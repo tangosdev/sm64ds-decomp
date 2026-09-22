@@ -50,7 +50,7 @@ extern "C" void func_ov006_020d1a3c(void *p)
             if (*(int *)(base + 0x53d8) >= 5) {
                 *(u8 *)(base + 0x53dc) = 1;
             } else {
-                *(int *)(((long long)(int)(base + 0x53d8))) += 1;
+                *(int *)(base + 0x53d8) += 1;
                 *(u8 *)(base + 0x53dc) = 0;
             }
             *(u8 *)(base + 0x53de) = 1;

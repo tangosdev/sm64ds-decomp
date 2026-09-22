@@ -1,47 +1,47 @@
-// The synthetic MeshCollider vtable (gate 8) -- the gate-3a mechanism at
+// The synthetic dBgW_Kc vtable (gate 8) -- the gate-3a mechanism at
 // its second use, and the first with REAL slot fillers throughout the hot
 // path: GetSurfaceInfo (matched, ITCM) calls GetNormal through the vtable
 // (notes/itcm.md, "the one lever"), so slot 4 must dispatch for the octree
 // walk to survive. Slots are __fastcall shims (ecx carries `this` exactly
 // as __thiscall does; the dummy edx absorbs fastcall's second register),
-// slot order per include/MeshCollider.h's ROM-read map: dtor 0/1,
+// slot order per include/dBgW_Kc.h's ROM-read map: dtor 0/1,
 // Virtual08 2, surface queries 3-5, the DetectClsn overloads 6-8.
 // Unevidenced slots trap loudly.
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "MeshCollider.h"
+#include "dBgW_Kc.h"
 
 extern "C" int g_sphere_dbg[16];   /* port/unmatched/MeshCollider_DetectClsn_Sphere.cpp */
 
-// BATCH-3 LINKAGE SEAT bridge. The real MeshCollider::DetectClsn(RaycastGround&)
+// BATCH-3 LINKAGE SEAT bridge. The real dBgW_Kc::DetectClsn(RaycastGround&)
 // body (now seated in slot 6) reads/writes the shared prism SurfaceInfo global
 // data_020a0cec, which it references with C++ type (mangled
 // ?data_020a0cec@@3USurfaceInfo@@A). The global is DEFINED once, flat-C, in
 // port/unmatched/MeshCollider_DetectClsn_Sphere.cpp (_data_020a0cec). Bridge the
 // typed reference to the flat definition, the same /alternatename mechanism the
-// MeshColliderBase seat uses for its method bodies. One storage, both names.
+// dBgW seat uses for its method bodies. One storage, both names.
 #pragma comment(linker, "/alternatename:?data_020a0cec@@3USurfaceInfo@@A=_data_020a0cec")
 
 static void __fastcall slot_v08(void *self, void *)
-{ ((MeshCollider *)self)->MeshCollider::Virtual08(); }
+{ ((dBgW_Kc *)self)->dBgW_Kc::Virtual08(); }
 static void __fastcall slot_surf(void *self, void *, s16 tri, SurfaceInfo *res)
-{ ((MeshCollider *)self)->MeshCollider::GetSurfaceInfo(tri, *res); }
+{ ((dBgW_Kc *)self)->dBgW_Kc::GetSurfaceInfo(tri, *res); }
 static void __fastcall slot_norm(void *self, void *, s16 tri, Vector3 *res)
-{ ((MeshCollider *)self)->MeshCollider::GetNormal(tri, *res); }
+{ ((dBgW_Kc *)self)->dBgW_Kc::GetNormal(tri, *res); }
 static void __fastcall slot_orig(void *self, void *, s16 tri, Vector3 *res)
-{ ((MeshCollider *)self)->MeshCollider::GetTriangleOrigin(tri, *res); }
-static int __fastcall slot_ray(void *self, void *, RaycastLine *ray)
-{ return ((MeshCollider *)self)->MeshCollider::DetectClsn(*ray); }
+{ ((dBgW_Kc *)self)->dBgW_Kc::GetTriangleOrigin(tri, *res); }
+static int __fastcall slot_ray(void *self, void *, dBgCh_Lin *ray)
+{ return ((dBgW_Kc *)self)->dBgW_Kc::DetectClsn(*ray); }
 
-/* Slot 9 -- MeshColliderBase::BeforeClsn, the platform-carry seat. A moving
+/* Slot 9 -- dBgW::BeforeClsn, the platform-carry seat. A moving
    collider (a lift, a rotating platform) that an actor is STANDING ON fires
    this every collision step; the body invokes the beforeClsnCallback the
    platform's InitResources stored via func_020393d4 (UpdatePosWithTransform and
    its siblings), which is what walks the rider along with the platform. Neither
-   MeshColliderBase overrides it nor does MovingMeshCollider, so both tables
-   inherit this one body (MeshColliderBase.h slot 9; MovingMeshCollider.h
+   dBgW overrides it nor does MovingMeshCollider, so both tables
+   inherit this one body (dBgW.h slot 9; MovingMeshCollider.h
    "Overrides every slot except BeforeClsn (slot 9) and GetSurfaceInfo").
    Left as slot_trap9 until this gate: the ride path was never proof-driven, so
    the first actor to stand on a moving platform aborted here.
@@ -49,39 +49,39 @@ static int __fastcall slot_ray(void *self, void *, RaycastLine *ray)
    The one-line ROM body is inlined rather than dispatched to the matched
    src (_ZN16MeshColliderBase10BeforeClsn...cpp): that TU rides slice_gate16,
    which walk_window links but the gate-8/9 collision smoke targets do not, so a
-   qualified `MeshColliderBase::BeforeClsn` call would leave them unresolved and
+   qualified `dBgW::BeforeClsn` call would leave them unresolved and
    only GATE8_EXTRA_SOURCES (CMakeLists) could repair that. The body is exactly
    `beforeClsnCallback(this, actor, &res, &pos, motionAng, ang)` with the
    documented arg-order swap (the virtual takes res-first, the callback
-   actor-first); the pointer lives at MeshColliderBase+0x18, its type spelled by
-   MeshColliderBase.h. PORT_HOST_ABI: __fastcall shim, ecx=this; the ROM body
+   actor-first); the pointer lives at dBgW+0x18, its type spelled by
+   dBgW.h. PORT_HOST_ABI: __fastcall shim, ecx=this; the ROM body
    transcribed, the WaterBomb/host-copy reading (one less cross-TU dependency). */
-static void __fastcall slot_beforeclsn(void *self, void *, ClsnResult *res,
-                                       Actor *actor, Vector3 *pos,
+static void __fastcall slot_beforeclsn(void *self, void *, dBgPi *res,
+                                       dActor_c *actor, Vector3 *pos,
                                        Vector3_16 *motionAng, Vector3_16 *ang)
 {
-    MeshColliderBase *base = (MeshColliderBase *)self;
+    dBgW *base = (dBgW *)self;
     base->beforeClsnCallback(base, actor, res, pos, motionAng, ang);
 }
 
-/* Ground overload (ROM slot 6) -- MeshCollider::DetectClsn(RaycastGround &),
+/* Ground overload (ROM slot 6) -- dBgW_Kc::DetectClsn(RaycastGround &),
    ITCM 0x01ffd3f8, 0x498 bytes. BATCH-3 LINKAGE SEAT: this now dispatches the
-   REAL matched body (src/_ZN12MeshCollider10DetectClsnER13RaycastGround.cpp,
-   2004/b56 byte-match), replacing the earlier stack-RaycastLine adapter. The
+   REAL matched body (src/_ZN7dBgW_Kc10DetectClsnER9dBgCh_Gnd.cpp,
+   2004/b56 byte-match), replacing the earlier stack-dBgCh_Lin adapter. The
    TU rides slice_gate8 (and GATE8_EXTRA_SOURCES for the gate-8/9 smoke
    targets), so the qualified call resolves in every target that links this
    table, and naming it here is the reference edge that pulls it in.
 
    The real body IS the downward ground probe (its own octree march through the
-   (x, z) column), so the adapter that synthesised a vertical RaycastLine is no
+   (x, z) column), so the adapter that synthesised a vertical dBgCh_Lin is no
    longer needed: it built the same query the ROM body runs natively, only via
    the hosted line walk. The shim is now the same one-line qualified dispatch as
    slot_ray; the RaycastGround the caller passed carries its own pos and reach
-   (BgCh head 0x10, ClsnResult 0x10, pos Vec3 0x38, reach 0x4c) and the body
+   (BgCh head 0x10, dBgPi 0x10, pos Vec3 0x38, reach 0x4c) and the body
    fills the result fields in place. */
-static int __fastcall slot_ground(void *self, void *, RaycastGround *g)
+static int __fastcall slot_ground(void *self, void *, dBgCh_Gnd *g)
 {
-    int hit = ((MeshCollider *)self)->MeshCollider::DetectClsn(*g);
+    int hit = ((dBgW_Kc *)self)->dBgW_Kc::DetectClsn(*g);
     if (getenv("PORT_TRACE_CLSN"))
         fprintf(stderr, "  [ground] real DetectClsn(RaycastGround) -> hit=%d\n",
                 hit);
@@ -103,8 +103,8 @@ extern "C" int hal_ground_ray(void *mc, int x, int y, int z, int reach,
     ((int *)(line + 0x54))[1] = y - reach;
     ((int *)(line + 0x54))[2] = z;
     *(int *)(line + 0x60) = 0x7FFFFFF;           /* best-dist seed */
-    int hit = ((MeshCollider *)mc)->MeshCollider::DetectClsn(
-        *(RaycastLine *)line);
+    int hit = ((dBgW_Kc *)mc)->dBgW_Kc::DetectClsn(
+        *(dBgCh_Lin *)line);
     if (hit && out_y)
         *out_y = ((int *)(line + 0x54))[1];      /* clsnPos.y (walk writes
                                                     the end as the hit) */
@@ -121,19 +121,19 @@ extern "C" int hal_line_ray(void *mc, const int *a, const int *b, int *out)
     memcpy(line + 0x38, a, 12);
     memcpy(line + 0x54, b, 12);
     *(int *)(line + 0x60) = 0x7FFFFFF;
-    int hit = ((MeshCollider *)mc)->MeshCollider::DetectClsn(
-        *(RaycastLine *)line);
+    int hit = ((dBgW_Kc *)mc)->dBgW_Kc::DetectClsn(
+        *(dBgCh_Lin *)line);
     if (hit && out)
         memcpy(out, line + 0x54, 12);            /* clsnPos */
     return hit;
 }
 
-/* Sphere overload (ROM slot 8) -- MeshCollider::DetectClsn(SphereClsn &),
+/* Sphere overload (ROM slot 8) -- dBgW_Kc::DetectClsn(SphereClsn &),
    ITCM 0x01ffb830, 0x1bc8 bytes = 7112, the largest unmatched function in
    the game (notes/itcm.md). It is not just the wall pass: it returns floor,
    wall and ceiling as one three-bit mask (see SphereClsn::DetectClsn, which
    fans bit 0/1/2 out to func_020379d0/9c/68), and it is what holds a STANDING
-   actor up. WithMeshClsn's swept RaycastLine finds a floor only once the
+   actor up. WithMeshClsn's swept dBgCh_Lin finds a floor only once the
    sweep crosses the floor plane, so while this was stubbed the Player sank
    about his own height before the sweep caught him and shoved him back --
    a 46-unit bob at 3 Hz, and the whole reason the harness ground snap and
@@ -179,8 +179,8 @@ static int __fastcall slot_sphere(void *self, void *, void *sph)
         }
         return 0;
     }
-    int r = ((MeshCollider *)self)->MeshCollider::DetectClsn(
-        *(SphereClsn *)sph);
+    int r = ((dBgW_Kc *)self)->dBgW_Kc::DetectClsn(
+        *(dBgCh_SphCrr *)sph);
     if (r && getenv("PORT_TRACE_CLSN")) {
         const unsigned char *s = (const unsigned char *)sph;
         fprintf(stderr, "  [sphere] mask=%d flags=%02x tri=%d kind=%d "
@@ -197,20 +197,20 @@ static int __fastcall slot_sphere(void *self, void *, void *sph)
 
 #define TRAP(n) \
     static void __fastcall slot_trap##n(void *, void *) { \
-        fprintf(stderr, "FATAL: MeshCollider vtable slot %d dispatched " \
+        fprintf(stderr, "FATAL: dBgW_Kc vtable slot %d dispatched " \
                         "with no filler (clsn_vtable.cpp)\n", n); \
         abort(); }
 TRAP(0) TRAP(1) TRAP(8) TRAP(10) TRAP(11) TRAP(12)
 
 // SLOT ORDER IS MSVC'S, NOT THE ROM'S. The dispatching code here is
-// MSVC-compiled against include/MeshCollider.h, and MSVC lays the table
+// MSVC-compiled against include/dBgW_Kc.h, and MSVC lays the table
 // with a ONE-slot destructor (the ROM's Itanium layout spends two). Filling
 // the array in ROM order put GetSurfaceInfo where MSVC reads GetNormal, and
 // its internal virtual call recursed into itself until the stack died --
 // the exact D1/D0-vs-scalar-dtor skew the earlier gates dodged by never
 // dispatching. One more MSVC quirk pinned here: adjacent overloads
 // (the DetectClsn trio) are emitted in REVERSE declaration order.
-extern "C" void *_ZTV12MeshCollider[13] = {
+extern "C" void *_ZTV7dBgW_Kc[13] = {
     (void *)slot_trap0,         /* 0: scalar deleting dtor (real D0 seated at
                                        boot by hal_seat_meshcollider_dtor in the
                                        walk_window family; smoke targets never
@@ -221,7 +221,7 @@ extern "C" void *_ZTV12MeshCollider[13] = {
     (void *)slot_orig,          /* 4: GetTriangleOrigin */
     (void *)slot_trap1,         /* 5: GetTriangleOrigin (ROM numbering) */
     (void *)slot_ground,        /* 6: DetectClsn(RaycastGround) - real body */
-    (void *)slot_ray,           /* 7: DetectClsn(RaycastLine) */
+    (void *)slot_ray,           /* 7: DetectClsn(dBgCh_Lin) */
     (void *)slot_sphere,        /* 8: DetectClsn(SphereClsn) - stub */
     (void *)slot_beforeclsn,    /* 9: BeforeClsn - the platform-carry seat */
     (void *)slot_trap10,
@@ -229,8 +229,8 @@ extern "C" void *_ZTV12MeshCollider[13] = {
 };
 
 // MovingMeshCollider inherits the surface queries; its table starts as a copy
-// of MeshCollider's, which is all the binaries that stop at gate 8/9 need --
-// the only collider on the level then is the level's, a plain MeshCollider.
+// of dBgW_Kc's, which is all the binaries that stop at gate 8/9 need --
+// the only collider on the level then is the level's, a plain dBgW_Kc.
 //
 // GATE 16 GOES FURTHER. SIGN_POST, BLACK_BRICK_BLOCK and CASTLE_WATER each
 // Enable a MovingMeshCollider of their own onto data_020a0c80, and everything
@@ -240,23 +240,23 @@ extern "C" void *_ZTV12MeshCollider[13] = {
 // by hal_fill_moving_mesh_collider_vtable in hal/actor_class_faces.cpp, which
 // only the binaries carrying the actor classes link; this stays the base.
 extern "C" {
-void *_ZTV18MovingMeshCollider[16];
+void *_ZTV10dBgW_KcMbg[16];
 void hal_fill_mmc_vtable(void)
 {
     for (int i = 0; i < 13; ++i)
-        _ZTV18MovingMeshCollider[i] = _ZTV12MeshCollider[i];
+        _ZTV10dBgW_KcMbg[i] = _ZTV7dBgW_Kc[i];
 }
 }
 
-// ---- the moving collider's scratch RaycastLine ------------------------------
+// ---- the moving collider's scratch dBgCh_Lin ------------------------------
 //
-// MovingMeshCollider::DetectClsn(RaycastLine &) and its RaycastGround sibling
+// MovingMeshCollider::DetectClsn(dBgCh_Lin &) and its RaycastGround sibling
 // do not build a ray on the stack: they fill ONE static one at arm9
 // 0x020a0d0c, walk it, and read the answer back out. dsd split that object
 // three ways at the offsets code happened to name --
 //
 //     data_020a0d0c  the ray itself
-//     data_020a0d1c  +0x10, its ClsnResult (copied back to the caller's)
+//     data_020a0d1c  +0x10, its dBgPi (copied back to the caller's)
 //     data_020a0d60  +0x54, its line END, which is where the walk writes the
 //                    hit position
 //

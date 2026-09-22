@@ -20,8 +20,8 @@
 # zero skipped, the second in this lane after level 15.
 #
 # WHAT THE CLASS IS: a 0x21c-byte Actor holding an ARRAY of five
-# MovingCylinderClsnWithPos at +0xd4, stride 0x40, built by func_020733a8 and
-# torn down by __destroy_arr. It loads no file and has no static initialiser --
+# MovingCylinderClsnWithPos at +0xd4, stride 0x40, built by __cxa_vec_ctor and
+# torn down by __cxa_vec_cleanup. It loads no file and has no static initialiser --
 # ov058's .rodata, .init, .ctor and .bss are all empty. InitResources is a
 # five-iteration loop that sizes the cylinders; Behavior is the Rec Room's
 # conversation and minigame-menu entry (Player::GetTalkState,
@@ -31,8 +31,9 @@
 # THE MEASURED CLOSURE GAP: none. The first link added no arm9 TU.
 
 src/_ZN15RecRoomCupboardD1Ev.cpp
-src/_ZN15RecRoomCupboardD0Ev.cpp
-src/_ZN15RecRoomCupboard16CleanupResourcesEv.c
+# RETIRED at SLICE1: body now in src/_ZN15RecRoomCupboardD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN15RecRoomCupboardD0Ev.cpp
+src/_ZN15RecRoomCupboard16CleanupResourcesEv.cpp
 src/_ZN15RecRoomCupboard8BehaviorEv.cpp
-src/_ZN15RecRoomCupboard13InitResourcesEv.c
-src/RecRoomCupboard_Spawn.cpp
+src/_ZN15RecRoomCupboard13InitResourcesEv.cpp
+src/d_a_obj_closet.cpp

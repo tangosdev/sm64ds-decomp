@@ -13,7 +13,7 @@
 // data_ov002_0210cbf4[raw]) yields 279 x1, 284 x8, 301 x16. For 301:
 //
 //   arm9 ACTOR_SPAWN_TABLE 0x02090864 + 301*4 = 0x02090d18  ->  0x021115e0
-//   overlay_0044.bin @0x021115e0 word[0] = 0x021112dc  (OrangeBallBillboard_Spawn)
+//   overlay_0044.bin @0x021115e0 word[0] = 0x021112dc  (daObjKb1Billboard_c_classInit)
 //   overlay_0044.bin @0x021115e0 word[1] & 0xffff = 0x012d = 301
 //
 // BOTH tests, because sibling overlays share the load window: the spawnFunc
@@ -25,7 +25,7 @@
 //
 // ---- CLASS IDENTITY: RTTI, NOT THE LABEL ----------------------------------
 //
-// _ZTV19OrangeBallBillboard is at 0x02111604; its vtable[-1] (0x02111600)
+// _ZTV19daObjKb1Billboard_c is at 0x02111604; its vtable[-1] (0x02111600)
 // points at 0x021115bc, and that typeinfo's name string (0x021115c8) reads
 // "19daObjKb1Billboard_c". kb1 = koopa boss 1 -- this arena. The asset agrees
 // independently: __sinit_ov044_02111314 constructs the class's SharedFilePtr on
@@ -34,7 +34,7 @@
 // config's chosen spelling of daObjKb1Billboard_c, NOT a shifted label -- ov044
 // contains exactly one class, so there is no neighbour for a shift to land on.
 // No RTTI alias is needed here: the only two TUs that restore the table by name
-// (D0 and Spawn) both spell it _ZTV19OrangeBallBillboard.
+// (D0 and Spawn) both spell it _ZTV19daObjKb1Billboard_c.
 //
 // ---- THE WIDTH: THIRTY-ONE, PINNED TWICE ----------------------------------
 //
@@ -50,8 +50,8 @@
 // addresses as _ZTV18BowserFireSeaArena's (0x0211a8b0, ov060) -- compared word
 // for word on this lane. One slot differs from that class's shape and is
 // INHERITED here rather than own:
-//   slot  6  0x02043b24  _ZN9ActorBase8BehaviorEv        (no Behavior of its own)
-// (slot 12, 0x02043ac0 _ZN9ActorBase16OnPendingDestroyEv, is the SAME word in
+//   slot  6  0x02043b24  _ZN7fBase_c8BehaviorEv        (no Behavior of its own)
+// (slot 12, 0x02043ac0 _ZN7fBase_c16OnPendingDestroyEv, is the SAME word in
 // both tables -- inherited in each; the review's word-for-word recomparison
 // puts the full differing set at {0, 3, 6, 9, 16, 17}.)
 // Own slots are 0 / 3 / 9 / 16 / 17 only. Sixteen static billboards that turn
@@ -61,14 +61,14 @@
 //
 // This seat uses dsd's Itanium numbering, and the ROM settles which is which
 // rather than the names doing it: 0x021111d0 (dsd: D0) ends in
-// Memory::Deallocate (src/_ZN19OrangeBallBillboardD0Ev.c, and reloc 0x021111fc
+// Memory::Deallocate (src/game/actors/d_a_obj_kb1_billboard.cpp, and reloc 0x021111fc
 // -> 0x0203c1e8), 0x021111a0 (dsd: D1) does not (its only calls are
 // 0x02016d20 Model::~Model and 0x020112c8 Actor::D2). So D1 = complete-object,
 // slot 16; D0 = deleting, slot 17. That is the arena/spikebomb seating.
 //
 // ---- THE ONE TU HELD OUT OF THE SLICE -------------------------------------
 //
-// src/_ZN19OrangeBallBillboardD1Ev.cpp is a real MSVC destructor over a SHADOW
+// src/game/actors/d_a_obj_kb1_billboard.cpp is a real MSVC destructor over a SHADOW
 // class (`struct OrangeBallBillboard : Actor { Model m0; }` declared inside its
 // own .cpp), so MSVC emits ??1OrangeBallBillboard@@UAE@XZ and auto-generates
 // calls to ??1Model@@QAE@XZ and ??1Actor@@UAE@XZ, neither of which exists
@@ -78,7 +78,7 @@
 //
 // ---- THE ONE CROSS-OVERLAY SPELLING ---------------------------------------
 //
-// src/_ZN19OrangeBallBillboard13InitResourcesEv.c reaches the class's
+// src/game/actors/d_a_obj_kb1_billboard.cpp reaches the class's
 // SharedFilePtr as `data_ov059_02111680` while its sibling
 // CleanupResources and the sinit both spell the SAME cell `data_ov044_02111680`
 // -- dsd's shared-window naming race (0x02111680 is inside twenty overlays'
@@ -95,13 +95,15 @@
 // ov045/ov060 shape). Whoever next owns actor_overlays.cpp should move the body
 // beside the ov013/ov045/ov060 blocks and cut the guard here to a call.
 
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
@@ -110,40 +112,40 @@ extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 
 #include "dsstate_seg.h"
 #include "dtor_faces_cpp.h"
-#include "Actor.h"
-#include "ActorBase.h"
-#include "OrangeBallBillboard.h"
+#include "dActor_c.h"
+#include "fBase_c.h"
+#include "daObjKb1Billboard_c.h"
 
 extern "C" {
 
 /* ---- the shared arm9 half, slots 1..30 (see the width block above) ---- */
-int  _ZN5Actor19BeforeInitResourcesEv(void *self);              /* slot 1  */
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a);   /* slot 2  */
-int  _ZN5Actor14BeforeBehaviorEv(void *self);                   /* slot 7  */
-int  _ZN5Actor12BeforeRenderEv(void *self);                     /* slot 10 */
-int  _ZN5Actor13OnYoshiTryEatEv(void *self);                    /* slot 18 */
-void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p);    /* slot 19 */
-int  _ZN5Actor9Virtual50Ev(void *self);                         /* slot 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);       /* slot 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);           /* slot 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);           /* slot 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);               /* slot 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);               /* slot 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o);  /* slot 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);      /* slot 27 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);       /* slot 28 */
-int  _ZN5Actor16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
+int  _ZN8dActor_c19BeforeInitResourcesEv(void *self);              /* slot 1  */
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a);   /* slot 2  */
+int  _ZN8dActor_c14BeforeBehaviorEv(void *self);                   /* slot 7  */
+int  _ZN8dActor_c12BeforeRenderEv(void *self);                     /* slot 10 */
+int  _ZN8dActor_c13OnYoshiTryEatEv(void *self);                    /* slot 18 */
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void *self, void *p);    /* slot 19 */
+int  _ZN8dActor_c9Virtual50Ev(void *self);                         /* slot 20 */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);       /* slot 21 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);           /* slot 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);           /* slot 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);               /* slot 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);               /* slot 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o);  /* slot 26 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);      /* slot 27 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);       /* slot 28 */
+int  _ZN8dActor_c16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
 
 /* ---- the class's own matched bodies ---- */
-int  _ZN19OrangeBallBillboard13InitResourcesEv(void *self);     /* slot 0  */
-int  _ZN19OrangeBallBillboard16CleanupResourcesEv(void);        /* slot 3  */
-int *_ZN19OrangeBallBillboardD0Ev(int *self);                   /* slot 17 */
-void *OrangeBallBillboard_Spawn(void);
+int  _ZN19daObjKb1Billboard_c13InitResourcesEv(void *self);     /* slot 0  */
+int  _ZN19daObjKb1Billboard_c16CleanupResourcesEv(void);        /* slot 3  */
+int *_ZN19daObjKb1Billboard_cD0Ev(int *self);                   /* slot 17 */
+void *daObjKb1Billboard_c_classInit(void);
 void __sinit_ov044_02111314(void);
 
 /* ---- the destructor chain obb_d1 spells (relocs 0x021111b4 / 0x021111bc) ---- */
 void  _ZN5ModelD1Ev(void *m);
-void *_ZN5ActorD2Ev(void *self);
+void *_ZN8dActor_cD2Ev(void *self);
 
 /* ---- the ov044 per-symbol mount (port/ov044_syms.txt) ---- */
 void port_ov044_pack_check(void);
@@ -157,7 +159,7 @@ const char *port_actor_class_name(unsigned id);
    from port/ov044_syms.txt: a mounted vtable hands a factory DS code
    addresses. */
 DSSTATE_BEGIN
-void *_ZTV19OrangeBallBillboard[31];   /* ROM 0x02111604..0x02111680 */
+void *_ZTV19daObjKb1Billboard_c[31];   /* ROM 0x02111604..0x02111680 */
 DSSTATE_END
 
 }  /* extern "C" */
@@ -187,63 +189,63 @@ OBB_TRAP(13) OBB_TRAP(14)
 
 // ---- the shared half -------------------------------------------------------
 static int __fastcall obb_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall obb_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall obb_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 static void __fastcall obb_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall obb_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall obb_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall obb_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall obb_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall obb_pdes(void *s, void *)
-{ ((ActorBase *)s)->ActorBase::OnPendingDestroy(); return 0; }
+{ ((fBase_c *)s)->fBase_c::OnPendingDestroy(); return 0; }
 static int __fastcall obb_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int __fastcall obb_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 /* slot 19 takes the three-parameter shape so it emits `ret 4`: the dispatch
    site pushes the Player the callee pops -- the wf_turn_egg contract. */
 static int __fastcall obb_turn_egg(void *s, void *, void *p)
-{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+{ _ZN8dActor_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall obb_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall obb_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall obb_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall obb_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall obb_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall obb_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall obb_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall obb_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall obb_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 static int __fastcall obb_egg(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 /* slot 6, INHERITED: the ROM's word is 0x02043b24 = ActorBase::Behavior, the
    base no-op. This class has no Behavior of its own. */
 static int __fastcall obb_behavior(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::Behavior(); }
+{ return ((fBase_c *)s)->fBase_c::Behavior(); }
 
 // ---- the class's own slots -------------------------------------------------
 static int __fastcall obb_init(void *s, void *)
-{ return _ZN19OrangeBallBillboard13InitResourcesEv(s); }
+{ return _ZN19daObjKb1Billboard_c13InitResourcesEv(s); }
 /* slot 3 takes NO receiver: the matched body is a free function over the
    overlay's one SharedFilePtr (the SPIKE_BOMB / arena shape). */
 static int __fastcall obb_clean(void *s, void *)
-{ (void)s; return _ZN19OrangeBallBillboard16CleanupResourcesEv(); }
+{ (void)s; return _ZN19daObjKb1Billboard_c16CleanupResourcesEv(); }
 /* slot 9 is a REAL MSVC METHOD (src/..Render..cpp defines
    OrangeBallBillboard::Render over include/OrangeBallBillboard.h), so it is
    called through the class rather than by a C name that is never emitted.
@@ -254,7 +256,7 @@ static int __fastcall obb_clean(void *s, void *)
 static int __fastcall obb_render(void *s, void *)
 {
     port_actor_render_probe("ORANGE_BALL_BILLBOARD", (char *)s + 0xd4);
-    return ((OrangeBallBillboard *)s)->Render();
+    return ((daObjKb1Billboard_c *)s)->Render();
 }
 /* slot 16, HOST THUNK, not the matched TU -- the shadow-class MSVC destructor
    (file header). The chain is what the matched D0 spells minus the Deallocate,
@@ -264,7 +266,7 @@ static int __fastcall obb_render(void *s, void *)
 /* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
    the transcribed thunk that stood here (obb_d1) spelled the same chain by hand. */
 static int __fastcall obb_d0(void *s, void *)
-{ return (int)(size_t)_ZN19OrangeBallBillboardD0Ev((int *)s); }
+{ return (int)(size_t)_ZN19daObjKb1Billboard_cD0Ev((int *)s); }
 
 // ---- the mount bring-up ----------------------------------------------------
 /* CAPTURED, and the argument is hal/level_boot.cpp's on g_level_mounted: this
@@ -294,9 +296,9 @@ extern "C" void port_ov44_bringup(void)
 // 31 slots, x16 on level 36
 // ============================================================================
 //
-// Actor build: operator new(292 = 0x124) in OrangeBallBillboard_Spawn, Model at
+// Actor build: operator new(292 = 0x124) in daObjKb1Billboard_c_classInit, Model at
 // +0xd4, no collider. Spawn stores the table BY A REAL NAME
-// (`p[0] = (int)_ZTV19OrangeBallBillboard`, not a VT placeholder), so the row
+// (`p[0] = (int)_ZTV19daObjKb1Billboard_c`, not a VT placeholder), so the row
 // registers the matched Spawn directly with no factory wrapper.
 //
 // THE POINTER IS VOLATILE ON PURPOSE -- the gate-200 elided-stores bug
@@ -304,7 +306,7 @@ extern "C" void port_ov44_bringup(void)
 extern "C" void hal_fill_orange_ball_billboard_vtable(void)
 {
     port_ov44_bringup();
-    void *volatile *vt = (void *volatile *)_ZTV19OrangeBallBillboard;
+    void *volatile *vt = (void *volatile *)_ZTV19daObjKb1Billboard_c;
     vt[0]  = (void *)obb_init;
     vt[1]  = (void *)obb_binit;
     vt[2]  = (void *)obb_ainit;
@@ -321,7 +323,7 @@ extern "C" void hal_fill_orange_ball_billboard_vtable(void)
     vt[13] = (void *)obb_trap13;     /* ActorBase::Virtual34, the wf/ov45 trap */
     vt[14] = (void *)obb_trap14;     /* ActorBase::Virtual38, likewise */
     vt[15] = (void *)obb_heap;
-    vt[16] = (void *)hal_cppd1_OrangeBallBillboard;
+    vt[16] = (void *)PORT_D16(hal_cppd1_OrangeBallBillboard);
     vt[17] = (void *)obb_d0;
     vt[18] = (void *)obb_yoshi;
     vt[19] = (void *)obb_turn_egg;

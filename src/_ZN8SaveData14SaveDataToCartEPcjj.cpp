@@ -16,7 +16,14 @@ extern "C" {
 }
 
 
-extern "C" int _ZN8SaveData14SaveDataToCartEPcjj(char* data, u32 size, u32 fileID)
+/* SaveData::SaveDataToCart(char* data, u32 size, u32 fileID) at 0x02042c3c -- static.
+ *
+ * Writes one block to the cart's backup memory with an 8-byte magic and a 16-bit
+ * rolling checksum, to a primary and a mirror copy. Returns 0 on success -- the
+ * opposite of the 1-is-success convention its callers use, which is why every one
+ * of them inverts it.
+ */
+int SaveData::SaveDataToCart(char* data, u32 size, u32 fileID)
 {
     int lockID;
     u16 sum = 0;

@@ -60,7 +60,7 @@ extern "C" int func_0203842c(char *self)
             int active = (info->pB0 & 2) ? 1 : 0;
             if (active != 0) {
                 Vector3 v;
-                Vector3 *src = (Vector3 *)((unsigned long long)(unsigned int)((char *)info + 0x5c) & 0xFFFFFFFFFFFFFFFFULL);
+                Vector3 *src = (Vector3 *)((char *)info + 0x5c);
                 v.x = src->x;
                 v.y = src->y;
                 v.z = src->z;

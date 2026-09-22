@@ -65,6 +65,14 @@
 
 #include "dsstate_seg.h"
 
+#if PORT_FN_TRACE
+extern "C" void ntr_fn_trace_frame(unsigned int frame);
+#define PORT_FN_TRACE_FRAME(f) ntr_fn_trace_frame((unsigned int)(f))
+#else
+#define PORT_FN_TRACE_FRAME(f) ((void)0)
+#endif
+
+
 /* THE ROM'S PHASE ID, hosted for the first time, INSIDE the .dsstate bracket.
    It is a hosted DS BSS global at 0x0209d50c and tools/dsstate_guard.py refuses
    the link if one of those lands outside the span a save state captures -- it
@@ -202,6 +210,20 @@ void port_rom_frame_phase6(void)
         const int blink = data_020a0db0[0] - g_blink_base;
         g_blink_missed = g_frame - blink;
     }
+    /* THE ONE THING THE /Gh CALL TRACE CANNOT WORK OUT FOR ITSELF (run link100,
+       lane TRACEPORT). port/hal/fn_trace.cpp records every function entry in the
+       build without an edit to any translation unit, because the compiler emits
+       the call. What it cannot see is where one frame ends and the next begins,
+       and the cartridge-side trace lane ROMTRACE takes out of the emulator is
+       scoped per frame, so without a marker the two lists cannot be lined up at
+       all. THIS IS THE RIGHT PLACE AND THE ONLY ONE: every path that renders a
+       frame comes through here exactly once -- the scene loop in
+       hal/scene_boot.cpp, the level loop and the scene loop in
+       tests/walk_window.cpp, and hal/title_entry.cpp -- which is the same
+       property the frame cross-check below already depends on, and g_frame is
+       the counter that cross-check is written against. It compiles to nothing at
+       all unless the build was configured -DPORT_FN_TRACE=ON. */
+    PORT_FN_TRACE_FRAME(g_frame);
 }
 
 int port_rom_frame(void)

@@ -4,17 +4,17 @@
 #include "common.h"
 
 extern "C" {
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void* self);
-extern void* _ZNK12WithMeshClsn14GetFloorResultEv(void* self);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void* self);
+extern void* _ZNK10dBgCh_Actr14GetFloorResultEv(void* self);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void* self, struct Vector3* out);
 extern int func_02010844(void* unused, struct Vector3* v, short angle);
 extern void _Z11UpdateAngleRssis(short* a, int b, int c, short d);
 void func_ov002_020ed738(char* c) {
     int e4 = 0;
     int e6 = 0;
-    if (_ZNK12WithMeshClsn10IsOnGroundEv(c+0x144)) {
+    if (_ZNK10dBgCh_Actr10IsOnGroundEv(c+0x144)) {
         struct Vector3 n;
-        void* fr = _ZNK12WithMeshClsn14GetFloorResultEv(c+0x144);
+        void* fr = _ZNK10dBgCh_Actr14GetFloorResultEv(c+0x144);
         _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char*)fr+4, &n);
         e4 = func_02010844(c, &n, *(short*)(c+0x8e));
         e6 = func_02010844(c, &n, (short)(*(short*)(c+0x8e) - 0x4000));

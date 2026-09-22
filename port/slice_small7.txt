@@ -1,0 +1,52 @@
+# run link100 wave 14, lane SEAT14B (BATCH 7, small-overlay singles).
+#
+# ONE row of the four this batch named. The other three are refusals with the
+# address as the reason, recorded here so the next census does not re-open them:
+#
+#   func_ov074_021201f0 (0x021201f0, 0x1f0) and
+#   func_ov074_021204c0 (0x021204c0, 0x208)
+#       DUPLICATE, not unlinked code. Both bodies are already in walk_window:
+#       main's consolidation moved them into src/actors/Goomboss.cpp (ROM
+#       ordinals 22 and 27, lines 810 and 703 of that file), whose object is on
+#       the link line, and _func_ov074_021201f0 / _func_ov074_021204c0 are both
+#       in build/port/walk_window.map. port/slice_ov074.txt lines 236-240
+#       already carry the two rows commented out with "body now in
+#       src/actors/Goomboss.cpp ... the per-function leftover is a second
+#       definition." Seating either stem is a duplicate symbol, and the ROM
+#       code at both addresses runs today. These are tag rows, not seats.
+#
+#   __sinit_ov045_02112280 (0x02112280, 0x6c)
+#       STANDING RULING, PORT_HOST_ABI, hal/cxx_aliases.cpp:1241. ov013 and
+#       ov045 share the level load window at 0x021111a0 and both cover
+#       0x02112280: ov013 holds CLOCK_PENDULUM's SharedFilePtr there (mounted
+#       DATA, ov013_syms.c.obj) while ov045 holds this static initialiser, and
+#       dsd's ov045 export won the naming race inside ov013's own recovered
+#       source. The port resolves it with
+#         /alternatename:___sinit_ov045_02112280=_data_ov013_02112280
+#       which fires only while the name is UNDEFINED. Linking the matched TU
+#       defines the name, defeats the alias silently, and hands ov013's
+#       CLOCK_PENDULUM an ov045 function address where its SharedFilePtr
+#       belongs, on level 5. hal/actor_classes_ov045.cpp already hosts the
+#       body by hand (ov45_sinit_02112280), so the ROM's four calls do run.
+#
+#   func_ov003_020adc74 / func_ov003_020adcbc are BATCH 3's, not this lane's.
+#
+# BookSwitch_Spawn (ov016 0x021115a4, 0x1c). dsd mis-symbolized it: it is not a
+# factory, it is Unagi's d7c-cell state ENTER, the path-arrival state. Verified
+# instruction by instruction out of extracted/overlays/overlay_0016.bin (base
+# 0x021111a0), a real standalone leaf entry, not an interior address:
+#   021115a4  e2801c01  ADD  r1, r0, #0x100
+#   021115a8  e3a02064  MOV  r2, #100
+#   021115ac  e1c120b0  STRH r2, [r1]
+#   021115b0  e3a01905  MOV  r1, #0x14000
+#   021115b4  e5801098  STR  r1, [r0, #0x98]
+#   021115b8  e3a00001  MOV  r0, #1
+#   021115bc  e12fff1e  BX   lr
+# src/BookSwitch_Spawn.c is that body statement for statement, and
+# port/unmatched/Unagi_StateDispatch.cpp's unagi_state_arrive was a hand
+# transcription of the same seven instructions (it dropped only the return
+# value, which the dispatch discards). A true stand-in, so the host copy
+# retires and the matched TU takes the seat. The ROM's own reference is the
+# record at BookSwitch_SpawnInfo (0x02114898), whose fn word holds 0x021115a4
+# and which the seat checks against the mount before it rewrites it.
+src/BookSwitch_Spawn.c

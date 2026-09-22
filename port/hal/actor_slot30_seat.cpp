@@ -9,17 +9,17 @@
  *
  * WHAT THE ROM PUTS THERE, READ OUT OF THE ROM. Every Actor-width vtable the
  * port fills has 0x020100dc in slot 30 -- the arm9 base body,
- * _ZN5Actor25OnAimedAtWithEggReturnVecEv -- with exactly ONE exception in the
+ * _ZN8dActor_c25OnAimedAtWithEggReturnVecEv -- with exactly ONE exception in the
  * whole tree: Whomp (ov079 0x02123b54), which has its own override and is
  * seated separately in hal/actor_classes_wf_enemy.cpp. That was established by
  * reading the slot-30 relocation (vtable + 30*4) of all 178 resolvable host
  * vtables against config/<module>/relocs.txt, not by pattern-matching the
  * fills. The ovNNN_syms.txt notes in port/ record the same reading
- * independently ("slot 30 0x020100dc _ZN5Actor25OnAimedAtWithEggReturnVecEv").
+ * independently ("slot 30 0x020100dc _ZN8dActor_c25OnAimedAtWithEggReturnVecEv").
  *
  * So there is nothing to decompile here and nothing to invent: the body
  * already exists, byte-matched on all three mwccarm 1.2 configs, in
- * src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp. It was simply not in any
+ * src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp. It was simply not in any
  * slice, so it never reached the host link, and 85 of the 86 fills trapped the
  * slot instead. It now joins the link on slice_gate50.txt beside
  * Actor::OnAimedAtWithEgg and Actor::OnTurnIntoEgg, the two Actor tail bodies
@@ -54,16 +54,16 @@ extern "C" {
 
 struct PortActorVec3 { int x, y, z; };
 
-/* src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp, slice_gate50.txt.
+/* src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp, slice_gate50.txt.
    The matched TU's own spelling: hidden result pointer first, then `this`. */
-void _ZN5Actor25OnAimedAtWithEggReturnVecEv(PortActorVec3 *ret, void *self);
+void _ZN8dActor_c25OnAimedAtWithEggReturnVecEv(PortActorVec3 *ret, void *self);
 
 /* The seat every Actor-width fill installs in slot 30. Three parameters, the
    Whomp shape: self -> ecx, the unused second -> edx, the hidden result
    pointer -> the one stack slot the caller pushed and this function pops. */
 void *__fastcall port_actor_s30_base(void *self, void *, void *out)
 {
-    _ZN5Actor25OnAimedAtWithEggReturnVecEv((PortActorVec3 *)out, self);
+    _ZN8dActor_c25OnAimedAtWithEggReturnVecEv((PortActorVec3 *)out, self);
     return out;
 }
 

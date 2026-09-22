@@ -18,7 +18,7 @@
 # into two of them, so the sizes are pinned: without that the registry reads
 # the +4 id halfword out of a neighbour and says WRONG RECORD -- which is
 # exactly what it said for FLAG.
-Bird_SpawnInfo:0x1c CastleWater_SpawnInfo:0x1c MetalNet_SpawnInfo:0x1c Flag_SpawnInfo:0x1c
+g_profile_SBIRD:0x1c g_profile_MC_WATER:0x1c g_profile_MC_METALNET:0x1c g_profile_MC_FLAG:0x1c
 
 # ---- .data: the CLPS run and the water's texture animation ----
 # ov009 carries FOUR consecutive count-1 CLPS blocks, not the three this line

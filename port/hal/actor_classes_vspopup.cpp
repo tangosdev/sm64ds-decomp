@@ -22,12 +22,12 @@
 // hal/actor_classes_bob_world.cpp's INVISIBLE_SECRET section says it in as
 // many words, and this seat is the other half of that finding. By address:
 //
-//   InvisibleSecret_SpawnInfo  ov002 0x0210b00c  actor 329
-//   InvisibleSecret_Spawn      ov002 0x020f085c, installs data_ov002_0210b030
+//   g_profile_SECRET_COIN  ov002 0x0210b00c  actor 329
+//   daSCoin_c_classInit      ov002 0x020f085c, installs _ZTV9daSCoin_c
 //                              (RTTI 9daSCoin_c) -- a 276-byte object with a
 //                              MovingCylinderClsn, seated in bob_world
-//   Number_SpawnInfo           ov002 0x0210b0c8  actor 330
-//   Number_Spawn               ov002 0x020f0d90, installs 0x0210b0ec
+//   g_profile_OBJ_NUMBER           ov002 0x0210b0c8  actor 330
+//   daObjNumber_c_classInit               ov002 0x020f0d90, installs 0x0210b0ec
 //   _ZTV15InvisibleSecret      ov002 0x0210b0ec, RTTI 13daObjNumber_c
 //
 // So the six src files spelled _ZN15InvisibleSecret* are NUMBER'S methods and
@@ -97,9 +97,9 @@
 // two shadow classes are shaped DIFFERENTLY, which is exactly the shape of the
 // MSVC destructor-slot shift:
 //
-//   src/_ZN15InvisibleSecret6RenderEv.cpp  struct Obj { v0..v4; m(int); }
+//   src/_ZN6Number6RenderEv.cpp  struct Obj { v0..v4; m(int); }
 //       no destructor -> MSVC counts m at 5, mwcc counts it at 5. Same slot.
-//   src/_ZN11WingFeather6RenderEv.cpp      struct Sub { ~Sub(); a; b; c; f4; }
+//   src/game/actors/WingFeather/_ZN11WingFeather6RenderEv.cpp      struct Sub { ~Sub(); a; b; c; f4; }
 //       a VIRTUAL DESTRUCTOR -> MSVC folds D1/D0 into one and counts f4 at 4,
 //       while mwcc counts it at 5. One slot low against the ROM.
 //
@@ -110,44 +110,46 @@
 // numbering are served by the same array. Slot 4 and slot 5 both land on
 // Model::Render. Written down because it is the first thing to re-check if
 // either of these two ever renders wrong.
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
 extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include <cstdlib>
 
-#include "Actor.h"
+#include "dActor_c.h"
 #include "dtor_faces_cpp.h"
-#include "ActorBase.h"
+#include "fBase_c.h"
 
 extern "C" {
 /* the shared Actor/ActorBase halves, all matched arm9 bodies already in the
    build. The addresses beside each are what BOTH of this file's two ROM
    tables actually hold in that slot -- read off config/arm9/overlays/ov002/
    relocs.txt, not assumed from the shape. */
-int _ZN5Actor19BeforeInitResourcesEv(void *self);              /* 1  0x02011268 */
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a);  /* 2  0x02011244 */
-int _ZN5Actor14BeforeBehaviorEv(void *self);                   /* 7  0x02010fd4 */
-int _ZN5Actor12BeforeRenderEv(void *self);                     /* 10 0x02010f78 */
-int _ZN5Actor13OnYoshiTryEatEv(void *self);                    /* 18 0x02010160 */
-void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p);   /* 19 0x02010154 */
-int _ZN5Actor9Virtual50Ev(void *self);                         /* 20 0x0201014c */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);      /* 21 0x02010148 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);          /* 22 0x02010144 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);          /* 23 0x02010140 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);              /* 24 0x0201013c */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);              /* 25 0x02010138 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* 26 0x02010134 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* 27 0x02010130 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);      /* 28 0x0201012c */
-int _ZN5Actor16OnAimedAtWithEggEv(void *self);                 /* 29 0x02010124 */
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);              /* 1  0x02011268 */
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a);  /* 2  0x02011244 */
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);                   /* 7  0x02010fd4 */
+int _ZN8dActor_c12BeforeRenderEv(void *self);                     /* 10 0x02010f78 */
+int _ZN8dActor_c13OnYoshiTryEatEv(void *self);                    /* 18 0x02010160 */
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void *self, void *p);   /* 19 0x02010154 */
+int _ZN8dActor_c9Virtual50Ev(void *self);                         /* 20 0x0201014c */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);      /* 21 0x02010148 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);          /* 22 0x02010144 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);          /* 23 0x02010140 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);              /* 24 0x0201013c */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);              /* 25 0x02010138 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o); /* 26 0x02010134 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);     /* 27 0x02010130 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);      /* 28 0x0201012c */
+int _ZN8dActor_c16OnAimedAtWithEggEv(void *self);                 /* 29 0x02010124 */
 extern int data_02099f24[];               /* the frame phase */
 extern unsigned char data_020a4b4c;       /* the spawn spine's own step */
 const char *port_actor_class_name(unsigned id);
@@ -155,29 +157,29 @@ void port_actor_slot_decline(const char *what);  /* func_02043fdc_hostcopy.cpp *
 }
 
 static int __fastcall vsp_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall vsp_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall vsp_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 /* Slots 5, 8 and 11 are ARM tail-call veneers on the ROM (Actor's own forward
    into ActorBase's body), so the thunk calls the target directly rather than
    forwarding through the veneer's face and dropping the argument riding in
    r1 -- the bob_world/ccm convention, unchanged. */
 static void __fastcall vsp_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall vsp_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall vsp_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall vsp_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall vsp_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall vsp_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static void __fastcall vsp_pdes(void *s, void *)
-{ ((ActorBase *)s)->ActorBase::OnPendingDestroy(); }
+{ ((fBase_c *)s)->fBase_c::OnPendingDestroy(); }
 
 /* Slots 13 and 14 keep the gate-16 trap for the reason bob_world writes out at
    length: ActorBase::Virtual34/Virtual38 sit on top of the SolidHeap
@@ -204,31 +206,31 @@ static int __fastcall vsp_trap14(void *s, void *) { vsp_trap_report(s, 14); retu
    does the same. */
 
 static int __fastcall vsp_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 /* slot 19, OnTurnIntoEgg(Player &): the caller PUSHES the player, so the
    three-parameter veneer pops it. */
 static int __fastcall vsp_turn_egg(void *s, void *, void *p)
-{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+{ _ZN8dActor_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall vsp_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall vsp_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall vsp_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall vsp_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall vsp_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall vsp_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall vsp_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall vsp_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall vsp_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 static int __fastcall vsp_aimed(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 
 /* The shared half of both tables. Slot 12 is written here too: both ROM tables
    hold ActorBase::OnPendingDestroy (0x02043ac0) there, neither class overrides
@@ -271,21 +273,21 @@ extern "C" {
 void _ZN15TextureSequenceD1Ev(void *self);       /* Number      +0x124 */
 void _ZN5ModelD1Ev(void *self);                  /* both        +0x0d4 */
 void _ZN11ShadowModelD1Ev(void *self);           /* WingFeather +0x314 */
-void _ZN12WithMeshClsnD1Ev(void *self);          /* WingFeather +0x158 */
-void _ZN18MovingCylinderClsnD1Ev(void *self);    /* WingFeather +0x124 */
-void _ZN5ActorD2Ev(void *self);
+void _ZN10dBgCh_ActrD1Ev(void *self);          /* WingFeather +0x158 */
+void _ZN7dCcAc_cD1Ev(void *self);    /* WingFeather +0x124 */
+void _ZN8dActor_cD2Ev(void *self);
 
 /* NUMBER's own bodies. The four real C++ methods are faced at the foot of this
    file; D0 and the factory are C-linkage already. */
-int _ZN15InvisibleSecret13InitResourcesEv(void *self);
-int _ZN15InvisibleSecret16CleanupResourcesEv(void *self);
-int _ZN15InvisibleSecret8BehaviorEv(void *self);
-int _ZN15InvisibleSecret6RenderEv(void *self);
-int *_ZN15InvisibleSecretD0Ev(int *self);
-void *Number_Spawn(void);                        /* installs _ZTV15InvisibleSecret */
-extern unsigned char Number_SpawnInfo[];         /* ov002 0x0210b0c8 */
+int _ZN6Number13InitResourcesEv(void *self);
+int _ZN6Number16CleanupResourcesEv(void *self);
+int _ZN6Number8BehaviorEv(void *self);
+int _ZN6Number6RenderEv(void *self);
+int *_ZN6NumberD0Ev(int *self);
+void *daObjNumber_c_classInit(void);                        /* installs _ZTV15InvisibleSecret */
+extern unsigned char g_profile_OBJ_NUMBER[];         /* ov002 0x0210b0c8 */
 int _ZTV15InvisibleSecret[31];
-int _ZTV13daObjNumber_c[];    /* RTTI alias, ONE speller (_ZN15InvisibleSecretD0Ev),
+int _ZTV13daObjNumber_c[];    /* RTTI alias, ONE speller (_ZN6NumberD0Ev),
                                  not a shared placeholder -- aliased below. */
 
 /* WING_FEATHER's own bodies. CleanupResources and D0 are C-linkage .c files;
@@ -296,8 +298,8 @@ int _ZN11WingFeather16CleanupResourcesEv(void);
 int _ZN11WingFeather8BehaviorEv(void *self);
 int _ZN11WingFeather6RenderEv(void *self);
 int *_ZN11WingFeatherD0Ev(int *self);
-void *WingFeather_Spawn(void);                   /* installs _ZTV11WingFeather */
-extern unsigned char WingFeather_SpawnInfo[];    /* ov002 0x02108884 */
+void *daFeather_c_classInit(void);                   /* installs _ZTV11WingFeather */
+extern unsigned char g_profile_FEATHER[];    /* ov002 0x02108884 */
 int _ZTV11WingFeather[31];
 int _ZTV11daFeather_c[];      /* RTTI alias, ONE speller (_ZN11WingFeatherD0Ev) */
 }
@@ -323,14 +325,14 @@ int _ZTV11daFeather_c[];      /* RTTI alias, ONE speller (_ZN11WingFeatherD0Ev) 
 #pragma comment(linker, "/alternatename:?data_ov002_0210da58@@3USharedFilePtr@@A=_data_ov002_0210da58")
 
 static int __fastcall num_init(void *s, void *)
-{ return _ZN15InvisibleSecret13InitResourcesEv(s); }
+{ return _ZN6Number13InitResourcesEv(s); }
 static int __fastcall num_clean(void *s, void *)
-{ return _ZN15InvisibleSecret16CleanupResourcesEv(s); }
+{ return _ZN6Number16CleanupResourcesEv(s); }
 static int __fastcall num_behavior(void *s, void *)
-{ return _ZN15InvisibleSecret8BehaviorEv(s); }
+{ return _ZN6Number8BehaviorEv(s); }
 static int __fastcall num_render(void *s, void *)
-{ return _ZN15InvisibleSecret6RenderEv(s); }
-/* slot 16: src/_ZN15InvisibleSecretD1Ev.cpp is a real MSVC-synthesised member
+{ return _ZN6Number6RenderEv(s); }
+/* slot 16: src/_ZN6NumberD1Ev.cpp is a real MSVC-synthesised member
    destructor over a LOCAL shadow Actor/Model/TextureSequence hierarchy whose
    classes have no bodies of their own, so it is not compiled -- the gate-31
    recipe (hal/actor_classes.cpp's PeachPainting D1), the same one ONE_UP_LOGO
@@ -341,7 +343,7 @@ static int __fastcall num_render(void *s, void *)
 /* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
    the transcribed thunk that stood here (num_d1) spelled the same chain by hand. */
 static int __fastcall num_d0(void *s, void *)
-{ return (int)(size_t)_ZN15InvisibleSecretD0Ev((int *)s); }
+{ return (int)(size_t)_ZN6NumberD0Ev((int *)s); }
 
 static int __fastcall wf_init(void *s, void *)
 { return _ZN11WingFeather13InitResourcesEv(s); }
@@ -369,7 +371,7 @@ extern "C" void hal_fill_number_vtable(void)
     vt[3]  = (void *)num_clean;
     vt[6]  = (void *)num_behavior;
     vt[9]  = (void *)num_render;
-    vt[16] = (void *)hal_cppd1_InvisibleSecret;
+    vt[16] = (void *)PORT_D16(hal_cppd1_InvisibleSecret);
     vt[17] = (void *)num_d0;
     /* no slot 31: Actor-derived, not Platform-derived -- 31 slots total */
 }
@@ -382,7 +384,7 @@ extern "C" void hal_fill_wing_feather_vtable(void)
     vt[3]  = (void *)wf_clean;
     vt[6]  = (void *)wf_behavior;
     vt[9]  = (void *)wf_render;
-    vt[16] = (void *)hal_cppd1_WingFeather;
+    vt[16] = (void *)PORT_D16(hal_cppd1_WingFeather);
     vt[17] = (void *)wf_d0;
     /* no slot 31, same reason */
 }
@@ -392,20 +394,20 @@ extern "C" void hal_fill_wing_feather_vtable(void)
 // Seven of the twelve bodies are `Class::Method` .cpp definitions, so MSVC
 // mangles them off the Itanium name rather than emitting it (the IceSheet /
 // OneUpLogo case, hal/actor_classes_ccm.cpp's foot). They are faced here.
-// _ZN15InvisibleSecretD0Ev, _ZN11WingFeather16CleanupResourcesEv,
+// _ZN6NumberD0Ev, _ZN11WingFeather16CleanupResourcesEv,
 // _ZN11WingFeatherD0Ev, both factories and func_ov002_020b2c44 are already
 // C-linkage bodies -- no face.
-#include "InvisibleSecret.h"
+#include "Number.h"
 #include "WingFeather.h"
 extern "C" {
-int _ZN15InvisibleSecret13InitResourcesEv(void *self)
-{ return ((InvisibleSecret *)self)->InvisibleSecret::InitResources(); }
-int _ZN15InvisibleSecret16CleanupResourcesEv(void *self)
-{ return ((InvisibleSecret *)self)->InvisibleSecret::CleanupResources(); }
-int _ZN15InvisibleSecret8BehaviorEv(void *self)
-{ return ((InvisibleSecret *)self)->InvisibleSecret::Behavior(); }
-int _ZN15InvisibleSecret6RenderEv(void *self)
-{ return ((InvisibleSecret *)self)->InvisibleSecret::Render(); }
+int _ZN6Number13InitResourcesEv(void *self)
+{ return ((Number *)self)->Number::InitResources(); }
+int _ZN6Number16CleanupResourcesEv(void *self)
+{ return ((Number *)self)->Number::CleanupResources(); }
+int _ZN6Number8BehaviorEv(void *self)
+{ return ((Number *)self)->Number::Behavior(); }
+int _ZN6Number6RenderEv(void *self)
+{ return ((Number *)self)->Number::Render(); }
 int _ZN11WingFeather13InitResourcesEv(void *self)
 { return ((WingFeather *)self)->WingFeather::InitResources(); }
 int _ZN11WingFeather8BehaviorEv(void *self)

@@ -23,7 +23,7 @@ void Player::InitBalloonMario()
 
     func_ov002_020bda48(((char*)this));
     mIsBalloon = 1;
-    unk_6c0 = 0x258;
+    mBalloonTimer = 0x258;
     _ZN6Player11ChangeStateERNS_5StateE(((char*)this), &data_ov002_0211028c);
     func_ov002_020bd9ec(((char*)this), 0x30);
     func_ov002_020c43c4(((char*)this), 2);

@@ -328,14 +328,14 @@ FIXTURES = [
     ("__ZN10FaderColor11AdvanceFadeEv", "?AdvanceFade@FaderColor@@QAEHXZ",
      "DROPPED"),
     ("__ZN5Enemy16InitEnemyStandardEjRK7Vector3",
-     "?InitEnemyStandard@Enemy@@QAEXIABUVector3@@@Z", "DROPPED"),
+     "?InitEnemyStandard@dEnemyBase_c@@QAEXIABUVector3@@@Z", "DROPPED"),
     # -- the three the original prove.py pinned, all still catchable
-    ("__ZN6Player7TryGrabER5Actor", "?TryGrab@Player@@QAE_NAAUActor@@@Z",
+    ("__ZN6Player7TryGrabER8dActor_c", "?TryGrab@Player@@QAE_NAAUActor@@@Z",
      "DROPPED"),
     ("__ZN14BlendModelAnim7SetAnimER8SharedFilePtr",
      "?SetAnim@BlendModelAnim@@QAEXAAUSharedFilePtr@@@Z", "DROPPED"),
     ("__ZN8Platform15KillByMegaCharER6Player",
-     "?KillByMegaChar@Platform@@QAEXAAUPlayer@@@Z", "DROPPED"),
+     "?KillByMegaChar@dBgActor_c@@QAEXAAUPlayer@@@Z", "DROPPED"),
     # -- the OTHER direction: thiscall left, flat right (SolidHeapAllocator)
     ("?Allocate@SolidHeapAllocator@@QAEPAXIH@Z",
      "__ZN18SolidHeapAllocator8AllocateEji", "SHIFTED"),
@@ -347,7 +347,7 @@ FIXTURES = [
     ("__ZN2GX12SetBankForBGEt", "?SetBankForBG@GX@@YAXG@Z", None),
     ("?ChangeState@Player@@QAEHAAUState@1@@Z",
      "?ChangeState@PlayerChangeStateFace@@QAEHAAUState@1@@Z", None),
-    ("?data_02082128@@3UM48@@A", "_data_02082128", None),   # data bridge
+    ("?IDENTITY_MATRIX4X3@@3UM48@@A", "_data_02082128", None),   # data bridge
     ("__ZTV9FaderWipe", "??_7HalFaderWipe@@6B@", None),     # vftable bridge
     ("_port_crash_dir_get", "_port_crash_dir_get_stub", None),  # flat/flat
     # -- a virtual thiscall is still a thiscall (the UAE forms)

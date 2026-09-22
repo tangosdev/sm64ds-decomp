@@ -1,8 +1,6 @@
-// NONMATCHING: different op / idiom (div=34). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 extern void _ZN5Sound12PlayBank2_2DEj(unsigned int);
 
+#pragma opt_strength_reduction off
 void func_ov006_02103ac0(char *c)
 {
     int i;
@@ -13,7 +11,7 @@ void func_ov006_02103ac0(char *c)
     if (*(short *)(c + 0x566c) > 0) return;
     *(unsigned short *)(c + 0x566c) = 0;
     for (i = 0; i < 0x30; i++) {
-        char *b = c + i * 64;
+        char *b = c + (i << 6);
         if (*(unsigned char *)(b + 0x4698) == 0) {
             *(unsigned char *)(b + 0x4698) = 1;
             *(unsigned char *)(b + 0x469a) = 1;
@@ -37,9 +35,9 @@ void func_ov006_02103ac0(char *c)
             *(unsigned char *)(c + 0x5676) = (unsigned char)(i + 1);
             if (*(unsigned short *)(c + 0x5670) != 0) {
                 _ZN5Sound12PlayBank2_2DEj(0x19d);
-            } else {
-                *(unsigned short *)(c + 0x5670) += 1;
+                return;
             }
+            *(unsigned short *)(c + 0x5670) += 1;
             return;
         }
     }

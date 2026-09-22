@@ -118,8 +118,8 @@ port_scene_after_behavior, port_scene_after_render and
 port_scene_on_heap_created, which dispatch STRAIGHT TO EACH VENEER'S TARGET
 with both arguments. Slots 2, 8 and 11 of the Stage table take those three
 faces. The corresponding src veneer TUs must NOT be seated: measured, the only
-thing src/_ZN5Scene18AfterInitResourcesEj.cpp still wants is the C name
-__ZN12ActorDerived18AfterInitResourcesEj, so it is one line from "linking" --
+thing src/_ZN8dScene_c18AfterInitResourcesEj.cpp still wants is the C name
+__ZN7dBase_c18AfterInitResourcesEj, so it is one line from "linking" --
 and linking it would install a `void f(void)` that reads the receiver and the
 vfSuccess code off a stack nobody pushed. It stays out on purpose.
 
@@ -154,8 +154,13 @@ from a mode the port never entered.
       screen to latch it, and port_level_boot_target() is the seam.
   data_0209f264 = SM64DS_ENTRANCE    data_0209f264 = data_0209f268
       SAME SHAPE. data_0209f268 is the entrance the previous scene chose.
-  data_0209f220 = SM64DS_STAR_FILTER data_0209f220 = data_0209f1f0
-      SAME SHAPE. data_0209f1f0 is the game-mode byte.
+  data_0209f220 = data_0209f1f0      data_0209f220 = data_0209f1f0
+      THE ROM'S OWN LINE NOW, after the 0.4.1 patch. data_0209f1f0 is the act
+      the level change staged and the star select's own output
+      (src/_ZN12dScStarSel_c8BehaviorEv.cpp:147). This used to read
+      SM64DS_STAR_FILTER unconditionally and so threw the player's chosen act
+      away on every course entry. SM64DS_STAR_FILTER now seats the PENDING act
+      once, on the first stage boot, exactly as SM64DS_ENTRANCE does above it.
   data_0209f344 = &VS_STAR_SPAWN_    data_0209f344 = &data_02075720[
     ORDERS[data_020a1040 % 6][0]       func_0203dad4() % 6]
       TRUE DUPLICATE of the ROM's tail block, and the comment at
@@ -280,7 +285,7 @@ name; "none" means no writer exists anywhere in the port.
                                     InitResources:201 does it). It used to say
                                     "none", and that was the infinite death
                                     loop: the Player's own level-enter step
-                                    (src/func_ov002_020c75f0.c:29) restores full
+                                    (src/actors/Player.cpp:29) restores full
                                     health when this byte is 1 or 2, and it read
                                     0 every entry, so a death respawned with the
                                     health it died with and died again. The same
@@ -470,8 +475,8 @@ every lane's bucket counts mid-stage.
 port/slice_w8a.txt's blocked list is also stale in the direction of pessimism.
 It rules Stage::CleanupResources blocked on "the storage the fader closure
 needs -- _ZTV9FaderWipe, the table hal/fader_wipes.cpp stages by hand, and
-_ZN5ColorD1Ev". Measured today, CleanupResources wants SIX symbols and neither
-_ZTV9FaderWipe nor _ZN5ColorD1Ev is among them (section 5). The fader
+_ZN10FaderColorD2Ev". Measured today, CleanupResources wants SIX symbols and neither
+_ZTV9FaderWipe nor _ZN10FaderColorD2Ev is among them (section 5). The fader
 dependency is real but it arrives through _ZN9FaderWipeD1Ev, one level down.
 
 
@@ -572,7 +577,7 @@ CALLEES (9) -- matched TUs that exist in src/ and are on no active slice:
                              CLOSED by lane SL0: /alternatename onto
                              ??_7HalFaderWipe@@6B@, the two tables compared
                              against the ROM record word for word first
-    _ZN5ColorD1Ev            WRONG ROW, and it was wrong when written. This
+    _ZN10FaderColorD2Ev            WRONG ROW, and it was wrong when written. This
                              is on port/slice_ov007.txt:678 and has been in
                              the image throughout (walk_window.map:9986).
                              Adding it to a slice is an LNK2005, not a gain
@@ -618,7 +623,7 @@ Two of those are CleanupResources-only, so SLOT 0's OWN NUMBER IS TWENTY-ONE:
                NEIGHBOURS (0x628/0x62c/0x630/0x634) are already on line 44 of
                port/ov001_syms.txt. This is two names on an existing line in a
                file this lane does not own.
-    2 fader    _ZTV9FaderWipe and _ZN5ColorD1Ev, under FaderWipe::FaderWipe
+    2 fader    _ZTV9FaderWipe and _ZN10FaderColorD2Ev, under FaderWipe::FaderWipe
                and FaderWipe::~FaderWipe
 
 RE-MEASURED 2026-08-16 AGAINST 17c0cf11e (run link60, lane SL0): BASE B IS
@@ -632,7 +637,7 @@ FIVE CLOSED SINCE THE 21, and four of them are lane SL0's own work: the
 FaderWipe::LoadAndSetFile face and the _ZTV9FaderWipe alias (both
 hal/fader_wipes.cpp), and data_ov001_020ad620 / data_ov001_020ad624
 (port/ov001_syms.txt). The fifth is this section's own overcount, which that
-lane caught: _ZN5ColorD1Ev was never a blocker. It is on
+lane caught: _ZN10FaderColorD2Ev was never a blocker. It is on
 port/slice_ov007.txt:678 and has been in the image all along, so the CALLEES
 list below is wrong to carry it.
 
@@ -955,7 +960,7 @@ THE CHAIN, end to end, every link read out of src/ or port/hal/:
 
   1. Seated slot 7 runs Scene::BeforeBehavior on the Stage EVERY FRAME. That
      function carries two ActorBase::MarkForDestruction(self) calls.
-  2. src/_ZN9ActorBase18MarkForDestructionEv.cpp is not deferred bookkeeping.
+  2. src/_ZN7fBase_c18MarkForDestructionEv.cpp is not deferred bookkeeping.
      It sets shouldBeKilled and then calls OnPendingDestroy() straight through
      the vptr -- slot 12. So either edge landed on st_trap and aborted.
   3. EDGE A IS DEAD. It is gated on data_0209f1e0, and no linked TU writes
@@ -1120,7 +1125,7 @@ SL0's own alias, described one section above where the wall is written down:
   * HalFaderWipe (hal/fader_wipes.cpp) is vptr 0x00, currInterp 0x04, speed
     0x08, color 0x0c, unk0e 0x0e, model[0x50] 0x10. That is 0x60 bytes, which
     is the stride Stage::InitResources passes func_02073470(7, 0x60, 8, ...),
-    and src/engine/fader/_ZN9FaderWipeC1Ev.c declares the identical struct.
+    and src/engine/fader/_ZN9FaderWipeC1Ev.cpp declares the identical struct.
   * that ctor's last store is `this->vtable = _ZTV9FaderWipe`, and after SL0's
     /alternatename:__ZTV9FaderWipe=??_7HalFaderWipe@@6B@ that symbol IS the
     host table. A FaderWipe the ROM constructs on the game heap therefore
@@ -1214,7 +1219,7 @@ off) and every resolved address. The short form:
          (DELETED by lane LK4) /alternatename:__ZN4Heap10SetDefaultEv=?SetDefault@Heap@@QAEHXZ
      The RHS is __thiscall and takes its receiver in ECX; every C caller of the
      LHS passes it on the stack (RestoreFromTemporary:11,
-     SetupSolidHeapAsDefault:18, func_ov007_020cc2cc:49 and :53,
+     SetupSolidHeapAsDefault:18, _ZN9dScDSMT_c8BehaviorEv:49 and :53,
      InitResources:234). The body is `int old = G; G = (int)this; return old`,
      so it writes the default-heap pointer from a register nobody set, and the
      RESTORE half of InitResources' pair is mis-bridged too, so the default
@@ -1393,9 +1398,9 @@ spell __ZN4Heap10SetDefaultEv as flat C with the receiver on the stack, against
 a __thiscall definition:
 
   LINKED TODAY, so the bug is live now and not only under a seat
-    src/_ZN4Heap20RestoreFromTemporaryEv.c            1 site  (:11)
-    src/_ZN4Heap23SetupSolidHeapAsDefaultEjPS_i.c     1 site  (:18)
-    src/func_ov007_020cc2cc.c                         2 sites (:49, :53)
+    src/_ZN4Heap20RestoreFromTemporaryEv.cpp            1 site  (:11)
+    src/_ZN4Heap23SetupSolidHeapAsDefaultEjPS_i.cpp     1 site  (:18)
+    src/_ZN9dScDSMT_c8BehaviorEv.cpp                         2 sites (:49, :53)
   NOT COMPILED TODAY, so each is a lane-shaped tripwire rather than a bug
     src/func_02034fbc.c                               4 sites (:22, :27,
                                                               :31, :33)
@@ -1494,7 +1499,7 @@ rather than inferred from the ActorBase slot order:
     from:0x02092204 kind:load to:0x020236f0 module:main   slot 17
 
 and config/arm9/symbols.txt puts a matched TU on each destination
-(_ZN5Stage16CleanupResourcesEv line 1084, _ZN5StageD2Ev 973, _ZN5StageD0Ev
+(_ZN5Stage16CleanupResourcesEv line 1084, _ZN5StageD1Ev 973, _ZN5StageD0Ev
 974). port/slice_gate213.txt is the enrolment; hal/stage_bridges.cpp is the
 seat.
 
@@ -2165,7 +2170,7 @@ Traced under cdb (breakpoints, f = the slot-6 thunk's own counter):
                                    nothing pending, so it did nothing
     SETSCENE  f=80 id=3            from ?Behavior@Stage@@QAEHXZ+0x2a9
     A_BOOT    f=80 p110=-1         level 19 up
-    MFD_STAGE f=111 pend=3         from _ZN5Scene14BeforeBehaviorEv+0xe1
+    MFD_STAGE f=111 pend=3         from _ZN8dScene_c14BeforeBehaviorEv+0xe1
     FATAL: Stage vtable slot 3 (CleanupResources) is not hosted
 
 The two middle rows are the mechanism. hal/level_change.cpp's
@@ -2572,7 +2577,7 @@ for the end of a declaration AFTER counting the depth of the character it was
 looking at, so an INLINE body's opening `{` incremented the counter instead of
 terminating the declaration, and every virtual after the first inline one in
 that class became invisible. It hid exactly one row --
-src/_ZN11WingFeather6RenderEv.cpp's `struct Sub`, `virtual ~Sub() {}` then four
+src/game/actors/WingFeather/_ZN11WingFeather6RenderEv.cpp's `struct Sub`, `virtual ~Sub() {}` then four
 more -- and what found it was cross-checking the dispatch census against the
 sweep: five dispatching TUs also spell a virtual destructor and only four of
 them were in the list. A sweep is only as good as the thing that contradicts it.
@@ -2595,7 +2600,7 @@ out with the index the host compiled. There are 501. All but twenty are
 local shadow classes with plain virtuals, which count in ROM/Itanium numbering
 and land correctly on the ROM-ordered tables. The twenty that matter:
 
-    Heap::ResizeToFit                 idx 14   src/_ZN4Heap11ResizeToFitEv.c
+    Heap::ResizeToFit                 idx 14   src/_ZN4Heap11ResizeToFitEv.cpp
     CylinderClsn::Process             idx 1,2  (six sites)
     MeshColliderBase carry trio       idx 9,10,11
     FaderBrightness setters+predicate idx 4,5  (six sites)
@@ -2607,7 +2612,7 @@ and land correctly on the ROM-ordered tables. The twenty that matter:
 
 TWO OF THOSE WERE LIVE DEFECTS AND ARE FIXED HERE.
 
-FIRST, Heap. src/_ZN4Heap11ResizeToFitEv.c declares the ROM's fifteen-virtual
+FIRST, Heap. src/_ZN4Heap11ResizeToFitEv.cpp declares the ROM's fifteen-virtual
 Heap with `virtual ~Heap()` at the head, and its one line of body is a virtual
 `VResizeToFit()`. MSVC compiled that to
 
@@ -2619,7 +2624,7 @@ and hal/heap_vtable.cpp's _ZTV13ExpandingHeap is ROM-ordered sixteen slots:
 index 14 is VGetNodeID and VResizeToFit is 15. So the host's ResizeToFit never
 resized anything and returned the heap's NODE ID instead, which is a plausible
 non-zero number, so the `if (!result)` rescue path never fired either. It is
-reached from _ZN9ActorBase9Virtual34Ejj at three sites (:57, :116, :123)
+reached from _ZN7fBase_c9Virtual34Ejj at three sites (:57, :116, :123)
 through slot 13 of _ZTV5Actor, which hal/lk4_solidheap_seat.cpp seats. Both
 words are zero-argument __fastcall thunks, so nothing was corrupted -- this one
 is silently wrong rather than fatal, which is why nothing had caught it.
@@ -2629,7 +2634,7 @@ other end. include/CylinderClsn.h declares ~CylinderClsn then GetPos (ROM slot
 2) then GetOwnerID (ROM slot 3), and CylinderClsn::Process is header-compiled
 and dispatches both on every node of the active list:
 
-    ?Process@CylinderClsn@@SAXXZ
+    ?Process@dCc_c@@SAXXZ
       call dword ptr [eax+4]          <- index 1, the DELETING DESTRUCTOR
       call dword ptr [eax+8]          <- index 2, GetPos
 
@@ -2699,7 +2704,7 @@ port dispatches is MSVC-ORDERED, so the two skews cancel.
                 keeps slots 0..15 in agreement and confines this to the tail.
                 LATENT, not clean: seat one of those slots through the class
                 and it becomes the Heap defect.
-  the fourteen thunk-shape TUs   _ZThn80_* and func_020375b0/5c0/780c/781c/
+  the fourteen thunk-shape TUs   _ZThn80_* and _ZThn16_N9dBgCh_GndD0Ev/5c0/780c/781c/
                 d84/d94/da4/db4 declare Base1/Base2/Derived purely so mwccarm
                 emits a this-adjusting thunk. They contain no call at all;
                 twenty-eight of the fifty-three are these.

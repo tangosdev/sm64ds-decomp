@@ -44,9 +44,9 @@ extern "C" {
 int func_ov080_02124208(void *c);
 void func_ov080_021243d8(char *c);
 /* engine faces Behavior calls; all in the map */
-void _ZN5Actor19MakeVanishLuigiWorkER12CylinderClsn(void *self, void *cyl);
-void _ZN12CylinderClsn5ClearEv(void *c);
-void _ZN12CylinderClsn6UpdateEv(void *c);
+void _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c(void *self, void *cyl);
+void _ZN5dCc_c5ClearEv(void *c);
+void _ZN5dCc_c6UpdateEv(void *c);
 
 /* the six state functions, table order; all matched src */
 void func_ov080_02123fcc(char *c);   /* state 0 */

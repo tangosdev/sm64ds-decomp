@@ -49,7 +49,7 @@
 # TWO DECOMP-SIDE OBSERVATIONS, recorded so they are not re-derived as
 # mysteries, the way run mg7 lane L370's row was:
 #   - func_ov030_02113324 (0x2e8 bytes) has NO delink block in
-#     config/arm9/overlays/ov030/delinks.txt, but src/func_ov030_02113324.cpp
+#     config/arm9/overlays/ov030/delinks.txt, but src/actors/daMky_c.cpp
 #     exists and is a real body. It costs the port nothing -- the port slices a
 #     src file and does not need the block -- so it is in this slice.
 #   - func_ov030_021136b0 (0x3d0 bytes) has neither a delink block nor a src
@@ -67,8 +67,8 @@
 # from this list, because a host copy defines the same symbol and listing both
 # would be an LNK2005.
 #
-#   src/func_ov030_02114170.cpp   -> unmatched/Ukiki_StateEnter.cpp
-#   src/func_ov030_02114134.cpp   -> unmatched/Ukiki_StateTick.cpp
+#   src/actors/daMky_c.cpp   -> unmatched/Ukiki_StateEnter.cpp
+#   src/actors/daMky_c.cpp   -> unmatched/Ukiki_StateTick.cpp
 #     Both are mwcc POINTER-TO-MEMBER dispatch on a deliberately incomplete
 #     class -- `struct C { char pad[0x3a4]; PMF *pp; };`, no base, no virtuals
 #     -- so mwcc's PMF is the ROM's own 8-byte {function, delta} pair and MSVC's
@@ -76,11 +76,11 @@
 #     BabyPenguin six-cell shape exactly (port/unmatched/BabyPenguin_StateEnter
 #     .cpp and _StateTick.cpp), one cell wider: ELEVEN cells, each two pairs
 #     (`S16 { S8 lo, hi; }` in the sinit's own declaration), enter at pp+0 and
-#     tick at pp+1. src/func_ov030_021141a8.c is the cell-pointer installer --
+#     tick at pp+1. src/actors/daMky_c.cpp is the cell-pointer installer --
 #     it writes `*(Item16 **)(self + 0x3a4) = &data_ov030_02115e0c[idx]` -- and
 #     it is UNCHANGED and stays in this slice.
 #
-#   src/_ZN13RollingLogTtm8BehaviorEv.cpp -> unmatched/Ukiki_Behavior.cpp
+#   src/actors/daMky_c.cpp -> unmatched/Ukiki_Behavior.cpp
 #     THE SHADOW-CLASS SLOT DEFECT, and it is the stack-unbalancing half rather
 #     than the merely-wrong-body half. The matched src models the ModelAnim at
 #     this+0xd4 with a local FOUR-virtual shadow `struct VObj` and calls `v3()`,
@@ -91,30 +91,30 @@
 #     returning `ret 4` off a stack this caller never pushed. That is the exact
 #     pair of failures port/unmatched/MgMemory2_ShadowSlot_020c06dc.cpp
 #     measured. WHICH CLASS THE OBJECT IS was established from the CONSTRUCTOR
-#     and not guessed from the call: UkikiStar_Spawn / UkikiThief_Spawn both run
+#     and not guessed from the call: daMky_c_classInit_MONKEY_STAR / daMky_c_classInit_MONKEY_THIEF both run
 #     `_ZN9ModelAnimC1Ev(p + 0xd4)`, so +0xd4 is a ModelAnim, whose UpdateVerts
 #     is MSVC slot 2 under include/ModelAnim.h. The dispatch stays VIRTUAL in
 #     the host copy, for MgFlower_ModelRender_020c3bf4.cpp's reason.
 #
-#   src/_ZN13RollingLogTtmD1Ev.cpp -> spelled INLINE in the fill (slot 16)
+#   src/actors/daMky_c.cpp -> spelled INLINE in the fill (slot 16)
 #     A real MSVC-synthesised destructor over a local shadow class with no
 #     vtable store of its own -- the MotherPenguin / OneUpLogo / BabyPenguin
 #     shape, which gate 191 and gate 193 both keep OUT of the slice for the same
 #     reason (MSVC mangles `RollingLogTtm::~RollingLogTtm` as
-#     ?1RollingLogTtm@@UAE@XZ, never as the Itanium _ZN13RollingLogTtmD1Ev the
+#     ?1RollingLogTtm@@UAE@XZ, never as the Itanium _ZN7daMky_cD1Ev the
 #     vtable slot needs). The chain is spelled directly in the thunk, HIGH
 #     ADDRESS FIRST, from the src file's own member list.
 #
 # THE TWO SIBLING SHADOW CLASSES IN THIS SLICE ARE NOT DEFECTS, and the
 # distinction is the whole rule -- a sweep that flags every shadow gets it
 # wrong (MgMemory2_ShadowSlot_020c06dc.cpp's own closing paragraph):
-#   src/func_ov030_02111350.cpp  (UkikiCage's Render, ROM slot 9) and
-#   src/func_ov080_02127124.cpp  (RollingLogTtm's Render, ROM slot 9)
+#   src/_ZN13daObjHmBskt_c6RenderEv.cpp  (UkikiCage's Render, ROM slot 9) and
+#   src/_ZN13daObjMaruta_c6RenderEv.cpp  (RollingLogTtm's Render, ROM slot 9)
 # both model a plain Model with a SIX-virtual shadow and call `m(0)`, index 5.
 # hal/cxxname_bridge.cpp:511 DUAL-FILLS `_ZTV5Model[5] = mv_render` for exactly
 # this, so index 5 on the host is Render too and the shadow's numbering is
 # right. Verified by reading that line, not assumed. Neither object is a
-# ModelAnim: func_ov030_021111a0.c (UkikiCage's D1) and the Maruta dtors both
+# ModelAnim: _ZN13daObjHmBskt_cD1Ev.c (UkikiCage's D1) and the Maruta dtors both
 # run `_ZN5ModelD1Ev(t + 0xd4)`, so both +0xd4 members are plain Models.
 #
 # ===========================================================================
@@ -128,8 +128,8 @@
 #
 # TWO ov080 LINES COME FROM THE VTABLE, not from a link failure.
 # RollingLogTtm's table takes two slots from ov080 rather than from arm9:
-#   slot  9 (Render)             0x02127124  func_ov080_02127124
-#   slot 27 (OnHitByMegaChar)    0x02127058  func_ov080_02127058
+#   slot  9 (Render)             0x02127124  _ZN13daObjMaruta_c6RenderEv
+#   slot 27 (OnHitByMegaChar)    0x02127058  _ZN13daObjMaruta_c15OnHitByMegaCharER6Player
 # Both resolve `module:overlays(78,80)` in relocs.txt, and level 22's roster
 # loads ov080 and not ov078, so the ov080 spelling is the live one.
 #
@@ -190,66 +190,29 @@
 # all recorded this; it is recorded a fourth time here because the failure it
 # produces names the symbols and not the cause.
 
-src/func_ov030_021111a0.c
-src/func_ov030_021111ec.c
+src/_ZN13daObjHmBskt_cD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN13daObjHmBskt_cD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN13daObjHmBskt_cD0Ev.cpp
 src/func_ov030_0211124c.cpp
-src/func_ov030_0211130c.c
-src/func_ov030_02111350.cpp
-src/func_ov030_02111384.cpp
-src/func_ov030_02111410.cpp
-src/UkikiCage_Spawn.c
-src/_ZN9UkikiCageD1Ev.c
-src/_ZN9UkikiCageD0Ev.c
-src/_ZN9UkikiCage16CleanupResourcesEv.c
-src/_ZN9UkikiCage8BehaviorEv.c
-src/_ZN9UkikiCage13InitResourcesEv.c
-src/RollingLogTtm_Spawn.c
-src/_ZN13RollingLogTtmD0Ev.c
-src/func_ov030_0211172c.c
-src/func_ov030_02111734.c
-src/func_ov030_02111890.c
-src/func_ov030_02111908.c
-src/func_ov030_02111a00.c
-src/func_ov030_02111b20.c
-src/func_ov030_02111bc4.c
-src/func_ov030_02111dd0.cpp
-src/func_ov030_02111ea4.cpp
-src/func_ov030_02111f6c.cpp
-src/func_ov030_02112094.cpp
-src/func_ov030_021122b0.cpp
-src/func_ov030_021123a4.cpp
-src/func_ov030_02112400.cpp
-src/func_ov030_02112560.c
-src/func_ov030_02112578.c
-src/func_ov030_02112a14.c
-src/func_ov030_02112a84.c
-src/func_ov030_02112c14.c
-src/func_ov030_02112da0.c
-src/func_ov030_02112ff8.c
-src/func_ov030_02113094.c
-src/func_ov030_021132d4.cpp
-src/func_ov030_02113324.cpp
-src/func_ov030_0211360c.cpp
-src/func_ov030_02113a80.cpp
-src/func_ov030_02113b38.cpp
-src/func_ov030_02113be8.c
-src/func_ov030_02113d20.c
-src/func_ov030_02113fd8.c
-src/func_ov030_02113ff0.cpp
-src/func_ov030_02114124.c
-src/func_ov030_021141a8.c
-src/_ZN13RollingLogTtm16CleanupResourcesEv.c
-src/_ZN13RollingLogTtm16OnPendingDestroyEv.c
-src/_ZN13RollingLogTtm6RenderEv.cpp
-src/_ZN13RollingLogTtm13InitResourcesEv.cpp
-src/func_ov030_021145d4.c
-src/UkikiStar_Spawn.c
-src/UkikiThief_Spawn.c
+src/_ZN13daObjHmBskt_c16CleanupResourcesEv.cpp
+src/_ZN13daObjHmBskt_c6RenderEv.cpp
+src/_ZN13daObjHmBskt_c8BehaviorEv.cpp
+src/_ZN13daObjHmBskt_c13InitResourcesEv.cpp
+src/d_a_obj_hm_bskt.c
+# QUARANTINED at the main->port sync (lane SYNC5, the wave-7 fold merge): MSVC
+# refuses main's shape for this TU (C2556 and C2371, one free function
+# declared with two different return types in one TU). It is a decomp-side
+# item, not a port one: see runs/link100/out/SYNC5/decomp_side.md. The row
+# returns when main lands the fix.
+#src/actors/daMky_c.cpp
+src/d_a_obj_hm_maruta.c
+src/d_a_mky_monkey_star.c
+src/d_a_mky_monkey_thief.c
 src/__sinit_ov030_0211484c.c
 src/__sinit_ov030_021148b8.c
 src/__sinit_ov030_02114924.c
-src/func_ov080_02127124.cpp
-src/func_ov080_02127058.c
+src/_ZN13daObjMaruta_c6RenderEv.cpp
+src/_ZN13daObjMaruta_c15OnHitByMegaCharER6Player.cpp
 src/func_ov080_021270dc.c
 src/func_ov080_0212714c.c
 src/func_ov080_021274ac.c

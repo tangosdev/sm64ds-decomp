@@ -8,9 +8,9 @@
 
 /* the nine missing-body faces are declared by the seat above this
    include (VS_FACE), so they are not re-declared here */
-void _ZN5Scene14GraphCallback0Ev(void);
-void _ZN5Scene14GraphCallback1Ev(void);
-void _ZN5Scene14GraphCallback3Ev(void);
+void _ZN8dGraph_c10callback_c14GraphCallback0Ev(void);
+void _ZN8dGraph_c10callback_c14GraphCallback1Ev(void);
+void _ZN8dGraph_c10callback_c14GraphCallback3Ev(void);
 void func_ov075_02114010(void);
 void func_ov075_021140e4(void);
 void func_ov075_021141b8(void);
@@ -24,8 +24,8 @@ void func_ov075_02114560(void);
 void func_ov075_0211473c(void);
 void func_ov075_021147d4(void);
 void func_ov075_02114890(void);
-void func_ov075_02115e1c(void);
-void func_ov075_02116040(void);
+void _ZN10dScEntry_c6icon_c8BehaviorEv(void);
+void _ZN10dScEntry_c15graphCallback_c14GraphCallback2Ev(void);
 void func_ov075_02116e44(void);
 void func_ov075_02116ebc(void);
 void func_ov075_02116f40(void);
@@ -71,9 +71,9 @@ void func_ov075_02119d78(void);
 void func_ov075_0211b1cc(void);
 void func_ov075_0211b260(void);
 void port_vs_body_0211478c(void);
-extern unsigned char data_02086e78[];
-extern unsigned char data_0208ee04[];
-extern unsigned char data_020914d4[];
+extern unsigned char _ZTI7dBase_c[];
+extern unsigned char _ZTIN8dGraph_c10callback_cE[];
+extern unsigned char _ZTI8dScene_c[];
 extern unsigned char data_02098be8[];
 extern unsigned char data_02098c98[];
 extern unsigned char data_02098dd8[];
@@ -96,7 +96,7 @@ extern unsigned char data_ov075_0211c628[];
 extern unsigned char data_ov075_0211c630[];
 extern unsigned char data_ov075_0211c638[];
 extern unsigned char data_ov075_0211c640[];
-extern unsigned char data_ov075_0211c66c[];
+extern unsigned char _ZTI9dEntObj_c[];
 extern unsigned char data_ov075_0211c6f8[];
 extern unsigned char data_ov075_0211c700[];
 extern unsigned char data_ov075_0211c718[];
@@ -143,11 +143,11 @@ extern unsigned char data_ov075_0211c8c0[];
 extern unsigned char data_ov075_0211c8c8[];
 extern unsigned char data_ov075_0211c8d0[];
 extern unsigned char data_ov075_0211c8d8[];
-extern unsigned char data_ov075_0211c8ec[];
-extern unsigned char data_ov075_0211c8f8[];
-extern unsigned char data_ov075_0211c94c[];
+extern unsigned char _ZTIN10dScEntry_c15graphCallback_cE[];
+extern unsigned char _ZTI10dScEntry_c[];
+extern unsigned char _ZTVN10dScEntry_c6icon_cE[];
 extern unsigned char data_ov075_0211c968[];
-extern unsigned char data_ov075_0211ca3c[];
+extern unsigned char _ZTVN10dScEntry_c15graphCallback_cE[];
 extern unsigned char data_ov075_0211d34c[];
 extern unsigned char data_ov075_0211d354[];
 extern unsigned char data_ov075_0211d35c[];
@@ -170,7 +170,7 @@ static const VsPatch vs_data_patch[] = {
     { data_ov075_0211c630, 0x0, (void *)func_ov075_02114890 },  /* 0x0211c630 -> ov075 0x02114890 */
     { data_ov075_0211c638, 0x0, (void *)func_ov075_021140e4 },  /* 0x0211c638 -> ov075 0x021140e4 */
     { data_ov075_0211c640, 0x0, (void *)func_ov075_0211473c },  /* 0x0211c640 -> ov075 0x0211473c */
-    { data_ov075_0211c66c, 0x8, (void *)data_02086e78 },  /* 0x0211c674 -> arm9 0x02086e78 (data) */
+    { _ZTI9dEntObj_c, 0x8, (void *)_ZTI7dBase_c },  /* 0x0211c674 -> arm9 0x02086e78 (data) */
     { data_ov075_0211c6f8, 0x0, (void *)func_ov075_02119918 },  /* 0x0211c6f8 -> ov075 0x02119918 */
     { data_ov075_0211c700, 0x0, (void *)func_ov075_02119d3c },  /* 0x0211c700 -> ov075 0x02119d3c */
     { data_ov075_0211c718, 0x0, (void *)func_ov075_021194e4 },  /* 0x0211c718 -> ov075 0x021194e4 */
@@ -217,19 +217,19 @@ static const VsPatch vs_data_patch[] = {
     { data_ov075_0211c8c8, 0x0, (void *)func_ov075_021199d8 },  /* 0x0211c8c8 -> ov075 0x021199d8 */
     { data_ov075_0211c8d0, 0x0, (void *)func_ov075_02119d78 },  /* 0x0211c8d0 -> ov075 0x02119d78 */
     { data_ov075_0211c8d8, 0x0, (void *)func_ov075_02119640 },  /* 0x0211c8d8 -> ov075 0x02119640 */
-    { data_ov075_0211c8ec, 0x8, (void *)data_0208ee04 },  /* 0x0211c8f4 -> arm9 0x0208ee04 (data) */
-    { data_ov075_0211c8f8, 0x8, (void *)data_020914d4 },  /* 0x0211c900 -> arm9 0x020914d4 (data) */
-    { data_ov075_0211c94c, 0x0, (void *)func_ov075_02115e1c },  /* 0x0211c94c -> ov075 0x02115e1c */
-    { data_ov075_0211c94c, 0x4, (void *)func_ov075_02115bcc },  /* 0x0211c950 -> ov075 0x02115bcc */
+    { _ZTIN10dScEntry_c15graphCallback_cE, 0x8, (void *)_ZTIN8dGraph_c10callback_cE },  /* 0x0211c8f4 -> arm9 0x0208ee04 (data) */
+    { _ZTI10dScEntry_c, 0x8, (void *)_ZTI8dScene_c },  /* 0x0211c900 -> arm9 0x020914d4 (data) */
+    { _ZTVN10dScEntry_c6icon_cE, 0x0, (void *)_ZN10dScEntry_c6icon_c8BehaviorEv },  /* 0x0211c94c -> ov075 0x02115e1c */
+    { _ZTVN10dScEntry_c6icon_cE, 0x4, (void *)_ZN10dScEntry_c6icon_c6RenderEv },  /* 0x0211c950 -> ov075 0x02115bcc */
     { data_ov075_0211c968, 0x0, (void *)data_02098be8 },  /* 0x0211c968 -> arm9 0x02098be8 (data) */
     { data_ov075_0211c968, 0x4, (void *)data_02098c98 },  /* 0x0211c96c -> arm9 0x02098c98 (data) */
     { data_ov075_0211c968, 0x8, (void *)data_02098dd8 },  /* 0x0211c970 -> arm9 0x02098dd8 (data) */
     { data_ov075_0211c968, 0xc, (void *)data_02098ef8 },  /* 0x0211c974 -> arm9 0x02098ef8 (data) */
     { data_ov075_0211c968, 0x10, (void *)data_020990f8 },  /* 0x0211c978 -> arm9 0x020990f8 (data) */
-    { data_ov075_0211ca3c, 0x0, (void *)_ZN5Scene14GraphCallback0Ev },  /* 0x0211ca3c -> arm9 0x02018eb8 (function) */
-    { data_ov075_0211ca3c, 0x4, (void *)_ZN5Scene14GraphCallback1Ev },  /* 0x0211ca40 -> arm9 0x02018eb0 (function) */
-    { data_ov075_0211ca3c, 0x8, (void *)func_ov075_02116040 },  /* 0x0211ca44 -> ov075 0x02116040 */
-    { data_ov075_0211ca3c, 0xc, (void *)_ZN5Scene14GraphCallback3Ev },  /* 0x0211ca48 -> arm9 0x02018ea0 (function) */
+    { _ZTVN10dScEntry_c15graphCallback_cE, 0x0, (void *)_ZN8dGraph_c10callback_c14GraphCallback0Ev },  /* 0x0211ca3c -> arm9 0x02018eb8 (function) */
+    { _ZTVN10dScEntry_c15graphCallback_cE, 0x4, (void *)_ZN8dGraph_c10callback_c14GraphCallback1Ev },  /* 0x0211ca40 -> arm9 0x02018eb0 (function) */
+    { _ZTVN10dScEntry_c15graphCallback_cE, 0x8, (void *)_ZN10dScEntry_c15graphCallback_c14GraphCallback2Ev },  /* 0x0211ca44 -> ov075 0x02116040 */
+    { _ZTVN10dScEntry_c15graphCallback_cE, 0xc, (void *)_ZN8dGraph_c10callback_c14GraphCallback3Ev },  /* 0x0211ca48 -> arm9 0x02018ea0 (function) */
     { data_ov075_0211d34c, 0x0, (void *)func_ov075_0211b1cc },  /* 0x0211d34c -> ov075 0x0211b1cc */
     { data_ov075_0211d354, 0x0, (void *)func_ov075_0211b260 },  /* 0x0211d354 -> ov075 0x0211b260 */
     { data_ov075_0211d35c, 0x0, (void *)func_ov075_0211afb0 },  /* 0x0211d35c -> ov075 0x0211afb0 */

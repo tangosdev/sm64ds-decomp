@@ -7,16 +7,16 @@
 # _ZTV6Klepto / _ZTV9daJango_c, ov062 0x0211dd5c -- one address, two names (the
 # dsd emits both; D0 and D1 both store 0x0211dd5c). An Enemy subclass, 31-slot
 # table, overriding the six lifecycle slots (0/3/6/9/12/16/17). Slot 29
-# (OnAimedAtWithEgg) has a ROM body of its own, func_ov062_0211ce78, but that
+# (OnAimedAtWithEgg) has a ROM body of its own, _ZN6Klepto16OnAimedAtWithEggEv, but that
 # body carries the "recovered from vtable slot identity" GUESS marker, so it is
 # NOT enrolled and the fill keeps the shared Actor default there
-# (inferred_stub_guard stays green). Its object is 1168 bytes (Klepto_Spawn
+# (inferred_stub_guard stays green). Its object is 1168 bytes (daJango_c_classInit
 # ov062 0x0211ce80): MovingCylinderClsn at 0x110 and 0x144, WithMeshClsn at
 # 0x178, BlendModelAnim at 0x334, ShadowModel at 0x3a4.
 #
 # ---- the id, and the live spawn edge ---------------------------------------
 #
-# Klepto_SpawnInfo (ov062 0x0211dd38) has +4 halfword 0xef (239); ACTOR_SPAWN_
+# g_profile_JANGO (ov062 0x0211dd38) has +4 halfword 0xef (239); ACTOR_SPAWN_
 # TABLE[239] (arm9 0x02090c20, table base 0x02090864) points at it. It is
 # STATICALLY PLACED: the object table of level 16 (Shifting Sand Land, ov024)
 # places id 239 at (1749,1284,102); levels 25 and 43 place it too. ov062's
@@ -44,20 +44,21 @@
 # The vtable fill hal_fill_klepto_vtable and the method faces are in
 # hal/actor_classes_koopa_chuckya.cpp; the registry row is in
 # hal/actor_classes.inc.
-src/Klepto_Spawn.c
+src/d_a_jango.c
 src/_ZN6Klepto13InitResourcesEv.cpp
 # _ZN6Klepto6RenderEv.cpp is NOT here: it dispatches BlendModelAnim at +0x334
 # through a slot-5 LOCAL SHADOW, which the MSVC-ordered _ZTV14BlendModelAnim
 # routes to Virtual18 (a Model::Virtual10 fault). Host-copied in
 # port/unmatched/Klepto_Render.cpp, the ModelAnim_Renders / Whomp recipe.
-src/_ZN6Klepto16CleanupResourcesEv.c
-src/_ZN6Klepto16OnPendingDestroyEv.c
-src/_ZN6KleptoD0Ev.c
-src/_ZN6KleptoD1Ev.c
+src/_ZN6Klepto16CleanupResourcesEv.cpp
+src/_ZN6Klepto16OnPendingDestroyEv.cpp
+# RETIRED at SLICE1: body now in src/_ZN6KleptoD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN6KleptoD0Ev.cpp
+src/_ZN6KleptoD1Ev.cpp
 # the ten matched state handlers the class dispatches through (reached only via
 # the seated template table, so no link edge names them):
 src/func_ov062_0211ba84.c
-src/func_ov062_0211bd10.cpp
+src/func_ov062_0211bd10.c
 src/func_ov062_0211c594.c
 src/func_ov062_0211b880.cpp
 src/func_ov062_0211c2f4.cpp

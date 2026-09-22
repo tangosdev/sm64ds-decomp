@@ -17,19 +17,27 @@ Assertions 2 and 3 are what stop a "nothing happened, so nothing crashed"
 non-fix from passing: an egg that is never thrown, or is thrown but never
 acquires a target, never reaches slot 30 and proves nothing.
 
-WHY THERE IS A DRIVER AT ALL. Four env knobs, all off by default, all in the
+WHY THERE IS A DRIVER AT ALL. Three env knobs, all off by default, all in the
 host test layer, none of them touching game logic:
 
   SM64DS_SELFTEST_TONGUE / _ONCE  one B flick, the tongue (pre-existing)
-  SM64DS_YOSHI_SWALLOW            the tongue-to-mouth transfer the port's
-                                  frozen head animation never reaches
-                                  (pre-existing; see yoshi_egg_proof.py)
   SM64DS_SELFTEST_TONGUE_THROW    a SECOND B press. That is the throw: it
                                   enters St_YoshiPower_Init, which does
                                   func_ov002_020ed63c(mHeldObj, 1). New here --
                                   without it no test could ever reach the
                                   flight, which is why slot 30 went unmeasured.
   SM64DS_EGG_TRACE                one read-only line per egg tick
+
+This tool used to also carry SM64DS_YOSHI_SWALLOW, which made by hand the two
+writes St_YoshiPower_Main case 1 makes at body-anim frame 0xa -- exactly the
+step a played swallow does not reach (see yoshi_egg_proof.py for the full
+measurement). The knob is gone. What replaces it is arming the tongue target
+earlier: SM64DS_YOSHI_EGG_REPRO now reads 213, not 200, so the real grab lands
+on tongue-animation frame 3 (ROM start-frame table entry 8, before the
+frame-0xa transfer) instead of frame 0 (table entry 11, after it), and the
+transfer fires with no driver standing in for it. THROW_FRAME may need to
+move later by the same 13 frames the grab moved; that is a per-run tuning
+question, not part of this change.
 
 RECIPE (reproducible from a clean tree):
 
@@ -57,15 +65,19 @@ ENV = {
     "SM64DS_SELFTEST_TONGUE": "1",
     "SM64DS_SELFTEST_TONGUE_ONCE": "1",
     "SM64DS_SELFTEST_TONGUE_THROW": THROW_FRAME,
-    "SM64DS_YOSHI_EGG_REPRO": "200",
+    "SM64DS_YOSHI_EGG_REPRO": "213",
     "SM64DS_YOSHI_EGG_CLASS": "200",
     "SM64DS_YOSHI_EGG_WIN": "700",
-    "SM64DS_YOSHI_SWALLOW": "1",
     "SM64DS_EGG_TRACE": "1",
+    "SM64DS_EGG_TRIS": "1",
     "SM64DS_TRACE_STATE": "2",
     "SM64DS_RS_PROBE": "1",
+    "SM64DS_ACTOR_PROBE": "1",
+    # quiet spawner: no window, no sound, never activated
+    "SM64DS_NO_FOCUS": "1",
+    "SM64DS_VOLUME": "0",
     "SM64DS_TEST_LOCK": "1",
-    "SM64DS_TEST_LOCK_PATH": r"C:\tmp\sm64ds-test-slot\windowed_test.lock",
+    "SM64DS_TEST_LOCK_PATH": r"C:\tmp\sm64ds-test-slot\slot.lock",
     "SM64DS_TEST_LOCK_TIMEOUT": "5400",
 }
 
@@ -76,9 +88,14 @@ EGG = re.compile(r"^\[eggstate\] self=(\S+) state=(\d+) target=(\d+) hops=(\d+)"
 def run(log_path):
     env = dict(os.environ)
     env.update(ENV)
+    SI = subprocess.STARTUPINFO()
+    SI.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+    SI.wShowWindow = 7  # SW_SHOWMINNOACTIVE
+    NOCON = getattr(subprocess, "CREATE_NO_WINDOW", 0)
     with open(log_path, "wb") as fh:
         rc = subprocess.call([EXE], cwd=REPO, env=env, stdout=fh,
-                             stderr=subprocess.STDOUT)
+                             stderr=subprocess.STDOUT,
+                             creationflags=NOCON, startupinfo=SI)
     with open(log_path, "r", errors="ignore") as fh:
         return rc, fh.read()
 

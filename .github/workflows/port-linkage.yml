@@ -103,8 +103,14 @@ jobs:
       # port/CMakeLists.txt shells out to tools/srcpath.py at configure time, so
       # Python is on PATH before cmake runs. ninja from pip rather than from the
       # VS install so this does not depend on which workload the image ships.
-      - name: Ninja
-        run: python -m pip install --disable-pip-version-check ninja
+      # pefile and capstone are what the post-link guards read walk_window.exe
+      # with (facecycle_guard, pmf_guard, slot16_guard, dtor_dispatch_guard). They
+      # run as part of the link edge, and a guard that cannot import its reader
+      # refuses rather than passes, so without them the first build that reaches
+      # the link fails there: "facecycle_guard: CANNOT RUN (No module named
+      # 'pefile')". capstone is pinned to tools/requirements.txt's version.
+      - name: Ninja and the guards' readers
+        run: python -m pip install --disable-pip-version-check ninja pefile==2024.8.26 capstone==5.0.9
 
       # A cartridge-free tree must LOOK cartridge-free to the build, so fail
       # here rather than let a stray extracted/ turn this into a real build that
@@ -144,6 +150,26 @@ jobs:
       # only the discovery carries over, through GITHUB_ENV. The environment
       # variable is the SECOND gate -- without it every emitter refuses, which
       # is the behaviour that keeps a stray --link-only out of a real build.
+      # THE DEMANGLER, NAMED BEFORE THE BUILD. port/tools/facegen.py --sync
+      # reads every decorated definition's class, method, parameter list and
+      # constness out of undname.exe, and with no undname it cannot read any of
+      # them -- so all 1926 ledger rows refuse, nine minutes into the build,
+      # with a thousand lines that each look like a binding failure. That is
+      # what runs 34771733335 (2026-09-13) through 35463216993 (2026-09-19)
+      # were: facegen looked for undname only under
+      # %ProgramFiles(x86)%\Microsoft Visual Studio\2022\<edition>, and this
+      # image ships Visual Studio 18 under the other Program Files. facegen now
+      # finds it through vswhere and through the environment vcvars exports,
+      # and this step is the claim as a check -- inside the same vcvars shell
+      # the build uses, so it measures the environment facegen actually gets.
+      # It costs one process and prints the path, so the next time an image
+      # moves the tool this log says which one and where it looked.
+      - name: The demangler facegen binds with
+        shell: cmd
+        run: |
+          call "%VSINSTALL%\VC\Auxiliary\Build\vcvars32.bat" >nul || exit /b 1
+          python port\tools\facegen.py --where-undname
+
       - name: Build and link walk_window
         shell: cmd
         env:
@@ -247,6 +273,16 @@ jobs:
       # -k 0 so ninja reports every target's link instead of stopping at the
       # first, which otherwise makes which failures you see depend on
       # scheduling.
+      # smoke_heap and smoke_roots generate their faces the same way, from
+      # port/faces_sync_smoke_heap.txt and faces_sync_smoke_roots.txt, so this
+      # job has the same dependency and gets the same one-line answer. See the
+      # note on the linkage job's copy.
+      - name: The demangler facegen binds with
+        shell: cmd
+        run: |
+          call "%VSINSTALL%\VC\Auxiliary\Build\vcvars32.bat" >nul || exit /b 1
+          python port\tools\facegen.py --where-undname
+
       - name: Link the ROM-free targets
         shell: cmd
         run: |

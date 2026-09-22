@@ -6,10 +6,10 @@
 // (ArrowPathLift, both-routes owner ov091) and id 192 (PushBlock, ov002).
 //
 //   id   name                   x on L39  factory                    table
-//   151  RICKSHAW_PLATFORM_BS   12*       RickshawPlatformBs_Spawn   0x0211244c
-//   152  RICKSHAW_BS             3        RickshawBs_Spawn           0x021122a0
-//   153  STAIRS_BS               1        StairsBs_Spawn             0x0211254c
-//   156  ROTATING_PLATFORM_BS    3        func_ov047_021113bc        0x0211237c
+//   151  RICKSHAW_PLATFORM_BS   12*       daObjKm3_Kuruma_c_classInit   0x0211244c
+//   152  RICKSHAW_BS             3        daObjKm3_Kurumajiku_c_classInit           0x021122a0
+//   153  STAIRS_BS               1        daObjKm3_Dorifu_c_classInit             0x0211254c
+//   156  ROTATING_PLATFORM_BS    3        daObjKm3_Kaitendai_c_classInit        0x0211237c
 //
 // * id 151 IS NOT IN THE LEVEL'S SKIP LIST. It is a RUNTIME CHILD: the three
 // RICKSHAW_BS axles each build four RICKSHAW_PLATFORM_BS carts, so while the
@@ -24,12 +24,12 @@
 // order, with the factory install and the RTTI at vtable[-1] read out of the
 // image:
 //
-//   0x021122a0  RickshawBs_Spawn (alloc 0x330)          21daObjKm3_Kurumajiku_c
-//   0x0211237c  func_ov047_021113bc (alloc 0x320)       20daObjKm3_Kaitendai_c
-//   0x0211244c  RickshawPlatformBs_Spawn (alloc 0x320)  17daObjKm3_Kuruma_c
-//   0x0211254c  StairsBs_Spawn (alloc 0xdcc)            17daObjKm3_Dorifu_c
+//   0x021122a0  daObjKm3_Kurumajiku_c_classInit (alloc 0x330)          21daObjKm3_Kurumajiku_c
+//   0x0211237c  daObjKm3_Kaitendai_c_classInit (alloc 0x320)       20daObjKm3_Kaitendai_c
+//   0x0211244c  daObjKm3_Kuruma_c_classInit (alloc 0x320)  17daObjKm3_Kuruma_c
+//   0x0211254c  daObjKm3_Dorifu_c_classInit (alloc 0xdcc)            17daObjKm3_Dorifu_c
 //
-// and dsd's _ZTV10RickshawBs is 0x0211237c while _ZTV18RickshawPlatformBs is
+// and dsd's _ZTV20daObjKm3_Kaitendai_c is 0x0211237c while _ZTV17daObjKm3_Dorifu_c is
 // 0x0211254c -- one table LATER than the class each names. So every
 // _ZN10RickshawBs* body in src/ is ROTATING_PLATFORM_BS's and every
 // _ZN18RickshawPlatformBs* body is STAIRS_BS's. The rows below are wired by
@@ -67,13 +67,15 @@
 // hal_fill_platform_vtable (all eight destructors install ov002 0x0210ae38 as
 // the base vptr on the way out), the two ov002 intermediate bases this lane
 // hosts, and then all FOUR ov047 sinits in ROM order.
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
@@ -81,28 +83,28 @@ extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include "dsstate_seg.h"
 #include <cstdlib>
 
-#include "Actor.h"
-#include "ActorBase.h"
+#include "dActor_c.h"
+#include "fBase_c.h"
 
 extern "C" {
 /* the arm9 shared half */
-int _ZN5Actor19BeforeInitResourcesEv(void *self);              /* slot 1  */
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
-int _ZN5Actor14BeforeBehaviorEv(void *self);                   /* slot 7  */
-int _ZN5Actor12BeforeRenderEv(void *self);                     /* slot 10 */
-int _ZN5Actor13OnYoshiTryEatEv(void *self);                    /* slot 18 */
-void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
-int _ZN5Actor9Virtual50Ev(void *self);                         /* slot 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);              /* slot 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);              /* slot 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
-int _ZN5Actor16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
-void _ZN8Platform4KillEv(void *self);                              /* slot 31 */
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);              /* slot 1  */
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);                   /* slot 7  */
+int _ZN8dActor_c12BeforeRenderEv(void *self);                     /* slot 10 */
+int _ZN8dActor_c13OnYoshiTryEatEv(void *self);                    /* slot 18 */
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
+int _ZN8dActor_c9Virtual50Ev(void *self);                         /* slot 20 */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);              /* slot 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);              /* slot 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
+int _ZN8dActor_c16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
+void _ZN10dBgActor_c4KillEv(void *self);                              /* slot 31 */
 
 const char *port_actor_class_name(unsigned id);   /* hal/actor_registry */
 void port_actor_slot_decline(const char *what);   /* func_02043fdc_hostcopy.cpp */
@@ -119,56 +121,56 @@ void __sinit_ov047_021117b4(void);
 void __sinit_ov047_0211181c(void);
 
 /* ---- id 152 RICKSHAW_BS -- dsd left this class unnamed ------------------ */
-int func_ov047_02111268(void *self);       /* slot 0,  InitResources */
-int func_ov047_02111254(void *self);       /* slot 3,  CleanupResources */
-int *func_ov047_021111a0(int *self);       /* slot 16, D1 */
-int *func_ov047_021111f0(int *self);       /* slot 17, D0 */
-int *RickshawBs_Spawn(void);               /* id 152 */
-int func_ov002_020b6b38(void *self);       /* slot 6,  inherited Behavior */
-int func_ov002_020b6b10(void *self);       /* slot 9,  inherited Render */
+int _ZN21daObjKm3_Kurumajiku_c13InitResourcesEv(void *self);       /* slot 0,  InitResources */
+int _ZN21daObjKm3_Kurumajiku_c16CleanupResourcesEv(void *self);       /* slot 3,  CleanupResources */
+int *_ZN21daObjKm3_Kurumajiku_cD1Ev(int *self);       /* slot 16, D1 */
+int *_ZN21daObjKm3_Kurumajiku_cD0Ev(int *self);       /* slot 17, D0 */
+int *daObjKm3_Kurumajiku_c_classInit(void);               /* id 152 */
+int _ZN17daObjKurumajiku_c8BehaviorEv(void *self);       /* slot 6,  inherited Behavior */
+int _ZN17daObjKurumajiku_c6RenderEv(void *self);       /* slot 9,  inherited Render */
 
 /* ---- id 156 ROTATING_PLATFORM_BS -- these are the ones dsd spelled
    _ZN10RickshawBs*, and they belong to the ROTATING class ---------------- */
-int _ZN10RickshawBs13InitResourcesEv(void *self);      /* slot 0  */
-int _ZN10RickshawBs16CleanupResourcesEv(void *self);   /* slot 3  */
-int *_ZN10RickshawBsD1Ev(int *self);                   /* slot 16 */
-int *_ZN10RickshawBsD0Ev(int *self);                   /* slot 17 */
-int *func_ov047_021113bc(void);                        /* id 156 */
-int func_ov002_020b6718(void *self);       /* slot 6,  inherited Behavior */
-int func_ov002_020b66f0(void *self);       /* slot 9,  inherited Render */
+int _ZN20daObjKm3_Kaitendai_c13InitResourcesEv(void *self);      /* slot 0  */
+int _ZN20daObjKm3_Kaitendai_c16CleanupResourcesEv(void *self);   /* slot 3  */
+int *_ZN20daObjKm3_Kaitendai_cD1Ev(int *self);                   /* slot 16 */
+int *_ZN20daObjKm3_Kaitendai_cD0Ev(int *self);                   /* slot 17 */
+int *daObjKm3_Kaitendai_c_classInit(void);                        /* id 156 */
+int _ZN16daObjKaitendai_c8BehaviorEv(void *self);       /* slot 6,  inherited Behavior */
+int _ZN16daObjKaitendai_c6RenderEv(void *self);       /* slot 9,  inherited Render */
 
 /* ---- id 151 RICKSHAW_PLATFORM_BS -- dsd left this class unnamed too ---- */
-int func_ov047_021114c0(void *self);       /* slot 0,  InitResources */
-int func_ov047_021114ac(void *self);       /* slot 3,  CleanupResources */
-int *func_ov047_021113f8(int *self);       /* slot 16, D1 */
-int *func_ov047_02111448(int *self);       /* slot 17, D0 */
-int *RickshawPlatformBs_Spawn(void);       /* id 151 */
-int func_ov002_020b6920(void *self);       /* slot 6,  inherited Behavior */
-int func_ov002_020b68f8(void *self);       /* slot 9,  inherited Render */
+int _ZN17daObjKm3_Kuruma_c13InitResourcesEv(void *self);       /* slot 0,  InitResources */
+int _ZN17daObjKm3_Kuruma_c16CleanupResourcesEv(void *self);       /* slot 3,  CleanupResources */
+int *_ZN17daObjKm3_Kuruma_cD1Ev(int *self);       /* slot 16, D1 */
+int *_ZN17daObjKm3_Kuruma_cD0Ev(int *self);       /* slot 17, D0 */
+int *daObjKm3_Kuruma_c_classInit(void);       /* id 151 */
+int _ZN13daObjKuruma_c8BehaviorEv(void *self);       /* slot 6,  inherited Behavior */
+int _ZN13daObjKuruma_c6RenderEv(void *self);       /* slot 9,  inherited Render */
 
 /* ---- id 153 STAIRS_BS -- these are the ones dsd spelled
    _ZN18RickshawPlatformBs*, and they belong to the STAIRS class ---------- */
-int *_ZN18RickshawPlatformBsD1Ev(void *self);          /* slot 16 */
-int *_ZN18RickshawPlatformBsD0Ev(void *self);          /* slot 17 */
-void *StairsBs_Spawn(void);                            /* id 153 */
-int func_ov002_020b4bfc(void *self);       /* slot 6,  inherited Behavior */
-int func_ov002_020b4bc4(void *self);       /* slot 9,  inherited Render */
+int *_ZN17daObjKm3_Dorifu_cD1Ev(void *self);          /* slot 16 */
+int *_ZN17daObjKm3_Dorifu_cD0Ev(void *self);          /* slot 17 */
+void *daObjKm3_Dorifu_c_classInit(void);                            /* id 153 */
+int _ZN13daObjDorifu_c8BehaviorEv(void *self);       /* slot 6,  inherited Behavior */
+int _ZN13daObjDorifu_c6RenderEv(void *self);       /* slot 9,  inherited Render */
 
 /* the four host vtables, all excluded from the mount. The two dsd names are
    dsd's for the ADDRESSES, not for the classes -- see this file's header. */
 DSSTATE_BEGIN
-int data_ov047_021122a0[32];        /* 0x021122a0, id 152 RICKSHAW_BS */
-int _ZTV10RickshawBs[32];           /* 0x0211237c, id 156 ROTATING_PLATFORM_BS */
-int data_ov047_0211244c[32];        /* 0x0211244c, id 151 RICKSHAW_PLATFORM_BS */
-int _ZTV18RickshawPlatformBs[32];   /* 0x0211254c, id 153 STAIRS_BS */
+int _ZTV21daObjKm3_Kurumajiku_c[32];        /* 0x021122a0, id 152 RICKSHAW_BS */
+int _ZTV20daObjKm3_Kaitendai_c[32];           /* 0x0211237c, id 156 ROTATING_PLATFORM_BS */
+int _ZTV17daObjKm3_Kuruma_c[32];        /* 0x0211244c, id 151 RICKSHAW_PLATFORM_BS */
+int _ZTV17daObjKm3_Dorifu_c[32];   /* 0x0211254c, id 153 STAIRS_BS */
 /* THE TWO OV002 INTERMEDIATE BASES THIS LANE HOSTS. The other two this overlay
-   needs, data_ov002_021091d4 (daObjKaitendai_c) and data_ov002_02108d94
+   needs, _ZTV16daObjKaitendai_c (daObjKaitendai_c) and _ZTV13daObjDorifu_c
    (daObjDorifu_c), are already hosted and trap-filled by
    hal/actor_classes_ov036.cpp; these two are the same shape and get the same
    treatment. Both are DS-shaped names, so they sit inside the .dsstate span
    (dsstate_guard fails the build otherwise -- the ov036 reading). */
-void *data_ov002_02109320[32];      /* id 152's intermediate base */
-void *data_ov002_02109278[32];      /* id 151's intermediate base */
+void *_ZTV17daObjKurumajiku_c[32];      /* id 152's intermediate base */
+void *_ZTV13daObjKuruma_c[32];      /* id 151's intermediate base */
 DSSTATE_END
 }
 
@@ -185,12 +187,12 @@ DSSTATE_END
    include/RickshawPlatformBs.h -- they are STAIRS_BS's (id 153), not id 151's,
    for this file's header reason -- faced here, the ov013/ov024/ov025/ov032/
    ov033/ov035 recipe. */
-#include "RickshawPlatformBs.h"
+#include "daObjKm3_Dorifu_c.h"
 extern "C" {
-int _ZN18RickshawPlatformBs13InitResourcesEv(void *self)
-{ return ((RickshawPlatformBs *)self)->RickshawPlatformBs::InitResources(); }
-int _ZN18RickshawPlatformBs16CleanupResourcesEv(void *self)
-{ return ((RickshawPlatformBs *)self)->RickshawPlatformBs::CleanupResources(); }
+int _ZN17daObjKm3_Dorifu_c13InitResourcesEv(void *self)
+{ return ((daObjKm3_Dorifu_c *)self)->daObjKm3_Dorifu_c::InitResources(); }
+int _ZN17daObjKm3_Dorifu_c16CleanupResourcesEv(void *self)
+{ return ((daObjKm3_Dorifu_c *)self)->daObjKm3_Dorifu_c::CleanupResources(); }
 }
 
 // ---- the trap --------------------------------------------------------------
@@ -234,51 +236,51 @@ OV47_BASE_TRAP(0) OV47_BASE_TRAP(3) OV47_BASE_TRAP(6) OV47_BASE_TRAP(9)
 #undef OV47_BASE_TRAP
 
 static int __fastcall ov47_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall ov47_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall ov47_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 static void __fastcall ov47_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall ov47_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall ov47_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall ov47_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall ov47_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall ov47_pdes(void *s, void *)
-{ ((ActorBase *)s)->ActorBase::OnPendingDestroy(); return 0; }
+{ ((fBase_c *)s)->fBase_c::OnPendingDestroy(); return 0; }
 static int __fastcall ov47_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int __fastcall ov47_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 static int __fastcall ov47_turn_egg(void *s, void *, void *p)
-{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+{ _ZN8dActor_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall ov47_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall ov47_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall ov47_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall ov47_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall ov47_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall ov47_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall ov47_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall ov47_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall ov47_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 static int __fastcall ov47_egg(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 static int __fastcall ov47_kill(void *s, void *)
-{ _ZN8Platform4KillEv(s); return 0; }
+{ _ZN10dBgActor_c4KillEv(s); return 0; }
 
 /* The shared half of all six tables (four classes plus the two intermediate
    bases). Each caller writes its own 0/3/6/9/16/17 and, for the four class
@@ -335,20 +337,20 @@ static void ov47_fill_shared(void *volatile *vt)
      0x02109278 +0x40 -> 0x020b686c  D1    +0x44 -> 0x020b6814  D0
      0x02109320 +0x40 -> 0x020b6a3c  D1    +0x44 -> 0x020b69e4  D0
 
-   Each body's own literal pool holds its table and then _ZTV8Platform (ov002
+   Each body's own literal pool holds its table and then _ZTV10dBgActor_c (ov002
    0x0210ae38); the recovery spells those two as the shared-header placeholders
    _ZTV10dBgActor_c and VT1, which the -D block for slice_gate216 in
    port/CMakeLists.txt binds per source to the addresses read above. */
 extern "C" {
-void *func_ov002_020b686c(void *self);   /* 0x02109278 slot 16 */
-void *func_ov002_020b6814(void *self);   /* 0x02109278 slot 17 */
-void *func_ov002_020b6a3c(void *self);   /* 0x02109320 slot 16 */
-void *func_ov002_020b69e4(void *self);   /* 0x02109320 slot 17 */
+void *_ZN13daObjKuruma_cD1Ev(void *self);   /* 0x02109278 slot 16 */
+void *_ZN13daObjKuruma_cD0Ev(void *self);   /* 0x02109278 slot 17 */
+void *_ZN17daObjKurumajiku_cD1Ev(void *self);   /* 0x02109320 slot 16 */
+void *_ZN17daObjKurumajiku_cD0Ev(void *self);   /* 0x02109320 slot 17 */
 }
-static void *__fastcall ov47_b78_d1(void *s, void *) { return func_ov002_020b686c(s); }
-static void *__fastcall ov47_b78_d0(void *s, void *) { return func_ov002_020b6814(s); }
-static void *__fastcall ov47_320_d1(void *s, void *) { return func_ov002_020b6a3c(s); }
-static void *__fastcall ov47_320_d0(void *s, void *) { return func_ov002_020b69e4(s); }
+static void *__fastcall ov47_b78_d1(void *s, void *) { return _ZN13daObjKuruma_cD1Ev(s); }
+static void *__fastcall ov47_b78_d0(void *s, void *) { return _ZN13daObjKuruma_cD0Ev(s); }
+static void *__fastcall ov47_320_d1(void *s, void *) { return _ZN17daObjKurumajiku_cD1Ev(s); }
+static void *__fastcall ov47_320_d0(void *s, void *) { return _ZN17daObjKurumajiku_cD0Ev(s); }
 
 static void ov47_base_bringup(void)
 {
@@ -356,7 +358,7 @@ static void ov47_base_bringup(void)
     if (done)
         return;
     done = 1;
-    void **tabs[2] = { data_ov002_02109320, data_ov002_02109278 };
+    void **tabs[2] = { _ZTV17daObjKurumajiku_c, _ZTV13daObjKuruma_c };
     for (int k = 0; k < 2; ++k) {
         void *volatile *vt = (void *volatile *)tabs[k];
         ov47_fill_shared(vt);
@@ -364,7 +366,7 @@ static void ov47_base_bringup(void)
         vt[3]  = (void *)ov47_base_trap3;
         vt[6]  = (void *)ov47_base_trap6;
         vt[9]  = (void *)ov47_base_trap9;
-        vt[16] = (void *)(k == 0 ? ov47_320_d1 : ov47_b78_d1);
+        vt[16] = (void *)(k == 0 ? PORT_D16(ov47_320_d1) : PORT_D16(ov47_b78_d1));
         vt[17] = (void *)(k == 0 ? ov47_320_d0 : ov47_b78_d0);
         vt[31] = (void *)ov47_kill;    /* both are Platform-derived */
     }
@@ -398,35 +400,35 @@ extern "C" void port_ov47_bringup(void)
 // MovingMeshCollider at +0x124, intermediate base ov002 0x02109320, from which
 // it inherits Behavior and Render. Three on level 39.
 static int __fastcall rb_init(void *s, void *)
-{ return func_ov047_02111268(s); }
+{ return _ZN21daObjKm3_Kurumajiku_c13InitResourcesEv(s); }
 static int __fastcall rb_clean(void *s, void *)
-{ return func_ov047_02111254(s); }
+{ return _ZN21daObjKm3_Kurumajiku_c16CleanupResourcesEv(s); }
 static int __fastcall rb_behavior(void *s, void *)
-{ return func_ov002_020b6b38(s); }
+{ return _ZN17daObjKurumajiku_c8BehaviorEv(s); }
 static int __fastcall rb_render(void *s, void *)
 { port_actor_render_probe("RICKSHAW_BS", (char *)s + 0xd4);
-  return func_ov002_020b6b10(s); }
+  return _ZN17daObjKurumajiku_c6RenderEv(s); }
 static int __fastcall rb_d1(void *s, void *)
-{ return (int)(size_t)func_ov047_021111a0((int *)s); }
+{ return (int)(size_t)_ZN21daObjKm3_Kurumajiku_cD1Ev((int *)s); }
 static int __fastcall rb_d0(void *s, void *)
-{ return (int)(size_t)func_ov047_021111f0((int *)s); }
+{ return (int)(size_t)_ZN21daObjKm3_Kurumajiku_cD0Ev((int *)s); }
 
 extern "C" void hal_fill_rickshaw_bs_vtable(void)
 {
     port_ov47_bringup();
-    void *volatile *vt = (void *volatile *)data_ov047_021122a0;
+    void *volatile *vt = (void *volatile *)_ZTV21daObjKm3_Kurumajiku_c;
     ov47_fill_shared(vt);
     vt[0]  = (void *)rb_init;
     vt[3]  = (void *)rb_clean;
     vt[6]  = (void *)rb_behavior;
     vt[9]  = (void *)rb_render;
-    vt[16] = (void *)rb_d1;
+    vt[16] = (void *)PORT_D16(rb_d1);
     vt[17] = (void *)rb_d0;
     vt[31] = (void *)ov47_kill;
 }
 
 // ============================================================================
-// ROTATING_PLATFORM_BS (156) -- table 0x0211237c (dsd _ZTV10RickshawBs),
+// ROTATING_PLATFORM_BS (156) -- table 0x0211237c (dsd _ZTV20daObjKm3_Kaitendai_c),
 // RTTI 20daObjKm3_Kaitendai_c, 32 slots
 // ============================================================================
 //
@@ -435,29 +437,29 @@ extern "C" void hal_fill_rickshaw_bs_vtable(void)
 // hal/actor_classes_ov036.cpp). Three on level 39. Its four own bodies are the
 // ones dsd spelled _ZN10RickshawBs*.
 static int __fastcall rp_init(void *s, void *)
-{ return _ZN10RickshawBs13InitResourcesEv(s); }
+{ return _ZN20daObjKm3_Kaitendai_c13InitResourcesEv(s); }
 static int __fastcall rp_clean(void *s, void *)
-{ return _ZN10RickshawBs16CleanupResourcesEv(s); }
+{ return _ZN20daObjKm3_Kaitendai_c16CleanupResourcesEv(s); }
 static int __fastcall rp_behavior(void *s, void *)
-{ return func_ov002_020b6718(s); }
+{ return _ZN16daObjKaitendai_c8BehaviorEv(s); }
 static int __fastcall rp_render(void *s, void *)
 { port_actor_render_probe("ROTATING_PLATFORM_BS", (char *)s + 0xd4);
-  return func_ov002_020b66f0(s); }
+  return _ZN16daObjKaitendai_c6RenderEv(s); }
 static int __fastcall rp_d1(void *s, void *)
-{ return (int)(size_t)_ZN10RickshawBsD1Ev((int *)s); }
+{ return (int)(size_t)_ZN20daObjKm3_Kaitendai_cD1Ev((int *)s); }
 static int __fastcall rp_d0(void *s, void *)
-{ return (int)(size_t)_ZN10RickshawBsD0Ev((int *)s); }
+{ return (int)(size_t)_ZN20daObjKm3_Kaitendai_cD0Ev((int *)s); }
 
 extern "C" void hal_fill_rotating_platform_bs_vtable(void)
 {
     port_ov47_bringup();
-    void *volatile *vt = (void *volatile *)_ZTV10RickshawBs;
+    void *volatile *vt = (void *volatile *)_ZTV20daObjKm3_Kaitendai_c;
     ov47_fill_shared(vt);
     vt[0]  = (void *)rp_init;
     vt[3]  = (void *)rp_clean;
     vt[6]  = (void *)rp_behavior;
     vt[9]  = (void *)rp_render;
-    vt[16] = (void *)rp_d1;
+    vt[16] = (void *)PORT_D16(rp_d1);
     vt[17] = (void *)rp_d0;
     vt[31] = (void *)ov47_kill;
 }
@@ -472,35 +474,35 @@ extern "C" void hal_fill_rotating_platform_bs_vtable(void)
 // of the three RICKSHAW_BS axles builds four of these at run time, so the
 // pre-spawn gate never saw the id while the parent was skipped.
 static int __fastcall rk_init(void *s, void *)
-{ return func_ov047_021114c0(s); }
+{ return _ZN17daObjKm3_Kuruma_c13InitResourcesEv(s); }
 static int __fastcall rk_clean(void *s, void *)
-{ return func_ov047_021114ac(s); }
+{ return _ZN17daObjKm3_Kuruma_c16CleanupResourcesEv(s); }
 static int __fastcall rk_behavior(void *s, void *)
-{ return func_ov002_020b6920(s); }
+{ return _ZN13daObjKuruma_c8BehaviorEv(s); }
 static int __fastcall rk_render(void *s, void *)
 { port_actor_render_probe("RICKSHAW_PLATFORM_BS", (char *)s + 0xd4);
-  return func_ov002_020b68f8(s); }
+  return _ZN13daObjKuruma_c6RenderEv(s); }
 static int __fastcall rk_d1(void *s, void *)
-{ return (int)(size_t)func_ov047_021113f8((int *)s); }
+{ return (int)(size_t)_ZN17daObjKm3_Kuruma_cD1Ev((int *)s); }
 static int __fastcall rk_d0(void *s, void *)
-{ return (int)(size_t)func_ov047_02111448((int *)s); }
+{ return (int)(size_t)_ZN17daObjKm3_Kuruma_cD0Ev((int *)s); }
 
 extern "C" void hal_fill_rickshaw_platform_bs_vtable(void)
 {
     port_ov47_bringup();
-    void *volatile *vt = (void *volatile *)data_ov047_0211244c;
+    void *volatile *vt = (void *volatile *)_ZTV17daObjKm3_Kuruma_c;
     ov47_fill_shared(vt);
     vt[0]  = (void *)rk_init;
     vt[3]  = (void *)rk_clean;
     vt[6]  = (void *)rk_behavior;
     vt[9]  = (void *)rk_render;
-    vt[16] = (void *)rk_d1;
+    vt[16] = (void *)PORT_D16(rk_d1);
     vt[17] = (void *)rk_d0;
     vt[31] = (void *)ov47_kill;
 }
 
 // ============================================================================
-// STAIRS_BS (153) -- table 0x0211254c (dsd _ZTV18RickshawPlatformBs),
+// STAIRS_BS (153) -- table 0x0211254c (dsd _ZTV17daObjKm3_Dorifu_c),
 // RTTI 17daObjKm3_Dorifu_c, 32 slots
 // ============================================================================
 //
@@ -512,29 +514,29 @@ extern "C" void hal_fill_rickshaw_platform_bs_vtable(void)
 // (daObjDorifu_c, already hosted by hal/actor_classes_ov036.cpp). One on level
 // 39. Its four own bodies are the ones dsd spelled _ZN18RickshawPlatformBs*.
 static int __fastcall sb_init(void *s, void *)
-{ return _ZN18RickshawPlatformBs13InitResourcesEv(s); }
+{ return _ZN17daObjKm3_Dorifu_c13InitResourcesEv(s); }
 static int __fastcall sb_clean(void *s, void *)
-{ return _ZN18RickshawPlatformBs16CleanupResourcesEv(s); }
+{ return _ZN17daObjKm3_Dorifu_c16CleanupResourcesEv(s); }
 static int __fastcall sb_behavior(void *s, void *)
-{ return func_ov002_020b4bfc(s); }
+{ return _ZN13daObjDorifu_c8BehaviorEv(s); }
 static int __fastcall sb_render(void *s, void *)
 { port_actor_render_probe("STAIRS_BS", (char *)s + 0xd4);
-  return func_ov002_020b4bc4(s); }
+  return _ZN13daObjDorifu_c6RenderEv(s); }
 static int __fastcall sb_d1(void *s, void *)
-{ return (int)(size_t)_ZN18RickshawPlatformBsD1Ev(s); }
+{ return (int)(size_t)_ZN17daObjKm3_Dorifu_cD1Ev(s); }
 static int __fastcall sb_d0(void *s, void *)
-{ return (int)(size_t)_ZN18RickshawPlatformBsD0Ev(s); }
+{ return (int)(size_t)_ZN17daObjKm3_Dorifu_cD0Ev(s); }
 
 extern "C" void hal_fill_stairs_bs_vtable(void)
 {
     port_ov47_bringup();
-    void *volatile *vt = (void *volatile *)_ZTV18RickshawPlatformBs;
+    void *volatile *vt = (void *volatile *)_ZTV17daObjKm3_Dorifu_c;
     ov47_fill_shared(vt);
     vt[0]  = (void *)sb_init;
     vt[3]  = (void *)sb_clean;
     vt[6]  = (void *)sb_behavior;
     vt[9]  = (void *)sb_render;
-    vt[16] = (void *)sb_d1;
+    vt[16] = (void *)PORT_D16(sb_d1);
     vt[17] = (void *)sb_d0;
     vt[31] = (void *)ov47_kill;
 }

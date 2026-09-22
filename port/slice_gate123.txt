@@ -2,15 +2,15 @@
 #
 # Level 8's census printed id 323 skipped, x1. Settled the ROM's own way:
 # ACTOR_SPAWN_TABLE[323] (arm9 0x02090d70) is a load reloc to:0x02108bbc
-# module:overlay(2) -- GreenShellBlockTag_SpawnInfo, whose +4 halfword reads
+# module:overlay(2) -- g_profile_BLK_GNSHELL_TAG, whose +4 halfword reads
 # 323. Census id, reloc target and record id all agree.
 #
 # GreenShellBlockTag is a tag body (an Actor subclass) whose factory installs
 # _ZTV10BrickBlock, the SAME table ONE_UP_MUSHROOM_BLOCK_TAG (321) and
 # MEGA_MUSHROOM_BLOCK_TAG (322) install and hal_fill_brick_block_tag_vtable
 # already fills (gate 49). So all its methods are already compiled and the vtable
-# filled; this gate's ONLY new symbol is the factory GreenShellBlockTag_Spawn.
+# filled; this gate's ONLY new symbol is the factory daObjBlockItemTag_c_classInit_BLK_GNSHELL_TAG.
 # The SpawnInfo mount is added to ov002_syms.txt and the registry row reuses the
 # shared fill (fill 0, the ONE_UP_MUSHROOM_BLOCK_TAG shape). No new overlay data,
 # no method face.
-src/GreenShellBlockTag_Spawn.c
+src/d_a_obj_block_item_tag_blk_gnshell_tag.c

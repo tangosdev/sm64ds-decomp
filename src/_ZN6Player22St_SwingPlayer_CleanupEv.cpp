@@ -8,7 +8,7 @@ int Player::St_SwingPlayer_Cleanup()
 {
   char* p = *(char**)((char*)&mHeldObj);
   if (p) {
-    *(unsigned int*)(((long long)(int)(p + 0xb0))) &= ~0x800;
+    *(unsigned int*)(p + 0xb0) &= ~0x800;
   }
   mPrevAngleY = mAngleY;
   return 1;

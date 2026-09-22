@@ -22,24 +22,24 @@
 #    shoulder buttons produce.
 
 src/_ZN3OAM5ResetEv.cpp
-src/_ZN3OAM12EnableSubOAMEv.c
-src/_ZN3OAM9RenderSubEP7OamAttrii.c
-src/_ZN3OAM9RenderSubEP7OamAttriiii.c
+src/_ZN3OAM12EnableSubOAMEv.cpp
+src/_ZN3OAM9RenderSubEP7OamAttrii.cpp
+src/_ZN3OAM9RenderSubEP7OamAttriiii.cpp
 src/func_020566dc.c
 src/func_02056674.c
 
 src/_ZN5Stage14LoadGraphics2DEbi.cpp
-src/_ZN2G213GetBG2CharPtrEv.c
-src/_ZN2G212GetBG2ScrPtrEv.c
-src/_ZN3G2S13GetBG0CharPtrEv.c
-src/_ZN3G2S12GetBG0ScrPtrEv.c
-src/_ZN3G2S12GetBG2ScrPtrEv.c
+src/_ZN2G213GetBG2CharPtrEv.cpp
+src/_ZN2G212GetBG2ScrPtrEv.cpp
+src/_ZN3G2S13GetBG0CharPtrEv.cpp
+src/_ZN3G2S12GetBG0ScrPtrEv.cpp
+src/_ZN3G2S12GetBG2ScrPtrEv.cpp
 src/LoadFont.cpp
 src/LoadFileAt.c
 src/LoadCompressedFileAt.c
 src/func_02018ac4.c
-src/_ZN2GX10LoadBGPlttEPKvjj.c
-src/_ZN3GXS10LoadBGPlttEPKvjj.c
+src/_ZN2GX10LoadBGPlttEPKvjj.cpp
+src/_ZN3GXS10LoadBGPlttEPKvjj.cpp
 src/GetOwnerLanguage.c
 src/SetBg0Offset.c
 src/SetSubBg0Offset.c

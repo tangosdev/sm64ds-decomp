@@ -23,46 +23,48 @@
 // THE VTABLE NAME IS THE ROM'S OWN, taken from the table's own RTTI record and
 // not from a dsd label: 0x021122b8's vtable[-1] is 0x02112270 and that record's
 // word[1] names "19daObjKm1_Ukishima_c". dsd calls the table
-// data_ov043_021122b8, which is what the matched factory spells, so that
+// _ZTV19daObjKm1_Ukishima_c, which is what the matched factory spells, so that
 // spelling is an /alternatename onto this one array. 0x021122b8 is excluded
 // from the mount (the ov015/ov016/ov022/ov045/ov080 rule) -- mounting it would
 // hand the factory DS code addresses.
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
 extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include <cstdlib>
 
-#include "Actor.h"
-#include "ActorBase.h"
+#include "dActor_c.h"
+#include "fBase_c.h"
 #include "dsstate_seg.h"
 
 extern "C" {
 /* the shared lifecycle halves, the same functions every sibling fill writes */
-int _ZN5Actor19BeforeInitResourcesEv(void *self);            /* slot 1  */
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a); /* slot 2  */
-int _ZN5Actor14BeforeBehaviorEv(void *self);                 /* slot 7  */
-int _ZN5Actor12BeforeRenderEv(void *self);                   /* slot 10 */
-int _ZN5Actor13OnYoshiTryEatEv(void *self);                  /* slot 18 */
-void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p); /* slot 19 */
-int _ZN5Actor9Virtual50Ev(void *self);                       /* slot 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);    /* slot 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);        /* slot 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);        /* slot 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);            /* slot 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);            /* slot 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
-int _ZN5Actor16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
-void _ZN8Platform4KillEv(void *self);                              /* slot 31 */
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);            /* slot 1  */
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a); /* slot 2  */
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);                 /* slot 7  */
+int _ZN8dActor_c12BeforeRenderEv(void *self);                   /* slot 10 */
+int _ZN8dActor_c13OnYoshiTryEatEv(void *self);                  /* slot 18 */
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void *self, void *p); /* slot 19 */
+int _ZN8dActor_c9Virtual50Ev(void *self);                       /* slot 20 */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);    /* slot 21 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);        /* slot 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);        /* slot 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);            /* slot 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);            /* slot 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
+int _ZN8dActor_c16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
+void _ZN10dBgActor_c4KillEv(void *self);                              /* slot 31 */
 
 extern int data_02099f24[];          /* the frame phase the lists are in */
 extern unsigned char data_020a4b4c;  /* the spawn spine's own step */
@@ -88,19 +90,19 @@ void __sinit_ov043_02111940(void);   /* id 134 */
 void __sinit_ov043_02111868(void);   /* id 137, ON since link100 SPAWN2 */
 
 /* id 135's own bodies, all matched src on slice_gate206.txt */
-int func_ov043_02111320(void *self);     /* slot 0,  InitResources */
-int func_ov043_0211123c(void *self);     /* slot 3,  CleanupResources */
-int func_ov043_021112a8(void *self);     /* slot 6,  Behavior */
-int func_ov043_02111280(void *self);     /* slot 9,  Render */
-int *func_ov043_021111a0(int *self);     /* slot 16, D1 */
-int *func_ov043_021111e4(int *self);     /* slot 17, D0 */
-void *DiamondLift_Spawn(void);
+int _ZN19daObjKm1_Ukishima_c13InitResourcesEv(void *self);     /* slot 0,  InitResources */
+int _ZN19daObjKm1_Ukishima_c16CleanupResourcesEv(void *self);     /* slot 3,  CleanupResources */
+int _ZN19daObjKm1_Ukishima_c8BehaviorEv(void *self);     /* slot 6,  Behavior */
+int _ZN19daObjKm1_Ukishima_c6RenderEv(void *self);     /* slot 9,  Render */
+int *_ZN19daObjKm1_Ukishima_cD1Ev(int *self);     /* slot 16, D1 */
+int *_ZN19daObjKm1_Ukishima_cD0Ev(int *self);     /* slot 17, D0 */
+void *daObjKm1_Ukishima_c_classInit(void);
 
 /* The array the ROM factory installs. Thirty-two slots, defined here and not
    just declared: the `int` type and C linkage match the
    `extern int _ZTV19daObjKm1_Ukishima_c[]` in include/decl_common.h:680 that
    the matched D1 reads. Inside DSSTATE because the factory's spelling of it,
-   data_ov043_021122b8, is a hosted DS name and dsstate_guard requires every
+   _ZTV19daObjKm1_Ukishima_c, is a hosted DS name and dsstate_guard requires every
    one of those to be inside the captured segment -- the ov045 treatment of
    _ZTV15FireSeaElevator. */
 DSSTATE_BEGIN
@@ -115,7 +117,7 @@ DSSTATE_END
    cannot be defeated. */
 #pragma comment(linker, "/alternatename:_data_ov043_021122b8=__ZTV19daObjKm1_Ukishima_c")
 
-/* The G0/G1 landing pads. src/func_ov043_0211123c.c releases ov043's own two
+/* The G0/G1 landing pads. src/game/actors/d_a_obj_km1_ukishima.cpp releases ov043's own two
    bss SharedFilePtrs through the shared role-name placeholders G0 and G1, which
    hal/cxx_aliases.cpp has already bound to OTHER objects -- _G0 to the game
    heap pointer, _G1 to SignPost's KCL -- so the body would have released the
@@ -156,51 +158,51 @@ O43_TRAP(13) O43_TRAP(14)
 
 // ---- the shared half -------------------------------------------------------
 static int __fastcall o43_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall o43_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall o43_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 static void __fastcall o43_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall o43_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall o43_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall o43_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall o43_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall o43_pdes(void *s, void *)
-{ ((ActorBase *)s)->ActorBase::OnPendingDestroy(); return 0; }
+{ ((fBase_c *)s)->fBase_c::OnPendingDestroy(); return 0; }
 static int __fastcall o43_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int __fastcall o43_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 static int __fastcall o43_turn_egg(void *s, void *, void *p)
-{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+{ _ZN8dActor_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall o43_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall o43_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall o43_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall o43_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall o43_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall o43_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall o43_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall o43_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall o43_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 static int __fastcall o43_egg(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 static int __fastcall o43_kill(void *s, void *)
-{ _ZN8Platform4KillEv(s); return 0; }
+{ _ZN10dBgActor_c4KillEv(s); return 0; }
 
 // ---- the mount bring-up ----------------------------------------------------
 //
@@ -255,18 +257,18 @@ extern "C" void port_ov43_bringup(void)
 
 // ---- DIAMOND_LIFT (id 135) -- table 0x021122b8 -----------------------------
 static int __fastcall dl_init(void *s, void *)
-{ return func_ov043_02111320(s); }
+{ return _ZN19daObjKm1_Ukishima_c13InitResourcesEv(s); }
 static int __fastcall dl_clean(void *s, void *)
-{ return func_ov043_0211123c(s); }
+{ return _ZN19daObjKm1_Ukishima_c16CleanupResourcesEv(s); }
 static int __fastcall dl_behavior(void *s, void *)
-{ return func_ov043_021112a8(s); }
+{ return _ZN19daObjKm1_Ukishima_c8BehaviorEv(s); }
 static int __fastcall dl_render(void *s, void *)
 { port_actor_render_probe("DIAMOND_LIFT", (char *)s + 0xd4);
-  return func_ov043_02111280(s); }
+  return _ZN19daObjKm1_Ukishima_c6RenderEv(s); }
 static int __fastcall dl_d1(void *s, void *)
-{ return (int)(size_t)func_ov043_021111a0((int *)s); }
+{ return (int)(size_t)_ZN19daObjKm1_Ukishima_cD1Ev((int *)s); }
 static int __fastcall dl_d0(void *s, void *)
-{ return (int)(size_t)func_ov043_021111e4((int *)s); }
+{ return (int)(size_t)_ZN19daObjKm1_Ukishima_cD0Ev((int *)s); }
 
 extern "C" void hal_fill_diamond_lift_vtable(void)
 {
@@ -288,7 +290,7 @@ extern "C" void hal_fill_diamond_lift_vtable(void)
     vt[13] = (void *)o43_trap13;
     vt[14] = (void *)o43_trap14;
     vt[15] = (void *)o43_heap;
-    vt[16] = (void *)dl_d1;
+    vt[16] = (void *)PORT_D16(dl_d1);
     vt[17] = (void *)dl_d0;
     vt[18] = (void *)o43_yoshi;
     vt[19] = (void *)o43_turn_egg;
@@ -314,8 +316,8 @@ extern "C" void hal_fill_diamond_lift_vtable(void)
 //
 // THE ID<->BODY MAP IS THE NAMING SHIFT (port/ov043_syms.txt): each id is
 // pinned by its OWN Spawn's final vtable store, never by a name. dsd's
-// _ZTV11RickshawBdw / _ZN11RickshawBdw* are id 136's; _ZTV19RickshawPlatformBdw
-// / _ZN19RickshawPlatformBdw* are id 134's; and RickshawBdw_Spawn is id 137's.
+// _ZTV17daObjKm1_Kuruma_c / _ZN11RickshawBdw* are id 136's; _ZTV17daObjKm1_Dorifu_c
+// / _ZN19RickshawPlatformBdw* are id 134's; and daObjKm1_Kurumajiku_c_classInit is id 137's.
 //
 // 136, 134 AND -- SINCE link100 SPAWN2 -- 137 ARE SEATED. The note that stood
 // here said 137 could not be: its four own bodies carried the "recovered from
@@ -342,38 +344,38 @@ extern "C" {
    field); nothing in this file calls them. */
 
 /* id 136's four matched own bodies (slots 0/3/16/17) */
-int _ZN11RickshawBdw13InitResourcesEv(void *self);      /* slot 0  */
-int _ZN11RickshawBdw16CleanupResourcesEv(void *self);   /* slot 3  */
-int *_ZN11RickshawBdwD1Ev(int *self);                   /* slot 16 */
-int *_ZN11RickshawBdwD0Ev(int *self);                   /* slot 17 */
+int _ZN17daObjKm1_Kuruma_c13InitResourcesEv(void *self);      /* slot 0  */
+int _ZN17daObjKm1_Kuruma_c16CleanupResourcesEv(void *self);   /* slot 3  */
+int *_ZN17daObjKm1_Kuruma_cD1Ev(int *self);                   /* slot 16 */
+int *_ZN17daObjKm1_Kuruma_cD0Ev(int *self);                   /* slot 17 */
 
 /* id 137's four matched own bodies (slots 0/3/16/17), link100 SPAWN2. Every one
-   taken from the reloc at data_ov043_0211238c + 4*slot and confirmed by a
+   taken from the reloc at _ZTV21daObjKm1_Kurumajiku_c + 4*slot and confirmed by a
    kind:function(arm,size=..) record at exactly that address:
-     slot 0  0x0211238c -> 0x021114c4  func_ov043_021114c4 size 0x18
-     slot 3  0x02112398 -> 0x021114b0  func_ov043_021114b0 size 0x14
-     slot 16 0x021123cc -> 0x021113fc  func_ov043_021113fc size 0x50
-     slot 17 0x021123d0 -> 0x0211144c  func_ov043_0211144c size 0x64 */
-void func_ov043_021114c4(unsigned char *self);  /* slot 0,  InitResources */
-int  func_ov043_021114b0(unsigned char *self);  /* slot 3,  CleanupResources */
-int *func_ov043_021113fc(int *self);            /* slot 16, D1 */
-int *func_ov043_0211144c(int *self);            /* slot 17, D0 */
+     slot 0  0x0211238c -> 0x021114c4  _ZN21daObjKm1_Kurumajiku_c13InitResourcesEv size 0x18
+     slot 3  0x02112398 -> 0x021114b0  _ZN21daObjKm1_Kurumajiku_c16CleanupResourcesEv size 0x14
+     slot 16 0x021123cc -> 0x021113fc  _ZN21daObjKm1_Kurumajiku_cD1Ev size 0x50
+     slot 17 0x021123d0 -> 0x0211144c  _ZN21daObjKm1_Kurumajiku_cD0Ev size 0x64 */
+void _ZN21daObjKm1_Kurumajiku_c13InitResourcesEv(unsigned char *self);  /* slot 0,  InitResources */
+int  _ZN21daObjKm1_Kurumajiku_c16CleanupResourcesEv(unsigned char *self);  /* slot 3,  CleanupResources */
+int *_ZN21daObjKm1_Kurumajiku_cD1Ev(int *self);            /* slot 16, D1 */
+int *_ZN21daObjKm1_Kurumajiku_cD0Ev(int *self);            /* slot 17, D0 */
 
 /* id 134's four matched own bodies (slots 0/3/16/17) */
-int _ZN19RickshawPlatformBdw13InitResourcesEv(void *self);    /* slot 0  */
-int _ZN19RickshawPlatformBdw16CleanupResourcesEv(void *self); /* slot 3  */
-int *_ZN19RickshawPlatformBdwD1Ev(void *self);                /* slot 16 */
-int _ZN19RickshawPlatformBdwD0Ev(void *self);                 /* slot 17 */
+int _ZN17daObjKm1_Dorifu_c13InitResourcesEv(void *self);    /* slot 0  */
+int _ZN17daObjKm1_Dorifu_c16CleanupResourcesEv(void *self); /* slot 3  */
+int *_ZN17daObjKm1_Dorifu_cD1Ev(void *self);                /* slot 16 */
+int _ZN17daObjKm1_Dorifu_cD0Ev(void *self);                 /* slot 17 */
 
 /* the four inherited slot 6/9 bodies (for 136 and 134), already linked by the
    ov036 and ov047 slices -- declared and faced, NEVER enrolled here (a second
    definition would be a duplicate symbol). */
-int func_ov002_020b6920(void *self);   /* 136 Behavior, ov047 slice */
-int func_ov002_020b68f8(void *self);   /* 136 Render,   ov047 slice */
-int func_ov002_020b4bfc(void *self);   /* 134 Behavior, ov036 slice */
-int func_ov002_020b4bc4(void *self);   /* 134 Render,   ov036 slice */
-int func_ov002_020b6b38(void *self);   /* 137 Behavior, slot 6 of 0x0211238c */
-int func_ov002_020b6b10(void *self);   /* 137 Render,   slot 9 of 0x0211238c */
+int _ZN13daObjKuruma_c8BehaviorEv(void *self);   /* 136 Behavior, ov047 slice */
+int _ZN13daObjKuruma_c6RenderEv(void *self);   /* 136 Render,   ov047 slice */
+int _ZN13daObjDorifu_c8BehaviorEv(void *self);   /* 134 Behavior, ov036 slice */
+int _ZN13daObjDorifu_c6RenderEv(void *self);   /* 134 Render,   ov036 slice */
+int _ZN17daObjKurumajiku_c8BehaviorEv(void *self);   /* 137 Behavior, slot 6 of 0x0211238c */
+int _ZN17daObjKurumajiku_c6RenderEv(void *self);   /* 137 Render,   slot 9 of 0x0211238c */
 
 /* the seated classes' file-constructor sinits, re-declared here beside the
    bodies they feed (all four run; see port_ov43_bringup). */
@@ -388,21 +390,21 @@ void __sinit_ov043_02111940(void);   /* id 134's five-stair array (files 1609-16
    them with link100 SPAWN2; `int` and C linkage because include/decl_common.h
    declares the placeholder the -D renames as `extern int _ZTV...[]`. */
 DSSTATE_BEGIN
-int _ZTV11RickshawBdw[32];          /* 0x0211245c, id 136 RICKSHAW_PLATFORM_BDW */
-int _ZTV19RickshawPlatformBdw[32];  /* 0x0211255c, id 134 STAIRS_BDW */
-int data_ov043_0211238c[32];        /* 0x0211238c, id 137 RICKSHAW_BDW */
+int _ZTV17daObjKm1_Kuruma_c[32];          /* 0x0211245c, id 136 RICKSHAW_PLATFORM_BDW */
+int _ZTV17daObjKm1_Dorifu_c[32];  /* 0x0211255c, id 134 STAIRS_BDW */
+int _ZTV21daObjKm1_Kurumajiku_c[32];        /* 0x0211238c, id 137 RICKSHAW_BDW */
 DSSTATE_END
 }
 
 /* id 134's InitResources/CleanupResources are real C++ methods (spelled
    RickshawPlatformBdw::), so the Itanium _ZN19RickshawPlatformBdw* symbols the
    fill wants do not exist -- faced here, the ov047 STAIRS_BS recipe. */
-#include "RickshawPlatformBdw.h"
+#include "daObjKm1_Dorifu_c.h"
 extern "C" {
-int _ZN19RickshawPlatformBdw13InitResourcesEv(void *self)
-{ return ((RickshawPlatformBdw *)self)->RickshawPlatformBdw::InitResources(); }
-int _ZN19RickshawPlatformBdw16CleanupResourcesEv(void *self)
-{ return ((RickshawPlatformBdw *)self)->RickshawPlatformBdw::CleanupResources(); }
+int _ZN17daObjKm1_Dorifu_c13InitResourcesEv(void *self)
+{ return ((daObjKm1_Dorifu_c *)self)->daObjKm1_Dorifu_c::InitResources(); }
+int _ZN17daObjKm1_Dorifu_c16CleanupResourcesEv(void *self)
+{ return ((daObjKm1_Dorifu_c *)self)->daObjKm1_Dorifu_c::CleanupResources(); }
 }
 
 /* id 134's two //cpp method TUs declare `extern struct Arg data_ov043_02112518;`
@@ -465,87 +467,87 @@ static void o43_fill_shared(void **vt)
 // axle, which is the "runtime child" relation actor_classes.inc already
 // records, and 136 is seated.)
 static int __fastcall rbdw_init(void *s, void *)
-{ func_ov043_021114c4((unsigned char *)s); return 1; }
+{ _ZN21daObjKm1_Kurumajiku_c13InitResourcesEv((unsigned char *)s); return 1; }
 static int __fastcall rbdw_clean(void *s, void *)
-{ return func_ov043_021114b0((unsigned char *)s); }
+{ return _ZN21daObjKm1_Kurumajiku_c16CleanupResourcesEv((unsigned char *)s); }
 static int __fastcall rbdw_behavior(void *s, void *)
-{ return func_ov002_020b6b38(s); }
+{ return _ZN17daObjKurumajiku_c8BehaviorEv(s); }
 static int __fastcall rbdw_render(void *s, void *)
 { port_actor_render_probe("RICKSHAW_BDW", (char *)s + 0xd4);
-  return func_ov002_020b6b10(s); }
+  return _ZN17daObjKurumajiku_c6RenderEv(s); }
 static int __fastcall rbdw_d1(void *s, void *)
-{ return (int)(size_t)func_ov043_021113fc((int *)s); }
+{ return (int)(size_t)_ZN21daObjKm1_Kurumajiku_cD1Ev((int *)s); }
 static int __fastcall rbdw_d0(void *s, void *)
-{ return (int)(size_t)func_ov043_0211144c((int *)s); }
+{ return (int)(size_t)_ZN21daObjKm1_Kurumajiku_cD0Ev((int *)s); }
 
 extern "C" void hal_fill_rickshaw_bdw_vtable(void)
 {
     port_ov43_bringup();
-    void **vt = (void **)data_ov043_0211238c;
+    void **vt = (void **)_ZTV21daObjKm1_Kurumajiku_c;
     o43_fill_shared(vt);
     vt[0]  = (void *)rbdw_init;
     vt[3]  = (void *)rbdw_clean;
     vt[6]  = (void *)rbdw_behavior;
     vt[9]  = (void *)rbdw_render;
-    vt[16] = (void *)rbdw_d1;
+    vt[16] = (void *)PORT_D16(rbdw_d1);
     vt[17] = (void *)rbdw_d0;
     vt[31] = (void *)o43_kill;
 }
 
 // ---- RICKSHAW_PLATFORM_BDW (id 136) -- table 0x0211245c, matched -----------
 static int __fastcall rpbdw_init(void *s, void *)
-{ return _ZN11RickshawBdw13InitResourcesEv(s); }
+{ return _ZN17daObjKm1_Kuruma_c13InitResourcesEv(s); }
 static int __fastcall rpbdw_clean(void *s, void *)
-{ return _ZN11RickshawBdw16CleanupResourcesEv(s); }
+{ return _ZN17daObjKm1_Kuruma_c16CleanupResourcesEv(s); }
 static int __fastcall rpbdw_behavior(void *s, void *)
-{ return func_ov002_020b6920(s); }
+{ return _ZN13daObjKuruma_c8BehaviorEv(s); }
 static int __fastcall rpbdw_render(void *s, void *)
 { port_actor_render_probe("RICKSHAW_PLATFORM_BDW", (char *)s + 0xd4);
-  return func_ov002_020b68f8(s); }
+  return _ZN13daObjKuruma_c6RenderEv(s); }
 static int __fastcall rpbdw_d1(void *s, void *)
-{ return (int)(size_t)_ZN11RickshawBdwD1Ev((int *)s); }
+{ return (int)(size_t)_ZN17daObjKm1_Kuruma_cD1Ev((int *)s); }
 static int __fastcall rpbdw_d0(void *s, void *)
-{ return (int)(size_t)_ZN11RickshawBdwD0Ev((int *)s); }
+{ return (int)(size_t)_ZN17daObjKm1_Kuruma_cD0Ev((int *)s); }
 
 extern "C" void hal_fill_rickshaw_platform_bdw_vtable(void)
 {
     port_ov43_bringup();
-    void **vt = (void **)_ZTV11RickshawBdw;
+    void **vt = (void **)_ZTV17daObjKm1_Kuruma_c;
     o43_fill_shared(vt);
     vt[0]  = (void *)rpbdw_init;
     vt[3]  = (void *)rpbdw_clean;
     vt[6]  = (void *)rpbdw_behavior;
     vt[9]  = (void *)rpbdw_render;
-    vt[16] = (void *)rpbdw_d1;
+    vt[16] = (void *)PORT_D16(rpbdw_d1);
     vt[17] = (void *)rpbdw_d0;
     vt[31] = (void *)o43_kill;
 }
 
 // ---- STAIRS_BDW (id 134) -- table 0x0211255c, matched ----------------------
 static int __fastcall sbdw_init(void *s, void *)
-{ return _ZN19RickshawPlatformBdw13InitResourcesEv(s); }
+{ return _ZN17daObjKm1_Dorifu_c13InitResourcesEv(s); }
 static int __fastcall sbdw_clean(void *s, void *)
-{ return _ZN19RickshawPlatformBdw16CleanupResourcesEv(s); }
+{ return _ZN17daObjKm1_Dorifu_c16CleanupResourcesEv(s); }
 static int __fastcall sbdw_behavior(void *s, void *)
-{ return func_ov002_020b4bfc(s); }
+{ return _ZN13daObjDorifu_c8BehaviorEv(s); }
 static int __fastcall sbdw_render(void *s, void *)
 { port_actor_render_probe("STAIRS_BDW", (char *)s + 0xd4);
-  return func_ov002_020b4bc4(s); }
+  return _ZN13daObjDorifu_c6RenderEv(s); }
 static int __fastcall sbdw_d1(void *s, void *)
-{ return (int)(size_t)_ZN19RickshawPlatformBdwD1Ev(s); }
+{ return (int)(size_t)_ZN17daObjKm1_Dorifu_cD1Ev(s); }
 static int __fastcall sbdw_d0(void *s, void *)
-{ return (int)(size_t)_ZN19RickshawPlatformBdwD0Ev(s); }
+{ return (int)(size_t)_ZN17daObjKm1_Dorifu_cD0Ev(s); }
 
 extern "C" void hal_fill_stairs_bdw_vtable(void)
 {
     port_ov43_bringup();
-    void **vt = (void **)_ZTV19RickshawPlatformBdw;
+    void **vt = (void **)_ZTV17daObjKm1_Dorifu_c;
     o43_fill_shared(vt);
     vt[0]  = (void *)sbdw_init;
     vt[3]  = (void *)sbdw_clean;
     vt[6]  = (void *)sbdw_behavior;
     vt[9]  = (void *)sbdw_render;
-    vt[16] = (void *)sbdw_d1;
+    vt[16] = (void *)PORT_D16(sbdw_d1);
     vt[17] = (void *)sbdw_d0;
     vt[31] = (void *)o43_kill;
 }

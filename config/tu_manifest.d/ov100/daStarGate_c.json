@@ -1,0 +1,4005 @@
+{
+  "id": "ov100/daStarGate_c",
+  "module": "ov100",
+  "source": "src/game/actors/d_a_star_gate.cpp",
+  "promoted_source": "src/game/actors/d_a_star_gate.cpp",
+  "production_mode": "intact-object",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous actor linker run: 0x21458d4..0x214620c, 20 function(s), with the registry-referenced class factory immediately following the 19 class methods",
+    "ROM class identity: _ZTI12daStarGate_c at 0x02148374 and _ZTS12daStarGate_c at 0x02148380",
+    "the compiler-generated __sinit_d_a_star_gate.cpp is byte-identical to retail __sinit_ov100_02147a70 and has the same nineteen relocation sites and destinations",
+    "retail .ctor points to that initializer; eight PTMF constants, class RTTI, the typed four-row gate table, profile, and vtable occupy 0x02148334..0x02148448",
+    "the resource handle, destructor-registration node, temporary vector, and five 16-byte state objects occupy 0x02148934..0x021489a4"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x021458d4",
+      "end": "0x0214620c"
+    },
+    {
+      "name": ".init",
+      "start": "0x02147a70",
+      "end": "0x02147bc0"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x02147df8",
+      "end": "0x02147dfc"
+    },
+    {
+      "name": ".data",
+      "start": "0x02148334",
+      "end": "0x02148448"
+    },
+    {
+      "name": ".bss",
+      "start": "0x02148934",
+      "end": "0x021489a4"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN12daStarGate_cD1Ev",
+      "address": "0x021458d4",
+      "size": "0x00000030",
+      "legacy_source": "src/_ZN12daStarGate_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN12daStarGate_cD0Ev",
+      "address": "0x02145904",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN12daStarGate_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN12daStarGate_c18St_StayClosed_MainEP6Player",
+      "address": "0x02145948",
+      "size": "0x00000040",
+      "legacy_source": "src/_ZN12daStarGate_c18St_StayClosed_MainEP6Player.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN12daStarGate_c17St_OpenClose_MainEP6Player",
+      "address": "0x02145988",
+      "size": "0x0000012c",
+      "legacy_source": "src/_ZN12daStarGate_c17St_OpenClose_MainEP6Player.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN12daStarGate_c17St_OpenClose_InitEP6Player",
+      "address": "0x02145ab4",
+      "size": "0x0000005c",
+      "legacy_source": "src/_ZN12daStarGate_c17St_OpenClose_InitEP6Player.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN12daStarGate_c17St_Unlocking_MainEP6Player",
+      "address": "0x02145b10",
+      "size": "0x0000006c",
+      "legacy_source": "src/_ZN12daStarGate_c17St_Unlocking_MainEP6Player.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN12daStarGate_c17St_Unlocking_InitEP6Player",
+      "address": "0x02145b7c",
+      "size": "0x00000020",
+      "legacy_source": "src/_ZN12daStarGate_c17St_Unlocking_InitEP6Player.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_ZN12daStarGate_c23St_TalkingToPlayer_MainEP6Player",
+      "address": "0x02145b9c",
+      "size": "0x00000090",
+      "legacy_source": "src/_ZN12daStarGate_c23St_TalkingToPlayer_MainEP6Player.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "_ZN12daStarGate_c23St_TalkingToPlayer_InitEP6Player",
+      "address": "0x02145c2c",
+      "size": "0x0000002c",
+      "legacy_source": "src/_ZN12daStarGate_c23St_TalkingToPlayer_InitEP6Player.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "_ZN12daStarGate_c12St_Wait_MainEP6Player",
+      "address": "0x02145c58",
+      "size": "0x000001b8",
+      "legacy_source": "src/_ZN12daStarGate_c12St_Wait_MainEP6Player.cpp",
+      "ordinal": 9
+    },
+    {
+      "symbol": "_ZN12daStarGate_c11TryOpenDoorEP6Player",
+      "address": "0x02145e10",
+      "size": "0x00000064",
+      "legacy_source": "src/_ZN12daStarGate_c11TryOpenDoorEP6Player.cpp",
+      "ordinal": 10
+    },
+    {
+      "symbol": "_ZN12daStarGate_c17IsInFrontOfPlayerEP6Player",
+      "address": "0x02145e74",
+      "size": "0x0000008c",
+      "legacy_source": "src/_ZN12daStarGate_c17IsInFrontOfPlayerEP6Player.cpp",
+      "ordinal": 11
+    },
+    {
+      "symbol": "_ZN12daStarGate_c26CalculateRelativePlayerPosEv",
+      "address": "0x02145f00",
+      "size": "0x00000068",
+      "legacy_source": "src/_ZN12daStarGate_c26CalculateRelativePlayerPosEv.cpp",
+      "ordinal": 12
+    },
+    {
+      "symbol": "_ZN12daStarGate_c11ChangeStateEPNS_5StateEP6Player",
+      "address": "0x02145f68",
+      "size": "0x00000054",
+      "legacy_source": "src/_ZN12daStarGate_c11ChangeStateEPNS_5StateEP6Player.cpp",
+      "ordinal": 13
+    },
+    {
+      "symbol": "_ZN12daStarGate_c16CleanupResourcesEv",
+      "address": "0x02145fbc",
+      "size": "0x00000024",
+      "legacy_source": "src/_ZN12daStarGate_c16CleanupResourcesEv.cpp",
+      "ordinal": 14
+    },
+    {
+      "symbol": "_ZN12daStarGate_c16OnPendingDestroyEv",
+      "address": "0x02145fe0",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN12daStarGate_c16OnPendingDestroyEv.cpp",
+      "ordinal": 15
+    },
+    {
+      "symbol": "_ZN12daStarGate_c6RenderEv",
+      "address": "0x02145fe4",
+      "size": "0x000000f8",
+      "legacy_source": "src/_ZN12daStarGate_c6RenderEv.cpp",
+      "ordinal": 16
+    },
+    {
+      "symbol": "_ZN12daStarGate_c8BehaviorEv",
+      "address": "0x021460dc",
+      "size": "0x00000050",
+      "legacy_source": "src/_ZN12daStarGate_c8BehaviorEv.cpp",
+      "ordinal": 17
+    },
+    {
+      "symbol": "_ZN12daStarGate_c13InitResourcesEv",
+      "address": "0x0214612c",
+      "size": "0x000000a8",
+      "legacy_source": "src/_ZN12daStarGate_c13InitResourcesEv.cpp",
+      "ordinal": 18
+    },
+    {
+      "symbol": "daStarGate_c_classInit",
+      "address": "0x021461d4",
+      "size": "0x00000038",
+      "legacy_source": "src/d_a_star_gate.c",
+      "ordinal": 19
+    }
+  ],
+  "init": [
+    {
+      "symbol": "__sinit_d_a_star_gate.cpp",
+      "address": "0x02147a70",
+      "size": "0x150",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated static initializer is byte-identical to retail and carries the same nineteen relocation sites"
+    }
+  ],
+  "ctor": [
+    {
+      "symbol": ".p__sinit_d_a_star_gate.cpp",
+      "address": "0x02147df8",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
+    }
+  ],
+  "data": [
+    {
+      "symbol": "@446",
+      "address": "0x02148334",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-emitted PTMF constant for St_StayClosed_Main"
+    },
+    {
+      "symbol": "@444",
+      "address": "0x0214833c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-emitted PTMF constant for St_OpenClose_Main"
+    },
+    {
+      "symbol": "@436",
+      "address": "0x02148344",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-emitted PTMF constant for St_TalkingToPlayer_Main"
+    },
+    {
+      "symbol": "@438",
+      "address": "0x0214834c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-emitted PTMF constant for St_Unlocking_Init"
+    },
+    {
+      "symbol": "@442",
+      "address": "0x02148354",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-emitted PTMF constant for St_OpenClose_Init"
+    },
+    {
+      "symbol": "@440",
+      "address": "0x0214835c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-emitted PTMF constant for St_Unlocking_Main"
+    },
+    {
+      "symbol": "@434",
+      "address": "0x02148364",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-emitted PTMF constant for St_TalkingToPlayer_Init"
+    },
+    {
+      "symbol": "@432",
+      "address": "0x0214836c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-emitted PTMF constant for St_Wait_Main"
+    },
+    {
+      "symbol": "_ZTI12daStarGate_c",
+      "address": "0x02148374",
+      "size": "0xc",
+      "evidence": "ROM RTTI identity and compiler-emitted single-inheritance record"
+    },
+    {
+      "symbol": "_ZTS12daStarGate_c",
+      "address": "0x02148380",
+      "size": "0xf",
+      "evidence": "ROM type-name string and exact compiler emission"
+    },
+    {
+      "symbol": "data_ov100_02148390",
+      "address": "0x02148390",
+      "size": "0x18",
+      "evidence": "typed four-row star-count, save-flag, and message-ID table"
+    },
+    {
+      "symbol": "g_profile_STAR_GATE",
+      "address": "0x021483a8",
+      "size": "0x1c",
+      "evidence": "typed actor profile; factory relocation and all seven fields match retail"
+    },
+    {
+      "symbol": "_ZTV12daStarGate_c",
+      "address": "0x021483cc",
+      "emitted_storage_address": "0x021483c4",
+      "address_point_bias": "0x8",
+      "size": "0x84",
+      "evidence": "compiler storage includes the two-word ABI preamble; all thirty-one public slots match retail destinations"
+    }
+  ],
+  "bss": [
+    {
+      "symbol": "data_ov100_02148934",
+      "address": "0x02148934",
+      "size": "0x8",
+      "evidence": "model resource handle constructed with file ID 0x4a1"
+    },
+    {
+      "symbol": "@430",
+      "address": "0x0214893c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated resource destructor-registration node"
+    },
+    {
+      "symbol": "data_ov100_02148948",
+      "address": "0x02148948",
+      "size": "0xc",
+      "evidence": "TU-local three-component fixed-point work vector"
+    },
+    {
+      "symbol": "_ZN12daStarGate_c13ST_OPEN_CLOSEE",
+      "address": "0x02148954",
+      "size": "0x10",
+      "evidence": "two-PTMF state object initialized by the compiler-generated initializer"
+    },
+    {
+      "symbol": "_ZN12daStarGate_c14ST_STAY_CLOSEDE",
+      "address": "0x02148964",
+      "size": "0x10",
+      "evidence": "two-PTMF state object initialized by the compiler-generated initializer"
+    },
+    {
+      "symbol": "_ZN12daStarGate_c7ST_WAITE",
+      "address": "0x02148974",
+      "size": "0x10",
+      "evidence": "two-PTMF state object initialized by the compiler-generated initializer"
+    },
+    {
+      "symbol": "_ZN12daStarGate_c20ST_TALKING_TO_PLAYERE",
+      "address": "0x02148984",
+      "size": "0x10",
+      "evidence": "two-PTMF state object initialized by the compiler-generated initializer"
+    },
+    {
+      "symbol": "_ZN12daStarGate_c12ST_UNLOCKINGE",
+      "address": "0x02148994",
+      "size": "0x10",
+      "evidence": "two-PTMF state object initialized by the compiler-generated initializer"
+    }
+  ],
+  "undefined_symbol_aliases": [
+    {
+      "symbol": "_ZN20StarGateModelFilePtrC1Ej",
+      "canonical_symbol": "func_02017acc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017acc",
+      "evidence": "retail initializer call destination and the wrapper constructor's exact PC24 relocation"
+    },
+    {
+      "symbol": "_ZN20StarGateModelFilePtrD1Ev",
+      "canonical_symbol": "func_02017ab4",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017ab4",
+      "evidence": "retail destructor-registration destination and the wrapper destructor's exact ABS32 relocation"
+    },
+    {
+      "symbol": "__register_global_object",
+      "canonical_symbol": "func_020731dc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020731dc",
+      "evidence": "compiler-generated static initialization call shape and direct retail reference"
+    }
+  ],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "_ZN12daStarGate_cD1Ev",
+      "from": "STB_LOPROC",
+      "to": "STB_GLOBAL",
+      "evidence": "mwccarm emits the inline complete destructor with processor-specific binding; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "_ZN12daStarGate_cD0Ev",
+      "from": "STB_LOPROC",
+      "to": "STB_GLOBAL",
+      "evidence": "mwccarm emits the inline deleting destructor with processor-specific binding; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "__sinit_d_a_star_gate.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
+    },
+    {
+      "symbol": ".p__sinit_d_a_star_gate.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the constructor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+    },
+    {
+      "symbol": "@446",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local St_StayClosed_Main PTMF is a configured initializer relocation destination at 0x02148334"
+    },
+    {
+      "symbol": "@444",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local St_OpenClose_Main PTMF is a configured initializer relocation destination at 0x0214833c"
+    },
+    {
+      "symbol": "@436",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local St_TalkingToPlayer_Main PTMF is a configured initializer relocation destination at 0x02148344"
+    },
+    {
+      "symbol": "@438",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local St_Unlocking_Init PTMF is a configured initializer relocation destination at 0x0214834c"
+    },
+    {
+      "symbol": "@442",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local St_OpenClose_Init PTMF is a configured initializer relocation destination at 0x02148354"
+    },
+    {
+      "symbol": "@440",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local St_Unlocking_Main PTMF is a configured initializer relocation destination at 0x0214835c"
+    },
+    {
+      "symbol": "@434",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local St_TalkingToPlayer_Init PTMF is a configured initializer relocation destination at 0x02148364"
+    },
+    {
+      "symbol": "@432",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local St_Wait_Main PTMF is a configured initializer relocation destination at 0x0214836c"
+    },
+    {
+      "symbol": "@430",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x0214893c"
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".data",
+      "source": "0x02148334",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daStarGate_c18St_StayClosed_MainEP6Player",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02145948"
+    },
+    {
+      "section": ".data",
+      "source": "0x0214833c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daStarGate_c17St_OpenClose_MainEP6Player",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02145988"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148344",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daStarGate_c23St_TalkingToPlayer_MainEP6Player",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02145b9c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0214834c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daStarGate_c17St_Unlocking_InitEP6Player",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02145b7c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148354",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daStarGate_c17St_OpenClose_InitEP6Player",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02145ab4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0214835c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daStarGate_c17St_Unlocking_MainEP6Player",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02145b10"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148364",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daStarGate_c23St_TalkingToPlayer_InitEP6Player",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02145c2c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0214836c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daStarGate_c12St_Wait_MainEP6Player",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02145c58"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148374",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTVN3abi20__si_class_type_infoE",
+      "addend": 8,
+      "target_module": "arm9",
+      "target_address": "0x0209a764"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148378",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTS12daStarGate_c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02148380"
+    },
+    {
+      "section": ".data",
+      "source": "0x0214837c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI8dActor_c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208e390"
+    },
+    {
+      "section": ".data",
+      "source": "0x021483a8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "daStarGate_c_classInit",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x021461d4"
+    },
+    {
+      "section": ".data",
+      "source": "0x021483c8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI12daStarGate_c",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02148374"
+    },
+    {
+      "section": ".data",
+      "source": "0x021483cc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daStarGate_c13InitResourcesEv",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214612c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021483d0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19BeforeInitResourcesEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011268"
+    },
+    {
+      "section": ".data",
+      "source": "0x021483d4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c18AfterInitResourcesEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011244"
+    },
+    {
+      "section": ".data",
+      "source": "0x021483d8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daStarGate_c16CleanupResourcesEv",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02145fbc"
+    },
+    {
+      "section": ".data",
+      "source": "0x021483dc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c22BeforeCleanupResourcesEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011220"
+    },
+    {
+      "section": ".data",
+      "source": "0x021483e0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c21AfterCleanupResourcesEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011214"
+    },
+    {
+      "section": ".data",
+      "source": "0x021483e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daStarGate_c8BehaviorEv",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x021460dc"
+    },
+    {
+      "section": ".data",
+      "source": "0x021483e8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c14BeforeBehaviorEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010fd4"
+    },
+    {
+      "section": ".data",
+      "source": "0x021483ec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13AfterBehaviorEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010fc8"
+    },
+    {
+      "section": ".data",
+      "source": "0x021483f0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daStarGate_c6RenderEv",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02145fe4"
+    },
+    {
+      "section": ".data",
+      "source": "0x021483f4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c12BeforeRenderEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010f78"
+    },
+    {
+      "section": ".data",
+      "source": "0x021483f8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11AfterRenderEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010f6c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021483fc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daStarGate_c16OnPendingDestroyEv",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02145fe0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148400",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual34Ejj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0204357c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148404",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual38Ejj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0204349c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148408",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02043494"
+    },
+    {
+      "section": ".data",
+      "source": "0x0214840c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daStarGate_cD1Ev",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x021458d4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148410",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daStarGate_cD0Ev",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02145904"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148414",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnYoshiTryEatEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010160"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148418",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnTurnIntoEggER6Player",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010154"
+    },
+    {
+      "section": ".data",
+      "source": "0x0214841c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c9Virtual50Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201014c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148420",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnGroundPoundedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010148"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148424",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked1ERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010144"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148428",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked2ERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010140"
+    },
+    {
+      "section": ".data",
+      "source": "0x0214842c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnKickedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201013c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148430",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnPushedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010138"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148434",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010134"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148438",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnHitByMegaCharER6Player",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010130"
+    },
+    {
+      "section": ".data",
+      "source": "0x0214843c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19OnHitFromUnderneathERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201012c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148440",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c16OnAimedAtWithEggEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010124"
+    },
+    {
+      "section": ".data",
+      "source": "0x02148444",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020100dc"
+    },
+    {
+      "section": ".ctor",
+      "source": "0x02147df8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_d_a_star_gate.cpp",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02147a70"
+    },
+    {
+      "section": ".init",
+      "source": "0x02147a80",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017acc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017acc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02147a90",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02147b78",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov100_02148934",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02148934"
+    },
+    {
+      "section": ".init",
+      "source": "0x02147b80",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "func_02017ab4",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017ab4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02147b84",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@430",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214893c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02147b88",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__ptmf_null",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02086b58"
+    },
+    {
+      "section": ".init",
+      "source": "0x02147b8c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@432",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214836c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02147b90",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@434",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02148364"
+    },
+    {
+      "section": ".init",
+      "source": "0x02147b94",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@436",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02148344"
+    },
+    {
+      "section": ".init",
+      "source": "0x02147b98",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@438",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214834c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02147b9c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@440",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214835c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02147ba0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@442",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02148354"
+    },
+    {
+      "section": ".init",
+      "source": "0x02147ba4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@444",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x0214833c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02147ba8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@446",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02148334"
+    },
+    {
+      "section": ".init",
+      "source": "0x02147bac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daStarGate_c7ST_WAITE",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02148974"
+    },
+    {
+      "section": ".init",
+      "source": "0x02147bb0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daStarGate_c14ST_STAY_CLOSEDE",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02148964"
+    },
+    {
+      "section": ".init",
+      "source": "0x02147bb4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daStarGate_c20ST_TALKING_TO_PLAYERE",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02148984"
+    },
+    {
+      "section": ".init",
+      "source": "0x02147bb8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daStarGate_c12ST_UNLOCKINGE",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02148994"
+    },
+    {
+      "section": ".init",
+      "source": "0x02147bbc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daStarGate_c13ST_OPEN_CLOSEE",
+      "addend": 0,
+      "target_module": "ov100",
+      "target_address": "0x02148954"
+    }
+  ],
+  "compiler_only_output": [],
+  "externalized_output": [
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0x8",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "inherited vague RTTI copy; canonical definition is owned by arm9",
+      "relocations": [
+        {
+          "offset": 0,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTVN3abi17__class_type_infoE",
+          "addend": 8,
+          "target_module": "arm9",
+          "target_address": "0x0209a774"
+        },
+        {
+          "offset": 4,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTS7fBase_c",
+          "addend": 0,
+          "target_module": "arm9",
+          "target_address": "0x02086e60"
+        }
+      ]
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0x9",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "inherited vague RTTI copy; canonical definition is owned by arm9",
+      "relocations": []
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0x9",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "inherited vague RTTI copy; canonical definition is owned by arm9",
+      "relocations": []
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0xa",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "inherited vague RTTI copy; canonical definition is owned by arm9",
+      "relocations": []
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0xc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "inherited vague RTTI copy; canonical definition is owned by arm9",
+      "relocations": [
+        {
+          "offset": 0,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTVN3abi20__si_class_type_infoE",
+          "addend": 8,
+          "target_module": "arm9",
+          "target_address": "0x0209a764"
+        },
+        {
+          "offset": 4,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTS7dBase_c",
+          "addend": 0,
+          "target_module": "arm9",
+          "target_address": "0x02086e54"
+        },
+        {
+          "offset": 8,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTI7fBase_c",
+          "addend": 0,
+          "target_module": "arm9",
+          "target_address": "0x02086d70"
+        }
+      ]
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0xc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "inherited vague RTTI copy; canonical definition is owned by arm9",
+      "relocations": [
+        {
+          "offset": 0,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTVN3abi20__si_class_type_infoE",
+          "addend": 8,
+          "target_module": "arm9",
+          "target_address": "0x0209a764"
+        },
+        {
+          "offset": 4,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTS8dActor_c",
+          "addend": 0,
+          "target_module": "arm9",
+          "target_address": "0x0208e384"
+        },
+        {
+          "offset": 8,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTI7dBase_c",
+          "addend": 0,
+          "target_module": "arm9",
+          "target_address": "0x02086e78"
+        }
+      ]
+    }
+  ],
+  "notes": [
+    "Genuine lifecycle and state-machine source form: daStarGate_c defines its virtual destructor inline in the directly included class header and InitResources as its key function. The compiler, not hand-authored vtable/PTMF bytes or a forcing object, owns the retail D1/D0 pair, class RTTI/vtable, the five state objects, and their static initializer; this source form emits no D2 body.",
+    "SM64DS proves the daStarGate_c RTTI identity, STAR_GATE registry relationship, class layout, factory shape, state descriptor layout, PTMF targets, bodies, and relocations. The English state/method names and pointer parameter spellings are lineage-supported reconstructions; exact original source spellings are not preserved. Historical project alias: StarDoor.",
+    "StarGateModelFilePtr is an evidence-bounded local wrapper spelling. Its 8-byte storage, file ID 0x4a1, constructor/destructor destinations, and runtime registration topology are direct ROM evidence; undefined_symbol_aliases map only those compiler-generated imports to their exact established addresses.",
+    "The typed daStarGateInfo table reproduces all four six-byte rows. The typed STAR_GATE profile reproduces all seven fields, including actorFlags 0x00000002, and its factory relocation.",
+    "This intact object owns .text, .init, .ctor, the contiguous PTMF/RTTI/table/profile/vtable .data band, and the resource/state .bss band. No byte in those declared ranges is supplied by a retail gap object in the promoted build.",
+    "The earlier standalone source for __sinit_ov100_02147a70 is absorbed by the compiler-generated __sinit_d_a_star_gate.cpp at the same 0x02147a70..0x02147bc0 range; its 19 relocation sites and destinations remain exact."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov100-daStarGate_c/d_a_star_gate.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 20,
+    "functions_declared": 20,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "data": [],
+      "dataExternalized": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 16 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/ov100-daStarGate_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x021458d4",
+        "end": "0x0214620c",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x021458d4",
+          "end": "0x0214620c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".init",
+          "start": "0x02147a70",
+          "end": "0x02147bc0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x02147df8",
+          "end": "0x02147dfc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x02148334",
+          "end": "0x02148448",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x02148934",
+          "end": "0x021489a4",
+          "comparison": "NOBITS -- symbol/module gates"
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 43
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".init",
+            "original": [
+              86
+            ],
+            "desired": [
+              86
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              84
+            ],
+            "desired": [
+              84
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              5,
+              7,
+              9,
+              11,
+              14,
+              18,
+              20,
+              22,
+              27,
+              35,
+              41,
+              42,
+              44
+            ],
+            "desired": [
+              22,
+              7,
+              5,
+              11,
+              14,
+              9,
+              18,
+              20,
+              27,
+              35,
+              41,
+              42,
+              44
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              13,
+              29,
+              30,
+              36,
+              37,
+              38,
+              39,
+              40
+            ],
+            "desired": [
+              13,
+              29,
+              30,
+              36,
+              37,
+              38,
+              39,
+              40
+            ]
+          }
+        ],
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".data",
+              "original": [
+                5,
+                7,
+                9,
+                11,
+                14,
+                18,
+                20,
+                22,
+                27,
+                35,
+                41,
+                42,
+                44
+              ],
+              "desired": [
+                22,
+                7,
+                5,
+                11,
+                14,
+                9,
+                18,
+                20,
+                27,
+                35,
+                41,
+                42,
+                44
+              ],
+              "slots": [
+                5,
+                7,
+                9,
+                11,
+                14,
+                18,
+                20,
+                22,
+                27,
+                35,
+                41,
+                42,
+                44
+              ]
+            }
+          ],
+          "symbolIndices": 13,
+          "sectionLinks": 0,
+          "sectionInfos": 11,
+          "error": null
+        },
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  },
+  "partitioned_link": {
+    "lastAttempt": {
+      "result": "partitioned-link-verified",
+      "round": "tools/tubuild.py linkcheck --partitioned -- scratch-only additive non-text delinks entry, objisolate-derived per-function text objects, exact compiler-only/RTTI policies, exact data partition and vtable address-point rebias, whole-tree link and full-ROM comparison",
+      "trackedDelinksChanged": false,
+      "text": {
+        "toolchain": "2004/b56",
+        "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+        "mergedBytes": 15408,
+        "contributionEquivalent": "20/20",
+        "substitutedObjectPaths": [
+          "src/_ZN12daStarGate_cD1Ev.cpp",
+          "src/_ZN12daStarGate_cD0Ev.cpp",
+          "src/_ZN12daStarGate_c18St_StayClosed_MainEP6Player.cpp",
+          "src/_ZN12daStarGate_c17St_OpenClose_MainEP6Player.cpp",
+          "src/_ZN12daStarGate_c17St_OpenClose_InitEP6Player.cpp",
+          "src/_ZN12daStarGate_c17St_Unlocking_MainEP6Player.cpp",
+          "src/_ZN12daStarGate_c17St_Unlocking_InitEP6Player.cpp",
+          "src/_ZN12daStarGate_c23St_TalkingToPlayer_MainEP6Player.cpp",
+          "src/_ZN12daStarGate_c23St_TalkingToPlayer_InitEP6Player.cpp",
+          "src/_ZN12daStarGate_c12St_Wait_MainEP6Player.cpp",
+          "src/_ZN12daStarGate_c11TryOpenDoorEP6Player.cpp",
+          "src/_ZN12daStarGate_c17IsInFrontOfPlayerEP6Player.cpp",
+          "src/_ZN12daStarGate_c26CalculateRelativePlayerPosEv.cpp",
+          "src/_ZN12daStarGate_c11ChangeStateEPNS_5StateEP6Player.cpp",
+          "src/_ZN12daStarGate_c16CleanupResourcesEv.cpp",
+          "src/_ZN12daStarGate_c16OnPendingDestroyEv.cpp",
+          "src/_ZN12daStarGate_c6RenderEv.cpp",
+          "src/_ZN12daStarGate_c8BehaviorEv.cpp",
+          "src/_ZN12daStarGate_c13InitResourcesEv.cpp",
+          "src/d_a_star_gate.c"
+        ],
+        "rows": [
+          {
+            "ordinal": 0,
+            "symbol": "_ZN12daStarGate_cD1Ev",
+            "identical": true,
+            "relocCount": 3,
+            "differences": [],
+            "symbolBindingRewrites": {
+              "requested": [
+                {
+                  "symbol": "_ZN12daStarGate_cD1Ev",
+                  "from": "STB_LOPROC",
+                  "to": "STB_GLOBAL",
+                  "evidence": "mwccarm emits the inline complete destructor with processor-specific binding; the configured ROM symbol uses global binding"
+                }
+              ],
+              "rewritten": [
+                {
+                  "symbolIndex": 106,
+                  "symbol": "_ZN12daStarGate_cD1Ev",
+                  "from": "STB_LOPROC",
+                  "to": "STB_GLOBAL"
+                }
+              ],
+              "objisolate": {
+                "rewritten": [
+                  {
+                    "symbolIndex": 106,
+                    "symbol": "_ZN12daStarGate_cD1Ev",
+                    "from": "STB_LOPROC",
+                    "to": "STB_GLOBAL"
+                  }
+                ],
+                "error": null
+              }
+            }
+          },
+          {
+            "ordinal": 1,
+            "symbol": "_ZN12daStarGate_cD0Ev",
+            "identical": true,
+            "relocCount": 5,
+            "differences": [],
+            "symbolBindingRewrites": {
+              "requested": [
+                {
+                  "symbol": "_ZN12daStarGate_cD0Ev",
+                  "from": "STB_LOPROC",
+                  "to": "STB_GLOBAL",
+                  "evidence": "mwccarm emits the inline deleting destructor with processor-specific binding; the configured ROM symbol uses global binding"
+                }
+              ],
+              "rewritten": [
+                {
+                  "symbolIndex": 100,
+                  "symbol": "_ZN12daStarGate_cD0Ev",
+                  "from": "STB_LOPROC",
+                  "to": "STB_GLOBAL"
+                }
+              ],
+              "objisolate": {
+                "rewritten": [
+                  {
+                    "symbolIndex": 100,
+                    "symbol": "_ZN12daStarGate_cD0Ev",
+                    "from": "STB_LOPROC",
+                    "to": "STB_GLOBAL"
+                  }
+                ],
+                "error": null
+              }
+            }
+          },
+          {
+            "ordinal": 2,
+            "symbol": "_ZN12daStarGate_c18St_StayClosed_MainEP6Player",
+            "identical": true,
+            "relocCount": 3,
+            "differences": [],
+            "symbolBindingRewrites": null
+          },
+          {
+            "ordinal": 3,
+            "symbol": "_ZN12daStarGate_c17St_OpenClose_MainEP6Player",
+            "identical": true,
+            "relocCount": 13,
+            "differences": [],
+            "symbolBindingRewrites": null
+          },
+          {
+            "ordinal": 4,
+            "symbol": "_ZN12daStarGate_c17St_OpenClose_InitEP6Player",
+            "identical": true,
+            "relocCount": 5,
+            "differences": [],
+            "symbolBindingRewrites": null
+          },
+          {
+            "ordinal": 5,
+            "symbol": "_ZN12daStarGate_c17St_Unlocking_MainEP6Player",
+            "identical": true,
+            "relocCount": 4,
+            "differences": [],
+            "symbolBindingRewrites": null
+          },
+          {
+            "ordinal": 6,
+            "symbol": "_ZN12daStarGate_c17St_Unlocking_InitEP6Player",
+            "identical": true,
+            "relocCount": 1,
+            "differences": [],
+            "symbolBindingRewrites": null
+          },
+          {
+            "ordinal": 7,
+            "symbol": "_ZN12daStarGate_c23St_TalkingToPlayer_MainEP6Player",
+            "identical": true,
+            "relocCount": 7,
+            "differences": [],
+            "symbolBindingRewrites": null
+          },
+          {
+            "ordinal": 8,
+            "symbol": "_ZN12daStarGate_c23St_TalkingToPlayer_InitEP6Player",
+            "identical": true,
+            "relocCount": 2,
+            "differences": [],
+            "symbolBindingRewrites": null
+          },
+          {
+            "ordinal": 9,
+            "symbol": "_ZN12daStarGate_c12St_Wait_MainEP6Player",
+            "identical": true,
+            "relocCount": 13,
+            "differences": [],
+            "symbolBindingRewrites": null
+          },
+          {
+            "ordinal": 10,
+            "symbol": "_ZN12daStarGate_c11TryOpenDoorEP6Player",
+            "identical": true,
+            "relocCount": 4,
+            "differences": [],
+            "symbolBindingRewrites": null
+          },
+          {
+            "ordinal": 11,
+            "symbol": "_ZN12daStarGate_c17IsInFrontOfPlayerEP6Player",
+            "identical": true,
+            "relocCount": 1,
+            "differences": [],
+            "symbolBindingRewrites": null
+          },
+          {
+            "ordinal": 12,
+            "symbol": "_ZN12daStarGate_c26CalculateRelativePlayerPosEv",
+            "identical": true,
+            "relocCount": 5,
+            "differences": [],
+            "symbolBindingRewrites": null
+          },
+          {
+            "ordinal": 13,
+            "symbol": "_ZN12daStarGate_c11ChangeStateEPNS_5StateEP6Player",
+            "identical": true,
+            "relocCount": 0,
+            "differences": [],
+            "symbolBindingRewrites": null
+          },
+          {
+            "ordinal": 14,
+            "symbol": "_ZN12daStarGate_c16CleanupResourcesEv",
+            "identical": true,
+            "relocCount": 2,
+            "differences": [],
+            "symbolBindingRewrites": null
+          },
+          {
+            "ordinal": 15,
+            "symbol": "_ZN12daStarGate_c16OnPendingDestroyEv",
+            "identical": true,
+            "relocCount": 0,
+            "differences": [],
+            "symbolBindingRewrites": null
+          },
+          {
+            "ordinal": 16,
+            "symbol": "_ZN12daStarGate_c6RenderEv",
+            "identical": true,
+            "relocCount": 6,
+            "differences": [],
+            "symbolBindingRewrites": null
+          },
+          {
+            "ordinal": 17,
+            "symbol": "_ZN12daStarGate_c8BehaviorEv",
+            "identical": true,
+            "relocCount": 1,
+            "differences": [],
+            "symbolBindingRewrites": null
+          },
+          {
+            "ordinal": 18,
+            "symbol": "_ZN12daStarGate_c13InitResourcesEv",
+            "identical": true,
+            "relocCount": 8,
+            "differences": [],
+            "symbolBindingRewrites": null
+          },
+          {
+            "ordinal": 19,
+            "symbol": "daStarGate_c_classInit",
+            "identical": true,
+            "relocCount": 4,
+            "differences": [],
+            "symbolBindingRewrites": null
+          }
+        ]
+      },
+      "compilerOnlyPolicy": {
+        "requested": [],
+        "deadstripped": [],
+        "droppedSections": null,
+        "errors": null
+      },
+      "externalizedPolicy": {
+        "requested": [
+          "_ZTI7fBase_c",
+          "_ZTS7fBase_c",
+          "_ZTS7dBase_c",
+          "_ZTS8dActor_c",
+          "_ZTI7dBase_c",
+          "_ZTI8dActor_c"
+        ],
+        "externalized": [
+          "_ZTI7dBase_c",
+          "_ZTI7fBase_c",
+          "_ZTI8dActor_c",
+          "_ZTS7dBase_c",
+          "_ZTS7fBase_c",
+          "_ZTS8dActor_c"
+        ],
+        "droppedSections": [
+          16,
+          17,
+          24,
+          25,
+          26,
+          31,
+          32,
+          33,
+          34
+        ],
+        "verificationOk": true,
+        "errors": []
+      },
+      "undefinedAliasPolicy": {
+        "requested": [
+          {
+            "from": "_ZN20StarGateModelFilePtrC1Ej",
+            "to": "func_02017acc",
+            "module": "arm9",
+            "address": "0x02017acc",
+            "evidence": "retail initializer call destination and the wrapper constructor's exact PC24 relocation"
+          },
+          {
+            "from": "_ZN20StarGateModelFilePtrD1Ev",
+            "to": "func_02017ab4",
+            "module": "arm9",
+            "address": "0x02017ab4",
+            "evidence": "retail destructor-registration destination and the wrapper destructor's exact ABS32 relocation"
+          },
+          {
+            "from": "__register_global_object",
+            "to": "func_020731dc",
+            "module": "arm9",
+            "address": "0x020731dc",
+            "evidence": "compiler-generated static initialization call shape and direct retail reference"
+          }
+        ],
+        "renamed": [
+          {
+            "symbolIndex": 151,
+            "from": "_ZN20StarGateModelFilePtrC1Ej",
+            "to": "func_02017acc"
+          },
+          {
+            "symbolIndex": 153,
+            "from": "_ZN20StarGateModelFilePtrD1Ev",
+            "to": "func_02017ab4"
+          },
+          {
+            "symbolIndex": 152,
+            "from": "__register_global_object",
+            "to": "func_020731dc"
+          }
+        ],
+        "errors": null
+      },
+      "symbolBindingPolicy": {
+        "requested": [
+          {
+            "symbol": "_ZN12daStarGate_cD1Ev",
+            "from": "STB_LOPROC",
+            "to": "STB_GLOBAL",
+            "evidence": "mwccarm emits the inline complete destructor with processor-specific binding; the configured ROM symbol uses global binding"
+          },
+          {
+            "symbol": "_ZN12daStarGate_cD0Ev",
+            "from": "STB_LOPROC",
+            "to": "STB_GLOBAL",
+            "evidence": "mwccarm emits the inline deleting destructor with processor-specific binding; the configured ROM symbol uses global binding"
+          },
+          {
+            "symbol": "__sinit_daStarGate_c.cpp",
+            "from": "STB_LOCAL",
+            "to": "STB_GLOBAL",
+            "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
+          },
+          {
+            "symbol": ".p__sinit_daStarGate_c.cpp",
+            "from": "STB_LOCAL",
+            "to": "STB_GLOBAL",
+            "evidence": "mwcc emits the constructor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+          },
+          {
+            "symbol": "@436",
+            "from": "STB_LOCAL",
+            "to": "STB_GLOBAL",
+            "evidence": "compiler-local St_StayClosed_Main PTMF is a configured initializer relocation destination at 0x02148334"
+          },
+          {
+            "symbol": "@434",
+            "from": "STB_LOCAL",
+            "to": "STB_GLOBAL",
+            "evidence": "compiler-local St_OpenClose_Main PTMF is a configured initializer relocation destination at 0x0214833c"
+          },
+          {
+            "symbol": "@426",
+            "from": "STB_LOCAL",
+            "to": "STB_GLOBAL",
+            "evidence": "compiler-local St_TalkingToPlayer_Main PTMF is a configured initializer relocation destination at 0x02148344"
+          },
+          {
+            "symbol": "@428",
+            "from": "STB_LOCAL",
+            "to": "STB_GLOBAL",
+            "evidence": "compiler-local St_Unlocking_Init PTMF is a configured initializer relocation destination at 0x0214834c"
+          },
+          {
+            "symbol": "@432",
+            "from": "STB_LOCAL",
+            "to": "STB_GLOBAL",
+            "evidence": "compiler-local St_OpenClose_Init PTMF is a configured initializer relocation destination at 0x02148354"
+          },
+          {
+            "symbol": "@430",
+            "from": "STB_LOCAL",
+            "to": "STB_GLOBAL",
+            "evidence": "compiler-local St_Unlocking_Main PTMF is a configured initializer relocation destination at 0x0214835c"
+          },
+          {
+            "symbol": "@424",
+            "from": "STB_LOCAL",
+            "to": "STB_GLOBAL",
+            "evidence": "compiler-local St_TalkingToPlayer_Init PTMF is a configured initializer relocation destination at 0x02148364"
+          },
+          {
+            "symbol": "@422",
+            "from": "STB_LOCAL",
+            "to": "STB_GLOBAL",
+            "evidence": "compiler-local St_Wait_Main PTMF is a configured initializer relocation destination at 0x0214836c"
+          },
+          {
+            "symbol": "@420",
+            "from": "STB_LOCAL",
+            "to": "STB_GLOBAL",
+            "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x0214893c"
+          }
+        ],
+        "rewritten": [
+          {
+            "symbolIndex": 106,
+            "symbol": "_ZN12daStarGate_cD1Ev",
+            "from": "STB_LOPROC",
+            "to": "STB_GLOBAL"
+          },
+          {
+            "symbolIndex": 100,
+            "symbol": "_ZN12daStarGate_cD0Ev",
+            "from": "STB_LOPROC",
+            "to": "STB_GLOBAL"
+          },
+          {
+            "symbolIndex": 46,
+            "symbol": "__sinit_daStarGate_c.cpp",
+            "from": "STB_LOCAL",
+            "to": "STB_GLOBAL"
+          },
+          {
+            "symbolIndex": 45,
+            "symbol": ".p__sinit_daStarGate_c.cpp",
+            "from": "STB_LOCAL",
+            "to": "STB_GLOBAL"
+          },
+          {
+            "symbolIndex": 43,
+            "symbol": "@436",
+            "from": "STB_LOCAL",
+            "to": "STB_GLOBAL"
+          },
+          {
+            "symbolIndex": 37,
+            "symbol": "@434",
+            "from": "STB_LOCAL",
+            "to": "STB_GLOBAL"
+          },
+          {
+            "symbolIndex": 36,
+            "symbol": "@426",
+            "from": "STB_LOCAL",
+            "to": "STB_GLOBAL"
+          },
+          {
+            "symbolIndex": 39,
+            "symbol": "@428",
+            "from": "STB_LOCAL",
+            "to": "STB_GLOBAL"
+          },
+          {
+            "symbolIndex": 40,
+            "symbol": "@432",
+            "from": "STB_LOCAL",
+            "to": "STB_GLOBAL"
+          },
+          {
+            "symbolIndex": 38,
+            "symbol": "@430",
+            "from": "STB_LOCAL",
+            "to": "STB_GLOBAL"
+          },
+          {
+            "symbolIndex": 41,
+            "symbol": "@424",
+            "from": "STB_LOCAL",
+            "to": "STB_GLOBAL"
+          },
+          {
+            "symbolIndex": 42,
+            "symbol": "@422",
+            "from": "STB_LOCAL",
+            "to": "STB_GLOBAL"
+          },
+          {
+            "symbolIndex": 44,
+            "symbol": "@420",
+            "from": "STB_LOCAL",
+            "to": "STB_GLOBAL"
+          }
+        ],
+        "errors": null
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".init",
+            "original": [
+              86
+            ],
+            "desired": [
+              86
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              84
+            ],
+            "desired": [
+              84
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              5,
+              7,
+              9,
+              11,
+              14,
+              18,
+              20,
+              22,
+              27,
+              35,
+              41,
+              42,
+              44
+            ],
+            "desired": [
+              22,
+              7,
+              5,
+              11,
+              14,
+              9,
+              18,
+              20,
+              27,
+              35,
+              41,
+              42,
+              44
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              13,
+              29,
+              30,
+              36,
+              37,
+              38,
+              39,
+              40
+            ],
+            "desired": [
+              13,
+              29,
+              30,
+              36,
+              37,
+              38,
+              39,
+              40
+            ]
+          }
+        ],
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".data",
+              "original": [
+                5,
+                7,
+                9,
+                11,
+                14,
+                18,
+                20,
+                22,
+                27,
+                35,
+                41,
+                42,
+                44
+              ],
+              "desired": [
+                22,
+                7,
+                5,
+                11,
+                14,
+                9,
+                18,
+                20,
+                27,
+                35,
+                41,
+                42,
+                44
+              ],
+              "slots": [
+                5,
+                7,
+                9,
+                11,
+                14,
+                18,
+                20,
+                22,
+                27,
+                35,
+                41,
+                42,
+                44
+              ]
+            }
+          ],
+          "symbolIndices": 13,
+          "sectionLinks": 0,
+          "sectionInfos": 11,
+          "error": null
+        },
+        "errors": null
+      },
+      "nontextPartition": {
+        "requestedSections": [
+          ".init",
+          ".ctor",
+          ".data",
+          ".bss"
+        ],
+        "licensedSymbols": [
+          ".p__sinit_daStarGate_c.cpp",
+          "@420",
+          "@422",
+          "@424",
+          "@426",
+          "@428",
+          "@430",
+          "@432",
+          "@434",
+          "@436",
+          "_ZN12daStarGate_c12ST_UNLOCKINGE",
+          "_ZN12daStarGate_c13ST_OPEN_CLOSEE",
+          "_ZN12daStarGate_c14ST_STAY_CLOSEDE",
+          "_ZN12daStarGate_c20ST_TALKING_TO_PLAYERE",
+          "_ZN12daStarGate_c7ST_WAITE",
+          "_ZTI12daStarGate_c",
+          "_ZTS12daStarGate_c",
+          "_ZTV12daStarGate_c",
+          "__sinit_daStarGate_c.cpp",
+          "data_ov100_02148390",
+          "data_ov100_02148934",
+          "data_ov100_02148948",
+          "g_profile_STAR_GATE"
+        ],
+        "deferredOutputs": [
+          {
+            "symbol": "_ZN12daStarGate_cD1Ev",
+            "section": ".text",
+            "size": "0x00000030"
+          },
+          {
+            "symbol": "_ZN12daStarGate_cD0Ev",
+            "section": ".text",
+            "size": "0x00000044"
+          },
+          {
+            "symbol": "_ZN12daStarGate_c18St_StayClosed_MainEP6Player",
+            "section": ".text",
+            "size": "0x00000040"
+          },
+          {
+            "symbol": "_ZN12daStarGate_c17St_OpenClose_MainEP6Player",
+            "section": ".text",
+            "size": "0x0000012c"
+          },
+          {
+            "symbol": "_ZN12daStarGate_c17St_OpenClose_InitEP6Player",
+            "section": ".text",
+            "size": "0x0000005c"
+          },
+          {
+            "symbol": "_ZN12daStarGate_c17St_Unlocking_MainEP6Player",
+            "section": ".text",
+            "size": "0x0000006c"
+          },
+          {
+            "symbol": "_ZN12daStarGate_c17St_Unlocking_InitEP6Player",
+            "section": ".text",
+            "size": "0x00000020"
+          },
+          {
+            "symbol": "_ZN12daStarGate_c23St_TalkingToPlayer_MainEP6Player",
+            "section": ".text",
+            "size": "0x00000090"
+          },
+          {
+            "symbol": "_ZN12daStarGate_c23St_TalkingToPlayer_InitEP6Player",
+            "section": ".text",
+            "size": "0x0000002c"
+          },
+          {
+            "symbol": "_ZN12daStarGate_c12St_Wait_MainEP6Player",
+            "section": ".text",
+            "size": "0x000001b8"
+          },
+          {
+            "symbol": "_ZN12daStarGate_c11TryOpenDoorEP6Player",
+            "section": ".text",
+            "size": "0x00000064"
+          },
+          {
+            "symbol": "_ZN12daStarGate_c17IsInFrontOfPlayerEP6Player",
+            "section": ".text",
+            "size": "0x0000008c"
+          },
+          {
+            "symbol": "_ZN12daStarGate_c26CalculateRelativePlayerPosEv",
+            "section": ".text",
+            "size": "0x00000068"
+          },
+          {
+            "symbol": "_ZN12daStarGate_c11ChangeStateEPNS_5StateEP6Player",
+            "section": ".text",
+            "size": "0x00000054"
+          },
+          {
+            "symbol": "_ZN12daStarGate_c16CleanupResourcesEv",
+            "section": ".text",
+            "size": "0x00000024"
+          },
+          {
+            "symbol": "_ZN12daStarGate_c16OnPendingDestroyEv",
+            "section": ".text",
+            "size": "0x00000004"
+          },
+          {
+            "symbol": "_ZN12daStarGate_c6RenderEv",
+            "section": ".text",
+            "size": "0x000000f8"
+          },
+          {
+            "symbol": "_ZN12daStarGate_c8BehaviorEv",
+            "section": ".text",
+            "size": "0x00000050"
+          },
+          {
+            "symbol": "_ZN12daStarGate_c13InitResourcesEv",
+            "section": ".text",
+            "size": "0x000000a8"
+          },
+          {
+            "symbol": "daStarGate_c_classInit",
+            "section": ".text",
+            "size": "0x00000038"
+          }
+        ],
+        "keptSectionIndices": [
+          5,
+          7,
+          9,
+          11,
+          13,
+          14,
+          18,
+          20,
+          22,
+          27,
+          29,
+          30,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          44,
+          84,
+          86
+        ],
+        "droppedSectionIndices": [
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77,
+          78,
+          79,
+          80,
+          81,
+          82,
+          83
+        ],
+        "externalizedTextSymbols": [
+          "_ZN12daStarGate_c12St_Wait_MainEP6Player",
+          "_ZN12daStarGate_c13InitResourcesEv",
+          "_ZN12daStarGate_c16CleanupResourcesEv",
+          "_ZN12daStarGate_c16OnPendingDestroyEv",
+          "_ZN12daStarGate_c17St_OpenClose_InitEP6Player",
+          "_ZN12daStarGate_c17St_OpenClose_MainEP6Player",
+          "_ZN12daStarGate_c17St_Unlocking_InitEP6Player",
+          "_ZN12daStarGate_c17St_Unlocking_MainEP6Player",
+          "_ZN12daStarGate_c18St_StayClosed_MainEP6Player",
+          "_ZN12daStarGate_c23St_TalkingToPlayer_InitEP6Player",
+          "_ZN12daStarGate_c23St_TalkingToPlayer_MainEP6Player",
+          "_ZN12daStarGate_c6RenderEv",
+          "_ZN12daStarGate_c8BehaviorEv",
+          "_ZN12daStarGate_cD0Ev",
+          "_ZN12daStarGate_cD1Ev",
+          "daStarGate_c_classInit"
+        ],
+        "deadTextSymbols": [
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$d",
+          "$d",
+          "$d",
+          "$d",
+          "$d",
+          "$d",
+          "$d",
+          "$d",
+          "$d",
+          "$d",
+          "$d",
+          "$d",
+          "$d",
+          "_ZN12daStarGate_c11ChangeStateEPNS_5StateEP6Player",
+          "_ZN12daStarGate_c11TryOpenDoorEP6Player",
+          "_ZN12daStarGate_c17IsInFrontOfPlayerEP6Player",
+          "_ZN12daStarGate_c26CalculateRelativePlayerPosEv"
+        ],
+        "liveSections": [
+          {
+            "index": 5,
+            "name": ".data",
+            "type": "SHT_PROGBITS",
+            "size": 8
+          },
+          {
+            "index": 7,
+            "name": ".data",
+            "type": "SHT_PROGBITS",
+            "size": 8
+          },
+          {
+            "index": 9,
+            "name": ".data",
+            "type": "SHT_PROGBITS",
+            "size": 8
+          },
+          {
+            "index": 11,
+            "name": ".data",
+            "type": "SHT_PROGBITS",
+            "size": 8
+          },
+          {
+            "index": 13,
+            "name": ".bss",
+            "type": "SHT_NOBITS",
+            "size": 8
+          },
+          {
+            "index": 14,
+            "name": ".data",
+            "type": "SHT_PROGBITS",
+            "size": 8
+          },
+          {
+            "index": 18,
+            "name": ".data",
+            "type": "SHT_PROGBITS",
+            "size": 8
+          },
+          {
+            "index": 20,
+            "name": ".data",
+            "type": "SHT_PROGBITS",
+            "size": 8
+          },
+          {
+            "index": 22,
+            "name": ".data",
+            "type": "SHT_PROGBITS",
+            "size": 8
+          },
+          {
+            "index": 27,
+            "name": ".data",
+            "type": "SHT_PROGBITS",
+            "size": 12
+          },
+          {
+            "index": 29,
+            "name": ".bss",
+            "type": "SHT_NOBITS",
+            "size": 12
+          },
+          {
+            "index": 30,
+            "name": ".bss",
+            "type": "SHT_NOBITS",
+            "size": 12
+          },
+          {
+            "index": 35,
+            "name": ".data",
+            "type": "SHT_PROGBITS",
+            "size": 15
+          },
+          {
+            "index": 36,
+            "name": ".bss",
+            "type": "SHT_NOBITS",
+            "size": 16
+          },
+          {
+            "index": 37,
+            "name": ".bss",
+            "type": "SHT_NOBITS",
+            "size": 16
+          },
+          {
+            "index": 38,
+            "name": ".bss",
+            "type": "SHT_NOBITS",
+            "size": 16
+          },
+          {
+            "index": 39,
+            "name": ".bss",
+            "type": "SHT_NOBITS",
+            "size": 16
+          },
+          {
+            "index": 40,
+            "name": ".bss",
+            "type": "SHT_NOBITS",
+            "size": 16
+          },
+          {
+            "index": 41,
+            "name": ".data",
+            "type": "SHT_PROGBITS",
+            "size": 24
+          },
+          {
+            "index": 42,
+            "name": ".data",
+            "type": "SHT_PROGBITS",
+            "size": 28
+          },
+          {
+            "index": 44,
+            "name": ".data",
+            "type": "SHT_PROGBITS",
+            "size": 132
+          },
+          {
+            "index": 84,
+            "name": ".ctor",
+            "type": "SHT_PROGBITS",
+            "size": 4
+          },
+          {
+            "index": 86,
+            "name": ".init",
+            "type": "SHT_PROGBITS",
+            "size": 336
+          }
+        ],
+        "error": null
+      },
+      "ownedBeforePartition": {
+        "ok": true,
+        "rows": [
+          {
+            "section": ".init",
+            "start": "0x02147a70",
+            "end": "0x02147bc0",
+            "emittedBytes": 336,
+            "sizeOk": true,
+            "bytesOk": true,
+            "differingWords": 0,
+            "relocCount": 19
+          },
+          {
+            "section": ".ctor",
+            "start": "0x02147df8",
+            "end": "0x02147dfc",
+            "emittedBytes": 4,
+            "sizeOk": true,
+            "bytesOk": true,
+            "differingWords": 0,
+            "relocCount": 1
+          },
+          {
+            "section": ".data",
+            "start": "0x02148334",
+            "end": "0x02148448",
+            "emittedBytes": 276,
+            "sizeOk": true,
+            "bytesOk": true,
+            "differingWords": 0,
+            "relocCount": 44
+          },
+          {
+            "section": ".bss",
+            "start": "0x02148934",
+            "end": "0x021489a4",
+            "emittedBytes": 112,
+            "sizeOk": true,
+            "bytesOk": true,
+            "differingWords": 0,
+            "relocCount": 0
+          }
+        ],
+        "errors": []
+      },
+      "ownedAfterRebias": {
+        "ok": true,
+        "rows": [
+          {
+            "section": ".init",
+            "start": "0x02147a70",
+            "end": "0x02147bc0",
+            "emittedBytes": 336,
+            "sizeOk": true,
+            "bytesOk": true,
+            "differingWords": 0,
+            "relocCount": 19
+          },
+          {
+            "section": ".ctor",
+            "start": "0x02147df8",
+            "end": "0x02147dfc",
+            "emittedBytes": 4,
+            "sizeOk": true,
+            "bytesOk": true,
+            "differingWords": 0,
+            "relocCount": 1
+          },
+          {
+            "section": ".data",
+            "start": "0x02148334",
+            "end": "0x02148448",
+            "emittedBytes": 276,
+            "sizeOk": true,
+            "bytesOk": true,
+            "differingWords": 0,
+            "relocCount": 44
+          },
+          {
+            "section": ".bss",
+            "start": "0x02148934",
+            "end": "0x021489a4",
+            "emittedBytes": 112,
+            "sizeOk": true,
+            "bytesOk": true,
+            "differingWords": 0,
+            "relocCount": 0
+          }
+        ],
+        "errors": []
+      },
+      "vtableRebias": {
+        "rebased": [
+          {
+            "symbol": "_ZTV12daStarGate_c",
+            "bias": 8,
+            "oldValue": 0,
+            "newValue": 8,
+            "oldSize": 132,
+            "newSize": 124
+          }
+        ],
+        "aliases": [],
+        "partitions": [],
+        "relocations": [
+          {
+            "section": ".data",
+            "relocationSection": ".rela.data",
+            "offset": 0,
+            "symbol": "_ZTVN3abi20__si_class_type_infoE",
+            "type": "R_ARM_ABS32",
+            "oldAddend": 8,
+            "newAddend": 0,
+            "mode": "undefined-public-import"
+          }
+        ],
+        "stringTable": null,
+        "error": null
+      },
+      "linkedStorageAliases": null,
+      "objectHashes": {
+        "rawTuSha256": "28f9fb70cfc244ab3bc54760644ef35b165b130521e2a38cba236decc7cbbb63",
+        "rawTuBytes": 15408,
+        "tuObjectPath": "build/tu/ov100-daStarGate_c/link-partitioned/src_tu/actors/daStarGate_c.o",
+        "postPolicySha256": "19f4419e3a7de9ff9d6dbd2cac135fbd6138ac4f37ef54604ba067394ca35620",
+        "postOrderSha256": "6b8d2bae72dd91bac2d7ab0e7946a67af7040bd5d4b48f0c7cba66ae66e6f023",
+        "reducedStorageSha256": "104c40c658964458590c46a974702b28a2fc34be28281a0ca3d0422c3380163d",
+        "linkedDataSha256": "441d484e92cb489380aad130e8f09f15f5f8c753711b0a0d85e0d806f01831a0"
+      },
+      "artifactAudit": {
+        "ok": true,
+        "errors": [],
+        "expectedTuSelectors": [
+          "daStarGate_c.o(.init)",
+          "daStarGate_c.o(.ctor)",
+          "daStarGate_c.o(.data)",
+          "daStarGate_c.o(.bss)"
+        ],
+        "observedTuSelectors": [
+          "daStarGate_c.o(.init)",
+          "daStarGate_c.o(.ctor)",
+          "daStarGate_c.o(.data)",
+          "daStarGate_c.o(.bss)"
+        ],
+        "expectedLegacyCount": 20,
+        "selectorCount": 10861,
+        "objectCount": 10634,
+        "selectorListSha256": "3eaedc94a8e92dc3985c5a64776a7d4195e7eef16976359ef13770f360d5ec57",
+        "objectListSha256": "d02d172cbf529b0bbca5a75a0ef740e4b21b88800f0b8df89ac1e7fb5d05a28a"
+      },
+      "ranges": [
+        {
+          "section": ".text",
+          "start": "0x021458d4",
+          "end": "0x0214620c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".init",
+          "start": "0x02147a70",
+          "end": "0x02147bc0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x02147df8",
+          "end": "0x02147dfc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x02148334",
+          "end": "0x02148448",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x02148934",
+          "end": "0x021489a4",
+          "comparison": "NOBITS -- symbol/module gates"
+        }
+      ],
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "moduleFidelityPassed": true,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "strayOutputs": null,
+      "scratch": "build/tu/ov100-daStarGate_c/link-partitioned (gitignored)"
+    },
+    "state": "partitioned-link-verified",
+    "stateMeaning": "At least one scratch-only attempt compiled one shadow TU into exact ROM-ordered text partitions plus exact owned non-text data and reproduced the stock ROM. The latest attempt is recorded separately; this is never a production enrollment or promotion state.",
+    "lastVerified": {
+      "result": "partitioned-link-verified",
+      "round": "tools/tubuild.py linkcheck --partitioned -- scratch-only additive non-text delinks entry, objisolate-derived per-function text objects, exact compiler-only/RTTI policies, exact data partition and vtable address-point rebias, whole-tree link and full-ROM comparison",
+      "trackedDelinksChanged": false,
+      "text": {
+        "toolchain": "2004/b56",
+        "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+        "mergedBytes": 15408,
+        "contributionEquivalent": "20/20",
+        "substitutedObjectPaths": [
+          "src/_ZN12daStarGate_cD1Ev.cpp",
+          "src/_ZN12daStarGate_cD0Ev.cpp",
+          "src/_ZN12daStarGate_c18St_StayClosed_MainEP6Player.cpp",
+          "src/_ZN12daStarGate_c17St_OpenClose_MainEP6Player.cpp",
+          "src/_ZN12daStarGate_c17St_OpenClose_InitEP6Player.cpp",
+          "src/_ZN12daStarGate_c17St_Unlocking_MainEP6Player.cpp",
+          "src/_ZN12daStarGate_c17St_Unlocking_InitEP6Player.cpp",
+          "src/_ZN12daStarGate_c23St_TalkingToPlayer_MainEP6Player.cpp",
+          "src/_ZN12daStarGate_c23St_TalkingToPlayer_InitEP6Player.cpp",
+          "src/_ZN12daStarGate_c12St_Wait_MainEP6Player.cpp",
+          "src/_ZN12daStarGate_c11TryOpenDoorEP6Player.cpp",
+          "src/_ZN12daStarGate_c17IsInFrontOfPlayerEP6Player.cpp",
+          "src/_ZN12daStarGate_c26CalculateRelativePlayerPosEv.cpp",
+          "src/_ZN12daStarGate_c11ChangeStateEPNS_5StateEP6Player.cpp",
+          "src/_ZN12daStarGate_c16CleanupResourcesEv.cpp",
+          "src/_ZN12daStarGate_c16OnPendingDestroyEv.cpp",
+          "src/_ZN12daStarGate_c6RenderEv.cpp",
+          "src/_ZN12daStarGate_c8BehaviorEv.cpp",
+          "src/_ZN12daStarGate_c13InitResourcesEv.cpp",
+          "src/d_a_star_gate.c"
+        ],
+        "rows": [
+          {
+            "ordinal": 0,
+            "symbol": "_ZN12daStarGate_cD1Ev",
+            "identical": true,
+            "relocCount": 3,
+            "differences": [],
+            "symbolBindingRewrites": {
+              "requested": [
+                {
+                  "symbol": "_ZN12daStarGate_cD1Ev",
+                  "from": "STB_LOPROC",
+                  "to": "STB_GLOBAL",
+                  "evidence": "mwccarm emits the inline complete destructor with processor-specific binding; the configured ROM symbol uses global binding"
+                }
+              ],
+              "rewritten": [
+                {
+                  "symbolIndex": 106,
+                  "symbol": "_ZN12daStarGate_cD1Ev",
+                  "from": "STB_LOPROC",
+                  "to": "STB_GLOBAL"
+                }
+              ],
+              "objisolate": {
+                "rewritten": [
+                  {
+                    "symbolIndex": 106,
+                    "symbol": "_ZN12daStarGate_cD1Ev",
+                    "from": "STB_LOPROC",
+                    "to": "STB_GLOBAL"
+                  }
+                ],
+                "error": null
+              }
+            }
+          },
+          {
+            "ordinal": 1,
+            "symbol": "_ZN12daStarGate_cD0Ev",
+            "identical": true,
+            "relocCount": 5,
+            "differences": [],
+            "symbolBindingRewrites": {
+              "requested": [
+                {
+                  "symbol": "_ZN12daStarGate_cD0Ev",
+                  "from": "STB_LOPROC",
+                  "to": "STB_GLOBAL",
+                  "evidence": "mwccarm emits the inline deleting destructor with processor-specific binding; the configured ROM symbol uses global binding"
+                }
+              ],
+              "rewritten": [
+                {
+                  "symbolIndex": 100,
+                  "symbol": "_ZN12daStarGate_cD0Ev",
+                  "from": "STB_LOPROC",
+                  "to": "STB_GLOBAL"
+                }
+              ],
+              "objisolate": {
+                "rewritten": [
+                  {
+                    "symbolIndex": 100,
+                    "symbol": "_ZN12daStarGate_cD0Ev",
+                    "from": "STB_LOPROC",
+                    "to": "STB_GLOBAL"
+                  }
+                ],
+                "error": null
+              }
+            }
+          },
+          {
+            "ordinal": 2,
+            "symbol": "_ZN12daStarGate_c18St_StayClosed_MainEP6Player",
+            "identical": true,
+            "relocCount": 3,
+            "differences": [],
+            "symbolBindingRewrites": null
+          },
+          {
+            "ordinal": 3,
+            "symbol": "_ZN12daStarGate_c17St_OpenClose_MainEP6Player",
+            "identical": true,
+            "relocCount": 13,
+            "differences": [],
+            "symbolBindingRewrites": null
+          },
+          {
+            "ordinal": 4,
+            "symbol": "_ZN12daStarGate_c17St_OpenClose_InitEP6Player",
+            "identical": true,
+            "relocCount": 5,
+            "differences": [],
+            "symbolBindingRewrites": null
+          },
+          {
+            "ordinal": 5,
+            "symbol": "_ZN12daStarGate_c17St_Unlocking_MainEP6Player",
+            "identical": true,
+            "relocCount": 4,
+            "differences": [],
+            "symbolBindingRewrites": null
+          },
+          {
+            "ordinal": 6,
+            "symbol": "_ZN12daStarGate_c17St_Unlocking_InitEP6Player",
+            "identical": true,
+            "relocCount": 1,
+            "differences": [],
+            "symbolBindingRewrites": null
+          },
+          {
+            "ordinal": 7,
+            "symbol": "_ZN12daStarGate_c23St_TalkingToPlayer_MainEP6Player",
+            "identical": true,
+            "relocCount": 7,
+            "differences": [],
+            "symbolBindingRewrites": null
+          },
+          {
+            "ordinal": 8,
+            "symbol": "_ZN12daStarGate_c23St_TalkingToPlayer_InitEP6Player",
+            "identical": true,
+            "relocCount": 2,
+            "differences": [],
+            "symbolBindingRewrites": null
+          },
+          {
+            "ordinal": 9,
+            "symbol": "_ZN12daStarGate_c12St_Wait_MainEP6Player",
+            "identical": true,
+            "relocCount": 13,
+            "differences": [],
+            "symbolBindingRewrites": null
+          },
+          {
+            "ordinal": 10,
+            "symbol": "_ZN12daStarGate_c11TryOpenDoorEP6Player",
+            "identical": true,
+            "relocCount": 4,
+            "differences": [],
+            "symbolBindingRewrites": null
+          },
+          {
+            "ordinal": 11,
+            "symbol": "_ZN12daStarGate_c17IsInFrontOfPlayerEP6Player",
+            "identical": true,
+            "relocCount": 1,
+            "differences": [],
+            "symbolBindingRewrites": null
+          },
+          {
+            "ordinal": 12,
+            "symbol": "_ZN12daStarGate_c26CalculateRelativePlayerPosEv",
+            "identical": true,
+            "relocCount": 5,
+            "differences": [],
+            "symbolBindingRewrites": null
+          },
+          {
+            "ordinal": 13,
+            "symbol": "_ZN12daStarGate_c11ChangeStateEPNS_5StateEP6Player",
+            "identical": true,
+            "relocCount": 0,
+            "differences": [],
+            "symbolBindingRewrites": null
+          },
+          {
+            "ordinal": 14,
+            "symbol": "_ZN12daStarGate_c16CleanupResourcesEv",
+            "identical": true,
+            "relocCount": 2,
+            "differences": [],
+            "symbolBindingRewrites": null
+          },
+          {
+            "ordinal": 15,
+            "symbol": "_ZN12daStarGate_c16OnPendingDestroyEv",
+            "identical": true,
+            "relocCount": 0,
+            "differences": [],
+            "symbolBindingRewrites": null
+          },
+          {
+            "ordinal": 16,
+            "symbol": "_ZN12daStarGate_c6RenderEv",
+            "identical": true,
+            "relocCount": 6,
+            "differences": [],
+            "symbolBindingRewrites": null
+          },
+          {
+            "ordinal": 17,
+            "symbol": "_ZN12daStarGate_c8BehaviorEv",
+            "identical": true,
+            "relocCount": 1,
+            "differences": [],
+            "symbolBindingRewrites": null
+          },
+          {
+            "ordinal": 18,
+            "symbol": "_ZN12daStarGate_c13InitResourcesEv",
+            "identical": true,
+            "relocCount": 8,
+            "differences": [],
+            "symbolBindingRewrites": null
+          },
+          {
+            "ordinal": 19,
+            "symbol": "daStarGate_c_classInit",
+            "identical": true,
+            "relocCount": 4,
+            "differences": [],
+            "symbolBindingRewrites": null
+          }
+        ]
+      },
+      "compilerOnlyPolicy": {
+        "requested": [],
+        "deadstripped": [],
+        "droppedSections": null,
+        "errors": null
+      },
+      "externalizedPolicy": {
+        "requested": [
+          "_ZTI7fBase_c",
+          "_ZTS7fBase_c",
+          "_ZTS7dBase_c",
+          "_ZTS8dActor_c",
+          "_ZTI7dBase_c",
+          "_ZTI8dActor_c"
+        ],
+        "externalized": [
+          "_ZTI7dBase_c",
+          "_ZTI7fBase_c",
+          "_ZTI8dActor_c",
+          "_ZTS7dBase_c",
+          "_ZTS7fBase_c",
+          "_ZTS8dActor_c"
+        ],
+        "droppedSections": [
+          16,
+          17,
+          24,
+          25,
+          26,
+          31,
+          32,
+          33,
+          34
+        ],
+        "verificationOk": true,
+        "errors": []
+      },
+      "undefinedAliasPolicy": {
+        "requested": [
+          {
+            "from": "_ZN20StarGateModelFilePtrC1Ej",
+            "to": "func_02017acc",
+            "module": "arm9",
+            "address": "0x02017acc",
+            "evidence": "retail initializer call destination and the wrapper constructor's exact PC24 relocation"
+          },
+          {
+            "from": "_ZN20StarGateModelFilePtrD1Ev",
+            "to": "func_02017ab4",
+            "module": "arm9",
+            "address": "0x02017ab4",
+            "evidence": "retail destructor-registration destination and the wrapper destructor's exact ABS32 relocation"
+          },
+          {
+            "from": "__register_global_object",
+            "to": "func_020731dc",
+            "module": "arm9",
+            "address": "0x020731dc",
+            "evidence": "compiler-generated static initialization call shape and direct retail reference"
+          }
+        ],
+        "renamed": [
+          {
+            "symbolIndex": 151,
+            "from": "_ZN20StarGateModelFilePtrC1Ej",
+            "to": "func_02017acc"
+          },
+          {
+            "symbolIndex": 153,
+            "from": "_ZN20StarGateModelFilePtrD1Ev",
+            "to": "func_02017ab4"
+          },
+          {
+            "symbolIndex": 152,
+            "from": "__register_global_object",
+            "to": "func_020731dc"
+          }
+        ],
+        "errors": null
+      },
+      "symbolBindingPolicy": {
+        "requested": [
+          {
+            "symbol": "_ZN12daStarGate_cD1Ev",
+            "from": "STB_LOPROC",
+            "to": "STB_GLOBAL",
+            "evidence": "mwccarm emits the inline complete destructor with processor-specific binding; the configured ROM symbol uses global binding"
+          },
+          {
+            "symbol": "_ZN12daStarGate_cD0Ev",
+            "from": "STB_LOPROC",
+            "to": "STB_GLOBAL",
+            "evidence": "mwccarm emits the inline deleting destructor with processor-specific binding; the configured ROM symbol uses global binding"
+          },
+          {
+            "symbol": "__sinit_daStarGate_c.cpp",
+            "from": "STB_LOCAL",
+            "to": "STB_GLOBAL",
+            "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
+          },
+          {
+            "symbol": ".p__sinit_daStarGate_c.cpp",
+            "from": "STB_LOCAL",
+            "to": "STB_GLOBAL",
+            "evidence": "mwcc emits the constructor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+          },
+          {
+            "symbol": "@436",
+            "from": "STB_LOCAL",
+            "to": "STB_GLOBAL",
+            "evidence": "compiler-local St_StayClosed_Main PTMF is a configured initializer relocation destination at 0x02148334"
+          },
+          {
+            "symbol": "@434",
+            "from": "STB_LOCAL",
+            "to": "STB_GLOBAL",
+            "evidence": "compiler-local St_OpenClose_Main PTMF is a configured initializer relocation destination at 0x0214833c"
+          },
+          {
+            "symbol": "@426",
+            "from": "STB_LOCAL",
+            "to": "STB_GLOBAL",
+            "evidence": "compiler-local St_TalkingToPlayer_Main PTMF is a configured initializer relocation destination at 0x02148344"
+          },
+          {
+            "symbol": "@428",
+            "from": "STB_LOCAL",
+            "to": "STB_GLOBAL",
+            "evidence": "compiler-local St_Unlocking_Init PTMF is a configured initializer relocation destination at 0x0214834c"
+          },
+          {
+            "symbol": "@432",
+            "from": "STB_LOCAL",
+            "to": "STB_GLOBAL",
+            "evidence": "compiler-local St_OpenClose_Init PTMF is a configured initializer relocation destination at 0x02148354"
+          },
+          {
+            "symbol": "@430",
+            "from": "STB_LOCAL",
+            "to": "STB_GLOBAL",
+            "evidence": "compiler-local St_Unlocking_Main PTMF is a configured initializer relocation destination at 0x0214835c"
+          },
+          {
+            "symbol": "@424",
+            "from": "STB_LOCAL",
+            "to": "STB_GLOBAL",
+            "evidence": "compiler-local St_TalkingToPlayer_Init PTMF is a configured initializer relocation destination at 0x02148364"
+          },
+          {
+            "symbol": "@422",
+            "from": "STB_LOCAL",
+            "to": "STB_GLOBAL",
+            "evidence": "compiler-local St_Wait_Main PTMF is a configured initializer relocation destination at 0x0214836c"
+          },
+          {
+            "symbol": "@420",
+            "from": "STB_LOCAL",
+            "to": "STB_GLOBAL",
+            "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x0214893c"
+          }
+        ],
+        "rewritten": [
+          {
+            "symbolIndex": 106,
+            "symbol": "_ZN12daStarGate_cD1Ev",
+            "from": "STB_LOPROC",
+            "to": "STB_GLOBAL"
+          },
+          {
+            "symbolIndex": 100,
+            "symbol": "_ZN12daStarGate_cD0Ev",
+            "from": "STB_LOPROC",
+            "to": "STB_GLOBAL"
+          },
+          {
+            "symbolIndex": 46,
+            "symbol": "__sinit_daStarGate_c.cpp",
+            "from": "STB_LOCAL",
+            "to": "STB_GLOBAL"
+          },
+          {
+            "symbolIndex": 45,
+            "symbol": ".p__sinit_daStarGate_c.cpp",
+            "from": "STB_LOCAL",
+            "to": "STB_GLOBAL"
+          },
+          {
+            "symbolIndex": 43,
+            "symbol": "@436",
+            "from": "STB_LOCAL",
+            "to": "STB_GLOBAL"
+          },
+          {
+            "symbolIndex": 37,
+            "symbol": "@434",
+            "from": "STB_LOCAL",
+            "to": "STB_GLOBAL"
+          },
+          {
+            "symbolIndex": 36,
+            "symbol": "@426",
+            "from": "STB_LOCAL",
+            "to": "STB_GLOBAL"
+          },
+          {
+            "symbolIndex": 39,
+            "symbol": "@428",
+            "from": "STB_LOCAL",
+            "to": "STB_GLOBAL"
+          },
+          {
+            "symbolIndex": 40,
+            "symbol": "@432",
+            "from": "STB_LOCAL",
+            "to": "STB_GLOBAL"
+          },
+          {
+            "symbolIndex": 38,
+            "symbol": "@430",
+            "from": "STB_LOCAL",
+            "to": "STB_GLOBAL"
+          },
+          {
+            "symbolIndex": 41,
+            "symbol": "@424",
+            "from": "STB_LOCAL",
+            "to": "STB_GLOBAL"
+          },
+          {
+            "symbolIndex": 42,
+            "symbol": "@422",
+            "from": "STB_LOCAL",
+            "to": "STB_GLOBAL"
+          },
+          {
+            "symbolIndex": 44,
+            "symbol": "@420",
+            "from": "STB_LOCAL",
+            "to": "STB_GLOBAL"
+          }
+        ],
+        "errors": null
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".init",
+            "original": [
+              86
+            ],
+            "desired": [
+              86
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              84
+            ],
+            "desired": [
+              84
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              5,
+              7,
+              9,
+              11,
+              14,
+              18,
+              20,
+              22,
+              27,
+              35,
+              41,
+              42,
+              44
+            ],
+            "desired": [
+              22,
+              7,
+              5,
+              11,
+              14,
+              9,
+              18,
+              20,
+              27,
+              35,
+              41,
+              42,
+              44
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              13,
+              29,
+              30,
+              36,
+              37,
+              38,
+              39,
+              40
+            ],
+            "desired": [
+              13,
+              29,
+              30,
+              36,
+              37,
+              38,
+              39,
+              40
+            ]
+          }
+        ],
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".data",
+              "original": [
+                5,
+                7,
+                9,
+                11,
+                14,
+                18,
+                20,
+                22,
+                27,
+                35,
+                41,
+                42,
+                44
+              ],
+              "desired": [
+                22,
+                7,
+                5,
+                11,
+                14,
+                9,
+                18,
+                20,
+                27,
+                35,
+                41,
+                42,
+                44
+              ],
+              "slots": [
+                5,
+                7,
+                9,
+                11,
+                14,
+                18,
+                20,
+                22,
+                27,
+                35,
+                41,
+                42,
+                44
+              ]
+            }
+          ],
+          "symbolIndices": 13,
+          "sectionLinks": 0,
+          "sectionInfos": 11,
+          "error": null
+        },
+        "errors": null
+      },
+      "nontextPartition": {
+        "requestedSections": [
+          ".init",
+          ".ctor",
+          ".data",
+          ".bss"
+        ],
+        "licensedSymbols": [
+          ".p__sinit_daStarGate_c.cpp",
+          "@420",
+          "@422",
+          "@424",
+          "@426",
+          "@428",
+          "@430",
+          "@432",
+          "@434",
+          "@436",
+          "_ZN12daStarGate_c12ST_UNLOCKINGE",
+          "_ZN12daStarGate_c13ST_OPEN_CLOSEE",
+          "_ZN12daStarGate_c14ST_STAY_CLOSEDE",
+          "_ZN12daStarGate_c20ST_TALKING_TO_PLAYERE",
+          "_ZN12daStarGate_c7ST_WAITE",
+          "_ZTI12daStarGate_c",
+          "_ZTS12daStarGate_c",
+          "_ZTV12daStarGate_c",
+          "__sinit_daStarGate_c.cpp",
+          "data_ov100_02148390",
+          "data_ov100_02148934",
+          "data_ov100_02148948",
+          "g_profile_STAR_GATE"
+        ],
+        "deferredOutputs": [
+          {
+            "symbol": "_ZN12daStarGate_cD1Ev",
+            "section": ".text",
+            "size": "0x00000030"
+          },
+          {
+            "symbol": "_ZN12daStarGate_cD0Ev",
+            "section": ".text",
+            "size": "0x00000044"
+          },
+          {
+            "symbol": "_ZN12daStarGate_c18St_StayClosed_MainEP6Player",
+            "section": ".text",
+            "size": "0x00000040"
+          },
+          {
+            "symbol": "_ZN12daStarGate_c17St_OpenClose_MainEP6Player",
+            "section": ".text",
+            "size": "0x0000012c"
+          },
+          {
+            "symbol": "_ZN12daStarGate_c17St_OpenClose_InitEP6Player",
+            "section": ".text",
+            "size": "0x0000005c"
+          },
+          {
+            "symbol": "_ZN12daStarGate_c17St_Unlocking_MainEP6Player",
+            "section": ".text",
+            "size": "0x0000006c"
+          },
+          {
+            "symbol": "_ZN12daStarGate_c17St_Unlocking_InitEP6Player",
+            "section": ".text",
+            "size": "0x00000020"
+          },
+          {
+            "symbol": "_ZN12daStarGate_c23St_TalkingToPlayer_MainEP6Player",
+            "section": ".text",
+            "size": "0x00000090"
+          },
+          {
+            "symbol": "_ZN12daStarGate_c23St_TalkingToPlayer_InitEP6Player",
+            "section": ".text",
+            "size": "0x0000002c"
+          },
+          {
+            "symbol": "_ZN12daStarGate_c12St_Wait_MainEP6Player",
+            "section": ".text",
+            "size": "0x000001b8"
+          },
+          {
+            "symbol": "_ZN12daStarGate_c11TryOpenDoorEP6Player",
+            "section": ".text",
+            "size": "0x00000064"
+          },
+          {
+            "symbol": "_ZN12daStarGate_c17IsInFrontOfPlayerEP6Player",
+            "section": ".text",
+            "size": "0x0000008c"
+          },
+          {
+            "symbol": "_ZN12daStarGate_c26CalculateRelativePlayerPosEv",
+            "section": ".text",
+            "size": "0x00000068"
+          },
+          {
+            "symbol": "_ZN12daStarGate_c11ChangeStateEPNS_5StateEP6Player",
+            "section": ".text",
+            "size": "0x00000054"
+          },
+          {
+            "symbol": "_ZN12daStarGate_c16CleanupResourcesEv",
+            "section": ".text",
+            "size": "0x00000024"
+          },
+          {
+            "symbol": "_ZN12daStarGate_c16OnPendingDestroyEv",
+            "section": ".text",
+            "size": "0x00000004"
+          },
+          {
+            "symbol": "_ZN12daStarGate_c6RenderEv",
+            "section": ".text",
+            "size": "0x000000f8"
+          },
+          {
+            "symbol": "_ZN12daStarGate_c8BehaviorEv",
+            "section": ".text",
+            "size": "0x00000050"
+          },
+          {
+            "symbol": "_ZN12daStarGate_c13InitResourcesEv",
+            "section": ".text",
+            "size": "0x000000a8"
+          },
+          {
+            "symbol": "daStarGate_c_classInit",
+            "section": ".text",
+            "size": "0x00000038"
+          }
+        ],
+        "keptSectionIndices": [
+          5,
+          7,
+          9,
+          11,
+          13,
+          14,
+          18,
+          20,
+          22,
+          27,
+          29,
+          30,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          44,
+          84,
+          86
+        ],
+        "droppedSectionIndices": [
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77,
+          78,
+          79,
+          80,
+          81,
+          82,
+          83
+        ],
+        "externalizedTextSymbols": [
+          "_ZN12daStarGate_c12St_Wait_MainEP6Player",
+          "_ZN12daStarGate_c13InitResourcesEv",
+          "_ZN12daStarGate_c16CleanupResourcesEv",
+          "_ZN12daStarGate_c16OnPendingDestroyEv",
+          "_ZN12daStarGate_c17St_OpenClose_InitEP6Player",
+          "_ZN12daStarGate_c17St_OpenClose_MainEP6Player",
+          "_ZN12daStarGate_c17St_Unlocking_InitEP6Player",
+          "_ZN12daStarGate_c17St_Unlocking_MainEP6Player",
+          "_ZN12daStarGate_c18St_StayClosed_MainEP6Player",
+          "_ZN12daStarGate_c23St_TalkingToPlayer_InitEP6Player",
+          "_ZN12daStarGate_c23St_TalkingToPlayer_MainEP6Player",
+          "_ZN12daStarGate_c6RenderEv",
+          "_ZN12daStarGate_c8BehaviorEv",
+          "_ZN12daStarGate_cD0Ev",
+          "_ZN12daStarGate_cD1Ev",
+          "daStarGate_c_classInit"
+        ],
+        "deadTextSymbols": [
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$d",
+          "$d",
+          "$d",
+          "$d",
+          "$d",
+          "$d",
+          "$d",
+          "$d",
+          "$d",
+          "$d",
+          "$d",
+          "$d",
+          "$d",
+          "_ZN12daStarGate_c11ChangeStateEPNS_5StateEP6Player",
+          "_ZN12daStarGate_c11TryOpenDoorEP6Player",
+          "_ZN12daStarGate_c17IsInFrontOfPlayerEP6Player",
+          "_ZN12daStarGate_c26CalculateRelativePlayerPosEv"
+        ],
+        "liveSections": [
+          {
+            "index": 5,
+            "name": ".data",
+            "type": "SHT_PROGBITS",
+            "size": 8
+          },
+          {
+            "index": 7,
+            "name": ".data",
+            "type": "SHT_PROGBITS",
+            "size": 8
+          },
+          {
+            "index": 9,
+            "name": ".data",
+            "type": "SHT_PROGBITS",
+            "size": 8
+          },
+          {
+            "index": 11,
+            "name": ".data",
+            "type": "SHT_PROGBITS",
+            "size": 8
+          },
+          {
+            "index": 13,
+            "name": ".bss",
+            "type": "SHT_NOBITS",
+            "size": 8
+          },
+          {
+            "index": 14,
+            "name": ".data",
+            "type": "SHT_PROGBITS",
+            "size": 8
+          },
+          {
+            "index": 18,
+            "name": ".data",
+            "type": "SHT_PROGBITS",
+            "size": 8
+          },
+          {
+            "index": 20,
+            "name": ".data",
+            "type": "SHT_PROGBITS",
+            "size": 8
+          },
+          {
+            "index": 22,
+            "name": ".data",
+            "type": "SHT_PROGBITS",
+            "size": 8
+          },
+          {
+            "index": 27,
+            "name": ".data",
+            "type": "SHT_PROGBITS",
+            "size": 12
+          },
+          {
+            "index": 29,
+            "name": ".bss",
+            "type": "SHT_NOBITS",
+            "size": 12
+          },
+          {
+            "index": 30,
+            "name": ".bss",
+            "type": "SHT_NOBITS",
+            "size": 12
+          },
+          {
+            "index": 35,
+            "name": ".data",
+            "type": "SHT_PROGBITS",
+            "size": 15
+          },
+          {
+            "index": 36,
+            "name": ".bss",
+            "type": "SHT_NOBITS",
+            "size": 16
+          },
+          {
+            "index": 37,
+            "name": ".bss",
+            "type": "SHT_NOBITS",
+            "size": 16
+          },
+          {
+            "index": 38,
+            "name": ".bss",
+            "type": "SHT_NOBITS",
+            "size": 16
+          },
+          {
+            "index": 39,
+            "name": ".bss",
+            "type": "SHT_NOBITS",
+            "size": 16
+          },
+          {
+            "index": 40,
+            "name": ".bss",
+            "type": "SHT_NOBITS",
+            "size": 16
+          },
+          {
+            "index": 41,
+            "name": ".data",
+            "type": "SHT_PROGBITS",
+            "size": 24
+          },
+          {
+            "index": 42,
+            "name": ".data",
+            "type": "SHT_PROGBITS",
+            "size": 28
+          },
+          {
+            "index": 44,
+            "name": ".data",
+            "type": "SHT_PROGBITS",
+            "size": 132
+          },
+          {
+            "index": 84,
+            "name": ".ctor",
+            "type": "SHT_PROGBITS",
+            "size": 4
+          },
+          {
+            "index": 86,
+            "name": ".init",
+            "type": "SHT_PROGBITS",
+            "size": 336
+          }
+        ],
+        "error": null
+      },
+      "ownedBeforePartition": {
+        "ok": true,
+        "rows": [
+          {
+            "section": ".init",
+            "start": "0x02147a70",
+            "end": "0x02147bc0",
+            "emittedBytes": 336,
+            "sizeOk": true,
+            "bytesOk": true,
+            "differingWords": 0,
+            "relocCount": 19
+          },
+          {
+            "section": ".ctor",
+            "start": "0x02147df8",
+            "end": "0x02147dfc",
+            "emittedBytes": 4,
+            "sizeOk": true,
+            "bytesOk": true,
+            "differingWords": 0,
+            "relocCount": 1
+          },
+          {
+            "section": ".data",
+            "start": "0x02148334",
+            "end": "0x02148448",
+            "emittedBytes": 276,
+            "sizeOk": true,
+            "bytesOk": true,
+            "differingWords": 0,
+            "relocCount": 44
+          },
+          {
+            "section": ".bss",
+            "start": "0x02148934",
+            "end": "0x021489a4",
+            "emittedBytes": 112,
+            "sizeOk": true,
+            "bytesOk": true,
+            "differingWords": 0,
+            "relocCount": 0
+          }
+        ],
+        "errors": []
+      },
+      "ownedAfterRebias": {
+        "ok": true,
+        "rows": [
+          {
+            "section": ".init",
+            "start": "0x02147a70",
+            "end": "0x02147bc0",
+            "emittedBytes": 336,
+            "sizeOk": true,
+            "bytesOk": true,
+            "differingWords": 0,
+            "relocCount": 19
+          },
+          {
+            "section": ".ctor",
+            "start": "0x02147df8",
+            "end": "0x02147dfc",
+            "emittedBytes": 4,
+            "sizeOk": true,
+            "bytesOk": true,
+            "differingWords": 0,
+            "relocCount": 1
+          },
+          {
+            "section": ".data",
+            "start": "0x02148334",
+            "end": "0x02148448",
+            "emittedBytes": 276,
+            "sizeOk": true,
+            "bytesOk": true,
+            "differingWords": 0,
+            "relocCount": 44
+          },
+          {
+            "section": ".bss",
+            "start": "0x02148934",
+            "end": "0x021489a4",
+            "emittedBytes": 112,
+            "sizeOk": true,
+            "bytesOk": true,
+            "differingWords": 0,
+            "relocCount": 0
+          }
+        ],
+        "errors": []
+      },
+      "vtableRebias": {
+        "rebased": [
+          {
+            "symbol": "_ZTV12daStarGate_c",
+            "bias": 8,
+            "oldValue": 0,
+            "newValue": 8,
+            "oldSize": 132,
+            "newSize": 124
+          }
+        ],
+        "aliases": [],
+        "partitions": [],
+        "relocations": [
+          {
+            "section": ".data",
+            "relocationSection": ".rela.data",
+            "offset": 0,
+            "symbol": "_ZTVN3abi20__si_class_type_infoE",
+            "type": "R_ARM_ABS32",
+            "oldAddend": 8,
+            "newAddend": 0,
+            "mode": "undefined-public-import"
+          }
+        ],
+        "stringTable": null,
+        "error": null
+      },
+      "linkedStorageAliases": null,
+      "objectHashes": {
+        "rawTuSha256": "28f9fb70cfc244ab3bc54760644ef35b165b130521e2a38cba236decc7cbbb63",
+        "rawTuBytes": 15408,
+        "tuObjectPath": "build/tu/ov100-daStarGate_c/link-partitioned/src_tu/actors/daStarGate_c.o",
+        "postPolicySha256": "19f4419e3a7de9ff9d6dbd2cac135fbd6138ac4f37ef54604ba067394ca35620",
+        "postOrderSha256": "6b8d2bae72dd91bac2d7ab0e7946a67af7040bd5d4b48f0c7cba66ae66e6f023",
+        "reducedStorageSha256": "104c40c658964458590c46a974702b28a2fc34be28281a0ca3d0422c3380163d",
+        "linkedDataSha256": "441d484e92cb489380aad130e8f09f15f5f8c753711b0a0d85e0d806f01831a0"
+      },
+      "artifactAudit": {
+        "ok": true,
+        "errors": [],
+        "expectedTuSelectors": [
+          "daStarGate_c.o(.init)",
+          "daStarGate_c.o(.ctor)",
+          "daStarGate_c.o(.data)",
+          "daStarGate_c.o(.bss)"
+        ],
+        "observedTuSelectors": [
+          "daStarGate_c.o(.init)",
+          "daStarGate_c.o(.ctor)",
+          "daStarGate_c.o(.data)",
+          "daStarGate_c.o(.bss)"
+        ],
+        "expectedLegacyCount": 20,
+        "selectorCount": 10861,
+        "objectCount": 10634,
+        "selectorListSha256": "3eaedc94a8e92dc3985c5a64776a7d4195e7eef16976359ef13770f360d5ec57",
+        "objectListSha256": "d02d172cbf529b0bbca5a75a0ef740e4b21b88800f0b8df89ac1e7fb5d05a28a"
+      },
+      "ranges": [
+        {
+          "section": ".text",
+          "start": "0x021458d4",
+          "end": "0x0214620c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".init",
+          "start": "0x02147a70",
+          "end": "0x02147bc0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x02147df8",
+          "end": "0x02147dfc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x02148334",
+          "end": "0x02148448",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x02148934",
+          "end": "0x021489a4",
+          "comparison": "NOBITS -- symbol/module gates"
+        }
+      ],
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "moduleFidelityPassed": true,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "strayOutputs": null,
+      "scratch": "build/tu/ov100-daStarGate_c/link-partitioned (gitignored)"
+    }
+  }
+}

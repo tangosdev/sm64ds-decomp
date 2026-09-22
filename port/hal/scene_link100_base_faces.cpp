@@ -7,8 +7,8 @@
  * TWO MORE of them unoverridden, so they are the first that need faces for
  * them:
  *
- *   slot  9  Render             0x02043af0  _ZN9ActorBase6RenderEv
- *   slot 12  OnPendingDestroy   0x02043ac0  _ZN9ActorBase16OnPendingDestroyEv
+ *   slot  9  Render             0x02043af0  _ZN7fBase_c6RenderEv
+ *   slot 12  OnPendingDestroy   0x02043ac0  _ZN7fBase_c16OnPendingDestroyEv
  *
  * Both addresses are read out of config/arm9/relocs.txt at the table word, not
  * inferred from a slot number:
@@ -18,8 +18,8 @@
  *   from:0x020943f4 kind:load to:0x02043ac0 module:main   (MB   slot 12)
  *
  * and config/arm9/symbols.txt names both:
- *   _ZN9ActorBase6RenderEv           kind:function(arm,size=0x8)  addr:0x02043af0
- *   _ZN9ActorBase16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02043ac0
+ *   _ZN7fBase_c6RenderEv           kind:function(arm,size=0x8)  addr:0x02043af0
+ *   _ZN7fBase_c16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02043ac0
  *
  * NEITHER IS A VENEER. Render is an 8-byte `return 1` (VS_FAIL) and
  * OnPendingDestroy is a bare `bx lr`, so there are no arguments to ride
@@ -30,19 +30,19 @@
  * these bodies are real C++ methods against include/ActorBase.h, and the seat
  * files that call them declare their own flat structs. One include per file.
  */
-#include "ActorBase.h"
+#include "fBase_c.h"
 
 extern "C" {
 
-/* slot 9. src/_ZN9ActorBase6RenderEv.cpp is a //cpp TU that defines the real
-   method, so the call below resolves to ?Render@ActorBase@@UAEHXZ -- the same
+/* slot 9. src/_ZN7fBase_c6RenderEv.cpp is a //cpp TU that defines the real
+   method, so the call below resolves to ?Render@fBase_c@@UAEHXZ -- the same
    shape port_scene_base_cleanup uses for CleanupResources one file over. */
 int port_scene_link100_base_render(void *self)
-{ return ((ActorBase *)self)->ActorBase::Render(); }
+{ return ((fBase_c *)self)->fBase_c::Render(); }
 
-/* slot 12. Same shape; src/_ZN9ActorBase16OnPendingDestroyEv.cpp is the body
+/* slot 12. Same shape; src/_ZN7fBase_c16OnPendingDestroyEv.cpp is the body
    and it is already in the link through port/slice_gate9.txt. */
 void port_scene_link100_base_pending_destroy(void *self)
-{ ((ActorBase *)self)->ActorBase::OnPendingDestroy(); }
+{ ((fBase_c *)self)->fBase_c::OnPendingDestroy(); }
 
 }  /* extern "C" */

@@ -33,7 +33,7 @@
 //       that is not the ROM's. The ROM's D1 body is empty apart from the vptr
 //       store and the Actor chain, which is exactly what co_d1 does.
 //
-//   D0: src/_ZN14CutsceneObjectD0Ev.c reaches the vtable and the heap through
+//   D0: src/_ZN14CutsceneObjectD0Ev.cpp reaches the vtable and the heap through
 //       decl_common.h's GENERIC placeholders (`extern int VT[];`, `extern void
 //       *HEAP;`) rather than through the real symbols the way LakituBro's D0
 //       does. Bare VT is bound to the ov002 Enemy base table, so linked as-is
@@ -44,50 +44,52 @@
 //       treatment; HEAP is the game heap by the standing alias, which is the
 //       pool's second word (020A0EAC). co_d0 is the ecx->arg adapter over it.
 //
-//       data_020a0eac is not a guess: src/_ZN9ActorBasenwEj.cpp allocates every
-//       actor out of it, and CutsceneObject_Spawn is an ActorBase::operator new
+//       data_020a0eac is not a guess: src/_ZN7fBase_cnwEj.cpp allocates every
+//       actor out of it, and daDemo_c_classInit is an ActorBase::operator new
 //       of 260 bytes, so it is the heap this object came from.
 //
 // Neither D-source is listed in slice_intro.txt; nothing else references either
 // symbol (the ROM's D0 inlines the chain rather than calling D1).
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
 extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include <cstdlib>
 
-#include "Actor.h"
+#include "dActor_c.h"
 #include "dtor_faces_cpp.h"
-#include "ActorBase.h"
+#include "fBase_c.h"
 #include "CutsceneObject.h"
 #include "Model.h"   /* the model class the vtable seat below describes */
 
 extern "C" {
 /* the shared lifecycle halves, the same functions every fill in this tree
    writes -- see hal/actor_classes_bbh.cpp for the slot map */
-int _ZN5Actor19BeforeInitResourcesEv(void *self);             /* slot 1  */
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a); /* slot 2  */
-int _ZN5Actor14BeforeBehaviorEv(void *self);                  /* slot 7  */
-int _ZN5Actor12BeforeRenderEv(void *self);                    /* slot 10 */
-int _ZN5Actor13OnYoshiTryEatEv(void *self);                   /* slot 18 */
-int _ZN5Actor9Virtual50Ev(void *self);                        /* slot 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);     /* slot 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);         /* slot 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);         /* slot 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);             /* slot 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);             /* slot 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *s, void *o);   /* 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *s, void *p);       /* 27 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *s, void *o);        /* 28 */
-void _ZN5Actor13OnTurnIntoEggER6Player(void *s, void *p);         /* 19 */
-int _ZN5Actor16OnAimedAtWithEggEv(void *self);                    /* 29 */
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);             /* slot 1  */
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a); /* slot 2  */
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);                  /* slot 7  */
+int _ZN8dActor_c12BeforeRenderEv(void *self);                    /* slot 10 */
+int _ZN8dActor_c13OnYoshiTryEatEv(void *self);                   /* slot 18 */
+int _ZN8dActor_c9Virtual50Ev(void *self);                        /* slot 20 */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);     /* slot 21 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);         /* slot 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);         /* slot 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);             /* slot 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);             /* slot 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *s, void *o);   /* 26 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *s, void *p);       /* 27 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *s, void *o);        /* 28 */
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void *s, void *p);         /* 19 */
+int _ZN8dActor_c16OnAimedAtWithEggEv(void *self);                    /* 29 */
 
 /* the class's own, all from port/slice_intro.txt */
 int _ZN14CutsceneObject13InitResourcesEv(void *self);     /* face, below */
@@ -99,8 +101,8 @@ int *_ZN14CutsceneObjectD0Ev(int *self);                  /* slot 17, .c, DTOR-P
 void *_ZTV14CutsceneObject[31];
 
 /* the Actor chain co_d1/co_d0 end on, and the heap every actor is allocated
-   from (src/_ZN9ActorBasenwEj.cpp) */
-void _ZN5ActorD2Ev(void *self);
+   from (src/_ZN7fBase_cnwEj.cpp) */
+void _ZN8dActor_cD2Ev(void *self);
 void _ZN6Memory10DeallocateEPvP4Heap(void *p, void *heap);
 extern void *data_020a0eac;
 
@@ -132,49 +134,49 @@ CO_TRAP(13) CO_TRAP(14)
 #undef CO_TRAP
 
 static int __fastcall co_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall co_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall co_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 /* Slots 5/8/11 are ARM tail-call veneers on the ROM; call the target directly
    so the argument riding in r1 is not dropped. */
 static void __fastcall co_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall co_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall co_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall co_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall co_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall co_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int __fastcall co_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 static int __fastcall co_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall co_aimed(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 static int __fastcall co_turn_egg(void *s, void *, void *p)
-{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+{ _ZN8dActor_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall co_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall co_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall co_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall co_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall co_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall co_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall co_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall co_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 
 // ---- the class's own six ---------------------------------------------------
 /* PER-OBJECT BRANCH TRACE, PER SHAPE. CutsceneObject::InitResources branches on
@@ -331,8 +333,8 @@ static int __fastcall co_d0(void *s, void *)
 /* ---- A VTABLE SLOT THE SCRIPT'S OWN MODEL CLASS CALLS THROUGH --------------
    data_ov002_0210bae4 is a VTABLE, not a spawn record -- an earlier version of
    this comment called it a factory and that was wrong. Reading the body settles
-   it: src/func_ov002_020f69a8.cpp stores data_ov002_0210bae4 into *this, calls
-   SharedFilePtr::Release, then Model::~Model, __destroy_arr and
+   it: src/_ZN8daDemo_c13simpleModel_cD0Ev.cpp stores data_ov002_0210bae4 into *this, calls
+   SharedFilePtr::Release, then Model::~Model, __cxa_vec_cleanup and
    Memory::operator_delete2. That is a DELETING DESTRUCTOR (a D0), and
    config/arm9/overlays/ov002/relocs.txt puts it in slot 1:
        from:0x0210bae8 kind:load to:0x020f69a8 module:overlay(2)
@@ -342,7 +344,7 @@ static int __fastcall co_d0(void *s, void *)
      ... Actor::Spawn -> func_02043098 -> CutsceneObject::InitResources
      -> func_ov002_020f6960 -> ModelBase::SetFile -> [this slot]
    so a DS address here is a jump into unmapped memory. Offering
-   src/func_ov002_020f69a8.cpp put the body in the binary but did NOTHING about
+   src/_ZN8daDemo_c13simpleModel_cD0Ev.cpp put the body in the binary but did NOTHING about
    the pointer, which is the same lesson romdata.py's header records for
    data_020876e4.
 
@@ -372,9 +374,9 @@ extern "C" {
 
    The other two stay void(void) deliberately: they are ov002 bodies with no
    competing prototyped declaration, and the one place this file reaches
-   func_ov002_020f69a8 as code casts it through CoRomD0 first. */
-void func_ov002_020f6a00(void);
-void func_ov002_020f69a8(void);
+   _ZN8daDemo_c13simpleModel_cD0Ev as code casts it through CoRomD0 first. */
+void _ZN8daDemo_c13simpleModel_cD1Ev(void);
+void _ZN8daDemo_c13simpleModel_cD0Ev(void);
 void _ZN5Model6RenderEPK7Vector3(void *self, const void *scale);
 extern unsigned data_ov002_0210bae4[];
 }
@@ -394,7 +396,7 @@ extern unsigned data_ov002_0210bae4[];
  * slot 1 and called the DELETING DESTRUCTOR instead. Measured, and it is what
  * the fault chain showed:
  *     CutsceneObject::InitResources+0x1c2 -> func_ov002_020f6960+0x1f
- *     -> ModelBase::SetFile+0x63 -> func_ov002_020f69a8 (the D0)
+ *     -> ModelBase::SetFile+0x63 -> _ZN8daDemo_c13simpleModel_cD0Ev (the D0)
  *     -> SharedFilePtr::Release   -> access violation
  *
  * [[sm64ds-port-msvc-dtor-slot-shift]] names this class of bug and prescribes
@@ -426,8 +428,8 @@ void _ZN5Model9Virtual10ER9Matrix4x3(void *, Matrix4x3 &);
 
 static const struct { unsigned rom; void *host; const char *what; }
 g_co_vt[6] = {
-    { 0x020f6a00, (void *)&func_ov002_020f6a00,            "+0x00" },
-    { 0x020f69a8, (void *)&func_ov002_020f69a8,            "+0x04 (the deleting dtor)" },
+    { 0x020f6a00, (void *)&_ZN8daDemo_c13simpleModel_cD1Ev,            "+0x00" },
+    { 0x020f69a8, (void *)&_ZN8daDemo_c13simpleModel_cD0Ev,            "+0x04 (the deleting dtor)" },
     { 0x02016bf8, (void *)&_ZN5Model9DoSetFileEPcii,       "+0x08 Model::DoSetFile" },
     { 0x02016c98, (void *)&_ZN5Model11UpdateVertsEv,       "+0x0c Model::UpdateVerts" },
     { 0x02016bb8, (void *)&_ZN5Model9Virtual10ER9Matrix4x3,"+0x10 Model::Virtual10" },
@@ -448,8 +450,8 @@ extern void *_ZTV5Model[8];
 extern void *_ZTV9ModelAnim[10];
 void hal_fill_model_vtable(void);
 void hal_fill_modelanim2_vtable(void);  /* fills _ZTV9ModelAnim too */
-void func_ov002_020f6778(void);           /* the ModelAnim class's own D0 */
-void func_ov002_020f6870(void);           /* and its D1, the ROM's slot 0 */
+void _ZN8daDemo_c10anmModel_cD0Ev(void);           /* the ModelAnim class's own D0 */
+void _ZN8daDemo_c10anmModel_cD1Ev(void);           /* and its D1, the ROM's slot 0 */
 extern unsigned data_ov002_0210bcc4[];
 void port_intro_seat_ov002_ptrs(void);    /* hal/intro_ov002_seat.cpp */
 }
@@ -465,8 +467,8 @@ static const struct { unsigned rom; const char *what; } g_co_vt2[7] = {
 };
 
 /* THE TWO DELETING DESTRUCTORS, FACED. Both ROM bodies are plain C functions
-   taking `this` as an ordinary first argument (src/func_ov002_020f69a8.cpp and
-   src/func_ov002_020f6778.cpp are both `void *f(char *c)`), and the seat below
+   taking `this` as an ordinary first argument (src/_ZN8daDemo_c13simpleModel_cD0Ev.cpp and
+   src/_ZN8daDemo_c10anmModel_cD0Ev.cpp are both `void *f(char *c)`), and the seat below
    used to store their raw addresses in slot 0 under a comment saying the seat
    "never calls them, so the arity here is irrelevant". That stopped being true
    the moment CutsceneObject::CleanupResources was hosted: it dispatches its
@@ -484,9 +486,9 @@ static const struct { unsigned rom; const char *what; } g_co_vt2[7] = {
    src TUs, which is the type cast to here. */
 typedef void *(*CoRomD0)(char *);
 static void *__fastcall co_model_d0(void *s, void *)
-{ return ((CoRomD0)(void *)&func_ov002_020f69a8)((char *)s); }
+{ return ((CoRomD0)(void *)&_ZN8daDemo_c13simpleModel_cD0Ev)((char *)s); }
 static void *__fastcall co_modelanim_d0(void *s, void *)
-{ return ((CoRomD0)(void *)&func_ov002_020f6778)((char *)s); }
+{ return ((CoRomD0)(void *)&_ZN8daDemo_c10anmModel_cD0Ev)((char *)s); }
 /* THE COMPLETE-OBJECT HALVES, SEATED (run link100, lane CUTD1).
 
    THE ROM'S OWN WORDS for the two slots this lane fills, read twice. Out of
@@ -509,7 +511,7 @@ static void *__fastcall co_modelanim_d0(void *s, void *)
    belongs at slot 1. A brief for this lane had the two transposed.
 
    WHY THIS NOTE USED TO SAY THE HALVES COULD NOT BE SEATED, and what changed.
-   src/func_ov002_020f6870.cpp destroys the TextureSequence it owns through a
+   src/_ZN8daDemo_c10anmModel_cD1Ev.cpp destroys the TextureSequence it owns through a
    HAND-INDEXED vtable word,
 
        p = *(void **)(c + 0x7c);
@@ -527,11 +529,11 @@ static void *__fastcall co_modelanim_d0(void *s, void *)
 
    TWO CORRECTIONS TO THE OLD NOTE, both checked against the sources.
    First, only ONE of the two D1 bodies has a TextureSequence at all. The old
-   note said "both": src/func_ov002_020f6870.cpp (the ModelAnim) carries the
-   hand-indexed call, src/func_ov002_020f6a00.cpp (the Model) does not -- it
-   Releases one SharedFilePtr, calls Model's D2 and runs __destroy_arr.
+   note said "both": src/_ZN8daDemo_c10anmModel_cD1Ev.cpp (the ModelAnim) carries the
+   hand-indexed call, src/_ZN8daDemo_c13simpleModel_cD1Ev.cpp (the Model) does not -- it
+   Releases one SharedFilePtr, calls Model's D2 and runs __cxa_vec_cleanup.
    Second, the remedy it asked for (a host copy of each D1) is neither what
-   happened nor needed. src/func_ov002_020f6778.cpp, the ModelAnim's DELETING
+   happened nor needed. src/_ZN8daDemo_c10anmModel_cD0Ev.cpp, the ModelAnim's DELETING
    half, carries the SAME hand-indexed TextureSequence call, and it has been
    seated at slot 1 and green since lane EXCEPT retired its host copy. The D1
    therefore opens no path the D0 was not already taking.
@@ -553,9 +555,9 @@ static void *__fastcall co_modelanim_d0(void *s, void *)
    typedef's name is one letter narrower than what it describes and the shape
    is exactly right. */
 static void *__fastcall co_model_d1(void *s, void *)
-{ return ((CoRomD0)(void *)&func_ov002_020f6a00)((char *)s); }
+{ return ((CoRomD0)(void *)&_ZN8daDemo_c13simpleModel_cD1Ev)((char *)s); }
 static void *__fastcall co_modelanim_d1(void *s, void *)
-{ return ((CoRomD0)(void *)&func_ov002_020f6870)((char *)s); }
+{ return ((CoRomD0)(void *)&_ZN8daDemo_c10anmModel_cD1Ev)((char *)s); }
 
 static void co_seat_model_vtable(void)
 {
@@ -674,7 +676,7 @@ extern "C" void hal_fill_cutscene_object_vtable(void)
     vt[6] = (void *)co_behavior;
     vt[9] = (void *)co_render;
     vt[12] = (void *)co_pdes;
-    vt[16] = (void *)hal_cppd1_CutsceneObject;
+    vt[16] = (void *)PORT_D16(hal_cppd1_CutsceneObject);
     vt[17] = (void *)co_d0;
 }
 
@@ -717,7 +719,7 @@ void _ZN5Model9Virtual10ER9Matrix4x3(void *self, Matrix4x3 &mat)
 // block, so MSVC mangles the reference as a C++ name while the one real symbol
 // is defined with C linkage (romdata / the ov002 and ov085 mounts). Point the
 // mangled spellings at the C symbols -- the same "propagate config renames BY
-// ADDRESS" hazard applied to a type, and the precedent is the data_02082128
+// ADDRESS" hazard applied to a type, and the precedent is the IDENTITY_MATRIX4X3
 // bridge at the foot of hal/actor_classes_bbh.cpp.
 #pragma comment(linker, "/alternatename:?_Znwj@@YAPAXH@Z=__Znwj")
 #pragma comment(linker, "/alternatename:?data_ov085_0213074c@@3DA=_data_ov085_0213074c")

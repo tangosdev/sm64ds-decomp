@@ -15,7 +15,7 @@
 # So the crash the note describes was the trap firing, not the ROM's code, and
 # seating the real bodies is exactly what removes it.
 #
-# THE TABLE, read from the ROM. data_ov043_0211238c, and the reloc run is 32
+# THE TABLE, read from the ROM. _ZTV21daObjKm1_Kurumajiku_c, and the reloc run is 32
 # words: slot 31 is 0x020ee55c (Platform::Kill) and the word at +0x80 is
 # 0x0209a764, the next class's RTTI record. dsd's "next data symbol" for this
 # table is 0x021123e4, which would read 22 slots; the reloc run wins, because
@@ -23,22 +23,22 @@
 # would not. Own slots, each the destination of the reloc at vtable + 4*N with a
 # kind:function(arm,size=..) record at exactly that address:
 #
-#   slot 0   0x0211238c -> 0x021114c4  func_ov043_021114c4  0x18   InitResources
-#   slot 3   0x02112398 -> 0x021114b0  func_ov043_021114b0  0x14   CleanupResources
-#   slot 16  0x021123cc -> 0x021113fc  func_ov043_021113fc  0x50   D1
-#   slot 17  0x021123d0 -> 0x0211144c  func_ov043_0211144c  0x64   D0
+#   slot 0   0x0211238c -> 0x021114c4  _ZN21daObjKm1_Kurumajiku_c13InitResourcesEv  0x18   InitResources
+#   slot 3   0x02112398 -> 0x021114b0  _ZN21daObjKm1_Kurumajiku_c16CleanupResourcesEv  0x14   CleanupResources
+#   slot 16  0x021123cc -> 0x021113fc  _ZN21daObjKm1_Kurumajiku_cD1Ev  0x50   D1
+#   slot 17  0x021123d0 -> 0x0211144c  _ZN21daObjKm1_Kurumajiku_cD0Ev  0x64   D0
 #
 # SLOTS 6 AND 9 ARE INHERITED and already linked: 0x021123a4 -> 0x020b6b38 and
 # 0x021123b0 -> 0x020b6b10, both module overlays(0,2), the shared ov002
 # generic-object Behavior/Render pair. They are faced in the fill and never
 # re-enrolled. That is why this class costs five files and not nine.
 #
-# THE NAME TRAP AGAIN: src/func_ov043_0211144c.c is headed
+# THE NAME TRAP AGAIN: src/game/actors/d_a_obj_km1_kurumajiku.cpp is headed
 # "daObjKm1_Kurumajiku_c::OnYoshiTryEat" and is the slot-17 deleting destructor.
 # Taken from the reloc, not the comment.
 #
-# THE FACTORY. RickshawBdw_Spawn kind:function(arm,size=0x3c) addr:0x021114dc,
-# and RickshawBdw_SpawnInfo (0x02112368) word[0] relocates to it; the record's
+# THE FACTORY. daObjKm1_Kurumajiku_c_classInit kind:function(arm,size=0x3c) addr:0x021114dc,
+# and g_profile_KM1_KURUMAJIKU (0x02112368) word[0] relocates to it; the record's
 # +4 halfword reads 137.
 #
 # THE FILE CONSTRUCTOR COMES ON WITH THIS GATE. __sinit_ov043_02111868 builds
@@ -47,9 +47,5 @@
 # are words 0 and 1 of the 3-word Arg record data_ov043_02112344 the mount
 # rebases (build/port/host-src/ov043_syms.c). It was left out of slice_bdw.txt
 # on the "a sinit for an unhosted class stays off" rule; 137 is hosted now.
-src/RickshawBdw_Spawn.c
-src/func_ov043_021114c4.c
-src/func_ov043_021114b0.c
-src/func_ov043_021113fc.c
-src/func_ov043_0211144c.c
+src/game/actors/d_a_obj_km1_kurumajiku.cpp
 src/__sinit_ov043_02111868.c

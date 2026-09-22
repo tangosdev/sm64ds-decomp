@@ -83,7 +83,16 @@
     /* CrazedCrate */
     case 0x020e0d48: return ((Player *)self)->Player::St_CrazedCrate_Main();
     case 0x020e0fac: return ((Player *)self)->Player::St_CrazedCrate_Init();
-    case 0x020e0d28: return ((Player *)self)->Player::St_CrazedCrate_Cleanup();
+    /* SYNC4: main's include/Player.h declares St_CrazedCrate_Init and
+       St_CrazedCrate_Main but NOT St_CrazedCrate_Cleanup, while
+       src/_ZN6Player22St_CrazedCrate_CleanupEv.cpp still defines it against
+       its own local `struct Player` shim -- so the body is in the link under
+       ?St_CrazedCrate_Cleanup@Player@@QAEHXZ and only the declaration is
+       missing. The dead-edx face below reaches that decoration: a __thiscall
+       body with no arguments and a __fastcall caller with two both put the
+       receiver in ecx and leave nothing on the stack for either side to
+       clean. decomp_side.md item 13 asks for the declaration. */
+    case 0x020e0d28: return port_player_st_crazedcrate_cleanup(self, 0);
     /* DebugFly */
     case 0x020ca7f4: return ((Player *)self)->Player::St_DebugFly_Main();
     case 0x020ca8d0: return ((Player *)self)->Player::St_DebugFly_Init();
@@ -122,7 +131,7 @@
     /* InYoshiMouth */
     case 0x020d60b8: return ((Player *)self)->Player::St_InYoshiMouth_Main();
     case 0x020d62f8: return ((Player *)self)->Player::St_InYoshiMouth_Init();
-    case 0x020d6084: return func_ov002_020d6084((char *)self);   /* St_InYoshiMouth_Cleanup slot */
+    case 0x020d6084: return _ZN6Player23St_InYoshiMouth_CleanupEv((char *)self);   /* St_InYoshiMouth_Cleanup slot */
     /* JumpQuicksand */
     case 0x020dedf0: return ((Player *)self)->Player::St_JumpQuicksand_Main();
     case 0x020deeac: return ((Player *)self)->Player::St_JumpQuicksand_Init();
@@ -152,7 +161,7 @@
     /* Null */
     case 0x020cac28: return ((Player *)self)->Player::St_Null_Main();
     case 0x020cac20: return ((Player *)self)->Player::St_Null_Cleanup();
-    case 0x020cac30: return func_ov002_020cac30();   /* St_Null_Init slot */
+    case 0x020cac30: return _ZN6Player12St_Null_InitEv();   /* St_Null_Init slot */
     /* OpeningWakeUp */
     case 0x020c3dd0: return ((Player *)self)->Player::St_OpeningWakeUp_Main();
     case 0x020c3ed8: return ((Player *)self)->Player::St_OpeningWakeUp_Init();
@@ -210,7 +219,7 @@
     case 0x020d2224: return ((Player *)self)->Player::St_WaitQuicksand_Init();
     /* WallJump */
     case 0x020e1714: return ((Player *)self)->Player::St_WallJump_Main();
-    case 0x020e17f8: return func_ov002_020e17f8((void *)self);   /* St_WallJump_Init slot */
+    case 0x020e17f8: return _ZN6Player16St_WallJump_InitEv((void *)self);   /* St_WallJump_Init slot */
     /* WallSlide */
     case 0x020d0d78: return ((Player *)self)->Player::St_WallSlide_Main();
     case 0x020d0e8c: return ((Player *)self)->Player::St_WallSlide_Init();
@@ -280,7 +289,7 @@
     case 0x020e1990: return ((Player *)self)->Player::St_SlideKickRecover_Init();
     /* St_LevelEnter, the boot state (gate 14). Main is ov002 0x020c6f3c,
        which ov002/symbols.txt names _ZN6Player18St_LevelEnter_MainEv
-       (size 0xa8) and src/_ZN6Player18St_LevelEnter_MainEv.cpp defines.
+       (size 0xa8) and src/actors/Player.cpp defines.
        func_ov002_020c6f3c is NOT a config symbol and is in no
        symbols.txt: it is the port's own name for the host copy in
        port/unmatched, which exists because the matched body dispatches

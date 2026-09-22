@@ -76,8 +76,8 @@
 #   func_ov063_0211ddf4        16         16      16   TAILJUMP unchanged
 #   func_ov071_021223c8        20         24      20   TAILJUMP unchanged
 #   func_ov071_02122414        20         24      20   TAILJUMP unchanged
-#   func_ov085_02129524        20         24      20   TAILJUMP unchanged
-#   func_ov085_02129570        20         24      20   TAILJUMP unchanged
+#   _ZN4Toad8SetStateEi        20         24      20   TAILJUMP unchanged
+#   _ZN4Toad8RunStateEv        20         24      20   TAILJUMP unchanged
 #
 # and the object the option produces is the ROM's arithmetic instruction for
 # instruction. The tick half of the Toad, for one:
@@ -152,8 +152,8 @@
 #
 #   data_ov085_0212fe88   port_toad_states_seat aborts unless each record reads
 #                         {rom, 0}, then fills host.
-#       func_ov085_02129524   3 ROM referrers, all linked
-#       func_ov085_02129570   1 ROM referrer, Toad::Behavior, which has no
+#       _ZN4Toad8SetStateEi   3 ROM referrers, all linked
+#       _ZN4Toad8RunStateEv   1 ROM referrer, Toad::Behavior, which has no
 #                             matched TU; the reference reaches this row through
 #                             the host body in unmatched/Ov085_Behaviors.cpp.
 #
@@ -161,7 +161,7 @@
 # plus an intra-module scan of the owning overlay for BL/B targets and for data
 # words equal to the address. Overlays that share a load window therefore
 # produce FALSE referrers, and two rows show one (.p__sinit_ov072_02122414 at
-# the ov071 address, data_ov052_021125ac at the ov034 address). Neither changes
+# the ov071 address, _ZTI14daObjEmmYuka_c at the ov034 address). Neither changes
 # a verdict, because both rows have a real linked caller in their own overlay.
 #
 # ---- THE SEVEN NAMES, AND WHERE THEY LIVE --------------------------------
@@ -183,7 +183,7 @@
 #   unmatched/Bbh_PmfDispatch.c            KEEP THE FILE.
 #       removed func_ov063_0211ddac, func_ov063_0211ddf4, func_ov071_021223c8,
 #       func_ov071_02122414 and the two externs that went dead with them.
-#       KEPT _ZN12MansionSteps8BehaviorEv, which is CALL-shaped, and KEPT the
+#       KEPT _ZN11daTrsTrap_c8BehaviorEv, which is CALL-shaped, and KEPT the
 #       static bbh_pmf_call -- PMFC2's plan called it "now-unused", but
 #       MansionSteps::Behavior dispatches the furniture table through it.
 #   unmatched/ChainChomp_States.cpp        KEEP THE FILE.
@@ -193,7 +193,7 @@
 #       called from hal/actor_classes_bob_enemy.cpp.
 #   unmatched/PathLift_StateDispatch.cpp   KEEP THE FILE.
 #       removed func_ov002_020efa54 and its now-dead forward declaration. KEPT
-#       port_pathlift_states_seat, KEPT _ZN8PathLift12BaseBehaviorEv and its
+#       port_pathlift_states_seat, KEPT _ZN16dPathLiftActor_c12BaseBehaviorEv and its
 #       PathLift::BaseBehavior face (both CALL-shaped), and KEPT the static
 #       pl_pmf_call -- PMFC2's plan did not list it, and BaseBehavior needs it.
 #   unmatched/PushBlock_StateDispatch.cpp  KEEP THE FILE.
@@ -214,23 +214,34 @@
 # the matched TU publishes the same C name with the same cdecl signature:
 # hal/actor_classes_ov100pl.cpp:185 declares func_ov002_020efa54(void *, int),
 # and unmatched/Ov085_Behaviors.cpp:134 and :297 declare and call
-# func_ov085_02129570(void *). The PUBLIC name in every one of the thirteen
+# _ZN4Toad8RunStateEv(void *). The PUBLIC name in every one of the thirteen
 # listings is the plain _func_ovNNN_XXXXXXXX.
 #
 # ---- THE THIRTEEN ---------------------------------------------------------
 src/func_ov002_020b9704.cpp
 src/func_ov002_020b9750.cpp
 src/func_ov002_020efa54.cpp
-src/func_ov014_02111ebc.cpp
-src/func_ov014_02111f08.cpp
+# HELD AGAIN at SYNC6, and NOT for a compile family: this TU compiles on the
+# host now (main #2663/#2669), but seating it duplicates _daWanwan_c_classInit
+# against port/unmatched/ChainChomp_Spawn_hostcopy.cpp, which is a FACTORY host
+# copy. The ARM r0 ride-through its ruling names IS fixed in main's text
+# (_ZN12dEnemyBase_cC2Ev(c) at line 112 passes the object), but the two spell
+# the vptr store differently -- main writes &_ZTV10daWanwan_c[2], the Itanium
+# address point, and the host copy writes _ZTV10daWanwan_c, slot 0 of a host
+# array -- which is exactly the OPEN QUESTION in out/FACES2/bugs.md section 6
+# and out/FACES2/hostgen_rulings.txt. The brief for this lane forbids retiring a
+# factory host copy until that is settled, and a factory's vptr store is a
+# dispatch change that no tree can capture until it links. So the TU waits; it
+# is a sixth row for that list, not a compile-family quarantine.
+#src/game/actors/d_a_wanwan.cpp
 src/func_ov034_021125b8.cpp
 src/func_ov034_02112604.cpp
 src/unnamed/ov063/func_ov063_0211ddac.cpp
 src/unnamed/ov063/func_ov063_0211ddf4.cpp
 src/func_ov071_021223c8.cpp
 src/func_ov071_02122414.cpp
-src/func_ov085_02129524.cpp
-src/func_ov085_02129570.cpp
+src/_ZN4Toad8SetStateEi.cpp
+src/_ZN4Toad8RunStateEv.cpp
 #
 # ---- GATE 2: ONE OF THE FIVE OPEN-CODED ROWS ------------------------------
 #
@@ -279,7 +290,7 @@ src/func_ov085_02129570.cpp
 #       One line in hal/scene_mg.cpp is worth +2 here and would also unblock the
 #       thirteen sub-dispatcher rows that read the same tables.
 #
-#   func_ov006_020e683c   src/func_ov006_020e683c.cpp line 7 is
+#   _ZN15dScMgCurling2_c8BehaviorEv   src/_ZN15dScMgCurling2_c8BehaviorEv.cpp line 7 is
 #       "dScMgCurling2_c::Behavior - recovered from vtable slot identity". That is
 #       the guess marker: a guessed body is not matched code and
 #       inferred_stub_guard.py refuses a new seat for one. Not taken, and it

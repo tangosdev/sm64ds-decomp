@@ -173,7 +173,7 @@ five independent tests per row, and all 55 pass all five:
 and every one of the 55 lands at offset 0 of its provider symbol -- not one is
 an interior landing, so there is no offset arithmetic to get wrong. The 55 rows
 land on 25 distinct ov006 targets and SIX distinct ov004 targets -- the ov004
-side is concentrated, with data_ov004_020bbf6c alone taking 15 of the 20. (An
+side is concentrated, with _ZTI11dScMgBase_c alone taking 15 of the 20. (An
 earlier draft said 32 for the ov004 side. That was the count of distinct ov004
 addresses ov006 WANTS, most of which are .text and stay raw, not the count that
 carries a row.)
@@ -413,7 +413,7 @@ F4  dsstate_guard IS BLIND TO 344 MOUNTED SYMBOLS, 320 of them pre-existing and
     -- 48 of the 49 ovNNN_syms.txt files, ov026's being excluded because ov026
     is a whole-image mount and its list is not an input -- that is 344 names,
     320 of them pre-existing and 24 from ov006 (twenty-three minigame SpawnInfo
-    records plus _ZTV17MgBounceAndPounce). All 344 were then looked up in
+    records plus _ZTV14dScMgD3DBase_c). All 344 were then looked up in
     walk_window.map: 344 present, 344 inside .dsstate, 0 outside, 0 absent.
 
     TWO OTHER DENOMINATORS ARE WRONG AND ARE NAMED SO NOBODY RE-DERIVES THEM.

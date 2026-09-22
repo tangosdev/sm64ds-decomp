@@ -34,11 +34,11 @@
 # from.
 #
 #   id   SpawnInfo   word[0] spawnFunc              idhalf   census
-#   89   0x02113abc  0x02111678 func_ov026_02111678      89   L18 x7
-#   90   0x02113c48  0x02111a70 Submarine_Spawn          90   L18 x1
-#   91   0x02113b80  0x02111888 BowserShutter_Spawn      91   L18 x1
-#  246   0x02113d30  0x021121bc Whirlpool_Spawn         246   L18 x1
-#  247   0x02113e00  0x02112450 WaterSuction_Spawn      247   (not placed)
+#   89   0x02113abc  0x02111678 daObjWlPolelift_c_classInit      89   L18 x7
+#   90   0x02113c48  0x02111a70 daObjWlSubmarine_c_classInit          90   L18 x1
+#   91   0x02113b80  0x02111888 daObjWlKoopaShutter_c_classInit      91   L18 x1
+#  246   0x02113d30  0x021121bc daWater_Tatumaki_c_classInit         246   L18 x1
+#  247   0x02113e00  0x02112450 daWater_Suikomi_c_classInit      247   (not placed)
 #
 # Ten placed instances on level 18 across four ids, out of the twenty-five that
 # level still skips. Measured from this tree's own baseline census, not quoted.
@@ -105,9 +105,9 @@
 # out of the list:
 #   0x02113ae0..0x02113b5c  89  31 slots  data_ov026_02113ae0 +02113b10
 #                                          +02113b2c +02113b50
-#   0x02113ba4..0x02113c24  91  32 slots  data_ov026_02113ba4 +02113c08
+#   0x02113ba4..0x02113c24  91  32 slots  _ZTV13BowserShutter +02113c08
 #                                          +02113c14 +02113c20
-#   0x02113c6c..0x02113cec  90  32 slots  data_ov026_02113c6c +02113ccc
+#   0x02113c6c..0x02113cec  90  32 slots  _ZTV9Submarine +02113ccc
 #                                          +02113cd4
 #   0x02113d54..0x02113dd0 246  31 slots  _ZTV18daWater_Tatumaki_c
 #                                          +02113d90 +02113da8 +02113dc4
@@ -169,15 +169,15 @@ data_ov026_021138bc data_ov026_021138c4 data_ov026_021138d8
 data_ov026_021138f0 data_ov026_021138fc data_ov026_02113934
 data_ov026_02113980 data_ov026_02113998 data_ov026_021139b0
 data_ov026_021139f4 data_ov026_02113a00 data_ov026_02113a50
-data_ov026_02113a74 data_ov026_02113a90 data_ov026_02113a9c
-data_ov026_02113aa0 data_ov026_02113aa8 data_ov026_02113abc
-data_ov026_02113b5c data_ov026_02113b68 data_ov026_02113b7c
-BowserShutter_SpawnInfo data_ov026_02113b90 data_ov026_02113c24
-data_ov026_02113c28 data_ov026_02113c30 Submarine_SpawnInfo
+data_ov026_02113a74 _ZTI17daObjWlPolelift_c data_ov026_02113a9c
+data_ov026_02113aa0 _ZTS17daObjWlPolelift_c g_profile_WL_POLELIFT
+_ZTI21daObjWlKoopaShutter_c _ZTS21daObjWlKoopaShutter_c data_ov026_02113b7c
+g_profile_WL_KOOPA_SHUTTER data_ov026_02113b90 _ZTI18daObjWlSubmarine_c
+data_ov026_02113c28 _ZTS18daObjWlSubmarine_c g_profile_WL_SUBMARINE
 data_ov026_02113cec data_ov026_02113cf4 data_ov026_02113cfc
-data_ov026_02113d04 data_ov026_02113d0c data_ov026_02113d18
-Whirlpool_SpawnInfo data_ov026_02113dd0 data_ov026_02113dd8
-data_ov026_02113de0 data_ov026_02113dec WaterSuction_SpawnInfo
+data_ov026_02113d04 _ZTI18daWater_Tatumaki_c _ZTS18daWater_Tatumaki_c
+g_profile_WATER_TATUMAKI data_ov026_02113dd0 data_ov026_02113dd8
+_ZTI17daWater_Suikomi_c _ZTS17daWater_Suikomi_c g_profile_WATER_SUIKOMI
 data_ov026_02113ea0 data_ov026_02113ea8 data_ov026_02113eb4
 data_ov026_02113ebc data_ov026_02113ec4 data_ov026_02113ed0
 data_ov026_02113edc data_ov026_02113ee4 data_ov026_02113eec
@@ -205,7 +205,7 @@ data_ov026_02113f78
 #
 # THE ANSWER: 0x02113d54 IS THE WHIRLPOOL, and dsd's second label on it,
 # _ZTV9Submarine, is the wrong one. The Submarine's table is 0x02113c6c, which
-# config leaves unnamed apart from data_ov026_02113c6c. 0x02113e24 carries two
+# config leaves unnamed apart from _ZTV9Submarine. 0x02113e24 carries two
 # labels that are the SAME class under two spellings -- _ZTV12WaterSuction and
 # _ZTV17daWater_Suikomi_c both name 17daWater_Suikomi_c -- so only one config
 # row in the pair is actually wrong, and it is
@@ -302,14 +302,14 @@ data_ov026_02113f78
 # The block above settles the VTABLE labels. The same swap runs through the
 # METHOD names and this file did not say so: every _ZN9Submarine* TU in ov026
 # is the WHIRLPOOL's. Table 0x02113d54 (18daWater_Tatumaki_c) carries
-# _ZN9Submarine13InitResourcesEv at slot 0, _ZN9Submarine16CleanupResourcesEv
-# at 3, _ZN9Submarine8BehaviorEv at 6, _ZN9Submarine6RenderEv at 9,
-# _ZN9Submarine16OnPendingDestroyEv at 12, _ZN9SubmarineD1Ev at 16 and
-# _ZN9SubmarineD0Ev at 17. The real Submarine's table 0x02113c6c carries
-# func_ov026_021119c0 / _02111954 / ActorBase::Behavior / _02111998 /
+# _ZN9Whirlpool13InitResourcesEv at slot 0, _ZN9Whirlpool16CleanupResourcesEv
+# at 3, _ZN9Whirlpool8BehaviorEv at 6, _ZN9Whirlpool6RenderEv at 9,
+# _ZN9Whirlpool16OnPendingDestroyEv at 12, _ZN9WhirlpoolD1Ev at 16 and
+# _ZN9WhirlpoolD0Ev at 17. The real Submarine's table 0x02113c6c carries
+# _ZN9Submarine13InitResourcesEv / _02111954 / ActorBase::Behavior / _02111998 /
 # ActorBase::OnPendingDestroy / _021118b8 / _021118fc -- bodies dsd left
-# unnamed. Whirlpool_Spawn calls Enemy's constructor for 444 bytes with a
-# ModelAnim at +0x114; Submarine_Spawn calls Platform's for 800 with a plain
+# unnamed. daWater_Tatumaki_c_classInit calls Enemy's constructor for 444 bytes with a
+# ModelAnim at +0x114; daObjWlSubmarine_c_classInit calls Platform's for 800 with a plain
 # Model at +0xd4. Nothing in the class shapes agrees with dsd's naming.
 #
 # ---- THE T3 SIZE AUDIT: NO SYMBOL NEEDS AN EXPLICIT :0xSIZE PIN ------------
@@ -328,13 +328,13 @@ data_ov026_02113f78
 #     reproduce the ROM are the six gap boundaries. The six symbols that end
 #     on one are data_ov026_02112b08 (ends at the .rodata/.init boundary,
 #     clamped by the section rule) and the five records that end exactly at a
-#     vtable start: data_ov026_02113abc, data_ov026_02113b90,
-#     Submarine_SpawnInfo, Whirlpool_SpawnInfo and WaterSuction_SpawnInfo.
+#     vtable start: g_profile_WL_POLELIFT, data_ov026_02113b90,
+#     g_profile_WL_SUBMARINE, g_profile_WATER_TATUMAKI and g_profile_WATER_SUIKOMI.
 #     The five run up to a span the ROM only ever READS as a vtable and the
 #     port hosts as a separate array, so there is nothing behind them to
 #     trample.
 #   * Two symbols that LOOK like the ov002 failure are safe for the same
-#     reason: data_ov026_02113c24 gets 4 bytes for the Submarine's 12-byte
+#     reason: _ZTI18daObjWlSubmarine_c gets 4 bytes for the Submarine's 12-byte
 #     typeinfo record, and data_ov026_02113b7c gets 4 for the tail of the
 #     shutter's name string. In both cases the rest of the record is the next
 #     mounted symbol and the two are adjacent in the pack.
@@ -359,8 +359,8 @@ data_ov026_02113f78
 #
 #   src/func_ov026_021122b0.c      __sinit_ov045_02112280 -> func_ov026_02112280
 #   src/__sinit_ov026_02112d68.c   data_ov036_02113f58    -> data_ov026_02113f58
-#   src/func_ov026_02111598.cpp    data_ov032_02113a9c    -> ov026's own
-#   src/func_ov026_02111598.cpp    func_ov053_021112a4    -> func_ov026_021112a4
+#   src/_ZN17daObjWlPolelift_c13InitResourcesEv.cpp    data_ov032_02113a9c    -> ov026's own
+#   src/_ZN17daObjWlPolelift_c13InitResourcesEv.cpp    func_ov053_021112a4    -> func_ov026_021112a4
 #
 # THE FIRST WAS A LIVE HAZARD, not a synonym: ___sinit_ov045_02112280 is
 # already DEFINED in walk_window by ov013_syms.c.obj -- a mounted DATA object
@@ -372,14 +372,14 @@ data_ov026_02113f78
 #
 # The census moves all seven POLE_LIFT_DDD instances from skipped to spawned,
 # and then they destroy themselves inside their own byte-matched
-# InitResources: func_ov026_02111598 reads
+# InitResources: _ZN17daObjWlPolelift_c13InitResourcesEv reads
 #   if ((data_0209caa0[1] & 0x204) == 0) return 0;
 # and the mask is clear on a fresh save. That is the ROM's behaviour, not a
 # seat defect, and THREE independent byte-matched sites agree on what 0x204
 # means:
 #
-#   1. func_ov026_02111598 (the poles' InitResources) requires it SET.
-#   2. func_ov026_021117d8 (BowserShutter's InitResources) requires it CLEAR
+#   1. _ZN17daObjWlPolelift_c13InitResourcesEv (the poles' InitResources) requires it SET.
+#   2. _ZN13BowserShutter13InitResourcesEv (BowserShutter's InitResources) requires it CLEAR
 #      -- the opposite polarity on the same word, which is why the submarine
 #      and its shutter are the ones standing on a fresh save.
 #   3. _ZN7Minimap19UpdateLevelSpecificEv's case 0x12 -- LEVEL 18's own arm --

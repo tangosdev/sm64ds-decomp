@@ -73,7 +73,7 @@
 #     site by call site against each callee's own definition, the check that
 #     found Lakitu::InitResources's missing state index one overlay over).
 #   * NO Actor::ClosestPlayer() no-argument r0 ride-through. func_ov092_02131010
-#     calls `_ZN5Actor13ClosestPlayerEv(thiz)` WITH its receiver, which is the
+#     calls `_ZN8dActor_c13ClosestPlayerEv(thiz)` WITH its receiver, which is the
 #     correct form; port/tools/closestplayer_guard.py runs before configure and
 #     would refuse the build otherwise.
 #
@@ -86,7 +86,7 @@
 # BabyPenguin/IceSheet/OneUpLogo/HootTheOwl/ShipWater recipe:
 #     src/_ZN6ToxBox16CleanupResourcesEv.cpp -> _ZN6ToxBox16CleanupResourcesEv
 #     src/_ZN6ToxBox6RenderEv.cpp            -> _ZN6ToxBox6RenderEv
-# src/_ZN6ToxBox13InitResourcesEv.c is a .c file defining the FLAT name
+# src/_ZN6ToxBox13InitResourcesEv.cpp is a .c file defining the FLAT name
 # already, so slot 0 needs no face -- the ov017 asymmetry again.
 #
 # ==== T5 ADJUDICATION: NOTHING TO ADJUDICATE ===============================
@@ -102,16 +102,17 @@
 # Sweeping all 24 ov092 TUs for `data_ovNNN_*` / `func_ovNNN_*` / `_ZTV*`
 # tokens that are not ov092's yields exactly three, and all three are correct:
 #     func_ov002_020de328   ov002's, mounted and linked today
-#     _ZTV8Platform         the host base table (hal/actor_vtables.cpp)
+#     _ZTV10dBgActor_c         the host base table (hal/actor_vtables.cpp)
 #     _ZTV6ToxBox           this class's own, the host array below
 # No -D rename is needed anywhere in this slice.
 #
 # ==== THE SLICE: 23 TUs (24 - 1 host copy) =================================
-src/ToxBox_Spawn.c
-src/_ZN6ToxBox13InitResourcesEv.c
+src/d_a_onms.cpp
+src/_ZN6ToxBox13InitResourcesEv.cpp
 src/_ZN6ToxBox16CleanupResourcesEv.cpp
 src/_ZN6ToxBox6RenderEv.cpp
-src/_ZN6ToxBoxD0Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN6ToxBoxD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN6ToxBoxD0Ev.cpp
 src/_ZN6ToxBoxD1Ev.cpp
 src/__sinit_ov092_021320cc.c
 src/func_ov092_02130fcc.c

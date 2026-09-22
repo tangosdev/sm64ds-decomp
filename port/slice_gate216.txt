@@ -25,7 +25,7 @@
 #
 # ---- 1. THE TWO ACTOR TAIL VENEERS, slots 8 and 11 of every Actor table -----
 #
-# _ZN5Actor13AfterBehaviorEj (arm9 0x02010fc8) and _ZN5Actor11AfterRenderEj
+# _ZN8dActor_c13AfterBehaviorEj (arm9 0x02010fc8) and _ZN8dActor_c11AfterRenderEj
 # (0x02010f6c) are the ROM's words at slots 8 and 11 of ~180 vtables -- every
 # Actor-derived class in the game. Both are two-instruction ARM tail-call
 # veneers (`ldr ip,[pc]; bx ip`) into ActorBase's bodies, so `this` and the
@@ -34,10 +34,10 @@
 # target directly for that reason.
 #
 # WHAT SETTLES IT IS THE CALLEE, and hal/method_faces.cpp measured it for the
-# _ZTV5Scene pair of the same family:
+# _ZTV8dScene_c pair of the same family:
 #
-#     ?AfterBehavior@ActorBase@@UAEXI@Z   00000000: C2 04 00   ret 4
-#     ?AfterRender@ActorBase@@UAEXI@Z     00000000: C2 04 00   ret 4
+#     ?AfterBehavior@fBase_c@@UAEXI@Z   00000000: C2 04 00   ret 4
+#     ?AfterRender@fBase_c@@UAEXI@Z     00000000: C2 04 00   ret 4
 #
 # Neither reads ecx, neither reads [ebp+8], and /OPT:ICF folds them onto one
 # address. A dropped receiver cannot be wrong where there is no read to be
@@ -47,21 +47,21 @@
 # lane.
 #
 # SLOT 5 IS NOT HERE and the reason is the same test failing the other way.
-# _ZN5Actor21AfterCleanupResourcesEj's target, ActorBase::AfterCleanupResources
+# _ZN8dActor_c21AfterCleanupResourcesEj's target, ActorBase::AfterCleanupResources
 # (0x02043b2c), walks this->sceneNode (+0x14) and this->behavNode (+0x28) off
 # the two processing lists, destroys this->unk4C and this->unk48, dispatches
 # its own virtual destructor and calls Memory::Deallocate -- every one a read
 # of the receiver, and its first statement tests the ARGUMENT. That is the
 # CRASH half of the dropped-receiver mode, so slot 5 keeps calling the target
 # directly and the TU stays unlinked.
-src/_ZN5Actor13AfterBehaviorEj.cpp
-src/_ZN5Actor11AfterRenderEj.cpp
+src/_ZN8dActor_c13AfterBehaviorEj.cpp
+src/_ZN8dActor_c11AfterRenderEj.cpp
 #
 # ---- 2. FOUR ABSTRACT ov002 INTERMEDIATES' OWN DESTRUCTOR PAIRS -------------
 #
-# data_ov002_02108d94 (daObjDorifu_c) and data_ov002_021091d4 (daObjKaitendai_c)
-# are filled by hal/actor_classes_ov036.cpp; data_ov002_02109278 and
-# data_ov002_02109320 (ids 151 and 152's intermediate bases) by
+# _ZTV13daObjDorifu_c (daObjDorifu_c) and _ZTV16daObjKaitendai_c (daObjKaitendai_c)
+# are filled by hal/actor_classes_ov036.cpp; _ZTV13daObjKuruma_c and
+# _ZTV17daObjKurumajiku_c (ids 151 and 152's intermediate bases) by
 # hal/actor_classes_ov047.cpp. All four had slots 16 and 17 trapping, with the
 # same note at each fill: "an abstract intermediate installed only between two
 # member teardowns never reaches its own destructors either."
@@ -76,18 +76,18 @@ src/_ZN5Actor11AfterRenderEj.cpp
 #
 # The daObjDorifu_c pair spells both of its vtable stores by their real names.
 # The other six carry the shared-header placeholders _ZTV10dBgActor_c (the
-# class's OWN table) and VT1 (_ZTV8Platform, ov002 0x0210ae38), bound per
+# class's OWN table) and VT1 (_ZTV10dBgActor_c, ov002 0x0210ae38), bound per
 # source in port/CMakeLists.txt from each body's own literal pool -- read out
 # of the relocations inside each function's span, not from the recovery's
 # names. G0 is the game heap (data_020a0eac) in the three deleting halves.
-src/func_ov002_020b4af8.c
-src/func_ov002_020b4a70.c
-src/func_ov002_020b6664.c
-src/func_ov002_020b660c.c
-src/func_ov002_020b686c.c
-src/func_ov002_020b6814.c
-src/func_ov002_020b6a3c.c
-src/func_ov002_020b69e4.c
+src/_ZN13daObjDorifu_cD1Ev.cpp
+src/_ZN13daObjDorifu_cD0Ev.cpp
+src/_ZN16daObjKaitendai_cD1Ev.cpp
+src/_ZN16daObjKaitendai_cD0Ev.cpp
+src/_ZN13daObjKuruma_cD1Ev.cpp
+src/_ZN13daObjKuruma_cD0Ev.cpp
+src/_ZN17daObjKurumajiku_cD1Ev.cpp
+src/_ZN17daObjKurumajiku_cD0Ev.cpp
 #
 # ---- 3. THE BULLY/BIGBULLY BASE TABLE, four words --------------------------
 #
@@ -101,10 +101,7 @@ src/func_ov002_020b69e4.c
 # 0x021165d4 and 0x021163bc are `void f(void) {}` -- one `bx lr` each -- so
 # their slot adapters name the receiver and drop it, which cannot be wrong for
 # a body with no loads in it.
-src/func_ov064_02115ee0.c
-src/func_ov064_02115f28.c
-src/func_ov064_021165d4.c
-src/func_ov064_021163bc.c
+src/actors/daOts_c.cpp
 #
 # ---- 4. UNCHAINED_CHOMP'S OWN DELETING DESTRUCTOR, slot 17 -----------------
 #
@@ -117,7 +114,8 @@ src/func_ov064_021163bc.c
 # _ZN14UnchainedChompD0Ev. If nothing dispatches it the seat is free; if
 # anything ever does, the matched body is what the ROM runs where the trap
 # would have aborted.
-src/_ZN14UnchainedChompD0Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN14UnchainedChompD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN14UnchainedChompD0Ev.cpp
 #
 # ---- 5. SIX MORE D1 SLOTS, one per class, all from the same two blockers ----
 #
@@ -125,19 +123,19 @@ src/_ZN14UnchainedChompD0Ev.cpp
 # carried a HAND THUNK instead of the ROM's word. Two things kept them out and
 # both are removed rather than argued with:
 #
-#   THE SHARED-HEADER PLACEHOLDERS. func_ov012_021111a0, func_ov016_02112a00
-#   and func_ov018_021111a0 spell their two vtable stores _ZTV16daObjC0_Switch_c
+#   THE SHARED-HEADER PLACEHOLDERS. _ZN16daObjC0_Switch_cD1Ev, _ZN10RockPillarD1Ev
+#   and _ZN7SkiLiftD1Ev spell their two vtable stores _ZTV16daObjC0_Switch_c
 #   / _ZTV16daObjKi_Hasira_c / _ZTV14daObjSm_Lift_c and then _ZTV10dBgActor_c.
 #   Each fill's own note says the placeholders are why the TU was dropped. The
 #   relocations INSIDE each function's span say which addresses those pooled
 #   words are, and port/CMakeLists.txt binds them per source:
-#     ov012 0x021111dc -> data_ov012_02112344   0x021111e0 -> _ZTV8Platform
-#     ov016 0x02112a3c -> data_ov016_02114b00   0x02112a40 -> _ZTV8Platform
-#     ov018 0x021111dc -> data_ov018_021138cc   0x021111e0 -> _ZTV8Platform
-#   func_ov013_021111a0 has NO placeholder at all -- its single pooled word is
-#   data_ov013_02112128 by that name -- and the thunk it replaces was a
+#     ov012 0x021111dc -> _ZTV16daObjC0_Switch_c   0x021111e0 -> _ZTV10dBgActor_c
+#     ov016 0x02112a3c -> _ZTV10RockPillar   0x02112a40 -> _ZTV10dBgActor_c
+#     ov018 0x021111dc -> _ZTV7SkiLift   0x021111e0 -> _ZTV10dBgActor_c
+#   _ZN18daObjClockHuriko_cD1Ev has NO placeholder at all -- its single pooled word is
+#   _ZTV18daObjClockHuriko_c by that name -- and the thunk it replaces was a
 #   line-for-line copy of it, so that row takes no -D and changes nothing.
-#   func_ov100_021443f4 likewise spells _ZTV8daDoor_c by the array's own name.
+#   _ZN4DoorD1Ev likewise spells _ZTV8daDoor_c by the array's own name.
 #
 #   THE DECORATED VTABLE REFERENCE. src/_ZN14UnchainedChompD1Ev.cpp declares
 #   `extern int _ZTV14UnchainedChomp;` outside its extern "C" block, so MSVC
@@ -153,22 +151,22 @@ src/_ZN14UnchainedChompD0Ev.cpp
 # the Memory::Deallocate the caller does next. The door's and the chomp's are
 # not dispatched at all, by the readings their fills already carry.
 #
-# THE D0 HALVES ARE NOT HERE. func_ov012_021111e4, func_ov013_021111d0,
-# func_ov016_02112a44, func_ov018_021111e4 and func_ov100_02144424 all carry
+# THE D0 HALVES ARE NOT HERE. _ZN16daObjC0_Switch_cD0Ev, _ZN18daObjClockHuriko_cD0Ev,
+# _ZN10RockPillarD0Ev, _ZN7SkiLiftD0Ev and _ZN4DoorD0Ev all carry
 # the "recovered from vtable slot identity" marker, and
 # port/tools/inferred_stub_guard.py refuses new seats of guessed bodies. Their
 # slots keep the host thunks.
-src/func_ov012_021111a0.c
-src/func_ov013_021111a0.c
-src/func_ov016_02112a00.c
-src/func_ov018_021111a0.c
-src/func_ov100_021443f4.c
+src/game/actors/d_a_obj_c0_switch.cpp
+src/game/actors/d_a_obj_clock_huriko.cpp
+src/_ZN10RockPillarD1Ev.cpp
+src/game/actors/d_a_pg_mthr.cpp
+src/game/actors/d_a_star_gate.cpp
 src/_ZN14UnchainedChompD1Ev.cpp
 #
 # ---- NOT IN THIS GATE, and why, so the rows stop reading as work -----------
 #
-# * func_ov018_021111e4 (SKI_LIFT's own D0, data_ov018_021138cc slot 17). Its
-#   D1 sibling func_ov018_021111a0 (slot 16) IS in this gate (second batch, the
+# * _ZN7SkiLiftD0Ev (SKI_LIFT's own D0, _ZTV7SkiLift slot 17). Its
+#   D1 sibling _ZN7SkiLiftD1Ev (slot 16) IS in this gate (second batch, the
 #   six class D1s off hand thunks); the D0 stays out because that slot is a host
 #   thunk with a documented divergence, not a trap. Review note: four of the six
 #   second-batch D1 seats are on live, dispatched classes, so their teardown now

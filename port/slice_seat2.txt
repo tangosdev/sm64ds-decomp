@@ -30,7 +30,7 @@
 #                            this is that check.
 #   _ZN9FaderWipeD0Ev.c      _ZTV9FaderWipe (the alias onto
 #                            ??_7HalFaderWipe@@6B@ in hal/fader_wipes.cpp),
-#                            _ZN5ModelD1Ev, _ZN5ColorD1Ev and
+#                            _ZN5ModelD1Ev, _ZN10FaderColorD2Ev and
 #                            Memory::operator_delete2 -- all four in the map.
 #
 # NOT LISTED, refused with a measurement rather than parked:
@@ -44,6 +44,15 @@
 #     exclusion for the BlendModelAnim two; out/SEAT2/thunk_msvc_probe.log is
 #     this lane's own measurement of all of it.
 
-src/_ZN7ClipperD0Ev.c
-src/_ZN11ShadowModelD0Ev.c
-src/engine/fader/_ZN9FaderWipeD0Ev.c
+# RETIRED at SLICE1: body now in src/_ZN7ClipperD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN7ClipperD0Ev.cpp
+# QUARANTINED at the main->port sync (lane SYNC5, the wave-7 fold merge): MSVC
+# refuses main's shape for this TU (C2600, the model family's destructor TUs:
+# main defines X::~X() where the host header spells the destructor as two
+# plain virtuals; port/unmatched/ModelFamily_Dtors_HostCopy.c carries the
+# merge base's own bodies instead). It is a decomp-side item, not a port one:
+# see runs/link100/out/SYNC5/decomp_side.md. The row returns when main lands
+# the fix.
+#src/_ZN11ShadowModelD0Ev.cpp
+# RETIRED at SLICE1: body now in src/engine/fader/_ZN9FaderWipeD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/engine/fader/_ZN9FaderWipeD0Ev.cpp

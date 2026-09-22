@@ -1,0 +1,44 @@
+# port/faces_sync_smoke_heap.txt -- THE GATE-2 SUBSET OF port/faces_sync.txt.
+#
+# Lane SMOKELINK2, run link100 wave 10 round 2.
+#
+# WHY A SECOND LEDGER FILE RATHER THAN A SECOND TARGET ON THE FIRST ONE.
+# port/faces_sync.txt is 1925 rows and the file generated from it,
+# build/port/host-src/faces_sync_gen.cpp, is on walk_window, walk_window_hires
+# and smoke_player -- the three targets that compile most of the game.  Every
+# one of those rows CALLS a C++ member, so the generated object carries 1925
+# references.  smoke_heap links 26 objects and defines 54 symbols; putting that
+# file on it trades twelve unresolved names for hundreds.  There is no /Gy in
+# this build (FLAGS has /GR /EHsc /O2 /Ob2 -std:c++17 /MT /Oy- /vmg /vmm), so
+# there is no function-level COMDAT for /OPT:REF to drop either.
+#
+# EVERY ROW BELOW IS COPIED VERBATIM FROM port/faces_sync.txt, columns and all.
+# Nothing here is a new binding and nothing here is hand-derived: the same
+# port/tools/facegen.py --sync reads this file, re-derives each row against the
+# ROM address in column three exactly as it does for the big ledger, and fails
+# the build if a row stops deriving.  Keeping the row text identical is what
+# makes that true -- if the big ledger's row for one of these ever changes, the
+# two files disagree and the diff is one grep away.
+#
+# THE FOUR ROWS ARE THE __thiscall HALF OF smoke_heap's twelve unresolved
+# names, measured at 79388ffe5 (out/SMOKELINK2/build_smokelink2_0.log).  The
+# other eight close differently, and the split is the whole point:
+#   * three are STATIC members (ExpandingHeapAllocator::CreateNode, LinkNode,
+#     UnlinkNode) and two are DATA, so caller and callee are both __cdecl and a
+#     name bridge IS an ABI bridge.  Those five are /alternatename rows, copied
+#     verbatim from port/hal/cxx_aliases.cpp into port/hal/smoke_aliases_heap.cpp.
+#   * three are the HARNESS's own calls, and port/tests/smoke_heap.cpp is host
+#     test code, so it now calls the members as C++ instead of spelling a flat
+#     name that no longer exists.
+# The four here are ordinary non-static members and constructors, receiver in
+# ECX, and faces_sync.txt's own header says what that means: an /alternatename
+# is a NAME bridge and never an ABI bridge, so a row like these cannot be closed
+# with one.  A face is what closes it.
+#
+# COLUMNS, and the R/F/D meaning, are port/faces_sync.txt's.  Read that file's
+# header before adding a row here.
+
+__ZN22ExpandingHeapAllocator16AllocateForwardsEjj                        ?AllocateForwards@ExpandingHeapAllocator@@QAEPAXII@Z             0x0204e5c8 R
+__ZN22ExpandingHeapAllocator17AllocateBackwardsEjj                       ?AllocateBackwards@ExpandingHeapAllocator@@QAEPAXII@Z            0x0204e504 R
+__ZN22ExpandingHeapAllocatorC1EPvj                                       ??0ExpandingHeapAllocator@@QAE@PAXI@Z                            0x0204e828 R
+__ZN18NestedHeapIteratorC1Ej                                             ??0NestedHeapIterator@@QAE@I@Z                                   0x0204df20 R

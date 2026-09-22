@@ -12,7 +12,7 @@
 // ---- 1. THE NAME IS dScMgMemory_c AND THE ROM SAYS SO ---------------------
 //
 // The RTTI string at 0x0213d0b4 reads "13dScMgMemory_c", and the record that
-// points at it, data_ov006_0213d090 = {0x0209a764, 0x0213d0b4, 0x0213bc64}, is
+// points at it, _ZTI13dScMgMemory_c = {0x0209a764, 0x0213d0b4, 0x0213bc64}, is
 // what the word at 0x0213d1b4 -- the relocated pointer immediately before the
 // vtable -- loads.  This file and its unmatched/ companions are spelled
 // MgMemory1_* rather than MgMemory_* for one reason and it is not the ROM's:
@@ -24,8 +24,8 @@
 // ---- 2. THE HIERARCHY IS THREE DEEP, AND THE ROM SAYS SO TWICE ------------
 //
 //     Scene -> dScMgBase_c         data_ov004_020bc0c0  36 slots
-//           -> dScMgSingle3DBase_c data_ov006_0213e448  36 slots
-//           -> dScMgMemory_c       data_ov006_0213d1b8  36 slots
+//           -> dScMgSingle3DBase_c _ZTV19dScMgSingle3DBase_c  36 slots
+//           -> dScMgMemory_c       _ZTV13dScMgMemory_c  36 slots
 //
 // port/mg_fanout_costs.txt section 3's row for 0x16a lists ONE vtable and says
 // nothing about an intermediate base, exactly as it did for 0x16b before run
@@ -34,16 +34,16 @@
 // holding raw DS words.  Both edges are read off code rather than inherited
 // from the sibling:
 //
-//   MgMemoryMatch_Spawn (0x020f5504, disassembled) calls func_ov004_020b2adc(p)
+//   dScMgMemory_c_classInit (0x020f5504, disassembled) calls _ZN11dScMgBase_cC2Ev(p)
 //   WITH its argument, writes 0x0213e448 into p[0], constructs the
 //   Particle::SysTracker at +0x471c, then writes 0x0213d1b8 over it and
 //   constructs the model sub-object at +0x4f38.  The object is 0x5340 bytes.
-//   src/MgMemoryMatch_Spawn.c reproduces that instruction for instruction.
+//   src/minigames/d_s_mg_memory.cpp reproduces that instruction for instruction.
 //
-//   src/func_ov006_020f3888.cpp (slot 17, D0) unwinds them in the OPPOSITE
+//   src/minigames/d_s_mg_memory.cpp (slot 17, D0) unwinds them in the OPPOSITE
 //   order: 0x0213d1b8 first, then 0x0213e448, then the SysTracker at +0x471c,
-//   then func_ov004_020b29c0 and Memory::Deallocate.
-//   src/func_ov006_020f3834.cpp (slot 16, D2) does the same without the
+//   then _ZN11dScMgBase_cD2Ev and Memory::Deallocate.
+//   src/minigames/d_s_mg_memory.cpp (slot 16, D2) does the same without the
 //   Deallocate.
 //
 // THE D1/D2 ORDER WAS CHECKED RATHER THAN ASSUMED, because the config has the
@@ -79,10 +79,10 @@
 // two files this lane does not own.  It is recorded as a merge-time finding
 // rather than taken, and the safety argument is unchanged and re-derived here:
 //
-//   - The middle table data_ov006_0213e448 is claimed by whichever fill runs
+//   - The middle table _ZTV19dScMgSingle3DBase_c is claimed by whichever fill runs
 //     FIRST, and this row is appended after the flower's and the sibling's, so
 //     the flower keeps it and both other copies write nothing into it.
-//   - This seat's own table data_ov006_0213d1b8 is named by NO other file, so
+//   - This seat's own table _ZTV13dScMgMemory_c is named by NO other file, so
 //     the six inherited slots in it are this file's alone.  Three copies of the
 //     array cannot collide on it because no other fill ever visits it.
 //
@@ -91,7 +91,7 @@
 // ZERO and that is the correct reading"; the run says 11642 on a 1500-frame
 // boot and the run is right.  kSingle3DFaces is applied to BOTH tables, and
 // the copy that lands is the one in this class's own derived table -- slots 2,
-// 7, 10, 26 and 33 of data_ov006_0213d1b8, which is where every one of those
+// 7, 10, 26 and 33 of _ZTV13dScMgMemory_c, which is where every one of those
 // dispatches actually goes.  The zero belongs to the OTHER seats' copies of
 // the array, which is what hal/scene_mg_flower.cpp's own line reports on a
 // scene-362 run.  Two counters, two tables, and the mistake was reading the
@@ -99,11 +99,11 @@
 //
 // ---- 4. SLOT 2 IS NOT src's BODY, AND IT IS NOT THIS LANE'S HOST COPY -----
 //
-// func_ov006_0210a6e4 (AfterInitResources) drops the framework's second
+// _ZN19dScMgSingle3DBase_c18AfterInitResourcesEj (AfterInitResources) drops the framework's second
 // argument: the ROM never writes r1 before its `bl 0x20b08f0`, so the flags
 // ride through in r1, and src spells the call with one argument because that is
 // the only way to spell an unnamed value in C.  On the host the callee reads
-// stack litter, and func_ov004_020b08f0's tail is Scene::AfterInitResources
+// stack litter, and _ZN11dScMgBase_c18AfterInitResourcesEj's tail is Scene::AfterInitResources
 // (this, flags) where flags == 1 marks the actor for destruction -- so the
 // wrong value is a coin flip on whether the scene survives frame 0.
 //
@@ -111,7 +111,7 @@
 // port_mg_flower_after_init, and its header ends "THE NEXT LANE TO SEAT 361 OR
 // 363 SHOULD CALL THIS RATHER THAN WRITE A SECOND".  This is 362, under the
 // same base and through the same slot, and it calls it.
-// src/func_ov006_0210a6e4.cpp stays out of port/slice_mmt.txt for the same
+// src/minigames/d_s_mg_single3_d_base.cpp stays out of port/slice_mmt.txt for the same
 // reason it is out of port/slice_flw.txt and port/slice_mem.txt: listing it
 // would be an LNK2005 against that host copy.
 //
@@ -124,13 +124,13 @@
 //
 //   check                     reading
 //   -----------------------   ------------------------------------------------
-//   1 SPAN                    next config symbol after data_ov006_0213d1b8 is
+//   1 SPAN                    next config symbol after _ZTV13dScMgMemory_c is
 //                             data_ov006_0213d248, exactly 0x90 = 36 words on
 //   2 TERMINAL SLOT           slot 35 holds 0x020ad660, the word every
 //                             dScMgBase_c-derived table holds there
 //   3 WHAT THE WORD IS        index 36 reads 0x020f6538 and index 37 reads
 //                             0x00000000 -- an mwcc PAIR {code, adj}, and the
-//                             code is func_ov006_020f6538, which is
+//                             code is _ZN14dScMgMemory2_c10ResultWaitEv, which is
 //                             dScMgMemory2_c's round-end state, slot 0 of the
 //                             sibling's data_ov006_021423c0 (its constructor
 //                             src/__sinit_ov006_021314e4.c copies
@@ -169,12 +169,12 @@
 //
 // ---- 8. THE CARD DRAW WAS A FLOOR AND RUN mg10 LANE F362 CLOSED IT --------
 //
-// func_ov006_020f3e68 -- the sixth call vtable slot 9 (Render) makes, 0xa8, the
+// _ZN13dScMgMemory_c9DrawCardsEv -- the sixth call vtable slot 9 (Render) makes, 0xa8, the
 // only code in the class that puts a card pixel anywhere -- had NO src TU in
 // any overlay and has NO delink block.  Run mg9 lane MMT put a named counting
 // trap in port/unmatched/MgMemory1_Faces.cpp with the ROM read of what it does;
 // run mg10 lane F362 wrote the body from that read and DELETED the trap.
-// src/func_ov006_020f3e68.c is the TU and port/slice_mmt.txt carries it.
+// src/minigames/d_s_mg_memory.cpp is the TU and port/slice_mmt.txt carries it.
 //
 // SO A GREEN RUN OF THIS SCENE USED TO MEAN "the board is dealt and the machine
 // runs", NOT "the game looks right".  The sibling's identical floor was exactly
@@ -229,38 +229,38 @@ int      port_scene_env_want(void);
    host array of the same name is a duplicate symbol, and leaving the mounted
    table alone leaves live wild DS pointers in a table the factory installs. */
 extern unsigned char data_ov004_020bc0c0[];   /* dScMgBase_c,         36 */
-extern unsigned char data_ov006_0213e448[];   /* dScMgSingle3DBase_c, 36 */
-extern unsigned char data_ov006_0213d1b8[];   /* dScMgMemory_c,       36 */
-extern unsigned char MgMemoryMatch_SpawnInfo[];
+extern unsigned char _ZTV19dScMgSingle3DBase_c[];   /* dScMgSingle3DBase_c, 36 */
+extern unsigned char _ZTV13dScMgMemory_c[];   /* dScMgMemory_c,       36 */
+extern unsigned char g_profile_MG_MEMORY[];
 
 /* dScMgSingle3DBase_c's eight overrides.  Slot 2 is NOT src's body: see
    section 4 and port/unmatched/MgFlower_Slot2.cpp. */
 int   port_mg_flower_after_init(void *c, unsigned f);   /* slot  2 */
-void  func_ov006_0210a608(void *c, unsigned f);         /* slot  5 */
-int   func_ov006_0210a698(void *c);                     /* slot  7 */
-int   func_ov006_0210a664(void *c);                     /* slot 10 */
-int   func_ov006_0210a4b0(char *c);                     /* slot 16 D2 */
-int   func_ov006_0210a4e8(char *c);                     /* slot 17 D0 */
-int   func_ov006_0210a600(void);                        /* slot 26 */
-void  func_ov006_0210a708(char *c);                     /* slot 33 */
+void  _ZN19dScMgSingle3DBase_c21AfterCleanupResourcesEj(void *c, unsigned f);         /* slot  5 */
+int   _ZN19dScMgSingle3DBase_c14BeforeBehaviorEv(void *c);                     /* slot  7 */
+int   _ZN19dScMgSingle3DBase_c12BeforeRenderEv(void *c);                     /* slot 10 */
+int   _ZN19dScMgSingle3DBase_cD1Ev(char *c);                     /* slot 16 D2 */
+int   _ZN19dScMgSingle3DBase_cD0Ev(char *c);                     /* slot 17 D0 */
+int   _ZN19dScMgSingle3DBase_c24OnHitByCannonBlastedCharEv(void);                        /* slot 26 */
+void  _ZN19dScMgSingle3DBase_c9Virtual84Ev(char *c);                     /* slot 33 */
 
-/* dScMgMemory_c's own eight.  func_ov006_020f5388 is the HOST COPY in
+/* dScMgMemory_c's own eight.  _ZN13dScMgMemory_c8BehaviorEv is the HOST COPY in
    unmatched/MgMemory1_StateDispatch.cpp, not the src TU: it is the
    pointer-to-member dispatcher and the port cannot compile the src. */
-int   func_ov006_020f53e4(char *self);        /* slot  0 InitResources */
-int   func_ov006_020f5388(void *self);        /* slot  6 Behavior, host copy */
-int   func_ov006_020f5324(char *c);           /* slot  9 Render */
-void *func_ov006_020f3834(char *c);           /* slot 16 D2 */
-void *func_ov006_020f3888(char *c);           /* slot 17 D0 */
-void  func_ov006_020f52c4(char *c);           /* slot 18 state reset */
-int   func_ov006_020f5250(char *c);           /* slot 19 */
-int   func_ov006_020f523c(char *c);           /* slot 21 */
+int   _ZN13dScMgMemory_c13InitResourcesEv(char *self);        /* slot  0 InitResources */
+int   _ZN13dScMgMemory_c8BehaviorEv(void *self);        /* slot  6 Behavior, host copy */
+int   _ZN13dScMgMemory_c6RenderEv(char *c);           /* slot  9 Render */
+void *_ZN13dScMgMemory_cD1Ev(char *c);           /* slot 16 D2 */
+void *_ZN13dScMgMemory_cD0Ev(char *c);           /* slot 17 D0 */
+void  _ZN13dScMgMemory_c13OnYoshiTryEatEi(char *c);           /* slot 18 state reset */
+int   _ZN13dScMgMemory_c13OnTurnIntoEggEi(char *c);           /* slot 19 */
+int   _ZN13dScMgMemory_c15OnGroundPoundedEv(char *c);           /* slot 21 */
 
 /* the factory */
-int  *MgMemoryMatch_Spawn(void);
+int  *dScMgMemory_c_classInit(void);
 
 /* this seat's own witnesses.  There is no card-draw counter any more: run mg10
-   lane F362 decompiled func_ov006_020f3e68 into src/func_ov006_020f3e68.c and
+   lane F362 decompiled _ZN13dScMgMemory_c9DrawCardsEv into src/minigames/d_s_mg_memory.cpp and
    deleted the trap that counted itself. */
 unsigned port_mg_memory1_state_hits(void);
 unsigned port_mg_memory1_floor_hits(void);
@@ -304,36 +304,36 @@ static unsigned g_mem1_base_hits[36];   /* the same slots on the MIDDLE table */
 static void *__fastcall s31_ainit(void *s, void *, unsigned f)
 { M3D1(2);  return (void *)(size_t)port_mg_flower_after_init(s, f); }
 static void __fastcall s31_aclean(void *s, void *, unsigned f)
-{ M3D1(5);  func_ov006_0210a608(s, f); }
+{ M3D1(5);  _ZN19dScMgSingle3DBase_c21AfterCleanupResourcesEj(s, f); }
 static int  __fastcall s31_bbeh(void *s, void *)
-{ M3D1(7);  return func_ov006_0210a698(s); }
+{ M3D1(7);  return _ZN19dScMgSingle3DBase_c14BeforeBehaviorEv(s); }
 static int  __fastcall s31_bren(void *s, void *)
-{ M3D1(10); return func_ov006_0210a664(s); }
+{ M3D1(10); return _ZN19dScMgSingle3DBase_c12BeforeRenderEv(s); }
 static void *__fastcall s31_d2(void *s, void *)
-{ M3D1(16); return (void *)(size_t)func_ov006_0210a4b0((char *)s); }
+{ M3D1(16); return (void *)(size_t)_ZN19dScMgSingle3DBase_cD1Ev((char *)s); }
 static void *__fastcall s31_d0(void *s, void *)
-{ M3D1(17); return (void *)(size_t)func_ov006_0210a4e8((char *)s); }
+{ M3D1(17); return (void *)(size_t)_ZN19dScMgSingle3DBase_cD0Ev((char *)s); }
 static int  __fastcall s31_v26(void *, void *)
-{ M3D1(26); return func_ov006_0210a600(); }
+{ M3D1(26); return _ZN19dScMgSingle3DBase_c24OnHitByCannonBlastedCharEv(); }
 static int  __fastcall s31_v33(void *s, void *)
-{ M3D1(33); func_ov006_0210a708((char *)s); return 0; }
+{ M3D1(33); _ZN19dScMgSingle3DBase_c9Virtual84Ev((char *)s); return 0; }
 
 /* ---- dScMgMemory_c's own eight ------------------------------------------ */
 static int  __fastcall mem1_init(void *s, void *)
-{ MEM1(0);  const int r = func_ov006_020f53e4((char *)s);
+{ MEM1(0);  const int r = _ZN13dScMgMemory_c13InitResourcesEv((char *)s);
   /* the GaplessMinigames latch, for hal/scene_mg.cpp's reason: every seated
      minigame calls it so the ones the gapless table does not name can say
      "unsupported" instead of doing nothing quietly. */
   hal_gapless_minigames_latch(); return r; }
 static int  __fastcall mem1_beh(void *s, void *)
-{ MEM1(6);  const int r = func_ov006_020f5388(s); hal_gapless_splice();
+{ MEM1(6);  const int r = _ZN13dScMgMemory_c8BehaviorEv(s); hal_gapless_splice();
   return r; }
 static int  __fastcall mem1_render(void *s, void *)
-{ MEM1(9);  return func_ov006_020f5324((char *)s); }
+{ MEM1(9);  return _ZN13dScMgMemory_c6RenderEv((char *)s); }
 static void *__fastcall mem1_d2(void *s, void *)
-{ MEM1(16); return func_ov006_020f3834((char *)s); }
+{ MEM1(16); return _ZN13dScMgMemory_cD1Ev((char *)s); }
 static void *__fastcall mem1_d0(void *s, void *)
-{ MEM1(17); return func_ov006_020f3888((char *)s); }
+{ MEM1(17); return _ZN13dScMgMemory_cD0Ev((char *)s); }
 /* SLOTS 18 AND 19 TAKE ONE STACK ARGUMENT AND THE THUNK MUST POP IT.  Run mg5
    lane BASESET scanned both offsets out of the two overlay images word by word
    (runs/mg5/out/baseset/slot18_19_scan.txt): offset 0x48 is 22 sites and offset
@@ -345,16 +345,16 @@ static void *__fastcall mem1_d0(void *s, void *)
    WHETHER IT MUST ALSO FORWARD IT IS A PER-CLASS QUESTION and run mg9 lane LKY
    is why: dScMgLuckyStars_c's slot-18 and slot-19 bodies READ the second
    argument and branch on it.  Disassembled here rather than inherited, and the
-   test is where r1 is first TOUCHED.  func_ov006_020f52c4's first mention of
+   test is where r1 is first TOUCHED.  _ZN13dScMgMemory_c13OnYoshiTryEatEi's first mention of
    r1 is `ldr r1,[pc,#0x40]` after four instructions, and
-   func_ov006_020f5250's is `ldr r1,[r0,#0x314]` after three -- both WRITES, so
+   _ZN13dScMgMemory_c13OnTurnIntoEggEi's is `ldr r1,[r0,#0x314]` after three -- both WRITES, so
    neither body can have read the incoming value and cleaning is enough.
 
    THE FIRST HALF OF THAT NEEDED ONE MORE STEP AND THE RUN mg9 REVIEWER FOUND
    IT MISSING.  020f52c4's four instructions include a CALL, `bl 0x020f4f94`,
    and r1 is an argument register -- so the callee could have read the incoming
    r1 and a test that only looks at this body would never see it.  It does not:
-   func_ov006_020f4f94's own first mention of r1 is `add r1,r3,#0x5100` at
+   _ZN13dScMgMemory_c9ResetGameEv's own first mention of r1 is `add r1,r3,#0x5100` at
    0x020f4fb4, its ninth instruction and a WRITE, and the eight before it never
    name r1.  It is the only call before the write, so the chain is closed.
    020f5250 has no call before its write and never had the hole.
@@ -362,11 +362,11 @@ static void *__fastcall mem1_d0(void *s, void *)
    NOTHING WITNESSES EITHER WAY: both slots read zero hits on every run this
    lane made, at 300, 900 and 1500 frames. */
 static int  __fastcall mem1_reset(void *s, void *, int /*ridethrough*/)
-{ MEM1(18); func_ov006_020f52c4((char *)s); return 1; }
+{ MEM1(18); _ZN13dScMgMemory_c13OnYoshiTryEatEi((char *)s); return 1; }
 static int  __fastcall mem1_v19(void *s, void *, int /*ridethrough*/)
-{ MEM1(19); return func_ov006_020f5250((char *)s); }
+{ MEM1(19); return _ZN13dScMgMemory_c13OnTurnIntoEggEi((char *)s); }
 static int  __fastcall mem1_v21(void *s, void *)
-{ MEM1(21); return func_ov006_020f523c((char *)s); }
+{ MEM1(21); return _ZN13dScMgMemory_c15OnGroundPoundedEv((char *)s); }
 
 /* SM64DS_SCENE_SLOT0=0 and SM64DS_SCENE_SLOT9=0, the diagnostics every scene
    seat in this port carries, counted separately so a run can never read a no-op
@@ -425,14 +425,14 @@ extern "C" void port_scene_memory1_hits(void);
 extern "C" void port_scene_fill_memory1(void)
 {
     void **base = (void **)data_ov004_020bc0c0;
-    void **mid  = (void **)data_ov006_0213e448;
-    void **vt   = (void **)data_ov006_0213d1b8;
+    void **mid  = (void **)_ZTV19dScMgSingle3DBase_c;
+    void **vt   = (void **)_ZTV13dScMgMemory_c;
 
     /* THE BASE TABLE IS FILLED HERE TOO AND IT IS NOT CEREMONY.  Earlier rows'
        fills already did it and run first, so on a tree carrying them this is a
        second pass over words that are already host pointers and finds nothing.
        It is here so this class does not depend on another class's row existing:
-       the factory's first act is func_ov004_020b2adc, which writes
+       the factory's first act is _ZN11dScMgBase_cC2Ev, which writes
        data_ov004_020bc0c0 into the object's first word before either derived
        table lands. */
     port_scene_mg_fill_shared(base, 36);
@@ -501,10 +501,10 @@ extern "C" void port_scene_fill_memory1(void)
    without the registry table growing a second column.
 
    THE FACTORY NEEDS NO DISPLACEMENT RULING, and the check was run rather than
-   inherited from the sibling.  MgMemoryMatch_Spawn's disassembly at 0x020f5504
+   inherited from the sibling.  dScMgMemory_c_classInit's disassembly at 0x020f5504
    is `ldr r0,[pc,#0x40] / bl 0x2043444 / movs r4,r0 / beq / bl 0x20b2adc` --
-   r0 holds `this` at the call, so func_ov004_020b2adc gets its argument.  0x169
-   needed a ruling because src/func_ov006_020e0574.cpp calls the same base
+   r0 holds `this` at the call, so _ZN11dScMgBase_cC2Ev gets its argument.  0x169
+   needed a ruling because src/actors/dScMgCup_c.cpp calls the same base
    constructor with NO argument and rides r0 through, and that callee
    dereferences on its first statement.  This class is on the correct side of
    it and is linked from the slice rather than host-copied. */
@@ -512,7 +512,7 @@ static char *g_mem1_self;
 
 extern "C" void *port_mg_memory1_spawn(void)
 {
-    void *p = (void *)MgMemoryMatch_Spawn();
+    void *p = (void *)dScMgMemory_c_classInit();
     g_mem1_self = (char *)p;
     return p;
 }
@@ -563,14 +563,14 @@ extern "C" void port_scene_memory1_hits(void)
                     fcalls, fhits, calls, unknown);
     }
 
-    /* THE FLOOR THAT USED TO BE HERE.  func_ov006_020f3e68 is the sixth call
+    /* THE FLOOR THAT USED TO BE HERE.  _ZN13dScMgMemory_c9DrawCardsEv is the sixth call
        vtable slot 9 (Render) makes and the only card draw in the class.  It
        had no src TU and a counting trap stood in for it until run mg10 lane
        F362 read it out of the overlay: the body is now a real src TU,
-       src/func_ov006_020f3e68.c, carried by port/slice_mmt.txt.  The card
+       src/minigames/d_s_mg_memory.cpp, carried by port/slice_mmt.txt.  The card
        census below is what the trap count was standing in for. */
     std::printf("[scene] dScMgMemory_c card draw: the Render callee 0x020f3e68 "
-                "is DECOMPILED (src/func_ov006_020f3e68.c, NONMATCHING at 24 of "
+                "is DECOMPILED (src/minigames/d_s_mg_memory.cpp, NONMATCHING at 24 of "
                 "42 words, colouring and schedule only) and no longer trapped\n");
 
     /* The two state indexes the ROM's own dispatchers read, at the offsets
@@ -586,14 +586,14 @@ extern "C" void port_scene_memory1_hits(void)
     /* THE CARD RECORDS, because a run that renders no cards and a run that has
        no cards to render read the same on every other line -- which is exactly
        the lesson port/mg_fanout_costs.txt section 15 paid for on the sibling.
-       func_ov006_020f3e68 walks TWELVE records at +0x51a8 with stride 0x18 and
+       _ZN13dScMgMemory_c9DrawCardsEv walks TWELVE records at +0x51a8 with stride 0x18 and
        would draw one sprite per record whose +0x12 byte is nonzero.  The fields
        are read off the ROM: +0x00/+0x04 are the 20.12 screen x/y the draw
        shifts down by 12, +0x10 is the card identity (the row of the seven-by-
        five halfword table at 0x0213d168), +0x15 is the flip frame (its column),
-       +0x13 is the in-play gate func_ov006_020f3f10's per-card dispatch reads
+       +0x13 is the in-play gate _ZN13dScMgMemory_c11UpdateCardsEv's per-card dispatch reads
        and +0x14 is the per-card state it dispatches ON.
-       src/func_ov006_020f4cd8.c is what populates them: records 4..11 for the
+       src/minigames/d_s_mg_memory.cpp is what populates them: records 4..11 for the
        eight-card board, 2..11 for the ten and 0..11 for the twelve, each with
        an identity in 1..4/5/6 twice over, x = 128.0 and y = -128.0 -- off the
        top of the screen, which is where the deal animates them in from. */
@@ -634,7 +634,7 @@ extern "C" void port_scene_memory1_hits(void)
 
         /* WHERE EACH RECORD IS, in DS pixels, so a lane that wants to TAP one
            does not have to infer the record-to-slot mapping from a picture.
-           src/func_ov006_020f43c4.c flies record i toward
+           src/minigames/d_s_mg_memory.cpp flies record i toward
            data_ov006_0213d09c[+0x533c][i], so record index IS slot index for
            this class -- unlike the sibling, whose dealer walks slots
            separately.  Same >>12 the draw does. */
@@ -648,7 +648,7 @@ extern "C" void port_scene_memory1_hits(void)
         }
         std::printf("\n");
 
-        /* THE TOUCH STATE.  src/func_ov006_020f4248.c is slot 2 of the arity-1
+        /* THE TOUCH STATE.  src/minigames/d_s_mg_memory.cpp is slot 2 of the arity-1
            table: it compares data_020a0dea/deb against a record's own x/y in a
            +-0x10 by +-0x16 box, refuses once +0x5338 reaches 2, and on a hit
            writes the picked identity to +0x532c+s, the picked record index to
@@ -664,7 +664,7 @@ extern "C" void port_scene_memory1_hits(void)
     }
 
     /* ---- THE BOARD LADDER, AND WHERE IT COMES FROM ------------------------
-       The card count is not a property of the scene.  func_ov006_020f51f0
+       The card count is not a property of the scene.  _ZN13dScMgMemory_c15SetupDifficultyEv
        reads ONE int -- the object's +0xb4 -- and picks 8/10/12:
 
            add r1,r0,#0x5000 / mov r2,#0 / strb r2,[r1,#0x33c]
@@ -676,17 +676,17 @@ extern "C" void port_scene_memory1_hits(void)
                          movge r0,#5 strhge [+0x532a]   >=  5 -> 5 pairs, 10
 
        and +0xb4 is SEEDED in exactly one place, InitResources
-       (src/func_ov006_020f53e4.cpp):  *(int*)(self+0xb4) = func_ov004_020ad878()
+       (src/minigames/d_s_mg_memory.cpp):  *(int*)(self+0xb4) = func_ov004_020ad878()
        which is data_0209caf4[minigame index][1] -- the PERSISTENT per-minigame
-       record.  (Vtable slot 1, func_ov004_020b0930, ZEROES +0xb4 before slot 0
+       record.  (Vtable slot 1, _ZN11dScMgBase_c19BeforeInitResourcesEv, ZEROES +0xb4 before slot 0
        runs; say "the only writer of the seed" rather than "no other writer",
        which is the correction port/mg_fanout_costs.txt section 17 records.)
        So the board size is saved progress, and a fresh record -- zero, what
        SaveData::SetDefaultValuesMg leaves -- is the eight-card board.
 
-       The round end writes it back: src/func_ov006_020f4888.c does
+       The round end writes it back: src/minigames/d_s_mg_memory.cpp does
        +0xb4 +/- 1 on a cleared or failed board and mirrors the maximum into
-       +0xb8, and src/func_ov006_020f3c90.c calls
+       +0xb8, and src/minigames/d_s_mg_memory.cpp calls
        func_ov004_020ad79c(score, +0xb4 +/- 1) through to the record.  This
        block prints both ends so a run can say which of them moved.
 

@@ -1,4 +1,4 @@
-/* HOST COPY of src/_ZN6Eyerok8BehaviorEv.cpp -- EYEROK's (176, ov066) vtable
+/* HOST COPY of src/actors/Eyerok.cpp -- EYEROK's (176, ov066) vtable
  * slot 6, and the TICK half of its nineteen-cell pointer-to-member state
  * machine. Run rel0215, lane cast-ov066.
  *
@@ -60,12 +60,12 @@ void MulVec3Mat4x3(void *src, void *m, void *dst);
 u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     u32 a, u32 b, int x, int y, int z, const void *v, void *cb);
 void func_ov066_021194fc(char *c);
-int _ZN16MeshColliderBase9IsEnabledEv(char *c);
+int _ZN4dBgW9IsEnabledEv(char *c);
 void func_ov066_021194a4(char *c);
-void _ZN5Actor9UpdatePosEP12CylinderClsn(char *c, void *clsn);
-void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(char *c, const Vector3 *v);
-void _ZN12CylinderClsn5ClearEv(char *c);
-void _ZN12CylinderClsn6UpdateEv(char *c);
+void _ZN8dActor_c9UpdatePosEP5dCc_c(char *c, void *clsn);
+void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(char *c, const Vector3 *v);
+void _ZN5dCc_c5ClearEv(char *c);
+void _ZN5dCc_c6UpdateEv(char *c);
 void _ZN14BlendModelAnim7AdvanceEv(char *c);
 void _ZN9Animation7AdvanceEv(char *c);
 
@@ -74,7 +74,7 @@ extern char data_ov066_0211b07c;
 extern char data_020a0e68[];
 extern int data_ov066_0211ad18[];
 
-/* HOST COPY RETIRED, run link100 lane PMFB7 gate 2. src/_ZN6Eyerok8BehaviorEv.cpp
+/* HOST COPY RETIRED, run link100 lane PMFB7 gate 2. src/actors/Eyerok.cpp
    dispatches its own field now: with /vmg /vmm (block R8) MSVC's pointer to
    member IS the ROM's eight-byte {code, adjust} pair, so the widening this
    banner was written for does not happen. The per-frame half of every state

@@ -4,6 +4,12 @@ struct BCA_File;
 struct BlendModelAnim {
     void SetAnim(BCA_File &f, int a, int b, Fix12 c, unsigned short d);
 };
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" void _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void *, BCA_File &f, int a, int b, Fix12 c, unsigned short d);
+
 struct P2 { int w[2]; };
 
 int ApproachLinear2(short &v, short t, short step);
@@ -15,7 +21,7 @@ extern "C" void func_ov006_020c0264(char *c)
 {
     if (ApproachLinear2(*(short *)(c + 0xf2), 0, 1) == 0)
         return;
-    ((BlendModelAnim *)(c + 0x18))->SetAnim(*(BCA_File *)*(void **)(c + 0x14), 0, 0, 0x800, 0);
+    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt((BlendModelAnim *)(c + 0x18), *(BCA_File *)*(void **)(c + 0x14), 0, 0, 0x800, 0);
     int r = RandomIntInternal(&data_0209e650);
     int idx = (int)((unsigned int)(r & 0x7fffffff) >> 0x13);
     *(short *)(c + 0xf2) = (short)(((idx * 0x258) >> 12) + 0x258);

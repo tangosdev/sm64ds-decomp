@@ -1,7 +1,7 @@
 typedef struct { int x, y, z; } Vec3;
 typedef struct { signed char flag, amt; short x, y, z; } Elem;
 
-extern void func_020effb8(void* a0, int m, Vec3* v0, Vec3* v1, Vec3* v2, Vec3* v3);
+extern void func_ov002_020effb8(void* a0, int m, Vec3* v0, Vec3* v1, Vec3* v2, Vec3* v3);
 extern int func_02053200(int x);
 
 int func_02008b4c(void* a0, short* p1, int* p2, char* tbl) {
@@ -35,7 +35,7 @@ int func_02008b4c(void* a0, short* p1, int* p2, char* tbl) {
         }
     }
 
-    func_020effb8(a0, *p2, &v[0], &v[1], &v[2], &v[3]);
+    func_ov002_020effb8(a0, *p2, &v[0], &v[1], &v[2], &v[3]);
 
     lo = 0;
     hi = 0;

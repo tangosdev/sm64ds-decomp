@@ -1,7 +1,7 @@
 //cpp
 struct Vector3; struct Vector3_16;
-struct Actor {
-    static Actor *FindWithID(unsigned int id);
+struct dActor_c {
+    static dActor_c *FindWithID(unsigned int id);
     static int Spawn(unsigned int a, unsigned int b, const Vector3 &v,
                      const Vector3_16 *p, signed char e, short f);
 };
@@ -17,7 +17,7 @@ extern "C" int func_ov081_0212479c(char *self)
     if (*(int*)(self + 0x41c) == 0)
         *(int*)(self + 0x9c) = -0x2000;
     if (*(int*)(self + 0x400) != 0) {
-        Actor *a = Actor::FindWithID(*(int*)(self + 0x400));
+        dActor_c *a = dActor_c::FindWithID(*(int*)(self + 0x400));
         if (a != 0) {
             char *t = (char*)a;
             *(int*)(t + 0x9c) = -0x2000;
@@ -35,7 +35,7 @@ extern "C" int func_ov081_0212479c(char *self)
         *(int*)(self + 0x400) = 0;
     }
     if (*(int*)(self + 0x41c) == 2)
-        Actor::Spawn(0xdf, 0x300, *(Vector3*)(self + 0x44c), 0,
+        dActor_c::Spawn(0xdf, 0x300, *(Vector3*)(self + 0x44c), 0,
                      *(signed char*)(self + 0xcc), -1);
     return 1;
 }

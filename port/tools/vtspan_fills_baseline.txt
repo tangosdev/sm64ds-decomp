@@ -32,7 +32,7 @@
 #     2 fill(s) this scan could NOT resolve
 
 # --- leaves a ROM slot unwritten -------------------------------------------
-hal_seat_platform_dtors        # _ZTV10dBgActor_c and _ZTV8Platform, 32 slots each, writes only the dtor pair
+hal_seat_platform_dtors        # _ZTV10dBgActor_c and _ZTV10dBgActor_c, 32 slots each, writes only the dtor pair
 hal_fill_mri_projectile_vtable # _ZTV14MrI_Projectile, 31 slots, 12+ never written
 hal_fill_mri_vtable            # _ZTV3MrI, 31 slots, 12+ never written
 port_scene_fill_curling        # data_ov004_020bc0c0, 36 slots

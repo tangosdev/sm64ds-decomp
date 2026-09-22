@@ -102,7 +102,7 @@ extern "C" int func_ov100_0214233c(char *c)
     dot = s6 * sA + s7 * ssl + s8 * sB;
     if (dot <= 0) {
         int v = *(int *)(c + 0x3e8);
-        int *pidx = (int *)(int)(((long long)(int)(c + 0x3d8)) & 0xFFFFFFFFFFFFFFFFLL);
+        int *pidx = (int *)(int)(c + 0x3d8);
         *(int *)(c + 0x3dc) = v;
         v = *(int *)(c + 0x3ec);
         *(int *)(c + 0x3e0) = v;

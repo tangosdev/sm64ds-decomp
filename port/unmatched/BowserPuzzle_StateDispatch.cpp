@@ -37,8 +37,8 @@ struct PortPmf { unsigned fn; int delta; };
 void func_ov064_02118ee4(void *c);   /* the pre-dispatch step */
 void func_ov064_02119010(void *c);   /* the matrix step after */
 void func_ov064_02118fa4(void *c);   /* the collider transform */
-char *_ZN5Actor10FindWithIDEj(unsigned int id);
-int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *c, int a, int b);
+char *_ZN8dActor_c10FindWithIDEj(unsigned int id);
+int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *c, int a, int b);
 
 /* the six Manager state functions, all matched src (the daBbl_c-family movers +
    the LavaBubble Kill/Spawn) */
@@ -76,7 +76,7 @@ extern PortPmf data_ov064_0211c2e4[];     /* {fn=021197fc, 0} -> c934[0] (.a) */
 }  /* extern "C" */
 
 /* HOST COPY RETIRED, run link100 lane FWD. BowserPuzzleManager::Behavior
- * dispatches this table from src/_ZN19BowserPuzzleManager8BehaviorEv.cpp now. The flat C name the port's
+ * dispatches this table from src/_ZN9JetStream8BehaviorEv.cpp now. The flat C name the port's
  * actor-class face calls is defined by the forwarder in
  * port/hal/fwd_forwarders.cpp, which receives `this` on the stack and calls
  * the member through the real class type; the member and the flat name are two
@@ -91,7 +91,7 @@ extern PortPmf data_ov064_0211c2e4[];     /* {fn=021197fc, 0} -> c934[0] (.a) */
    pair, the matched TU compiles to the same tail jump this body was, and
    the seat in this file aborts the binary on a nonzero delta so the two
    agree word for word. The reading above is kept as the derivation. */
-/* HOST COPY RETIRED, run link100 lane PMFB7 gate 1. src/_ZN17BowserPuzzlePiece8BehaviorEv.cpp
+/* HOST COPY RETIRED, run link100 lane PMFB7 gate 1. src/_ZN9JetStream8BehaviorEv.cpp
    dispatches its own field now: with /vmg /vmm (block R8) MSVC's pointer to
    member IS the ROM's eight-byte {code, adjust} pair, so the widening this
    banner was written for does not happen. The per-frame half of every state
@@ -174,7 +174,7 @@ static const struct { PortPmf *slot; unsigned rom; int (*host)(void *); }
 g_piece_states[] = {
     {data_ov064_0211c2e4, 0x021197fc, func_ov064_021197fc},  /* .a, the reset */
     /* run link100 lane PMFB7 gate 1: the .b half is a FACE now --
-       src/_ZN17BowserPuzzlePiece8BehaviorEv.cpp dispatches it as a real
+       src/_ZN9JetStream8BehaviorEv.cpp dispatches it as a real
        pointer to member (mov eax,[cell+8] / mov ecx,[cell+12] / add ecx,this /
        call eax, arity 0). The .a half keeps its plain cdecl body. */
     {data_ov064_0211c2dc, 0x021193b4,

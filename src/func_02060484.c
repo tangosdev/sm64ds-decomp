@@ -7,7 +7,7 @@ int func_0206062c(void* g);
 extern unsigned int _ZN3IRQ7DisableEv(void);
 extern void _ZN3IRQ7RestoreEj(unsigned int flags);
 
-#define AT(p, off) ((void*)(int)(((long long)(int)((char*)(p) + (off)))))
+#define AT(p, off) ((void*)(int)((char*)(p) + (off)))
 
 int func_02060484(int a, int b, int c, int d, int e, int f)
 {

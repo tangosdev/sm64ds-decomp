@@ -1,0 +1,49 @@
+# slice_l15arm9 -- run link100 wave 15, LINK15 BATCH 6 (lane SEAT15F).
+#
+# arm9 miscellaneous singles: matched TUs that a host copy in port/hal or
+# port/unmatched has been standing in for, each with a PORT_HOST_ABI reason
+# that named a defect in the matched source AND THAT MAIN HAS SINCE FIXED.
+# Every line below was re-read against src/ at 8ddff3187 before the host body
+# came out; the retired body's file carries the finding in its own header.
+#
+# Appended to SLICE10_CAM_SOURCES rather than given a target list of its own,
+# for the reason SLICE_COMMS_SOURCES states above its conductor line: the three
+# add_executable lines that take slice 10 (smoke_player, walk_window,
+# walk_window_hires) are exactly the three that link the host files these TUs
+# replace, and a fourth variable each of them has to remember is how a lane's
+# TUs silently leave one link and not the others.
+#
+# src/HitDeathPlane.c is NOT here on purpose: its host copy was retired the
+# other way round, by taking the file's filter line back out of
+# SLICE10_CAM_SOURCES, so slice 10 compiles it itself.
+
+# PathPtr::FromID. It is a real C++ member now and the host copy's
+# struct-return reason is stale. Seating it needed one hunk in a file this
+# lane did not own: unmatched/Klepto_PathPtrFaces.cpp:61 already defined
+# `void PathPtr::FromID(unsigned int)` as a __thiscall forwarder (LNK2005,
+# measured build_seat15f_a.log); PATHPTR2 (wave 15) retired that forwarder
+# the way its sibling constructor face was retired at ALIAS2, and turned
+# unmatched/PathPtr_FromID.cpp into a flat-name bridge into this member
+# instead of deleting it -- about 28 object files call the flat cdecl name
+# directly and never go through the member (PATHPTR1 measured LNK1120 across
+# that set when the flat body was deleted instead of bridged).
+src/_ZN7PathPtr6FromIDEj.cpp
+
+# MSL memset and its fill. func_0206e2f8 declares all three arguments now and
+# returns dst, which is what include/decl_common.h:2101 says it does; the fill
+# it forwards to is plain portable C. hal/cxxname_bridge.cpp's host loop is
+# retired for the pair.
+src/func_0206e2f8.c
+src/func_0206e330.c
+
+# The MSL array-delete chain. unmatched/func_02073244_hostcopy.c's copy of
+# func_02073244 named two reasons and BOTH are stale: src/func_02073244.c
+# passes the element destructor as a declared fourth argument now, and
+# func_02073300 is no longer an asm hatch -- src/func_02073300.cpp is the real
+# array-destroy-with-rethrow helper, exceptions and all, which is what the
+# cartridge's .exceptix record at 0x02073994 is there for. func_020731fc is
+# that one's terminate hop. The host file keeps func_0203cbc0 (its own reason
+# is NOT stale) and hosts the one global the chain reads.
+src/func_02073244.c
+src/func_02073300.cpp
+src/func_020731fc.c

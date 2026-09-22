@@ -147,10 +147,10 @@ data_ov035_02112258
 # ==== THE CAST: FOUR IDS, NOT THREE, both attribution routes ================
 #
 #   id   arm9 slot   SpawnInfo   word[0]     factory                  +4   x L27
-#   119  0x02090a40  0x02112aa4  0x021116bc  RotatingClockHand_Spawn  119   2
-#   120  0x02090a44  0x02112ba8  0x02111b98  SpinningPlatform_Spawn   120  13
-#   121  0x02090a4c  0x02112ac0  0x0211168c  func_ov035_0211168c      121   2
-#   122  0x02090a4c  0x02112adc  0x0211165c  RotatingCogSmall_Spawn   122   2
+#   119  0x02090a40  0x02112aa4  0x021116bc  daObjCtMecha10_c_classInit_CT_MECHA10  119   2
+#   120  0x02090a44  0x02112ba8  0x02111b98  daObjCtMecha11_c_classInit   120  13
+#   121  0x02090a4c  0x02112ac0  0x0211168c  daObjCtMecha10_c_classInit_CT_MECHA12L      121   2
+#   122  0x02090a4c  0x02112adc  0x0211165c  daObjCtMecha10_c_classInit_CT_MECHA12S   122   2
 #
 # ROUTE 1: every record's word[0] lands inside ov035's own image
 # [0x021111a0, 0x02112c60) and is one of this overlay's four factory bodies.
@@ -164,7 +164,7 @@ data_ov035_02112258
 # "AMBIG actor 121 ROTATING_COG_BIG: ['ov010','ov035'] -> ov010". That
 # resolution is about the SYMBOL NAME at 0x02112ac0, not about the id. The
 # address holds two different records in two different overlays:
-#     ov010's image  0x02112ac0 = Trap_SpawnInfo, id 36,  factory 0x02111998
+#     ov010's image  0x02112ac0 = g_profile_C1_TRAP, id 36,  factory 0x02111998
 #     ov035's image  0x02112ac0 = (unnamed),      id 121, factory 0x0211168c
 # and arm9 slots 36 AND 121 both point there. Which one is live is decided by
 # which overlay is loaded. On level 27 it is ov035's, and the class's own
@@ -177,10 +177,10 @@ data_ov035_02112258
 # dsd's two vtable labels are on the wrong tables. Disassembled from
 # extracted/overlays/overlay_0035.bin (T4 -- never the dsd copies):
 #
-#   0x0211165c RotatingCogSmall_Spawn   alloc 0x330  installs 0x02112b00
-#   0x0211168c func_ov035_0211168c      alloc 0x330  installs 0x02112b00
-#   0x021116bc RotatingClockHand_Spawn  alloc 0x330  installs 0x02112b00
-#   0x02111b98 SpinningPlatform_Spawn   alloc 0x380  installs 0x02112bcc
+#   0x0211165c daObjCtMecha10_c_classInit_CT_MECHA12S   alloc 0x330  installs 0x02112b00
+#   0x0211168c daObjCtMecha10_c_classInit_CT_MECHA12L      alloc 0x330  installs 0x02112b00
+#   0x021116bc daObjCtMecha10_c_classInit_CT_MECHA10  alloc 0x330  installs 0x02112b00
+#   0x02111b98 daObjCtMecha11_c_classInit   alloc 0x380  installs 0x02112bcc
 #                                       + ShadowModel ctor at this+0x328
 #
 # So THREE ids share the table dsd named _ZTV16RotatingCogSmall, and the table
@@ -201,24 +201,24 @@ data_ov035_02112258
 #   0x02112c18 and 0x02112c44 are interior splits too. The landing reads FOUR.
 # The pin on both is the ROM's own close, read slot by slot out of
 # config/arm9/overlays/ov035/relocs.txt:
-#     slot 29  0x02010124  _ZN5Actor16OnAimedAtWithEggEv
-#     slot 30  0x020100dc  _ZN5Actor25OnAimedAtWithEggReturnVecEv
-#     slot 31  0x020ee55c  _ZN8Platform4KillEv   (ov002 symbols.txt:1175)
+#     slot 29  0x02010124  _ZN8dActor_c16OnAimedAtWithEggEv
+#     slot 30  0x020100dc  _ZN8dActor_c25OnAimedAtWithEggReturnVecEv
+#     slot 31  0x020ee55c  _ZN10dBgActor_c4KillEv   (ov002 symbols.txt:1175)
 # the 32-slot Platform close ov025's two, ov045's six, ov052's two and ov056's
 # one all end on. Both tables are EXCLUDED from this mount and hosted as
 # arrays hal/actor_classes_ov035.cpp fills.
 #
 # ==== FIVE T3 WIDTH PINS IN .data, and each is a real mis-read =============
 #
-#   RotatingClockHand_SpawnInfo  natural next-symbol delta 0x4 (dsd named
+#   g_profile_CT_MECHA10  natural next-symbol delta 0x4 (dsd named
 #     0x02112aa8 INSIDE the record). A record is 0x1c. Unpinned this mounts
 #     FOUR bytes of a twenty-eight byte record -- and the registry's own
 #     "SpawnInfo says id N" check reads +4, inside those four bytes, so it
 #     would have passed while the other six words belonged to somebody else.
-#   RotatingCogSmall_SpawnInfo   natural 0x24: the usual eight bytes of the
+#   g_profile_CT_MECHA12S   natural 0x24: the usual eight bytes of the
 #     next vtable's Itanium prologue past the end. Pinned back to 0x1c.
-#   SpinningPlatform_SpawnInfo   natural 0x24, same over-read, same pin.
-#   data_ov035_02112ac0 (id 121) natural 0x1c already; pinned anyway so all
+#   g_profile_CT_MECHA11   natural 0x24, same over-read, same pin.
+#   g_profile_CT_MECHA12L (id 121) natural 0x1c already; pinned anyway so all
 #     four records read identically in the diff.
 #   data_ov035_021121d8  natural 0x4 (dsd named 0x021121dc). It is a CLPS
 #     block -- 'CLPS' magic 0x53504c43, entrySize 8, count 1, 0xffffffff fill
@@ -283,8 +283,8 @@ data_ov035_02111ef0 data_ov035_02111ef4
 data_ov035_021121d8:0x20 data_ov035_02112238:0x20
 
 # ---- .data: the four SpawnInfo records, all pinned to the ROM's 0x1c ------
-RotatingClockHand_SpawnInfo:0x1c data_ov035_02112ac0:0x1c
-RotatingCogSmall_SpawnInfo:0x1c SpinningPlatform_SpawnInfo:0x1c
+g_profile_CT_MECHA10:0x1c g_profile_CT_MECHA12L:0x1c
+g_profile_CT_MECHA12S:0x1c g_profile_CT_MECHA11:0x1c
 
 # ---- .data: id 120's four-short Behavior table ---------------------------
 data_ov035_02112b80:0x8

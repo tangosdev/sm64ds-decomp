@@ -11,7 +11,7 @@ extern void _ZN9ModelBase12ApplyOpacityEj(void *self, u32 a, int z);
 extern void func_020167a4(void *p);
 extern void _ZN15ModelComponents21UpdateVertsUsingBonesEv(void *p);
 extern void Matrix4x3_ApplyInPlaceToRotationY(void *m, s16 ang);
-extern void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     void *self, void *sm, void *mtx, int a, int b, u32 g);
 
 extern struct Matrix4x3 data_020a0e68;
@@ -61,7 +61,7 @@ void func_ov063_0211640c(char *c)
         Matrix4x3_FromTranslation(&data_020a0e68,
             pos.x >> 3, pos.y >> 3, pos.z >> 3);
         *(struct Matrix4x3 *)(c + 0x4a4) = data_020a0e68;
-        _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+        _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
             c, c + 0x434, c + 0x4a4, 0x12c000, 0xc8000, 0xf);
 
         if ((u32)(*(u16 *)(c + 0x5d4) << 0x17) >> 0x1f) {
@@ -71,7 +71,7 @@ void func_ov063_0211640c(char *c)
             Matrix4x3_FromTranslation(&data_020a0e68,
                 pos.x >> 3, pos.y >> 3, pos.z >> 3);
             *(struct Matrix4x3 *)(c + 0x4d4) = data_020a0e68;
-            _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+            _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
                 c, c + 0x45c, c + 0x4d4, 0x12c000, 0xc8000, 0xf);
         }
     }

@@ -1,0 +1,46 @@
+# port/faces_sync_smoke_oam.txt -- THE smoke_oam SUBSET OF port/faces_sync.txt.
+#
+# Lane SMOKELINK3, run link100 wave 10 round 2.
+#
+# Read port/faces_sync_smoke_heap.txt's header for the whole argument, and
+# port/faces_sync_smoke_roots.txt's for the worked second copy of it; nothing
+# about either changes here.  In one line: every row of the 1925-row
+# port/faces_sync.txt CALLS a C++ member, so the file generated from it carries
+# 1925 references, and a smoke harness links a few dozen objects.  An n-row
+# ledger costs n faces.
+#
+# EVERY ROW BELOW IS COPIED VERBATIM FROM port/faces_sync.txt, columns and all,
+# and the same port/tools/facegen.py --sync re-derives each one against the ROM
+# address in column three on every build.  Nothing here is hand-written and
+# nothing here is a new binding: if the big ledger's row for one of these ever
+# changes, the two files disagree and the diff is one grep away.
+#
+# EVERY ROW IS AN ORDINARY NON-STATIC MEMBER OR A CONSTRUCTOR, receiver in ECX.
+# faces_sync.txt's own header says what that means: an /alternatename is a NAME
+# bridge and never an ABI bridge, so a row like these cannot be closed with one.
+# Rows that CAN be are in port/hal/smoke_aliases_oam.cpp instead, with the
+# hal/cxx_aliases.cpp line each was copied from.
+#
+# Counts measured at f7d4b3c3a, out/SMOKELINK2/build_smokelink2_0.log, re-
+# confirmed by this lane's own -k 0 build.  COLUMNS and the R/F/D meaning are
+# port/faces_sync.txt's; read that file's header before adding a row here.
+
+__ZN10MemoryNode6TargetC1EPS_                                            ??0Target@MemoryNode@@QAE@PAU1@@Z                                0x0204e938 R
+__ZN13ExpandingHeap11VDeallocateEPv                                      ?VDeallocate@ExpandingHeap@@UAEXPAX@Z                            0x0203c50c R
+__ZN13ExpandingHeapC1EPvjP4HeapP22ExpandingHeapAllocator                 ??0ExpandingHeap@@QAE@PAXIPAUHeap@@PAUExpandingHeapAllocator@@@Z 0x0203ca80 R
+__ZN13SharedFilePtr8LoadFileEv                                           ?LoadFile@SharedFilePtr@@QAEPAXXZ                                0x02017bc4 R
+__ZN18NestedHeapIteratorC1Ej                                             ??0NestedHeapIterator@@QAE@I@Z                                   0x0204df20 R
+__ZN22ExpandingHeapAllocator16AllocateForwardsEjj                        ?AllocateForwards@ExpandingHeapAllocator@@QAEPAXII@Z             0x0204e5c8 R
+__ZN22ExpandingHeapAllocator17AllocateBackwardsEjj                       ?AllocateBackwards@ExpandingHeapAllocator@@QAEPAXII@Z            0x0204e504 R
+__ZN22ExpandingHeapAllocatorC1EPvj                                       ??0ExpandingHeapAllocator@@QAE@PAXI@Z                            0x0204e828 R
+
+# THE ONE ROW HERE THAT IS NOT A COPY OF A port/faces_sync.txt ROW.
+# NestedHeapIterator::Remove(HeapAllocator *) is derived by address in
+# port/faces_sync_smoke_roots.txt -- config/arm9/symbols.txt:1999 gives it as
+# function(arm,size=0x70) at 0x0204dd28, include/NestedHeapIterator.h:28
+# declares it non-static so the receiver is in ECX, and dumpbin /symbols on this
+# tree's compiled object prints the right hand side.  Read that file's note for
+# the derivation.  It arrives here with the same source rows: ExpandingHeap::
+# VDestroy calls HeapAllocator::Destroy calls HeapAllocator::Remove calls it.
+
+__ZN18NestedHeapIterator6RemoveEP13HeapAllocator                         ?Remove@NestedHeapIterator@@QAEXPAUHeapAllocator@@@Z             0x0204dd28 R

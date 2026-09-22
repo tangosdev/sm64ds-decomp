@@ -17,7 +17,7 @@
 // ---- THE ID, ALL THREE ROUTES --------------------------------------------
 //
 //   id   SpawnInfo   word[0] spawnFunc            idhalf
-//   259  0x021132ec  0x021125bc RacingPenguin_Spawn  259
+//   259  0x021132ec  0x021125bc daPgRcer_c_classInit  259
 // Route 2, the Spawn's own vtable store: 0x02113310. Route 3, the RTTI at
 // vtable[-1]: 0x0211330c -> 0x021132d0 -> "10daPgRcer_c" (penguin racer),
 // base typeinfo arm9 0x0208e390. dsd's _ZTV10daPgRcer_c and _ZTV13RacingPenguin
@@ -79,7 +79,7 @@
 // in writing its _ZTV9ModelAnim cannot serve. Host copy in
 // port/unmatched/RacingPenguin_Render.cpp.
 //
-// src/_ZN15IceSlideManagerD1Ev.cpp is the same synthesised-destructor shape
+// src/game/actors/d_a_sld_mng.cpp is the same synthesised-destructor shape
 // and stays where gate 143 left it (ism_d1 in hal/actor_classes_ccm.cpp).
 //
 // ---- LANE OWNERSHIP ------------------------------------------------------
@@ -93,13 +93,15 @@
 // hal/level_boot.cpp's g_level_mounted records: what the pass writes lives in
 // .dsstate, so the guard has to roll back with it.
 
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
@@ -107,29 +109,29 @@ extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include "dsstate_seg.h"
 #include "dtor_faces_cpp.h"
 
-#include "Actor.h"
-#include "ActorBase.h"
+#include "dActor_c.h"
+#include "fBase_c.h"
 #include "RacingPenguin.h"
 
 extern "C" {
 /* the arm9 shared half, read off this table's own reloc run */
-int _ZN5Actor19BeforeInitResourcesEv(void *self);              /* slot 1  */
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
-int _ZN5Actor14BeforeBehaviorEv(void *self);                   /* slot 7  */
-int _ZN5Actor12BeforeRenderEv(void *self);                     /* slot 10 */
-int _ZN5Actor13OnYoshiTryEatEv(void *self);                    /* slot 18 */
-void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
-int _ZN5Actor9Virtual50Ev(void *self);                         /* slot 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);              /* slot 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);              /* slot 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
-int _ZN5Actor16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
-void _ZN5ActorD2Ev(void *self);
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);              /* slot 1  */
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);                   /* slot 7  */
+int _ZN8dActor_c12BeforeRenderEv(void *self);                     /* slot 10 */
+int _ZN8dActor_c13OnYoshiTryEatEv(void *self);                    /* slot 18 */
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
+int _ZN8dActor_c9Virtual50Ev(void *self);                         /* slot 20 */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);              /* slot 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);              /* slot 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
+int _ZN8dActor_c16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
+void _ZN8dActor_cD2Ev(void *self);
 
 const char *port_actor_class_name(unsigned id);
 void port_actor_slot_decline(const char *what);
@@ -143,11 +145,11 @@ int _ZN13RacingPenguin16CleanupResourcesEv(void);       /* slot 3  */
 int _ZN13RacingPenguin6RenderEv(char *self);            /* slot 9, host copy */
 void _ZN13RacingPenguin16OnPendingDestroyEv(void);      /* slot 12 */
 int *_ZN13RacingPenguinD0Ev(int *self);                 /* slot 17 */
-void *RacingPenguin_Spawn(void);
+void *daPgRcer_c_classInit(void);
 
 /* the member destructors rp_d1 spells out */
-void _ZN12WithMeshClsnD1Ev(void *self);
-void _ZN18MovingCylinderClsnD1Ev(void *self);
+void _ZN10dBgCh_ActrD1Ev(void *self);
+void _ZN7dCcAc_cD1Ev(void *self);
 void _ZN11ShadowModelD1Ev(void *self);
 void _ZN15TextureSequenceD1Ev(void *self);
 void _ZN9ModelAnimD1Ev(void *self);
@@ -185,7 +187,7 @@ extern unsigned char data_ov019_021132c0[];
 extern unsigned char data_ov019_021132c8[];
 
 /* The table the ROM factory installs. `int` and C linkage to match the
-   `extern int _ZTV13RacingPenguin[]` in decl_common.h that RacingPenguin_Spawn
+   `extern int _ZTV13RacingPenguin[]` in decl_common.h that daPgRcer_c_classInit
    sees, exactly as hal/actor_classes_ccm.cpp declares IceSlideManager's. */
 DSSTATE_BEGIN
 int _ZTV13RacingPenguin[31];
@@ -232,49 +234,49 @@ RP_TRAP(13) RP_TRAP(14)
 #undef RP_TRAP
 
 static int __fastcall rp_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall rp_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall rp_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 static void __fastcall rp_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall rp_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall rp_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall rp_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall rp_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall rp_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int __fastcall rp_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 /* slot 19 takes the three-parameter shape so it emits `ret 4`: the dispatch
    site pushes the Player the callee pops -- the wf_turn_egg contract. */
 static int __fastcall rp_turn_egg(void *s, void *, void *p)
-{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+{ _ZN8dActor_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall rp_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall rp_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall rp_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall rp_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall rp_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall rp_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall rp_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall rp_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall rp_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 static int __fastcall rp_egg(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 
 // ---- the class's own slots -------------------------------------------------
 static int __fastcall rp_init(void *s, void *)
@@ -374,7 +376,7 @@ extern "C" void hal_fill_racing_penguin_vtable(void)
     vt[13] = (void *)rp_trap13;
     vt[14] = (void *)rp_trap14;
     vt[15] = (void *)rp_heap;
-    vt[16] = (void *)hal_cppd1_RacingPenguin;
+    vt[16] = (void *)PORT_D16(hal_cppd1_RacingPenguin);
     vt[17] = (void *)rp_d0;
     vt[18] = (void *)rp_yoshi;
     vt[19] = (void *)rp_turn_egg;

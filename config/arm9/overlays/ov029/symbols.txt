@@ -1,62 +1,62 @@
-func_ov029_021111a0 kind:function(arm,size=0x50) addr:0x021111a0
-func_ov029_021111f0 kind:function(arm,size=0x64) addr:0x021111f0
-func_ov029_02111254 kind:function(arm,size=0xec) addr:0x02111254
-FloatOnWaterPlatformWdwSquare_Spawn kind:function(arm,size=0x3c) addr:0x02111340
-_ZN29FloatOnWaterPlatformWdwSquareD1Ev kind:function(arm,size=0x44) addr:0x0211137c
-_ZN29FloatOnWaterPlatformWdwSquareD0Ev kind:function(arm,size=0x58) addr:0x021113c0
-_ZN29FloatOnWaterPlatformWdwSquare16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02111418
-_ZN29FloatOnWaterPlatformWdwSquare6RenderEv kind:function(arm,size=0x28) addr:0x0211145c
-_ZN29FloatOnWaterPlatformWdwSquare8BehaviorEv kind:function(arm,size=0x174) addr:0x02111484
-_ZN29FloatOnWaterPlatformWdwSquare13InitResourcesEv kind:function(arm,size=0xcc) addr:0x021115f8
+_ZN14daObjWcObj01_cD1Ev kind:function(arm,size=0x50) addr:0x021111a0
+_ZN14daObjWcObj01_cD0Ev kind:function(arm,size=0x64) addr:0x021111f0
+_ZN14daObjWcObj01_c13InitResourcesEv kind:function(arm,size=0xec) addr:0x02111254
+daObjWcObj01_c_classInit kind:function(arm,size=0x3c) addr:0x02111340
+_ZN15daObjWc_Obj02_cD1Ev kind:function(arm,size=0x44) addr:0x0211137c
+_ZN15daObjWc_Obj02_cD0Ev kind:function(arm,size=0x58) addr:0x021113c0
+_ZN15daObjWc_Obj02_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02111418
+_ZN15daObjWc_Obj02_c6RenderEv kind:function(arm,size=0x28) addr:0x0211145c
+_ZN15daObjWc_Obj02_c8BehaviorEv kind:function(arm,size=0x174) addr:0x02111484
+_ZN15daObjWc_Obj02_c13InitResourcesEv kind:function(arm,size=0xcc) addr:0x021115f8
 func_ov029_021116c4 kind:function(arm,size=0x20) addr:0x021116c4
 func_ov029_021116e4 kind:function(arm,size=0x14) addr:0x021116e4
-ArrowLift_Spawn kind:function(arm,size=0x30) addr:0x021116f8
-_ZN9ArrowLiftD1Ev kind:function(arm,size=0x38) addr:0x02111728
-_ZN9ArrowLiftD0Ev kind:function(arm,size=0x4c) addr:0x02111760
-func_ov029_021117ac kind:function(arm,size=0xa4) addr:0x021117ac
-func_ov029_02111850 kind:function(arm,size=0x78) addr:0x02111850
-func_ov029_021118c8 kind:function(arm,size=0x40) addr:0x021118c8
-_ZN9ArrowLift16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x02111908
-_ZN9ArrowLift6RenderEv kind:function(arm,size=0x28) addr:0x0211192c
-_ZN9ArrowLift8BehaviorEv kind:function(arm,size=0xb0) addr:0x02111954
-_ZN9ArrowLift13InitResourcesEv kind:function(arm,size=0x80) addr:0x02111a04
-WaterDiamond_Spawn kind:function(arm,size=0x40) addr:0x02111a84
-func_ov029_02111ac4 kind:function(arm,size=0x44) addr:0x02111ac4
-func_ov029_02111b08 kind:function(arm,size=0x58) addr:0x02111b08
-func_ov029_02111b60 kind:function(arm,size=0x44) addr:0x02111b60
-func_ov029_02111ba4 kind:function(arm,size=0x28) addr:0x02111ba4
-func_ov029_02111bcc kind:function(arm,size=0x1a0) addr:0x02111bcc
-func_ov029_02111d6c kind:function(arm,size=0xd4) addr:0x02111d6c
+daObjWc_Obj02_c_classInit kind:function(arm,size=0x30) addr:0x021116f8
+_ZN15daObjWc_Obj03_cD1Ev kind:function(arm,size=0x38) addr:0x02111728
+_ZN15daObjWc_Obj03_cD0Ev kind:function(arm,size=0x4c) addr:0x02111760
+_ZN15daObjWc_Obj03_c19CheckClsnWithPlayerEv kind:function(arm,size=0xa4) addr:0x021117ac
+_ZN15daObjWc_Obj03_c10SetWaterIDEv kind:function(arm,size=0x78) addr:0x02111850
+_ZN15daObjWc_Obj03_c20UpdateModelTransformEv kind:function(arm,size=0x40) addr:0x021118c8
+_ZN15daObjWc_Obj03_c16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x02111908
+_ZN15daObjWc_Obj03_c6RenderEv kind:function(arm,size=0x28) addr:0x0211192c
+_ZN15daObjWc_Obj03_c8BehaviorEv kind:function(arm,size=0xb0) addr:0x02111954
+_ZN15daObjWc_Obj03_c13InitResourcesEv kind:function(arm,size=0x80) addr:0x02111a04
+daObjWc_Obj03_c_classInit kind:function(arm,size=0x40) addr:0x02111a84
+_ZN15daObjWc_Obj05_cD1Ev kind:function(arm,size=0x44) addr:0x02111ac4
+_ZN15daObjWc_Obj05_cD0Ev kind:function(arm,size=0x58) addr:0x02111b08
+_ZN15daObjWc_Obj05_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02111b60
+_ZN15daObjWc_Obj05_c6RenderEv kind:function(arm,size=0x28) addr:0x02111ba4
+_ZN15daObjWc_Obj05_c8BehaviorEv kind:function(arm,size=0x1a0) addr:0x02111bcc
+_ZN15daObjWc_Obj05_c13InitResourcesEv kind:function(arm,size=0xd4) addr:0x02111d6c
 func_ov029_02111e40 kind:function(arm,size=0x20) addr:0x02111e40
 func_ov029_02111e60 kind:function(arm,size=0x14) addr:0x02111e60
-CageLift_Spawn kind:function(arm,size=0x30) addr:0x02111e74
-func_ov029_02111ea4 kind:function(arm,size=0x50) addr:0x02111ea4
-func_ov029_02111ef4 kind:function(arm,size=0x64) addr:0x02111ef4
-func_ov029_02111f58 kind:function(arm,size=0xec) addr:0x02111f58
-FloatOnWaterPlatformWdwRectangle_Spawn kind:function(arm,size=0x3c) addr:0x02112044
-_ZN32FloatOnWaterPlatformWdwRectangleD1Ev kind:function(arm,size=0x50) addr:0x02112080
-_ZN32FloatOnWaterPlatformWdwRectangleD0Ev kind:function(arm,size=0x64) addr:0x021120d0
-_ZN32FloatOnWaterPlatformWdwRectangle16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02112134
-_ZN32FloatOnWaterPlatformWdwRectangle13InitResourcesEv kind:function(arm,size=0x20) addr:0x02112148
-RotatingPlatformWdw_Spawn kind:function(arm,size=0x3c) addr:0x02112168
-_ZN19RotatingPlatformWdwD1Ev kind:function(arm,size=0x4c) addr:0x021121a4
-_ZN19RotatingPlatformWdwD0Ev kind:function(arm,size=0x60) addr:0x021121f0
+daObjWc_Obj05_c_classInit kind:function(arm,size=0x30) addr:0x02111e74
+_ZN14daObjWcObj06_cD1Ev kind:function(arm,size=0x50) addr:0x02111ea4
+_ZN14daObjWcObj06_cD0Ev kind:function(arm,size=0x64) addr:0x02111ef4
+_ZN14daObjWcObj06_c13InitResourcesEv kind:function(arm,size=0xec) addr:0x02111f58
+daObjWcObj06_c_classInit kind:function(arm,size=0x3c) addr:0x02112044
+_ZN15daObjWc_Obj07_cD1Ev kind:function(arm,size=0x50) addr:0x02112080
+_ZN15daObjWc_Obj07_cD0Ev kind:function(arm,size=0x64) addr:0x021120d0
+_ZN15daObjWc_Obj07_c16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02112134
+_ZN15daObjWc_Obj07_c13InitResourcesEv kind:function(arm,size=0x20) addr:0x02112148
+daObjWc_Obj07_c_classInit kind:function(arm,size=0x3c) addr:0x02112168
+_ZN14daObjWc_Mizu_cD1Ev kind:function(arm,size=0x4c) addr:0x021121a4
+_ZN14daObjWc_Mizu_cD0Ev kind:function(arm,size=0x60) addr:0x021121f0
 func_ov029_02112250 kind:function(arm,size=0x64) addr:0x02112250
 func_ov029_021122b4 kind:function(arm,size=0x28) addr:0x021122b4
-_ZN19RotatingPlatformWdw16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x021122dc
-_ZN19RotatingPlatformWdw6RenderEv kind:function(arm,size=0x34) addr:0x02112320
-_ZN19RotatingPlatformWdw8BehaviorEv kind:function(arm,size=0x17c) addr:0x02112354
-_ZN19RotatingPlatformWdw13InitResourcesEv kind:function(arm,size=0x128) addr:0x021124d0
-WDW_Water_Spawn kind:function(arm,size=0x38) addr:0x021125f8
-_ZN20SwitchActivatedPlankD1Ev kind:function(arm,size=0x4c) addr:0x02112630
-_ZN20SwitchActivatedPlankD0Ev kind:function(arm,size=0x60) addr:0x0211267c
+_ZN14daObjWc_Mizu_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x021122dc
+_ZN14daObjWc_Mizu_c6RenderEv kind:function(arm,size=0x34) addr:0x02112320
+_ZN14daObjWc_Mizu_c8BehaviorEv kind:function(arm,size=0x17c) addr:0x02112354
+_ZN14daObjWc_Mizu_c13InitResourcesEv kind:function(arm,size=0x128) addr:0x021124d0
+daObjWc_Mizu_c_classInit kind:function(arm,size=0x38) addr:0x021125f8
+_ZN15daObjWc_Obj04_cD1Ev kind:function(arm,size=0x4c) addr:0x02112630
+_ZN15daObjWc_Obj04_cD0Ev kind:function(arm,size=0x60) addr:0x0211267c
 func_ov029_021126dc kind:function(arm,size=0x34) addr:0x021126dc
 func_ov029_02112710 kind:function(arm,size=0x40) addr:0x02112710
-_ZN20SwitchActivatedPlank16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02112750
-_ZN20SwitchActivatedPlank6RenderEv kind:function(arm,size=0x38) addr:0x02112794
-_ZN20SwitchActivatedPlank8BehaviorEv kind:function(arm,size=0xe4) addr:0x021127cc
-_ZN20SwitchActivatedPlank13InitResourcesEv kind:function(arm,size=0xb4) addr:0x021128b0
-SwitchActivatedPlank_Spawn kind:function(arm,size=0x38) addr:0x02112964
+_ZN15daObjWc_Obj04_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02112750
+_ZN15daObjWc_Obj04_c6RenderEv kind:function(arm,size=0x38) addr:0x02112794
+_ZN15daObjWc_Obj04_c8BehaviorEv kind:function(arm,size=0xe4) addr:0x021127cc
+_ZN15daObjWc_Obj04_c13InitResourcesEv kind:function(arm,size=0xb4) addr:0x021128b0
+daObjWc_Obj04_c_classInit kind:function(arm,size=0x38) addr:0x02112964
 data_ov029_0211299c kind:data(any) addr:0x0211299c
 data_ov029_021129a0 kind:data(any) addr:0x021129a0
 data_ov029_021129a4 kind:data(any) addr:0x021129a4
@@ -169,63 +169,60 @@ data_ov029_02113b50 kind:data(any) addr:0x02113b50 ambiguous
 data_ov029_02113b7c kind:data(any) addr:0x02113b7c ambiguous
 data_ov029_02113b80 kind:data(any) addr:0x02113b80 ambiguous
 data_ov029_02113b90 kind:data(any) addr:0x02113b90 ambiguous
-data_ov029_02113bdc kind:data(any) addr:0x02113bdc
+_ZTI14daObjWcObj01_c kind:data(any) addr:0x02113bdc
 data_ov029_02113be8 kind:data(any) addr:0x02113be8
-data_ov029_02113bf4 kind:data(any) addr:0x02113bf4
-FloatOnWaterPlatformWdwSquare_SpawnInfo kind:data(any) addr:0x02113c08 ambiguous
+_ZTS14daObjWcObj01_c kind:data(any) addr:0x02113bf4
+g_profile_WC_OBJ01 kind:data(any) addr:0x02113c08 ambiguous
 data_ov029_02113c14 kind:data(any) addr:0x02113c14 ambiguous
 data_ov029_02113c20 kind:data(any) addr:0x02113c20 ambiguous
 data_ov029_02113c28 kind:data(any) addr:0x02113c28 ambiguous
-data_ov029_02113c2c kind:data(any) addr:0x02113c2c
+_ZTV14daObjWcObj01_c kind:data(any) addr:0x02113c2c
 data_ov029_02113c48 kind:data(any) addr:0x02113c48 ambiguous
-data_ov029_02113cac kind:data(any) addr:0x02113cac
-data_ov029_02113cb8 kind:data(any) addr:0x02113cb8
-ArrowLift_SpawnInfo kind:data(any) addr:0x02113ccc ambiguous
+_ZTI15daObjWc_Obj02_c kind:data(any) addr:0x02113cac
+_ZTS15daObjWc_Obj02_c kind:data(any) addr:0x02113cb8
+g_profile_WC_OBJ02 kind:data(any) addr:0x02113ccc ambiguous
 data_ov029_02113cd4 kind:data(any) addr:0x02113cd4 ambiguous
 data_ov029_02113cec kind:data(any) addr:0x02113cec ambiguous
-_ZTV29FloatOnWaterPlatformWdwSquare kind:data(any) addr:0x02113cf0
+_ZTV15daObjWc_Obj02_c kind:data(any) addr:0x02113cf0
 data_ov029_02113cf4 kind:data(any) addr:0x02113cf4 ambiguous
 data_ov029_02113d30 kind:data(any) addr:0x02113d30 ambiguous
-data_ov029_02113d70 kind:data(any) addr:0x02113d70
-data_ov029_02113d7c kind:data(any) addr:0x02113d7c
-WaterDiamond_SpawnInfo kind:data(any) addr:0x02113d90 ambiguous
+_ZTI15daObjWc_Obj03_c kind:data(any) addr:0x02113d70
+_ZTS15daObjWc_Obj03_c kind:data(any) addr:0x02113d7c
+g_profile_WC_OBJ03 kind:data(any) addr:0x02113d90 ambiguous
 data_ov029_02113da8 kind:data(any) addr:0x02113da8 ambiguous
-_ZTV9ArrowLift kind:data(any) addr:0x02113db4
 _ZTV15daObjWc_Obj03_c kind:data(any) addr:0x02113db4
 data_ov029_02113dc4 kind:data(any) addr:0x02113dc4 ambiguous
 data_ov029_02113e00 kind:data(any) addr:0x02113e00 ambiguous
-data_ov029_02113e30 kind:data(any) addr:0x02113e30
-data_ov029_02113e3c kind:data(any) addr:0x02113e3c
-CageLift_SpawnInfo kind:data(any) addr:0x02113e50 ambiguous
+_ZTI15daObjWc_Obj05_c kind:data(any) addr:0x02113e30
+_ZTS15daObjWc_Obj05_c kind:data(any) addr:0x02113e3c
+g_profile_WC_OBJ05 kind:data(any) addr:0x02113e50 ambiguous
 data_ov029_02113e6c kind:data(any) addr:0x02113e6c ambiguous
-data_ov029_02113e74 kind:data(any) addr:0x02113e74
+_ZTV15daObjWc_Obj05_c kind:data(any) addr:0x02113e74
 data_ov029_02113e88 kind:data(any) addr:0x02113e88 ambiguous
-data_ov029_02113ef4 kind:data(any) addr:0x02113ef4
+_ZTI14daObjWcObj06_c kind:data(any) addr:0x02113ef4
 data_ov029_02113f00 kind:data(any) addr:0x02113f00
-data_ov029_02113f0c kind:data(any) addr:0x02113f0c
-FloatOnWaterPlatformWdwRectangle_SpawnInfo kind:data(any) addr:0x02113f20 ambiguous
-data_ov029_02113f44 kind:data(any) addr:0x02113f44
+_ZTS14daObjWcObj06_c kind:data(any) addr:0x02113f0c
+g_profile_WC_OBJ06 kind:data(any) addr:0x02113f20 ambiguous
+_ZTV14daObjWcObj06_c kind:data(any) addr:0x02113f44
 data_ov029_02113f4c kind:data(any) addr:0x02113f4c ambiguous
 data_ov029_02113f78 kind:data(any) addr:0x02113f78 ambiguous
 data_ov029_02113fc4 kind:data(any) addr:0x02113fc4
-data_ov029_02113fc8 kind:data(any) addr:0x02113fc8
+_ZTI15daObjWc_Obj07_c kind:data(any) addr:0x02113fc8
 data_ov029_02113fd4 kind:data(any) addr:0x02113fd4
-data_ov029_02113fe0 kind:data(any) addr:0x02113fe0
-RotatingPlatformWdw_SpawnInfo kind:data(any) addr:0x02113ff4 ambiguous
+_ZTS15daObjWc_Obj07_c kind:data(any) addr:0x02113fe0
+g_profile_WC_UKISIMA kind:data(any) addr:0x02113ff4 ambiguous
 data_ov029_02114010 kind:data(any) addr:0x02114010 ambiguous
-_ZTV32FloatOnWaterPlatformWdwRectangle kind:data(any) addr:0x02114018
-data_ov029_02114098 kind:data(any) addr:0x02114098
-data_ov029_021140a4 kind:data(any) addr:0x021140a4
-WDW_Water_SpawnInfo kind:data(any) addr:0x021140b8 ambiguous
-_ZTV19RotatingPlatformWdw kind:data(any) addr:0x021140dc
+_ZTV15daObjWc_Obj07_c kind:data(any) addr:0x02114018
+_ZTI14daObjWc_Mizu_c kind:data(any) addr:0x02114098
+_ZTS14daObjWc_Mizu_c kind:data(any) addr:0x021140a4
+g_profile_WC_MIZU kind:data(any) addr:0x021140b8 ambiguous
 _ZTV14daObjWc_Mizu_c kind:data(any) addr:0x021140dc
 data_ov029_021140ec kind:data(any) addr:0x021140ec ambiguous
 data_ov029_021140f8 kind:data(any) addr:0x021140f8 ambiguous
 data_ov029_02114108 kind:data(any) addr:0x02114108 ambiguous
-data_ov029_0211415c kind:data(any) addr:0x0211415c
-data_ov029_02114168 kind:data(any) addr:0x02114168
-SwitchActivatedPlank_SpawnInfo kind:data(any) addr:0x0211417c ambiguous
-_ZTV20SwitchActivatedPlank kind:data(any) addr:0x021141a0
+_ZTI15daObjWc_Obj04_c kind:data(any) addr:0x0211415c
+_ZTS15daObjWc_Obj04_c kind:data(any) addr:0x02114168
+g_profile_WC_OBJ04 kind:data(any) addr:0x0211417c ambiguous
 _ZTV15daObjWc_Obj04_c kind:data(any) addr:0x021141a0
 data_ov029_021141cc kind:data(any) addr:0x021141cc ambiguous
 data_ov029_02114220 kind:bss addr:0x02114220
@@ -251,7 +248,9 @@ data_ov029_021142dc kind:bss addr:0x021142dc
 data_ov029_021142e4 kind:bss addr:0x021142e4
 data_ov029_021142f0 kind:bss addr:0x021142f0
 data_ov029_021142fc kind:bss addr:0x021142fc
+daObjWc_Obj07_c_ModelFile kind:bss addr:0x021142fc
 data_ov029_02114304 kind:bss addr:0x02114304
+daObjWc_Obj07_c_ClsnFile kind:bss addr:0x02114304
 data_ov029_0211430c kind:bss addr:0x0211430c
 data_ov029_02114318 kind:bss addr:0x02114318
 data_ov029_02114324 kind:bss addr:0x02114324

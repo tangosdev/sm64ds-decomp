@@ -24,7 +24,7 @@
 #    kind:function(arm,size=0x118).
 src/_ZN14CutsceneObject6RenderEv.cpp
 
-# 2. src/func_ov012_02111324.cpp  (daObjC0_Switch_c::Render, SWITCH_PILLAR id 34)
+# 2. src/game/actors/d_a_obj_c0_switch.cpp  (daObjC0_Switch_c::Render, SWITCH_PILLAR id 34)
 #    RETIRES port/unmatched/ModelAnim_Renders.cpp (whole file -- this was the
 #    last body left in it after SLOT5F's stage B took the other twenty-three).
 #    The source dispatches a plain Model at +0xd4 through a local six-virtual
@@ -33,14 +33,14 @@ src/_ZN14CutsceneObject6RenderEv.cpp
 #    vtable slot identity" marker -- and it is ADJUDICATED:
 #    inferred_stub_adjudicated.txt:2326 REAL_DECOMP, match.py 2004/b56
 #    strict-reloc MATCH, 0 WRONG-DEST, 0 EXTRA.
-#    REFERRER: SwitchPillar's own host vtable data_ov012_02112344[9] <- sp_render
+#    REFERRER: SwitchPillar's own host vtable _ZTV16daObjC0_Switch_c[9] <- sp_render
 #    (hal/actor_classes_ov012.cpp:214), which calls the C symbol directly, so no
 #    face is needed. ROM: from:0x02112368 (0x02112344 + 4*9) -> 0x02111324,
 #    kind:function(arm,size=0x28).
-src/func_ov012_02111324.cpp
+src/game/actors/d_a_obj_c0_switch.cpp
 
-# 3. src/func_ov064_02117cfc.cpp  (daObjFl_Amilift_c::Render, METAL_NET_LIFT id 69)
-#    RETIRES the func_ov064_02117cfc body from port/unmatched/
+# 3. src/_ZN12MetalNetLift6RenderEv.cpp  (daObjFl_Amilift_c::Render, METAL_NET_LIFT id 69)
+#    RETIRES the _ZN12MetalNetLift6RenderEv body from port/unmatched/
 #    Ov064Gate178_States.cpp. THE FILE STAYS: its other bodies are the ov064
 #    pointer-to-member dispatchers and the gate-178 table seat, which are a
 #    different and still-live reason.
@@ -48,11 +48,11 @@ src/func_ov012_02111324.cpp
 #    inferred_stub_adjudicated.txt:2366 REAL_DECOMP, strict-reloc MATCH.
 #    REFERRER: hal/actor_classes_ov064_gate178.cpp:306, a __fastcall slot-9
 #    thunk calling the C symbol directly -- no face needed. ROM:
-#    from:0x0211bc8c (data_ov064_0211bc68 + 4*9) -> 0x02117cfc,
+#    from:0x0211bc8c (_ZTV12MetalNetLift + 4*9) -> 0x02117cfc,
 #    kind:function(arm,size=0x28).
-src/func_ov064_02117cfc.cpp
+src/_ZN12MetalNetLift6RenderEv.cpp
 
-# 4. src/func_ov100_0214542c.cpp  (daDoor_c::CleanupResources)
+# 4. src/game/actors/d_a_star_gate.cpp  (daDoor_c::CleanupResources)
 #    RETIRES port/unmatched/Door_CleanupResources.cpp (whole file).
 #    The matched source deletes the door's second Model through a two-virtual
 #    shadow's v1() -- ROM slot 1, the DELETING destructor. That is exactly what
@@ -66,24 +66,24 @@ src/func_ov064_02117cfc.cpp
 #    ADJUDICATED at inferred_stub_adjudicated.txt:2389 REAL_DECOMP, all 7 reloc
 #    slots destination-verified.
 #    REFERRER: hal/actor_classes.cpp:2143, a slot-3 thunk calling the C symbol
-#    directly -- no face needed. ROM: from:0x02148194 (data_ov100_02148188 +
+#    directly -- no face needed. ROM: from:0x02148194 (_ZTV4Door +
 #    4*3) -> 0x0214542c, kind:function(arm,size=0x98).
-src/func_ov100_0214542c.cpp
+src/game/actors/d_a_star_gate.cpp
 
 # THE FOUR THAT STAY, and why (SEAT3's census listed seven "already DEFINED as
 # host copies in port/unmatched"; three of them are above):
-#   func_ov060_02118254  unmatched/Ov060_StateDispatch.cpp -- REAL. The ov060
+#   _ZN17BowserSkyPlatform8BehaviorEv  unmatched/Ov060_StateDispatch.cpp -- REAL. The ov060
 #       record is the ROM's 8 bytes and MSVC's pointer-to-member for this TU's
 #       forward-declared-C class measures 16, re-measured at the wave-6 close
 #       with this build's compiler. A 16-byte stride over-steps by two records.
-#   func_ov064_02117220  unmatched/Bully_AfterClsn.cpp -- REAL. The matched TU
+#   _ZN5Bully16UpdateDeathStateEv  unmatched/Bully_AfterClsn.cpp -- REAL. The matched TU
 #       re-declares Actor::Spawn and Actor::FindWithID at namespace scope after
 #       declaring them in its local shadow; MSVC rejects that with C2761.
-#   func_ov072_02120a44  unmatched/Snowman_InitResources.cpp -- REAL. The
+#   _ZN11daBgSnwmn_c13InitResourcesEv  unmatched/Snowman_InitResources.cpp -- REAL. The
 #       TextureSequence::Prepare register ride-through (the SHORT-1 argsweep
 #       row): the matched source calls a three-register method with two declared
 #       arguments and relies on r0-r2 riding through, which cdecl cannot do.
-#   func_ov098_02137d40  unmatched/ArrowSign_OnAttacked1.cpp -- REAL. The
+#   _ZN14ArrowSignRight11OnAttacked1ER8dActor_c  unmatched/ArrowSign_OnAttacked1.cpp -- REAL. The
 #       matched source's inner slot-31 dispatch leaves the VTABLE in ecx and
 #       pushes `this`, while the seated slot-31 veneer as_kill is __fastcall and
 #       reads `this` from ecx. Wrong receiver, listings quoted in the file.

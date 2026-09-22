@@ -1,3 +1,9 @@
+# RETIRED at SYNC6: the class translation unit main folded these bodies into
+# is back on its slice rows (today's #2660/#2663/#2666 un-quarantine) and it
+# DEFINES the names below itself, so the mount was the second definition.
+# Measured as LNK2005 rows against this file's generated object in
+# build_s2.log. Removed from the generator's INPUT, per the rule: never
+# edit the generated output. Retired here: g_profile_BIG_SNOWMAN_BODY, g_profile_BIG_SNOWMAN
 # Gate 193, EXTENDED by lane w3-d: ov072, a 100% matched ACTOR overlay
 # carrying FOUR classes -- BABY_PENGUIN (256), the actual SNOWMAN (272, the
 # UNNAMED daBgSnwmn_c block -- see below), SNOWMAN_HEAD (273) and
@@ -13,20 +19,20 @@
 #
 # CLASS-IDENTITY CORRECTION (main-brain verified against arm9 relocs.txt --
 # spawn-table entry at 0x02090ca4 -> SpawnInfo 0x02122954 -> vtable
-# 0x02122978 -> vtable slot 0 0x02120a44 = func_ov072_02120a44,
+# 0x02122978 -> vtable slot 0 0x02120a44 = _ZN11daBgSnwmn_c13InitResourcesEv,
 # daBgSnwmn_c::InitResources): id 272 (the task's "SNOWMAN") is NOT
 # SnowmanBody or SnowmanHead -- dsd never assigned daBgSnwmn_c a clean C++
 # name (no _ZTV11Snowman* spelling exists for it at all; its own D0 file
 # even carries a stray "OnYoshiTryEat" name-decoy from a slot-identity
 # mis-scan). The real class is the NINE-FILE unnamed chain
-# func_ov072_02120824 (D1) .. func_ov072_02120c00 (Spawn/ctor), address
+# _ZN11daBgSnwmn_cD1Ev (D1) .. daBgSnwmn_c_classInit (Spawn/ctor), address
 # range 0x02120824..0x02120c58, sitting BETWEEN SnowmanHead's block
 # (0x0211ff34..0x02120824) and BabyPenguin's block (0x02120c58..
 # 0x02121ffc). SnowmanBody (274) and SnowmanHead (273) keep their dsd-clean
 # _ZN11SnowmanBody*/_ZN11SnowmanHead* names but are NOT what this gate
 # hosts under ids 272/273.
 #
-# VTABLE SLOT COUNT CORRECTION: daBgSnwmn_c's own vtable (data_ov072_02122978)
+# VTABLE SLOT COUNT CORRECTION: daBgSnwmn_c's own vtable (_ZTV11daBgSnwmn_c)
 # is 31 WORDS (0x02122978..0x021229f0), not 32 with an own Kill at slot 31 --
 # the word at 0x021229f4 that looked like a plausible slot-31 entry is
 # ACTUALLY BabyPenguin's own data (data_ov072_021229f4, an entry
@@ -63,7 +69,7 @@
 #
 # daBgSnwmn_c'S OWN PREPARE SHORT-1 BUG (a 6th, previously-unscreened
 # caller of the argsweep FINAL_TABLE.csv row
-# __ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File): func_ov072_02120a44
+# __ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File): _ZN11daBgSnwmn_c13InitResourcesEv
 # (daBgSnwmn_c::InitResources) calls Prepare with the same two-argument
 # shape MotherPenguin's fix (gate 191) diagnosed -- self=model,
 # bmd=animFile, btp=animFile (data_ov072_02122c48[1] as model,
@@ -125,4 +131,4 @@
 # (31 words, 0x021227c0..0x0212283c and 0x021228bc..0x02122938), read out of
 # extracted/overlays/overlay_0072.bin, and every one of their shared slots is
 # byte-identical to the two tables ov72_fill_shared already served.
-data_ov072_02121ffc data_ov072_02122004 data_ov072_02122720 data_ov072_02122728 data_ov072_02122730 data_ov072_02122738 data_ov072_02122740 data_ov072_02122748 data_ov072_02122750 data_ov072_02122758 data_ov072_02122760 data_ov072_02122768 data_ov072_02122770 data_ov072_02122778 data_ov072_02122780 data_ov072_0212278c SnowmanBody_SpawnInfo data_ov072_0212283c data_ov072_02122844 data_ov072_0212284c data_ov072_02122854 data_ov072_0212285c data_ov072_02122864 data_ov072_0212286c data_ov072_02122874 data_ov072_0212287c data_ov072_02122888 SnowmanHead_SpawnInfo data_ov072_02122938 data_ov072_02122944 data_ov072_02122954 data_ov072_021229f4 data_ov072_021229fc data_ov072_02122a04 data_ov072_02122a0c data_ov072_02122a14 data_ov072_02122a1c data_ov072_02122a24 data_ov072_02122a2c data_ov072_02122a34 data_ov072_02122a3c data_ov072_02122a44 data_ov072_02122a4c data_ov072_02122a54 data_ov072_02122a60 BabyPenguin_SpawnInfo data_ov072_02122b20 data_ov072_02122b28 data_ov072_02122b34 data_ov072_02122b40 data_ov072_02122b4c data_ov072_02122b58 data_ov072_02122b64 data_ov072_02122bc4 data_ov072_02122bcc data_ov072_02122bd4 data_ov072_02122bdc data_ov072_02122be8 data_ov072_02122bf4 data_ov072_02122c00 data_ov072_02122c08 data_ov072_02122c40 data_ov072_02122c48 data_ov072_02122c50 data_ov072_02122c58 data_ov072_02122c64 data_ov072_02122c70 data_ov072_02122c7c data_ov072_02122c88 data_ov072_02122c94 data_ov072_02122c9c data_ov072_02122ca4 data_ov072_02122cac data_ov072_02122cb4 data_ov072_02122cbc data_ov072_02122cc4 data_ov072_02122cd0 data_ov072_02122cdc data_ov072_02122ce8 data_ov072_02122cf0 data_ov072_02122cf4 data_ov072_02122d00 data_ov072_02122d0c data_ov072_02122d18 data_ov072_02122d24 data_ov072_02122d30 data_ov072_02122d3c data_ov072_02122d48 data_ov072_02122d54 data_ov072_02122d60 data_ov072_02122d6c data_ov072_02122dc4
+data_ov072_02121ffc data_ov072_02122004 data_ov072_02122720 data_ov072_02122728 data_ov072_02122730 data_ov072_02122738 data_ov072_02122740 data_ov072_02122748 data_ov072_02122750 data_ov072_02122758 data_ov072_02122760 data_ov072_02122768 data_ov072_02122770 data_ov072_02122778 _ZTI12daBgSnmBdy_c _ZTS12daBgSnmBdy_c data_ov072_0212283c data_ov072_02122844 data_ov072_0212284c data_ov072_02122854 data_ov072_0212285c data_ov072_02122864 data_ov072_0212286c data_ov072_02122874 _ZTI12daBgSnmHed_c _ZTS12daBgSnmHed_c g_profile_BIG_SNOWMAN_HEAD _ZTI11daBgSnwmn_c _ZTS11daBgSnwmn_c data_ov072_021229f4 data_ov072_021229fc data_ov072_02122a04 data_ov072_02122a0c data_ov072_02122a14 data_ov072_02122a1c data_ov072_02122a24 data_ov072_02122a2c data_ov072_02122a34 data_ov072_02122a3c data_ov072_02122a44 data_ov072_02122a4c _ZTS9daPgBby_c _ZTI9daPgBby_c g_profile_PENGUIN_BABY data_ov072_02122b20 data_ov072_02122b28 data_ov072_02122b34 data_ov072_02122b40 data_ov072_02122b4c data_ov072_02122b58 data_ov072_02122b64 data_ov072_02122bc4 data_ov072_02122bcc data_ov072_02122bd4 data_ov072_02122bdc data_ov072_02122be8 data_ov072_02122bf4 data_ov072_02122c00 data_ov072_02122c08 data_ov072_02122c40 data_ov072_02122c48 data_ov072_02122c50 data_ov072_02122c58 data_ov072_02122c64 data_ov072_02122c70 data_ov072_02122c7c data_ov072_02122c88 data_ov072_02122c94 data_ov072_02122c9c data_ov072_02122ca4 data_ov072_02122cac data_ov072_02122cb4 data_ov072_02122cbc data_ov072_02122cc4 data_ov072_02122cd0 data_ov072_02122cdc data_ov072_02122ce8 data_ov072_02122cf0 data_ov072_02122cf4 data_ov072_02122d00 data_ov072_02122d0c data_ov072_02122d18 data_ov072_02122d24 data_ov072_02122d30 data_ov072_02122d3c data_ov072_02122d48 data_ov072_02122d54 data_ov072_02122d60 data_ov072_02122d6c data_ov072_02122dc4

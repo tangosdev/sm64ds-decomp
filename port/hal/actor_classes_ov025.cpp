@@ -20,7 +20,7 @@
 // each; id 87's reloc run also overruns by three words into id 88's typeinfo
 // record. The pin on both is the slot-31 Platform check -- 29
 // Actor::OnAimedAtWithEgg, 30 Actor::OnAimedAtWithEggReturnVec, 31
-// _ZN8Platform4KillEv -- the close every 32-slot platform table in the port
+// _ZN10dBgActor_c4KillEv -- the close every 32-slot platform table in the port
 // ends on. An eight-slot host array would have left Behavior, Render, the
 // D1/D0 pair, the whole Actor interaction list and Platform::Kill off the end
 // of storage, all of them dispatched.
@@ -73,13 +73,15 @@
 // PyramidTag/PyramidTop, which this lane does not register, and running a
 // sinit for a class with no reach is the gate-6 mistake -- so they stay
 // unrun, the ov019 rule.
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
@@ -87,33 +89,33 @@ extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include "dsstate_seg.h"
 #include <cstdlib>
 
-#include "Actor.h"
-#include "ActorBase.h"
+#include "dActor_c.h"
+#include "fBase_c.h"
 
 extern "C" {
 /* the arm9 shared half, the same words ov045's six platform tables, ov052's
    two, ov056's one and ov073's two carry -- checked slot for slot against both
    ROM tables before this fill was written. */
-int _ZN5Actor19BeforeInitResourcesEv(void *self);              /* slot 1  */
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
-int _ZN5Actor14BeforeBehaviorEv(void *self);                   /* slot 7  */
-int _ZN5Actor12BeforeRenderEv(void *self);                     /* slot 10 */
-int _ZN5Actor13OnYoshiTryEatEv(void *self);                    /* slot 18 */
-void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
-int _ZN5Actor9Virtual50Ev(void *self);                         /* slot 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);              /* slot 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);              /* slot 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
-int _ZN5Actor16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
-void _ZN8Platform4KillEv(void *self);                              /* slot 31 */
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);              /* slot 1  */
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);                   /* slot 7  */
+int _ZN8dActor_c12BeforeRenderEv(void *self);                     /* slot 10 */
+int _ZN8dActor_c13OnYoshiTryEatEv(void *self);                    /* slot 18 */
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
+int _ZN8dActor_c9Virtual50Ev(void *self);                         /* slot 20 */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);              /* slot 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);              /* slot 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
+int _ZN8dActor_c16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
+void _ZN10dBgActor_c4KillEv(void *self);                              /* slot 31 */
 
 /* the two the held-out CleanupResources thunk calls, both already linked */
-int _ZN16MeshColliderBase7DisableEv(void *self);
+int _ZN4dBgW7DisableEv(void *self);
 void _ZN13SharedFilePtr7ReleaseEv(void *self);
 /* ...and the two SharedFilePtrs it releases, from the ov025 per-symbol mount */
 extern int data_ov025_02113ab8[];   /* model file 1503 */
@@ -135,11 +137,11 @@ void __sinit_ov025_02112aac(void);   /* id 88's files 1505 + 1506 */
 /* the class bodies src spells with C names (port/slice_w15c.txt) */
 int *_ZN11PyramidStepD1Ev(int *self);                   /* 87 slot 16 */
 int *_ZN11PyramidStepD0Ev(int *self);                   /* 87 slot 17 */
-void *PyramidStep_Spawn(void);
+void *daObjDpBrock_c_classInit(void);
 int _ZN11PyramidLift16CleanupResourcesEv(void);         /* 88 slot 3  */
 void *_ZN11PyramidLiftD1Ev(void *self);                 /* 88 slot 16 */
 int *_ZN11PyramidLiftD0Ev(void *self);                  /* 88 slot 17 */
-void *PyramidLift_Spawn(void);
+void *daDpLift_c_classInit(void);
 
 DSSTATE_BEGIN
 void *_ZTV11PyramidStep[32];
@@ -153,13 +155,13 @@ DSSTATE_END
    spelling is another OVERLAY's name and is routed by a per-source -D. */
 #pragma comment(linker, "/alternatename:__ZTV14daObjDpBrock_c=__ZTV11PyramidStep")
 
-/* FOUR C++-MANGLED DATA SPELLINGS, the data_02082128 / data_020a0e68 /
+/* FOUR C++-MANGLED DATA SPELLINGS, the IDENTITY_MATRIX4X3 / data_020a0e68 /
    ov052 data_ov052_021124d4 precedent. src/_ZN11PyramidLift13InitResourcesEv
    .cpp declares its two SharedFilePtrs, ov002's second model file and its
    CLPS_Block at FILE SCOPE -- above the file's own extern "C" block rather
    than inside it -- so MSVC decorates all four with their struct types. The
    mounts emit the one C-named array each. Its sibling
-   src/_ZN11PyramidLift16CleanupResourcesEv.c reaches two of the same objects
+   src/_ZN11PyramidLift16CleanupResourcesEv.cpp reaches two of the same objects
    through the plain C names, which is what these resolve to. All four LHS are
    declared and never defined, so alternatename_guard stays clean. */
 #pragma comment(linker, "/alternatename:?data_ov025_02113ae0@@3USharedFilePtr@@A=_data_ov025_02113ae0")
@@ -205,54 +207,54 @@ OV25_TRAP(13) OV25_TRAP(14)
 #undef OV25_TRAP
 
 static int __fastcall ov25_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall ov25_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall ov25_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 static void __fastcall ov25_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall ov25_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall ov25_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall ov25_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall ov25_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall ov25_pdes(void *s, void *)
-{ ((ActorBase *)s)->ActorBase::OnPendingDestroy(); return 0; }
+{ ((fBase_c *)s)->fBase_c::OnPendingDestroy(); return 0; }
 static int __fastcall ov25_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int __fastcall ov25_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 /* slot 19 takes the three-parameter shape so it emits `ret 4`: the dispatch
    site pushes the Player the callee pops -- the wf_turn_egg contract. */
 static int __fastcall ov25_turn_egg(void *s, void *, void *p)
-{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+{ _ZN8dActor_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall ov25_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall ov25_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall ov25_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall ov25_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall ov25_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall ov25_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall ov25_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall ov25_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall ov25_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 static int __fastcall ov25_egg(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 /* slot 31, the Platform tail, the word both widths are pinned by. */
 static int __fastcall ov25_kill(void *s, void *)
-{ _ZN8Platform4KillEv(s); return 0; }
+{ _ZN10dBgActor_c4KillEv(s); return 0; }
 
 /* The shared half of both tables. The caller writes its own 0/3/6/9/16/17
    and 31. */
@@ -338,7 +340,7 @@ static int __fastcall ps_init(void *s, void *)
    rename on ov022's LAVA_PLANK body does NOT compile, because ITS targets are
    in that header; the W4/W9 blocks in port/CMakeLists.txt carry both halves of
    the test.) The transcription below is what proved the two addresses.
-     _ZN16MeshColliderBase7DisableEv(this + 0x124);
+     _ZN4dBgW7DisableEv(this + 0x124);
      SharedFilePtr::Release(0x02113ab8);  SharedFilePtr::Release(0x02113ab0); */
 static int __fastcall ps_clean(void *s, void *)
 { return ((PyramidStep *)s)->PyramidStep::CleanupResources(); }
@@ -363,7 +365,7 @@ extern "C" void hal_fill_pyramid_step_vtable(void)
     vt[3]  = (void *)ps_clean;
     vt[6]  = (void *)ps_behavior;
     vt[9]  = (void *)ps_render;
-    vt[16] = (void *)ps_d1;
+    vt[16] = (void *)PORT_D16(ps_d1);
     vt[17] = (void *)ps_d0;
     vt[31] = (void *)ov25_kill;
 }
@@ -374,8 +376,8 @@ extern "C" void hal_fill_pyramid_step_vtable(void)
 //
 // 1020-byte object; Model at +0xd4, MovingMeshCollider at +0x124, a second
 // Model at +0x320 and a TEN-ELEMENT array of 12-byte position records at
-// +0x37c that its factory builds with func_020733a8 and its destructors tear
-// down with __destroy_arr. Its Render draws the first model once and then the
+// +0x37c that its factory builds with __cxa_vec_ctor and its destructors tear
+// down with __cxa_vec_cleanup. Its Render draws the first model once and then the
 // second model once per array element, translating between draws. Its files
 // are 1505 (model) and 1506 (collision), plus ov002's data_ov002_0210d9f0 for
 // the second model. func_ov025_021125dc is the collision callback its
@@ -404,7 +406,7 @@ extern "C" void hal_fill_pyramid_lift_vtable(void)
     vt[3]  = (void *)pl_clean;
     vt[6]  = (void *)pl_behavior;
     vt[9]  = (void *)pl_render;
-    vt[16] = (void *)pl_d1;
+    vt[16] = (void *)PORT_D16(pl_d1);
     vt[17] = (void *)pl_d0;
     vt[31] = (void *)ov25_kill;
 }

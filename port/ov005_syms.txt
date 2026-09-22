@@ -14,7 +14,7 @@
 # it, config/arm9/relocs.txt `from:0x02090878 kind:load to:0x020c2440`, is
 # ACTOR_SPAWN_TABLE[(0x02090878 - 0x02090864) / 4] = [5], and 0x020c2440 is the
 # first symbol of this overlay's .data -- the SpawnInfo, whose +0 word
-# relocates to func_ov005_020c21ec (the factory) and whose +4 is 0x00080005.
+# relocates to dScMiniGm_c_classInit (the factory) and whose +4 is 0x00080005.
 #
 # WHY ALL 51 AND NOT A SLICE, the ov007 argument unchanged: --pack fills the
 # space between mounted symbols with ZEROED padding rather than ROM bytes, so a
@@ -34,8 +34,8 @@
 #
 # THE VTABLE STAYS IN THE MOUNT, deliberately, and that is the ov007 treatment
 # rather than the ov003 one. data_ov005_020c2490 is _ZTV11dScMiniGm_c -- the
-# address func_ov005_020c21ec stores into the object's +0 word and the address
-# func_ov005_020bfec0's literal pool holds -- and eighteen slots wide (the
+# address dScMiniGm_c_classInit stores into the object's +0 word and the address
+# _ZN11dScMiniGm_cD1Ev's literal pool holds -- and eighteen slots wide (the
 # delta to data_ov005_020c24d8 is 0x48). hal/scene_mg_menu.cpp fills it with
 # port_scene_fill_rom(), the KEYED fill, which reads the ROM word each slot
 # holds and replaces only the words the port has a host body for. That fill can
@@ -45,14 +45,14 @@
 # ONE SYMBOL PAIR IS AN OVERLAPPING NAME, the shape port/ov007_syms.txt calls
 # out: data_ov005_020c24d8 is the 36-row minigame launch table (stride 0x34,
 # 0x750 bytes, ending exactly at data_ov005_020c2c28) and dsd ALSO named
-# 0x020c24dc, its second column, because src/func_ov005_020c0378.c indexes the
+# 0x020c24dc, its second column, because src/func_ov005_020c0378.cpp indexes the
 # two separately. No pin is needed -- the delta rule gives 24d8 four bytes and
 # 24dc the remaining 0x74c -- and --pack is what puts the table back
 # contiguous. hal/scene_mg_menu.cpp checks the spacing at run time.
 #
 # THE MOUNT IS NOT A LINKAGE CLAIM. Mounted bytes are not matched TUs.
 data_ov005_020c2250 data_ov005_020c2260 data_ov005_020c2280 data_ov005_020c22c8 data_ov005_020c2310 data_ov005_020c23a0
-data_ov005_020c2440 data_ov005_020c2448 data_ov005_020c2454 data_ov005_020c2464 data_ov005_020c2490 data_ov005_020c24d8
+g_profile_MINIGAME _ZTI11dScMiniGm_c _ZTS11dScMiniGm_c data_ov005_020c2464 data_ov005_020c2490 data_ov005_020c24d8
 data_ov005_020c24dc data_ov005_020c2c28 data_ov005_020c2c48 data_ov005_020c2c90 data_ov005_020c2cd8 data_ov005_020c2d20
 data_ov005_020c2d68 data_ov005_020c2db0 data_ov005_020c2df8 data_ov005_020c2e40 data_ov005_020c2e88 data_ov005_020c2e8c
 data_ov005_020c2e94 data_ov005_020c2e9c data_ov005_020c2ea4 data_ov005_020c2eac data_ov005_020c2eb4 data_ov005_020c2ebc

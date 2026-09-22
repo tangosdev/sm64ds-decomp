@@ -25,10 +25,10 @@
 #
 # WHAT IS NOT HERE AND WHY:
 #
-#   src/func_0202ed08.c   slot 0x20  SetToEnd
+#   src/_ZN7dWipe_c8SetToEndEv.cpp   slot 0x20  SetToEnd
 #     HOST-BROKEN, and this is a decomp-side finding rather than a scheduling
 #     one. The ROM body is a bare tail-call veneer (ldr ip,[pc]; bx ip; .word
-#     0x0201761c) and the src spells it `func_0202ed08(void)` calling
+#     0x0201761c) and the src spells it `_ZN7dWipe_c8SetToEndEv(void)` calling
 #     `_ZN15FaderBrightness8SetToEndEv()` with no argument at all. Under mwccarm
 #     that is byte-correct because r0 falls through a bx; on the host the
 #     receiver is simply gone. Identical in shape to the Heap::_Destroy veneer
@@ -37,14 +37,15 @@
 
 src/__sinit_02074f80.c
 src/func_0202fc40.c
-src/func_0202fc08.c
-src/func_0202fbc8.c
-src/func_0202ee38.c
-src/func_0202eddc.c
-src/func_0202ed7c.cpp
-src/func_0202ecfc.c
+src/_ZN7dWipe_cD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN7dWipe_cD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN7dWipe_cD0Ev.cpp
+src/_ZN7dWipe_c9IsAtStartEv.cpp
+src/_ZN7dWipe_c7IsAtEndEv.cpp
+src/_ZN7dWipe_c20IsBetweenStartAndEndEv.cpp
+src/_ZN7dWipe_c10SetToStartEv.cpp
 
-# func_0202ed7c's own base-class branch. Already matched and already compiled
+# _ZN7dWipe_c20IsBetweenStartAndEndEv's own base-class branch. Already matched and already compiled
 # on the `smoke` target through slice_gate1, but slice_w1l3 deliberately left
 # it off the walk_window family ("SetForwardTime / SetBackwardTime /
 # IsBetweenStartAndEnd are matched too and are NOT seated"), so the link does
@@ -58,8 +59,8 @@ src/engine/fader/_ZN15FaderBrightness20IsBetweenStartAndEndEv.cpp
 # that the image did not already carry. The two setters arm a fade: they write
 # the eight blend registers, build the per-scanline gradient table, and install
 # the ROM's own HBlank handler for it.
-src/func_0202f928.c
-src/func_0202f708.c
+src/_ZN7dWipe_c15SetBackwardTimeEj.c
+src/_ZN7dWipe_c14SetForwardTimeEj.cpp
 # func_0202f58c is what both setters call to bring the table up. It writes the
 # window and blend registers, then builds BOTH halves of the double buffer
 # through func_0202f290, which picks the type-2 builder or the ordinary one.
@@ -73,7 +74,7 @@ src/func_0202efa0.c
 # name them, not because anything has run them.
 src/func_0202f2c4.c
 src/func_0202f3a4.c
-# func_0202f928's `type == 1` branch tail-calls this. Its matched TU rides
+# _ZN7dWipe_c15SetBackwardTimeEj's `type == 1` branch tail-calls this. Its matched TU rides
 # slice_gate1 only, so the walk_window family needs it here; the receiver
 # bridge onto the MSVC method is in hal/fdr_arm9_fader_seat.cpp, the same shape
 # hal/method_faces.cpp uses for the SetForwardTime half of the pair.
@@ -85,7 +86,7 @@ src/engine/fader/_ZN15FaderBrightness15SetBackwardTimeEj.cpp
 #
 # THE REFUSAL THIS REPLACES had two halves and both are spent.
 #
-#   THE CALL DEFECT IS FIXED ON MAIN. src/func_0202f428.c's `type == 1` branch
+#   THE CALL DEFECT IS FIXED ON MAIN. src/_ZN7dWipe_c11AdvanceFadeEv.cpp's `type == 1` branch
 #   used to call `_ZN10FaderColor11AdvanceFadeEv()` with no argument, because
 #   the ROM's `bl` at 0x0202f440 leaves r0 holding the receiver. main PR #1539
 #   named the receiver in include/decl_FaderColor.h and passed it at the call.
@@ -99,13 +100,13 @@ src/engine/fader/_ZN15FaderBrightness15SetBackwardTimeEj.cpp
 #   binary and got read as a fact about the game. The ROM's frame phase 2
 #   (func_02019390) calls TWO fader advances -- func_02018efc on data_0209d4ac
 #   and func_02018ec0 on data_0209d4b0 -- and both dispatch vtable byte 0x08.
-#   _ZN5Scene9SetFadersEP15FaderBrightness writes `data_0209d4ac = thiz` and is
+#   _ZN8dScene_c9SetFadersEP15FaderBrightness writes `data_0209d4ac = thiz` and is
 #   already in the link on slice_gate10, so on scene 374 dScMgBase_c slot 1
 #   arms this object into d4ac with the ROM's own store. The only thing missing
 #   was the one-line TU that reads it. IRQ2's successor note named d4b0, which
 #   is the wrong pointer: nothing in the image (arm9, itcm, dtcm and all 90
 #   overlay reloc tables) ever stores data_0209f61c there.
-src/func_0202f428.c
+src/_ZN7dWipe_c11AdvanceFadeEv.cpp
 # The `type == 1` branch's callee. Its matched TU is a real C++ method, so the
 # flat name the caller spells needs a receiver-bridging face in
 # hal/fdr_arm9_fader_seat.cpp -- and so does Fader::AdvanceInterp, the one name

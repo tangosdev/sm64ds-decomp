@@ -19,11 +19,11 @@
 # Everything below was read out of extracted/overlays/overlay_0075.bin at base
 # 0x02113ee0 (the delinks.txt .text start), with the base proven on symbols
 # first: the first word of _ZN14UnknownVsEntryD1Ev (0x02113ee0), of
-# func_ov075_0211a854 and of func_ov075_0211a740 is e92d4010 = push {r4,lr} in
+# dScEntry_c_classInit_ENTRY and of dScEntry_c_classInit_RESULT is e92d4010 = push {r4,lr} in
 # all three, so the file offset arithmetic is right.
 #
 #   SpawnInfo      0x0211c880  {0x0211a854 factory, 0x00090006}
-#                              (data_ov075_0211c880, the `ambiguous` row)
+#                              (g_profile_ENTRY, the `ambiguous` row)
 #   RTTI           0x0211c8f8  {0x0209a764 class_type_info vt, 0x0211c904 name,
 #                              0x020914d4 base}, and 0x0211c904 spells
 #                              "10dScEntry_c". The base pointer is Scene's
@@ -56,10 +56,10 @@
 #                              this file names. 18 is the width. port/tools/
 #                              vtspan_fills_baseline.txt carries the full
 #                              measurement and the vtspan gap that reads it 19.
-#   factory        0x0211a854  func_ov075_0211a854 (matched src): operator
+#   factory        0x0211a854  dScEntry_c_classInit_ENTRY (matched src): operator
 #                              new(0x288), ActorBase ctor, vptr data_0208e4b8
-#                              -> _ZTV5Scene -> data_ov075_0211d304, |=1 |=4 on
-#                              +0x13, then TWO func_020733a8 element arrays
+#                              -> _ZTV8dScene_c -> data_ov075_0211d304, |=1 |=4 on
+#                              +0x13, then TWO __cxa_vec_ctor element arrays
 #                              (9 x 0x24 at +0x70, 4 x 0x2c at +0x1b4).
 #
 # Slot 7 one table over: from:0x02090880 -> 0x0211c788 (also ov075's window),
@@ -75,14 +75,14 @@
 #
 #   135  delinked complete to a src/ TU (delinks.txt), sinits included
 #     3  present in src/ but NONMATCHING-bannered, honest and logic-verified:
-#          src/func_ov075_02116128.c  (//cpp; regalloc, div=31)
-#          src/func_ov075_02117d80.c  (idiom, div=5)
+#          src/func_ov075_02116128.cpp  (//cpp; regalloc, div=31)
+#          src/func_ov075_02117d80.cpp  (idiom, div=5)
 #          src/func_ov075_021190a4.c  (push-set/frame, div=26)
 #        All three compile and are in this slice; a NONMATCHING body is a
 #        decompiled body and the port runs it, the ov005 precedent.
 #     9  MISSING -- no ov075 body anywhere in the tree (tree-wide search by
 #        address, not just src/ globbing):
-#          func_ov075_02115bcc  0x250
+#          _ZN10dScEntry_c6icon_c6RenderEv  0x250
 #          func_ov075_0211621c  0x394
 #          func_ov075_021165b0  0x268
 #          func_ov075_02116818  0x2bc
@@ -90,12 +90,12 @@
 #          func_ov075_02117d80 is NOT here (it exists, see above)
 #          func_ov075_0211867c  0x238
 #          func_ov075_021190a4 is NOT here (it exists, see above)
-#          func_ov075_02119dc4  0x33c   src/func_ov006_02119dc4.c is ov006's
+#          func_ov075_02119dc4  0x33c   src/actors/dScMgSound_c.cpp is ov006's
 #                                       OWN body at the shared window address;
 #                                       bytes compared, DIFFERENT function
 #          func_ov075_0211a948  0xb8
 #          func_ov075_0211afb0  0x21c   same shared-window story as _02119dc4
-#                                       (src/func_ov006_0211afb0.c differs);
+#                                       (src/actors/dScMgSound_c.cpp differs);
 #                                       ALSO the 0x0211d35c pair-run target
 #        135 + 3 + 9 = 147. The nine get loud L2-pattern faces in the seat,
 #        never silent stubs (hal/scene_boot.cpp's l2_trap is the model).
@@ -112,7 +112,7 @@
 #             address, same bytes, the spelling this tree's config expects.
 #   021165b0  taken from origin/main unchanged
 #   02116818  taken from origin/main with ONE by-address rename: 0x02013ee8 is
-#             _ZN12ActorDerived5SpawnEjP9ActorBaseii here and
+#             _ZN7dBase_c5SpawnEjP7fBase_cii here and
 #             _ZN7dBase_c5SpawnEjP7fBase_cii on main. Same function, older
 #             name; main's spelling would leave the reloc unresolvable.
 #   0211705c  taken from origin/main unchanged
@@ -223,7 +223,7 @@
 # failure hostgen.py's own header describes. They are NOT routed through
 # hostgen here, and that is deliberate: this slice ALREADY compiles eight
 # MMIO-touching TUs raw (measured with hostgen.py over every slice line:
-# func_0200f2cc 20, func_ov075_0211a410 12, _02116818 6, _0211a948 5,
+# func_0200f2cc 20, _ZN10dScEntry_c13InitResourcesEv 12, _02116818 6, _0211a948 5,
 # _02116040 2, _02119dc4 1, _02118d1c 1, _02116e44 1), so the two new ones join
 # a posture this slice already has rather than creating one. Routing only these
 # two would make them the only writes in the scene that actually reach the
@@ -244,17 +244,17 @@
 #            raw DS words. The SpawnInfo run 0x0211c740..0x0211c8a0 and the
 #            VS map list data_ov075_0211c6ec ride in the same .data mount.
 #   piece 2  this slice: the TUs below (135 delinked + the NONMATCHING set),
-#            with src/func_ov075_021184b0.c marked LANGUAGE CXX (the
+#            with src/func_ov075_021184b0.cpp marked LANGUAGE CXX (the
 #            comment-stripped token sweep found exactly two .c files carrying
 #            C++; same sweep the ov005 slice ran). The OTHER one was
-#            src/func_ov075_02116128.c, and section 2c's propagation took
+#            src/func_ov075_02116128.cpp, and section 2c's propagation took
 #            main's .cpp spelling of it, so CMake picks the language off the
 #            extension and the marking row is one file now, not two.
 #   piece 3  hal/scene_vs_menu.cpp (the seat: factory wrapper over the matched
 #            src factory, keyed vtable fill, the loud faces -- nine when this
 #            was written, two after section 2b, NONE after 2c) plus ONE
 #            APPENDED row in hal/scene_boot.cpp's port_scene_classes:
-#            {6, "SCENE_VS_MENU", data_ov075_0211c880, ...}.
+#            {6, "SCENE_VS_MENU", g_profile_ENTRY, ...}.
 #
 #   THE DIFFERENCE: ov005 had no static initialisers; ov075 HAS THREE (above).
 #   They initialise ov075's own .data/.bss objects, so the mount must run them
@@ -314,17 +314,18 @@
 # level consumption, keeps the flag alive the way the DS does.
 #
 # ---- THE SLICE -----------------------------------------------------------
-src/UnknownVsEntry_Spawn.cpp
+src/d_ent_obj.cpp
 src/_ZN14UnknownVsEntry13InitResourcesEv.cpp
 src/_ZN14UnknownVsEntry16CleanupResourcesEv.cpp
 src/_ZN14UnknownVsEntry6RenderEv.cpp
 src/_ZN14UnknownVsEntry8BehaviorEv.cpp
-src/_ZN14UnknownVsEntryD0Ev.c
+# RETIRED at SLICE1: body now in src/_ZN14UnknownVsEntryD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN14UnknownVsEntryD0Ev.cpp
 src/_ZN14UnknownVsEntryD1Ev.cpp
 src/__sinit_ov075_0211b5e0.c
 src/__sinit_ov075_0211bb00.c
 src/__sinit_ov075_0211c51c.c
-src/func_ov075_02113fdc.c
+src/_ZN15UnknownVsPlayerD1Ev.cpp
 src/func_ov075_02114010.c
 src/func_ov075_021140e4.c
 src/func_ov075_021141b8.c
@@ -359,19 +360,20 @@ src/func_ov075_021151b4.c
 src/func_ov075_0211524c.c
 src/func_ov075_02115290.c
 src/func_ov075_021152d4.cpp
-src/func_ov075_02115a88.c
-src/func_ov075_02115ab8.cpp
-src/func_ov075_02115b28.c
-src/func_ov075_02115bac.c
-src/func_ov075_02115bc8.c
-src/func_ov075_02115bcc.c
-src/func_ov075_02115e1c.cpp
+src/_ZN15UnknownVsPlayerC1Ev.cpp
+src/_ZN10dScEntry_cD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN10dScEntry_cD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN10dScEntry_cD0Ev.cpp
+src/_ZN10dScEntry_c6icon_cD1Ev.cpp
+src/_ZN12OamAnimationD1Ev.cpp
+src/_ZN10dScEntry_c6icon_c6RenderEv.cpp
+src/_ZN10dScEntry_c6icon_c8BehaviorEv.cpp
 src/func_ov075_02115e8c.c
 src/func_ov075_0211601c.c
 src/func_ov075_02116028.c
 src/func_ov075_02116030.c
-src/func_ov075_02116040.c
-src/func_ov075_021160b4.c
+src/_ZN10dScEntry_c15graphCallback_c14GraphCallback2Ev.cpp
+src/_ZN10dScEntry_c15graphCallback_cC1Ev.cpp
 src/func_ov075_021160dc.cpp
 src/func_ov075_02116128.cpp
 src/func_ov075_0211621c.c
@@ -402,7 +404,7 @@ src/func_ov075_02117f5c.c
 src/func_ov075_02117fe4.c
 src/func_ov075_02118248.c
 src/func_ov075_02118378.c
-src/func_ov075_021184b0.c
+src/func_ov075_021184b0.cpp
 src/func_ov075_0211867c.c
 src/func_ov075_021188b4.c
 src/func_ov075_02118a78.c
@@ -432,14 +434,14 @@ src/func_ov075_02119d78.c
 src/func_ov075_02119dc4.cpp
 src/func_ov075_0211a100.c
 src/func_ov075_0211a148.c
-src/func_ov075_0211a210.c
-src/func_ov075_0211a268.c
-src/func_ov075_0211a410.cpp
-src/func_ov075_0211a734.c
-src/func_ov075_0211a740.c
-src/func_ov075_0211a834.c
-src/func_ov075_0211a838.c
-src/func_ov075_0211a854.c
+src/_ZN10dScEntry_c16CleanupResourcesEv.cpp
+src/_ZN10dScEntry_c16OnPendingDestroyEv.cpp
+src/_ZN10dScEntry_c13InitResourcesEv.cpp
+src/_ZN10dScEntry_c19BeforeInitResourcesEv.cpp
+src/d_s_entry_result.cpp
+src/_ZN12OamAnimationC1Ev.cpp
+src/_ZN10dScEntry_c6icon_cC1Ev.cpp
+src/d_s_entry_entry.cpp
 src/func_ov075_0211a948.c
 src/func_ov075_0211aa00.c
 src/func_ov075_0211aa94.c
@@ -466,7 +468,7 @@ src/func_ov075_0211b458.cpp
 src/PrepareVsMode.c
 src/SetControllerMode.c
 src/_ZN11ShadowModel9RenderAllEv.cpp
-src/_ZN5Scene14GraphCallback0Ev.c
+src/_ZN8dGraph_c10callback_c14GraphCallback0Ev.cpp
 src/_ZN7Message17DisplayVsExitTextEt.cpp
 src/func_0200f0bc.c
 src/func_0200f13c.cpp
@@ -548,8 +550,8 @@ src/func_0203128c.c
 src/func_02031154.c
 src/func_020313d8.c
 src/LoadFont3D.c
-src/_ZN7Message10LoadTextVSEv.c
-src/_ZN7Message16SetTextGlobalsVSEv.c
+src/_ZN7Message10LoadTextVSEv.cpp
+src/_ZN7Message16SetTextGlobalsVSEv.cpp
 src/func_0203d7b8.c
 src/func_0203d854.c
 src/func_0203d868.c
@@ -570,5 +572,5 @@ src/func_0203da2c.c
 # the dispatches spelled out as cdecl-through-record; src keeps the
 # byte-matched originals:
 #   src/func_ov075_0211a194.cpp   the state setter (+0x54/+0x5c/+0x64)
-#   src/func_ov075_0211a2b8.cpp   Behavior (pmf + the element v0 walk)
-#   src/func_ov075_0211a26c.cpp   Render (pmf)
+#   src/_ZN10dScEntry_c8BehaviorEv.cpp   Behavior (pmf + the element v0 walk)
+#   src/_ZN10dScEntry_c6RenderEv.cpp   Render (pmf)

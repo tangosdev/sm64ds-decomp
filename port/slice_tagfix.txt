@@ -44,8 +44,8 @@
 #    Vec3_Dist < 0x32000), stores ITSELF in that block's +0x328 and sets
 #    unk_0d8. If it finds nothing it destroys itself on frame one.
 #
-# 3. When the block is broken, src/func_ov002_020b38a0.c (daObjBlockL_c::Kill)
-#    calls src/func_ov002_020b363c.c, which reads the block's +0x328, checks
+# 3. When the block is broken, src/_ZN13BigBrickBlock4KillEv.cpp (daObjBlockL_c::Kill)
+#    calls src/_ZN13BigBrickBlock17NotifyLinkedActorEv.cpp, which reads the block's +0x328, checks
 #    the tag's id is one of the four, and writes tag+0xd6 = 1.
 #
 # 4. The NEXT tick of the tag's Behavior takes the unk_0d6 branch and
@@ -57,10 +57,10 @@
 # {fn, adj} records, and config/arm9/overlays/ov002/relocs.txt 13732-13735
 # names the four function words:
 #
-#     dd30[0] = data_ov002_02108b6c  ->  func_ov002_020b429c   (idx 0, id 321)
-#     dd30[1] = data_ov002_02108b5c  ->  func_ov002_020b4250   (idx 1, id 322)
-#     dd30[2] = data_ov002_02108b74  ->  func_ov002_020b41f8   (idx 2, id 323)
-#     dd30[3] = data_ov002_02108b64  ->  func_ov002_020b42e4   (idx 3, id 324)
+#     dd30[0] = data_ov002_02108b6c  ->  _ZN10BrickBlock18SpawnOneUpMushroomEv   (idx 0, id 321)
+#     dd30[1] = data_ov002_02108b5c  ->  _ZN10BrickBlock17SpawnMegaMushroomEv   (idx 1, id 322)
+#     dd30[2] = data_ov002_02108b74  ->  _ZN10BrickBlock15SpawnKoopaShellEv   (idx 2, id 323)
+#     dd30[3] = data_ov002_02108b64  ->  _ZN10BrickBlock15SpawnSilverStarEv   (idx 3, id 324)
 #
 # All four records are already on port/ov002_syms.txt, so the sinit runs
 # against real hosted storage and really does write those four words. What it
@@ -74,7 +74,7 @@
 #
 # ---- the fifth file -------------------------------------------------------
 #
-# func_ov002_020b41b8 is not a handler. It is the shared position helper all
+# _ZN10BrickBlock11GetSpawnPosER7Vector3RS_ is not a handler. It is the shared position helper all
 # four call first: it reads the tag's x/y/z at +0x5c and lifts y by
 # data_ov002_020ff090[unk_0d7], a four-int table indexed by the SAME dispatch
 # index (0x020ff090..0x020ff0a0, sixteen bytes, one per id). Seating the four
@@ -93,8 +93,8 @@
 # Every line below byte-matches at 2004/b56 with --strict-relocs against
 # extracted/overlays/overlay_0002.bin based at 0x020ad660.
 #
-src/func_ov002_020b41b8.c
-src/func_ov002_020b41f8.cpp
-src/func_ov002_020b4250.cpp
-src/func_ov002_020b429c.cpp
-src/func_ov002_020b42e4.c
+src/_ZN10BrickBlock11GetSpawnPosER7Vector3RS_.cpp
+src/_ZN10BrickBlock15SpawnKoopaShellEv.cpp
+src/_ZN10BrickBlock17SpawnMegaMushroomEv.cpp
+src/_ZN10BrickBlock18SpawnOneUpMushroomEv.cpp
+src/_ZN10BrickBlock15SpawnSilverStarEv.cpp

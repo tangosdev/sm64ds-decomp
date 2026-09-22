@@ -4,7 +4,7 @@
  * THE DEFECT CLASS (measured, not predicted): the scene's states live as
  * {fn, delta} pairs at self+0x54/+0x5c/+0x64, seeded by func_ov075_0211a194
  * from six-word records the sinits build in bss, and dispatched by Behavior
- * (func_ov075_0211a2b8), Render (func_ov075_0211a26c) and the setter itself
+ * (_ZN10dScEntry_c8BehaviorEv), Render (_ZN10dScEntry_c6RenderEv) and the setter itself
  * through `(self->**pmf)()`. The matched TUs model that with a real MSVC
  * pointer-to-member, which compiles to a __thiscall: `this` rides in ecx and
  * nothing goes to the stack. The fn words hold plain cdecl host bodies (the
@@ -13,7 +13,7 @@
  * reading [esi+0x50] with esi = stack garbage (1). Same story for Behavior's
  * element walk, which the TU models as a virtual call `o->v0()` over the
  * 0x24-stride records at self+0x70 whose vptr is the mounted
- * data_ov075_0211c94c table.
+ * _ZTVN10dScEntry_c6icon_cE table.
  *
  * THE COPIES CHANGE THE CALL SHAPE AND NOTHING ELSE: every dispatch becomes
  * an explicit cdecl call through the record word with self as the first
@@ -23,8 +23,8 @@
  * fader dispatch data_0209f5bc->v5() keeps the TU's own shape because that
  * object's host vtable already serves every other scene's matched TUs.
  *
- * src/func_ov075_0211a194.cpp, src/func_ov075_0211a2b8.cpp and
- * src/func_ov075_0211a26c.cpp are out of the slice for these.
+ * src/func_ov075_0211a194.cpp, src/_ZN10dScEntry_c8BehaviorEv.cpp and
+ * src/_ZN10dScEntry_c6RenderEv.cpp are out of the slice for these.
  */
 
 #include <cstdio>
@@ -46,6 +46,19 @@ struct VsVObj {
 extern "C" { extern VsVObj *data_0209f5bc; }
 
 typedef void (*VsStateFn)(void *self);
+
+/* the icon records at self+0x70: the matched TU models this walk as a
+   VIRTUAL call, `o->v0()`, and the cartridge agrees -- ov075 0x0211a3cc
+   is `mov r0, r5` before `blx r1`, the receiver in mwcc's `this`
+   register with nothing on the stack. The live records carry MSVC's own
+   ??_7icon_c@dScEntry_c@@6B@, whose two slots are the matched __thiscall
+   members dScEntry_c::icon_c::Behavior and ::Render, so the host has to
+   dispatch with the receiver in ecx. Spelling it cdecl left ecx holding
+   1 and ?Behavior@icon_c@dScEntry_c@@UAEXXZ+0x3 read [1+0x1c]. */
+struct VsIconObj {
+    virtual void v0();
+    virtual void v1();
+};
 
 static void vs_state_call(void *self, unsigned off)
 {
@@ -72,7 +85,7 @@ extern "C" void func_ov075_0211a194(char *self, int *src)
 }
 
 // PORT_HOST_ABI: mwcc pointer-to-member dispatch spelled as an explicit cdecl call through the record word with self as the first argument
-extern "C" int func_ov075_0211a2b8(void *cv)
+extern "C" int _ZN10dScEntry_c8BehaviorEv(void *cv)
 {
     char *cc = (char *)cv;
 
@@ -107,10 +120,9 @@ extern "C" int func_ov075_0211a2b8(void *cv)
             char *o = cc + 0x70;
             do {
                 /* the element walk: slot 0 of the record's own table (the
-                   mounted data_ov075_0211c94c), self as the argument -- the
-                   mwcc virtual-call shape, spelled out */
-                VsStateFn *vt = *(VsStateFn **)o;
-                vt[0](o);
+                   mounted _ZTVN10dScEntry_c6icon_cE), the receiver in ecx --
+                   the mwcc virtual-call shape, spelled out */
+                ((VsIconObj *)o)->v0();
                 ++i;
                 o += 0x24;
             } while (i < (int)*(unsigned char *)(cc + 0x280));
@@ -120,7 +132,7 @@ extern "C" int func_ov075_0211a2b8(void *cv)
 }
 
 // PORT_HOST_ABI: mwcc pointer-to-member dispatch spelled as an explicit cdecl call through the record word with self as the first argument
-extern "C" int func_ov075_0211a26c(void *cv)
+extern "C" int _ZN10dScEntry_c6RenderEv(void *cv)
 {
     char *cc = (char *)cv;
     if (*(volatile int *)(cc + 0x64) != 0)

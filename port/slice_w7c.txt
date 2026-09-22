@@ -9,7 +9,7 @@
 # landed in wave 6, so that arena needs no slice at all.
 #
 # ONE TU HELD OUT, for a measured reason:
-#   src/_ZN19OrangeBallBillboardD1Ev.cpp -- a real MSVC destructor over a
+#   src/game/actors/d_a_obj_kb1_billboard.cpp -- a real MSVC destructor over a
 #     SHADOW class declared inside its own .cpp, so MSVC emits
 #     ??1OrangeBallBillboard@@UAE@XZ and auto-generates calls to
 #     ??1Model@@QAE@XZ and ??1Actor@@UAE@XZ, which exist nowhere in this build.
@@ -35,13 +35,7 @@
 # CALLED from the registry fill (port_ov44_bringup) -- the ov045/ov060
 # lane-ownership shape, because no lane owns hal/actor_overlays.cpp this wave.
 
-src/OrangeBallBillboard_Spawn.c
-src/_ZN19OrangeBallBillboard13InitResourcesEv.c
-src/_ZN19OrangeBallBillboard16CleanupResourcesEv.c
-src/_ZN19OrangeBallBillboard6RenderEv.cpp
-src/_ZN19OrangeBallBillboardD0Ev.c
-src/func_ov044_02111214.c
-src/__sinit_ov044_02111314.c
+src/game/actors/d_a_obj_kb1_billboard.cpp
 
 # the registry row / vtable fill / host D1 / cross-overlay alias host file
 port/hal/actor_classes_ov044.cpp

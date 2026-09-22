@@ -21,40 +21,42 @@
 // this port. Every other shared slot is address-identical to ov081's own
 // Enemy shared half (cross-checked target for target against Spindrift's
 // own vtable).
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
 extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include <cstdlib>
 
-#include "Actor.h"
-#include "ActorBase.h"
+#include "dActor_c.h"
+#include "fBase_c.h"
 #include "HootTheOwl.h"
 
 extern "C" {
-int _ZN5Actor19BeforeInitResourcesEv(void *self);             /* slot 1  */
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
-int _ZN5Actor14BeforeBehaviorEv(void *self);                  /* slot 7  */
-int _ZN5Actor12BeforeRenderEv(void *self);                    /* slot 10 */
-int _ZN5Actor13OnYoshiTryEatEv(void *self);                   /* slot 18 */
-void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p);  /* slot 19 */
-int _ZN5Actor9Virtual50Ev(void *self);                        /* slot 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);     /* slot 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);         /* slot 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);         /* slot 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);             /* slot 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);             /* slot 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o); /* slot 28 */
-int _ZN5Actor16OnAimedAtWithEggEv(void *self);                /* slot 29 */
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);             /* slot 1  */
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);                  /* slot 7  */
+int _ZN8dActor_c12BeforeRenderEv(void *self);                    /* slot 10 */
+int _ZN8dActor_c13OnYoshiTryEatEv(void *self);                   /* slot 18 */
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void *self, void *p);  /* slot 19 */
+int _ZN8dActor_c9Virtual50Ev(void *self);                        /* slot 20 */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);     /* slot 21 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);         /* slot 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);         /* slot 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);             /* slot 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);             /* slot 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o); /* slot 28 */
+int _ZN8dActor_c16OnAimedAtWithEggEv(void *self);                /* slot 29 */
 
 const char *port_actor_class_name(unsigned id);   /* hal/actor_registry */
 void port_actor_slot_decline(const char *what);   /* func_02043fdc_hostcopy.cpp */
@@ -72,8 +74,8 @@ int _ZN10HootTheOwl16CleanupResourcesEv(void);
 void _ZN10HootTheOwl16OnPendingDestroyEv(void);
 int *_ZN10HootTheOwlD1Ev(int *self);
 int *_ZN10HootTheOwlD0Ev(int *self);
-void *HootTheOwl_Spawn(void);
-extern unsigned char HootTheOwl_SpawnInfo[];
+void *daOwl_c_classInit(void);
+extern unsigned char g_profile_OWL[];
 int _ZTV10HootTheOwl[31];                          /* == _ZTV7daOwl_c, host array */
 /* the method face, defined at the bottom of this file (real C++ method
    call against HootTheOwl.h -- needs C++ linkage, forward-declared here
@@ -81,7 +83,7 @@ int _ZTV10HootTheOwl[31];                          /* == _ZTV7daOwl_c, host arra
 int _ZN10HootTheOwl13InitResourcesEv(void *self);
 }
 
-/* D0 (src/_ZN10HootTheOwlD0Ev.c) stores its own table under the RTTI-alias
+/* D0 (src/_ZN10HootTheOwlD0Ev.cpp) stores its own table under the RTTI-alias
    spelling _ZTV7daOwl_c (include/decl_common.h's own `extern int
    _ZTV7daOwl_c[];`), the SAME address as _ZTV10HootTheOwl under two names --
    the SkiLift/MotherPenguin (_ZTV7SkiLift == _ZTV10daPgMthr_c) one-speller
@@ -105,49 +107,49 @@ static int __fastcall ov94_trap13(void *s, void *) { ov94_trap_report(s, 13); re
 static int __fastcall ov94_trap14(void *s, void *) { ov94_trap_report(s, 14); return 0; }
 
 static int __fastcall ov94_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall ov94_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall ov94_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 static void __fastcall ov94_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall ov94_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall ov94_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall ov94_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall ov94_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall ov94_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int __fastcall ov94_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 static int __fastcall ov94_egg(void *s, void *, void *p)
-{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+{ _ZN8dActor_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall ov94_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall ov94_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall ov94_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall ov94_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall ov94_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall ov94_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall ov94_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall ov94_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall ov94_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 static int __fastcall ov94_aimed(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 static int __fastcall ov94_pdes(void *s, void *)
-{ ((ActorBase *)s)->ActorBase::OnPendingDestroy(); return 0; }
+{ ((fBase_c *)s)->fBase_c::OnPendingDestroy(); return 0; }
 
 /* Fills slots 1,2,4,5,7,8,10,11,13,14,15,18..30 -- the standard 31/32-slot
    Enemy shared half. HootTheOwl uses the shared default (own body,
@@ -218,7 +220,7 @@ extern "C" void hal_fill_hoot_the_owl_vtable(void)
     vt[6]  = (void *)hoot_behavior;
     vt[9]  = (void *)hoot_render;
     vt[12] = (void *)hoot_pdes;
-    vt[16] = (void *)hoot_d1;
+    vt[16] = (void *)PORT_D16(hoot_d1);
     vt[17] = (void *)hoot_d0;
     /* no slot 31: a 31-slot Enemy, no own Kill, ends here */
 }

@@ -12,7 +12,7 @@ int func_ov007_020c6550(char *c)
     } else {
         func_ov007_020c6d20(c, left);
         {
-            int *p = (int *)(((unsigned int)c + 8) & 0xFFFFFFFFFFFFFFFFULL);
+            int *p = (int *)((unsigned int)c + 8);
             *p = *p + 1;
         }
         if (*(int *)(c + 8) >= *(int *)(c + 0xc))

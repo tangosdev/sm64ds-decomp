@@ -26,7 +26,7 @@
 // defect: a draw gap, not a logic gap.
 //
 // ITS CALLER ON THIS PATH IS MATCHED AND SETTLES THE ARGUMENTS.
-// src/func_ov006_020f0e28.c is dScMgLuigi_c's timer HUD:
+// src/actors/dScMgLuigi_c.cpp is dScMgLuigi_c's timer HUD:
 //     if (*(int*)(this + 0x4f78) < 2) return;               // not counting yet
 //     DrawOamSprite(lang_label[GetGameLanguage()], 0x80, 0x10, 0);
 //     func_ov004_020b2220(0x80, 0x28, *(u16*)(this + 0x5172), 1, -1, 0x800, 0);

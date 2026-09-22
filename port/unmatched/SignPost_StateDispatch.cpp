@@ -121,7 +121,7 @@ int Vec3_ApproachHorz(void *pos, void *target, int step);
 int func_ov002_020bec84(void *player, unsigned int i);
 int func_ov002_020bec9c(void *player, unsigned int a, int b, int d, unsigned short e);
 int _ZN6Player12FinishedAnimEv(void *player);
-void _ZN6Player12ShowMessage2ER9ActorBasejPK7Vector3jj(
+void _ZN6Player12ShowMessage2ER7fBase_cjPK7Vector3hh(
     void *player, void *actor, unsigned int msg, void *pos, unsigned int a,
     unsigned int b);
 void func_02012790(int id);
@@ -200,12 +200,12 @@ static void port_signpost_read_main(void *selfv)
                         func_ov002_020bec9c(player, 3, 0x40000000, 0x1000, 0);
                     } else if (func_ov002_020bec84(player, 3) != 0
                                && _ZN6Player12FinishedAnimEv(player) != 0) {
-                        _ZN6Player12ShowMessage2ER9ActorBasejPK7Vector3jj(
+                        _ZN6Player12ShowMessage2ER7fBase_cjPK7Vector3hh(
                             player, c, (short)msgId, msgPos, 0, 1);
                     }
                 } else {
                     func_ov002_020bec9c(player, 0, 0, 0x1000, 0);
-                    _ZN6Player12ShowMessage2ER9ActorBasejPK7Vector3jj(
+                    _ZN6Player12ShowMessage2ER7fBase_cjPK7Vector3hh(
                         player, c, (short)msgId, msgPos, 0, 1);
                 }
             }

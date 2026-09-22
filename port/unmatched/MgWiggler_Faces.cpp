@@ -17,7 +17,7 @@
 // pointer-to-member symbol, which is what section 4 predicts for a class whose
 // whole wall is the FIELD form: there is no table global for a link to fail on.
 //
-//   ?data_ov006_0213c96c@@3UPair@@A   src/func_ov006_020eb8f0.cpp declares its
+//   ?data_ov006_0213c96c@@3UPair@@A   src/actors/dScMgHanachan_c.cpp declares its
 //   ?data_ov006_0213c9bc@@3UPair@@A   three .data pairs OUTSIDE its extern "C"
 //   ?data_ov006_0213c9c4@@3UPair@@A   block, so they mangle as C++ globals and
 //                                     the ov006 mount's plain C definitions do
@@ -37,7 +37,7 @@
 //     (`p->v[0] == g->v[0] && (p->v[1] == g->v[1] || p->v[0] == 0)`), and a
 //     host address never equals a DS address.
 //
-//   _func_0203adec   src/func_ov006_020ecb80.c calls arm9 0x0203adec under an
+//   _func_0203adec   src/actors/dScMgHanachan_c.cpp calls arm9 0x0203adec under an
 //                    ADDRESS-SHAPED name that exists in no config.
 //                    config/arm9/symbols.txt names that address
 //                    _Z14ApproachLinearRsss, and src/_Z14ApproachLinearRsss.cpp
@@ -77,7 +77,7 @@
 //       segments through OAM::Render and the face sprite on segment 0.
 //
 //   func_ov006_020ec4dc  0x20c  ONE OF FOUR WIGGLER SET-UP VARIANTS.
-//       src/func_ov006_020ecdb8.c ends in a four-way switch on
+//       src/actors/dScMgHanachan_c.cpp ends in a four-way switch on
 //       data_ov006_02141fd8:
 //           case 0 -> func_ov006_020ecba4    matched
 //           case 1 -> func_ov006_020ec9c0    matched
@@ -115,7 +115,7 @@ extern "C++" int ApproachLinear(short &x, short target, short step);
 extern "C" {
 
 /* func_0203adec is arm9's _Z14ApproachLinearRsss under the address-shaped name
-   src/func_ov006_020ecb80.c spells. The src declares the step as an int and the
+   src/actors/dScMgHanachan_c.cpp spells. The src declares the step as an int and the
    ROM body reads it as one register either way; the face narrows it explicitly
    rather than leaving the widths to __cdecl. */
 void func_0203adec(short *x, short target, int step)

@@ -1,6 +1,6 @@
 # Lane SOS of run mg6: dScMgBomroom_c, the "Sort or 'Splode" minigame.
 #
-# actor id 0x172 (scene 370), spawn symbol MgSortOrSplode_Spawn (0x020d9574),
+# actor id 0x172 (scene 370), spawn symbol dScMgBomroom_c_classInit (0x020d9574),
 # SpawnInfo 0x0213badc, vtable data_ov006_0213bbb4, RTTI "14dScMgBomroom_c" at
 # 0x0213bb38. Every one of those was derived from the ROM by this lane rather
 # than taken from the handover, by the mechanical route
@@ -13,7 +13,7 @@
 #     config/arm9/overlays/ov006/relocs.txt
 #     from:0x020d95a0 kind:load to:0x0213bbb4 module:overlay(6)
 #
-# and 0x020d95a0 is the literal pool of MgSortOrSplode_Spawn (0x020d9574,
+# and 0x020d95a0 is the literal pool of dScMgBomroom_c_classInit (0x020d9574,
 # size 0x30).
 #
 # THE SPAWN SYMBOL SAYS SortOrSplode AND THE CLASS SAYS Bomroom, AND BOTH ARE
@@ -44,15 +44,15 @@
 # image and ruled REAL_DECOMP before anything was seated;
 # port/tools/inferred_stub_adjudicated.txt carries the per-body evidence.
 #
-# THE HIERARCHY IS TWO DEEP. Slot 16 (D2, func_ov006_020d5a54) and slot 17
-# (D0, func_ov006_020d5a78) both store data_ov006_0213bbb4 into [this] and then
-# call func_ov004_020b29c0 with nothing in between -- read off the ROM, not off
+# THE HIERARCHY IS TWO DEEP. Slot 16 (D2, _ZN14dScMgBomroom_cD1Ev) and slot 17
+# (D0, _ZN14dScMgBomroom_cD0Ev) both store data_ov006_0213bbb4 into [this] and then
+# call _ZN11dScMgBase_cD2Ev with nothing in between -- read off the ROM, not off
 # src -- so the seat fills ONE derived table plus the shared base one, the way
 # curling's and dScMgCoin_c's do, and not the three 0x169 needed.
 #
 # THE FACTORY NEEDS NO DISPLACEMENT RULING, and it is worth saying because
-# 0x169's did. src/MgSortOrSplode_Spawn.c calls func_ov004_020b2adc(p) WITH its
-# argument, where src/func_ov006_020e0574.cpp calls the same base constructor
+# 0x169's did. src/d_s_mg_bomroom.c calls _ZN11dScMgBase_cC2Ev(p) WITH its
+# argument, where src/actors/dScMgCup_c.cpp calls the same base constructor
 # with none and rides r0 through. That callee dereferences on its first
 # statement and then writes three vtable words through the pointer, so the
 # difference is a wild write versus a correct one. This factory is on the
@@ -87,11 +87,11 @@
 # is deliberately excluded because MG1/MG2/BASESET host-copied it:
 #     func_ov004_020add88  _020adf2c  _020b31b4  _020b321c  _020b3278
 #     _020b8714  _020b8778   the pointer-to-member group (MG2)
-#     func_ov004_020aeed8  _020af094                       MgBase_DeclConflict
-#     func_ov004_020b0930                                  MgBase_Slot1
-#     func_ov004_020b0840  _020b7460                       BASESET
+#     _ZN11dScMgBase_c25OnAimedAtWithEggReturnVecEv  _020af094                       MgBase_DeclConflict
+#     _ZN11dScMgBase_c19BeforeInitResourcesEv                                  MgBase_Slot1
+#     _ZN11dScMgBase_c21AfterCleanupResourcesEj  _020b7460                       BASESET
 #     func_ov004_020b2cb8                                  MgBase_LangTable
-#     func_ov004_020b87e0                                  the framework's PMF
+#     _ZN10dMgState_c8SetStateEi                                  the framework's PMF
 #                                                          state setter
 # Adding a line for any of them would put a second definition in the link.
 #
@@ -120,7 +120,7 @@
 #
 # THE SECOND FLOOR COST A LINKED FUNCTION AS WELL AS A BODY, and closing it
 # pays that back. This list had 72 active lines against a +71 linkage delta,
-# because the one TU /OPT:REF dropped was src/func_ov006_020d66c4.cpp: every
+# because the one TU /OPT:REF dropped was src/actors/dScMgBomroom_c.cpp: every
 # relocation that reaches 0x020d66c4 anywhere in ov006 comes from inside
 # func_ov006_020d8408 (five call sites, 0x020d86e8, _8768, _8794, _8814,
 # _8884), so with that body undecompiled the TU had no caller in the build. It
@@ -156,10 +156,11 @@
 # but for the table declaration and the dispatch site.
 
 # ---- ov006: the class's own closure, minus the seven host copies -----------
-src/MgSortOrSplode_Spawn.c
-src/_ZN6Player23St_InYoshiMouth_CleanupEv.cpp
-src/func_ov006_020d5a54.c
-src/func_ov006_020d5a78.c
+src/d_s_mg_bomroom.c
+src/actors/dScMgBomroom_c.cpp
+src/_ZN14dScMgBomroom_cD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN14dScMgBomroom_cD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN14dScMgBomroom_cD0Ev.cpp
 src/func_ov006_020d5ab0.cpp
 src/func_ov006_020d5b00.c
 src/func_ov006_020d5b10.c
@@ -172,54 +173,27 @@ src/func_ov006_020d5dfc.cpp
 src/func_ov006_020d5e1c.c
 src/func_ov006_020d5e3c.c
 src/func_ov006_020d5e5c.c
-src/func_ov006_020d5eb8.c
-src/func_ov006_020d5f28.c
-src/func_ov006_020d5f2c.c
-src/func_ov006_020d5fd8.c
-# HOST-COPIED (SOS): src/func_ov006_020d5fec.cpp -- table data_ov006_02141660, arity 1 (constant 0), member-pointer typed through an Entry wrapper
-src/func_ov006_020d604c.c
-src/func_ov006_020d6098.c
-src/func_ov006_020d6100.c
-src/func_ov006_020d6170.c
-src/func_ov006_020d61dc.c
-src/func_ov006_020d6264.c
-# HOST-COPIED (SOS): src/func_ov006_020d6278.cpp -- table data_ov006_021416c0, arity 1, member-pointer typed
-src/func_ov006_020d62e0.c
-src/func_ov006_020d634c.c
-src/func_ov006_020d63ac.c
-src/func_ov006_020d63d4.c
-src/func_ov006_020d6454.c
-src/func_ov006_020d64c4.c
-src/func_ov006_020d64c8.c
-src/func_ov006_020d65b4.c
-# HOST-COPIED (SOS): src/func_ov006_020d65c8.cpp -- table data_ov006_02141680, arity 1, member-pointer typed
-src/func_ov006_020d6630.c
-src/func_ov006_020d669c.c
-src/func_ov006_020d66c4.cpp
-src/func_ov006_020d672c.c
-src/func_ov006_020d6784.c
-src/func_ov006_020d68a8.c
-src/func_ov006_020d69b8.c
-src/func_ov006_020d6b88.c
-src/func_ov006_020d6c90.c
-src/func_ov006_020d6d7c.c
-src/func_ov006_020d6e8c.c
-src/func_ov006_020d7524.c
-src/func_ov006_020d7604.c
-src/func_ov006_020d7778.c
-src/func_ov006_020d777c.c
-src/func_ov006_020d7958.c
-src/func_ov006_020d795c.c
-src/func_ov006_020d7a84.c
-# HOST-COPIED (SOS): src/func_ov006_020d7c00.cpp -- table data_ov006_02141708, arity 1, member-pointer typed through an Entry wrapper; ALSO state slot 6 of 02141730
-src/func_ov006_020d7c4c.c
+# HOST-COPIED (SOS): src/actors/dScMgBomroom_c.cpp -- table data_ov006_02141660, arity 1 (constant 0), member-pointer typed through an Entry wrapper
+# HOST-COPIED (SOS): src/actors/dScMgBomroom_c.cpp -- table data_ov006_021416c0, arity 1, member-pointer typed
+# HOST-COPIED (SOS): src/actors/dScMgBomroom_c.cpp -- table data_ov006_02141680, arity 1, member-pointer typed
+# HOST-COPIED (SOS): src/actors/dScMgBomroom_c.cpp -- table data_ov006_02141708, arity 1, member-pointer typed through an Entry wrapper; ALSO state slot 6 of 02141730
+src/func_ov006_020d7c4c.cpp
 src/func_ov006_020d7e7c.c
 src/func_ov006_020d7edc.c
 src/func_ov006_020d7f5c.c
 src/func_ov006_020d816c.c
 src/func_ov006_020d8324.c
 # HOST-COPIED (SOS): src/func_ov006_020d836c.cpp -- table data_ov006_02141730, arity 1, member-pointer typed
-src/func_ov006_020d8408.c
+# HOST-COPIED (SCENES2, run link100 wave 10 round 2): src/func_ov006_020d8408.c is
+# REPLACED by port/unmatched/MgBomroom_Slot8408.c on the row below. Its line 202
+# calls the two-parameter func_ov006_020d66c4 through a one-parameter cast, which
+# is an ARM argument riding through r1 that the host never pushes; the callee then
+# indexes the scene object by stack garbage and scene 370 dies at
+# func_ov006_020d66c4+0xc. The host copy is the src TU with that one call spelled
+# with both arguments and nothing else changed; its header carries the
+# disassembly at 0x020d86e8 and the sed line that reproduces it. Taking BOTH rows
+# would be a duplicate symbol, so the src row is deliberately absent.
+port/unmatched/MgBomroom_Slot8408.c
 src/func_ov006_020d8904.c
 src/func_ov006_020d893c.c
 src/func_ov006_020d89c4.c
@@ -233,7 +207,7 @@ src/func_ov006_020d8ff4.c
 src/func_ov006_020d9020.c
 src/func_ov006_020d904c.c
 src/func_ov006_020d907c.c
-src/func_ov006_020d9104.c
-src/func_ov006_020d9160.c
-# HOST-COPIED (SOS): src/func_ov006_020d91b0.cpp -- table data_ov006_021416e0, arity 0, member-pointer typed; VTABLE SLOT 6, Behavior
-src/func_ov006_020d9244.c
+src/_ZN14dScMgBomroom_c13OnYoshiTryEatEi.cpp
+src/_ZN14dScMgBomroom_c6RenderEv.cpp
+# HOST-COPIED (SOS): src/_ZN14dScMgBomroom_c8BehaviorEv.cpp -- table data_ov006_021416e0, arity 0, member-pointer typed; VTABLE SLOT 6, Behavior
+src/_ZN14dScMgBomroom_c13InitResourcesEv.cpp

@@ -16,22 +16,35 @@ Example:
       --out build/validate-report.json --markdown build/validate-report.md
 """
 import argparse
+import bisect
 import collections
 import hashlib
+import io
 import json
 import pathlib
 import re
 import subprocess
 import sys
+import tempfile
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "tools"))
+import asm_policy as AP  # noqa: E402
 import chaos_db_ci as CHAOS  # noqa: E402
 import rombuild_check as RBC  # noqa: E402
 
 FUNC_RE = re.compile(
     r"^(\S+)\s+kind:function\((?:arm|thumb),size=0x([0-9a-fA-F]+)\).*?addr:0x([0-9a-fA-F]+)")
 SOURCE_SUFFIXES = (".c", ".cpp")
+# Credit moves named in the one-line reason, and rows in the check body's table.
+CREDIT_NAMED = 3
+CREDIT_ROWS = 25
+# Relocation-evidence defects carried in the JSON report. The count always travels;
+# a broken config can produce thousands of rows and the report has a size budget.
+RELOC_DEFECTS_SHOWN = 10
+# tangos-backend's /result cap. Kept here so the report clips itself rather than being
+# rejected whole -- see the clamp in build_report.
+SUMMARY_LIMIT = 500
 
 
 def _git(*args, allow=(0,), repo=None):
@@ -73,6 +86,755 @@ def _module_from_delinks(path):
     return m.group(1) if m else None
 
 
+_ENROLMENT_CACHE = {}
+
+
+def _rev_enrolment(rev):
+    """``(module -> sorted [addr], (module, addr) -> src path)`` at ``rev``.
+
+    validate_merge's own copy of ``srcpath._enrolment``, and it has to be one: every
+    snapshot here reads git revisions through ``git show``, never the working tree, so
+    the filesystem-backed resolver cannot answer for a base commit. Same rule, same
+    `mods/` exclusion -- an entry outside `src/` is a deliberate divergence from the
+    cartridge and is not the source that reproduces a ROM function.
+
+    Every entry is read, `complete` or not: this answers "which file owns this symbol",
+    which is a different question from "which range does the ROM build compare".
+    """
+    if rev not in _ENROLMENT_CACHE:
+        addrs = {}
+        for path in tree_paths(rev, "config/arm9"):
+            module = _module_from_symbols(path)
+            if module is None:
+                continue
+            rows = []
+            for line in git_text(rev, path).splitlines():
+                m = FUNC_RE.match(line)
+                if m:
+                    rows.append(int(m.group(3), 16))
+            addrs[module] = sorted(rows)
+        owner = {}
+        for path in tree_paths(rev, "config/arm9"):
+            module = _module_from_delinks(path)
+            if module is None:
+                continue
+            module_addrs = addrs.get(module, [])
+            entry = None
+            for line in git_text(rev, path).splitlines():
+                if not line.strip():
+                    continue
+                if not line[0].isspace():
+                    entry = line.strip().rstrip(":")
+                    continue
+                # An indented section line before the first entry is the MODULE's own
+                # header and owns nothing; read as an entry's it would hand the first
+                # file every function in its module.
+                if entry is None or not entry.startswith("src/"):
+                    continue
+                m = RBC.ENTRY_SEC.match(line)
+                if not m:
+                    continue
+                start, end = int(m.group(2), 16), int(m.group(3), 16)
+                i = bisect.bisect_left(module_addrs, start)
+                while i < len(module_addrs) and module_addrs[i] < end:
+                    owner[(module, module_addrs[i])] = entry
+                    i += 1
+        _ENROLMENT_CACHE[rev] = (addrs, owner)
+    return _ENROLMENT_CACHE[rev]
+
+
+# The two row shapes dsd writes into a `relocs.txt`, and nothing else. Measured over
+# the whole tree at cabeb60aa: 106 files, 91,809 rows, 91,808 of the first shape and
+# exactly one of the second (`config/arm9/relocs.txt`, the ARM9_CTOR_START link-time
+# constant, which names no destination address at all).
+#
+#   from:0x<addr> kind:<kind> to:0x<addr> module:<token>
+#   from:0x<addr> kind:link_time_const(<NAME>)
+#
+# Anchored at both ends on purpose. A leading BOM, leading whitespace, a truncated
+# tail row or a row from some future dsd all fail to match here, and a row that fails
+# to match is a DEFECT, never a line to skip -- see `_reloc_index`.
+_RELOC_ROW = re.compile(
+    r"^from:0x[0-9a-fA-F]+ +kind:\S+ +to:0x([0-9a-fA-F]+) +module:(\S+)$")
+_RELOC_CONST = re.compile(r"^from:0x[0-9a-fA-F]+ +kind:link_time_const\([^()]+\)$")
+# The documented destination tokens. `main` and `overlay(N)`/`overlays(N,M)` name a
+# symbol-table module; `itcm`, `dtcm` and `none` are real tokens that name none.
+_RELOC_OVERLAY = re.compile(r"^overlays?\((\d+(?: *, *\d+)*)\)$")
+_RELOC_UNMAPPED = ("itcm", "dtcm", "none")
+_RELOC_ANY = "*"
+_RELOC_CACHE = {}
+
+
+def _is_reloc_file(path):
+    return path.startswith("config/arm9/") and path.endswith("/relocs.txt") \
+        or path == "config/arm9/relocs.txt"
+
+
+def _is_symbols_file(path):
+    return path.startswith("config/arm9/") and path.endswith("/symbols.txt") \
+        or path == "config/arm9/symbols.txt"
+
+
+_SECTION_ROW = re.compile(
+    r"^\s+(\.\S+)\s+start:0x([0-9a-fA-F]+)\s+end:0x([0-9a-fA-F]+)\s+kind:(\S+)")
+
+
+def _module_from_config_path(path):
+    """The module a ``config/arm9/**`` file belongs to, INCLUDING itcm and dtcm.
+
+    `_module_from_symbols` and `_module_from_delinks` answer only for the modules this
+    report COUNTS, which is the right scope for the coverage arithmetic and the wrong
+    one for evidence: `config/arm9/itcm` and `config/arm9/dtcm` hold real cartridge
+    bytes and real relocation files.
+    """
+    rel = pathlib.PurePosixPath(path)
+    parts = rel.parts
+    if len(parts) < 3 or parts[0] != "config" or parts[1] != "arm9":
+        return None
+    if len(parts) == 3:
+        return "arm9"
+    if len(parts) == 4 and parts[2] in ("itcm", "dtcm"):
+        return parts[2]
+    if len(parts) == 5 and parts[2] == "overlays" and re.fullmatch(r"ov\d+", parts[3]):
+        return parts[3]
+    return None
+
+
+def _module_sections(rev, module):
+    """A module's OWN section inventory at ``rev``: ``[(name, start, end, kind)]``.
+
+    dsd writes it as the indented block at the top of the module's ``delinks.txt``,
+    ahead of the first entry -- the same block `_rev_enrolment` skips because an entry
+    would otherwise inherit it. None when the file is absent or carries no such block,
+    which callers must read as "no evidence" and never as "the module is empty".
+    """
+    path = _module_symbols_path(module)
+    if path is None:
+        return None
+    path = path[:-len("symbols.txt")] + "delinks.txt"
+    try:
+        text = git_text(rev, path)
+    except RuntimeError:
+        return None
+    rows = []
+    for line in text.splitlines():
+        if not line.strip():
+            continue
+        if not line[0].isspace():
+            break                       # the first entry; the module header is over
+        m = _SECTION_ROW.match(line)
+        if m:
+            rows.append((m.group(1), int(m.group(2), 16), int(m.group(3), 16),
+                         m.group(4)))
+    return rows or None
+
+
+def _empty_relocs_defect(rev, symbols_path, reloc_path, declared):
+    """Why an EMPTY ``relocs.txt`` is not complete evidence, or None when it is.
+
+    A count of functions cannot answer this. dsd writes one relocation row per word it
+    resolved to a symbol, wherever that word lives -- and a module with no code at all
+    can still hold a table of callback pointers in its `.data`, each of which is an
+    incoming reference to some other module. Fourteen modules in this tree do carry a
+    legitimately empty file, so refusing all of them is not the answer either.
+
+    THE EVIDENCE IS WHAT dsd WROTE, in this order:
+
+      * a module that declares a FUNCTION has code, and code holds references. An empty
+        file beside it is incomplete, full stop.
+      * otherwise the module's own section inventory decides. `.bss` is uninitialised --
+        it occupies no cartridge bytes and can hold no pointer in the image -- so a
+        module whose every other section is zero-length really does reference nothing.
+        That is the fourteen: `config/arm9/dtcm` aside, every overlay with an empty file
+        has a zero-length `.ctor` and a `.bss`.
+      * a module WITH initialised bytes has to be read. Its words are either all zero,
+        in which case they name no address and the empty file is complete, or they are
+        not, in which case an empty relocation file cannot be shown to account for them.
+
+    FAIL CLOSED WHEN THE EVIDENCE IS UNAVAILABLE: no section inventory, or an image this
+    checkout does not have, is a defect naming the file it wanted -- never a pass.
+    """
+    module = _module_from_config_path(symbols_path)
+    where = f"is empty at {rev[:12]}"
+    if declared:
+        return (f"{reloc_path} {where} while {symbols_path} declares "
+                f"{declared} function(s)")
+    if module is None:
+        return f"{reloc_path} {where} and names no module this report can read"
+    sections = _module_sections(rev, module)
+    if sections is None:
+        return (f"{reloc_path} {where} and {module} has no section inventory, so "
+                f"nothing establishes that it holds no references")
+    initialised = [(name, start, end) for name, start, end, kind in sections
+                   if kind != "bss" and end > start]
+    if not initialised:
+        return None
+    image = _module_image(rev, module)
+    if image is None:
+        return (f"{reloc_path} {where} while {module} carries "
+                f"{sum(e - s for _n, s, e in initialised)} byte(s) of initialised data, "
+                f"and the module image is unavailable, so the evidence cannot be "
+                f"completed")
+    data, base = image
+    for name, start, end in initialised:
+        lo, hi = start - base, end - base
+        if lo < 0 or hi > len(data):
+            return (f"{reloc_path} {where} and {module}{name} "
+                    f"(0x{start:08x}..0x{end:08x}) lies outside the module image, so "
+                    f"its words cannot be read")
+        chunk = data[lo:hi]
+        for off in range(0, len(chunk), 4):
+            word = int.from_bytes(chunk[off:off + 4].ljust(4, b"\x00"), "little")
+            if word:
+                return (f"{reloc_path} {where} while {module}{name} holds a nonzero "
+                        f"word 0x{word:08x} at 0x{start + off:08x}, which an empty "
+                        f"relocation file does not account for")
+    return None
+
+
+def _reloc_index(rev):
+    """The relocation destination index at ``rev``, WITH the defects that invalidate it.
+
+    Returns ``{"dests": module -> sorted destination addresses, "defects": [str]}``.
+
+    Read from git like every other snapshot here, and read from EVERY ``relocs.txt``
+    under ``config/arm9``, not just the ones whose own module has a symbol table. A
+    relocation names the module of its DESTINATION, so where the reference LIVES is
+    irrelevant: a call from an overlay into the main binary is an incoming destination
+    for arm9, and the arm9 file alone would not see it. Reading only the files that
+    match `config/arm9/(overlays/ovNNN/)?relocs.txt` -- the shape `_module_from_symbols`
+    and `_module_from_delinks` use for the modules this report counts -- covers 104 of
+    the 106 and silently drops `config/arm9/itcm/relocs.txt`, whose 142 `module:main`
+    rows are 142 incoming references into arm9 that no other file records, along with
+    `config/arm9/dtcm/relocs.txt`.
+
+    DEFECTS, NOT SKIPPED INPUT. Nothing here quietly tolerates missing or unreadable
+    evidence, because the only thing this index is ever used for is deciding whether
+    NOTHING points at an address, and an index that skipped its input answers that
+    question "nothing" for every address in the cartridge. So:
+
+      * every module whose ``symbols.txt`` declares at least one function must have a
+        ``relocs.txt`` beside it, present and non-empty, at this revision;
+      * a module that declares no function may have an empty file, but only when its
+        own section inventory or its own bytes say it can hold no reference -- a count
+        of functions does not establish that, and `_empty_relocs_defect` carries the
+        rule (15 modules qualify at cabeb60aa: fourteen overlays whose non-`bss`
+        sections are all zero-length, e.g. ov061's `.ctor start:0x02115ec0
+        end:0x02115ec0`, and `config/arm9/dtcm`, whose 0x20 of `.data` is all zeroes);
+      * every line of every file must be one of the two documented row shapes, and
+        every destination token one of the documented set;
+      * an unreadable blob is a defect rather than an exception, so the caller fails
+        closed with a reason naming the file instead of the worker failing with a
+        traceback.
+
+    WHAT THIS COSTS A CHECKOUT WITHOUT `extracted/`. One module in this tree,
+    `config/arm9/dtcm`, has an empty relocation file beside 0x20 of real `.data`, and
+    the only way to tell that data from a table of callback pointers is to read it (it
+    is all zeroes). A checkout that has never run `tools/unpack.py` cannot, so the index
+    there carries exactly one defect and the matched-loss exception is unavailable --
+    which is the same position the exception is already in without the ROM image, and
+    it changes no other number the report prints. Measured at 42d3c8edc: 92 destination
+    buckets and 96,395 destinations either way, 0 defects with the images and 1 without.
+
+    A defect does not make this function raise and does not empty the index. It makes
+    the EVIDENCE invalid, and callers that need valid evidence to permit something must
+    check `defects` and refuse. See `_reloc_evidence`.
+    """
+    # Keyed by (repo, rev), not by rev: the tests point `REPO` at one temporary
+    # repository after another, and two of them holding the same tree, author and
+    # second produce the same sha. A cache keyed on the sha alone would answer the
+    # second repository with the first one's index.
+    key = (str(REPO), rev)
+    if key not in _RELOC_CACHE:
+        try:
+            paths = tree_paths(rev, "config/arm9")
+        except RuntimeError as exc:
+            _RELOC_CACHE[key] = {"dests": {},
+                                 "defects": [f"config/arm9 unreadable: {exc}"]}
+            return _RELOC_CACHE[key]
+        defects = []
+        reloc_paths = sorted(p for p in paths if _is_reloc_file(p))
+        texts = {}
+        for path in reloc_paths:
+            try:
+                texts[path] = git_text(rev, path)
+            except RuntimeError as exc:
+                defects.append(f"{path} is unreadable at {rev[:12]}: {exc}")
+        # INVENTORY. A module missing from the index reads exactly like a module that
+        # references nothing, so the inventory is checked before the rows are.
+        for path in sorted(p for p in paths if _is_symbols_file(p)):
+            sibling = path[:-len("symbols.txt")] + "relocs.txt"
+            try:
+                declared = sum(1 for line in git_text(rev, path).splitlines()
+                               if FUNC_RE.match(line))
+            except RuntimeError as exc:
+                defects.append(f"{path} is unreadable at {rev[:12]}: {exc}")
+                continue
+            if sibling not in texts:
+                defects.append(f"{sibling} is missing at {rev[:12]} while {path} "
+                               f"declares {declared} function(s)")
+            elif not texts[sibling].strip():
+                # NOT "declared and ...". Zero functions does not make an empty
+                # relocation file complete -- see `_empty_relocs_defect`.
+                defect = _empty_relocs_defect(rev, path, sibling, declared)
+                if defect:
+                    defects.append(defect)
+        dests = collections.defaultdict(list)
+        for path in reloc_paths:
+            for number, line in enumerate(texts.get(path, "").splitlines(), 1):
+                m = _RELOC_ROW.match(line)
+                if not m:
+                    if not _RELOC_CONST.match(line):
+                        defects.append(f"{path}:{number} is not a relocation row: "
+                                       f"{line[:60]!r}")
+                    continue
+                addr, token = int(m.group(1), 16), m.group(2)
+                if token == "main":
+                    modules = ("arm9",)
+                elif token in _RELOC_UNMAPPED:
+                    # A documented token naming no symbol-table module. Filed under `*`
+                    # and counted for EVERY module: the conservative direction, because
+                    # the only use of a destination count is refusing to let a matched
+                    # record leave.
+                    modules = (_RELOC_ANY,)
+                else:
+                    ov = _RELOC_OVERLAY.match(token)
+                    if ov is None:
+                        defects.append(f"{path}:{number} names an undocumented "
+                                       f"destination module {token!r}")
+                        continue
+                    modules = tuple(f"ov{int(n):03d}" for n in ov.group(1).split(","))
+                for module in modules:
+                    dests[module].append(addr)
+        _RELOC_CACHE[key] = {"dests": {k: sorted(v) for k, v in dests.items()},
+                             "defects": defects}
+    return _RELOC_CACHE[key]
+
+
+def _reloc_evidence(base, head):
+    """The relocation index over BOTH revisions, with every defect either one carries.
+
+    The union is the conservative direction: a reference present in either revision
+    counts, so a PR cannot earn "nothing points here" by deleting the row that says
+    something does. The defects are the union too -- evidence that is invalid at one
+    end is invalid.
+    """
+    dests, defects = collections.defaultdict(list), []
+    for rev in (base, head):
+        index = _reloc_index(rev)
+        defects.extend(index["defects"])
+        for module, addrs in index["dests"].items():
+            dests[module].extend(addrs)
+    return {"dests": {k: sorted(v) for k, v in dests.items()},
+            "defects": defects,
+            "valid": not defects}
+
+
+# WHERE THE CARTRIDGE'S OWN BYTES LIVE. `extracted/arm9_dec.bin` is the DECOMPRESSED
+# main binary and it loads at 0x02004000, not at the 0x02000000 RAM base -- the same
+# constant `tools/modules.py`, `tools/match.py` and `tools/evidence_rom.py` use, and
+# the byte gate reads a function's bytes exactly this way. An overlay's image is
+# `extracted/overlays/overlay_NNNN.bin`, based at its lowest symbol address in the
+# config's relocated space (`modules.py:_overlay_base`), read here from the revision
+# under judgement rather than from the worktree.
+ARM9_IMAGE = "extracted/arm9_dec.bin"
+ARM9_IMAGE_BASE = 0x02004000
+
+# THE ACCEPTED RETURN ENCODINGS, and nothing else:
+#
+#   bx lr                  0xE12FFF1E
+#   a stack pop to pc      unconditional block data transfer, L=1, S=0, r13 as the base
+#                          register and r15 in the list -- `pop {r4, pc}` 0xE8BD8010,
+#                          `ldmfd sp!, {pc}` 0xE8BD8000
+#
+# CLASSIFIED BY `evidence_rom.is_unconditional_return`, NOT BY A MASK OF OUR OWN. The
+# mask this replaced tested the transfer bits and the pc bit and nothing else, so it
+# read `ldm r0, {pc}` (0xE8908000) as a return -- an indirect transfer through whatever
+# r0 held, about which the four bytes say nothing -- and `ldmdb r0, {pc}` and
+# `ldmib r0!, {pc}` with it, neither of which the helper it cited classifies that way.
+# One classifier, imported, is the only way those stay in step.
+#
+# THEN NARROWED, deliberately, in three places the helper does not reach. A rule that
+# lets a matched record leave should accept the smallest set that covers the real case:
+#
+#   * the base register must be r13. `ldm r0, {pc}` is a return only if r0 happens to
+#     hold a return address, which is a fact about the code before it, not about the
+#     word. A stack pop is self-evidencing.
+#   * `mov pc, lr` is dropped. It is a plain register move whose return-ness is a fact
+#     about lr, and no epilogue in this cartridge's severed-tail shape uses it. Nothing
+#     is lost by refusing it and re-examining if a real case appears.
+#   * `ldr pc, [sp], #4` (0xE49DF004) stays refused. capstone renders it `pop {pc}` and
+#     the helper accepts it; the block-transfer bits do not, and they are the test. (An
+#     earlier comment here claimed capstone decodes it as LDR. It does not.)
+#
+# CONDITION AL ONLY, which is the helper's own rule: a conditional return (`bxeq lr`,
+# `popne {.., pc}`) leaves a live fall-through path, so the bytes after it are still
+# reached and the record is not a severed tail. The S bit (`ldm ... ^`) restores CPSR --
+# an exception return, not a function return, and on the never-in-C list in
+# notes/asm-policy.md.
+_BLOCK_TRANSFER_MASK = 0x0E000000
+_BLOCK_TRANSFER_VALUE = 0x08000000
+_S_BIT = 1 << 22
+_SP = 13
+_DECODER = None
+_DECODER_DEFECT = None
+
+
+def _arm_decoder():
+    """``(capstone handle, evidence_rom, (BX, POP, LDM))``, or None when unavailable.
+
+    Lazy and guarded on purpose. Everything else in this report reads git text, so the
+    tool still runs on a box with no ARM tooling; only the matched-loss exception needs
+    a decoder, and that exception already needs the cartridge image and the pinned
+    compiler beside it. Unavailable is answered as None and refuses the exception --
+    never as "the word is not a return", and never as "it is".
+
+    Refusing is correct; refusing SILENTLY is not. The import failure is kept in
+    `_DECODER_DEFECT` so the report can name the missing package, the way it already
+    names a broken relocation config or an absent cartridge image. Without that, a
+    worker with capstone and no pyyaml failed PR #2496 as "lost 1 matched function(s)"
+    and gave its author nothing to act on.
+    """
+    global _DECODER, _DECODER_DEFECT
+    if _DECODER is None:
+        try:
+            from capstone import Cs, CS_ARCH_ARM, CS_MODE_ARM
+            from capstone.arm import ARM_INS_BX, ARM_INS_LDM, ARM_INS_POP
+            import evidence_rom as EV
+        except (ImportError, SystemExit) as exc:
+            _DECODER = False
+            _DECODER_DEFECT = str(exc) or exc.__class__.__name__
+        else:
+            handle = Cs(CS_ARCH_ARM, CS_MODE_ARM)
+            handle.detail = True
+            _DECODER = (handle, EV, (ARM_INS_BX, ARM_INS_POP, ARM_INS_LDM))
+    return _DECODER or None
+
+
+def _decoder_defect():
+    """Why `_arm_decoder` is unavailable, or None when it is available."""
+    _arm_decoder()
+    return _DECODER_DEFECT
+
+
+def _is_return_word(word):
+    """Is this 32-bit ARM word `bx lr` or a stack pop to pc? See the block above."""
+    decoder = _arm_decoder()
+    if decoder is None:
+        return False
+    handle, EV, (BX, POP, LDM) = decoder
+    insn = next(handle.disasm(word.to_bytes(4, "little"), 0), None)
+    if insn is None or not EV.is_unconditional_return(insn):
+        return False
+    if insn.id == BX:
+        return True                     # the helper already checked the register is lr
+    if insn.id not in (POP, LDM):
+        return False                    # `mov pc, lr`
+    if (word & _BLOCK_TRANSFER_MASK) != _BLOCK_TRANSFER_VALUE:
+        return False                    # `ldr pc, [sp], #4`, rendered `pop {pc}`
+    if word & _S_BIT:
+        return False                    # `ldm sp!, {.., pc}^` restores CPSR
+    return ((word >> 16) & 0xF) == _SP  # `ldm r0, {pc}` and its db/ib spellings
+
+
+_SYMBOL_ROW = re.compile(r"^(\S+)\s+kind:\S.*?\baddr:0x([0-9a-fA-F]+)")
+_SYMBOL_BASE_CACHE = {}
+
+
+def _module_symbols_path(module):
+    """Where a module's ``symbols.txt`` lives, for every module this report names."""
+    if module == "arm9":
+        return "config/arm9/symbols.txt"
+    if module in ("itcm", "dtcm"):
+        return f"config/arm9/{module}/symbols.txt"
+    return (f"config/arm9/overlays/{module}/symbols.txt"
+            if re.fullmatch(r"ov\d+", module or "") else None)
+
+
+def _module_symbol_base(rev, module):
+    """A module's image base at ``rev``: the LOWEST address of ANY symbol it declares.
+
+    The revision-pinned equivalent of `modules._overlay_base`, which is the derivation
+    the rest of the repo already uses -- the byte gate, `match.py --module ovNNN` and
+    `evidence_rom` all read an overlay this way. dsd relocates each overlay to a unique
+    address in the delinked config space, and the module's lowest symbol IS that base.
+
+    ANY SYMBOL, NOT THE FIRST FUNCTION. `_rev_enrolment` collects function rows only,
+    because the question it answers is which file owns a symbol. A module whose lowest
+    symbol is DATA -- config declares `data_...` rows in the same table -- then has a
+    base below its first function, and an image read based on the first function is
+    displaced by exactly that distance: every query answers with an earlier word. On a
+    guard whose whole job is to ask "is the cartridge's word at this address a return",
+    reading the word in FRONT of the address is the difference between refusing a
+    `mov r0, #0` and absorbing it as a `bx lr`.
+    """
+    path = _module_symbols_path(module)
+    if path is None:
+        return None
+    key = (str(REPO), rev, module)
+    if key not in _SYMBOL_BASE_CACHE:
+        lo = None
+        try:
+            text = git_text(rev, path)
+        except RuntimeError:
+            text = ""
+        for line in text.splitlines():
+            m = _SYMBOL_ROW.match(line)
+            if m:
+                addr = int(m.group(2), 16)
+                lo = addr if lo is None else min(lo, addr)
+        _SYMBOL_BASE_CACHE[key] = lo
+    return _SYMBOL_BASE_CACHE[key]
+
+
+def _module_image(rev, module):
+    """``(bytes, base address)`` of a module's cartridge image, or None if absent.
+
+    The images are gitignored extraction output, so a checkout that has never run
+    `tools/unpack.py` has none. Absent is answered as None and every caller treats
+    that as "no evidence", never as "the evidence says yes".
+
+    ARM9 is the one module with a fixed base: `arm9_dec.bin` loads at 0x02004000
+    whatever its lowest symbol is. Every other module is based at its lowest symbol --
+    see `_module_symbol_base` -- and itcm and dtcm are read from the same two places
+    `modules.py` looks, so a checkout that has only run `tools/unpack.py` still has them.
+    """
+    if module == "arm9":
+        path, base = REPO / ARM9_IMAGE, ARM9_IMAGE_BASE
+    else:
+        if module in ("itcm", "dtcm"):
+            candidates = [REPO / "build" / "build" / f"{module}.bin",
+                          REPO / "extracted" / "dsd" / "arm9" / f"{module}.bin"]
+            path = next((c for c in candidates if c.is_file()), candidates[-1])
+        elif re.fullmatch(r"ov\d+", module or ""):
+            path = (REPO / "extracted" / "overlays"
+                    / f"overlay_{int(module[2:]):04d}.bin")
+        else:
+            return None
+        base = _module_symbol_base(rev, module)
+        if base is None:
+            return None
+    try:
+        return path.read_bytes(), base
+    except OSError:
+        return None
+
+
+def _rom_word_reader(rev):
+    """``read(module, addr)`` -> the cartridge's own word there, or None.
+
+    Also carries `.missing`, the set of modules whose image could not be read, so a
+    caller that had to refuse for want of the ROM can say which file it wanted.
+    """
+    cache = {}
+
+    def read(module, addr):
+        if module not in cache:
+            cache[module] = _module_image(rev, module)
+            if cache[module] is None:
+                read.missing.add(module)
+        image = cache[module]
+        if image is None:
+            return None
+        data, base = image
+        offset = addr - base
+        if offset < 0 or offset + 4 > len(data):
+            return None
+        return int.from_bytes(data[offset:offset + 4], "little")
+
+    read.missing = set()
+    return read
+
+
+# The placeholder config derives from an address when it has no recovered name for it.
+# `func_02071694` and `func_ov006_020cb030` are this; `AutoloadCallback` is not.
+_ADDRESS_NAME = re.compile(r"^func_(?:ov\d+_)?([0-9a-fA-F]{8})$")
+_SYMBOL_NAME_CACHE = {}
+
+
+def _symbol_names(rev):
+    """``{(module, addr) -> [name]}`` over EVERY ``symbols.txt`` row at ``rev``.
+
+    Every row, not the function rows, and not `function_snapshot`'s `records`: that
+    dict is keyed by module:addr and keeps only the largest symbol at an address, so a
+    zero-size named alias sharing an address with a placeholder is invisible in it --
+    and an alias is exactly the shape this has to see.
+    """
+    key = (str(REPO), rev)
+    if key not in _SYMBOL_NAME_CACHE:
+        names = collections.defaultdict(list)
+        for path in tree_paths(rev, "config/arm9"):
+            if not _is_symbols_file(path):
+                continue
+            module = _module_from_config_path(path)
+            if module is None:
+                continue
+            for line in git_text(rev, path).splitlines():
+                m = _SYMBOL_ROW.match(line)
+                if m:
+                    names[(module, int(m.group(2), 16))].append(m.group(1))
+        _SYMBOL_NAME_CACHE[key] = {k: sorted(v) for k, v in names.items()}
+    return _SYMBOL_NAME_CACHE[key]
+
+
+def _named_symbol(revs, module, addr):
+    """The name of a symbol at ``addr`` that is not the address's own placeholder.
+
+    IDENTITY, NOT POSITION. A record sitting at the tail of a merged range is in the
+    right place to be that range's epilogue; it is not thereby the same thing. Config
+    that has a NAME for those bytes -- `AutoloadCallback`, a recovered symbol, an alias
+    -- is recording an identity the cartridge gave them, independent of whatever range
+    now covers them, and no merge gets to retire that on the strength of its position.
+    Read over BOTH revisions, so a PR cannot earn the exception by deleting the row
+    that names the address.
+    """
+    for names in revs:
+        for name in names.get((module, addr), ()):
+            m = _ADDRESS_NAME.fullmatch(name)
+            if m is None or int(m.group(1), 16) != addr:
+                return name
+    return None
+
+
+def _pinned_version(rev, path):
+    """The mwccarm version the ROM build compiles ``path`` with, read from ``rev``.
+
+    Revision-pinned like every other snapshot here: `build_pin.version_for` reads the
+    worktree's `config/rombuild-versions.txt`, which is not the table the revision under
+    judgement carries. Keyed on the file STEM because `rombuild.compile_one` is.
+    """
+    import build_pin as BP
+    stem = pathlib.PurePosixPath(path).stem
+    try:
+        text = git_text(rev, "config/rombuild-versions.txt")
+    except RuntimeError:
+        return BP.DEFAULT_VERSION
+    for line in text.splitlines():
+        row = line.split("#", 1)[0].split()
+        if len(row) >= 2 and row[0] == stem:
+            return row[1]
+    return BP.DEFAULT_VERSION
+
+
+def _mapping_evidence(obj, symbol, offset):
+    """``{"instruction": bool, "word": int}`` for ``offset`` bytes into ``symbol``.
+
+    None when the object cannot answer: it does not define the symbol, or it carries no
+    ARM EABI mapping symbols in the symbol's section, so nothing separates code from
+    data in it.
+
+    THE MAPPING SYMBOLS ARE THE ANSWER, and the compiler emits them for exactly this.
+    `$a` opens an ARM instruction region, `$t` a Thumb one and `$d` a data region, and
+    a compiler-generated literal pool sits in a `$d` region INSIDE the function's own
+    byte range. Measured with the pinned 2004/b56 on
+    `unsigned int f(void) { return 0xe12fff1e; }`: three words, `e59f0000 e12fff1e
+    e12fff1e`, `$a` at 0 and `$d` at 8. The third word has a return's bits and is a
+    constant. Only the mapping symbols tell them apart.
+    """
+    try:
+        from elftools.elf.elffile import ELFFile
+    except ImportError:
+        return None
+    elf = ELFFile(io.BytesIO(obj))
+    symtab = elf.get_section_by_name(".symtab")
+    if symtab is None:
+        return None
+    sym = next((s for s in symtab.iter_symbols()
+                if s.name == symbol and s["st_info"]["type"] == "STT_FUNC"
+                and s["st_shndx"] not in ("SHN_UNDEF", "SHN_ABS")), None)
+    if sym is None:
+        return None
+    shndx = sym["st_shndx"]
+    marks = sorted((m["st_value"], m.name) for m in symtab.iter_symbols()
+                   if m.name in ("$a", "$t", "$d") and m["st_shndx"] == shndx)
+    if not marks:
+        return None
+    if not (0 <= offset and offset + 4 <= sym["st_size"]):
+        return {"instruction": False, "word": None}
+    where = sym["st_value"] + offset
+    kind = None
+    for value, name in marks:
+        if value > where:
+            break
+        kind = name
+    data = elf.get_section(shndx).data()
+    return {"instruction": kind == "$a",
+            "word": int.from_bytes(data[where:where + 4], "little")}
+
+
+def _compiled_code_reader(rev):
+    """``read(path, symbol, symbol_addr, addr)`` -> the code-ownership evidence, or None.
+
+    THE OBJECT, BECAUSE THIS TOOL DOES NOT HAVE ONE. The private worker runs
+    `rombuild.py` and hands this report the JSON it produced; that report says whether a
+    module reproduced, not where inside a function's bytes the instructions stop. So the
+    one source this file compiles is the merged source itself, with the pinned compiler
+    the ROM build uses, read from the revision under judgement -- the same compile
+    `build_pin.verify` runs, minus the byte comparison the ROM build already did.
+
+    None from any step, and every caller must refuse: a missing compiler, a source that
+    does not compile, an object without the symbol or without mapping symbols. `.missing`
+    carries the reasons so the report can name what it wanted.
+    """
+    cache = {}
+
+    def _object(path):
+        if path in cache:
+            return cache[path]
+        obj = None
+        try:
+            import build_pin as BP
+            import match as M
+        except (ImportError, SystemExit):
+            read.missing.add("the pinned compiler tooling is not importable")
+            cache[path] = None
+            return None
+        try:
+            text = git_text(rev, path)
+        except RuntimeError:
+            read.missing.add(f"{path} is unreadable at {rev[:12]}")
+            cache[path] = None
+            return None
+        version = _pinned_version(rev, path)
+        if not (BP.MW / version / "mwccarm.exe").is_file():
+            read.missing.add(f"the pinned compiler {version} is not installed")
+            cache[path] = None
+            return None
+        with tempfile.TemporaryDirectory() as td:
+            src = pathlib.Path(td) / pathlib.PurePosixPath(path).name
+            src.write_text(text, encoding="utf-8", newline="\n")
+            obj = M.compile_c(src, version, BP.flags_for(src, text))
+        if obj is None:
+            read.missing.add(f"{path} does not compile under {version} at {rev[:12]}")
+        cache[path] = obj
+        return obj
+
+    def read(path, symbol, symbol_addr, addr):
+        obj = _object(path)
+        if obj is None:
+            return None
+        evidence = _mapping_evidence(obj, symbol, addr - symbol_addr)
+        if evidence is None:
+            read.missing.add(f"the object {path} produced carries no mapping evidence "
+                             f"for {symbol}")
+        return evidence
+
+    read.missing = set()
+    return read
+
+
+def _incoming_relocations(dests, module, addr, end):
+    """How many relocation destinations land inside ``[addr, end)`` of ``module``."""
+    total = 0
+    for key in (module, _RELOC_ANY):
+        addrs = dests.get(key) or []
+        i = bisect.bisect_left(addrs, addr)
+        while i < len(addrs) and addrs[i] < end:
+            total += 1
+            i += 1
+    return total
+
+
 def function_snapshot(rev):
     paths = tree_paths(rev)
     sources = {}
@@ -86,12 +848,38 @@ def function_snapshot(rev):
     candidates = {line.split(":", 1)[1] if ":" in line else line
                   for line in grep.splitlines()}
     # Match progress.py and the rest of the repo's established hatch rule: the
-    # marker is a source header and is recognized in the first 200 characters.
+    # marker is a source header, recognized anywhere in the file's leading comment
+    # block (asm_policy.counts_as_matched -- the one rule every consumer shares).
+    # It is the whole banner rule, not just the draft half, so a hand-written
+    # assembly primitive that carries both banners reads matched here exactly as it
+    # does in chaos_db_ci and progress.py. A per-PR validator that disagreed with
+    # the published count about what "matched" means would report a coverage loss
+    # for twenty functions the count had just gained.
     nonmatching = {path for path in candidates
-                   if "NONMATCHING" in git_text(rev, path)[:200]}
+                   if not AP.counts_as_matched(git_text(rev, path))}
+    # An unbannered dcd transcription byte-matches vacuously (it IS the ROM words
+    # re-spelled), so it never counts as matched -- see tools/asm_policy.py. Built
+    # the same revision-based way as ``nonmatching``: a cheap fixed-string grep
+    # prefilter, then the shared classifier confirms on the committed blob.
+    grep = _git("grep", "-l", "-F", "dcd 0x", rev, "--", "src/", allow=(0, 1))
+    dcd_candidates = {line.split(":", 1)[1] if ":" in line else line
+                      for line in grep.splitlines()}
+    transcribed = {path for path in dcd_candidates
+                   if AP.classify(git_text(rev, path)) == "transcribed"}
 
+    # Which file owns a function has two answers and this needs the authoritative one.
+    # `sources` above is the filename convention -- stem == symbol -- which is right for
+    # legacy one-function sources and blind to every merged translation unit, whose name
+    # is neither of the symbols in it. Blind here does not read as "unknown": it reads as
+    # "no source exists", so the functions leave `matched`, leave the byte-verified
+    # count, and hand their authors' credit to nobody, while the ROM build goes on
+    # compiling and byte-comparing them. The enrolment table is asked first, and it is
+    # the one dsd hands the linker.
+    enrolled = _rev_enrolment(rev)[1]
+    in_tree = set(paths)
     records = {}
     total_bytes = matched_bytes = 0
+    spans = {}
     for path in paths:
         module = _module_from_symbols(path)
         if module is None:
@@ -102,16 +890,40 @@ def function_snapshot(rev):
                 continue
             name, size, addr = m.group(1), int(m.group(2), 16), int(m.group(3), 16)
             key = f"{module}:0x{addr:08x}"
-            src = sources.get(name)
-            matched = bool(src and src not in nonmatching)
-            records[key] = {"id": key, "module": module, "addr": addr, "name": name,
-                            "size": size, "matched": matched, "srcPath": src}
+            owner = enrolled.get((module, addr))
+            src = owner if owner in in_tree else sources.get(name)
+            matched = bool(src and src not in nonmatching and src not in transcribed)
+            # A ZERO-SIZE ALIAS MUST NOT DISPLACE THE FUNCTION IT ALIASES. `records` is
+            # keyed by module:addr, so without this the last line at an address wins,
+            # and in every one of the ten colliding addresses in this tree the last
+            # line is the alias: `__cxa_vec_cleanup`(0x0) over `__destroy_arr`(0x5c),
+            # `_dadd`(0x0) over `func_01ff8000`(0x59c), and eight more. The surviving
+            # record then carries the alias's name, size, srcPath AND matched flag, so
+            # the real function is invisible to every check below.
+            #
+            # Latent rather than live today: none of the ten has an unbannered source,
+            # so no current count moves. It fires the moment one of them is matched --
+            # which is precisely what a pending `__destroy_arr` match does.
+            prior = records.get(key)
+            if prior is None or size > prior["size"]:
+                records[key] = {"id": key, "module": module, "addr": addr, "name": name,
+                                "size": size, "matched": matched, "srcPath": src}
+            # RAW spans, collected here rather than derived from `records` later.
+            # `records` is keyed by module:addr, so two symbols at one address collapse
+            # to whichever line comes last -- and config/arm9/symbols.txt:3052-3053 is
+            # exactly that, `__destroy_arr` (0x5c) followed by the zero-size alias
+            # `__cxa_vec_cleanup` at the SAME address. Derived from `records`, the real
+            # function's extent would simply vanish. Only classify_repartition reads
+            # this; no existing statistic changes.
+            if size > 0:
+                spans.setdefault(module, []).append((addr, addr + size))
             total_bytes += size
             if matched:
                 matched_bytes += size
     matched = {k: r for k, r in records.items() if r["matched"]}
     return {
         "functions": records,
+        "spans": spans,
         "matched": matched,
         "stats": {
             "totalFunctions": len(records),
@@ -122,6 +934,373 @@ def function_snapshot(rev):
             "matchedBytePercent": 100.0 * matched_bytes / total_bytes if total_bytes else 0.0,
         },
     }
+
+
+def _covered_spans(snapshot):
+    """Byte ranges each module's symbol table covers, merged, per module.
+
+    Reads `snapshot["spans"]`, the RAW per-line ranges, never `snapshot["functions"]`:
+    that dict is keyed by module:addr and so loses one of any two symbols sharing an
+    address. `__destroy_arr` is shadowed by the zero-size alias `__cxa_vec_cleanup` at
+    its own address (config/arm9/symbols.txt:3052-3053), and deriving the covered set
+    from `functions` would drop its 0x5c entirely -- which made the very re-partition
+    this rule exists to allow look like a change to the covered bytes.
+
+    Zero-size rows are already excluded upstream: they cover nothing, so an alias can
+    never move the covered set.
+    """
+    spans = snapshot["spans"]
+    out = {}
+    for module, raw in spans.items():
+        merged = []
+        for lo, hi in sorted(raw):
+            if merged and lo <= merged[-1][1]:
+                merged[-1] = (merged[-1][0], max(merged[-1][1], hi))
+            else:
+                merged.append([lo, hi])
+        out[module] = tuple(tuple(s) for s in merged)
+    return out
+
+
+def classify_merge(bf, hf, be, he, compiled, reloc_dests=None, rom_word=None,
+                   code_owned=None, named=None):
+    """Is a denominator DROP a merge the ROM build has already paid for?
+
+    A merge lowers `totalFunctions` and so RAISES the headline, which is the direction an
+    attack uses. No arithmetic over the symbol snapshot can separate a true merge from a
+    false one -- see `classify_repartition` for why `matchedBytes` in particular cannot,
+    and why "every changed range is unmatched" cannot either.
+
+    The separating fact lives in `delinks.txt`. A range carrying `complete` is compiled,
+    linked and byte-compared against the cartridge; everything else is filled by a gap
+    object holding the ROM's own bytes (`verification_split` states this). So requiring
+    that EVERY address the merge removes is newly covered by a `complete` range, and that
+    `sourceBytes` rises by exactly the NEW coverage those ranges add, ties the carve-out
+    to a build. Merging a hundred junk symbols yields no new `complete` range; forging one
+    for a range that does not reproduce fails module fidelity in the same validator run.
+
+    NEW COVERAGE, NOT NEW EXTENT. A range's extent and the coverage it ADDS differ
+    whenever the merge swallows a `complete` entry the base already had: those bytes were
+    in `sourceBytes` before and are in it after, so they are not new. Comparing against
+    the raw extent refused the honest fold and would have kept refusing it forever. The
+    subtraction is of base entries lying WHOLLY INSIDE a new range only; one lying outside
+    is coverage this merge really lost and still shortens the delta, which is what stops
+    an unrelated range leaving under cover of the merge.
+
+    THE RANGE IS NOT EVIDENCE BY ITSELF; ITS SOURCE HAS TO BE COMPILED CODE. The forging
+    argument above covers a range that FAILS to reproduce. It does not cover one that
+    reproduces VACUOUSLY: a `dcd` transcription is the ROM's own words re-spelled, so
+    `complete` over it byte-compares exact having decompiled nothing. Nor does the
+    transcription gate stop that, because `asm_policy.classify` returns None as soon as a
+    `HAND-ASM PRIMITIVE` banner appears anywhere in the file -- exculpatory is the right
+    reading everywhere else and exactly wrong here, where the banner IS the attack. So
+    `compiled` must name the source of every newly-`complete` range: build_report passes
+    the merge's own sources that carry no asm body and no banner excusing one. Measured
+    before this clause existed, with the same helpers the tests below use: a hundred junk
+    symbols folded into one, behind a covering new `complete` range, classified as a
+    merge of -99 functions. `compiled` covers only the sources this merge adds or
+    modifies, so enrolling a file the merge does not touch is refused as well -- a fold
+    that never edits the source absorbing it is not a shape this carve-out is for.
+
+    NOTHING MATCHED MAY LEAVE, EXCEPT A RANGE'S OWN RETURN INSTRUCTION. The removed
+    records are normally all unmatched in base -- a merge is licensed to absorb ASM stubs
+    and severed epilogues, never to swallow a function someone had already matched.
+    Matched records that survive keep their sizes, with one exception: a survivor of the
+    merge may grow, and only into the new `complete` range, at exactly its head size.
+
+    The narrow exception exists because config can carve a function's trailing return
+    instruction off as its own symbol, and an empty body then "matches" it. Recovering
+    the real function retires that record, and the absolute rule made the correction the
+    one edit that cannot land.
+
+    WHAT IS AND IS NOT CLAIMED HERE. This does not claim that ROM execution can never
+    enter the address -- an index cannot establish that, and an earlier version of this
+    rule said so and was wrong to. Nor does it claim that four bytes whose bits read as a
+    return ARE one: a compiler-generated literal pool inside a function's own range can
+    hold 0xE12FFF1E as a CONSTANT, and its bits are identical. The claim is that a
+    specific compiled function OWNS these bytes and emits an instruction at them, and
+    every half of it is checkable:
+
+      (a) the record ends exactly where the new `complete` range ends, so it is that
+          range's TAIL and not something in the middle of it;
+      (b) it is four bytes, and the cartridge's own word at that address is `bx lr` or a
+          stack pop to pc -- the two encodings `_is_return_word` accepts;
+      (c) the range is backed by compiled source, which the ROM build then links and
+          byte-compares against retail;
+      (d) no relocation destination in a VALIDATED index over both revisions lands in
+          those bytes -- with the emphasis on validated: missing, empty or malformed
+          relocation input is not an absence of callers, it is an absence of evidence,
+          and `_reloc_index` reports it as a defect that makes this exception
+          unavailable;
+      (e) NO SYMBOL IN EITHER REVISION NAMES THE ADDRESS. Config's placeholder for
+          bytes it has no name for is derived from the address itself; a real name --
+          `AutoloadCallback`, a recovered symbol, an alias -- records an identity the
+          cartridge gave those bytes, independent of which range now covers them. (a)
+          tests POSITION and a named callback can sit at a tail too; this tests
+          identity. See `_named_symbol`;
+      (f) CODE OWNERSHIP: the merged function's own object, compiled here from the
+          revision under judgement with the pinned compiler, covers that address as an
+          INSTRUCTION -- an ARM EABI `$a` region, not a `$d` literal pool -- and the
+          word it emits there is the cartridge's word. See `_compiled_code_reader`.
+          Without it, (a)+(b) accept the last word of
+          `unsigned int f(void) { return 0xe12fff1e; }`, which under the pinned 2004/b56
+          is `e59f0000 e12fff1e e12fff1e` with `$d` at offset 8: a constant, at the tail,
+          with a return's bits. Preserving its bits does not make it an epilogue.
+
+    Together those say: a function this merge compiles owns these four bytes and emits
+    the cartridge's own return instruction at them, config has no independent name for
+    them, and no relocation destination in the tree's index points at them. They do not
+    say the address is unreachable. A record that fails any one of them stays matched and
+    the merge is refused.
+
+    THE EXCEPTION IS NARROW, MEASURED RATHER THAN ASSERTED. Over src/ at 9a1deb15d there
+    are 79 sources whose whole body is `void f(void) {}`; 77 have at least one incoming
+    relocation and are ordinary no-op functions the ROM really calls. Two have zero:
+    `AutoloadCallback` (0x020049ec) and `func_02071694`. `AutoloadCallback` is refused
+    anyway -- it is a named callback, not a range tail, and no merge compiles a range
+    over it. This is NOT a general "a vacuous match does not count" mechanism: such a
+    record keeps counting exactly as before until some merge proves, with a build, that
+    its bytes are the return of the function next door.
+
+    The exception has exactly one live case: `func_02071644`, whose trailing `bx lr`
+    config carried as `func_02071694` and someone matched with an empty body. The merge
+    rule's other live case, `__destroy_arr` (declared 0x5c in `symbols.txt` while the
+    ROM's own `.exceptix` record gives 0x74, the trailing 0x18 the catch handler rather
+    than a function), needs no exception at all: both of its removed records are unmatched
+    in base. It could not use this door anyway -- 0x18 is not one instruction.
+
+    Returns a dict describing the merge, or None.
+    """
+    if be is None or he is None:
+        return None
+    if hf["stats"]["totalFunctions"] >= bf["stats"]["totalFunctions"]:
+        return None
+    if hf["stats"]["totalBytes"] != bf["stats"]["totalBytes"]:
+        return None
+    if _covered_spans(bf) != _covered_spans(hf):
+        return None
+
+    base_matched, head_matched = bf["matched"], hf["matched"]
+
+    removed = sorted(set(bf["functions"]) - set(hf["functions"]))
+    if not removed:
+        return None
+
+    # The evidence: ranges that are `complete` in head and were not in base, each one
+    # backed by a source this merge actually compiled. A range that is not is refused
+    # outright rather than merely ignored -- ignoring it would leave its bytes in the
+    # `sourceBytes` delta below, which is the arithmetic that stops an unrelated range
+    # joining under cover of the merge.
+    new_ranges = collections.defaultdict(list)
+    for key, entry in he["source"].items():
+        if key in be["source"]:
+            continue
+        if entry["path"] not in compiled:
+            return None
+        new_ranges[entry["module"]].append((entry["addr"], entry["end"], entry["path"]))
+    if not new_ranges:
+        return None
+
+    def _containing_new(module, addr, end):
+        for start, stop, path in new_ranges.get(module, []):
+            if start <= addr and end <= stop:
+                return start, stop, path
+        return None
+
+    def _inside_new(module, addr, end):
+        return _containing_new(module, addr, end) is not None
+
+    # Every removed address is absorbed into one of them.
+    for key in removed:
+        record = bf["functions"][key]
+        if not _inside_new(record["module"], record["addr"],
+                           record["addr"] + record["size"]):
+            return None
+
+    # NOTHING MATCHED MAY LEAVE, except a range's own return instruction -- the six
+    # conditions the docstring sets out, in order. Each one refuses outright: a merge
+    # carrying a matched loss it cannot justify is not classified at all.
+    absorbed = []
+    for key in sorted(set(base_matched) - set(head_matched)):
+        record = base_matched[key]
+        addr, end = record["addr"], record["addr"] + record["size"]
+        # A record still PRESENT in head that lost `matched` some other way (a banner
+        # went on, its source was deleted) is a withdrawal or a loss, never this.
+        if key in hf["functions"]:
+            return None
+        span = _containing_new(record["module"], addr, end)
+        if span is None:
+            return None
+        # (a) the exact tail of the covering range, not a record inside it.
+        if end != span[1]:
+            return None
+        # (b) one instruction, and the cartridge's own word there is a return.
+        if record["size"] != 4 or rom_word is None:
+            return None
+        word = rom_word(record["module"], addr)
+        if word is None or not _is_return_word(word):
+            return None
+        # (c) the covering range is compiled evidence. Every new range is already
+        # required to be, above; asserted again here because this is the clause that
+        # makes (f) possible and it must not depend on a distant loop.
+        if span[2] not in compiled:
+            return None
+        # (d) a VALIDATED index, and nothing in it names those bytes.
+        if reloc_dests is None:
+            return None
+        if _incoming_relocations(reloc_dests, record["module"], addr, end):
+            return None
+        # (e) identity: config has no name of its own for these bytes, in either
+        # revision. A record whose name config derived from the address is a
+        # placeholder; anything else is an identity this merge does not get to retire.
+        if named is None or named(record["module"], addr):
+            return None
+        # (f) code ownership: the merged function's own compiled output covers the
+        # address as an instruction, and emits the cartridge's word there. `owner` is
+        # the head record whose bytes contain it -- the function that claims to have
+        # absorbed these four bytes. Its symbol has to be DEFINED in the object the
+        # covering range's source produces, so a record whose owner lives in some other
+        # file gets no answer and the exception stays unavailable.
+        if code_owned is None:
+            return None
+        owner = next((r for r in hf["functions"].values()
+                      if r["module"] == record["module"]
+                      and r["addr"] <= addr and end <= r["addr"] + r["size"]), None)
+        if owner is None:
+            return None
+        evidence = code_owned(span[2], owner["name"], owner["addr"], addr)
+        if not evidence or not evidence["instruction"] or evidence["word"] != word:
+            return None
+        absorbed.append(key)
+
+    # sourceBytes rises by exactly the newly-complete extent, less whatever of it the
+    # base was ALREADY compiling. A base entry lying wholly inside one of the new ranges
+    # is not new coverage -- its bytes moved from one `complete` entry to another and
+    # were already in `sourceBytes`. A base entry that lies OUTSIDE every new range is
+    # coverage this merge LOST: it is not subtracted, so it still shortens the delta and
+    # the comparison below still refuses it. That is the clause that stops an unrelated
+    # range leaving under cover of the merge, and it is untouched.
+    new_bytes = sum(stop - start
+                    for spans in new_ranges.values() for start, stop, _ in spans)
+    absorbed_bytes = sum(entry["size"] for key, entry in be["source"].items()
+                         if key not in he["source"]
+                         and _inside_new(entry["module"], entry["addr"], entry["end"]))
+    if (he["stats"]["sourceBytes"] - be["stats"]["sourceBytes"]
+            != new_bytes - absorbed_bytes):
+        return None
+
+    # Surviving matched records keep their size unless they grew into a new range.
+    for key, head_record in head_matched.items():
+        base_record = base_matched.get(key)
+        if base_record is None:
+            continue
+        if base_record["size"] == head_record["size"]:
+            continue
+        if not _inside_new(head_record["module"], head_record["addr"],
+                           head_record["addr"] + head_record["size"]):
+            return None
+
+    return {"kind": "merge",
+            "functionDelta": hf["stats"]["totalFunctions"] - bf["stats"]["totalFunctions"],
+            "added": sorted(set(hf["functions"]) - set(bf["functions"])),
+            "removed": removed,
+            "absorbed": absorbed,
+            "newExtent": new_bytes,
+            "absorbedBytes": absorbed_bytes,
+            "sourceByteDelta": new_bytes - absorbed_bytes}
+
+
+def classify_repartition(bf, hf):
+    """Is a denominator change a SPLIT of the same bytes, with the numerator frozen?
+
+    The denominator check below refuses any move in `totalFunctions` or `totalBytes`, in
+    either direction, and it is right to: the headline is a fraction, and a gate that
+    watched only the numerator would let anyone lift it by shrinking what they divide by.
+
+    But the symbol table is not ground truth. It is a HYPOTHESIS about where the
+    cartridge's functions start and end, and it is sometimes wrong -- one symbol claiming
+    a span the ROM runs as two routines. Correcting such a row moves the denominator, so
+    the gate as written makes the correction the one edit that cannot land, and holds the
+    tree in a state where its own count is a fiction. PR #2360 is the live case:
+    `func_020610fc` is declared 0x3c, the routine is 0x2c and ends in `b self`, and the
+    remaining 0x10 is a separate routine that `src/func_02019ebc.c` CALLS -- a call
+    `config/unresolved-baseline.json` records as missing because nothing defines it.
+
+    That is the trap the WITHDRAWN carve-out below was written for: "treating both as
+    loss made the gate reward the lie."
+
+    SPLITS ONLY, AND THE DIRECTION IS THE WHOLE SAFETY ARGUMENT. A split raises
+    `totalFunctions`. With the numerator frozen (below), that strictly LOWERS both
+    headline percentages, so it is not a lever anyone pulls to game a number -- the rule
+    can only ever make the tree look worse. That argument is explicit rather than
+    emergent, which is the standard the WITHDRAWN restriction sets for itself two
+    screens down.
+
+    MERGES ARE NOT THIS RULE'S TO ALLOW, AND NO ARITHMETIC CAN ALLOW THEM. A merge lowers
+    `totalFunctions` and so RAISES the percentage, which makes it the direction an attack
+    uses, and no arithmetic over this snapshot can tell a true merge from a false one --
+    which is why this function still refuses every one of them. In particular a rule of
+    the form "allow it when `matchedBytes` rises" does NOT work, however tightly it is
+    tied to the merged range: `matchedBytes` is `size` summed over records that merely
+    have an unbannered `src/` file (see `function_snapshot` and `verification_split`,
+    which says it outright -- "Nothing in that classification compiles the file, links
+    it, or compares a byte"). Growing an already-matched, text-only symbol to swallow an
+    unmatched neighbour raises `matchedBytes` by the absorbed size with nothing compiled
+    and nothing verified, in a symbols.txt-only diff. Nor is "every changed range is
+    unmatched" enough on its own: merging a hundred unmatched symbols into one still
+    drops the denominator by ninety-nine and lifts the headline for no work at all.
+
+    A MERGE THEREFORE NEEDS EVIDENCE RATHER THAN ARITHMETIC, and `classify_merge` above
+    is that evidence -- but ONLY where the source behind it is genuinely compiled. The
+    distinguishing fact is not in the symbol table at all: it is that the merged range
+    newly carries `complete` in a `delinks.txt`, which means the ROM build compiles it,
+    links it into its module and byte-compares it against retail rather than filling it
+    from a gap object. A hundred junk symbols merged into one cannot produce that,
+    because nothing would compile. Neither can growing a text-only symbol: `complete` on
+    a range that does not reproduce fails module fidelity, in the same validator run.
+
+    THE BANNER CASE IS EXCLUDED BY NAME, BECAUSE IT REPRODUCES VACUOUSLY. The paragraph
+    above rests on a forged range FAILING to reproduce. A `dcd` transcription does not
+    fail: its words ARE the cartridge's words, so `complete` over it byte-compares exact
+    with nothing decompiled -- and `asm_policy.classify` will not object, because a
+    `HAND-ASM PRIMITIVE` banner anywhere in the file makes it return None. Exculpatory is
+    the right reading for every other consumer and exactly wrong here, where the banner
+    IS the attack. So `classify_merge` requires more than the `complete` range: every
+    such range's source must be one this merge compiled -- no asm body, and no banner
+    excusing one. Measured before that clause existed, a hundred junk symbols behind a
+    covering new `complete` range classified as a merge of -99 functions.
+
+    THE NUMERATOR IS FROZEN BY IDENTITY, NOT BY COUNT. `matchedFunctions` staying equal
+    is not enough -- one match can leave while another arrives -- and neither is the byte
+    total, since a matched symbol may grow while another shrinks. So the matched SET must
+    be identical and every matched record must keep its size. Without the size clause a
+    split may grow a matched neighbour by a few bytes and raise `matchedBytePercent`
+    while `matchedFunctionPercent` falls, which is the leak that killed the first draft
+    of this rule. A split that genuinely produces a newly matched function lands the
+    split first and the match second.
+
+    Returns a dict describing the split, or None if the change is not one.
+    """
+    if hf["stats"]["totalFunctions"] <= bf["stats"]["totalFunctions"]:
+        return None
+    if hf["stats"]["totalBytes"] != bf["stats"]["totalBytes"]:
+        return None
+    # Per module: overlay addresses overlap, so a global address set would let a
+    # cross-module shuffle read as a clean re-partition.
+    if _covered_spans(bf) != _covered_spans(hf):
+        return None
+
+    base_matched, head_matched = bf["matched"], hf["matched"]
+    if set(base_matched) != set(head_matched):
+        return None
+    if any(base_matched[k]["size"] != head_matched[k]["size"] for k in base_matched):
+        return None
+
+    added = sorted(set(hf["functions"]) - set(bf["functions"]))
+    removed = sorted(set(bf["functions"]) - set(hf["functions"]))
+    return {"kind": "split",
+            "functionDelta": hf["stats"]["totalFunctions"] - bf["stats"]["totalFunctions"],
+            "added": added, "removed": removed}
 
 
 def enrollment_snapshot(rev):
@@ -137,11 +1316,78 @@ def enrollment_snapshot(rev):
                             "kind": "mod" if rel.startswith("mods/") else "src"}
     src = {k: e for k, e in entries.items() if e["kind"] == "src"}
     mods = {k: e for k, e in entries.items() if e["kind"] == "mod"}
+    # FUNCTIONS IN THE RANGES, NOT THE NUMBER OF RANGES. `len(src)` counted delinks
+    # entries and called them functions, which was the same number only while every
+    # entry held exactly one. Merging two entries into one covering the identical span
+    # then reads as `source-built function coverage decreased`, an unconditional failure,
+    # for arithmetic rather than for lost coverage: `sourceBytes` does not move,
+    # because no byte left the set.
+    addrs = _rev_enrolment(rev)[0]
+
+    def _functions_in(group):
+        n = 0
+        for e in group.values():
+            module_addrs = addrs.get(e["module"], [])
+            i = bisect.bisect_left(module_addrs, e["addr"])
+            while i < len(module_addrs) and module_addrs[i] < e["end"]:
+                n += 1
+                i += 1
+        return n
+
     return {"entries": entries, "source": src, "mods": mods,
-            "stats": {"sourceFunctions": len(src),
+            "stats": {"sourceFunctions": _functions_in(src),
                       "sourceBytes": sum(e["size"] for e in src.values()),
-                      "modFunctions": len(mods),
+                      "modFunctions": _functions_in(mods),
                       "modBytes": sum(e["size"] for e in mods.values())}}
+
+
+def verification_split(functions, enrollment):
+    """Divide ``matched`` into what the ROM build PROVES and what only asserts itself.
+
+    ``function_snapshot`` calls a function matched when its delinks enrollment resolves
+    to a source in ``src/`` (falling back to a file named after the symbol), that source
+    carries no ``NONMATCHING`` banner, and is not a ``dcd`` transcription. Nothing in
+    that classification compiles the file, links it, or compares a byte -- and it
+    cannot, because the real per-function ledger (``progress/matched.jsonl``) is
+    gitignored and never reaches a validator.
+
+    What the cartridge actually settles is the OTHER set: a range carrying ``complete``
+    in a ``delinks.txt`` is compiled, linked into its module, and byte-compared against
+    retail.  Everything else is filled by a gap object holding the ROM's own bytes, so
+    it is exact by construction and proves nothing about the source beside it.
+
+    The two are not close.  Reporting only the larger one puts a 10-point overstatement
+    in front of every reader, so both travel, separately labelled, and the measured one
+    leads.  ``matched`` itself is deliberately left alone: ``attribution_snapshot`` keys
+    contributor credit off it, so redefining it here would move credit for everyone.
+    """
+    # A complete delinks entry is an object contribution, not necessarily one
+    # function.  A promoted TU can cover dozens of consecutive function records;
+    # comparing only the entry's start address misclassifies every member after the
+    # first as "claimed, not byte-verified" even though rombuild compiles and checks
+    # the entire range.  Classify against the full enrolled interval, just as
+    # enrollment_snapshot's sourceFunctions counter does.
+    enrolled = collections.defaultdict(list)
+    for entry in enrollment["source"].values():
+        enrolled[entry["module"]].append((entry["addr"], entry["end"]))
+
+    def is_verified(record):
+        end = record["addr"] + record["size"]
+        return any(start <= record["addr"] and end <= stop
+                   for start, stop in enrolled[record["module"]])
+
+    verified = {k: r for k, r in functions["matched"].items() if is_verified(r)}
+    claimed = {k: r for k, r in functions["matched"].items() if not is_verified(r)}
+    return {
+        "verified": verified,
+        "claimed": claimed,
+        "stats": {
+            "verifiedFunctions": len(verified),
+            "verifiedBytes": sum(r["size"] for r in verified.values()),
+            "claimedFunctions": len(claimed),
+            "claimedBytes": sum(r["size"] for r in claimed.values()),
+        },
+    }
 
 
 def _json_at(rev, path):
@@ -169,11 +1415,18 @@ def attribution_snapshot(rev, functions):
     by_function, counts, sizes = {}, collections.Counter(), collections.Counter()
     for key, rec in functions["matched"].items():
         path = rec["srcPath"]
-        author = overrides.get(path) or finishers.get(path) or first.get(path)
+        # A reconstructed TU may combine functions first matched by different people.
+        # Keep the path override as the default, but let path#symbol preserve credit
+        # for each member without inventing duplicate source files.
+        member_key = f"{path}#{rec['name']}"
+        author = (overrides.get(member_key) or overrides.get(path)
+                  or finishers.get(path) or first.get(path))
         if not author:
             continue
         author = canon(author)
-        by_function[key] = author
+        # The source path travels with the author because credit is decided per file:
+        # a report that says only "2 changed" cannot tell a PR author which two.
+        by_function[key] = {"author": author, "path": path}
         counts[author] += 1
         sizes[author] += rec["size"]
     return {"byFunction": by_function,
@@ -200,10 +1453,15 @@ def diff_snapshot(base, head, head_paths):
     return {"files": rows, "perfectRenames": renames, "leftoverOldPaths": leftovers}
 
 
-def _load_json(path):
+def _load_json(path, optional=False):
     if not path:
         return None
-    return json.loads(pathlib.Path(path).read_text(encoding="utf-8"))
+    p = pathlib.Path(path)
+    if optional and not p.exists():
+        # An optional phase that did not run leaves no artifact.  That is "not
+        # checked", not "failed" -- see _port_state.
+        return None
+    return json.loads(p.read_text(encoding="utf-8"))
 
 
 def _rom_state(report):
@@ -227,7 +1485,136 @@ def _rom_state(report):
             json.dumps(payload, sort_keys=True).encode("utf-8")).hexdigest()
     return {"available": True, "passed": passed, "signature": signature,
             "analysis": analysis if "moduleFidelity" in analysis else None,
+            # tools/romdata_check.py's counts, present only from a rombuild that ran the
+            # measurement. A base report cached before it existed simply has none, and
+            # the ratchet below then does not run -- which is the right degradation:
+            # nothing to compare against is not a regression.
+            "romData": report.get("romData"),
             "failure": failure}
+
+
+def _data_symbol_rows(data, field):
+    """Return the report's per-symbol rows, or None for an old/unparsable report."""
+    rows = data.get(field)
+    if not isinstance(rows, list):
+        return None
+    out = []
+    for row in rows:
+        if not isinstance(row, dict) or not isinstance(row.get("symbol"), str):
+            return None
+        out.append(row)
+    return out
+
+
+def _data_identity(row):
+    return (row.get("module"), row["symbol"])
+
+
+def _data_anchor(row):
+    """The cartridge anchor a rename cannot move: module, ROM address, proven bytes.
+
+    A symbol NAME is a source-side choice; the address and the number of bytes that
+    byte-verified there are ROM facts. Retiring a coined ``_ZTV<Coined>`` in favour
+    of the ROM's own ``_ZTV<RomName>`` at the same address proves exactly the same
+    cartridge data, so it is a rename and not a loss. Returns None for a report that
+    predates the addresses -- `romdata_check.summarize` used to drop them -- which is
+    what puts the diff back on its old name-only footing.
+    """
+    addr, size = row.get("addr"), row.get("bytes")
+    if isinstance(addr, bool) or not isinstance(addr, int):
+        return None
+    if isinstance(size, bool) or not isinstance(size, int):
+        return None
+    return (row.get("module"), addr, size)
+
+
+def _data_departures(base_rows, head_rows):
+    """Base identities absent from head, after cancelling address-anchored renames.
+
+    Identity by ``(module, symbol)`` alone reads every symbol RENAME as a deletion,
+    which is what blocked adopting the ROM's own RTTI name over a coined one. The
+    address anchor cannot be forged from source: a head symbol has to byte-verify at
+    that address to appear in the report at all, and neither an alias row in
+    `symbols.txt` nor the PR's own rename ledger takes part in the decision.
+
+    Matching is strictly one-to-one per anchor, so two departures answered by a
+    single arrival still lose one symbol, and a departure whose only arrival sits at
+    a different address -- or proves a different number of bytes -- is still a loss.
+    A row carrying no anchor, on either side, never matches; that is exactly the
+    pre-existing name-only behaviour.
+    """
+    head_ids = {_data_identity(r) for r in head_rows}
+    base_ids = {_data_identity(r) for r in base_rows}
+    gone = [r for r in base_rows if _data_identity(r) not in head_ids]
+    arrivals = collections.Counter(
+        anchor for anchor in (_data_anchor(r) for r in head_rows
+                              if _data_identity(r) not in base_ids)
+        if anchor is not None)
+    lost = []
+    for row in sorted(gone, key=lambda r: (r.get("module") or "", r["symbol"])):
+        anchor = _data_anchor(row)
+        if anchor is not None and arrivals[anchor] > 0:
+            arrivals[anchor] -= 1
+            continue
+        lost.append(_data_identity(row))
+    return lost
+
+
+def _data_name(identity):
+    module, symbol = identity
+    return f"{module or '?'}:{symbol}"
+
+
+def rom_data_regressions(base_data, head_data):
+    """Name data-verification losses that a count-only ratchet can hide."""
+    if base_data.get("verified") is None:
+        return []
+    if head_data.get("verified") is None:
+        return ["head full-ROM report omitted the ROM-data measurement"]
+
+    out = []
+    base_verified = _data_symbol_rows(base_data, "verifiedSymbols")
+    head_verified = _data_symbol_rows(head_data, "verifiedSymbols")
+    if base_verified is not None and head_verified is not None:
+        lost = _data_departures(base_verified, head_verified)
+        if lost:
+            names = ", ".join(_data_name(x) for x in lost[:3])
+            more = f", +{len(lost) - 3} more" if len(lost) > 3 else ""
+            out.append(f"ROM data verification lost {len(lost)} exact symbol(s): "
+                       f"{names}{more}")
+    elif head_data["verified"] < base_data["verified"]:
+        out.append(
+            f"ROM data verified from source fell from {base_data['verified']} to "
+            f"{head_data['verified']} symbol(s)")
+
+    if (base_data.get("verifiedBytes") is not None
+            and head_data.get("verifiedBytes") is not None
+            and head_data["verifiedBytes"] < base_data["verifiedBytes"]):
+        out.append(
+            f"ROM data verified bytes fell from {base_data['verifiedBytes']} to "
+            f"{head_data['verifiedBytes']}")
+
+    base_differing = _data_symbol_rows(base_data, "differingSymbols")
+    head_differing = _data_symbol_rows(head_data, "differingSymbols")
+    if base_differing is not None and head_differing is not None:
+        # Symmetric, and for the same reason: a symbol that was already wrong on base
+        # and is still wrong at the same address under a new name is not a NEWLY wrong
+        # symbol. Reversing the arguments makes an ARRIVAL the thing to cancel. A
+        # genuinely new differing symbol has no departure to answer it, and a symbol
+        # that went VERIFIED -> DIFFERS across a rename is still caught, by the
+        # verified-loss diff above.
+        new = _data_departures(head_differing, base_differing)
+        if new:
+            names = ", ".join(_data_name(x) for x in new[:3])
+            more = f", +{len(new) - 3} more" if len(new) > 3 else ""
+            out.append(f"ROM data gained {len(new)} differing symbol(s): {names}{more}")
+    elif (base_data.get("differs") is not None
+          and head_data.get("differs") is not None
+          and head_data["differs"] > base_data["differs"]):
+        out.append(
+            f"ROM data differing symbols rose from {base_data['differs']} to "
+            f"{head_data['differs']}")
+    return out
 
 
 def _link_state(rows):
@@ -244,10 +1631,18 @@ def _link_state(rows):
                 # per-slot results still say NO-REPRO, so carry it down or the
                 # flattened tally re-blocks what pr_linkcheck already excused.
                 draft = row.get("worst") == "DRAFT"
+                # RAW-ASM is the opposite carry-down: pr_linkcheck stamps an
+                # unbannered dcd transcription on the GROUP row, while the
+                # per-slot results can read VERIFIED -- vacuously, since the
+                # dcd words ARE the ROM bytes. Without the override those
+                # VERIFIED slots would launder the gate at the flattened level.
+                raw_asm = row.get("worst") == "RAW-ASM"
                 for result in row["results"]:
                     flat = {"file": row.get("file"), **result}
                     if draft and str(flat.get("verdict")) == "NO-REPRO":
                         flat["verdict"] = "DRAFT"
+                    if raw_asm:
+                        flat["verdict"] = "RAW-ASM"
                     flattened.append(flat)
             else:
                 flattened.append({"file": row.get("file"),
@@ -261,14 +1656,66 @@ def _link_state(rows):
         verdict = str(row.get("verdict", "ERROR"))
         bucket = "BLIND" if verdict.startswith("BLIND") else verdict
         tally[bucket] += 1
-        if bucket in ("WRONG", "NO-REPRO", "ERROR"):
+        if bucket in ("WRONG", "NO-REPRO", "ERROR", "RAW-ASM"):
             blocking.append(row)
     return {"checked": len(flattened), "tally": dict(tally), "blocking": blocking,
             "rows": flattened}
 
 
+def _port_state(report):
+    """tools/port_refcheck.py's JSON: port/'s literal src/ path and symbol
+    references, checked against the merged tree.
+
+    The phase is optional -- an older worker, a PR that touches no source, or a
+    base that predates the tool all leave no report -- so an absent report is
+    "not run" and never a failure.  `failures` is port_refcheck's flat
+    {check,file,line,message} list; the per-check grouping is accepted as a
+    fallback so a report written by an older copy of the tool still reads.
+    """
+    if report is None:
+        return {"available": False}
+    failures = report.get("failures")
+    if failures is None:
+        failures = [dict(f, check=name)
+                    for name, check in (report.get("checks") or {}).items()
+                    for f in check.get("failures") or []]
+    passed = bool(report.get("ok", not failures)) and not failures
+    return {"available": True, "passed": passed,
+            "checked": report.get("checked", 0), "failures": failures}
+
+
+def _port_reason(port):
+    """Name what broke, not just that something did: a PR author reading the
+    check has to be able to find the stale reference without the worker log."""
+    failures = port["failures"]
+    shown = "; ".join(f"{f.get('file')}:{f.get('line')}: {f.get('message')}"
+                      for f in failures[:3])
+    if len(failures) > 3:
+        shown += f"; +{len(failures) - 3} more"
+    return f"port refcheck: {len(failures)} stale reference(s) ({shown})"
+
+
+def _credit_detail(changed, lost):
+    """Name whose credit moved, not just how many did: "2 changed" sends a PR author
+    to the worker log to find out which two files and which two contributors.
+
+    Only CREDIT_NAMED of them go inline, because this text reaches the check run's
+    summary and tangos-backend refuses a summary over 500 characters outright -- a
+    long list would cost the whole verdict.  The readable list is the table
+    ``render_markdown`` writes into the check body, and the full one is the JSON
+    report's ``attribution`` section.
+    """
+    moves = ([f"{c['path']}: {c['before']} -> {c['after']}" for c in changed]
+             + [f"{c['path']}: {c['author']} -> nobody" for c in lost])
+    shown = "; ".join(moves[:CREDIT_NAMED])
+    if len(moves) > CREDIT_NAMED:
+        shown += f"; +{len(moves) - CREDIT_NAMED} more"
+    return f"{len(changed)} changed, {len(lost)} lost -- {shown}"
+
+
 def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
-                 require_merge_commit=False, expected_pr_head=None):
+                 require_merge_commit=False, expected_pr_head=None,
+                 port_report=None, code_evidence=None):
     base_sha, head_sha = resolve_commit(base), resolve_commit(head)
     parents = _git("rev-list", "--parents", "-n", "1", head_sha).split()
     is_merge = len(parents) >= 3
@@ -287,18 +1734,55 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
 
     bf, hf = function_snapshot(base_sha), function_snapshot(head_sha)
     be, he = enrollment_snapshot(base_sha), enrollment_snapshot(head_sha)
+    bv, hv = verification_split(bf, be), verification_split(hf, he)
     ba, ha = attribution_snapshot(base_sha, bf), attribution_snapshot(head_sha, hf)
     diff = diff_snapshot(base_sha, head_sha, set(tree_paths(head_sha, "src/")))
+    # The relocation index over both revisions, and whether it is fit to be relied on.
+    # Reported whether or not anything consumes it: "the evidence this run had" is a
+    # fact a reader auditing a decision needs, and a silent index is how missing
+    # evidence gets mistaken for an answer.
+    reloc = _reloc_evidence(base_sha, head_sha)
+
+    # The transcription gate for the PR itself, scoped STRICTLY to the sources this
+    # merge adds or modifies (never renames-only or pre-existing files, so an old
+    # transcription in the tree cannot fail an unrelated PR). Classified from the
+    # committed head blob, same discipline as everything else in this report.
+    changed_src = [row["path"] for row in diff["files"]
+                   if row["status"][:1] in ("A", "M") and row.get("path", "")
+                   .endswith(SOURCE_SUFFIXES)]
+    changed_text = {p: git_text(head_sha, p) for p in sorted(changed_src)}
+    changed_cls = {p: AP.classify(t) for p, t in changed_text.items()}
+    new_transcribed = [p for p, c in changed_cls.items() if c == "transcribed"]
+    new_unbannered = [p for p, c in changed_cls.items() if c == "unbannered-asm"]
+    # A marker the counters cannot see inverts the file's own claim: every consumer
+    # recognizes NONMATCHING only inside the leading comment block
+    # (asm_policy.has_draft_banner), so a marker that sits below the first line of
+    # code leaves the file counted as MATCHED while its author believes it is
+    # bannered. Scoped like the transcription gate: only sources this merge adds or
+    # modifies, so a historical stray cannot fail an unrelated PR.
+    stranded_markers = [p for p, t in changed_text.items()
+                        if AP.DRAFT_BANNER in t and not AP.has_draft_banner(t)]
+    # The evidence classify_merge needs: which of those sources are real compiled code.
+    # `changed_cls` alone cannot answer it. AP.classify treats BOTH banners as
+    # exculpatory, so a `dcd` transcription under a HAND-ASM PRIMITIVE banner reads clean
+    # here while reproducing vacuously -- it is the ROM's own words -- and a `complete`
+    # range over it would byte-compare exact with nothing decompiled. The banners are
+    # therefore read directly rather than through the classifier.
+    compiled_src = {p for p, t in changed_text.items()
+                    if changed_cls[p] is None
+                    and AP.HAND_BANNER not in t and AP.DRAFT_BANNER not in t}
 
     base_keys, head_keys = set(bf["matched"]), set(hf["matched"])
-    common_credit = set(ba["byFunction"]) & set(ha["byFunction"])
-    credit_changes = [{"id": k, "before": ba["byFunction"][k], "after": ha["byFunction"][k]}
+    bc, hc = ba["byFunction"], ha["byFunction"]
+    common_credit = set(bc) & set(hc)
+    credit_changes = [{"id": k, "path": hc[k]["path"], "basePath": bc[k]["path"],
+                       "before": bc[k]["author"], "after": hc[k]["author"]}
                       for k in sorted(common_credit)
-                      if ba["byFunction"][k] != ha["byFunction"][k]]
-    lost_credit = [{"id": k, "author": ba["byFunction"][k]}
-                   for k in sorted(set(ba["byFunction"]) - set(ha["byFunction"]))]
-    added_credit = [{"id": k, "author": ha["byFunction"][k]}
-                    for k in sorted(set(ha["byFunction"]) - set(ba["byFunction"]))]
+                      if bc[k]["author"] != hc[k]["author"]]
+    lost_credit = [{"id": k, "path": bc[k]["path"], "author": bc[k]["author"]}
+                   for k in sorted(set(bc) - set(hc))]
+    added_credit = [{"id": k, "path": hc[k]["path"], "author": hc[k]["author"]}
+                    for k in sorted(set(hc) - set(bc))]
 
     base_rom_state, head_rom_state = _rom_state(base_rom), _rom_state(head_rom)
     rom_regression = (base_rom_state.get("passed") is True
@@ -309,22 +1793,153 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
                              and base_rom_state.get("signature")
                              == head_rom_state.get("signature"))
     link = _link_state(link_rows)
+    port = _port_state(port_report)
     reasons = []
-    if base_keys - head_keys:
-        reasons.append(f"lost {len(base_keys - head_keys)} matched function(s)")
+    # A function can leave `matched` two ways, and they are opposite acts.
+    #
+    #   REMOVED    the file was deleted, renamed out from under its symbol, or turned
+    #              into a dcd transcription. Something the tree had is gone. Blocks.
+    #   WITHDRAWN  the same file is still there, still named after the same symbol, and
+    #              now carries a NONMATCHING banner. Nothing was lost -- a claim was
+    #              retracted, which is the sanctioned way to tell the truth here.
+    #
+    # Treating both as loss made the gate reward the lie: a file that compiles to 916
+    # bytes where the ROM has 912 was never a match, and bannering it -- the only
+    # mechanism this repo HAS for saying so -- was the one edit that could not land.
+    # Same shape as the CONVERTED defect, where un-converting a class was the only way
+    # to score. See tools/bytegate.py: policy D already stopped counting the
+    # unevidenced half of `matched`; this is the same judgement at the PR gate.
+    #
+    # WITHDRAWN is restricted to functions that were NOT byte-verified in the base.
+    # That restriction is the whole safety argument, and it is explicit rather than
+    # emergent: a byte-verified function is one the ROM build compiles and compares, so
+    # retracting its claim is a real coverage loss and stays a hard reason (it would
+    # also trip `source-built function coverage decreased`, but relying on that
+    # interaction would leave the rule true only by accident).
+    # ABSORBED is the third way, and it is classify_merge's to decide, not this loop's:
+    # the record is the return instruction at the tail of a range this merge newly
+    # compiles and byte-compares, and no relocation in a VALIDATED index names it. So
+    # the classification runs first and this loop reads its answer -- see classify_merge
+    # for the whole argument, including what is not claimed.
+    #
+    # THE EVIDENCE GATES THE EXCEPTION, NOT THE OTHER WAY ROUND. `reloc["valid"]` is
+    # false as soon as a relocation file is missing, empty where its module declares
+    # functions, or carries a line that is not one of the documented row shapes. Passing
+    # None then is what keeps missing evidence from reading as "nothing points here".
+    # A denominator move is a blocker UNLESS it is a re-partition of the same bytes --
+    # see classify_repartition, which carries the full argument and the two tests.
+    rom_word = _rom_word_reader(head_sha)
+    # `code_evidence` is a seam, not a policy knob: the default reader compiles the
+    # merged source with the pinned compiler, which a runner with no toolchain does not
+    # have, and a test that needs the wiring rather than the compiler supplies its own.
+    # Absent either way the exception is unavailable -- there is no value of this
+    # argument that grants it.
+    code_owned = (_compiled_code_reader(head_sha) if code_evidence is None
+                  else code_evidence)
+    revs = (_symbol_names(base_sha), _symbol_names(head_sha))
+    repartition = (classify_repartition(bf, hf)
+                   or classify_merge(bf, hf, be, he, compiled_src,
+                                     reloc["dests"] if reloc["valid"] else None,
+                                     rom_word, code_owned,
+                                     lambda module, addr: _named_symbol(revs, module,
+                                                                        addr)))
+    absorbed_keys = set((repartition or {}).get("absorbed") or ())
+
+    base_enrolled = {key.split("-", 1)[0] for key in be["source"]}
+    transcribed_now = set(new_transcribed)
+    withdrawn, removed, absorbed = [], [], []
+    for k in sorted(base_keys - head_keys):
+        hr, br = hf["functions"].get(k) or {}, bf["functions"].get(k) or {}
+        if k in absorbed_keys:
+            absorbed.append({"id": k, "path": br.get("srcPath"), "name": br.get("name")})
+        elif (k not in base_enrolled and hr.get("srcPath")
+                and hr["srcPath"] == br.get("srcPath")
+                and hr["srcPath"] not in transcribed_now):
+            withdrawn.append({"id": k, "path": hr["srcPath"], "name": hr.get("name")})
+        else:
+            removed.append(k)
+    if removed:
+        reasons.append(f"lost {len(removed)} matched function(s)")
+        # Say WHY the exception was unavailable when it was, naming the defective file:
+        # a PR author reading "lost 1 matched function(s)" on a tree whose relocation
+        # config is broken has no way to find the broken file otherwise.
+        if not reloc["valid"]:
+            extra = (f"; +{len(reloc['defects']) - 1} more"
+                     if len(reloc["defects"]) > 1 else "")
+            reasons.append("relocation evidence invalid, so nothing matched may leave: "
+                           f"{reloc['defects'][0]}{extra}")
+        elif rom_word.missing:
+            reasons.append("ROM image unavailable, so nothing matched may leave: "
+                           + ", ".join(sorted(rom_word.missing)))
+        elif getattr(code_owned, "missing", None):
+            reasons.append("compiled code ownership unavailable, so nothing matched "
+                           "may leave: " + "; ".join(sorted(code_owned.missing)))
+        elif _arm_decoder() is None:
+            reasons.append("ARM decoder unavailable, so nothing matched may leave: "
+                           + (_decoder_defect() or "capstone or tools/evidence_rom.py "
+                              "did not import"))
     if (hf["stats"]["totalFunctions"] != bf["stats"]["totalFunctions"]
             or hf["stats"]["totalBytes"] != bf["stats"]["totalBytes"]):
-        reasons.append("function/byte coverage denominator changed")
+        if repartition is None:
+            reasons.append("function/byte coverage denominator changed")
     if he["stats"]["sourceBytes"] < be["stats"]["sourceBytes"]:
         reasons.append("source-built byte coverage decreased")
-    if credit_changes or lost_credit:
-        reasons.append("contributor attribution changed or was lost")
-    if ha["stats"]["unattributedFunctions"] > ba["stats"]["unattributedFunctions"]:
-        reasons.append("the merge introduced an unattributed matched function")
+    # Bytes alone cannot see a SWAP. Dropping `complete` from one delinks entry and
+    # adding it to another of equal or greater size holds sourceBytes flat while the
+    # first range quietly leaves the set the ROM build actually byte-compares -- and
+    # its src/ file still exists, so `matched` does not move either and nothing in the
+    # report changes. Two more checks, because the pair is what closes it: the count
+    # catches a same-size swap, and the range diff below names anything that left even
+    # when both totals hold.
+    if he["stats"]["sourceFunctions"] < be["stats"]["sourceFunctions"]:
+        reasons.append("source-built function coverage decreased")
+    # A key changes whenever an entry's `end` moves, so a range that GREW to swallow
+    # its neighbour reads as dropped even though every one of its bytes is still
+    # compiled and byte-compared -- and the warning below would then say those bytes
+    # left the verified set, which is the opposite of what happened. Only report a base
+    # range no head range still covers.
+    _head_spans = collections.defaultdict(list)
+    for _entry in he["source"].values():
+        _head_spans[_entry["module"]].append((_entry["addr"], _entry["end"]))
+    dropped_enrollment = sorted(
+        key for key, entry in be["source"].items()
+        if key not in he["source"]
+        and not any(start <= entry["addr"] and entry["end"] <= stop
+                    for start, stop in _head_spans.get(entry["module"], [])))
+    # Reassignment alone (a name moving from one contributor to another, credit_changes)
+    # is never a blocker: a rebase, a rename, or resolving someone else's merge conflict
+    # all relabel a function's "last touched by" without losing anything, and this
+    # project spends no tokens defending credit -- not even for an outright LOSS
+    # (lost_credit: a function that had a contributor and now has none). Both are
+    # reported below so a PR author can see what moved, but neither fails the merge.
+    credit_moved = bool(credit_changes or lost_credit)
+    new_unattributed = (ha["stats"]["unattributedFunctions"]
+                        > ba["stats"]["unattributedFunctions"])
     if diff["leftoverOldPaths"]:
         reasons.append("old source paths remain after rename")
+    if new_transcribed:
+        reasons.append(f"{len(new_transcribed)} asm-transcription file(s) with no "
+                       f"HAND-ASM PRIMITIVE or NONMATCHING banner: "
+                       + ", ".join(new_transcribed))
+    if stranded_markers:
+        reasons.append(f"{len(stranded_markers)} file(s) say NONMATCHING outside the "
+                       "leading comment block, where no counter or gate recognizes it "
+                       "-- move the marker into the file header, or reword prose that "
+                       "quotes the bare word: " + ", ".join(stranded_markers))
     if link["blocking"]:
         reasons.append(f"{len(link['blocking'])} blocking relocation verdict(s)")
+    if port.get("available") and not port["passed"]:
+        reasons.append(_port_reason(port))
+    # A RATCHET, not a gate. The emitted vtable and RTTI that `objisolate` discards are
+    # compared against the cartridge, and most of the tree fails that today for a
+    # understood reason -- a generated flat header declares no virtuals, so mwcc emits a
+    # two-slot stub where the ROM has thirty-one. Failing a merge on all existing debt
+    # would fail nearly every C++ file. Instead, known-good symbol identities and bytes
+    # may not be lost, new differing symbols are refused, and a missing head measurement
+    # is not allowed to disable the ratchet.
+    base_data = base_rom_state.get("romData") or {}
+    head_data = head_rom_state.get("romData") or {}
+    reasons.extend(rom_data_regressions(base_data, head_data))
     if rom_regression:
         reasons.append("full-ROM result regressed from the base commit")
     if head_rom_state.get("available") and not head_rom_state.get("passed") \
@@ -332,8 +1947,70 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
         reasons.append("full-ROM validation failed")
 
     warnings = []
+    if repartition:
+        # A carve-out that passes quietly is a carve-out nobody audits. Say what moved,
+        # and say which of the two rules let it through -- they rest on different
+        # evidence and a reader auditing one should not have to guess.
+        if repartition["kind"] == "merge":
+            basis = (f"newly `complete` delinks coverage of every removed range, "
+                     f"sourceBytes {repartition['sourceByteDelta']:+d} "
+                     f"(new extent {repartition['newExtent']}, of which "
+                     f"{repartition['absorbedBytes']} the base already compiled) -- see "
+                     f"classify_merge")
+        else:
+            basis = ("identical matched set and matched sizes -- see "
+                     "classify_repartition")
+        warnings.append(
+            f"symbol-table {repartition['kind']}: totalFunctions "
+            f"{repartition['functionDelta']:+d} over identical covered bytes, allowed on "
+            f"{basis}. Added: "
+            + ", ".join(repartition["added"][:3] or ["none"])
+            + "; removed: " + ", ".join(repartition["removed"][:3] or ["none"]))
+    if absorbed:
+        warnings.append(
+            f"{len(absorbed)} claimed match(es) absorbed by the merge rather than lost: "
+            "for each, the merged source's own object covers the address as an "
+            "instruction emitting the cartridge's own `bx lr` or stack pop, the record "
+            "is that range's exact four-byte tail, no symbol in either revision names "
+            "the address, and no relocation destination in a validated index over both "
+            "revisions lands in it. That is what is established; reachability is not -- "
+            + ", ".join(f"{a['name'] or a['id']} ({a['path'] or 'no source'})"
+                        for a in absorbed[:3])
+            + (f", +{len(absorbed) - 3} more" if len(absorbed) > 3 else ""))
+    if withdrawn:
+        warnings.append(
+            f"{len(withdrawn)} claimed match(es) withdrawn by a NONMATCHING banner "
+            "rather than lost: each file is still present under the same name, and "
+            "none was byte-verified -- "
+            + ", ".join(w["path"] for w in withdrawn[:3])
+            + (f", +{len(withdrawn) - 3} more" if len(withdrawn) > 3 else ""))
+    if credit_changes:
+        # Never a blocker (see above) -- reported so a reader can still see whose
+        # credit moved.
+        warnings.append("contributor attribution changed, not a blocker "
+                        f"({_credit_detail(credit_changes, [])})")
+    if lost_credit:
+        warnings.append("contributor attribution was lost, not a blocker "
+                        f"({_credit_detail([], lost_credit)})")
+    if new_unattributed:
+        warnings.append("the merge introduced an unattributed matched function, "
+                        "not a blocker")
     if same_baseline_failure:
         warnings.append("base and merge share the same pre-existing ROM-build failure")
+    if (dropped_enrollment
+            and he["stats"]["sourceBytes"] >= be["stats"]["sourceBytes"]
+            and he["stats"]["sourceFunctions"] >= be["stats"]["sourceFunctions"]):
+        # Both totals held, so neither reason above fired -- but these ranges are no
+        # longer byte-compared against the cartridge. Re-splitting an entry (its `end`
+        # moving) lands here too, which is why it warns rather than failing.
+        warnings.append(
+            f"{len(dropped_enrollment)} address range(s) left the byte-verified set "
+            f"while enrolled totals held steady: " + ", ".join(dropped_enrollment[:5])
+            + (f", +{len(dropped_enrollment) - 5} more" if len(dropped_enrollment) > 5 else ""))
+    if new_unbannered:
+        warnings.append(f"{len(new_unbannered)} new/changed file(s) carry an asm body "
+                        f"with no HAND-ASM PRIMITIVE or NONMATCHING banner: "
+                        + ", ".join(new_unbannered))
     if link["tally"].get("BLIND"):
         warnings.append(f"{link['tally']['BLIND']} linkcheck result(s) have unresolved relocations")
     unresolved = sum(link["tally"].get(k, 0) for k in ("UNRESOLVED", "NO-SYM", "NONE"))
@@ -341,14 +2018,34 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
         warnings.append(f"{unresolved} affected source file(s) could not be fully link-checked")
     if not head_rom_state.get("available"):
         warnings.append("no head full-ROM report was supplied")
+    new_claimed = hv["stats"]["claimedFunctions"] - bv["stats"]["claimedFunctions"]
+    if new_claimed > 0:
+        # Landing a match before enrolling it is ordinary, so this is not a failure --
+        # but the count only ever grew silently before, and it is the number that makes
+        # the headline percentage bigger than the evidence.
+        warnings.append(
+            f"{new_claimed} more function(s) now claim a match "
+            f"that nothing compiles; enroll them in a delinks.txt to have the ROM "
+            f"build check them")
 
     coverage_delta = {
         "matchedFunctions": hf["stats"]["matchedFunctions"] - bf["stats"]["matchedFunctions"],
         "matchedBytes": hf["stats"]["matchedBytes"] - bf["stats"]["matchedBytes"],
+        "verifiedFunctions": (hv["stats"]["verifiedFunctions"]
+                              - bv["stats"]["verifiedFunctions"]),
+        "verifiedBytes": hv["stats"]["verifiedBytes"] - bv["stats"]["verifiedBytes"],
+        "claimedFunctions": (hv["stats"]["claimedFunctions"]
+                             - bv["stats"]["claimedFunctions"]),
+        "claimedBytes": hv["stats"]["claimedBytes"] - bv["stats"]["claimedBytes"],
         "sourceBuiltFunctions": he["stats"]["sourceFunctions"] - be["stats"]["sourceFunctions"],
         "sourceBuiltBytes": he["stats"]["sourceBytes"] - be["stats"]["sourceBytes"],
         "newMatchedFunctions": len(head_keys - base_keys),
+        # Kept as the total, so an existing reader of this field does not silently see
+        # a smaller number than the tree actually shed. The split is beside it.
         "removedMatchedFunctions": len(base_keys - head_keys),
+        "withdrawnMatchedFunctions": len(withdrawn),
+        "absorbedMatchedFunctions": len(absorbed),
+        "lostMatchedFunctions": len(removed),
     }
     base_source_stats = dict(be["stats"])
     head_source_stats = dict(he["stats"])
@@ -358,24 +2055,55 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
     head_source_stats["sourceBytesPercent"] = (
         100.0 * head_source_stats["sourceBytes"] / hf["stats"]["totalBytes"]
         if hf["stats"]["totalBytes"] else 0.0)
+    if reasons:
+        summary = "Validation failed: " + "; ".join(reasons)
+    elif lost_credit or new_unattributed:
+        summary = ("Committed merge passes; "
+                   f"{len(lost_credit)} lost credit(s) noted"
+                   + (", including an unattributed match" if new_unattributed else "")
+                   + ", not a blocker.")
+    elif credit_changes:
+        summary = (f"Committed merge passes; {len(credit_changes)} contributor credit "
+                   "reassignment(s) noted, not a blocker.")
+    else:
+        summary = "Committed merge introduces no reconstruction or attribution regression."
+    # tangos-backend refuses a result whose summary runs past 500 characters, and a refused
+    # result is a job that never reports at all -- the check sits pending until the sweeper
+    # writes it off. Naming what broke is worth the length; losing the verdict is not, and
+    # `reasons` below still carries every reason in full.
+    if len(summary) > SUMMARY_LIMIT:
+        summary = summary[:SUMMARY_LIMIT - 1] + "…"
     report = {
         "schemaVersion": 1,
         "status": "Failed" if reasons else "Passed",
         "baseSha": base_sha,
         "headSha": head_sha,
         "committedMerge": is_merge,
-        "summary": "Validation failed: " + "; ".join(reasons) if reasons
-                   else "Committed merge introduces no reconstruction or attribution regression.",
+        "summary": summary,
         "reasons": reasons,
         "warnings": warnings,
-        "coverage": {"base": bf["stats"], "head": hf["stats"], "delta": coverage_delta},
+        "coverage": {"base": {**bf["stats"], **bv["stats"]},
+                     "head": {**hf["stats"], **hv["stats"]},
+                     "delta": coverage_delta},
         "sourceBuild": {"base": base_source_stats, "head": head_source_stats},
         "attribution": {"base": ba["contributors"], "head": ha["contributors"],
                         "baseStats": ba["stats"], "headStats": ha["stats"],
                         "added": added_credit, "changed": credit_changes,
                         "lost": lost_credit},
         "diff": diff,
+        "asmPolicy": {"transcribed": new_transcribed, "unbanneredAsm": new_unbannered,
+                      "strandedMarkers": stranded_markers},
+        "matchedWithdrawn": withdrawn,
+        "matchedAbsorbed": absorbed,
+        "relocationEvidence": {
+            "valid": reloc["valid"],
+            "modules": len(reloc["dests"]),
+            "destinations": sum(len(v) for v in reloc["dests"].values()),
+            "defects": reloc["defects"][:RELOC_DEFECTS_SHOWN],
+            "defectCount": len(reloc["defects"])},
+        "repartition": repartition,
         "linkcheck": link,
+        "portRefcheck": port,
         "rom": {"base": base_rom_state, "head": head_rom_state,
                 "regression": rom_regression, "sameBaselineFailure": same_baseline_failure},
     }
@@ -387,6 +2115,10 @@ def _signed(n):
     return f"{n:+,}"
 
 
+def _pct(n, d):
+    return f"{100.0 * n / d:.2f}%" if d else "n/a"
+
+
 def render_markdown(r):
     c, s, l = r["coverage"], r["sourceBuild"], r["linkcheck"]
     h, d = c["head"], c["delta"]
@@ -395,18 +2127,58 @@ def render_markdown(r):
     lines = ["### Full merge validation", "",
              "| Check | Result |", "|---|---|",
              f"| Committed test merge | {'yes' if r['committedMerge'] else 'no'} |",
-             f"| Matched functions | {h['matchedFunctions']:,} / {h['totalFunctions']:,} "
-             f"({h['matchedFunctionPercent']:.1f}%, {_signed(d['matchedFunctions'])}) |",
-             f"| Matched code bytes | {h['matchedBytes']:,} / {h['totalBytes']:,} "
-             f"({h['matchedBytePercent']:.1f}%, {_signed(d['matchedBytes'])}) |",
-             f"| Tracked source enrollment | {s['head']['sourceFunctions']:,} functions, "
-             f"{s['head']['sourceBytes']:,} bytes "
-             f"({s['head']['sourceBytesPercent']:.2f}%, {_signed(d['sourceBuiltBytes'])}) |",
-             f"| Perfect source moves | {len(r['diff']['perfectRenames'])} R100 |",
+             # The measured number leads and the asserted one is named as an assertion.
+             # Printing only `matchedFunctions` overstated coverage by ten points,
+             # because a filename with no `complete` delinks entry counts there and is
+             # compiled by nothing -- see verification_split.
+             f"| Byte-verified functions | {h['verifiedFunctions']:,} / "
+             f"{h['totalFunctions']:,} ({_pct(h['verifiedFunctions'], h['totalFunctions'])}, "
+             f"{_signed(d['verifiedFunctions'])}) |",
+             f"| Byte-verified code bytes | {h['verifiedBytes']:,} / {h['totalBytes']:,} "
+             f"({_pct(h['verifiedBytes'], h['totalBytes'])}, {_signed(d['verifiedBytes'])}) |",
+             f"| Claimed, not byte-verified | {h['claimedFunctions']:,} functions, "
+             f"{h['claimedBytes']:,} bytes ({_signed(d['claimedFunctions'])}) |",
+             f"| Perfect source moves | {len(r['diff']['perfectRenames'])} R100 |"]
+    # Only when it happened. A retracted claim is news; a zero here would be noise on
+    # every other pull request.
+    if r.get("matchedWithdrawn"):
+        lines.append(
+            f"| Claims withdrawn (banner added) | {len(r['matchedWithdrawn'])} "
+            f"function(s), none byte-verified |")
+    if r.get("matchedAbsorbed"):
+        lines.append(
+            f"| Claims absorbed by the merge | {len(r['matchedAbsorbed'])} "
+            f"function(s); for each: the merged object emits an instruction there, the "
+            f"ROM word is a return, config names the address only after itself, and no "
+            f"indexed relocation lands in it. Not a reachability claim |")
+    if r.get("repartition"):
+        rp = r["repartition"]
+        lines.append(
+            f"| Symbol-table {rp['kind']} | totalFunctions "
+            f"{rp['functionDelta']:+d} over identical covered bytes |")
+    # The delinks view of the same quantity. Identical to byte-verified above whenever
+    # every enrolled range is a matched symbols.txt function, which is the healthy
+    # state -- so it earns a row only when the two disagree, where the disagreement is
+    # the news: an enrolled range with no matched function behind it, or a matched
+    # function whose enrolled entry the symbol table does not know about.
+    if s["head"]["sourceFunctions"] != h["verifiedFunctions"]:
+        lines.append(
+            f"| Enrolled ranges (delinks `complete`) | {s['head']['sourceFunctions']:,} "
+            f"functions, {s['head']['sourceBytes']:,} bytes "
+            f"({s['head']['sourceBytesPercent']:.2f}%, {_signed(d['sourceBuiltBytes'])}) "
+            f"-- differs from byte-verified by "
+            f"{s['head']['sourceFunctions'] - h['verifiedFunctions']:+,} |")
+    lines += [
              f"| Contributor credit | {len(r['attribution']['added'])} added, "
              f"{len(r['attribution']['changed'])} changed, "
              f"{len(r['attribution']['lost'])} lost |",
              f"| Relocation check | {l['checked']} checked; {relocation_summary} |"]
+    # Optional phase: no row at all when it did not run, so an older worker's
+    # report reads exactly as it did before.
+    port = r.get("portRefcheck") or {}
+    if port.get("available"):
+        lines.append(f"| Port reference check | {port['checked']} checked; "
+                     f"{len(port['failures'])} stale |")
     head_rom = r["rom"]["head"]
     if head_rom.get("analysis"):
         mf = head_rom["analysis"]["moduleFidelity"]
@@ -415,13 +2187,175 @@ def render_markdown(r):
                      f"{mf['percent']:.6f}% compared bytes |")
         lines.append(f"| Code linked from verified source | {sf['sourceFunctions']:,} functions, "
                      f"{sf['sourceBytes']:,} bytes ({sf['sourceBytesPercent']:.2f}%) |")
+        # What the 100.000000% above is a percentage OF. Every byte not built from
+        # source is one dsd handed back from the cartridge and compared against itself.
+        mc = head_rom["analysis"].get("moduleComposition")
+        if mc:
+            unowned_data = mc.get("unownedDataBytes", mc["dataBytes"])
+            unowned_percent = (100.0 * unowned_data / mc["moduleBytes"]
+                               if mc["moduleBytes"] else 0.0)
+            lines.append(
+                f"| Module bytes from source | {mc['sourceBytes']:,} / "
+                f"{mc['moduleBytes']:,} ({mc['sourceBytesOfModulePercent']:.1f}%); "
+                f"{unowned_data:,} ({unowned_percent:.1f}%) are data "
+                f"no delink entry reaches |")
+            if mc.get("retailGapBytes") is not None:
+                lines.append(
+                    f"| Retail-gap contribution | {mc['retailGapBytes']:,} module "
+                    f"bytes ({mc.get('retailGapCodeBytes', 0):,} function-code; "
+                    f"{mc.get('unownedDataBytes', mc['dataBytes']):,} "
+                    "data/non-function) |")
+    rom_data = head_rom.get("romData")
+    if rom_data:
+        lines.append(f"| ROM data reproduced from source | {rom_data['verified']:,} "
+                     f"symbol(s) exact, {rom_data['partial']:,} partial, "
+                     f"{rom_data['differs']:,} differ |")
     elif head_rom.get("failure"):
         lines.append(f"| Full ROM build | {head_rom['failure'].get('phase')} failed |")
     else:
         lines.append("| Full ROM build | not supplied |")
+    lines += _credit_table(r["attribution"])
+    if h.get("claimedFunctions"):
+        lines += ["", f"*Byte-verified* means the range carries `complete` in a "
+                      f"`delinks.txt`, so the ROM build compiled it and compared it to "
+                      f"the cartridge. The {h['claimedFunctions']:,} *claimed* functions "
+                      f"have a `src/` file named after the symbol with no `NONMATCHING` "
+                      f"banner, and nothing compiles them -- dsd fills their addresses "
+                      f"with the ROM's own bytes. Both together are the "
+                      f"{h['matchedFunctions']:,} this project calls matched."]
+    lines += _module_fidelity_detail(head_rom)
+    lines += _rom_failure_detail(head_rom)
     if r["warnings"]:
         lines += ["", "Warnings: " + "; ".join(r["warnings"]) + "."]
     return "\n".join(lines)
+
+
+SHOWN = 12
+
+
+def _rom_failure_detail(head_rom):
+    """Print the compiler's own words when the ROM build dies, not just the phase name.
+
+    rombuild.py already captures up to 4000 chars of the failing phase's output into
+    failure["output"] (rombuild.py:799), and the summary table rendered only
+    failure["phase"] -- so a build that died on one bad #include reached the author as
+    the four words "mwccarm failed" and nothing else. That is unactionable from the PR
+    page and actively misleading when the box and the author's machine disagree: the
+    author sees a clean local build and has no way to learn what the box saw. Same
+    defect and same remedy as _module_fidelity_detail above.
+
+    Returns markdown lines, or [] when the build did not fail or said nothing.
+    """
+    failure = (head_rom or {}).get("failure")
+    if not failure:
+        return []
+    out = (failure.get("output") or "").strip()
+    if not out:
+        return []
+    LIMIT = 3000
+    if len(out) > LIMIT:
+        out = "[... earlier output trimmed, showing the last " + str(LIMIT) + " chars ...]" + chr(10) + out[-LIMIT:]
+    phase = failure.get("phase")
+    code = failure.get("returncode")
+    return ["",
+            "<details><summary>Full ROM build output (%s failed, exit %s)</summary>" % (phase, code),
+            "", "```", out, "```", "", "</details>"]
+
+
+def _module_fidelity_detail(head_rom):
+    """Name the modules and functions behind a `105/106`, instead of only counting them.
+
+    The worker already ships all of this -- `moduleFidelity.results` carries a row per
+    module and `failures` a row per function range -- and the summary table used to
+    drop both. A bare "105/106 exact; 99.999738% compared bytes" says a few bytes are
+    wrong somewhere in three million and gives no way to find them, while every
+    per-file check on the PR stays green, because a per-file check compiles with the
+    right pin and the module compare is the only thing that does not. That combination
+    cost a full day on #1607. rombuild_check.py has printed this to the worker's
+    console all along; this puts it in the comment.
+
+    Returns markdown lines, or [] when the build is exact or said nothing.
+    """
+    analysis = (head_rom or {}).get("analysis")
+    if not analysis:
+        return []
+    mf = analysis.get("moduleFidelity") or {}
+    bad_modules = [m for m in (mf.get("results") or []) if not m.get("exact")]
+    failures = analysis.get("failures") or []
+    if not bad_modules and not failures:
+        return []
+
+    out = ["", f"**Module fidelity detail --- {len(bad_modules)} module(s) differ "
+               f"from the cartridge.**", ""]
+    if bad_modules:
+        out += ["| Module | Bytes differing | Module bytes |", "|---|---:|---:|"]
+        for m in sorted(bad_modules, key=lambda m: -m.get("differingBytes", 0))[:SHOWN]:
+            out.append(f"| `{m.get('module')}` | {m.get('differingBytes', 0):,} "
+                       f"| {m.get('comparedBytes', 0):,} |")
+        out.append("")
+
+    if failures:
+        out += ["Function ranges that account for it:", "",
+                "| Module | Function | Address | Size | Bytes differing |",
+                "|---|---|---|---:|---:|"]
+        for f in sorted(failures,
+                        key=lambda f: -(f.get("differingBytes") or 0))[:SHOWN]:
+            detail = (f"{f['differingBytes']:,}" if f.get("differingBytes") is not None
+                      else f.get("reason", "?"))
+            out.append(f"| `{f.get('module')}` | `{f.get('name')}` "
+                       f"| 0x{f.get('addr', 0):08x} | 0x{f.get('size', 0):x} "
+                       f"| {detail} |")
+        if len(failures) > SHOWN:
+            out.append(f"| ... | {len(failures) - SHOWN} more | | | |")
+        out.append("")
+    else:
+        # The distinction worth calling out: a module can differ with every enrolled
+        # function exact, when the differing bytes fall outside every delink range
+        # (padding, alignment, or data no entry reaches). Nothing per-function can
+        # ever surface those, so say so rather than leave an empty section.
+        out += ["No enrolled function range accounts for these bytes --- they fall "
+                "outside every `delinks.txt` range, so no per-function or per-file "
+                "check can see them.", ""]
+
+    # A function that is pinned to a non-default mwccarm and is ALSO mismatching is
+    # the signature of a pin that did not apply: the source is fine, the compiler was
+    # wrong. Worth naming, because the fix is a config re-key, not a decomp change.
+    pinned = ((analysis.get("alternateToolchain") or {}).get("applied")
+              or (head_rom or {}).get("alternateToolchain", {}).get("applied") or {})
+    hits = [f for f in failures if f.get("name") in pinned]
+    if hits:
+        out += ["Pinned to a non-default mwccarm in `config/rombuild-versions.txt`: "
+                + ", ".join(f"`{f['name']}` ({pinned[f['name']]})" for f in hits)
+                + ". A pinned function that mismatches usually means the ROM build "
+                  "did not apply its pin --- check `alternateToolchainFiles` in the "
+                  "build report before treating this as a source defect.", ""]
+    return out
+
+
+def _credit_table(a):
+    """Spell out every credit the merge moved or dropped.
+
+    The summary line has room for CREDIT_NAMED of them; this is the check body, where
+    a PR author can actually read the list and see whether the moves are the ones the
+    pull request meant to make.  Added credit is not listed -- new work earning new
+    credit is what a merge is for, and it is never what fails the check.
+    """
+    rows = ([(c["id"], c["path"], c.get("basePath", c["path"]), c["before"], c["after"])
+             for c in a["changed"]]
+            + [(c["id"], c["path"], c["path"], c["author"], "nobody") for c in a["lost"]])
+    if not rows:
+        return []
+    lines = ["", f"#### Contributor credit moved ({len(rows)})", "",
+             "| Function | Source | Before | After |", "|---|---|---|---|"]
+    for fid, path, base_path, before, after in rows[:CREDIT_ROWS]:
+        # A rename that also moves credit is the case worth seeing whole, so the old
+        # path stays visible rather than being silently replaced by the new one.
+        where = path if base_path == path else f"{base_path} -> {path}"
+        lines.append(f"| `{fid}` | `{where}` | {before} | {after} |")
+    if len(rows) > CREDIT_ROWS:
+        lines += ["", f"+{len(rows) - CREDIT_ROWS} more; the full list is in the "
+                      "JSON report's `attribution` section."]
+    return lines
 
 
 def main():
@@ -434,12 +2368,16 @@ def main():
     ap.add_argument("--base-rom-report")
     ap.add_argument("--head-rom-report")
     ap.add_argument("--link-report")
+    ap.add_argument("--port-refcheck-report",
+                    help="tools/port_refcheck.py --json output; the check is "
+                         "reported only when this is supplied and exists")
     ap.add_argument("--out", required=True)
     ap.add_argument("--markdown")
     args = ap.parse_args()
     report = build_report(args.base, args.head, _load_json(args.base_rom_report),
                           _load_json(args.head_rom_report), _load_json(args.link_report),
-                          args.require_merge_commit, args.expected_pr_head)
+                          args.require_merge_commit, args.expected_pr_head,
+                          _load_json(args.port_refcheck_report, optional=True))
     pathlib.Path(args.out).write_text(json.dumps(report, indent=2) + "\n",
                                       encoding="utf-8", newline="\n")
     if args.markdown:

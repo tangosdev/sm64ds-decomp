@@ -1,16 +1,16 @@
-/* HOST COPY of src/func_ov066_02119398.cpp -- EYEROK's (176, ov066) state
+/* HOST COPY of src/actors/Eyerok.cpp -- EYEROK's (176, ov066) state
  * cell 0 TICK body, and a RECEIVER-DROPPING ClosestPlayer reader.
  * Run rel0215, lane cast-ov066.
  *
  * WHY A HOST COPY. The matched src calls
  *
- *     char* p = _ZN5Actor13ClosestPlayerEv();
+ *     char* p = _ZN8dActor_c13ClosestPlayerEv();
  *
  * with EMPTY parentheses. Actor::ClosestPlayer is a thiscall: it reads `this`
  * from the receiver register, so a zero-argument call on the host leaves that
  * register holding whatever was there and dereferences a null base. This TU is
  * ALREADY NAMED in port/unmatched/Actor_ClosestPlayer_OverlayReaders.cpp's own
- * latent list ("src/func_ov066_02119398.cpp (ov066, calls ClosestPlayer() no
+ * latent list ("src/actors/Eyerok.cpp (ov066, calls ClosestPlayer() no
  * arg)") and in port/tools/aritycheck_receiver_baseline.txt:137 -- it was a
  * known latent reader waiting for its overlay to be mounted, and this is that
  * mount. Slicing it raw fails port/tools/closestplayer_guard.py before cmake
@@ -25,7 +25,7 @@
  *     021193a4  ebfbddcb  bl   0x02010ad8    <- r0 STILL the incoming Eyerok
  *
  * and the reloc `from:0x021193a4 kind:arm_call to:0x02010ad8 module:main`
- * names 0x02010ad8 as _ZN5Actor13ClosestPlayerEv. r0 is untouched between the
+ * names 0x02010ad8 as _ZN8dActor_c13ClosestPlayerEv. r0 is untouched between the
  * prologue and the call, so ClosestPlayer's `this` rode in as this body's own
  * argument. That is the func_ov084_02129cf4 shape exactly.
  *
@@ -53,16 +53,29 @@
  */
 extern "C" {
 
-void *_ZN5Actor13ClosestPlayerEv(void *self);
+void *_ZN8dActor_c13ClosestPlayerEv(void *self);
 int func_ov066_02119454(void *c, void *p);
 extern unsigned char data_ov066_0211ae08;
 extern unsigned char data_ov066_0211ae04;
 extern int data_ov066_0211b0ac;
 
 // PORT_HOST_ABI: implicit-register-arg (ClosestPlayer's this rode r0 in from this body's own argument; the host passes c).
+/* RETIRED, run link100 lane HOSTGEN2. The ruling above is "implicit-register-arg
+   (ClosestPlayer's this rode r0 in from this body's own argument)", and main's
+   text no longer has that defect: src/actors/Eyerok.cpp declares
+   `extern void *_ZN8dActor_c13ClosestPlayerEv(void *self);` at line 182 and
+   passes the receiver at all three call sites, lines 655, 743 and 847. The
+   guard that decides this question, port/tools/closestplayer_guard.py, runs
+   before configure over every build-active TU, so a wrong reading here refuses
+   the build rather than shipping a garbage receiver.
+
+   With this body out, port/unmatched/ host-copies nothing inside the
+   consolidated class TU, and lane FOLD2's slice row returns. Text kept, not
+   deleted. */
+#if 0  /* HOSTGEN2: body seated from src, see above */
 int func_ov066_02119398(char *c)
 {
-    char *p = (char *)_ZN5Actor13ClosestPlayerEv(c);   /* <-- this, the ROM's r0 */
+    char *p = (char *)_ZN8dActor_c13ClosestPlayerEv(c);   /* <-- this, the ROM's r0 */
 
     if (p != 0) {
         char *sp2 = p + 0x5c;
@@ -84,5 +97,6 @@ int func_ov066_02119398(char *c)
     }
     return 1;
 }
+#endif  /* HOSTGEN2: func_ov066_02119398 retired to src */
 
 }  /* extern "C" */

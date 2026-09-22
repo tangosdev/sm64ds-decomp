@@ -94,7 +94,7 @@ import sys
 # Publics-by-value rows look like:
 #   0003:000002e8       _data_ov002_020ff480       005852e8     ov002_data.c.obj
 # and, for a symbol the linker flagged as code, with an extra one-letter column:
-#   0001:000936f0       _data_ov000_020ab3c4       004946f0 f   func_ov001_020ab3c4.c.obj
+#   0001:000936f0       _data_ov000_020ab3c4       004946f0 f   _ZN10dCapIcon_cC1Ev.c.obj
 # groups: seg:off, name, rva+base, flag ('f' = function, 'i' = import, or none),
 # object. The flag matters: dsd names some FUNCTIONS `data_*` (a symbol it saw
 # referenced as data that turned out to be code), and those live in .text. They

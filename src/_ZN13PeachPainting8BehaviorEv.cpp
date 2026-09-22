@@ -1,23 +1,27 @@
 //cpp
 // @symbol _ZN13PeachPainting8BehaviorEv
-/* recovered: named members + shared header, real C++ method */
 #include "PeachPainting.h"
-struct Actor { int DistToCPlayer(); };
+
 namespace cstd { int fdiv(int a, int b); }
-struct ModelBase { void ApplyOpacity(unsigned int o, int x); };
+
+/* The ROM call carries a third register argument even though the imported
+ * mangled name records only the opacity. Keep that measured ABI view until
+ * the declaration itself is repaired; the ordinary member call is shorter. */
+extern "C" void _ZN9ModelBase12ApplyOpacityEj(void *, u32 opacity, int enable);
 
 int PeachPainting::Behavior()
 {
-    int d = ((Actor *)((char *)this))->DistToCPlayer();
-    if (d >= 0xe10000) {
+    int distance = DistToCPlayer();
+    if (distance >= 0xe10000) {
         mOpacity = 0xff;
-    } else if (d <= 0xbf4000) {
+    } else if (distance <= 0xbf4000) {
         mOpacity = 0;
     } else {
-        int q = cstd::fdiv(d - 0xbf4000, 0x21c000);
-        int o = (int)(((long long)q * 0xff + 0x800) >> 12);
-        mOpacity = (unsigned char)(o >> 3);
+        int fraction = cstd::fdiv(distance - 0xbf4000, 0x21c000);
+        int opacity = (int)(((long long)fraction * 0xff + 0x800) >> 12);
+        mOpacity = (u8)(opacity >> 3);
     }
-    ((ModelBase *)((char *)&mModel))->ApplyOpacity(mOpacity, 1);
+
+    _ZN9ModelBase12ApplyOpacityEj(&mModel, mOpacity, 1);
     return 1;
 }

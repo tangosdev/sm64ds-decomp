@@ -11,7 +11,7 @@
  *        /alternatename:_func_ov018_02111bf0=_func_ov016_02111bf0
  *
  *    ov018's OWN 0x02111bf0 is a real, different function -- MOTHER_PENGUIN's
- *    floor/wall collision pass, src/func_ov018_02111bf0.c, called by
+ *    floor/wall collision pass, src/game/actors/d_a_pg_mthr.cpp, called by
  *    func_ov018_02112234 and func_ov018_02111e28 with overlay(18) relocations
  *    at both sites. While the alias stood, DEFINING that body defeated it and
  *    silently rerouted all three Unagi bodies into the penguin's collision
@@ -28,7 +28,7 @@
  *    free for the ov018 body that owns it. hal/unmatched/MotherPenguin_ClsnPass
  *    .cpp, the host copy that stood in for it, is retired with the same commit.
  *
- * 2. func_020b5e58 -- func_ov016_02112fa8 (id 60's daObjKi_Ita_c InitResources)
+ * 2. func_020b5e58 -- _ZN13daObjKi_Ita_c13InitResourcesEv (id 60's daObjKi_Ita_c InitResources)
  *    calls it by the bare "func_020b5e58" C name, but the matched body is
  *    func_ov002_020b5e58 (ov002, in slice_gate188.txt). Bridge the bare name.
  *
@@ -36,7 +36,7 @@
  *    InitResources declares it `extern void* _ZN16...S8_;` and takes its address
  *    as the BeforeClsn callback, which MSVC mangles as the data symbol
  *    ?_ZN16...S8_@@3PAXA. The real static method is
- *    ?UpdatePosWithTransform@MeshColliderBase@@SAX...@Z (hosted, gate 59). Alias
+ *    ?UpdatePosWithTransform@dBgW@@SAX...@Z (hosted, gate 59). Alias
  *    the void* data spelling onto it. (FloatOnWater/id 313 declares it as a
  *    `void(void)` function whose &-address already resolves through the existing
  *    cxx_aliases.cpp bridge, so only ShipUp's void* form needs this.)
@@ -53,9 +53,9 @@ int func_ov002_020b5e58(char *self, char *fp);
 #pragma comment(linker, "/alternatename:_func_020b5e58=_func_ov002_020b5e58")
 /* #3: ShipUp's void* data reference to UpdatePosWithTransform -> the real
    static method (the gate-59 host body). */
-#pragma comment(linker, "/alternatename:?_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_@@3PAXA=?UpdatePosWithTransform@MeshColliderBase@@SAXAAU1@PAUActor@@AAUClsnResult@@AAUVector3@@PAUVector3_16@@4@Z")
+#pragma comment(linker, "/alternatename:?_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_@@3PAXA=?UpdatePosWithTransform@dBgW@@SAXAAU1@PAUActor@@AAUClsnResult@@AAUVector3@@PAUVector3_16@@4@Z")
 /* #4: func_ov002_020b5e58 (id 60's daObjKi_Ita_c init helper) takes the address
    of UpdatePosAndAngs declared `extern char _ZN16...S8_;` -> MSVC mangles that
    data spelling as ?_ZN16...S8_@@3DA (D = char); bridge it to the real static
    method the same way. */
-#pragma comment(linker, "/alternatename:?_ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_@@3DA=?UpdatePosAndAngs@MeshColliderBase@@SAXAAU1@PAUActor@@AAUClsnResult@@AAUVector3@@PAUVector3_16@@4@Z")
+#pragma comment(linker, "/alternatename:?_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_@@3DA=?UpdatePosAndAngs@dBgW@@SAXAAU1@PAUActor@@AAUClsnResult@@AAUVector3@@PAUVector3_16@@4@Z")

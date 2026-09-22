@@ -392,7 +392,7 @@ extern "C" unsigned port_fs_interior_id(const char *want)
    is Deallocate'd by func_02017c24 and re-read on the next reference. That
    is right for a DS with 4 MB of RAM and a card that streams; on a host it
    means Player::SetAnim does a blocking fopen + fread + LZ77 decode on the
-   frame the animation changes (see src/_ZN6Player7SetAnimEji5Fix12IiEj.cpp:
+   frame the animation changes (see src/actors/Player.cpp:
    Release(old) immediately followed by LoadFile(new)). That was the frame
    hitch on jumps.
 
@@ -700,6 +700,27 @@ static const u8 *port_fs_archive_slice(unsigned fileID, u32 *len_out)
         return img + start;
     }
     return 0;
+}
+
+/* ONE ARCHIVE MEMBER'S BYTES, BY ITS INTERIOR FILE ID, for a host layer that
+   wants to read a file the running scene never loads.
+ *
+ * It exists for the improved minimap's decorative panel: the wallpaper behind
+ * the map is a MENU screen's background, so no level path loads it and there
+ * is no in-memory copy to borrow. It is still the player's own game data, and
+ * this hands it over without a copy and without anything to free -- the
+ * archive image is cached for the process by port_fs_archive_image above.
+ *
+ * READ ONLY, and never a substitute for the Load seam: nothing here maps mod
+ * ids, decompresses, or touches the game's heap, and a caller that wants the
+ * file the way the game would take it wants func_0201817c below instead. */
+extern "C" const unsigned char *port_fs_archive_member(unsigned fileID,
+                                                       unsigned *len_out)
+{
+    u32 n = 0;
+    const u8 *p = port_fs_archive_slice(fileID, &n);
+    if (len_out) *len_out = p ? (unsigned)n : 0u;
+    return p;
 }
 
 static u8 *port_fs_read_raw(u32 handle, long *len_out)

@@ -2,9 +2,9 @@ extern void Vec3_Asr(void* d, void* s, int sh);
 extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void* m, int x, int y, int z);
-extern unsigned int _ZN5Actor10FindWithIDEj(unsigned int id);
+extern unsigned int _ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern void MulMat4x3Mat4x3(void* a, void* b, void* c);
-extern void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void* thiz, void* sm, void* m, int rad, int h, unsigned int u);
+extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void* thiz, void* sm, void* m, int rad, int h, unsigned int u);
 
 extern int data_020a0e68[];
 
@@ -22,7 +22,7 @@ void func_ov062_0211c6a8(char* c)
 
     if (*(unsigned int*)(c + 0x44c) != 0)
     {
-        actor = (char*)_ZN5Actor10FindWithIDEj(*(unsigned int*)(c + 0x44c));
+        actor = (char*)_ZN8dActor_c10FindWithIDEj(*(unsigned int*)(c + 0x44c));
         if (actor != 0)
         {
             *(int*)(c + 0x450) = 0;
@@ -52,5 +52,5 @@ void func_ov062_0211c6a8(char* c)
 
     Matrix4x3_FromTranslation(data_020a0e68, *(int*)(c + 0x5c) >> 3, (*(int*)(c + 0x60) - 0x18000) >> 3, *(int*)(c + 0x64) >> 3);
     *(M48*)(c + 0x3cc) = *(M48*)data_020a0e68;
-    _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(c, c + 0x3a4, c + 0x3cc, 0x40000, 0x258000, 0xf);
+    _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(c, c + 0x3a4, c + 0x3cc, 0x40000, 0x258000, 0xf);
 }

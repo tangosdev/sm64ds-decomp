@@ -1,0 +1,75 @@
+{
+  "class": "Goomboss",
+  "rom_rtti_name": "daKuriKing_c",
+  "name_status": "COINED. The tree's class, header and every mangled symbol in config/ spell it `Goomboss`; the cartridge's own RTTI spells it `12daKuriKing_c`. Both spellings are live in ov074's symbols.txt at once -- _ZTI12daKuriKing_c and _ZTS12daKuriKing_c carry the ROM name while _ZTV8Goomboss carries the coined one. Renaming is a class_rename campaign, not a promotion; this file records the mismatch rather than acting on it.",
+  "overlay": "ov074",
+  "produced_by": "writer (no scout ran for this class); tools/rtti_extract.py, tools/rtti_vtables.py, config/arm9/overlays/ov074/{symbols,relocs,delinks}.txt, and tools/romdata_check.check_object over a probe object compiled with mwccarm 2004/b56",
+  "rtti_name": "12daKuriKing_c",
+  "rtti": {
+    "symbol": "_ZTI12daKuriKing_c",
+    "address": "0x02122e30",
+    "kind": "abi::__si_class_type_info",
+    "name_pointer": "0x02122e3c",
+    "name_symbol": "_ZTS12daKuriKing_c",
+    "direct_base_pointer": "0x021081c0",
+    "evidence": "tools/rtti_extract.py resolves ov074:0x02122e30 as kind 'si', mangled '12daKuriKing_c', name at 0x02122e3c, vtable 0x02122eb8; both _ZTI12daKuriKing_c and _ZTS12daKuriKing_c are named at those addresses in config/arm9/overlays/ov074/symbols.txt."
+  },
+  "base_class": "dEnemyBase_c",
+  "ancestor_chain": ["daKuriKing_c", "dEnemyBase_c", "dActor_c", "dBase_c", "fBase_c"],
+  "ancestor_chain_evidence": "build/rtti.json edge daKuriKing_c(ov074:0x02122e30) -> dEnemyBase_c(ov002:0x021081c0), resolved_by 'unique', then the chain each base records. FIVE levels including self. Confirmed independently by compiling a probe TU that owns the key function: mwccarm 2004/b56 emits exactly _ZTI/_ZTS for fBase_c, dBase_c, dActor_c, dEnemyBase_c and Goomboss plus one _ZTV -- 2*5 + 1 = 11 data symbols, the row-count formula's prediction, exact.",
+  "leaf": true,
+  "leaf_evidence": "No RTTI record in build/rtti.json names 0x02122e30 as a direct base.",
+  "vtable": {
+    "symbol": "_ZTV8Goomboss",
+    "address": "0x02122eb8",
+    "header_start": "0x02122eb0",
+    "offset_to_top_address": "0x02122eb0",
+    "rtti_pointer_address": "0x02122eb4",
+    "rtti_pointer": "0x02122e30",
+    "slots": 31,
+    "symbol_extent": "0x7c",
+    "storage_size": "0x84",
+    "last_slot_address": "0x02122f30",
+    "end": "0x02122f34",
+    "extent_evidence": "Three independent tools agree. (1) Relocation gap: config/arm9/overlays/ov074/relocs.txt has an unbroken relocated run 0x02122eb4..0x02122f30, and the next relocated word, 0x02122f34, is the separately named data_ov074_02122f34 relocating to 0x02123038 -- a bss address, not a code pointer. (2) tools/rtti_vtables.py --own daKuriKing_c prints '31 slots (base 31)'. (3) tools/romdata_check.check_object over a probe object that owns the key function returns {bytes 124, emitted 124, romExtent 124, blindWords 0, verdict VERIFIED}; 124 = 0x7c = 31 words. Storage size 0x84 is the 8-byte offset-to-top + typeinfo preamble plus the 31 slots, and equals the .data section size mwccarm emitted for _ZTV8Goomboss in that same probe. NOTE the name trap: rtti_vtables.py answers to daKuriKing_c and prints 'no vtable for Goomboss'.",
+    "own_overrides": [
+      { "slot": 0,  "target": "0x02121e98", "symbol": "_ZN8Goomboss13InitResourcesEv" },
+      { "slot": 3,  "target": "0x02121abc", "symbol": "_ZN8Goomboss16CleanupResourcesEv" },
+      { "slot": 6,  "target": "0x02121bf0", "symbol": "_ZN8Goomboss8BehaviorEv" },
+      { "slot": 9,  "target": "0x02121b70", "symbol": "_ZN8Goomboss6RenderEv" },
+      { "slot": 16, "target": "0x0211f000", "symbol": "_ZN8GoombossD1Ev" },
+      { "slot": 17, "target": "0x0211f0a0", "symbol": "_ZN8GoombossD0Ev" }
+    ]
+  },
+  "destructors": {
+    "D1": "0x0211f000",
+    "D0": "0x0211f0a0",
+    "D2": null,
+    "rom_order": "D1 below D0",
+    "significance": "D1-below-D0 is the REPRODUCIBLE direction. Measured here: an out-of-line `Goomboss::~Goomboss() {}` makes mwccarm 2004/b56 emit D2 (0xa0), D0 (0xb4), D1 (0xa0) in that section order plus the full 11-symbol RTTI set, while an inline in-class `virtual ~Goomboss() {}` emits no D2 and can put the pair in ROM order. So this class is NOT a destructor-order refusal. The pair is nevertheless outside the promoted TU, for the unrelated key-function reason recorded in candidate_text.",
+    "emission_order_lever": "Measured, and recorded in no role file: with the destructor inline, the two variants are emitted in the REVERSE order of their first odr-use. `p->~Goomboss(); delete p;` emits D0 then D1; `delete p; p->~Goomboss();` emits D1 then D0. Both read out of the compiled object's section order. The destructor group also travels with the scaffold that forces it: it is emitted immediately after that function, wherever the function lands."
+  },
+  "candidate_text": {
+    "tu_map_run": { "start": "0x0211f000", "end": "0x02122764", "functions": 53 },
+    "real_run": { "start": "0x0211f000", "end": "0x0212290c", "functions": 55 },
+    "real_run_evidence": "tu_map cuts on symbol name, so it stopped at 0x02122764 and missed the class's two factories: daKuriKing_c_classInit_KURIKING_VANISH (0x02122764, size 0xd4, src/d_a_kuri_king_kuriking_vanish.cpp) and daKuriKing_c_classInit_KURIKING (0x02122838, size 0xd4, src/d_a_kuri_king_kuriking.cpp). Both are enrolled in ov074's delinks.txt, both store _ZTV8Goomboss (relocs.txt from 0x02122818 and 0x021228ec), and .text itself runs to 0x0212290c. The queue's shard_count of 53 is a floor, not the total.",
+    "licensed": { "start": "0x0211f154", "end": "0x02121380", "functions": 36, "ordinals": "2..37" },
+    "why_partial": [
+      "A near-miss splits the run. ROM ordinal 38, func_ov074_02121380 (0x02121380, size 0x374), is a banked near-miss at 11 divergent words (notes/mwccarm-codegen.md 6bq) and has NO entry in config/arm9/overlays/ov074/delinks.txt, so the cartridge's own bytes cover 0x02121380..0x021216f4. It sits in the middle of the run, and no delink block and no TU manifest in this tree carries two .text runs, so the run can only be taken as one of its two contiguous sides: a 38-function lower side and a 16-function upper side. This one function is the ONLY thing standing between 36 and 55 -- matching it would let a single TU own the key function, the vtable and the whole run.",
+      "The destructor pair cannot be on the lower side, and the reason is the key function rather than the destructor order. The ROM's D1-then-D0 needs an inline in-class destructor; with the destructor inline the class's key function becomes the first out-of-line virtual it declares, which is Behavior at 0x02121bf0 -- on the far side of the hole. A TU that does not own the key function emits no vtable, and nothing then odr-uses the destructor, so NEITHER variant is emitted (measured: a probe TU over the inline-destructor header emits zero symbols beyond its own function). A forcing scaffold does emit the pair, and in ROM order when `delete p;` precedes `p->~Goomboss();` -- but mwccarm emits the scaffold itself into .text immediately BELOW D1, and D1 is at 0x0211f000, the first byte of ov074's .text. There is no address below it, so no admissible source form places the pair at the head of this TU's licensed run."
+    ]
+  },
+  "compiler_only_output_measured": {
+    "rows": 1,
+    "symbols": ["_ZN7Vector3D1Ev"],
+    "note": "The row-count formula 2*(ancestors+self) + 1 vtable predicts 11 for this class, and that is CORRECT for any ov074 TU that owns the key function -- verified by compiling one. It does not apply to THIS entry: the licensed range excludes the key function, so the TU emits no _ZTV/_ZTI/_ZTS at all and the only unlicensed symbol is Vector3's inline destructor, homed at arm9:0x020072c0 and licensed deadstrip-duplicate.",
+    "warning_for_the_next_ov074_writer": "A future ov074 TU that DOES own the key function will emit _ZTI8Goomboss and _ZTS8Goomboss under the COINED name. tools/romdata_check.check_object reports both as UNNAMED -- no module's symbols.txt names those addresses, because the cartridge homes them as _ZTI12daKuriKing_c / _ZTS12daKuriKing_c. Those two rows are therefore plain `deadstrip` (homeless), not `deadstrip-data`, and the emitted _ZTS bytes ('8Goomboss') are not the cartridge's ('12daKuriKing_c'). The other nine rows -- _ZTV8Goomboss (ov074:0x02122eb8) plus the eight inherited dEnemyBase_c / dActor_c / dBase_c / fBase_c records -- are all homed and are deadstrip-data. Their measured homes: _ZTI12dEnemyBase_c ov002:0x021081c0, _ZTS12dEnemyBase_c ov002:0x021081cc, _ZTI8dActor_c arm9:0x0208e390, _ZTS8dActor_c arm9:0x0208e384, _ZTI7dBase_c arm9:0x02086e78, _ZTS7dBase_c arm9:0x02086e54, _ZTI7fBase_c arm9:0x02086d70, _ZTS7fBase_c arm9:0x02086e60."
+  },
+  "unproven": [
+    "That the 55-function run 0x0211f000..0x0212290c was one original translation unit. tu_map rates the boundary 'medium' and its sinit corroboration is module-wide rather than narrowed to this TU; the two factories at the top are the strongest positive signal, since both construct this one class.",
+    "That ordinals 2..37 are a whole original TU. They are the longest contiguous run this tree can license today, which is a build fact and not a boundary fact. boundary_confidence stays medium.",
+    "Whether func_ov074_02121380's 11 remaining divergent words are reachable at all. notes/mwccarm-codegen.md 6bq records the lever set already tried and calls it one lever short.",
+    "The field names behind Goomboss.h's pad_2ec[0xc0], pad_5e0, pad_5ec, pad_5fa, pad_600 and pad_605 windows. This promotion reads them all through raw offsets, exactly as the shards did.",
+    "Whether _ZN8Goomboss13InitResourcesEv is really incomplete. Its delinks.txt entry lacks the `complete` marker, which is the draft signal, but build_pin.verify reproduces it byte-for-byte at 2004/b56. The marker looks stale rather than accurate."
+  ]
+}

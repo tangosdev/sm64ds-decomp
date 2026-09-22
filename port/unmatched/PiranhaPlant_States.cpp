@@ -70,13 +70,13 @@ void func_ov084_0212f298(void *self);
 /* the two per-frame helpers Behavior closes over, plus the Enemy kill check */
 void func_ov084_0212f204(void *self);
 void func_ov084_0212ec60(void *self);
-int _ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(
+int _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj(
     void *self, void *clsn, void *anim, unsigned n);
-void _ZN5Actor19MakeVanishLuigiWorkER12CylinderClsn(void *self, void *clsn);
+void _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c(void *self, void *clsn);
 void _ZN9Animation7AdvanceEv(void *self);
-void _ZN12CylinderClsn5ClearEv(void *self);
-void _ZN12CylinderClsn6UpdateEv(void *self);
-void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(
+void _ZN5dCc_c5ClearEv(void *self);
+void _ZN5dCc_c6UpdateEv(void *self);
+void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(
     void *self, void *v);
 
 }  /* extern "C" */
@@ -84,7 +84,7 @@ void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(
 typedef void (*PortPirFn)(void *);
 
 /* ---- THE NINE FACES, AND THE ALIAS (run link100, lane PMFB2) ------------
-   src/_ZN12PiranhaPlant8BehaviorEv.cpp is a real pointer-to-member dispatch
+   src/actors/daPkn_c.cpp is a real pointer-to-member dispatch
    and MSVC emits it as `mov ecx, <table>[esi*8+4] / mov eax, <table>[esi*8] /
    add ecx, <this> / call eax`.
    -- `call <reg>` with the receiver in ECX and nothing pushed. The state
@@ -169,14 +169,14 @@ extern "C" void port_piranha_plant_states_seat(void)
     }
 }
 
-/* _ZN12PiranhaPlant8BehaviorEv RETIRED (run link100, lane PMFB2). It is on
+/* _ZN7daPkn_c8BehaviorEv RETIRED (run link100, lane PMFB2). It is on
    port/slice_pmfb2.txt and compiles from
-   src/_ZN12PiranhaPlant8BehaviorEv.cpp, which recovered as a real C++ method
-   (?Behavior@PiranhaPlant@@QAEHXZ); the Itanium C name its fill site calls is
+   src/actors/daPkn_c.cpp, which recovered as a real C++ method
+   (?Behavior@daPkn_c@@QAEHXZ); the Itanium C name its fill site calls is
    one cdecl line in hal/except_faces.cpp and no fill site changes. The
    derivation, including why the retired tag's "4-byte stride" reading no
    longer holds, is in the face block above. */
-/* _ZN12PiranhaPlant6RenderEv RETIRED (run link100, lane EXCEPT). Its stated reason -- the
+/* _ZN7daPkn_c6RenderEv RETIRED (run link100, lane EXCEPT). Its stated reason -- the
    ROM-order model slot-5 dispatch -- died with lane SLOT5F's
    respelling of include/ModelBase.h: hal/cxxname_bridge.cpp:522/578
    put Render back on index 5 of _ZTV5Model and _ZTV9ModelAnim, so the

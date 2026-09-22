@@ -40,7 +40,7 @@
 //   The two it does answer are the two whose ARM9 halves this lane enrolled.
 //   A channel it holds with no driver behind gets the SDK's own reply: the
 //   word back with the no-handler flag set, which is the exact shape
-//   src/_ZN3IRQ24IPCRxFifoNotEmptyHandlerEv.c uses in the other direction. A
+//   src/_ZN3IRQ24IPCRxFifoNotEmptyHandlerEv.cpp uses in the other direction. A
 //   channel NOBODY holds is reported loudly and refused the same way.
 //
 // THE ONE SEAM. link_up() below runs the ROM's own PXI bring-up. On the DS
@@ -84,7 +84,7 @@ unsigned char data_020a645c[4];
 
 // 0x020a7fc4 .. 0x020a8048. The PXI layer's own state: the init guard and the
 // 32-entry receive-callback table src/func_0205ba64.c writes and
-// src/_ZN3IRQ24IPCRxFifoNotEmptyHandlerEv.c indexes. 0x80 bytes is exactly the
+// src/_ZN3IRQ24IPCRxFifoNotEmptyHandlerEv.cpp indexes. 0x80 bytes is exactly the
 // 0x20 entries func_0205bad8 zeroes.
 unsigned short data_020a7fc4;
 void          *data_020a7fc8[0x20];
@@ -533,7 +533,7 @@ void wireless_tick()
 // -> back through the model to this ARM7.
 //
 //   1. tag 31, an UNCLAIMED channel. data_020a7fc8[31] is null and the flag is
-//      clear, so src/_ZN3IRQ24IPCRxFifoNotEmptyHandlerEv.c takes its
+//      clear, so src/_ZN3IRQ24IPCRxFifoNotEmptyHandlerEv.cpp takes its
 //      no-handler arm: it ors 0x20 into the word and posts it to IPCFIFOSEND.
 //      Seeing that word arrive back at arm7_recv proves the receive read, the
 //      table lookup and the send path.

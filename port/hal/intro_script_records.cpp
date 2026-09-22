@@ -32,8 +32,8 @@
  * _ZN10FaderColorD1Ev: the sinit hands this to func_020731dc, the ROM's
  * global-destructor registrar, as the destructor for a static FaderColor. A
  * no-op host body used to live here under the claim that the symbol had no
- * matched src TU. That was stale: src/engine/fader/_ZN10FaderColorD1Ev.c is
- * matched (vptr store, base-subobject dtor func_020177c4, returns self) and
+ * matched src TU. That was stale: src/engine/fader/_ZN10FaderColorD1Ev.cpp is
+ * matched (vptr store, base-subobject dtor _ZN15FaderBrightnessD2Ev, returns self) and
  * is on slice_intro.txt now, so the registrar stores the ROM's own body. The
  * port never runs global destructors, so nothing observable changes; the
  * stand-in is simply gone (lane shadow-A).

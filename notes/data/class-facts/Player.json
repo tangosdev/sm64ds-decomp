@@ -1,0 +1,71 @@
+{
+  "class": "Player",
+  "overlay": "ov002",
+  "module_base": "0x020ad660",
+  "produced_by": "writer (no scout ran for this class); tools/rtti_extract.py plus a direct read of extracted/dsd/arm9_overlays/ov002.bin via tools/build_pin.target_bytes",
+  "rtti_name": "7daPly_c",
+  "coined_name_warning": "The tree calls this class Player. The ROM does not. The type_info record this class's vtable points at spells its name '7daPly_c', so the cartridge's own name for it is daPly_c. `Player` is a coined name, and every mangled symbol built on it (_ZN6Player..., _ZTV6Player) is a coined spelling that happens to be what config/arm9/overlays/ov002/symbols.txt records. Nothing here renames it -- that is a separate, tree-wide workstream -- but no later stage should treat `Player` as ROM-proved identity.",
+  "rtti": {
+    "symbol": "(unnamed in symbols.txt)",
+    "address": "0x0210a56c",
+    "kind_vptr": "0x0209a764",
+    "kind": "abi::__si_class_type_info",
+    "name_pointer": "0x0210a554",
+    "direct_base_pointer": "0x0208e390",
+    "evidence": "The vtable header word at 0x0210a838 is 0x0210a56c. Linked ov002 words at 0x0210a56c are {0x0209a764, 0x0210a554, 0x0208e390}; the NUL-terminated bytes at 0x0210a554 are '7daPly_c'. tools/rtti_extract.py's census (429 records) does NOT carry this record -- it is reachable only from the vtable, which is why the class does not appear in build/rtti.json."
+  },
+  "base_class": "dActor_c",
+  "base_evidence": "The __si_class_type_info record at 0x0210a56c has +0x08 = 0x0208e390, which is _ZTI8dActor_c in arm9 (the same address config/tu_manifest.d/ov002/daChRoom_c.json names as dActor_c's canonical typeinfo home). include/Player.h already declares `struct Player : dActor_c` and the 31-slot vtable length agrees: 31 words is the dActor_c slot count.",
+  "leaf": true,
+  "leaf_evidence": "No RTTI record in build/rtti.json names 0x0210a56c as a direct base.",
+  "vtable": {
+    "symbol": "_ZTV6Player",
+    "address": "0x0210a83c",
+    "header_start": "0x0210a834",
+    "offset_to_top_address": "0x0210a834",
+    "offset_to_top": "0x00000000",
+    "rtti_pointer_address": "0x0210a838",
+    "rtti_pointer": "0x0210a56c",
+    "slots": 31,
+    "last_slot_address": "0x0210a8b4",
+    "end": "0x0210a8b8",
+    "extent_evidence": "The 31 consecutive words from the address point 0x0210a83c through 0x0210a8b4 are all plausible code addresses in main/ov002. The next word at 0x0210a8b8 is 0x00000014, which is not a code pointer, so the vtable ends there and there are no trailing null slots to qualify. Two sources agree on 31: this direct read, and include/Player.h's own header comment, which states the 31-slot count and its seven declared overrides. 31 words is also the dActor_c length recorded in the vtable-length census.",
+    "own_overrides": [
+      { "slot": 0,  "target": "0x020e558c", "symbol": "_ZN6Player13InitResourcesEv" },
+      { "slot": 3,  "target": "0x020e32d4", "symbol": "_ZN6Player16CleanupResourcesEv" },
+      { "slot": 6,  "target": "0x020e4d24", "symbol": "_ZN6Player8BehaviorEv" },
+      { "slot": 9,  "target": "0x020e3a08", "symbol": "_ZN6Player6RenderEv" },
+      { "slot": 12, "target": "0x020e3a04", "symbol": "_ZN6Player16OnPendingDestroyEv" },
+      { "slot": 16, "target": "0x020e6858", "symbol": "_ZN6PlayerD1Ev" },
+      { "slot": 17, "target": "0x020e67a8", "symbol": "_ZN6PlayerD0Ev" },
+      { "slot": 18, "target": "0x020e69b8", "symbol": "_ZN6Player13OnYoshiTryEatEv" }
+    ]
+  },
+  "destructors": {
+    "D1": "0x020e6858",
+    "D0": "0x020e67a8",
+    "D2": null,
+    "rom_order": "D0 below D1",
+    "significance": "D0-below-D1 is the direction mwccarm 2004/b56 cannot be made to emit: an inline in-class virtual dtor gives D1 then D0, an out-of-line one gives D2, D0, D1, and no scaffold changes either. So the destructor pair is unreproducible for this class and can never be promoted, whatever else happens to the run. It is not why THIS promotion is partial -- the pair sits at ROM ordinals 595/596, nearly three hundred functions above the claim's top edge -- but it does mean the run's upper segment (471..599) can never be taken whole either.",
+    "key_function": "include/Player.h declares `virtual ~Player();` FIRST among the non-inline virtuals, so the destructor is this class's key function. It lies outside the promoted range, and the compiled object proves the consequence: it defines no _ZTV6Player, _ZTI6Player or _ZTS6Player at all."
+  },
+  "candidate_text": {
+    "tu_map_run": { "start": "0x020bd828", "end": "0x020e6a08", "functions": 600 },
+    "licensed": { "start": "0x020bd828", "end": "0x020cfea4", "functions": 301, "ordinals": "0..300" },
+    "why_partial": [
+      "A sourceless hole splits the run at ROM ordinal 301, func_ov002_020cfea4 (0x020cfea4). It has no shard anywhere in src/ and no entry in config/arm9/overlays/ov002/delinks.txt -- the cartridge's own bytes cover it. A licensed .text claim cannot have a hole (no delink block and no TU manifest in this tree carries two .text runs), so the run can only be taken as one of the segments its holes leave.",
+      "Two more sourceless holes follow, at ordinal 344 (func_ov002_020d3b9c) and ordinal 430 (_ZN6Player19St_SwingPlayer_MainEv), plus a fourth blocker at ordinal 470 (func_ov002_020dc560), whose shard reproduces under the pinned compiler but carries no `complete` marker, so it is not delinked. Segment sizes: 0..300 = 301, 471..599 = 129, 345..429 = 85, 302..343 = 42, 431..469 = 39. Ordinals 0..300 is the largest and is the side taken.",
+      "No pragma refusal remains. The one pragma inside the claim, `#pragma opt_propagation off` on ordinal 35, is file-global under deferred codegen and cost 43 other members their match; `#pragma defer_codegen off` plus a ROM-ascending source order makes its push/pop bracket bind positionally and recovers all 301."
+    ]
+  },
+  "unproven": [
+    "That the 600-function tu_map run was ever a single original translation unit. 600 functions is far larger than any other reconstructed TU in this tree, and three sourceless members inside it are positive evidence that the run as tu_map draws it is a linker artefact rather than one authored file.",
+    "That ordinals 0..300 are a whole original TU. They are the longest contiguous run this tree can currently license, which is a build fact, not a boundary fact -- the top edge is where a sourceless function happens to sit, not where a file was known to end.",
+    "The nested type `Player::State`. include/Player.h declares `struct State` but never defines it; _ZN6Player7IsStateERNS_5StateE and _ZN6Player11ChangeStateERNS_5StateE both take a `State&`, every St_*_Init/_Main/_Cleanup handler is reached through one, and the state objects themselves are still spelled as untyped `data_ov002_0211....` addresses. Twenty-one members of this TU declare that type five mutually incompatible ways; none of them is proved.",
+    "Whether func_ov002_020cfea4, func_ov002_020d3b9c and _ZN6Player19St_SwingPlayer_MainEv belong to this class at all. Only address adjacency places them in the run."
+  ],
+  "related_modules": [
+    { "module": "main",  "module_base": "0x02004000", "role": "inherited vtable slots, dActor_c RTTI, and the ABI type-info implementation" },
+    { "module": "ov002", "module_base": "0x020ad660", "role": "class RTTI, vtable, own overrides, and all 600 functions of the candidate run" }
+  ]
+}

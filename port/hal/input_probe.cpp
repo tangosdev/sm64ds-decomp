@@ -194,7 +194,7 @@ extern "C" void port_input_probe_trace_cannon(int frame)
  */
 extern "C" {
 extern void *data_0209b468;                 /* the live-actor list head node */
-extern void *_ZN5Actor10FindWithIDEj(unsigned int id);
+extern void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern void func_ov084_0212c8b0(void *buddy);   /* buddy state-0 main */
 extern void func_ov084_0212c960(void *buddy, int i);  /* buddy ChangeState */
 extern unsigned char data_0209f49e[];        /* per-player pressed word, stride 0x18 */
@@ -208,7 +208,7 @@ extern unsigned char data_0209f204;          /* VS "time is up" flag         */
 extern unsigned short data_ov002_02111188;   /* VS timer sub-counter         */
 extern int data_0209fc68;                    /* wireless session state       */
 extern unsigned char data_0209f2bc;          /* the 3-2-1 countdown          */
-extern void func_ov002_020e7d84(char *m);    /* StarMarker's own ball break  */
+extern void _ZN10StarMarker7CollectEv(char *m);    /* StarMarker's own ball break  */
 }
 
 /* STAGE 0 (temporary): walk EVERY class-178 PowerStar in the live list and
@@ -254,7 +254,7 @@ extern "C" void port_stage0_vs_score(int frame)
 
 /* STAGE 0 (temporary): SM64DS_VS_BREAKALL=<frame>. Correction from Tango: a
    VS star comes out when a player BREAKS THE BALL around it; the marker's own
-   break, func_ov002_020e7d84, is that release, and the earlier runs proved
+   break, _ZN10StarMarker7CollectEv, is that release, and the earlier runs proved
    only that robot players who never swing leave every ball intact. At the
    armed frame this dumps every star<->marker ID link, then runs the ROM's own
    break on EVERY container marker, so the picked star's own marker is
@@ -310,7 +310,7 @@ extern "C" void port_stage0_vs_breakall(int frame)
         std::fprintf(stderr, "[breakall] f%d breaking marker %p (uid %08x)%s\n",
                      frame, (void *)a, *(unsigned int *)(a + 4),
                      king ? " [king: active marker only]" : "");
-        func_ov002_020e7d84(a);
+        _ZN10StarMarker7CollectEv(a);
     }
 }
 
@@ -1058,7 +1058,7 @@ extern "C" void port_input_probe_apply(int frame)
 extern "C" {
 extern int _Z14ApproachLinearRsss(short *x, short target, short step);
 extern int func_ov014_02111f54(void *chomp);
-extern short _ZN5Actor18HorzAngleToCPlayerEv(void *self);
+extern short _ZN8dActor_c18HorzAngleToCPlayerEv(void *self);
 }
 
 extern "C" void port_probe_alcheck(void)
@@ -1109,7 +1109,7 @@ extern "C" void port_probe_chomp(int frame)
        func_ov014_02111f54 (the break-free, called by state 1 AND state 2 every
        frame) refuses while the post's +0x31e is non-zero, so that byte is the
        pounded-the-post gate. Clearing it is what pounding it does. */
-    char *post = (char *)_ZN5Actor10FindWithIDEj(*(unsigned *)(ch + 0x608));
+    char *post = (char *)_ZN8dActor_c10FindWithIDEj(*(unsigned *)(ch + 0x608));
     const char *fr = std::getenv("SM64DS_CHOMP_FREE");
     if (fr && post && frame >= std::atoi(fr) && *(unsigned char *)(post + 0x31e)) {
         std::fprintf(stderr, "  [chomp] f%d post +0x31e %d -> 0 (post pounded)\n",
@@ -1126,7 +1126,7 @@ extern "C" void port_probe_chomp(int frame)
         "  [chomp] f%d state=%d sub=%d yaw=%6d tgtAng=%6d landed=%d "
         "y=%d floor=%d freed=%d post31e=%d\n",
         frame, st, sub, (int)*(short *)(ch + 0x8e),
-        (int)_ZN5Actor18HorzAngleToCPlayerEv(ch),
+        (int)_ZN8dActor_c18HorzAngleToCPlayerEv(ch),
         (int)*(unsigned char *)(ch + 0x61c),
         *(int *)(ch + 0x60) >> 12, *(int *)(ch + 0x5f0) >> 12,
         (int)*(unsigned char *)(ch + 0x605),
@@ -1136,15 +1136,15 @@ extern "C" void port_probe_chomp(int frame)
 /* TEMPORARY rabbit-catch trigger, the RABBIT half of the same seam the buddy
  * and the sign already stand in for.
  *
- * func_ov085_0212a828 is the rabbit's own grab check, called unconditionally
- * from Rabbit::Behavior (src/_ZN6Rabbit8BehaviorEv.c:204, reloc 0x0212c778 ->
+ * _ZN7daMip_c10UpdateGrabEv is the rabbit's own grab check, called unconditionally
+ * from Rabbit::Behavior (src/actors/daMip_c.cpp:204, reloc 0x0212c778 ->
  * 0x0212a828). It reads the rabbit's grab-trigger fields -- +0x134 (the id of
  * the actor on its collision cylinder) and +0x130 & 0x1000 (the trigger flag) --
  * confirms that actor is the player (0xbf), runs the REAL Player::TryGrab, and
  * on success writes the player at rabbit+0x45c and hands the rabbit to its
  * caught state. Those two trigger fields are set by the collision cylinder
  * detecting a punch, which the port does not drive for a headless run, so this
- * stands in for JUST that detection. Everything from func_ov085_0212a828 down
+ * stands in for JUST that detection. Everything from _ZN7daMip_c10UpdateGrabEv down
  * -- TryGrab, the +0x45c write, the caught dialogue, the key spawn -- is the
  * matched code, in the ROM's own order.
  *
@@ -1155,7 +1155,7 @@ extern "C" void port_probe_chomp(int frame)
  * run that cannot grab says why instead of going quiet.
  */
 extern "C" {
-extern void func_ov085_0212a828(void *rabbit);
+extern void _ZN7daMip_c10UpdateGrabEv(void *rabbit);
 extern int _ZN6Player7IsStateERNS_5StateE(void *p, void *st);
 extern char data_ov002_02110574, data_ov002_0211067c, data_ov002_021105bc;
 /* the four gates St_HoldLight_Main's carry-bit write sits behind */
@@ -1174,8 +1174,8 @@ extern char data_ov085_021306ac, data_ov085_021306bc, data_ov085_021306cc,
 /* the caught state's own pair: Init 0x0212b3fc, Main 0x0212ae08. Printing their
    host addresses beside the words the live State object carries is what tells a
    "the dialogue refused" reading apart from "a different function is seated". */
-extern int func_ov085_0212ae08(char *c);
-extern int func_ov085_0212b3fc(char *c);
+extern int _ZN7daMip_c15StateCaughtMainEv(char *c);
+extern int _ZN7daMip_c15StateCaughtInitEv(char *c);
 /* the two globals Rabbit::Behavior's own top-of-body gate reads */
 extern unsigned char data_0209f2f8;   /* the current level word */
 extern int data_0209caa0[];           /* the save/global flag block */
@@ -1196,7 +1196,7 @@ extern "C" void port_probe_rabbit_trigger(int frame)
     /* THE RABBIT-HUNT-IS-ON FLAG, the second half of this stand-in.
      *
      * Rabbit::Behavior returns before its own state dispatch unless
-     * data_0209caa0[2] & 0x20000 is set (src/_ZN6Rabbit8BehaviorEv.c:50-65). On
+     * data_0209caa0[2] & 0x20000 is set (src/actors/daMip_c.cpp:50-65). On
      * a level other than 0x32 the rabbit sits on the +0x428 == 1 arm and only
      * leaves it once that bit is on, so with the bit clear the actor is inert:
      * measured, its Animation at +0x350 (30 frames, speed 0x1000) never advances
@@ -1226,11 +1226,11 @@ extern "C" void port_probe_rabbit_trigger(int frame)
      * rabbit; a course rabbit carries its course number) and +0x429 is the
      * glowing marker. Nothing else is touched.
      *
-     * WHY IT MATTERS. func_ov085_0212ae08's +43c == 7 arm spawns the key and
+     * WHY IT MATTERS. _ZN7daMip_c15StateCaughtMainEv's +43c == 7 arm spawns the key and
      * returns. Every OTHER variant falls through to the tail, where the arm at
      * "flag_path" -- taken when +0x429 != 0 and SaveData::NumGlowingRabbitsFound()
      * != 8 -- spawns the key and IN THE SAME FRAME hands the rabbit to state
-     * 0213068c, whose Main func_ov085_0212a904 opens message 0x148 on its very
+     * 0213068c, whose Main _ZN7daMip_c17StateSaveTalkMainEv opens message 0x148 on its very
      * first frame (case 0). The key's own descent needs about ten frames
      * (func_ov085_0212d24c sets +0x100 = 10 and func_ov085_0212d108 only leaves
      * on that countdown), so that second dialogue is up well before the key
@@ -1259,10 +1259,10 @@ extern "C" void port_probe_rabbit_trigger(int frame)
     static int caught, tries;
 
     /* SM64DS_RABBIT_REGRAB=1 re-arms the stand-in once the rabbit has been let
-     * go again (func_ov085_0212ae08's +43c==7 arm clears rabbit+0x45c in the
+     * go again (_ZN7daMip_c15StateCaughtMainEv's +43c==7 arm clears rabbit+0x45c in the
      * same breath as it spawns the key). Re-grabbing the rabbit is an ordinary
      * player action -- the rabbit is standing right there and Rabbit::Behavior
-     * puts it back on its catchable arm (src/_ZN6Rabbit8BehaviorEv.c:154-162) --
+     * puts it back on its catchable arm (src/actors/daMip_c.cpp:154-162) --
      * and it is the only NATURAL way found so far to put the player back under
      * mIsNoControl while the key is still flying to him. That is the overlap
      * lane C could only reach by injecting a key with SM64DS_KEY_SPAWN_AT. */
@@ -1280,7 +1280,7 @@ extern "C" void port_probe_rabbit_trigger(int frame)
         /* post-grab: follow the rabbit's own caught states, so a run that never
            reaches the key spawn says where it stopped instead of going quiet. */
 
-        /* CARRY-BIT GATE (lane C2). func_ov085_0212ae08.c:65-69 opens the caught
+        /* CARRY-BIT GATE (lane C2). _ZN7daMip_c15StateCaughtMainEv.c:65-69 opens the caught
            dialogue only when rabbit+0xb0 & 0x4000 is set, and the ROM's writer of
            that bit is Player::St_HoldLight_Main (ov002 0x020d1a1c,
            src/_ZN6Player17St_HoldLight_MainEv.cpp:61-68), which needs FOUR things
@@ -1339,7 +1339,7 @@ extern "C" void port_probe_rabbit_trigger(int frame)
 
                 /* WHICH RABBIT STATE IS LIVE. rabbit+0x364 is the State object
                    Rabbit::Behavior dispatches through (its .b pair at +8 is the
-                   Main). Only 021306ac's Main is func_ov085_0212ae08, the caught
+                   Main). Only 021306ac's Main is _ZN7daMip_c15StateCaughtMainEv, the caught
                    dialogue that spawns the key, so print the four candidates'
                    addresses beside the live pointer and the Main word the
                    dispatch will actually call. */
@@ -1367,10 +1367,10 @@ extern "C" void port_probe_rabbit_trigger(int frame)
                         (int)*(short *)(rb + 0x100));
                     if (hl_left == 59)
                         std::fprintf(stderr,
-                            "  [rbstate] &func_ov085_0212ae08=0x%08x "
-                            "&func_ov085_0212b3fc=0x%08x animlen=0x%08x\n",
-                            (unsigned)(size_t)&func_ov085_0212ae08,
-                            (unsigned)(size_t)&func_ov085_0212b3fc,
+                            "  [rbstate] &_ZN7daMip_c15StateCaughtMainEv=0x%08x "
+                            "&_ZN7daMip_c15StateCaughtInitEv=0x%08x animlen=0x%08x\n",
+                            (unsigned)(size_t)&_ZN7daMip_c15StateCaughtMainEv,
+                            (unsigned)(size_t)&_ZN7daMip_c15StateCaughtInitEv,
                             (unsigned)*(int *)(rb + 0x350 + 0x04));
                 }
             }
@@ -1426,7 +1426,7 @@ extern "C" void port_probe_rabbit_trigger(int frame)
                      (*(int *)(rb + 0xb0) & 0x80) != 0,
                      (unsigned)*(int *)(rb + 0xb0),
                      *(int *)(rb + 0x350 + 0x08),
-                     /* THE BEHAVIOR GATE. src/_ZN6Rabbit8BehaviorEv.c:50-65
+                     /* THE BEHAVIOR GATE. src/actors/daMip_c.cpp:50-65
                         returns before the state dispatch unless the level word
                         data_0209f2f8 and these fields agree. Off level 0x32 the
                         only question is rabbit+0x428; on level 0x32 it is the
@@ -1441,7 +1441,7 @@ extern "C" void port_probe_rabbit_trigger(int frame)
                      _ZN6Player7IsStateERNS_5StateE(player, &data_ov002_021105bc),
                      (int)*(unsigned char *)(player + 0x6e2));
     }
-    func_ov085_0212a828(rb);        /* the rabbit's own real grab check */
+    _ZN7daMip_c10UpdateGrabEv(rb);        /* the rabbit's own real grab check */
 }
 
 /* TEMPORARY Yoshi-swallow trigger -- the functional proof for the
@@ -1449,7 +1449,7 @@ extern "C" void port_probe_rabbit_trigger(int frame)
  *
  * Every enemy Yoshi can eat opens its Behavior by calling Enemy::UpdateYoshiEat
  * on itself; a non-zero return puts the enemy in its eat branch instead of its
- * normal AI. For the intro rabbit that branch (src/_ZN6Rabbit8BehaviorEv.c:130-
+ * normal AI. For the intro rabbit that branch (src/actors/daMip_c.cpp:130-
  * 151) is what writes rabbit+0x45c -- the caught-by player that arms the talk
  * block and the key spawn. While UpdateYoshiEat was a constant-0 host stub the
  * branch was dead: an eaten enemy never entered the swallow states, the rabbit
@@ -1466,7 +1466,7 @@ extern "C" void port_probe_rabbit_trigger(int frame)
  *
  *   SM64DS_YOSHI_SWALLOW=<frame>   arm from that frame (default 90)
  */
-extern "C" { int _ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(void *self, void *clsn); }
+extern "C" { int _ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(void *self, void *clsn); }
 
 extern "C" void port_probe_yoshi_swallow(int frame)
 {
@@ -1499,7 +1499,7 @@ extern "C" void port_probe_yoshi_swallow(int frame)
         int spit0 = *(unsigned char *)(rb + 0x107);
         int tmr0  = *(unsigned short *)(rb + 0x104);
         int spd0  = *(int *)(rb + 0x98);
-        int ret = _ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(rb, rb + 0x144);
+        int ret = _ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(rb, rb + 0x144);
         std::fprintf(stderr,
             "  [swallow] f%d UpdateYoshiEat(rabbit) ret=%d  "
             "spit(0x107) %d->%d  timer(0x104) %d->%d  launchSpeed(0x98) %d->%d\n",
@@ -1533,7 +1533,7 @@ extern "C" void port_probe_yoshi_swallow(int frame)
  *
  * SM64DS_SPAWN_ACTOR only fires at boot, and the whole question about this
  * actor is a TIMING one: on the ROM the key is spawned by the rabbit's own
- * caught-dialogue state (src/func_ov085_0212ae08.c:235) in the same breath as
+ * caught-dialogue state (src/actors/daMip_c.cpp:235) in the same breath as
  * the talk ending, so it reaches its caught state while the player may still be
  * flagged mIsNoControl. A boot spawn always lands on an idle player and can
  * never ask that question. This drops a key at a chosen frame instead.
@@ -1541,7 +1541,7 @@ extern "C" void port_probe_yoshi_swallow(int frame)
  *   SM64DS_KEY_SPAWN_AT=<frame>[:<param>]   param default 0
  *
  * It uses the harness's own port_debug_spawn_at, which goes through the level's
- * real Actor::Spawn -- the same call func_ov085_0212ae08 makes, with the same
+ * real Actor::Spawn -- the same call _ZN7daMip_c15StateCaughtMainEv makes, with the same
  * class id 0xe5 and the same param word.
  */
 extern "C" {
@@ -1746,7 +1746,7 @@ extern "C" void port_probe_rabbit_key(int frame)
        (func_ov002_020c8540.c:51 and friends); data_0209b464 is the per-frame
        copy Stage::Behavior latches from it (_ZN5Stage8BehaviorEv.cpp:105) and
        the ONLY word Actor::BeforeBehavior reads
-       (_ZN5Actor14BeforeBehaviorEv.cpp:74). kf is the key's own mFlags & 0x800000
+       (_ZN8dActor_c14BeforeBehaviorEv.cpp:74). kf is the key's own mFlags & 0x800000
        -- its opt-out of the freeze, which it does not have. So the three
        together say whether this frame's key Behavior should have run at all. */
     std::fprintf(stderr, "  [rkey] f%d step=%d +198=%d +19c=0x%x d684=%d "

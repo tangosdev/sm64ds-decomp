@@ -140,7 +140,7 @@
 #
 # 1. THE MATCHED TU MISNAMES 0x020a0ea4. It calls it Memory::rootParamOffset,
 #    which reads as a numeric offset. It is not: in
-#    src/_ZN4Heap13SetupRootHeapEv.c that address is passed as the FIRST
+#    src/_ZN4Heap13SetupRootHeapEv.cpp that address is passed as the FIRST
 #    argument to every arena accessor -- func_02058ea0(g), func_02058eb4(g),
 #    func_02059040(g,...), func_02058d58(g,...), func_02058cd0(g,...) -- so it
 #    is the OS globals POINTER, and InitializeRootHeap NULLs it so the

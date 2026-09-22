@@ -20,30 +20,30 @@
 # SIX PER-SOURCE -D RENAMES travel with this slice (port/CMakeLists.txt), and
 # every one is pinned to a relocation or a literal pool, not to a guess:
 #
-#   _ZN8SquasherD1Ev.c   the two vtable stores are LABELLED BACKWARDS by the
-#   _ZN8SquasherD0Ev.c   resolver. The source writes _ZTV10dBgActor_c first and
+#   _ZN16daObjFm_Battan_cD1Ev.c   the two vtable stores are LABELLED BACKWARDS by the
+#   _ZN16daObjFm_Battan_cD0Ev.c   resolver. The source writes _ZTV10dBgActor_c first and
 #                        VT1 second; the ROM writes the OWN table first
 #                        (pool 0x021111e4 = 0x02111fe4) and Platform's base
 #                        second (pool 0x021111e8 = 0x0210ae38). Same inversion
 #                        ov033's id-105 pair carries. D0 also takes G0 -> the
 #                        game heap 0x020a0eac.
-#   _ZN8Squasher16CleanupResourcesEv.cpp   G0 -> the MODEL SharedFilePtr
+#   _ZN16daObjFm_Battan_c16CleanupResourcesEv.cpp   G0 -> the MODEL SharedFilePtr
 #                        0x02112088, G1 -> the COLLISION one 0x02112080, in the
 #                        pool order the ROM body releases them (0x02111380 then
 #                        0x02111384). Private names, because that TU includes
 #                        decl_common.h which already declares 0x02112088 as a
 #                        scalar and a direct -D is a redeclaration.
-#   _ZN8Squasher13InitResourcesEv.cpp   TWO live alias races in one body:
-#                        func_ov026_02111308 -> ov023's OWN transform helper at
+#   _ZN16daObjFm_Battan_c13InitResourcesEv.cpp   TWO live alias races in one body:
+#                        _ZN17daObjWlPolelift_c6RenderEv -> ov023's OWN transform helper at
 #                        0x02111308 (the call at 0x021116a4 relocates there,
 #                        module ov023), and
-#                        _ZN32FloatOnWaterPlatformWdwRectangleD1Ev -> ov023's
+#                        _ZN15daObjWc_Obj07_cD1Ev -> ov023's
 #                        collision SharedFilePtr at 0x02112080 (pool
 #                        0x0211171c). The second is the worse one: left alone
 #                        MeshCollider::LoadFile is handed the address of an
 #                        OV029 DESTRUCTOR as a file pointer. The first is
 #                        urgent for a different reason -- lane W1-A is seating
-#                        ov026 in this same wave, so func_ov026_02111308 is
+#                        ov026 in this same wave, so _ZN17daObjWlPolelift_c6RenderEv is
 #                        about to become a DEFINED symbol and the call would
 #                        silently land in another level's overlay.
 #
@@ -57,13 +57,4 @@
 #
 # THE MEASURED CLOSURE GAP: none. The first link added no arm9 TU.
 
-src/_ZN8SquasherD1Ev.c
-src/_ZN8SquasherD0Ev.c
-src/func_ov023_0211124c.c
-src/func_ov023_02111308.c
-src/_ZN8Squasher16CleanupResourcesEv.cpp
-src/_ZN8Squasher6RenderEv.cpp
-src/_ZN8Squasher8BehaviorEv.c
-src/_ZN8Squasher13InitResourcesEv.cpp
-src/Squasher_Spawn.c
-src/__sinit_ov023_02111aa8.c
+src/game/actors/d_a_obj_fm_battan.cpp

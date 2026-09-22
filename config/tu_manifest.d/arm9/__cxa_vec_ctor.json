@@ -1,0 +1,125 @@
+{
+  "id": "arm9/__cxa_vec_ctor",
+  "module": "arm9",
+  "source": "src/__cxa_vec_ctor.cpp",
+  "promoted_source": "src/__cxa_vec_ctor.cpp",
+  "status": "text-verified",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "ONE FUNCTION, THREE SECTIONS. 0x020733a8..0x02073470 is a single MSL C++ runtime array construct helper, the last member of the family that starts at __cxa_vec_cleanup. The cartridge's own .exceptix record at 0x020739a0 declares the function length as 0xc8, which is the range config/arm9/symbols.txt already carried, so like func_02073470 and unlike the other two siblings this one needed no symbol merge: the out-of-line catch landing pad at 0x02073414 was already inside the function's declared size, and there is no split-out pad symbol to absorb.",
+    "THE UNWIND RECORDS ARE THIS TU'S OUTPUT. Compiled with tools/rombuild.py's exact command (2004/b56, CFLAGS carrying -Cpp_exceptions off, -lang c++ because of the //cpp marker), the in-file `#pragma exceptions on` wins and the object carries .text 200, .exception 20 and .exceptix 12. All three reproduce the cartridge byte for byte outside relocation slots, and every slot resolves to the symbol config/arm9/relocs.txt records.",
+    "THE .exception CLAIM ENDS EXACTLY WHERE THE COMPILER OUTPUT ENDS, AND HERE THAT IS ALSO THE NEXT RECORD. @ET@__cxa_vec_ctor is 0x14 bytes in the object and the cartridge's next .exception record begins at 0x0207377c, which is 0x02073768 + 0x14, so this member needed no linker alignment fill at all and the claim 0x02073768..0x0207377c is both the compiler's output and the whole gap. The two siblings that do have fill (func_02073300, func_02073470) stop short of the next record on purpose; this one has nothing to stop short of.",
+    "THE NAME IS THE COMPILER'S. mwccarm 2004/b56 emits a call to __cxa_vec_ctor for an array of a class that has a constructor and a destructor. A bare probe compiled with rombuild's CFLAGS leaves __cxa_vec_ctor, __cxa_vec_new, __cxa_vec_delete and __cxa_vec_cleanup undefined, and a scan of all 18,173 objects of a completed rombuild link tree finds two real importers of __cxa_vec_ctor: _ZN10dMgPsOpt_cC1Ev.o and _ZN17dMg3DEspAnimSet_cC1Ev.o. Before this entry the only definition came from the dsd gap object covering 0x020733a8, which defined the name because config/arm9/symbols.txt carried a size-0 alias row beside the sized func_020733a8 row. Making this range `complete` carves it out of that gap, so the alias would have stopped being a definition, which is exactly the failure #2454 hit on __cxa_vec_cleanup. The sized row therefore took the compiler's spelling and the size-0 row is deleted.",
+    "NOT FROM tools/tu_map.py. The arm9 main module is reported under-segmented and emits one unit for 0x20049f0..0x20707a4; this entry was assembled by hand from the .exceptix length field."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020733a8",
+      "end": "0x02073470"
+    },
+    {
+      "name": ".exception",
+      "start": "0x02073768",
+      "end": "0x0207377c"
+    },
+    {
+      "name": ".exceptix",
+      "start": "0x020739a0",
+      "end": "0x020739ac"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "__cxa_vec_ctor",
+      "address": "0x020733a8",
+      "size": "0x000000c8",
+      "legacy_source": "src/func_020733a8.c",
+      "ordinal": 0
+    }
+  ],
+  "data": [],
+  "rodata": [],
+  "bss": [],
+  "exception": [
+    {
+      "symbol": "@ET@__cxa_vec_ctor",
+      "address": "0x02073768",
+      "size": "0x14",
+      "evidence": "compiler-emitted exception frame record for this function's single try; STB_LOCAL STT_OBJECT at offset 0 of the object's only .exception section, and the 20 bytes are identical to the cartridge with no relocation slots at all"
+    }
+  ],
+  "exceptix": [
+    {
+      "symbol": "@EX@__cxa_vec_ctor",
+      "address": "0x020739a0",
+      "size": "0xc",
+      "evidence": "compiler-emitted unwind index entry: function pointer, length 0xc8, frame pointer. The middle word is the literal 0x000000c8 on both sides, which is the cartridge declaring this function's length; the two pointer words are relocation slots and both resolve"
+    }
+  ],
+  "compiler_only_output": [],
+  "notes": [
+    "PRODUCTION MODE IS DELIBERATELY ABSENT, and that is the honest state of this entry. tools/rombuild.py intact_tu_policies admits an intact-object TU only on a scratch-data-verified ordinary link that proves every claimed range, all modules and the full ROM. That proof needs a build/sm64ds.nds a --no-rom run never writes and a same-worker stock-ROM comparison this worktree cannot produce, so this entry records the measured shape and does not request the path. config/arm9/delinks.txt therefore claims only the .text range, which is exactly what the build produces.",
+    "WHAT THE BUILD DOES TODAY. src/__cxa_vec_ctor.cpp is enrolled as an ordinary single-function source, so tools/objisolate.py takes the one selected symbol and drops the two unwind sections to size 0. The cartridge's copies of those bytes come from the dsd gap objects, as they did before this file existed. Nothing in this entry changes a ROM byte.",
+    "THE FIFTH ARGUMENT IS ON THE STACK. Seven pushed registers plus the 0x1c frame put the first stacked argument at [fp,#0x38], which is where the guard at +0x28 tests the element destructor and where the landing pad at +0x6c reads it back. Those two loads are the evidence for the arity, and calling this function with four arguments would leave both reading whatever the caller happened to leave there.",
+    "WHY THERE ARE TWO COPIES OF THE LOOP. The destructor argument decides the shape, not the behaviour: with no destructor there is nothing to unwind, so the compiler emits a second, plain copy of the construct loop outside the try. That is the guarded loop at +0x4c and the plain loop at +0xa8, and it is why `base` has to keep its own register across the guarded copy while the plain copy is free to walk the register it arrived in.",
+    "This is the fifth and last entry in the manifest to claim any of arm9's 636 bytes of retail .exceptix, after arm9/__cxa_vec_cleanup, arm9/func_02073300, arm9/func_02073534 and arm9/func_02073470. With it the whole 0x0207328c..0x02073534 array-helper family is source-built."
+  ],
+  "relocations": [
+    {
+      "section": ".exceptix",
+      "source": "0x020739a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__cxa_vec_ctor",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020733a8"
+    },
+    {
+      "section": ".exceptix",
+      "source": "0x020739a8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@ET@__cxa_vec_ctor",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02073768"
+    }
+  ],
+  "externalized_output": [],
+  "verification": {
+    "round": "hand-run of tools/rombuild.py's compile command plus tools/objisolate.py and tools/tu_production.py prepare_intact_object, run link100 lane DARRCTOR",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "comparison": "tools/match.py --strict-relocs for .text; raw byte compare against extracted/arm9_dec.bin for .exception and .exceptix, relocation slots wildcarded from the object's own .rela records",
+    "functions_matched": 1,
+    "functions_declared": 1,
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS",
+      "every_declared_section_bytes_match": "PASS"
+    },
+    "linkcheck": {
+      "round": "NOT RUN",
+      "result": null,
+      "phases": {
+        "delink": false,
+        "lcf": false,
+        "compile": false,
+        "link": false,
+        "checkModules": false,
+        "checkSymbols": false,
+        "rom": false
+      },
+      "tuRanges": [],
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
+      "rom": {}
+    }
+  }
+}

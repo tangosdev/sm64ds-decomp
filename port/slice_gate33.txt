@@ -31,9 +31,9 @@
 # names are shifted by one through a run of ov002 -- the gate-20 finding.
 #
 #     id  SpawnInfo             installs                RTTI
-#     288 Coin_SpawnInfo        _ZTV4Coin               8daCoin_c
-#     289 RedCoin_SpawnInfo     _ZTV4Coin               (same table)
-#     290 BlueCoin_SpawnInfo    _ZTV4Coin               (same table)
+#     288 g_profile_COIN        _ZTV4Coin               8daCoin_c
+#     289 g_profile_RED_COIN     _ZTV4Coin               (same table)
+#     290 g_profile_BLUE_COIN    _ZTV4Coin               (same table)
 #
 # One class, three ids, one vtable: the three factories are byte-identical
 # apart from nothing at all, and Coin::InitResources / Behavior / Render read
@@ -45,11 +45,11 @@
 # row and closes the third of the three ids the task names.
 
 # ---- the coin ---------------------------------------------------------------
-src/Coin_Spawn.c
-src/RedCoin_Spawn.c
-src/BlueCoin_Spawn.c
-src/_ZN4Coin13InitResourcesEv.c
-src/_ZN4Coin16CleanupResourcesEv.c
+src/d_a_coin_coin.c
+src/d_a_coin_red_coin.c
+src/d_a_coin_blue_coin.c
+src/_ZN4Coin13InitResourcesEv.cpp
+src/_ZN4Coin16CleanupResourcesEv.cpp
 src/_ZN4Coin6RenderEv.cpp
 # _ZN4Coin8BehaviorEv is NOT here: its last act is
 #
@@ -65,7 +65,8 @@ src/_ZN4Coin6RenderEv.cpp
 # own. Slot 16 is the ROM's D0 body minus the final Deallocate, written by
 # hand in hal/actor_classes_bob_world.cpp -- the Bird's treatment, and this
 # class NEEDS it: a collected coin is destroyed every time one is touched.
-src/_ZN4CoinD0Ev.c
+# RETIRED at SLICE1: body now in src/_ZN4CoinD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN4CoinD0Ev.cpp
 
 # ---- the nine behaviour states -------------------------------------------
 # __sinit_ov002_02100c50 (already on the gate-10 list) copies nine
@@ -95,23 +96,30 @@ src/func_ov002_020b10e4.c
 
 # ---- slots 18 and 19 -------------------------------------------------------
 # OnYoshiTryEat is eight bytes ("no") and OnTurnIntoEgg is the collect path.
-src/func_ov002_020b2a90.c
-src/func_ov002_020b2a34.c
+src/_ZN4Coin13OnYoshiTryEatEv.cpp
+src/_ZN4Coin13OnTurnIntoEggER6Player.cpp
 
 # --- linkloop round 0 -------------------------------------------------------
 # CommonModel: the coin carries two of them, and the class had never been
 # compiled for the host before -- the other hosted classes use Model or
 # ModelAnim. Six files, all matched.
-src/_ZN11CommonModelC1Ev.c
-src/_ZN11CommonModelD1Ev.c
-src/_ZN11CommonModelD0Ev.c
+src/_ZN11CommonModelC1Ev.cpp
+src/_ZN11CommonModelD1Ev.cpp
+# QUARANTINED at the main->port sync (lane SYNC5, the wave-7 fold merge): MSVC
+# refuses main's shape for this TU (C2600, the model family's destructor TUs:
+# main defines X::~X() where the host header spells the destructor as two
+# plain virtuals; port/unmatched/ModelFamily_Dtors_HostCopy.c carries the
+# merge base's own bodies instead). It is a decomp-side item, not a port one:
+# see runs/link100/out/SYNC5/decomp_side.md. The row returns when main lands
+# the fix.
+#src/_ZN11CommonModelD0Ev.cpp
 src/_ZN11CommonModel6RenderEPK7Vector3.cpp
 src/_ZN11CommonModel9DoSetFileEPcii.cpp
 src/_ZN11CommonModel12SetPolygonIDEj.cpp
 src/_ZN11CommonModel13Func_020160ACEj.cpp
 # the red coin's own star: what the eighth one collected calls
 src/_ZN10StarMarker27SpawnRedCoinStarIfNecessaryEv.cpp
-# _ZN5Actor18HorzAngleToFPlayerEv: HOST COPY at unmatched/Actor_ClosestPlayerWrappers.cpp
+# _ZN8dActor_c18HorzAngleToFPlayerEv: HOST COPY at unmatched/Actor_ClosestPlayerWrappers.cpp
 # (wired in CMakeLists). The matched C calls Actor::ClosestPlayer() with no argument
 # and relies on `this` being live in ARM r0; cdecl drops it, so ClosestPlayer measures
 # from garbage+0x5c. That is the RABBIT fault in crash 9e164e92 (read at 0x0000005c).
@@ -170,7 +178,7 @@ src/func_02016e70.c
 # BRICK_BLOCK (15) x14 -- installs _ZTV13BigBrickBlock, which gate 16 already
 # fills for BLACK_BRICK_BLOCK (17). One class body, six actor ids, so 15 is a
 # registry row and a factory and nothing else.
-src/BrickBlock_Spawn.c
+src/d_a_obj_block_l_block_l.c
 
 # MEGA_MUSHROOM_BLOCK_TAG (322) x4, AND NOT ON THIS LEVEL -- _ZTV10BrickBlock,
 # RTTI daObjBlockItemTag_c. The x8 this line carried was read off ov014's own
@@ -180,9 +188,10 @@ src/BrickBlock_Spawn.c
 # gate 33 is what first linked its dispatcher; port/slice_tagfix.txt seats the
 # four handlers that dispatcher indexes and carries the full placement table
 # for all four ids.
-src/MegaMushroomBlockTag_Spawn.c
+src/d_a_obj_block_item_tag_blk_skinoko_tag.c
 src/_ZN10BrickBlock13InitResourcesEv.cpp
-src/_ZN10BrickBlockD0Ev.c
+# RETIRED at SLICE1: body now in src/_ZN10BrickBlockD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN10BrickBlockD0Ev.cpp
 src/_ZN10BrickBlock16CleanupResourcesEv.cpp
 src/_ZN10BrickBlock8BehaviorEv.cpp
 # _ZN10BrickBlockD1Ev.cpp is NOT here (real C++ destructor) and
@@ -191,33 +200,21 @@ src/_ZN10BrickBlock8BehaviorEv.cpp
 # alias would mis-resolve for any other TU that uses them. Slot 16 is written
 # out in the HAL, which for this class is two lines.
 
-# CANNON_HATCH (14) x6 -- _ZTV11CannonHatch, RTTI daObjCannonShutter_c
-src/CannonHatch_Spawn.c
-src/_ZN11CannonHatch13InitResourcesEv.cpp
-src/_ZN11CannonHatch16CleanupResourcesEv.cpp
-src/_ZN11CannonHatch8BehaviorEv.cpp
-src/_ZN11CannonHatch6RenderEv.cpp
-src/_ZN11CannonHatchD1Ev.c
-src/_ZN11CannonHatchD0Ev.c
+# CANNON_HATCH (14) x6 -- _ZTV20daObjCannonShutter_c, RTTI daObjCannonShutter_c
+src/game/actors/d_a_obj_cannon_shutter.cpp
 
 # CAP (269) -- _ZTV13WaterfallMist, RTTI daObjMarioCap_c. NOT gate 20's class:
-# WATERFALL_MIST (197) installs _ZTV18PoppingLavaBubbles, RTTI daObjWaterfall_c.
-src/Cap_Spawn.c
-src/_ZN13WaterfallMist13InitResourcesEv.cpp
-src/_ZN13WaterfallMist16CleanupResourcesEv.cpp
-src/_ZN13WaterfallMist8BehaviorEv.cpp
-src/_ZN13WaterfallMist6RenderEv.cpp
-src/_ZN13WaterfallMist16OnPendingDestroyEv.c
-src/_ZN13WaterfallMistD1Ev.c
-src/func_ov002_020b8270.c
-src/func_ov002_020b81e0.c
+# WATERFALL_MIST (197) installs _ZTV16daObjWaterfall_c, RTTI daObjWaterfall_c.
+src/d_a_obj_mario_cap.c
+src/_ZN15daObjMarioCap_c13InitResourcesEv.cpp
+src/actors/daObjMarioCap_c.cpp
 
 # HEALING_HEART (297) -- _ZTV7Seaweed, RTTI daObjHeart_c
-src/HealingHeart_Spawn.c
-src/_ZN7Seaweed13InitResourcesEv.cpp
-src/_ZN7Seaweed16CleanupResourcesEv.c
-src/_ZN7Seaweed8BehaviorEv.c
-# _ZN7Seaweed6RenderEv IS NOT HERE: like PowerStar/Whomp/UpDownLiftBbh it
+src/d_a_obj_heart.c
+src/_ZN12HealingHeart13InitResourcesEv.cpp
+src/_ZN12HealingHeart16CleanupResourcesEv.cpp
+src/_ZN12HealingHeart8BehaviorEv.cpp
+# _ZN12HealingHeart6RenderEv IS NOT HERE: like PowerStar/Whomp/UpDownLiftBbh it
 # dispatches ModelAnim slot 5 through a local six-virtual ROM-order shadow
 # (b->m(0) off the ModelAnim at +0xd4), which lands on the host _ZTV9ModelAnim's
 # Virtual18 (MSVC folds the two dtor slots into one) instead of Render -- a two-arg
@@ -229,34 +226,32 @@ src/_ZN7Seaweed8BehaviorEv.c
 # with them, so leaving it in makes both HealingHeart's and Seaweed's own vtable
 # calls fault. Host copy in port/unmatched/ModelAnim_Renders.cpp, dispatched by
 # C name from the HealingHeart vtable fill in hal/actor_classes_bob_world.cpp.
-# (src/_ZN7Seaweed6RenderEv.cpp intentionally omitted)
+# (src/_ZN12HealingHeart6RenderEv.cpp intentionally omitted)
 
 # EXCLAMATION_SWITCH (11) -- _ZTV10StarSwitch, RTTI daObjSwitch_c
-src/ExclamationSwitch_Spawn.c
+src/d_a_obj_switch_hanswitch.c
 src/_ZN10StarSwitch13InitResourcesEv.cpp
 src/_ZN10StarSwitch16CleanupResourcesEv.cpp
 src/_ZN10StarSwitch8BehaviorEv.cpp
 src/_ZN10StarSwitch6RenderEv.cpp
-src/_ZN10StarSwitchD1Ev.c
-src/_ZN10StarSwitchD0Ev.c
+src/_ZN10StarSwitchD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN10StarSwitchD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN10StarSwitchD0Ev.cpp
 
 # INVISIBLE_SECRET (329) x5 -- the vtable at ov002 0x0210b030, RTTI daSCoin_c.
 # NOT _ZTV15InvisibleSecret and NOT the six _ZN15InvisibleSecret* files: the
 # config's name is shifted onto Number's table here, and this class's own five
 # slots are the unnamed func_ov002_020f0* family the factory's one literal
 # points at. The full chain is in hal/actor_classes_bob_world.cpp.
-src/InvisibleSecret_Spawn.c
-src/func_ov002_020f07dc.c
-src/func_ov002_020f069c.c
-src/func_ov002_020f06c0.cpp
-src/func_ov002_020f03c4.c
+src/actors/daSCoin_c.cpp
 
 # ARROW_SIGN_LEFT (299) x2 and ARROW_SIGN_RIGHT (300) x3 -- one class, one
 # table, two ids. The four methods are already on the gate-9 list, which is on
 # both binaries, so only the left factory and the destructor are new here.
-src/ArrowSignLeft_Spawn.c
-src/_ZN14ArrowSignRightD1Ev.c
-src/_ZN14ArrowSignRightD0Ev.c
+src/d_a_obj_yajirusi_yajirusi_l.c
+src/_ZN14ArrowSignRightD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN14ArrowSignRightD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN14ArrowSignRightD0Ev.cpp
 # The sign's own interaction bodies, matched src, were in no slice so slots 27
 # and 31 declined by name. Now enrolled and seated through as_mega / as_kill in
 # hal/actor_classes_bob_world.cpp. Slot 27 OnHitByMegaChar (0x02137d80) is
@@ -269,24 +264,25 @@ src/_ZN14ArrowSignRightD0Ev.c
 # (0x02137d40) is now seated through as_atk1 (thiscall, ret 4). Its raw src
 # tail-dispatches slot 31 through a cdecl function-pointer idiom that mismatches
 # slot 31's thiscall veneer, a false-fix one call deep, so it is NOT sliced;
-# src/func_ov098_02137d40.cpp -- HOST COPY: unmatched/ArrowSign_OnAttacked1.cpp
+# src/_ZN14ArrowSignRight11OnAttacked1ER8dActor_c.cpp -- HOST COPY: unmatched/ArrowSign_OnAttacked1.cpp
 # (the inner slot-31 dispatch remodelled as a C++ virtual so the site is
 # thiscall and lands on as_kill). The Player_HeadBonk pattern.
-src/func_ov098_02137d80.c
-src/func_ov098_02137ccc.cpp
+src/_ZN14ArrowSignRight15OnHitByMegaCharER6Player.cpp
+src/_ZN14ArrowSignRight4KillEv.cpp
 port/unmatched/ArrowSign_OnAttacked1.cpp
 
 # WATER_BOMB (208) x2 -- _ZTV9WaterBomb, RTTI daWbm_c
-src/WaterBomb_Spawn.c
+src/d_a_wbm.c
 src/_ZN9WaterBomb13InitResourcesEv.cpp
 src/_ZN9WaterBomb16CleanupResourcesEv.cpp
 src/_ZN9WaterBomb8BehaviorEv.cpp
 src/_ZN9WaterBomb6RenderEv.cpp
-src/_ZN9WaterBombD1Ev.c
-src/_ZN9WaterBombD0Ev.c
+src/_ZN9WaterBombD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN9WaterBombD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN9WaterBombD0Ev.cpp
 
 # ROLLING_IRON_BALL (220) x4 -- _ZTV15RollingIronBall, RTTI daIbl_c
-src/RollingIronBall_Spawn.c
+src/d_a_ibl.c
 src/_ZN15RollingIronBall13InitResourcesEv.cpp
 src/_ZN15RollingIronBall16CleanupResourcesEv.cpp
 src/_ZN15RollingIronBall8BehaviorEv.cpp
@@ -295,21 +291,23 @@ src/_ZN15RollingIronBall8BehaviorEv.cpp
 # needed for the same reason UnchainedChomp's is -- the class's slot 30 is now
 # the Actor base body, which dispatches slot 29. Byte-matches on all three
 # 1.2 configs with strict relocs.
-src/func_ov100_02141fa8.c
+src/_ZN15RollingIronBall16OnAimedAtWithEggEv.cpp
 src/_ZN15RollingIronBall6RenderEv.cpp
-src/_ZN15RollingIronBallD1Ev.c
-src/_ZN15RollingIronBallD0Ev.c
+src/_ZN15RollingIronBallD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN15RollingIronBallD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN15RollingIronBallD0Ev.cpp
 
 # WARP_PIPE (298) -- _ZTV13FortressTower, RTTI daObjSimpleBg_c. Bob-omb
 # Battlefield does not name it; it is here because the task asks for warp
 # pipes and ov102 is already mounted.
-src/WarpPipe_Spawn.c
+src/d_a_obj_simple_bg_dokan.c
 src/_ZN13FortressTower13InitResourcesEv.cpp
 src/_ZN13FortressTower16CleanupResourcesEv.cpp
 src/_ZN13FortressTower8BehaviorEv.cpp
 src/_ZN13FortressTower6RenderEv.cpp
-src/_ZN13FortressTowerD1Ev.c
-src/_ZN13FortressTowerD0Ev.c
+src/_ZN13FortressTowerD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN13FortressTowerD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN13FortressTowerD0Ev.cpp
 
 # gate 48: BigBrickBlock (16) and FortressTowerWall (46) of Whomp's Fortress
 # (level 7). Both factories install _ZTV13BigBrickBlock, the class body gate 16
@@ -317,58 +315,43 @@ src/_ZN13FortressTowerD0Ev.c
 # on mActorId. So the only new code is the two Spawn factories -- InitResources,
 # Behavior, Render and the destructors are already linked with black brick
 # block. Behavior has no PMF dispatch (Event bits and collision range only).
-src/BigBrickBlock_Spawn.c
-src/FortressTowerWall_Spawn.c
+src/d_a_obj_block_l_dp_block_l.c
+src/d_a_obj_block_l_bk_futa.c
 
 # gate 49: OneUpMushroomBlockTag (321), Whomp's Fortress. Installs
 # _ZTV10BrickBlock, the tag class body gate 33 fills for MEGA_MUSHROOM_BLOCK_TAG
 # (322). One body serves both ids; the only new code is this Spawn factory.
-src/OneUpMushroomBlockTag_Spawn.c
+src/d_a_obj_block_item_tag_blk_okinoko_tag.c
 
 # gate 46: InvisiblePole (287), Whomp's Fortress -- RTTI daBar_c, a moving-bar
-# actor. Its real vtable is data_ov002_02108480 (the gate-20 name shift; the
+# actor. Its real vtable is _ZTV7daBar_c (the gate-20 name shift; the
 # factory's bodies are the func_ov002_020b0* family, not the config's
 # _ZN13InvisiblePole* methods). No PMF dispatch: Behavior/Render/Cleanup are
 # short and the bar's collision is a plain MovingCylinderClsn. The vtable is
 # filled by hand in hal/actor_classes_bob_world.cpp.
-src/InvisiblePole_Spawn.c
-src/func_ov002_020b067c.c
-src/func_ov002_020b0644.c
-src/func_ov002_020b0658.cpp
-src/func_ov002_020b0650.c
-src/func_ov002_020b064c.c
-src/func_ov002_020b05d0.c
-src/func_ov002_020b0600.c
+src/game/actors/d_a_bar.cpp
 
 # lane SEAT-CAMERATAG: CameraTag (333), RTTI daCamTag_c. Resolved by address:
-# ACTOR_SPAWN_TABLE[333] -> CameraTag_SpawnInfo (0x02108518), factory
-# CameraTag_Spawn (0x020b07c8) installs 0x0210853c, the table the config names
-# _ZTV13InvisiblePole, whose slot bodies are the config's _ZN13InvisiblePole*
+# ACTOR_SPAWN_TABLE[333] -> g_profile_CAMERA_TAG (0x02108518), factory
+# daCamTag_c_classInit (0x020b07c8) installs 0x0210853c, the table the config names
+# _ZTV10daCamTag_c, whose slot bodies are the config's _ZN13InvisiblePole*
 # (the gate-20 shift, one class past the pole). All matched at their ROM
 # addresses (tools/match.py 2004/b56, 8 of 8). The D1 is class-form C++ and
 # rides slice_dtorfaces.txt; the vtable is host storage filled by hand in
 # hal/actor_classes_bob_world.cpp. No shipped level places 333.
-src/CameraTag_Spawn.c
-src/_ZN13InvisiblePole13InitResourcesEv.c
-src/_ZN13InvisiblePole16CleanupResourcesEv.c
-src/_ZN13InvisiblePole8BehaviorEv.c
-src/_ZN13InvisiblePole6RenderEv.c
-src/_ZN13InvisiblePole16OnPendingDestroyEv.c
-src/_ZN13InvisiblePoleD0Ev.c
+src/game/actors/d_a_cam_tag.cpp
 
 # --- linkloop round 3: the closure of the twelve above ----------------------
 src/IsCannonOpenInCurLevel.c
 src/UnloadSilverStarAndNumber.c
-src/_ZN5Actor13SmallPoofDustEv.c
-src/_ZN5Event8ClearBitEj.c
+src/_ZN8dActor_c13SmallPoofDustEv.cpp
+src/_ZN5Event8ClearBitEj.cpp
 src/_ZN5Model6RenderEPK7Vector3.cpp
 src/func_020393c4.c
-src/func_ov001_020ab110.c
+src/_ZN10dCapIcon_c6UnlinkEv.cpp
 src/func_ov001_020ab228.c
-src/func_ov001_020ab3a0.c
-src/func_ov001_020ab3c4.c
-src/func_ov002_020b7f2c.cpp
-src/func_ov002_020b7f7c.c
+src/_ZN10dCapIcon_cD1Ev.cpp
+src/_ZN10dCapIcon_cC1Ev.cpp
 src/func_ov002_020b9f00.c
 src/func_ov002_020b9f80.cpp
 # EXCLAMATION_SWITCH's own OnGroundPounded (StarSwitch_OnGroundPounded, ov002
@@ -379,7 +362,7 @@ src/func_ov002_020b9f80.cpp
 # so hal seats it through a 3-param __fastcall veneer that emits ret 4, the same
 # shape ssb_pounded and bbb_pounded already ship. Was in no slice, so slot 21
 # declined on ac_trap21; a ground pound is how this switch is pressed.
-src/func_ov002_020b9fec.c
+src/_ZN10StarSwitch15OnGroundPoundedER8dActor_c.cpp
 src/func_ov002_020ba01c.cpp
 # func_ov002_020ba4d8 and func_ov002_020ba520 (the EXCLAMATION_SWITCH's two
 # state dispatchers) are EXCLUDED here: they form a pointer-to-member over an
@@ -394,18 +377,14 @@ src/func_ov098_0213b63c.cpp
 src/func_ov098_0213b6e0.cpp
 src/func_ov100_0214233c.cpp
 src/Vec3_Equal.c
-src/_ZN5Actor13ClosestPlayerEv.c
-src/_ZN8Platform19UpdateClsnPosAndRotEv.cpp
-src/_ZN8Platform21UpdateModelPosAndRotYEv.cpp
+src/_ZN8dActor_c13ClosestPlayerEv.cpp
+src/actors/dBgActor_c.cpp
 
 # --- linkloop round 4 -------------------------------------------------------
 src/IsCannonOpenInLevel.c
 src/func_ov001_020aa6b0.c
 src/func_ov001_020aa6cc.c
 src/func_ov002_020baa2c.c
-src/func_ov002_020f0438.cpp
-src/func_ov002_020f051c.c
-src/func_ov002_020f05f4.c
 src/IsCannonOpen.c
 
 # WARP (347) x4 -- the vtable at ov002 0x0210acbc, RTTI daWarpkun_c. What
@@ -414,16 +393,11 @@ src/IsCannonOpen.c
 # the RTTI name and dsd never named it (the InvisibleSecret case again); all
 # seven slots are plain C-named funcs, so this class needs no header and no
 # face at all.
-src/Warp_Spawn.c
-src/func_ov002_020ec4c4.c
-src/func_ov002_020ec3fc.c
-# func_ov002_020ec410 is C++ inside a .c and goes through hostgen instead,
+src/game/actors/d_a_warpkun.cpp
+# _ZN11daWarpkun_c8BehaviorEv is C++ inside a .c and goes through hostgen instead,
 # see GATE16_SYMS in CMakeLists.txt.
-src/func_ov002_020ec408.c
-src/func_ov002_020ec404.c
-src/func_ov002_020ec388.c
 src/WarpPlayer.c
-src/_ZN6Player7CanWarpEv.cpp
+src/actors/Player.cpp
 
 # ---- CylinderClsn::Process, and it is the whole of "a coin can be picked up"
 # arm9 0x02014aa8, 0x49c bytes, matched, and never called in the port until
@@ -444,14 +418,13 @@ src/_ZN6Player7CanWarpEv.cpp
 # and the Stage's twenty slots are all traps in the port -- gate 26 landed it
 # as a scene root, not as a running actor. So the call goes where Stage::Render
 # would have made it: the head of the render phase, in port_actor_render.
-src/_ZN12CylinderClsn7ProcessEv.cpp
+src/_ZN5dCc_c7ProcessEv.cpp
 src/func_02014f44.c
 src/func_02014f5c.c
 # func_02014f5c calls its ov002 target by an UNPREFIXED name -- func_020caf98
 # rather than func_ov002_020caf98 -- because its TU had no way to know the
 # address was in an overlay. Same function, one alias in
 # hal/actor_faces_bob.cpp.
-src/func_ov002_020caf98.cpp
 
 # gate 55: the WATER_BOMB's three-state closure. WaterBomb::Behavior dispatches
 # a {function, delta} pair out of data_ov098_0213c930[unk_3c4]; the three bodies

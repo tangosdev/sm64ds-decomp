@@ -1,0 +1,220 @@
+{
+  "id": "ov002/dPathLiftActor_c",
+  "module": "ov002",
+  "source": "src_tu/actors/dPathLiftActor_c.cpp",
+  "promoted_source": "src/actors/dPathLiftActor_c.cpp",
+  "status": "text-verified",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x20ef320..0x20eff90, 22 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): dPathLiftActor_c (ROM RTTI)",
+    "module sinit corroboration: 26 sinit(s) / 26 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020ef320",
+      "end": "0x020effb8"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN16dPathLiftActor_cD0Ev",
+      "address": "0x020ef320",
+      "size": "0x00000070",
+      "legacy_source": "src/_ZN16dPathLiftActor_cD0Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN16dPathLiftActor_cD1Ev",
+      "address": "0x020ef390",
+      "size": "0x0000005c",
+      "legacy_source": "src/_ZN16dPathLiftActor_cD1Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN16dPathLiftActor_c9StateWaitEv",
+      "address": "0x020ef3ec",
+      "size": "0x00000004",
+      "legacy_source": "src/func_ov002_020ef3ec.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN16dPathLiftActor_c13StateWaitInitEv",
+      "address": "0x020ef3f0",
+      "size": "0x00000018",
+      "legacy_source": "src/func_ov002_020ef3f0.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN16dPathLiftActor_c9StateFallEv",
+      "address": "0x020ef408",
+      "size": "0x00000174",
+      "legacy_source": "src/func_ov002_020ef408.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN16dPathLiftActor_c13StateFallInitEv",
+      "address": "0x020ef57c",
+      "size": "0x000000f4",
+      "legacy_source": "src/func_ov002_020ef57c.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN16dPathLiftActor_c9StatePathEv",
+      "address": "0x020ef670",
+      "size": "0x000003d4",
+      "legacy_source": "src/func_ov002_020ef670.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_ZN16dPathLiftActor_c13StatePathInitEv",
+      "address": "0x020efa44",
+      "size": "0x00000010",
+      "legacy_source": "src/func_ov002_020efa44.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "_ZN16dPathLiftActor_c8SetStateEi",
+      "address": "0x020efa54",
+      "size": "0x0000004c",
+      "legacy_source": "src/func_ov002_020efa54.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "_ZN16dPathLiftActor_c12BaseBehaviorEv",
+      "address": "0x020efaa0",
+      "size": "0x00000050",
+      "legacy_source": "src/_ZN16dPathLiftActor_c12BaseBehaviorEv.cpp",
+      "ordinal": 9
+    },
+    {
+      "symbol": "_ZN16dPathLiftActor_c17BaseInitResourcesEv",
+      "address": "0x020efaf0",
+      "size": "0x000000ec",
+      "legacy_source": "src/func_ov002_020efaf0.cpp",
+      "ordinal": 10
+    },
+    {
+      "symbol": "_ZN16dPathLiftActor_c9ResetPathEv",
+      "address": "0x020efbdc",
+      "size": "0x00000098",
+      "legacy_source": "src/func_ov002_020efbdc.c",
+      "ordinal": 11
+    },
+    {
+      "symbol": "_ZN16dPathLiftActor_c16RenderPathModelsEv",
+      "address": "0x020efc74",
+      "size": "0x00000080",
+      "legacy_source": "src/func_ov002_020efc74.cpp",
+      "ordinal": 12
+    },
+    {
+      "symbol": "_ZN16dPathLiftActor_c16UpdatePathModelsEv",
+      "address": "0x020efcf4",
+      "size": "0x00000174",
+      "legacy_source": "src/func_ov002_020efcf4.c",
+      "ordinal": 13
+    },
+    {
+      "symbol": "_ZNK16dPathLiftActor_c16HasNonzeroAngleZEv",
+      "address": "0x020efe68",
+      "size": "0x00000014",
+      "legacy_source": "src/func_ov002_020efe68.c",
+      "ordinal": 14
+    },
+    {
+      "symbol": "_ZNK16dPathLiftActor_c14Param10ModeIs1Ev",
+      "address": "0x020efe7c",
+      "size": "0x00000020",
+      "legacy_source": "src/func_ov002_020efe7c.c",
+      "ordinal": 15
+    },
+    {
+      "symbol": "_ZNK16dPathLiftActor_c14Param12ModeIs1Ev",
+      "address": "0x020efe9c",
+      "size": "0x00000020",
+      "legacy_source": "src/func_ov002_020efe9c.c",
+      "ordinal": 16
+    },
+    {
+      "symbol": "_ZNK16dPathLiftActor_c14Param08ModeIs2Ev",
+      "address": "0x020efebc",
+      "size": "0x00000020",
+      "legacy_source": "src/func_ov002_020efebc.c",
+      "ordinal": 17
+    },
+    {
+      "symbol": "_ZNK16dPathLiftActor_c17Param08ModeIs1Or2Ev",
+      "address": "0x020efedc",
+      "size": "0x00000028",
+      "legacy_source": "src/func_ov002_020efedc.c",
+      "ordinal": 18
+    },
+    {
+      "symbol": "_ZNK16dPathLiftActor_c11IsUnk42cSetEv",
+      "address": "0x020eff04",
+      "size": "0x00000014",
+      "legacy_source": "src/func_ov002_020eff04.cpp",
+      "ordinal": 19
+    },
+    {
+      "symbol": "_ZN16dPathLiftActor_c9AfterClsnEi",
+      "address": "0x020eff18",
+      "size": "0x00000078",
+      "legacy_source": "src/_ZN16dPathLiftActor_c9AfterClsnEi.cpp",
+      "ordinal": 20
+    },
+    {
+      "symbol": "func_ov002_020eff90",
+      "address": "0x020eff90",
+      "size": "0x00000028",
+      "legacy_source": "src/func_ov002_020eff90.cpp",
+      "ordinal": 21
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+    "tubuild create warning: RAW: src/func_ov002_020efaf0.cpp (func_ov002_020efaf0) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov002_020eff04.cpp (func_ov002_020eff04) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov002_020efe68' differs between the legacy file that used to hold func_ov002_020ef408 and the one that held func_ov002_020ef57c; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'DecIfAbove0_Short' differs between the legacy file that used to hold func_ov002_020ef408 and the one that held func_ov002_020ef670; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_HorzDist' differs between the legacy file that used to hold func_ov002_020ef57c and the one that held func_ov002_020ef670; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_Z14ApproachLinearRsss' differs between the legacy file that used to hold func_ov002_020ef408 and the one that held func_ov002_020ef670; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov002_020efe9c' differs between the legacy file that used to hold func_ov002_020efc74 and the one that held func_ov002_020efcf4; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZNK7PathPtr7GetNodeER7Vector3j' differs between the legacy file that used to hold func_ov002_020ef670 and the one that held func_ov002_020efcf4; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_Sub' differs between the legacy file that used to hold func_ov002_020ef670 and the one that held func_ov002_020efcf4; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'LenVec3' differs between the legacy file that used to hold func_ov002_020ef670 and the one that held func_ov002_020efcf4; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov002_020efedc' differs between the legacy file that used to hold func_ov002_020efbdc and the one that held _ZN8PathLift9AfterClsnEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'DecIfAbove0_Byte' differs between the legacy file that used to hold func_ov002_020ef408 and the one that held _ZN8PathLift9AfterClsnEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov002_020efa54' differs between the legacy file that used to hold func_ov002_020efbdc and the one that held _ZN8PathLift9AfterClsnEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'C') differs between the legacy file that used to hold func_ov002_020efa54 and the one that held func_ov002_020efa54; kept the first, the other is commented out for review",
+    "tubuild reconcile note: the conflict markers the warnings above were frozen against are no longer present in src_tu/actors/dPathLiftActor_c.cpp. They were reconciled in place and the notes were not updated at the time, so the entry claimed open conflicts that no longer existed. Marked (RESOLVED) rather than deleted, so the record that two legacy files disagreed about these names survives. Checked by tools/check_tubuild_conflicts.py."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov002-dPathLiftActor_c/dPathLiftActor_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 22,
+    "functions_declared": 22,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "unhandled": [
+        "_ZN7Vector3D1Ev",
+        "__sinit_dPathLiftActor_c.cpp"
+      ],
+      "data": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 25 unlicensed section/symbol(s), 2 compiler-only policy error(s)",
+      "functions_occur_in_expected_order": "PARTIAL -- ordinal pair(s) not in ROM order: [(0, 1)]",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}

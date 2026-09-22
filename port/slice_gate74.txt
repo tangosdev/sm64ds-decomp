@@ -1,16 +1,17 @@
 # Gate 74: SLIDING_PLATFORM_WF (actor 55, ov091), Whomp's Fortress.
 #
 # _ZTV17SlidingPlatformWf, ov091 0x02135080, a THIRTY-TWO slot Platform table
-# (slot 31 is Platform::Kill). SlidingPlatformWf_Spawn installs it cleanly and
+# (slot 31 is Platform::Kill). daObjSimpleLift_c_classInit_BK_TRANSBAR installs it cleanly and
 # its own SpawnInfo +4 halfword reads 55. ov091 has been mounted since gate 32.
 #
 # The simplest of the three ov091 platforms: it overrides nothing past slot 17,
 # dispatches no pointer-to-member, and its Render goes through the dual-filled
 # _ZTV5Model slot 5, so every method serves from src unchanged.
-src/SlidingPlatformWf_Spawn.c
+src/d_a_obj_simple_lift_bk_transbar.c
 src/_ZN17SlidingPlatformWf13InitResourcesEv.cpp
 src/_ZN17SlidingPlatformWf16CleanupResourcesEv.cpp
 src/_ZN17SlidingPlatformWf8BehaviorEv.cpp
 src/_ZN17SlidingPlatformWf6RenderEv.cpp
-src/_ZN17SlidingPlatformWfD1Ev.c
-src/_ZN17SlidingPlatformWfD0Ev.c
+src/_ZN17SlidingPlatformWfD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN17SlidingPlatformWfD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN17SlidingPlatformWfD0Ev.cpp

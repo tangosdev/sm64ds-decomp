@@ -5,5 +5,5 @@ void func_ov002_020ae9f8(char *self)
     *(unsigned int *)(self + 0x98) = 0;
     *(unsigned int *)(self + 0xa8) = 0;
     *(unsigned short *)(self + 0x102) = 0xf;
-    *(unsigned int *)(((long long)(int)(self + 0xb0))) &= ~0x1;
+    *(unsigned int *)(self + 0xb0) &= ~0x1;
 }

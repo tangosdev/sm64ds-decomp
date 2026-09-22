@@ -9,8 +9,8 @@
 #   48  delinked COMPLETE to a src TU
 #    4  present but NOT complete in delinks
 #         _ZN8Goomboss13InitResourcesEv.c   (0x404, the resource load)
-#         ExplosionGoomba_Spawn.cpp         (0xd4)
-#         Goomboss_Spawn.cpp                (0xd4)
+#         daKuriKing_c_classInit_KURIKING_VANISH.cpp         (0xd4)
+#         daKuriKing_c_classInit_KURIKING.cpp                (0xd4)
 #         __sinit_ov074_02122978.c          (0x3f8, the static initialiser)
 #    4  no delink block at all
 #         func_ov074_02121800  0x15c  -- src EXISTS, //cpp NONMATCHING banner
@@ -25,10 +25,13 @@
 #                                        this count, but src/ has it and the
 #                                        port runs it.
 #         func_ov074_021204c0  0x208  -- same, same commit, same lane.
-#         func_ov074_02121380  0x374  -- MISSING, no src anywhere. The
-#                                        collision-cylinder rebuild; an honest
-#                                        div-11 near-miss is banked on the
-#                                        decomp side and a siege is queued.
+#         func_ov074_02121380  0x374  -- src EXISTS, declared NONMATCHING body
+#                                        with a differential-execution audit
+#                                        (main 6d4ffd596, PR #2018). Still no
+#                                        delink block, so it stays in this
+#                                        count, but src/ has it and the port
+#                                        runs it -- the collision-cylinder
+#                                        rebuild.
 #   ---
 #    56  = 48 + 4 + 4.  Sum checks against symbols.txt.
 #
@@ -41,7 +44,7 @@
 # src/func_ov074_021201f0.c and src/func_ov074_021204c0.c). The six held out,
 # each for a named reason, and prop17 held out none of them:
 #
-#   src/func_ov074_0212087c.c        ALREADY LINKED. port/slice_gate32.txt:356
+#   src/actors/Goomboss.cpp        ALREADY LINKED. port/slice_gate32.txt:356
 #       compiles it -- the goomba's knocked-back state asks the Goomboss
 #       overlay for a launch vector, and gate 32 took the CODE while ov074 was
 #       unmounted. It is the "1 linked" in ov074's 1/53 and is not this lane's
@@ -50,9 +53,9 @@
 #       about what this lane adds.
 #   src/_ZN8Goomboss6RenderEv.cpp    HOST COPY (ModelAnim slot 5), see 3 below
 #   src/func_ov074_021222e0.cpp      HOST COPY (ModelAnim slot 5), see 3 below
-#   src/func_ov074_021203e4.cpp      HOST COPY (PMF state ENTER), see 3 below
-#   src/func_ov074_0212042c.cpp      HOST COPY (PMF state TICK),  see 3 below
-#   src/_ZN8Goomboss13InitResourcesEv.c  HOST COPY (MSVC C2561), see 3 below
+#   src/actors/Goomboss.cpp      HOST COPY (PMF state ENTER), see 3 below
+#   src/actors/Goomboss.cpp      HOST COPY (PMF state TICK),  see 3 below
+#   src/_ZN8Goomboss13InitResourcesEv.cpp  HOST COPY (MSVC C2561), see 3 below
 #
 # ==== 3. THE REFUSALS, SMALLEST SUBTREE EACH ===============================
 # (a) TWO ModelAnim slot-5 dispatch sites -> port/unmatched/Goomboss_HostSites.cpp
@@ -70,7 +73,7 @@
 #     {enter, tick} cells; the eighteen source records are seated with host
 #     bodies by hal/actor_classes_ov074.cpp's port_ov074_states_seat().
 # (c) ONE MSVC C2561 -> port/unmatched/Goomboss_InitResources.cpp
-#     src/_ZN8Goomboss13InitResourcesEv.c is declared int-returning and uses
+#     src/_ZN8Goomboss13InitResourcesEv.cpp is declared int-returning and uses
 #     mwccarm's bare `return;` on its mParam == 0x1111 early exit. MSVC's C++
 #     front end rejects that outright ("function must return a value") -- an
 #     ERROR, not a warning, so there is no /wd -- and it cannot be compiled as
@@ -84,20 +87,21 @@
 # `asm` over all 53 TUs comes back empty, so no other subtree is refused. Lane
 # prop17 re-ran that sweep over its two additions and it is still empty.
 #
-# (d) THE ONE BODY STILL MISSING, and what its absence costs.
+# (d) THE ONE BODY STILL MISSING -- NOW CLOSED (SEATED 2026-09-17).
 #     func_ov074_02121380 (0x374) is the collision-cylinder rebuild. Its single
 #     reference is an arm_call at 0x02121ccc, inside Goomboss::Behavior, which
 #     runs it unconditionally every frame; it in turn is the only caller of
-#     func_ov074_02121270 (its own arm_call at 0x02121548). It is faced loudly
-#     in hal/actor_classes_ov074.cpp under the ROM's own name.
-#     EXPECTATION, recorded before anyone measures the fight: with the state
-#     machine complete the boss now animates, talks, scales and moves, and the
-#     four MovingCylinderClsnWithPos members at +0x110 stride 0x40 stay where
-#     the constructor left them. The fight may LOOK right and not HIT right.
-#     A clean-looking level 45 is NOT evidence that this hole is closed; the
-#     UNHOSTED line the face prints is the only thing that speaks to it.
-#     Because 02121270's only caller stays faced, seating 021201f0 and 021204c0
-#     does not un-strip it -- it stays out of the link, and that is expected.
+#     func_ov074_02121270 (its own arm_call at 0x02121548). It was faced loudly
+#     in hal/actor_classes_ov074.cpp under the ROM's own name; that face is now
+#     deleted.
+#     WHAT NOW HAPPENS: the audited body runs (see section 1's inventory row
+#     and the SEATED comment above src/func_ov074_02121380.c below), so the
+#     four MovingCylinderClsnWithPos members at +0x110 stride 0x40 follow the
+#     boss instead of sitting where the constructor left them. The paragraph's
+#     own stated reason for func_ov074_02121270 staying out of the link --
+#     that its only caller stayed faced -- is exactly what changed: the caller
+#     is compiled now, so 02121270 comes into the link from
+#     src/actors/Goomboss.cpp, which was already an input.
 #
 # ==== 4. THE TWO ALIAS RACES THIS MOUNT SETTLES (T6) =======================
 # ov074 shares the load window at base 0x0211f000 with ov070, ov071 and ov073,
@@ -125,7 +129,7 @@
 #      DELETED: hal/actor_classes_ov071.cpp:224 pragma
 #
 # (4b) 0x021222e0 -- ov070 rodata vs ov074 CODE.
-#      src/_ZN3Amp16CleanupResourcesEv.c reads
+#      src/game/actors/daBrq_c.cpp reads
 #      `struct SharedFilePtr *func_ov074_021222e0[2]` -- ov070's own
 #      two-pointer file table -- under the ov074 FUNCTION spelling;
 #      hal/cxx_aliases.cpp:995 aliased it onto data_ov070_021222e0 and its own
@@ -133,13 +137,13 @@
 #      this storage rather than replace it"). ov074's function at that address
 #      is real, 0xdc bytes, and Goomboss::Render CALLS it, so the name has to
 #      resolve to CODE in this link.
-#      NEW:     set_source_files_properties(src/_ZN3Amp16CleanupResourcesEv.c
+#      NEW:     set_source_files_properties(src/game/actors/daBrq_c.cpp
 #                   COMPILE_DEFINITIONS func_ov074_021222e0=data_ov070_021222e0)
 #      DELETED: hal/cxx_aliases.cpp:995 pragma
 #
 # The reverse direction was swept too: every ov074 TU was scanned for a
 # sibling-overlay symbol name. Six references, none in this window --
-# data_ov002_0210da30, func_ov002_020aed18, data_ov084_0213089c,
+# data_ov002_0210da30, _ZN12dEnemyBase_cD2Ev, data_ov084_0213089c,
 # data_ov084_02130cc8, data_ov084_02130cf8 and func_ov084_021296b0. ov002 and
 # ov084 are both mounted and both are genuinely co-resident with ov074 on
 # level 45 (its roster is ov067 ov074 ov084 ov089 ov098 ov102), so all six are
@@ -151,21 +155,26 @@
 # placeholder at all. Both destructors spell _ZTV8Goomboss directly, both
 # factories store that same table, and the table's own vtable[-1] typeinfo
 # reads through to "12daKuriKing_c", so dsd's label is on the right class and
-# the ov026/ov030/ov036 label shift does not fire. src/_ZN8GoombossD0Ev.c even
+# the ov026/ov030/ov036 label shift does not fire. src/_ZN8GoombossD0Ev.cpp even
 # spells the game heap `data_020a0eac` outright instead of G0.
 #
 # ==== 6. LANGUAGE ==========================================================
-# 18 of the 47 slice lines are .cpp. Of the 29 .c lines, the comment-stripped
+# 10 of the 20 slice lines are .cpp. Of the 10 .c lines, the comment-stripped
 # token sweep (`extern "C"`, virtual, class, namespace, bool, new, delete,
 # template, true, false, ::) plus the //cpp marker check finds TWO that are
 # really C++ and get LANGUAGE CXX in port/CMakeLists.txt (a third,
-# src/_ZN8Goomboss13InitResourcesEv.c, is a host copy and not a slice line):
-#     src/func_ov074_0211f5b8.c             //cpp + a top-level extern "C"
+# src/_ZN8Goomboss13InitResourcesEv.cpp, is a host copy and not a slice line):
+#     src/actors/Goomboss.cpp             //cpp + a top-level extern "C"
 #     src/func_ov074_02121800.c             //cpp + the NONMATCHING banner
-# One more file matched the sweep and is NOT C++: src/func_ov074_02120d74.c
+# One more file matched the sweep and is NOT C++: src/actors/Goomboss.cpp
 # matches `false` because it DEFINES it (`#define false 0` on line 7), which
 # is the false positive the sweep has to tolerate to stay cheap -- and
 # compiling that file as C++ would break on the macro.
+# (counts remeasured 2026-09-17, fixer GOOMBOSS: 18/47/29 above had gone stale
+# against this file's current row list, independent of the row this card adds)
+# src/func_ov074_02121380.c, the new row this card seats, was swept for the
+# same token list and the //cpp marker: no hit, plain C, so it takes no
+# LANGUAGE CXX row.
 #
 # ==== 7. THE MEASURED EXTERNAL CLOSURE =====================================
 # THREE plain C names off the FIRST link's own LNK2019/LNK2001 list, taken from
@@ -186,7 +195,7 @@
 #                         own base typeinfo settles it: _ZTV8Goomboss's
 #                         vtable[-1] names base 0x021081c0, whose name string
 #                         reads "12dEnemyBase_c". The port's spelling of that
-#                         constructor is _ZN5EnemyC2Ev (hal/cxx_aliases.cpp
+#                         constructor is _ZN12dEnemyBase_cC2Ev (hal/cxx_aliases.cpp
 #                         :1434 and the ov073 lane's port_factory_chief_chilly,
 #                         which calls it by that name), so the two factory TUs
 #                         get a per-source -D onto it in port/CMakeLists.txt.
@@ -215,48 +224,36 @@
 # also appended below) declares it a static member of class Sound, so MSVC
 # emits ?Func_02048ee4@Sound@@SAXXZ -- the same shape the other way round,
 # bridged with the rest and confirmed with dumpbin /symbols on the object.
-src/ExplosionGoomba_Spawn.cpp
-src/Goomboss_Spawn.cpp
+src/d_a_kuri_king_kuriking_vanish.cpp
+src/d_a_kuri_king_kuriking.cpp
 src/_ZN8Goomboss16CleanupResourcesEv.cpp
 src/_ZN8Goomboss8BehaviorEv.cpp
-src/_ZN8GoombossD0Ev.c
-src/_ZN8GoombossD1Ev.c
+# RETIRED at SLICE1: body now in src/_ZN8GoombossD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN8GoombossD0Ev.cpp
+src/_ZN8GoombossD1Ev.cpp
 src/__sinit_ov074_02122978.c
-src/func_ov074_0211f154.c
-src/func_ov074_0211f244.cpp
-src/func_ov074_0211f344.c
-src/func_ov074_0211f38c.c
-src/func_ov074_0211f5b8.c
-src/func_ov074_0211fa08.c
-src/func_ov074_0211fa74.c
-src/func_ov074_0211fb84.c
-src/func_ov074_0211fbd0.c
-src/func_ov074_0211fc34.c
-src/func_ov074_0211fc38.c
-src/func_ov074_0211fd48.c
-src/func_ov074_0211fd74.cpp
-src/func_ov074_0211ffac.c
-src/func_ov074_0211ffcc.c
-src/func_ov074_0212007c.c
-src/func_ov074_02120080.cpp
-src/func_ov074_0212016c.c
-src/func_ov074_0212018c.cpp
-src/func_ov074_021201ec.c
-src/func_ov074_021201f0.c
-src/func_ov074_021203e0.c
-src/func_ov074_02120474.cpp
-src/func_ov074_021204c0.c
-src/func_ov074_021206c8.c
-src/func_ov074_021207b8.c
-src/func_ov074_02120808.cpp
-src/func_ov074_02120b24.c
-src/func_ov074_02120b90.c
-src/func_ov074_02120bb8.c
-src/func_ov074_02120d74.c
-src/func_ov074_02121270.c
-src/func_ov074_02121300.cpp
+src/actors/Goomboss.cpp
+# RETIRED at SLICE1: body now in src/actors/Goomboss.cpp. main consolidation put this body in the class TU, which the build already compiles, so the per-function leftover is a second definition.
+#src/func_ov074_021201f0.c
+# RETIRED at SLICE1: body now in src/actors/Goomboss.cpp. main consolidation put this body in the class TU, which the build already compiles, so the per-function leftover is a second definition.
+#src/func_ov074_021204c0.c
 src/func_ov074_021216f4.c
 src/func_ov074_02121800.c
+# SEATED 2026-09-17 (run link100 wave 10, fixer GOOMBOSS, card
+# out/TRIAGE3/card_goomboss.md). The collision-cylinder rebuild, and the last hole in this
+# overlay. main 6d4ffd596 (PR #2018) landed it as a DECLARED NONMATCHING body: 11 residue
+# words of 221, size and the 0x74 frame exact, prologue and tail byte-exact, the ordering
+# floor measured closed over 4320 order cells and all 25 archived mwccarm builds, two full
+# sieges on record in config/match_attempts.jsonl, and the compiler hunt closed. The
+# residue is permanent, so the port runs the body on its AUDIT rather than on a byte gate:
+# differential execution against the cartridge over a 2700-state discriminating lattice,
+# IDENTICAL on every state -- same calls with the same arguments, same final value of all
+# 216 written bytes, same return, all 12 branch arms exercised, and the harness proved by
+# 8 deliberately broken size-neutral controls that it catches. src/func_ov074_02121380.c
+# lines 1 to 90 carry the whole record. This is the func_ov074_02121800 shape one row up
+# (the ov005/ov075 precedent that slice section 1 names), and the face it replaces in
+# hal/actor_classes_ov074.cpp is deleted rather than left beside a live body.
+src/func_ov074_02121380.c
 src/func_ov074_0212195c.c
 src/func_ov074_0212199c.c
 src/func_ov074_02121a20.c

@@ -1,0 +1,370 @@
+{
+  "id": "ov006/dScMgCoin_c",
+  "module": "ov006",
+  "source": "src/actors/dScMgCoin_c.cpp",
+  "promoted_source": "src/actors/dScMgCoin_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "PARTIAL RUN, 33 of 61 delink sections. tu_map calls 0x020dbe40..0x020de940 one contiguous linker run of 62 function(s) (build/tu_map.json, tools/tu_map.py). This TU licenses 0x020dbf7c..0x020dd0e0, 33 function(s), ROM ordinals 3..35. The other 28 sections keep their own shards and their own delinks.txt entries.",
+    "class label(s): dScMgCoin_c",
+    "TWO SOURCELESS HOLES, NOT ONE, AND THEY SPLIT THE RUN INTO THREE. ROM ordinal 2, func_ov006_020dbe9c (0x020dbe9c, size 0xe0), and ROM ordinal 36, func_ov006_020dd0e0 (0x020dd0e0, size 0x1ec), have no source anywhere in the tree and no entry in config/arm9/overlays/ov006/delinks.txt at all -- the cartridge's own bytes cover both ranges. Neither is unattempted work: func_ov006_020dbe9c carries 16 logged attempts in config/match_attempts.jsonl across four models (claude-opus-5, claude-fable-5, grok-4.5, grok-4.6) and two harnesses (claude-code, grok-build), best 7 divergent words, with the last three attempts all stalled at 7; func_ov006_020dd0e0 is banked in nearmiss/db.jsonl at 34 divergences. A near-miss never lands in src/, so bringing either in was not available. Nothing in this tree expresses a .text claim with a hole in it -- re-derived by the builder on this base, 0 of 149 TU manifests (this one included) and 0 of 1207 ov006 delink blocks carry two .text runs -- so the run can only be licensed as one of its three contiguous pieces.",
+    "WHICH SIDE, AND WHAT IT COSTS. The three pieces are: segment 1, 0x020dbe40..0x020dbe9c, 2 sections, the D1/D0 pair alone; segment 2, 0x020dbf7c..0x020dd0e0, 33 sections, this file; segment 3, 0x020dd2cc..0x020de988, 26 sections, being 25 shards plus dScMgCoin_c_classInit from src/d_s_mg_coin.cpp. Segment 2 is the largest side by shard count -- the queue's own ranking metric -- and 33 beats segment 3's ceiling of 26 even with the factory folded in. The cost is stated rather than hidden: segment 3 holds four of the six own vtable overrides (slots 0 InitResources, 6 Behavior, 9 Render, 18 OnYoshiTryEat) and the factory, so those stay in their own shards and a later promotion may take that side. A class-named TU holding no mangled class member is precedented and landed: ov006/dScMgBomroom_c (41 functions) and ov074/Goomboss (36) are both promoted with none.",
+    "THE FACTORY IS NOT EXCLUDED BY CONVENTION -- IT IS UNREACHABLE FROM THIS SIDE. dScMgCoin_c_classInit (0x020de940..0x020de988, src/d_s_mg_coin.cpp) abuts the run's top end at a zero-byte gap and is not claimed by any manifest, so it was a genuine candidate; 12 of the 20 ov006 manifests on this base do fold their own *_classInit in, including the immediate neighbour dScMgCard_c. It is out here only because it is contiguous with segment 3 and not with segment 2.",
+    "NOT A DESTRUCTOR-ORDER REFUSAL. The cartridge orders this class D1 (0x020dbe40) BELOW D0 (0x020dbe64), with no _ZN11dScMgCoin_cD2Ev in any config symbols file; that is the reproducible direction and the pair would not have blocked a whole-run promotion. The pair is out only because it lies on the far side of the first hole. Consequently this TU does not own the class's key function -- the first declared virtual is the out-of-line destructor at 0x020dbe40, in segment 1 -- so it emits no _ZTV/_ZTI/_ZTS, needs no compiler_only_output rows (verify reports zero unlicensed symbols and linkcheck [4b/8] reports 33 LICENSED, 0 unlicensed), and needed no edit to include/dScMgCoin_c.h. Text-only is in any case the only route available: ov006's entire .data segment (0x02133600..0x021402e0) is one delink section owned by no file, so no ov006 TU can own its own vtable.",
+    "THE pragma:2 BLOCKER IS A PHANTOM -- MEASURED, WITH THE DELETE-OUTRIGHT CONTROL. The legacy shards of func_ov006_020dca04 and func_ov006_020dcb1c each carried #pragma opt_common_subs off and #pragma opt_strength_reduction off. Three configurations were compiled on this identical 33-member set with the pinned 2004/b56: (a) #pragma defer_codegen off plus both pragmas in a push/pop bracket -> 33/33 MATCH, all 33 in ROM-ascending emission order; (b) defer_codegen off, both pragmas deleted outright -> 33/33 MATCH, ROM-ascending; (c) both pragmas deleted and defer_codegen off deleted too, source still ascending -> 33/33 MATCH but 32 ordinal pair(s) NOT in ROM order. (a) and (b) are byte-identical, so both pragmas buy zero members here and are gone from the shipped file. This is the dScMgRoulette_c verdict, not the dScMgHanachan_c one, on the same overlay and the same pragma pair -- the queue column counts shards carrying a #pragma line and is not evidence either way.",
+    "SOURCE ORDER IS ROM-ASCENDING, lowest address first, and #pragma defer_codegen off is what makes that admissible: control (c) above is the measurement -- dropping that one line from this ascending file costs nothing in bytes and inverts emission order to 32 out-of-order pairs, which linkcheck [4b/8] hard-refuses.",
+    "RATCHET-NEUTRAL. None of the 33 absorbed shards appears in config/converted-baseline.json (2680 entries). The three dScMgCoin_c files that do -- src/_ZN11dScMgCoin_cD1Ev.cpp, src/_ZN11dScMgCoin_cD0Ev.cpp and src/_ZN11dScMgCoin_c6RenderEv.cpp -- are all outside the licensed range and stay enrolled, so tiers_ratchet --update was deliberately NOT run and nothing was banked.",
+    "OUTPUT PATH: src/actors/dScMgCoin_c.cpp. The manifest's generated promoted_source already named this path; it is also PIPELINE.md's stage-2 convention and the shape the seven most recent ov006 promotions use, against the older src/minigames/d_s_mg_*.cpp group.",
+    "module sinit corroboration: 31 sinit(s) / 31 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020dbf7c",
+      "end": "0x020dd0e0"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "func_ov006_020dbf7c",
+      "address": "0x020dbf7c",
+      "size": "0x000001d8",
+      "legacy_source": "src/func_ov006_020dbf7c.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov006_020dc154",
+      "address": "0x020dc154",
+      "size": "0x00000070",
+      "legacy_source": "src/func_ov006_020dc154.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov006_020dc1c4",
+      "address": "0x020dc1c4",
+      "size": "0x000000a8",
+      "legacy_source": "src/func_ov006_020dc1c4.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov006_020dc26c",
+      "address": "0x020dc26c",
+      "size": "0x00000028",
+      "legacy_source": "src/func_ov006_020dc26c.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov006_020dc294",
+      "address": "0x020dc294",
+      "size": "0x00000004",
+      "legacy_source": "src/func_ov006_020dc294.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov006_020dc298",
+      "address": "0x020dc298",
+      "size": "0x00000060",
+      "legacy_source": "src/func_ov006_020dc298.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov006_020dc2f8",
+      "address": "0x020dc2f8",
+      "size": "0x0000003c",
+      "legacy_source": "src/func_ov006_020dc2f8.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov006_020dc334",
+      "address": "0x020dc334",
+      "size": "0x00000014",
+      "legacy_source": "src/func_ov006_020dc334.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov006_020dc348",
+      "address": "0x020dc348",
+      "size": "0x00000028",
+      "legacy_source": "src/func_ov006_020dc348.c",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov006_020dc370",
+      "address": "0x020dc370",
+      "size": "0x0000004c",
+      "legacy_source": "src/func_ov006_020dc370.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_ov006_020dc3bc",
+      "address": "0x020dc3bc",
+      "size": "0x00000058",
+      "legacy_source": "src/func_ov006_020dc3bc.c",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_ov006_020dc414",
+      "address": "0x020dc414",
+      "size": "0x0000009c",
+      "legacy_source": "src/func_ov006_020dc414.c",
+      "ordinal": 14
+    },
+    {
+      "symbol": "func_ov006_020dc4b0",
+      "address": "0x020dc4b0",
+      "size": "0x00000018",
+      "legacy_source": "src/func_ov006_020dc4b0.c",
+      "ordinal": 15
+    },
+    {
+      "symbol": "func_ov006_020dc4c8",
+      "address": "0x020dc4c8",
+      "size": "0x000000fc",
+      "legacy_source": "src/func_ov006_020dc4c8.c",
+      "ordinal": 16
+    },
+    {
+      "symbol": "func_ov006_020dc5c4",
+      "address": "0x020dc5c4",
+      "size": "0x0000010c",
+      "legacy_source": "src/func_ov006_020dc5c4.c",
+      "ordinal": 17
+    },
+    {
+      "symbol": "func_ov006_020dc6d0",
+      "address": "0x020dc6d0",
+      "size": "0x00000084",
+      "legacy_source": "src/func_ov006_020dc6d0.c",
+      "ordinal": 18
+    },
+    {
+      "symbol": "func_ov006_020dc754",
+      "address": "0x020dc754",
+      "size": "0x00000060",
+      "legacy_source": "src/func_ov006_020dc754.cpp",
+      "ordinal": 19
+    },
+    {
+      "symbol": "func_ov006_020dc7b4",
+      "address": "0x020dc7b4",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov006_020dc7b4.c",
+      "ordinal": 20
+    },
+    {
+      "symbol": "func_ov006_020dc7fc",
+      "address": "0x020dc7fc",
+      "size": "0x00000018",
+      "legacy_source": "src/func_ov006_020dc7fc.c",
+      "ordinal": 21
+    },
+    {
+      "symbol": "func_ov006_020dc814",
+      "address": "0x020dc814",
+      "size": "0x0000005c",
+      "legacy_source": "src/func_ov006_020dc814.c",
+      "ordinal": 22
+    },
+    {
+      "symbol": "func_ov006_020dc870",
+      "address": "0x020dc870",
+      "size": "0x00000090",
+      "legacy_source": "src/func_ov006_020dc870.c",
+      "ordinal": 23
+    },
+    {
+      "symbol": "func_ov006_020dc900",
+      "address": "0x020dc900",
+      "size": "0x00000060",
+      "legacy_source": "src/func_ov006_020dc900.c",
+      "ordinal": 24
+    },
+    {
+      "symbol": "func_ov006_020dc960",
+      "address": "0x020dc960",
+      "size": "0x0000003c",
+      "legacy_source": "src/func_ov006_020dc960.c",
+      "ordinal": 25
+    },
+    {
+      "symbol": "func_ov006_020dc99c",
+      "address": "0x020dc99c",
+      "size": "0x00000068",
+      "legacy_source": "src/func_ov006_020dc99c.c",
+      "ordinal": 26
+    },
+    {
+      "symbol": "func_ov006_020dca04",
+      "address": "0x020dca04",
+      "size": "0x00000118",
+      "legacy_source": "src/func_ov006_020dca04.c",
+      "ordinal": 27
+    },
+    {
+      "symbol": "func_ov006_020dcb1c",
+      "address": "0x020dcb1c",
+      "size": "0x0000012c",
+      "legacy_source": "src/func_ov006_020dcb1c.c",
+      "ordinal": 28
+    },
+    {
+      "symbol": "func_ov006_020dcc48",
+      "address": "0x020dcc48",
+      "size": "0x00000070",
+      "legacy_source": "src/func_ov006_020dcc48.c",
+      "ordinal": 29
+    },
+    {
+      "symbol": "func_ov006_020dccb8",
+      "address": "0x020dccb8",
+      "size": "0x000000bc",
+      "legacy_source": "src/func_ov006_020dccb8.c",
+      "ordinal": 30
+    },
+    {
+      "symbol": "func_ov006_020dcd74",
+      "address": "0x020dcd74",
+      "size": "0x000000c8",
+      "legacy_source": "src/func_ov006_020dcd74.c",
+      "ordinal": 31
+    },
+    {
+      "symbol": "func_ov006_020dce3c",
+      "address": "0x020dce3c",
+      "size": "0x0000006c",
+      "legacy_source": "src/func_ov006_020dce3c.c",
+      "ordinal": 32
+    },
+    {
+      "symbol": "func_ov006_020dcea8",
+      "address": "0x020dcea8",
+      "size": "0x00000154",
+      "legacy_source": "src/func_ov006_020dcea8.c",
+      "ordinal": 33
+    },
+    {
+      "symbol": "func_ov006_020dcffc",
+      "address": "0x020dcffc",
+      "size": "0x00000004",
+      "legacy_source": "src/func_ov006_020dcffc.c",
+      "ordinal": 34
+    },
+    {
+      "symbol": "func_ov006_020dd000",
+      "address": "0x020dd000",
+      "size": "0x000000e0",
+      "legacy_source": "src/func_ov006_020dd000.c",
+      "ordinal": 35
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov006_020ddeb0' differs between the legacy file that used to hold func_ov006_020dc154 and the one that held func_ov006_020dc1c4; kept the first, the other is commented out for review. RESOLVED: the two spellings (char* and void*) are both kept, each declared at block scope inside the member that uses it; the enclosing extern \"C\" still gives them C linkage. No marker survives in the source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Sound12PlayBank2_2DEj' differs between the legacy file that used to hold func_ov006_020dc5c4 and the one that held func_ov006_020dc6d0; kept the first, the other is commented out for review. RESOLVED: the two spellings differ only in unsigned vs unsigned int, which name one type; one file-scope declaration serves both members. No marker survives in the source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov004_020b0380' differs between the legacy file that used to hold func_ov006_020dc99c and the one that held func_ov006_020dcc48; kept the first, the other is commented out for review. RESOLVED: the two spellings (void*,int,int,int and int,int,int,int) are both kept, each declared at block scope inside the member that uses it. No marker survives in the source.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'C') differs between the legacy file that used to hold func_ov006_020dc298 and the one that held func_ov006_020dc754; kept the first, the other is commented out for review. RESOLVED: the colliding tag is uniquified per member rather than merged -- merging a shared struct changes mwccarm pointer-to-member and struct-copy codegen, so each member keeps the exact spelling its shard byte-matched under. No marker survives in the source.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'E') differs between the legacy file that used to hold func_ov006_020dc99c and the one that held func_ov006_020dcea8; kept the first, the other is commented out for review. RESOLVED: the colliding tag is uniquified per member rather than merged -- merging a shared struct changes mwccarm pointer-to-member and struct-copy codegen, so each member keeps the exact spelling its shard byte-matched under. No marker survives in the source.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov006_020dbf7c and the one that held func_ov006_020dcea8; kept the first, the other is commented out for review. RESOLVED: the colliding tag is uniquified per member rather than merged -- merging a shared struct changes mwccarm pointer-to-member and struct-copy codegen, so each member keeps the exact spelling its shard byte-matched under. No marker survives in the source."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov006-dScMgCoin_c/dScMgCoin_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 33,
+    "functions_declared": 33,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "data": [],
+      "dataExternalized": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "link-verified",
+      "scratch": "build/tu/ov006-dScMgCoin_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x020dbf7c",
+        "end": "0x020dd0e0",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020dbf7c",
+          "end": "0x020dd0e0",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 33
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  },
+  "production_mode": "text-only",
+  "compiler_only_output": [],
+  "externalized_output": []
+}

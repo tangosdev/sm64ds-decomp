@@ -759,7 +759,7 @@ void port_boot_rom_game_init_head(void)
 //     func_02019440();
 //     if (!r4) func_020134c8();
 //     func_0203b684();
-//     data_020a4bb8 = data_02090864;
+//     data_020a4bb8 = ACTOR_SPAWN_TABLE;
 //     func_020233f0();
 //     Scene::PrepareToSpawnBoot();
 //     func_020196cc();
@@ -767,7 +767,7 @@ void port_boot_rom_game_init_head(void)
 //     *(u32*)0x040004c8 = 0x296a5800; ... (the 3D fog/edge registers)
 //     func_0201a5cc();
 //
-// `data_020a4bb8 = data_02090864` is the actor spawn table pointer, which
+// `data_020a4bb8 = ACTOR_SPAWN_TABLE` is the actor spawn table pointer, which
 // tests/walk_window.cpp already seats on its own line, and
 // Scene::PrepareToSpawnBoot picks the ROM's boot scene (0x168) -- a decision
 // the host boot has already made by this point, so it is not taken back here.
@@ -783,7 +783,7 @@ void port_boot_rom_game_init_tail(void)
        0x06800000, 0x400 of OAM to 0xc0 and 0x400 of palette to 0, the three
        stage words, and then func_0200f4f4: Initialise3dGraphics(0),
        GX::SetBankForTex(3), GX::SetBankForTexPltt(0x30), func_02045d9c and the
-       data_02082128 -> data_0209b3ec matrix with its inverse.
+       IDENTITY_MATRIX4X3 -> data_0209b3ec matrix with its inverse.
        IT IS SAFE HERE FOR THE SAME REASON func_02053c40 IS: nothing the port
        draws has happened yet at this line. tests/walk_window.cpp seeds
        data_0209b3ec by hand right after port_boot_rom_main_head(); this is the
@@ -810,7 +810,7 @@ void port_boot_rom_game_init_tail(void)
        own now (port/slice_snd1.txt, rung R1), driven from
        hal/sdat/consumer.cpp's sd_sound_init_host rather than from here. */
     func_0203b684();
-    /* data_020a4bb8 = data_02090864 -- already seated by the host boot */
+    /* data_020a4bb8 = ACTOR_SPAWN_TABLE -- already seated by the host boot */
     func_020233f0();
     /* Scene::PrepareToSpawnBoot() -- picks the ROM boot scene */
     /* THE FIRMWARE READ AND THE SOUND MODE. SEATED, run link100 lane IPCSEND,

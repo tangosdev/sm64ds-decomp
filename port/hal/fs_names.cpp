@@ -5,7 +5,7 @@
 // port/tools/battery.py's SCENE_BLOCKED row for scene 374 records:
 //
 //     FAULT c0000005 at func_0205cdf4+0x22 accessing 0x00000010, reached
-//     through mg_init -> func_ov006_020e3578 (dScMgCurling_c::InitResources)
+//     through mg_init -> _ZN14dScMgCurling_c13InitResourcesEv (dScMgCurling_c::InitResources)
 //     -> func_ov004_020adc74 -> func_020182bc -> func_02018e3c
 //     -> func_0205d644 -> func_0205d714 -> func_0205cdf4
 //
@@ -577,26 +577,32 @@ void port_nitrofs_header_words(u32 *fnt_off, u32 *fnt_size,
 
    Identical trade to hal/fs.cpp's SharedFilePtr::Construct face, whose header
    describes the same shape in the id-based seam, and to the two ride-through
-   command handlers hal/ptr_tables.cpp types through. src/func_02018e3c.c is
-   commented out of slice_mg1.txt with this note. */
+   command handlers hal/ptr_tables.cpp types through.
+
+   RETIRED, run link100 wave 15 lane SEAT15C. Everything above stays true of
+   the ARM and of the source this face was written against; it is no longer
+   true of src/func_02018e3c.c, which today reads
+
+       extern int func_0205d644(void *out_file_id, const char *path);
+       int func_02018e3c(void *out_file_id, const char *path){
+         int r = func_0205d644(out_file_id, path);
+         if(!r){ func_02018e68(data_0208ecd8); Crash(); }
+         return r; }
+
+   -- both parameters named, both forwarded, and its own banner records the
+   same three callers this one does (func_020182bc, func_02018434,
+   func_020189f0). That is statement-for-statement the body this face held, so
+   the matched TU carries the row: port/slice_l15fs.txt. The declarations below
+   stay because port_nitrofs_report and the probe further down use them.
+
+   The SM64DS_NFS_TRACE / SM64DS_NFS_PROBE measurement that convicted the old
+   source is kept above on purpose: it is the evidence for why the face was
+   right when it was written, and it is the test to re-run if a future sync
+   ever walks the source back. */
 int func_0205d644(void *out_file_id, const char *path);
 void func_02018e68(void *message);
 void Crash(void);
 extern int data_0208ecd8[];
-
-// PORT_HOST_ABI: src is an ARM register ride-through. The ROM carries r0 (the
-// FSFileID out pointer) and r1 (the path) into func_0205d644 untouched and so
-// names no parameters; on cdecl the two arguments never arrive. Same shape
-// hal/fs.cpp faces for SharedFilePtr::Construct.
-int func_02018e3c(void *out_file_id, const char *path)
-{
-    int r = func_0205d644(out_file_id, path);
-    if (!r) {
-        func_02018e68(data_0208ecd8);
-        Crash();
-    }
-    return r;
-}
 
 /* ---- the report, and the cross-seam probe ---------------------------------
    Constraint from review: whatever this seam resolves a name to must be what

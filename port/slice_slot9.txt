@@ -81,7 +81,7 @@
 # and Stage::RenderModelTransparent.
 #
 # ONE OF THOSE IS A LIVE SWITCH-OVER AND IT IS DECLARED HERE.  Stage::Render
-# calls CylinderClsn::Process(), which resolves to ?Process@CylinderClsn@@SAXXZ
+# calls CylinderClsn::Process(), which resolves to ?Process@dCc_c@@SAXXZ
 # -- the MATCHED body from src, in the link since gate 33.  The frame loop was
 # calling port_cylinder_clsn_process (port/unmatched/CylinderClsn_Process.cpp),
 # the ROM-shaped host copy.  Section 17 of port/stage_lifecycle_map.txt fixed

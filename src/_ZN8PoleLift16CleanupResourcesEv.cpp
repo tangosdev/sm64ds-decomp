@@ -5,12 +5,13 @@
 /* recovered: named members + shared header, real C++ method */
 #include "PoleLift.h"
 #include "SharedFilePtr.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
+extern int data_ov045_021131b0[];
 
 int PoleLift::CleanupResources()
 {
-    ((MeshColliderBase *)((char *)&mCollider))->Disable();
-    ((SharedFilePtr *)(data_ov045_021131d8))->Release();
-    ((SharedFilePtr *)(data_ov045_021131d0))->Release();
+    ((dBgW *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();
+    ((SharedFilePtr *)(data_ov045_021131b0))->Release();
+    ((SharedFilePtr *)(data_ov045_021131a8))->Release();
     return 1;
 }

@@ -10,7 +10,7 @@
 # walk_window.map -- no line sits here looking seated.
 #
 # THE CLOSURE IS RELOC-DERIVED, NOT GUESSED. Seeds: daObjPathLift_c's own six
-# vtable bodies + PathLift_Spawn (ov100), and the base branch's dispatch
+# vtable bodies + daObjPathLift_c_classInit (ov100), and the base branch's dispatch
 # entry points (ov002). Walking arm_call/load relocs out of every body to
 # fixpoint gives 9 ov100 bodies + 22 ov002 bodies, and ZERO arm9 targets that
 # are not already in walk_window.map -- the base branch pulls no new engine
@@ -19,7 +19,7 @@
 # TWO MATCHED TUs ARE DELIBERATELY ABSENT, both host copies instead
 # (port/unmatched/PathLift_StateDispatch.cpp, the gate-200 PushBlock ruling):
 #   src/func_ov002_020efa54.cpp            state installer, PMF dispatch
-#   src/_ZN8PathLift12BaseBehaviorEv.cpp   per-frame tick, PMF dispatch
+#   src/_ZN16dPathLiftActor_c12BaseBehaviorEv.cpp   per-frame tick, PMF dispatch
 # Both form an MSVC pointer-to-member over a DELIBERATELY INCOMPLETE class.
 # mwcc's PMF is a uniform 8-byte {fn, delta<<1|isVirtual} pair, which is what
 # makes the ROM's record 20 bytes wide (the `mov r0,#0x14` in both bodies);
@@ -27,7 +27,7 @@
 # offsets and the dispatch decoding all come out wrong.
 #
 # THE TU THAT IS *NOT* HERE ON PURPOSE, and why (the w5-B EyerokD0 class):
-#   src/_ZN8PathLift17BaseInitResourcesEv.c
+#   src/minigames/d_s_mg_jump2.cpp
 # That name is an ov006 export (config/arm9/overlays/ov006/symbols.txt:887,
 # size 0x118) and ov006 shares the 0x020efaf0 load window with ov002, whose
 # own body there is func_ov002_020efaf0 (size 0xec -- a DIFFERENT body, the
@@ -38,35 +38,28 @@
 
 # ---- ov100, daObjPathLift_c's own block (9) --------------------------------
 # slot 16, D1
-src/func_ov100_02146d7c.cpp
+src/game/actors/daObjPathLift_c.cpp
 # slot 17, D0 (the "OnYoshiTryEat" recovered
 #   NAME is wrong; the body is D1 + Deallocate
 #   and the table puts it at slot 17)
-src/func_ov100_02146dec.cpp
 # Behavior helper, model/matrix update
-src/func_ov100_02146e70.c
 # Init + Behavior helper
-src/func_ov100_0214700c.c
 # slot 3, CleanupResources
-src/func_ov100_02147054.c
 # slot 9, Render
-src/func_ov100_021470a4.cpp
 # slot 6, Behavior
-src/func_ov100_021470f4.cpp
 # slot 0, InitResources
-src/func_ov100_021471e0.cpp
 # the factory
-src/PathLift_Spawn.cpp
+src/d_a_obj_path_lift.cpp
 
 # ---- ov002, the PathLift BASE branch (20 of 22; 2 are host copies) ---------
 # base table slot 16
-src/_ZN8PathLiftD2Ev.c
+src/_ZN16dPathLiftActor_cD1Ev.cpp
 # base table slot 17
-src/_ZN8PathLiftD0Ev.c
+src/_ZN16dPathLiftActor_cD0Ev.cpp
 # slot 32 -- the EXTRA virtual PathLift adds
 #   to Platform's 32-slot shape, INHERITED
 #   unchanged by daObjPathLift_c
-src/_ZN8PathLift9AfterClsnEv.cpp
+src/_ZN16dPathLiftActor_c9AfterClsnEi.cpp
 # the real base init (see the note above)
 src/func_ov002_020efaf0.cpp
 # base-init helper

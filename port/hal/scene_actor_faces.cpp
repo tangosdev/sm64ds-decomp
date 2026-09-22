@@ -4,9 +4,9 @@
 // WHY THIS IS A SEPARATE FILE FROM scene_boot.cpp. Two mutually exclusive
 // declarations of `struct ActorBase` are needed and one TU cannot hold both.
 // The bodies here are real C++ methods against include/ActorBase.h (virtual,
-// so ?AfterBehavior@ActorBase@@UAEXI@Z), while ActorBase::Virtual34 and
+// so ?AfterBehavior@fBase_c@@UAEXI@Z), while ActorBase::Virtual34 and
 // Virtual38 are defined by src TUs that declare them NON-virtual in their own
-// local struct (?Virtual34@ActorBase@@QAEHII@Z, which is what
+// local struct (?Virtual34@fBase_c@@QAEHII@Z, which is what
 // hal/lk4_solidheap_seat.cpp links against and what scene_boot.cpp has to
 // reproduce). Same class name, different mangling, one file each.
 //
@@ -39,29 +39,29 @@
 // nothing can call would be a count, not a port. Scene::AfterCleanupResources
 // (slot 5) is NOT a veneer -- it has a real body with declared arguments -- and
 // it is dispatched directly, from scene_boot.cpp.
-#include "ActorDerived.h"
+#include "dBase_c.h"
 
 extern "C" {
 
 /* slot 2. ActorDerived's is the ONE functional override in that class: mark
    the actor for destruction when init reported VS_FAIL, then chain to
    ActorBase's. The body is the hostgen copy of src/
-   _ZN12ActorDerived18AfterInitResourcesEj.c (GATE13_SYMS in CMakeLists). */
+   _ZN7dBase_c18AfterInitResourcesEj.c (GATE13_SYMS in CMakeLists). */
 void port_scene_after_init(void *self, unsigned vfSuccess)
-{ ((ActorDerived *)self)->ActorDerived::AfterInitResources(vfSuccess); }
+{ ((dBase_c *)self)->dBase_c::AfterInitResources(vfSuccess); }
 
 /* slots 8 and 11 */
 void port_scene_after_behavior(void *self, unsigned vfSuccess)
-{ ((ActorBase *)self)->ActorBase::AfterBehavior(vfSuccess); }
+{ ((fBase_c *)self)->fBase_c::AfterBehavior(vfSuccess); }
 void port_scene_after_render(void *self, unsigned vfSuccess)
-{ ((ActorBase *)self)->ActorBase::AfterRender(vfSuccess); }
+{ ((fBase_c *)self)->fBase_c::AfterRender(vfSuccess); }
 
 /* slot 15. Not a veneer -- ActorBase::OnHeapCreated is an 8-byte `return 1`
    and the three scene classes do not override it -- but it is reached through
    the same header, so it lives here with the other three rather than forcing
    scene_boot.cpp to include ActorBase.h. */
 int port_scene_on_heap_created(void *self)
-{ return ((ActorBase *)self)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)self)->fBase_c::OnHeapCreated(); }
 
 /* slots 0 and 3, for the MINIGAME classes only, and they are here for the same
    include reason the other four are rather than because anything about them is
@@ -71,10 +71,10 @@ int port_scene_on_heap_created(void *self)
    data_ov004_020bc0c0 slot 0 is 0x02043c80 and slot 3 is 0x02043bf0, the arm9
    ActorBase addresses, read out of extracted/overlays/overlay_0004.bin. A
    derived minigame may still override slot 0 (MgShuffleShell does, with
-   func_ov006_020e3578), which is why the fill keys on the ROM word rather than
+   _ZN14dScMgCurling_c13InitResourcesEv), which is why the fill keys on the ROM word rather than
    on the slot index. */
 /* SLOT 0 IS CALLED AT C LINKAGE AND SLOT 3 AS A METHOD, and the asymmetry is
-   the ROM's rather than a slip. src/_ZN9ActorBase13InitResourcesEv.cpp is
+   the ROM's rather than a slip. src/_ZN7fBase_c13InitResourcesEv.cpp is
    "deliberately defined WITHOUT including ActorBase.h" -- its own header block
    says so at length: InitResources is the first virtual declared in the class,
    which makes it CW 1.2's KEY FUNCTION, and a real method definition there
@@ -83,12 +83,12 @@ int port_scene_on_heap_created(void *self)
    "Multiply-defined: virtual table for ActorBase". The TU therefore defines
    the C name only, and a `((ActorBase *)self)->ActorBase::InitResources()`
    here does not resolve -- measured, as an unresolved
-   ?InitResources@ActorBase@@UAEHXZ at link. CleanupResources is not the key
+   ?InitResources@fBase_c@@UAEHXZ at link. CleanupResources is not the key
    function and IS a real method, which is why the two lines below differ. */
-extern int _ZN9ActorBase13InitResourcesEv(void *self);
+extern int _ZN7fBase_c13InitResourcesEv(void *self);
 int port_scene_base_init(void *self)
-{ return _ZN9ActorBase13InitResourcesEv(self); }
+{ return _ZN7fBase_c13InitResourcesEv(self); }
 int port_scene_base_cleanup(void *self)
-{ return ((ActorBase *)self)->ActorBase::CleanupResources(); }
+{ return ((fBase_c *)self)->fBase_c::CleanupResources(); }
 
 }  /* extern "C" */

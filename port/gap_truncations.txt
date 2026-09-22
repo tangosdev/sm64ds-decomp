@@ -397,7 +397,7 @@ mounted and only unsized, so it is the one case where the fix adds no new name.
   0x021148ec  0000635f
 
 "16daObjCvShutter_c", 18 characters with the NUL at +18 and a second NUL at
-+19. 0x14 = 20 runs to ShutterHmc_SpawnInfo at 0x021148f0.
++19. 0x14 = 20 runs to g_profile_CV_SHUTTER at 0x021148f0.
 
 Read out of extracted/overlays/overlay_0021.bin. ov021's dsd export is the
 compressed image and shows garbage here; the raw extract does not, which is why
@@ -406,7 +406,7 @@ this whole document works from the extracts.
 dsd guessed a boundary at 0x021148e0, four bytes in, and the hosted array was
 literally
 
-    u8 data_ov021_021148dc[4] = { 49,54,100,97 };
+    u8 _ZTS16daObjCvShutter_c[4] = { 49,54,100,97 };
 
 "16da". Every read of the class name got four characters and a pack pad.
 

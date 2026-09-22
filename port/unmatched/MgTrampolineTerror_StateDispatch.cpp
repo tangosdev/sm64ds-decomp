@@ -35,7 +35,7 @@
 // ---- 2. THE PAIR IS A FIELD, NOT A TABLE ---------------------------------
 //
 // Out of extracted/overlays/overlay_0006.bin at base 0x020bfec0, the tail of
-// func_ov006_02123340:
+// _ZN18dScMgTrampoline2_c8BehaviorEv:
 //
 //     021233C8  ldr   r0,[pc,#0x54]     pool 0x02123424 = 0x00005004
 //     021233CC  add   r3,r5,r0          r3 = this + 0x5004
@@ -52,7 +52,7 @@
 // worse shape port/unmatched/MgMemory2_FieldPmf.cpp names: MSVC's
 // single-inheritance member pointer is four bytes where the ROM's is eight, so
 // a field spelled as a real `T::*` moves every field after it before any
-// dispatch happens.  Here it is the LAST member src/func_ov006_02123340.cpp
+// dispatch happens.  Here it is the LAST member src/minigames/d_s_mg_trampoline2.cpp
 // declares, so nothing moves and this one is a wrong-decode only -- but the
 // decode is still wrong, and it is wrong silently.
 //
@@ -87,11 +87,11 @@
 // host copy".  All five src TUs copy the pair as TWO PLAIN WORDS and none of
 // them names a member-pointer type --
 //
-//     src/func_ov006_02123b24.c    two int loads, two int stores
-//     src/func_ov006_02123bf4.cpp  *(double*)(c + 0x5004) = data_ov006_0213fbe0
-//     src/func_ov006_02123c78.c    struct P2 { int a, b; } assignment
-//     src/func_ov006_02124040.c    struct S2 { int a; int b; } assignment
-//     src/func_ov006_02124228.c    struct P2 { int a, b; } assignment
+//     src/minigames/d_s_mg_trampoline2.cpp    two int loads, two int stores
+//     src/minigames/d_s_mg_trampoline2.cpp  *(double*)(c + 0x5004) = data_ov006_0213fbe0
+//     src/minigames/d_s_mg_trampoline2.cpp    struct P2 { int a, b; } assignment
+//     src/minigames/d_s_mg_trampoline2.cpp    struct S2 { int a; int b; } assignment
+//     src/minigames/d_s_mg_trampoline2.cpp    struct P2 { int a, b; } assignment
 //
 // -- so all five are eight bytes on MSVC as well, they land at +0x5004 and
 // +0x5008 exactly as the ROM does, and they stay ordinary slice lines.  The
@@ -101,9 +101,9 @@
 //
 // THE MACHINE IS ONE LEVEL DEEP AND LINEAR, from the writers' own call graph:
 //
-//     slot 0  (func_ov006_021243ec) dispatches slot 18 through the object's
+//     slot 0  (_ZN18dScMgTrampoline2_c13InitResourcesEv) dispatches slot 18 through the object's
 //             own vtable with mode -1  (`ldr r2,[r0]; ldr r2,[r2,#0x48]; blx r2`)
-//       slot 18 (func_ov006_021242cc) tail-calls func_ov006_02124228
+//       slot 18 (_ZN18dScMgTrampoline2_c13OnYoshiTryEatEi) tail-calls func_ov006_02124228
 //         -> state 0x02124088   calls func_ov006_02124040
 //              -> state 0x02123cb4   calls func_ov006_02123c78
 //                   -> state 0x02123bf4  (its own writer)
@@ -173,7 +173,7 @@ void *_ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
 void *_ZN8Particle6System12FromUniqueIDEj(unsigned uniqueID);
 void  _Z14ApproachLinearRiii(int &v, int a, int b);
 
-/* src/func_ov006_02123340.cpp declares this one OUTSIDE its extern "C" block,
+/* src/minigames/d_s_mg_trampoline2.cpp declares this one OUTSIDE its extern "C" block,
    so MSVC mangles the reference as ?data_ov006_02140830@@3HA against the ov006
    mount's plain _data_ov006_02140830 -- the ordinary name-spelling defect this
    port carries /alternatename rows for.  The host copy declares it at C linkage
@@ -290,14 +290,54 @@ extern MgPmf data_ov006_0213fbd0, data_ov006_0213fbd8, data_ov006_0213fbe0,
     data_ov006_0213fbe8, data_ov006_0213fbf0;
 }
 
+/* ---- WHAT THE MOUNT ACTUALLY HOLDS ON THIS MACHINE ------------------------
+ *
+ * The five records are NOT a hosted ROM blob. src/minigames/d_s_mg_trampoline2.cpp
+ * defines all five itself, and it defines them the way the cartridge's own
+ * source does -- by NAMING the function:
+ *
+ *     int data_ov006_0213fbd0[] = { (int)func_ov006_02123b20, 0 };
+ *
+ * On the DS that initializer IS the word 0x02123b20, because that is where the
+ * linker puts the body. On this port the same initializer is a relocation
+ * against the host image, so the word reads the HOST address of the same
+ * function -- 0x00408480 on the build this was written against. Both words are
+ * the same record; only the spelling of "where that function lives" differs,
+ * and the difference is the linker's, not the source's. The seat is what taught
+ * this: it read a host address, reported WRONG BYTES and aborted every scene.
+ *
+ * So `rom` is what the cartridge stores and `host` is what THIS build stores,
+ * and the check below compares the mount against `host`. The guard is not
+ * weakened by that. It still refuses any mount whose code word is not exactly
+ * this record's own function, it still refuses a nonzero adjustment, and it now
+ * also refuses a mount that was NOT produced by the TU's initializer -- a raw
+ * DS word here would mean the five records came back from a hosted blob and
+ * every seated face would be reached with the wrong calling convention. The DS
+ * word stays in the message so the report still names the cartridge record a
+ * reader can look up in config/arm9/overlays/ov006/relocs.txt.
+ *
+ * WHY THE MOUNT CANNOT SIMPLY BE CALLED AS IT STANDS, host address or not: the
+ * dispatch site is `mov eax,[esi+0x5004] / mov ecx,[esi+0x5008] / add ecx,esi /
+ * call eax`, which hands the object in ecx. func_ov006_02123b24 and its four
+ * siblings are C-linkage cdecl and take the object as a stack argument, so the
+ * seat is still required and each face is still the __fastcall shim that moves
+ * ecx across.
+ * ======================================================================== */
+
 namespace {
-struct TteSeat { MgPmf *rec; unsigned rom; void *face; const char *what; };
+struct TteSeat { MgPmf *rec; unsigned rom; void *host; void *face;
+                 const char *what; };
 const TteSeat g_tte_seats[] = {
-    {&data_ov006_0213fbd0, 0x02123b20u, (void *)tte_f02123b20, "0213fbd0"},
-    {&data_ov006_0213fbd8, 0x02124088u, (void *)tte_f02124088, "0213fbd8"},
-    {&data_ov006_0213fbe0, 0x02123b24u, (void *)tte_f02123b24, "0213fbe0"},
-    {&data_ov006_0213fbe8, 0x02123cb4u, (void *)tte_f02123cb4, "0213fbe8"},
-    {&data_ov006_0213fbf0, 0x02123bf4u, (void *)tte_f02123bf4, "0213fbf0"},
+    {&data_ov006_0213fbd0, 0x02123b20u, (void *)func_ov006_02123b20,
+     (void *)tte_f02123b20, "0213fbd0"},
+    {&data_ov006_0213fbd8, 0x02124088u, (void *)func_ov006_02124088,
+     (void *)tte_f02124088, "0213fbd8"},
+    {&data_ov006_0213fbe0, 0x02123b24u, (void *)func_ov006_02123b24,
+     (void *)tte_f02123b24, "0213fbe0"},
+    {&data_ov006_0213fbe8, 0x02123cb4u, (void *)func_ov006_02123cb4,
+     (void *)tte_f02123cb4, "0213fbe8"},
+    {&data_ov006_0213fbf0, 0x02123bf4u, (void *)func_ov006_02123bf4,
+     (void *)tte_f02123bf4, "0213fbf0"},
 };
 }  /* namespace */
 
@@ -309,11 +349,13 @@ extern "C" void port_mg_tte2_field_seat(void)
     done = 1;
     for (unsigned i = 0; i < sizeof g_tte_seats / sizeof g_tte_seats[0]; ++i) {
         MgPmf *p = g_tte_seats[i].rec;
-        if (p->code != g_tte_seats[i].rom || p->adj != 0) {
+        unsigned want = (unsigned)(size_t)g_tte_seats[i].host;
+        if (p->code != want || p->adj != 0) {
             std::fprintf(stderr, "FATAL: dScMgTrampoline2_c pair %s: the mount holds "
-                         "%08x/%d, the cartridge's own record says %08x/0 -- "
+                         "%08x/%d, this build's own record says %08x/0 (the "
+                         "cartridge's is %08x/0) -- "
                          "WRONG BYTES\n", g_tte_seats[i].what, p->code, p->adj,
-                         g_tte_seats[i].rom);
+                         want, g_tte_seats[i].rom);
             std::abort();
         }
         p->code = (unsigned)(size_t)g_tte_seats[i].face;
@@ -371,11 +413,11 @@ extern "C" void port_mg_tte_state_report(void)
 
 // ---- the one host copy ------------------------------------------------------
 //
-// src/func_ov006_02123340.cpp verbatim except for two lines: `PMF cb` becomes
+// src/minigames/d_s_mg_trampoline2.cpp verbatim except for two lines: `PMF cb` becomes
 // `MgPmf cb` (eight bytes on both machines, and it is the last member so
 // nothing else in the layout moves), and `(self->*(self->cb))()` becomes the
 // routed call.  Every other statement, constant and offset is that file's.
-// src/func_ov006_02123340.cpp is OUT of port/slice_tte.txt: listing it would be
+// src/minigames/d_s_mg_trampoline2.cpp is OUT of port/slice_tte.txt: listing it would be
 // an LNK2005 against this definition.
 
 struct TteObj {
@@ -384,6 +426,6 @@ struct TteObj {
 };
 
 /* HOST COPY RETIRED, run link100 lane PMFB7 gate 3.
-   src/func_ov006_02123340.cpp dispatches its own field now, compiled with /Zp4
+   src/minigames/d_s_mg_trampoline2.cpp dispatches its own field now, compiled with /Zp4
    so the member lands at the ROM's own 0x5004. The five records the class's own
    writers copy from hold zero-argument __fastcall faces. */

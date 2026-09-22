@@ -1,14 +1,14 @@
 //cpp
 extern "C" {
-void* _ZN5Actor22ClosestNonVanishPlayerEv(void*);
-int _ZN5Actor18HorzAngleToCPlayerEv(void*);
+void* _ZN8dActor_c22ClosestNonVanishPlayerEv(void*);
+int _ZN8dActor_c18HorzAngleToCPlayerEv(void*);
 int AngleDiff(int a, int b);
 int Vec3_Dist(const void* a, const void* b);
 short Vec3_HorzAngle(const void* v0, const void* v1);
 int func_ov090_021314a0(char* c){
-  char* p = (char*)_ZN5Actor22ClosestNonVanishPlayerEv(c);
+  char* p = (char*)_ZN8dActor_c22ClosestNonVanishPlayerEv(c);
   if(p == 0) goto out;
-  if(AngleDiff(*(short*)(c+0x94), _ZN5Actor18HorzAngleToCPlayerEv(c)) >= 0x2000) goto out;
+  if(AngleDiff(*(short*)(c+0x94), _ZN8dActor_c18HorzAngleToCPlayerEv(c)) >= 0x2000) goto out;
   {
     int* sv = (int*)(((int)p + 0x5c));
     int v[3];

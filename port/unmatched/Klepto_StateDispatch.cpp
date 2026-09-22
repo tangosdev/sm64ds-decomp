@@ -43,18 +43,18 @@ struct PortPmf { unsigned fn; int delta; };
 
 /* ---- Behavior's C-linkage helpers (matched src or hosted) ---------------- */
 unsigned short DecIfAbove0_Short(unsigned short *p);
-void _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(void *self, void *cc);
-void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(void *self, void *wm,
+void _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(void *self, void *cc);
+void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void *self, void *wm,
                                               unsigned int j);
 void func_ov062_0211c6a8(void *self);
-void *_ZN5Actor10FindWithIDEj(unsigned int id);
+void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 void func_02012790(int a, int b);
 int func_ov062_0211c658(void *c, void *rec);      /* our own host copy below */
-void _ZN9ActorBase18MarkForDestructionEv(void *self);
+void _ZN7fBase_c18MarkForDestructionEv(void *self);
 void _ZN14BlendModelAnim7AdvanceEv(void *self);
 void func_ov062_0211b51c(void *self);
-void _ZN12CylinderClsn5ClearEv(void *self);
-void _ZN12CylinderClsn6UpdateEv(void *self);
+void _ZN5dCc_c5ClearEv(void *self);
+void _ZN5dCc_c6UpdateEv(void *self);
 extern unsigned char data_ov062_0211e14c[];
 extern unsigned char data_ov062_0211e17c[];
 
@@ -109,8 +109,8 @@ extern "C" int _ZN6Klepto8BehaviorEv(void *self)
         *(int *)(c + 0xac) = t;
     }
 
-    _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(c, c + 0x110);
-    _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(c, c + 0x178, 0);
+    _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(c, c + 0x110);
+    _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(c, c + 0x178, 0);
 
     *(short *)(c + 0x8c) = *(short *)(c + 0x92);
     *(short *)(c + 0x8e) = *(short *)(c + 0x94);
@@ -120,7 +120,7 @@ extern "C" int _ZN6Klepto8BehaviorEv(void *self)
     {
         unsigned int actorId = *(unsigned int *)(c + 0x44c);
         if (actorId != 0) {
-            char *p = (char *)_ZN5Actor10FindWithIDEj(actorId);
+            char *p = (char *)_ZN8dActor_c10FindWithIDEj(actorId);
             if (p != 0) {
                 if (*(int *)(c + 0x468) == 1) {
                     *(int *)(p + 0x5c) = *(int *)(c + 0x450);
@@ -152,17 +152,17 @@ extern "C" int _ZN6Klepto8BehaviorEv(void *self)
     if (*(int *)(c + 0x468) == 1 && *(unsigned char *)(c + 0x448) != 2) {
         int b = (*(int *)(c + 0xb0) & 8) != 0;
         if (b != 0)
-            _ZN9ActorBase18MarkForDestructionEv(c);
+            _ZN7fBase_c18MarkForDestructionEv(c);
     }
 skip_destroy:
     _ZN14BlendModelAnim7AdvanceEv(c + 0x334);
     if (*(void **)(c + 0x42c) != (void *)data_ov062_0211e14c)
         func_ov062_0211b51c(c);
 
-    _ZN12CylinderClsn5ClearEv(c + 0x110);
-    _ZN12CylinderClsn6UpdateEv(c + 0x110);
-    _ZN12CylinderClsn5ClearEv(c + 0x144);
-    _ZN12CylinderClsn6UpdateEv(c + 0x144);
+    _ZN5dCc_c5ClearEv(c + 0x110);
+    _ZN5dCc_c6UpdateEv(c + 0x110);
+    _ZN5dCc_c5ClearEv(c + 0x144);
+    _ZN5dCc_c6UpdateEv(c + 0x144);
 
     return 1;
 }

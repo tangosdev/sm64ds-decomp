@@ -1,0 +1,111 @@
+#ifndef DABRQ_C_H
+#define DABRQ_C_H
+
+#include "Model.h"
+#include "ModelAnim.h"
+#include "dCcAcPos_c.h"
+#include "ShadowModel.h"
+#include "TextureSequence.h"
+#include "TextureTransformer.h"
+#include "dBgCh_Actr.h"
+#include "dActor_c.h"
+
+extern "C" void *_ZN7fBase_cnwEj(unsigned size);
+
+struct daBrq_c;
+
+typedef s32 (daBrq_c::*BrqStateHandler)();
+
+struct BrqStateHandlers {
+    BrqStateHandler enter;
+    BrqStateHandler update;
+};
+
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
+typedef char BrqStateHandlers_size_must_be_0x10[
+    sizeof(BrqStateHandlers) == 0x10 ? 1 : -1];
+#endif
+
+/* daBrq_c is the ROM-proven class identity: ov070 owns _ZTS7daBrq_c at
+ * 0x0212323c, _ZTI7daBrq_c at 0x02123248, and the public vtable address point
+ * at 0x02123278. daBrq_c_classInit (historical alias Amp_Spawn) allocates
+ * 0x434 bytes, constructs dActor_c, then
+ * constructs the seven owned subobjects below at 0xd4..0x218. D1 destroys
+ * those subobjects in reverse order before chaining to dActor_c. Behavior
+ * identifies the Vector3 at 0x410 as the moving cylinder's actor-relative
+ * offset.
+ */
+struct daBrq_c : dActor_c {
+    u8                        pad_0d0[0x4];
+    ModelAnim                 mModelAnim;                    /* 0x0d4 */
+    Model                     mModel;                        /* 0x138 */
+    TextureSequence           mTextureSequence;              /* 0x188 */
+    TextureTransformer        mTextureTransformer;           /* 0x19c */
+    ShadowModel               mShadowModel;                  /* 0x1b0 */
+    dCcAcPos_c                mdCcAcPos_c;                  /* 0x1d8 */
+    dBgCh_Actr                mWithMeshClsn;                /* 0x218 */
+    /* Matrix4x3, on three witnesses: InitResources block-copies the identity
+       matrix IDENTITY_MATRIX4X3 (0x30 bytes) into it; UpdateModelTransform writes
+       the position (>>3) at m[9]/m[10]/m[11] -- exactly the translation row --
+       and passes &mMat4x3 as the matrix argument of DropShadowRadHeight. Same
+       role as Lakitu's 0x3f8 translation words. */
+    Matrix4x3                 mMat4x3;                       /* 0x3d4 */
+    Vector3                   mOrbitCenter;                  /* 0x404 */
+    Vector3                   mCylinderOffset;               /* 0x410 */
+    BrqStateHandlers         *mStateHandlers;                /* 0x41c */
+    s32                       mState;                        /* 0x420 */
+    s32                       mTurnSpeed;                    /* 0x424 */
+    u32                       mSoundHandle;                  /* 0x428 */
+    s16                       mOrbitAngle;                   /* 0x42c */
+    s16                       mSpinAngle;                    /* 0x42e */
+    u8                        mStateTimer;                   /* 0x430 */
+    u8                        pad_431[0x3];
+
+    /* The destructor pair spelled as two plain virtuals on the host, plus
+       the non-virtual destructor declaration the src/ definitions need; the
+       whole ruling is in include/ModelBase.h. An override takes its base's
+       slots, so these carry the SAME TWO NAMES the base declares -- a fresh
+       name would append a slot instead of claiming one. */
+#ifdef _MSC_VER
+    virtual void Destructor1();   /* D1 */
+    virtual void Destructor0();   /* D0 */
+    ~daBrq_c() {}   /* no slot */
+#else
+    virtual ~daBrq_c() {}   /* D1 and D0 */
+#endif
+
+    virtual s32 InitResources();
+    virtual s32 CleanupResources();
+    virtual s32 Behavior();
+    virtual s32 Render();
+    virtual void OnPendingDestroy();
+
+    static void *operator new(size_t size) {
+        return _ZN7fBase_cnwEj((unsigned)size);
+    }
+
+private:
+    /* These state-machine spellings are inferred aliases. Class ownership,
+     * bodies, call graph, and the two-PMF table layout are proven; SetState's
+     * signed parameter spelling is not distinguishable from other 32-bit forms. */
+    void EnterState();
+    void UpdateState();
+    void SetState(s32 state);
+    s32 EnterCooldownState();
+    s32 UpdateCooldownState();
+    s32 EnterActiveState();
+    s32 UpdateActiveState();
+    s32 EnterDefeatedState();
+    s32 UpdateDefeatedState();
+    s32 HandlePlayerCollision();
+    void UpdateModelTransform();
+};
+
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
+typedef char daBrq_c_size_must_be_0x434[
+    sizeof(daBrq_c) == 0x434 ? 1 : -1];
+#endif
+
+#endif /* DABRQ_C_H */

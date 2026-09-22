@@ -13,17 +13,17 @@
 // their extern "C" block, so MSVC mangles it and the plain C name the ov006
 // mount defines cannot satisfy the reference:
 //
-//   src/func_ov006_020e9e70.cpp  extern volatile M48 data_ov006_0213c88c;
+//   src/_ZN12dScMg3DEsp_c13InitResourcesEv.cpp  extern volatile M48 data_ov006_0213c88c;
 //       -> ?data_ov006_0213c88c@@3UM48@@C
-//   src/func_ov006_020e7660.cpp  extern void *data_ov006_0213c8c4;
-//       -> ?data_ov006_0213c8c4@@3PAXA
+//   src/_ZN12dScMg3DEsp_cD1Ev.cpp  extern void *_ZTV12dScMg3DEsp_c;
+//       -> ?_ZTV12dScMg3DEsp_c@@3PAXA
 //
 // Both are DATA, so there is no calling convention to disagree about and an
 // alias is correct rather than merely convenient -- the distinction section 4
 // draws when it says "AN ALIAS CANNOT CHANGE A CALLING CONVENTION".
 //
 // data_ov006_0213c88c IS THE CLASS'S OWN CAMERA MATRIX BLOCK, twelve words at
-// 0x0213c88c that InitResources copies, and data_ov006_0213c8c4 IS THE VTABLE
+// 0x0213c88c that InitResources copies, and _ZTV12dScMg3DEsp_c IS THE VTABLE
 // ITSELF -- the D2 destructor stores it into the object's first word, which is
 // the same store slot 17 makes and the same address the registry row seats.
 // So the second alias binds the one symbol this whole lane is about, and a
@@ -32,7 +32,7 @@
 // ---- 2. THREE SHADOW-CLASS DESTRUCTORS, AND WHY THEY ARE FACES AND NOT ----
 //         ALIASES
 //
-// src/func_ov006_020e7660.cpp (slot 16, D2) unwinds the object through LOCAL
+// src/_ZN12dScMg3DEsp_cD1Ev.cpp (slot 16, D2) unwinds the object through LOCAL
 // shadow classes:
 //
 //     struct TextureTransformer { ~TextureTransformer(); };
@@ -82,7 +82,7 @@
 
 // ---- 3. WAVE THREE ADDS TWO MORE DESTRUCTORS AND TWELVE MORE ALIASES -----
 //
-// src/func_ov006_020e80d8.cpp is the sub-object's own teardown and spells two
+// src/_ZN15dMg3DEspModel_cD1Ev.cpp is the sub-object's own teardown and spells two
 // further shadow classes, TextureSequence and ModelAnim.  Same ruling, same
 // evidence, read off the ROM at 0x020e80d8:
 //
@@ -100,8 +100,8 @@
 //
 // THE TWELVE ALIASES ARE SIX ADDRESSES SPELLED TWICE.  The same six ov006
 // SharedFilePtrs -- the ones __sinit_ov006_02130a08 constructs -- are declared
-// `extern void *` by src/func_ov006_020e7fe8.cpp and `extern SharedFilePtr` by
-// src/func_ov006_020e80d8.cpp, so MSVC emits two different mangles per address
+// `extern void *` by src/_ZN15dMg3DEspModel_c13InitResourcesEv.cpp and `extern SharedFilePtr` by
+// src/_ZN15dMg3DEspModel_cD1Ev.cpp, so MSVC emits two different mangles per address
 // and both need a row onto the one C name the mount defines.  That is a fact
 // about two src TUs disagreeing on a type, not about the port.
 //
@@ -125,7 +125,7 @@ void _ZN15TextureSequenceD1Ev(void *self);
 void _ZN9ModelAnimD1Ev(void *self);
 }
 
-/* The three shadow classes, declared exactly as src/func_ov006_020e7660.cpp
+/* The three shadow classes, declared exactly as src/_ZN12dScMg3DEsp_cD1Ev.cpp
    declares them so the mangles match byte for byte, and defined here. */
 struct TextureTransformer { ~TextureTransformer(); };
 struct Model { ~Model(); };
@@ -133,31 +133,90 @@ namespace Particle { struct SysTracker { ~SysTracker(); }; }
 struct TextureSequence { ~TextureSequence(); };
 struct ModelAnim { ~ModelAnim(); };
 
+/* RETIRED at FACES4 (wave 9c) under the SHADOW RULE, the same treatment the
+   Model and Particle::SysTracker faces below took at ALIAS2. This shadow
+   declares the destructor NON-VIRTUAL and src/_ZN18TextureTransformerD1Ev.cpp,
+   the TU config says owns ROM 0x0201592c, emits the VIRTUAL spelling
+   ??1TextureTransformer@@UAE@XZ, so the two mangle apart and facegen read one
+   function as two and refused to bind the flat name. Measured before removal:
+   dumpbin over all 8662 of walk_window's link inputs reports ZERO objects
+   referencing ??1TextureTransformer@@QAE@XZ, while the virtual spelling has
+   fourteen. The flat name is now defined by the face in port/faces_sync.txt.
+   The body is kept under #if 0 rather than deleted, so the evidence in it
+   stays readable. */
+#if 0
 TextureTransformer::~TextureTransformer()
 { _ZN18TextureTransformerD1Ev(this); }
+#endif
 
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync): src/_ZN10StarMarkerD1Ev.cpp emits ??1Model@@QAE@XZ as a COMDAT since main langmode migration, so this out-of-line face was the second definition (LNK2005).
+   The body is kept below under #if 0 rather than deleted, so the
+   evidence in it stays readable. */
+#if 0
 Model::~Model()
 { _ZN5ModelD1Ev(this); }
+#endif
 
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync): the hostgen copy of src/_ZN8Particle10SysTrackerD1Ev.cpp emits ??1SysTracker@Particle@@QAE@XZ itself since main langmode migration, so this face was the second definition (LNK2005).
+   The body is kept below under #if 0 rather than deleted, so the
+   evidence in it stays readable. */
+#if 0
 Particle::SysTracker::~SysTracker()
 { _ZN8Particle10SysTrackerD1Ev(this); }
+#endif
 
+/* RETIRED at FACES4 (wave 9c) under the SHADOW RULE, same shape as the
+   TextureTransformer face above: non-virtual here, virtual in
+   src/_ZN15TextureSequenceD1Ev.cpp, which owns ROM 0x02015a2c and emits
+   ??1TextureSequence@@UAE@XZ. Zero objects reference the non-virtual spelling;
+   twenty-six reference the virtual one. The flat name is now defined by the
+   face in port/faces_sync.txt. */
+#if 0
 TextureSequence::~TextureSequence()
 { _ZN15TextureSequenceD1Ev(this); }
+#endif
 
+/* KEPT, and MEASURED before it was kept (run link100 wave 9c, lane DTORS2).
+   Lane HALROWS settled which of this link's two MSVC ModelAnim destructors is
+   right, and it is not this one: _ZTV9ModelAnim at arm9 0x0208e980 puts the
+   destructor in slots 0 and 1 and VTable_Animation_ModelAnimThunk at 0x0208e9a4
+   carries the two _ZThn80_ adjustor thunks, and a NON-virtual destructor gets
+   neither.  So ??1ModelAnim@@UAE@XZ (src/_ZN9ModelAnimD1Ev.cpp, on a live slice
+   row) is the ROM's spelling and the shadow struct above is the wrong one.
+
+   HALROWS's own note says this face should go "once the src side stops asking
+   for ??1ModelAnim@@QAE@XZ".  It has not.  Two COMPILED src TUs declare the
+   same non-virtual shadow and call it on an embedded member:
+
+       src/func_ov006_020ca604.cpp:3   (live on port/slice_tte.txt)
+       src/func_ov006_020ccfc8.cpp:3   (live on port/slice_tti.txt)
+
+   Read back out of their objects with dumpbin at 319f0f191, both carry
+   ??1ModelAnim@@QAE@XZ as an UNDEF, and this definition is the only one in the
+   link.  Commenting it out today therefore ADDS a row to walk_window's wall
+   instead of removing one, so it stays until main stops spelling the shadow;
+   that is the needs_main item in out/DTORS2/needs_main.md.
+
+   WHAT DID CHANGE.  Until this wave the face was DEAD: _ZN9ModelAnimD1Ev was
+   itself undefined, so a caller that reached ??1ModelAnim@@QAE@XZ reached an
+   unresolved symbol.  hal/dtor_forwarders_gen_w9c.cpp now defines that flat
+   name as a forwarder onto ??1ModelAnim@@UAE@XZ, the virtual spelling the
+   cartridge's own vtable proves, so the chain shadow -> flat -> real destructor
+   resolves and runs the right body for the first time. */
 ModelAnim::~ModelAnim()
 { _ZN9ModelAnimD1Ev(this); }
 
 /* ---- the two ordinary alias rows ---------------------------------------- */
 
 /* ?data_ov006_0213c88c@@3UM48@@C  <- the ov006 mount's _data_ov006_0213c88c.
-   src/func_ov006_020e9e70.cpp declares it `extern volatile M48` at C++ linkage;
+   src/_ZN12dScMg3DEsp_c13InitResourcesEv.cpp declares it `extern volatile M48` at C++ linkage;
    the mount defines the plain C name. */
 #pragma comment(linker, "/alternatename:?data_ov006_0213c88c@@3UM48@@C=_data_ov006_0213c88c")
 
-/* ?data_ov006_0213c8c4@@3PAXA  <- the class's own vtable, declared
-   `extern void *` at C++ linkage by src/func_ov006_020e7660.cpp. */
-#pragma comment(linker, "/alternatename:?data_ov006_0213c8c4@@3PAXA=_data_ov006_0213c8c4")
+/* ?_ZTV12dScMg3DEsp_c@@3PAXA  <- the class's own vtable, declared
+   `extern void *` at C++ linkage by src/_ZN12dScMg3DEsp_cD1Ev.cpp. */
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEAD RHS and an UNREFERENCED left hand side: nothing in the build defines _data_ov006_0213c8c4, and nothing references ?_ZTV12dScMg3DEsp_c@@3PAXA, so the row can never fire and nothing wants it to. */
+// #pragma comment(linker, "/alternatename:?_ZTV12dScMg3DEsp_c@@3PAXA=_data_ov006_0213c8c4")
 
 /* wave 3: six ov006 SharedFilePtrs, each spelled twice by two different src
    TUs, plus the sprite-layout pointer table and the render half's idle
@@ -177,7 +236,7 @@ ModelAnim::~ModelAnim()
 #pragma comment(linker, "/alternatename:?data_ov006_02141e8c@@3USharedFilePtr@@A=_data_ov006_02141e8c")
 /* the sprite-layout pointer table, read before it was aliased -- section 3 */
 #pragma comment(linker, "/alternatename:?data_ov006_02133f24@@3PAPAUEnt@@A=_data_ov006_02133f24")
-/* the RENDER half's idle sentinel, the pair func_ov006_020e7b44 compares the
+/* the RENDER half's idle sentinel, the pair _ZN15dMg3DEspModel_c6RenderEv compares the
    field at +0x210 against. It is compared and never dispatched, so an alias
    onto the mounted words is right and the pair keeps the ROM's own values --
    which is exactly what makes that comparison keep answering what the ROM
@@ -196,8 +255,8 @@ ModelAnim::~ModelAnim()
    which is a correct eight-byte move on both machines and is why that writer
    needs no host copy -- only an alias for the mangle.  The second row is a
    THIRD spelling of an address two earlier TUs already declared: 0x02141e7c is
-   `extern void *` in src/func_ov006_020e7fe8.cpp, `extern SharedFilePtr` in
-   src/func_ov006_020e80d8.cpp and `extern int []` here, so it carries three
+   `extern void *` in src/_ZN15dMg3DEspModel_c13InitResourcesEv.cpp, `extern SharedFilePtr` in
+   src/_ZN15dMg3DEspModel_cD1Ev.cpp and `extern int []` here, so it carries three
    mangles onto one C name.  Three src TUs disagreeing about a type is a fact
    about src, and the alias rows are where the port absorbs it. */
 #pragma comment(linker, "/alternatename:?data_ov006_02141e7c@@3PAHA=_data_ov006_02141e7c")

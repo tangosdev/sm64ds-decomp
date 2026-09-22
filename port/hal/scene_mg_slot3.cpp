@@ -23,20 +23,20 @@
 // ---- 2. THE HIERARCHY IS THREE DEEP, AND THE ROM SAYS SO THREE TIMES ------
 //
 //     Scene -> dScMgBase_c         data_ov004_020bc0c0  36 slots
-//           -> dScMgSingle3DBase_c data_ov006_0213e448  36 slots
-//           -> dScMgSlot3_c        data_ov006_0213eaa8  36 slots
+//           -> dScMgSingle3DBase_c _ZTV19dScMgSingle3DBase_c  36 slots
+//           -> dScMgSlot3_c        _ZTV12dScMgSlot3_c  36 slots
 //
 //   TYPEINFO. The word before this class's vtable, 0x0213eaa4, points at the
 //     typeinfo record at 0x0213e588 = {0x0209a764, 0x0213e5ac, 0x0213bc64}.
 //     0x0213e5ac reads "12dScMgSlot3_c" and 0x0213bc64 is
 //     dScMgSingle3DBase_c's OWN typeinfo record (its name pointer 0x0213bd00
 //     reads "19dScMgSingle3DBase_c"). The compiler wrote the inheritance down.
-//   FACTORY. func_ov006_0210c120 calls ActorBase::operator new(0x5044), then
-//     func_ov004_020b2adc (dScMgBase_c's constructor), then
+//   FACTORY. dScMgSlot3_c_classInit calls ActorBase::operator new(0x5044), then
+//     _ZN11dScMgBase_cC2Ev (dScMgBase_c's constructor), then
 //     `str r1,[r4]` with 0x0213e448 at 0x0210c144, then `str r1,[r4]` again
 //     with 0x0213eaa8 at 0x0210c158.
-//   DESTRUCTORS. Slot 17 (func_ov006_0210a9a8, the D0) and its unmarked D2
-//     sibling slot 16 (func_ov006_0210a954) both unwind them in the opposite
+//   DESTRUCTORS. Slot 17 (_ZN12dScMgSlot3_cD0Ev, the D0) and its unmarked D2
+//     sibling slot 16 (_ZN12dScMgSlot3_cD1Ev) both unwind them in the opposite
 //     order, 0x0213eaa8 first and 0x0213e448 second. Both bodies' literal
 //     pools hold exactly those two words.
 //
@@ -84,7 +84,7 @@
 // rather than cross-referenced because a reader of THIS file needs to know why
 // two of the eight rows below do not name the src symbol:
 //
-// func_ov006_0210a6e4 (slot 2, AfterInitResources) drops the framework's
+// _ZN19dScMgSingle3DBase_c18AfterInitResourcesEj (slot 2, AfterInitResources) drops the framework's
 // second argument: the ROM never writes r1 before its `bl 0x20b08f0`, so the
 // flags ride through in r1 and src spells the call with one argument because
 // that is the only way to spell an unnamed value in C. On the host the callee
@@ -93,14 +93,14 @@
 // it rather than write a second one; this is the NINTH lane to do so (eight
 // call sites in the base tree, one each in the eight hal files listed in
 // section 3, counted by grepping 98a4c0e8f for port_mg_flower_after_init), and
-// src/func_ov006_0210a6e4.cpp stays out of port/slice_mug.txt for that reason.
+// src/minigames/d_s_mg_single3_d_base.cpp stays out of port/slice_mug.txt for that reason.
 //
-// func_ov006_0210a708 (slot 33, the once-per-boot 3D setup) ends with two
+// _ZN19dScMgSingle3DBase_c9Virtual84Ev (slot 33, the once-per-boot 3D setup) ends with two
 // stores to LIGHT_COLOR at 0x040004cc, which a plain src build lands in the
 // memory ntr maps across the I/O window without ever telling the geometry
 // engine -- the "Yoshi is a black silhouette" defect run mg5 lane YTEX
 // measured. It builds from the hostgen'd copy port/CMakeLists.txt's
-// FLW_HOSTGEN_SYMS already emits, and src/func_ov006_0210a708.c is out of this
+// FLW_HOSTGEN_SYMS already emits, and src/minigames/d_s_mg_single3_d_base.cpp is out of this
 // slice for the same reason.
 //
 // ---- 5. SLOT 18 TAKES A REAL ARGUMENT, AND ON THIS CLASS THAT IS THE ONE
@@ -112,7 +112,7 @@
 // THIS CLASS IS THE SECOND, and it was checked from the ROM rather than
 // inherited:
 //
-//   func_ov006_0210b314 keeps r1 (`mov r8, r1` at 0x0210b31c) and tests it --
+//   _ZN12dScMgSlot3_c13OnYoshiTryEatEi keeps r1 (`mov r8, r1` at 0x0210b31c) and tests it --
 //   `cmp r8,#3` at 0x0210b324, `cmp r8,#0x12` at 0x0210b32c, and an `== 4` arm
 //   -- so the body has THREE distinct paths through it: 3 and 0x12 are the
 //   round START (score 0xc, best-score clamp at 0x270e, level 0), 4 is the
@@ -134,13 +134,13 @@
 //
 // ---- 6. SLOT 32 TAKES NO RECEIVER, AND THAT IS THE ROM's DOING ------------
 //
-// src/func_ov006_0210aa60.cpp declares `void func_ov006_0210aa60(void)` and
+// src/_ZN12dScMgSlot3_c9Virtual80Ev.cpp declares `void _ZN12dScMgSlot3_c9Virtual80Ev(void)` and
 // the disassembly agrees: the body's first use of r0 is `mov r0,#0` at
 // 0x0210aa68, feeding SetBg1Offset(0,0). It never reads the incoming r0. This
 // is the ROM ride-through and NOT the dropped-receiver defect class -- there
 // is no receiver in the body for a host thunk to lose. hal/scene_mg.cpp's own
 // base face for this slot (mb_v32) is spelled the same way, over
-// func_ov004_020b27f4, which is the shape this row inherits.
+// _ZN11dScMgBase_c9Virtual80Ev, which is the shape this row inherits.
 //
 // ---- 7. THE WIDTH IS 36 ON BOTH SCENE TABLES, CHECKED FIVE WAYS -----------
 //
@@ -237,40 +237,40 @@ unsigned port_mg_scene_spawn_param(int scene_id);
    host array of the same name is a duplicate symbol, and leaving the mounted
    table alone leaves live wild DS pointers in a table the factory installs. */
 extern unsigned char data_ov004_020bc0c0[];   /* dScMgBase_c,         36 */
-extern unsigned char data_ov006_0213e448[];   /* dScMgSingle3DBase_c, 36 */
-extern unsigned char data_ov006_0213eaa8[];   /* dScMgSlot3_c,        36 */
-extern unsigned char data_ov006_0213e508[];   /* the SpawnInfo record    */
+extern unsigned char _ZTV19dScMgSingle3DBase_c[];   /* dScMgSingle3DBase_c, 36 */
+extern unsigned char _ZTV12dScMgSlot3_c[];   /* dScMgSlot3_c,        36 */
+extern unsigned char g_profile_MG_SLOT3[];   /* the SpawnInfo record    */
 /* dScMgSlot1_c's typeinfo record -- NOT dispatched, NOT filled and NOT this
    class's. It is named for one reason: the census below reads the word past
    this seat's 36 and has to say what that word is supposed to be. */
-extern unsigned char data_ov006_0213e5a0[];
+extern unsigned char _ZTI12dScMgSlot1_c[];
 
 /* dScMgSingle3DBase_c's eight overrides. Slot 2 is NOT src's body and slot 33
    is the hostgen'd copy: see section 4. */
 int   port_mg_flower_after_init(void *c, unsigned f);   /* slot  2 */
-void  func_ov006_0210a608(void *c, unsigned f);         /* slot  5 */
-int   func_ov006_0210a698(void *c);                     /* slot  7 */
-int   func_ov006_0210a664(void *c);                     /* slot 10 */
-int   func_ov006_0210a4b0(char *c);                     /* slot 16 D2 */
-int   func_ov006_0210a4e8(char *c);                     /* slot 17 D0 */
-int   func_ov006_0210a600(void);                        /* slot 26 */
-void  func_ov006_0210a708(char *c);                     /* slot 33 */
+void  _ZN19dScMgSingle3DBase_c21AfterCleanupResourcesEj(void *c, unsigned f);         /* slot  5 */
+int   _ZN19dScMgSingle3DBase_c14BeforeBehaviorEv(void *c);                     /* slot  7 */
+int   _ZN19dScMgSingle3DBase_c12BeforeRenderEv(void *c);                     /* slot 10 */
+int   _ZN19dScMgSingle3DBase_cD1Ev(char *c);                     /* slot 16 D2 */
+int   _ZN19dScMgSingle3DBase_cD0Ev(char *c);                     /* slot 17 D0 */
+int   _ZN19dScMgSingle3DBase_c24OnHitByCannonBlastedCharEv(void);                        /* slot 26 */
+void  _ZN19dScMgSingle3DBase_c9Virtual84Ev(char *c);                     /* slot 33 */
 
 /* dScMgSlot3_c's own nine. Slot 6 is the HOST COPY in
    port/unmatched/MgSlot3_StateDispatch.cpp -- same symbol, so
-   src/func_ov006_0210bcb0.cpp is out of port/slice_mug.txt. */
-int   func_ov006_0210bdb0(void *c);           /* slot  0 InitResources */
-int   func_ov006_0210bcb0(char *c);           /* slot  6 Behavior, host copy */
-int   func_ov006_0210b648(char *c);           /* slot  9 Render        */
-void *func_ov006_0210a954(char *c);           /* slot 16 D2            */
-void *func_ov006_0210a9a8(char *c);           /* slot 17 D0            */
-void  func_ov006_0210b314(char *c, int mode); /* slot 18 round set-up  */
-void  func_ov006_0210aa3c(void *c);           /* slot 29               */
-void  func_ov006_0210aa10(void *c);           /* slot 30               */
-void  func_ov006_0210aa60(void);              /* slot 32, no receiver  */
+   src/_ZN12dScMgSlot3_c8BehaviorEv.cpp is out of port/slice_mug.txt. */
+int   _ZN12dScMgSlot3_c13InitResourcesEv(void *c);           /* slot  0 InitResources */
+int   _ZN12dScMgSlot3_c8BehaviorEv(char *c);           /* slot  6 Behavior, host copy */
+int   _ZN12dScMgSlot3_c6RenderEv(char *c);           /* slot  9 Render        */
+void *_ZN12dScMgSlot3_cD1Ev(char *c);           /* slot 16 D2            */
+void *_ZN12dScMgSlot3_cD0Ev(char *c);           /* slot 17 D0            */
+void  _ZN12dScMgSlot3_c13OnYoshiTryEatEi(char *c, int mode); /* slot 18 round set-up  */
+void  _ZN12dScMgSlot3_c16OnAimedAtWithEggEv(void *c);           /* slot 29               */
+void  _ZN12dScMgSlot3_c25OnAimedAtWithEggReturnVecEv(void *c);           /* slot 30               */
+void  _ZN12dScMgSlot3_c9Virtual80Ev(void);              /* slot 32, no receiver  */
 
 /* the factory */
-void *func_ov006_0210c120(void);
+void *dScMgSlot3_c_classInit(void);
 
 /* the state machine, from unmatched/MgSlot3_StateDispatch.cpp */
 unsigned port_mg_slot3_state_hits(void);
@@ -317,35 +317,35 @@ static unsigned g_s3_slot18_arg3, g_s3_slot18_arg4, g_s3_slot18_arg5,
 static void *__fastcall s3b_ainit(void *s, void *, unsigned f)
 { M3D(2);  return (void *)(size_t)port_mg_flower_after_init(s, f); }
 static void __fastcall s3b_aclean(void *s, void *, unsigned f)
-{ M3D(5);  func_ov006_0210a608(s, f); }
+{ M3D(5);  _ZN19dScMgSingle3DBase_c21AfterCleanupResourcesEj(s, f); }
 static int  __fastcall s3b_bbeh(void *s, void *)
-{ M3D(7);  return func_ov006_0210a698(s); }
+{ M3D(7);  return _ZN19dScMgSingle3DBase_c14BeforeBehaviorEv(s); }
 static int  __fastcall s3b_bren(void *s, void *)
-{ M3D(10); return func_ov006_0210a664(s); }
+{ M3D(10); return _ZN19dScMgSingle3DBase_c12BeforeRenderEv(s); }
 static void *__fastcall s3b_d2(void *s, void *)
-{ M3D(16); return (void *)(size_t)func_ov006_0210a4b0((char *)s); }
+{ M3D(16); return (void *)(size_t)_ZN19dScMgSingle3DBase_cD1Ev((char *)s); }
 static void *__fastcall s3b_d0(void *s, void *)
-{ M3D(17); return (void *)(size_t)func_ov006_0210a4e8((char *)s); }
+{ M3D(17); return (void *)(size_t)_ZN19dScMgSingle3DBase_cD0Ev((char *)s); }
 static int  __fastcall s3b_v26(void *, void *)
-{ M3D(26); return func_ov006_0210a600(); }
+{ M3D(26); return _ZN19dScMgSingle3DBase_c24OnHitByCannonBlastedCharEv(); }
 static int  __fastcall s3b_v33(void *s, void *)
-{ M3D(33); func_ov006_0210a708((char *)s); return 0; }
+{ M3D(33); _ZN19dScMgSingle3DBase_c9Virtual84Ev((char *)s); return 0; }
 
 /* ---- dScMgSlot3_c's own nine -------------------------------------------- */
 static int  __fastcall slot3_init(void *s, void *)
-{ S3(0);  const int r = func_ov006_0210bdb0(s);
+{ S3(0);  const int r = _ZN12dScMgSlot3_c13InitResourcesEv(s);
   /* the GaplessMinigames latch, for hal/scene_mg.cpp's reason: every seated
      minigame calls it so the ones the gapless table does not name can say
      "unsupported" instead of doing nothing quietly. */
   hal_gapless_minigames_latch(); return r; }
 static int  __fastcall slot3_beh(void *s, void *)
-{ S3(6);  return func_ov006_0210bcb0((char *)s); }
+{ S3(6);  return _ZN12dScMgSlot3_c8BehaviorEv((char *)s); }
 static int  __fastcall slot3_render(void *s, void *)
-{ S3(9);  return func_ov006_0210b648((char *)s); }
+{ S3(9);  return _ZN12dScMgSlot3_c6RenderEv((char *)s); }
 static void *__fastcall slot3_d2(void *s, void *)
-{ S3(16); return func_ov006_0210a954((char *)s); }
+{ S3(16); return _ZN12dScMgSlot3_cD1Ev((char *)s); }
 static void *__fastcall slot3_d0(void *s, void *)
-{ S3(17); return func_ov006_0210a9a8((char *)s); }
+{ S3(17); return _ZN12dScMgSlot3_cD0Ev((char *)s); }
 /* SECTION 5. THE THIRD PARAMETER IS FORWARDED AND IT IS NOT CEREMONY: the ROM
    body branches on it three ways and the two ROM dispatch sites pass 3 and 4.
    A (void*, void*) thunk here would compile to a body that reads whatever was
@@ -357,15 +357,15 @@ static int  __fastcall slot3_reset(void *s, void *, int mode)
   else if (mode == 4)            ++g_s3_slot18_arg4;
   else if (mode == 5)            ++g_s3_slot18_arg5;
   else                           ++g_s3_slot18_argother;
-  func_ov006_0210b314((char *)s, mode); return 1; }
+  _ZN12dScMgSlot3_c13OnYoshiTryEatEi((char *)s, mode); return 1; }
 static int  __fastcall slot3_v29(void *s, void *)
-{ S3(29); func_ov006_0210aa3c(s); return 0; }
+{ S3(29); _ZN12dScMgSlot3_c16OnAimedAtWithEggEv(s); return 0; }
 static int  __fastcall slot3_v30(void *s, void *)
-{ S3(30); func_ov006_0210aa10(s); return 0; }
+{ S3(30); _ZN12dScMgSlot3_c25OnAimedAtWithEggReturnVecEv(s); return 0; }
 /* SECTION 6: no receiver, the ROM's own shape, matching hal/scene_mg.cpp's
-   mb_v32 over func_ov004_020b27f4. */
+   mb_v32 over _ZN11dScMgBase_c9Virtual80Ev. */
 static int  __fastcall slot3_v32(void *, void *)
-{ S3(32); func_ov006_0210aa60(); return 0; }
+{ S3(32); _ZN12dScMgSlot3_c9Virtual80Ev(); return 0; }
 
 /* SM64DS_SCENE_SLOT0=0 and SM64DS_SCENE_SLOT9=0, the diagnostics every scene
    seat in this port carries, counted separately so a run can never read a
@@ -427,15 +427,15 @@ extern "C" void port_scene_slot3_hits(void);
 extern "C" void port_scene_fill_slot3(void)
 {
     void **base = (void **)data_ov004_020bc0c0;
-    void **mid  = (void **)data_ov006_0213e448;
-    void **vt   = (void **)data_ov006_0213eaa8;
+    void **mid  = (void **)_ZTV19dScMgSingle3DBase_c;
+    void **vt   = (void **)_ZTV12dScMgSlot3_c;
 
     /* THE BASE TABLE IS FILLED HERE TOO AND IT IS NOT CEREMONY. Earlier rows'
        fills already did it and run first, so on a tree carrying them this is a
        second pass over words that are already host pointers and finds nothing.
        It is here so this class does not depend on another class's row
        existing: the factory's first act after operator new is
-       func_ov004_020b2adc, which writes data_ov004_020bc0c0 into the object's
+       _ZN11dScMgBase_cC2Ev, which writes data_ov004_020bc0c0 into the object's
        first word before either derived table lands. */
     port_scene_mg_fill_shared(base, 36);
 
@@ -506,7 +506,7 @@ static char *g_s3_self;
 
 extern "C" void *port_mg_slot3_spawn(void)
 {
-    void *p = func_ov006_0210c120();
+    void *p = dScMgSlot3_c_classInit();
     g_s3_self = (char *)p;
     return p;
 }
@@ -568,16 +568,16 @@ extern "C" void port_scene_slot3_hits(void)
        CONTIGUOUS blob (port/ov006_syms.txt: "--pack fills the space BETWEEN
        mounted symbols ... makes the run contiguous"), so the two words really
        are the neighbour's -- but the mount REBASES relocated words, so the
-       typeinfo pointer reads as the HOST address of data_ov006_0213e5a0 and
+       typeinfo pointer reads as the HOST address of _ZTI12dScMgSlot1_c and
        not as 0x0213e5a0. Comparing against the mount's own symbol is the check
        that survives that, and it is the stronger comparison anyway: it asks
        "is this still the word the mount emitted", which is exactly the
        question. */
     {
-        const unsigned *past = (const unsigned *)(data_ov006_0213eaa8 + 36 * 4);
-        const unsigned want = (unsigned)(size_t)data_ov006_0213e5a0;
+        const unsigned *past = (const unsigned *)(_ZTV12dScMgSlot3_c + 36 * 4);
+        const unsigned want = (unsigned)(size_t)_ZTI12dScMgSlot1_c;
         std::printf("[scene] dScMgSlot3_c words past its 36: [36] = 0x%08x, "
-                    "[37] = 0x%08x (the mount's own &data_ov006_0213e5a0 = "
+                    "[37] = 0x%08x (the mount's own &_ZTI12dScMgSlot1_c = "
                     "0x%08x, dScMgSlot1_c's typeinfo, scene 364)%s\n",
                     past[0], past[1], want,
                     (past[0] == 0u && past[1] == want)
@@ -675,26 +675,30 @@ extern "C" void port_scene_slot3_hits(void)
  * the same address, and mwcc's eight-byte member-pointer pair against MSVC's
  * four-byte one is the case where they do not.
  *
- * ?data_ov006_0213eaa8@@3PAXA. src/func_ov006_0210a954.cpp (slot 16, the D2)
- * declares `extern void* data_ov006_0213eaa8;` outside its extern "C" block
+ * ?_ZTV12dScMgSlot3_c@@3PAXA. src/_ZN12dScMgSlot3_cD1Ev.cpp (slot 16, the D2)
+ * declares `extern void* _ZTV12dScMgSlot3_c;` outside its extern "C" block
  * and stores its ADDRESS into the object's first word. Its D0 sibling
- * src/func_ov006_0210a9a8.cpp declares the same table inside extern "C" and
+ * src/_ZN12dScMgSlot3_cD0Ev.cpp declares the same table inside extern "C" and
  * needs no row, which is the two spellings of one table sitting three lines
  * apart in the same class. The right-hand side is the ov006 mount's own
  * definition of the vtable this seat fills.
  *
- * ?GetBG1ScrPtr@G2@@SAPAXXZ. src/func_ov006_0210aa60.cpp (slot 32) declares a
+ * ?GetBG1ScrPtr@G2@@SAPAXXZ. src/_ZN12dScMgSlot3_c9Virtual80Ev.cpp (slot 32) declares a
  * local `struct G2 { static void* GetBG1ScrPtr(); };` to spell the arm9 static,
  * so MSVC mangles the call while the port defines the Itanium name at C
  * linkage. The double underscore on the right is the same shape
  * hal/actor_faces_bob.cpp's Model::LoadFile row and eight others in
  * hal/actor_classes_*.cpp use.
  *
- * NO ROW IS OWED FOR data_ov006_0213e448: src/func_ov006_0210a954.cpp declares
+ * NO ROW IS OWED FOR _ZTV19dScMgSingle3DBase_c: src/_ZN12dScMgSlot3_cD1Ev.cpp declares
  * it the same way, and hal/scene_mg_flower.cpp already carries
- * ?data_ov006_0213e448@@3HA while port/unmatched/MgMemory2_Faces.cpp carries
- * ?data_ov006_0213e448@@3PAXA. A second /alternatename for the same LHS is
+ * ?_ZTV19dScMgSingle3DBase_c@@3HA while port/unmatched/MgMemory2_Faces.cpp carries
+ * ?_ZTV19dScMgSingle3DBase_c@@3PAXA. A second /alternatename for the same LHS is
  * noise a reader has to diff, and the link is satisfied.
  */
-#pragma comment(linker, "/alternatename:?data_ov006_0213eaa8@@3PAXA=_data_ov006_0213eaa8")
-#pragma comment(linker, "/alternatename:?GetBG1ScrPtr@G2@@SAPAXXZ=__ZN2G212GetBG1ScrPtrEv")
+#pragma comment(linker, "/alternatename:?_ZTV12dScMgSlot3_c@@3PAXA=__ZTV12dScMgSlot3_c")
+/* RE-POINTED at ALIAS2 (wave 8, the main -> port sync), lane ALIAS's
+   derivation: the right hand side this row carried is defined nowhere in
+   the link any more. same member, same convention, same 0 argument slots, types spelled differently
+   was: #pragma comment(linker, "/alternatename:?GetBG1ScrPtr@G2@@SAPAXXZ=__ZN2G212GetBG1ScrPtrEv") */
+#pragma comment(linker, "/alternatename:?GetBG1ScrPtr@G2@@SAPAXXZ=?GetBG1ScrPtr@G2@@YAPAXXZ")

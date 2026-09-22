@@ -45,7 +45,7 @@ for a hundred actor classes.
            data_020a4b50 = 4
            func_02043060(4)               the pre-spawn hook
            func_02043180(4, 0, 0, 1)      the spawn context
-           (*data_020a4bb8[4])()          StarSelect_Spawn, ov003 0x020b04f0
+           (*data_020a4bb8[4])()          dScStarSel_c_classInit, ov003 0x020b04f0
            func_020433b8(obj)             thread it onto the init list
 
 Every step is a matched arm9 TU. THE PORT ADDS NOTHING TO THE CHAIN:
@@ -81,24 +81,24 @@ extracted/overlays/overlay_0003.bin -- whose length 0x4240 equals the OVT's
 ram_size for ov003, so the read is exact; the dsd export is a different file
 and is not the RAM image. Cross-checked against ov003's relocs.
 
-     0  InitResources           func_ov003_020af8a0   ov003  (NONMATCHING)
+     0  InitResources           _ZN12dScStarSel_c13InitResourcesEv   ov003  (NONMATCHING)
      1  BeforeInitResources     Scene::               0x0202e638
      2  AfterInitResources      Scene::               0x0202e62c   VENEER
-     3  CleanupResources        func_ov003_020af86c   ov003
+     3  CleanupResources        _ZN12dScStarSel_c16CleanupResourcesEv   ov003
      4  BeforeCleanupResources  Scene::               0x0202e5f0
      5  AfterCleanupResources   Scene::               0x0202e5d0
-     6  Behavior                func_ov003_020af038   ov003  (NONMATCHING)
+     6  Behavior                _ZN12dScStarSel_c8BehaviorEv   ov003  (NONMATCHING)
      7  BeforeBehavior          Scene::               0x0202e3d4
      8  AfterBehavior           Scene::               0x0202e3c8   VENEER
-     9  Render                  func_ov003_020ae6f4   ov003  (NONMATCHING)
+     9  Render                  _ZN12dScStarSel_c6RenderEv   ov003  (NONMATCHING)
     10  BeforeRender            Scene::               0x0202e3a4
     11  AfterRender             Scene::               0x0202e398   VENEER
-    12  OnPendingDestroy        func_ov003_020ae6f0   ov003
+    12  OnPendingDestroy        _ZN12dScStarSel_c16OnPendingDestroyEv   ov003
     13  Virtual34               ActorBase::           0x0204357c
     14  Virtual38               ActorBase::           0x0204349c
     15  OnHeapCreated           ActorBase::           0x02043494
-    16  D2                      func_ov003_020addfc   ov003
-    17  D0                      func_ov003_020ade54   ov003
+    16  D2                      _ZN12dScStarSel_cD1Ev   ov003
+    17  D0                      _ZN12dScStarSel_cD0Ev   ov003
 
 THE THREE SLOTS MARKED VENEER ARE THE ONE REAL ABI PROBLEM IN THE FILL, and
 they are worth reading before anyone seats a second scene class. Each is a
@@ -488,7 +488,7 @@ and the +43 is those 42 plus one TU that is not in the slice at all
 dScTitle_c (id 2, the debug level select) and dScGameOver_c (id 8) are derived
 to exactly the same depth as the star select: SpawnInfo 0x020b1380 / 0x020b1750
 (each record's +4 halfword reads back its own id), factories
-func_ov003_020adc10 / func_ov003_020b1118, vtables data_ov003_020b1650 /
+dScTitle_c_classInit / dScGameOver_c_classInit, vtables data_ov003_020b1650 /
 data_ov003_020b179c with all eighteen slots read and recorded in
 port/ov003_syms.txt, and every body has a src TU. Neither is seated, and
 neither blocker is the mount or the chain:
@@ -505,9 +505,9 @@ neither blocker is the mount or the chain:
        dScGameOver_c: 020b0b3c 020b0b34 020b0814 020b0810 020b05bc
 
   2. THREE of the dtor TUs spell their vptr writes as PER-TU PLACEHOLDERS
-     rather than symbols: src/func_ov003_020ad660.c writes _ZTV10dScTitle_c /
-     _ZTV8dScene_c / _ZTV7dBase_c, src/func_ov003_020b0580.c writes
-     _ZTV13dScGameOver_c and the same two, and src/func_ov003_020b05bc.c writes
+     rather than symbols: src/_ZN10dScTitle_cD1Ev.cpp writes _ZTV10dScTitle_c /
+     _ZTV8dScene_c / _ZTV7dBase_c, src/actors/dScGameOver_c.cpp writes
+     _ZTV13dScGameOver_c and the same two, and src/actors/dScGameOver_c.cpp writes
      VT0 / VT1 / VT2 and deallocates against G0. None of those six names exists
      in any config. The ROM words at the three sites are 0x020b1650 /
      0x02092680 / 0x0208e4b8 (and 0x020a0eac for G0), read out of the image --
@@ -564,7 +564,7 @@ Two host bodies, and no others:
 Twenty-three /alternatename faces, every one a NAME-SPELLING fix onto a symbol
 that already exists, none a stand-in for a body:
 
-  - nine C-named globals that src/func_ov003_020af038.cpp declares outside an
+  - nine C-named globals that src/_ZN12dScStarSel_c8BehaviorEv.cpp declares outside an
     extern "C" block, so MSVC mangles the references;
   - two functions two ov003 TUs reach through a locally-declared namespace
     (G2::GetBG0ScrPtr, Sound::UnsetPlayerVoiceGroup) rather than the mangled C
@@ -644,7 +644,7 @@ real defect in the scene bring-up." This is that lane's answer. Run link60
 Stage 4, branch s4-subscreen off 1179692bc.
 
 WHERE THE BRING-UP BELONGS, AND WHY IT IS NOT THE SAME INIT MOVED EARLIER.
-Each scene owns its own sub display. src/func_ov003_020af8a0.c is
+Each scene owns its own sub display. src/_ZN12dScStarSel_c13InitResourcesEv.cpp is
 dScStarSel_c::InitResources and it configures the bottom screen itself: POWCNT1
 bit 15 at line 110, its own sub BG / OBJ / OBJExtPltt banks at 118-120,
 GXS::SetGraphicsMode(0) at 124, display mode 1 at 128, its own sub OBJ tiles

@@ -64,17 +64,17 @@ extern "C" {
 struct PortPmf { unsigned fn; int delta; };
 
 /* ---- Chuckya Behavior's C-linkage helpers, all matched src or hosted ---- */
-int _ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(
+int _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj(
     void *self, void *wm, void *anim, unsigned int n);
 unsigned short DecIfAbove0_Short(unsigned short *p);
-void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *cc);
-int _ZN5Enemy15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_(
+void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *cc);
+int _ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actrisbbi(
     void *self, void *wm, int a, short b, int c, int d, void *e);
-void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(void *self, void *wm,
+void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void *self, void *wm,
                                               unsigned int j);
 void func_ov062_02116010(void *self);   /* the held/thrown-player step */
-void _ZN12CylinderClsn5ClearEv(void *self);
-void _ZN12CylinderClsn6UpdateEv(void *self);
+void _ZN5dCc_c5ClearEv(void *self);
+void _ZN5dCc_c6UpdateEv(void *self);
 void _ZN9Animation7AdvanceEv(void *self);
 void func_ov062_02116d28(void *c);      /* the held-by-player short-circuit */
 void func_ov062_02116e80(void *c);      /* the post step */

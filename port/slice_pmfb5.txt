@@ -30,18 +30,18 @@
 #
 # ---- BATCH 1: FIVE ov006 SINGLE-ROW TABLES --------------------------------
 #
-#   func_ov006_020e0204  data_ov006_02141870   8 slots  arity 0  MgCup
+#   _ZN10dScMgCup_c8BehaviorEv  data_ov006_02141870   8 slots  arity 0  MgCup
 #   func_ov006_020e4800  data_ov006_02141988   3 slots  arity 1  MgCurling2
 #   func_ov006_02104ac4  data_ov006_021427bc   3 slots  arity 1  MgPanel
-#   func_ov006_0210bcb0  data_ov006_02142bdc   8 slots  arity 0  MgSlot3
-#   func_ov006_021254c0  data_ov006_02142f94  14 slots  arity 0  MgBSC
+#   _ZN12dScMgSlot3_c8BehaviorEv  data_ov006_02142bdc   8 slots  arity 0  MgSlot3
+#   _ZN10dScMgBSC_c8BehaviorEv  data_ov006_02142f94  14 slots  arity 0  MgBSC
 #
 # NINE ov006 ROWS WERE MEASURED AND FIVE WERE TAKEN.
 # THREE OF THE NINE REFUSE ON ROM EVIDENCE, and the refusals
 # are the useful part of this batch. The census gives each of them a `table`
 # column, and at the row's own address none of the three indexes that table:
 #
-#   func_ov006_020ed18c (dScMgHanachan_c, "table" data_ov006_02141fcc).
+#   _ZN15dScMgHanachan_c8BehaviorEv (dScMgHanachan_c, "table" data_ov006_02141fcc).
 #     The pool word at 020ed25c IS 02141fcc, so a reader that only checks for
 #     the constant would pass it. The body then does `ldrh r5,[r2]` /
 #     `add r0,r5,#0x800` / `strh r0,[r2]` -- it uses that address as a
@@ -50,7 +50,7 @@
 #     add anywhere in the body. It is an object-field row and belongs to the
 #     writer lane.
 #
-#   func_ov006_021214f8 (dScMgTrampoline_c, "table" data_ov006_02140588).
+#   _ZN17dScMgTrampoline_c8BehaviorEv (dScMgTrampoline_c, "table" data_ov006_02140588).
 #     Same shape. The pool word at 02121570 is 02140588 and the body does
 #     `ldr r4,[r1]` on it once -- a plain global pointer read -- then takes the
 #     member pointer from `r3 = r5 + 0x5004`, an OBJECT FIELD. No shift-scaled
@@ -165,8 +165,8 @@
 # This is the trap lane PMFB3 hit with the tapped-pad witness: a counter left
 # behind a seat reads zero forever and nothing looks wrong.
 #
-# THREE GUESS MARKERS, ALL ALREADY ADJUDICATED. src/func_ov006_020e0204.cpp,
-# src/func_ov006_0210bcb0.cpp and src/func_ov006_021254c0.cpp carry "recovered
+# THREE GUESS MARKERS, ALL ALREADY ADJUDICATED. src/actors/dScMgCup_c.cpp,
+# src/_ZN12dScMgSlot3_c8BehaviorEv.cpp and src/minigames/d_s_mg_bsc.cpp carry "recovered
 # from vtable slot identity" headers; inferred_stub_guard.py reports them and
 # does not refuse them, and each is ruled REAL_DECOMP against the ROM in
 # port/tools/inferred_stub_adjudicated.txt.
@@ -177,22 +177,27 @@
 # port_mg_panel_call0 still route the other five dScMgPanel_c tables, including
 # hostgen's MG_PMF_CALL swap. c2_call1 still routes dScMgCurling2_c's other six
 # tables for the four dispatchers that stay host copies.
-src/func_ov006_020e0204.cpp
-src/func_ov006_020e4800.cpp
-src/func_ov006_02104ac4.cpp
-src/func_ov006_0210bcb0.cpp
-src/func_ov006_021254c0.cpp
+src/actors/dScMgCup_c.cpp
+# QUARANTINED at the main->port sync (origin/main 9c7f38a24): main folded this
+# class into one TU, and port/ host-copies bodies inside it (unmatched/MgCurling2_StateDispatch.cpp).
+# port/CMakeLists.txt's own assertion refuses the pair, because taking both is a
+# duplicate symbol and taking the src one puts the host copy's reason back. The
+# row returns when the host copy covers the whole consolidated TU.
+#src/actors/dScMgCurling2_c.cpp
+src/actors/dScMgPanel_c.cpp
+src/_ZN12dScMgSlot3_c8BehaviorEv.cpp
+src/minigames/d_s_mg_bsc.cpp
 #
 # ---- BATCH 2: dScMgCurling_c's COHERENT PAIR, THREE TABLES ------------------
 #
 #   func_ov006_020e3078  data_ov006_021418b0   2 slots  arity 0
 #                        data_ov006_02141910   4 slots  arity 1
-#   func_ov006_020e3528  data_ov006_02141950   5 slots  arity 0
+#   _ZN14dScMgCurling_c8BehaviorEv  data_ov006_02141950   5 slots  arity 0
 #
 # THE TWO ROWS MOVE TOGETHER OR NOT AT ALL, which is what lane PMFB4 measured
 # when it left them. func_ov006_020e3078 READS TWO TABLES, not the one the
 # census names: 021418b0 at its first dispatch site and 02141910 at its second.
-# And slot 1 of func_ov006_020e3528's table 02141950 IS func_ov006_020e3078
+# And slot 1 of _ZN14dScMgCurling_c8BehaviorEv's table 02141950 IS func_ov006_020e3078
 # itself. Seating one table alone would leave the other dispatch reading a
 # cartridge code word and calling it; retiring one copy alone would install a
 # face pointing at a host copy about to be retired. So all three tables are
@@ -251,13 +256,13 @@ src/func_ov006_021254c0.cpp
 # switches; eleven of this class's twenty-five addresses no longer reach a
 # switch, so each face takes the same increment.
 src/func_ov006_020e3078.cpp
-src/func_ov006_020e3528.cpp
+src/_ZN14dScMgCurling_c8BehaviorEv.cpp
 #
 # ---- BATCH 3: FOUR ACTOR-OVERLAY ROWS, TWO OVERLAYS ------------------------
 #
 #   func_ov060_02115b84                  data_ov060_0211ae9c   3 slots  arity 0
 #   _ZN10BowserFire13InitResourcesEv     data_ov060_0211af74   8 slots  arity 0
-#   func_ov060_02118254                  data_ov060_0211b1ac   3 slots  arity 0
+#   _ZN17BowserSkyPlatform8BehaviorEv                  data_ov060_0211b1ac   3 slots  arity 0
 #   _ZN10BulletBill8BehaviorEv           data_ov079_021282e0   2 slots  arity 0
 #
 # THESE ROWS NEED NO NEW INSTALLER AND NO NEW CALL SITE, and finding that out
@@ -288,9 +293,9 @@ src/func_ov006_020e3528.cpp
 # link named them, and the reason is worth more than the four counts were:
 #
 #   _ZN10BowserFire8BehaviorEv      (data_ov060_0211afb4,  8 slots)
-#   _ZN14KnockDownPlank8BehaviorEv  (data_ov015_021149ec,  7 slots)
+#   _ZN19daObjBk_Dossunbar_c8BehaviorEv  (data_ov015_021149ec,  7 slots)
 #   _ZN5Whomp8BehaviorEv            (data_ov079_02128280, 12 slots)
-#   _ZN19BowserPuzzleManager8BehaviorEv (data_ov064_0211c904, 6 slots)
+#   _ZN17BowserPuzzlePiece8BehaviorEv (data_ov064_0211c904, 6 slots)
 #
 # Every one of those four TABLES measures clean on every axis this lane checks:
 # stride 8 at the ROM body's own address with the pool word matching, [reg*8] on
@@ -299,9 +304,9 @@ src/func_ov006_020e3528.cpp
 # table stops them. What stops them is the DEFINITION FORM of the matched TU:
 #
 #   src/_ZN10BowserFire8BehaviorEv.cpp        defines `int BowserFire::Behavior()`
-#   src/_ZN14KnockDownPlank8BehaviorEv.cpp    defines `int KnockDownPlank::Behavior()`
+#   src/game/actors/d_a_obj_bk_dossunbar.cpp    defines `int KnockDownPlank::Behavior()`
 #   src/_ZN5Whomp8BehaviorEv.cpp              defines `int Whomp::Behavior()`
-#   src/_ZN19BowserPuzzleManager8BehaviorEv.cpp defines `int BowserPuzzleManager::Behavior()`
+#   src/_ZN9JetStream8BehaviorEv.cpp defines `int BowserPuzzleManager::Behavior()`
 #
 # -- real C++ MEMBERS, which mangle __thiscall -- while the port's actor faces
 # call the FLAT C name. Retiring the host copy leaves that flat name with no
@@ -418,7 +423,7 @@ src/func_ov006_020e3528.cpp
 #     and not the table: whatever 021498e0 indexes at stride 32 is not this
 #     eight-byte table, and seating it on the census's word would be seating a
 #     row this lane cannot show reads it.
-#   _ZN12MansionSteps8BehaviorEv (data_ov063_0211ef38). MEASURES CLEAN and is
+#   _ZN11daTrsTrap_c8BehaviorEv (data_ov063_0211ef38). MEASURES CLEAN and is
 #     left for OWNERSHIP, not for evidence. `add r3,r1,r0,lsl #3` at 0211ce8c on
 #     the pool word 0211cefc = 0211ef38; four whole-pair {code,0} sources from
 #     src/unnamed/ov063/__sinit_ov063_0211e3cc.c in the `TAB.<m> = SRC` spelling
@@ -427,9 +432,9 @@ src/func_ov006_020e3528.cpp
 #     ov63_bringup in hal/actor_classes_ov063.cpp, which is not one of this
 #     lane's files -- every row this lane took seats from inside the unmatched/
 #     file it already owns.
-#   func_ov064_02117d24 (data_ov064_0211c750). `add r3,r0,r4,lsl #3` at
+#   _ZN12MetalNetLift8BehaviorEv (data_ov064_0211c750). `add r3,r0,r4,lsl #3` at
 #     02117d38 on pool 02117e3c, emitted [esi*8], three whole-pair {code,0}
-#     sources, a span of exactly three cells -- but src/func_ov064_02117d24.c is
+#     sources, a span of exactly three cells -- but src/_ZN12MetalNetLift8BehaviorEv.cpp is
 #     a .c FILE CONTAINING C++ member-pointer syntax, so it needs a
 #     set_source_files_properties(... LANGUAGE CXX) line beside the R10d gate
 #     before it will compile at all. Compiled by hand with -TP for this lane it
@@ -462,8 +467,8 @@ src/func_ov006_020e3528.cpp
 # the sweep.
 #   _ZN11MirrorLuigi8BehaviorEv reads INDEX STRIDE FOUR on the census's own
 #     width_ev column, a different shape from every other row in this family,
-#     and func_ov075_0211a2b8 and func_02043fdc show no index stride at all.
+#     and _ZN10dScEntry_c8BehaviorEv and func_02043fdc show no index stride at all.
 src/func_ov060_02115b84.cpp
 src/_ZN10BowserFire13InitResourcesEv.cpp
-src/func_ov060_02118254.cpp
+src/_ZN9SpikeBomb8BehaviorEv.cpp
 src/_ZN10BulletBill8BehaviorEv.cpp

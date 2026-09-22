@@ -7,7 +7,7 @@
 # Behavior, D0, and the two tiny tail overrides (OnYoshiTryEat 0x020b59a0,
 # OnTurnIntoEgg 0x020b599c). No pointer-to-member table anywhere, so no host
 # copies and no seat. D1 is a host thunk in the fill
-# (hal/actor_classes_flame.cpp): the matched _ZN9BlueFlameD1Ev.cpp is the
+# (hal/actor_classes_flame.cpp): the matched _ZN11daObjFire_cD1Ev.cpp is the
 # auto-emitted-member-dtor form.
 #
 # Player::Burn rides along: the Behavior's contact path calls it by C name;
@@ -15,11 +15,5 @@
 # player into (data_ov002_021100dc, __sinit_ov002_021019d0) was already
 # constructed and its St_BurnFire bodies already linked -- the face in the
 # fill bridges the C spelling.
-src/BlueFlame_Spawn.c
-src/RedFlame_Spawn.c
-src/_ZN9BlueFlame13InitResourcesEv.c
-src/_ZN9BlueFlame8BehaviorEv.c
-src/_ZN9BlueFlameD0Ev.c
-src/func_ov002_020b599c.c
-src/func_ov002_020b59a0.c
+src/actors/daObjFire_c.cpp
 src/_ZN6Player4BurnEv.cpp

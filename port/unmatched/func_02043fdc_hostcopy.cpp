@@ -14,7 +14,7 @@
  * Control flow is the matched sources', unchanged. func_02043fdc reads the
  * successor BEFORE the callback runs (a Process that destroys the actor
  * unlinks the node under it) and publishes the node it is on in
- * data_020a4b68, which is what func_020440e8/func_02044104 clear when a
+ * data_020a4b68, which is what _ZN11fLiNdBaPr_cD1Ev/_ZN9fLiNdBa_cD1Ev clear when a
  * destructor takes the walk's own cursor out. func_020441cc walks the scene
  * tree instead, whose successor comes from func_0203b394.
  */
@@ -27,6 +27,7 @@ extern int data_020a4b68[];        /* the walk's published cursor
                                       (storage: hal/player_bridges.cpp) */
 
 void port_scene_canary(const char *where);
+void port_list_canary(int *node, int index);
 }
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -75,6 +76,52 @@ void port_scene_canary(const char *where)
     }
     std::printf("[canary] %s: clean (%d nodes)\n", where, n);
     std::fflush(stdout);
+}
+
+/* SM64DS_LIST_CANARY=1: name the PROCESSING-LIST node whose owner is not a
+   constructed actor.
+
+   port_scene_canary above watches the scene tree, whose invariant is
+   node == owner + 0x14. The processing list this file walks has a different
+   shape ({prev, next, owner}, embedded in the actor at +0x28) and a different
+   failure: a node that IS linked and whose owner word DOES point back at its
+   own block, but whose block was never given a vtable. func_02043288 then
+   loads that first word as a table and calls slot 7 through it, which is
+   level 7's fault on port/l7-models3 (ebx = 0x00001000, Fix12 1.0, where the
+   table should be). Nothing in the tree could name the class that owns such a
+   block: the allocation size does not identify it (twenty src classInit
+   bodies allocate exactly 0x330) and SM64DS_TRACE_SPAWN prints no address,
+   because port_prespawn_hook runs before the object exists.
+
+   So this dumps the list itself. On the first two walks it prints every node
+   with its owner, the owner's id word at +0xc, the owner's first word and the
+   allocation size out of the heap header at owner-0xc, which places the bad
+   block between two actors whose ids the spawn trace already names. After
+   that it prints only the nodes that fail the test. Off by default, one
+   getenv, and free when it is off. */
+extern "C" void port_list_canary(int *node, int index)
+{
+    static int on = -1;
+    static int walk = 0;
+    if (on < 0) on = std::getenv("SM64DS_LIST_CANARY") != 0;
+    if (!on) return;
+    if (index == 0) ++walk;
+    char *owner = (char *)(size_t)node[2];
+    unsigned first = 0, size = 0;
+    unsigned id = 0xffffu;
+    int bad = 1;
+    if (owner != 0 && !IsBadReadPtr(owner, 0x10)) {
+        first = *(unsigned *)owner;
+        id = *(unsigned short *)(owner + 0xc);
+        if (!IsBadReadPtr(owner - 0x10, 8))
+            size = *(unsigned *)(owner - 0xc);
+        if (first >= 0x00400000u && !IsBadReadPtr((void *)(size_t)first, 4))
+            bad = 0;
+    }
+    if (!bad && walk > 2) return;
+    std::fprintf(stderr, "[lcanary] walk %d node %2d %p owner %p id 0x%x "
+                 "first %08x size %04x%s\n", walk, index, (void *)node,
+                 (void *)owner, id, first, size, bad ? "   <-- NO TABLE" : "");
 }
 
 /* SM64DS_FADER_WATCH=1: after every Process dispatch, check the installed
@@ -824,10 +871,12 @@ void *func_02043fdc(void *listv)
     if (fn == 0)
         return (void *)1;
     node = (int *)(size_t)list[0];
+    int walked = 0;
     while (node != 0) {
         int *next;
         data_020a4b68[0] = (int)(size_t)node;
         next = (int *)(size_t)node[1];
+        port_list_canary(node, walked++);
         /* per-actor quarantine boundary: a fault in this one actor's phase
            callback is caught, the actor frozen, and the walk continues at
            `next` -- which was read BEFORE the callback (matched behaviour: a

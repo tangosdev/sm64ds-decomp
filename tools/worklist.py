@@ -20,6 +20,7 @@ exact oracle / regperm-oracle code.
 """
 import argparse
 import json
+import asm_policy  # noqa: E402
 import pathlib
 import random
 import re
@@ -72,7 +73,7 @@ def read_src_text(name):
     # match over a NONMATCHING draft when both exist.
     texts = [p.read_text(encoding="utf-8") for p in SP.paths_for(name)]
     for t in texts:
-        if "// NONMATCHING" not in t[:200]:
+        if not asm_policy.has_draft_banner(t):
             return t
     return texts[0] if texts else None
 
@@ -99,7 +100,9 @@ def is_policy_done(src):
     sibling examples, since the body is assembly rather than recovered C."""
     if not src:
         return False
-    head = src[:600]
+    # The tags live in the banner, and banners drift downward as recovery prose grows
+    # above them -- the leading comment block, never a fixed byte window.
+    head = asm_policy.header_region(src)
     low = head.lower()
     if _OWES_C in low:                      # explicitly still owes a C decompilation
         return False
@@ -263,9 +266,10 @@ def main():
             print(f"  {n:4}  {cls}")
         return
 
-    # Someone else's active CLAIMS.md row means that function is taken. Scheduling it anyway
-    # is how a batch ends up duplicating work another contributor already finished.
-    held = CLM.held_targets() if not args.ignore_claims else {"names": set(), "addrs": set(), "rows": 0}
+    # Someone else's active claim (API lock or CLAIMS.md row) means that function is taken.
+    # Scheduling it anyway is how a batch ends up duplicating work another contributor
+    # already finished.
+    held = CLM.held_targets() if not args.ignore_claims else {"names": set(), "addrs": set(), "ranges": [], "rows": 0}
     try:
         import claims as _CL
         _msg = _CL.key_reminder()
@@ -276,7 +280,7 @@ def main():
     skipped_claimed = [0]
 
     def emit(rec):
-        if CLM.is_held(held, rec.get("name"), rec.get("addr")):
+        if CLM.is_held(held, rec.get("name"), rec.get("addr"), module=rec.get("module")):
             skipped_claimed[0] += 1
             return
         if args.pretty:

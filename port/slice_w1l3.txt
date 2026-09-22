@@ -18,10 +18,13 @@ src/_ZN11ShadowModel9DoSetFileEPcii.cpp
 # The three Animation-derived deleting destructors, into their folded slot 0.
 # Their tables were all zeros before this wave. ROM 0x0208e7d8 / 0x0208e7f8 /
 # 0x0208e7c8 respectively.
-src/_ZN15TextureSequenceD0Ev.c
-src/_ZN15MaterialChangerD0Ev.c
-src/_ZN18TextureTransformerD0Ev.c
-# ModelBase's destructor PAIR. data_0208e87c is _ZTV9ModelBase's function-slot
+# RETIRED at SLICE1: body now in src/_ZN15TextureSequenceD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN15TextureSequenceD0Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN15MaterialChangerD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN15MaterialChangerD0Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN18TextureTransformerD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN18TextureTransformerD0Ev.cpp
+# ModelBase's destructor PAIR. _ZTV9ModelBase is _ZTV9ModelBase's function-slot
 # start: ROM 0x0208e87c -> 0x02017120 is the complete-object D1 and
 # 0x0208e880 -> 0x020170e8 the deleting D0.
 #
@@ -30,10 +33,17 @@ src/_ZN18TextureTransformerD0Ev.c
 # is already spoken for" -- and that reason is gone. include/ModelBase.h spells
 # the pair as two plain virtuals on the host now, so the table has both slots
 # and hal/model_dtor_seat.cpp seats D1 at 0 and D0 at 1, the way the ROM holds
-# them. The D1's whole closure is the D0's closure (data_0208e87c and
+# them. The D1's whole closure is the D0's closure (_ZTV9ModelBase and
 # Deallocate, nothing else), and the D0 has been linking here since wave 1.
-src/_ZN9ModelBaseD0Ev.c
-src/_ZN9ModelBaseD1Ev.c
+# QUARANTINED at the main->port sync (lane SYNC5, the wave-7 fold merge): MSVC
+# refuses main's shape for this TU (C2600, the model family's destructor TUs:
+# main defines X::~X() where the host header spells the destructor as two
+# plain virtuals; port/unmatched/ModelFamily_Dtors_HostCopy.c carries the
+# merge base's own bodies instead). It is a decomp-side item, not a port one:
+# see runs/link100/out/SYNC5/decomp_side.md. The row returns when main lands
+# the fix.
+#src/_ZN9ModelBaseD0Ev.cpp
+src/_ZN9ModelBaseD1Ev.cpp
 
 # ---- wave 2: the game heap --------------------------------------------------
 # The port aliased the game-heap word straight onto the root heap and skipped
@@ -49,7 +59,7 @@ src/_ZN9ModelBaseD1Ev.c
 # TUs. The rest of the closure -- Heap::Allocate, Heap::Deallocate,
 # Heap::CreateExpandingHeapAllocator, ExpandingHeap::ExpandingHeap -- was
 # already linked before this wave.
-src/_ZN4Heap18InitializeGameHeapEjPS_.c
+src/_ZN4Heap18InitializeGameHeapEjPS_.cpp
 #
 # ---- wave 3: the ENCODING, re-derived, and who else can call it ------------
 # The BL word at 0x0201a108 is eb00884f, NOT eb0083fc. Re-derived three ways
@@ -236,7 +246,7 @@ src/engine/fader/_ZN15FaderBrightness7IsAtEndEv.cpp
 # reads them. The 300-frame control position is unchanged by this line, which
 # is the expected result: InitModel writes the ShadowModel and the two list
 # globals, and nothing feeds back into actor behaviour.
-src/_ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j.c
+src/_ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j.cpp
 
 # ---- mined and NOT taken (kept here so wave 2 does not re-mine them) --------
 # _ZN11ShadowModel10InitCuboidEv.cpp

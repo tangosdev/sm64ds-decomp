@@ -5,28 +5,28 @@
 #
 # Level 9's census printed id 0x15 (21) skipped, x1. Resolved the ROM's own
 # way: ACTOR_SPAWN_TABLE entry [21] (arm9 0x02090864 + 21*4) is a pointer to
-# 0x0214e404 in overlay(102) -- ExclamationBlock_SpawnInfo, whose +4 halfword
+# 0x0214e404 in overlay(102) -- g_profile_ITEM_BLOCK, whose +4 halfword
 # reads 21. So the census id, the table target and the record's own id agree.
 #
 # ExclamationBlock is a Platform subclass. Its 1016-byte object is built by
-# ExclamationBlock_Spawn (ov102 0x0214a8ac), which installs vtable
+# daObjHatenaBlock_c_classInit_ITEM_BLOCK (ov102 0x0214a8ac), which installs vtable
 # _ZTV13QuestionBlock (ov102 0x0214e47c) -- ExclamationBlock and QuestionBlock
 # are the same class shape (RTTI daObjHatena_c), the block-kind is a param, so
 # the two share one vtable and one method set.
 #
 # ---- everything but the factory is already in the link ---------------------
 #
-# _ZTV13QuestionBlock is the table QUESTION_BLOCK (id 20, QuestionBlock_Spawn)
+# _ZTV13QuestionBlock is the table QUESTION_BLOCK (id 20, daObjHatenaBlock_c_classInit_HATENA_BLOCK)
 # installs, and QUESTION_BLOCK is already registered (gate 23), so:
 #   - all of QuestionBlock's methods (Init/Cleanup/Behavior/Render/D1) are
 #     already compiled -- gate 23 named them,
 #   - the host vtable array _ZTV13QuestionBlock is already filled by
 #     hal_fill_question_block_vtable (hal/actor_classes.cpp), and
-#   - ExclamationBlock_SpawnInfo is already mounted (ov102_syms.txt).
+#   - g_profile_ITEM_BLOCK is already mounted (ov102_syms.txt).
 #
-# So this gate's ONLY new symbol is the factory ExclamationBlock_Spawn -- a
-# distinct matched TU from QuestionBlock_Spawn (same 0x0214e47c vtable store,
+# So this gate's ONLY new symbol is the factory daObjHatenaBlock_c_classInit_ITEM_BLOCK -- a
+# distinct matched TU from daObjHatenaBlock_c_classInit_HATENA_BLOCK (same 0x0214e47c vtable store,
 # different object size 1016) -- plus the registry row, which reuses
 # QUESTION_BLOCK's shared vtable fill (fill 0, the FORTRESS_TOWER shape). No
 # new overlay data, no PMF state table, no method face.
-src/ExclamationBlock_Spawn.c
+src/d_a_obj_hatena_block_item_block.c

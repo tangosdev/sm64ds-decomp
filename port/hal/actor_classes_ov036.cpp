@@ -20,13 +20,13 @@
 // section for the per-id table.
 //
 //   id   registry name            ROM RTTI name          host vtable array
-//   127  SWINGING_PLATFORM        16daObjRcBuranko_c      data_ov036_02113a98         (0x02113a98, 32)
-//   129  ROTATING_PLATFORM_RR     19daObjRc_Kaitendai_c   data_ov036_02113b74         (0x02113b74, 32)
+//   127  SWINGING_PLATFORM        16daObjRcBuranko_c      _ZTV16daObjRcBuranko_c         (0x02113a98, 32)
+//   129  ROTATING_PLATFORM_RR     19daObjRc_Kaitendai_c   _ZTV19daObjRc_Kaitendai_c         (0x02113b74, 32)
 //   125  SHIP_WING                14daObjRc_Hane_c        _ZTV18RotatingPlatformRr    (0x02113c38, 31)
 //   126  DONUT_BLOCK              16daObjRc_Tikuwa_c      _ZTV8ShipWing               (0x02113cf8, 32)
-//   132  ARMED_ROTATING_PLATFORM  18daObjRc_Guruguru_c    _ZTV10DonutBlock            (0x02113dcc, 32)
-//   123  TRICKY_TRIANGLES         16daObjRc_Dorifu_c      _ZTV21ArmedRotatingPlatform (0x02113ecc, 32)
-//   130  FLYING_CARPET            15daObjRcCarpet_c       data_ov036_02113f9c         (0x02113f9c, 33)
+//   132  ARMED_ROTATING_PLATFORM  18daObjRc_Guruguru_c    _ZTV18daObjRc_Guruguru_c            (0x02113dcc, 32)
+//   123  TRICKY_TRIANGLES         16daObjRc_Dorifu_c      _ZTV16daObjRc_Dorifu_c (0x02113ecc, 32)
+//   130  FLYING_CARPET            15daObjRcCarpet_c       _ZTV15daObjRcCarpet_c         (0x02113f9c, 33)
 //
 // So hal_fill_ship_wing_vtable fills _ZTV18RotatingPlatformRr and seats the
 // bodies named _ZN18RotatingPlatformRr*, and that is CORRECT: both the array
@@ -96,7 +96,7 @@
 // TRAP T5: eight ov036 bodies carry the "recovered from vtable slot identity"
 // marker. ALL EIGHT ARE REAL DECOMP AND FIVE OF THEM ARE SEATED HERE.
 // ============================================================================
-// func_ov036_021111e4, _02111284, _021112c8, _021112f0, _0211137c (all
+// _ZN16daObjRcBuranko_cD0Ev, _02111284, _021112c8, _021112f0, _0211137c (all
 // SWINGING_PLATFORM) and _02111494, _021114f8, _0211150c (all
 // ROTATING_PLATFORM_RR). Adjudicated per body by disassembling the ROM out of
 // extracted/overlays/overlay_0036.bin and reading the C against it, which is
@@ -120,7 +120,7 @@
 //             MeshCollider::LoadFile/MovingMeshCollider::SetFile,
 //             func_020393d4 with the UpdatePosWithTransform callback.
 //   02111494  the D0 twin of 021111e4, three vptr stores (own, ov002 0x021091d4,
-//             _ZTV8Platform) and the same teardown chain.
+//             _ZTV10dBgActor_c) and the same teardown chain.
 //   021114f8  a two-instruction ARM VENEER: ldr ip / ldr r1 / bx ip into
 //             func_ov002_020b66a8 with data_ov036_02113b2c in r1. The C spells
 //             it as the two-argument call it is.
@@ -148,10 +148,10 @@
 // ============================================================================
 // SHIP_WING's D1 IS NOT COMPILED.
 // ============================================================================
-// src/_ZN18RotatingPlatformRrD1Ev.cpp is a real MSVC-synthesised destructor
+// src/game/actors/d_a_obj_rc_hane.cpp is a real MSVC-synthesised destructor
 // over a LOCAL shadow class (`struct Actor { char pad[0xd0]; virtual ~Actor();
 // }` plus a CommonModel member), so it defines ??1RotatingPlatformRr@@UAE@XZ
-// and provides no _ZN18RotatingPlatformRrD1Ev at all -- the MotherPenguin /
+// and provides no _ZN14daObjRc_Hane_cD1Ev at all -- the MotherPenguin /
 // OneUpLogo / BabyPenguin shape (gate-31 PeachPainting recipe). The chain is
 // spelled directly as sw_d1 below, HIGH ADDRESS FIRST, from the ROM's own
 // listing at 0x02111580: store the own table, CommonModel::~CommonModel at
@@ -170,13 +170,15 @@
 // and slot 32 gets the same THREE-PARAMETER thunk shape that lane measured:
 // the dispatch site pushes the colliding Actor and the callee pops it, so a
 // two-parameter thunk would emit a bare `ret` and desync the caller.
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
@@ -186,13 +188,14 @@ extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include "dsstate_seg.h"
 #include "dtor_faces_cpp.h"
 
-#include "Actor.h"
-#include "ActorBase.h"
-#include "ArmedRotatingPlatform.h"
+#include "dActor_c.h"
+#include "fBase_c.h"
+#include "daObjRc_Dorifu_c.h"
+#include "daObjRc_Guruguru_c.h"
 #include "DonutBlock.h"
 #include "PathLift.h"
-#include "RotatingPlatformRr.h"
-#include "ShipWing.h"
+#include "daObjRc_Hane_c.h"
+#include "DonutBlock.h"
 
 // ---- five decorated references onto mounted cells --------------------------
 // Five ov036 TUs in this slice are .cpp files that declare a mounted symbol
@@ -203,11 +206,11 @@ extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 // in this link defines, which is what keeps alternatename_guard's rule (an
 // /alternatename whose LHS is also DEFINED is defeated silently) satisfied by
 // construction. Measured from the linker's own unresolved list, not guessed.
-//   func_ov036_0211137c.cpp                      SwingingPlatform's two
+//   _ZN16daObjRcBuranko_c13InitResourcesEv.cpp                      SwingingPlatform's two
 //     ?data_ov036_02114028@@3USharedFilePtr@@A     SharedFilePtrs and the CLPS
 //     ?data_ov036_02114020@@3USharedFilePtr@@A     block its collider takes
 //     ?data_ov036_02112b68@@3UCLPS_Block@@A
-//   _ZN10DonutBlock13InitResourcesEv.cpp         ArmedRotatingPlatform's own
+//   _ZN18daObjRc_Guruguru_c13InitResourcesEv.cpp         ArmedRotatingPlatform's own
 //     ?data_ov036_02113d78@@3PAPAXA                three-word file record
 //   _ZN21ArmedRotatingPlatform{13InitResources,   TrickyTriangles' own
 //     16CleanupResources}Ev.cpp                     three-word file record
@@ -220,26 +223,26 @@ extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 
 extern "C" {
 /* the arm9 shared half; every address read off this overlay's own reloc runs */
-int _ZN5Actor19BeforeInitResourcesEv(void *self);              /* slot 1  */
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
-int _ZN5Actor14BeforeBehaviorEv(void *self);                   /* slot 7  */
-int _ZN5Actor12BeforeRenderEv(void *self);                     /* slot 10 */
-int _ZN5Actor13OnYoshiTryEatEv(void *self);                    /* slot 18 */
-void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
-int _ZN5Actor9Virtual50Ev(void *self);                         /* slot 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);              /* slot 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);              /* slot 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p); /* slot 27 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);  /* slot 28 */
-int _ZN5Actor16OnAimedAtWithEggEv(void *self);                 /* slot 29 */
-void _ZN8Platform4KillEv(void *self);                          /* slot 31 */
-int _ZN16MeshColliderBase9IsEnabledEv(void *self);
-int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
-void _ZN5ActorD2Ev(void *self);
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);              /* slot 1  */
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);                   /* slot 7  */
+int _ZN8dActor_c12BeforeRenderEv(void *self);                     /* slot 10 */
+int _ZN8dActor_c13OnYoshiTryEatEv(void *self);                    /* slot 18 */
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
+int _ZN8dActor_c9Virtual50Ev(void *self);                         /* slot 20 */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);              /* slot 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);              /* slot 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p); /* slot 27 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);  /* slot 28 */
+int _ZN8dActor_c16OnAimedAtWithEggEv(void *self);                 /* slot 29 */
+void _ZN10dBgActor_c4KillEv(void *self);                          /* slot 31 */
+int _ZN4dBgW9IsEnabledEv(void *self);
+int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
+void _ZN8dActor_cD2Ev(void *self);
 void _ZN11CommonModelD1Ev(void *self);
 
 extern int data_02099f24[];          /* the frame phase the lists are in */
@@ -256,12 +259,12 @@ void port_pathlift_states_seat(void);      /* port/unmatched/PathLift_StateDispa
 }
 
 // ---- two __thiscall faces onto @@YA bodies, the ov100pl Platform2/Platform3
-// shape. src/_ZN10DonutBlock8BehaviorEv.cpp (which is ARMED_ROTATING_PLATFORM's
+// shape. src/game/actors/d_a_obj_rc_guruguru.cpp (which is ARMED_ROTATING_PLATFORM's
 // Behavior -- the naming shift) declares its OWN local shadows
 //     struct MeshColliderBase { bool IsEnabled(); void Disable(); };
 //     struct Platform { ...; bool IsClsnInRange(Fix12, Fix12); ... };
 // and both of those return BOOL, so MSVC decorates them
-// ?IsEnabled@MeshColliderBase@@QAE_NXZ and ?IsClsnInRange@Platform@@QAE_NHH@Z
+// ?IsEnabled@dBgW@@QAE_NXZ and ?IsClsnInRange@dBgActor_c@@QAE_NHH@Z
 // -- different symbols from the int-returning pair hal/actor_classes_ov100pl.cpp
 // already faces, which is why those two and only those two came back
 // unresolved. NOT alias-eligible, for the reason that lane wrote down:
@@ -273,9 +276,9 @@ void port_pathlift_states_seat(void);      /* port/unmatched/PathLift_StateDispa
 struct MeshColliderBase { bool IsEnabled(); };
 struct Platform { bool IsClsnInRange(int a, int b); };
 bool MeshColliderBase::IsEnabled()
-{ return _ZN16MeshColliderBase9IsEnabledEv(this) != 0; }
+{ return _ZN4dBgW9IsEnabledEv(this) != 0; }
 bool Platform::IsClsnInRange(int a, int b)
-{ return _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(this, a, b) != 0; }
+{ return _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, a, b) != 0; }
 
 // ---- the traps -------------------------------------------------------------
 // Slots 13/14 are ActorBase::Virtual34/Virtual38 and slot 30 is
@@ -299,9 +302,9 @@ static void ov36_trap_report(void *self, int slot, const char *which)
       port_actor_slot_decline(_m); }
 }
 static int __fastcall ov36_trap13(void *s, void *)
-{ ov36_trap_report(s, 13, "ActorBase::Virtual34"); return 0; }
+{ ov36_trap_report(s, 13, "fBase_c::Virtual34"); return 0; }
 static int __fastcall ov36_trap14(void *s, void *)
-{ ov36_trap_report(s, 14, "ActorBase::Virtual38"); return 0; }
+{ ov36_trap_report(s, 14, "fBase_c::Virtual38"); return 0; }
 static int __fastcall ov36_trap30(void *s, void *)
 { ov36_trap_report(s, 30, "Actor::OnAimedAtWithEggReturnVec"); return 0; }
 /* The abstract intermediates' own 0/3/6/9. The ROM parks ZERO in those words
@@ -318,60 +321,60 @@ static int __fastcall ov36_base_trap9(void *s, void *)
 
 // ---- the shared 1..31 half -------------------------------------------------
 static int __fastcall ov36_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall ov36_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall ov36_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 static void __fastcall ov36_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall ov36_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall ov36_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall ov36_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall ov36_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall ov36_pdes(void *s, void *)
-{ ((ActorBase *)s)->ActorBase::OnPendingDestroy(); return 0; }
+{ ((fBase_c *)s)->fBase_c::OnPendingDestroy(); return 0; }
 static int __fastcall ov36_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int __fastcall ov36_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 /* slot 19 takes the three-parameter shape so it emits `ret 4`: the dispatch
    site pushes the Player the callee pops -- the wf/ov072/ov100pl contract. */
 static int __fastcall ov36_turn_egg(void *s, void *, void *p)
-{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+{ _ZN8dActor_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall ov36_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall ov36_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall ov36_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall ov36_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall ov36_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall ov36_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall ov36_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall ov36_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall ov36_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 static int __fastcall ov36_aimed(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 static int __fastcall ov36_kill(void *s, void *)
-{ _ZN8Platform4KillEv(s); return 0; }
+{ _ZN10dBgActor_c4KillEv(s); return 0; }
 /* slot 32, FLYING_CARPET only. THE THIRD PARAMETER IS THE POP, NOT A VALUE --
    the ov100pl lane measured this: the dispatch site is a thiscall over a
    33-virtual class that PUSHES the colliding Actor with no caller cleanup, so
    a two-parameter thunk emits a bare `ret`, and the caller's own `pop ebp`
    then takes the pushed Actor into EBP. Same word (0x020eff18), same shape. */
-static int __fastcall ov36_after_clsn(void *s, void *, void * /*clsnActor*/)
-{ ((PathLift *)s)->PathLift::AfterClsn(); return 0; }
+static int __fastcall ov36_after_clsn(void *s, void *, void *clsnActor)
+{ ((dPathLiftActor_c *)s)->dPathLiftActor_c::AfterClsn((int)(size_t)clsnActor); return 0; }
 
 /* Fills every slot the seven tables share: 1,2,4,5,7,8,10,11,12,13,14,15 and
    18..30. Each caller writes its own 0/3/6/9/16/17 afterwards (and 126 its own
@@ -421,11 +424,11 @@ static void ov36_fill_shared(void *volatile *vt)
 // so one DSSTATE_BEGIN/END pair covers the set.
 extern "C" {
 DSSTATE_BEGIN
-void *data_ov036_02113a98[32];  /* vtspan: data_ov036_02113a98, SWINGING_PLATFORM */
-void *data_ov002_021091d4[32];  /* vtspan: daObjKaitendai_c, ov002 0x021091d4 */
-void *data_ov002_02108d94[32];  /* vtspan: daObjDorifu_c, ov002 0x02108d94 */
-int data_ov036_02113b74[32];   /* vtspan: data_ov036_02113b74, ROTATING_PLATFORM_RR */
-int data_ov036_02113f9c[33];   /* vtspan: data_ov036_02113f9c, FLYING_CARPET */
+void *_ZTV16daObjRcBuranko_c[32];  /* vtspan: _ZTV16daObjRcBuranko_c, SWINGING_PLATFORM */
+void *_ZTV16daObjKaitendai_c[32];  /* vtspan: daObjKaitendai_c, ov002 0x021091d4 */
+void *_ZTV13daObjDorifu_c[32];  /* vtspan: daObjDorifu_c, ov002 0x02108d94 */
+int _ZTV19daObjRc_Kaitendai_c[32];   /* vtspan: _ZTV19daObjRc_Kaitendai_c, ROTATING_PLATFORM_RR */
+int _ZTV15daObjRcCarpet_c[33];   /* vtspan: _ZTV15daObjRcCarpet_c, FLYING_CARPET */
 DSSTATE_END
 }
 
@@ -447,19 +450,19 @@ DSSTATE_END
    argument, so each slot takes the ecx->arg adapter the rest of this file
    uses; each returns the receiver, which the __fastcall slot forwards. */
 extern "C" {
-void *func_ov002_020b6664(void *self);   /* 0x021091d4 slot 16, daObjKaitendai_c D1 */
-void *func_ov002_020b660c(void *self);   /* 0x021091d4 slot 17, daObjKaitendai_c D0 */
-void *func_ov002_020b4af8(void *self);   /* 0x02108d94 slot 16, daObjDorifu_c D1 */
-void *func_ov002_020b4a70(void *self);   /* 0x02108d94 slot 17, daObjDorifu_c D0 */
+void *_ZN16daObjKaitendai_cD1Ev(void *self);   /* 0x021091d4 slot 16, daObjKaitendai_c D1 */
+void *_ZN16daObjKaitendai_cD0Ev(void *self);   /* 0x021091d4 slot 17, daObjKaitendai_c D0 */
+void *_ZN13daObjDorifu_cD1Ev(void *self);   /* 0x02108d94 slot 16, daObjDorifu_c D1 */
+void *_ZN13daObjDorifu_cD0Ev(void *self);   /* 0x02108d94 slot 17, daObjDorifu_c D0 */
 }
 static void *__fastcall ov36_kaitendai_d1(void *s, void *)
-{ return func_ov002_020b6664(s); }
+{ return _ZN16daObjKaitendai_cD1Ev(s); }
 static void *__fastcall ov36_kaitendai_d0(void *s, void *)
-{ return func_ov002_020b660c(s); }
+{ return _ZN16daObjKaitendai_cD0Ev(s); }
 static void *__fastcall ov36_dorifu_d1(void *s, void *)
-{ return func_ov002_020b4af8(s); }
+{ return _ZN13daObjDorifu_cD1Ev(s); }
 static void *__fastcall ov36_dorifu_d0(void *s, void *)
-{ return func_ov002_020b4a70(s); }
+{ return _ZN13daObjDorifu_cD0Ev(s); }
 
 static void ov36_base_bringup(void)
 {
@@ -467,7 +470,7 @@ static void ov36_base_bringup(void)
     if (done)
         return;
     done = 1;
-    void **tabs[2] = { data_ov002_021091d4, data_ov002_02108d94 };
+    void **tabs[2] = { _ZTV16daObjKaitendai_c, _ZTV13daObjDorifu_c };
     for (int k = 0; k < 2; ++k) {
         void *volatile *vt = (void *volatile *)tabs[k];
         ov36_fill_shared(vt);
@@ -493,12 +496,12 @@ static void ov36_base_bringup(void)
              0x021091d4 +0x40 -> 0x020b6664   D1   +0x44 -> 0x020b660c   D0
 
            and each body's own two vtable stores are the table it belongs to
-           and then _ZTV8Platform (ov002 0x0210ae38), read out of the four
+           and then _ZTV10dBgActor_c (ov002 0x0210ae38), read out of the four
            literal pools rather than taken from the recovery's placeholder
            names -- see the -D block for slice_gate216 in port/CMakeLists.txt.
            The two daObjDorifu_c bodies spell both tables by their real names
            and need no rename at all. */
-        vt[16] = (void *)(k == 0 ? ov36_kaitendai_d1 : ov36_dorifu_d1);
+        vt[16] = (void *)(k == 0 ? PORT_D16(ov36_kaitendai_d1) : PORT_D16(ov36_dorifu_d1));
         vt[17] = (void *)(k == 0 ? ov36_kaitendai_d0 : ov36_dorifu_d0);
         vt[31] = (void *)ov36_kill;    /* both are Platform-derived */
     }
@@ -509,18 +512,18 @@ static void ov36_base_bringup(void)
 // Platform-derived. Two on level 28. Own 0/3/6/9/16/17.
 // ============================================================================
 extern "C" {
-int func_ov036_0211137c(char *self);       /* slot 0  */
-int func_ov036_02111284(void *self);       /* slot 3  */
-int func_ov036_021112f0(char *self);       /* slot 6  */
-int func_ov036_021112c8(void *self);       /* slot 9, +0xd4 plain Model draw */
-int *func_ov036_021111a0(int *self);       /* slot 16, D1 */
-int *func_ov036_021111e4(int *self);       /* slot 17, D0 */
-void *SwingingPlatform_Spawn(void);
-/* data_ov036_02113a98[32] is declared in the DSSTATE block above. THE ROM NAME
+int _ZN16daObjRcBuranko_c13InitResourcesEv(char *self);       /* slot 0  */
+int _ZN16daObjRcBuranko_c16CleanupResourcesEv(void *self);       /* slot 3  */
+int _ZN16daObjRcBuranko_c8BehaviorEv(char *self);       /* slot 6  */
+int _ZN16daObjRcBuranko_c6RenderEv(void *self);       /* slot 9, +0xd4 plain Model draw */
+int *_ZN16daObjRcBuranko_cD1Ev(int *self);       /* slot 16, D1 */
+int *_ZN16daObjRcBuranko_cD0Ev(int *self);       /* slot 17, D0 */
+void *daObjRcBuranko_c_classInit(void);
+/* _ZTV16daObjRcBuranko_c[32] is declared in the DSSTATE block above. THE ROM NAME
    IS THE CANONICAL ONE HERE, not _ZTV16daObjRcBuranko_c, and that is not
    cosmetic: port/tools/vtspan.py --sweep sizes a host array against the ROM by
    looking its name up in config, and config names 0x02113a98 only
-   data_ov036_02113a98 -- _ZTV16daObjRcBuranko_c is a host-only spelling that
+   _ZTV16daObjRcBuranko_c -- _ZTV16daObjRcBuranko_c is a host-only spelling that
    comes from include/decl_common.h. Declared under the host-only name, this
    32-slot array would not have been sized by the one tool that sizes them, the
    _ZTV13daObjWakame_c / _ZTV20daObjFl_Fall_Block_c shape. The two TUs that
@@ -528,28 +531,28 @@ void *SwingingPlatform_Spawn(void);
 }
 
 static int __fastcall swp_init(void *s, void *)
-{ return func_ov036_0211137c((char *)s); }
+{ return _ZN16daObjRcBuranko_c13InitResourcesEv((char *)s); }
 static int __fastcall swp_clean(void *s, void *)
-{ return func_ov036_02111284(s); }
+{ return _ZN16daObjRcBuranko_c16CleanupResourcesEv(s); }
 static int __fastcall swp_behavior(void *s, void *)
-{ return func_ov036_021112f0((char *)s); }
+{ return _ZN16daObjRcBuranko_c8BehaviorEv((char *)s); }
 static int __fastcall swp_render(void *s, void *)
 { port_actor_render_probe("SWINGING_PLATFORM", (char *)s + 0xd4);
-  return func_ov036_021112c8(s); }
+  return _ZN16daObjRcBuranko_c6RenderEv(s); }
 static int __fastcall swp_d1(void *s, void *)
-{ return (int)(size_t)func_ov036_021111a0((int *)s); }
+{ return (int)(size_t)_ZN16daObjRcBuranko_cD1Ev((int *)s); }
 static int __fastcall swp_d0(void *s, void *)
-{ return (int)(size_t)func_ov036_021111e4((int *)s); }
+{ return (int)(size_t)_ZN16daObjRcBuranko_cD0Ev((int *)s); }
 
 extern "C" void hal_fill_swinging_platform_vtable(void)
 {
-    void *volatile *vt = (void *volatile *)data_ov036_02113a98;
+    void *volatile *vt = (void *volatile *)_ZTV16daObjRcBuranko_c;
     ov36_fill_shared(vt);
     vt[0]  = (void *)swp_init;
     vt[3]  = (void *)swp_clean;
     vt[6]  = (void *)swp_behavior;
     vt[9]  = (void *)swp_render;
-    vt[16] = (void *)swp_d1;
+    vt[16] = (void *)PORT_D16(swp_d1);
     vt[17] = (void *)swp_d0;
     vt[31] = (void *)ov36_kill;
 }
@@ -560,40 +563,40 @@ extern "C" void hal_fill_swinging_platform_vtable(void)
 // 9 are ov002's shared bodies, which the ROM parks directly in the table.
 // ============================================================================
 extern "C" {
-int func_ov036_0211150c(int *self);        /* slot 0, veneer into ov002 */
-int func_ov036_021114f8(void *self);       /* slot 3, veneer into ov002 */
-int func_ov002_020b6718(char *self);       /* slot 6, ov002 shared */
-int func_ov002_020b66f0(void *self);       /* slot 9, ov002 shared */
-int *func_ov036_02111444(int *self);       /* slot 16, D1 */
-int *func_ov036_02111494(int *self);       /* slot 17, D0 */
-void *RotatingPlatformRr_Spawn(void);
-/* data_ov036_02113b74[32] is declared in the DSSTATE block above */
+int _ZN19daObjRc_Kaitendai_c13InitResourcesEv(int *self);        /* slot 0, veneer into ov002 */
+int _ZN19daObjRc_Kaitendai_c16CleanupResourcesEv(void *self);       /* slot 3, veneer into ov002 */
+int _ZN16daObjKaitendai_c8BehaviorEv(char *self);       /* slot 6, ov002 shared */
+int _ZN16daObjKaitendai_c6RenderEv(void *self);       /* slot 9, ov002 shared */
+int *_ZN19daObjRc_Kaitendai_cD1Ev(int *self);       /* slot 16, D1 */
+int *_ZN19daObjRc_Kaitendai_cD0Ev(int *self);       /* slot 17, D0 */
+void *daObjRc_Kaitendai_c_classInit(void);
+/* _ZTV19daObjRc_Kaitendai_c[32] is declared in the DSSTATE block above */
 }
 
 static int __fastcall rpr_init(void *s, void *)
-{ return func_ov036_0211150c((int *)s); }
+{ return _ZN19daObjRc_Kaitendai_c13InitResourcesEv((int *)s); }
 static int __fastcall rpr_clean(void *s, void *)
-{ return func_ov036_021114f8(s); }
+{ return _ZN19daObjRc_Kaitendai_c16CleanupResourcesEv(s); }
 static int __fastcall rpr_behavior(void *s, void *)
-{ return func_ov002_020b6718((char *)s); }
+{ return _ZN16daObjKaitendai_c8BehaviorEv((char *)s); }
 static int __fastcall rpr_render(void *s, void *)
 { port_actor_render_probe("ROTATING_PLATFORM_RR", (char *)s + 0xd4);
-  return func_ov002_020b66f0(s); }
+  return _ZN16daObjKaitendai_c6RenderEv(s); }
 static int __fastcall rpr_d1(void *s, void *)
-{ return (int)(size_t)func_ov036_02111444((int *)s); }
+{ return (int)(size_t)_ZN19daObjRc_Kaitendai_cD1Ev((int *)s); }
 static int __fastcall rpr_d0(void *s, void *)
-{ return (int)(size_t)func_ov036_02111494((int *)s); }
+{ return (int)(size_t)_ZN19daObjRc_Kaitendai_cD0Ev((int *)s); }
 
 extern "C" void hal_fill_rotating_platform_rr_vtable(void)
 {
     ov36_base_bringup();
-    void *volatile *vt = (void *volatile *)data_ov036_02113b74;
+    void *volatile *vt = (void *volatile *)_ZTV19daObjRc_Kaitendai_c;
     ov36_fill_shared(vt);
     vt[0]  = (void *)rpr_init;
     vt[3]  = (void *)rpr_clean;
     vt[6]  = (void *)rpr_behavior;
     vt[9]  = (void *)rpr_render;
-    vt[16] = (void *)rpr_d1;
+    vt[16] = (void *)PORT_D16(rpr_d1);
     vt[17] = (void *)rpr_d0;
     vt[31] = (void *)ov36_kill;
 }
@@ -603,21 +606,21 @@ extern "C" void hal_fill_rotating_platform_rr_vtable(void)
 // plain Actor of the seven. Six on level 28. Own 0/3/6/9/16/17, no Kill.
 // ============================================================================
 extern "C" {
-int _ZN18RotatingPlatformRr13InitResourcesEv(void *self);      /* slot 0, faced */
-int _ZN18RotatingPlatformRr16CleanupResourcesEv(void);         /* slot 3, .c body takes void */
-int _ZN18RotatingPlatformRr8BehaviorEv(void *self);            /* slot 6, faced */
-int _ZN18RotatingPlatformRr6RenderEv(char *self);              /* slot 9, extern "C" already */
-int *_ZN18RotatingPlatformRrD0Ev(int *self);                   /* slot 17, D0 */
-void *ShipWing_Spawn(void);
+int _ZN14daObjRc_Hane_c13InitResourcesEv(void *self);      /* slot 0, faced */
+int _ZN14daObjRc_Hane_c16CleanupResourcesEv(void);         /* slot 3, .c body takes void */
+int _ZN14daObjRc_Hane_c8BehaviorEv(void *self);            /* slot 6, faced */
+int _ZN14daObjRc_Hane_c6RenderEv(char *self);              /* slot 9, extern "C" already */
+int *_ZN14daObjRc_Hane_cD0Ev(int *self);                   /* slot 17, D0 */
+void *daObjRc_Hane_c_classInit(void);
 int _ZTV18RotatingPlatformRr[31];  /* vtspan: _ZTV18RotatingPlatformRr */
 }
 
 static int __fastcall sw_init(void *s, void *)
-{ return _ZN18RotatingPlatformRr13InitResourcesEv(s); }
+{ return _ZN14daObjRc_Hane_c13InitResourcesEv(s); }
 static int __fastcall sw_clean(void *s, void *)
-{ (void)s; return _ZN18RotatingPlatformRr16CleanupResourcesEv(); }
+{ (void)s; return _ZN14daObjRc_Hane_c16CleanupResourcesEv(); }
 static int __fastcall sw_behavior(void *s, void *)
-{ return _ZN18RotatingPlatformRr8BehaviorEv(s); }
+{ return _ZN14daObjRc_Hane_c8BehaviorEv(s); }
 /* NO port_actor_render_probe HERE, and that is deliberate. SHIP_WING's member
    at +0xd4 is a CommonModel (its Spawn constructs it with _ZN11CommonModelC1Ev
    and its Render calls CommonModel::Render), not a Model, and the shared probe
@@ -631,7 +634,7 @@ static int __fastcall sw_behavior(void *s, void *)
    not take it. Its Init does load: the faced InitResources calls
    Model::LoadFile(data_ov036_02114070) then ModelBase::SetFile(+0xd4, ..., 1, -1). */
 static int __fastcall sw_render(void *s, void *)
-{ return _ZN18RotatingPlatformRr6RenderEv((char *)s); }
+{ return _ZN14daObjRc_Hane_c6RenderEv((char *)s); }
 /* D1: the matched TU is an MSVC-synthesised destructor over a LOCAL shadow
    class and provides no C name (see this file's header). Chain spelled
    directly from the ROM's own listing at 0x02111580: the class's own vtable,
@@ -639,7 +642,7 @@ static int __fastcall sw_render(void *s, void *)
 /* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
    the transcribed thunk that stood here (sw_d1) spelled the same chain by hand. */
 static int __fastcall sw_d0(void *s, void *)
-{ return (int)(size_t)_ZN18RotatingPlatformRrD0Ev((int *)s); }
+{ return (int)(size_t)_ZN14daObjRc_Hane_cD0Ev((int *)s); }
 
 extern "C" void hal_fill_ship_wing_vtable(void)
 {
@@ -649,7 +652,7 @@ extern "C" void hal_fill_ship_wing_vtable(void)
     vt[3]  = (void *)sw_clean;
     vt[6]  = (void *)sw_behavior;
     vt[9]  = (void *)sw_render;
-    vt[16] = (void *)hal_cppd1_RotatingPlatformRr;
+    vt[16] = (void *)PORT_D16(hal_cppd1_RotatingPlatformRr);
     vt[17] = (void *)sw_d0;
     /* no slot 31: a plain Actor, 31 slots total, ends at 30 */
 }
@@ -660,32 +663,32 @@ extern "C" void hal_fill_ship_wing_vtable(void)
 // level's skip list. The only one of the seven with its own slot 12.
 // ============================================================================
 extern "C" {
-int _ZN8ShipWing13InitResourcesEv(void *self);      /* slot 0,  faced */
-int _ZN8ShipWing16CleanupResourcesEv(void *self);   /* slot 3,  faced */
-int _ZN8ShipWing8BehaviorEv(void *self);            /* slot 6,  faced */
-int _ZN8ShipWing6RenderEv(void *self);              /* slot 9,  faced */
-void _ZN8ShipWing16OnPendingDestroyEv(void);        /* slot 12, own, .c body takes void */
-int *_ZN8ShipWingD1Ev(int *self);                   /* slot 16, D1 */
-int *_ZN8ShipWingD0Ev(int *self);                   /* slot 17, D0 */
-void *DonutBlock_Spawn(void);
+int _ZN10DonutBlock13InitResourcesEv(void *self);      /* slot 0,  faced */
+int _ZN10DonutBlock16CleanupResourcesEv(void *self);   /* slot 3,  faced */
+int _ZN10DonutBlock8BehaviorEv(void *self);            /* slot 6,  faced */
+int _ZN10DonutBlock6RenderEv(void *self);              /* slot 9,  faced */
+void _ZN10DonutBlock16OnPendingDestroyEv(void);        /* slot 12, own, .c body takes void */
+int *_ZN10DonutBlockD1Ev(int *self);                   /* slot 16, D1 */
+int *_ZN10DonutBlockD0Ev(int *self);                   /* slot 17, D0 */
+void *daObjRc_Tikuwa_c_classInit(void);
 int _ZTV8ShipWing[32];  /* vtspan: _ZTV8ShipWing */
 }
 
 static int __fastcall db_init(void *s, void *)
-{ return _ZN8ShipWing13InitResourcesEv(s); }
+{ return _ZN10DonutBlock13InitResourcesEv(s); }
 static int __fastcall db_clean(void *s, void *)
-{ return _ZN8ShipWing16CleanupResourcesEv(s); }
+{ return _ZN10DonutBlock16CleanupResourcesEv(s); }
 static int __fastcall db_behavior(void *s, void *)
-{ return _ZN8ShipWing8BehaviorEv(s); }
+{ return _ZN10DonutBlock8BehaviorEv(s); }
 static int __fastcall db_render(void *s, void *)
 { port_actor_render_probe("DONUT_BLOCK", (char *)s + 0xd4);
-  return _ZN8ShipWing6RenderEv(s); }
+  return _ZN10DonutBlock6RenderEv(s); }
 static int __fastcall db_pdes(void *s, void *)
-{ (void)s; _ZN8ShipWing16OnPendingDestroyEv(); return 0; }
+{ (void)s; _ZN10DonutBlock16OnPendingDestroyEv(); return 0; }
 static int __fastcall db_d1(void *s, void *)
-{ return (int)(size_t)_ZN8ShipWingD1Ev((int *)s); }
+{ return (int)(size_t)_ZN10DonutBlockD1Ev((int *)s); }
 static int __fastcall db_d0(void *s, void *)
-{ return (int)(size_t)_ZN8ShipWingD0Ev((int *)s); }
+{ return (int)(size_t)_ZN10DonutBlockD0Ev((int *)s); }
 
 extern "C" void hal_fill_donut_block_vtable(void)
 {
@@ -696,7 +699,7 @@ extern "C" void hal_fill_donut_block_vtable(void)
     vt[6]  = (void *)db_behavior;
     vt[9]  = (void *)db_render;
     vt[12] = (void *)db_pdes;   /* own, overrides the shared ActorBase default */
-    vt[16] = (void *)db_d1;
+    vt[16] = (void *)PORT_D16(db_d1);
     vt[17] = (void *)db_d0;
     vt[31] = (void *)ov36_kill;
 }
@@ -706,39 +709,39 @@ extern "C" void hal_fill_donut_block_vtable(void)
 // Platform-derived. One on level 28. Own 0/3/6/9/16/17.
 // ============================================================================
 extern "C" {
-int _ZN10DonutBlock13InitResourcesEv(void *self);      /* slot 0, faced */
-int _ZN10DonutBlock16CleanupResourcesEv(void *self);   /* slot 3, faced */
-int _ZN10DonutBlock8BehaviorEv(void *self);            /* slot 6, faced */
-int _ZN10DonutBlock6RenderEv(void *self);              /* slot 9, faced */
-int *_ZN10DonutBlockD1Ev(int *self);                   /* slot 16, D1 */
-int *_ZN10DonutBlockD0Ev(int *self);                   /* slot 17, D0 */
-void *ArmedRotatingPlatform_Spawn(void);
-int _ZTV10DonutBlock[32];  /* vtspan: _ZTV10DonutBlock */
+int _ZN18daObjRc_Guruguru_c13InitResourcesEv(void *self);      /* slot 0, faced */
+int _ZN18daObjRc_Guruguru_c16CleanupResourcesEv(void *self);   /* slot 3, faced */
+int _ZN18daObjRc_Guruguru_c8BehaviorEv(void *self);            /* slot 6, faced */
+int _ZN18daObjRc_Guruguru_c6RenderEv(void *self);              /* slot 9, faced */
+int *_ZN18daObjRc_Guruguru_cD1Ev(int *self);                   /* slot 16, D1 */
+int *_ZN18daObjRc_Guruguru_cD0Ev(int *self);                   /* slot 17, D0 */
+void *daObjRc_Guruguru_c_classInit(void);
+int _ZTV18daObjRc_Guruguru_c[32];  /* vtspan: _ZTV18daObjRc_Guruguru_c */
 }
 
 static int __fastcall arp_init(void *s, void *)
-{ return _ZN10DonutBlock13InitResourcesEv(s); }
+{ return _ZN18daObjRc_Guruguru_c13InitResourcesEv(s); }
 static int __fastcall arp_clean(void *s, void *)
-{ return _ZN10DonutBlock16CleanupResourcesEv(s); }
+{ return _ZN18daObjRc_Guruguru_c16CleanupResourcesEv(s); }
 static int __fastcall arp_behavior(void *s, void *)
-{ return _ZN10DonutBlock8BehaviorEv(s); }
+{ return _ZN18daObjRc_Guruguru_c8BehaviorEv(s); }
 static int __fastcall arp_render(void *s, void *)
 { port_actor_render_probe("ARMED_ROTATING_PLATFORM", (char *)s + 0xd4);
-  return _ZN10DonutBlock6RenderEv(s); }
+  return _ZN18daObjRc_Guruguru_c6RenderEv(s); }
 static int __fastcall arp_d1(void *s, void *)
-{ return (int)(size_t)_ZN10DonutBlockD1Ev((int *)s); }
+{ return (int)(size_t)_ZN18daObjRc_Guruguru_cD1Ev((int *)s); }
 static int __fastcall arp_d0(void *s, void *)
-{ return (int)(size_t)_ZN10DonutBlockD0Ev((int *)s); }
+{ return (int)(size_t)_ZN18daObjRc_Guruguru_cD0Ev((int *)s); }
 
 extern "C" void hal_fill_armed_rotating_platform_vtable(void)
 {
-    void *volatile *vt = (void *volatile *)_ZTV10DonutBlock;
+    void *volatile *vt = (void *volatile *)_ZTV18daObjRc_Guruguru_c;
     ov36_fill_shared(vt);
     vt[0]  = (void *)arp_init;
     vt[3]  = (void *)arp_clean;
     vt[6]  = (void *)arp_behavior;
     vt[9]  = (void *)arp_render;
-    vt[16] = (void *)arp_d1;
+    vt[16] = (void *)PORT_D16(arp_d1);
     vt[17] = (void *)arp_d0;
     vt[31] = (void *)ov36_kill;
 }
@@ -753,40 +756,40 @@ extern "C" void hal_fill_armed_rotating_platform_vtable(void)
 // record data_ov036_02113e88 as the second argument.
 // ============================================================================
 extern "C" {
-int _ZN21ArmedRotatingPlatform13InitResourcesEv(void *self);      /* slot 0, faced */
-int _ZN21ArmedRotatingPlatform16CleanupResourcesEv(void *self);   /* slot 3, faced */
-int func_ov002_020b4bfc(char *self);                              /* slot 6, ov002 shared */
-int func_ov002_020b4bc4(char *self);                              /* slot 9, ov002 shared */
-void *_ZN21ArmedRotatingPlatformD1Ev(void *self);                 /* slot 16, D1 */
-int _ZN21ArmedRotatingPlatformD0Ev(void *self);                   /* slot 17, D0 */
-void *TrickyTriangles_Spawn(void);
-int _ZTV21ArmedRotatingPlatform[32];  /* vtspan: _ZTV21ArmedRotatingPlatform */
+int _ZN16daObjRc_Dorifu_c13InitResourcesEv(void *self);      /* slot 0, faced */
+int _ZN16daObjRc_Dorifu_c16CleanupResourcesEv(void *self);   /* slot 3, faced */
+int _ZN13daObjDorifu_c8BehaviorEv(char *self);                              /* slot 6, ov002 shared */
+int _ZN13daObjDorifu_c6RenderEv(char *self);                              /* slot 9, ov002 shared */
+void *_ZN16daObjRc_Dorifu_cD1Ev(void *self);                 /* slot 16, D1 */
+int _ZN16daObjRc_Dorifu_cD0Ev(void *self);                   /* slot 17, D0 */
+void *daObjRc_Dorifu_c_classInit(void);
+int _ZTV16daObjRc_Dorifu_c[32];  /* vtspan: _ZTV16daObjRc_Dorifu_c */
 }
 
 static int __fastcall tt_init(void *s, void *)
-{ return _ZN21ArmedRotatingPlatform13InitResourcesEv(s); }
+{ return _ZN16daObjRc_Dorifu_c13InitResourcesEv(s); }
 static int __fastcall tt_clean(void *s, void *)
-{ return _ZN21ArmedRotatingPlatform16CleanupResourcesEv(s); }
+{ return _ZN16daObjRc_Dorifu_c16CleanupResourcesEv(s); }
 static int __fastcall tt_behavior(void *s, void *)
-{ return func_ov002_020b4bfc((char *)s); }
+{ return _ZN13daObjDorifu_c8BehaviorEv((char *)s); }
 static int __fastcall tt_render(void *s, void *)
 { port_actor_render_probe("TRICKY_TRIANGLES", (char *)s + 0x320);
-  return func_ov002_020b4bc4((char *)s); }
+  return _ZN13daObjDorifu_c6RenderEv((char *)s); }
 static int __fastcall tt_d1(void *s, void *)
-{ return (int)(size_t)_ZN21ArmedRotatingPlatformD1Ev(s); }
+{ return (int)(size_t)_ZN16daObjRc_Dorifu_cD1Ev(s); }
 static int __fastcall tt_d0(void *s, void *)
-{ return _ZN21ArmedRotatingPlatformD0Ev(s); }
+{ return _ZN16daObjRc_Dorifu_cD0Ev(s); }
 
 extern "C" void hal_fill_tricky_triangles_vtable(void)
 {
     ov36_base_bringup();
-    void *volatile *vt = (void *volatile *)_ZTV21ArmedRotatingPlatform;
+    void *volatile *vt = (void *volatile *)_ZTV16daObjRc_Dorifu_c;
     ov36_fill_shared(vt);
     vt[0]  = (void *)tt_init;
     vt[3]  = (void *)tt_clean;
     vt[6]  = (void *)tt_behavior;
     vt[9]  = (void *)tt_render;
-    vt[16] = (void *)tt_d1;
+    vt[16] = (void *)PORT_D16(tt_d1);
     vt[17] = (void *)tt_d0;
     vt[31] = (void *)ov36_kill;
 }
@@ -804,37 +807,37 @@ extern "C" void hal_fill_tricky_triangles_vtable(void)
 // ModelAnim slot-5 collision.
 // ============================================================================
 extern "C" {
-int func_ov036_0211244c(char *self);       /* slot 0  */
-int func_ov036_02112318(char *self);       /* slot 3  */
-int func_ov036_021123c8(char *self);       /* slot 6, calls PathLift::BaseBehavior */
-int func_ov036_02112378(void *self);       /* slot 9, HOST COPY */
-int func_ov036_02112158(char *self);       /* slot 16, D1 */
-void *func_ov036_021121c8(char *self);     /* slot 17, D0 */
-void *FlyingCarpet_Spawn(void);
-/* data_ov036_02113f9c[33] is declared in the DSSTATE block above */
+int _ZN15daObjRcCarpet_c13InitResourcesEv(char *self);       /* slot 0  */
+int _ZN15daObjRcCarpet_c16CleanupResourcesEv(char *self);       /* slot 3  */
+int _ZN15daObjRcCarpet_c8BehaviorEv(char *self);       /* slot 6, calls PathLift::BaseBehavior */
+int _ZN15daObjRcCarpet_c6RenderEv(void *self);       /* slot 9, HOST COPY */
+int _ZN15daObjRcCarpet_cD1Ev(char *self);       /* slot 16, D1 */
+void *_ZN15daObjRcCarpet_cD0Ev(char *self);     /* slot 17, D0 */
+void *daObjRcCarpet_c_classInit(void);
+/* _ZTV15daObjRcCarpet_c[33] is declared in the DSSTATE block above */
 }
 
 static int __fastcall fc_init(void *s, void *)
-{ return func_ov036_0211244c((char *)s); }
+{ return _ZN15daObjRcCarpet_c13InitResourcesEv((char *)s); }
 static int __fastcall fc_clean(void *s, void *)
-{ return func_ov036_02112318((char *)s); }
+{ return _ZN15daObjRcCarpet_c16CleanupResourcesEv((char *)s); }
 static int __fastcall fc_behavior(void *s, void *)
-{ return func_ov036_021123c8((char *)s); }
+{ return _ZN15daObjRcCarpet_c8BehaviorEv((char *)s); }
 static int __fastcall fc_render(void *s, void *)
 { port_actor_render_probe("FLYING_CARPET", (char *)s + 0x450);
-  return func_ov036_02112378(s); }
+  return _ZN15daObjRcCarpet_c6RenderEv(s); }
 static int __fastcall fc_d1(void *s, void *)
-{ return func_ov036_02112158((char *)s); }
+{ return _ZN15daObjRcCarpet_cD1Ev((char *)s); }
 static int __fastcall fc_d0(void *s, void *)
-{ return (int)(size_t)func_ov036_021121c8((char *)s); }
+{ return (int)(size_t)_ZN15daObjRcCarpet_cD0Ev((char *)s); }
 
 extern "C" void hal_fill_flying_carpet_vtable(void)
 {
     /* THE BASE MACHINERY IS OV100PL'S AND IS REUSED, NOT REBUILT.
        port_pathlift_states_seat rewrites the three PathLift state records'
        enter/tick words from DS code addresses to host ones, and
-       func_ov036_021123c8 (this class's Behavior) dispatches through them via
-       _ZN8PathLift12BaseBehaviorEv on its FIRST tick -- without the seat that
+       _ZN15daObjRcCarpet_c8BehaviorEv (this class's Behavior) dispatches through them via
+       _ZN16dPathLiftActor_c12BaseBehaviorEv on its FIRST tick -- without the seat that
        is a call into unmapped DS memory. It is mandatory here and it carries
        its own done guard.
        hal_fill_path_lift_vtable is called for its side effect: it is the only
@@ -850,13 +853,13 @@ extern "C" void hal_fill_flying_carpet_vtable(void)
        another lane's array from this file. */
     port_pathlift_states_seat();
     hal_fill_path_lift_vtable();
-    void *volatile *vt = (void *volatile *)data_ov036_02113f9c;
+    void *volatile *vt = (void *volatile *)_ZTV15daObjRcCarpet_c;
     ov36_fill_shared(vt);
     vt[0]  = (void *)fc_init;
     vt[3]  = (void *)fc_clean;
     vt[6]  = (void *)fc_behavior;
     vt[9]  = (void *)fc_render;
-    vt[16] = (void *)fc_d1;
+    vt[16] = (void *)PORT_D16(fc_d1);
     vt[17] = (void *)fc_d0;
     vt[31] = (void *)ov36_kill;
     vt[32] = (void *)ov36_after_clsn;   /* the INHERITED extra virtual */
@@ -865,27 +868,18 @@ extern "C" void hal_fill_flying_carpet_vtable(void)
 // ---- method faces ----------------------------------------------------------
 // Twelve ov036 TUs define a REAL C++ METHOD against their class header
 // (int ShipWing::Behavior() and friends), so MSVC mangles them
-// ?Behavior@ShipWing@@QAEHXZ and the ROM's C name _ZN8ShipWing8BehaviorEv is
+// ?Behavior@DonutBlock@@QAEHXZ and the ROM's C name _ZN10DonutBlock8BehaviorEv is
 // not provided by the object at all. Faced here, the IceSheet/OneUpLogo/
 // BabyPenguin recipe: a thin extern "C" wrapper that calls the qualified
 // method. The four bodies that are already extern "C" in src
-// (_ZN18RotatingPlatformRr6RenderEv, _ZN18RotatingPlatformRr16CleanupResourcesEv,
-// _ZN8ShipWing16OnPendingDestroyEv, _ZN21ArmedRotatingPlatformD1Ev) need no
+// (_ZN14daObjRc_Hane_c6RenderEv, _ZN14daObjRc_Hane_c16CleanupResourcesEv,
+// _ZN10DonutBlock16OnPendingDestroyEv, _ZN16daObjRc_Dorifu_cD1Ev) need no
 // face and are declared above and called directly.
 extern "C" {
-int _ZN18RotatingPlatformRr13InitResourcesEv(void *self)
-{ return ((RotatingPlatformRr *)self)->RotatingPlatformRr::InitResources(); }
-int _ZN18RotatingPlatformRr8BehaviorEv(void *self)
-{ return ((RotatingPlatformRr *)self)->RotatingPlatformRr::Behavior(); }
-
-int _ZN8ShipWing13InitResourcesEv(void *self)
-{ return ((ShipWing *)self)->ShipWing::InitResources(); }
-int _ZN8ShipWing16CleanupResourcesEv(void *self)
-{ return ((ShipWing *)self)->ShipWing::CleanupResources(); }
-int _ZN8ShipWing8BehaviorEv(void *self)
-{ return ((ShipWing *)self)->ShipWing::Behavior(); }
-int _ZN8ShipWing6RenderEv(void *self)
-{ return ((ShipWing *)self)->ShipWing::Render(); }
+int _ZN14daObjRc_Hane_c13InitResourcesEv(void *self)
+{ return ((daObjRc_Hane_c *)self)->daObjRc_Hane_c::InitResources(); }
+int _ZN14daObjRc_Hane_c8BehaviorEv(void *self)
+{ return ((daObjRc_Hane_c *)self)->daObjRc_Hane_c::Behavior(); }
 
 int _ZN10DonutBlock13InitResourcesEv(void *self)
 { return ((DonutBlock *)self)->DonutBlock::InitResources(); }
@@ -896,8 +890,17 @@ int _ZN10DonutBlock8BehaviorEv(void *self)
 int _ZN10DonutBlock6RenderEv(void *self)
 { return ((DonutBlock *)self)->DonutBlock::Render(); }
 
-int _ZN21ArmedRotatingPlatform13InitResourcesEv(void *self)
-{ return ((ArmedRotatingPlatform *)self)->ArmedRotatingPlatform::InitResources(); }
-int _ZN21ArmedRotatingPlatform16CleanupResourcesEv(void *self)
-{ return ((ArmedRotatingPlatform *)self)->ArmedRotatingPlatform::CleanupResources(); }
+int _ZN18daObjRc_Guruguru_c13InitResourcesEv(void *self)
+{ return ((daObjRc_Guruguru_c *)self)->daObjRc_Guruguru_c::InitResources(); }
+int _ZN18daObjRc_Guruguru_c16CleanupResourcesEv(void *self)
+{ return ((daObjRc_Guruguru_c *)self)->daObjRc_Guruguru_c::CleanupResources(); }
+int _ZN18daObjRc_Guruguru_c8BehaviorEv(void *self)
+{ return ((daObjRc_Guruguru_c *)self)->daObjRc_Guruguru_c::Behavior(); }
+int _ZN18daObjRc_Guruguru_c6RenderEv(void *self)
+{ return ((daObjRc_Guruguru_c *)self)->daObjRc_Guruguru_c::Render(); }
+
+int _ZN16daObjRc_Dorifu_c13InitResourcesEv(void *self)
+{ return ((daObjRc_Dorifu_c *)self)->daObjRc_Dorifu_c::InitResources(); }
+int _ZN16daObjRc_Dorifu_c16CleanupResourcesEv(void *self)
+{ return ((daObjRc_Dorifu_c *)self)->daObjRc_Dorifu_c::CleanupResources(); }
 }

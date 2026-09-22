@@ -11,7 +11,7 @@
 # decompiled, but its byte-matched InitResources references its own overlay's
 # statics by the ov055/ov056 symbol SPELLINGS (data_ov056_02111a60,
 # data_ov055_02111a94) ... Hosting it needs a per-symbol ov017 mount
-# (ShipWater_SpawnInfo, _ZTV9ShipWater, data_ov017_02111c88) PLUS an
+# (g_profile_KS_MIZU, _ZTV9ShipWater, data_ov017_02111c88) PLUS an
 # alias-by-address that resolves the ov055/ov056 spellings onto ov017's host
 # bytes -- the 'propagate config renames BY ADDRESS' hazard. Deferred to a
 # dedicated gate." This file and port/slice_sweep1_ov017.txt are that gate.
@@ -26,7 +26,7 @@
 # ==== THE ONE CLASS, both attribution routes ===============================
 #
 #   id  arm9 slot   SpawnInfo   word[0]     factory          +4  x on L9
-#   62  0x0209095c  0x02111bd4  0x02111480  ShipWater_Spawn  62   1
+#   62  0x0209095c  0x02111bd4  0x02111480  daObjKsWater_c_classInit  62   1
 #
 # The record's word[0] lands inside ov017 [0x021111a0, 0x02111c80) and is the
 # overlay's only factory; the record reads 62 back at +4. Both routes are
@@ -39,9 +39,9 @@
 # 0x02111c78. next dsd symbol 0x02111c20 -- INTERIOR (slot 10), and 0x02111c54
 # (slot 23) is an interior split too, so the landing reads TEN. The pin is the
 # ROM's own close:
-#     slot 29  0x02010124  _ZN5Actor16OnAimedAtWithEggEv
-#     slot 30  0x020100dc  _ZN5Actor25OnAimedAtWithEggReturnVecEv
-#     slot 31  0x020ee55c  _ZN8Platform4KillEv   (ov002 symbols.txt:1175)
+#     slot 29  0x02010124  _ZN8dActor_c16OnAimedAtWithEggEv
+#     slot 30  0x020100dc  _ZN8dActor_c25OnAimedAtWithEggReturnVecEv
+#     slot 31  0x020ee55c  _ZN10dBgActor_c4KillEv   (ov002 symbols.txt:1175)
 # the 32-slot Platform close every platform table in this lane ends on. dsd's
 # two names are both for this one table and the RTTI string agrees
 # ("14daObjKsWater_c", Ks = Kaizoku Ship), so there is NO class-identity shift
@@ -50,7 +50,7 @@
 #
 # ==== TWO T3 WIDTH PINS ====================================================
 #
-#   ShipWater_SpawnInfo  natural next-symbol delta 0xc (dsd named 0x02111be0
+#   g_profile_KS_MIZU  natural next-symbol delta 0xc (dsd named 0x02111be0
 #     INSIDE the record). A record is 0x1c. Unpinned this mounts twelve bytes
 #     of twenty-eight, and the registry's id check at +4 sits inside those
 #     twelve so it would have passed anyway.
@@ -79,7 +79,7 @@
 #
 # ==== THREE ALIAS RACES IN ONE FUNCTION, AND ONE OF THEM IS LIVE TODAY =====
 #
-# src/_ZN9ShipWater13InitResourcesEv.c reaches four objects. Its own literal
+# src/game/actors/d_a_obj_ks_water.cpp reaches four objects. Its own literal
 # pool at 0x02111470..0x0211147c and the relocations over it say what each one
 # is, and every one of the four resolves to an OV017 symbol:
 #
@@ -88,12 +88,12 @@
 #                      Source spells it data_ov056_02111a60.
 #   pool 0x02111478 -> 0x02111c80  data_ov017_02111c80, the collision
 #                      SharedFilePtr. Source spells it
-#                      &_ZN16FloatingFloorBfsD0Ev -- an OV045 FUNCTION.
+#                      &_ZN15daObjKm2_Gura_cD0Ev -- an OV045 FUNCTION.
 #   pool 0x0211147c -> 0x02111a94  data_ov017_02111a94, the CLPS block.
 #                      Source spells it data_ov055_02111a94.
 #
 # THE THIRD ONE IS LIVE ON THIS TIP AND IT IS THE WORST IN THE LANE.
-# src/_ZN16FloatingFloorBfsD0Ev.c is in port/slice_w1l4.txt and the symbol is
+# src/game/actors/d_a_obj_km2_gura.cpp is in port/slice_w1l4.txt and the symbol is
 # IN build/port/walk_window.map right now. Link the ShipWater slice without the
 # rename and MeshCollider::LoadFile is handed the ADDRESS OF A DESTRUCTOR as a
 # file pointer, resolving cleanly, failing nowhere at link, and reading a
@@ -117,7 +117,7 @@
 # retires it. Left unseated, level 9 keeps both the skip and the wrong water.
 
 # ---- .data: the SpawnInfo record, pinned to the ROM's 0x1c ----------------
-ShipWater_SpawnInfo:0x1c
+g_profile_KS_MIZU:0x1c
 
 # ---- .data: the BTA file descriptor and the CLPS collision block ----------
 data_ov017_02111a60 data_ov017_02111a94

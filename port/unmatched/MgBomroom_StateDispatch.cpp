@@ -26,7 +26,7 @@
 //   data_ov006_02141680  4    1    func_ov006_020d65c8
 //   data_ov006_021416a0  4    0    func_ov006_020d8f98   THE OPEN-CODED ONE
 //   data_ov006_021416c0  4    1    func_ov006_020d6278
-//   data_ov006_021416e0  5    0    func_ov006_020d91b0   (vtable slot 6)
+//   data_ov006_021416e0  5    0    _ZN14dScMgBomroom_c8BehaviorEv   (vtable slot 6)
 //   data_ov006_02141708  5    1    func_ov006_020d7c00
 //   data_ov006_02141730  7    1    func_ov006_020d836c
 //
@@ -48,7 +48,7 @@
 // ---- THE STATE THAT HAD NO BODY NOW HAS ONE (run mg7, lane L370) -----------
 //
 // 0x020d7c4c, slot 5 of data_ov006_02141730, is decompiled and BYTE-MATCHED --
-// src/func_ov006_020d7c4c.c, 0x230, matching mwccarm 1.2/base, 1.2/sp2 and
+// src/func_ov006_020d7c4c.cpp, 0x230, matching mwccarm 1.2/base, 1.2/sp2 and
 // 1.2/sp2p3 with strict relocs. The reporting case that stood here (it counted
 // how often the ROM's own state machine ASKED for a body this build did not
 // have) is retired, and the slot calls the real body.
@@ -74,7 +74,7 @@
 //
 //   NAMED BY A LINK -- the table is declared at C++ linkage, so MSVC encodes
 //   the member-pointer type into the symbol and nothing can satisfy it
-//     func_ov006_020d91b0   PMF data_ov006_021416e0[]
+//     _ZN14dScMgBomroom_c8BehaviorEv   PMF data_ov006_021416e0[]
 //     func_ov006_020d836c   PMF data_ov006_02141730[]
 //     func_ov006_020d65c8   PMF data_ov006_02141680[]
 //     func_ov006_020d6278   PMF data_ov006_021416c0[]
@@ -358,10 +358,10 @@ extern "C" unsigned port_mg_bomroom_opencoded_calls(void)
 // dispatchers that read them now compile from their own matched TUs
 // (port/slice_pmfb4.txt) and the host copies of them are gone:
 //
-//   func_ov006_020d5fec  data_ov006_02141660   src/func_ov006_020d5fec.cpp
-//   func_ov006_020d65c8  data_ov006_02141680   src/func_ov006_020d65c8.cpp
-//   func_ov006_020d6278  data_ov006_021416c0   src/func_ov006_020d6278.cpp
-//   func_ov006_020d91b0  data_ov006_021416e0   src/func_ov006_020d91b0.cpp
+//   func_ov006_020d5fec  data_ov006_02141660   src/actors/dScMgBomroom_c.cpp
+//   func_ov006_020d65c8  data_ov006_02141680   src/actors/dScMgBomroom_c.cpp
+//   func_ov006_020d6278  data_ov006_021416c0   src/actors/dScMgBomroom_c.cpp
+//   _ZN14dScMgBomroom_c8BehaviorEv  data_ov006_021416e0   src/_ZN14dScMgBomroom_c8BehaviorEv.cpp
 //   func_ov006_020d836c  data_ov006_02141730   src/func_ov006_020d836c.cpp
 //
 // THE TWO THAT STAY, and why the switch above stays with them:
@@ -404,7 +404,7 @@ extern "C" unsigned port_mg_bomroom_opencoded_calls(void)
 //                           pool 020d662c = 02141680                   [eax*8+4]
 //   func_ov006_020d6278   data_ov006_021416c0  add r3,r4,r0,lsl #3     [eax*8]
 //                           pool 020d62dc = 021416c0                   [eax*8+4]
-//   func_ov006_020d91b0   data_ov006_021416e0  add r3,r1,r0,lsl #3     [eax*8]
+//   _ZN14dScMgBomroom_c8BehaviorEv   data_ov006_021416e0  add r3,r1,r0,lsl #3     [eax*8]
 //                           pool 020d9240 = 021416e0                   [eax*8+4]
 //   func_ov006_020d836c   data_ov006_02141730  add r3,r4,r0,lsl #3     [eax*8]
 //                           pool 020d8404 = 02141730                   [eax*8+4]

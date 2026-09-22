@@ -22,12 +22,12 @@
 // ---- JET_STREAM'S TABLE WAS ALREADY FILLED, ONE CLASS OFF ------------------
 //
 // dsd's ov064 BowserPuzzle labels are ROTATED BY ONE. id 78's factory
-// (0x02119300, dsd BowserPuzzlePiece_Spawn) installs _ZTV19BowserPuzzleManager
+// (0x02119300, dsd daObjFl_Puzzle_c_classInit) installs _ZTV19BowserPuzzleManager
 // (0x0211c25c, RTTI "16daObjFl_Puzzle_c"); id 79's (0x021192d0) installs
-// data_ov064_0211c1d8 ("14daObjFl_Coin_c"); and _ZTV17BowserPuzzlePiece
+// _ZTV19BowserPuzzleManager ("14daObjFl_Coin_c"); and _ZTV17BowserPuzzlePiece
 // (0x0211c334) is JET STREAM'S table -- which is why
 // hal/actor_classes_bowserpuzzle.cpp's own note says the only things that spell
-// it are "this D0 and JetStream_Spawn, unhosted". Gate 179 filled that array
+// it are "this D0 and daWater_Hakidasi_c_classInit, unhosted". Gate 179 filled that array
 // with the seven bodies dsd named _ZN17BowserPuzzlePiece* (JetStream's own
 // InitResources / CleanupResources / Behavior / Render / OnPendingDestroy /
 // D1 / D0), sliced every one of them in port/slice_gate179.txt, and seated its
@@ -61,15 +61,15 @@
 //   WaterRing::Behavior          mwcc PMF over a forward-declared struct
 //   func_ov064_02119ecc          the same, the enter half
 //   WaterRing::Render            local six-virtual Model slot-5 shadow
-//   func_ov064_0211a6ec / _0211a734   TreasureChest's two PMF dispatchers
-//   func_ov064_0211a4c4          THE ROM BODY THE DECOMP DOES NOT HAVE
+//   _ZN13TreasureChest8SetStateEi / _0211a734   TreasureChest's two PMF dispatchers
+//   _ZN13TreasureChest6State0Ev          THE ROM BODY THE DECOMP DOES NOT HAVE
 //   TreasureChest::Render        local six-virtual ModelAnim slot-5 shadow
 //   TreasureChest D1 (slot 16)   a real MSVC dtor with no C name -- host chain
 //
 // The first six live in port/unmatched/Ov064_WaterRing.cpp,
 // port/unmatched/Ov064_TreasureChest.cpp and port/unmatched/Ov064_Clam.cpp
 // (the last by that file's own instruction). The seventh is tc_d1 below.
-// func_ov064_0211a4c4's derivation -- no delink block, no src file, referenced
+// _ZN13TreasureChest6State0Ev's derivation -- no delink block, no src file, referenced
 // only from the data word at 0x0211c4bc, stored by __sinit_ov064_0211b59c at
 // Entry[0].tick, and reached on the first Behavior frame of every chest -- is
 // in Ov064_TreasureChest.cpp's header, along with why a loud face is not
@@ -77,7 +77,7 @@
 //
 // ---- WaterRing's D1/D0 ARE BOTH C NAMES ------------------------------------
 //
-// src/_ZN9WaterRingD1Ev.c and src/_ZN9WaterRingD0Ev.c are both .c bodies with
+// src/_ZN9WaterRingD1Ev.cpp and src/_ZN9WaterRingD0Ev.cpp are both .c bodies with
 // C linkage that restore _ZTV9WaterRing, so both stay in the slice and neither
 // needs a host thunk -- the gate-179 Piece reading. TreasureChest's D0 is a .c
 // too (it spells the table by its RTTI name _ZTV11daObjTbox_c, aliased below);
@@ -86,13 +86,15 @@
 // gate-199/200/202, ov045 ExtendingPlatform and Clam case. tc_d1 is that
 // chain, transcribed from the ROM at 0x0211a200 and cross-checked against its
 // sibling D0, which spells the identical chain plus Memory::Deallocate.
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
@@ -101,28 +103,28 @@ extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include "dtor_faces_cpp.h"
 #include <cstdlib>
 
-#include "Actor.h"
-#include "ActorBase.h"
+#include "dActor_c.h"
+#include "fBase_c.h"
 
 extern "C" {
 /* the arm9 shared half -- the same words every 31-slot Actor table carries,
    checked slot for slot against both reloc runs. */
-int _ZN5Actor19BeforeInitResourcesEv(void *self);              /* slot 1  */
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
-int _ZN5Actor14BeforeBehaviorEv(void *self);                   /* slot 7  */
-int _ZN5Actor12BeforeRenderEv(void *self);                     /* slot 10 */
-int _ZN5Actor13OnYoshiTryEatEv(void *self);                    /* slot 18 */
-void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
-int _ZN5Actor9Virtual50Ev(void *self);                         /* slot 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);              /* slot 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);              /* slot 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
-int _ZN5Actor16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);              /* slot 1  */
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);                   /* slot 7  */
+int _ZN8dActor_c12BeforeRenderEv(void *self);                     /* slot 10 */
+int _ZN8dActor_c13OnYoshiTryEatEv(void *self);                    /* slot 18 */
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
+int _ZN8dActor_c9Virtual50Ev(void *self);                         /* slot 20 */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);              /* slot 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);              /* slot 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
+int _ZN8dActor_c16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
 
 const char *port_actor_class_name(unsigned id);
 void port_actor_slot_decline(const char *what);
@@ -141,7 +143,7 @@ int _ZN9WaterRing6RenderEv(void *self);             /* slot 9, HOST COPY */
 void _ZN9WaterRing16OnPendingDestroyEv(void *self); /* slot 12, .c */
 int *_ZN9WaterRingD1Ev(void *self);                 /* slot 16, .c */
 int *_ZN9WaterRingD0Ev(void *self);                 /* slot 17, .c */
-void *WaterRing_Spawn(void);
+void *daWater_Ring_c_classInit(void);
 void port_water_ring_states_seat(void);
 void __sinit_ov064_0211b518(void);
 
@@ -151,14 +153,14 @@ int _ZN13TreasureChest16CleanupResourcesEv(void *self); /* slot 3, .c */
 int _ZN13TreasureChest8BehaviorEv(void *self);          /* slot 6, .cpp, faced */
 int _ZN13TreasureChest6RenderEv(void *self);            /* slot 9, HOST COPY */
 int *_ZN13TreasureChestD0Ev(int *self);                 /* slot 17, .c */
-void *TreasureChest_Spawn(void);
+void *daObjTbox_c_classInit(void);
 void port_treasure_chest_states_seat(void);
 void __sinit_ov064_0211b59c(void);
 
 /* what tc_d1 spells by hand */
-void _ZN18MovingCylinderClsnD1Ev(void *self);
+void _ZN7dCcAc_cD1Ev(void *self);
 void _ZN9ModelAnimD1Ev(void *self);
-void *_ZN5ActorD2Ev(void *self);
+void *_ZN8dActor_cD2Ev(void *self);
 
 /* the two derived vtables this lane hosts. `int[]` with C linkage matches the
    `extern int _ZTV..[]` declarations in include/decl_common.h that the .c
@@ -172,7 +174,7 @@ DSSTATE_END
 
 /* dsd names each address twice and both spellings are out of the mount; the
    RTTI spelling is the one each class's own D0 restores by
-   (src/_ZN9WaterRingD0Ev.c and src/_ZN13TreasureChestD0Ev.c). Both LHS are
+   (src/_ZN9WaterRingD0Ev.cpp and src/_ZN13TreasureChestD0Ev.cpp). Both LHS are
    declared and never defined, so tools/alternatename_guard.py stays clean. */
 #pragma comment(linker, "/alternatename:__ZTV14daWater_Ring_c=__ZTV9WaterRing")
 #pragma comment(linker, "/alternatename:__ZTV11daObjTbox_c=__ZTV13TreasureChest")
@@ -217,49 +219,49 @@ OV64W3C_TRAP(13) OV64W3C_TRAP(14)
 
 // ---- the shared 0..30 half -------------------------------------------------
 static int __fastcall w3c_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall w3c_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall w3c_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 static void __fastcall w3c_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall w3c_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall w3c_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall w3c_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall w3c_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall w3c_pdes_base(void *s, void *)
-{ ((ActorBase *)s)->ActorBase::OnPendingDestroy(); return 0; }
+{ ((fBase_c *)s)->fBase_c::OnPendingDestroy(); return 0; }
 static int __fastcall w3c_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int __fastcall w3c_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 static int __fastcall w3c_turn_egg(void *s, void *, void *p)
-{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+{ _ZN8dActor_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall w3c_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall w3c_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall w3c_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall w3c_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall w3c_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall w3c_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall w3c_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall w3c_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall w3c_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 static int __fastcall w3c_egg(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 
 /* Fill slots 1..15 and 18..30 of a 31-slot Actor table with the shared bodies.
    The caller writes 0/3/6/9/16/17 and, where the class overrides it, 12. */
@@ -348,7 +350,7 @@ static int __fastcall tc_render(void *s, void *)
 /* slot 16, HOST CHAIN -- src/_ZN13TreasureChestD1Ev.cpp is a real MSVC
    destructor over structs declared inside itself, so it emits
    ??1TreasureChest@@UAE@XZ and never the C name. Transcribed from ROM
-   0x0211a200 and cross-checked against src/_ZN13TreasureChestD0Ev.c, which
+   0x0211a200 and cross-checked against src/_ZN13TreasureChestD0Ev.cpp, which
    spells the identical chain plus Memory::Deallocate. */
 /* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
    the transcribed thunk that stood here (tc_d1) spelled the same chain by hand. */
@@ -390,7 +392,7 @@ extern "C" void hal_fill_water_ring_vtable(void)
     vt[6]  = (void *)wr_behavior;
     vt[9]  = (void *)wr_render;
     vt[12] = (void *)wr_pdes;      /* WaterRing overrides OnPendingDestroy */
-    vt[16] = (void *)wr_d1;
+    vt[16] = (void *)PORT_D16(wr_d1);
     vt[17] = (void *)wr_d0;
     /* 31 slots: an Enemy/Actor, not a Platform. No slot 31. */
 }
@@ -404,7 +406,7 @@ extern "C" void hal_fill_treasure_chest_vtable(void)
     vt[3]  = (void *)tc_clean;
     vt[6]  = (void *)tc_behavior;
     vt[9]  = (void *)tc_render;
-    vt[16] = (void *)hal_cppd1_TreasureChest;
+    vt[16] = (void *)PORT_D16(hal_cppd1_TreasureChest);
     vt[17] = (void *)tc_d0;
     /* slot 12 keeps w3c_pdes_base -- the chest defaults to ActorBase's own. */
     /* 31 slots: an Actor, not a Platform. No slot 31. */

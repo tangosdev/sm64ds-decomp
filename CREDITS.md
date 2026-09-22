@@ -10,8 +10,8 @@ This decompilation builds on reverse-engineering knowledge from the SM64DS commu
   all matching C in `src/` is written from scratch against our own ROM. Their addresses
   were independently verified against our `dsd` analysis (≈72% land exactly on functions
   we found, confirming the same EU build).
-- **SplattyDS / SM64DS-ASM-Reference** and **Arisotura / SM64DSe**, upstream symbol /
-  level-format documentation the above builds on.
+- **SplattyDS / SM64DS-ASM-Reference**, **Arisotura / SM64DSe**, and **Gota7 /
+  MoreObjectsMod**, further upstream symbol / reference documentation the above builds on.
 
 If you contribute, keep this separation: import knowledge, write code.
 

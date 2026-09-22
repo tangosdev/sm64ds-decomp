@@ -4,7 +4,7 @@
 # THE SLICE IS ID 135 ALONE, and that is the whole recommendation of
 # port/ov043_syms.txt: six of level 35's eight skipped instances, and the only
 # one of the overlay's three placed classes whose factory is CLEAN
-# (DiamondLift_Spawn.c names data_ov043_021122b8 outright, no placeholder).
+# (daObjKm1_Ukishima_c_classInit.c names _ZTV19daObjKm1_Ukishima_c outright, no placeholder).
 # Ids 134 and 137 stay skipped: 137's factory hides its real table behind a
 # placeholder AND spells an invented class name that means a DIFFERENT
 # overlay's base table, and both 134 and 137 need ov002 base bodies this slice
@@ -17,7 +17,7 @@
 # cross-mount candidates.
 #
 # ==== THE WIDTH: 32, AND EVERY ROUTE AGREES ================================
-# `python port/tools/vtspan.py . data_ov043_021122b8` on this tree:
+# `python port/tools/vtspan.py . _ZTV19daObjKm1_Ukishima_c` on this tree:
 #     tail 32   typeinfo 32   terminator 32   raw run 32   next dsd symbol 26
 # with "slot 31 is Platform::Kill and slot 32 is not a code pointer". Four
 # routes agree and only the next-dsd-symbol route disagrees, which is the
@@ -27,20 +27,20 @@
 # is the shared Platform::Kill.
 #
 # ==== SLOT 9 IS THE SLOT-5 SHADOW, AND IT IS SAFE ==========================
-# src/func_ov043_02111280.cpp dispatches slot 5 of a six-virtual shadow over
+# src/game/actors/d_a_obj_km1_ukishima.cpp dispatches slot 5 of a six-virtual shadow over
 # the member at +0xd4. Adjudicated from CONSTRUCTION, the wave-19 method, and
 # three matched TUs witness the same thing:
-#   src/func_ov043_02111320.c   Model::LoadFile -> ModelBase::SetFile at c+0xd4
-#   src/func_ov043_021111a0.c   _ZN5ModelD1Ev(t + 0xd4)
-#   src/func_ov043_021111e4.c   _ZN5ModelD1Ev(t + 0xd4)
+#   src/game/actors/d_a_obj_km1_ukishima.cpp   Model::LoadFile -> ModelBase::SetFile at c+0xd4
+#   src/game/actors/d_a_obj_km1_ukishima.cpp   _ZN5ModelD1Ev(t + 0xd4)
+#   src/game/actors/d_a_obj_km1_ukishima.cpp   _ZN5ModelD1Ev(t + 0xd4)
 # A plain Model, and hal/cxxname_bridge.cpp dual-fills _ZTV5Model at [4] AND
 # [5], so the shadow's slot 5 lands on Model::Render. The SlideDecoration
 # ruling, not the Snufit/Swoop/Dorrie/MontyMole one. The matched TU is linked.
 #
 # ==== THE AUTHORIZATION THIS SEAT RIDES ON =================================
 # FIVE of the eight TUs below carry the inferred-stub marker "recovered from
-# vtable slot identity" -- func_ov043_02111320, func_ov043_0211123c,
-# func_ov043_021112a8, func_ov043_02111280 and func_ov043_021111e4. They are
+# vtable slot identity" -- _ZN19daObjKm1_Ukishima_c13InitResourcesEv, _ZN19daObjKm1_Ukishima_c16CleanupResourcesEv,
+# _ZN19daObjKm1_Ukishima_c8BehaviorEv, _ZN19daObjKm1_Ukishima_c6RenderEv and _ZN19daObjKm1_Ukishima_cD0Ev. They are
 # seated here on wave 16's pre-existing per-body ruling in
 # port/tools/inferred_stub_adjudicated.txt:71-77, which grades all five
 # REAL_DECOMP against w16.md#135 and whose own header note says the seating was
@@ -51,7 +51,7 @@
 #
 # ==== THE FOUR TRAPS, EACH RE-VERIFIED BY DISASSEMBLY ON THIS TREE =========
 #
-# (1) THE G0/G1 TRAP, the live one. src/func_ov043_0211123c.c releases two
+# (1) THE G0/G1 TRAP, the live one. src/game/actors/d_a_obj_km1_ukishima.cpp releases two
 #     SharedFilePtrs spelled G0 and G1, and hal/cxx_aliases.cpp has already
 #     bound the single global name _G0 to _data_020a0eac (the GAME HEAP
 #     pointer) and _G1 to _data_ov002_0210e05c (SignPost's KCL). Neither would
@@ -73,12 +73,12 @@
 #     declares `extern int G1[];` and MSVC rejects the redeclaration.
 #
 # (2) THE DESTRUCTOR'S G0 IS A DIFFERENT OBJECT AND IS LEFT ALONE.
-#     src/func_ov043_021111e4.c passes G0 to Memory::Deallocate as the HEAP.
+#     src/game/actors/d_a_obj_km1_ukishima.cpp passes G0 to Memory::Deallocate as the HEAP.
 #     Its literal at 0x02111238 relocs to 0x020a0eac module:main -- the game
 #     heap -- which is exactly what cxx_aliases.cpp already binds _G0 to. No
 #     rename on that file's G0. The per-source -D there covers VT0/VT1 only.
 #
-# (3) THE TWO ov047-SPELLED CELLS. src/func_ov043_02111320.c spells ov043's
+# (3) THE TWO ov047-SPELLED CELLS. src/game/actors/d_a_obj_km1_ukishima.cpp spells ov043's
 #     own bss cells data_ov047_021125e8 and data_ov047_021125e0. Its load
 #     sites are the same two addresses the sinit initialises, both
 #     module:overlay(43); ov043 and ov047 are distinct objects sharing the
@@ -89,22 +89,22 @@
 #     declares no data_ov043_021125e0/e8 at all, so there is nothing to
 #     conflict with.
 #
-# (4) THE PLACEHOLDER VTABLES. src/func_ov043_021111e4.c (D0) writes VT0 then
-#     VT1; src/func_ov043_021111a0.c (D1) writes the same pair BY NAME,
+# (4) THE PLACEHOLDER VTABLES. src/game/actors/d_a_obj_km1_ukishima.cpp (D0) writes VT0 then
+#     VT1; src/game/actors/d_a_obj_km1_ukishima.cpp (D1) writes the same pair BY NAME,
 #     _ZTV19daObjKm1_Ukishima_c then _ZTV10dBgActor_c. Both pairs are the same
 #     two addresses, read off the D0's own literal pool:
 #         from:0x02111230 kind:load to:0x021122b8 module:overlay(43)
 #         from:0x02111234 kind:load to:0x0210ae38 module:overlay(2)
 #     0x0210ae38 is the Platform base table and IS ALREADY SOLVED in this tree:
 #     hal/actor_classes.cpp:583 defines `void *_ZTV10dBgActor_c[32]` and
-#     hal_fill_platform_vtable fills it and _ZTV8Platform identically. So the
+#     hal_fill_platform_vtable fills it and _ZTV10dBgActor_c identically. So the
 #     D1 needs no rename at all, and the D0 needs VT0/VT1 renamed to the two
 #     real hosted names -- never to a placeholder, and never trusting one.
 #     0x021122b8 is excluded from the mount and is the host array
 #     hal/actor_classes_ov043.cpp declares. It is defined under the ROM's own
 #     class name, which comes from the table's OWN RTTI record and not from a
 #     dsd label: vtable[-1] = 0x02112270, whose word[1] names
-#     "19daObjKm1_Ukishima_c". The factory's spelling data_ov043_021122b8
+#     "19daObjKm1_Ukishima_c". The factory's spelling _ZTV19daObjKm1_Ukishima_c
 #     is an /alternatename onto it.
 #
 # ==== ONE SINIT RUNS, NOT FOUR ============================================
@@ -129,11 +129,5 @@
 #       error: the cells it builds belong to classes this slice does not host.
 #       It stays OFF and is not on the slice.
 # Running only 021117fc is what the hosted class needs and nothing more.
-src/DiamondLift_Spawn.c
-src/func_ov043_02111320.c
-src/func_ov043_0211123c.c
-src/func_ov043_021112a8.cpp
-src/func_ov043_02111280.cpp
-src/func_ov043_021111a0.c
-src/func_ov043_021111e4.c
+src/game/actors/d_a_obj_km1_ukishima.cpp
 src/__sinit_ov043_021117fc.c

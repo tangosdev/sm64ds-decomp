@@ -1,3 +1,16 @@
+// ===========================================================================
+// RETIRED -- THIS FILE IS NOT IN ANY BUILD. Run link100 wave 15, lane SEAT15D,
+// LINK15 BATCH 3. The one token this file existed to change is now the token
+// src/ carries: src/func_ov006_020fa7b8.cpp:6 reads
+// `extern void* data_ov006_0213ac24;`. The matched TU is taken through
+// port/slice_l15mg.txt and the SEAT15D block in port/CMakeLists.txt, and this
+// file's source-list entry there is commented out. The body is deleted so the
+// two copies cannot both be taken; the banner below is kept because it is the
+// derivation, and the next lane that meets this shape needs it.
+//
+// The rest of the file, from here down, is the note as it was written.
+// ===========================================================================
+//
 // PORT_HOST_ABI. src/func_ov006_020fa7b8.cpp, verbatim except for ONE TOKEN.
 // dScMgPachinko_c, actor id 0x170, scene 368. Run mg5, lane PCH.
 //
@@ -47,31 +60,9 @@
 // survived to be found by a host link.
 //
 // THE BODY IS LIVE ON THIS CLASS'S PATH: it is the tenth and last call of
-// vtable slot 9 (func_ov006_020fedc4, dScMgPachinko_c::Render), so a boot that
+// vtable slot 9 (_ZN15dScMgPachinko_c6RenderEv, dScMgPachinko_c::Render), so a boot that
 // renders reaches it.
 
-extern "C" {
-
-int _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int, void *, int, int, int,
-                                                int, int, void *, int, int);
-
-/* THE ONE TOKEN. The mount owns this cell and has already rebased it. */
-extern void *data_ov006_0213ac24;
-
-// PORT_HOST_ABI: src's `void* data_ov006_0213ac24;` in a .cpp is a tentative definition C++ treats as a real one, colliding with the mount (LNK2005); host copy respells it extern
-void func_ov006_020fa7b8(char *thiz)
-{
-    for (int i = 0; i < 3; i++) {
-        if (*(unsigned char *)(thiz + 0x4000 + 0xe6d) != 0) {
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(
-                false, data_ov006_0213ac24,
-                *(int *)(thiz + 0x4000 + 0xe58) >> 12,
-                *(int *)(thiz + 0x4000 + 0xe5c) >> 12,
-                -1, -1, 0x1000, (void *)0x1000,
-                *(unsigned short *)(thiz + 0x4e00 + 0x68), -1);
-        }
-        thiz += 0x18;
-    }
-}
-
-}  /* extern "C" */
+/* THE BODY LIVES IN src/func_ov006_020fa7b8.cpp, on port/slice_l15mg.txt.
+   Every character of it already matched this copy except line 6's `extern`,
+   which src/ now carries. */

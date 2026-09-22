@@ -11,7 +11,7 @@
 #include <cstring>
 
 #include "Animation.h"
-#include "BgCh.h"
+#include "dBgCh.h"
 #include "NestedHeapIterator.h"
 #include "Player.h"
 #include "player_fields.h"   /* run mg16 lane MP4: the one place field offsets live */
@@ -23,6 +23,9 @@
 #include "ModelAnim.h"
 
 #include "dsstate_seg.h"
+/* SYNC4: see the case for 0x020e0d28 inside player_states.inc. */
+extern "C" int __fastcall port_player_st_crazedcrate_cleanup(void *self, void *);
+#pragma comment(linker, "/alternatename:@port_player_st_crazedcrate_cleanup@8=?St_CrazedCrate_Cleanup@Player@@QAEHXZ")
 
 /* the geometry-engine polygon buffer, for the tongue render self-check
    (SM64DS_WINGS_PROBE); same forward decl cxxname_bridge.cpp uses so the
@@ -48,8 +51,12 @@ extern "C" int _ZN9Animation8GetFlagsEv(void *self)
 void _ZN6Player4HealEi(Player *p, int amt)
 { p->Player::Heal(amt); }
 
+/* RETIRED at SYNC6: main's #2666 put src/actors/Player.cpp back in the build
+   and it defines ?GetBodyModelID@Player@@QBEII_N@Z itself, so this face was
+   the second definition (one LNK2005 row against player_bridges.cpp.obj in
+   build_s2.log). The flat body it forwarded to is unchanged.
 unsigned int Player::GetBodyModelID(unsigned int a, bool b_) const
-{ return _ZNK6Player14GetBodyModelIDEjb((char *)this, a, b_ ? 1 : 0); }
+{ return _ZNK6Player14GetBodyModelIDEjb((char *)this, a, b_ ? 1 : 0); }      */
 
 extern "C" {
 /* gate-10 smoke drives the state machine directly (the ChangeState PMF
@@ -92,14 +99,14 @@ static void hal_dump_model_tables(Model *m)
         BMD_Texture *t = f->textures + i;
         printf("  tex %2u %-20s flags %08x fmt %u %3dx%-3d size %5u "
                "vramoff %05x\n",
-               i, (const char *)t->unk_00, t->flags, (t->flags >> 26) & 7,
+               i, (const char *)t->name, t->flags, (t->flags >> 26) & 7,
                8 << ((t->flags >> 20) & 7), 8 << ((t->flags >> 23) & 7),
                t->size, (t->flags & 0xffff) << 3);
     }
     for (u32 i = 0; i < f->numPalettes; ++i) {
         BMD_Palette *p = f->palettes + i;
         printf("  pal %2u %-20s size %5u vramoff %05x -> pltt %04x\n", i,
-               (const char *)p->unk_00, p->size, p->vramOffset,
+               (const char *)p->name, p->size, p->vramOffset,
                p->vramOffset >> 4);
     }
     const unsigned char *mm = (const unsigned char *)m->data.materials;
@@ -107,7 +114,7 @@ static void hal_dump_model_tables(Model *m)
         const u32 *e = (const u32 *)(mm + i * 0x30);
         printf("  mat %2u %-20s tex %3d pal %3d teximage %08x pltt %04x "
                "attr %08x difamb %08x\n",
-               i, (const char *)f->materials[i].unk_00, (int)e[0], (int)e[1],
+               i, (const char *)f->materials[i].name, (int)e[0], (int)e[1],
                e[7], e[8], e[9], e[10]);
     }
 }
@@ -122,7 +129,7 @@ void hal_render_model(void *model, int scaleShift)
     if (hal_tex_log()) hal_dump_model_tables(m);
     /* THE STAGE RENDERS IN SCENE UNITS, and this is Stage::RenderModel's own
        shape: the model matrix is the Model constructor's identity
-       (data_02082128) and the entire scale travels through Model::Render's
+       (IDENTITY_MATRIX4X3) and the entire scale travels through Model::Render's
        Vector3 argument -- data_020755d4 -- which the ordinary part walk
        spends as an MTX_SCALE on top of its own 1 << (shift + 12). Scene is
        what everything else in the frame is now in: the view matrix
@@ -344,11 +351,29 @@ static void hal_render_head_group(char *c, char *head, unsigned hid,
        all differ by the same order. This change is not an invisible numeric
        delta; what the box looks like is an owner's call, not this comment's.
        Shots: status_shots/cap/mario_crushed_f0{78,80,82}_{before,after}.png */
-    char *neck = *(char **)((char *)ma + 0x14) + 0x2d0;
-    if (neck)
-        m43_mul((const int *)neck, scene, (int *)(head + 0x1c));
+    /* THE ROM'S STATEMENT 1, src/_ZN6Player6RenderEv.cpp:123-126: the body's
+       neck bone is copied INTO the head model's bone 0, and the head model's
+       own mat4x3 is left as func_ov002_020e444c seated it this frame (the
+       player root, the same matrix the body draws through). The port used to
+       compose neck * scene into head+0x1c instead and leave bone 0 at
+       (0,0,0). The two are the same product while mScale is unit; they are
+       not the same product under a crush, because func_0204488c emits
+       MTX_SCALE between the world matrix and the bone, so a neck carried in
+       the world matrix is outside the scale and cannot shrink with the body.
+       Measured: crushed gap 41378 on castle grounds and 22714 on the
+       opening's Wario before, 0 after. */
+    char *hbones = *(char **)(head + 0x14);
+    const char *neck = *(const char *const *)((char *)ma + 0x14) + 0x2d0;
+    if (hbones && neck)
+        for (int i = 0; i < 12; ++i)
+            ((int *)hbones)[i] = ((const int *)neck)[i];
+    /* Slot 5, not 4: VObj (src/_ZN6Player6RenderEv.cpp's shadow vtable) names
+       every slot by byte offset, so m14 is index 5, and _ZTV5Model[5] is
+       Model::Render (hal/cxxname_bridge.cpp:522). This read 4 while
+       hal_fill_model_vtable dual-filled _ZTV5Model[4] with Render, until
+       0a7f12ee9 removed the dual fill and put Virtual10 back at [4]. */
     ((void(__fastcall *)(void *, void *, const void *))(
-        ((void ***)head)[0][4]))(head, 0, c + 0x80);
+        ((void ***)head)[0][5]))(head, 0, c + 0x80);
 }
 
 /* run mg16 lane MP3: the two globals Player::Render's own gates read. The
@@ -460,13 +485,13 @@ extern "C" signed char g_party_render_ghost[16] = {
    handler performs (func_ov002_020d6998 sets mObjInMouth and the enemy's grabbed
    bit), then hands control to the REAL St_Swallow egg-lay path via ChangeState.
    Everything downstream -- Player_DisableInteraction, anim 0x70, FinishedAnim,
-   YoshiEgg_Spawn -- runs unchanged, so the freeze it exposes is the game's, not
+   daYegg_c_classInit -- runs unchanged, so the freeze it exposes is the game's, not
    the driver's. Inert unless the env is set. */
 extern "C" {
 extern void *port_first_live_actor_of_class(unsigned id);   /* hal/actor_registry.cpp */
 extern unsigned port_unique_id_of_actor(void *actor);       /* hal/actor_registry.cpp */
-/* the ROM's own cap-pickup entry point; src/_ZN6Player18SetNewHatCharacterEjjb.cpp,
-   called by the cap actor at src/func_ov002_020b74d0.c:51. Used only by the
+/* the ROM's own cap-pickup entry point; src/actors/Player.cpp,
+   called by the cap actor at src/actors/daObjMarioCap_c.cpp:51. Used only by the
    SM64DS_YOSHI_CAP repro driver below. */
 extern void _ZN6Player18SetNewHatCharacterEjjb(void *self, unsigned a, unsigned b,
                                                bool c);
@@ -529,7 +554,7 @@ extern "C" void port_adventure_probe(int frame)
            the ROM's own two writes, at the same point in the eat, and then gets
            out of the way: func_ov002_020d6790 (from Player::Behavior) reads the
            enemy's OnYoshiTryEat itself, picks the state itself, and every frame
-           of St_Swallow_Init / St_Swallow_Main / OnTurnIntoEgg / YoshiEgg_Spawn
+           of St_Swallow_Init / St_Swallow_Main / OnTurnIntoEgg / daYegg_c_classInit
            after that is the game's. So a freeze this exposes is the game's.
 
            Off unless the env is set, and it only ever fires while the player is
@@ -552,7 +577,7 @@ extern "C" void port_adventure_probe(int frame)
 
            This is the ordinary single-player route into
            func_ov002_020bdb50's slot-19 dispatch. The cap actor's own state
-           machine (src/func_ov002_020b74d0.c:51, case 1) does exactly this
+           machine (src/actors/daObjMarioCap_c.cpp:51, case 1) does exactly this
            call and nothing else on the way in:
 
                Player::SetNewHatCharacter(cap->mCharacter & 0xff, 0, 0)
@@ -1193,7 +1218,7 @@ static void yhd_probe(char *c, const int *scene, const char *head)
    With the root, the world rotation and the world translation identical for
    both models, any scale != 1.0 moves one mesh and leaves the other where it
    was. mScaleY is written by exactly two functions, both crush states:
-   Player::St_Squish_Main (src/_ZN6Player14St_Squish_MainEv.cpp, case 0 sets
+   Player::St_Squish_Main (src/actors/Player.cpp, case 0 sets
    mScaleY = 0x100 and case 1 walks it back up in 0x100 steps) and
    Player::Unk_020c6a10 (mScaleY = 0x100, 30-frame hold), so in ordinary play
    mScale is unit and this whole difference is invisible.
@@ -1282,11 +1307,12 @@ static int hsink_axisY(const int *m, const int *b, const int *s)
    with the body's scale, so the column was measuring the body's scale twice
    and the head not at all.
 
-   CORRECTED: on the else arm the probe now composes the same neck * scene the
-   render arm composes and measures through THAT, which is the matrix the draw
-   loads. The real figures for Mario are 0 standing and +41378 crushed -- the
-   cap FLOATING 80.8 world units above the flattened body, not sinking into it.
-   Yoshi's arm is untouched and still reads 0. */
+   CORRECTED, AGAIN: hal_render_head_group's else arm now seats the body's
+   neck bone into the head model's own bone 0 (the ROM's statement 1) instead
+   of composing neck * scene into head+0x1c, so head+0x1c is left exactly as
+   func_ov002_020e444c seats it and is the matrix the draw loads on EVERY
+   arm, i==3 included. The probe reads it directly, with no separate compose
+   of its own. */
 static void hsink_probe(char *c, const int *scene, const char *head,
                         const char *ma, const int *bscale,
                         const int *hscale, unsigned hid, int btris)
@@ -1310,11 +1336,8 @@ static void hsink_probe(char *c, const int *scene, const char *head,
     const int *b0 = (const int *)hb;              /* head bone 0  */
     const int *nk = (const int *)(bb + 0x2d0);    /* body neck    */
 
-    /* the matrix the draw loads: head+0x1c on the i==3 arm, the else
-       arm's own neck * scene compose on every other head. */
-    int comp[12];
+    /* the matrix the draw loads: head+0x1c, on every arm. */
     const int *hm = (const int *)(head + 0x1c);
-    if (hid != 3) { m43_mul(nk, scene, comp); hm = comp; }
     const int headY = hsink_axisY(hm, b0, hs);
     const int bodyY = hsink_axisY(scene, nk, bs);
 
@@ -1327,7 +1350,7 @@ static void hsink_probe(char *c, const int *scene, const char *head,
 /* ---- THE VS COLOUR, AND WHY EVERY YOSHI WAS GREEN --------------------------
 
    In VS every player is Yoshi -- the spawn loop forces character 3 into every
-   slot (src/_Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij.c:68-71) --
+   slot (src/_Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij.cpp:68-71) --
    and they are told apart by COLOUR. That is the ROM's own arrangement, not a
    mod: yoshi_model.bmd carries ONE palette, yoshi_all_16p_pl, 128 bytes = four
    stacked 16-colour rows, and a player selects his row by shifting the palette
@@ -1664,7 +1687,32 @@ void hal_render_player_world(void *player)
        against the body's real matrix rather than a stand-in. */
     int scene[12];
     for (int i = 0; i < 12; ++i) scene[i] = ((const int *)&ma->mat4x3)[i];
-    ma->ModelAnim::UpdateVerts();
+    /* NO RE-POSE AT DRAW TIME, because the cartridge does not have one, and
+       the second pose is not the same pose. src/_ZN6Player6RenderEv.cpp's body
+       draw is a bare Model::Render and poses nothing; the ROM's ONE per-frame
+       body pose is func_ov002_020e4768, in the behaviour pass:
+
+           func_020167a4(body)                  ModelComponents::UpdateBones,
+                                                bone records from the animation
+           func_ov002_020e640c(self)            THE HEAD AND NECK LOOK ANGLES,
+                                                written into the body's BMD bone
+                                                records at bones+0x1ba/0x1bc/0x1be
+                                                and +0x326/0x328/0x32a out of
+                                                Player +0x742 and +0x75c..0x766
+           UpdateVertsUsingBones(body+8)        transforms[] from those records
+           if (i == 3) head->Virtual10(bones+0x2d0)   Yoshi's head root
+
+       ModelAnim::UpdateVerts is UpdateBones + UpdateVertsUsingBones with the
+       middle step MISSING, so calling it here rewrote the bone records from the
+       raw animation, threw the look angles away and re-skinned. The head had
+       already been rooted at the look-corrected neck by the behaviour pass, so
+       the two disagreed. Measured with SM64DS_HSINK_PROBE=1 as the head anchor
+       minus the body neck, Fix12 in scene units: castle grounds as Yoshi, 55 of
+       118 head draws nonzero, worst 4430 at the walk-to-idle change; castle
+       interior, 228 of 257. Both go to 0 with this call gone, and btris stays
+       258 on every frame, which is the witness that the behaviour pass poses the
+       body by itself. A write watch on the neck bone showed it written twice a
+       frame with two different answers (out/HEAD3/bugs.md sections 1 and 2). */
     hal_player_vs_palette(c, (char *)ma);
     /* see-through, last before the draw so the per-frame material rebuild
        (UpdateVerts, the palette stamp) is already done and the alpha is what
@@ -1753,10 +1801,11 @@ void hal_render_player_world(void *player)
        through SM64DS_SELFTEST_TONGUE says the gate stays 0 the whole run).
 
        Faithful now: gated on unk_700, the ROM's own two matrices, and
-       Virtual18 -- which is host slot 5 (_ZTV9ModelAnim is dtor 0, DoSetFile 1,
-       UpdateVerts 2, Virtual10 3, Render 4, Virtual18 5; see
-       hal/bob_enemy_bridges.cpp) and takes the matrix and the scale, unlike
-       Render. The bone matrix is composed through `scene` the way the head at
+       Virtual18 -- which is host slot 6 (_ZTV9ModelAnim is D1 0, D0 1,
+       Model::DoSetFile 2, UpdateVerts 3, Virtual10 4, Render 5, Virtual18 6,
+       read out of the ROM's own table at 0x0208e980) and takes the matrix and
+       the scale, unlike Render. The bone matrix is composed through `scene`
+       the way the head at
        +0x154 is, because this path renders in scene space, not the ROM's
        world space. */
     {
@@ -1796,20 +1845,24 @@ void hal_render_player_world(void *player)
                 src = (const int *)(bones + 0x2d0);
             }
             m43_mul(src, scene, composed);
-            /* Slot 5 holds hal/cxxname_bridge.cpp's ma2_virtual18, a
-               __fastcall face with a DEAD edx parameter and TWO stack
-               arguments: (self, dummy, unsigned mat, const void *scale).
-               This call used to borrow the head's three-parameter render
-               shape, which put `composed` in the dead edx and left the
-               scale to an unwritten stack slot -- so the first time the
-               gate ever opened (a wing-feather collect, or entering level
-               31 winged) the callee rendered off a garbage scale pointer
-               and popped 8 stack bytes where the caller pushed 4. The
-               fault that pointed here read address 0x9 inside the model
-               walk, three frames after SM64DS_SPAWN_ACTOR=345's feather
-               was collected at the player's feet. */
+            /* Slot 6, not 5. The ROM's _ZTV9ModelAnim at 0x0208e980 is seven slots
+               -- D1 0, D0 1, Model::DoSetFile 2, UpdateVerts 3, Virtual10 4,
+               Render 5, Virtual18 6 (0x0208e99c = 020167c4) -- and
+               src/_ZN6Player6RenderEv.cpp's own shadow names every slot by byte
+               offset, so the wing statement's m18 is byte 0x18, index 6. MSVC does
+               not fold the destructor pair for this family any more
+               (hal/cxxname_bridge.cpp:530-539), so ??_7ModelAnim@@6BModel@@@ is
+               seven slots in the same order and slot 6 is
+               ?Virtual18@ModelAnim@@UAEXIPBUVector3@@@Z. This read 5 while the
+               fold made Virtual18 the fifth slot; 0a7f12ee9 restored ROM order and
+               these dispatches were not renumbered with it. Index 5 is
+               ModelAnim::Render, which takes the scale alone and ends `ret 4`,
+               while this site pushes two stack words and cleans none -- so the
+               wrong slot also left four bytes on the stack and this function's
+               epilogue pops edi, esi and ebx before it restores the frame
+               pointer. */
             ((void(__fastcall *)(void *, void *, unsigned, const void *))(
-                ((void ***)m4)[0][5]))(m4, 0, (unsigned)(uintptr_t)composed,
+                ((void ***)m4)[0][6]))(m4, 0, (unsigned)(uintptr_t)composed,
                                        c + 0x80);
         }
     }
@@ -1847,8 +1900,14 @@ void hal_render_player_body_ex(void *player, int with_head)
             if (src)
                 for (int i = 0; i < 12; ++i)
                     ((int *)(head + 0x1c))[i] = ((const int *)src)[i];
+            /* Slot 5, not 4: VObj names every slot by byte offset, so m14 is
+               index 5, and _ZTV5Model[5] is Model::Render
+               (hal/cxxname_bridge.cpp:522). This read 4 while
+               hal_fill_model_vtable dual-filled _ZTV5Model[4] with Render,
+               until 0a7f12ee9 removed the dual fill and put Virtual10 back
+               at [4]. */
             ((void(__fastcall *)(void *, void *, const void *))(
-                ((void ***)head)[0][4]))(head, 0, 0);
+                ((void ***)head)[0][5]))(head, 0, 0);
             hal_player_texseq_head(c, hid);
         }
     }
@@ -1884,9 +1943,9 @@ extern "C" void func_ov002_020e1c20(char *c);
 /* Three state slots the ROM fills with plain ov002 functions rather than
    Player methods: Null's Init, WallJump's Init, InYoshiMouth's Cleanup.
    The community St_ names at those addresses belong to ov006, not ov002. */
-extern "C" int func_ov002_020cac30(void);
-extern "C" int func_ov002_020d6084(char *c);
-extern "C" int func_ov002_020e17f8(void *c);
+extern "C" int _ZN6Player12St_Null_InitEv(void);
+extern "C" int _ZN6Player23St_InYoshiMouth_CleanupEv(char *c);
+extern "C" int _ZN6Player16St_WallJump_InitEv(void *c);
 extern "C" int _ZN6Player16St_BurnLava_MainEv(char *c);
 /* gate 14: the level-boot state and the seven entrance-step handlers */
 extern "C" int func_ov002_020c6f3c(void *c);
@@ -1913,7 +1972,7 @@ extern "C" int port_player_st_climb_main(void *self);
 extern "C" int port_player_st_swingplayer_main(void *self);
 /* Player::St_EndingFly_Main, under the flat name the ov002 world gives it
    (the sinit's PMF table pairs it with the EndingFly state; see the case). */
-extern "C" int func_ov002_020c3d1c(char *self);
+extern "C" int _ZN6Player17St_EndingFly_MainEv(char *self);
 
 extern "C" int hal_call_state_fn(void *self, unsigned ds_addr)
 {
@@ -1998,7 +2057,7 @@ extern "C" int hal_call_state_fn(void *self, unsigned ds_addr)
 
        EndingFly's Main is NOT the ov007-named body an earlier version of
        this comment blamed. The ov002 sinit's own PMF state table pairs the
-       EndingFly state object (0x0211058c) with func_ov002_020c3d1c: the
+       EndingFly state object (0x0211058c) with _ZN6Player17St_EndingFly_MainEv: the
        wave-2 mount lane derived that from the relocation triple, and its
        reviewer re-derived it by reconstructing all 81 state objects from
        the sinit's store sequence. The ov007 body at the same address is a
@@ -2006,7 +2065,7 @@ extern "C" int hal_call_state_fn(void *self, unsigned ds_addr)
        no PMF cell anywhere names. The case below dispatches the ov002 body;
        its data (the 27-record rising-spiral step table data_ov002_0210a8b8
        and the kuppa script data_02088610) rode in with the wave-2 mounts. */
-    case 0x020c3d1c: return func_ov002_020c3d1c((char *)self);
+    case 0x020c3d1c: return _ZN6Player17St_EndingFly_MainEv((char *)self);
     case 0x020c3d6c: return ((Player *)self)->Player::St_EndingFly_Init();
     case 0x020d9fc4: return ((Player *)self)->Player::St_SwingPlayer_Cleanup();
     case 0x020da3b0: return ((Player *)self)->Player::St_SwingPlayer_Init();
@@ -2222,8 +2281,8 @@ int _ZN6Player8HasNoCapEv(void *self)
 int _ZN6Player9GetHealthEv(void *self)
 { return ((Player *)self)->Player::GetHealth(); }
 
-void _ZN4BgCh19StartDetectingWaterEv(void *self)
-{ ((BgCh *)self)->BgCh::StartDetectingWater(); }
+void _ZN5dBgCh19StartDetectingWaterEv(void *self)
+{ ((dBgCh *)self)->dBgCh::StartDetectingWater(); }
 
 /* THE CYLINDER SHADOW IS NO LONGER DEFERRED (run linkw wave 4, lane w4-a).
    This was `void _ZN11ShadowModel12InitCylinderEv(void *) {}`, the stub that
@@ -2300,10 +2359,39 @@ int _ZN11ShadowModel12InitCylinderEv(void *self)
     return ((ShadowModel *)self)->data != 0;
 }
 
-void _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(void *self, void *bmd,
-                                                       void *btp)
-{ ((TextureSequence *)self)->TextureSequence::Prepare(*(BMD_File *)bmd,
-                                                      *(BTP_File *)btp); }
+/* PORT_HOST_ABI CORRECTION (run link100, lane CRASH3). TextureSequence::Prepare
+   is STATIC, and include/TextureSequence.h carries the cartridge evidence for it:
+   the ROM body is a 0xc long-call veneer into func_02046d50, which reads only r0
+   and r1, never touches r2, and reads r1 at exactly BTP_File's own field offsets.
+   Two words and no this -- that IS the ROM's call surface.
+
+   The three-parameter face this replaces was written against the stale belief
+   that Prepare was a non-static method (the same belief is still spelled out in
+   port/tools/hostgen.py's REG_RIDE_ARG comment and in the two retired host
+   copies). Because the callee is in fact static, MSVC compiled
+   `((TextureSequence *)self)->Prepare(*bmd, *btp)` by evaluating self, DISCARDING
+   it, and pushing only the 2nd and 3rd parameters. Read out of the shipped
+   artifact at 004106e0:
+
+       push ebp / mov ebp,esp
+       push dword ptr [ebp+0x10]      <- 3rd parameter
+       push dword ptr [ebp+0x0c]      <- 2nd parameter
+       call ?Prepare@TextureSequence@@SAXAAUBMD_File@@AAUBTP_File@@@Z
+       add esp,8 / pop ebp / ret
+
+   [ebp+8] is never read, and the callee's own mangling ("SAX") says static. So
+   the face shifted every argument down by one. All 17 call sites in the image
+   pass the BMD as their FIRST argument, so func_02046d50 was handed the BTP file
+   where it wanted the BMD; func_020471ac then read [BTP+0x14] as a texture count
+   and [BTP+0x18] as a texture array, walked into the BTP's own bytes, and handed
+   a run of characters to cstd::strcmp as a pointer.
+
+   Two parameters is the ROM's shape and is right for every caller at this cdecl
+   ABI: the fourteen ROM-arity sites pass exactly these two words, and the three
+   sites the REG_RIDE_ARG row patched pass (bmd, btp, btp), whose first two words
+   are the same two -- the caller cleans up its own extra push. */
+void _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(void *bmd, void *btp)
+{ TextureSequence::Prepare(*(BMD_File *)bmd, *(BTP_File *)btp); }
 void *_ZN15TextureSequence8LoadFileER13SharedFilePtr(void *fp)
 { return TextureSequence::LoadFile(*(SharedFilePtr *)fp); }
 
@@ -2314,8 +2402,13 @@ int _ZN18NestedHeapIterator8PreviousEP13HeapAllocator(void *self, void *h)
 { return ((NestedHeapIterator *)self)->NestedHeapIterator::Previous(
       (HeapAllocator *)h); }
 
+/* SYNC4: main declares Heap::Rescue void. The face keeps its int signature
+   because its C callers are declared that way, and returns 0 rather than
+   whatever EAX happens to hold -- the ROM body sets no result either, so the
+   value is unread; see the falls-off-the-end block in port/CMakeLists.txt for
+   the same question asked of the src bodies. */
 int _ZN4Heap6RescueEv(void *self)
-{ return ((Heap *)self)->Heap::Rescue(); }
+{ ((Heap *)self)->Heap::Rescue(); return 0; }
 int _ZN4Heap21MaxAllocationUnitSizeEv(void *self)
 { return ((Heap *)self)->Heap::MaxAllocationUnitSize(); }
 int _ZN4Heap6IntactEv(void *self)
@@ -2361,7 +2454,7 @@ int data_020a4b58[4], data_020a4b68[4], data_020a60f4[4];
        func_0202f2c4            |= 2       slice_fdr, AND REACHED, 191x a frame
        func_02059834            |= 0x10    slice_gate10, linked and undriven
        _ZN3IRQ13VBlankHandlerEv |= 1       not compiled
-       _ZN3IRQ13DmaTimHandlerEv |= mask    not compiled
+       _ZN3IRQ13DmaTimHandlerEj |= mask    not compiled
        func_ov006_020efcf8      |= 2       not compiled
    At 64 bytes that store landed 16,312 bytes past the object, 56 bytes into
    _hal_area_table and so INSIDE .dsstate, which means a save state would have

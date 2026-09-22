@@ -17,7 +17,7 @@
    Read off the matched TUs, not off a description of them. The three that
    define the whole shape:
 
-     src/_ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR12MeshCollider.cpp
+     src/_ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR7dBgW_Kc.cpp
          LVL_Overlay: clps +0x00, objTable +0x04, kclFileId +0x0a,
          subTables +0x10, subCount +0x14. It calls LoadObjects ONCE on
          ovl->objTable with index -1, then once per sub-table entry with
@@ -34,7 +34,7 @@
          pointer first. hal/level_boot.cpp's PortLvlOverlay says stride 0x0c
          independently and the two agree.
 
-     src/_Z11LoadObjectsRN11LVL_Overlay8ObjTableEij.c
+     src/_Z11LoadObjectsRN11LVL_Overlay8ObjTableEij.cpp
          ObjTable: u16 count +0x00, entries +0x04. The entries are 8 bytes
          each and they are DESCRIPTORS, not objects:
 
@@ -174,7 +174,7 @@
    written from said "+0x78" and that is an offset in the level header FILE,
    not in the record the game reads.
 
-     src/_ZN5Stage11GetSkyboxIDEv.c is the whole of the read:
+     src/_ZN5Stage11GetSkyboxIDEv.cpp is the whole of the read:
 
          extern int data_0209f340[];
          int _ZN5Stage11GetSkyboxIDEv(void){
@@ -200,7 +200,7 @@
      sky is id 1. The two agree.
 
    WHY 1..11 IS THE CEILING. Stage::LoadSkybox indexes data_02075620 at
-   skyboxID - 1 (src/_ZN5Stage10LoadSkyboxEv.c:26). That table runs to the next
+   skyboxID - 1 (src/_ZN5Stage10LoadSkyboxEv.cpp:26). That table runs to the next
    symbol at 0x02075638, so it is twelve u16 slots, and the ROM's bytes are
    2040..2050 in the first eleven and ZERO in the twelfth. Eleven real vrbox
    handles, then a slot that would hand Model::LoadAndSetFile file 0. The ROM's

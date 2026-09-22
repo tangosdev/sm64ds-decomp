@@ -15,8 +15,8 @@ extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* c, u32 anim, int a, Fix12i b, 
 extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, void* s);
 extern int func_ov002_020c0688(void* c);
 extern int _ZNK6Player14GetBodyModelIDEjb(void* c, u32 a, int b);
-extern void _ZN12CylinderClsn5ClearEv(void* c);
-extern void _ZN12CylinderClsn6UpdateEv(void* c);
+extern void _ZN5dCc_c5ClearEv(void* c);
+extern void _ZN5dCc_c6UpdateEv(void* c);
 extern void Player_AdvanceAnims(void* c);
 
 extern int data_ov002_021104e4[];
@@ -96,8 +96,8 @@ L18c:
         if ((u16)(w >> 12) < 4)
             goto L1d8;
         func_ov002_020dbaec(((char*)this));
-        _ZN12CylinderClsn5ClearEv((char*)&mAttackClsn);
-        _ZN12CylinderClsn6UpdateEv((char*)&mAttackClsn);
+        _ZN5dCc_c5ClearEv((char*)&mAttackClsn);
+        _ZN5dCc_c6UpdateEv((char*)&mAttackClsn);
     }
 
 L1d8:

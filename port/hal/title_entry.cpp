@@ -8,7 +8,7 @@
  * ---- WHAT WAS ALREADY TRUE, AND IT IS NEARLY ALL OF IT --------------------
  *
  * Every step of the handoff is the ROM's own matched code and every step of it
- * already runs. src/func_ov007_020cc2cc.c is dScDSMT_c::Behavior, and its
+ * already runs. src/_ZN9dScDSMT_c8BehaviorEv.cpp is dScDSMT_c::Behavior, and its
  * save-file branch is four statements:
  *
  *     if ((unsigned)(result - 3) <= 2) {          // 3, 4, 5 = files A, B, C
@@ -136,6 +136,10 @@ int  port_scene_request_release(const char *why);
 extern unsigned short data_02092664;   /* pending scene id, 0x187 = none */
 extern unsigned char  data_02092660;   /* "a scene has spawned" latch */
 extern signed char    data_02092110;   /* next level, -1 = nothing pending */
+extern int            data_0209f220[]; /* current star; hal/level_change.cpp:119
+                                           declares it EXACTLY this way -- a
+                                           widened redeclaration here would be a
+                                           silent read of the wrong bytes */
 
 /* The save block. data_0209caa0 is the ACTIVE FileSaveData, 0x44 bytes, and
    the two bytes read here are the ROM's own record of the pick:
@@ -152,7 +156,8 @@ extern unsigned char data_02092128[];
 enum {
     SCENE_NONE  = 0x187,   /* the ROM's "nothing pending" sentinel */
     SCENE_STAGE = 3,       /* scene 3 IS the Stage, i.e. the level */
-    SCENE_TITLE = 1
+    SCENE_TITLE = 1,
+    SCENE_STARSEL = 4      /* dScStarSel_c: its Behavior ends in StartSceneFade(3) too */
 };
 
 static int g_armed = -1;   /* -1 = not yet resolved */
@@ -175,7 +180,7 @@ static int g_taken;        /* did a run end by entering the adventure */
  *     title -> menu -> file select -> a slot is picked -> CUTSCENE -> adventure
  *
  * That is the ROM's own order and it is readable in two independent places.
- * src/_ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR12MeshCollider.cpp:76-98
+ * src/_ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR7dBgW_Kc.cpp:76-98
  * computes the opening's gate from game mode 0, flags2 bit 7 clear and
  * ContinueKuppaScriptIfNecessary()==0 and then calls StartIntroCutscene() --
  * and Stage::LoadClsnAndObjects runs during the LEVEL boot, which on this path
@@ -324,7 +329,21 @@ extern "C" int port_boot_skip_intro(void)
 extern "C" int port_title_entry_armed(void)
 {
     if (g_armed < 0) {
-        if (port_scene_env_want() != SCENE_TITLE) {
+        const int want = port_scene_env_want();
+        if (want == SCENE_STARSEL) {
+            /* THE STAR SELECT TAKES THE SAME BRIDGE THE TITLE TAKES, and for
+               the same reason: its Behavior ends in StartSceneFade(3), which
+               is the Stage, so the scene's own exit IS "boot the level".
+               src/_ZN12dScStarSel_c8BehaviorEv.cpp:144 is that call and
+               :147 is the act it sets (data_0209f1f0 = the chosen star + 1),
+               which port_level_entry_latch already moves into
+               data_0209f220[0].
+               OFF UNLESS ASKED. Every battery and bootab scene-4 row runs
+               with no knob set and must stay byte-identical, so this arms
+               only on SM64DS_STARSEL_ENTRY=1. */
+            const char *e = std::getenv("SM64DS_STARSEL_ENTRY");
+            g_armed = (e && std::atoi(e) != 0) ? 1 : 0;
+        } else if (want != SCENE_TITLE) {
             g_armed = 0;
         } else if (port_boot_is_default_title()) {
             /* The default boot's whole point is that picking a file plays the
@@ -681,17 +700,27 @@ extern "C" int port_title_entry_commit(void)
 
     const int slot = (int)data_0209caa0[0x328];
     const int chr  = (int)data_0209caa0[0x41];
+    /* The wording below says "title" and "StartFile"; on a scene-4 (star
+       select) entry neither is true, so the two printfs are worded off this
+       flag with no change to any test or any call. */
+    const int starsel = port_scene_env_want() == SCENE_STARSEL;
 
     const int level = port_level_entry_latch();
     if (level < 0) {
         /* The Stage was asked for and no level was staged with it. That is a
            state this bridge does not understand, so it refuses rather than
            booting SM64DS_LEVEL's default and calling it an entry. */
-        std::printf("[title-entry] REFUSED: scene 3 was requested but no level "
-                    "is pending (data_02092110 < 0). StartFile did not run, or "
-                    "something consumed its request. Not entering the "
-                    "adventure; the run ends here rather than leaving a torn "
-                    "-down title ticking.\n");
+        if (starsel) {
+            std::printf("[title-entry] REFUSED: scene 3 was requested but no "
+                        "level is pending (data_02092110 < 0). "
+                        "SM64DS_SCENE_SUBLEVEL did not stage one.\n");
+        } else {
+            std::printf("[title-entry] REFUSED: scene 3 was requested but no level "
+                        "is pending (data_02092110 < 0). StartFile did not run, or "
+                        "something consumed its request. Not entering the "
+                        "adventure; the run ends here rather than leaving a torn "
+                        "-down title ticking.\n");
+        }
         std::fflush(stdout);
         return 0;
     }
@@ -702,14 +731,24 @@ extern "C" int port_title_entry_commit(void)
     port_scene_request_release("the title handed off and the adventure is "
                                "booting on the level path");
 
-    std::printf("[title-entry] ENTERING THE ADVENTURE: level %d, entrance %d, "
-                "save slot %d, character %d\n",
-                level, 0, slot, chr);
-    std::printf("[title-entry]   level and entrance are StartFile's own "
-                "LoadLevelNoReturn(1, 0, 1, 0); slot is data_0209caa0[0x328] "
-                "and character is data_0209caa0[0x41], both written by the "
-                "ROM's own func_02013c84/StartFile. The port chose none of "
-                "them.\n");
+    if (starsel) {
+        const int act = (int)data_0209f220[0];
+        std::printf("[starsel-entry] ENTERING THE LEVEL: level %d, entrance %d, "
+                    "save slot %d, character %d, act %d\n",
+                    level, 0, slot, chr, act);
+        std::printf("[starsel-entry]   the act came from dScStarSel_c::Behavior's "
+                    "own data_0209f1f0 = FB(this, 0x115) + 1. The port chose none "
+                    "of it.\n");
+    } else {
+        std::printf("[title-entry] ENTERING THE ADVENTURE: level %d, entrance %d, "
+                    "save slot %d, character %d\n",
+                    level, 0, slot, chr);
+        std::printf("[title-entry]   level and entrance are StartFile's own "
+                    "LoadLevelNoReturn(1, 0, 1, 0); slot is data_0209caa0[0x328] "
+                    "and character is data_0209caa0[0x41], both written by the "
+                    "ROM's own func_02013c84/StartFile. The port chose none of "
+                    "them.\n");
+    }
     std::fflush(stdout);
 
     g_taken = 1;

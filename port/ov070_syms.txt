@@ -15,7 +15,7 @@
 # because the vtable was already left out as host storage and the seat already
 # rewrote all twelve of FlyGuy's PMF sources with host addresses.
 #
-# ONE THING THAT NOTE DID NOT COVER: FlyGuy_SpawnInfo (0x02123144) was NOT in
+# ONE THING THAT NOTE DID NOT COVER: g_profile_PROPELLER_HEYHO (0x02123144) was NOT in
 # the mount, so the row had nothing to point at. It is added below in the
 # siblings' own shape -- the two data symbols ahead of it plus the record --
 # and it needs no size pin for the reason theirs do not: ovdata.py sizes off
@@ -31,9 +31,9 @@
 # The three registered SpawnInfo records were read as raw bytes out of
 # extracted/overlays/overlay_0070.bin (base 0x0211f000; the probe rule --
 # never the dsd export):
-#   0x02123254 word[0]=0x021210ac Amp_Spawn             word[1]&0xffff=266
-#   0x0212334c word[0]=0x02121af8 FlameChomp_Spawn      word[1]&0xffff=270
-#   0x02123424 word[0]=0x021221fc FlameChompFire_Spawn  word[1]&0xffff=271
+#   0x02123254 word[0]=0x021210ac daBrq_c_classInit             word[1]&0xffff=266
+#   0x0212334c word[0]=0x02121af8 daKrpa_c_classInit      word[1]&0xffff=270
+#   0x02123424 word[0]=0x021221fc daKpFr_c_classInit  word[1]&0xffff=271
 # Every spawn word lands inside ov070 itself and every id matches the arm9
 # spawn-table slot it was reached from (0x02090864 + id*4). NO NAMING SHIFT in
 # this overlay, checked class by class: each *_Spawn's literal pool stores the
@@ -53,7 +53,7 @@
 #   0x02123448..0x021234c4  _ZTV14FlameChompFire == _ZTV8daKpFr_c
 # All four are 31 slots (each span pinned by the next dsd symbol and by the
 # reloc run ending at slot 30). _ZTV6FlyGuy is defined as zeroed host storage
-# (FlyGuy_Spawn names it and the slice carries that TU's callers) but NOT
+# (daPropeller_Heyho_c_classInit names it and the slice carries that TU's callers) but NOT
 # filled -- the class is unregistered, so a fill would be dead words and a
 # filled-looking table on a class the census must keep declining.
 # The .init bodies and dsd's ".p__sinit_*" .ctor words stay out as always;
@@ -133,8 +133,8 @@ data_ov070_02123404
 
 # ---- .data: file tables, the BTA, and the SpawnInfo records ----------------
 # data_ov070_021231f4 is the BTA_File Amp's TextureSequence binds
-# (func_ov070_02120bf8); 021234c4 is the BCA table FlameChomp's Kill anim
-# reads; 021234dc is FlameChompFire's. data_ov070_02123248 / _02123340 /
+# (_ZN7daBrq_c16EnterActiveStateEv); 021234c4 is the BCA table FlameChomp's Kill anim
+# reads; 021234dc is FlameChompFire's. _ZTI7daBrq_c / _02123340 /
 # _02123418 are the RTTI records each SpawnInfo's +0x20 word points at
 # ({typeinfo-vt, name, base}, 0xc each) and 0212323c / 02123334 / 0212340c
 # the name strings their middle words point at ("7daBrq_c" and kin) --
@@ -142,10 +142,10 @@ data_ov070_02123404
 # Each SpawnInfo sizes to 0x24 by delta, ending exactly on its excluded
 # vtable.
 data_ov070_021231f4
-data_ov070_02123120 data_ov070_0212312c FlyGuy_SpawnInfo
-data_ov070_0212323c data_ov070_02123248 Amp_SpawnInfo
-data_ov070_02123334 data_ov070_02123340 FlameChomp_SpawnInfo
-data_ov070_0212340c data_ov070_02123418 FlameChompFire_SpawnInfo
+_ZTI19daPropeller_Heyho_c _ZTS19daPropeller_Heyho_c
+_ZTS7daBrq_c _ZTI7daBrq_c
+_ZTS8daKrpa_c _ZTI8daKrpa_c
+_ZTS8daKpFr_c _ZTI8daKpFr_c
 data_ov070_021234c4 data_ov070_021234dc
 
 # ---- .bss: FlyGuy's SharedFilePtrs (model 0x411, anims 0x412..0x417),
@@ -168,3 +168,14 @@ data_ov070_02123644 data_ov070_02123650 data_ov070_0212365c
 data_ov070_02123668
 data_ov070_02123698 data_ov070_021236a0 data_ov070_021236ac
 data_ov070_021236ec:0x20
+
+
+# RETIRED at ALIAS2 (wave 8, the main -> port sync). Each symbol below was
+# hosted here as a ROM data blob AND is now defined by a translation unit the
+# build compiles, so the link reported it twice (LNK2005). The generator input
+# is the place to fix that: build/port/host-src/ov070_syms.c is its output and is
+# regenerated from this list on every configure.
+#   g_profile_PROPELLER_HEYHO                  now defined by d_a_propeller_heyho.cpp.obj
+#   g_profile_BIRIKYU                          now defined by daBrq_c.cpp.obj
+#   g_profile_KERONPA                          now defined by d_a_krpa.cpp.obj
+#   g_profile_KERONPA_FIRE                     now defined by d_a_kp_fr.cpp.obj

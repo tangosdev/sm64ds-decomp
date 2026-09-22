@@ -25,7 +25,7 @@ extern "C" void func_ov102_021498e0(C *self)
     func_ov102_02149684((int *)&pos, c);
     if (DecIfAbove0_Short((s16 *)(c + 0x3ee)) != 0) {
 
-        s16 *pang = (s16 *)((int)(((s64)(int)(c + 0x3ec)) & 0xFFFFFFFFFFFFFFFFLL));
+        s16 *pang = (s16 *)((int)(c + 0x3ec));
         u16 ang = *(u16 *)(c + 0x3ec);
         s16 s = data_02082214[(ang >> 4) * 2];
         int conf = 0x999;

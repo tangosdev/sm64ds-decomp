@@ -23,11 +23,20 @@
  * THE SEAT rewrites each of the ten SOURCE records' fn word with its host body
  * BEFORE __sinit_ov016_021136ec copies the ten 8-byte source values into the
  * five cells (the MontyMole/Scuttlebug order: seat the source, before the copy).
- * Nine of the ten are matched src (func_ov016_02111bac / 19ec / 1860 / 1758 /
- * 1994 / 18b4 / 1718 / 15c0 / 1534); the tenth, cell d7c's ENTER, is the tiny
- * 7-instruction path-arrival state-enter at 0x021115a4 that dsd mis-symbolized
- * as "BookSwitch_Spawn" -- it is NOT a factory, it sets a timer and a speed and
- * returns 1. Reproduced as unagi_state_arrive below.
+ * ALL TEN are matched src (func_ov016_02111bac / 19ec / 1860 / 1758 / 1994 /
+ * 18b4 / 1718 / 15c0 / 1534, and BookSwitch_Spawn). The tenth, cell d7c's
+ * ENTER, is the tiny 7-instruction path-arrival state-enter at 0x021115a4 that
+ * dsd mis-symbolized as "BookSwitch_Spawn" -- it is NOT a factory, it sets a
+ * timer and a speed and returns 1.
+ *
+ * 09-19, run link100 wave 14, lane SEAT14B: that tenth body was a hand
+ * transcription here (unagi_state_arrive); src/BookSwitch_Spawn.c is the same
+ * seven instructions and now takes the seat, off port/slice_small7.txt. Read
+ * out of extracted/overlays/overlay_0016.bin at base 0x021111a0, the body is a
+ * real standalone leaf entry -- ADD r1,r0,#0x100 / MOV r2,#100 / STRH r2,[r1] /
+ * MOV r1,#0x14000 / STR r1,[r0,#0x98] / MOV r0,#1 / BX lr -- so it is not an
+ * interior address of a larger function. The dispatch discards the return
+ * value, which is the only thing the retired transcription left out.
  *
  * Each source's ROM fn is checked against the mount before it is overwritten, so
  * a mount pointing at the wrong bytes aborts instead of seating a stale address.
@@ -52,7 +61,9 @@ extern PortPmf data_ov016_02114888, data_ov016_02114880;  /* dac enter/main */
 extern PortPmf data_ov016_021148b0, data_ov016_02114890;  /* dbc enter/main */
 extern PortPmf BookSwitch_SpawnInfo, data_ov016_02114878; /* d7c enter/main */
 
-/* the nine matched state bodies (slice_gate188.txt) */
+/* the ten matched state bodies (nine on slice_gate188.txt, the d7c ENTER on
+   slice_small7.txt) */
+int BookSwitch_Spawn(void *c);       /* d7c enter, ov016 0x021115a4 */
 void func_ov016_02111bac(void *c);   /* d8c enter */
 void func_ov016_021119ec(void *c);   /* d8c main  */
 void func_ov016_02111860(void *c);   /* d9c enter */
@@ -65,15 +76,15 @@ void func_ov016_02111534(void *c);   /* d7c main  */
 
 /* the whole-Behavior call graph (everything except the inlined PMF dispatch) */
 unsigned short DecIfAbove0_Short(unsigned short *p);
-void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *cc);
-void *_ZN5Actor10FindWithIDEj(unsigned id);
-void *_ZN5Actor13ClosestPlayerEv(void *self);
+void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *cc);
+void *_ZN8dActor_c10FindWithIDEj(unsigned id);
+void *_ZN8dActor_c13ClosestPlayerEv(void *self);
 int Vec3_Dist(const void *a, const void *b);
-void _ZN9ActorBase18MarkForDestructionEv(void *self);
-void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned a, unsigned b,
+void _ZN7fBase_c18MarkForDestructionEv(void *self);
+void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned a, unsigned b,
         const void *pos, const void *rot, int e, int f);
-void _ZN12CylinderClsn5ClearEv(void *self);
-void _ZN12CylinderClsn6UpdateEv(void *self);
+void _ZN5dCc_c5ClearEv(void *self);
+void _ZN5dCc_c6UpdateEv(void *self);
 void _ZN14BlendModelAnim7AdvanceEv(void *self);
 void func_ov016_02111c40(void *c);
 void func_ov016_02111284(void *c);
@@ -81,17 +92,15 @@ extern unsigned char data_0209f220;
 
 }  /* extern "C" */
 
-/* The d7c ENTER (0x021115a4, size 0x1c): sets the arrival timer and speed,
- * returns 1. Reproduced from the overlay bytes:
+/* The d7c ENTER (0x021115a4, size 0x1c) is src/BookSwitch_Spawn.c now. The
+ * hand transcription that stood here read, from the overlay bytes:
  *   add r1,r0,#0x100; mov r2,#0x64; strh r2,[r1]   -> *(u16*)(this+0x100)=100
  *   mov r1,#0x14000;  str r1,[r0,#0x98]             -> *(int*)(this+0x98)=0x14000
  *   mov r0,#1; bx lr                                -> return 1
+ * and the matched TU is those same three statements with the return kept. The
+ * cast below is the one the MAIN seats already use: both sides are cdecl with
+ * one pointer argument, so the discarded int return costs nothing.
  */
-static void unagi_state_arrive(void *c)
-{
-    *(unsigned short *)((char *)c + 0x100) = 100;
-    *(int *)((char *)c + 0x98) = 0x14000;
-}
 
 /* PORT_HOST_ABI: SetState + dispatch the ENTER half. The matched
  * func_ov016_02111bf0 forms the ROM PMF adjust over cell[0]; here cell+0 is a
@@ -170,7 +179,8 @@ g_unagi_sources[] = {
     {&data_ov016_021148b0, 0x02111718, func_ov016_02111718},  /* dbc enter */
     {&data_ov016_02114890, 0x021115c0,
      (void (*)(void *))(void *)seat5_unagi_main_021115c0},  /* dbc main  */
-    {&BookSwitch_SpawnInfo, 0x021115a4, unagi_state_arrive},  /* d7c enter */
+    {&BookSwitch_SpawnInfo, 0x021115a4,
+     (void (*)(void *))(void *)BookSwitch_Spawn},  /* d7c enter */
     {&data_ov016_02114878, 0x02111534,
      (void (*)(void *))(void *)seat5_unagi_main_02111534},  /* d7c main  */
 };

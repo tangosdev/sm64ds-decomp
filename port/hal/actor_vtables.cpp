@@ -1,8 +1,8 @@
 // Actor-hierarchy vtables (gate 9), per the vtable law (clsn_vtable.cpp):
-// MSVC slot order. include/ActorBase.h declares the dtor LAST, so MSVC and
+// MSVC slot order. include/fBase_c.h declares the dtor LAST, so MSVC and
 // the ROM agree on slots 0..15 and diverge only at the tail -- the header
 // was built for exactly this. Lifecycle slots forward to the class's own
-// overrides where they exist and to the ActorBase/Actor defaults where
+// overrides where they exist and to the fBase_c/Actor defaults where
 // they do not; the tail traps.
 //
 // Base-class vtable symbols the ctor chain installs and then overwrites
@@ -11,11 +11,11 @@
 #include "vs_width.h"   /* run vs16: the port's player width */
 #include <stdlib.h>
 
-#include "ActorBase.h"
+#include "fBase_c.h"
 #include "ArrowSignRight.h"
 #include "dsstate_seg.h"
 
-// The lifecycle definitions are MSVC methods (ArrowSignRight.h/ActorBase.h
+// The lifecycle definitions are MSVC methods (ArrowSignRight.h/fBase_c.h
 // real classes); InitResources alone is a C-named free function. Every shim
 // calls QUALIFIED -- never virtual.
 extern "C" int _ZN14ArrowSignRight13InitResourcesEv(char *self);
@@ -29,25 +29,25 @@ static int __fastcall sl_behavior(void *self, void *)
 static int __fastcall sl_render(void *self, void *)
 { return ((ArrowSignRight *)self)->ArrowSignRight::Render(); }
 static int __fastcall sl_binit(void *self, void *)
-{ return ((ActorBase *)self)->ActorBase::BeforeInitResources(); }
+{ return ((fBase_c *)self)->fBase_c::BeforeInitResources(); }
 static void __fastcall sl_ainit(void *self, void *, u32 a)
-{ ((ActorBase *)self)->ActorBase::AfterInitResources(a); }
+{ ((fBase_c *)self)->fBase_c::AfterInitResources(a); }
 static int __fastcall sl_bclean(void *self, void *)
-{ return ((ActorBase *)self)->ActorBase::BeforeCleanupResources(); }
+{ return ((fBase_c *)self)->fBase_c::BeforeCleanupResources(); }
 static void __fastcall sl_aclean(void *self, void *, u32 a)
-{ ((ActorBase *)self)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)self)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall sl_bbeh(void *self, void *)
-{ return ((ActorBase *)self)->ActorBase::BeforeBehavior(); }
+{ return ((fBase_c *)self)->fBase_c::BeforeBehavior(); }
 static void __fastcall sl_abeh(void *self, void *, u32 a)
-{ ((ActorBase *)self)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)self)->fBase_c::AfterBehavior(a); }
 static int __fastcall sl_bren(void *self, void *)
-{ return ((ActorBase *)self)->ActorBase::BeforeRender(); }
+{ return ((fBase_c *)self)->fBase_c::BeforeRender(); }
 static void __fastcall sl_aren(void *self, void *, u32 a)
-{ ((ActorBase *)self)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)self)->fBase_c::AfterRender(a); }
 static int __fastcall sl_pdes(void *self, void *)
-{ ((ActorBase *)self)->ActorBase::OnPendingDestroy(); return 0; }
+{ ((fBase_c *)self)->fBase_c::OnPendingDestroy(); return 0; }
 static int __fastcall sl_heap(void *self, void *)
-{ return ((ActorBase *)self)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)self)->fBase_c::OnHeapCreated(); }
 
 #define ATRAP(n) \
     static void __fastcall a_trap##n(void *, void *) { \
@@ -98,10 +98,10 @@ extern "C" {
    fills it now, the same contents it gives _ZTV10dBgActor_c -- the two host
    arrays stand in for the SAME ROM table and only differ in which name a
    destructor TU spells. */
-void *_ZTV8Platform[32];
-int data_0208e4b8[20];   /* ActorBase-era vtable-ish install in Actor ctor */
+void *_ZTV10dBgActor_c[32];
+int data_0208e4b8[20];   /* fBase_c-era vtable-ish install in Actor ctor */
 /* _ZTV5Actor, the base Actor vtable. 31 slots (the full Actor table, not the
-   20-slot ActorBase shape): STAR_CAMERA (gate 90) is a bare Actor that leaves
+   20-slot fBase_c shape): STAR_CAMERA (gate 90) is a bare Actor that leaves
    this installed as its final vtable and dispatches all 31, so it is FILLED by
    hal_fill_actor_base_vtable in hal/actor_classes_star.cpp. For every other
    class it is still only the transient ctor install, overwritten before any
@@ -110,18 +110,18 @@ int data_0208e4b8[20];   /* ActorBase-era vtable-ish install in Actor ctor */
 void *data_0208e3a4[31];
 }
 
-// ---- ActorBase::ActorBase() transcription ---------------------------------
-// The ROM ctor is a hand-asm block (src/_ZN9ActorBaseC1Ev.cpp); this is its
+// ---- fBase_c::fBase_c() transcription ---------------------------------
+// The ROM ctor is a hand-asm block (src/_ZN7fBase_cC2Ev.cpp); this is its
 // C transcription, field for field against the disassembly there. The spawn
 // CONTEXT globals it reads (pending actor ID, area byte, the spawn-info
 // pointer table for the two processing-list priorities) are storage here;
 // the smoke seeds them the way func_02010e78/ActorDerived::Spawn would.
 extern "C" {
-void _ZN9ActorBase9SceneNodeC1Ev(void *node);
+void _ZN7fBase_c9SceneNodeC1Ev(void *node);
 int func_0203b438(void *a, void *b, void *c);
 int func_02043810(void *p);
 
-/* the transient ActorBase vtable install. EIGHTEEN words -- ActorBase's own
+/* the transient fBase_c vtable install. EIGHTEEN words -- fBase_c's own
    virtual list runs 0..17 (arm9 0x02099edc) -- and this was [8], so a ctor-time
    dispatch of anything from OnPendingDestroy up read past the end. */
 int data_02099edc[18];
@@ -131,11 +131,13 @@ unsigned short data_020a4b54;   /* PENDING ACTOR ID (the spawn context) */
 unsigned char data_020a4b48;    /* pending area byte */
 int data_020a4b64[1];
 int data_020a4b6c[8];           /* the scene tree root the ctor links into */
+int port_tree_link_refused;     /* spawns func_0203b438 refused, see below */
+int port_tree_link_refusals(void) { return port_tree_link_refused; }
 void *data_020a4bb8_storage[512];
 void **data_020a4bb8 = data_020a4bb8_storage;  /* actorID -> SpawnInfo* */
 
 /* PORT_HOST_ABI: the matched TU is an mwccarm `asm` block (ARM hand-asm); MSVC has no inline ARM assembler.
-   src/_ZN9ActorBaseC1Ev.cpp is `extern "C" asm void* _ZN9ActorBaseC1Ev(void* self)`
+   src/_ZN7fBase_cC2Ev.cpp is `extern "C" asm void* _ZN7fBase_cC2Ev(void* self)`
    followed by 70-odd ARM instructions -- an asm-hatch TU, not C. It is a match
    under the asm-primitive policy and it is unbuildable by any host compiler:
    MSVC's __asm accepts x86 only, and the block is register-allocated ARM
@@ -144,14 +146,14 @@ void **data_020a4bb8 = data_020a4bb8_storage;  /* actorID -> SpawnInfo* */
    / e1a04000 / e59f112c / e2845014 / e1a00005 -- stmdb sp!,{r4,r5,lr}; sub
    sp,sp,#4; mov r4,r0; ldr r1,[pc,#0x12c]; add r5,r4,#0x14; mov r0,r5 --
    instruction for instruction the head of that asm block. Same class as
-   func_020733a8 below, which carries the same tag. The C transcription above
+   __cxa_vec_ctor below, which carries the same tag. The C transcription above
    is the faithful stand-in, written field for field against that block.
    NOT a stub: it is a full transcription, and the reason it cannot be retired
    is the source language, not a missing closure. */
-void *_ZN9ActorBaseC1Ev(char *self)
+void *_ZN7fBase_cC2Ev(char *self)
 {
     *(void **)self = data_02099edc;
-    _ZN9ActorBase9SceneNodeC1Ev(self + 0x14);
+    _ZN7fBase_c9SceneNodeC1Ev(self + 0x14);
     *(void **)(self + 0x24) = self;             /* sceneNode.actor */
     for (int off = 0x28; off <= 0x38; off += 0x10) {
         *(void **)(self + off) = 0;
@@ -166,7 +168,19 @@ void *_ZN9ActorBaseC1Ev(char *self)
     *(int *)(self + 8) = data_020a4b60[0];
     *(unsigned short *)(self + 0xc) = data_020a4b54;
     *(unsigned char *)(self + 0x12) = data_020a4b48;
-    func_0203b438(data_020a4b6c, self + 0x14, (void *)(size_t)data_020a4b64[0]);
+    /* THE REFUSAL IS SILENT AND IT IS THE ONE OUTCOME THAT MATTERS. Read
+       src/func_0203b438.c: with a null parent it takes handle_a, and handle_a
+       opens `if (a->f0 != 0) return 0` -- a parentless spawn into a tree that
+       already has a root LINKS NOTHING and says nothing. The actor then runs
+       normally (its behaviour/render nodes are separate lists) but the phase-1
+       scene pass, func_02043880, never reaches it, and that pass is the only
+       thing that moves a marked actor onto the cleanup list. So a refused link
+       is invisible until a level change, when it becomes "TEARDOWN DID NOT
+       CONVERGE". Counting it costs one branch and turns that into a number.
+       port_tree_link_refusals reports it; nothing here changes behaviour. */
+    if (!func_0203b438(data_020a4b6c, self + 0x14,
+                       (void *)(size_t)data_020a4b64[0]))
+        ++port_tree_link_refused;
     {
         unsigned short *info = (unsigned short *)data_020a4bb8[
             *(unsigned short *)(self + 0xc)];
@@ -282,7 +296,7 @@ void Memory_Deallocate(void *p, void *heap);
    veneer) and the C++ method Heap::_Destroy (the receiver-bridging face at the
    bottom of hal/lk4_solidheap_seat.cpp). This one exists because the matched
    teardown TU spells the callee by role at C linkage rather than by mangled
-   name: src/_ZN9ActorBase21AfterCleanupResourcesEj.c declares
+   name: src/_ZN7fBase_c21AfterCleanupResourcesEj.cpp declares
    "void Heap_Destroy(void*);" with the comment "0x0203c74c = Heap::_Destroy"
    beside it, and calls it on line 60 as
    "if (this->unk4C) Heap_Destroy(this->unk4C);".
@@ -364,7 +378,7 @@ extern "C" {
 /* PORT_HOST_ABI: MSL C++ array-construct asm with EH landing pad, MSVC cannot assemble.
    MSL runtime array construction (asm on the DS, with EH frames the host
    does not need): apply the ctor forward across n elements. */
-void func_020733a8(void *base, int n, int stride,
+void __cxa_vec_ctor(void *base, int n, int stride,
                    void (*ctor)(void *), void (*dtor)(void *))
 {
     (void)dtor;
@@ -374,8 +388,8 @@ void func_020733a8(void *base, int n, int stride,
 }
 
 /* PORT_HOST_ABI: the matched TU is an mwccarm `asm` block (ARM hand-asm) with an EH landing pad; MSVC has no inline ARM assembler.
-   ...and its sibling, the array DESTROY. src/__destroy_arr.c is hand-asm for
-   the same reason as func_020733a8 above -- an exception frame no C under the
+   ...and its sibling, the array DESTROY. src/__cxa_vec_cleanup.cpp is hand-asm for
+   the same reason as __cxa_vec_ctor above -- an exception frame no C under the
    ROM's flags emits -- so there is no source to compile, only a block to read.
    Re-derived from the ROM for this ruling: arm9 0x0207328c (size 0x5c) reads
    e92d48f0 / e24dd018 / e1a0b00d / e1b05003 -- stmdb sp!,{r4,r5,r6,r7,r11,lr};
@@ -385,7 +399,7 @@ void func_020733a8(void *base, int n, int stride,
    one past the end and the loop steps DOWN by size before each call, so the
    elements are destroyed back to front. Both zero-count guards fall out of
    the two early returns. */
-void __destroy_arr(void *base, int n, int size, void (*dtor)(void *))
+void __cxa_vec_cleanup(void *base, int n, int size, void (*dtor)(void *))
 {
     char *p;
     if (dtor == 0 || n == 0)
@@ -409,7 +423,7 @@ extern "C" {
 
 void *_ZTV15MaterialChanger[8];
 void *_ZTV15TextureSequence[8];
-void *_ZTV25MovingCylinderClsnWithPos[12];
+void *_ZTV10dCcAcPos_c[12];
 int VT0[20];    /* an unresolved shared-header vtable alias in ov002 TUs */
 int VT2[20];    /* ...and its sibling: SphereClsn's D1 spells its three
                    sub-object vtables VT0/VT1/VT2. All three are installed
@@ -418,7 +432,7 @@ int VT2[20];    /* ...and its sibling: SphereClsn's D1 spells its three
                    classes can spell DIFFERENT vtables VT0 and both resolve
                    here. A slot that is actually dispatched must never come
                    through one of them. */
-void *data_02099204[20];   /* WithMeshClsn's own vtable, same treatment */
+void *_ZTV10dBgCh_Actr[20];   /* WithMeshClsn's own vtable, same treatment */
 /* the coin counter GiveCoins increments, PER PLAYER -- HUD::Behavior reads
    data_0209f358[data_0209f250]. run vs16: sixteen. */
 short data_0209f358[kPortMaxPlayers];
@@ -457,7 +471,7 @@ unsigned char data_0209f1f4; /* ...and the flag it clears with it */
 // Player::ShowMessage2 was declined here (2026-08-07) because its yes-branch
 // enters the message state and nothing ticked the dialogue box. THE DECLINE IS
 // GONE (2026-08-08, the dialogue-pipeline session): the matched src is back in
-// slice_gate10 (_ZN6Player12ShowMessage2ER9ActorBasejPK7Vector3jj.cpp) and the
+// slice_gate10 (_ZN6Player12ShowMessage2ER7fBase_cjPK7Vector3hh.cpp) and the
 // box now ticks -- hal/message_pump.cpp runs Message::UpdateWindow +
 // Message::Update every frame (Stage::UpdateMessage's own dialogue arm) and
 // hal/message_compositor path rasters engine A's 2D over the 3D frame. The one
@@ -523,7 +537,7 @@ unsigned char data_0209f4ab;
    Stage::PS_Update read data_0209f4ac + idx * 0x18. Hosted as bare shorts
    these were two bytes each, so SetPlayerGlobals' four-player boot loop
    strayed: player 1's byte landed in data_020a0e40[5], and player 2's
-   zeroed the low byte of _ZTV18MovingCylinderClsn[3] two symbols later,
+   zeroed the low byte of _ZTV7dCcAc_c[3] two symbols later,
    which happened to turn mcc_ownerid (low byte 0x80) into lb_d0 (low byte
    0x00) and sent the frame-0 cylinder pass into LakituBro's deleting
    destructor. The two bases are distinct fields of the same DS record and
@@ -562,7 +576,7 @@ extern "C" {
    (lane w9-harvest) checked: it is an ARM asm block, so it cannot replace
    this host body no matter how the port catches up to main. */
 int __aeabi_idiv(int n, int d) { return d ? n / d : 0; }
-void *_ZTV18MovingCylinderClsn[12];
+void *_ZTV7dCcAc_c[12];
 
 /* gate-10 BSS ring (spawn/camera/collision-config globals; zeros are the
    pre-scene defaults) */
@@ -571,9 +585,9 @@ void *_ZTV18MovingCylinderClsn[12];
    what it returns. The `short[64]` here was also half the right stride --
    decl_common.h declares it `signed char[]` and SublevelToLevel indexes it
    that way. */
-int data_020991d8[8], data_02099264[8], data_02099274[8];
+int _ZTV5dBgCh[8], _ZTV9dBgCh_Gnd[8], VTable_dBgPi_dBgCh_GndThunk[8];
 int data_02099338[8], data_02099348[8], data_02099358[8], data_02099368[8];
-int data_020994cc[8];
+int _ZTV8dM3dGSph[8];
 /* data_02099fa4/fa8/fac moved to romdata (gate 35): they are file-backed arm9
    data, not BSS, and data_02099fac is the 3D sound distance limit -- zeroed,
    it culls every positional sound effect in the game and Sound::Play's
@@ -621,14 +635,7 @@ extern "C" {
    names it. Filled at runtime if a gate ever dispatches ModelAnim2. */
 void *_ZTV10ModelAnim2[12];
 void *VTable_Animation_ModelAnim2Thunk[12];
-/* data_020a5bb8 (the SDAT root pointer the func_02050xxx family reads) moved to
-   hal/snd_globals.cpp. It is not a standalone word: src/func_020506fc.c hands
-   &data_020a5bb8 to func_02058200 as the TOP of the sound thread's DOWNWARD
-   1 KB stack, so the ROM has it as the last four bytes of one 0x534-byte run,
-   data_020a5684 + data_020a5718 + data_020a5bb8. Hosted alone here, that
-   thread's stack wrote a kilobyte over whatever the linker happened to place
-   below it. Same treatment, same reason, as the card driver's data_020a8760 in
-   hal/globals_link100.cpp. (run link100 wave 7, lane SND3, rung R5.) */
+void *data_020a5bb8;            /* table root pointer (func_02050xxx family) */
 int data_0209f5c0[8];
 /* data_020ad560 USED TO BE A ZEROED int[0x3c/4] HERE (run linkw wave 4, lane
    w4-a), the exact counterpart of the cuboid's host array that wave 3 removed

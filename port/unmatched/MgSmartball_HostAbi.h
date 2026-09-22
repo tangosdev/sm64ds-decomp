@@ -14,13 +14,13 @@
  * include/private/disp_obj_vtbl.h declares the smartball sub-object's two
  * virtuals as ordinary C++ members. On MSVC an ordinary member is __thiscall,
  * so `p->f1()` puts the receiver in ECX. EVERY OTHER DISPATCH THROUGH THE SAME
- * TWELVE VTABLES IN THIS BINARY IS CDECL: src/func_ov006_02118488.c, the
+ * TWELVE VTABLES IN THIS BINARY IS CDECL: src/_ZN16dScMgSmartball_c8BehaviorEv.cpp, the
  * class's own Behavior, declares `typedef void (*VFunc)(void*)` and makes
  * twelve `(**(VFunc**)o)(o)` calls, which push the receiver. A vtable cannot
  * hold both shapes at once, so the port picks the majority and makes the odd
  * caller match it.
  *
- * THIS IS THE SAME RULING port/CMakeLists.txt ALREADY MAKES FOR func_02021d1c,
+ * THIS IS THE SAME RULING port/CMakeLists.txt ALREADY MAKES FOR _ZN8Particle10SysTracker8Contents5Entry10InitialiseEjjR7Vector3PK11Vector3_16fPN5dPa_c7level_c10callback_cE,
  * the particle-spawn tail: "the ONE place in the subsystem that reaches a
  * Callback vtable through a C++ `virtual` -- a local shadow class, `p6->Run`,
  * which MSVC compiles thiscall while every other dispatch on the same vtable

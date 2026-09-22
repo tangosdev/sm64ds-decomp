@@ -31,20 +31,20 @@ struct PortVec3 { int x, y, z; };
 
 extern "C" {
 void func_0200f760(void *self, void *cc);
-void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *cc);
-void *_ZN5Actor10FindWithIDEj(u32 id);
+void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *cc);
+void *_ZN8dActor_c10FindWithIDEj(u32 id);
 void _ZN6Player16IncMegaKillCountEv();
 void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32, int, int, int);
-void _ZN9ActorBase18MarkForDestructionEv(void *self);
+void _ZN7fBase_c18MarkForDestructionEv(void *self);
 void func_02012694(int a, void *b);
 void _ZN5Sound9PlayBank0EjRK7Vector3(u32 id, const PortVec3 *pos);
 void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *self, const PortVec3 *pos,
     u32 a, int b, u32 c, u32 d, u32 e);
 void func_ov079_02126704(char *c);
-void _ZN12CylinderClsn5ClearEv(void *self);
-void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(
+void _ZN5dCc_c5ClearEv(void *self);
+void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(
     void *self, const PortVec3 *pos);
-void _ZN12CylinderClsn6UpdateEv(void *self);
+void _ZN5dCc_c6UpdateEv(void *self);
 
 struct PortPmf { unsigned fn; int delta; };
 extern PortPmf data_ov079_021282e0[];       /* the bss table, dispatched each frame */

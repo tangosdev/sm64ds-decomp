@@ -15,13 +15,13 @@
 # RESOLVED from raw bytes out of extracted/overlays/overlay_0021.bin (base
 # 0x021111a0; ov021 is compressed:true, the dsd export is the compressed
 # image) against the arm9 spawn table 0x02090864 + id*4:
-#   id  68 -> 0x02114768  word[0]=0x02112168 WorkElevator_Spawn  id-half 68
-#   id 221 -> 0x02114824  word[0]=0x02112d64 RollingRock_Spawn   id-half 221
-#   id  67 -> 0x021148f0  word[0]=0x02112ed4 ShutterHmc_Spawn    id-half 67
+#   id  68 -> 0x02114768  word[0]=0x02112168 daObjCvNewsLift_c_classInit  id-half 68
+#   id 221 -> 0x02114824  word[0]=0x02112d64 daGrock_c_classInit   id-half 221
+#   id  67 -> 0x021148f0  word[0]=0x02112ed4 daObjCvShutter_c_classInit    id-half 67
 # Every spawn word lands inside ov021's own code and every id matches its
 # spawn-table slot. Names are unshifted (each class's block is contiguous).
 #
-# ONE MORE NAME RACE, resolved against ov021's own config: WorkElevator_Spawn
+# ONE MORE NAME RACE, resolved against ov021's own config: daObjCvNewsLift_c_classInit
 # spells its own vtable store `func_ov075_0211478c` -- another module's dsd
 # export won the naming race at 0x0211478c, which ov021's config names
 # _ZTV12WorkElevator. Aliased onto the host array in
@@ -38,18 +38,18 @@
 #                           (Actor shape, own slot 29); the THREE RELOCATED
 #                           WORDS after it (0x021148c4: typeinfo vtable ptr /
 #                           &0x021148dc / ov002 0x021099c0) are dsd's own
-#                           SPLIT symbol data_ov021_021148c4 and ride the
+#                           SPLIT symbol _ZTI16daObjCvShutter_c and ride the
 #                           mount, unlike DorrieCap's merged tail
-#   0x02114914..0x02114994  _ZTV10ShutterHmc  32 slots, slot 31 =
+#   0x02114914..0x02114994  _ZTV16daObjCvShutter_c  32 slots, slot 31 =
 #                           Platform::Kill; the span crosses the overlays.yaml
 #                           code_size boundary (0x02114980) -- the reloc run
 #                           carries slots 27..31 at 0x02114980..0x02114990, so
 #                           the yaml size is floor-rounded, not the truth
 #
 # ==== FACTORY SHAPES (re-derived, not carried) =============================
-# WorkElevator_Spawn and RollingRock_Spawn each store their OWN table (by the
+# daObjCvNewsLift_c_classInit and daGrock_c_classInit each store their OWN table (by the
 # aliased/real name) as the single final vptr write: registered directly.
-# ShutterHmc_Spawn is the ov045 factory-F shape -- disassembled at
+# daObjCvShutter_c_classInit is the ov045 factory-F shape -- disassembled at
 # 0x02112eec..0x02112ef8: ldr r1,=0x021099e4 (ov002 BASE table, the
 # daObjCvShutter_c spelling); ldr r0,=0x02114914 (OWN); str r1,[r4]; str
 # r0,[r4]. Base first, own second; the recovered source's VT1 placeholder is
@@ -72,24 +72,24 @@
 
 # ---- WORK_ELEVATOR (68): CLPS blocks, tuning words, SpawnInfo -------------
 data_ov021_02113a60 data_ov021_02113a80
-data_ov021_02114740 data_ov021_02114748 data_ov021_02114750 data_ov021_02114754
-WorkElevator_SpawnInfo
+data_ov021_02114740 _ZTI17daObjCvNewsLift_c data_ov021_02114750 _ZTS17daObjCvNewsLift_c
+g_profile_CV_NEWS_LIFT
 
 # ---- ROLLING_ROCK (221): SpawnInfo + the split three-word record ----------
-RollingRock_SpawnInfo
-data_ov021_021148c4
+g_profile_GORO_ROCK
+_ZTI16daObjCvShutter_c
 # The mangled class-name string the record's middle word points at,
 # "16daObjCvShutter_c" -- 18 characters, NUL at +18 (read out of the raw ndspy
 # image; ov021's dsd export is the compressed one and shows garbage here). dsd
 # guessed a boundary four bytes in, so the host array was [4] plus a zero pack
-# pad and every read got "16da". 0x14 runs to ShutterHmc_SpawnInfo at
+# pad and every read got "16da". 0x14 runs to g_profile_CV_SHUTTER at
 # 0x021148f0.
-data_ov021_021148dc:0x14
+_ZTS16daObjCvShutter_c:0x14
 
 # ---- SHUTTER_HMC (67): pointer table + the CLPS block it names ------------
 data_ov021_02113a00
 data_ov021_021148d0
-ShutterHmc_SpawnInfo
+g_profile_CV_SHUTTER
 
 # ---- bss: the three sinits' SharedFilePtrs and destructor-chain nodes -----
 data_ov021_021149a0 data_ov021_021149a8 data_ov021_021149b0 data_ov021_021149b8

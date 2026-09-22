@@ -1,15 +1,15 @@
 #include "types.h"
-struct Actor {
+struct dActor_c {
     char pad[0x49e];
     unsigned char obj; /* 0x49e */
 };
 
-extern int _ZN5Actor13SpawnSoundObjEj(struct Actor *thiz, u32 id);
+extern int _ZN8dActor_c13SpawnSoundObjEj(struct dActor_c *thiz, u32 id);
 
-void func_ov002_020e7e24(struct Actor *thiz)
+void func_ov002_020e7e24(struct dActor_c *thiz)
 {
     if (thiz->obj != 0xff)
         return;
-    if (_ZN5Actor13SpawnSoundObjEj(thiz, 6))
+    if (_ZN8dActor_c13SpawnSoundObjEj(thiz, 6))
         thiz->obj = 0x78;
 }

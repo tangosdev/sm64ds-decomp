@@ -1,23 +1,60 @@
 //cpp
-// NONMATCHING (TERMINAL-FLOOR): functionally-verified C at the proven compiler floor.
-// func_02009e70 @ 0x02009e70 (arm9, size 0x109c). 96 words diverge, ALL register-identity
-// swaps (88) or same-multiset reorderings (8): zero wrong opcodes, immediates, or branches,
-// semantics verified instruction-by-instruction 2026-08-01. Eight clusters, every one a
-// coloring/scheduling build delta; every source axis is closed (notes 6ay, DB row has the
-// full closed-axis list). Not byte-matchable without the NITRO V0.5-V0.6.1 compiler.
-// For recomp/port purposes this file is complete: the compiled code is functionally
-// identical to the ROM, differing only in register names and instruction order.
+// NONMATCHING: functionally-verified C, 72 of 1063 words diverge (was 96).
+// func_02009e70 @ 0x02009e70 (arm9, size 0x109c). Size exact; every opcode,
+// immediate, branch target and pool word is right. The residue is register
+// identity plus nine scheduling words: tools/wallcrack.py tags 63 regperm and
+// 9 SCHED, and the semantics were verified instruction by instruction (2026-08-01).
+// For recomp/port purposes the file is complete: the compiled code is
+// functionally identical to the ROM, differing only in register names and
+// instruction order.
+//
+// 2026-09-13 (run link100 crack wave 9, lane CRK-M) 96 -> 72, two source levers:
+//   * the file's own `#pragma opt_common_subs off` was a 14-word REGRESSION and
+//     is gone. Deleting it closes the whole 17-word table-lookup + FXMUL cluster
+//     at +0xa44..+0xaa4 that the near-miss DB called "RC4, the LARGEST, the one
+//     cluster with residual source-lever hope". Found by sweeping the full
+//     246-name verified pragma vocabulary at on and off (493 compiles).
+//   * `t0 = FXMUL(sp28, sp30)` instead of `FXMUL(sp30, sp28)`: the ROM wants
+//     sp28 as the smull Rm operand. Closes 10 of the 13 words at +0xe8c..+0xec4
+//     (notes 6cb lever 2, commutative operand transposition).
+// What is left, and what it is: 52 of the 72 words hang off ONE web exchange --
+// the ROM colours the mode-flags word r5 and the func_020093f4 distance limit sl,
+// this build does the reverse -- and every later cluster (the sp4c pair at
+// +0xc90, the ground height at +0xd6c..+0xdf0, the sqrt chain at +0xb38, the
+// sp28 load at +0xe8c, the +0xef8/+0xf08/+0xf18 adds) falls out of it. The
+// remaining 20 are the sp10 store interleave (+0x4ac, 6w), the self+0x100
+// materialisation schedule (+0x618, 12w) and the +0xfd4 zero temp (2w).
+// The exchange does not move on any source axis measured. Lane CRK-M swept the
+// radius-1 declaration rank x type-name neighbourhood (166 cells, twice), 20
+// random declaration orders, the pragma vocabulary (twice), 6cd dead preamble
+// stores at four positions x eleven locals, 6cb block-depth naming, 6ce pool-
+// address launders, 21 commutative transpositions and 2100 random product draws
+// over all of those jointly. Lane CRK2-M then swept, at this 72 base and scoring
+// every cell on the WHOLE function region by region, about 1,470 further cells:
+// the COMPLETE sl x r5 declaration rank cross product (156, not just radius 1),
+// that product crossed with seven equal-width type names on each of the two
+// declarations (588, the joint 6cc axis), the 246-name pragma vocabulary at on
+// and off on top of this base (492), the birth ORDER of the three sp1c loads
+// crossed with the sb initialiser's position (24) and the three FXMULC pair
+// orders (7), the limit web's callee return type, block-depth nesting of each
+// declaration, the `register` storage class, nine disjoint-local merges that
+// relieve pressure by one, dead stores at three positions inside the f20 web,
+// the flags table's pool-address launders and index spellings, sba/t1 width
+// respellings, and comparison and mask operand transpositions at every use site
+// of both webs. R01 reads exactly 4 in every one of those cells that keeps the
+// schedule; no cell anywhere reads below 72. Splitting or regrouping the webs
+// adds one live range and shifts EVERY register up by one (273-297 words), so
+// the pressure is saturated at thirteen locals. All 25 installed compiler builds
+// were swept: 2004/b56 is the only one within reach (72); every other build
+// fails the function outright. Details in the lanes' attempts.txt.
+//
+// L0() below was a u64-mask launder (`& 0xFFFFFFFFFFFFFFFFLL` through a long long
+// round trip) that lane BANK measured dead under 2004/b56; it is kept as a no-op
+// macro rather than inlined at every call site so the history stays reviewable.
+#include "dBgCh_Gnd.h"
+#include "dBgCh_Lin.h"
+
 extern "C" {
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef int s32;
-typedef unsigned int u32;
-typedef long long s64;
-typedef unsigned long long u64;
-
-struct Vector3 { s32 x, y, z; };
-
 struct CamMode {
     s32 nearDist;   /* 0x00 */
     s32 farDist;    /* 0x04 */
@@ -64,16 +101,7 @@ extern void func_0200c9e0(void *self, s32 *a, s32 *b);
 extern u32 func_02012790(u32 a);
 extern s32 Sound_PlayIfNotActive(s32 a, s32 b, s32 c);
 
-extern void _ZN11RaycastLineC1Ev(void *t);
-extern void _ZN11RaycastLineD1Ev(void *t);
-extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(void *t, const struct Vector3 *a, const struct Vector3 *b, void *actor);
-extern s32 _ZN11RaycastLine10DetectClsnEv(void *t);
-extern void _ZN11RaycastLine10GetClsnPosEv(struct Vector3 *out, void *t);
-extern void _ZN13RaycastGroundC1Ev(void *t);
-extern void _ZN13RaycastGroundD1Ev(void *t);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(void *t, const struct Vector3 *p, void *actor);
-extern s32 _ZN13RaycastGround10DetectClsnEv(void *t);
-extern void _ZN4BgCh19StartDetectingWaterEv(void *t);
+extern void _ZN9dBgCh_Lin10GetClsnPosEv(struct Vector3 *out, dBgCh_Lin *line);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *t, struct Vector3 *out);
 
 extern s16 data_02082214[];
@@ -103,11 +131,10 @@ extern struct CamMode data_020874cc;
 
 static inline int CheckMode(void) { return data_0209f2d8 == 1; }
 
-#define L0(p) ((s32)(((long long)(s32)(p)) & 0xFFFFFFFFFFFFFFFFLL))
+#define L0(p) (p)
 #define FXMUL(a, b) ((s32)((((s64)(a)) * (b) + 0x800) >> 12))
 #define FXMULC(a, b) ((s32)((((s64)(a)) * (s64)(b) + 0x800) >> 12))
 
-#pragma opt_common_subs off
 s32 func_02009e70(char *self)
 {
     s32 sp04;
@@ -135,8 +162,6 @@ s32 func_02009e70(char *self)
     struct Vector3 spac;
     struct Vector3 spb8;
     struct Vector3 spc4;
-    char spd0[0x78];
-    char sp148[0x54];
     s32 r7;
     s32 r6;
     s32 fl;
@@ -269,11 +294,12 @@ s32 func_02009e70(char *self)
     }
     r4 = 0x7fffffff;
     sb = *(s32 *)(self + 0x9c) + 0x82500;
-    _ZN11RaycastLineC1Ev(spd0);
-    func_0200897c(self, spd0);
-    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(spd0, (struct Vector3 *)(self + 0x98), &sp4c, 0);
-    if (_ZN11RaycastLine10DetectClsnEv(spd0) != 0) {
-        _ZN11RaycastLine10GetClsnPosEv(&sp94, spd0);
+    {
+    dBgCh_Lin line;
+    func_0200897c(self, &line);
+    line.SetObjAndLine(*(struct Vector3 *)(self + 0x98), sp4c, 0);
+    if (line.DetectClsn() != 0) {
+        _ZN9dBgCh_Lin10GetClsnPosEv(&sp94, &line);
         r4 = sp94.y - 0x80000;
         if (r4 < sb) r4 = sb;
     }
@@ -287,10 +313,10 @@ s32 func_02009e70(char *self)
         sp58.z = tz;
     }
     if (sb > r4) goto L_A534;
-    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(spd0, &sp58, (struct Vector3 *)(self + 0x8c), 0);
-    if (_ZN11RaycastLine10DetectClsnEv(spd0) == 0) goto L_A534;
-    _ZNK11SurfaceInfo12CopyNormalToER7Vector3(spd0 + 0x14, &sp64);
-    _ZN11RaycastLine10GetClsnPosEv(&spa0, spd0);
+    line.SetObjAndLine(sp58, *(struct Vector3 *)(self + 0x8c), 0);
+    if (line.DetectClsn() == 0) goto L_A534;
+    _ZNK11SurfaceInfo12CopyNormalToER7Vector3(&line.surface, &sp64);
+    _ZN9dBgCh_Lin10GetClsnPosEv(&spa0, &line);
     *(s32 *)(self + 0xe0) = spa0.x;
     *(s32 *)(self + 0xe4) = spa0.y;
     *(s32 *)(self + 0xe8) = spa0.z;
@@ -303,7 +329,7 @@ s32 func_02009e70(char *self)
         *(u32 *)L0(self + 0x154) |= 0x80200;
         goto L_A534;
     }
-    _ZN11RaycastLine10GetClsnPosEv(&sp70, spd0);
+    _ZN9dBgCh_Lin10GetClsnPosEv(&sp70, &line);
     sba = (s16)(_ZN4cstd5atan2E5Fix12IiES1_(sp64.x, sp64.z) + 0x8000);
     t1 = *(u8 *)(self + 0x1a6);
     t0 = (s16)(sba - *(s16 *)(self + 0x17c));
@@ -455,9 +481,9 @@ L_AAD0:
         sp4c.y = ty;
         sp4c.z = tz;
     }
-    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(spd0, (struct Vector3 *)(self + 0x8c), &sp4c, 0);
-    if (_ZN11RaycastLine10DetectClsnEv(spd0) != 0) {
-        _ZN11RaycastLine10GetClsnPosEv(&spb8, spd0);
+    line.SetObjAndLine(*(struct Vector3 *)(self + 0x8c), sp4c, 0);
+    if (line.DetectClsn() != 0) {
+        _ZN9dBgCh_Lin10GetClsnPosEv(&spb8, &line);
         sp4c.y = spb8.y;
         if (r4 > spb8.y - 0x80000) r4 = spb8.y - 0x80000;
     }
@@ -466,19 +492,19 @@ L_AAD0:
     sp88.x = sp7c.x;
     sp88.y = sp7c.y + 0x100000;
     sp88.z = sp7c.z;
-    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(spd0, &sp7c, &sp88, 0);
-    if (_ZN11RaycastLine10DetectClsnEv(spd0) != 0) {
-        _ZN11RaycastLine10GetClsnPosEv(&spc4, spd0);
+    line.SetObjAndLine(sp7c, sp88, 0);
+    if (line.DetectClsn() != 0) {
+        _ZN9dBgCh_Lin10GetClsnPosEv(&spc4, &line);
         sp88.y = spc4.y - 0x80000;
         if (r4 > sp88.y) r4 = sp88.y;
     }
     sb = *(s32 *)(self + 0x9c);
-    _ZN13RaycastGroundC1Ev(sp148);
-    *(s32 *)(sp148 + 0x4c) = 0x5dc000;
-    func_0200897c(self, sp148);
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(sp148, &sp4c, 0);
-    if (sp1c > &data_02086fcc) _ZN4BgCh19StartDetectingWaterEv(sp148);
-    if (_ZN13RaycastGround10DetectClsnEv(sp148) != 0) sb = *(s32 *)(sp148 + 0x44);
+    dBgCh_Gnd ground;
+    ground.mProbeHeight = 0x5dc000;
+    func_0200897c(self, &ground);
+    ground.SetObjAndPos(sp4c, 0);
+    if (sp1c > &data_02086fcc) ground.StartDetectingWater();
+    if (ground.DetectClsn() != 0) sb = ground.clsnY;
     if (sp1c == &data_02086ff4) {
         if (sb < data_0209f32c) sb = data_0209f32c;
         r7h = sb + 0x64000;
@@ -497,7 +523,7 @@ L_AAD0:
     if (sp1c == &data_0208706c && sp34.y < 0) t0 = 0xa49;
     else t0 = sp2c;
     r6 = FXMUL(sp28, t0);
-    t0 = FXMUL(sp30, sp28);
+    t0 = FXMUL(sp28, sp30);
     if (sp40.y < r6) r7h = *(s32 *)(self + 0x84) + r6;
     else if (sp40.y > t0) r7h = *(s32 *)(self + 0x84) + t0;
     if (data_0209f2f8 == 0x26) {
@@ -514,8 +540,7 @@ L_AD94:
 L_ADD4:
     Math_Function_0203b14c((s32 *)(self + 0x90), r7h, 0x300, 0x14000, 0x100);
     *(s16 *)(self + 0x17c) = Vec3_HorzAngle((struct Vector3 *)(self + 0x80), (struct Vector3 *)(self + 0x8c));
-    _ZN13RaycastGroundD1Ev(sp148);
-    _ZN11RaycastLineD1Ev(spd0);
+    }
 L_AE14:
     if (r5 != 0) {
         if (data_0209b000 == 0) func_02012790(0xe);

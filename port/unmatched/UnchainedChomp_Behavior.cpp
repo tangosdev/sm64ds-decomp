@@ -18,7 +18,7 @@
  *     data_ov100_021486f4.hi = data_ov100_02147ff8   (fn 0x02143aa4, delta 0)
  *
  * -- ov100's own DS CODE ADDRESSES (port/ov100_syms.txt line 34; both sit
- * immediately before UnchainedChomp_SpawnInfo). The fn/delta words were read
+ * immediately before g_profile_WANWAN2). The fn/delta words were read
  * straight off overlay_0100.bin: both deltas are 0, so the virtual-bit branch
  * of the pair encoding is dead on this level, but it is spelled below anyway
  * (the Door reading: a dead line that is right beats a live assumption).
@@ -66,13 +66,13 @@ int func_ov100_02143ae0(void *self, void *arg);   /* lo 0x02143ae0, installer's 
 /* the rest of Behavior's engine calls */
 unsigned short DecIfAbove0_Short(unsigned short *p);
 void _Z14ApproachLinearRiii(int &x, int target, int step);
-void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *clsn);
-void _ZN12CylinderClsn5ClearEv(void *thiz);
-void _ZN12CylinderClsn6UpdateEv(void *thiz);
+void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *clsn);
+void _ZN5dCc_c5ClearEv(void *thiz);
+void _ZN5dCc_c6UpdateEv(void *thiz);
 void func_02012694(int, void *);
-void _ZN5Actor15HugeLandingDustEb(void *thiz, bool b);
-void *_ZN5Actor13ClosestPlayerEv(void *thiz);
-void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned a, unsigned b,
+void _ZN8dActor_c15HugeLandingDustEb(void *thiz, bool b);
+void *_ZN8dActor_c13ClosestPlayerEv(void *thiz);
+void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned a, unsigned b,
     const void *pos, const void *rot, int e, int f);
 void _ZN7PathPtrC1Ev(void *thiz);
 void _ZN7PathPtr6FromIDEj(void *thiz, unsigned id);
@@ -94,51 +94,51 @@ extern PortPmf data_ov100_02147ff8[];    /* -> hi, the one Behavior reads */
 }  /* extern "C" */
 
 /* ---- Spawn host copy ------------------------------------------------------
- * src/UnchainedChomp_Spawn.c calls Enemy's constructor as `func_020aed98()`
+ * src/d_a_wanwan2.cpp calls Enemy's constructor as `func_020aed98()`
  * with no argument -- correct ARM (operator new returns `this` in r0 and the
  * ctor wants it in r0, so mwcc emits the branch with nothing between), but under
  * MSVC cdecl a no-arg call passes no argument and the ctor reads `this` off the
- * caller's frame -> a c0000005 in ActorBase's ctor. The ChainChomp_Spawn case
- * exactly. func_020aed98 is ov002 0x020aed98 = _ZN5EnemyC2Ev. Everything else is
+ * caller's frame -> a c0000005 in ActorBase's ctor. The daWanwan_c_classInit case
+ * exactly. func_020aed98 is ov002 0x020aed98 = _ZN12dEnemyBase_cC2Ev. Everything else is
  * the matched source line for line. Also carries the PathPtr method aliases
  * InitResources needs (it declares PathPtr as a real class, whose MSVC-mangled
  * method names nothing defines; the C-linkage _ZN7PathPtr* bodies are in
  * slice_gate10). */
 extern "C" {
-void *_ZN9ActorBasenwEj(unsigned size);
-int _ZN5EnemyC2Ev(void *self);
-int _ZN25MovingCylinderClsnWithPosC1Ev(void *self);
-int _ZN12WithMeshClsnC1Ev(void *self);
+void *_ZN7fBase_cnwEj(unsigned size);
+int _ZN12dEnemyBase_cC2Ev(void *self);
+int _ZN10dCcAcPos_cC1Ev(void *self);
+int _ZN10dBgCh_ActrC1Ev(void *self);
 int _ZN9ModelAnimC1Ev(void *self);
 int _ZN11ShadowModelC1Ev(void *self);
-int func_020733a8(void *arr, int n, int stride, void *ctor, void *dtor);
+int __cxa_vec_ctor(void *arr, int n, int stride, void *ctor, void *dtor);
 void _ZN5ModelC1Ev(void);
 void _ZN5ModelD1Ev(void);
 void _ZN11ShadowModelD1Ev(void);
-void func_020072c0(void);
+void _ZN7Vector3D1Ev(void);
 void func_0203d384(void);
-void func_02011508(void);
+void _ZN8Vector3sD1Ev(void);
 void func_0203d73c(void);
 extern int _ZTV14UnchainedChomp;
 
 /* PORT_HOST_ABI: ARM no-arg ctor call ride-through (operator new's `this`
-   already sits in r0); cdecl needs it passed explicitly. ChainChomp_Spawn
+   already sits in r0); cdecl needs it passed explicitly. daWanwan_c_classInit
    shape. */
-void *UnchainedChomp_Spawn(void)
+void *daWanwan2_c_classInit(void)
 {
-    char *p = (char *)_ZN9ActorBasenwEj(0x7a4);
+    char *p = (char *)_ZN7fBase_cnwEj(0x7a4);
     if (p) {
-        _ZN5EnemyC2Ev(p);
+        _ZN12dEnemyBase_cC2Ev(p);
         *(int *)p = (int)&_ZTV14UnchainedChomp;
-        _ZN25MovingCylinderClsnWithPosC1Ev(p + 0x110);
-        _ZN12WithMeshClsnC1Ev(p + 0x150);
+        _ZN10dCcAcPos_cC1Ev(p + 0x110);
+        _ZN10dBgCh_ActrC1Ev(p + 0x150);
         _ZN9ModelAnimC1Ev(p + 0x30c);
-        func_020733a8(p + 0x370, 6, 0x50, (void *)_ZN5ModelC1Ev, (void *)_ZN5ModelD1Ev);
-        func_020733a8(p + 0x550, 6, 0x28, (void *)_ZN11ShadowModelC1Ev, (void *)_ZN11ShadowModelD1Ev);
+        __cxa_vec_ctor(p + 0x370, 6, 0x50, (void *)_ZN5ModelC1Ev, (void *)_ZN5ModelD1Ev);
+        __cxa_vec_ctor(p + 0x550, 6, 0x28, (void *)_ZN11ShadowModelC1Ev, (void *)_ZN11ShadowModelD1Ev);
         _ZN11ShadowModelC1Ev(p + 0x640);
-        func_020733a8(p + 0x6d8, 6, 0xc, (void *)func_0203d384, (void *)func_020072c0);
-        func_020733a8(p + 0x720, 6, 0xc, (void *)func_0203d384, (void *)func_020072c0);
-        func_020733a8(p + 0x768, 6, 6, (void *)func_0203d73c, (void *)func_02011508);
+        __cxa_vec_ctor(p + 0x6d8, 6, 0xc, (void *)func_0203d384, (void *)_ZN7Vector3D1Ev);
+        __cxa_vec_ctor(p + 0x720, 6, 0xc, (void *)func_0203d384, (void *)_ZN7Vector3D1Ev);
+        __cxa_vec_ctor(p + 0x768, 6, 6, (void *)func_0203d73c, (void *)_ZN8Vector3sD1Ev);
     }
     return p;
 }
@@ -155,7 +155,7 @@ int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *f, int a, int b);
 void _ZN9Animation8LoadFileER13SharedFilePtr(void *p);
 void LoadSilverStarAndNumber(void);
 void _ZN11ShadowModel12InitCylinderEv(void *self);
-void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(
+void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
     void *self, void *a, const void *v, int fix12, int c, unsigned d, unsigned e);
 int func_ov100_02143b18(void *c, void *p);   /* defined below (the installer) */
 

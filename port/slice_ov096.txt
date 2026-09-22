@@ -29,7 +29,7 @@
 # wrappers, eleven of which were leaf accessors, and its first boot crashed on
 # a face returning 0 where the real body returns a pointer).
 #
-#  A. THE C++-MANGLING WALL (2 TUs). src/_ZN5PokeyD1Ev.cpp and
+#  A. THE C++-MANGLING WALL (2 TUs). src/actors/daSanbo_c.cpp and
 #     src/_ZN7TornadoD1Ev.cpp are REAL C++ class definitions ending
 #     `virtual ~X();` with an empty body. mwccarm mangles that Itanium and
 #     emits the name vtable slot 16 needs; MSVC emits ??1Pokey@@UAE@XZ and
@@ -45,20 +45,20 @@
 #                 0x0213571c 0x020149a4  MovingCylinderClsn dtor (+0x14c)
 #                 0x02135724 0x02015ff8  ShadowModel dtor        (+0x124)
 #                 0x0213572c 0x02016d20  Model dtor              (+0xd4)
-#                 0x02135734 0x020112c8  _ZN5ActorD2Ev
+#                 0x02135734 0x020112c8  _ZN8dActor_cD2Ev
 #                 0x02135744 (load) 0x021379d8  its own table
 #       TornadoD1 0x02136dc4 0x0201592c  TextureTransformer dtor (+0x328)
 #                 0x02136dcc 0x0201691c  ModelAnim dtor          (+0x2c4)
 #                 0x02136dd4 0x020373f8  WithMeshClsn dtor       (+0x108)
 #                 0x02136ddc 0x020149a4  MovingCylinderClsn dtor (+0xd4)
-#                 0x02136de4 0x020112c8  _ZN5ActorD2Ev
+#                 0x02136de4 0x020112c8  _ZN8dActor_cD2Ev
 #                 0x02136df4 (load) 0x02137a90  its own table
 #     The two lists CROSS-CONFIRM each other: WithMeshClsn, MovingCylinderClsn
 #     and Actor D2 resolve to the same three arm9 addresses in both classes,
 #     from two independently recovered destructors.
-#       src/_ZN5PokeyD1Ev.cpp   -> port/unmatched/Pokey_HostSites.cpp
+#       src/actors/daSanbo_c.cpp   -> port/unmatched/Pokey_HostSites.cpp
 #       src/_ZN7TornadoD1Ev.cpp -> port/unmatched/Tornado_HostSites.cpp
-#     BOTH D0s NEED NOTHING: src/_ZN5PokeyD0Ev.c and src/_ZN7TornadoD0Ev.c are
+#     BOTH D0s NEED NOTHING: src/actors/daSanbo_c.cpp and src/_ZN7TornadoD0Ev.cpp are
 #     already plain C bodies that store their table by name and call flat
 #     member destructors, so both stay below as matched source. That asymmetry
 #     is the ROM recovery route, not a choice.
@@ -76,9 +76,9 @@
 #     the recovered sources own declarations, not inferred from a crash. The
 #     SoundObject/Cap/MrBlizzard/BabyPenguin/Unagi/HootTheOwl/ov077/ov092
 #     shape, ninth and tenth instances.
-#       src/func_ov096_021368f0.cpp -> port/unmatched/Pokey_HostSites.cpp
-#       src/func_ov096_021368b4.cpp -> port/unmatched/Pokey_HostSites.cpp
-#     src/func_ov096_02136928.c is NOT refused and stays in the slice: it sets
+#       src/actors/daSanbo_c.cpp -> port/unmatched/Pokey_HostSites.cpp
+#       src/actors/daSanbo_c.cpp -> port/unmatched/Pokey_HostSites.cpp
+#     src/actors/daSanbo_c.cpp is NOT refused and stays in the slice: it sets
 #     the cell pointer with plain integer arithmetic
 #     (`*(int *)(c + 0x384) = (int)&data_ov096_02137b48 + (a << 4)`) and forms
 #     no pointer-to-member at all. Its `a << 4` is what proves the cells are
@@ -95,7 +95,7 @@
 #       src/_ZN7Tornado6RenderEv.cpp -> port/unmatched/Tornado_HostSites.cpp
 #
 #  D. THE FALL-OFF-THE-END BODY (1 TU), FOUND BY THE FIRST BUILD, not by
-#     reading. src/func_ov096_02135e2c.cpp is declared `int` and has NO return
+#     reading. src/actors/daSanbo_c.cpp is declared `int` and has NO return
 #     statement. mwccarm accepts it and lets r0 carry whatever the last call
 #     left; MSVC refuses the translation unit with
 #         error C4716: 'func_ov096_02135e2c': must return a value
@@ -105,9 +105,9 @@
 #     0x02135ee4..0x02135ef8 is `add r1,sp,#0xc / add r0,r0,#4 / bl
 #     SurfaceInfo::CopyNormalTo (void) / add sp,sp,#0x1c / pop {r4-r7,lr} /
 #     bx lr` with no instruction setting r0, and the ONE caller,
-#     src/func_ov096_021365d4.c:12, declares it `void` and discards the result
+#     src/actors/daSanbo_c.cpp:12, declares it `void` and discards the result
 #     at line 47.
-#       src/func_ov096_02135e2c.cpp -> port/unmatched/Pokey_HostSites.cpp
+#       src/actors/daSanbo_c.cpp -> port/unmatched/Pokey_HostSites.cpp
 #     THE CHEAPER ROUTE EXISTS AND WAS NOT TAKEN. port/tools/hostgen.py carries
 #     a FALLS_OFF_RETURN table for exactly this failure, added by lane w5-c for
 #     func_ov070_0211f0a4 (port/CMakeLists.txt:2421), and a two-line entry
@@ -118,9 +118,9 @@
 #
 #  E. THE IMPLICIT r0 RIDE-THROUGH (1 TU), AND IT IS THE DANGEROUS ONE.
 #     src/_ZN7Tornado8BehaviorEv.cpp dispatches its three-way state switch as
-#         case 0: func_ov096_021372c0(); break;
-#         case 1: func_ov096_02137088(); break;
-#         case 2: func_ov096_02136fd4(); break;
+#         case 0: _ZN7Tornado6State0Ev(); break;
+#         case 1: _ZN7Tornado6State1Ev(); break;
+#         case 2: _ZN7Tornado6State2Ev(); break;
 #     with NO ARGUMENTS, while all three bodies take a receiver
 #     (void *self / char *c / Actor *thiz). It compiles clean because
 #     include/decl_common.h:2927-2929 declares all three
@@ -143,25 +143,25 @@
 #     eyeballed: every ovNNN symbol include/decl_common.h declares was compared
 #     against its own body's arity across BOTH overlays this lane mounts.
 #     ov092 has ZERO mismatches. ov096 has exactly these three, plus one
-#     header-WIDER row (func_ov096_021357a4, declared `(void*)` and defined
+#     header-WIDER row (_ZN9daSanbo_c13OnYoshiTryEatEv, declared `(void*)` and defined
 #     `(void)`) which is harmless on cdecl and is called that way only from
 #     src/_ZN10HootTheOwl8BehaviorEv.cpp, a TU that is itself host-copied and
 #     not linked.
 #
 #  F. THE decl_common REDECL TRAP (1 TU), a COMPILE failure.
-#     src/func_ov096_02137088.cpp declares its own body
-#     `void func_ov096_02137088(char *c);` inside an `extern "C"` block AND
+#     src/_ZN7Tornado6State1Ev.cpp declares its own body
+#     `void _ZN7Tornado6State1Ev(char *c);` inside an `extern "C"` block AND
 #     includes include/decl_common.h, which declares the same C-linkage symbol
-#     `extern void func_ov096_02137088(void);` at line 2928:
-#         error C2733: 'func_ov096_02137088': you cannot overload a function
+#     `extern void _ZN7Tornado6State1Ev(void);` at line 2928:
+#         error C2733: '_ZN7Tornado6State1Ev': you cannot overload a function
 #                      with 'extern "C"' linkage
 #     mwccarm accepts it. The same wrong `(void)` declaration that hides the
 #     ride-through in E, now failing the build outright rather than silently.
 #     BOTH CHEAP ROUTES FAIL and were tried, not assumed: a per-source -D
 #     cannot rename only the header's occurrence, and -DDECL_COMMON_H would
 #     neutralise the header but this body needs func_ov002_020de328 and
-#     func_ov096_02136e54 FROM it and declares neither itself.
-#       src/func_ov096_02137088.cpp -> port/unmatched/Tornado_HostSites.cpp
+#     _ZN7Tornado10UpdateSpinEi FROM it and declares neither itself.
+#       src/_ZN7Tornado6State1Ev.cpp -> port/unmatched/Tornado_HostSites.cpp
 #     The real fix is decomp-side, in tools/decl_headers.py or its config --
 #     the known decl_common redecl class -- and correcting that one line
 #     retires the copy and returns the TU.
@@ -201,9 +201,9 @@
 #     over the port_ovNNN_at family instead of one binding.
 #
 # ==== WHAT LOOKS LIKE A TENTH REFUSAL AND IS NOT =========================
-# src/_ZN5Pokey6RenderEv.cpp RIDES FROM SRC. It is the SAME six-virtual local
+# src/actors/daSanbo_c.cpp RIDES FROM SRC. It is the SAME six-virtual local
 # shadow reaching index 5 as Tornado, and it is the opposite case: it
-# dispatches on the member at +0xd4, which src/_ZN5PokeyD1Ev.cpp own member
+# dispatches on the member at +0xd4, which src/actors/daSanbo_c.cpp own member
 # list names a plain **Model** (and Pokey::InitResources confirms it, calling
 # ModelBase::SetFile on this+0xd4). hal/cxxname_bridge.cpp:511 DUAL-FILLS
 # `_ZTV5Model[5] = mv_render` for exactly this shape, with the reason written
@@ -229,15 +229,15 @@
 # ==== SEVEN METHOD FACES, NOT REFUSALS ====================================
 # Seven TUs define REAL C++ METHODS against the generated class headers
 # (include/Pokey.h declares five, include/Tornado.h two). mwccarm mangles those
-# Itanium; MSVC mangles them ?Behavior@Pokey@@QAEHXZ and so on, so nothing in
+# Itanium; MSVC mangles them ?Behavior@daSanbo_c@@QAEHXZ and so on, so nothing in
 # the link answers to the flat name the vtable fills use. All seven stay in the
 # slice and get a one-line face in hal/actor_classes_ov096.cpp -- the
 # BabyPenguin/IceSheet/OneUpLogo/HootTheOwl/ShipWater/ToxBox recipe:
-#     _ZN5Pokey13InitResourcesEv     _ZN5Pokey16CleanupResourcesEv
-#     _ZN5Pokey16OnPendingDestroyEv  _ZN5Pokey6RenderEv
-#     _ZN5Pokey8BehaviorEv           _ZN7Tornado13InitResourcesEv
+#     _ZN9daSanbo_c13InitResourcesEv     _ZN9daSanbo_c16CleanupResourcesEv
+#     _ZN9daSanbo_c16OnPendingDestroyEv  _ZN9daSanbo_c6RenderEv
+#     _ZN9daSanbo_c8BehaviorEv           _ZN7Tornado13InitResourcesEv
 #     _ZN7Tornado8BehaviorEv
-# src/_ZN7Tornado16CleanupResourcesEv.c is a .c file defining the FLAT name and
+# src/_ZN7Tornado16CleanupResourcesEv.cpp is a .c file defining the FLAT name and
 # needs no face; src/_ZN7Tornado6RenderEv.cpp is already `extern "C"` flat and
 # its HOST COPY defines that flat name itself, so it needs none either.
 #
@@ -249,17 +249,17 @@
 # extracted/overlays/overlay_0096.bin before being seated, and for the two
 # eight-byte bodies the ruling is the whole function:
 #
-#   func_ov096_021357a4  Pokey slot 18  0x8   e3a00004 e12fff1e
+#   _ZN9daSanbo_c13OnYoshiTryEatEv  Pokey slot 18  0x8   e3a00004 e12fff1e
 #                        = MOV r0,#4 ; BX lr, and the source is `return 4;`
-#   func_ov096_021357ac  Pokey slot 29  0x8   e3a0090f e12fff1e
+#   _ZN9daSanbo_c16OnAimedAtWithEggEv  Pokey slot 29  0x8   e3a0090f e12fff1e
 #                        = MOV r0,#0x0f ROR 18 = 0x3c000 = 245760, and the
 #                        source is `return 245760;`
-#   func_ov096_02136cd0  Pokey slot 19  0x40  sixteen instructions, and BOTH
+#   _ZN9daSanbo_c13OnTurnIntoEggER6Player  Pokey slot 19  0x40  sixteen instructions, and BOTH
 #                        of its calls are RELOCATION-confirmed:
 #                          0x02136cfc -> 0x0201061c
-#                                        _ZN5Actor15GivePlayerCoinsER6Playerhj
+#                                        _ZN8dActor_c15GivePlayerCoinsER6Playerhj
 #                          0x02136d04 -> 0x02043824
-#                                        _ZN9ActorBase18MarkForDestructionEv
+#                                        _ZN7fBase_c18MarkForDestructionEv
 #                        with r2=1 r3=2 set immediately before the first,
 #                        guarded by `ldrh r0,[r4,#0xc]` / `cmp r0,#0xf0` -- the
 #                        actor-id test the recovered source writes as
@@ -302,43 +302,17 @@
 #
 # ==== THE SLICE: 41 TUs (40 of ov096's 49, plus one arm9 closure TU) =======
 src/func_02016aac.c
-src/PokeySegment_Spawn.c
-src/Pokey_Spawn.c
-src/Tornado_Spawn.c
-src/_ZN5Pokey13InitResourcesEv.cpp
-src/_ZN5Pokey16CleanupResourcesEv.cpp
-src/_ZN5Pokey16OnPendingDestroyEv.cpp
-src/_ZN5Pokey6RenderEv.cpp
-src/_ZN5Pokey8BehaviorEv.cpp
-src/_ZN5PokeyD0Ev.c
-src/_ZN7Tornado16CleanupResourcesEv.c
-src/_ZN7TornadoD0Ev.c
+# QUARANTINED at the main->port sync (origin/main 9c7f38a24): main folded this
+# class into one TU, and port/ host-copies bodies inside it (the slice_ov096 host copies).
+# port/CMakeLists.txt's own assertion refuses the pair, because taking both is a
+# duplicate symbol and taking the src one puts the host copy's reason back. The
+# row returns when the host copy covers the whole consolidated TU.
+#src/actors/daSanbo_c.cpp
+src/d_a_tor.c
+src/_ZN7Tornado16CleanupResourcesEv.cpp
+src/_ZN7TornadoD0Ev.cpp
 src/__sinit_ov096_0213770c.c
 src/__sinit_ov096_02137894.c
-src/func_ov096_021357a4.c
-src/func_ov096_021357ac.c
-src/func_ov096_021357b4.c
-src/func_ov096_02135800.cpp
-src/func_ov096_02135838.c
-src/func_ov096_0213585c.c
-src/func_ov096_02135878.cpp
-src/func_ov096_021358c8.cpp
-src/func_ov096_02135948.cpp
-src/func_ov096_02135efc.cpp
-src/func_ov096_021360c4.cpp
-src/func_ov096_02136134.cpp
-src/func_ov096_02136264.c
-src/func_ov096_021363b4.c
-src/func_ov096_021363c4.c
-src/func_ov096_0213640c.c
-src/func_ov096_02136434.cpp
-src/func_ov096_02136534.cpp
-src/func_ov096_021365d4.c
-src/func_ov096_0213670c.c
-src/func_ov096_02136754.c
-src/func_ov096_021368a4.c
-src/func_ov096_02136928.c
-src/func_ov096_02136cd0.c
-src/func_ov096_02136e54.c
-src/func_ov096_02136fd4.c
-src/func_ov096_021372c0.c
+src/_ZN7Tornado10UpdateSpinEi.cpp
+src/_ZN7Tornado6State2Ev.cpp
+src/_ZN7Tornado6State0Ev.cpp

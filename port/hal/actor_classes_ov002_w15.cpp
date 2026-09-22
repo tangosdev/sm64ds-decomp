@@ -48,7 +48,7 @@
 //
 // ---- SLOT 16 IS SPELLED HERE, AND WHY --------------------------------------
 //
-// src/_ZN21MegaMushroomCreateTagD1Ev.cpp is the shadow-class MSVC destructor
+// src/game/actors/d_a_obj_kinoko_tag.cpp is the shadow-class MSVC destructor
 // shape, the SlideDecorationSilverStar case (hal/actor_classes_ov031_w10.cpp):
 // the TU declares its own `struct Actor` / `struct MovingCylinderClsn` /
 // `struct MegaMushroomCreateTag : Actor` and defines the destructor, so MSVC
@@ -63,9 +63,9 @@
 //     020b46a8  LDR  r1, [pc, #0x1c]      (pool 0x020b46cc -> 0x02108cf4)
 //     020b46ac  ADD  r0, r4, #0xd4
 //     020b46b0  STR  r1, [r4]             install the table
-//     020b46b4  BL   0x020149a4           _ZN18MovingCylinderClsnD1Ev
+//     020b46b4  BL   0x020149a4           _ZN7dCcAc_cD1Ev
 //     020b46b8  MOV  r0, r4
-//     020b46bc  BL   0x020112c8           _ZN5ActorD2Ev
+//     020b46bc  BL   0x020112c8           _ZN8dActor_cD2Ev
 //     020b46c0  MOV  r0, r4               return this
 //     020b46c4  POP  {r4, lr} / BX lr
 // A statement-for-statement transcription, not a re-derivation. The D0 is NOT
@@ -79,13 +79,15 @@
 // two u32 arguments each and bodies not linked into the port at all; 30 is
 // Actor::OnAimedAtWithEggReturnVec, an SRET method no __fastcall thunk shape
 // here models.
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
@@ -94,37 +96,37 @@ extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include "dtor_faces_cpp.h"
 #include <cstdlib>
 
-#include "Actor.h"
-#include "ActorBase.h"
+#include "dActor_c.h"
+#include "fBase_c.h"
 
 extern "C" {
-int _ZN5Actor19BeforeInitResourcesEv(void *self);              /* slot 1  */
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
-int _ZN5Actor14BeforeBehaviorEv(void *self);                   /* slot 7  */
-int _ZN5Actor12BeforeRenderEv(void *self);                     /* slot 10 */
-int _ZN5Actor13OnYoshiTryEatEv(void *self);                    /* slot 18 */
-void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
-int _ZN5Actor9Virtual50Ev(void *self);                         /* slot 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);              /* slot 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);              /* slot 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
-int _ZN5Actor16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);              /* slot 1  */
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);                   /* slot 7  */
+int _ZN8dActor_c12BeforeRenderEv(void *self);                     /* slot 10 */
+int _ZN8dActor_c13OnYoshiTryEatEv(void *self);                    /* slot 18 */
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
+int _ZN8dActor_c9Virtual50Ev(void *self);                         /* slot 20 */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);              /* slot 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);              /* slot 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
+int _ZN8dActor_c16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
 
 /* the two the transcribed D1 calls, both already linked */
-void _ZN18MovingCylinderClsnD1Ev(void *self);
-void _ZN5ActorD2Ev(void *self);
+void _ZN7dCcAc_cD1Ev(void *self);
+void _ZN8dActor_cD2Ev(void *self);
 
 /* the class's own bodies (port/slice_w15b.txt) */
-int _ZN21MegaMushroomCreateTag13InitResourcesEv(char *self);   /* slot 0  */
-int _ZN21MegaMushroomCreateTag16CleanupResourcesEv(void);      /* slot 3  */
-int *_ZN21MegaMushroomCreateTagD0Ev(int *self);                /* slot 17 */
-void *MegaMushroomCreateTag_Spawn(void);
-void *MegaMushroomTag_Spawn(void);
+int _ZN16daObjKinokoTag_c13InitResourcesEv(char *self);   /* slot 0  */
+int _ZN16daObjKinokoTag_c16CleanupResourcesEv(void);      /* slot 3  */
+int *_ZN16daObjKinokoTag_cD0Ev(int *self);                /* slot 17 */
+void *daObjKinokoTag_c_classInit_KINOKO_CREATE_TAG(void);
+void *daObjKinokoTag_c_classInit_KINOKO_TAG(void);
 
 const char *port_actor_class_name(unsigned id);   /* hal/actor_registry */
 void port_actor_slot_decline(const char *what);   /* func_02043fdc_hostcopy.cpp */
@@ -142,10 +144,10 @@ DSSTATE_END
 /* Behavior is a real C++ method in src (its TU compiles as C++ against a local
    shadow class), so it needs the extern-"C" face the vtable names. The other
    four own bodies are extern-C in src already. */
-#include "MegaMushroomCreateTag.h"
-extern "C" int _ZN21MegaMushroomCreateTag8BehaviorEv(void *self)
-{ return ((MegaMushroomCreateTag *)self)
-             ->MegaMushroomCreateTag::Behavior(); }
+#include "daObjKinokoTag_c.h"
+extern "C" int _ZN16daObjKinokoTag_c8BehaviorEv(void *self)
+{ return ((daObjKinokoTag_c *)self)
+             ->daObjKinokoTag_c::Behavior(); }
 
 // ---- the trap --------------------------------------------------------------
 static void kt_trap_report(void *self, int slot)
@@ -167,66 +169,66 @@ KT_TRAP(13) KT_TRAP(14)
 #undef KT_TRAP
 
 static int __fastcall kt_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall kt_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall kt_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 static void __fastcall kt_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall kt_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall kt_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall kt_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall kt_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall kt_pdes(void *s, void *)
-{ ((ActorBase *)s)->ActorBase::OnPendingDestroy(); return 0; }
+{ ((fBase_c *)s)->fBase_c::OnPendingDestroy(); return 0; }
 static int __fastcall kt_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int __fastcall kt_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 static int __fastcall kt_turn_egg(void *s, void *, void *p)
-{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+{ _ZN8dActor_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall kt_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall kt_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall kt_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall kt_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall kt_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall kt_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall kt_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall kt_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall kt_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 static int __fastcall kt_egg(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 
 /* the class's own six */
 static int __fastcall kt_init(void *s, void *)
-{ return _ZN21MegaMushroomCreateTag13InitResourcesEv((char *)s); }
+{ return _ZN16daObjKinokoTag_c13InitResourcesEv((char *)s); }
 static int __fastcall kt_clean(void *s, void *)
-{ return _ZN21MegaMushroomCreateTag16CleanupResourcesEv(); }
+{ return _ZN16daObjKinokoTag_c16CleanupResourcesEv(); }
 static int __fastcall kt_behavior(void *s, void *)
-{ return _ZN21MegaMushroomCreateTag8BehaviorEv(s); }
+{ return _ZN16daObjKinokoTag_c8BehaviorEv(s); }
 /* slot 9 is 0x02043af0, ActorBase::Render, in the ROM's own table: this class
    is a tag and has no model of its own -- no render probe, nothing to probe. */
 static int __fastcall kt_render(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::Render(); }
+{ return ((fBase_c *)s)->fBase_c::Render(); }
 /* Slot 16, the ROM D1 transcribed; see this file's header. */
 /* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
    the transcribed thunk that stood here (kt_d1) spelled the same chain by hand. */
 static int __fastcall kt_d0(void *s, void *)
-{ return (int)(size_t)_ZN21MegaMushroomCreateTagD0Ev((int *)s); }
+{ return (int)(size_t)_ZN16daObjKinokoTag_cD0Ev((int *)s); }
 
 /* ONE fill for BOTH rows. The registry calls `if (k->fill) k->fill();` once
    per row, so this runs twice; it is stores only, no verify-then-rewrite seat
@@ -253,7 +255,7 @@ extern "C" void hal_fill_mega_mushroom_tag_vtable(void)
     vt[13] = (void *)kt_trap13;
     vt[14] = (void *)kt_trap14;
     vt[15] = (void *)kt_heap;
-    vt[16] = (void *)hal_cppd1_MegaMushroomCreateTag;
+    vt[16] = (void *)PORT_D16(hal_cppd1_MegaMushroomCreateTag);
     vt[17] = (void *)kt_d0;
     vt[18] = (void *)kt_yoshi;
     vt[19] = (void *)kt_turn_egg;

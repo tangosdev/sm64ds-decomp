@@ -1,12 +1,17 @@
 //cpp
-/* _ZN8Fireball8BehaviorEv at 0x020f8c94 */
-typedef int s32;
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef signed short s16;
-typedef unsigned char u8;
+// @symbol _ZN8Fireball8BehaviorEv
+/* _ZN8Fireball8BehaviorEv at 0x020f8c94 -- a real Fireball:: method now.
+ *
+ * The file-local POD `struct Vector3` is renamed `Vec3F` rather than dropped.
+ * types.h's Vector3 is NOT a POD, and the two cannot both be named Vector3 in one
+ * TU; keeping the POD spelling is deliberate (a C++ struct copy scalarises to the
+ * members' own types, which is what a non-POD substitution would change here).
+ * Renaming a file-local type cannot move a byte -- see the same note in
+ * src_tu/actors/Enemy.cpp, where the merge forced the identical choice.
+ */
+#include "Fireball.h"
 
-struct Vector3 { int x, y, z; };
+struct Vec3F { int x, y, z; };
 struct Vec3P { int x, y, z; Vec3P() {} };
 enum Bool { FALSE, TRUE };
 
@@ -24,32 +29,32 @@ struct Obj {
 extern "C" {
 void func_ov002_020f8b24(void* self);
 int func_ov002_020ad660(void* cc, void* pp, void* r5p, int flags);
-void _ZN5Actor19DisappearPoofDustAtERK7Vector3(void* self, const struct Vector3* v);
-void* _ZN5Actor13ClosestPlayerEv(void* self);
+void _ZN8dActor_c19DisappearPoofDustAtERK7Vector3(void* self, const struct Vec3F* v);
+void* _ZN8dActor_c13ClosestPlayerEv(void* self);
 s16 Vec3_HorzAngle(const void* a, const void* b);
-void* _ZN5Actor10FindWithIDEj(u32 id);
+void* _ZN8dActor_c10FindWithIDEj(u32 id);
 void _ZN5Sound9PlayBank0EjRK7Vector3(u32 id, const void* pos);
 void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 id, s32 x, s32 y, s32 z);
-void _ZN12CylinderClsn5ClearEv(void* self);
-void _ZN12CylinderClsn6UpdateEv(void* self);
+void _ZN5dCc_c5ClearEv(void* self);
+void _ZN5dCc_c6UpdateEv(void* self);
 void _ZN6Player4BurnEv(void* self);
 void func_02012694(u32 id, const void* v);
-void _ZN9ActorBase18MarkForDestructionEv(void* self);
-void WithMeshClsn_UpdateContinuous_Veneer(void* p);
+void _ZN7fBase_c18MarkForDestructionEv(void* self);
+void dBgCh_Actr_UpdateContinuous_Veneer(void* p);
 int _Z14ApproachLinearRiii(void* p, s32 target, s32 step);
 int _Z14ApproachLinearRsss(void* p, s16 target, s16 step);
-int _ZNK12WithMeshClsn8IsOnWallEv(void* self);
-int _ZNK12WithMeshClsn12TouchesWaterEv(void* self);
+int _ZNK10dBgCh_Actr8IsOnWallEv(void* self);
+int _ZNK10dBgCh_Actr12TouchesWaterEv(void* self);
 void func_ov002_020f897c(void* self);
 void func_ov002_020f88ec(void* self);
 extern s16 data_02082214[];
 }
 
-extern "C" int _ZN8Fireball8BehaviorEv(void* arg0) {
-    char* c = (char*)arg0;
-    struct Vector3 v1;
-    volatile struct Vector3 pt;
-    struct Vector3 v2, v3, w1, w2, w3;
+int Fireball::Behavior() {
+    char* c = (char*)this;
+    struct Vec3F v1;
+    volatile struct Vec3F pt;
+    struct Vec3F v2, v3, w1, w2, w3;
     int f;
     int res;
     void* found;
@@ -84,14 +89,14 @@ extern "C" int _ZN8Fireball8BehaviorEv(void* arg0) {
             ((int*)&w1)[0] = ((int*)&v1)[0];
             ((int*)&w1)[1] = ((int*)&v1)[1];
             ((int*)&w1)[2] = ((int*)&v1)[2];
-            _ZN5Actor19DisappearPoofDustAtERK7Vector3(c, &w1);
+            _ZN8dActor_c19DisappearPoofDustAtERK7Vector3(c, &w1);
         } else {
             func_ov002_020f8b24(c);
         }
         return 1;
     }
 
-    *(void**)(c + 0x358) = _ZN5Actor13ClosestPlayerEv(c);
+    *(void**)(c + 0x358) = _ZN8dActor_c13ClosestPlayerEv(c);
     if (*(void**)(c + 0x358) != 0 && *(u8*)(c + 0x36d) != 3) {
         *(s16*)(c + 0x368) = Vec3_HorzAngle(c + 0x5c, (char*)(*(void**)(c + 0x358)) + 0x5c);
     } else {
@@ -101,7 +106,7 @@ extern "C" int _ZN8Fireball8BehaviorEv(void* arg0) {
     id134 = *(int*)(c + 0x134);
     if (id134 != 0) {
         if ((*(int*)(c + 0x130) & 0x8000) == 0) {
-            found = _ZN5Actor10FindWithIDEj((u32)id134);
+            found = _ZN8dActor_c10FindWithIDEj((u32)id134);
             if (found != 0) {
                 if (*(int*)(c + 0x130) & 0x10) {
                     *(u32*)(((int)c + 0xb0)) &= ~0x10000001;
@@ -131,7 +136,7 @@ extern "C" int _ZN8Fireball8BehaviorEv(void* arg0) {
                     }
                     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x44, pt.x, pt.y, pt.z);
                     func_ov002_020f8b24(c);
-                    _ZN12CylinderClsn5ClearEv(c + 0x110);
+                    _ZN5dCc_c5ClearEv(c + 0x110);
                     return 1;
                 }
                 {
@@ -149,11 +154,11 @@ extern "C" int _ZN8Fireball8BehaviorEv(void* arg0) {
                             ((int*)&w2)[0] = ((int*)&v2)[0];
                             ((int*)&w2)[1] = ((int*)&v2)[1];
                             ((int*)&w2)[2] = ((int*)&v2)[2];
-                            _ZN5Actor19DisappearPoofDustAtERK7Vector3(c, &w2);
+                            _ZN8dActor_c19DisappearPoofDustAtERK7Vector3(c, &w2);
                         }
                         if (*(u8*)(c + 0x36d) == 4)
                             func_02012694(0x157, c + 0x74);
-                        _ZN9ActorBase18MarkForDestructionEv(c);
+                        _ZN7fBase_c18MarkForDestructionEv(c);
                     }
                 }
             }
@@ -162,7 +167,7 @@ extern "C" int _ZN8Fireball8BehaviorEv(void* arg0) {
         }
     }
 
-    WithMeshClsn_UpdateContinuous_Veneer(c + 0x144);
+    dBgCh_Actr_UpdateContinuous_Veneer(c + 0x144);
     if (_Z14ApproachLinearRiii(c + 0x98, *(int*)(c + 0x35c), 0x999) != 0) {
         _Z14ApproachLinearRsss(c + 0x94, *(s16*)(c + 0x368), 0x200);
     }
@@ -175,17 +180,17 @@ extern "C" int _ZN8Fireball8BehaviorEv(void* arg0) {
     *(int*)(((int)c + 0x60)) += *(int*)(c + 0xa8);
     *(int*)(((int)c + 0x64)) += *(int*)(c + 0xac);
 
-    _ZN12CylinderClsn5ClearEv(c + 0x110);
-    _ZN12CylinderClsn6UpdateEv(c + 0x110);
+    _ZN5dCc_c5ClearEv(c + 0x110);
+    _ZN5dCc_c6UpdateEv(c + 0x110);
     *(int*)(((int)c + 0x360)) += *(int*)(c + 0x98);
 
     if (*(int*)(c + 0x360) > *(int*)(c + 0x364)
-        || _ZNK12WithMeshClsn8IsOnWallEv(c + 0x144) != 0
-        || _ZNK12WithMeshClsn12TouchesWaterEv(c + 0x144) != 0) {
+        || _ZNK10dBgCh_Actr8IsOnWallEv(c + 0x144) != 0
+        || _ZNK10dBgCh_Actr12TouchesWaterEv(c + 0x144) != 0) {
         u8 st = *(u8*)(c + 0x36d);
         if (st == 0) {
             func_ov002_020f897c(c);
-        } else if (st == 4 && _ZNK12WithMeshClsn8IsOnWallEv(c + 0x144) == 0) {
+        } else if (st == 4 && _ZNK10dBgCh_Actr8IsOnWallEv(c + 0x144) == 0) {
             func_ov002_020f88ec(c);
         }
         {
@@ -199,11 +204,11 @@ extern "C" int _ZN8Fireball8BehaviorEv(void* arg0) {
             ((int*)&w3)[0] = ((int*)&v3)[0];
             ((int*)&w3)[1] = ((int*)&v3)[1];
             ((int*)&w3)[2] = ((int*)&v3)[2];
-            _ZN5Actor19DisappearPoofDustAtERK7Vector3(c, &w3);
+            _ZN8dActor_c19DisappearPoofDustAtERK7Vector3(c, &w3);
         }
         if (*(u8*)(c + 0x36d) == 4)
             func_02012694(0x157, c + 0x74);
-        _ZN9ActorBase18MarkForDestructionEv(c);
+        _ZN7fBase_c18MarkForDestructionEv(c);
     }
 
     *(u16*)(((int)c + 0x100)) += 1;

@@ -60,7 +60,7 @@
 // Three distinct callees, five call sites, all in the main module, and ALL
 // THREE ALREADY HAVE DECOMPILED BODIES. Nothing had to be invented.
 //
-//   0x0203d744  _ZN4cstd4sqrtEy               x2   src/_ZN4cstd4sqrtEy.c
+//   0x0203d744  _ZN4cstd4sqrtEy               x2   src/_ZN4cstd4sqrtEy.cpp
 //   0x0203b4dc  _ZN4cstd5atan2E5Fix12IiES1_   x2   src/_ZN4cstd5atan2E5Fix12IiES1_.c
 //   0x02012718  func_02012718                 x1   src/func_02012718.c
 //

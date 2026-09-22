@@ -47,7 +47,7 @@ extern "C" void func_ov006_020cbaec(char *c)
     r4v = *(int *)(c + 0x14);
     if (r5v < 0) r5v = -r5v;
     {
-        int *src = (int *)(((long long)(int)(c + 4)));
+        int *src = (int *)(c + 4);
         tmp.x = src[0];
         tmp.y = src[1];
         tmp.z = src[2];

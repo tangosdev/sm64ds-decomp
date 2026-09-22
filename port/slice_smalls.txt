@@ -6,7 +6,7 @@
 # RUNG 1: MOTHER_PENGUIN'S TENTH ov018 TU
 # ---------------------------------------------------------------------------
 #
-# src/func_ov018_02111bf0.c -- the floor/wall collision pass at Actor+0x1a8,
+# src/game/actors/d_a_pg_mthr.cpp -- the floor/wall collision pass at Actor+0x1a8,
 # called by func_ov018_02112234 and func_ov018_02111e28 (both linked, both with
 # an overlay(18) relocation at the call site). Lane MPG linked nine of the
 # mother penguin's ten ov018 TUs and left this one host-copied, because its
@@ -37,7 +37,7 @@
 # unmatched/MotherPenguin_ClsnPass.cpp -- a line-for-line copy of this file
 # under a port name -- comes out of the three target lists and off disk.
 #
-src/func_ov018_02111bf0.c
+src/game/actors/d_a_pg_mthr.cpp
 
 # ---------------------------------------------------------------------------
 # RUNG 2: THE KUPPA SCRIPT'S FIRST COMMAND DISPATCHER

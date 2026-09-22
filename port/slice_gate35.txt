@@ -25,7 +25,7 @@ src/InitControllerMode.c
 # Player::Heal into the health, and the count popup. A coin class calls this
 # and needs nothing else from the port. Its two tables (coin value by kind,
 # popup actor id by kind) are romdata entries.
-src/_ZN5Actor15GivePlayerCoinsER6Playerhj.c
+src/_ZN8dActor_c15GivePlayerCoinsER6Playerhj.cpp
 
 # ---- the course's sound row.
 # GetSoundGroupID indexes the per-sublevel {group, bank, bgm} table that
@@ -63,4 +63,4 @@ src/IsStarCollectedInCurLevel.c
 # ---- the two the probes read back through: the coin total the HUD shows,
 # and Event::ClearBit, which the respawn releases the health meter with.
 src/NumCoins.c
-src/_ZN5Event8ClearBitEj.c
+src/_ZN5Event8ClearBitEj.cpp

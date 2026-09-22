@@ -11,52 +11,40 @@
 # IceSheet_ModelFile/IceSheet_ClsnFile bss pair, source-side, no linker alias
 # needed on main -- this worktree adds the alias instead of editing the
 # matched src (see hal/actor_classes_ccm.cpp's two /alternatename pragmas).
-# func_ov018_021126f8 (PowerStarCreate's D0) and func_ov018_02112730
+# _ZN8daSCre_cD0Ev (PowerStarCreate's D0) and _ZN8daSCre_c8BehaviorEv
 # (PowerStarCreate's Behavior) also differ from the stale cons copies by the
 # same #1083 sweep (cross-overlay symbol fixes unrelated to their own vtable
 # slots). config/arm9/overlays/ov018/symbols.txt was carried wholesale (pure
 # renames, RTTI names + the two IceSheet bss aliases; ovdata.py reads this
 # file directly for symbol resolution). SkiLift's cleanup fix
-# (_ZN7SkiLift16CleanupResourcesEv.cpp) and MotherPenguin's sinit fix
+# (_ZN10daPgMthr_c16CleanupResourcesEv.cpp) and MotherPenguin's sinit fix
 # (__sinit_ov018_02112c80.cpp), efa312c5e #1305, are carried too even though
 # neither class is hosted this gate -- both are matched src that must not
 # regress, and SkiLift/MotherPenguin stay unregistered (their sinits are not
 # called) so their fix has no runtime effect here, only correctness for a
 # later gate.
 # ---- the two factories -----------------------------------------------------
-src/IceSheet_Spawn.c
-src/PowerStarCreate_Spawn.c
+src/game/actors/d_a_obj_ice_board.cpp
+src/game/actors/d_a_s_cre.cpp
 # ---- ICE_SHEET (daObjIceBoard_c, a Platform) -------------------------------
 # All 9 own vtable slots are matched src: the 6 the scope report named
 # (Init/Cleanup/Behavior/Render/D1/D0) plus three combat overrides the scope
 # report missed (OnGroundPounded slot 21, OnHitByMegaChar slot 27, Kill slot
-# 31 -- found by reading every relocation in _ZTV8IceSheet's 32-word span, not
+# 31 -- found by reading every relocation in _ZTV15daObjIceBoard_c's 32-word span, not
 # just the six-method count). All three use the montymole/Crate shadow-vtable-
 # call shape (a local `struct { virtual ... }` whose Nth virtual is really
 # whatever the real installed vtable's same slot holds) and need no special
 # handling once the real slots are filled.
-src/_ZN8IceSheet13InitResourcesEv.cpp
-src/_ZN8IceSheet16CleanupResourcesEv.cpp
-src/_ZN8IceSheet8BehaviorEv.cpp
-src/_ZN8IceSheet6RenderEv.cpp
-src/_ZN8IceSheetD1Ev.c
-src/_ZN8IceSheetD0Ev.c
-src/func_ov018_021128e0.cpp
-src/func_ov018_02112858.cpp
-src/func_ov018_02112880.cpp
 # ---- POWER_STAR_CREATE (daSCre_c, an ActorBase-only 18-slot shape) ---------
 # Only 3 of its 18 slots are overridden (6 Behavior, 16 D1, 17 D0); slots
 # 0/3/9/12 take ActorBase's own shared base bodies UNCHANGED (confirmed by
 # reloc target address -- the class installs no InitResources/Cleanup/Render
-# override at all). func_ov018_021126f8 (slot 17) carries a stale "recovered
+# override at all). _ZN8daSCre_cD0Ev (slot 17) carries a stale "recovered
 # name: daSCre_c_OnYoshiTryEat" comment in main -- a name decoy, not a byte
 # problem: its reloc slot is 17 (D0's ROM position) and its body shape (store
 # own vtable, Actor::D2, Memory::Deallocate) is D0's. The table is only 18
 # words long (ends at 0x02113ab8; 0x02113abc is IceSheet's own RTTI, a
 # disjoint record), so there is no slot 18 for OnYoshiTryEat to occupy.
-src/func_ov018_021126d4.c
-src/func_ov018_021126f8.c
-src/func_ov018_02112730.cpp
 # ---- ONE_UP_LOGO (daObj1UpLogo_c, a plain 31-slot Actor, no Kill) ----------
 # D1 (src/_ZN9OneUpLogoD1Ev.cpp) is NOT in this slice: a real MSVC-synthesised
 # destructor over a local shadow Actor/Model/TextureSequence hierarchy with no
@@ -64,7 +52,7 @@ src/func_ov018_02112730.cpp
 # PeachPainting D1) spells the chain directly in the fill instead of compiling
 # the shadow-class TU. src/_ZN9OneUpLogoD1Ev.cpp stays in src/ as the matched
 # proof; it is not part of the port build.
-src/OneUpLogo_Spawn.c
+src/d_a_obj1_up_logo.c
 # InitResources: RETIRED PLAIN to the matched TU. It calls
 # TextureSequence::Prepare through the SHORT-1 seam: the Prepare veneer is a
 # pure passthrough tail-call into func_02046d50, whose matched body reads only
@@ -76,10 +64,11 @@ src/OneUpLogo_Spawn.c
 # by hand, and func_02046d50 never reads the third value. The host copy
 # unmatched/OneUpLogo_InitResources.cpp is dropped from CMakeLists.
 src/_ZN9OneUpLogo13InitResourcesEv.cpp
-src/_ZN9OneUpLogo16CleanupResourcesEv.c
-src/_ZN9OneUpLogo8BehaviorEv.c
+src/_ZN9OneUpLogo16CleanupResourcesEv.cpp
+src/_ZN9OneUpLogo8BehaviorEv.cpp
 src/_ZN9OneUpLogo6RenderEv.cpp
-src/_ZN9OneUpLogoD0Ev.c
+# RETIRED at SLICE1: body now in src/_ZN9OneUpLogoD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN9OneUpLogoD0Ev.cpp
 # ---- the one sinit that runs (IceSheet's own, self-contained) -------------
 src/__sinit_ov018_02112e00.c
 #
@@ -95,16 +84,16 @@ src/__sinit_ov018_02112e00.c
 # not spread over 600 -- the play-time gap the boot census cannot see.
 #
 # TRAP CHECKLIST, run like the other three classes:
-#  - ROM-shaped vtable: _ZTV11SoundObject host array, 31 words (0x0210c0dc..
+#  - ROM-shaped vtable: _ZTV12daSoundObj_c host array, 31 words (0x0210c0dc..
 #    0x0210c154, plain Actor, no Kill), own slots 0/6/16/17 only.
 #  - SpawnInfo+0x24 decoy: +0x24 of the 0x0210c064 record is
 #    data_ov002_0210c088, a TUNING COLUMN, not a vtable -- the +0x24-is-vtable
 #    rule is the ov018 record shape and does NOT hold on ov002. The factory
-#    installs _ZTV11SoundObject by name (read from SoundObject_Spawn.c), so no
+#    installs _ZTV12daSoundObj_c by name (read from daSoundObj_c_classInit.c), so no
 #    decoy and no reseat; the registry's +4 id cross-check reads 359.
 #  - D1/D0 placeholder: D1 spells its OWN table, clean, stays in slice. D0's
 #    cons copy spelled the shared VT/HEAP placeholders -- main's copy (carried,
-#    hash-verified) spells _ZTV11SoundObject + data_020a0eac directly; with
+#    hash-verified) spells _ZTV12daSoundObj_c + data_020a0eac directly; with
 #    that carry both stay in the slice, no host thunk. D0 also carries the
 #    SAME "recovered name: OnYoshiTryEat" decoy comment PowerStarCreate's D0
 #    does; the reloc slot is 17 and the body shape is D0's.
@@ -124,22 +113,17 @@ src/__sinit_ov018_02112e00.c
 #    (port_sound_object_states_seat, the Cap_StateDispatch shape: verify each
 #    sinit-left DS address against the ROM's own record, then rewrite with the
 #    host body; abort on WRONG BYTES). The matched
-#    src/_ZN11SoundObject8BehaviorEv.cpp stays out of the build.
+#    src/game/actors/d_a_sound_obj.cpp stays out of the build.
 # ---- SOUND_OBJECT's own bodies (matched src; Behavior is the host copy) ----
-src/SoundObject_Spawn.c
-src/_ZN11SoundObject13InitResourcesEv.c
-src/_ZN11SoundObjectD1Ev.c
-src/_ZN11SoundObjectD0Ev.c
+src/game/actors/d_a_sound_obj.cpp
 # ---- the three not-yet-compiled PMF state targets (matched src; the other
 # two, Sound::PlaySecretSound / Sound::PlaySmallSecretSound, are already in
 # slice_gate32 / slice_gate41) ----
 src/func_0200f7f0.c
-src/func_ov002_020f9468.c
-src/func_ov002_020f93a8.cpp
 #
 # NOT in this slice (present in src/, carried byte-identical from main, but
 # NOT compiled into this gate's build): SkiLift's cleanup fix
-# (_ZN7SkiLift16CleanupResourcesEv.cpp) and MotherPenguin's sinit fix
+# (_ZN10daPgMthr_c16CleanupResourcesEv.cpp) and MotherPenguin's sinit fix
 # (__sinit_ov018_02112c80.cpp), efa312c5e #1305. Both reach data_ov018_*
 # statics that live OUTSIDE this gate's ov018_syms.txt mount (SkiLift's and
 # MotherPenguin's own bss/data windows, neither hosted) -- compiling them here

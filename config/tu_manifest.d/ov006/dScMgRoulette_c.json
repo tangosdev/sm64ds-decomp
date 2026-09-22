@@ -1,0 +1,577 @@
+{
+  "id": "ov006/dScMgRoulette_c",
+  "module": "ov006",
+  "source": "src/actors/dScMgRoulette_c.cpp",
+  "promoted_source": "src/actors/dScMgRoulette_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous linker run: 0x210788c..0x210a400, 40 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): dScMgRoulette_c",
+    "module sinit corroboration: 31 sinit(s) / 31 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
+    "VTABLE-CORROBORATED: _ZTV15dScMgRoulette_c (ov006 0x0213e39c) points into this run at slots 0 (0x0210a194 InitResources), 3 (0x0210980c CleanupResources), 6 (0x02109aac Behavior), 9 (0x02109834 Render), 16 and 17 (0x0210788c D1 / 0x02107920 D0) and 18 and 19 (0x021095cc OnYoshiTryEat / 0x021096c8 OnTurnIntoEgg). Every other slot in that 36-word table relocates OUTSIDE 0x0210788c..0x0210a400, so both ends of the run are this class's own code.",
+    "NO HOLE: all 40 addresses in 0x0210788c..0x0210a400 have a legacy src/ file and a delinks.txt entry -- `tubuild inspect` reports `functions with no legacy source: none` and `functions without complete: none`. No sourceless member splits the run, so the whole range is claimable as a single .text block.",
+    "DESTRUCTOR ORDER IS THE REPRODUCIBLE ONE: the cartridge puts D1 at 0x0210788c BELOW D0 at 0x02107920 and carries no D2. mwccarm 2004/b56 emits D1-then-D0 for an inline in-class destructor, so the pair stays inside the licensed run and this TU promotes whole at 40/40 -- there is no held-out subset. include/dScMgRoulette_c.h's destructor was moved inline for exactly this reason; declared out of line it emits D2/D0/D1 plus a D2 the ROM lacks.",
+    "PRAGMA BLOCKER RETIRED BY MEASUREMENT -- AND THE MEASUREMENT CORRECTS MY OWN FIRST READING OF IT. notes/data/tu-promotion-queue.tsv lists this class with pragma:1, and tubuild create's emitted note says optimize_for_size and opt_propagation are FILE-GLOBAL last-wins and refuses to carry them. Four controls, each a full tubuild verify: (a) both shard pragmas bracketed around their own members -> 40/40 MATCH; (b) both pragmas DELETED outright -> 40/40 MATCH; (c) `#pragma optimize_for_size on` at file scope with no closing `off` -> 23/40, 17 DIFF; (d) `#pragma optimize_for_size on`/`off` bracketed around func_ov006_02108d28, one of the 17 members control (c) proved to be size-sensitive -> 40/40 MATCH. (c) proves the compile is live and that this pragma really does move bytes; (d) then proves the bracket did NOT bind -- had it bound, 02108d28 would have gone DIFF. The trailing `off` restored the default for the entire file. So mwccarm 2004/b56 IS file-global last-wins for optimize_for_size, notes/agents/roles/writer.md is right, and control (a) proved nothing about positionality: it passed only because control (b) shows both members match at the plain -O4,p defaults anyway. The pragma:1 blocker is therefore a phantom for this class -- the shards' pragmas were belt-and-braces -- and the promoted TU carries no pragma at all. This is a partial retraction of the claim an earlier draft of this manifest made (that brackets bind positionally); the retraction is the measurement, not an opinion.",
+    "DEFER_CODEGEN: MEASURED, AND DELIBERATELY NOT USED. Repeating control (d) above with `#pragma defer_codegen off` as the first line of the TU flips the verdict: 39/40 with the DIFF being EXACTLY the bracketed func_ov006_02108d28 and nothing else. So defer_codegen off does make a positional optimize_for_size bracket bind, which extends the dScMgMemory2_c writer's finding (measured there on opt_propagation and opt_loop_invariants) to a third pragma. It is not used here for two reasons. First, this TU needs no pragma at all -- see control (b). Second, the same run flips emission order: with deferral ON mwcc emits .text in reverse source order, which is why this file is written in DESCENDING ROM order and why `tubuild verify` reports ROM-ascending emission; with `defer_codegen off` the same file reported '38 ordinal pair(s) NOT in ROM order' and linkcheck [4b/8] would refuse it. The two are coupled: adopting defer_codegen off means rewriting the TU in ASCENDING ROM order. Either layout is admissible, but they cannot be mixed."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x0210788c",
+      "end": "0x0210a400"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN15dScMgRoulette_cD1Ev",
+      "address": "0x0210788c",
+      "size": "0x00000094",
+      "legacy_source": "src/_ZN15dScMgRoulette_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN15dScMgRoulette_cD0Ev",
+      "address": "0x02107920",
+      "size": "0x000000a8",
+      "legacy_source": "src/_ZN15dScMgRoulette_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov006_021079c8",
+      "address": "0x021079c8",
+      "size": "0x00000004",
+      "legacy_source": "src/func_ov006_021079c8.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov006_021079cc",
+      "address": "0x021079cc",
+      "size": "0x000000a0",
+      "legacy_source": "src/func_ov006_021079cc.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov006_02107a6c",
+      "address": "0x02107a6c",
+      "size": "0x000000a8",
+      "legacy_source": "src/func_ov006_02107a6c.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov006_02107b14",
+      "address": "0x02107b14",
+      "size": "0x0000005c",
+      "legacy_source": "src/func_ov006_02107b14.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov006_02107b70",
+      "address": "0x02107b70",
+      "size": "0x00000024",
+      "legacy_source": "src/func_ov006_02107b70.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov006_02107b94",
+      "address": "0x02107b94",
+      "size": "0x000000bc",
+      "legacy_source": "src/func_ov006_02107b94.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov006_02107c50",
+      "address": "0x02107c50",
+      "size": "0x000000d0",
+      "legacy_source": "src/func_ov006_02107c50.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov006_02107d20",
+      "address": "0x02107d20",
+      "size": "0x00000038",
+      "legacy_source": "src/func_ov006_02107d20.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov006_02107d58",
+      "address": "0x02107d58",
+      "size": "0x00000028",
+      "legacy_source": "src/func_ov006_02107d58.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov006_02107d80",
+      "address": "0x02107d80",
+      "size": "0x00000038",
+      "legacy_source": "src/func_ov006_02107d80.cpp",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov006_02107db8",
+      "address": "0x02107db8",
+      "size": "0x000000f0",
+      "legacy_source": "src/func_ov006_02107db8.cpp",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_ov006_02107ea8",
+      "address": "0x02107ea8",
+      "size": "0x0000041c",
+      "legacy_source": "src/func_ov006_02107ea8.c",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_ov006_021082c4",
+      "address": "0x021082c4",
+      "size": "0x00000038",
+      "legacy_source": "src/func_ov006_021082c4.c",
+      "ordinal": 14
+    },
+    {
+      "symbol": "func_ov006_021082fc",
+      "address": "0x021082fc",
+      "size": "0x0000020c",
+      "legacy_source": "src/func_ov006_021082fc.c",
+      "ordinal": 15
+    },
+    {
+      "symbol": "func_ov006_02108508",
+      "address": "0x02108508",
+      "size": "0x0000001c",
+      "legacy_source": "src/func_ov006_02108508.c",
+      "ordinal": 16
+    },
+    {
+      "symbol": "func_ov006_02108524",
+      "address": "0x02108524",
+      "size": "0x00000068",
+      "legacy_source": "src/func_ov006_02108524.c",
+      "ordinal": 17
+    },
+    {
+      "symbol": "func_ov006_0210858c",
+      "address": "0x0210858c",
+      "size": "0x00000034",
+      "legacy_source": "src/func_ov006_0210858c.c",
+      "ordinal": 18
+    },
+    {
+      "symbol": "func_ov006_021085c0",
+      "address": "0x021085c0",
+      "size": "0x00000090",
+      "legacy_source": "src/func_ov006_021085c0.c",
+      "ordinal": 19
+    },
+    {
+      "symbol": "func_ov006_02108650",
+      "address": "0x02108650",
+      "size": "0x00000540",
+      "legacy_source": "src/func_ov006_02108650.c",
+      "ordinal": 20
+    },
+    {
+      "symbol": "func_ov006_02108b90",
+      "address": "0x02108b90",
+      "size": "0x00000130",
+      "legacy_source": "src/func_ov006_02108b90.c",
+      "ordinal": 21
+    },
+    {
+      "symbol": "func_ov006_02108cc0",
+      "address": "0x02108cc0",
+      "size": "0x00000068",
+      "legacy_source": "src/func_ov006_02108cc0.c",
+      "ordinal": 22
+    },
+    {
+      "symbol": "func_ov006_02108d28",
+      "address": "0x02108d28",
+      "size": "0x000000fc",
+      "legacy_source": "src/func_ov006_02108d28.c",
+      "ordinal": 23
+    },
+    {
+      "symbol": "func_ov006_02108e24",
+      "address": "0x02108e24",
+      "size": "0x00000108",
+      "legacy_source": "src/func_ov006_02108e24.c",
+      "ordinal": 24
+    },
+    {
+      "symbol": "func_ov006_02108f2c",
+      "address": "0x02108f2c",
+      "size": "0x00000350",
+      "legacy_source": "src/func_ov006_02108f2c.c",
+      "ordinal": 25
+    },
+    {
+      "symbol": "func_ov006_0210927c",
+      "address": "0x0210927c",
+      "size": "0x00000024",
+      "legacy_source": "src/func_ov006_0210927c.c",
+      "ordinal": 26
+    },
+    {
+      "symbol": "func_ov006_021092a0",
+      "address": "0x021092a0",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov006_021092a0.c",
+      "ordinal": 27
+    },
+    {
+      "symbol": "func_ov006_021092e8",
+      "address": "0x021092e8",
+      "size": "0x00000074",
+      "legacy_source": "src/func_ov006_021092e8.c",
+      "ordinal": 28
+    },
+    {
+      "symbol": "func_ov006_0210935c",
+      "address": "0x0210935c",
+      "size": "0x00000150",
+      "legacy_source": "src/func_ov006_0210935c.c",
+      "ordinal": 29
+    },
+    {
+      "symbol": "func_ov006_021094ac",
+      "address": "0x021094ac",
+      "size": "0x00000084",
+      "legacy_source": "src/func_ov006_021094ac.c",
+      "ordinal": 30
+    },
+    {
+      "symbol": "func_ov006_02109530",
+      "address": "0x02109530",
+      "size": "0x0000007c",
+      "legacy_source": "src/func_ov006_02109530.c",
+      "ordinal": 31
+    },
+    {
+      "symbol": "func_ov006_021095ac",
+      "address": "0x021095ac",
+      "size": "0x00000020",
+      "legacy_source": "src/func_ov006_021095ac.c",
+      "ordinal": 32
+    },
+    {
+      "symbol": "_ZN15dScMgRoulette_c13OnYoshiTryEatEi",
+      "address": "0x021095cc",
+      "size": "0x000000fc",
+      "legacy_source": "src/_ZN15dScMgRoulette_c13OnYoshiTryEatEi.cpp",
+      "ordinal": 33
+    },
+    {
+      "symbol": "_ZN15dScMgRoulette_c13OnTurnIntoEggEi",
+      "address": "0x021096c8",
+      "size": "0x00000144",
+      "legacy_source": "src/_ZN15dScMgRoulette_c13OnTurnIntoEggEi.cpp",
+      "ordinal": 34
+    },
+    {
+      "symbol": "_ZN15dScMgRoulette_c16CleanupResourcesEv",
+      "address": "0x0210980c",
+      "size": "0x00000028",
+      "legacy_source": "src/_ZN15dScMgRoulette_c16CleanupResourcesEv.cpp",
+      "ordinal": 35
+    },
+    {
+      "symbol": "_ZN15dScMgRoulette_c6RenderEv",
+      "address": "0x02109834",
+      "size": "0x0000026c",
+      "legacy_source": "src/_ZN15dScMgRoulette_c6RenderEv.cpp",
+      "ordinal": 36
+    },
+    {
+      "symbol": "func_ov006_02109aa0",
+      "address": "0x02109aa0",
+      "size": "0x0000000c",
+      "legacy_source": "src/func_ov006_02109aa0.c",
+      "ordinal": 37
+    },
+    {
+      "symbol": "_ZN15dScMgRoulette_c8BehaviorEv",
+      "address": "0x02109aac",
+      "size": "0x000006e8",
+      "legacy_source": "src/_ZN15dScMgRoulette_c8BehaviorEv.cpp",
+      "ordinal": 38
+    },
+    {
+      "symbol": "_ZN15dScMgRoulette_c13InitResourcesEv",
+      "address": "0x0210a194",
+      "size": "0x0000026c",
+      "legacy_source": "src/_ZN15dScMgRoulette_c13InitResourcesEv.cpp",
+      "ordinal": 39
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_Z14ApproachLinearRiii' differs between the legacy file that used to hold func_ov006_02107a6c and the one that held func_ov006_02107ea8; kept the first, the other is commented out for review -- RESOLVED: one declaration, `int _Z14ApproachLinearRiii(int &v, int a, int b)`, which is the signature the mangled name itself proves (Riii). The three files that spelled the first parameter `int *` dereference at the call site; bytes unchanged.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_020a0e68' differs between the legacy file that used to hold func_ov006_02107db8 and the one that held func_ov006_02107ea8; kept the first, the other is commented out for review -- RESOLVED: declared once as common.h's flat `Matrix4x3`. The legacy Mtx43 and M48 shadow structs were the same 0x30 layout under different names and are gone; common.h is included FIRST so the flat spelling wins the MATRIX4X3_DEFINED guard.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_Z14ApproachLinearRiii' differs between the legacy file that used to hold func_ov006_02107a6c and the one that held func_ov006_021082fc; kept the first, the other is commented out for review -- RESOLVED: one declaration, `int _Z14ApproachLinearRiii(int &v, int a, int b)`, which is the signature the mangled name itself proves (Riii). The three files that spelled the first parameter `int *` dereference at the call site; bytes unchanged.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Matrix4x3_ApplyInPlaceToTranslation' differs between the legacy file that used to hold func_ov006_02107ea8 and the one that held func_ov006_021082fc; kept the first, the other is commented out for review -- RESOLVED: takes `Matrix4x3 *`, the flat common.h spelling, for the same reason as data_020a0e68 above.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_020a0e68' differs between the legacy file that used to hold func_ov006_02107db8 and the one that held func_ov006_021082fc; kept the first, the other is commented out for review -- RESOLVED: declared once as common.h's flat `Matrix4x3`. The legacy Mtx43 and M48 shadow structs were the same 0x30 layout under different names and are gone; common.h is included FIRST so the flat spelling wins the MATRIX4X3_DEFINED guard.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'RenderOamBothScreens' differs between the legacy file that used to hold func_ov006_02107c50 and the one that held func_ov006_02108cc0; kept the first, the other is commented out for review -- RESOLVED: one declaration, `(void *, int, int, int, int, void *)`. func_ov006_02108cc0's `*data_ov006_02138c3c` becomes `data_ov006_02138c3c` -- an `int[]` name dereferenced and a `void *` read load the same word.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Sound12PlayBank2_2DEj' differs between the legacy file that used to hold func_ov006_02107ea8 and the one that held func_ov006_02108d28; kept the first, the other is commented out for review -- RESOLVED: dropped entirely; decl_common.h already declares it `extern void _ZN5Sound12PlayBank2_2DEj(unsigned int)`, which every use agrees with.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Sound12PlayBank2_2DEj' differs between the legacy file that used to hold func_ov006_02107ea8 and the one that held func_ov006_02108e24; kept the first, the other is commented out for review -- RESOLVED: dropped entirely; decl_common.h already declares it `extern void _ZN5Sound12PlayBank2_2DEj(unsigned int)`, which every use agrees with.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_Z14ApproachLinearRiii' differs between the legacy file that used to hold func_ov006_02107a6c and the one that held func_ov006_02108f2c; kept the first, the other is commented out for review -- RESOLVED: one declaration, `int _Z14ApproachLinearRiii(int &v, int a, int b)`, which is the signature the mangled name itself proves (Riii). The three files that spelled the first parameter `int *` dereference at the call site; bytes unchanged.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov006_02108650' differs between the legacy file that used to hold func_ov006_02108d28 and the one that held func_ov006_02108f2c; kept the first, the other is commented out for review -- RESOLVED: it returns `short`, not `int`. With `int` the caller func_ov006_02108f2c grew an `lsl r0,#0x10 / asr r0,#0x10` pair the cartridge does not have (0x350 -> 0x358). Declared and DEFINED `short`; 40/40 match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Sound12PlayBank2_2DEj' differs between the legacy file that used to hold func_ov006_02107ea8 and the one that held func_ov006_02108f2c; kept the first, the other is commented out for review -- RESOLVED: dropped entirely; decl_common.h already declares it `extern void _ZN5Sound12PlayBank2_2DEj(unsigned int)`, which every use agrees with.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov006_021428c8' differs between the legacy file that used to hold func_ov006_02108d28 and the one that held func_ov006_02108f2c; kept the first, the other is commented out for review -- RESOLVED: decl_common.h's `void *` wins; the two files that assigned `(int)p` assign `(void *)p`.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov006_02109530' differs between the legacy file that used to hold func_ov006_02108f2c and the one that held func_ov006_0210927c; kept the first, the other is commented out for review -- RESOLVED: one declaration, `(int *out, int *a, int scale)`, matching the definition; the five callers holding char*/void*/Thing* receivers cast at the call site.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov006_02109530' differs between the legacy file that used to hold func_ov006_02108f2c and the one that held func_ov006_021092e8; kept the first, the other is commented out for review -- RESOLVED: one declaration, `(int *out, int *a, int scale)`, matching the definition; the five callers holding char*/void*/Thing* receivers cast at the call site.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec2_Sub' differs between the legacy file that used to hold func_ov006_02108f2c and the one that held func_ov006_021094ac; kept the first, the other is commented out for review -- RESOLVED: one declaration, `(int *, int *, int *)`; func_ov006_02108f2c casts its Thing* third argument.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec2_Sub' differs between the legacy file that used to hold func_ov006_02108f2c and the one that held func_ov006_02109530; kept the first, the other is commented out for review -- RESOLVED: one declaration, `(int *out, int *a, int scale)`, matching the definition; the five callers holding char*/void*/Thing* receivers cast at the call site.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov006_02109530' differs between the legacy file that used to hold func_ov006_02108f2c and the one that held func_ov006_021095ac; kept the first, the other is commented out for review -- RESOLVED: one declaration, `(int *out, int *a, int scale)`, matching the definition; the five callers holding char*/void*/Thing* receivers cast at the call site.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_020a0db0' differs between the legacy file that used to hold func_ov006_02107b94 and the one that held _ZN15dScMgRoulette_c6RenderEv; kept the first, the other is commented out for review -- RESOLVED: `extern int` -- the two spellings (s32 and int) were the same type.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Hud_RenderSprite' differs between the legacy file that used to hold func_ov006_02107c50 and the one that held _ZN15dScMgRoulette_c6RenderEv; kept the first, the other is commented out for review -- RESOLVED: one declaration, `(void *, int, int, int, int)`; Render passes `(void *)data_ov006_02138c18`, decl_common.h having typed that symbol `int`.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Sound12PlayBank2_2DEj' differs between the legacy file that used to hold func_ov006_02107ea8 and the one that held _ZN15dScMgRoulette_c8BehaviorEv; kept the first, the other is commented out for review -- RESOLVED: dropped entirely; decl_common.h already declares it `extern void _ZN5Sound12PlayBank2_2DEj(unsigned int)`, which every use agrees with.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov006_02108650' differs between the legacy file that used to hold func_ov006_02108d28 and the one that held _ZN15dScMgRoulette_c8BehaviorEv; kept the first, the other is commented out for review -- RESOLVED: it returns `short`, not `int`. With `int` the caller func_ov006_02108f2c grew an `lsl r0,#0x10 / asr r0,#0x10` pair the cartridge does not have (0x350 -> 0x358). Declared and DEFINED `short`; 40/40 match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov006_02109530' differs between the legacy file that used to hold func_ov006_02108f2c and the one that held _ZN15dScMgRoulette_c8BehaviorEv; kept the first, the other is commented out for review -- RESOLVED: one declaration, `(int *out, int *a, int scale)`, matching the definition; the five callers holding char*/void*/Thing* receivers cast at the call site.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov006_0210935c' differs between the legacy file that used to hold func_ov006_02108f2c and the one that held _ZN15dScMgRoulette_c8BehaviorEv; kept the first, the other is commented out for review -- RESOLVED: it takes TWO parameters, `(RacerPos *self, int idx)`. Behavior's legacy file declared it one-parameter and called it with one argument; the cartridge at 0x02109d60 does `mov r0, r8; bl 0x210935c` with the tile type already live in r1 from the `ldrsh r1, [r1, #0xd4]` at 0x02109d08, so the second argument is real and simply free. Passing it explicitly costs nothing -- Behavior still matches byte for byte.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov006_020c0aa8' differs between the legacy file that used to hold _ZN15dScMgRoulette_c6RenderEv and the one that held _ZN15dScMgRoulette_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: one declaration, `void func_ov006_020c0aa8(char *)`; the two spellings were identical apart from the parameter name.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov006_02107db8 and the one that held func_ov006_0210858c; kept the first, the other is commented out for review -- RESOLVED: the two `struct Obj` were unrelated types. Renamed to `ObjV` (the 4-virtual subobject func_ov006_02107db8 dispatches through) and `ResPair` (the two BMD file pointers func_ov006_0210858c frees).",
+    "PROOF/SOURCE BINDING. verification.linkcheck was recorded against the shadow arrangement (source src_tu/actors/dScMgRoulette_c.cpp, the 40 shard entries still in config/arm9/overlays/ov006/delinks.txt) -- the only arrangement in which linkcheck can run, since once the promoted src/ path is enrolled in delinks.txt tubuild routes the candidate to the intact-object production path, which refuses a text-only TU ('intact production requires one .text claim and at least one non-text claim'). Every promoted text-only entry in this module carries a pre-splice record for the same reason -- compare ov006/dScMgSingle3DBase_c and ov006/dScMgD3DBase_c, whose phase maps are identical to this one down to checkSymbols:false and the same nine baseline symbol errors. The source was edited AFTER that run (the two inert shard pragmas were removed, see boundary_evidence), so the binding was re-proved rather than assumed: compiling the TU with and without those pragma lines yields the SAME raw object, sha256 9569de726c9193c1b70f0414aee978a432b7124bcf187dfc4995ab533b565be3, 29744 bytes. The recorded link and ROM evidence is a function of that object, so it applies verbatim to the source that ships."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov006-dScMgRoulette_c/dScMgRoulette_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 40,
+    "functions_declared": 40,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS8dScene_c",
+        "_ZTI7dBase_c",
+        "_ZTI11dScMgBase_c",
+        "_ZTS11dScMgBase_c",
+        "_ZTI8dScene_c",
+        "_ZTI19dScMgSingle3DBase_c",
+        "_ZTS19dScMgSingle3DBase_c",
+        "_ZTI15dScMgRoulette_c",
+        "_ZTS15dScMgRoulette_c",
+        "_ZTV15dScMgRoulette_c"
+      ],
+      "dataExternalized": [
+        "_ZTI11dScMgBase_c",
+        "_ZTI15dScMgRoulette_c",
+        "_ZTI19dScMgSingle3DBase_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dScene_c",
+        "_ZTS11dScMgBase_c",
+        "_ZTS15dScMgRoulette_c",
+        "_ZTS19dScMgSingle3DBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dScene_c",
+        "_ZTV15dScMgRoulette_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov006-dScMgRoulette_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x0210788c",
+        "end": "0x0210a400",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x0210788c",
+          "end": "0x0210a400",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 40
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgRoulette_c's key function -- InitResources, the first DECLARED non-inline virtual once the destructor moved inline -- so mwcc emits the whole inheritance chain's typeinfo as vague linkage. The cartridge keeps its canonical copy at arm9:0x02086d70, outside this TU's only licensed range (.text 0x0210788c-0x0210a400), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70"
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgRoulette_c's key function -- InitResources, the first DECLARED non-inline virtual once the destructor moved inline -- so mwcc emits the whole inheritance chain's typeinfo as vague linkage. The cartridge keeps its canonical copy at arm9:0x02086e60, outside this TU's only licensed range (.text 0x0210788c-0x0210a400), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60"
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgRoulette_c's key function -- InitResources, the first DECLARED non-inline virtual once the destructor moved inline -- so mwcc emits the whole inheritance chain's typeinfo as vague linkage. The cartridge keeps its canonical copy at arm9:0x02086e54, outside this TU's only licensed range (.text 0x0210788c-0x0210a400), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54"
+    },
+    {
+      "symbol": "_ZTS8dScene_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgRoulette_c's key function -- InitResources, the first DECLARED non-inline virtual once the destructor moved inline -- so mwcc emits the whole inheritance chain's typeinfo as vague linkage. The cartridge keeps its canonical copy at arm9:0x020914b0, outside this TU's only licensed range (.text 0x0210788c-0x0210a400), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020914b0"
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgRoulette_c's key function -- InitResources, the first DECLARED non-inline virtual once the destructor moved inline -- so mwcc emits the whole inheritance chain's typeinfo as vague linkage. The cartridge keeps its canonical copy at arm9:0x02086e78, outside this TU's only licensed range (.text 0x0210788c-0x0210a400), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78"
+    },
+    {
+      "symbol": "_ZTI11dScMgBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgRoulette_c's key function -- InitResources, the first DECLARED non-inline virtual once the destructor moved inline -- so mwcc emits the whole inheritance chain's typeinfo as vague linkage. The cartridge keeps its canonical copy at ov004:0x020bbf6c, outside this TU's only licensed range (.text 0x0210788c-0x0210a400), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov004",
+      "canonical_address": "0x020bbf6c"
+    },
+    {
+      "symbol": "_ZTS11dScMgBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgRoulette_c's key function -- InitResources, the first DECLARED non-inline virtual once the destructor moved inline -- so mwcc emits the whole inheritance chain's typeinfo as vague linkage. The cartridge keeps its canonical copy at ov004:0x020bbf84, outside this TU's only licensed range (.text 0x0210788c-0x0210a400), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov004",
+      "canonical_address": "0x020bbf84"
+    },
+    {
+      "symbol": "_ZTI8dScene_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgRoulette_c's key function -- InitResources, the first DECLARED non-inline virtual once the destructor moved inline -- so mwcc emits the whole inheritance chain's typeinfo as vague linkage. The cartridge keeps its canonical copy at arm9:0x020914d4, outside this TU's only licensed range (.text 0x0210788c-0x0210a400), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020914d4"
+    },
+    {
+      "symbol": "_ZTI19dScMgSingle3DBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgRoulette_c's key function -- InitResources, the first DECLARED non-inline virtual once the destructor moved inline -- so mwcc emits the whole inheritance chain's typeinfo as vague linkage. The cartridge keeps its canonical copy at ov006:0x0213bc64, outside this TU's only licensed range (.text 0x0210788c-0x0210a400), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213bc64"
+    },
+    {
+      "symbol": "_ZTS19dScMgSingle3DBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgRoulette_c's key function -- InitResources, the first DECLARED non-inline virtual once the destructor moved inline -- so mwcc emits the whole inheritance chain's typeinfo as vague linkage. The cartridge keeps its canonical copy at ov006:0x0213bd00, outside this TU's only licensed range (.text 0x0210788c-0x0210a400), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213bd00"
+    },
+    {
+      "symbol": "_ZTI15dScMgRoulette_c",
+      "disposition": "deadstrip-data",
+      "reason": "This class's own typeinfo record, emitted here because this TU defines its key function (InitResources) -- which is the point: the emission is real, compiler-generated, and byte-compared against retail. The cartridge keeps its canonical copy at ov006:0x0213e300, outside this TU's only licensed range (.text 0x0210788c-0x0210a400), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213e300"
+    },
+    {
+      "symbol": "_ZTS15dScMgRoulette_c",
+      "disposition": "deadstrip-data",
+      "reason": "This class's own typeinfo name, emitted here because this TU defines its key function (InitResources) -- which is the point: the emission is real, compiler-generated, and byte-compared against retail. The cartridge keeps its canonical copy at ov006:0x0213e30c, outside this TU's only licensed range (.text 0x0210788c-0x0210a400), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213e30c"
+    },
+    {
+      "symbol": "_ZTV15dScMgRoulette_c",
+      "disposition": "deadstrip-data",
+      "reason": "This class's own vtable, emitted here because this TU defines its key function (InitResources) -- which is the point: the emission is real, compiler-generated, and byte-compared against retail. The cartridge keeps its canonical copy at ov006:0x0213e39c, outside this TU's only licensed range (.text 0x0210788c-0x0210a400), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it. EXTENT, from two directions. config/arm9/overlays/ov006/relocs.txt carries a relocated word at every address from 0x0213e39c through 0x0213e428 inclusive and nothing again until 0x0213e444, which is the typeinfo header word of _ZTV19dScMgSingle3DBase_c at 0x0213e448 -- so this table is 36 slots, and with the 8-byte header (offset-to-top, plus the 0x0213e398 word that relocates to _ZTI15dScMgRoulette_c at 0x0213e300) its STORAGE runs 0x0213e394..0x0213e42c, 0x98 bytes. mwcc emits a 0x98 section here, which is the same number from the compiler's side. Reading the extent from the next symbols.txt row instead (data_ov006_0213e42c) would have said 0x90 and been wrong low, which is the error notes/agents/roles/writer.md warns about. The _ZTV symbol address is the ADDRESS POINT, not the storage start.",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213e39c"
+    }
+  ],
+  "externalized_output": []
+}

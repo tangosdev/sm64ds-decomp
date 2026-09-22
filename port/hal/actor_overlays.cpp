@@ -71,26 +71,26 @@ extern PortPmf data_ov085_0212ff34[], data_ov085_0212ff3c[],
     data_ov085_0212ff5c[], data_ov085_0212ff64[], data_ov085_0212ff6c[],
     data_ov085_0212ff74[], data_ov085_0212ff7c[];
 
-void func_ov085_0212a904(void *); void func_ov085_0212aaa4(void *);
-void func_ov085_0212aaec(void *); void func_ov085_0212ac3c(void *);
-void func_ov085_0212ac4c(void *); void func_ov085_0212ad8c(void *);
-void func_ov085_0212ae08(void *); void func_ov085_0212b3fc(void *);
-void func_ov085_0212b444(void *); void func_ov085_0212b478(void *);
-void func_ov085_0212b4b4(void *); void func_ov085_0212b75c(void *);
-void func_ov085_0212b86c(void *); void func_ov085_0212b8a0(void *);
-void func_ov085_0212b8dc(void *); void func_ov085_0212bc14(void *);
+void _ZN7daMip_c17StateSaveTalkMainEv(void *); void _ZN7daMip_c17StateSaveTalkInitEv(void *);
+void _ZN7daMip_c13StateTalkMainEv(void *); void _ZN7daMip_c13StateTalkInitEv(void *);
+void _ZN7daMip_c17StateReleasedMainEv(void *); void _ZN7daMip_c17StateReleasedInitEv(void *);
+void _ZN7daMip_c15StateCaughtMainEv(void *); void _ZN7daMip_c15StateCaughtInitEv(void *);
+void _ZN7daMip_c13StateRestMainEv(void *); void _ZN7daMip_c13StateRestInitEv(void *);
+void _ZN7daMip_c13StateFleeMainEv(void *); void _ZN7daMip_c13StateFleeInitEv(void *);
+void _ZN7daMip_c16StateStartleMainEv(void *); void _ZN7daMip_c16StateStartleInitEv(void *);
+void _ZN7daMip_c13StateIdleMainEv(void *); void _ZN7daMip_c13StateIdleInitEv(void *);
 /* the RABBIT_KEY's four state bodies (gate 18, the key-grant wave) */
 void func_ov085_0212cd80(void *); void func_ov085_0212d038(void *);
 void func_ov085_0212d108(void *); void func_ov085_0212d24c(void *);
 /* TOAD's four (run link60, lane A1) */
-void func_ov085_021294f0(void *); void func_ov085_02129470(void *);
-void func_ov085_0212943c(void *); void func_ov085_021291ac(void *);
+void _ZN4Toad12St_Idle_InitEv(void *); void _ZN4Toad12St_Idle_MainEv(void *);
+void _ZN4Toad12St_Talk_InitEv(void *); void _ZN4Toad12St_Talk_MainEv(void *);
 /* PRINCESS_PEACH's ten (run rel0215 wave 3, lane w3-f), five enter/main pairs */
-void func_ov085_0212a3ec(void *); void func_ov085_0212a37c(void *);
-void func_ov085_0212a328(void *); void func_ov085_0212a220(void *);
-void func_ov085_0212a1d4(void *); void func_ov085_0212a19c(void *);
-void func_ov085_0212a150(void *); void func_ov085_0212a148(void *);
-void func_ov085_0212a0e8(void *); void func_ov085_0212a0b8(void *);
+void _ZN13PrincessPeach6State4Ev(void *); void _ZN13PrincessPeach10InitState3Ev(void *);
+void _ZN13PrincessPeach10InitState1Ev(void *); void _ZN13PrincessPeach6State3Ev(void *);
+void _ZN13PrincessPeach6State1Ev(void *); void _ZN13PrincessPeach10InitState4Ev(void *);
+void _ZN13PrincessPeach10InitState2Ev(void *); void _ZN13PrincessPeach6State2Ev(void *);
+void _ZN13PrincessPeach6State0Ev(void *); void _ZN13PrincessPeach10InitState0Ev(void *);
 
 /* LakituBro's twenty-two {function, delta} statics carry DS code addresses,
    and __sinit_ov085_0212fa40 copies them into his eleven State objects. Seat
@@ -266,6 +266,11 @@ void func_ov080_021269b8(void *); void func_ov080_02126120(void *);
 void func_ov080_02125fd0(void *); void func_ov080_0212677c(void *);
 void func_ov080_021265ec(void *); void func_ov080_02125f00(void *);
 void func_ov080_021264ec(void *);
+/* The twelfth body is the host transcription in
+   port/unmatched/Painting_StateRender_021261f4.cpp, not a src/ TU. It is
+   declared with the char* receiver its own definition uses rather than the
+   void* the nine above take, so the two spellings cannot drift. */
+void func_ov080_021261f4(char *);
 
 /* ov102: QUESTION_BLOCK (and the bob-omb, the koopa shell, the warp pipe and
    the rest of the level-furniture set other levels name). Its CODE has been
@@ -450,10 +455,10 @@ extern PortPmf2 data_ov100_02147e20[], data_ov100_02147e28[],
     data_ov100_02147e30[], data_ov100_02147e38[], data_ov100_02147e40[],
     data_ov100_02147e48[], data_ov100_02147e50[], data_ov100_02147e58[];
 
-void func_ov100_0214109c(void *); void func_ov100_0214117c(void *);
-void func_ov100_021412d8(void *); void func_ov100_02140e44(void *);
-void func_ov100_02141470(void *); void func_ov100_021415bc(void *);
-void func_ov100_02141800(void *); void func_ov100_02141848(void *);
+void _ZN9Butterfly6State6Ev(void *); void _ZN9Butterfly6State5Ev(void *);
+void _ZN9Butterfly6State4Ev(void *); void _ZN9Butterfly6State7Ev(void *);
+void _ZN9Butterfly6State3Ev(void *); void _ZN9Butterfly6State2Ev(void *);
+void _ZN9Butterfly6State1Ev(void *); void _ZN9Butterfly6State0Ev(void *);
 
 /* ---- gate 51: the ROLLING_IRON_BALL's five states -------------------------
    __sinit_ov100_021474e8 copies five {function, delta} statics from ov100
@@ -470,21 +475,58 @@ void func_ov100_021424c0(void *); void func_ov100_0214272c(void *);
 
 }  /* extern "C" */
 
+/* ---- RUN link100 LANE PMFSWEEP: BUTTERFLY'S EIGHT CELLS TAKE THEIR RECEIVER
+   IN ECX. ?Behavior@Butterfly@@UAEHXZ is a matched TU on the slice and it
+   makes the pointer-to-member call itself, inline, with nothing pushed. Read
+   off this build's own image at +0x2d:
+
+       mov  dword ptr [ebp-0x14], ebx
+       mov  eax, dword ptr [ebx+0x3e4]                   ; the state index
+       mov  ecx, dword ptr [_data_ov100_02148628+4+eax*8]  ; the adjustment
+       mov  eax, dword ptr [_data_ov100_02148628+eax*8]    ; the code word
+       add  ecx, ebx                                     ; this + delta
+       call eax                                          ; A REAL CALL
+
+   The seat used to write hal/faces_sync_gen.cpp's flat C face for each state,
+
+       __ZN9Butterfly6State5Ev:
+         push ebp / mov ebp,esp / mov ecx,[ebp+8] / pop ebp / jmp State5
+
+   which reads the receiver off the STACK. Nothing put one there. This is
+   5ae983797's correction at another class. Each thunk NAMES its matched face,
+   so trap T2's rule still holds. */
+static void __fastcall bf_state5_pmf(void *self, void *)
+{ _ZN9Butterfly6State5Ev(self); }
+static void __fastcall bf_state3_pmf(void *self, void *)
+{ _ZN9Butterfly6State3Ev(self); }
+static void __fastcall bf_state4_pmf(void *self, void *)
+{ _ZN9Butterfly6State4Ev(self); }
+static void __fastcall bf_state7_pmf(void *self, void *)
+{ _ZN9Butterfly6State7Ev(self); }
+static void __fastcall bf_state1_pmf(void *self, void *)
+{ _ZN9Butterfly6State1Ev(self); }
+static void __fastcall bf_state0_pmf(void *self, void *)
+{ _ZN9Butterfly6State0Ev(self); }
+static void __fastcall bf_state2_pmf(void *self, void *)
+{ _ZN9Butterfly6State2Ev(self); }
+static void __fastcall bf_state6_pmf(void *self, void *)
+{ _ZN9Butterfly6State6Ev(self); }
+
 static const struct { PortPmf2 *slot; unsigned rom; void (*host)(void *); }
 g_butterfly_states[] = {
-    {data_ov100_02147e20, 0x0214117c, func_ov100_0214117c},
-    {data_ov100_02147e28, 0x02141470, func_ov100_02141470},
-    {data_ov100_02147e30, 0x021412d8, func_ov100_021412d8},
-    {data_ov100_02147e38, 0x02140e44, func_ov100_02140e44},
-    {data_ov100_02147e40, 0x02141800, func_ov100_02141800},
-    {data_ov100_02147e48, 0x02141848, func_ov100_02141848},
-    {data_ov100_02147e50, 0x021415bc, func_ov100_021415bc},
-    {data_ov100_02147e58, 0x0214109c, func_ov100_0214109c},
+    {data_ov100_02147e20, 0x0214117c, (void (*)(void *))(void *)bf_state5_pmf},
+    {data_ov100_02147e28, 0x02141470, (void (*)(void *))(void *)bf_state3_pmf},
+    {data_ov100_02147e30, 0x021412d8, (void (*)(void *))(void *)bf_state4_pmf},
+    {data_ov100_02147e38, 0x02140e44, (void (*)(void *))(void *)bf_state7_pmf},
+    {data_ov100_02147e40, 0x02141800, (void (*)(void *))(void *)bf_state1_pmf},
+    {data_ov100_02147e48, 0x02141848, (void (*)(void *))(void *)bf_state0_pmf},
+    {data_ov100_02147e50, 0x021415bc, (void (*)(void *))(void *)bf_state2_pmf},
+    {data_ov100_02147e58, 0x0214109c, (void (*)(void *))(void *)bf_state6_pmf},
 };
 
 /* ---- gate 40: the STAR_DOOR's eight callback halves -----------------------
    __sinit_ov100_02147a70 builds five two-pair callback nodes
-   (data_ov100_02148974/84/94/54/64) out of eight {function, delta} statics at
+   (_ZN12daStarGate_c7ST_WAITE/84/94/54/64) out of eight {function, delta} statics at
    0x0214833c..0x0214836c, and Door::Behavior (the config's _ZN4Door* family,
    the STAR door) dispatches the second pair of whichever node its +0x110
    pointer holds. Those statics carry DS code addresses, so the host bodies are
@@ -498,10 +540,10 @@ struct PortPmfSD { unsigned fn; int delta; };
 extern PortPmfSD data_ov100_02148334[], data_ov100_0214833c[],
     data_ov100_02148344[], data_ov100_0214834c[], data_ov100_02148354[],
     data_ov100_0214835c[], data_ov100_02148364[], data_ov100_0214836c[];
-int func_ov100_02145948(void *, void *); int func_ov100_02145988(void *, void *);
-int func_ov100_02145ab4(void *); int func_ov100_02145b10(void *, void *);
-int func_ov100_02145b7c(int, void *); int func_ov100_02145b9c(void *, void *);
-int func_ov100_02145c2c(void *); int func_ov100_02145c58(void *, void *);
+int _ZN12daStarGate_c18St_StayClosed_MainEP6Player(void *, void *); int _ZN12daStarGate_c17St_OpenClose_MainEP6Player(void *, void *);
+int _ZN12daStarGate_c17St_OpenClose_InitEP6Player(void *); int _ZN12daStarGate_c17St_Unlocking_MainEP6Player(void *, void *);
+int _ZN12daStarGate_c17St_Unlocking_InitEP6Player(int, void *); int _ZN12daStarGate_c23St_TalkingToPlayer_MainEP6Player(void *, void *);
+int _ZN12daStarGate_c23St_TalkingToPlayer_InitEP6Player(void *); int _ZN12daStarGate_c12St_Wait_MainEP6Player(void *, void *);
 }
 
 /* Door::Behavior calls the seated pointer as `(base->*pmf)(res)` -- a
@@ -513,14 +555,14 @@ int func_ov100_02145c2c(void *); int func_ov100_02145c58(void *, void *);
    func body (self and arg both on the stack). The two funcs that take only
    (self) drop the arg. */
 // PORT_HOST_ABI: mwcc pointer-to-member dispatch adapted to the port's __fastcall thunk ABI.
-static void __fastcall sd_cb_02145948(void *self, void *, void *arg) { func_ov100_02145948(self, arg); }
-static void __fastcall sd_cb_02145988(void *self, void *, void *arg) { func_ov100_02145988(self, arg); }
-static void __fastcall sd_cb_02145b9c(void *self, void *, void *arg) { func_ov100_02145b9c(self, arg); }
-static void __fastcall sd_cb_02145b7c(void *self, void *, void *arg) { func_ov100_02145b7c(0, arg); }
-static void __fastcall sd_cb_02145ab4(void *self, void *, void *)    { func_ov100_02145ab4(self); }
-static void __fastcall sd_cb_02145b10(void *self, void *, void *arg) { func_ov100_02145b10(self, arg); }
-static void __fastcall sd_cb_02145c2c(void *self, void *, void *)    { func_ov100_02145c2c(self); }
-static void __fastcall sd_cb_02145c58(void *self, void *, void *arg) { func_ov100_02145c58(self, arg); }
+static void __fastcall sd_cb_02145948(void *self, void *, void *arg) { _ZN12daStarGate_c18St_StayClosed_MainEP6Player(self, arg); }
+static void __fastcall sd_cb_02145988(void *self, void *, void *arg) { _ZN12daStarGate_c17St_OpenClose_MainEP6Player(self, arg); }
+static void __fastcall sd_cb_02145b9c(void *self, void *, void *arg) { _ZN12daStarGate_c23St_TalkingToPlayer_MainEP6Player(self, arg); }
+static void __fastcall sd_cb_02145b7c(void *self, void *, void *arg) { _ZN12daStarGate_c17St_Unlocking_InitEP6Player(0, arg); }
+static void __fastcall sd_cb_02145ab4(void *self, void *, void *)    { _ZN12daStarGate_c17St_OpenClose_InitEP6Player(self); }
+static void __fastcall sd_cb_02145b10(void *self, void *, void *arg) { _ZN12daStarGate_c17St_Unlocking_MainEP6Player(self, arg); }
+static void __fastcall sd_cb_02145c2c(void *self, void *, void *)    { _ZN12daStarGate_c23St_TalkingToPlayer_InitEP6Player(self); }
+static void __fastcall sd_cb_02145c58(void *self, void *, void *arg) { _ZN12daStarGate_c12St_Wait_MainEP6Player(self, arg); }
 
 static const struct { PortPmfSD *slot; unsigned rom; void *host; }
 g_star_door_callbacks[] = {
@@ -643,28 +685,98 @@ static void port_iron_ball_states_seat(void)
 /* ov085 0x0212b8dc IS NOW HOSTED: the Main half of state 0x021306cc -- the
    state Rabbit::InitResources itself enters on its own last line, so it is what
    an ACTIVE rabbit runs every frame. It byte-matched at mwccarm 2004/b56
-   (linkcheck VERIFIED, 0 diffs) and landed as src/func_ov085_0212b8dc.cpp
+   (linkcheck VERIFIED, 0 diffs) and landed as src/actors/daMip_c.cpp
    (public main 3bcbc9aea / #1361). The last hole in the rabbit state table is
    closed; the FATAL-refusal stub it used to carry is gone. */
 
+/* ---- RUN link100 LANE PMFSWEEP3: THE RABBIT'S SIXTEEN CELLS TAKE THEIR
+   RECEIVER IN ECX. daMip_c dispatches its own state record, and every one of
+   its dispatch sites is a __thiscall member that pushes NOTHING. Read off this
+   build's own image, the transition and the call in one piece:
+
+       ?Behavior@daMip_c@@UAEHXZ      +0x2f6 mov  [edi+0x364], 0x18a6b2c
+                                      +0x300 mov  eax, [0x18a6b2c]   the code
+                                      +0x309 mov  ecx, edi           this
+                                      +0x30b add  ecx, [0x18a6b30]   + delta
+                                      +0x311 call eax
+       ?InitResources@daMip_c@@UAEHXZ +0x373 mov  [esi+0x364], 0x18a6b4c
+                                      +0x386 mov  edx, [0x18a6b4c]
+                                      +0x390 mov  ecx, [0x18a6b50] / add ecx,esi
+                                      +0x398 call edx
+
+   and the same three-move shape again in ?Render, ?StateCaughtInit,
+   ?StateCaughtMain, ?StateFleeInit, ?StateFleeMain, ?StateReleasedMain,
+   ?StateRestInit, ?StateRestMain, ?StateSaveTalkMain, ?StateStartleInit,
+   ?StateStartleMain and ?StateTalkMain: sixteen sites in seven bodies, all
+   QAEHXZ/UAEHXZ members, not one of them pushing an argument. The records
+   those sites read are the RUNTIME ones: __sinit_ov085_0212f5ec copies the
+   seat's source records (_data_ov085_0213003c.. at 018a64bc) into
+   018a6aec..018a6b68 before any of them runs, so what the seat writes is what
+   those sites call. No reader calls a rabbit cell through a pushing __cdecl
+   call: every other reference to that range is `push <record>` (the record
+   pointer as an ARGUMENT to a helper) or a `cmp` against it.
+
+   The seat used to write hal/faces_sync_gen.cpp's flat C face for fifteen of
+   the sixteen and Ov085_Rabbit_b8dc.cpp's host copy for StateIdleMain, and a
+   flat face is
+
+       __ZN7daMip_c13StateFleeMainEv:
+         push ebp / mov ebp,esp / mov ecx,[ebp+8] / pop ebp / jmp StateFleeMain
+
+   which reads the receiver off the STACK, where nothing put one. This is
+   5ae983797's correction at a fifteenth class, the Butterfly case two hundred
+   lines up. Each thunk NAMES its face, so trap T2's rule still holds. */
+static void __fastcall rb_0212b4b4(void *self, void *)
+{ _ZN7daMip_c13StateFleeMainEv(self); }
+static void __fastcall rb_0212b8dc(void *self, void *)
+{ _ZN7daMip_c13StateIdleMainEv(self); }
+static void __fastcall rb_0212aaec(void *self, void *)
+{ _ZN7daMip_c13StateTalkMainEv(self); }
+static void __fastcall rb_0212ad8c(void *self, void *)
+{ _ZN7daMip_c17StateReleasedInitEv(self); }
+static void __fastcall rb_0212b478(void *self, void *)
+{ _ZN7daMip_c13StateRestInitEv(self); }
+static void __fastcall rb_0212b444(void *self, void *)
+{ _ZN7daMip_c13StateRestMainEv(self); }
+static void __fastcall rb_0212ac3c(void *self, void *)
+{ _ZN7daMip_c13StateTalkInitEv(self); }
+static void __fastcall rb_0212bc14(void *self, void *)
+{ _ZN7daMip_c13StateIdleInitEv(self); }
+static void __fastcall rb_0212b3fc(void *self, void *)
+{ _ZN7daMip_c15StateCaughtInitEv(self); }
+static void __fastcall rb_0212b8a0(void *self, void *)
+{ _ZN7daMip_c16StateStartleInitEv(self); }
+static void __fastcall rb_0212ae08(void *self, void *)
+{ _ZN7daMip_c15StateCaughtMainEv(self); }
+static void __fastcall rb_0212b86c(void *self, void *)
+{ _ZN7daMip_c16StateStartleMainEv(self); }
+static void __fastcall rb_0212ac4c(void *self, void *)
+{ _ZN7daMip_c17StateReleasedMainEv(self); }
+static void __fastcall rb_0212a904(void *self, void *)
+{ _ZN7daMip_c17StateSaveTalkMainEv(self); }
+static void __fastcall rb_0212aaa4(void *self, void *)
+{ _ZN7daMip_c17StateSaveTalkInitEv(self); }
+static void __fastcall rb_0212b75c(void *self, void *)
+{ _ZN7daMip_c13StateFleeInitEv(self); }
+
 static const struct { PortPmf *slot; unsigned rom; void (*host)(void *); }
 g_rabbit_states[] = {
-    {data_ov085_0213003c, 0x0212b4b4, func_ov085_0212b4b4},
-    {data_ov085_02130044, 0x0212b8dc, func_ov085_0212b8dc},
-    {data_ov085_0213004c, 0x0212aaec, func_ov085_0212aaec},
-    {data_ov085_02130054, 0x0212ad8c, func_ov085_0212ad8c},
-    {data_ov085_0213005c, 0x0212b478, func_ov085_0212b478},
-    {data_ov085_02130064, 0x0212b444, func_ov085_0212b444},
-    {data_ov085_0213006c, 0x0212ac3c, func_ov085_0212ac3c},
-    {data_ov085_02130074, 0x0212bc14, func_ov085_0212bc14},
-    {data_ov085_0213007c, 0x0212b3fc, func_ov085_0212b3fc},
-    {data_ov085_02130084, 0x0212b8a0, func_ov085_0212b8a0},
-    {data_ov085_0213008c, 0x0212ae08, func_ov085_0212ae08},
-    {data_ov085_02130094, 0x0212b86c, func_ov085_0212b86c},
-    {data_ov085_0213009c, 0x0212ac4c, func_ov085_0212ac4c},
-    {data_ov085_021300a4, 0x0212a904, func_ov085_0212a904},
-    {data_ov085_021300ac, 0x0212aaa4, func_ov085_0212aaa4},
-    {data_ov085_021300b4, 0x0212b75c, func_ov085_0212b75c},
+    {data_ov085_0213003c, 0x0212b4b4, (void (*)(void *))(void *)rb_0212b4b4},
+    {data_ov085_02130044, 0x0212b8dc, (void (*)(void *))(void *)rb_0212b8dc},
+    {data_ov085_0213004c, 0x0212aaec, (void (*)(void *))(void *)rb_0212aaec},
+    {data_ov085_02130054, 0x0212ad8c, (void (*)(void *))(void *)rb_0212ad8c},
+    {data_ov085_0213005c, 0x0212b478, (void (*)(void *))(void *)rb_0212b478},
+    {data_ov085_02130064, 0x0212b444, (void (*)(void *))(void *)rb_0212b444},
+    {data_ov085_0213006c, 0x0212ac3c, (void (*)(void *))(void *)rb_0212ac3c},
+    {data_ov085_02130074, 0x0212bc14, (void (*)(void *))(void *)rb_0212bc14},
+    {data_ov085_0213007c, 0x0212b3fc, (void (*)(void *))(void *)rb_0212b3fc},
+    {data_ov085_02130084, 0x0212b8a0, (void (*)(void *))(void *)rb_0212b8a0},
+    {data_ov085_0213008c, 0x0212ae08, (void (*)(void *))(void *)rb_0212ae08},
+    {data_ov085_02130094, 0x0212b86c, (void (*)(void *))(void *)rb_0212b86c},
+    {data_ov085_0213009c, 0x0212ac4c, (void (*)(void *))(void *)rb_0212ac4c},
+    {data_ov085_021300a4, 0x0212a904, (void (*)(void *))(void *)rb_0212a904},
+    {data_ov085_021300ac, 0x0212aaa4, (void (*)(void *))(void *)rb_0212aaa4},
+    {data_ov085_021300b4, 0x0212b75c, (void (*)(void *))(void *)rb_0212b75c},
 };
 
 static const struct { PortPmf3 *slot; unsigned rom; void (*host)(void *); }
@@ -805,43 +917,168 @@ static void __fastcall pmfb7_ov078_021250f8(void *self, void *dead_edx)
     ((void (*)(void *))(void *)func_ov078_021250f8)(self);
 }
 
+
+/* ---- RUN link100 LANE PMFSWEEP: THE ENTER RECORDS ARE FACES TOO ----------
+ * The paragraph above ruled the enter halves safe as plain cdecl bodies
+ * because "they are reached by the class's state-change helper, which MSVC
+ * compiles as a one-call forwarder ending in `jmp`, so the caller's own frame
+ * is reused". That is the sentence 5ae983797, 27a24ff5a, 651b5e853, f9936e798,
+ * 45ce69707 and 00732a5ab each had to retract one class over, and it is wrong
+ * here for the same reason: the helper is not the only way in. /O2 INLINES it.
+ * Five of this class's own matched bodies carry the state change with the
+ * record constant-folded, and the call that comes out pushes nothing. Read off
+ * this build's image, four sites identical apart from the register:
+ *
+ *   _func_ov078_02123804 +0x47                _func_ov078_02123c20 +0x4b
+ *   _func_ov078_02123d3c +0x4e                _func_ov078_021250f8 +0x4a
+ *   _func_ov078_02125790 +0x4e
+ *     mov  edx, dword ptr [_data_ov078_02126ffc]      ; the ENTER code word
+ *     test edx, edx
+ *     je   <skip>
+ *     mov  ecx, dword ptr [_data_ov078_02126ffc+4]    ; the adjustment word
+ *     lea  ecx, [ecx+esi]                             ; this + delta
+ *     call edx                                        ; A REAL CALL
+ *
+ * and the seat's own row for record 02126ffc is data_ov078_02126d08, which
+ * held func_ov078_021243c0, a raw cdecl body reading [ebp+8]. It read the
+ * caller's spill as its receiver.
+ *
+ * _KingBobOmb_SetState is the helper, and on this build it is
+ *   mov ecx,[ecx+4] / add ecx,eax / pop ebp / jmp edx
+ * so ECX carries this + delta on that path as well: a __fastcall thunk is
+ * right after a `call` and right after a `jmp`, and the stack is right only
+ * after the jmp. So all eighteen enter halves get the thunk, matching the
+ * eighteen per-frame halves PMFB7 already converted. Each thunk NAMES its
+ * matched body, so trap T2's rule still holds.
+ */
+static void __fastcall pmfsw_ov078_02123a3c(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the ENTER half of its record */
+    ((void (*)(void *))(void *)func_ov078_02123a3c)(self);
+}
+static void __fastcall pmfsw_ov078_02123bc4(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the ENTER half of its record */
+    ((void (*)(void *))(void *)func_ov078_02123bc4)(self);
+}
+static void __fastcall pmfsw_ov078_02123cf0(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the ENTER half of its record */
+    ((void (*)(void *))(void *)func_ov078_02123cf0)(self);
+}
+static void __fastcall pmfsw_ov078_02123eb8(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the ENTER half of its record */
+    ((void (*)(void *))(void *)func_ov078_02123eb8)(self);
+}
+static void __fastcall pmfsw_ov078_02123fb4(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the ENTER half of its record */
+    ((void (*)(void *))(void *)func_ov078_02123fb4)(self);
+}
+static void __fastcall pmfsw_ov078_02124060(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the ENTER half of its record */
+    ((void (*)(void *))(void *)func_ov078_02124060)(self);
+}
+static void __fastcall pmfsw_ov078_021243c0(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the ENTER half of its record */
+    ((void (*)(void *))(void *)func_ov078_021243c0)(self);
+}
+static void __fastcall pmfsw_ov078_021244d0(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the ENTER half of its record */
+    ((void (*)(void *))(void *)func_ov078_021244d0)(self);
+}
+static void __fastcall pmfsw_ov078_02124778(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the ENTER half of its record */
+    ((void (*)(void *))(void *)func_ov078_02124778)(self);
+}
+static void __fastcall pmfsw_ov078_02124b40(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the ENTER half of its record */
+    ((void (*)(void *))(void *)func_ov078_02124b40)(self);
+}
+static void __fastcall pmfsw_ov078_02124c94(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the ENTER half of its record */
+    ((void (*)(void *))(void *)func_ov078_02124c94)(self);
+}
+static void __fastcall pmfsw_ov078_02124e9c(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the ENTER half of its record */
+    ((void (*)(void *))(void *)func_ov078_02124e9c)(self);
+}
+static void __fastcall pmfsw_ov078_021250d0(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the ENTER half of its record */
+    ((void (*)(void *))(void *)func_ov078_021250d0)(self);
+}
+static void __fastcall pmfsw_ov078_02125350(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the ENTER half of its record */
+    ((void (*)(void *))(void *)func_ov078_02125350)(self);
+}
+static void __fastcall pmfsw_ov078_02125734(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the ENTER half of its record */
+    ((void (*)(void *))(void *)func_ov078_02125734)(self);
+}
+static void __fastcall pmfsw_ov078_021258e4(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the ENTER half of its record */
+    ((void (*)(void *))(void *)func_ov078_021258e4)(self);
+}
+static void __fastcall pmfsw_ov078_021259e4(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the ENTER half of its record */
+    ((void (*)(void *))(void *)func_ov078_021259e4)(self);
+}
+static void __fastcall pmfsw_ov078_02125bc8(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the ENTER half of its record */
+    ((void (*)(void *))(void *)func_ov078_02125bc8)(self);
+}
+
 static const struct { PortPmf4 *slot; unsigned rom; void (*host)(void *); }
 g_king_states[] = {
-    {data_ov078_02126d78, 0x02125bc8, func_ov078_02125bc8},   /* 0212710c */
+    {data_ov078_02126d78, 0x02125bc8, (void (*)(void *))(void *)pmfsw_ov078_02125bc8},   /* 0212710c */
     {data_ov078_02126d40, 0x021259ec, (void (*)(void *))(void *)pmfb7_ov078_021259ec},
-    {data_ov078_02126cf8, 0x021259e4, func_ov078_021259e4},   /* 0212700c */
+    {data_ov078_02126cf8, 0x021259e4, (void (*)(void *))(void *)pmfsw_ov078_021259e4},   /* 0212700c */
     {data_ov078_02126db8, 0x02125950, (void (*)(void *))(void *)pmfb7_ov078_02125950},
-    {data_ov078_02126ce8, 0x021258e4, func_ov078_021258e4},   /* 0212701c */
+    {data_ov078_02126ce8, 0x021258e4, (void (*)(void *))(void *)pmfsw_ov078_021258e4},   /* 0212701c */
     {data_ov078_02126ce0, 0x02125790, (void (*)(void *))(void *)pmfb7_ov078_02125790},
-    {data_ov078_02126d00, 0x02125734, func_ov078_02125734},   /* 0212703c */
+    {data_ov078_02126d00, 0x02125734, (void (*)(void *))(void *)pmfsw_ov078_02125734},   /* 0212703c */
     {data_ov078_02126dc8, 0x02125448, (void (*)(void *))(void *)pmfb7_ov078_02125448},
-    {data_ov078_02126df0, 0x02125350, func_ov078_02125350},   /* 0212704c */
+    {data_ov078_02126df0, 0x02125350, (void (*)(void *))(void *)pmfsw_ov078_02125350},   /* 0212704c */
     {data_ov078_02126de8, 0x021250f8, (void (*)(void *))(void *)pmfb7_ov078_021250f8},
-    {data_ov078_02126dd8, 0x021250d0, func_ov078_021250d0},   /* 0212707c */
+    {data_ov078_02126dd8, 0x021250d0, (void (*)(void *))(void *)pmfsw_ov078_021250d0},   /* 0212707c */
     {data_ov078_02126dd0, 0x02124f28, (void (*)(void *))(void *)pmfb7_ov078_02124f28},
-    {data_ov078_02126d28, 0x02124e9c, func_ov078_02124e9c},   /* 0212708c */
+    {data_ov078_02126d28, 0x02124e9c, (void (*)(void *))(void *)pmfsw_ov078_02124e9c},   /* 0212708c */
     {data_ov078_02126d38, 0x02124cf4, (void (*)(void *))(void *)pmfb7_ov078_02124cf4},
-    {data_ov078_02126d98, 0x02124c94, func_ov078_02124c94},   /* 021270ac */
+    {data_ov078_02126d98, 0x02124c94, (void (*)(void *))(void *)pmfsw_ov078_02124c94},   /* 021270ac */
     {data_ov078_02126d50, 0x02124bc4, (void (*)(void *))(void *)pmfb7_ov078_02124bc4},
-    {data_ov078_02126d60, 0x02124b40, func_ov078_02124b40},   /* 021270bc */
+    {data_ov078_02126d60, 0x02124b40, (void (*)(void *))(void *)pmfsw_ov078_02124b40},   /* 021270bc */
     {data_ov078_02126d20, 0x021247bc, (void (*)(void *))(void *)pmfb7_ov078_021247bc},
-    {data_ov078_02126d70, 0x02124778, func_ov078_02124778},   /* 021270dc */
+    {data_ov078_02126d70, 0x02124778, (void (*)(void *))(void *)pmfsw_ov078_02124778},   /* 021270dc */
     {data_ov078_02126d88, 0x02124520, (void (*)(void *))(void *)pmfb7_ov078_02124520},
-    {data_ov078_02126d30, 0x021244d0, func_ov078_021244d0},   /* 021270ec */
+    {data_ov078_02126d30, 0x021244d0, (void (*)(void *))(void *)pmfsw_ov078_021244d0},   /* 021270ec */
     {data_ov078_02126da0, 0x02124470, (void (*)(void *))(void *)pmfb7_ov078_02124470},
-    {data_ov078_02126d08, 0x021243c0, func_ov078_021243c0},   /* 02126ffc */
+    {data_ov078_02126d08, 0x021243c0, (void (*)(void *))(void *)pmfsw_ov078_021243c0},   /* 02126ffc */
     {data_ov078_02126d80, 0x021240a0, (void (*)(void *))(void *)pmfb7_ov078_021240a0},
-    {data_ov078_02126d10, 0x02124060, func_ov078_02124060},   /* 0212702c */
+    {data_ov078_02126d10, 0x02124060, (void (*)(void *))(void *)pmfsw_ov078_02124060},   /* 0212702c */
     {data_ov078_02126cf0, 0x02124000, (void (*)(void *))(void *)pmfb7_ov078_02124000},
-    {data_ov078_02126df8, 0x02123fb4, func_ov078_02123fb4},   /* 0212706c */
+    {data_ov078_02126df8, 0x02123fb4, (void (*)(void *))(void *)pmfsw_ov078_02123fb4},   /* 0212706c */
     {data_ov078_02126de0, 0x02123f1c, (void (*)(void *))(void *)pmfb7_ov078_02123f1c},
-    {data_ov078_02126dc0, 0x02123eb8, func_ov078_02123eb8},   /* 0212709c */
+    {data_ov078_02126dc0, 0x02123eb8, (void (*)(void *))(void *)pmfsw_ov078_02123eb8},   /* 0212709c */
     {data_ov078_02126db0, 0x02123d3c, (void (*)(void *))(void *)pmfb7_ov078_02123d3c},
-    {data_ov078_02126d18, 0x02123cf0, func_ov078_02123cf0},   /* 021270cc */
+    {data_ov078_02126d18, 0x02123cf0, (void (*)(void *))(void *)pmfsw_ov078_02123cf0},   /* 021270cc */
     {data_ov078_02126d48, 0x02123c20, (void (*)(void *))(void *)pmfb7_ov078_02123c20},
-    {data_ov078_02126d90, 0x02123bc4, func_ov078_02123bc4},   /* 021270fc */
+    {data_ov078_02126d90, 0x02123bc4, (void (*)(void *))(void *)pmfsw_ov078_02123bc4},   /* 021270fc */
     {data_ov078_02126da8, 0x02123aa0, (void (*)(void *))(void *)pmfb7_ov078_02123aa0},
-    {data_ov078_02126d68, 0x02123a3c, func_ov078_02123a3c},   /* 0212705c */
+    {data_ov078_02126d68, 0x02123a3c, (void (*)(void *))(void *)pmfsw_ov078_02123a3c},   /* 0212705c */
     {data_ov078_02126d58, 0x021238ac, (void (*)(void *))(void *)pmfb7_ov078_021238ac},
 };
 
@@ -909,15 +1146,62 @@ static void port_rabbit_key_states_seat(void)
 /* TOAD's four pairs (run link60, lane A1), the same seat and the same reason:
    __sinit_ov085_0212f2a8 copies these into the two records of
    data_ov085_0212fe88, and what the mount holds is four DS code addresses.
-   The dispatchers that read them back are host copies for the gate-16 reason
-   (port/unmatched/Ov085_Toad_StateSeat.cpp); this is what makes what they read
-   a host address. */
-static const struct { PortPmf *slot; unsigned rom; void (*host)(void *); }
+
+   THE RECEIVER RIDES IN ECX ON THIS TABLE AND ON NO OTHER ONE HERE, which is
+   what run link100 lane LEVELBOOT found under levels 2 and 5. The sentence this
+   paragraph replaces said the dispatchers were host copies in
+   port/unmatched/Ov085_Toad_StateSeat.cpp. That file is gone: run link100 lane
+   PMFB1 retired it and put the ROM's own matched TUs on the link line
+   (src/_ZN4Toad8SetStateEi.cpp and src/_ZN4Toad8RunStateEv.cpp,
+   port/slice_pmfc.txt). Those two are the only rows in that slice of THIRTEEN
+   that are C++ MEMBERS. The other eleven are free functions --
+   `func_ovNNN_XXXXXXXX(C *c, int i)`, cdecl, receiver at [esp+4] -- and they
+   tail-jump, so a cdecl `void (*)(void *)` body reads the receiver out of the
+   caller's own frame and everything lines up. A member does not work that way:
+
+       ?SetState@Toad@@QAEXH@Z            ?RunState@Toad@@QAEXXZ
+         mov  edx, ecx                      mov  edx, ecx
+         ...                                ...
+         mov  eax, [table + i*20 + 8]       mov  eax, [table + i*20 + 8]
+         add  ecx, edx        ; this        add  ecx, edx        ; this
+         call eax                           jmp  eax
+
+   MSVC's pointer-to-member call is __thiscall: the receiver is in ECX and
+   NOTHING is pushed. A cdecl `void (*)(void *)` seated there reads [esp+4],
+   which on the call form is the return address's neighbour and on the jump form
+   is whatever the caller happened to leave there. Measured on level 2: the WAIT
+   enter ran with `this` = 0x001af0b4, a STACK address, and
+   Toad::St_Idle_Init's ModelAnim::SetAnim wrote three words over its own
+   caller's saved ebp and return address. func_020433b8 then returned to 0 and
+   the level died before its first frame. Level 1 has no Toad and never saw it.
+
+   So the four host words are __fastcall(void *, void *) thunks, not the bare
+   faces. __fastcall takes its first argument in ECX, its second in EDX and
+   cleans nothing off the stack, which is byte-for-byte what MSVC emits for a
+   member with no arguments -- the same shape hal/actor_classes*.cpp use for
+   every vtable slot. EDX is dead here: a member call leaves it undefined and
+   the thunks never read it.
+
+   NOT the arity hazard port/fader_boot_map.txt section 9 records. That one was
+   a __fastcall stub under a call site that PUSHES two arguments, so eight bytes
+   leaked. A pointer-to-member call with no arguments pushes nothing, so there
+   is nothing to leak and nothing to clean. */
+static void __fastcall toad_idle_init_pmf(void *self, void *)
+{ _ZN4Toad12St_Idle_InitEv(self); }
+static void __fastcall toad_idle_main_pmf(void *self, void *)
+{ _ZN4Toad12St_Idle_MainEv(self); }
+static void __fastcall toad_talk_init_pmf(void *self, void *)
+{ _ZN4Toad12St_Talk_InitEv(self); }
+static void __fastcall toad_talk_main_pmf(void *self, void *)
+{ _ZN4Toad12St_Talk_MainEv(self); }
+
+static const struct { PortPmf *slot; unsigned rom;
+                      void (__fastcall *host)(void *, void *); }
 g_toad_states[] = {
-    {data_ov085_0212fe40, 0x021294f0, func_ov085_021294f0},  /* WAIT enter */
-    {data_ov085_0212fe48, 0x02129470, func_ov085_02129470},  /* WAIT main  */
-    {data_ov085_0212fe30, 0x0212943c, func_ov085_0212943c},  /* TALK enter */
-    {data_ov085_0212fe38, 0x021291ac, func_ov085_021291ac},  /* TALK main  */
+    {data_ov085_0212fe40, 0x021294f0, toad_idle_init_pmf},  /* WAIT enter */
+    {data_ov085_0212fe48, 0x02129470, toad_idle_main_pmf},  /* WAIT main  */
+    {data_ov085_0212fe30, 0x0212943c, toad_talk_init_pmf},  /* TALK enter */
+    {data_ov085_0212fe38, 0x021291ac, toad_talk_main_pmf},  /* TALK main  */
 };
 
 static void port_toad_states_seat(void)
@@ -954,18 +1238,66 @@ static void port_toad_states_seat(void)
    THESE TEN PAIRS ARE ALSO WHAT ENDS TOAD'S VTABLE AT 31. The gate-205 header
    adjudicated 0x0212ff34 onward as a pointer-to-member SOURCE table from its
    shape; this sinit names its owner. */
+/* ---- RUN link100 LANE PMFSWEEP: THE RECEIVER ARRIVES IN ECX AT BOTH OF THIS
+   CLASS'S DISPATCH SITES, so the ten seated words are __fastcall thunks and
+   not the flat C faces themselves. Read off this build's own image:
+
+     ?CallStateInit@PrincessPeach@@QAEXXZ      +0x0f
+       mov eax,ecx / mov edx,[eax+0x350] / mov ecx,[edx+4] / add ecx,eax
+       mov eax,[edx] / jmp eax
+     ?CallStateBehavior@PrincessPeach@@QAEXXZ  +0x10
+       mov eax,ecx / mov edx,[eax+0x350] / mov ecx,[edx+0xc] / add ecx,eax
+       mov eax,[edx+8] / jmp eax
+
+   Both are __thiscall members of PrincessPeach taking NO argument, so at the
+   jmp there is nothing above the return address but the caller's own frame.
+   What the seat used to write into the cells is the flat C face
+   hal/faces_sync_gen.cpp emits for each method,
+
+       __ZN13PrincessPeach6State4Ev:
+         push ebp / mov ebp,esp / mov ecx,[ebp+8] / pop ebp / jmp State4
+
+   which reads the receiver off the STACK and therefore took whatever the
+   caller of CallStateInit had last spilled. SnowmanHead's four cells in
+   00732a5ab are these two dispatchers at the same two offsets one overlay
+   over; this is 5ae983797's correction at another class, the one 27a24ff5a,
+   651b5e853, f9936e798, 45ce69707 and 00732a5ab each had to make one class
+   over. MSVC puts this + delta in ECX before it transfers control whichever
+   way it transfers, so the thunk is right on the tail-jump path too. Each
+   thunk NAMES its matched face, so trap T2's rule still holds. */
+static void __fastcall pp_state4_pmf(void *self, void *)
+{ _ZN13PrincessPeach6State4Ev(self); }
+static void __fastcall pp_initstate3_pmf(void *self, void *)
+{ _ZN13PrincessPeach10InitState3Ev(self); }
+static void __fastcall pp_initstate1_pmf(void *self, void *)
+{ _ZN13PrincessPeach10InitState1Ev(self); }
+static void __fastcall pp_state3_pmf(void *self, void *)
+{ _ZN13PrincessPeach6State3Ev(self); }
+static void __fastcall pp_state1_pmf(void *self, void *)
+{ _ZN13PrincessPeach6State1Ev(self); }
+static void __fastcall pp_initstate4_pmf(void *self, void *)
+{ _ZN13PrincessPeach10InitState4Ev(self); }
+static void __fastcall pp_initstate2_pmf(void *self, void *)
+{ _ZN13PrincessPeach10InitState2Ev(self); }
+static void __fastcall pp_state2_pmf(void *self, void *)
+{ _ZN13PrincessPeach6State2Ev(self); }
+static void __fastcall pp_state0_pmf(void *self, void *)
+{ _ZN13PrincessPeach6State0Ev(self); }
+static void __fastcall pp_initstate0_pmf(void *self, void *)
+{ _ZN13PrincessPeach10InitState0Ev(self); }
+
 static const struct { PortPmf *slot; unsigned rom; void (*host)(void *); }
 g_princess_peach_states[] = {
-    {data_ov085_0212ff7c, 0x0212a3ec, func_ov085_0212a3ec},  /* 0 enter */
-    {data_ov085_0212ff64, 0x0212a37c, func_ov085_0212a37c},  /* 0 main  */
-    {data_ov085_0212ff44, 0x0212a328, func_ov085_0212a328},  /* 1 enter */
-    {data_ov085_0212ff6c, 0x0212a220, func_ov085_0212a220},  /* 1 main  */
-    {data_ov085_0212ff4c, 0x0212a1d4, func_ov085_0212a1d4},  /* 2 enter */
-    {data_ov085_0212ff74, 0x0212a19c, func_ov085_0212a19c},  /* 2 main  */
-    {data_ov085_0212ff54, 0x0212a150, func_ov085_0212a150},  /* 3 enter */
-    {data_ov085_0212ff5c, 0x0212a148, func_ov085_0212a148},  /* 3 main  */
-    {data_ov085_0212ff3c, 0x0212a0e8, func_ov085_0212a0e8},  /* 4 enter */
-    {data_ov085_0212ff34, 0x0212a0b8, func_ov085_0212a0b8},  /* 4 main  */
+    {data_ov085_0212ff7c, 0x0212a3ec, (void (*)(void *))(void *)pp_state4_pmf},  /* 0 enter */
+    {data_ov085_0212ff64, 0x0212a37c, (void (*)(void *))(void *)pp_initstate3_pmf},  /* 0 main  */
+    {data_ov085_0212ff44, 0x0212a328, (void (*)(void *))(void *)pp_initstate1_pmf},  /* 1 enter */
+    {data_ov085_0212ff6c, 0x0212a220, (void (*)(void *))(void *)pp_state3_pmf},  /* 1 main  */
+    {data_ov085_0212ff4c, 0x0212a1d4, (void (*)(void *))(void *)pp_state1_pmf},  /* 2 enter */
+    {data_ov085_0212ff74, 0x0212a19c, (void (*)(void *))(void *)pp_initstate4_pmf},  /* 2 main  */
+    {data_ov085_0212ff54, 0x0212a150, (void (*)(void *))(void *)pp_initstate2_pmf},  /* 3 enter */
+    {data_ov085_0212ff5c, 0x0212a148, (void (*)(void *))(void *)pp_state2_pmf},  /* 3 main  */
+    {data_ov085_0212ff3c, 0x0212a0e8, (void (*)(void *))(void *)pp_state0_pmf},  /* 4 enter */
+    {data_ov085_0212ff34, 0x0212a0b8, (void (*)(void *))(void *)pp_initstate0_pmf},  /* 4 main  */
 };
 
 static void port_princess_peach_states_seat(void)
@@ -985,19 +1317,55 @@ static void port_princess_peach_states_seat(void)
     }
 }
 
-/* ov080 0x021261f4 IS NOT HOSTED, and it is the one hole in the painting. It
-   is state record index 5's function -- the Render half a painting at spawn
-   flag mi=3 would reach (Render reads +0x10 off the object's +0x1a4 dispatch
+/* ov080 0x021261f4 WAS THE ONE HOLE IN THE PAINTING, and it is filled.
+   HISTORY, kept because it is the measurement that named the hole: this is
+   state record index 5's function -- the Render half a painting at spawn flag
+   mi=3 would reach (Render reads +0x10 off the object's +0x1a4 dispatch
    pointer, which lands two records past the seated one). 0x2f8 bytes of it
-   have no C in src/ and no draft in nearmiss/db.jsonl. Measured: all six of
-   level 2's paintings run 300 frames fault-free without touching it, so the
-   class is registered and this seat names the function instead of jumping into
-   the overlay image -- what a hole should do. */
-static void __fastcall port_painting_state_021261f4(void *, void *)
+   have no C in src/ and no draft in nearmiss/db.jsonl, so this cell held a
+   trap that named the address and aborted. All six of level 2's paintings ran
+   300 frames fault-free without touching it, which is why the trap looked
+   harmless for as long as it did.
+
+   WHAT REACHED IT (run link100 wave 17, lane HEALTH1 and fixer ENTRANCE):
+   once a level change entered a level at the entrance it actually asked for,
+   level 37's exit to level 4 entrance 9 (param 0x0409 -> slot 8 -> entry mode
+   0x08, COMING OUT OF A PAINTING) ran the painting's emergence and the state
+   machine reached this cell. The trap aborted the process and level 37 went
+   PASS -> FAIL on levels=all, warpin=1 and reentry=1.
+
+   IT IS NOW A HOST TRANSCRIPTION, not a guess:
+   port/unmatched/Painting_StateRender_021261f4.cpp carries the 0x2f8 bytes
+   statement for statement out of a capstone listing of
+   extracted/overlays/overlay_0080.bin at base 0x02123740, with every ROM
+   address range in the margin. It is not a byte match and does not claim to
+   be one; when a match lands in src/ the file retires per the port rule. */
+static void __fastcall port_painting_state_021261f4(void *s, void *)
 {
-    std::fprintf(stderr, "FATAL: Painting state 5's Render (ov080 "
-                 "0x021261f4) is UNMATCHED -- no host body exists\n");
-    std::abort();
+    /* SM64DS_PAINT_STATE5=1: one line entering and one leaving. DEFAULT OFF.
+       It exists because "the painting drew" and "the painting's state 5 was
+       entered" are different claims and a capture cannot tell them apart: the
+       grid counts it walks are invisible in a frame, and a strip count of one
+       draws nothing at all while still running the whole body. */
+    static int trace = -1;
+    if (trace < 0) {
+        const char *e = std::getenv("SM64DS_PAINT_STATE5");
+        trace = (e && *e && *e != '0') ? 1 : 0;
+    }
+    if (trace) {
+        std::fprintf(stderr, "[paint5] enter 021261f4: obj=%p buf=%p n=%u "
+                     "strips=%u pairs=%u\n", s,
+                     *(void **)((char *)s + 0x1a0),
+                     *(unsigned short *)((char *)s + 0x1b8),
+                     *(unsigned char *)((char *)s + 0x1ba),
+                     *(unsigned char *)((char *)s + 0x1bb));
+        std::fflush(stderr);
+    }
+    func_ov080_021261f4((char *)s);
+    if (trace) {
+        std::fprintf(stderr, "[paint5] leave 021261f4: obj=%p\n", s);
+        std::fflush(stderr);
+    }
 }
 
 /* THE FACES, run link100 lane UNMATCH, and the Painting is the one member-
@@ -1007,7 +1375,7 @@ static void __fastcall port_painting_state_021261f4(void *, void *)
    MSVC compiles as a TAIL JUMP: it pops its own frame and jumps, so the
    callee's [esp+4] is still the dispatcher's own receiver argument, which is
    exactly where a cdecl ov-body reads it. The Painting's three dispatchers
-   (src/func_ov080_02126ca0.cpp, _02126c60.cpp, _02126c20.cpp) end in
+   (src/_ZN8Painting13InitResourcesEv.cpp, _02126c60.cpp, _02126c20.cpp) end in
    `return 1;` after the dispatch, so MSVC cannot tail-jump and emits
 
        mov  ecx, DWORD PTR [edx+N+4]     ; the ROM's adjustment word
@@ -1305,15 +1673,15 @@ void __sinit_ov066_0211a418(void);
    each one's relocs name:
      02112cb0 -> 02113be0/02113be8                 SLIDING_ICE (92 + 93)
      02112d1c -> 02113c08/c10/c18/c20/c28          CHILL_BULLY, the five files
-                                                   ChillBully_SpawnInfo's own
+                                                   g_profile_ICE_DONKETU's own
                                                    tail names at 021138f4..02113904
      02112df8 -> 02113c6c/c74/c7c/c84/c8c/c94      DA_PG_DFDR, six files, PLUS
                                                    the four PMF pairs it copies
                                                    into 02113ce4
      02112f70 -> 02113d10                          SNOWMAN_BREATH's Vector3
                                                    {0x27a52b, 0xdf2000, 0x2626bb},
-                                                   read by func_ov027_02112170
-                                                   and func_ov027_021124e4
+                                                   read by _ZN21SnowmanBreathParticle9HitPlayerEv
+                                                   and _ZN21SnowmanBreathParticle8TrySpawnER6Player
    02112df8 is the ONE PMF source-table constructor in this overlay; its
    destination is pinned :0x20 in port/ov027_syms.txt because the ROM writes
    four 8-byte pairs into a cell dsd sized at 4, and

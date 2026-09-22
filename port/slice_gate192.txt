@@ -14,18 +14,18 @@
 #
 # ---- shared arm9 dependency: Enemy::~Enemy (Spindrift and MrBlizzard's
 # D1/D0 both call it as their own base-class D2). Self-contained (already-
-# hosted _ZN5ActorD2Ev + the already-hosted data_ov002_021081e4 vtable
+# hosted _ZN8dActor_cD2Ev + the already-hosted data_ov002_021081e4 vtable
 # array). Not previously mounted anywhere in the port. ----
-src/_ZN5EnemyD2Ev.c
+src/_ZN12dEnemyBase_cD1Ev.cpp
 #
 # ---- func_ov081_02123910's (Spindrift's player-bump helper) own callee
-# closure: _ZN5Enemy20KillByInvincibleCharERK10Vector3_16R6Player and its
+# closure: func_ov004_020ada40 and its
 # two ov004 (Bob-omb Battlefield) helpers -- all null-guard
 # data_ov004_020beb68 first and return doing nothing when it reads zero
 # (hal/actor_classes_ov081.cpp hosts it as a zero-initialized global for
 # exactly this). _ZN6Player10SpinBounceE5Fix12IiE and func_ov002_020e10a8
 # are two more previously-unmounted leaves of the same helper's closure. ----
-src/_ZN5Enemy20KillByInvincibleCharERK10Vector3_16R6Player.c
+src/func_ov004_020ada40.c
 src/func_ov004_020adc1c.c
 src/func_ov004_020adc00.c
 src/_ZN6Player10SpinBounceE5Fix12IiE.cpp
@@ -35,13 +35,14 @@ src/func_ov002_020e10a8.cpp
 # D1/D0 stay in the slice: both store _ZTV9Spindrift directly, their own
 # table, no shared-placeholder overwrite (the Unagi/IceSheet/RotatingFirebar
 # treatment).
-src/_ZN9SpindriftD1Ev.c
-src/_ZN9SpindriftD0Ev.c
-src/func_ov081_021237e4.c
+src/_ZN9SpindriftD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN9SpindriftD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN9SpindriftD0Ev.cpp
+src/_ZN9Spindrift16OnAimedAtWithEggEv.cpp
 src/func_ov081_021237ec.cpp
 src/func_ov081_02123910.cpp
 src/func_ov081_02123b20.cpp
-src/_ZN9Spindrift16CleanupResourcesEv.c
+src/_ZN9Spindrift16CleanupResourcesEv.cpp
 # _ZN9Spindrift6RenderEv.cpp is NOT in this list -- the ModelAnim slot-5
 # collision (the Whomp/Butterfly/Fish/BabyPenguin case). The matched TU
 # dispatches `((Obj*)&mModelAnim)->m5(0)` through a local six-virtual
@@ -56,9 +57,9 @@ src/_ZN9Spindrift16CleanupResourcesEv.c
 # in src/ as proof.
 src/_ZN9Spindrift8BehaviorEv.cpp
 src/_ZN9Spindrift13InitResourcesEv.cpp
-src/func_ov081_02123fd8.cpp
-src/func_ov081_02124038.c
-src/Spindrift_Spawn.c
+src/_ZN9Spindrift13OnTurnIntoEggER6Player.cpp
+src/_ZN9Spindrift13OnYoshiTryEatEv.cpp
+src/d_a_huwa.c
 #
 # ---- MR_BLIZZARD (daYuki_c), an Enemy, 32 slots (own Kill, own
 # OnPendingDestroy -- NOT the shared default) -------------------------------
@@ -80,8 +81,9 @@ src/Spindrift_Spawn.c
 # are seated at runtime by hal/actor_classes_ov081.cpp (verify-then-abort).
 # Both matched files stay byte-locked in src/ as proof, dropped from
 # CMakeLists' gate-192 source list.
-src/_ZN10MrBlizzardD1Ev.c
-src/_ZN10MrBlizzardD0Ev.c
+src/_ZN10MrBlizzardD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN10MrBlizzardD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN10MrBlizzardD0Ev.cpp
 src/func_ov081_02124134.c
 src/func_ov081_0212423c.c
 src/func_ov081_021243cc.cpp
@@ -107,12 +109,12 @@ src/func_ov081_02125200.c
 src/func_ov081_02125208.c
 src/func_ov081_0212538c.c
 src/func_ov081_021254d8.cpp
-src/_ZN10MrBlizzard16CleanupResourcesEv.c
-src/_ZN10MrBlizzard16OnPendingDestroyEv.c
+src/_ZN10MrBlizzard16CleanupResourcesEv.cpp
+src/_ZN10MrBlizzard16OnPendingDestroyEv.cpp
 src/_ZN10MrBlizzard6RenderEv.cpp
 src/_ZN10MrBlizzard13InitResourcesEv.cpp
-src/func_ov081_02125eb8.c
-src/MrBlizzard_Spawn.c
+src/_ZN10MrBlizzard16OnAimedAtWithEggEv.cpp
+src/d_a_snowman.c
 # func_ov081_021261b8 (MrBlizzard's own Kill, slot 31 -- confirmed by reloc)
 # sits inside delinks.txt's Snowball-labelled range (dsd's own file-discovery
 # order interleaves the two classes' bodies; address, not file grouping, is
@@ -122,21 +124,22 @@ src/func_ov081_021261b8.c
 #
 # ---- ICE_BLOCK (daObjIceBlock_c), a Platform, 32 slots (own Kill) ----------
 # _ZN8IceBlockD1Ev.c and _ZN8IceBlockD0Ev.c ride from src (lane DTOR-PAIRS-C):
-# the "_ZTV8Platform placeholder" their second store spells is ov002 0x0210ae38
+# the "_ZTV10dBgActor_c placeholder" their second store spells is ov002 0x0210ae38
 # by relocation, the one Platform base table the port hosts, so the fill's
 # slots 16/17 take the matched pair behind adapters. func_ov081_02127be0 is a
 # DIFFERENT function (a Behavior helper, address-confirmed -- sits right
 # after D0 ends, 0x02127be0..02127ccc), not D1; it stays in the slice.
-src/_ZN8IceBlockD1Ev.c
-src/_ZN8IceBlockD0Ev.c
+src/_ZN8IceBlockD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN8IceBlockD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN8IceBlockD0Ev.cpp
 src/func_ov081_02127be0.cpp
-src/func_ov081_02127ccc.cpp
-src/func_ov081_02127cf4.c
+src/_ZN8IceBlock15OnHitByMegaCharER6Player.cpp
+src/_ZN8IceBlock4KillEv.cpp
 src/_ZN8IceBlock16CleanupResourcesEv.cpp
 src/_ZN8IceBlock6RenderEv.cpp
 src/_ZN8IceBlock8BehaviorEv.cpp
 src/_ZN8IceBlock13InitResourcesEv.cpp
-src/IceBlock_Spawn.c
+src/d_a_obj_ice_block.c
 #
 # ---- the three own-class sinits (self-contained; RUN) ----------------------
 # __sinit_ov081_021284b4 (Snowball) and __sinit_ov081_021284f0 (Moneybag)

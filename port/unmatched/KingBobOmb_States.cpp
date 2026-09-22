@@ -1,8 +1,8 @@
-/* HOST COPY of src/_ZN10KingBobOmb8BehaviorEv.cpp -- the mwcc
+/* HOST COPY of src/actors/daBombking_c.cpp -- the mwcc
  * pointer-to-member dispatch for the eleventh time in this port, and the
  * widest one yet: EIGHTEEN states of two halves each.
  *
- * The OTHER half of this pair, src/KingBobOmb_SetState.cpp, is no longer host
+ * The OTHER half of this pair, src/actors/daBombking_c.cpp, is no longer host
  * copied: run link100 lane PMF3 put it back on the slice once /vmg /vmm made
  * MSVC's pointer-to-member the ROM's own 8-byte record. Behavior stays because
  * it does more than dispatch -- it COMPARES the state pointer against four
@@ -52,26 +52,26 @@ extern PortKingState data_ov078_0212703c, data_ov078_0212707c,
     data_ov078_021270bc, data_ov078_021270fc;
 extern int data_ov078_02126e00[];      /* the collider's offset Vector3 */
 
-int _ZN5Actor13DistToCPlayerEv(void *self);
+int _ZN8dActor_c13DistToCPlayerEv(void *self);
 void _ZN14BlendModelAnim7AdvanceEv(void *self);
 unsigned short DecIfAbove0_Short(unsigned short *p);
 unsigned char DecIfAbove0_Byte(unsigned char *p);
-void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *clsn);
-void _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(void *self, void *clsn);
-void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(void *self, void *wmc,
+void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *clsn);
+void _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(void *self, void *clsn);
+void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void *self, void *wmc,
                                               unsigned flags);
-int _ZNK12WithMeshClsn8IsOnWallEv(void *self);
-int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
-void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(
+int _ZNK10dBgCh_Actr8IsOnWallEv(void *self);
+int _ZNK10dBgCh_Actr10IsOnGroundEv(void *self);
+void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(
     void *self, const void *v);
-void _ZN12CylinderClsn5ClearEv(void *self);
-void _ZN12CylinderClsn6UpdateEv(void *self);
+void _ZN5dCc_c5ClearEv(void *self);
+void _ZN5dCc_c6UpdateEv(void *self);
 void func_ov078_02125de0(void *self);
 void func_ov078_02125c98(void *self);
 extern void *data_0209f318;            /* the camera the king registers with */
 
 int KingBobOmb_SetState(void *self, void *state);
-int _ZN10KingBobOmb8BehaviorEv(void *self);
+int _ZN12daBombking_c8BehaviorEv(void *self);
 
 }  /* extern "C" */
 
@@ -97,7 +97,7 @@ static void port_king_call(const PortKingPmf *m, void *self, const char *half)
 /* +0x420 is the state pointer both the setter and Behavior read. */
 #define PORT_KING_STATE(s) (*(PortKingState **)((char *)(s) + 0x420))
 
-/* KingBobOmb_SetState IS NO LONGER HOST-COPIED. src/KingBobOmb_SetState.cpp is
+/* KingBobOmb_SetState IS NO LONGER HOST-COPIED. src/actors/daBombking_c.cpp is
    on port/slice_pmf3.txt (run link100 lane PMF3). With /vmg /vmm target-wide
    MSVC's pointer-to-member IS the ROM's 8-byte {function, delta} record, so
    `pp + 1` steps eight and the null test reads the record's own function word,
@@ -116,7 +116,7 @@ static void port_king_call(const PortKingPmf *m, void *self, const char *half)
    init half returns, which is what the ROM does. Behavior ignores the value.
    port_king_call and PORT_KING_STATE stay because Behavior uses both. */
 
-/* HOST COPY RETIRED, run link100 lane PMFB7 gate 2. src/_ZN10KingBobOmb8BehaviorEv.cpp
+/* HOST COPY RETIRED, run link100 lane PMFB7 gate 2. src/actors/daBombking_c.cpp
    dispatches its own field now: with /vmg /vmm (block R8) MSVC's pointer to
    member IS the ROM's eight-byte {code, adjust} pair, so the widening this
    banner was written for does not happen. The per-frame half of every state

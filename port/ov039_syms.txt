@@ -18,7 +18,7 @@
 # in place and the ActorBase constructor reads the +4/+6 priorities back out of
 # the same bytes, so this has to be storage the actor code and the registry
 # agree on -- which is exactly why the --whole mount cannot serve it.
-Cloud_SpawnInfo:0x1c
+g_profile_OBJ_KUMO:0x1c
 #
 # ---- the sinit-built bss window (0x021118e4..0x02111900) -------------------
 # __sinit_ov039_021113b4 constructs the model SharedFilePtr at 0x021118e4

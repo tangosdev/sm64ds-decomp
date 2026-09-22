@@ -24,9 +24,9 @@ extern "C" {
 void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *file, int a,
                                                  int b, unsigned e);
 void func_0201267c(unsigned id, const Vector3 *v);
-void _ZN5Actor10PoofDustAtERK7Vector3(void *self, const Vector3 &v);
-void *_ZN5Actor10FindWithIDEj(unsigned id);
-int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned id, unsigned a,
+void _ZN8dActor_c10PoofDustAtERK7Vector3(void *self, const Vector3 &v);
+void *_ZN8dActor_c10FindWithIDEj(unsigned id);
+int _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned id, unsigned a,
                                                  const Vector3 &pos,
                                                  const void *vec16, int b,
                                                  int c2);
@@ -72,14 +72,14 @@ extern "C" void func_ov080_02124088(void *self)
     ((int *)&v2)[0] = ((int *)&v1)[0];
     ((int *)&v2)[1] = ((int *)&v1)[1];
     ((int *)&v2)[2] = ((int *)&v1)[2];
-    _ZN5Actor10PoofDustAtERK7Vector3(c, v2);
+    _ZN8dActor_c10PoofDustAtERK7Vector3(c, v2);
 
     func_ov080_02124360(c);
 
     acc = *(u8 *)(c + 0x184);
     i = 0;
     while (i < *(u8 *)(c + 0x183)) {
-        a = _ZN5Actor10FindWithIDEj(((u32 *)(c + 0x16c))[i]);
+        a = _ZN8dActor_c10FindWithIDEj(((u32 *)(c + 0x16c))[i]);
         i = i + 1;
         if (a != 0) {
             acc = (u8)(acc + *(u8 *)((char *)a + 0x184));
@@ -96,7 +96,7 @@ extern "C" void func_ov080_02124088(void *self)
         v3.z = *(int *)(c + 0x64);
         v3.y = y3 + 0x64000;
     }
-    _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x114, 0, v3, 0,
+    _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0x114, 0, v3, 0,
                                                  (int)*(signed char *)(c + 0xcc),
                                                  -1);
 

@@ -7,7 +7,7 @@ extern void Vec3_Lsl(Vec3* d, Vec3* s, int sh);
 extern void Matrix4x3_FromTranslation(Mtx43* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void* m, int x, int y, int z);
 extern void MulMat4x3Mat4x3(void* a, void* b, void* c);
-extern void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void* thiz, void* sm, void* m, int rad, int h, unsigned int u);
+extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void* thiz, void* sm, void* m, int rad, int h, unsigned int u);
 extern Mtx43 data_020a0e68;
 extern int data_ov073_021233b0[];
 extern int data_ov073_021233e0[];
@@ -59,6 +59,6 @@ void func_ov073_021215cc(char* c)
 
     Matrix4x3_FromTranslation(&data_020a0e68, *(int*)(c + 0x5c) >> 3, (*(int*)(c + 0x60) - 0xa000) >> 3, *(int*)(c + 0x64) >> 3);
     *(Mtx43*)(c + 0x3a8) = data_020a0e68;
-    _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+    _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
         c, c + 0x380, c + 0x3a8, 0x12c000, 0x3e8000, 0xf);
 }

@@ -38,24 +38,24 @@
 #
 #   id  ov  spawn-table site  SpawnInfo    word[0]                     +4   +6
 #   ------------------------------------------------------------------------
-#    59 102 0x02090950 -> 0x0214e0fc  0x02148f5c RockTriangle_Spawn      59  183
-#   340 102 0x02090db4 -> 0x0214e150  0x02148ecc CgStairs_Spawn        340  340
-#   341 102 0x02090db8 -> 0x0214e16c  0x02148e9c RopeBarrier_Spawn     341  341
+#    59 102 0x02090950 -> 0x0214e0fc  0x02148f5c daObjSimpleBg_c_classInit_KI_HASIRA_DAI      59  183
+#   340 102 0x02090db4 -> 0x0214e150  0x02148ecc daObjSimpleBg_c_classInit_MC_DODAI        340  340
+#   341 102 0x02090db8 -> 0x0214e16c  0x02148e9c daObjSimpleBg_c_classInit_MC_HAZAD     341  341
 #    22 102 0x020908bc -> 0x0214e3cc  0x0214a92c ExclamationBlockVs_Sp  22   40
-#    23 102 0x020908c0 -> 0x0214e420  0x0214a86c CapBlockMario_Spawn    23   41
-#    24 102 0x020908c4 -> 0x0214e458  0x0214a7ec CapBlockWario_Spawn    24   42
-#    25 102 0x020908c8 -> 0x0214e43c  0x0214a82c CapBlockLuigi_Spawn    25   43
+#    23 102 0x020908c0 -> 0x0214e420  0x0214a86c daObjHatenaBlock_c_classInit_CAP_BLOCK_M    23   41
+#    24 102 0x020908c4 -> 0x0214e458  0x0214a7ec daObjHatenaBlock_c_classInit_CAP_BLOCK_W    24   42
+#    25 102 0x020908c8 -> 0x0214e43c  0x0214a82c daObjHatenaBlock_c_classInit_CAP_BLOCK_L    25   43
 #   147  91 0x02090ab0 -> 0x02134fd0  0x02132848 SlidingPlatformBfsSq  147  218
 #   146  91 0x02090aac -> 0x02134fec  0x02132818 SlidingPlatformBfsRe  146  217
 #   124  91 0x02090a54 -> 0x02134fb4  0x02132878 SlidingPlatformRr_Sp  124  254
 #    30  91 0x020908dc -> 0x02134c14  0x02131ba4 RotatingUpDownPlatfo   30  298
-#   201  84 0x02090b88 -> 0x02130908  0x0212c054 GoombaSmall_Spawn     201   25
-#   204  62 0x02090b94 -> 0x0211da90  0x021196bc KoopaSmall_Spawn      204   28
-#   143  95 0x02090aa0 -> 0x02137414  0x02135f34 SeesawBfs_Spawn       143  214
-#    28  95 0x020908d4 -> 0x021373dc  0x02135fc4 SeesawUtm_Spawn        28  296
-#   128  95 0x02090a64 -> 0x02137468  0x02135ea4 SeesawRr_Spawn        128  258
-#   131  95 0x02090a70 -> 0x02137604  0x0213679c UpDownLiftRr_Spawn    131  261
-#   179   2 0x02090b30 -> 0x0210aa5c  0x020ebed4 SilverStar_Spawn      179   65
+#   201  84 0x02090b88 -> 0x02130908  0x0212c054 daKrb_c_classInit_KURIBO_S     201   25
+#   204  62 0x02090b94 -> 0x0211da90  0x021196bc daNknk_c_classInit_NOKONOKO_S      204   28
+#   143  95 0x02090aa0 -> 0x02137414  0x02135f34 daObjSeesaw_c_classInit_KM2_YOKOSEESAW       143  214
+#    28  95 0x020908d4 -> 0x021373dc  0x02135fc4 daObjSeesaw_c_classInit_SEESAW        28  296
+#   128  95 0x02090a64 -> 0x02137468  0x02135ea4 daObjSeesaw_c_classInit_RC_SEESAW        128  258
+#   131  95 0x02090a70 -> 0x02137604  0x0213679c daUdlift_c_classInit_RC_RIFT02    131  261
+#   179   2 0x02090b30 -> 0x0210aa5c  0x020ebed4 daStar_c_classInit_SILVER_STAR      179   65
 #   324   2 0x02090d74 -> 0x02108bd8  0x020b45e0 SilverStarBlockTag_S  324  322
 #
 # ---- THE SEVEN SHARED TABLES ------------------------------------------------
@@ -154,22 +154,22 @@
 # widened sweep prints) is hosted and DELIBERATELY unregistered for a measured
 # frame-0 register-skew blocker. It is not in this slice and must not be added
 # to it.
-src/RockTriangle_Spawn.c
-src/CgStairs_Spawn.c
-src/RopeBarrier_Spawn.c
-src/ExclamationBlockVs_Spawn.c
-src/CapBlockMario_Spawn.c
-src/CapBlockWario_Spawn.c
-src/CapBlockLuigi_Spawn.c
-src/SlidingPlatformBfsSquare_Spawn.c
-src/SlidingPlatformBfsRectangle_Spawn.c
-src/SlidingPlatformRr_Spawn.c
-src/RotatingUpDownPlatformUtm_Spawn.c
-src/GoombaSmall_Spawn.c
-src/KoopaSmall_Spawn.c
-src/SeesawBfs_Spawn.c
-src/SeesawUtm_Spawn.c
-src/SeesawRr_Spawn.c
-src/UpDownLiftRr_Spawn.c
-src/SilverStar_Spawn.c
-src/SilverStarBlockTag_Spawn.c
+src/d_a_obj_simple_bg_ki_hasira_dai.c
+src/d_a_obj_simple_bg_mc_dodai.c
+src/d_a_obj_simple_bg_mc_hazad.c
+src/d_a_obj_hatena_block_vs_item_block.c
+src/d_a_obj_hatena_block_cap_block_m.c
+src/d_a_obj_hatena_block_cap_block_w.c
+src/d_a_obj_hatena_block_cap_block_l.c
+src/d_a_obj_simple_lift_km2_rifut01.c
+src/d_a_obj_simple_lift_km2_rifut02.c
+src/d_a_obj_simple_lift_rc_rift01.c
+src/d_a_obj_rotate_updown_lift_hs_updown_lift.c
+src/d_a_krb_kuribo_s.c
+src/d_a_nknk_nokonoko_s.c
+src/d_a_obj_seesaw_km2_yokoseesaw.c
+src/d_a_obj_seesaw_seesaw.c
+src/d_a_obj_seesaw_rc_seesaw.c
+src/d_a_udlift_rc_rift02.c
+src/d_a_star_silver_star.c
+src/d_a_obj_block_item_tag_blk_slvstar_tag.c

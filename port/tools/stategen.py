@@ -84,7 +84,7 @@ WHAT IT DOES NOT DO:
   * IT DOES NOT COVER THE FRAMEWORK HALF OF THE WALL, and a fan-out lane
     reading the ONE MECHANISM claim above as full coverage of
     mg_fanout_costs section 4 will be wrong in the most expensive
-    direction. src/func_ov004_020b87e0.cpp is dScMgBase_c's state setter,
+    direction. src/_ZN10dMgState_c8SetStateEi.cpp is dScMgBase_c's state setter,
     the TU section 4 says unblocks the framework half of all thirty
     minigames, and it is a DIFFERENT MECHANISM: it builds its twenty-entry
     member-pointer table IN-FUNCTION out of twenty individually named
@@ -768,7 +768,7 @@ def src_file_for(root, symbol):
     A NAME LOOKUP AND NOTHING MORE. It exists so a delinks-join miss is not
     reported as "undecompiled": the two questions are independent, and
     conflating them is what made this tool's hole message wrong on
-    func_ov006_020f6904. Nothing is inferred about the body from its
+    _ZN14dScMgMemory2_c14RoundShowCardsEv. Nothing is inferred about the body from its
     existence -- the banner is what says matched vs NONMATCHING, and the
     message tells the reader to go read it.
     """
@@ -858,8 +858,8 @@ def build(root, sinit, overlay_num=None, arity_override=None):
             # and the message used to report its result as "HAS NO DECOMPILED
             # BODY ... and no src file". For the first three holes the tool
             # ever hit that happened to be true, so nothing contradicted it.
-            # It is FALSE for func_ov006_020f6904: no delink block, and a
-            # decompiled src/func_ov006_020f6904.c bannered NONMATCHING.
+            # It is FALSE for _ZN14dScMgMemory2_c14RoundShowCardsEv: no delink block, and a
+            # decompiled src/actors/dScMgMemory2_c.cpp bannered NONMATCHING.
             # NONMATCHING TUs are routinely sliced and built, so calling that
             # address unreachable over-costs the class that owns it -- which
             # is exactly the error this lane then wrote into
@@ -1189,9 +1189,27 @@ def cmd_reconstruct(root):
         print("  DIVERGE hand 0x%08x is NOT derivable from the constructor"
               % a)
         bad += 1
+    # A hand target that is NOT a ROM symbol name is a HOST-SIDE RULING, the
+    # same rule arm (b) below already applies: a forwarding bridge, or a host
+    # copy standing in for a body the port cannot compile. That is a lane's
+    # judgment, not a contradiction, and the test is membership in the loaded
+    # symbol tables rather than a name prefix, for the reason (b) states.
+    #
+    # This arm did not need the rule until the 2026-09-12 main -> port sync.
+    # Before it, 0x020e1854 had no delink block on either side, so the hole
+    # branch below let the hand's port_mg_curling_st_020e1854 through. main has
+    # since decompiled that address, so the derived side now names
+    # func_ov006_020e1854 and the SAME deliberate host copy started reading as
+    # a divergence. Nothing about the port's ruling changed; the decomp caught
+    # up with it, which is the case (b) was already written to recognise.
+    romnames_mg = m["romnames"]
+    bridges_mg = []
     mism = 0
     for a in sorted(set(derived) & set(hand)):
         d, h = derived[a], hand[a]
+        if h not in romnames_mg:
+            bridges_mg.append((a, d, h))
+            continue
         if d is None:
             # the hole: the hand file must NOT call a ROM symbol for it
             if h.startswith("func_") or h.startswith("_Z"):
@@ -1204,6 +1222,13 @@ def cmd_reconstruct(root):
             print("  DIVERGE 0x%08x derived %s, hand %s" % (a, d, h))
             bad += 1
             mism += 1
+    if bridges_mg:
+        print("host-side rulings (hand rows naming a port symbol rather "
+              "than a ROM one -- a bridge or a host copy; a ruling, not a "
+              "divergence): %d" % len(bridges_mg))
+        for a, d, h in bridges_mg:
+            print("    0x%08x  ROM %-38s hand %s"
+                  % (a, d or "NO DELINK BLOCK", h))
     print("address sets %s; target symbols %s"
           % ("EQUAL" if not (only_d or only_h) else "DIFFER",
              "EQUAL" if not mism else "%d DIFFER" % mism))
@@ -1478,7 +1503,7 @@ def selftest():
         # The base fixture's f_1300 has no src, so it reads as it always did;
         # dropping a src file at that name must flip the message and must NOT
         # stop it being a hole. Both real precedents turned out to be the
-        # second kind -- func_ov006_020f6904 (NONMATCHING) and
+        # second kind -- _ZN14dScMgMemory2_c14RoundShowCardsEv (NONMATCHING) and
         # _ZN6Player13St_Climb_MainEv (unbannered) -- so the old text was
         # wrong on live data, not just in principle.
         expect("HAS NO DECOMPILED BODY" in m["refusals"][0]

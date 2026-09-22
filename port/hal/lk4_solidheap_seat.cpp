@@ -94,7 +94,7 @@
 //   * Destroy IS SEQUENCING-GATED and must land BEFORE the scene 1 unblock
 //     lane, by the same rule stage_lifecycle_map.txt section 11g states for
 //     the unlinked SetDefault carriers: unblocking scene 1 is what puts
-//     func_ov007_020cc4c0 on a path, and a lane that does it first inherits
+//     _ZN9dScDSMT_c13InitResourcesEv on a path, and a lane that does it first inherits
 //     the fault with none of this evidence.
 //     DONE, lane LK5, SO THE GATE IS DISCHARGED: the scene 1 unblock lane is
 //     free to run. The pairing was one participant wider than this ruling
@@ -176,13 +176,23 @@
 // statics/methods while the definitions are flat C (or, for Rescue, a
 // method whose matched TU returns int where the hostgen caller spelled
 // void; same __thiscall, r0/EAX ignored, the ROM's own shape).
-#pragma comment(linker, "/alternatename:?InitializeSolidHeapAsDefault@Heap@@SAPAU1@IPAU1@H@Z=__ZN4Heap28InitializeSolidHeapAsDefaultEjPS_i")
-#pragma comment(linker, "/alternatename:?Allocate@Memory@@SAPAXIHPAUHeap@@@Z=__ZN6Memory8AllocateEjiP4Heap")
-#pragma comment(linker, "/alternatename:?RestoreFromTemporary@Heap@@SAXXZ=__ZN4Heap20RestoreFromTemporaryEv")
+/* RE-POINTED at ALIAS2 (wave 8, the main -> port sync), lane ALIAS's
+   derivation: the right hand side this row carried is defined nowhere in
+   the link any more. same member, same convention, same 3 argument slots, types spelled differently
+   was: #pragma comment(linker, "/alternatename:?InitializeSolidHeapAsDefault@Heap@@SAPAU1@IPAU1@H@Z=__ZN4Heap28InitializeSolidHeapAsDefaultEjPS_i") */
+#pragma comment(linker, "/alternatename:?InitializeSolidHeapAsDefault@Heap@@SAPAU1@IPAU1@H@Z=?InitializeSolidHeapAsDefault@Heap@@SAPAXIPAU1@H@Z")
+/* RE-POINTED at ALIAS2 (wave 8, the main -> port sync), lane ALIAS's
+   derivation: the right hand side this row carried is defined nowhere in
+   the link any more. same member, same convention, same 3 argument slots, types spelled differently
+   was: #pragma comment(linker, "/alternatename:?Allocate@Memory@@SAPAXIHPAUHeap@@@Z=__ZN6Memory8AllocateEjiP4Heap") */
+#pragma comment(linker, "/alternatename:?Allocate@Memory@@SAPAXIHPAUHeap@@@Z=?Allocate@Memory@@YAPAXIHPAVHeap@@@Z")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEFEATED: the left hand side is a real definition in this link now (_ZN4Heap20RestoreFromTemporaryEv.cpp.obj), so the directive is inert and alternatename_guard fails on it. */
+// #pragma comment(linker, "/alternatename:?RestoreFromTemporary@Heap@@SAXXZ=__ZN4Heap20RestoreFromTemporaryEv")
 // ?_Destroy@Heap@@QAEXXZ=__ZN4Heap8_DestroyEv WAS HERE AND IT HAD TO GO WITH
 // THE Destroy FIX, which is the part of that pairing nobody had spotted. See
 // the _Destroy face at the bottom of this file.
-#pragma comment(linker, "/alternatename:?Rescue@Heap@@QAEXXZ=?Rescue@Heap@@QAEHXZ")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEFEATED: the left hand side is a real definition in this link now (_ZN4Heap6RescueEv.cpp.obj), so the directive is inert and alternatename_guard fails on it. */
+// #pragma comment(linker, "/alternatename:?Rescue@Heap@@QAEXXZ=?Rescue@Heap@@QAEHXZ")
 // The SolidHeapAllocator pair USED TO BE THE NEXT TWO LINES AND BOTH WERE
 // WRONG, the same failure class as SetDefault above and running the other
 // way. Receiver-bridging faces near the bottom of this file replace them and
@@ -208,7 +218,7 @@ public:
 };
 
 /* the matched Virtual34/38 are real ActorBase methods; this local decl
-   produces the same ?Virtual34@ActorBase@@QAEHII@Z the TUs define */
+   produces the same ?Virtual34@fBase_c@@QAEHII@Z the TUs define */
 struct ActorBase
 {
     int Virtual34(u32 a, u32 b);
@@ -225,7 +235,7 @@ struct Heap
 {
     int SetDefault();
     /* I = unsigned int, matching ?ResizeToFit@Heap@@QAEIXZ and the
-       `unsigned int Heap::ResizeToFit()` src/_ZN4Heap11ResizeToFitEv.c
+       `unsigned int Heap::ResizeToFit()` src/_ZN4Heap11ResizeToFitEv.cpp
        defines. Virtual34 spells the flat C name with a void return; same
        __thiscall, r0/EAX ignored, the ROM's own shape. */
     unsigned int ResizeToFit();
@@ -312,7 +322,7 @@ static int __fastcall ab_v38(void *s, void *, u32 a, u32 b)
    :236 through this name on level 1. Before, the run faulted in Heap::Allocate
    +0xd accessing 00000005 under SharedFilePtr::Load -> fs_hand_out ->
    Memory::Allocate, and that 5 IS data_020a0ea0 read back, because
-   src/_ZN6Memory8AllocateEjiP4Heap.c substitutes the default-heap pointer for
+   src/_ZN6Memory8AllocateEjiP4Heap.cpp substitutes the default-heap pointer for
    a null heap argument. After, the pair reads
 
      SetDefault(30000060): data_020a0ea0 30000000 -> 30000060
@@ -327,9 +337,9 @@ static int __fastcall ab_v38(void *s, void *, u32 a, u32 b)
 
    SIX TUs SPELL THE FLAT C NAME AND PUSH THE RECEIVER, three of them linked
    today, so this is a live bug and not one a future seat would introduce:
-     src/_ZN4Heap20RestoreFromTemporaryEv.c:11
-     src/_ZN4Heap23SetupSolidHeapAsDefaultEjPS_i.c:18
-     src/func_ov007_020cc2cc.c:49 and :53
+     src/_ZN4Heap20RestoreFromTemporaryEv.cpp:11
+     src/_ZN4Heap23SetupSolidHeapAsDefaultEjPS_i.cpp:18
+     src/_ZN9dScDSMT_c8BehaviorEv.cpp:49 and :53
      src/_ZN5Stage13InitResourcesEv.cpp:234 and :236   (linked, env-gated)
      src/func_02034fbc.c:22, :27, :31, :33             (not compiled today)
      src/func_ov075_02118bf8.c:9 and :18               (not compiled today)
@@ -453,14 +463,30 @@ extern "C" void *_ZN18SolidHeapAllocator8AllocateEji(void *c, u32 size,
 extern "C" u32 _ZN18SolidHeapAllocator10ReallocateEPvj(void *c, void *ptr,
                                                        u32 size);
 
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync): main defines
+   SolidHeapAllocator::Allocate as a real member now, so src/ emits
+   ?Allocate@SolidHeapAllocator@@QAEPAXIH@Z itself and this face was the second
+   definition (LNK2005). Reallocate below is untouched; its src TU still
+   defines only the flat C name.
 void *SolidHeapAllocator::Allocate(u32 size, int align)
-{ return _ZN18SolidHeapAllocator8AllocateEji(this, size, align); }
+{ return _ZN18SolidHeapAllocator8AllocateEji(this, size, align); }           */
 
 /* the flat body returns the granted size where the method's callers spell
    void*; same __thiscall, r0/EAX ignored, the ROM's own shape and the same
    widening the Rescue alias above documents */
+/* RETIRED at FACES4 (wave 9c) under the SHADOW RULE. This is a SECOND
+   DECLARATION of one function, not a second function: it spells the return
+   void * and src/_ZN18SolidHeapAllocator10ReallocateEPvj.cpp, the TU config
+   says owns ROM 0x0204e964, spells it unsigned, so MSVC mangles the two apart
+   and facegen read the pair as an overload and refused to bind the flat name.
+   ?Reallocate@SolidHeapAllocator@@QAEIPAXI@Z is the definition and the one
+   caller, src/_ZN9SolidHeap11VReallocateEPvj.cpp, asks for it since today's
+   main merge. Measured before removal: dumpbin over all 8662 of walk_window's
+   link inputs reports ZERO objects referencing
+   ?Reallocate@SolidHeapAllocator@@QAEPAXPAXI@Z. The flat name is now defined
+   by the face in port/faces_sync.txt.
 void *SolidHeapAllocator::Reallocate(void *ptr, u32 size)
-{ return (void *)_ZN18SolidHeapAllocator10ReallocateEPvj(this, ptr, size); }
+{ return (void *)_ZN18SolidHeapAllocator10ReallocateEPvj(this, ptr, size); } */
 
 /* THE RECEIVER-BRIDGING FACE FOR Heap::ResizeToFit, replacing the third of
    the four directives this file used to carry. Same direction and same
@@ -520,9 +546,9 @@ extern "C" unsigned int _ZN4Heap11ResizeToFitEv(void *thiz)
 
    THE VENEER HAS TWO KINDS OF CALLER, and only one of them was broken:
 
-     src/_ZN9ActorBase9Virtual34Ejj.cpp  spells the flat C name and PUSHES the
+     src/_ZN7fBase_c9Virtual34Ejj.cpp  spells the flat C name and PUSHES the
          heap, at :50, :78, :100, :106 and :111. Broken.
-     src/_ZN9ActorBase9Virtual38Ejj.cpp  spells `h->_Destroy()`, a __thiscall
+     src/_ZN7fBase_c9Virtual38Ejj.cpp  spells `h->_Destroy()`, a __thiscall
          METHOD call on ?_Destroy@Heap@@QAEXXZ, receiver in ECX and nothing
          pushed, at :44. CORRECT TODAY, purely because the veneer is a bare
          jmp that leaves ECX alone.
@@ -578,14 +604,14 @@ extern "C" unsigned int _ZN4Heap11ResizeToFitEv(void *thiz)
    other two.
 
    NO DRIVE EXISTS FOR THIS FAMILY AND NONE IS CLAIMED. func_0201a428's own
-   caller is func_ov007_020cc4c0 and scene 1 is a BLOCKED battery skip, and
+   caller is _ZN9dScDSMT_c13InitResourcesEv and scene 1 is a BLOCKED battery skip, and
    nothing dispatches slot 13 or slot 14 on any battery path, so every reading
    above is probe and disassembly. That is what the sibling-lane ruling in
    this file's header calls decisive, and it is the honest limit of it.
 
    AND THIS COMMIT UNBLOCKS THE FUTURE SCENE 1 LANE, by the rule
    port/stage_lifecycle_map.txt section 11g states: unblocking scene 1 is what
-   puts func_ov007_020cc4c0 on a path, and a lane that unblocked it before
+   puts _ZN9dScDSMT_c13InitResourcesEv on a path, and a lane that unblocked it before
    this landed would have inherited the fault with none of this evidence. The
    sequencing gate the header records is now discharged. */
 extern "C" void _ZN4Heap8_DestroyEv(void *thiz);
@@ -623,8 +649,11 @@ extern "C" void _ZN4Heap8_DestroyEv(void *thiz);
 
 /* the other direction: Virtual38's method call arrives with the receiver in
    ECX, and the veneer now wants it pushed */
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync): main defines Heap::_Destroy
+   as a real member now, so src/ emits ?_Destroy@Heap@@QAEXXZ itself and this
+   face was the second definition (LNK2005).
 void Heap::_Destroy()
-{ _ZN4Heap8_DestroyEv(this); }
+{ _ZN4Heap8_DestroyEv(this); }                                               */
 
 extern "C" void hal_seat_solidheap(void)
 {

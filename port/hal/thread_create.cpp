@@ -47,7 +47,7 @@
 //      it is the ROM's: src/func_02058048.c, `IRQ off; state = 1;
 //      func_02057f54(); IRQ back`. That is the same call src/func_02060310.c
 //      makes when the ARM7 answers a card command, and the same call
-//      src/func_020603c8.c and src/func_02060228.c make. func_02057f54 then
+//      src/func_020603c8.cpp and src/func_02060228.c make. func_02057f54 then
 //      picks the card thread (priority 4 sorts ahead of the game context's
 //      0x10), switches to it, and the card thread's loop sleeps again --
 //      so a successful wake shows up as TWO more switches and a state word

@@ -19,16 +19,16 @@
 # of overlay_0063.bin itself: word[0] must land on the class's own Spawn
 # INSIDE ov063 and word[1]'s low half must be the id the spawn table reached
 # it from. All ten records agree with the config names:
-#   0x0211e770 Boo_SpawnInfo          w0=0x0211c590 Boo_Spawn          id 209
-#   0x0211e78c BigBoo_SpawnInfo       w0=0x0211c520 BigBoo_Spawn       id 210
-#   0x0211e7a8 BooCage_SpawnInfo      w0=0x0211c4d0 BooCage_Spawn      id 212
-#   0x0211e7c4 BigBooIcon_SpawnInfo   w0=0x0211c4a0 BigBooIcon_Spawn   id 211
-#   0x0211ea10 MansionSteps_SpawnInfo w0=0x0211d360 MansionSteps_Spawn id 65
-#   0x0211ea2c Bookshelf_SpawnInfo    w0=0x0211d320 Bookshelf_Spawn    id 158
-#   0x0211ea48 MerryGoRound_SpawnInfo w0=0x0211d2e0 MerryGoRound_Spawn id 159
-#   0x0211ea64 TrapDoor_SpawnInfo     w0=0x0211d2a0 TrapDoor_Spawn     id 160
-#   0x0211eb34 FallBlockBbh_SpawnInfo w0=0x0211d47c FallBlockBbh_Spawn id 66
-#   0x0211ed10 MadPiano_SpawnInfo     w0=0x0211e128 MadPiano_Spawn     id 249
+#   0x0211e770 g_profile_TERESA          w0=0x0211c590 daTrs_c_classInit_TERESA          id 209
+#   0x0211e78c g_profile_BOSS_TERESA       w0=0x0211c520 daTrs_c_classInit_BOSS_TERESA       id 210
+#   0x0211e7a8 g_profile_T_BASKET      w0=0x0211c4d0 daTBasket_c_classInit      id 212
+#   0x0211e7c4 g_profile_ICON_TERESA   w0=0x0211c4a0 daTrsIcon_c_classInit   id 211
+#   0x0211ea10 g_profile_KAIDAN w0=0x0211d360 daTrsTrap_c_classInit_KAIDAN id 65
+#   0x0211ea2c g_profile_BOOKSHELF    w0=0x0211d320 daTrsTrap_c_classInit_BOOKSHELF    id 158
+#   0x0211ea48 g_profile_MERRYGOROUND w0=0x0211d2e0 daTrsTrap_c_classInit_MERRYGOROUND id 159
+#   0x0211ea64 g_profile_TERESAPIT     w0=0x0211d2a0 daTrsTrap_c_classInit_TERESAPIT     id 160
+#   0x0211eb34 g_profile_TH_DOWN_B w0=0x0211d47c daObjTh_Fall_Block_c_classInit id 66
+#   0x0211ed10 g_profile_PIANO     w0=0x0211e128 daPiano_c_classInit     id 249
 # (dsd's block-labels-start-at-the-Spawn shift, which scrambled ov045's
 # names, does NOT afflict ov063's config: the Spawn stored in each record is
 # the record's own name's Spawn.)
@@ -39,10 +39,10 @@
 # fills. Spans, from the raw image (each table's own-slot reads confirmed
 # against the class's D1/D0/method addresses; width by the vtspan.py rule --
 # a word past slot 30 that is not a function ends the table at 31):
-#   0x0211e828..0x0211e8a4  _ZTV3Boo, 31 slots (own 0/3/6/9/12/16/17/18/29;
-#                           slot 18 func_ov063_0211c480, slot 29
-#                           func_ov063_021160c4). SHARED BY BigBoo (210):
-#                           BigBoo_Spawn stores &_ZTV3Boo too (its own src).
+#   0x0211e828..0x0211e8a4  _ZTV7daTrs_c, 31 slots (own 0/3/6/9/12/16/17/18/29;
+#                           slot 18 _ZN7daTrs_c13OnYoshiTryEatEv, slot 29
+#                           _ZN7daTrs_c16OnAimedAtWithEggEv). SHARED BY BigBoo (210):
+#                           daTrs_c_classInit_BOSS_TERESA stores &_ZTV7daTrs_c too (its own src).
 #   0x0211e8ac..0x0211e928  _ZTV10BigBooIcon, 31 slots (own 0/16/17 only)
 #   0x0211e930..0x0211e9ac  _ZTV7BooCage == _ZTV11daTBasket_c, 31 slots
 #   0x0211ea88..0x0211eb04  _ZTV12MansionSteps == _ZTV11daTrsTrap_c, 31
@@ -50,7 +50,7 @@
 #                           (65/158/159/160 -- each Spawn stores this one
 #                           name; one class, four SpawnInfo records)
 #   0x0211eb58..0x0211ebd8  _ZTV12FallBlockBbh, 32 slots -- slot 31 is
-#                           func_ov098_0213a17c, the same ov098 inherited
+#                           _ZN16daObjFallBlock_c4KillEv, the same ov098 inherited
 #                           quad (6/9/27/31) FALL_BLOCK_WF and FALL_BLOCK_BFS
 #                           already seat
 #   0x0211ed34..0x0211edc0  _ZTV8MadPiano, 32 slots -- slot 31 is
@@ -58,7 +58,7 @@
 #                           Platform), then 12 bytes of .data align padding
 # The two words IN FRONT of each table ({0, typeinfo}) are the mwcc RTTI
 # header; each lives inside the PREVIOUS listed symbol's next-symbol span
-# (TrapDoor_SpawnInfo's span is 0x24 = 0x1c record + 8 header, and so on), so
+# (g_profile_TERESAPIT's span is 0x24 = 0x1c record + 8 header, and so on), so
 # they mount as inert data without being named. BooCage's header sits inside
 # the EXCLUDED _ZTV10BigBooIcon span and is not mounted at all; nothing
 # dispatches through a header (no dynamic_cast in this cast), same as ov045.
@@ -84,23 +84,23 @@ data_ov063_0211e27c data_ov063_0211e28c
 # ---- .data 0x0211e720..0x0211edc0 -----------------------------------------
 # The first six are the mwcc typeinfo records (12-byte si_class_type_info
 # nodes; the vtable headers point into them). Mounted as plain data.
-data_ov063_0211e720 data_ov063_0211e72c data_ov063_0211e738
-data_ov063_0211e744 data_ov063_0211e750 data_ov063_0211e760
-Boo_SpawnInfo BigBoo_SpawnInfo BooCage_SpawnInfo BigBooIcon_SpawnInfo
+_ZTS7daTrs_c _ZTI11daTBasket_c _ZTI7daTrs_c
+_ZTI11daTrsIcon_c _ZTS11daTBasket_c _ZTS11daTrsIcon_c
+g_profile_TERESA g_profile_BOSS_TERESA g_profile_T_BASKET g_profile_ICON_TERESA
 data_ov063_0211e7e0
 data_ov063_0211e9ac data_ov063_0211e9b4 data_ov063_0211e9bc
-data_ov063_0211e9c4 data_ov063_0211e9cc data_ov063_0211e9d8
+data_ov063_0211e9c4 _ZTI11daTrsTrap_c _ZTS11daTrsTrap_c
 data_ov063_0211e9e8 data_ov063_0211e9f8
-MansionSteps_SpawnInfo Bookshelf_SpawnInfo MerryGoRound_SpawnInfo
-TrapDoor_SpawnInfo
-data_ov063_0211eb04 data_ov063_0211eb10 data_ov063_0211eb1c
-FallBlockBbh_SpawnInfo
+g_profile_KAIDAN g_profile_BOOKSHELF g_profile_MERRYGOROUND
+g_profile_TERESAPIT
+_ZTI20daObjTh_Fall_Block_c data_ov063_0211eb10 _ZTS20daObjTh_Fall_Block_c
+g_profile_TH_DOWN_B
 data_ov063_0211ebd8 data_ov063_0211ebf8 data_ov063_0211ec18
 data_ov063_0211ec38 data_ov063_0211ec58 data_ov063_0211ec78
 data_ov063_0211ec98 data_ov063_0211ecb8 data_ov063_0211ecd8
 data_ov063_0211ece0 data_ov063_0211ece8 data_ov063_0211ecf0
-data_ov063_0211ecf8 data_ov063_0211ed04
-MadPiano_SpawnInfo
+_ZTS9daPiano_c _ZTI9daPiano_c
+g_profile_PIANO
 
 # ---- .bss 0x0211edc0..0x0211efe0 ------------------------------------------
 # The Boo pack's SharedFilePtr statics and their destructor-chain nodes

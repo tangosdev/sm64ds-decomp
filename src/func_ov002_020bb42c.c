@@ -4,15 +4,15 @@
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-extern void* _ZN5Actor10FindWithIDEj(unsigned int id);
+extern void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern s16 Vec3_HorzAngle(const struct Vector3* v0, const struct Vector3* v1);
-extern int _ZN6Player7TryGrabER5Actor(char* p, char* a);
+extern int _ZN6Player7TryGrabER8dActor_c(char* p, char* a);
 
 void func_ov002_020bb42c(char* self){
   char* other;
   unsigned int id = *(unsigned int*)(self+0x344);
   if (id == 0) return;
-  other = (char*)_ZN5Actor10FindWithIDEj(id);
+  other = (char*)_ZN8dActor_c10FindWithIDEj(id);
   if (other == 0) return;
   {
     int b = (int)(*(u16*)(other+0xc) == 0xbf);
@@ -28,7 +28,7 @@ void func_ov002_020bb42c(char* self){
     if (AngleDiff(ang, *(s16*)(self+0x8e)) <= 0x4000) return;
   }
   if ((*(int*)(self+0x340) & 0x1000) == 0) return;
-  if (_ZN6Player7TryGrabER5Actor(other, self) == 0) return;
+  if (_ZN6Player7TryGrabER8dActor_c(other, self) == 0) return;
   *(int*)(self+0x59c) = (int)other;
   func_ov002_020bbd5c(self, 2);
 }

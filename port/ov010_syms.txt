@@ -1,7 +1,7 @@
 # ---- link100 SPAWN2, gate 232: TWO ROWS TAKEN OUT ------------------------
-# data_ov010_02112ae4:0x24 and data_ov010_02112b08:0x5c used to be in the list
+# _ZTV14daObjC1_Trap_c:0x24 and data_ov010_02112b08:0x5c used to be in the list
 # below, and together they were the 128 bytes of actor 36's own 32-slot vtable
-# emitted as raw DS words (the generator wrote `u8 data_ov010_02112ae4[36] =
+# emitted as raw DS words (the generator wrote `u8 _ZTV14daObjC1_Trap_c[36] =
 # { 84,22,17,2, ... }`, which is 0x02111654, a DS code address). Nothing
 # dispatched them, because the port had actor 36 installing _ZTV4Trap through an
 # /alternatename instead -- and that binding is the defect gate 232 corrects.
@@ -52,13 +52,21 @@ data_ov010_02112530:0x40 data_ov010_02112570:0x10 data_ov010_02112580:0x10 data_
 data_ov010_021125cc:0x44 data_ov010_02112610:0xc data_ov010_0211261c:0xb4 data_ov010_021126d0:0xc0
 data_ov010_02112790:0xd4 data_ov010_02112864:0xe4 data_ov010_02112948:0x20 data_ov010_02112968:0x4c
 data_ov010_021129b4:0xb8 data_ov010_02112a6c:0xc data_ov010_02112a78:0x8 data_ov010_02112a80:0x8
-data_ov010_02112a88:0x8 data_ov010_02112a90:0x8 data_ov010_02112a98:0x8 data_ov010_02112aa0:0x4
-data_ov010_02112aa4:0x4 data_ov010_02112aa8:0x4 data_ov010_02112aac:0x14 Trap_SpawnInfo:0x1c
-data_ov010_02112adc:0x8 data_ov010_02112b64:0xc
-data_ov010_02112b70:0x14 LightBeam_SpawnInfo:0x1c data_ov010_02112bdc:0x10 data_ov010_02112bec:0x1c
-data_ov010_02112c08:0x10 data_ov010_02112c18:0xc data_ov010_02112c24:0xc data_ov010_02112c30:0x14
-PeachPainting_SpawnInfo:0x1c data_ov010_02112c88:0x20
+data_ov010_02112a88:0x8 data_ov010_02112a90:0x8 data_ov010_02112a98:0x8 _ZTI14daObjC1_Trap_c:0x4
+data_ov010_02112aa4:0x4 data_ov010_02112aa8:0x4 _ZTS14daObjC1_Trap_c:0x14
+data_ov010_02112adc:0x8 _ZTI15daObjC1Hikari_c:0xc
+_ZTS15daObjC1Hikari_c:0x14 g_profile_C1_HIKARI:0x1c data_ov010_02112bdc:0x10 data_ov010_02112bec:0x1c
+data_ov010_02112c08:0x10 data_ov010_02112c18:0xc _ZTI14daObjC1Peach_c:0xc _ZTS14daObjC1Peach_c:0x14
+g_profile_C1_PEACH:0x1c data_ov010_02112c88:0x20
 data_ov010_02112ca8:0x20 data_ov010_02112cc8:0x8 data_ov010_02112cd0:0x30 data_ov010_02112d00:0x8
 data_ov010_02112d08:0x8 data_ov010_02112d10:0xc data_ov010_02112d1c:0xc data_ov010_02112d28:0x20
 data_ov010_02112d48:0x8 data_ov010_02112d50:0x8 data_ov010_02112d58:0xc data_ov010_02112d64:0x8
 data_ov010_02112d6c:0x4
+
+
+# RETIRED at ALIAS2 (wave 8, the main -> port sync). Each symbol below was
+# hosted here as a ROM data blob AND is now defined by a translation unit the
+# build compiles, so the link reported it twice (LNK2005). The generator input
+# is the place to fix that: build/port/host-src/ov010_syms.c is its output and is
+# regenerated from this list on every configure.
+#   g_profile_C1_TRAP                          now defined by d_a_obj_c1_trap.cpp.obj

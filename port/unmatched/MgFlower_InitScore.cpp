@@ -1,3 +1,18 @@
+/* ==========================================================================
+ * RETIRED -- THIS FILE IS NOT IN ANY BUILD. Run link100 wave 15, lane SEAT15D,
+ * LINK15 BATCH 3. Both deltas this file lists below are now in src/:
+ * src/func_ov004_020ad8b8.c:3 declares `extern int func_ov004_020adc3c(int* c);`
+ * and :24 passes `c`, and the TU's own header states the defect in the past
+ * tense ("THE ARGUMENT IS THE FRAMEWORK OBJECT AND IT USED TO BE DROPPED
+ * HERE"). The matched TU is taken through port/slice_l15mg.txt and the SEAT15D
+ * block in port/CMakeLists.txt, and this file's source-list entry there is
+ * commented out. The body is deleted so the two copies cannot both be taken;
+ * the banner below is kept because the disassembly in it is the derivation.
+ *
+ * The rest of the file, from here down, is the note as it was written.
+ * ==========================================================================
+ */
+
 /* PORT_HOST_ABI. func_ov004_020ad8b8, ov004's minigame-framework helper that
  * dScMgFlower_c::InitResources calls on its first statement. Run mg5, lane
  * FLW, under the coordinator's granted displacement ruling.
@@ -51,7 +66,7 @@
  * host the callee reads [esp+4], which the caller never wrote:
  *
  *     FAULT c0000005 at +0x00049026 accessing 00000009
- *       flw_init -> func_ov006_0212b480 (slot 0) +0xa
+ *       flw_init -> _ZN13dScMgFlower_c13InitResourcesEv (slot 0) +0xa
  *                -> func_ov004_020ad8b8 +0x10
  *                -> func_ov004_020adc3c +0x6
  *
@@ -86,25 +101,9 @@
  * coordinator's to make rather than this lane's.
  */
 
-extern "C" {
-
-extern int data_ov004_020beb68;
-extern int data_0209b308[];
-extern int func_ov004_020adc3c(void *c);   /* DELTA 1: was (void) */
-extern int func_02013580(int a, int b);
-
-// PORT_HOST_ABI: src drops the argument to func_ov004_020adc3c that the ROM rides through r0 (the ldr that made the null test); host copy passes data_ov004_020beb68 read as a pointer
-int func_ov004_020ad8b8(void)
-{
-    if (data_ov004_020beb68 != 0) {
-        /* DELTA 2: the ROM has this value live in r0 across the bl. */
-        int r = func_02013580(
-            func_ov004_020adc3c((void *)data_ov004_020beb68), 0);
-        if (r == 0)
-            return data_0209b308[0x14 / 4];
-        return r;
-    }
-    return 0;
-}
-
-}  /* extern "C" */
+/* THE BODY LIVES IN src/func_ov004_020ad8b8.c, on port/slice_l15mg.txt. It
+   spells DELTA 1 and DELTA 2 itself now: the callee's declaration takes the
+   parameter its definition takes, and the call passes the pointer the ROM has
+   live in r0 across the bl. src declares the global `int*` rather than casting
+   an `int`, which is the same 32 bits and the reading this file's own
+   "THE CAST IS THE ROM'S OWN READING" paragraph asked for. */

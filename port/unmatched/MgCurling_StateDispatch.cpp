@@ -278,7 +278,7 @@ extern "C" void func_ov006_020e1214(char *base, int idx)
 //        data_ov006_02141910 at its second, one call each. Seating only the
 //        table the census named would have left the second dispatch reading a
 //        cartridge code word and calling it.
-//   func_ov006_020e3528  reads data_ov006_02141950, and SLOT 1 OF THAT TABLE
+//   _ZN14dScMgCurling_c8BehaviorEv  reads data_ov006_02141950, and SLOT 1 OF THAT TABLE
 //        IS func_ov006_020e3078 ITSELF. Seating 02141950 without seating
 //        021418b0 and 02141910 would install a face pointing at a host copy
 //        that is about to be retired; retiring 020e3078 without seating
@@ -290,7 +290,7 @@ extern "C" void func_ov006_020e1214(char *base, int idx)
 //
 //   func_ov006_020e3078   data_ov006_021418b0   2 slots   arity 0
 //                         data_ov006_02141910   4 slots   arity 1
-//   func_ov006_020e3528   data_ov006_02141950   5 slots   arity 0
+//   _ZN14dScMgCurling_c8BehaviorEv   data_ov006_02141950   5 slots   arity 0
 //
 // THE STRIDE, ROM SIDE, read at each body's OWN address out of
 // extracted/overlays/overlay_0006.bin at ov006 base 0x020bfec0
@@ -330,7 +330,7 @@ extern "C" void func_ov006_020e1214(char *base, int idx)
 // no r1 and pushes nothing. So 021418b0 and 02141950 take ZERO-argument faces
 // and 02141910 takes ONE-argument faces, ELEVEN faces in all.
 //
-// ONE /alternatename. src/func_ov006_020e3528.cpp wraps its member pointer in
+// ONE /alternatename. src/_ZN14dScMgCurling_c8BehaviorEv.cpp wraps its member pointer in
 // `struct Entry { PMF pmf[1]; }` at C++ linkage, so MSVC spells the reference
 // ?data_ov006_02141950@@3PAUEntry@@A -- read off the object with
 // dumpbin /symbols, not guessed. src/func_ov006_020e3078.cpp declares BOTH of

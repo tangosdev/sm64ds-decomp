@@ -1,0 +1,13 @@
+# port/facecycle_allow.txt -- reviewed exceptions for port/tools/facecycle_guard.py.
+#
+# The guard fails the link when one trivial forwarder calls another in a cycle:
+# a face pointing at a face, which is an unbounded call with no exit. A line
+# here names ONE symbol from a cycle and tells the guard to let that cycle pass.
+#
+# THE LIST IS EMPTY AND SHOULD STAY EMPTY. A face/forwarder cycle is never
+# correct: whichever side of the pair has no real body behind it is wrong, and
+# the map says which. Every one found so far (eight on 2026-09-14, folded by
+# /OPT:ICF onto four addresses) had a real ROM body sitting in the link or one
+# translation unit away from it, and the fix was always to reach that body, never
+# to accept the loop. If you are about to add a row here, write the argument for
+# it next to the row and expect to be asked for the map evidence.

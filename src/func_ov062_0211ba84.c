@@ -5,7 +5,7 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* daRFlag_c::Kill - recovered from vtable slot identity */
-extern char *_ZN5Actor13ClosestPlayerEv(char *self);
+extern char *_ZN8dActor_c13ClosestPlayerEv(char *self);
 extern int func_ov062_0211c658(char *c, void *p);
 extern s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 extern s16 Vec3_VertAngle(const Vector3 *v0, const Vector3 *v1);
@@ -13,7 +13,7 @@ extern void _Z14ApproachLinearRsss(s16 *cur, s16 tgt, s16 step);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
 extern void MulVec3Mat4x3(const Vector3 *v, void *m, Vector3 *out);
-extern int _ZNK12WithMeshClsn8IsOnWallEv(char *self);
+extern int _ZNK10dBgCh_Actr8IsOnWallEv(char *self);
 extern void *data_ov062_0211e17c;
 extern signed char data_0209f2f8;
 extern int data_020a0e68[];
@@ -32,7 +32,7 @@ int func_ov062_0211ba84(char *c)
     v.x = 0;
     v.y = 0;
     v.z = 0;
-    ip = _ZN5Actor13ClosestPlayerEv(c);
+    ip = _ZN8dActor_c13ClosestPlayerEv(c);
     if (ip != 0) {
         if (*(u8 *)(ip + 0x6fb) == 1) {
             *(s16 *)(c + 0x444) = 0x1e;
@@ -67,7 +67,7 @@ int func_ov062_0211ba84(char *c)
     Matrix4x3_ApplyInPlaceToRotationX(data_020a0e68, *(s16 *)(c + 0x8c));
     MulVec3Mat4x3(&v, data_020a0e68, (Vector3 *)(c + 0xa4));
     func_ov062_0211b51c(c);
-    if (*(u16 *)(c + 0x100) == 0 || _ZNK12WithMeshClsn8IsOnWallEv(c + 0x178) != 0) {
+    if (*(u16 *)(c + 0x100) == 0 || _ZNK10dBgCh_Actr8IsOnWallEv(c + 0x178) != 0) {
         *(s16 *)(c + 0x444) = 0x1e;
         func_ov062_0211c658(c, &data_ov062_0211e17c);
     }

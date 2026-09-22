@@ -24,11 +24,11 @@
 // _ZN11RaycastLine11DetectClsnEv. Those Itanium length prefixes contradict the
 // identifiers they precede (SetObjAndLine is 13 characters, DetectClsn is 10),
 // so neither string is any symbol, and the real 13/10 spellings were linked all
-// along -- from _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor.cpp.obj
+// along -- from _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c.cpp.obj
 // and reverse_bridges.cpp.obj. Only func_ov002_020ee5d0 was genuinely absent,
 // and it was already sliced (slice_gate16.txt line 302) and only wanted a
 // reference edge. The seat cost one face, not a lane.
-extern "C" int _ZN8Platform20UpdateKillByMegaCharEsss5Fix12IiE(
+extern "C" int _ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE(
     void *, short, short, short, int)
 {
     return 0;

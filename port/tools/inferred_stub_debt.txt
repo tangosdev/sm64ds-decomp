@@ -37,9 +37,9 @@
 #
 # RESULT: 43 REAL DECOMP, 0 genuine guesses, 0 unverifiable. Nothing was
 # de-seated because nothing needed de-seating -- including the seven that run
-# every frame on a mounted level (func_ov045_0211129c, func_ov045_02111274,
-# func_ov052_021112ac, func_ov052_02111284, func_ov063_0211c7b0,
-# func_ov100_021470f4, func_ov100_021470a4). The marker is a MISLABEL on all
+# every frame on a mounted level (_ZN15FireSeaElevator8BehaviorEv, _ZN15FireSeaElevator6RenderEv,
+# _ZN13daObjEmmLog_c8BehaviorEv, _ZN13daObjEmmLog_c6RenderEv, func_ov063_0211c7b0,
+# _ZN15daObjPathLift_c8BehaviorEv, _ZN15daObjPathLift_c6RenderEv). The marker is a MISLABEL on all
 # 43: the NAME was recovered from vtable slot identity, the BODY is decompiled.
 #
 # The list is therefore still 43 long and that is correct. A symbol leaves the
@@ -49,45 +49,45 @@
 # this queue clears itself when that lands. Deleting a line here on the
 # strength of the ruling alone would turn a discovered-debt queue back into
 # the approval list its header forbids.
-func_ov020_021127a4
-func_ov020_021127cc
-func_ov021_0211228c
-func_ov045_021111e4
-func_ov045_0211123c
-func_ov045_02111274
-func_ov045_0211129c
-func_ov045_021113ec
-func_ov045_02111b64
-func_ov045_02111bc8
-func_ov045_02111bdc
-func_ov052_0211123c
-func_ov052_02111284
-func_ov052_021112ac
-func_ov052_02111348
-func_ov060_02117d60
-func_ov060_021181e8
-func_ov060_0211822c
-func_ov060_021182b0
-func_ov063_021160c4
-func_ov063_0211c480
+_ZN8BookShot16OnAimedAtWithEggEv
+_ZN8BookShot13OnYoshiTryEatEv
+_ZN11RollingRock16OnAimedAtWithEggEv
+_ZN15FireSeaElevatorD0Ev
+_ZN15FireSeaElevator16CleanupResourcesEv
+_ZN15FireSeaElevator6RenderEv
+_ZN15FireSeaElevator8BehaviorEv
+_ZN15FireSeaElevator13InitResourcesEv
+_ZN19daObjKm2_Ukishima_cD0Ev
+_ZN19daObjKm2_Ukishima_c16CleanupResourcesEv
+_ZN19daObjKm2_Ukishima_c13InitResourcesEv
+_ZN13daObjEmmLog_c16CleanupResourcesEv
+_ZN13daObjEmmLog_c6RenderEv
+_ZN13daObjEmmLog_c8BehaviorEv
+_ZN13daObjEmmLog_c13InitResourcesEv
+_ZN17BowserSkyPlatformD0Ev
+_ZN17BowserSkyPlatform16CleanupResourcesEv
+_ZN17BowserSkyPlatform6RenderEv
+_ZN17BowserSkyPlatform13InitResourcesEv
+_ZN7daTrs_c16OnAimedAtWithEggEv
+_ZN7daTrs_c13OnYoshiTryEatEv
 func_ov063_0211c7b0
-func_ov065_02116f0c
-func_ov065_02116f14
-func_ov065_02116f40
-func_ov065_02117eac
-func_ov065_02117eb4
-func_ov065_02117ee0
-func_ov065_021195e4
-func_ov071_02121b00
-func_ov073_02121ec0
-func_ov073_021223f4
-func_ov080_02124ac4
+_ZN15daYurei_Mucho_c16OnAimedAtWithEggEv
+_ZN15daYurei_Mucho_c13OnTurnIntoEggER6Player
+_ZN15daYurei_Mucho_c13OnYoshiTryEatEv
+_ZN5Swoop16OnAimedAtWithEggEv
+_ZN5Swoop13OnTurnIntoEggER6Player
+_ZN5Swoop13OnYoshiTryEatEv
+_ZN12daDossyCap_c13OnYoshiTryEatEv
+_ZN8daEyBm_c13OnYoshiTryEatEv
+_ZN11ChiefChilly16OnAimedAtWithEggEv
+_ZN8CccArena4KillEv
+_ZN11CrazedCrate13OnYoshiTryEatEv
 func_ov080_02124eb0
-func_ov080_02125318
-func_ov089_02131f04
-func_ov089_02131f4c
-func_ov100_02146dec
-func_ov100_02147054
-func_ov100_021470a4
-func_ov100_021470f4
-func_ov100_021471e0
+_ZN11CrazedCrate13OnTurnIntoEggER6Player
+_ZN3Key13OnTurnIntoEggER6Player
+_ZN3Key13OnYoshiTryEatEv
+_ZN15daObjPathLift_cD0Ev
+_ZN15daObjPathLift_c16CleanupResourcesEv
+_ZN15daObjPathLift_c6RenderEv
+_ZN15daObjPathLift_c8BehaviorEv
+_ZN15daObjPathLift_c13InitResourcesEv

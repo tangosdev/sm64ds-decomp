@@ -22,8 +22,8 @@
 // ---- 2. THE HIERARCHY IS THREE DEEP, AND THE RTTI SAYS SO ----------------
 //
 //     Scene -> dScMgBase_c         data_ov004_020bc0c0  36 slots
-//           -> dScMgSingle3DBase_c data_ov006_0213e448  36 slots
-//           -> dScMgCard_c         data_ov006_0213bdb4  36 slots
+//           -> dScMgSingle3DBase_c _ZTV19dScMgSingle3DBase_c  36 slots
+//           -> dScMgCard_c         _ZTV11dScMgCard_c  36 slots
 //
 // The word immediately before a vtable is its type_info, that record's second
 // word is the name and its third is the BASE's type_info.  Read out of
@@ -34,9 +34,9 @@
 //                +8 -> 0x0213bc64 +4 -> 0x0213bd00 = "19dScMgSingle3DBase_c"
 //                                +8 -> 0x020bbf6c   (ov004, dScMgBase_c's)
 //
-// The code agrees twice over: src/MgPicturePoker_Spawn.cpp writes 0x0213e448
+// The code agrees twice over: src/minigames/d_s_mg_card.cpp writes 0x0213e448
 // into the object and then 0x0213bdb4 over it, and slots 16 and 17
-// (src/func_ov006_020d95a4.cpp, src/func_ov006_020d9638.cpp) unwind them in the
+// (src/minigames/d_s_mg_card.cpp, src/minigames/d_s_mg_card.cpp) unwind them in the
 // opposite order.  A hierarchy written by the constructor and unwritten by the
 // destructor in reverse, with an RTTI base link agreeing, is not a guess.
 //
@@ -44,16 +44,16 @@
 //
 // This is the first seat in the family whose FACTORY PRODUCTS have their own
 // virtuals, which is run mg9 lane S381's element-vtable law arriving with
-// teeth.  src/MgPicturePoker_Spawn.cpp builds two five-element arrays through
+// teeth.  src/minigames/d_s_mg_card.cpp builds two five-element arrays through
 // the MSL array constructor:
 //
-//     func_020733a8(p + 0x51a8, 5, 0x30, func_ov006_020dbe30, func_ov006_020d96e0)
-//     func_020733a8(p + 0x5298, 5, 0x30, func_ov006_020dbe14, func_ov006_020d96f0)
+//     __cxa_vec_ctor(p + 0x51a8, 5, 0x30, _ZN12dMgCardObj_cC1Ev, _ZN12dMgCardObj_cD1Ev)
+//     __cxa_vec_ctor(p + 0x5298, 5, 0x30, _ZN17dMgDilarCardObj_cC1Ev, _ZN17dMgDilarCardObj_cD1Ev)
 //
 // and each element constructor writes a vtable into the element's word 0:
 //
-//     +0x51a8[5]  dMgCardObj_c        data_ov006_0213bccc  3 slots  (Mario's)
-//     +0x5298[5]  dMgDilarCardObj_c   data_ov006_0213bcf4  3 slots  (Luigi's)
+//     +0x51a8[5]  dMgCardObj_c        _ZTV12dMgCardObj_c  3 slots  (Mario's)
+//     +0x5298[5]  dMgDilarCardObj_c   _ZTV17dMgDilarCardObj_c  3 slots  (Luigi's)
 //
 // 0x0213bcf4's element ctor writes 0x0213bccc first and 0x0213bcf4 over it, so
 // the dealer's card DERIVES from the player's; the RTTI at 0x0213bc58 says the
@@ -65,13 +65,13 @@
 // sweep over this class's own 37 bodies (slice section 6) finds NINE indirect
 // call sites and every one of them is accounted for:
 //
-//     slot 0   0x020dab40, 0x020daba4   src/func_ov006_020da9c4.cpp, Render,
+//     slot 0   0x020dab40, 0x020daba4   src/minigames/d_s_mg_card.cpp, Render,
 //              `ldr r1,[r0] / ldr r1,[r1] / blx r1`, five elements of each array
-//     slot 1   0x020db640, 0x020db650   src/func_ov006_020dac34.c's tail,
+//     slot 1   0x020db640, 0x020db650   src/minigames/d_s_mg_card.cpp's tail,
 //              `ldr r1,[r1,#4]`, five elements of each array, EVERY FRAME
 //     slot 2   0x020d9854, 0x020d9de0, 0x020da030, 0x020da0e4
 //              the two element ticks and the two element seeders
-//     +0x48    0x020dbd0c                src/func_ov006_020dbaf0.cpp, the class's
+//     +0x48    0x020dbd0c                src/minigames/d_s_mg_card.cpp, the class's
 //              OWN vtable slot 18, dispatched with r1 = -1 (`mvn r1,#0`).  The
 //              address is the blx itself, which is what the sweep reports; the
 //              sequence it ends runs 0x020dbd00..0x020dbd0c.
@@ -122,7 +122,7 @@
 // ---- 6. THERE IS NO POINTER-TO-MEMBER WALL FOR THIS CLASS -----------------
 //
 // This class has no state table and no member pointer of its own.  The state
-// machine is an ORDINARY 14-ARM ARM JUMP TABLE in src/func_ov006_020dac34.c:
+// machine is an ORDINARY 14-ARM ARM JUMP TABLE in src/minigames/d_s_mg_card.cpp:
 //
 //     020dac44  ldrsh r0,[r1,#0x88]        the state, at +0x5388
 //     020dac48  cmp   r0,#0xd
@@ -145,13 +145,13 @@
 // ---- 7. WHAT THIS SEAT DOES NOT CLAIM -------------------------------------
 //
 // NO FLOOR ANY MORE, AND THAT IS THE ONLY THING THAT CHANGED HERE.  Run mg11
-// seated this class with one, func_ov006_020da174 (0x2ac at 0x020da174, the
+// seated this class with one, _ZN11dScMgCard_c11ArrangeHandEP12dMgCardObj_c (0x2ac at 0x020da174, the
 // hand sorter), behind port/unmatched/MgCard_Traps.cpp, and it sat on the
 // critical path: state 9 calls it on both hands, it is the only caller of
-// src/func_ov006_020d99ec.c, which is what puts every card into state 7 with a
+// src/minigames/d_s_mg_card.cpp, which is what puts every card into state 7 with a
 // slide target, and state 10 will not advance until all ten cards reach state
 // 8.  So the port reached state 10 and stayed there.  Run mg12 lane SRT
-// decompiled the body -- src/func_ov006_020da174.c, byte-identical at mwccarm
+// decompiled the body -- src/minigames/d_s_mg_card.cpp, byte-identical at mwccarm
 // 2004/b56, with the delink block for 0x020da174..0x020da420 enrolled -- and
 // the trap is deleted.  port/slice_pkr.txt section 7 is the record.
 //
@@ -186,49 +186,49 @@ int      port_scene_env_want(void);
    mounted table alone leaves live wild DS pointers in a table the factory (and,
    for the two element tables, the array constructor) installs. */
 extern unsigned char data_ov004_020bc0c0[];   /* dScMgBase_c,          36 */
-extern unsigned char data_ov006_0213e448[];   /* dScMgSingle3DBase_c,  36 */
-extern unsigned char data_ov006_0213bdb4[];   /* dScMgCard_c,          36 */
-extern unsigned char data_ov006_0213bccc[];   /* dMgCardObj_c,          3 */
-extern unsigned char data_ov006_0213bcf4[];   /* dMgDilarCardObj_c,     3 */
-extern unsigned char MgPicturePoker_SpawnInfo[];
+extern unsigned char _ZTV19dScMgSingle3DBase_c[];   /* dScMgSingle3DBase_c,  36 */
+extern unsigned char _ZTV11dScMgCard_c[];   /* dScMgCard_c,          36 */
+extern unsigned char _ZTV12dMgCardObj_c[];   /* dMgCardObj_c,          3 */
+extern unsigned char _ZTV17dMgDilarCardObj_c[];   /* dMgDilarCardObj_c,     3 */
+extern unsigned char g_profile_MG_CARD[];
 
 /* dScMgSingle3DBase_c's eight overrides.  Slot 2 is NOT src's body: see
    hal/scene_mg_luckystars.cpp section 4 and port/unmatched/MgFlower_Slot2.cpp,
-   re-checked for this class rather than copied -- func_ov006_0210a6e4 drops the
+   re-checked for this class rather than copied -- _ZN19dScMgSingle3DBase_c18AfterInitResourcesEj drops the
    framework's second argument at its `bl 0x20b08f0` and src spells the call
    with one argument because that is the only way to spell an unnamed value. */
 int   port_mg_flower_after_init(void *c, unsigned f);   /* slot  2 */
-void  func_ov006_0210a608(void *c, unsigned f);         /* slot  5 */
-int   func_ov006_0210a698(void *c);                     /* slot  7 */
-int   func_ov006_0210a664(void *c);                     /* slot 10 */
-int   func_ov006_0210a4b0(char *c);                     /* slot 16 D2 */
-int   func_ov006_0210a4e8(char *c);                     /* slot 17 D0 */
-int   func_ov006_0210a600(void);                        /* slot 26 */
-void  func_ov006_0210a708(char *c);                     /* slot 33 */
+void  _ZN19dScMgSingle3DBase_c21AfterCleanupResourcesEj(void *c, unsigned f);         /* slot  5 */
+int   _ZN19dScMgSingle3DBase_c14BeforeBehaviorEv(void *c);                     /* slot  7 */
+int   _ZN19dScMgSingle3DBase_c12BeforeRenderEv(void *c);                     /* slot 10 */
+int   _ZN19dScMgSingle3DBase_cD1Ev(char *c);                     /* slot 16 D2 */
+int   _ZN19dScMgSingle3DBase_cD0Ev(char *c);                     /* slot 17 D0 */
+int   _ZN19dScMgSingle3DBase_c24OnHitByCannonBlastedCharEv(void);                        /* slot 26 */
+void  _ZN19dScMgSingle3DBase_c9Virtual84Ev(char *c);                     /* slot 33 */
 
 /* dScMgCard_c's own NINE.  Slot 3 is the one dScMgBSC_c does not have; run mg9
    lane WIG recorded CleanupResources as new to the family and this is the
    second class to carry it. */
-int   func_ov006_020dbaf0(char *c);           /* slot  0 InitResources    */
-int   func_ov006_020da994(void);              /* slot  3 CleanupResources */
-int   func_ov006_020dabec(char *c);           /* slot  6 Behavior         */
-int   func_ov006_020da9c4(char *c);           /* slot  9 Render           */
-void *func_ov006_020d95a4(char *c);           /* slot 16 D2               */
-void *func_ov006_020d9638(char *c);           /* slot 17 D0               */
-void  func_ov006_020db9dc(char *c);           /* slot 18 state reset      */
-int   func_ov006_020db720(char *c);           /* slot 19                  */
-int   func_ov006_020db6ec(void *c);           /* slot 21 difficulty band  */
+int   _ZN11dScMgCard_c13InitResourcesEv(char *c);           /* slot  0 InitResources    */
+int   _ZN11dScMgCard_c16CleanupResourcesEv(void);              /* slot  3 CleanupResources */
+int   _ZN11dScMgCard_c8BehaviorEv(char *c);           /* slot  6 Behavior         */
+int   _ZN11dScMgCard_c6RenderEv(char *c);           /* slot  9 Render           */
+void *_ZN11dScMgCard_cD1Ev(char *c);           /* slot 16 D2               */
+void *_ZN11dScMgCard_cD0Ev(char *c);           /* slot 17 D0               */
+void  _ZN11dScMgCard_c13OnYoshiTryEatEi(char *c);           /* slot 18 state reset      */
+int   _ZN11dScMgCard_c13OnTurnIntoEggEi(char *c);           /* slot 19                  */
+int   _ZN11dScMgCard_c15OnGroundPoundedEv(void *c);           /* slot 21 difficulty band  */
 
 /* the two element classes' three each */
-void  func_ov006_020d9bdc(char *c);           /* dMgCardObj_c      slot 0 */
-void  func_ov006_020d9c5c(void *c);           /* dMgCardObj_c      slot 1 */
-int   func_ov006_020d9bd0(void);              /* dMgCardObj_c      slot 2 */
-void  func_ov006_020d970c(unsigned char *c);  /* dMgDilarCardObj_c slot 0 */
-void  func_ov006_020d978c(void *c);           /* dMgDilarCardObj_c slot 1 */
-int   func_ov006_020d9998(void);              /* dMgDilarCardObj_c slot 2 */
+void  _ZN12dMgCardObj_c6RenderEv(char *c);           /* dMgCardObj_c      slot 0 */
+void  _ZN12dMgCardObj_c6UpdateEv(void *c);           /* dMgCardObj_c      slot 1 */
+int   _ZN12dMgCardObj_c13GetOffscreenYEv(void);              /* dMgCardObj_c      slot 2 */
+void  _ZN17dMgDilarCardObj_c6RenderEv(unsigned char *c);  /* dMgDilarCardObj_c slot 0 */
+void  _ZN17dMgDilarCardObj_c6UpdateEv(void *c);           /* dMgDilarCardObj_c slot 1 */
+int   _ZN17dMgDilarCardObj_c13GetOffscreenYEv(void);              /* dMgDilarCardObj_c slot 2 */
 
 /* the factory */
-void *MgPicturePoker_Spawn(void);
+void *dScMgCard_c_classInit(void);
 
 /* the framework's, from unmatched/MgBase_StateDispatch.cpp */
 void     port_mg_dispatch_counts(unsigned *calls, unsigned *unknown);
@@ -291,23 +291,23 @@ static int g_card_mode18 = -1, g_card_mode19 = -1;
 static void *__fastcall s3_ainit(void *s, void *, unsigned f)
 { B3D(2);  return (void *)(size_t)port_mg_flower_after_init(s, f); }
 static void __fastcall s3_aclean(void *s, void *, unsigned f)
-{ B3D(5);  func_ov006_0210a608(s, f); }
+{ B3D(5);  _ZN19dScMgSingle3DBase_c21AfterCleanupResourcesEj(s, f); }
 static int  __fastcall s3_bbeh(void *s, void *)
-{ B3D(7);  return func_ov006_0210a698(s); }
+{ B3D(7);  return _ZN19dScMgSingle3DBase_c14BeforeBehaviorEv(s); }
 static int  __fastcall s3_bren(void *s, void *)
-{ B3D(10); return func_ov006_0210a664(s); }
+{ B3D(10); return _ZN19dScMgSingle3DBase_c12BeforeRenderEv(s); }
 static void *__fastcall s3_d2(void *s, void *)
-{ B3D(16); return (void *)(size_t)func_ov006_0210a4b0((char *)s); }
+{ B3D(16); return (void *)(size_t)_ZN19dScMgSingle3DBase_cD1Ev((char *)s); }
 static void *__fastcall s3_d0(void *s, void *)
-{ B3D(17); return (void *)(size_t)func_ov006_0210a4e8((char *)s); }
+{ B3D(17); return (void *)(size_t)_ZN19dScMgSingle3DBase_cD0Ev((char *)s); }
 static int  __fastcall s3_v26(void *, void *)
-{ B3D(26); return func_ov006_0210a600(); }
+{ B3D(26); return _ZN19dScMgSingle3DBase_c24OnHitByCannonBlastedCharEv(); }
 static int  __fastcall s3_v33(void *s, void *)
-{ B3D(33); func_ov006_0210a708((char *)s); return 0; }
+{ B3D(33); _ZN19dScMgSingle3DBase_c9Virtual84Ev((char *)s); return 0; }
 
 /* ---- dScMgCard_c's own nine --------------------------------------------- */
 static int  __fastcall card_init(void *s, void *)
-{ CARD(0); const int r = func_ov006_020dbaf0((char *)s);
+{ CARD(0); const int r = _ZN11dScMgCard_c13InitResourcesEv((char *)s);
   /* the GaplessMinigames latch, for hal/scene_mg.cpp's reason: every seated
      minigame calls it so the ones the gapless table does not name can say
      "unsupported" instead of doing nothing quietly.  hal_gapless_splice() is
@@ -318,48 +318,48 @@ static int  __fastcall card_init(void *s, void *)
      hal/scene_mg_luckystars.cpp. */
   hal_gapless_minigames_latch(); return r; }
 static int  __fastcall card_clean(void *, void *)
-{ CARD(3); return func_ov006_020da994(); }
+{ CARD(3); return _ZN11dScMgCard_c16CleanupResourcesEv(); }
 static int  __fastcall card_beh(void *s, void *)
-{ CARD(6); return func_ov006_020dabec((char *)s); }
+{ CARD(6); return _ZN11dScMgCard_c8BehaviorEv((char *)s); }
 static int  __fastcall card_render(void *s, void *)
-{ CARD(9); return func_ov006_020da9c4((char *)s); }
+{ CARD(9); return _ZN11dScMgCard_c6RenderEv((char *)s); }
 static void *__fastcall card_d2(void *s, void *)
-{ CARD(16); return func_ov006_020d95a4((char *)s); }
+{ CARD(16); return _ZN11dScMgCard_cD1Ev((char *)s); }
 static void *__fastcall card_d0(void *s, void *)
-{ CARD(17); return func_ov006_020d9638((char *)s); }
+{ CARD(17); return _ZN11dScMgCard_cD0Ev((char *)s); }
 /* Slot 18's ROM body sets no return value at its single exit (0x020dbac0:
    `add sp,sp,#4 / pop / bx lr`, r0 untouched) and its ROM caller at 0x020dbd0c
    ignores whatever comes back, so the 1 here is the family convention rather
    than a measurement.  Slot 19's DOES return -- 1 on the ApproachLinear2 arm
    and 0 at its other exit -- so that one is forwarded. */
 static int  __fastcall card_reset(void *s, void *, int mode)
-{ CARD(18); g_card_mode18 = mode; func_ov006_020db9dc((char *)s); return 1; }
+{ CARD(18); g_card_mode18 = mode; _ZN11dScMgCard_c13OnYoshiTryEatEi((char *)s); return 1; }
 static int  __fastcall card_v19(void *s, void *, int mode)
-{ CARD(19); g_card_mode19 = mode; return func_ov006_020db720((char *)s); }
+{ CARD(19); g_card_mode19 = mode; return _ZN11dScMgCard_c13OnTurnIntoEggEi((char *)s); }
 static int  __fastcall card_v21(void *s, void *)
-{ CARD(21); return func_ov006_020db6ec(s); }
+{ CARD(21); return _ZN11dScMgCard_c15OnGroundPoundedEv(s); }
 
 /* ---- the two element classes' three each --------------------------------
    These are dispatched off the ELEMENT's own word 0, not off the scene's, and
    the receiver is the element.  Every one of the six is __fastcall for the
    reason every other face in this port is: MSVC reaches a C++ virtual with
    `this` in ecx, and the src bodies that dispatch them
-   (src/func_ov006_020da9c4.cpp, _020dac34.c, _020da00c.cpp, _020da0ac.cpp,
+   (src/minigames/d_s_mg_card.cpp, _020dac34.c, _020da00c.cpp, _020da0ac.cpp,
    _020d978c.cpp, _020d9c5c.cpp) all spell the object as a real C++ class with
    three virtuals, so MSVC emits the ecx call and reads the word this fill
    replaces. */
 static void __fastcall elem_draw(void *s, void *)
-{ ELEM(0); func_ov006_020d9bdc((char *)s); }
+{ ELEM(0); _ZN12dMgCardObj_c6RenderEv((char *)s); }
 static void __fastcall elem_tick(void *s, void *)
-{ ELEM(1); func_ov006_020d9c5c(s); }
+{ ELEM(1); _ZN12dMgCardObj_c6UpdateEv(s); }
 static int  __fastcall elem_home(void *, void *)
-{ ELEM(2); return func_ov006_020d9bd0(); }
+{ ELEM(2); return _ZN12dMgCardObj_c13GetOffscreenYEv(); }
 static void __fastcall dilr_draw(void *s, void *)
-{ DILR(0); func_ov006_020d970c((unsigned char *)s); }
+{ DILR(0); _ZN17dMgDilarCardObj_c6RenderEv((unsigned char *)s); }
 static void __fastcall dilr_tick(void *s, void *)
-{ DILR(1); func_ov006_020d978c(s); }
+{ DILR(1); _ZN17dMgDilarCardObj_c6UpdateEv(s); }
 static int  __fastcall dilr_home(void *, void *)
-{ DILR(2); return func_ov006_020d9998(); }
+{ DILR(2); return _ZN17dMgDilarCardObj_c13GetOffscreenYEv(); }
 
 /* SM64DS_SCENE_SLOT0=0 and SM64DS_SCENE_SLOT9=0, the diagnostics every scene
    seat in this port carries, counted separately so a run can never read a no-op
@@ -435,16 +435,16 @@ static unsigned g_card_mid_claimed;
 extern "C" void port_scene_fill_card(void)
 {
     void **base = (void **)data_ov004_020bc0c0;
-    void **mid  = (void **)data_ov006_0213e448;
-    void **vt   = (void **)data_ov006_0213bdb4;
-    void **el   = (void **)data_ov006_0213bccc;
-    void **dl   = (void **)data_ov006_0213bcf4;
+    void **mid  = (void **)_ZTV19dScMgSingle3DBase_c;
+    void **vt   = (void **)_ZTV11dScMgCard_c;
+    void **el   = (void **)_ZTV12dMgCardObj_c;
+    void **dl   = (void **)_ZTV17dMgDilarCardObj_c;
 
     /* THE BASE TABLE IS FILLED HERE TOO AND IT IS NOT CEREMONY.  Earlier rows'
        fills already did it and run first, so on a tree carrying them this is a
        second pass over words that are already host pointers and finds nothing.
        It is here so this class does not depend on another class's row existing:
-       the factory's first act is func_ov004_020b2adc, which writes
+       the factory's first act is _ZN11dScMgBase_cC2Ev, which writes
        data_ov004_020bc0c0 into the object's first word before either derived
        table lands. */
     port_scene_mg_fill_shared(base, 36);
@@ -524,16 +524,16 @@ extern "C" void port_scene_fill_card(void)
 
    THE FACTORY NEEDS NO DISPLACEMENT RULING, re-checked rather than assumed.
    port/mg_fanout_costs.txt section 12 grants one to 0x169 because
-   src/func_ov006_020e0574.cpp calls the base constructor func_ov004_020b2adc
+   src/actors/dScMgCup_c.cpp calls the base constructor _ZN11dScMgBase_cC2Ev
    with NO argument and rides r0 through, and that callee dereferences on its
-   first statement.  src/MgPicturePoker_Spawn.cpp calls func_ov004_020b2adc(p)
+   first statement.  src/minigames/d_s_mg_card.cpp calls _ZN11dScMgBase_cC2Ev(p)
    WITH its argument, so this class is on the correct side of it and the factory
    is linked from the slice rather than host-copied. */
 static char *g_card_self;
 
 extern "C" void *port_mg_card_spawn(void)
 {
-    void *p = MgPicturePoker_Spawn();
+    void *p = dScMgCard_c_classInit();
     g_card_self = (char *)p;
     return p;
 }
@@ -594,10 +594,10 @@ extern "C" void port_scene_card_hits(void)
         std::printf("[scene] dScMgCard_c state machine: no member-pointer table"
                     " (14-arm ARM jump table at 0x020dac4c); %u framework "
                     "call(s), %u UNHANDLED address(es)\n", calls, unknown);
-        std::printf("[scene] dScMgCard_c hand sorter func_ov006_020da174: "
-                    "SEATED (src/func_ov006_020da174.c, run mg12 lane SRT; run "
+        std::printf("[scene] dScMgCard_c hand sorter _ZN11dScMgCard_c11ArrangeHandEP12dMgCardObj_c: "
+                    "SEATED (src/minigames/d_s_mg_card.cpp, run mg12 lane SRT; run "
                     "mg11 had to trap it). It is the ONLY caller of "
-                    "src/func_ov006_020d99ec.c, which is what puts all ten "
+                    "src/minigames/d_s_mg_card.cpp, which is what puts all ten "
                     "cards into state 7 with a slide target, and state 10 waits"
                     " for every card to reach state 8 -- so the card `state` "
                     "bytes below and a state index past 0x0a are what say it "
@@ -645,8 +645,8 @@ extern "C" void port_scene_card_hits(void)
     /* THE TEN CARDS, because a run that draws nothing and a run that has
        nothing to draw read the same on every other line -- run mg7 lane
        MEMCARDS' finding, and the reason it is worth the twenty lines.  Each
-       0x30-byte record carries, at the offsets src/func_ov006_020d9bdc.c and
-       src/func_ov006_020d9c5c.cpp read:
+       0x30-byte record carries, at the offsets src/minigames/d_s_mg_card.cpp and
+       src/minigames/d_s_mg_card.cpp read:
          +0x04  the 20.12 x, shifted down 12 and offset 0x18 for the draw
          +0x08  the 20.12 y
          +0x24  the flip progress; >> 12 indexes the sprite row
@@ -681,15 +681,15 @@ extern "C" void port_scene_card_hits(void)
        mg9 lane LKY found again for Lucky Stars, found once more here rather
        than assumed:
 
-         slot 0   (src/func_ov006_020dbaf0.cpp) seeds +0xa8 and +0xac from
+         slot 0   (src/minigames/d_s_mg_card.cpp) seeds +0xa8 and +0xac from
                   func_ov004_020ad8b8(), writes func_ov004_020ad878()'s answer
                   into the LIVE BASE's +0xb4 (not its own), and then dispatches
                   its own vtable slot 18 with -1 through the object's vptr.
-         slot 21  (src/func_ov006_020db6ec.c) READS +0xb4: < 5 -> band 1,
+         slot 21  (src/minigames/d_s_mg_card.cpp) READS +0xb4: < 5 -> band 1,
                   < 10 -> 2, < 15 -> 3, else 4, handed to func_ov004_020b6324.
                   Four bands, the same shape Lucky Stars has with a different
                   arithmetic (this one is thresholds, that one is /5 capped).
-         the machine (src/func_ov006_020dac34.c) WRITES IT BACK: state 13's win
+         the machine (src/minigames/d_s_mg_card.cpp) WRITES IT BACK: state 13's win
                   arm increments +0xb4 up to 0x270f and raises +0xb8 to match,
                   its lose arm decrements +0xb4 while it is > 0, and state 4
                   calls func_ov004_020ad79c(+0xa8, +0xb4) -- score and level,

@@ -6,7 +6,7 @@
 // skipped classes.
 //
 //   id  name      x on L15  factory         table                  width
-//   84  SQUASHER   1        Squasher_Spawn  0x02111fe4 _ZTV8Squasher  32
+//   84  SQUASHER   1        daObjFm_Battan_c_classInit  0x02111fe4 _ZTV16daObjFm_Battan_c  32
 //
 // An 892-byte Platform: Model at +0xd4, MovingMeshCollider at +0x124, the
 // collider transform source at +0x2ec and a ShadowModel at +0x324 the factory
@@ -18,12 +18,12 @@
 //
 // ---- THE DSD LANDING OVER-READS BY SEVEN SLOTS ----------------------------
 //
-// _ZTV8Squasher's next dsd symbol is the .bss base 0x9c away, so the landing
+// _ZTV16daObjFm_Battan_c's next dsd symbol is the .bss base 0x9c away, so the landing
 // reads THIRTY-NINE slots against a real 32. That is the opposite of ov024's
 // and ov033's under-reads and it is the quieter failure for a host array:
 // seven words of storage nothing ever writes, where a reader walking past slot
 // 31 finds zeros instead of a fault. The width is pinned by the ROM's own
-// close on slot 31, _ZN8Platform4KillEv at 0x020ee55c, verified slot by slot
+// close on slot 31, _ZN10dBgActor_c4KillEv at 0x020ee55c, verified slot by slot
 // against config/arm9/overlays/ov023/relocs.txt.
 //
 // ---- T1: THE TABLE STAYS ROM-SHAPED ---------------------------------------
@@ -37,13 +37,13 @@
 // pool and the relocations over it settle every argument:
 //   pool 0x02111718 -> 0x02112088   model SharedFilePtr, spelled correctly
 //   pool 0x0211171c -> 0x02112080   collision SharedFilePtr, spelled
-//                                   &_ZN32FloatOnWaterPlatformWdwRectangleD1Ev
+//                                   &_ZN15daObjWc_Obj07_cD1Ev
 //                                   -- an OV029 FUNCTION name at the same
 //                                   window address. Left alone,
 //                                   MeshCollider::LoadFile takes the address
 //                                   of a destructor as a file pointer.
 //   call 0x021116a4 -> 0x02111308   ov023's own transform helper, spelled
-//                                   func_ov026_02111308. Lane W1-A is seating
+//                                   _ZN17daObjWlPolelift_c6RenderEv. Lane W1-A is seating
 //                                   ov026 in this same wave, so that name is
 //                                   about to become DEFINED and the call would
 //                                   land in another level's overlay.
@@ -65,13 +65,15 @@
 // hal_fill_platform_vtable (the destructors install ov002 0x0210ae38 on the
 // way out and that array is zeroed storage until the fill runs), then ov023's
 // single sinit, which is all of them.
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
@@ -79,28 +81,28 @@ extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include "dsstate_seg.h"
 #include <cstdlib>
 
-#include "Actor.h"
-#include "ActorBase.h"
+#include "dActor_c.h"
+#include "fBase_c.h"
 
 extern "C" {
 /* the arm9 shared half */
-int _ZN5Actor19BeforeInitResourcesEv(void *self);              /* slot 1  */
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
-int _ZN5Actor14BeforeBehaviorEv(void *self);                   /* slot 7  */
-int _ZN5Actor12BeforeRenderEv(void *self);                     /* slot 10 */
-int _ZN5Actor13OnYoshiTryEatEv(void *self);                    /* slot 18 */
-void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
-int _ZN5Actor9Virtual50Ev(void *self);                         /* slot 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);              /* slot 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);              /* slot 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
-int _ZN5Actor16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
-void _ZN8Platform4KillEv(void *self);                              /* slot 31 */
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);              /* slot 1  */
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);                   /* slot 7  */
+int _ZN8dActor_c12BeforeRenderEv(void *self);                     /* slot 10 */
+int _ZN8dActor_c13OnYoshiTryEatEv(void *self);                    /* slot 18 */
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
+int _ZN8dActor_c9Virtual50Ev(void *self);                         /* slot 20 */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);              /* slot 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);              /* slot 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
+int _ZN8dActor_c16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
+void _ZN10dBgActor_c4KillEv(void *self);                              /* slot 31 */
 
 const char *port_actor_class_name(unsigned id);   /* hal/actor_registry */
 void port_actor_slot_decline(const char *what);   /* func_02043fdc_hostcopy.cpp */
@@ -115,14 +117,14 @@ void port_ov023_syms_patch(void);
 void __sinit_ov023_02111aa8(void);
 
 /* the bodies src spells with C names (port/slice_sweep1_ov023.txt) */
-int *_ZN8SquasherD1Ev(int *self);                 /* slot 16 */
-int *_ZN8SquasherD0Ev(int *self);                 /* slot 17 */
-int _ZN8Squasher8BehaviorEv(void *self);          /* slot 6, a plain .c body */
-void *Squasher_Spawn(void);                       /* id 84 */
+int *_ZN16daObjFm_Battan_cD1Ev(int *self);                 /* slot 16 */
+int *_ZN16daObjFm_Battan_cD0Ev(int *self);                 /* slot 17 */
+int _ZN16daObjFm_Battan_c8BehaviorEv(void *self);          /* slot 6, a plain .c body */
+void *daObjFm_Battan_c_classInit(void);                       /* id 84 */
 
 /* the host vtable, excluded from the mount */
 DSSTATE_BEGIN
-void *_ZTV8Squasher[32];      /* 0x02111fe4 */
+void *_ZTV16daObjFm_Battan_c[32];      /* 0x02111fe4 */
 DSSTATE_END
 }
 
@@ -142,11 +144,11 @@ DSSTATE_END
         is inside one. Hence the two different LHS shapes -- both measured off
         the link's unresolved list, not guessed.
    port_ov023_clsn_file           InitResources's collision file, spelled
-        &_ZN32FloatOnWaterPlatformWdwRectangleD1Ev by the resolver -- an ov029
+        &_ZN15daObjWc_Obj07_cD1Ev by the resolver -- an ov029
         function name at ov023's data address.
    port_ov023_xform               InitResources's call to ov023's own transform
-        helper, spelled func_ov026_02111308. */
-#pragma comment(linker, "/alternatename:_port_ov023_vt_own=__ZTV8Squasher")
+        helper, spelled _ZN17daObjWlPolelift_c6RenderEv. */
+#pragma comment(linker, "/alternatename:_port_ov023_vt_own=__ZTV16daObjFm_Battan_c")
 #pragma comment(linker, "/alternatename:_port_ov023_vt_base=__ZTV10dBgActor_c")
 #pragma comment(linker, "/alternatename:?port_ov023_sq_file0@@3PAHA=_data_ov023_02112088")
 #pragma comment(linker, "/alternatename:_port_ov023_sq_file1=_data_ov023_02112080")
@@ -158,14 +160,14 @@ DSSTATE_END
    slot-5 bare-call shadow over +0xd4; _ZTV5Model[5] is dual-filled in
    hal/cxxname_bridge.cpp and this class holds no ModelAnim, so it is the
    Tree/ov013 case, not the ModelAnim slot-5 collision. */
-#include "Squasher.h"
+#include "daObjFm_Battan_c.h"
 extern "C" {
-int _ZN8Squasher13InitResourcesEv(void *self)
-{ return ((Squasher *)self)->Squasher::InitResources(); }
-int _ZN8Squasher16CleanupResourcesEv(void *self)
-{ return ((Squasher *)self)->Squasher::CleanupResources(); }
-int _ZN8Squasher6RenderEv(void *self)
-{ return ((Squasher *)self)->Squasher::Render(); }
+int _ZN16daObjFm_Battan_c13InitResourcesEv(void *self)
+{ return ((daObjFm_Battan_c *)self)->daObjFm_Battan_c::InitResources(); }
+int _ZN16daObjFm_Battan_c16CleanupResourcesEv(void *self)
+{ return ((daObjFm_Battan_c *)self)->daObjFm_Battan_c::CleanupResources(); }
+int _ZN16daObjFm_Battan_c6RenderEv(void *self)
+{ return ((daObjFm_Battan_c *)self)->daObjFm_Battan_c::Render(); }
 }
 
 // ---- the trap --------------------------------------------------------------
@@ -187,68 +189,68 @@ OV23_TRAP(13) OV23_TRAP(14)
 #undef OV23_TRAP
 
 static int __fastcall ov23_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall ov23_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall ov23_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 static void __fastcall ov23_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall ov23_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall ov23_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall ov23_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall ov23_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall ov23_pdes(void *s, void *)
-{ ((ActorBase *)s)->ActorBase::OnPendingDestroy(); return 0; }
+{ ((fBase_c *)s)->fBase_c::OnPendingDestroy(); return 0; }
 static int __fastcall ov23_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int __fastcall ov23_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 static int __fastcall ov23_turn_egg(void *s, void *, void *p)
-{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+{ _ZN8dActor_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall ov23_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall ov23_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall ov23_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall ov23_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall ov23_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall ov23_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall ov23_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall ov23_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall ov23_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 static int __fastcall ov23_egg(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 static int __fastcall ov23_kill(void *s, void *)
-{ _ZN8Platform4KillEv(s); return 0; }
+{ _ZN10dBgActor_c4KillEv(s); return 0; }
 
 // ============================================================================
 // SQUASHER (84) -- table 0x02111fe4, 32 slots.
 // ============================================================================
 static int __fastcall sq_init(void *s, void *)
-{ return _ZN8Squasher13InitResourcesEv(s); }
+{ return _ZN16daObjFm_Battan_c13InitResourcesEv(s); }
 static int __fastcall sq_clean(void *s, void *)
-{ return _ZN8Squasher16CleanupResourcesEv(s); }
+{ return _ZN16daObjFm_Battan_c16CleanupResourcesEv(s); }
 static int __fastcall sq_behavior(void *s, void *)
-{ return _ZN8Squasher8BehaviorEv(s); }
+{ return _ZN16daObjFm_Battan_c8BehaviorEv(s); }
 static int __fastcall sq_render(void *s, void *)
 { port_actor_render_probe("SQUASHER", (char *)s + 0xd4);
-  return _ZN8Squasher6RenderEv(s); }
+  return _ZN16daObjFm_Battan_c6RenderEv(s); }
 static int __fastcall sq_d1(void *s, void *)
-{ return (int)(size_t)_ZN8SquasherD1Ev((int *)s); }
+{ return (int)(size_t)_ZN16daObjFm_Battan_cD1Ev((int *)s); }
 static int __fastcall sq_d0(void *s, void *)
-{ return (int)(size_t)_ZN8SquasherD0Ev((int *)s); }
+{ return (int)(size_t)_ZN16daObjFm_Battan_cD0Ev((int *)s); }
 
 // ---- the mount bring-up ----------------------------------------------------
 DSSTATE_BEGIN
@@ -273,7 +275,7 @@ extern "C" void port_ov23_bringup(void)
 extern "C" void hal_fill_squasher_vtable(void)
 {
     port_ov23_bringup();
-    void *volatile *vt = (void *volatile *)_ZTV8Squasher;
+    void *volatile *vt = (void *volatile *)_ZTV16daObjFm_Battan_c;
     vt[0]  = (void *)sq_init;
     vt[1]  = (void *)ov23_binit;
     vt[2]  = (void *)ov23_ainit;
@@ -290,7 +292,7 @@ extern "C" void hal_fill_squasher_vtable(void)
     vt[13] = (void *)ov23_trap13;
     vt[14] = (void *)ov23_trap14;
     vt[15] = (void *)ov23_heap;
-    vt[16] = (void *)sq_d1;
+    vt[16] = (void *)PORT_D16(sq_d1);
     vt[17] = (void *)sq_d0;
     vt[18] = (void *)ov23_yoshi;
     vt[19] = (void *)ov23_turn_egg;

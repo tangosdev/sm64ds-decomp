@@ -28,12 +28,12 @@ void func_ov007_020c03b0(Arg *arg) {
     int bit1, bit2;
     int f;
 
-    pa = (Node *volatile *)(((long long)(int)arr_a));
+    pa = (Node *volatile *)(arr_a);
     pa[0] = 0;
     pa[1] = 0;
     pa[2] = 0;
     pa[3] = 0;
-    pb = (int *)(((long long)(int)arr_b));
+    pb = (int *)(arr_b);
     pb[0] = 0;
     pb[1] = 0;
     pb[2] = 0;

@@ -67,7 +67,7 @@ enum : unsigned {
 
     // The current animation, stored as id << 2 because the field doubles as
     // the base index into the stride-4 per-character file table
-    // data_ov002_020ff480[]. src/_ZN6Player7SetAnimEji5Fix12IiEj.cpp writes
+    // data_ov002_020ff480[]. src/actors/Player.cpp writes
     // `a << 2` here, and src/func_ov002_020e3f90.c:40 reads it back as
     // `(*(int*)(p + 0x63c) >> 2)` -- the >> 2 is what proves the scaling.
     kAnimIdScaled = 0x63c,
@@ -172,7 +172,7 @@ enum : unsigned {
 // arbitrary jump and not a visual glitch. The animation is applied; the state
 // is carried for diagnosis only. See the sync layer's own note.
 
-// Declared EXACTLY as src/_ZN6Player12FinishedAnimEv.cpp:5 declares it. DO NOT
+// Declared EXACTLY as src/actors/Player.cpp:5 declares it. DO NOT
 // RESPELL: competing declarations of one extern "C" symbol is its own bug class.
 extern "C" unsigned int _ZNK6Player14GetBodyModelIDEjb(char *, unsigned int, char);
 

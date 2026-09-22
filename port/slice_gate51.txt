@@ -14,24 +14,7 @@
 # the dispatcher.
 
 # ---- the eighteen state Init/Main functions --------------------------------
-src/func_ov002_020b71e8.c
-src/func_ov002_020b71f0.c
-src/func_ov002_020b7200.c
-src/func_ov002_020b7330.c
-src/func_ov002_020b74d0.c
-src/func_ov002_020b76ec.c
-src/func_ov002_020b781c.c
-src/func_ov002_020b7b70.c
-src/func_ov002_020b7c30.c
-src/func_ov002_020b7cdc.c
-src/func_ov002_020b7cec.cpp
-src/func_ov002_020b7d58.c
-src/func_ov002_020b7d6c.c
-src/func_ov002_020b7d94.c
-src/func_ov002_020b7d9c.cpp
-src/func_ov002_020b7e08.c
-src/func_ov002_020b7e1c.cpp
-src/func_ov002_020b7f24.c
+src/actors/daObjMarioCap_c.cpp
 
 # ---- the closure the states reach that no earlier gate linked --------------
 # The angle helper, the shared collision-clear the states call, a tuning helper
@@ -40,13 +23,11 @@ src/func_ov002_020b7f24.c
 # InitVanishLuigi and their file loads) is already linked -- the cap's
 # InitResources reached it when the class was built at gate 33.
 src/_Z11UpdateAngleRssis.cpp
-src/func_ov002_020b6fcc.cpp
 src/func_02013a88.c
 src/func_020139b8.c
-src/_ZN8SaveData13PlayerLoseCapEv.c
+src/_ZN8SaveData13PlayerLoseCapEv.cpp
 # the metal/vanish form-change entry points func_ov002_020b6fcc dispatches
-src/_ZN6Player14InitMetalWarioEv.cpp
-src/_ZN6Player15InitVanishLuigiEv.c
+src/actors/Player.cpp
 
 # ---- EXCLAMATION_SWITCH (11): the ten state halves + closure ----------------
 # StarSwitch's five-state machine, the ten records data_ov002_0210e00c holds.

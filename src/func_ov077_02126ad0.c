@@ -5,13 +5,13 @@
 /* recovered: shared common types */
 #include "common.h"
 extern int Vec3_Dist(void* a, void* b);
-extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int a, unsigned int b, unsigned int cc, void* v, unsigned int d);
+extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int cc, void* v, unsigned int d);
 extern int func_ov077_02126300(char* c);
 extern void func_ov077_02126d5c(char* c, void* p);
-extern int _ZNK12WithMeshClsn8IsOnWallEv(void* p);
+extern int _ZNK10dBgCh_Actr8IsOnWallEv(void* p);
 extern short Vec3_HorzAngle(void* a, void* b);
 extern void _Z14ApproachLinearRsss(short* a, short b, short cc);
-extern void* _ZN5Actor13ClosestPlayerEv(char* c);
+extern void* _ZN8dActor_c13ClosestPlayerEv(char* c);
 
 extern char data_ov077_02127cf8[];
 
@@ -22,14 +22,14 @@ int func_ov077_02126ad0(char* c)
     struct Vector3 pp;
 
     dist = Vec3_Dist(c + 0x5c, c + 0x404);
-    *(unsigned int*)(c + 0x428) = _ZN5Sound8PlayLongEjjjRK7Vector3j(*(unsigned int*)(c + 0x428), 3, 0x186, c + 0x74, 0);
+    *(unsigned int*)(c + 0x428) = _ZN5Sound8PlayLongEjjjRK7Vector3s(*(unsigned int*)(c + 0x428), 3, 0x186, c + 0x74, 0);
 
     if (func_ov077_02126300(c) != 0) {
         func_ov077_02126d5c(c, data_ov077_02127d18);
         return 1;
     }
 
-    if (_ZNK12WithMeshClsn8IsOnWallEv(c + 0x184) != 0) {
+    if (_ZNK10dBgCh_Actr8IsOnWallEv(c + 0x184) != 0) {
         *(int*)(c + 0x5c) = *(int*)(c + 0x410);
         *(int*)(c + 0x60) = *(int*)(c + 0x414);
         *(int*)(c + 0x64) = *(int*)(c + 0x418);
@@ -54,7 +54,7 @@ int func_ov077_02126ad0(char* c)
     if (*(unsigned short*)(c + 0x426) != 0)
         return 1;
 
-    player = (char*)_ZN5Actor13ClosestPlayerEv(c);
+    player = (char*)_ZN8dActor_c13ClosestPlayerEv(c);
     if (player != 0) {
         struct Vector3* src = (struct Vector3*)(((long)(player + 0x5c)));
         pp.x = src->x;

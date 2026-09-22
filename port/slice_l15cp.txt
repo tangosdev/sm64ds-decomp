@@ -1,0 +1,52 @@
+# port/slice_l15cp.txt -- run link100 wave 15, lane SEAT15B, LINK15 BATCH 1
+# (THE ClosestPlayer RECEIVER FAMILY).
+#
+# WHY THIS FILE EXISTS. Every row below was host-copied into port/unmatched/
+# because the matched source of that name called Actor::ClosestPlayer() with no
+# argument: on the DS the enclosing body's own `this` is still live in r0 across
+# the `bl`, so the zero-argument spelling is byte-identical there. On the host
+# the ClosestPlayer bridge takes its receiver as an ordinary first argument, so
+# the zero-argument call read stack garbage and measured distance from
+# garbage + 0x5c -- the null-this fault class of the live rabbit crash
+# (corpus id 9e164e92, see port/unmatched/Actor_ClosestPlayerWrappers.cpp).
+#
+# WHAT CHANGED. The main -> port sync brought in sources that PASS the receiver.
+# Re-read at 8ddff3187, one file at a time, before this file was written:
+#
+#   src/func_ov060_02111f08.c:21                (arg0)
+#   src/unnamed/ov063/func_ov063_02117650.c:17  (self)
+#
+# Both declare `_ZN8dActor_c13ClosestPlayerEv(void *thiz)` and pass their own
+# first parameter, which is exactly the value the ROM leaves in r0. Neither
+# carries a NONMATCHING banner, an asm hatch or a ROM-address literal. The host
+# copies they replace are retired in the same commit: func_ov060_02111f08 out of
+# port/unmatched/Actor_ClosestPlayer_OverlayReaders.cpp (which keeps its three
+# still-raw siblings), and the whole of port/unmatched/Boo_Teleport.c, whose only
+# body was func_ov063_02117650.
+#
+# NOT IN THIS FILE, deliberately. func_ov102_02149078 and func_ov084_0212f204 and
+# the two dActor_c wrappers DistToCPlayer / FarthestPlayer still spell the
+# zero-argument call in src/ and stay host-copied; closestplayer_guard.py is what
+# keeps them out of the build. Check each source individually, never by file.
+#
+# The four sibling rows of this batch that already had a commented row in an
+# existing manifest were uncommented there instead of being duplicated here:
+# src/func_ov085_0212d9b8.c, 0212dd10.cpp, 0212e310.cpp and 0212e4a4.c in
+# port/slice_gate18.txt, and src/func_ov094_02136024.cpp in
+# port/slice_gate194.txt.
+
+src/func_ov060_02111f08.c
+src/unnamed/ov063/func_ov063_02117650.c
+
+# SUB-BATCH 2, the three arm9 members. These are not the overlay shape: the
+# sources are REAL C++ members against include/dActor_c.h (`Player *ClosestPlayer();`
+# at :181), so the receiver is implicit and correct, and MSVC puts only the
+# decorated member in the object. The flat ROM name that twenty-odd matched TUs
+# spell extern "C" is therefore carried by a REVERSE face instead of by the host
+# copy: port/faces_sync.txt rows 1124, 1143 and 1145, the first of which was a
+# FORWARD row until this lane flipped it. The bool return of IsPlayerInRange(s32)
+# is widened to int there, which facegen's RETURN WIDTH RULE requires and which
+# the forward direction is forbidden to do.
+src/_ZN8dActor_c18HorzAngleToCPlayerEv.cpp
+src/_ZN8dActor_c18HorzAngleToFPlayerEv.cpp
+src/_ZN8dActor_c15IsPlayerInRangeEi.cpp

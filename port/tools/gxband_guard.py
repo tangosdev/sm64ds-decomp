@@ -212,7 +212,11 @@ BANDS = (
         'end': 0x020a60a4,
         'end_source': 'config',
         'members': 13,
-        'hosts': ('smoke_player.map', 'walk_window.map',
+        # smoke_player.map left the floor 2026-09-17 (lane GXFLOOR): the target is
+        # EXCLUDE_FROM_ALL since 1d7f6c98b pending Stage::Behavior/Render hosting
+        # (out/SMOKELINK5B/bugs.md item 2); the floor is the built maps only. Put it back
+        # the day smoke_player links.
+        'hosts': ('walk_window.map',
                   'walk_window_hires.map'),
         'host': 'port/hal/cxx_aliases.cpp',
         'what': 'the GX bank-state block',
@@ -240,7 +244,7 @@ BANDS = (
             'row; see port/irq2_map.txt section 8 and the note above '
             'data_023c0000 in port/hal/player_bridges.cpp',
         'members': 1,
-        'hosts': ('smoke_player.map', 'walk_window.map',
+        'hosts': ('walk_window.map',
                   'walk_window_hires.map'),
         'host': 'port/hal/player_bridges.cpp',
         'what': 'the ARM9 data TCM',
@@ -273,7 +277,7 @@ BANDS = (
         'end': 0x0209b2f0,
         'end_source': 'config',
         'members': 2,
-        'hosts': ('smoke_player.map', 'walk_window.map',
+        'hosts': ('walk_window.map',
                   'walk_window_hires.map'),
         'host': 'port/hal/scene_vs_menu.cpp',
         'what': 'the VS ranking counters',
@@ -314,7 +318,7 @@ BANDS = (
         'end': 0x0209f314,
         'end_source': 'config',
         'members': 2,
-        'hosts': ('smoke_player.map', 'walk_window.map',
+        'hosts': ('walk_window.map',
                   'walk_window_hires.map'),
         'host': 'port/hal/actor_classes_star.cpp',
         'what': 'the VS carried-star array',
@@ -348,7 +352,7 @@ BANDS = (
         'end': 0x0209fc60,
         'end_source': 'config',
         'members': 2,
-        'hosts': ('smoke_player.map', 'walk_window.map',
+        'hosts': ('walk_window.map',
                   'walk_window_hires.map'),
         'host': 'port/hal/scene_vs_menu.cpp',
         'what': 'the per-slot ready bytes',
@@ -364,7 +368,7 @@ BANDS = (
 )
 
 
-# 0001:0003dc80       ?Render@Trap@@QAEHXZ       0043ec80 f   obj.obj
+# 0001:0003dc80       ?Render@LightBeam@@QAEHXZ       0043ec80 f   obj.obj
 # Row shape and the Rva+Base convention: port/tools/faultmap.py's load_map.
 # The flag column is `f`, `f i`, or absent on data rows, and the object may be
 # `lib:member.obj`, so it is anchored at end of line.

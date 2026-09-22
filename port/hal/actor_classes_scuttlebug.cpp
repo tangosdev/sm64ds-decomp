@@ -15,8 +15,8 @@
 // The class owns 0 (Init), 3 (Cleanup), 6 (Behavior), 9 (Render), 12
 // (OnPendingDestroy, an empty body of its OWN -- unlike the flame, which uses
 // ActorBase's), 16 (D1), 17 (D0), and the interaction overrides 18
-// (OnYoshiTryEat func_ov071_0211f0a4, returns 6), 19 (OnTurnIntoEgg
-// func_ov071_02120580) and 29 (OnAimedAtWithEgg func_ov071_0211f0ac, returns
+// (OnYoshiTryEat _ZN10Scuttlebug13OnYoshiTryEatEv, returns 6), 19 (OnTurnIntoEgg
+// _ZN10Scuttlebug13OnTurnIntoEggER6Player) and 29 (OnAimedAtWithEgg _ZN10Scuttlebug16OnAimedAtWithEggEv, returns
 // 0x32000). Slots 13/14 (ActorBase::Virtual34/38, 0x0204357c/0x0204349c) trap
 // by name the way every sibling fill traps that pair, and slot 30
 // (OnAimedAtWithEggReturnVec, arm9 0x020100dc) traps because its matched body
@@ -40,44 +40,46 @@
 // ModelAnim +0xd4, ~Actor) minus the final Memory::Deallocate, because the
 // slot-16 caller (ActorBase::AfterCleanupResources) deallocates itself.
 //
-// The id was cross-checked from the relocated overlay image: Scuttlebug_SpawnInfo
-// (0x02122c08) +0 word = Scuttlebug_Spawn (0x02120618), +4 halfword = 0x00ff =
-// 255, and ACTOR_SPAWN_TABLE[255] (data_02090864 + 255*4 = 0x02090c60) points at
-// that record. Scuttlebug_Spawn's own vtable-store site (Spawn.c: p[0] =
+// The id was cross-checked from the relocated overlay image: g_profile_SPIDER
+// (0x02122c08) +0 word = daSpd_c_classInit (0x02120618), +4 halfword = 0x00ff =
+// 255, and ACTOR_SPAWN_TABLE[255] (ACTOR_SPAWN_TABLE + 255*4 = 0x02090c60) points at
+// that record. daSpd_c_classInit's own vtable-store site (Spawn.c: p[0] =
 // _ZTV10Scuttlebug) names the table.
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
 extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include <cstdlib>
 
-#include "Actor.h"
+#include "dActor_c.h"
 #include "dtor_faces_cpp.h"
-#include "ActorBase.h"
+#include "fBase_c.h"
 #include "Scuttlebug.h"
 
 extern "C" {
 /* the shared lifecycle halves, the same functions every fill writes */
-int _ZN5Actor19BeforeInitResourcesEv(void *self);            /* slot 1  */
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a); /* slot 2  */
-int _ZN5Actor14BeforeBehaviorEv(void *self);                 /* slot 7  */
-int _ZN5Actor12BeforeRenderEv(void *self);                   /* slot 10 */
-int _ZN5Actor9Virtual50Ev(void *self);                       /* slot 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);    /* slot 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);        /* slot 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);        /* slot 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);            /* slot 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);            /* slot 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);            /* slot 1  */
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a); /* slot 2  */
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);                 /* slot 7  */
+int _ZN8dActor_c12BeforeRenderEv(void *self);                   /* slot 10 */
+int _ZN8dActor_c9Virtual50Ev(void *self);                       /* slot 20 */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);    /* slot 21 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);        /* slot 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);        /* slot 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);            /* slot 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);            /* slot 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
 
 extern int data_02099f24[];          /* the frame phase the lists are in */
 extern unsigned char data_020a4b4c;  /* the spawn spine's own step */
@@ -91,20 +93,20 @@ void port_actor_render_probe(const char *cls, void *model); /* actor_classes */
 int _ZN10Scuttlebug16CleanupResourcesEv(void);    /* slot 3,  .c C linkage */
 int _ZN10Scuttlebug16OnPendingDestroyEv(void);    /* slot 12, .c C linkage */
 int *_ZN10ScuttlebugD0Ev(int *self);              /* slot 17, .c C linkage */
-int func_ov071_0211f0a4(void);                    /* slot 18, OnYoshiTryEat */
-void func_ov071_02120580(void *self, void *p);    /* slot 19, OnTurnIntoEgg */
-int func_ov071_0211f0ac(void);                    /* slot 29, OnAimedAtWithEgg */
-void *Scuttlebug_Spawn(void);
+int _ZN10Scuttlebug13OnYoshiTryEatEv(void);                    /* slot 18, OnYoshiTryEat */
+void _ZN10Scuttlebug13OnTurnIntoEggER6Player(void *self, void *p);    /* slot 19, OnTurnIntoEgg */
+int _ZN10Scuttlebug16OnAimedAtWithEggEv(void);                    /* slot 29, OnAimedAtWithEgg */
+void *daSpd_c_classInit(void);
 
 /* the D1 chain's sub-object destructors, all C-linkage in the build (the same
    node dtors ScuttlebugD0 calls) */
-void _ZN12WithMeshClsnD1Ev(void *);         /* the WithMeshClsn at +0x194 */
-void _ZN18MovingCylinderClsnD1Ev(void *);   /* the MovingCylinderClsn at +0x160 */
+void _ZN10dBgCh_ActrD1Ev(void *);         /* the WithMeshClsn at +0x194 */
+void _ZN7dCcAc_cD1Ev(void *);   /* the MovingCylinderClsn at +0x160 */
 void _ZN11ShadowModelD1Ev(void *);          /* the ShadowModel at +0x138 */
 void _ZN9ModelAnimD1Ev(void *);             /* the ModelAnim at +0xd4 */
-void *_ZN5ActorD2Ev(void *);                /* the Actor base */
+void *_ZN8dActor_cD2Ev(void *);                /* the Actor base */
 
-/* The array the ROM factory installs (Scuttlebug_Spawn does
+/* The array the ROM factory installs (daSpd_c_classInit does
    `p[0] = (int)_ZTV10Scuttlebug`); thirty-one slots. Defined here, not just
    declared: the `int` type and C linkage match the `extern int
    _ZTV10Scuttlebug[]` in include/decl_common.h that the .c factory and D0 read. */
@@ -132,7 +134,7 @@ int _ZTV10Scuttlebug[31];
    at the first link. The routing moved to the R1/R2 remedy, a per-source
    rename on the one TU that needs it, in port/CMakeLists.txt:
 
-       set_source_files_properties(src/func_ov071_0211fbf4.c PROPERTIES
+       set_source_files_properties(src/actors/Scuttlebug.cpp PROPERTIES
            COMPILE_DEFINITIONS "data_ov073_02122f88=data_ov071_02122f88")
 
    Scuttlebug's behaviour is unchanged: that TU still reads
@@ -157,19 +159,20 @@ int _ZTV10Scuttlebug[31];
    - func_ov071_0211f524 declares the arm9 identity matrix as a C++ Mtx43;
      romdata.c defines the C symbol. */
 #pragma comment(linker, "/alternatename:_AnimLoadFile=?LoadFile@Animation@@SAPADAAUSharedFilePtr@@@Z")
-#pragma comment(linker, "/alternatename:?Init@WithMeshClsn@@QAEXPAUActor@@HHPAXH@Z=?Init@WithMeshClsn@@QAEXPAUActor@@HHPAUVector3_16@@H@Z")
-#pragma comment(linker, "/alternatename:?GetFloorResult@WithMeshClsn@@QBEPAXXZ=?GetFloorResult@WithMeshClsn@@QBEHXZ")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEAD RHS and an UNREFERENCED left hand side: nothing in the build defines ?Init@dBgCh_Actr@@QAEXPAUActor@@HHPAUVector3_16@@H@Z, and nothing references ?Init@dBgCh_Actr@@QAEXPAUActor@@HHPAXH@Z, so the row can never fire and nothing wants it to. */
+// #pragma comment(linker, "/alternatename:?Init@dBgCh_Actr@@QAEXPAUActor@@HHPAXH@Z=?Init@dBgCh_Actr@@QAEXPAUActor@@HHPAUVector3_16@@H@Z")
+#pragma comment(linker, "/alternatename:?GetFloorResult@dBgCh_Actr@@QBEPAXXZ=?GetFloorResult@dBgCh_Actr@@QBEHXZ")
 #pragma comment(linker, "/alternatename:?data_020a0e68@@3UMtx43@@A=_data_020a0e68")
 
 /* func_ov071_0211f7d4 names its second cylinder collider CylinderClsn2 and
    calls Clear/Update as methods; the bodies are the one CylinderClsn's own
    C-linkage forms, already linked. A local shadow bridges the __thiscall
    spellings -- an alias cannot cross the __thiscall/cdecl seam. */
-extern "C" void _ZN12CylinderClsn5ClearEv(void *c);
-extern "C" void _ZN12CylinderClsn6UpdateEv(void *c);
+extern "C" void _ZN5dCc_c5ClearEv(void *c);
+extern "C" void _ZN5dCc_c6UpdateEv(void *c);
 struct CylinderClsn2 { void Clear(); void Update(); };
-void CylinderClsn2::Clear() { _ZN12CylinderClsn5ClearEv(this); }
-void CylinderClsn2::Update() { _ZN12CylinderClsn6UpdateEv(this); }
+void CylinderClsn2::Clear() { _ZN5dCc_c5ClearEv(this); }
+void CylinderClsn2::Update() { _ZN5dCc_c6UpdateEv(this); }
 
 // ---- the trap --------------------------------------------------------------
 static void sb_trap_report(void *self, int slot)
@@ -195,41 +198,41 @@ SB_TRAP(13) SB_TRAP(14)
 
 // ---- the shared half -------------------------------------------------------
 static int __fastcall sb_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall sb_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall sb_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 static void __fastcall sb_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall sb_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall sb_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall sb_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall sb_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall sb_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int __fastcall sb_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall sb_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall sb_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall sb_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall sb_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall sb_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall sb_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall sb_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall sb_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 
 // ---- SCUTTLEBUG's own slots -------------------------------------------------
 /* Init/Behavior/Render are real __thiscall members; the face bridges cdecl to
@@ -253,11 +256,11 @@ static int __fastcall sb_d0(void *s, void *)
 { return (int)(size_t)_ZN10ScuttlebugD0Ev((int *)s); }
 /* the interaction overrides Scuttlebug carries of its own */
 static int __fastcall sb_yoshi(void *s, void *)
-{ (void)s; return func_ov071_0211f0a4(); }
+{ (void)s; return _ZN10Scuttlebug13OnYoshiTryEatEv(); }
 static int __fastcall sb_egg(void *s, void *, void *p)
-{ func_ov071_02120580(s, p); return 0; }
+{ _ZN10Scuttlebug13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall sb_aimed(void *s, void *)
-{ (void)s; return func_ov071_0211f0ac(); }
+{ (void)s; return _ZN10Scuttlebug16OnAimedAtWithEggEv(); }
 /* D1, the complete-object destructor slot 16 holds: the D0 chain
    (_ZN10ScuttlebugD0Ev) without the Memory::Deallocate at its tail, because the
    caller of slot 16 (ActorBase::AfterCleanupResources) deallocates itself.
@@ -284,7 +287,7 @@ extern "C" void hal_fill_scuttlebug_vtable(void)
     vt[13] = (void *)sb_trap13;
     vt[14] = (void *)sb_trap14;
     vt[15] = (void *)sb_heap;
-    vt[16] = (void *)hal_cppd1_Scuttlebug;
+    vt[16] = (void *)PORT_D16(hal_cppd1_Scuttlebug);
     vt[17] = (void *)sb_d0;
     /* the Enemy tail (18..30): 18/19/29 are Scuttlebug's own overrides, the
        rest bind Actor/ActorBase's default half, 30 traps (SRET). */

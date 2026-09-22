@@ -1,13 +1,13 @@
 extern int _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned, unsigned, unsigned, int, int);
 extern unsigned char DecIfAbove0_Byte(void*);
-extern int func_020ca78c(void*);
+extern int func_ov002_020ca78c(void*);
 extern int _ZN6Player24TryExitWhiteDoorWithStarEv(void*);
 
 int func_ov100_02145080(char* c, void* arg1)
 {
     if (*(int*)(c + 8) != 0xd) {
         if (*(unsigned char*)(c + 0x145) == 0) {
-            if (func_020ca78c(arg1) == 0)
+            if (func_ov002_020ca78c(arg1) == 0)
                 goto ret1;
             _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x2b, 0, 0x7f, 0x15666, 0);
             *(unsigned char*)(c + 0x145) = 0x78;

@@ -4,7 +4,7 @@
 #include "common.h"
 
 extern "C" void _ZN9Animation7AdvanceEv(void*);
-extern "C" void _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(
+extern "C" void _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(
     void* self, const Vector3* pos, unsigned n, int fix, short s);
 
 extern "C" void func_ov079_02124dec(char* c)
@@ -28,7 +28,7 @@ extern "C" void func_ov079_02124dec(char* c)
                 v1.y = y;
                 w1.y = y;
 
-                _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(c, &w1, 5, 0x8000, 0);
+                _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(c, &w1, 5, 0x8000, 0);
                 *(int*)(c + 0x3b0) = 8;
             } else {
                 unsigned char* p = (unsigned char*)(((int)c + 0x40c));

@@ -28,7 +28,7 @@
 // are linked as themselves, so the call actually goes
 //     func_02042778 -> func_0201a4d0 -> OS_SleepThread(data_0209d4fc)
 // and the wake actually goes through the ROM's own expression from
-// src/_ZN3IRQ13VBlankHandlerEv.c:22, OS_WakeupThread(&data_0209d4fc).
+// src/_ZN3IRQ13VBlankHandlerEv.cpp:22, OS_WakeupThread(&data_0209d4fc).
 //
 // SILENT BY CONSTRUCTION: console only, no window, no BMP.
 
@@ -52,7 +52,7 @@ extern "C" {
 // is OS_SleepThread(data_0209d4fc).
 void func_02042778(void);
 // The per-VBlank wake queue. src/func_0201a4d0.c takes its address;
-// src/_ZN3IRQ13VBlankHandlerEv.c:22 hands the same address to OS_WakeupThread.
+// src/_ZN3IRQ13VBlankHandlerEv.cpp:22 hands the same address to OS_WakeupThread.
 extern unsigned short data_0209d4fc;
 void OS_SleepThread(unsigned short *q);
 void OS_WakeupThread(unsigned short *q);
@@ -111,7 +111,7 @@ static double now_ms() {
 //
 // It stands in for the frame the DS would have run while the main thread was
 // off the scheduler. The line it exists for is the ROM's own:
-//     src/_ZN3IRQ13VBlankHandlerEv.c:22   OS_WakeupThread(&data_0209d4fc)
+//     src/_ZN3IRQ13VBlankHandlerEv.cpp:22   OS_WakeupThread(&data_0209d4fc)
 // Every turn of this pump is one DS VBlank.
 
 static unsigned long long g_host_frames;

@@ -152,6 +152,31 @@ int hal_gapless_obj_raster_shift_ds(void);
 /* the top screen's OAM source while the gapless mod is engaged; see the note
    over oam_a below and the definition in hal/screen_gap.cpp */
 unsigned hal_gapless_oam_src_a(void);
+extern "C" {
+/* THE IMPROVED MAP'S ATTENTION-ARROW RE-ANCHOR, asked once a frame. The banner
+   is over the definition in hal/sub_screen.cpp, which owns both the option and
+   the panel's rectangle; this file owns the sprites. Short-circuits on the
+   option, so a run with the map option off never even asks about the layout.
+   C linkage because that file's whole tail is one extern "C" block. */
+int hal_minimap_arrow_reanchor_on(void);
+
+/* THE LEVEL-CLEAR COMPOSE'S TWO SOURCE BANDS, asked once a frame. Returns 0
+   whenever the composed level-clear picture is not being drawn, which is every
+   frame of every ordinary run, and then this file does exactly what it did
+   before the overlay existed. With it on it fills the two DS row spans the
+   compose lifts off the top screen and redraws elsewhere: the course-clear
+   text block and the coin total. The banner is over hal/sub_screen.cpp's own
+   definition, which owns the option, the trigger and the rectangles; this file
+   owns the layers. */
+int hal_lc_compose_rows(int *text_r0, int *text_r1, int *coin_r0, int *coin_r1);
+
+/* Stage::RenderBouncingArrows' own sprite template, ov001 0x020abd88, mounted
+   by name (port/ov001_syms.txt) and bound to the matched body's func_020abd88
+   spelling in hal/sub_actors.cpp. The arrows are identified out of this table
+   at run time rather than by a literal, the way the map's camera buttons are:
+   a graphic that moved would take its tile number with it. */
+extern const unsigned short _ZN3OAM14BOUNCING_ARROWE[];
+}
 
 namespace {
 
@@ -204,7 +229,7 @@ struct BgConfig {
 // 3D engine's output layer, BG0CNT's character and screen bases address nothing
 // the game ever wrote, and the 2D unit never reads them.
 //
-// THE DECOMP'S OWN CODE PINS THE BIT. src/_ZN2GX15SetGraphicsModeEiii.c is
+// THE DECOMP'S OWN CODE PINS THE BIT. src/_ZN2GX15SetGraphicsModeEiii.cpp is
 // GX::SetGraphicsMode(dispMode, bgMode, bg0_3d) and its whole use of the third
 // argument is `reg = ((unsigned)c << 3) | reg`. ntr/ppu.cpp's OBJ note already
 // says the same thing from the other side ("its third argument only ever
@@ -673,6 +698,129 @@ inline bool layer_behind_3d(unsigned owner, int prio, int p3d) {
     return (owner == (unsigned)kOwnerObj) ? (prio > p3d) : (prio >= p3d);
 }
 
+/* ---- THE LEVEL-CLEAR GLYPH OVERLAY ----------------------------------------
+ *
+ * WHAT IT IS FOR. hal/sub_screen.cpp composes the level-clear save menu onto
+ * the top screen: the course-clear text at the top of the picture, the three
+ * button plates in the middle, the coin total at the bottom. Its first two
+ * cuts moved RECTANGLES OF THE FINISHED PICTURE -- the glyphs and the 3D scene
+ * behind them together -- so the picture's own top rows were thrown away and
+ * its middle rows appeared twice. The owner read that as a stretch: "why is
+ * the background picture like stretched? The screen height shouldnt change,
+ * just slot it in."
+ *
+ * THE ANSWER IS TO SEPARATE THE 2D LAYER FROM THE 3D PICTURE, which this file
+ * is the only place that can do: it is the unit that resolves engine A's four
+ * backgrounds and its sprites into one image and blits them over the 3D frame
+ * the GX path already rendered. While the compose is up it sends the pixels of
+ * the layers that carry the menu's own lettering into a separate buffer INSTEAD
+ * of the framebuffer, keeping their colour and their host position and marking
+ * which ones are opaque. What is left in the framebuffer is the game's own
+ * frame with those layers lifted off it -- no row moved, no region copied --
+ * and the compose then draws the lifted pixels where the owner asked for them.
+ *
+ * WHICH LAYERS, AND IT IS MEASURED AND NOT ASSUMED. Each of engine A's five
+ * composited layers was masked off in turn with SM64DS_ENGINE_A_LAYERS on the
+ * SAME frame of the same row (level 6, a star, the menu up, frame 900, the
+ * plain top screen at 512x384), counting the pixels each one puts on the
+ * picture that the no-2D picture does not have:
+ *
+ *   BG0     0 px  -- DISPCNT bit 3 is set, so BG0 IS the 3D layer and read_bg
+ *                    never treats it as a background at all
+ *   BG1     0 px
+ *   BG2  8556 px  picture rows 336..367, x 54..457  -- "TOUCH TO SELECT"
+ *   BG3  5971 px  picture rows  72..221, x 96..393  -- THE COURSE-CLEAR TEXT,
+ *                    every one of the 5971 the single colour (144,144,144), in
+ *                    the four line bands 72..93, 104..125, 166..189, 200..221
+ *   OBJ  3646 px  two bands: 2..35 x 12..95 the LIVES COUNTER, and
+ *                    256..287 x 196..271 THE COIN TOTAL
+ *   all 18173 px  = 8556 + 5971 + 3646 exactly, so the three sets are disjoint
+ *
+ * SO THERE ARE THREE LAYERS AND EACH GETS ITS OWN RULE:
+ *
+ *   BG3, on the text band's rows -> LIFTED. It is the whole course-clear text
+ *     block and its footprint (72..221) lies inside the band the compose lifts
+ *     (68..231), so the lift loses none of it.
+ *   OBJ, on the coin band's rows -> LIFTED. The coin total, 256..287, inside
+ *     that band (244..287).
+ *   BG2 -> HIDDEN, drawn nowhere. It is "TOUCH TO SELECT", which the owner
+ *     asked to be removed and which the compose has never drawn.
+ *   OBJ anywhere else -> LEFT EXACTLY WHERE IT IS. That is the lives counter
+ *     in the top-left corner. It is part of the top screen's own picture, it
+ *     is not re-slotted anywhere, and "the screen height shouldnt change" is a
+ *     picture whose own top is still there. It cannot collide with the text
+ *     either: the lifted text lands at x 96..393 and the counter is x 12..95.
+ *
+ * A COLOUR KEY WAS NOT AN OPTION and was never tried: the 3D picture behind
+ * the text can hold any colour, including the glyphs' own grey, so keying on
+ * colour would punch holes in the scenery. The layer is the only honest key,
+ * and this unit already knows it per pixel (Cell::owner).
+ *
+ * THE COST WHEN THE COMPOSE IS OFF IS ONE INTEGER TEST PER FRAME.
+ * hal_lc_compose_rows answers 0, lc_ov.lift is 0, the buffer is never
+ * allocated, and every per-pixel test below short-circuits on a zero that was
+ * read once for the whole frame. */
+struct LcOverlay {
+    uint32_t *col;               /* the lifted pixels, framebuffer-shaped */
+    uint8_t *msk;                /* 1 where a lifted pixel was written */
+    int n;                       /* allocated pixels */
+    unsigned lift;               /* owner bits sent to the overlay this frame */
+    unsigned hide;               /* owner bits drawn nowhere this frame */
+    int t0, t1;                  /* the text band, HOST rows [t0, t1) */
+    int c0, c1;                  /* the coin band, HOST rows [c0, c1) */
+    int live;                    /* the overlay holds THIS frame's pixels */
+};
+LcOverlay lc_ov;
+
+/* Asked once a frame, at the head of the composite. Everything the overlay
+   does is behind the answer. */
+void lc_overlay_begin(void)
+{
+    lc_ov.lift = 0;
+    lc_ov.hide = 0;
+    lc_ov.live = 0;
+    if (!hal_lc_compose_rows(&lc_ov.t0, &lc_ov.t1, &lc_ov.c0, &lc_ov.c1))
+        return;
+    const int n = ntr::SCREEN_W * ntr::SCREEN_H;
+    if (lc_ov.n < n) {
+        uint32_t *c = (uint32_t *)std::realloc(lc_ov.col, (size_t)n * sizeof *c);
+        if (!c) return;
+        lc_ov.col = c;
+        uint8_t *m = (uint8_t *)std::realloc(lc_ov.msk, (size_t)n);
+        if (!m) return;
+        lc_ov.msk = m;
+        lc_ov.n = n;
+    }
+    std::memset(lc_ov.msk, 0, (size_t)n);
+    lc_ov.lift = (1u << 3) | (1u << kOwnerObj);   /* BG3 and the sprites */
+    lc_ov.hide = (1u << 2);                       /* BG2, "TOUCH TO SELECT" */
+    lc_ov.live = 1;
+}
+
+/* What to do with a composited pixel's LAYER: 0 draw it, 1 lift it on its own
+   band, 2 hide it. Zero for everything while the compose is off, on one test
+   of a word that was written once for the frame. */
+inline int lc_overlay_verdict(unsigned owner)
+{
+    if (!(lc_ov.lift | lc_ov.hide)) return 0;
+    const unsigned b = 1u << owner;
+    if (b & lc_ov.hide) return 2;
+    return (b & lc_ov.lift) ? 1 : 0;
+}
+
+/* AND THE BAND THAT LAYER IS LIFTED ON, IN HOST ROWS, which is the same
+   rectangle the compose redraws it into. Host rows and not DS rows, and the
+   band is the compose's own: the lift and the redraw then cover EXACTLY the
+   same pixels, so a glyph can never be taken out of the picture and then
+   fall outside the band that puts it back. A pixel of a lifted layer outside
+   its band is left in the picture where the game put it -- which is the lives
+   counter, a sprite far above the coin band. */
+inline bool lc_overlay_in_band(unsigned owner, int hy)
+{
+    return (owner == 3) ? (hy >= lc_ov.t0 && hy < lc_ov.t1)
+                        : (hy >= lc_ov.c0 && hy < lc_ov.c1);
+}
+
 // ---- PER-ELEMENT HUD ANCHORING (widescreen) --------------------------------
 //
 // WHAT THIS REPLACES, AND WHY. The widescreen HUD used to be placed by a BAND
@@ -1057,7 +1205,7 @@ void attrib_take() {
  * IT IS THE ARM-COMPARISON TOOL, and that is its point. GaplessMinigames writes
  * zero into the game's own G, and whether a scene's BACKGROUND scroll follows G
  * is a per-scene fact nobody can argue from source: the framework's own BG
- * plotter (func_ov004_020ae3b4) adds G + 0xc0 for the top engine, so a scene
+ * plotter (_ZN11dScMgBase_c9Virtual88Eiiii) adds G + 0xc0 for the top engine, so a scene
  * whose layers are placed through it moves when G moves and a scene that writes
  * BGnVOFS itself may not. Run this in both arms and diff the two logs.
  */
@@ -1217,6 +1365,103 @@ void enga_strip_probe(uint32_t dispcnt)
 // the same arithmetic and NO live caller; the note was right about the
 // arithmetic and pointed at the copy that cannot reach a screen. Both are
 // fixed, in ntr/ppu_sub.cpp's shape.
+/* ---- THE THREE ATTENTION ARROWS, HELD BACK AND PUT SOMEWHERE ELSE ----------
+ *
+ * WHAT THE CUE IS. Stage::RenderBouncingArrows (src/, ROM 0x02023be0) draws
+ * three arrows along the bottom edge of the TOP screen, bouncing between two
+ * rows, with a sound: the DS telling the player to look at the other screen.
+ * It is raised by the ROM's own condition word (HUD::Render calls it only when
+ * data_0209f284 is set) on a map event. This port has no other screen -- the
+ * bottom screen is a corner inset over the same picture -- so the arrows point
+ * at bare floor a long way from the map.
+ *
+ * WHAT HAPPENS INSTEAD. With the improved map on, the arrow texels are kept
+ * OUT of the top screen's own buffer here and handed to hal/sub_screen.cpp,
+ * which draws them just above the map panel after it has composed it: one
+ * above the panel's top-left corner, one above its middle, one above its
+ * top-right corner. Nothing in src/ changes, no call is skipped, the ROM still
+ * computes and submits three sprites, and the sound is not touched at all.
+ *
+ * THE TRANSLATION IS CONSTANT, WHICH IS WHAT KEEPS THE BOUNCE. The arrows
+ * bounce by alternating their row, so a placement that PINNED them to a fixed
+ * row would hold them still. Vertically they are therefore moved by one offset
+ * for the whole band -- the DS screen's bottom edge is mapped to just above the
+ * panel's top edge -- and each arrow carries whatever row the ROM gave it. The
+ * ROM rests them against the bottom edge, so at rest they sit on the panel and
+ * bounce up off it, which is the motion the cartridge draws.
+ *
+ * THEY KEEP THEIR OWN SIZE. The panel's scale factor moves them; it does not
+ * shrink them. A DS sprite drawn at the map's own scale would be a quarter of
+ * its size at 1x and its two-pixel bounce would be sub-pixel, and nothing in
+ * the request asks for smaller arrows -- only for arrows in the right place. */
+uint32_t g_arrow_px[192][256];
+int g_arrow_n;                           /* texels captured this frame */
+int g_arrow_x0, g_arrow_x1, g_arrow_y0, g_arrow_y1;   /* their bounding box */
+
+/* The template's tile numbers, read out of the cartridge's own OamAttr records
+   the way hal/sub_screen.cpp reads the camera buttons': an OamAttr is four
+   halfwords and attr3 == 0xffff ends the list (include/OamAttr.h). Tile 0 is
+   the ROM's "nothing here" and is never added. Sixteen is a guard against a
+   list that never terminates, not a length. */
+unsigned short g_arrow_tiles[16];
+int g_arrow_tiles_n = -1;
+
+void arrow_tiles_init(void)
+{
+    g_arrow_tiles_n = 0;
+    const unsigned short *t = _ZN3OAM14BOUNCING_ARROWE;
+    for (int i = 0; i < 16; ++i) {
+        const unsigned short a2 = t[i * 4 + 2];
+        const unsigned short a3 = t[i * 4 + 3];
+        const unsigned short tile = (unsigned short)(a2 & 0x03FFu);
+        if (tile && g_arrow_tiles_n <
+                (int)(sizeof g_arrow_tiles / sizeof g_arrow_tiles[0])) {
+            int seen = 0;
+            for (int k = 0; k < g_arrow_tiles_n; ++k)
+                if (g_arrow_tiles[k] == tile) { seen = 1; break; }
+            if (!seen) g_arrow_tiles[g_arrow_tiles_n++] = tile;
+        }
+        if (a3 == 0xffff) break;
+    }
+    if (std::getenv("SM64DS_MINIMAP_TRACE")) {
+        std::fprintf(stderr, "[mmtrace] bouncing-arrow tiles (%d):",
+                     g_arrow_tiles_n);
+        for (int k = 0; k < g_arrow_tiles_n; ++k)
+            std::fprintf(stderr, " %u", (unsigned)g_arrow_tiles[k]);
+        std::fprintf(stderr, "\n");
+    }
+}
+
+/* A TILE NUMBER AND A BAND, both, for the same reason the camera-button veto
+   wants both: engine A's OBJ VRAM is shared by every top-screen sprite and a
+   tile number alone could collide with an unrelated graphic. The cue's own band
+   is the bottom of the top screen -- RenderBouncingArrows passes y 0xae / 0xb0,
+   174 and 176 of 192 -- so an entry whose box is centred above the screen's
+   bottom third is not this cue whatever tile it carries. */
+inline bool arrow_entry(unsigned short a2, int y, int bh)
+{
+    if (g_arrow_tiles_n < 0) arrow_tiles_init();
+    if (y + bh / 2 < 128) return false;
+    const unsigned short tile = (unsigned short)(a2 & 0x03FFu);
+    for (int k = 0; k < g_arrow_tiles_n; ++k)
+        if (g_arrow_tiles[k] == tile) return true;
+    return false;
+}
+
+void arrow_capture(int px, int py, uint32_t color)
+{
+    if (!g_arrow_n) {
+        g_arrow_x0 = g_arrow_y0 = 1 << 30;
+        g_arrow_x1 = g_arrow_y1 = -1;
+    }
+    if (!g_arrow_px[py][px]) ++g_arrow_n;
+    g_arrow_px[py][px] = color | 0xFF000000u;
+    if (px < g_arrow_x0) g_arrow_x0 = px;
+    if (px > g_arrow_x1) g_arrow_x1 = px;
+    if (py < g_arrow_y0) g_arrow_y0 = py;
+    if (py > g_arrow_y1) g_arrow_y1 = py;
+}
+
 void raster_obj(uint32_t dispcnt, const Blend &bl, const Windows &win,
                 ntr::Framebuffer &fb) {
     static const int kSizes[3][4][2] = {
@@ -1264,6 +1509,17 @@ void raster_obj(uint32_t dispcnt, const Blend &bl, const Windows &win,
     const bool objprio_off = objprio_off_env();
     /* and for the OBJ-vs-BG one, plus the DS pixel the transcript follows */
     const bool objbg_off = objbg_off_env();
+    /* THE ATTENTION ARROWS, asked once for the walk. Last frame's capture is
+       dropped HERE rather than after it was drawn, so the layer is exactly
+       what this frame submitted whether or not the panel got as far as
+       drawing it. Only the rectangle that was written is touched. */
+    if (g_arrow_n) {
+        for (int ay = g_arrow_y0; ay <= g_arrow_y1; ++ay)
+            std::memset(&g_arrow_px[ay][g_arrow_x0], 0,
+                        (size_t)(g_arrow_x1 - g_arrow_x0 + 1) * sizeof(uint32_t));
+        g_arrow_n = 0;
+    }
+    const bool arrows_moved = hal_minimap_arrow_reanchor_on() != 0;
     int probe_x, probe_y;
     objbg_probe_pixel(probe_x, probe_y);
     ++g_obj_frame;
@@ -1337,6 +1593,12 @@ void raster_obj(uint32_t dispcnt, const Blend &bl, const Windows &win,
         const bool vflip = !affine && (a1 & 0x2000);
         const uint32_t tile = a2 & 0x3FF;
         const uint32_t pal = (a2 >> 12) & 0xF;
+        /* Is this one of the three bouncing arrows, and is this a run that
+           moves them? If so its texels go to the capture layer instead of to
+           g_a, so the whole cue leaves the top screen's own buffer in one
+           piece -- it neither draws where the ROM put it nor takes part in the
+           priority resolution of the sprites that stay. */
+        const bool arrow = arrows_moved && arrow_entry(a2, y, bh);
         /* attribute 2 bits 10-11, this sprite's own priority. Read here rather
            than at the store because the OBJ-vs-OBJ test below needs it before
            a texel is written. */
@@ -1425,6 +1687,11 @@ void raster_obj(uint32_t dispcnt, const Blend &bl, const Windows &win,
                     if (!index) continue;
                     color = bgr555(rd16(obj_pltt + (pal * 16u + index) * 2u));
                 }
+                /* THE CUE IS TAKEN OUT HERE, before any of the resolution
+                   below, because it is not being drawn on this screen at all.
+                   Taking it out after the priority tests would let it lose to
+                   a sprite it is about to be moved away from. */
+                if (arrow) { arrow_capture(px, py, color); continue; }
                 /* OBJ-vs-OBJ IS RESOLVED BY PRIORITY, NOT BY OAM INDEX, and
                    this test is what makes that true on engine A. GBATEK's OAM
                    notes: attribute 2 bits 10-11 order a sprite against the
@@ -1557,8 +1824,21 @@ void raster_obj(uint32_t dispcnt, const Blend &bl, const Windows &win,
                             color = blend_alpha(color, g_a[py][px].color,
                                                 bl.eva, bl.evb);
                     } else if (bl.second & 1u) {   // BG0 (3D) is a 2nd target
-                        color = blend_alpha(color, fb.px[py * yscale][px * xscale],
-                                            bl.eva, bl.evb);
+                        /* THE 3D PIXEL THIS SPRITE BLENDS AGAINST, read from
+                           the pre-smoothing copy when there is one (ntr/gx.h
+                           gx_aa_preimage). A semi-transparent sprite over a
+                           smoothed edge would otherwise carry the smoothing
+                           into the blend, and this blend is written into the
+                           frame the display capture reads, so the game would
+                           see the setting through it. Null -- the default --
+                           is the framebuffer, unchanged. */
+                        const uint32_t *pre3d = ntr::gx_aa_preimage();
+                        const int by = py * yscale, bx = px * xscale;
+                        color = blend_alpha(
+                            color,
+                            pre3d ? pre3d[(size_t)by * ntr::SCREEN_W + bx]
+                                  : fb.px[by][bx],
+                            bl.eva, bl.evb);
                     }
                 }
                 g_a[py][px].color = color;
@@ -1587,6 +1867,140 @@ void raster_obj(uint32_t dispcnt, const Blend &bl, const Windows &win,
 
 }  // namespace
 
+/* ---- AND WHERE THE CUE GOES: JUST ABOVE THE MAP ---------------------------
+ *
+ * Called by hal/sub_screen.cpp with the rectangle the map panel was just drawn
+ * into, so the arrows follow MinimapScale, the aspect and the render scale
+ * without knowing about any of them. Nothing captured means nothing drawn,
+ * which is every frame but the ones the ROM raises the cue on.
+ *
+ * THE ARROWS ARE SPREAD ALONG THE PANEL'S TOP EDGE IN THE ORDER THE ROM
+ * SUBMITTED THEM: the leftmost over the top-left corner, the rightmost over the
+ * top-right corner, the rest evenly between -- which for the three-arrow form
+ * the request is about is exactly "one above the top left, middle, and top
+ * right corner". The two-arrow form the same function can draw (it puts them at
+ * the screen's far edges instead) lands on the two corners by the same
+ * arithmetic, so neither form needs a special case.
+ *
+ * GROUPS ARE FOUND BY THEIR COLUMNS. The capture layer holds nothing but this
+ * cue, so a run of columns with any texel in it is one arrow and a gap ends it.
+ * That reads the arrows the ROM actually submitted rather than assuming three,
+ * and it costs one pass over 256 flags.
+ *
+ * VERTICALLY THE WHOLE BAND MOVES BY ONE OFFSET (see the banner in the
+ * namespace above), and the offset is LATCHED for as long as the cue runs. The
+ * arrows bounce by alternating their row, so measuring the band's bottom edge
+ * every frame and pinning THAT to the panel would hold them perfectly still --
+ * the offset has to be constant for the motion to survive. So the first frame
+ * of a cue decides it: that frame's bottom row is put one DS row above the
+ * panel's top edge, and every later frame of the same cue keeps the same
+ * offset, so the arrows bounce off the map exactly as they bounce off the
+ * bottom of the screen on a DS. The latch drops the moment the cue stops, so
+ * the next one measures itself afresh and nothing carries between scenes.
+ *
+ * If the band would run off the top of the picture -- the biggest map on a 4:3
+ * window is the whole window, so there is no "above" left -- it is pushed back
+ * down until it fits, and the player sees the cue over the map instead of not
+ * at all. */
+extern "C" void port_bounce_arrows_present(unsigned int *dst, int dst_w,
+                                           int dst_h, int px0, int py0,
+                                           int pw, int ph)
+{
+    (void)ph;
+    /* The latch this cue's vertical offset is measured into, and the frame
+       that drops it: a frame with nothing captured is a frame with no cue. */
+    static int rest_held, rest_y1;
+    if (!g_arrow_n || !dst || dst_w < 1 || dst_h < 1) { rest_held = 0; return; }
+    /* THE LOWEST ROW THIS CUE HAS BOUNCED TO, which is its resting row. The
+       cue alternates between two rows a few frames apart, so the first frame
+       is as likely to be the raised one as the rest; taking the lowest seen
+       settles the band within the cue's first bounce and then never moves
+       again, which is what makes the arrows rest ON the panel rather than two
+       rows inside it. It is a maximum over ONE cue only -- the latch is
+       dropped above the moment a frame captures nothing. */
+    if (!rest_held || g_arrow_y1 > rest_y1) { rest_y1 = g_arrow_y1; rest_held = 1; }
+
+    /* The top screen's own uniform host scale: one DS row is this many host
+       rows, and in the widescreen arm of the blit above it is this many host
+       columns too (uni == sy). At 4:3 sx == sy, so this is that scale as well.
+       The arrows are drawn at it, which is the size they have on screen now. */
+    int s = dst_h / 192;
+    if (s < 1) s = 1;
+
+    /* Which columns this cue occupies, and therefore how many arrows it is. */
+    int gx0[8], gx1[8], n = 0;
+    {
+        int run = -1;
+        for (int x = g_arrow_x0; x <= g_arrow_x1 + 1; ++x) {
+            bool used = false;
+            if (x <= g_arrow_x1)
+                for (int y = g_arrow_y0; y <= g_arrow_y1 && !used; ++y)
+                    if (g_arrow_px[y][x]) used = true;
+            if (used) {
+                if (run < 0) run = x;
+            } else if (run >= 0) {
+                if (n < (int)(sizeof gx0 / sizeof gx0[0])) {
+                    gx0[n] = run;
+                    gx1[n] = x - 1;
+                    ++n;
+                }
+                run = -1;
+            }
+        }
+    }
+    if (n < 1) return;
+
+    /* The band's vertical offset, and the clamp that keeps it on the picture.
+       `base` is where the latched resting row lands: one DS row above the
+       panel's top edge. Every other row is carried relative to it. */
+    int base = py0 - s;
+    int top = base + (g_arrow_y0 - rest_y1) * s;
+    if (top < 0) { base -= top; top = 0; }
+
+    const int stride = ntr::SCREEN_W;
+    const int trace = std::getenv("SM64DS_MINIMAP_TRACE") ? 1 : 0;
+    for (int k = 0; k < n; ++k) {
+        const int gcx = (gx0[k] + gx1[k] + 1) / 2;
+        int tcx = (n == 1) ? px0 + pw / 2
+                           : px0 + (int)((long)pw * k / (n - 1));
+        /* AND THE SAME CLAMP SIDEWAYS, for the same reason as the vertical
+           one. The panel sits eight pixels in from the right edge, so an arrow
+           centred on its top-right corner has half of itself off the picture.
+           Sliding it back in keeps a whole arrow over the corner instead of
+           half of one, which is what the cue is for. It only ever moves the
+           outer two, and only when the panel is near an edge. */
+        {
+            const int half_l = (gcx - gx0[k]) * s;
+            const int half_r = (gx1[k] - gcx + 1) * s;
+            if (tcx - half_l < 0) tcx = half_l;
+            if (tcx + half_r > dst_w) tcx = dst_w - half_r;
+        }
+        if (trace)
+            std::fprintf(stderr, "[mmtrace] arrow %d/%d ds x %d..%d centre %d "
+                         "-> host centre %d, rows %d..%d, scale %d\n",
+                         k + 1, n, gx0[k], gx1[k], gcx, tcx,
+                         base + (g_arrow_y0 - rest_y1) * s,
+                         base + (g_arrow_y1 - rest_y1) * s + s - 1, s);
+        for (int y = g_arrow_y0; y <= g_arrow_y1; ++y) {
+            const int hy0 = base + (y - rest_y1) * s;
+            for (int x = gx0[k]; x <= gx1[k]; ++x) {
+                const uint32_t c = g_arrow_px[y][x];
+                if (!c) continue;
+                const int hx0 = tcx + (x - gcx) * s;
+                for (int dy = 0; dy < s; ++dy) {
+                    const int hy = hy0 + dy;
+                    if (hy < 0 || hy >= dst_h) continue;
+                    for (int dx = 0; dx < s; ++dx) {
+                        const int hx = hx0 + dx;
+                        if (hx < 0 || hx >= dst_w) continue;
+                        dst[hy * stride + hx] = c;
+                    }
+                }
+            }
+        }
+    }
+}
+
 /* func_02019144's FIRST beat, hal/scene_boot.cpp. 1 = run that function's
    tail, 0 = the current graphics block did the display sync itself. */
 extern "C" int port_graph_block_beat(void);
@@ -1600,6 +2014,12 @@ extern "C" void port_frame_oam_upload(void);
 extern "C" void port_message_composite_engine_a(void *fbp)
 {
     ntr::Framebuffer &fb = *reinterpret_cast<ntr::Framebuffer *>(fbp);
+
+    /* THE LEVEL-CLEAR GLYPH OVERLAY'S ONE QUESTION FOR THE FRAME, asked here
+       -- above every early return -- so that a frame this unit declines is a
+       frame the overlay reports as empty rather than as last frame's. Off, it
+       is one call that answers 0 and nothing else in this file changes. */
+    lc_overlay_begin();
 
     /* ---- func_02019144 LINE 46, THE ENGINE-A LAYER-MASK PUBLISH -----------
      *
@@ -2086,6 +2506,15 @@ extern "C" void port_message_composite_engine_a(void *fbp)
     const bool honour3d = shown3d && !prio3d_off_env();
     const int p3d = bg0_3d_priority();
     const uint8_t *cover = shown3d ? ntr::gx_coverage() : nullptr;
+    /* THE PRE-SMOOTHING COPY OF THIS FRAME, or null when the AntiAliasing
+       setting is off -- which is the default and is every run that has not
+       asked for it. See ntr/gx.h's gx_aa_preimage: the game reads its own top
+       screen back through the DS display capture unit, and that copy is the
+       picture the setting promises it. Every host pixel written below goes
+       there too, so what the capture reads is a FINISHED frame -- this unit's
+       2D layers over the 3D -- that the smoothing never touched. One extra
+       store per composited pixel, and only when the setting is on. */
+    uint32_t *const pre = ntr::gx_aa_preimage();
     uint32_t kept = 0, buried = 0;
     for (int y = 0; y < 192; ++y) {
         for (int x = 0; x < 256; ++x) {
@@ -2135,7 +2564,16 @@ extern "C" void port_message_composite_engine_a(void *fbp)
                is the control the before/after images are taken against. */
             hx0 = (g_a[y][x].owner == 3)
                           ? x * uni + margin / 2
-                          : !shown3d
+                          /* A SCENE PRESENTED NATIVELY TAKES THE PILLARBOX ARM
+                             whether or not a 3D layer is behind it. Tango's
+                             ruling of 2026-09-17: a minigame presents exactly
+                             as it does at 4:3, so its HUD keeps its native
+                             positions, centred, at the uniform scale -- the
+                             arm the full-2D minigame boards already took by
+                             way of !shown3d. margin / 2 is ntr::present_x(),
+                             and it is the bottom panel's pan_x0 too, so all
+                             three layers line up. */
+                          : (ntr::present_native() || !shown3d)
                           ? x * uni + margin / 2
                           : !bandsplit
                           ? x * uni + hudelem::g_off[hudelem::g_lbl[y][x]]
@@ -2146,6 +2584,21 @@ extern "C" void port_message_composite_engine_a(void *fbp)
             bw = sx;
             hx0 = x * sx;
             }
+            /* THE LEVEL-CLEAR COMPOSE'S LAYER SPLIT, and it is one read of a
+               zero on every frame of every ordinary run (see the LcOverlay
+               banner). Verdict 1 sends this pixel to the overlay INSTEAD of
+               the framebuffer wherever it falls inside its layer's own band,
+               so the picture keeps what engine A's 3D path drew under it;
+               verdict 2 drops it. The 3D priority, the placement and
+               the pre-smoothing copy are all still this loop's own answers --
+               nothing here re-decides where a pixel goes, only which buffer it
+               lands in, so the lifted glyphs are exactly the pixels the player
+               would have seen at these rows. The capture copy keeps them at
+               their own rows either way: the display capture unit is the ROM
+               reading its own screen back and it is not part of this mod. */
+            const unsigned lcow = g_a[y][x].owner;
+            const int lcv = lc_overlay_verdict(lcow);
+            if (lcv == 2) continue;
             if (!honour3d
                 || !layer_behind_3d(g_a[y][x].owner, g_a[y][x].prio, p3d)) {
                 /* the owning 2D layer is in FRONT of the 3D layer (or there is
@@ -2154,7 +2607,13 @@ extern "C" void port_message_composite_engine_a(void *fbp)
                     for (int dx = 0; dx < bw; ++dx) {
                         const int hy = y * sy + dy, hx = hx0 + dx;
                         if (cover && cover[hy * ntr::SCREEN_W + hx]) ++buried;
-                        fb.px[hy][hx] = c;
+                        if (lcv && lc_overlay_in_band(lcow, hy)) {
+                            lc_ov.col[(size_t)hy * ntr::SCREEN_W + hx] = c;
+                            lc_ov.msk[(size_t)hy * ntr::SCREEN_W + hx] = 1;
+                        } else {
+                            fb.px[hy][hx] = c;
+                        }
+                        if (pre) pre[(size_t)hy * ntr::SCREEN_W + hx] = c;
                     }
                 continue;
             }
@@ -2163,7 +2622,13 @@ extern "C" void port_message_composite_engine_a(void *fbp)
                 for (int dx = 0; dx < bw; ++dx) {
                     const int hy = y * sy + dy, hx = hx0 + dx;
                     if (cover[hy * ntr::SCREEN_W + hx]) { ++kept; continue; }
-                    fb.px[hy][hx] = c;
+                    if (lcv && lc_overlay_in_band(lcow, hy)) {
+                        lc_ov.col[(size_t)hy * ntr::SCREEN_W + hx] = c;
+                        lc_ov.msk[(size_t)hy * ntr::SCREEN_W + hx] = 1;
+                    } else {
+                        fb.px[hy][hx] = c;
+                    }
+                    if (pre) pre[(size_t)hy * ntr::SCREEN_W + hx] = c;
                 }
         }
     }
@@ -2181,4 +2646,33 @@ extern "C" void port_message_composite_engine_a(void *fbp)
     }
     g_kept3d = kept;
     g_buried3d = buried;
+}
+
+/* ---- WHAT THE COMPOSE READS BACK -----------------------------------------
+ *
+ * The three the level-clear compose in hal/sub_screen.cpp calls, and nothing
+ * else in the program calls any of them. The buffers are framebuffer-shaped:
+ * one entry per host pixel at a stride of ntr::SCREEN_W, exactly the way
+ * ntr::Framebuffer and every drawing helper in that file index dst, so the
+ * compose moves a lifted pixel by adding rows to its index and never by
+ * re-deriving where it was.
+ *
+ * `live` is this frame's own answer and not a latch: the composite above
+ * clears it on every frame the compose is not up and sets it on every frame it
+ * is, above its own early returns, so a compose that asks on a frame this unit
+ * declined is told the overlay is empty instead of being handed the last
+ * frame's glyphs. */
+extern "C" int hal_lc_overlay_live(void)
+{
+    return lc_ov.live && lc_ov.msk && lc_ov.col ? 1 : 0;
+}
+
+extern "C" const unsigned int *hal_lc_overlay_colour(void)
+{
+    return lc_ov.col;
+}
+
+extern "C" const unsigned char *hal_lc_overlay_mask(void)
+{
+    return lc_ov.msk;
 }

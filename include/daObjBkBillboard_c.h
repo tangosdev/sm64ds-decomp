@@ -1,0 +1,51 @@
+#ifndef DAOBJBKBILLBOARD_C_H
+#define DAOBJBKBILLBOARD_C_H
+
+#include "types.h"
+#include "dActor_c.h"
+#include "Model.h"
+
+extern "C" void *_ZN7fBase_cnwEj(unsigned size);
+
+/**
+ * Whomp's Fortress pole billboard (profile BK_BILLBOARD /
+ * POLE_BILLBOARD 42). Direct base is dActor_c. Factory allocates
+ * 0x124 = sizeof(dActor_c) plus pad_0d0[4] plus Model.
+ *
+ * `daObjBkBillboard_c` is the RTTI name.
+ */
+struct daObjBkBillboard_c : dActor_c {
+    u8    pad_0d0[0x4];
+    Model mModel;            /* 0x0d4 */
+
+    /* Inline empty dtor: mwccarm emits D1 then D0, no D2. */
+    /* The destructor pair spelled as two plain virtuals on the host, plus
+       the non-virtual destructor declaration the src/ definitions need; the
+       whole ruling is in include/ModelBase.h. An override takes its base's
+       slots, so these carry the SAME TWO NAMES the base declares -- a fresh
+       name would append a slot instead of claiming one. */
+#ifdef _MSC_VER
+    virtual void Destructor1();   /* D1 */
+    virtual void Destructor0();   /* D0 */
+    ~daObjBkBillboard_c() {}   /* no slot */
+#else
+    virtual ~daObjBkBillboard_c() {}   /* D1 and D0 */
+#endif
+
+    virtual s32 InitResources();         /* slot  0 */
+    virtual s32 CleanupResources();      /* slot  3 */
+    virtual s32 Render();                /* slot  9 */
+
+    /* size_t == unsigned long here; unsigned int is illegal. */
+    static void *operator new(size_t size) {
+        return _ZN7fBase_cnwEj((unsigned)size);
+    }
+};
+
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
+typedef char daObjBkBillboard_c_size_must_be_0x124[
+    sizeof(daObjBkBillboard_c) == 0x124 ? 1 : -1];
+#endif
+
+#endif /* DAOBJBKBILLBOARD_C_H */

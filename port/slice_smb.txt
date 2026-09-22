@@ -15,10 +15,10 @@
 #
 # and the factory's own literal pool names the vtable:
 #
-#     02119824  MgBingoBallSlotsShot_Spawn
-#       ldr r0,[pc] ; =0x0000629c   _ZN9ActorBasenwEj(0x629c)
-#       bl  0x20b2adc               func_ov004_020b2adc(o)   <- WITH the arg
-#       str ip,[r4] ; ip=0x0213eefc data_ov006_0213eefc, the vtable
+#     02119824  dScMgSmartball_c_classInit
+#       ldr r0,[pc] ; =0x0000629c   _ZN7fBase_cnwEj(0x629c)
+#       bl  0x20b2adc               _ZN11dScMgBase_cC2Ev(o)   <- WITH the arg
+#       str ip,[r4] ; ip=0x0213eefc _ZTV16dScMgSmartball_c, the vtable
 #
 # THE FACTORY NEEDS NO DISPLACEMENT RULING, AND THE REASON IS IN THE SOURCE
 # RATHER THAN IN THE INSTRUCTIONS. Section 12 of port/mg_fanout_costs.txt
@@ -28,16 +28,16 @@
 # `movs r4,r0` after the allocator returns and never rewrites r0 before
 # `bl 0x20b2adc`, so the object rides through in r0 exactly as 0x169's does.
 # What differs is the only thing that matters on the host: 0x169's
-# src/func_ov006_020e0574.cpp spells `func_ov004_020b2adc();` with no
-# argument, and src/MgBingoBallSlotsShot_Spawn.cpp spells
-# `func_ov004_020b2adc(o)` with one. port/tools/aritycheck.py finds the same
-# split without being pointed at it: it lists func_ov004_020b2adc as DROPS from
-# src/func_ov006_020e0574.cpp (0x169's) and src/MgMushroomRoulette_Spawn.cpp
+# src/actors/dScMgCup_c.cpp spells `_ZN11dScMgBase_cC2Ev();` with no
+# argument, and src/minigames/d_s_mg_smartball.cpp spells
+# `_ZN11dScMgBase_cC2Ev(o)` with one. port/tools/aritycheck.py finds the same
+# split without being pointed at it: it lists _ZN11dScMgBase_cC2Ev as DROPS from
+# src/actors/dScMgCup_c.cpp (0x169's) and src/minigames/d_s_mg_roulette.cpp
 # (0x17f's) and NOT from this one. Checked because the ruling is expensive, not
 # assumed because the file is short.
 #
 # THE WIDTH IS 36 AND ALL THREE OF SECTION 11's CHECKS SAY SO:
-#   1. SPAN. data_ov006_0213eefc's next config symbol is data_ov006_0213ef8c,
+#   1. SPAN. _ZTV16dScMgSmartball_c's next config symbol is data_ov006_0213ef8c,
 #      0x90 bytes on, which is 36 words. The check can only refuse, and at 37
 #      it refuses.
 #   2. TERMINAL SLOT. Slot 35 holds 0x020ad660, the word every
@@ -68,7 +68,7 @@
 # THIS CLASS HAS NO POINTER-TO-MEMBER STATE MACHINE, AND THAT IS MEASURED
 # THREE WAYS. It is the largest single difference from the pathfinder and it
 # is why this lane's wall cost is zero.
-#   a. Its Behavior (slot 6, src/func_ov006_02118488.c) dispatches a PLAIN INT:
+#   a. Its Behavior (slot 6, src/_ZN16dScMgSmartball_c8BehaviorEv.cpp) dispatches a PLAIN INT:
 #      `switch (*(int *)(c + 0x4660))` with cases 0, 1 and 2. The ROM agrees
 #      instruction for instruction (0x021184b4 ldr r1,[r0,#0x660]; cmp/beq x3).
 #   b. NO overlay constructor in ov006 copies a pair table anywhere in this
@@ -79,7 +79,7 @@
 #      0x0213f4fc, which is where this class's own data lives.
 #   c. THE `::*` SWEEP OF THE WHOLE CLOSURE, which is the detector section 4
 #      says a link cannot replace. All 76 TUs the walk reached were
-#      swept for `::*` and `->*`; exactly ONE hits, func_ov004_020b87e0.cpp,
+#      swept for `::*` and `->*`; exactly ONE hits, _ZN10dMgState_c8SetStateEi.cpp,
 #      which is the FRAMEWORK's state setter and is already excluded from
 #      port/slice_mg1.txt and trapped in hal/scene_mg_faces.cpp. The sweep was
 #      validated against all six of the TUs section 4 records as SILENT to a
@@ -89,7 +89,7 @@
 #      caught.
 #
 # SO ONE TU IS EXCLUDED AND IT IS NOT THIS CLASS'S:
-#     src/func_ov004_020b87e0.cpp   dScMgBase_c's state setter, the wall.
+#     src/_ZN10dMgState_c8SetStateEi.cpp   dScMgBase_c's state setter, the wall.
 # It is trapped by hal/scene_mg_faces.cpp already and stays that way. Listing
 # it here would put a second definition of the trap into the link.
 #
@@ -98,10 +98,10 @@
 # (b) and (c), found here in ov006 rather than ov004:
 #
 #     src/func_ov006_02115b0c.c:113   void func_ov006_02115b0c(char *c)
-#     src/func_ov006_02118a8c.cpp:8   void func_ov006_02115b0c(void);
-#     src/func_ov006_02118a8c.cpp:11  func_ov006_02115b0c();
+#     src/_ZN16dScMgSmartball_c13OnYoshiTryEatEi.cpp:8   void func_ov006_02115b0c(void);
+#     src/_ZN16dScMgSmartball_c13OnYoshiTryEatEi.cpp:11  func_ov006_02115b0c();
 #
-# vtable slot 18 is func_ov006_02118a8c and its first statement calls the
+# vtable slot 18 is _ZN16dScMgSmartball_c13OnYoshiTryEatEi and its first statement calls the
 # board teardown-and-rebuild. THE ROM PASSES self: 0x02118a8c's prologue is
 # `stmdb sp!,{lr}; sub sp,sp,#4` and it does not touch r0 before
 # `bl 0x2115b0c`, and 0x02115b0c's own first instruction is `mov r8, r0`. So
@@ -110,7 +110,7 @@
 # words and calling Memory::operator_delete2 through whatever it found -- a
 # wild WRITE, not a wild read, so no fault is guaranteed and the corruption is
 # silent. port/tools/aritycheck.py finds the same row independently:
-#   DROPS func_ov006_02115b0c  declared 0 at src/func_ov006_02118a8c.cpp:8,
+#   DROPS func_ov006_02115b0c  declared 0 at src/_ZN16dScMgSmartball_c13OnYoshiTryEatEi.cpp:8,
 #   DEFINED 1 at src/func_ov006_02115b0c.c:67
 # Both TUs are matched and read-only, so the answer is the PORT_HOST_ABI shape
 # the section-6 remedy names: port/unmatched/MgSmartball_Slot18.cpp is the
@@ -119,22 +119,22 @@
 #
 # TWO OTHER aritycheck ROWS TOUCH THIS SLICE AND NEITHER IS THIS LANE'S WORK,
 # recorded so a reader does not have to re-derive them:
-#   _ZN3G2x13SetBlendAlphaEPVttttt  reads as DROPS (def 6, decl 5) and is
+#   _ZN3G2x13SetBlendAlphaEPVttttj  reads as DROPS (def 6, decl 5) and is
 #     BENIGN. The definition's sixth parameter is never read by its body, the
 #     mangled name says five, the ROM passes five (r0-r3 plus one stack word),
-#     and dScMgCurling_c's own slot 18 src/func_ov006_020e3470.c carries the
+#     and dScMgCurling_c's own slot 18 src/_ZN14dScMgCurling_c13OnYoshiTryEatEi.cpp carries the
 #     identical five-parameter declaration and has shipped since lane MG2.
-#   func_ov004_020b9280 and func_ov004_020b9430 read as DROPS from
-#     src/func_ov004_020b92c4.c and _020b929c.c. All four TUs are inherited
+#   _ZN10dMgPsOpt_c11TouchIcon_cD1Ev and _ZN10dMgPsOpt_c11TouchIcon_cC1Ev read as DROPS from
+#     src/_ZN10dMgPsOpt_cC1Ev.cpp and _020b929c.c. All four TUs are inherited
 #     from port/slice_mg1.txt unchanged; the rows predate this lane.
 #
 # THREE BODIES IN THE CLOSURE HAVE NO SOURCE and are therefore NOT here. Each
 # gets a NAMED, SELF-REPORTING trap in port/unmatched/MgSmartball_Traps.cpp,
 # the func_ov006_020e1854 precedent: a trap that says which address was
 # entered, never an invented body.
-#     func_ov006_02118b70   vtable slot 0, InitResources.  gap 0x02118b70..
+#     _ZN16dScMgSmartball_c13InitResourcesEv   vtable slot 0, InitResources.  gap 0x02118b70..
 #                           0x0211944c between two delink blocks
-#     func_ov006_021173c8   vtable slot 9, Render.         gap 0x021173c8..
+#     _ZN16dScMgSmartball_c6RenderEv   vtable slot 9, Render.         gap 0x021173c8..
 #                           0x02118488
 #     func_ov006_02114800   symbols.txt names it (size 0x310) and no delink
 #                           block covers it. Called from five sites inside
@@ -168,9 +168,10 @@
 # unreadable as a closure. The genuinely new content is the 41 ov006 lines.
 
 # ---- ov006: dScMgSmartball_c's own closure, 41 TUs (42 reached, 1 excluded)
-src/MgBingoBallSlotsShot_Spawn.cpp
-src/func_ov006_0210d740.c
-src/func_ov006_0210d7e0.cpp
+src/minigames/d_s_mg_smartball.cpp
+src/_ZN16dScMgSmartball_cD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN16dScMgSmartball_cD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN16dScMgSmartball_cD0Ev.cpp
 src/func_ov006_0210d894.c
 src/func_ov006_0210d898.c
 src/func_ov006_0210e0d0.c
@@ -183,7 +184,7 @@ src/func_ov006_02110bc0.c
 src/func_ov006_02111220.c
 # Run mg5, lane INTEG: the spring placement-new helper the seated InitResources
 # (_ZN16dScMgSmartball_c13InitResourcesEv) calls; the link named it. Matched, has
-# its own delink block; its callees (func_ov006_0211474c, data_ov006_0213ecfc)
+# its own delink block; its callees (func_ov006_0211474c, _ZTV21cMgSmartball_spring_c)
 # are already in this slice and the ov006 mount.
 src/func_ov006_0211157c.c
 src/func_ov006_02111774.c
@@ -198,7 +199,7 @@ src/func_ov006_021146cc.c
 src/func_ov006_021146e0.c
 src/func_ov006_0211470c.c
 src/func_ov006_0211474c.c
-src/func_ov006_021147ac.c
+src/_ZN16dScMgSmartball_c8OnPushedEv.cpp
 src/func_ov006_021147d0.c
 # Run mg5, lane INTEG: the ball-table seeder (branch decomp/smb-bodies, MATCHED),
 # recovered with its delink block. Replaces the aux trap in MgSmartball_Traps.cpp.
@@ -213,13 +214,13 @@ src/func_ov006_021156f8.c
 src/func_ov006_02115830.c
 src/func_ov006_02115a5c.c
 src/func_ov006_02115b0c.c
-src/func_ov006_02118488.c
-src/func_ov006_02118ae4.c
+src/_ZN16dScMgSmartball_c8BehaviorEv.cpp
+src/_ZN16dScMgSmartball_c9Virtual7CEv.cpp
 # Run mg5, lane INTEG: dScMgSmartball_c::InitResources, vtable slot 0 (branch
 # decomp/smb-bodies, NONMATCHING, the flagged weak point). Plain C carrying the
-# mangled symbol; the func_ov006_02118b70 trap name is aliased onto it in
+# mangled symbol; the _ZN16dScMgSmartball_c13InitResourcesEv trap name is aliased onto it in
 # MgSmartball_Faces.cpp. Builds the sub-objects the class needs to tick.
-src/_ZN16dScMgSmartball_c13InitResourcesEv.c
+src/_ZN16dScMgSmartball_c13InitResourcesEv.cpp
 
 # ---- Run mg5, lane SMBSEAT: THE SUB-OBJECT FAMILY, 37 further TUs ---------
 #
@@ -232,7 +233,7 @@ src/_ZN16dScMgSmartball_c13InitResourcesEv.c
 # THIRTY-FIVE OF THE THIRTY-SIX WERE ALREADY IN THIS TREE and none of them was
 # in any slice, which is why a symbol search for them came back empty and read
 # as "no body". Two are filed under WRONG RECOVERED NAMES -- delinks.txt calls
-# 0x02111144 START_INTRO_MINIMAP_ZOOM and 0x02110154 _ZN6Player7ST_WAITE, and
+# 0x02111144 _ZN24cMgSmartball_propeller_c12SaveSnapshotEv and 0x02110154 _ZN19cMgSmartball_slot_c14RestoreInitialEv, and
 # main has since renamed both onto the cMgSmartball_ classes they belong to.
 # The rename is a byte-gated-tree job and is routed, not taken.
 #
@@ -249,45 +250,45 @@ src/_ZN16dScMgSmartball_c13InitResourcesEv.c
 #       port/unmatched/MgSmartball_Faces.cpp.
 src/_ZN16dScMgSmartball_c6RenderEv.cpp
 src/_ZN20cMgSmartball_board_c12SaveSnapshotEv.cpp
-src/START_INTRO_MINIMAP_ZOOM.c
-# src/_ZN6Player7ST_WAITE.cpp (0x02110154, cMgSmartball_slot_c's RestoreInitial
+src/_ZN24cMgSmartball_propeller_c12SaveSnapshotEv.cpp
+# src/_ZN19cMgSmartball_slot_c14RestoreInitialEv.cpp (0x02110154, cMgSmartball_slot_c's RestoreInitial
 # under a wrong recovered name) is DELIBERATELY ABSENT: it drops the receiver
 # on a call the ROM rides through in r0, and the callee STORES through it.
 # port/unmatched/MgSmartball_SlotRestore.cpp is that body with the argument
-# placed, the same split MgSmartball_Slot18.cpp makes for func_ov006_02118a8c.
-src/func_ov006_0210ddf0.c
-src/func_ov006_0210e014.c
-src/func_ov006_0210e098.c
-src/func_ov006_0210e364.c
-src/func_ov006_0210e3e8.c
-src/func_ov006_0210e460.c
-src/func_ov006_0210e4f4.c
-src/func_ov006_0210f914.c
-src/func_ov006_0210ff1c.c
-src/func_ov006_021100a8.c
-src/func_ov006_02110850.c
-src/func_ov006_02110928.c
-src/func_ov006_02110a20.c
-src/func_ov006_02110bb4.c
-src/func_ov006_021104c0.c
-src/func_ov006_021106b4.c
-src/func_ov006_0211102c.c
-src/func_ov006_021111f0.c
-src/func_ov006_02111268.c
-src/func_ov006_0211134c.c
-src/func_ov006_02111560.c
-src/func_ov006_02111654.c
-src/func_ov006_021116f0.c
-src/func_ov006_02111750.c
-src/func_ov006_021117bc.c
-src/func_ov006_02111b20.c
-src/func_ov006_0211192c.c
-src/func_ov006_02113e54.c
-src/func_ov006_02113f1c.c
-src/func_ov006_02114458.c
-src/func_ov006_02114720.c
-src/func_ov006_02114724.c
-src/func_ov006_02114738.c
+# placed, the same split MgSmartball_Slot18.cpp makes for _ZN16dScMgSmartball_c13OnYoshiTryEatEi.
+src/_ZN19cMgSmartball_wing_c6UpdateEv.cpp
+src/_ZN19cMgSmartball_wing_c12SaveSnapshotEv.cpp
+src/_ZN19cMgSmartball_wing_c14RestoreInitialEv.cpp
+src/_ZN25cMgSmartball_pushswitch_c6UpdateEv.cpp
+src/_ZN25cMgSmartball_pushswitch_c12SaveSnapshotEv.cpp
+src/_ZN25cMgSmartball_pushswitch_c14RestoreInitialEv.cpp
+src/_ZN20cMgSmartball_board_c6UpdateEv.cpp
+src/_ZN20cMgSmartball_board_c14RestoreInitialEv.cpp
+src/_ZN19cMgSmartball_slot_c6UpdateEv.cpp
+src/_ZN19cMgSmartball_slot_c12SaveSnapshotEv.cpp
+src/_ZN21cMgSmartball_pakkun_c14RestoreInitialEv.cpp
+src/_ZN20cMgSmartball_dokan_c6UpdateEv.cpp
+src/_ZN20cMgSmartball_dokan_c12SaveSnapshotEv.cpp
+src/_ZN20cMgSmartball_dokan_c14RestoreInitialEv.cpp
+src/_ZN21cMgSmartball_pakkun_c6UpdateEv.cpp
+src/_ZN21cMgSmartball_pakkun_c12SaveSnapshotEv.cpp
+src/_ZN24cMgSmartball_propeller_c6UpdateEv.cpp
+src/_ZN24cMgSmartball_propeller_c14RestoreInitialEv.cpp
+src/_ZN21cMgSmartball_spring_c6UpdateEv.cpp
+src/_ZN21cMgSmartball_spring_c12SaveSnapshotEv.cpp
+src/_ZN21cMgSmartball_spring_c14RestoreInitialEv.cpp
+src/_ZN18cMgSmartball_ana_c6UpdateEv.cpp
+src/_ZN18cMgSmartball_ana_c12SaveSnapshotEv.cpp
+src/_ZN18cMgSmartball_ana_c14RestoreInitialEv.cpp
+src/_ZN21cMgSmartball_kinoko_c6UpdateEv.cpp
+src/_ZN21cMgSmartball_kinoko_c14RestoreInitialEv.cpp
+src/_ZN21cMgSmartball_kinoko_c12SaveSnapshotEv.cpp
+src/_ZN19cMgSmartball_ball_c6UpdateEv.cpp
+src/_ZN19cMgSmartball_ball_c12SaveSnapshotEv.cpp
+src/_ZN19cMgSmartball_ball_c14RestoreInitialEv.cpp
+src/_ZN21cMgSmartball_object_c6UpdateEv.cpp
+src/_ZN21cMgSmartball_object_c12SaveSnapshotEv.cpp
+src/_ZN21cMgSmartball_object_c14RestoreInitialEv.cpp
 
 # ---- SMBSEAT wave 2: the closure the LINKER asked for, 18 TUs ------------
 # Each line here is an unresolved external from the wave-1 link, resolved by
@@ -311,14 +312,13 @@ src/func_ov006_02114b10.c
 src/func_ov006_02114ec0.c
 src/func_ov006_02114fd0.c
 src/func_ov006_02115008.c
-src/func_ov006_0211944c.c
-src/func_ov006_02119900.c
+src/_ZN16dScMgSmartball_c21AfterCleanupResourcesEj.cpp
 
 # ---- ov004: the framework half, 32 TUs, all inherited from slice_mg1 --
 src/FreeGfxSlotsById.c
 src/GetGameLanguage.c
 src/Ov004_Deallocate.c
-src/_ZN5Enemy20KillByInvincibleCharERK10Vector3_16R6Player.c
+src/func_ov004_020ada40.c
 src/func_ov004_020ad6fc.c
 src/func_ov004_020ad90c.c
 src/func_ov004_020ad940.cpp
@@ -330,28 +330,29 @@ src/func_ov004_020adc00.c
 src/func_ov004_020adc1c.c
 src/func_ov004_020adc3c.c
 src/func_ov004_020adc74.c
-src/func_ov004_020ae128.c
+src/_ZN11dScMgBase_c8OnPushedEv.cpp
 src/func_ov004_020ae1cc.c
 src/func_ov004_020ae1f0.c
 src/func_ov004_020ae20c.c
 src/func_ov004_020b04d0.c
-# Run mg5, lane BASESET. src/func_ov004_020b0840.c IS EXCLUDED, host-copied in
+# Run mg5, lane BASESET. src/minigames/d_s_mg_base.cpp IS EXCLUDED, host-copied in
 # port/unmatched/MgBase_Slot5.cpp. This slice carried the line as well as
 # slice_mg1.txt, and both had to drop it: CMake dedupes identical absolute paths
 # within a target, so leaving it in either list would keep the src body in the
 # build and collide with the host copy. See slice_mg1.txt for the derivation.
-# HOST-COPIED (BASESET): src/func_ov004_020b0840.c
-src/func_ov004_020b0a54.c
-src/func_ov004_020b29c0.cpp
-src/func_ov004_020b2adc.c
+# HOST-COPIED (BASESET): src/minigames/d_s_mg_base.cpp
+src/func_ov004_020b0a54.cpp
+# RETIRED at SLICE1: body now in src/_ZN11dScMgBase_cD0Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN11dScMgBase_cD2Ev.cpp
+src/_ZN11dScMgBase_cC2Ev.cpp
 src/func_ov004_020b2c84.c
 src/func_ov004_020b3194.c
-src/func_ov004_020b8a70.c
+src/_ZN10dMgState_cC1Ev.cpp
 src/func_ov004_020b8dc0.c
-src/func_ov004_020b9280.c
-src/func_ov004_020b929c.c
-src/func_ov004_020b92c4.c
-src/func_ov004_020b9430.c
+src/_ZN10dMgPsOpt_c11TouchIcon_cD1Ev.cpp
+src/_ZN10dMgPsOpt_cD1Ev.cpp
+src/_ZN10dMgPsOpt_cC1Ev.cpp
+src/_ZN10dMgPsOpt_c11TouchIcon_cC1Ev.cpp
 
 # ---- ov001: ov004's touch layer, 1 TU, inherited from slice_mg1 ------
 src/func_ov001_020ab5b0.c
@@ -366,8 +367,8 @@ src/func_ov001_020ab5b0.c
 #   Vec2_Sub        wanted by src/func_ov006_02115830.c
 #   func_0203d388   wanted by src/func_ov006_02114c04.c and _02115830.c
 #   func_0203d434   wanted by src/func_ov006_02114c04.c
-#   func_0203d738   wanted by src/MgBingoBallSlotsShot_Spawn.cpp -- one of the
-#                   two callbacks the factory hands func_020733a8
+#   func_0203d738   wanted by src/minigames/d_s_mg_smartball.cpp -- one of the
+#                   two callbacks the factory hands __cxa_vec_ctor
 #   func_02057d00   wanted by src/func_ov006_02115b0c.c
 src/Vec2_Len.c
 src/Vec2_Sub.c
@@ -426,7 +427,7 @@ src/func_ov006_02115060.c
 
 # ---- SMBSEAT wave 4: 10 further TUs, each one an unresolved external
 # from the previous link resolved by the TU that defines it.
-src/_ZN6Player6ST_OWLE.c
+src/func_ov006_02110244.c
 src/func_ov006_0210dbb0.c
 src/func_ov006_0210e1fc.c
 src/func_ov006_021108bc.c

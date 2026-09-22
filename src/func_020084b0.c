@@ -1,7 +1,7 @@
 // @symbol func_020084b0
 /* recovered: shared common types */
 #include "common.h"
-// func_020084b0 @ 0x020084b0 - Camera/Actor member, size 0x50.
+// func_020084b0 @ 0x020084b0 - Camera/dActor_c member, size 0x50.
 // Reads a packed unaligned Vector3_16 (x,y,z s16) from a data record,
 // converts each component to Fix12i (<<12) and stores them as a Vector3
 // at offset 0x8c of the target object. Returns 1.

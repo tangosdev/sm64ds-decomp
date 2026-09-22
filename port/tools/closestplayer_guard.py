@@ -3,7 +3,7 @@
 Some src/ readers were decompiled as free functions that call an Actor
 thiscall with empty parentheses, for example
 
-    char* p = _ZN5Actor13ClosestPlayerEv();
+    char* p = _ZN8dActor_c13ClosestPlayerEv();
 
 Actor::ClosestPlayer is a thiscall: it reads `this` from the receiver
 register. A zero argument call leaves that register holding whatever was
@@ -66,8 +66,8 @@ import sys
 #   remedy       the fix text printed when this row finds an offender.
 RULES = [
     {
-        "symbol": "_ZN5Actor13ClosestPlayerEv",
-        "pattern": re.compile(r"_ZN5Actor13ClosestPlayerEv\s*\(\s*\)"),
+        "symbol": "_ZN8dActor_c13ClosestPlayerEv",
+        "pattern": re.compile(r"_ZN8dActor_c13ClosestPlayerEv\s*\(\s*\)"),
         "remedy": (
             "Actor::ClosestPlayer is thiscall. A zero argument call drops the "
             "receiver and faults on a null base (null this + 0x5c). Host copy "
@@ -79,11 +79,11 @@ RULES = [
     },
     {
         # Run link60 lane FDR2. Found while sizing the dWipe_c motion slots:
-        # src/func_0202f428.c (vtable slot 0x08, AdvanceFade) calls this with
+        # src/_ZN7dWipe_c11AdvanceFadeEv.cpp (vtable slot 0x08, AdvanceFade) calls this with
         # empty parentheses, and include/decl_FaderColor.h declares it (void),
         # so the call is not even a warning. On ARM it is byte-correct -- the
         # ROM's `bl` at 0x0202f440 leaves r0 holding the receiver, which is the
-        # same trick src/func_0202ed08.c and Heap::_Destroy rely on -- and on
+        # same trick src/_ZN7dWipe_c8SetToEndEv.cpp and Heap::_Destroy rely on -- and on
         # the host the receiver is simply gone. The TU is NOT in any slice
         # today and the guard passes; this row is here so that the day someone
         # seats slot 0x08 the build refuses instead of shipping the call. See
@@ -93,10 +93,10 @@ RULES = [
         # NOT. The remedy below offered two ways out and named the first
         # "give the src TU a receiver and pass it". main PR #1539 did exactly
         # that: include/decl_FaderColor.h declares the symbol (void*) and
-        # src/func_0202f428.c passes obj. Byte-verified at 2004/b56 with
+        # src/_ZN7dWipe_c11AdvanceFadeEv.cpp passes obj. Byte-verified at 2004/b56 with
         # strict relocs on both trees and re-verified in the port worktree
         # before the seat, both before and after the edit -- MATCH each time,
-        # so the ARM bytes did not move. src/func_0202f428.c is now on
+        # so the ARM bytes did not move. src/_ZN7dWipe_c11AdvanceFadeEv.cpp is now on
         # port/slice_fdr.txt and slot 0x08 of the dWipe_c table dispatches it.
         #
         # WHAT THE ROW DOES NOW is the reason to keep it rather than delete
@@ -109,8 +109,8 @@ RULES = [
         # along with the refusal.
         #
         # THAT WAS TESTED BY INJECTION rather than asserted. With the call in
-        # src/func_0202f428.c put back to the zero-argument spelling, this
-        # guard reports "src/func_0202f428.c:16: zero-argument
+        # src/_ZN7dWipe_c11AdvanceFadeEv.cpp put back to the zero-argument spelling, this
+        # guard reports "src/_ZN7dWipe_c11AdvanceFadeEv.cpp:16: zero-argument
         # _ZN10FaderColor11AdvanceFadeEv call" and exits 1, over a TU that is
         # in a slice -- which is the state the row could never reach before,
         # because the refusal kept the TU out of every slice.
@@ -121,7 +121,7 @@ RULES = [
             "receiver riding through in r0, and a call spelled with no "
             "argument runs on whatever was in the receiver register on the "
             "host. This was fixed upstream (main PR #1539: the declaration in "
-            "include/decl_FaderColor.h takes void* and src/func_0202f428.c "
+            "include/decl_FaderColor.h takes void* and src/_ZN7dWipe_c11AdvanceFadeEv.cpp "
             "passes obj), and slot 0x08 of the dWipe_c table ships that TU, "
             "so an offender here means the fix was reverted. Restore the "
             "argument rather than unseating the slot; the edit is byte-neutral "
@@ -267,7 +267,7 @@ def blank_comments(src):
     """Replace C and C++ comment bodies with spaces, preserving newlines.
 
     A host copy often documents the very bug it fixes by quoting the raw src
-    spelling, for example the string `_ZN5Actor13ClosestPlayerEv()` inside a
+    spelling, for example the string `_ZN8dActor_c13ClosestPlayerEv()` inside a
     block comment (see port/unmatched/Ov085_Rabbit_b8dc.cpp). That is prose,
     not a call, so comments must not count. Line numbers are preserved so the
     reported line still points at the real source line. String literals are
@@ -353,7 +353,7 @@ def main():
     # to read "zero-argument Actor::ClosestPlayer call" whatever fired, which
     # was harmless while RULES had one row and became a wrong answer the moment
     # it had two: run link60 lane FDR2 added _ZN10FaderColor11AdvanceFadeEv and
-    # an offender in src/func_0202f428.c would have been reported under the
+    # an offender in src/_ZN7dWipe_c11AdvanceFadeEv.cpp would have been reported under the
     # other rule's name, sending the reader to the wrong fix. The remedy block
     # below was already per-symbol and did not have the bug.
     for rel, lineno, symbol, _remedy in offenders:

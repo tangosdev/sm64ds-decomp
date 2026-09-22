@@ -25,29 +25,29 @@
 # EACH BODY, AND WHY IT COMPILES AS-IS (all three are flat C, none carries the
 # inferred-stub marker, and every callee is already in walk_window.map):
 #
-#   _ZN9PushBlockD0Ev      ov002 0x020b9198, slot 17 of _ZTV9PushBlock
+#   _ZN11PowerFlowerD0Ev      ov002 0x020b9198, slot 17 of _ZTV9PushBlock
 #       WithMeshClsn +0x200, MovingCylinderClsn +0x1cc, ShadowModel +0x174,
 #       Model +0x124, Model +0xd4, Actor::D2, Deallocate. Spells its table by
 #       the RTTI name _ZTV18daObjPowerUpItem_c, which
 #       hal/actor_classes_ov002g200.cpp already aliases onto _ZTV9PushBlock.
 #       hal's pb_d0 was this chain typed out by hand; it now calls this body.
 #
-#   _ZN7SeaweedD0Ev        ov002 0x020bc618, slot 17 of _ZTV7Seaweed
+#   _ZN12HealingHeartD0Ev        ov002 0x020bc618, slot 17 of _ZTV7Seaweed
 #       MovingCylinderClsn +0x138, ModelAnim +0xd4, Actor::D2, Deallocate.
 #       _ZTV7Seaweed is HEALING_HEART's table (RTTI 12daObjHeart_c, the ov002
 #       name shift hal/actor_classes_bob_world.cpp derives at its head); the
 #       body spells it by the RTTI name and the alias for that spelling is new
 #       with this gate.
 #
-#   _ZN13WaterfallMistD0Ev ov002 0x020b6f68, slot 17 of _ZTV13WaterfallMist
-#       func_ov001_020ab3a0 +0x3d0, ShadowModel +0x364, ModelAnim +0x300,
-#       WithMeshClsn +0x144, MovingCylinderClsn +0x110, func_ov002_020aed18,
+#   _ZN15daObjMarioCap_cD0Ev ov002 0x020b6f68, slot 17 of _ZTV13WaterfallMist
+#       _ZN10dCapIcon_cD1Ev +0x3d0, ShadowModel +0x364, ModelAnim +0x300,
+#       WithMeshClsn +0x144, MovingCylinderClsn +0x110, _ZN12dEnemyBase_cD2Ev,
 #       Deallocate. _ZTV13WaterfallMist is THE CAP's table (RTTI
 #       15daObjMarioCap_c), not the class gate 20 fills; same new-alias note.
-#       This one ends in func_ov002_020aed18 rather than Actor::D2 directly,
+#       This one ends in _ZN12dEnemyBase_cD2Ev rather than Actor::D2 directly,
 #       which is Enemy's D2 -- the cap is an Enemy subclass.
 #
-# COIN'S D0 NEEDS NO LINE HERE. src/_ZN4CoinD0Ev.c has been on slice_gate33.txt
+# COIN'S D0 NEEDS NO LINE HERE. src/_ZN4CoinD0Ev.cpp has been on slice_gate33.txt
 # since that gate and was /OPT:REF-stripped for want of a reference; the seat
 # in hal/actor_classes_bob_world.cpp is the whole of its change.
 #
@@ -85,7 +85,7 @@
 #       call/jmp dword ptr [reg+40h]   1 site    <- slot 16, positive control
 #
 # and the single slot-16 site resolves through walk_window.map to 0x004df5d0,
-# ?AfterCleanupResources@ActorBase@@UAEXI@Z -- which is exactly the function
+# ?AfterCleanupResources@fBase_c@@UAEXI@Z -- which is exactly the function
 # the w1l1 ruling names as the one that dispatches 16 and deallocates itself.
 # So the control proves the sweep can see this shape, and the zero is a real
 # zero rather than a pattern that does not match.
@@ -104,11 +104,13 @@
 #   17 stays exactly as level_boot.cpp has it; the abort is the feature.
 #
 # SCOPE, because the ruling had a second reason this does not touch.
-# _ZN4TrapD0Ev is declined in w1l1 for a different and stronger cause: the ROM
+# _ZN9LightBeamD0Ev is declined in w1l1 for a different and stronger cause: the ROM
 # shares that body across two object layouts and it fits LIGHT_BEAM's only, so
 # on a 944-byte TRAP its 0xd4/0x124 chain smashes Platform's fields. That is a
 # correctness fault in the body, not a diagnostic trade, and nothing here
 # unblocks it. Same for any slot-17 body whose layout is shared.
-src/_ZN9PushBlockD0Ev.c
-src/_ZN7SeaweedD0Ev.c
-src/_ZN13WaterfallMistD0Ev.c
+# RETIRED at SLICE1: body now in src/_ZN11PowerFlowerD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN11PowerFlowerD0Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN12HealingHeartD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN12HealingHeartD0Ev.cpp
+src/actors/daObjMarioCap_c.cpp

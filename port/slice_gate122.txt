@@ -2,14 +2,14 @@
 #
 # Level 8's census printed id 19 skipped, x8. Settled the ROM's own way:
 # ACTOR_SPAWN_TABLE[19] (arm9 0x020908b0) is a load reloc to:0x02108a5c
-# module:overlay(2) -- BrickBlockSwitchActivated_SpawnInfo, whose +4 halfword
+# module:overlay(2) -- g_profile_SW_BLOCK_L, whose +4 halfword
 # reads 19. Census id, reloc target and record id all agree.
 #
 # BrickBlockSwitchActivated is a Platform subclass whose factory installs
 # _ZTV13BigBrickBlock, the SAME table BRICK_BLOCK (15), BIG_BRICK_BLOCK (16) and
 # FORTRESS_TOWER_WALL (46) install and hal_fill_black_brick_block_vtable already
 # fills (gate 16). So all its methods are already compiled and the vtable filled;
-# this gate's ONLY new symbol is the factory BrickBlockSwitchActivated_Spawn.
+# this gate's ONLY new symbol is the factory daObjBlockL_c_classInit_SW_BLOCK_L.
 # The SpawnInfo mount is added to ov002_syms.txt and the registry row reuses the
 # shared fill (fill 0). No new overlay data, no method face.
-src/BrickBlockSwitchActivated_Spawn.c
+src/d_a_obj_block_l_sw_block_l.c

@@ -33,13 +33,13 @@
 # word[0], which must land inside ov036's own .text.
 #
 #  id  SpawnInfo                       word[0] spawnFunc                idhalf  route-1 slot -> target / module list
-# 123  TrickyTriangles_SpawnInfo       0x021120c8 TrickyTriangles_Spawn     123  0x02090a50 -> 0x02113e6c overlays(9,14,15,16,20,21,22,26,29,36)
-# 125  ShipWing_SpawnInfo              0x02111904 ShipWing_Spawn            125  0x02090a58 -> 0x02113c14 overlays(6,9,14,15,16,18,20,21,22,26,27,29,36)
-# 126  DonutBlock_SpawnInfo            0x02111cd8 DonutBlock_Spawn          126  0x02090a5c -> 0x02113cd4 overlays(9,14,15,16,20,21,22,26,27,29,36)
-# 127  SwingingPlatform_SpawnInfo      0x02111414 SwingingPlatform_Spawn    127  0x02090a60 -> 0x02113a74 overlays(9,14,15,18,20,21,22,25,26,27,29,32,36)
-# 129  RotatingPlatformRr_SpawnInfo    0x02111544 RotatingPlatformRr_Spawn  129  0x02090a68 -> 0x02113b50 overlays(9,14,15,16,18,20,21,22,26,27,29,36)
-# 130  FlyingCarpet_SpawnInfo          0x02112538 FlyingCarpet_Spawn        130  0x02090a6c -> 0x02113f78 overlays(14,15,16,20,21,22,26,29,36)
-# 132  ArmedRotatingPlatform_SpawnInfo 0x02111f5c ArmedRotatingPlatform_Spawn 132 0x02090a74 -> 0x02113da8 overlays(9,14,15,16,20,21,22,26,29,36)
+# 123  g_profile_RC_DORIFU       0x021120c8 daObjRc_Dorifu_c_classInit     123  0x02090a50 -> 0x02113e6c overlays(9,14,15,16,20,21,22,26,29,36)
+# 125  g_profile_RC_HANE              0x02111904 daObjRc_Hane_c_classInit            125  0x02090a58 -> 0x02113c14 overlays(6,9,14,15,16,18,20,21,22,26,27,29,36)
+# 126  g_profile_RC_TIKUWA            0x02111cd8 daObjRc_Tikuwa_c_classInit          126  0x02090a5c -> 0x02113cd4 overlays(9,14,15,16,20,21,22,26,27,29,36)
+# 127  g_profile_RC_BURANKO      0x02111414 daObjRcBuranko_c_classInit    127  0x02090a60 -> 0x02113a74 overlays(9,14,15,18,20,21,22,25,26,27,29,32,36)
+# 129  g_profile_RC_KAITEN    0x02111544 daObjRc_Kaitendai_c_classInit  129  0x02090a68 -> 0x02113b50 overlays(9,14,15,16,18,20,21,22,26,27,29,36)
+# 130  g_profile_RC_CARPET          0x02112538 daObjRcCarpet_c_classInit        130  0x02090a6c -> 0x02113f78 overlays(14,15,16,20,21,22,26,29,36)
+# 132  g_profile_RC_GURUGURU 0x02111f5c daObjRc_Guruguru_c_classInit 132 0x02090a74 -> 0x02113da8 overlays(9,14,15,16,20,21,22,26,29,36)
 #
 # All seven word[0]s land in 0x021111a0..0x021125b0 (ov036's .text). All seven
 # idhalves read back their own id. Both routes agree on all seven.
@@ -61,7 +61,7 @@
 #
 # ID 123 (TRICKY_TRIANGLES) IS THE EXCEPTION AND THE ROUTE MUST NOT BE APPLIED
 # TO IT. Its record is not nine words: the next dsd symbol after
-# TrickyTriangles_SpawnInfo is data_ov036_02113e88, only 0x1c (seven words)
+# g_profile_RC_DORIFU is data_ov036_02113e88, only 0x1c (seven words)
 # later, and that neighbour is the class's own three-word file record -- the
 # same one its Init and Cleanup pass to ov002 as their second argument. So the
 # word at SpawnInfo+0x20 (0x02113e8c) is not part of the SpawnInfo at all; it is
@@ -77,7 +77,7 @@
 #   * route 2, word[1] = 0x00fd007b whose low halfword is 0x7b = 123, with
 #     word[0] = 0x021120c8 landing inside ov036's own .text;
 #   * BLOCK CONTAINMENT, which is the one that settles the table: 0x021120c8
-#     TrickyTriangles_Spawn is the last function of block 6 (0x02111f8c..
+#     daObjRc_Dorifu_c_classInit is the last function of block 6 (0x02111f8c..
 #     0x02112158), its own literal pool at 0x02112154 stores 0x02113ecc as the
 #     final vptr write, and 0x02113ecc's OWN vtable[-1] (0x02113ec8) reads
 #     0x02113e4c, whose name string is 16daObjRc_Dorifu_c.
@@ -110,12 +110,12 @@
 #   6      02111f8c..02112158         0x02113ecc  16daObjRc_Dorifu_c
 #   7      02112158..021125b0         0x02113f9c  15daObjRcCarpet_c
 #
-#   (1) block 1's Spawn is SwingingPlatform_Spawn and block 1's table is
-#       "Buranko" = swing. Block 7's Spawn is FlyingCarpet_Spawn and block 7's
+#   (1) block 1's Spawn is daObjRcBuranko_c_classInit and block 1's table is
+#       "Buranko" = swing. Block 7's Spawn is daObjRcCarpet_c_classInit and block 7's
 #       table is "Carpet". Both ends anchor, so the Spawn names are right.
-#   (2) block 2's vtable slots 16/17 are func_ov036_02111444 / _02111494, both
-#       inside block 2, and block 2's Spawn is RotatingPlatformRr_Spawn --
-#       "Kaitendai" is a turntable. So _ZN18RotatingPlatformRrD1Ev at
+#   (2) block 2's vtable slots 16/17 are _ZN19daObjRc_Kaitendai_cD1Ev / _02111494, both
+#       inside block 2, and block 2's Spawn is daObjRc_Kaitendai_c_classInit --
+#       "Kaitendai" is a turntable. So _ZN14daObjRc_Hane_cD1Ev at
 #       0x02111580 is NOT in RotatingPlatformRr's block; it opens block 3.
 #   (3) every table's own vtable[-1] __si_class_type_info reads through to the
 #       name string above. On SIX of the seven (all but 123) the SpawnInfo's
@@ -128,15 +128,15 @@
 # THE SEATING TABLE THIS LANE USES. The pairing is BY ADDRESS.
 #
 #  id  registry name            ROM class              vtable      config _ZTV label(s)         method prefix in src
-# 127  SWINGING_PLATFORM        16daObjRcBuranko_c     0x02113a98  (none: data_ov036_02113a98)  func_ov036_0211*
-# 129  ROTATING_PLATFORM_RR     19daObjRc_Kaitendai_c  0x02113b74  (none: data_ov036_02113b74)  func_ov036_0211*
+# 127  SWINGING_PLATFORM        16daObjRcBuranko_c     0x02113a98  (none: _ZTV16daObjRcBuranko_c)  func_ov036_0211*
+# 129  ROTATING_PLATFORM_RR     19daObjRc_Kaitendai_c  0x02113b74  (none: _ZTV19daObjRc_Kaitendai_c)  func_ov036_0211*
 # 125  SHIP_WING                14daObjRc_Hane_c       0x02113c38  _ZTV18RotatingPlatformRr +   _ZN18RotatingPlatformRr*
 #                                                                  _ZTV14daObjRc_Hane_c
 # 126  DONUT_BLOCK              16daObjRc_Tikuwa_c     0x02113cf8  _ZTV8ShipWing +              _ZN8ShipWing*
 #                                                                  _ZTV16daObjRc_Tikuwa_c
-# 132  ARMED_ROTATING_PLATFORM  18daObjRc_Guruguru_c   0x02113dcc  _ZTV10DonutBlock             _ZN10DonutBlock*
-# 123  TRICKY_TRIANGLES         16daObjRc_Dorifu_c     0x02113ecc  _ZTV21ArmedRotatingPlatform  _ZN21ArmedRotatingPlatform*
-# 130  FLYING_CARPET            15daObjRcCarpet_c      0x02113f9c  (none: data_ov036_02113f9c)  func_ov036_0211*
+# 132  ARMED_ROTATING_PLATFORM  18daObjRc_Guruguru_c   0x02113dcc  _ZTV18daObjRc_Guruguru_c             _ZN10DonutBlock*
+# 123  TRICKY_TRIANGLES         16daObjRc_Dorifu_c     0x02113ecc  _ZTV16daObjRc_Dorifu_c  _ZN21ArmedRotatingPlatform*
+# 130  FLYING_CARPET            15daObjRcCarpet_c      0x02113f9c  (none: _ZTV15daObjRcCarpet_c)  func_ov036_0211*
 #
 # Pairing "SHIP_WING" with _ZTV8ShipWing, which is the obvious reading, would
 # hand id 125's factory DonutBlock's table. That is the entire reason this
@@ -144,15 +144,19 @@
 # header names it, "ov045's off-by-one is ov045's"); ov070 does not. It is per
 # overlay, and it is measured here rather than inherited.
 #
-# ONE MIS-BOUND NAME INSIDE A TU, not just across the config.
-# src/RotatingPlatformRr_Spawn.c spells its FIRST vtable store
-# _ZTV19daObjRc_Kaitendai_c, but that store's literal is ov002 0x021091d4, the
-# daObjKaitendai_c BASE table -- the derived name on the base object. Its
-# second store (VT1) is the real 0x02113b74. The ROM order is base then derived,
-# which is the correct constructor shape; only the two names are swapped. The
-# per-file COMPILE_DEFINITIONS in port/CMakeLists.txt bind each spelling to the
-# address its own literal pool carries, so the store order and both values stay
-# exactly the ROM's.
+# ONE MIS-BOUND NAME INSIDE A TU -- RETIRED 2026-09-16, lane UNHOSTED.
+# The PRE-SYNC recovered source (src/RotatingPlatformRr_Spawn.c) spelled its
+# FIRST vtable store _ZTV19daObjRc_Kaitendai_c although that store's literal is
+# ov002 0x021091d4, the daObjKaitendai_c BASE table, and called the second one
+# VT1. Per-file COMPILE_DEFINITIONS in port/CMakeLists.txt bound each spelling
+# to the address its own literal pool carries. The synced TU,
+# src/game/actors/d_a_obj_rc_kaitendai.cpp, does not have that defect: its
+# daObjRc_Kaitendai_c_classInit stores _ZTV16daObjKaitendai_c first and
+# _ZTV19daObjRc_Kaitendai_c second, which is the cartridge's own order and the
+# cartridge's own two values (relocs 0x02111578 -> 0x021091d4 and 0x0211157c ->
+# 0x02113b74). The binding was carried across the sync by NAME and then made
+# BOTH stores write the intermediate, which is what took level 28 out; the rows
+# are gone and that TU now takes no COMPILE_DEFINITIONS at all.
 #
 # ==== THE SEVEN VTABLE WIDTHS, SLOT BY SLOT ================================
 # Read out of config/arm9/overlays/ov036/relocs.txt with every target resolved
@@ -194,7 +198,7 @@
 # ShipWing (125) is the one plain Actor: its Spawn calls Actor::C2 and
 # CommonModel::C1, not Platform::C2, and its table stops at Actor's slot 30.
 # The other six are Platform-derived. Base chains, from each typeinfo's word[2]:
-#   127 Buranko    <- dBgActor_c                       (= _ZTV8Platform, ov002 0x0210ae38)
+#   127 Buranko    <- dBgActor_c                       (= _ZTV10dBgActor_c, ov002 0x0210ae38)
 #   129 Kaitendai  <- daObjKaitendai_c <- dBgActor_c    (ov002 0x021091d4)
 #   125 Hane       <- (Actor)
 #   126 Tikuwa     <- dBgActor_c
@@ -205,17 +209,17 @@
 # ==== THE SEVEN VTABLE SPANS ARE EXCLUDED: THEY ARE HOST STORAGE ==========
 # The ov015/ov016/ov022/ov045/ov080 rule -- a mounted vtable hands a factory DS
 # code addresses. Every dsd symbol INSIDE each span is excluded with it:
-#   0x02113a98..0x02113b18  127  32 slots  data_ov036_02113a98 +02113aa0
+#   0x02113a98..0x02113b18  127  32 slots  _ZTV16daObjRcBuranko_c +02113aa0
 #                                          +02113abc +02113b10
-#   0x02113b74..0x02113bf4  129  32 slots  data_ov036_02113b74 +02113b7c
+#   0x02113b74..0x02113bf4  129  32 slots  _ZTV19daObjRc_Kaitendai_c +02113b7c
 #                                          +02113b80 +02113b90
 #   0x02113c38..0x02113cb4  125  31 slots  _ZTV18RotatingPlatformRr
 #                                          _ZTV14daObjRc_Hane_c +02113c48
 #   0x02113cf8..0x02113d78  126  32 slots  _ZTV8ShipWing
 #                                          _ZTV16daObjRc_Tikuwa_c +02113d30
-#   0x02113dcc..0x02113e4c  132  32 slots  _ZTV10DonutBlock +02113e00
-#   0x02113ecc..0x02113f4c  123  32 slots  _ZTV21ArmedRotatingPlatform +02113f20
-#   0x02113f9c..0x02114020  130  33 slots  data_ov036_02113f9c +02113ff4
+#   0x02113dcc..0x02113e4c  132  32 slots  _ZTV18daObjRc_Guruguru_c +02113e00
+#   0x02113ecc..0x02113f4c  123  32 slots  _ZTV16daObjRc_Dorifu_c +02113f20
+#   0x02113f9c..0x02114020  130  33 slots  _ZTV15daObjRcCarpet_c +02113ff4
 #                                          +02114010
 # hal/actor_classes_ov036.cpp declares the seven as host arrays and fills them.
 # Two ov002 INTERMEDIATE base tables (0x021091d4 daObjKaitendai_c and
@@ -224,7 +228,7 @@
 # and is left exactly as it is.
 #
 # NOTE FOR THE COORDINATOR, an ov025 cross-name found while excluding these:
-# src/__sinit_ov025_021129dc.c spells `data_ov036_02113a98` for ov025's own
+# src/__sinit_ov025_021129dc.c spells `_ZTV16daObjRcBuranko_c` for ov025's own
 # object at that shared-window address (the ov043 TRAP-3 shape). That TU is in
 # no slice and in no map today, so nothing races; if an ov025 lane ever links
 # it, its destructor-node write would land on SwingingPlatform's host vtable.
@@ -286,18 +290,18 @@ data_ov036_021138a8 data_ov036_021138bc data_ov036_021138c4
 data_ov036_021138d8 data_ov036_021138f0 data_ov036_021138fc
 data_ov036_02113934 data_ov036_02113980 data_ov036_02113998
 data_ov036_021139b0 data_ov036_021139f4 data_ov036_02113a00
-data_ov036_02113a50 data_ov036_02113a54 data_ov036_02113a60
-SwingingPlatform_SpawnInfo data_ov036_02113b18 data_ov036_02113b1c
-data_ov036_02113b20 data_ov036_02113b2c data_ov036_02113b38
-RotatingPlatformRr_SpawnInfo data_ov036_02113bf4 data_ov036_02113c00
-data_ov036_02113c08 ShipWing_SpawnInfo data_ov036_02113c20
+data_ov036_02113a50 _ZTI16daObjRcBuranko_c _ZTS16daObjRcBuranko_c
+g_profile_RC_BURANKO data_ov036_02113b18 data_ov036_02113b1c
+_ZTI19daObjRc_Kaitendai_c data_ov036_02113b2c _ZTS19daObjRc_Kaitendai_c
+g_profile_RC_KAITEN _ZTI14daObjRc_Hane_c _ZTS14daObjRc_Hane_c
+data_ov036_02113c08 g_profile_RC_HANE data_ov036_02113c20
 data_ov036_02113c28 data_ov036_02113cb4 data_ov036_02113cc0
-data_ov036_02113ccc DonutBlock_SpawnInfo data_ov036_02113cec
-data_ov036_02113cf4 data_ov036_02113d78 data_ov036_02113d84
-data_ov036_02113d90 ArmedRotatingPlatform_SpawnInfo data_ov036_02113dc4
-data_ov036_02113e4c data_ov036_02113e50 data_ov036_02113e58
-TrickyTriangles_SpawnInfo data_ov036_02113e88 data_ov036_02113f4c
-data_ov036_02113f58 data_ov036_02113f64 FlyingCarpet_SpawnInfo
+data_ov036_02113ccc g_profile_RC_TIKUWA data_ov036_02113cec
+data_ov036_02113cf4 data_ov036_02113d78 _ZTI18daObjRc_Guruguru_c
+_ZTS18daObjRc_Guruguru_c g_profile_RC_GURUGURU data_ov036_02113dc4
+_ZTI16daObjRc_Dorifu_c _ZTS16daObjRc_Dorifu_c
+data_ov036_02113e88 _ZTI15daObjRcCarpet_c
+_ZTS15daObjRcCarpet_c
 data_ov036_02114020 data_ov036_02114028 data_ov036_02114030
 data_ov036_0211403c data_ov036_02114048 data_ov036_02114050
 data_ov036_02114058 data_ov036_02114064 data_ov036_02114070
@@ -313,3 +317,13 @@ data_ov036_02114160 data_ov036_0211416c data_ov036_02114178:0xc
 data_ov036_02114184 data_ov036_02114190 data_ov036_0211419c
 data_ov036_021141a4 data_ov036_021141ac data_ov036_021141b4
 data_ov036_021141c0 data_ov036_021141cc
+
+
+# RETIRED at ALIAS2 (wave 8, the main -> port sync). Each symbol below was
+# hosted here as a ROM data blob AND is now defined by a translation unit the
+# build compiles, so the link reported it twice (LNK2005). The generator input
+# is the place to fix that: build/port/host-src/ov036_syms.c is its output and is
+# regenerated from this list on every configure.
+#   g_profile_RC_DORIFU                        now defined by d_a_obj_rc_dorifu.cpp.obj
+#   data_ov036_02113f58                        now defined by d_a_obj_rc_carpet.cpp.obj
+#   g_profile_RC_CARPET                        now defined by d_a_obj_rc_carpet.cpp.obj

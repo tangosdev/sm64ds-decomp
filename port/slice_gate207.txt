@@ -14,9 +14,9 @@
 # from a recovered name and not from vtspan's resolution:
 #
 #   table                      +0x40 raw   is D1       +0x44 raw   is D0
-#   _ZTV11VirtualDoor          0x020b09b0  0x020b09b0  0x020b09d4  0x020b09d4
-#   _ZTV18PoppingLavaBubbles   0x020b6e08  0x020b6e08  0x020b6e2c  0x020b6e2c
-#   _ZTV19AmbientSoundEffects  0x020f198c  0x020f198c  0x020f19b0  0x020f19b0
+#   _ZTV11daChScene_c          0x020b09b0  0x020b09b0  0x020b09d4  0x020b09d4
+#   _ZTV16daObjWaterfall_c   0x020b6e08  0x020b6e08  0x020b6e2c  0x020b6e2c
+#   _ZTV9daSetSE_c  0x020f198c  0x020f198c  0x020f19b0  0x020f19b0
 #   _ZTV8MugenBgm              0x020f1bc4  0x020f1bc4  0x020f1be8  0x020f1be8
 #
 # Four MATCHes. vtspan agrees independently on all four and pins every table at
@@ -27,15 +27,15 @@
 # own D0, and one factory -- so no second class installs it and the class
 # identity behind the ROM's slot-17 word is not shared:
 #
-#   0x021086b4  0x020b09d0 D1   0x020b0a04 D0   0x020b0f50 Exit_Spawn
-#   0x021094a0  0x020b6e28 D1   0x020b6e5c D0   0x020b6f14 WaterfallMist_Spawn
-#   0x0210b4c8  0x020f19ac D1   0x020f19e0 D0   0x020f1bc0 AmbientSoundEffects_Spawn
-#   0x0210b584  0x020f1be4 D1   0x020f1c18 D0   0x020f1f6c MugenBgm_Spawn
+#   0x021086b4  0x020b09d0 D1   0x020b0a04 D0   0x020b0f50 daChScene_c_classInit
+#   0x021094a0  0x020b6e28 D1   0x020b6e5c D0   0x020b6f14 daObjWaterfall_c_classInit
+#   0x0210b4c8  0x020f19ac D1   0x020f19e0 D0   0x020f1bc0 daSetSE_c_classInit
+#   0x0210b584  0x020f1be4 D1   0x020f1c18 D0   0x020f1f6c daMugenBGM_c_classInit
 #
 # The enclosing function of each third site is read from ov002's symbol table
 # by address range, not by name proximity. Note that two of the four factories
-# are named for a DIFFERENT class than the table they install -- Exit_Spawn
-# installs VirtualDoor's, WaterfallMist_Spawn installs PoppingLavaBubbles's --
+# are named for a DIFFERENT class than the table they install -- daChScene_c_classInit
+# installs VirtualDoor's, daObjWaterfall_c_classInit installs PoppingLavaBubbles's --
 # which is the ov002 name shift hal/actor_classes.cpp:1591 already derives, and
 # it does not affect the count.
 #
@@ -48,11 +48,11 @@
 #     ldr r1,[pc] / mov r0,r4 / ldr r1,[r1] / bl 0x203c1e8    Memory::Deallocate
 #     mov r0,r4 / pop {r4,lr} / bx lr
 #
-# The C is `t[0] = (int)VT; _ZN5ActorD2Ev(t); Deallocate(t, HEAP); return t;`
+# The C is `t[0] = (int)VT; _ZN8dActor_cD2Ev(t); Deallocate(t, HEAP); return t;`
 # with two callees, both already in walk_window.map. None of the four carries
 # the "recovered from vtable slot identity" inferred-stub marker and none is
 # named in inferred_stub_baseline.txt or inferred_stub_debt.txt. No class here
-# shares its body across two object layouts, so the _ZN4TrapD0Ev exclusion the
+# shares its body across two object layouts, so the _ZN9LightBeamD0Ev exclusion the
 # w1l1 ruling raises does not reach any of them.
 #
 # THE VT PLACEHOLDER IS THE ONE THING EACH NEEDS. All four spell their table
@@ -79,7 +79,7 @@
 #     call/jmp dword ptr [reg+40h]   1 site    <- slot 16, positive control
 #
 # and the one slot-16 site, 0x004DFB9F, resolves through walk_window.map into
-# ?AfterCleanupResources@ActorBase@@UAEXI@Z (0x004DFB50..0x004DFBC0) -- the
+# ?AfterCleanupResources@fBase_c@@UAEXI@Z (0x004DFB50..0x004DFBC0) -- the
 # function the w1l1 ruling names as the one that dispatches 16 and deallocates
 # itself. So the sweep can see the shape and the zero is a real zero.
 #
@@ -102,7 +102,8 @@
 # Slot 16 is untouched on all four. Every D1 in this group is a .cpp real C++
 # destructor that MSVC would emit under ??1Class@@UAE@XZ against a layout that
 # is not the ROM's, which is what hal/actor_classes.cpp:1639 already records.
-src/_ZN11VirtualDoorD0Ev.c
-src/_ZN18PoppingLavaBubblesD0Ev.c
-src/_ZN19AmbientSoundEffectsD0Ev.c
-src/_ZN8MugenBgmD0Ev.c
+src/game/actors/d_a_ch_scene.cpp
+src/game/actors/d_a_obj_waterfall.cpp
+src/game/actors/d_a_set_se.cpp
+# RETIRED at SLICE1: body now in src/_ZN8MugenBgmD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN8MugenBgmD0Ev.cpp

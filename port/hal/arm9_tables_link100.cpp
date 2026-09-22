@@ -20,8 +20,8 @@
  *                  else in the image loads the address.
  *   data_02094390  ONE reader, from:0x02074fdc -> data_020a0c68 in
  *                  __sinit_02074fb8, and one consumer of that list,
- *                  func_0203506c+0x230 (dScMB_c_InitResources). Both unlinked;
- *                  func_0203506c is the 531-TU scene-boot root
+ *                  _ZN7dScMB_c13InitResourcesEv+0x230 (dScMB_c_InitResources). Both unlinked;
+ *                  _ZN7dScMB_c13InitResourcesEv is the 531-TU scene-boot root
  *                  port/arm9_frontier.txt ranks second.
  *   data_02092188  ONE reader, from:0x02074ecc = __sinit_02074e84+0x48, a
  *                  static initialiser that is not in the link. Independently,
@@ -32,8 +32,8 @@
  *   data_0209a424  ONE reader and it is not code at all: from:0x0209a440, a
  *                  word inside data_0209a438, i.e. a parent descriptor points
  *                  at this table. That parent is hosted nowhere either.
- *   data_0209a744  THREE readers, all inside its own class: from:0x020736bc
- *                  (func_020736c0), 0x020736e0 (func_020736e4) and 0x020736f0
+ *   _ZTVSt9type_info  THREE readers, all inside its own class: from:0x020736bc
+ *                  (_ZNSt9type_infoD0Ev), 0x020736e0 (_ZNSt9type_infoD1Ev) and 0x020736f0
  *                  (func_020736f4). None of the three is in the link -- which
  *                  is also how this symbol is known to be unhosted, since a
  *                  linked reader would have made it an unresolved external.
@@ -58,8 +58,8 @@
  *
  * WIDTH. Next symbol in config/arm9/symbols.txt after 0x02099fe4 is
  * data_0209a03c, so the span is 0x58 = 88 bytes = 22 words. That is confirmed
- * from the other end by the ROM's own readers: src/_ZN3IRQ13GetIRQHandlerEj.c
- * and src/_ZN3IRQ13SetIRQHandlerEjPFvvE.c both walk `for (i = 0; i < 0x16;
+ * from the other end by the ROM's own readers: src/_ZN3IRQ13GetIRQHandlerEj.cpp
+ * and src/_ZN3IRQ13SetIRQHandlerEjPFvvE.cpp both walk `for (i = 0; i < 0x16;
  * i++)` -- 0x16 is 22 -- so the loop bound and the symbol delta are the same
  * number read two different ways.
  *
@@ -97,11 +97,11 @@
  * forwarders is exactly the three instructions plus the literal it loads.
  *
  * A TENTH TU RIDES IN ON THEM. All eight forwarders tail into 0x02056cc0,
- * which config/arm9/symbols.txt names _ZN3IRQ13DmaTimHandlerEv and which the
+ * which config/arm9/symbols.txt names _ZN3IRQ13DmaTimHandlerEj and which the
  * eight src TUs spell func_02056cc0 -- one address, two names. That is a
  * COMPILE_DEFINITIONS row in port/CMakeLists.txt, not an /alternatename: the
  * gate-224 block's technique, and it keeps tools/alternatename_guard.py out of
- * it entirely. The body is src/_ZN3IRQ13DmaTimHandlerEv.c and it is the tenth
+ * it entirely. The body is src/_ZN3IRQ13DmaTimHandlerEj.cpp and it is the tenth
  * line of port/slice_gate225.txt.
  *
  * ITS THREE GLOBALS WERE CHECKED BEFORE IT WAS SLICED, because a handler that
@@ -151,16 +151,16 @@
  * 3. data_02092188 -- THE STAGE'S GRAPH CALLBACK TABLE, 4 SLOTS
  * ===========================================================================
  *
- * WIDTH. Next symbol after 0x02092188 is data_02092198: 0x10 = 4 words. Same
+ * WIDTH. Next symbol after 0x02092188 is _ZTSN10dScStage_c15graphCallback_cE: 0x10 = 4 words. Same
  * shape and the same job as section 2's, one class up: the ROM's scene manager
  * keeps the current graphics block in data_0209d4a8 and calls its slots from
  * the frame beat.
  *
  *   idx  word        symbol                        disposition
- *    0   0x02018eb8  _ZN5Scene14GraphCallback0Ev   already linked
+ *    0   0x02018eb8  _ZN8dGraph_c10callback_c14GraphCallback0Ev   already linked
  *    1   0x02029838  _ZN5Stage14GraphCallback1Ev   SEATED, was unlinked
- *    2   0x020297f4  _ZN5Stage14GraphCallback2EP12SceneRelated   TRAPS
- *    3   0x02018ea0  _ZN5Scene14GraphCallback3Ev   already linked
+ *    2   0x020297f4  _ZN5Stage14GraphCallback2Ev   TRAPS
+ *    3   0x02018ea0  _ZN8dGraph_c10callback_c14GraphCallback3Ev   already linked
  *
  * SLOT 2 IS THE ONE ROW THIS TABLE COULD NOT BUY, and the reason is an
  * EXISTING RULING rather than this gate's caution. port/slice_w8a.txt: "NOT
@@ -173,8 +173,8 @@
  *
  * THE THREE `return 1` BODIES ARE ONE BODY IN THIS IMAGE. GraphCallback0, 1
  * and 3 are all `return 1` and /OPT:ICF folds them: the baseline map has
- * __ZN5Scene14GraphCallback0Ev, __ZN5Scene14GraphCallback1Ev and
- * __ZN5Scene14GraphCallback3Ev at one address, 0x00431300. Stage's slot 1 is
+ * __ZN8dGraph_c10callback_c14GraphCallback0Ev, __ZN8dGraph_c10callback_c14GraphCallback1Ev and
+ * __ZN8dGraph_c10callback_c14GraphCallback3Ev at one address, 0x00431300. Stage's slot 1 is
  * NOT one of those -- _ZN5Stage14GraphCallback1Ev calls Particle::RenderAll
  * and then returns 1, which is why it is a row and the Scene ones are not.
  *
@@ -195,35 +195,35 @@
  * of this table is exactly its own two TUs.
  *
  * ===========================================================================
- * 5. data_0209a744 -- A TWO-SLOT VTABLE, HOSTED 4 WORDS WIDE
+ * 5. _ZTVSt9type_info -- A TWO-SLOT VTABLE, HOSTED 4 WORDS WIDE
  * ===========================================================================
  *
- * WIDTH. Next symbol after 0x0209a744 is data_0209a754: 0x10 = 4 words. But
+ * WIDTH. Next symbol after 0x0209a744 is _ZTVN3abi21__vmi_class_type_infoE: 0x10 = 4 words. But
  * only TWO of those are this class's slots, for hal/scene_boot.cpp's
  * data_0208ea6c reason exactly: an Itanium vtable symbol starts at the first
  * virtual, so the two words after the last slot are the NEXT table's header.
  *
  *   idx  word        symbol           disposition
- *    0   0x020736e4  func_020736e4    SEATED, was unlinked
- *    1   0x020736c0  func_020736c0    TRAPS -- see below
+ *    0   0x020736e4  _ZNSt9type_infoD1Ev    SEATED, was unlinked
+ *    1   0x020736c0  _ZNSt9type_infoD0Ev    TRAPS -- see below
  *    2   0x00000000  --               the next table's offset-to-top, the one
  *                                     word in the run with no relocation
- *    3   0x0209a708  data_0209a708    the next table's typeinfo, a DS data
+ *    3   0x0209a708  _ZTIN3abi21__vmi_class_type_infoE    the next table's typeinfo, a DS data
  *                                     address and not code
  *
  * The array is four words because that is the symbol's span and a save state
  * captures by span; slots 2 and 3 are left null rather than carrying a DS
  * address a host cannot mean anything by, and nothing dispatches them.
  *
- * SLOT 1 TRAPS BECAUSE IT IS NOT THIS LANE'S. func_020736c0 is a row of run
+ * SLOT 1 TRAPS BECAUSE IT IS NOT THIS LANE'S. _ZNSt9type_infoD0Ev is a row of run
  * link100's .exceptix census, not of the residue this lane was given, and a
  * seat that reaches into another lane's list is how two lanes land the same TU
  * twice. Its ROM word is real and is written down here so that lane does not
  * have to find it again.
  *
  * THE SEAT IS SELF-REFERENTIAL AND THAT IS THE ROM'S SHAPE, not a trick:
- * src/func_020736e4.c is the whole body `void func_020736e4(int *p) { p[0] =
- * (int)data_0209a744; }`, a base-subobject destructor that writes its own
+ * src/_ZNSt9type_infoD1Ev.cpp is the whole body `void _ZNSt9type_infoD1Ev(int *p) { p[0] =
+ * (int)_ZTVSt9type_info; }`, a base-subobject destructor that writes its own
  * class's vptr. So the table names the body and the body names the table. The
  * reference edge that keeps it alive is the fill below, which is CODE in an
  * object the link always carries, not the data word.
@@ -245,7 +245,7 @@
  * require 40 unlinked TUs and 17 arm9 data symbols the port hosts nowhere.
  * The path is func_0203d950 and func_02030790 into the wireless/WM stack
  * (WM_SendCommand, WM_SetCallbackTable, Wireless_Reset and their thirty-odd
- * companions), and ONE of the 40 is src/_ZN3IRQ13SetIRQHandlerEjPFvvE.c --
+ * companions), and ONE of the 40 is src/_ZN3IRQ13SetIRQHandlerEjPFvvE.cpp --
  * an LNK2005 against ntr/runtime.cpp's host copy of that symbol on sight, and
  * the same host copy section 1 above is about.
  *
@@ -258,27 +258,27 @@
  * 2. data_02094390 -- dScMB_c's GRAPH DESCRIPTOR, 4 SLOTS
  * ===========================================================================
  *
- * WIDTH. Next symbol after 0x02094390 is data_020943a0: 0x10 = 4 words.
+ * WIDTH. Next symbol after 0x02094390 is _ZTSN7dScMB_c15graphCallback_cE: 0x10 = 4 words.
  *
  *   idx  word        symbol                        disposition
- *    0   0x02034d2c  func_02034d2c                 SEATED (int f(void), ret 0)
- *    1   0x02018eb0  _ZN5Scene14GraphCallback1Ev   already linked
- *    2   0x02034d24  func_02034d24                 SEATED (int f(void), ret 0)
- *    3   0x02034b40  func_02034b40                 SEATED (int f(char *self))
+ *    0   0x02034d2c  _ZN7dScMB_c15graphCallback_c14GraphCallback0Ev                 SEATED (int f(void), ret 0)
+ *    1   0x02018eb0  _ZN8dGraph_c10callback_c14GraphCallback1Ev   already linked
+ *    2   0x02034d24  _ZN7dScMB_c15graphCallback_c14GraphCallback2Ev                 SEATED (int f(void), ret 0)
+ *    3   0x02034b40  _ZN7dScMB_c15graphCallback_c14GraphCallback3Ev                 SEATED (int f(char *self))
  *
  * SLOT 3 TAKES A RECEIVER AND THE OTHER THREE DO NOT, which is read off the
- * bodies rather than off the table: src/func_02034b40.c is `int
- * func_02034b40(char *self)` and reads self+4, +8, +0xc and +0xd, while
- * func_02034d24 / func_02034d2c are two-instruction `mov r0,#0; bx lr` bodies
+ * bodies rather than off the table: src/_ZN7dScMB_c15graphCallback_c14GraphCallback3Ev.cpp is `int
+ * _ZN7dScMB_c15graphCallback_c14GraphCallback3Ev(char *self)` and reads self+4, +8, +0xc and +0xd, while
+ * _ZN7dScMB_c15graphCallback_c14GraphCallback2Ev / _ZN7dScMB_c15graphCallback_c14GraphCallback0Ev are two-instruction `mov r0,#0; bx lr` bodies
  * and Scene::GraphCallback1 is `mov r0,#1; bx lr`. The seat below stores the
  * bodies' own addresses and does NOT wrap slot 3 in a __fastcall veneer,
  * because -- see the header of this section -- nothing in this link dispatches
  * this table, so there is no call site whose convention a veneer would have to
- * match. If a lane ever links func_0203506c, that lane owns the veneer
+ * match. If a lane ever links _ZN7dScMB_c13InitResourcesEv, that lane owns the veneer
  * question and hal/scene_boot.cpp's data_0208ea6c block is the worked example.
  *
- * func_02034b40 PULLS func_02034d34 IN BEHIND IT (the census lists it as
- * from-unlinked-only on func_02034b40), so this three-word seat is worth four
+ * _ZN7dScMB_c15graphCallback_c14GraphCallback3Ev PULLS func_02034d34 IN BEHIND IT (the census lists it as
+ * from-unlinked-only on _ZN7dScMB_c15graphCallback_c14GraphCallback3Ev), so this three-word seat is worth four
  * TUs; every other callee it names is already in the link, which is what
  * port/tools/closure.py was run to establish before the slice line was added.
  *
@@ -319,7 +319,7 @@
 
 /* ONE LINK SEAM, and it is the whole cost of section 2's slot 3.
  *
- * src/func_02034b40.c declares its callee `extern void _ZN3OAM5ResetEv(void);`
+ * src/_ZN7dScMB_c15graphCallback_c14GraphCallback3Ev.cpp declares its callee `extern void _ZN3OAM5ResetEv(void);`
  * -- the Itanium C name, with C linkage. The one real definition of that body
  * is src/_ZN3OAM5ResetEv.cpp, WHICH IS ALREADY IN THIS LINK, and it spells the
  * function `namespace OAM { void Reset(void) }`, so MSVC mangles it
@@ -341,7 +341,7 @@
 extern "C" {
 /* ---- 1. the nine IRQ handler bodies. Every one is a src/ TU on
    port/slice_gate225.txt; none is declared into existence here. ---- */
-void _ZN3IRQ12EmptyHandlerEv(void);          /* src/_ZN3IRQ12EmptyHandlerEv.c */
+void _ZN3IRQ12EmptyHandlerEv(void);          /* src/_ZN3IRQ12EmptyHandlerEv.cpp */
 void _ZN3IRQ19Tim0OverflowHandlerEv(void);
 void _ZN3IRQ19Tim1OverflowHandlerEv(void);
 void _ZN3IRQ19Tim2OverflowHandlerEv(void);
@@ -353,21 +353,21 @@ void _ZN3IRQ11Dma3HandlerEv(void);
 
 /* ---- 2. dScMB_c's graph descriptor. GraphCallback1 is already in the link;
    the other three come in on port/slice_gate225.txt. ---- */
-int func_02034d2c(void);
-int _ZN5Scene14GraphCallback1Ev(void);
-int func_02034d24(void);
-int func_02034b40(char *self);
+int _ZN7dScMB_c15graphCallback_c14GraphCallback0Ev(void);
+int _ZN8dGraph_c10callback_c14GraphCallback1Ev(void);
+int _ZN7dScMB_c15graphCallback_c14GraphCallback2Ev(void);
+int _ZN7dScMB_c15graphCallback_c14GraphCallback3Ev(char *self);
 
 /* ---- 3. the Stage's graph callbacks. 0 and 3 are already in the link (and
    /OPT:ICF-folded onto each other); 1 comes in on port/slice_gate225.txt. ---- */
-int _ZN5Scene14GraphCallback0Ev(void);
+int _ZN8dGraph_c10callback_c14GraphCallback0Ev(void);
 int _ZN5Stage14GraphCallback1Ev(void);
-int _ZN5Scene14GraphCallback3Ev(void);
+int _ZN8dGraph_c10callback_c14GraphCallback3Ev(void);
 
 /* ---- 4 and 5 ---- */
 int  func_0206e254(unsigned short *dst, unsigned char *src, int flag);
 int  func_0206e240(unsigned char *p, unsigned char v);
-void func_020736e4(int *p);
+void _ZNSt9type_infoD1Ev(int *p);
 }
 
 /* The two slots whose ROM word names a body this gate does not seat. Both are
@@ -390,7 +390,7 @@ static int a9t_trap_2188_s2(void)
 }
 static void a9t_trap_a744_s1(void)
 {
-    a9t_trap("data_0209a744 slot 1, func_020736c0 -- an .exceptix census row, "
+    a9t_trap("_ZTVSt9type_info slot 1, _ZNSt9type_infoD0Ev -- an .exceptix census row, "
              "not this lane's to seat");
 }
 
@@ -401,10 +401,10 @@ static void a9t_trap_a744_s1(void)
 extern "C" {
 DSSTATE_BEGIN
 void *data_02099fe4[22];   /* 0x02099fe4 -> data_0209a03c, 0x58 / 4 */
-void *data_02094390[4];    /* 0x02094390 -> data_020943a0, 0x10 / 4 */
-void *data_02092188[4];    /* 0x02092188 -> data_02092198, 0x10 / 4 */
+void *data_02094390[4];    /* 0x02094390 -> _ZTSN7dScMB_c15graphCallback_cE, 0x10 / 4 */
+void *data_02092188[4];    /* 0x02092188 -> _ZTSN10dScStage_c15graphCallback_cE, 0x10 / 4 */
 void *data_0209a424[2];    /* 0x0209a424 -> data_0209a42c, 0x08 / 4 */
-void *data_0209a744[4];    /* 0x0209a744 -> data_0209a754, 0x10 / 4, 2 slots */
+void *_ZTVSt9type_info[4];    /* 0x0209a744 -> _ZTVN3abi21__vmi_class_type_infoE, 0x10 / 4, 2 slots */
 /* the one table here that is pure ROM data: eight IRQ bit numbers, no
    relocation anywhere inside 0x02099fd4..0x02099fe4, carried verbatim. */
 unsigned short data_02099fd4[8] = { 8, 9, 10, 11, 3, 4, 5, 6 };
@@ -434,25 +434,25 @@ extern "C" void hal_seat_arm9_link100_tables(void)
     }
 
     /* 2. data_02094390 -- dScMB_c's graph descriptor. */
-    data_02094390[0] = (void *)func_02034d2c;
-    data_02094390[1] = (void *)_ZN5Scene14GraphCallback1Ev;
-    data_02094390[2] = (void *)func_02034d24;
-    data_02094390[3] = (void *)func_02034b40;
+    data_02094390[0] = (void *)_ZN7dScMB_c15graphCallback_c14GraphCallback0Ev;
+    data_02094390[1] = (void *)_ZN8dGraph_c10callback_c14GraphCallback1Ev;
+    data_02094390[2] = (void *)_ZN7dScMB_c15graphCallback_c14GraphCallback2Ev;
+    data_02094390[3] = (void *)_ZN7dScMB_c15graphCallback_c14GraphCallback3Ev;
 
     /* 3. data_02092188 -- the Stage's. Slot 2 is not hostable and traps. */
-    data_02092188[0] = (void *)_ZN5Scene14GraphCallback0Ev;
+    data_02092188[0] = (void *)_ZN8dGraph_c10callback_c14GraphCallback0Ev;
     data_02092188[1] = (void *)_ZN5Stage14GraphCallback1Ev;
     data_02092188[2] = (void *)a9t_trap_2188_s2;
-    data_02092188[3] = (void *)_ZN5Scene14GraphCallback3Ev;
+    data_02092188[3] = (void *)_ZN8dGraph_c10callback_c14GraphCallback3Ev;
 
     /* 4. data_0209a424 -- the callback pair. */
     data_0209a424[0] = (void *)func_0206e254;
     data_0209a424[1] = (void *)func_0206e240;
 
-    /* 5. data_0209a744 -- two slots; 2 and 3 are the next table's header and
+    /* 5. _ZTVSt9type_info -- two slots; 2 and 3 are the next table's header and
        stay null, and slot 1 belongs to the .exceptix census. */
-    data_0209a744[0] = (void *)func_020736e4;
-    data_0209a744[1] = (void *)a9t_trap_a744_s1;
+    _ZTVSt9type_info[0] = (void *)_ZNSt9type_infoD1Ev;
+    _ZTVSt9type_info[1] = (void *)a9t_trap_a744_s1;
 }
 
 namespace {

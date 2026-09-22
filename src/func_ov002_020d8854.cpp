@@ -4,13 +4,13 @@
 #include "common.h"
 extern "C" {
 
-extern void* _ZN5Actor10FindWithIDEj(unsigned int id);
+extern void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern void Vec3_RotateYAndTranslate(struct Vector3* out, struct Vector3* in, int ang, struct Vector3* tr);
 extern int func_ov002_020d8944(char* a, char* b, char* other);
 extern void func_ov002_020d8d10(char* self, struct Vector3* v);
 
 void func_ov002_020d8854(char* self){
-  char* other = (char*)_ZN5Actor10FindWithIDEj(*(unsigned int*)(self+0x338));
+  char* other = (char*)_ZN8dActor_c10FindWithIDEj(*(unsigned int*)(self+0x338));
   if (other == 0) return;
   {
     int b = (int)(*(unsigned short*)(other+0xc) == 0xbf);

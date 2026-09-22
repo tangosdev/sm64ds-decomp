@@ -16,7 +16,7 @@
  * THIS LANE RAN THAT SWEEP OVER ALL 216 TUs of its closure -- the 204 slice
  * lines PLUS the 12 TUs it host-copies or repairs, which are not slice lines and
  * would otherwise never be swept -- and it returns exactly THREE files: these
- * two and src/func_ov006_02123340.cpp (the class's own vtable slot 6,
+ * two and src/minigames/d_s_mg_trampoline2.cpp (the class's own vtable slot 6,
  * unmatched/MgTrampolineTerror_StateDispatch.cpp).
  *
  * THE FOURTH WALL IS NOT ONE OF THEM, and saying it was is the error the mg11
@@ -36,7 +36,7 @@
  *       func_ov006_020cea2c
  *       func_ov006_020cedf0        (walks data_ov006_0214082c, stride 0x1d0)
  *       func_ov006_02123cb4        (this class's PLAY state)
- *       func_ov006_02123340 / tte_beh
+ *       _ZN18dScMgTrampoline2_c8BehaviorEv / tte_beh
  *
  * -- MSVC's four-byte member pointer read half of one eight-byte record and
  * dispatched on it.

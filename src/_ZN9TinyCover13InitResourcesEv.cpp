@@ -1,34 +1,28 @@
 //cpp
 // @symbol _ZN9TinyCover13InitResourcesEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-#include "decl_common.h"
-/* recovered: named members + shared header, real C++ method */
 #include "TinyCover.h"
-#include "MeshColliderBase.h"
+// recovered name: daObjTtFuta_c_InitResources
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* daObjTtFuta_c::InitResources - recovered from vtable slot identity */
 extern "C" {
-extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* fp);
-extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* thiz, void* f, int a, int b);
-extern void _ZN18TextureTransformer7PrepareER8BMD_FileR8BTA_File(void* bmd, void* bta);
-extern void _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(void* thiz, void* bta, int a, int b, unsigned int e);
-extern void _ZN8Platform21UpdateModelPosAndRotYEv(void* thiz);
-extern void _ZN8Platform19UpdateClsnPosAndRotEv(void* thiz);
-extern void* _ZN12MeshCollider8LoadFileER13SharedFilePtr(void* fp);
-extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* thiz, void* kcl, void* mtx, int fix, short s, void* clps);
-extern int _ZN5Event6GetBitEj(unsigned int n);
+extern void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
+extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void*, void*, int, int);
+extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void*);
+extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void*);
+extern void* _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void*);
+extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void*, void*, void*, int, short, void*);
+extern int _ZN5Event6GetBitEj(unsigned int);
+extern int data_ov033_02111bfc[];
+s32 TinyCover::InitResources() {
+    char * c = (char *)this;
+  void *f = _ZN5Model8LoadFileER13SharedFilePtr((void*)data_ov033_021124c8);
+  _ZN9ModelBase7SetFileEP8BMD_Fileii(c+0xd4, f, 1, -1);
+  _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
+  _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
+  void *k = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr((void*)data_ov033_021124c0);
+  _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(c+0x124, k, c+0x2ec, 0x199, *(short*)(c+0x8e), data_ov033_02111bfc);
+  return _ZN5Event6GetBitEj(0xe) == 0;
 }
-
-int TinyCover::InitResources()
-{
-    void* m = _ZN5Model8LoadFileER13SharedFilePtr(data_ov033_021124f0);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this) + 0xd4, m, 1, 0x14);
-    _ZN18TextureTransformer7PrepareER8BMD_FileR8BTA_File(*(void**)((char*)data_ov033_021124f0 + 4), data_ov033_02111bc8);
-    _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(((char*)this) + 0x320, data_ov033_02111bc8, 0, 0x1000, 0);
-    _ZN8Platform21UpdateModelPosAndRotYEv(((char*)this));
-    _ZN8Platform19UpdateClsnPosAndRotEv(((char*)this));
-    void* mc = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov033_021124e8);
-    _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        ((char*)this) + 0x124, mc, ((char*)this) + 0x2ec, 0x1000, mAngleY, data_ov033_02111c1c);
-    ((MeshColliderBase *)(((char*)this) + 0x124))->Enable((Actor *)(((char*)this)));
-    unk_334 = mPosY - 0x3c000;
-    return _ZN5Event6GetBitEj(0xe) == 0;
 }

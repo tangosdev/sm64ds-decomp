@@ -11,9 +11,9 @@
 // SpawnInfo's own word[1] idhalf, plus word[0] landing inside ov027's .text)
 // cuts route 1's thirty-one candidates to five: 92, 93, 217, 258 and 275.
 // Id 258's SpawnInfo and factory are both UNNAMED in config
-// (data_ov027_02113a00 / func_ov027_0211207c), its ROM RTTI name is
+// (g_profile_PENGUIN_DEFENDER / daPgDfdr_c_classInit), its ROM RTTI name is
 // daPgDfdr_c, it owns sixteen of the overlay's 53 functions, and it is placed
-// on level 19. The task sheet's own booby-trap-2 TU (func_ov027_02111d8c) is
+// on level 19. The task sheet's own booby-trap-2 TU (_ZN10daPgDfdr_c16CleanupResourcesEv) is
 // its CleanupResources, so seating four and not five would have left the
 // flagged TU unlinked.
 //
@@ -26,11 +26,11 @@
 //   id(s)  registry name   ROM RTTI name         host vtable array         slots
 //   92,93  SLIDING_ICE*    17daObjSlIceBlock_c   _ZTV10SlidingIce           32
 //    217   CHILL_BULLY     12daIDonketu_c        data_ov027_02113930        37
-//    258   DA_PG_DFDR      10daPgDfdr_c          data_ov027_02113a90        32
+//    258   DA_PG_DFDR      10daPgDfdr_c          _ZTV10daPgDfdr_c        32
 //    275   SNOWMAN_BREATH  10daSnmBth_c          _ZTV13SnowmanBreath        31
 //
-// IDS 92 AND 93 SHARE ONE TABLE AND ONE FILL. SlidingIce_Spawn and
-// SlidingIceSpawner_Spawn are the same twelve instructions -- allocate 812,
+// IDS 92 AND 93 SHARE ONE TABLE AND ONE FILL. daObjSlIceBlock_c_classInit_SL_ICEBLOCK_SHOT and
+// daObjSlIceBlock_c_classInit_SL_ICEBLOCK are the same twelve instructions -- allocate 812,
 // Platform::C2, store 0x02113824 -- and the class branches on its own actor id
 // (`mActorID == 0x5d`) inside InitResources, CleanupResources and Render. Two
 // SpawnInfo records, two registry rows, two factories, ONE class. Only 92 is
@@ -39,11 +39,11 @@
 // TWO HOST ARRAY NAMES ARE THE CONFIG SPELLING, NOT THE ROM RTTI SPELLING, and
 // that is not cosmetic: port/tools/vtspan.py --sweep sizes a host array against
 // the ROM by looking its name up in config, and config names 0x02113930 and
-// 0x02113a90 only data_ov027_02113930 / data_ov027_02113a90 --
+// 0x02113a90 only data_ov027_02113930 / _ZTV10daPgDfdr_c --
 // _ZTV12daIDonketu_c and _ZTV10daPgDfdr_c are host-only spellings out of
 // include/decl_common.h. Declared under the host-only name, these two arrays
 // would not have been sized by the one tool that sizes them (the ov036
-// data_ov036_02113a98 correction). The TUs that spell the host-only names get
+// _ZTV16daObjRcBuranko_c correction). The TUs that spell the host-only names get
 // a per-source -D onto these.
 //
 // ============================================================================
@@ -101,7 +101,7 @@
 // +0x110 and +0x320); that is a different question and those members dispatch
 // through cxxname_bridge's own MSVC-shaped tables, untouched by this file.
 //
-// THE OVERRIDE THAT DEPENDS ON IT is src/func_ov027_0211123c.cpp, SLIDING_ICE's
+// THE OVERRIDE THAT DEPENDS ON IT is src/_ZN10SlidingIce15OnHitByMegaCharER6Player.cpp, SLIDING_ICE's
 // slot 27. It declares a local shadow with THIRTY-TWO virtuals -- v0..v30 then
 // m() -- and calls `c->m()`, so MSVC indexes m at 31, and 31 is exactly where
 // the ROM parks Platform::Kill. The shadow declares NO destructor, so there is
@@ -117,7 +117,7 @@
 // 0x0211b764 relocates to 0x021138bc in the shared multi-overlay level window,
 // so mounting it would bake a cross-level pointer" -- and nothing else in the
 // tree defines it, so it is declared as a host array below. It is an
-// intermediate installed only transiently: ChillBully_Spawn stores it right
+// intermediate installed only transiently: daIDonketu_c_classInit stores it right
 // after Enemy::C2 and overwrites it with the derived table four member
 // constructors later, and the two destructors install it between teardowns.
 // None of those four member constructors dispatches a virtual on the receiver,
@@ -129,7 +129,7 @@
 // TRAP T5: TWELVE ov027 BODIES CARRY THE "recovered from vtable slot identity"
 // MARKER. ALL TWELVE ARE REAL DECOMP; NINE OF THEM ARE SEATED HERE.
 // ============================================================================
-// func_ov027_0211123c, _02111618, _02111680, _021116f0, _02111770, _0211181c,
+// _ZN10SlidingIce15OnHitByMegaCharER6Player, _02111618, _02111680, _021116f0, _02111770, _0211181c,
 // _02111924, _02111d8c, _02111dfc, _02111e00, _02111e34, _02111eb4.
 // Adjudicated per body: every one was put through the repo's own byte gate --
 // tools/match.py at the canonical 2004/b56 with --strict-relocs on (the
@@ -155,7 +155,7 @@
 // ============================================================================
 // THREE TUs ARE NOT COMPILED.
 // ============================================================================
-// src/func_ov027_02111d38.cpp and src/func_ov027_02111cfc.cpp both spell
+// src/actors/daPgDfdr_c.cpp and src/actors/daPgDfdr_c.cpp both spell
 // `(c->**p)()` over an mwcc eight-byte member pointer. MSVC's is four bytes and
 // cannot deliver `this` in ecx onto the plain cdecl state bodies, so both are
 // host-copied in port/unmatched/DaPgDfdr_StateDispatch.cpp and dropped from the
@@ -165,18 +165,18 @@
 // pair as `struct S2 { int w[2]; }`, one array field, and stategen's parser
 // keys on two scalar fields -- a refusal, correctly, rather than a guess).
 //
-// THE THIRD is src/func_ov027_02111e00.cpp, DA_PG_DFDR's Render, and it is the
+// THE THIRD is src/actors/daPgDfdr_c.cpp, DA_PG_DFDR's Render, and it is the
 // T1 Model/ModelAnim exception biting. It dispatches ROM slot 5 of the
 // ModelAnim at +0x320 through a six-virtual local shadow, and the host
 // _ZTV9ModelAnim is MSVC-numbered with Virtual18 genuinely in that slot -- the
 // Whomp/Fish case, and FLYING_CARPET's. This lane MEASURED it rather than
 // predicting it: the first seated boot of level 19 faulted on frame 2 in
 // Model::Virtual10 with a null, and faultmap resolved the chain
-// port_actor_process -> pd_render -> func_ov027_02111e00 -> ModelAnim::Virtual18
+// port_actor_process -> pd_render -> _ZN10daPgDfdr_c6RenderEv -> ModelAnim::Virtual18
 // -> ModelAnim::Virtual10 -> Model::Virtual10. Host copy in
 // port/unmatched/DaPgDfdr_Render.cpp, matched original byte-locked in src/.
 // SWEPT for siblings: only two ov027 TUs declare a six-virtual `m()` shadow,
-// this one and src/func_ov027_0211123c.cpp -- and that second one dispatches
+// this one and src/_ZN10SlidingIce15OnHitByMegaCharER6Player.cpp -- and that second one dispatches
 // slot 31 of SLIDING_ICE's OWN ROM-shaped table, where the shadow's numbering
 // and the ROM's already agree (see TRAP T1 above). It stays compiled.
 
@@ -184,14 +184,14 @@
 // THREE BODIES IN THIS CAST TAKE NO RECEIVER, AND THE DECLARATIONS SAY SO.
 // ============================================================================
 // Read off each TU's own definition, not assumed from the slot:
-//   src/func_ov027_02111dfc.c                     void (void)   empty body
-//   src/_ZN13SnowmanBreath16CleanupResourcesEv.c  int  (void)   releases three
+//   src/actors/daPgDfdr_c.cpp                     void (void)   empty body
+//   src/_ZN13SnowmanBreath16CleanupResourcesEv.cpp  int  (void)   releases three
 //       ov002 SharedFilePtrs (0x0210da40 / 0x0210d9a0 / 0x0210d9c0) and touches
 //       no member, so it genuinely needs no `this`
-//   src/_ZN13SnowmanBreath16OnPendingDestroyEv.c  void (void)   empty body
+//   src/_ZN13SnowmanBreath16OnPendingDestroyEv.cpp  void (void)   empty body
 // and one more that returns void where the slot's neighbours return int:
-//   src/func_ov064_02116374.cpp                   void (char *)
-// plus src/func_ov064_0211635c.cpp, void (void), the other receiver-less one.
+//   src/actors/daOts_c.cpp                   void (char *)
+// plus src/actors/daOts_c.cpp, void (void), the other receiver-less one.
 // Their thunks call them with the arity they have. Passing an ignored argument
 // would have linked and run -- cdecl, the caller cleans -- but a declaration
 // that disagrees with its definition is exactly what aritycheck and abicheck
@@ -199,13 +199,15 @@
 // port/tools/abicheck_extslot_baseline.txt rest on these arities being read
 // rather than guessed.
 
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
@@ -213,8 +215,8 @@ extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 
 #include "dsstate_seg.h"
 
-#include "Actor.h"
-#include "ActorBase.h"
+#include "dActor_c.h"
+#include "fBase_c.h"
 #include "Bully.h"
 #include "SlidingIce.h"
 #include "SnowmanBreath.h"
@@ -229,25 +231,27 @@ extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 // is also DEFINED is defeated silently) satisfied by construction. Both were
 // taken off the FIRST LINK'S OWN unresolved list, not guessed:
 //
-//   ?_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj@@YAHPAX0IPBUVector3@@II@Z
-//       -> __ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj, defined by
+//   ?_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh@@YAHPAX0IPBUVector3@@II@Z
+//       -> __ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh, defined by
 //          hal/message_probe.cpp:28. hal/cxx_aliases.cpp:1121 already routes a
 //          DIFFERENT decorated spelling of the same body (@@YAXPAUPlayer@@...,
 //          returning void and taking Player*); this TU's spelling returns int
 //          and takes void*, so it needs its own row. Both are cdecl and the
 //          argument slots line up: the two trailing u8s are pushed as full
 //          words either way and the callee reads the low byte.
-//   ?_ZN5Sound8PlayLongEjjjRK7Vector3j@@YAHHIIPAXI@Z
-//       -> __ZN5Sound8PlayLongEjjjRK7Vector3j, defined by
+//   ?_ZN5Sound8PlayLongEjjjRK7Vector3s@@YAHHIIPAXI@Z
+//       -> __ZN5Sound8PlayLongEjjjRK7Vector3s, defined by
 //          hal/bob_enemy_bridges.cpp:27. hal/cxx_aliases.cpp:1233 already
 //          routes @@YAIIIIPAXI@Z (unsigned return, unsigned first argument);
 //          this TU spells int/int, same four bytes in the same slots.
-#pragma comment(linker, "/alternatename:?_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj@@YAHPAX0IPBUVector3@@II@Z=__ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj")
-#pragma comment(linker, "/alternatename:?_ZN5Sound8PlayLongEjjjRK7Vector3j@@YAHHIIPAXI@Z=__ZN5Sound8PlayLongEjjjRK7Vector3j")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEAD RHS and an UNREFERENCED left hand side: nothing in the build defines __ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh, and nothing references ?_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh@@YAHPAX0IPBUVector3@@II@Z, so the row can never fire and nothing wants it to. */
+// #pragma comment(linker, "/alternatename:?_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh@@YAHPAX0IPBUVector3@@II@Z=__ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEAD RHS and an UNREFERENCED left hand side: nothing in the build defines __ZN5Sound8PlayLongEjjjRK7Vector3s, and nothing references ?_ZN5Sound8PlayLongEjjjRK7Vector3s@@YAHHIIPAXI@Z, so the row can never fire and nothing wants it to. */
+// #pragma comment(linker, "/alternatename:?_ZN5Sound8PlayLongEjjjRK7Vector3s@@YAHHIIPAXI@Z=__ZN5Sound8PlayLongEjjjRK7Vector3s")
 
 // ---- and two onto this lane's own mounted cells ----------------------------
 // src/_ZN10SlidingIce16CleanupResourcesEv.cpp is the same shape: it declares
-// `extern char func_ov030_02113be8[];` and its sibling at FILE scope, outside
+// `extern char _ZN7daMky_c11EnterState2Ev[];` and its sibling at FILE scope, outside
 // any extern "C", so after the per-source -D in port/CMakeLists.txt routes the
 // wrong-overlay name onto ov027's own cell the reference is still decorated,
 // while ovdata's emission carries the plain cdecl name. Its twin,
@@ -259,63 +263,63 @@ extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 
 extern "C" {
 /* the arm9 shared half; every address read off this overlay's own reloc runs */
-int _ZN5Actor19BeforeInitResourcesEv(void *self);              /* slot 1  */
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
-int _ZN5Actor14BeforeBehaviorEv(void *self);                   /* slot 7  */
-int _ZN5Actor12BeforeRenderEv(void *self);                     /* slot 10 */
-int _ZN5Actor13OnYoshiTryEatEv(void *self);                    /* slot 18 */
-void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
-int _ZN5Actor9Virtual50Ev(void *self);                         /* slot 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);              /* slot 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);              /* slot 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p); /* slot 27 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);  /* slot 28 */
-int _ZN5Actor16OnAimedAtWithEggEv(void *self);                 /* slot 29 */
-void _ZN8Platform4KillEv(void *self);                          /* slot 31 */
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);              /* slot 1  */
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);                   /* slot 7  */
+int _ZN8dActor_c12BeforeRenderEv(void *self);                     /* slot 10 */
+int _ZN8dActor_c13OnYoshiTryEatEv(void *self);                    /* slot 18 */
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
+int _ZN8dActor_c9Virtual50Ev(void *self);                         /* slot 20 */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);              /* slot 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);              /* slot 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p); /* slot 27 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);  /* slot 28 */
+int _ZN8dActor_c16OnAimedAtWithEggEv(void *self);                 /* slot 29 */
+void _ZN10dBgActor_c4KillEv(void *self);                          /* slot 31 */
 
 /* ---- SLIDING_ICE (92, 93), 0x02113824 ---- */
 int _ZN10SlidingIce13InitResourcesEv(char *self);   /* slot 0, a C name */
 int *_ZN10SlidingIceD1Ev(int *self);                /* slot 16 */
 int *_ZN10SlidingIceD0Ev(int *self);                /* slot 17 */
-void func_ov027_0211123c(void *self, void *player); /* slot 27 override */
-void *SlidingIce_Spawn(void);
-void *SlidingIceSpawner_Spawn(void);
+void _ZN10SlidingIce15OnHitByMegaCharER6Player(void *self, void *player); /* slot 27 override */
+void *daObjSlIceBlock_c_classInit_SL_ICEBLOCK_SHOT(void);
+void *daObjSlIceBlock_c_classInit_SL_ICEBLOCK(void);
 
 /* ---- CHILL_BULLY (217), 0x02113930 ---- */
-int func_ov027_0211181c(char *self);                /* slot 0  */
-int func_ov027_02111770(char *self);                /* slot 6  */
-int _ZN5Bully6RenderEv(void *self);                 /* slot 9, ov064, a C name */
-int *func_ov027_021115c4(int *self);                /* slot 16, D1 */
-int *func_ov027_02111618(int *self);                /* slot 17, D0 */
+int _ZN12daIDonketu_c13InitResourcesEv(char *self);                /* slot 0  */
+int _ZN12daIDonketu_c8BehaviorEv(char *self);                /* slot 6  */
+int _ZN7daOts_c6RenderEv(void *self);                 /* slot 9, ov064, a C name */
+int *_ZN12daIDonketu_cD1Ev(int *self);                /* slot 16, D1 */
+int *_ZN12daIDonketu_cD0Ev(int *self);                /* slot 17, D0 */
 int func_ov062_02115f84(char *self);                /* slot 29 override, ov062 */
-int func_ov027_02111680(char *self);                /* slot 31 */
-int func_ov027_021116f0(char *self);                /* slot 32 */
-void func_ov064_02116374(char *self);               /* slot 33, returns void */
-int func_ov064_02116360(char *self);                /* slot 34 */
-void func_ov064_0211635c(void);                     /* slot 35, NO receiver */
-int func_ov064_02116348(char *self);                /* slot 36 */
-void *ChillBully_Spawn(void);
+int _ZN12daIDonketu_c14UpdateRunStateEv(char *self);                /* slot 31 */
+int _ZN12daIDonketu_c16UpdateDeathStateEv(char *self);                /* slot 32 */
+void _ZN7daOts_c13PlayStepSoundEv(char *self);               /* slot 33, returns void */
+int _ZN7daOts_c12PlayHitSoundEv(char *self);                /* slot 34 */
+void _ZN7daOts_c17PlayShellHitSoundEv(void);                     /* slot 35, NO receiver */
+int _ZN7daOts_c14PlayDeathSoundEv(char *self);                /* slot 36 */
+void *daIDonketu_c_classInit(void);
 
 /* ---- DA_PG_DFDR (258), 0x02113a90 ---- */
-int func_ov027_02111eb4(void *self);                /* slot 0  */
-int func_ov027_02111d8c(char *self);                /* slot 3  */
-int func_ov027_02111e34(char *self);                /* slot 6  */
-int func_ov027_02111e00(void *self);                /* slot 9  */
-void func_ov027_02111dfc(void);                     /* slot 12 override, NO receiver */
-int *func_ov027_021118c8(int *self);                /* slot 16, D1 */
-int *func_ov027_02111924(int *self);                /* slot 17, D0 */
-void *func_ov027_0211207c(void);                    /* the UNNAMED factory */
+int _ZN10daPgDfdr_c13InitResourcesEv(void *self);                /* slot 0  */
+int _ZN10daPgDfdr_c16CleanupResourcesEv(char *self);                /* slot 3  */
+int _ZN10daPgDfdr_c8BehaviorEv(char *self);                /* slot 6  */
+int _ZN10daPgDfdr_c6RenderEv(void *self);                /* slot 9  */
+void _ZN10daPgDfdr_c16OnPendingDestroyEv(void);                     /* slot 12 override, NO receiver */
+int *_ZN10daPgDfdr_cD1Ev(int *self);                /* slot 16, D1 */
+int *_ZN10daPgDfdr_cD0Ev(int *self);                /* slot 17, D0 */
+void *daPgDfdr_c_classInit(void);                    /* the UNNAMED factory */
 
 /* ---- SNOWMAN_BREATH (275), 0x02113b50 ---- */
 int _ZN13SnowmanBreath16CleanupResourcesEv(void);         /* slot 3, NO receiver */
 void _ZN13SnowmanBreath16OnPendingDestroyEv(void);        /* slot 12, NO receiver */
 int _ZN13SnowmanBreathD1Ev(char *self);                   /* slot 16 */
 void *_ZN13SnowmanBreathD0Ev(char *self);                 /* slot 17 */
-void *SnowmanBreath_Spawn(void);
+void *daSnmBth_c_classInit(void);
 
 extern int data_02099f24[];          /* the frame phase the lists are in */
 extern unsigned char data_020a4b4c;  /* the spawn spine's own step */
@@ -334,7 +338,7 @@ void port_dapgdfdr_states_check(void);   /* unmatched/DaPgDfdr_StateDispatch */
 extern "C" {
 DSSTATE_BEGIN
 void *data_ov027_02113930[37];  /* vtspan: data_ov027_02113930, CHILL_BULLY */
-void *data_ov027_02113a90[32];  /* vtspan: data_ov027_02113a90, DA_PG_DFDR */
+void *_ZTV10daPgDfdr_c[32];  /* vtspan: _ZTV10daPgDfdr_c, DA_PG_DFDR */
 void *data_ov064_0211b768[37];  /* vtspan: Bully/BigBully base, ov064 0x0211b768 */
 DSSTATE_END
 
@@ -343,9 +347,9 @@ int _ZTV13SnowmanBreath[31];    /* vtspan: _ZTV13SnowmanBreath, SNOWMAN_BREATH *
 }
 
 // ---- one __thiscall face onto an @@QAE body --------------------------------
-// src/_ZN5Bully16CleanupResourcesEv.cpp (ov064's, LINKED via
+// src/actors/daOts_c.cpp (ov064's, LINKED via
 // port/slice_gate177.txt) is a real C++ method, so the link carries only
-// ?CleanupResources@Bully@@QAEHXZ and there is no _ZN5Bully16CleanupResourcesEv
+// ?CleanupResources@Bully@@QAEHXZ and there is no _ZN7daOts_c16CleanupResourcesEv
 // C name for slot 3 to take. include/Bully.h declares the class, so the call
 // is spelled as the method it is rather than aliased: an /alternatename from a
 // @@QAE LHS onto a cdecl body would hand it a `this` that never was one
@@ -374,11 +378,11 @@ static void ov27_trap_report(void *self, int slot, const char *which)
       port_actor_slot_decline(_m); }
 }
 static int __fastcall ov27_trap13(void *s, void *)
-{ ov27_trap_report(s, 13, "ActorBase::Virtual34"); return 0; }
+{ ov27_trap_report(s, 13, "fBase_c::Virtual34"); return 0; }
 static int __fastcall ov27_trap14(void *s, void *)
-{ ov27_trap_report(s, 14, "ActorBase::Virtual38"); return 0; }
+{ ov27_trap_report(s, 14, "fBase_c::Virtual38"); return 0; }
 static int __fastcall ov27_trap30(void *s, void *)
-{ ov27_trap_report(s, 30, "Actor::OnAimedAtWithEggReturnVec"); return 0; }
+{ ov27_trap_report(s, 30, "dActor_c::OnAimedAtWithEggReturnVec"); return 0; }
 /* the Bully base table's own slots. Nothing dispatches through an intermediate
    installed only between two member teardowns; this says which slot instead of
    running a derived body on a base that has not finished constructing. */
@@ -393,53 +397,53 @@ static int __fastcall ov27_base_trap9(void *s, void *)
 
 // ---- the shared 1..30 half -------------------------------------------------
 static int __fastcall ov27_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall ov27_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall ov27_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 static void __fastcall ov27_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall ov27_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall ov27_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall ov27_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall ov27_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall ov27_pdes(void *s, void *)
-{ ((ActorBase *)s)->ActorBase::OnPendingDestroy(); return 0; }
+{ ((fBase_c *)s)->fBase_c::OnPendingDestroy(); return 0; }
 static int __fastcall ov27_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int __fastcall ov27_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 /* slot 19 takes the three-parameter shape so it emits `ret 4`: the dispatch
    site pushes the Player the callee pops -- the wf/ov036/ov072 contract. */
 static int __fastcall ov27_turn_egg(void *s, void *, void *p)
-{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+{ _ZN8dActor_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall ov27_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall ov27_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall ov27_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall ov27_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall ov27_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall ov27_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall ov27_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall ov27_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall ov27_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 static int __fastcall ov27_aimed(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 static int __fastcall ov27_kill(void *s, void *)
-{ _ZN8Platform4KillEv(s); return 0; }
+{ _ZN10dBgActor_c4KillEv(s); return 0; }
 
 /* Fills every slot the four tables share: 1,2,4,5,7,8,10,11,12,13,14,15 and
    18..30. Each caller writes its own 0/3/6/9/16/17 afterwards (92/93 its own
@@ -511,19 +515,19 @@ static void ov27_fill_shared(void *volatile *vt)
    apiece, so the adapters below name their receiver and drop it -- there is no
    read for a dropped receiver to be wrong about. */
 extern "C" {
-void *func_ov064_02115ee0(void *self);   /* slot 16, D1 */
-void *func_ov064_02115f28(void *self);   /* slot 17, D0 */
-void func_ov064_021165d4(void);          /* slot 31, empty */
-void func_ov064_021163bc(void);          /* slot 32, empty */
+void *_ZN7daOts_cD1Ev(void *self);   /* slot 16, D1 */
+void *_ZN7daOts_cD0Ev(void *self);   /* slot 17, D0 */
+void _ZN7daOts_c14UpdateRunStateEv(void);          /* slot 31, empty */
+void _ZN7daOts_c16UpdateDeathStateEv(void);          /* slot 32, empty */
 }
 static void *__fastcall ov27_bully_base_d1(void *s, void *)
-{ return func_ov064_02115ee0(s); }
+{ return _ZN7daOts_cD1Ev(s); }
 static void *__fastcall ov27_bully_base_d0(void *s, void *)
-{ return func_ov064_02115f28(s); }
+{ return _ZN7daOts_cD0Ev(s); }
 static int __fastcall ov27_bully_base_s31(void *s, void *)
-{ (void)s; func_ov064_021165d4(); return 0; }
+{ (void)s; _ZN7daOts_c14UpdateRunStateEv(); return 0; }
 static int __fastcall ov27_bully_base_s32(void *s, void *)
-{ (void)s; func_ov064_021163bc(); return 0; }
+{ (void)s; _ZN7daOts_c16UpdateDeathStateEv(); return 0; }
 
 static void ov27_bully_base_bringup(void)
 {
@@ -540,7 +544,7 @@ static void ov27_bully_base_bringup(void)
     /* 16/17: an intermediate installed only between two member teardowns never
        reaches its own destructors either -- so they carry the ROM's own pair
        (see the block above this function) rather than the trap. */
-    vt[16] = (void *)ov27_bully_base_d1;
+    vt[16] = (void *)PORT_D16(ov27_bully_base_d1);
     vt[17] = (void *)ov27_bully_base_d0;
     /* 31..36 are Enemy/Bully's own virtuals. The derived table overwrites all
        six one instruction later in the constructor and the two destructors
@@ -577,7 +581,7 @@ static int __fastcall si_d0(void *s, void *)
    site pushes the Player the callee pops. The body itself dispatches slot 31
    back through this same table -- see TRAP T1 in the header. */
 static int __fastcall si_mega(void *s, void *, void *p)
-{ func_ov027_0211123c(s, p); return 0; }
+{ _ZN10SlidingIce15OnHitByMegaCharER6Player(s, p); return 0; }
 
 extern "C" void hal_fill_sliding_ice_vtable(void)
 {
@@ -587,7 +591,7 @@ extern "C" void hal_fill_sliding_ice_vtable(void)
     vt[3]  = (void *)si_clean;
     vt[6]  = (void *)si_behavior;
     vt[9]  = (void *)si_render;
-    vt[16] = (void *)si_d1;
+    vt[16] = (void *)PORT_D16(si_d1);
     vt[17] = (void *)si_d0;
     vt[27] = (void *)si_mega;
     vt[31] = (void *)ov27_kill;
@@ -599,32 +603,38 @@ extern "C" void hal_fill_sliding_ice_vtable(void)
 // the ROM parks directly in the table, and 33..36 are ov064's too.
 // ============================================================================
 static int __fastcall cb_init(void *s, void *)
-{ return func_ov027_0211181c((char *)s); }
+{ return _ZN12daIDonketu_c13InitResourcesEv((char *)s); }
+/* daOts_c AND NOT Bully, corrected run link100 wave 9c, lane LINK21. Slot 3 is
+   0x02116ca0 in daIDonketu_c's table exactly as it is in daOts_c's and Bully's,
+   so this class inherits the base's CleanupResources and there is no
+   ?CleanupResources@Bully@@UAEHXZ anywhere for the qualified call to reach. This
+   row now names the class that owns the body, which is what its own sibling
+   cb_render three lines down already does through the C name. */
 static int __fastcall cb_clean(void *s, void *)
-{ return ((Bully *)s)->Bully::CleanupResources(); }
+{ return ((daOts_c *)s)->daOts_c::CleanupResources(); }
 static int __fastcall cb_behavior(void *s, void *)
-{ return func_ov027_02111770((char *)s); }
+{ return _ZN12daIDonketu_c8BehaviorEv((char *)s); }
 static int __fastcall cb_render(void *s, void *)
 { port_actor_render_probe("CHILL_BULLY", (char *)s + 0x110);
-  return _ZN5Bully6RenderEv(s); }
+  return _ZN7daOts_c6RenderEv(s); }
 static int __fastcall cb_d1(void *s, void *)
-{ return (int)(size_t)func_ov027_021115c4((int *)s); }
+{ return (int)(size_t)_ZN12daIDonketu_cD1Ev((int *)s); }
 static int __fastcall cb_d0(void *s, void *)
-{ return (int)(size_t)func_ov027_02111618((int *)s); }
+{ return (int)(size_t)_ZN12daIDonketu_cD0Ev((int *)s); }
 static int __fastcall cb_aimed(void *s, void *)
 { return func_ov062_02115f84((char *)s); }
 static int __fastcall cb_v31(void *s, void *)
-{ return func_ov027_02111680((char *)s); }
+{ return _ZN12daIDonketu_c14UpdateRunStateEv((char *)s); }
 static int __fastcall cb_v32(void *s, void *)
-{ return func_ov027_021116f0((char *)s); }
+{ return _ZN12daIDonketu_c16UpdateDeathStateEv((char *)s); }
 static int __fastcall cb_v33(void *s, void *)
-{ func_ov064_02116374((char *)s); return 0; }
+{ _ZN7daOts_c13PlayStepSoundEv((char *)s); return 0; }
 static int __fastcall cb_v34(void *s, void *)
-{ return func_ov064_02116360((char *)s); }
+{ return _ZN7daOts_c12PlayHitSoundEv((char *)s); }
 static int __fastcall cb_v35(void *s, void *)
-{ func_ov064_0211635c(); return 0; }
+{ _ZN7daOts_c17PlayShellHitSoundEv(); return 0; }
 static int __fastcall cb_v36(void *s, void *)
-{ return func_ov064_02116348((char *)s); }
+{ return _ZN7daOts_c14PlayDeathSoundEv((char *)s); }
 
 extern "C" void hal_fill_chill_bully_vtable(void)
 {
@@ -635,7 +645,7 @@ extern "C" void hal_fill_chill_bully_vtable(void)
     vt[3]  = (void *)cb_clean;
     vt[6]  = (void *)cb_behavior;
     vt[9]  = (void *)cb_render;
-    vt[16] = (void *)cb_d1;
+    vt[16] = (void *)PORT_D16(cb_d1);
     vt[17] = (void *)cb_d0;
     vt[29] = (void *)cb_aimed;
     vt[31] = (void *)cb_v31;
@@ -657,31 +667,31 @@ extern "C" void hal_fill_chill_bully_vtable(void)
 // port/unmatched/DaPgDfdr_StateDispatch.cpp.
 // ============================================================================
 static int __fastcall pd_init(void *s, void *)
-{ return func_ov027_02111eb4(s); }
+{ return _ZN10daPgDfdr_c13InitResourcesEv(s); }
 static int __fastcall pd_clean(void *s, void *)
-{ return func_ov027_02111d8c((char *)s); }
+{ return _ZN10daPgDfdr_c16CleanupResourcesEv((char *)s); }
 static int __fastcall pd_behavior(void *s, void *)
-{ return func_ov027_02111e34((char *)s); }
+{ return _ZN10daPgDfdr_c8BehaviorEv((char *)s); }
 static int __fastcall pd_render(void *s, void *)
 { port_actor_render_probe("DA_PG_DFDR", (char *)s + 0xd4);
-  return func_ov027_02111e00(s); }
+  return _ZN10daPgDfdr_c6RenderEv(s); }
 static int __fastcall pd_pdes(void *s, void *)
-{ func_ov027_02111dfc(); return 0; }
+{ _ZN10daPgDfdr_c16OnPendingDestroyEv(); return 0; }
 static int __fastcall pd_d1(void *s, void *)
-{ return (int)(size_t)func_ov027_021118c8((int *)s); }
+{ return (int)(size_t)_ZN10daPgDfdr_cD1Ev((int *)s); }
 static int __fastcall pd_d0(void *s, void *)
-{ return (int)(size_t)func_ov027_02111924((int *)s); }
+{ return (int)(size_t)_ZN10daPgDfdr_cD0Ev((int *)s); }
 
 extern "C" void hal_fill_da_pg_dfdr_vtable(void)
 {
-    void *volatile *vt = (void *volatile *)data_ov027_02113a90;
+    void *volatile *vt = (void *volatile *)_ZTV10daPgDfdr_c;
     ov27_fill_shared(vt);
     vt[0]  = (void *)pd_init;
     vt[3]  = (void *)pd_clean;
     vt[6]  = (void *)pd_behavior;
     vt[9]  = (void *)pd_render;
     vt[12] = (void *)pd_pdes;
-    vt[16] = (void *)pd_d1;
+    vt[16] = (void *)PORT_D16(pd_d1);
     vt[17] = (void *)pd_d0;
     vt[31] = (void *)ov27_kill;
     /* the constructor's copy of the four member-pointer pairs, checked once.
@@ -695,8 +705,8 @@ extern "C" void hal_fill_da_pg_dfdr_vtable(void)
 // One on level 19. Own 0/3/6/9/12/16/17. NO slot 31: its Spawn calls
 // Actor::C2, not Platform::C2, and the table stops at Actor's slot 30.
 // The object carries FIFTY sub-elements at +0xd4, stride 0x60, built by
-// func_020733a8 and torn down by __destroy_arr -- which is why its Render
-// loops func_ov027_02112424 fifty times.
+// __cxa_vec_ctor and torn down by __cxa_vec_cleanup -- which is why its Render
+// loops _ZN21SnowmanBreathParticle6RenderEv fifty times.
 // ============================================================================
 static int __fastcall sb_init(void *s, void *)
 { return ((SnowmanBreath *)s)->SnowmanBreath::InitResources(); }
@@ -723,6 +733,6 @@ extern "C" void hal_fill_snowman_breath_vtable(void)
     vt[6]  = (void *)sb_behavior;
     vt[9]  = (void *)sb_render;
     vt[12] = (void *)sb_pdes;
-    vt[16] = (void *)sb_d1;
+    vt[16] = (void *)PORT_D16(sb_d1);
     vt[17] = (void *)sb_d0;
 }

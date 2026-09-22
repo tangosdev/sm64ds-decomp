@@ -41,11 +41,11 @@
 //
 // BY ADDRESS, because every name in this family is shifted one class:
 //
-//   ACTOR_SPAWN_TABLE[348]        -> 0x021085d4   (VirtualDoor_SpawnInfo)
+//   ACTOR_SPAWN_TABLE[348]        -> 0x021085d4   (g_profile_CH_ROOM)
 //   record +4 halfword             = 348          the registry's own check
-//   record +0 word                -> 0x020b0980   (VirtualDoor_Spawn)
+//   record +0 word                -> 0x020b0980   (daChRoom_c_classInit)
 //   the factory's only data load
-//   (reloc from:0x020b09ac)       -> 0x021085f8   (config _ZTV9CameraTag)
+//   (reloc from:0x020b09ac)       -> 0x021085f8   (config _ZTV10daChRoom_c)
 //   that table's -4 word          -> typeinfo 0x021085b8, name "10daChRoom_c"
 //
 // THE SHIFT, stated once. dsd's SpawnInfo/factory names are right and its
@@ -56,10 +56,10 @@
 // happens to follow the table:
 //
 //   0x02108480  RTTI 7daBar_c       bodies named _ZN13InvisiblePole* ... no:
-//                                   installed by InvisiblePole_Spawn, id 287
-//   0x0210853c  RTTI 10daCamTag_c   installed by CameraTag_Spawn, id 333
-//   0x021085f8  RTTI 10daChRoom_c   installed by VirtualDoor_Spawn, id 348 <-
-//   0x021086b4  RTTI 11daChScene_c  installed by Exit_Spawn, id 349
+//                                   installed by daBar_c_classInit, id 287
+//   0x0210853c  RTTI 10daCamTag_c   installed by daCamTag_c_classInit, id 333
+//   0x021085f8  RTTI 10daChRoom_c   installed by daChRoom_c_classInit, id 348 <-
+//   0x021086b4  RTTI 11daChScene_c  installed by daChScene_c_classInit, id 349
 //
 // so 287, 333 and 349 were already seated and 348 was the one hole in the
 // family. Its seven own bodies are the files dsd named _ZN9CameraTag*, and
@@ -83,17 +83,17 @@
 // CLASS B -- actor id 314, ov039, RTTI 11daObjKumo_c (kumo: cloud)
 // ============================================================================
 //
-//   ACTOR_SPAWN_TABLE[314]        -> 0x02111834   (Cloud_SpawnInfo)
+//   ACTOR_SPAWN_TABLE[314]        -> 0x02111834   (g_profile_OBJ_KUMO)
 //   record +4 halfword             = 314, +6 = 5  (the render priority)
-//   record +0 word                -> 0x0211137c   (Cloud_Spawn)
+//   record +0 word                -> 0x0211137c   (daObjKumo_c_classInit)
 //   the factory's data load
 //   (reloc from:0x021113b0)       -> 0x02111858   (_ZTV5Cloud)
 //   that table's -4 word          -> typeinfo 0x02111818, name "11daObjKumo_c"
 //
 // No name shift here: both destructors and the factory load the same table,
 // and dsd gave that one address TWO names (_ZTV5Cloud and _ZTV11daObjKumo_c,
-// ov039/symbols.txt lines 52 and 53). Cloud_Spawn.c spells the first,
-// _ZN5CloudD0Ev.c the second; the host array below is defined under
+// ov039/symbols.txt lines 52 and 53). daObjKumo_c_classInit.c spells the first,
+// _ZN11daObjKumo_cD0Ev.c the second; the host array below is defined under
 // _ZTV5Cloud and hal/cxx_aliases.cpp's link100 block aliases the other name
 // onto it, the ov017 daObjKsWater_c treatment. Both names are held OUT of the
 // ov039 mount, so the alias's left side is undefined everywhere and cannot be
@@ -126,7 +126,7 @@
 // serves for ov045's five sinits.
 //
 // ---- TWO SIBLING-OVERLAY SPELLINGS, ROUTED PER SOURCE ----------------------
-// src/_ZN5Cloud13InitResourcesEv.cpp calls `func_ov044_02111214` and bumps
+// src/game/actors/d_a_obj_kumo.cpp calls `_ZN19daObjKb1Billboard_c20UpdateModelTransformEv` and bumps
 // `data_ov041_021118e0`: two sibling overlays' names for addresses that, in
 // THIS class's module, are ov039's own (the ROM relocs at 0x02111354 and
 // 0x02111378 both read module:overlay(39)). port/CMakeLists.txt routes both
@@ -140,12 +140,14 @@
 // neither is a Platform and neither has a Kill. Slots 13/14 are
 // ActorBase::Virtual34/Virtual38 -- two u32 arguments each, bodies not in this
 // link -- and are TRAPPED by name, the ccm/ov064/jrb/bbh/ov072 convention.
+#include "port_d16.h"
+
 #include <cstdio>
 #include <cstdlib>
 
 #include "dsstate_seg.h"
-#include "Actor.h"
-#include "ActorBase.h"
+#include "dActor_c.h"
+#include "fBase_c.h"
 
 /* hal/actor_slot30_seat.cpp: the shared SRET seat for slot 30. The ROM word
    in slot 30 of both tables IS the arm9 base body 0x020100dc. */
@@ -153,22 +155,22 @@ extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 
 extern "C" {
 /* ---- the shared arm9 half both tables carry, slot for slot -------------- */
-int _ZN5Actor19BeforeInitResourcesEv(void *self);
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a);
-int _ZN5Actor14BeforeBehaviorEv(void *self);
-int _ZN5Actor12BeforeRenderEv(void *self);
-int _ZN5Actor13OnYoshiTryEatEv(void *self);
-void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p);
-int _ZN5Actor9Virtual50Ev(void *self);
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);
-void _ZN5Actor8OnKickedERS_(void *self, void *o);
-void _ZN5Actor8OnPushedERS_(void *self, void *o);
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o);
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);
-int _ZN5Actor16OnAimedAtWithEggEv(void *self);
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a);
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);
+int _ZN8dActor_c12BeforeRenderEv(void *self);
+int _ZN8dActor_c13OnYoshiTryEatEv(void *self);
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void *self, void *p);
+int _ZN8dActor_c9Virtual50Ev(void *self);
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o);
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);
+int _ZN8dActor_c16OnAimedAtWithEggEv(void *self);
 /* the diagnostics the trap uses */
 extern int data_02099f24[];
 extern unsigned char data_020a4b4c;
@@ -176,18 +178,18 @@ const char *port_actor_class_name(unsigned id);
 void port_actor_slot_decline(const char *what);
 
 /* ---- class A, ov002 id 348 ---------------------------------------------- */
-int _ZN9CameraTag16CleanupResourcesEv(void);     /* slot  3, 0x020b0854 */
-int _ZN9CameraTag6RenderEv(void);                /* slot  9, 0x020b0860 */
-void _ZN9CameraTag16OnPendingDestroyEv(void);    /* slot 12, 0x020b085c */
-int *_ZN9CameraTagD0Ev(int *self);               /* slot 17, 0x020b081c */
+int _ZN10daChRoom_c16CleanupResourcesEv(void);     /* slot  3, 0x020b0854 */
+int _ZN10daChRoom_c6RenderEv(void);                /* slot  9, 0x020b0860 */
+void _ZN10daChRoom_c16OnPendingDestroyEv(void);    /* slot 12, 0x020b085c */
+int *_ZN10daChRoom_cD0Ev(int *self);               /* slot 17, 0x020b081c */
 DSSTATE_BEGIN
-void *_ZTV9CameraTag[31];                        /* ov002 0x021085f8 */
+void *_ZTV10daChRoom_c[31];                        /* ov002 0x021085f8 */
 DSSTATE_END
 
 /* ---- class B, ov039 id 314 ---------------------------------------------- */
-int _ZN5Cloud16CleanupResourcesEv(void);         /* slot  3, 0x02111254 */
-int _ZN5Cloud8BehaviorEv(char *self);            /* slot  6, 0x021112a0 */
-int *_ZN5CloudD0Ev(int *self);                   /* slot 17, 0x021111d0 */
+int _ZN11daObjKumo_c16CleanupResourcesEv(void);         /* slot  3, 0x02111254 */
+int _ZN11daObjKumo_c8BehaviorEv(char *self);            /* slot  6, 0x021112a0 */
+int *_ZN11daObjKumo_cD0Ev(int *self);                   /* slot 17, 0x021111d0 */
 void __sinit_ov039_021113b4(void);               /* ov039 0x021113b4 */
 /* the generated ov039 per-symbol mount (build/port/host-src/ov039_syms.c) */
 void port_ov039_pack_check(void);
@@ -204,7 +206,7 @@ DSSTATE_END
 /* ---- the real-C++ faces --------------------------------------------------
    Four of the nine own bodies are real C++ methods and two more are real C++
    destructors, so MSVC emits them under its own manglings
-   (?InitResources@CameraTag@@QAEHXZ, ??1Cloud@@UAE@XZ and so on) rather than
+   (?InitResources@daChRoom_c@@QAEHXZ, ??1Cloud@@UAE@XZ and so on) rather than
    under the ROM's Itanium C names. The shadow classes below are declared with
    exactly the members whose manglings are needed -- a mangle depends on the
    name, the class, the calling convention and the signature, and on nothing
@@ -224,7 +226,7 @@ struct Cloud {
     int InitResources();
     int Render();
 };
-/* src/_ZN5CloudD1Ev.cpp's Cloud holds a `Model m0` at +0xd4, so its MSVC
+/* src/game/actors/d_a_obj_kumo.cpp's Cloud holds a `Model m0` at +0xd4, so its MSVC
    destructor calls ??1Model@@QAE@XZ. That face already exists --
    port/unmatched/Mg3DEsp_Faces.cpp defines Model::~Model() as one call into
    the ROM C name _ZN5ModelD1Ev -- and defining a second one here was an
@@ -263,47 +265,47 @@ static int __fastcall l100_trap14(void *s, void *) { l100_trap_report(s, 14); re
    makes one shared writer legitimate. The caller writes its own
    0/3/6/9/12/16/17 afterwards. */
 static int __fastcall l100_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall l100_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall l100_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 static void __fastcall l100_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall l100_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall l100_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall l100_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall l100_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall l100_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int __fastcall l100_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 static int __fastcall l100_egg(void *s, void *, void *p)
-{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+{ _ZN8dActor_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall l100_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall l100_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall l100_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall l100_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall l100_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall l100_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall l100_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall l100_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall l100_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 static int __fastcall l100_aimed(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 
 static void l100_fill_shared(void *volatile *vt)
 {
@@ -339,28 +341,28 @@ static void l100_fill_shared(void *volatile *vt)
 static int __fastcall chroom_init(void *s, void *)
 { return ((CameraTag *)s)->CameraTag::InitResources(); }
 static int __fastcall chroom_clean(void *s, void *)
-{ (void)s; return _ZN9CameraTag16CleanupResourcesEv(); }
+{ (void)s; return _ZN10daChRoom_c16CleanupResourcesEv(); }
 static int __fastcall chroom_behavior(void *s, void *)
 { return ((CameraTag *)s)->CameraTag::Behavior(); }
 static int __fastcall chroom_render(void *s, void *)
-{ (void)s; return _ZN9CameraTag6RenderEv(); }
+{ (void)s; return _ZN10daChRoom_c6RenderEv(); }
 static int __fastcall chroom_pdes(void *s, void *)
-{ (void)s; _ZN9CameraTag16OnPendingDestroyEv(); return 0; }
+{ (void)s; _ZN10daChRoom_c16OnPendingDestroyEv(); return 0; }
 static int __fastcall chroom_d1(void *s, void *)
 { ((CameraTag *)s)->CameraTag::~CameraTag(); return (int)(size_t)s; }
 static int __fastcall chroom_d0(void *s, void *)
-{ return (int)(size_t)_ZN9CameraTagD0Ev((int *)s); }
+{ return (int)(size_t)_ZN10daChRoom_cD0Ev((int *)s); }
 
 extern "C" void hal_fill_change_room_vtable(void)
 {
-    void *volatile *vt = (void *volatile *)_ZTV9CameraTag;
+    void *volatile *vt = (void *volatile *)_ZTV10daChRoom_c;
     l100_fill_shared(vt);
     vt[0]  = (void *)chroom_init;      /* 0x020b0938 */
     vt[3]  = (void *)chroom_clean;     /* 0x020b0854 */
     vt[6]  = (void *)chroom_behavior;  /* 0x020b0868 */
     vt[9]  = (void *)chroom_render;    /* 0x020b0860 */
     vt[12] = (void *)chroom_pdes;      /* 0x020b085c */
-    vt[16] = (void *)chroom_d1;        /* 0x020b07f8 */
+    vt[16] = (void *)PORT_D16(chroom_d1);        /* 0x020b07f8 */
     vt[17] = (void *)chroom_d0;        /* 0x020b081c */
 }
 
@@ -370,17 +372,17 @@ extern "C" void hal_fill_change_room_vtable(void)
 static int __fastcall cloud_init(void *s, void *)
 { return ((Cloud *)s)->Cloud::InitResources(); }
 static int __fastcall cloud_clean(void *s, void *)
-{ (void)s; return _ZN5Cloud16CleanupResourcesEv(); }
+{ (void)s; return _ZN11daObjKumo_c16CleanupResourcesEv(); }
 static int __fastcall cloud_behavior(void *s, void *)
-{ return _ZN5Cloud8BehaviorEv((char *)s); }
+{ return _ZN11daObjKumo_c8BehaviorEv((char *)s); }
 static int __fastcall cloud_render(void *s, void *)
 { return ((Cloud *)s)->Cloud::Render(); }
 static int __fastcall cloud_pdes(void *s, void *)
-{ ((ActorBase *)s)->ActorBase::OnPendingDestroy(); return 0; }
+{ ((fBase_c *)s)->fBase_c::OnPendingDestroy(); return 0; }
 static int __fastcall cloud_d1(void *s, void *)
 { ((Cloud *)s)->Cloud::~Cloud(); return (int)(size_t)s; }
 static int __fastcall cloud_d0(void *s, void *)
-{ return (int)(size_t)_ZN5CloudD0Ev((int *)s); }
+{ return (int)(size_t)_ZN11daObjKumo_cD0Ev((int *)s); }
 
 /* The ov039 bring-up: check the per-symbol mount landed where the ROM says,
    rebase its interior pointers, then run the overlay's own static
@@ -410,6 +412,6 @@ extern "C" void hal_fill_cloud_vtable(void)
     vt[6]  = (void *)cloud_behavior;  /* 0x021112a0 */
     vt[9]  = (void *)cloud_render;    /* 0x02111278 */
     vt[12] = (void *)cloud_pdes;      /* arm9 0x02043ac0, ActorBase's own */
-    vt[16] = (void *)cloud_d1;        /* 0x021111a0 */
+    vt[16] = (void *)PORT_D16(cloud_d1);        /* 0x021111a0 */
     vt[17] = (void *)cloud_d0;        /* 0x021111d0 */
 }

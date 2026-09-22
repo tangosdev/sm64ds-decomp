@@ -1,11 +1,11 @@
 # Lane BOX of run mg9: dScMgSound_c, the "Boom Box" minigame.
 #
-# actor id 0x16f (scene 367), spawn symbol MgBoomBox_Spawn (0x0211cb70),
-# SpawnInfo MgBoomBox_SpawnInfo (0x0213f69c), vtable data_ov006_0213f844.
+# actor id 0x16f (scene 367), spawn symbol dScMgSound_c_classInit (0x0211cb70),
+# SpawnInfo g_profile_MG_SOUND (0x0213f69c), vtable _ZTV12dScMgSound_c.
 # Every one of those was re-read out of extracted/overlays/overlay_0006.bin at
 # base 0x020bfec0 by this lane rather than taken from the handover, and the
 # alignment was checked FIRST on a body this lane did not write:
-# func_ov006_0210a600 disassembles to `mov r0,#1 / bx lr`, which is exactly
+# _ZN19dScMgSingle3DBase_c24OnHitByCannonBlastedCharEv disassembles to `mov r0,#1 / bx lr`, which is exactly
 # what port/tools/inferred_stub_adjudicated.txt already records for it.
 #
 # The doubled-id word 0x016f016f occurs EXACTLY ONCE in the overlay, at
@@ -24,7 +24,7 @@
 # The word immediately BEFORE the vtable is the type_info pointer, which is the
 # chain port/mg_fanout_costs.txt section 14 tells later lanes to prefer:
 #
-#     data_ov006_0213f844[-1] = 0x0213f6e4      the type_info record
+#     _ZTV12dScMgSound_c[-1] = 0x0213f6e4      the type_info record
 #     0x0213f6e4[1]           = 0x0213f708      the name pointer
 #     0x0213f708              = "12dScMgSound_c"
 #
@@ -56,14 +56,14 @@
 # ---- THE HIERARCHY IS THREE DEEP -----------------------------------------
 #
 #     Scene -> dScMgBase_c         data_ov004_020bc0c0  36
-#           -> dScMgSingle3DBase_c data_ov006_0213e448  36  ovr 8,  mark 6,  nosrc 0
-#           -> dScMgSound_c        data_ov006_0213f844  36  ovr 13, mark 11, nosrc 0
+#           -> dScMgSingle3DBase_c _ZTV19dScMgSingle3DBase_c  36  ovr 8,  mark 6,  nosrc 0
+#           -> dScMgSound_c        _ZTV12dScMgSound_c  36  ovr 13, mark 11, nosrc 0
 #
 # Both edges are read off code as well as off RTTI:
-#   src/MgBoomBox_Spawn.cpp calls func_ov004_020b2adc(p) WITH its argument
-#   (ROM 0x0211cb84), writes data_ov006_0213e448 into p[0] (0x0211cbc4), then
-#   writes data_ov006_0213f844 over it (0x0211cbcc).
-#   src/func_ov006_02119958.cpp (slot 17, D0) unwinds in the opposite order.
+#   src/actors/dScMgSound_c.cpp calls _ZN11dScMgBase_cC2Ev(p) WITH its argument
+#   (ROM 0x0211cb84), writes _ZTV19dScMgSingle3DBase_c into p[0] (0x0211cbc4), then
+#   writes _ZTV12dScMgSound_c over it (0x0211cbcc).
+#   src/actors/dScMgSound_c.cpp (slot 17, D0) unwinds in the opposite order.
 #
 # SIX of the thirteen overrides (slots 2, 5, 7, 10, 26, 33) are the MIDDLE
 # base's bodies -- the same six dScMgMemory2_c inherits. The seven that are its
@@ -75,7 +75,7 @@
 # ---- THE WIDTH IS 36, CHECKED FIVE WAYS ----------------------------------
 #
 #   1. SPAN. config/arm9/overlays/ov006/symbols.txt puts the next symbol after
-#      data_ov006_0213f844 at data_ov006_0213f8d4, exactly 0x90 = 36 words on.
+#      _ZTV12dScMgSound_c at data_ov006_0213f8d4, exactly 0x90 = 36 words on.
 #      The middle table's next symbol is data_ov006_0213e4d8, also 0x90 on.
 #   2. TERMINAL SLOT. Slot 35 of both tables holds 0x020ad660.
 #   3. WHAT THE WORD PAST IT IS, and this one has a named victim. Index 36 of
@@ -126,7 +126,7 @@
 # record's +0xb4 reset alongside it -- the whole difference between "one more
 # round" and "start again". hal/scene_mg_boombox.cpp's snd_reset is declared
 # (void *, void *, int flag) and passes flag through; the adjudication ledger
-# entry for func_ov006_0211c5d0 carries the disassembly.
+# entry for _ZN12dScMgSound_c13OnYoshiTryEatEi carries the disassembly.
 # IT IS UNEXERCISED, HONESTLY: slot 18 is entered ZERO times on every run this
 # lane took -- 300 frames, 1200 frames and the touch-driven 300 -- so the
 # forwarding is proven to COMPILE and is NOT witnessed. Nothing here claims it.
@@ -244,7 +244,7 @@
 #
 # From src/__sinit_ov006_02132970.c ONE ASSIGNMENT AT A TIME, which is the only
 # ground truth for a slot number. A sweep of the source span would have
-# manufactured phantoms: MgBoomBox_SpawnInfo itself sits INSIDE the pair span
+# manufactured phantoms: g_profile_MG_SOUND itself sits INSIDE the pair span
 # 0x0213f4fc..0x0213f6dc, bracketed by the pairs at 0x0213f694 and 0x0213f6a4.
 # All 57 adjustment words read zero, all 57 code words are distinct, and every
 # one lands in 0x02119d50..0x0211bf44 -- inside this class's own code block.
@@ -288,7 +288,7 @@
 #
 # IT IS THE FIRST STATE A TAP PRODUCES, which is why an unattended 1200-frame
 # boot asked for it zero times and why that zero was one of the dishonest ones
-# section 16 lists. src/func_ov006_0211bf44.c -- slot 0 of the same table, and
+# section 16 lists. src/actors/dScMgSound_c.cpp -- slot 0 of the same table, and
 # what all six pads sit in on a boot -- is a STYLUS HIT TEST: it compares
 # data_020a0dea/deb against the record's own x/y in a +-0x18 box and, on a hit,
 # writes state 1 into the record and plays Sound::PlayBank2_2D(0x201). State 1
@@ -303,7 +303,7 @@
 # {2,2,3,4,4,4,6,4}. On each expiry the timer resets and the sub-index at
 # +0x50f7 advances, returning while it is <= 6. The step that would make it 7
 # clamps it back to 6 and COMMITS:
-#   - the record's state byte at +0x50f4 becomes 2 (src/func_ov006_0211bc68.c);
+#   - the record's state byte at +0x50f4 becomes 2 (src/actors/dScMgSound_c.cpp);
 #   - the note index at +0x50f8 plus one is appended to the 16-bit play log at
 #     +0x5610 under the write cursor at +0x5625, then OR'd with the pad index
 #     in the high byte, and the cursor advances;
@@ -330,7 +330,7 @@
 # already produced three receiver-drop defects at exactly this shape (see the
 # section above), and 0x0211bc8c is the THIRD of the three `ldr Rm,[Rn,#0x8c]`
 # sites the word-by-word sweep found. The src spelling is the 36-slot shadow
-# class src/func_ov006_0211b9c8.cpp already uses for this class, and the match
+# class src/actors/dScMgSound_c.cpp already uses for this class, and the match
 # means the ROM's `mov r0,r6 / ldr r1,[r0] / ldr r1,[r1,#0x8c] / blx r1` is
 # reproduced instruction for instruction, receiver included.
 #
@@ -338,7 +338,7 @@
 #
 #   func_ov006_0211ba88   slot 4 of data_ov006_02142df8, 0x158 bytes
 #
-# Outside the delinks join, but src/func_ov006_0211ba88.c EXISTS, bannered
+# Outside the delinks join, but src/actors/dScMgSound_c.cpp EXISTS, bannered
 # NONMATCHING. That is section 13's 0x020f6904 shape and would normally cost a
 # slice line plus a switch arm. It costs a HOST COPY instead, because reading
 # it against the ROM found FOUR divergences and the banner claims none:
@@ -370,10 +370,10 @@
 #
 # ---- ONE SHARED HOST COPY IS REUSED RATHER THAN REWRITTEN ----------------
 #
-# src/func_ov006_0210a6e4.cpp (slot 2, AfterInitResources) is NOT below.
+# src/minigames/d_s_mg_single3_d_base.cpp (slot 2, AfterInitResources) is NOT below.
 # port/unmatched/MgFlower_Slot2.cpp defines the repaired body as
 # port_mg_flower_after_init and this seat calls it, exactly as
-# hal/scene_mg_memory2.cpp does. src/func_ov006_0210a708.c (slot 33) is not
+# hal/scene_mg_memory2.cpp does. src/minigames/d_s_mg_single3_d_base.cpp (slot 33) is not
 # below either: it reaches a geometry register and the FLW block in
 # port/CMakeLists.txt already builds it from a hostgen-emitted copy, so listing
 # it here would compile the register writes into the real memory map instead.
@@ -397,7 +397,7 @@
 #
 # func_02012790 and Sound::PlayBank2_2D do NOT move the number and the reason
 # is measured rather than assumed: both already have many other live callers
-# (src/func_ov006_0211b80c.c is one, and it is in this very slice), so they
+# (src/actors/dScMgSound_c.cpp is one, and it is in this very slice), so they
 # were in the base map already.
 #
 # RUN mg9's ROW, kept because the denominators are the cross-check: mg9's after
@@ -422,7 +422,7 @@
 # banner. Two of run mg9's did not, and the reason was the run law's warning
 # that "a trap-shaped floor HIDES its callees from static closure":
 #
-#     src/func_ov006_0211b654.c   called ONLY from 0x0211bd88
+#     src/actors/dScMgSound_c.cpp   called ONLY from 0x0211bd88
 #     src/func_ov006_020c2300.c   called ONLY from 0x0211bf10
 #
 # and both of those addresses are inside func_ov006_0211bc8c. The closure walk
@@ -457,7 +457,7 @@
 # nothing in the ovr/mark/nosrc columns can see it. Asked of this class, of
 # every object its factory and that factory's helpers construct:
 #
-#   the scene object          word 0 = data_ov006_0213f844, filled by the seat
+#   the scene object          word 0 = _ZTV12dScMgSound_c, filled by the seat
 #   Particle::SysTracker      at +0x471c, an arm9 host class, already hosted
 #   the sub-object at +0x4f38 word 0 is NOT a vptr: it is the CODE half of the
 #                             object's own member pointer, which
@@ -471,7 +471,7 @@
 #                             repaired in port/unmatched/
 #                             MgShared4f38_ModelRender_020c29dc.cpp
 #   the TEN-record array      at +0x50e8, stride 0x14: word 0 is a 20.12 x
-#                             coordinate (src/func_ov006_0211bf44.c compares it
+#                             coordinate (src/actors/dScMgSound_c.cpp compares it
 #                             against the stylus)
 #   the THIRTY-record array   at +0x51cc, stride 0x24: word 0 holds the in-play
 #                             gate BYTE func_ov006_0211b5e0 reads as
@@ -493,22 +493,22 @@
 # ---- ov006: dScMgSound_c's own closure, plus the +0x4f38 sub-object -------
 #
 # HOST-COPIED (mg9 lane BOX), all in port/unmatched/MgSound_StateDispatch.cpp:
-#   src/func_ov006_0211b954.cpp  src/func_ov006_0211b5e0.cpp   open-coded ints
-#   src/func_ov006_0211b590.cpp  src/func_ov006_0211b398.cpp   PMF, extern "C"
-#   src/func_ov006_0211b17c.cpp  src/func_ov006_0211af60.cpp
-#   src/func_ov006_0211ad44.cpp  src/func_ov006_0211abdc.cpp
-#   src/func_ov006_0211aa44.cpp  src/func_ov006_0211a7ac.cpp
-#   src/func_ov006_0211a648.cpp  src/func_ov006_0211a4b0.cpp
-#   src/func_ov006_0211a0d8.cpp  src/func_ov006_02119eec.cpp
-#   src/func_ov006_0211a2c4.cpp                                PMF, C++ linkage
+#   src/actors/dScMgSound_c.cpp  src/actors/dScMgSound_c.cpp   open-coded ints
+#   src/actors/dScMgSound_c.cpp  src/actors/dScMgSound_c.cpp   PMF, extern "C"
+#   src/actors/dScMgSound_c.cpp  src/actors/dScMgSound_c.cpp
+#   src/actors/dScMgSound_c.cpp  src/actors/dScMgSound_c.cpp
+#   src/actors/dScMgSound_c.cpp  src/actors/dScMgSound_c.cpp
+#   src/actors/dScMgSound_c.cpp  src/actors/dScMgSound_c.cpp
+#   src/actors/dScMgSound_c.cpp  src/actors/dScMgSound_c.cpp
+#   src/actors/dScMgSound_c.cpp                                PMF, C++ linkage
 #   src/func_ov006_020c2b8c.cpp                                FIELD pmf
 # HOST-COPIED (mg9 lane BOX), port/unmatched/MgSound_ShadowSlot35.cpp:
-#   src/func_ov006_0211ba88.c    -- and it is a delinks JOIN MISS as well, so
+#   src/actors/dScMgSound_c.cpp    -- and it is a delinks JOIN MISS as well, so
 #   it never appeared in the closure listing either way.
 # THE FLOOR IS RETIRED (run mg10 lane F367): func_ov006_0211bc8c is now
 #   src/func_ov006_0211bc8c.cpp, listed below in address order, byte-matched
 #   and delinked. It is the only line this run adds.
-src/MgBoomBox_Spawn.cpp
+src/actors/dScMgSound_c.cpp
 src/func_ov006_020c225c.c
 src/func_ov006_020c2290.c
 src/func_ov006_020c22d8.c
@@ -549,71 +549,8 @@ src/func_ov006_020c2be8.c
 src/func_ov006_020c3050.c
 src/func_ov006_020c3288.c
 src/func_ov006_020c33dc.c
-src/func_ov006_02119904.cpp
-src/func_ov006_02119958.cpp
-src/func_ov006_021199c0.c
-src/func_ov006_02119a18.c
-src/func_ov006_02119a88.c
-src/func_ov006_02119aa8.c
-src/func_ov006_02119b00.c
-src/func_ov006_02119ba4.c
-src/func_ov006_02119bc4.c
-src/func_ov006_02119bdc.cpp
-src/func_ov006_02119c74.c
-src/func_ov006_02119d50.c
-src/func_ov006_02119dc4.c
-src/func_ov006_02119e5c.c
-src/func_ov006_02119f3c.c
-src/func_ov006_02119fb0.c
-src/func_ov006_0211a048.c
-src/func_ov006_0211a128.c
-src/func_ov006_0211a19c.c
-src/func_ov006_0211a234.c
-src/func_ov006_0211a314.c
-src/func_ov006_0211a388.c
-src/func_ov006_0211a420.c
-src/func_ov006_0211a500.c
-src/func_ov006_0211a578.c
-src/func_ov006_0211a5ec.c
-src/func_ov006_0211a698.c
-src/func_ov006_0211a69c.c
-src/func_ov006_0211a714.c
-src/func_ov006_0211a7fc.c
-src/func_ov006_0211a910.c
-src/func_ov006_0211a9fc.c
-src/func_ov006_0211aa94.c
-src/func_ov006_0211ab0c.c
-src/func_ov006_0211ab80.c
-src/func_ov006_0211ac2c.c
-src/func_ov006_0211ac30.c
-src/func_ov006_0211ad00.c
-src/func_ov006_0211ad94.c
-src/func_ov006_0211ae40.c
-src/func_ov006_0211aed0.c
-src/func_ov006_0211afb0.c
-src/func_ov006_0211b05c.c
-src/func_ov006_0211b0ec.c
-src/func_ov006_0211b1cc.c
-src/func_ov006_0211b278.c
-src/func_ov006_0211b308.c
-src/func_ov006_0211b3e8.c
-src/func_ov006_0211b3ec.c
-src/func_ov006_0211b4fc.c
-src/func_ov006_0211b654.c
-src/func_ov006_0211b790.c
-src/func_ov006_0211b80c.c
-src/func_ov006_0211b9c8.cpp
-src/func_ov006_0211bbe0.c
-src/func_ov006_0211bc68.c
-src/func_ov006_0211bc8c.cpp
-src/func_ov006_0211bf44.c
-src/func_ov006_0211c080.c
-src/func_ov006_0211c478.c
-src/func_ov006_0211c5b8.c
-src/func_ov006_0211c5d0.c
-src/func_ov006_0211c6c4.c
-src/func_ov006_0211c720.c
-src/func_ov006_0211c984.c
+# RETIRED at SLICE1: body now in src/actors/dScMgSound_c.cpp. main consolidation put this body in the class TU, which the build already compiles, so the per-function leftover is a second definition.
+#src/func_ov006_0211bc8c.cpp
 
 # ---- ov004: the delta over what the framework already builds --------------
 #
@@ -641,7 +578,7 @@ src/func_ov004_020b6808.c
 # externals in ONE wave. Four are ordinary /alternatename rows
 # (port/unmatched/MgSound_Faces.cpp), one is this slice line, and one is a
 # per-source name rename recorded in port/CMakeLists.txt (src/
-# func_ov006_0211c5d0.c spells data_ov004_020beb68 as the bare placeholder
+# _ZN12dScMgSound_c13OnYoshiTryEatEi.c spells data_ov004_020beb68 as the bare placeholder
 # g_020beb68, which include/decl_common.h declares and no config defines). The
 # framework half being already paid is why this is one wave and not eight, and
 # a lane taking a thirteenth class should budget the same.

@@ -5,7 +5,7 @@
 # reached through a __fastcall shim aliased onto it in hal/actor_classes.cpp).
 # Factory + the eight lifecycle TUs + the one Behavior helper. Its SpawnInfo is
 # mounted in ov002_syms.txt; the vtable is a host array the registry fills.
-src/StarMarker_Spawn.c
+src/d_a_star_base.c
 src/_ZN10StarMarker13InitResourcesEv.cpp
 src/_ZN10StarMarker16CleanupResourcesEv.cpp
 src/_ZN10StarMarker8BehaviorEv.cpp
@@ -16,6 +16,7 @@ src/_ZN10StarMarker16OnPendingDestroyEv.cpp
 # resolve to the extern-C ROM bodies, so its body is a host copy in
 # port/unmatched/StarMarker_D1.cpp -- the ROM D1's own four teardown calls plus
 # the vtable restore, byte-faithful (it is exactly D0 minus the Deallocate).
-src/_ZN10StarMarkerD0Ev.c
+# RETIRED at SLICE1: body now in src/_ZN10StarMarkerD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN10StarMarkerD0Ev.cpp
 # the Behavior's one helper (the marker's tracked-actor follow path)
-src/func_ov002_020e7d84.c
+src/_ZN10StarMarker7CollectEv.cpp

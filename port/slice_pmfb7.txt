@@ -25,10 +25,10 @@
 #  _ZN17BowserPuzzlePiece8B..    064  02119330..02119a18   2  0211c2dc..0211c2ec   2
 #  _ZN10LavaBubble8BehaviorEv    064  021185c0..02118b08   4  0211be90..0211beb0   4
 #  _ZN9WaterRing8BehaviorEv      064  02119a58..0211a1b0   4  0211c3b0..0211c3d0   4
-#  _ZN6Snufit8BehaviorEv         065  02115ee0..02116f0c   8  0211cb20..0211cb60   8
+#  _ZN15daYurei_Mucho_c8BehaviorEv         065  02115ee0..02116f0c   8  0211cb20..0211cb60   8
 #  _ZN5Swoop8BehaviorEv          065  02116f98..02117eac   8  0211cc20..0211cc60   8
 #  _ZN12WaterSuction8Behavi..    026  021121fc..02112450   2  02113dd0..02113de0   2
-#  _ZN9Submarine8BehaviorEv      026  02111aa0..021121bc   4  02113cec..02113d0c   4
+#  _ZN9Whirlpool8BehaviorEv      026  02111aa0..021121bc   4  02113cec..02113d0c   4
 #  _ZN6Bullet8BehaviorEv         002  020feabc..020fefcc   2  0210d5f8..0210d608   2
 #
 # Twelve for twelve the run is SOLID (stride 8, no gap) and carries as many
@@ -101,13 +101,13 @@ src/_ZN7Skeeter8BehaviorEv.cpp
 src/_ZN10CheepCheep8BehaviorEv.cpp
 src/_ZN8MantaRay8BehaviorEv.cpp
 src/_ZN5Shark8BehaviorEv.cpp
-src/_ZN17BowserPuzzlePiece8BehaviorEv.cpp
+src/_ZN9JetStream8BehaviorEv.cpp
 src/_ZN10LavaBubble8BehaviorEv.cpp
 src/_ZN9WaterRing8BehaviorEv.cpp
-src/_ZN6Snufit8BehaviorEv.cpp
+src/actors/daYurei_Mucho_c.cpp
 src/_ZN5Swoop8BehaviorEv.cpp
 src/_ZN12WaterSuction8BehaviorEv.cpp
-src/_ZN9Submarine8BehaviorEv.cpp
+src/_ZN9Whirlpool8BehaviorEv.cpp
 src/_ZN6Bullet8BehaviorEv.cpp
 
 # ---- gate 2: THE REMAINING NINE OBJECT-FIELD ROWS, ONE PER OVERLAY --------
@@ -119,7 +119,7 @@ src/_ZN6Bullet8BehaviorEv.cpp
 #  _ZN7HeaveHo8BehaviorEv      077  0212624c..021271d4    10   02127a00..02127a50
 #  _ZN10KingBobOmb8Behavio..   078  02123740..021265f4    36   02126ce0..02126e00
 #  _ZN9LakituBro8BehaviorEv    085  0212d528..0212ed54    22   02130254..02130304
-#  _ZN5Stump8BehaviorEv        091  02133968..02134484     6   0213533c..0213536c
+#  _ZN6Fwoosh8BehaviorEv        091  02133968..02134484     6   0213533c..0213536c
 #  _ZN10HootTheOwl8Behavio..   094  02135700..02136798    10   021369c0..02136a10
 #                                                       ^ NOT TAKEN, see below
 #  _ZN14UnchainedChomp8Beh..   100  021431c4..021442d4     2   02147ff8..02148008
@@ -152,7 +152,7 @@ src/_ZN6Bullet8BehaviorEv.cpp
 # matched TU carries a WRONG-OVERLAY CROSSING: the ROM's own Behavior at
 # 0x02136478 calls 0x021357a4 at 0x021365fc, ov094 and ov096 share the base
 # 0x02135700, and src/_ZN10HootTheOwl8BehaviorEv.cpp spells that call
-# func_ov096_021357a4 -- an EIGHT-byte ov096 stub -- where the ROM reaches
+# _ZN9daSanbo_c13OnYoshiTryEatEv -- an EIGHT-byte ov096 stub -- where the ROM reaches
 # ov094's own 0x110-byte body. The host copy this row would have retired
 # spelled it func_ov094_021357a4 and was right. Seating the row therefore
 # RAISES the linkage count and makes the port call the wrong body, and it is
@@ -167,12 +167,17 @@ src/_ZN6Bullet8BehaviorEv.cpp
 # Five of the eight need a forwarder; Chuckya, Eyerok and ChiefChilly define the
 # flat extern "C" name themselves.
 src/_ZN7Chuckya8BehaviorEv.cpp
-src/_ZN6Eyerok8BehaviorEv.cpp
+# QUARANTINED at the main->port sync (origin/main 9c7f38a24): main folded this
+# class into one TU, and port/ host-copies bodies inside it (the slice_ov066 host copies).
+# port/CMakeLists.txt's own assertion refuses the pair, because taking both is a
+# duplicate symbol and taking the src one puts the host copy's reason back. The
+# row returns when the host copy covers the whole consolidated TU.
+#src/actors/Eyerok.cpp
 src/_ZN11ChiefChilly8BehaviorEv.cpp
 src/_ZN7HeaveHo8BehaviorEv.cpp
-src/_ZN10KingBobOmb8BehaviorEv.cpp
+src/actors/daBombking_c.cpp
 src/_ZN9LakituBro8BehaviorEv.cpp
-src/_ZN5Stump8BehaviorEv.cpp
+src/_ZN6Fwoosh8BehaviorEv.cpp
 src/_ZN14UnchainedChomp8BehaviorEv.cpp
 
 # ---- gate 3: THE FOUR ov006 FIELD-HELD ROWS -------------------------------
@@ -184,10 +189,10 @@ src/_ZN14UnchainedChomp8BehaviorEv.cpp
 # span of those bodies snapped out to the enclosing symbol boundaries.
 #
 #  row                    vtable      class code block        pairs  run
-#  func_ov006_02123340   0213fc7c   021225ac..021245a8       5   0213fbd0..0213fbf8
-#  func_ov006_020ee27c   0213cbe4   020edec0..020eeafc       7   0213cb4c..0213cb8c
-#  func_ov006_020ef3e0   0213ccfc   020eebe8..020efaf0       5   0213cc74..0213cca4
-#  func_ov006_020e7be8   0213c8c4   020e7660..020ea1f0      28   0213c6c4..0213c7bc
+#  _ZN18dScMgTrampoline2_c8BehaviorEv   0213fc7c   021225ac..021245a8       5   0213fbd0..0213fbf8
+#  _ZN11dScMgJump_c8BehaviorEv   0213cbe4   020edec0..020eeafc       7   0213cb4c..0213cb8c
+#  _ZN12dScMgJump2_c8BehaviorEv   0213ccfc   020eebe8..020efaf0       5   0213cc74..0213cca4
+#  _ZN15dMg3DEspModel_c8BehaviorEv   0213c8c4   020e7660..020ea1f0      28   0213c6c4..0213c7bc
 #
 # The first three CLOSE: every reference into the run comes from inside the
 # class's own block and each is one writer's literal pool, so nothing outside
@@ -199,8 +204,8 @@ src/_ZN14UnchainedChomp8BehaviorEv.cpp
 # reference into the run says which is which: SIX are loaded by the class's OWN
 # CODE and are exactly this field's records, the other 22 by
 # __sinit_ov006_02130a08 alone. THREE of the six hold code word 0x020e7fac and
-# two of those three are BY-VALUE SENTINELS (src/func_ov006_020e7be8.cpp reads
-# 0x0213c704, src/func_ov006_020e7b44.cpp reads 0x0213c744, and that TU is in
+# two of those three are BY-VALUE SENTINELS (src/_ZN15dMg3DEspModel_c8BehaviorEv.cpp reads
+# 0x0213c704, src/_ZN15dMg3DEspModel_c6RenderEv.cpp reads 0x0213c744, and that TU is in
 # the link through port/slice_fold2.txt), so this row is ONE FACE PER CODE WORD:
 # four faces, six records, and every comparison keeps comparing one host address
 # against itself.
@@ -214,11 +219,23 @@ src/_ZN14UnchainedChomp8BehaviorEv.cpp
 # All 23 source pairs read {code, 0} in the overlay image.
 #
 # THE TWO GUESS-MARKED BODIES ARE ALREADY ADJUDICATED, which is what PMFB6 could
-# not see: port/tools/inferred_stub_adjudicated.txt carries func_ov006_020ee27c
-# REAL_DECOMP (lane BNP) and func_ov006_020ef3e0 REAL_DECOMP (lane BNT), each
+# not see: port/tools/inferred_stub_adjudicated.txt carries _ZN11dScMgJump_c8BehaviorEv
+# REAL_DECOMP (lane BNP) and _ZN12dScMgJump2_c8BehaviorEv REAL_DECOMP (lane BNT), each
 # with instruction-for-instruction ROM evidence, and inferred_stub_guard admits
 # a symbol with that ruling. Nothing new is excused by this gate.
-src/func_ov006_020ef3e0.cpp
-src/func_ov006_020ee27c.cpp
-src/func_ov006_02123340.cpp
-src/func_ov006_020e7be8.cpp
+# QUARANTINED at the main->port sync (origin/main 9c7f38a24): this row is the raw
+# consolidated TU. slice_bnt.txt's BNT_HOSTGEN_SRCS substitutes a hostgen'd copy of
+# the WHOLE TU so its light-vector and matrix writes reach the geometry engine instead of
+# latching in the I/O window. Taking the raw copy as well would be a duplicate
+# symbol; taking it instead would put the defect back. The generated copy is in
+# this slice's target set, so the bodies still arrive.
+#src/minigames/d_s_mg_jump2.cpp
+src/_ZN11dScMgJump_c8BehaviorEv.cpp
+# QUARANTINED at the main->port sync (origin/main 9c7f38a24): this row is the raw
+# consolidated TU. slice_tte.txt's TTE_HOSTGEN_SRCS substitutes a hostgen'd copy of
+# the WHOLE TU so its geometry register writes reach the geometry engine instead of
+# latching in the I/O window. Taking the raw copy as well would be a duplicate
+# symbol; taking it instead would put the defect back. The generated copy is in
+# this slice's target set, so the bodies still arrive.
+#src/minigames/d_s_mg_trampoline2.cpp
+src/_ZN15dMg3DEspModel_c8BehaviorEv.cpp

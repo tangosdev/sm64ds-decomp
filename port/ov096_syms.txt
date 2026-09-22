@@ -18,14 +18,14 @@
 # 103 overlays and dsd never scores better). The base is proved, not assumed --
 # the first word of ten known functions is a plausible prologue:
 #
-#   0x02135700 _ZN5PokeyD1Ev                e92d4010  push {r4,lr}
-#   0x02135748 _ZN5PokeyD0Ev                e92d4010  push {r4,lr}
-#   0x02136ab0 _ZN5Pokey13InitResourcesEv   e92d4010  push {r4,lr}
-#   0x02136d10 PokeySegment_Spawn           e92d4010  push {r4,lr}
-#   0x02136d60 Pokey_Spawn                  e92d4010  push {r4,lr}
+#   0x02135700 _ZN9daSanbo_cD1Ev                e92d4010  push {r4,lr}
+#   0x02135748 _ZN9daSanbo_cD0Ev                e92d4010  push {r4,lr}
+#   0x02136ab0 _ZN9daSanbo_c13InitResourcesEv   e92d4010  push {r4,lr}
+#   0x02136d10 daSanbo_c_classInit_SANBO_BODY           e92d4010  push {r4,lr}
+#   0x02136d60 daSanbo_c_classInit_SANBO                  e92d4010  push {r4,lr}
 #   0x02136db0 _ZN7TornadoD1Ev              e92d4010  push {r4,lr}
 #   0x02137564 _ZN7Tornado13InitResourcesEv e92d4010  push {r4,lr}
-#   0x021376bc Tornado_Spawn                e92d4010  push {r4,lr}
+#   0x021376bc daTor_c_classInit                e92d4010  push {r4,lr}
 #   0x0213770c __sinit_ov096_0213770c       e92d4010  push {r4,lr}
 #   0x02137894 __sinit_ov096_02137894       e92d4000  push {lr}
 #
@@ -44,9 +44,9 @@
 # own .text.
 #
 #   id   SpawnInfo   table slot   word[0] spawnFunc               idhalf module
-#   240  0x02137998  0x02090c24   0x02136d60 Pokey_Spawn          0x00f0 (6,96)
-#   241  0x021379b4  0x02090c28   0x02136d10 PokeySegment_Spawn   0x00f1 (6,96)
-#   308  0x02137a6c  0x02090d34   0x021376bc Tornado_Spawn        0x0134 (6,96)
+#   240  0x02137998  0x02090c24   0x02136d60 daSanbo_c_classInit_SANBO          0x00f0 (6,96)
+#   241  0x021379b4  0x02090c28   0x02136d10 daSanbo_c_classInit_SANBO_BODY   0x00f1 (6,96)
+#   308  0x02137a6c  0x02090d34   0x021376bc daTor_c_classInit        0x0134 (6,96)
 #
 # (0x02090c24 - 0x02090864)/4 = 240, (0x02090c28 - ...)/4 = 241,
 # (0x02090d34 - ...)/4 = 308. Both routes agree on all three.
@@ -83,7 +83,7 @@
 # both dumps claim every address in the overlap.
 #
 # NO BRIDGE AND NO /alternatename IS NEEDED FOR ANY OF THE THREE: the two
-# mounts emit DIFFERENT C names (Pokey_SpawnInfo vs data_ov006_02137998, and so
+# mounts emit DIFFERENT C names (g_profile_SANBO vs data_ov006_02137998, and so
 # on) at different host storage, and both the registry and the two sinits reach
 # their records by C NAME, never by DS address. The ov077/ov080 0x02127848
 # ruling, applied to three live contests instead of one. The only aliases this
@@ -93,13 +93,13 @@
 # ==== POKEY_SEGMENT IS POKEY: ONE CLASS, TWO SPAWN ENTRY POINTS ============
 # The ov030 UKIKI_THIEF/UKIKI_STAR (267/268) shape, and it is proved three
 # ways rather than assumed from the shared name prefix:
-#   * src/Pokey_Spawn.c and src/PokeySegment_Spawn.c are IDENTICAL apart from
-#     their own names -- both allocate 944 bytes, call _ZN5ActorC2Ev, store
+#   * src/actors/daSanbo_c.cpp and src/actors/daSanbo_c.cpp are IDENTICAL apart from
+#     their own names -- both allocate 944 bytes, call _ZN8dActor_cC2Ev, store
 #     _ZTV5Pokey at p[0] and construct the same four members at the same four
 #     offsets (Model 0xd4, ShadowModel 0x124, MovingCylinderClsn 0x14c,
 #     WithMeshClsn 0x180);
 #   * the ROM agrees without the sources: the relocations at 0x02136d5c
-#     (PokeySegment_Spawn's pool) and 0x02136dac (Pokey_Spawn's pool) both read
+#     (daSanbo_c_classInit_SANBO_BODY's pool) and 0x02136dac (daSanbo_c_classInit_SANBO's pool) both read
 #     `to:0x021379d8`, the one table;
 #   * PokeySegment's OWN record's typeinfo word (0x021379d4) is 0x0213798c,
 #     POKEY's __si_class_type_info, whose name string reads "9daSanbo_c".
@@ -119,7 +119,7 @@
 # 30 == 0x020100dc Actor::OnAimedAtWithEggReturnVec is the last Actor slot, and
 # neither class is Platform-derived, so neither carries a 32nd. (Contrast
 # ov092, the other half of this lane, which IS Platform-derived and closes on
-# slot 31 = 0x020ee55c _ZN8Platform4KillEv.)
+# slot 31 = 0x020ee55c _ZN10dBgActor_c4KillEv.)
 #
 # ROUTE B LIES ON TORNADO. Its next dsd symbol is data_ov096_02137b20, the .bss
 # start, giving 0x90 = 36 slots. Slots 31 through 35 (0x02137b0c..0x02137b1c)
@@ -133,9 +133,9 @@
 # PMF source records sit at the very TOP of .data, 0x02137920..0x02137980,
 # before either name string, so neither vtable has anything behind it but the
 # next class's name string. The per-overlay .data layout is:
-#     [12 PMF source pairs][Pokey name][Pokey typeinfo][Pokey_SpawnInfo]
-#     [PokeySegment_SpawnInfo][_ZTV5Pokey][Tornado name][Tornado typeinfo]
-#     [Tornado_SpawnInfo][_ZTV7Tornado]
+#     [12 PMF source pairs][Pokey name][Pokey typeinfo][g_profile_SANBO]
+#     [g_profile_SANBO_BODY][_ZTV5Pokey][Tornado name][Tornado typeinfo]
+#     [g_profile_TORNADO][_ZTV7Tornado]
 #
 # Own bodies per class:
 #
@@ -147,9 +147,9 @@
 #   12    Pokey::OnPendingDestroy      0x02043ac0  arm9 ActorBase default
 #   16    PokeyD1                      TornadoD1
 #   17    PokeyD0                      TornadoD0
-#   18    func_ov096_021357a4          0x02010160  arm9 Actor default
-#   19    func_ov096_02136cd0          0x02010154  arm9 Actor default
-#   29    func_ov096_021357ac          0x02010124  arm9 Actor default
+#   18    _ZN9daSanbo_c13OnYoshiTryEatEv          0x02010160  arm9 Actor default
+#   19    _ZN9daSanbo_c13OnTurnIntoEggER6Player          0x02010154  arm9 Actor default
+#   29    _ZN9daSanbo_c16OnAimedAtWithEggEv          0x02010124  arm9 Actor default
 # Pokey takes the Lakitu/Spiny pattern (own 18, 19, 29 AND an own slot 12);
 # Tornado takes the HeaveHo pattern (defaults at 18, 19, 29 and at 12). Every
 # other slot is the shared Actor/ActorBase half, byte-identical between the two
@@ -166,9 +166,9 @@
 # So dsd's _ZTV5Pokey / _ZTV9daSanbo_c are two spellings of ONE table, and
 # _ZTV7Tornado / _ZTV7daTor_c likewise. Every install route agrees:
 #   _ZTV5Pokey    from 0x02135744 (D1 pool), 0x0213579c (D0 pool),
-#                      0x02136d5c (PokeySegment_Spawn), 0x02136dac (Pokey_Spawn)
+#                      0x02136d5c (daSanbo_c_classInit_SANBO_BODY), 0x02136dac (daSanbo_c_classInit_SANBO)
 #   _ZTV7Tornado  from 0x02136df4 (D1 pool), 0x02136e4c (D0 pool),
-#                      0x02137708 (Tornado_Spawn)
+#                      0x02137708 (daTor_c_classInit)
 # NO ov026-style identity swap in this overlay, checked table by table.
 # The SOURCES split the two spellings: both factories spell the C++ name, both
 # D0s spell the RTTI name. Two /alternatename bridges in the seat file cover
@@ -200,18 +200,18 @@
 #   the twelve 0x8 rows (7920 7928 7930 7938 7940 7948 7950 7958 7960 7968
 #                        7970 7978) are the PMF SOURCE records, {function, 0}
 #                        pairs, and every one is exactly 8 bytes in the ROM
-#   data_ov096_02137980  0xc   the RTTI name string "9daSanbo_c", 11 used
-#   data_ov096_0213798c  0xc   Pokey's three-word typeinfo record
-#   Pokey_SpawnInfo      0x1c  the record's TRUE width, and for once the
+#   _ZTS9daSanbo_c  0xc   the RTTI name string "9daSanbo_c", 11 used
+#   _ZTI9daSanbo_c  0xc   Pokey's three-word typeinfo record
+#   g_profile_SANBO      0x1c  the record's TRUE width, and for once the
 #                              inferred delta IS it -- PokeySegment's record
 #                              follows immediately, so nothing else folds in
-#   PokeySegment_SpawnInfo 0x24 the record's 0x1c plus the vtable object's pad
+#   g_profile_SANBO_BODY 0x24 the record's 0x1c plus the vtable object's pad
 #                              word (0x021379d0, zero) and _ZTV5Pokey's own
 #                              vtable[-1] typeinfo pointer (0x021379d4 ->
 #                              0x0213798c). See the note below.
-#   data_ov096_02137a54  0xc   the RTTI name string "7daTor_c", 9 used
-#   data_ov096_02137a60  0xc   Tornado's three-word typeinfo record
-#   Tornado_SpawnInfo    0x24  the same shape: 0x1c + pad + _ZTV7Tornado's
+#   _ZTS7daTor_c  0xc   the RTTI name string "7daTor_c", 9 used
+#   _ZTI7daTor_c  0xc   Tornado's three-word typeinfo record
+#   g_profile_TORNADO    0x24  the same shape: 0x1c + pad + _ZTV7Tornado's
 #                              vtable[-1] (0x02137a8c -> 0x02137a60)
 #   data_ov096_02137b20  0x8   SharedFilePtr (file 0x41b = 1051)
 #   data_ov096_02137b28  0x8   SharedFilePtr (file 0x41a = 1050)
@@ -240,15 +240,15 @@
 # shows the true 0x1c because a second record follows it rather than a table.
 # Both 0x24 rows are mounted UNPINNED, matching ov077's three landed records:
 # the pad word is zero and stays zero, the typeinfo word is a relocation into
-# data_ov096_0213798c / _02137a60 which this list ALSO mounts (so ovdata --pack
+# _ZTI9daSanbo_c / _02137a60 which this list ALSO mounts (so ovdata --pack
 # rebases it and ptr_audit still reads 0), and nothing on the host reads either
 # -- the host vtables are separate 31-element arrays and the ROM's vtable spans
 # are EXCLUDED, so there is no host object whose [-1] those words are.
 data_ov096_02137920 data_ov096_02137928 data_ov096_02137930 data_ov096_02137938
 data_ov096_02137940 data_ov096_02137948 data_ov096_02137950 data_ov096_02137958
 data_ov096_02137960 data_ov096_02137968 data_ov096_02137970 data_ov096_02137978
-data_ov096_02137980 data_ov096_0213798c Pokey_SpawnInfo PokeySegment_SpawnInfo
-data_ov096_02137a54 data_ov096_02137a60 Tornado_SpawnInfo
+_ZTS9daSanbo_c _ZTI9daSanbo_c g_profile_SANBO g_profile_SANBO_BODY
+_ZTS7daTor_c _ZTI7daTor_c g_profile_TORNADO
 data_ov096_02137b20 data_ov096_02137b28 data_ov096_02137b30 data_ov096_02137b3c
 data_ov096_02137b48 data_ov096_02137ba8 data_ov096_02137bb0 data_ov096_02137bb8
 data_ov096_02137bc4

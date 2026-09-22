@@ -93,6 +93,7 @@ import argparse
 import os
 import pathlib
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -110,6 +111,24 @@ REFUSED_SCALARS = {"float", "double", "__int64", "unsigned __int64"}
 # catches exactly what MSVC_METHOD now excludes. Deeper nestings
 # (?f@Inner@Outer@@...) match neither and fall to UNKNOWN, a safe refusal.
 MSVC_METHOD = re.compile(r"^\?(\w+)@(\w+)@@(?!Y)[A-Z]")
+# A STRUCTOR IS A MEMBER TOO, and MSVC_METHOD cannot see one: ??0Cls@@QAE@XZ
+# and ??1Cls@@UAE@XZ have no method-name component for it to match, so the
+# forward direction refused every one of them as "not a class-member mangle"
+# -- 34 rows of the sync wall, including ??0fBase_c@@QAE@XZ. parse_msvc_sig
+# has always reported the structor kind; only the gate was short.
+MSVC_STRUCTOR = re.compile(r"^\?\?([01])((?:\w+@)+)@[A-Z]")
+# A MEMBER OF A NESTED CLASS IS A MEMBER TOO, and MSVC_METHOD cannot see one
+# either: it allows exactly ONE qualifier component, so
+# ?SpawnParticles@splashCallback_c@level_c@dPa_c@@ and
+# ?OnUpdate@CleanParticleCallback@Particle@@ refused as "not a class-member
+# mangle" -- eleven rows of this wall, every one a real member of a class the
+# Itanium side parses happily (itanium_parse_ext has taken up to four name
+# components since lane FACES1). This is a SECOND expression rather than a
+# widening of the first, because MSVC_METHOD's group(2) is read as a bare class
+# name by build_universe and classify and a multi-component group there would be
+# a silent change to the legacy classification path. Only the FORWARD
+# direction's gate uses this one.
+MSVC_METHOD_Q = re.compile(r"^\?(\w+)@((?:\w+@)+)@(?!Y)[A-Z]")
 MSVC_NSFREE = re.compile(r"^\?(\w+)@(\w+)@@Y([A-Z])")
 MSVC_DATA = re.compile(r"^\?(\w+)@(?:(\w+)@)?@3(.+)$")
 MSVC_FREE = re.compile(r"^\?(\w+)@@Y([A-Z])")
@@ -123,6 +142,631 @@ ITANIUM = re.compile(r"^_?(_ZNK?\d.*)$")
 # principle, never seen on a wall, so not claimed), and anything this
 # expression has no opinion on.
 SAFE_DATA_TYPE = re.compile(r"^(?:[PQ][AB])*(?:[CDEFGHIJKMNX]|_[JKN])[A-D]$")
+
+
+# ---------------------------------------------------------------------------
+# THE RETURN WIDTH RULE (lane RETFIX, from lanes RETCONV and RETCONV2's
+# measurement of the shipped binary).
+#
+# THE DEFECT THIS CLOSES. The address binding's rule 3 below compares the class,
+# the method, the parameter count, the constness and the access/virtualness
+# letter, AND NEVER THE RETURN TYPE. That is fine for the BINDING itself --
+# MSVC puts the return type in the decorated name, so a name that joins at all
+# already agrees about it -- but it left the FACE carrying the target's
+# sub-register return type, and the face is what the flat callers read.
+#
+# A bool member is returned in AL ALONE. Player::IsState is the whole story:
+#
+#     004bb9c0  mov  eax, dword ptr [ecx + 0x370]   ; the CURRENT state pointer
+#               cmp  eax, dword ptr [ebp + 8]
+#               sete al                             ; ONLY AL is written
+#               ret  4
+#
+# and the face compiled from `bool _ZN6Player7IsStateERNS_5StateE(...)` forwards
+# that EAX untouched. The upper three bytes still hold a State pointer, which
+# lives around 0x017b7xxx and is therefore NEVER ZERO, so every caller whose own
+# declaration spells the flat name `int` reads `test eax,eax` as TRUE no matter
+# what the answer was. The flat name is extern "C", so its return type is not in
+# the symbol and the linker cannot see the disagreement: 77 declarations across
+# 54 files, and RETCONV2 hand-read 191 live wrong answers at 194 wide-read call
+# sites, ten of them inside ?Behavior@Player@@UAEHXZ, which runs every frame.
+#
+# WHY WIDENING IS THE ROM-FAITHFUL ANSWER AND NOT A HOST PATCH. The cartridge's
+# own body, recorded at include/Player.h:185, is
+#
+#     ldr r0,[r0,#0x370] / cmp r0,r1 / moveq r0,#1 / movne r0,#0
+#
+# The DS code DEFINES THE WHOLE REGISTER, 0 or 1. The single-byte answer is
+# something the PC rebuild introduced, so a face that widens moves toward the
+# cartridge, not away from it, which is what the port's north star asks for.
+#
+# WHERE THE WIDENING MAY AND MAY NOT GO. Only in a REVERSE face, whose body is
+# the qualified call and which is therefore the one place where AL is known good
+# and the upper bytes are known junk. Normalising anywhere ABOVE that is
+# actively harmful: five callers already run MSVC's neg/sbb/neg idiom over the
+# raw result and hand a tidy 1 downstream, which is how "is Mario diving"
+# answers yes to everything with no trace of where the lie began.
+#
+# A FORWARD face is the mirror and MUST NOT widen: it DEFINES the member and
+# calls the flat ROM body, which is defined elsewhere and writes only the narrow
+# part, so re-declaring that callee wider would invent the same defect pointing
+# the other way (dActor_c::HorzAngleToCPlayer and Player::GetHealth are the two
+# forward rows this ledger has). Structors and D0 faces return void and have
+# nothing to widen.
+#
+# The mapping is plain C integral promotion, so each row keeps its own
+# signedness: bool and unsigned char zero-extend (movzx), signed char and short
+# sign-extend (movsx). check_return_widths() refuses to ship a generated reverse
+# face that still declares a sub-register return type.
+NARROW_RETURNS = {
+    "bool": "int",
+    "char": "int",
+    "signed char": "int",
+    "unsigned char": "int",
+    "short": "int",
+    "unsigned short": "int",
+}
+
+
+def widened_return(r):
+    """The face's OWN return type when the target's is sub-register, else None.
+
+    Reverse faces only; see THE RETURN WIDTH RULE above for why a forward face,
+    a structor and a D0 face are all excluded.
+    """
+    if r.get("d0") or r.get("forward"):
+        return None
+    sig = r.get("sig")
+    if sig is None:
+        return None
+    if r["rec"]["meth"] in ("~", "~delete", "ctor"):
+        return None
+    return NARROW_RETURNS.get(sig["ret"])
+
+
+# ---------------------------------------------------------------------------
+# THE ADDRESS BINDING (lane FACES1, the main -> port sync's last link wall).
+#
+# THE RULE THAT MAKES A FACE HONEST: a face for flat name F binds F to exactly
+# the member the ROM name names, never a sibling. Three things have to agree
+# before a row is generated, and the row is REFUSED with the reason when any of
+# them does not:
+#
+#   1. F IS A ROM NAME AT A KNOWN ADDRESS. F must appear in config/**/symbols.txt
+#      with an addr:. A flat name with no ROM address is not a ROM function and
+#      no face can be derived for it.
+#   2. ONE ADDRESS PER TARGET. Every ROM symbol that would join the same MSVC
+#      definition is gathered, and their addresses must be ONE address. This is
+#      the mechanical form of method_faces.cpp's failure mode 1: ApproachLinear
+#      and ApproachLinear2 are two ROM bodies 140 lines apart, and a face that
+#      picked the wrong one shipped (signs spinning forever, 156 src TUs). The
+#      pair that makes this bite here is the destructor: _ZN1XD1Ev at one
+#      address and _ZN1XD2Ev at another BOTH demangle to X::~X, and MSVC has one
+#      ??1X@@UAE@XZ. Two addresses, one target, so both refuse.
+#   3. CLASS AND METHOD AGREE LITERALLY. undname is asked what the decorated
+#      definition really says, and its class and method text must equal the
+#      Itanium name's, component for component; its parameter count must equal
+#      the Itanium parameter count; its constness must match.
+#
+# THE RETURN TYPE IS NOT ONE OF THE THREE, and it never needed to be for the
+# BINDING: MSVC decorates the return type, so a decorated name that joins at all
+# already agrees about it. What it DOES decide is the shape of the face, and
+# that is THE RETURN WIDTH RULE above -- a sub-register return is widened in a
+# reverse face so the flat extern "C" name defines the whole register the way
+# the ROM's own body does. Before that rule, Player::IsState answered yes
+# unconditionally at 191 call sites.
+#
+# The structor kinds are keyed APART, because they are different ROM functions:
+#   D1, D2  -> "~"        the complete/base object destructor, no deallocation.
+#                         MSVC's ??1Cls@@ is exactly this.
+#   D0      -> "~delete"  the DELETING destructor. MSVC's is ??_GCls@@UAEPAXI@Z,
+#                         the scalar deleting destructor, which cannot be named
+#                         from C++ source at all -- and ??1 is its non-deleting
+#                         sibling, so binding D0 to ??1 would drop the free.
+#                         Always refused; the D0 half is the flat .c TU's job
+#                         (hal/dtor_faces_cpp.cpp's "WHAT IS NOT DONE" note).
+#   C1, C2, C3 -> "ctor"  MSVC has one ??0Cls@@ per signature; when the ROM has
+#                         C1 and C2 at different addresses rule 2 refuses both.
+STRUCTOR_KEY = {"C1": "ctor", "C2": "ctor", "C3": "ctor",
+                "D0": "~delete", "D1": "~", "D2": "~"}
+
+# THE OPERATOR TABLE, and it has exactly one row on purpose. An operator is a
+# member like any other at the ABI -- dBgPi::operator= is __thiscall with the
+# receiver in ecx and one reference argument, which is why lane HALROWS had to
+# refuse it an /alternatename and leave it for a face. What made it unreachable
+# was the NAME: the Itanium spelling is the two-letter code aS where a method
+# name would be, and MSVC's is ??4 where ??0 and ??1 sit. Both sides are
+# mechanical; what is not mechanical is CLAIMING an operator nothing has
+# measured, so the table carries the one this wall actually has and every other
+# operator still returns None with the old reason. Each entry is
+#   Itanium code -> (the C++ spelling undname prints, the MSVC prefix).
+ITANIUM_OPERATORS = {"aS": ("operator=", "??4")}
+
+# MSVC access/virtualness letters, member functions, near (A) code model.
+# The pair is what the shadow declaration has to reproduce: get either half
+# wrong and the emitted reference names a symbol nothing defines.
+MSVC_ACCESS = {
+    "A": ("private", False),   "B": ("private", False),
+    "E": ("private", True),    "F": ("private", True),
+    "I": ("protected", False), "J": ("protected", False),
+    "M": ("protected", True),  "N": ("protected", True),
+    "Q": ("public", False),    "R": ("public", False),
+    "U": ("public", True),     "V": ("public", True),
+}
+
+
+def decorated_access(sym):
+    """The (access, is_virtual) pair a decorated member name declares.
+
+    ?meth@Cls@@<letter>... and ??1Cls@@<letter>..., where <letter> is the
+    access/virtualness code. Returns None for anything that is not a member
+    function mangle.
+    """
+    m = re.match(r"^\?\?[0-9A-Z_]+(?:\w+@)+@([A-Z])[A-Z]", sym)
+    if not m:
+        m = re.match(r"^\?\w+(?:@\w+)+@@([A-Z])[A-Z]", sym)
+    if not m:
+        return None
+    return MSVC_ACCESS.get(m.group(1))
+
+
+def itanium_parse_ext(name):
+    """The extended demangler subset: what a sync face may be derived from.
+
+    Covers, beyond itanium_parse's two-component non-structor shape:
+      * ONE to FOUR name components, so a nested class or a class inside a
+        namespace (dScEntry_c::graphCallback_c::GraphCallback2,
+        dPa_c::level_c::callback_c::SpawnParticles) parses instead of
+        falling to UNKNOWN;
+      * structors, keyed by STRUCTOR_KEY above;
+      * method names that begin with an underscore (Heap::_Deallocate),
+        which itanium_parse rejected on meth[0].isalpha();
+      * the St abbreviation as a leading component, so _ZNSt9type_infoD1Ev
+        reads as std::type_info::~type_info and binds to ??1type_info@std@@;
+      * the operator names in ITANIUM_OPERATORS, which is operator= alone at
+        the moment: one row of this wall is dBgPi::operator=, and every other
+        operator still refuses rather than being claimed unmeasured.
+
+    Returns a dict, or None when the name is outside the subset (an operator
+    that is not in the table, _ZTV/_ZTI, template blocks in the NAME
+    components). Arity comes from itanium_arity and is -1 when that refuses.
+    """
+    m = re.match(r"^_ZN(K?)(St\d.*|\d.*)$", name)
+    if not m:
+        return None
+    is_const = m.group(1) == "K"
+    comps, rest = [], m.group(2)
+    if rest.startswith("St"):
+        # The ABI's one-letter abbreviation for the std namespace. It is a
+        # NAME component here rather than a substitution, so it is spelled out
+        # and everything downstream (msvc_prefix, cpp_qualified, rule 3's
+        # class comparison against undname) sees an ordinary component.
+        comps.append("std")
+        rest = rest[2:]
+    while rest and rest[0].isdigit():
+        n = re.match(r"(\d+)", rest)
+        length = int(n.group(1))
+        body = rest[n.end():n.end() + length]
+        if len(body) != length:
+            return None
+        comps.append(body)
+        rest = rest[n.end() + length:]
+    if not comps or len(comps) > 4:
+        return None
+    st = re.match(r"^([CD][0-3])E", rest)
+    if st:
+        tag = st.group(1)
+        key = STRUCTOR_KEY.get(tag)
+        if key is None:
+            return None
+        subs = subst_table(comps)
+        return {"comps": comps, "cls": list(comps), "meth": key,
+                "structor": tag, "const": is_const,
+                "pcls": itanium_param_classes(rest[st.end():], subs),
+                "arity": itanium_arity(rest[st.end():])}
+    op = re.match(r"^(%s)E" % "|".join(sorted(ITANIUM_OPERATORS)), rest)
+    if op and comps:
+        subs = subst_table(comps)
+        return {"comps": comps + [ITANIUM_OPERATORS[op.group(1)][0]],
+                "cls": list(comps),
+                "meth": ITANIUM_OPERATORS[op.group(1)][0],
+                "structor": None, "const": is_const,
+                "pcls": itanium_param_classes(rest[op.end():], subs),
+                "arity": itanium_arity(rest[op.end():])}
+    if not rest.startswith("E") or len(comps) < 2:
+        return None
+    meth = comps[-1]
+    if not (meth[0].isalpha() or meth[0] == "_"):
+        return None
+    subs = subst_table(comps[:-1])
+    return {"comps": comps, "cls": comps[:-1], "meth": meth,
+            "structor": None, "const": is_const,
+            "pcls": itanium_param_classes(rest[1:], subs),
+            "arity": itanium_arity(rest[1:])}
+
+
+def msvc_prefix(rec):
+    """The decorated-name prefix the Itanium record's target must carry.
+
+    MSVC writes a qualified name INNERMOST FIRST, so Outer::Inner::meth is
+    ?meth@Inner@Outer@@ -- the reverse of the Itanium component order.
+    """
+    qual = "".join(c + "@" for c in reversed(rec["cls"]))
+    if rec["meth"] == "ctor":
+        return "??0" + qual + "@"
+    if rec["meth"] == "~":
+        return "??1" + qual + "@"
+    for _code, (spelling, prefix) in ITANIUM_OPERATORS.items():
+        if rec["meth"] == spelling:
+            return prefix + qual + "@"
+    if rec["structor"]:
+        return None                     # "~delete": ??_G, not nameable
+    return "?" + rec["meth"] + "@" + qual + "@"
+
+
+def cpp_qualified(rec):
+    """Outer::Inner, the C++ spelling of the record's class."""
+    return "::".join(rec["cls"])
+
+
+_ROM_INDEX_CACHE = {}
+
+
+def rom_index(root):
+    """{ROM symbol: [(address, module)]} from every config/**/symbols.txt.
+
+    This is the ADDRESS half of the binding rule. Reading every symbols.txt
+    under config/ (arm9, itcm, dtcm and every overlay) is what lets rule 2
+    see a D1/D2 pair that lives in one overlay and a C1/C2 pair that lives
+    in another.
+    """
+    root = os.path.abspath(root)
+    if root in _ROM_INDEX_CACHE:
+        return _ROM_INDEX_CACHE[root]
+    idx = {}
+    cfg = os.path.join(root, "config")
+    if not os.path.isdir(cfg):
+        sys.exit("no config/ under %s: the address binding cannot be checked, "
+                 "and a face derived without it is a guess" % root)
+    pat = re.compile(r"^(\S+)\s+kind:(\S+)\s+addr:(0x[0-9a-fA-F]+)")
+    for dirpath, _dirs, files in os.walk(cfg):
+        if "symbols.txt" not in files:
+            continue
+        mod = os.path.relpath(dirpath, cfg).replace("\\", "/")
+        with open(os.path.join(dirpath, "symbols.txt"), encoding="utf-8",
+                  errors="replace") as fh:
+            for ln in fh:
+                m = pat.match(ln)
+                if m:
+                    idx.setdefault(m.group(1), []).append(
+                        (int(m.group(3), 16), mod))
+    if not idx:
+        sys.exit("config/ under %s holds no symbols.txt rows" % root)
+    _ROM_INDEX_CACHE[root] = idx
+    return idx
+
+
+_JOIN_CACHE = {}
+
+
+def rom_join_addresses(root):
+    """{(cls tuple, meth key): {address: [ROM names]}} over the whole ROM.
+
+    Rule 2's table. Built from the ROM index, not from the wall, because a
+    sibling that is ALREADY DEFINED in this link never appears on the wall
+    and would otherwise be invisible to the check.
+    """
+    root = os.path.abspath(root)
+    if root in _JOIN_CACHE:
+        return _JOIN_CACHE[root]
+    table = {}
+    for name, entries in rom_index(root).items():
+        rec = itanium_parse_ext(name)
+        if rec is None:
+            continue
+        key = (tuple(rec["cls"]), rec["meth"])
+        slot = table.setdefault(key, {})
+        for addr, _mod in entries:
+            slot.setdefault(addr, []).append(name)
+    _JOIN_CACHE[root] = table
+    return table
+
+
+# ---------------------------------------------------------------------------
+# THE D0 RULE (lane FACES2).
+#
+# MSVC's deleting destructor is ??_GCls@@UAEPAXI@Z, which C++ source cannot
+# name, so the address binding refuses every _ZN<Cls>D0Ev outright (rule 2
+# above) and the sync wall kept 356 of them. They are not judgment rows: lane
+# FACES1 measured all 356 against the ROM's own relocations and every one is
+# its D1 PLUS EXACTLY ONE CALL, to Memory::Deallocate(void *, Heap *) or to
+# Memory::operator_delete2(void *). So the D0 face is the D1 body followed by
+# that one call, and the only thing in it that is not a name is Deallocate's
+# second argument: a heap pointer each D0 body reads out of its OWN LITERAL
+# POOL. That pool word is RELOCATED, so config/**/relocs.txt says which symbol
+# it points at, per class. Getting it wrong is heap corruption, which is why it
+# is derived from the reloc row and never defaulted.
+#
+# WHAT IS CHECKED WHERE, and why the split.
+#   * At DERIVATION (a lane, once, with capstone and extracted/): the D0 body's
+#     whole instruction stream is diffed against its D1's, with pc-relative
+#     loads and branches resolved through the relocations, and the diff must be
+#     ONE contiguous insertion that makes exactly one call. A class whose D0
+#     differs from its D1 by anything else is REFUSED with the diff pasted.
+#     That check needs the ROM image, which is gitignored, so it cannot be the
+#     build's check.
+#   * At BUILD (this tool, every time): the same claim re-proved from
+#     config/**/relocs.txt alone, which IS checked in -- the D0's call
+#     relocations must be the D1's plus exactly one to the ledger's
+#     deallocator, and its load relocations the D1's plus, for Deallocate,
+#     exactly one, to the ledger's heap word. A ledger row whose ROM
+#     relocations stop saying that fails the build.
+
+_SPAN_CACHE = {}
+
+
+def rom_spans(root):
+    """{ROM symbol: [(address, module, size)]} for every config record.
+
+    rom_index drops the size because the address binding never needed it; the
+    D0 rule does, because its proof is over a body's own address RANGE.
+    """
+    root = os.path.abspath(root)
+    if root in _SPAN_CACHE:
+        return _SPAN_CACHE[root]
+    idx = {}
+    cfg = os.path.join(root, "config")
+    pat = re.compile(r"^(\S+)\s+kind:(\S+)\s+addr:(0x[0-9a-fA-F]+)")
+    for dirpath, _dirs, files in os.walk(cfg):
+        if "symbols.txt" not in files:
+            continue
+        mod = os.path.relpath(dirpath, cfg).replace("\\", "/")
+        with open(os.path.join(dirpath, "symbols.txt"), encoding="utf-8",
+                  errors="replace") as fh:
+            for ln in fh:
+                m = pat.match(ln)
+                if not m:
+                    continue
+                sm = re.search(r"size=(0x[0-9a-fA-F]+)", m.group(2))
+                idx.setdefault(m.group(1), []).append(
+                    (int(m.group(3), 16), mod,
+                     int(sm.group(1), 16) if sm else None))
+    _SPAN_CACHE[root] = idx
+    return idx
+
+
+_RELOC_CACHE = {}
+
+
+def rom_relocs(root):
+    """{module: sorted [(from, kind, to)]} from every config/**/relocs.txt."""
+    root = os.path.abspath(root)
+    if root in _RELOC_CACHE:
+        return _RELOC_CACHE[root]
+    out = {}
+    cfg = os.path.join(root, "config")
+    pat = re.compile(
+        r"^from:(0x[0-9a-fA-F]+)\s+kind:(\S+)\s+to:(0x[0-9a-fA-F]+)")
+    for dirpath, _dirs, files in os.walk(cfg):
+        if "relocs.txt" not in files:
+            continue
+        mod = os.path.relpath(dirpath, cfg).replace("\\", "/")
+        rows = []
+        with open(os.path.join(dirpath, "relocs.txt"), encoding="utf-8",
+                  errors="replace") as fh:
+            for ln in fh:
+                m = pat.match(ln)
+                if m:
+                    rows.append((int(m.group(1), 16), m.group(2),
+                                 int(m.group(3), 16)))
+        out[mod] = sorted(rows)
+    _RELOC_CACHE[root] = out
+    return out
+
+
+def _span_of(root, name):
+    """((address, module, size), None) for a uniquely placed, sized symbol."""
+    ents = rom_spans(root).get(name)
+    if not ents:
+        return None, "no ROM record for %s in config/**/symbols.txt" % name
+    if len(ents) > 1:
+        return None, ("%s is listed at %d ROM addresses (%s), so its body has "
+                      "no single span" % (name, len(ents),
+                                          ", ".join("0x%08x" % a
+                                                    for a, _m, _s in ents)))
+    addr, mod, size = ents[0]
+    if size is None:
+        return None, "the config record for %s carries no size" % name
+    return (addr, mod, size), None
+
+
+def _reloc_slice(root, mod, addr, size, kinds):
+    """The relocation targets of one body, sorted, for the named kinds."""
+    out = []
+    for frm, kind, to in rom_relocs(root).get(mod, ()):
+        if addr <= frm < addr + size and any(k in kind for k in kinds):
+            out.append(to)
+    return sorted(out)
+
+
+def _multiset_diff(a, b):
+    """(a minus b, b minus a) as multisets, order preserved."""
+    extra, missing = list(a), list(b)
+    for t in b:
+        if t in extra:
+            extra.remove(t)
+    for t in a:
+        if t in missing:
+            missing.remove(t)
+    return extra, missing
+
+
+def d0_reloc_proof(root, d0name, d1name, dealloc_addr, heap_addr):
+    """Re-prove 'D0 is D1 plus one deallocation' from the checked-in relocs.
+
+    Returns (info, None) or (None, reason). This is the BUILD-time half of the
+    D0 rule: no ROM image and no disassembler, only config/**/relocs.txt.
+    """
+    s0, why = _span_of(root, d0name)
+    if s0 is None:
+        return None, why
+    s1, why = _span_of(root, d1name)
+    if s1 is None:
+        return None, why
+    a0, m0, z0 = s0
+    a1, m1, z1 = s1
+    if m0 != m1:
+        return None, ("%s is in %s and %s in %s, so the pair is not one body "
+                      "plus a call" % (d0name, m0, d1name, m1))
+    extra, missing = _multiset_diff(
+        _reloc_slice(root, m0, a0, z0, ("call",)),
+        _reloc_slice(root, m1, a1, z1, ("call",)))
+    if missing:
+        return None, ("%s makes calls %s does not (%s), so the D0 is not the "
+                      "D1 plus a call"
+                      % (d1name, d0name,
+                         ", ".join("0x%08x" % t for t in missing)))
+    if extra != [dealloc_addr]:
+        return None, ("the calls %s makes beyond %s are %s, not the one "
+                      "deallocation at 0x%08x"
+                      % (d0name, d1name,
+                         ", ".join("0x%08x" % t for t in extra) or "none",
+                         dealloc_addr))
+    lextra, lmissing = _multiset_diff(
+        _reloc_slice(root, m0, a0, z0, ("load",)),
+        _reloc_slice(root, m1, a1, z1, ("load",)))
+    if lmissing:
+        return None, ("%s pools words %s does not (%s)"
+                      % (d1name, d0name,
+                         ", ".join("0x%08x" % t for t in lmissing)))
+    if heap_addr is None:
+        if lextra:
+            return None, ("operator_delete2 takes no heap, but %s pools %s "
+                          "beyond its D1"
+                          % (d0name, ", ".join("0x%08x" % t for t in lextra)))
+    elif lextra != [heap_addr]:
+        return None, ("the words %s pools beyond %s are %s, not the one heap "
+                      "pointer at 0x%08x"
+                      % (d0name, d1name,
+                         ", ".join("0x%08x" % t for t in lextra) or "none",
+                         heap_addr))
+    return {"addr": a0, "module": m0, "size": z0, "d1_addr": a1}, None
+
+
+# ---------------------------------------------------------------------------
+# THE STRUCTOR TWIN RULE (lane FACES3).
+#
+# Rule 2 refuses a flat name whose (class, method) key joins more than one ROM
+# address, because one decorated definition cannot be two different functions.
+# For an ordinary overload that is exactly right and it stays. For a STRUCTOR
+# PAIR it is a question about the ROM rather than about names: the Itanium ABI
+# emits D1 (complete object) and D2 (base object) as two symbols, and C1/C2
+# likewise, and for a class with no virtual bases the two are the SAME CODE
+# emitted twice. MSVC emits ONE destructor and one constructor. So the pair can
+# be bound to that one definition exactly when the two ROM bodies are PROVED to
+# be one body emitted twice, and it keeps refusing when they are not.
+#
+# That refusal is also the net for config/**/symbols.txt carrying a pair the
+# wrong way round (the Actor/ActorBase D1/D2 swap this tree has seen): an
+# identical pair cannot be swapped into a wrong answer, and a pair that is not
+# identical never binds.
+#
+# WHAT IS CHECKED WHERE, the same split the D0 rule uses.
+#   * At DERIVATION (a lane, once, with extracted/): the two bodies' BYTES are
+#     compared over the ROM image with every relocated word masked out, and the
+#     only difference allowed beyond that is an ARM B/BL word whose resolved
+#     target is the same in both -- a call that did not leave the delink unit
+#     encodes a different displacement from a different address and is the same
+#     call. Lane FACES3 ran that over the 28 pairs the sync wall asks for: 27
+#     are byte-identical bodies, and the one that is not (dCapEnemy_c, whose D1
+#     is in arm9 and whose D2 is in ov002) refuses on the first clause below.
+#   * At BUILD (this tool, every time): the same claim re-proved from the
+#     checked-in config alone -- one module, equal sizes, and relocations equal
+#     as body-relative (offset, kind, target) triples, so the two bodies
+#     reference the same things at the same places. A pair that stops saying
+#     that fails the build.
+
+
+def _reloc_triples(root, mod, addr, size):
+    """A body's relocations as sorted body-relative (offset, kind, target)."""
+    out = []
+    for frm, kind, to in rom_relocs(root).get(mod, ()):
+        if addr <= frm < addr + size:
+            out.append((frm - addr, kind, to))
+    return sorted(out)
+
+
+def structor_twin_proof(root, name_a, name_b):
+    """(True, None) when two ROM structor bodies are one body emitted twice."""
+    sa, why = _span_of(root, name_a)
+    if sa is None:
+        return False, why
+    sb, why = _span_of(root, name_b)
+    if sb is None:
+        return False, why
+    a_addr, a_mod, a_size = sa
+    b_addr, b_mod, b_size = sb
+    if a_mod != b_mod:
+        return False, ("%s is in %s and %s in %s, so they are not one body "
+                       "emitted twice" % (name_a, a_mod, name_b, b_mod))
+    if a_size != b_size:
+        return False, ("%s is 0x%x bytes and %s is 0x%x, so they are not one "
+                       "body emitted twice" % (name_a, a_size, name_b, b_size))
+    ra = _reloc_triples(root, a_mod, a_addr, a_size)
+    rb = _reloc_triples(root, b_mod, b_addr, b_size)
+    if ra != rb:
+        return False, ("%s and %s relocate differently (%s against %s), so "
+                       "they are not one body emitted twice"
+                       % (name_a, name_b,
+                          ["+0x%x %s 0x%08x" % t for t in ra],
+                          ["+0x%x %s 0x%08x" % t for t in rb]))
+    return True, None
+
+
+def itanium_stem(cls):
+    """Re-spell a parsed class path as the Itanium prefix it came from.
+
+    This is the inverse of itanium_parse_ext's component loop and it has to
+    honour the SAME abbreviation: the std namespace mangles as the two letters
+    St and never as 3std, so a class path whose first component is std has to
+    be spelled back that way or the reconstruction names a symbol that does not
+    exist. That is what made the structor twin rule refuse
+    _ZNSt9type_infoD1Ev: it rebuilt the stem as _ZN3std9type_info, compared it
+    against the ROM's real pair and reported a pair that was not a pair.
+    """
+    out = ""
+    for i, c in enumerate(cls):
+        if i == 0 and c == "std":
+            out += "St"
+        else:
+            out += "%d%s" % (len(c), c)
+    return "_ZN" + out
+
+
+def structor_twin_slot(root, rec, slot):
+    """(True, None) when a rule-2 slot is a provable C1/C2 or D1/D2 pair.
+
+    `slot` is rom_join_addresses' {address: [ROM names]} for one key. The pair
+    has to be exactly the two structor spellings of ONE class -- the same name
+    components, the same structor letter, the digits 1 and 2 -- before the ROM
+    proof is asked at all, so an overload or a third address never reaches it.
+    """
+    if rec["meth"] not in ("ctor", "~"):
+        return False, "the joined name is not a constructor or a destructor"
+    if len(slot) != 2:
+        return False, ("%d ROM addresses join it, and only a pair of structor "
+                       "siblings can be one body emitted twice" % len(slot))
+    names = sorted(n for a in slot for n in slot[a])
+    if len(names) != 2:
+        return False, ("the two addresses carry %d ROM names (%s)"
+                       % (len(names), ", ".join(names)))
+    letter = "C" if rec["meth"] == "ctor" else "D"
+    stem = itanium_stem(rec["cls"])
+    want = ["%s%s1Ev" % (stem, letter), "%s%s2Ev" % (stem, letter)]
+    if names != want:
+        return False, ("the pair is %s, not the %s1/%s2 siblings of one class"
+                       % (", ".join(names), letter, letter))
+    return structor_twin_proof(root, names[0], names[1])
 
 
 def member_ptr_typed(sym):
@@ -142,7 +786,7 @@ def member_ptr_typed(sym):
 # name parsing
 
 def itanium_parse(name):
-    """_ZN5Actor9UpdatePosEP12CylinderClsn -> (cls, meth, const, arity).
+    """_ZN8dActor_c9UpdatePosEP5dCc_c -> (cls, meth, const, arity).
 
     Returns None for anything outside the two-component non-structor shape:
     nested namespaces, ctors/dtors and operators are not face material.
@@ -170,6 +814,130 @@ def itanium_parse(name):
     if re.match(r"^[CD][0-3]$", meth) or not meth[0].isalpha():
         return None
     return cls, meth, is_const, itanium_arity(rest[1:])
+
+
+def subst_table(cls):
+    """The Itanium SUBSTITUTION list the leading nested-name pushes.
+
+    Mangling N<A><B>E pushes A, then A::B -- every PREFIX of the qualified
+    name, in that order -- and those are what S_, S0_, S1_ ... name in the
+    parameter list that follows. A member name's own METHOD component is not a
+    prefix and is never pushed, which is why Player::IsState's S_ is Player and
+    MemoryNode::Target's is MemoryNode (not Target: the parameter PS_ of
+    _ZN10MemoryNode6TargetC1EPS_ is a MemoryNode *, and the definition the ROM
+    address names spells it PAU1@, which is the same thing on the MSVC side).
+    """
+    out, acc = [], []
+    for c in cls:
+        acc.append(c)
+        out.append("::".join(acc))
+    return out
+
+
+def subst_index(tok):
+    """A substitution token -> its index into subst_table. None if unparsable.
+
+    S_ is the first entry, then S0_, S1_ ... S9_, SA_ ... SZ_ in base 36, which
+    is the ABI's own numbering. Anything else (the standard abbreviations Sa,
+    St and friends, which carry no trailing underscore) returns None and the
+    row refuses rather than guessing.
+    """
+    if len(tok) < 2 or tok[0] != "S" or tok[-1] != "_":
+        return None
+    body = tok[1:-1]
+    if body == "":
+        return 0
+    n = 0
+    for ch in body:
+        if ch.isdigit():
+            n = n * 36 + int(ch)
+        elif ch.isupper():
+            n = n * 36 + (ord(ch) - ord("A") + 10)
+        else:
+            return None
+    return n + 1
+
+
+def itanium_param_classes(params, subs=()):
+    """The CLASS NAME of each argument in an Itanium parameter list.
+
+    A scalar argument contributes None and a class-typed one its innermost
+    class name, so `R9dBgCh_Lin` reads as ["dBgCh_Lin"] and `jj` as
+    [None, None]. Returns None when the list is outside the counted subset.
+    This is what lets the address binding tell two ROM OVERLOADS apart: they
+    join one (class, method) key and differ only here.
+
+    `subs` is subst_table() of the name's own class, so a parameter spelled as
+    a BACK-REFERENCE resolves instead of poisoning the whole list. Three rows
+    of this wall are that shape and no other: PS_ in
+    _ZN10MemoryNode6TargetC1EPS_, RKS_ in _ZN5dBgPiaSERKS_ and the nested
+    NS_5StateE in _ZN6Player7IsStateERNS_5StateE. A substitution the table
+    cannot answer still returns None.
+    """
+    if params == "v":
+        return []
+    out, i = [], 0
+    while i < len(params):
+        c = params[i]
+        if c in "PRK":
+            i += 1
+            continue
+        if c.isdigit():
+            m = re.match(r"(\d+)", params[i:])
+            length = int(m.group(1))
+            name = params[i + m.end():i + m.end() + length]
+            if len(name) != length:
+                return None
+            i += m.end() + length
+            if i < len(params) and params[i] == "I":
+                return None          # a template block: outside the subset
+            out.append(name)
+            continue
+        if c == "S":
+            j = params.find("_", i)
+            if j < 0:
+                return None          # a standard abbreviation, not a back-ref
+            k = subst_index(params[i:j + 1])
+            if k is None or k >= len(subs):
+                return None
+            out.append(subs[k].split("::")[-1])
+            i = j + 1
+            continue
+        if c == "N":
+            depth, i, comps = 1, i + 1, []
+            while i < len(params) and depth:
+                if params[i] == "E":
+                    depth -= 1
+                    i += 1
+                    continue
+                if params[i] == "S":
+                    # A nested name whose PREFIX is a back-reference:
+                    # NS_5StateE is Player::State inside Player's own members.
+                    j = params.find("_", i)
+                    if j < 0:
+                        return None
+                    k = subst_index(params[i:j + 1])
+                    if k is None or k >= len(subs):
+                        return None
+                    comps += subs[k].split("::")
+                    i = j + 1
+                    continue
+                m = re.match(r"(\d+)", params[i:])
+                if not m:
+                    return None
+                length = int(m.group(1))
+                comps.append(params[i + m.end():i + m.end() + length])
+                i += m.end() + length
+            if depth or not comps:
+                return None
+            out.append(comps[-1])
+            continue
+        if c in "abcdefghijlmnostuvwxyz":
+            i += 1
+            out.append(None)
+            continue
+        return None
+    return out
 
 
 def itanium_arity(params):
@@ -202,6 +970,20 @@ def itanium_arity(params):
             i = j + 1
             n += 1
             continue
+        if c == "N":
+            # A nested-name type, N<components>E: Particle::System spelled as
+            # N8Particle6SystemE. One argument, however many components.
+            # Added by lane FACES1 so a parameter whose TYPE is a nested class
+            # counts instead of poisoning the whole row's arity with -1.
+            depth, i = 1, i + 1
+            while i < len(params) and depth:
+                if params[i] == "E":
+                    depth -= 1
+                i += 1
+            if depth:
+                return -1
+            n += 1
+            continue
         if c in "abcdefghijlmnostuvwxyz":
             i += 1
             n += 1
@@ -210,22 +992,256 @@ def itanium_arity(params):
     return n
 
 
+_UNDNAME_EXE = []
+_UNDNAME_TRIED = []
+
+# bin\Host<host>\<arch>, newest toolset first. undname is a pure text tool --
+# it reads a decorated name and prints the C++ spelling -- so ANY of the four
+# cross combinations answers identically; the order is only which one is
+# likeliest to be installed. Hostx64 comes second because a 64-bit-only VC
+# workload has no Hostx86 tree at all, and this tool never runs the compiler.
+_UNDNAME_BINS = (("Hostx86", "x86"), ("Hostx64", "x64"),
+                 ("Hostx64", "x86"), ("Hostx86", "x64"))
+
+
+def _undname_in_toolset(toolset):
+    """undname.exe directly under one ...\\Tools\\MSVC\\<ver> directory.
+
+    The four named combinations first because they are one stat each, then a
+    walk of bin\\ as the answer to "what if a future toolset arranges its host
+    directories differently". The walk is over a few hundred files and only
+    ever runs on a toolset where the named layout already missed, so the fast
+    path stays fast and the layout is not a thing this tool has to be right
+    about.
+    """
+    for host, arch in _UNDNAME_BINS:
+        cand = os.path.join(toolset, "bin", host, arch, "undname.exe")
+        _UNDNAME_TRIED.append(cand)
+        if os.path.exists(cand):
+            return cand
+    binroot = os.path.join(toolset, "bin")
+    if os.path.isdir(binroot):
+        for base, _dirs, files in os.walk(binroot):
+            for name in files:
+                if name.lower() == "undname.exe":
+                    found = os.path.join(base, name)
+                    _UNDNAME_TRIED.append(found + "  (found by walking bin)")
+                    return found
+        _UNDNAME_TRIED.append(binroot + "  (walked, no undname.exe)")
+    return None
+
+
+def _undname_under_vc(vcroot):
+    """undname.exe under a ...\\VC directory, newest toolset first."""
+    tools = os.path.join(vcroot, "Tools", "MSVC")
+    if not os.path.isdir(tools):
+        _UNDNAME_TRIED.append(tools + "  (no such directory)")
+        return None
+    try:
+        versions = sorted(os.listdir(tools), reverse=True)
+    except OSError as exc:
+        _UNDNAME_TRIED.append("%s  (%s)" % (tools, exc))
+        return None
+    for ver in versions:
+        found = _undname_in_toolset(os.path.join(tools, ver))
+        if found:
+            return found
+    return None
+
+
+def _vs_installs():
+    """Every Visual Studio installation path vswhere reports.
+
+    The same discovery port/build-port.cmd and the Configure steps of
+    .github/workflows/port-linkage.yml use for cl.exe. vswhere itself is the
+    one fixed path Microsoft promises across versions -- it has lived in
+    %ProgramFiles(x86)%\\Microsoft Visual Studio\\Installer since 2017 -- and
+    everything else about where VS puts itself is a moving target.
+    """
+    seen, out = set(), []
+    for pf in (os.environ.get("ProgramFiles(x86)", r"C:\Program Files (x86)"),
+               os.environ.get("ProgramFiles", r"C:\Program Files")):
+        exe = os.path.join(pf, "Microsoft Visual Studio", "Installer",
+                           "vswhere.exe")
+        if not os.path.exists(exe):
+            _UNDNAME_TRIED.append(exe + "  (no vswhere here)")
+            continue
+        for extra in (["-requires",
+                       "Microsoft.VisualStudio.Component.VC.Tools.x86.x64"],
+                      ["-prerelease"]):
+            try:
+                res = subprocess.run(
+                    [exe, "-latest", "-products", "*"] + extra +
+                    ["-property", "installationPath"], capture_output=True)
+            except OSError as exc:
+                _UNDNAME_TRIED.append("%s  (%s)" % (exe, exc))
+                continue
+            for line in res.stdout.decode("latin-1", "replace").splitlines():
+                line = line.strip()
+                if line and line not in seen:
+                    seen.add(line)
+                    out.append(line)
+        _UNDNAME_TRIED.append(
+            "%s  ->  %s" % (exe, ", ".join(out) if out
+                            else "(vswhere reported no installation)"))
+        break
+    return out
+
+
+def find_undname():
+    """The absolute path of undname.exe, or None.
+
+    WHY NOT JUST CALL VCVARS. undname needs nothing but its own directory,
+    and calling vcvars32.bat to put it on PATH costs TWO MINUTES on this box
+    (vswhere is missing here, so the batch takes its slow path). The sync
+    ledger asks about more than a thousand symbols on every regeneration, and
+    two minutes of batch file per build is two minutes nobody gets back.
+    Measured: 127s for ONE undname call through vcvars, under a second for
+    1385 through the direct path. The vcvars route stays as the fallback.
+
+    WHY closure.find_vcvars IS LAST NOW, NOT FIRST (lane CIPORT1, 2026-09-19).
+    closure.VCVARS_CANDIDATES is four fixed paths, all of them
+    %ProgramFiles(x86)%\\Microsoft Visual Studio\\2022\\<edition>. GitHub's
+    windows-latest image ships Visual Studio 18 at
+    C:\\Program Files\\Microsoft Visual Studio\\18\\Enterprise -- a different
+    version folder AND the other Program Files -- so all four miss, this
+    returned None, undname_batch's fallback asked the same function and got
+    None again, and every decorated definition came back with no class, no
+    method, no parameter list and no constness. facegen --sync then refused
+    all 1926 ledger rows on the runner while the same tree derived all 1926
+    here. Run 35463216993's linkage job is the measurement: 1757 "undname
+    produced nothing" refusals, plus nine dBgW/dBgW_KcMbg/dBgW_KcMbgSclY
+    DetectClsn rule-2 rows, which are the SAME outage reaching pick_by_params
+    -- with no parameter lists to read, "0 of the 3 MSVC definitions take
+    (dBgCh_Gnd)" is true of every overload trio. So the search is the one the
+    build scripts already use for cl.exe (vswhere), plus the environment
+    vcvars itself exports, and the fixed 2022 list stays as the last resort.
+
+    THE RULE IS STILL THE RULE. Nothing here relaxes a refusal: every row
+    still has to pass the three checks of THE ADDRESS BINDING. This only
+    restores the tool those checks read their evidence from.
+    """
+    if _UNDNAME_EXE:
+        return _UNDNAME_EXE[0]
+    found = None
+
+    # 1. An explicit answer, for a future image move that outruns this list.
+    override = os.environ.get("SM64DS_UNDNAME")
+    if override:
+        _UNDNAME_TRIED.append("$SM64DS_UNDNAME=" + override)
+        if os.path.exists(override):
+            found = override
+
+    # 2. The toolset vcvars already selected, when this runs inside one. The
+    #    port-linkage build step is exactly that shell.
+    if not found:
+        toolset = os.environ.get("VCToolsInstallDir")
+        if toolset:
+            found = _undname_in_toolset(toolset.rstrip("\\/"))
+
+    # 3. PATH, same reason.
+    if not found:
+        onpath = shutil.which("undname")
+        _UNDNAME_TRIED.append("PATH:undname.exe" +
+                              ("" if onpath else "  (not on PATH)"))
+        if onpath:
+            found = onpath
+
+    # 4. vswhere, version-agnostic.
+    if not found:
+        for install in _vs_installs():
+            found = _undname_under_vc(os.path.join(install, "VC"))
+            if found:
+                break
+
+    # 5. The install the workflow's Configure step already discovered and
+    #    exported through GITHUB_ENV.
+    if not found:
+        vsinstall = os.environ.get("VSINSTALL")
+        if vsinstall:
+            found = _undname_under_vc(os.path.join(vsinstall, "VC"))
+
+    # 6. The fixed VS2022 list, which is what this box has.
+    if not found:
+        vcvars = closure.find_vcvars()
+        if vcvars:
+            found = _undname_under_vc(os.path.dirname(os.path.dirname(
+                os.path.dirname(os.path.abspath(vcvars)))))     # ...\VC
+        else:
+            _UNDNAME_TRIED.append(
+                "closure.find_vcvars(): none of %d fixed VS2022 paths exist"
+                % len(closure.VCVARS_CANDIDATES))
+
+    _UNDNAME_EXE.append(found)
+    return found
+
+
+def no_undname(exe):
+    """Stop, naming the missing tool, instead of refusing every row.
+
+    A silent {} from undname_batch is indistinguishable at the row level from
+    a thousand genuine binding failures, and that is how run 34771733335 read
+    for five days: 1512 honest-looking refusals whose real content was "the
+    demangler did not run". The refusals are still refusals when undname
+    answers and the answer disagrees; this is the case where it never spoke.
+    """
+    where = "\n".join("    " + p for p in _UNDNAME_TRIED) or "    (nowhere)"
+    sys.exit(
+        "facegen: undname.exe is not reachable%s.\n"
+        "Without it no decorated definition's class, method, parameter list "
+        "or\nconstness can be read, so every ledger row would refuse and the "
+        "faces\nwould silently leave the link. That is a missing tool, not a "
+        "binding\nfailure, and it is reported as one.\n"
+        "Install the VC x86 tools, run this inside vcvars32, or point\n"
+        "SM64DS_UNDNAME at undname.exe. Searched:\n%s"
+        % (" (found at %s, but it produced nothing)" % exe if exe else "",
+           where))
+
+
 def undname_batch(symbols):
     """{decorated: undecorated} via the toolchain's own undname.exe."""
     if not symbols:
         return {}
+    exe = find_undname()
+    if exe:
+        direct = _undname_direct(exe, symbols)
+        if direct:
+            return direct
+        # Found but mute: a toolset whose undname prints another shape, or one
+        # that cannot start. Try the slow route rather than report every row
+        # as unbindable on the strength of a tool that said nothing at all.
     vcvars = closure.find_vcvars()
     if vcvars is None:
-        return {}
+        no_undname(exe)
     with tempfile.TemporaryDirectory() as td:
         runner = pathlib.Path(td) / "und.cmd"
         outp = pathlib.Path(td) / "und.txt"
         lines = ["@echo off", 'call "%s" >nul' % vcvars]
-        for s in symbols:
-            lines.append('undname "%s" >> "%s"' % (s, outp))
+        # undname takes MANY symbols per invocation, and the sync ledger asks
+        # about more than a thousand. One process per symbol measured over two
+        # minutes for 1385 rows, on every build; chunked onto one command line
+        # (well under cmd's 8191-character limit) it is a handful of spawns.
+        chunk, width = [], 0
+        for sym in symbols:
+            piece = ' "%s"' % sym
+            if chunk and width + len(piece) > 6000:
+                lines.append('undname%s >> "%s"' % ("".join(chunk), outp))
+                chunk, width = [], 0
+            chunk.append(piece)
+            width += len(piece)
+        if chunk:
+            lines.append('undname%s >> "%s"' % ("".join(chunk), outp))
         runner.write_text("\r\n".join(lines) + "\r\n")
         subprocess.run(["cmd", "/c", str(runner)], capture_output=True)
         text = outp.read_text(errors="replace") if outp.exists() else ""
+    parsed = _undname_parse(text)
+    if not parsed:
+        _UNDNAME_TRIED.append("vcvars route: " + vcvars + "  (no output)")
+        no_undname(exe)
+    return parsed
+
+
+def _undname_parse(text):
     result, key = {}, None
     for line in text.splitlines():
         m = re.match(r'Undecoration of :- "(.+)"', line)
@@ -238,9 +1254,37 @@ def undname_batch(symbols):
     return result
 
 
+def _undname_direct(exe, symbols):
+    """undname.exe called straight, many symbols per invocation.
+
+    The command line is capped well under Windows' 32k so a long ledger runs
+    in a handful of spawns instead of one per symbol.
+    """
+    out = {}
+    chunk, width = [], 0
+    for sym in list(symbols) + [None]:
+        piece = None if sym is None else sym
+        if piece is None or (chunk and width + len(piece) + 3 > 24000):
+            res = subprocess.run([exe] + chunk, capture_output=True)
+            out.update(_undname_parse(
+                res.stdout.decode("latin-1", errors="replace")))
+            chunk, width = [], 0
+        if piece is not None:
+            chunk.append(piece)
+            width += len(piece) + 3
+    return out
+
+
+# The access specifier is CAPTURED, not skipped. MSVC puts it in the mangle
+# (Q public / A private / I protected non-virtual, U public / E private /
+# M protected virtual), so ?InitResources@X@@QAEHXZ and ?InitResources@X@@UAEHXZ
+# are DIFFERENT SYMBOLS. A shadow declaration that gets either half wrong emits
+# a reference to a name nothing defines, and the row comes back as a fresh
+# unresolved external with no hint of why. See faces_sync.txt's header.
 SIG = re.compile(
-    r"^(?:public|protected|private): "
-    r"(virtual )?(.+?)__thiscall (\w+)::(\w+)\((.*)\)(const )?\s*$")
+    r"^(public|protected|private): "
+    r"(virtual )?(.*?)__thiscall ([\w:]+)::(operator=|~?\w+)\((.*)\)"
+    r"(const )?\s*$")
 
 
 def parse_param(text):
@@ -254,19 +1298,37 @@ def parse_param(text):
     if "<" in t or "(" in t:
         return None
     is_const = False
-    m = re.match(r"^(?:struct|class) (\w+) (const )?([*&])$", t)
+    # A QUALIFIED class name (Particle::System, dPa_c::level_c::callback_c) is
+    # a class like any other at the ABI: the face takes a pointer either way.
+    # What it needs beyond a plain name is a nested DECLARATION rather than a
+    # bare `struct X;`, which emit_sync does from the same spelling.
+    # A CLASS-SPELLED TYPE IS NOT A STRUCT-SPELLED ONE. MSVC mangles a class
+    # as V and a struct as U, and every shadow this tool writes is a struct,
+    # so a `class X *` parameter comes out as PAUX@@ against the definition's
+    # PAVX@@ -- a face that names a symbol nothing defines. Nothing but
+    # --verify's surface check ever caught it, and only after a compile. It is
+    # a refusal here instead, with its reason, until a lane rules on giving
+    # shadows a keyword and on what to do when two rows disagree about one
+    # class. The old regexes accepted class and struct alike and dropped the
+    # word.
+    m = re.match(r"^(?:const )?(struct|class) ([\w:]+) (const )?([*&])$", t)
     if m:
-        cls, is_const = m.group(1), bool(m.group(2))
-        kind = "ptr" if m.group(3) == "*" else "ref"
-        return (kind, cls, is_const)
-    m = re.match(r"^(?:const )?(?:struct|class) (\w+) ([*&])$", t)
-    if m:
-        return ("ptr" if m.group(2) == "*" else "ref", m.group(1),
-                t.startswith("const "))
+        if m.group(1) == "class":
+            return None
+        kind = "ptr" if m.group(4) == "*" else "ref"
+        return (kind, m.group(2),
+                bool(m.group(3)) or t.startswith("const "))
     if t in SCALARS:
         return ("scalar", t, False)
     if t in ("void *", "void const *", "const void *"):
         return ("ptr", "void", "const" in t)
+    # A REFERENCE TO A SCALAR (short &, signed char &) is a pointer at the
+    # ABI, so the flat caller pushes an address and the face passes *(T *)a.
+    # It is spelled as a 'ref' whose name is the scalar, which is what tells
+    # the emitter not to forward-declare a struct called `short`.
+    m = re.match(r"^(const )?(.+) &$", t)
+    if m and m.group(2).strip() in SCALARS:
+        return ("ref", m.group(2).strip(), bool(m.group(1)))
     return None
 
 
@@ -279,8 +1341,15 @@ def parse_msvc_sig(und):
         if "__thiscall" not in und:
             return "not __thiscall"
         return "unparsed signature"
-    virtual, ret, cls, meth, params, constness = m.groups()
+    access, virtual, ret, cls, meth, params, constness = m.groups()
     ret = ret.strip()
+    structor = None
+    if meth.startswith("~"):
+        structor = "dtor"
+    elif cls.split("::")[-1] == meth:
+        structor = "ctor"
+    if structor and not ret:
+        ret = "void"
     if ret in REFUSED_SCALARS or "<" in ret:
         return "refused return type %r" % ret
     if ret not in SCALARS and ret != "void":
@@ -297,12 +1366,18 @@ def parse_msvc_sig(und):
         for p in params.split(","):
             parsed = parse_param(p)
             if parsed is None:
+                if re.match(r"^\s*(?:const )?class\b", p):
+                    return ("refused param %r: a class-spelled type mangles V "
+                            "where this file's struct shadows mangle U, so the "
+                            "face would name a symbol nothing defines"
+                            % p.strip())
                 return "refused param %r" % p.strip()
             if parsed[0] == "scalar" and parsed[1] in REFUSED_SCALARS:
                 return "refused param %r" % p.strip()
             plist.append(parsed)
-    return {"virtual": bool(virtual), "ret": ret, "cls": cls, "meth": meth,
-            "params": plist, "const": bool(constness)}
+    return {"virtual": bool(virtual), "access": access, "ret": ret,
+            "cls": cls, "meth": meth, "params": plist,
+            "const": bool(constness), "structor": structor}
 
 
 # ---------------------------------------------------------------------------
@@ -639,6 +1714,1438 @@ def report(rows):
 
 # ---------------------------------------------------------------------------
 
+MSVC_QUAL = re.compile(r"^\?\?([01])((?:\w+@)+)@[A-Z]")
+# The operator mangles, keyed by the same ??<code> shape as the structors.
+MSVC_OPER = re.compile(r"^\?\?([2-9A-Z_])((?:\w+@)+)@[A-Z]")
+MSVC_OPER_KEY = dict((prefix[2:], spelling)
+                     for spelling, prefix in ITANIUM_OPERATORS.values())
+MSVC_MEM = re.compile(r"^\?(\w+)@((?:\w+@)+)@[A-Z]")
+
+
+def comps_head(cls):
+    """The innermost class name of a `Outer::Inner` spelling."""
+    return cls.split("::")[-1]
+
+
+def msvc_member_index(defined):
+    """{(class components outermost-first, method key): [decorated names]}.
+
+    The same key shape itanium_parse_ext produces, so the two sides join on
+    equal keys rather than on a string prefix. MSVC writes a qualified name
+    innermost first, so the components are reversed back here.
+    """
+    idx = {}
+    for raw in defined:
+        if not raw.startswith("?"):
+            continue
+        m = MSVC_QUAL.match(raw)
+        mo = None if m else MSVC_OPER.match(raw)
+        if m:
+            meth = "ctor" if m.group(1) == "0" else "~"
+            quals = m.group(2).rstrip("@").split("@")
+        elif mo and mo.group(1) in MSVC_OPER_KEY:
+            meth = MSVC_OPER_KEY[mo.group(1)]
+            quals = mo.group(2).rstrip("@").split("@")
+        else:
+            m = MSVC_MEM.match(raw)
+            if not m:
+                continue
+            meth = m.group(1)
+            quals = m.group(2).rstrip("@").split("@")
+        idx.setdefault((tuple(reversed(quals)), meth), []).append(raw)
+    return idx
+
+
+def _msvc_param_classes(sig):
+    """The class name of each MSVC parameter, None for a scalar or void."""
+    out = []
+    for kind, name, _c in sig["params"]:
+        out.append(None if kind == "scalar" or name == "void"
+                   or name in SCALARS else name)
+    return out
+
+
+def pick_by_params(root, rec, ident, slot, cands, und=None):
+    """Tell two OVERLOADS apart by their parameter types.
+
+    Returns (the one decorated name, None) or (None, the reason).
+
+    THE SHAPE THIS ANSWERS. Rule 2's join key is (class, method) and drops the
+    parameter list, so the three ROM overloads of dBgW_KcMbg::DetectClsn land
+    on one key and every one of them refused as a plausible sibling. They are
+    not siblings in the dangerous sense: each ROM name spells its own parameter
+    types, each MSVC definition spells the same types its own way, and the two
+    spellings JOIN. What makes this safe rather than clever is that it refuses
+    on every kind of doubt:
+
+      * every ROM name in the join must parse into a parameter type list, and
+        those lists must be pairwise DISTINCT -- two overloads differing only
+        in a scalar type (f(int) against f(short)) are indistinguishable here
+        and are refused, never guessed;
+      * exactly one of them must be THIS row's own name;
+      * exactly one MSVC candidate's parameter class names must equal it.
+
+    A structor never reaches this: C1/C2 and D1/D2 carry the same parameter
+    list by construction, which is the structor twin rule's question instead.
+    """
+    want = rec.get("pcls")
+    if want is None:
+        return None, ("the Itanium parameter list of %s is outside the "
+                      "counted subset, so the overloads cannot be told apart"
+                      % ident)
+    seen = {}
+    for a in slot:
+        for name in slot[a]:
+            r = itanium_parse_ext(name)
+            pc = r.get("pcls") if r else None
+            if pc is None:
+                return None, ("%s in the same join has a parameter list "
+                              "outside the counted subset, so the overloads "
+                              "cannot be told apart" % name)
+            kpc = tuple(pc)
+            if kpc in seen:
+                return None, ("%s and %s take the same parameter CLASSES "
+                              "(%s), so the ROM names do not tell the "
+                              "overloads apart"
+                              % (seen[kpc], name,
+                                 ", ".join(x or "scalar" for x in pc)
+                                 or "none"))
+            seen[kpc] = name
+    if seen.get(tuple(want)) != ident:
+        return None, ("%s is not the name its own parameter list picks out of "
+                      "the join" % ident)
+    if und is None:
+        und = undname_batch(list(cands))
+    hits = []
+    for c in cands:
+        text = und.get(c)
+        if not text:
+            continue
+        sig = parse_msvc_sig(text)
+        if isinstance(sig, str):
+            continue
+        if _msvc_param_classes(sig) == want:
+            hits.append(c)
+    if len(hits) != 1:
+        return None, ("%d of the %d MSVC definitions take (%s), so the "
+                      "parameter types do not pick one (%s)"
+                      % (len(hits), len(cands),
+                         ", ".join(x or "scalar" for x in want) or "none",
+                         ", ".join(sorted(cands))))
+    return hits[0], None
+
+
+# THE SHADOW RULE (lane HALROWS, wave 9b; out/HALROWS/settled.txt section A).
+#
+# Rule 2 refuses a flat name whose class::method has SEVERAL MSVC definitions
+# in the link, because one ROM address cannot be two bodies. That is right for
+# an overload and wrong for the commonest shape on this wall: a port host file
+# in port/hal or port/unmatched declares a PRIVATE SHADOW of a game class so it
+# can reach one member, spells that member with a different RETURN TYPE (int
+# against void, void * against unsigned, int against bool) or a different
+# VIRTUALNESS, and MSVC mangles the two differently. There is one function and
+# two declarations of it, not two functions.
+#
+# The join that settles which is which is the ROM ADDRESS, never the name:
+# config/**/symbols.txt gives the flat name's address, config delinks.txt gives
+# the TU that owns that address, and THAT TU'S OWN OBJECT is dumped to read the
+# decorated spelling it emits. Lane HALROWS did that join for all fifteen
+# ambiguous rows on this wall and recorded both spellings for each. The entries
+# below are the ones whose host file still carries the shadow after lane
+# FACES4's wave-9c retirements; each names the real definition it shadows, the
+# file that carries it, and what the two disagree about.
+#
+# A SHADOW IS ONLY EVER DROPPED WHEN THE DEFINITION IT SHADOWS IS ALSO IN THE
+# CANDIDATE SET. If the real one is missing, the row refuses exactly as before
+# rather than binding to the host's spelling, which would be the receiver-shape
+# failure this whole file exists to prevent.
+PORT_SHADOW_DEFINITIONS = {
+    "?LoadFile@SharedFilePtr@@QAEXXZ": (
+        "?LoadFile@SharedFilePtr@@QAEPAXXZ", "port/hal/gx_upload_bridge.cpp",
+        "the host spells the return void, the owning TU void *"),
+    "?ChangeState@Camera@@QAEXPAUState@1@@Z": (
+        "?ChangeState@Camera@@QAEHPAUState@1@@Z", "port/hal/door_ring_faces.cpp",
+        "the host spells the return void, the owning TU int"),
+    "?IsState@Player@@QAEHAAUState@1@@Z": (
+        "?IsState@Player@@QAE_NAAUState@1@@Z", "port/hal/reverse_bridges.cpp",
+        "the host spells the return int, the owning TU bool"),
+    "?TryGrab@Player@@QAE_NAAUdActor_c@@@Z": (
+        "?TryGrab@Player@@QAEHAAUdActor_c@@@Z", "port/hal/cxx_aliases.cpp",
+        "the host spells the return bool, the owning TU int"),
+    "?GetNode@PathPtr@@QBEHAAUVector3@@I@Z": (
+        "?GetNode@PathPtr@@QBEXAAUVector3@@I@Z",
+        "port/unmatched/ToxBox_ShadowFaces.cpp",
+        "the host spells the return int, the owning TU void"),
+}
+
+
+def drop_shadows(cands):
+    """Apply the shadow rule to one class::method's candidate list."""
+    if len(cands) < 2:
+        return cands, []
+    kept, dropped = [], []
+    for c in cands:
+        row = PORT_SHADOW_DEFINITIONS.get(c)
+        if row and row[0] in cands:
+            dropped.append(c)
+        else:
+            kept.append(c)
+    if len(kept) == 1:
+        return kept, dropped
+    return cands, []
+
+
+def derive_rows(flat_names, defined, root, und=None):
+    """The ADDRESS BINDING, applied to a list of flat ROM names.
+
+    Returns (rows, refusals). Each row is a dict carrying the flat name, the
+    one decorated definition it binds to, the ROM address that proves the
+    binding, the Itanium record and the undname signature. Every refusal
+    carries the reason, in the form a reader can act on.
+    """
+    rom = rom_index(root)
+    joins = rom_join_addresses(root)
+    midx = msvc_member_index(defined)
+    staged, refusals = [], []
+    for raw in flat_names:
+        ident = raw[1:] if raw.startswith("_") else raw
+        rec = itanium_parse_ext(ident)
+        if rec is None:
+            refusals.append((raw, "Itanium shape outside the derivable subset "
+                             "(operator, _ZTV/_ZTI, _ZSt, a template block in "
+                             "a name component, or more than four components)"))
+            continue
+        entries = rom.get(ident)
+        if not entries:
+            refusals.append((raw, "rule 1: no ROM address for %s in "
+                             "config/**/symbols.txt, so it is not a ROM "
+                             "function and no face can be derived" % ident))
+            continue
+        addrs = sorted(set(a for a, _m in entries))
+        if len(addrs) > 1:
+            refusals.append((raw, "rule 1: %s is listed at %d different ROM "
+                             "addresses (%s)"
+                             % (ident, len(addrs),
+                                ", ".join("0x%08x" % a for a in addrs))))
+            continue
+        if rec["meth"] == "~delete":
+            refusals.append((raw, "rule 2: D0 is the DELETING destructor. "
+                             "MSVC's is ??_G%s@@UAEPAXI@Z, the scalar "
+                             "deleting destructor, which C++ source cannot "
+                             "name; ??1 is its non-deleting sibling and "
+                             "binding D0 to it would drop the free. The D0 "
+                             "half is a flat .c TU's job"
+                             % rec["cls"][-1]))
+            continue
+        key = (tuple(rec["cls"]), rec["meth"])
+        slot = joins.get(key, {})
+        cands = midx.get(key, [])
+        cands, _shadowed = drop_shadows(cands)
+        overload = False
+        if len(slot) > 1:
+            twin, twhy = structor_twin_slot(root, rec, slot)
+            if twin:
+                pass
+            elif not rec["structor"]:
+                overload = True      # decided below, once the types are read
+            else:
+                parts = []
+                for a in sorted(slot):
+                    parts.append("0x%08x %s" % (a, "/".join(sorted(slot[a]))))
+                refusals.append((raw, "rule 2: %d ROM addresses join %s::%s, "
+                                 "so one decorated definition cannot be all "
+                                 "of them -- the plausible-sibling trap (%s); "
+                                 "and the structor twin rule does not save it: "
+                                 "%s"
+                                 % (len(slot), cpp_qualified(rec),
+                                    rec["meth"], "; ".join(parts), twhy)))
+                continue
+        if not cands:
+            refusals.append((raw, "no MSVC definition of %s::%s in this link"
+                             % (cpp_qualified(rec), rec["meth"])))
+            continue
+        if overload or len(cands) > 1:
+            pick, pwhy = pick_by_params(root, rec, ident, slot, cands)
+            if pick is None:
+                parts = []
+                for a in sorted(slot):
+                    parts.append("0x%08x %s" % (a, "/".join(sorted(slot[a]))))
+                if overload:
+                    refusals.append((raw, "rule 2: %d ROM addresses join "
+                                     "%s::%s, so one decorated definition "
+                                     "cannot be all of them -- the "
+                                     "plausible-sibling trap (%s); and the "
+                                     "parameter types do not tell them apart: "
+                                     "%s" % (len(slot), cpp_qualified(rec),
+                                             rec["meth"], "; ".join(parts),
+                                             pwhy)))
+                else:
+                    refusals.append((raw, "ambiguous: %d MSVC definitions of "
+                                     "%s::%s (%s); and the parameter types do "
+                                     "not pick one: %s"
+                                     % (len(cands), cpp_qualified(rec),
+                                        rec["meth"], ", ".join(sorted(cands)),
+                                        pwhy)))
+                continue
+            cands = [pick]
+        acc = decorated_access(cands[0])
+        if acc is None:
+            refusals.append((raw, "the access/virtualness letter of %s is not "
+                             "a member-function code" % cands[0]))
+            continue
+        staged.append((raw, ident, rec, cands[0], addrs[0], acc))
+
+    if und is None:
+        und = undname_batch([t[3] for t in staged])
+    rows = []
+    for raw, ident, rec, cand, addr, acc in staged:
+        text = und.get(cand)
+        if not text:
+            refusals.append((raw, "undname produced nothing for %s" % cand))
+            continue
+        sig = parse_msvc_sig(text)
+        if isinstance(sig, str):
+            refusals.append((raw, "%s [%s]" % (sig, text)))
+            continue
+        # rule 3, literally: class and method text, parameter count, constness.
+        want_cls = cpp_qualified(rec)
+        if sig["cls"] != want_cls:
+            refusals.append((raw, "rule 3: %s undecorates to class %s, not %s"
+                             % (cand, sig["cls"], want_cls)))
+            continue
+        if rec["meth"] == "~":
+            want_meth = "~" + rec["cls"][-1]
+        elif rec["meth"] == "ctor":
+            want_meth = rec["cls"][-1]
+        else:
+            want_meth = rec["meth"]
+        if sig["meth"] != want_meth:
+            refusals.append((raw, "rule 3: %s undecorates to method %s, not %s"
+                             % (cand, sig["meth"], want_meth)))
+            continue
+        if rec["arity"] < 0:
+            refusals.append((raw, "rule 3: the Itanium parameter list of %s "
+                             "is outside the counted subset, so the arity "
+                             "cannot be compared" % ident))
+            continue
+        if rec["arity"] != len(sig["params"]):
+            refusals.append((raw, "rule 3: ARITY MISMATCH, the ROM name takes "
+                             "%d and %s takes %d -- a ruling, not plumbing"
+                             % (rec["arity"], cand, len(sig["params"]))))
+            continue
+        if rec["const"] != sig["const"]:
+            refusals.append((raw, "rule 3: constness disagrees, ROM name %s "
+                             "and %s %s"
+                             % ("const" if rec["const"] else "non-const", cand,
+                                "const" if sig["const"] else "non-const")))
+            continue
+        if (sig["access"], sig["virtual"]) != acc:
+            refusals.append((raw, "rule 3: the mangle's access letter says "
+                             "%s/%s and undname says %s/%s"
+                             % (acc[0], "virtual" if acc[1] else "non-virtual",
+                                sig["access"],
+                                "virtual" if sig["virtual"] else
+                                "non-virtual")))
+            continue
+        rows.append({"flat": raw, "ident": ident, "rec": rec, "target": cand,
+                     "addr": addr, "sig": sig})
+    return rows, refusals
+
+
+def pick_rom_by_params(slot, want):
+    """THE PARAMETER-TYPE JOIN, in the FORWARD direction.
+
+    Lane FACES3 taught the reverse direction to tell several ROM addresses on
+    one (class, method) key apart by the parameter types both sides spell, and
+    the forward direction never got it: a decorated caller name whose class and
+    method join three ROM overloads refused outright, even when its own
+    parameter list picks exactly one of them out.
+    `?IsPlayerInRange@dActor_c@@QAE_NABUVector3@@H@Z` is the row on this wall.
+
+    `want` is _msvc_param_classes of the caller's undname signature and `slot`
+    is rom_join_addresses' {address: [ROM names]} for the key. Returns
+    (address, None) or (None, the reason), and it refuses on every kind of
+    doubt, the same three the reverse direction refuses on: a ROM name whose
+    parameter list is outside the counted subset, two ROM names taking the same
+    parameter CLASSES (an overload pair differing only in a scalar type, which
+    is the ApproachLinear shape), and a caller list that matches none of them.
+    """
+    if want is None:
+        return None, "the caller's parameter list is outside the counted subset"
+    seen = {}
+    for a in sorted(slot):
+        for name in slot[a]:
+            r = itanium_parse_ext(name)
+            pc = r.get("pcls") if r else None
+            if pc is None:
+                return None, ("%s in the same join has a parameter list "
+                              "outside the counted subset, so the overloads "
+                              "cannot be told apart" % name)
+            kpc = tuple(pc)
+            if kpc in seen:
+                return None, ("%s and %s take the same parameter CLASSES "
+                              "(%s), so the ROM names do not tell the "
+                              "overloads apart"
+                              % (seen[kpc][1], name,
+                                 ", ".join(x or "scalar" for x in pc)
+                                 or "none"))
+            seen[kpc] = (a, name)
+    hit = seen.get(tuple(want))
+    if hit is None:
+        return None, ("no ROM name in the join takes (%s)"
+                      % (", ".join(x or "scalar" for x in want) or "none"))
+    return hit[0], None
+
+
+def derive_forward_rows(decorated, defined, root, und=None):
+    """The address binding in the OTHER direction: a decorated CALLER name.
+
+    A caller TU declares a shadow class and calls a member of it, so MSVC
+    emits a __thiscall reference to ?meth@Cls@@... that nothing defines --
+    while the port carries the body under the ROM's flat C name. The face is
+    the mirror of the reverse one: a real __thiscall DEFINITION whose body
+    calls the flat name with the receiver as its first stack argument.
+
+    The same three rules apply, in the same order, and the ROM address is
+    still what binds: undname says which class and method the decoration
+    names, exactly ONE ROM address may join that class and method, and the
+    flat name at that address must be defined in this link.
+    """
+    joins = rom_join_addresses(root)
+    rom = rom_index(root)
+    if und is None:
+        und = undname_batch([d for d in decorated if d.startswith("?")])
+    rows, refusals = [], []
+    for raw in decorated:
+        if not (MSVC_METHOD_Q.match(raw) or MSVC_STRUCTOR.match(raw)):
+            refusals.append((raw, "not a class-member mangle"))
+            continue
+        text = und.get(raw)
+        if not text:
+            refusals.append((raw, "undname produced nothing"))
+            continue
+        sig = parse_msvc_sig(text)
+        if isinstance(sig, str):
+            refusals.append((raw, "%s [%s]" % (sig, text)))
+            continue
+        if sig["structor"]:
+            # A FORWARD FACE FOR A STRUCTOR DRAGS THE WHOLE CLASS WITH IT, and
+            # this file must not own any of it. Defining Cls::~Cls() or
+            # Cls::Cls() over a shadow that declares one virtual member makes
+            # MSVC emit that class's VFTABLE (??_7Cls@@6B@) and its scalar
+            # deleting destructor (??_GCls@@UAEPAXI@Z) from this object, and
+            # reference the vector one (??_ECls@@), operator delete and
+            # type_info besides. Measured, not feared: widening the gate to
+            # structors put eight such definitions and six such references on
+            # the generated file's surface in one build. ??_7 would duplicate
+            # or displace whatever else emits that class's table, and ??_G is
+            # the deleting destructor the whole D-row mechanism exists because
+            # nothing can name -- satisfying it here with a host body is a
+            # ruling, not plumbing. So the gate above accepts a structor and
+            # this refuses it with the true reason, which is better than the
+            # old "not a class-member mangle": that was never why.
+            refusals.append((raw, "a forward face cannot DEFINE a structor: "
+                             "MSVC emits the class's vftable ??_7%s@@6B@ and "
+                             "its deleting destructor ??_G%s@@ from the same "
+                             "object, and this file must not own either. The "
+                             "reverse direction (a face for the ROM's own "
+                             "flat name) has no such cost"
+                             % (comps_head(sig["cls"]), comps_head(sig["cls"]))))
+            continue
+        comps = sig["cls"].split("::")
+        if sig["structor"] == "dtor":
+            meth = "~"
+        elif sig["structor"] == "ctor":
+            meth = "ctor"
+        else:
+            meth = sig["meth"]
+        key = (tuple(comps), meth)
+        slot = joins.get(key, {})
+        if not slot:
+            refusals.append((raw, "no ROM name for %s::%s in "
+                             "config/**/symbols.txt" % (sig["cls"], meth)))
+            continue
+        picked = None
+        if len(slot) > 1:
+            picked, pwhy = pick_rom_by_params(slot, _msvc_param_classes(sig))
+            if picked is None:
+                parts = ["0x%08x %s" % (a, "/".join(sorted(slot[a])))
+                         for a in sorted(slot)]
+                refusals.append((raw, "rule 2: %d ROM addresses join %s::%s -- "
+                                 "the plausible-sibling trap (%s); and the "
+                                 "parameter types do not tell them apart: %s"
+                                 % (len(slot), sig["cls"], meth,
+                                    "; ".join(parts), pwhy)))
+                continue
+        addr = picked if picked is not None else list(slot)[0]
+        cands = [n for n in slot[addr]
+                 if ("_" + n) in defined or n in defined]
+        if not cands:
+            refusals.append((raw, "the ROM body at 0x%08x (%s) is not "
+                             "defined in this link"
+                             % (addr, "/".join(sorted(slot[addr])))))
+            continue
+        if len(cands) > 1:
+            refusals.append((raw, "%d defined flat spellings at 0x%08x (%s)"
+                             % (len(cands), addr, "/".join(sorted(cands)))))
+            continue
+        ident = cands[0]
+        rec = itanium_parse_ext(ident)
+        if rec is None:
+            refusals.append((raw, "the ROM name %s is outside the "
+                             "derivable subset" % ident))
+            continue
+        if rec["arity"] < 0:
+            refusals.append((raw, "rule 3: the parameter list of %s is "
+                             "outside the counted subset" % ident))
+            continue
+        if rec["arity"] != len(sig["params"]):
+            refusals.append((raw, "rule 3: ARITY MISMATCH, the caller spells "
+                             "%d and the ROM body %s takes %d -- a ruling, "
+                             "not plumbing"
+                             % (len(sig["params"]), ident, rec["arity"])))
+            continue
+        if rec["const"] != sig["const"]:
+            refusals.append((raw, "rule 3: constness disagrees between %s "
+                             "and %s" % (raw, ident)))
+            continue
+        acc = decorated_access(raw)
+        if acc is None or (sig["access"], sig["virtual"]) != acc:
+            refusals.append((raw, "the access/virtualness letter does not "
+                             "agree with undname"))
+            continue
+        rows.append({"flat": "_" + ident, "ident": ident, "rec": rec,
+                     "target": raw, "addr": addr, "sig": sig,
+                     "forward": True})
+
+    # TWO CALLER SPELLINGS OF ONE MEMBER. Player::GetHealth is asked for as
+    # ?GetHealth@Player@@QAEEXZ by one caller and ?GetHealth@Player@@QAEHXZ by
+    # another: same class, same method, same parameter list, different return
+    # width. Both are honest (eax carries either) and both are unresolved, but
+    # ONE SHADOW CLASS CANNOT DECLARE BOTH -- C++ has no overload on return
+    # type. The first spelling by name is emitted and the rest are refused
+    # with the reason, so the leftovers go to a hand file rather than
+    # disappearing quietly.
+    seen, kept = {}, []
+    for r in sorted(rows, key=lambda x: x["target"]):
+        sig = r["sig"]
+        k = (tuple(sig["cls"].split("::")), sig["meth"],
+             tuple(c_type(*p) for p in sig["params"]), sig["const"])
+        if k in seen:
+            refusals.append((r["target"], "a second caller spelling of "
+                             "%s::%s with the same parameters and a "
+                             "different return type; %s is emitted and one "
+                             "shadow class cannot declare both, so this one "
+                             "needs a hand file"
+                             % (sig["cls"], sig["meth"], seen[k])))
+            continue
+        seen[k] = r["target"]
+        kept.append(r)
+    return kept, refusals
+
+
+# The two deallocations a ROM D0 body is allowed to add to its D1, and how the
+# emitted face spells each. Memory is a NAMESPACE, so Deallocate's definition in
+# this link is the C++ one (?Deallocate@Memory@@YAXPAXPAVHeap@@@Z) and the face
+# names the method; operator_delete2 is carried under its flat C name by
+# hal/cxxname_bridge.cpp and the face declares that. Neither is guessed: the
+# ledger row names the call and d0_reloc_proof checks the ROM agrees.
+DEALLOCATORS = {
+    "_ZN6Memory10DeallocateEPvP4Heap": {
+        "heap": True,
+        "decl": ['extern "C" void _ZN6Memory10DeallocateEPvP4Heap('
+                 "void *ptr, void *heap);"],
+        "undefined": "__ZN6Memory10DeallocateEPvP4Heap",
+    },
+    "_ZN6Memory16operator_delete2EPv": {
+        "heap": False,
+        "decl": ['extern "C" void _ZN6Memory16operator_delete2EPv(void *p);'],
+        "undefined": "__ZN6Memory16operator_delete2EPv",
+    },
+}
+
+
+def derive_d0_rows(want, defined, root, und=None):
+    """The D0 RULE, applied to ledger rows of direction D.
+
+    `want` is [(flat D0 name, callee, D0 address, "D", deallocator, heap)].
+    The callee is either the flat ROM D1 name (when this link defines it) or
+    the decorated MSVC destructor of the same class; the heap column is the
+    ROM symbol the D0's pooled word relocates to, or "-" for the
+    operator_delete2 shape, which takes none.
+
+    Returns (rows, refusals). Nothing here is derived from a name alone: every
+    row is re-proved against config/**/relocs.txt by d0_reloc_proof.
+    """
+    rom = rom_index(root)
+    rows, refusals = [], []
+    staged = []
+    for flat, callee, addr, _d, dealloc, heap in want:
+        ident = flat[1:] if flat.startswith("_") else flat
+        rec = itanium_parse_ext(ident)
+        if rec is None or rec["meth"] != "~delete":
+            refusals.append((flat, "a D row must name a D0 destructor and %s "
+                             "is not one" % ident))
+            continue
+        ents = rom.get(ident)
+        if not ents:
+            refusals.append((flat, "rule 1: no ROM address for %s" % ident))
+            continue
+        addrs = sorted(set(a for a, _m in ents))
+        if len(addrs) != 1:
+            refusals.append((flat, "rule 1: %s is listed at %d ROM addresses"
+                             % (ident, len(addrs))))
+            continue
+        if addrs[0] != addr:
+            refusals.append((flat, "LEDGER DISAGREES: the row names ROM "
+                             "0x%08x and config says 0x%08x"
+                             % (addr, addrs[0])))
+            continue
+        spec = DEALLOCATORS.get(dealloc)
+        if spec is None:
+            refusals.append((flat, "%s is not one of the two deallocations a "
+                             "D0 body may add (%s)"
+                             % (dealloc, ", ".join(sorted(DEALLOCATORS)))))
+            continue
+        dents = rom.get(dealloc)
+        if not dents or len(set(a for a, _m in dents)) != 1:
+            refusals.append((flat, "no single ROM address for %s" % dealloc))
+            continue
+        dealloc_addr = dents[0][0]
+        heap_addr = None
+        if spec["heap"]:
+            if heap == "-":
+                refusals.append((flat, "%s takes a heap pointer and the row "
+                                 "names none" % dealloc))
+                continue
+            hents = rom.get(heap)
+            if not hents or len(set(a for a, _m in hents)) != 1:
+                refusals.append((flat, "no single ROM address for the heap "
+                                 "word %s" % heap))
+                continue
+            heap_addr = hents[0][0]
+        elif heap != "-":
+            refusals.append((flat, "%s takes no heap pointer, so the row's "
+                             "heap column must be '-', not %s"
+                             % (dealloc, heap)))
+            continue
+        d1name = ident[:-4] + "D1Ev"
+        info, why = d0_reloc_proof(root, ident, d1name, dealloc_addr,
+                                   heap_addr)
+        if info is None:
+            refusals.append((flat, "the ROM relocations no longer say this D0 "
+                             "is its D1 plus one deallocation: %s" % why))
+            continue
+        if callee.startswith("?"):
+            staged.append((flat, ident, rec, callee, addr, dealloc, heap,
+                           d1name))
+            continue
+        if callee != d1name:
+            refusals.append((flat, "a flat callee must be the class's own D1, "
+                             "%s, not %s" % (d1name, callee)))
+            continue
+        if ("_" + callee) not in defined and callee not in defined:
+            refusals.append((flat, "the D1 body %s is not defined in this "
+                             "link, so the D0 face would call nothing"
+                             % callee))
+            continue
+        rows.append({"flat": flat, "ident": ident, "rec": rec,
+                     "target": callee, "addr": addr, "sig": None,
+                     "d0": True, "dealloc": dealloc, "heap": heap,
+                     "flat_callee": True})
+
+    if staged:
+        if und is None:
+            und = undname_batch([t[3] for t in staged])
+        for flat, ident, rec, callee, addr, dealloc, heap, d1name in staged:
+            if callee not in defined:
+                refusals.append((flat, "the destructor %s is not defined in "
+                                 "this link, so the D0 face would call "
+                                 "nothing" % callee))
+                continue
+            text = und.get(callee)
+            if not text:
+                refusals.append((flat, "undname produced nothing for %s"
+                                 % callee))
+                continue
+            sig = parse_msvc_sig(text)
+            if isinstance(sig, str):
+                refusals.append((flat, "%s [%s]" % (sig, text)))
+                continue
+            want_cls = cpp_qualified(rec)
+            if sig["cls"] != want_cls:
+                refusals.append((flat, "rule 3: %s undecorates to class %s, "
+                                 "not %s" % (callee, sig["cls"], want_cls)))
+                continue
+            if sig["meth"] != "~" + rec["cls"][-1]:
+                refusals.append((flat, "rule 3: %s undecorates to method %s, "
+                                 "not the destructor of %s"
+                                 % (callee, sig["meth"], want_cls)))
+                continue
+            if sig["params"]:
+                refusals.append((flat, "rule 3: %s takes %d parameters and a "
+                                 "destructor takes none"
+                                 % (callee, len(sig["params"]))))
+                continue
+            acc = decorated_access(callee)
+            if acc is None or (sig["access"], sig["virtual"]) != acc:
+                refusals.append((flat, "the access/virtualness letter of %s "
+                                 "does not agree with undname" % callee))
+                continue
+            rows.append({"flat": flat, "ident": ident, "rec": rec,
+                         "target": callee, "addr": addr, "sig": sig,
+                         "d0": True, "dealloc": dealloc, "heap": heap,
+                         "flat_callee": False})
+    return rows, refusals
+
+
+def refuse_face_cycles(rows):
+    """Take out any pair of faces that would call each other forever.
+
+    THE TRAP, found while re-deriving against a link that already carried the
+    generated file. A reverse face DEFINES the flat ROM name and CALLS the
+    decorated member; a forward face DEFINES the decorated member and CALLS the
+    flat ROM name. Derive both for the same function and each one's body is the
+    other: ?Behavior@BowserPuzzleManager@@QAEHXZ calls
+    __ZN19BowserPuzzleManager8BehaviorEv calls
+    ?Behavior@BowserPuzzleManager@@QAEHXZ, forever, until the stack runs out.
+
+    It cannot happen from one wall, because a name the link already resolves is
+    not on the wall. It happens the moment a lane re-derives with the generated
+    object in the universe: the reverse face's own definition of the flat name
+    reads as "the ROM body is defined in this link", and the forward face binds
+    straight onto it. The link is clean, --verify is clean, and the fault is a
+    stack overflow the first time the function is called.
+
+    So the two directions are cross-checked here rather than trusted. The
+    REVERSE row is the one kept: it is the ROM's own name, which is what the
+    ROM's callers ask for.
+    """
+    rev = set(r["flat"] for r in rows if not r.get("forward"))
+    revtgt = set(r["target"] for r in rows if not r.get("forward")
+                 and not r.get("d0"))
+    kept, refusals = [], []
+    dropped_fwd = set()
+    for r in rows:
+        if r.get("forward") and (r["flat"] in rev or r["target"] in revtgt):
+            refusals.append((r["target"], "FACE CYCLE: a reverse face in this "
+                             "same set defines %s and calls %s, so a forward "
+                             "face here would make the two call each other "
+                             "until the stack runs out. The reverse row is "
+                             "kept" % (r["flat"], r["target"])))
+            dropped_fwd.add(r["target"])
+            continue
+        kept.append(r)
+    # A D0 face runs the class's destructor. When the only definition of that
+    # destructor was a forward face this guard just dropped, the D0 face would
+    # call nothing, so it goes with it rather than becoming a dangling row.
+    kept2 = []
+    for r in kept:
+        if (r.get("d0") and not r.get("flat_callee")
+                and r["target"] in dropped_fwd):
+            refusals.append((r["flat"], "the D0 face runs %s and the face "
+                             "cycle guard just dropped the only definition "
+                             "of it" % r["target"]))
+            continue
+        kept2.append(r)
+    return kept2, refusals
+
+
+# ---------------------------------------------------------------------------
+# the sync-face emitter
+
+def _fwd_from(text):
+    """The class name a 'struct X *' / 'class X &' spelling names, or None.
+
+    The name may be QUALIFIED (Particle::SysTracker::Contents::Entry), which
+    is what a nested return type undecorates to.
+    """
+    m = re.match(r"^(?:const )?(?:struct|class) ([\w:]+) (?:const )?[*&]$",
+                 text.strip())
+    return m.group(1) if m else None
+
+
+def _shadow_comps(r):
+    """The class components the shadow declaration must carry.
+
+    For a reverse face that is the ROM name's own qualification; for a
+    forward face it is the CALLER's, read off the decoration through undname,
+    because the shadow has to reproduce the caller's mangle exactly.
+    """
+    if r.get("forward"):
+        return r["sig"]["cls"].split("::")
+    return r["rec"]["cls"]
+
+
+def _face_signature(r):
+    """(return type, name, [(C parameter type, argument name)]) for one face.
+
+    The return type is the target's own C++ spelling (so a pointer return
+    keeps its type and the forward declaration above covers it); the
+    parameters are the C-side ones the ROM's caller pushes, receiver first.
+    One helper, used by the definition, by the forward prototype and by the
+    friend declaration, so the three cannot drift apart.
+    """
+    rec, sig = r["rec"], r["sig"]
+    # "~delete" is the D0 face: it runs the destructor and then hands the
+    # storage back, and like every destructor face it returns nothing.
+    ret = "void" if rec["meth"] in ("~", "~delete", "ctor") else sig["ret"]
+    # THE RETURN WIDTH RULE. A reverse face over a sub-register return declares
+    # the widened type, so the prototype, the friend declaration and the
+    # definition below all say the same thing; widened_return() is None for
+    # every other row, so nothing else moves.
+    ret = widened_return(r) or ret
+    cparams = [("const void *" if sig["const"] else "void *", "self")]
+    for i, pr in enumerate(sig["params"]):
+        cparams.append((c_type(*pr), "a%d" % i))
+    return ret, r["ident"], cparams
+
+
+def _spell_params(cparams, with_names):
+    out = []
+    for ctype, name in cparams:
+        if not with_names:
+            out.append(ctype.rstrip())
+        elif ctype.endswith("*"):
+            out.append("%s%s" % (ctype, name))
+        else:
+            out.append("%s %s" % (ctype, name))
+    return ", ".join(out)
+
+
+def _member_decl(rec, sig, comps=None):
+    """The shadow declaration: the target's REAL access and virtualness.
+
+    Both halves are in the decoration, so both have to be reproduced or the
+    emitted reference names a symbol nothing defines.
+    """
+    cls = (comps or rec["cls"])[-1]
+    virt = "virtual " if sig["virtual"] else ""
+    params = ", ".join(cpp_type(*p) for p in sig["params"])
+    if rec["meth"] in ("~", "~delete"):
+        body = "%s~%s()" % (virt, cls)
+    elif rec["meth"] == "ctor":
+        body = "%s(%s)" % (cls, params)
+    else:
+        body = "%s%s %s(%s)%s" % (virt, sig["ret"], sig["meth"], params,
+                                  " const" if sig["const"] else "")
+    return "%s: %s;" % (sig["access"], body)
+
+
+def _node(tree, comps):
+    """Walk/create the shadow-tree node for a list of class components."""
+    cur, node = tree, None
+    for c in comps:
+        node = cur.setdefault(c, {"kids": {}, "decls": [], "fwds": set()})
+        node.setdefault("fwds", set())
+        cur = node["kids"]
+    return node
+
+
+def _walk(tree, prefix=()):
+    """[(path tuple, node)] over the whole shadow tree."""
+    out = []
+    for name in sorted(tree):
+        path = prefix + (name,)
+        out.append((path, tree[name]))
+        out += _walk(tree[name]["kids"], path)
+    return out
+
+
+QUAL_USE = re.compile(r"\b(\w+(?:::\w+)+)\b")
+
+# COMPONENTS THAT ARE NAMESPACES ON THE HOST, not classes. MSVC mangles a class
+# inside a namespace exactly as it mangles a class inside a class, so a struct
+# shadow reproduces either one and every shadow in this file has been a struct.
+# std is the exception the compiler forces: it has already declared std as a
+# namespace, so `struct std { ... };` is C2365 redefinition and every use of
+# std::type_info after it is C2027. The shadow is written as a namespace
+# instead, its members defined out of line by qualified name exactly as the
+# class shadows are.
+NAMESPACE_SHADOWS = {"std"}
+
+
+def _render_struct(path, node):
+    """One class's definition, written OUT OF LINE.
+
+    THE SHADOWS ARE FLATTENED, not nested, and the reason is a parameter type
+    that names another tree's nested class. dPa_c::level_c::callback_c's
+    members take a Particle::System &, and Particle::SysTracker::Contents'
+    members take a dPa_c::level_c::callback_c *: each needs the OTHER tree's
+    nested name declared before its own body is read, and a class cannot be
+    reopened to add that later. Written out of line the two orders are
+    separable -- `struct Particle { struct System; ... };` declares the name,
+    `struct dPa_c::level_c::callback_c { ... };` uses it, and
+    `struct Particle::SysTracker::Contents { ... };` comes after both. The
+    mangling is identical either way; what changes is only what is declared by
+    the time a body is read.
+    """
+    is_ns = len(path) == 1 and path[0] in NAMESPACE_SHADOWS
+    out = ["namespace %s {" % path[0] if is_ns
+           else "struct %s {" % "::".join(path)]
+    # nested declarations first, so a member of this same shadow may use one
+    for f in sorted(node.get("fwds", ())):
+        out.append("    struct %s;" % f)
+    for kid in sorted(node["kids"]):
+        out.append("    struct %s;" % kid)
+    for d in node["decls"]:
+        out.append("    %s" % d)
+    out.append("}" if is_ns else "};")
+    return out
+
+
+def _render_tree(tree):
+    """Every shadow class, out of line, in an order that always compiles.
+
+    The order obeys two edges. A class is declared by its ENCLOSING class, so
+    a parent is written before its children. And a class whose member
+    declarations name a qualified type needs that type's enclosing class
+    written first, which is the edge that makes the flattening worth anything.
+    Ties break alphabetically so the generated file is stable.
+    """
+    nodes = dict(_walk(tree))
+    deps = {p: set() for p in nodes}
+    for path, node in nodes.items():
+        if len(path) > 1:
+            deps[path].add(path[:-1])
+        for d in node["decls"]:
+            for use in QUAL_USE.findall(d):
+                owner = tuple(use.split("::"))[:-1]
+                if owner in nodes and owner != path:
+                    deps[path].add(owner)
+    out, done = [], set()
+    ready = sorted(nodes)
+    while len(done) < len(nodes):
+        progressed = False
+        for path in ready:
+            if path in done or deps[path] - done:
+                continue
+            out += _render_struct(path, nodes[path]) + [""]
+            done.add(path)
+            progressed = True
+        if not progressed:
+            stuck = sorted("::".join(p) for p in nodes if p not in done)
+            sys.exit("facegen: the shadow classes %s depend on each other's "
+                     "nested names in a cycle, so no order of definitions "
+                     "declares every name before it is used. Refuse the rows "
+                     "that cross, do not reorder by hand." % ", ".join(stuck))
+    return out
+
+
+FACE_DECL = re.compile(r'^extern "C" ((?:unsigned |signed )?\w+) (_Z\w+)\(')
+
+
+def check_return_widths(text):
+    """Refuse a generated reverse face that still returns a sub-register type.
+
+    THE GATE FOR THE RETURN WIDTH RULE. The rule lives in one branch of one
+    emitter, so the way it silently comes undone is an edit to that branch, and
+    the symptom is invisible: the file still compiles, the link is still clean,
+    the extern "C" symbol is unchanged, and the only difference is three bytes
+    of EAX at 191 call sites. This reads the emitted text back and fails the
+    build instead, which is the same shape as facecycle_guard.py.
+
+    Returns a list of (name, type) that must not have been emitted.
+    """
+    bad = []
+    for line in text.splitlines():
+        m = FACE_DECL.match(line)
+        if m and m.group(1) in NARROW_RETURNS:
+            bad.append((m.group(2), m.group(1)))
+    return bad
+
+
+def emit_sync(rows, out, header_note=""):
+    """One generated source for the derived sync faces."""
+    lines = [
+        "// GENERATED by port/tools/facegen.py --sync. DO NOT EDIT.",
+        "// The input is the checked-in ledger port/faces_sync.txt; every row",
+        "// below was re-derived from it at build time and every row that",
+        "// failed the address binding was REFUSED rather than guessed.",
+        "// This file includes NOTHING, for hal/actor_class_faces.cpp's",
+        "// reasons: the shadow declarations exist to reproduce a mangle, not",
+        "// to describe a type, and a real header would fight them.",
+        "//",
+        "// Each face is  extern \"C\" RET _ZN...(void *self, args...)  whose",
+        "// body is the QUALIFIED call ((Cls *)self)->Cls::meth(args), so it",
+        "// dispatches directly to the member the ROM name names and never",
+        "// through a vtable slot back into itself.",
+        "//",
+        "// A REVERSE face over a sub-register return (bool, char, short) is",
+        "// WIDENED to int with an explicit conversion, and says so on its own",
+        "// line. A bool member writes AL alone and leaves the rest of EAX",
+        "// holding whatever was there, the flat name is extern \"C\" so its",
+        "// return type is not in the symbol, and a caller that spells the flat",
+        "// name `int` then reads three bytes of junk as part of the answer.",
+        "// The ROM's own bodies define the whole register, so the conversion",
+        "// is the ROM-faithful shape. See THE RETURN WIDTH RULE in",
+        "// port/tools/facegen.py.",
+    ]
+    if header_note:
+        lines += ["//", "// " + header_note]
+    lines.append("")
+
+    # forward declarations for every class named in a parameter or return
+    fwd = set()
+    shadow_names = set()
+    for r in rows:
+        if r.get("d0") and r.get("flat_callee"):
+            continue            # a flat-callee D0 face declares no class
+        shadow_names.add(_shadow_comps(r)[0])
+    for r in rows:
+        sig = r["sig"]
+        if sig is None:
+            continue
+        for kind, name, _c in sig["params"]:
+            # a 'ref' to a SCALAR carries the scalar's own spelling, and
+            # `struct short;` is not a declaration of anything
+            if kind != "scalar" and name != "void" and name not in SCALARS:
+                fwd.add(name)
+        n = _fwd_from(sig["ret"])
+        if n:
+            fwd.add(n)
+    # A QUALIFIED name cannot be forward-declared from the outside, so it is
+    # handed to the shadow tree instead and its enclosing class declares it.
+    nested_fwd = sorted(n for n in fwd if "::" in n)
+    fwd = set(n for n in fwd if "::" not in n)
+    # EVERY class name gets a forward declaration first, shadows included.
+    # The shadow definitions are emitted in name order and one of them can
+    # name another as a parameter type (ExpandingHeap's constructor takes an
+    # ExpandingHeapAllocator *), so without this the later one is an unknown
+    # identifier at the point of use.
+    for name in sorted(fwd | shadow_names | set(n.split("::")[0]
+                                                for n in nested_fwd)):
+        if name in NAMESPACE_SHADOWS:
+            continue        # already a namespace; see NAMESPACE_SHADOWS
+        lines.append("struct %s;" % name)
+    lines.append("")
+    if any(r["rec"]["meth"] == "ctor" for r in rows):
+        lines += [
+            "// A CONSTRUCTOR FACE IS A PLACEMENT NEW, because C++ has no other",
+            "// way to spell 'call this constructor on memory the caller owns'.",
+            "// The placement form of operator new is declared here rather than",
+            "// included, for this file's include-nothing rule: it is inline and",
+            "// returns its argument, so it emits no symbol of its own and the",
+            "// new-expression compiles to one call of ??0Cls@@ with the",
+            "// receiver in ecx, which is exactly what the ROM's C1/C2 is. No",
+            "// vptr is stored at the call site; the ROM's own constructor body",
+            "// does that, the way it does on the DS.",
+            "inline void *operator new(unsigned int, void *p) { return p; }",
+            "",
+        ]
+
+    # the shadow classes
+    tree = {}
+    prototypes = []
+    for name in nested_fwd:
+        comps = name.split("::")
+        parent = _node(tree, comps[:-1])
+        if comps[-1] not in parent["kids"]:
+            parent["fwds"].add(comps[-1])
+    for r in rows:
+        if r.get("d0") and r.get("flat_callee"):
+            continue
+        rec = r["rec"]
+        node = _node(tree, _shadow_comps(r))
+        d = _member_decl(rec, r["sig"], _shadow_comps(r))
+        if d not in node["decls"]:
+            node["decls"].append(d)
+        if r["sig"]["access"] != "public":
+            # A NON-PUBLIC TARGET still has to be called, and the access is
+            # half of the decorated name (A private, I protected), so the
+            # shadow cannot simply declare it public to get at it. The face
+            # is made a FRIEND of the shadow instead: the declaration refers
+            # to the extern "C" prototype emitted above the structs, the
+            # call is legal, and the emitted reference is still the private
+            # mangle the definition carries.
+            ret, name, cparams = _face_signature(r)
+            fr = "friend %s ::%s(%s);" % (ret, name,
+                                          _spell_params(cparams, False))
+            if fr not in node["decls"]:
+                node["decls"].append(fr)
+            prototypes.append('extern "C" %s %s(%s);'
+                              % (ret, name, _spell_params(cparams, True)))
+    if prototypes:
+        lines += [
+            "// Prototypes for the faces whose target is NOT public. Each is",
+            "// befriended by its shadow below, which is how a private or",
+            "// protected member is called without changing the access -- and",
+            "// the access is half of the decorated name.",
+        ] + sorted(set(prototypes)) + [""]
+    lines += _render_tree(tree)
+
+    # the flat bodies a FORWARD face calls, declared extern "C"
+    fwd_rows = [r for r in rows if r.get("forward")]
+    if fwd_rows:
+        lines += [
+            "// The ROM bodies the FORWARD faces call. A forward face is the",
+            "// mirror of a reverse one: the caller's TU emitted a __thiscall",
+            "// reference to a member of its own shadow class, and the port",
+            "// carries that body under the ROM's flat C name, so the face is",
+            "// a real __thiscall DEFINITION whose body passes the receiver",
+            "// on as the first stack argument.",
+            'extern "C" {']
+        for r in sorted(fwd_rows, key=lambda x: x["ident"]):
+            ret, name, cparams = _face_signature(r)
+            lines.append("%s %s(%s);" % (ret, name,
+                                         _spell_params(cparams, True)))
+        lines += ["}", ""]
+
+    # what a D0 face needs beyond its D1: the one deallocation, and the heap
+    # pointer word the ROM body reads out of its own literal pool.
+    d0_rows = [r for r in rows if r.get("d0")]
+    if d0_rows:
+        lines += [
+            "// THE D0 FACES. MSVC's deleting destructor is ??_GCls@@UAEPAXI@Z,",
+            "// which C++ source cannot name, so a D0 cannot be bound to a",
+            "// definition the way every other row here is. What it can be is",
+            "// WRITTEN: the ROM's own D0 body is its D1 plus exactly one call,",
+            "// proved per class against config/**/relocs.txt, so each face",
+            "// below runs the destructor and then makes that one call. The",
+            "// heap pointer is Deallocate's second argument, read out of the",
+            "// D0's own literal pool on the DS; the pooled word is relocated,",
+            "// so the ROM says per class which symbol it is and no default is",
+            "// ever used -- getting it wrong is heap corruption.",
+            "//",
+            "// BOTH CALLS ARE MADE BY THE ROM'S OWN FLAT NAME, which is what",
+            "// the D0's relocation names and what the port already resolves:",
+            "// operator_delete2 is defined under it in hal/cxxname_bridge.cpp",
+            "// and Deallocate reaches its C++ definition through the",
+            "// /alternatename in hal/cxx_aliases.cpp. Spelling Deallocate as",
+            "// a C++ method here instead would need a `class Heap` in a file",
+            "// whose shadows already declare `struct Heap`, and MSVC mangles",
+            "// the two differently (PAVHeap vs PAUHeap), so the face would",
+            "// name a symbol nothing defines.",
+        ]
+        decls = []
+        for r in d0_rows:
+            decls += DEALLOCATORS[r["dealloc"]]["decl"]
+        heaps = sorted(set(r["heap"] for r in d0_rows if r["heap"] != "-"))
+        for h in heaps:
+            decls.append('extern "C" void *%s;' % h)
+        seen_d = []
+        for d in decls:
+            if d not in seen_d:
+                seen_d.append(d)
+        lines += seen_d
+        flatcallees = sorted(set(r["target"] for r in d0_rows
+                                 if r.get("flat_callee")))
+        if flatcallees:
+            lines += ["// The D1 bodies the D0 faces run, under the ROM's own "
+                      "flat name.", 'extern "C" {']
+            lines += ["void %s(void *self);" % n for n in flatcallees]
+            lines += ["}"]
+        lines.append("")
+
+    # the faces
+    for r in sorted(rows, key=lambda x: x["flat"]):
+        rec, sig = r["rec"], r["sig"]
+        if r.get("d0"):
+            spec = DEALLOCATORS[r["dealloc"]]
+            if spec["heap"]:
+                free = ("_ZN6Memory10DeallocateEPvP4Heap(self, %s);"
+                        % r["heap"])
+            else:
+                free = "_ZN6Memory16operator_delete2EPv(self);"
+            if r.get("flat_callee"):
+                run = "%s(self);" % r["target"]
+            else:
+                qual = cpp_qualified(rec)
+                run = "((%s *)self)->%s::~%s();" % (qual, qual,
+                                                    rec["cls"][-1])
+            lines.append("/* ROM 0x%08x %s = %s + %s */"
+                         % (r["addr"], r["ident"],
+                            r["target"], r["dealloc"]))
+            lines.append('extern "C" void %s(void *self)' % r["ident"])
+            lines.append("{ %s %s }" % (run, free))
+            lines.append("")
+            continue
+        if r.get("forward"):
+            argn = ["a%d" % i for i in range(len(sig["params"]))]
+            mparams = ", ".join(
+                "%s %s" % (cpp_type(*pr), n)
+                for pr, n in zip(sig["params"], argn))
+            callargs = ["(void *)this" if sig["const"] else "this"]
+            for pr, n in zip(sig["params"], argn):
+                callargs.append("&" + n if pr[0] == "ref" else n)
+            retkw = "return " if sig["ret"] != "void" else ""
+            lines.append("/* ROM 0x%08x %s -> the caller's %s */"
+                         % (r["addr"], r["ident"], r["target"]))
+            # A STRUCTOR IS DECLARED WITHOUT A RETURN TYPE, and undname reports
+            # one for it anyway (`void` for a destructor, the class for a
+            # constructor). Writing it out is C2577/C2533 and the whole
+            # generated file stops compiling, so the two are spelled apart.
+            if sig["structor"]:
+                retkw = ""
+                lines.append("%s::%s(%s)"
+                             % (cpp_qualified(rec) if len(rec["cls"]) > 1
+                                else rec["cls"][0], sig["meth"], mparams))
+            else:
+                lines.append("%s %s::%s(%s)%s"
+                             % (sig["ret"], cpp_qualified(rec) if
+                                len(rec["cls"]) > 1 else rec["cls"][0],
+                                sig["meth"], mparams,
+                                " const" if sig["const"] else ""))
+            lines.append("{ %s%s(%s); }"
+                         % (retkw, r["ident"], ", ".join(callargs)))
+            lines.append("")
+            continue
+        qual = cpp_qualified(rec)
+        cls = rec["cls"][-1]
+        argn = ["a%d" % i for i in range(len(sig["params"]))]
+        _ret, _name, _cp = _face_signature(r)
+        cparams = [_spell_params(_cp, True)]
+        callargs = []
+        for pr, n in zip(sig["params"], argn):
+            kind, tname, isc = pr
+            if kind == "scalar":
+                callargs.append(n)
+            elif kind == "ref":
+                callargs.append("*(%s%s *)%s"
+                                % ("const " if isc else "", tname, n))
+            else:
+                callargs.append("(%s%s *)%s"
+                                % ("const " if isc else "", tname, n))
+        cast = "(const %s *)" % qual if sig["const"] else "(%s *)" % qual
+        lines.append("/* ROM 0x%08x -> %s */" % (r["addr"], r["target"]))
+        if rec["meth"] == "~":
+            lines.append('extern "C" void %s(void *self)' % r["ident"])
+            lines.append("{ ((%s *)self)->%s::~%s(); }" % (qual, qual, cls))
+        elif rec["meth"] == "ctor":
+            lines.append('extern "C" void %s(%s)'
+                         % (r["ident"], cparams[0]))
+            lines.append("{ new ((void *)self) %s(%s); }"
+                         % (qual, ", ".join(callargs)))
+        else:
+            ret = sig["ret"]
+            wide = widened_return(r)
+            if wide:
+                # THE RETURN WIDTH RULE. The cast is the whole fix: the target
+                # writes AL (or AX) alone and leaves the rest of EAX holding
+                # whatever was there, and a flat caller that spells this name
+                # `int` reads all four bytes. The conversion makes MSVC emit the
+                # movzx/movsx, so the face defines the WHOLE register the way
+                # the ROM's own body does.
+                lines.append("/* RETURN WIDENED %s -> %s: see THE RETURN WIDTH "
+                             "RULE in port/tools/facegen.py */" % (ret, wide))
+                lines.append('extern "C" %s %s(%s)'
+                             % (wide, r["ident"], cparams[0]))
+                lines.append("{ return (%s)(%sself)->%s::%s(%s); }"
+                             % (wide, cast, qual, sig["meth"],
+                                ", ".join(callargs)))
+            else:
+                retkw = "return " if ret != "void" else ""
+                lines.append('extern "C" %s %s(%s)'
+                             % (ret, r["ident"], cparams[0]))
+                lines.append("{ %s(%sself)->%s::%s(%s); }"
+                             % (retkw, cast, qual, sig["meth"],
+                                ", ".join(callargs)))
+        lines.append("")
+
+    text = "\n".join(lines) + "\n"
+    pathlib.Path(out).parent.mkdir(parents=True, exist_ok=True)
+    pathlib.Path(out).write_text(text)
+    return text
+
+
+def verify_sync(rows, genfile, scratch):
+    """Compile the emitted file; its symbol surface must equal the request."""
+    genfile = pathlib.Path(genfile).resolve()
+    results = closure.compile_batch(genfile.parent, [str(genfile)], scratch)
+    syms = results[str(genfile)]
+    if syms is None:
+        return False, "generated file DID NOT COMPILE (see %s)" % scratch
+    und, dfn = closure.read_syms(syms)
+    want_def = set(r["target"] if r.get("forward") else "_" + r["ident"]
+                   for r in rows)
+    if any(r["rec"]["meth"] == "ctor" and not r.get("forward")
+           for r in rows):
+        # The inline placement operator new the constructor faces need comes
+        # back as a COMDAT of its own. Three other objects in this link
+        # already emit it (fader_wipes, sdat, editor_channel), COMDATs fold,
+        # and it is the standard body, so it is an expected member of the
+        # surface rather than a stray.
+        want_def.add("??2@YAPAXIPAX@Z")
+    want_und = set("_" + r["ident"] if r.get("forward") else r["target"]
+                   for r in rows)
+    for r in rows:
+        if not r.get("d0"):
+            continue
+        # A D0 face refers to its D1 (flat or decorated), to the one
+        # deallocation the ROM body makes, and to the pooled heap word.
+        if r.get("flat_callee"):
+            want_und.add("_" + r["target"])
+        want_und.add(DEALLOCATORS[r["dealloc"]]["undefined"])
+        if r["heap"] != "-":
+            want_und.add("_" + r["heap"])
+    problems = []
+    if dfn != want_def:
+        problems.append("defined set mismatch: extra=%s missing=%s"
+                        % (sorted(dfn - want_def)[:8],
+                           sorted(want_def - dfn)[:8]))
+    if not und <= want_und:
+        problems.append("unexpected undefineds: %s"
+                        % sorted(und - want_und)[:8])
+    return (not problems), "; ".join(problems) or "surface exact"
+
+
+SYNC_ROW = re.compile(r"^(\S+)\s+(\S+)\s+(0x[0-9a-fA-F]+)\s+"
+                      r"(?:([RF])|D\s+(\S+)\s+(\S+))\s*$")
+
+
+def read_sync_ledger(path):
+    """port/faces_sync.txt -> [(flat, other, address, direction, *extra)].
+
+    The direction says which of the two names the FACE DEFINES:
+      R  reverse -- the face defines the flat ROM name and calls the member;
+      F  forward -- the face defines the decorated member the caller asked
+         for and calls the flat ROM body;
+      D  deleting destructor -- the face defines the flat ROM D0 name, runs
+         the class's D1 (the second column: the flat D1 when this link
+         defines it, else the decorated destructor) and then makes the one
+         deallocation the ROM's own D0 body makes. A D row carries two more
+         columns, the deallocation and the heap word its pooled literal
+         relocates to ("-" for the operator_delete2 shape, which takes none),
+         because Deallocate's heap argument is per class and a default would
+         be heap corruption.
+
+    Comment and blank lines are skipped. A malformed row is fatal: this file
+    is the tool's whole universe in --sync mode, and a row the reader drops
+    is a face that silently stops being generated.
+    """
+    rows = []
+    for num, ln in enumerate(pathlib.Path(path).read_text(
+            errors="replace").splitlines(), 1):
+        t = ln.strip()
+        if not t or t.startswith("#"):
+            continue
+        m = SYNC_ROW.match(t)
+        if not m:
+            sys.exit("%s:%d: malformed ledger row %r (want "
+                     "'<flat> <other> <0xaddress> <R|F>' or "
+                     "'<flat D0> <D1> <0xaddress> D <deallocation> <heap>')"
+                     % (path, num, t))
+        if m.group(4):
+            rows.append((m.group(1), m.group(2), int(m.group(3), 16),
+                         m.group(4)))
+        else:
+            rows.append((m.group(1), m.group(2), int(m.group(3), 16),
+                         "D", m.group(5), m.group(6)))
+    return rows
+
+
+def write_ledger(rows, path):
+    """Write a derived row set out as a faces_sync.txt ledger body.
+
+    Header text is not written here: port/faces_sync.txt carries a hand
+    header that explains the contract, and a regeneration must not silently
+    drop it. This writes the rows only, for a lane to paste under it.
+    """
+    lines = []
+    cur = None
+    for r in sorted(rows, key=lambda x: (_shadow_comps(x)[0], x["flat"],
+                                         x["target"])):
+        top = _shadow_comps(r)[0]
+        if top != cur:
+            lines.append("")
+            cur = top
+        if r.get("d0"):
+            lines.append("%-72s %-64s 0x%08x D %s %s"
+                         % (r["flat"], r["target"], r["addr"],
+                            r["dealloc"], r["heap"]))
+        else:
+            lines.append("%-72s %-64s 0x%08x %s"
+                         % (r["flat"], r["target"], r["addr"],
+                            "F" if r.get("forward") else "R"))
+    pathlib.Path(path).write_text("\n".join(lines) + "\n")
+    return len(rows)
+
+
+def run_sync(ledger, root, out, defined=None, strict=True):
+    """Generate the sync faces named by the checked-in ledger.
+
+    THE TOOL REFUSES TO RUN ON A NAME THAT IS NOT IN THE LEDGER: the ledger
+    IS the request in this mode, so a face can only appear in the output by
+    appearing in a reviewed, checked-in row first.
+    """
+    want = read_sync_ledger(ledger)
+    rev = [w for w in want if w[3] == "R"]
+    fwd = [w for w in want if w[3] == "F"]
+    dzero = [w for w in want if w[3] == "D"]
+    if defined is None:
+        # The ledger's own columns are the universe: each row names both the
+        # definition it binds to and the ROM body, and the build has no link
+        # map to read yet. A D row's second column is the destructor its face
+        # runs, which is in this link by the same argument.
+        defined = (set(w[1] for w in rev) | set(w[0] for w in fwd)
+                   | set(w[1] for w in dzero)
+                   | set("_" + w[1] for w in dzero))
+    rows, refusals = derive_rows([w[0] for w in rev], defined, root)
+    frows, frefusals = derive_forward_rows([w[1] for w in fwd], defined, root)
+    refusals += frefusals
+    drows, drefusals = derive_d0_rows(dzero, defined, root)
+    refusals += drefusals
+    bound = {}
+    for r in rows:
+        bound[("R", r["flat"])] = r
+    for r in frows:
+        bound[("F", r["target"])] = r
+    for r in drows:
+        bound[("D", r["flat"])] = r
+
+    def _key(w):
+        return (w[3], w[1] if w[3] == "F" else w[0])
+
+    for w in want:
+        direction, flat, dec, addr = w[3], w[0], w[1], w[2]
+        k = _key(w)
+        r = bound.get(k)
+        if r is None:
+            continue
+        want_other = flat if direction == "F" else dec
+        got_other = r["flat"] if direction == "F" else r["target"]
+        if got_other != want_other:
+            refusals.append((k[1], "LEDGER DISAGREES: the row names %s and "
+                             "the derivation binds %s"
+                             % (want_other, got_other)))
+            bound.pop(k)
+            continue
+        if r["addr"] != addr:
+            refusals.append((k[1], "LEDGER DISAGREES: the row names ROM "
+                             "0x%08x and config says 0x%08x"
+                             % (addr, r["addr"])))
+            bound.pop(k)
+    rows = [bound[_key(w)] for w in want if _key(w) in bound]
+    rows, cyc = refuse_face_cycles(rows)
+    refusals += cyc
+    widened = sorted((r["ident"], r["sig"]["ret"], widened_return(r))
+                     for r in rows if widened_return(r))
+    text = emit_sync(rows, out, "%d faces from %d ledger rows; %d REFUSED; "
+                     "%d RETURN WIDENED"
+                     % (len(rows), len(want), len(want) - len(rows),
+                        len(widened)))
+    for flat, why in refusals:
+        print("REFUSED %s -- %s" % (flat, why))
+    # THE RETURN WIDTH RULE names its whole set out loud, so the class is
+    # visible in every build log rather than being found one call site at a
+    # time by a player.
+    print("RETURN WIDENED %d reverse faces (see THE RETURN WIDTH RULE):"
+          % len(widened))
+    for ident, was, now in widened:
+        print("    %-58s %s -> %s" % (ident, was, now))
+    bad = check_return_widths(text)
+    if bad:
+        sys.exit("THE RETURN WIDTH RULE was not applied to %d generated "
+                 "reverse face(s), which is a wrong answer the link cannot "
+                 "see: %s" % (len(bad), ", ".join("%s (%s)" % b for b in bad)))
+    print("faces %d of %d ledger rows -> %s" % (len(rows), len(want), out))
+    if strict and len(rows) != len(want):
+        sys.exit("%d ledger rows did not survive the address binding; a "
+                 "checked-in row that stops deriving is a face that silently "
+                 "left the link" % (len(want) - len(rows)))
+    return rows, refusals
+
+
 def read_list(path):
     """A symbol per line; closure.py output is accepted as-is.
 
@@ -701,20 +3208,20 @@ def selftest():
          namespace-scope free function rather than dying in undname.
     """
     unresolved = [
-        "?UpdatePos@Actor@@QAEXPAUCylinderClsn@@@Z",
-        "?UpdatePosWithHorzSpeedAndAng@Actor@@QAEXXZ",
-        "?ReflectAngle@Actor@@QAEFHHF@Z",
-        "?DistToCPlayer@Actor@@QAEHXZ",
-        "?UpdateWMClsn@Enemy@@QAEXAAUWithMeshClsn@@I@Z",
-        "?Init@MovingCylinderClsn@@QAEXPAUActor@@HHII@Z",
-        "?SetFile@MovingMeshCollider@@QAEXPAUKCL_File@@ABUMatrix4x3@@HFAAUCLPS_Block@@@Z",
-        "?Init@WithMeshClsn@@QAEXPAUActor@@HHPAUVector3_16@@H@Z",
-        "?IsOnWall@WithMeshClsn@@QBEHXZ",
-        "?JustHitGround@WithMeshClsn@@QBEHXZ",
+        "?UpdatePos@dActor_c@@QAEXPAUCylinderClsn@@@Z",
+        "?UpdatePosWithHorzSpeedAndAng@dActor_c@@QAEXXZ",
+        "?ReflectAngle@dActor_c@@QAEFHHF@Z",
+        "?DistToCPlayer@dActor_c@@QAEHXZ",
+        "?UpdateWMClsn@dEnemyBase_c@@QAEXAAUWithMeshClsn@@I@Z",
+        "?Init@dCcAc_c@@QAEXPAUActor@@HHII@Z",
+        "?SetFile@dBgW_KcMbg@@QAEXPAUKCL_File@@ABUMatrix4x3@@HFAAUCLPS_Block@@@Z",
+        "?Init@dBgCh_Actr@@QAEXPAUActor@@HHPAUVector3_16@@H@Z",
+        "?IsOnWall@dBgCh_Actr@@QBEHXZ",
+        "?JustHitGround@dBgCh_Actr@@QBEHXZ",
         "?ApplyOpacity@ModelBase@@QAEXIH@Z",
         "?data_ov004_020beb98@@3PAP8C@@AEXXZA",
         "?data_ov004_020beb68@@3PAHA",
-        "__ZN5Actor17TrackInDeathTableEv",
+        "__ZN8dActor_c17TrackInDeathTableEv",
         "?data_ov006_02141950@@3PAUEntry@@A",
         "?data_ov004_020bc904@@3UPair@@A",
         "__ZN6Memory8AllocateEji",
@@ -723,19 +3230,19 @@ def selftest():
         "?data_ov004_020bff00@@3PAP6AXXZA",
     ]
     targets = [
-        "__ZN5Actor9UpdatePosEP12CylinderClsn",
-        "__ZN5Actor28UpdatePosWithHorzSpeedAndAngEv",
-        "__ZN5Actor12ReflectAngleE5Fix12IiES1_s",
-        "__ZN5Actor13DistToCPlayerEv",
-        "__ZN5Enemy12UpdateWMClsnER12WithMeshClsnj",
-        "__ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj",
-        "__ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block",
-        "__ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_",
-        "__ZNK12WithMeshClsn8IsOnWallEv",
-        "__ZNK12WithMeshClsn13JustHitGroundEv",
+        "__ZN8dActor_c9UpdatePosEP5dCc_c",
+        "__ZN8dActor_c28UpdatePosWithHorzSpeedAndAngEv",
+        "__ZN8dActor_c12ReflectAngleE5Fix12IiES1_s",
+        "__ZN8dActor_c13DistToCPlayerEv",
+        "__ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj",
+        "__ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj",
+        "__ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block",
+        "__ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_",
+        "__ZNK10dBgCh_Actr8IsOnWallEv",
+        "__ZNK10dBgCh_Actr13JustHitGroundEv",
         "__ZN9ModelBase12ApplyOpacityEj",
         "_data_ov004_020beb68",
-        "?TrackInDeathTable@Actor@@QAEXXZ",
+        "?TrackInDeathTable@dActor_c@@QAEXXZ",
         "_data_ov006_02141950",
         "_data_ov004_020bc904",
         "?Allocate@Memory@@YAPAXIH@Z",
@@ -753,7 +3260,7 @@ def selftest():
 
     expect(len(rows["FACE"]) == 10, "10 faces, got %d" % len(rows["FACE"]))
     expect(len(rows["RFACE"]) == 1 and
-           rows["RFACE"][0][1] == "_ZN5Actor17TrackInDeathTableEv",
+           rows["RFACE"][0][1] == "_ZN8dActor_c17TrackInDeathTableEv",
            "TrackInDeathTable reverse face")
     # dataP8pad is the WALL scan's name-exclusion arm: 'P8' in the NAME
     # portion of a scalar-spelled global must still alias -- the scan
@@ -842,12 +3349,12 @@ def selftest():
             "map defines 32535 symbols\n"
             "\n"
             "=== COMPILE FAILURES (1) ===\n"
-            "   src/func_ov006_020e3528.cpp\n"
+            "   src/_ZN14dScMgCurling_c8BehaviorEv.cpp\n"
             "        error C2440: cannot convert\n"
             "\n"
             "=== UNRESOLVED after this slice: 2 "
             "(an estimate; confirm with a link) ===\n"
-            "    ?UpdatePos@Actor@@QAEXPAUCylinderClsn@@@Z\n"
+            "    ?UpdatePos@dActor_c@@QAEXPAUCylinderClsn@@@Z\n"
             "    _data_02075720\n"
             "\n"
             "=== DUP-DEF CANDIDATES, NEED A REAL LINK ===\n"
@@ -857,7 +3364,7 @@ def selftest():
             "  FOREIGN-object rows, the LNK2005 candidates: 1\n"
             "    _LoadArchive  --  image copy is from scene_boot.cpp.obj\n")
         got = read_list(mixed)
-        expect(got == ["?UpdatePos@Actor@@QAEXPAUCylinderClsn@@@Z",
+        expect(got == ["?UpdatePos@dActor_c@@QAEXPAUCylinderClsn@@@Z",
                        "_data_02075720"],
                "read_list on mixed closure output: %s" % got)
 
@@ -867,6 +3374,40 @@ def selftest():
         got = read_list(plain)
         expect(got == ["?A@B@@QAEXXZ", "_c_name"],
                "read_list on a plain list: %s" % got)
+
+    # THE RETURN WIDTH RULE arm. Three claims, each one a way the rule has
+    # already been got wrong by hand somewhere in this tree:
+    #   1. a REVERSE face over a bool target widens and converts explicitly;
+    #   2. a FORWARD face over the same target does NOT (it declares a callee
+    #      it does not define, and widening that invents the defect mirrored);
+    #   3. check_return_widths() actually refuses the un-widened text, so the
+    #      rule cannot quietly come undone in the one emitter branch it lives
+    #      in.
+    boolsig = {"virtual": False, "access": "public", "ret": "bool",
+               "cls": "Player", "meth": "IsState", "params": [],
+               "const": False, "structor": None}
+    rev = {"flat": "_ZN6Player7IsStateEv", "ident": "_ZN6Player7IsStateEv",
+           "target": "?IsState@Player@@QAE_NXZ", "addr": 0x020e308c,
+           "rec": {"cls": ["Player"], "meth": "IsState", "comps": ["Player"]},
+           "sig": boolsig}
+    fwd = dict(rev, forward=True)
+    expect(widened_return(rev) == "int", "reverse bool face must widen")
+    expect(widened_return(fwd) is None, "forward bool face must NOT widen")
+    with tempfile.TemporaryDirectory() as td:
+        out = pathlib.Path(td) / "g.cpp"
+        text = emit_sync([rev], str(out))
+        expect('extern "C" int _ZN6Player7IsStateEv(void *self)' in text,
+               "widened reverse face declaration: %s"
+               % [l for l in text.splitlines() if "IsState" in l])
+        expect("return (int)((Player *)self)->Player::IsState();" in text,
+               "widened reverse face body: %s"
+               % [l for l in text.splitlines() if "IsState" in l])
+        expect(check_return_widths(text) == [],
+               "the widened file must pass its own gate")
+    unfixed = 'extern "C" bool _ZN6Player7IsStateEv(void *self)\n'
+    expect(check_return_widths(unfixed) ==
+           [("_ZN6Player7IsStateEv", "bool")],
+           "check_return_widths must catch an un-widened reverse face")
     print("selftest %s" % ("PASS" if ok else "FAIL"))
     return 0 if ok else 1
 
@@ -883,10 +3424,57 @@ def main():
     ap.add_argument("--verify", action="store_true",
                     help="compile the output and check its symbol surface")
     ap.add_argument("--selftest", action="store_true")
+    ap.add_argument("--sync", metavar="LEDGER",
+                    help="generate the sync faces named by a checked-in "
+                         "ledger (port/faces_sync.txt); every row is "
+                         "re-derived against the ROM addresses and a row "
+                         "that stops deriving fails")
+    ap.add_argument("--derive", action="store_true",
+                    help="with --unresolved and a universe: WRITE a candidate "
+                         "ledger to --out instead of a source file")
+    ap.add_argument("--root", default=None,
+                    help="repo root holding config/**/symbols.txt (default: "
+                         "the parent of the port/ directory this tool is in)")
+    ap.add_argument("--lenient", action="store_true",
+                    help="--sync only: report refusals without failing")
+    ap.add_argument("--where-undname", action="store_true",
+                    help="print the undname.exe this host would use, and "
+                         "every place that was looked, then exit 1 if there "
+                         "is none")
     args = ap.parse_args()
+
+    if args.where_undname:
+        # Cheap enough to run before a build, and it turns the whole class of
+        # "the demangler was not there" into one line at the top of the log
+        # instead of a thousand refusals nine minutes in.
+        exe = find_undname()
+        for place in _UNDNAME_TRIED:
+            print("  looked: %s" % place)
+        if exe:
+            print("undname: %s" % exe)
+            probe = _undname_direct(exe, ["?Behavior@BillBlaster@@UAEHXZ"])
+            for key in sorted(probe):
+                print("  probe: %s -> %s" % (key, probe[key]))
+            sys.exit(0 if probe else
+                     "undname: found but it produced nothing for the probe")
+        sys.exit("undname: NOT FOUND -- facegen --sync would refuse every "
+                 "ledger row")
 
     if args.selftest:
         sys.exit(selftest())
+
+    root = args.root or os.path.dirname(os.path.dirname(
+        os.path.dirname(os.path.abspath(__file__))))
+
+    if args.sync:
+        rows, _ref = run_sync(args.sync, root, args.out,
+                              strict=not args.lenient)
+        if args.verify:
+            with tempfile.TemporaryDirectory() as td:
+                good, msg = verify_sync(rows, args.out, td)
+                print("verify:", ("PASS " if good else "FAIL ") + msg)
+                sys.exit(0 if good else 1)
+        sys.exit(0)
     if not args.unresolved:
         sys.exit("pass --unresolved (or --selftest)")
 
@@ -897,6 +3485,17 @@ def main():
         targets += sorted(closure.map_defined(args.mapfile))
     if not targets:
         sys.exit("empty universe: pass --targets and/or --map")
+
+    if args.derive:
+        flats = [x for x in read_list(args.unresolved)
+                 if not x.startswith("?")]
+        drows, refusals = derive_rows(flats, set(targets), root)
+        write_ledger(drows, args.out)
+        for flat, why in refusals:
+            print("REFUSED %s -- %s" % (flat, why))
+        print("\nledger %s: %d rows derived, %d refused"
+              % (args.out, len(drows), len(refusals)))
+        sys.exit(0)
 
     rows = classify(read_list(args.unresolved), build_universe(targets))
     report(rows)

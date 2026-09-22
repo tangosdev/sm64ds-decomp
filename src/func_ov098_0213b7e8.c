@@ -6,7 +6,7 @@
 extern int _Z14ApproachLinearRiii(int *v, int step, int rate);
 extern void func_ov098_0213b63c(char *c);
 extern int _ZN4cstd4fdivEii(int a, int b);
-extern char *_ZN5Actor13ClosestPlayerEv(char *self);
+extern char *_ZN8dActor_c13ClosestPlayerEv(char *self);
 extern short Vec3_HorzAngle(const void *v0, const void *v1);
 
 void func_ov098_0213b7e8(char *c)
@@ -34,7 +34,7 @@ void func_ov098_0213b7e8(char *c)
             *pst = *pst + 1;
             *(int *)(c + 0xa8) = (*(u8 *)(c + 0x3b6) << 13) + 0x30000;
             *(int *)(c + 0x98) = 0x6000;
-            player = _ZN5Actor13ClosestPlayerEv(c);
+            player = _ZN8dActor_c13ClosestPlayerEv(c);
             if (player != 0) {
                 *(u16 *)(c + 0x94) = Vec3_HorzAngle(c + 0x5c, player + 0x5c);
             } else {

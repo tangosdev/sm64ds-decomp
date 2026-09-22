@@ -22,7 +22,7 @@
 # port/hal/player_bridges.cpp, at the address config/arm9/overlays/ov002/
 # symbols.txt gives it. These are the last three ov002 St_ addresses the
 # generated player_states.inc did not carry.
-src/_ZN6Player17St_EndingFly_InitEv.cpp
+src/actors/Player.cpp
 src/_ZN6Player19St_SwingPlayer_InitEv.cpp
 src/_ZN6Player22St_SwingPlayer_CleanupEv.cpp
 
@@ -50,7 +50,7 @@ src/_ZN6Player22St_SwingPlayer_CleanupEv.cpp
 #   020c3148  func_ov002_020c38a0 (blocked, see below)
 #   020c3160  func_ov002_020c2fec (blocked, see below)
 #   020c37a4  func_ov002_020c38a0, func_ov002_020c3a48
-#   020c3a48  func_ov002_020c3d1c
+#   020c3a48  _ZN6Player17St_EndingFly_MainEv
 #   020c3cf0  func_ov002_020c3a48, func_ov002_020c3bdc
 #   020c3dbc  func_ov089_02131dcc
 #   020c51d0  func_ov034_02111a64
@@ -61,49 +61,35 @@ src/_ZN6Player22St_SwingPlayer_CleanupEv.cpp
 #   020d5f98  func_ov002_020ec9c4
 #   020d6048  func_ov002_020ec9c4
 #   020db674  func_ov077_02126640
-#   020de328  func_ov092_02131010, func_ov096_02137088
+#   020de328  func_ov092_02131010, _ZN7Tornado6State1Ev
 #   020de33c  _ZN7Tornado8BehaviorEv
-#   020ee5d0  _ZN8Platform20UpdateKillByMegaCharEsss5Fix12IiE
-src/func_ov002_020c3148.c
-src/func_ov002_020c3160.c
-src/func_ov002_020c37a4.cpp
-src/func_ov002_020c3a48.c
-src/func_ov002_020c3cf0.c
-src/func_ov002_020c3dbc.c
-src/func_ov002_020c51d0.cpp
-src/func_ov002_020c56f0.c
-src/func_ov002_020c5cd8.c
-src/func_ov002_020cc16c.c
-src/func_ov002_020cfd84.cpp
+#   020ee5d0  _ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE
 src/func_ov002_020d5f98.cpp
 src/func_ov002_020d6048.cpp
 src/func_ov002_020db674.c
 src/func_ov002_020de328.c
 src/func_ov002_020de33c.c
-src/func_ov002_020ee5d0.c
+src/actors/dBgActor_c.cpp
 #
 # Player methods, same story -- none of them is a state function, so none has
 # a dispatcher address; they come alive when their real callers land:
 #   GetHurtState     ov073/ov077 damage readers
-#   Shock            func_ov070_02120644, _ZN16BowserShockwaves8BehaviorEv
-#   BlowAway         func_ov027_02112170, func_ov091_021339fc
+#   Shock            _ZN7daBrq_c21HandlePlayerCollisionEv, _ZN16BowserShockwaves8BehaviorEv
+#   BlowAway         _ZN21SnowmanBreathParticle9HitPlayerEv, func_ov091_021339fc
 #   EnterWhirlpool   no caller anywhere in src/ yet
 #   JumpIntoBooCage  no caller anywhere in src/ yet
 #   CanPause         no caller in src/ yet (the arm9 pause menu calls it)
 src/_ZN6Player12GetHurtStateEv.cpp
 src/_ZN6Player5ShockEj.cpp
 src/_ZN6Player8BlowAwayEs.cpp
-src/_ZN6Player14EnterWhirlpoolEv.cpp
-src/_ZN6Player15JumpIntoBooCageER7Vector3.cpp
-src/_ZN6Player8CanPauseEv.cpp
 
 # ---------------------------------------------------------------------------
 # WAVE 2 / LANE w2-e: ov002's REAL St_EndingFly_Main and everything under it.
 #
 # Wave 1 left 0x020c3d1c as a suspicion: ov002 and ov007 both have a function
 # there (they share base 0x020ad660 and the DS only ever loads one), ov007's
-# is named _ZN6Player17St_EndingFly_MainEv by the community config, and ov002's
-# is the anonymous func_ov002_020c3d1c. Pattern evidence pointed at ov002 and
+# is named func_ov007_020c3d1c by the community config, and ov002's
+# is the anonymous _ZN6Player17St_EndingFly_MainEv. Pattern evidence pointed at ov002 and
 # was not enough to act on.
 #
 # The ROM settles it. __sinit_ov002_021019d0 is the constructor for every
@@ -111,13 +97,13 @@ src/_ZN6Player8CanPauseEv.cpp
 # in ov002 .data, Init cell first, then Main, then the State's own bss address.
 # Read straight out of config/arm9/overlays/ov002/relocs.txt:
 #     0x02106dac -> cell 0x0210a51c -> 0x020c3d6c  _ZN6Player17St_EndingFly_InitEv
-#     0x02106db0 -> cell 0x0210a0bc -> 0x020c3d1c  func_ov002_020c3d1c
+#     0x02106db0 -> cell 0x0210a0bc -> 0x020c3d1c  _ZN6Player17St_EndingFly_MainEv
 #     0x02106db4 ->      0x02110804               (a pool argument word; the
 #     EndingFly State object itself is 0x0211058c -- the reviewer's full
 #     81-state reconstruction of the sinit store sequence settled that)
 # The same triple shape names OpeningWakeUp, LongJump, PunchKick and
 # GroundPound correctly two cells earlier, so the pairing is the sinit's, not
-# a guess. func_ov002_020c3d1c IS Player::St_EndingFly_Main; ov007's body at
+# a guess. _ZN6Player17St_EndingFly_MainEv IS Player::St_EndingFly_Main; ov007's body at
 # the same address is a leaf helper reached by 86 arm_calls inside ov007 and
 # never by a PMF cell, which is not the shape of a state function at all.
 #
@@ -132,10 +118,6 @@ src/_ZN6Player8CanPauseEv.cpp
 #   020c38a0  calls func_ov002_020c2fec, plus 020c3148/020c37a4 (both seated)
 #   020c2fec  walks data_ov002_0210a8b8, mounted for this in port/ov002_syms.txt
 src/func_0200eec8.c
-src/func_ov002_020c2fec.c
-src/func_ov002_020c38a0.c
-src/func_ov002_020c3bdc.c
-src/func_ov002_020c3d1c.c
 
 # ---------------------------------------------------------------------------
 # NOT SEATABLE, and why. None of these is a wiring problem this lane can fix.
@@ -167,16 +149,16 @@ src/func_ov002_020c3d1c.c
 #     already dispatches correctly into the tree, under a name a future caller
 #     could pick by mistake. That is the WRONG TARGET failure mode from the
 #     header essay in hal/method_faces.cpp, bought for nothing:
-#       _ZN6Player23St_InYoshiMouth_CleanupEv  ov006's 0x020d6084; the .inc
-#         dispatches that address to func_ov002_020d6084.
-#       _ZN6Player12St_Null_InitEv         ov006's 0x020cac30; same shape.
-#       _ZN6Player6ST_OWLE                 an ov006 class, not a Player member
+#       func_ov006_020d6084  ov006's 0x020d6084; the .inc
+#         dispatches that address to _ZN6Player23St_InYoshiMouth_CleanupEv.
+#       func_ov006_020cac30         ov006's 0x020cac30; same shape.
+#       func_ov006_02110244                 an ov006 class, not a Player member
 #         at all -- see the note in the src file.
 #
 # (b1) _ZN6Player18St_LevelEnter_MainEv is left out for the PMF STRIDE, not
 #     for a shared address, and it sat under (b) with the polarity inverted.
 #     ov002/symbols.txt names 0x020c6f3c with this exact symbol (size 0xa8)
-#     and src/_ZN6Player18St_LevelEnter_MainEv.cpp defines the ov002 body, so
+#     and src/actors/Player.cpp defines the ov002 body, so
 #     the name is this overlay's own rather than another's. It stays out
 #     because that body dispatches through data_ov002_0211075c, whose records
 #     are eight bytes and which MSVC's one-word pointer-to-member would stride
@@ -204,11 +186,11 @@ src/func_ov002_020c3d1c.c
 # (d) Cross-subsystem externs. Each of these compiles clean and fails only at
 #     link, on a symbol from an overlay this lane does not own. Seating the
 #     missing side belongs to the lane that owns it:
-#       _ZN6Player16St_WallJump_InitEv   ov004 020afdd0, ov006 data 0213c2e4
-#       _ZN6Player17St_EndingFly_MainEv  ov007 data 02103254
+#       func_ov006_020e17f8   ov004 020afdd0, ov006 data 0213c2e4
+#       func_ov007_020c3d1c  ov007 data 02103254
 #       _ZN6Player29TryExitCharacterDoorWithIntroEv   ov006 020cd6f4
 #       func_ov002_020c3bdc              arm9 func_0200eec8
-#       func_ov002_020c3d1c              via func_ov002_020c3bdc
+#       _ZN6Player17St_EndingFly_MainEv              via func_ov002_020c3bdc
 #       func_ov002_020c2fec              data_ov002_0210a8b8, which is not in
 #                                        port/ov002_syms.txt, so the overlay's
 #                                        data image does not seat it
@@ -229,7 +211,7 @@ src/func_ov002_020c3d1c.c
 # THE CALL EDGE (w4-e's derivation, re-checked at seat time):
 # _ZN3HUD6RenderEv.cpp.obj is in walk_window.map and calls
 # _ZN5Stage20RenderBouncingArrowsEv by the C name. Stage::Render,
-# Stage::LC_Render, Stage::PS_Render and func_ov003_020b0814 call it too and
+# Stage::LC_Render, Stage::PS_Render and _ZN13dScGameOver_c6RenderEv call it too and
 # none of those four is linked, so HUD::Render is the whole edge today, gated
 # on data_0209f284 (zeroed bss on this boot) -- a linkage win first, a visible
 # one only on a level that sets it.

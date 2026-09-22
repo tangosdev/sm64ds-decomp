@@ -31,13 +31,13 @@
 // ---- 2. THE HIERARCHY IS THREE DEEP, AND THE ROM SAYS SO THREE WAYS -------
 //
 //     Scene -> dScMgBase_c         data_ov004_020bc0c0  36 slots
-//           -> dScMgSingle3DBase_c data_ov006_0213e448  36 slots
-//           -> dScMgSound_c        data_ov006_0213f844  36 slots
+//           -> dScMgSingle3DBase_c _ZTV19dScMgSingle3DBase_c  36 slots
+//           -> dScMgSound_c        _ZTV12dScMgSound_c  36 slots
 //
 // The class name is the ROM's own RTTI and not a src spelling, which is the
 // chain port/mg_fanout_costs.txt section 14 says every later lane should
 // prefer: the word immediately BEFORE the vtable is the type_info pointer,
-// data_ov006_0213f844[-1] = 0x0213f6e4, whose second word is 0x0213f708, which
+// _ZTV12dScMgSound_c[-1] = 0x0213f6e4, whose second word is 0x0213f708, which
 // reads "12dScMgSound_c" in extracted/overlays/overlay_0006.bin. That record's
 // THIRD word is 0x0213bc64, another type_info, whose name pointer reads
 // "19dScMgSingle3DBase_c" -- so the intermediate base is named by the ROM
@@ -45,11 +45,11 @@
 //
 // Both edges are also read off code, the way run mg6 lane MEM read 0x16b's:
 //
-//   src/MgBoomBox_Spawn.cpp (0x0211cb70) calls func_ov004_020b2adc(p) WITH its
-//   argument, writes data_ov006_0213e448 into p[0] (ROM 0x0211cbc4), then
-//   writes data_ov006_0213f844 over it (ROM 0x0211cbcc).
-//   src/func_ov006_02119958.cpp (slot 17, D0) unwinds them in the OPPOSITE
-//   order -- 0x0213f844 first, then 0x0213e448 -- and src/func_ov006_02119904
+//   src/actors/dScMgSound_c.cpp (0x0211cb70) calls _ZN11dScMgBase_cC2Ev(p) WITH its
+//   argument, writes _ZTV19dScMgSingle3DBase_c into p[0] (ROM 0x0211cbc4), then
+//   writes _ZTV12dScMgSound_c over it (ROM 0x0211cbcc).
+//   src/actors/dScMgSound_c.cpp (slot 17, D0) unwinds them in the OPPOSITE
+//   order -- 0x0213f844 first, then 0x0213e448 -- and src/_ZN12dScMgSound_cD1Ev
 //   .cpp (slot 16, D2) does the same without the Deallocate.
 //
 // SIX OF THIS CLASS'S THIRTEEN OVERRIDES ARE THE MIDDLE BASE'S BODIES, slots
@@ -97,17 +97,17 @@
 //
 // ---- 4. SLOT 2 IS NOT src's BODY, AND IT IS NOT THIS LANE'S HOST COPY -----
 //
-// func_ov006_0210a6e4 (AfterInitResources) drops the framework's second
+// _ZN19dScMgSingle3DBase_c18AfterInitResourcesEj (AfterInitResources) drops the framework's second
 // argument: the ROM never writes r1 before its `bl 0x20b08f0`, so the flags
 // ride through in r1, and src spells the call with one argument because that
 // is the only way to spell an unnamed value in C. On the host the callee reads
-// stack litter, and func_ov004_020b08f0's tail is Scene::AfterInitResources
+// stack litter, and _ZN11dScMgBase_c18AfterInitResourcesEj's tail is Scene::AfterInitResources
 // (this, flags) where flags == 1 marks the actor for destruction.
 //
 // port/unmatched/MgFlower_Slot2.cpp already carries the repair as
 // port_mg_flower_after_init and its header ends "THE NEXT LANE TO SEAT 361 OR
 // 363 SHOULD CALL THIS RATHER THAN WRITE A SECOND". This is 367 and it calls
-// it too. src/func_ov006_0210a6e4.cpp stays out of port/slice_box.txt for the
+// it too. src/minigames/d_s_mg_single3_d_base.cpp stays out of port/slice_box.txt for the
 // same reason it is out of port/slice_flw.txt and port/slice_mem.txt: listing
 // it would be an LNK2005 against that host copy.
 //
@@ -118,7 +118,7 @@
 // twelve it corrected. All four checks were redone here from the image:
 //
 //   1. SPAN. config/arm9/overlays/ov006/symbols.txt puts the next symbol after
-//      data_ov006_0213f844 at data_ov006_0213f8d4, exactly 0x90 = 36 words on,
+//      _ZTV12dScMgSound_c at data_ov006_0213f8d4, exactly 0x90 = 36 words on,
 //      so a 37th slot cannot exist inside the table. The middle table's next
 //      symbol is data_ov006_0213e4d8, also exactly 0x90 on.
 //   2. TERMINAL SLOT. Slot 35 of both tables holds 0x020ad660, the word every
@@ -142,8 +142,8 @@
 // mark 11, nosrc 0, which is what section 3's row predicts. ALL ELEVEN MARKERS
 // WERE DISASSEMBLED AND RULED REAL_DECOMP BY THIS LANE, with per-body evidence
 // and per-body instruction arithmetic in port/tools/inferred_stub_adjudicated
-// .txt. The two unmarked overrides are slot 16 (func_ov006_02119904) and slot
-// 33 (func_ov006_0210a708).
+// .txt. The two unmarked overrides are slot 16 (_ZN12dScMgSound_cD1Ev) and slot
+// 33 (_ZN19dScMgSingle3DBase_c9Virtual84Ev).
 //
 // ---- 6. THE ROW GOES LAST, AND THE ORDER IS LOAD-BEARING ------------------
 //
@@ -175,7 +175,7 @@
 // Six pads, read off a run rather than off a picture: the ten-record array at
 // +0x50e8 holds SIX live records at (64,32) (128,32) (192,32) (64,112)
 // (128,112) (192,112), and all six sit in state 0 forever on an unattended
-// boot. src/func_ov006_0211bf44.c IS state 0, and it is a STYLUS HIT TEST --
+// boot. src/actors/dScMgSound_c.cpp IS state 0, and it is a STYLUS HIT TEST --
 // data_020a0dea/deb against the record's own x/y in a +-0x18 box, and on a hit
 // it writes state 1 into the record, zeroes the record's +0x50f0 and +0x50f7,
 // increments the per-round tap counter at +0x5624 and plays
@@ -216,36 +216,36 @@ int      port_scene_env_want(void);
    of the same name is a duplicate symbol, and leaving the mounted table alone
    would leave live wild DS pointers in a table the factory installs. */
 extern unsigned char data_ov004_020bc0c0[];   /* dScMgBase_c,         36 */
-extern unsigned char data_ov006_0213e448[];   /* dScMgSingle3DBase_c, 36 */
-extern unsigned char data_ov006_0213f844[];   /* dScMgSound_c,        36 */
-extern unsigned char MgBoomBox_SpawnInfo[];
+extern unsigned char _ZTV19dScMgSingle3DBase_c[];   /* dScMgSingle3DBase_c, 36 */
+extern unsigned char _ZTV12dScMgSound_c[];   /* dScMgSound_c,        36 */
+extern unsigned char g_profile_MG_SOUND[];
 
 /* dScMgSingle3DBase_c's eight overrides. Slot 2 is NOT src's body: see
    section 4 and port/unmatched/MgFlower_Slot2.cpp. */
 int   port_mg_flower_after_init(void *c, unsigned f);   /* slot  2 */
-void  func_ov006_0210a608(void *c, unsigned f);         /* slot  5 */
-int   func_ov006_0210a698(void *c);                     /* slot  7 */
-int   func_ov006_0210a664(void *c);                     /* slot 10 */
-int   func_ov006_0210a4b0(char *c);                     /* slot 16 D2 */
-int   func_ov006_0210a4e8(char *c);                     /* slot 17 D0 */
-int   func_ov006_0210a600(void);                        /* slot 26 */
-void  func_ov006_0210a708(char *c);                     /* slot 33 */
+void  _ZN19dScMgSingle3DBase_c21AfterCleanupResourcesEj(void *c, unsigned f);         /* slot  5 */
+int   _ZN19dScMgSingle3DBase_c14BeforeBehaviorEv(void *c);                     /* slot  7 */
+int   _ZN19dScMgSingle3DBase_c12BeforeRenderEv(void *c);                     /* slot 10 */
+int   _ZN19dScMgSingle3DBase_cD1Ev(char *c);                     /* slot 16 D2 */
+int   _ZN19dScMgSingle3DBase_cD0Ev(char *c);                     /* slot 17 D0 */
+int   _ZN19dScMgSingle3DBase_c24OnHitByCannonBlastedCharEv(void);                        /* slot 26 */
+void  _ZN19dScMgSingle3DBase_c9Virtual84Ev(char *c);                     /* slot 33 */
 
-/* dScMgSound_c's own seven. func_ov006_0211c720 is the src TU and NOT a host
+/* dScMgSound_c's own seven. _ZN12dScMgSound_c8BehaviorEv is the src TU and NOT a host
    copy: slot 6 is a plain switch on the int at +0x5608 with a compiler jump
    table (ROM 0x0211c734 `addls pc,pc,r2,lsl #2`), so the "read the slot-6 src
    before wiring by name" rule came back clean. The two dispatchers it CALLS
    are the host copies. */
-int   func_ov006_0211c984(void *self);         /* slot  0 InitResources */
-int   func_ov006_0211c720(char *c);            /* slot  6 Behavior      */
-int   func_ov006_0211c6c4(char *c);            /* slot  9 Render        */
-void *func_ov006_02119904(char *c);            /* slot 16 D2            */
-void *func_ov006_02119958(char *c);            /* slot 17 D0            */
-void  func_ov006_0211c5d0(void *self, int r1); /* slot 18 state reset   */
-void  func_ov006_0211c5b8(char *c);            /* slot 20               */
+int   _ZN12dScMgSound_c13InitResourcesEv(void *self);         /* slot  0 InitResources */
+int   _ZN12dScMgSound_c8BehaviorEv(char *c);            /* slot  6 Behavior      */
+int   _ZN12dScMgSound_c6RenderEv(char *c);            /* slot  9 Render        */
+void *_ZN12dScMgSound_cD1Ev(char *c);            /* slot 16 D2            */
+void *_ZN12dScMgSound_cD0Ev(char *c);            /* slot 17 D0            */
+void  _ZN12dScMgSound_c13OnYoshiTryEatEi(void *self, int r1); /* slot 18 state reset   */
+void  _ZN12dScMgSound_c9Virtual50Ev(char *c);            /* slot 20               */
 
 /* the factory */
-void *MgBoomBox_Spawn(void);
+void *dScMgSound_c_classInit(void);
 
 /* the dispatch file's witness */
 void port_mg_sound_counts(unsigned *hits, unsigned *floor, unsigned *unknown,
@@ -262,7 +262,7 @@ extern void         *data_ov004_020beb68;     /* the live dScMgBase_c `this` */
 extern unsigned char data_0209caf4[];         /* 36 records x 20 bytes       */
 int  func_ov004_020adc3c(void *c);            /* (self->field_8 >> 8) & 0xff */
 
-/* THE STYLUS RECORD, the four names src/func_ov006_0211bf44.c reads. Four DS
+/* THE STYLUS RECORD, the four names src/actors/dScMgSound_c.cpp reads. Four DS
    symbols over one 16-byte block, hal/auto_bss.cpp carries the layout and its
    evidence; nothing is defined here. */
 extern unsigned char data_020a0e40;           /* which player's record       */
@@ -295,36 +295,36 @@ static unsigned g_snd_mid_hits[36];   /* the same slots on the MIDDLE table */
 static void *__fastcall s3_ainit(void *s, void *, unsigned f)
 { S3D(2);  return (void *)(size_t)port_mg_flower_after_init(s, f); }
 static void __fastcall s3_aclean(void *s, void *, unsigned f)
-{ S3D(5);  func_ov006_0210a608(s, f); }
+{ S3D(5);  _ZN19dScMgSingle3DBase_c21AfterCleanupResourcesEj(s, f); }
 static int  __fastcall s3_bbeh(void *s, void *)
-{ S3D(7);  return func_ov006_0210a698(s); }
+{ S3D(7);  return _ZN19dScMgSingle3DBase_c14BeforeBehaviorEv(s); }
 static int  __fastcall s3_bren(void *s, void *)
-{ S3D(10); return func_ov006_0210a664(s); }
+{ S3D(10); return _ZN19dScMgSingle3DBase_c12BeforeRenderEv(s); }
 static void *__fastcall s3_d2(void *s, void *)
-{ S3D(16); return (void *)(size_t)func_ov006_0210a4b0((char *)s); }
+{ S3D(16); return (void *)(size_t)_ZN19dScMgSingle3DBase_cD1Ev((char *)s); }
 static void *__fastcall s3_d0(void *s, void *)
-{ S3D(17); return (void *)(size_t)func_ov006_0210a4e8((char *)s); }
+{ S3D(17); return (void *)(size_t)_ZN19dScMgSingle3DBase_cD0Ev((char *)s); }
 static int  __fastcall s3_v26(void *, void *)
-{ S3D(26); return func_ov006_0210a600(); }
+{ S3D(26); return _ZN19dScMgSingle3DBase_c24OnHitByCannonBlastedCharEv(); }
 static int  __fastcall s3_v33(void *s, void *)
-{ S3D(33); func_ov006_0210a708((char *)s); return 0; }
+{ S3D(33); _ZN19dScMgSingle3DBase_c9Virtual84Ev((char *)s); return 0; }
 
 /* ---- dScMgSound_c's own seven ------------------------------------------- */
 static int  __fastcall snd_init(void *s, void *)
-{ SND(0);  const int r = func_ov006_0211c984(s);
+{ SND(0);  const int r = _ZN12dScMgSound_c13InitResourcesEv(s);
   /* the GaplessMinigames latch, for hal/scene_mg.cpp's reason: every seated
      minigame calls it so the ones the gapless table does not name can say
      "unsupported" instead of doing nothing quietly. */
   hal_gapless_minigames_latch(); return r; }
 static int  __fastcall snd_beh(void *s, void *)
-{ SND(6);  const int r = func_ov006_0211c720((char *)s); hal_gapless_splice();
+{ SND(6);  const int r = _ZN12dScMgSound_c8BehaviorEv((char *)s); hal_gapless_splice();
   return r; }
 static int  __fastcall snd_render(void *s, void *)
-{ SND(9);  return func_ov006_0211c6c4((char *)s); }
+{ SND(9);  return _ZN12dScMgSound_c6RenderEv((char *)s); }
 static void *__fastcall snd_d2(void *s, void *)
-{ SND(16); return func_ov006_02119904((char *)s); }
+{ SND(16); return _ZN12dScMgSound_cD1Ev((char *)s); }
 static void *__fastcall snd_d0(void *s, void *)
-{ SND(17); return func_ov006_02119958((char *)s); }
+{ SND(17); return _ZN12dScMgSound_cD0Ev((char *)s); }
 /* SLOT 18 TAKES ONE STACK ARGUMENT AND THIS CLASS READS IT, which is the
    difference between this thunk and hal/scene_mg_memory2.cpp's. Run mg5 lane
    BASESET scanned both offsets out of the two overlay images word by word:
@@ -337,9 +337,9 @@ static void *__fastcall snd_d0(void *s, void *)
    with it. Passing it through is the whole of the difference between "one more
    round" and "start again". hal/scene_mg.cpp's mp_reset is the precedent. */
 static int  __fastcall snd_reset(void *s, void *, int flag)
-{ SND(18); func_ov006_0211c5d0(s, flag); return 1; }
+{ SND(18); _ZN12dScMgSound_c13OnYoshiTryEatEi(s, flag); return 1; }
 static int  __fastcall snd_v20(void *s, void *)
-{ SND(20); func_ov006_0211c5b8((char *)s); return 0; }
+{ SND(20); _ZN12dScMgSound_c9Virtual50Ev((char *)s); return 0; }
 
 /* SM64DS_SCENE_SLOT0=0 and SM64DS_SCENE_SLOT9=0, the diagnostics every scene
    seat in this port carries, counted separately so a run can never read a
@@ -402,14 +402,14 @@ extern "C" void port_scene_boombox_hits(void);
 extern "C" void port_scene_fill_boombox(void)
 {
     void **base = (void **)data_ov004_020bc0c0;
-    void **mid  = (void **)data_ov006_0213e448;
-    void **vt   = (void **)data_ov006_0213f844;
+    void **mid  = (void **)_ZTV19dScMgSingle3DBase_c;
+    void **vt   = (void **)_ZTV12dScMgSound_c;
 
     /* THE BASE TABLE IS FILLED HERE TOO AND IT IS NOT CEREMONY. Earlier rows'
        fills already did it and run first, so on this tree this is a second
        pass over words that are already host pointers and finds nothing. It is
        here so this class does not depend on another class's row existing: the
-       factory's first act is func_ov004_020b2adc, which writes
+       factory's first act is _ZN11dScMgBase_cC2Ev, which writes
        data_ov004_020bc0c0 into the object's first word before either derived
        table lands. */
     port_scene_mg_fill_shared(base, 36);
@@ -475,10 +475,10 @@ extern "C" void port_scene_fill_boombox(void)
    port_mg_curling_spawn are, so the seat has one place to observe the object
    without the registry table growing a second column.
 
-   THE FACTORY NEEDS NO DISPLACEMENT RULING. src/MgBoomBox_Spawn.cpp calls
-   func_ov004_020b2adc(p) WITH its argument -- ROM 0x0211cb84 `bl 0x20b2adc`
+   THE FACTORY NEEDS NO DISPLACEMENT RULING. src/actors/dScMgSound_c.cpp calls
+   _ZN11dScMgBase_cC2Ev(p) WITH its argument -- ROM 0x0211cb84 `bl 0x20b2adc`
    with r0 carrying the allocation from 0x0211cb78 -- where src/
-   func_ov006_020e0574.cpp (0x169's factory) calls the same base constructor
+   dScMgCup_c_classInit.cpp (0x169's factory) calls the same base constructor
    with none and rides r0 through. That callee dereferences on its first
    statement and then writes vtable words through the pointer, so the
    difference is a wild write versus a correct one. This class is on the
@@ -487,7 +487,7 @@ static char *g_snd_self;
 
 extern "C" void *port_mg_boombox_spawn(void)
 {
-    void *p = MgBoomBox_Spawn();
+    void *p = dScMgSound_c_classInit();
     g_snd_self = (char *)p;
     return p;
 }
@@ -519,7 +519,7 @@ extern "C" void port_scene_boombox_hits(void)
 
        kSingle3DFaces is applied to BOTH tables and lands in only one of them.
        This class's registry row is appended after the flower's and memory2's,
-       so whichever of those fills first claims data_ov006_0213e448 and this
+       so whichever of those fills first claims _ZTV19dScMgSingle3DBase_c and this
        copy finds no DS word left there -- the middle-table claim reads 0 by
        design, and a NONZERO one would mean the row order changed, which is the
        fact section 3's sharing argument rests on. The DERIVED table is a
@@ -559,8 +559,8 @@ extern "C" void port_scene_boombox_hits(void)
     }
 
     /* THE OBJECT, AND THE FIELDS THE ROM'S OWN SLOT 6 READS. Every offset here
-       is out of the disassembly of func_ov006_0211c720 (the Behavior's plain
-       switch) and func_ov006_0211c5d0 (slot 18), not out of a struct:
+       is out of the disassembly of _ZN12dScMgSound_c8BehaviorEv (the Behavior's plain
+       switch) and _ZN12dScMgSound_c13OnYoshiTryEatEi (slot 18), not out of a struct:
          +0x5608  the top-level state the switch reads (0 init, 1 intro,
                   2 result, 3 retry)
          +0x5618  the intro countdown, a u16 slot 0 and slot 18 both seed 0x20
@@ -595,7 +595,7 @@ extern "C" void port_scene_boombox_hits(void)
     if (g_snd_self) {
         int live10 = 0;
         /* x and y BOTH, and which word is which comes off the state-0 body
-           rather than off a guess: src/func_ov006_0211bf44.c compares
+           rather than off a guess: src/actors/dScMgSound_c.cpp compares
            data_020a0dea[player*4] against (+0xe8 >> 12) and
            data_020a0deb[player*4] against (+0xec >> 12), so +0x50e8 is the
            stylus X and +0x50ec is the stylus Y, in 20.12. A lane that wants to

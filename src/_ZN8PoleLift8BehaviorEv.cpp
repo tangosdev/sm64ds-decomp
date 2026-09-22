@@ -1,16 +1,36 @@
 //cpp
+// @symbol _ZN8PoleLift8BehaviorEv
+/* recovered: named members + shared header, real C++ method */
+#include "PoleLift.h"
 extern "C" {
-extern int func_0203aad0(void*);
-extern int _ZN21ExtendingMeshCollider9SetScaleYE5Fix12IiE(void*,int);
-int _ZN8PoleLift8BehaviorEv(char* c){
-  int v=func_0203aad0(c+0x158);
-  if(*(unsigned char*)(c+0xd4)){
-    _ZN21ExtendingMeshCollider9SetScaleYE5Fix12IiE(c+0x158, v+8);
-    if(func_0203aad0(c+0x158)>0x1000) *(char*)(c+0xd4)=0;
-  } else {
-    _ZN21ExtendingMeshCollider9SetScaleYE5Fix12IiE(c+0x158, v-8);
-    if(func_0203aad0(c+0x158)<0x800) *(char*)(c+0xd4)=1;
-  }
-  return 1;
+extern void _ZN5dCc_c5ClearEv(void *self);
+extern void _ZN5dCc_c6UpdateEv(void *self);
+extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *self);
+extern int _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(void *self, int a, int b);
+extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
 }
+extern short data_02082214[];
+
+int PoleLift::Behavior()
+{
+    _ZN5dCc_c5ClearEv((char *)&mdCcAc_c);
+    _ZN5dCc_c6UpdateEv((char *)&mdCcAc_c);
+    if ((*(s32 *)&param1) != 0xffff) {
+        int idx = mHeightAng >> 4;
+        int s = *(short*)((char*)data_02082214 + (idx << 2));
+        *(int*)(((int)((char *)this) + 0x60)) =
+            *(int*)(((int)((char *)this) + 0x60)) + (int)(((long long)s * 0x7000 + 0x800) >> 12);
+    } else {
+        int idx = mHeightAng >> 4;
+        int s = *(short*)((char*)data_02082214 + (idx << 2));
+        *(int*)(((int)((char *)this) + 0x60)) =
+            *(int*)(((int)((char *)this) + 0x60)) - (int)(((long long)s * 0x3000 + 0x800) >> 12);
+    }
+    *(short*)(((int)((char *)this) + 0x354)) =
+        *(short*)(((int)((char *)this) + 0x354)) + 0x100;
+    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char *)this));
+    if (_ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(((char *)this), 0x400000, 0)) {
+        _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char *)this));
+    }
+    return 1;
 }

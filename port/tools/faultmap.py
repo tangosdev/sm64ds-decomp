@@ -32,7 +32,7 @@ kind of wrong answer -- confident, specific, and about someone else's build.
 
 THE OFFSET CONVERSION. An MSVC map row is
 
-    0001:0003dc80       ?Render@Trap@@QAEHXZ       0043ec80 f   <obj>
+    0001:0003dc80       ?Render@LightBeam@@QAEHXZ       0043ec80 f   <obj>
 
 and the first column is a SECTION-relative offset (0x3dc80), while the fault
 line is IMAGE-relative. The image offset is the third column minus the
@@ -46,7 +46,7 @@ Identical COMDAT folding is on in this link, and two methods that compile to
 the same bytes are given the same address. On the 4888-linked baseline
 
     0001:0003dc80       ?Render@MontyMole@@QAEHXZ  0043ec80 f  _ZN9MontyMole6RenderEv.cpp.obj
-    0001:0003dc80       ?Render@Trap@@QAEHXZ       0043ec80 f  _ZN4Trap6RenderEv.cpp.obj
+    0001:0003dc80       ?Render@LightBeam@@QAEHXZ       0043ec80 f  _ZN9LightBeam6RenderEv.cpp.obj
 
 are one function. A symbolizer that takes the first row and prints "MontyMole"
 has told you a fact about the wrong class half the time, and there is nothing
@@ -78,7 +78,7 @@ import os
 import re
 import sys
 
-# 0001:0003dc80       ?Render@Trap@@QAEHXZ       0043ec80 f   obj.obj
+# 0001:0003dc80       ?Render@LightBeam@@QAEHXZ       0043ec80 f   obj.obj
 # The flag column is `f`, `f i`, or absent on data rows, and the object may be
 # `lib:member.obj`, so it is anchored at end of line rather than left to a
 # backtracking \S*.
@@ -288,7 +288,7 @@ FIX_MAP = """\
  Preferred load address is 00400000
 
  0001:00001000       _bootstrap                 00401000 f   boot.cpp.obj
- 0001:00001100       ?Render@Trap@@QAEHXZ       00401100 f   trap.cpp.obj
+ 0001:00001100       ?Render@LightBeam@@QAEHXZ       00401100 f   trap.cpp.obj
  0001:00001100       ?Render@MontyMole@@QAEHXZ  00401100 f   monty.cpp.obj
  0001:00002000       _last_sym                  00402000 f   tail.cpp.obj
 """

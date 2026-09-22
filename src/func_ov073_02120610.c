@@ -5,7 +5,7 @@
     extern void Matrix4x3_FromRotationY(void *m, int angle);
     extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, int angX);
     extern void MulVec3Mat4x3(void *in, void *m, void *out);
-    extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
+    extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *self);
     extern void func_ov073_0211f2c0(void *self, int v);
     extern int func_02012694(int a, void *pos);
     extern void ChiefChilly_ChangeState(void *c, void *p);
@@ -61,7 +61,7 @@
             }
             *(int *)(c + 0xac) = out[2];
         }
-        if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x150) != 0) {
+        if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x150) != 0) {
             *(unsigned char *)(c + 0x4c5) = *(unsigned char *)(c + 0x4c4);
             *(int *)(c + 0x98) = 0;
             *(int *)(c + 0xa4) = 0;

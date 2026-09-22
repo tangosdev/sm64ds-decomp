@@ -23,23 +23,24 @@
 # factories, and every func_ov079_* the Whomp closure reaches.
 # _ZN5Whomp13InitResourcesEv.cpp routed through hostgen (GATE64_SYMS): the
 # decl_common.h C2733 header-shadow case (func_01ffb07c / func_020396d0).
-src/Whomp_Spawn.c
-src/WhompKing_Spawn.c
+src/d_a_btn_batan.c
+src/d_a_btn_batanking.c
 # _ZN5Whomp6RenderEv IS NOT HERE: it dispatches ModelAnim slot 5 through a local
 # six-virtual shadow (the ROM Render), which the host _ZTV9ModelAnim array
 # numbers as Virtual18 -- a c0000005 in func_02045074 the first frame a Whomp is
 # drawn. Host copy in port/unmatched/ModelAnim_Renders.cpp, the Butterfly/Fish/
 # QuestionBlock ModelAnim slot-5 case.
 src/_ZN5Whomp16CleanupResourcesEv.cpp
-src/_ZN5WhompD1Ev.c
-src/_ZN5WhompD0Ev.c
+src/_ZN5WhompD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN5WhompD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN5WhompD0Ev.cpp
 src/func_ov079_02123804.c
 src/func_ov079_02123a8c.cpp
-src/func_ov079_02123b54.c
-src/func_ov079_02123b60.c
+src/_ZN5Whomp25OnAimedAtWithEggReturnVecEv.cpp
+src/_ZN5Whomp16OnAimedAtWithEggEv.cpp
 src/func_ov079_02123bcc.c
 src/func_ov079_02123d4c.cpp
-src/func_ov079_02123e60.cpp
+src/_ZN5Whomp15OnHitByMegaCharER6Player.cpp
 src/func_ov079_02123f34.c
 src/func_ov079_02124008.c
 src/func_ov079_02124188.c
@@ -63,43 +64,46 @@ src/func_ov079_021258fc.c
 src/func_ov079_02125b44.c
 
 # gate 66: BULLET_BILL (222). _ZTV10BulletBill / daKlr_c.
-src/BulletBill_Spawn.c
-src/_ZN10BulletBill13InitResourcesEv.c
+src/d_a_klr.c
+src/_ZN10BulletBill13InitResourcesEv.cpp
 src/_ZN10BulletBill6RenderEv.cpp
-src/_ZN10BulletBill16CleanupResourcesEv.c
-src/_ZN10BulletBillD1Ev.c
-src/_ZN10BulletBillD0Ev.c
-src/func_ov079_021266fc.c
+src/_ZN10BulletBill16CleanupResourcesEv.cpp
+src/_ZN10BulletBillD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN10BulletBillD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN10BulletBillD0Ev.cpp
+src/_ZN10BulletBill16OnAimedAtWithEggEv.cpp
 src/func_ov079_02126704.c
 src/func_ov079_0212682c.c
 src/func_ov079_02126794.cpp
 
-# gate 67: BILL_BLASTER (43). Its vtable is data_ov079_02127fb8 (plain data
+# gate 67: BILL_BLASTER (43). Its vtable is _ZTV11BillBlaster (plain data
 # symbol); every override is a func_ov079_* free function.
-# func_ov079_02126f8c.cpp (BillBlaster::Behavior) routed through hostgen
+# _ZN11BillBlaster8BehaviorEv.cpp (BillBlaster::Behavior) routed through hostgen
 # (GATE64_SYMS): mwcc-tolerated out-of-line member redeclarations, C2761 to MSVC.
-src/BillBlaster_Spawn.c
-src/func_ov079_02126dbc.c
-src/func_ov079_02126e00.c
-src/func_ov079_02126e58.cpp
-src/func_ov079_02126ecc.cpp
-src/func_ov079_02126f04.c
-src/func_ov079_02126f64.cpp
-src/func_ov079_02127090.cpp
+src/d_a_obj_bk_killerdai.c
+src/_ZN11BillBlasterD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN11BillBlasterD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN11BillBlasterD0Ev.cpp
+src/_ZN11BillBlaster4KillEv.cpp
+src/_ZN11BillBlaster15OnHitByMegaCharER6Player.cpp
+src/_ZN11BillBlaster16CleanupResourcesEv.cpp
+src/_ZN11BillBlaster6RenderEv.cpp
+src/_ZN11BillBlaster13InitResourcesEv.cpp
 
 # gate 68: FORTRESS_WALL (47) and gate 69: FORTRESS_WALL_BREAKABLE (48). One
 # class (_ZTV12FortressWall), a Platform; both factories build the same object.
 # Behavior is plain (matched src), so it is here rather than host-copied.
-src/FortressWall_Spawn.c
-src/FortressWallBreakable_Spawn.c
+src/d_a_obj_bk_kabe_bk_kabe01.c
+src/d_a_obj_bk_kabe_bk_kabe00.c
 src/_ZN12FortressWall13InitResourcesEv.cpp
 src/_ZN12FortressWall6RenderEv.cpp
 src/_ZN12FortressWall16CleanupResourcesEv.cpp
 src/_ZN12FortressWall8BehaviorEv.cpp
-src/_ZN12FortressWallD1Ev.c
-src/_ZN12FortressWallD0Ev.c
-src/func_ov079_02127280.cpp
-src/func_ov079_021272e0.cpp
+src/_ZN12FortressWallD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN12FortressWallD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN12FortressWallD0Ev.cpp
+src/_ZN12FortressWall4KillEv.cpp
+src/_ZN12FortressWall24OnHitByCannonBlastedCharER8dActor_c.cpp
 
 # the four static initialisers
 src/__sinit_ov079_02127618.c
@@ -108,11 +112,11 @@ src/__sinit_ov079_02127a10.c
 src/__sinit_ov079_02127acc.c
 
 # closure dependencies not pulled by any earlier slice:
-#   _ZN8Platform14KillByMegaCharER6Player -- FortressWall/BillBlaster's mega-hit
+#   _ZN10dBgActor_c14KillByMegaCharER6Player -- FortressWall/BillBlaster's mega-hit
 #   func_0200f760                          -- BulletBill::Behavior's first call
 #   func_02011d38                          -- reached from the Whomp closure
 #   func_ov002_020dd8b8                    -- reached from func_ov079_02125058
-src/_ZN8Platform14KillByMegaCharER6Player.c
+src/actors/dBgActor_c.cpp
 src/func_0200f760.c
 src/func_02011d38.c
 src/func_02048f04.c

@@ -47,13 +47,29 @@ extern "C" void _ZN7PathPtrC1Ev(void *self);
 extern "C" void _ZN7PathPtr6FromIDEj(void *self, unsigned int id);
 
 /* PORT_HOST_ABI: __thiscall receiver in ECX forwarded to the cdecl flat name. */
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync): src/_ZN7PathPtrC1Ev.cpp defines ??0PathPtr@@QAE@XZ itself since main langmode migration, so this face was the second definition (LNK2005). PathPtr::FromID in this file is retired separately below (PATHPTR2, wave 15).
+   The body is kept below under #if 0 rather than deleted, so the
+   evidence in it stays readable. */
+#if 0
 PathPtr::PathPtr()
 {
     _ZN7PathPtrC1Ev(this);
 }
+#endif
 
 /* PORT_HOST_ABI: __thiscall receiver in ECX forwarded to the cdecl flat name. */
+/* RETIRED at PATHPTR2 (wave 15, link100): src/_ZN7PathPtr6FromIDEj.cpp now
+   defines ?FromID@PathPtr@@QAEXI@Z itself as a real matched member built for
+   the host, so this face was the second definition (LNK2005: "public: void
+   __thiscall PathPtr::FromID(unsigned int) (?FromID@PathPtr@@QAEXI@Z) already
+   defined in _ZN7PathPtr6FromIDEj.cpp.obj"). unmatched/PathPtr_FromID.cpp's
+   flat body is now a bridge INTO that matched member, so nothing here
+   forwards back into it.
+   The body is kept below under #if 0 rather than deleted, so the
+   evidence in it stays readable. */
+#if 0
 void PathPtr::FromID(unsigned int id)
 {
     _ZN7PathPtr6FromIDEj(this, id);
 }
+#endif

@@ -79,7 +79,7 @@ symbol-coverage problem, not a tool one.
 
 ## Usage
 
-```
+```sh
 python tools/linkcheck.py                                              # whole corpus
 python tools/linkcheck.py --module ov006 -j 10
 python tools/linkcheck.py --name func_02013a88 --addr 0x02013a88 --size 0x4c --module arm9

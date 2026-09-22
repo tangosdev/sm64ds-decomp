@@ -8,10 +8,10 @@
 # belongs to it, and each factory's own literal pool names the vtable it
 # installs:
 #
-#   Bird_Spawn        0x02111a30  ->  _ZTV4Bird             = 0x02113958
-#   CastleWater_Spawn 0x02111d8c  ->  _ZTV14daObjMcWater_c  = 0x02113a18
-#   MetalNet_Spawn    0x02112048  ->  _ZTV8MetalNet         = 0x02113ae0
-#   Flag_Spawn        0x021121f0  ->  _ZTV4Flag             = 0x02113ba0
+#   daSBird_c_classInit        0x02111a30  ->  _ZTV4Bird             = 0x02113958
+#   daObjMcWater_c_classInit 0x02111d8c  ->  _ZTV14daObjMcWater_c  = 0x02113a18
+#   daObjMc_Metalnet_c_classInit    0x02112048  ->  _ZTV8MetalNet         = 0x02113ae0
+#   daMcFlag_c_classInit        0x021121f0  ->  _ZTV4Flag             = 0x02113ba0
 #
 # The ROM's own RTTI agrees from the other side: 0x02113ae0's class name is
 # daObjMc_Metalnet_c and 0x02113ba0's is daMcFlag_c, and config carries both
@@ -24,11 +24,12 @@
 # (-3941,254,4257) and (5401,377,584). A four-state bird: its Behavior
 # dispatches data_ov009_02113c48, four {function, delta} pairs the sinit
 # copies out of the overlay's own statics. Host copy, see port/unmatched/.
-src/Bird_Spawn.c
+src/d_a_s_bird.c
 src/_ZN4Bird13InitResourcesEv.cpp
-src/_ZN4BirdD0Ev.c
-src/_ZN4Bird16CleanupResourcesEv.c
-src/_ZN4Bird16OnPendingDestroyEv.c
+# RETIRED at SLICE1: body now in src/_ZN4BirdD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN4BirdD0Ev.cpp
+src/_ZN4Bird16CleanupResourcesEv.cpp
+src/_ZN4Bird16OnPendingDestroyEv.cpp
 src/func_ov009_02111224.c
 src/func_ov009_02111234.cpp
 # func_ov009_0211145c is NOT here. It is the Bird's state 2 and it is a
@@ -44,32 +45,18 @@ src/func_ov009_021116ec.cpp
 # the actor's own matrix, Enables it, and then CLAMPS THE GLOBAL WATER LEVEL
 # (data_0209f32c) to its own Y minus 100 -- which is what the Player's own
 # state machine reads to decide it is swimming.
-src/CastleWater_Spawn.c
-src/_ZN11CastleWater13InitResourcesEv.cpp
-src/_ZN11CastleWater8BehaviorEv.cpp
-src/_ZN11CastleWater6RenderEv.cpp
-src/_ZN11CastleWater16CleanupResourcesEv.cpp
-src/func_ov009_02111b1c.cpp
+src/game/actors/d_a_obj_mc_water.cpp
 
 # ---- METAL_NET (actor 339, ov009), x3 -------------------------------------
 # (2330,140,3920), (-3300,-520,20), (-3760,-1260,-3378) -- the climbable nets
 # under the bridge. The ROM's RTTI calls this class daObjMc_Metalnet_c.
-src/MetalNet_Spawn.c
-src/_ZN8MetalNet13InitResourcesEv.cpp
-src/_ZN8MetalNet8BehaviorEv.cpp
-src/_ZN8MetalNet6RenderEv.cpp
-src/_ZN8MetalNet16CleanupResourcesEv.cpp
-src/_ZN8MetalNet16OnPendingDestroyEv.c
+src/game/actors/d_a_obj_mc_metalnet.cpp
 
 # ---- FLAG (actor 342, ov009), x4 ------------------------------------------
 # The four castle-tower flags, at y 3095 and 3662. The ROM's RTTI calls this
 # class daMcFlag_c. Its Behavior is one Animation::Advance and a rotation
 # matrix -- the flag waves.
-src/Flag_Spawn.c
-src/_ZN4Flag13InitResourcesEv.cpp
-src/_ZN4FlagD0Ev.c
-src/_ZN4Flag8BehaviorEv.cpp
-src/_ZN4Flag16CleanupResourcesEv.c
+src/game/actors/d_a_mc_flag.cpp
 
 # ---- the overlay's own static initialisers --------------------------------
 # Four sinits, and they are what makes any of the above load anything: every
@@ -84,7 +71,7 @@ src/__sinit_ov009_02112ac8.c
 # Nothing on the castle grounds destroys one of these -- every InitResources
 # returns 1 on this level -- and func_ov009_02111abc.c (the water's D0) is
 # the reason it matters: it spells its two vtables VT0 and VT1, the SAME
-# placeholder names src/_ZN10SphereClsnD1Ev.c uses for three completely
+# placeholder names src/_ZN12dBgCh_SphCrrD1Ev.cpp uses for three completely
 # different tables. One host definition would satisfy both with the wrong
 # bytes and nothing would say so. Compiling it is the footgun; not
 # compiling it is the fix.
@@ -93,7 +80,7 @@ src/__sinit_ov009_02112ac8.c
 # CastleWater's InitResources prepares a BTA against its own BMD and its
 # Render Updates it every frame: the moat's surface scrolls. TextureTransformer
 # is the class that does it and this is its first host caller.
-src/_ZN18TextureTransformerC1Ev.c
+src/_ZN18TextureTransformerC1Ev.cpp
 src/_ZN18TextureTransformer6UpdateER15ModelComponents.cpp
 # TextureTransformer::Prepare is NOT here, and the reason is a signature the
 # ROM settles against its own header. include/TextureTransformer.h says the

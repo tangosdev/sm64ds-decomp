@@ -193,13 +193,6 @@ extern unsigned char data_0209d574[];   /* the boot's own tick record */
 void func_0204f94c(void *p);         /* clear one player's voice pointer */
 void func_02011a28(void *table);     /* PlayLong's 0x40-slot handle table */
 void func_02048f34(void *owner);     /* 3D voice pools */
-/* RUNG R5 (run link100 wave 7, lane SND3): the ARM9 sound thread. Four
- * statements -- a once-only guard, OS_InitMessageQueue, OS_CreateThread and
- * OS_WakeupThreadDirect -- and its body func_02050038 blocks on the queue at
- * data_020a5600 the moment it is entered, so what the port gains at this line
- * is a created ROM thread that parks itself, exactly like the card driver's.
- * See port/slice_snd3.txt for what had to move for it to link. */
-void func_020506fc(int prio);
 extern int data_0209b4a0[], data_0209b4b0[], data_0209b4a4[];
 extern int data_0209b53c[];
 extern unsigned char data_0209b4b4[];
@@ -693,20 +686,8 @@ void publish_player_status(void)
 //                        Rung R2 removes that reason but not the face: the
 //                        file is not this lane's to edit, and the branch
 //                        also needs func_02050f34. Named in the report.
-//   RUN  func_020506fc   THE ARM9 SOUND THREAD (rung R5). The SKIP that stood
-//                        here said it 'starts the ARM9 sound THREAD that would
-//                        drain the queue. This consumer is that drain.' The
-//                        first half is right and the second names the wrong
-//                        thread: func_02050038 is not a command drain, it is
-//                        the STREAM SERVICE loop -- a blocking receive on the
-//                        message queue at data_020a5600, then two cache
-//                        invalidations and the callback carried in the message
-//                        itself. A STRM player posts to that queue when it
-//                        wants its next buffer filled; nothing in this build
-//                        posts to it yet, so the thread is created, entered,
-//                        and blocks on its own first statement. The hosted
-//                        ARM7 command drain is unaffected and still lives in
-//                        this file.
+//   SKIP func_020506fc   starts the ARM9 sound THREAD that would drain the
+//                        queue. This consumer is that drain.
 //
 // If a sound plays that this init did not prepare for, the failure is a
 // missing voice or a skipped command, both of which print -- not silence
@@ -736,10 +717,6 @@ void sd_sound_init_host(void)
     func_0204f94c(&data_0209b4a4);
     func_02011a28(data_0209b53c);
     func_02048f34(data_0209b4b4);
-    /* rung R5, at func_020133bc's own line after it. The argument is the
-       ROM's: priority 2, above the game thread, so the wakeup reschedules
-       into the new thread at once and it blocks there. */
-    func_020506fc(2);
     data_0209b480 = 1;
     fprintf(stderr, "[snd] sound init: 16 voices, 32 players, SFX enabled; "
                     "sound heap %p (1 MB out of the root heap, rung R2)\n",
@@ -758,7 +735,7 @@ void sd_sound_init_host(void)
 // func_020119c8 (skip if +6==1) with func_02011974 (stop if field_0 != 0) -- the
 // second is the first with the refresh test removed.
 //
-// It is Scene::BeforeCleanupResources (_ZN5Scene22BeforeCleanupResourcesEv,
+// It is Scene::BeforeCleanupResources (_ZN8dScene_c22BeforeCleanupResourcesEv,
 // vtable slot 4) that fires it: func_02011974(&data_0209b53c) is that override's
 // whole body past the ActorBase base call. On the ROM the Scene actor is torn
 // down and respawned per level, so slot 4 runs on every level change and every
@@ -896,7 +873,7 @@ extern "C" void func_0205a8c4(void *c);   /* Snd_SendCommand(0x13, c, 0,0,0) */
  * this fires the ROM's own coin call instead, unchanged:
  *
  *     Actor::GivePlayerCoins  ->  Sound::PlayBank3(0x11, actor + 0x74)
- *     (src/_ZN5Actor15GivePlayerCoinsER6Playerhj.c:44-48, and the three ov002
+ *     (src/_ZN8dActor_c15GivePlayerCoinsER6Playerhj.cpp:44-48, and the three ov002
  *      collect paths func_ov002_020af684 / 020b16c4 / 020b1884 make the same
  *      two calls with the same two ids)
  *
@@ -951,7 +928,7 @@ static void snd_coin_probe(void)
  * on a real container off the behaviour list:
  *
  *     StarMarker::Behavior          -- src/_ZN10StarMarker8BehaviorEv.cpp:78-84
- *       -> func_ov002_020e7d84      -- the break: Sound::Play(3, 0x53) through
+ *       -> _ZN10StarMarker7CollectEv      -- the break: Sound::Play(3, 0x53) through
  *          func_02012694(0x53, actor + 0x74), the cylinder cleared, and the
  *          three Particle::NewSimple bursts 0x12c/0x12d/0x12e
  *
@@ -1004,7 +981,7 @@ static void snd_coin_probe(void)
  * was started on, printed by the [sseq] line immediately above it. */
 extern "C" {
 extern int data_020a4b78[];               /* the behaviour list head */
-extern void func_ov002_020e7d84(char *c); /* StarMarker's own break */
+extern void _ZN10StarMarker7CollectEv(char *c); /* StarMarker's own break */
 extern void func_02012694(unsigned int id, const void *camSpacePos);
 }
 
@@ -1017,7 +994,7 @@ static void snd_break_probe(void)
         at = e ? atoi(e) : 0;
         if (at > 0)
             fprintf(stderr, "[breakprobe] armed for frame %d: the ROM's own "
-                    "func_ov002_020e7d84 on a live STAR_MARKER container\n",
+                    "_ZN10StarMarker7CollectEv on a live STAR_MARKER container\n",
                     at);
     }
     if (at <= 0) return;
@@ -1041,7 +1018,7 @@ static void snd_break_probe(void)
                 frame, (void *)hit, (int)*(unsigned char *)(hit + 0x1d8),
                 p[0] >> 12, p[1] >> 12, p[2] >> 12,
                 c[0] >> 12, c[1] >> 12, c[2] >> 12);
-        func_ov002_020e7d84(hit);
+        _ZN10StarMarker7CollectEv(hit);
     } else {
         fprintf(stderr, "[breakprobe] frame %d: no STAR_MARKER with "
                 "mState != 0 on the behaviour list\n", frame);

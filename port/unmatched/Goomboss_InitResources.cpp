@@ -1,8 +1,8 @@
-/* HOST COPY of src/_ZN8Goomboss13InitResourcesEv.c -- run rel0215 wave 2, lane
+/* HOST COPY of src/_ZN8Goomboss13InitResourcesEv.cpp -- run rel0215 wave 2, lane
  * w2-ov074. The MSVC C2561 case, the WaterBomb_State0 / Cannon_Behavior /
  * Coin_Behavior idiom.
  *
- * src/_ZN8Goomboss13InitResourcesEv.c is declared int-returning and uses
+ * src/_ZN8Goomboss13InitResourcesEv.cpp is declared int-returning and uses
  * mwccarm's bare `return;` on its ONE early exit (the mParam == 0x1111 path).
  * mwccarm accepts that -- r0 carries whatever the last call left -- and MSVC's
  * C++ front end rejects it outright:
@@ -69,7 +69,7 @@ struct BTP_File;
 struct BMA_File;
 struct BTA_File;
 struct Vector3;
-struct Actor;
+struct dActor_c;
 struct Vector3_16;
 
 extern "C" {
@@ -92,7 +92,7 @@ extern "C" {
    declare the full signature and pass it. The explicit 0 is the whole fix and
    it cannot change the result. */
     int func_01ffa344(int a, int b);
-    void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(
+    void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
         void *self, void *actor, void *pos, s32 fx, s32 fy, u32 a, u32 b);
     void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *f, int a, s32 fix, u32 c);
     void _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(void *bmd, void *btp);
@@ -101,12 +101,12 @@ extern "C" {
     void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void *self, void *f, int a, s32 fix, u32 c);
     void _ZN15MaterialChanger7SetFileER8BMA_Filei5Fix12IiEj(void *self, void *f, int a, s32 fix, u32 c);
     void _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(void *self, void *f, int a, s32 fix, u32 c);
-    void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(
+    void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
         void *self, void *actor, s32 fa, s32 fb, void *v0, void *v1);
-    void _ZN13RaycastGroundC1Ev(void *self);
-    void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(void *self, void *pos, void *actor);
-    int _ZN13RaycastGround10DetectClsnEv(void *self);
-    void _ZN13RaycastGroundD1Ev(void *self);
+    void _ZN9dBgCh_GndC1Ev(void *self);
+    void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void *self, void *pos, void *actor);
+    int _ZN9dBgCh_Gnd10DetectClsnEv(void *self);
+    void _ZN9dBgCh_GndD1Ev(void *self);
     void func_ov074_02121300(void *c);
     void func_ov074_0212195c(void *t);
 
@@ -208,7 +208,7 @@ extern "C" int _ZN8Goomboss13InitResourcesEv(char *self)
     c8 = self + 0x110;
     k = 0;
     do {
-        _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(
+        _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
             c8, self, self + 0x5c, *(s32 *)(self + 0x80) * 0xa, *(s32 *)(self + 0x84) * 0xa, 0x200004, 0x26fe0);
         k++;
         c8 += 0x40;
@@ -231,7 +231,7 @@ extern "C" int _ZN8Goomboss13InitResourcesEv(char *self)
     *(s32 *)(self + 0x3f0) = 0;
     *(s32 *)(self + 0x3d8) = (s32)(data_ov074_02122e04[*(u8 *)(self + 0x604)] << 0xc);
 
-    _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(self + 0x40c, self, 0x14000, 0x14000, 0, 0);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(self + 0x40c, self, 0x14000, 0x14000, 0, 0);
 
     *(s32 *)(self + 0x5f0) = -1;
     *(s16 *)(self + 0x5f8) = (s16)(*(s32 *)(self + 0x5f0) * data_ov074_02122dfc[*(u8 *)(self + 0x604)]);
@@ -259,9 +259,9 @@ extern "C" int _ZN8Goomboss13InitResourcesEv(char *self)
         v[2] = a1;
     }
 
-    _ZN13RaycastGroundC1Ev(&rg);
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(&rg, v, 0);
-    if (_ZN13RaycastGround10DetectClsnEv(&rg) != 0) {
+    _ZN9dBgCh_GndC1Ev(&rg);
+    _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rg, v, 0);
+    if (_ZN9dBgCh_Gnd10DetectClsnEv(&rg) != 0) {
         *(s32 *)(self + 0x60) = *(s32 *)((char *)&rg + 0x44);
     }
 
@@ -272,7 +272,7 @@ extern "C" int _ZN8Goomboss13InitResourcesEv(char *self)
     *(u8 *)(self + 0x60a) = 1;
     *(s32 *)(self + 0x5e4) = 0x1000;
 
-    _ZN13RaycastGroundD1Ev(&rg);
+    _ZN9dBgCh_GndD1Ev(&rg);
 
     return 1;
 }

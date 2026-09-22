@@ -8,7 +8,7 @@ int func_0206e450(char* obj, const void* src, unsigned int n)
         n = len - off;
     func_0206e310(*(char**)(obj) + off, src, n);
     {
-        int* p = (int*)(((long long)(int)(obj + 8)));
+        int* p = (int*)(obj + 8);
         *p = *p + n;
     }
     return 1;

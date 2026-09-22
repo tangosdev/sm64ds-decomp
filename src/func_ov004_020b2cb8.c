@@ -6,6 +6,7 @@ typedef struct Entry {
 extern int GetGameLanguage(void);
 extern int LoadFile(int handle);
 
+extern int data_ov004_020b9f54;
 extern int data_ov004_020bc42c[];
 extern int data_ov004_020bc65c[];
 extern int data_ov004_020bc418[];
@@ -70,36 +71,18 @@ extern int data_ov004_020bf5d4[];
 void func_ov004_020b2cb8(void)
 {
     int i;
+    /* The ROM's template for this array is at 0x020bc6e8 and is all zero except
+       entry 1. What stood here was 29 invented pairs {1,100}, {2,101} ... {29,128};
+       none of them were ever compared to anything, because mwccarm puts a local
+       initializer in an anonymous .rodata object (`@7`) that objisolate drops and
+       match.py wildcards the relocation to.
+
+       It matters for exactly one entry. Every index except 1 is overwritten below
+       before the loop reads it -- entry 1 is not, so its initial value is live, and
+       it was wrong. */
     Entry entries[29] = {
-        { 1, 100 },
-        { 2, 101 },
-        { 3, 102 },
-        { 4, 103 },
-        { 5, 104 },
-        { 6, 105 },
-        { 7, 106 },
-        { 8, 107 },
-        { 9, 108 },
-        { 10, 109 },
-        { 11, 110 },
-        { 12, 111 },
-        { 13, 112 },
-        { 14, 113 },
-        { 15, 114 },
-        { 16, 115 },
-        { 17, 116 },
-        { 18, 117 },
-        { 19, 118 },
-        { 20, 119 },
-        { 21, 120 },
-        { 22, 121 },
-        { 23, 122 },
-        { 24, 123 },
-        { 25, 124 },
-        { 26, 125 },
-        { 27, 126 },
-        { 28, 127 },
-        { 29, 128 },
+        { 0, 0 },
+        { 0x140, (int)&data_ov004_020b9f54 },
     };
 
     entries[0].id = data_ov004_020bc42c[GetGameLanguage()];

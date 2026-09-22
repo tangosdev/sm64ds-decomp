@@ -42,17 +42,10 @@
 # held out: it is a .c TU carrying the ROM's Itanium name in extern "C" and it
 # is in the list below.
 #
-# THE TWO HELPERS ARE PART OF THE CLASS. func_ov002_020b47ec is the guarded
-# entry the Behavior calls on the non-paired branch and func_ov002_020b4714 is
+# THE TWO HELPERS ARE PART OF THE CLASS. _ZN16daObjKinokoTag_c20TrySpawnMegaMushroomEv is the guarded
+# entry the Behavior calls on the non-paired branch and _ZN16daObjKinokoTag_c17SpawnMegaMushroomEv is
 # the pairing body itself; it Spawns actor 0x115 (277, MEGA_MUSHROOM), which
 # lane w10-shared already registered, so the spawn resolves to a hosted class
 # rather than the gate's skip path.
 
-src/_ZN21MegaMushroomCreateTag13InitResourcesEv.c
-src/_ZN21MegaMushroomCreateTag16CleanupResourcesEv.c
-src/_ZN21MegaMushroomCreateTag8BehaviorEv.cpp
-src/_ZN21MegaMushroomCreateTagD0Ev.c
-src/func_ov002_020b4714.c
-src/func_ov002_020b47ec.c
-src/MegaMushroomCreateTag_Spawn.c
-src/MegaMushroomTag_Spawn.c
+src/game/actors/d_a_obj_kinoko_tag.cpp

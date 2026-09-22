@@ -4,29 +4,29 @@
 #
 # Level 7's census printed id 0x31 (49) skipped, x1. Resolved the ROM's own
 # way: ACTOR_SPAWN_TABLE entry [49] (arm9 0x02090864 + 49*4) is a load reloc
-# to:0x0214e118 module:overlay(102) -- FortressTower_SpawnInfo, whose +4
+# to:0x0214e118 module:overlay(102) -- g_profile_BK_TOWER, whose +4
 # halfword reads 49. So the census id, the reloc target and the record's own
 # id all agree.
 #
 # FortressTower is a Platform subclass, RTTI 15daObjSimpleBg_c (a simple
 # background object with a collider). Its 800-byte object is built by
-# FortressTower_Spawn (ov102 0x02148f2c), which installs vtable
+# daObjSimpleBg_c_classInit_BK_TOWER (ov102 0x02148f2c), which installs vtable
 # _ZTV13FortressTower (ov102 0x0214e1d8).
 #
 # ---- everything but the factory is already in the link ---------------------
 #
 # The vtable _ZTV13FortressTower is the ONE table every ov102 daObjSimpleBg_c
-# shares, and it is the same table WARP_PIPE (id 298, WarpPipe_Spawn) installs.
+# shares, and it is the same table WARP_PIPE (id 298, daObjSimpleBg_c_classInit_DOKAN) installs.
 # WARP_PIPE is already registered (gate 33), so:
 #   - all five FortressTower methods (Init/Cleanup/Behavior/Render/D1) are
 #     already compiled -- gate 33's WARP_PIPE slice named them,
 #   - the host vtable array _ZTV13FortressTower is already filled by
 #     hal_fill_warp_pipe_vtable (hal/actor_classes_bob_world.cpp), and
-#   - FortressTower_SpawnInfo is already mounted (ov102_syms.txt).
+#   - g_profile_BK_TOWER is already mounted (ov102_syms.txt).
 #
-# So this gate's ONLY new symbol is the factory FortressTower_Spawn -- a
-# distinct matched TU from WarpPipe_Spawn (same 0x0214e1d8 store, 800-byte
+# So this gate's ONLY new symbol is the factory daObjSimpleBg_c_classInit_BK_TOWER -- a
+# distinct matched TU from daObjSimpleBg_c_classInit_DOKAN (same 0x0214e1d8 store, 800-byte
 # object) -- plus the registry row, which reuses WARP_PIPE's shared vtable fill
 # (fill 0, the BIG_BRICK_BLOCK / LIGHT_BEAM shape). No new overlay data, no PMF
 # state table, no method face.
-src/FortressTower_Spawn.c
+src/d_a_obj_simple_bg_bk_tower.c

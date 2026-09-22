@@ -402,7 +402,7 @@
 #                   already files them as documented exceptions.
 #
 # ---------------------------------------------------------------------------
-# 14. ov085 0x0212b8dc  src/func_ov085_0212b8dc.cpp (3bcbc9aea 2026-08-10)
+# 14. ov085 0x0212b8dc  src/actors/daMip_c.cpp (3bcbc9aea 2026-08-10)
 #    port hosting   unmatched/Ov085_Rabbit_b8dc.cpp
 #    disposition    NOT CATCH-UP WORK, and this row is here because the
 #                   address-join surfaces it and a reader will otherwise ask.
@@ -457,9 +457,9 @@
 # averaged away or silently taken from one side.
 #
 # What the class IS, is not in dispute: main's naming work, not new matches.
-# ov015's _ZN14KnockDownPlank8BehaviorEv is main's name
-# for 0x02111720, which this branch calls _ZN13PoleBillboard8BehaviorEv and
-# already links, while this branch's _ZN14KnockDownPlank8BehaviorEv is main's
+# ov015's _ZN19daObjBk_Dossunbar_c8BehaviorEv is main's name
+# for 0x02111720, which this branch calls _ZN14KnockDownPlank8BehaviorEv and
+# already links, while this branch's _ZN19daObjBk_Dossunbar_c8BehaviorEv is main's
 # _ZN9MovingBar8BehaviorEv at 0x02112090. Propagating a rename means renaming
 # BY ADDRESS across src/, include/ and every port seam at once; doing it one
 # TU at a time is exactly how the cxx_aliases direction gets inverted. Out of

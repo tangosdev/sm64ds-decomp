@@ -1,4 +1,5 @@
 //cpp
+#include "Stage.h"
 // _ZN5Stage9LC_RenderEv at 0x02023db8
 
 extern "C" {
@@ -27,7 +28,7 @@ extern unsigned char data_0209f2d4;
 extern void _ZN5Stage20RenderBouncingArrowsEv(void);
 }
 
-extern "C" void _ZN5Stage9LC_RenderEv(void) {
+void Stage::LC_Render() {
     data_0209f2a8 = data_0209f2a8 + data_0208ee44;
     if (data_0209f2a8 >= 0xc)
         data_0209f2a8 = 0;
@@ -81,5 +82,5 @@ extern "C" void _ZN5Stage9LC_RenderEv(void) {
     }
 
     if (data_0209f2d4 == 3)
-        _ZN5Stage20RenderBouncingArrowsEv();
+        RenderBouncingArrows();
 }

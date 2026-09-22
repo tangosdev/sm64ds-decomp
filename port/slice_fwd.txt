@@ -111,7 +111,7 @@
 # THREE SEATS ARE MIXED AND ONLY PART OF EACH CHANGES, which is the distinction
 # worth writing down:
 #   port/unmatched/KnockDownPlank_Behavior.cpp  7 of 14 rows. The other seven
-#     feed data_ov015_02114a24, dispatched by src/func_ov015_02111fb8.c -- a .c
+#     feed data_ov015_02114a24, dispatched by src/game/actors/d_a_obj_bk_dossunbar.cpp -- a .c
 #     file with no pointer to member in it, calling the cell as a plain cdecl
 #     function pointer.
 #   port/unmatched/Ov065_StateDispatch.cpp      3 of 19 rows. The other sixteen
@@ -213,7 +213,7 @@
 #     the matched TU would CALL, so both stay host copies.
 #   _ZN6ToxBox8BehaviorEv (ov092) is the same extent refusal and is not a
 #     definition-form row at all: its src defines the flat extern "C" symbol.
-#   _ZN12MansionSteps8BehaviorEv (ov063 data_ov063_0211ef38, 4 cells, span
+#   _ZN11daTrsTrap_c8BehaviorEv (ov063 data_ov063_0211ef38, 4 cells, span
 #     COMPLETE) is a member-defining row that measures clean on every axis. It
 #     is not in THIS gate because its source-pair seat is ov63_bringup in
 #     hal/actor_classes_ov063.cpp; it is taken in this lane's gate 2.
@@ -224,19 +224,19 @@
 #
 # Three rows, each blocked by something that is not a table:
 #
-#   func_ov064_02117d24   ov064 02117d24  data_ov064_0211c750  3 cells
+#   _ZN12MetalNetLift8BehaviorEv   ov064 02117d24  data_ov064_0211c750  3 cells
 #     ROM `add r3,r0,r4,lsl #3` at 02117d38, pool 02117e3c = 0211c750, STRIDE 8;
 #     emitted [esi*8]/[esi*8+4], ARITY 0; three whole-pair {code,0} sources
 #     (0211bc0c/14/1c) from __sinit_ov064_0211afc0; span 0211c750..0211c768 = 24
 #     bytes = exactly the three filled cells. Its src DEFINES THE FLAT C NAME,
 #     so unlike gate 1's nine it needs no forwarder. What blocked it is that
-#     src/func_ov064_02117d24.c is a .c FILE CONTAINING C++ member-pointer
+#     src/_ZN12MetalNetLift8BehaviorEv.cpp is a .c FILE CONTAINING C++ member-pointer
 #     syntax: `typedef void (C::*PMF)();` is not C and cl will not read it as C
 #     at all. LANGUAGE CXX beside the gate row is the tree's standing treatment
-#     (lane PMFB2, src/func_ov002_020aea30.c). Its table comes in decorated,
+#     (lane PMFB2, src/func_ov002_020aea30.cpp). Its table comes in decorated,
 #     ?data_ov064_0211c750@@3PAUEntry@@A, read off the object with dumpbin.
 #
-#   _ZN12MansionSteps8BehaviorEv  ov063 0211ce74  data_ov063_0211ef38  4 cells
+#   _ZN11daTrsTrap_c8BehaviorEv  ov063 0211ce74  data_ov063_0211ef38  4 cells
 #     ROM `add r3,r1,r0,lsl #3` at 0211ce8c, pool 0211cefc = 0211ef38, STRIDE 8;
 #     emitted [eax*8]/[eax*8+4], ARITY 0; four whole-pair {code,0} sources
 #     (0211e9ac/b4/bc/c4) from src/unnamed/ov063/__sinit_ov063_0211e3cc.c in the
@@ -331,9 +331,9 @@
 #
 # ===========================================================================
 port/hal/fwd_forwarders.cpp
-src/_ZN14KnockDownPlank8BehaviorEv.cpp
+src/game/actors/d_a_obj_bk_dossunbar.cpp
 src/_ZN10BowserFire8BehaviorEv.cpp
-src/_ZN19BowserPuzzleManager8BehaviorEv.cpp
+src/_ZN9JetStream8BehaviorEv.cpp
 src/_ZN6Dorrie8BehaviorEv.cpp
 src/_ZN5Whomp8BehaviorEv.cpp
 src/_ZN9MontyMole8BehaviorEv.cpp
@@ -341,8 +341,8 @@ src/_ZN22RotatingUpDownPlatform8BehaviorEv.cpp
 src/_ZN6Cannon8BehaviorEv.cpp
 src/_ZN4Fish8BehaviorEv.cpp
 # ---- gate 2 ----
-src/func_ov064_02117d24.c
-src/actors/MansionSteps/_ZN12MansionSteps8BehaviorEv.cpp
+src/_ZN12MetalNetLift8BehaviorEv.cpp
+src/game/actors/daTrsTrap_c/_ZN11daTrsTrap_c8BehaviorEv.cpp
 src/func_ov006_0212a2e0.cpp
 # ---- gate 3: the trampoline pair ----
 src/func_ov006_020cf758.cpp

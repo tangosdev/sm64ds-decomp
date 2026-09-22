@@ -1,0 +1,69 @@
+name: merge stranding
+
+# Detects work committed to a branch AFTER the pull request that closed it merged --
+# the trap `notes/handoff-marker-typing.md` section 7 documents, which has cost the tree
+# four times (#1156 -> #1169, #1196 -> #1200, and twice before).
+#
+# This CANNOT be a pull_request gate. The damage happens after a merge, when the PR is
+# closed and there is nothing left to fail. By the time the commits exist, the only
+# thing that can notice them is something that looks back at merged PRs -- so this runs
+# on a schedule and fails loudly, which mails the repo owner.
+#
+# Cheap by construction: stdlib Python, no compiler and no ROM, one ls-remote per remote
+# and a fetch only for tips it actually has to compare. A 286-PR window runs in ~11s.
+#
+# fetch-depth: 0 is required and not incidental -- the tool compares a branch tip
+# against main with `git merge-tree`, which needs real history, not a shallow graft.
+on:
+  schedule:
+    # Hourly. The window is 7 days, so a miss is caught by the next 167 runs; the point
+    # of running often is to catch a stranding while its author is still around to fix
+    # it, not to be the only chance of catching it.
+    - cron: "17 * * * *"
+  workflow_dispatch:
+    inputs:
+      since:
+        description: "days of merged PRs to examine"
+        required: false
+        default: "7"
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: merge-stranding
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # The baseline holds the five findings that already existed when this gate
+      # landed. They are acknowledged, not forgiven -- each entry is keyed on the
+      # branch tip, so any of those branches receiving one more commit fails this
+      # job again. Drain them by re-landing or deleting the branch, then re-bank.
+      - name: Look for commits no pull request contains
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python tools/merge_stranding.py \
+            --since "${{ github.event.inputs.since || '7' }}" \
+            --baseline stranding-baseline.json \
+            --check --json stranding.json
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: merge-stranding
+          path: stranding.json
+          if-no-files-found: ignore

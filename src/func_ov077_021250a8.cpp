@@ -1,9 +1,9 @@
 //cpp
 extern "C" {
 typedef struct { int x, y, z; } Vector3;
-typedef struct Actor Actor;
+typedef struct dActor_c dActor_c;
 typedef struct Player Player;
-Actor* _ZN5Actor10FindWithIDEj(unsigned int id);
+dActor_c* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 void func_ov077_02125e94(void* c, int a);
 short Vec3_HorzAngle(const Vector3* a, const Vector3* b);
 void _ZN6Player16IncMegaKillCountEv(Player* p);
@@ -12,7 +12,7 @@ void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(Player* p, const Vector3* v, unsign
 void func_ov077_021250a8(char* c){
   unsigned int id = *(unsigned int*)(c+0x1d4);
   if (id == 0) return;
-  char* r4 = (char*)_ZN5Actor10FindWithIDEj(id);
+  char* r4 = (char*)_ZN8dActor_c10FindWithIDEj(id);
   if (r4 == 0) return;
   int b1 = (int)(*(unsigned short*)(r4+0xc) == 0xbf);
   if (b1 == 0) return;

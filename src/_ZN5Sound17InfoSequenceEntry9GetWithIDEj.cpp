@@ -1,8 +1,9 @@
 //cpp
-extern "C" {
-extern char* data_020a5bb8;
+#include "Sound.h"
 
-int _ZN5Sound17InfoSequenceEntry9GetWithIDEj(unsigned int id)
+extern "C" char *data_020a5bb8;
+
+Sound::InfoSequenceEntry *Sound::InfoSequenceEntry::GetWithID(u32 id)
 {
     char* root = data_020a5bb8;
     char* sub = *(char**)(root + 0x84);
@@ -13,6 +14,5 @@ int _ZN5Sound17InfoSequenceEntry9GetWithIDEj(unsigned int id)
     if (id >= *(unsigned*)tbl) return 0;
     int v = ((int*)(tbl + id * 4))[1];
     char* base = *(char**)(root + 0x84);
-    return (v == 0) ? 0 : (int)(base + v);
-}
+    return (v == 0) ? 0 : (InfoSequenceEntry *)(base + v);
 }

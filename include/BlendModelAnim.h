@@ -24,18 +24,22 @@
 
 #ifdef __cplusplus
 
+extern "C" void _ZN6Memory16operator_delete2EPv(void *);
+
 struct BlendModelAnim : ModelAnim {
     Fix12i blendWeight;        /* 0x64 - 0x1000 is 1.0 */
     Fix12i blendStep;          /* 0x68 - per-frame increment */
     void *unk_6c;              /* 0x6c - owned; D1 deletes it */
 
     /* --- vtable order. Do not reorder. --- */
-    /* The destructor pair spelled as two plain virtuals on the host; the whole
+    /* The destructor pair spelled as two plain virtuals on the host, plus the
+       non-virtual destructor declaration the src/ definitions need; the whole
        ruling is in include/ModelBase.h. Overrides take their base's slots, so
        these carry the SAME TWO NAMES ModelAnim declares. */
 #ifdef _MSC_VER
     virtual void Destructor1();                           /* slot 0 (D1) */
     virtual void Destructor0();                           /* slot 1 (D0) */
+    ~BlendModelAnim();                                    /* no slot */
 #else
     virtual ~BlendModelAnim();                            /* slots 0 (D1), 1 (D0) */
 #endif
@@ -45,13 +49,57 @@ struct BlendModelAnim : ModelAnim {
     virtual void Render(const Vector3 *scale);            /* slot 5 */
     virtual void Virtual18(u32 mat, const Vector3 *scale);/* slot 6 */
 
+    /* DECLARED, defined out of line in src/_ZN14BlendModelAnimC1Ev.cpp as
+     * real C++ -- complete-object context for every ROM caller (it is a
+     * member subobject in ChiefChilly/Eyerok/Klepto/Unagi...), hence C1.
+     * Body is empty; blendWeight and unk_6c are initialised through the init
+     * list so their stores land where the ROM has them. */
+
     /* --- non-virtual --- */
+    BlendModelAnim();
     void Advance();
     void SetAnim(BCA_File &animFile, int numBlendFrames, int flags,
                  Fix12<int> speed, u16 startFrame);  /* free function, wall 6az */
+
+    /* ITS OWN, TO RESOLVE AN AMBIGUITY MULTIPLE INHERITANCE CREATES. ModelAnim
+       derives from Model (so ModelBase) and from Animation, and both bases
+       declare operator delete, so an inherited one is "ambiguous access to
+       name found: ModelBase::operator delete and Animation::operator delete".
+       Declaring it here picks the same deallocator both bases name, and also
+       satisfies the rule in include/dActor_c.h that mwcc only inlines the member
+       when it is in the class or its immediate base. */
+    void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
+
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char BlendModelAnim_size_must_be_0x70[sizeof(BlendModelAnim) == 0x70 ? 1 : -1];
+#endif
+
+#else
+
+/* The same object for C translation units, both vptrs written out -- the same shape
+ * ModelAnim.h gives its own C fallback, with the blend state appended. */
+struct BlendModelAnim {
+    void **vtable;                     /* 0x00 */
+    struct BMD_File *modelFile;        /* 0x04 */
+    struct ModelComponents data;       /* 0x08 */
+    struct Matrix4x3 mat4x3;           /* 0x1c */
+    void *transformsBuf;               /* 0x4c */
+    void **animVtable;                 /* 0x50 */
+    u32 numFramesAndFlags;             /* 0x54 */
+    s32 currFrame;                     /* 0x58 */
+    s32 speed;                         /* 0x5c */
+    struct BCA_File *file;             /* 0x60 */
+    s32 blendWeight;                   /* 0x64 */
+    s32 blendStep;                     /* 0x68 */
+    void *unk_6c;                      /* 0x6c */
+};
+
+/* So an object header declaring a BlendModelAnim member reads the same in both modes:
+ * C++ gets the class, C gets the flat stand-in above, and neither needs `struct`. */
+typedef struct BlendModelAnim BlendModelAnim;
 
 #endif /* __cplusplus */
 

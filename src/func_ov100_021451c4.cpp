@@ -10,7 +10,7 @@ extern unsigned int data_ov100_0214870c;
 extern int data_ov100_021487e4[];
 extern unsigned int data_ov100_02148714;
 extern int data_ov100_02148808[];
-extern void func_020072c0(void);
+extern void _ZN7Vector3D1Ev(void);
 extern int data_ov100_021487cc[];
 extern int data_ov100_021487fc[];
 
@@ -24,14 +24,14 @@ int func_ov100_021451c4(char* r6, void* r5, char* r4) {
         data_ov100_021487e4[0] = 0;
         data_ov100_021487e4[1] = 0;
         data_ov100_021487e4[2] = 0x64000;
-        func_020731dc(data_ov100_021487e4, (void*)func_020072c0, data_ov100_021487cc);
+        func_020731dc(data_ov100_021487e4, (void*)_ZN7Vector3D1Ev, data_ov100_021487cc);
         data_ov100_0214870c |= 1;
     }
     if (!(data_ov100_02148714 & 1)) {
         data_ov100_02148808[0] = 0;
         data_ov100_02148808[1] = 0;
         data_ov100_02148808[2] = -0x64000;
-        func_020731dc(data_ov100_02148808, (void*)func_020072c0, data_ov100_021487fc);
+        func_020731dc(data_ov100_02148808, (void*)_ZN7Vector3D1Ev, data_ov100_021487fc);
         data_ov100_02148714 |= 1;
     }
     func_ov100_02145170(r6, r4, data_ov100_021487e4, data_ov100_02148808);

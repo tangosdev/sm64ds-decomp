@@ -1,17 +1,27 @@
 //cpp
 // @symbol _ZN4Heap7DestroyEv
-/* recovered: named members + shared header, real C++ method */
+/* Heap::Destroy() at 0x0203c758 -- tears the heap down: let the concrete heap
+ * release its own bookkeeping (slot 2), forget the arena, then hand the block
+ * back to the heap this one was carved out of.
+ *
+ * Was a cast of `this' to a local `struct Base' for the slot-2 call, plus
+ * address-cast writes through `&unk_004' / `&unk_008' / `&unk_00c' -- the
+ * casts existed because the header declared those fields but nothing would
+ * admit what they were. They are named now, so the writes are plain. */
 #include "Heap.h"
-struct Base { virtual void v0(); virtual void v1(); virtual void m(); };
-extern "C" void _ZN4Heap10DeallocateEPv(void*, void*);
 
 void Heap::Destroy()
 {
-  ((Base *)this)->m();
-  *(int*)((char*)&unk_004)=0;
-  *(int*)((char*)&unk_008)=0;
-  void* p = *(void**)((char*)&unk_00c);
-  if (p==0) return;
-  _ZN4Heap10DeallocateEPv(p, ((Base *)this));
-  *(int*)((char*)&unk_00c)=0;
+    VDestroy();
+
+    heapStart = 0;
+    heapSize = 0;
+
+    /* A root heap has no parent to return the block to. */
+    Heap* parent = parentHeap;
+    if (parent == 0)
+        return;
+
+    parent->Deallocate(this);
+    parentHeap = 0;
 }

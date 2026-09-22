@@ -26,7 +26,7 @@
 // SLOT 9 IS THE WAVE-19 SLOT-5 SHADOW, AND IT IS SAFE. The matched Render
 // dispatches slot 5 of a local six-virtual shadow over the member at +0x110.
 // Adjudicated from how the class CONSTRUCTS that member and not from any
-// header name: MontyMoleRock_Spawn calls _ZN5ModelC1Ev(p + 0x110),
+// header name: daChoro_Rock_c_classInit calls _ZN5ModelC1Ev(p + 0x110),
 // InitResources feeds Model::LoadFile into ModelBase::SetFile at this + 0x110,
 // and both destructors call _ZN5ModelD1Ev(t + 0x110). It is a plain Model, and
 // hal/cxxname_bridge.cpp DUAL-FILLS _ZTV5Model at [4] AND [5], so the shadow's
@@ -39,44 +39,46 @@
 // overlay, same shape, same file family, opposite answer.
 //
 // The id is cross-checked from the relocated overlay image the gate-174 way:
-// MontyMoleRock_SpawnInfo (ov080 0x02128008, in the per-symbol mount at the
-// real 0x1c stride) +0 word = MontyMoleRock_Spawn 0x02124998, +4 halfword =
-// 0x0137 = 311, and MontyMoleRock_Spawn's own vtable-store names 0x0212802c.
+// g_profile_CHORO_ROCK (ov080 0x02128008, in the per-symbol mount at the
+// real 0x1c stride) +0 word = daChoro_Rock_c_classInit 0x02124998, +4 halfword =
+// 0x0137 = 311, and daChoro_Rock_c_classInit's own vtable-store names 0x0212802c.
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
 extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include <cstdlib>
 
-#include "Actor.h"
-#include "ActorBase.h"
+#include "dActor_c.h"
+#include "fBase_c.h"
 #include "MontyMoleRock.h"
 
 extern "C" {
 /* the shared lifecycle halves, the same functions every sibling fill writes */
-int _ZN5Actor19BeforeInitResourcesEv(void *self);            /* slot 1  */
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a); /* slot 2  */
-int _ZN5Actor14BeforeBehaviorEv(void *self);                 /* slot 7  */
-int _ZN5Actor12BeforeRenderEv(void *self);                   /* slot 10 */
-int _ZN5Actor13OnYoshiTryEatEv(void *self);                  /* slot 18 */
-void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p); /* slot 19 */
-int _ZN5Actor9Virtual50Ev(void *self);                       /* slot 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);    /* slot 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);        /* slot 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);        /* slot 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);            /* slot 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);            /* slot 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
-int _ZN5Actor16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);            /* slot 1  */
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a); /* slot 2  */
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);                 /* slot 7  */
+int _ZN8dActor_c12BeforeRenderEv(void *self);                   /* slot 10 */
+int _ZN8dActor_c13OnYoshiTryEatEv(void *self);                  /* slot 18 */
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void *self, void *p); /* slot 19 */
+int _ZN8dActor_c9Virtual50Ev(void *self);                       /* slot 20 */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);    /* slot 21 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);        /* slot 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);        /* slot 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);            /* slot 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);            /* slot 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
+int _ZN8dActor_c16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
 
 extern int data_02099f24[];          /* the frame phase the lists are in */
 extern unsigned char data_020a4b4c;  /* the spawn spine's own step */
@@ -88,9 +90,9 @@ void port_actor_render_probe(const char *cls, void *model); /* actor_classes */
 int _ZN13MontyMoleRock16CleanupResourcesEv(void);   /* slot 3,  .c C linkage */
 int *_ZN13MontyMoleRockD1Ev(int *self);             /* slot 16, .c C linkage */
 int *_ZN13MontyMoleRockD0Ev(int *self);             /* slot 17, .c C linkage */
-void *MontyMoleRock_Spawn(void);
+void *daChoro_Rock_c_classInit(void);
 
-/* The one array the ROM factory installs (MontyMoleRock_Spawn does
+/* The one array the ROM factory installs (daChoro_Rock_c_classInit does
    `p[0] = (int)_ZTV13MontyMoleRock`); thirty-one slots. Defined here, not just
    declared: the `int` type and C linkage match the
    `extern int _ZTV13MontyMoleRock[]` in include/decl_common.h that the .c
@@ -145,49 +147,49 @@ MR_TRAP(13) MR_TRAP(14)
 // ActorBase bodies. Evidence, scope sweep and the two caveats are in
 // port/actorbase_slots_ruling.txt.
 static int __fastcall mr_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall mr_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall mr_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 static void __fastcall mr_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall mr_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall mr_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall mr_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall mr_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall mr_pdes(void *s, void *)
-{ ((ActorBase *)s)->ActorBase::OnPendingDestroy(); return 0; }
+{ ((fBase_c *)s)->fBase_c::OnPendingDestroy(); return 0; }
 static int __fastcall mr_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int __fastcall mr_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 static int __fastcall mr_egg(void *s, void *, void *p)
-{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+{ _ZN8dActor_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall mr_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall mr_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall mr_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall mr_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall mr_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall mr_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall mr_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall mr_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall mr_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 static int __fastcall mr_aimed(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 
 // ---- MONTY_MOLE_ROCK's own slots -------------------------------------------
 /* Init, Behavior and Render are real __thiscall members against
@@ -232,11 +234,11 @@ extern "C" void hal_fill_monty_mole_rock_vtable(void)
     vt[13] = (void *)mr_trap13;
     vt[14] = (void *)mr_trap14;
     vt[15] = (void *)mr_heap;
-    vt[16] = (void *)mr_d1;
+    vt[16] = (void *)PORT_D16(mr_d1);
     vt[17] = (void *)mr_d0;
     /* the Actor tail (18..30). The rock overrides none of it -- slot 29 is
        Actor's own OnAimedAtWithEgg, where the mole substitutes
-       func_ov080_02123858. */
+       _ZN9MontyMole16OnAimedAtWithEggEv. */
     vt[18] = (void *)mr_yoshi;
     vt[19] = (void *)mr_egg;
     vt[20] = (void *)mr_v50;

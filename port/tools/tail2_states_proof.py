@@ -66,6 +66,7 @@ def main():
         "SM64DS_NO_AUDIO": "1",
         "SM64DS_VOLUME": "0",
         "SM64DS_NO_FOCUS": "1",
+        "SM64DS_MINIMIZED": "1",
         "SM64DS_SKIP_MENU": "1",
         "SM64DS_SCENE_WINDOW": "1",
         "SM64DS_SCENE_FRAMES": "100000",
@@ -75,10 +76,76 @@ def main():
         "SM64DS_CUTSCENE_STATES": "1",
         "SM64DS_WINDOW_SELFTEST": str(a.frames),
     })
+    # Run hd1, lane MDL: the model-smoothing level is the one SM64DS_* this
+    # proof has to be able to carry through the scrub above, because the gate
+    # is run BOTH with the key absent and with it set -- smoothing is picture
+    # only, so the opening must take the same distinct positions either way,
+    # and there is no way to ask that question without passing the key. With
+    # the variable unset this line does nothing and the proof is byte-identical
+    # to one from before it existed.
+    if os.environ.get("SM64DS_SMOOTH_MODELS"):
+        e["SM64DS_SMOOTH_MODELS"] = os.environ["SM64DS_SMOOTH_MODELS"]
+    # Run hd2, lane PIC: the texture filter and the edge-smoothing pass carry
+    # through for the same reason. Both are picture only, so the opening must
+    # take the same distinct positions with them on as with them absent, and
+    # there is no way to ask that question without passing the keys. With the
+    # variables unset these two lines do nothing.
+    if os.environ.get("SM64DS_TEXTURE_FILTER"):
+        e["SM64DS_TEXTURE_FILTER"] = os.environ["SM64DS_TEXTURE_FILTER"]
+    if os.environ.get("SM64DS_ANTI_ALIASING"):
+        e["SM64DS_ANTI_ALIASING"] = os.environ["SM64DS_ANTI_ALIASING"]
+    # Run hd2, lane GPU1: the present backend and its knobs carry through for
+    # the same reason as the four above. Which path hands the finished picture
+    # to the screen is presentation only, so the opening must take the same
+    # distinct positions with the graphics-card path on as with it absent, and
+    # there is no way to ask that question without passing the keys. With the
+    # variables unset these lines do nothing.
+    for _k in ("SM64DS_PRESENT_BACKEND", "SM64DS_PRESENT_FILTER_D3D",
+               "SM64DS_VSYNC", "SM64DS_PRESENT_DEVICE",
+               "SM64DS_PRESENT_OFFSCREEN", "SM64DS_PRESENT_OFFSCREEN_SIZE",
+               "SM64DS_PRESENT_ADDRCHECK"):
+        if os.environ.get(_k):
+            e[_k] = os.environ[_k]
+    # The improved minimap's three keys, carried for the same reason and in the
+    # same shape. The option draws a panel on the BOTTOM screen and nothing
+    # else, so the opening has to take the same distinct positions with it on
+    # as with it absent -- and this gate cannot ask that question unless the
+    # keys survive the scrub above. Every one of them unset is a loop that does
+    # nothing, so a run that names none is byte-identical to one from before
+    # this existed.
+    # The level-clear save menu's screen swap, carried for the same reason and
+    # in the same shape: the gate is run BOTH with the key absent and with it
+    # set, the swap is picture only, and the opening has to take the same
+    # distinct positions either way. Unset, the loop does nothing.
+    for k in ("SM64DS_IMPROVED_MINIMAP", "SM64DS_MINIMAP_SCALE",
+              "SM64DS_MINIMAP_DIR", "SM64DS_SAVE_MENU_ON_TOP"):
+        if os.environ.get(k):
+            e[k] = os.environ[k]
+    # Run hd2, lane GPU2: which rasteriser draws the 3D picture, and the knob
+    # that pins the device it draws on. Same reason again: the renderer is
+    # picture only, so the opening must take the same distinct positions with
+    # the card drawing as with it absent, and there is no way to ask that
+    # question without passing the keys. With the variables unset these lines
+    # do nothing.
+    for _k in ("SM64DS_RENDERER", "SM64DS_RENDERER_DEVICE",
+               "SM64DS_RENDERER_AB", "SM64DS_RENDERER_PERF"):
+        if os.environ.get(_k):
+            e[_k] = os.environ[_k]
     log = out / "run.log"
     with log.open("wb") as f:
+        # The quiet spawner every other launcher in port/tools uses (battery.py's
+        # run(), bootab.py): minimized, never activated, no console. NO_FOCUS and
+        # VOLUME alone still put a visible window on the screen for the whole run.
+        si = None
+        flags = 0
+        if os.name == "nt":
+            si = subprocess.STARTUPINFO()
+            si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+            si.wShowWindow = 7  # SW_SHOWMINNOACTIVE
+            flags = subprocess.CREATE_NO_WINDOW
         rc = subprocess.call([str(exe)], stdout=f, stderr=subprocess.STDOUT,
-                             env=e, cwd=str(root))
+                             env=e, cwd=str(root), startupinfo=si,
+                             creationflags=flags)
     text = log.read_text(encoding="utf-8", errors="replace")
 
     armed = "the opening is ARMED for this entry" in text

@@ -13,13 +13,13 @@
 #
 # BOTH IDS CONFIRMED BOTH ROUTES (the PLAN section 3 step 2 requirement):
 #   SNOWBALL  arm9 ACTOR_SPAWN_TABLE 0x02090864 + 224*4 = 0x02090be4
-#             -> reloc to:0x02128a98 module:overlay(81)  = Snowball_SpawnInfo
-#             Snowball_SpawnInfo +0 = 0x021264b4 = Snowball_Spawn (inside ov081)
-#             Snowball_SpawnInfo +4 halfword = 0x00e0 = 224
+#             -> reloc to:0x02128a98 module:overlay(81)  = g_profile_SNOWBALL
+#             g_profile_SNOWBALL +0 = 0x021264b4 = daSnowball_c_classInit (inside ov081)
+#             g_profile_SNOWBALL +4 halfword = 0x00e0 = 224
 #   MONEYBAG  arm9 ACTOR_SPAWN_TABLE 0x02090864 + 261*4 = 0x02090c78
-#             -> reloc to:0x02128be0 module:overlay(81)  = Moneybag_SpawnInfo
-#             Moneybag_SpawnInfo +0 = 0x02127adc = Moneybag_Spawn (inside ov081)
-#             Moneybag_SpawnInfo +4 halfword = 0x0105 = 261
+#             -> reloc to:0x02128be0 module:overlay(81)  = g_profile_GAMAGUCHI
+#             g_profile_GAMAGUCHI +0 = 0x02127adc = daGmch_c_classInit (inside ov081)
+#             g_profile_GAMAGUCHI +4 halfword = 0x0105 = 261
 # Neither reloc is a `module:overlays(a,b)` pair, so the window race that
 # produced the Spindrift/Lakitu misroute cannot arise on these two.
 #
@@ -34,7 +34,7 @@
 #   _ZTV8Snowball  ov081 0x02128abc  31 slots (plain Actor)
 #     routes: tail 31  typeinfo 70  terminator 31  raw run 32  next dsd 31
 #     The semantic tail is the resolved number and it is right: word 31 is
-#     0x021273e8 == func_ov081_021273e8, which is MONEYBAG's state-2 enter
+#     0x021273e8 == _ZN8daGmch_c11EnterState2Ev, which is MONEYBAG's state-2 enter
 #     body, reached because slot 31 is where Moneybag's own {function, 0} PMF
 #     SOURCE table (data_ov081_02128b38) begins -- trap T4's fourth width trap
 #     exactly, one class over. typeinfo's 70 is the documented over-read.
@@ -44,9 +44,9 @@
 #   _ZTV8Moneybag  ov081 0x02128c04  31 slots (plain Actor)
 #     every route agrees on 31.
 #     Owns 0 Init, 3 Cleanup, 6 Behavior, 9 Render, 12 OnPendingDestroy,
-#     16 D1, 17 D0, 18 OnYoshiTryEat (func_ov081_021265b8),
-#     19 OnTurnIntoEgg (func_ov081_02127a7c), 29 OnAimedAtWithEgg
-#     (func_ov081_021265c0).
+#     16 D1, 17 D0, 18 OnYoshiTryEat (_ZN8daGmch_c13OnYoshiTryEatEv),
+#     19 OnTurnIntoEgg (_ZN8daGmch_c13OnTurnIntoEggER6Player), 29 OnAimedAtWithEgg
+#     (_ZN8daGmch_c16OnAimedAtWithEggEv).
 #
 # ==== SNOWBALL (daSnowball_c), an Enemy ====================================
 # Object 908 bytes; MovingCylinderClsn +0x110, WithMeshClsn +0x144, Model
@@ -55,7 +55,7 @@
 # Render IS IN THE SLICE and that is a ruling, not an oversight. It is the
 # wave-19 six-virtual ROM-order shadow (`Base *b; b->m(0)`) over the member at
 # +0x300 -- and that member is a plain Model, adjudicated FROM CONSTRUCTION the
-# MontyMoleRock way, three witnesses in matched src: Snowball_Spawn calls
+# MontyMoleRock way, three witnesses in matched src: daSnowball_c_classInit calls
 # _ZN5ModelC1Ev(p + 0x300), InitResources feeds Model::LoadFile through
 # ModelBase::SetFile at this + 0x300, and D1/D0 both call
 # _ZN5ModelD1Ev(t + 0x300). hal/cxxname_bridge.cpp DUAL-FILLS _ZTV5Model at [4]
@@ -79,18 +79,19 @@
 # func_ov081_021261d4 (the installer) IS the genuine index-0 case -- its
 # `struct C` is defined in the TU, MSVC emits the 4-byte form, and the obj was
 # read to confirm it rather than argued from the shape.
-src/_ZN8SnowballD1Ev.c
-src/_ZN8SnowballD0Ev.c
+src/_ZN8SnowballD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN8SnowballD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN8SnowballD0Ev.cpp
 src/func_ov081_02125fb8.c
 src/func_ov081_021260fc.cpp
 src/func_ov081_021261d4.cpp
 src/func_ov081_02126224.c
-src/_ZN8Snowball16CleanupResourcesEv.c
-src/_ZN8Snowball16OnPendingDestroyEv.c
+src/_ZN8Snowball16CleanupResourcesEv.cpp
+src/_ZN8Snowball16OnPendingDestroyEv.cpp
 src/_ZN8Snowball6RenderEv.cpp
 src/_ZN8Snowball8BehaviorEv.cpp
 src/_ZN8Snowball13InitResourcesEv.cpp
-src/Snowball_Spawn.c
+src/d_a_snowball.c
 # Snowball's own sinit: it copies the class's TWO {function, delta} source
 # records (data_ov081_02128a6c -> 0x021261b8, data_ov081_02128a74 ->
 # 0x021260fc, both read out of ov081's relocs.txt) into the mutable cell
@@ -111,13 +112,13 @@ src/__sinit_ov081_021284b4.c
 # MovingCylinderClsn +0x1b0, WithMeshClsn +0x1e4, the PMF cell pointer +0x3dc.
 #
 # NINE STATES, TWO PMF RECORDS EACH, and this is where the width matters.
-# func_ov081_0212777c sets `c->pp = &data_ov081_02128f40 + (state << 4)` --
+# _ZN8daGmch_c8SetStateEi sets `c->pp = &data_ov081_02128f40 + (state << 4)` --
 # 0x10 bytes per state, i.e. two 8-byte {function, delta} records -- then
-# func_ov081_02127744 dispatches `*(c->pp)` (the ENTER half, index 0) and
-# func_ov081_02127708 dispatches `*(c->pp + 1)` (the TICK half, index 1).
+# _ZN8daGmch_c14CallStateEnterEv dispatches `*(c->pp)` (the ENTER half, index 0) and
+# _ZN8daGmch_c15CallStateUpdateEv dispatches `*(c->pp + 1)` (the TICK half, index 1).
 #
 # THE TICK DISPATCHER IS THE R9 CASE AND ITS FIX IS ALREADY ON THE TIP.
-# src/func_ov081_02127708.cpp is one of the twenty-one TUs run linkw wave 18's
+# src/actors/daGmch_c.cpp is one of the twenty-one TUs run linkw wave 18's
 # R9 sweep put on `COMPILE_OPTIONS "/vmg;/vmm"` in port/CMakeLists.txt, listed
 # there under "inert today: no host copy, no reference, /OPT:REF strips them --
 # a trap disarmed ahead of the lane that mounts the class." This is that lane.
@@ -126,11 +127,11 @@ src/__sinit_ov081_021284b4.c
 # ENTER record's delta word, which is zero on every one of the eighteen
 # records -- a jmp 0, the wave-17 failure exactly. Nothing is added to
 # CMakeLists for it; the existing row is what makes this slice safe.
-# func_ov081_02127744 (index 0) needs no option, the Snowball argument.
+# _ZN8daGmch_c14CallStateEnterEv (index 0) needs no option, the Snowball argument.
 #
 # TWO TUs ARE HELD OUT, both for reasons this tree has already ruled on:
 #
-#   src/_ZN8MoneybagD1Ev.cpp  -- the AUTO-EMITTED-MEMBER-DTOR .cpp form. It
+#   src/actors/daGmch_c.cpp  -- the AUTO-EMITTED-MEMBER-DTOR .cpp form. It
 #     declares ModelAnim/Model/ShadowModel/MovingCylinderClsn/WithMeshClsn as
 #     local structs with private destructors and writes `Moneybag::~Moneybag()
 #     {}`, leaving MSVC to emit calls to five member destructors that exist in
@@ -140,10 +141,10 @@ src/__sinit_ov081_021284b4.c
 #     runs minus the Deallocate -- the MontyMole gate-174 and IceBlock gate-192
 #     treatment. The matched file stays byte-locked in src/ as proof.
 #
-#   src/_ZN8Moneybag6RenderEv.cpp -- the ModelAnim slot-5 collision, the
+#   src/actors/daGmch_c.cpp -- the ModelAnim slot-5 collision, the
 #     fourteenth walk into it. It dispatches `((Sub *)&mModelAnim)->m(0)`
 #     through a LOCAL six-virtual ROM-order shadow off the ModelAnim at +0xd4
-#     (constructed by _ZN9ModelAnimC1Ev in Moneybag_Spawn, destroyed by
+#     (constructed by _ZN9ModelAnimC1Ev in daGmch_c_classInit, destroyed by
 #     _ZN9ModelAnimD1Ev in D0 -- adjudicated from construction, not from a
 #     header name), so its "slot 5" is the ROM's ModelAnim::Render while the
 #     host _ZTV9ModelAnim's slot 5 is Virtual18. HOST COPY in
@@ -151,51 +152,23 @@ src/__sinit_ov081_021284b4.c
 #     SECOND draw, off the Model at +0x138, is safe through the dual-filled
 #     _ZTV5Model and is spelled qualified there anyway so the file reads the
 #     same way twice.
-src/_ZN8MoneybagD0Ev.c
-src/func_ov081_021265b8.c
-src/func_ov081_021265c0.c
-src/func_ov081_021265c8.c
-src/func_ov081_02126700.cpp
-src/func_ov081_02126758.cpp
-# src/func_ov081_02126950.cpp is NOT here -- it rides in through hostgen
+# QUARANTINED at the main->port sync (origin/main 9c7f38a24): main folded this
+# class into one TU, and port/ host-copies bodies inside it (the slice_w3b host copies).
+# port/CMakeLists.txt's own assertion refuses the pair, because taking both is a
+# duplicate symbol and taking the src one puts the host copy's reason back. The
+# row returns when the host copy covers the whole consolidated TU.
+#src/actors/daGmch_c.cpp
+# src/actors/daGmch_c.cpp is NOT here -- it rides in through hostgen
 # instead (the W3BGEN block in port/CMakeLists.txt). It is a FALL-OFF-THE-END
 # int body: declared `int`, no return statement anywhere. mwccarm lets r0 carry
 # whatever the last call left; MSVC refuses the whole TU with
-#     error C4716: 'func_ov081_02126950': must return a value
+#     error C4716: '_ZN8daGmch_c21ApplySlopeToVertSpeedEPv': must return a value
 # -- a language-strictness refusal, not an ABI one. hostgen's FALLS_OFF_RETURN
-# table appends the return, so the object is still named func_ov081_02126950
+# table appends the return, so the object is still named _ZN8daGmch_c21ApplySlopeToVertSpeedEPv
 # and the TU still counts as linked. The value is unobservable both ends: the
 # ROM sets no r0 at either exit, and all three call sites the relocs name
 # (0x021270f8, 0x021272e8, 0x02127478) call it as a bare statement. The full
 # derivation is in the table's own note in port/tools/hostgen.py.
-src/func_ov081_02126a20.cpp
-src/func_ov081_02126c20.cpp
-src/func_ov081_02126c8c.cpp
-src/func_ov081_02126d64.c
-src/func_ov081_02126e28.c
-src/func_ov081_02126fa4.cpp
-src/func_ov081_02127044.c
-src/func_ov081_02127070.cpp
-src/func_ov081_02127134.c
-src/func_ov081_02127188.c
-src/func_ov081_021271e8.c
-src/func_ov081_02127240.cpp
-src/func_ov081_02127314.cpp
-src/func_ov081_02127398.c
-src/func_ov081_021273e8.c
-src/func_ov081_02127440.cpp
-src/func_ov081_021274c8.cpp
-src/func_ov081_02127558.c
-src/func_ov081_021276b0.cpp
-src/func_ov081_02127708.cpp
-src/func_ov081_02127744.cpp
-src/func_ov081_0212777c.c
-src/_ZN8Moneybag16CleanupResourcesEv.c
-src/_ZN8Moneybag16OnPendingDestroyEv.c
-src/_ZN8Moneybag8BehaviorEv.cpp
-src/_ZN8Moneybag13InitResourcesEv.cpp
-src/func_ov081_02127a7c.cpp
-src/Moneybag_Spawn.c
 # Moneybag's own sinit: five SharedFilePtr constructions (fileIDs 0x2fd..0x301,
 # one model and four animations), the eighteen-record copy into
 # data_ov081_02128f40, and the +0x2000 Vector3 offset record. The eighteen

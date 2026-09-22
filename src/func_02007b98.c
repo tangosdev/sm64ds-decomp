@@ -7,7 +7,7 @@ typedef int Fix12i;
 
 
 
-struct Actor {
+struct dActor_c {
     char pad0[0x5c];
     struct Vector3 pos; /* 0x5c */
 };
@@ -16,7 +16,7 @@ struct Camera {
     char pad0[0x80];
     char field_0x80[0x10]; /* 0x80 */
     char pad1[0x110 - 0x90];
-    struct Actor *owner; /* 0x110 */
+    struct dActor_c *owner; /* 0x110 */
 };
 
 struct Data {

@@ -80,13 +80,13 @@
 #
 #   THE FADER TABLE AND A COLOUR DESTRUCTOR. Stage::CleanupResources calls
 #   FaderWipe::~FaderWipe, and that IS matched --
-#   src/engine/fader/_ZN9FaderWipeD1Ev.c, 0x02017450 (config/arm9/delinks.txt),
+#   src/engine/fader/_ZN9FaderWipeD1Ev.cpp, 0x02017450 (config/arm9/delinks.txt),
 #   already listed on the INERT slice_gate36.txt; _ZN9FaderWipeD0Ev.c exists
 #   too. (An earlier draft of this file called it genuinely unmatched. That was
 #   a search that did not descend into src/engine/fader/, not a fact about the
 #   corpus. There is NO genuinely unmatched body in this arc.) What actually
 #   blocks it is the storage the fader closure needs -- _ZTV9FaderWipe, the
-#   table hal/fader_wipes.cpp stages by hand, and _ZN5ColorD1Ev -- the same
+#   table hal/fader_wipes.cpp stages by hand, and _ZN10FaderColorD2Ev -- the same
 #   two the gate-36 note has carried since wave 4:
 #       Stage::CleanupResources (also blocked above)
 #
@@ -113,31 +113,32 @@ src/_ZN5Stage19BeforeInitResourcesEv.cpp
 src/_ZN5Stage16OnPendingDestroyEv.cpp
 
 # _ZTV5Stage slots 16 and 17 -- ~Stage (D2/D1) and the deleting ~Stage (D0).
-# Between them they name _ZTV5Stage, _ZTV5Scene, MeshCollider::~MeshCollider,
+# Between them they name _ZTV5Stage, _ZTV8dScene_c, MeshCollider::~MeshCollider,
 # Model::~Model, Particle::SysTracker::~SysTracker, ActorBase::~ActorBase and
 # Memory::Deallocate. Every one of those already resolves, which is why these
 # two close with nothing added.
-src/_ZN5StageD2Ev.c
-src/_ZN5StageD0Ev.c
+src/_ZN5StageD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN5StageD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN5StageD0Ev.cpp
 
 # The Stage's SceneRelated graphics block, slot 1: Particle::RenderAll. NOT a
 # _ZTV5Stage entry -- func_02019144 dispatches it, and the port does not run
 # that beat.
-src/_ZN5Stage14GraphCallback1Ev.c
+src/_ZN5Stage14GraphCallback1Ev.cpp
 
 # Stage::Behavior's two pause gates -- reached from Behavior, not from the
 # vtable. IsPauseDisabled's only callee is func_ov002_020bd8ac, below.
-src/_ZN5Stage8CanPauseEv.c
-src/_ZN5Stage15IsPauseDisabledEv.c
+src/_ZN5Stage8CanPauseEv.cpp
+src/_ZN5Stage15IsPauseDisabledEv.cpp
 
 # The pause / VS / level-clear menu button rows, reached from Stage::PS_Update,
 # VE_Init, VE_Update and LC_Update. This is the one body in the slice that
 # needs the storage batch: data_0209f244, data_0209f2b4, data_0209f2e0 and the
 # four-slot data_0209f360[0..3], all hosted by hal/w8a_stage_storage.cpp in
 # this same piece.
-src/_ZN5Stage17UpdateMenuButtonsEb.c
+src/_ZN5Stage17UpdateMenuButtonsEb.cpp
 
 # ---- the one callee those eight drag that no slice already names (1) ------
 
 # Stage::IsPauseDisabled's only callee.
-src/func_ov002_020bd8ac.c
+src/actors/Player.cpp

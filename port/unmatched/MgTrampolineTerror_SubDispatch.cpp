@@ -32,9 +32,9 @@
  *
  *     FAULT code c0000005 at +0x01cca310 accessing 020ca310
  *       func_ov006_020c8f20
- *       _ZN6Player12St_Null_InitEv
+ *       func_ov006_020cac30
  *       func_ov006_02123cb4      <- this class's PLAY state
- *       func_ov006_02123340      <- vtable slot 6
+ *       _ZN18dScMgTrampoline2_c8BehaviorEv      <- vtable slot 6
  *       tte_beh
  *
  * and 0x020ca310 is a real ov006 body: the faulting address IS the pair's code
@@ -49,8 +49,8 @@
  *     src/func_ov006_020ca374.c   *(S2*)(o+0x70)   = data_ov006_0213b124
  *     src/func_ov006_020ca2ec.c   *(S8*)(o+0x70)   = data_ov006_0213b134
  *     src/func_ov006_020c9e7c.c   *(Vec2i*)(o+0x70)= data_ov006_0213b16c
- *     src/func_ov006_020c9098.c   from data_ov006_0213b114
- *     src/func_ov006_020c9c8c.c   from data_ov006_0213b194
+ *     src/func_ov006_020c9098.cpp   from data_ov006_0213b114
+ *     src/func_ov006_020c9c8c.cpp   from data_ov006_0213b194
  *     src/func_ov006_020c94e0.cpp from data_ov006_0213b1ec
  *
  * and every one of those symbols sits inside ONE CONTIGUOUS RUN of {code, 0}

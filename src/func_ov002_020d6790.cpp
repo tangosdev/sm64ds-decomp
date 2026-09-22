@@ -5,7 +5,7 @@ struct Obj {
   virtual int v4(); virtual int v5(); virtual int v6(); virtual int v7();
   virtual int v8(); virtual int v9(); virtual int v10(); virtual int v11();
   virtual int v12(); virtual int v13(); virtual int v14(); virtual int v15();
-  virtual int v16(); virtual int v17(); virtual int v18(); virtual int v19(char* c);
+  virtual int v16(); virtual int v17(); virtual int v18(); virtual void v19(char* c);
 };
 
 extern "C" {
@@ -70,8 +70,8 @@ isbf_ret0:
         return 1;
     case 7:
         if (*(u8*)(self + 0x714) != 0) goto case7_ret1;
-        *(int*)(((long long)(int)(*(int*)(self + 0x360) + 0xb0))) |= 0x40000;
-        *(int*)(((long long)(int)(*(int*)(self + 0x360) + 0xb0))) &= ~0x20000;
+        *(int*)(*(int*)(self + 0x360) + 0xb0) |= 0x40000;
+        *(int*)(*(int*)(self + 0x360) + 0xb0) &= ~0x20000;
         *(u8*)(self + 0x714) = 1;
 case7_ret1:
         return 1;

@@ -69,7 +69,7 @@ int Player::St_SideFlip_Main()
         } else {
             if (param1 == 1
                 && _ZN6Player7IsStateERNS_5StateE(((char*)this), data_ov002_0211052c)) {
-                unk_6e6 = 0;
+                mStatePhase = 0;
                 _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_02110454);
                 return 1;
             }

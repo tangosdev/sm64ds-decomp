@@ -1,33 +1,26 @@
 # Gate 72: THWOMP (actor 161, ov091), Whomp's Fortress.
 #
 # _ZTV6Thwomp / _ZTV7daDsn_c, ov091 0x02135174, a THIRTY-TWO slot Platform
-# table (slot 31 is Platform::Kill). Thwomp_Spawn installs it and its own
+# table (slot 31 is Platform::Kill). daDsn_c_classInit installs it and its own
 # SpawnInfo +4 halfword reads 161. ov091 has been mounted since gate 32 (the
 # chomp's post drags it in), so this class costs no overlay work.
 #
-# The config's name checks out three ways: Thwomp_SpawnInfo's +4 halfword is
-# 161, Thwomp_Spawn's own vtable-store site installs 0x02135174, and its RTTI
+# The config's name checks out three ways: g_profile_DOSUN's +4 halfword is
+# 161, daDsn_c_classInit's own vtable-store site installs 0x02135174, and its RTTI
 # name reads daDsn_c (the dosun, the thwomp).
 #
 # Its Behavior dispatches NO pointer-to-member -- it is a straight-line body
 # over the Platform helpers and its own func_ov091_* closures -- so nothing
 # here needs a state seat.
-src/Thwomp_Spawn.c
+src/d_a_dsn.c
 src/_ZN6Thwomp13InitResourcesEv.cpp
 src/_ZN6Thwomp8BehaviorEv.cpp
-src/_ZN6Thwomp6RenderEv.cpp
-src/_ZN6Thwomp16CleanupResourcesEv.cpp
-src/_ZN6ThwompD1Ev.c
-src/_ZN6ThwompD0Ev.c
+src/actors/daDsnBase_c.cpp
+src/_ZN6ThwompD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN6ThwompD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN6ThwompD0Ev.cpp
 # slot 27 (OnHitByMegaChar) and slot 29 (OnAimedAtWithEgg), both its own
-src/func_ov091_02132a14.cpp
-src/func_ov091_02132a0c.c
+src/_ZN6Thwomp15OnHitByMegaCharER6Player.cpp
+src/_ZN6Thwomp16OnAimedAtWithEggEv.cpp
 # the thwomp's own closure: the fall, the shake, the ground test and the raise
-src/func_ov091_02132dc0.cpp
-src/func_ov091_02132e64.c
-src/func_ov091_02132e98.c
-src/func_ov091_02132f04.cpp
-src/func_ov091_02132ff4.c
-src/func_ov091_02133020.c
-src/func_ov091_02133098.cpp
 src/func_ov091_02133254.cpp

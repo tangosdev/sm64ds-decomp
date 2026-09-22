@@ -1,0 +1,160 @@
+# slice_mg7.txt -- run link100 wave 14, lane SEAT14E, BATCH 4 of out/LINK14/BATCHES.md
+# ("ov006 minigame table roots. Expected +6 to +10.")
+#
+# THE BATCH'S PREMISE IS FALSE FOR NINE OF ITS TEN ROWS, and this file is the
+# measurement that says so plus the one row that survived it. The census read
+# the ten rows out of rows.tsv's family column, where eight of them are
+# UNENROLLED-TABLE-ROOT ("no slice row; its only ROM referrers are vtables or
+# data tables that have no src TU of their own"). That family is computed from
+# the per-function file's own stem, and for six of the eight the ROM's body is
+# already IN THE BINARY under a DIFFERENT object -- the consolidated class TU
+# the main-to-port sync folded it into. linkage.py counts a matched TU as linked
+# when an object of that TU's own stem is in the map, so a body that moved into
+# a sibling TU reads as unlinked forever and is not work at any point.
+#
+# Measured on this tree at 8ddff3187, build/port/walk_window.map:
+#
+#   func_ov006_020ec4dc   _func_ov006_020ec4dc  <-  dScMgHanachan_c.cpp.obj
+#   func_ov006_02106168   _func_ov006_02106168  <-  dScMgPanel_c.cpp.obj
+#   func_ov006_02106ca4   _func_ov006_02106ca4  <-  dScMgPanel_c.cpp.obj
+#   func_ov006_0211bc8c   _func_ov006_0211bc8c  <-  dScMgSound_c.cpp.obj
+#   func_ov006_02123428   _func_ov006_02123428  <-  d_s_mg_trampoline2.cpp.obj
+#   func_ov006_020e513c   _func_ov006_020e513c  <-  dScMgCurling2_c.cpp.obj
+#
+# Each of those six ALREADY HAS ITS RULING WRITTEN, in the slice that owns the
+# consolidated TU, and every ruling says the same thing: taking the per-function
+# file as well is LNK2005.
+#
+#   slice_ppp.txt:291   "RETIRED at ALIAS2 (wave 8, the main -> port sync): main
+#                        folded this body into src/actors/dScMgPanel_c.cpp ...
+#                        the per-function leftover here was the second
+#                        definition (LNK2005)."          #src/func_ov006_02106168.cpp
+#   slice_ppp.txt:279   the same for src/func_ov006_02106ca4.c, table 02142840
+#   slice_tte.txt:725   the same for #src/func_ov006_02123428.c
+#   slice_tte.txt:730   the same for #src/func_ov006_02123938.c
+#   slice_wig.txt:417   "HELD, run link100 lane HOSTGEN2: main's consolidated TU
+#                        above defines func_ov006_020ec4dc as well, and taking
+#                        both is a duplicate symbol."     #src/func_ov006_020ec4dc.c
+#   slice_s75.txt:311   the same for #src/func_ov006_020e513c.c, and that file is
+#                        additionally the port's OWN NONMATCHING decompile of the
+#                        address while the matched tree's body is the one to keep
+#   slice_box.txt:508   func_ov006_0211bc8c "THE FLOOR IS RETIRED" -- it is
+#                        src/func_ov006_0211bc8c.cpp now, and dScMgSound_c.cpp
+#                        carries the body into the link
+#
+# This is memory note sm64ds-port-exists-on-main-dup exactly: EXISTS-on-main is
+# either an upgrade or a duplicate, and a per-function file whose name a linked
+# consolidated TU already defines is a duplicate. STOP is the right move and the
+# right tag. None of the six is a defect, a floor, or a seat. The next census
+# should join the 1006 against the MAP'S SYMBOL NAMES as well as the object
+# stems, and tag every row whose flat name is already defined by a linked object
+# under another stem; on this batch alone that is six of ten.
+#
+# TWO MORE ROWS ARE REFUSALS FOR REASONS THAT ARE NOT DUPLICATION:
+#
+#   func_ov006_02123938   d_s_mg_trampoline2.cpp DEFINES it (line 868 of the
+#       hostgen'd copy) and dScMgTrampoline2_c::Behavior calls it by name one
+#       statement after the pointer-to-member dispatch, so the ROM's edge is
+#       live; MSVC inlined the body into Behavior and /OPT:REF then dropped the
+#       standalone COMDAT, which is why the flat name is the one member of the
+#       group missing from the map. Seating src/func_ov006_02123938.c beside the
+#       TU that defines it is the same LNK2005 as the six above, and slice_tte
+#       already ruled it so. Nothing to seat; the body runs today.
+#
+#   _ZN19cMgSmartball_slot_c14RestoreInitialEv   0x02110154, and the src TU has
+#       TWO defects that port/unmatched/MgSmartball_SlotRestore.cpp measured
+#       against the cartridge: it drops the receiver that rides through in r0
+#       (the ROM's `mov r4, r0; bl 0x2114738` hands the object to the base
+#       class's RestoreInitial, which STORES through it -- a silent wild write
+#       on the host, not a wild read), and it spells that callee
+#       data_ov034_02114738, an ov034 DATA name for an ov006 FUNCTION that no
+#       config defines. A third reason forbids even the flat name: ov002 and
+#       ov006 SHARE A DS OVERLAY LOAD WINDOW, both cover 0x02110154, and
+#       hal/cxx_aliases.cpp:895 routes _ZN19cMgSmartball_slot_c14RestoreInitialEv
+#       to _data_ov002_02110154 (the Wait State object). Defining the flat name
+#       defeats that alias silently, and alternatename_guard.py has already
+#       refused exactly that once. The row is a src/ BUG, reported in
+#       out/SEAT14E/bugs.md, not a seat.
+#
+#   _ZN20cMgSmartball_dokan_c14RestoreInitialEv   0x02110bb4, STRIPPED: its
+#       object IS on the link line already (slice_smb.txt:272) and /OPT:REF
+#       dropped it for want of a reference. The reference it would need lives in
+#       hal/scene_mg.cpp's kSmartballObjFaces, which BATCH 4 is forbidden to
+#       touch (SEAT4's footprint rule), and that file's banner says why the edge
+#       is deliberately absent: the ROM body is a 0xc-byte tail-call veneer
+#       (`ldr ip,[pc]; bx ip; .word 0x02114738`) and the src TU spells both sides
+#       void(void), which rides r0 through on ARM and DROPS THE RECEIVER on the
+#       host. The thunk therefore dispatches to the veneer's target with the
+#       receiver placed. Referencing the matched TU would put the dropped
+#       receiver back. (b) refusal: the enabler is a receiver-carrying spelling
+#       of the veneer, and the file that would carry it is not this lane's.
+#
+# ---- THE ONE ROW THAT IS REAL ----------------------------------------------
+#
+# func_ov006_020e1854, ov006, 0x020e1854, 0x300 bytes. dScMgCurling_c's
+# twenty-fifth state: the pen handler that drags the stone while the stylus is
+# down.
+#
+# WHY IT IS AVAILABLE NOW AND WAS NOT BEFORE. Three separate banners in this
+# tree say "the decomp has no body for 0x020e1854" -- hal/scene_mg_faces.cpp:74,
+# slice_mg1.txt:57 ("still the live pointer-to-member state target"),
+# hal/scene_mg_flower.cpp:121. All three are STALE in the same way lane SHADOWS3
+# found five others stale tonight: main matched the function since. PR #2352
+# (86a6e696d, "Match three more ov006 minigame functions: the Coin cup touch
+# test, the pen drag handler and the Coin cursor sprite") landed
+# src/func_ov006_020e1854.c, and this tree carries the delink block for it:
+#
+#   config/arm9/overlays/ov006/delinks.txt:1785
+#       src/func_ov006_020e1854.c:
+#           .text start:0x020e1854 end:0x020e1b54
+#
+# 0x020e1b54 - 0x020e1854 = 0x300, which is rows.tsv's own size for the row.
+# The file carries no NONMATCHING banner.
+#
+# THE ROM'S OWN EDGE, READ OUT OF THE CARTRIDGE, not out of a note. The referrer
+# rows.tsv names is data_ov006_0213c2bc, and in
+# extracted/overlays/overlay_0006.bin at base 0x020bfec0 that word and its
+# neighbours read:
+#
+#   0x0213c2b8  0x00000000
+#   0x0213c2bc  0x020e1854   <- the code word of the pointer-to-member pair
+#   0x0213c2c0  0x00000000   <- its adjustment, zero
+#   0x0213c2c4  0x0209a764
+#
+# and the six words at 0x020e1854 are e92d43f0 e24dd004 e59f12d8 e59f22d8
+# e5d11000 e1a09000 -- `stmdb sp!, {r4-r9, lr}` and the frame, a function entry
+# and not an interior address. That is the byte-for-byte verification the seat
+# rule asks for (memory note sm64ds-port-phantom-seat-body): the table's own
+# word at the ROM address, and a prologue under it.
+#
+# WHAT THE SEAT REPLACES. port/unmatched/MgCurling_State_020e1854.cpp, lane
+# CT1's 425-line HAND TRANSCRIPTION of those same 0x300 bytes, written when the
+# decomp had no body. Its own banner is explicit that it is a transcription and
+# that its port_ name exists so that "nothing in this tree claims a
+# decompilation that does not exist". A decompilation exists now, so the
+# transcription retires and the ROM's matched body takes the state, which is the
+# SHADOWS.md three-way decision's case (a) -- a true stand-in.
+#
+# THE EDGE IS UNCHANGED BY THE SEAT. unmatched/MgCurling_StateDispatch.cpp's
+# address switch has called port_mg_curling_st_020e1854 by name since run link60
+# lane MG2, at two case sites and one CUR_FACE0 row, and it goes on calling it:
+# hal/scene_mg_faces.cpp now DEFINES that name as a one-line bridge into
+# func_ov006_020e1854, so the dispatch file is not touched, the pointer-to-member
+# path is not touched, and no new call exists anywhere. The trace instrument the
+# transcription carried (SM64DS_MG_CURLING_TRACE and the entry counter) moves
+# with the bridge rather than being lost; nothing else in the tree referenced
+# port_mg_curling_st_020e1854_entries.
+#
+# THE LINK WAVE IS EMPTY. src/func_ov006_020e1854.c declares seven externals and
+# every one is in the pre-seat map: data_020a0e40 (actor_vtables.cpp.obj),
+# data_020a0de8, data_020a0dea, data_020a0deb (auto_bss.cpp.obj),
+# _ZN4cstd4sqrtEy, _ZN4cstd5atan2E5Fix12IiES1_ and func_02012718 (each its own
+# matched TU's object). The transcription declared the same three functions, so
+# the arity and the spellings are the ones already in the build.
+#
+# WHAT IS OWED. This state is the PEN HANDLER: it runs only while the stylus is
+# down, so a 600-frame headless run with no input never enters it and no
+# headless proof can exercise the dispatch. The seat is taken on the byte-for-
+# byte arm of the rule, and a click-driven play proof of Slots Shot's curling
+# scene with Tango present is OWED and named in this lane's report.
+src/func_ov006_020e1854.c

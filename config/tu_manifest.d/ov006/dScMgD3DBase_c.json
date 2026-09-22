@@ -1,0 +1,450 @@
+{
+  "id": "ov006/dScMgD3DBase_c",
+  "module": "ov006",
+  "source": "src/actors/dScMgD3DBase_c.cpp",
+  "promoted_source": "src/actors/dScMgD3DBase_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x20e6c28..0x20e7660, 27 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): dScMgD3DBase_c",
+    "module sinit corroboration: 31 sinit(s) / 31 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
+    "SCOUT CORROBORATION, added after the fact file was recovered: notes/data/class-facts/dScMgD3DBase_c.json partitions this same 0x020e6c28..0x020e7660 run as 17 vtable-targeted class methods (0x06e0 bytes) plus 10 free helpers (0x0358 bytes) and gives a per-helper reason -- each of the ten either ignores the incoming receiver or has callers outside the class region. That agrees function-for-function with the 27 this TU licenses. Its `unproven` list is binding and says what this boundary still does NOT rest on: 'call behavior proves they are not class methods, but adjacency alone does not prove static versus external linkage or the original translation-unit cut.' boundary_confidence stays medium for exactly that reason."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020e6c28",
+      "end": "0x020e7660"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN14dScMgD3DBase_cD1Ev",
+      "address": "0x020e6c28",
+      "size": "0x00000038",
+      "legacy_source": "src/_ZN14dScMgD3DBase_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN14dScMgD3DBase_cD0Ev",
+      "address": "0x020e6c60",
+      "size": "0x0000004c",
+      "legacy_source": "src/_ZN14dScMgD3DBase_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN14dScMgD3DBase_c25OnAimedAtWithEggReturnVecEv",
+      "address": "0x020e6cac",
+      "size": "0x00000078",
+      "legacy_source": "src/_ZN14dScMgD3DBase_c25OnAimedAtWithEggReturnVecEv.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN14dScMgD3DBase_c16OnAimedAtWithEggEv",
+      "address": "0x020e6d24",
+      "size": "0x00000068",
+      "legacy_source": "src/_ZN14dScMgD3DBase_c16OnAimedAtWithEggEv.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN14dScMgD3DBase_c19OnHitFromUnderneathEv",
+      "address": "0x020e6d8c",
+      "size": "0x0000000c",
+      "legacy_source": "src/_ZN14dScMgD3DBase_c19OnHitFromUnderneathEv.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN14dScMgD3DBase_c15OnHitByMegaCharEv",
+      "address": "0x020e6d98",
+      "size": "0x0000000c",
+      "legacy_source": "src/_ZN14dScMgD3DBase_c15OnHitByMegaCharEv.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov006_020e6da4",
+      "address": "0x020e6da4",
+      "size": "0x00000010",
+      "legacy_source": "src/func_ov006_020e6da4.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov006_020e6db4",
+      "address": "0x020e6db4",
+      "size": "0x0000003c",
+      "legacy_source": "src/func_ov006_020e6db4.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "Sound_PlayBank1Panned",
+      "address": "0x020e6df0",
+      "size": "0x0000004c",
+      "legacy_source": "src/Sound_PlayBank1Panned.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov006_020e6e3c",
+      "address": "0x020e6e3c",
+      "size": "0x00000010",
+      "legacy_source": "src/func_ov006_020e6e3c.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "_ZN14dScMgD3DBase_c24OnHitByCannonBlastedCharEv",
+      "address": "0x020e6e4c",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN14dScMgD3DBase_c24OnHitByCannonBlastedCharEv.cpp",
+      "ordinal": 10
+    },
+    {
+      "symbol": "_ZN14dScMgD3DBase_c8OnPushedEv",
+      "address": "0x020e6e54",
+      "size": "0x00000024",
+      "legacy_source": "src/_ZN14dScMgD3DBase_c8OnPushedEv.cpp",
+      "ordinal": 11
+    },
+    {
+      "symbol": "_ZN14dScMgD3DBase_c8OnKickedEv",
+      "address": "0x020e6e78",
+      "size": "0x000000e8",
+      "legacy_source": "src/_ZN14dScMgD3DBase_c8OnKickedEv.cpp",
+      "ordinal": 12
+    },
+    {
+      "symbol": "_ZN14dScMgD3DBase_c21AfterCleanupResourcesEj",
+      "address": "0x020e6f60",
+      "size": "0x000000ac",
+      "legacy_source": "src/_ZN14dScMgD3DBase_c21AfterCleanupResourcesEj.cpp",
+      "ordinal": 13
+    },
+    {
+      "symbol": "_ZN14dScMgD3DBase_c11AfterRenderEj",
+      "address": "0x020e700c",
+      "size": "0x00000034",
+      "legacy_source": "src/_ZN14dScMgD3DBase_c11AfterRenderEj.cpp",
+      "ordinal": 14
+    },
+    {
+      "symbol": "_ZN14dScMgD3DBase_c12BeforeRenderEv",
+      "address": "0x020e7040",
+      "size": "0x00000034",
+      "legacy_source": "src/_ZN14dScMgD3DBase_c12BeforeRenderEv.cpp",
+      "ordinal": 15
+    },
+    {
+      "symbol": "_ZN14dScMgD3DBase_c14BeforeBehaviorEv",
+      "address": "0x020e7074",
+      "size": "0x0000004c",
+      "legacy_source": "src/_ZN14dScMgD3DBase_c14BeforeBehaviorEv.cpp",
+      "ordinal": 16
+    },
+    {
+      "symbol": "_ZN14dScMgD3DBase_c18AfterInitResourcesEj",
+      "address": "0x020e70c0",
+      "size": "0x00000024",
+      "legacy_source": "src/_ZN14dScMgD3DBase_c18AfterInitResourcesEj.cpp",
+      "ordinal": 17
+    },
+    {
+      "symbol": "_ZN14dScMgD3DBase_c19BeforeInitResourcesEv",
+      "address": "0x020e70e4",
+      "size": "0x0000002c",
+      "legacy_source": "src/_ZN14dScMgD3DBase_c19BeforeInitResourcesEv.cpp",
+      "ordinal": 18
+    },
+    {
+      "symbol": "func_ov006_020e7110",
+      "address": "0x020e7110",
+      "size": "0x00000014",
+      "legacy_source": "src/func_ov006_020e7110.c",
+      "ordinal": 19
+    },
+    {
+      "symbol": "_ZN14dScMgD3DBase_c9Virtual84Ev",
+      "address": "0x020e7124",
+      "size": "0x0000019c",
+      "legacy_source": "src/_ZN14dScMgD3DBase_c9Virtual84Ev.cpp",
+      "ordinal": 20
+    },
+    {
+      "symbol": "_ZN14dScMgD3DBase_c9Virtual7CEv",
+      "address": "0x020e72c0",
+      "size": "0x00000104",
+      "legacy_source": "src/_ZN14dScMgD3DBase_c9Virtual7CEv.cpp",
+      "ordinal": 21
+    },
+    {
+      "symbol": "func_ov006_020e73c4",
+      "address": "0x020e73c4",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov006_020e73c4.cpp",
+      "ordinal": 22
+    },
+    {
+      "symbol": "func_ov006_020e740c",
+      "address": "0x020e740c",
+      "size": "0x0000001c",
+      "legacy_source": "src/func_ov006_020e740c.c",
+      "ordinal": 23
+    },
+    {
+      "symbol": "func_ov006_020e7428",
+      "address": "0x020e7428",
+      "size": "0x000000e0",
+      "legacy_source": "src/func_ov006_020e7428.c",
+      "ordinal": 24
+    },
+    {
+      "symbol": "func_ov006_020e7508",
+      "address": "0x020e7508",
+      "size": "0x00000094",
+      "legacy_source": "src/func_ov006_020e7508.cpp",
+      "ordinal": 25
+    },
+    {
+      "symbol": "func_ov006_020e759c",
+      "address": "0x020e759c",
+      "size": "0x000000c4",
+      "legacy_source": "src/func_ov006_020e759c.c",
+      "ordinal": 26
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+    "tubuild create warning (RESOLVED): RAW: src/_ZN14dScMgD3DBase_c25OnAimedAtWithEggReturnVecEv.cpp (_ZN14dScMgD3DBase_c25OnAimedAtWithEggReturnVecEv) did not split (the definition is inside the extern \"C\" block opened on line 6, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block RESOLVED: the member was lifted out of its legacy extern \"C\" block by hand; its declarations were merged into the file's one top-of-file extern \"C\" block and the body now sits at file scope. verify reports 27/27 MATCH.",
+    "tubuild create warning (RESOLVED): RAW: src/Sound_PlayBank1Panned.cpp (Sound_PlayBank1Panned) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block RESOLVED: the member was lifted out of its legacy extern \"C\" block by hand; its declarations were merged into the file's one top-of-file extern \"C\" block and the body now sits at file scope. verify reports 27/27 MATCH.",
+    "tubuild create warning (RESOLVED): RAW: src/_ZN14dScMgD3DBase_c9Virtual7CEv.cpp (_ZN14dScMgD3DBase_c9Virtual7CEv) did not split (the definition is inside the extern \"C\" block opened on line 9, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block RESOLVED: the member was lifted out of its legacy extern \"C\" block by hand; its declarations were merged into the file's one top-of-file extern \"C\" block and the body now sits at file scope. verify reports 27/27 MATCH.",
+    "tubuild create warning (RESOLVED): RAW: src/func_ov006_020e73c4.cpp (func_ov006_020e73c4) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block RESOLVED: the member was lifted out of its legacy extern \"C\" block by hand; its declarations were merged into the file's one top-of-file extern \"C\" block and the body now sits at file scope. verify reports 27/27 MATCH.",
+    "tubuild create warning (RESOLVED): RAW: src/func_ov006_020e7508.cpp (func_ov006_020e7508) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block RESOLVED: the member was lifted out of its legacy extern \"C\" block by hand; its declarations were merged into the file's one top-of-file extern \"C\" block and the body now sits at file scope. verify reports 27/27 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN3GXS11LoadOBJPlttEPKvjj' differs between the legacy file that used to hold _ZN14dScMgD3DBase_c16OnAimedAtWithEggEv and the one that held _ZN14dScMgD3DBase_c9Virtual84Ev; kept the first, the other is commented out for review RESOLVED: the two spellings name one symbol and the file now carries a single reconciled declaration in its one top-of-file extern \"C\" block; the commented-out alternate is gone. See the reconciliation note at the head of src/actors/dScMgD3DBase_c.cpp for which spelling won and why. verify reports 27/27 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_0209e660' differs between the legacy file that used to hold _ZN14dScMgD3DBase_c16OnAimedAtWithEggEv and the one that held _ZN14dScMgD3DBase_c9Virtual84Ev; kept the first, the other is commented out for review RESOLVED: the two spellings name one symbol and the file now carries a single reconciled declaration in its one top-of-file extern \"C\" block; the commented-out alternate is gone. See the reconciliation note at the head of src/actors/dScMgD3DBase_c.cpp for which spelling won and why. verify reports 27/27 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov006_02141a48' differs between the legacy file that used to hold _ZN14dScMgD3DBase_c21AfterCleanupResourcesEj and the one that held _ZN14dScMgD3DBase_c9Virtual84Ev; kept the first, the other is commented out for review RESOLVED: the two spellings name one symbol and the file now carries a single reconciled declaration in its one top-of-file extern \"C\" block; the commented-out alternate is gone. See the reconciliation note at the head of src/actors/dScMgD3DBase_c.cpp for which spelling won and why. verify reports 27/27 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov006_02141a44' differs between the legacy file that used to hold _ZN14dScMgD3DBase_c8OnKickedEv and the one that held _ZN14dScMgD3DBase_c9Virtual84Ev; kept the first, the other is commented out for review RESOLVED: the two spellings name one symbol and the file now carries a single reconciled declaration in its one top-of-file extern \"C\" block; the commented-out alternate is gone. See the reconciliation note at the head of src/actors/dScMgD3DBase_c.cpp for which spelling won and why. verify reports 27/27 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_02056674' differs between the legacy file that used to hold func_ov006_020e740c and the one that held func_ov006_020e7428; kept the first, the other is commented out for review RESOLVED: the two spellings name one symbol and the file now carries a single reconciled declaration in its one top-of-file extern \"C\" block; the commented-out alternate is gone. See the reconciliation note at the head of src/actors/dScMgD3DBase_c.cpp for which spelling won and why. verify reports 27/27 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN2GX15SetBankForSubBGEt' differs between the legacy file that used to hold _ZN14dScMgD3DBase_c16OnAimedAtWithEggEv and the one that held func_ov006_020e759c; kept the first, the other is commented out for review RESOLVED: the two spellings name one symbol and the file now carries a single reconciled declaration in its one top-of-file extern \"C\" block; the commented-out alternate is gone. See the reconciliation note at the head of src/actors/dScMgD3DBase_c.cpp for which spelling won and why. verify reports 27/27 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_0209d454' differs between the legacy file that used to hold _ZN14dScMgD3DBase_c9Virtual84Ev and the one that held func_ov006_020e759c; kept the first, the other is commented out for review RESOLVED: the two spellings name one symbol and the file now carries a single reconciled declaration in its one top-of-file extern \"C\" block; the commented-out alternate is gone. See the reconciliation note at the head of src/actors/dScMgD3DBase_c.cpp for which spelling won and why. verify reports 27/27 MATCH.",
+    "PROMOTED BY HAND (tubuild promote is --dry-run only). Pre-promotion evidence: verify 27/27 MATCH, objisolate clean, reloc-destinations clean, emission order ROM-ascending; linkcheck ov006/dScMgD3DBase_c = SCRATCH-LINK-VERIFIED with the whole 0x020e6c28..0x020e7660 range reproducing from one object, 106/106 modules exact, and a ROM sha256 identical to the pristine-tree baseline control (d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8). The 9 `dsd check symbols --fail` errors are pre-existing -- the baseline control has the same 9, 0 new.",
+    "COMPILER-ONLY ROW COUNT DERIVED, NOT COPIED. The queue estimated ~11 from the sibling dScMgSingle3DBase_c. The formula in notes/agents/roles/writer.md gives 2 x (ancestors + self) + 1 vtable: dScMgD3DBase_c -> dScMgBase_c -> dScene_c -> dBase_c -> fBase_c is 5 levels, so 10 typeinfo rows + 1 vtable = 11. The oracle happens to agree only because it sits at the same depth under the same base. verify then reported exactly those 11 symbols. The formula's '+1 Vector3 D1' term does not apply -- this class has no Vector3 member, and neither does the oracle, which is why the oracle also has 11 and not 12.",
+    "DATA CHECK RUN BY THE WRITER, before any rombuild: tools/romdata_check.py on src/actors/dScMgD3DBase_c.cpp gives 11 symbols / 6 VERIFIED / 5 PARTIAL / 0 DIFFERS. The 5 PARTIAL are the five _ZTS strings (59 emitted bytes, 52 equal) whose ROM extent runs past the string itself. MEASURED BY THE BUILDER, no longer inference: the CLI prints only bucket totals, so the per-symbol verdicts were recovered by importing tools/romdata_check.py and calling check_object() directly. PARTIAL = _ZTS7fBase_c, _ZTS7dBase_c, _ZTS8dScene_c, _ZTS11dScMgBase_c, _ZTS14dScMgD3DBase_c (emitted 9+9+10+14+17 = 59, equal 8+8+8+12+16 = 52). VERIFIED = _ZTI7fBase_c, _ZTI7dBase_c, _ZTI8dScene_c, _ZTI11dScMgBase_c, _ZTI14dScMgD3DBase_c and _ZTV14dScMgD3DBase_c (8+12+12+12+12+144 = 200). The vtable is therefore VERIFIED, with all 144 emitted body bytes equal to the cartridge.",
+    "A SECOND, EARLIER ATTEMPT AT THIS CLASS EXISTS and was never pushed: local branch wip/dScMgD3DBase_c-humanizer-blocked-0905 (commits c6294b980 'Document dScMgD3DBase_c ROM facts' and faee1ae87 'ov006: promote dScMgD3DBase_c translation unit'), cut from an older main. classqueue.py granted this claim with no conflict, so the claim lock did not see it -- a ref under refs/claims/ is released when a stage finishes, and a blocked branch left behind holds nothing. Its scout fact file is harvested here; its source is NOT, because it placed the TU at src/dScMgD3DBase_c.cpp instead of the src/actors/<Class>.cpp that notes/agents/roles/writer.md fixes as the convention, and its converted-baseline.json delta was 460 lines against this promotion's 8."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov006-dScMgD3DBase_c/dScMgD3DBase_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 27,
+    "functions_declared": 27,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS8dScene_c",
+        "_ZTI7dBase_c",
+        "_ZTI11dScMgBase_c",
+        "_ZTS11dScMgBase_c",
+        "_ZTI8dScene_c",
+        "_ZTI14dScMgD3DBase_c",
+        "_ZTS14dScMgD3DBase_c",
+        "_ZTV14dScMgD3DBase_c"
+      ],
+      "dataExternalized": [
+        "_ZTI11dScMgBase_c",
+        "_ZTI14dScMgD3DBase_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dScene_c",
+        "_ZTS11dScMgBase_c",
+        "_ZTS14dScMgD3DBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dScene_c",
+        "_ZTV14dScMgD3DBase_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov006-dScMgD3DBase_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x020e6c28",
+        "end": "0x020e7660",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020e6c28",
+          "end": "0x020e7660",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 27
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgD3DBase_c's key function (BeforeInitResources, the first DECLARED non-inline virtual -- the destructor is declared before it but is defined inline in the class body and so cannot be the key function), so mwcc emits the whole inheritance chain's typeinfo record as vague linkage. The cartridge keeps its canonical copy at arm9:0x02086d70, outside this TU's only licensed range (.text 0x020e6c28-0x020e7660), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70"
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgD3DBase_c's key function (BeforeInitResources, the first DECLARED non-inline virtual -- the destructor is declared before it but is defined inline in the class body and so cannot be the key function), so mwcc emits the whole inheritance chain's typeinfo name as vague linkage. The cartridge keeps its canonical copy at arm9:0x02086e60, outside this TU's only licensed range (.text 0x020e6c28-0x020e7660), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60"
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgD3DBase_c's key function (BeforeInitResources, the first DECLARED non-inline virtual -- the destructor is declared before it but is defined inline in the class body and so cannot be the key function), so mwcc emits the whole inheritance chain's typeinfo name as vague linkage. The cartridge keeps its canonical copy at arm9:0x02086e54, outside this TU's only licensed range (.text 0x020e6c28-0x020e7660), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54"
+    },
+    {
+      "symbol": "_ZTS8dScene_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgD3DBase_c's key function (BeforeInitResources, the first DECLARED non-inline virtual -- the destructor is declared before it but is defined inline in the class body and so cannot be the key function), so mwcc emits the whole inheritance chain's typeinfo name as vague linkage. The cartridge keeps its canonical copy at arm9:0x020914b0, outside this TU's only licensed range (.text 0x020e6c28-0x020e7660), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020914b0"
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgD3DBase_c's key function (BeforeInitResources, the first DECLARED non-inline virtual -- the destructor is declared before it but is defined inline in the class body and so cannot be the key function), so mwcc emits the whole inheritance chain's typeinfo record as vague linkage. The cartridge keeps its canonical copy at arm9:0x02086e78, outside this TU's only licensed range (.text 0x020e6c28-0x020e7660), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78"
+    },
+    {
+      "symbol": "_ZTI11dScMgBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgD3DBase_c's key function (BeforeInitResources, the first DECLARED non-inline virtual -- the destructor is declared before it but is defined inline in the class body and so cannot be the key function), so mwcc emits the whole inheritance chain's typeinfo record as vague linkage. The cartridge keeps its canonical copy at ov004:0x020bbf6c, outside this TU's only licensed range (.text 0x020e6c28-0x020e7660), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov004",
+      "canonical_address": "0x020bbf6c"
+    },
+    {
+      "symbol": "_ZTS11dScMgBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgD3DBase_c's key function (BeforeInitResources, the first DECLARED non-inline virtual -- the destructor is declared before it but is defined inline in the class body and so cannot be the key function), so mwcc emits the whole inheritance chain's typeinfo name as vague linkage. The cartridge keeps its canonical copy at ov004:0x020bbf84, outside this TU's only licensed range (.text 0x020e6c28-0x020e7660), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov004",
+      "canonical_address": "0x020bbf84"
+    },
+    {
+      "symbol": "_ZTI8dScene_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgD3DBase_c's key function (BeforeInitResources, the first DECLARED non-inline virtual -- the destructor is declared before it but is defined inline in the class body and so cannot be the key function), so mwcc emits the whole inheritance chain's typeinfo record as vague linkage. The cartridge keeps its canonical copy at arm9:0x020914d4, outside this TU's only licensed range (.text 0x020e6c28-0x020e7660), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020914d4"
+    },
+    {
+      "symbol": "_ZTI14dScMgD3DBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "This class's own typeinfo record, emitted here because this TU defines dScMgD3DBase_c's key function (BeforeInitResources, the first DECLARED non-inline virtual -- the destructor is declared before it but is defined inline in the class body and so cannot be the key function) -- which is the point: the emission is real, compiler-generated, and byte-compared against retail. The cartridge keeps its canonical copy at ov006:0x0213c5c8, outside this TU's only licensed range (.text 0x020e6c28-0x020e7660), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213c5c8"
+    },
+    {
+      "symbol": "_ZTS14dScMgD3DBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "This class's own typeinfo name, emitted here because this TU defines dScMgD3DBase_c's key function (BeforeInitResources, the first DECLARED non-inline virtual -- the destructor is declared before it but is defined inline in the class body and so cannot be the key function) -- which is the point: the emission is real, compiler-generated, and byte-compared against retail. The cartridge keeps its canonical copy at ov006:0x0213c5d4, outside this TU's only licensed range (.text 0x020e6c28-0x020e7660), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213c5d4"
+    },
+    {
+      "symbol": "_ZTV14dScMgD3DBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "This class's own vtable, emitted here because this TU defines dScMgD3DBase_c's key function (BeforeInitResources, the first DECLARED non-inline virtual -- the destructor is declared before it but is defined inline in the class body and so cannot be the key function) -- which is the point: the emission is real, compiler-generated, and byte-compared against retail. The cartridge keeps its canonical copy at ov006:0x0213c62c, outside this TU's only licensed range (.text 0x020e6c28-0x020e7660), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it. THE EXTENT IS PROVEN, not inferred. mwcc emits 0x98 bytes here, and the scout's ROM read (notes/data/class-facts/dScMgD3DBase_c.json, `vtable`) walks the cartridge's own table: header words at 0x0213c624, address point 0x0213c62c, 36 consecutive code pointers through the last slot at 0x0213c6b8, ending at 0x0213c6bc -- where the next word is 0x6f6d6168, the start of the non-RTTI string \"hamon\", so it is not a 37th slot and there are no trailing null slots to hide a declaration. 0x0213c6bc - 0x0213c624 = 0x98. The emitted table is therefore the WHOLE table and not a prefix, which is what you get now that include/dScMgBase_c.h declares all eighteen of its own new slots (18-35) and include/dScMgD3DBase_c.h declares the nine of them this class overrides. MEASURED SEPARATELY: `python tools/romdata_check.py --files src/actors/dScMgD3DBase_c.cpp` reports 11 symbols, 6 VERIFIED (200 bytes equal), 5 PARTIAL (52 bytes equal), 0 DIFFERS -- nothing this TU emits disagrees with the cartridge. The CLI prints only bucket totals, so the builder recovered the per-symbol verdicts by calling tools/romdata_check.py check_object() directly: THIS VTABLE IS VERIFIED, all 144 emitted body bytes equal to the cartridge, and the 5 PARTIAL are the five _ZTS strings, none of them this table. The extent argument above never rested on that, and still does not; it is now corroborated by it. Note the tool's own romExtent for this symbol reads 0x50, not 0x90, because ov006's symbols.txt carries an interior phantom `data_ov006_0213c67c` at slot 20 that truncates the extent lookup -- the comparison still covered all 144 emitted bytes, but do not read that 0x50 as the table's size. Note also that the ROM's _ZTV symbol IS the address point, so the manifest address is 8 bytes above the emitted section's start.",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213c62c"
+    }
+  ]
+}

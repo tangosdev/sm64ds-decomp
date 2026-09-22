@@ -9,7 +9,7 @@
 //      A matched .cpp TU declares a data symbol outside its extern "C" block,
 //      so MSVC mangles the reference while port/tools/ovdata.py's mount defines
 //      the one real C name.  Data only; a data alias has no this-register
-//      contract to break.  This is hal/actor_classes_bbh.cpp's data_02082128
+//      contract to break.  This is hal/actor_classes_bbh.cpp's IDENTITY_MATRIX4X3
 //      case, 67 words deep.
 //   2. FIVE FUNCTION ALIASES, every one of them cdecl on BOTH sides.  The
 //      hal/actor_classes_ov063.cpp law is that an /alternatename can never
@@ -123,15 +123,15 @@
 //
 // Scene::AfterRender.  include/decl_common.h:1936 declares
 // `extern void Scene_AfterRender(void*, unsigned int);` while the matched body
-// is src/_ZN5Scene11AfterRenderEj.cpp, already linked by port/slice_w1l2.txt
+// is src/_ZN8dScene_c11AfterRenderEj.cpp, already linked by port/slice_w1l2.txt
 // under the ROM's own Itanium name (config/arm9/symbols.txt:1105,
-// _ZN5Scene11AfterRenderEj at 0x0202e398 -- the address dScMgD3DBase_c's slot
+// _ZN8dScene_c11AfterRenderEj at 0x0202e398 -- the address dScMgD3DBase_c's slot
 // 11 tail-jumps to, which is how this lane found it).  Both are C linkage and
 // both take (void*, unsigned): the receiver is an explicit first parameter on
 // both sides, so this is a rename and not a receiver placement.
-#pragma comment(linker, "/alternatename:_Scene_AfterRender=__ZN5Scene11AfterRenderEj")
+#pragma comment(linker, "/alternatename:_Scene_AfterRender=__ZN8dScene_c11AfterRenderEj")
 //
-// AND ONE THAT IS NOT EVEN A TYPE RENAME.  src/func_ov006_020e7124.c declares
+// AND ONE THAT IS NOT EVEN A TYPE RENAME.  src/actors/dScMgD3DBase_c.cpp declares
 // `extern int func_020beb74[];` and USES IT AS DATA
 // (`func_020beb74[1] = (int)obj; data_0209d4a8 = (void *)func_020beb74;`).
 // There is no function at 0x020beb74: config/arm9/overlays/ov004/symbols.txt
@@ -154,10 +154,10 @@
 #pragma comment(linker, "/alternatename:__Z15ApproachLinear2Riii=?ApproachLinear2@@YAHAAHHH@Z")
 //
 // Sound_PlayBank1Panned.  src/func_ov006_020c94e0.cpp and
-// src/func_ov006_020c7c68.c call `func_ov006_020e6df0(a, b, c)` by address-
+// src/actors/dMgJump3DMario_c.cpp call `func_ov006_020e6df0(a, b, c)` by address-
 // derived name, while config/arm9/overlays/ov006/symbols.txt:690 gives 0x020e6df0
 // the recovered name Sound_PlayBank1Panned (size 0x4c) and the matched TU is
-// src/Sound_PlayBank1Panned.cpp, a slice line here.  Same address, same three
+// src/actors/dScMgD3DBase_c.cpp, a slice line here.  Same address, same three
 // C-linkage arguments; the row is a rename and nothing else.
 #pragma comment(linker, "/alternatename:_func_ov006_020e6df0=_Sound_PlayBank1Panned")
 
@@ -169,27 +169,27 @@
 // call.  A linker alias would hand the body a `this` that was never pushed.
 
 extern "C" {
-void _ZN6Player12St_Null_InitEv(void);
+void func_ov006_020cac30(void);
 void _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(
         void *self, void *file, int flags, int speed, unsigned startFrame);
 void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
         void *self, void *f, int flags, int speed, unsigned start);
 }
 
-/* Player::St_Null_Init.  src/func_ov006_02123bf4.cpp -- this class's state
+/* Player::St_Null_Init.  src/minigames/d_s_mg_trampoline2.cpp -- this class's state
    0x02123bf4 -- declares `struct Player { void St_Null_Init(); };` and calls
    `func_ov006_020cedf0(c)->St_Null_Init()`, so MSVC wants
    ?St_Null_Init@Player@@QAEXXZ, __thiscall with the receiver in ecx.
 
    THE RECEIVER IS DROPPED ON PURPOSE AND THE ROM DROPS IT TOO.  The matched
-   body src/_ZN6Player12St_Null_InitEv.cpp takes `(void)` -- it walks
+   body src/func_ov006_020cac30.cpp takes `(void)` -- it walks
    data_ov006_02140554 for data_ov006_021405bc entries and then calls
    func_ov006_020c8a64, and never reads a receiver.  On ARM the caller's r0 is
    simply not read.  So this is NOT the dropped-receiver disease
    port/mg_fanout_costs.txt warns about: there is no argument to lose, and the
    face is what lets MSVC's ecx-passing caller reach a body that takes none. */
 struct Player { void St_Null_Init(); };
-void Player::St_Null_Init() { _ZN6Player12St_Null_InitEv(); }
+void Player::St_Null_Init() { func_ov006_020cac30(); }
 
 /* TextureTransformer::SetFile.  src/func_ov006_020cecc0.cpp declares a local
    `struct TextureTransformer { ...; void SetFile(BTA_File&, int, int, unsigned); }`
@@ -210,7 +210,7 @@ void TextureTransformer::SetFile(BTA_File &f, int a, int b, unsigned c)
 /* ModelAnim::SetAnim, THE void* SPELLING.  hal/bob_enemy_shadow_faces.cpp:88
    already carries this face with a `BCA_File *` first parameter, which MSVC
    mangles ?SetAnim@ModelAnim@@QAEXPAUBCA_File@@HHI@Z.  Two TUs in this closure
-   -- src/func_ov006_020c9c8c.c and src/func_ov006_020cc198.c -- declare their
+   -- src/func_ov006_020c9c8c.cpp and src/func_ov006_020cc198.cpp -- declare their
    local ModelAnim with the first parameter as `void *`, so MSVC wants
    ?SetAnim@ModelAnim@@QAEXPAXHHI@Z instead.  Different mangled name, same body,
    same four stack arguments and the same receiver in ecx; the existing face
@@ -238,7 +238,7 @@ void TextureTransformer::SetFile(BTA_File &f, int a, int b, unsigned c)
 //
 //   func_ov006_020cf2fc  0x45c  void(char*)                 src/func_ov006_020d09e0.c
 //   func_ov006_020d01e0  0x800  void(short*,short*,short*)  src/func_ov006_020d0b78.c
-//   func_ov006_020d0c38  0x3ac  int(u16*,u16*)              src/func_ov006_02122f24.c
+//   func_ov006_020d0c38  0x3ac  int(u16*,u16*)              src/minigames/d_s_mg_trampoline2.cpp
 //                                                           (THIS class's slot 23)
 //   func_ov006_020cfc74  0x56c  void(char*)                 src/func_ov006_020cfa44.c
 //
@@ -250,7 +250,7 @@ void TextureTransformer::SetFile(BTA_File &f, int a, int b, unsigned c)
 // on the port every stroke reads as a miss at that test.  The trap says so on
 // its first call rather than reading as a quiet correct answer.  Its arity and
 // return type are taken from the two CALL SITES that name it
-// (src/func_ov006_0212101c.c and src/func_ov006_02122f24.c), which agree.
+// (src/minigames/d_s_mg_trampoline.cpp and src/minigames/d_s_mg_trampoline2.cpp), which agree.
 //
 // SECTION 4 IS HISTORY NOW.  All four of those bodies are seated -- the first
 // three by runs mg12/mg13 in unmatched/MgTrampolineTime_Floors.cpp's slice, and

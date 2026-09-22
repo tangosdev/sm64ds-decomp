@@ -67,9 +67,9 @@
 extern "C" {
 int _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned soundID, unsigned vol,
                                     unsigned pan, int dist, int loop);
-void _ZN9ActorBase18MarkForDestructionEv(void *self);
-int _ZN5Sound15PlaySecretSoundEP5ActorPt(void *self, unsigned short *counter);
-int _ZN5Sound20PlaySmallSecretSoundEP5ActorPt(void *self,
+void _ZN7fBase_c18MarkForDestructionEv(void *self);
+int _ZN5Sound15PlaySecretSoundEP8dActor_cPt(void *self, unsigned short *counter);
+int _ZN5Sound20PlaySmallSecretSoundEP8dActor_cPt(void *self,
                                               unsigned short *counter);
 int func_0200f7f0(void *self, unsigned short *counter);
 int func_ov002_020f9468(char *self, unsigned short *counter);
@@ -84,13 +84,13 @@ extern PortSoundObjPair data_ov002_0211110c[];   /* the 7 dispatch cells */
 
 /* the matched TU, taken off this file's host copy by lane PMFB3. Same C name,
    same one-argument cdecl signature the vtable face already called. */
-int _ZN11SoundObject8BehaviorEv(char *cc);
+int _ZN12daSoundObj_c8BehaviorEv(char *cc);
 
 /* the port's slot-6 body: the out-of-range refusal, then the matched TU. */
 int port_sound_object_behavior(char *cc);
 }
 
-/* THE ONE ALIAS THE MATCHED TU ASKS FOR. src/_ZN11SoundObject8BehaviorEv.cpp
+/* THE ONE ALIAS THE MATCHED TU ASKS FOR. src/game/actors/d_a_sound_obj.cpp
    declares `extern PMF data_ov002_0211110c[];` at namespace scope rather than
    inside its extern "C" block, so MSVC spells the reference with the C++
    decoration below -- read off that TU's own /FAsc listing, not guessed -- while
@@ -131,8 +131,8 @@ typedef int (__fastcall *PortSoundObjFace)(void *, void *, unsigned short *);
         return ((PortSoundObjFn)sym)((char *)self, counter);                  \
     }
 
-SOB_FACE(_ZN5Sound15PlaySecretSoundEP5ActorPt)
-SOB_FACE(_ZN5Sound20PlaySmallSecretSoundEP5ActorPt)
+SOB_FACE(_ZN5Sound15PlaySecretSoundEP8dActor_cPt)
+SOB_FACE(_ZN5Sound20PlaySmallSecretSoundEP8dActor_cPt)
 SOB_FACE(func_0200f7f0)
 SOB_FACE(func_ov002_020f9468)
 SOB_FACE(func_ov002_020f93a8)
@@ -141,8 +141,8 @@ SOB_FACE(func_ov002_020f93a8)
 
 static const struct { unsigned rom; PortSoundObjFace face; }
 g_sound_obj_states[PORT_SOUND_OBJ_CELLS] = {
-    {0x0200f8f8, sob_cell__ZN5Sound15PlaySecretSoundEP5ActorPt},
-    {0x0200f874, sob_cell__ZN5Sound20PlaySmallSecretSoundEP5ActorPt},
+    {0x0200f8f8, sob_cell__ZN5Sound15PlaySecretSoundEP8dActor_cPt},
+    {0x0200f874, sob_cell__ZN5Sound20PlaySmallSecretSoundEP8dActor_cPt},
     {0x0200f7f0, sob_cell_func_0200f7f0},
     {0x020f9468, sob_cell_func_ov002_020f9468},
     {0x020f93a8, sob_cell_func_ov002_020f93a8},
@@ -171,7 +171,7 @@ extern "C" void port_sound_object_states_seat(void)
 
 /* ---- THE PORT'S SLOT-6 BODY, run link100 lane PMFB3 ----------------------
    WHAT THIS IS AND IS NOT. It is NOT a host copy of Behavior: the body that
-   runs is src/_ZN11SoundObject8BehaviorEv.cpp, the ROM's own, on
+   runs is src/game/actors/d_a_sound_obj.cpp, the ROM's own, on
    port/slice_pmfb3.txt. This is the port-only out-of-range refusal that gate
    190 wrote INSIDE the host copy, moved to the one place it can live once the
    matched TU is what dispatches -- ahead of it, at the vtable edge that
@@ -196,8 +196,8 @@ extern "C" int port_sound_object_behavior(char *cc)
            garbage dispatch. */
         std::fprintf(stderr, "SOUND_OBJECT: param %d has no dispatch cell "
                      "(table is 0..6) -- destroying the emitter\n", sel);
-        _ZN9ActorBase18MarkForDestructionEv(cc);
+        _ZN7fBase_c18MarkForDestructionEv(cc);
         return 1;
     }
-    return _ZN11SoundObject8BehaviorEv(cc);
+    return _ZN12daSoundObj_c8BehaviorEv(cc);
 }

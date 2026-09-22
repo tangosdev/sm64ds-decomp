@@ -102,7 +102,7 @@
 //      that installs one.
 //   2. the VBlank edge, through the port's own registry. IF bit 0 up, dispatch
 //      _ZN3IRQ13GetIRQHandlerEj(1), IF bit 0 down.
-//   3. the wake that handler performs. src/_ZN3IRQ13VBlankHandlerEv.c:22 is
+//   3. the wake that handler performs. src/_ZN3IRQ13VBlankHandlerEv.cpp:22 is
 //      `OS_WakeupThread(&data_0209d4fc)`, and OS_WakeupThread is ROM code: it
 //      clears the queue word, marks every thread whose bit is set runnable and
 //      calls func_02057f54, which switches back to the sleeper. This is the
@@ -117,7 +117,7 @@
 // WHY STEP 2 IS NULL IN EVERY SHIPPED TARGET TODAY: ntr/runtime.cpp's
 // _ZN3IRQ13SetIRQHandlerEjPFvvE stores handlers for mask 0x200000 (GXFIFO) and
 // mask 2 (HBlank) and DROPS every other mask, mask 1 included, and
-// src/_ZN3IRQ13VBlankHandlerEv.c is in no slice. Both are BOOT's files this
+// src/_ZN3IRQ13VBlankHandlerEv.cpp is in no slice. Both are BOOT's files this
 // run; the proposed hunks are in the report. Step 3 does the handler's line 22
 // directly meanwhile, which is why it is tagged.
 //
@@ -277,13 +277,13 @@ extern int data_020a6128;
 extern int data_020a6148[16];
 
 // The per-VBlank wake queue, hosted by hal/comms_conductor.cpp as four bytes.
-// src/func_0201a4d0.c sleeps on it; src/_ZN3IRQ13VBlankHandlerEv.c:22 wakes it.
+// src/func_0201a4d0.c sleeps on it; src/_ZN3IRQ13VBlankHandlerEv.cpp:22 wakes it.
 extern unsigned char data_0209d4fc[4];
 /* THE ROM'S WAIT FLAG, 0x0209d4f0, hosted in hal/boot_globals.cpp. It is up for
    exactly the length of func_020197b8's phase-7 wait -- :53 raises it, :56
    drops it -- which makes it the one word this file can read to tell THE
    FRAME'S OWN WAIT apart from any other wait that reaches this halt.
-   src/_ZN3IRQ13VBlankHandlerEv.c:15 reads it for the same reason: the ROM's own
+   src/_ZN3IRQ13VBlankHandlerEv.cpp:15 reads it for the same reason: the ROM's own
    wake fires only while it is up. Step 4's bound reads it (run link100, lane
    DET). */
 extern unsigned char data_0209d4f0[4];
@@ -291,7 +291,7 @@ extern unsigned char data_0209d4f0[4];
    this file. 0x0208ee44, hosted in hal/auto_bss.cpp and written by
    Stage::InitResources (hal/level_boot.cpp:5174 records the value: 2 for a 3D
    level, which is how a 60 Hz VBlank becomes a 30 Hz game tick).
-   src/_ZN3IRQ13VBlankHandlerEv.c:15 is the reader that matters:
+   src/_ZN3IRQ13VBlankHandlerEv.cpp:15 is the reader that matters:
        if (data_0209d514 >= data_0208ee44 && data_0209d4f0 != 0)
            OS_WakeupThread(&data_0209d500);
    so the sleeper at phase 7 needs THAT MANY VBlank edges before the ROM's own
@@ -841,7 +841,7 @@ void starve_wake() {
 // ONLY dispatch of a ROM IRQ handler in the linked set -- IRQ::VBlankHandler,
 // through this file's own CP15::WaitForInterrupt. It is not the only one any
 // more: hal/os_thread.cpp's pump_vblank and ntr/rt.cpp's HBlank handler both
-// call a ROM IRQ handler too (src/_ZN3IRQ13VBlankHandlerEv.c and whatever is
+// call a ROM IRQ handler too (src/_ZN3IRQ13VBlankHandlerEv.cpp and whatever is
 // registered for mask 2), and until this lane neither raised the depth, so
 // ARMProcessorMode answered system mode (0x1f) inside them even with SM64DS_
 // DET3 on everywhere else -- the one caller in the linked set,
@@ -981,7 +981,7 @@ void ARMRestoreContext(void *ctx) {
     // A DS SWITCHES THREADS ON IRQ RETURN, NOT FROM INSIDE THE HANDLER (run
     // link100, lane DET2, rung 2).
     //
-    // src/_ZN3IRQ13VBlankHandlerEv.c is five statements and the wake is the
+    // src/_ZN3IRQ13VBlankHandlerEv.cpp is five statements and the wake is the
     // second of them:
     //     data_0209d514 = data_0209d514 + 1;
     //     if (data_0209d514 >= data_0208ee44 && data_0209d4f0 != 0) {
@@ -1099,7 +1099,7 @@ void ARMRestoreContext(void *ctx) {
 //   exception vector, so this models the whole hardware sequence the halt is
 //   one third of: the interrupt arrives, the dispatcher runs the handler, the
 //   handler's wake reschedules. Step 3 stands in for
-//   src/_ZN3IRQ13VBlankHandlerEv.c:22 because ntr/runtime.cpp's SetIRQHandler
+//   src/_ZN3IRQ13VBlankHandlerEv.cpp:22 because ntr/runtime.cpp's SetIRQHandler
 //   drops mask 1 and that handler is in no slice -- proposed hunks in the
 //   lane report. Step 4 is the bound: it cannot spin forever.
 void _ZN4CP1516WaitForInterruptEv(void) {
@@ -1166,7 +1166,7 @@ void _ZN4CP1516WaitForInterruptEv(void) {
     //    some piece of host code decides to sleep, which on a wireless wait is
     //    as often as a datagram is late. Delivered on every halt, the edge made
     //    data_0209d514 -- whose ONE ROM reader is the handler's own wake test at
-    //    src/_ZN3IRQ13VBlankHandlerEv.c:15 -- a count of RADIO WAITS rather than
+    //    src/_ZN3IRQ13VBlankHandlerEv.cpp:15 -- a count of RADIO WAITS rather than
     //    a count of frames, and a count of radio waits is not something a
     //    re-simulated frame can reproduce: a replayed frame's comms are served
     //    from hal/rollback.cpp's record and take no wait at all. That is what

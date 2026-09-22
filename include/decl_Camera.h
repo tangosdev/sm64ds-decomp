@@ -21,7 +21,7 @@ extern "C" {
 #endif
 
 extern int _ZNK6Camera12IsUnderwaterEv(void*);
-extern void _ZN6Camera10LookAtExitER5Actor(void*, void*);
+extern void _ZN6Camera10LookAtExitER8dActor_c(void*, void*);
 
 
 #ifdef __cplusplus

@@ -14,45 +14,45 @@
 #
 # ==== GATE 191 additions: SKI_LIFT (63) + MOTHER_PENGUIN (257) ============
 # The cross-overlay trap above is RESOLVED: main's c19c90882 (#1301) renamed
-# _ZN7SkiLift13InitResourcesEv.cpp's data_ov036/ov056/func_ov022 spellings to
+# _ZN10daPgMthr_c13InitResourcesEv.cpp's data_ov036/ov056/func_ov022 spellings to
 # their own ov018 names (ov018/ov022/ov036/ov056 all share load window base
 # 0x021111a0, never co-resident -- confirmed via tools/ovsweep.py E2, which
 # no longer flags this file; delinks.txt already claims it for ov018). The
 # file is carried into this worktree byte-identical from main HEAD.
 #
 # CLASS IDENTITY: the eight src/_ZN7SkiLift* files are MOTHER_PENGUIN's own
-# bodies under a dsd-era mislabel -- MotherPenguin_Spawn.c installs
-# _ZTV7SkiLift == _ZTV10daPgMthr_c at 0x021139bc (MotherPenguin_SpawnInfo
+# bodies under a dsd-era mislabel -- daPgMthr_c_classInit.c installs
+# _ZTV7SkiLift == _ZTV10daPgMthr_c at 0x021139bc (g_profile_PENGUIN_MOTHER
 # 0x02113998 +0x24). The REAL SkiLift (daObjSm_Lift_c) is the unnamed chain
-# func_ov018_021111a0..02111804 + SkiLift_Spawn.c, own vtable
-# data_ov018_021138cc.
+# _ZN7SkiLiftD1Ev..02111804 + daObjSm_Lift_c_classInit.c, own vtable
+# _ZTV7SkiLift.
 #
-# ---- SkiLift_SpawnInfo (0x021138a8) / MotherPenguin_SpawnInfo (0x02113998) --
-SkiLift_SpawnInfo:0x1c
-MotherPenguin_SpawnInfo:0x1c
+# ---- g_profile_SM_LIFT (0x021138a8) / g_profile_PENGUIN_MOTHER (0x02113998) --
+g_profile_SM_LIFT:0x1c
+g_profile_PENGUIN_MOTHER:0x1c
 #
-# ---- SkiLift's OWN vtable, _ZTV14daObjSm_Lift_c == data_ov018_021138cc ----
+# ---- SkiLift's OWN vtable, _ZTV14daObjSm_Lift_c == _ZTV7SkiLift ----
 # 32 words (0x021138cc..0x02113948 inclusive), the full 31-slot Actor shape
 # PLUS Platform's Kill tail, read with relocations applied (every slot, not
 # just the six the scope report named):
-#   0  InitResources    0x021116b4  own (func_ov018_021116b4)
-#   3  CleanupResources 0x021112fc  own (func_ov018_021112fc)
-#   6  Behavior         0x02111368  own (func_ov018_02111368) -- NOT in the
+#   0  InitResources    0x021116b4  own (_ZN7SkiLift13InitResourcesEv)
+#   3  CleanupResources 0x021112fc  own (_ZN7SkiLift16CleanupResourcesEv)
+#   6  Behavior         0x02111368  own (_ZN7SkiLift8BehaviorEv) -- NOT in the
 #                                    task's file list; found by reading the
 #                                    reloc, essential (real 0x34c-byte body)
-#   9  Render           0x02111340  own (func_ov018_02111340)
+#   9  Render           0x02111340  own (_ZN7SkiLift6RenderEv)
 #  12  OnPendingDestroy 0x02043ac0  ActorBase's base body (shared)
-#  16  D1               0x021111a0  own (func_ov018_021111a0) -- HOST THUNK:
+#  16  D1               0x021111a0  own (_ZN7SkiLiftD1Ev) -- HOST THUNK:
 #                                    stores _ZTV14daObjSm_Lift_c then
 #                                    OVERWRITES with _ZTV10dBgActor_c, the
 #                                    196-speller SHARED PLACEHOLDER (the
 #                                    ShipUp/RockPillar gate-188 shape) -- NOT
 #                                    compiled, chain spelled in the fill.
-#  17  D0               0x021111e4  own (func_ov018_021111e4) -- SAME shape:
+#  17  D0               0x021111e4  own (_ZN7SkiLiftD0Ev) -- SAME shape:
 #                                    stores VT0 then VT1 (decl_common.h's
 #                                    generic placeholders, the G0/G1 disease
 #                                    family) -- HOST THUNK, not compiled.
-#  27  OnHitByMegaChar  0x0211123c  own (func_ov018_0211123c)
+#  27  OnHitByMegaChar  0x0211123c  own (_ZN7SkiLift15OnHitByMegaCharER6Player)
 #  31  Kill (Platform)  0x020ee55c  shared base body (already in the build,
 #                                    the l7/ov064/jrb precedent)
 # Every other slot is the shared Actor/ActorBase half.
@@ -61,7 +61,7 @@ MotherPenguin_SpawnInfo:0x1c
 # __sinit_ov018_02112c14 is SELF-CONTAINED (only ov018 symbols; verified by
 # reading its body) and constructs two SharedFilePtrs -- data_ov018_02113bc8
 # (Model, InitResources' _ZN5Model8LoadFileER13SharedFilePtr arg) and
-# data_ov018_02113bc0 (Clsn/KCL, InitResources' _ZN12MeshCollider8LoadFileER13SharedFilePtr
+# data_ov018_02113bc0 (Clsn/KCL, InitResources' _ZN7dBgW_Kc8LoadFileER13SharedFilePtr
 # arg) -- plus their two destruct-node cells at 02113bdc/02113bd0 (void*[3],
 # the func_020731dc shape, 12 bytes each by next-symbol delta). data_ov018_02112f48
 # is the CLPS_Block MovingMeshCollider::SetFile consumes, 0x10 bytes by
@@ -81,18 +81,18 @@ data_ov018_02112f48
 #                                    follow-up fixes, a second independent
 #                                    caller. Matched src stays byte-locked,
 #                                    dropped from this slice.
-#   3  CleanupResources 0x021123ec  own (_ZN7SkiLift16CleanupResourcesEv.cpp)
-#   6  Behavior         0x02112480  own (_ZN7SkiLift8BehaviorEv.cpp)
-#   9  Render           0x02112454  own (_ZN7SkiLift6RenderEv.cpp)
-#  12  OnPendingDestroy 0x02112450  own (_ZN7SkiLift16OnPendingDestroyEv.c,
+#   3  CleanupResources 0x021123ec  own (_ZN10daPgMthr_c16CleanupResourcesEv.cpp)
+#   6  Behavior         0x02112480  own (_ZN10daPgMthr_c8BehaviorEv.cpp)
+#   9  Render           0x02112454  own (_ZN10daPgMthr_c6RenderEv.cpp)
+#  12  OnPendingDestroy 0x02112450  own (_ZN10daPgMthr_c16OnPendingDestroyEv.c,
 #                                    empty body -- NOT the shared default,
 #                                    confirmed by reloc target address)
-#  16  D1               0x02111848  own (_ZN7SkiLiftD1Ev.cpp) -- a real
+#  16  D1               0x02111848  own (_ZN10daPgMthr_cD1Ev.cpp) -- a real
 #                                    MSVC-synthesised destructor with NO
 #                                    vtable store at all (the OneUpLogo D1
 #                                    shape) -- NOT compiled, chain spelled
 #                                    directly in the fill.
-#  17  D0               0x02111898  own (_ZN7SkiLiftD0Ev.c) -- stores
+#  17  D0               0x02111898  own (_ZN10daPgMthr_cD0Ev.c) -- stores
 #                                    _ZTV10daPgMthr_c, ITS OWN table under
 #                                    the correct RTTI name (not a shared
 #                                    placeholder) -- STAYS in slice, the
@@ -122,22 +122,22 @@ data_ov018_02112c04:0x8 data_ov018_02112c0c:0x8
 data_ov018_0211394c data_ov018_02113954 data_ov018_0211395c data_ov018_02113964 data_ov018_0211396c data_ov018_02113974
 data_ov018_02113c4c
 #
-# THE VTABLES STAY OUT, the ov080/ov095/ov064/ov016 rule: _ZTV8IceSheet
+# THE VTABLES STAY OUT, the ov080/ov095/ov064/ov016 rule: _ZTV15daObjIceBoard_c
 # (0x02113b34, 32 words -- the full 31-slot Actor shape, own overrides at
 # 0/3/6/9/16/17/21/27/31) and PowerStarCreate's unnamed table
-# data_ov018_02113a74 (18 words -- the ActorBase-only shape, own overrides at
+# _ZTV8daSCre_c (18 words -- the ActorBase-only shape, own overrides at
 # 6/16/17 only, no OnYoshiTryEat/combat tail) each carry the vtable signature
 # (+4 relocates to Actor::BeforeInitResources, arm9 0x02011268) and are HOST
 # arrays hal/actor_classes_ccm.cpp fills.
 #
 # ---- IDs cross-checked from relocs.txt (the ov016 recipe: SpawnInfo's +4
 # halfword is the id the registry cross-checks) ----
-# PowerStarCreate_SpawnInfo (0x02113a50, +4 -> 0x02113a54 = 0x163 = 355) --
-# +0 is the factory word (0x0211278c = PowerStarCreate_Spawn).
-# IceSheet_SpawnInfo (0x02113b10, +4 -> 0x02113b14 = 0x127 = 295) -- +0 is
-# 0x02112a44 = IceSheet_Spawn.
-PowerStarCreate_SpawnInfo:0x1c
-IceSheet_SpawnInfo:0x1c
+# g_profile_STAR_CREATE (0x02113a50, +4 -> 0x02113a54 = 0x163 = 355) --
+# +0 is the factory word (0x0211278c = daSCre_c_classInit).
+# g_profile_ICE_BOARD (0x02113b10, +4 -> 0x02113b14 = 0x127 = 295) -- +0 is
+# 0x02112a44 = daObjIceBoard_c_classInit.
+g_profile_STAR_CREATE:0x1c
+g_profile_ICE_BOARD:0x1c
 #
 # ---- IceSheet's bss window (the four cells __sinit_ov018_02112e00 builds) --
 # __sinit_ov018_02112e00 is SELF-CONTAINED (only ov018 symbols; verified by

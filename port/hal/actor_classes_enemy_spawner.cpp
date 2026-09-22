@@ -22,9 +22,9 @@
 // tables are distinct addresses in config/arm9/overlays/ov002/symbols.txt --
 //     _ZTV12EnemySpawner       0x0210b364
 //     _ZTV14EnemySwitchTag     0x0210b3e8
-//     _ZTV19AmbientSoundEffects 0x0210b4c8
+//     _ZTV9daSetSE_c 0x0210b4c8
 // -- so the two fills below build their OWN host arrays and never touch
-// _ZTV19AmbientSoundEffects, which hal_fill_ambient_sound_vtable owns.
+// _ZTV9daSetSE_c, which hal_fill_ambient_sound_vtable owns.
 //
 // THE LAW, same as every sibling fill: ROM slot order, host __fastcall thunks
 // that bridge cdecl/__thiscall to the matched bodies, unhosted slots trapped
@@ -42,43 +42,45 @@
 // ac_d1_actor_only shape). Slot 17, the deleting destructor, IS a matched flat
 // C body on the slice and both are enrolled.
 
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
 extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include <cstdlib>
 
-#include "Actor.h"
+#include "dActor_c.h"
 #include "dtor_faces_cpp.h"
-#include "ActorBase.h"
+#include "fBase_c.h"
 #include "EnemySwitchTag.h"
 #include "EnemySpawner.h"
 
 extern "C" {
 /* the shared lifecycle halves, the same arm9 bodies every sibling fill writes */
-int  _ZN5Actor19BeforeInitResourcesEv(void *self);            /* slot 1  */
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a); /* slot 2  */
-int  _ZN5Actor14BeforeBehaviorEv(void *self);                 /* slot 7  */
-int  _ZN5Actor12BeforeRenderEv(void *self);                   /* slot 10 */
-int  _ZN5Actor13OnYoshiTryEatEv(void *self);                  /* slot 18 */
-void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p);  /* slot 19 */
-int  _ZN5Actor9Virtual50Ev(void *self);                       /* slot 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);     /* slot 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);         /* slot 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);         /* slot 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);             /* slot 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);             /* slot 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
-int  _ZN5Actor16OnAimedAtWithEggEv(void *self);                    /* slot 29 */
+int  _ZN8dActor_c19BeforeInitResourcesEv(void *self);            /* slot 1  */
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a); /* slot 2  */
+int  _ZN8dActor_c14BeforeBehaviorEv(void *self);                 /* slot 7  */
+int  _ZN8dActor_c12BeforeRenderEv(void *self);                   /* slot 10 */
+int  _ZN8dActor_c13OnYoshiTryEatEv(void *self);                  /* slot 18 */
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void *self, void *p);  /* slot 19 */
+int  _ZN8dActor_c9Virtual50Ev(void *self);                       /* slot 20 */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);     /* slot 21 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);         /* slot 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);         /* slot 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);             /* slot 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);             /* slot 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
+int  _ZN8dActor_c16OnAimedAtWithEggEv(void *self);                    /* slot 29 */
 
 extern int data_02099f24[];          /* the frame phase the lists are in */
 extern unsigned char data_020a4b4c;  /* the spawn spine's own step */
@@ -93,11 +95,11 @@ int  _ZN12EnemySpawner8BehaviorEv(char *self);         /* slot 6, extern-C expli
 int *_ZN12EnemySpawnerD0Ev(int *self);                 /* slot 17, .c C linkage */
 
 /* the D1 chain's sub-object destructor and the base, both C-linkage here */
-void *_ZN18MovingCylinderClsnD1Ev(void *);   /* EnemySwitchTag's member at +0xd4 */
-void *_ZN5ActorD2Ev(void *);
+void *_ZN7dCcAc_cD1Ev(void *);   /* EnemySwitchTag's member at +0xd4 */
+void *_ZN8dActor_cD2Ev(void *);
 
-/* The two arrays the ROM factories install: EnemySwitchTag_Spawn does
-   `p[0] = (int)_ZTV14EnemySwitchTag`, EnemySpawner_Spawn the same for its own.
+/* The two arrays the ROM factories install: daESwitch_c_classInit does
+   `p[0] = (int)_ZTV14EnemySwitchTag`, daECreate_c_classInit the same for its own.
    Defined here, not just declared -- the `int` type and C linkage match the
    `extern int _ZTV*[]` in include/decl_common.h that the factories, the D0
    bodies and the host thunks all read. Thirty-one slots each. */
@@ -142,53 +144,53 @@ ES_TRAP(13) ES_TRAP(14)
 // substitution ruled correct in port/actorbase_slots_ruling.txt (the ROM's
 // three Actor bodies are `ldr ip,[pc]; bx ip` veneers onto ActorBase's).
 static int  __fastcall es_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall es_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int  __fastcall es_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 static void __fastcall es_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int  __fastcall es_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall es_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 /* Slot 9: neither class overrides Render, so it is ActorBase::Render, the
    no-op base body (ccm_render_base precedent). */
 static int  __fastcall es_render_base(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::Render(); }
+{ return ((fBase_c *)s)->fBase_c::Render(); }
 static int  __fastcall es_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall es_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int  __fastcall es_pdes(void *s, void *)
-{ ((ActorBase *)s)->ActorBase::OnPendingDestroy(); return 0; }
+{ ((fBase_c *)s)->fBase_c::OnPendingDestroy(); return 0; }
 static int  __fastcall es_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int  __fastcall es_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 static int  __fastcall es_egg(void *s, void *, void *p)
-{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+{ _ZN8dActor_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int  __fastcall es_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int  __fastcall es_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int  __fastcall es_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int  __fastcall es_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int  __fastcall es_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int  __fastcall es_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int  __fastcall es_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int  __fastcall es_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int  __fastcall es_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 static int  __fastcall es_aimed(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 
 // Fill the eleven shared interaction-tail and lifecycle-half slots that are
 // identical on any plain-Actor table. Slots 0/3/6/9/12/16/17 are set per class.
@@ -265,7 +267,7 @@ extern "C" void hal_fill_enemy_switch_tag_vtable(void)
     vt[0]  = (void *)est_init;
     vt[3]  = (void *)est_clean;
     vt[6]  = (void *)est_behavior;
-    vt[16] = (void *)hal_cppd1_EnemySwitchTag;
+    vt[16] = (void *)PORT_D16(hal_cppd1_EnemySwitchTag);
     vt[17] = (void *)est_d0;
 }
 
@@ -276,6 +278,6 @@ extern "C" void hal_fill_enemy_spawner_vtable(void)
     vt[0]  = (void *)esp_init;
     vt[3]  = (void *)esp_clean;
     vt[6]  = (void *)esp_behavior;
-    vt[16] = (void *)hal_cppd1_EnemySpawner;
+    vt[16] = (void *)PORT_D16(hal_cppd1_EnemySpawner);
     vt[17] = (void *)esp_d0;
 }

@@ -1,0 +1,70 @@
+# port/slice_l15mg.txt -- run link100 wave 15, lane SEAT15D, LINK15 BATCH 3.
+#
+# THREE MINIGAME BODIES THAT WENT BACK TO src/ BECAUSE main FIXED THE SPELLING
+# THE HOST COPY WAS WRITTEN AGAINST. Each of the three host files under
+# port/unmatched/ named, in its own banner, one defect in the matched source
+# and then carried a corrected copy of that source beside it. The 09-14
+# main-to-port sync brought the fixed sources in and nothing re-read the
+# banners. Re-read here, one file at a time, against src/ as it stands at
+# 2ddf31f57:
+#
+#   src/func_ov006_020d3ba0.cpp   dScMgAmida_c (the ladder game, scene 371),
+#       2444 bytes, the largest body in LINK15's whole candidate pool.
+#       unmatched/MgAmida_Slot3ba0.cpp said line 37 read `int data_0209d4b8;`,
+#       a mwcc tentative definition that under MSVC becomes a second strong
+#       definition of the arm9 RNG seed the HAL owns (LNK2005 against
+#       hal/scene_mg_faces.cpp). src:34 now reads `extern int data_0209d4b8;`.
+#       main went further than the one token the host copy changed: it also
+#       dropped the NONMATCHING banner, put `extern` on the five
+#       data_ov006_0212e1xx arrays the host copy still spells as bare
+#       definitions, and deleted the u64 launder masks. Nothing else differs.
+#
+#   src/func_ov006_020fa7b8.cpp   dScMgPachinko_c (Slots Shot, scene 368),
+#       the tenth and last call of vtable slot 9, so a boot that renders
+#       reaches it. unmatched/MgPachinko_OamRender.cpp said src:6 read
+#       `void* data_ov006_0213ac24;` and collided with the ov006 mount, which
+#       owns that cell and rebases it to a live host pointer. src:6 now reads
+#       `extern void* data_ov006_0213ac24;`. Every other character already
+#       matched the host copy, loop bound, stride, four offsets, ten arguments.
+#
+#   src/func_ov004_020ad8b8.c     ov004's minigame-framework helper that
+#       dScMgFlower_c::InitResources ("Loves Me...?", scene 390) calls on its
+#       first statement, and that dScMgRoulette_c slot 0 seeds +0xa8 from.
+#       unmatched/MgFlower_InitScore.cpp said the src declared
+#       `func_ov004_020adc3c(void)` and called it with nothing, so on the host
+#       the callee read an unwritten stack slot: the measured cost was
+#       FAULT c0000005 at func_ov004_020adc3c+0x6. src:3 now declares
+#       `extern int func_ov004_020adc3c(int* c);` and src:24 passes `c`, and
+#       the TU's own header says so in the past tense ("THE ARGUMENT IS THE
+#       FRAMEWORK OBJECT AND IT USED TO BE DROPPED HERE").
+#
+# THE ONE ROW LINK15 PUT IN THIS BATCH THAT IS STILL NOT HERE, and why, so the
+# next census does not find it again:
+#
+#   src/func_ov006_020d8408.c     REFUSED, the defect still holds. The census
+#       tested callee ARITY and src:4 does declare
+#       `func_ov006_020d66c4(char *base, int idx)` with both parameters -- but
+#       the defect is at a CALL SITE, not a declaration: src:202 still reads
+#       `((void (*)(char *)) func_ov006_020d66c4)(c);`, casting the function
+#       pointer down to one parameter so the second argument rides ARM r1. That
+#       one line is the whole difference between the src TU and
+#       unmatched/MgBomroom_Slot8408.c. Seating it puts back the fault that
+#       file measured: scene 370 (Sort or 'Splode) dies at
+#       func_ov006_020d66c4+0xc reading 0x3879cf6c. An arity check over
+#       declarations cannot see a cast at a call site.
+#
+#   src/_ZN12dScMg3DEsp_c16CleanupResourcesEv.cpp   SEATED, run link100 wave
+#       15, lane ESP3D, off SEAT15D's REFUSED note above (kept here for the
+#       record: it was out of BATCH 3's ownership because the matched TU is a
+#       real C++ member, `s32 dScMg3DEsp_c::CleanupResources()`, so it does
+#       NOT define the flat C name the port calls). The seat is exactly the
+#       one-row fix SEAT15D named: port/faces_sync.txt:1303 flips F -> R, so
+#       facegen now generates the REVERSE face -- it defines the flat Itanium
+#       name and calls the matched member -- instead of a forwarder that would
+#       have collided with this TU (LNK2005). port/unmatched/Mg3DEsp_Cleanup.cpp
+#       is retired the way SEAT15D retired its three.
+#
+src/func_ov006_020d3ba0.cpp
+src/func_ov006_020fa7b8.cpp
+src/func_ov004_020ad8b8.c
+src/_ZN12dScMg3DEsp_c16CleanupResourcesEv.cpp

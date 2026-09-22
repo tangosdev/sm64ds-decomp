@@ -73,13 +73,13 @@
 //     020ee2a4  ldreq  r1, [r3]             ; direct: the code word
 //     020ee2a8  blx    r1
 //
-// which is src/func_ov006_020ee27c.cpp's `(c->*c->m)()` to the instruction.
+// which is src/_ZN11dScMgJump_c8BehaviorEv.cpp's `(c->*c->m)()` to the instruction.
 // The rulebook corollary applies: a member-pointer TYPE in the src puts the
 // body on the host-copy side, so the seat wires the copy below rather than the
 // src TU, and port/slice_bnp.txt does not list that TU.
 //
 // A `::*` / `->*` SWEEP OVER ALL 41 TUs OF THIS CLASS AND ITS SHARED BASE
-// RETURNS EXACTLY ONE FILE, src/func_ov006_020ee27c.cpp. The open-coded third
+// RETURNS EXACTLY ONE FILE, src/_ZN11dScMgJump_c8BehaviorEv.cpp. The open-coded third
 // shape lane LKY's encoding detector exists for is absent here: decoding every
 // word of 0x020edec0..0x020eebe8 (this class's code block) and
 // 0x020e6c28..0x020e740c (dScMgD3DBase_c's) for `add Rd,Rn,Rm,asr #1`
@@ -99,12 +99,12 @@
 //
 // ---- 3. WHAT IS NOT ROUTED, AND WHY THE COUNT CAN LEGITIMATELY BE ZERO ----
 //
-// dScMgJump_c's vtable slot 18 is func_ov006_020ee994, and it is this class's
+// dScMgJump_c's vtable slot 18 is _ZN11dScMgJump_c13OnYoshiTryEatEi, and it is this class's
 // ONE nosrc floor: a config symbol with no delink block and no src file in
 // either extension. hal/scene_mg_jump.cpp traps it, and the trap is the reason
 // a default boot of scene 372 routes NOTHING through the switch below.
 //
-// THE FLOOR IS THE ONLY BODY THAT STARTS THE MACHINE. src/func_ov006_020ee690
+// THE FLOOR IS THE ONLY BODY THAT STARTS THE MACHINE. src/_ZN11dScMgJump_c13InitResourcesEv
 // .cpp (slot 0, InitResources) ends with `((Base *)base)->m48(-1)` -- vtable
 // offset 0x48, which is slot 18 -- and the ROM's slot-18 body tail-calls
 // func_ov006_020ee658, whose only job is to install the pair at 0x0213cb54.
@@ -114,7 +114,7 @@
 // state machine was never started", not "the class does not dispatch".
 //
 // ALL THREE PARAGRAPHS ABOVE ARE PAST TENSE NOW. Run mg12's lane IGN
-// decompiled func_ov006_020ee994 and this seat routes the real body, so the
+// decompiled _ZN11dScMgJump_c13OnYoshiTryEatEi and this seat routes the real body, so the
 // field is written on the first tick, the null-pmf guard stops firing, and an
 // unattended scene 372 routes 1153 of 1153 with zero null pairs and walks five
 // distinct states in ROM order. The section is kept because it is the
@@ -152,7 +152,7 @@ void func_ov006_020ee508(char *c);
 void func_ov006_020ee5b8(char *c);
 
 /* the host copy of vtable slot 6, defined below */
-int func_ov006_020ee27c(void *c);
+int _ZN11dScMgJump_c8BehaviorEv(void *c);
 
 /* this class's own witnesses, read by hal/scene_mg_jump.cpp */
 void     port_mg_jump_counts(unsigned *calls, unsigned *hits, unsigned *nullpmf);
@@ -335,14 +335,14 @@ extern "C" void port_mg_jump_counts(unsigned *calls, unsigned *hits,
 
 // ---- the one host copy -----------------------------------------------------
 
-/* src/func_ov006_020ee27c.cpp -- VTABLE SLOT 6, the Behavior. Its `struct C`
+/* src/_ZN11dScMgJump_c8BehaviorEv.cpp -- VTABLE SLOT 6, the Behavior. Its `struct C`
    carried nothing but the padding and the member-pointer typedef, so replacing
    the dispatch removes the struct entirely and no layout moves: every access
    in the copy is a raw char* offset at the same displacement the ROM uses. The
    ROM returns a literal 1 (mov r0,#1 at 0x020ee2ac, single exit), so the copy
    does too. */
 /* HOST COPY RETIRED, run link100 lane PMFB7 gate 3.
-   src/func_ov006_020ee27c.cpp dispatches its own field now, compiled with /Zp4
+   src/_ZN11dScMgJump_c8BehaviorEv.cpp dispatches its own field now, compiled with /Zp4
    so the member lands at the ROM's own 0x5004. The seven records the class's
    own writers copy from hold six zero-argument __fastcall faces, one per code
    word. */

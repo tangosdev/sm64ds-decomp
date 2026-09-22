@@ -13,7 +13,7 @@
 //
 // Both recoveries are faithful readings of the same ARM function: on the
 // cartridge 0x020214a4 leaves something in r0 and its callers differ on whether
-// they model that as a value. src/_ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2.c is
+// they model that as a value. src/_ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2.cpp is
 // the matched body and it is flat C returning void, so NEITHER decorated name
 // is defined by anything in the tree.
 //
@@ -48,9 +48,14 @@ extern "C" void _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(int draw, void *obj,
                                                          int pal, int prio,
                                                          void *mtx);
 
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync): src/_ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2.cpp emits the VOID decorated spelling itself since main langmode migration, so the matched body now carries the name this face was written to supply and this face was the second definition (LNK2005). hal/stage_frame.cpp keeps the int spelling; it is a different symbol and is not duplicated.
+   The body is kept below under #if 0 rather than deleted, so the
+   evidence in it stays readable. */
+#if 0
 void OAM::Render(bool sub, OamAttr *data, int x, int y, int a, int b,
                  Matrix2x2 *mtx)
 {
     _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(sub ? 1 : 0, (void *)data, x, y,
                                              a, b, (void *)mtx);
 }
+#endif

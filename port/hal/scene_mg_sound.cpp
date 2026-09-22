@@ -7,7 +7,7 @@
 //
 // ---- 1. WHY THERE WAS NO MUSIC --------------------------------------------
 //
-// dScMgBase_c::AfterInitResources (vtable slot 2, src/func_ov004_020b08f0.cpp,
+// dScMgBase_c::AfterInitResources (vtable slot 2, src/minigames/d_s_mg_base.cpp,
 // linked and in the slice) calls func_ov004_020ae330 on every minigame boot.
 // That function:
 //     if (data_ov004_020beb68 == 0) return;                 // scene tracker
@@ -19,8 +19,8 @@
 //     }
 //     Sound::LoadAndSetMusic_Layer1(func_ov004_020ae1f0()); // enable != 0
 // func_ov004_020ae1f0 returns self->unk_0c8, which slot 1
-// (src/func_ov004_020b0930.cpp:41) fills from data_0209b308 + 0x28 (the music
-// id). The base ctor func_ov004_020b2adc:38 sets data_ov004_020beb68 = self,
+// (src/minigames/d_s_mg_base.cpp:41) fills from data_0209b308 + 0x28 (the music
+// id). The base ctor _ZN11dScMgBase_cC2Ev:38 sets data_ov004_020beb68 = self,
 // so the scene-tracker gate passes on a direct scene boot, and also reads
 // data_0209b308 + 0x30.
 //
@@ -45,7 +45,7 @@
 //   and it stays BSS (zeroed) because that is its DS boot value.
 //
 //   UNSEEDED. The only writer of the record is the Rec Room overlay ov005
-//   (src/func_ov005_020c0378.c:96-107), which copies a 0x34-byte row out of
+//   (src/func_ov005_020c0378.cpp:96-107), which copies a 0x34-byte row out of
 //   data_ov005_020c24d8 for the minigame the player picked and THEN launches
 //   the minigame scene. ov005 is in no slice and no mount, so a direct
 //   SM64DS_SCENE=374 boot never runs it: music id and enable read zero, enable
@@ -167,7 +167,7 @@ extern "C" int IsMinigameActorID(unsigned id);   /* src/IsMinigameActorID.c */
 // the row's own +0x04 word. Scene::StartSceneFade hands it to
 // Scene::SetSceneToSpawn(id, param) and the spine lands it on the actor at +8.
 //
-// dScMgBase_c's constructor (src/func_ov004_020b2adc.c) is what unpacks it:
+// dScMgBase_c's constructor (src/_ZN11dScMgBase_cC2Ev.cpp) is what unpacks it:
 //
 //     *(short*)(self+0x465e) = data_ov004_020bc070[(*(u32*)(self+8) >> 0x10) & 0xff];
 //     *(int*)(self+8)        = *(u32*)(self+8) & 0xffff;
@@ -179,11 +179,11 @@ extern "C" int IsMinigameActorID(unsigned id);   /* src/IsMinigameActorID.c */
 //                            per-minigame save record. func_ov004_020ad878
 //                            reads field 1 of it and dScMgMemory2_c's
 //                            InitResources copies that into +0xb4, which is
-//                            the only input func_ov006_020f6c90 has for
+//                            the only input _ZN14dScMgMemory2_c12ShuffleCardsEv has for
 //                            dealing 16, 18 or 20 cards.
 //     (param >> 16) & 0xff   the row of data_ov004_020bc070, the minigame's
 //                            name-text id, read back at +0x465e by
-//                            src/func_ov004_020af094.cpp.
+//                            src/_ZN11dScMgBase_c16OnAimedAtWithEggEv.cpp.
 //
 // hal/scene_boot.cpp used to pass 0 here, so every minigame in the port shared
 // save record 0 and every one of them asked for name text index 0. Memory

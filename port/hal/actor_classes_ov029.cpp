@@ -22,11 +22,13 @@
 //  100  FloatOnWaterPlatformWdwRectangle   0x02113f44 (unnamed)         Platform 32
 //  101  WDW_Water             0x021125f8   0x021140dc _ZTV19Rotating..  Platform 32
 //
-// The dead first store each _Spawn/D1 makes (an ov002 base table or _ZTV8Platform)
+// The dead first store each _Spawn/D1 makes (an ov002 base table or _ZTV10dBgActor_c)
 // and the recovered VT0/VT1/VT2 placeholders are bound per source in
 // port/CMakeLists.txt, because the same recovered name means different addresses
-// in different TUs (RotatingPlatformWdw_Spawn's _ZTV15daObjWc_Obj07_c is the
+// in different TUs (daObjWc_Obj07_c_classInit's _ZTV15daObjWc_Obj07_c is the
 // ov002 base, the RectangleD1 TU's is 0x02114018).
+
+#include "port_d16.h"
 
 #include <cstdio>
 
@@ -34,36 +36,36 @@
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
 extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include "dsstate_seg.h"
 #include "dtor_faces_cpp.h"
-#include "Actor.h"
-#include "ActorBase.h"
+#include "dActor_c.h"
+#include "fBase_c.h"
 
 extern "C" {
 /* shared arm9 Actor/ActorBase bodies (slots 1..30), same set the ov025 lane
    forwards, all already in walk_window.map */
-int  _ZN5Actor19BeforeInitResourcesEv(void *self);
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a);
-int  _ZN5Actor14BeforeBehaviorEv(void *self);
-int  _ZN5Actor12BeforeRenderEv(void *self);
-int  _ZN5Actor13OnYoshiTryEatEv(void *self);
-void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p);
-int  _ZN5Actor9Virtual50Ev(void *self);
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);
-void _ZN5Actor8OnKickedERS_(void *self, void *o);
-void _ZN5Actor8OnPushedERS_(void *self, void *o);
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o);
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);
-int  _ZN5Actor16OnAimedAtWithEggEv(void *self);
-void _ZN8Platform4KillEv(void *self);
+int  _ZN8dActor_c19BeforeInitResourcesEv(void *self);
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a);
+int  _ZN8dActor_c14BeforeBehaviorEv(void *self);
+int  _ZN8dActor_c12BeforeRenderEv(void *self);
+int  _ZN8dActor_c13OnYoshiTryEatEv(void *self);
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void *self, void *p);
+int  _ZN8dActor_c9Virtual50Ev(void *self);
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o);
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);
+int  _ZN8dActor_c16OnAimedAtWithEggEv(void *self);
+void _ZN10dBgActor_c4KillEv(void *self);
 
 const char *port_actor_class_name(unsigned id);
 void port_actor_slot_decline(const char *what);
@@ -82,87 +84,87 @@ void __sinit_ov029_02112d90(void);
 void __sinit_ov029_02112dfc(void);
 
 /* ov002 shared base-platform bodies the inherited slots 3/6/9 reach (in map) */
-int func_ov002_020b5be0(void *self);
-int func_ov002_020b5c4c(void *self);
-int func_ov002_020b5c24(void *self);
-int func_ov002_020b6718(void *self);
-int func_ov002_020b66f0(void *self);
+int _ZN17daObjFloatBoard_c16CleanupResourcesEv(void *self);
+int _ZN17daObjFloatBoard_c8BehaviorEv(void *self);
+int _ZN17daObjFloatBoard_c6RenderEv(void *self);
+int _ZN16daObjKaitendai_c8BehaviorEv(void *self);
+int _ZN16daObjKaitendai_c6RenderEv(void *self);
 
 /* id 95 FloatOnWaterPlatformWdwSquare own bodies (unnamed; s17 D0 is a guessed
    body, trapped not seated -- no extern) */
-int  func_ov029_02111254(char *self);   /* s0 InitResources */
-int *func_ov029_021111a0(int *self);    /* s16 D1 */
-int *func_ov029_021111f0(int *self);    /* s17 D0 -- GATE 229, ruled and seated */
-/* id 96 ArrowLift, live table _ZTV29FloatOnWaterPlatformWdwSquare (mangled bodies) */
-int _ZN29FloatOnWaterPlatformWdwSquare13InitResourcesEv(void *self);
-int _ZN29FloatOnWaterPlatformWdwSquare16CleanupResourcesEv(void *self);
-int _ZN29FloatOnWaterPlatformWdwSquare8BehaviorEv(void *self);
-int _ZN29FloatOnWaterPlatformWdwSquare6RenderEv(void *self);
-int *_ZN29FloatOnWaterPlatformWdwSquareD1Ev(int *self);
-int *_ZN29FloatOnWaterPlatformWdwSquareD0Ev(int *self);
+int  _ZN14daObjWcObj01_c13InitResourcesEv(char *self);   /* s0 InitResources */
+int *_ZN14daObjWcObj01_cD1Ev(int *self);    /* s16 D1 */
+int *_ZN14daObjWcObj01_cD0Ev(int *self);    /* s17 D0 -- GATE 229, ruled and seated */
+/* id 96 ArrowLift, live table _ZTV15daObjWc_Obj02_c (mangled bodies) */
+int _ZN15daObjWc_Obj02_c13InitResourcesEv(void *self);
+int _ZN15daObjWc_Obj02_c16CleanupResourcesEv(void *self);
+int _ZN15daObjWc_Obj02_c8BehaviorEv(void *self);
+int _ZN15daObjWc_Obj02_c6RenderEv(void *self);
+int *_ZN15daObjWc_Obj02_cD1Ev(int *self);
+int *_ZN15daObjWc_Obj02_cD0Ev(int *self);
 /* id 97 WaterDiamond, live table _ZTV9ArrowLift (Actor 31) */
-int _ZN9ArrowLift13InitResourcesEv(void *self);
-int _ZN9ArrowLift16CleanupResourcesEv(void *self);
-int _ZN9ArrowLift8BehaviorEv(void *self);
-int _ZN9ArrowLift6RenderEv(void *self);
-int *_ZN9ArrowLiftD0Ev(int *self);   /* D1 trapped: see WaterDiamond fill */
+int _ZN15daObjWc_Obj03_c13InitResourcesEv(void *self);
+int _ZN15daObjWc_Obj03_c16CleanupResourcesEv(void *self);
+int _ZN15daObjWc_Obj03_c8BehaviorEv(void *self);
+int _ZN15daObjWc_Obj03_c6RenderEv(void *self);
+int *_ZN15daObjWc_Obj03_cD0Ev(int *self);   /* D1 trapped: see WaterDiamond fill */
 /* id 99 CageLift (link100 SPAWN2). Its six own bodies, every one taken from the
-   reloc at data_ov029_02113e74 + 4*slot and confirmed by a
+   reloc at _ZTV15daObjWc_Obj05_c + 4*slot and confirmed by a
    kind:function(arm,size=..) record at exactly that address in
    config/arm9/overlays/ov029/symbols.txt:
-     slot 0  0x02113e74 -> 0x02111d6c  func_ov029_02111d6c size 0xd4   (.cpp)
-     slot 3  0x02113e80 -> 0x02111b60  func_ov029_02111b60 size 0x44
-     slot 6  0x02113e8c -> 0x02111bcc  func_ov029_02111bcc size 0x1a0
-     slot 9  0x02113e98 -> 0x02111ba4  func_ov029_02111ba4 size 0x28   (.cpp)
-     slot 16 0x02113eb4 -> 0x02111ac4  func_ov029_02111ac4 size 0x44
-     slot 17 0x02113eb8 -> 0x02111b08  func_ov029_02111b08 size 0x58
+     slot 0  0x02113e74 -> 0x02111d6c  _ZN15daObjWc_Obj05_c13InitResourcesEv size 0xd4   (.cpp)
+     slot 3  0x02113e80 -> 0x02111b60  _ZN15daObjWc_Obj05_c16CleanupResourcesEv size 0x44
+     slot 6  0x02113e8c -> 0x02111bcc  _ZN15daObjWc_Obj05_c8BehaviorEv size 0x1a0
+     slot 9  0x02113e98 -> 0x02111ba4  _ZN15daObjWc_Obj05_c6RenderEv size 0x28   (.cpp)
+     slot 16 0x02113eb4 -> 0x02111ac4  _ZN15daObjWc_Obj05_cD1Ev size 0x44
+     slot 17 0x02113eb8 -> 0x02111b08  _ZN15daObjWc_Obj05_cD0Ev size 0x58
    Five of the six carry the "recovered from vtable slot identity" marker and
    lane STUBADJ ruled ALL FIVE REAL_DECOMP against the ROM (match.py 2004/b56
    strict-reloc MATCH, 0 WRONG-DEST), which is the fact that retires the note
    that used to stand where this block is. The sixth (the D1) never carried a
    marker. */
-int  func_ov029_02111d6c(char *self);   /* s0  InitResources */
-int  func_ov029_02111b60(void *self);   /* s3  CleanupResources */
-int  func_ov029_02111bcc(void *self);   /* s6  Behavior */
-int  func_ov029_02111ba4(void *self);   /* s9  Render */
-int *func_ov029_02111ac4(int *self);    /* s16 D1 */
-int *func_ov029_02111b08(int *self);    /* s17 D0 */
+int  _ZN15daObjWc_Obj05_c13InitResourcesEv(char *self);   /* s0  InitResources */
+int  _ZN15daObjWc_Obj05_c16CleanupResourcesEv(void *self);   /* s3  CleanupResources */
+int  _ZN15daObjWc_Obj05_c8BehaviorEv(void *self);   /* s6  Behavior */
+int  _ZN15daObjWc_Obj05_c6RenderEv(void *self);   /* s9  Render */
+int *_ZN15daObjWc_Obj05_cD1Ev(int *self);    /* s16 D1 */
+int *_ZN15daObjWc_Obj05_cD0Ev(int *self);    /* s17 D0 */
 /* id 100 FloatOnWaterPlatformWdwRectangle own bodies (unnamed; s17 D0 guessed,
    trapped not seated) */
-int  func_ov029_02111f58(char *self);   /* s0 */
-int *func_ov029_02111ea4(int *self);    /* s16 */
-int *func_ov029_02111ef4(int *self);    /* s17 D0 -- GATE 229, ruled and seated */
-/* id 94 RotatingPlatformWdw, live table _ZTV32FloatOnWaterPlatformWdwRectangle */
-int _ZN32FloatOnWaterPlatformWdwRectangle13InitResourcesEv(void *self);
-int _ZN32FloatOnWaterPlatformWdwRectangle16CleanupResourcesEv(void *self);
-int *_ZN32FloatOnWaterPlatformWdwRectangleD1Ev(int *self);
-int *_ZN32FloatOnWaterPlatformWdwRectangleD0Ev(int *self);
+int  _ZN14daObjWcObj06_c13InitResourcesEv(char *self);   /* s0 */
+int *_ZN14daObjWcObj06_cD1Ev(int *self);    /* s16 */
+int *_ZN14daObjWcObj06_cD0Ev(int *self);    /* s17 D0 -- GATE 229, ruled and seated */
+/* id 94 RotatingPlatformWdw, live table _ZTV15daObjWc_Obj07_c */
+int _ZN15daObjWc_Obj07_c13InitResourcesEv(void *self);
+int _ZN15daObjWc_Obj07_c16CleanupResourcesEv(void *self);
+int *_ZN15daObjWc_Obj07_cD1Ev(int *self);
+int *_ZN15daObjWc_Obj07_cD0Ev(int *self);
 /* id 98 SwitchActivatedPlank, live table _ZTV20SwitchActivatedPlank */
-int _ZN20SwitchActivatedPlank13InitResourcesEv(void *self);
-int _ZN20SwitchActivatedPlank16CleanupResourcesEv(void *self);
-int _ZN20SwitchActivatedPlank8BehaviorEv(void *self);
-int _ZN20SwitchActivatedPlank6RenderEv(void *self);
-int *_ZN20SwitchActivatedPlankD1Ev(int *self);
-int *_ZN20SwitchActivatedPlankD0Ev(int *self);
+int _ZN15daObjWc_Obj04_c13InitResourcesEv(void *self);
+int _ZN15daObjWc_Obj04_c16CleanupResourcesEv(void *self);
+int _ZN15daObjWc_Obj04_c8BehaviorEv(void *self);
+int _ZN15daObjWc_Obj04_c6RenderEv(void *self);
+int *_ZN15daObjWc_Obj04_cD1Ev(int *self);
+int *_ZN15daObjWc_Obj04_cD0Ev(int *self);
 /* id 101 WDW_Water, live table _ZTV19RotatingPlatformWdw */
-int _ZN19RotatingPlatformWdw13InitResourcesEv(void *self);
-int _ZN19RotatingPlatformWdw16CleanupResourcesEv(void *self);
-int _ZN19RotatingPlatformWdw8BehaviorEv(void *self);
-int _ZN19RotatingPlatformWdw6RenderEv(void *self);
-int *_ZN19RotatingPlatformWdwD1Ev(int *self);
-int *_ZN19RotatingPlatformWdwD0Ev(int *self);
+int _ZN14daObjWc_Mizu_c13InitResourcesEv(void *self);
+int _ZN14daObjWc_Mizu_c16CleanupResourcesEv(void *self);
+int _ZN14daObjWc_Mizu_c8BehaviorEv(void *self);
+int _ZN14daObjWc_Mizu_c6RenderEv(void *self);
+int *_ZN14daObjWc_Mizu_cD1Ev(int *self);
+int *_ZN14daObjWc_Mizu_cD0Ev(int *self);
 
 /* the eight live vtables. Five carry the dsd _ZTV name (the matched _Spawn/D1
    TUs spell them); three are unnamed and hosted under their ROM address. Sized
    by vtspan: 32 slots for the Platform tables (Kill at 31), 31 for the Actor
    table (id 97, ends at slot 30). DSSTATE so a savestate restore refills. */
 DSSTATE_BEGIN
-void *data_ov029_02113c2c[32];                    /* id 95  Square       */
-void *_ZTV29FloatOnWaterPlatformWdwSquare[32];    /* id 96  ArrowLift     */
+void *_ZTV14daObjWcObj01_c[32];                    /* id 95  Square       */
+void *_ZTV15daObjWc_Obj02_c[32];    /* id 96  ArrowLift     */
 void *_ZTV9ArrowLift[31];                          /* id 97  WaterDiamond  */
-void *data_ov029_02113e74[32];                    /* id 99  CageLift      */
-void *data_ov029_02113f44[32];                    /* id 100 Rectangle     */
-void *_ZTV32FloatOnWaterPlatformWdwRectangle[32]; /* id 94  RotatingWdw   */
+void *_ZTV15daObjWc_Obj05_c[32];                    /* id 99  CageLift      */
+void *_ZTV14daObjWcObj06_c[32];                    /* id 100 Rectangle     */
+void *_ZTV15daObjWc_Obj07_c[32]; /* id 94  RotatingWdw   */
 void *_ZTV20SwitchActivatedPlank[32];             /* id 98  SwitchPlank   */
 void *_ZTV19RotatingPlatformWdw[32];              /* id 101 WDW_Water     */
 DSSTATE_END
@@ -191,29 +193,29 @@ OV29_TRAP(13) OV29_TRAP(14) OV29_TRAP(16) OV29_TRAP(17)
 #undef OV29_TRAP
 
 // ---- the shared slots 1..30 (own 0/3/6/9/16/17 and 31 written by the caller) -
-static int  __fastcall ov29_binit(void *s, void *) { return _ZN5Actor19BeforeInitResourcesEv(s); }
-static void __fastcall ov29_ainit(void *s, void *, unsigned a) { _ZN5Actor18AfterInitResourcesEj(s, a); }
-static int  __fastcall ov29_bclean(void *s, void *) { return ((Actor *)s)->Actor::BeforeCleanupResources(); }
-static void __fastcall ov29_aclean(void *s, void *, unsigned a) { ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
-static int  __fastcall ov29_bbeh(void *s, void *) { return _ZN5Actor14BeforeBehaviorEv(s); }
-static void __fastcall ov29_abeh(void *s, void *, unsigned a) { ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
-static int  __fastcall ov29_bren(void *s, void *) { return _ZN5Actor12BeforeRenderEv(s); }
-static void __fastcall ov29_aren(void *s, void *, unsigned a) { ((ActorBase *)s)->ActorBase::AfterRender(a); }
-static int  __fastcall ov29_pdes(void *s, void *) { ((ActorBase *)s)->ActorBase::OnPendingDestroy(); return 0; }
-static int  __fastcall ov29_heap(void *s, void *) { return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
-static int  __fastcall ov29_yoshi(void *s, void *) { return _ZN5Actor13OnYoshiTryEatEv(s); }
-static int  __fastcall ov29_turn_egg(void *s, void *, void *p) { _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
-static int  __fastcall ov29_v50(void *s, void *) { return _ZN5Actor9Virtual50Ev(s); }
-static int  __fastcall ov29_pounded(void *s, void *, void *o) { _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
-static int  __fastcall ov29_atk1(void *s, void *, void *o) { _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
-static int  __fastcall ov29_atk2(void *s, void *, void *o) { _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
-static int  __fastcall ov29_kicked(void *s, void *, void *o) { _ZN5Actor8OnKickedERS_(s, o); return 0; }
-static int  __fastcall ov29_pushed(void *s, void *, void *o) { _ZN5Actor8OnPushedERS_(s, o); return 0; }
-static int  __fastcall ov29_cannon(void *s, void *, void *o) { _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
-static int  __fastcall ov29_mega(void *s, void *, void *p) { _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
-static int  __fastcall ov29_under(void *s, void *, void *o) { _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
-static int  __fastcall ov29_egg(void *s, void *) { return _ZN5Actor16OnAimedAtWithEggEv(s); }
-static int  __fastcall ov29_kill(void *s, void *) { _ZN8Platform4KillEv(s); return 0; }
+static int  __fastcall ov29_binit(void *s, void *) { return _ZN8dActor_c19BeforeInitResourcesEv(s); }
+static void __fastcall ov29_ainit(void *s, void *, unsigned a) { _ZN8dActor_c18AfterInitResourcesEj(s, a); }
+static int  __fastcall ov29_bclean(void *s, void *) { return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
+static void __fastcall ov29_aclean(void *s, void *, unsigned a) { ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
+static int  __fastcall ov29_bbeh(void *s, void *) { return _ZN8dActor_c14BeforeBehaviorEv(s); }
+static void __fastcall ov29_abeh(void *s, void *, unsigned a) { ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
+static int  __fastcall ov29_bren(void *s, void *) { return _ZN8dActor_c12BeforeRenderEv(s); }
+static void __fastcall ov29_aren(void *s, void *, unsigned a) { ((fBase_c *)s)->fBase_c::AfterRender(a); }
+static int  __fastcall ov29_pdes(void *s, void *) { ((fBase_c *)s)->fBase_c::OnPendingDestroy(); return 0; }
+static int  __fastcall ov29_heap(void *s, void *) { return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
+static int  __fastcall ov29_yoshi(void *s, void *) { return _ZN8dActor_c13OnYoshiTryEatEv(s); }
+static int  __fastcall ov29_turn_egg(void *s, void *, void *p) { _ZN8dActor_c13OnTurnIntoEggER6Player(s, p); return 0; }
+static int  __fastcall ov29_v50(void *s, void *) { return _ZN8dActor_c9Virtual50Ev(s); }
+static int  __fastcall ov29_pounded(void *s, void *, void *o) { _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
+static int  __fastcall ov29_atk1(void *s, void *, void *o) { _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
+static int  __fastcall ov29_atk2(void *s, void *, void *o) { _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
+static int  __fastcall ov29_kicked(void *s, void *, void *o) { _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
+static int  __fastcall ov29_pushed(void *s, void *, void *o) { _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
+static int  __fastcall ov29_cannon(void *s, void *, void *o) { _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+static int  __fastcall ov29_mega(void *s, void *, void *p) { _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
+static int  __fastcall ov29_under(void *s, void *, void *o) { _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
+static int  __fastcall ov29_egg(void *s, void *) { return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
+static int  __fastcall ov29_kill(void *s, void *) { _ZN10dBgActor_c4KillEv(s); return 0; }
 
 /* THE POINTER IS VOLATILE ON PURPOSE: the gate-200 elided-stores bug. */
 static void ov29_fill_shared(void *volatile *vt)
@@ -258,74 +260,74 @@ extern "C" void port_ov29_bringup(void)
 }
 
 // ---- the eight per-actor override thunks + fills ----------------------------
-/* id 95 FloatOnWaterPlatformWdwSquare (data_ov029_02113c2c, Platform 32). Its
+/* id 95 FloatOnWaterPlatformWdwSquare (_ZTV14daObjWcObj01_c, Platform 32). Its
    inherited s3/6/9 are the ov002 base-platform bodies. */
-static int __fastcall sq_init(void *s, void *) { return func_ov029_02111254((char *)s); }
-static int __fastcall sq_clean(void *s, void *) { return func_ov002_020b5be0(s); }
-static int __fastcall sq_beh(void *s, void *)   { return func_ov002_020b5c4c(s); }
-static int __fastcall sq_ren(void *s, void *)   { return func_ov002_020b5c24(s); }
-static int __fastcall sq_d1(void *s, void *)    { return (int)(size_t)func_ov029_021111a0((int *)s); }
-/* GATE 229: SLOT 17 IS THE ROM BODY NOW. func_ov029_021111f0 carries the
+static int __fastcall sq_init(void *s, void *) { return _ZN14daObjWcObj01_c13InitResourcesEv((char *)s); }
+static int __fastcall sq_clean(void *s, void *) { return _ZN17daObjFloatBoard_c16CleanupResourcesEv(s); }
+static int __fastcall sq_beh(void *s, void *)   { return _ZN17daObjFloatBoard_c8BehaviorEv(s); }
+static int __fastcall sq_ren(void *s, void *)   { return _ZN17daObjFloatBoard_c6RenderEv(s); }
+static int __fastcall sq_d1(void *s, void *)    { return (int)(size_t)_ZN14daObjWcObj01_cD1Ev((int *)s); }
+/* GATE 229: SLOT 17 IS THE ROM BODY NOW. _ZN14daObjWcObj01_cD0Ev carries the
    "recovered from vtable slot identity" marker, which is why the note that used
    to stand here trapped it -- and lane STUBADJ ruled that marker set against the
    ROM (REAL_DECOMP, port/tools/inferred_stub_adjudicated.txt), so it is a
    decompilation after all. Checked by address before seating, not by the
-   ruling's own text: the table word 0x02113c70 is data_ov029_02113c2c + 4*17 and
+   ruling's own text: the table word 0x02113c70 is _ZTV14daObjWcObj01_c + 4*17 and
    relocates to 0x021111f0, and symbols.txt carries
-   func_ov029_021111f0 kind:function(arm,size=0x64) at exactly that address.
+   _ZN14daObjWcObj01_cD0Ev kind:function(arm,size=0x64) at exactly that address.
    Its THREE vptr stores are bound per TU in port/CMakeLists.txt out of its own
-   literal pool (own table, the ov002 base 0x02108fdc, then _ZTV8Platform), which
+   literal pool (own table, the ov002 base 0x02108fdc, then _ZTV10dBgActor_c), which
    is the store the recovered placeholder names could not spell. Two-parameter
    face: slot 17 is a lifecycle slot and the caller pushes nothing. */
-static int __fastcall sq_d0(void *s, void *)   { return (int)(size_t)func_ov029_021111f0((int *)s); }
+static int __fastcall sq_d0(void *s, void *)   { return (int)(size_t)_ZN14daObjWcObj01_cD0Ev((int *)s); }
 extern "C" void hal_fill_float_on_water_platform_wdw_square_vtable(void)
 {
     port_ov29_bringup();
-    void *volatile *vt = (void *volatile *)data_ov029_02113c2c;
+    void *volatile *vt = (void *volatile *)_ZTV14daObjWcObj01_c;
     ov29_fill_shared(vt);
     vt[0]=(void *)sq_init; vt[3]=(void *)sq_clean; vt[6]=(void *)sq_beh;
-    vt[9]=(void *)sq_ren;  vt[16]=(void *)sq_d1;   vt[17]=(void *)sq_d0;
+    vt[9]=(void *)sq_ren;  vt[16]=(void *)PORT_D16(sq_d1);   vt[17]=(void *)sq_d0;
     vt[31]=(void *)ov29_kill;
 }
 
-/* id 96 ArrowLift (_ZTV29FloatOnWaterPlatformWdwSquare, Platform 32) */
-static int __fastcall al_init(void *s, void *)  { return _ZN29FloatOnWaterPlatformWdwSquare13InitResourcesEv(s); }
-static int __fastcall al_clean(void *s, void *) { return _ZN29FloatOnWaterPlatformWdwSquare16CleanupResourcesEv(s); }
-static int __fastcall al_beh(void *s, void *)   { return _ZN29FloatOnWaterPlatformWdwSquare8BehaviorEv(s); }
-static int __fastcall al_ren(void *s, void *)   { return _ZN29FloatOnWaterPlatformWdwSquare6RenderEv(s); }
-static int __fastcall al_d1(void *s, void *)    { return (int)(size_t)_ZN29FloatOnWaterPlatformWdwSquareD1Ev((int *)s); }
-static int __fastcall al_d0(void *s, void *)    { return (int)(size_t)_ZN29FloatOnWaterPlatformWdwSquareD0Ev((int *)s); }
+/* id 96 ArrowLift (_ZTV15daObjWc_Obj02_c, Platform 32) */
+static int __fastcall al_init(void *s, void *)  { return _ZN15daObjWc_Obj02_c13InitResourcesEv(s); }
+static int __fastcall al_clean(void *s, void *) { return _ZN15daObjWc_Obj02_c16CleanupResourcesEv(s); }
+static int __fastcall al_beh(void *s, void *)   { return _ZN15daObjWc_Obj02_c8BehaviorEv(s); }
+static int __fastcall al_ren(void *s, void *)   { return _ZN15daObjWc_Obj02_c6RenderEv(s); }
+static int __fastcall al_d1(void *s, void *)    { return (int)(size_t)_ZN15daObjWc_Obj02_cD1Ev((int *)s); }
+static int __fastcall al_d0(void *s, void *)    { return (int)(size_t)_ZN15daObjWc_Obj02_cD0Ev((int *)s); }
 extern "C" void hal_fill_arrow_lift_vtable(void)
 {
     port_ov29_bringup();
-    void *volatile *vt = (void *volatile *)_ZTV29FloatOnWaterPlatformWdwSquare;
+    void *volatile *vt = (void *volatile *)_ZTV15daObjWc_Obj02_c;
     ov29_fill_shared(vt);
     vt[0]=(void *)al_init; vt[3]=(void *)al_clean; vt[6]=(void *)al_beh;
-    vt[9]=(void *)al_ren;  vt[16]=(void *)al_d1;   vt[17]=(void *)al_d0;
+    vt[9]=(void *)al_ren;  vt[16]=(void *)PORT_D16(al_d1);   vt[17]=(void *)al_d0;
     vt[31]=(void *)ov29_kill;
 }
 
 /* id 97 WaterDiamond (_ZTV9ArrowLift, Actor 31 -- NO Kill slot 31) */
-static int __fastcall wd_init(void *s, void *)  { return _ZN9ArrowLift13InitResourcesEv(s); }
-static int __fastcall wd_clean(void *s, void *) { return _ZN9ArrowLift16CleanupResourcesEv(s); }
-static int __fastcall wd_beh(void *s, void *)   { return _ZN9ArrowLift8BehaviorEv(s); }
-static int __fastcall wd_ren(void *s, void *)   { return _ZN9ArrowLift6RenderEv(s); }
-/* slot 16 (D1) is _ZN9ArrowLiftD1Ev, a C++ virtual destructor: since lane
+static int __fastcall wd_init(void *s, void *)  { return _ZN15daObjWc_Obj03_c13InitResourcesEv(s); }
+static int __fastcall wd_clean(void *s, void *) { return _ZN15daObjWc_Obj03_c16CleanupResourcesEv(s); }
+static int __fastcall wd_beh(void *s, void *)   { return _ZN15daObjWc_Obj03_c8BehaviorEv(s); }
+static int __fastcall wd_ren(void *s, void *)   { return _ZN15daObjWc_Obj03_c6RenderEv(s); }
+/* slot 16 (D1) is _ZN15daObjWc_Obj03_cD1Ev, a C++ virtual destructor: since lane
    DTOR-FACES-CPP it links from src through hal/dtor_faces_cpp.cpp's faces and
    is seated here (it was TRAPPED while the base dtors were unhosted). D0
-   (slot 17) is the C-linkage _ZN9ArrowLiftD0Ev, seated. */
-static int __fastcall wd_d0(void *s, void *)    { return (int)(size_t)_ZN9ArrowLiftD0Ev((int *)s); }
+   (slot 17) is the C-linkage _ZN15daObjWc_Obj03_cD0Ev, seated. */
+static int __fastcall wd_d0(void *s, void *)    { return (int)(size_t)_ZN15daObjWc_Obj03_cD0Ev((int *)s); }
 extern "C" void hal_fill_water_diamond_vtable(void)
 {
     port_ov29_bringup();
     void *volatile *vt = (void *volatile *)_ZTV9ArrowLift;
     ov29_fill_shared(vt);
     vt[0]=(void *)wd_init;      vt[3]=(void *)wd_clean; vt[6]=(void *)wd_beh;
-    vt[9]=(void *)wd_ren;  vt[16]=(void *)hal_cppd1_ArrowLift; vt[17]=(void *)wd_d0;
+    vt[9]=(void *)wd_ren;  vt[16]=(void *)PORT_D16(hal_cppd1_ArrowLift); vt[17]=(void *)wd_d0;
     /* no slot 31: a plain Actor, 31 slots, ends at 30 */
 }
 
-/* id 99 CageLift (data_ov029_02113e74, Platform 32) -- link100 SPAWN2.
+/* id 99 CageLift (_ZTV15daObjWc_Obj05_c, Platform 32) -- link100 SPAWN2.
    THE NOTE THAT USED TO STAND HERE IS RETIRED, and by a ruling rather than by a
    rewrite: the five "recovered from vtable slot identity" bodies this class was
    held back for are each ruled REAL_DECOMP in port/tools/
@@ -342,97 +344,97 @@ extern "C" void hal_fill_water_diamond_vtable(void)
    InitResources feeds Model::LoadFile into ModelBase::SetFile at +0xd4 and both
    destructors call _ZN5ModelD1Ev on +0xd4, so the object it dispatches slot 5 of
    is a plain Model and hal/cxxname_bridge.cpp's dual-filled _ZTV5Model[5] is
-   Model::Render. func_ov043_02111280.cpp is the same eight lines and has been
+   Model::Render. _ZN19daObjKm1_Ukishima_c6RenderEv.cpp is the same eight lines and has been
    linked and shipping on level 35 since gate 206. */
-static int __fastcall cl_init(void *s, void *)  { return func_ov029_02111d6c((char *)s); }
-static int __fastcall cl_clean(void *s, void *) { return func_ov029_02111b60(s); }
-static int __fastcall cl_beh(void *s, void *)   { return func_ov029_02111bcc(s); }
+static int __fastcall cl_init(void *s, void *)  { return _ZN15daObjWc_Obj05_c13InitResourcesEv((char *)s); }
+static int __fastcall cl_clean(void *s, void *) { return _ZN15daObjWc_Obj05_c16CleanupResourcesEv(s); }
+static int __fastcall cl_beh(void *s, void *)   { return _ZN15daObjWc_Obj05_c8BehaviorEv(s); }
 static int __fastcall cl_ren(void *s, void *)
 { port_actor_render_probe("CAGE_LIFT", (char *)s + 0xd4);
-  return func_ov029_02111ba4(s); }
-static int __fastcall cl_d1(void *s, void *)    { return (int)(size_t)func_ov029_02111ac4((int *)s); }
-static int __fastcall cl_d0(void *s, void *)    { return (int)(size_t)func_ov029_02111b08((int *)s); }
+  return _ZN15daObjWc_Obj05_c6RenderEv(s); }
+static int __fastcall cl_d1(void *s, void *)    { return (int)(size_t)_ZN15daObjWc_Obj05_cD1Ev((int *)s); }
+static int __fastcall cl_d0(void *s, void *)    { return (int)(size_t)_ZN15daObjWc_Obj05_cD0Ev((int *)s); }
 extern "C" void hal_fill_cage_lift_vtable(void)
 {
     port_ov29_bringup();
-    void *volatile *vt = (void *volatile *)data_ov029_02113e74;
+    void *volatile *vt = (void *volatile *)_ZTV15daObjWc_Obj05_c;
     ov29_fill_shared(vt);
     vt[0]=(void *)cl_init; vt[3]=(void *)cl_clean; vt[6]=(void *)cl_beh;
-    vt[9]=(void *)cl_ren;  vt[16]=(void *)cl_d1;   vt[17]=(void *)cl_d0;
+    vt[9]=(void *)cl_ren;  vt[16]=(void *)PORT_D16(cl_d1);   vt[17]=(void *)cl_d0;
     vt[31]=(void *)ov29_kill;
 }
 
-/* id 100 FloatOnWaterPlatformWdwRectangle (data_ov029_02113f44, Platform 32;
+/* id 100 FloatOnWaterPlatformWdwRectangle (_ZTV14daObjWcObj06_c, Platform 32;
    inherited s3/6/9 = ov002 base, same as Square) */
-static int __fastcall rc_init(void *s, void *)  { return func_ov029_02111f58((char *)s); }
-static int __fastcall rc_clean(void *s, void *) { return func_ov002_020b5be0(s); }
-static int __fastcall rc_beh(void *s, void *)   { return func_ov002_020b5c4c(s); }
-static int __fastcall rc_ren(void *s, void *)   { return func_ov002_020b5c24(s); }
-static int __fastcall rc_d1(void *s, void *)    { return (int)(size_t)func_ov029_02111ea4((int *)s); }
+static int __fastcall rc_init(void *s, void *)  { return _ZN14daObjWcObj06_c13InitResourcesEv((char *)s); }
+static int __fastcall rc_clean(void *s, void *) { return _ZN17daObjFloatBoard_c16CleanupResourcesEv(s); }
+static int __fastcall rc_beh(void *s, void *)   { return _ZN17daObjFloatBoard_c8BehaviorEv(s); }
+static int __fastcall rc_ren(void *s, void *)   { return _ZN17daObjFloatBoard_c6RenderEv(s); }
+static int __fastcall rc_d1(void *s, void *)    { return (int)(size_t)_ZN14daObjWcObj06_cD1Ev((int *)s); }
 /* GATE 229: slot 17 is the ROM body, the same reading as the Square one class
-   up. Table word 0x02113f88 = data_ov029_02113f44 + 4*17 relocates to
-   0x02111ef4, and symbols.txt has func_ov029_02111ef4
+   up. Table word 0x02113f88 = _ZTV14daObjWcObj06_c + 4*17 relocates to
+   0x02111ef4, and symbols.txt has _ZN14daObjWcObj06_cD0Ev
    kind:function(arm,size=0x64) there. Same three-store binding out of its own
    pool, same two-parameter face. */
-static int __fastcall rc_d0(void *s, void *)   { return (int)(size_t)func_ov029_02111ef4((int *)s); }
+static int __fastcall rc_d0(void *s, void *)   { return (int)(size_t)_ZN14daObjWcObj06_cD0Ev((int *)s); }
 extern "C" void hal_fill_float_on_water_platform_wdw_rectangle_vtable(void)
 {
     port_ov29_bringup();
-    void *volatile *vt = (void *volatile *)data_ov029_02113f44;
+    void *volatile *vt = (void *volatile *)_ZTV14daObjWcObj06_c;
     ov29_fill_shared(vt);
     vt[0]=(void *)rc_init; vt[3]=(void *)rc_clean; vt[6]=(void *)rc_beh;
-    vt[9]=(void *)rc_ren;  vt[16]=(void *)rc_d1;   vt[17]=(void *)rc_d0;
+    vt[9]=(void *)rc_ren;  vt[16]=(void *)PORT_D16(rc_d1);   vt[17]=(void *)rc_d0;
     vt[31]=(void *)ov29_kill;
 }
 
-/* id 94 RotatingPlatformWdw (_ZTV32FloatOnWaterPlatformWdwRectangle, Platform 32;
+/* id 94 RotatingPlatformWdw (_ZTV15daObjWc_Obj07_c, Platform 32;
    s6/9 inherit the ov002 rotating base) */
-static int __fastcall rp_init(void *s, void *)  { return _ZN32FloatOnWaterPlatformWdwRectangle13InitResourcesEv(s); }
-static int __fastcall rp_clean(void *s, void *) { return _ZN32FloatOnWaterPlatformWdwRectangle16CleanupResourcesEv(s); }
-static int __fastcall rp_beh(void *s, void *)   { return func_ov002_020b6718(s); }
-static int __fastcall rp_ren(void *s, void *)   { return func_ov002_020b66f0(s); }
-static int __fastcall rp_d1(void *s, void *)    { return (int)(size_t)_ZN32FloatOnWaterPlatformWdwRectangleD1Ev((int *)s); }
-static int __fastcall rp_d0(void *s, void *)    { return (int)(size_t)_ZN32FloatOnWaterPlatformWdwRectangleD0Ev((int *)s); }
+static int __fastcall rp_init(void *s, void *)  { return _ZN15daObjWc_Obj07_c13InitResourcesEv(s); }
+static int __fastcall rp_clean(void *s, void *) { return _ZN15daObjWc_Obj07_c16CleanupResourcesEv(s); }
+static int __fastcall rp_beh(void *s, void *)   { return _ZN16daObjKaitendai_c8BehaviorEv(s); }
+static int __fastcall rp_ren(void *s, void *)   { return _ZN16daObjKaitendai_c6RenderEv(s); }
+static int __fastcall rp_d1(void *s, void *)    { return (int)(size_t)_ZN15daObjWc_Obj07_cD1Ev((int *)s); }
+static int __fastcall rp_d0(void *s, void *)    { return (int)(size_t)_ZN15daObjWc_Obj07_cD0Ev((int *)s); }
 extern "C" void hal_fill_rotating_platform_wdw_vtable(void)
 {
     port_ov29_bringup();
-    void *volatile *vt = (void *volatile *)_ZTV32FloatOnWaterPlatformWdwRectangle;
+    void *volatile *vt = (void *volatile *)_ZTV15daObjWc_Obj07_c;
     ov29_fill_shared(vt);
     vt[0]=(void *)rp_init; vt[3]=(void *)rp_clean; vt[6]=(void *)rp_beh;
-    vt[9]=(void *)rp_ren;  vt[16]=(void *)rp_d1;   vt[17]=(void *)rp_d0;
+    vt[9]=(void *)rp_ren;  vt[16]=(void *)PORT_D16(rp_d1);   vt[17]=(void *)rp_d0;
     vt[31]=(void *)ov29_kill;
 }
 
 /* id 98 SwitchActivatedPlank (_ZTV20SwitchActivatedPlank, Platform 32) */
-static int __fastcall sp_init(void *s, void *)  { return _ZN20SwitchActivatedPlank13InitResourcesEv(s); }
-static int __fastcall sp_clean(void *s, void *) { return _ZN20SwitchActivatedPlank16CleanupResourcesEv(s); }
-static int __fastcall sp_beh(void *s, void *)   { return _ZN20SwitchActivatedPlank8BehaviorEv(s); }
-static int __fastcall sp_ren(void *s, void *)   { return _ZN20SwitchActivatedPlank6RenderEv(s); }
-static int __fastcall sp_d1(void *s, void *)    { return (int)(size_t)_ZN20SwitchActivatedPlankD1Ev((int *)s); }
-static int __fastcall sp_d0(void *s, void *)    { return (int)(size_t)_ZN20SwitchActivatedPlankD0Ev((int *)s); }
+static int __fastcall sp_init(void *s, void *)  { return _ZN15daObjWc_Obj04_c13InitResourcesEv(s); }
+static int __fastcall sp_clean(void *s, void *) { return _ZN15daObjWc_Obj04_c16CleanupResourcesEv(s); }
+static int __fastcall sp_beh(void *s, void *)   { return _ZN15daObjWc_Obj04_c8BehaviorEv(s); }
+static int __fastcall sp_ren(void *s, void *)   { return _ZN15daObjWc_Obj04_c6RenderEv(s); }
+static int __fastcall sp_d1(void *s, void *)    { return (int)(size_t)_ZN15daObjWc_Obj04_cD1Ev((int *)s); }
+static int __fastcall sp_d0(void *s, void *)    { return (int)(size_t)_ZN15daObjWc_Obj04_cD0Ev((int *)s); }
 extern "C" void hal_fill_switch_activated_plank_vtable(void)
 {
     port_ov29_bringup();
     void *volatile *vt = (void *volatile *)_ZTV20SwitchActivatedPlank;
     ov29_fill_shared(vt);
     vt[0]=(void *)sp_init; vt[3]=(void *)sp_clean; vt[6]=(void *)sp_beh;
-    vt[9]=(void *)sp_ren;  vt[16]=(void *)sp_d1;   vt[17]=(void *)sp_d0;
+    vt[9]=(void *)sp_ren;  vt[16]=(void *)PORT_D16(sp_d1);   vt[17]=(void *)sp_d0;
     vt[31]=(void *)ov29_kill;
 }
 
 /* id 101 WDW_Water (_ZTV19RotatingPlatformWdw, Platform 32) */
-static int __fastcall ww_init(void *s, void *)  { return _ZN19RotatingPlatformWdw13InitResourcesEv(s); }
-static int __fastcall ww_clean(void *s, void *) { return _ZN19RotatingPlatformWdw16CleanupResourcesEv(s); }
-static int __fastcall ww_beh(void *s, void *)   { return _ZN19RotatingPlatformWdw8BehaviorEv(s); }
-static int __fastcall ww_ren(void *s, void *)   { return _ZN19RotatingPlatformWdw6RenderEv(s); }
-static int __fastcall ww_d1(void *s, void *)    { return (int)(size_t)_ZN19RotatingPlatformWdwD1Ev((int *)s); }
-static int __fastcall ww_d0(void *s, void *)    { return (int)(size_t)_ZN19RotatingPlatformWdwD0Ev((int *)s); }
+static int __fastcall ww_init(void *s, void *)  { return _ZN14daObjWc_Mizu_c13InitResourcesEv(s); }
+static int __fastcall ww_clean(void *s, void *) { return _ZN14daObjWc_Mizu_c16CleanupResourcesEv(s); }
+static int __fastcall ww_beh(void *s, void *)   { return _ZN14daObjWc_Mizu_c8BehaviorEv(s); }
+static int __fastcall ww_ren(void *s, void *)   { return _ZN14daObjWc_Mizu_c6RenderEv(s); }
+static int __fastcall ww_d1(void *s, void *)    { return (int)(size_t)_ZN14daObjWc_Mizu_cD1Ev((int *)s); }
+static int __fastcall ww_d0(void *s, void *)    { return (int)(size_t)_ZN14daObjWc_Mizu_cD0Ev((int *)s); }
 extern "C" void hal_fill_wdw_water_vtable(void)
 {
     port_ov29_bringup();
     void *volatile *vt = (void *volatile *)_ZTV19RotatingPlatformWdw;
     ov29_fill_shared(vt);
     vt[0]=(void *)ww_init; vt[3]=(void *)ww_clean; vt[6]=(void *)ww_beh;
-    vt[9]=(void *)ww_ren;  vt[16]=(void *)ww_d1;   vt[17]=(void *)ww_d0;
+    vt[9]=(void *)ww_ren;  vt[16]=(void *)PORT_D16(ww_d1);   vt[17]=(void *)ww_d0;
     vt[31]=(void *)ov29_kill;
 }

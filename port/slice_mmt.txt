@@ -1,7 +1,7 @@
 # Lane MMT of run mg9: dScMgMemory_c, the "Memory Match" minigame.
 #
-# actor id 0x16a (scene 362), spawn symbol MgMemoryMatch_Spawn (0x020f5504),
-# SpawnInfo 0x0213cfd8, vtable data_ov006_0213d1b8.  Every one of those was
+# actor id 0x16a (scene 362), spawn symbol dScMgMemory_c_classInit (0x020f5504),
+# SpawnInfo 0x0213cfd8, vtable _ZTV13dScMgMemory_c.  Every one of those was
 # re-read out of the ROM by this lane rather than taken from the handover or
 # from the sibling: scanning extracted/overlays/overlay_0006.bin (base
 # 0x020bfec0) for the doubled-id word 0x016a016a finds exactly ONE hit, at
@@ -12,11 +12,11 @@
 #               6a 01 6a 01   362, 362     the id, twice
 #
 # The class name is the ROM's own RTTI: the string at 0x0213d0b4 reads
-# "13dScMgMemory_c", and the record that names it, data_ov006_0213d090 =
+# "13dScMgMemory_c", and the record that names it, _ZTI13dScMgMemory_c =
 # {0x0209a764, 0x0213d0b4, 0x0213bc64}, is what the relocated word at
 # 0x0213d1b4 -- immediately before the vtable -- loads.  It agrees with what the
-# destructors write: slot 17 (src/func_ov006_020f3888.cpp) stores
-# data_ov006_0213d1b8 into the object's first word before unwinding.
+# destructors write: slot 17 (src/minigames/d_s_mg_memory.cpp) stores
+# _ZTV13dScMgMemory_c into the object's first word before unwinding.
 #
 # ---- THE ATTRIBUTION WARNING, AND WHAT THIS LANE DID ABOUT IT -------------
 #
@@ -40,22 +40,22 @@
 # ---- THE HIERARCHY IS THREE DEEP -----------------------------------------
 #
 #     Scene -> dScMgBase_c         data_ov004_020bc0c0  36  (the framework's)
-#           -> dScMgSingle3DBase_c data_ov006_0213e448  36  ovr 8,  mark 6
-#           -> dScMgMemory_c       data_ov006_0213d1b8  36  ovr 14, mark 12
+#           -> dScMgSingle3DBase_c _ZTV19dScMgSingle3DBase_c  36  ovr 8,  mark 6
+#           -> dScMgMemory_c       _ZTV13dScMgMemory_c  36  ovr 14, mark 12
 #
 # port/mg_fanout_costs.txt section 3's row lists one vtable and says nothing
 # about an intermediate base, exactly as it did for 0x16b before section 13's
 # CORRECTION 1.  Both edges are read off THIS class's code:
 #
-#   MgMemoryMatch_Spawn (0x020f5504, 0x60, disassembled) allocates 0x5340,
-#   calls func_ov004_020b2adc(p) WITH its argument, writes data_ov006_0213e448
+#   dScMgMemory_c_classInit (0x020f5504, 0x60, disassembled) allocates 0x5340,
+#   calls _ZN11dScMgBase_cC2Ev(p) WITH its argument, writes _ZTV19dScMgSingle3DBase_c
 #   into p[0], constructs Particle::SysTracker at +0x471c, then writes
-#   data_ov006_0213d1b8 over it and constructs the model sub-object at +0x4f38.
-#   src/MgMemoryMatch_Spawn.c reproduces that instruction for instruction.
-#   src/func_ov006_020f3888.cpp (slot 17, D0) unwinds in the opposite order,
+#   _ZTV13dScMgMemory_c over it and constructs the model sub-object at +0x4f38.
+#   src/minigames/d_s_mg_memory.cpp reproduces that instruction for instruction.
+#   src/minigames/d_s_mg_memory.cpp (slot 17, D0) unwinds in the opposite order,
 #   0x0213d1b8 first and 0x0213e448 second, then the SysTracker, then
-#   func_ov004_020b29c0 and Memory::Deallocate.
-#   src/func_ov006_020f3834.cpp (slot 16, D2) is the same without the
+#   _ZN11dScMgBase_cD2Ev and Memory::Deallocate.
+#   src/minigames/d_s_mg_memory.cpp (slot 16, D2) is the same without the
 #   Deallocate, which is what says slot 16 is D2 and slot 17 is D0 rather than
 #   the other way round.
 #
@@ -73,13 +73,13 @@
 # from 37 to 36, so the checks are not ceremony here:
 #
 #   1. SPAN.  config/arm9/overlays/ov006/symbols.txt puts the next symbol after
-#      data_ov006_0213d1b8 at data_ov006_0213d248, exactly 0x90 = 36 words on,
+#      _ZTV13dScMgMemory_c at data_ov006_0213d248, exactly 0x90 = 36 words on,
 #      so a 37th slot cannot exist inside the table.
 #   2. TERMINAL SLOT.  Slot 35 holds 0x020ad660, the word every
 #      dScMgBase_c-derived table holds there.
 #   3. WHAT THE WORD PAST IT IS.  Index 36 reads 0x020f6538 and index 37 reads
 #      0x00000000.  That is an mwcc PAIR {code, adjustment}, and the code word
-#      is func_ov006_020f6538 -- MEMORY MASTER's round-end state, which
+#      is _ZN14dScMgMemory2_c10ResultWaitEv -- MEMORY MASTER's round-end state, which
 #      src/__sinit_ov006_021314e4.c copies into slot 0 of its
 #      data_ov006_021423c0.  A 37-slot fill of this class would write a host
 #      thunk over a live state of the class next door, on a tree where scene
@@ -110,7 +110,7 @@
 # table opens with a relocated CODE word the run continues through it.  All
 # three over-reads are that case -- 0x0213d248 is the code half of a pair whose
 # body is dScMgMemory2_c's round-end state, 0x0213c1e4 is the pair section 11
-# opens with, and 0x0213ebd0 is MgBingoBallSlotsShot_SpawnInfo's factory word.
+# opens with, and 0x0213ebd0 is g_profile_MG_SMARTBALL's factory word.
 # The 8-stride only begins on the SECOND pair.
 #
 # SO IT CANNOT TELL 0x173 FROM 0x169, 0x16a AND 0x16c: it returns 37 for all
@@ -141,10 +141,10 @@
 #
 #   table                n  arity  dispatched by
 #   -------------------  -  -----  ------------------------------------------
-#   data_ov006_021422dc  5    0    func_ov006_020f5388  (vtable slot 6)
-#   data_ov006_02142304  6    0    func_ov006_020f5164
-#   data_ov006_021422bc  4    0    func_ov006_020f50f8
-#   data_ov006_02142334  7    1    func_ov006_020f3f10
+#   data_ov006_021422dc  5    0    _ZN13dScMgMemory_c8BehaviorEv  (vtable slot 6)
+#   data_ov006_02142304  6    0    _ZN13dScMgMemory_c9StatePlayEv
+#   data_ov006_021422bc  4    0    _ZN13dScMgMemory_c11StateResultEv
+#   data_ov006_02142334  7    1    _ZN13dScMgMemory_c11UpdateCardsEv
 #   data_ov006_021422a4  3    ?    NOTHING
 #
 # The four dispatchers are host copies (the pointer-to-member wall); the fifth
@@ -157,12 +157,12 @@
 #
 # ---- THE BOARD LADDER, VERIFIED AGAINST THIS CLASS'S OWN CODE -------------
 #
-# func_ov006_020f51f0 (0x4c = 19 words: NINETEEN instructions and NO literal
+# _ZN13dScMgMemory_c15SetupDifficultyEv (0x4c = 19 words: NINETEEN instructions and NO literal
 # pool) is the whole of the decision and it reads exactly one int.
 #
 # THE COUNT WAS WRONG HERE AND READ "18 instructions + 1 pool", and the way it
 # went wrong is worth one line because two other rows in this file are the same
-# arithmetic. func_ov006_020f5164, the second table dispatcher, is ALSO 0x4c and
+# arithmetic. _ZN13dScMgMemory_c9StatePlayEv, the second table dispatcher, is ALSO 0x4c and
 # IS 18 instructions plus one pool word (0x02142304 at 0x020f51ac); the two sit
 # one function apart in the same block -- 0x020f5164, 0x020f51b0, 0x020f51f0 --
 # and the same-size split was carried across. The ladder has no
@@ -189,24 +189,24 @@
 #   board 1, 10 cards  grid1[2..11]   5 x 2 at x 32/80/128/176/224, y 136 and 64
 #   board 2, 12 cards  grid2[0..11]   4 x 3 at x 47/101/155/209, y 160/104/48
 #
-# src/func_ov006_020f4cd8.c is the dealer and agrees exactly: records 4..11 with
+# src/minigames/d_s_mg_memory.cpp is the dealer and agrees exactly: records 4..11 with
 # identities 1..4 for board 0, 2..11 with 1..5 for board 1, 0..11 with 1..6 for
 # board 2, every card starting at x = 128.0, y = -128.0 off the top of the
-# screen.  src/func_ov006_020f456c.c agrees a second time from a different
+# screen.  src/minigames/d_s_mg_memory.cpp agrees a second time from a different
 # angle: it walks cars[j*5 + k + 2] for board 1 and cars[j*4 + k] otherwise.
 #
 # ---- THE ONE FLOOR WAS THE CARD DRAW, AND RUN mg10 LANE F362 CLOSED IT -----
 #
-# func_ov006_020f3e68, 0xa8, the sixth call vtable slot 9 (Render) makes, had NO
+# _ZN13dScMgMemory_c9DrawCardsEv, 0xa8, the sixth call vtable slot 9 (Render) makes, had NO
 # src TU in any overlay and has NO delink block.  It is the ONLY code in the
 # class that draws a card -- ov006's relocs.txt has thirty-two arm_call
 # relocations to Hud_RenderSprite (0x020af68c) and exactly ONE of them,
 # 0x020f3ee8, is inside this class's code block.  It is the exact analogue of
-# the sibling's func_ov006_020f5b98, which cost run mg7 lane MEMCARDS a whole
+# the sibling's _ZN14dScMgMemory2_c9DrawCardsEv, which cost run mg7 lane MEMCARDS a whole
 # lane to close.
 #
 # RUN mg9 LANE MMT TRAPPED IT AND RUN mg10 LANE F362 DECOMPILED IT.
-# src/func_ov006_020f3e68.c is the body and this slice carries it, so a tree
+# src/minigames/d_s_mg_memory.cpp is the body and this slice carries it, so a tree
 # that loses that line fails to LINK rather than quietly drawing nothing.  The
 # named trap in port/unmatched/MgMemory1_Faces.cpp is DELETED, not emptied.
 # THE SEAT DRAWS CARDS.
@@ -255,11 +255,11 @@
 # warned that a card game seat which misses one links, boots and jumps to a raw
 # DS address on the first rendered frame. CHECKED HERE AND ABSENT, three ways:
 #
-#   - THE FACTORY. MgMemoryMatch_Spawn is 0x60 and constructs exactly two
+#   - THE FACTORY. dScMgMemory_c_classInit is 0x60 and constructs exactly two
 #     sub-objects after the base constructor: Particle::SysTracker at +0x471c
 #     and the model at +0x4f38 (func_ov006_020c1d80). There is no third `bl`
 #     and no loop; nothing builds a card object.
-#   - THE CLEAR. src/func_ov006_020f4f94.c zeroes all twelve records field by
+#   - THE CLEAR. src/minigames/d_s_mg_memory.cpp zeroes all twelve records field by
 #     field and every field is a plain int, short or char -- word 0 of a record
 #     is `*(int*)(p + 0x51a8) = 0`, the 20.12 screen x. A vptr is not something
 #     a per-round reset writes zero over.
@@ -285,7 +285,7 @@
 #
 # THE AMBIGUOUS-ADDRESS MODULE HAZARD (lane S364). This class walks straight
 # into it on paper: config/arm9/overlays/ov006/symbols.txt marks
-# MgMemoryMatch_SpawnInfo `ambiguous`, and config/arm9/overlays/ov099/
+# g_profile_MG_MEMORY `ambiguous`, and config/arm9/overlays/ov099/
 # symbols.txt claims the same address 0x0213cfd8 as data_ov099_0213cfd8, a bss
 # symbol. The port hosts the RIGHT one, proved two ways:
 #   - walk_window.map defines _MgMemoryMatch_SpawnInfo exactly once, out of
@@ -310,13 +310,13 @@
 # inherit the ignore. DONE, and this class ignores it -- established by where
 # r1 is first TOUCHED in each body, which is the only thing that settles it:
 #
-#   func_ov006_020f52c4 (slot 18).  push {r4,r5,lr} / sub sp,#4 / mov r5,r0 /
+#   _ZN13dScMgMemory_c13OnYoshiTryEatEi (slot 18).  push {r4,r5,lr} / sub sp,#4 / mov r5,r0 /
 #     bl 0x020f4f94, and then `ldr r1,[pc,#0x40]` at 0x020f52d4. r1's first
 #     appearance in the body is a WRITE, so nothing IN THIS BODY can have read
 #     the incoming value.
 #     AND THAT ARGUMENT HAD A HOLE IN IT, WHICH THE RUN mg9 REVIEWER CLOSED.
 #     There is a CALL between the entry and the write, and r1 is an argument
-#     register: func_ov006_020f4f94 could have read the incoming r1 and the
+#     register: _ZN13dScMgMemory_c9ResetGameEv could have read the incoming r1 and the
 #     "first appearance is a write" test would not have seen it. It does not.
 #     Its own first mention of r1 is `add r1,r3,#0x5100` at 0x020f4fb4, its
 #     ninth instruction, computed off r3 = the receiver -- a WRITE again, and
@@ -324,7 +324,7 @@
 #     mov lr,ip / add r2,r3,#0x5000 / str lr,[r2,#0x1a8] / str lr,[r2,#0x1ac])
 #     never name r1. It is the only call before the write, so the chain is
 #     closed and the conclusion stands.
-#   func_ov006_020f5250 (slot 19).  push {r4,lr} / mov r4,r0 /
+#   _ZN13dScMgMemory_c13OnTurnIntoEggEi (slot 19).  push {r4,lr} / mov r4,r0 /
 #     add r0,r4,#0x5000, and then `ldr r1,[r0,#0x314]` at 0x020f525c. Again a
 #     WRITE, three instructions in, and this one has NO call before it, so the
 #     hole above cannot exist here.
@@ -343,7 +343,7 @@
 # RUN mg9 LANE PSY ASKS FOR THE ARGUMENT TO BE FORWARDED ANYWAY, its own
 # witness value having been -1 and matching neither branch arm. THAT ADVICE IS
 # DECLINED HERE AND THE REASON IS THE ARITY GATE, not confidence.
-# src/func_ov006_020f52c4.c DEFINES a one-parameter function, so a thunk that
+# src/minigames/d_s_mg_memory.cpp DEFINES a one-parameter function, so a thunk that
 # forwarded a second one would be a declaration disagreeing with a definition
 # across a C-linkage symbol -- the exact shape port/tools/aritycheck.py exists
 # to catch, and the disease its header calls the bin-softlock. PSY's classes
@@ -358,7 +358,7 @@
 # here, and the measurement is the same 900-frame scene-362 boot in each case.
 #
 #   SLOT 34 (lane S371). hal/scene_mg.cpp's shared thunk is declared
-#   (void*, void*) while func_ov004_020ae3b4 takes five parameters at every ROM
+#   (void*, void*) while _ZN11dScMgBase_c9Virtual88Eiiii takes five parameters at every ROM
 #   dispatch site. The run reports "framework slots entered: 1(x1) 31(x1)
 #   32(x1)" -- slot 34 is not entered at all, so this class witnesses nothing
 #   and the repair is not this lane's to make.
@@ -368,7 +368,7 @@
 #   cdecl pointer while mb_v19 is __fastcall and cleans four bytes itself. It
 #   bites only once the FRAMEWORK state machine runs, and it does not run here:
 #   the census reads "0 framework call(s), 0 UNHANDLED address(es)" and
-#   "framework state setter: 0 call(s) into func_ov004_020b87e0". Same reading
+#   "framework state setter: 0 call(s) into _ZN10dMgState_c8SetStateEi". Same reading
 #   port/mg_fanout_costs.txt section 13 records for the sibling. Nothing to
 #   replicate; BOO's fix stands alone.
 #
@@ -392,57 +392,16 @@
 # 0x020c0264..0x020c1d80 and the dScMgSingle3DBase_c bodies at 0x0210a5xx and
 # 0x0210a6xx.  This lane's ov004 delta is ZERO new lines: every ov004 body in
 # its 103-function closure is already carried or already host-copied.
-src/MgMemoryMatch_Spawn.c
-src/func_ov006_020f3834.cpp
-src/func_ov006_020f3888.cpp
-src/func_ov006_020f38f0.c
-src/func_ov006_020f392c.c
-src/func_ov006_020f3964.c
-src/func_ov006_020f39c8.c
-src/func_ov006_020f39fc.c
-src/func_ov006_020f3a10.c
-src/func_ov006_020f3a14.c
-src/func_ov006_020f3ba0.c
-src/func_ov006_020f3c0c.c
-src/func_ov006_020f3c90.c
-src/func_ov006_020f3d34.cpp
-src/func_ov006_020f3f84.c
-src/func_ov006_020f411c.c
-src/func_ov006_020f41ac.c
-src/func_ov006_020f41b0.c
-src/func_ov006_020f4248.c
-src/func_ov006_020f43c0.c
-src/func_ov006_020f43c4.c
-src/func_ov006_020f456c.c
-src/func_ov006_020f46ec.cpp
-src/func_ov006_020f47d8.c
-src/func_ov006_020f4888.c
-src/func_ov006_020f49ac.c
-src/func_ov006_020f4a40.c
-src/func_ov006_020f4ad4.c
-src/func_ov006_020f4b30.c
-src/func_ov006_020f4bbc.c
-src/func_ov006_020f4c38.c
-src/func_ov006_020f4cd8.c
-src/func_ov006_020f4f94.c
-src/func_ov006_020f50c0.c
-src/func_ov006_020f5140.c
-src/func_ov006_020f51b0.c
-src/func_ov006_020f51f0.c
-src/func_ov006_020f523c.c
-src/func_ov006_020f5250.c
-src/func_ov006_020f52c4.c
-src/func_ov006_020f5324.c
-src/func_ov006_020f53e4.cpp
-# HOST-COPIED (mg9 lane MMT): src/func_ov006_020f5388.cpp -- vtable slot 6,
+src/minigames/d_s_mg_memory.cpp
+# HOST-COPIED (mg9 lane MMT): src/minigames/d_s_mg_memory.cpp -- vtable slot 6,
 #   the class's Behavior.  Its table is declared inside extern "C", so the link
 #   never complains and MSVC strides the eight-byte table by four.
-# HOST-COPIED (mg9 lane MMT): src/func_ov006_020f5164.cpp -- the second table
+# HOST-COPIED (mg9 lane MMT): src/minigames/d_s_mg_memory.cpp -- the second table
 #   dispatcher, AND slot 1 of the first table.  Its table is at C++ linkage, so
 #   this one IS link-visible as ?data_ov006_02142304@@3PAUEntry@@A.
-# HOST-COPIED (mg9 lane MMT): src/func_ov006_020f50f8.cpp -- the third table
+# HOST-COPIED (mg9 lane MMT): src/minigames/d_s_mg_memory.cpp -- the third table
 #   dispatcher, AND slot 3 of the first table.  extern "C" table, silent.
-# HOST-COPIED (mg9 lane MMT): src/func_ov006_020f3f10.cpp -- the arity-1
+# HOST-COPIED (mg9 lane MMT): src/minigames/d_s_mg_memory.cpp -- the arity-1
 #   per-record dispatcher, twelve records at +0x51a8 stride 0x18.
 # THE CLASS'S ONE HARD FLOOR, DECOMPILED (run mg10 lane F362).  It is the sixth
 #   call vtable slot 9 (Render) makes, and it is the ONLY thing in the whole
@@ -457,8 +416,7 @@ src/func_ov006_020f53e4.cpp
 #   the sibling's too.  NO src/func_ovNNN_020f3e68.* exists in any other
 #   overlay, so the module-residency trap that almost closed the sibling's
 #   floor twice cannot fire here; the check was run, not assumed.
-src/func_ov006_020f3e68.c
-# NOT HERE: src/func_ov006_0210a6e4.cpp, defined by
+# NOT HERE: src/minigames/d_s_mg_single3_d_base.cpp, defined by
 #   port/unmatched/MgFlower_Slot2.cpp as port_mg_flower_after_init.
 # NOT HERE: src/func_ov006_020c0a48.c, src/func_ov006_020c1804.cpp,
 #   src/func_ov006_020c06dc.cpp, src/func_ov006_020c07e8.cpp and

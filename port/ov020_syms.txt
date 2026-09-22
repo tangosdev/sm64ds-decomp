@@ -14,7 +14,7 @@
 # slots 0/3/6/9/16/17 and whose rest are the shared Actor/ActorBase bodies
 # already in the build.
 #
-# HauntedChair_SpawnInfo delta-sizes to 12 bytes (data_ov020_021149fc sits at
+# g_profile_CHAIR delta-sizes to 12 bytes (data_ov020_021149fc sits at
 # +12 in ROM), NOT a :0x1c pin like ov019's record: --pack keeps 021149fc
 # contiguous at its ROM offset, so a read past +12 still lands on ROM bytes.
 # The +4 id halfword the registry cross-checks reads 326 either way.
@@ -26,12 +26,12 @@
 # book classes' four SharedFilePtrs (aa0/aa8/ab0/ab8), built by the other ov020
 # sinit, are NOT mounted: BOOK_SHOT / BOOKEND / BOOK_SHOT_SPAWNER stay skipped
 # (BookShot's state-9 behaviour calls an undecompiled ov063 function).
-HauntedChair_SpawnInfo data_ov020_021149fc
+g_profile_CHAIR data_ov020_021149fc
 data_ov020_02114af0 data_ov020_02114af8
 
 # run linkw wave 5 (lane w5-A): the BOOK CAST joins -- Bookend (327),
 # BookShotSpawner (328), BookShot (325) and the unnamed BookSwitch record
-# (213, data_ov020_02114898; its factory is the unnamed func_ov020_021127f4,
+# (213, g_profile_BOOK_SWITCH; its factory is the unnamed daBook_c_classInit_BOOK_SWITCH,
 # settled by the record's own bytes -- every record in this cluster is
 # config-`ambiguous` and each was verified: w0 = its own factory inside
 # ov020, +4 halfword = the id). The cluster 0x02114844..0x021148d8 is ONE
@@ -42,13 +42,13 @@ data_ov020_02114af0 data_ov020_02114af8
 # (_ZTV15BookShotSpawner 0x021148d8 with its interior splits
 # data_ov020_021148e0/021148f0, _ZTV8BookShot 0x0211495c) stay OUT -- host
 # arrays hal/actor_classes_ov063.cpp fills.
-data_ov020_02114844 data_ov020_02114850
-Bookend_SpawnInfo data_ov020_02114874
-BookShotSpawner_SpawnInfo data_ov020_0211488c
-data_ov020_02114898
-BookShot_SpawnInfo data_ov020_021148b8
+_ZTI8daBook_c _ZTS11daBookGen_c
+g_profile_KILLER_BOOK data_ov020_02114874
+g_profile_BOOK_GENERATOR data_ov020_0211488c
+g_profile_BOOK_SWITCH
+g_profile_SHOOT_BOOK data_ov020_021148b8
 # the two 12-byte nodes between BookShot's table and HauntedChair's record
-data_ov020_021149d8 data_ov020_021149e4
+_ZTS9daChair_c _ZTI9daChair_c
 # the four book SharedFilePtrs __sinit_ov020_02113674 builds (models
 # 0x2c8/0x2cb, anims 0x2c9/0x2ca) and their destructor-chain nodes; the
 # node at 0x02114ad8 is 12 bytes by the ROM's own write (func_020731dc

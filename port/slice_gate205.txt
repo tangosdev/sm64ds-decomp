@@ -30,12 +30,12 @@
 #   the matched bodies land they come out of that file and two lines are added
 #   here, and nothing else in the seat changes.
 #
-#   func_ov085_02129524 and func_ov085_02129570, TOAD's seat-and-enter and its
+#   _ZN4Toad8SetStateEi and _ZN4Toad8RunStateEv, TOAD's seat-and-enter and its
 #   per-frame Main dispatch, are the gate-16 case: both matched TUs form an
 #   MSVC pointer-to-member over an INCOMPLETE class, which is the four-word
 #   general representation, and 02129570 does not even compile because it sizes
 #   its record as `char tail[0x14 - 8 - sizeof(PMF)]`, which at sixteen bytes
-#   is -4 in a size_t expression and wraps. `cl /c src/func_ov085_02129570.cpp`
+#   is -4 in a size_t expression and wraps. `cl /c src/_ZN4Toad8RunStateEv.cpp`
 #   says so: "error C2148: total size of array must not exceed 0x7fffffff
 #   bytes". Host copies with the dispatch hand-rolled:
 #   port/unmatched/Ov085_Toad_StateSeat.cpp, and the four {function, 0} pairs
@@ -76,27 +76,28 @@
 # value AT that address, which is what `extern void *G0; ... Deallocate(t, G0)`
 # compiles to. hal/cxx_aliases.cpp's cdecl _G0 = _data_020a0eac binding is the
 # right one for this TU.
-src/WallSign_Spawn.c
+src/d_a_obj_kanban.c
 src/_ZN8WallSign13InitResourcesEv.cpp
-src/_ZN8WallSign16CleanupResourcesEv.c
+src/_ZN8WallSign16CleanupResourcesEv.cpp
 src/_ZN8WallSign6RenderEv.cpp
-src/_ZN8WallSignD1Ev.c
-src/_ZN8WallSignD0Ev.c
+src/_ZN8WallSignD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN8WallSignD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN8WallSignD0Ev.cpp
 # _ZN8WallSign8BehaviorEv is NOT decompiled: HOST REIMPLEMENTATION at
 # port/unmatched/Ov085_Behaviors.cpp.
 
 # ---- TOAD (actor 185, ov085), x10 -----------------------------------------
 # InitResources loads the model and two animations, seats state 0, and on the
 # cap-carrying variant spawns actor 0x10d (269, CAP). 269 IS registered --
-# hal/actor_classes.inc gate 51, Cap_SpawnInfo at ov002 0x021095cc, the
+# hal/actor_classes.inc gate 51, g_profile_OBJ_MARIO_CAP at ov002 0x021095cc, the
 # always-resident engine overlay -- so this is not the MontyMoleRock shape.
 # Render is a plain non-virtual Model::Render at +0x108 (the ROM's own `bl` at
 # 0x02129864), safe as it stands.
-src/Toad_Spawn.c
-src/_ZN4Toad13InitResourcesEv.c
+src/d_a_kinopio.c
+src/_ZN4Toad13InitResourcesEv.cpp
 src/_ZN4Toad16CleanupResourcesEv.cpp
 src/_ZN4Toad6RenderEv.cpp
-src/_ZN4ToadD0Ev.c
+src/_ZN4ToadD0Ev.cpp
 # _ZN4ToadD1Ev is NOT here: shadow-class MSVC destructor, spelled inline in
 # hal/actor_classes_ov085.cpp. See this file's header.
 # _ZN4Toad8BehaviorEv is NOT decompiled: HOST REIMPLEMENTATION at
@@ -106,26 +107,26 @@ src/_ZN4ToadD0Ev.c
 # __sinit_ov085_0212f2a8 (already in slice_gate18.txt) copies four eight-byte
 # {function, 0} statics into the two records of data_ov085_0212fe88 --
 # entry 0 "WAIT", entry 1 "TALK". All four bodies are matched:
-#     0x0212fe40 -> func_ov085_021294f0   WAIT enter (SetAnim, the idle)
-#     0x0212fe48 -> func_ov085_02129470   WAIT main  (watch for a talker)
-#     0x0212fe30 -> func_ov085_0212943c   TALK enter (SetAnim, the talk)
-#     0x0212fe38 -> func_ov085_021291ac   TALK main  (the message, the star
+#     0x0212fe40 -> _ZN4Toad12St_Idle_InitEv   WAIT enter (SetAnim, the idle)
+#     0x0212fe48 -> _ZN4Toad12St_Idle_MainEv   WAIT main  (watch for a talker)
+#     0x0212fe30 -> _ZN4Toad12St_Talk_InitEv   TALK enter (SetAnim, the talk)
+#     0x0212fe38 -> _ZN4Toad12St_Talk_MainEv   TALK main  (the message, the star
 #                                          spawn, the cap hand-back, EndTalk)
 # read out of extracted/overlays/overlay_0085.bin at base 0x02129020 with
 # config/arm9/overlays/ov085/relocs.txt agreeing on every one.
-src/func_ov085_021294f0.cpp
-src/func_ov085_02129470.cpp
-src/func_ov085_0212943c.cpp
-src/func_ov085_021291ac.c
-# func_ov085_021290b4 is the message-id picker the TALK main opens with: on the
+src/_ZN4Toad12St_Idle_InitEv.cpp
+src/_ZN4Toad12St_Idle_MainEv.cpp
+src/_ZN4Toad12St_Talk_InitEv.cpp
+src/_ZN4Toad12St_Talk_MainEv.cpp
+# _ZN4Toad12GetMessageIDEv is the message-id picker the TALK main opens with: on the
 # rec room (level 0x32) it reads the minigame state, elsewhere it maps the
 # actor's own parameter through ObjectMessageIDToActualMessageID.
-src/func_ov085_021290b4.c
+src/_ZN4Toad12GetMessageIDEv.cpp
 # and the per-frame matrix/shadow pass Behavior calls after the head tracking:
 # builds the body matrix, applies the head angles to the model's own, carries
 # the held cap along on its matrix, and drops the shadow.
-src/func_ov085_021295bc.c
-# func_ov085_02129524 and func_ov085_02129570 are NOT here: MSVC PMF over an
+src/_ZN4Toad15UpdateModelPoseEv.cpp
+# _ZN4Toad8SetStateEi and _ZN4Toad8RunStateEv are NOT here: MSVC PMF over an
 # incomplete class, the gate-16 case. Host copies at
 # port/unmatched/Ov085_Toad_StateSeat.cpp.
 

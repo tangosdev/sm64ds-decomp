@@ -9,8 +9,8 @@
 // ---- POWER_STAR (178) -----------------------------------------------------
 //
 // _ZTV9PowerStar @ ov002 0x0210ab3c, 31 slots, RTTI daStar_c (aliased
-// _ZTV8daStar_c at the same address). PowerStar_Spawn installs it directly
-// (p[0] = (int)_ZTV9PowerStar) after _ZN5EnemyC2Ev, so the vtable is a HOST
+// _ZTV8daStar_c at the same address). daStar_c_classInit_STAR installs it directly
+// (p[0] = (int)_ZTV9PowerStar) after _ZN12dEnemyBase_cC2Ev, so the vtable is a HOST
 // array this file declares and the registry fills -- the ov079 rule, a mounted
 // vtable would hand the factory DS code addresses.
 //
@@ -23,40 +23,42 @@
 //                          (ModelAnim slot-5 dispatch, port/unmatched/ModelAnim_Renders.cpp)
 //   slot 16 D1             020e6c40  _ZN9PowerStarD1Ev (matched, C-named .c)
 //   slot 17 D0             020e6c90  _ZN9PowerStarD0Ev (matched, C-named .c)
-//   slot 18 OnYoshiTryEat  020e8ee8  func_ov002_020e8ee8 (matched)
-//   slot 19 (egg)          020e8edc  func_ov002_020e8edc (matched)
+//   slot 18 OnYoshiTryEat  020e8ee8  _ZN9PowerStar13OnYoshiTryEatEv (matched)
+//   slot 19 (egg)          020e8edc  _ZN9PowerStar13OnTurnIntoEggER6Player (matched)
 // every other slot is an Actor/ActorBase base method, the ac31/we31 shared set.
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
 extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include <cstdlib>
 
-#include "Actor.h"
-#include "ActorBase.h"
+#include "dActor_c.h"
+#include "fBase_c.h"
 
 extern "C" {
-int _ZN5Actor19BeforeInitResourcesEv(void *self);          /* slot 1  */
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a); /* slot 2 */
-int _ZN5Actor14BeforeBehaviorEv(void *self);               /* slot 7  */
-int _ZN5Actor12BeforeRenderEv(void *self);                 /* slot 10 */
-int _ZN5Actor13OnYoshiTryEatEv(void *self);                /* slot 18 default */
-int _ZN5Actor9Virtual50Ev(void *self);                     /* slot 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);  /* slot 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);      /* slot 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);      /* slot 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);          /* slot 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);          /* slot 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* 27 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);      /* 28 */
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);          /* slot 1  */
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a); /* slot 2 */
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);               /* slot 7  */
+int _ZN8dActor_c12BeforeRenderEv(void *self);                 /* slot 10 */
+int _ZN8dActor_c13OnYoshiTryEatEv(void *self);                /* slot 18 default */
+int _ZN8dActor_c9Virtual50Ev(void *self);                     /* slot 20 */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);  /* slot 21 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);      /* slot 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);      /* slot 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);          /* slot 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);          /* slot 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o); /* 26 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);     /* 27 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);      /* 28 */
 
 extern int data_02099f24[];          /* the frame phase the lists are in */
 extern unsigned char data_020a4b4c;  /* the spawn spine's own step */
@@ -91,43 +93,43 @@ STAR_TRAP(13) STAR_TRAP(14) STAR_TRAP(30)
 
 // ---- the ten shared lifecycle halves plus Actor's tail ---------------------
 static int __fastcall star_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall star_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall star_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 static void __fastcall star_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall star_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall star_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall star_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall star_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall star_pdes(void *s, void *)
-{ ((ActorBase *)s)->ActorBase::OnPendingDestroy(); return 0; }
+{ ((fBase_c *)s)->fBase_c::OnPendingDestroy(); return 0; }
 static int __fastcall star_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int __fastcall star_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall star_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall star_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall star_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall star_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall star_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall star_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall star_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall star_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 
 /* The shared half of a 31-slot Actor table: Actor's four Before/After pairs,
    ActorBase's OnHeapCreated/OnPendingDestroy, Virtual50 and the eight combat
@@ -170,8 +172,8 @@ int _ZN9PowerStar6RenderEv(void *self);            /* face: below */
 int _ZN9PowerStar8BehaviorEv(void *self);          /* host copy */
 int *_ZN9PowerStarD1Ev(int *self);
 int *_ZN9PowerStarD0Ev(int *self);
-int func_ov002_020e8ee8(void *self);               /* slot 18 override */
-int func_ov002_020e8edc(void *self, void *player); /* slot 19 override */
+int _ZN9PowerStar13OnYoshiTryEatEv(void *self);               /* slot 18 override */
+int _ZN9PowerStar13OnTurnIntoEggER6Player(void *self, void *player); /* slot 19 override */
 void *_ZTV9PowerStar[31];
 void port_power_star_states_seat(void);   /* port/unmatched/PowerStar_States */
 
@@ -180,15 +182,15 @@ void port_power_star_states_seat(void);   /* port/unmatched/PowerStar_States */
    OnAimedAtWithEggReturnVec). 29 forwards to Actor's; 30 returns a Vector3 by
    value, an ABI a thunk cannot bridge, so it TRAPS -- nothing aims a Yoshi egg
    at the star as Mario, same as every Enemy class in the port. */
-int _ZN5Actor16OnAimedAtWithEggEv(void *self);     /* slot 29 */
+int _ZN8dActor_c16OnAimedAtWithEggEv(void *self);     /* slot 29 */
 }
 /* PORT_HOST_ABI: two names of ONE ROM table, read off the ROM rather than
    off a comment (lane ALIASCHK). ov002 0x0210ab3c carries its own RTTI
    record: the word at 0x0210ab38 relocates to the typeinfo at 0x0210aa24,
    whose word[1] points at the Itanium name string at 0x0210aa00 =
    "8daStar_c", so 8daStar_c is the ROM's own RTTI spelling of that class.
-   The ROM bodies whose literal pools load it are PowerStar_Spawn,
-   SilverStar_Spawn, _ZN9PowerStarD0Ev. Read out of
+   The ROM bodies whose literal pools load it are daStar_c_classInit_STAR,
+   daStar_c_classInit_SILVER_STAR, _ZN9PowerStarD0Ev. Read out of
    extracted/overlays/overlay_0002.bin; the LHS is not a config symbol
    anywhere, so the alias cannot be defeated by a later slice. */
 #pragma comment(linker, "/alternatename:__ZTV8daStar_c=__ZTV9PowerStar")
@@ -291,7 +293,7 @@ extern "C" int port_vsstar_layout_check(void)
    matched Itanium body. */
 #pragma comment(linker, "/alternatename:?New@System@Particle@@SAPAU12@IIHHHPBUVector3@@PAUCallback@2@@Z=__ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE")
 
-/* gate 90: _ZN5ActorC1Ev (the matched Actor base ctor StarCamera_Spawn calls)
+/* gate 90: _ZN8dActor_cC1Ev (the matched Actor base ctor StarCamera_Spawn calls)
    declares its engine globals as bare typed C++ names, which MSVC mangles while
    the port hosts them with C linkage (data_0208e3a4 here, the rest in
    actor_vtables.cpp / actor_registry.cpp). Alias each mangled reference onto its
@@ -318,19 +320,19 @@ static int __fastcall ps_d1(void *s, void *)
 static int __fastcall ps_d0(void *s, void *)
 { return (int)(size_t)_ZN9PowerStarD0Ev((int *)s); }
 static int __fastcall ps_yoshi(void *s, void *)
-{ return func_ov002_020e8ee8(s); }
+{ return _ZN9PowerStar13OnYoshiTryEatEv(s); }
 /* Slot 19 is OnTurnIntoEgg(Player &player): the pushed player has to be
    declared so the thunk pops it, the way ps_yoshi's argument-free slot 18
-   does not have to, and it has to be FORWARDED. func_ov002_020e8edc is the
+   does not have to, and it has to be FORWARDED. _ZN9PowerStar13OnTurnIntoEggER6Player is the
    ROM's `ldr ip,[pc]; bx ip` veneer onto func_ov002_020e8e80(c, a), and a
    veneer is a tail jump on the host too, so whatever this pushes is what
    the body reads. Pushing only self left the body's `a` reading this
    thunk's own return address, which it stored at +0x438 and passed on to
    func_ov002_020e8ef0. */
 static int __fastcall ps_s19(void *s, void *, void *player)
-{ return func_ov002_020e8edc(s, player); }
+{ return _ZN9PowerStar13OnTurnIntoEggER6Player(s, player); }
 static int __fastcall ps_aimed(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 
 extern "C" void hal_fill_power_star_vtable(void)
 {
@@ -342,7 +344,7 @@ extern "C" void hal_fill_power_star_vtable(void)
     vt[3] = (void *)ps_clean;
     vt[6] = (void *)ps_behavior;
     vt[9] = (void *)ps_render;
-    vt[16] = (void *)ps_d1;
+    vt[16] = (void *)PORT_D16(ps_d1);
     vt[17] = (void *)ps_d0;
     vt[18] = (void *)ps_yoshi;
     vt[19] = (void *)ps_s19;
@@ -374,13 +376,13 @@ int _ZN9PowerStar16CleanupResourcesEv(void *self)
 // ============================================================================
 //
 // StarCamera_Spawn (src/StarCamera_Spawn.cpp) is `new(0xd4) Actor` then
-// _ZN5ActorC1Ev -- it installs NO vtable of its own, so a spawned STAR_CAMERA
+// _ZN8dActor_cC1Ev -- it installs NO vtable of its own, so a spawned STAR_CAMERA
 // dispatches every virtual through the base Actor vtable, _ZTV5Actor at arm9
 // 0x0208e3a4 (aliased data_0208e3a4, 31 slots). The port kept that symbol as
 // zeroed transient storage, so registering STAR_CAMERA as-is dispatched through
 // nulls on the first frame.
 //
-// FILLING IT IS PROVABLY SAFE. _ZN5ActorC1Ev is the ONLY code that stores
+// FILLING IT IS PROVABLY SAFE. _ZN8dActor_cC1Ev is the ONLY code that stores
 // data_0208e3a4 as an object's vptr, and it does so transiently: it writes
 // data_0208e4b8 (ActorDerived) then data_0208e3a4 (Actor), and every derived
 // class's own Spawn overwrites word 0 with its class vtable immediately after
@@ -388,7 +390,7 @@ int _ZN9PowerStar16CleanupResourcesEv(void *self)
 // derived overwrite (the ctor calls its bases QUALIFIED, never virtual), so the
 // contents of data_0208e3a4 are never read for any class but the one that
 // LEAVES it installed. StarCamera_Spawn is the ONLY such TU in src/ (verified:
-// it is the only file that calls _ZN5ActorC1Ev and installs no vtable after).
+// it is the only file that calls _ZN8dActor_cC1Ev and installs no vtable after).
 // So this fill changes the behaviour of exactly one class -- STAR_CAMERA --
 // turning its null dispatches into the ROM's own Actor/ActorBase bodies, and is
 // invisible to every other class's ctor.
@@ -407,38 +409,38 @@ int _ZN9PowerStar16CleanupResourcesEv(void *self)
 // virtuals with C-named free-function TUs (OnYoshiTryEat/OnTurnIntoEgg/
 // OnAimedAtWithEgg, D1/D0) are declared extern "C".
 extern "C" {
-int _ZN9ActorBase13InitResourcesEv(void);                /* slot 0, C-free */
-int _ZN5Actor16OnAimedAtWithEggEv(void *self);           /* slot 29, C-free */
-int _ZN5Actor13OnYoshiTryEatEv(void *self);              /* slot 18, C-free */
-void _ZN5Actor13OnTurnIntoEggER6Player(void);            /* slot 19, C-free veneer */
-int *_ZN5ActorD1Ev(int *self);                           /* slot 16 */
-int *_ZN5ActorD0Ev(int *self);                           /* slot 17 */
+int _ZN7fBase_c13InitResourcesEv(void);                /* slot 0, C-free */
+int _ZN8dActor_c16OnAimedAtWithEggEv(void *self);           /* slot 29, C-free */
+int _ZN8dActor_c13OnYoshiTryEatEv(void *self);              /* slot 18, C-free */
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void);            /* slot 19, C-free veneer */
+int *_ZN8dActor_cD1Ev(int *self);                           /* slot 16 */
+int *_ZN8dActor_cD0Ev(int *self);                           /* slot 17 */
 extern void *data_0208e3a4[];   /* _ZTV5Actor, storage in hal/actor_vtables.cpp */
 }
 
 static int __fastcall star_d1(void *s, void *)
-{ return (int)(size_t)_ZN5ActorD1Ev((int *)s); }
+{ return (int)(size_t)_ZN8dActor_cD1Ev((int *)s); }
 static int __fastcall star_d0(void *s, void *)
-{ return (int)(size_t)_ZN5ActorD0Ev((int *)s); }
+{ return (int)(size_t)_ZN8dActor_cD0Ev((int *)s); }
 
 static int __fastcall ab_init(void *s, void *)
-{ (void)s; return _ZN9ActorBase13InitResourcesEv(); }
+{ (void)s; return _ZN7fBase_c13InitResourcesEv(); }
 static int __fastcall ab_clean(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::CleanupResources(); }
+{ return ((fBase_c *)s)->fBase_c::CleanupResources(); }
 static int __fastcall ab_behavior(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::Behavior(); }
+{ return ((fBase_c *)s)->fBase_c::Behavior(); }
 static int __fastcall ab_render(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::Render(); }
+{ return ((fBase_c *)s)->fBase_c::Render(); }
 static int __fastcall ac_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 static int __fastcall ac_egg(void *s, void *, void *)
-{ _ZN5Actor13OnTurnIntoEggER6Player(); return 0; }
+{ _ZN8dActor_c13OnTurnIntoEggER6Player(); return 0; }
 static int __fastcall ac_aimed(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 
 /* The base Actor vtable is filled slot by slot HERE rather than through
    star31_fill_shared. data_0208e3a4 is aliased to _ZTV5Actor and declared with
-   a different type (scalar void*) in src/_ZN5ActorC1Ev.cpp than here (void*[31]);
+   a different type (scalar void*) in src/_ZN8dActor_cC1Ev.cpp than here (void*[31]);
    MSVC's optimiser exploited that cross-TU type disagreement to treat the
    through-parameter stores star31_fill_shared makes into it as dead and drop
    them (it did NOT for _ZTV9PowerStar, which no TU spells as a scalar). Filling
@@ -466,7 +468,7 @@ extern "C" void hal_fill_actor_base_vtable(void)
     vt[13] = (void *)star_trap13;
     vt[14] = (void *)star_trap14;
     vt[15] = (void *)star_heap;    /* ActorBase::OnHeapCreated */
-    vt[16] = (void *)star_d1;      /* Actor::~Actor (D1) */
+    vt[16] = (void *)PORT_D16(star_d1);      /* Actor::~Actor (D1) */
     vt[17] = (void *)star_d0;      /* Actor::~Actor (D0) */
     vt[18] = (void *)ac_yoshi;     /* Actor::OnYoshiTryEat default */
     vt[19] = (void *)ac_egg;       /* Actor::OnTurnIntoEgg default */

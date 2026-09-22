@@ -1,7 +1,7 @@
 #include "types.h"
 extern void func_ov006_0211f454(char *c, int i);
 extern void func_ov006_0211f34c(char *c, int i);
-extern void _ZN3G2x13SetBlendAlphaEPVttttt(volatile void *reg,
+extern void _ZN3G2x13SetBlendAlphaEPVttttj(volatile void *reg,
     unsigned short a, unsigned short b, unsigned short c, unsigned short d);
 extern void _ZN5Sound12PlayBank2_2DEj(unsigned int id);
 extern short data_02082214[];
@@ -46,7 +46,7 @@ void func_ov006_0211ee34(char *c, int i)
     *(u16 *)(c + 0x466e + k) = 0;
 
     if (i == *(u8 *)(c + 0x4c22)) {
-        _ZN3G2x13SetBlendAlphaEPVttttt((volatile void *)0x4001050, 0, 1,
+        _ZN3G2x13SetBlendAlphaEPVttttj((volatile void *)0x4001050, 0, 1,
             *(u8 *)(c + 0x4676 + k), 0x10);
     }
 

@@ -69,7 +69,7 @@
 // 363 and section 14 reports the same on 380 ("On scene 380 NOTHING fires"),
 // and both close on the honest note that routing an address no run touches
 // buys no evidence. dScMgTeresa_c is the first seated class whose boot
-// actually enters func_ov004_020b87e0: its scene-387 run reports 1 call into
+// actually enters _ZN10dMgState_c8SetStateEi: its scene-387 run reports 1 call into
 // the setter, message index 18 asked for once, 1 state body and 10 per-frame
 // tick entries routed. Message index 18 is func_ov004_020b6d6c, whose last act
 // is `*(P2*)(c+8) = data_ov004_020bc924` -- and that pair reads

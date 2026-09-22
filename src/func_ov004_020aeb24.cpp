@@ -16,9 +16,9 @@ extern int func_ov004_020b8f78(char* p);
 extern int _Z15ApproachLinear2Rsss(short* v, short a, short b);
 extern void func_0203b958(short* o, short* a, short* b);
 extern int _Z14ApproachLinearRiii(int* v, int a, int b);
-extern void _ZN5Scene9SetFadersEP15FaderBrightness(void* f);
+extern void _ZN8dScene_c9SetFadersEP15FaderBrightness(void* f);
 extern void func_0202ec9c(void* f, int a);
-extern void _ZN5Scene14StartSceneFadeEjjt(unsigned a, unsigned b, unsigned short c);
+extern void _ZN8dScene_c14StartSceneFadeEjjt(unsigned a, unsigned b, unsigned short c);
 extern void func_02012dd0(int a);
 extern void func_ov004_020b9220(char* p);
 
@@ -102,9 +102,9 @@ after:
         ((Obj*)c)->v28();
         return;
     case 1:
-        _ZN5Scene9SetFadersEP15FaderBrightness(data_0209f61c);
+        _ZN8dScene_c9SetFadersEP15FaderBrightness(data_0209f61c);
         func_0202ec9c(data_0209f61c, 1);
-        _ZN5Scene14StartSceneFadeEjjt(5, 0, 0);
+        _ZN8dScene_c14StartSceneFadeEjjt(5, 0, 0);
         if (*(int*)(c + 0x4648) != 0) return;
         func_02012dd0(0x3c);
         *(int*)(c + 0x4648) = 1;

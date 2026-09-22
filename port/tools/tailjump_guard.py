@@ -335,7 +335,7 @@ CLASS_C = tuple(
          'tu': 'src/func_ov007_020bdeb0.c',
          'note': 'Also found by the veneer scan; the two derivations agree.'},
         {'frame': 'func_ov007_020c05f8',
-         'callee': '_ZN6Player17St_EndingFly_MainEv',
+         'callee': 'func_ov007_020c3d1c',
          'tu': 'src/func_ov007_020c05f8.c',
          'note':
              'Also found by the veneer scan, and one of the seventeen MSVC '
@@ -369,8 +369,8 @@ CLASS_C = tuple(
         # the face reads it. Verified in this lane's own build: both objects
         # disassemble to exactly `jmp __ZN13HeapAllocator6RemoveEv` and
         # nothing else.
-        {'frame': '_ZN13HeapAllocator7DestroyEv',
-         'callee': '_ZN13HeapAllocator6RemoveEv',
+        {'frame': '?Destroy@HeapAllocator@@QAEXXZ',
+         'callee': '?Remove@HeapAllocator@@QAEXXZ',
          'tu': 'src/_ZN13HeapAllocator7DestroyEv.cpp',
          'note':
              'The ExpandingHeap teardown leg. src/_ZN13ExpandingHeap8VDestroy'
@@ -378,13 +378,18 @@ CLASS_C = tuple(
              'names no parameter at all, so the allocator reaches '
              'HeapAllocator::Remove ONLY through the jmp. If it becomes a '
              'call, Remove unlinks a stack word from the nested-allocator '
-             'list on every expanding-heap teardown.'},
+             'list on every expanding-heap teardown. '
+             'Re-keyed 2026-09-17 (lane TAILJUMP2): the chain is C++ members '
+             'since the sync (VDestroy -> Destroy -> Remove, receiver in ECX '
+             'end to end); the frame still tail-jumps (E9 at 004f23a0, no E8 '
+             'at all); the old flat __ZN13HeapAllocator6RemoveEv in '
+             'lk4_eh_dtor_seat.cpp.obj is not this jmp\'s target.'},
         {'frame': 'func_0204ebb8',
          'callee': '_ZN13HeapAllocator6RemoveEv',
          'tu': 'src/func_0204ebb8.c',
          'note':
              'The SolidHeap teardown leg, same shape and same consequence; '
-             'its pusher is src/_ZN9SolidHeap8VDestroyEv.c:23.'},
+             'its pusher is src/_ZN9SolidHeap8VDestroyEv.cpp:23.'},
         # CURLING'S COLLISION VENEER, added by run link60 lane CUR2 when
         # func_ov006_020e20bc stopped being a return-0 face and became a
         # transcribed body in port/unmatched/MgCurling_Collide_020e20bc.cpp.
@@ -408,34 +413,6 @@ CLASS_C = tuple(
              'hal/scene_mg_faces.cpp, which forwards to the transcription; '
              'the arguments ride the whole chain because each link is one '
              'call.'},
-        # WHOMP'S FORTRESS' KNOCK-DOWN PLANK, added by run link100 lane ADJSEAT
-        # when _ZTV13PoleBillboard's slots 23 and 24 stopped being wf_trap23 and
-        # wf_trap24 and became the ROM's own bodies. Not from section 5d either:
-        # it is ov015, and 5d only screened ov007. The ROM shape is the same
-        # three words the VENEER set scans overlay 7 for --
-        #     021113fc  ldr ip,[pc]; bx ip; .word 0x02111414
-        #     02111408  ldr ip,[pc]; bx ip; .word 0x02111414
-        # -- so r0 and r1 ride both frames untouched. These rows are REQUIRED
-        # and not decoration: hal/actor_classes_wf.cpp's kp_atk2 and kp_kicked
-        # push (self, other) into a veneer whose src TU declares itself (void)
-        # and names neither, and the only thing that puts them where
-        # func_ov015_02111414 reads them is the jmp reusing the thunk's frame.
-        # If either becomes a call, an id-44 plank that is attacked or kicked
-        # steps a counter through a saved register and takes an angle off a
-        # return address.
-        {'frame': 'func_ov015_02111408',
-         'callee': 'func_ov015_02111414',
-         'tu': 'src/func_ov015_02111408.c',
-         'note':
-             'Slot 23, OnAttacked2. func_ov015_02111414 reads c+0x397 at its '
-             'first instruction and other+0x5c at its Vec3_HorzAngle call, so '
-             'both pushed words are real.'},
-        {'frame': 'func_ov015_021113fc',
-         'callee': 'func_ov015_02111414',
-         'tu': 'src/func_ov015_021113fc.c',
-         'note':
-             'Slot 24, OnKicked, the same veneer onto the same body and the '
-             'same consequence.'},
     ))
 
 # THE VENEER SET, DERIVED. Not a list: the three-word ROM shape below is
@@ -456,7 +433,12 @@ VENEER = {
 # leaving a target is a coverage regression that reads as a smaller green,
 # because a map that does not host a frame is correctly SKIPPED. Widening this
 # is a measurement anyone can take; narrowing it needs the reason written down.
-HOSTS = ('smoke_player.map', 'walk_window.map', 'walk_window_hires.map')
+# smoke_player.map left the floor 2026-09-17 (lane TAILJUMP2): the target is
+# EXCLUDE_FROM_ALL since 1d7f6c98b pending Stage::Behavior/Render hosting
+# (out/SMOKELINK5B/bugs.md item 2), same measurement gxband_guard narrowed on
+# in commit 9176c774d; the floor is the built maps only. Put it back the day
+# smoke_player links.
+HOSTS = ('walk_window.map', 'walk_window_hires.map')
 
 # config symbol tables consulted when resolving a veneer's two ends. ov007
 # first: a veneer's target is usually inside the overlay, and two of the 22
@@ -1930,7 +1912,7 @@ def selftest():
         rc = run(tmp, [m], build_dir=bd, out=o, rows=floor_rows, sweep=True)
         case('a sweep missing floor maps FAILS', 1, rc, o.text(),
              wants=['COVERAGE FLOOR BROKEN', 'not in the build at all',
-                    'smoke_player.map'])
+                    'walk_window_hires.map'])
         o = _Out()
         rc = run(tmp, [m], build_dir=bd, out=o, rows=floor_rows, sweep=False)
         case('a partial run does not judge absent floor maps', 0, rc, o.text(),

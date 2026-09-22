@@ -51,12 +51,39 @@
 // class inherits the wrong name. Two of the four tables filled here are
 // shifted and two are not:
 //
-//   74  FloatOnLavaPlatform  bodies spelled _ZN19RotatingPlatformLll*
-//                            table  spelled _ZTV19RotatingPlatformLll
+//   74  FloatOnLavaPlatform  NOT SHIFTED -- corrected 09-19, lane SEAT14B.
+//                            See "THE 74 SHIFT WAS NOT A SHIFT" below.
 //   82  LavaPlank            bodies spelled _ZN19FloatingFloorLllBig*
-//                            table  spelled _ZTV19FloatingFloorLllBig
+//                            table  spelled _ZTV9LavaPlank
 //   71  VolcanoRing          unnamed func_ov022_* bodies, unnamed table
 //   76  FloatingFloorLllSmall its own block, named correctly
+//
+// ---- THE 74 SHIFT WAS NOT A SHIFT (corrected 09-19, lane SEAT14B) ----------
+//
+// The wave-8 table above put id 74's bodies under the _ZN19RotatingPlatformLll
+// spelling, and the fill below dispatched all four of slots 0/3/6/9 into that
+// OTHER class. Read straight out of extracted/overlays/overlay_0022.bin (base
+// 0x021111a0, the DECOMPRESSED image), the two tables are disjoint and each
+// holds its own class's bodies:
+//
+//   _ZTV19FloatOnLavaPlatform 0x02113eac  RTTI at V-4 = 0x02113e68 -> 15daObjFl_Block_c
+//     [0] 0x02111870 = _ZN19FloatOnLavaPlatform13InitResourcesEv
+//     [3] 0x02111760 = _ZN19FloatOnLavaPlatform16CleanupResourcesEv
+//     [6] 0x021117cc = _ZN19FloatOnLavaPlatform8BehaviorEv
+//     [9] 0x021117a4 = _ZN19FloatOnLavaPlatform6RenderEv
+//     [16] 0x021116c4  [17] 0x02111708  [31] 0x020ee55c
+//
+//   _ZTV19RotatingPlatformLll 0x02113de8  RTTI at V-4 = 0x02113d98 -> 16daObjFl_Koma_D_c
+//     [0] 0x02111670  [3] 0x0211165c   its own two bodies
+//     [6] 0x020b6718  [9] 0x020b66f0   ov002 daObjKaitendai_c, the shared pair
+//     [16] 0x021115a8 [17] 0x021115f8
+//
+// So the ROM holds id 74's own body in every one of its four slots, and it is
+// ROTATING_PLATFORM_LLL -- a different base (daObjKaitendai_c, object 0x320)
+// from 74's (dBgActor_c, object 0x328) -- that inherits the shared pair. The
+// four thunks below now call FloatOnLavaPlatform's own methods, which is what
+// the cartridge dispatches. hal/actor_classes_ov022_w3e.cpp keeps id 80's own
+// fill, so the RotatingPlatformLll bodies lose nothing by this correction.
 //
 // The shift is settled by the vtable's own slot-0/3/6/9/16/17 relocations
 // landing inside the block that ENDS at that class's Spawn, and by the RTTI
@@ -75,7 +102,7 @@
 // ---- SLOTS THAT ARE INHERITED BUT NOT arm9 --------------------------------
 //
 // FLOATING_FLOOR_LLL_SMALL/BIG take Behavior and Render from an ov002 base:
-//   slot 6 func_ov002_020b6494   slot 9 func_ov002_020b646c
+//   slot 6 _ZN14daObjUkiyuka_c8BehaviorEv   slot 9 _ZN14daObjUkiyuka_c6RenderEv
 // Those are the SAME two bodies ov045's FloatingFloorBfs (id 145) already
 // seats, and both were in walk_window.map on this lane's own baseline
 // (C:\tmp\wl31, 4623/11240), so they cost no new TU.
@@ -108,7 +135,12 @@
 //    recipe. The other three factories (71, 74, 82) store their table by a
 //    real name as the FINAL write and are registered directly.
 //
-// 2. _ZN19FloatingFloorLllBig16CleanupResourcesEv (id 82, slot 3) SPELLS ITS
+// 2. SUPERSEDED 09-19 (lane SEAT14B): the TU no longer spells G0/G1, so the
+//    refusal below is stale and slot 3 now dispatches the matched body. The
+//    reasoning is kept because the disassembly in it is still the evidence for
+//    the release order. See the note above lp_clean. Original text:
+//
+//    _ZN9LavaPlank16CleanupResourcesEv (id 82, slot 3) SPELLS ITS
 //    TWO SharedFilePtrs G0/G1, and hal/cxx_aliases.cpp has already bound
 //    _G0 to the GAME HEAP POINTER (data_020a0eac), ?G0@@3PAHA to SignPost's
 //    ov002 model file and _G1 to SignPost's ov002 collision file. Linking this
@@ -139,7 +171,7 @@
 //    no register-rename or scheduling divergence to classify: the thunk is a
 //    statement-for-statement transcription, not a re-derivation.
 //
-// 3. THE ov059 NAME RACE. func_ov022_0211149c (71's InitResources) hands
+// 3. THE ov059 NAME RACE. _ZN11VolcanoRing13InitResourcesEv (71's InitResources) hands
 //    func_020393c4 the address of ov022's own func_ov022_02111564 under
 //    ov059's spelling -- another module's dsd export won the naming race at
 //    0x02111564. Both names are the same ov022 body; the alias below is the
@@ -151,7 +183,7 @@
 //    additive edit, marked in that file). The disambiguation matters:
 //    ov064 and ov065 share base 0x02115ee0, and 0x0211bbac is
 //    `module:overlays(64,65)` -- ov065 has a FUNCTION there
-//    (TtcMovingCubeA_Spawn) while ov064 has data, and the site is a
+//    (daObjCtMecha08_c_classInit_CT_MECHA08A) while ov064 has data, and the site is a
 //    CLPS_Block argument, so it is ov064's. The other four are
 //    `module:overlay(64)` outright.
 //      71 -> 0x0211bbac (through the table data_ov022_02113cc8)
@@ -178,14 +210,14 @@
 // seated-guess set at a two-entry ratchet that may only SHRINK. Naming any of
 // them in a fill here would fail the build by design, and its baseline is
 // explicitly not to be edited by hand. Per class:
-//   73  func_ov022_02111bdc/02111a64/02111ad0/02111aa8/021119c4  (5 guesses)
-//   77  func_ov022_02111ea0/02111d90/02111dfc/02111dd4/02111cf0  (5)
-//   80  func_ov022_02111670/0211165c/021115f8                    (3)
-//   83  func_ov022_02112448/02112434/021123d0                    (3)
+//   73  _ZN16daObjFl_London_c13InitResourcesEv/02111a64/02111ad0/02111aa8/021119c4  (5 guesses)
+//   77  _ZN10LavaSeesaw13InitResourcesEv/02111d90/02111dfc/02111dd4/02111cf0  (5)
+//   80  _ZN19RotatingPlatformLll13InitResourcesEv/0211165c/021115f8                    (3)
+//   83  _ZN20daObjFl_Fall_Block_c13InitResourcesEv/02112434/021123d0                    (3)
 // A fifth, ROLLING_LOG_LLL (70, x1), is guess-free but reaches THREE ov080
-// bodies (its slot 9 func_ov080_02127124, its slot 27 func_ov080_02127058 and
+// bodies (its slot 9 _ZN13daObjMaruta_c6RenderEv, its slot 27 _ZN13daObjMaruta_c15OnHitByMegaCharER6Player and
 // the func_ov080_021274ac its InitResources tail-calls, none of them linked on
-// this baseline) plus an ov080 base table at data_ov080_02128338 that its
+// this baseline) plus an ov080 base table at _ZTV13daObjMaruta_c that its
 // Spawn stores before its own; that is an ov080 mount edit and a second
 // closure, deferred to the next lane rather than half-done here.
 // VOLCANO_FIRE (243) is ov022's eleventh id and is placed on NO mounted
@@ -219,13 +251,15 @@
 //   __sinit_ov022_02112f78   82's              (0x02114620 / 0x02114618)
 // The other six build file pointers for the five blocked classes and
 // VolcanoFire's PMF seat, and stay out for the same reason their classes do.
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
@@ -233,8 +267,8 @@ extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include "dsstate_seg.h"
 #include <cstdlib>
 
-#include "Actor.h"
-#include "ActorBase.h"
+#include "dActor_c.h"
+#include "fBase_c.h"
 /* Seven of this cast's bodies are REAL C++ METHODS in src/ (MSVC decorates
    them ?InitResources@RotatingPlatformLll@@QAEHXZ and friends), so they are
    called as methods against the generated headers -- never through a C name
@@ -248,29 +282,30 @@ extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
      82  InitResources / Render                                -> methods
      82  Behavior / D1 / D0                                    -> C names */
 #include "RotatingPlatformLll.h"
-#include "FloatingFloorLllBig.h"
+#include "FloatOnLavaPlatform.h"
+#include "LavaPlank.h"
 
 extern "C" {
 /* the arm9 shared half -- every address read off this lane's own reloc runs
    over the four tables; they agree slot for slot with each other and with the
    six ov045 tables, which is why the shape below is ov045's unchanged. */
-int _ZN5Actor19BeforeInitResourcesEv(void *self);              /* slot 1  */
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
-int _ZN5Actor14BeforeBehaviorEv(void *self);                   /* slot 7  */
-int _ZN5Actor12BeforeRenderEv(void *self);                     /* slot 10 */
-int _ZN5Actor13OnYoshiTryEatEv(void *self);                    /* slot 18 */
-void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
-int _ZN5Actor9Virtual50Ev(void *self);                         /* slot 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);              /* slot 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);              /* slot 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
-int _ZN5Actor16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
-void _ZN8Platform4KillEv(void *self);                              /* slot 31 */
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);              /* slot 1  */
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);                   /* slot 7  */
+int _ZN8dActor_c12BeforeRenderEv(void *self);                     /* slot 10 */
+int _ZN8dActor_c13OnYoshiTryEatEv(void *self);                    /* slot 18 */
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
+int _ZN8dActor_c9Virtual50Ev(void *self);                         /* slot 20 */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);              /* slot 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);              /* slot 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
+int _ZN8dActor_c16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
+void _ZN10dBgActor_c4KillEv(void *self);                              /* slot 31 */
 
 const char *port_actor_class_name(unsigned id);   /* hal/actor_registry */
 void port_actor_slot_decline(const char *what);   /* func_02043fdc_hostcopy.cpp */
@@ -285,11 +320,11 @@ void __sinit_ov022_02112d80(void);
 void __sinit_ov022_02112ec0(void);
 void __sinit_ov022_02112f78(void);
 
-/* what the RETIRED lp_clean thunk spelled out by hand (id 82, slot 3);
-   kept as declarations only (lane B1SEAT seated slot 3) */
-void port_b1seat_cleanup_probe(const char *cls);  /* hal/b1seat_globals.cpp */
-int _ZN16MeshColliderBase9IsEnabledEv(void *self);
-void _ZN16MeshColliderBase7DisableEv(void *self);
+/* id 82 slot 3 used to be spelled out by hand here; the matched TU took the
+   slot in wave 14, and these stay declared because the two data names are what
+   the /alternatename pair above binds. */
+int _ZN4dBgW9IsEnabledEv(void *self);
+void _ZN4dBgW7DisableEv(void *self);
 void _ZN13SharedFilePtr7ReleaseEv(void *sfp);
 extern int data_ov022_02114620[];   /* 82's model SharedFilePtr */
 extern int data_ov022_02114618[];   /* 82's collision SharedFilePtr */
@@ -298,10 +333,10 @@ extern int data_ov022_02114618[];   /* 82's collision SharedFilePtr */
    hal/actor_faces_bob.cpp rule-2 case. Both sides are cdecl, so it is an
    ordinary forward rather than an alias (and a forward keeps the name
    readable in the map). */
-int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
+int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
 }
 extern "C" int Platform_IsClsnInRange(void *self, int a, int b)
-{ return _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(self, a, b); }
+{ return _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(self, a, b); }
 
 // ---- the trap --------------------------------------------------------------
 static void ov22_trap_report(void *self, int slot)
@@ -322,54 +357,54 @@ OV22_TRAP(13) OV22_TRAP(14) OV22_TRAP(17)
 #undef OV22_TRAP
 
 static int __fastcall ov22_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall ov22_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall ov22_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 static void __fastcall ov22_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall ov22_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall ov22_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall ov22_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall ov22_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall ov22_pdes(void *s, void *)
-{ ((ActorBase *)s)->ActorBase::OnPendingDestroy(); return 0; }
+{ ((fBase_c *)s)->fBase_c::OnPendingDestroy(); return 0; }
 static int __fastcall ov22_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int __fastcall ov22_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 /* slot 19 takes the three-parameter shape so it emits `ret 4`: the dispatch
    site pushes the Player the callee pops -- the wf_turn_egg contract. */
 static int __fastcall ov22_turn_egg(void *s, void *, void *p)
-{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+{ _ZN8dActor_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall ov22_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall ov22_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall ov22_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall ov22_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall ov22_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall ov22_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall ov22_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall ov22_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall ov22_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 static int __fastcall ov22_egg(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 /* slot 31, the Platform tail; all four tables here take it unchanged. */
 static int __fastcall ov22_kill(void *s, void *)
-{ _ZN8Platform4KillEv(s); return 0; }
+{ _ZN10dBgActor_c4KillEv(s); return 0; }
 
 /* The shared half, slots 1..30, every word of it read off the four tables'
    relocations (they agree slot for slot outside each class's own overrides,
@@ -452,54 +487,54 @@ extern "C" void port_ov22_bringup(void)
 // than by direct literal -- which is why the table has to be MOUNTED and the
 // ov064 CLPS block with it.
 extern "C" {
-int func_ov022_0211149c(char *self);   /* slot 0  InitResources */
-int func_ov022_0211123c(void *self);   /* slot 3  CleanupResources */
-int func_ov022_021112ac(char *self);   /* slot 6  Behavior */
-int func_ov022_02111284(void *self);   /* slot 9  Render */
-int *func_ov022_021111a0(int *self);   /* slot 16 D1 */
-int *func_ov022_021111e4(int *self);   /* slot 17 D0 */
-void *VolcanoRing_Spawn(void);
+int _ZN11VolcanoRing13InitResourcesEv(char *self);   /* slot 0  InitResources */
+int _ZN11VolcanoRing16CleanupResourcesEv(void *self);   /* slot 3  CleanupResources */
+int _ZN11VolcanoRing8BehaviorEv(char *self);   /* slot 6  Behavior */
+int _ZN11VolcanoRing6RenderEv(void *self);   /* slot 9  Render */
+int *_ZN11VolcanoRingD1Ev(int *self);   /* slot 16 D1 */
+int *_ZN11VolcanoRingD0Ev(int *self);   /* slot 17 D0 */
+void *daObjFl_Ring_c_classInit(void);
 DSSTATE_BEGIN
-void *data_ov022_02113d18[32];
+void *_ZTV11VolcanoRing[32];
 DSSTATE_END
 }
-/* func_ov022_0211149c hands func_020393c4 the address of ov022's own
+/* _ZN11VolcanoRing13InitResourcesEv hands func_020393c4 the address of ov022's own
    func_ov022_02111564 under ov059's spelling -- another module's dsd export
    won the naming race at 0x02111564. Both names are the same ov022 body. */
 #pragma comment(linker, "/alternatename:_data_ov059_02111564=_func_ov022_02111564")
-/* func_ov022_0211123c.cpp declares the three-word table as a bare `int` while
+/* _ZN11VolcanoRing16CleanupResourcesEv.cpp declares the three-word table as a bare `int` while
    the mount defines the plain C name; data has no calling convention. */
 #pragma comment(linker, "/alternatename:?data_ov022_02113cc8@@3HA=_data_ov022_02113cc8")
 static int __fastcall vr_init(void *s, void *)
-{ return func_ov022_0211149c((char *)s); }
+{ return _ZN11VolcanoRing13InitResourcesEv((char *)s); }
 static int __fastcall vr_clean(void *s, void *)
-{ return func_ov022_0211123c(s); }
+{ return _ZN11VolcanoRing16CleanupResourcesEv(s); }
 static int __fastcall vr_behavior(void *s, void *)
-{ return func_ov022_021112ac((char *)s); }
+{ return _ZN11VolcanoRing8BehaviorEv((char *)s); }
 static int __fastcall vr_render(void *s, void *)
 { port_actor_render_probe("VOLCANO_RING", (char *)s + 0xd4);
-  return func_ov022_02111284(s); }
+  return _ZN11VolcanoRing6RenderEv(s); }
 static int __fastcall vr_d1(void *s, void *)
-{ return (int)(size_t)func_ov022_021111a0((int *)s); }
+{ return (int)(size_t)_ZN11VolcanoRingD1Ev((int *)s); }
 static int __fastcall vr_d0(void *s, void *)
-{ return (int)(size_t)func_ov022_021111e4((int *)s); }
+{ return (int)(size_t)_ZN11VolcanoRingD0Ev((int *)s); }
 extern "C" void hal_fill_volcano_ring_vtable(void)
 {
     port_ov22_bringup();
-    void *volatile *vt = (void *volatile *)data_ov022_02113d18;
+    void *volatile *vt = (void *volatile *)_ZTV11VolcanoRing;
     ov22_fill_shared(vt);
     vt[0]  = (void *)vr_init;
     vt[3]  = (void *)vr_clean;
     vt[6]  = (void *)vr_behavior;
     vt[9]  = (void *)vr_render;
-    vt[16] = (void *)vr_d1;
+    vt[16] = (void *)PORT_D16(vr_d1);
     vt[17] = (void *)vr_d0;
     vt[31] = (void *)ov22_kill;
 }
 
 // ============================================================================
-// FLOAT_ON_LAVA_PLATFORM (74) -- table 0x02113eac, the
-// _ZN19RotatingPlatformLll* bodies (THE SHIFT)
+// FLOAT_ON_LAVA_PLATFORM (74) -- table 0x02113eac, its OWN
+// _ZN19FloatOnLavaPlatform* bodies (see "THE 74 SHIFT WAS NOT A SHIFT")
 // ============================================================================
 //
 // 808-byte object; Model at +0xd4, MovingMeshCollider at +0x124. Its
@@ -507,42 +542,44 @@ extern "C" void hal_fill_volcano_ring_vtable(void)
 // CLPS block 0x0211bb0c to MovingMeshCollider::SetFile. RTTI daObjFl_Block_c.
 extern "C" {
 /* slots 0/3/6/9 are C++ methods -- see the note at the top of the file */
-int *_ZN19RotatingPlatformLllD1Ev(int *self);                  /* slot 16 */
-int *_ZN19RotatingPlatformLllD0Ev(int *self);                  /* slot 17 */
-void *FloatOnLavaPlatform_Spawn(void);
+int *_ZN19FloatOnLavaPlatformD1Ev(int *self);                  /* slot 16 */
+int *_ZN19FloatOnLavaPlatformD0Ev(int *self);                  /* slot 17 */
+void *daObjFl_Block_c_classInit(void);
 DSSTATE_BEGIN
-void *_ZTV19RotatingPlatformLll[32];
+void *_ZTV19FloatOnLavaPlatform[32];
 DSSTATE_END
 }
 /* 0x02113eac answers to both names; the D1/D0 restore it by the RTTI one. */
-#pragma comment(linker, "/alternatename:__ZTV15daObjFl_Block_c=__ZTV19RotatingPlatformLll")
+#pragma comment(linker, "/alternatename:__ZTV15daObjFl_Block_c=__ZTV19FloatOnLavaPlatform")
 /* 74's InitResources declares its SharedFilePtr pair as `char *` while the
    ov022 mount defines the plain C name; data has no calling convention, so an
    alias onto the one object is exact (the hal/actor_faces_bob.cpp rule 1). */
 #pragma comment(linker, "/alternatename:?data_ov022_02114558@@3PADA=_data_ov022_02114558")
+/* Slots 0/3/6/9 are this class's OWN four bodies, read off the ROM table at
+   0x02113eac; the wave-8 spelling dispatched RotatingPlatformLll's instead. */
 static int __fastcall fl_init(void *s, void *)
-{ return ((RotatingPlatformLll *)s)->RotatingPlatformLll::InitResources(); }
+{ return ((FloatOnLavaPlatform *)s)->FloatOnLavaPlatform::InitResources(); }
 static int __fastcall fl_clean(void *s, void *)
-{ return ((RotatingPlatformLll *)s)->RotatingPlatformLll::CleanupResources(); }
+{ return ((FloatOnLavaPlatform *)s)->FloatOnLavaPlatform::CleanupResources(); }
 static int __fastcall fl_behavior(void *s, void *)
-{ return ((RotatingPlatformLll *)s)->RotatingPlatformLll::Behavior(); }
+{ return ((FloatOnLavaPlatform *)s)->FloatOnLavaPlatform::Behavior(); }
 static int __fastcall fl_render(void *s, void *)
 { port_actor_render_probe("FLOAT_ON_LAVA_PLATFORM", (char *)s + 0xd4);
-  return ((RotatingPlatformLll *)s)->RotatingPlatformLll::Render(); }
+  return ((FloatOnLavaPlatform *)s)->FloatOnLavaPlatform::Render(); }
 static int __fastcall fl_d1(void *s, void *)
-{ return (int)(size_t)_ZN19RotatingPlatformLllD1Ev((int *)s); }
+{ return (int)(size_t)_ZN19FloatOnLavaPlatformD1Ev((int *)s); }
 static int __fastcall fl_d0(void *s, void *)
-{ return (int)(size_t)_ZN19RotatingPlatformLllD0Ev((int *)s); }
+{ return (int)(size_t)_ZN19FloatOnLavaPlatformD0Ev((int *)s); }
 extern "C" void hal_fill_float_on_lava_platform_vtable(void)
 {
     port_ov22_bringup();
-    void *volatile *vt = (void *volatile *)_ZTV19RotatingPlatformLll;
+    void *volatile *vt = (void *volatile *)_ZTV19FloatOnLavaPlatform;
     ov22_fill_shared(vt);
     vt[0]  = (void *)fl_init;
     vt[3]  = (void *)fl_clean;
     vt[6]  = (void *)fl_behavior;
     vt[9]  = (void *)fl_render;
-    vt[16] = (void *)fl_d1;
+    vt[16] = (void *)PORT_D16(fl_d1);
     vt[17] = (void *)fl_d0;
     vt[31] = (void *)ov22_kill;
 }
@@ -564,12 +601,12 @@ extern "C" void hal_fill_float_on_lava_platform_vtable(void)
 extern "C" {
 int _ZN21FloatingFloorLllSmall13InitResourcesEv(void *self);     /* slot 0  */
 int _ZN21FloatingFloorLllSmall16CleanupResourcesEv(void *self);  /* slot 3  */
-int func_ov002_020b6494(char *self);                             /* slot 6  */
-int func_ov002_020b646c(void *self);                             /* slot 9  */
+int _ZN14daObjUkiyuka_c8BehaviorEv(char *self);                             /* slot 6  */
+int _ZN14daObjUkiyuka_c6RenderEv(void *self);                             /* slot 9  */
 int *_ZN21FloatingFloorLllSmallD1Ev(int *self);                  /* slot 16 */
 int *_ZN21FloatingFloorLllSmallD0Ev(int *self);                  /* slot 17 */
-void *FloatingFloorLllSmall_Spawn(void);
-void *FloatingFloorLllBig_Spawn(void);
+void *daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA_L(void);
+void *daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA(void);
 DSSTATE_BEGIN
 void *_ZTV21FloatingFloorLllSmall[32];
 DSSTATE_END
@@ -595,20 +632,20 @@ DSSTATE_END
    have loaded its models out of Rainbow Cruise's cells -- silently, with no
    link error and no byte-gate signal. port/tools/alternatename_guard.py caught
    it at the link. The routing moved to the guard's own remedy, a per-source -D
-   on the ONE reader (src/_ZN21FloatingFloorLllSmall13InitResourcesEv.c) in
+   on the ONE reader (src/_ZN21FloatingFloorLllSmall13InitResourcesEv.cpp) in
    port/CMakeLists.txt beside the ov036 slice block. Nothing about 76 changes;
    what changes is that the binding no longer depends on a name staying
    undefined somewhere else in the tree. */
 extern "C" void *port_factory_floating_floor_lll_small(void)
 {
-    void *p = FloatingFloorLllSmall_Spawn();
+    void *p = daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA_L();
     if (p)
         *(void **)p = (void *)_ZTV21FloatingFloorLllSmall;
     return p;
 }
 extern "C" void *port_factory_floating_floor_lll_big(void)
 {
-    void *p = FloatingFloorLllBig_Spawn();
+    void *p = daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA();
     if (p)
         *(void **)p = (void *)_ZTV21FloatingFloorLllSmall;
     return p;
@@ -618,10 +655,10 @@ static int __fastcall ff_init(void *s, void *)
 static int __fastcall ff_clean(void *s, void *)
 { return _ZN21FloatingFloorLllSmall16CleanupResourcesEv(s); }
 static int __fastcall ff_behavior(void *s, void *)
-{ return func_ov002_020b6494((char *)s); }
+{ return _ZN14daObjUkiyuka_c8BehaviorEv((char *)s); }
 static int __fastcall ff_render(void *s, void *)
 { port_actor_render_probe("FLOATING_FLOOR_LLL", (char *)s + 0xd4);
-  return func_ov002_020b646c(s); }
+  return _ZN14daObjUkiyuka_c6RenderEv(s); }
 static int __fastcall ff_d1(void *s, void *)
 { return (int)(size_t)_ZN21FloatingFloorLllSmallD1Ev((int *)s); }
 static int __fastcall ff_d0(void *s, void *)
@@ -635,7 +672,7 @@ extern "C" void hal_fill_floating_floor_lll_vtable(void)
     vt[3]  = (void *)ff_clean;
     vt[6]  = (void *)ff_behavior;
     vt[9]  = (void *)ff_render;
-    vt[16] = (void *)ff_d1;
+    vt[16] = (void *)PORT_D16(ff_d1);
     vt[17] = (void *)ff_d0;
     vt[31] = (void *)ov22_kill;
 }
@@ -651,60 +688,67 @@ extern "C" void hal_fill_floating_floor_lll_vtable(void)
 // see the header, item 2, for the instruction-level derivation.
 extern "C" {
 /* slots 0 and 9 are C++ methods; slot 6 is extern "C" in src/ */
-int _ZN19FloatingFloorLllBig8BehaviorEv(char *self);           /* slot 6  */
-int *_ZN19FloatingFloorLllBigD1Ev(int *self);                  /* slot 16 */
-int *_ZN19FloatingFloorLllBigD0Ev(int *self);                  /* slot 17 */
-void *LavaPlank_Spawn(void);
+int _ZN9LavaPlank8BehaviorEv(char *self);           /* slot 6  */
+int *_ZN9LavaPlankD1Ev(int *self);                  /* slot 16 */
+int *_ZN9LavaPlankD0Ev(int *self);                  /* slot 17 */
+void *daObjFl_UkiKi_c_classInit(void);
 DSSTATE_BEGIN
-void *_ZTV19FloatingFloorLllBig[32];
+void *_ZTV9LavaPlank[32];
 DSSTATE_END
 }
 /* uki-ki = the floating wood; the D1/D0 restore the table by this name. */
-#pragma comment(linker, "/alternatename:__ZTV15daObjFl_UkiKi_c=__ZTV19FloatingFloorLllBig")
+#pragma comment(linker, "/alternatename:__ZTV15daObjFl_UkiKi_c=__ZTV9LavaPlank")
 /* 82's Behavior indexes the arm9 sine-ish table at 0x02082214 through its own
    two-short `SEnt` declaration; the arm9 mount defines the plain C name. Same
    data-alias rule as 74's file pointers above. */
 #pragma comment(linker, "/alternatename:?data_02082214@@3PAUSEnt@@A=_data_02082214")
 static int __fastcall lp_init(void *s, void *)
-{ return ((FloatingFloorLllBig *)s)->FloatingFloorLllBig::InitResources(); }
-/* slot 3, SEATED (run link100 wave 7, lane B1SEAT). The transcription that
-   stood here is retired, and so is the C2371 that kept it.
-   run rel0215 wave 3 (lane w3-e) tried to retire this thunk with a per-source
-   -DG1=data_ov022_02114618 and MEASURED THE REFUSAL: both targets are declared
-   in include/decl_common.h (extern char data_ov022_02114618[] and ..._02114620[])
-   and so is G1 (extern int G1[]), so the -D rewrote one declaration into a
-   redefinition of the other with a different type. The fix is not a -D at all.
-   src/_ZN19FloatingFloorLllBig16CleanupResourcesEv.cpp now SPELLS the two real
-   names itself and declares neither: decl_common.h already has both, with the
-   right type, inside its extern "C" block, so there is one declaration and no
-   collision. The two words are what ov022/relocs.txt carries at 0x02112208 and
-   0x0211220c. match.py re-verifies the body byte-exact under 2004/b56 but
-   wildcards every relocated word, so the slot check is tools/linkcheck.py:
-   BLIND-2 on the placeholder spelling, VERIFIED with 0 blind slots here. */
+{ return ((LavaPlank *)s)->LavaPlank::InitResources(); }
+/* slot 3, THE MATCHED TU (run link100 wave 14, lane SEAT14B). The host thunk
+   lp_clean stood here from wave 8 over a G0/G1 refusal that has since gone
+   stale. The old reason: the matched TU spelled its two SharedFilePtrs G0/G1,
+   both this body's targets are declared in include/decl_common.h (lines
+   238-239, `extern char data_ov022_02114618[]` and `..._02114620[]`) while G1
+   is declared there too (line 396, `extern int G1[]`), so the per-source
+   -DG1=data_ov022_02114618 that works on 73's and 77's identically-shaped
+   CleanupResources rewrote one into a differently-typed redeclaration of the
+   other -- C2371 (lane w3-e measured it; the same wall the ov006 Mg3DEsp block
+   at port/CMakeLists.txt records).
+   WHAT CHANGED: src/_ZN9LavaPlank16CleanupResourcesEv.cpp on this tree no
+   longer spells G0/G1 at all. It declares
+     extern int FloatingFloorLllBig_ModelFile[];   ROM 0x02114620
+     extern int FloatingFloorLllBig_ClsnFile[];    ROM 0x02114618
+   and config/arm9/overlays/ov022/symbols.txt lines 287-290 carry exactly those
+   two names at exactly those two addresses. decl_common.h does not declare
+   either, so no -D and no rename is involved: the two array names simply need
+   binding onto the plain C names port/ov022_syms.txt mounts, which is the
+   data-alias rule this file already uses for 74's 0x02114558 pair. Verified by
+   ROM address -- table 0x021141f0 (RTTI 15daObjFl_UkiKi_c) slot 3 holds
+   0x021121cc, and the TU's Release order is model (0x02114620) then collision
+   (0x02114618), the order both the ROM body and __sinit_ov022_02112f78 use. */
+#pragma comment(linker, "/alternatename:?FloatingFloorLllBig_ModelFile@@3PAHA=_data_ov022_02114620")
+#pragma comment(linker, "/alternatename:?FloatingFloorLllBig_ClsnFile@@3PAHA=_data_ov022_02114618")
 static int __fastcall lp_clean(void *s, void *)
-{
-    port_b1seat_cleanup_probe("LAVA_PLANK");
-    return ((FloatingFloorLllBig *)s)->FloatingFloorLllBig::CleanupResources();
-}
+{ return ((LavaPlank *)s)->LavaPlank::CleanupResources(); }
 static int __fastcall lp_behavior(void *s, void *)
-{ return _ZN19FloatingFloorLllBig8BehaviorEv((char *)s); }
+{ return _ZN9LavaPlank8BehaviorEv((char *)s); }
 static int __fastcall lp_render(void *s, void *)
 { port_actor_render_probe("LAVA_PLANK", (char *)s + 0xd4);
-  return ((FloatingFloorLllBig *)s)->FloatingFloorLllBig::Render(); }
+  return ((LavaPlank *)s)->LavaPlank::Render(); }
 static int __fastcall lp_d1(void *s, void *)
-{ return (int)(size_t)_ZN19FloatingFloorLllBigD1Ev((int *)s); }
+{ return (int)(size_t)_ZN9LavaPlankD1Ev((int *)s); }
 static int __fastcall lp_d0(void *s, void *)
-{ return (int)(size_t)_ZN19FloatingFloorLllBigD0Ev((int *)s); }
+{ return (int)(size_t)_ZN9LavaPlankD0Ev((int *)s); }
 extern "C" void hal_fill_lava_plank_vtable(void)
 {
     port_ov22_bringup();
-    void *volatile *vt = (void *volatile *)_ZTV19FloatingFloorLllBig;
+    void *volatile *vt = (void *volatile *)_ZTV9LavaPlank;
     ov22_fill_shared(vt);
     vt[0]  = (void *)lp_init;
     vt[3]  = (void *)lp_clean;
     vt[6]  = (void *)lp_behavior;
     vt[9]  = (void *)lp_render;
-    vt[16] = (void *)lp_d1;
+    vt[16] = (void *)PORT_D16(lp_d1);
     vt[17] = (void *)lp_d0;
     vt[31] = (void *)ov22_kill;
 }

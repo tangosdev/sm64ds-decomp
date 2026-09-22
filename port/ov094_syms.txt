@@ -37,9 +37,9 @@
 #                        D1 treatment, matched src, not a host thunk).
 #  17  D0               0x02135748  own -- stores _ZTV7daOwl_c, its own
 #                        table under its own RTTI alias, same treatment.
-# Slots 13/14 (0x0204357c/0x0204349c = _ZN9ActorBase9Virtual34Ejj /
-# _ZN9ActorBase9Virtual38Ejj) and slot 30 (0x020100dc =
-# _ZN5Actor25OnAimedAtWithEggReturnVecEv, an SRET method no __fastcall(void*,
+# Slots 13/14 (0x0204357c/0x0204349c = _ZN7fBase_c9Virtual34Ejj /
+# _ZN7fBase_c9Virtual38Ejj) and slot 30 (0x020100dc =
+# _ZN8dActor_c25OnAimedAtWithEggReturnVecEv, an SRET method no __fastcall(void*,
 # void*) thunk shape can model) are the REPO-WIDE Enemy/ActorBase traps --
 # neither Virtual34/38 body is linked anywhere in the port (grepped every
 # slice_gate*.txt and hal/unmatched .cpp), matching every other Enemy class
@@ -72,9 +72,9 @@
 # (called from Behavior at 0x021365fc, reloc-confirmed to:0x021357a4
 # module:overlay(94)) is a real, matched, self-contained ov094 function --
 # but src/_ZN10HootTheOwl8BehaviorEv.cpp spells the call
-# "func_ov096_021357a4", a dsd cross-overlay mislabel (address 0x021357a4
+# "_ZN9daSanbo_c13OnYoshiTryEatEv", a dsd cross-overlay mislabel (address 0x021357a4
 # ALSO exists in ov096 as a completely unrelated 8-byte function,
-# src/func_ov096_021357a4.c, "Pokey_OnYoshiTryEat" -- read and confirmed
+# src/actors/daSanbo_c.cpp, "Pokey_OnYoshiTryEat" -- read and confirmed
 # different bodies, an address collision only, not a duplicate). UNLIKE the
 # Unagi case, no /alternatename bridge is needed: the ONLY caller of the
 # mislabeled spelling is Behavior itself (grepped, one hit besides the
@@ -110,9 +110,9 @@
 # ShadowModel/WithMeshClsn/MovingCylinderClsnWithPos/CylinderClsn bases,
 # Matrix4x3_*, Vec3_Asr, MulMat4x3Mat4x3, DecIfAbove0_Short,
 # _ZN9Animation7AdvanceEv, func_02012694, IsStarCollectedInCurLevel,
-# _ZN9ActorBase18MarkForDestructionEv, _ZN13SharedFilePtr7ReleaseEv,
+# _ZN7fBase_c18MarkForDestructionEv, _ZN13SharedFilePtr7ReleaseEv,
 # _ZN5Model8LoadFileER13SharedFilePtr, _ZN9ModelBase7SetFileEP8BMD_Fileii,
-# _ZN9Animation8LoadFileER13SharedFilePtr, _ZN9ActorBasenwEj, _ZN5EnemyC2Ev,
+# _ZN9Animation8LoadFileER13SharedFilePtr, _ZN7fBase_cnwEj, _ZN12dEnemyBase_cC2Ev,
 # _ZN6Memory10DeallocateEPvP4Heap -- every one grepped present in an
 # existing slice_gate*.txt or host .cpp before this gate was written).
-data_ov094_021369c0 data_ov094_021369c8 data_ov094_021369d0 data_ov094_021369d8 data_ov094_021369e0 data_ov094_021369e8 data_ov094_021369f0 data_ov094_021369f8 data_ov094_02136a00 data_ov094_02136a08 data_ov094_02136a10 data_ov094_02136a1c data_ov094_02136a28 HootTheOwl_SpawnInfo data_ov094_02136ae0 data_ov094_02136ae8 data_ov094_02136af0 data_ov094_02136af8 data_ov094_02136b00 data_ov094_02136b0c data_ov094_02136b18 data_ov094_02136b24 data_ov094_02136b30 data_ov094_02136b40 data_ov094_02136b50 data_ov094_02136b60 data_ov094_02136b70
+data_ov094_021369c0 data_ov094_021369c8 data_ov094_021369d0 data_ov094_021369d8 data_ov094_021369e0 data_ov094_021369e8 data_ov094_021369f0 data_ov094_021369f8 data_ov094_02136a00 data_ov094_02136a08 _ZTS7daOwl_c data_ov094_02136a1c _ZTI7daOwl_c g_profile_OWL data_ov094_02136ae0 data_ov094_02136ae8 data_ov094_02136af0 data_ov094_02136af8 data_ov094_02136b00 data_ov094_02136b0c data_ov094_02136b18 data_ov094_02136b24 data_ov094_02136b30 data_ov094_02136b40 data_ov094_02136b50 data_ov094_02136b60 data_ov094_02136b70

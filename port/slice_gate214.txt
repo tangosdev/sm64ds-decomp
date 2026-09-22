@@ -62,9 +62,9 @@
 # read, sized by ROM span and carrying the ROM's own .data bytes.
 src/FS_LoadOverlay.c
 src/GetSceneOverlayID.c
-src/_ZN3IRQ13VBlankHandlerEv.c
-src/_ZN3OAM5FlushEv.c
-src/_ZN4cstd8__assertEPKcPKcPKci.cpp
+src/_ZN3IRQ13VBlankHandlerEv.cpp
+src/_ZN3OAM5FlushEv.cpp
+src/_ZN4cstd8__assertEPKcS1_S1_i.cpp
 src/func_02017fd0.c
 src/func_02018434.c
 src/func_02018474.c

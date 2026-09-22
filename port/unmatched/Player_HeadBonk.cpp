@@ -1,4 +1,4 @@
-/* HOST COPY of src/func_ov002_020cef84.cpp -- the Player's head-bonk check.
+/* HOST COPY of src/actors/Player.cpp -- the Player's head-bonk check.
  *
  * WHY THIS FILE EXISTS. Vtable slot 28, Actor::OnHitFromUnderneath(Actor&),
  * has TWO dispatch sites in this port and the two matched transcriptions
@@ -7,7 +7,7 @@
  *   src/func_ov002_020eeca8.cpp   models Actor as a C++ class, so MSVC emits
  *                                 __thiscall: this in ecx, the argument
  *                                 pushed, and the CALLEE pops it.
- *   src/func_ov002_020cef84.cpp   models the vtable as a plain array of
+ *   src/actors/Player.cpp   models the vtable as a plain array of
  *                                 function pointers taking self explicitly:
  *                                     (*(void (**)(void *, char *))
  *                                        (*(int *)a + 0x70))(a, self)
@@ -37,7 +37,7 @@
  * exclamation box in jrb ship from below" arrives here.
  *
  * PROOF (run linkw, lane l1). Both spellings compiled standalone with the port's
- * own cl, /O2 /FAsc, and read off the listing. src/func_ov002_020cef84.cpp:
+ * own cl, /O2 /FAsc, and read off the listing. src/actors/Player.cpp:
  *
  *     ; (*(void (**)(void *, char *))(*(int *)a + 0x70))(a, self);
  *       8b 01      mov  eax, DWORD PTR [ecx]
@@ -81,17 +81,17 @@ extern "C" {
 extern int _ZN6Player7IsInAirEv(void *self);
 extern int _ZN6Player7IsStateERNS_5StateE(void *self, void *st);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void *self, void *st);
-extern void _ZN11RaycastLineC1Ev(void *self);
-extern void _ZN11RaycastLineD1Ev(void *self);
-extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(void *self, void *a, void *b, void *act);
-extern int _ZN11RaycastLine10DetectClsnEv(void *self);
-extern void _ZN11RaycastLine10GetClsnPosEv(void *ret, void *self);
+extern void _ZN9dBgCh_LinC1Ev(void *self);
+extern void _ZN9dBgCh_LinD1Ev(void *self);
+extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(void *self, void *a, void *b, void *act);
+extern int _ZN9dBgCh_Lin10DetectClsnEv(void *self);
+extern void _ZN9dBgCh_Lin10GetClsnPosEv(void *ret, void *self);
 extern void func_02035414(void *bgch);
 extern void func_02035428(void *bgch);
 extern int func_02037e38(unsigned int *p);
-extern unsigned _ZNK10ClsnResult9GetClsnIDEv(void *self);
-extern void *_ZN5Actor10FindWithIDEj(unsigned id);
-extern void _ZN10ClsnResultD1Ev(void *self);
+extern unsigned _ZNK5dBgPi9GetClsnIDEv(void *self);
+extern void *_ZN8dActor_c10FindWithIDEj(unsigned id);
+extern void _ZN5dBgPiD1Ev(void *self);
 
 extern char data_ov002_0211001c;
 extern int data_02099368;

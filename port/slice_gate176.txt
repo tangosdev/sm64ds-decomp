@@ -1,8 +1,8 @@
 # Gate 176: SCUTTLEBUG (255), the spider daSpd_c, and ov071's FIRST mount. The
 # whole class is matched src -- the factory, InitResources/Behavior/Render (real
 # MSVC members against include/Scuttlebug.h), Cleanup/OnPendingDestroy/D0 (plain
-# C), the two interaction overrides (OnYoshiTryEat func_ov071_0211f0a4,
-# OnAimedAtWithEgg func_ov071_0211f0ac) and OnTurnIntoEgg (func_ov071_02120580),
+# C), the two interaction overrides (OnYoshiTryEat _ZN10Scuttlebug13OnYoshiTryEatEv,
+# OnAimedAtWithEgg _ZN10Scuttlebug16OnAimedAtWithEggEv) and OnTurnIntoEgg (_ZN10Scuttlebug13OnTurnIntoEggER6Player),
 # the eighteen state-machine halves the two dispatchers reach, the helpers those
 # reach, and ov071's four sinits (all self+arm9 reach, verified).
 #
@@ -21,42 +21,12 @@
 # Cross-overlay reach is ov002 only (the engine overlay, always mounted): six
 # Player methods -- IncMegaKillCount, IsOnShell, Hurt, Bounce, IsCollectingCap,
 # RegisterEggCoinCount -- all linked and faced.
-src/Scuttlebug_Spawn.c
-src/Scuttlebug_SetState.c
-src/_ZN10Scuttlebug13InitResourcesEv.cpp
-src/_ZN10Scuttlebug8BehaviorEv.cpp
+src/actors/Scuttlebug.cpp
 # Render is NOT here: it dispatches ModelAnim slot 5 through a ROM-order
 # local shadow (the Whomp/Fish case); the host copy is in
 # port/unmatched/ModelAnim_Renders.cpp.
-src/_ZN10Scuttlebug16CleanupResourcesEv.c
-src/_ZN10Scuttlebug16OnPendingDestroyEv.c
-src/_ZN10ScuttlebugD0Ev.c
-src/func_ov071_0211f0a4.c
-src/func_ov071_0211f0ac.c
-src/func_ov071_0211f0b4.c
-src/func_ov071_0211f148.cpp
-src/func_ov071_0211f29c.cpp
-src/func_ov071_0211f498.c
-src/func_ov071_0211f524.cpp
-src/func_ov071_0211f694.c
-src/func_ov071_0211f6f8.cpp
-src/func_ov071_0211f7d4.c
-src/func_ov071_0211f8d0.cpp
-src/func_ov071_0211fa54.c
-src/func_ov071_0211fb0c.c
-src/func_ov071_0211fb24.cpp
-src/func_ov071_0211fbf4.c
-src/func_ov071_0211fc60.c
-src/func_ov071_0211fcd4.c
-src/func_ov071_0211fd58.cpp
-src/func_ov071_0211fe38.c
-src/func_ov071_0211fee4.cpp
-src/func_ov071_0211ff84.c
-src/func_ov071_02120028.c
-src/func_ov071_02120130.c
-src/func_ov071_021201b4.cpp
-src/func_ov071_02120200.c
-src/func_ov071_02120580.cpp
+# RETIRED at SLICE1: body now in src/_ZN10ScuttlebugD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN10ScuttlebugD0Ev.cpp
 src/__sinit_ov071_021226ac.c
 src/__sinit_ov071_021228c8.c
 src/__sinit_ov071_02122a1c.c
@@ -64,9 +34,9 @@ src/__sinit_ov071_02122a64.c
 # Three arm9 helpers the state bodies call, matched C-form src the supervisor
 # added after the closure audit: the raycast probe, the non-vanish player
 # finder and the wall-result flag read.
-src/_ZN5Actor17DetectRaycastClsnER7Vector3S1_b.cpp
-src/_ZN5Actor22ClosestNonVanishPlayerEv.c
-src/_ZNK12WithMeshClsn14GetResultFlag1Ev.c
+src/_ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b.cpp
+src/_ZN8dActor_c22ClosestNonVanishPlayerEv.cpp
+src/_ZNK10dBgCh_Actr14GetResultFlag1Ev.cpp
 # The anim loader InitResources reaches through decl_common's friendly
 # AnimLoadFile name: the STATIC Animation::LoadFile, matched src, aliased in
 # the fill.

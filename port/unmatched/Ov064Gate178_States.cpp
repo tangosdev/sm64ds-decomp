@@ -1,13 +1,13 @@
 /* HOST COPIES for gate 178's two ov064 riders, METAL_NET_LIFT (69,
  * daObjFl_Amilift_c) and LAVA_BUBBLE (214, daBbl_c):
- *   - the Amilift Render func_ov064_02117cfc -- RETIRED, run link100 lane
+ *   - the Amilift Render _ZN12MetalNetLift6RenderEv -- RETIRED, run link100 lane
  *     UNMATCH; the slot-5 shadow collision died with SLOT5F's unfold,
  *   - the two PMF-dispatching bodies of each class, and
  *   - the seat of the two source PMF tables their sinits copy into bss.
  *
  * WHY THESE ARE HOST COPIES, NOT SLICED
  * -------------------------------------
- * 1. func_ov064_02117cfc RETIRED, run link100 lane UNMATCH. It dispatched its
+ * 1. _ZN12MetalNetLift6RenderEv RETIRED, run link100 lane UNMATCH. It dispatched its
  *    model's slot 5 through a LOCAL six-virtual shadow struct whose sixth
  *    method takes an int (`Base *b = &d->base; b->m(0)`, Model at +0xd4), and
  *    the host _ZTV5Model / _ZTV9ModelAnim were MSVC-ordered (one dtor slot
@@ -16,10 +16,10 @@
  *    _MSC_VER; the tables are ROM-numbered and the matched source needs no
  *    help. See the block below where the copy used to be.
  *
- * 2. func_ov064_02117d24, func_ov064_021187ec and _ZN10LavaBubble8BehaviorEv all
+ * 2. _ZN12MetalNetLift8BehaviorEv, func_ov064_021187ec and _ZN10LavaBubble8BehaviorEv all
  *    invoke an mwcc pointer-to-member: `(obj->*pmf)()`. On MSVC that is a
  *    __thiscall (this in ECX) against a plain extern-C state body that wants self
- *    on the stack -> calling-convention corruption. func_ov064_02117d24 also
+ *    on the stack -> calling-convention corruption. _ZN12MetalNetLift8BehaviorEv also
  *    indexes `data_ov064_0211c750[idx]` with the mwcc 8-byte record stride that
  *    MSVC would make 4 (the Scuttlebug stride trap). Each is copied here reading
  *    the record as a plain { fn, delta } (delta 0, non-virtual complete-class)
@@ -57,8 +57,8 @@ extern "C" {
    folded host table put Virtual18 on the slot the matched source means. Lane
    SLOT5F's destructor unfold ROM-numbers _ZTV5Model, so the source's own
    six-virtual shadow reaches Render at index 5 again and there is nothing left
-   to spell differently. src/func_ov064_02117cfc.cpp carries it now, in
-   port/slice_unmatch.txt; the reloc is from:0x0211bc8c (data_ov064_0211bc68 +
+   to spell differently. src/_ZN12MetalNetLift6RenderEv.cpp carries it now, in
+   port/slice_unmatch.txt; the reloc is from:0x0211bc8c (_ZTV12MetalNetLift +
    4*9) -> 0x02117cfc and the body is ADJUDICATED REAL_DECOMP at
    port/tools/inferred_stub_adjudicated.txt:2366. The fill at
    hal/actor_classes_ov064_gate178.cpp:306 calls the C symbol by name, so it is
@@ -69,20 +69,20 @@ extern "C" {
 struct PortPmf { unsigned fn; int delta; };
 
 /* ---- METAL_NET_LIFT (69) Behavior: the 3-state PMF machine ------------------
-   func_ov064_02117d24 line for line, only the `(c->*table[idx].pmf)()` dispatch
+   _ZN12MetalNetLift8BehaviorEv line for line, only the `(c->*table[idx].pmf)()` dispatch
    spelled as an explicit host call on the 8-byte record. */
 extern PortPmf data_ov064_0211c750[3];      /* bss runtime table, sinit-filled */
 extern short data_02082214[];                /* arm9 sin/cos-ish table (already linked) */
 int _Z14ApproachLinearRiii(int *v, int target, int step);
-void _ZN8Platform21UpdateModelPosAndRotYEv(void *self);
-int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
-void _ZN8Platform19UpdateClsnPosAndRotEv(void *self);
+void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *self);
+int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
+void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
 
-/* HOST COPY RETIRED, run link100 lane FWD gate 2. src/func_ov064_02117d24.c
+/* HOST COPY RETIRED, run link100 lane FWD gate 2. src/_ZN12MetalNetLift8BehaviorEv.cpp
    compiles and dispatches data_ov064_0211c750 itself. TWO THINGS HAD TO BE
    TRUE AND BOTH WERE MEASURED: the file is a .c whose own text spells
    `typedef void (C::*PMF)();`, which is not C, so it carries LANGUAGE CXX in
-   block R10e -- lane PMFB2's treatment for src/func_ov002_020aea30.c -- and
+   block R10e -- lane PMFB2's treatment for src/func_ov002_020aea30.cpp -- and
    its table comes in decorated as ?data_ov064_0211c750@@3PAUEntry@@A, which
    port/hal/fwd_forwarders.cpp aliases onto the mounted C name. Its src defines
    the FLAT C symbol, so unlike gate 1's nine rows it needs no forwarder; the
@@ -102,15 +102,15 @@ void _ZN8Platform19UpdateClsnPosAndRotEv(void *self);
    The matched .cpp line for line, with the two `(this->*(m->pmf))()` dispatches
    (m = the table base stored at +0x300, m->pmf = record[1].fn, the MAIN state)
    spelled as explicit host calls. */
-int _ZN5Actor22IsTooFarAwayFromPlayerE5Fix12IiE(void *self, int d);
-void _ZN9ActorBase18MarkForDestructionEv(void *self);
+int _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(void *self, int d);
+void _ZN7fBase_c18MarkForDestructionEv(void *self);
 unsigned short DecIfAbove0_Short(unsigned short *p);
-void *_ZN5Actor10FindWithIDEj(unsigned int id);
+void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 void _ZN6Player4BurnEv(void *self);
-void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *cc);
-void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(void *self, void *wm, unsigned int j);
-void _ZN12CylinderClsn5ClearEv(void *self);
-void _ZN12CylinderClsn6UpdateEv(void *self);
+void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *cc);
+void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void *self, void *wm, unsigned int j);
+void _ZN5dCc_c5ClearEv(void *self);
+void _ZN5dCc_c6UpdateEv(void *self);
 
 /* HOST COPY RETIRED, run link100 lane PMFB7 gate 1. src/_ZN10LavaBubble8BehaviorEv.cpp
    dispatches its own field now: with /vmg /vmm (block R8) MSVC's pointer to
@@ -139,7 +139,7 @@ extern PortPmf data_ov064_0211be90, data_ov064_0211be98,
 }  /* extern "C" */
 
 /* RUN link100, LANE FWD gate 2: THE AMILIFT'S THREE CELLS HOLD __fastcall
-   FACES NOW. src/func_ov064_02117d24.c dispatches data_ov064_0211c750 itself
+   FACES NOW. src/_ZN12MetalNetLift8BehaviorEv.cpp dispatches data_ov064_0211c750 itself
    since the host copy above was retired, and a matched TU dispatches a pointer
    to member as `mov ecx, TAB[i*8+4] / mov eax, TAB[i*8] / add ecx, this /
    call eax` -- receiver in ecx, nothing pushed (read off its /FAsc listing,

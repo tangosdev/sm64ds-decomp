@@ -1,0 +1,66 @@
+# Guards the tools that guard this repo.
+#
+# `tools/pr_linkcheck.py` shipped in #1367 reading `asm_policy.has_draft_banner` while
+# the import bound the module as `AP`. Because `and` short-circuits, the line only ran
+# once a file graded NO-REPRO -- so the first PR to contain a declared draft got a
+# NameError mid-loop, and the validator reported "worker error: pr_linkcheck exited 1
+# without a report" instead of a verdict for any file. #1392 fixed it. This job is why
+# it cannot happen twice.
+#
+# A gate's failure branch is the one path a green CI run never exercises. No ROM build
+# will ever catch a bug there, because these tools are not compiled into the ROM --
+# only static analysis reaches that code without running it.
+#
+# NARROW ON PURPOSE. Fails on unresolvable names and unparseable files, nothing else.
+# The tree has zero of those and 32 style findings (unused imports, unused locals,
+# f-strings without placeholders); gating on style would have meant landing this red,
+# and a gate that lands red gets switched off. `tools/check_python_names.py` counts the
+# style findings on every run so the number stays visible, and --advisories lists them.
+# Ratcheting them downward the way langmode-ratchet.yml does is a fair follow-up.
+#
+# Costs nothing: pure static analysis over git-tracked files, no compiler and no ROM,
+# which is why it lives here rather than on the private build box pr-validate.yml
+# relays to. Runs in about a second over 184 files.
+#
+# pyflakes is PINNED. A floating version can add a check, and this gate turning red on
+# a PR that touched no Python would be indistinguishable from a real regression -- the
+# exact confusion that cost a session when the reference ratchet went stale.
+name: python names
+
+on:
+  pull_request:
+    paths:
+      - "**.py"
+      - ".github/workflows/python-names.yml"
+  push:
+    branches: [main]
+    paths:
+      - "**.py"
+      - ".github/workflows/python-names.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: python-names-${{ github.event.pull_request.head.sha || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  names:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        # No history needed: the check reads `git ls-files` and the working tree.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pyflakes
+        run: pip install "pyflakes==3.0.1"
+      - name: Unresolvable names and unparseable files
+        run: python tools/check_python_names.py
+      - name: The gate's own tests
+        # Includes the #1367 defect verbatim, so a change that stops detecting it fails
+        # here rather than silently going quiet. stdlib unittest, so the runner needs
+        # no dependency beyond the pinned pyflakes above.
+        run: python -m unittest tools.test_check_python_names -v

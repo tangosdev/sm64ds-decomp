@@ -3,14 +3,14 @@
  *
  * ---- 1. WHY A HOST COPY -------------------------------------------------
  *
- * src/func_ov006_02120da8.c reads its own mode selector as
+ * src/minigames/d_s_mg_trampoline.cpp reads its own mode selector as
  *
  *     int mode = *(int *)(obj + 0x6c);
  *
  * with `obj` declared `void *`.  ARITHMETIC ON A void* IS A GNU/mwcc EXTENSION
  * and MSVC refuses it outright:
  *
- *     src\func_ov006_02120da8.c(37): error C2036: 'void *': unknown size
+ *     src\_ZN17dScMgTrampoline_c9Virtual88Eiiii.c(37): error C2036: 'void *': unknown size
  *
  * That is a SPELLING the host compiler will not accept, not a semantic defect
  * and not an ABI repair.  The body below is that file verbatim with ONE
@@ -26,7 +26,7 @@
  * unmatched/MgBSC_StateDispatch.cpp convention for "the port cannot compile
  * the src" and NOT the unmatched/MgFlower_Slot2.cpp convention for "the src
  * drops an argument".  The distinction is whether the host body differs from
- * the ROM body in behaviour: this one does not.  src/func_ov006_02120da8.c is
+ * the ROM body in behaviour: this one does not.  src/minigames/d_s_mg_trampoline.cpp is
  * therefore out of port/slice_tti.txt, because listing both would be an
  * LNK2005.
  *
@@ -40,13 +40,13 @@
  *
  * THE SECOND HALF OF THAT IS NO LONGER TRUE ON THIS TREE, and this class is
  * why.  func_ov004_020ae5c4 is not a floor any more: hal/scene_mg_faces.cpp's
- * own header records it as a REAL DECOMPILATION (src/func_ov004_020ae5c4.c, a
+ * own header records it as a REAL DECOMPILATION (src/func_ov004_020ae5c4.cpp, a
  * Bresenham line walk that stamps slot 34 at every lattice point).  And THIS
  * class calls it from two places:
  *
- *     src/func_ov006_0212157c.c line 41   -- reached from vtable slot 6 on
+ *     src/minigames/d_s_mg_trampoline.cpp line 41   -- reached from vtable slot 6 on
  *                                            EVERY behavior tick
- *     src/func_ov006_02121d64.cpp line 64 -- chain link 0, the intro state
+ *     src/minigames/d_s_mg_trampoline.cpp line 64 -- chain link 0, the intro state
  *
  * so scene 384 is the first seated scene on which slot 34 has a live
  * dispatcher.  The "unreachable" half of the earlier conclusion should be read
@@ -54,10 +54,10 @@
  * of it stands and is what this file's thunk depends on.
  *
  * THE ARITY IS THE SAME FIVE, re-derived rather than carried.  Every slot-34
- * dispatch in src/func_ov004_020ae5c4.c is `ldr Rd,[r0] / ldr Rd,[Rd,#0x88] /
+ * dispatch in src/func_ov004_020ae5c4.cpp is `ldr Rd,[r0] / ldr Rd,[Rd,#0x88] /
  * blx Rd` with r1, r2, r3 loaded and one word stored at [sp] first -- 0x88/4 =
  * 34 -- so five arguments arrive: the receiver, the two walked coordinates, the
- * caller's `val` and its `n`.  src/func_ov004_020ae3b4.c (the BASE's own brush)
+ * caller's `val` and its `n`.  src/_ZN11dScMgBase_c9Virtual88Eiiii.cpp (the BASE's own brush)
  * declares the same five and hal/scene_mg.cpp's mb_v34 forwards all five.
  * hal/scene_mg_trampoline.cpp's tti_v34 has the same shape for the same reason.
  *
@@ -81,7 +81,7 @@ extern int func_02054d88(void);
 extern void MultiCopy_Int(int *dst, int *src, int len);
 
 // PORT_HOST_ABI: src reads its mode selector via arithmetic on a void* (a GNU/mwcc extension) that MSVC refuses as C2036; the host copy is the src body verbatim with the one read cast to (char *)obj + 0x6c, no behaviour change.
-void func_ov006_02120da8(void *obj, int x_base, int y, int val, int n)
+void _ZN17dScMgTrampoline_c9Virtual88Eiiii(void *obj, int x_base, int y, int val, int n)
 {
     int half;
     int x0;

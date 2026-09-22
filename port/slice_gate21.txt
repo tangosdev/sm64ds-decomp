@@ -10,10 +10,10 @@
 # SHIFTED, which is why every one was checked. Each factory's literal pool
 # names the vtable it installs and the ROM's RTTI names it back:
 #
-#   Butterfly_Spawn 0x02141ea4 -> _ZTV9Butterfly      RTTI 9daBtfly_c   OK
-#   Fish_Spawn      0x02146d38 -> _ZTV4Fish           RTTI 8daFish_c    OK
-#   Door_Spawn      0x0214589c -> data_ov100_02148188 RTTI 8daDoor_c    UNNAMED
-#   StarDoor_Spawn  0x021461d4 -> _ZTV4Door           RTTI 12daStarGate_c
+#   daBtfly_c_classInit 0x02141ea4 -> _ZTV9Butterfly      RTTI 9daBtfly_c   OK
+#   daFish_c_classInit      0x02146d38 -> _ZTV4Fish           RTTI 8daFish_c    OK
+#   daDoor_c_classInit      0x0214589c -> _ZTV4Door RTTI 8daDoor_c    UNNAMED
+#   daStarGate_c_classInit  0x021461d4 -> _ZTV4Door           RTTI 12daStarGate_c
 #
 # So config's `_ZTV4Door` is the STAR door's table and the whole _ZN4Door*
 # method family implements the star door; the real door (actor 353) is the
@@ -35,9 +35,10 @@
 # this-adjustment arithmetic itself, so MSVC's pointer-to-member
 # representation never comes into it -- the rabbit's case. Only the eight
 # statics need seating, and that is in hal/actor_overlays.cpp with the rest.
-src/Butterfly_Spawn.c
+src/d_a_btfly.c
 src/_ZN9Butterfly13InitResourcesEv.cpp
-src/_ZN9ButterflyD0Ev.c
+# RETIRED at SLICE1: body now in src/_ZN9ButterflyD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN9ButterflyD0Ev.cpp
 src/_ZN9Butterfly8BehaviorEv.cpp
 # _ZN9Butterfly6RenderEv IS NOT HERE: it dispatches ModelAnim slot 5
 # through a local shadow class, which is ROM numbering, and _ZTV9ModelAnim
@@ -45,17 +46,17 @@ src/_ZN9Butterfly8BehaviorEv.cpp
 # Virtual18, which takes two arguments where the shadow passes one. Host
 # copy in port/unmatched/ModelAnim_Renders.cpp; measured as a c0000005 in
 # Model::Virtual10 before it was one.
-src/_ZN9Butterfly16CleanupResourcesEv.c
-src/_ZN9Butterfly16OnPendingDestroyEv.c
+src/_ZN9Butterfly16CleanupResourcesEv.cpp
+src/_ZN9Butterfly16OnPendingDestroyEv.cpp
 # the eight states, all matched -- no hole and no trap
-src/func_ov100_0214109c.cpp
-src/func_ov100_0214117c.cpp
-src/func_ov100_021412d8.c
-src/func_ov100_02140e44.cpp
-src/func_ov100_02141470.c
-src/func_ov100_021415bc.c
-src/func_ov100_02141800.cpp
-src/func_ov100_02141848.c
+src/_ZN9Butterfly6State6Ev.cpp
+src/_ZN9Butterfly6State5Ev.cpp
+src/_ZN9Butterfly6State4Ev.cpp
+src/_ZN9Butterfly6State7Ev.cpp
+src/_ZN9Butterfly6State3Ev.cpp
+src/_ZN9Butterfly6State2Ev.cpp
+src/_ZN9Butterfly6State1Ev.cpp
+src/_ZN9Butterfly6State0Ev.cpp
 
 # ---- FISH (actor 344, ov100) x2 -------------------------------------------
 # The two shoals in the moat. Seven states, and the class is bound to a PARENT
@@ -69,12 +70,13 @@ src/func_ov100_02141848.c
 # case for the fifth time, so MSVC would quadruple the stride. Host copy plus
 # the seven-static seat in port/unmatched/Fish_Behavior.cpp. All seven states
 # are matched src, so that file carries no trap.
-src/Fish_Spawn.cpp
+src/d_a_fish.cpp
 src/_ZN4Fish13InitResourcesEv.cpp
-src/_ZN4FishD0Ev.c
+# RETIRED at SLICE1: body now in src/_ZN4FishD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN4FishD0Ev.cpp
 # _ZN4Fish6RenderEv IS NOT HERE either, the same ModelAnim slot-5 case.
 src/_ZN4Fish16CleanupResourcesEv.cpp
-src/_ZN4Fish16OnPendingDestroyEv.c
+src/_ZN4Fish16OnPendingDestroyEv.cpp
 # the seven states, all matched
 src/func_ov100_021463b0.cpp
 src/func_ov100_02146468.c
@@ -93,7 +95,7 @@ src/__sinit_ov100_021473bc.c
 src/__sinit_ov100_021474e8.c
 src/__sinit_ov100_021475a4.c
 src/__sinit_ov100_02147698.c
-src/__sinit_ov100_02147a70.c
+src/game/actors/d_a_star_gate.cpp
 src/__sinit_ov100_02147bc0.c
 src/__sinit_ov100_02147d7c.c
 
@@ -106,23 +108,25 @@ src/func_ov100_0214629c.cpp
 # Two arm9 bodies no class the port carried before now needed: the butterfly
 # asks its own animation how long it is, and one of its states poofs.
 src/_ZNK9Animation13GetFrameCountEv.cpp
-src/_ZN5Actor14TriplePoofDustEv.c
+src/_ZN8dActor_c14TriplePoofDustEv.cpp
 
 # --- linkloop round 1 ---
-src/_ZN5Actor16TriplePoofDustAtERK7Vector3.c
+src/_ZN8dActor_c16TriplePoofDustAtERK7Vector3.cpp
 
 # --- linkloop round 2 ---
 # The butterfly's D1 teardown chain (hal/actor_classes.cpp hosts slot 16 for
 # the three classes that die once woken): the +0x394 member's own D1 and the
 # MovingCylinderClsn D2 it chains to. Aliases in hal/cxx_aliases.cpp.
-src/_ZN25MovingCylinderClsnWithPosD1Ev.c
-src/_ZN18MovingCylinderClsnD2Ev.c
+src/_ZN10dCcAcPos_cD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN7dCcAc_cD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN7dCcAc_cD2Ev.cpp
 # ...and the rest of the WithPos table, for the same reason gate 16 carries
-# the parent's: _ZTV25MovingCylinderClsnWithPos is [D1, D0, GetPos,
+# the parent's: _ZTV10dCcAcPos_c is [D1, D0, GetPos,
 # GetOwnerID], the last of those inherited through a linker veneer, so only D0
 # and GetPos are new files here.
-src/_ZN25MovingCylinderClsnWithPosD0Ev.c
-src/_ZN25MovingCylinderClsnWithPos6GetPosEv.c
+# RETIRED at SLICE1: body now in src/_ZN10dCcAcPos_cD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN10dCcAcPos_cD0Ev.cpp
+src/_ZN10dCcAcPos_c6GetPosEv.cpp
 
 # ---- UNCHAINED_CHOMP (actor 337, ov100) -----------------------------------
 # The obstacle BoB star 3 (5 Silver Stars) needs; registered in
@@ -133,9 +137,9 @@ src/_ZN25MovingCylinderClsnWithPos6GetPosEv.c
 # port/unmatched/UnchainedChomp_Behavior.cpp; the two PMF targets it seats are
 # func_ov100_02143aa4 (hi, the one Behavior reads) and func_ov100_02143ae0
 # (lo), both plain matched src added below, the Fish-precedent shape.
-# UnchainedChomp_Spawn IS NOT HERE: it calls Enemy's ctor func_020aed98
-# (=_ZN5EnemyC2Ev) with a no-arg r0 ride-through the matched src leaves implicit
-# (operator new -> ctor with `this` in r0), the ChainChomp_Spawn case. Host copy
+# daWanwan2_c_classInit IS NOT HERE: it calls Enemy's ctor func_020aed98
+# (=_ZN12dEnemyBase_cC2Ev) with a no-arg r0 ride-through the matched src leaves implicit
+# (operator new -> ctor with `this` in r0), the daWanwan_c_classInit case. Host copy
 # in port/unmatched/UnchainedChomp_Behavior.cpp spells the argument.
 # InitResources IS NOT HERE either: it declares PathPtr as a real C++ class and
 # calls pp.FromID/NumNodes/GetNode as THISCALL members, whose MSVC-mangled names
@@ -147,8 +151,8 @@ src/_ZN25MovingCylinderClsnWithPos6GetPosEv.c
 # +0x668 Holder (typedef'd over an incomplete Actor in the matched TU), the
 # Fish/Whomp/LakituBro case. Host copy in
 # port/unmatched/UnchainedChomp_Behavior.cpp, which also carries the 2-static seat.
-src/_ZN14UnchainedChomp16CleanupResourcesEv.c
-src/_ZN14UnchainedChomp16OnPendingDestroyEv.c
+src/_ZN14UnchainedChomp16CleanupResourcesEv.cpp
+src/_ZN14UnchainedChomp16OnPendingDestroyEv.cpp
 # _ZN14UnchainedChomp6RenderEv IS NOT HERE: ModelAnim slot-5 shadow dispatch
 # off mModelAnim (+0x30c, not the usual +0xd4) plus a 5-iteration loop over the
 # +0x370 Model array. Host copy in port/unmatched/ModelAnim_Renders.cpp.
@@ -170,16 +174,16 @@ src/func_ov100_02143ae0.c
 src/func_ov100_0214344c.c
 src/func_ov100_021435e8.cpp
 src/func_ov100_021437d4.c
-# the two ctor/dtor helpers Spawn and D1 pass to func_020733a8 / __destroy_arr
-# (func_0203d384 and func_020072c0 are already in slice_gate10); leaf funcs.
-src/func_02011508.c
+# the two ctor/dtor helpers Spawn and D1 pass to __cxa_vec_ctor / __cxa_vec_cleanup
+# (func_0203d384 and _ZN7Vector3D1Ev are already in slice_gate10); leaf funcs.
+src/_ZN8Vector3sD1Ev.cpp
 src/func_0203d73c.c
 
 # ---- slot 29, UnchainedChomp::OnAimedAtWithEgg ----------------------------
-# func_ov100_021442d4 (ov100 0x021442d4, 8 bytes, `return 0`) is the class's own
+# _ZN14UnchainedChomp16OnAimedAtWithEggEv (ov100 0x021442d4, 8 bytes, `return 0`) is the class's own
 # override of Actor::OnAimedAtWithEgg -- the ROM word in _ZTV14UnchainedChomp
 # slot 29. It is needed now because the class's slot 30 is seated with the Actor
 # base body, and that body's one job is to add slot 29's result to y: seating 30
 # over a trapped 29 would only move the freeze one slot along. Byte-matches on
 # 1.2/base, 1.2/sp2, 1.2/sp2p3 with strict relocs.
-src/func_ov100_021442d4.c
+src/_ZN14UnchainedChomp16OnAimedAtWithEggEv.cpp

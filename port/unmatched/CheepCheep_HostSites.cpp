@@ -36,13 +36,13 @@ typedef int (*PortOv090StateFn)(void *);
    8-byte {function, delta} pair, and the matched TU compiles to the same
    tail jump this body was -- measured, listing in that slice's header.
    The reading above is kept because it is the derivation. */
-int  _ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(void *self, void *wm);
-void _ZN12CylinderClsn5ClearEv(void *c);
-void _ZN12CylinderClsn6UpdateEv(void *c);
+int  _ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(void *self, void *wm);
+void _ZN5dCc_c5ClearEv(void *c);
+void _ZN5dCc_c6UpdateEv(void *c);
 unsigned short DecIfAbove0_Short(unsigned short *p);
-void _ZN5Actor9UpdatePosEP12CylinderClsn(void *thiz, void *clsn);
+void _ZN8dActor_c9UpdatePosEP5dCc_c(void *thiz, void *clsn);
 void _ZN9Animation7AdvanceEv(void *thiz);
-char *_ZN5Actor13ClosestPlayerEv(void *thiz);
+char *_ZN8dActor_c13ClosestPlayerEv(void *thiz);
 void func_ov090_02133338(void *c);
 void func_ov090_021330c8(void *c);
 

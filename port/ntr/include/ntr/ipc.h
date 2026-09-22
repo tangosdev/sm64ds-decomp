@@ -82,7 +82,7 @@ enum : uint16_t {
 constexpr unsigned FIFO_DEPTH = 16;   // 16 words each way, both DS FIFOs
 
 // A word on the wire, as src/IPCSend.c and
-// src/_ZN3IRQ24IPCRxFifoNotEmptyHandlerEv.c lay it out: five tag bits, one
+// src/_ZN3IRQ24IPCRxFifoNotEmptyHandlerEv.cpp lay it out: five tag bits, one
 // flag bit, twenty-six payload bits. The flag is the SDK's "no handler on the
 // far side" marker -- the ROM's receive handler sets it (`cmd.raw |= 0x20`)
 // and posts the word back when a channel arrives with no callback installed,

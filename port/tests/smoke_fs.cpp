@@ -11,14 +11,24 @@
 #include <stdio.h>
 #include <string.h>
 
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
+// THE BRING-UP ENTRY POINT MOVED, and this harness follows it (lane SMOKELINK3,
+// run link100 wave 10 round 2, continuing SMOKELINK2's rule for
+// port/tests/smoke_heap.cpp). It used to declare the entry as a flat extern "C"
+// Itanium name over a forward-declared `struct HeapS' --
+//   HeapS *_ZN4Heap13SetupRootHeapEv(void);
+// -- which is what the ROM's own callers spell and what src/ emitted before the
+// 09-14 sync. It is now Heap::SetupRootHeap(), a real static member
+// (include/Heap.h:236, ?SetupRootHeap@Heap@@SAPAU1@XZ), so the flat spelling
+// bought a link error. This file is HOST TEST CODE, not ROM code, so it may
+// include the class header and call the member the way C++ calls it, which is
+// also what the synced src/ TUs now do. It reaches the same object it always
+// linked, src/_ZN4Heap13SetupRootHeapEv.cpp; only the spelling changed.
+#include "types.h"
+#include "Heap.h"
+
 
 struct SharedFilePtr { u16 fileID; u8 numRefs; void *filePtr; };
-struct HeapS;
 extern "C" {
-HeapS *_ZN4Heap13SetupRootHeapEv(void);
 SharedFilePtr *_ZN13SharedFilePtr9ConstructEj(SharedFilePtr *self, u32 ov0FileID);
 void *_ZN13SharedFilePtr8LoadFileEv(SharedFilePtr *self);
 void _ZN13SharedFilePtr7ReleaseEv(SharedFilePtr *self);
@@ -42,7 +52,7 @@ static u32 sum32(const void *p, u32 n)
 
 int main(void)
 {
-    CHECK(_ZN4Heap13SetupRootHeapEv() != NULL);
+    CHECK(Heap::SetupRootHeap() != NULL);
 
     /* raw file: bytes arrive exactly as on disk */
     SharedFilePtr raw;

@@ -14,7 +14,7 @@
 //
 // ---- 1. THE CLASS VTABLE SYMBOL ------------------------------------------
 //
-// src/MgBobOmbSquad_Spawn.c ends with `p[0] = (int)_ZTV15dScMgPachinko_c;` and
+// src/d_s_mg_pachinko.c ends with `p[0] = (int)_ZTV15dScMgPachinko_c;` and
 // nothing in this tree defines that symbol -- the table is mounted ov006 data
 // under its address name, data_ov006_0213d9cc. This is the same shape
 // hal/scene_mg_faces.cpp:231 already carries for curling
@@ -45,7 +45,7 @@
 //
 // This is port/mg_fanout_costs.txt section 6's fourth defect, the one it calls
 // "a name-spelling face, the ordinary kind" -- there recorded for
-// src/func_ov006_020e3578.c spelling ov004's func_ov004_020adc74 as bare
+// src/_ZN14dScMgCurling_c13InitResourcesEv.cpp spelling ov004's func_ov004_020adc74 as bare
 // func_020adc74. It is a decomp-side spelling question and is ROUTED, not
 // taken: the fix in the byte-gated tree is one token in one src TU, and
 // whether that still builds byte-identically under mwccarm is that tree's
@@ -63,13 +63,13 @@
 // dScMgPachinko_c::InitResources (vtable slot 0, the black-screen fix) was
 // recovered on origin/main only as the __thiscall C++ member
 // src/_ZN15dScMgPachinko_c13InitResourcesEv.cpp. hal/scene_mg.cpp's slot-0
-// dispatch (pch_init) calls the ROM address name func_ov006_020fefc0 as a plain
+// dispatch (pch_init) calls the ROM address name _ZN15dScMgPachinko_c13InitResourcesEv as a plain
 // cdecl (void*). An alias cannot bridge cdecl to __thiscall -- the port's
 // documented wall -- so this is the method_faces.cpp shape instead: a cdecl
 // forwarder carrying the flat Itanium name, doing the qualified (non-virtual)
 // call so it reaches THIS body rather than dispatching through the object's ROM
 // vtable, and an alias pointing the ROM address name onto that forwarder. The
-// trap for func_ov006_020fefc0 is removed from MgPachinko_Traps.cpp so the LHS
+// trap for _ZN15dScMgPachinko_c13InitResourcesEv is removed from MgPachinko_Traps.cpp so the LHS
 // is undefined for the alias to bind.
 #include "dScMgPachinko_c.h"
 extern "C" int _ZN15dScMgPachinko_c13InitResourcesEv(void *self)

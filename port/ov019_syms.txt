@@ -8,11 +8,11 @@
 # statics its InitResources reads BY NAME. The two mounts are disjoint pointer
 # graphs on purpose.
 #
-# THE VTABLE _ZTV15IceSlideManager IS LEFT OUT, the ov015/ov010/ov080 rule: it is
+# THE VTABLE _ZTV10daSldMng_c IS LEFT OUT, the ov015/ov010/ov080 rule: it is
 # a host array the registry fills (hal/actor_classes_ccm.cpp), so mounting it
 # would hand the factory DS code addresses.
 #
-# IceSlideManager_SpawnInfo is pinned to the record's real 0x1c so the +4 id
+# g_profile_SLIDER_MANAGER is pinned to the record's real 0x1c so the +4 id
 # halfword the registry cross-checks reads out of the right bytes (356 = 0x164).
 #
 # data_ov019_021135d8 and data_ov019_021135cc are the two bss statics
@@ -22,7 +22,7 @@
 # __sinit_ov019_021127a4, is RacingPenguin's (259, not spawned by level 11) and
 # is deliberately not run -- it constructs a dozen SharedFilePtrs that class needs
 # and this one does not.
-IceSlideManager_SpawnInfo:0x1c
+g_profile_SLIDER_MANAGER:0x1c
 data_ov019_021135d8 data_ov019_021135cc
 # run rel0215 wave 3 (lane w3-e): RACING PENGUIN's mount. Gate 142's three
 # symbols above are IceSlideManager's; these are 259's, and they are what its
@@ -33,13 +33,13 @@ data_ov019_021135d8 data_ov019_021135cc
 # class's VTABLE -- excluded from this mount on purpose (it is the host array
 # hal/actor_classes_ov019_w3e.cpp fills, the ov015/ov016/ov080 rule). Unpinned,
 # the mount would hand the factory eight bytes of DS code addresses inside its
-# own SpawnInfo record. Same 0x1c IceSlideManager_SpawnInfo is pinned to above.
-RacingPenguin_SpawnInfo:0x1c
+# own SpawnInfo record. Same 0x1c g_profile_SLIDER_MANAGER is pinned to above.
+g_profile_PENGUIN_RACER:0x1c
 # THE TWO FILE-POINTER TABLES its InitResources and CleanupResources index,
 # both exact by next-symbol delta:
 #   0211277c  three TextureSequence file pointers   0xc
 #   02112788  seven Animation file pointers         0x1c
-# CleanupResources spells the second one `_ZN9HugeCover6RenderEv` -- ov032's
+# CleanupResources spells the second one `_ZN14daObjTdWater_c6RenderEv` -- ov032's
 # HugeCover::Render, a FUNCTION this link DEFINES since wave 2 seated that
 # class, so an /alternatename would be defeated silently and the body would
 # Release through a code address. ov019's own relocs settle it:

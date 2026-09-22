@@ -12,7 +12,7 @@
 #                /PathPtr/SharedFilePtr/Memory/Vec3 and the four SharedFilePtr
 #                constructor-chain helpers the sinit uses
 #   4 in ov002   Platform::UpdateModelPosAndRotY / UpdateClsnPosAndRot /
-#                IsClsnInRange / Platform::C2, plus _ZTV8Platform
+#                IsClsnInRange / Platform::C2, plus _ZTV10dBgActor_c
 #   5 in ov056   the file table, the typeinfo, the name string and the two
 #                .bss SharedFilePtrs -- all mounted by port/ov056_syms.txt
 # Every one of the 40 code targets was already in walk_window.map before this
@@ -46,11 +46,11 @@
 # func_ov052_* (already sliced by lane w12) and ov056's are _ZN17BigMoving* --
 # so both sets compile side by side with no alias and no per-source rename.
 
-src/_ZN17BigMovingIceBlockD1Ev.c
-src/_ZN17BigMovingIceBlockD0Ev.c
-src/_ZN17BigMovingIceBlock16CleanupResourcesEv.c
+src/_ZN17BigMovingIceBlockD1Ev.cpp
+src/_ZN17BigMovingIceBlockD0Ev.cpp
+src/_ZN17BigMovingIceBlock16CleanupResourcesEv.cpp
 src/_ZN17BigMovingIceBlock6RenderEv.cpp
 src/_ZN17BigMovingIceBlock8BehaviorEv.cpp
 src/_ZN17BigMovingIceBlock13InitResourcesEv.cpp
-src/BigMovingIceBlock_Spawn.c
+src/d_a_obj_ewm_ice_block.c
 src/__sinit_ov056_02112b48.c

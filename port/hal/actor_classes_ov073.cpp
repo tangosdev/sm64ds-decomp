@@ -49,7 +49,7 @@
 // ChiefChilly_ChangeState, func_ov073_021223a4 (CccArena's ChangeState),
 // _ZN11ChiefChilly8BehaviorEv and _ZN11ChiefChilly6RenderEv.
 //
-// The fourth is here. ChiefChilly_Spawn is an ARM r0 RIDE-THROUGH: its matched
+// The fourth is here. daKing_Donketu_c_classInit is an ARM r0 RIDE-THROUGH: its matched
 // src calls `func_020aed98();` with NO ARGUMENT, because in the ROM the object
 // the allocator just returned is still in r0 when the Enemy constructor is
 // entered --
@@ -65,11 +65,11 @@
 // own sequence with the receiver spelled: every call target, every member
 // offset (0x110 / 0x150 / 0x30c / 0x380 / 0x3e8 / 0x448 / 0x4d4) and every
 // literal (0x504 the size, 8/8/2 the array counts, 0xc the stride,
-// func_0203d384 the element constructor in r3, func_020072c0 the destructor on
+// func_0203d384 the element constructor in r3, _ZN7Vector3D1Ev the destructor on
 // the stack) is read from the disassembly of 0x02121ec8 and its literal pool.
-// src/ChiefChilly_Spawn.cpp stays OUT of this lane's slice.
+// src/d_a_king_donketu.cpp stays OUT of this lane's slice.
 // The three Ccc Spawns do NOT have this problem -- their
-// `_ZN8PlatformC2Ev(p)` names the receiver -- so they are registered directly.
+// `_ZN10dBgActor_cC2Ev(p)` names the receiver -- so they are registered directly.
 //
 // ---- WHY THE MOUNT BRING-UP IS IN THIS FILE --------------------------------
 //
@@ -88,13 +88,15 @@
 // that ran after them would fix the sources and leave every live table holding
 // DS code addresses. Both sinits LINK (unlike ov045's 0x02112280, neither name
 // is contested at a shared window), so nothing here is hand-hosted.
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
@@ -102,30 +104,30 @@ extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include "dsstate_seg.h"
 #include <cstdlib>
 
-#include "Actor.h"
-#include "ActorBase.h"
+#include "dActor_c.h"
+#include "fBase_c.h"
 
 extern "C" {
 /* the arm9 shared half -- slots 1/2/4/5/7/8/10/11/13/14/15/18..30 of BOTH
    tables are the SAME arm9 words, and they are the same words ov045's six
    platform tables carry (checked slot for slot against _ZTV15FireSeaElevator
    before this fill was written), so the shared half below is that file's. */
-int _ZN5Actor19BeforeInitResourcesEv(void *self);              /* slot 1  */
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
-int _ZN5Actor14BeforeBehaviorEv(void *self);                   /* slot 7  */
-int _ZN5Actor12BeforeRenderEv(void *self);                     /* slot 10 */
-int _ZN5Actor13OnYoshiTryEatEv(void *self);                    /* slot 18 */
-void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
-int _ZN5Actor9Virtual50Ev(void *self);                         /* slot 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);              /* slot 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);              /* slot 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
-int _ZN5Actor16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);              /* slot 1  */
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);                   /* slot 7  */
+int _ZN8dActor_c12BeforeRenderEv(void *self);                     /* slot 10 */
+int _ZN8dActor_c13OnYoshiTryEatEv(void *self);                    /* slot 18 */
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
+int _ZN8dActor_c9Virtual50Ev(void *self);                         /* slot 20 */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);              /* slot 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);              /* slot 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
+int _ZN8dActor_c16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
 
 const char *port_actor_class_name(unsigned id);   /* hal/actor_registry */
 void port_actor_slot_decline(const char *what);   /* func_02043fdc_hostcopy.cpp */
@@ -141,18 +143,18 @@ void __sinit_ov073_02122874(void);
 void __sinit_ov073_02122d48(void);
 
 /* what port_factory_chief_chilly spells by hand */
-void *_ZN9ActorBasenwEj(unsigned size);
-void _ZN5EnemyC2Ev(void *self);                  /* ov002 0x020aed98 */
-void _ZN25MovingCylinderClsnWithPosC1Ev(void *self);
-void _ZN12WithMeshClsnC1Ev(void *self);
+void *_ZN7fBase_cnwEj(unsigned size);
+void _ZN12dEnemyBase_cC2Ev(void *self);                  /* ov002 0x020aed98 */
+void _ZN10dCcAcPos_cC1Ev(void *self);
+void _ZN10dBgCh_ActrC1Ev(void *self);
 void _ZN14BlendModelAnimC1Ev(void *self);
 void _ZN11ShadowModelC1Ev(void *self);
-void func_020733a8(void *base, int count, int stride, void *ctor, void *dtor);
-void func_020072c0(void);
+void __cxa_vec_ctor(void *base, int count, int stride, void *ctor, void *dtor);
+void _ZN7Vector3D1Ev(void);
 void func_0203d384(void);
 }
 
-/* ---- C++-MANGLED DATA SPELLINGS, the data_02082128 / data_020a0e68 precedent
+/* ---- C++-MANGLED DATA SPELLINGS, the IDENTITY_MATRIX4X3 / data_020a0e68 precedent
    (hal/actor_classes_ov071.cpp, hal/actor_classes_ov100pl.cpp,
    hal/actor_classes_ov065.cpp all carry the same block).
 
@@ -275,51 +277,51 @@ OV73_TRAP(13) OV73_TRAP(14) OV73_TRAP(17)
 #undef OV73_TRAP
 
 static int __fastcall ov73_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall ov73_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall ov73_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 static void __fastcall ov73_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall ov73_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall ov73_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall ov73_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall ov73_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall ov73_pdes(void *s, void *)
-{ ((ActorBase *)s)->ActorBase::OnPendingDestroy(); return 0; }
+{ ((fBase_c *)s)->fBase_c::OnPendingDestroy(); return 0; }
 static int __fastcall ov73_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int __fastcall ov73_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 /* slot 19 takes the three-parameter shape so it emits `ret 4`: the dispatch
    site pushes the Player the callee pops -- the wf_turn_egg contract. */
 static int __fastcall ov73_turn_egg(void *s, void *, void *p)
-{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+{ _ZN8dActor_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall ov73_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall ov73_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall ov73_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall ov73_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall ov73_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall ov73_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall ov73_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall ov73_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall ov73_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 static int __fastcall ov73_egg(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 
 /* The shared half, every word of it read off the two tables' relocations (they
    agree slot for slot outside each class's own overrides, and agree with
@@ -403,10 +405,10 @@ int _ZN8CccArena8BehaviorEv(void *self);           /* slot 6  */
 int _ZN8CccArena6RenderEv(void *self);             /* slot 9  */
 int *_ZN8CccArenaD1Ev(int *self);                  /* slot 16 */
 int *_ZN8CccArenaD0Ev(int *self);                  /* slot 17 */
-int func_ov073_021223f4(char *self);               /* slot 31 */
-void *CccArena_Spawn(void);
-void *CccBigIce_Spawn(void);
-void *CccSmallIce_Spawn(void);
+int _ZN8CccArena4KillEv(char *self);               /* slot 31 */
+void *daObjEwbIce_c_classInit_EWB_ICE_A(void);
+void *daObjEwbIce_c_classInit_EWB_ICE_B(void);
+void *daObjEwbIce_c_classInit_EWB_ICE_C(void);
 DSSTATE_BEGIN
 void *_ZTV8CccArena[32];
 DSSTATE_END
@@ -433,7 +435,7 @@ static int __fastcall ccc_d0(void *s, void *)
 /* slot 31 is CccArena's own Kill (poof dust + bank-3 sound), not
    Platform::Kill -- the one place this cast's tail differs from ov045's. */
 static int __fastcall ccc_kill(void *s, void *)
-{ return func_ov073_021223f4((char *)s); }
+{ return _ZN8CccArena4KillEv((char *)s); }
 extern "C" void hal_fill_ccc_arena_vtable(void)
 {
     port_ov73_bringup();
@@ -443,7 +445,7 @@ extern "C" void hal_fill_ccc_arena_vtable(void)
     vt[3]  = (void *)ccc_clean;
     vt[6]  = (void *)ccc_behavior;
     vt[9]  = (void *)ccc_render;
-    vt[16] = (void *)ccc_d1;
+    vt[16] = (void *)PORT_D16(ccc_d1);
     vt[17] = (void *)ccc_d0;
     vt[31] = (void *)ccc_kill;
 }
@@ -466,7 +468,7 @@ int _ZN11ChiefChilly6RenderEv(void *self);            /* slot 9, HOST COPY */
 void _ZN11ChiefChilly16OnPendingDestroyEv(void);      /* slot 12 */
 int *_ZN11ChiefChillyD1Ev(int *self);                 /* slot 16 */
 int *_ZN11ChiefChillyD0Ev(int *self);                 /* slot 17 */
-int func_ov073_02121ec0(void);                        /* slot 29 */
+int _ZN11ChiefChilly16OnAimedAtWithEggEv(void);                        /* slot 29 */
 DSSTATE_BEGIN
 void *_ZTV11ChiefChilly[31];
 DSSTATE_END
@@ -474,20 +476,20 @@ DSSTATE_END
 /* THE FACTORY, the r0 ride-through this file's header derives. */
 extern "C" void *port_factory_chief_chilly(void)
 {
-    char *p = (char *)_ZN9ActorBasenwEj(0x504);
+    char *p = (char *)_ZN7fBase_cnwEj(0x504);
     if (p) {
-        _ZN5EnemyC2Ev(p);                     /* ROM: entered with r0 = p */
+        _ZN12dEnemyBase_cC2Ev(p);                     /* ROM: entered with r0 = p */
         *(void **)p = (void *)_ZTV11ChiefChilly;
-        _ZN25MovingCylinderClsnWithPosC1Ev(p + 0x110);
-        _ZN12WithMeshClsnC1Ev(p + 0x150);
+        _ZN10dCcAcPos_cC1Ev(p + 0x110);
+        _ZN10dBgCh_ActrC1Ev(p + 0x150);
         _ZN14BlendModelAnimC1Ev(p + 0x30c);
         _ZN11ShadowModelC1Ev(p + 0x380);
-        func_020733a8(p + 0x3e8, 8, 0xc, (void *)&func_0203d384,
-                      (void *)&func_020072c0);
-        func_020733a8(p + 0x448, 8, 0xc, (void *)&func_0203d384,
-                      (void *)&func_020072c0);
-        func_020733a8(p + 0x4d4, 2, 0xc, (void *)&func_0203d384,
-                      (void *)&func_020072c0);
+        __cxa_vec_ctor(p + 0x3e8, 8, 0xc, (void *)&func_0203d384,
+                      (void *)&_ZN7Vector3D1Ev);
+        __cxa_vec_ctor(p + 0x448, 8, 0xc, (void *)&func_0203d384,
+                      (void *)&_ZN7Vector3D1Ev);
+        __cxa_vec_ctor(p + 0x4d4, 2, 0xc, (void *)&func_0203d384,
+                      (void *)&_ZN7Vector3D1Ev);
     }
     return p;
 }
@@ -510,7 +512,7 @@ static int __fastcall cc_d0(void *s, void *)
 /* slot 29 overrides Actor::OnAimedAtWithEgg. The ROM body is two
    instructions, `mov r0, #0x64000; bx lr`. */
 static int __fastcall cc_egg(void *s, void *)
-{ (void)s; return func_ov073_02121ec0(); }
+{ (void)s; return _ZN11ChiefChilly16OnAimedAtWithEggEv(); }
 extern "C" void hal_fill_chief_chilly_vtable(void)
 {
     port_ov73_bringup();
@@ -521,7 +523,7 @@ extern "C" void hal_fill_chief_chilly_vtable(void)
     vt[6]  = (void *)cc_behavior;
     vt[9]  = (void *)cc_render;
     vt[12] = (void *)cc_pdes;
-    vt[16] = (void *)cc_d1;
+    vt[16] = (void *)PORT_D16(cc_d1);
     vt[17] = (void *)cc_d0;
     vt[29] = (void *)cc_egg;
     /* 31 slots: no slot 31. See this file's header and port/ov073_syms.txt. */

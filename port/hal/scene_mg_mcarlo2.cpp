@@ -22,8 +22,8 @@
 // ---- 2. THE HIERARCHY IS THREE DEEP, AND THE ROM SAYS SO THREE TIMES ------
 //
 //     Scene -> dScMgBase_c         data_ov004_020bc0c0  36 slots
-//           -> dScMgSingle3DBase_c data_ov006_0213e448  36 slots
-//           -> dScMgMCarlo2_c      data_ov006_0213d7e8  36 slots
+//           -> dScMgSingle3DBase_c _ZTV19dScMgSingle3DBase_c  36 slots
+//           -> dScMgMCarlo2_c      _ZTV14dScMgMCarlo2_c  36 slots
 //
 // The middle edge is stated by the ROM three separate ways, the same three the
 // sibling seat had:
@@ -32,12 +32,12 @@
 //     typeinfo record at 0x0213d714, whose third word is 0x0213bc64 --
 //     dScMgSingle3DBase_c's OWN typeinfo. Its name pointer 0x0213d730 reads
 //     "14dScMgMCarlo2_c".
-//   FACTORY. MgPairAGoneAndOn_Spawn at 0x020fa6ac calls func_ov004_020b2adc
+//   FACTORY. dScMgMCarlo2_c_classInit at 0x020fa6ac calls _ZN11dScMgBase_cC2Ev
 //     (dScMgBase_c's constructor), writes 0x0213e448 into the object's first
 //     word (str r1,[r4] at 0x020fa6d4, pool word 0x020fa728), then writes
 //     0x0213d7e8 over it (str r1,[r4] at 0x020fa6e8, pool word 0x020fa730).
-//   DESTRUCTORS. Slot 17 (func_ov006_020f8f68, the D0) and its unmarked D2
-//     sibling slot 16 (func_ov006_020f8ef4) both unwind them in the opposite
+//   DESTRUCTORS. Slot 17 (_ZN14dScMgMCarlo2_cD0Ev, the D0) and its unmarked D2
+//     sibling slot 16 (_ZN14dScMgMCarlo2_cD1Ev) both unwind them in the opposite
 //     order, 0x0213d7e8 first and 0x0213e448 second.
 //
 // ---- 3. THE FILL IS ADDRESS-KEYED, AND THIS IS THE FIFTH CLAIM ON THE
@@ -83,25 +83,25 @@
 // Both substitutions are inherited unchanged from the family and neither is
 // re-derived here:
 //
-// func_ov006_0210a6e4 (AfterInitResources) drops the framework's second
+// _ZN19dScMgSingle3DBase_c18AfterInitResourcesEj (AfterInitResources) drops the framework's second
 // argument -- the ROM never writes r1 before its `bl 0x20b08f0`, so the flags
 // ride through in r1 and src spells the call with one argument because that is
 // the only way to spell an unnamed value in C. The repair is
 // port_mg_flower_after_init in port/unmatched/MgFlower_Slot2.cpp, whose header
 // asks the next lane to call it rather than write a second one; this is the
-// fifth lane to do so. src/func_ov006_0210a6e4.cpp stays out of
+// fifth lane to do so. src/minigames/d_s_mg_single3_d_base.cpp stays out of
 // port/slice_pgo.txt for that reason.
 //
-// func_ov006_0210a708 (slot 33, the once-per-boot 3D setup) ends with two
+// _ZN19dScMgSingle3DBase_c9Virtual84Ev (slot 33, the once-per-boot 3D setup) ends with two
 // stores to LIGHT_COLOR at 0x040004cc, which a plain src build lands in the
 // memory ntr maps across the I/O window without ever telling the geometry
 // engine -- the "Yoshi is a black silhouette" defect run mg5 lane YTEX
 // measured. It builds from the hostgen'd copy port/CMakeLists.txt's
-// FLW_HOSTGEN_SYMS already emits, and src/func_ov006_0210a708.c is out of this
+// FLW_HOSTGEN_SYMS already emits, and src/minigames/d_s_mg_single3_d_base.cpp is out of this
 // slice for the same reason.
 //
 // THIS CLASS'S OWN SLOT 0 WRITES TWO PPU REGISTERS STRAIGHT FROM src AND THAT
-// IS CORRECT. func_ov006_020fa56c ends with a read-modify-write of the 16-bit
+// IS CORRECT. _ZN14dScMgMCarlo2_c13InitResourcesEv ends with a read-modify-write of the 16-bit
 // words at 0x04000008 and 0x0400100a (BG0CNT on engine A and BG1CNT on engine
 // B). Those are plain STATE registers -- the host's ntr memory maps the I/O
 // window and a later reader sees the value -- and they are not the
@@ -114,26 +114,26 @@
 // ---- 4b. THERE IS A THIRD TABLE AND THE VTABLE AXIS CANNOT SEE IT ---------
 //
 // The factory builds an array of 0x28 records of 0x30 bytes at this+0x51a8
-// through func_020733a8 with the element constructor func_ov006_020fa740,
+// through __cxa_vec_ctor with the element constructor _ZN19dMgMCarlo2CardObj_cC1Ev,
 // whose whole body is
 //
-//     p[0] = (int)&data_ov006_0213d728;  p[1] = 0;  p[2] = 0;
+//     p[0] = (int)&_ZTV19dMgMCarlo2CardObj_c;  p[1] = 0;  p[2] = 0;
 //
 // so every one of the FORTY records carries a MOUNTED ROM TABLE as its vptr.
-// data_ov006_0213d728 is dMgMCarlo2CardObj_c's vtable -- the typeinfo pointer
+// _ZTV19dMgMCarlo2CardObj_c is dMgMCarlo2CardObj_c's vtable -- the typeinfo pointer
 // at 0x0213d724 reads 0x0213d704, whose name string at 0x0213d758 is
 // "19dMgMCarlo2CardObj_c" -- and it is TWO slots wide:
 //
 //     [0]  0x020f98dc   the card DRAW
 //     [1]  0x020f9994   the card's per-frame update, which takes an event
 //
-// AND BOTH SLOTS ARE DISPATCHED. Slot 9 (src/func_ov006_020f9ffc.cpp) walks the
+// AND BOTH SLOTS ARE DISPATCHED. Slot 9 (src/minigames/d_s_mg_m_carlo2.cpp) walks the
 // list at data_ov006_02142578 twice and calls `n->m0()` on each node --
 // `ldr r1,[r0] / ldr r1,[r1] / blx r1` at 0x020fa0b4 and 0x020fa0f4 in the ROM.
-// The pair matcher func_ov006_020f9000, which slot 6 calls on every frame,
+// The pair matcher _ZN14dScMgMCarlo2_c11UpdateBoardEv, which slot 6 calls on every frame,
 // calls `head->m1(i)` -- `ldr r2,[r0] / ldr r2,[r2,#4] / blx r2` at 0x020f9400
 // and 0x020f948c. Nothing else in ov006 ever constructs an object with this
-// vptr: the only two relocations naming data_ov006_0213d728 in the whole
+// vptr: the only two relocations naming _ZTV19dMgMCarlo2CardObj_c in the whole
 // overlay are this class's element constructor (0x020fa758) and its element
 // reset (0x020f8ffc).
 //
@@ -144,7 +144,7 @@
 // it.
 //
 // THE WIDTH IS 2, CHECKED THE SAME WAY THE 36s ARE: the span from
-// data_ov006_0213d728 to the next config symbol data_ov006_0213d730 is 8 bytes
+// _ZTV19dMgMCarlo2CardObj_c to the next config symbol _ZTS14dScMgMCarlo2_c is 8 bytes
 // = 2 words; exactly 2 load relocations fall inside that span; and the word
 // past the end is 0x53643431, the first four bytes of the RTTI string
 // "14dScMgMCarlo2_c", not a code address.
@@ -156,7 +156,7 @@
 // thunk over live ROM data belonging to another class. FOR THIS CLASS THE
 // PHANTOM IS REAL AND ITS VICTIM IS NAMED, so the checks are not ceremony:
 //
-//   1. SPAN. data_ov006_0213d7e8 -> next config symbol data_ov006_0213d878.
+//   1. SPAN. _ZTV14dScMgMCarlo2_c -> next config symbol data_ov006_0213d878.
 //      0x90 bytes = 36 words. (An UPPER bound only; it refuses a width and
 //      never grants one.)
 //   2. TERMINAL SLOT. Slot 35 (0x0213d874) holds 0x020ad660, which every
@@ -224,9 +224,9 @@
 // rather than one:
 //
 //   - THE SOURCE, READ BEFORE THE FACE ARRAY WAS WIRED. That ordering is
-//     section 14's practical rule. src/func_ov006_020fa13c.c (slot 6) is a
+//     section 14's practical rule. src/minigames/d_s_mg_m_carlo2.cpp (slot 6) is a
 //     plain `switch (*(s16*)(c + 0x5928))` with cases 1, 2 and 3;
-//     src/func_ov006_020fa3d0.c (slot 19) continues the same index with cases
+//     src/minigames/d_s_mg_m_carlo2.cpp (slot 19) continues the same index with cases
 //     4, 5 and 6.
 //   - THE ROM. 0x020fa148 is add r0,r4,#0x5900 / ldrsh r0,[r0,#0x28] / cmp #1
 //     beq / cmp #2 beq / cmp #3 beq / b default, and 0x020fa3d8 is the same
@@ -250,16 +250,16 @@
 //     eip on a DS address; port/slice_pgo.txt carries the numbers.
 //
 // The FRAMEWORK's wall is still the framework's and is still paid: this class
-// reaches func_ov004_020b87e0 through dScMgBase_c exactly as curling does, and
+// reaches _ZN10dMgState_c8SetStateEi through dScMgBase_c exactly as curling does, and
 // unmatched/MgBase_StateSetter.cpp's eighty routed addresses are inherited.
 //
 // ---- 9. THE RIDE-THROUGH IS LOAD-BEARING ON SLOTS 18 AND 19 ---------------
 //
 // Slot 0's own tail dispatches slot 18 through the object's vtable at offset
 // 0x48 with `mvn r1,#0` -- one argument, value -1 -- at 0x020fa664, and
-// src/func_ov006_020fa56c.cpp spells it `((Base *)c)->m48(-1)` over a
+// src/minigames/d_s_mg_m_carlo2.cpp spells it `((Base *)c)->m48(-1)` over a
 // nineteen-virtual shim so MSVC emits the same slot. The ROM body
-// func_ov006_020fa4d4 never reads its r1. A thunk declared (void*, void*)
+// _ZN14dScMgMCarlo2_c13OnYoshiTryEatEi never reads its r1. A thunk declared (void*, void*)
 // compiles to a bare ret, leaks those four bytes, and the caller's own `ret`
 // then takes a garbage return address -- the fault lane BASESET repaired across
 // the family. runs/mg5/out/baseset/slot18_19_scan.txt is the census: 22 slot-18
@@ -298,38 +298,38 @@ int      port_scene_env_want(void);
    leaving the mounted table alone leaves live wild DS pointers in a table the
    factory installs. */
 extern unsigned char data_ov004_020bc0c0[];   /* dScMgBase_c,          36 */
-extern unsigned char data_ov006_0213e448[];   /* dScMgSingle3DBase_c,  36 */
-extern unsigned char data_ov006_0213d7e8[];   /* dScMgMCarlo2_c,       36 */
-extern unsigned char data_ov006_0213d728[];   /* dMgMCarlo2CardObj_c,   2 */
-extern unsigned char MgPairAGoneAndOn_SpawnInfo[];  /* the SpawnInfo record */
+extern unsigned char _ZTV19dScMgSingle3DBase_c[];   /* dScMgSingle3DBase_c,  36 */
+extern unsigned char _ZTV14dScMgMCarlo2_c[];   /* dScMgMCarlo2_c,       36 */
+extern unsigned char _ZTV19dMgMCarlo2CardObj_c[];   /* dMgMCarlo2CardObj_c,   2 */
+extern unsigned char g_profile_MG_MCARLO2[];  /* the SpawnInfo record */
 
 /* dScMgSingle3DBase_c's eight overrides. Slot 2 is NOT src's body and slot 33
    is the hostgen'd copy: see section 4. */
 int   port_mg_flower_after_init(void *c, unsigned f);   /* slot  2 */
-void  func_ov006_0210a608(void *c, unsigned f);         /* slot  5 */
-int   func_ov006_0210a698(void *c);                     /* slot  7 */
-int   func_ov006_0210a664(void *c);                     /* slot 10 */
-int   func_ov006_0210a4b0(char *c);                     /* slot 16 D2 */
-int   func_ov006_0210a4e8(char *c);                     /* slot 17 D0 */
-int   func_ov006_0210a600(void);                        /* slot 26 */
-void  func_ov006_0210a708(char *c);                     /* slot 33 */
+void  _ZN19dScMgSingle3DBase_c21AfterCleanupResourcesEj(void *c, unsigned f);         /* slot  5 */
+int   _ZN19dScMgSingle3DBase_c14BeforeBehaviorEv(void *c);                     /* slot  7 */
+int   _ZN19dScMgSingle3DBase_c12BeforeRenderEv(void *c);                     /* slot 10 */
+int   _ZN19dScMgSingle3DBase_cD1Ev(char *c);                     /* slot 16 D2 */
+int   _ZN19dScMgSingle3DBase_cD0Ev(char *c);                     /* slot 17 D0 */
+int   _ZN19dScMgSingle3DBase_c24OnHitByCannonBlastedCharEv(void);                        /* slot 26 */
+void  _ZN19dScMgSingle3DBase_c9Virtual84Ev(char *c);                     /* slot 33 */
 
 /* dScMgMCarlo2_c's own eight */
-int   func_ov006_020fa56c(char *c);           /* slot  0 InitResources     */
-int   func_ov006_020f9fe0(void *c);           /* slot  3 CleanupResources  */
-int   func_ov006_020fa13c(void *c);           /* slot  6 Behavior          */
-int   func_ov006_020f9ffc(char *c);           /* slot  9 Render            */
-void *func_ov006_020f8ef4(char *c);           /* slot 16 D2                */
-void *func_ov006_020f8f68(char *c);           /* slot 17 D0                */
-void  func_ov006_020fa4d4(char *c);           /* slot 18 state reset       */
-int   func_ov006_020fa3d0(char *c);           /* slot 19 states 4..6       */
+int   _ZN14dScMgMCarlo2_c13InitResourcesEv(char *c);           /* slot  0 InitResources     */
+int   _ZN14dScMgMCarlo2_c16CleanupResourcesEv(void *c);           /* slot  3 CleanupResources  */
+int   _ZN14dScMgMCarlo2_c8BehaviorEv(void *c);           /* slot  6 Behavior          */
+int   _ZN14dScMgMCarlo2_c6RenderEv(char *c);           /* slot  9 Render            */
+void *_ZN14dScMgMCarlo2_cD1Ev(char *c);           /* slot 16 D2                */
+void *_ZN14dScMgMCarlo2_cD0Ev(char *c);           /* slot 17 D0                */
+void  _ZN14dScMgMCarlo2_c13OnYoshiTryEatEi(char *c);           /* slot 18 state reset       */
+int   _ZN14dScMgMCarlo2_c13OnTurnIntoEggEi(char *c);           /* slot 19 states 4..6       */
 
 /* dMgMCarlo2CardObj_c's two, section 4b */
-void  func_ov006_020f98dc(char *thiz);        /* slot  0 the card draw   */
-void  func_ov006_020f9994(char *thiz, int event);  /* slot 1 the update  */
+void  _ZN19dMgMCarlo2CardObj_c6RenderEv(char *thiz);        /* slot  0 the card draw   */
+void  _ZN19dMgMCarlo2CardObj_c6UpdateEi(char *thiz, int event);  /* slot 1 the update  */
 
 /* the factory */
-void *MgPairAGoneAndOn_Spawn(void);
+void *dScMgMCarlo2_c_classInit(void);
 
 /* ---- THE LOOP TRACE, SM64DS_MC2_TRACE=1 (run mg12 lane CRD) -------------
    Diagnostic only. Every global the class's state-3 loop reads or writes,
@@ -356,8 +356,8 @@ extern unsigned char data_020a0de9[];         /* stylus: edge                */
 extern unsigned char data_020a0dea[];         /* stylus: x                   */
 extern unsigned char data_020a0deb[];         /* stylus: y                   */
 extern int           data_020a0e40[];         /* the local player index      */
-int  func_ov006_020f95f0(void);               /* "the board has settled"     */
-int  func_ov006_020f96e0(void);               /* "a matching pair exists"    */
+int  _ZN14dScMgMCarlo2_c10BoardReadyEv(void);               /* "the board has settled"     */
+int  _ZN14dScMgMCarlo2_c16HasRemovablePairEv(void);               /* "a matching pair exists"    */
 
 /* the framework's dispatch witness, from unmatched/MgBase_StateDispatch.cpp */
 void  port_mg_dispatch_counts(unsigned *calls, unsigned *unknown);
@@ -394,23 +394,23 @@ static unsigned g_mc2_base_hits[36];   /* the same slots on the MIDDLE table */
 static void *__fastcall s3_ainit(void *s, void *, unsigned f)
 { M3D(2);  return (void *)(size_t)port_mg_flower_after_init(s, f); }
 static void __fastcall s3_aclean(void *s, void *, unsigned f)
-{ M3D(5);  func_ov006_0210a608(s, f); }
+{ M3D(5);  _ZN19dScMgSingle3DBase_c21AfterCleanupResourcesEj(s, f); }
 static int  __fastcall s3_bbeh(void *s, void *)
-{ M3D(7);  return func_ov006_0210a698(s); }
+{ M3D(7);  return _ZN19dScMgSingle3DBase_c14BeforeBehaviorEv(s); }
 static int  __fastcall s3_bren(void *s, void *)
-{ M3D(10); return func_ov006_0210a664(s); }
+{ M3D(10); return _ZN19dScMgSingle3DBase_c12BeforeRenderEv(s); }
 static void *__fastcall s3_d2(void *s, void *)
-{ M3D(16); return (void *)(size_t)func_ov006_0210a4b0((char *)s); }
+{ M3D(16); return (void *)(size_t)_ZN19dScMgSingle3DBase_cD1Ev((char *)s); }
 static void *__fastcall s3_d0(void *s, void *)
-{ M3D(17); return (void *)(size_t)func_ov006_0210a4e8((char *)s); }
+{ M3D(17); return (void *)(size_t)_ZN19dScMgSingle3DBase_cD0Ev((char *)s); }
 static int  __fastcall s3_v26(void *, void *)
-{ M3D(26); return func_ov006_0210a600(); }
+{ M3D(26); return _ZN19dScMgSingle3DBase_c24OnHitByCannonBlastedCharEv(); }
 static int  __fastcall s3_v33(void *s, void *)
-{ M3D(33); func_ov006_0210a708((char *)s); return 0; }
+{ M3D(33); _ZN19dScMgSingle3DBase_c9Virtual84Ev((char *)s); return 0; }
 
 /* ---- dScMgMCarlo2_c's own eight ----------------------------------------- */
 static int  __fastcall mc2_init(void *s, void *)
-{ MC2(0);  const int r = func_ov006_020fa56c((char *)s);
+{ MC2(0);  const int r = _ZN14dScMgMCarlo2_c13InitResourcesEv((char *)s);
   /* the GaplessMinigames latch, for hal/scene_mg.cpp's reason: every seated
      minigame calls it so the ones the gapless table does not name can say
      "unsupported" instead of doing nothing quietly. */
@@ -422,7 +422,7 @@ static int  __fastcall mc2_init(void *s, void *)
    -- (void *, void *), no ride-through -- because that is the shape every
    existing caller of slot 3 in this port already uses. */
 static int  __fastcall mc2_clean(void *s, void *)
-{ MC2(3);  return func_ov006_020f9fe0(s); }
+{ MC2(3);  return _ZN14dScMgMCarlo2_c16CleanupResourcesEv(s); }
 /* SM64DS_MC2_TRACE=1: the state-3 loop, once a frame. Section CRD. */
 static int  g_mc2_trace = -1;
 static void mc2_trace(const char *when, const char *self)
@@ -446,7 +446,7 @@ static void mc2_trace(const char *when, const char *self)
                 (int)data_ov006_02142558,
                 (void *)data_ov006_02142570, (void *)data_ov006_02142574,
                 (void *)data_ov006_0214257c,
-                func_ov006_020f95f0(), func_ov006_020f96e0(),
+                _ZN14dScMgMCarlo2_c10BoardReadyEv(), _ZN14dScMgMCarlo2_c16HasRemovablePairEv(),
                 (unsigned)data_020a0de8[idx * 4], (unsigned)data_020a0de9[idx * 4],
                 (unsigned)data_020a0dea[idx * 4], (unsigned)data_020a0deb[idx * 4]);
     /* the whole card array, so a tap plan can be computed from a run */
@@ -468,19 +468,19 @@ static void mc2_trace(const char *when, const char *self)
 
 static int  __fastcall mc2_beh(void *s, void *)
 { MC2(6);  mc2_trace("in", (const char *)s);
-  const int r = func_ov006_020fa13c(s);
+  const int r = _ZN14dScMgMCarlo2_c8BehaviorEv(s);
   mc2_trace("out", (const char *)s); return r; }
 static int  __fastcall mc2_render(void *s, void *)
-{ MC2(9);  return func_ov006_020f9ffc((char *)s); }
+{ MC2(9);  return _ZN14dScMgMCarlo2_c6RenderEv((char *)s); }
 static void *__fastcall mc2_d2(void *s, void *)
-{ MC2(16); return func_ov006_020f8ef4((char *)s); }
+{ MC2(16); return _ZN14dScMgMCarlo2_cD1Ev((char *)s); }
 static void *__fastcall mc2_d0(void *s, void *)
-{ MC2(17); return func_ov006_020f8f68((char *)s); }
+{ MC2(17); return _ZN14dScMgMCarlo2_cD0Ev((char *)s); }
 /* the two ride-through faces, section 9 */
 static int  __fastcall mc2_reset(void *s, void *, int /*ridethrough*/)
-{ MC2(18); func_ov006_020fa4d4((char *)s); return 1; }
+{ MC2(18); _ZN14dScMgMCarlo2_c13OnYoshiTryEatEi((char *)s); return 1; }
 static int  __fastcall mc2_v19(void *s, void *, int /*ridethrough*/)
-{ MC2(19); return func_ov006_020fa3d0((char *)s); }
+{ MC2(19); return _ZN14dScMgMCarlo2_c13OnTurnIntoEggEi((char *)s); }
 
 /* ---- dMgMCarlo2CardObj_c's two, section 4b ------------------------------ */
 /* These are NOT __fastcall thunks over a Scene slot: the ROM dispatches them
@@ -492,9 +492,9 @@ static int  __fastcall mc2_v19(void *s, void *, int /*ridethrough*/)
    looks identical from every other census line in this file. */
 static unsigned g_mc2_card_draws, g_mc2_card_updates;
 static void __fastcall card_draw(void *s, void *)
-{ ++g_mc2_card_draws; func_ov006_020f98dc((char *)s); }
+{ ++g_mc2_card_draws; _ZN19dMgMCarlo2CardObj_c6RenderEv((char *)s); }
 static void __fastcall card_update(void *s, void *, int event)
-{ ++g_mc2_card_updates; func_ov006_020f9994((char *)s, event); }
+{ ++g_mc2_card_updates; _ZN19dMgMCarlo2CardObj_c6UpdateEi((char *)s, event); }
 
 /* SM64DS_SCENE_SLOT0=0 and SM64DS_SCENE_SLOT9=0, the diagnostics every scene
    seat in this port carries, counted separately so a run can never read a
@@ -564,14 +564,14 @@ extern "C" void port_scene_mcarlo2_hits(void);
 extern "C" void port_scene_fill_mcarlo2(void)
 {
     void **base = (void **)data_ov004_020bc0c0;
-    void **mid  = (void **)data_ov006_0213e448;
-    void **vt   = (void **)data_ov006_0213d7e8;
+    void **mid  = (void **)_ZTV19dScMgSingle3DBase_c;
+    void **vt   = (void **)_ZTV14dScMgMCarlo2_c;
 
     /* THE BASE TABLE IS FILLED HERE TOO AND IT IS NOT CEREMONY. Earlier rows'
        fills already did it and run first, so on a tree carrying them this is a
        second pass over words that are already host pointers and finds nothing.
        It is here so this class does not depend on another class's row
-       existing: the factory's first act is func_ov004_020b2adc, which writes
+       existing: the factory's first act is _ZN11dScMgBase_cC2Ev, which writes
        data_ov004_020bc0c0 into the object's first word before either derived
        table lands, and thirty-six raw DS words in a table the ROM installs is
        what produced the ov007 lane's wild-execute fault. */
@@ -609,7 +609,7 @@ extern "C" void port_scene_fill_mcarlo2(void)
        each of the forty records, not its contents, so records built later pick
        the host pointers up on their own. */
     {
-        void **card = (void **)data_ov006_0213d728;
+        void **card = (void **)_ZTV19dMgMCarlo2CardObj_c;
         g_mc2_card_claimed =
             mc2_apply(card, 2, kCard2Faces,
                       sizeof kCard2Faces / sizeof kCard2Faces[0]);
@@ -627,7 +627,7 @@ extern "C" void port_scene_fill_mcarlo2(void)
         const unsigned lb = mc2_raw_left(base, 36);
         const unsigned lm = mc2_raw_left(mid, 36);
         const unsigned lv = mc2_raw_left(vt, 36);
-        const unsigned lc = mc2_raw_left((void **)data_ov006_0213d728, 2);
+        const unsigned lc = mc2_raw_left((void **)_ZTV19dMgMCarlo2CardObj_c, 2);
         if (lb || lm || lv || lc) {
             std::fprintf(stderr, "  [scene] MCARLO2 FILL INCOMPLETE: "
                          "dScMgBase_c leaves %u of 36 raw DS words, "
@@ -661,7 +661,7 @@ static char *g_mc2_self;
 
 extern "C" void *port_mg_mcarlo2_spawn(void)
 {
-    void *p = MgPairAGoneAndOn_Spawn();
+    void *p = dScMgMCarlo2_c_classInit();
     g_mc2_self = (char *)p;
     return p;
 }
@@ -825,7 +825,7 @@ extern "C" void port_scene_mcarlo2_hits(void)
  *                            shape reaches only the address.
  *
  * AND TWO OF THE EIGHTEEN ARE FUNCTIONS, WHICH IS A DIFFERENT DEFECT WITH THE
- * SAME REMEDY. src/func_ov006_020f9000.cpp declares
+ * SAME REMEDY. src/minigames/d_s_mg_m_carlo2.cpp declares
  *
  *     void ApproachLinear2(s16& r, s16 a, s16 b);
  *     void ApproachLinear(int& r, int a, int b);
@@ -844,8 +844,8 @@ extern "C" void port_scene_mcarlo2_hits(void)
 #pragma comment(linker, "/alternatename:?data_ov006_0213d6f4@@3FA=_data_ov006_0213d6f4")
 #pragma comment(linker, "/alternatename:?data_ov006_0213d6f8@@3FA=_data_ov006_0213d6f8")
 #pragma comment(linker, "/alternatename:?data_ov006_0213d700@@3HA=_data_ov006_0213d700")
-#pragma comment(linker, "/alternatename:?data_ov006_0213d7e8@@3HA=_data_ov006_0213d7e8")
-#pragma comment(linker, "/alternatename:?data_ov006_0213d7e8@@3PAXA=_data_ov006_0213d7e8")
+#pragma comment(linker, "/alternatename:?_ZTV14dScMgMCarlo2_c@@3HA=__ZTV14dScMgMCarlo2_c")
+#pragma comment(linker, "/alternatename:?_ZTV14dScMgMCarlo2_c@@3PAXA=__ZTV14dScMgMCarlo2_c")
 #pragma comment(linker, "/alternatename:?data_ov006_0212e97c@@3PAY09HA=_data_ov006_0212e97c")
 #pragma comment(linker, "/alternatename:?data_ov006_02142558@@3FA=_data_ov006_02142558")
 #pragma comment(linker, "/alternatename:?data_ov006_02142560@@3FA=_data_ov006_02142560")

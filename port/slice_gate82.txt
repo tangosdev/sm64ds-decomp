@@ -5,15 +5,15 @@
 # Level 6's census printed id 40 skipped, x2. Resolved the ROM's own way:
 # ACTOR_SPAWN_TABLE entry [40] (arm9 0x02090864 + 40*4) relocates to the
 # SpawnInfo at 0x021145e4, and the only overlay whose symbols.txt names that
-# address is ov014 -- ShutterBob_SpawnInfo, +4 halfword reads 40. ov014 is
+# address is ov014 -- g_profile_SWITCHDOOR, +4 halfword reads 40. ov014 is
 # level 6's own overlay and is ALREADY MOUNTED (the gate-32 chain chomp mount,
-# ov014_syms.txt); ShutterBob_SpawnInfo and data_ov014_021145c4 are in that
+# ov014_syms.txt); g_profile_SWITCHDOOR and data_ov014_021145c4 are in that
 # mount, so this gate adds NO new overlay data.
 #
 # ShutterBob is a Platform subclass (RTTI daObjBSwdoor_c, "B swing door"): the
-# same BlueCoinSwitch/FallBlockWf shape. Its 32-slot vtable _ZTV10ShutterBob
+# same BlueCoinSwitch/FallBlockWf shape. Its 32-slot vtable _ZTV14daObjBSwdoor_c
 # (ov014 0x02114608) overrides only 0 (Init), 3 (Cleanup), 6 (Behavior),
-# 16 (D1), 17 (D0). Slot 9 (Render) is func_ov002_020babf0, the shared
+# 16 (D1), 17 (D0). Slot 9 (Render) is _ZN13daObjSwdoor_c6RenderEv, the shared
 # Platform model-render; slot 12 (OnPendingDestroy) is ActorBase's own. The
 # vtable is a HOST array the registry fills (the ov085/ov080 rule), so it is
 # NOT mounted from ov014.
@@ -28,18 +28,14 @@
 # link from the Platform-subclass gates. The HAL seam is
 # hal/actor_classes_bob_world.cpp (the ShutterBob section) and its vtable fill.
 #
-# ShutterBob_Spawn is a HOST COPY (port/unmatched/ShutterBob_Spawn_hostcopy.cpp), added
+# daObjBSwdoor_c_classInit is a HOST COPY (port/unmatched/ShutterBob_Spawn_hostcopy.cpp), added
 # in CMakeLists rather than here: the shared-header recovery emitted the
 # factory's two vtable stores in pool order, so the base table won and the
 # object came up with no ShutterBob::InitResources in slot 0 -- a null call in
 # the spawn spine. The copy writes the derived table last, exactly what the ROM
 # asm does. See the file header.
-src/_ZN10ShutterBob13InitResourcesEv.cpp
-src/_ZN10ShutterBob16CleanupResourcesEv.cpp
-src/_ZN10ShutterBob8BehaviorEv.cpp
-src/_ZN10ShutterBobD1Ev.c
-src/_ZN10ShutterBobD0Ev.c
+src/game/actors/d_a_obj_b_swdoor.cpp
 src/func_ov002_020bac18.c
 src/func_ov002_020bad10.c
 src/func_ov002_020baba8.cpp
-src/func_ov002_020babf0.cpp
+src/_ZN13daObjSwdoor_c6RenderEv.cpp

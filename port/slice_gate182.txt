@@ -7,8 +7,8 @@
 # 70 ov062 TUs plus one arm9 TU, every one fully matched, no asm-hatch. The
 # fill is hal/actor_classes_koopa_chuckya.cpp.
 #
-# THE NAMES DO NOT CROSS. Chuckya_Spawn (0x02117478, alloc 0x438) installs
-# _ZTV7Chuckya (0x0211d9e0) and Koopa_Spawn (0x0211970c, alloc 0x3d0) installs
+# THE NAMES DO NOT CROSS. daHolhei_c_classInit (0x02117478, alloc 0x438) installs
+# _ZTV7Chuckya (0x0211d9e0) and daNknk_c_classInit_NOKONOKO (0x0211970c, alloc 0x3d0) installs
 # _ZTV5Koopa (0x0211dab4), each as its only vptr write -- real tables, no
 # reseat wrappers. KOOPA_SMALL (204) shares _ZTV5Koopa and is NOT in this gate
 # (the level-6 census names no 204).
@@ -53,28 +53,29 @@
 #    Its slot-18 self-dispatch (`c->Slot18()` through a 19-virtual local
 #    shadow) goes through the host vtable's own slot 18 thunk -- the port's
 #    standard thunk ABI, safe.
-#  - func_ov062_02119628.cpp (Koopa OnTurnIntoEgg): same local-shadow slot-18
+#  - _ZN5Koopa13OnTurnIntoEggER6Player.cpp (Koopa OnTurnIntoEgg): same local-shadow slot-18
 #    dispatch, same reason.
 #  - The twenty Chuckya state bodies: called by host pointer with `this` as
 #    arg 0 after the seat.
 #
 # ALREADY BUILT (not here): the five ov062 sinits and KOOPA_THE_QUICK's whole
-# closure (gate 32); _ZN5EnemyC2Ev / func_ov002_020aed18 (gate 16);
-# _ZN9ModelAnimC1Ev/D1Ev, _ZN11ShadowModelC1Ev/D1Ev, _ZN18MovingCylinderClsnC1Ev/
-# D1Ev, _ZN12WithMeshClsnC1Ev/D1Ev, _ZN5Model12HideMaterialEii,
+# closure (gate 32); _ZN12dEnemyBase_cC2Ev / _ZN12dEnemyBase_cD2Ev (gate 16);
+# _ZN9ModelAnimC1Ev/D1Ev, _ZN11ShadowModelC1Ev/D1Ev, _ZN7dCcAc_cC1Ev/
+# D1Ev, _ZN10dBgCh_ActrC1Ev/D1Ev, _ZN5Model12HideMaterialEii,
 # _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj (and its shadow-mangle face,
 # hal/bob_enemy_shadow_faces.cpp); the Enemy Update* family, DecIfAbove0_Short,
 # Animation::Advance, Memory::Deallocate and G0.
 #
 # ---- CHUCKYA (190): lifecycle, factory, helpers, twenty state bodies -------
-src/Chuckya_Spawn.c
-src/_ZN7Chuckya13InitResourcesEv.c
-src/_ZN7Chuckya16CleanupResourcesEv.c
-src/_ZN7Chuckya6RenderEv.c
-src/_ZN7Chuckya16OnPendingDestroyEv.c
-src/_ZN7ChuckyaD1Ev.c
-src/_ZN7ChuckyaD0Ev.c
-src/func_ov062_02117470.c
+src/d_a_holhei.c
+src/_ZN7Chuckya13InitResourcesEv.cpp
+src/_ZN7Chuckya16CleanupResourcesEv.cpp
+src/_ZN7Chuckya6RenderEv.cpp
+src/_ZN7Chuckya16OnPendingDestroyEv.cpp
+src/_ZN7ChuckyaD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN7ChuckyaD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN7ChuckyaD0Ev.cpp
+src/_ZN7Chuckya16OnAimedAtWithEggEv.cpp
 src/func_ov062_02115f84.c
 src/func_ov062_02116010.c
 src/func_ov062_021161a8.c
@@ -102,16 +103,17 @@ src/func_ov062_02116dbc.cpp
 src/func_ov062_02116e80.c
 src/func_ov062_02116edc.cpp
 # ---- KOOPA (203): lifecycle, factory, overrides, behavior helpers ----------
-src/Koopa_Spawn.c
+src/d_a_nknk_nokonoko.c
 src/_ZN5Koopa13InitResourcesEv.cpp
 src/_ZN5Koopa16CleanupResourcesEv.cpp
 src/_ZN5Koopa8BehaviorEv.cpp
-src/_ZN5Koopa16OnPendingDestroyEv.c
-src/_ZN5KoopaD1Ev.c
-src/_ZN5KoopaD0Ev.c
-src/func_ov062_021196a8.c
-src/func_ov062_02119628.cpp
-src/func_ov062_02119608.cpp
+src/_ZN5Koopa16OnPendingDestroyEv.cpp
+src/_ZN5KoopaD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN5KoopaD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN5KoopaD0Ev.cpp
+src/_ZN5Koopa13OnYoshiTryEatEv.cpp
+src/_ZN5Koopa13OnTurnIntoEggER6Player.cpp
+src/_ZN5Koopa16OnAimedAtWithEggEv.cpp
 src/func_ov062_02117570.cpp
 src/func_ov062_021175c0.c
 src/func_ov062_02117994.c

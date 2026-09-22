@@ -11,8 +11,8 @@
 #
 # Everything below was read out of extracted/overlays/overlay_0005.bin at base
 # 0x020bfec0 (the delinks.txt .text start), with the base proven on a symbol
-# first: func_ov005_020c21ec's first word is e92d4010 = push {r4,lr} and
-# func_ov005_020c14a0's is the same, so the file offset arithmetic is right.
+# first: dScMiniGm_c_classInit's first word is e92d4010 = push {r4,lr} and
+# _ZN11dScMiniGm_c8BehaviorEv's is the same, so the file offset arithmetic is right.
 #
 #   SpawnInfo      0x020c2440  {0x020c21ec factory, 0x00080005}
 #   RTTI           0x020c2448  {0x0209a764 class_type_info vt, 0x020c2454 name,
@@ -24,7 +24,7 @@
 #                              +0x13, then the class vptr 0x020c2490
 #   vtable         0x020c2490  EIGHTEEN slots (delta to the next symbol,
 #                              data_ov005_020c24d8, is 0x48 = 18 words), the
-#                              _ZTV5Scene shape -- NOT the 36-slot
+#                              _ZTV8dScene_c shape -- NOT the 36-slot
 #                              dScMgBase_c shape the ov006 minigames use.
 #                              dScMiniGm_c is a direct Scene subclass; the
 #                              minigames are not.
@@ -53,7 +53,7 @@
 # (byte-matched and delinked); the other three carry NONMATCHING banners:
 #
 #   func_ov005_020c0378  the touch SELECTOR      regalloc/path-A schedule
-#   func_ov005_020c0b04  Render                  "missing logic (ROM does more)"
+#   _ZN11dScMiniGm_c6RenderEv  Render                  "missing logic (ROM does more)"
 #   func_ov005_020c16e4  the tile blitter        size 0x338 vs 0x33c
 #
 # The Render banner is the one that matters to this seat and it is reported as
@@ -86,7 +86,7 @@
 #
 # ---- 4. THE THREE //cpp-MARKED .c FILES ----------------------------------
 #
-# src/func_ov005_020c0140.c, _020c0378.c and _020c0878.c open with the //cpp
+# src/func_ov005_020c0140.cpp, _020c0378.c and _020c0878.c open with the //cpp
 # marker and a top-level `extern "C" {` block, which is invalid C. They get
 # LANGUAGE CXX in port/CMakeLists.txt beside this slice, the treatment gates
 # 176/177/194 already established. The three genuine .cpp TUs (020bff4c,
@@ -106,8 +106,9 @@
 # from the scan, and the independent review caught it. The five match.py
 # re-verifications in port/tools/inferred_stub_adjudicated.txt are the primary
 # evidence either way and they were always five.)
-src/func_ov005_020bfec0.c
-src/func_ov005_020bfefc.c
+src/_ZN11dScMiniGm_cD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN11dScMiniGm_cD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN11dScMiniGm_cD0Ev.cpp
 src/func_ov005_020bff4c.cpp
 src/func_ov005_020bffc8.c
 src/func_ov005_020bfff4.c
@@ -116,22 +117,22 @@ src/func_ov005_020c0030.c
 src/func_ov005_020c007c.c
 src/func_ov005_020c00b4.c
 src/func_ov005_020c00e4.c
-src/func_ov005_020c0140.c
+src/func_ov005_020c0140.cpp
 src/func_ov005_020c0250.cpp
-src/func_ov005_020c0378.c
+src/func_ov005_020c0378.cpp
 src/func_ov005_020c06cc.c
-src/func_ov005_020c0878.c
-src/func_ov005_020c0b00.c
-src/func_ov005_020c0b04.c
+src/func_ov005_020c0878.cpp
+src/_ZN11dScMiniGm_c16OnPendingDestroyEv.cpp
+src/_ZN11dScMiniGm_c6RenderEv.cpp
 src/func_ov005_020c0f38.c
 src/func_ov005_020c1030.cpp
 src/func_ov005_020c1130.c
-src/func_ov005_020c14a0.c
-src/func_ov005_020c1654.c
+src/_ZN11dScMiniGm_c8BehaviorEv.cpp
+src/_ZN11dScMiniGm_c16CleanupResourcesEv.cpp
 src/func_ov005_020c1688.c
 src/func_ov005_020c16e4.c
-src/func_ov005_020c1a20.c
-src/func_ov005_020c21ec.c
+src/_ZN11dScMiniGm_c13InitResourcesEv.cpp
+src/d_s_mini_gm.c
 src/ExitMinigameMenu.c
 src/func_02013598.c
 src/func_020135d0.c
@@ -205,7 +206,7 @@ src/func_02013638.c
 # at DS y about 87, x about 70 and 118 -- inside grid cells (row 0, columns 0
 # and 1) by func_ov005_020c0378's own hit test -- with no card art under them.
 # The first suspect is named in section 2 and in hal/scene_mg_menu.cpp:
-# func_ov005_020c0b04, the Render slot, is NONMATCHING with the banner
+# _ZN11dScMiniGm_c6RenderEv, the Render slot, is NONMATCHING with the banner
 # "missing logic (ROM does more)". This lane did not chase it: the seat is
 # proved to boot, draw and take a touch, and finishing Render is a decomp job
 # on one body rather than a port job. Nobody should read this seat's pictures

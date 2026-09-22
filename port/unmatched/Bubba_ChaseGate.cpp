@@ -1,14 +1,14 @@
-/* HOST COPY of src/func_ov032_02111350.c -- BUBBA's chase gate (id 228, ov032,
+/* HOST COPY of src/game/actors/d_a_bakubaku.cpp -- BUBBA's chase gate (id 228, ov032,
  * level 24). Run rel0215, lane cast-sweep2.
  *
  * WHY A HOST COPY: the r0-passthrough seam, the fifth instance of the shape
  * port/unmatched/Actor_ClosestPlayer_OverlayReaders.cpp hosts four of. That
- * file's LATENT registry names this exact TU -- "src/func_ov032_02111350.c
+ * file's LATENT registry names this exact TU -- "src/game/actors/d_a_bakubaku.cpp
  * (ov032, calls ClosestPlayer() no arg)" -- as a bug that goes live the instant
  * ov032 is hosted, which is what this lane does. port/tools/closestplayer_guard
  * .py fails the build rather than letting it through, and it did.
  *
- * The matched src declares `extern char *_ZN5Actor13ClosestPlayerEv(void);` and
+ * The matched src declares `extern char *_ZN8dActor_c13ClosestPlayerEv(void);` and
  * calls it with no argument. That is byte-identical on ARM because
  * Actor::ClosestPlayer reads `this` from r0 and the caller's r0 is still live
  * across the `bl` -- ROM 0x02111350:
@@ -37,11 +37,11 @@
 
 /* the real one-arg (this) shape, the same declaration the four copies in
  * Actor_ClosestPlayer_OverlayReaders.cpp share */
-extern "C" void *_ZN5Actor13ClosestPlayerEv(void *self);
+extern "C" void *_ZN8dActor_c13ClosestPlayerEv(void *self);
 
 extern "C" {
-int _ZNK12WithMeshClsn8IsOnWallEv(void *self);
-int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
+int _ZNK10dBgCh_Actr8IsOnWallEv(void *self);
+int _ZNK10dBgCh_Actr10IsOnGroundEv(void *self);
 int Vec3_HorzDist(const struct Vector3 *a, const struct Vector3 *b);
 extern char data_ov032_02113abc[];
 extern char data_0209f32c[];

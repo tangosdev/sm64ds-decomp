@@ -14,7 +14,7 @@
 // port/tools/stategen.py --sinit src/__sinit_ov006_02131a38.c --overlay 6
 // --arity 1 reprints the join. That constructor is attributed to THIS class by
 // address containment: its copied pairs run 0x0213d878..0x0213d940 and that
-// range brackets MgBobOmbSquad_SpawnInfo at 0x0213d910.
+// range brackets g_profile_MG_PACHINKO at 0x0213d910.
 //
 //   table                n  arity  state addresses (in slot order)
 //   -------------------  -  -----  ----------------------------------------

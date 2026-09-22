@@ -16,7 +16,7 @@ address alone does not name a module (the ov039/ov041/ov044 spellings in
 Cloud::InitResources are exactly that hazard).
 
     python port/tools/ov_closure.py <root> port/slice_gate217.txt
-    python port/tools/ov_closure.py <root> --tu src/Cloud_Spawn.c
+    python port/tools/ov_closure.py <root> --tu src/game/actors/d_a_obj_kumo.cpp
 """
 import argparse
 import collections

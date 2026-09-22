@@ -18,14 +18,14 @@
 // convention involved. Section 4's rulebook corollary about member pointers
 // does not apply: none of these four is a pair.
 //
-//   ?data_ov006_0213f844@@3HA     src/MgBoomBox_Spawn.cpp
-//                                 `extern int data_ov006_0213f844;` and takes
+//   ?_ZTV12dScMgSound_c@@3HA     src/actors/dScMgSound_c.cpp
+//                                 `extern int _ZTV12dScMgSound_c;` and takes
 //                                 its ADDRESS to store as the vptr
-//   ?data_ov006_0213f844@@3PAXA   src/func_ov006_02119904.cpp (slot 16, D2)
-//                                 `extern void* data_ov006_0213f844;`, the
+//   ?_ZTV12dScMgSound_c@@3PAXA   src/actors/dScMgSound_c.cpp (slot 16, D2)
+//                                 `extern void* _ZTV12dScMgSound_c;`, the
 //                                 same symbol at a different C++ type
-//   ?data_ov006_0212ef7c@@3PAHA   src/func_ov006_0211b9c8.cpp
-//   ?data_ov006_0212ef8c@@3PAHA   src/func_ov006_0211b9c8.cpp
+//   ?data_ov006_0212ef7c@@3PAHA   src/actors/dScMgSound_c.cpp
+//   ?data_ov006_0212ef8c@@3PAHA   src/actors/dScMgSound_c.cpp
 //                                 the two int tables that body indexes by the
 //                                 spacing byte at +0x5627
 //
@@ -34,9 +34,9 @@
 // `extern void*` produce two different undefined symbols for one address and
 // each needs its own row. hal/scene_mg_flower.cpp and
 // unmatched/MgMemory2_Faces.cpp already carry exactly this pair for the
-// intermediate base's table (?data_ov006_0213e448@@3HA and @@3PAXA), which is
+// intermediate base's table (?_ZTV19dScMgSingle3DBase_c@@3HA and @@3PAXA), which is
 // why 0x0213e448 did NOT appear in this class's first link wave even though
-// src/MgBoomBox_Spawn.cpp declares it the same way.
+// src/actors/dScMgSound_c.cpp declares it the same way.
 //
 // ---- THE RIGHT-HAND SIDES ARE THE LINKER'S OWN ANSWER --------------------
 //
@@ -54,7 +54,9 @@
 // -- cannot work twice running on one tree. A lane that wants facegen here
 // should copy the map aside BEFORE the probe link.
 
-#pragma comment(linker, "/alternatename:?data_ov006_0213f844@@3HA=_data_ov006_0213f844")
-#pragma comment(linker, "/alternatename:?data_ov006_0213f844@@3PAXA=_data_ov006_0213f844")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEAD RHS and an UNREFERENCED left hand side: nothing in the build defines _data_ov006_0213f844, and nothing references ?_ZTV12dScMgSound_c@@3HA, so the row can never fire and nothing wants it to. */
+// #pragma comment(linker, "/alternatename:?_ZTV12dScMgSound_c@@3HA=_data_ov006_0213f844")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEAD RHS and an UNREFERENCED left hand side: nothing in the build defines _data_ov006_0213f844, and nothing references ?_ZTV12dScMgSound_c@@3PAXA, so the row can never fire and nothing wants it to. */
+// #pragma comment(linker, "/alternatename:?_ZTV12dScMgSound_c@@3PAXA=_data_ov006_0213f844")
 #pragma comment(linker, "/alternatename:?data_ov006_0212ef7c@@3PAHA=_data_ov006_0212ef7c")
 #pragma comment(linker, "/alternatename:?data_ov006_0212ef8c@@3PAHA=_data_ov006_0212ef8c")

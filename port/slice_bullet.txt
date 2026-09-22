@@ -9,12 +9,12 @@
 # Enemy subclass, 31-slot table, overriding the seven lifecycle slots
 # (0/3/6/9/12/16/17). Every tail slot is the Enemy/Actor default the reloc run
 # already lands on -- no ov002 body of its own, so nothing to trap by name and
-# inferred_stub_guard stays green. Its object is 860 bytes (Bullet_Spawn ov002
+# inferred_stub_guard stays green. Its object is 860 bytes (daPropeller_Heyho_Fire_c_classInit ov002
 # 0x020fefcc): MovingCylinderClsn at 0x110, WithMeshClsn at 0x144, Model at 0x300.
 #
 # ---- the id, and the live spawn edge ---------------------------------------
 #
-# Bullet_SpawnInfo (ov002 0x0210d630) has +4 halfword 0xe9 (233); Snufit spawns
+# g_profile_PROPELLER_HEYHO_FIRE (ov002 0x0210d630) has +4 halfword 0xe9 (233); Snufit spawns
 # it. ov002 is the engine overlay (always mounted). Reachability proof:
 # SM64DS_SPAWN_ACTOR=233, or spawn a Snufit and let it fire.
 #
@@ -40,13 +40,14 @@
 # mounted symbol in hal/actor_classes_bullet.cpp. The vtable fill
 # hal_fill_bullet_vtable and the method faces are in hal/actor_classes_bullet.cpp;
 # the registry row is in hal/actor_classes.inc.
-src/Bullet_Spawn.c
+src/d_a_propeller_heyho_fire.c
 src/_ZN6Bullet13InitResourcesEv.cpp
 src/_ZN6Bullet6RenderEv.cpp
-src/_ZN6Bullet16CleanupResourcesEv.c
-src/_ZN6Bullet16OnPendingDestroyEv.c
-src/_ZN6BulletD0Ev.c
-src/_ZN6BulletD1Ev.c
+src/_ZN6Bullet16CleanupResourcesEv.cpp
+src/_ZN6Bullet16OnPendingDestroyEv.cpp
+# RETIRED at SLICE1: body now in src/_ZN6BulletD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN6BulletD0Ev.cpp
+src/_ZN6BulletD1Ev.cpp
 # the two matched state handlers the class dispatches through (reached only via
 # the seated descriptor, so no link edge names them):
 src/func_ov002_020fed18.c

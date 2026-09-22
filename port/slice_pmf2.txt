@@ -31,7 +31,7 @@
 # are a TAIL JUMP -- `pop ebp` and then `jmp` through a register, no `call`.
 # The listings are archived at runs/link100/out/PMF2/listings/.
 #
-#   the pure forwarder, src/func_ov096_021368f0.cpp:
+#   the pure forwarder, src/actors/daSanbo_c.cpp:
 #       push ebp / mov ebp,esp
 #       mov  eax, [ebp+8]          ; c
 #       mov  edx, [eax+900]        ; c->pp
@@ -114,24 +114,24 @@
 # referrer per symbol is runs/link100/out/PMF2/audit.txt):
 #
 #   func_ov030_02114134  <- unmatched/Ukiki_Behavior.cpp (RollingLogTtm::Behavior)
-#   func_ov030_02114170  <- src/func_ov030_021141a8.c
-#   func_ov072_0211fc78  <- src/func_ov072_0211fcb0.c
-#   func_ov072_0211fc3c  <- src/_ZN11SnowmanBody8BehaviorEv.cpp
-#   func_ov072_0212059c  <- src/func_ov072_021205d4.c
-#   func_ov072_02120560  <- src/_ZN11SnowmanHead8BehaviorEv.cpp
+#   func_ov030_02114170  <- src/actors/daMky_c.cpp
+#   _ZN12daBgSnmBdy_c13CallStateInitEv  <- src/actors/daBgSnmBdy_c.cpp
+#   _ZN12daBgSnmBdy_c17CallStateBehaviorEv  <- src/actors/daBgSnmBdy_c.cpp
+#   _ZN11SnowmanHead13CallStateInitEv  <- src/_ZN11SnowmanHead8SetStateEi.cpp
+#   _ZN11SnowmanHead17CallStateBehaviorEv  <- src/_ZN11SnowmanHead8BehaviorEv.cpp
 #   func_ov077_02124754  <- src/func_ov077_0212478c.c
 #   func_ov077_02124718  <- src/_ZN6Lakitu8BehaviorEv.cpp
 #   func_ov077_02125e5c  <- src/func_ov077_02125e94.c
 #   func_ov077_02125e20  <- src/_ZN5Spiny8BehaviorEv.cpp
-#   func_ov096_021368f0  <- src/func_ov096_02136928.c
-#   func_ov096_021368b4  <- src/_ZN5Pokey8BehaviorEv.cpp
+#   func_ov096_021368f0  <- src/actors/daSanbo_c.cpp
+#   func_ov096_021368b4  <- src/actors/daSanbo_c.cpp
 #   ChiefChilly_ChangeState <- src/_ZN11ChiefChilly13InitResourcesEv.cpp and
 #                              fifteen more ov073 state bodies
 #   func_ov073_021223a4  <- src/_ZN8CccArena13InitResourcesEv.cpp
-#   func_ov026_02111ee0  <- src/_ZN9Submarine13InitResourcesEv.cpp
+#   func_ov026_02111ee0  <- src/_ZN9Whirlpool13InitResourcesEv.cpp
 #   func_ov026_021122d4  <- src/_ZN12WaterSuction13InitResourcesEv.cpp
-#   func_ov032_02111ff4  <- src/func_ov032_02111620.cpp and five more
-#   func_ov065_0211691c  <- src/_ZN6Snufit13InitResourcesEv.cpp
+#   func_ov032_02111ff4  <- src/game/actors/d_a_bakubaku.cpp and five more
+#   func_ov065_0211691c  <- src/actors/daYurei_Mucho_c.cpp
 #   func_ov065_02117944  <- src/_ZN5Swoop13InitResourcesEv.cpp
 #   func_ov066_02119454  <- src/_ZN6Eyerok13InitResourcesEv.cpp and eighteen more
 #   func_ov077_02126d5c  <- src/_ZN7HeaveHo13InitResourcesEv.cpp
@@ -140,7 +140,7 @@
 #   func_ov090_02132ac4  <- unmatched/MantaRay_HostSites.cpp (InitResources)
 #   func_ov090_021332e8  <- src/_ZN10CheepCheep13InitResourcesEv.cpp
 #   func_ov090_021338b4  <- src/_ZN5Shark13InitResourcesEv.cpp
-#   func_ov091_02134044  <- src/_ZN5Stump13InitResourcesEv.cpp
+#   func_ov091_02134044  <- src/_ZN6Fwoosh13InitResourcesEv.cpp
 #   func_ov100_02143b18  <- unmatched/UnchainedChomp_Behavior.cpp (InitResources)
 #
 # ---- WHAT IS NOT HERE, AND THE MECHANISM THAT KEEPS IT OUT -----------------
@@ -163,7 +163,7 @@
 #     width work, and it belongs to whoever takes it with a measured before and
 #     after.
 #
-# (3) src/func_ov018_0211235c.cpp is a pure forwarder with NO host copy and NO
+# (3) src/game/actors/d_a_pg_mthr.cpp is a pure forwarder with NO host copy and NO
 #     caller anywhere in the binary -- nothing defines or references the symbol
 #     except one prose mention in unmatched/Ov070_PmfDispatch.cpp. Adding it
 #     would raise the count without the ROM's reference graph reaching it, so
@@ -214,27 +214,39 @@
 # ---- THE TWENTY-EIGHT ------------------------------------------------------
 #
 # pure forwarder, pp + 0 and pp + 1
-src/func_ov030_02114134.cpp
-src/func_ov030_02114170.cpp
-src/func_ov072_0211fc3c.cpp
-src/func_ov072_0211fc78.cpp
-src/func_ov072_02120560.cpp
-src/func_ov072_0212059c.cpp
+# QUARANTINED at the main->port sync (lane SYNC5, the wave-7 fold merge): MSVC
+# refuses main's shape for this TU (C2556 and C2371, one free function
+# declared with two different return types in one TU). It is a decomp-side
+# item, not a port one: see runs/link100/out/SYNC5/decomp_side.md. The row
+# returns when main lands the fix.
+#src/actors/daMky_c.cpp
+src/actors/daBgSnmBdy_c.cpp
+src/_ZN11SnowmanHead17CallStateBehaviorEv.cpp
+src/_ZN11SnowmanHead13CallStateInitEv.cpp
 src/func_ov077_02124718.cpp
 src/func_ov077_02124754.cpp
 src/func_ov077_02125e20.cpp
 src/func_ov077_02125e5c.cpp
-src/func_ov096_021368b4.cpp
-src/func_ov096_021368f0.cpp
+# QUARANTINED at the main->port sync (origin/main 9c7f38a24): main folded this
+# class into one TU, and port/ host-copies bodies inside it (the slice_ov096 host copies).
+# port/CMakeLists.txt's own assertion refuses the pair, because taking both is a
+# duplicate symbol and taking the src one puts the host copy's reason back. The
+# row returns when the host copy covers the whole consolidated TU.
+#src/actors/daSanbo_c.cpp
 # setter plus null guard
 src/ChiefChilly_ChangeState.cpp
 src/func_ov073_021223a4.cpp
 src/func_ov026_02111ee0.cpp
 src/func_ov026_021122d4.cpp
-src/func_ov032_02111ff4.cpp
-src/func_ov065_0211691c.cpp
+src/game/actors/d_a_bakubaku.cpp
+src/actors/daYurei_Mucho_c.cpp
 src/func_ov065_02117944.cpp
-src/func_ov066_02119454.cpp
+# QUARANTINED at the main->port sync (origin/main 9c7f38a24): main folded this
+# class into one TU, and port/ host-copies bodies inside it (the slice_ov066 host copies).
+# port/CMakeLists.txt's own assertion refuses the pair, because taking both is a
+# duplicate symbol and taking the src one puts the host copy's reason back. The
+# row returns when the host copy covers the whole consolidated TU.
+#src/actors/Eyerok.cpp
 src/func_ov077_02126d5c.cpp
 src/func_ov081_02125488.cpp
 src/func_ov090_02131e00.cpp
@@ -258,7 +270,7 @@ src/func_ov100_02143b18.cpp
 #       referrer src/func_ov071_02121634.c
 #   src/Chuckya_ChangeState.cpp   Chuckya, +0x364
 #       seat unmatched/KoopaChuckya_StateDispatch.cpp:277
-#       referrer src/_ZN7Chuckya13InitResourcesEv.c and ten more ov062 bodies
+#       referrer src/_ZN7Chuckya13InitResourcesEv.cpp and ten more ov062 bodies
 #   src/func_ov002_020fed2c.cpp   Bullet, +0x350
 #       seat unmatched/Bullet_StateDispatch.cpp:135
 #       referrer src/_ZN6Bullet13InitResourcesEv.cpp
@@ -274,7 +286,7 @@ src/func_ov100_02143b18.cpp
 #       referrer src/_ZN10LavaBubble13InitResourcesEv.cpp
 #   src/func_ov064_0211982c.cpp   BowserPuzzle, +0x300
 #       seat unmatched/BowserPuzzle_StateDispatch.cpp:164 and :192
-#       referrer src/_ZN17BowserPuzzlePiece13InitResourcesEv.cpp
+#       referrer src/_ZN9JetStream13InitResourcesEv.cpp
 #   src/func_ov064_02119ecc.cpp   WaterRing, +0x370
 #       seat unmatched/Ov064_WaterRing.cpp:207
 #       referrer src/_ZN9WaterRing13InitResourcesEv.cpp; the host file also calls
@@ -282,7 +294,7 @@ src/func_ov100_02143b18.cpp
 #
 # STILL NOT HERE after this pass, and now for one shared reason rather than a
 # scan artefact: DaPgDfdr (func_ov027_02111cfc, func_ov027_02111d38), Bbh
-# (func_ov080_02125104), PrincessPeach (func_ov085_0212a430, func_ov085_0212a46c),
+# (func_ov080_02125104), PrincessPeach (_ZN13PrincessPeach17CallStateBehaviorEv, _ZN13PrincessPeach13CallStateInitEv),
 # RabbitKey (func_ov085_0212d268), HootTheOwl (func_ov094_02136188) and
 # KingBobOmb_SetState all tail jump, and every one of their host files states in
 # prose that the adjustment words are ROM zero, read out of the overlay image.

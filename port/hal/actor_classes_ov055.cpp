@@ -5,7 +5,7 @@
 // one is this class -- so this seat takes level 47 to zero skipped.
 //
 //   id   name          x on L47  factory            table              width
-//   195  MIRROR_LUIGI   1        MirrorLuigi_Spawn  _ZTV11MirrorLuigi   31
+//   195  MIRROR_LUIGI   1        daLuigi_c_classInit  _ZTV11MirrorLuigi   31
 //
 // ---- NO IDENTITY SHIFT, AND THE RTTI SAYS SO ------------------------------
 //
@@ -53,13 +53,15 @@
 // lane-ownership pattern, behind one DSSTATE-bracketed done-guard: the pack
 // check, the syms patch, the overlay's single sinit, then the cell seat.
 // hal_fill_platform_vtable is NOT called -- nothing here is a Platform.
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
@@ -67,27 +69,27 @@ extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include "dsstate_seg.h"
 #include <cstdlib>
 
-#include "Actor.h"
-#include "ActorBase.h"
+#include "dActor_c.h"
+#include "fBase_c.h"
 
 extern "C" {
 /* the arm9 shared half */
-int _ZN5Actor19BeforeInitResourcesEv(void *self);              /* slot 1  */
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
-int _ZN5Actor14BeforeBehaviorEv(void *self);                   /* slot 7  */
-int _ZN5Actor12BeforeRenderEv(void *self);                     /* slot 10 */
-int _ZN5Actor13OnYoshiTryEatEv(void *self);                    /* slot 18 */
-void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
-int _ZN5Actor9Virtual50Ev(void *self);                         /* slot 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);              /* slot 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);              /* slot 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
-int _ZN5Actor16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);              /* slot 1  */
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);                   /* slot 7  */
+int _ZN8dActor_c12BeforeRenderEv(void *self);                     /* slot 10 */
+int _ZN8dActor_c13OnYoshiTryEatEv(void *self);                    /* slot 18 */
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
+int _ZN8dActor_c9Virtual50Ev(void *self);                         /* slot 20 */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);              /* slot 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);              /* slot 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
+int _ZN8dActor_c16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
 
 const char *port_actor_class_name(unsigned id);   /* hal/actor_registry */
 void port_actor_slot_decline(const char *what);   /* func_02043fdc_hostcopy.cpp */
@@ -102,15 +104,15 @@ void __sinit_ov055_021118d4(void);
 
 /* what ml_d1 spells by hand (src/_ZN11MirrorLuigiD1Ev.cpp is held out -- it is
    the //cpp real-destructor shape, the ov024 PyramidTag case) */
-int __destroy_arr(void *base, int n, int stride, void *dtor);
+int __cxa_vec_cleanup(void *base, int n, int stride, void *dtor);
 void _ZN15TextureSequenceD1Ev(void *p);
 void _ZN11ShadowModelD1Ev(void *p);
 void _ZN5ModelD1Ev(void *p);
 void _ZN9ModelAnimD1Ev(void *p);
-void _ZN5ActorD2Ev(void *p);
+void _ZN8dActor_cD2Ev(void *p);
 
 /* the class's own bodies */
-void *MirrorLuigi_Spawn(void);                       /* id 195 */
+void *daLuigi_c_classInit(void);                       /* id 195 */
 int *_ZN11MirrorLuigiD0Ev(void *self);               /* slot 17 */
 int _ZN11MirrorLuigi16CleanupResourcesEv(void);      /* slot 3,  a plain .c body */
 void _ZN11MirrorLuigi16OnPendingDestroyEv(void);     /* slot 12, a plain .c body */
@@ -197,47 +199,47 @@ OV55_TRAP(13) OV55_TRAP(14)
 #undef OV55_TRAP
 
 static int __fastcall ov55_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall ov55_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall ov55_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 static void __fastcall ov55_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall ov55_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall ov55_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall ov55_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall ov55_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall ov55_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int __fastcall ov55_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 static int __fastcall ov55_turn_egg(void *s, void *, void *p)
-{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+{ _ZN8dActor_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall ov55_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall ov55_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall ov55_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall ov55_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall ov55_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall ov55_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall ov55_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall ov55_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall ov55_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 static int __fastcall ov55_egg(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 
 // ============================================================================
 // THE ONE-CELL PMF SEAT
@@ -332,7 +334,7 @@ extern "C" void port_ov55_bringup(void)
 // function with no delink block.
 // The thunk below is a statement-for-statement transcription of the ROM body at
 // 0x021111a0 (0x58 bytes), disassembled from
-// extracted/overlays/overlay_0055.bin: install the own table, __destroy_arr
+// extracted/overlays/overlay_0055.bin: install the own table, __cxa_vec_cleanup
 // over the TWO TextureSequences at +0x1b0 (stride 0x14) with
 // TextureSequence::~D1, then ShadowModel at +0x188, Model at +0x138, ModelAnim
 // at +0xd4 and Actor::D2 -- member sub-objects destroyed high address first,
@@ -353,11 +355,11 @@ static int __fastcall ml_d1(void *s, void *)
 {
     char *t = (char *)s;
     *(void **)t = (void *)_ZTV11MirrorLuigi;
-    __destroy_arr(t + 0x1b0, 2, 0x14, (void *)&_ZN15TextureSequenceD1Ev);
+    __cxa_vec_cleanup(t + 0x1b0, 2, 0x14, (void *)&_ZN15TextureSequenceD1Ev);
     _ZN11ShadowModelD1Ev(t + 0x188);
     _ZN5ModelD1Ev(t + 0x138);
     _ZN9ModelAnimD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
+    _ZN8dActor_cD2Ev(t);
     return (int)(size_t)s;
 }
 static int __fastcall ml_d0(void *s, void *)
@@ -396,7 +398,7 @@ extern "C" void hal_fill_mirror_luigi_vtable(void)
     vt[6]  = (void *)ml_behavior;
     vt[9]  = (void *)ml_render;
     vt[12] = (void *)ml_pdes;   /* own body, overrides ActorBase's default */
-    vt[16] = (void *)ml_d1;
+    vt[16] = (void *)PORT_D16(ml_d1);
     vt[17] = (void *)ml_d0;
     /* no slot 31: a plain Actor, 31 slots total, ends at 30. */
 }

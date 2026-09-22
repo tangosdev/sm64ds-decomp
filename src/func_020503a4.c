@@ -46,9 +46,9 @@ int func_020503a4(int a, int b, int c, int d, int p5, int p6, int p7, int p8,
     int chunk;
     G *g;
 
-    dd = (int)(((s64)(int)d) & ~0ULL);
-    pp8 = (int)(((s64)(int)p8) & ~0ULL);
-    pp10 = (int)(((s64)(int)p10) & ~0ULL);
+    dd = (int)((d) & ~0ULL);
+    pp8 = (int)((p8) & ~0ULL);
+    pp10 = (int)((p10) & ~0ULL);
 
     handle = -1;
     g = &data_020a5634;

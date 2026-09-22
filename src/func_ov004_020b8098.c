@@ -11,9 +11,9 @@ struct Obj { struct VT* vt; };
 
 extern int func_ov004_020b0b1c(int arg);
 extern void func_ov004_020b0cac(int c, int a1, int a2, int a3, int arg5, short arg6);
-extern void _ZN5Scene9SetFadersEP15FaderBrightness(void* fb);
+extern void _ZN8dScene_c9SetFadersEP15FaderBrightness(void* fb);
 extern void func_0202ec9c(void* thiz, int arg1);
-extern void _ZN5Scene14StartSceneFadeEjjt(unsigned int a, unsigned int b, unsigned short c);
+extern void _ZN8dScene_c14StartSceneFadeEjjt(unsigned int a, unsigned int b, unsigned short c);
 extern void func_02012dd0(int c);
 
 extern struct Obj* data_0209f5bc;
@@ -36,9 +36,9 @@ void func_ov004_020b8098(char* r4){
     o = data_0209f5bc;
     if (o->vt->m_1c(o))
       return;
-    _ZN5Scene9SetFadersEP15FaderBrightness(data_0209f61c);
+    _ZN8dScene_c9SetFadersEP15FaderBrightness(data_0209f61c);
     func_0202ec9c(data_0209f61c, 2);
-    _ZN5Scene14StartSceneFadeEjjt(5, 0, 0);
+    _ZN8dScene_c14StartSceneFadeEjjt(5, 0, 0);
     func_02012dd0(0x3c);
     return;
   }

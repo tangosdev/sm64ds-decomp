@@ -1,9 +1,9 @@
-/* HOST COPY of dScMgBase_c slot 1, func_ov004_020b0930. Run link60, lane MG1.
+/* HOST COPY of dScMgBase_c slot 1, _ZN11dScMgBase_c19BeforeInitResourcesEv. Run link60, lane MG1.
  *
  * ONE OF FOUR. port/unmatched/MgBase_DeclConflict.cpp carries the full
  * derivation, the sweep that found exactly four, and the reason the fix is not
  * in include/decl_common.h. The short version: that header declares this
- * function void* while src/func_ov004_020b0930.cpp defines it char*, and the
+ * function void* while src/minigames/d_s_mg_base.cpp defines it char*, and the
  * TU includes the header, so MSVC refuses it with C2733. mwccarm accepts it.
  *
  * WHAT CHANGED: `char* c` became `void *cv`, plus a first line
@@ -25,7 +25,7 @@
 #include "decl_common.h"
 #include "dScMgBase_c.h"
 
-/* ---- func_ov004_020b0930, slot 1, BeforeInitResources -------------------- */
+/* ---- _ZN11dScMgBase_c19BeforeInitResourcesEv, slot 1, BeforeInitResources -------------------- */
 namespace mg30 {
 struct Obj {
     virtual void v0();  virtual void v1();  virtual void v2();  virtual void v3();
@@ -44,17 +44,17 @@ extern "C" {
 extern void Enable3dEngines(void);
 extern char data_0209b308[];
 extern void *data_ov004_020beb60;
-extern char *data_ov004_020beb68;
+extern void *data_ov004_020beb68;   /* SYNC4: main declares it void * */
 extern char data_0209f61c[];
 extern unsigned char data_0209d460[];
 extern unsigned char data_0209d458[];
 
 // PORT_HOST_ABI: decl_common.h declares this void* while src defines it char*, which MSVC rejects as C2733 where mwccarm accepts; host copy respells the parameter
-int func_ov004_020b0930(void *cv)
+int _ZN11dScMgBase_c19BeforeInitResourcesEv(void *cv)
 {
     char *c = (char *)cv;                       /* the one added line */
     struct dScMgBase_c *self = (struct dScMgBase_c *)(void *)c;
-    if (_ZN5Scene19BeforeInitResourcesEv(c) == 0) return 0;
+    if (_ZN8dScene_c19BeforeInitResourcesEv(c) == 0) return 0;
     if (((mg30::Obj*)c)->v26() == 0)
         func_02019028();
     else
@@ -63,14 +63,14 @@ int func_ov004_020b0930(void *cv)
     if (data_ov004_020beb60 == 0)
         data_ov004_020beb60 = _ZN6Memory13operator_new2Ej(0x4000);
     if (data_ov004_020beb68 != 0)
-        *(int*)(data_ov004_020beb68 + 0xb0) = 0;
-    self->unk_0b4 = 0;
+        *(int*)((char *)data_ov004_020beb68 + 0xb0) = 0;
+    self->mHudScore = 0;
     self->unk_0b8 = 0;
     self->unk_465c = 0;
     func_ov004_020b8a8c(c + 0x4000);
     ((mg30::Obj*)c)->v33();
     func_ov004_020b2cb8();
-    _ZN5Scene9SetFadersEP15FaderBrightness(data_0209f61c);
+    _ZN8dScene_c9SetFadersEP15FaderBrightness(data_0209f61c);
     func_0202ec9c(data_0209f61c, 0);
     data_0209d460[0] = 0;
     data_0209d458[0] = 0;

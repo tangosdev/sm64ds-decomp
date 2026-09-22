@@ -32,7 +32,7 @@
  * THE FIX is to pass the found player explicitly, exactly the value the ROM
  * leaves in r1: FindWithID(self->[0x19c]). This host copy is the matched
  * source line for line; only the func_ov002_020b1884 call gains its real second
- * argument. The other caller of func_ov002_020b1884 (func_ov002_020b2a34,
+ * argument. The other caller of func_ov002_020b1884 (_ZN4Coin13OnTurnIntoEggER6Player,
  * OnTurnIntoEgg) already passes two arguments in its matched C, so it is
  * correct as-is and is left untouched.
  *
@@ -42,7 +42,7 @@
 
 extern "C" {
 
-void *_ZN5Actor10FindWithIDEj(unsigned int id);
+void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 void func_ov002_020b16c4(char *self, char *p);   /* derefs the player at +0x706/+0x6d8 */
 void func_ov002_020b1674(char *self, char *p);
 void func_ov002_020b1884(char *self, char *p);   /* the real two-arg shape */
@@ -52,7 +52,7 @@ int func_ov002_020b19dc(char *self)
 {
     unsigned int id = *(unsigned int *)(self + 0x19c);
     if (id != 0) {
-        char *p = (char *)_ZN5Actor10FindWithIDEj(id);
+        char *p = (char *)_ZN8dActor_c10FindWithIDEj(id);
         if (p != 0) {
             if (*(int *)(self + 0x198) & 0x400000) {
                 *(unsigned short *)(self + 0x3a8) = 0;

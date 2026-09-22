@@ -78,7 +78,7 @@ def faces(root, mapfile):
 
 
 # Itanium mangling is only decoded far enough to recover class and method, which
-# is all the suggestion needs. `_ZN12CylinderClsn5ClearEv` -> CylinderClsn,
+# is all the suggestion needs. `_ZN5dCc_c5ClearEv` -> CylinderClsn,
 # Clear. Nested names and templates fall through and the row reads `read-it`,
 # which is the right default for a name this cannot parse.
 NESTED = re.compile(r"^_ZN((?:\d+\w+)+)E?")
@@ -285,13 +285,13 @@ HAND = {
     "_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii": ("FORWARDS", "0xffff "
         "terminator guard then OAM::Render; the guard turns a runaway walk "
         "off the end of main RAM into one skipped sprite"),
-    "_ZNK10ClsnResult9GetClsnIDEv": ("FORWARDS", "qualified "
+    "_ZNK5dBgPi9GetClsnIDEv": ("FORWARDS", "qualified "
         "ClsnResult::GetClsnID"),
-    "_ZNK12WithMeshClsn13GetWallResultEv": ("FORWARDS",
+    "_ZNK10dBgCh_Actr13GetWallResultEv": ("FORWARDS",
         "WithMeshClsn::GetWallResult through a const cast"),
-    "_ZNK12WithMeshClsn14GetFloorResultEv": ("FORWARDS",
+    "_ZNK10dBgCh_Actr14GetFloorResultEv": ("FORWARDS",
         "WithMeshClsn::GetFloorResult through a const cast"),
-    "_ZNK12WithMeshClsn12TouchesWaterEv": ("FORWARDS", "qualified "
+    "_ZNK10dBgCh_Actr12TouchesWaterEv": ("FORWARDS", "qualified "
         "WithMeshClsn::TouchesWater"),
     "_ZN5Model8LoadFileER13SharedFilePtr": ("FORWARDS", "PORT_TRACE_SETFILE "
         "tracing around Model::LoadFile"),
@@ -311,22 +311,22 @@ HAND = {
         "((HUD *)s)->HUD::RenderHealthMeter()"),
     "_ZNK9Animation12WillHitFrameEi": ("FORWARDS", "two hops: hal_anim_willhit "
         "at player_bridges.cpp:763 calls Animation::WillHitFrame"),
-    "_ZN8Particle17CheckLavaCallback14SpawnParticlesERNS_6SystemE":
+    "_ZN5dPa_c7level_c20checkYoganCallback_c14SpawnParticlesERN8Particle6SystemE":
         ("FORWARDS", "nested-namespace method through a cast"),
-    "_ZN8Particle21CleanParticleCallback8OnUpdateERNS_6SystemEb":
+    "_ZN5dPa_c7level_c23cleanParticleCallback_c8OnUpdateERN8Particle6SystemEb":
         ("FORWARDS", "nested-namespace method through a cast"),
-    "_ZN8Particle24CheckWaterRippleCallback8OnUpdateERNS_6SystemEb":
+    "_ZN5dPa_c7level_c26checkWaterRippleCallback_c8OnUpdateERN8Particle6SystemEb":
         ("FORWARDS", "nested-namespace method through a cast"),
-    "_ZNK12MeshCollider13GetUnkOctreeYEv": ("FORWARDS", "qualified "
+    "_ZNK7dBgW_Kc13GetUnkOctreeYEv": ("FORWARDS", "qualified "
         "MeshCollider::GetUnkOctreeY"),
-    "_ZNK12MeshCollider16GetOctreeOriginYEv": ("FORWARDS", "qualified "
+    "_ZNK7dBgW_Kc16GetOctreeOriginYEv": ("FORWARDS", "qualified "
         "MeshCollider::GetOctreeOriginY"),
     "_ZNK7PathPtr5LoopsEv": ("FORWARDS", "qualified PathPtr::Loops"),
     "_ZN2GX7LoadTexEPKvjj": ("FORWARDS", "optional texture log then "
         "GX::LoadTex"),
     "_ZN11CommonModel6RenderEPK7Vector3": ("FORWARDS", "qualified "
         "CommonModel::Render, returns 1 for a caller that ignores it"),
-    "_ZN8Platform20UpdateKillByMegaCharEsss5Fix12IiE": ("FORWARDS",
+    "_ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE": ("FORWARDS",
         "both branches call Platform::UpdateKillByMegaChar; the probe only "
         "counts"),
     "_ZN10StarMarker27SpawnRedCoinStarIfNecessaryEv": ("FORWARDS",
@@ -341,7 +341,7 @@ HAND = {
     # is now the ordinary bridge. The ledger keeps the original row and records
     # the fix in a dated section, because it is append-only; this entry tracks
     # the code, which is what a re-run has to agree with.
-    "_ZN5Actor17TrackInDeathTableEv": ("FORWARDS",
+    "_ZN8dActor_c17TrackInDeathTableEv": ("FORWARDS",
         "qualified Actor::TrackInDeathTable; was the bucket's one DUPLICATES "
         "and was replaced in run linkw wave C"),
 }

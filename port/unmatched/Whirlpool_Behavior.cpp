@@ -1,4 +1,4 @@
-/* HOST COPY of src/_ZN9Submarine8BehaviorEv.cpp -- the WHIRLPOOL's per-frame
+/* HOST COPY of src/_ZN9Whirlpool8BehaviorEv.cpp -- the WHIRLPOOL's per-frame
  * body (id 246, daWater_Tatumaki_c, ov026, vtable slot 6).
  *
  * THE NAME IS dsd's, NOT THE CLASS'S. Every `_ZN9Submarine*` TU in ov026 is
@@ -38,13 +38,13 @@ struct PortOv026Cell { unsigned enter_fn, enter_adj, tick_fn, tick_adj; };
 typedef int (*PortOv026Fn)(void *);
 
 unsigned short DecIfAbove0_Short(unsigned short *p);
-void _ZN5Actor9UpdatePosEP12CylinderClsn(void *thiz, void *cc);
+void _ZN8dActor_c9UpdatePosEP5dCc_c(void *thiz, void *cc);
 void *_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     unsigned int a, unsigned int b, int fx, int t1, int t2, int s4, int s5);
 void _ZN9Animation7AdvanceEv(void *thiz);
 void func_ov026_02111f30(char *c);
 
-/* HOST COPY RETIRED, run link100 lane PMFB7 gate 1. src/_ZN9Submarine8BehaviorEv.cpp
+/* HOST COPY RETIRED, run link100 lane PMFB7 gate 1. src/_ZN9Whirlpool8BehaviorEv.cpp
    dispatches its own field now: with /vmg /vmm (block R8) MSVC's pointer to
    member IS the ROM's eight-byte {code, adjust} pair, so the widening this
    banner was written for does not happen. The per-frame half of every state

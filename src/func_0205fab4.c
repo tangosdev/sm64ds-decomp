@@ -1,7 +1,7 @@
 #include "types.h"
-extern int func_0205fbd0(int v);
+extern int func_0205fbd0(int v, int b, int c);
 
-int func_0205fab4(int x)
+int func_0205fab4(int x, int b, int c)
 {
     int v;
     switch (x) {
@@ -11,5 +11,5 @@ int func_0205fab4(int x)
     default: v = 0; break;
     }
     if (v == 0) return 0xffff;
-    return func_0205fbd0(v);
+    return func_0205fbd0(v, b, c);
 }

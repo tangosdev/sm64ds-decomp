@@ -149,7 +149,7 @@ LVL_Overlay table at data_02092208, not from a derived class -- and the port
 keeps ONE Stage object alive across every level change, so all 35 mounted
 levels dispatch the same eighteen slots audited in section 5.
 
-ONE THING THE SWEEP FOUND AND THIS LANE DID NOT CHANGE. _ZTV5Scene
+ONE THING THE SWEEP FOUND AND THIS LANE DID NOT CHANGE. _ZTV8dScene_c
 (0x02092680, hal/stage_bridges.cpp:83) is declared as plain storage and is
 never trap-filled, so it holds nulls rather than named traps. Stage::Stage
 installs it transiently and _ZTV5Stage wins, so nothing dispatches through it
@@ -215,7 +215,7 @@ for arm9 .text at these addresses arm9_dec.bin is the one that reads.)
 --------------------------
 
 _ZTV5Stage slot 7 is Scene::BeforeBehavior, the ROM's own matched body
-(src/_ZN5Scene14BeforeBehaviorEv.cpp), dispatched on the Stage every frame
+(src/_ZN8dScene_c14BeforeBehaviorEv.cpp), dispatched on the Stage every frame
 since lane L4 put the Stage on the behaviour list. It contains:
 
     if (data_02092664 != 0x187) {
@@ -289,14 +289,14 @@ and one puts it back. The pair that matter here are both matched src in this
 tree:
 
     Scene::SetSceneToSpawn(id, param)   data_02092664 = id
-        src/_ZN5Scene15SetSceneToSpawnEjj.c
+        src/_ZN8dScene_c15SetSceneToSpawnEjj.cpp
     Scene::SpawnIfNecessary()           spawn the scene, THEN
                                         data_02092664 = 0x187
-        src/_ZN5Scene16SpawnIfNecessaryEv.c
+        src/_ZN8dScene_c16SpawnIfNecessaryEv.cpp
 
 THE THIRD WRITER, named because it is a live tripwire for whoever slices in the
 boot spine. Scene::PrepareToSpawnBoot (0x0202e300,
-src/_ZN5Scene18PrepareToSpawnBootEv.c) also writes data_02092664 -- to 0 or to
+src/_ZN8dScene_c18PrepareToSpawnBootEv.cpp) also writes data_02092664 -- to 0 or to
 0x168, never to the sentinel -- and clears data_02092660 with it. It is
 UNREACHABLE TODAY: its only caller is func_0201a054 (src/func_0201a054.c:75),
 which is on the unsliced boot spine, and neither symbol appears in

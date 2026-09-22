@@ -19,19 +19,19 @@
  *     config/arm9/overlays/ov077/relocs.txt the two make the SAME seven calls
  *     in the SAME order and load the SAME vtable, and D0 adds exactly one more
  *     call plus one more load:
- *       D1 0x02123754 0x020373f8 _ZN12WithMeshClsnD1Ev
- *          0x0212375c 0x02014a60 _ZN25MovingCylinderClsnWithPosD1Ev
+ *       D1 0x02123754 0x020373f8 _ZN10dBgCh_ActrD1Ev
+ *          0x0212375c 0x02014a60 _ZN10dCcAcPos_cD1Ev
  *          0x02123764 0x02015a2c _ZN15TextureSequenceD1Ev
  *          0x0212376c 0x02015ff8 _ZN11ShadowModelD1Ev
  *          0x02123774 0x02016d20 _ZN5ModelD1Ev
  *          0x0212377c 0x0201691c _ZN9ModelAnimD1Ev
- *          0x02123784 0x020112c8 _ZN5ActorD2Ev
+ *          0x02123784 0x020112c8 _ZN8dActor_cD2Ev
  *          0x02123794 load       0x0212786c  (_ZTV6Lakitu)
  *       D0 the identical seven at 0x021237ac..0x021237dc, then
  *          0x021237ec 0x0203c1e8 _ZN6Memory10DeallocateEPvP4Heap
  *          0x021237fc load 0x0212786c   0x02123800 load 0x020a0eac (the heap)
  *     So D1 IS D0 minus the deallocate, and the member offsets come from
- *     src/_ZN6LakituD0Ev.c, which is a plain C body the ROM matches and which
+ *     src/_ZN6LakituD0Ev.cpp, which is a plain C body the ROM matches and which
  *     this lane leaves in the slice untouched. Nothing here is guessed from a
  *     vtable slot (T5): every call and both offsets are relocation-confirmed.
  *
@@ -83,13 +83,13 @@ extern "C" {
 
 /* ---- (1) the destructor ------------------------------------------------ */
 extern int _ZTV6Lakitu[];
-void _ZN12WithMeshClsnD1Ev(void *);
-void _ZN25MovingCylinderClsnWithPosD1Ev(void *);
+void _ZN10dBgCh_ActrD1Ev(void *);
+void _ZN10dCcAcPos_cD1Ev(void *);
 void _ZN15TextureSequenceD1Ev(void *);
 void _ZN11ShadowModelD1Ev(void *);
 void _ZN5ModelD1Ev(void *);
 void _ZN9ModelAnimD1Ev(void *);
-void _ZN5ActorD2Ev(void *);
+void _ZN8dActor_cD2Ev(void *);
 int _ZN15TextureSequence6UpdateER15ModelComponents(void *seq, void *comp);
 
 /* PORT_HOST_ABI: mwcc-Itanium destructor name MSVC cannot emit; ROM call
@@ -97,13 +97,13 @@ int _ZN15TextureSequence6UpdateER15ModelComponents(void *seq, void *comp);
 int *_ZN6LakituD1Ev(int *t)
 {
     t[0] = (int)(size_t)_ZTV6Lakitu;
-    _ZN12WithMeshClsnD1Ev((char *)t + 0x204);
-    _ZN25MovingCylinderClsnWithPosD1Ev((char *)t + 0x1c4);
+    _ZN10dBgCh_ActrD1Ev((char *)t + 0x204);
+    _ZN10dCcAcPos_cD1Ev((char *)t + 0x1c4);
     _ZN15TextureSequenceD1Ev((char *)t + 0x1b0);
     _ZN11ShadowModelD1Ev((char *)t + 0x188);
     _ZN5ModelD1Ev((char *)t + 0x138);
     _ZN9ModelAnimD1Ev((char *)t + 0xd4);
-    _ZN5ActorD2Ev(t);
+    _ZN8dActor_cD2Ev(t);
     return t;
 }
 
@@ -169,9 +169,9 @@ void *_ZN9Animation8LoadFileER13SharedFilePtr(void *f);
 void *_ZN15TextureSequence8LoadFileER13SharedFilePtr(void *f);
 void _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(void *bmd, void *btp);
 int _ZN11ShadowModel12InitCylinderEv(void *self);
-void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(
+void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
         void *self, void *a, void *v, int b, int c, unsigned d, unsigned e);
-void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(
+void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
         void *self, void *a, int b, int c, void *d, void *e);
 void func_ov077_02123d40(void *c);
 /* the TWO-argument form, which is what src/func_ov077_0212478c.c defines */
@@ -179,7 +179,7 @@ void func_ov077_0212478c(char *c, int i);
 extern int data_ov077_02127b38[], data_ov077_02127b48[], data_ov077_02127b50[];
 extern int data_ov077_02127b88[], data_ov077_02127230[], data_ov077_02127238[];
 struct PortM48 { int w[12]; };
-extern PortM48 data_02082128;
+extern PortM48 IDENTITY_MATRIX4X3;
 }
 
 /* PORT_HOST_ABI: the ROM passed this call's second argument in r1 and the
@@ -202,9 +202,9 @@ extern "C" int _ZN6Lakitu13InitResourcesEv(void *selfv)
     }
     if (_ZN11ShadowModel12InitCylinderEv(c + 0x188) == 0)
         return 0;
-    _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(
+    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
         c + 0x1c4, c, data_ov077_02127b88, 0x41000, 0x78000, 0x200002, 0x6eff0);
-    _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
         c + 0x204, c, 0x2d000, 0x2d000, 0, 0);
 
     *(int *)(c + 0x9c) = 0;
@@ -218,7 +218,7 @@ extern "C" int _ZN6Lakitu13InitResourcesEv(void *selfv)
     *(int *)(c + 0x410) = 0;
 
     func_ov077_0212478c(c, 0);                 /* <- the r1 the ROM rode in */
-    *(PortM48 *)(c + 0x3c0) = data_02082128;
+    *(PortM48 *)(c + 0x3c0) = IDENTITY_MATRIX4X3;
     func_ov077_02123d40(c);
     return 1;
 }

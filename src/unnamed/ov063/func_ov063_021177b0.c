@@ -7,7 +7,7 @@ typedef struct {
     unsigned short hi7 : 7;
 } Sub500;
 
-extern void* _ZN5Actor13ClosestPlayerEv(void* self);
+extern void* _ZN8dActor_c13ClosestPlayerEv(void* self);
 extern int Vec3_Dist(const void* a, const void* b);
 extern short Vec3_HorzAngle(const void* a, const void* b);
 extern void func_020092c4(void* cam, void* out, void* tgt);
@@ -23,7 +23,7 @@ extern short data_02082214[];
 void func_ov063_021177b0(char* c)
 {
     if (*(unsigned short*)(c + 0x100) == 0) {
-        unsigned char* p = (unsigned char*)(((long long)(int)(c + 0x5ca)));
+        unsigned char* p = (unsigned char*)(c + 0x5ca);
         *p = (unsigned char)(*p - 1);
     }
 
@@ -32,7 +32,7 @@ void func_ov063_021177b0(char* c)
         unsigned short flags = *(unsigned short*)(c + 0x5d4);
 
         if (((unsigned)(flags << 21)) >> 31) {
-            void* pl = _ZN5Actor13ClosestPlayerEv(c);
+            void* pl = _ZN8dActor_c13ClosestPlayerEv(c);
             if (pl != 0) {
                 Vec3 v;
                 Vec3 mid;
@@ -44,7 +44,7 @@ void func_ov063_021177b0(char* c)
                 int t;
 
                 {
-                    int* src = (int*)(((long long)(int)((char*)pl + 0x5c)));
+                    int* src = (int*)((char*)pl + 0x5c);
                     v.x = src[0];
                     v.y = src[1];
                     v.z = src[2];
@@ -75,7 +75,7 @@ void func_ov063_021177b0(char* c)
                 func_020092c4(cam, (char*)cam + 0x80, &mid);
             }
         } else {
-            *(unsigned short*)(((long long)(int)(c + 0x5d4))) |= 0x400;
+            *(unsigned short*)(c + 0x5d4) |= 0x400;
             _ZN6Camera9SetFlag_3Ev(cam);
         }
 
@@ -83,7 +83,7 @@ void func_ov063_021177b0(char* c)
             return;
 
         {
-            unsigned short* pf = (unsigned short*)(((long long)(int)(c + 0x5d4)));
+            unsigned short* pf = (unsigned short*)(c + 0x5d4);
             *pf = (unsigned short)(*pf & ~8);
         }
         *(unsigned char*)(c + 0x5cc) = 8;
@@ -116,7 +116,7 @@ void func_ov063_021177b0(char* c)
     }
 
     if (*(unsigned short*)(c + 0x100) == 0) {
-        int* p584 = (int*)(((long long)(int)(c + 0x584)));
+        int* p584 = (int*)(c + 0x584);
         int dec = 0x255;
         *p584 = *p584 - dec;
     }
@@ -124,7 +124,7 @@ void func_ov063_021177b0(char* c)
         return;
     *(unsigned char*)(c + 0x5cc) = 6;
     {
-        int* p19c = (int*)(((long long)(int)(c + 0x19c)));
+        int* p19c = (int*)(c + 0x19c);
         *p19c |= 1;
     }
     *(unsigned char*)(c + 0x5c9) = 0;

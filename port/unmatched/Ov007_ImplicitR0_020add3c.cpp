@@ -1,4 +1,4 @@
-/* HOST COPY of src/func_ov007_020add3c.c -- SCENE 1'S IMPLICIT r0 ARGUMENT,
+/* RETIRED HOST COPY of src/func_ov007_020add3c.c -- SCENE 1'S IMPLICIT r0 ARGUMENT,
  * with the one thing the ROM leaves implicit spelled out: the forward.
  * ov007 0x020add3c, 0xd8 bytes (216, 54 ARM instructions).
  *
@@ -151,49 +151,43 @@
  * The behaviour below is the matched source's, unchanged in every other
  * respect.
  */
-extern "C" {
-
-int  func_ov007_020ae558(char *self);
-void func_ov007_020ae834(void *p);
-void func_ov007_020ae2d0(void *c);
-void func_ov007_020ae070(void *c);
-void func_ov007_020ae454(void *c);
-
-#define P0 (*(char **)(c))
-#define P1 (*(char **)(c + 4))
-
-/* PORT_HOST_ABI: implicit r0 argument. The matched src declares its callee
- * `(void)` and calls it with nothing, because on ARM the caller's own incoming
- * argument is still in r0 at the branch. See the header. */
-void func_ov007_020add3c(char *c)
-{
-    int r = func_ov007_020ae558(c);
-    *(short *)(*(char **)(P0 + 4) + 2) = (short)r;
-    func_ov007_020ae834(P0);
-    switch (*(short *)(*(char **)(P0 + 4))) {
-    case 0:
-        func_ov007_020ae2d0(c);
-        break;
-    case 1: break;
-    case 2: break;
-    case 3:
-        func_ov007_020ae070(c);
-        break;
-    case 4: break;
-    case 5: break;
-    case 6: break;
-    case 7: break;
-    }
-    func_ov007_020ae454(c);
-    *(int *)(P1 + 0) = *(int *)(P0 + 8);
-    *(int *)(P1 + 4) = *(int *)(P0 + 0xc);
-    *(int *)(P1 + 8) = *(int *)(P0 + 0x20);
-    if (*(int *)(P1 + 8) != 0) {
-        if (*(int *)(P1 + 4) <= -0x64000) *(int *)(P1 + 8) = 0;
-    }
-}
-
-#undef P0
-#undef P1
-
-}
+/* ======================== RETIRED, AND WHY =================================
+ *
+ * run link100 wave 15, lane SEAT15E (LINK15 BATCH 4). THIS FILE CARRIES NO
+ * BODY ANY MORE. The matched TU is back in the port's ov007 slice as itself:
+ * the `continue()` that cut it out of the loop in port/CMakeLists.txt is gone,
+ * and so is the branch that appended this file in its place.
+ *
+ * WHAT WAS RE-READ, against src/ at 8ddff3187, before the cut was removed.
+ * The header says the defect is an implicit r0 argument: the matched source
+ * declared its callee `(void)` and called it with nothing, because on ARM the
+ * caller own incoming argument is still in r0 at the branch.
+ * src/func_ov007_020add3c.c today opens
+ *
+ *     extern int func_ov007_020ae558(char *self);
+ *
+ * and calls it `int r = func_ov007_020ae558(c);` on its own incoming argument,
+ * and src/func_ov007_020ae558.c defines `int func_ov007_020ae558(char *self)`
+ * with that one parameter and reads it as `*(int**)self`. Nothing is left in
+ * r0 for a stack ABI to miss. Every other statement in the body this file used
+ * to carry was the same source line for line -- the strh through P0+4, the
+ * ae834 call, the eight-arm switch with its two live arms, the ae454 call, the
+ * three word copies into P1 and the -0x64000 compare -- so retiring the copy
+ * changes the emitted behaviour in exactly one place, and that place is the
+ * argument the source now passes itself.
+ *
+ * THE MEASURED FAULT THE HEADER RECORDS IS THE SAME FACT FROM THE OTHER SIDE.
+ * `FAULT code c0000005 at +0x0002a8e6 accessing 000000a4` was the callee
+ * reading [ebp+8] on iteration zero, a slot nobody had written. With the
+ * source passing the argument, the push at the call site is what fills it.
+ * port/tools/tailjump_guard.py's Class A row 1 asserts the other half in every
+ * build from here on: this frame must emit a REAL CALL and never a tail jump,
+ * and its `tu` now names the source the build actually compiles, so the row
+ * comes back off RETIRED by itself.
+ *
+ * THE HEADER ABOVE IS KEPT ON PURPOSE: the 54-instruction capstone reading at
+ * the config-aligned base 0x020ad660, the eight-arm jump table with its two
+ * non-default arms, and the measured save-versus-argument listing at 0042A310
+ * that settled the class are readings of the cartridge and of a real binary,
+ * and they stay true whichever side of the seam runs.
+ */

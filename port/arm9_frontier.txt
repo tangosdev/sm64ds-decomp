@@ -112,18 +112,18 @@ There are 403. Sorted by how many unlinked arm9 TUs become transitively
 reachable if the root links, counting the root itself:
 
      738  Entry                    0x02004800  the CRT0 entry point, hand-asm
-     531  func_0203506c            0x0203506c  dScMB_c_InitResources, in the
+     531  _ZN7dScMB_c13InitResourcesEv            0x0203506c  dScMB_c_InitResources, in the
                                                scene vtable data_020943c4
-     528  func_02005a58            0x02005a58  dScBoot_c_InitResources, in the
+     528  _ZN9BootScene13InitResourcesEv            0x02005a58  dScBoot_c_InitResources, in the
                                                scene vtable data_02091528
      483  func_02030b58            0x02030b58  in the callback table
                                                data_020927ec
      479  func_02030c38            0x02030c38  same table
      182  _ZN5Stage8BehaviorEv                 _ZTV5Stage
-     162  func_02034da4            0x02034da4  dScMB_c_Behavior, data_020943c4
+     162  _ZN7dScMB_c8BehaviorEv            0x02034da4  dScMB_c_Behavior, data_020943c4
      146  _ZN5Stage13InitResourcesEv           _ZTV5Stage
       91  _ZN5Stage16CleanupResourcesEv        _ZTV5Stage
-      89  func_02005418            0x02005418  dScBoot_c_Behavior,
+      89  _ZN9BootScene8BehaviorEv            0x02005418  dScBoot_c_Behavior,
                                                data_02091528
       80  func_0202deac            0x0202deac
       71  _ZN5Stage6RenderEv                   _ZTV5Stage
@@ -249,7 +249,7 @@ would have to change for the edge to exist:
          body of PathPtr::FromID's two-word struct return -- the ride-through
          itself), _ZN4cstd10fdiv_asyncE5Fix12IiE5Fix12IiE (a thin wrapper over
          the DS hardware divider) and
-         _ZN9ActorBase7ProcessEMS_FivEMS_FbvEMS_FvjE (the PMF dispatch).
+         _ZN7fBase_c7ProcessEMS_FivEMS_FbvEMS_FvjE (the PMF dispatch).
      1   _ZN4Heap11_DeallocateEPv has a linked caller, _ZdlPv, and is itself an
          ARM tail-call veneer -- `void _Deallocate(void)` branching to
          Deallocate with the arguments riding in registers. The MSVC-method
@@ -283,7 +283,7 @@ works the same case through for CommonModel and lands on "no"; nothing found
 here changes that reasoning for the other eleven pairs.
 
 The remaining eight are four Actor After-hooks in data_0208e3a4 and four
-func_0203* pairs in data_02099274 / data_02099348 / data_02099358. All eight
+func_0203* pairs in VTable_dBgPi_dBgCh_GndThunk / data_02099348 / data_02099358. All eight
 live in hal/actor_vtables.cpp or hal/cxx_aliases.cpp, which the actors lane
 owns this wave, so this lane looked and did not touch. They are the most
 promising eight in the bucket and they belong in an actors-lane pass, not here.
@@ -309,8 +309,8 @@ as linked) and 18 HOST stand-ins counted as linked matched TUs. Fourteen of the
 eighteen were arm9, which is most of this lane's own bucket table walking
 around uncounted. Ten are func_02xxxxxx and place by address; ChangeArea,
 CollectStar, NumStars and SetNumPlayers place by name out of
-config/arm9/symbols.txt. The remaining four are ChainChomp_Spawn and
-ShutterBob_Spawn in ov014, and func_ov002_020e444c and func_ov002_020e4768 in
+config/arm9/symbols.txt. The remaining four are daWanwan_c_classInit and
+daObjBSwdoor_c_classInit in ov014, and func_ov002_020e444c and func_ov002_020e4768 in
 ov002. An earlier draft of this file said six, which was eyeballed off a
 partial listing rather than derived; the module of every one of the eighteen is
 now taken the same way the bucket table takes it, stem by stem.

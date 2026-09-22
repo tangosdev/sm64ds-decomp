@@ -22,5 +22,5 @@
  * hal/actor_classes_bob_enemy.cpp reach a __thiscall method are in
  * hal/actor_classes_bob_world.cpp. KingBobOmb::Render was never here: it calls
  * Model::Render by its Itanium C name rather than through a shadow, so
- * src/_ZN10KingBobOmb6RenderEv.cpp always served the host build unchanged.
+ * src/actors/daBombking_c.cpp always served the host build unchanged.
  */

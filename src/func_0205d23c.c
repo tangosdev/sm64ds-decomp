@@ -1,11 +1,11 @@
 #include "types.h"
-/* FS_FindArchiveByName. The two parameters were missing from this file until
-   run link100 lane WM7: the ARM body calls func_0205d304 as its very first
-   instruction after the prologue, so r0 and r1 still hold this function's own
-   name pointer and length and the call needs no argument setup at all. That
-   reads as a call with no arguments and it was decompiled as one, which is
-   faithful to the ARM and wrong on every host with a stack calling convention:
-   every caller in the image already passes the name and the length
+/* FS_FindArchiveByName. The two parameters were missing from this file: the
+   ARM body calls func_0205d304 as its very first instruction after the
+   prologue, so r0 and r1 still hold this function's own name pointer and
+   length, and the call needs no argument setup at all. That reads as a call
+   with no arguments and it was decompiled as one, which is faithful to the
+   ARM and wrong on every host with a stack calling convention: every caller
+   in the image already passes the name and the length
    (src/func_0205cc80.c, src/func_020423dc.c, src/func_020424c0.c,
    src/func_02042254.c, src/func_0201a2f8.c, src/func_0205d714.c,
    src/func_02067bfc.c), the callee dropped them, and the lookup then walked

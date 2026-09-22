@@ -20,10 +20,10 @@
 # is shared (its base 0x0211f000 sits inside a dozen other overlays' spans):
 #
 #   id   site        SpawnInfo   word[0]     name                  +4   +6
-#   170  0x02090b0c  0x02123168  0x02122844  CccArena_Spawn        170  12
-#   171  0x02090b10  0x02123184  0x02122814  CccBigIce_Spawn       171  13
-#   172  0x02090b14  0x021231a0  0x021227e4  CccSmallIce_Spawn     172  14
-#   218  0x02090b98  0x0212306c  0x02121ec8  ChiefChilly_Spawn     218  20
+#   170  0x02090b0c  0x02123168  0x02122844  daObjEwbIce_c_classInit_EWB_ICE_A        170  12
+#   171  0x02090b10  0x02123184  0x02122814  daObjEwbIce_c_classInit_EWB_ICE_B       171  13
+#   172  0x02090b14  0x021231a0  0x021227e4  daObjEwbIce_c_classInit_EWB_ICE_C     172  14
+#   218  0x02090b98  0x0212306c  0x02121ec8  daKing_Donketu_c_classInit     218  20
 #
 # ONE TABLE FOR THREE IDS. All three Ccc Spawns are the same 0x30-byte body
 # (`ActorBase::operator new(828)`, `Platform::C2`, `p[0] = _ZTV8CccArena`) and
@@ -48,7 +48,7 @@
 #                   bound is the .data end at 0x02123280, which is 38 slots.
 #   The run wins: 0x02123268..0x02123280 is 0x18 bytes of ROM ZEROS, .data
 #   align-32 padding (the FallBlockBfs/BowserShockwaves shape), and slot 31 is
-#   a real load reloc onto func_ov073_021223f4, a body inside CccArena's OWN
+#   a real load reloc onto _ZN8CccArena4KillEv, a body inside CccArena's OWN
 #   code block. data_ov073_02123254 is EXCLUDED with the table.
 #
 # _ZTV11ChiefChilly  0x02123090, THIRTY-ONE slots, ends 0x0212310c.
@@ -124,16 +124,16 @@ data_ov073_02123030 data_ov073_02123038
 # 0x02123040 is the Vector3 ChiefChilly::Behavior hands
 # MovingCylinderClsnWithPos::SetPosRelativeToActor; 0x0212304c/0x02123058 are
 # his typeinfo and its name string.
-data_ov073_02123040 data_ov073_0212304c data_ov073_02123058
-ChiefChilly_SpawnInfo
+data_ov073_02123040 _ZTI16daKing_Donketu_c _ZTS16daKing_Donketu_c
+g_profile_KING_DONKETU
 # 0x0212310c..0x0212314c: CccArena's EIGHT state records (see the width block
 # above -- the first of them is what ChiefChilly's reloc run overran into);
 # then CccArena's typeinfo and its name string.
 data_ov073_0212310c data_ov073_02123114 data_ov073_0212311c
 data_ov073_02123124 data_ov073_0212312c data_ov073_02123134
-data_ov073_0212313c data_ov073_02123144 data_ov073_0212314c
-data_ov073_02123158
-CccArena_SpawnInfo CccBigIce_SpawnInfo CccSmallIce_SpawnInfo
+data_ov073_0212313c data_ov073_02123144 _ZTI13daObjEwbIce_c
+_ZTS13daObjEwbIce_c
+g_profile_EWB_ICE_A g_profile_EWB_ICE_B g_profile_EWB_ICE_C
 # the three-column {model SFP, clsn SFP, CLPS block} file table, one row per
 # Ccc id. The CLPS pointers (0x0211153c/0x0211155c/0x0211159c) land in the
 # LEVEL overlay ov057, which level 49 whole-mounts, so ovdata's --cross pass

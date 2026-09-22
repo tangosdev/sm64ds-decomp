@@ -19,8 +19,8 @@ a host interrupt lives in ntr/rt.cpp rather than beside the fader.
 Read out of the ROM's own arming code, three agreements that do not depend on
 each other:
 
-  * src/func_0202f708.c (dWipe_c slot 0x10, SetForwardTime) and its sibling
-    src/func_0202f928.c (slot 0x0c, SetBackwardTime) arm with the same three
+  * src/_ZN7dWipe_c14SetForwardTimeEj.cpp (dWipe_c slot 0x10, SetForwardTime) and its sibling
+    src/_ZN7dWipe_c15SetBackwardTimeEj.c (slot 0x0c, SetBackwardTime) arm with the same three
     calls inside an IME bracket:
 
         saved = IME; IME = 0;
@@ -115,7 +115,7 @@ bare clear, so not one of them can introduce a 1:
         saved = IME; IME = 0; ...; IME = saved
     func_02013f28
         IME = 0, then the idle spin
-    func_0202f708  func_0202f928  func_0202fb30
+    _ZN7dWipe_c14SetForwardTimeEj  _ZN7dWipe_c15SetBackwardTimeEj  func_0202fb30
         the dWipe_c bracket above, which restores only `if (saved)`
 
 So "the only writer of a 1 into IME in the whole IMAGE was ntr::rt_run" is
@@ -164,7 +164,7 @@ Every one of the five has a ROM writer on this path, which is what makes the
 DISARM work rather than needing its own host code: src/func_0202fb30.c clears
 IE bit 1, clears DISPSTAT bit 4 and nulls the handler, so any one of three
 independent paths closes the edge, and the curling overlay's own
-func_ov006_020efc68 and func_ov006_020eff20 close it a fourth way with
+_ZN12dScMgLuigi_c21AfterCleanupResourcesEj and _ZN12dScMgLuigi_c8IrisStopEi close it a fourth way with
 SetIRQHandler(2, 0).
 
 SM64DS_IRQ2_TRACE=1 prints the gate breakdown the first time the gates change
@@ -188,7 +188,7 @@ extended that loop to raise the edge on each line, which is constraint 2's
     }
 
 THE GATE IS RE-ASKED PER LINE and not hoisted, because a handler may disarm
-itself mid-frame and the ROM's own does: func_0202f428's case 1 and case 3 both
+itself mid-frame and the ROM's own does: _ZN7dWipe_c11AdvanceFadeEv's case 1 and case 3 both
 call func_0202fb30 at the end of the fade.
 
 THE STATUS BIT IS RAISED AND DROPPED AROUND THE CALL. The handler reads
@@ -278,24 +278,24 @@ NO PIXEL CLAIM IS MADE ANYWHERE IN THIS SECTION.
 THE TABLE IS READ AND THE WIPE STILL DOES NOT ANIMATE, and the two facts do not
 contradict: all 384 rows of both buffers hold the same four bytes. The last row
 copied is 80807F7F, which is WIN0H 0x7F7F and WIN1H 0x8080 -- byte for byte
-what src/func_0202f928.c wrote to those registers directly at arm time, before
+what src/_ZN7dWipe_c15SetBackwardTimeEj.c wrote to those registers directly at arm time, before
 it ever built a table. A uniform table is a rectangle, and a rectangle that
 does not change is not a wipe.
 
-WHAT CHANGES IT IS func_0202f428, dWipe_c slot 0x08, AdvanceFade. Read the
+WHAT CHANGES IT IS _ZN7dWipe_c11AdvanceFadeEv, dWipe_c slot 0x08, AdvanceFade. Read the
 body: it STEPS the object's +0x1c (interpVal) and +0x20 by the per-frame deltas
 the setters computed, and its last statement is func_0202f290(obj) -- THE TABLE
 REBUILD.
 
 BE PRECISE ABOUT "ONLY", because a draft of this paragraph was not and the
-correction is the interesting part. func_0202f428 is NOT the only writer of
-interpVal: func_0202f708 sets it to 0x200000 and func_0202f928 sets it to 0,
+correction is the interesting part. _ZN7dWipe_c11AdvanceFadeEv is NOT the only writer of
+interpVal: _ZN7dWipe_c14SetForwardTimeEj sets it to 0x200000 and _ZN7dWipe_c15SetBackwardTimeEj sets it to 0,
 both at arm time, and that is exactly why the table is uniform rather than
-absent. What func_0202f428 is the only thing to do is CHANGE IT AFTER ARM
+absent. What _ZN7dWipe_c11AdvanceFadeEv is the only thing to do is CHANGE IT AFTER ARM
 TIME -- it is the only `+=` on the field in the image, and the setters' writes
 are single stores that happen once. The same distinction applies to the
 rebuild: func_0202f290 has exactly two callers, func_0202f58c (twice, at arm
-time, once per buffer) and func_0202f428, so slot 0x08 is the only thing that
+time, once per buffer) and _ZN7dWipe_c11AdvanceFadeEv, so slot 0x08 is the only thing that
 ever writes a SECOND table.
 
 THE REPRODUCTION IS THE AFTER ROW IN SECTION 5. `1 run(s) of equal rows across
@@ -311,10 +311,10 @@ many runs, and the same line is the check.
            last row 00807F00 (WIN1H:WIN0H)
 
  THE READ COUNT FALLING IS PART OF THE PASS, not a hole in it. The fade now
- ENDS: case 1 of func_0202f428 clamps +0x1c at 0x200000, calls func_0202fb30
+ ENDS: case 1 of _ZN7dWipe_c11AdvanceFadeEv clamps +0x1c at 0x200000, calls func_0202fb30
  and writes state 2, and func_0202fb30 clears IE bit 1 and DISPSTAT bit 4 and
  nulls the handler, so the edge closes. 17280 / 384 = 45 and 11835 / 263 = 45,
- and 45 is 0x2d, the frame count func_0202f928 derived for a type-0 backward
+ and 45 is 0x2d, the frame count _ZN7dWipe_c15SetBackwardTimeEj derived for a type-0 backward
  fade. The gates read handler=0 ie=0 dispstat=0 at exit for the same reason,
  which is the self-disarm section 4 refused to hoist the per-line gate check
  over.]
@@ -396,7 +396,7 @@ of them is still open.
       WRITING AND data_0209d4b0 IS THE WRONG POINTER: the ROM's frame phase 2
       (func_02019390) advances TWO faders, func_02018ec0 on d4b0 and
       func_02018efc on data_0209d4ac, and it is d4ac that
-      _ZN5Scene9SetFadersEP15FaderBrightness writes -- with this very object,
+      _ZN8dScene_c9SetFadersEP15FaderBrightness writes -- with this very object,
       from dScMgBase_c slot 1, on scene 374. Nothing in the image ever stores
       data_0209f61c into d4b0, and the proof is the review's rather than the
       one written here first: THE TWO REFERENCE SETS DO NOT INTERSECT. Eleven
@@ -409,7 +409,7 @@ of them is still open.
       So the missing piece was src/func_02018efc.c, six lines, now on
       slice_fdr.txt and called from hal/fader_wipes.cpp's port_fader_advance.
       This item's mistake is the mirror of section 6's: 6 said correctly that
-      func_0202f428 is the only thing that CHANGES interpVal, and then reached
+      _ZN7dWipe_c11AdvanceFadeEv is the only thing that CHANGES interpVal, and then reached
       for the fader-in-motion pointer because that is the one the port's own
       driver already read.]
   c. THE OTHER DROPPED MASKS. Mask 1 (VBlank, _ZN3IRQ13VBlankHandlerEv via
@@ -436,7 +436,7 @@ in src; the full set, with what each one's state in this image actually is:
     func_0202f2c4              |= 2              YES, slice_fdr, AND REACHED
     func_02059834              |= 0x10           YES, slice_gate10, unreached
     _ZN3IRQ13VBlankHandlerEv   |= 1              no
-    _ZN3IRQ13DmaTimHandlerEv   |= mask           no
+    _ZN3IRQ13DmaTimHandlerEj   |= mask           no
     func_ov006_020efcf8        |= 2              no
 
 REACHABLE AND HYPOTHETICAL ARE DIFFERENT THINGS AND THE FIX NEEDS BOTH. Only
@@ -594,7 +594,7 @@ unreachable, and reaching it is what made it matter.
   * SLOT 0x0c IS THE ONLY SETTER THIS RUN EXERCISES. Scene 374 reaches
     SetBackwardTime from Scene::BeforeBehavior and never SetForwardTime, which
     port/fader_boot_map.txt section 9c already records as the branch this scene
-    does not take. func_0202f708's arming block is the same three calls and is
+    does not take. _ZN7dWipe_c14SetForwardTimeEj's arming block is the same three calls and is
     believed to behave identically; that is reasoning and not a measurement.
   * THE COUNTERS ARE PROCESS-CUMULATIVE, not per-scene. A run that boots two
     scenes would report their sum. Nothing does that today.

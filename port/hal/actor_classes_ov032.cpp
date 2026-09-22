@@ -6,18 +6,18 @@
 // other three are id 232 (FlyGuy), whose both-routes owner is ov070.
 //
 //   id   name         x on L24  factory              table                width
-//   106  HUGE_COVER    1        HugeCover_Spawn      0x021138e0 (unnamed)  32
-//   107  HUGE_WATER    1        HugeWater_Spawn      0x021139a4            32
-//   228  BUBBA         2        func_ov032_0211244c  0x02113824 (unnamed)  31
+//   106  HUGE_COVER    1        daObjTdFuta_c_classInit      0x021138e0 (unnamed)  32
+//   107  HUGE_WATER    1        daObjTdWater_c_classInit      0x021139a4            32
+//   228  BUBBA         2        daBakubaku_c_classInit  0x02113824 (unnamed)  31
 //
 // ---- THE CAMPAIGN PLAN SAYS TWO CLASSES; THE ROM SAYS THREE ---------------
 //
 // PLAN.md's inventory row for ov032 reads "HugeCover, HugeWater", which is the
 // set dsd named. The third class is the bulk of the overlay: id 228, factory
-// func_ov032_0211244c, RTTI 12daBakubaku_c -- the big fish, which
+// daBakubaku_c_classInit, RTTI 12daBakubaku_c -- the big fish, which
 // tools/actor_names.py already resolves to BUBBA. Both attribution routes put
 // it here: its SpawnInfo record 0x02113800's word[0] relocates to
-// module:overlay(32) func_ov032_0211244c, and word[1]'s low halfword reads 228,
+// module:overlay(32) daBakubaku_c_classInit, and word[1]'s low halfword reads 228,
 // the id the arm9 spawn table slot 0x02090bf4 was reached from. Run over every
 // candidate overlay of every id, each of 106 / 107 / 228 has EXACTLY ONE
 // both-routes owner and it is ov032. (tools/actor_names.py's own report line
@@ -29,17 +29,17 @@
 // dsd names ONE vtable address here and gives it TWO names, both 0x021139a4:
 // _ZTV9HugeCover and _ZTV14daObjTdWater_c. Three independent routes say that
 // address is the WATER's and the cover's own table is unnamed:
-//   the factories   HugeCover_Spawn (0x02112668) allocates 800 and installs
-//                   0x021138e0; HugeWater_Spawn (0x021128b8) allocates 820,
+//   the factories   daObjTdFuta_c_classInit (0x02112668) allocates 800 and installs
+//                   0x021138e0; daObjTdWater_c_classInit (0x021128b8) allocates 820,
 //                   installs 0x021139a4 and constructs a TextureTransformer at
-//                   this+0x320; func_ov032_0211244c allocates 1080, runs
+//                   this+0x320; daBakubaku_c_classInit allocates 1080, runs
 //                   Enemy::Enemy and installs 0x02113824.
 //   the RTTI        0x02113824 -> "12daBakubaku_c"
 //                   0x021138e0 -> "13daObjTdFuta_c" (futa = lid/cover)
 //                   0x021139a4 -> "14daObjTdWater_c"
-//   the records     0x021138bc (id 106) -> HugeCover_Spawn
-//                   0x02113980 (id 107) -> HugeWater_Spawn
-//                   0x02113800 (id 228) -> func_ov032_0211244c
+//   the records     0x021138bc (id 106) -> daObjTdFuta_c_classInit
+//                   0x02113980 (id 107) -> daObjTdWater_c_classInit
+//                   0x02113800 (id 228) -> daBakubaku_c_classInit
 // So every _ZN9HugeCover* method body in src/ is HUGE_WATER's. The rows below
 // are wired by address; the dsd spellings survive only as host array names,
 // which is what lets the matched TUs link unchanged. Same shift ov033 carries
@@ -54,8 +54,8 @@
 // before a word was replaced.
 //
 // BUBBA carries EIGHT own slots, not six: 12 OnPendingDestroy is an EMPTY body
-// (func_ov032_02112160) that overrides ActorBase's, and 29 OnAimedAtWithEgg is
-// func_ov032_02112444 (`return 0xa0000`). Letting the shared half write the
+// (_ZN12daBakubaku_c16OnPendingDestroyEv) that overrides ActorBase's, and 29 OnAimedAtWithEgg is
+// _ZN12daBakubaku_c16OnAimedAtWithEggEv (`return 0xa0000`). Letting the shared half write the
 // defaults into either would have changed the answer with no fault and no log
 // line, so the fill writes both explicitly.
 //
@@ -76,16 +76,18 @@
 // one DSSTATE-bracketed done-guard. It runs the pack check, the syms patch,
 // hal_fill_platform_vtable (both Platform destructors install ov002 0x0210ae38
 // as the base vptr on the way out), hal_fill_enemy_base_vtable (BUBBA's
-// destructors tail into the Enemy base D2 func_ov002_020aed18) and then all
+// destructors tail into the Enemy base D2 _ZN12dEnemyBase_cD2Ev) and then all
 // THREE ov032 sinits in ROM order -- all of them; no class here is without
 // reach.
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
@@ -93,28 +95,28 @@ extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include "dsstate_seg.h"
 #include <cstdlib>
 
-#include "Actor.h"
-#include "ActorBase.h"
+#include "dActor_c.h"
+#include "fBase_c.h"
 
 extern "C" {
 /* the arm9 shared half */
-int _ZN5Actor19BeforeInitResourcesEv(void *self);              /* slot 1  */
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
-int _ZN5Actor14BeforeBehaviorEv(void *self);                   /* slot 7  */
-int _ZN5Actor12BeforeRenderEv(void *self);                     /* slot 10 */
-int _ZN5Actor13OnYoshiTryEatEv(void *self);                    /* slot 18 */
-void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
-int _ZN5Actor9Virtual50Ev(void *self);                         /* slot 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);              /* slot 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);              /* slot 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
-int _ZN5Actor16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
-void _ZN8Platform4KillEv(void *self);                              /* slot 31 */
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);              /* slot 1  */
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);                   /* slot 7  */
+int _ZN8dActor_c12BeforeRenderEv(void *self);                     /* slot 10 */
+int _ZN8dActor_c13OnYoshiTryEatEv(void *self);                    /* slot 18 */
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
+int _ZN8dActor_c9Virtual50Ev(void *self);                         /* slot 20 */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);              /* slot 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);              /* slot 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
+int _ZN8dActor_c16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
+void _ZN10dBgActor_c4KillEv(void *self);                              /* slot 31 */
 
 const char *port_actor_class_name(unsigned id);   /* hal/actor_registry */
 void port_actor_slot_decline(const char *what);   /* func_02043fdc_hostcopy.cpp */
@@ -135,15 +137,15 @@ void __sinit_ov032_02112e28(void);
    dsd left this class unnamed, so all of it is func_ov032_*. Its Behavior,
    Render and state-enter setter are HOST COPIES (port/unmatched/Bubba_*.cpp);
    everything else rides from src. */
-int func_ov032_021122dc(char *self);       /* slot 0,  InitResources */
-int func_ov032_02112124(void);             /* slot 3,  CleanupResources */
-int func_ov032_021121b4(char *self);       /* slot 6,  Behavior  HOST COPY */
-int func_ov032_02112164(void *self);       /* slot 9,  Render    HOST COPY */
-void func_ov032_02112160(void);            /* slot 12, OnPendingDestroy, empty */
-int *func_ov032_021111a0(int *self);       /* slot 16, D1 */
-int *func_ov032_021111f0(int *self);       /* slot 17, D0 */
-int func_ov032_02112444(void);             /* slot 29, OnAimedAtWithEgg */
-int *func_ov032_0211244c(void);            /* id 228's factory */
+int _ZN12daBakubaku_c13InitResourcesEv(char *self);       /* slot 0,  InitResources */
+int _ZN12daBakubaku_c16CleanupResourcesEv(void);             /* slot 3,  CleanupResources */
+int _ZN12daBakubaku_c8BehaviorEv(char *self);       /* slot 6,  Behavior  HOST COPY */
+int _ZN12daBakubaku_c6RenderEv(void *self);       /* slot 9,  Render    HOST COPY */
+void _ZN12daBakubaku_c16OnPendingDestroyEv(void);            /* slot 12, OnPendingDestroy, empty */
+int *_ZN12daBakubaku_cD1Ev(int *self);       /* slot 16, D1 */
+int *_ZN12daBakubaku_cD0Ev(int *self);       /* slot 17, D0 */
+int _ZN12daBakubaku_c16OnAimedAtWithEggEv(void);             /* slot 29, OnAimedAtWithEgg */
+int *daBakubaku_c_classInit(void);            /* id 228's factory */
 
 /* BUBBA's ten state handlers, five {enter, tick} pairs */
 int func_ov032_02111f9c(char *c);
@@ -162,27 +164,27 @@ int func_ov032_02111620(void *c);
    func_ov032_*. Their "recovered from vtable slot identity" markers are NAME
    recoveries over real decompiled bodies (T5, adjudicated in
    port/tools/inferred_stub_adjudicated.txt); none is a stub. */
-int func_ov032_021125d4(char *self);       /* slot 0,  InitResources */
-int func_ov032_02112544(void *self);       /* slot 3,  CleanupResources */
-int func_ov032_021125b0(void *self);       /* slot 6,  Behavior */
-int func_ov032_02112588(void *self);       /* slot 9,  Render */
-int *func_ov032_021124a8(int *self);       /* slot 16, D1 */
-int *func_ov032_021124ec(int *self);       /* slot 17, D0 */
-int *HugeCover_Spawn(void);                /* id 106 */
+int _ZN13daObjTdFuta_c13InitResourcesEv(char *self);       /* slot 0,  InitResources */
+int _ZN13daObjTdFuta_c16CleanupResourcesEv(void *self);       /* slot 3,  CleanupResources */
+int _ZN13daObjTdFuta_c8BehaviorEv(void *self);       /* slot 6,  Behavior */
+int _ZN13daObjTdFuta_c6RenderEv(void *self);       /* slot 9,  Render */
+int *_ZN13daObjTdFuta_cD1Ev(int *self);       /* slot 16, D1 */
+int *_ZN13daObjTdFuta_cD0Ev(int *self);       /* slot 17, D0 */
+int *daObjTdFuta_c_classInit(void);                /* id 106 */
 
 /* ---- id 107 HUGE_WATER --------------------------------------------------
    these are the ones dsd spelled _ZN9HugeCover*, and they belong to the WATER
    class. The four method bodies are real MSVC members against
    include/HugeCover.h and are faced below. */
-int *_ZN9HugeCoverD1Ev(int *self);         /* slot 16 */
-int *_ZN9HugeCoverD0Ev(int *self);         /* slot 17 */
-int *HugeWater_Spawn(void);                /* id 107 */
+int *_ZN14daObjTdWater_cD1Ev(int *self);         /* slot 16 */
+int *_ZN14daObjTdWater_cD0Ev(int *self);         /* slot 17 */
+int *daObjTdWater_c_classInit(void);                /* id 107 */
 
 /* the three host vtables, all excluded from the mount. The names are dsd's for
    the addresses, NOT for the classes -- see this file's header. */
 DSSTATE_BEGIN
-int data_ov032_02113824[31];   /* 0x02113824, id 228 BUBBA */
-int data_ov032_021138e0[32];   /* 0x021138e0, id 106 HUGE_COVER */
+int _ZTV12daBakubaku_c[31];   /* 0x02113824, id 228 BUBBA */
+int _ZTV13daObjTdFuta_c[32];   /* 0x021138e0, id 106 HUGE_COVER */
 void *_ZTV9HugeCover[32];      /* 0x021139a4, id 107 HUGE_WATER */
 DSSTATE_END
 }
@@ -191,11 +193,10 @@ DSSTATE_END
    all. Both LHS are DECLARED in include/decl_common.h (lines 541 and 573) and
    DEFINED nowhere else in the link, so neither alias can be defeated and
    alternatename_guard stays clean.
-     _ZTV13daObjTdFuta_c   src/func_ov032_021124a8.c, id 106's D1
-     _ZTV14daObjTdWater_c  src/_ZN9HugeCoverD1Ev.c and D0Ev.c, id 107's pair --
-                           the SAME address src/HugeWater_Spawn.c spells
+     _ZTV13daObjTdFuta_c   src/game/actors/d_a_obj_td_futa.cpp, id 106's D1
+     _ZTV14daObjTdWater_c  src/game/actors/d_a_obj_td_water.cpp and D0Ev.c, id 107's pair --
+                           the SAME address src/game/actors/d_a_obj_td_water.cpp spells
                            _ZTV9HugeCover, which is the storage below. */
-#pragma comment(linker, "/alternatename:__ZTV13daObjTdFuta_c=_data_ov032_021138e0")
 #pragma comment(linker, "/alternatename:__ZTV14daObjTdWater_c=__ZTV9HugeCover")
 
 /* THE C++-LINKAGE DATA SPELLINGS. Six of this overlay's TUs are //cpp files
@@ -227,16 +228,16 @@ DSSTATE_END
 /* The four bodies src defines as real C++ methods against include/HugeCover.h,
    faced here -- the ov013/ov024/ov025/ov033/ov035 recipe. All four serve id
    107, not id 106. */
-#include "HugeCover.h"
+#include "daObjTdWater_c.h"
 extern "C" {
-int _ZN9HugeCover13InitResourcesEv(void *self)
-{ return ((HugeCover *)self)->HugeCover::InitResources(); }
-int _ZN9HugeCover16CleanupResourcesEv(void *self)
-{ return ((HugeCover *)self)->HugeCover::CleanupResources(); }
-int _ZN9HugeCover6RenderEv(void *self)
-{ return ((HugeCover *)self)->HugeCover::Render(); }
-int _ZN9HugeCover8BehaviorEv(void *self)
-{ return ((HugeCover *)self)->HugeCover::Behavior(); }
+int _ZN14daObjTdWater_c13InitResourcesEv(void *self)
+{ return ((daObjTdWater_c *)self)->daObjTdWater_c::InitResources(); }
+int _ZN14daObjTdWater_c16CleanupResourcesEv(void *self)
+{ return ((daObjTdWater_c *)self)->daObjTdWater_c::CleanupResources(); }
+int _ZN14daObjTdWater_c6RenderEv(void *self)
+{ return ((daObjTdWater_c *)self)->daObjTdWater_c::Render(); }
+int _ZN14daObjTdWater_c8BehaviorEv(void *self)
+{ return ((daObjTdWater_c *)self)->daObjTdWater_c::Behavior(); }
 }
 
 // ---- the trap --------------------------------------------------------------
@@ -258,51 +259,51 @@ OV32_TRAP(13) OV32_TRAP(14)
 #undef OV32_TRAP
 
 static int __fastcall ov32_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall ov32_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall ov32_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 static void __fastcall ov32_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall ov32_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall ov32_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall ov32_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall ov32_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall ov32_pdes(void *s, void *)
-{ ((ActorBase *)s)->ActorBase::OnPendingDestroy(); return 0; }
+{ ((fBase_c *)s)->fBase_c::OnPendingDestroy(); return 0; }
 static int __fastcall ov32_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int __fastcall ov32_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 static int __fastcall ov32_turn_egg(void *s, void *, void *p)
-{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+{ _ZN8dActor_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall ov32_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall ov32_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall ov32_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall ov32_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall ov32_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall ov32_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall ov32_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall ov32_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall ov32_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 static int __fastcall ov32_egg(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 static int __fastcall ov32_kill(void *s, void *)
-{ _ZN8Platform4KillEv(s); return 0; }
+{ _ZN10dBgActor_c4KillEv(s); return 0; }
 
 /* The shared half of all three tables. Each caller writes its own 0/3/6/9/16/17
    afterwards, BUBBA also writes 12 and 29, and the two Platforms also write 31.
@@ -363,19 +364,46 @@ extern PortBubbaCell data_ov032_02113a7c;   /* cell 4 */
 typedef int (*PortBubbaFn)(void *);
 
 /* RUN link100 LANE PMFB8 GATE 2: THE FIVE TICK WORDS ARE __fastcall FACES NOW.
-   src/func_ov032_021121b4.cpp is in the link (port/slice_pmfb8.txt) and its own
+   src/game/actors/d_a_bakubaku.cpp is in the link (port/slice_pmfb8.txt) and its own
    emitted dispatch is
        mov eax,[ecx+8] / test eax,eax / mov ecx,[ecx+12] / add ecx,esi /
        call eax
    -- the tick half at offset 8 of the cell, receiver in ecx, ZERO stack
    arguments, nothing to clean. A zero-arg __fastcall face takes ecx as its
    first argument and cleans the same nothing.
-   THE FIVE ENTER WORDS ARE NOT TOUCHED. Their dispatcher,
-   src/func_ov032_02111ff4.cpp, is already in the link and emits `jmp edx`, a
-   TAIL JUMP: the caller's frame survives the transfer, so the cdecl body reads
-   the caller's own first stack word, which is `c`. */
+   THE FIVE ENTER WORDS NEED THE SAME FACE, and the paragraph that used to
+   stand here -- "their dispatcher emits `jmp edx`, a TAIL JUMP: the caller's
+   frame survives the transfer, so the cdecl body reads the caller's own first
+   stack word" -- was true of the dispatcher AS A SEPARATE FRAME and false of
+   the frame the enter path actually runs in. /O2 inlines that dispatcher into
+   its callers in the same translation unit, and the inlined sequence is a
+   REAL CALL with nothing pushed. Read off this build's own image at six sites,
+   not reasoned about:
+
+     ?InitResources@daBakubaku_c@@UAEHXZ +0x133
+       mov  dword ptr [edi+0x3b0], <cell>       ; the state pointer
+       mov  eax, dword ptr [<cell>]             ; the enter code word
+       test eax,eax
+       je   +0x11
+       mov  ecx, dword ptr [<cell>+4]           ; the record's delta = 0
+       add  ecx, edi                            ; this + delta
+       call eax                                 ; A REAL CALL
+
+   and the same five moves again in func_ov032_02111620 +0x20f,
+   func_ov032_02111830, func_ov032_02111d7c, func_ov032_02111e24 and
+   func_ov032_02111f9c. Nothing is pushed at any of them, so a raw cdecl enter
+   body read whatever the caller last spilled as its `c`. Same defect and same
+   remedy as the Amp's rows in hal/actor_classes_ov070.cpp: one __fastcall face
+   per word, right whether the transfer is a call or a tail jump, because
+   MSVC's pointer-to-member sequence puts `this + delta` in ECX either way. */
 #define BUBBA_TICK_FACE(sym)                                              \
     static int __fastcall bb_tick_##sym(void *self, void *dead_edx)       \
+    {                                                                     \
+        (void)dead_edx;                                                   \
+        return ((PortBubbaFn)sym)(self);                                  \
+    }
+#define BUBBA_ENTER_FACE(sym)                                             \
+    static int __fastcall bb_enter_##sym(void *self, void *dead_edx)      \
     {                                                                     \
         (void)dead_edx;                                                   \
         return ((PortBubbaFn)sym)(self);                                  \
@@ -387,21 +415,27 @@ BUBBA_TICK_FACE(func_ov032_02111b9c)
 BUBBA_TICK_FACE(func_ov032_02111830)
 BUBBA_TICK_FACE(func_ov032_02111620)
 
+BUBBA_ENTER_FACE(func_ov032_02111f9c)
+BUBBA_ENTER_FACE(func_ov032_02111dd8)
+BUBBA_ENTER_FACE(func_ov032_02111d58)
+BUBBA_ENTER_FACE(func_ov032_02111b50)
+BUBBA_ENTER_FACE(func_ov032_02111814)
+
 static const struct {
     PortBubbaCell *cell;
     unsigned enter_rom, tick_rom;
     PortBubbaFn enter_host, tick_host;
 } g_bubba_cells[5] = {
     { &data_ov032_02113a8c, 0x02111f9c, 0x02111e24,
-      (PortBubbaFn)func_ov032_02111f9c, (PortBubbaFn)bb_tick_func_ov032_02111e24 },
+      (PortBubbaFn)bb_enter_func_ov032_02111f9c, (PortBubbaFn)bb_tick_func_ov032_02111e24 },
     { &data_ov032_02113a9c, 0x02111dd8, 0x02111d7c,
-      (PortBubbaFn)func_ov032_02111dd8, (PortBubbaFn)bb_tick_func_ov032_02111d7c },
+      (PortBubbaFn)bb_enter_func_ov032_02111dd8, (PortBubbaFn)bb_tick_func_ov032_02111d7c },
     { &data_ov032_02113aac, 0x02111d58, 0x02111b9c,
-      (PortBubbaFn)func_ov032_02111d58, (PortBubbaFn)bb_tick_func_ov032_02111b9c },
+      (PortBubbaFn)bb_enter_func_ov032_02111d58, (PortBubbaFn)bb_tick_func_ov032_02111b9c },
     { &data_ov032_02113abc, 0x02111b50, 0x02111830,
-      (PortBubbaFn)func_ov032_02111b50, (PortBubbaFn)bb_tick_func_ov032_02111830 },
+      (PortBubbaFn)bb_enter_func_ov032_02111b50, (PortBubbaFn)bb_tick_func_ov032_02111830 },
     { &data_ov032_02113a7c, 0x02111814, 0x02111620,
-      (PortBubbaFn)func_ov032_02111814, (PortBubbaFn)bb_tick_func_ov032_02111620 },
+      (PortBubbaFn)bb_enter_func_ov032_02111814, (PortBubbaFn)bb_tick_func_ov032_02111620 },
 };
 
 extern "C" void port_bubba_states_seat(void)
@@ -445,7 +479,7 @@ extern "C" void port_ov32_bringup(void)
     __sinit_ov032_02112dbc();
     __sinit_ov032_02112e28();
     /* Seat and verify the five PMF cells BEFORE anything can dispatch through
-       them: func_ov032_021122dc (BUBBA's InitResources) installs cell 0 through
+       them: _ZN12daBakubaku_c13InitResourcesEv (BUBBA's InitResources) installs cell 0 through
        func_ov032_02111ff4, which tail-calls its enter half on the same frame. */
     port_bubba_states_seat();
 }
@@ -461,29 +495,29 @@ extern "C" void port_ov32_bringup(void)
 // cylinders out of the two Vector3s at 0x021137cc / 0x021137d8, and enters
 // state cell 0x02113a8c.
 static int __fastcall bb_init(void *s, void *)
-{ return func_ov032_021122dc((char *)s); }
+{ return _ZN12daBakubaku_c13InitResourcesEv((char *)s); }
 static int __fastcall bb_clean(void *s, void *)
-{ (void)s; return func_ov032_02112124(); }
+{ (void)s; return _ZN12daBakubaku_c16CleanupResourcesEv(); }
 static int __fastcall bb_behavior(void *s, void *)
-{ return func_ov032_021121b4((char *)s); }        /* HOST COPY */
+{ return _ZN12daBakubaku_c8BehaviorEv((char *)s); }        /* HOST COPY */
 static int __fastcall bb_render(void *s, void *)
 { port_actor_render_probe("BUBBA", (char *)s + 0x34c);
-  return func_ov032_02112164(s); }                /* HOST COPY */
+  return _ZN12daBakubaku_c6RenderEv(s); }                /* HOST COPY */
 /* Slot 12, the OVERRIDE: an empty body where ActorBase does real work. */
 static int __fastcall bb_pdes(void *s, void *)
-{ (void)s; func_ov032_02112160(); return 0; }
+{ (void)s; _ZN12daBakubaku_c16OnPendingDestroyEv(); return 0; }
 static int __fastcall bb_d1(void *s, void *)
-{ return (int)(size_t)func_ov032_021111a0((int *)s); }
+{ return (int)(size_t)_ZN12daBakubaku_cD1Ev((int *)s); }
 static int __fastcall bb_d0(void *s, void *)
-{ return (int)(size_t)func_ov032_021111f0((int *)s); }
+{ return (int)(size_t)_ZN12daBakubaku_cD0Ev((int *)s); }
 /* Slot 29, the OVERRIDE: returns 0xa0000 where Actor returns its own default. */
 static int __fastcall bb_aimed(void *s, void *)
-{ (void)s; return func_ov032_02112444(); }
+{ (void)s; return _ZN12daBakubaku_c16OnAimedAtWithEggEv(); }
 
 extern "C" void hal_fill_bubba_vtable(void)
 {
     port_ov32_bringup();
-    void *volatile *vt = (void *volatile *)data_ov032_02113824;
+    void *volatile *vt = (void *volatile *)_ZTV12daBakubaku_c;
     ov32_fill_shared(vt);
     vt[0]  = (void *)bb_init;
     vt[3]  = (void *)bb_clean;
@@ -491,7 +525,7 @@ extern "C" void hal_fill_bubba_vtable(void)
     vt[9]  = (void *)bb_render;
     /* AFTER the shared fill, which writes the ActorBase/Actor defaults here. */
     vt[12] = (void *)bb_pdes;
-    vt[16] = (void *)bb_d1;
+    vt[16] = (void *)PORT_D16(bb_d1);
     vt[17] = (void *)bb_d0;
     vt[29] = (void *)bb_aimed;
     /* no slot 31: an Enemy is a plain Actor, 31 slots total, ends at 30. */
@@ -508,29 +542,29 @@ extern "C" void hal_fill_bubba_vtable(void)
 // Event::GetBit(0xe) == 0 -- the same event bit ov033's pair shares, so once the
 // well is open the class declines to initialise.
 static int __fastcall hc_init(void *s, void *)
-{ return func_ov032_021125d4((char *)s); }
+{ return _ZN13daObjTdFuta_c13InitResourcesEv((char *)s); }
 static int __fastcall hc_clean(void *s, void *)
-{ return func_ov032_02112544(s); }
+{ return _ZN13daObjTdFuta_c16CleanupResourcesEv(s); }
 static int __fastcall hc_behavior(void *s, void *)
-{ return func_ov032_021125b0(s); }
+{ return _ZN13daObjTdFuta_c8BehaviorEv(s); }
 static int __fastcall hc_render(void *s, void *)
 { port_actor_render_probe("HUGE_COVER", (char *)s + 0xd4);
-  return func_ov032_02112588(s); }
+  return _ZN13daObjTdFuta_c6RenderEv(s); }
 static int __fastcall hc_d1(void *s, void *)
-{ return (int)(size_t)func_ov032_021124a8((int *)s); }
+{ return (int)(size_t)_ZN13daObjTdFuta_cD1Ev((int *)s); }
 static int __fastcall hc_d0(void *s, void *)
-{ return (int)(size_t)func_ov032_021124ec((int *)s); }
+{ return (int)(size_t)_ZN13daObjTdFuta_cD0Ev((int *)s); }
 
 extern "C" void hal_fill_huge_cover_vtable(void)
 {
     port_ov32_bringup();
-    void *volatile *vt = (void *volatile *)data_ov032_021138e0;
+    void *volatile *vt = (void *volatile *)_ZTV13daObjTdFuta_c;
     ov32_fill_shared(vt);
     vt[0]  = (void *)hc_init;
     vt[3]  = (void *)hc_clean;
     vt[6]  = (void *)hc_behavior;
     vt[9]  = (void *)hc_render;
-    vt[16] = (void *)hc_d1;
+    vt[16] = (void *)PORT_D16(hc_d1);
     vt[17] = (void *)hc_d0;
     vt[31] = (void *)ov32_kill;
 }
@@ -547,18 +581,18 @@ extern "C" void hal_fill_huge_cover_vtable(void)
 // descriptor 0x02112f64, loads KCL 1720, hands the collider CLPS 0x02112fb8 and
 // enables it against itself.
 static int __fastcall hw_init(void *s, void *)
-{ return _ZN9HugeCover13InitResourcesEv(s); }
+{ return _ZN14daObjTdWater_c13InitResourcesEv(s); }
 static int __fastcall hw_clean(void *s, void *)
-{ return _ZN9HugeCover16CleanupResourcesEv(s); }
+{ return _ZN14daObjTdWater_c16CleanupResourcesEv(s); }
 static int __fastcall hw_behavior(void *s, void *)
-{ return _ZN9HugeCover8BehaviorEv(s); }
+{ return _ZN14daObjTdWater_c8BehaviorEv(s); }
 static int __fastcall hw_render(void *s, void *)
 { port_actor_render_probe("HUGE_WATER", (char *)s + 0xd4);
-  return _ZN9HugeCover6RenderEv(s); }
+  return _ZN14daObjTdWater_c6RenderEv(s); }
 static int __fastcall hw_d1(void *s, void *)
-{ return (int)(size_t)_ZN9HugeCoverD1Ev((int *)s); }
+{ return (int)(size_t)_ZN14daObjTdWater_cD1Ev((int *)s); }
 static int __fastcall hw_d0(void *s, void *)
-{ return (int)(size_t)_ZN9HugeCoverD0Ev((int *)s); }
+{ return (int)(size_t)_ZN14daObjTdWater_cD0Ev((int *)s); }
 
 extern "C" void hal_fill_huge_water_vtable(void)
 {
@@ -569,7 +603,7 @@ extern "C" void hal_fill_huge_water_vtable(void)
     vt[3]  = (void *)hw_clean;
     vt[6]  = (void *)hw_behavior;
     vt[9]  = (void *)hw_render;
-    vt[16] = (void *)hw_d1;
+    vt[16] = (void *)PORT_D16(hw_d1);
     vt[17] = (void *)hw_d0;
     vt[31] = (void *)ov32_kill;
 }

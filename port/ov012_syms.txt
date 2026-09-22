@@ -9,7 +9,7 @@
 # TWO SYMBOLS LEFT OUT ON PURPOSE (host arrays the registry fills):
 #   _ZTV12SwitchPillar / _ZTV14daObjC0Water_c (0x02112408, BASEMENT_WATER's
 #     REAL vtable -- see the class-identity note below)
-#   data_ov012_02112344 (SWITCH_PILLAR's REAL vtable, unnamed by dsd)
+#   _ZTV16daObjC0_Switch_c (SWITCH_PILLAR's REAL vtable, unnamed by dsd)
 # dsd's ".p__sinit_*" pointer entries are also left out (not C identifiers;
 # the port calls the two sinits by name).
 #
@@ -25,7 +25,7 @@
 # low byte) matches exactly: 0x0212320's word[1]=0xe40022 -> id 0x22=34;
 # 0x021123e4's word[1]=0xe50023 -> id 0x23=35. Both records' own vtable-
 # pointer word (slot 0) also relocates to a function INSIDE ov012 itself
-# (0x02111420=SwitchPillar_Spawn, 0x02111730=BasementWater_Spawn), never
+# (0x02111420=daObjC0_Switch_c_classInit, 0x02111730=daObjC0Water_c_classInit), never
 # to main or another overlay. The ambiguity is a dsd static-export artifact
 # (twelve overlays' own SpawnInfo tables happen to sit at addresses that
 # coincide across windows); ov012's own mounted bytes are unambiguous at
@@ -34,8 +34,8 @@
 # correct records.
 #
 # ==== CLASS-IDENTITY CORRECTION (the SwitchPillar/BasementWater swap) ====
-# SwitchPillar_Spawn.c installs data_ov012_02112344 (unnamed), NOT
-# _ZTV12SwitchPillar. BasementWater_Spawn.c installs _ZTV12SwitchPillar ==
+# daObjC0_Switch_c_classInit.c installs _ZTV16daObjC0_Switch_c (unnamed), NOT
+# _ZTV12SwitchPillar. daObjC0Water_c_classInit.c installs _ZTV12SwitchPillar ==
 # _ZTV14daObjC0Water_c (0x02112408) -- dsd's own class-identity mislabel:
 # the ENTIRE `_ZN12SwitchPillar*` file family (D1Ev, D0Ev,
 # CleanupResourcesEv, RenderEv, BehaviorEv, InitResourcesEv) is REALLY
@@ -52,10 +52,10 @@
 #     whatever function references a member, so it inherited the wrong
 #     class name too -- it is not independent confirmation).
 #   - reloc-verified: _ZTV12SwitchPillar's own slot 0/3/6/9/16/17 targets
-#     are EXACTLY _ZN12SwitchPillar13InitResourcesEv/16CleanupResourcesEv/
+#     are EXACTLY _ZN13BasementWater13InitResourcesEv/16CleanupResourcesEv/
 #     8BehaviorEv/6RenderEv/D1Ev/D0Ev's own addresses.
 # The REAL SwitchPillar (RTTI _ZTV16daObjC0_Switch_c, config's own
-# data_ov012_02112344) is the SEVEN UNNAMED func_ov012_* files
+# _ZTV16daObjC0_Switch_c) is the SEVEN UNNAMED func_ov012_* files
 # (021111a0 D1, 021111e4 D0 -- its own comment reads "daObjC0_Switch_c_
 # OnYoshiTryEat", ANOTHER dsd slot-identity decoy name for what reloc-
 # derivation proves is really D0 -- 0211123c OnGroundPounded (slot 21,
@@ -88,11 +88,11 @@
 #
 # RENDER'S OWN ModelAnim/Model SLOT-5 COLLISION, TWICE OVER (the Whomp/
 # Bully case): BOTH classes' real Render hit it.
-#   func_ov012_02111324 (SwitchPillar's real Render) dispatches
+#   _ZN16daObjC0_Switch_c6RenderEv (SwitchPillar's real Render) dispatches
 #   `struct Base{...virtual void m(int);}; struct Derived{char pad[0xd4];
 #   Base base;}; b->m(0);` -- the bare-call shape over a plain Model at
 #   +0xd4, the RotatingFirebar precedent exactly.
-#   _ZN12SwitchPillar6RenderEv.cpp (BasementWater's REAL Render, despite
+#   _ZN13BasementWater6RenderEv.cpp (BasementWater's REAL Render, despite
 #   the misleading filename) dispatches `struct Sub{...virtual void
 #   m(int);}; struct Base{char pad[0xd4]; Sub sub;}; ... b->m(0);` --
 #   the SAME shape, but calls TextureTransformer::Update FIRST (the Whomp
@@ -136,9 +136,9 @@ data_ov012_02112118:0x20 data_ov012_02112138:0x20 data_ov012_02112158:0x20
 data_ov012_02112178:0x20 data_ov012_02112198:0x20 data_ov012_021121b8:0x8
 data_ov012_021121c0:0x1c data_ov012_021121dc:0x1c data_ov012_021121f8:0x60
 data_ov012_02112258:0x24 data_ov012_0211227c:0x18 data_ov012_02112294:0x8
-data_ov012_0211229c:0x64 data_ov012_02112300:0xc data_ov012_0211230c:0x14
-SwitchPillar_SpawnInfo:0x38 data_ov012_02112358:0x10 data_ov012_02112368:0x5c
-data_ov012_021123c4:0xc data_ov012_021123d0:0x14 BasementWater_SpawnInfo:0x10
+data_ov012_0211229c:0x64 _ZTI16daObjC0_Switch_c:0xc _ZTS16daObjC0_Switch_c:0x14
+g_profile_C0_SWITCH:0x38 data_ov012_02112358:0x10 data_ov012_02112368:0x5c
+_ZTI14daObjC0Water_c:0xc _ZTS14daObjC0Water_c:0x14 g_profile_C0_WATER:0x10
 data_ov012_021123f4:0x10 data_ov012_02112404:0x18 data_ov012_0211241c:0xc
 data_ov012_02112428:0xc data_ov012_02112434:0x4 data_ov012_02112438:0x14
 data_ov012_0211244c:0x18 data_ov012_02112464:0x30 data_ov012_02112494:0xc

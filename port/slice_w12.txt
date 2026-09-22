@@ -41,7 +41,7 @@
 #
 # ---- FIVE TUs HELD OUT, AND WHY --------------------------------------------
 #
-# src/ChiefChilly_Spawn.cpp             ARM r0 RIDE-THROUGH. It calls
+# src/d_a_king_donketu.cpp             ARM r0 RIDE-THROUGH. It calls
 #   `func_020aed98();` with NO ARGUMENT because in the ROM the object the
 #   allocator just returned is still in r0 when Enemy::C2 is entered
 #   (0x02121ed4 bl operator new / 0x02121ed8 movs r4, r0 / 0x02121ee0 bl
@@ -49,7 +49,7 @@
 #   under cdecl. port_factory_chief_chilly in hal/actor_classes_ov073.cpp is the
 #   ROM's own sequence with the receiver spelled, every offset and literal read
 #   from the disassembly. The three Ccc Spawns do NOT have this problem
-#   (`_ZN8PlatformC2Ev(p)` names its receiver) and are in this slice.
+#   (`_ZN10dBgActor_cC2Ev(p)` names its receiver) and are in this slice.
 #
 # src/ChiefChilly_ChangeState.cpp       MSVC POINTER-TO-MEMBER, both of them.
 # src/func_ov073_021223a4.cpp           `struct C; typedef int (C::*PMF)();
@@ -77,20 +77,22 @@
 # No level mount is added: level 49 is already in port_level_table and already
 # loads ov057 whole. Only PORT_ACTOR_OVERLAYS gains ov073, which is the first
 # mount of that overlay.
-src/CccArena_Spawn.c
-src/CccBigIce_Spawn.c
-src/CccSmallIce_Spawn.c
+src/d_a_obj_ewb_ice_ewb_ice_a.c
+src/d_a_obj_ewb_ice_ewb_ice_b.c
+src/d_a_obj_ewb_ice_ewb_ice_c.c
 src/_ZN8CccArena13InitResourcesEv.cpp
 src/_ZN8CccArena16CleanupResourcesEv.cpp
 src/_ZN8CccArena8BehaviorEv.cpp
 src/_ZN8CccArena6RenderEv.cpp
-src/_ZN8CccArenaD1Ev.c
-src/_ZN8CccArenaD0Ev.c
+src/_ZN8CccArenaD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN8CccArenaD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN8CccArenaD0Ev.cpp
 src/_ZN11ChiefChilly13InitResourcesEv.cpp
 src/_ZN11ChiefChilly16CleanupResourcesEv.cpp
-src/_ZN11ChiefChilly16OnPendingDestroyEv.c
-src/_ZN11ChiefChillyD1Ev.c
-src/_ZN11ChiefChillyD0Ev.c
+src/_ZN11ChiefChilly16OnPendingDestroyEv.cpp
+src/_ZN11ChiefChillyD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN11ChiefChillyD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN11ChiefChillyD0Ev.cpp
 src/__sinit_ov073_02122874.c
 src/__sinit_ov073_02122d48.c
 src/func_02011d08.c
@@ -98,7 +100,7 @@ src/_ZN5Sound13Func_02048ec4Ev.cpp
 src/func_ov073_0211f144.c
 src/func_ov073_0211f2c0.c
 src/func_ov073_0211f494.c
-src/func_ov073_0211f61c.c
+src/func_ov073_0211f61c.cpp
 src/func_ov073_0211fa74.c
 src/func_ov073_0211fbec.c
 src/func_ov073_0211fbf4.cpp
@@ -132,7 +134,7 @@ src/func_ov073_02121378.c
 src/func_ov073_02121388.c
 src/func_ov073_02121538.cpp
 src/func_ov073_021215cc.c
-src/func_ov073_02121ec0.c
+src/_ZN11ChiefChilly16OnAimedAtWithEggEv.cpp
 src/func_ov073_0212202c.c
 src/func_ov073_02122034.cpp
 src/func_ov073_021220c0.c
@@ -141,6 +143,6 @@ src/func_ov073_02122200.cpp
 src/func_ov073_021222c8.c
 src/func_ov073_021222ec.c
 src/func_ov073_0212239c.c
-src/func_ov073_021223f4.cpp
+src/_ZN8CccArena4KillEv.cpp
 src/func_ov073_02122730.c
 src/func_ov073_021227d0.c

@@ -113,7 +113,7 @@ ALIAS_FIXTURES = [
     # read out of the fixing diff and not out of the old baseline prose.
     ("ExpandingHeapAllocator::DeallocateAll",
      "?DeallocateAll@ExpandingHeapAllocator@@QAEXPAP6AXPAXPAV1@I@ZI@Z="
-     "__ZN22ExpandingHeapAllocator13DeallocateAllEPPFvPvPS_jEj",
+     "__ZN22ExpandingHeapAllocator13DeallocateAllEPFvPvPS_jEj",
      "the allocator went into ECX and the flat body read the VISITOR out of "
      "the first stack slot, dereferencing that code pointer at +0x2c "
      "unconditionally; and the thiscall caller expected a ret 8 the cdecl "
@@ -134,19 +134,19 @@ ALIAS_FIXTURES = [
      "cons s5-receiver-fixes, 2026-08-17 (run link60 lane RF1)"),
     ("Player::St_EndingFly_Main (int spelling)",
      "?St_EndingFly_Main@Player@@QAEHXZ="
-     "__ZN6Player17St_EndingFly_MainEv",
+     "_func_ov007_020c3d1c",
      "nine thiscall sites put the object in ECX and push nothing, so the "
      "flat body handed its own RETURN ADDRESS to the ov007 teardown "
      "trampoline at data_ov007_02103254",
      "cons s5-receiver-fixes, 2026-08-17 (run link60 lane RF1)"),
     ("Player::St_EndingFly_Main (void spelling)",
      "?St_EndingFly_Main@Player@@QAEXXZ="
-     "__ZN6Player17St_EndingFly_MainEv",
+     "_func_ov007_020c3d1c",
      "the same body and the same nine-site bug, spelled by the TU that "
      "declares the void return",
      "cons s5-receiver-fixes, 2026-08-17 (run link60 lane RF1)"),
     ("Player::TryGrab",
-     "__ZN6Player7TryGrabER5Actor=?TryGrab@Player@@QAE_NAAUActor@@@Z",
+     "__ZN6Player7TryGrabER8dActor_c=?TryGrab@Player@@QAE_NAAUActor@@@Z",
      "grabbing an actor, e.g. the penguin catch",
      "the King Bob-omb lane, 2026-08-10"),
     ("BlendModelAnim::SetAnim",
@@ -156,7 +156,7 @@ ALIAS_FIXTURES = [
      "the King Bob-omb lane, 2026-08-10"),
     ("Platform::KillByMegaChar",
      "__ZN8Platform15KillByMegaCharER6Player="
-     "?KillByMegaChar@Platform@@QAEXAAUPlayer@@@Z",
+     "?KillByMegaChar@dBgActor_c@@QAEXAAUPlayer@@@Z",
      "a Mega character kills a platform",
      "the King Bob-omb lane, 2026-08-10"),
     # RULE P's own fixture, deliberately invisible to RULE R. Both sides are
@@ -188,11 +188,11 @@ ARITY_FIXTURES = [
      "a member's receiver rides r0; declared (void) the caller passes nothing "
      "and the body reads its own caller's return address as `this`",
      "PR #1539, cons ba1b0a670, 2026-08-16"),
-    ("Enemy base ctor", "src/RollingRock_Spawn.c",
-     "extern void _ZN5EnemyC2Ev(void);",
-     "extern void _ZN5EnemyC2Ev(void *);",
+    ("Enemy base ctor", "src/d_a_grock.c",
+     "extern void _ZN12dEnemyBase_cC2Ev(void);",
+     "extern void _ZN12dEnemyBase_cC2Ev(void *);",
      "spawn sites that already had the receiver in hand and were not passing "
-     "it; the definition src/_ZN5EnemyC2Ev.cpp:5 takes one",
+     "it; the definition src/_ZN12dEnemyBase_cC2Ev.cpp:5 takes one",
      "PR #1543, cons b74cf657d, 2026-08-16 (that PR fixed the ChainChomp / "
      "ChiefChilly / Wiggler spellings; this row re-breaks a sibling that "
      "carries the identical declaration today)"),
@@ -426,7 +426,7 @@ def prove_nsdecl(root, scratch, results):
     print("=" * 74)
 
     ns_alias = ("?St_EndingFly_Main@Player@@YAXXZ="
-                "__ZN6Player17St_EndingFly_MainEv")
+                "_func_ov007_020c3d1c")
 
     path = os.path.join(scratch, "src", NS_FIXTURE_FILE)
     with open(path, "w", encoding="utf-8") as f:

@@ -20,16 +20,16 @@
  *                                            0x02136e4c (load) 0x02137a90
  *                                            0x02136e50 (load) 0x020a0eac
  *
- *     Resolved against src/_ZN7TornadoD0Ev.c own member list:
+ *     Resolved against src/_ZN7TornadoD0Ev.cpp own member list:
  *     TextureTransformer +0x328 (0x0201592c), ModelAnim +0x2c4 (0x0201691c),
  *     WithMeshClsn +0x108 (0x020373f8), MovingCylinderClsn +0xd4 (0x020149a4),
- *     then _ZN5ActorD2Ev (0x020112c8). THE LAST THREE ARE THE SAME THREE arm9
+ *     then _ZN8dActor_cD2Ev (0x020112c8). THE LAST THREE ARE THE SAME THREE arm9
  *     ADDRESSES POKEY DESTRUCTOR USES for the same three member types, from a
  *     separately recovered destructor -- the cross-check that makes this a
  *     reading rather than a guess.
  *
  *     The load at 0x02136df4 reads 0x02137a90, the one Tornado table. src
- *     spells it two ways -- Tornado_Spawn says _ZTV7Tornado and D0 says
+ *     spells it two ways -- daTor_c_classInit says _ZTV7Tornado and D0 says
  *     _ZTV7daTor_c -- and port/ov096_syms.txt proves they are one table by
  *     reading its own vtable[-1] typeinfo through to the string "7daTor_c".
  *     This copy stores the host array _ZTV7Tornado; the /alternatename bridge
@@ -57,6 +57,7 @@
  *     methods that stay in the slice.
  */
 #include "ModelAnim.h"
+#include "Tornado.h"
 
 extern "C" {
 
@@ -64,9 +65,9 @@ extern "C" {
 extern int _ZTV7Tornado[];
 void _ZN18TextureTransformerD1Ev(void *);    /* 0x0201592c, member +0x328 */
 void _ZN9ModelAnimD1Ev(void *);              /* 0x0201691c, member +0x2c4 */
-void _ZN12WithMeshClsnD1Ev(void *);          /* 0x020373f8, member +0x108 */
-void _ZN18MovingCylinderClsnD1Ev(void *);    /* 0x020149a4, member +0xd4  */
-void _ZN5ActorD2Ev(void *);                  /* 0x020112c8               */
+void _ZN10dBgCh_ActrD1Ev(void *);          /* 0x020373f8, member +0x108 */
+void _ZN7dCcAc_cD1Ev(void *);    /* 0x020149a4, member +0xd4  */
+void _ZN8dActor_cD2Ev(void *);                  /* 0x020112c8               */
 
 /* PORT_HOST_ABI: mwcc Itanium D1 that MSVC emits no flat name for. */
 int *_ZN7TornadoD1Ev(int *t)
@@ -74,9 +75,9 @@ int *_ZN7TornadoD1Ev(int *t)
     t[0] = (int)(size_t)_ZTV7Tornado;
     _ZN18TextureTransformerD1Ev((char *)t + 0x328);
     _ZN9ModelAnimD1Ev((char *)t + 0x2c4);
-    _ZN12WithMeshClsnD1Ev((char *)t + 0x108);
-    _ZN18MovingCylinderClsnD1Ev((char *)t + 0xd4);
-    _ZN5ActorD2Ev(t);
+    _ZN10dBgCh_ActrD1Ev((char *)t + 0x108);
+    _ZN7dCcAc_cD1Ev((char *)t + 0xd4);
+    _ZN8dActor_cD2Ev(t);
     return t;
 }
 
@@ -93,229 +94,94 @@ int _ZN18TextureTransformer6UpdateER15ModelComponents(void *, void *);
    are in port/slice_except2.txt. */
 
 
-/* ---- (3) THE IMPLICIT r0 RIDE-THROUGH, and it is the dangerous one ------
- * src/_ZN7Tornado8BehaviorEv.cpp dispatches its three-way state switch as
- *     case 0: func_ov096_021372c0(); break;
- *     case 1: func_ov096_02137088(); break;
- *     case 2: func_ov096_02136fd4(); break;
- * -- with NO ARGUMENTS, while all three bodies take a receiver:
- *     src/func_ov096_021372c0.c   void func_ov096_021372c0(void *self)
- *     src/func_ov096_02137088.cpp void func_ov096_02137088(char *c)
- *     src/func_ov096_02136fd4.c   void func_ov096_02136fd4(Actor *thiz)
- * It compiles clean because include/decl_common.h:2927-2929 declares all three
- * `extern void func_ov096_...(void);` -- the decl_common redecl trap.
+/* ---- (3) Tornado::Behavior -- HOST BODY RETIRED, run link100 wave 15 -----
+ * SEATED: src/_ZN7Tornado8BehaviorEv.cpp is on port/slice_l15ov7.txt and the
+ * ROM body runs.
  *
- * THE ROM PROVES THE RECEIVER RIDES IN r0, and this was found by READING
- * rather than by the first boot (ov077's Lakitu case was found by a crash on
- * four levels). Tornado::Behavior's own prologue at 0x02137448:
- *     e92d4030  push {r4,r5,lr}
- *     e24dd004  sub  sp,sp,#4
- *     e1a04000  mov  r4,r0          <- r4 = this, and r0 STILL holds this
- *     e594535c  ldr  r5,[r4,#0x35c]
- *     e3550000  cmp  r5,#0
- *     0a000004  beq  0x02137474
- *     ...
- *     ebffff91  bl   0x021372c0     <- 0x02137474, r0 never reloaded
- *     ebffff01  bl   0x02137088     <- 0x0213747c, r0 never reloaded
- *     ebfffed2  bl   0x02136fd4     <- 0x02137484, r0 never reloaded
- * Nothing between the prologue and the three branch targets writes r0, so each
- * callee reads `this` straight out of the argument register the caller was
- * entered with. On the host MSVC emits three zero-argument cdecl calls and
- * each callee reads its receiver off an uninitialised stack slot -- a garbage
- * pointer dereferenced on TORNADO's first frame, on the one level that places
- * it.
+ * WHY THE OLD REFUSAL NO LONGER HOLDS. The banner this replaces stood on the
+ * ROM carrying this method's receiver through r0 into three zero-argument
+ * state calls (Tornado::Behavior's own prologue at 0x02137448 never reloads
+ * r0 across the three `bl`s at 0x02137474/7c/84, so each callee read `this`
+ * straight out of the entry register), while the matched TU called
+ * State0/State1/State2 with no arguments and each body wanted a receiver.
+ * BOTH HALVES ARE GONE: src/_ZN7Tornado8BehaviorEv.cpp is now
+ * `int Tornado::Behavior()`, calling all three as ordinary members at
+ * :14..:16, so no receiver rides r0 any more. The three callees were always
+ * correct and stay in port/slice_ov096.txt; only this caller was ever wrong,
+ * and it is the caller the sync fixed.
  *
- * THE CALLER IS DISPLACED, not the callees: the Ov007_ImplicitR0 /
- * Actor_ClosestPlayer / ov077-Lakitu idiom. All three callees are CORRECT and
- * stay in port/slice_ov096.txt; only this one caller moves, and the whole
- * lane's exposure to the trap is this single body -- swept mechanically over
- * every ov092 and ov096 symbol decl_common.h declares, comparing the header's
- * arity against each body's own. ov092 has ZERO such mismatches; ov096 has
- * exactly these three, and all three are called from here and nowhere else.
- *
- * Every other statement is transcribed line for line from the matched body
- * with Tornado.h's own member names. Only the three call sites are respelled.
+ * THE BRIDGE IS WHAT STAYS, and it lives in the ledger, not here. mwccarm
+ * mangles the member Itanium (_ZN7Tornado8BehaviorEv); MSVC mangles it
+ * ?Behavior@Tornado@@UAEHXZ; and hal/actor_classes_ov096.cpp's tor_behavior
+ * thunk (the host vtable fill for _ZTV7Tornado slot 6) calls the FLAT name
+ * directly. Seating the TU therefore needed a face onto the flat name, not a
+ * deletion of the row that named it: port/faces_sync.txt:3231 carried
+ *     __ZN7Tornado8BehaviorEv   ?Behavior@Tornado@@UAEHXZ   0x02137448 F
+ * a FORWARD row, which made facegen define the DECORATED name as a wrapper
+ * onto this host body -- and the seated TU defines that same decorated name
+ * itself, being now a real C++ member, so the two collided:
+ *     faces_sync_gen.cpp.obj : error LNK2005: "public: virtual int __thiscall
+ *     Tornado::Behavior(void)" (?Behavior@Tornado@@UAEHXZ) already defined in
+ *     _ZN7Tornado8BehaviorEv.cpp.obj
+ * Same shape as SHADOWS3's Flamethrower::Behavior seat (git 62fe1fd00): the
+ * row flips F -> R, so facegen defines the FLAT name as
+ * ((Tornado *)self)->Tornado::Behavior() instead, which is what tor_behavior
+ * calls, and the matched TU alone defines the decorated name. Row now reads
+ *     __ZN7Tornado8BehaviorEv   ?Behavior@Tornado@@UAEHXZ   0x02137448 R
+ * and nothing else in the link defines the decorated spelling, so it cannot
+ * duplicate.
  */
-void func_ov096_021372c0(void *self);
-void func_ov096_02137088(void *self);
-void func_ov096_02136fd4(void *self);
-void *_ZN5Actor10FindWithIDEj(unsigned int id);
-void *_ZN5Actor18ClosestWithActorIDEj(void *actor, unsigned int id);
-int Vec3_Dist(void *a, void *b);
-int func_ov002_020de33c(void *a, int b);
-void _ZN12CylinderClsn5ClearEv(void *thiz);
-void _ZN12CylinderClsn6UpdateEv(void *thiz);
-void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-void _ZN9Animation7AdvanceEv(void *thiz);
 
-/* PORT_HOST_ABI: the ROM carries this method's receiver through r0 into three
-   callees the source calls with no arguments. */
-int _ZN7Tornado8BehaviorEv(void *selfv)
-{
-    char *c = (char *)selfv;
-    int s = *(int *)(c + 0x35c);          /* unk_35c */
-    switch (s) {
-    case 0: func_ov096_021372c0(c); break;
-    case 1: func_ov096_02137088(c); break;
-    case 2: func_ov096_02136fd4(c); break;
-    }
-    {
-        unsigned short *p = (unsigned short *)(c + 0x350);
-        *p = (unsigned short)(*p + 1);
-    }
-    if (s != *(int *)(c + 0x35c)) {
-        *(unsigned short *)(c + 0x350) = 0;   /* unk_350 */
-        *(unsigned char *)(c + 0x360) = 0;    /* unk_360 */
-    }
-    {
-        unsigned int id = *(unsigned int *)(c + 0x0f8);   /* unk_0f8 */
-        if (id != 0 && (*(int *)(c + 0x0f4) & 0x400000) != 0) {
-            void *o = _ZN5Actor10FindWithIDEj(id);
-            if (o != 0) {
-                void *closest = _ZN5Actor18ClosestWithActorIDEj(c, 0x135);
-                if (closest == 0 ||
-                    Vec3_Dist((char *)o + 0x5c, (char *)closest + 0x5c) > 0x118000) {
-                    if (func_ov002_020de33c((char *)o, (int)(size_t)c) != 0)
-                        *(void **)(c + 0x33c) = o;     /* unk_33c */
-                }
-            }
-        }
-    }
-    _ZN12CylinderClsn5ClearEv(c + 0xd4);      /* mMovingCylinderClsn */
-    _ZN12CylinderClsn6UpdateEv(c + 0xd4);
-    Matrix4x3_FromTranslation(c + 0x2e0,
-                              *(int *)(c + 0x5c) >> 3,
-                              *(int *)(c + 0x60) >> 3,
-                              *(int *)(c + 0x64) >> 3);
-    _ZN9Animation7AdvanceEv(c + 0x314);       /* mAnimation */
-    _ZN9Animation7AdvanceEv(c + 0x328);       /* mTextureTransformer */
-    return 1;
-}
-
-/* ---- (4) THE decl_common REDECL TRAP, a COMPILE failure ----------------
- * src/func_ov096_02137088.cpp declares its own body `void
- * func_ov096_02137088(char *c);` inside an `extern "C"` block AND includes
- * include/decl_common.h, which declares the same symbol
- * `extern void func_ov096_02137088(void);` at line 2928. Two declarations of
- * one C-linkage name with different signatures in one translation unit:
- *     error C2733: 'func_ov096_02137088': you cannot overload a function with
- *                  'extern "C"' linkage
- * mwccarm accepts it. This is a COMPILE failure and a defect in an
- * AUTO-GENERATED header (tools/decl_headers.py), not an ABI wall -- the same
- * wrong `(void)` declaration that hides the ride-through above.
+/* ---- (4) Tornado::State1 -- HOST BODY RETIRED, run link100 wave 15 -------
+ * SEATED: src/_ZN7Tornado6State1Ev.cpp is on port/slice_l15ov7.txt and the ROM
+ * body runs. Only the C-name bridge below is left here.
  *
- * WHY A HOST COPY. The two cheap routes both fail:
- *   * a per-source -D cannot rename only the header's occurrence, and renaming
- *     both leaves the same two signatures under a new name;
- *   * -DDECL_COMMON_H would neutralise the header, but this body needs
- *     func_ov002_020de328 and func_ov096_02136e54 FROM it and declares neither
- *     itself, so the TU would stop compiling for a second reason.
- * The real fix is decomp-side, in the header generator or its config -- the
- * known "decl_common redecl trap" class -- and is outside a cast-seating
- * lane's scope. Correcting that one line retires this copy and returns the TU.
+ * WHY THE OLD REFUSAL NO LONGER HOLDS, re-read against the tree at 8ddff3187.
+ * The banner this replaces said the TU could not compile at all: it declared
+ * its own body `void _ZN7Tornado6State1Ev(char *c);` inside an `extern "C"`
+ * block while include/decl_common.h declared the same C-linkage name
+ * `extern void _ZN7Tornado6State1Ev(void);` at its line 2928, which is MSVC
+ * error C2733. BOTH HALVES OF THAT ARE GONE. include/decl_common.h carries
+ * exactly one Tornado line today -- `extern int _ZTV7Tornado[];` at :712 --
+ * and no _ZN7Tornado6State1Ev declaration anywhere, so the collision has no
+ * second declaration to collide with; and the matched TU is now
+ * `void Tornado::State1()`, a real C++ member that declares
+ * func_ov002_020de328 itself at :7 and calls UpdateSpin as a member at :80,
+ * which closes the second reason the old banner named ("this body needs
+ * func_ov002_020de328 and _ZN7Tornado10UpdateSpinEi FROM it and declares
+ * neither itself").
  *
- * Every line below is the matched body verbatim; only the two declarations the
- * header used to supply are restated locally.
+ * THE BRIDGE IS WHAT STAYS. mwccarm mangles the member Itanium
+ * (_ZN7Tornado6State1Ev); MSVC mangles it ?State1@Tornado@@QAEXXZ; and the
+ * host Tornado::Behavior above still dispatches its three states under the
+ * flat names, because that row is NOT seated in this lane -- see the note on
+ * it below. One face carries the flat name into the ROM body, the same
+ * ((Cls *)self)->Cls::meth() shape port/faces_sync.txt already generates for
+ * ?State0@Tornado@@QAEXXZ and ?State2@Tornado@@QAEXXZ at :967-968, and nothing
+ * else in the link defines the decorated spelling, so it cannot duplicate.
+ *
+ * TORNADO::BEHAVIOR WAS TESTED IN THE SAME LANE AND IS NOT SEATED, although
+ * its refusal is equally stale (src/_ZN7Tornado8BehaviorEv.cpp is
+ * `int Tornado::Behavior()` and calls State0/State1/State2 as members at
+ * :14..:16, so no receiver rides r0 any more). Seating it is a compile
+ * failure THAT THIS FILE CANNOT FIX: port/faces_sync.txt:3231 carries the
+ * forward row
+ *     __ZN7Tornado8BehaviorEv   ?Behavior@Tornado@@UAEHXZ   0x02137448 F
+ * so facegen emits a definition of ?Behavior@Tornado@@UAEHXZ, and the seated
+ * TU defines it too:
+ *     faces_sync_gen.cpp.obj : error LNK2005: "public: virtual int __thiscall
+ *     Tornado::Behavior(void)" (?Behavior@Tornado@@UAEHXZ) already defined in
+ *     _ZN7Tornado8BehaviorEv.cpp.obj
+ * That F row exists only because nothing else defined the decorated name --
+ * the ledger says so in its own words at :3219-3229 ("nothing references the
+ * decorated spellings today ... they make Tornado D0 and D1 forwardable").
+ * Deleting that ONE LINE retires the host Behavior body in section (3) above
+ * and returns that TU too. It is
+ * outside this lane's owned files, so the row stops here as a written finding.
  */
-struct PortOv096Vec3 { int x, y, z; };
-
-short Vec3_HorzAngle(const void *a, const void *b);
-int Vec3_HorzDist(const void *a, const void *b);
-unsigned _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned a, unsigned b, unsigned cc,
-                                           const void *v, unsigned e);
-void *_ZN5Actor13ClosestPlayerEv(void *self);
-void _Z14ApproachLinearRsss(short *v, short target, short step);
-void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *clsn);
-void WithMeshClsn_UpdateContinuous_Veneer(void *p);
-int _ZNK12WithMeshClsn8IsOnWallEv(void *p);
-void *_ZNK12WithMeshClsn13GetWallResultEv(void *p);
-void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *s, int *out);
-short _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);
-unsigned _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-    unsigned a, unsigned b, int x, int y, int z, const void *v, void *cb);
-/* the two decl_common.h used to supply */
-int func_ov002_020de328(void *p);
-void func_ov096_02136e54(void *self, int n);
-
-/* PORT_HOST_ABI: a decl_common.h redeclaration MSVC refuses to compile. */
-void func_ov096_02137088(void *cv)
+void _ZN7Tornado6State1Ev(void *cv)
 {
-    char *c = (char *)cv;
-    PortOv096Vec3 pos;
-    char *player;
-    void *p33c;
-    short ang;
-    unsigned short *p354 = (unsigned short *)(c + 0x354);
-    *p354 = (unsigned short)(*p354 + 1);
-
-    ang = Vec3_HorzAngle(c + 0x5c, c + 0x340);
-    *(short *)(c + 0x356) = ang;
-
-    *(unsigned *)(c + 0x36c) = _ZN5Sound8PlayLongEjjjRK7Vector3j(
-        *(unsigned *)(c + 0x36c), 3, 0x85, c + 0x74, 0);
-
-    *(int *)(c + 0x98) = 0x14000;
-
-    player = (char *)_ZN5Actor13ClosestPlayerEv(c);
-    if (player == 0) {
-        *(int *)(c + 0x35c) = 2;
-        return;
-    }
-
-    {
-        int *pp = (int *)(player + 0x5c);
-        pos.x = pp[0];
-        pos.y = pp[1];
-        pos.z = pp[2];
-    }
-
-    if (Vec3_HorzDist(c + 0x340, &pos) < *(int *)(c + 0x34c)
-        && *(unsigned char *)(c + 0x360) == 0
-        && *(unsigned short *)(c + 0x354) < 0x384) {
-        ang = Vec3_HorzAngle(c + 0x5c, &pos);
-        *(short *)(c + 0x358) = ang;
-        _Z14ApproachLinearRsss((short *)(c + 0x94), *(short *)(c + 0x358), 0x200);
-        p33c = *(void **)(c + 0x33c);
-        if (p33c != 0) {
-            if (func_ov002_020de328(p33c) != 0) {
-                unsigned char *pb = (unsigned char *)(c + 0x360);
-                *pb = (unsigned char)(*pb + 1);
-            }
-        }
-    } else {
-        _Z14ApproachLinearRsss((short *)(c + 0x94), *(short *)(c + 0x356), 0x200);
-        if (Vec3_HorzDist(c + 0x340, c + 0x5c) < 0xc8000)
-            *(int *)(c + 0x35c) = 2;
-    }
-
-    if (Vec3_Dist(c + 0x5c, &pos) > 0xbb8000
-        || *(unsigned short *)(c + 0x354) >= 0x384) {
-        *(int *)(c + 0x35c) = 2;
-    }
-
-    _ZN5Actor9UpdatePosEP12CylinderClsn(c, 0);
-    WithMeshClsn_UpdateContinuous_Veneer(c + 0x108);
-    if (_ZNK12WithMeshClsn8IsOnWallEv(c + 0x108) != 0) {
-        int n[3];
-        void *wr = _ZNK12WithMeshClsn13GetWallResultEv(c + 0x108);
-        _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char *)wr + 4, n);
-        *(short *)(c + 0x94) = _ZN4cstd5atan2E5Fix12IiES1_(n[0], n[2]);
-    }
-
-    func_ov096_02136e54(c, 0x1000);
-
-    {
-        int z = *(int *)(c + 0x64);
-        *(unsigned *)(c + 0x364) =
-            _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-                *(unsigned *)(c + 0x364), 0x11f,
-                *(int *)(c + 0x5c), *(int *)(c + 0x60), z, 0, 0);
-        z = *(int *)(c + 0x64);
-        *(unsigned *)(c + 0x368) =
-            _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-                *(unsigned *)(c + 0x368), 0x120,
-                *(int *)(c + 0x5c), *(int *)(c + 0x60), z, 0, 0);
-    }
+    ((Tornado *)cv)->Tornado::State1();
 }
 
 /* ---- (5) THE WRONG-NAMED LEVEL-DATA REFERENCE -------------------------
@@ -374,10 +240,10 @@ void _ZN18TextureTransformer7PrepareER8BMD_FileR8BTA_File(void *a, void *b);
 void _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(void *thiz, void *f,
                                                            int a, int fix,
                                                            unsigned u);
-void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void *thiz, void *actor,
+void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *thiz, void *actor,
                                                         int a, int b,
                                                         unsigned c, unsigned d);
-void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(
+void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
     void *thiz, void *actor, int a, int b, void *v, int e);
 void func_02016aac(void *self, unsigned value, int index);
 extern void *data_ov096_02137ba8[];
@@ -403,9 +269,9 @@ int _ZN7Tornado13InitResourcesEv(void *selfv)
         data_ov096_02137ba8[1], bta);
     _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(c + 0x328, bta,
                                                           0, 0x1000, 0);
-    _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(c + 0xd4, c, 0, 0,
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(c + 0xd4, c, 0, 0,
                                                        0x200002, 0);
-    _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
         c + 0x108, c, 0x50000, 0x50000, 0, 0);
 
     *(int *)(c + 0x340) = *(int *)(c + 0x5c);   /* unk_340 = mPosX */

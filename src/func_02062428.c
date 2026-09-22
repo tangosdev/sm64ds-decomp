@@ -8,6 +8,13 @@ extern int WM_SendCommand(int a, int b, int c, int d, int e, int f, int g, int h
 extern void _ZN4CP1519InvalidateDataCacheEjj(unsigned int addr, unsigned int len);
 extern void _ZN4CP1514FlushDataCacheEjj(unsigned int addr, unsigned int len);
 
+/* Each load below deliberately spells its address `(char *)handle[1] + K` while the
+ * InvalidateDataCache call on the line above passes `handle[1] + K`. That difference is
+ * load-bearing under 2004/b56: written identically, b56 shares the address with the
+ * argument, parks K in the literal pool and emits a register-offset `ldrh`, where the
+ * ROM computes `handle[1] + 0x100` and uses an 8-bit displacement. All three loads have
+ * to be respelled together -- respelling any one alone leaves the other two sharing.
+ */
 int func_02062428(int p0, int p1, int p2, int p3, unsigned short p4, unsigned short p5, unsigned short p6) {
     int a;
     int x;
@@ -22,14 +29,14 @@ int func_02062428(int p0, int p1, int p2, int p3, unsigned short p4, unsigned sh
     if (ret != 0) return ret;
 
     _ZN4CP1519InvalidateDataCacheEjj(handle[1] + 0x18e, 2);
-    a = *(unsigned short *)(handle[1] + 0x18e);
+    a = *(unsigned short *)((char *)handle[1] + 0x18e);
     _ZN4CP1519InvalidateDataCacheEjj(handle[1] + 0x184, 2);
 
-    val184 = *(unsigned short *)(handle[1] + 0x184);
+    val184 = *(unsigned short *)((char *)handle[1] + 0x184);
     flag = (val184 == 0) ? x : 0;
     if (flag == 1) {
         _ZN4CP1519InvalidateDataCacheEjj(handle[1] + 0x17e, 2);
-        x = *(unsigned short *)(handle[1] + 0x17e);
+        x = *(unsigned short *)((char *)handle[1] + 0x17e);
         _ZN4CP1519InvalidateDataCacheEjj(handle[1] + 0x86, 2);
     }
 

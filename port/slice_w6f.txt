@@ -12,10 +12,11 @@
 # HOST COPY, port/unmatched/Flamethrower_Behavior.c, transcribed per
 # instruction from the ROM listing; when the decomp lands a byte match, that TU
 # replaces the host copy on this line and the file is deleted.
-src/Flamethrower_Spawn.cpp
+src/d_a_obj_flamethrower.cpp
 src/_ZN12Flamethrower13InitResourcesEv.cpp
 src/_ZN12FlamethrowerD1Ev.cpp
-src/_ZN12FlamethrowerD0Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN12FlamethrowerD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN12FlamethrowerD0Ev.cpp
 
 # ---- the reference edges ---------------------------------------------------
 #
@@ -23,14 +24,14 @@ src/_ZN12FlamethrowerD0Ev.cpp
 # targets plus their own construction closure. Every one of those was checked
 # against walk_window.map on this lane's OWN baseline build (b8ff3d0b7,
 # C:\tmp\wl19base) and all but four were ALREADY LINKED, so they are not listed
-# here: DecIfAbove0_Short, _ZN5Sound8PlayLongEjjjRK7Vector3j,
+# here: DecIfAbove0_Short, _ZN5Sound8PlayLongEjjjRK7Vector3s,
 # Matrix4x3_FromRotationXYZExt, MulVec3Mat4x3, Vec3_Add,
-# _ZN5Actor10FindWithIDEj, _ZN6Player4BurnEv (gate 175 brought it in, with its
-# face), _ZN12CylinderClsn5ClearEv, _ZN12CylinderClsn6UpdateEv,
-# _ZN19CylinderClsnWithPos4InitERK7Vector35Fix12IiES4_jj,
-# _ZN19CylinderClsnWithPosC1Ev/D1Ev, _ZN9ActorBasenwEj, _ZN5ActorC2Ev,
-# _ZN5ActorD2Ev, _ZN6Memory10DeallocateEPvP4Heap, func_020733a8,
-# __destroy_arr, func_020072c0, func_0203d384.
+# _ZN8dActor_c10FindWithIDEj, _ZN6Player4BurnEv (gate 175 brought it in, with its
+# face), _ZN5dCc_c5ClearEv, _ZN5dCc_c6UpdateEv,
+# _ZN8dCcPos_c4InitERK7Vector35Fix12IiES4_jj,
+# _ZN8dCcPos_cC1Ev/D1Ev, _ZN7fBase_cnwEj, _ZN8dActor_cC2Ev,
+# _ZN8dActor_cD2Ev, _ZN6Memory10DeallocateEPvP4Heap, __cxa_vec_ctor,
+# __cxa_vec_cleanup, _ZN7Vector3D1Ev, func_0203d384.
 #
 # The four particle emitters the Behavior fires -- one pair per variant --
 #

@@ -22,19 +22,19 @@
 //
 //     Scene -> dScMgBase_c      data_ov004_020bc0c0  36 slots
 //           -> dScMgD3DBase_c   data_ov006_0213c62c  36 slots
-//           -> dScMgTrampoline_c data_ov006_0213fb34 36 slots
+//           -> dScMgTrampoline_c _ZTV17dScMgTrampoline_c 36 slots
 //
-// The code agrees twice over.  src/MgTrampolineTime_Spawn.c writes
-// _ZTV17MgBounceAndPounce (which IS 0x0213c62c -- section 2) into the object and
-// then data_ov006_0213fb34 over it; slots 16 and 17
-// (src/func_ov006_021207dc.c, src/func_ov006_02120880.cpp) unwind them in the
+// The code agrees twice over.  src/minigames/d_s_mg_trampoline.cpp writes
+// _ZTV14dScMgD3DBase_c (which IS 0x0213c62c -- section 2) into the object and
+// then _ZTV17dScMgTrampoline_c over it; slots 16 and 17
+// (src/minigames/d_s_mg_trampoline.cpp, src/minigames/d_s_mg_trampoline.cpp) unwind them in the
 // opposite order, and slot 17's literal pool holds both words in that order at
 // 0x02120914 and 0x02120930.
 //
 // ---- 2. THE MIDDLE BASE IS MISNAMED IN config, AND FOUR CLASSES SHARE IT --
 //
 // config/arm9/overlays/ov006/symbols.txt calls 0x0213c62c
-// `_ZTV17MgBounceAndPounce` and names its thirteen bodies
+// `_ZTV14dScMgD3DBase_c` and names its thirteen bodies
 // `_ZN17MgBounceAndPounce*`.  The ROM's own RTTI says the table belongs to
 // dScMgD3DBase_c, and FIVE type_info records in ov006 carry 0x0213c5c8 as their
 // base pointer:
@@ -68,11 +68,11 @@
 //
 //   pair addr   code word   installed by            reached from
 //   ---------   ---------   --------------------    ------------------------
-//   0213fab0    02121d64    func_ov006_02121f04     slot 18 (the reset)
-//   0213fac0    021218fc    func_ov006_02121cf4     state 02121d64
-//   0213fac8    02121848    func_ov006_021218c4     state 021218fc
-//   0213faa0    02121778    func_ov006_02121848     state 02121848 itself
-//   0213faa8    02121774    func_ov006_02121778     state 02121778 itself
+//   0213fab0    02121d64    _ZN17dScMgTrampoline_c10BeginIntroEv     slot 18 (the reset)
+//   0213fac0    021218fc    _ZN17dScMgTrampoline_c9BeginPlayEv     state 02121d64
+//   0213fac8    02121848    _ZN17dScMgTrampoline_c12BeginResultsEv     state 021218fc
+//   0213faa0    02121778    _ZN17dScMgTrampoline_c12StateResultsEv     state 02121848 itself
+//   0213faa8    02121774    _ZN17dScMgTrampoline_c13StateWaitExitEv     state 02121778 itself
 //
 // so the machine is a five-link CHAIN, not an indexed table, and the port
 // numbers the links 0..4 in that install order for the census.  Every
@@ -82,9 +82,9 @@
 // port/mg_fanout_costs.txt section 4's curling trap and run mg9 lane LKY's
 // again.  Two words inside 0x0213fa9c..0x0213fac8 are not pairs at all:
 //
-//     0x0213fa9c  an INT FLAG.  src/func_ov006_0212101c.c (slot 23) reads and
+//     0x0213fa9c  an INT FLAG.  src/minigames/d_s_mg_trampoline.cpp (slot 23) reads and
 //                 writes it as data_ov006_0213fa9c; it is never called.
-//     0x0213fab8  MgTrampolineTime_SpawnInfo -- the factory word 0x02122490
+//     0x0213fab8  g_profile_MG_TRAMPOLINE -- the factory word 0x02122490
 //                 followed by the doubled id 0x01800180.
 //
 // A sweep of the span would have produced seven "pairs" and routed two words
@@ -100,7 +100,7 @@
 // is the mistake lane LKY made twice and the reason its correction exists:
 //
 //   this class's 43 own bodies (0x021207dc..0x021225a4)      1 site
-//                                            0x0212151c, in func_ov006_021214f8
+//                                            0x0212151c, in _ZN17dScMgTrampoline_c8BehaviorEv
 //   the 13 INHERITED dScMgD3DBase_c bodies                   0 sites
 //   whole-overlay control                                  114 sites
 //
@@ -110,7 +110,7 @@
 // is three or five instructions later and is a different number for the same
 // site.  Both sequences in full:
 //
-//     func_ov006_021214f8   add 0x0212151c   ands 0x02121520   blx 0x02121534
+//     _ZN17dScMgTrampoline_c8BehaviorEv   add 0x0212151c   ands 0x02121520   blx 0x02121534
 //     func_ov006_020cb030   add 0x020cb068   ands 0x020cb06c   blx 0x020cb080
 //
 // An earlier version of the element file reported ITS site at the blx while
@@ -124,7 +124,7 @@
 //
 // ---- 4. THE SLOT-6 DISASSEMBLY, THE ONLY THING WORTH COPYING --------------
 //
-//   func_ov006_021214f8  vtable slot 6, Behavior, 0x84
+//   _ZN17dScMgTrampoline_c8BehaviorEv  vtable slot 6, Behavior, 0x84
 //     push {r4,r5,lr} / sub sp,sp,#4
 //     ldr  r1,[pc,#0x68]  (= 0x02140588) / mov r5,r0 / ldr r4,[r1]
 //     bl   0x02120c40
@@ -169,7 +169,7 @@
 // that sits IMMEDIATELY AFTER this class's vtable is dScMgTrampoline2_c's, and
 // it is FIVE PAIRS: 0x0213fbd0, 0x0213fbd8, 0x0213fbe0, 0x0213fbe8 and
 // 0x0213fbf0.  0x0213fbc8 is NOT one of them -- config names it
-// MgTrampolineTerror_SpawnInfo and the word after it is the doubled id
+// g_profile_MG_TRAMPOLINE2 and the word after it is the doubled id
 // 0x01810181, which is the SpawnInfo-in-the-pair-run trap section 3 of this
 // file documents for THIS class's own run.  An earlier version of this comment
 // counted six and took the range from the SpawnInfo's factory word.  The five
@@ -191,20 +191,20 @@ void port_mg_call0(void *self, unsigned code, int adj);
 /* ---- the five routed state bodies, in install order ----------------------
    Each is declared with the parameter list ITS OWN src TU defines, so a
    ride-through is called the way the ROM calls it rather than the way a slot
-   arity would suggest.  func_ov006_02121774 is a four-byte `bx lr` body whose
+   arity would suggest.  _ZN17dScMgTrampoline_c9StateDoneEv is a four-byte `bx lr` body whose
    src takes (void): the ROM body is one instruction long, so there is nothing
    for a missing argument to be wrong about.  That is the MgCoin_, MgMemory2_
    and MgBSC_StateDispatch.cpp ruling for the same shape. */
-void func_ov006_02121d64(char *c);            /* link 0, the intro/countdown */
-void func_ov006_021218fc(char *c);            /* link 1, the play state      */
-void func_ov006_02121848(unsigned char *c);   /* link 2, the settle          */
-void func_ov006_02121778(char *c);            /* link 3, the result          */
-void func_ov006_02121774(void);               /* link 4, bx lr, terminal     */
+void _ZN17dScMgTrampoline_c10StateIntroEv(char *c);            /* link 0, the intro/countdown */
+void _ZN17dScMgTrampoline_c9StatePlayEv(char *c);            /* link 1, the play state      */
+void _ZN17dScMgTrampoline_c12StateResultsEv(unsigned char *c);   /* link 2, the settle          */
+void _ZN17dScMgTrampoline_c13StateWaitExitEv(char *c);            /* link 3, the result          */
+void _ZN17dScMgTrampoline_c9StateDoneEv(void);               /* link 4, bx lr, terminal     */
 
 /* the ordinary callees the host copy keeps, each spelled as its own src TU
    spells it */
 void func_ov006_02120c40(void);
-void func_ov006_0212157c(char *c);
+void _ZN17dScMgTrampoline_c16UpdateTouchInputEv(char *c);
 void func_ov006_021209ac(short *o);
 void func_ov004_020adb1c(int a);
 
@@ -240,11 +240,11 @@ static int tti_try_0(void *self, unsigned code, int *link)
 {
     char *c = (char *)self;
     switch (code) {
-    case 0x02121d64u: *link = 0; func_ov006_02121d64(c); return 1;
-    case 0x021218fcu: *link = 1; func_ov006_021218fc(c); return 1;
-    case 0x02121848u: *link = 2; func_ov006_02121848((unsigned char *)c); return 1;
-    case 0x02121778u: *link = 3; func_ov006_02121778(c); return 1;
-    case 0x02121774u: *link = 4; func_ov006_02121774();  return 1;
+    case 0x02121d64u: *link = 0; _ZN17dScMgTrampoline_c10StateIntroEv(c); return 1;
+    case 0x021218fcu: *link = 1; _ZN17dScMgTrampoline_c9StatePlayEv(c); return 1;
+    case 0x02121848u: *link = 2; _ZN17dScMgTrampoline_c12StateResultsEv((unsigned char *)c); return 1;
+    case 0x02121778u: *link = 3; _ZN17dScMgTrampoline_c13StateWaitExitEv(c); return 1;
+    case 0x02121774u: *link = 4; _ZN17dScMgTrampoline_c9StateDoneEv();  return 1;
     default:                                             return 0;
     }
 }
@@ -290,7 +290,7 @@ extern "C" void port_mg_tti_anomalies(unsigned *unset, unsigned *virt,
 
 // ---- the one host copy -----------------------------------------------------
 //
-// src/func_ov006_021214f8.cpp verbatim except for the field read (two ints
+// src/minigames/d_s_mg_trampoline.cpp verbatim except for the field read (two ints
 // rather than a member-pointer type) and the dispatch site (port_mg_tti_call0
 // rather than `(c->*c->pmf)()`).  Nothing else moved.
 //
@@ -304,7 +304,7 @@ extern "C" void port_mg_tti_anomalies(unsigned *unset, unsigned *virt,
 // and the second time a class has hidden it at vtable slot 6.
 
 // PORT_HOST_ABI: dScMgTrampoline_c vtable slot 6 Behavior; src dispatches a member pointer held in the field at c+0x5004 via (c->*c->pmf)() that is four bytes on MSVC where the ROM's field is eight, so the host reads the {code, adj} pair and routes it.
-extern "C" int func_ov006_021214f8(void *self)
+extern "C" int _ZN17dScMgTrampoline_c8BehaviorEv(void *self)
 {
     char *c = (char *)self;
     const int saved = data_ov006_02140588;
@@ -316,7 +316,7 @@ extern "C" int func_ov006_021214f8(void *self)
         port_mg_tti_call0(c, e->code, e->adj);
     }
 
-    func_ov006_0212157c(c);
+    _ZN17dScMgTrampoline_c16UpdateTouchInputEv(c);
     func_ov006_021209ac((short *)(c + 0x5d84));
 
     if (saved != data_ov006_02140588)

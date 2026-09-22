@@ -1,6 +1,6 @@
 extern void func_ov006_020fb8fc(char *c, int a2, int a3, int a4, int a5, int a6);
 extern void func_02012718(void *a, int b);
-extern unsigned short data_ov006_0213d954;
+extern unsigned short data_ov006_0213d954[];
 
 void func_ov006_020fce04(char *c, int i)
 {
@@ -14,7 +14,7 @@ void func_ov006_020fce04(char *c, int i)
                             *(int *)(c + 0x4660 + k),
                             *(int *)(c + k + 0x4000 + 0x664),
                             2,
-                            data_ov006_0213d954,
+                            data_ov006_0213d954[0],
                             0);
         func_02012718((void *)0x18b, *(int *)(c + 0x4660 + k));
         return;

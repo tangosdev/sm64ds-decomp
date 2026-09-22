@@ -15,7 +15,7 @@
 //
 // ---- THE CLASS VTABLE SYMBOL ---------------------------------------------
 //
-// src/MgLakituLaunch_Spawn.c ends with `p[0] = (int)_ZTV16dScMgPachinko2_c;`
+// src/d_s_mg_pachinko2.c ends with `p[0] = (int)_ZTV16dScMgPachinko2_c;`
 // and nothing in this tree defines that symbol -- the table is mounted ov006
 // data under its address name, data_ov006_0213dbbc. This is the same shape
 // hal/scene_mg_faces.cpp already carries for curling

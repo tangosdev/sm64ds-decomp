@@ -1,0 +1,71 @@
+# slice_l15fs -- run link100 wave 15, lane SEAT15C, LINK15 BATCH 2:
+# the arm9 SharedFilePtr / FS veneer family.
+#
+# Every row here was host-copied over the same recorded defect: "the matched
+# src names one parameter (or none) and the fileID / path rides through in an
+# ARM register the C declaration never spells". That was true when each banner
+# was written. It is no longer true: main matched these TUs with both arguments
+# spelled, and the 09-14 main-to-port sync brought the fixed sources in. Nothing
+# re-read the banners, so the host copies kept occupying the flat names.
+#
+# RE-READ AT 8ddff3187 BEFORE SEATING, per row (the census is a map, not a
+# ruling). What the src says today:
+#
+#   src/func_02017acc.c                  void *f(void *self, unsigned int fileID)
+#   src/SharedFilePtr_Construct_TexSeq.c void *f(void *self, unsigned int fileID)
+#   src/func_02017b4c.c                  void *f(void *self, unsigned int fileID)
+#   src/func_020178cc.c                  void *f(void *self, unsigned int fileID)
+#   src/func_02017a24.c                  void *f(void *self, unsigned int fileID)
+#
+# THE CHAIN, and why the route is the same one the host took. Three of the five
+# forward to func_02017e48, the other two to func_02017ae4, and both of those
+# are themselves on the link line with both arguments spelled today
+# (src/func_02017ae4.c on port/slice_mg1.txt, src/func_02017e48.c on
+# port/slice_gate10.txt), and both end at func_02017e0c(self, fileID), which is
+# already linked from src/func_02017e0c.c through port/slice_gate3b.txt.
+# hal/fs.cpp's _ZN13SharedFilePtr9ConstructEj -- what the retired host veneers
+# called -- is itself nothing but `func_02017e0c(self, ov0FileID); return self;`.
+# So the seated route and the retired route end at the same statement with the
+# same two values; the difference is two extra forwarding frames the cartridge
+# also executes.
+#
+#   src/func_0201fc88.c   declares  ObjectMessageIDToActualMessageID(s32)
+#                                   func_0201f32c(s16)
+#     and passes the object-message id through both. The host veneer in
+#     hal/cxx_aliases.cpp existed because the pre-sync src spelled both callees
+#     argumentless, which dropped the id and opened the sign box on garbage.
+#     The /alternatename at hal/cxx_aliases.cpp for
+#     ?func_0201fc88@@YAXF@Z=_func_0201fc88 still resolves: the matched TU
+#     defines the same flat _func_0201fc88.
+#     (src/func_0201fc88.c is commented out of port/slice_gate10.txt with the
+#     old note; that comment is now stale and is left for its owner to clear.)
+#
+#   src/func_02018e3c.c   declares  func_0205d644(void *out_file_id,
+#                                                 const char *path)
+#     and forwards both. The host face in hal/fs_names.cpp was statement-for-
+#     statement the same body; the only reason it existed was that the
+#     pre-sync src said `int func_02018e3c(void)` calling `func_0205d644()`.
+#     (src/func_02018e3c.c is commented out of port/slice_mg1.txt with the old
+#     note; that comment is now stale and is left for its owner to clear.)
+#
+# No table, vtable or face edit is needed: every one of these is already
+# referenced by the flat name the matched TU defines.
+
+# ---- sub-batch A: the four construct veneers -------------------------------
+src/func_02017acc.c
+src/SharedFilePtr_Construct_TexSeq.c
+src/func_02017b4c.c
+src/func_020178cc.c
+
+# ---- sub-batch B: the two spelled-callee rows ------------------------------
+src/func_0201fc88.c
+src/func_02018e3c.c
+
+# SEVENTH ROW, not in the census, found by reading the family rather than the
+# list: src/func_02017a24.c is the same shape and is also fixed now. Run mg9
+# lane PSY made it a host veneer in hal/cxx_aliases.cpp precisely because it was
+# then the only one of the five still compiled from a one-parameter src, and
+# that measurement (scene 389, "FATAL: fs fileID 0xf40c matches no archive
+# range") is what the whole family's evidence rests on. Its src now spells both.
+# It goes in last and alone.
+src/func_02017a24.c

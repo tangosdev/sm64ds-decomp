@@ -78,18 +78,45 @@ extern PortPmf data_ov009_02113c48[];
    NONMATCHING asm hatch in src -- an mwcc `asm { }` block rather than C -- so
    there is no body MSVC can compile. Seated by name: the two birds on the
    castle grounds start in state 0 and the walk says so if one ever gets here. */
-static void port_bird_state2(void *)
+static void __fastcall port_bird_state2(void *, void *)
 {
     std::fprintf(stderr, "FATAL: Bird state 2 (ov009 0x0211145c) is an asm "
                  "hatch, not C -- no host body exists\n");
     std::abort();
 }
 
-static const struct { unsigned rom; void (*host)(void *); } g_bird[4] = {
-    {0x021116ec, func_ov009_021116ec},
-    {0x021115d8, func_ov009_021115d8},
+/* ---- RUN link100 LANE PMFSWEEP: THE FOUR SEATED WORDS TAKE THEIR RECEIVER IN
+   ECX. src/_ZN4Bird8BehaviorEv.cpp is on the slice and makes the
+   pointer-to-member call itself, with nothing pushed. Read off this build's
+   own image, ?Behavior@Bird@@UAEHXZ +0x29:
+
+       mov  esi, ecx                                      ; the bird
+       mov  eax, dword ptr [esi+0x17c]                    ; the state index
+       mov  ecx, dword ptr [_data_ov009_02113c48+4+eax*8] ; the adjustment word
+       mov  eax, dword ptr [_data_ov009_02113c48+eax*8]   ; the code word
+       add  ecx, esi                                      ; this + delta
+       call eax                                           ; A REAL CALL
+
+   The three matched bodies this seat used to write are raw cdecl bodies that
+   read their receiver from [ebp+8], and nothing put one there. This is
+   5ae983797's correction (FlameChomp) at another class, the one 27a24ff5a,
+   651b5e853, f9936e798, 45ce69707 and 00732a5ab each had to make one class
+   over. State 2's refusal stub becomes __fastcall as well so the cell's four
+   words are one shape; it ignores its receiver either way. Each thunk NAMES
+   its matched body, so trap T2's rule still holds. */
+static void __fastcall bird_state0_pmf(void *self, void *)
+{ func_ov009_021116ec(self); }
+static void __fastcall bird_state1_pmf(void *self, void *)
+{ func_ov009_021115d8(self); }
+static void __fastcall bird_state3_pmf(void *self, void *)
+{ func_ov009_02111234(self); }
+
+static const struct { unsigned rom; void (__fastcall *host)(void *, void *); }
+g_bird[4] = {
+    {0x021116ec, bird_state0_pmf},
+    {0x021115d8, bird_state1_pmf},
     {0x0211145c, port_bird_state2},
-    {0x02111234, func_ov009_02111234},
+    {0x02111234, bird_state3_pmf},
 };
 
 extern "C" void port_ov009_sinits(void)
@@ -154,7 +181,7 @@ void Vec3_Asr(void *dst, const void *src, int n);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationZ(void *m, short a);
 void Matrix4x3_ApplyInPlaceToRotationY(void *m, short a);
-int _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+int _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     void *self, void *sm, void *m, int rad, int h, unsigned u);
 int _ZN9Animation7AdvanceEv(void *a);
 extern int data_020a0e68[12];

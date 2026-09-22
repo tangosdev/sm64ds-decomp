@@ -1,20 +1,18 @@
 //cpp
 // @symbol _ZN8PoleLiftD1Ev
+/* The class-body destructor is real C++. This otherwise-unused explicit call
+ * forces mwccarm to emit its out-of-line D1 copy; objisolate keeps that symbol
+ * and discards the forcing wrapper.
+ *
+ * The body is two vtable stores and three destructor calls, every one a
+ * consequence of `struct PoleLift : dBgActor_c`: its own vptr, then
+ * dBgActor_c's -- inlined, because dBgActor_c's destructor is defined in its
+ * class body -- then dBgActor_c's Model and dBgW_KcMbg, then dActor_c. This
+ * class adds no member with a destructor of its own.
+ */
+#include "PoleLift.h"
 
-struct Actor {
-    char pad[0xd4];
-    virtual ~Actor();
-};
-
-struct Model { char pad[0x80]; ~Model(); };
-struct ExtendingMeshCollider { char pad[0x4]; ~ExtendingMeshCollider(); };
-
-struct PoleLift : Actor {
-    Model m0;   /* 0xd8 */
-    ExtendingMeshCollider m1;   /* 0x158 */
-    virtual ~PoleLift();
-};
-
-PoleLift::~PoleLift()
+void PoleLift_EmitDestructor(PoleLift *p)
 {
+    p->~PoleLift();
 }

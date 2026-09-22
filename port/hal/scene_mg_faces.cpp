@@ -18,7 +18,7 @@
 //
 // ---- 2. TWO NAME-SPELLING FACES, NEITHER A STAND-IN FOR A BODY -------------
 //
-// _ZTV14dScMgCurling_c. src/MgShuffleShell_Spawn.c writes the class vtable
+// _ZTV14dScMgCurling_c. src/d_s_mg_curling.c writes the class vtable
 // through this spelling, and no config holds that name. IT IS NOT A GUESS
 // THOUGH, and that is worth separating from the ov007 lane's VT0/VT1/VT2 case:
 // the ROM's own RTTI string at 0x0213c2d0 reads "14dScMgCurling_c", so the
@@ -26,9 +26,9 @@
 // its dsd address. The address is settled by the ROM twice: the RTTI, and
 // config/arm9/overlays/ov006/relocs.txt's
 //     from:0x020e3850 kind:load to:0x0213c304 module:overlay(6)
-// where 0x020e3850 is inside MgShuffleShell_Spawn (0x020e3820, 0x34 bytes).
+// where 0x020e3850 is inside dScMgCurling_c_classInit (0x020e3820, 0x34 bytes).
 //
-// func_020adc74. src/func_ov006_020e3578.c (InitResources) spells its callee
+// func_020adc74. src/_ZN14dScMgCurling_c13InitResourcesEv.cpp (InitResources) spells its callee
 // with no overlay in the name, and no arm9 symbol exists at 0x020adc74. The
 // reloc reads module:overlays(3,4), and ov003 can never be co-resident with
 // ov006 while ov004 always is -- func_0201a798 loads the pair together -- so
@@ -84,7 +84,7 @@
 //
 // ---- 4. THE mwcc POINTER-TO-MEMBER TU, WHICH IS THE WALL -------------------
 //
-// src/func_ov004_020b87e0.cpp is EXCLUDED from the slice and trapped here
+// src/_ZN10dMgState_c8SetStateEi.cpp is EXCLUDED from the slice and trapped here
 // instead, and it is the single most important thing in this file because it is
 // where the minigame seat stops.
 //
@@ -115,7 +115,7 @@
 // port/unmatched/Player_ChangeState.cpp is the precedent: a host copy of the
 // dispatching TU with the member-pointer site replaced by hal_call_state_fn, an
 // address switch from DS code address to a real __thiscall call, generated into
-// hal/player_states.inc with 197 cases. func_ov004_020b87e0 needs the same for
+// hal/player_states.inc with 197 cases. _ZN10dMgState_c8SetStateEi needs the same for
 // its twenty, and dScMgCurling_c needs it for its own twenty-five across five
 // more TUs. That is costed in port/mg_fanout_costs.txt section 4 and it is the
 // next lane.
@@ -125,11 +125,11 @@
 // the run reports that rather than jumping to a DS address as a host one.
 //
 // SEATED, run mg5 lane BASESET, AND EVERYTHING ABOVE IS NOW HISTORY. The trap
-// is deleted from this file and func_ov004_020b87e0 is a host copy in
+// is deleted from this file and _ZN10dMgState_c8SetStateEi is a host copy in
 // port/unmatched/MgBase_StateSetter.cpp, which carries the derivation: the
 // twenty globals with their code words and relocation rows, the ROM
 // disassembly of the table build and the dispatch, and the object layout the
-// offsets force. src/func_ov004_020b87e0.cpp stays off every slice.
+// offsets force. src/_ZN10dMgState_c8SetStateEi.cpp stays off every slice.
 //
 // READ THE SECTION ABOVE FOR WHAT THE TRAP COST RATHER THAN FOR WHAT TO DO.
 // "A minigame whose framework reaches this function does not run past it" was
@@ -304,7 +304,7 @@ DSSTATE_END
  * The struct-typed refusal does not catch it either, because it tests for
  * the by-value spelling @@3U and an array of that struct is spelled @@3PAU.
  * NO ALIAS IS WRITTEN FOR IT ANYWHERE. Its one consumer,
- * src/func_ov006_020e3528.cpp, is host-copied in
+ * src/_ZN14dScMgCurling_c8BehaviorEv.cpp, is host-copied in
  * unmatched/MgCurling_StateDispatch.cpp, so after that host copy the symbol
  * is referenced by nothing and an alias for it would be a dead directive.
  *
@@ -415,10 +415,10 @@ DSSTATE_END
 
 /* ---- 2c. THE ONE ARGUMENT-LANDING FACE ----------------------------------
  *
- * src/func_ov004_020b08f0.cpp (dScMgBase_c::AfterInitResources, vtable slot 2)
+ * src/minigames/d_s_mg_base.cpp (dScMgBase_c::AfterInitResources, vtable slot 2)
  * declares a local `struct Scene` with a non-virtual
  * `void AfterInitResources(unsigned int)` and calls it, which MSVC mangles
- * __thiscall as ?AfterInitResources@Scene@@QAEXI@Z. facegen refused the row:
+ * __thiscall as ?AfterInitResources@dScene_c@@QAEXI@Z. facegen refused the row:
  *
  *   "no Itanium body for Scene::AfterInitResources"
  *
@@ -428,7 +428,7 @@ DSSTATE_END
  * port/slice_scene1.txt -- and if there were one it would be the wrong
  * target anyway. AN ALIAS CANNOT CHANGE A CALLING CONVENTION, and this is
  * that rule's other half: the caller is __thiscall with an argument, and
- * src/_ZN5Scene18AfterInitResourcesEj.cpp is a `void f(void)` transcription
+ * src/_ZN8dScene_c18AfterInitResourcesEj.cpp is a `void f(void)` transcription
  * of a 0xc-byte ARM tail-call veneer (ldr ip,[pc]; bx ip; .word 0x2013ef4)
  * whose arguments ride through in r0/r1. On the host it would drop both.
  *
@@ -499,7 +499,7 @@ extern "C" unsigned port_mg_trap_hits(void) { return g_mg_trap_hits; }
  * THAT FLOOR IS CLOSED, run mg14 lane RESULTS, and the diagnosis mg12 left here
  * was aimed one step too far upstream. mg12 read the panel as needing "whatever
  * fills +0x4634..+0x463e and steps +0x4640". Nothing was missing from the FILL:
- * func_ov004_020af27c, the ROM's own slot 27, writes all six halfwords, and
+ * _ZN11dScMgBase_c15OnHitByMegaCharEv, the ROM's own slot 27, writes all six halfwords, and
  * (-128,48) (384,96) (128,224) ARE the values it writes -- the OFF-SCREEN START
  * of a slide-in. The motion was the missing half, and both the slide and the
  * stylus hit test live in ONE function, func_ov004_020aeb24, which is why the
@@ -568,7 +568,7 @@ void port_mg_hud_scaled_number_020b2220(int x, int y, int num, int a3, int a4,
  * label renderer. func_ov004_020ae858 draws the three buttons a minigame's
  * results screen offers -- the play-again row -- and returning 0 from it is
  * exactly the defect the owner reported as the play-again buttons never
- * appearing: dScMgBase_c::BeforeRender (src/func_ov004_020b04f4.cpp) hands the
+ * appearing: dScMgBase_c::BeforeRender (src/minigames/d_s_mg_base.cpp) hands the
  * WHOLE frame to this body while the panel is up and returns, so with a stub
  * behind it nothing submits the labels to either engine.
  *
@@ -607,7 +607,7 @@ void port_mg_hud_scaled_number_020b2220(int x, int y, int num, int a3, int a4,
  * symbol. That reasoning was right and it is why this single line is simply
  * deleted rather than moved.
  *
- * IT IS A REAL DECOMPILATION. src/func_ov004_020ae5c4.c is a Bresenham walk
+ * IT IS A REAL DECOMPILATION. src/func_ov004_020ae5c4.cpp is a Bresenham walk
  * from (x0,y0) to (x1,y1) that stamps vtable slot 34 at every lattice point it
  * visits, and the symbol comes from port/slice_mg1.txt. The seven parameters
  * lane BOO derived off the prologue were correct and the new body spells the
@@ -708,11 +708,18 @@ void func_ov004_020b2220(int x, int y, int num, int a3, int a4,
  * either and cannot have one -- it ratchets guessed bodies in src/, and these
  * are host copies in port/unmatched/ carrying provenance banners.
  */
-void func_ov006_020e1dc8(char *self, int idx)
-{
-    port_mg_curling_collide_020e1dc8(self, idx);
-}
-
+/* AND ONE OF THE TWO IS RETIRED AGAIN, this time for the ROM's own body (run
+ * link100 wave 14, lane SHADOWS3). The paragraph above is exact about why the
+ * host transcription was written -- "neither address has a delink block ... and
+ * neither has a src TU" -- and that is no longer true of 0x020e1dc8: PR #2328
+ * (ba6e1eef3) matched it, src/func_ov006_020e1dc8.cpp is on
+ * port/slice_shadows3.txt, and this forwarder is gone. The seat changes nothing
+ * about the signature the note above insists on: the matched TU is
+ * (dScMgCurling_c *self, int idx), the two arguments the callers already pass.
+ * ITS SIBLING func_ov006_020e20bc IS STILL A HOLE -- no delink block, no src TU
+ * -- so the forwarder below and port_mg_curling_collide_020e20bc stay exactly
+ * as they are, and so does port_mg_curling_collide_020e1dc8's own file: this
+ * lane owns the face, not the transcription beneath it. */
 void func_ov006_020e20bc(char *self, int idx)
 {
     port_mg_curling_collide_020e20bc(self, idx);
@@ -724,7 +731,7 @@ void func_ov006_020e20bc(char *self, int idx)
  * _ZN2GX15DisableAllBanksEv in config/arm9/symbols.txt: thirteen calls, one
  * per VRAM bank family, each already matched in src/ and already in this
  * link (func_02053ee0..func_02054018). The minigame framework's graphics init
- * (func_ov004_020b265c -> func_ov004_020b2980) calls it FIRST, so every bank
+ * (_ZN11dScMgBase_c9Virtual84Ev -> func_ov004_020b2980) calls it FIRST, so every bank
  * the 3D game had mapped is released before InitResources re-banks for 2D.
  * With this trapped as return-0, scene 368's engine A BG2 character load
  * (LoadFile 0x46, the Bob-omb Squad airship hull) landed in whatever banking
@@ -753,7 +760,7 @@ int func_0202e78c(void *)
 
 /* THE WALL WAS HERE AND IT IS GONE. Run mg5, lane BASESET.
  *
- * func_ov004_020b87e0 stood at this spot as a named trap that incremented
+ * _ZN10dMgState_c8SetStateEi stood at this spot as a named trap that incremented
  * g_mg_trap_hits, printed one line and set no state. Section 4 of this file's
  * header records what it was and why; what follows is what replaced it.
  *
@@ -766,7 +773,7 @@ int func_0202e78c(void *)
  *
  * NO SYMBOL IS DEFINED HERE FOR IT ANY MORE. That is the point of removing the
  * trap rather than leaving it beside the host copy: two definitions of
- * func_ov004_020b87e0 in one build is a link error, and a trap kept "just in
+ * _ZN10dMgState_c8SetStateEi in one build is a link error, and a trap kept "just in
  * case" behind an #if is a second opinion nobody reads.
  *
  * g_mg_trap_hits and port_mg_trap_hits() STAY. The counter is shared with
@@ -775,5 +782,111 @@ int func_0202e78c(void *)
  * six. A census that used to read 2 on a scene 378 sweep because the setter was
  * called twice now reads 0, and that drop is the seat rather than a regression.
  */
+
+}  /* extern "C" */
+
+/* ---- 8. THE TWENTY-FIFTH CURLING STATE IS THE ROM'S OWN BODY NOW ----------
+ *
+ * Run link100 wave 14, lane SEAT14E, BATCH 4. SECTION 3 ABOVE IS NOW STALE IN
+ * ITS LAST PARAGRAPH and this is the correction rather than a rewrite of it.
+ * "WHAT STILL STANDS, unchanged and deliberately so: it STILL gets no symbol
+ * here ... The decomp has no body for 0x020e1854" was exactly true when lane
+ * CT1 wrote it. The decomp has one now: PR #2352 (86a6e696d, "Match three more
+ * ov006 minigame functions: the Coin cup touch test, the pen drag handler and
+ * the Coin cursor sprite") landed src/func_ov006_020e1854.c, and this tree
+ * carries its delink block --
+ *
+ *     config/arm9/overlays/ov006/delinks.txt:1785
+ *         src/func_ov006_020e1854.c:  .text start:0x020e1854 end:0x020e1b54
+ *
+ * which is 0x300 bytes, the size the address has always had here. The file
+ * carries no NONMATCHING banner. It is on port/slice_mg7.txt and
+ * port/unmatched/MgCurling_State_020e1854.cpp -- CT1's hand transcription of
+ * those same 0x300 bytes, written because there was no source -- is retired in
+ * the same commit with its CMakeLists line.
+ *
+ * VERIFIED AGAINST THE CARTRIDGE AND NOT AGAINST A NOTE, because the whole
+ * reason section 3 spent four paragraphs on this address is that a plausible
+ * body at a wrong address is the failure mode here. In
+ * extracted/overlays/overlay_0006.bin at base 0x020bfec0 the pointer-to-member
+ * pair section 3 names reads
+ *
+ *     0x0213c2bc  0x020e1854      the code word
+ *     0x0213c2c0  0x00000000      its adjustment
+ *
+ * and the words at 0x020e1854 are e92d43f0 e24dd004 e59f12d8 e59f22d8
+ * e5d11000 e1a09000 -- stmdb sp!, {r4-r9, lr} and the frame set-up. A function
+ * entry, at the table's own word, at the address the delink block covers.
+ *
+ * NO NEW EDGE IS CREATED. unmatched/MgCurling_StateDispatch.cpp has called
+ * port_mg_curling_st_020e1854 by name since run link60 lane MG2 (two case rows
+ * and one CUR_FACE0), and it still does: the name is DEFINED HERE now, as one
+ * call into the matched body. The dispatch file is not touched and the ROM's
+ * own state word is what still selects the state. That is the same shape lane
+ * SHADOWS3 used for the five rows it retired tonight, one level down: the
+ * stand-in goes, the reference edge stays exactly where it was.
+ *
+ * THE INSTRUMENT MOVES WITH THE BRIDGE. The transcription carried an entry
+ * counter and an SM64DS_MG_CURLING_TRACE dump, and its banner's reason for them
+ * -- "the state was entered has to be a measurement and not an assumption" --
+ * survives the seat unchanged, so they are here rather than lost. The env read
+ * is still once per process, not once per entry; this runs every frame the
+ * stylus is down. Nothing outside the retired file ever referenced
+ * port_mg_curling_st_020e1854_entries, so it keeps its internal-only shape.
+ *
+ * WHAT IS OWED. This state is the PEN HANDLER. It runs only while the stylus is
+ * down, so no headless run without input enters it: the seat rests on the
+ * byte-for-byte arm above, and a click-driven play proof of the curling scene
+ * with Tango present is OWED and is named in lane SEAT14E's report.
+ */
+
+extern "C" {
+
+void func_ov006_020e1854(void *arg);          /* src/func_ov006_020e1854.c */
+
+static unsigned g_curling_st_020e1854_entries;
+
+unsigned port_mg_curling_st_020e1854_entries(void)
+{
+    return g_curling_st_020e1854_entries;
+}
+
+void port_mg_curling_st_020e1854(char *c)
+{
+    static int on = -1;
+    static int traced;
+    if (on < 0) {
+        const char *e = std::getenv("SM64DS_MG_CURLING_TRACE");
+        on = (e && *e && *e != '0') ? 1 : 0;
+    }
+
+    ++g_curling_st_020e1854_entries;
+
+    if (on && !traced) {
+        traced = 1;
+        std::fprintf(stderr,
+                     "  [scene] dScMgCurling_c STATE 0x020e1854 ENTERED "
+                     "(func_ov006_020e1854, the ROM's matched TU, "
+                     "src/func_ov006_020e1854.c)\n");
+        std::fflush(stderr);
+    }
+
+    func_ov006_020e1854(c);
+
+    if (on) {
+        std::fprintf(stderr,
+                     "  [curling] n=%u substate=%u ready=%u phase=%u "
+                     "ang=0x%04x power=0x%x cur=(%d,%d)\n",
+                     g_curling_st_020e1854_entries,
+                     (unsigned)*(unsigned char *)(c + 0x4ee4),
+                     (unsigned)*(unsigned char *)(c + 0x4ee5),
+                     (unsigned)*(unsigned char *)(c + 0x4eea),
+                     (unsigned)*(unsigned short *)(c + 0x4ede),
+                     (unsigned)*(int *)(c + 0x4ec8),
+                     (*(int *)(c + 0x4eb0)) >> 12,
+                     (*(int *)(c + 0x4eb4)) >> 12);
+        std::fflush(stderr);
+    }
+}
 
 }  /* extern "C" */

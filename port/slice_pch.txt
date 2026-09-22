@@ -96,7 +96,7 @@
 # and unmatched/MgBase_Slot7.cpp by run link60 lane MG2, and are excluded here
 # for that reason rather than re-hosted.
 #
-# THE DELETING DESTRUCTOR, src/func_ov006_020fa780.c, vtable slot 17. It spells
+# THE DELETING DESTRUCTOR, src/_ZN15dScMgPachinko_cD0Ev.cpp, vtable slot 17. It spells
 # the two shared decl_common.h placeholders -- `t[0] = (int)VT;` and
 # `Memory::Deallocate(t, HEAP)` -- and hal/cxx_aliases.cpp binds bare VT to
 # _data_ov002_021081e4, the ENEMY base table, with the comment "a second
@@ -161,8 +161,8 @@
 
 # ---- ov006, dScMgPachinko_c's own closure, wave 1 -----------------------
 
-src/MgBobOmbSquad_Spawn.c
-src/func_ov006_020fa75c.c
+src/d_s_mg_pachinko.c
+src/_ZN15dScMgPachinko_cD1Ev.cpp
 src/func_ov006_020fa844.c
 src/func_ov006_020fa924.c
 src/func_ov006_020fa9a0.c
@@ -256,28 +256,28 @@ src/func_ov006_020fd9cc.c
 # _020fd17c and _020fd2d8; its trap is removed.
 src/func_ov006_020fdaf0.c
 # Run mg5, lane INTEG: 020fdd40 = slot-6 spawn body, void(char*); trap removed.
-src/func_ov006_020fdd40.c
+src/func_ov006_020fdd40.cpp
 src/func_ov006_020fe1a8.c
 src/func_ov006_020fe1d0.c
 src/func_ov006_020fe2bc.c
 src/func_ov006_020fe2e4.c
 # Run mg5, lane INTEG: 020fe394 = state 1 of data_ov006_02142644, void(char*,int);
 # wired into the address switch in MgPachinko_StateDispatch.cpp (was a floor).
-src/func_ov006_020fe394.c
+src/func_ov006_020fe394.cpp
 src/func_ov006_020fe750.c
 src/func_ov006_020fe90c.c
 src/func_ov006_020fea54.c
 src/func_ov006_020feba8.c
-src/func_ov006_020fed58.c
-src/func_ov006_020fedc4.c
-src/func_ov006_020fee24.c
+src/_ZN15dScMgPachinko_c13OnYoshiTryEatEi.cpp
+src/_ZN15dScMgPachinko_c6RenderEv.cpp
+src/_ZN15dScMgPachinko_c8BehaviorEv.cpp
 # Run mg5, lane INTEG: dScMgPachinko_c::InitResources (vtable slot 0), the
 # copy-across black-screen fix from origin/main. Compiles as the __thiscall C++
 # member against include/dScMgPachinko_c.h; a cdecl face in MgPachinko_Faces.cpp
-# forwards to it and MgPachinko_Faces.cpp aliases func_ov006_020fefc0 onto that
+# forwards to it and MgPachinko_Faces.cpp aliases _ZN15dScMgPachinko_c13InitResourcesEv onto that
 # face. Its trap in MgPachinko_Traps.cpp is removed.
 src/_ZN15dScMgPachinko_c13InitResourcesEv.cpp
-src/func_ov006_0210c374.cpp
+src/_ZN12dScMgSlot1_c9betIcon_c6RenderEv.cpp
 
 # ---- WAVE 1's CORRECTION: FOUR ov004 LINES REMOVED --------------------------
 #
@@ -287,9 +287,9 @@ src/func_ov006_0210c374.cpp
 # lines this walk found are exactly that -- run link60 lane MG2 excluded them
 # and put the bodies in port/unmatched/:
 #
-#     src/func_ov004_020aeed8.cpp   MgBase_DeclConflict.cpp
-#     src/func_ov004_020af094.cpp   MgBase_DeclConflict.cpp
-#     src/func_ov004_020b0930.cpp   MgBase_Slot1.cpp
+#     src/_ZN11dScMgBase_c25OnAimedAtWithEggReturnVecEv.cpp   MgBase_DeclConflict.cpp
+#     src/_ZN11dScMgBase_c16OnAimedAtWithEggEv.cpp   MgBase_DeclConflict.cpp
+#     src/minigames/d_s_mg_base.cpp   MgBase_Slot1.cpp
 #     src/func_ov004_020b2cb8.c     MgBase_LangTable.cpp
 #
 # The first three are port/mg_fanout_costs.txt section 6a's declaration
@@ -331,8 +331,8 @@ src/func_ov004_020af2f8.cpp
 # are the linker asking for exactly the three the header predicted, which is
 # the wave method working rather than a miss.
 #
-#     func_ov006_020fb7e0   called by src/func_ov006_020fee24.c (vtable slot 6)
-#     func_ov006_020fea70   called by src/func_ov006_020fee24.c (vtable slot 6)
+#     func_ov006_020fb7e0   called by src/_ZN15dScMgPachinko_c8BehaviorEv.cpp (vtable slot 6)
+#     func_ov006_020fea70   called by src/_ZN15dScMgPachinko_c8BehaviorEv.cpp (vtable slot 6)
 #     func_ov006_020fc718   state 0 of data_ov006_02142624, called by this
 #                           class's address switch
 # func_ov006_020fb7e0 IS EXCLUDED, host-copied in

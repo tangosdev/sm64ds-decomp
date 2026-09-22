@@ -53,7 +53,7 @@
 // 020f300c (slot 3 of data_ov006_02142234). The switch calls the host copies,
 // which is the only definition of those symbols in the build.
 //
-// ---- func_ov006_020f15ac IS A HARD FLOOR AND IS NOT TRANSCRIBED -----------
+// ---- _ZN12dScMgLuigi_c15MovePictureSwayEi IS A HARD FLOOR AND IS NOT TRANSCRIBED -----------
 //
 // Slot 7 of data_ov006_02142254. No delink block in
 // config/arm9/overlays/ov006/delinks.txt and no src file defines it, and the
@@ -68,9 +68,9 @@
 // nobody reviewed. The case below reports which state was wanted and calls
 // nothing, which is what MgCurling_StateDispatch.cpp did before CT1.
 //
-// ---- func_ov006_020f2790 IS A SECOND FLOOR, AND A NAME TRAP ---------------
+// ---- _ZN12dScMgLuigi_c16PlaceNextPictureEv IS A SECOND FLOOR, AND A NAME TRAP ---------------
 //
-// 0x528 bytes, called eight times in a loop by src/func_ov006_020f31dc.c,
+// 0x528 bytes, called eight times in a loop by src/actors/dScMgLuigi_c.cpp,
 // which is state slot 1 of data_ov006_02142234 and IS sliced. No delink block
 // and no src file. config/arm9/overlays/ov006/symbols.txt DOES name it, which
 // is exactly the shape port/mg_fanout_costs.txt section 3 records as having
@@ -113,45 +113,45 @@ extern MgPmf data_ov006_02142254[];
    holding DS addresses, so nothing else in the build names them and /OPT:REF
    would drop every one of them without this file. They join
    port/slice_lui.txt in the same commit. */
-void func_ov006_020eff20(char *c, int i);
-void func_ov006_020effb8(char *c, int i);
-void func_ov006_020f002c(char *c, int i);
-void func_ov006_020f05d8(char *c, int i);
-void func_ov006_020f06fc(char *c, int i);
-void func_ov006_020f088c(char *c, int i);
-void func_ov006_020f0a6c(char *c, int i);
-void func_ov006_020f0bf0(char *c, int i);
-void func_ov006_020f1318(char *c, int i);
-void func_ov006_020f13cc(char *c, int i);
+void _ZN12dScMgLuigi_c8IrisStopEi(char *c, int i);
+void _ZN12dScMgLuigi_c8IrisGrowEi(char *c, int i);
+void _ZN12dScMgLuigi_c8IrisHoldEi(char *c, int i);
+void _ZN12dScMgLuigi_c16CurtainStateSlowEi(char *c, int i);
+void _ZN12dScMgLuigi_c16CurtainStateFastEi(char *c, int i);
+void _ZN12dScMgLuigi_c16CurtainStateHoldEi(char *c, int i);
+void _ZN12dScMgLuigi_c18CurtainStateBounceEi(char *c, int i);
+void _ZN12dScMgLuigi_c12CurtainStartEi(char *c, int i);
+void _ZN12dScMgLuigi_c16TickPictureFlashEi(char *c, int i);
+void _ZN12dScMgLuigi_c17MovePictureBounceEi(char *c, int i);
 /* Run mg5, lane INTEG: slot 7 of data_ov006_02142254, recovered on branch
    decomp/wanted-layout; was a floor, now a real dispatch below. */
-void func_ov006_020f15ac(char *c, int i);
-void func_ov006_020f17fc(char *c, int i);
-void func_ov006_020f192c(char *c, int i);
-void func_ov006_020f1a70(char *c, int i);
-void func_ov006_020f1b98(char *c, int i);
-void func_ov006_020f1cb4(char *c, int i);
-void func_ov006_020f1e40(char *c, int i);
-void func_ov006_020f1e58(char *c, int i);
-void func_ov006_020f319c(char *c);
-void func_ov006_020f31dc(int self);   /* src takes `int this`, not a pointer */
-void func_ov006_020f3260(char *o);
+void _ZN12dScMgLuigi_c15MovePictureSwayEi(char *c, int i);
+void _ZN12dScMgLuigi_c22MovePictureDriftRandomEi(char *c, int i);
+void _ZN12dScMgLuigi_c21MovePictureDriftByRowEi(char *c, int i);
+void _ZN12dScMgLuigi_c24MovePictureDriftByColumnEi(char *c, int i);
+void _ZN12dScMgLuigi_c23MovePictureDriftByLevelEi(char *c, int i);
+void _ZN12dScMgLuigi_c21MovePictureDriftFixedEi(char *c, int i);
+void _ZN12dScMgLuigi_c11StopPictureEi(char *c, int i);
+void _ZN12dScMgLuigi_c14RestartPictureEi(char *c, int i);
+void _ZN12dScMgLuigi_c9StatePlayEv(char *c);
+void _ZN12dScMgLuigi_c10StatePlaceEv(int self);   /* src takes `int this`, not a pointer */
+void _ZN12dScMgLuigi_c10StateSetupEv(char *o);
 
 /* the ordinary callees the host copies below keep, spelled as their own src
    TUs spell them so the faces they already have keep their references */
-void func_ov006_020f10ec(void *q);
-void func_ov006_020f0274(void *s);
+void _ZN12dScMgLuigi_c15UpdatePenaltiesEv(void *q);
+void _ZN12dScMgLuigi_c12UpdateRewardEv(void *s);
 void func_ov004_020b0a54(int c);
 
 }  /* extern "C" */
 
 // ---- the two floors --------------------------------------------------------
 
-/* Run mg5, lane INTEG: func_ov006_020f2790 (the "Wanted!" round-setup driver)
-   was recovered on branch decomp/mg-luigi-state as src/func_ov006_020f2790.c
-   (void(char*)) together with the scripted-layout routine func_ov006_020f2224 it
+/* Run mg5, lane INTEG: _ZN12dScMgLuigi_c16PlaceNextPictureEv (the "Wanted!" round-setup driver)
+   was recovered on branch decomp/mg-luigi-state as src/actors/dScMgLuigi_c.cpp
+   (void(char*)) together with the scripted-layout routine _ZN12dScMgLuigi_c16PlaceBoardLayoutEv it
    calls (branch decomp/wanted-layout), both now in port/slice_lui.txt, so the
-   trap that src/func_ov006_020f31dc.c linked against is gone and the real body
+   trap that src/actors/dScMgLuigi_c.cpp linked against is gone and the real body
    runs. src/func_ov002_020f2790.c is a different function in a non-co-resident
    overlay and is not in this build. The counter is kept because
    port_mg_luigi_counts reports it; it now stays 0. */
@@ -162,12 +162,12 @@ static unsigned g_luigi_floor_hits;
 static unsigned g_luigi_state_hits;
 static unsigned g_luigi_state_floor;
 
-/* The two dispatchers that are also states. func_ov006_020f0ba0 is still the
-   host copy defined below; run link100 lane PMFB4 retired func_ov006_020f300c,
-   so this declaration now names src/func_ov006_020f300c.cpp, at the same C
+/* The two dispatchers that are also states. _ZN12dScMgLuigi_c13CurtainUpdateEi is still the
+   host copy defined below; run link100 lane PMFB4 retired _ZN12dScMgLuigi_c10StateCatchEv,
+   so this declaration now names src/actors/dScMgLuigi_c.cpp, at the same C
    linkage and the same one-pointer signature. */
-extern "C" void func_ov006_020f0ba0(void *c, int i);
-extern "C" void func_ov006_020f300c(char *o);
+extern "C" void _ZN12dScMgLuigi_c13CurtainUpdateEi(void *c, int i);
+extern "C" void _ZN12dScMgLuigi_c10StateCatchEv(char *o);
 
 /* the boot installer at the end of this file; hal/scene_mg.cpp calls it after
    the ov006 constructors have filled the tables. */
@@ -179,7 +179,7 @@ extern "C" void port_pmf_seat4_luigi(void);
 
 extern "C" void port_mg_luigi_states_seat(void);
 
-/* Run mg5, lane INTEG: slot 7 of data_ov006_02142254 (func_ov006_020f15ac) was
+/* Run mg5, lane INTEG: slot 7 of data_ov006_02142254 (_ZN12dScMgLuigi_c15MovePictureSwayEi) was
    recovered on branch decomp/wanted-layout and is now sliced and dispatched
    below, so the floor reporter is gone. g_luigi_state_floor is kept because
    port_mg_luigi_counts reports it; it now stays 0. */
@@ -189,10 +189,10 @@ static int luigi_try_0(void *self, unsigned code)
     char *c = (char *)self;
     switch (code) {
     /* data_ov006_02142234, the arity-0 table slot 6 dispatches */
-    case 0x020f3260u: func_ov006_020f3260(c);              return 1;
-    case 0x020f31dcu: func_ov006_020f31dc((int)(size_t)c); return 1;
-    case 0x020f319cu: func_ov006_020f319c(c);              return 1;
-    case 0x020f300cu: func_ov006_020f300c(c);              return 1;
+    case 0x020f3260u: _ZN12dScMgLuigi_c10StateSetupEv(c);              return 1;
+    case 0x020f31dcu: _ZN12dScMgLuigi_c10StatePlaceEv((int)(size_t)c); return 1;
+    case 0x020f319cu: _ZN12dScMgLuigi_c9StatePlayEv(c);              return 1;
+    case 0x020f300cu: _ZN12dScMgLuigi_c10StateCatchEv(c);              return 1;
     default:                                               return 0;
     }
 }
@@ -202,29 +202,29 @@ static int luigi_try_1(void *self, unsigned code, int a)
     char *c = (char *)self;
     switch (code) {
     /* data_ov006_021421ec */
-    case 0x020f002cu: func_ov006_020f002c(c, a); return 1;
-    case 0x020effb8u: func_ov006_020effb8(c, a); return 1;
-    case 0x020eff20u: func_ov006_020eff20(c, a); return 1;
+    case 0x020f002cu: _ZN12dScMgLuigi_c8IrisHoldEi(c, a); return 1;
+    case 0x020effb8u: _ZN12dScMgLuigi_c8IrisGrowEi(c, a); return 1;
+    case 0x020eff20u: _ZN12dScMgLuigi_c8IrisStopEi(c, a); return 1;
     /* data_ov006_02142204 */
-    case 0x020f0bf0u: func_ov006_020f0bf0(c, a); return 1;
-    case 0x020f0ba0u: func_ov006_020f0ba0(c, a); return 1;
-    case 0x020f05d8u: func_ov006_020f05d8(c, a); return 1;
+    case 0x020f0bf0u: _ZN12dScMgLuigi_c12CurtainStartEi(c, a); return 1;
+    case 0x020f0ba0u: _ZN12dScMgLuigi_c13CurtainUpdateEi(c, a); return 1;
+    case 0x020f05d8u: _ZN12dScMgLuigi_c16CurtainStateSlowEi(c, a); return 1;
     /* data_ov006_0214221c */
-    case 0x020f0a6cu: func_ov006_020f0a6c(c, a); return 1;
-    case 0x020f088cu: func_ov006_020f088c(c, a); return 1;
-    case 0x020f06fcu: func_ov006_020f06fc(c, a); return 1;
+    case 0x020f0a6cu: _ZN12dScMgLuigi_c18CurtainStateBounceEi(c, a); return 1;
+    case 0x020f088cu: _ZN12dScMgLuigi_c16CurtainStateHoldEi(c, a); return 1;
+    case 0x020f06fcu: _ZN12dScMgLuigi_c16CurtainStateFastEi(c, a); return 1;
     /* data_ov006_02142254 */
-    case 0x020f1e58u: func_ov006_020f1e58(c, a); return 1;
-    case 0x020f1e40u: func_ov006_020f1e40(c, a); return 1;
-    case 0x020f1cb4u: func_ov006_020f1cb4(c, a); return 1;
-    case 0x020f1b98u: func_ov006_020f1b98(c, a); return 1;
-    case 0x020f1a70u: func_ov006_020f1a70(c, a); return 1;
-    case 0x020f192cu: func_ov006_020f192c(c, a); return 1;
-    case 0x020f17fcu: func_ov006_020f17fc(c, a); return 1;
-    case 0x020f13ccu: func_ov006_020f13cc(c, a); return 1;
-    case 0x020f1318u: func_ov006_020f1318(c, a); return 1;
+    case 0x020f1e58u: _ZN12dScMgLuigi_c14RestartPictureEi(c, a); return 1;
+    case 0x020f1e40u: _ZN12dScMgLuigi_c11StopPictureEi(c, a); return 1;
+    case 0x020f1cb4u: _ZN12dScMgLuigi_c21MovePictureDriftFixedEi(c, a); return 1;
+    case 0x020f1b98u: _ZN12dScMgLuigi_c23MovePictureDriftByLevelEi(c, a); return 1;
+    case 0x020f1a70u: _ZN12dScMgLuigi_c24MovePictureDriftByColumnEi(c, a); return 1;
+    case 0x020f192cu: _ZN12dScMgLuigi_c21MovePictureDriftByRowEi(c, a); return 1;
+    case 0x020f17fcu: _ZN12dScMgLuigi_c22MovePictureDriftRandomEi(c, a); return 1;
+    case 0x020f13ccu: _ZN12dScMgLuigi_c17MovePictureBounceEi(c, a); return 1;
+    case 0x020f1318u: _ZN12dScMgLuigi_c16TickPictureFlashEi(c, a); return 1;
     /* run mg5 lane INTEG seated this, so it is a real dispatch now */
-    case 0x020f15acu: func_ov006_020f15ac(c, a); return 1;
+    case 0x020f15acu: _ZN12dScMgLuigi_c15MovePictureSwayEi(c, a); return 1;
     default:                                     return 0;
     }
 }
@@ -269,12 +269,12 @@ extern "C" void port_mg_luigi_counts(unsigned *hits, unsigned *floor,
 // and each is stated next to its body so the check is visible rather than
 // assumed. The four that went are named after them.
 
-/* src/func_ov006_020f0044 -- RETIRED, run link100 lane SEAT4. Its table is
+/* src/_ZN12dScMgLuigi_c10UpdateIrisEv -- RETIRED, run link100 lane SEAT4. Its table is
    seated in port/hal/pmf_seat4.cpp and the matched TU is on
    port/slice_seat4.txt, so the host copy that stood in for it is gone and
    the declaration above is what the faces in this file reach. */
 
-/* src/func_ov006_020f0ba0 -- RETIRED, run link100 lane SEAT4. Its table is
+/* src/_ZN12dScMgLuigi_c13CurtainUpdateEi -- RETIRED, run link100 lane SEAT4. Its table is
    seated in port/hal/pmf_seat4.cpp and the matched TU is on
    port/slice_seat4.txt, so the host copy that stood in for it is gone and
    the declaration above is what the faces in this file reach. */
@@ -285,24 +285,24 @@ extern "C" void port_mg_luigi_counts(unsigned *hits, unsigned *floor,
 // dispatchers that read them compile from their own matched TUs
 // (port/slice_pmfb4.txt) and the host copies of them are gone:
 //
-//   func_ov006_020f0d58  data_ov006_02142204   src/func_ov006_020f0d58.cpp
-//   func_ov006_020f3414  data_ov006_02142234   src/func_ov006_020f3414.cpp
-//   func_ov006_020f1e90  data_ov006_02142254   src/func_ov006_020f1e90.cpp
-//   func_ov006_020f300c  data_ov006_02142254   src/func_ov006_020f300c.cpp
+//   _ZN12dScMgLuigi_c12CurtainsDoneEv  data_ov006_02142204   src/actors/dScMgLuigi_c.cpp
+//   _ZN12dScMgLuigi_c8BehaviorEv  data_ov006_02142234   src/actors/dScMgLuigi_c.cpp
+//   _ZN12dScMgLuigi_c14UpdatePicturesEv  data_ov006_02142254   src/actors/dScMgLuigi_c.cpp
+//   _ZN12dScMgLuigi_c10StateCatchEv  data_ov006_02142254   src/actors/dScMgLuigi_c.cpp
 //
 // TWO TABLES ARE NOT SEATED, so their two dispatchers keep their host copies
-// above: data_ov006_021421ec (func_ov006_020f0044) and data_ov006_0214221c
-// (func_ov006_020f0ba0). luigi_try_1 therefore stays live for those two tables'
+// above: data_ov006_021421ec (_ZN12dScMgLuigi_c10UpdateIrisEv) and data_ov006_0214221c
+// (_ZN12dScMgLuigi_c13CurtainUpdateEi). luigi_try_1 therefore stays live for those two tables'
 // six addresses. luigi_try_0 is now unreachable -- data_ov006_02142234 was the
 // only arity-0 table and it is seated -- and is kept rather than deleted for
 // the same reason MgBomroom keeps its dead cases: the switch is the written
 // record of which address belongs to which table.
 //
 // TWO OF THE FOUR ARE THEMSELVES STATE BODIES, and both keep working:
-//   func_ov006_020f300c is slot 3 of data_ov006_02142234, so the seat installs
+//   _ZN12dScMgLuigi_c10StateCatchEv is slot 3 of data_ov006_02142234, so the seat installs
 //     a face that calls it -- and it is the matched TU now, which dispatches
 //     data_ov006_02142254 straight through the seated cells.
-//   func_ov006_020f0ba0 is slot 1 of data_ov006_02142204 and is still a host
+//   _ZN12dScMgLuigi_c13CurtainUpdateEi is slot 1 of data_ov006_02142204 and is still a host
 //     copy, so the seat installs a face that calls THAT copy.
 
 // ---- THE SEVENTEEN FACES AND THE BOOT INSTALLER ----------------------------
@@ -312,13 +312,13 @@ extern "C" void port_mg_luigi_counts(unsigned *hits, unsigned *floor,
 //
 //   dispatcher            table                ROM                     emitted
 //   --------------------  -------------------  ----------------------  --------
-//   func_ov006_020f0d58   data_ov006_02142204  add r3,r4,r0,lsl #3     [eax*8]
+//   _ZN12dScMgLuigi_c12CurtainsDoneEv   data_ov006_02142204  add r3,r4,r0,lsl #3     [eax*8]
 //                           pool 020f0dd4 = 02142204                   [eax*8+4]
-//   func_ov006_020f3414   data_ov006_02142234  add r3,r2,r1,lsl #3     [edx*8]
+//   _ZN12dScMgLuigi_c8BehaviorEv   data_ov006_02142234  add r3,r2,r1,lsl #3     [edx*8]
 //                           pool 020f345c = 02142234                   [edx*8+4]
-//   func_ov006_020f1e90   data_ov006_02142254  add r3,r4,r0,lsl #3     [eax*8]
+//   _ZN12dScMgLuigi_c14UpdatePicturesEv   data_ov006_02142254  add r3,r4,r0,lsl #3     [eax*8]
 //                           pool 020f1ef4 = 02142254                   [eax*8+4]
-//   func_ov006_020f300c   data_ov006_02142254  add r3,r4,r0,lsl #3     [eax*8]
+//   _ZN12dScMgLuigi_c10StateCatchEv   data_ov006_02142254  add r3,r4,r0,lsl #3     [eax*8]
 //                           pool 020f3190 = 02142254                   [eax*8+4]
 //
 // so ROM 8 == emitted 8 on all four. /Zp4 IS A MEASURED NO-OP on every one:
@@ -351,12 +351,12 @@ extern "C" void port_mg_luigi_counts(unsigned *hits, unsigned *floor,
 //   arity 1: data_ov006_02142204, data_ov006_02142254
 //   arity 0: data_ov006_02142234
 //
-// THREE /alternatename DIRECTIVES. src/func_ov006_020f0d58.cpp,
-// src/func_ov006_020f3414.cpp and src/func_ov006_020f1e90.cpp declare their
+// THREE /alternatename DIRECTIVES. src/actors/dScMgLuigi_c.cpp,
+// src/actors/dScMgLuigi_c.cpp and src/actors/dScMgLuigi_c.cpp declare their
 // tables at namespace scope, so MSVC spells the references
 // ?data_ov006_02142204@@3PAUEntry@@A, ?data_ov006_02142234@@3PAUEntry@@A and
 // ?data_ov006_02142254@@3PAUEntry@@A -- all three read off the objects with
-// dumpbin /symbols. src/func_ov006_020f300c.cpp declares the SAME table
+// dumpbin /symbols. src/actors/dScMgLuigi_c.cpp declares the SAME table
 // data_ov006_02142254 inside its own extern "C" block and comes in as the plain
 // _data_ov006_02142254, which is the pair its own header calls "the silent one":
 // the two spellings of one table, one aliased and one not, both resolving to the
@@ -390,26 +390,26 @@ extern "C" void port_mg_luigi_counts(unsigned *hits, unsigned *floor,
     }
 
 /* data_ov006_02142204, arity 1. Slot 1 is the host copy above. */
-LG_FACE1(func_ov006_020f0bf0, (char *))
-LG_FACE1(func_ov006_020f0ba0, (char *))
-LG_FACE1(func_ov006_020f05d8, (char *))
+LG_FACE1(_ZN12dScMgLuigi_c12CurtainStartEi, (char *))
+LG_FACE1(_ZN12dScMgLuigi_c13CurtainUpdateEi, (char *))
+LG_FACE1(_ZN12dScMgLuigi_c16CurtainStateSlowEi, (char *))
 /* data_ov006_02142234, arity 0. Slot 1's src takes `int this`, not a pointer;
-   slot 3 is func_ov006_020f300c, which is the matched TU now. */
-LG_FACE0(func_ov006_020f3260, (char *))
-LG_FACE0(func_ov006_020f31dc, (int)(size_t))
-LG_FACE0(func_ov006_020f319c, (char *))
-LG_FACE0(func_ov006_020f300c, (char *))
+   slot 3 is _ZN12dScMgLuigi_c10StateCatchEv, which is the matched TU now. */
+LG_FACE0(_ZN12dScMgLuigi_c10StateSetupEv, (char *))
+LG_FACE0(_ZN12dScMgLuigi_c10StatePlaceEv, (int)(size_t))
+LG_FACE0(_ZN12dScMgLuigi_c9StatePlayEv, (char *))
+LG_FACE0(_ZN12dScMgLuigi_c10StateCatchEv, (char *))
 /* data_ov006_02142254, arity 1 */
-LG_FACE1(func_ov006_020f1e58, (char *))
-LG_FACE1(func_ov006_020f1e40, (char *))
-LG_FACE1(func_ov006_020f1cb4, (char *))
-LG_FACE1(func_ov006_020f1b98, (char *))
-LG_FACE1(func_ov006_020f1a70, (char *))
-LG_FACE1(func_ov006_020f192c, (char *))
-LG_FACE1(func_ov006_020f17fc, (char *))
-LG_FACE1(func_ov006_020f15ac, (char *))
-LG_FACE1(func_ov006_020f13cc, (char *))
-LG_FACE1(func_ov006_020f1318, (char *))
+LG_FACE1(_ZN12dScMgLuigi_c14RestartPictureEi, (char *))
+LG_FACE1(_ZN12dScMgLuigi_c11StopPictureEi, (char *))
+LG_FACE1(_ZN12dScMgLuigi_c21MovePictureDriftFixedEi, (char *))
+LG_FACE1(_ZN12dScMgLuigi_c23MovePictureDriftByLevelEi, (char *))
+LG_FACE1(_ZN12dScMgLuigi_c24MovePictureDriftByColumnEi, (char *))
+LG_FACE1(_ZN12dScMgLuigi_c21MovePictureDriftByRowEi, (char *))
+LG_FACE1(_ZN12dScMgLuigi_c22MovePictureDriftRandomEi, (char *))
+LG_FACE1(_ZN12dScMgLuigi_c15MovePictureSwayEi, (char *))
+LG_FACE1(_ZN12dScMgLuigi_c17MovePictureBounceEi, (char *))
+LG_FACE1(_ZN12dScMgLuigi_c16TickPictureFlashEi, (char *))
 
 extern "C" void port_mg_luigi_states_seat(void)
 {
@@ -427,25 +427,25 @@ extern "C" void port_mg_luigi_states_seat(void)
         unsigned rom;
         void *face;
     } seats[] = {
-        {data_ov006_02142204, "02142204", 0, 0x020f0bf0u, (void *)lg_func_ov006_020f0bf0},
-        {data_ov006_02142204, "02142204", 1, 0x020f0ba0u, (void *)lg_func_ov006_020f0ba0},
-        {data_ov006_02142204, "02142204", 2, 0x020f05d8u, (void *)lg_func_ov006_020f05d8},
+        {data_ov006_02142204, "02142204", 0, 0x020f0bf0u, (void *)lg__ZN12dScMgLuigi_c12CurtainStartEi},
+        {data_ov006_02142204, "02142204", 1, 0x020f0ba0u, (void *)lg__ZN12dScMgLuigi_c13CurtainUpdateEi},
+        {data_ov006_02142204, "02142204", 2, 0x020f05d8u, (void *)lg__ZN12dScMgLuigi_c16CurtainStateSlowEi},
 
-        {data_ov006_02142234, "02142234", 0, 0x020f3260u, (void *)lg_func_ov006_020f3260},
-        {data_ov006_02142234, "02142234", 1, 0x020f31dcu, (void *)lg_func_ov006_020f31dc},
-        {data_ov006_02142234, "02142234", 2, 0x020f319cu, (void *)lg_func_ov006_020f319c},
-        {data_ov006_02142234, "02142234", 3, 0x020f300cu, (void *)lg_func_ov006_020f300c},
+        {data_ov006_02142234, "02142234", 0, 0x020f3260u, (void *)lg__ZN12dScMgLuigi_c10StateSetupEv},
+        {data_ov006_02142234, "02142234", 1, 0x020f31dcu, (void *)lg__ZN12dScMgLuigi_c10StatePlaceEv},
+        {data_ov006_02142234, "02142234", 2, 0x020f319cu, (void *)lg__ZN12dScMgLuigi_c9StatePlayEv},
+        {data_ov006_02142234, "02142234", 3, 0x020f300cu, (void *)lg__ZN12dScMgLuigi_c10StateCatchEv},
 
-        {data_ov006_02142254, "02142254", 0, 0x020f1e58u, (void *)lg_func_ov006_020f1e58},
-        {data_ov006_02142254, "02142254", 1, 0x020f1e40u, (void *)lg_func_ov006_020f1e40},
-        {data_ov006_02142254, "02142254", 2, 0x020f1cb4u, (void *)lg_func_ov006_020f1cb4},
-        {data_ov006_02142254, "02142254", 3, 0x020f1b98u, (void *)lg_func_ov006_020f1b98},
-        {data_ov006_02142254, "02142254", 4, 0x020f1a70u, (void *)lg_func_ov006_020f1a70},
-        {data_ov006_02142254, "02142254", 5, 0x020f192cu, (void *)lg_func_ov006_020f192c},
-        {data_ov006_02142254, "02142254", 6, 0x020f17fcu, (void *)lg_func_ov006_020f17fc},
-        {data_ov006_02142254, "02142254", 7, 0x020f15acu, (void *)lg_func_ov006_020f15ac},
-        {data_ov006_02142254, "02142254", 8, 0x020f13ccu, (void *)lg_func_ov006_020f13cc},
-        {data_ov006_02142254, "02142254", 9, 0x020f1318u, (void *)lg_func_ov006_020f1318},
+        {data_ov006_02142254, "02142254", 0, 0x020f1e58u, (void *)lg__ZN12dScMgLuigi_c14RestartPictureEi},
+        {data_ov006_02142254, "02142254", 1, 0x020f1e40u, (void *)lg__ZN12dScMgLuigi_c11StopPictureEi},
+        {data_ov006_02142254, "02142254", 2, 0x020f1cb4u, (void *)lg__ZN12dScMgLuigi_c21MovePictureDriftFixedEi},
+        {data_ov006_02142254, "02142254", 3, 0x020f1b98u, (void *)lg__ZN12dScMgLuigi_c23MovePictureDriftByLevelEi},
+        {data_ov006_02142254, "02142254", 4, 0x020f1a70u, (void *)lg__ZN12dScMgLuigi_c24MovePictureDriftByColumnEi},
+        {data_ov006_02142254, "02142254", 5, 0x020f192cu, (void *)lg__ZN12dScMgLuigi_c21MovePictureDriftByRowEi},
+        {data_ov006_02142254, "02142254", 6, 0x020f17fcu, (void *)lg__ZN12dScMgLuigi_c22MovePictureDriftRandomEi},
+        {data_ov006_02142254, "02142254", 7, 0x020f15acu, (void *)lg__ZN12dScMgLuigi_c15MovePictureSwayEi},
+        {data_ov006_02142254, "02142254", 8, 0x020f13ccu, (void *)lg__ZN12dScMgLuigi_c17MovePictureBounceEi},
+        {data_ov006_02142254, "02142254", 9, 0x020f1318u, (void *)lg__ZN12dScMgLuigi_c16TickPictureFlashEi},
     };
 
     for (unsigned i = 0; i < sizeof seats / sizeof seats[0]; ++i) {

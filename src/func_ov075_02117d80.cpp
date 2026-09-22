@@ -2,7 +2,7 @@
 // @symbol func_ov075_02117d80
 /* recovered: dScEntry_c entry-menu setup for the non-VS path.
  *
- * Logic first recovered by andrewboudreau as a NONMATCHING body against
+ * Logic first recovered by andrewboudreau as a non-matching body against
  * mwccarm 1.2/sp2p3; byte-matched here at 2004/b56 without changing what it
  * does. Two shapes were load-bearing: the mode test is a static inline
  * predicate in a C++ TU (the ROM materializes the bool, which no measured

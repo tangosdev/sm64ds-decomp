@@ -118,13 +118,20 @@ extern signed char data_0209f2f8;    /* current level */
 extern int data_0209f264[];          /* current entrance */
 extern int data_0209f220[];          /* current star */
 extern unsigned char data_0209f26c;  /* why we are entering (1 fresh, 2 death) */
+/* THE SUBLEVEL THE PLAYER JUST CAME OUT OF, and the queued sublevel beside it
+   (Stage::InitResources:222-223, written in port_level_latch below). Both are
+   romdata-hosted -- host-src/romdata.c ships 6 and -1, StartFile's own values
+   -- so they are declared as arrays, which is their host storage, while the
+   ROM reads each as one signed byte. */
+extern unsigned char data_02092124[];
+extern unsigned char data_02092118[];
 
 /* the ROM tables, from romdata.py */
 extern unsigned char data_02092208[];   /* level -> LVL_Overlay (DS address) */
 extern unsigned char data_020758c8[];   /* level -> overlay id */
 
 /* the engine pieces the change drives */
-void _ZN9ActorBase18MarkForDestructionEv(void *self);
+void _ZN7fBase_c18MarkForDestructionEv(void *self);
 void port_actor_tick(void);
 void port_quarantine_reset(void);   /* port/unmatched/func_02043fdc_hostcopy.cpp: clear
                                        the per-actor fault freeze set */
@@ -147,6 +154,9 @@ int  port_quarantine_is_frozen(void *actor);  /* same TU: is this actor frozen?
    tail of the teardown needs both -- see the scene-tree pass there. */
 int   func_0203b3c0(void *list, void *node);
 void *func_0203b394(void *node);
+/* hal/actor_vtables.cpp: how many spawns func_0203b438 refused to link into
+   the scene tree (a parentless spawn into an already-rooted tree). */
+int   port_tree_link_refusals(void);
 void port_actor_scene_pass(void);
 void *port_stage_object(void);
 void *port_stage_a_boot(void *mc, int spawn);
@@ -163,6 +173,8 @@ void port_intro_arm_for_entry(void);     /* hal/level_boot.cpp: the intro seam -
                                             pick"; the seam itself decides */
 void CleanCommonModelDataArr(void);
 void port_model_vram_reset(void);   /* hal/model_host.cpp */
+void port_fader_wipes_reset(void);  /* hal/fader_wipes.cpp: the seven wipes
+                                       Stage::InitResources builds fresh */
 void sd_sound_level_reap(void);     /* hal/sdat/consumer.cpp: the ROM's
                                        Scene::BeforeCleanupResources reap */
 int  port_course_loop_live(void);
@@ -182,12 +194,23 @@ extern void *data_020a0eac;              /* Memory::gameHeapPtr */
 extern void *data_0209f394[];        /* the local players, [0] is ours */
 extern void *data_0209f318;          /* the Camera */
 extern unsigned char data_0209f2c4;  /* the input/VS-timer suppress flag */
+extern int data_0209f20c[];            /* the level-clear screen is up       */
+extern unsigned char data_0209f2d4[];  /* LC_Update's / PS_Update's state     */
+extern unsigned char data_0209f2e0[];  /* the menu row chosen                 */
+extern unsigned char data_0209f244[];  /* menu-button state                   */
+extern unsigned char data_0209f2b0[];  /* menu-button state                   */
 
 extern int data_020a4b6c[];   /* scene tree     {head, cb, 0} */
+/* the spawn parent ActorDerived::Spawn hands func_02043098 for every actor a
+   level loads: on the ROM the Stage, written by Scene::ResetFadersAndSound
+   (_ZTV5Stage slot 1) on every entry. hal/actor_vtables.cpp defines it. */
+extern int data_0209f5c0[];
 extern int data_020a4b78[];   /* behaviour list {head, tail, cb, 0} */
 extern int data_020a4b88[];   /* pending list */
 extern int data_020a4b98[];   /* render list */
 extern int data_020a4ba8[];   /* cleanup list */
+extern int data_0209b468[];   /* live-actor list {head, tail}; every
+                                  dActor_c links its node at +0x50 in */
 
 }  /* extern "C" */
 
@@ -335,6 +358,49 @@ static int port_level_live_count(void)
    an actor that survives a teardown shows up here as the count going up. */
 extern "C" int port_actor_live_count(void) { return port_level_live_count(); }
 
+/* THE SCENE TREE'S OWN CENSUS, and it is the one number the teardown never
+   printed. The banner above port_level_live_count says the phase-1 scene pass
+   (func_02043880) is what moves a marked actor onto the cleanup list, so an
+   actor that is marked and never destroyed is first of all an actor that pass
+   never reached. Three things can put it out of reach and the three look
+   identical from the behaviour list: the tree's callback word cleared (then
+   func_020441cc walks nobody), the tree's head cleared, or the actor linked
+   under a parent that is no longer in the tree (then the pre-order walk from
+   the head simply never arrives at it).
+
+   So this walks the tree exactly as func_020441cc does -- head at
+   data_020a4b6c[0], successor from func_0203b394, owner at node[4] -- and
+   answers how many nodes it reaches, how many of those own a live actor, and
+   whether a named actor is among them. Printed only under SM64DS_TRACE_LEVEL;
+   it reads and writes nothing. */
+static int port_level_tree_count(int *reached_actors)
+{
+    int n = 0, owners = 0, guard = 0;
+    for (int *nd = (int *)(size_t)data_020a4b6c[0];
+         nd && guard < 8192; nd = (int *)func_0203b394(nd), ++guard) {
+        ++n;
+        if (nd[4])
+            ++owners;
+    }
+    if (reached_actors)
+        *reached_actors = owners;
+    return n;
+}
+
+/* Is this actor's SceneNode (actor+0x14) reachable from the tree head? */
+static int port_level_tree_holds(void *actor)
+{
+    if (!actor)
+        return 0;
+    void *want = (char *)actor + 0x14;
+    int guard = 0;
+    for (int *nd = (int *)(size_t)data_020a4b6c[0];
+         nd && guard < 8192; nd = (int *)func_0203b394(nd), ++guard)
+        if ((void *)nd == want)
+            return 1;
+    return 0;
+}
+
 static int port_level_mark_all(void)
 {
     int n = 0;
@@ -363,7 +429,7 @@ static int port_level_mark_all(void)
         char *o = (char *)victim[i];
         if (*(unsigned char *)(o + 0xf))   /* already marked */
             continue;
-        _ZN9ActorBase18MarkForDestructionEv(o);
+        _ZN7fBase_c18MarkForDestructionEv(o);
         ++n;
     }
     return n;
@@ -587,6 +653,47 @@ extern "C" int port_level_teardown(void)
 {
     const int trace = std::getenv("SM64DS_TRACE_LEVEL") != 0;
     int rounds = 0;
+    if (trace) {
+        int owners = 0;
+        const int nodes = port_level_tree_count(&owners);
+        void *first = 0;
+        for (int *node = (int *)(size_t)data_020a4b78[0]; node;
+             node = (int *)(size_t)node[1])
+            if (node[2] && (void *)(size_t)node[2] != port_stage_object()) {
+                first = (void *)(size_t)node[2];
+                break;
+            }
+        void *stage = port_stage_object();
+        std::printf("  [lvl] teardown entry: %d live | scene tree head %p cb "
+                    "%p, %d node(s), %d owned | first live actor %p %s in the "
+                    "tree | %d spawn(s) refused by the tree this session\n",
+                    port_level_live_count(),
+                    (void *)(size_t)data_020a4b6c[0],
+                    (void *)(size_t)data_020a4b6c[1], nodes, owners, first,
+                    port_level_tree_holds(first) ? "IS" : "is NOT",
+                    port_tree_link_refusals());
+        /* SceneNode is {parent, firstChild, prevSibling, nextSibling, owner}
+           (src/func_0203b438.c). Whether the subtree is orphaned at the TOP
+           (the Stage's firstChild cleared) or at the BOTTOM (the actors
+           pointing at a parent that is not the Stage) are two different bugs
+           that look identical from the node count, so print both words. */
+        if (stage)
+            std::printf("  [lvl] teardown entry: Stage %p node %p "
+                        "{parent %p, firstChild %p, nextSibling %p}\n", stage,
+                        (void *)((char *)stage + 0x14),
+                        *(void **)((char *)stage + 0x14),
+                        *(void **)((char *)stage + 0x18),
+                        *(void **)((char *)stage + 0x20));
+        if (first)
+            std::printf("  [lvl] teardown entry: actor %p node %p "
+                        "{parent %p%s, firstChild %p, nextSibling %p}\n", first,
+                        (void *)((char *)first + 0x14),
+                        *(void **)((char *)first + 0x14),
+                        (stage && *(void **)((char *)first + 0x14) ==
+                         (void *)((char *)stage + 0x14)) ? " = THE STAGE" : "",
+                        *(void **)((char *)first + 0x18),
+                        *(void **)((char *)first + 0x20));
+    }
     for (; rounds < 16; ++rounds) {
         int marked = port_level_mark_all();
         /* phase 1 moves the marked onto the cleanup list, phase 4 runs it */
@@ -692,11 +799,21 @@ extern "C" int port_level_teardown(void)
        tick (playlog 001951, a stale cleanup node after the garden door).
        Repair instead: keep the stage links, drop the dangling nodes BY NAME
        so the leak is loud, and proceed with the boot. */
-    struct { const char *name; int *list; } lists[4] = {
+    /* AND THE LIVE-ACTOR LIST, the sixth structure. dActor_c's constructor links
+       every actor into data_0209b468 through its node at actor+0x50 and its
+       D1/D2 unlink it again, so a cleanup that never reaches dActor_c's own
+       destructor leaves a node here even when all four processing lists and the
+       scene tree came out clean. The head then points into a block the next
+       level's fBase_c::operator new hands out, the allocator zeroes the owner
+       word, and the first walker (dActor_c::FindWithID through func_02043f98)
+       reads [0 + 4]. Same node shape and same primitives as the four above, so
+       it is one more row. */
+    struct { const char *name; int *list; } lists[5] = {
         {"behaviour", data_020a4b78}, {"pending", data_020a4b88},
-        {"render", data_020a4b98}, {"cleanup", data_020a4ba8}};
+        {"render", data_020a4b98}, {"cleanup", data_020a4ba8},
+        {"actor", data_0209b468}};
     void *stage = port_stage_object();
-    for (int i = 0; i < 4; ++i) {
+    for (int i = 0; i < 5; ++i) {
         int *keep_head = 0, *keep_tail = 0;
         int dropped = 0;
         for (int *n = (int *)(size_t)lists[i].list[0]; n;) {
@@ -853,6 +970,34 @@ extern "C" int port_level_teardown(void)
     data_0209f318 = 0;
     data_0209f2c4 = 0;
 
+    /* The next statement of the same ROM function the three lines above come
+       from, src/_ZN5Stage16CleanupResourcesEv.cpp:120-127, and here for the
+       same reason: the port keeps one Stage alive across every level change,
+       so Stage::CleanupResources never runs and nothing else clears them.
+       data_0209f20c is "the level-clear screen is up" and data_0209f2d4 is
+       its state machine's step (src/_ZN5Stage8BehaviorEv.cpp:206 runs
+       Stage::LC_Update off the first, and src/_ZN5Stage9LC_UpdateEv.cpp case 6
+       is what clears both when a player answers the menu).
+
+       Left behind, they carry a level-clear screen into the next level: a
+       level booted at an entrance the game never sends a player to can end
+       its arrival animation in the one that sets the flag
+       (src/actors/Player.cpp:6741), and the courtyard's second boot under
+       that stale flag took an access violation in a Boo's model render.
+
+       The DS's other clear of the same words is
+       src/_ZN5Stage13InitResourcesEv.cpp:412-418, under
+       `data_0209f2fc != 1`, and it is deliberately NOT ported here: on a
+       fresh entry that guard declines, so the teardown line is the one that
+       does the work on every path. port/hal/level_boot.cpp clears the same
+       word once per process at the shared bring-up, which is the first
+       boot's half and stays. */
+    data_0209f2e0[0] = 0;
+    data_0209f2d4[0] = 0;
+    data_0209f244[0] = 0;
+    data_0209f2b0[0] = 0;
+    data_0209f20c[0] = 0;
+
     /* The freeze set was reaped and cleared BEFORE the verdict, not here. There
        used to be a port_quarantine_reset() at this line and it was the second
        half of the bug: it is downstream of the `return 0` above, so the one
@@ -870,7 +1015,7 @@ static unsigned port_level_heap_free(void)
 {
     if (!data_020a0eac)
         return 0;
-    /* Heap's first word is its allocator (src/_ZN4HeapC1EPvjP4Heap.c). */
+    /* Heap's first word is its allocator (src/_ZN4HeapC2EPvjPS_.cpp). */
     void *alloc = *(void **)((char *)data_020a0eac + 4);
     if (!alloc)
         return 0;
@@ -880,6 +1025,112 @@ static unsigned port_level_heap_free(void)
 extern "C" unsigned port_level_heap_free_bytes(void)
 { return port_level_heap_free(); }
 
+/* ---- Stage::InitResources:177-218: THE SUBLEVEL CLEAR ---------------------
+
+   THE ROM CLEARS FOUR THINGS WHEN A LEVEL CHANGE LEAVES THE COURSE IT WAS IN,
+   and until now the port cleared none of them. port/stage_lifecycle_map.txt
+   listed them under "WHAT THE ROM'S InitResources DOES THAT THE PORT DOES NOT
+   DO AT ALL": "the three sublevel clear loops (data_0209f4f8, data_0209f30c,
+   data_0209f310, data_0209f358)", and at its own row for those symbols, "none.
+   The per-player star/coin clear loops are not run at all."
+
+   data_0209f4f8 IS THE ACTOR DEATH TABLE, and it is the one that shows. Three
+   level parts of sixteen words, 512 slots each, indexed by
+   GetLevelPart(data_0209f2f8) (src/DeathTable_GetBit.c). A slot is the
+   SPAWN-ORDER INDEX of a placed object: LoadStandardObjects hands each object
+   the running counter data_ov002_0211118c as its deathTableID
+   (src/_Z19LoadStandardObjectsRN11LVL_Overlay11ObjSubTableEij.cpp), so slot 7
+   is the eighth object the walk placed, whatever level the walk was for.
+   dActor_c::TrackInDeathTable raises the slot when the object dies -- 120 call
+   sites in src/, every Bob-omb, Goomba, 1-Up, Boo and coin among them -- and
+   dActor_c::BeforeInitResources reads it back: an actor whose slot is up marks
+   itself for destruction instead of initialising
+   (src/_ZN8dActor_c19BeforeInitResourcesEv.cpp:34-38).
+
+   So with the clear missing, everything a player killed or collected in one
+   course stayed marked for the whole session, and the marks landed on the
+   SPAWN-ORDER SLOTS of every level entered afterwards -- and the castle
+   grounds, Bob-omb Battlefield and Whomp's Fortress all read part 0, so they
+   share one set of 512 slots. Measured on this tree with 32 slots marked, the
+   settled census fell from 51 actors to 39 on the castle grounds, 184 to 156
+   on Bob-omb Battlefield and 156 to 142 on Whomp's Fortress, and the count of
+   slots held stayed at 32 through twelve level changes.
+
+   THE OTHER THREE are the per-player coin and star counters the same statement
+   group clears: data_0209f358 (the coin counter GiveCoins increments),
+   data_0209f30c and data_0209f310 (the VS star arrays). They are in one ROM
+   `if`, so they are transcribed with it rather than split; a half of a
+   statement group is not the cartridge.
+
+   THE CONDITION IS THE ROM'S, byte for byte: VS mode, or an entry reason of 2,
+   or a pending level in the Bowser/key set (the (level + 0xDC) & 0xFF <= 0xD
+   and (1 << that) & 0x2A15 test -- levels 36, 38, 40, 45, 47, 49), or a
+   pending level whose course is 0x1D (the castle), or simply a DIFFERENT
+   course from the one being left. Two sublevels of one course (Cool Cool
+   Mountain and its slide) therefore keep their marks, which is the cartridge's
+   own behaviour and the reason the test is there at all.
+
+   WHY IT SITS HERE AND NOT IN port_stage_boot_body, where the port's other
+   InitResources lines land: it reads data_0209f2f8 (the level being LEFT) and
+   data_02092110 (the level being ENTERED), and the four lines below are what
+   consume both. Run after them, `to != from` would be false on every change
+   and the clear would never fire. This is InitResources' own order -- :188
+   before :227.
+
+   The ROM runs the block inside InitResources' `if (this+0x9c4 == 0)` arm,
+   which is the arm the port's hand-rolled boot corresponds to. The direct
+   SM64DS_LEVEL boot does not come through here and does not need to: nothing
+   has run yet in that process and the table is at its bss zero. */
+extern "C" {
+extern int   data_0209f4f8[];        /* 3 level parts x 16 words, 512 slots */
+extern int   data_0209f34c;
+extern unsigned char data_0209f30c[];
+extern signed char   data_0209f310[];
+extern short data_0209f358[];        /* the coin counter GiveCoins increments */
+extern unsigned char data_0209f21c;  /* the player count */
+extern unsigned char data_0209f2d8;  /* game mode: 1 = VS */
+int SublevelToLevel(int i);
+}
+
+static void port_level_sublevel_clear(void)
+{
+    const int to   = SublevelToLevel((int)data_02092110);
+    const int from = SublevelToLevel((int)data_0209f2f8);
+    const unsigned bits = ((unsigned)(unsigned char)data_02092110 + 0xDC) & 0xFF;
+    const int boss = (bits <= 0xD && ((1u << bits) & 0x2A15u)) ? 1 : 0;
+    const int vs   = (data_0209f2d8 == 1) ? 1 : 0;
+
+    if (!(vs || data_0209f26c == 2 || boss || to == 0x1D || to != from))
+        return;
+
+    const int was_c = (int)data_0209f358[0];
+    const int was_r = (int)data_0209f30c[0];
+    const int was_s = (int)data_0209f310[0];
+
+    data_0209f34c = 0;
+    for (int part = 0; part < 3; ++part)
+        for (int w = 0; w < 0x10; ++w)
+            data_0209f4f8[part * 0x10 + w] = 0;
+
+    const int count = (int)data_0209f21c;
+    if (count > 0) {
+        const unsigned char why = data_0209f26c;
+        for (int i = 0; i < count; ++i) {
+            if (vs || (boss == 0 && why != 1))
+                data_0209f358[i] = 0;
+            data_0209f30c[i] = 0;
+            data_0209f310[i] = 0;
+        }
+    }
+    if (std::getenv("SM64DS_DEATH_WATCH"))
+        std::fprintf(stderr, "  [deathtab] sublevel clear: course %d -> %d, "
+                     "reason %d -- the death table and the per-player counters "
+                     "are back to zero (coins %d -> %d, red coins %d -> 0, "
+                     "silver stars %d -> 0)\n", from, to,
+                     (int)data_0209f26c, was_c, (int)data_0209f358[0],
+                     was_r, was_s);
+}
+
 /* Runs the four lines Stage::InitResources runs, in its order:
        prev      = data_0209f2f8
        current   = pending
@@ -887,9 +1138,49 @@ extern "C" unsigned port_level_heap_free_bytes(void)
        star      = next star
    and then clears the request, which is Stage::InitResources' own last
    statement (data_02092110 = -1). Everything between those two in the ROM is
-   the level boot itself. */
+   the level boot itself.
+
+   THE "prev" LINE IS A REAL STATEMENT, NOT A COMMENT. Stage::InitResources
+   :221-223 is
+
+       data_0209f2fc = data_0209f26c;
+       if (data_0209f2fc == 1) {
+           data_02092124 = data_0209f2f8;    <- the sublevel being LEFT
+           data_02092118 = -1;
+       }
+
+   immediately above the `data_0209f2f8 = data_02092110` below, and the port
+   used to keep only the first of the three (hal/level_boot.cpp latches
+   data_0209f2fc at the boot). data_02092124 was therefore pinned forever at
+   romdata's 6, and 6 is Bob-omb Battlefield: src/_ZN5Stage9LC_UpdateEv.cpp:73
+   hands SublevelToLevel(data_02092124) to Message::DisplayLevelClearText as
+   THE COURSE (func_0201d850 prints that value + 1 as the course number and
+   indexes the course name at value + 0x196 and the star name at value * 7 +
+   0x1b3), and :95 uses it again for the 100-coin record. So every star in the
+   game, in any course, came up as COURSE 1 / BOB-OMB BATTLEFIELD with a
+   Bob-omb Battlefield star name.
+
+   THE GUARD IS SPELLED data_0209f26c BECAUSE THAT IS WHAT data_0209f2fc IS
+   ABOUT TO BE: the ROM tests the copy one statement after making it, and the
+   port's copy is made in the boot body a moment after this latch. 1 is a
+   fresh entry and 2 is a death, so a death return leaves both words alone,
+   exactly as on the cartridge.
+
+   WHAT THIS ARMS, said plainly: a data_02092124 that tracks the previous
+   sublevel lets func_ov002_020c7cbc (src/actors/Player.cpp:7025) reach
+   LoadKeyModels. Its switch takes only sublevels 0x24, 0x26, 0x2d, 0x2f and
+   0x31 -- the five Bowser fights -- so it arms on a key handover and on
+   nothing else; every course sublevel falls through the switch, leaves the
+   key slot at its -1 and returns 0. */
 static void port_level_latch(void)
 {
+    /* :188-218 first, because the two words below are its inputs. */
+    port_level_sublevel_clear();
+
+    if (data_0209f26c == 1) {
+        data_02092124[0] = (unsigned char)data_0209f2f8;
+        data_02092118[0] = 0xffu;         /* -1 */
+    }
     data_0209f2f8 = data_02092110;
     data_0209f264[0] = data_0209f268;
     data_0209f220[0] = data_0209f1f0;
@@ -1081,7 +1372,7 @@ extern "C" {
 extern unsigned char data_0209f250;      /* local player index */
 extern void *data_0209f394[];            /* per-player Actor* */
 /* the same two calls VirtualDoor::Behavior itself uses */
-char *_ZN5Actor15FindWithActorIDEjPS_(unsigned int id, void *prev);
+char *_ZN8dActor_c15FindWithActorIDEjPS_(unsigned int id, void *prev);
 void MulVec3Mat4x3(const void *in, const void *m, void *out);
 void InvMat4x3(const void *in, void *out);
 /* the ROM's own return from a no-control state (hal/bob_enemy_header_faces) */
@@ -1095,8 +1386,8 @@ enum { PORT_ACTOR_EXIT = 349 };
    there is one player. */
 static char *port_exit_pulling(void)
 {
-    for (char *e = _ZN5Actor15FindWithActorIDEjPS_(PORT_ACTOR_EXIT, 0); e;
-         e = _ZN5Actor15FindWithActorIDEjPS_(PORT_ACTOR_EXIT, e))
+    for (char *e = _ZN8dActor_c15FindWithActorIDEjPS_(PORT_ACTOR_EXIT, 0); e;
+         e = _ZN8dActor_c15FindWithActorIDEjPS_(PORT_ACTOR_EXIT, e))
         if (*(int *)(e + 0x98) != 0)
             return e;
     return 0;
@@ -1143,6 +1434,408 @@ static void port_level_change_declined(void)
 
 /* defined further down, with the whole derivation beside it */
 extern "C" int port_scene_request_release(const char *why);
+
+/* ---- THE PAINTING ENTRY: level -> star select -> level, in one process ----
+ *
+ * ON THE CARTRIDGE, entering a painting shows the star select. The decision is
+ * not the painting's and not the port's: it is Stage::Behavior's, the Stage's
+ * own vtable slot 6, dispatched every frame and matched src in this tree
+ * (src/_ZN5Stage8BehaviorEv.cpp:190-198):
+ *
+ *     if (data_02092110 >= 0) {                        // a level change is pending
+ *         lvl  = SublevelToLevel(data_02092110);       // the level being entered
+ *         lvl2 = SublevelToLevel(data_0209f2f8);       // the level being left
+ *         bb   = (data_0209f2d8 == 2);
+ *         if (bb == 0 && lvl <= 0xe && lvl != lvl2 && data_02092118 < 0
+ *             && (data_02092110 != 0xc || data_0209f268 != 4))
+ *             dScene_c::SetSceneToSpawn(4, 0);         // THE STAR SELECT
+ *         else
+ *             dScene_c::SetSceneToSpawn(3, 0);         // straight into the level
+ *     }
+ *
+ * EVERY REFUSAL IN THAT `if` IS THE ROM'S OWN and this file adds none: game
+ * mode 2, anything above the fifteen main courses (the castle rooms, the caps,
+ * the Bowser stages, the key courses, the Rec Room, every VS map), a sublevel
+ * of the course you are already in, a latched return level, and Big Boo's
+ * Haunt through entrance 4. A minigame and the opening never reach the block at
+ * all -- it is inside Stage::Behavior and a minigame scene has no Stage, and
+ * the opening's own change is level 1 -> level 1, which fails `lvl != lvl2`
+ * and takes the scene-3 arm. Measured: the opening gate's run log prints
+ * "[lvl] change: level 1 -> 1" followed by "pending scene 3 released".
+ *
+ * THAT BODY ALREADY RUNS HERE. _ZTV5Stage slot 6 is the ROM's Stage::Behavior
+ * on walk_window and walk_window_hires (SM64DS_STAGE_SLOT6_ROM, the thunk in
+ * hal/stage_bridges.cpp into hal/stage_frame.cpp's port_stage_rom_behavior), so
+ * on every painting entry the cartridge's own code writes data_02092664 = 4 --
+ * and the port threw the request away, one statement later, in
+ * port_level_change_poll's release. The whole of what follows is the port
+ * answering it instead.
+ *
+ * WHEN THE DECISION ARRIVES, which is the thing that shapes this code.
+ * port_level_teardown's convergence loop calls port_actor_tick, and the Stage
+ * HEADS the behaviour list, so Stage::Behavior runs FROM INSIDE THE TEARDOWN
+ * (the banner above port_level_change_poll works that out for level 20). So the
+ * scene id is not readable before the teardown; it is readable after it. The
+ * cartridge's order is the same -- the Stage's own destruction is what produces
+ * the next scene -- and that is why this call sits where it does, between the
+ * teardown half of port_level_change_apply and its boot half.
+ *
+ * WHAT THE INTERLUDE RUNS. hal/scene_boot.cpp's port_scene_tick is the scene
+ * frame, complete: the touch poll, the scripted pad, port_scene_comms_publish,
+ * the SCENE-REQUEST CARRIER (the ROM's own Scene::SpawnIfNecessary, which is
+ * what spawns dScStarSel_c and clears the pending id itself), port_actor_tick,
+ * the frame clock, the fader advance, port_actor_render, gx_render and
+ * hal_sub_screen_present. Nothing new is written here; the level path simply
+ * had no caller for it. Measured, warp castle grounds -> Bob-omb Battlefield:
+ *
+ *     [starsel] at the seam: pending scene 4, spawned latch 0, level request 6
+ *     [scene] CARRIER: scene 4 pending -> SpawnIfNecessary SPAWNED (frame 0)
+ *     [starsel] the star select asked for SCENE 3 at frame 217; act 1
+ *     [lvl] level 6 up.
+ *     [lvl] re-seated: player 30039DEC camera 30039C34
+ *
+ * THE STOP IS THE STAR SELECT'S OWN HANDOFF. dScStarSel_c::Behavior ends in
+ * StartSceneFade(3, 0, 0) (src/_ZN12dScStarSel_c8BehaviorEv.cpp:144) and writes
+ * the act on the next line, data_0209f1f0 = FB(this, 0x115) + 1. Scene 3 is the
+ * Stage, so the scene's own exit is "boot the level with this star", and
+ * port_level_latch's third line -- data_0209f220[0] = data_0209f1f0 -- carries
+ * it. The port chooses no act and no star.
+ *
+ * WHAT IS NOT DONE HERE AND IS MEASURED, not assumed. data_02092660, the ROM's
+ * "a scene has spawned" latch, does not return to 0 on this route, so the star
+ * select is not destroyed by the ROM's own path before the level boots: the
+ * title bridge's stop test (`== 3 && data_02092660 == 0`) would never fire, and
+ * this one deliberately does not use it. Measured either way the level boots
+ * and the run stays clean for 1500 frames. The fade is also not armed across
+ * the crossing, so the cut is hard rather than covered; arming a cover whose
+ * reveal is not wired on this route would leave a white screen, which is worse
+ * than a cut. Both are named in the lane's write-up rather than papered over.
+ *
+ * DEFAULT ON, because on the cartridge every course entry shows this screen.
+ * SM64DS_STARSEL_PAINTING=0 declines the interlude on the same binary, which is
+ * how the before/after is taken without a rebuild.
+ */
+extern "C" {
+extern unsigned short data_02092664;    /* Scene::SetSceneToSpawn's pending id */
+extern unsigned char  data_02092660;    /* its "already spawned" latch */
+void port_scene_tick(int frame, int tick_game);   /* hal/scene_boot.cpp */
+/* The ROM's own MarkForDestruction edge on a scene, latched in
+   hal/scene_boot.cpp's sc_bbeh off fBase_c::shouldBeKilled at +0x0f. That is
+   the frame the cartridge is FINISHED with the star select, and the banner
+   below says why the pending id is not. */
+void port_scene_killed_reset(void);
+int  port_scene_killed(void);
+/* the live scene object and the abort's MarkForDestruction stand-in; see the
+   banner on the interlude's tail (run link100, lane STARSEL5) */
+void *port_scene_live_object(void);
+int   port_scene_force_kill(void);
+unsigned port_scene_behavior_ticks(void);
+/* PadData[4], {u16 held, u16 pressed} per player. The star select reads it
+   directly (src/_ZN12dScStarSel_c8BehaviorEv.cpp), so it is the one word that
+   says whether a press made by the host ever reached the screen. Reported on
+   the interlude's own progress line: the whole of the reported bug is that it
+   read 0 on every one of 1800 frames. */
+extern int data_020a0e58[];
+}
+
+/* THE INTERLUDE'S FRAME, filled in by tests/walk_window.cpp's main (run
+   link100, lane STARSEL5). A POINTER and not a call, because this file is on
+   the smoke targets as well and walk_window.cpp is not; with nobody to fill it
+   in -- a smoke target, a headless bring-up -- the interlude falls back to the
+   bare scene tick this loop used to make, which is what those builds had.
+   Filled in, it is the WHOLE host frame: the message pump, the host input poll
+   that ends in PadData, the scene tick, the present and the pace. */
+extern "C" int (*port_interlude_frame_hook)(int frame) = 0;
+
+/* Read by the three ROM Stage slots (hal/stage_frame.cpp's
+   port_stage_rom_behavior and port_stage_rom_render, hal/stage_bridges.cpp's
+   st_bbeh). While this answers 1 the port has no Stage, which is what the
+   cartridge means at this moment: Scene::BeforeBehavior marked the Stage for
+   destruction before Scene::SpawnIfNecessary spawned the star select. The port
+   keeps ONE Stage alive across every level change and slot 3
+   (CleanupResources) is not hosted, so it cannot follow the ROM there; a
+   dormant Stage is the closest honest host state, and it is not cosmetic.
+   Measured with the slots live: Stage::Render reached Camera::IsUnderwater
+   through Stage::RenderFog and faulted on the camera the teardown destroyed
+   (c0000005 at Camera::IsUnderwater), and Scene::BeforeBehavior took
+   its `data_02092664 != 0x187` arm and marked the Stage, which aborts at the
+   slot-3 trap one frame later. Stage::Behavior would also re-issue
+   SetSceneToSpawn(4) every frame on top of the star select's own
+   StartSceneFade(3), because data_02092110 is still pending until the latch. */
+static int g_interlude_live;
+
+extern "C" int port_level_interlude_live(void) { return g_interlude_live; }
+
+static int port_starsel_painting_on(void)
+{
+    static int on = -1;
+    if (on < 0) {
+        const char *e = std::getenv("SM64DS_STARSEL_PAINTING");
+        on = (e && std::atoi(e) == 0) ? 0 : 1;   /* DEFAULT ON */
+    }
+    return on;
+}
+
+/* Between the teardown half and the boot half. The level is gone,
+   data_02092110 still names the level being entered (the latch has not run, so
+   the star select's own SublevelToLevel(data_02092110) test reads the right
+   level), and data_02092664 holds what Stage::Behavior decided. */
+static void port_level_scene_interlude(void)
+{
+    if (!port_starsel_painting_on())
+        return;
+    if (data_02092664 != 4)
+        return;                     /* the ROM's own scene-3 arm: straight in */
+
+    /* NO GIVE-UP TIMER IN REAL PLAY, and this is the whole of Tango's bug
+       report's first half.
+     *
+     * The 1800-frame cap was written when the interlude ran port_scene_tick and
+     * nothing else: a scene that could not be reached by any input had to be
+     * abandoned or the process would hang. Now that the frame is a real frame
+     * the cap is wrong in a session -- on the cartridge the star select waits
+     * for the player as long as the player takes, and the window can be closed
+     * -- so it is kept ONLY for a scripted run, where a row that waits forever
+     * is a lane that never finishes. cap <= 0 means "wait", which is what a
+     * player gets. SM64DS_STARSEL_FRAMES still overrides both ways, and 0
+     * through it asks a scripted run to wait too. */
+    const int selftest = std::getenv("SM64DS_WINDOW_SELFTEST") != 0;
+    int cap = selftest ? 1800 : 0;
+    if (const char *e = std::getenv("SM64DS_STARSEL_FRAMES"))
+        cap = std::atoi(e);
+    std::fprintf(stderr, "[starsel] at the seam: pending scene %u, spawned "
+                 "latch %u, level request %d -- running the star select in "
+                 "this process %s\n",
+                 (unsigned)data_02092664, (unsigned)data_02092660,
+                 (int)data_02092110,
+                 cap > 0 ? "with a scripted-run backstop" : "until it is done");
+    if (cap > 0)
+        std::fprintf(stderr, "[starsel] BACKSTOP ARMED: this run gives the star "
+                     "select %d frames and then boots the level anyway. That is "
+                     "a harness rule, not the game's: a session has no cap.\n",
+                     cap);
+
+    /* On the DS the Stage IS scene 3, and Scene::SpawnIfNecessary destroys
+       the current scene before it spawns the next one -- so the tree root is
+       EMPTY when dScStarSel_c spawns, and the star select becomes the root
+       itself. The port keeps ONE Stage object alive across every level
+       change instead of destroying and recreating it, so without this the
+       Stage's node is still sitting in the root when the scene spawns, the
+       spawn is parentless, and func_0203b438's handle_a refuses to link it
+       at all ("if (a->f0 != 0) return 0"). Hand the root to the scene here,
+       the way the cartridge's own object lifetime would, and take it back
+       once the scene is gone (see the pump and the restore below). */
+    void *il_stage = port_stage_object();
+    const int il_root_was = data_020a4b6c[0];
+    if (il_stage &&
+        il_root_was == (int)(size_t)((char *)il_stage + 0x14)) {
+        data_020a4b6c[0] = 0;
+        std::fprintf(stderr, "[starsel] tree root released for the scene "
+                     "(was the Stage node %p)\n", (void *)(size_t)il_root_was);
+    }
+
+    int f = 0, asked = -1, closed = 0;
+    g_interlude_live = 1;
+    port_scene_killed_reset();
+    for (; cap <= 0 || f < cap; ++f) {
+        /* THE WHOLE HOST FRAME, not just the scene tick. See the hook's banner
+           above and tests/walk_window.cpp's port_interlude_frame: the outer
+           window loop is not running during the interlude, so every per-frame
+           duty it performs -- the message pump, the host input poll that ends
+           in PadData, the present, the pace -- has to be performed here or the
+           star select cannot be seen, cannot be pressed and cannot be left. */
+        if (port_interlude_frame_hook) {
+            if (port_interlude_frame_hook(f)) {
+                closed = 1;
+                std::fprintf(stderr, "[starsel] the window was closed at frame "
+                             "%d; the interlude stops\n", f);
+                break;
+            }
+        } else {
+            port_scene_tick(f, 1);
+        }
+        if ((f % 300) == 0)
+            std::fprintf(stderr, "  [starsel] f%d pending %u latch %u act %d "
+                         "pad %04x/%04x\n",
+                         f, (unsigned)data_02092664, (unsigned)data_02092660,
+                         (int)data_0209f1f0,
+                         (unsigned)((unsigned short *)data_020a0e58)[0],
+                         (unsigned)((unsigned short *)data_020a0e58)[1]);
+        /* THE GRID ITSELF, once it exists and again on every change.
+           dScStarSel_c::InitResources:283-320 derives the row the player is
+           looking at from the save block, and every question about "why did
+           the pick not move" is a question about these six bytes: how many
+           icons there are (+0x114), which of them may be chosen (+0x131), the
+           one under the cursor (+0x115, and the act is that plus one), and the
+           three state bytes the Behavior's own arms are gated on (+0x133,
+           +0x135 -- nonzero is what lets a button confirm at all -- and
+           +0x139). Without them a row can only report that nothing happened. */
+        {
+            static unsigned char was[6];
+            static int had;
+            unsigned char *sc = (unsigned char *)port_scene_live_object();
+            if (sc) {
+                const unsigned char now[6] = { sc[0x114], sc[0x131], sc[0x115],
+                                               sc[0x133], sc[0x135], sc[0x139] };
+                if (!had || std::memcmp(now, was, sizeof now) != 0) {
+                    had = 1;
+                    std::memcpy(was, now, sizeof now);
+                    std::fprintf(stderr, "  [starsel] f%d grid icons %u mask "
+                                 "%02x cur %u (act %u) state %02x/%02x/%02x\n",
+                                 f, now[0], now[1], now[2], now[2] + 1u,
+                                 now[3], now[4], now[5]);
+                }
+            }
+        }
+        /* AND EVERY EDGE OF IT, because a press held for two hundred frames in
+           the middle of a thousand is invisible on a line printed every three
+           hundred. This is the line that separates "the host was polled" from
+           "the press reached the game": the pad census is written by the frame
+           the hook just ran, before the scene's own Behavior read it. */
+        {
+            static unsigned short pad_was;
+            const unsigned short now = ((unsigned short *)data_020a0e58)[0];
+            if (now != pad_was) {
+                std::fprintf(stderr, "  [starsel] f%d PadData held %04x -> "
+                             "%04x\n", f, (unsigned)pad_was, (unsigned)now);
+                pad_was = now;
+            }
+        }
+        if (data_02092664 == 3 && asked < 0) {
+            asked = f;
+            std::fprintf(stderr, "[starsel] the star select asked for SCENE 3 "
+                         "at frame %d; the act it chose is data_0209f1f0 = %d "
+                         "(dScStarSel_c::Behavior's own FB(this,0x115) + 1; the "
+                         "port chose none of it)\n", f, (int)data_0209f1f0);
+        }
+        /* AND THE INTERLUDE DOES NOT END THERE, which is the whole of this
+           change. On the cartridge the request is the START of the scene's
+           exit, not the end of it: dScene_c::BeforeBehavior then runs the
+           installed fader forward for 0x1e frames and calls
+           MarkForDestruction, and only then is the Stage allowed back. Handing
+           the frame to the boot half on the asking frame left a star select
+           that had never faded out and had never been marked, still holding
+           the bottom screen's sprite layer over the course that booted under
+           it. Measured on the l1to6 route: the ask lands at interlude frame
+           217 and the kill flag at 249, and with those 32 frames given the
+           course's own bottom-screen capture is byte-identical to the same
+           course reached with no star select at all (sha 20e7b97397a609c9,
+           which is also fixer MAPSTAGE's own pre-interlude sha for that
+           route); without them 2171 pixels of it are the star select's
+           sprites. So the stop is the ROM's flag, read through
+           hal/scene_boot.cpp's latch, and the cap is only a backstop. */
+        if (asked >= 0 && (port_scene_killed() || data_02092660 == 0)) {
+            std::fprintf(stderr, "[starsel] the cartridge is finished with the "
+                         "star select at frame %d, %d frames after the ask: "
+                         "dScene_c::BeforeBehavior ran the installed fader's "
+                         "0x1e-frame fade-out and marked the scene for "
+                         "destruction (shouldBeKilled latched %u, latch %u). "
+                         "The boot half runs now.\n",
+                         f, f - asked, (unsigned)port_scene_killed(),
+                         (unsigned)data_02092660);
+            break;
+        }
+    }
+    /* AND IF IT DID NOT FINISH, THE SCENE IS STILL TORN DOWN FIRST. This is the
+       second half of the report: with the interlude abandoned the star select
+       stayed in the behaviour list, so its sprite layer sat over the course on
+       both screens, and the first stylus press that reached it made it ask for
+       a scene change -- which marks the Stage and aborts at the unhosted slot
+       3. A course must never boot underneath a live star select, whatever ended
+       the interlude. The cartridge never has to abandon this screen and so has
+       no path to copy: the port sets the byte fBase_c::MarkForDestruction sets
+       and then keeps running frames until the list reaps it, loudly, because
+       this is the port standing in for a sequence the ROM does not have. */
+    const int unfinished = (asked < 0 || !port_scene_killed());
+    if (unfinished && port_scene_live_object()) {
+        std::fprintf(stderr, "[starsel] the star select is being TORN DOWN "
+                     "unfinished (asked at %d, pending %u, latch %u, "
+                     "shouldBeKilled %u, %s). The port marks it the way "
+                     "fBase_c::MarkForDestruction does and runs the frames the "
+                     "reap needs; the course must not boot under a live star "
+                     "select.\n", asked, (unsigned)data_02092664,
+                     (unsigned)data_02092660, (unsigned)port_scene_killed(),
+                     closed ? "the window was closed"
+                            : "the scripted-run backstop fired");
+        port_scene_force_kill();
+        /* 0x1e is the fade dScene_c::BeforeBehavior runs before it marks, and
+           the reap itself is one more list walk; 64 is that with slack. Not a
+           second wait for the player: the object is already marked. The stop
+           test is the ROM's own reap -- the frame on which the scene's
+           behaviour slot is no longer dispatched -- and not a pointer, which
+           never becomes null by itself. */
+        int reaped = -1;
+        unsigned beh_was = port_scene_behavior_ticks();
+        for (int k = 0; k < 64; ++k) {
+            if (port_interlude_frame_hook) {
+                if (port_interlude_frame_hook(f + k))
+                    break;
+            } else {
+                port_scene_tick(f + k, 1);
+            }
+            const unsigned beh_now = port_scene_behavior_ticks();
+            if (beh_now == beh_was) { reaped = k; break; }
+            beh_was = beh_now;
+        }
+        if (reaped >= 0)
+            std::fprintf(stderr, "[starsel] the star select was reaped out of "
+                         "the behaviour list %d frame(s) after the mark; the "
+                         "course boots with no scene over it\n", reaped + 1);
+        else
+            std::fprintf(stderr, "[starsel] WARNING: the star select was still "
+                         "being dispatched 64 frames after the mark; the course "
+                         "boots with a scene the port could not reap\n");
+    }
+    /* The scene is MARKED at this point, not gone: on the ROM its own reap
+       runs on the next dispatch of phase 1 (func_02043880), which is a frame
+       this interlude does not otherwise run. Pump the ROM's own phase passes
+       here, with the Stage still OUT of the root (g_interlude_live is still
+       1), until the destroyed scene's node comes out of the tree by itself
+       (func_0203b3c0 clears the head when it unlinks a root node with no
+       parent and no previous sibling). This has to happen BEFORE the Stage
+       goes back into the root: a root node with no parent and no previous
+       sibling unlinks by clearing `*list` outright, so if the Stage were
+       back in the root already, the scene's later reap would wipe the Stage
+       back out of it and the next teardown would read an empty tree just the
+       same. Measured that way before this pump was added. */
+    {
+        int k = 0;
+        for (; k < 16 && data_020a4b6c[0]; ++k) {
+            port_actor_scene_pass();
+            port_actor_tick();
+            port_actor_scene_pass();
+        }
+        std::fprintf(stderr, "[starsel] scene reap pump: %d round(s), tree "
+                     "root now %p, live actors %d\n", k,
+                     (void *)(size_t)data_020a4b6c[0], port_level_live_count());
+    }
+    g_interlude_live = 0;
+    /* Put the Stage back where the cartridge's Scene::ResetFadersAndSound
+       would have put it on its own next entry: back in the scene tree's
+       root, and back in the spawn-parent seat (data_0209f5c0) that the star
+       select's own ResetFadersAndSound took when it ran. The port never
+       constructs a second Stage, so nothing else will ever do this. */
+    if (il_stage) {
+        std::fprintf(stderr, "[starsel] tree root after the scene: %p; spawn "
+                     "parent %p -- restoring the Stage (%p / node %p)\n",
+                     (void *)(size_t)data_020a4b6c[0],
+                     (void *)(size_t)data_0209f5c0[0], il_stage,
+                     (void *)((char *)il_stage + 0x14));
+        data_020a4b6c[0] = (int)(size_t)((char *)il_stage + 0x14);
+        data_0209f5c0[0] = (int)(size_t)il_stage;
+    }
+    if (cap > 0 && f >= cap)
+        std::fprintf(stderr, "[starsel] the star select did not finish inside "
+                     "%d frames (asked at %d, pending %u, latch %u, "
+                     "shouldBeKilled %u); the level boots with the act as it "
+                     "stands rather than hanging\n", cap, asked,
+                     (unsigned)data_02092664, (unsigned)data_02092660,
+                     (unsigned)port_scene_killed());
+    /* Whatever happened, the port has now done everything it is going to do
+       about the request, so it completes Scene::SpawnIfNecessary's other half
+       exactly as the poll's own tail release does. */
+    port_scene_request_release("the star-select interlude is over");
+}
 
 extern "C" int port_level_change_apply(void)
 {
@@ -1228,8 +1921,24 @@ extern "C" int port_level_change_apply(void)
        Model::GetVramOffset reaches the game's Crash(). */
     port_model_vram_reset();
 
+    /* and the seven fader wipes, for the same reason and in the same place:
+       Stage::InitResources BUILDS that pool at every level boot, so on the
+       cartridge a level always opens with seven fresh FaderWipes. The port's
+       are static objects that outlive the Stage, and a wipe that carries the
+       last transition's interpolator makes dScene_c::SetFaders read the
+       outgoing fader as mid-fade instead of at the start -- which left the
+       screen fully black from the second star of a session onwards. The banner
+       over port_fader_wipes_reset in hal/fader_wipes.cpp has the measurement. */
+    port_fader_wipes_reset();
+
     const unsigned free_torn = port_level_heap_free();
     port_level_reset_host();
+    /* THE TEARDOWN HALF ENDS HERE AND THE BOOT HALF BEGINS BELOW. The
+       banner above port_level_scene_interlude says why the scene runs
+       between them and not before or after: the ROM's own decision is
+       written from inside the teardown, and the latch below consumes the
+       level request the star select has to read. */
+    port_level_scene_interlude();
     port_level_latch();
     /* Point the boot at the level the latch just made current. Without this the
        boot's mount resolved to the env-cached level and the warp re-booted the
@@ -1280,7 +1989,7 @@ extern "C" int port_level_change_apply(void)
                                    nothing pending yet, so it did nothing)
      SETSCENE  f=80 id=3   from ?Behavior@Stage@@QAEHXZ+0x2a9
      A_BOOT    f=80 p110=-1                               level 19 up
-     MFD_STAGE f=111 pend=3   from _ZN5Scene14BeforeBehaviorEv+0xe1
+     MFD_STAGE f=111 pend=3   from _ZN8dScene_c14BeforeBehaviorEv+0xe1
      FATAL: Stage vtable slot 3 (CleanupResources) is not hosted   (0xc0000409)
 
    Read the two middle lines together. port_level_teardown's convergence loop
@@ -1323,7 +2032,7 @@ extern "C" int port_level_change_poll(void)
 
 /* ---- the front door -------------------------------------------------------
    dScTitle_c's own selection table, and its own handoff call.
-   func_ov003_020ad814 (the debug level select's Behavior) picks a row out of
+   _ZN10dScTitle_c8BehaviorEv (the debug level select's Behavior) picks a row out of
    data_ov003_020b1180 -- 0x36 eight-byte rows, byte 0 the level id, byte 1
    the entrance -- and calls LoadLevelNoReturn(level, entrance, 1, 0). Two
    rows are sentinels: -1 means "back to the file select" and -2 "into the
@@ -1344,7 +2053,7 @@ extern unsigned char data_0209f2d8;         /* game mode */
    scene id in data_02092664 and writes the fade colour into data_0209f5e8+0xc.
    It does NOT put the fade in motion -- on the ROM the Scene actor's own
    BeforeBehavior does that when it sees the pending scene. */
-void _ZN5Scene14StartSceneFadeEjjt(unsigned actorID, unsigned param,
+void _ZN8dScene_c14StartSceneFadeEjjt(unsigned actorID, unsigned param,
                                    unsigned short fadeColor);
 extern unsigned short data_02092664;         /* Scene::SetSceneToSpawn's id */
 extern unsigned short data_0209f5e8[];        /* the color fader (its +0xc word) */
@@ -1369,13 +2078,13 @@ void port_fader_start_color(int frames, int toEnd, unsigned short color);
        -> Scene::SpawnIfNecessary  calls func_02013edc(4, param, 1)
        -> func_02042fe4 -> func_02043098(4, 0, param, 1)   the spawn spine
        -> (*(Fn*)data_020a4bb8[4])()   the factory for scene id 4
-       -> StarSelect_Spawn  (ov003, 0x020b04f0)
+       -> dScStarSel_c_classInit  (ov003, 0x020b04f0)
 
-   StarSelect_Spawn (src/StarSelect_Spawn.cpp) is small and portable-shaped:
+   dScStarSel_c_classInit (src/d_s_star_sel.cpp) is small and portable-shaped:
      - ActorBase::operator new(0x13c), ActorBase ctor
      - vptr = data_ov003_020b1704   (the dScStarSel_c vtable, IN ov003)
      - flags +0x13 |= 1|4
-     - func_020733a8(self+0x64, 2, 0x50, Model::ctor, Model::dtor)  two Models
+     - __cxa_vec_ctor(self+0x64, 2, 0x50, Model::ctor, Model::dtor)  two Models
 
    The dScStarSel_c vtable (data_ov003_020b1704, from ov003 relocs) is:
      slot 0  0x020af8a0   (a method, ov003)
@@ -1410,7 +2119,7 @@ void port_fader_start_color(int frames, int toEnd, unsigned short color);
    So the stretch is a real sub-project (mount ov003 .text, stage the star-grid
    2D resources, host the OAM render), landed here as analysis. The fade flow
    that would drive it is live: the request is recorded, the screen fades, and
-   the frame loop is the seam a real StarSelect_Spawn registration would plug
+   the frame loop is the seam a real dScStarSel_c_classInit registration would plug
    into (register a host factory at data_020a4bb8[4], then spawn on cover). */
 static int g_scene_fade_scene = -1;   /* pending scene id, -1 = none */
 
@@ -1436,10 +2145,10 @@ extern "C" int port_scene_fade_pending(int *sceneId)
  * both are matched src in this tree:
  *
  *     Scene::SetSceneToSpawn(id, param)   data_02092664 = id
- *         src/_ZN5Scene15SetSceneToSpawnEjj.c
+ *         src/_ZN8dScene_c15SetSceneToSpawnEjj.cpp
  *     Scene::SpawnIfNecessary()           spawn the scene, THEN
  *                                         data_02092664 = 0x187
- *         src/_ZN5Scene16SpawnIfNecessaryEv.c
+ *         src/_ZN8dScene_c16SpawnIfNecessaryEv.cpp
  *
  * THE PORT RUNS THE FIRST HALF AND NOT THE SECOND. It has no spawner for the
  * ov003 scenes -- the long block above this one says why, at length: ov003's
@@ -1527,7 +2236,7 @@ extern "C" int port_title_row(int i, int *level, int *entrance)
     return r[0] >= 0;         /* -1 / -2 are the two scene sentinels */
 }
 
-/* The else-branch of func_ov003_020ad814, now in the ROM's OWN order.
+/* The else-branch of _ZN10dScTitle_c8BehaviorEv, now in the ROM's OWN order.
    FaderColor is staged (hal/fader_wipes.cpp), so LoadLevel's opening
    Scene::SetAndStopColorFader call is safe and the mount check no longer has to
    come first to dodge a null fader slot. The ROM branch runs verbatim, then the
@@ -1542,7 +2251,7 @@ extern "C" int port_title_select(int i)
         return 0;
     }
 
-    /* dScTitle_c::Behavior's confirm branch, in order (func_ov003_020ad814):
+    /* dScTitle_c::Behavior's confirm branch, in order (_ZN10dScTitle_c8BehaviorEv):
            data_0209f2d8 = 0;                       single player
            LoadLevelNoReturn(level, entrance, 1, 0);
            SetPlayerGlobals();
@@ -1581,7 +2290,7 @@ extern "C" int port_title_select(int i)
     /* Scene::StartSceneFade(4, 0, 0): records scene 4 (dScStarSel_c) as the
        pending scene and sets the fade colour. data_0209f5e8[6] (+0xc) = 0x7fff
        is the ROM's own next line: fade to WHITE, not black. */
-    _ZN5Scene14StartSceneFadeEjjt(4, 0, 0);
+    _ZN8dScene_c14StartSceneFadeEjjt(4, 0, 0);
     data_0209f5e8[6] = 0x7fff;
     /* Record the scene request for the frame loop, and put the colour fade in
        motion so it renders. 0x7fff (nonzero) is a white fade; 16 frames is the

@@ -4,12 +4,14 @@
 //
 // Nothing here is behaviour. Camera::InitResources, Behavior and Render are
 // the matched src files; this is the seam they need to reach the host.
+#include "port_d16.h"
+
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
 
-#include "ActorBase.h"
-#include "ActorDerived.h"
+#include "fBase_c.h"
+#include "dBase_c.h"
 #include "Camera.h"
 #include "PathPtr.h"
 #include "dsstate_seg.h"
@@ -23,16 +25,21 @@
 #include <cstddef>
 namespace ntr { struct GxTriangle; const GxTriangle *gx_polygons(std::size_t &n); }
 
-/* Camera::Render calls View::Render() as a METHOD (its TU declares a local
-   `struct View`); src defines the function at C linkage. Same shape as the
-   method faces in method_faces.cpp, kept here because the local View has no
-   header. */
-struct View {
-    int render();
-    int Render();
-};
+/* Camera::Render calls View::Render() as a METHOD; src defines the body at C
+   linkage, so this is the face that gives the method its MSVC decoration.
+   MAIN -> PORT SYNC (lane SYNC5): the two-member shadow that used to stand
+   here is gone. include/View.h now declares the real class (dBase_c base, a
+   viewMat member, a virtual destructor and `virtual s32 Render()`), which the
+   include chain below reaches, so the shadow was a C2011 redefinition of a
+   type the header already has. The face is spelled against the real
+   declaration instead -- same face, same flat callee, no second View. */
 extern "C" int _ZN4View6RenderEv(void *self);
-int View::Render() { return _ZN4View6RenderEv(this); }
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync): src/_ZN4View6RenderEv.cpp is a real virtual View member since main langmode migration and emits ?Render@View@@UAEHXZ itself, so this face was the second definition (LNK2005).
+   The body is kept below under #if 0 rather than deleted, so the
+   evidence in it stays readable. */
+#if 0
+s32 View::Render() { return _ZN4View6RenderEv(this); }
+#endif
 
 extern "C" {
 
@@ -40,7 +47,7 @@ int _ZNK6Camera12IsUnderwaterEv(const void *self);
 int _ZN6Camera16CleanupResourcesEv(void *self);
 void *_ZN6CameraD1Ev(void *self);
 void *_ZN6CameraD0Ev(void *self);
-void *_ZN6CameraC1Ev(void *self);
+void *dCamera_c_classInit(void *self);
 
 /* method faces (the definitions are MSVC methods; every caller and the
    vtable want C names) */
@@ -73,27 +80,27 @@ void *_ZTV4View[20];
 static int __fastcall cs_init(void *s, void *)
 { return _ZN6Camera13InitResourcesEv(s); }
 static int __fastcall cs_binit(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::BeforeInitResources(); }
+{ return ((fBase_c *)s)->fBase_c::BeforeInitResources(); }
 static void __fastcall cs_ainit(void *s, void *, unsigned a)
-{ ((ActorDerived *)s)->ActorDerived::AfterInitResources(a); }
+{ ((dBase_c *)s)->dBase_c::AfterInitResources(a); }
 static int __fastcall cs_cleanup(void *s, void *)
 { return _ZN6Camera16CleanupResourcesEv(s); }
 static int __fastcall cs_bclean(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::BeforeCleanupResources(); }
+{ return ((fBase_c *)s)->fBase_c::BeforeCleanupResources(); }
 static void __fastcall cs_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall cs_behavior(void *s, void *)
 { return _ZN6Camera8BehaviorEv(s); }
 static int __fastcall cs_bbeh(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::BeforeBehavior(); }
+{ return ((fBase_c *)s)->fBase_c::BeforeBehavior(); }
 static void __fastcall cs_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall cs_render(void *s, void *)
 { return _ZN6Camera6RenderEv(s); }
 static int __fastcall cs_bren(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::BeforeRender(); }
+{ return ((fBase_c *)s)->fBase_c::BeforeRender(); }
 static void __fastcall cs_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall cs_pdes(void *s, void *)
 { _ZN6Camera16OnPendingDestroyEv(s); return 0; }
 /* Slots 13/14 trap, the ArrowSignRight rule: they are the two heap-creating
@@ -105,7 +112,7 @@ static void __fastcall cs_trap13(void *, void *)
 static void __fastcall cs_trap14(void *, void *)
 { std::fprintf(stderr, "FATAL: Camera vtable slot 14 trap\n"); std::abort(); }
 static int __fastcall cs_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static void *__fastcall cs_d1(void *s, void *) { return _ZN6CameraD1Ev(s); }
 static void *__fastcall cs_d0(void *s, void *) { return _ZN6CameraD0Ev(s); }
 
@@ -127,7 +134,7 @@ extern "C" void hal_fill_camera_vtable(void)
     _ZTV6Camera[13] = (void *)cs_trap13;
     _ZTV6Camera[14] = (void *)cs_trap14;
     _ZTV6Camera[15] = (void *)cs_heap;
-    _ZTV6Camera[16] = (void *)cs_d1;
+    _ZTV6Camera[16] = (void *)PORT_D16(cs_d1);
     _ZTV6Camera[17] = (void *)cs_d0;
 }
 
@@ -506,6 +513,6 @@ int hal_camera_behavior(void *cam) { return _ZN6Camera8BehaviorEv(cam); }
 int hal_camera_render(void *cam) { return _ZN6Camera6RenderEv(cam); }
 int hal_camera_init_resources(void *cam)
 { return _ZN6Camera13InitResourcesEv(cam); }
-void *hal_camera_new(void) { return _ZN6CameraC1Ev(0); }
+void *hal_camera_new(void) { return dCamera_c_classInit(0); }
 
 }  /* extern "C" */

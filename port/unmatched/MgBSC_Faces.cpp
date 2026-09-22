@@ -3,11 +3,11 @@
 //
 // ---- ONE ALIAS, AND IT IS THE ORDINARY KIND ------------------------------
 //
-// src/MgLuckyStars_Spawn.cpp is a //cpp TU and declares the class's vtable as
+// src/minigames/d_s_mg_bsc.cpp is a //cpp TU and declares the class's vtable as
 //
-//     extern int data_ov006_0213fec8;
+//     extern int _ZTV10dScMgBSC_c;
 //
-// so MSVC mangles the reference as ?data_ov006_0213fec8@@3HA -- a C++-linkage
+// so MSVC mangles the reference as ?_ZTV10dScMgBSC_c@@3HA -- a C++-linkage
 // int -- while the ov006 mount (port/tools/ovdata.py's emission) defines the
 // plain C name _data_ov006_0213fec8. That is the "C-named symbols declared at
 // C++ linkage" case port/mg_fanout_costs.txt section 4 counts twenty-two of,
@@ -34,7 +34,8 @@
 // build and fails if an /alternatename left-hand side is also a defined symbol,
 // which is the failure mode that would make this line silently useless.
 
-#pragma comment(linker, "/alternatename:?data_ov006_0213fec8@@3HA=_data_ov006_0213fec8")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEAD RHS and an UNREFERENCED left hand side: nothing in the build defines _data_ov006_0213fec8, and nothing references ?_ZTV10dScMgBSC_c@@3HA, so the row can never fire and nothing wants it to. */
+// #pragma comment(linker, "/alternatename:?_ZTV10dScMgBSC_c@@3HA=_data_ov006_0213fec8")
 
 // ---- A SECOND ALIAS, AND IT IS ov004's RATHER THAN THIS CLASS'S ----------
 //
@@ -47,7 +48,7 @@
 //
 // IT IS HERE BECAUSE THIS SEAT IS THE FIRST TO REACH THAT BODY, not because it
 // belongs to dScMgBSC_c. func_ov004_020b5ed0 -- which this class's state slots
-// 9 and 10 (src/func_ov006_02124ae4.c) call -- calls func_ov004_020b5c18, and
+// 9 and 10 (src/minigames/d_s_mg_bsc.cpp) call -- calls func_ov004_020b5c18, and
 // neither was in any wired slice before this lane. A later lane that reaches
 // the same pair will find the alias already standing; an /alternatename with
 // the same left and right sides declared twice is deduplicated by the linker,

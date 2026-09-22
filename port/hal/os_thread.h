@@ -39,7 +39,7 @@
 //
 //   src/func_02042778.c   tail-call veneer
 //     -> src/func_0201a4d0.c   OS_SleepThread(data_0209d4fc)
-//   src/_ZN3IRQ13VBlankHandlerEv.c:22   OS_WakeupThread(&data_0209d4fc)
+//   src/_ZN3IRQ13VBlankHandlerEv.cpp:22   OS_WakeupThread(&data_0209d4fc)
 //
 // data_0209d4fc is the PER-VBLANK wake queue and the VBlank handler clears it
 // every frame. (data_0209d500, three lines above, is the every-N-frames queue.

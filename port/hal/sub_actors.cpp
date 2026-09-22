@@ -58,12 +58,14 @@
 // (`p[0] = _ZTV7dBase_c; p[0] = _ZTV8dMeter_c;` -- the ROM's own two stores,
 // which is what the decomp recovered). Nothing dispatches through the base
 // one, so it is storage and no more.
+#include "port_d16.h"
+
 #include <cstdio>
 #include <cstdlib>
 
-#include "Actor.h"
-#include "ActorBase.h"
-#include "ActorDerived.h"
+#include "dActor_c.h"
+#include "fBase_c.h"
+#include "dBase_c.h"
 #include "dsstate_seg.h"
 
 extern "C" {
@@ -265,14 +267,26 @@ unsigned data_020a60a4;               /* GXS ext-palette: the saved VRAM bank */
 
 /* The stylus half of the Ctrl block. On the DS these are bytes 0x10 and 0x11
    of each 0x18-byte record and the readers index them [player * 0x18], which
-   is why they are sized for the whole four-record block rather than one byte.
+   is why they are sized for the whole record block rather than one byte.
    The port keeps them as separate storage the way hal/actor_vtables.cpp
-   already does for data_0209f4ac / data_0209f4ae. Nothing on the host writes
-   them: the host stylus goes to data_020a0de8, so the recentre-the-minimap
-   branch Minimap::Behavior gates on data_0209f4ac stays shut and these are
-   never read for a value that matters. */
-unsigned char data_0209f4a8[0x60];
-unsigned char data_0209f4a9[0x60];
+   already does for data_0209f4ac / data_0209f4ae.
+
+   THEY ARE WRITTEN NOW, and the paragraph that used to stand here said they
+   never were: "the recentre-the-minimap branch Minimap::Behavior gates on
+   data_0209f4ac stays shut and these are never read for a value that
+   matters". Both halves were wrong on a course. The branch is not shut --
+   data_0209f4ac is fanned out of the Ctrl block every frame, so a touch opens
+   it -- and what it reads these two for is where to put the touch marker:
+   `SetSubBg2Offset(0x100 - x, 0x80 - y)`. Stuck at zero they put the marker in
+   the map's top-left corner whatever point the player touched, which is the
+   defect the owner reported as "the target". The Ctrl fan-out in
+   hal/stage_frame.cpp and tests/walk_window.cpp fills them from +0x10 and
+   +0x11 now, beside the flag at +0x14 it always filled.
+
+   SIZED FOR EVERY SEAT, because that fan-out walks one record per player and
+   a sixteen-wide session would have run off a four-record array. */
+unsigned char data_0209f4a8[0x18 * 16];
+unsigned char data_0209f4a9[0x18 * 16];
 DSSTATE_END
 }
 
@@ -372,10 +386,15 @@ extern "C" int _ZN6Player12Unk_020ca8f8Ev(void *s)
 /* ...and the reverse. CalculateDigits' TU is a .c file, so it defines the C
    name, while RenderCoinCount and RenderLifeCount call it as a member. */
 extern "C" void _ZN3HUD15CalculateDigitsEt(void *self, unsigned short n);
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync): src/_ZN3HUD15CalculateDigitsEt.cpp is a real HUD member since main langmode migration and emits ?CalculateDigits@HUD@@QAEXG@Z itself, so this face was the second definition (LNK2005).
+   The body is kept below under #if 0 rather than deleted, so the
+   evidence in it stays readable. */
+#if 0
 void HUD::CalculateDigits(unsigned short n)
 {
     _ZN3HUD15CalculateDigitsEt(this, n);
 }
+#endif
 
 namespace {
 
@@ -425,23 +444,23 @@ int __fastcall sa_trap(void *s, void *)
    re-dispatch through the vtable it is filling. ActorBase throughout, except
    slot 2. */
 int __fastcall sa_binit(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::BeforeInitResources(); }
+{ return ((fBase_c *)s)->fBase_c::BeforeInitResources(); }
 void __fastcall sa_ainit(void *s, void *, unsigned a)
-{ ((ActorDerived *)s)->ActorDerived::AfterInitResources(a); }
+{ ((dBase_c *)s)->dBase_c::AfterInitResources(a); }
 int __fastcall sa_bclean(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::BeforeCleanupResources(); }
+{ return ((fBase_c *)s)->fBase_c::BeforeCleanupResources(); }
 void __fastcall sa_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 int __fastcall sa_bbeh(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::BeforeBehavior(); }
+{ return ((fBase_c *)s)->fBase_c::BeforeBehavior(); }
 void __fastcall sa_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 int __fastcall sa_bren(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::BeforeRender(); }
+{ return ((fBase_c *)s)->fBase_c::BeforeRender(); }
 void __fastcall sa_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 int __fastcall sa_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 #define SA_TRAP(n)                                                           \
     int __fastcall sa_trap##n(void *s, void *) { g_trap_slot = (n); return sa_trap(s, 0); }
 SA_TRAP(0)  SA_TRAP(1)  SA_TRAP(2)  SA_TRAP(3)  SA_TRAP(4)  SA_TRAP(5)
@@ -846,6 +865,25 @@ static int port_adv_hud_render_stars_lives_on_top(HUD *self)
             _ZN3HUD17RenderSilverStarsEv((void *)self);
             _ZN3HUD15RenderTimeTimerEv((void *)self);
         }
+        /* SM64DS_BOUNCE_ARROWS=1 RAISES THE ROM'S OWN CUE, and raises nothing
+           else. data_0209f284 is the word HUD::Render reads to decide whether
+           the "look at the other screen" arrows are drawn this frame; the game
+           sets it on a map event (a warp pipe, a sign, a boss gate: Player.cpp
+           and func_ov001_020aa6e4 among others) and clears it a few seconds
+           later. On a headless run nothing raises it, so the cue cannot be
+           MEASURED -- and the improved map moves those arrows, so it has to
+           be. Setting the game's own word is the cheapest honest way to put the
+           cue on screen: from here on it is the ROM's code that decides the
+           form, the position, the bounce and the sound, exactly as it does in
+           play. Unset, this is not compiled out but it does nothing at all. */
+        {
+            static int force = -1;
+            if (force < 0) {
+                const char *e = std::getenv("SM64DS_BOUNCE_ARROWS");
+                force = (e && *e && *e != '0') ? 1 : 0;
+            }
+            if (force) data_0209f284 = 1;
+        }
         if (data_0209f284 != 0)
             _ZN5Stage20RenderBouncingArrowsEv();
     } else {
@@ -951,7 +989,7 @@ extern "C" void hal_fill_hud_vtable(void)
     vt[6] = (void *)hud_behavior;
     vt[9] = (void *)hud_render;
     vt[12] = (void *)hud_pdes;
-    vt[16] = (void *)hud_d1;
+    vt[16] = (void *)PORT_D16(hud_d1);
     vt[17] = (void *)hud_d0;
     /* the base table is never dispatched through, but a null slot in it would
        be indistinguishable from a bug if one ever were */
@@ -989,7 +1027,7 @@ extern "C" void hal_fill_minimap_vtable(void)
     vt[6] = (void *)map_behavior;
     vt[9] = (void *)map_render;
     vt[12] = (void *)map_pdes;
-    vt[16] = (void *)map_d1;
+    vt[16] = (void *)PORT_D16(map_d1);
     vt[17] = (void *)map_d0;
 }
 
@@ -1018,12 +1056,19 @@ extern "C" void hal_fill_minimap_vtable(void)
 // plain C++ free functions, so MSVC emits C++ manglings for symbols that are
 // C-named everywhere else in the port. Every one of these is cdecl on both
 // sides, so the alias is exact -- the mechanism hal/cxx_aliases.cpp documents.
-#pragma comment(linker, "/alternatename:?Render@OAM@@YAX_NPAUOamAttr@@HHHHPAUMatrix2x2@@@Z=__ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2")
-#pragma comment(linker, "/alternatename:?RenderSub@OAM@@SAXPAUOamAttr@@HHHH@Z=__ZN3OAM9RenderSubEP7OamAttriiii")
+/* RE-POINTED at ALIAS2 (wave 8, the main -> port sync), lane ALIAS's
+   derivation: the right hand side this row carried is defined nowhere in
+   the link any more. same member, same convention, same 7 argument slots, types spelled differently
+   was: #pragma comment(linker, "/alternatename:?Render@OAM@@YAX_NPAUOamAttr@@HHHHPAUMatrix2x2@@@Z=__ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2") */
+#pragma comment(linker, "/alternatename:?Render@OAM@@YAX_NPAUOamAttr@@HHHHPAUMatrix2x2@@@Z=?Render@OAM@@SAH_NPAUOamAttr@@HHHHPAUMatrix2x2@@@Z")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEFEATED: the left hand side is a real definition in this link now (_ZN3OAM9RenderSubEP7OamAttriiii.cpp.obj), so the directive is inert and alternatename_guard fails on it. */
+// #pragma comment(linker, "/alternatename:?RenderSub@OAM@@SAXPAUOamAttr@@HHHH@Z=__ZN3OAM9RenderSubEP7OamAttriiii")
 #pragma comment(linker, "/alternatename:?GetOwnerLanguage@@YAHXZ=_GetOwnerLanguage")
 #pragma comment(linker, "/alternatename:?_ZN5Timer7GetTimeEv@@YA_KPAX@Z=__ZN5Timer7GetTimeEv")
-#pragma comment(linker, "/alternatename:?LoadOBJPltt@GX@@YAXPBXII@Z=__ZN2GX11LoadOBJPlttEPKvjj")
-#pragma comment(linker, "/alternatename:?LoadOBJPltt@GXS@@YAXPBXII@Z=__ZN3GXS11LoadOBJPlttEPKvjj")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEFEATED: the left hand side is a real definition in this link now (_ZN2GX11LoadOBJPlttEPKvjj.cpp.obj), so the directive is inert and alternatename_guard fails on it. */
+// #pragma comment(linker, "/alternatename:?LoadOBJPltt@GX@@YAXPBXII@Z=__ZN2GX11LoadOBJPlttEPKvjj")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEFEATED: the left hand side is a real definition in this link now (_ZN3GXS11LoadOBJPlttEPKvjj.cpp.obj), so the directive is inert and alternatename_guard fails on it. */
+// #pragma comment(linker, "/alternatename:?LoadOBJPltt@GXS@@YAXPBXII@Z=__ZN3GXS11LoadOBJPlttEPKvjj")
 #pragma comment(linker, "/alternatename:?data_0209fc9c@@3EA=_data_0209fc9c")
 #pragma comment(linker, "/alternatename:?data_ov002_0210c29c@@3PAHA=_data_ov002_0210c29c")
 #pragma comment(linker, "/alternatename:?data_ov002_0210c310@@3PAFA=_data_ov002_0210c310")
@@ -1041,8 +1086,16 @@ extern "C" void hal_fill_minimap_vtable(void)
 #pragma comment(linker, "/alternatename:?data_ov002_02111150@@3EA=_data_ov002_02111150")
 #pragma comment(linker, "/alternatename:?data_ov002_0211064c@@3UState@@A=_data_ov002_0211064c")
 #pragma comment(linker, "/alternatename:?data_ov002_02110664@@3UState@@A=_data_ov002_02110664")
-#pragma comment(linker, "/alternatename:?GetBG3CharPtr@G2S@@YAPAXXZ=__ZN3G2S13GetBG3CharPtrEv")
-#pragma comment(linker, "/alternatename:?GetBit@Event@@SAHI@Z=__ZN5Event6GetBitEj")
+/* RE-POINTED at ALIAS2 (wave 8, the main -> port sync), lane ALIAS's
+   derivation: the right hand side this row carried is defined nowhere in
+   the link any more. same member, same convention, same 0 argument slots, types spelled differently
+   was: #pragma comment(linker, "/alternatename:?GetBG3CharPtr@G2S@@YAPAXXZ=__ZN3G2S13GetBG3CharPtrEv") */
+#pragma comment(linker, "/alternatename:?GetBG3CharPtr@G2S@@YAPAXXZ=?GetBG3CharPtr@G2S@@YAIXZ")
+/* RE-POINTED at ALIAS2 (wave 8, the main -> port sync), lane ALIAS's
+   derivation: the right hand side this row carried is defined nowhere in
+   the link any more. same member, same convention, same 1 argument slots, types spelled differently
+   was: #pragma comment(linker, "/alternatename:?GetBit@Event@@SAHI@Z=__ZN5Event6GetBitEj") */
+#pragma comment(linker, "/alternatename:?GetBit@Event@@SAHI@Z=?GetBit@Event@@YAHI@Z")
 #pragma comment(linker, "/alternatename:?SublevelToLevel@@YAHH@Z=_SublevelToLevel")
 
 /* OAM's camera-button templates are static DATA members of class OAM in the

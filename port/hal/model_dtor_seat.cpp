@@ -104,8 +104,8 @@
 //        ROM from:0x0208e7f8 -> 0x02015800 (_ZTV15MaterialChanger+4, slot 1)
 //   _ZTV18TextureTransformer[0]<- _ZN18TextureTransformerD0Ev
 //        ROM from:0x0208e7c8 -> 0x02015900 (_ZTV18TextureTransformer+4, slot 1)
-//   data_0208e87c[0]           <- _ZN9ModelBaseD0Ev
-//        data_0208e87c IS _ZTV9ModelBase's function-slot start (dsd named the
+//   _ZTV9ModelBase[0]           <- _ZN9ModelBaseD0Ev
+//        _ZTV9ModelBase IS _ZTV9ModelBase's function-slot start (dsd named the
 //        address, not the class): ROM from:0x0208e87c -> 0x02017120 is
 //        ModelBase's D1 and from:0x0208e880 -> 0x020170e8 its D0. Storage is
 //        hal/model_host.cpp, which already calls it the ModelBase vtable.
@@ -125,7 +125,7 @@
 //     holds the D1 their embedders need, and the ROM's second dtor slot has no
 //     MSVC index to live at. A deleting body cannot be added without evicting
 //     a destructor that is dispatched.
-//   _ZN9ModelBaseD1Ev -- same folding, one slot up: data_0208e87c[0] can hold
+//   _ZN9ModelBaseD1Ev -- same folding, one slot up: _ZTV9ModelBase[0] can hold
 //     one of the two ModelBase dtors and the deleting one is the useful half.
 //   _ZThn80_N{9ModelAnim,14BlendModelAnim,10ModelAnim2}D{0,1}Ev -- the six
 //     Animation-subobject thunks. Their matched TUs are mwcc ARTEFACT sources:
@@ -138,6 +138,7 @@
 // ===========================================================================
 
 #include "ShadowModel.h"
+#include "TextureSequence.h"
 
 extern "C" {
 
@@ -150,7 +151,7 @@ extern void *_ZTV11ShadowModel[];        /* storage in hal/actor_vtables.cpp */
 extern void *_ZTV15TextureSequence[];    /* storage in hal/actor_vtables.cpp */
 extern void *_ZTV15MaterialChanger[];    /* storage in hal/actor_vtables.cpp */
 extern void *_ZTV18TextureTransformer[]; /* storage in hal/method_faces.cpp */
-extern int data_0208e87c[];              /* _ZTV9ModelBase, hal/model_host.cpp */
+extern int _ZTV9ModelBase[];              /* _ZTV9ModelBase, hal/model_host.cpp */
 
 void *_ZN5ModelD0Ev(void *self);
 void *_ZN9AnimationD0Ev(void *self);
@@ -186,6 +187,13 @@ static void __fastcall texseq_d0(void *s, void *)    { _ZN15TextureSequenceD0Ev(
 /* Run link100, lane EXCEPT. THE SAME BODY, ENTERED THE OTHER WAY, for ROM
    slot 1 -- see the TEXTURESEQUENCE SLOT 1 note in the seat block above. */
 static void texseq_d0_cdecl(void *s)                 { _ZN15TextureSequenceD0Ev(s); }
+
+/* The host-only ROM slot 1 declared in include/TextureSequence.h: the
+   ROM's own deleting half, entered cdecl by the four anmModel_c
+   destructors. */
+void __cdecl TextureSequence::RomSlot1D0()
+{ _ZN15TextureSequenceD0Ev(this); }
+
 static void __fastcall matchg_d0(void *s, void *)    { _ZN15MaterialChangerD0Ev(s); }
 static void __fastcall texxfm_d0(void *s, void *)    { _ZN18TextureTransformerD0Ev(s); }
 static void __fastcall modelbase_d0(void *s, void *) { _ZN9ModelBaseD0Ev(s); }
@@ -232,8 +240,8 @@ extern "C" void hal_seat_model_family_dtors(void)
        The fold gave the pair one slot and the D0 took it, which is why
        _ZN9ModelBaseD1Ev was on this file's LEFT UNSEATED list. It has a slot
        of its own again. */
-    data_0208e87c[0]            = (int)(size_t)modelbase_d1;
-    data_0208e87c[1]            = (int)(size_t)modelbase_d0;
+    _ZTV9ModelBase[0]            = (int)(size_t)modelbase_d1;
+    _ZTV9ModelBase[1]            = (int)(size_t)modelbase_d0;
 
     /* run link100, lane STAGEFIX: _ZTV18TextureTransformer's ROM slot 1 (the
        Itanium D0, folded away by MSVC the same way slot 0 above already

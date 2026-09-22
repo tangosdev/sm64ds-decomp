@@ -12,19 +12,19 @@
 //
 // ---- THE SPAWN CHAIN; THE NAMES DO NOT CROSS -------------------------------
 //
-// ACTOR_SPAWN_TABLE[190] (arm9 0x02090b5c) -> Chuckya_SpawnInfo (ov062
-// 0x0211d9bc, +4 halfword 190); its +0 word is Chuckya_Spawn (0x02117478),
+// ACTOR_SPAWN_TABLE[190] (arm9 0x02090b5c) -> g_profile_HOLHEI (ov062
+// 0x0211d9bc, +4 halfword 190); its +0 word is daHolhei_c_classInit (0x02117478),
 // which allocates 0x438 (1080) bytes, runs the Enemy ctor, and installs
 // _ZTV7Chuckya (0x0211d9e0) as its ONLY vptr write -- the real table, so NO
 // reseat wrapper. Members: MovingCylinderClsn +0x110, WithMeshClsn +0x144,
-// ModelAnim +0x300, ShadowModel +0x368 (read out of the matched Chuckya_Spawn.c,
+// ModelAnim +0x300, ShadowModel +0x368 (read out of the matched daHolhei_c_classInit.c,
 // which the ROM's own ctor-call sequence at 0x0211749c..0x021174b4 confirms).
 //
-// ACTOR_SPAWN_TABLE[203] (arm9 0x02090b90) -> Koopa_SpawnInfo (0x0211da74,
-// +4 halfword 203); +0 = Koopa_Spawn (0x0211970c), 0x3d0 (976) bytes, installs
+// ACTOR_SPAWN_TABLE[203] (arm9 0x02090b90) -> g_profile_NOKONOKO (0x0211da74,
+// +4 halfword 203); +0 = daNknk_c_classInit_NOKONOKO (0x0211970c), 0x3d0 (976) bytes, installs
 // _ZTV5Koopa (0x0211dab4) -- the real table, no reseat wrapper. Members:
 // MovingCylinderClsn +0x110, WithMeshClsn +0x144, ModelAnim +0x300, ShadowModel
-// +0x364. KOOPA_SMALL (204) shares this class (KoopaSmall_Spawn installs the
+// +0x364. KOOPA_SMALL (204) shares this class (daNknk_c_classInit_NOKONOKO_S installs the
 // SAME _ZTV5Koopa, same 0x3d0) but the level-6 census names no id 204, so it is
 // deliberately NOT registered this gate -- one fill-0-style row later if ever
 // needed.
@@ -34,13 +34,13 @@
 // Read off each table's own reloc run (config/arm9/overlays/ov062/relocs.txt),
 // slot 0 = InitResources at the vptr word, typeinfo one word before:
 //   _ZTV7Chuckya  0x0211d9e0..0x0211da58: overrides 0/3/6/9/12/16/17 and
-//     slot 29 (func_ov062_02117470, its own OnAimedAtWithEgg -- returns
+//     slot 29 (_ZN7Chuckya16OnAimedAtWithEggEv, its own OnAimedAtWithEgg -- returns
 //     0xCA000); slots 18..28 the Actor interaction tail (0x02010160..
 //     0x0201012c), slot 30 the SRET 0x020100dc.
 //   _ZTV5Koopa    0x0211dab4..0x0211db2c: overrides 0/3/6/9/12/16/17 and
-//     slots 18 (func_ov062_021196a8, OnYoshiTryEat: 5 or 6 by mModelIndex),
-//     19 (func_ov062_02119628, OnTurnIntoEgg: egg-coin bookkeeping + kill) and
-//     29 (func_ov062_02119608, OnAimedAtWithEgg: 0x46000/0x25800 by actor id);
+//     slots 18 (_ZN5Koopa13OnYoshiTryEatEv, OnYoshiTryEat: 5 or 6 by mModelIndex),
+//     19 (_ZN5Koopa13OnTurnIntoEggER6Player, OnTurnIntoEgg: egg-coin bookkeeping + kill) and
+//     29 (_ZN5Koopa16OnAimedAtWithEggEv, OnAimedAtWithEgg: 0x46000/0x25800 by actor id);
 //     slot 30 the SRET. The next symbol after 0x0211db2c is data_ov062_0211db30
 //     -- KOOPA_THE_QUICK's state static, NOT a 32nd slot.
 //
@@ -50,7 +50,7 @@
 // -> 0x0211d9e0; 0x02117510/0x02117568 -> 0x0211dab4), never a shared
 // placeholder -- the LavaBubble/FallBlockWf case, no host thunks. Teardown
 // high-address-first: ShadowModel +0x368/+0x364, ModelAnim +0x300, WithMeshClsn
-// +0x144, MovingCylinderClsn +0x110, then the Enemy base D2 func_ov002_020aed18
+// +0x144, MovingCylinderClsn +0x110, then the Enemy base D2 _ZN12dEnemyBase_cD2Ev
 // (gate 16); each D0 adds Memory::Deallocate on data_020a0eac. Each D0 spells
 // the table by its RTTI alias (_ZTV10daHolhei_c / _ZTV8daNknk_c, the same ROM
 // address as the class name) -- aliased below onto the host arrays, the
@@ -85,40 +85,42 @@
 // in the StateDispatch file satisfies the link and names the hole if a fresh
 // BoB boot ever reaches it -- the Rabbit-0x0212b8dc/Painting-0x021261f4
 // precedent. CHUCKYA never reaches it.
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
 extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include <cstdlib>
 
-#include "Actor.h"
-#include "ActorBase.h"
+#include "dActor_c.h"
+#include "fBase_c.h"
 
 extern "C" {
 /* the shared lifecycle halves, the same functions every 31-slot fill writes */
-int _ZN5Actor19BeforeInitResourcesEv(void *self);            /* slot 1  */
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a); /* slot 2  */
-int _ZN5Actor14BeforeBehaviorEv(void *self);                 /* slot 7  */
-int _ZN5Actor12BeforeRenderEv(void *self);                   /* slot 10 */
-int _ZN5Actor13OnYoshiTryEatEv(void *self);                  /* slot 18 */
-void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p); /* slot 19 */
-int _ZN5Actor9Virtual50Ev(void *self);                       /* slot 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);    /* slot 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);        /* slot 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);        /* slot 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);            /* slot 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);            /* slot 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
-int _ZN5Actor16OnAimedAtWithEggEv(void *self);               /* slot 29 (Actor's) */
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);            /* slot 1  */
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a); /* slot 2  */
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);                 /* slot 7  */
+int _ZN8dActor_c12BeforeRenderEv(void *self);                   /* slot 10 */
+int _ZN8dActor_c13OnYoshiTryEatEv(void *self);                  /* slot 18 */
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void *self, void *p); /* slot 19 */
+int _ZN8dActor_c9Virtual50Ev(void *self);                       /* slot 20 */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);    /* slot 21 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);        /* slot 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);        /* slot 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);            /* slot 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);            /* slot 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
+int _ZN8dActor_c16OnAimedAtWithEggEv(void *self);               /* slot 29 (Actor's) */
 
 extern int data_02099f24[];          /* the frame phase the lists are in */
 extern unsigned char data_020a4b4c;  /* the spawn spine's own step */
@@ -139,8 +141,8 @@ int _ZN7Chuckya6RenderEv(void *self);            /* slot 9,  .c, direct call */
 void _ZN7Chuckya16OnPendingDestroyEv(void);      /* slot 12, .c, empty (void) */
 int *_ZN7ChuckyaD1Ev(int *self);                 /* slot 16, .c, own table */
 int *_ZN7ChuckyaD0Ev(int *self);                 /* slot 17, .c, own table */
-int func_ov062_02117470(void);                   /* slot 29, returns 0xCA000 */
-void *Chuckya_Spawn(void);                       /* installs _ZTV7Chuckya itself */
+int _ZN7Chuckya16OnAimedAtWithEggEv(void);                   /* slot 29, returns 0xCA000 */
+void *daHolhei_c_classInit(void);                       /* installs _ZTV7Chuckya itself */
 
 /* ---- KOOPA (203) / daNknk_c: the bodies ----
    Init/Cleanup/Behavior are real MSVC .cpp methods against include/Koopa.h,
@@ -153,10 +155,10 @@ int _ZN5Koopa6RenderEv(void *self);              /* slot 9,  HOST COPY */
 void _ZN5Koopa16OnPendingDestroyEv(void);        /* slot 12, .c, empty (void) */
 int *_ZN5KoopaD1Ev(int *self);                   /* slot 16, .c, own table */
 int *_ZN5KoopaD0Ev(int *self);                   /* slot 17, .c, own table */
-int func_ov062_021196a8(void *self);             /* slot 18, OnYoshiTryEat */
-void func_ov062_02119628(void *self, void *p);   /* slot 19, OnTurnIntoEgg */
-int func_ov062_02119608(void *self);             /* slot 29, OnAimedAtWithEgg */
-void *Koopa_Spawn(void);                         /* installs _ZTV5Koopa itself */
+int _ZN5Koopa13OnYoshiTryEatEv(void *self);             /* slot 18, OnYoshiTryEat */
+void _ZN5Koopa13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19, OnTurnIntoEgg */
+int _ZN5Koopa16OnAimedAtWithEggEv(void *self);             /* slot 29, OnAimedAtWithEgg */
+void *daNknk_c_classInit_NOKONOKO(void);                         /* installs _ZTV5Koopa itself */
 
 /* the two derived vtables, HOST arrays this file fills; 31 slots each. `int[]`
    with C linkage matches the `extern int _ZTV..[]` decls in include/decl_common.h
@@ -181,8 +183,8 @@ int _ZTV5Koopa[31];
    are compiled with a per-source -Dfunc_ov065_02117994=func_ov062_02117994
    in port/CMakeLists.txt instead (w5b_review.md R2).
    THE TWO ov066 SPELLINGS FOLLOWED IT, run rel0215 wave 2, lane cast-ov066.
-   That lane landed ov066 and with it src/func_ov066_02118cdc.cpp and
-   src/func_ov066_02118a50.c, so both LHS became DEFINED and both aliases were
+   That lane landed ov066 and with it src/actors/Eyerok.cpp and
+   src/actors/Eyerok.cpp, so both LHS became DEFINED and both aliases were
    defeated -- silently, and pointing at Eyerok's two state bodies instead of
    ov062's. Both are now
      -Dfunc_ov066_02118cdc=func_ov062_02118cdc
@@ -208,7 +210,7 @@ int _ZTV5Koopa[31];
 #pragma comment(linker, "/alternatename:?data_ov062_0211de00@@3PAPAXA=_data_ov062_0211de00")
 #pragma comment(linker, "/alternatename:?data_ov062_0211dec0@@3HA=_data_ov062_0211dec0")
 /* Already bridged elsewhere (kept here as a map, NOT re-declared):
-   ?data_02082128@@3UMatrix4x3@@A   hal/bob_enemy_bridges.cpp (Chuckya's two
+   ?IDENTITY_MATRIX4X3@@3UMatrix4x3@@A   hal/bob_enemy_bridges.cpp (Chuckya's two
                                     shadow-matrix TUs spell Matrix4x3)
    ?data_0209f2f8@@3CA, ?data_0209d684@@3EA, ?data_0209e650@@3HA,
    ?data_0209d4c8@@3PADA            hal/cxx_aliases.cpp / bob_enemy_bridges.cpp
@@ -244,49 +246,49 @@ KC182_TRAP(13) KC182_TRAP(14)
 
 // ---- the shared 0..30 half -------------------------------------------------
 static int __fastcall kc182_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall kc182_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall kc182_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 static void __fastcall kc182_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall kc182_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall kc182_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall kc182_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall kc182_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall kc182_pdes_base(void *s, void *)
-{ ((ActorBase *)s)->ActorBase::OnPendingDestroy(); return 0; }
+{ ((fBase_c *)s)->fBase_c::OnPendingDestroy(); return 0; }
 static int __fastcall kc182_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int __fastcall kc182_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 static int __fastcall kc182_egg(void *s, void *, void *p)
-{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+{ _ZN8dActor_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall kc182_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall kc182_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall kc182_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall kc182_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall kc182_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall kc182_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall kc182_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall kc182_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall kc182_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 static int __fastcall kc182_aimed_actor(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }   /* slot 29, Actor's own default */
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }   /* slot 29, Actor's own default */
 
 /* Fill slots 1..30 with the shared bodies. The callers write 0/3/6/9/12/16/17
    and their own interaction overrides (Chuckya 29; Koopa 18/19/29). */
@@ -338,7 +340,7 @@ static int __fastcall chk_d1(void *s, void *)
 static int __fastcall chk_d0(void *s, void *)
 { return (int)(size_t)_ZN7ChuckyaD0Ev((int *)s); }
 static int __fastcall chk_aimed(void *s, void *)
-{ (void)s; return func_ov062_02117470(); }    /* slot 29, its own, no args */
+{ (void)s; return _ZN7Chuckya16OnAimedAtWithEggEv(); }    /* slot 29, its own, no args */
 
 extern "C" void hal_fill_chuckya_vtable(void)
 {
@@ -350,7 +352,7 @@ extern "C" void hal_fill_chuckya_vtable(void)
     vt[6]  = (void *)chk_behavior;
     vt[9]  = (void *)chk_render;
     vt[12] = (void *)chk_pdes;
-    vt[16] = (void *)chk_d1;
+    vt[16] = (void *)PORT_D16(chk_d1);
     vt[17] = (void *)chk_d0;
     vt[29] = (void *)chk_aimed;   /* Chuckya's own OnAimedAtWithEgg override */
 }
@@ -375,11 +377,11 @@ static int __fastcall kp_d1(void *s, void *)
 static int __fastcall kp_d0(void *s, void *)
 { return (int)(size_t)_ZN5KoopaD0Ev((int *)s); }
 static int __fastcall kp_yoshi(void *s, void *)
-{ return func_ov062_021196a8(s); }            /* slot 18, its own: 5 or 6 */
+{ return _ZN5Koopa13OnYoshiTryEatEv(s); }            /* slot 18, its own: 5 or 6 */
 static int __fastcall kp_egg(void *s, void *, void *p)
-{ func_ov062_02119628(s, p); return 0; }      /* slot 19, its own */
+{ _ZN5Koopa13OnTurnIntoEggER6Player(s, p); return 0; }      /* slot 19, its own */
 static int __fastcall kp_aimed(void *s, void *)
-{ return func_ov062_02119608(s); }            /* slot 29, its own */
+{ return _ZN5Koopa16OnAimedAtWithEggEv(s); }            /* slot 29, its own */
 
 extern "C" void hal_fill_koopa_vtable(void)
 {
@@ -391,7 +393,7 @@ extern "C" void hal_fill_koopa_vtable(void)
     vt[6]  = (void *)kp_behavior;
     vt[9]  = (void *)kp_render;
     vt[12] = (void *)kp_pdes;
-    vt[16] = (void *)kp_d1;
+    vt[16] = (void *)PORT_D16(kp_d1);
     vt[17] = (void *)kp_d0;
     vt[18] = (void *)kp_yoshi;
     vt[19] = (void *)kp_egg;
@@ -429,11 +431,11 @@ int _ZN5Koopa8BehaviorEv(void *self)
 // STATICALLY PLACED: the object table of level 16 (Shifting Sand Land) places
 // id 239 at (1749,1284,102); levels 25 and 43 place it too.
 //
-// Object layout, from Klepto_Spawn (ov062 0x0211ce80, 1168 bytes):
+// Object layout, from daJango_c_classInit (ov062 0x0211ce80, 1168 bytes):
 // MovingCylinderClsn at 0x110 and 0x144, WithMeshClsn at 0x178, BlendModelAnim
 // at 0x334, ShadowModel at 0x3a4.
 //
-// Slot 29 (OnAimedAtWithEgg) has a ROM body of its own, func_ov062_0211ce78,
+// Slot 29 (OnAimedAtWithEgg) has a ROM body of its own, _ZN6Klepto16OnAimedAtWithEggEv,
 // and GATE 228 seats it. It used to keep the shared Actor default
 // (kc182_aimed_actor) because the body carries the "recovered from vtable slot
 // identity" marker; lane STUBADJ disassembled it and ruled it REAL DECOMP, so
@@ -486,7 +488,8 @@ void port_klepto_states_seat(void);               /* port/unmatched */
    the stack -- aliasing crashes (the ToxBox_ShadowFaces door-open failure mode,
    the level-16 c0000005 the first seat took). GetNode's member forwarder already
    lives in unmatched/RacingPenguin_ShadowFaces.cpp. */
-#pragma comment(linker, "/alternatename:?Spawn@Actor@@SAIIIABUVector3@@PBUVector3_16@@HH@Z=__ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEAD RHS and an UNREFERENCED left hand side: nothing in the build defines __ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as, and nothing references ?Spawn@dActor_c@@SAIIIABUVector3@@PBUVector3_16@@HH@Z, so the row can never fire and nothing wants it to. */
+// #pragma comment(linker, "/alternatename:?Spawn@dActor_c@@SAIIIABUVector3@@PBUVector3_16@@HH@Z=__ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as")
 
 static int __fastcall klp_init(void *s, void *)
 { return _ZN6Klepto13InitResourcesEv(s); }
@@ -500,7 +503,7 @@ static int __fastcall klp_clean(void *, void *)
    landing (the cap actor id appears at +0x44c and the save flips), not merely
    a census entry that survived. Off by default, prints nothing. */
 extern "C" int _ZN8SaveData16HasPlayerLostCapEv(void);
-extern "C" char *_ZN5Actor13ClosestPlayerEv(void *self);
+extern "C" char *_ZN8dActor_c13ClosestPlayerEv(void *self);
 extern "C" unsigned char data_ov062_0211e14c[];
 static int __fastcall klp_behavior(void *s, void *)
 {
@@ -520,7 +523,7 @@ static int __fastcall klp_behavior(void *s, void *)
         /* the steal's physical gate: the second cylinder (+0x144) must have
            touched the player, id at +0x168 (the first cylinder's at +0x134),
            and the dive aims at the player's +0x644 floor height + 40. */
-        char *pl = _ZN5Actor13ClosestPlayerEv(s);
+        char *pl = _ZN8dActor_c13ClosestPlayerEv(s);
         if (pl)
             std::printf("[klepto]   player (%d,%d,%d) floor %d f6fb %d hit134 %08x hit168 %08x\n",
                         *(int *)(pl + 0x5c) >> 12, *(int *)(pl + 0x60) >> 12,
@@ -541,9 +544,9 @@ static int __fastcall klp_d0(void *s, void *)
 { return (int)(size_t)_ZN6KleptoD0Ev((int *)s); }
 /* slot 29, OnAimedAtWithEgg. GATE 228; see the fill for the table word. The ROM
    body takes no parameters at all, receiver included. */
-extern "C" int func_ov062_0211ce78(void);   /* ov062 0x0211ce78 */
+extern "C" int _ZN6Klepto16OnAimedAtWithEggEv(void);   /* ov062 0x0211ce78 */
 static int __fastcall klp_aimed(void *, void *)
-{ return func_ov062_0211ce78(); }
+{ return _ZN6Klepto16OnAimedAtWithEggEv(); }
 
 extern "C" void hal_fill_klepto_vtable(void)
 {
@@ -556,12 +559,12 @@ extern "C" void hal_fill_klepto_vtable(void)
     vt[6]  = (void *)klp_behavior;
     vt[9]  = (void *)klp_render;
     vt[12] = (void *)klp_pdes;
-    vt[16] = (void *)klp_d1;
+    vt[16] = (void *)PORT_D16(klp_d1);
     vt[17] = (void *)klp_d0;
     /* slots 18/19 stay the shared Actor defaults kc182_fill_shared_0_30 seats:
        the reloc run lands both on the Actor defaults.
        SLOT 29 IS THE ROM'S OWN WORD NOW (gate 228). It stayed on the shared
-       default while func_ov062_0211ce78 was only a vtable-slot-identity name;
+       default while _ZN6Klepto16OnAimedAtWithEggEv was only a vtable-slot-identity name;
        lane STUBADJ disassembled the body and ruled it REAL DECOMP. Table word
        _ZTV9daJango_c 0x0211dd5c + 29*4 = 0x0211ddd0 relocates to 0x0211ce78,
        kind:function(arm,size=0x8), and the whole body is `return 458752` --

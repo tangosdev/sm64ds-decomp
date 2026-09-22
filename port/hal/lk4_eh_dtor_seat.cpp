@@ -15,7 +15,7 @@
 // TWO NAME SPACES, the batch-2 mechanism: VDeallocateAll and VMemoryLeft are
 // real MSVC methods whose callee references are MSVC-mangled, while the
 // allocator bodies they reach are flat-C definitions
-// (_ZN22ExpandingHeapAllocator13DeallocateAllEPPFvPvPS_jEj,
+// (_ZN22ExpandingHeapAllocator13DeallocateAllEPFvPvPS_jEj,
 // _ZN22ExpandingHeapAllocator16InvokeDeallocateEPvPS_j, and the
 // already-linked _ZN22ExpandingHeapAllocator10MemoryLeftEv). The
 // /alternatename bridges below carry the decorated spellings verbatim from
@@ -53,7 +53,8 @@
 //                     by the face at hal/heap_vtable.cpp:96, so the directive
 //                     never fires (it is row 68 of alternatename_baseline.txt
 //                     for that reason).
-#pragma comment(linker, "/alternatename:?InvokeDeallocate@ExpandingHeapAllocator@@SAXPAXPAV1@I@Z=__ZN22ExpandingHeapAllocator16InvokeDeallocateEPvPS_j")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEAD RHS and an UNREFERENCED left hand side: nothing in the build defines __ZN22ExpandingHeapAllocator16InvokeDeallocateEPvPS_j, and nothing references ?InvokeDeallocate@ExpandingHeapAllocator@@SAXPAXPAV1@I@Z, so the row can never fire and nothing wants it to. */
+// #pragma comment(linker, "/alternatename:?InvokeDeallocate@ExpandingHeapAllocator@@SAXPAXPAV1@I@Z=__ZN22ExpandingHeapAllocator16InvokeDeallocateEPvPS_j")
 #pragma comment(linker, "/alternatename:?MemoryLeft@ExpandingHeapAllocator@@QAEIXZ=__ZN22ExpandingHeapAllocator10MemoryLeftEv")
 
 /* the matched methods, dispatched qualified through a local shadow (the
@@ -71,8 +72,8 @@ public:
  * _ZTV4Heap is data_02099d90; hal/heap_vtable.cpp hosts it and its comment
  * there carries the reloc evidence for the shape. Two slots, both matched:
  *
- *   [ 0] ~Heap D1  0x0203ca44  src/_ZN4HeapD1Ev.c  flat .c, ecx->arg adapter
- *   [ 1] ~Heap D0  0x0203ca20  src/_ZN4HeapD0Ev.c  flat .c, ecx->arg adapter
+ *   [ 0] ~Heap D1  0x0203ca44  src/_ZN4HeapD1Ev.cpp  flat .c, ecx->arg adapter
+ *   [ 1] ~Heap D0  0x0203ca20  src/_ZN4HeapD0Ev.cpp  flat .c, ecx->arg adapter
  *
  * and fourteen the ROM leaves null, because Heap declares the rest of the
  * list pure virtual. A null slot is nothing the host can usefully reproduce,
@@ -81,7 +82,7 @@ public:
  * loudly instead of jumping to zero.
  *
  * Nothing dispatches through this table today. Heap is abstract, and
- * Heap::C1 (src/_ZN4HeapC1EPvjP4Heap.c) installs the vptr only for the window
+ * Heap::C1 (src/_ZN4HeapC2EPvjPS_.cpp) installs the vptr only for the window
  * between the base constructor and the derived one overwriting it -- the same
  * reading hal/lk2_platform_dtor_seat.cpp records for the Platform base table,
  * and it is why the pair could sit unlinked this long. Seating it is the
@@ -103,7 +104,8 @@ public:
  * (src/_ZN4Heap8AllocateEji.cpp, written against include/Heap.h) defines it
  * returning int. Same __thiscall, same arguments, EAX either way -- the same
  * void/int return bridge hal/lk4_solidheap_seat.cpp takes for Heap::Rescue. */
-#pragma comment(linker, "/alternatename:?Allocate@Heap@@QAEPAXIH@Z=?Allocate@Heap@@QAEHIH@Z")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEFEATED: the left hand side is a real definition in this link now (_ZN4Heap8AllocateEji.cpp.obj), so the directive is inert and alternatename_guard fails on it. */
+// #pragma comment(linker, "/alternatename:?Allocate@Heap@@QAEPAXIH@Z=?Allocate@Heap@@QAEHIH@Z")
 
 class Heap
 {
@@ -169,7 +171,7 @@ static void __fastcall heap_pure_virtual(void *, void *)
    The deleted directive was
 
      ?DeallocateAll@ExpandingHeapAllocator@@QAEXPAP6AXPAXPAV1@I@ZI@Z
-       = __ZN22ExpandingHeapAllocator13DeallocateAllEPPFvPvPS_jEj
+       = __ZN22ExpandingHeapAllocator13DeallocateAllEPFvPvPS_jEj
 
    src/_ZN13ExpandingHeap14VDeallocateAllEv.cpp:30 is
 
@@ -177,7 +179,7 @@ static void __fastcall heap_pure_virtual(void *, void *)
 
    a qualified __thiscall call: the ALLOCATOR goes into ECX, and 0 and the
    visitor are pushed. The body,
-   src/_ZN22ExpandingHeapAllocator13DeallocateAllEPPFvPvPS_jEj.cpp:3, is flat
+   src/_ZN22ExpandingHeapAllocator13DeallocateAllEPFvPvPS_jEj.cpp:3, is flat
    cdecl `(void *thiz, Fn fn, void *ctx)` and reads thiz from the first stack
    slot -- which holds the VISITOR, a code pointer. Its very first statement
    dereferences it:
@@ -226,7 +228,7 @@ static void __fastcall heap_pure_virtual(void *, void *)
    two veneers are matched TUs that declare the callee `(void)` and call it
    with nothing, MSVC compiles a one-call void forwarder as a JMP, and a jmp
    reuses the caller's own cdecl argument frame -- so the allocator that
-   src/_ZN13ExpandingHeap8VDestroyEv.c:23 and src/_ZN9SolidHeap8VDestroyEv.c:23
+   src/_ZN13ExpandingHeap8VDestroyEv.cpp:23 and src/_ZN9SolidHeap8VDestroyEv.cpp:23
    PUSH is still sitting where this face reads it. That is the same
    ride-through the ov007 slice rests on in about fifty places, and
    port/tools/tailjump_guard.py asserts it; these two frames are added to that
@@ -281,7 +283,7 @@ struct HeapAllocator
 extern "C" {
 
 /* the flat cdecl bodies the two faces forward into */
-void *_ZN22ExpandingHeapAllocator13DeallocateAllEPPFvPvPS_jEj(
+void *_ZN22ExpandingHeapAllocator13DeallocateAllEPFvPvPS_jEj(
     void *thiz, void (*fn)(void *, void *, void *), void *ctx);
 
 /* the ARM veneers' stack argument IS the receiver; see the header above */
@@ -295,7 +297,7 @@ void _ZN13HeapAllocator6RemoveEv(void *thiz)
    SetNodeID bridges take elsewhere in this family. */
 void ExpandingHeapAllocator::DeallocateAll(Visitor *visitor, u32 param)
 {
-    _ZN22ExpandingHeapAllocator13DeallocateAllEPPFvPvPS_jEj(
+    _ZN22ExpandingHeapAllocator13DeallocateAllEPFvPvPS_jEj(
         this, (void (*)(void *, void *, void *))visitor,
         (void *)(size_t)param);
 }

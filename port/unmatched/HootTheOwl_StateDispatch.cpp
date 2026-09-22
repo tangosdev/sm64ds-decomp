@@ -127,17 +127,17 @@ extern "C" void port_hoot_the_owl_states_seat(void)
    differs from the matched src; the rest is transcribed line for line off
    _ZN10HootTheOwl8BehaviorEv.cpp with raw offsets, including the
    func_ov094_021357a4 call -- the matched src spells this call
-   "func_ov096_021357a4" (a dsd cross-overlay alias typo, port/ov094_syms.txt's
+   "_ZN9daSanbo_c13OnYoshiTryEatEv" (a dsd cross-overlay alias typo, port/ov094_syms.txt's
    own header has the full derivation), but since Behavior is a host copy
    here, the real ov094 name is called directly and no /alternatename
    bridge is needed. */
 extern void DecIfAbove0_Short(void *);
 extern void _ZN9Animation7AdvanceEv(void *);
 extern void func_02012694(int, void *);
-extern void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(void *, void *, unsigned int);
-extern void _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(void *, void *);
-extern void _ZN12CylinderClsn5ClearEv(void *);
-extern void _ZN12CylinderClsn6UpdateEv(void *);
+extern void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void *, void *, unsigned int);
+extern void _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(void *, void *);
+extern void _ZN5dCc_c5ClearEv(void *);
+extern void _ZN5dCc_c6UpdateEv(void *);
 extern void func_ov094_021361d8(void *);
 extern void func_ov094_021362e0(void *);
 extern void func_ov094_021357a4(void *);
@@ -178,7 +178,7 @@ int _ZN10HootTheOwl8BehaviorEv(void *selfv)
         *(short *)(c + 0x8c) = *(short *)(c + 0x92);
         *(short *)(c + 0x8e) = *(short *)(c + 0x94);
         *(short *)(c + 0x90) = *(short *)(c + 0x96);
-        _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(c, c + 0x150, 0);
+        _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(c, c + 0x150, 0);
         return 1;
     }
     {
@@ -189,7 +189,7 @@ int _ZN10HootTheOwl8BehaviorEv(void *selfv)
         *(int *)(c + 0xa8) = m2;
         *(int *)(c + 0xac) = ac;
     }
-    _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(c, c + 0x110);
+    _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(c, c + 0x110);
     *(short *)(c + 0x8c) = *(short *)(c + 0x92);
     *(short *)(c + 0x8e) = *(short *)(c + 0x94);
     *(short *)(c + 0x90) = *(short *)(c + 0x96);
@@ -197,8 +197,8 @@ int _ZN10HootTheOwl8BehaviorEv(void *selfv)
     if (*(char **)(c + 0x3c8) == (char *)data_ov094_02136b60 && *(unsigned char *)(c + 0x3d4) == 2) {
         func_ov094_021357a4(c);
     }
-    _ZN12CylinderClsn5ClearEv(c + 0x110);
-    _ZN12CylinderClsn6UpdateEv(c + 0x110);
+    _ZN5dCc_c5ClearEv(c + 0x110);
+    _ZN5dCc_c6UpdateEv(c + 0x110);
     return 1;
 }
 }  /* extern "C" */

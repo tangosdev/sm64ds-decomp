@@ -53,19 +53,16 @@ import match as M            # noqa: E402
 import reloc_audit as RA     # noqa: E402
 import modules as MOD        # noqa: E402
 
-def _rel_section_for(elf, shndx):
-    """The relocation section that applies to section `shndx`, matched by sh_info.
-
-    Do NOT look this up by name. mwccarm emits ONE section per function and names them all
-    ".text", so `get_section_by_name(".rel.text")` returns whichever came first in the file -
-    some other function's relocations. Any TU that defines several functions (a C++ class with
-    D0/D1/D2 plus its this-adjusting thunks emits five) then gets its slots resolved against
-    the wrong table, which reads as a confident WRONG on a source that is actually correct.
-    sh_info is the only reliable link from a reloc section to the section it patches."""
-    for sec in elf.iter_sections():
-        if sec.header["sh_type"] in ("SHT_REL", "SHT_RELA") and sec.header["sh_info"] == shndx:
-            return sec
-    return None
+# The relocation section that applies to a given section index, matched by sh_info.
+# Do NOT look this up by name: mwccarm emits ONE section per function and names them all
+# ".text", so ".rel.text" is ambiguous and the name lookup answers with the last section
+# of that name -- one fixed function's relocations, whichever function was asked about.
+# Any TU that defines several functions (a C++ class with D0/D1/D2 plus its this-adjusting
+# thunks emits five) then gets its slots resolved against another function's table, which
+# reads as a confident WRONG on a source that is actually correct.
+# sh_info is the only reliable link from a reloc section to the section it patches.
+# Lived here first; now shared with reloc_audit, which had the by-name bug.
+_rel_section_for = RA.rel_section_for
 
 
 # ARM relocation types we know how to link.
@@ -136,6 +133,63 @@ def is_interwork(rom_word, rom_t, cand_t):
     return (rom_word >> 24) in (0xfa, 0xfb) and cand_t is not None and rom_t == cand_t
 
 
+def is_thumb_pointer(rtype, rom_t, cand_t):
+    """True if the ROM slot is a DATA word holding a Thumb function pointer.
+
+    Taking the address of a Thumb function yields ``addr | 1``. Bit 0 is the state
+    bit ``bx``/``blx`` reads, not part of the address, and ``symbols.txt`` names the
+    function at its even address -- so a correct source naming that symbol produces a
+    slot the linker fills with ``addr | 1``, and the raw comparison is off by one.
+
+    ``is_interwork`` above covers the CALL form, a BL the linker rewrote to BLX. This
+    is the literal-pool form -- ``ldr ip, [pc]; bx ip; .word addr|1`` -- which is
+    R_ARM_ABS32 and so never reaches that check.
+
+    Safe because ARM instructions are 4-byte aligned and Thumb 2-byte aligned, so no
+    genuine function address ever carries bit 0. ``rom_t == cand_t | 1`` with an even
+    candidate identifies this case uniquely; every other divergence still reports
+    WRONG.
+
+    Proven on func_0203c178 (arm9 0x0203c178), a veneer whose literal is 0x020527e9
+    for the Thumb symbol func_020527e8: enrolling that range and building the ROM
+    reproduces the cartridge byte for byte while this check called it WRONG.
+    """
+    return (rtype == R_ARM_ABS32 and cand_t is not None
+            and cand_t % 2 == 0 and rom_t == (cand_t | 1))
+
+
+def linked_dest(rl):
+    """The address the LINKER writes for this relocation -- base plus addend, or None.
+
+    Every forgiveness test below ("is the ROM's slot a veneer to what the candidate
+    names?", "a byte-identical twin?", "the same function in Thumb?") is a question
+    about the candidate's DESTINATION, and for a data relocation the destination is
+    `base + addend`: mwccarm encodes `&array[i]`, `&s.field` and a vptr store's
+    `&_ZTV<C>[2]` as the symbol's base plus a nonzero RELA addend. `link_function`
+    already writes `base + addend`, so reading only the base asks the forgiveness
+    tests about an address the link never produces.
+
+    That gap was not cosmetic. When a source names the right symbol with the WRONG
+    addend, the base equals the ROM's own destination, so `is_benign(rom_t, base)`
+    compared an address against itself, found the same 16 bytes there (it is the same
+    address), and returned True -- forgiving every wrong-addend data relocation as a
+    "byte-identical twin" of itself. Measured on ov100 0x02147328, where a vptr store
+    spelled `&_ZTV15daObjPathLift_c[2]` links to 0x02148584 for a slot array that
+    lives at 0x0214857c: BENIGN here, overlay MISMATCHING in the ROM build.
+
+    A BRANCH is the exception and the reason this is not a one-line expression. Its
+    addend is the -8 PC bias, not an offset into the target, and `link_function` folds
+    it into the displacement rather than the destination -- so a branch's destination
+    is the base alone. Adding the addend there reported every genuine wrong-callee
+    eight bytes below the address the candidate actually calls.
+    """
+    if rl is None or rl.get("addr") is None:
+        return None
+    if rl["type"] == R_ARM_ABS32:
+        return (rl["addr"] + rl.get("add", 0)) & 0xFFFFFFFF
+    return rl["addr"] & 0xFFFFFFFF
+
+
 def is_benign(rom_t, cand_t, prefer):
     """True if the ROM target is a veneer to cand_t, or a byte-identical twin of it."""
     if cand_t is None:
@@ -163,7 +217,8 @@ def func_relocs_typed(obj, func, name_index):
     elf = ELFFile(io.BytesIO(obj))
     symtab = elf.get_section_by_name(".symtab")
     syms = list(symtab.iter_symbols())
-    sym = next((s for s in syms if s.name == func), None)
+    sym = next((s for s in syms if s.name == func
+                and s["st_shndx"] not in ("SHN_UNDEF", "SHN_ABS")), None)
     if sym is None:
         return None
     sec = elf.get_section(sym["st_shndx"])
@@ -213,17 +268,39 @@ def link_function(code, addr, relocs):
 
 
 def linkcheck(name, addr, size, mod, name_index, candidate=None, include_dirs=(),
-              obj=None, sym=None):
+              obj=None, sym=None, off=0):
     """Verdict + detail for one banked match.
 
     Normally compiles the source that defines `name` (reloc_audit.winning_object) and
     checks the reproduced bytes. A caller that already holds the compiled object -- e.g.
     pr_linkcheck checking a compiler-emitted passenger (a this-adjusting thunk or a weak
     dtor/ctor copy) that has no source file of its own -- passes obj=<object bytes> and
-    sym=<symbol to extract> so the symbol is link-checked straight from that object."""
+    sym=<symbol to extract> so the symbol is link-checked straight from that object. When
+    the pre-supplied object is a NESTED entry point's containing symbol rather than the
+    symbol itself (reloc_audit.winning_object's fourth return value -- see its docstring),
+    that same caller must also pass `off`, the byte offset of `name`'s own range inside
+    `sym`'s compiled span; this function does not re-derive it when `obj` is pre-supplied,
+    because a pre-supplied object skips the winning_object call that computes it.
+
+    A zero-size `size` is an EABI alias name for a differently-named, correctly-sized
+    primary function at the same address (e.g. _dmul, size 0, aliasing func_01ff8708,
+    size 0x6f0) -- nothing compiles to 0 bytes, so a zero-size target could never be
+    byte-compared and every alias used to read NO-SYM regardless of its source. Verify
+    against the sized twin's real range instead, still reported under the requested
+    (alias) name; bytegate.alias_target_size is the one place that lookup is made, the
+    same scan progress.py's own matched-count already trusts for this address shape.
+    This substitution runs unconditionally, whether or not `obj` is pre-supplied, so a
+    pre-supplied zero-size alias is corrected here even if the caller passed the raw
+    (unresolved) size through."""
     import reverify_corpus as RV
+    if size == 0:
+        import bytegate as BG
+        alt = BG.alias_target_size(mod, addr)
+        if alt:
+            size = alt
     if obj is None:
-        obj, sym, err = RA.winning_object(name, addr, size, mod, candidate, include_dirs)
+        obj, sym, err, off = RA.winning_object(name, addr, size, mod, candidate,
+                                               include_dirs, name_index)
     if obj is None:
         # A missing or wrong-length source is NOT a false match; give it a verdict
         # distinct from NO-REPRO so it does not read as "the source stopped matching".
@@ -233,6 +310,13 @@ def linkcheck(name, addr, size, mod, name_index, candidate=None, include_dirs=()
                 "reason": err, "diffs": [], "blind": 0}
     target = RV.rom_bytes(mod, addr, size)
     code, _ = M.extract_func(obj, sym)
+    if off and code is not None:
+        # Nested entry point: `sym` is the CONTAINING symbol the object actually
+        # defines (a hand-asm block packing several ROM functions into one compiled
+        # body -- func_01ff97d8.c is the case in this tree). `off` is `name`'s own
+        # start within that body, already resolved by RA.winning_object via address
+        # arithmetic against config, never by scanning the source text for a label.
+        code = code[off:off + size]
     if (code is not None and target is not None and len(code) > len(target)
             and len(code) - len(target) <= 0x40):
         # Split-symbol carrier (notes 9a(3)): the compiled function extends over the
@@ -246,6 +330,9 @@ def linkcheck(name, addr, size, mod, name_index, candidate=None, include_dirs=()
         return {"name": name, "module": mod, "addr": f"0x{addr:08x}", "verdict": "NO-SYM",
                 "reason": "len-mismatch", "diffs": [], "blind": 0}
     relocs = func_relocs_typed(obj, sym, name_index)
+    if off:
+        relocs = [dict(rl, off=rl["off"] - off) for rl in relocs
+                  if off <= rl["off"] < off + size]
     linked, blind = link_function(code, addr, relocs)
     by_off = {rl["off"] & ~3: rl for rl in relocs}
     diffs = [i for i in range(0, len(target), 4)
@@ -255,13 +342,14 @@ def linkcheck(name, addr, size, mod, name_index, candidate=None, include_dirs=()
         genuine, benign = [], 0
         for i in diffs:
             rl = by_off.get(i)
+            tgt = linked_dest(rl)
             if rl is not None:
                 rt = rom_target(target, i, rl["type"], addr)
                 rw = int.from_bytes(target[i:i + 4], "little")
-                if is_benign(rt, rl["addr"], prefer) or is_interwork(rw, rt, rl["addr"]):
+                if (is_benign(rt, tgt, prefer) or is_interwork(rw, rt, tgt)
+                        or is_thumb_pointer(rl["type"], rt, tgt)):
                     benign += 1
                     continue
-            tgt = (rl["addr"] + rl.get("add", 0)) & 0xFFFFFFFF if rl and rl["addr"] is not None else None
             genuine.append({"off": f"+0x{i:x}", "sym": rl["sym"] if rl else None,
                             "target": (f"0x{tgt:08x}" if tgt is not None else None)})
         if genuine:

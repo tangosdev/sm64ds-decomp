@@ -13,6 +13,7 @@ extern void _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(Vector3 *cur, const Vector3
 extern int _ZN9Animation8FinishedEv(void *self);
 extern unsigned char data_0209f220;
 extern struct Matrix4x3 data_020a0e68;
+extern void func_ov016_02111bf0(void *c, void *p);
 
 int func_ov016_02111758(char *c) {
     Vector3 in;
@@ -36,7 +37,7 @@ int func_ov016_02111758(char *c) {
     }
     if (_ZN9Animation8FinishedEv(c + 0x3a0)) {
         *(int*)(c + 0x98) = 0;
-        func_ov018_02111bf0(c, &data_ov016_02114dac);
+        func_ov016_02111bf0(c, &data_ov016_02114dac);
     }
     return 1;
 }

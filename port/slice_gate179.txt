@@ -16,13 +16,22 @@
 # LEFT OUT ON PURPOSE, host copies in unmatched/ (all three are mwcc pointer-to-
 # member dispatchers formed over a local/forward-declared struct -- the MSVC
 # general-representation fault, the KnockDownPlank/MontyMole/Scuttlebug case):
-#   _ZN19BowserPuzzleManager8BehaviorEv.cpp   -> BowserPuzzle_StateDispatch.cpp
-#   _ZN17BowserPuzzlePiece8BehaviorEv.cpp     -> BowserPuzzle_StateDispatch.cpp
+#   _ZN17BowserPuzzlePiece8BehaviorEv.cpp   -> BowserPuzzle_StateDispatch.cpp
+#   _ZN9JetStream8BehaviorEv.cpp     -> BowserPuzzle_StateDispatch.cpp
 #   func_ov064_0211982c.cpp                   -> BowserPuzzle_StateDispatch.cpp
-# and the Manager's Render, the ROM-order Model slot-5 shadow collision:
-#   _ZN19BowserPuzzleManager6RenderEv.cpp     -> BowserPuzzle_Render.cpp
-# The Piece's Render (return 1;) is a plain C stub and stays here; its draw is a
-# no-op, no slot-5 shadow.
+# Those three lines are the PRE-SYNC spelling and the classes they name have
+# since been corrected: _ZN17BowserPuzzlePiece8BehaviorEv is the Piece's own
+# body at ov064 0x021190b0 and IS carried below, and the Manager's Render row
+# named here does not exist (the Manager has no Render of its own; slot 9 of its
+# table 0x0211c1d8 is the arm9 base body 0x02043af0).
+#
+# ADDED with the ov064 face correction: the Piece's own CleanupResources
+# (0x0211904c, slot 3 of table 0x0211c25c) and Render (0x02119088, slot 9).
+# Both are plain methods -- Render is `mModel.Render(0); return 1;` -- and
+# nothing referenced them while the faces named the Manager's bodies, so the
+# linker dropped both.
+src/_ZN17BowserPuzzlePiece16CleanupResourcesEv.cpp
+src/_ZN17BowserPuzzlePiece6RenderEv.cpp
 #
 # The D-tors STAY here. The Manager D1/D0 write VT0=_ZTV16daObjFl_Puzzle_c (aliased
 # to the host Manager array) then VT1=_ZTV10dBgActor_c (Platform's base table,
@@ -30,22 +39,19 @@
 # Piece D1/D0 write _ZTV17BowserPuzzlePiece / _ZTV18daWater_Hakidasi_c, the same
 # address and both the real Piece table -- no launder, no host thunk needed.
 #
-# Also NOT here (already built): the Enemy base D2 func_ov002_020aed18 (gate 16);
+# Also NOT here (already built): the Enemy base D2 _ZN12dEnemyBase_cD2Ev (gate 16);
 # Model/ModelAnim/WithMeshClsn/MovingCylinderClsn/MovingMeshCollider D1 (widely
 # linked); Memory::Deallocate and G0 (decl_common / cxx_aliases); the two ov002
 # model SharedFilePtrs the Piece loads (data_ov002_0210da10/9a8, mounted gate 14).
-src/BowserPuzzleManager_Spawn.c
-src/BowserPuzzlePiece_Spawn.c
-src/_ZN19BowserPuzzleManager13InitResourcesEv.cpp
-src/_ZN19BowserPuzzleManager16CleanupResourcesEv.cpp
-src/_ZN19BowserPuzzleManagerD0Ev.c
-src/_ZN19BowserPuzzleManagerD1Ev.c
-src/_ZN17BowserPuzzlePiece13InitResourcesEv.cpp
-src/_ZN17BowserPuzzlePiece16CleanupResourcesEv.c
-src/_ZN17BowserPuzzlePiece16OnPendingDestroyEv.c
-src/_ZN17BowserPuzzlePiece6RenderEv.c
-src/_ZN17BowserPuzzlePieceD0Ev.c
-src/_ZN17BowserPuzzlePieceD1Ev.c
+src/d_a_obj_fl_coin.c
+src/d_a_obj_fl_puzzle.c
+src/_ZN9JetStream13InitResourcesEv.cpp
+src/_ZN9JetStream16CleanupResourcesEv.cpp
+# RETIRED at SLICE1: body now in src/_ZN9JetStreamD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN9JetStreamD0Ev.cpp
+src/_ZN9JetStreamD1Ev.cpp
+src/_ZN9JetStream16OnPendingDestroyEv.cpp
+src/_ZN9JetStream6RenderEv.cpp
 src/func_ov064_02118c48.c
 src/func_ov064_02118cd4.c
 src/func_ov064_02118cec.c
@@ -57,7 +63,7 @@ src/func_ov064_02118e24.cpp
 src/func_ov064_02118ee4.c
 src/func_ov064_02118fa4.cpp
 src/func_ov064_02119010.c
-src/func_ov064_02119284.c
+src/_ZN17BowserPuzzlePiece13InitResourcesEv.cpp
 src/func_ov064_021192bc.c
 src/func_ov064_0211929c.cpp
 src/func_ov064_0211987c.c
@@ -69,4 +75,4 @@ src/__sinit_ov064_0211b4dc.c
 # the id-79 coordinator shell's own bodies (slot 0 was already below; slot 6
 # joins it -- D1/D0 store the mounted c1d8 / shared VT placeholders and are host
 # thunks in hal/actor_classes_bowserpuzzle.cpp)
-src/func_ov064_0211915c.c
+src/_ZN17BowserPuzzlePiece8BehaviorEv.cpp

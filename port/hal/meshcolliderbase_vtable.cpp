@@ -1,4 +1,4 @@
-// Seat the REAL MeshColliderBase vtable (_ZTV16MeshColliderBase, arm9
+// Seat the REAL MeshColliderBase vtable (_ZTV4dBgW, arm9
 // 0x02099388) with its own matched ROM bodies, the faithful class seat in the
 // QUESTION_BLOCK sense: hal_fill_meshcolliderbase_vtable NAMES the matched src
 // bodies, so the linker pulls the whole MeshColliderBase cluster (its ten own
@@ -41,49 +41,69 @@
 //   slot 12  GetVelocity(Vector3 &)  0x0203940c
 
 // Flat C name -> the MSVC-mangled method the matched .cpp TU actually emits.
-#pragma comment(linker, "/alternatename:__ZN16MeshColliderBase9Virtual08Ev=?Virtual08@MeshColliderBase@@UAEXXZ")
-#pragma comment(linker, "/alternatename:__ZN16MeshColliderBase10DetectClsnER13RaycastGround=?DetectClsn@MeshColliderBase@@UAEHAAURaycastGround@@@Z")
-#pragma comment(linker, "/alternatename:__ZN16MeshColliderBase10DetectClsnER11RaycastLine=?DetectClsn@MeshColliderBase@@UAEHAAURaycastLine@@@Z")
-#pragma comment(linker, "/alternatename:__ZN16MeshColliderBase10DetectClsnER10SphereClsn=?DetectClsn@MeshColliderBase@@UAEHAAUSphereClsn@@@Z")
-#pragma comment(linker, "/alternatename:__ZN16MeshColliderBase10BeforeClsnER10ClsnResultP5ActorR7Vector3P10Vector3_16S7_=?BeforeClsn@MeshColliderBase@@UAEXAAUClsnResult@@PAUActor@@AAUVector3@@PAUVector3_16@@3@Z")
-#pragma comment(linker, "/alternatename:__ZN16MeshColliderBase12TransformPosERK7Vector3RS0_=?TransformPos@MeshColliderBase@@UAEHABUVector3@@AAU2@@Z")
-#pragma comment(linker, "/alternatename:__ZN16MeshColliderBase14GetAngularVelYEv=?GetAngularVelY@MeshColliderBase@@UAEFXZ")
-#pragma comment(linker, "/alternatename:__ZN16MeshColliderBase11GetVelocityER7Vector3=?GetVelocity@MeshColliderBase@@UAEXAAUVector3@@@Z")
+#pragma comment(linker, "/alternatename:__ZN4dBgW9Virtual08Ev=?Virtual08@dBgW@@UAEXXZ")
+// FOUR ROWS RETIRED at SMOKELINK (wave 10). All four are dead in the shape
+// alternatename_guard refuses: the LHS is a DEFINED symbol, so the alias is
+// inert and references bind to that definition rather than to the RHS, and in
+// these four the RHS is not in the map at all -- the 09-14 main-to-port sync
+// renamed the parameter classes (RaycastGround/RaycastLine/SphereClsn ->
+// dBgCh_Gnd/dBgCh_Lin/dBgCh_SphCrr, ClsnResult -> dBgPi), so the decorated
+// spellings these rows name stopped existing. The flat names are defined by
+// the sync FACES instead, which walk_window.map carries:
+//   0001:001c6190  __ZN4dBgW10DetectClsnER9dBgCh_Gnd      faces_sync_gen.cpp.obj
+//   0001:001c6190  __ZN4dBgW10DetectClsnER9dBgCh_Lin      faces_sync_gen.cpp.obj
+//   0001:001c6190  __ZN4dBgW10DetectClsnER12dBgCh_SphCrr  faces_sync_gen.cpp.obj
+//   0001:001c6170  __ZN4dBgW10BeforeClsnER5dBgPi...       faces_sync_gen.cpp.obj
+// A face is the right binding here and an alias never was: the flat caller is
+// __cdecl with the receiver on the stack and the synced body is __thiscall
+// with it in ECX, which is a NAME bridge against an ABI mismatch.
+// NOT FIXED HERE, and logged rather than touched: those three DetectClsn faces
+// share ONE address while the cartridge has three distinct virtuals at
+// 0x02039480 / 0x02039478 / 0x02039470 (see out/SMOKELINK/bugs.md, and lane
+// SINGLES's bugs.md item 3, which found it first). That belongs to whoever
+// owns port/faces_sync.txt.
+// #pragma comment(linker, "/alternatename:__ZN4dBgW10DetectClsnER9dBgCh_Gnd=?DetectClsn@dBgW@@UAEHAAURaycastGround@@@Z")
+// #pragma comment(linker, "/alternatename:__ZN4dBgW10DetectClsnER9dBgCh_Lin=?DetectClsn@dBgW@@UAEHAAURaycastLine@@@Z")
+// #pragma comment(linker, "/alternatename:__ZN4dBgW10DetectClsnER12dBgCh_SphCrr=?DetectClsn@dBgW@@UAEHAAUSphereClsn@@@Z")
+// #pragma comment(linker, "/alternatename:__ZN4dBgW10BeforeClsnER5dBgPiP8dActor_cR7Vector3P10Vector3_16S7_=?BeforeClsn@dBgW@@UAEXAAUClsnResult@@PAUActor@@AAUVector3@@PAUVector3_16@@3@Z")
+#pragma comment(linker, "/alternatename:__ZN4dBgW12TransformPosERK7Vector3RS0_=?TransformPos@dBgW@@UAEHABUVector3@@AAU2@@Z")
+#pragma comment(linker, "/alternatename:__ZN4dBgW14GetAngularVelYEv=?GetAngularVelY@dBgW@@UAEFXZ")
+#pragma comment(linker, "/alternatename:__ZN4dBgW11GetVelocityER7Vector3=?GetVelocity@dBgW@@UAEXAAUVector3@@@Z")
 
 extern "C" {
 
-extern void *_ZTV16MeshColliderBase[13];   /* storage in hal/model_host.cpp */
+extern void *_ZTV4dBgW[13];   /* storage in hal/model_host.cpp */
 
-void *_ZN16MeshColliderBaseD2Ev(void *self);   /* slot 0 body (D1 by #774) */
-void *_ZN16MeshColliderBaseD0Ev(void *self);   /* slot 1 */
-void _ZN16MeshColliderBase9Virtual08Ev(void *self);
-int _ZN16MeshColliderBase10DetectClsnER13RaycastGround(void *self, void *ray);
-int _ZN16MeshColliderBase10DetectClsnER11RaycastLine(void *self, void *ray);
-int _ZN16MeshColliderBase10DetectClsnER10SphereClsn(void *self, void *sphere);
-void _ZN16MeshColliderBase10BeforeClsnER10ClsnResultP5ActorR7Vector3P10Vector3_16S7_(
+void *_ZN4dBgWD1Ev(void *self);   /* slot 0 body (D1 by #774) */
+void *_ZN4dBgWD0Ev(void *self);   /* slot 1 */
+void _ZN4dBgW9Virtual08Ev(void *self);
+int _ZN4dBgW10DetectClsnER9dBgCh_Gnd(void *self, void *ray);
+int _ZN4dBgW10DetectClsnER9dBgCh_Lin(void *self, void *ray);
+int _ZN4dBgW10DetectClsnER12dBgCh_SphCrr(void *self, void *sphere);
+void _ZN4dBgW10BeforeClsnER5dBgPiP8dActor_cR7Vector3P10Vector3_16S7_(
     void *self, void *res, void *actor, void *pos, void *motionAng, void *ang);
-int _ZN16MeshColliderBase12TransformPosERK7Vector3RS0_(void *self, const void *pos, void *res);
-short _ZN16MeshColliderBase14GetAngularVelYEv(void *self);
-void _ZN16MeshColliderBase11GetVelocityER7Vector3(void *self, void *res);
+int _ZN4dBgW12TransformPosERK7Vector3RS0_(void *self, const void *pos, void *res);
+short _ZN4dBgW14GetAngularVelYEv(void *self);
+void _ZN4dBgW11GetVelocityER7Vector3(void *self, void *res);
 
 /* Called from level_boot's boot fills. Naming the ten matched bodies here is
    the reference edge that pulls the MeshColliderBase cluster into the link. */
 void hal_fill_meshcolliderbase_vtable(void)
 {
-    void **vt = _ZTV16MeshColliderBase;
-    vt[0]  = (void *)_ZN16MeshColliderBaseD2Ev;
-    vt[1]  = (void *)_ZN16MeshColliderBaseD0Ev;
-    vt[2]  = (void *)_ZN16MeshColliderBase9Virtual08Ev;
+    void **vt = _ZTV4dBgW;
+    vt[0]  = (void *)_ZN4dBgWD1Ev;
+    vt[1]  = (void *)_ZN4dBgWD0Ev;
+    vt[2]  = (void *)_ZN4dBgW9Virtual08Ev;
     vt[3]  = (void *)0;   /* pure GetSurfaceInfo */
     vt[4]  = (void *)0;   /* pure GetNormal */
     vt[5]  = (void *)0;   /* pure GetTriangleOrigin */
-    vt[6]  = (void *)_ZN16MeshColliderBase10DetectClsnER13RaycastGround;
-    vt[7]  = (void *)_ZN16MeshColliderBase10DetectClsnER11RaycastLine;
-    vt[8]  = (void *)_ZN16MeshColliderBase10DetectClsnER10SphereClsn;
-    vt[9]  = (void *)_ZN16MeshColliderBase10BeforeClsnER10ClsnResultP5ActorR7Vector3P10Vector3_16S7_;
-    vt[10] = (void *)_ZN16MeshColliderBase12TransformPosERK7Vector3RS0_;
-    vt[11] = (void *)_ZN16MeshColliderBase14GetAngularVelYEv;
-    vt[12] = (void *)_ZN16MeshColliderBase11GetVelocityER7Vector3;
+    vt[6]  = (void *)_ZN4dBgW10DetectClsnER9dBgCh_Gnd;
+    vt[7]  = (void *)_ZN4dBgW10DetectClsnER9dBgCh_Lin;
+    vt[8]  = (void *)_ZN4dBgW10DetectClsnER12dBgCh_SphCrr;
+    vt[9]  = (void *)_ZN4dBgW10BeforeClsnER5dBgPiP8dActor_cR7Vector3P10Vector3_16S7_;
+    vt[10] = (void *)_ZN4dBgW12TransformPosERK7Vector3RS0_;
+    vt[11] = (void *)_ZN4dBgW14GetAngularVelYEv;
+    vt[12] = (void *)_ZN4dBgW11GetVelocityER7Vector3;
 }
 
 } /* extern "C" */

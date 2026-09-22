@@ -17,15 +17,15 @@
 #
 #   func_ov004_020b31b4  pmf at self+0x08, guard *(int*)(self+0x20) == 0x1d
 #   func_ov004_020b321c  pmf at self+0x00, same guard
-#   func_ov004_020b8714  pmf at self+0x10, guard *(int*)(self+0x18) == -1
-#   func_ov004_020b8778  pmf at self+0x08, same guard, ApproachLinear on +0x1c
+#   _ZN10dMgState_c6RenderEv  pmf at self+0x10, guard *(int*)(self+0x18) == -1
+#   _ZN10dMgState_c8BehaviorEv  pmf at self+0x08, same guard, ApproachLinear on +0x1c
 #   func_ov004_020b3278  THE WRITER of the first two objects' fields, and the
 #                        one TABLE dispatch in the set, on data_ov004_020bf490
 #
 # Two DIFFERENT classes, and that is read off the ROM rather than off the
 # names. The first two test a state word at +0x20 and are the object
 # func_ov004_020b3278 fills; the second two test a message index at +0x18 and
-# are the object func_ov004_020b87e0 (the state SETTER, still a host copy) fills.
+# are the object _ZN10dMgState_c8SetStateEi (the state SETTER, still a host copy) fills.
 #
 # ---- THE ROM, AT EACH ROW'S OWN ADDRESS ------------------------------------
 #
@@ -148,7 +148,7 @@
 # mg_try_ov004_0 (28 arms) and port_mg_try_base_state (56 arms) are DELETED, and
 # they are deleted because every arm is now unreachable rather than merely
 # unused. Their three groups went three ways:
-#   the setter's own twenty are dispatched DIRECTLY by func_ov004_020b87e0,
+#   the setter's own twenty are dispatched DIRECTLY by _ZN10dMgState_c8SetStateEi,
 #     which now calls the host address the seat wrote and aborts loudly if it
 #     is ever handed a DS one;
 #   the twenty per-frame ticks and nine of the sixteen closure addresses are
@@ -208,5 +208,5 @@ src/func_ov006_020c19d0.cpp
 src/func_ov004_020b31b4.cpp
 src/func_ov004_020b321c.cpp
 src/func_ov004_020b3278.cpp
-src/func_ov004_020b8714.cpp
-src/func_ov004_020b8778.cpp
+src/_ZN10dMgState_c6RenderEv.cpp
+src/_ZN10dMgState_c8BehaviorEv.cpp

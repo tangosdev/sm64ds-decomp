@@ -20,7 +20,9 @@ Where a canonical symbol exists, the reference is renamed in `src/`. Where the a
 no symbol at all, nothing is renamed and the address is reported — those need a name added
 to `symbols.txt`, which is a config decision rather than a source fix.
 
-Every edit is byte-verified against the ROM before it is kept.
+Every edit is byte-verified against the ROM before it is kept, under the one compiler
+`tools/rombuild.py` will build that file with -- not a sweep of every installed mwccarm,
+which passes files the link then gets wrong (see tools/build_pin.py).
 
 Usage:
     python tools/resolve_blind.py                  # report only
@@ -36,6 +38,7 @@ import re
 import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+import build_pin as BP         # noqa: E402
 import match as M              # noqa: E402
 import modules as MOD          # noqa: E402
 import reloc_audit as RA       # noqa: E402
@@ -206,28 +209,20 @@ def main():
         if new == original:
             return rel, "unchanged"
         f.write_text(new, encoding="utf-8", newline="\n")
-        flags = CFLAGS
-        if new.startswith("//cpp"):
-            flags = flags.replace("-lang c99", "-lang c++")
         info = next(((a, s) for (d, n, r, a, s, _sec) in cands if r == rel), None)
-        ok = False
-        if info:
-            addr, size = info
-            tgt = (M.target_bytes(addr, size) if label == "arm9"
-                   else M.target_bytes(addr, size, mods[label]["bin"], mods[label]["base"]))
-            for v in [vers.get(name, VERSION)] + [x for x in M.SWEEP]:
-                o = M.compile_c(f, v, flags)
-                if o is None:
-                    continue
-                code, rl = M.extract_func(o, name)
-                if code is None:
-                    continue
-                ok, _ = M.compare(tgt, code, rl, verbose=False)
-                if ok:
-                    break
+        if info is None:
+            f.write_text(original, encoding="utf-8", newline="\n")
+            return rel, "reverted (not a candidate; there is nothing to verify against)"
+        addr, size = info
+        # The build's compiler ONLY. This started at the pinned version and then fell
+        # through the whole of match.SWEEP, so a rename that stopped reproducing under
+        # the version the link actually uses was still kept whenever any of the other
+        # installed mwccarm builds reproduced it -- a pass the ROM build cannot honour.
+        # See tools/build_pin.py.
+        ok, why = BP.verify(f, name, addr, size, label)
         if not ok:
             f.write_text(original, encoding="utf-8", newline="\n")
-            return rel, "reverted (stopped matching)"
+            return rel, f"reverted ({why})"
         return rel, "renamed"
 
     outcome = collections.Counter()

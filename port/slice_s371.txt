@@ -27,14 +27,14 @@
 #
 # THREE INDEPENDENT WITNESSES SAY THERE IS NO INTERMEDIATE TABLE, which is
 # section 13 CORRECTION 1's cheap test run in both directions and once more:
-#   the FACTORY func_ov006_020d5974 does exactly one vtable store, `str r1,[r4]`
+#   the FACTORY dScMgAmida_c_classInit does exactly one vtable store, `str r1,[r4]`
 #     at 0x020d599c with r1 = 0x0213b918 off its own pool at 0x020d5a2c;
-#   SLOT 17 (the D0, func_ov006_020d10b8) does exactly one, `str ip,[r4]` at
+#   SLOT 17 (the D0, _ZN12dScMgAmida_cD0Ev) does exactly one, `str ip,[r4]` at
 #     0x020d10d8 with ip = 0x0213b918 off its pool at 0x020d1150;
-#   SLOT 16 (the D2, func_ov006_020d1018) writes the same word.
+#   SLOT 16 (the D2, _ZN12dScMgAmida_cD1Ev) writes the same word.
 # One face array, not two.
 #
-# THE SPAWNINFO IS data_ov006_0213b814 AND THE FACTORY IS 0x020d5974, by
+# THE SPAWNINFO IS g_profile_MG_AMIDA AND THE FACTORY IS 0x020d5974, by
 # section 3's mechanical recipe: the doubled-id word 0x01730173 occurs in the
 # overlay at 0x0213b818 and the word before it is the factory. The arm9 spawn
 # table confirms the record from the other end, by RELOCATION rather than by
@@ -43,14 +43,14 @@
 #   config/arm9/relocs.txt  from:0x02090e30 kind:load to:0x0213b814
 #                                                       module:overlay(6)
 #
-# and 0x02090e30 is data_02090864 + 0x173*4 exactly.
+# and 0x02090e30 is ACTOR_SPAWN_TABLE + 0x173*4 exactly.
 #
 # THE ROM GIVES THIS ID NO SPAWN SYMBOL, and that is a measured absence rather
 # than a lane that did not look. port/slice_s75.txt's SHELL SMASH LESSON is
 # "sweep the whole config for the ADDRESS, not one overlay for the name" -- a
 # spawn symbol can be filed under a DIFFERENT overlay with an `ambiguous` flag.
 # The sweep was run: `grep -rn 0213b814 config/ symbols/` returns three rows and
-# only three -- ov006's own data_ov006_0213b814, the arm9 spawn-table relocation
+# only three -- ov006's own g_profile_MG_AMIDA, the arm9 spawn-table relocation
 # above, and an unrelated ov098 relocation whose `from` happens to be the same
 # number in a different module. No Mg*_SpawnInfo names this record anywhere.
 #
@@ -158,7 +158,7 @@
 # 1 English, 2 French, 3 German, 4 Italian, 5 Spanish -- against the F/G/I/S
 # filename suffixes with no gaps and no leftovers.
 #
-# SLOT 31's OWN TABLE IS THE SAME SHAPE. func_ov006_020d11a0 loads
+# SLOT 31's OWN TABLE IS THE SAME SHAPE. _ZN12dScMgAmida_c9Virtual7CEv loads
 # data_ov006_0213b838[GetGameLanguage()] into the sub-engine BG1 char base and
 # then the fixed id 0x5b, which is MG/d_2d_mg_bg_option_nsc.bin -- the shared
 # options banner, not an amida file, which is why it is the same on both modes.
@@ -199,8 +199,8 @@
 #      0x0213b9a8 is 0x0213b918 + 36*4. A slot-36 word that is live data
 #      belonging to something else -- section 11's whole failure mode -- has no
 #      load relocation of its own, because it is not a pointer. This one has
-#      one, and 0x020d1188 is func_ov006_020d1188 in symbols.txt, sized 0x18,
-#      immediately after func_ov006_020d1170.
+#      one, and 0x020d1188 is _ZN12dScMgAmida_c5Unk36Ev in symbols.txt, sized 0x18,
+#      immediately after _ZN12dScMgAmida_c9Virtual8CEv.
 #      The word at index 37, 0x0213b9ac, is the next config symbol, reads
 #      0x00000100, and has NO relocation. The table ends exactly where the span
 #      says it does.
@@ -269,17 +269,17 @@
 # seat was written.
 #
 #   slot  address     size   src                              marker
-#     0   0x020d5384  0x5a0  func_ov006_020d5384.cpp          yes  InitResources
-#     5   0x020d5924  0x050  func_ov006_020d5924.cpp          yes  AfterCleanup
-#     6   0x020d4b7c  0x774  func_ov006_020d4b7c.c            no   Behavior
-#     9   0x020d48dc  0x2a0  func_ov006_020d48dc.cpp          no   Render
-#    16   0x020d1018  0x0a0  func_ov006_020d1018.c            no   D2
-#    17   0x020d10b8  0x0b4  func_ov006_020d10b8.cpp          yes  D0
-#    18   0x020d52f0  0x094  func_ov006_020d52f0.c            yes  state reset
-#    31   0x020d11a0  0x08c  func_ov006_020d11a0.cpp          yes  sub BG1 load
-#    34   0x020d14c0  0x498  func_ov006_020d14c0.c            no
-#    35   0x020d1170  0x018  func_ov006_020d1170.c            no   mode == 1
-#    36   0x020d1188  0x018  func_ov006_020d1188.c            no   mode == 2
+#     0   0x020d5384  0x5a0  _ZN12dScMgAmida_c13InitResourcesEv.cpp          yes  InitResources
+#     5   0x020d5924  0x050  _ZN12dScMgAmida_c21AfterCleanupResourcesEj.cpp          yes  AfterCleanup
+#     6   0x020d4b7c  0x774  _ZN12dScMgAmida_c8BehaviorEv.c            no   Behavior
+#     9   0x020d48dc  0x2a0  _ZN12dScMgAmida_c6RenderEv.cpp          no   Render
+#    16   0x020d1018  0x0a0  _ZN12dScMgAmida_cD1Ev.c            no   D2
+#    17   0x020d10b8  0x0b4  _ZN12dScMgAmida_cD0Ev.cpp          yes  D0
+#    18   0x020d52f0  0x094  _ZN12dScMgAmida_c13OnYoshiTryEatEi.c            yes  state reset
+#    31   0x020d11a0  0x08c  _ZN12dScMgAmida_c9Virtual7CEv.cpp          yes  sub BG1 load
+#    34   0x020d14c0  0x498  _ZN12dScMgAmida_c9Virtual88Eiiii.c            no
+#    35   0x020d1170  0x018  _ZN12dScMgAmida_c9Virtual8CEv.c            no   mode == 1
+#    36   0x020d1188  0x018  _ZN12dScMgAmida_c5Unk36Ev.c            no   mode == 2
 #
 # THE OTHER 26 SLOTS NEED NO ROW HERE and the arithmetic closes: 7 hold arm9
 # words that hal/scene_mg.cpp's port_scene_fill_rom already keys (slots 3, 4, 8,
@@ -316,7 +316,7 @@
 #      no state table.
 #
 #   AND THE THIRD SHAPE IS CHECKED BY READING, because lane FLW's open-coded
-#   int decode is invisible to 1 and 2 alike. Slot 6 (src/func_ov006_020d4b7c.c)
+#   int decode is invisible to 1 and 2 alike. Slot 6 (src/_ZN12dScMgAmida_c8BehaviorEv.cpp)
 #   was read for section 14's practical rule -- an eight-byte stride into an
 #   external array followed by `>> 1` and `& 1`. It does none of that: it
 #   declares a 37-virtual shadow class over the mounted table, dispatches slot
@@ -332,8 +332,8 @@
 #
 # AMENDED, run mg10 lane F371: ONE OF THE TWO IS CLOSED and the third floor
 # this file's header counts (the ov004 one, in section 7 below) is closed too.
-# func_ov006_020d36a4 is src/func_ov006_020d36a4.c now, seated at the end of
-# this file, and func_ov004_020ae5c4 is src/func_ov004_020ae5c4.c in
+# func_ov006_020d36a4 is src/func_ov006_020d36a4.cpp now, seated at the end of
+# this file, and func_ov004_020ae5c4 is src/func_ov004_020ae5c4.cpp in
 # port/slice_mg1.txt. What follows is left as lane S371 wrote it because the
 # DERIVATION is still how both were found; only the status changed.
 # port/mg_fanout_costs.txt section 21 has the closures and maps the survivor.
@@ -374,23 +374,24 @@ src/__sinit_ov006_0212fc7c.c
 src/func_ov006_020d0fe4.c
 src/func_ov006_020d1008.c
 src/func_ov006_020d100c.c
-src/func_ov006_020d1018.c
-src/func_ov006_020d10b8.cpp
+src/_ZN12dScMgAmida_cD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN12dScMgAmida_cD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN12dScMgAmida_cD0Ev.cpp
 src/func_ov006_020d116c.c
-src/func_ov006_020d1170.c
-src/func_ov006_020d1188.c
-src/func_ov006_020d11a0.cpp
-src/func_ov006_020d122c.c
+src/_ZN12dScMgAmida_c9Virtual8CEv.cpp
+src/_ZN12dScMgAmida_c5Unk36Ev.cpp
+src/_ZN12dScMgAmida_c9Virtual7CEv.cpp
+src/func_ov006_020d122c.cpp
 src/func_ov006_020d1450.c
-src/func_ov006_020d14c0.c
+src/_ZN12dScMgAmida_c9Virtual88Eiiii.cpp
 src/func_ov006_020d1958.cpp
 src/func_ov006_020d1a3c.cpp
-src/func_ov006_020d1ba0.c
+src/func_ov006_020d1ba0.cpp
 src/func_ov006_020d2580.c
 src/func_ov006_020d25fc.c
 src/func_ov006_020d3624.cpp
 src/func_ov006_020d3668.cpp
-# src/func_ov006_020d3ba0.c IS DELIBERATELY ABSENT and host-copied in
+# src/func_ov006_020d3ba0.cpp IS DELIBERATELY ABSENT and host-copied in
 # port/unmatched/MgAmida_Slot3ba0.cpp. Its extern "C" block writes a bare
 # `int data_0209d4b8;`, which mwccarm takes as a tentative definition and MSVC
 # takes as a strong one, so it collides with hal/scene_mg_faces.cpp's hosted
@@ -399,17 +400,17 @@ src/func_ov006_020d3668.cpp
 # line that reproduces it.
 src/func_ov006_020d452c.c
 src/func_ov006_020d47f4.c
-src/func_ov006_020d48dc.cpp
-src/func_ov006_020d4b7c.c
-src/func_ov006_020d52f0.c
-src/func_ov006_020d5384.cpp
-src/func_ov006_020d5924.cpp
+src/_ZN12dScMgAmida_c6RenderEv.cpp
+src/_ZN12dScMgAmida_c8BehaviorEv.cpp
+src/_ZN12dScMgAmida_c13OnYoshiTryEatEi.cpp
+src/_ZN12dScMgAmida_c13InitResourcesEv.cpp
+src/_ZN12dScMgAmida_c21AfterCleanupResourcesEj.cpp
 # WAVE 2. The factory registers func_ov006_020d5a50 as an array element
 # destructor (its pool word at 0x020d5a4c), and 0x020d5a50 is the first
 # function AFTER this class's code block rather than inside it, so the block
 # walk did not reach it. It is a two-line empty body.
 src/func_ov006_020d5a50.c
-src/func_ov006_020d5974.cpp
+src/d_s_mg_amida.cpp
 # WAVE 3, run mg10 lane F371. THE FIRST OF THIS CLASS'S TWO ov006 FLOORS IS
 # CLOSED. func_ov006_020d36a4 is the ROUND SETUP: it shuffles the four ladder
 # lanes with the game's 15-bit range draw, refuses a board that repeats the
@@ -418,7 +419,7 @@ src/func_ov006_020d5974.cpp
 # THE TAIL IS WHAT IDENTIFIES THE WHOLE CLASS, and it is a control this lane
 # did not arrange: the walker's start X is LANE[i] * 64 + 32, which is 32, 96,
 # 160 and 224, and those are exactly the four rail coordinates 0x20, 0x60, 0xa0
-# and 0xe0 that src/func_ov006_020d3ba0.c draws its vertical lines at. The board
+# and 0xe0 that src/func_ov006_020d3ba0.cpp draws its vertical lines at. The board
 # and the walkers agree on where the ladder is and neither half was read off the
 # other.
 #
@@ -427,9 +428,9 @@ src/func_ov006_020d5974.cpp
 # beside a real definition is a duplicate symbol, not a safety net.
 #
 # It is a .c compiled as C++ (the slot-36 dispatch is spelled through a dummy
-# 37-virtual struct, the same device src/func_ov006_020d3ba0.c uses in this
+# 37-virtual struct, the same device src/func_ov006_020d3ba0.cpp uses in this
 # class), so it carries a LANGUAGE CXX row in port/CMakeLists.txt.
-src/func_ov006_020d36a4.c
+src/func_ov006_020d36a4.cpp
 # WAVE 4, run mg10 lane WALKER. THE LAST FLOOR IN THIS SCENE IS CLOSED.
 # func_ov006_020d27dc is THE WALKER TICK, 0xe48 = 3656 bytes, the largest single
 # hole in any seated minigame, one caller at 0x020d4d78 inside vtable slot 6.
@@ -455,6 +456,6 @@ src/func_ov006_020d36a4.c
 #
 # It is a .c compiled as C++ -- three slot-36 dispatches (0x020D2924, 0x020D2ABC,
 # 0x020D2D8C) spelled through the same dummy 37-virtual struct
-# src/func_ov006_020d36a4.c and src/func_ov006_020d3ba0.c use -- so it carries a
+# src/func_ov006_020d36a4.cpp and src/func_ov006_020d3ba0.cpp use -- so it carries a
 # LANGUAGE CXX row in port/CMakeLists.txt.
 src/func_ov006_020d27dc.c

@@ -9,7 +9,7 @@
  * shape: each declares its own local `struct Actor { ~Actor(); };` and calls
  * `((Actor *)c)->~Actor()` to run the base subobject's destructor. MSVC emits
  * that call as ??1Actor@@QAE@XZ -- public, __thiscall, no parameters, `this`
- * in ecx. The port's definition of that body is _ZN5ActorD2Ev, an ordinary
+ * in ecx. The port's definition of that body is _ZN8dActor_cD2Ev, an ordinary
  * CDECL C function taking the pointer on the stack. An /alternatename across
  * those two is a RECEIVER-SHAPE mismatch, not a spelling one: the call site
  * would put `this` in ecx and the callee would read whatever happened to be at
@@ -27,12 +27,12 @@
  *     021111b4  mov  r1, #5            five elements
  *     021111b8  mov  r2, #0x40         stride 0x40
  *     021111bc  str  r12, [r4]         install the own table
- *     021111c0  bl   0x0207328c        __destroy_arr
+ *     021111c0  bl   0x0207328c        __cxa_vec_cleanup
  *     021111c4  mov  r0, r4
  *     021111c8  bl   0x020112c8        Actor::D2   <-- THIS CALL
  *     021111cc  mov  r0, r4  /  return
  * The ~Actor() the source spells IS 0x020112c8, which the port defines as
- * _ZN5ActorD2Ev. The forwarder is a one-for-one bridge and introduces no
+ * _ZN8dActor_cD2Ev. The forwarder is a one-for-one bridge and introduces no
  * behaviour of its own.
  *
  * SCOPE. `Actor` is declared here with a NON-VIRTUAL destructor and no
@@ -44,7 +44,7 @@
  * This header is deliberately NOT included anywhere; the file is a definition
  * site and nothing more.
  */
-extern "C" void *_ZN5ActorD2Ev(void *self);
+extern "C" void *_ZN8dActor_cD2Ev(void *self);
 
 struct Actor {
     ~Actor();
@@ -52,5 +52,5 @@ struct Actor {
 
 Actor::~Actor()
 {
-    _ZN5ActorD2Ev(this);
+    _ZN8dActor_cD2Ev(this);
 }

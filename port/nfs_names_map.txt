@@ -15,7 +15,7 @@ copies the zero in; func_0205cdf4 faults on list+0x10. That is correct, and
 re-deriving it from the src produced three things the handover did not have.
 
 FIRST, THE NAMES. There are two of them and they are readable.
-func_ov006_020e3578 opens func_020adc74(&data_ov006_0213c394) and
+_ZN14dScMgCurling_c13InitResourcesEv opens func_020adc74(&data_ov006_0213c394) and
 func_020adc74(&data_ov006_0213c3b4). Out of build/port/host-src/ov006_syms.c
 those bytes are
 
@@ -276,8 +276,8 @@ now names. Reached only because InitResources finishes:
 
     func_02043288  the actor-tree walker
       mb_bbeh                              hal/scene_mg.cpp
-        func_ov004_020b0620                dScMgBase_c slot 7, BeforeBehavior
-          _ZN5Scene14BeforeBehaviorEv      where it dies
+        _ZN11dScMgBase_c14BeforeBehaviorEv                dScMgBase_c slot 7, BeforeBehavior
+          _ZN8dScene_c14BeforeBehaviorEv      where it dies
 
 THE MECHANISM BELOW IS THE REVIEWER'S INSTRUCTION-LEVEL SYMBOLIZATION AND IT
 REPLACES THIS LANE'S FIRST READING, which was wrong in three separate ways and
@@ -326,7 +326,7 @@ dies on 0x0c first. Fixing 0x0c alone moves the fault, it does not retire it.
 THE FIX, AND IT IS THE FADER SEAT'S: the fill's stubs are the wrong ABI for a
 table MSVC calls with pushed arguments and callee-cleans expectations. Slots
 0x0c and 0x10 need ABI-correct stubs or the ROM's real bodies
-(func_0202f928 and func_0202f708), AND THE REST OF THE FILL'S STUB SIGNATURES
+(_ZN7dWipe_c15SetBackwardTimeEj and _ZN7dWipe_c14SetForwardTimeEj), AND THE REST OF THE FILL'S STUB SIGNATURES
 NEED THE SAME AUDIT -- every one of the twelve is `__fastcall(void *, void *)`
 today, chosen on 7a's refuted reasoning, so any other slot this table reaches
 with pushed arguments has the same leak waiting. That audit is the work, not a
@@ -336,7 +336,7 @@ The playlog's last line before the fault is the fader seat's own, and it is
 what makes the slot identification direct rather than inferred:
 
     [fdr] dWipe_c vtable slot 0x0c SetBackwardTime FIRED -- the ROM body is
-          func_0202f928 and this tranche did not seat it.
+          _ZN7dWipe_c15SetBackwardTimeEj and this tranche did not seat it.
 
 so FDR's first unproven item -- "the three trap slots have never been
 dispatched" -- is spent.
@@ -350,7 +350,7 @@ own when they are seated.
 [BOTH ARE RETIRED NOW, run link60 Stage 5 lane SEAT8, and not by stopping on
  their own. Slot 0x08 was the last trap; seating it left the predicate
  comparing the slot against fdr_s08, which still occupies it as a forwarder
- onto func_0202f428, so the check would have gone on answering "unseated"
+ onto _ZN7dWipe_c11AdvanceFadeEv, so the check would have gone on answering "unseated"
  over a seated slot. The predicate and the pre-flight are both gone, with the
  reasoning kept at the sites they were removed from. The design point this
  paragraph makes -- ask a predicate, not a string -- is unaffected and worth

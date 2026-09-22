@@ -36,7 +36,7 @@ s32 func_ov002_020e0478(void* c);
 s32 _ZN6Player7IsStateERNS_5StateE(void* self, void* state);
 s16 _ZN4cstd5atan2E5Fix12IiES1_(s32 a, s32 b);
 s32 Vec3_HorzLen(const void* v);
-u32 _ZN5Sound8PlayLongEjjjRK7Vector3j(u32 a, u32 b, u32 c, const void* pos, u32 d);
+u32 _ZN5Sound8PlayLongEjjjRK7Vector3s(u32 a, u32 b, u32 c, const void* pos, u32 d);
 void func_ov002_020bf800(void* self, union VecArg v);
 
 extern s16 data_02082214[];
@@ -114,7 +114,7 @@ int func_ov002_020bfa74(char* self)
         }
     }
 
-    *(u32*)(self + 0x624) = _ZN5Sound8PlayLongEjjjRK7Vector3j(*(u32*)(self + 0x624), 3, 0x90, self + 0x74, 0);
+    *(u32*)(self + 0x624) = _ZN5Sound8PlayLongEjjjRK7Vector3s(*(u32*)(self + 0x624), 3, 0x90, self + 0x74, 0);
     if (*(u8*)(self + 0x6f9) != 0 || *(u8*)(self + 0x709) != 0 || func_ov002_020e0478(self) != 0)
         return 0;
 

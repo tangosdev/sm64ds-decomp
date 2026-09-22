@@ -97,7 +97,7 @@ void func_ov006_020e8f14(char *self, int i)
     *(u16 *) (self + 0x5548) = 0x90;
     if (*(u8 *) (self + 0x5550) == 0)
     {
-        u16 *p548 = (u16 *) ((long long) (int) (self + 0x5548));
+        u16 *p548 = (u16 *) (self + 0x5548);
         *p548 = *p548 + 0x40;
     }
 

@@ -63,7 +63,7 @@
  *
  * ONE CALLER, AND IT IS THIS LANE'S. config/arm9/overlays/ov006/relocs.txt
  * carries exactly one arm_call to 0x020c221c, from 0x0210c15c inside
- * func_ov006_0210c120 -- dScMgSlot3_c's factory. So the file is lane-named
+ * dScMgSlot3_c_classInit -- dScMgSlot3_c's factory. So the file is lane-named
  * rather than shared: if a later class turns out to construct the same
  * sub-object, the canonical-copy question is theirs and the answer is this
  * file, the way unmatched/MgShared4f38_SubDispatch.cpp became the canonical

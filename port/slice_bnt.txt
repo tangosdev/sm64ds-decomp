@@ -13,7 +13,7 @@
 #   THE SPAWNINFO.  The doubled-id word 0x01750175 occurs EXACTLY ONCE in the
 #   whole overlay, at 0x0213cc80, which puts the eight-byte SpawnInfo record at
 #   0x0213cc7c -- config/arm9/overlays/ov006/symbols.txt's
-#   MgBounceAndTrounce_SpawnInfo -- with the factory in the word before the id:
+#   g_profile_MG_JUMP2 -- with the factory in the word before the id:
 #   0x020efaf0.  There is no second candidate to choose between.
 #
 #   THE FACTORY'S OWN RELOCATION CONFIRMS THE VTABLE:
@@ -145,18 +145,18 @@
 #
 # ---- 5. THE STATE MACHINE IS A FIELD, NOT A TABLE ------------------------
 #
-# Vtable slot 6 (func_ov006_020ef3e0) dispatches a member pointer held at
+# Vtable slot 6 (_ZN12dScMgJump2_c8BehaviorEv) dispatches a member pointer held at
 # this+0x5004.  There is no table, no .bss array and nothing for
 # port/tools/stategen.py to read.  That is dScMg3DEsp_c's FIELD shape (run mg9
 # lane PSY) as a class's whole state machine rather than as an eighth
 # dispatcher beside seven table ones.
 #
 # THE FIELD HAS NO NULL GUARD, so the seed matters and it was traced:
-#   slot 0  (func_ov006_020ef834) ends with
+#   slot 0  (_ZN12dScMgJump2_c13InitResourcesEv) ends with
 #           `ldr r2,[r0] / mvn r1,#0 / ldr r2,[r2,#0x48] / blx r2` at
 #           0x020efa2c..0x020efa38 -- SLOT 18 dispatched through the object's
 #           own vtable with the argument -1;
-#   slot 18 (func_ov006_020efaa8) ends with func_ov006_020ef7f8(this), the
+#   slot 18 (_ZN12dScMgJump2_c13OnYoshiTryEatEi) ends with func_ov006_020ef7f8(this), the
 #           writer of 0x0213cc94 = {0x020ef794, 0}.
 # So the field is seeded on the InitResources path before Behavior ever runs,
 # and 0x020ef794 is this class's FIRST state.
@@ -174,11 +174,11 @@
 #   * THE ENCODING SCAN (run mg9 lane LKY's detector, blind to spelling) finds
 #     THREE ARM Itanium five-instruction dispatch sites in the closure:
 #     0x020ef450 (slot 6), 0x020c4cec and 0x020c789c.
-#   * THE `::*` SOURCE SWEEP finds FOUR: src/func_ov004_020b87e0.cpp (the
+#   * THE `::*` SOURCE SWEEP finds FOUR: src/_ZN10dMgState_c8SetStateEi.cpp (the
 #     framework state setter, already host-copied in
 #     unmatched/MgBase_StateSetter.cpp and excluded from every minigame slice),
-#     src/func_ov006_020c4cd8.cpp, src/func_ov006_020c7860.cpp and
-#     src/func_ov006_020ef3e0.cpp.
+#     src/func_ov006_020c4cd8.cpp, src/actors/dMgJump3DMario_c.cpp and
+#     src/_ZN12dScMgJump2_c8BehaviorEv.cpp.
 #
 # The two sub-object dispatchers are NOT shared with the three sibling classes,
 # which was checked rather than assumed: each has exactly ONE caller in the
@@ -209,7 +209,7 @@
 #     include/MgBounceAndPounce.h from its own STATIC thunks and defines NO
 #     C-linkage face for them, precisely so it does not define a symbol the
 #     other three lanes also define.  A merge that finds a
-#     _ZN17MgBounceAndPounce19BeforeInitResourcesEv face in some other lane's
+#     _ZN14dScMgD3DBase_c19BeforeInitResourcesEv face in some other lane's
 #     file should keep exactly one; this lane contributes none.
 #   * unmatched/MgJump2_FieldPmf.cpp defines only bodies this class alone
 #     reaches (section 6), and hal/scene_mg_jump2.cpp is a per-class file.
@@ -227,7 +227,7 @@
 # ---- 8. THE FACTORY, AND A SECOND CONFIG DEFECT --------------------------
 #
 # config/arm9/overlays/ov006/symbols.txt names 0x020efaf0
-# `_ZN8PathLift17BaseInitResourcesEv`.  That is ov002's name for the same
+# `dScMgJump2_c_classInit`.  That is ov002's name for the same
 # ADDRESS in a different overlay -- ov002's own symbols.txt has
 # func_ov002_020efaf0 (size 0xec) there, and src/func_ov002_020efaf0.cpp is a
 # path-following body with nothing to do with a minigame.  The ov006 body at
@@ -239,20 +239,20 @@
 #     020efb08  bl 0x020b2adc                         the base constructor,
 #                                                     WITH r0 still the object
 #     020efb0c  ldr r0 = 0x0213c62c / str r0,[r4]     dScMgD3DBase_c's vtable
-#     ...       three func_020733a8 array constructions at +0x500c (3 x 0xb8),
+#     ...       three __cxa_vec_ctor array constructions at +0x500c (3 x 0xb8),
 #               +0x5234 (6 x 0xf0) and +0x57d4 (0x10 x 0x24)
 #     020efb48  ldr r1 = 0x0213ccfc / str r1,[r4]     dScMgJump2_c's vtable
 #     020efbb0  ldr r0 = 0x00005a14 / bl 0x02016d58   the Model at +0x5a14
 #     55 instructions plus a 15-word pool = 70 = 0x118/4.
 #
 # NO DISPLACEMENT RULING IS OWED.  port/mg_fanout_costs.txt section 12 grants
-# one to 0x169 because its factory calls func_ov004_020b2adc with NO argument
+# one to 0x169 because its factory calls _ZN11dScMgBase_cC2Ev with NO argument
 # and rides r0 through; here r0 still holds the allocation at the bl and
-# src/_ZN8PathLift17BaseInitResourcesEv.c spells func_ov004_020b2adc(p) WITH
+# src/minigames/d_s_mg_jump2.cpp spells _ZN11dScMgBase_cC2Ev(p) WITH
 # its argument.  The factory is LINKED from this slice, not host-copied.
 #
 # THE MISNAME IS ALSO WHY THE SEAT SPELLS THE MIDDLE TABLE
-# `_ZTV17MgBounceAndPounce`: that is what the ov006 mount defines, and the seat
+# `_ZTV14dScMgD3DBase_c`: that is what the ov006 mount defines, and the seat
 # uses the tree's own spelling rather than inventing one.
 #
 # ---- 9. WHAT THIS LANE ROUTES TO THE DECOMP SIDE -------------------------
@@ -260,11 +260,11 @@
 # Nothing in src/ or config/ is edited by this lane.  Three findings belong to
 # the decomp side and are recorded here so the merge can route them:
 #
-#   (a) ov006's symbols.txt calls 0x0213c62c `_ZTV17MgBounceAndPounce` while
+#   (a) ov006's symbols.txt calls 0x0213c62c `_ZTV14dScMgD3DBase_c` while
 #       the ROM's own type_info calls it dScMgD3DBase_c, and four distinct
 #       classes inherit it.
 #   (b) ov006's symbols.txt calls 0x020efaf0
-#       `_ZN8PathLift17BaseInitResourcesEv`, which is ov002's name for that
+#       `dScMgJump2_c_classInit`, which is ov002's name for that
 #       address.  The ov006 body is MgBounceAndTrounce_Spawn.
 #   (c) data_ov006_0213c67c is a config symbol INSIDE dScMgD3DBase_c's vtable
 #       (its slot 20), and it makes port/tools/vtablerows.py refuse a correct
@@ -272,7 +272,7 @@
 #
 #   And one observation that is not a defect: the "recovered from vtable slot
 #   identity" NAMES on the middle table's bodies disagree with each other --
-#   func_ov006_020e6e54 says dScMgJump2_c_OnPushed while func_ov006_020e6e4c
+#   _ZN14dScMgD3DBase_c8OnPushedEv says dScMgJump2_c_OnPushed while _ZN14dScMgD3DBase_c24OnHitByCannonBlastedCharEv
 #   two words earlier says dScMgTrampoline2_c_OnHitByCannonBlastedChar.  Both
 #   are the same shared base's bodies, and the recovery walked whichever
 #   derived class's table it reached first.  It is a reason to trust the
@@ -292,7 +292,7 @@
 #   this class's seven   slots 0, 3, 6, 9, 17, 18, 19
 #   the middle base's eight  slots 24, 25, 26, 27, 28, 29, 30, 31
 #
-# Slot 16 (func_ov006_020eebe8) carries no marker and is therefore not ruled on.
+# Slot 16 (_ZN12dScMgJump2_cD1Ev) carries no marker and is therefore not ruled on.
 # THE EIGHT MIDDLE-BASE ROWS WILL BE RE-DERIVED BY THE THREE SIBLING LANES; if
 # the merge finds duplicate rows for them, keeping one per body is right and
 # the verdicts should agree.  Disagreement is the thing to stop on.
@@ -355,16 +355,16 @@
 # symbols and both link.  It is out of this slice because it is already in a
 # built one, not because it would collide.  SIX are this lane's own:
 #
-#   src/func_ov006_020ef3e0.cpp   unmatched/MgJump2_FieldPmf.cpp   (slot 6)
+#   src/minigames/d_s_mg_jump2.cpp   unmatched/MgJump2_FieldPmf.cpp   (slot 6)
 #   src/func_ov006_020c4cd8.cpp   unmatched/MgD3DBase_ObjStateDispatch.cpp
-#   src/func_ov006_020c7860.cpp   unmatched/MgD3DBase_ObjStateDispatch.cpp
+#   src/actors/dMgJump3DMario_c.cpp   unmatched/MgD3DBase_ObjStateDispatch.cpp
 #                                 (this lane wrote both as
 #                                 MgJump2_SubDispatch.cpp; unified with lane
 #                                 BNP's copies at the mg11 merge)
-#   src/func_ov006_020e6e78.cpp   unmatched/MgD3DBase_DeclConflict.cpp
+#   src/actors/dScMgD3DBase_c.cpp   unmatched/MgD3DBase_DeclConflict.cpp
 #                                 (slot 24, the decl_common.h C2733)
 #   src/func_ov006_020c4c54.cpp   unmatched/MgD3DBase_ModelAnimRender.cpp
-#   src/func_ov006_020c7734.cpp   unmatched/MgD3DBase_ModelAnimRender.cpp
+#   src/actors/dMgJump3DMario_c.cpp   unmatched/MgD3DBase_ModelAnimRender.cpp
 #                                 -- both dispatch a six-virtual SHADOW's m5
 #                                 (ROM slot 5) on a plain ModelAnim, which MSVC
 #                                 sends to Virtual18. The second one FAULTED a
@@ -376,18 +376,18 @@
 #
 #   src/func_ov004_020add88.cpp   unmatched/MgBase_StateDispatch.cpp
 #   src/func_ov004_020adf2c.cpp   unmatched/MgBase_StateDispatch.cpp
-#   src/func_ov004_020aeed8.cpp   unmatched/MgBase_DeclConflict.cpp
-#   src/func_ov004_020af094.cpp   unmatched/MgBase_DeclConflict.cpp
+#   src/_ZN11dScMgBase_c25OnAimedAtWithEggReturnVecEv.cpp   unmatched/MgBase_DeclConflict.cpp
+#   src/_ZN11dScMgBase_c16OnAimedAtWithEggEv.cpp   unmatched/MgBase_DeclConflict.cpp
 #   src/func_ov004_020afdd0.cpp   hal/screen_gap.cpp
-#   src/func_ov004_020b0620.cpp   unmatched/MgBase_Slot7.cpp
-#   src/func_ov004_020b0840.c     unmatched/MgBase_Slot5.cpp
-#   src/func_ov004_020b0930.cpp   unmatched/MgBase_Slot1.cpp
+#   src/minigames/d_s_mg_base.cpp   unmatched/MgBase_Slot7.cpp
+#   src/minigames/d_s_mg_base.cpp     unmatched/MgBase_Slot5.cpp
+#   src/minigames/d_s_mg_base.cpp   unmatched/MgBase_Slot1.cpp
 #   src/func_ov004_020b2cb8.c     unmatched/MgBase_LangTable.cpp
 #   src/func_ov004_020b31b4.cpp   unmatched/MgBase_StateDispatch.cpp
 #   src/func_ov004_020b321c.cpp   unmatched/MgBase_StateDispatch.cpp
-#   src/func_ov004_020b8714.cpp   unmatched/MgBase_StateDispatch.cpp
-#   src/func_ov004_020b8778.cpp   unmatched/MgBase_StateDispatch.cpp
-#   src/func_ov004_020b87e0.cpp   unmatched/MgBase_StateSetter.cpp
+#   src/_ZN10dMgState_c6RenderEv.cpp   unmatched/MgBase_StateDispatch.cpp
+#   src/_ZN10dMgState_c8BehaviorEv.cpp   unmatched/MgBase_StateDispatch.cpp
+#   src/_ZN10dMgState_c8SetStateEi.cpp   unmatched/MgBase_StateSetter.cpp
 #
 # THE SCAN IS THE POINT, and the number is FOUR rather than the seven this
 # paragraph used to claim -- re-measured entry by entry rather than adjusted.
@@ -410,10 +410,10 @@
 # the argument was not, and a wrong argument in a slice header is how the next
 # lane inherits a wrong rule.
 #
-#   src/_ZN17MgBounceAndPounce18AfterInitResourcesEj.cpp   slot 2
-#   src/_ZN17MgBounceAndPounce12BeforeRenderEv.cpp         slot 10
-#   src/func_ov006_020e6d98.c                              slot 27
-#   src/func_ov006_020e6d8c.c                              slot 28
+#   src/actors/dScMgD3DBase_c.cpp   slot 2
+#   src/actors/dScMgD3DBase_c.cpp         slot 10
+#   src/actors/dScMgD3DBase_c.cpp                              slot 27
+#   src/actors/dScMgD3DBase_c.cpp                              slot 28
 #
 # THE REAL REASON IS THE ONE port/unmatched/MgFlower_Slot2.cpp GIVES: the seat
 # calls the port_-named repair instead, so the src symbol would be compiled,
@@ -429,12 +429,12 @@
 # silently was the defect. It DOES fire on a scene-372 build, which after the
 # merge is the same binary. The finding, floor-style:
 #
-#   THE STATE       0x020c814c, src/func_ov006_020c814c.cpp, matched, no
+#   THE STATE       0x020c814c, src/actors/dMgJump3DMario_c.cpp, matched, no
 #                   NONMATCHING banner. It is a real body.
 #   THE RECORD      0x0213b080 {0x020c814c, 0}, in the +0x3c run, ONE
 #                   relocation, from func_ov006_020c81e0.
 #   THE INSTALLER   func_ov006_020c81e0, size 0x90, HAS src
-#                   (src/func_ov006_020c81e0.c) and HAS its own delink block
+#                   (src/actors/dMgJump3DMario_c.cpp) and HAS its own delink block
 #                   (.text start:0x020c81e0 end:0x020c8270). So this is NOT a
 #                   decomp floor: nothing is undecompiled.
 #   WHY IT IS DEAD  The installer is reachable only from 0x174's own state
@@ -454,7 +454,7 @@
 #                   families through the same code, so the case goes live the
 #                   moment lane BNP seats 0x174 into the same process. An
 #                   address-keyed switch cannot mis-route in the meantime.
-#   FOR LANE BNP    src/func_ov006_020c81e0.c and src/func_ov006_020c7418.c
+#   FOR LANE BNP    src/actors/dMgJump3DMario_c.cpp and src/func_ov006_020c7418.c
 #                   belong in slice_bnp.txt, not here.
 #
 # THE SLICE IS THE DELTA ONLY.  slice_mg1.txt already carries the ov004
@@ -470,7 +470,7 @@ src/func_02053eb0.c
 src/func_02054748.c
 src/func_ov006_020bfec0.cpp
 src/func_ov006_020bfff8.cpp
-src/func_ov006_020c4048.c
+src/_ZN22dMg3DHeyhoObjAdapter_cC2Ev.cpp
 src/func_ov006_020c4060.c
 src/func_ov006_020c40e8.c
 src/func_ov006_020c4148.c
@@ -527,85 +527,35 @@ src/func_ov006_020c7300.c
 src/func_ov006_020c7388.c
 src/func_ov006_020c7490.c
 src/func_ov006_020c7574.c
-src/func_ov006_020c762c.c
-src/func_ov006_020c78ec.cpp
-src/func_ov006_020c7a30.c
-src/func_ov006_020c8768.c
+# QUARANTINED at the main->port sync (origin/main 9c7f38a24): main folded this
+# class into one TU, and port/ host-copies bodies inside it (the slice_bnp host copies).
+# port/CMakeLists.txt's own assertion refuses the pair, because taking both is a
+# duplicate symbol and taking the src one puts the host copy's reason back. The
+# row returns when the host copy covers the whole consolidated TU.
+#src/actors/dMgJump3DMario_c.cpp
 src/func_ov006_020c8c78.c
-src/func_ov006_020c76d0.c
-src/func_ov006_020c76d8.c
-src/func_ov006_020c76e0.cpp
-src/func_ov006_020c79a8.cpp
-src/func_ov006_020c7ba4.c
-src/func_ov006_020c7c68.c
-src/func_ov006_020c802c.c
-src/func_ov006_020c8048.c
-src/func_ov006_020c8084.cpp
-src/func_ov006_020c814c.cpp
-src/func_ov006_020c8270.c
-src/func_ov006_020c833c.c
-src/func_ov006_020c85a0.c
-src/func_ov006_020c85bc.cpp
-src/func_ov006_020c862c.c
-src/func_ov006_020c864c.c
-src/func_ov006_020c8658.c
-src/func_ov006_020c8680.c
-src/func_ov006_020c87d0.cpp
-src/func_ov006_020c893c.cpp
-src/func_ov006_020c8a04.c
 src/func_ov006_020c8a30.c
 src/func_ov006_020c8a64.c
 src/func_ov006_020c8a9c.c
 src/func_ov006_020c8af4.c
 src/func_ov006_020c8ba8.cpp
 src/func_ov006_020c8c6c.c
-src/_ZN17MgBounceAndPounceD1Ev.cpp
-src/_ZN17MgBounceAndPounceD0Ev.cpp
-src/func_ov006_020e6cac.c
-src/func_ov006_020e6d24.cpp
-src/func_ov006_020e6da4.c
-src/Sound_PlayBank1Panned.cpp
-src/func_ov006_020e6e3c.c
-src/func_ov006_020e6e4c.c
-src/func_ov006_020e6e54.c
-src/_ZN17MgBounceAndPounce21AfterCleanupResourcesEj.cpp
-src/_ZN17MgBounceAndPounce11AfterRenderEj.cpp
-src/_ZN17MgBounceAndPounce14BeforeBehaviorEv.cpp
-src/_ZN17MgBounceAndPounce19BeforeInitResourcesEv.cpp
-src/func_ov006_020e7110.c
-src/func_ov006_020e7124.c
-src/func_ov006_020e72c0.c
-src/func_ov006_020e73c4.cpp
-src/func_ov006_020e740c.c
-src/func_ov006_020e7428.c
-src/func_ov006_020e7508.cpp
-src/func_ov006_020e759c.c
-src/func_ov006_020eebe8.cpp
-src/func_ov006_020eec9c.cpp
-src/func_ov006_020eed64.c
-src/func_ov006_020eed68.c
-src/func_ov006_020eedc8.c
-src/func_ov006_020eee3c.c
-src/func_ov006_020eeef4.c
-src/func_ov006_020eef40.c
-src/func_ov006_020eef58.c
-src/func_ov006_020eef90.c
-src/func_ov006_020eeff0.c
-src/func_ov006_020ef05c.c
-src/func_ov006_020ef0d4.c
-src/func_ov006_020ef110.c
-src/func_ov006_020ef148.c
-src/func_ov006_020ef2b8.c
-src/func_ov006_020ef47c.c
-src/func_ov006_020ef480.c
-src/func_ov006_020ef4ec.c
-src/func_ov006_020ef580.c
-src/func_ov006_020ef5ac.c
-src/func_ov006_020ef768.c
-src/func_ov006_020ef794.c
-src/func_ov006_020ef7f8.c
-src/func_ov006_020ef834.cpp
-src/func_ov006_020efa84.c
-src/func_ov006_020efaa8.c
-src/_ZN8PathLift17BaseInitResourcesEv.c
+# QUARANTINED at the main->port sync (origin/main 9c7f38a24): main folded this
+# class into one TU, and port/ host-copies bodies inside it (the slice_bnp host copies).
+# port/CMakeLists.txt's own assertion refuses the pair, because taking both is a
+# duplicate symbol and taking the src one puts the host copy's reason back. The
+# row returns when the host copy covers the whole consolidated TU.
+#src/actors/dScMgD3DBase_c.cpp
+# QUARANTINED at the main->port sync (origin/main 9c7f38a24): this row is the raw
+# consolidated TU. slice_bnt.txt's BNT_HOSTGEN_SRCS substitutes a hostgen'd copy of
+# the WHOLE TU so its light-vector and matrix writes reach the geometry engine instead of
+# latching in the I/O window. Taking the raw copy as well would be a duplicate
+# symbol; taking it instead would put the defect back. The generated copy is in
+# this slice's target set, so the bodies still arrive.
+# The row below stays LIVE on purpose: BNT_HOSTGEN_SKIP names it, so this slice's
+# loop skips it and compiles the hostgen'd copy instead, and CMakeLists asserts the
+# row is still here -- a row that quietly went away would take the raw TU back and
+# the light-vector and matrix writes with it. It IS commented out of slice_bnp,
+# slice_tte, slice_pmfb7 and slice_facef, which have no such skip.
+src/minigames/d_s_mg_jump2.cpp
 src/func_ov006_020efc08.c

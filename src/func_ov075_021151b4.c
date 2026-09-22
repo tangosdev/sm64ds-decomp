@@ -10,7 +10,7 @@ struct Entry { char pad[0x118]; int x, y, z; char rest[0x34]; };
 void func_ov075_021151b4(char *c, int idx)
 {
     struct Entry *e = ((struct Entry *)(c + 0x920)) + idx;
-    struct Vector3 *src = (struct Vector3 *)(((long long)(int)((char *)e + 0x118)));
+    struct Vector3 *src = (struct Vector3 *)((char *)e + 0x118);
     struct Vector3 v, out;
     int y;
 

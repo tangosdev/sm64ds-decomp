@@ -36,7 +36,7 @@
 #   src/func_02011a5c.c        __sinit_02074da8's only callee. Self-contained:
 #                              it zeroes the struct it is handed and names no
 #                              other symbol.
-#   src/_ZN5Scene14GraphCallback2Ev.c
+#   src/_ZN8dGraph_c10callback_c14GraphCallback2Ev.cpp
 #                              the third word of data_0208ee14. Its three
 #                              siblings (GraphCallback0/1/3) were already in
 #                              the link; this one had no reference until the
@@ -55,7 +55,7 @@
 #                              already hosted (hal/auto_bss.cpp) or linked
 #                              (func_0203b9b4, func_0201973c).
 #   src/__sinit_02074e44.c     the same shape, a node at data_0209e654.
-#   src/__sinit_02074fe4.c     func_02037eec(data_020a0cec) -- both linked and
+#   src/__sinit_02074fe4.c     _ZN5dBgPcC1Ev(data_020a0cec) -- both linked and
 #                              hosted -- and a node at data_020a0ce0.
 #   src/__sinit_020750b8.c     zeroes data_020a0ebc (hal/auto_bss.cpp:413, an
 #                              exact 12-byte host) and a node at data_020a0eb0.
@@ -108,13 +108,13 @@
 #                              second wins, the first is dead in the ROM),
 #                              Clipper's constructor on data_0209f43c, and one
 #                              func_020731dc push at data_0209f388.
-#   src/_ZN7ClipperC1Ev.c      writes the vptr and calls Clipper::Func_020156DC
+#   src/_ZN7ClipperC1Ev.cpp      writes the vptr and calls Clipper::Func_020156DC
 #                              with the ROM's own 4:3 seed. Its callee is
 #                              already in the link (port/slice_gate10.txt).
-#   src/_ZN7ClipperD1Ev.c      the first word of _ZTV7Clipper.
+#   src/_ZN7ClipperD1Ev.cpp      the first word of _ZTV7Clipper.
 #
 # hal/ctor_runner.cpp hosts what none of the three had: _ZTV7Clipper (two
-# words; word 0 is D1 and word 1 is a NAMED TRAP, because src/_ZN7ClipperD0Ev.c
+# words; word 0 is D1 and word 1 is a NAMED TRAP, because src/_ZN7ClipperD0Ev.cpp
 # calls base_dtor_Clipper, an invented name for 0x0203cbcc that nothing in this
 # tree defines) and the 12-byte cell data_0209f388. It also carries the five
 # MSVC spellings the //cpp initialiser emits, transcribed from dumpbin.
@@ -170,8 +170,8 @@
 #
 #   src/__sinit_0207501c.c     constructs the moving-collider scratch
 #                              RaycastLine at data_020a0d0c and pushes a node
-#                              at data_020a0d00. Both _ZN11RaycastLineC1Ev and
-#                              _ZN11RaycastLineD1Ev were already in the link.
+#                              at data_020a0d00. Both _ZN9dBgCh_LinC1Ev and
+#                              _ZN9dBgCh_LinD1Ev were already in the link.
 #                              The +0x64 write is inside hal/clsn_vtable.cpp's
 #                              0x78 contiguous band, which hal/mmc_vtable.cpp
 #                              asserts at run time.
@@ -186,7 +186,7 @@
 #
 src/func_02072f94.c
 src/func_02011a5c.c
-src/_ZN5Scene14GraphCallback2Ev.c
+src/_ZN8dGraph_c10callback_c14GraphCallback2Ev.cpp
 src/__sinit_02074d90.c
 src/__sinit_02074da8.c
 src/__sinit_02074dbc.c
@@ -203,8 +203,8 @@ src/__sinit_020750b8.c
 src/__sinit_020750ec.c
 src/__sinit_0207511c.c
 src/__sinit_02074e84.cpp
-src/_ZN7ClipperC1Ev.c
-src/_ZN7ClipperD1Ev.c
+src/_ZN7ClipperC1Ev.cpp
+src/_ZN7ClipperD1Ev.cpp
 src/__sinit_02073a24.c
 src/__sinit_02074edc.c
 src/__sinit_0207501c.c

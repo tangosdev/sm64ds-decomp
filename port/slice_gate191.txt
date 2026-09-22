@@ -3,42 +3,42 @@
 # hal/actor_classes_ccm.cpp (hal_fill_ski_lift_vtable / hal_fill_mother_penguin_vtable).
 #
 # ==== CLASS IDENTITY (main-brain verified, scope report) ===================
-# SkiLift's own SpawnInfo (0x021138a8) installs data_ov018_021138cc, the
-# daObjSm_Lift_c chain func_ov018_021111a0..02111804 + SkiLift_Spawn.c -- the
+# SkiLift's own SpawnInfo (0x021138a8) installs _ZTV7SkiLift, the
+# daObjSm_Lift_c chain _ZN7SkiLiftD1Ev..02111804 + daObjSm_Lift_c_classInit.c -- the
 # REAL SkiLift.
 #
-# The eight src/_ZN7SkiLift* files are NOT that class: MotherPenguin_Spawn.c
+# The eight src/_ZN7SkiLift* files are NOT that class: daPgMthr_c_classInit.c
 # installs _ZTV7SkiLift == _ZTV10daPgMthr_c at 0x021139bc (MotherPenguin_
 # SpawnInfo 0x02113998 +0x24) -- a dsd-era class-identity mislabel. They are
 # MOTHER_PENGUIN's own bodies, byte-correct, wrongly named. Naming
 # corrections for main are queued separately (out of this worktree's scope).
 #
 # ==== SKI_LIFT (daObjSm_Lift_c), a Platform, 32 slots =======================
-# _ZTV14daObjSm_Lift_c == data_ov018_021138cc (0x021138cc..0x02113948
+# _ZTV14daObjSm_Lift_c == _ZTV7SkiLift (0x021138cc..0x02113948
 # inclusive), read with relocations applied, every slot:
-#   0  InitResources    func_ov018_021116b4  own
-#   3  CleanupResources func_ov018_021112fc  own
-#   6  Behavior         func_ov018_02111368  own -- NOT in the original scope
+#   0  InitResources    _ZN7SkiLift13InitResourcesEv  own
+#   3  CleanupResources _ZN7SkiLift16CleanupResourcesEv  own
+#   6  Behavior         _ZN7SkiLift8BehaviorEv  own -- NOT in the original scope
 #                        report's file list; found by reading the vtable's
 #                        own slot-6 reloc (0x34c bytes, essential -- without
 #                        it the lift never approaches its path nodes)
-#   9  Render           func_ov018_02111340  own
+#   9  Render           _ZN7SkiLift6RenderEv  own
 #  12  OnPendingDestroy 0x02043ac0           ActorBase's shared base body
-#  16  D1               func_ov018_021111a0  own -- HOST THUNK (stores its
+#  16  D1               _ZN7SkiLiftD1Ev  own -- HOST THUNK (stores its
 #                        own table then OVERWRITES with the _ZTV10dBgActor_c
 #                        196-speller SHARED PLACEHOLDER, the ShipUp/
 #                        RockPillar gate-188 shape) -- matched src stays in
 #                        src/ as proof, NOT part of this slice
-#  17  D0               func_ov018_021111e4  own -- SAME shape (stores VT0
+#  17  D0               _ZN7SkiLiftD0Ev  own -- SAME shape (stores VT0
 #                        then VT1, decl_common.h's generic placeholders, the
 #                        G0/G1 disease family) -- HOST THUNK, NOT in slice
-#  27  OnHitByMegaChar  func_ov018_0211123c  own
-#  31  Kill (Platform)  0x020ee55c (_ZN8Platform4KillEv) shared base body,
+#  27  OnHitByMegaChar  _ZN7SkiLift15OnHitByMegaCharER6Player  own
+#  31  Kill (Platform)  0x020ee55c (_ZN10dBgActor_c4KillEv) shared base body,
 #                        already in the build -- NOT overridden
 # Every other slot is the shared Actor/ActorBase half.
 #
 # TRAP CHECKLIST (the MovingMeshCollider carry-slot disease): SkiLift's own
-# InitResources (func_ov018_021116b4) Enables a MovingMeshCollider at +0x124
+# InitResources (_ZN7SkiLift13InitResourcesEv) Enables a MovingMeshCollider at +0x124
 # and hand-seats its beforeClsnCallback (func_020393d4, storing
 # MeshColliderBase::UpdatePosWithTransform at +0x18) plus a second data slot
 # at +0x1c (func_020393c4, storing func_ov018_02111804 -> func_ov018_021117e8,
@@ -51,38 +51,35 @@
 # needed here; this file's InitResources calls MovingMeshCollider::SetFile
 # and the shared callback-store helpers unmodified, matched src, no host copy.
 #
-# SkiLift's D1 (func_ov018_021111a0.c) and D0 (func_ov018_021111e4.c) are
+# SkiLift's D1 (_ZN7SkiLiftD1Ev.c) and D0 (_ZN7SkiLiftD0Ev.c) are
 # NOT in this list -- host thunks (skl_d1/skl_d0 in the fill) cover slots
 # 16/17 instead, the ShipUp/RockPillar gate-188 treatment. Both files stay
 # byte-locked in src/ as the matched proof; neither is referenced from
 # CMakeLists' gate-191 source list.
-src/SkiLift_Spawn.c
-src/func_ov018_0211123c.cpp
+src/d_a_obj_sm_lift.c
+src/_ZN7SkiLift15OnHitByMegaCharER6Player.cpp
 src/func_ov018_02111278.cpp
-src/func_ov018_021112fc.c
-src/func_ov018_02111340.cpp
-src/func_ov018_021116b4.cpp
+src/game/actors/d_a_pg_mthr.cpp
 src/func_ov018_021117e8.cpp
 src/func_ov018_02111804.c
-src/func_ov018_02111368.cpp
 #
 # ==== MOTHER_PENGUIN (daPgMthr_c), a plain Actor, 31 slots (no Kill) ========
 # _ZTV7SkiLift == _ZTV10daPgMthr_c (0x021139bc..02113a34 inclusive), read
 # with relocations applied, every slot:
-#   0  InitResources    _ZN7SkiLift13InitResourcesEv  own -- RETIRED to the
+#   0  InitResources    _ZN10daPgMthr_c13InitResourcesEv  own -- RETIRED to the
 #                        matched src TU (see the ARGSWEEP note below)
-#   3  CleanupResources _ZN7SkiLift16CleanupResourcesEv  own
-#   6  Behavior         _ZN7SkiLift8BehaviorEv  own
-#   9  Render           _ZN7SkiLift6RenderEv  own
-#  12  OnPendingDestroy _ZN7SkiLift16OnPendingDestroyEv  own (empty body --
+#   3  CleanupResources _ZN10daPgMthr_c16CleanupResourcesEv  own
+#   6  Behavior         _ZN10daPgMthr_c8BehaviorEv  own
+#   9  Render           _ZN10daPgMthr_c6RenderEv  own
+#  12  OnPendingDestroy _ZN10daPgMthr_c16OnPendingDestroyEv  own (empty body --
 #                        confirmed NOT the shared default by reloc target)
-#  16  D1               _ZN7SkiLiftD1Ev  own -- a real MSVC-synthesised
+#  16  D1               _ZN10daPgMthr_cD1Ev  own -- a real MSVC-synthesised
 #                        destructor with NO vtable store at all (the
 #                        OneUpLogo D1 shape) -- NOT compiled, the chain
 #                        (WithMeshClsn/MovingCylinderClsn/ShadowModel/
 #                        TextureSequence/ModelAnim, high address first, then
 #                        Actor's own D2) is spelled directly in the fill
-#  17  D0               _ZN7SkiLiftD0Ev  own -- stores _ZTV10daPgMthr_c, its
+#  17  D0               _ZN10daPgMthr_cD0Ev  own -- stores _ZTV10daPgMthr_c, its
 #                        OWN table under the correct RTTI name, NOT a shared
 #                        placeholder -- STAYS in slice, the IceSheet D0
 #                        treatment
@@ -100,14 +97,14 @@ src/func_ov018_02111368.cpp
 # past its own prologue), so the matched TU and the host copy are behaviourally
 # identical, and port/unmatched/MotherPenguin_InitResources.cpp is dropped.
 #
-# src/_ZN7SkiLift13InitResourcesEv.cpp's window-shared ov036/ov056/ov022
+# src/game/actors/d_a_pg_mthr.cpp's window-shared ov036/ov056/ov022
 # spellings (the #1308-#1310 trap family) are RESOLVED: carried byte-
-# identical from main HEAD post-c19c90882 (#1301). src/_ZN7SkiLift8BehaviorEv.cpp
-# and src/func_ov018_02111d28.cpp are ALSO carried (natural main drift since
+# identical from main HEAD post-c19c90882 (#1301). src/game/actors/d_a_pg_mthr.cpp
+# and src/game/actors/d_a_pg_mthr.cpp are ALSO carried (natural main drift since
 # this worktree branched -- a field-name-only rename and a signature/ABI fix
 # respectively, both byte-neutral).
 #
-# MotherPenguin's D1 (_ZN7SkiLiftD1Ev.cpp) is NOT in this list -- a real
+# MotherPenguin's D1 (_ZN10daPgMthr_cD1Ev.cpp) is NOT in this list -- a real
 # MSVC-synthesised destructor with no vtable store (the OneUpLogo D1 shape),
 # so the fill (mpg_d1) spells the member-teardown chain directly instead of
 # compiling this TU. It stays byte-locked in src/ as the matched proof; not
@@ -129,11 +126,8 @@ src/func_ov018_02111368.cpp
 # fixed there, to data_ov018_02113be8/02113bf0 -- the exact cells this
 # slice already mounts for MotherPenguin's own TextureSequence/Animation
 # SharedFilePtrs, so no new mount rows are needed.
-src/func_ov018_021123d0.c
-src/func_ov018_02112398.cpp
-src/func_ov018_021122ec.c
 #
-# MotherPenguin's Behavior (_ZN7SkiLift8BehaviorEv.cpp) is NOT in this list --
+# MotherPenguin's Behavior (_ZN10daPgMthr_c8BehaviorEv.cpp) is NOT in this list --
 # HOST COPY (port/unmatched/MotherPenguin_Behavior.cpp), the MSVC dtor-slot-
 # shift seam: the matched src dispatches ModelAnim::UpdateVerts through a raw
 # shadow-vtable index 3 (ROM's own two-destructor-slot numbering), but the
@@ -143,14 +137,7 @@ src/func_ov018_021122ec.c
 # copy dispatches UpdateVerts through the real typed method call instead.
 # Matched src stays byte-locked in src/, dropped from CMakeLists' gate-191
 # source list.
-src/MotherPenguin_Spawn.c
-src/_ZN7SkiLift13InitResourcesEv.cpp
-src/_ZN7SkiLift16CleanupResourcesEv.cpp
-src/_ZN7SkiLift6RenderEv.cpp
-src/_ZN7SkiLift16OnPendingDestroyEv.c
-src/_ZN7SkiLiftD0Ev.c
-src/func_ov018_02111d28.cpp
-src/_ZN13RacingPenguin16OnPendingDestroyEv.c
+src/_ZN13RacingPenguin16OnPendingDestroyEv.cpp
 #
 # ---- the two sinits (SkiLift's own + MotherPenguin's own; both
 # self-contained, only ov018 symbols, verified by reading their bodies) ----
@@ -158,9 +145,9 @@ src/__sinit_ov018_02112c14.c
 src/__sinit_ov018_02112c80.cpp
 #
 # NOT in this slice (matched src that MUST NOT be compiled -- host thunks or
-# host copies cover their slots): src/func_ov018_021111a0.c (SkiLift D1),
-# src/func_ov018_021111e4.c (SkiLift D0), src/_ZN7SkiLift13InitResourcesEv.cpp
-# (MotherPenguin InitResources -- the Prepare fix), src/_ZN7SkiLiftD1Ev.cpp
+# host copies cover their slots): src/game/actors/d_a_pg_mthr.cpp (SkiLift D1),
+# src/game/actors/d_a_pg_mthr.cpp (SkiLift D0), src/game/actors/d_a_pg_mthr.cpp
+# (MotherPenguin InitResources -- the Prepare fix), src/game/actors/d_a_pg_mthr.cpp
 # (MotherPenguin D1). All four are carried in src/ byte-identical to main/
 # their own last-verified state; none are referenced from CMakeLists' gate-191
 # source list.

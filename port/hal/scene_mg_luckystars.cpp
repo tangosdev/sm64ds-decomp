@@ -21,8 +21,8 @@
 // ---- 2. THE HIERARCHY IS THREE DEEP, AND THE RTTI SAYS SO ----------------
 //
 //     Scene -> dScMgBase_c         data_ov004_020bc0c0  36 slots
-//           -> dScMgSingle3DBase_c data_ov006_0213e448  36 slots
-//           -> dScMgBSC_c          data_ov006_0213fec8  36 slots
+//           -> dScMgSingle3DBase_c _ZTV19dScMgSingle3DBase_c  36 slots
+//           -> dScMgBSC_c          _ZTV10dScMgBSC_c  36 slots
 //
 // port/mg_fanout_costs.txt section 3 lists 0x184 as "vtable 0x0213fec8, 36
 // slots, 14 overrides" and says nothing about an intermediate base -- the same
@@ -40,9 +40,9 @@
 //     0x0213fec4 -> 0x0213fd8c -> +4 -> 0x0213fd98 = "10dScMgBSC_c"
 //                                -> +8 -> 0x0213bc64 -> "19dScMgSingle3DBase_c"
 //
-// The code agrees twice over: src/MgLuckyStars_Spawn.cpp writes 0x0213e448 into
+// The code agrees twice over: src/minigames/d_s_mg_bsc.cpp writes 0x0213e448 into
 // the object and then 0x0213fec8 over it, and slots 16 and 17
-// (src/func_ov006_02124908.c, src/func_ov006_0212497c.cpp) unwind them in the
+// (src/minigames/d_s_mg_bsc.cpp, src/minigames/d_s_mg_bsc.cpp) unwind them in the
 // opposite order.  A hierarchy written by the constructor and unwritten by the
 // destructor in reverse, with an RTTI base link agreeing, is not a guess.
 //
@@ -73,10 +73,10 @@
 // thunk matches none.  Row order decides which, and this class's row is
 // APPENDED AFTER both, so on this tree:
 //
-//   - data_ov006_0213e448 keeps hal/scene_mg_flower.cpp's thunks, unchanged
+//   - _ZTV19dScMgSingle3DBase_c keeps hal/scene_mg_flower.cpp's thunks, unchanged
 //     from the baseline, and BOTH that file's witness and scene_mg_memory2's
 //     keep counting exactly what they counted before this seat existed;
-//   - data_ov006_0213fec8 gets THIS file's thunks in its six inherited slots,
+//   - _ZTV10dScMgBSC_c gets THIS file's thunks in its six inherited slots,
 //     which is the only table this seat needs to own.
 //
 // SO THE PROMOTION scene_mg_memory2.cpp ARGUES FOR IS NOW DUE, AND THIS LANE
@@ -92,7 +92,7 @@
 //
 // ---- 4. SLOT 2 IS NOT src's BODY, AND IT IS NOT THIS LANE'S HOST COPY -----
 //
-// func_ov006_0210a6e4 (AfterInitResources) drops the framework's second
+// _ZN19dScMgSingle3DBase_c18AfterInitResourcesEj (AfterInitResources) drops the framework's second
 // argument: the ROM never writes r1 before its `bl 0x20b08f0`, so the flags
 // ride through in r1, and src spells the call with one argument because that is
 // the only way to spell an unnamed value in C.  Disassembled again by this lane
@@ -100,7 +100,7 @@
 // re-derived rather than cited.
 //
 // port/unmatched/MgFlower_Slot2.cpp already carries the repair as
-// port_mg_flower_after_init and this file calls it.  src/func_ov006_0210a6e4.cpp
+// port_mg_flower_after_init and this file calls it.  src/minigames/d_s_mg_single3_d_base.cpp
 // stays out of port/slice_lky.txt for the same reason it is out of
 // port/slice_flw.txt and port/slice_mem.txt: listing it would be an LNK2005
 // against that host copy.
@@ -209,22 +209,22 @@ int      port_scene_env_want(void);
    host array of the same name is a duplicate symbol, and leaving the mounted
    table alone leaves live wild DS pointers in a table the factory installs. */
 extern unsigned char data_ov004_020bc0c0[];   /* dScMgBase_c,         36 */
-extern unsigned char data_ov006_0213e448[];   /* dScMgSingle3DBase_c, 36 */
-extern unsigned char data_ov006_0213fec8[];   /* dScMgBSC_c,          36 */
-extern unsigned char MgLuckyStars_SpawnInfo[];
+extern unsigned char _ZTV19dScMgSingle3DBase_c[];   /* dScMgSingle3DBase_c, 36 */
+extern unsigned char _ZTV10dScMgBSC_c[];   /* dScMgBSC_c,          36 */
+extern unsigned char g_profile_MG_BS_CARD[];
 
 /* dScMgSingle3DBase_c's eight overrides.  Slot 2 is NOT src's body: see
    section 4 and port/unmatched/MgFlower_Slot2.cpp. */
 int   port_mg_flower_after_init(void *c, unsigned f);   /* slot  2 */
-void  func_ov006_0210a608(void *c, unsigned f);         /* slot  5 */
-int   func_ov006_0210a698(void *c);                     /* slot  7 */
-int   func_ov006_0210a664(void *c);                     /* slot 10 */
-int   func_ov006_0210a4b0(char *c);                     /* slot 16 D2 */
-int   func_ov006_0210a4e8(char *c);                     /* slot 17 D0 */
-int   func_ov006_0210a600(void);                        /* slot 26 */
-void  func_ov006_0210a708(char *c);                     /* slot 33 */
+void  _ZN19dScMgSingle3DBase_c21AfterCleanupResourcesEj(void *c, unsigned f);         /* slot  5 */
+int   _ZN19dScMgSingle3DBase_c14BeforeBehaviorEv(void *c);                     /* slot  7 */
+int   _ZN19dScMgSingle3DBase_c12BeforeRenderEv(void *c);                     /* slot 10 */
+int   _ZN19dScMgSingle3DBase_cD1Ev(char *c);                     /* slot 16 D2 */
+int   _ZN19dScMgSingle3DBase_cD0Ev(char *c);                     /* slot 17 D0 */
+int   _ZN19dScMgSingle3DBase_c24OnHitByCannonBlastedCharEv(void);                        /* slot 26 */
+void  _ZN19dScMgSingle3DBase_c9Virtual84Ev(char *c);                     /* slot 33 */
 
-/* dScMgBSC_c's own eight.  func_ov006_021254c0 is the HOST COPY in
+/* dScMgBSC_c's own eight.  _ZN10dScMgBSC_c8BehaviorEv is the HOST COPY in
    unmatched/MgBSC_StateDispatch.cpp, not the src TU: it is the
    pointer-to-member dispatcher and the port cannot compile the src.
 
@@ -235,17 +235,17 @@ void  func_ov006_0210a708(char *c);                     /* slot 33 */
    before this one needed -- would hand both bodies stack litter and let the
    4/5 arms fire at random.  The declarations below take it and the thunks pass
    it. */
-int   func_ov006_0212551c(void *self);        /* slot  0 InitResources */
-int   func_ov006_021254c0(void *self);        /* slot  6 Behavior, host copy */
-int   func_ov006_021253bc(void *self);        /* slot  9 Render */
-void *func_ov006_02124908(char *c);           /* slot 16 D2 */
-void *func_ov006_0212497c(char *c);           /* slot 17 D0 */
-void  func_ov006_02125364(char *c, int mode); /* slot 18 state reset */
-int   func_ov006_0212527c(char *c, int mode); /* slot 19 */
-int   func_ov006_02125248(void *self);        /* slot 21 */
+int   _ZN10dScMgBSC_c13InitResourcesEv(void *self);        /* slot  0 InitResources */
+int   _ZN10dScMgBSC_c8BehaviorEv(void *self);        /* slot  6 Behavior, host copy */
+int   _ZN10dScMgBSC_c6RenderEv(void *self);        /* slot  9 Render */
+void *_ZN10dScMgBSC_cD1Ev(char *c);           /* slot 16 D2 */
+void *_ZN10dScMgBSC_cD0Ev(char *c);           /* slot 17 D0 */
+void  _ZN10dScMgBSC_c13OnYoshiTryEatEi(char *c, int mode); /* slot 18 state reset */
+int   _ZN10dScMgBSC_c13OnTurnIntoEggEi(char *c, int mode); /* slot 19 */
+int   _ZN10dScMgBSC_c15OnGroundPoundedEv(void *self);        /* slot 21 */
 
 /* the factory */
-void *MgLuckyStars_Spawn(void);
+void *dScMgBSC_c_classInit(void);
 
 /* the dispatch file's witnesses */
 unsigned port_mg_bsc_state_hits(void);
@@ -292,23 +292,23 @@ static int g_bsc_mode18 = -1, g_bsc_mode19 = -1;
 static void *__fastcall s3_ainit(void *s, void *, unsigned f)
 { B3D(2);  return (void *)(size_t)port_mg_flower_after_init(s, f); }
 static void __fastcall s3_aclean(void *s, void *, unsigned f)
-{ B3D(5);  func_ov006_0210a608(s, f); }
+{ B3D(5);  _ZN19dScMgSingle3DBase_c21AfterCleanupResourcesEj(s, f); }
 static int  __fastcall s3_bbeh(void *s, void *)
-{ B3D(7);  return func_ov006_0210a698(s); }
+{ B3D(7);  return _ZN19dScMgSingle3DBase_c14BeforeBehaviorEv(s); }
 static int  __fastcall s3_bren(void *s, void *)
-{ B3D(10); return func_ov006_0210a664(s); }
+{ B3D(10); return _ZN19dScMgSingle3DBase_c12BeforeRenderEv(s); }
 static void *__fastcall s3_d2(void *s, void *)
-{ B3D(16); return (void *)(size_t)func_ov006_0210a4b0((char *)s); }
+{ B3D(16); return (void *)(size_t)_ZN19dScMgSingle3DBase_cD1Ev((char *)s); }
 static void *__fastcall s3_d0(void *s, void *)
-{ B3D(17); return (void *)(size_t)func_ov006_0210a4e8((char *)s); }
+{ B3D(17); return (void *)(size_t)_ZN19dScMgSingle3DBase_cD0Ev((char *)s); }
 static int  __fastcall s3_v26(void *, void *)
-{ B3D(26); return func_ov006_0210a600(); }
+{ B3D(26); return _ZN19dScMgSingle3DBase_c24OnHitByCannonBlastedCharEv(); }
 static int  __fastcall s3_v33(void *s, void *)
-{ B3D(33); func_ov006_0210a708((char *)s); return 0; }
+{ B3D(33); _ZN19dScMgSingle3DBase_c9Virtual84Ev((char *)s); return 0; }
 
 /* ---- dScMgBSC_c's own eight --------------------------------------------- */
 static int  __fastcall bsc_init(void *s, void *)
-{ BSC(0);  const int r = func_ov006_0212551c(s);
+{ BSC(0);  const int r = _ZN10dScMgBSC_c13InitResourcesEv(s);
   /* the GaplessMinigames latch, for hal/scene_mg.cpp's reason: every seated
      minigame calls it so the ones the gapless table does not name can say
      "unsupported" instead of doing nothing quietly.  hal_gapless_splice() is
@@ -318,13 +318,13 @@ static int  __fastcall bsc_init(void *s, void *)
      hal/scene_mg_bomroom.cpp section 8 and hal/scene_mg_flower.cpp. */
   hal_gapless_minigames_latch(); return r; }
 static int  __fastcall bsc_beh(void *s, void *)
-{ BSC(6);  return func_ov006_021254c0(s); }
+{ BSC(6);  return _ZN10dScMgBSC_c8BehaviorEv(s); }
 static int  __fastcall bsc_render(void *s, void *)
-{ BSC(9);  return func_ov006_021253bc(s); }
+{ BSC(9);  return _ZN10dScMgBSC_c6RenderEv(s); }
 static void *__fastcall bsc_d2(void *s, void *)
-{ BSC(16); return func_ov006_02124908((char *)s); }
+{ BSC(16); return _ZN10dScMgBSC_cD1Ev((char *)s); }
 static void *__fastcall bsc_d0(void *s, void *)
-{ BSC(17); return func_ov006_0212497c((char *)s); }
+{ BSC(17); return _ZN10dScMgBSC_cD0Ev((char *)s); }
 /* SLOTS 18 AND 19 TAKE ONE STACK ARGUMENT AND THIS CLASS READS IT.  Run mg5
    lane BASESET scanned both offsets out of the two overlay images word by word
    (runs/mg5/out/baseset/slot18_19_scan.txt): offset 0x48 is 22 sites and offset
@@ -334,11 +334,11 @@ static void *__fastcall bsc_d0(void *s, void *)
    on it -- 0x02125364 against 4, 5 and 3, 0x0212527c against 4 and 5 -- so it
    is forwarded, and the mode is recorded for the census. */
 static int  __fastcall bsc_reset(void *s, void *, int mode)
-{ BSC(18); g_bsc_mode18 = mode; func_ov006_02125364((char *)s, mode); return 1; }
+{ BSC(18); g_bsc_mode18 = mode; _ZN10dScMgBSC_c13OnYoshiTryEatEi((char *)s, mode); return 1; }
 static int  __fastcall bsc_v19(void *s, void *, int mode)
-{ BSC(19); g_bsc_mode19 = mode; return func_ov006_0212527c((char *)s, mode); }
+{ BSC(19); g_bsc_mode19 = mode; return _ZN10dScMgBSC_c13OnTurnIntoEggEi((char *)s, mode); }
 static int  __fastcall bsc_v21(void *s, void *)
-{ BSC(21); return func_ov006_02125248(s); }
+{ BSC(21); return _ZN10dScMgBSC_c15OnGroundPoundedEv(s); }
 
 /* SM64DS_SCENE_SLOT0=0 and SM64DS_SCENE_SLOT9=0, the diagnostics every scene
    seat in this port carries, counted separately so a run can never read a no-op
@@ -402,14 +402,14 @@ static unsigned g_bsc_mid_claimed;
 extern "C" void port_scene_fill_luckystars(void)
 {
     void **base = (void **)data_ov004_020bc0c0;
-    void **mid  = (void **)data_ov006_0213e448;
-    void **vt   = (void **)data_ov006_0213fec8;
+    void **mid  = (void **)_ZTV19dScMgSingle3DBase_c;
+    void **vt   = (void **)_ZTV10dScMgBSC_c;
 
     /* THE BASE TABLE IS FILLED HERE TOO AND IT IS NOT CEREMONY.  Earlier rows'
        fills already did it and run first, so on a tree carrying them this is a
        second pass over words that are already host pointers and finds nothing.
        It is here so this class does not depend on another class's row existing:
-       the factory's first act is func_ov004_020b2adc, which writes
+       the factory's first act is _ZN11dScMgBase_cC2Ev, which writes
        data_ov004_020bc0c0 into the object's first word before either derived
        table lands. */
     port_scene_mg_fill_shared(base, 36);
@@ -481,17 +481,17 @@ extern "C" void port_scene_fill_luckystars(void)
 
    THE FACTORY NEEDS NO DISPLACEMENT RULING, re-checked rather than assumed.
    port/mg_fanout_costs.txt section 12 grants one to 0x169 because
-   src/func_ov006_020e0574.cpp calls the base constructor func_ov004_020b2adc
+   src/actors/dScMgCup_c.cpp calls the base constructor _ZN11dScMgBase_cC2Ev
    with NO argument and rides r0 through, and that callee dereferences on its
    first statement and then writes three vtable words through the pointer.
-   src/MgLuckyStars_Spawn.cpp calls func_ov004_020b2adc(p) WITH its argument, so
+   src/minigames/d_s_mg_bsc.cpp calls _ZN11dScMgBase_cC2Ev(p) WITH its argument, so
    this class is on the correct side of it and the factory is linked from the
    slice rather than host-copied. */
 static char *g_bsc_self;
 
 extern "C" void *port_mg_luckystars_spawn(void)
 {
-    void *p = MgLuckyStars_Spawn();
+    void *p = dScMgBSC_c_classInit();
     g_bsc_self = (char *)p;
     return p;
 }
@@ -556,7 +556,7 @@ extern "C" void port_scene_luckystars_hits(void)
     /* THE TWO SPRITE RECORDS, because a run that renders nothing and a run that
        has nothing to render read the same on every other line -- run mg7 lane
        MEMCARDS' finding, section 15, and the reason it is worth the twenty
-       lines.  src/func_ov006_021253bc.c (slot 9, Render) draws exactly two
+       lines.  src/minigames/d_s_mg_bsc.cpp (slot 9, Render) draws exactly two
        sprites through Hud_RenderSprite (0x020af68c), gated on the state index
        being >= 1, and their fields are read off the ROM at 0x021253f0..0x0212545c:
          +0x51a8 + i*8   the 20.12 x, shifted down by 12 for the draw
@@ -588,19 +588,19 @@ extern "C" void port_scene_luckystars_hits(void)
        again here rather than assumed: this class keeps its progress in the
        PERSISTENT per-minigame record, not in the scene.
 
-         slot 18  (src/func_ov006_02125364.c) SEEDS it, and only on mode 3:
+         slot 18  (src/minigames/d_s_mg_bsc.cpp) SEEDS it, and only on mode 3:
                     if (mode != 4 && mode != 5 && mode == 3)
                         self->+0xb4 = func_ov004_020ad878();
                         func_ov004_020adb1c(self->+0xb4);
                   -- func_ov004_020ad878 is data_0209caf4[minigame index][1],
                   and func_ov004_020adb1c is the star badge on the top screen.
-         slot 19  (src/func_ov006_0212527c.cpp) WRITES IT BACK, on state 0xc
+         slot 19  (src/minigames/d_s_mg_bsc.cpp) WRITES IT BACK, on state 0xc
                   with data_ov004_020bf9e4 == 1:
                         func_ov004_020ad79c(self->+0xa8, self->+0xb4)
                   -- score and level, the same pair Memory Master writes.
-         slot 21  (src/func_ov006_02125248.c) READS it: (+0xb4)/5 capped at 3,
+         slot 21  (src/minigames/d_s_mg_bsc.cpp) READS it: (+0xb4)/5 capped at 3,
                   plus one, handed to func_ov004_020b6324. Four bands.
-         slot 0   (src/func_ov006_0212551c.cpp) seeds +0xa8 and +0xac from
+         slot 0   (src/minigames/d_s_mg_bsc.cpp) seeds +0xa8 and +0xac from
                   func_ov004_020ad8b8() and then dispatches slot 18 with mode 3
                   through the object's own vtable -- which is how the seed above
                   is reached on a direct scene boot.

@@ -103,7 +103,7 @@
 # thiscall callee. Both conventions are satisfied by the same instruction.
 
 src/func_ov072_02121cdc.cpp
-src/func_ov071_02120278.cpp
+src/actors/Scuttlebug.cpp
 src/func_ov071_021215c0.cpp
 src/func_ov080_021250c8.cpp
 
@@ -122,8 +122,8 @@ src/func_ov080_021250c8.cpp
 #       sibling src/func_ov072_02121cdc.cpp (TICK, same +0x35c, same table,
 #       same seat) is four lines above this comment and has been linked and
 #       green since wave 18.
-#   src/func_ov071_021202b4.cpp   Scuttlebug ENTER, ov071 +0x380
-#       sibling src/func_ov071_02120278.cpp (MAIN, same +0x380, same table,
+#   src/actors/Scuttlebug.cpp   Scuttlebug ENTER, ov071 +0x380
+#       sibling src/actors/Scuttlebug.cpp (MAIN, same +0x380, same table,
 #       same seat) likewise.
 #
 # EVERY CHECK WAVE 18 MADE FOR THE SIBLING COVERS THE ENTER HALF UNCHANGED,
@@ -132,7 +132,7 @@ src/func_ov080_021250c8.cpp
 #                18); ov072's are checked at runtime on every boot, because
 #                hal/actor_classes_ov072.cpp's seat ABORTS on a nonzero one.
 #   convention   both callers are plain .c cdecl TUs that are already linked --
-#                src/func_ov072_02121d50.c and src/Scuttlebug_SetState.c -- each
+#                src/func_ov072_02121d50.c and src/actors/Scuttlebug.cpp -- each
 #                storing the record pointer and then calling the dispatcher with
 #                the object pushed. So the tail jump wave 18 measured
 #                ("pop ebp / jmp eax leaves the original argument at [esp+4]")
@@ -148,4 +148,3 @@ src/func_ov080_021250c8.cpp
 # eighteen-source table seat is untouched and still needed -- the same surgery
 # wave 18 did to that file for the MAIN half.
 src/func_ov072_02121d18.cpp
-src/func_ov071_021202b4.cpp

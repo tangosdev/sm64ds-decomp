@@ -25,7 +25,7 @@
 # overlay_0091.bin at base 0x02130f00 (ov091 is compressed:true, so the dsd
 # export is the wrong image for a halfword read):
 #
-#     id 138  0x02090a8c -> 0x02134f60  word[0]=0x02132908 SlidingPlatformBdw_Spawn
+#     id 138  0x02090a8c -> 0x02134f60  word[0]=0x02132908 daObjSimpleLift_c_classInit_KM1_DERU
 #                                       +4 halfword = 138, +6 priority 179
 #     id 154  0x02090acc -> 0x02134f7c  word[0]=0x021328d8 ..BsWide_Spawn
 #                                       +4 = 154, +6 priority 225
@@ -33,10 +33,10 @@
 #                                       +4 = 155, +6 priority 226
 #
 # NO FACTORY WRAPPER: all three Spawns are byte-for-byte the same shape as the
-# already-registered SlidingPlatformWf_Spawn -- 816 bytes over Platform's
+# already-registered daObjSimpleLift_c_classInit_BK_TRANSBAR -- 816 bytes over Platform's
 # constructor, then a single `p[0] = _ZTV17SlidingPlatformWf` by a REAL name
 # rather than the zeroed VT1 placeholder -- so the registry calls each matched
 # Spawn directly.
-src/SlidingPlatformBdw_Spawn.c
-src/SlidingPlatformBsWide_Spawn.c
-src/SlidingPlatformBsLong_Spawn.c
+src/d_a_obj_simple_lift_km1_deru.c
+src/d_a_obj_simple_lift_km3_deru01.c
+src/d_a_obj_simple_lift_km3_deru02.c

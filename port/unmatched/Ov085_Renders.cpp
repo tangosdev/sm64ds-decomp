@@ -1,4 +1,4 @@
-/* HOST COPIES of src/_ZN6Rabbit6RenderEv.cpp and
+/* HOST COPIES of src/actors/daMip_c.cpp and
  * src/_ZN9LakituBro6RenderEv.cpp -- the one slot the ROM's and MSVC's vtable
  * numbering cannot both be served by one array.
  *
@@ -28,11 +28,11 @@
 extern "C" {
 
 int _ZN15TextureSequence6UpdateER15ModelComponents(void *self, void *mc);
-void func_ov085_0212c150(void *self);
+void _ZN7daMip_c17RenderMirrorImageEv(void *self);
 extern signed char data_0209f2f8;   /* the level id */
 extern signed char data_02092120;   /* the area currently shown */
 
-/* _ZN6Rabbit6RenderEv RETIRED (run link100, lane EXCEPT). Its stated reason -- the
+/* _ZN7daMip_c6RenderEv RETIRED (run link100, lane EXCEPT). Its stated reason -- the
    ROM-order model slot-5 dispatch -- died with lane SLOT5F's
    respelling of include/ModelBase.h: hal/cxxname_bridge.cpp:522/578
    put Render back on index 5 of _ZTV5Model and _ZTV9ModelAnim, so the

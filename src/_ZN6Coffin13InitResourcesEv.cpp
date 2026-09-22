@@ -4,8 +4,9 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Coffin.h"
-typedef int Fix12;
-typedef short s16;
+/* Not `Fix12`: this actor's header now reaches math/Fix12.h, where Fix12 is a
+   class template. Only the raw word matters at this call. */
+typedef int Fix12Raw;
 
 struct Matrix4x3;
 struct SharedFilePtr;
@@ -13,27 +14,16 @@ struct BMD_File;
 struct KCL_File;
 struct CLPS_Block;
 
-struct Model {
-    static BMD_File* LoadFile(SharedFilePtr& f);
-};
-struct ModelBase {
-    int SetFile(BMD_File* f, int a, int b);
-};
-struct MeshCollider {
-    static KCL_File* LoadFile(SharedFilePtr& f);
-};
-struct MovingMeshCollider {
-    int SetFile(KCL_File* f, const Matrix4x3& m, Fix12 s, short n, CLPS_Block& c);
-};
-struct Platform {
-    void UpdateClsnPosAndRot();
-};
-
-BMD_File* Model::LoadFile(SharedFilePtr&);
-int ModelBase::SetFile(BMD_File*, int, int);
-KCL_File* MeshCollider::LoadFile(SharedFilePtr&);
-int MovingMeshCollider::SetFile(KCL_File*, const Matrix4x3&, Fix12, short, CLPS_Block&);
-void Platform::UpdateClsnPosAndRot();
+/* dBgW_Kc and dBgW_KcMbg are the real classes now, through this actor's header,
+   which types mMeshCollider. Redefining them ICEs mwccarm (CClass.c:3328).
+   dBgW_Kc declares LoadFile itself; SetFile is still reached by its mangled
+   symbol below, because the real one takes Fix12<int> BY VALUE and mwccarm
+   passes that differently at the call site. */
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" int _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *, KCL_File* f, const Matrix4x3& m, Fix12Raw s, short n, CLPS_Block& c);
 
 extern "C" {
 extern void Matrix4x3_FromRotationY(void* m, int angle);
@@ -47,13 +37,13 @@ extern SharedFilePtr data_ov071_021230d8;
 extern CLPS_Block data_ov063_0211ebd8;
 }
 
-extern int _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_;
+extern int _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_;
 
 int Coffin::InitResources()
 {
-    ((ModelBase*)((char*)&mModel))->SetFile(Model::LoadFile(data_ov071_021230d0), 1, -1);
-    unk_09c = -0x2000;
-    unk_0a0 = -0x3c000;
+    ((ModelBase*)((char*)&mModel))->SetFile((BMD_File*)Model::LoadFile(data_ov071_021230d0), 1, -1);
+    mVertAccel = -0x2000;
+    mTerminalVelocity = -0x3c000;
     Vector3 in;
     Vector3 out;
     in.x = 0;
@@ -70,10 +60,8 @@ int Coffin::InitResources()
     mPosY = res.y;
     mPosZ = res.z;
     func_ov071_02122080(((char*)this));
-    ((Platform*)((char*)this))->UpdateClsnPosAndRot();
-    ((MovingMeshCollider*)((char*)&mMeshCollider))->SetFile(
-        MeshCollider::LoadFile(data_ov071_021230d8),
-        *(Matrix4x3*)((char*)&unk_2ec), 0x199, mAngleY, data_ov063_0211ebd8);
-    func_020393d4((int*)((char*)&mMeshCollider), (int)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
+    ((dBgActor_c*)((char*)this))->UpdateClsnPosAndRot();
+    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block((dBgW_KcMbg*)((char*)&mMeshCollider), (KCL_File*)dBgW_Kc::LoadFile(data_ov071_021230d8), *(Matrix4x3*)((char*)&mClsnMat), 0x199, mAngleY, data_ov063_0211ebd8);
+    func_020393d4((int*)((char*)&mMeshCollider), (int)&_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
     return 1;
 }

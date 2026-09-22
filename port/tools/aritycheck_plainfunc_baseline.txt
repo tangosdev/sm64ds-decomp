@@ -49,7 +49,7 @@
 #       guard existed; it stays here rather than being re-discovered.
 #   func_0203dabc|include/decl_common.h   -- FIXED AND REMOVED, run mg15 MP1.
 #       It was a header prototype: decl_common.h spelled it (void), both
-#       definitions take the comms slot index, and src/func_ov007_020cc2cc.c
+#       definitions take the comms slot index, and src/_ZN9dScDSMT_c8BehaviorEv.cpp
 #       called it with nothing through the include. mg15 lane MP1 gave the
 #       header the parameter and the caller the explicit argument
 #       (func_0203dabc(func_0203da9c())), which is the same two bl on ARM:
@@ -57,8 +57,8 @@
 #       func_0203dae4|include/decl_common.h went with it. Kept here as the
 #       worked example of a header row that could be CLOSED rather than
 #       ridden, since this file may only shrink.
-#   func_01ffa344|src/_ZN8Goomboss13InitResourcesEv.c  -- FIXED AND REMOVED,
-#   func_01ffa344|src/func_ov074_0211fa08.c            run rel0215 lane prop17.
+#   func_01ffa344|src/_ZN8Goomboss13InitResourcesEv.cpp  -- FIXED AND REMOVED,
+#   func_01ffa344|src/actors/Goomboss.cpp            run rel0215 lane prop17.
 #       Both rows existed because the HOST body in hal/cxx_aliases.cpp was
 #       `int (int a, int b)` with `(void)b`, described in its own comment as
 #       "one caller's r1 ride-through". prop17 disassembled the ROM body
@@ -84,22 +84,22 @@
 #
 # The list may only shrink.
 
-func_0200d8c8|src/_ZN5Actor10EarthquakeERK7Vector35Fix12IiE.cpp
-func_02011dcc|src/_ZN5Sound8SetMusicEjj.c
+func_0200d8c8|src/_ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE.cpp
+func_02011dcc|src/_ZN5Sound8SetMusicEjj.cpp
 func_02018a24|src/func_02018270.c
 func_0202e78c|src/func_ov004_020b2980.c
-func_020308b4|src/func_02034da4.c
+func_020308b4|src/_ZN7dScMB_c8BehaviorEv.cpp
 func_020308b4|src/func_ov075_02118a78.c
 func_020308d0|src/SetNumPlayers.c
 func_02036acc|src/func_02038408.c
 func_0203ad6c|src/_ZN7PathPtr6FromIDEj.cpp
 func_0203cc0c|src/_ZN6Memory13operator_new2Ej.cpp
 func_0203cc0c|src/_Znwj.cpp
-func_0203d7d4|src/_ZN5Sound19LoadGroupAndSetBankEii.c
+func_0203d7d4|src/_ZN5Sound19LoadGroupAndSetBankEii.cpp
 func_0203f714|src/func_0203f920.c
 func_02040a5c|src/func_0203ea5c.c
-func_02042fe4|src/func_02013edc.c
-func_02042ffc|src/_ZN12ActorDerived5SpawnEjP9ActorBaseii.cpp
+func_02042fe4|src/actors/ActorDerived.cpp
+func_02042ffc|src/actors/ActorDerived.cpp
 func_02043098|src/func_02042ffc.c
 func_02044b30|src/_ZN15ModelComponents6RenderEP9Matrix4x3P7Vector3.cpp
 func_02045ad8|src/func_ov075_0211aa94.c
@@ -108,14 +108,14 @@ func_02045e70|src/func_020169f4.c
 func_02045ef8|src/func_02016a04.c
 func_02045f80|src/func_02016a14.c
 func_0204605c|src/func_02016aac.c
-func_02048a1c|src/_ZN5Sound8PlayLongEjjjRK7Vector3j.c
+func_02048a1c|src/_ZN5Sound8PlayLongEjjjRK7Vector3s.cpp
 func_02048a1c|src/func_0201226c.c
-func_02049d60|src/_ZN8Particle14SimpleCallback14SpawnParticlesERNS_6SystemE.cpp
+func_02049d60|src/_ZN5dPa_c7level_c16simpleCallback_c14SpawnParticlesERN8Particle6SystemE.cpp
 func_0204c584|src/func_0204a5bc.c
 func_0204efe0|src/func_02011db4.c
 func_0204f2d4|src/func_0204f630.c
 func_0204f5a0|src/func_0204fa2c.c
-func_02050cdc|src/_ZN5Sound4PlayEjjRK7Vector3.c
+func_02050cdc|src/_ZN5Sound4PlayEjjRK7Vector3.cpp
 func_02059950|src/func_0201aaa4.c
 func_02059ba0|src/func_0201aac8.c
 func_0205aaf4|src/func_0204f86c.c
@@ -130,40 +130,40 @@ func_0205d518|src/func_02018d98.c
 func_0205d644|src/func_02018e3c.c
 func_0205d644|src/func_0205d518.c
 func_0205fbd0|src/func_0205fab4.c
-func_ov002_020aefb8|src/func_ov002_020afbb4.c
+func_ov002_020aefb8|src/actors/da1up_c.cpp
 func_ov002_020b16c4|src/func_ov002_020b19dc.c
 func_ov002_020b1884|src/func_ov002_020b19dc.c
-func_ov002_020bac18|src/_ZN10ShutterHmc8BehaviorEv.cpp
+func_ov002_020bac18|src/game/actors/d_a_obj_cv_shutter.cpp
 func_ov002_020c3e8c|src/func_ov085_0212d5dc.cpp
 func_ov002_020d4d88|port/unmatched/func_ov002_020d3b9c.c
 func_ov002_020d4d88|src/_ZN6Player13St_Crawl_MainEv.cpp
-func_ov002_020d4d88|src/_ZN6Player14St_OnWall_MainEv.cpp
+func_ov002_020d4d88|src/actors/Player.cpp
 func_ov002_020d4d88|src/_ZN6Player17St_HoldHeavy_MainEv.cpp
 func_ov002_020d4d88|src/_ZN6Player17St_HoldLight_MainEv.cpp
-func_ov002_020d5cec|src/func_ov002_020bdb50.cpp
+func_ov002_020d5cec|src/actors/Player.cpp
 func_ov002_020de328|src/func_ov092_02131010.cpp
 func_ov002_020e3f90|include/decl_common.h
-func_ov002_020e7d84|src/func_ov002_020e930c.c
+_ZN10StarMarker7CollectEv|src/func_ov002_020e930c.c
 func_ov002_020e8abc|src/func_ov002_020e8c34.c
 func_ov002_020e8e80|include/decl_common.h
 func_ov002_020f2630|src/func_ov002_020f26d4.c
 func_ov004_020adfc4|src/func_ov004_020b39a4.c
 func_ov004_020adfc4|src/func_ov004_020b484c.c
 func_ov004_020adfc4|src/func_ov006_020dd658.c
-func_ov004_020af04c|src/func_ov006_020e6d8c.c
-func_ov004_020af27c|src/func_ov006_020e6d98.c
-func_ov004_020b04f4|src/_ZN17MgBounceAndPounce12BeforeRenderEv.cpp
-func_ov004_020b08f0|include/decl_common.h
+_ZN11dScMgBase_c19OnHitFromUnderneathEv|src/actors/dScMgD3DBase_c.cpp
+_ZN11dScMgBase_c15OnHitByMegaCharEv|src/actors/dScMgD3DBase_c.cpp
+_ZN11dScMgBase_c12BeforeRenderEv|src/actors/dScMgD3DBase_c.cpp
+_ZN11dScMgBase_c18AfterInitResourcesEj|include/decl_common.h
 func_ov004_020b19f0|src/func_ov006_021004c0.c
-func_ov004_020b2adc|src/MgMushroomRoulette_Spawn.cpp
-func_ov004_020b2adc|src/func_ov006_020e0574.cpp
+_ZN11dScMgBase_cC2Ev|src/minigames/d_s_mg_roulette.cpp
+_ZN11dScMgBase_cC2Ev|src/actors/dScMgCup_c.cpp
 func_ov004_020b42c0|src/func_ov004_020b31b4.cpp
 func_ov004_020b743c|src/func_ov004_020b7460.c
 func_ov005_020c0030|include/decl_common.h
 func_ov005_020c007c|src/func_ov005_020c0030.c
 func_ov006_020fbb2c|src/func_ov006_020fb7e0.c
-func_ov006_02114738|src/func_ov006_02110bb4.c
-func_ov006_02115b0c|src/func_ov006_02118a8c.cpp
+_ZN21cMgSmartball_object_c14RestoreInitialEv|src/_ZN20cMgSmartball_dokan_c14RestoreInitialEv.cpp
+func_ov006_02115b0c|src/_ZN16dScMgSmartball_c13OnYoshiTryEatEi.cpp
 func_ov006_0211fb1c|src/func_ov006_0211f9fc.c
 func_ov007_020ae558|src/func_ov007_020add3c.c
 func_ov007_020b3c54|src/func_ov007_020b3360.c
@@ -174,18 +174,18 @@ func_ov007_020c43bc|src/func_ov007_020b4b5c.c
 func_ov007_020c99d8|src/func_ov007_020bcdb8.cpp
 func_ov007_020cc0e4|src/func_ov007_020cc600.c
 func_ov015_02111414|include/decl_common.h
-func_ov018_021123d0|src/func_ov018_02111e28.cpp
-func_ov030_021141a8|src/_ZN13RollingLogTtm8BehaviorEv.cpp
+func_ov018_021123d0|src/game/actors/d_a_pg_mthr.cpp
+func_ov030_021141a8|src/actors/daMky_c.cpp
 func_ov063_02118eac|src/unnamed/ov063/func_ov063_02118ea0.c
 func_ov063_02119b84|src/unnamed/ov063/func_ov063_02119274.c
 func_ov063_0211a0dc|src/unnamed/ov063/func_ov063_02119b1c.c
 func_ov072_02121d50|src/_ZN11BabyPenguin13InitResourcesEv.cpp
 func_ov072_02121d50|src/func_ov072_021217ac.cpp
 func_ov077_0212478c|include/decl_common.h
-func_ov079_02123d4c|src/func_ov079_02123b54.c
+func_ov079_02123d4c|src/_ZN5Whomp25OnAimedAtWithEggReturnVecEv.cpp
 func_ov080_0212513c|include/decl_common.h
 func_ov080_0212513c|src/func_ov080_02124e60.c
-func_ov096_02136fd4|include/decl_common.h
-func_ov096_02137088|include/decl_common.h
-func_ov096_021372c0|include/decl_common.h
+_ZN7Tornado6State2Ev|include/decl_common.h
+_ZN7Tornado6State1Ev|include/decl_common.h
+_ZN7Tornado6State0Ev|include/decl_common.h
 func_ov100_02145080|src/func_ov100_02144468.c

@@ -209,10 +209,47 @@ static void port_message_flush_engine_a_regs(void)
     *(vu32 *)0x400001c = (data_0209d48c & 0x1ff) | (0x1ff0000u & (data_0209d490 << 16));
 }
 
+/* LANE SAVE1 INSTRUMENT, and nothing else. Inert unless SM64DS_SAVE_POINT is
+   set: one cached getenv and one compare per frame when it is not.
+//
+   WHAT IT IS FOR. Tango reported "save files still do not save". The write
+   path is provable end to end without it (port/tools/save_proof.py drives
+   SaveData::SaveFile through SM64DS_SAVE_PROBE=write), but the proof that was
+   MISSING is the one at a REAL SAVE POINT: the box the player answers after a
+   star. This fires the same call the star's own state machine makes --
+   PowerStar state 11 case 2 (func_ov002_020e9af4) calls
+   Message::DisplaySaving(0x295) when the player picks the save choice -- at a
+   requested frame of a level run, and then gets out of the way. Everything
+   under it is the ROM's and is untouched: DisplaySaving arms the box, the
+   save arm below runs the countdown, SaveData::SaveCurrentFile writes the
+   current file and the minigame record, SaveFile -> SaveDataToCart -> the card
+   driver -> port/ntr/backup.cpp reach the 8192-byte cartridge image on disk.
+
+   SM64DS_SAVE_POINT=<n> fires it on the n'th frame this pump is ticked. */
+static void port_save_point_probe(void)
+{
+    static int at = -2;
+    static int frames = 0;
+    static int fired = 0;
+    if (at == -2) {
+        const char *e = std::getenv("SM64DS_SAVE_POINT");
+        at = (e && *e) ? std::atoi(e) : -1;
+    }
+    if (at < 0 || fired) return;
+    if (++frames < at) return;
+    fired = 1;
+    std::fprintf(stderr, "[savepoint] pump frame %d: Message::DisplaySaving(0x295), "
+                         "the star's own save prompt\n", frames);
+    std::fflush(stderr);
+    _ZN7Message13DisplaySavingEt(0x295);
+}
+
 /* Reproduces Stage::UpdateMessage's dialogue arm, called once per frame. This
    is the exact tick Stage::Behavior gives the box when data_0209f2d8 != 1. */
 void port_message_pump(void)
 {
+    port_save_point_probe();   /* inert unless SM64DS_SAVE_POINT is set */
+
     /* diagnostic: report the box state each frame it is active for the first
        ~30 active frames, so a headless run can watch UpdateWindow animate the
        box open (d658/d64c grow to d6d0/d6c8) and Message::Update advance d6bc. */
@@ -285,7 +322,7 @@ void port_message_pump(void)
 }
 
 /* The save-write leaf. The ROM's own SaveData::SaveCurrentFile, linked from
-   src/_ZN8SaveData15SaveCurrentFileEv.c through port/slice_gate215.txt: it
+   src/_ZN8SaveData15SaveCurrentFileEv.cpp through port/slice_gate215.txt: it
    writes the current file (slot data_0209caa0[0x328]) and then the minigame
    record, and the value it returns is 1 when both reached the medium. Nothing
    in the ROM reads that value here either -- Message's countdown owns the box

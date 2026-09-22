@@ -138,6 +138,11 @@ int g_hal_fader_stepping;
 
 int hal_wipe_index(const void *self);
 
+/* Is the word the caller handed us a wipe object, or the vtable a wrong-shape
+   caller left behind? Both defined beside hal_wipe_index, under the array. */
+int hal_wipe_receiver_ok(const void *self);
+void hal_wipe_shape_trap(const char *slot, const void *self);
+
 /* Loud, but not per-frame: the first few calls say what the host is
    skipping, then it goes quiet. */
 void hal_wipe_note(const char *what, const void *self)
@@ -184,7 +189,7 @@ void hal_wipe_note(const char *what, const void *self)
    THE RECORDS ARE TEN SLOTS, NOT TWELVE, and reading them as twelve is the
    easy mistake this note used to make. Spanning symbol to symbol picks up two
    extra words past 0x24, which look like a zero and a pointer to
-   data_0208ea24 and invite being read as a trailer. They are not part of this
+   _ZTI15dFdBrightness_c and invite being read as a trailer. They are not part of this
    table at all: they are the ITANIUM HEADER OF THE NEXT VTABLE, offset-to-top
    then typeinfo, and config/arm9/relocs.txt proves it rather than suggesting
    it. Three rows, one per fader record:
@@ -223,7 +228,7 @@ void hal_wipe_note(const char *what, const void *self)
 
    ONE CLAIM RETRACTED. Commit 7a1e6b17f's message reads data_0208eb2c's
    naming as another instance of the Actor/ActorBase D1/D2 swap, on the
-   grounds that src/_ZN5ColorD1Ev.c calls it "vtable for Color". It is not.
+   grounds that src/_ZN10FaderColorD2Ev.cpp calls it "vtable for Color". It is not.
    FaderColor's destructors are named correctly in the config -- slots 0 and 1
    of data_0208eb2c are _ZN10FaderColorD1Ev and _ZN10FaderColorD0Ev, exactly
    as the config has them -- and Color at 0x02017574 is its own base class,
@@ -305,14 +310,55 @@ struct HalFaderWipe {
     /* 0x0c / 0x10 -- NOT delegated: the matched bodies end in a virtual
        IsAtStart()/IsAtEnd() that would land one slot off here. See the dtor-fold
        note in the header. The arithmetic below is the matched arithmetic:
-       cstd::fdiv(+-0x1000, frames << 12) is +-0x1000 / frames. */
-    virtual int SetBackwardTime(int frames, int)     /* 0x0c */
+       cstd::fdiv(+-0x1000, frames << 12) is +-0x1000 / frames.
+
+       AND __cdecl, WITH THE RECEIVER ON THE STACK. These two slots are the
+       fifth class of the shape 0ec379b94 and 19a71216e retired on the sibling
+       tables, and the reasoning is 19a71216e's word for word. The one call site
+       these two slots have is src/_ZN8dScene_c14BeforeBehaviorEv.cpp, whose
+       banner says why it cannot go through the real class and keep matching: it
+       reaches the installed fader through a file-local FaderVTable of PLAIN
+       FUNCTION POINTERS with an explicit first parameter,
+       `void (*SetBackwardTime)(void *, u32, u32)`, and MSVC compiles that as
+       __cdecl:
+
+           push 0
+           push 1Eh
+           push eax            <- THE RECEIVER, a stack argument
+           call eax
+           add  esp,0Ch        <- the CALLER takes all twelve back
+
+       and one instruction before the call it does `mov ecx,[eax]`, so ECX holds
+       THE VTABLE at that call, not the object. A __thiscall member here reads
+       ECX as `this` and its very first statement writes `speed` at this+8:
+       measured on levels 26, 34 and 35 as
+
+           FAULT c0000005 at ?SetBackwardTime@HalFaderWipe@@UAEHHH@Z+0x12
+           ecx 007192a0 = ??_7HalFaderWipe@@6B@, WRITE to 007192a8 = that + 8
+
+       i.e. the stub writing the fade speed into its own vtable, in .rdata. A
+       __cdecl member takes `this` as its first stack word and cleans nothing,
+       which is exactly the frame the call site builds. Run link100, lane
+       SINGLES2; measured by lane SINGLES (out/SINGLES/handoff_BOOT1.md).
+
+       Receiver check included for 19a71216e's stated reason: a caller of the
+       old shape would hand these two a vtable or a frame count as the receiver,
+       and a fault on that reports nothing. */
+    virtual int __cdecl SetBackwardTime(int frames, int)     /* 0x0c */
     {
+        if (!hal_wipe_receiver_ok(this)) {
+            hal_wipe_shape_trap("SetBackwardTime (ROM slot 0x0c)", this);
+            return 0;
+        }
         speed = frames ? -(Fix12i)(0x1000 / frames) : -0x1000;
         return HalFaderWipe::IsAtStart();
     }
-    virtual int SetForwardTime(int frames, int)      /* 0x10 */
+    virtual int __cdecl SetForwardTime(int frames, int)      /* 0x10 */
     {
+        if (!hal_wipe_receiver_ok(this)) {
+            hal_wipe_shape_trap("SetForwardTime (ROM slot 0x10)", this);
+            return 0;
+        }
         speed = frames ? (Fix12i)(0x1000 / frames) : 0x1000;
         return HalFaderWipe::IsAtEnd();
     }
@@ -349,6 +395,31 @@ int hal_wipe_index(const void *self)
 {
     long long d = (const char *)self - (const char *)&hal_wipes[0];
     return (int)(d / (long long)sizeof(HalFaderWipe));
+}
+
+/* Every object this file hands out -- the seven wipes and the colour fader
+   placement-new'd into data_0209f5e8 -- carries ??_7HalFaderWipe@@6B@ in its
+   first word, so comparing against wipe 0's own vptr accepts all eight and
+   rejects the vtable itself, a frame count and a null. Wipe 0 is constructed
+   at static init, long before any scene runs. */
+int hal_wipe_receiver_ok(const void *self)
+{
+    if (self == 0 || ((std::size_t)self & 3) != 0)
+        return 0;
+    return *(void *const *)self ==
+           *(void *const *)(const void *)&hal_wipes[0];
+}
+
+void hal_wipe_shape_trap(const char *slot, const void *self)
+{
+    static int said;
+    if (said >= 4) return;
+    ++said;
+    std::fprintf(stderr, "  [wipe] WRONG RECEIVER at %s: %p is not a wipe "
+                 "object. A caller of the old __thiscall shape reached a "
+                 "__cdecl slot; see the block above SetBackwardTime.\n",
+                 slot, self);
+    std::fflush(stderr);
 }
 
 }  /* anonymous namespace */
@@ -405,7 +476,7 @@ DSSTATE_END
    run link60 lane SL0. This is the one symbol the whole fader half of
    Stage::InitResources' closure was blocked on, and it is the last one:
    measured by compiling _ZN9FaderWipeC1Ev.c, _ZN9FaderWipeD1Ev.c,
-   _ZN5ColorD1Ev.c and _ZN9FaderWipe14LoadAndSetFileEt.cpp with walk_window's
+   _ZN10FaderColorD2Ev.c and _ZN9FaderWipe14LoadAndSetFileEt.cpp with walk_window's
    own flags and checking every undefined external of the four against
    walk_window.map, the set wants exactly ONE name that the image does not
    already have, and it is this one.
@@ -414,10 +485,10 @@ DSSTATE_END
    THREE OF THOSE SIX HAVE SINCE CLOSED and the map is corrected here with the
    measurement that corrects it:
 
-     _ZN5ColorD1Ev    ALREADY LINKED. The map lists it as "a matched TU that
+     _ZN10FaderColorD2Ev    ALREADY LINKED. The map lists it as "a matched TU that
                       exists in src/ and is on no active slice". It is on
                       port/slice_ov007.txt:678 and it is in the image at
-                      walk_window.map:9986 (_ZN5ColorD1Ev.c.obj). Adding it to
+                      walk_window.map:9986 (_ZN10FaderColorD2Ev.c.obj). Adding it to
                       a slice here would be an LNK2005, not a gain.
      data_0208eafc    ALL THREE ALREADY HOSTED, by hal/scene_boot.cpp:683-697,
      data_0208eacc    which stages them for func_02017278. The FaderWipe ctor
@@ -433,7 +504,7 @@ DSSTATE_END
    it agrees with this class byte for byte from 0x00 through 0x24.
 
    WHAT IT DOES NOT CLAIM. The two trailing words differ: the ROM has
-   0x00000000 at 0x28 and a pointer to data_0208ea24 at 0x2c, where this table
+   0x00000000 at 0x28 and a pointer to _ZTI15dFdBrightness_c at 0x2c, where this table
    has two callable stubs. Nothing in the port or in src reads past 0x24, so
    the difference is unobservable today; it is a divergence and it is written
    down rather than papered over.
@@ -486,7 +557,7 @@ extern int data_0209d4b0[8];
    does the same on data_0209d4b0, the fader in motion. Both run every frame,
    and func_02018efc runs on the early-return path too.
 
-   data_0209d4ac is written by _ZN5Scene9SetFadersEP15FaderBrightness, which
+   data_0209d4ac is written by _ZN8dScene_c9SetFadersEP15FaderBrightness, which
    ends `data_0209f5bc = thiz; data_0209d4ac = thiz;`. That TU is in the link
    already (slice_gate10), so on a minigame boot dScMgBase_c slot 1 arms the
    arm9 dWipe_c at data_0209f61c into d4ac with the ROM's own store, and the
@@ -570,6 +641,53 @@ void port_fader_advance(void)
     }
 }
 
+/* ---- THE WIPE POOL'S CONSTRUCTED STATE, given back at every level boot ----
+ *
+ * On the cartridge the seven wipes do not survive a level. Stage::InitResources
+ * BUILDS them every time a level is opened -- the array note at the top of this
+ * file has the line, func_02073470(7, 0x60, 8, FaderWipe::FaderWipe, ...) -- so
+ * a level always starts with seven fresh FaderWipes holding the constructor's
+ * two words, `currInterp = 0x1000; speed = 0` (include/FaderBrightness.h says
+ * why those two belong to the constructor and what they mean: a fade starts
+ * fully opaque and stationary). The port's stand-ins are the static objects in
+ * this file, and Stage slot 3 (CleanupResources) is not hosted, so with nothing
+ * to hand them back their state they carried one transition's interpolator into
+ * the next one.
+ *
+ * WHAT THAT COST, measured rather than reasoned. The return from a course after
+ * a star installs hal_wipes[0] and then, one frame later, hal_wipes[5], both
+ * through dScene_c::SetFaders (src/_ZN8dScene_c9SetFadersEP15FaderBrightness.cpp),
+ * whose whole job is to carry the outgoing fader's end state onto the incoming
+ * one -- start onto start, end onto end, and NOTHING when the outgoing one is
+ * mid-fade.
+ *   FIRST star of a session: both wipes are still at 0x1000 with speed 0, so
+ *   the outgoing one reads exactly at the start, the incoming one is snapped to
+ *   the start, and the arrival fades in over thirty frames.
+ *   SECOND star: hal_wipes[0] still carries the first transition's speed, so it
+ *   steps on the very frame it is installed (0x1000 -> 0xf78) and writes EVY 16
+ *   into 0x4000050 / 0x4000054. SetFaders then reads it as between start and
+ *   end and leaves hal_wipes[5] alone -- and hal_wipes[5] is at 0 from the first
+ *   fade-in, already at its target, so AdvanceFade's own `if (currInterp == old)
+ *   return` means nobody writes those two registers again. The picture stays
+ *   fully black, every pixel of it, until some other writer of the blend
+ *   registers happens along: the level-clear menu's own dim, or a message box.
+ *
+ * The vptr is left alone on purpose: these are live host C++ objects whose table
+ * is the one the constructor would store anyway, and a placement-new over an
+ * object other code holds a pointer to is a bigger claim than this fix makes.
+ * Every other word the constructor writes is written here. */
+void port_fader_wipes_reset(void)
+{
+    for (int i = 0; i < 7; ++i) {
+        hal_wipes[i].currInterp = 0x1000;
+        hal_wipes[i].speed = 0;
+        hal_wipes[i].color = 0;
+        hal_wipes[i].unk0e = 0;
+        for (int b = 0; b < 0x50; ++b)
+            hal_wipes[i].model[b] = 0;
+    }
+}
+
 /* Start a COLOR fade on the installed color fader (data_0209f5e8) and put it in
    motion. frames is the fade length; toEnd != 0 fades toward interp 1.0 (screen
    fully covered -- a fade-OUT to color), toEnd == 0 fades toward 0.0 (fade-IN,
@@ -616,6 +734,51 @@ int port_fader_blend_state(int *evy, int *toWhite)
     return 1;
 }
 
+/* THE SAME QUESTION ASKED OF THE SUB ENGINE, 0x4001050 / 0x4001054.
+ *
+ * THE BLEND UNIT IS PER ENGINE AND THE TWO ENGINES DO DIVERGE. Every fade the
+ * fader itself drives writes both engines the same values (AdvanceFade above
+ * writes 0x4000050/54 and 0x4001050/54 together), so for a long time "read
+ * engine A and apply it to both screens" and "read each engine" were the same
+ * answer, and the first one was the one the port had. The title's opening
+ * screen is where they part: func_ov007_020b7138 (src/func_ov007_020b7138.c)
+ * calls G2x::SetBlendBrightness on BOTH engines with first-target 0x3f and
+ * -0x10, so both go to mode 3 with EVY 16, and then only engine A is faded back
+ * in. From there to the first stylus tap engine B sits at mode 3 EVY 16, fully
+ * black, while engine A is clear.
+ *
+ * MEASURED ON BOTH SIDES, SAME INPUT, NEITHER TOUCHED. The cartridge in
+ * melonDS at frames 300-900: engine A BLDCNT 0x00bf mode 2 EVY 0, engine B
+ * BLDCNT 0x00ef mode 3 EVY 16, MASTER_BRIGHT zero on both engines. The port's
+ * own SM64DS_PPU_AUDIT over the same 915 frames: engine A BLDCNT 0x00bf x886
+ * with BLDY 0, engine B BLDCNT 0x00ff x30 then 0x00ef x885 with BLDY 0x0010 on
+ * every one of the 915 samples. The ROM code is writing the right registers on
+ * the port. Nothing was reading engine B's.
+ *
+ * THE LAYER-TARGET MASK IS NOT HONOURED HERE, which is the same approximation
+ * the engine-A path above has always made: the caller darkens the whole
+ * finished panel rather than only the layers BLDCNT bits 0-5 select. On the
+ * opening that is exact -- engine B's mask is 0x2f, which covers every layer it
+ * has content on, and its OAM has no placed object at all -- but a scene that
+ * put sprites on the sub screen with OBJ left out of the first-target set would
+ * have them darkened here and not on hardware. Worth knowing before this is
+ * leaned on for a screen other than the one it was measured against. */
+int port_fader_blend_state_sub(int *evy, int *toWhite)
+{
+    unsigned short bldcnt = *(volatile unsigned short *)0x4001050;
+    unsigned short bldy = *(volatile unsigned short *)0x4001054;
+    int mode = (bldcnt >> 6) & 3;            /* 2 = brighten, 3 = darken */
+    if (mode != 2 && mode != 3)
+        return 0;
+    int e = bldy & 0x1f;
+    if (e > 16) e = 16;
+    if (e == 0)
+        return 0;
+    if (evy) *evy = e;
+    if (toWhite) *toWhite = (mode == 2);
+    return 1;
+}
+
 /* ---- THE FRAME CLOCK, data_020a0db0 (run mg12 lane SELECT) ----------------
  *
  * WHAT IT IS. One int at 0x020a0db0, incremented once per frame by the ROM's
@@ -647,11 +810,11 @@ int port_fader_blend_state(int *evy, int *toWhite)
  * which cannot tell a compiled TU from an uncompiled one, and got six rows
  * wrong in both directions.
  *
- *   src/func_ov006_020f7e2c.c      & 8     Pair-a-Gone's card draw
- *   src/func_ov006_020f98dc.c      & 8     Pair-a-Gone And On's card draw
- *   src/func_ov006_02107b94.c      & 8     Roulette's five bet markers: the bit
+ *   src/minigames/d_s_mg_m_carlo.cpp      & 8     Pair-a-Gone's card draw
+ *   src/minigames/d_s_mg_m_carlo2.cpp      & 8     Pair-a-Gone And On's card draw
+ *   src/actors/dScMgRoulette_c.cpp      & 8     Roulette's five bet markers: the bit
  *                                          steps the sprite frame by one
- *   src/func_ov006_02109834.c      & 8     Roulette's BALL sprite, drawn only
+ *   src/actors/dScMgRoulette_c.cpp      & 8     Roulette's BALL sprite, drawn only
  *                                          while the bit is set (named off the
  *                                          Hud_RenderSprite call, not off a
  *                                          slice title -- it is not a banner)
@@ -661,9 +824,9 @@ int port_fader_blend_state(int *evy, int *toWhite)
  *   src/_ZN5Stage20RenderBouncingArrowsEv.cpp  & 0x10 and & 8 (two sites)
  *   src/_ZN7Message6UpdateEv.cpp   & (0x10 / data_0208ee44)   the text cursor
  *                                          (four sites)
- *   src/func_ov003_020ae6f4.cpp    * 0x300 fed to a Y rotation
- *   src/_ZN17MgBounceAndPounce14BeforeBehaviorEv.cpp   & 1
- *   src/func_ov006_0210a698.cpp    & 1     dScMgFlower_c::BeforeBehavior
+ *   src/_ZN12dScStarSel_c6RenderEv.cpp    * 0x300 fed to a Y rotation
+ *   src/actors/dScMgD3DBase_c.cpp   & 1
+ *   src/minigames/d_s_mg_single3_d_base.cpp    & 1     dScMgFlower_c::BeforeBehavior
  *   src/func_ov006_020cf820.c      & 1     Trampoline Terror's countdown
  *
  * NOT LINKED, and listed so the next reader does not re-add them:
@@ -719,7 +882,7 @@ int port_fader_blend_state(int *evy, int *toWhite)
  *
  * WHAT IT COST, measured rather than argued (run mg12, lane SELECT). In
  * Pair-a-Gone (scene 381) the ONLY difference between a selected card and an
- * idle one is this blink: func_ov006_020f7e2c draws state 3 exactly as it
+ * idle one is this blink: _ZN18dMgMCarloCardObj_c6RenderEv draws state 3 exactly as it
  * draws state 2 except that it skips the draw while bit 3 is set. With the
  * clock frozen the skip never fires, so tapping a card played its sound,
  * moved the state machine and changed NOTHING on screen. Two stacked captures

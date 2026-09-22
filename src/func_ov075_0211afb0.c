@@ -9,14 +9,14 @@
  * vertex array at self+0x80: each inner iteration emits vertex (i, j) and
  * vertex (i + 1, j), converting each 1.19.12 coordinate to the VTX_16 format
  * with (v << 9) >> 16 and packing x and y into one command word.
+ *
+ * Two spellings in the vertex emission are load-bearing for the register
+ * colouring of the second emission (notes/mwccarm-codegen.md 6ct): the z
+ * coordinate is loaded straight into `sz` and shifted in place, and x << 9 is
+ * parked in `cols`, the inner loop's bound, which the loop reloads from
+ * self[0xa7] before its next use. Both keep the shift out of the register of
+ * the value it consumes, which is where the ROM's compiler puts it.
  */
-// NONMATCHING: register allocation (div=4). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 2004/b56. The residual is four words in the
-// SECOND vertex emission (+0x164..+0x170): the ROM routes x<<9 through the dying
-// byte-offset register and z<<9 through the freed array base, where mwccarm
-// coalesces both shifts into their own sources. Mechanism, the levers that are
-// measured-closed, and the one open angle: notes/mwccarm-codegen.md 6bn.
-// Counts as decompiled, not matched.
 #include "types.h"
 
 extern void MulMat4x3Mat4x3(const void *m1, const void *m0, void *mF);
@@ -39,7 +39,6 @@ void func_ov075_0211afb0(char *self)
     int off1;
     int vx;
     int vy;
-    int vz;
     int sx;
     int sz;
 
@@ -76,18 +75,20 @@ void func_ov075_0211afb0(char *self)
                     j = j + 1;
                     *(int *)0x4000484 = *(int *)(p0 + 0x10);
                     vx = *(int *)(base + off0);
-                    vz = *(int *)(p0 + 8);
-                    sx = (vx << 9) >> 16;
-                    sz = (vz << 9) >> 16;
+                    sz = *(int *)(p0 + 8);
+                    cols = vx << 9;
+                    sx = cols >> 16;
+                    sz = (sz << 9) >> 16;
                     vy = *(int *)(p0 + 4);
                     *(int *)0x400048c = (u16)sx | ((u16)((vy << 9) >> 16) << 16);
                     *(int *)0x400048c = (u16)sz;
                     *(int *)0x4000488 = *(int *)(p1 + 0x14);
                     *(int *)0x4000484 = *(int *)(p1 + 0x10);
                     vx = *(int *)(base + off1);
-                    vz = *(int *)(p1 + 8);
-                    sx = (vx << 9) >> 16;
-                    sz = (vz << 9) >> 16;
+                    sz = *(int *)(p1 + 8);
+                    cols = vx << 9;
+                    sx = cols >> 16;
+                    sz = (sz << 9) >> 16;
                     vy = *(int *)(p1 + 4);
                     *(int *)0x400048c = (u16)sx | ((u16)((vy << 9) >> 16) << 16);
                     *(int *)0x400048c = (u16)sz;

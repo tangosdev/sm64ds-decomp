@@ -46,7 +46,7 @@
  *      5  the bare names and the two C++ spellings, sections 3 and 5
  *
  * data_ov006_0212e044/48/4c are the three halfwords chain link 0
- * (src/func_ov006_02121d64.cpp) and the state setter src/func_ov006_02121f04.c
+ * (src/minigames/d_s_mg_trampoline.cpp) and the state setter src/minigames/d_s_mg_trampoline.cpp
  * seed the object's +0x5db0..+0x5db6 block from.
  *
  * TWO OF THE int ROWS ARE VTABLES AND NOT DATA, which is worth naming rather
@@ -70,18 +70,18 @@
  *       = "18dMgTrmpln3DMario_c", whose base 0x0213b19c names
  *       "19dMgTrmpObjAdapter_c".
  *
- *   func_020beb74   src/func_ov006_020e7124.c uses it as `extern int
+ *   func_020beb74   src/actors/dScMgD3DBase_c.cpp uses it as `extern int
  *       func_020beb74[]` and writes func_020beb74[1] and data_0209d4a8.  It is
  *       not a function: config/arm9/overlays/ov004/symbols.txt has
  *       `data_ov004_020beb74 kind:bss addr:0x020beb74`.  The src's `func_`
  *       prefix is a decompiler default applied to an address it could not
  *       classify, and the alias points it at the mount's bss object.
  *
- *   Scene_AfterRender   src/_ZN17MgBounceAndPounce11AfterRenderEj.cpp tail-
+ *   Scene_AfterRender   src/actors/dScMgD3DBase_c.cpp tail-
  *       calls it.  The ROM body 0x020e700c is `ldr ip,[pc,#4] / bx ip` and its
  *       one pool word at 0x020e703c reads 0x0202e398 (config:
  *       `from:0x020e703c kind:load to:0x0202e398 module:main`), which
- *       config/arm9/symbols.txt names `_ZN5Scene11AfterRenderEj`.  So the alias
+ *       config/arm9/symbols.txt names `_ZN8dScene_c11AfterRenderEj`.  So the alias
  *       is a plain C name onto the mangled ARM one, which is the opposite
  *       direction from every other row in this file and is why it is spelled
  *       out.
@@ -89,7 +89,7 @@
  * ---- 4. ONE HOSTED arm9 BSS GLOBAL ---------------------------------------
  *
  * data_020a0dbc is arm9 .bss (config/arm9/symbols.txt, `kind:bss`) and nothing
- * in the port hosted it before this seat.  src/func_ov006_02121fa4.c (vtable
+ * in the port hosted it before this seat.  src/minigames/d_s_mg_trampoline.cpp (vtable
  * slot 18) reads it as `volatile short data_020a0dbc[]` at indices 0 and 1 to
  * seed the object's +0x5db0..+0x5db6 stylus block.
  *
@@ -115,7 +115,7 @@
    the mg11 merge found the two colliding.  TTE's is correct and this one was
    not, on four independent readings:
 
-     src/func_ov006_021242cc.cpp:34  extern volatile s16 data_020a0dbc[];
+     src/minigames/d_s_mg_trampoline2.cpp:34  extern volatile s16 data_020a0dbc[];
                                      reads [0] and [1] with ldrsh
      src/__sinit_02075054.c:2        extern short data_020a0dbc[];
                                      writes [0] and [1], and passes
@@ -217,7 +217,7 @@
 /* ---- 3. the three bare names, resolved from their literal pools ---------- */
 #pragma comment(linker, "/alternatename:__ZTV18dMgTrmpln3DMario_c=_data_ov006_0213b2c4")
 #pragma comment(linker, "/alternatename:_func_020beb74=_data_ov004_020beb74")
-#pragma comment(linker, "/alternatename:_Scene_AfterRender=__ZN5Scene11AfterRenderEj")
+#pragma comment(linker, "/alternatename:_Scene_AfterRender=__ZN8dScene_c11AfterRenderEj")
 /* src/func_ov006_020d0b2c.cpp spells Model::LoadTextureToVram as a free
    function in a Model namespace, so MSVC mangles the CALL as
    ?LoadTextureToVram@Model@@YAHPADI@Z while the body the port already links
@@ -238,7 +238,7 @@
 
 /* ---- 5. TWO C++ SPELLINGS THAT NEED A SHIM RATHER THAN AN ALIAS -------
 
-   ModelAnim::SetAnim.  src/func_ov006_020cb528.c and _020cb690.cpp call it
+   ModelAnim::SetAnim.  src/func_ov006_020cb528.cpp and _020cb690.cpp call it
    as a METHOD on a shadow class of their own, so MSVC wants
    ?SetAnim@ModelAnim@@QAEXPAXHHI@Z -- __thiscall, receiver in ecx.  The
    definition the port links is
@@ -269,7 +269,7 @@ void ModelAnim::SetAnim(void *f, int flags, int speed, unsigned start)
 
 #pragma comment(linker, "/alternatename:?LoadTextureToVram@Model@@YAHPADI@Z=?LoadTextureToVram@Model@@SAIPADI@Z")
 
-/* src/func_ov006_020c7c68.c calls func_ov006_020e6df0, which is not a
+/* src/actors/dMgJump3DMario_c.cpp calls func_ov006_020e6df0, which is not a
    symbol: config/arm9/overlays/ov006/symbols.txt names 0x020e6df0
    Sound_PlayBank1Panned, and delinks.txt gives it its own .text block
    0x020e6df0..0x020e6e3c.  Same bare-name shape as section 3. */

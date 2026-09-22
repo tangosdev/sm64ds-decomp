@@ -14,9 +14,11 @@
 // taking both seats.
 //
 // Nothing here is behaviour. Stage::Stage is the matched src file
-// (src/_ZN5StageC3Ev.c, arm9 0x0202e088) and this is the seam it needs: the
+// (src/d_s_stage.cpp, arm9 0x0202e088) and this is the seam it needs: the
 // vtable array its last vptr store names, the spawn context the ActorBase
 // constructor reads, and one honest stub for the particle constructor.
+#include "port_d16.h"
+
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -25,7 +27,7 @@
 
 extern "C" {
 
-void *_ZN5StageC3Ev(void);
+void *dScStage_c_classInit(void);
 
 /* The ROM's own SpawnInfo for the Stage: arm9 0x0209213c, emitted from the
    extracted image by port/tools/romdata.py (Nintendo's bytes never enter the
@@ -34,9 +36,9 @@ void *_ZN5StageC3Ev(void);
        +4  u16       the actor id, which the ActorBase ctor also reads back as
                      the BEHAVIOUR-list priority  -- 3 for the Stage
        +6  u16       the RENDER-list priority                  -- 6
-   Cross-checked against Camera_SpawnInfo, whose +4 is 0x14c and matches the
+   Cross-checked against g_profile_CAMERA, whose +4 is 0x14c and matches the
    registry's own row id. */
-extern unsigned char _ZN5Stage9spawnDataE[];
+extern unsigned char g_profile_STAGE[];
 
 extern void **data_020a4bb8;          /* actorID -> SpawnInfo* */
 extern unsigned short data_020a4b54;  /* the PENDING actor id the ctor reads */
@@ -51,7 +53,7 @@ extern void *data_0209f314;           /* the level AREA table (Stage+0x8bc) */
 
    The array the fill targets is _ZTV5Stage, because that is what Stage::Stage
    installs: its transcription stores three vptrs in a row (data_0208e4b8,
-   _ZTV5Scene, _ZTV5Stage) and the last one wins. Both other names are storage
+   _ZTV8dScene_c, _ZTV5Stage) and the last one wins. Both other names are storage
    only, same rule as the base tables.
 
    Read out of the ROM at 0x020921c0 with its relocations applied:
@@ -76,13 +78,13 @@ extern void *data_0209f314;           /* the level AREA table (Stage+0x8bc) */
    how the next step finds out which faces it owes.
 
    The names follow config/arm9/symbols.txt, which puts _ZTV5Stage at
-   0x020921c0 and _ZTV5Scene at 0x02092680. That is the ROM's layout: the
+   0x020921c0 and _ZTV8dScene_c at 0x02092680. That is the ROM's layout: the
    0x02092680 table carries the Scene destructors in slots 16/17 and the
    ActorBase default in slot 0, while 0x020921c0 is the one the constructor
    installs last. Config had the two swapped until 87a55cfab, so a checkout
    older than that calls 0x02092680 _ZTV5Stage and will not link this file. */
 void *_ZTV5Stage[20];      /* the table the ctor installs last; trap-filled */
-void *_ZTV5Scene[20];      /* transient ctor install, storage only */
+void *_ZTV8dScene_c[20];      /* transient ctor install, storage only */
 
 }  /* extern "C" */
 
@@ -232,7 +234,7 @@ extern "C" void hal_fill_stage_vtable(void)
 // this file. Slot 7 now runs Scene::BeforeBehavior on the Stage every frame,
 // and that function carries two ActorBase::MarkForDestruction(self) edges.
 // MarkForDestruction is not deferred bookkeeping: src/
-// _ZN9ActorBase18MarkForDestructionEv.cpp sets shouldBeKilled and then calls
+// _ZN7fBase_c18MarkForDestructionEv.cpp sets shouldBeKilled and then calls
 // OnPendingDestroy() straight through the vptr, so either edge landed on
 // st_trap and aborted.
 //
@@ -284,13 +286,13 @@ extern "C" void hal_fill_stage_vtable(void)
 // port/slice_w8a.txt's line for that TU stays dropped.
 extern "C" {
 /* slot 1's real destination */
-int  _ZN5Scene19ResetFadersAndSoundEv(void *self);
+bool _ZN8dScene_c19ResetFadersAndSoundEv(void *self);
 /* slots 4, 5, 7, 10 -- Scene halves with declared arguments, all four already
    in the image before this seat existed */
-int  _ZN5Scene22BeforeCleanupResourcesEv(void *self);
-void _ZN5Scene21AfterCleanupResourcesEj(void *self, unsigned a);
-int  _ZN5Scene14BeforeBehaviorEv(void *self);
-int  _ZN5Scene12BeforeRenderEv(void *self);
+int  _ZN8dScene_c22BeforeCleanupResourcesEv(void *self);
+void _ZN8dScene_c21AfterCleanupResourcesEj(void *self, unsigned a);
+int  _ZN8dScene_c14BeforeBehaviorEv(void *self);
+int  _ZN8dScene_c12BeforeRenderEv(void *self);
 /* slots 2, 8, 11, 15 -- hal/scene_actor_faces.cpp */
 void port_scene_after_init(void *self, unsigned vfSuccess);
 void port_scene_after_behavior(void *self, unsigned vfSuccess);
@@ -315,14 +317,14 @@ int  port_stage_cleanup_resources(void *self);
    `struct Stage *f(struct Stage *thiz)`, receiver as an ordinary first
    argument -- so they need no face, only the ecx->arg adapter every seat in
    this family uses. */
-void *_ZN5StageD2Ev(void *thiz);
+void *_ZN5StageD1Ev(void *thiz);
 void *_ZN5StageD0Ev(void *thiz);
 }
 
 /* Slots 13 and 14. The same local NON-VIRTUAL declaration hal/scene_boot.cpp
-   makes, and for the same reason: src/_ZN9ActorBase9Virtual34Ejj.cpp and its
+   makes, and for the same reason: src/_ZN7fBase_c9Virtual34Ejj.cpp and its
    sibling declare the method non-virtual in their own struct, so the
-   definitions are ?Virtual34@ActorBase@@QAEHII@Z. include/Stage.h does not
+   definitions are ?Virtual34@fBase_c@@QAEHII@Z. include/Stage.h does not
    pull in ActorBase.h, so there is nothing here for this to collide with. */
 struct ActorBase {
     int Virtual34(unsigned a, unsigned b);
@@ -360,7 +362,7 @@ static int __fastcall st_init(void *self, void *)
     /* 1 is the ROM's own "initialisation finished" return. The init Process
        turns it into vfSuccess 2, which is the only code
        ActorBase::AfterInitResources promotes on; 0 becomes 1, which is
-       ActorDerived::AfterInitResources' MarkForDestruction. */
+       dBase_c::AfterInitResources' MarkForDestruction. */
     return 1;
 }
 
@@ -515,22 +517,43 @@ static int __fastcall st_render(void *, void *)   { return 1; }
    one call site, rather than hidden in a wrong-arity extern.  Related:
    sm64ds-port-fastcall-face-arity, the face that DROPS `this`. */
 extern "C" void _ZN5Stage19BeforeInitResourcesEv(void);
-typedef int (*Seat2StageBeforeInit)(void *);
+/* `bool`, the face's real return type, NOT `int`. Stage::BeforeInitResources
+   is slot 1 and returns bool, so the answer is in AL and the rest of EAX is
+   whatever the callee left there. Reading it as `int` is the same defect this
+   file warns about one slot at a time, and it is the one that skipped the boot
+   (run link100, lane CRASH1). Declared bool, the compiler reads AL and widens
+   it, so st_binit returns exactly 0 or 1. */
+typedef bool (*Seat2StageBeforeInit)(void *);
 
 static int  __fastcall st_binit(void *s, void *)
 { return ((Seat2StageBeforeInit)&_ZN5Stage19BeforeInitResourcesEv)(s); }
 static void __fastcall st_ainit(void *s, void *, unsigned a)
 { port_scene_after_init(s, a); }
 static int  __fastcall st_bclean(void *s, void *)
-{ return _ZN5Scene22BeforeCleanupResourcesEv(s); }
+{ return _ZN8dScene_c22BeforeCleanupResourcesEv(s); }
 static void __fastcall st_aclean(void *s, void *, unsigned a)
-{ _ZN5Scene21AfterCleanupResourcesEj(s, a); }
+{ _ZN8dScene_c21AfterCleanupResourcesEj(s, a); }
+/* SLOT 7 IS THE ONE THAT DESTROYS THE STAGE, and during the star-select
+   interlude a scene is pending by construction, so it would fire every
+   frame: dScene_c::BeforeBehavior (src/_ZN8dScene_c14BeforeBehaviorEv.cpp
+   :85-92) calls MarkForDestruction once the installed fader is at its end,
+   and slot 3 is the deliberate abort documented below. On the cartridge
+   that destruction is CORRECT; on this port it is fatal, because one Stage
+   is kept alive across every level change. Declining for the interlude is
+   the same statement slots 6 and 9 make in hal/stage_frame.cpp, and 1 is
+   the value the ROM's own normal path returns. */
+extern "C" int port_level_interlude_live(void);   /* hal/level_change.cpp */
+
 static int  __fastcall st_bbeh(void *s, void *)
-{ return _ZN5Scene14BeforeBehaviorEv(s); }
+{
+    if (port_level_interlude_live())
+        return 1;
+    return _ZN8dScene_c14BeforeBehaviorEv(s);
+}
 static void __fastcall st_abeh(void *s, void *, unsigned a)
 { port_scene_after_behavior(s, a); }
 static int  __fastcall st_bren(void *s, void *)
-{ return _ZN5Scene12BeforeRenderEv(s); }
+{ return _ZN8dScene_c12BeforeRenderEv(s); }
 static void __fastcall st_aren(void *s, void *, unsigned a)
 { port_scene_after_render(s, a); }
 static int  __fastcall st_v34(void *s, void *, unsigned a, unsigned b)
@@ -552,7 +575,7 @@ static void __fastcall st_pdes(void *s, void *)
  *     from:0x02092204 kind:load to:0x020236f0 module:main   slot 17
  *
  * and config/arm9/symbols.txt puts a matched TU on each destination:
- * _ZN5Stage16CleanupResourcesEv (0x0202c9a8), _ZN5StageD2Ev (0x02023688) and
+ * _ZN5Stage16CleanupResourcesEv (0x0202c9a8), _ZN5StageD1Ev (0x02023688) and
  * _ZN5StageD0Ev (0x020236f0). port/slice_gate213.txt carries the enrolment
  * and the link measurement.
  *
@@ -644,7 +667,7 @@ static int st_slot3_rom(void)
  *      the translation is correct and this lane does not touch it.
  *   2. The object DestroyVirt is handed here is Stage+0x9bc, the skybox --
  *      confirmed live in this exact run ("skybox loaded by Stage::LoadSkybox,
- *      id 1, model set", src/_ZN5Stage10LoadSkyboxEv.c calling the ROM's own
+ *      id 1, model set", src/_ZN5Stage10LoadSkyboxEv.cpp calling the ROM's own
  *      _ZN5ModelC1Ev) -- so `o[0]` is _ZTV5Model, the ONE shared table every
  *      Model in the game points at.
  *   3. _ZTV5Model[1] IS NOT A DESTRUCTOR ON THIS PORT. hal/cxxname_bridge.cpp
@@ -729,7 +752,7 @@ static void st_skybox_vtable_fixup(void *self)
  *      static array is whatever four bytes the linker put before it -- which
  *      is where texxfm_d0's own address came from -- and freeing static
  *      storage through _ZdlPv would be its own crash even with a real count.
- *   2. WRONG LAYOUT. _ZN9FaderWipeD1Ev (src/engine/fader/_ZN9FaderWipeD1Ev.c)
+ *   2. WRONG LAYOUT. _ZN9FaderWipeD1Ev (src/engine/fader/_ZN9FaderWipeD1Ev.cpp)
  *      is the ROM's own FaderWipe: vtable at +0, an embedded Model at +0x10.
  *      HalFaderWipe, the host class, is Fix12i/Fix12i/two shorts/model[0x50]
  *      raw bytes from +0xc -- offset +0x10 there is four bytes into that
@@ -747,8 +770,8 @@ static void st_skybox_vtable_fixup(void *self)
  * _ZdlPv is the one port/unmatched/func_02073244_hostcopy.c's own banner
  * already uses for Player's queue), zeroed rather than copied from the real
  * wipes because every write _ZN9FaderWipeD1Ev's whole chain makes (traced
- * through _ZN5ModelD1Ev, _ZN9ModelBaseD2Ev, _ZN5ColorD1Ev,
- * func_020177c4, func_02017838) is a vtable-pointer store, and every
+ * through _ZN5ModelD1Ev, _ZN9ModelBaseD2Ev, _ZN10FaderColorD2Ev,
+ * _ZN15FaderBrightnessD2Ev, _ZN5FaderD2Ev) is a vtable-pointer store, and every
  * resource field it checks first (ModelBase::res, Model::unk4C) is safe at
  * zero -- so a zeroed span is both sufficient and the one shape guaranteed
  * not to double-free something the real wipes still own. */
@@ -798,7 +821,7 @@ static void *__fastcall st_d2(void *s, void *)
         std::fprintf(stderr, "[stage] slot 16: ~Stage (D2) is running. Nothing "
                      "in the port was supposed to destroy the Stage.\n");
     }
-    return _ZN5StageD2Ev(s);
+    return _ZN5StageD1Ev(s);
 }
 
 static void *__fastcall st_d0(void *s, void *)
@@ -830,7 +853,7 @@ extern "C" void hal_seat_stage_lifecycle(void)
     _ZTV5Stage[13] = (void *)st_v34;
     _ZTV5Stage[14] = (void *)st_v38;
     _ZTV5Stage[15] = (void *)st_heap;
-    _ZTV5Stage[16] = (void *)st_d2;
+    _ZTV5Stage[16] = (void *)PORT_D16(st_d2);
     _ZTV5Stage[17] = (void *)st_d0;
     /* 18 and 19 stay trapped -- they are past the ROM's eighteen-word table,
        host storage only, and a dispatch there is a bug worth aborting on. */
@@ -896,9 +919,9 @@ typedef int(__fastcall *StageSlot0)(void *self, void *dummy);
 // subsystem is not hosted" once, on the reasoning that the tracker was read
 // only by Initialise and Update and neither ran.
 //
-// Gate 29 linked the real one. src/_ZN8Particle10SysTrackerC1Ev.c and its
-// whole closure -- func_02021c90, Particle::SimpleCallback::SimpleCallback,
-// func_020226a4, func_020225fc, and the thirteen data_0208f3xx vtables they
+// Gate 29 linked the real one. src/_ZN8Particle10SysTrackerC1Ev.cpp and its
+// whole closure -- _ZN8Particle10SysTracker8ContentsC1Ev, Particle::SimpleCallback::SimpleCallback,
+// _ZN5dPa_c7level_c16simpleCallback_cC2Ev, _ZN5dPa_c7level_c15scaleCallback_cC1Ev, and the thirteen data_0208f3xx vtables they
 // install -- are in slice_gate29.txt. The vtables are hal/particle_vtable.cpp.
 // Nothing is needed here any more: the constructor is ordinary matched src
 // and the linker finds it in the slice.
@@ -979,17 +1002,17 @@ extern "C" void *port_stage_create(void)
 
     hal_fill_stage_vtable();
 
-    const unsigned stage_id = *(unsigned short *)(_ZN5Stage9spawnDataE + 4);
+    const unsigned stage_id = *(unsigned short *)(g_profile_STAGE + 4);
     if (stage_id != 3)
         std::fprintf(stderr, "  [stage] SPAWNDATA LOOKS WRONG: +4 is %u, the "
                      "ROM's Stage id is 3\n", stage_id);
 
     void *saved_info = data_020a4bb8[stage_id];
     unsigned short saved_pending = data_020a4b54;
-    data_020a4bb8[stage_id] = _ZN5Stage9spawnDataE;
+    data_020a4bb8[stage_id] = g_profile_STAGE;
     data_020a4b54 = (unsigned short)stage_id;
 
-    g_stage = _ZN5StageC3Ev();
+    g_stage = dScStage_c_classInit();
 
     data_020a4bb8[stage_id] = saved_info;
     data_020a4b54 = saved_pending;
@@ -1022,7 +1045,7 @@ extern "C" void *port_stage_create(void)
        stopped ticking and sat at its spawn point.
 
        The ROM clears them in Scene::BeforeBehavior (0x0202e3d4, matched src
-       _ZN5Scene14BeforeBehaviorEv.cpp), in exactly one place:
+       _ZN8dScene_c14BeforeBehaviorEv.cpp), in exactly one place:
 
            if ((*(u8*)(self + 0x13) & 1) != 0) {
                if (func_020431c4(self) == 0) { *p13 &= ~1; *p13 &= ~4; }
@@ -1035,7 +1058,7 @@ extern "C" void *port_stage_create(void)
 
        THIS LINE WAS A STAND-IN FOR THAT ONE STATEMENT and nothing else, and
        IT IS RETIRED (run link60, lane L4). The named job it asked for is done:
-       _ZN5Scene14BeforeBehaviorEv is linked, func_020431c4 is linked,
+       _ZN8dScene_c14BeforeBehaviorEv is linked, func_020431c4 is linked,
        data_0209f5bc is a live FaderWipe from static init
        (hal/fader_wipes.cpp:296), and the Stage now takes the processing-list
        seat its SpawnInfo already described, so slot 7 clears the bits where
@@ -1081,8 +1104,8 @@ extern "C" void *port_stage_create(void)
 
     std::printf("[stage] Stage actor %p (id %u, prio beh %u ren %u), "
                 "collider +0x91c %p, model +0x86c %p\n", g_stage, stage_id,
-                *(unsigned short *)(_ZN5Stage9spawnDataE + 4),
-                *(unsigned short *)(_ZN5Stage9spawnDataE + 6),
+                *(unsigned short *)(g_profile_STAGE + 4),
+                *(unsigned short *)(g_profile_STAGE + 6),
                 (void *)((char *)g_stage + 0x91c),
                 (void *)((char *)g_stage + 0x86c));
 

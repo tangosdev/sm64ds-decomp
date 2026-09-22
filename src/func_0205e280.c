@@ -9,7 +9,7 @@ typedef struct
 
 extern void func_0205e3d4(HashCtx* c);
 
-#define CNT (*(int*)(int)(((long long)(int)((char*)c + 0x1c))))
+#define CNT (*(int*)(int)((char*)c + 0x1c))
 
 void func_0205e280(HashCtx* c)
 {

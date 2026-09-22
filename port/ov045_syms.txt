@@ -1,3 +1,9 @@
+# RETIRED at SYNC6: the class translation unit main folded these bodies into
+# is back on its slice rows (today's #2660/#2663/#2666 un-quarantine) and it
+# DEFINES the names below itself, so the mount was the second definition.
+# Measured as LNK2005 rows against this file's generated object in
+# build_s2.log. Removed from the generator's INPUT, per the rule: never
+# edit the generated output. Retired here: g_profile_KM2_UKISHIMA
 # run linkw wave 4 (lane w4-b): ov045's PLATFORM CAST, per symbol.
 #
 # ov045 (level 37, Bowser in the Fire Sea, data/stage/koopa2_map) is already
@@ -32,12 +38,12 @@
 # (base 0x021111a0 -- ov045 is compressed:true in overlays.yaml, so the dsd
 # export extracted/dsd/arm9_overlays/ov045.bin is the COMPRESSED image and
 # reading halfwords out of it is reading noise):
-#   0x02112cd0 word[0]=0x021114dc FireSeaElevator_Spawn      word[1]&0xffff=140
-#   0x02112d98 word[0]=0x02111808 PoleLift_Spawn             word[1]&0xffff=142
-#   0x02112e5c word[0]=0x02111ad4 ExtendingPlatform_Spawn    word[1]&0xffff=148
-#   0x02112f2c word[0]=0x02111bf4 FloatingFloorBfs_Spawn     word[1]&0xffff=145
-#   0x02112ffc word[0]=0x02111d0c TiltingPlatformBfs_Spawn   word[1]&0xffff=141
-#   0x021130d0 word[0]=0x02111e24 FallBlockBfs_Spawn         word[1]&0xffff=139
+#   0x02112cd0 word[0]=0x021114dc daObjKm2_Agaru_c_classInit      word[1]&0xffff=140
+#   0x02112d98 word[0]=0x02111808 daObjKm2_Ami_Bou_c_classInit             word[1]&0xffff=142
+#   0x02112e5c word[0]=0x02111ad4 daObjKm2_Nobiru_c_classInit    word[1]&0xffff=148
+#   0x02112f2c word[0]=0x02111bf4 daObjKm2_Ukishima_c_classInit     word[1]&0xffff=145
+#   0x02112ffc word[0]=0x02111d0c daObjKm2_Gura_c_classInit   word[1]&0xffff=141
+#   0x021130d0 word[0]=0x02111e24 daObjKm2_Fall_Block_c_classInit         word[1]&0xffff=139
 # Every record's spawn word lands inside ov045 itself and every id matches the
 # spawn-table slot it was reached from. The ambiguity is a shared-window
 # artefact, not co-residency.
@@ -47,17 +53,17 @@
 # ov015/ov016/ov080 rule -- a mounted vtable hands a factory DS code addresses).
 # Their spans, and every dsd symbol inside each:
 #   0x02112cf4..0x02112d74  id 140 FireSeaElevator, 32 slots
-#                           data_ov045_02112cf4 + data_ov045_02112d48 (split)
+#                           _ZTV15FireSeaElevator + data_ov045_02112d48 (split)
 #   0x02112dbc..0x02112e3c  id 142 PoleLift, 32 slots
 #                           _ZTV15FireSeaElevator == _ZTV18daObjKm2_Ami_Bou_c
 #   0x02112e80..0x02112efc  id 148 ExtendingPlatform, 31 slots (no Kill)
 #                           _ZTV8PoleLift == _ZTV17daObjKm2_Nobiru_c
 #   0x02112f50..0x02112fd0  id 145 FloatingFloorBfs, 32 slots
-#                           data_ov045_02112f50 + 02112f58 + 02112f7c (3-way split)
+#                           _ZTV19daObjKm2_Ukishima_c + 02112f58 + 02112f7c (3-way split)
 #   0x02113020..0x021130a0  id 141 TiltingPlatformBfs, 32 slots
-#                           _ZTV16FloatingFloorBfs
+#                           _ZTV15daObjKm2_Gura_c
 #   0x021130f4..0x02113174  id 139 FallBlockBfs, 32 slots (+0xc of .data
-#                           align-32 padding to 0x02113180)  _ZTV12FallBlockBfs
+#                           align-32 padding to 0x02113180)  _ZTV21daObjKm2_Fall_Block_c
 # Each span's end is the address of the next kept symbol, which is what pins the
 # widths -- 148's table really is one word shorter than the other five, and 139's
 # next-symbol bound (the end of .data) really is three words long.
@@ -80,7 +86,7 @@
 #
 # THE CONSEQUENCE, and how it is paid: that sinit is the one that builds
 # ExtendingPlatform's two SharedFilePtrs (data_ov045_021131d8 model file 1635,
-# data_ov045_021131d0 clsn file 1636), which _ZN8PoleLift13InitResourcesEv reads.
+# data_ov045_021131d0 clsn file 1636), which _ZN17ExtendingPlatform13InitResourcesEv reads.
 # hal/actor_classes_ov045.cpp HOSTS that one initialisation by hand instead --
 # the gate-17 recipe slice_w1l4.txt itself names. The two bss objects are mounted
 # below like every other; only the .init body stays out.
@@ -120,14 +126,14 @@ data_ov045_02112b08 data_ov045_02112b84 data_ov045_02112ba8
 data_ov045_02112bdc data_ov045_02112bec data_ov045_02112c08
 data_ov045_02112c18 data_ov045_02112c44 data_ov045_02112c4c
 data_ov045_02112c58 data_ov045_02112c68 data_ov045_02112c88
-data_ov045_02112ca8 data_ov045_02112cb0 data_ov045_02112cbc
-data_ov045_02112cc8 FireSeaElevator_SpawnInfo data_ov045_02112d74
-data_ov045_02112d80 PoleLift_SpawnInfo data_ov045_02112e3c
-data_ov045_02112e48 ExtendingPlatform_SpawnInfo data_ov045_02112efc
-data_ov045_02112f08 data_ov045_02112f14 FloatingFloorBfs_SpawnInfo
-data_ov045_02112fd0 data_ov045_02112fdc data_ov045_02112fe8
-TiltingPlatformBfs_SpawnInfo data_ov045_021130a0 data_ov045_021130ac
-data_ov045_021130b8 data_ov045_021130cc FallBlockBfs_SpawnInfo
+data_ov045_02112ca8 data_ov045_02112cb0 _ZTS16daObjKm2_Agaru_c
+data_ov045_02112cc8 g_profile_KM2_AGARU _ZTI18daObjKm2_Ami_Bou_c
+_ZTS18daObjKm2_Ami_Bou_c g_profile_KM2_AMI_BOU _ZTI17daObjKm2_Nobiru_c
+_ZTS17daObjKm2_Nobiru_c g_profile_KM2_NOBIRU _ZTI19daObjKm2_Ukishima_c
+data_ov045_02112f08 _ZTS19daObjKm2_Ukishima_c
+_ZTI15daObjKm2_Gura_c _ZTS15daObjKm2_Gura_c
+_ZTI21daObjKm2_Fall_Block_c data_ov045_021130ac
+_ZTS21daObjKm2_Fall_Block_c data_ov045_021130cc g_profile_KM2_KUZURE
 
 # ---- .bss 0x02113180..0x02113280 ------------------------------------------
 # Six SharedFilePtr pairs and their destructor-chain nodes, one pair per sinit:
@@ -146,3 +152,12 @@ data_ov045_021131f8 data_ov045_02113200 data_ov045_02113208
 data_ov045_02113214 data_ov045_02113220 data_ov045_02113228
 data_ov045_02113230 data_ov045_0211323c data_ov045_02113248
 data_ov045_02113250 data_ov045_02113258 data_ov045_02113264:0x1c
+
+
+# RETIRED at ALIAS2 (wave 8, the main -> port sync). Each symbol below was
+# hosted here as a ROM data blob AND is now defined by a translation unit the
+# build compiles, so the link reported it twice (LNK2005). The generator input
+# is the place to fix that: build/port/host-src/ov045_syms.c is its output and is
+# regenerated from this list on every configure.
+#   data_ov045_02112fdc                        now defined by d_a_obj_km2_gura.cpp.obj
+#   g_profile_KM2_GURA                         now defined by d_a_obj_km2_gura.cpp.obj

@@ -20,7 +20,7 @@
 # WHAT THE ROM'S SLOT 28 DOES, read off the overlay's own table.
 # _ZTV13QuestionBlock is ov102 0x0214e47c; the reloc at 0x0214e47c + 28*4 =
 # 0x0214e4ec lands on 0x021496a4 (config/arm9/overlays/ov102/relocs.txt).
-# That body (src/func_ov102_021496a4.c) is:
+# That body (src/_ZN13QuestionBlock19OnHitFromUnderneathER8dActor_c.cpp) is:
 #     if (state == 1) return;              /* already bouncing, ignore */
 #     vel.y = -0x8000; ...   = 0x1e000;    /* the block's own recoil */
 #     if (func_ov102_02149078(c)) return;  /* refused: see below */
@@ -43,11 +43,11 @@
 # be stuck at a dead object.
 #
 # ---- the five slot bodies -------------------------------------------------
-src/func_ov102_021496a4.c
-src/func_ov102_02149710.c
-src/func_ov102_02149770.c
-src/func_ov102_021497c8.c
-src/func_ov102_02149820.c
+src/_ZN13QuestionBlock19OnHitFromUnderneathER8dActor_c.cpp
+src/_ZN13QuestionBlock15OnHitByMegaCharER6Player.cpp
+src/_ZN13QuestionBlock8OnKickedER8dActor_c.cpp
+src/_ZN13QuestionBlock11OnAttacked1ER8dActor_c.cpp
+src/_ZN13QuestionBlock15OnGroundPoundedER8dActor_c.cpp
 
 # ---- transitive closure ----------------------------------------------------
 # func_ov102_02149078 is the shared refusal test all five consult: on level

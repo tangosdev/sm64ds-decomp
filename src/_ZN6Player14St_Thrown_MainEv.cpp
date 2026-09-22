@@ -25,7 +25,7 @@ extern int data_ov002_0211013c[];
 int Player::St_Thrown_Main()
 {
     if (mStateTimer == 1) {
-        *(int*)(((int)((char*)this) + 0x2ec) & 0xFFFFFFFFFFFFFFFFULL) |= 0x2000;
+        *(int*)((int)((char*)this) + 0x2ec) |= 0x2000;
     }
     func_ov002_020bf90c(((char*)this));
 
@@ -34,7 +34,7 @@ int Player::St_Thrown_Main()
     case 0:
         if (mIsAirborne == 0) {
             mAngleX = 0;
-            *(int*)(((int)((char*)this) + 0x2ec) & 0xFFFFFFFFFFFFFFFFULL) &= ~0x2000;
+            *(int*)((int)((char*)this) + 0x2ec) &= ~0x2000;
             func_ov002_020c06fc(((char*)this), 0x8000);
             if (mStateArg == 0) {
                 mStateArg = 1;
@@ -47,7 +47,7 @@ int Player::St_Thrown_Main()
             if (r5 != 0) {
                 return 1;
             }
-            if (unk_558 == 0x1000) {
+            if (mFloorNormalY == 0x1000) {
                 if (mHorzSpeed == 0) {
                     mStateStep = 1;
                     goto L1f8;

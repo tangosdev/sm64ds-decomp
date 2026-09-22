@@ -13,7 +13,7 @@ HOW THE LENGTH IS DERIVED, AND WHY THE OBVIOUS WAY IS WRONG
     NOT reliable: where dsd could not tell a vtable's interior from the start
     of a new object it emitted an "ambiguous" data symbol INSIDE the table,
     and the next-symbol delta then truncates below the real length.
-    data_ov018_02113a74 reads as 18 words that way and is 31; _ZTV9TowerStep
+    _ZTV8daSCre_c reads as 18 words that way and is 31; _ZTV17daObjBk_Rotebar_c
     reads as 15 and is 32.  A sweep that trusts the symbol bound calls both of
     those correct.
 
@@ -108,7 +108,7 @@ USAGE
         export, which goes stale against config re-addressings).
 
     Symbols that carry no _ZTV name work too -- two of the seven ov015
-    platform tables are data_ov015_02114360 and data_ov015_021147e8, so a
+    platform tables are _ZTV18daObjBkBillboard_c and _ZTV17daObjBk_Ukisima_c, so a
     _ZTV-only scan cannot see them.
 """
 import collections
@@ -447,7 +447,7 @@ class Rom:
                 # terminator then under-reads a 32-slot Platform table as 31 --
                 # precisely the truncation this file's header blames the bound
                 # for. _ZTV11PyramidLift (ov025 0x021139d4) and
-                # data_ov026_02113ba4 both read as 31 that way; neither is
+                # _ZTV13BowserShutter both read as 31 that way; neither is
                 # hosted today, so it was latent, but the sweep would have
                 # cleared a [31] host array for either the day it was.
                 #
@@ -526,7 +526,7 @@ class Rom:
 # The first version of this pattern wanted `void *` or `int` and a decimal
 # literal, so it could not see
 #
-#     unsigned char data_ov079_02127fb8[31 * 4];
+#     unsigned char _ZTV11BillBlaster[31 * 4];
 #
 # which is BILL_BLASTER's table: 32 slots in the ROM, one short on the host,
 # slot 31 a real override (ov079 0x02126e58) that nothing ever wrote. The sweep
@@ -566,7 +566,7 @@ def sweep(rom, root):
         for i, ln in enumerate(p.read_text(errors="replace").splitlines(), 1):
             # `extern int X[];` is a declaration and is rightly skipped.
             # `extern "C" { int X[20]; }` is a DEFINITION, and skipping that
-            # hid _ZTV15IceSlideManager -- 20 host words against 31 in the ROM
+            # hid _ZTV10daSldMng_c -- 20 host words against 31 in the ROM
             # -- for as long as this sweep has existed.
             if (re.match(r"\s*extern\s", ln) and '"C"' not in ln
                     and "=" not in ln):
@@ -693,7 +693,7 @@ def canonical_slots(rom):
 
 
 def itanium_face(name):
-    """_ZN9ActorBase13AfterBehaviorEj -> ('ActorBase', 'AfterBehavior')."""
+    """_ZN7fBase_c13AfterBehaviorEj -> ('ActorBase', 'AfterBehavior')."""
     m = re.match(r"_ZN(\d+)", name)
     if not m:
         return None
@@ -824,8 +824,8 @@ def seats(rom, disasm):
 #     and no wrong body to catch -- the slot was simply never written.
 #
 #     Three of the tables found short this way carried a plain data_ name
-#     rather than a _ZTV name (data_ov002_0210a83c, data_ov079_02127fb8,
-#     data_ov015_021147e8). Naming, not just declaration shape, is the blind
+#     rather than a _ZTV name (data_ov002_0210a83c, _ZTV11BillBlaster,
+#     _ZTV17daObjBk_Ukisima_c). Naming, not just declaration shape, is the blind
 #     spot; this check keys off the fill instead of the name.
 #
 # WHAT IT READS
@@ -900,7 +900,7 @@ def fills(rom, root):
         for m in re.finditer(r"#define\s+(\w+)\s+(\d+)", text):
             consts[m.group(1)] = int(m.group(2))
         # A host array often carries the ROM's name only through an alias
-        # pragma -- _ZTV11daObjPile_c is really data_ov091_021352bc. Both
+        # pragma -- _ZTV11daObjPile_c is really _ZTV5Stump. Both
         # directions, because the pragma is written either way round.
         for m in ANNOT.finditer(text):
             alias.setdefault(m.group(1), set()).add(m.group(2))

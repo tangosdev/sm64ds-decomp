@@ -129,7 +129,7 @@
 #   block 02135700..02136798, TEN {code,0} pairs, run 021369c0..02136a10 solid,
 #   every reference __sinit_ov094_021367e8. NOT SEATED: the NINETEENTH SYMSCOPE
 #   CROSSING is still live on this tip. src/_ZN10HootTheOwl8BehaviorEv.cpp:69
-#   spells the ROM's call to 0x021357a4 as func_ov096_021357a4 -- an eight-byte
+#   spells the ROM's call to 0x021357a4 as _ZN9daSanbo_c13OnYoshiTryEatEv -- an eight-byte
 #   ov096 stub -- where the ROM reaches ov094's own 0x110-byte body (ov094 and
 #   ov096 both base at 0x02135700). Confirmed on 0046a2d11 by the TU's own EXTRN
 #   list. Seating it raises the count by one and loses two matched TUs to

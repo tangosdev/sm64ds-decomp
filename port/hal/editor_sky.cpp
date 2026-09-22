@@ -149,7 +149,7 @@ extern "C" {
 void *port_stage_object(void);
 
 /* The ROM's own loader parts, exactly the ones Stage::LoadSkybox uses
-   (src/_ZN5Stage10LoadSkyboxEv.c). Reused rather than reimplemented so a
+   (src/_ZN5Stage10LoadSkyboxEv.cpp). Reused rather than reimplemented so a
    switched sky is byte-for-byte the same object a booted one is. */
 void *_Znwj(unsigned size);
 void *_ZN5ModelC1Ev(void *self);
@@ -157,7 +157,7 @@ void _ZN5Model14LoadAndSetFileEtii(void *self, unsigned short fileID,
                                    int a, int b);
 int _ZN5Stage11GetSkyboxIDEv(void);
 
-/* Model::~Model, the DELETING variant (src/_ZN5ModelD0Ev.c). Frees the owned
+/* Model::~Model, the DELETING variant (src/_ZN5ModelD0Ev.cpp). Frees the owned
    block at +0x4c, runs ModelBase::~ModelBase -- which Deallocates the BMD
    image at +0x04 -- and then frees the Model itself. It is the ROM's own full
    teardown, and it is used ONLY on a model this file built, never on the one
@@ -168,7 +168,7 @@ void *_ZN5ModelD0Ev(void *self);
 extern unsigned short data_02075620[];
 
 /* Model's vtable, which Model::Model installs at +0x00
-   (src/_ZN5ModelC1Ev.c). Used ONLY as a cache-validity check. */
+   (src/_ZN5ModelC1Ev.cpp). Used ONLY as a cache-validity check. */
 extern void *_ZTV5Model[];
 
 /* The texture / palette bump allocators, hal/model_host.cpp:232-241. Read

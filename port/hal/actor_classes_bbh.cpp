@@ -23,45 +23,47 @@
 // outside ov020 (its whole helper closure is matched ov020 src and it loads only
 // its own model), so it hosts clean on its own.
 //
-// The id was cross-checked: HauntedChair_SpawnInfo's +4 halfword is 326, the
-// census id and ACTOR_SPAWN_TABLE[326] target all agree; HauntedChair_Spawn's
+// The id was cross-checked: g_profile_CHAIR's +4 halfword is 326, the
+// census id and ACTOR_SPAWN_TABLE[326] target all agree; daChair_c_classInit's
 // own vtable-store site (relocs.txt) names _ZTV12HauntedChair.
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
 extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include <cstdlib>
 
-#include "Actor.h"
+#include "dActor_c.h"
 #include "dtor_faces_cpp.h"
-#include "ActorBase.h"
+#include "fBase_c.h"
 #include "HauntedChair.h"
 
 extern "C" {
 /* the shared lifecycle halves, the same functions every enemy fill writes */
-int _ZN5Actor19BeforeInitResourcesEv(void *self);          /* slot 1  */
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a); /* slot 2 */
-int _ZN5Actor14BeforeBehaviorEv(void *self);               /* slot 7  */
-int _ZN5Actor12BeforeRenderEv(void *self);                 /* slot 10 */
-int _ZN5Actor13OnYoshiTryEatEv(void *self);                /* slot 18 */
-int _ZN5Actor9Virtual50Ev(void *self);                     /* slot 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);  /* slot 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);      /* slot 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);      /* slot 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);          /* slot 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);          /* slot 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* 27 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);      /* 28 */
-void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p);       /* 19 */
-int _ZN5Actor16OnAimedAtWithEggEv(void *self);                     /* 29 */
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);          /* slot 1  */
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a); /* slot 2 */
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);               /* slot 7  */
+int _ZN8dActor_c12BeforeRenderEv(void *self);                 /* slot 10 */
+int _ZN8dActor_c13OnYoshiTryEatEv(void *self);                /* slot 18 */
+int _ZN8dActor_c9Virtual50Ev(void *self);                     /* slot 20 */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);  /* slot 21 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);      /* slot 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);      /* slot 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);          /* slot 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);          /* slot 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o); /* 26 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);     /* 27 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);      /* 28 */
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void *self, void *p);       /* 19 */
+int _ZN8dActor_c16OnAimedAtWithEggEv(void *self);                     /* 29 */
 
 extern int data_02099f24[];          /* the frame phase the lists are in */
 extern unsigned char data_020a4b4c;  /* the spawn spine's own step */
@@ -91,61 +93,61 @@ BBH_TRAP(13) BBH_TRAP(14) BBH_TRAP(16) BBH_TRAP(17)
 #undef BBH_TRAP
 
 static int __fastcall bbh_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall bbh_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall bbh_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 /* Slots 5/8/11 are ARM tail-call veneers on the ROM; call the target directly
    so the argument riding in r1 is not dropped. */
 static void __fastcall bbh_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall bbh_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall bbh_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall bbh_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall bbh_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall bbh_pdes(void *s, void *)
-{ ((ActorBase *)s)->ActorBase::OnPendingDestroy(); return 0; }
+{ ((fBase_c *)s)->fBase_c::OnPendingDestroy(); return 0; }
 static int __fastcall bbh_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int __fastcall bbh_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 static int __fastcall bbh_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 /* Slot 29, Actor::OnAimedAtWithEgg (ov020 0x02114a88 -> 0x02010124). NOT
    Virtual50: the two have the same arity, so nothing checks caught the swap,
    but they return different things. OnAimedAtWithEgg returns the egg auto-aim
    lock-on radius as a Fix12i, 81920 (0x14000, 20.0 in 20.12); Virtual50
    returns VS_FAIL (1), which read as a radius is 1/4096 of a unit. */
 static int __fastcall bbh_aimed(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 /* slot 19, OnTurnIntoEgg(Player &player): the caller PUSHES the player, so the
    three-parameter veneer pops it. The ROM reloc at this table + 0x4c lands on
    arm9 0x02010154, Actor::OnTurnIntoEgg (a tail-call veneer to
    KillAndTrackInDeathTable). Seating it lets Yoshi swallow-and-respawn as the
    ROM does; trapping it froze the actor forever. */
 static int __fastcall bbh_turn_egg(void *s, void *, void *p)
-{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+{ _ZN8dActor_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall bbh_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall bbh_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall bbh_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall bbh_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall bbh_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall bbh_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall bbh_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall bbh_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 
 /* The shared half of a 31-slot Enemy table. The caller writes its own
    0/3/6/9/16/17. Slots 16/17 are trapped here and overwritten below -- a
@@ -165,7 +167,7 @@ static void bbh_fill_shared(void **vt)
     vt[13] = (void *)bbh_trap13;
     vt[14] = (void *)bbh_trap14;
     vt[15] = (void *)bbh_heap;
-    vt[16] = (void *)bbh_trap16;
+    vt[16] = (void *)PORT_D16(bbh_trap16);
     vt[17] = (void *)bbh_trap17;
     vt[18] = (void *)bbh_yoshi;
     vt[19] = (void *)bbh_turn_egg;
@@ -186,7 +188,7 @@ static void bbh_fill_shared(void **vt)
 // HAUNTED_CHAIR (326, ov020) -- _ZTV12HauntedChair / _ZTV9daChair_c (0x02114a14)
 // ============================================================================
 //
-// HauntedChair_Spawn (ov020 0x02113494) installs _ZTV12HauntedChair; its +4
+// daChair_c_classInit (ov020 0x02113494) installs _ZTV12HauntedChair; its +4
 // reads 326. A 0x398-byte object with a Model at +0xd4, a ShadowModel at +0x124,
 // a MovingCylinderClsnWithPos at +0x17c and a WithMeshClsn at +0x1bc. Its own
 // slots are 0/3/6/9/16/17; everything past 17 is Actor's default. Init/Behavior/
@@ -198,7 +200,7 @@ int _ZN12HauntedChair6RenderEv(void *self);           /* face: below */
 int _ZN12HauntedChair16CleanupResourcesEv(void *self); /* .c, C linkage */
 int *_ZN12HauntedChairD0Ev(int *self);                /* .c, C linkage */
 void *_ZTV12HauntedChair[31];
-int *HauntedChair_Spawn(void);
+int *daChair_c_classInit(void);
 /* The Itanium-named sub-object destructors, all in the build with C linkage
    (hal/actor_classes.cpp). The D1 thunk below runs the class's own teardown
    through them -- the D0's chain minus the final Deallocate -- because the
@@ -206,9 +208,9 @@ int *HauntedChair_Spawn(void);
    would resolve to MSVC-mangled names that do not exist in this build. */
 void _ZN5ModelD1Ev(void *);
 void _ZN11ShadowModelD1Ev(void *);
-void _ZN12WithMeshClsnD1Ev(void *);
-void _ZN25MovingCylinderClsnWithPosD1Ev(void *);
-void *_ZN5ActorD2Ev(void *);
+void _ZN10dBgCh_ActrD1Ev(void *);
+void _ZN10dCcAcPos_cD1Ev(void *);
+void *_ZN8dActor_cD2Ev(void *);
 extern void *_ZTV9daChair_c;   /* aliased to _ZTV12HauntedChair below */
 }
 static int __fastcall hc_init(void *s, void *)
@@ -236,7 +238,7 @@ extern "C" void hal_fill_haunted_chair_vtable(void)
     vt[3] = (void *)hc_clean;
     vt[6] = (void *)hc_behavior;
     vt[9] = (void *)hc_render;
-    vt[16] = (void *)hal_cppd1_HauntedChair;
+    vt[16] = (void *)PORT_D16(hal_cppd1_HauntedChair);
     vt[17] = (void *)hc_d0;
 }
 
@@ -261,8 +263,8 @@ int _ZN12HauntedChair6RenderEv(void *self)
 #pragma comment(linker, "/alternatename:__ZTV9daChair_c=__ZTV12HauntedChair")
 
 /* The C++/C linkage bridge. HauntedChair::InitResources declares the identity
-   Matrix4x3 it copies (data_02082128) OUTSIDE its extern "C" block, so MSVC
+   Matrix4x3 it copies (IDENTITY_MATRIX4X3) OUTSIDE its extern "C" block, so MSVC
    mangles the reference as a C++ name while romdata.c defines the one real
    symbol with C linkage. Point the mangled spelling at the C symbol -- the
    "propagate config renames BY ADDRESS" hazard applied to a type. */
-#pragma comment(linker, "/alternatename:?data_02082128@@3UM48@@A=_data_02082128")
+#pragma comment(linker, "/alternatename:?IDENTITY_MATRIX4X3@@3UM48@@A=_data_02082128")

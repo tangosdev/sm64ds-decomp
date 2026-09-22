@@ -57,12 +57,13 @@
 #include "LakituBro.h"
 #include "MantaRay.h"
 #include "MrI.h"
-#include "PiranhaPlant.h"
-#include "Rabbit.h"
+#include "daPkn_c.h"
+#include "daMip_c.h"
 #include "Shark.h"
 #include "Skeeter.h"
 #include "Spiny.h"
 #include "Stump.h"
+#include "Fwoosh.h"
 #include "TreasureChest.h"
 
 /* TWO NAME BRIDGES, and they are the whole reason this file has a pragma in it.
@@ -71,7 +72,7 @@
    linker for a mangled name that nothing defines:
 
      src/_ZN7HeaveHo6RenderEv.cpp        extern int data_0209f32c;
-     src/_ZN12PiranhaPlant6RenderEv.cpp  extern G2  data_ov084_02130df4;
+     src/actors/daPkn_c.cpp  extern G2  data_ov084_02130df4;
 
    The mount defines both at C linkage (_data_0209f32c out of
    hal/cxx_aliases.cpp, _data_ov084_02130df4 out of ov084_syms.c.obj), so each
@@ -103,10 +104,10 @@ int _ZN8MantaRay6RenderEv(void *s)            { return ((MantaRay *)s)->MantaRay
 int _ZN6Lakitu6RenderEv(void *s)              { return ((Lakitu *)s)->Lakitu::Render(); }
 int _ZN7HeaveHo6RenderEv(void *s)             { return ((HeaveHo *)s)->HeaveHo::Render(); }
 int _ZN10CheepCheep6RenderEv(void *s)         { return ((CheepCheep *)s)->CheepCheep::Render(); }
-int _ZN5Stump6RenderEv(void *s)               { return ((Stump *)s)->Stump::Render(); }
-int _ZN12PiranhaPlant6RenderEv(void *s)       { return ((PiranhaPlant *)s)->PiranhaPlant::Render(); }
+int _ZN6Fwoosh6RenderEv(void *s)              { return ((Fwoosh *)s)->Fwoosh::Render(); }
+int _ZN7daPkn_c6RenderEv(void *s)       { return ((daPkn_c *)s)->daPkn_c::Render(); }
 int _ZN19FirePiranhaPlantBig6RenderEv(void *s){ return ((FirePiranhaPlantBig *)s)->FirePiranhaPlantBig::Render(); }
-int _ZN6Rabbit6RenderEv(void *s)              { return ((Rabbit *)s)->Rabbit::Render(); }
+int _ZN7daMip_c6RenderEv(void *s)              { return ((daMip_c *)s)->daMip_c::Render(); }
 int _ZN9LakituBro6RenderEv(void *s)           { return ((LakituBro *)s)->LakituBro::Render(); }
 
 }  /* extern "C" */
@@ -149,7 +150,7 @@ int _ZN9LakituBro6RenderEv(void *s)           { return ((LakituBro *)s)->LakituB
    return type only decides whether EAX is read after the call, and every one
    of these bodies discards it. Lane EXCEPT shipped four seats of exactly that
    shape and the battery was green. */
-#include "FloatOnWaterPlatformJrb.h"
+#include "SlidingBox.h"
 #include "Goomboss.h"
 #include "Player.h"
 #include "ShipUp.h"
@@ -165,8 +166,8 @@ int _ZN6ShipUp6RenderEv(void *s)              { return ((ShipUp *)s)->ShipUp::Re
    RTTI name string behind _ZTV23FloatOnWaterPlatformJrb[-1] @ 0x02114c88 says
    "13daSlide_Box_c", so the table SLIDING_BOX (313) installs is the one that
    holds this body at slot 9 @ 0x02114cb0. */
-int _ZN23FloatOnWaterPlatformJrb6RenderEv(void *s)
-{ return ((FloatOnWaterPlatformJrb *)s)->FloatOnWaterPlatformJrb::Render(); }
+int _ZN10SlidingBox6RenderEv(void *s)
+{ return ((SlidingBox *)s)->SlidingBox::Render(); }
 /* Player::BlowAway, ROM 0x020d4fe4. Not a vtable row: the ROM reaches this body
    by two arm_calls (ov027 from:0x0211221c, ov091 from:0x02133b84), and every
    caller in the tree spells the FLAT name include/decl_Player.h:38 declares at
@@ -192,7 +193,7 @@ void _ZN6Player8BlowAwayEs(void *s, short v) { ((Player *)s)->Player::BlowAway(v
    so each row is one cdecl definition of that name onto the method and no fill
    site changes. */
 #include "Bird.h"
-#include "Flag.h"
+#include "daMcFlag_c.h"
 
 extern "C" {
 
@@ -201,7 +202,7 @@ extern "C" {
 int _ZN4Bird6RenderEv(void *s)                { return ((Bird *)s)->Bird::Render(); }
 /* Flag::Render, ROM 0x0211211c (ov009, kind:function(arm,size=0x28)); the fill
    site is hal/actor_classes.cpp:1506. */
-int _ZN4Flag6RenderEv(void *s)                { return ((Flag *)s)->Flag::Render(); }
+int _ZN10daMcFlag_c6RenderEv(void *s)                { return ((daMcFlag_c *)s)->daMcFlag_c::Render(); }
 
 }  /* extern "C" */
 
@@ -211,7 +212,7 @@ int _ZN4Flag6RenderEv(void *s)                { return ((Flag *)s)->Flag::Render
    cdecl line the rows above need, and for the same reason: the fill site
    declares the C name at C linkage because what it used to reach was an
    extern "C" host copy in port/unmatched. The fifth,
-   _ZN8PathLift12BaseBehaviorEv, defines its C name itself and is not here, and
+   _ZN16dPathLiftActor_c12BaseBehaviorEv, defines its C name itself and is not here, and
    neither are batch 1's two ov006 sound dispatchers, for the same reason.
 
    THESE ROWS' OWN REPAIR IS NOT THIS FILE. What made them takeable is a
@@ -222,9 +223,9 @@ int _ZN4Flag6RenderEv(void *s)                { return ((Flag *)s)->Flag::Render
    (port/unmatched/Coin_Behavior.cpp, PowerStar_States.cpp,
    PiranhaPlant_States.cpp) with the per-table ROM evidence. */
 #include "Coin.h"
-#include "OneUpMushroom.h"
+#include "da1up_c.h"
 #include "PowerStar.h"
-#include "PiranhaPlant.h"
+#include "daPkn_c.h"
 
 extern "C" {
 
@@ -232,10 +233,10 @@ extern "C" {
    hal/actor_classes.cpp. */
 int _ZN4Coin8BehaviorEv(void *s)              { return ((Coin *)s)->Coin::Behavior(); }
 /* OneUpMushroom::Behavior, ROM 0x020b00e8 (ov002). */
-int _ZN13OneUpMushroom8BehaviorEv(void *s)    { return ((OneUpMushroom *)s)->OneUpMushroom::Behavior(); }
+int _ZN7da1up_c8BehaviorEv(void *s)    { return ((da1up_c *)s)->da1up_c::Behavior(); }
 /* PowerStar::Behavior, ROM 0x020eb05c (ov002). */
 int _ZN9PowerStar8BehaviorEv(void *s)         { return ((PowerStar *)s)->PowerStar::Behavior(); }
 /* PiranhaPlant::Behavior, ROM 0x0212fd4c (ov084). */
-int _ZN12PiranhaPlant8BehaviorEv(void *s)     { return ((PiranhaPlant *)s)->PiranhaPlant::Behavior(); }
+int _ZN7daPkn_c8BehaviorEv(void *s)     { return ((daPkn_c *)s)->daPkn_c::Behavior(); }
 
 }  /* extern "C" */

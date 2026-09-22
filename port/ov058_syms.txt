@@ -18,7 +18,7 @@
 # ==== THE ONE CLASS, both attribution routes ===============================
 #
 #   id   arm9 slot   SpawnInfo   word[0]     factory                +4  x L50
-#   182  0x02090b3c  0x02111a4c  0x02111688  RecRoomCupboard_Spawn  182  1
+#   182  0x02090b3c  0x02111a4c  0x02111688  daObjCloset_c_classInit  182  1
 #
 # The record's word[0] lands inside ov058 [0x021111a0, 0x02111b00) and is the
 # overlay's only factory; the record reads 182 back at +4. Both routes are
@@ -33,11 +33,11 @@
 # ==== THE TABLE IS 31 SLOTS, NOT 32, AND THE LANDING READS TWO =============
 #
 # _ZTV15RecRoomCupboard  0x02111a70, THIRTY-ONE slots, ends 0x02111aec.
-#   It is an ACTOR table, not a Platform one. RecRoomCupboard_Spawn allocates
+#   It is an ACTOR table, not a Platform one. daObjCloset_c_classInit allocates
 #   0x21c bytes and calls Actor's constructor (not Platform's), and the tail is
 #   the plain Actor close:
-#       slot 29  0x02010124  _ZN5Actor16OnAimedAtWithEggEv
-#       slot 30  0x020100dc  _ZN5Actor25OnAimedAtWithEggReturnVecEv
+#       slot 29  0x02010124  _ZN8dActor_c16OnAimedAtWithEggEv
+#       slot 30  0x020100dc  _ZN8dActor_c25OnAimedAtWithEggReturnVecEv
 #       slot 31  0x00000000  -- NOT a relocation. There is no Platform::Kill.
 #   Same shape as ov024's PYRAMID_TAG, and the second 31-slot table in this
 #   lane against five 32-slot ones.
@@ -45,19 +45,19 @@
 #   and 0x02111abc (slot 19) and 0x02111ad4 (slot 25) are interior splits too.
 #   A two-slot host array would have left everything from CleanupResources
 #   onward off the end of storage.
-#   Slot 9 is _ZN9ActorBase6RenderEv, the BASE body: this class has no Render
+#   Slot 9 is _ZN7fBase_c6RenderEv, the BASE body: this class has no Render
 #   of its own, so its fill writes 0/3/6/16/17 and takes 9 from the base.
 #   The table is EXCLUDED from this mount and hosted as an array
 #   hal/actor_classes_ov058.cpp fills.
 #
 # ==== ONE T3 WIDTH PIN =====================================================
 #
-#   RecRoomCupboard_SpawnInfo  natural next-symbol delta 0xc (dsd named
+#   g_profile_PL_CLOSET  natural next-symbol delta 0xc (dsd named
 #     0x02111a58 INSIDE the record). A record is 0x1c. Unpinned this mounts
 #     TWELVE bytes of twenty-eight, and the registry's own id check at +4 sits
 #     inside those twelve so it would have passed while the record's last four
-#     words belonged to somebody else. Same shape as ov024's PyramidTag_SpawnInfo
-#     and ov017's ShipWater_SpawnInfo.
+#     words belonged to somebody else. Same shape as ov024's g_profile_DL_PYRAMID_DUMMY
+#     and ov017's g_profile_KS_MIZU.
 #
 # ==== NO ALIAS RACE, NO PLACEHOLDER, NO SHIFT ==============================
 #
@@ -69,4 +69,4 @@
 # the lane that needed no per-source -D at all.
 
 # ---- .data: the one SpawnInfo record, pinned to the ROM's 0x1c ------------
-RecRoomCupboard_SpawnInfo:0x1c
+g_profile_PL_CLOSET:0x1c

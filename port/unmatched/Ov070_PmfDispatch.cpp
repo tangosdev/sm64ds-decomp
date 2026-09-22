@@ -24,11 +24,11 @@
  * FlameChomp::Behavior +0x9. Both call sites are the FIRST call in their
  * Behavior and both callees tail-jump through a null.
  *
- * src/func_ov070_02120d34.cpp is
+ * src/game/actors/daBrq_c.cpp is
  *
  *     struct C; typedef void (C::*PMF)();
  *     struct C { char pad[0x41c]; PMF *pp; };
- *     extern "C" void func_ov070_02120d34(C *c) { PMF *p = c->pp + 1; (c->**p)(); }
+ *     extern "C" void _ZN7daBrq_c11UpdateStateEv(C *c) { PMF *p = c->pp + 1; (c->**p)(); }
  *
  * and the ROM body it decompiles (overlay_0070.bin at 0x02120d34) is
  *
@@ -47,7 +47,7 @@
  * word of record 0 -- which every one of these records holds as zero. The call
  * is literally `call 0`, which is exactly the EIP the fault reports.
  *
- * THE STRIDE IS PINNED BY THE SETTER, not inferred. func_ov070_02120da8 (Amp)
+ * THE STRIDE IS PINNED BY THE SETTER, not inferred. _ZN7daBrq_c8SetStateEi (Amp)
  * and func_ov070_02121880 (FlameChomp) both compute the State pointer as
  * `table + (state << 4)` -- sixteen bytes per state, two 8-byte PMFs per
  * State, pp[0] the enter handler and pp[1] the per-frame tick. The record
@@ -64,7 +64,7 @@
  * carries adj 0, so the two agree word for word here. A record with an odd adj
  * would need the virtual branch, and none exists.)
  *
- * WHY ONLY TWO OF ov070's FOUR dispatchers get the option. func_ov070_02120d70
+ * WHY ONLY TWO OF ov070's FOUR dispatchers get the option. _ZN7daBrq_c10EnterStateEv
  * and func_ov070_02121848 read pp[0] rather than pp[1], and at index 0 the
  * wrong stride cannot bite: MSVC's 4-byte PMF at offset 0 IS the fn word and
  * every seated record carries adj 0, so the compiled `call [p]` with an
@@ -74,13 +74,13 @@
  * THE WIDER FIX, which is NOT this lane's. `grep -rl "c->pp + 1" src/` finds
  * TWENTY-THREE TUs with this exact shape:
  *
- *   _ZN10KingBobOmb8BehaviorEv  _ZN10MrBlizzard8BehaviorEv
+ *   _ZN12daBombking_c8BehaviorEv  _ZN10MrBlizzard8BehaviorEv
  *   _ZN11ChiefChilly8BehaviorEv func_ov018_0211235c func_ov019_02112268
- *   func_ov027_02111cfc func_ov030_02114134 func_ov070_02120d34
+ *   func_ov027_02111cfc func_ov030_02114134 _ZN7daBrq_c11UpdateStateEv
  *   func_ov070_0212180c func_ov070_02121fd0 func_ov071_02120278
- *   func_ov071_021215c0 func_ov072_0211fc3c func_ov072_02120560
+ *   func_ov071_021215c0 _ZN12daBgSnmBdy_c17CallStateBehaviorEv _ZN11SnowmanHead17CallStateBehaviorEv
  *   func_ov072_02121cdc func_ov077_02124718 func_ov077_02125e20
- *   func_ov080_021250c8 func_ov081_02127708 func_ov085_0212a430
+ *   func_ov080_021250c8 _ZN8daGmch_c15CallStateUpdateEv _ZN13PrincessPeach17CallStateBehaviorEv
  *   func_ov085_0212dbdc func_ov085_0212de5c func_ov096_021368b4
  *
  * Every one of them is the same `call 0` the moment its class is both
@@ -111,8 +111,8 @@
  *
  * The two bodies are transcribed below from the ROM listings and dispatched
  * from ov070's two vtable fills by their port_ names. THE COST IS TWO LINKED
- * TUs and it should be read plainly: src/_ZN3Amp6RenderEv.cpp and
- * src/_ZN10FlameChomp6RenderEv.cpp are C++ METHODS whose only reference was
+ * TUs and it should be read plainly: src/game/actors/daBrq_c.cpp and
+ * src/game/actors/d_a_krpa.cpp are C++ METHODS whose only reference was
  * the C face in hal/actor_classes_ov070.cpp, so routing the fills past those
  * faces leaves both methods unreferenced and /OPT:REF strips them. That is the
  * same trade the Butterfly/Whomp/Seaweed copies made when their sources came

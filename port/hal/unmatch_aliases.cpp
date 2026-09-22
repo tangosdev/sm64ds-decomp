@@ -1,7 +1,7 @@
 // run link100 lane UNMATCH, batch 2: THE TWO NAMES THE PAINTING'S
 // InitResources ASKS FOR.
 //
-// src/func_ov080_02126ca0.cpp (daPicGate_c::InitResources) declares its two
+// src/_ZN8Painting13InitResourcesEv.cpp (daPicGate_c::InitResources) declares its two
 // arrays at namespace scope in C++ and NOT inside extern "C":
 //
 //     extern Disp data_ov080_02128628[];

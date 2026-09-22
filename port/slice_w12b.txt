@@ -26,31 +26,26 @@
 # six-virtual class, and _ZTV5Model IS dual-filled (slot 4 and slot 5 both
 # mv_render, hal/cxxname_bridge.cpp), so neither is the ModelAnim/BlendModelAnim
 # slot-5 collision and both stay sliced as matched src. Both Spawns name their
-# receiver (`_ZN8PlatformC2Ev(p)`) and store a REAL table name, so both register
+# receiver (`_ZN10dBgActor_cC2Ev(p)`) and store a REAL table name, so both register
 # directly with no factory wrapper and neither is an ARM r0 ride-through.
 #
 # ---- ONE SHARED-WINDOW MISSPELLING -----------------------------------------
 #
-# src/func_ov052_0211123c.c spells ov052's own file table `data_ov056_021124d4`
+# src/game/actors/d_a_obj_emm_log.cpp spells ov052's own file table `data_ov056_021124d4`
 # (ov052 and ov056 link at overlapping bases and dsd raced the name); its
-# sibling src/func_ov052_02111348.c spells the SAME address
+# sibling src/game/actors/d_a_obj_emm_log.cpp spells the SAME address
 # `data_ov052_021124d4`, and the load site's relocs at 0x02111260/0x02111268
 # say module:overlay(52). The rename is a PER-SOURCE -D in port/CMakeLists.txt,
 # not an /alternatename, because ov056 is a live target on this board and an
 # alias with an ov056 LHS would be defeated the day ov056 is mounted.
-src/func_ov052_02111410.c
-src/SquarePathLift_Spawn.c
-src/func_ov052_02111348.cpp
-src/func_ov052_0211123c.c
-src/func_ov052_021112ac.c
-src/func_ov052_02111284.cpp
-src/func_ov052_021111a0.c
-src/func_ov052_021111e4.c
+src/game/actors/d_a_obj_emm_log.cpp
+src/d_a_obj_emm_yuka.c
 src/_ZN14SquarePathLift13InitResourcesEv.cpp
 src/_ZN14SquarePathLift16CleanupResourcesEv.cpp
 src/_ZN14SquarePathLift8BehaviorEv.cpp
 src/_ZN14SquarePathLift6RenderEv.cpp
-src/_ZN14SquarePathLiftD1Ev.c
-src/_ZN14SquarePathLiftD0Ev.c
+src/_ZN14SquarePathLiftD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN14SquarePathLiftD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN14SquarePathLiftD0Ev.cpp
 src/__sinit_ov052_02111b64.c
 src/__sinit_ov052_02111bd0.c

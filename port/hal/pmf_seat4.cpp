@@ -26,12 +26,12 @@
 //       add ecx,this / call eax`, with NO `add esp,4` after it, so the one
 //       pushed word is callee-popped: __fastcall(self, dead edx, int).
 //   F0  arity zero. The same without the push: __fastcall(self, dead edx).
-//       Two of these dispatchers (func_ov006_020f50f8 and _020f71c8) emit
+//       Two of these dispatchers (_ZN13dScMgMemory_c11StateResultEv and _020f71c8) emit
 //       `jmp eax` rather than `call eax` because the dispatch is their last
 //       statement -- the tail-jump shape lane PMFB8 recorded. A zero-argument
 //       __fastcall face is correct under both: it takes its receiver from ecx,
 //       pops nothing, and returns to whoever the jump left on the stack.
-//   C0  func_ov006_020e683c OPEN-CODES the decode in plain ints and transfers
+//   C0  _ZN15dScMgCurling2_c8BehaviorEv OPEN-CODES the decode in plain ints and transfers
 //       with `push obj / call eax`, and the caller cleans up (the `add esp,12`
 //       that covers this call and the two ordinary ones after it). So table
 //       data_ov006_02141a18 takes __cdecl(void *self) faces. A __fastcall face
@@ -95,17 +95,17 @@ void func_ov006_020d7778(void);
 void func_ov006_020e1264(char *c, int idx);
 void func_ov006_020e1214(char *base, int idx);
 void func_ov006_020e0d84(char *c, int i);
-void func_ov006_020e3db4(char *c, int i);
-void func_ov006_020e3ce0(char *c, int i);
-void func_ov006_020e3c4c(char *c, int i);
-void func_ov006_020e4630(char *c, int i);
-void func_ov006_020e4520(char *c, int i);
-void func_ov006_020e440c(char *c, int i);
-void func_ov006_020e4348(char *c, int i);
-void func_ov006_020e41d0(char *c, int i);
-void func_ov006_020e4094(char *c, int i);
-void func_ov006_020e3f54(char *c, int i);
-void func_ov006_020e3e4c(char *c, int i);
+void _ZN15dScMgCurling2_c12StepYRestartEi(char *c, int i);
+void _ZN15dScMgCurling2_c11StepYRampUpEi(char *c, int i);
+void _ZN15dScMgCurling2_c13StepYRampDownEi(char *c, int i);
+void _ZN15dScMgCurling2_c13StepXPickFastEi(char *c, int i);
+void _ZN15dScMgCurling2_c16StepXPushPosFastEi(char *c, int i);
+void _ZN15dScMgCurling2_c16StepXPushNegFastEi(char *c, int i);
+void _ZN15dScMgCurling2_c15StepXSettleFastEi(char *c, int i);
+void _ZN15dScMgCurling2_c9StepXPickEi(char *c, int i);
+void _ZN15dScMgCurling2_c12StepXPushPosEi(char *c, int i);
+void _ZN15dScMgCurling2_c12StepXPushNegEi(char *c, int i);
+void _ZN15dScMgCurling2_c11StepXSettleEi(char *c, int i);
 void func_ov006_020e64e4(int c);
 void func_ov006_020e6354(char *c);
 void func_ov006_020e628c(char *c);
@@ -117,36 +117,36 @@ void func_ov006_020e97b0(char *c);
 void func_ov006_020e96f4(char *thiz);
 void func_ov006_020e968c(char *c);
 void func_ov006_020e9670(void *t);
-void func_ov006_020f002c(char *c, int i);
-void func_ov006_020effb8(char *c, int i);
-void func_ov006_020eff20(char *c, int i);
-void func_ov006_020f0a6c(char *c, int i);
-void func_ov006_020f088c(char *c, int i);
-void func_ov006_020f06fc(char *c, int i);
-void func_ov006_020f4888(char *self);
-void func_ov006_020f47d8(char *c);
-void func_ov006_020f46ec(char *c);
-void func_ov006_020f456c(void *c);
-void func_ov006_020f4c38(char *c);
-void func_ov006_020f4bbc(unsigned char *c);
-void func_ov006_020f4b30(char *c);
-void func_ov006_020f4ad4(unsigned char *c);
-void *func_ov006_020f4a40(char *c);
-void func_ov006_020f49ac(char *c);
-void func_ov006_020f6538(char *c);
-void func_ov006_020f6488(char *c);
-void func_ov006_020f639c(char *c);
-void func_ov006_020f6230(char *p);
-void func_ov006_020f6bf0(char *c);
-void func_ov006_020f6b78(char *thiz);
-void func_ov006_020f6b00(char *thiz);
-void func_ov006_020f6a78(char *c);
-void func_ov006_020f6a00(char *thiz);
-void func_ov006_020f6904(char *c);
-void func_ov006_020f6830(char *o);
-void func_ov006_020f67a0(char *c);
-void *func_ov006_020f670c(char *c);
-void func_ov006_020f6678(char *c);
+void _ZN12dScMgLuigi_c8IrisHoldEi(char *c, int i);
+void _ZN12dScMgLuigi_c8IrisGrowEi(char *c, int i);
+void _ZN12dScMgLuigi_c8IrisStopEi(char *c, int i);
+void _ZN12dScMgLuigi_c18CurtainStateBounceEi(char *c, int i);
+void _ZN12dScMgLuigi_c16CurtainStateHoldEi(char *c, int i);
+void _ZN12dScMgLuigi_c16CurtainStateFastEi(char *c, int i);
+void _ZN13dScMgMemory_c10ResultWaitEv(char *self);
+void _ZN13dScMgMemory_c12ResultRewardEv(char *c);
+void _ZN13dScMgMemory_c15ResultTurnCardsEv(char *c);
+void _ZN13dScMgMemory_c12ResultFinishEv(void *c);
+void _ZN13dScMgMemory_c10RoundStartEv(char *c);
+void _ZN13dScMgMemory_c13RoundDealEasyEv(unsigned char *c);
+void _ZN13dScMgMemory_c15RoundDealNormalEv(char *c);
+void _ZN13dScMgMemory_c13RoundDealHardEv(unsigned char *c);
+void *_ZN13dScMgMemory_c13RoundWaitDealEv(char *c);
+void _ZN13dScMgMemory_c11RoundRevealEv(char *c);
+void _ZN14dScMgMemory2_c10ResultWaitEv(char *c);
+void _ZN14dScMgMemory2_c12ResultRewardEv(char *c);
+void _ZN14dScMgMemory2_c15ResultTurnCardsEv(char *c);
+void _ZN14dScMgMemory2_c12ResultFinishEv(char *p);
+void _ZN14dScMgMemory2_c10RoundStartEv(char *c);
+void _ZN14dScMgMemory2_c13RoundDealEasyEv(char *thiz);
+void _ZN14dScMgMemory2_c15RoundDealNormalEv(char *thiz);
+void _ZN14dScMgMemory2_c13RoundDealHardEv(char *c);
+void _ZN14dScMgMemory2_c15RoundDealFourthEv(char *thiz);
+void _ZN14dScMgMemory2_c14RoundShowCardsEv(char *c);
+void _ZN14dScMgMemory2_c14RoundHideCardsEv(char *o);
+void _ZN14dScMgMemory2_c15RoundReadyCardsEv(char *c);
+void *_ZN14dScMgMemory2_c13RoundWaitDealEv(char *c);
+void _ZN14dScMgMemory2_c11RoundRevealEv(char *c);
 void func_ov006_02129894(char *c, int i);
 void func_ov006_021297c0(unsigned char *base, int idx);
 void func_ov006_0212972c(char *c, int idx);
@@ -335,21 +335,21 @@ static void __fastcall s4_021419a0_0(void *self, void *dead_edx, int arg)
     (void)dead_edx; (void)arg;
     char *self_c = (char *)self; (void)self_c;
     ++g_h_021419a0[0];
-    func_ov006_020e3db4((char *)self_c, arg);
+    _ZN15dScMgCurling2_c12StepYRestartEi((char *)self_c, arg);
 }
 static void __fastcall s4_021419a0_1(void *self, void *dead_edx, int arg)
 {
     (void)dead_edx; (void)arg;
     char *self_c = (char *)self; (void)self_c;
     ++g_h_021419a0[1];
-    func_ov006_020e3ce0((char *)self_c, arg);
+    _ZN15dScMgCurling2_c11StepYRampUpEi((char *)self_c, arg);
 }
 static void __fastcall s4_021419a0_2(void *self, void *dead_edx, int arg)
 {
     (void)dead_edx; (void)arg;
     char *self_c = (char *)self; (void)self_c;
     ++g_h_021419a0[2];
-    func_ov006_020e3c4c((char *)self_c, arg);
+    _ZN15dScMgCurling2_c13StepYRampDownEi((char *)self_c, arg);
 }
 
 /* data_ov006_021419b8, 4 cell(s), arity one */
@@ -358,28 +358,28 @@ static void __fastcall s4_021419b8_0(void *self, void *dead_edx, int arg)
     (void)dead_edx; (void)arg;
     char *self_c = (char *)self; (void)self_c;
     ++g_h_021419b8[0];
-    func_ov006_020e4630((char *)self_c, arg);
+    _ZN15dScMgCurling2_c13StepXPickFastEi((char *)self_c, arg);
 }
 static void __fastcall s4_021419b8_1(void *self, void *dead_edx, int arg)
 {
     (void)dead_edx; (void)arg;
     char *self_c = (char *)self; (void)self_c;
     ++g_h_021419b8[1];
-    func_ov006_020e4520((char *)self_c, arg);
+    _ZN15dScMgCurling2_c16StepXPushPosFastEi((char *)self_c, arg);
 }
 static void __fastcall s4_021419b8_2(void *self, void *dead_edx, int arg)
 {
     (void)dead_edx; (void)arg;
     char *self_c = (char *)self; (void)self_c;
     ++g_h_021419b8[2];
-    func_ov006_020e440c((char *)self_c, arg);
+    _ZN15dScMgCurling2_c16StepXPushNegFastEi((char *)self_c, arg);
 }
 static void __fastcall s4_021419b8_3(void *self, void *dead_edx, int arg)
 {
     (void)dead_edx; (void)arg;
     char *self_c = (char *)self; (void)self_c;
     ++g_h_021419b8[3];
-    func_ov006_020e4348((char *)self_c, arg);
+    _ZN15dScMgCurling2_c15StepXSettleFastEi((char *)self_c, arg);
 }
 
 /* data_ov006_021419f8, 4 cell(s), arity one */
@@ -388,28 +388,28 @@ static void __fastcall s4_021419f8_0(void *self, void *dead_edx, int arg)
     (void)dead_edx; (void)arg;
     char *self_c = (char *)self; (void)self_c;
     ++g_h_021419f8[0];
-    func_ov006_020e41d0((char *)self_c, arg);
+    _ZN15dScMgCurling2_c9StepXPickEi((char *)self_c, arg);
 }
 static void __fastcall s4_021419f8_1(void *self, void *dead_edx, int arg)
 {
     (void)dead_edx; (void)arg;
     char *self_c = (char *)self; (void)self_c;
     ++g_h_021419f8[1];
-    func_ov006_020e4094((char *)self_c, arg);
+    _ZN15dScMgCurling2_c12StepXPushPosEi((char *)self_c, arg);
 }
 static void __fastcall s4_021419f8_2(void *self, void *dead_edx, int arg)
 {
     (void)dead_edx; (void)arg;
     char *self_c = (char *)self; (void)self_c;
     ++g_h_021419f8[2];
-    func_ov006_020e3f54((char *)self_c, arg);
+    _ZN15dScMgCurling2_c12StepXPushNegEi((char *)self_c, arg);
 }
 static void __fastcall s4_021419f8_3(void *self, void *dead_edx, int arg)
 {
     (void)dead_edx; (void)arg;
     char *self_c = (char *)self; (void)self_c;
     ++g_h_021419f8[3];
-    func_ov006_020e3e4c((char *)self_c, arg);
+    _ZN15dScMgCurling2_c11StepXSettleEi((char *)self_c, arg);
 }
 
 /* data_ov006_02141a18, 5 cell(s), open-coded, cdecl */
@@ -498,21 +498,21 @@ static void __fastcall s4_021421ec_0(void *self, void *dead_edx, int arg)
     (void)dead_edx; (void)arg;
     char *self_c = (char *)self; (void)self_c;
     ++g_h_021421ec[0];
-    func_ov006_020f002c(self_c, arg);
+    _ZN12dScMgLuigi_c8IrisHoldEi(self_c, arg);
 }
 static void __fastcall s4_021421ec_1(void *self, void *dead_edx, int arg)
 {
     (void)dead_edx; (void)arg;
     char *self_c = (char *)self; (void)self_c;
     ++g_h_021421ec[1];
-    func_ov006_020effb8(self_c, arg);
+    _ZN12dScMgLuigi_c8IrisGrowEi(self_c, arg);
 }
 static void __fastcall s4_021421ec_2(void *self, void *dead_edx, int arg)
 {
     (void)dead_edx; (void)arg;
     char *self_c = (char *)self; (void)self_c;
     ++g_h_021421ec[2];
-    func_ov006_020eff20(self_c, arg);
+    _ZN12dScMgLuigi_c8IrisStopEi(self_c, arg);
 }
 
 /* data_ov006_0214221c, 3 cell(s), arity one */
@@ -521,21 +521,21 @@ static void __fastcall s4_0214221c_0(void *self, void *dead_edx, int arg)
     (void)dead_edx; (void)arg;
     char *self_c = (char *)self; (void)self_c;
     ++g_h_0214221c[0];
-    func_ov006_020f0a6c(self_c, arg);
+    _ZN12dScMgLuigi_c18CurtainStateBounceEi(self_c, arg);
 }
 static void __fastcall s4_0214221c_1(void *self, void *dead_edx, int arg)
 {
     (void)dead_edx; (void)arg;
     char *self_c = (char *)self; (void)self_c;
     ++g_h_0214221c[1];
-    func_ov006_020f088c(self_c, arg);
+    _ZN12dScMgLuigi_c16CurtainStateHoldEi(self_c, arg);
 }
 static void __fastcall s4_0214221c_2(void *self, void *dead_edx, int arg)
 {
     (void)dead_edx; (void)arg;
     char *self_c = (char *)self; (void)self_c;
     ++g_h_0214221c[2];
-    func_ov006_020f06fc(self_c, arg);
+    _ZN12dScMgLuigi_c16CurtainStateFastEi(self_c, arg);
 }
 
 // ---- dScMgMemory1_c ----------------------------------------------
@@ -545,28 +545,28 @@ static void __fastcall s4_021422bc_0(void *self, void *dead_edx)
     (void)dead_edx;
     char *self_c = (char *)self; (void)self_c;
     ++g_h_021422bc[0];
-    func_ov006_020f4888(self_c);
+    _ZN13dScMgMemory_c10ResultWaitEv(self_c);
 }
 static void __fastcall s4_021422bc_1(void *self, void *dead_edx)
 {
     (void)dead_edx;
     char *self_c = (char *)self; (void)self_c;
     ++g_h_021422bc[1];
-    func_ov006_020f47d8(self_c);
+    _ZN13dScMgMemory_c12ResultRewardEv(self_c);
 }
 static void __fastcall s4_021422bc_2(void *self, void *dead_edx)
 {
     (void)dead_edx;
     char *self_c = (char *)self; (void)self_c;
     ++g_h_021422bc[2];
-    func_ov006_020f46ec(self_c);
+    _ZN13dScMgMemory_c15ResultTurnCardsEv(self_c);
 }
 static void __fastcall s4_021422bc_3(void *self, void *dead_edx)
 {
     (void)dead_edx;
     char *self_c = (char *)self; (void)self_c;
     ++g_h_021422bc[3];
-    func_ov006_020f456c(self_c);
+    _ZN13dScMgMemory_c12ResultFinishEv(self_c);
 }
 
 /* data_ov006_02142304, 6 cell(s), arity zero */
@@ -575,42 +575,42 @@ static void __fastcall s4_02142304_0(void *self, void *dead_edx)
     (void)dead_edx;
     char *self_c = (char *)self; (void)self_c;
     ++g_h_02142304[0];
-    func_ov006_020f4c38(self_c);
+    _ZN13dScMgMemory_c10RoundStartEv(self_c);
 }
 static void __fastcall s4_02142304_1(void *self, void *dead_edx)
 {
     (void)dead_edx;
     char *self_c = (char *)self; (void)self_c;
     ++g_h_02142304[1];
-    func_ov006_020f4bbc((unsigned char *)self_c);
+    _ZN13dScMgMemory_c13RoundDealEasyEv((unsigned char *)self_c);
 }
 static void __fastcall s4_02142304_2(void *self, void *dead_edx)
 {
     (void)dead_edx;
     char *self_c = (char *)self; (void)self_c;
     ++g_h_02142304[2];
-    func_ov006_020f4b30(self_c);
+    _ZN13dScMgMemory_c15RoundDealNormalEv(self_c);
 }
 static void __fastcall s4_02142304_3(void *self, void *dead_edx)
 {
     (void)dead_edx;
     char *self_c = (char *)self; (void)self_c;
     ++g_h_02142304[3];
-    func_ov006_020f4ad4((unsigned char *)self_c);
+    _ZN13dScMgMemory_c13RoundDealHardEv((unsigned char *)self_c);
 }
 static void __fastcall s4_02142304_4(void *self, void *dead_edx)
 {
     (void)dead_edx;
     char *self_c = (char *)self; (void)self_c;
     ++g_h_02142304[4];
-    func_ov006_020f4a40(self_c);
+    _ZN13dScMgMemory_c13RoundWaitDealEv(self_c);
 }
 static void __fastcall s4_02142304_5(void *self, void *dead_edx)
 {
     (void)dead_edx;
     char *self_c = (char *)self; (void)self_c;
     ++g_h_02142304[5];
-    func_ov006_020f49ac(self_c);
+    _ZN13dScMgMemory_c11RoundRevealEv(self_c);
 }
 
 // ---- dScMgMemory2_c ----------------------------------------------
@@ -620,28 +620,28 @@ static void __fastcall s4_021423c0_0(void *self, void *dead_edx)
     (void)dead_edx;
     char *self_c = (char *)self; (void)self_c;
     ++g_h_021423c0[0];
-    func_ov006_020f6538(self_c);
+    _ZN14dScMgMemory2_c10ResultWaitEv(self_c);
 }
 static void __fastcall s4_021423c0_1(void *self, void *dead_edx)
 {
     (void)dead_edx;
     char *self_c = (char *)self; (void)self_c;
     ++g_h_021423c0[1];
-    func_ov006_020f6488(self_c);
+    _ZN14dScMgMemory2_c12ResultRewardEv(self_c);
 }
 static void __fastcall s4_021423c0_2(void *self, void *dead_edx)
 {
     (void)dead_edx;
     char *self_c = (char *)self; (void)self_c;
     ++g_h_021423c0[2];
-    func_ov006_020f639c(self_c);
+    _ZN14dScMgMemory2_c15ResultTurnCardsEv(self_c);
 }
 static void __fastcall s4_021423c0_3(void *self, void *dead_edx)
 {
     (void)dead_edx;
     char *self_c = (char *)self; (void)self_c;
     ++g_h_021423c0[3];
-    func_ov006_020f6230(self_c);
+    _ZN14dScMgMemory2_c12ResultFinishEv(self_c);
 }
 
 /* data_ov006_02142440, 10 cell(s), arity zero */
@@ -650,70 +650,70 @@ static void __fastcall s4_02142440_0(void *self, void *dead_edx)
     (void)dead_edx;
     char *self_c = (char *)self; (void)self_c;
     ++g_h_02142440[0];
-    func_ov006_020f6bf0(self_c);
+    _ZN14dScMgMemory2_c10RoundStartEv(self_c);
 }
 static void __fastcall s4_02142440_1(void *self, void *dead_edx)
 {
     (void)dead_edx;
     char *self_c = (char *)self; (void)self_c;
     ++g_h_02142440[1];
-    func_ov006_020f6b78(self_c);
+    _ZN14dScMgMemory2_c13RoundDealEasyEv(self_c);
 }
 static void __fastcall s4_02142440_2(void *self, void *dead_edx)
 {
     (void)dead_edx;
     char *self_c = (char *)self; (void)self_c;
     ++g_h_02142440[2];
-    func_ov006_020f6b00(self_c);
+    _ZN14dScMgMemory2_c15RoundDealNormalEv(self_c);
 }
 static void __fastcall s4_02142440_3(void *self, void *dead_edx)
 {
     (void)dead_edx;
     char *self_c = (char *)self; (void)self_c;
     ++g_h_02142440[3];
-    func_ov006_020f6a78(self_c);
+    _ZN14dScMgMemory2_c13RoundDealHardEv(self_c);
 }
 static void __fastcall s4_02142440_4(void *self, void *dead_edx)
 {
     (void)dead_edx;
     char *self_c = (char *)self; (void)self_c;
     ++g_h_02142440[4];
-    func_ov006_020f6a00(self_c);
+    _ZN14dScMgMemory2_c15RoundDealFourthEv(self_c);
 }
 static void __fastcall s4_02142440_5(void *self, void *dead_edx)
 {
     (void)dead_edx;
     char *self_c = (char *)self; (void)self_c;
     ++g_h_02142440[5];
-    func_ov006_020f6904(self_c);
+    _ZN14dScMgMemory2_c14RoundShowCardsEv(self_c);
 }
 static void __fastcall s4_02142440_6(void *self, void *dead_edx)
 {
     (void)dead_edx;
     char *self_c = (char *)self; (void)self_c;
     ++g_h_02142440[6];
-    func_ov006_020f6830(self_c);
+    _ZN14dScMgMemory2_c14RoundHideCardsEv(self_c);
 }
 static void __fastcall s4_02142440_7(void *self, void *dead_edx)
 {
     (void)dead_edx;
     char *self_c = (char *)self; (void)self_c;
     ++g_h_02142440[7];
-    func_ov006_020f67a0(self_c);
+    _ZN14dScMgMemory2_c15RoundReadyCardsEv(self_c);
 }
 static void __fastcall s4_02142440_8(void *self, void *dead_edx)
 {
     (void)dead_edx;
     char *self_c = (char *)self; (void)self_c;
     ++g_h_02142440[8];
-    func_ov006_020f670c(self_c);
+    _ZN14dScMgMemory2_c13RoundWaitDealEv(self_c);
 }
 static void __fastcall s4_02142440_9(void *self, void *dead_edx)
 {
     (void)dead_edx;
     char *self_c = (char *)self; (void)self_c;
     ++g_h_02142440[9];
-    func_ov006_020f6678(self_c);
+    _ZN14dScMgMemory2_c11RoundRevealEv(self_c);
 }
 
 // ---- dScMgSnowball_c ---------------------------------------------

@@ -1,10 +1,10 @@
 //cpp
 extern "C" {
-extern int _ZN6Player17St_EndingFly_MainEv(void *p);
+extern int func_ov007_020c3d1c(void *p);
 int func_ov007_020c1180(char *c){
   if(*(unsigned char*)(c+0x1c)){
-    _ZN6Player17St_EndingFly_MainEv(*(void**)(c+0x18));
+    func_ov007_020c3d1c(*(void**)(c+0x18));
   }
-  return _ZN6Player17St_EndingFly_MainEv(c);
+  return func_ov007_020c3d1c(c);
 }
 }

@@ -19,7 +19,7 @@
 #   (Cannon::InitResources, gate 19). The frame's cylinder-overlap pass writes
 #   the colliding player's uniqueID into that cylinder's otherOwner word
 #   (c+0x124 + 0x24 = c+0x148). That pass is CylinderClsn::Process -- matched
-#   src _ZN12CylinderClsn7ProcessEv.cpp is linked in gate 10, but the port runs
+#   src _ZN5dCc_c7ProcessEv.cpp is linked in gate 10, but the port runs
 #   the ROM-shaped HOST copy port/unmatched/CylinderClsn_Process.cpp
 #   (port_cylinder_clsn_process, called from walk_window's render frame) to dodge
 #   the MSVC destructor-slot-shift; the header-compiled symbol faults. Cannon
@@ -46,13 +46,13 @@
 #   St_Cannon rows in hal/player_states.inc (0x020def14/df208/deefc) wired.
 #
 # THE HATCH (grate lid, actor 14, all gate 33):
-#   CannonHatch_Spawn, Init/Cleanup/Behavior/Render/D1. Reads
+#   daObjCannonShutter_c_classInit, Init/Cleanup/Behavior/Render/D1. Reads
 #   IsCannonOpenInCurLevel() at Init to keep the grate collider disabled while
 #   the cannon is locked; when the buddy opens it, the buddy actor drives the
 #   hatch's +0x32c path and the hatch slides away and enables the collider.
 #   Registered as {14,"CANNON_HATCH",...} in hal/actor_classes.inc, vtable filled
 #   by hal_fill_cannon_hatch_vtable. Slot 17 (D0, the deleting dtor) is bw_trap17
-#   BY DESIGN -- nothing on BoB deletes a hatch, and _ZN11CannonHatchD0Ev.c is a
+#   BY DESIGN -- nothing on BoB deletes a hatch, and _ZN20daObjCannonShutter_cD0Ev.c is a
 #   real C++ member-dtor chain MSVC would emit wrong. It is the ONE matched TU in
 #   the whole chain deliberately left unsliced, and it must stay that way.
 #

@@ -34,13 +34,13 @@
 
 extern "C" {
 
-void CutsceneObject_Spawn(void);
+void daDemo_c_classInit(void);
 extern unsigned char data_ov002_0210b600[];
 extern unsigned char data_ov002_0210b604[];
 extern unsigned char data_ov002_0210b608[];
 extern unsigned char data_ov002_0210b60c[];
 extern unsigned char data_ov002_0210b610[];
-extern unsigned char CutsceneObject_SpawnInfo[];
+extern unsigned char g_profile_DEMO[];
 extern unsigned char data_ov002_0210bcf0[];
 extern unsigned char data_ov002_0210bd24[];
 extern unsigned char data_ov002_02110b10[];
@@ -83,7 +83,7 @@ g_ov002_ptrs[] = {
     { data_ov002_0210b608, 0x0, 0x0213073c, (void *)&data_ov085_0213073c, "data_ov002_0210b608+0x0" },
     { data_ov002_0210b60c, 0x0, 0x02130744, (void *)&data_ov085_02130744, "data_ov002_0210b60c+0x0" },
     { data_ov002_0210b610, 0x0, 0x02110bf8, (void *)&data_ov002_02110bf8, "data_ov002_0210b610+0x0" },
-    { CutsceneObject_SpawnInfo, 0x0, 0x020f8808, (void *)&CutsceneObject_Spawn, "CutsceneObject_SpawnInfo+0x0" },
+    { g_profile_DEMO, 0x0, 0x020f8808, (void *)&daDemo_c_classInit, "g_profile_DEMO+0x0" },
     { data_ov002_0210bcf0, 0x0, 0x02110c10, (void *)&data_ov002_02110c10, "data_ov002_0210bcf0+0x0" },
     { data_ov002_0210bcf0, 0x4, 0x02110bd0, (void *)&data_ov002_02110bd0, "data_ov002_0210bcf0+0x4" },
     { data_ov002_0210bcf0, 0x8, 0x02110b28, (void *)&data_ov002_02110b28, "data_ov002_0210bcf0+0x8" },

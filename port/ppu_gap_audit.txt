@@ -514,7 +514,7 @@ TWO ROWS ADDED TO ntr/ppu_audit.cpp, and they are what settled it.
 
   OBJ decode inputs, nonzero bytes: OBJ VRAM, the standard OBJ palette and --
   new -- the OBJ EXTENDED palette store, whose base 0x068a0000 is taken from
-  src/_ZN3GXS14LoadOBJExtPlttEPKvjj.c's own arithmetic rather than a doc.
+  src/_ZN3GXS14LoadOBJExtPlttEPKvjj.cpp's own arithmetic rather than a doc.
   Engine A gets no extended-palette row: this tree has no GX::LoadOBJExtPltt TU
   to derive a base from, and a guessed base is the invented mapping the audit
   exists to avoid.
@@ -879,7 +879,7 @@ SM64DS_SCENE=374 SM64DS_SCENE_FRAMES=300 SM64DS_FAULTS_FATAL=1, exit 0:
     POLYGONS      0 on all 300 samples
     the pair      layer mask d45c=14 vs DISPCNT bits 8-12=00 -- NOT PUBLISHED
 
-WHAT THE ROM INTENDS, from its own matched sources. src/func_ov006_020e3578.c
+WHAT THE ROM INTENDS, from its own matched sources. src/_ZN14dScMgCurling_c13InitResourcesEv.cpp
 (dScMgCurling_c::InitResources) sets data_0209d45c |= 4, forces BG2CNT to
 priority 2 and then to (old & 0x43) | 0x1220, decompresses the BG2 tiles to
 G2::GetBG2CharPtr(), loads the BG palette (file 0x2f, 0x60, 0x1a0) and a
@@ -1212,7 +1212,7 @@ before, whose whole body is `*(int *)(self + 0x4e9c) = 255`, and 255 is exactly
 the value func_ov006_020e3250's first branch tests for. That branch sets the
 field to 0 and returns without touching the generator, and 0 selects handle
 0x30. The RNG re-roll below it belongs to the OTHER caller,
-func_ov006_020e3470, the in-play reset that runs func_ov006_020e3388 and
+_ZN14dScMgCurling_c13OnYoshiTryEatEi, the in-play reset that runs func_ov006_020e3388 and
 func_ov006_020e3250 without the 255 store. So the first load of the scene picks
 rink 0 on every boot. It asks for handle 0x30 a SECOND time, the host cache
 hands back the block the ROM freed four loads earlier, and that block now holds
@@ -1360,7 +1360,7 @@ exit codes, as section 12d already says.
     InitResources calls func_ov006_020e3250, and 255 is the value that
     function's first branch tests, which zeroes the field and returns without
     reaching the generator. Zero selects handle 0x30. The RNG re-roll is the
-    other caller's, func_ov006_020e3470. So the boot path is DETERMINISTIC and
+    other caller's, _ZN14dScMgCurling_c13OnYoshiTryEatEi. So the boot path is DETERMINISTIC and
     every boot of this scene reproduces it. The hedge is kept visible rather
     than deleted because it is the shape of a wrong reading a successor could
     make again: a generator in the body is not a generator on the path.

@@ -37,13 +37,13 @@ typedef void (*BbhPmfFn)(char *self);
 
 
 /* HOST COPY RETIRED, run link100 lane FWD gate 2.
-   src/actors/MansionSteps/_ZN12MansionSteps8BehaviorEv.cpp dispatches
+   src/game/actors/daTrsTrap_c/_ZN11daTrsTrap_c8BehaviorEv.cpp dispatches
    data_ov063_0211ef38 now. The banner's reading -- "MSVC's 16-byte form" --
    expired when block R8's /vmg /vmm landed: MSVC's pointer to member on this
    target IS the ROM's eight-byte {fn, delta} pair, and the matched TU emits
    [eax*8] against the ROM's own `add r3,r1,r0,lsl #3`. What was actually left
    was the definition form (the TU defines the C++ MEMBER
-   ?Behavior@MansionSteps@@QAEHXZ where hal/actor_classes_ov063.cpp's
+   ?Behavior@daTrsTrap_c@@QAEHXZ where hal/actor_classes_ov063.cpp's
    ms_behavior face calls the flat C name), and port/hal/fwd_forwarders.cpp
    bridges it. bbh_pmf_call went with this body: it had no other caller. */
 

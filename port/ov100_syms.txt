@@ -1,3 +1,9 @@
+# RETIRED at SYNC6: the class translation unit main folded these bodies into
+# is back on its slice rows (today's #2660/#2663/#2666 un-quarantine) and it
+# DEFINES the names below itself, so the mount was the second definition.
+# Measured as LNK2005 rows against this file's generated object in
+# build_s2.log. Removed from the generator's INPUT, per the rule: never
+# edit the generated output. Retired here: data_ov100_02148390, g_profile_STAR_GATE, data_ov100_02148934, data_ov100_02148948
 # The ov100 data the castle grounds' BUTTERFLY, FISH and DOOR name.
 #
 # The gate-18 shape (see ov085_syms.txt for the long version): an ACTOR
@@ -11,7 +17,7 @@
 # name; ov100 has two REAL actor vtables it left as data_ov100_*, and mounting
 # either would hand a factory a table of DS code addresses:
 #
-#   data_ov100_02148188  RTTI 8daDoor_c        <- the DOOR's own, and the
+#   _ZTV4Door  RTTI 8daDoor_c        <- the DOOR's own, and the
 #                                                 registry fills it
 #   data_ov100_0214857c  RTTI 15daObjPathLift_c
 #
@@ -27,27 +33,27 @@
 data_ov100_021473a4:0xc data_ov100_021473b0:0xc data_ov100_02147e20:0x8
 data_ov100_02147e28:0x8 data_ov100_02147e30:0x8 data_ov100_02147e38:0x8
 data_ov100_02147e40:0x8 data_ov100_02147e48:0x8 data_ov100_02147e50:0x8
-data_ov100_02147e58:0x8 data_ov100_02147e60:0xc data_ov100_02147e6c:0xc
-Butterfly_SpawnInfo:0x1c data_ov100_02147f18:0x8 data_ov100_02147f20:0x8
+data_ov100_02147e58:0x8 _ZTS9daBtfly_c:0xc _ZTI9daBtfly_c:0xc
+g_profile_BUTTERFLY:0x1c data_ov100_02147f18:0x8 data_ov100_02147f20:0x8
 data_ov100_02147f28:0x8 data_ov100_02147f30:0x8 data_ov100_02147f38:0x8
-data_ov100_02147f40:0xc data_ov100_02147f4c:0xc RollingIronBall_SpawnInfo:0x1c
+_ZTS7daIbl_c:0xc _ZTI7daIbl_c:0xc g_profile_IRONBALL:0x1c
 data_ov100_02147ff8:0x8 data_ov100_02148000:0x8 data_ov100_02148008:0xc
-data_ov100_02148014:0xc data_ov100_02148020:0x10 UnchainedChomp_SpawnInfo:0x1c
+_ZTI11daWanwan2_c:0xc _ZTS11daWanwan2_c:0x10 g_profile_WANWAN2:0x1c
 data_ov100_021480d0:0x4 data_ov100_021480d4:0x8 data_ov100_021480dc:0x8
 data_ov100_021480e4:0x8 data_ov100_021480ec:0x8 data_ov100_021480f4:0x8
 data_ov100_021480fc:0x8 data_ov100_02148104:0x8 data_ov100_0214810c:0x8
 data_ov100_02148114:0x8 data_ov100_0214811c:0x8 data_ov100_02148124:0x8
 data_ov100_0214812c:0x8 data_ov100_02148134:0x8 data_ov100_0214813c:0x8
-data_ov100_02148144:0x8 data_ov100_0214814c:0xc data_ov100_02148158:0xc
-Door_SpawnInfo:0x1c data_ov100_02148204:0x130 data_ov100_02148334:0x8 data_ov100_0214833c:0x8
-data_ov100_02148344:0x8 data_ov100_0214834c:0x8 data_ov100_02148354:0x8
-data_ov100_0214835c:0x8 data_ov100_02148364:0x8 data_ov100_0214836c:0x8
-data_ov100_02148374:0xc data_ov100_02148380:0x10 data_ov100_02148390:0x18
-StarDoor_SpawnInfo:0x1c data_ov100_02148448:0x8 data_ov100_02148450:0x8
+data_ov100_02148144:0x8 _ZTS8daDoor_c:0xc _ZTI8daDoor_c:0xc
+g_profile_DOOR:0x1c data_ov100_02148204:0x130 data_ov100_02148334@0x02148334:0x8 data_ov100_0214833c@0x0214833c:0x8
+data_ov100_02148344@0x02148344:0x8 data_ov100_0214834c@0x0214834c:0x8 data_ov100_02148354@0x02148354:0x8
+data_ov100_0214835c@0x0214835c:0x8 data_ov100_02148364@0x02148364:0x8 data_ov100_0214836c@0x0214836c:0x8
+_ZTI12daStarGate_c:0xc _ZTS12daStarGate_c:0x10
+data_ov100_02148448:0x8 data_ov100_02148450:0x8
 data_ov100_02148458:0x8 data_ov100_02148460:0x8 data_ov100_02148468:0x8
-data_ov100_02148470:0x8 data_ov100_02148478:0x8 data_ov100_02148480:0xc
-data_ov100_0214848c:0xc Fish_SpawnInfo:0x1c data_ov100_02148538:0xc data_ov100_02148544:0x14
-PathLift_SpawnInfo:0x1c data_ov100_02148600:0x8 data_ov100_02148608:0x8
+data_ov100_02148470:0x8 data_ov100_02148478:0x8 _ZTS8daFish_c:0xc
+_ZTI8daFish_c:0xc g_profile_FISH:0x1c _ZTI15daObjPathLift_c:0xc _ZTS15daObjPathLift_c:0x14
+g_profile_PATH_LIFT:0x1c data_ov100_02148600:0x8 data_ov100_02148608:0x8
 data_ov100_02148610:0xc data_ov100_0214861c:0xc data_ov100_02148628:0x40
 data_ov100_02148668:0x8 data_ov100_02148670:0xc data_ov100_0214867c:0x28
 data_ov100_021486a4:0x8 data_ov100_021486ac:0x8 data_ov100_021486b4:0x8
@@ -70,10 +76,10 @@ data_ov100_02148868:0xc data_ov100_02148874:0xc data_ov100_02148880:0xc
 data_ov100_0214888c:0xc data_ov100_02148898:0xc data_ov100_021488a4:0x10
 data_ov100_021488b4:0x10 data_ov100_021488c4:0x10 data_ov100_021488d4:0x10
 data_ov100_021488e4:0x10 data_ov100_021488f4:0x10 data_ov100_02148904:0x10
-data_ov100_02148914:0x10 data_ov100_02148924:0x10 data_ov100_02148934:0x8
-data_ov100_0214893c:0xc data_ov100_02148948:0xc data_ov100_02148954:0x10
-data_ov100_02148964:0x10 data_ov100_02148974:0x10 data_ov100_02148984:0x10
-data_ov100_02148994:0x10 data_ov100_021489a4:0x8 data_ov100_021489ac:0x8
+data_ov100_02148914:0x10 data_ov100_02148924:0x10
+data_ov100_0214893c@0x0214893c:0xc _ZN12daStarGate_c13ST_OPEN_CLOSEE:0x10
+_ZN12daStarGate_c14ST_STAY_CLOSEDE:0x10 _ZN12daStarGate_c7ST_WAITE:0x10 _ZN12daStarGate_c20ST_TALKING_TO_PLAYERE:0x10
+_ZN12daStarGate_c12ST_UNLOCKINGE:0x10 data_ov100_021489a4:0x8 data_ov100_021489ac:0x8
 data_ov100_021489b4:0x8 data_ov100_021489bc:0x8 data_ov100_021489c4:0x8
 data_ov100_021489cc:0x8 data_ov100_021489d4:0xc data_ov100_021489e0:0xc
 data_ov100_021489ec:0xc data_ov100_021489f8:0xc data_ov100_02148a04:0xc

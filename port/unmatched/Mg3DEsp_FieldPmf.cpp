@@ -1,5 +1,5 @@
 // PORT_HOST_ABI.  The mwcc POINTER-TO-MEMBER WALL, FIELD half:
-// func_ov006_020e7be8, the per-frame tick of the sub-object dScMg3DEsp_c holds
+// _ZN15dMg3DEspModel_c8BehaviorEv, the per-frame tick of the sub-object dScMg3DEsp_c holds
 // at this+0x4fd8.  Run mg9, lane PSY.
 //
 // THIS IS THE EIGHTH DISPATCHER IN A CLASS THE COST FILE PREDICTS FIVE FOR,
@@ -29,8 +29,8 @@
 //     020e7c54  ldreq r1,[r3]
 //     020e7c58  blx r1                 NO r1 argument -> ARITY 0
 //
-// then Animation::Advance(this+0x5c), func_ov006_020e7818(this+0x84), and a
-// Particle::System::New guarded on this+0x208.  src/func_ov006_020e7be8.cpp
+// then Animation::Advance(this+0x5c), _ZN17dMg3DEspAnimSet_c8BehaviorEv(this+0x84), and a
+// Particle::System::New guarded on this+0x208.  src/_ZN15dMg3DEspModel_c8BehaviorEv.cpp
 // reproduces every line of that and spells the dispatch
 //
 //     (((C*)c)->**(PMF*)(c + 0x210))();
@@ -50,12 +50,12 @@
 //
 //   func_ov006_020e7d7c   *(struct G2*)(c+0x210) = data_ov006_0213c754
 //   func_ov006_020e7e74   *(struct G2*)(c+0x210) = data_ov006_0213c764
-//   func_ov006_020e7fb0   *(struct M2*)(c+0x210) = data_ov006_0213c774
+//   _ZN15dMg3DEspModel_c5ResetEv   *(struct M2*)(c+0x210) = data_ov006_0213c774
 //   func_ov006_020e7f5c   *(double*)(c+0x210)    = data_ov006_0213c76c
-//   func_ov006_020e7b44   compares c+0x210 against data_ov006_0213c744 and
+//   _ZN15dMg3DEspModel_c6RenderEv   compares c+0x210 against data_ov006_0213c744 and
 //                         returns early on a match -- the RENDER half of the
 //                         same idle test, and it does not dispatch
-//   func_ov006_020e7be8   this file: compares against data_ov006_0213c704,
+//   _ZN15dMg3DEspModel_c8BehaviorEv   this file: compares against data_ov006_0213c704,
 //                         then dispatches
 //
 // EVERY ONE OF THE FOUR WRITERS MOVES EIGHT BYTES.  Three spell the pair as a
@@ -78,11 +78,11 @@
 // go into an object rather than into a .bss table.
 //
 //     0x0213c704  {0x020e7fac, 0}   the idle sentinel this file reads
-//     0x0213c744  {0x020e7fac, 0}   the idle sentinel func_ov006_020e7b44 reads
+//     0x0213c744  {0x020e7fac, 0}   the idle sentinel _ZN15dMg3DEspModel_c6RenderEv reads
 //     0x0213c754  {0x020e7cc0, 0}   written by func_ov006_020e7d7c
 //     0x0213c764  {0x020e7de8, 0}   written by func_ov006_020e7e74
 //     0x0213c76c  {0x020e7f04, 0}   written by func_ov006_020e7f5c
-//     0x0213c774  {0x020e7fac, 0}   written by func_ov006_020e7fb0
+//     0x0213c774  {0x020e7fac, 0}   written by _ZN15dMg3DEspModel_c5ResetEv
 //
 // FOUR DISTINCT CODE WORDS, every adjustment zero, and all four have a src TU.
 // The seventh record in that span, 0x0213c75c, is the ASCII string "ki_mizu"
@@ -119,7 +119,7 @@ void func_ov006_020e7fac(void);
 /* the ordinary callees the host copy keeps, spelled as their own src TUs
    spell them */
 int   _ZN9Animation7AdvanceEv(void *anim);
-void  func_ov006_020e7818(void *p);
+void  _ZN17dMg3DEspAnimSet_c8BehaviorEv(void *p);
 void *_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
         unsigned int a, unsigned int b, int c, int d, int e,
         const void *f, void *g);
@@ -140,10 +140,10 @@ static unsigned g_esp_field_calls, g_esp_field_routed;
  * the sentinel comparison keeps comparing DS words with DS words" -- true of a
  * face per RECORD and false of a face per CODE WORD, which is lane FWD's
  * gate-3 rule. 0x0213c704 (this file's sentinel), 0x0213c744
- * (func_ov006_020e7b44's) and 0x0213c774 (the installed state) all hold the
+ * (_ZN15dMg3DEspModel_c6RenderEv's) and 0x0213c774 (the installed state) all hold the
  * SAME code word 0x020e7fac. Seat all three with the same face and each
  * predicate compares one host address against itself: it answers what it
- * answered before, on every path. src/func_ov006_020e7b44.cpp is in the link
+ * answered before, on every path. src/_ZN15dMg3DEspModel_c6RenderEv.cpp is in the link
  * (port/slice_fold2.txt) and reads data_ov006_0213c744 by value, so this is not
  * hypothetical.
  *
@@ -158,12 +158,12 @@ static unsigned g_esp_field_calls, g_esp_field_routed;
  * OWN CODE and they are exactly this field's records, while the other 22 are
  * loaded by __sinit_ov006_02130a08 alone.
  *
- *   0213c704 {020e7fac,0}  read by func_ov006_020e7be8    BY-VALUE SENTINEL
- *   0213c744 {020e7fac,0}  read by func_ov006_020e7b44    BY-VALUE SENTINEL
+ *   0213c704 {020e7fac,0}  read by _ZN15dMg3DEspModel_c8BehaviorEv    BY-VALUE SENTINEL
+ *   0213c744 {020e7fac,0}  read by _ZN15dMg3DEspModel_c6RenderEv    BY-VALUE SENTINEL
  *   0213c754 {020e7cc0,0}  written by func_ov006_020e7d7c
  *   0213c764 {020e7de8,0}  written by func_ov006_020e7e74
  *   0213c76c {020e7f04,0}  written by func_ov006_020e7f5c
- *   0213c774 {020e7fac,0}  written by func_ov006_020e7fb0
+ *   0213c774 {020e7fac,0}  written by _ZN15dMg3DEspModel_c5ResetEv
  *
  * FOUR distinct code words, four faces, six records.
  * (runs/link100/out/PMFB7/sweep_3desp.txt)
@@ -206,7 +206,7 @@ const EspSeat g_esp_seats[] = {
     {(MgPmf *)data_ov006_0213c704, 0x020e7facu, (void *)esp_f020e7fac,
      "0213c704 the sentinel this file reads"},
     {&data_ov006_0213c744, 0x020e7facu, (void *)esp_f020e7fac,
-     "0213c744 the sentinel func_ov006_020e7b44 reads"},
+     "0213c744 the sentinel _ZN15dMg3DEspModel_c6RenderEv reads"},
     {&data_ov006_0213c754, 0x020e7cc0u, (void *)esp_f020e7cc0, "0213c754"},
     {&data_ov006_0213c764, 0x020e7de8u, (void *)esp_f020e7de8, "0213c764"},
     {&data_ov006_0213c76c, 0x020e7f04u, (void *)esp_f020e7f04, "0213c76c"},
@@ -264,13 +264,13 @@ extern "C" void port_mg_esp3d_field_counts(unsigned *calls, unsigned *routed)
     if (routed) *routed = g_esp_field_routed;
 }
 
-/* src/func_ov006_020e7be8.cpp verbatim except that the member-pointer type is
+/* src/_ZN15dMg3DEspModel_c8BehaviorEv.cpp verbatim except that the member-pointer type is
    gone and the dispatch site is a routed call.  The two early returns, the
-   Animation::Advance, the func_ov006_020e7818 and the guarded
+   Animation::Advance, the _ZN17dMg3DEspAnimSet_c8BehaviorEv and the guarded
    Particle::System::New below it are src's, unchanged, and every one is
    confirmed against the disassembly in section 1. */
 /* HOST COPY RETIRED, run link100 lane PMFB7 gate 3.
-   src/func_ov006_020e7be8.cpp dispatches its own field now: with /vmg /vmm
+   src/_ZN15dMg3DEspModel_c8BehaviorEv.cpp dispatches its own field now: with /vmg /vmm
    (block R8) MSVC's pointer to member IS the ROM's eight-byte {code, adjust}
    pair, so the widening the banner above was written for does not happen, and
    the six records hold four faces -- one per code word, which is what keeps the

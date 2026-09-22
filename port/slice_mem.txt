@@ -1,7 +1,7 @@
 # Lane MEM of run mg6: dScMgMemory2_c, the "Memory Master" minigame.
 #
-# actor id 0x16b (scene 363), spawn symbol MgMemoryMaster_Spawn (0x020f75d4),
-# SpawnInfo 0x0213d288, vtable data_ov006_0213d4d4. Every one of those was
+# actor id 0x16b (scene 363), spawn symbol dScMgMemory2_c_classInit (0x020f75d4),
+# SpawnInfo 0x0213d288, vtable _ZTV14dScMgMemory2_c. Every one of those was
 # re-read out of the ROM by this lane rather than taken from the handover: the
 # doubled-id word 0x016b016b sits at file offset 0x7d3cc of
 # extracted/overlays/overlay_0006.bin (base 0x020bfec0), which puts the record
@@ -10,27 +10,27 @@
 #     0213d288  d4 75 0f 02   0x020f75d4   the factory
 #               6b 01 6b 01   363, 363     the id, twice
 #
-# The class name is src/func_ov006_020f730c.c's recovered header,
+# The class name is src/actors/dScMgMemory2_c.cpp's recovered header,
 # dScMgMemory2_c, and it agrees with what the destructors write: slot 17
-# (src/func_ov006_020f55b8.cpp) stores data_ov006_0213d4d4 into the object's
+# (src/actors/dScMgMemory2_c.cpp) stores _ZTV14dScMgMemory2_c into the object's
 # first word before unwinding, which is the strongest single confirmation that
 # 0x0213d4d4 is the right table for this id.
 #
 # ---- THE HIERARCHY IS THREE DEEP, AND THE HANDOVER DID NOT SAY SO ----------
 #
 #     Scene -> dScMgBase_c         data_ov004_020bc0c0  36  (the framework's)
-#           -> dScMgSingle3DBase_c data_ov006_0213e448  36  ovr 8, mark 6, nosrc 0
-#           -> dScMgMemory2_c      data_ov006_0213d4d4  36  ovr 14, mark 12, nosrc 0
+#           -> dScMgSingle3DBase_c _ZTV19dScMgSingle3DBase_c  36  ovr 8, mark 6, nosrc 0
+#           -> dScMgMemory2_c      _ZTV14dScMgMemory2_c  36  ovr 14, mark 12, nosrc 0
 #
 # port/mg_fanout_costs.txt section 3's 0x16b block lists one vtable and says
 # nothing about an intermediate base, so a lane that filled one derived table
 # would have left SIX of its own slots (2, 5, 7, 10, 26, 33) holding raw DS
 # words. Both edges are read off code:
 #
-#   src/MgMemoryMaster_Spawn.c calls func_ov004_020b2adc(p), writes
-#   data_ov006_0213e448 into p[0], constructs Particle::SysTracker at +0x471c,
-#   then writes data_ov006_0213d4d4 over it.
-#   src/func_ov006_020f55b8.cpp (slot 17, D0) unwinds in the opposite order,
+#   src/actors/dScMgMemory2_c.cpp calls _ZN11dScMgBase_cC2Ev(p), writes
+#   _ZTV19dScMgSingle3DBase_c into p[0], constructs Particle::SysTracker at +0x471c,
+#   then writes _ZTV14dScMgMemory2_c over it.
+#   src/actors/dScMgMemory2_c.cpp (slot 17, D0) unwinds in the opposite order,
 #   0x0213d4d4 first and 0x0213e448 second.
 #
 # It is the SAME middle table dScMgFlower_c (0x186) and dScMgCup_c (0x169) sit
@@ -43,7 +43,7 @@
 # file's own section 3 table were phantoms:
 #
 #   1. SPAN. config/arm9/overlays/ov006/symbols.txt puts the next symbol after
-#      data_ov006_0213d4d4 at data_ov006_0213d564, exactly 0x90 = 36 words on,
+#      _ZTV14dScMgMemory2_c at data_ov006_0213d564, exactly 0x90 = 36 words on,
 #      so a 37th slot cannot exist inside the table. The middle table's next
 #      symbol is data_ov006_0213e4d8, also exactly 0x90 on.
 #   2. TERMINAL SLOT. Slot 35 of both tables holds 0x020ad660, the word every
@@ -60,7 +60,7 @@
 # WERE ALREADY RULED REAL_DECOMP against the ROM by run link60 lane MGB, with
 # per-body evidence in port/tools/inferred_stub_adjudicated.txt, so this lane
 # owed no adjudication and invented none. The two unmarked overrides are slot 16
-# (func_ov006_020f5564) and slot 33 (func_ov006_0210a708).
+# (_ZN14dScMgMemory2_cD1Ev) and slot 33 (_ZN19dScMgSingle3DBase_c9Virtual84Ev).
 #
 # Six of the fourteen (slots 2, 5, 7, 10, 26, 33) are the MIDDLE base's bodies,
 # which this class does not override; the eight that are its own are slots
@@ -106,13 +106,13 @@
 # ov004 ones MG1/MG2/BASESET already host-copied.
 #
 #   LINK-VISIBLE
-#     func_ov006_020f7234   ?data_ov006_02142440@@3PAUEntry@@A
-#     func_ov006_020f5c40   ?data_ov006_02142408@@3PAP8C77@@AEXH@ZA
+#     _ZN14dScMgMemory2_c9StatePlayEv   ?data_ov006_02142440@@3PAUEntry@@A
+#     _ZN14dScMgMemory2_c11UpdateCardsEv   ?data_ov006_02142408@@3PAP8C77@@AEXH@ZA
 #   SILENT -- the table is declared inside extern "C", so it mangles as the
 #   plain C name the ov006 mount already defines and the linker is satisfied
 #   while the stride is wrong
-#     func_ov006_020f7458   (vtable slot 6, the Behavior)
-#     func_ov006_020f71c8
+#     _ZN14dScMgMemory2_c8BehaviorEv   (vtable slot 6, the Behavior)
+#     _ZN14dScMgMemory2_c11StateResultEv
 #   SILENT -- the member pointer is an object FIELD, so no symbol is emitted for
 #   it in any linkage and no link anywhere can name it
 #     func_ov006_020c19d0   the model sub-object's tick, at this+0x4f38
@@ -129,7 +129,7 @@
 #
 # 0x020f6904 is slot 5 of data_ov006_02142440. The delink block before it ends
 # at 0x020f6904 and the next starts at 0x020f6a00, so port/tools/stategen.py
-# cannot emit a case for it -- but src/func_ov006_020f6904.c EXISTS, bannered
+# cannot emit a case for it -- but src/actors/dScMgMemory2_c.cpp EXISTS, bannered
 # NONMATCHING (div=29, logic verified vs ROM). NONMATCHING TUs are routinely
 # sliced and built by this port, so the cost is the slice line below plus one
 # hand-written switch arm. THIS CLASS HAS NO HARD STATE FLOOR: all twenty-nine
@@ -146,7 +146,7 @@
 #
 # ---- ONE SHARED HOST COPY IS REUSED RATHER THAN REWRITTEN -----------------
 #
-# src/func_ov006_0210a6e4.cpp (slot 2, AfterInitResources) is NOT below.
+# src/minigames/d_s_mg_single3_d_base.cpp (slot 2, AfterInitResources) is NOT below.
 # port/unmatched/MgFlower_Slot2.cpp already defines the repaired body as
 # port_mg_flower_after_init and its header says "THE NEXT LANE TO SEAT 361 OR
 # 363 SHOULD CALL THIS RATHER THAN WRITE A SECOND". This seat calls it.
@@ -154,7 +154,7 @@
 # MgFlower_InitScore.cpp defines that symbol, and slot 0 InitResources calls it.
 
 # ---- ov006: dScMgMemory2_c's own closure, plus the model sub-object -------
-src/MgMemoryMaster_Spawn.c
+src/actors/dScMgMemory2_c.cpp
 src/func_ov006_020c0264.cpp
 src/func_ov006_020c0304.c
 src/func_ov006_020c0364.c
@@ -203,53 +203,14 @@ src/func_ov006_020c1764.cpp
 src/func_ov006_020c1a88.c
 src/func_ov006_020c1c64.c
 src/func_ov006_020c1d80.c
-src/func_ov006_020f5564.cpp
-src/func_ov006_020f55b8.cpp
-src/func_ov006_020f5620.c
-src/func_ov006_020f565c.c
-src/func_ov006_020f5694.c
-src/func_ov006_020f56f8.c
-src/func_ov006_020f572c.c
-src/func_ov006_020f5740.c
-src/func_ov006_020f5744.c
-src/func_ov006_020f58d0.c
-src/func_ov006_020f593c.c
-src/func_ov006_020f59c0.c
-src/func_ov006_020f5a64.cpp
-src/func_ov006_020f5cb4.c
-src/func_ov006_020f5de0.c
-src/func_ov006_020f5e70.c
-src/func_ov006_020f5e74.c
-src/func_ov006_020f5f0c.c
-src/func_ov006_020f6084.c
-src/func_ov006_020f6088.c
-src/func_ov006_020f6230.c
-src/func_ov006_020f639c.c
-src/func_ov006_020f6488.c
-src/func_ov006_020f6538.c
-src/func_ov006_020f6678.c
-src/func_ov006_020f670c.c
-src/func_ov006_020f67a0.c
-src/func_ov006_020f6830.c
-src/func_ov006_020f6904.c
-src/func_ov006_020f6a00.c
-src/func_ov006_020f6a78.c
-src/func_ov006_020f6b00.c
-src/func_ov006_020f6b78.c
-src/func_ov006_020f6bf0.c
-src/func_ov006_020f6c90.c
-src/func_ov006_020f6f88.c
-src/func_ov006_020f7064.c
-src/func_ov006_020f7190.c
-src/func_ov006_020f7210.c
-src/func_ov006_020f7280.c
-src/func_ov006_020f72c0.c
-src/func_ov006_020f730c.c
-src/func_ov006_020f7320.c
-src/func_ov006_020f7394.c
-src/func_ov006_020f73f4.c
-src/func_ov006_020f74b4.cpp
-src/func_ov006_0210a534.cpp
+# QUARANTINED at the main->port sync (origin/main 9c7f38a24): this row is the raw
+# consolidated TU, and slice_flw.txt substitutes a hostgen'd copy of the WHOLE TU so
+# its fourteen MMIO writes reach the geometry engine instead of latching in the I/O
+# window (the "Yoshi is a black silhouette" fix, run mg5 lane YTEX). Taking the raw
+# copy here as well would be a duplicate symbol, and taking it INSTEAD would put the
+# defect back. SLICE_FLW_SOURCES feeds the same three targets this slice does, so the
+# bodies still arrive; see port/CMakeLists.txt's FLW_HOSTGEN_SRCS block.
+#src/minigames/d_s_mg_single3_d_base.cpp
 # THE CLASS'S ONE HARD FLOOR, DECOMPILED (run mg7 lane MEMCARDS). It is the
 #   sixth call vtable slot 9 (Render) makes, and it is the ONLY thing in the
 #   whole class that draws a card. config/arm9/overlays/ov006/symbols.txt names
@@ -258,15 +219,14 @@ src/func_ov006_0210a534.cpp
 #   src/func_ov002_020f5b98.c is a DIFFERENT function at the same address in a
 #   different overlay -- the module-residency trap -- and is NOT a substitute
 #   and must never be the file that satisfies this symbol.
-src/func_ov006_020f5b98.c
 # HOST-COPIED (mg6 lane MEM): src/func_ov006_020c07e8.cpp -- object-FIELD member
 #   pointer, and its src struct pads for eight bytes
 # HOST-COPIED (mg6 lane MEM): src/func_ov006_020c19d0.cpp -- object-FIELD
-# HOST-COPIED (mg6 lane MEM): src/func_ov006_020f5c40.cpp -- the arity-1 table
-# HOST-COPIED (mg6 lane MEM): src/func_ov006_020f71c8.cpp
-# HOST-COPIED (mg6 lane MEM): src/func_ov006_020f7234.cpp
-# HOST-COPIED (mg6 lane MEM): src/func_ov006_020f7458.cpp -- vtable slot 6
-# NOT HERE: src/func_ov006_0210a6e4.cpp, defined by
+# HOST-COPIED (mg6 lane MEM): src/actors/dScMgMemory2_c.cpp -- the arity-1 table
+# HOST-COPIED (mg6 lane MEM): src/actors/dScMgMemory2_c.cpp
+# HOST-COPIED (mg6 lane MEM): src/actors/dScMgMemory2_c.cpp
+# HOST-COPIED (mg6 lane MEM): src/actors/dScMgMemory2_c.cpp -- vtable slot 6
+# NOT HERE: src/minigames/d_s_mg_single3_d_base.cpp, defined by
 #   port/unmatched/MgFlower_Slot2.cpp as port_mg_flower_after_init
 
 # ---- ov004: the delta over slice_mg1.txt, including the twenty-record

@@ -26,7 +26,7 @@
 # candidate to choose between.
 #
 # THE PLAYER-FACING TITLE IS "SHELL SMASH", AND THE TREE ALREADY NAMED IT.
-# The arm9 spawn table data_02090864 holds one record pointer per actor id;
+# The arm9 spawn table ACTOR_SPAWN_TABLE holds one record pointer per actor id;
 # entry 0x177 sits at 0x02090e40 and holds 0x0213c434, which is this class's
 # SpawnInfo, and config/arm9/overlays/ov098/symbols.txt:113 names that record
 #
@@ -43,8 +43,8 @@
 # THE ADDRESSING IS CHECKED RATHER THAN ASSUMED, and by controls rather than by
 # arithmetic. The two neighbouring entries in the same table are
 #
-#     entry 0x176 at 0x02090e3c -> 0x0213c214   MgShuffleShell_SpawnInfo
-#     entry 0x178 at 0x02090e44 -> 0x0213ebd0   MgBingoBallSlotsShot_SpawnInfo
+#     entry 0x176 at 0x02090e3c -> 0x0213c214   g_profile_MG_CURLING
+#     entry 0x178 at 0x02090e44 -> 0x0213ebd0   g_profile_MG_SMARTBALL
 #
 # and both are exactly the addresses port/mg_fanout_costs.txt section 4 and
 # section 11 independently give those two classes. Two known-good neighbours
@@ -151,11 +151,11 @@
 #   -------------------  -  -----  --------------------------------------------
 #   data_ov006_02141978  2    0    func_ov006_020e6354
 #   data_ov006_02141988  3    1    func_ov006_020e4800
-#   data_ov006_021419a0  3    1    func_ov006_020e42b4  (its second table)
-#   data_ov006_021419b8  4    1    func_ov006_020e4744
+#   data_ov006_021419a0  3    1    _ZN15dScMgCurling2_c9StepXAndYEi  (its second table)
+#   data_ov006_021419b8  4    1    _ZN15dScMgCurling2_c9StepXOnlyEi
 #   data_ov006_021419d8  4    1    func_ov006_020e6354  (its second table)
-#   data_ov006_021419f8  4    1    func_ov006_020e42b4
-#   data_ov006_02141a18  5    0    func_ov006_020e683c  (vtable slot 6)
+#   data_ov006_021419f8  4    1    _ZN15dScMgCurling2_c9StepXAndYEi
+#   data_ov006_02141a18  5    0    _ZN15dScMgCurling2_c8BehaviorEv  (vtable slot 6)
 #
 # ALL 25 ADJUSTMENT WORDS ARE ZERO, read out of the image pair by pair.
 #
@@ -176,7 +176,7 @@
 # extracted/overlays/overlay_0006.bin and are in the list below; all three ship
 # NONMATCHING-bannered with the ROM read stated in the file header.
 #
-#   src/func_ov006_020e4bd4.c   0x300  the stylus aim state; SIZE EXACT
+#   src/actors/dScMgCurling2_c.cpp   0x300  the stylus aim state; SIZE EXACT
 #                                      192/192 words, register colouring only
 #   src/func_ov006_020e513c.c   0x314  overlap depenetration over the eleven
 #                                      0x30-stride shell records
@@ -210,11 +210,11 @@
 # unmatched/MgCurling2_StateDispatch.cpp and are therefore OUT of the list
 # below, which is the same trade MG2 made five times for curling. Listing them
 # here as well would be a duplicate symbol.
-#     src/func_ov006_020e683c.cpp   slot 6 Behavior, table 02141a18
+#     src/_ZN15dScMgCurling2_c8BehaviorEv.cpp   slot 6 Behavior, table 02141a18
 #     src/func_ov006_020e6354.cpp   tables 02141978 and 021419d8
-#     src/func_ov006_020e4800.cpp   table 02141988
-#     src/func_ov006_020e42b4.cpp   tables 021419f8 and 021419a0
-#     src/func_ov006_020e4744.cpp   table 021419b8
+#     src/actors/dScMgCurling2_c.cpp   table 02141988
+#     src/actors/dScMgCurling2_c.cpp   tables 021419f8 and 021419a0
+#     src/actors/dScMgCurling2_c.cpp   table 021419b8
 #
 # WHY ALL FIVE AND NOT JUST THE ONE THE LINK NAMES. port/mg_fanout_costs.txt
 # section 4's rulebook corollary keys on the SPELLING: a pair whose consumer
@@ -226,9 +226,9 @@
 # sequence in plain ints -- lane FLW's third shape, which neither the link nor
 # a `::*` sweep can see and only a run convicts.
 #
-# ONE LINE THE mg6 CLOSURE COULD NOT HAVE PREDICTED: src/func_ov006_020e39e0.c.
+# ONE LINE THE mg6 CLOSURE COULD NOT HAVE PREDICTED: src/_ZN15dScMgCurling2_c10SpawnValueEii.c.
 # It is the contact-effect spawner, and BOTH of the newly decompiled collision
-# bodies end their hit path with func_ov006_020e39e0(c, idx, i). Nothing in the
+# bodies end their hit path with _ZN15dScMgCurling2_c10SpawnValueEii(c, idx, i). Nothing in the
 # mg6 seat referenced it, because the two things that would have were the port
 # traps and a trap calls nothing -- so the first link after the real bodies
 # landed closed to LNK1120 on exactly this one symbol, in all three targets that
@@ -244,10 +244,10 @@
 # paddle if im suposed to". He is supposed to: it is the cue bar the aim state
 # moves, and it was never being drawn.
 #
-# WHAT DRAWS IT. Slot 9 Render (func_ov006_020e67f0) calls six bodies and the
-# last is src/func_ov006_020e4b78.c, eight lines: gate on the cue-visible byte
+# WHAT DRAWS IT. Slot 9 Render (_ZN15dScMgCurling2_c6RenderEv) calls six bodies and the
+# last is src/actors/dScMgCurling2_c.cpp, eight lines: gate on the cue-visible byte
 # at +0x55b9, read the cue's x at +0x5584 and y at +0x5588 -- the two fields
-# func_ov006_020e4bd4, the stylus aim state this file's floor section named,
+# _ZN15dScMgCurling2_c10DragUpdateEv, the stylus aim state this file's floor section named,
 # writes -- and hand ONE OamAttr template to func_ov004_020afdd0 at
 # (x >> 12) - 0x20, (y >> 12) - 8. The -0x20 is half of 64, which is the first
 # thing that says the template is a 64-wide pair.
@@ -292,7 +292,7 @@
 # x 96..159, which is the bar, and no other scene moves.
 #
 # THE SRC TU'S OWN SPELLING IS A DECOMP DEFECT AND IS NOT FIXED HERE.
-# src/func_ov006_020e4b78.c should name data_ov006_0213c4f0; the reloc row above
+# src/actors/dScMgCurling2_c.cpp should name data_ov006_0213c4f0; the reloc row above
 # is the whole argument and the two names share an address so no byte moves.
 # ROUTED, because this is a port lane. A sweep of the other ov006 sources found
 # five more files carrying a non-ov006 data name -- func_ov006_020cb16c,
@@ -300,34 +300,18 @@
 # none of them checked by this lane, all of them the same question.
 #
 # ---- THE 48 LINES -----------------------------------------------------------
-src/func_ov006_020e3854.c
-src/func_ov006_020e3878.c
-src/func_ov006_020e38b0.c
-src/func_ov006_020e3948.c
-src/func_ov006_020e39e0.c
-src/func_ov006_020e3b9c.c
-src/func_ov006_020e3bc4.c
-src/func_ov006_020e3c4c.c
-src/func_ov006_020e3ce0.c
-src/func_ov006_020e3db4.c
-src/func_ov006_020e3e4c.c
-src/func_ov006_020e3f54.c
-src/func_ov006_020e4094.c
-src/func_ov006_020e41d0.c
-src/func_ov006_020e4348.c
-src/func_ov006_020e440c.c
-src/func_ov006_020e4520.c
-src/func_ov006_020e4630.c
-src/func_ov006_020e4794.c
-src/func_ov006_020e48d4.c
-src/func_ov006_020e4a84.c
-src/func_ov006_020e4b00.c
-src/func_ov006_020e4b78.c
-src/func_ov006_020e4bd4.c
-src/func_ov006_020e4ed4.c
-src/func_ov006_020e4fe8.c
-src/func_ov006_020e507c.c
-src/func_ov006_020e513c.c
+# UN-QUARANTINED, run link100 lane HOSTGEN2. unmatched/MgCurling2_StateDispatch.cpp
+# host-copied _ZN15dScMgCurling2_c9StepXAndYEi and _ZN15dScMgCurling2_c9StepXOnlyEi
+# out of this TU; both are commented out there now, because all four of this
+# class's dispatch tables are seated with host addresses whose faces are
+# __fastcall with a dead edx -- the shape MSVC's own member-pointer call makes
+# under the /vmg /vmm pair -- so the matched TU's dispatch is already right.
+src/actors/dScMgCurling2_c.cpp
+# HELD, run link100 lane HOSTGEN2: main's consolidated TU above defines
+# func_ov006_020e513c as well, and this file is the port's own NONMATCHING
+# decompile of the same address. Taking both is a duplicate symbol, and the
+# matched tree's body is the one to keep.
+#src/func_ov006_020e513c.c
 src/func_ov006_020e5450.c
 src/func_ov006_020e59b0.c
 src/func_ov006_020e5a0c.c
@@ -344,7 +328,7 @@ src/func_ov006_020e64e4.c
 src/func_ov006_020e6528.c
 src/func_ov006_020e667c.c
 src/func_ov006_020e668c.c
-src/func_ov006_020e6774.c
-src/func_ov006_020e67f0.c
-src/func_ov006_020e6894.c
-src/func_ov006_020e6bf4.c
+src/_ZN15dScMgCurling2_c13OnYoshiTryEatEi.cpp
+src/_ZN15dScMgCurling2_c6RenderEv.cpp
+src/_ZN15dScMgCurling2_c13InitResourcesEv.cpp
+src/d_s_mg_curling2.c

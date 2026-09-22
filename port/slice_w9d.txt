@@ -13,15 +13,15 @@
 # base 0x02135700 (ov095 is compressed:true, so the dsd export is the wrong image
 # for a halfword read):
 #
-#     id 133  0x02090a78 -> 0x021373f8  word[0]=0x02135f64 SeesawBdw_Spawn
+#     id 133  0x02090a78 -> 0x021373f8  word[0]=0x02135f64 daObjSeesaw_c_classInit_KM1_SEESAW
 #                                       +4 halfword = 133, +6 priority 174
-#     id 149  0x02090ab8 -> 0x02137430  word[0]=0x02135f04 SeesawBsPlank_Spawn
+#     id 149  0x02090ab8 -> 0x02137430  word[0]=0x02135f04 daObjSeesaw_c_classInit_KM3_SEESAW
 #                                       +4 = 149, +6 priority 220
-#     id 150  0x02090abc -> 0x0213744c  word[0]=0x02135ed4 SeesawBsZigZag_Spawn
+#     id 150  0x02090abc -> 0x0213744c  word[0]=0x02135ed4 daObjSeesaw_c_classInit_KM3_YOKOSEESAW
 #                                       +4 = 150, +6 priority 221
 #
 # NO FACTORY WRAPPER: all three Spawns are the same shape as the already-
-# registered SeesawBob_Spawn -- 808 bytes over Platform's constructor, then a
+# registered daObjSeesaw_c_classInit_BOMB_SEESAW -- 808 bytes over Platform's constructor, then a
 # single `p[0] = _ZTV9SeesawBob` by a REAL name rather than the zeroed VT1
 # placeholder.
 #
@@ -32,6 +32,6 @@
 # that run. Their natural next-symbol deltas would be 0x4, 0x1c and 0x8 -- two of
 # the three wrong, and 0x4 would truncate the record before the +4 id halfword
 # the registry cross-checks.
-src/SeesawBdw_Spawn.c
-src/SeesawBsPlank_Spawn.c
-src/SeesawBsZigZag_Spawn.c
+src/d_a_obj_seesaw_km1_seesaw.c
+src/d_a_obj_seesaw_km3_seesaw.c
+src/d_a_obj_seesaw_km3_yokoseesaw.c

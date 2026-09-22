@@ -6,21 +6,21 @@
 // an unmounted pack and stays skipped.
 //
 //   id   name         x on L25  factory          table                width
-//   104  TINY_COVER    1        TinyCover_Spawn  0x0211237c (unnamed)  32
-//   105  TINY_WATER    1        TinyWater_Spawn  0x02112440            32
+//   104  TINY_COVER    1        daObjTtFuta_c_classInit  0x0211237c (unnamed)  32
+//   105  TINY_WATER    1        daObjTtWater_c_classInit  0x02112440            32
 //
 // ---- THE DSD LABEL IS ON THE WRONG TABLE ----------------------------------
 //
-// dsd names exactly one vtable here, _ZTV9TinyCover at 0x02112440, and it is
+// dsd names exactly one vtable here, _ZTV9TinyWater at 0x02112440, and it is
 // the WATER class's. Three independent routes agree:
-//   the factories   TinyCover_Spawn (0x021113a4) allocates 800 and installs
-//                   0x0211237c; TinyWater_Spawn (0x02111690) allocates 832,
+//   the factories   daObjTtFuta_c_classInit (0x021113a4) allocates 800 and installs
+//                   0x0211237c; daObjTtWater_c_classInit (0x02111690) allocates 832,
 //                   installs 0x02112440 and constructs a TextureTransformer at
 //                   this+0x320.
 //   the RTTI        0x0211237c -> "13daObjTtFuta_c" (futa = lid/cover)
 //                   0x02112440 -> "14daObjTtWater_c"
-//   the records     0x02112358 (id 104) -> TinyCover_Spawn
-//                   0x0211241c (id 105) -> TinyWater_Spawn
+//   the records     0x02112358 (id 104) -> daObjTtFuta_c_classInit
+//                   0x0211241c (id 105) -> daObjTtWater_c_classInit
 // So every _ZN9TinyCover* method body in src/ is TINY_WATER's and every
 // func_ov033_* lifecycle body is TINY_COVER's. The rows below are wired by
 // address; the dsd spellings survive only as host array names, which is what
@@ -29,7 +29,7 @@
 //
 // ---- ID 104 HAS SEVEN OWN SLOTS, NOT SIX ----------------------------------
 //
-// Its table overrides slot 21, OnGroundPounded, with func_ov033_0211123c:
+// Its table overrides slot 21, OnGroundPounded, with _ZN9TinyCover15OnGroundPoundedER8dActor_c:
 // spawn particle 0x28 at the pounder's position, play sound 0xf,
 // Event::SetBit(0xe), mark self destroyed. Ground-pounding the lid is what
 // opens the well, and it is the class's whole reason to exist. A fill that let
@@ -53,13 +53,15 @@
 // hal_fill_platform_vtable (all four destructors install ov002 0x0210ae38 as
 // the base vptr on the way out) and then BOTH ov033 sinits, which is all of
 // them -- neither class here is without reach.
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
@@ -67,28 +69,28 @@ extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include "dsstate_seg.h"
 #include <cstdlib>
 
-#include "Actor.h"
-#include "ActorBase.h"
+#include "dActor_c.h"
+#include "fBase_c.h"
 
 extern "C" {
 /* the arm9 shared half */
-int _ZN5Actor19BeforeInitResourcesEv(void *self);              /* slot 1  */
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
-int _ZN5Actor14BeforeBehaviorEv(void *self);                   /* slot 7  */
-int _ZN5Actor12BeforeRenderEv(void *self);                     /* slot 10 */
-int _ZN5Actor13OnYoshiTryEatEv(void *self);                    /* slot 18 */
-void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
-int _ZN5Actor9Virtual50Ev(void *self);                         /* slot 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);              /* slot 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);              /* slot 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
-int _ZN5Actor16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
-void _ZN8Platform4KillEv(void *self);                              /* slot 31 */
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);              /* slot 1  */
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);                   /* slot 7  */
+int _ZN8dActor_c12BeforeRenderEv(void *self);                     /* slot 10 */
+int _ZN8dActor_c13OnYoshiTryEatEv(void *self);                    /* slot 18 */
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
+int _ZN8dActor_c9Virtual50Ev(void *self);                         /* slot 20 */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);              /* slot 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);              /* slot 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
+int _ZN8dActor_c16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
+void _ZN10dBgActor_c4KillEv(void *self);                              /* slot 31 */
 
 const char *port_actor_class_name(unsigned id);   /* hal/actor_registry */
 void port_actor_slot_decline(const char *what);   /* func_02043fdc_hostcopy.cpp */
@@ -106,33 +108,33 @@ void __sinit_ov033_02111a54(void);
    are func_ov033_*. Their "recovered from vtable slot identity" markers are
    NAME recoveries over real decompiled bodies (T5, adjudicated in
    port/ov033_syms.txt); none is a stub. */
-int func_ov033_02111310(char *self);       /* slot 0,  InitResources */
-int func_ov033_02111280(void *self);       /* slot 3,  CleanupResources */
-int func_ov033_021112ec(void *self);       /* slot 6,  Behavior */
-int func_ov033_021112c4(void *self);       /* slot 9,  Render */
-int *func_ov033_021111a0(int *self);       /* slot 16, D1 */
-int *func_ov033_021111e4(int *self);       /* slot 17, D0 */
-void func_ov033_0211123c(char *self, char *other); /* slot 21, OnGroundPounded */
-void *TinyCover_Spawn(void);               /* id 104 */
+int _ZN9TinyCover13InitResourcesEv(char *self);       /* slot 0,  InitResources */
+int _ZN9TinyCover16CleanupResourcesEv(void *self);       /* slot 3,  CleanupResources */
+int _ZN9TinyCover8BehaviorEv(void *self);       /* slot 6,  Behavior */
+int _ZN9TinyCover6RenderEv(void *self);       /* slot 9,  Render */
+int *_ZN9TinyCoverD1Ev(int *self);       /* slot 16, D1 */
+int *_ZN9TinyCoverD0Ev(int *self);       /* slot 17, D0 */
+void _ZN9TinyCover15OnGroundPoundedER8dActor_c(char *self, char *other); /* slot 21, OnGroundPounded */
+void *daObjTtFuta_c_classInit(void);               /* id 104 */
 
 /* id 105 TINY_WATER's own bodies -- these are the ones dsd spelled
    _ZN9TinyCover*, and they belong to the WATER class. */
-int *_ZN9TinyCoverD1Ev(int *self);         /* slot 16 */
-int *_ZN9TinyCoverD0Ev(int *self);         /* slot 17 */
-int _ZN9TinyCover8BehaviorEv(void *self);  /* slot 6, a plain .c body */
-void *TinyWater_Spawn(void);               /* id 105 */
+int *_ZN9TinyWaterD1Ev(int *self);         /* slot 16 */
+int *_ZN9TinyWaterD0Ev(int *self);         /* slot 17 */
+int _ZN9TinyWater8BehaviorEv(void *self);  /* slot 6, a plain .c body */
+void *daObjTtWater_c_classInit(void);               /* id 105 */
 
 /* the two host vtables, both excluded from the mount. The names are dsd's for
    the addresses, NOT for the classes -- see this file's header. */
 DSSTATE_BEGIN
-int data_ov033_0211237c[32];   /* 0x0211237c, id 104 TINY_COVER */
-void *_ZTV9TinyCover[32];      /* 0x02112440, id 105 TINY_WATER */
+int _ZTV9TinyCover[32];   /* 0x0211237c, id 104 TINY_COVER */
+void *_ZTV9TinyWater[32];      /* 0x02112440, id 105 TINY_WATER */
 DSSTATE_END
 }
 
 /* The RTTI spelling id 104's D1 restores its table by. It is excluded from the
    mount and defined nowhere else, so the alias cannot be defeated. */
-#pragma comment(linker, "/alternatename:__ZTV13daObjTtFuta_c=_data_ov033_0211237c")
+#pragma comment(linker, "/alternatename:__ZTV13daObjTtFuta_c=__ZTV9TinyCover")
 
 /* THE FOUR RESOLVER PLACEHOLDERS, all routed by per-source -D onto private
    names this lane owns, because each means a different object in a different
@@ -151,8 +153,8 @@ DSSTATE_END
    live host array (hal/actor_classes.cpp) for every Platform in the port. All
    four LHS below are declared and never defined, so the aliases cannot be
    defeated and alternatename_guard stays clean. */
-#pragma comment(linker, "/alternatename:_port_ov033_tc_vt_own=_data_ov033_0211237c")
-#pragma comment(linker, "/alternatename:_port_ov033_tw_vt_own=__ZTV9TinyCover")
+#pragma comment(linker, "/alternatename:_port_ov033_tc_vt_own=__ZTV9TinyCover")
+#pragma comment(linker, "/alternatename:_port_ov033_tw_vt_own=__ZTV9TinyWater")
 #pragma comment(linker, "/alternatename:_port_ov033_vt_base=__ZTV10dBgActor_c")
 
 /* The five bodies src defines as real C++ methods, faced here -- the
@@ -160,14 +162,15 @@ DSSTATE_END
    slot-5 bare-call shadows over +0xd4; _ZTV5Model[5] is dual-filled in
    hal/cxxname_bridge.cpp, and neither class holds a ModelAnim, so this is the
    Tree/ov013 case and not the ModelAnim slot-5 collision. */
+#include "TinyWater.h"
 #include "TinyCover.h"
 extern "C" {
-int _ZN9TinyCover13InitResourcesEv(void *self)
-{ return ((TinyCover *)self)->TinyCover::InitResources(); }
-int _ZN9TinyCover16CleanupResourcesEv(void *self)
-{ return ((TinyCover *)self)->TinyCover::CleanupResources(); }
-int _ZN9TinyCover6RenderEv(void *self)
-{ return ((TinyCover *)self)->TinyCover::Render(); }
+int _ZN9TinyWater13InitResourcesEv(void *self)
+{ return ((TinyWater *)self)->TinyWater::InitResources(); }
+int _ZN9TinyWater16CleanupResourcesEv(void *self)
+{ return ((TinyWater *)self)->TinyWater::CleanupResources(); }
+int _ZN9TinyWater6RenderEv(void *self)
+{ return ((TinyWater *)self)->TinyWater::Render(); }
 }
 
 // ---- the trap --------------------------------------------------------------
@@ -189,51 +192,51 @@ OV33_TRAP(13) OV33_TRAP(14)
 #undef OV33_TRAP
 
 static int __fastcall ov33_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall ov33_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall ov33_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 static void __fastcall ov33_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall ov33_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall ov33_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall ov33_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall ov33_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall ov33_pdes(void *s, void *)
-{ ((ActorBase *)s)->ActorBase::OnPendingDestroy(); return 0; }
+{ ((fBase_c *)s)->fBase_c::OnPendingDestroy(); return 0; }
 static int __fastcall ov33_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int __fastcall ov33_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 static int __fastcall ov33_turn_egg(void *s, void *, void *p)
-{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+{ _ZN8dActor_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall ov33_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall ov33_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall ov33_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall ov33_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall ov33_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall ov33_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall ov33_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall ov33_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall ov33_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 static int __fastcall ov33_egg(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 static int __fastcall ov33_kill(void *s, void *)
-{ _ZN8Platform4KillEv(s); return 0; }
+{ _ZN10dBgActor_c4KillEv(s); return 0; }
 
 /* The shared half of both tables. The caller writes its own 0/3/6/9/16/17/31,
    and id 104 also writes 21 AFTER this returns.
@@ -298,33 +301,33 @@ extern "C" void port_ov33_bringup(void)
 // Slot 21 is the pound: particle 0x28 at the pounder's position, sound 0xf,
 // Event::SetBit(0xe), self-destruct.
 static int __fastcall tc_init(void *s, void *)
-{ return func_ov033_02111310((char *)s); }
+{ return _ZN9TinyCover13InitResourcesEv((char *)s); }
 static int __fastcall tc_clean(void *s, void *)
-{ return func_ov033_02111280(s); }
+{ return _ZN9TinyCover16CleanupResourcesEv(s); }
 static int __fastcall tc_behavior(void *s, void *)
-{ return func_ov033_021112ec(s); }
+{ return _ZN9TinyCover8BehaviorEv(s); }
 static int __fastcall tc_render(void *s, void *)
 { port_actor_render_probe("TINY_COVER", (char *)s + 0xd4);
-  return func_ov033_021112c4(s); }
+  return _ZN9TinyCover6RenderEv(s); }
 static int __fastcall tc_d1(void *s, void *)
-{ return (int)(size_t)func_ov033_021111a0((int *)s); }
+{ return (int)(size_t)_ZN9TinyCoverD1Ev((int *)s); }
 static int __fastcall tc_d0(void *s, void *)
-{ return (int)(size_t)func_ov033_021111e4((int *)s); }
+{ return (int)(size_t)_ZN9TinyCoverD0Ev((int *)s); }
 /* Slot 21, the OVERRIDE. Three parameters so it emits `ret 4`, the
    wf_turn_egg/OnGroundPounded contract the shared half's own slot 21 uses. */
 static int __fastcall tc_pounded(void *s, void *, void *o)
-{ func_ov033_0211123c((char *)s, (char *)o); return 0; }
+{ _ZN9TinyCover15OnGroundPoundedER8dActor_c((char *)s, (char *)o); return 0; }
 
 extern "C" void hal_fill_tiny_cover_vtable(void)
 {
     port_ov33_bringup();
-    void *volatile *vt = (void *volatile *)data_ov033_0211237c;
+    void *volatile *vt = (void *volatile *)_ZTV9TinyCover;
     ov33_fill_shared(vt);
     vt[0]  = (void *)tc_init;
     vt[3]  = (void *)tc_clean;
     vt[6]  = (void *)tc_behavior;
     vt[9]  = (void *)tc_render;
-    vt[16] = (void *)tc_d1;
+    vt[16] = (void *)PORT_D16(tc_d1);
     vt[17] = (void *)tc_d0;
     /* AFTER the shared fill, which writes Actor's do-nothing here. */
     vt[21] = (void *)tc_pounded;
@@ -332,7 +335,7 @@ extern "C" void hal_fill_tiny_cover_vtable(void)
 }
 
 // ============================================================================
-// TINY_WATER (105) -- table 0x02112440 (dsd _ZTV9TinyCover), RTTI
+// TINY_WATER (105) -- table 0x02112440 (dsd _ZTV9TinyWater), RTTI
 // 14daObjTtWater_c, 32 slots.
 // ============================================================================
 //
@@ -345,29 +348,29 @@ extern "C" void hal_fill_tiny_cover_vtable(void)
 // Like the lid it returns Event::GetBit(0xe) == 0, so the water level and the
 // lid share one event bit -- pounding the lid is what drains it.
 static int __fastcall tw_init(void *s, void *)
-{ return _ZN9TinyCover13InitResourcesEv(s); }
+{ return _ZN9TinyWater13InitResourcesEv(s); }
 static int __fastcall tw_clean(void *s, void *)
-{ return _ZN9TinyCover16CleanupResourcesEv(s); }
+{ return _ZN9TinyWater16CleanupResourcesEv(s); }
 static int __fastcall tw_behavior(void *s, void *)
-{ return _ZN9TinyCover8BehaviorEv(s); }
+{ return _ZN9TinyWater8BehaviorEv(s); }
 static int __fastcall tw_render(void *s, void *)
 { port_actor_render_probe("TINY_WATER", (char *)s + 0xd4);
-  return _ZN9TinyCover6RenderEv(s); }
+  return _ZN9TinyWater6RenderEv(s); }
 static int __fastcall tw_d1(void *s, void *)
-{ return (int)(size_t)_ZN9TinyCoverD1Ev((int *)s); }
+{ return (int)(size_t)_ZN9TinyWaterD1Ev((int *)s); }
 static int __fastcall tw_d0(void *s, void *)
-{ return (int)(size_t)_ZN9TinyCoverD0Ev((int *)s); }
+{ return (int)(size_t)_ZN9TinyWaterD0Ev((int *)s); }
 
 extern "C" void hal_fill_tiny_water_vtable(void)
 {
     port_ov33_bringup();
-    void *volatile *vt = (void *volatile *)_ZTV9TinyCover;
+    void *volatile *vt = (void *volatile *)_ZTV9TinyWater;
     ov33_fill_shared(vt);
     vt[0]  = (void *)tw_init;
     vt[3]  = (void *)tw_clean;
     vt[6]  = (void *)tw_behavior;
     vt[9]  = (void *)tw_render;
-    vt[16] = (void *)tw_d1;
+    vt[16] = (void *)PORT_D16(tw_d1);
     vt[17] = (void *)tw_d0;
     vt[31] = (void *)ov33_kill;
 }

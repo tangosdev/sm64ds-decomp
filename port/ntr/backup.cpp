@@ -145,7 +145,9 @@
 // does verify it -- tag, checksum, primary and mirror, on a file the game wrote.
 //
 // WHERE IT LIVES:
-//     1. $SM64DS_SAVE_PATH        exact path, if set (what the proof uses)
+//     1. $SM64DS_SAVE_PATH        exact path, if set (what the proof uses); its
+//                                 parent directory is created too, same as the
+//                                 other three candidates below
 //     2. <folder holding the exe>/save/sm64ds.sav        -- a player's kit
 //     3. $SM64DS_ASSET_ROOT/save/sm64ds.sav
 //     4. ./save/sm64ds.sav
@@ -228,6 +230,19 @@ void resolve_path()
     const char *env = std::getenv("SM64DS_SAVE_PATH");
     if (env && *env && std::strlen(env) + 1 < sizeof g_path) {
         std::snprintf(g_path, sizeof g_path, "%s", env);
+        /* The other three candidates below create their save/
+           directory; this one returned before make_dir, so a
+           shortcut that pointed SM64DS_SAVE_PATH at a directory
+           that did not exist yet got fopen "wb" failing, a
+           flush_failure, SaveFile answering 0 -- and the game's
+           own "Saved!" box regardless, because Message's
+           countdown owns the box and not the write. */
+        char parent[sizeof g_path];
+        std::snprintf(parent, sizeof parent, "%s", g_path);
+        char *bs = std::strrchr(parent, '\\');
+        char *fs = std::strrchr(parent, '/');
+        if (fs && (!bs || fs > bs)) bs = fs;
+        if (bs && bs != parent) { *bs = '\0'; make_dir(parent); }
         return;
     }
 
@@ -303,6 +318,9 @@ void open_once()
 // Persist the whole image through a per-process temp and a replacing move.
 bool flush()
 {
+    // Once per process: a failing medium must not spam a play log.
+    static bool said = false;
+
     char tmp[1088];
 #ifdef _WIN32
     unsigned long pid = (unsigned long)GetCurrentProcessId();
@@ -313,22 +331,53 @@ bool flush()
     std::snprintf(tmp, sizeof tmp, "%s.%lu.tmp", g_path, pid);
 
     std::FILE *f = std::fopen(tmp, "wb");
-    if (!f) { ++g_stats.flush_failures; return false; }
+    if (!f) {
+        ++g_stats.flush_failures;
+        if (!said) {
+            said = true;
+            std::fprintf(stderr,
+                         "[backup] COULD NOT WRITE %s -- the game's save did "
+                         "not reach the disk\n", g_path);
+        }
+        return false;
+    }
     bool ok = std::fwrite(g_image, 1, sizeof g_image, f) == (size_t)kSize;
     if (std::fflush(f) != 0) ok = false;
     if (std::fclose(f) != 0) ok = false;
-    if (!ok) { std::remove(tmp); ++g_stats.flush_failures; return false; }
+    if (!ok) {
+        std::remove(tmp);
+        ++g_stats.flush_failures;
+        if (!said) {
+            said = true;
+            std::fprintf(stderr,
+                         "[backup] COULD NOT WRITE %s -- the game's save did "
+                         "not reach the disk\n", g_path);
+        }
+        return false;
+    }
 
 #ifdef _WIN32
     if (!MoveFileExA(tmp, g_path, MOVEFILE_REPLACE_EXISTING)) {
         std::remove(tmp);
         ++g_stats.flush_failures;
+        if (!said) {
+            said = true;
+            std::fprintf(stderr,
+                         "[backup] COULD NOT WRITE %s -- the game's save did "
+                         "not reach the disk\n", g_path);
+        }
         return false;
     }
 #else
     if (std::rename(tmp, g_path) != 0) {
         std::remove(tmp);
         ++g_stats.flush_failures;
+        if (!said) {
+            said = true;
+            std::fprintf(stderr,
+                         "[backup] COULD NOT WRITE %s -- the game's save did "
+                         "not reach the disk\n", g_path);
+        }
         return false;
     }
 #endif
@@ -429,7 +478,7 @@ int data_port_backup_device[10] = {
 
 // data_020a8760 is a POINTER, not the table: src/func_02060364.c assigns the
 // row to it and src/func_0206045c.c reads element [1] through it.
-// src/func_020603c8.c -> func_02060364 is what does this on hardware, off the
+// src/func_020603c8.cpp -> func_02060364 is what does this on hardware, off the
 // back of the card driver's own thread; the port has no card thread, so the
 // same assignment is made statically here.
 // The STORAGE for that pointer word is hal/globals_link100.cpp's grouped card

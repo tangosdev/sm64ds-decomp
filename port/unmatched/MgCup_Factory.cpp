@@ -1,18 +1,18 @@
-// PORT_HOST_ABI. HOST COPY of dScMgCup_c's factory, func_ov006_020e0574
-// (SpawnInfo data_ov006_0213c020, actor id 0x169, scene 361). Run mg9, lane
+// PORT_HOST_ABI. HOST COPY of dScMgCup_c's factory, dScMgCup_c_classInit
+// (SpawnInfo g_profile_MG_CUP, actor id 0x169, scene 361). Run mg9, lane
 // CUP.
 //
 // ---- WHY A MATCHED, BYTE-EXACT TU IS DISPLACED -----------------------------
 //
-// src/func_ov006_020e0574.cpp is MATCHED and it is READ-ONLY, and its second
+// src/actors/dScMgCup_c.cpp is MATCHED and it is READ-ONLY, and its second
 // statement is
 //
-//     func_ov004_020b2adc();
+//     _ZN11dScMgBase_cC2Ev();
 //
 // with NO ARGUMENT. Every other minigame factory in the ROM passes the object:
-// MgMemoryMaster_Spawn.c, MgBobOmbSquad_Spawn.c, MgLakituLaunch_Spawn.c,
-// MgCoincentration_Spawn.cpp and the rest all spell `func_ov004_020b2adc(p)`.
-// Exactly TWO drop it -- this one and src/MgMushroomRoulette_Spawn.cpp (id
+// dScMgMemory2_c_classInit.c, dScMgPachinko_c_classInit.c, dScMgPachinko2_c_classInit.c,
+// dScMgCoin_c_classInit.cpp and the rest all spell `_ZN11dScMgBase_cC2Ev(p)`.
+// Exactly TWO drop it -- this one and src/minigames/d_s_mg_roulette.cpp (id
 // 0x17f, not seated) -- and the src is right about the ROM both times.
 //
 // THE ROM, disassembled out of extracted/overlays/overlay_0006.bin at base
@@ -28,7 +28,7 @@
 //     020e0598  add r0,r4,r0 / str r1,[r4] / bl #0x2023204 SysTracker ctor
 //     020e05a4  ldr r0,[pc,#0x68] / ldr r1,[pc,#0x68]      0x4f38 / 0x0213c154
 //     020e05ac  add r0,r4,r0 / str r1,[r4] / bl #0x20c33dc
-//     020e05b8..020e05f4  the two func_020733a8 array constructions
+//     020e05b8..020e05f4  the two __cxa_vec_ctor array constructions
 //     020e05f8  mov r0, r4 / add sp, sp, #8 / pop {r4, lr} / bx lr
 //
 // On ARM `movs r4, r0` copies without clearing r0, so the base constructor is
@@ -37,14 +37,14 @@
 // transcription of that.
 //
 // ON THE HOST IT IS A WILD WRITE, NOT A WILD READ, which is lane MAR1's
-// verification and is why this cannot be left alone. src/func_ov004_020b2adc.c
+// verification and is why this cannot be left alone. src/_ZN11dScMgBase_cC2Ev.cpp
 // is
 //
-//     void *func_ov004_020b2adc(char *self)
+//     void *_ZN11dScMgBase_cC2Ev(char *self)
 //     {
-//         _ZN9ActorBaseC1Ev(self);              <-- dereferences immediately
+//         _ZN7fBase_cC2Ev(self);              <-- dereferences immediately
 //         *(void **)self = &data_0208e4b8;
-//         *(void **)self = &_ZTV5Scene;
+//         *(void **)self = &_ZTV8dScene_c;
 //         ...
 //
 // so a __cdecl call with nothing pushed makes the callee read whatever is at
@@ -56,7 +56,7 @@
 // ---- THE DISPLACEMENT RULING -----------------------------------------------
 //
 // Displacing a matched TU with a host copy costs ONE LINKED FUNCTION: the
-// linkage headline counts src/func_ov006_020e0574.cpp as unlinked from here
+// linkage headline counts src/actors/dScMgCup_c.cpp as unlinked from here
 // on, because this object is what the binary carries. That is a real, measured
 // price and it is why this port does not take it casually.
 //
@@ -70,7 +70,7 @@
 // THE ALTERNATIVES WERE CONSIDERED AND ARE WORSE:
 //
 //   * A FACE that lands the argument. An /alternatename cannot change an
-//     argument list, and a __cdecl thunk in front of func_ov004_020b2adc would
+//     argument list, and a __cdecl thunk in front of _ZN11dScMgBase_cC2Ev would
 //     have to invent the value the caller never pushed -- the same value this
 //     file has for free, because it holds `p`.
 //   * REPAIRING THE src. src/ is the byte-gated tree: adding an argument
@@ -80,9 +80,9 @@
 //     src -- what is wrong is that C cannot spell "r0 already holds it".
 //   * DOING NOTHING. That is the wild write above.
 //
-// WHAT CHANGED, exactly, and nothing else moved: `func_ov004_020b2adc();`
-// became `func_ov004_020b2adc(p);`. The declaration is spelled the way
-// src/func_ov004_020b2adc.c DEFINES it, `void *(char *)`, rather than the way
+// WHAT CHANGED, exactly, and nothing else moved: `_ZN11dScMgBase_cC2Ev();`
+// became `_ZN11dScMgBase_cC2Ev(p);`. The declaration is spelled the way
+// src/_ZN11dScMgBase_cC2Ev.cpp DEFINES it, `void *(char *)`, rather than the way
 // the displaced TU declared it, so port/tools/aritycheck.py sees a declaration
 // that agrees with the definition instead of one more zero-argument row.
 //
@@ -93,14 +93,14 @@
 extern "C" {
 
 /* the ROM's own callees, each spelled as its own src TU defines it */
-void *_ZN9ActorBasenwEj(unsigned int size);
-void *func_ov004_020b2adc(char *self);
+void *_ZN7fBase_cnwEj(unsigned int size);
+void *_ZN11dScMgBase_cC2Ev(char *self);
 void *_ZN8Particle10SysTrackerC1Ev(void *self);
 int   func_ov006_020c33dc(char *t);
-void  func_020733a8(void *base, int n, int stride,
+void  __cxa_vec_ctor(void *base, int n, int stride,
                     void (*ctor)(void *), void (*dtor)(void *));
 
-/* the two array-element callbacks the factory hands func_020733a8. Both are
+/* the two array-element callbacks the factory hands __cxa_vec_ctor. Both are
    (void) in src because both ROM bodies ignore r0: func_ov006_020e0634 is
    0x020e0634 = e12fff1e, a bare `bx lr`, and NullDestructor_0203d47c is the
    arm9 null destructor. Cast at the call sites the way src casts them. */
@@ -113,34 +113,34 @@ void NullDestructor_0203d47c(void);
    them OUTSIDE its extern "C" block, which is where port/slice_mga361.txt's
    "2 NAME-SPELLING FACES" frontier item came from; host-copying the factory
    retires that item rather than aliasing around it. */
-extern unsigned char data_ov006_0213e448[];   /* dScMgSingle3DBase_c */
-extern unsigned char data_ov006_0213c154[];   /* dScMgCup_c          */
+extern unsigned char _ZTV19dScMgSingle3DBase_c[];   /* dScMgSingle3DBase_c */
+extern unsigned char _ZTV10dScMgCup_c[];   /* dScMgCup_c          */
 
-void *func_ov006_020e0574(void);
+void *dScMgCup_c_classInit(void);
 
 }  /* extern "C" */
 
-// PORT_HOST_ABI: src spells the base constructor call func_ov004_020b2adc() with no argument because on ARM r0 already holds the object, a register ride-through C cannot spell; the host passes p explicitly so the callee does not store three vtable words through an uninitialised stack slot.
-extern "C" void *func_ov006_020e0574(void)
+// PORT_HOST_ABI: src spells the base constructor call _ZN11dScMgBase_cC2Ev() with no argument because on ARM r0 already holds the object, a register ride-through C cannot spell; the host passes p explicitly so the callee does not store three vtable words through an uninitialised stack slot.
+extern "C" void *dScMgCup_c_classInit(void)
 {
-    char *p = (char *)_ZN9ActorBasenwEj(0x5470);
+    char *p = (char *)_ZN7fBase_cnwEj(0x5470);
     if (p) {
-        /* THE ONE CHANGED LINE. src spells this `func_ov004_020b2adc();`
+        /* THE ONE CHANGED LINE. src spells this `_ZN11dScMgBase_cC2Ev();`
            because on ARM r0 already holds p; see the header. */
-        func_ov004_020b2adc(p);
+        _ZN11dScMgBase_cC2Ev(p);
 
-        *(void **)p = (void *)data_ov006_0213e448;
+        *(void **)p = (void *)_ZTV19dScMgSingle3DBase_c;
         _ZN8Particle10SysTrackerC1Ev(p + 0x471c);
-        *(void **)p = (void *)data_ov006_0213c154;
+        *(void **)p = (void *)_ZTV10dScMgCup_c;
         func_ov006_020c33dc(p + 0x4f38);
 
         /* pool 0x020e0624 = 020e0634 (ctor) and 0x020e0620 = 020deac4 (dtor);
            pool 0x020e0630 = 0203d738 (ctor) and 0x020e0628 = 0203d47c (dtor).
            Both orders read off the ROM's r3-versus-[sp] split, not inferred. */
-        func_020733a8(p + 0x50e8, 0x20, 0x18,
+        __cxa_vec_ctor(p + 0x50e8, 0x20, 0x18,
                       (void (*)(void *))func_ov006_020e0634,
                       (void (*)(void *))func_ov006_020deac4);
-        func_020733a8(p + 0x53e8, 3, 8,
+        __cxa_vec_ctor(p + 0x53e8, 3, 8,
                       (void (*)(void *))func_0203d738,
                       (void (*)(void *))NullDestructor_0203d47c);
     }

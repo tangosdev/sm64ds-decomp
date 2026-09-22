@@ -33,7 +33,7 @@
  *         D1 calls _ZN5ModelD1Ev on +0xd4), and hal/cxxname_bridge.cpp
  *         DUAL-FILLS _ZTV5Model at [4] AND [5], so it serves from src/ and
  *         does. Levels 39 and 37 run 300 frames rc 0 with it sliced.
- *       Stump::Render shadows the ModelAnim at +0x300 (Fwoosh_Spawn calls
+ *       Stump::Render shadows the ModelAnim at +0x300 (daHyuhyu_c_classInit calls
  *         _ZN9ModelAnimC1Ev on +0x300), and _ZTV9ModelAnim is filled in MSVC
  *         numbering where slot 5 is Virtual18 and Render has moved. NOT
  *         dual-filled, so index 5 lands on the wrong body -- the ov090 /
@@ -85,32 +85,32 @@ extern "C" {
 /* ---- arm9 / ov002 leaves, each named by its caller's own relocation ------- */
 void func_020393d4(void *p, void *v);                       /* 0x020393d4 */
 void _Z14ApproachLinearRiii(int *cur, int target, int rate); /* 0x0203ae58 */
-void _ZN16MeshColliderBase21UpdatePosWithVelocityERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_(void); /* 0x0203923c */
-void _ZN8Platform21UpdateModelPosAndRotYEv(void *self);     /* ov002 0x020ee830 */
-int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b); /* ov002 0x020ee870 */
-void _ZN8Platform19UpdateClsnPosAndRotEv(void *self);       /* ov002 0x020ee7cc */
+void _ZN4dBgW21UpdatePosWithVelocityERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_(void); /* 0x0203923c */
+void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *self);     /* ov002 0x020ee830 */
+int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b); /* ov002 0x020ee870 */
+void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);       /* ov002 0x020ee7cc */
 
-int _ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(void *self, void *wm); /* ov002 0x020ade78 */
-void _ZN12CylinderClsn5ClearEv(void *self);                 /* 0x02015024 */
-void _ZN12CylinderClsn6UpdateEv(void *self);                /* 0x02014ff0 */
+int _ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(void *self, void *wm); /* ov002 0x020ade78 */
+void _ZN5dCc_c5ClearEv(void *self);                 /* 0x02015024 */
+void _ZN5dCc_c6UpdateEv(void *self);                /* 0x02014ff0 */
 unsigned short DecIfAbove0_Short(unsigned short *p);        /* 0x0203adbc */
-void _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(void *self, void *c); /* 0x02010d40 */
-void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(void *self, void *wm, unsigned j); /* ov002 0x020aebf8 */
+void _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(void *self, void *c); /* 0x02010d40 */
+void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void *self, void *wm, unsigned j); /* ov002 0x020aebf8 */
 void _ZN9Animation7AdvanceEv(void *self);                   /* 0x02015c3c */
 
-void *_ZN5Actor10FindWithIDEj(unsigned int id);             /* 0x02010f3c */
+void *_ZN8dActor_c10FindWithIDEj(unsigned int id);             /* 0x02010f3c */
 /* 0x020aea30, and the spelling matters -- see the shared-window note at (3).
    This link defines BOTH _func_ov002_020aea30 and _func_020aea30 from the same
    object (port/unmatched/Enemy_UpdateDeath.cpp); main's body calls the ov002
    spelling, so that is the one declared. */
 void func_ov002_020aea30(void *c, void *a, unsigned int unused);
-void _ZN5Actor8PoofDustEv(void *a);                         /* 0x0200fe3c */
-void _ZN9ActorBase18MarkForDestructionEv(void *a);          /* 0x02043824 */
+void _ZN8dActor_c8PoofDustEv(void *a);                         /* 0x0200fe3c */
+void _ZN7fBase_c18MarkForDestructionEv(void *a);          /* 0x02043824 */
 void _ZN6Player16IncMegaKillCountEv(void *p);               /* ov002 0x020bdc58 */
 void func_02012694(int a, void *p);                         /* 0x02012694 */
 int _ZN6Player15IsCollectingCapEv(void *p);                 /* ov002 0x020bea94 */
 void _ZN6Player18SetNewHatCharacterEjjb(void *p, unsigned a, unsigned b, unsigned c2); /* ov002 0x020be0f8 */
-void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned id, unsigned flags,
+void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned id, unsigned flags,
         struct Vector3 *pos, short *rot, int a, int b);     /* 0x02010e2c */
 
 /* ---- the ov091 leaves these four call ------------------------------------ */
@@ -155,7 +155,7 @@ extern unsigned int data_ov091_021354e0[];   /* three records, 157/144 */
  * The three Platform methods are called by their FLAT ROM names with an
  * explicit self (0x020ee830 / 0x020ee870 / 0x020ee7cc), the level_boot.cpp:4940
  * shape, rather than through the local six-line `struct Platform` shadow the
- * src TU declares -- that shadow mangles to `?UpdateModelPosAndRotY@Platform@@`
+ * src TU declares -- that shadow mangles to `?UpdateModelPosAndRotY@dBgActor_c@@`
  * against a class this file does not define.
  * ========================================================================== */
 /* HOST COPY RETIRED, run link100 lane FWD.
@@ -193,14 +193,14 @@ extern unsigned int data_ov091_021354e0[];   /* three records, 157/144 */
 /* ==========================================================================
  * (1c) Stump::Behavior -- FWOOSH's tick half.
  *
- * src/_ZN5Stump8BehaviorEv.cpp reaches the same cell through
+ * src/_ZN6Fwoosh8BehaviorEv.cpp reaches the same cell through
  *   struct Holder { char pad[8]; PMF fn; };
  *   Holder *q = *(Holder **)(c + 0x364);  if (q->fn != 0) (this->*(q->fn))();
  * i.e. record[1]'s fn word -- the TICK half, exactly the ov090 record-0-enter /
  * record-1-tick split. Everything else is the src body line for line, with
  * every leaf named by that body's own relocation.
  * ========================================================================== */
-/* HOST COPY RETIRED, run link100 lane PMFB7 gate 2. src/_ZN5Stump8BehaviorEv.cpp
+/* HOST COPY RETIRED, run link100 lane PMFB7 gate 2. src/_ZN6Fwoosh8BehaviorEv.cpp
    dispatches its own field now: with /vmg /vmm (block R8) MSVC's pointer to
    member IS the ROM's eight-byte {code, adjust} pair, so the widening this
    banner was written for does not happen. The per-frame half of every state
@@ -208,7 +208,7 @@ extern unsigned int data_ov091_021354e0[];   /* three records, 157/144 */
    because the helper that dispatches it tail-jumps. Measurements in
    port/slice_pmfb7.txt and runs/link100/out/PMFB7/. */
 
-/* _ZN5Stump6RenderEv RETIRED (run link100, lane EXCEPT). Its stated reason -- the
+/* _ZN6Fwoosh6RenderEv RETIRED (run link100, lane EXCEPT). Its stated reason -- the
    ROM-order model slot-5 dispatch -- died with lane SLOT5F's
    respelling of include/ModelBase.h: hal/cxxname_bridge.cpp:522/578
    put Render back on index 5 of _ZTV5Model and _ZTV9ModelAnim, so the
@@ -249,13 +249,13 @@ extern unsigned int data_ov091_021354e0[];   /* three records, 157/144 */
  * because main renamed the actor hierarchy to its ROM RTTI spellings and this
  * tree has not taken that rename. Left column is main's, right is what THIS
  * link defines at the same address:
- *   0x02010f3c  _ZN8dActor_c10FindWithIDEj        -> _ZN5Actor10FindWithIDEj
- *   0x0200fe3c  _ZN8dActor_c8PoofDustEv           -> _ZN5Actor8PoofDustEv
- *   0x02043824  _ZN7fBase_c18MarkForDestructionEv -> _ZN9ActorBase18MarkForDestructionEv
+ *   0x02010f3c  _ZN8dActor_c10FindWithIDEj        -> _ZN8dActor_c10FindWithIDEj
+ *   0x0200fe3c  _ZN8dActor_c8PoofDustEv           -> _ZN8dActor_c8PoofDustEv
+ *   0x02043824  _ZN7fBase_c18MarkForDestructionEv -> _ZN7fBase_c18MarkForDestructionEv
  *   0x020adb40  _ZN12dEnemyBase_c22SpawnMegaCharParticlesER8dActor_cPc
- *                                                 -> _ZN5Enemy22SpawnMegaCharParticlesER5ActorPc
+ *                                                 -> _ZN12dEnemyBase_c22SpawnMegaCharParticlesER8dActor_cPc
  *   0x02010e2c  _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as
- *                                                 -> _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii
+ *                                                 -> _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as
  * The last pair also disagrees about the LAST TWO PARAMETERS -- main recovered
  * them `as` (signed char, short) and this tree `ii` -- and under C linkage the
  * mangled string IS the symbol, so the call must spell this tree's. It is
@@ -270,7 +270,7 @@ extern unsigned int data_ov091_021354e0[];   /* three records, 157/144 */
  * attribution backwards:
  *     ov002/symbols.txt:26   func_ov002_020aea30   0x8c   both trees agree
  *     ov004/symbols.txt:50   0x48                  this tree calls it
- *                            _ZN5Enemy12KillByAttackER5Actor, main calls it
+ *                            func_ov004_020aea30, main calls it
  *                            func_ov004_020aea30
  * So the two trees AGREE about the ov002 body and differ only about the ov004
  * one, and main's spelling is this tree's spelling for the function this TU
@@ -282,101 +282,17 @@ extern unsigned int data_ov091_021354e0[];   /* three records, 157/144 */
  * ADDRESS alone could have picked the ov004 body instead, which is a different
  * function of a different size.
  * ==========================================================================*/
-extern "C" void func_ov091_021339fc(char *c)
-{
-    char *a;
-    u32 fl;
-    u32 id = *(u32 *)(c + 0x134);
-
-    if (id == 0)
-        return;
-    a = (char *)_ZN5Actor10FindWithIDEj(id);
-    if (*(u32 *)(c + 0x374) == 0) {
-        fl = *(u32 *)(c + 0x130);
-        if ((fl & 0x40000) != 0) {
-            *(u32 *)(c + 0x10c) = 4;
-            func_ov002_020aea30(c, a, 0);
-            return;
-        }
-        if ((fl & 0x2000) != 0) {
-            _ZN5Actor8PoofDustEv(c);
-            _ZN9ActorBase18MarkForDestructionEv(c);
-            return;
-        }
-        {
-            int b = (int)(*(u16 *)(a + 0xc) == 0xbf);
-            if (b == 0)
-                return;
-        }
-        if (*(u8 *)(a + 0x6f9) == 1) {
-            _ZN5Actor8PoofDustEv(c);
-            _ZN9ActorBase18MarkForDestructionEv(c);
-            return;
-        }
-        if ((fl & 0x10) == 0)
-            return;
-        _ZN5Actor8PoofDustEv(c);
-        _ZN5Enemy22SpawnMegaCharParticlesER5ActorPc(c, a, 0);
-        _ZN6Player16IncMegaKillCountEv(a);
-        func_02012694(0x1d, c + 0x74);
-        _ZN9ActorBase18MarkForDestructionEv(c);
-        return;
-    }
-
-    {
-        int b = (int)(*(u16 *)(a + 0xc) == 0xbf);
-        if (b == 0)
-            return;
-    }
-    if (*(u8 *)(a + 0x6f9) != 0)
-        return;
-    if (*(u8 *)(a + 0x703) != 0)
-        return;
-    if (_ZN6Player15IsCollectingCapEv(a) != 0)
-        return;
-    _ZN6Player8BlowAwayEs(a, *(s16 *)(c + 0x94));
-    {
-        u8 capFlag = *(u8 *)(a + 0x6ff);
-        u8 hat = *(u8 *)(a + 0x6d9);
-        if (capFlag != 0)
-            return;
-        if (*(u8 *)(a + 0x6fd) != 0)
-            return;
-        {
-            u32 cur = *(u32 *)(a + 8);
-            u32 param = 1;
-            if (hat != cur) {
-                _ZN6Player18SetNewHatCharacterEjjb(a, hat, 0, 0);
-            } else {
-                if (_ZN8SaveData16HasPlayerLostCapEv() != 0)
-                    return;
-                _ZN8SaveData13PlayerLoseCapEv();
-            }
-            {
-                u32 curHat1 = *(u32 *)(a + 8);
-                Vector3_16 rot;
-                void *spawned;
-                rot.x = 0;
-                rot.y = 0;
-                rot.z = 0;
-                rot.y = *(s16 *)(c + 0x94);
-                param = param | (curHat1 << 8);
-                /* (short *)&rot: this tree recovered Spawn's fourth parameter
-                   as `short *` and main as `Vector3_16 *`, which is the same
-                   three consecutive s16 under two spellings -- the ROM passes
-                   one pointer either way. The narrow fifth and sixth arguments
-                   promote to int under cdecl, which is why this tree's `ii`
-                   mangling is ABI-identical to main's `as`. */
-                spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
-                    0x10d, param, (Vector3 *)(c + 0x5c), (short *)&rot,
-                    *(s8 *)(c + 0xcc), -1);
-                if (spawned == 0)
-                    return;
-                *(u32 *)((char *)spawned + 0x98) = 0x32000;
-                *(u32 *)((char *)spawned + 0xa4) = 0;
-                *(u32 *)((char *)spawned + 0xa8) = 0x14000;
-                *(u32 *)((char *)spawned + 0xac) = 0;
-            }
-        }
-    }
-}
+/* RETIRED (run link100 wave 14, lane SHADOWS3). The body that stood here is
+ * gone and src/func_ov091_021339fc.c is on port/slice_shadows3.txt in its
+ * place. The whole refusal above was one measurement -- "WHAT THIS TREE HAS AT
+ * 0x021339fc IS STALE", a NONMATCHING banner and an ARM asm hatch MSVC cannot
+ * parse -- and that measurement no longer holds: the src blob on this tree is
+ * 31897fa47d0d96862ba8ea690ed7060a3b80c507, which is the clean main blob this
+ * note itself names, with no banner and no hatch. So the re-gate recorded
+ * above (match.py 2004/b56 --strict-relocs --module ov091 against
+ * extracted/overlays/overlay_0091.bin at 0x02130f00, 155 instructions and one
+ * pool word MATCHING) is a re-gate of the text that now links, and the five
+ * bridged names are no longer bridged at all: every one of the ten externals
+ * the TU declares, INCLUDING the `as` spelling of dActor_c::Spawn that this
+ * note flagged as the disagreement, is defined at its own address in this
+ * build's map. Checked before the seat, not after. */

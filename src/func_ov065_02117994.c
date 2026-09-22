@@ -10,7 +10,7 @@ struct Mtx43 { Fix12i a[12]; };
 extern void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);
 extern void Matrix4x3_FromTranslation(struct Mtx43* m, Fix12i x, Fix12i y, Fix12i z);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void* m, int x, int y, int z);
-extern void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     void* self, void* sm, struct Mtx43* m, Fix12i fx, int t, unsigned int u);
 
 extern struct Mtx43 data_020a0e68;
@@ -31,6 +31,6 @@ void func_ov065_02117994(char* self){
         (*(Fix12i*)(self + 0x60) - 0x18000) >> 3,
         *(Fix12i*)(self + 0x64) >> 3);
     *(struct Mtx43*)(self + 0x3f0) = data_020a0e68;
-    _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+    _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
         self, self + 0x3c8, (struct Mtx43*)(self + 0x3f0), 0x32000, 0x258000, 0xf);
 }

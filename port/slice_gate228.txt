@@ -7,13 +7,13 @@
 # typed out by hand, and every one of those nine hal files says in prose that
 # the inferred-stub marker is the ONLY reason the real body was not used:
 #
-#   hal/actor_classes_jrb.cpp:436   "SLOT 17 KEEPS ITS THUNK: func_ov016_02112a44
+#   hal/actor_classes_jrb.cpp:436   "SLOT 17 KEEPS ITS THUNK: _ZN10RockPillarD0Ev
 #                                    carries the inferred-stub marker, and
 #                                    port/tools/inferred_stub_guard.py refuses
 #                                    new seats of those."
-#   hal/actor_classes_ccm.cpp:923    the same sentence, func_ov018_021111e4.
-#   hal/actor_classes_ov012.cpp:236  the same sentence, func_ov012_021111e4.
-#   hal/actor_classes_ov013.cpp:254  the same sentence, func_ov013_021111d0.
+#   hal/actor_classes_ccm.cpp:923    the same sentence, _ZN7SkiLiftD0Ev.
+#   hal/actor_classes_ov012.cpp:236  the same sentence, _ZN16daObjC0_Switch_cD0Ev.
+#   hal/actor_classes_ov013.cpp:254  the same sentence, _ZN18daObjClockHuriko_cD0Ev.
 #   hal/actor_classes_bob_enemy.cpp:305  slot 18 "keeps the shared Actor
 #                                    default ... so inferred_stub_guard keeps it
 #                                    trapped out of the live fill".
@@ -32,8 +32,8 @@
 # because the port could not name the placeholder table. The -D rows in
 # port/CMakeLists.txt name it per TU out of each body's own literal pool, so the
 # seated bodies do the stores the ROM does. Those stores land on tables the port
-# dual-fills (_ZTV8Platform and _ZTV10dBgActor_c are one ROM table under two
-# host arrays, both filled identically; data_ov002_02108fdc is hosted in
+# dual-fills (_ZTV10dBgActor_c and _ZTV10dBgActor_c are one ROM table under two
+# host arrays, both filled identically; _ZTV17daObjFloatBoard_c is hosted in
 # hal/actor_base_tables_ov002.cpp), and they happen inside a destructor whose
 # next act is Memory::Deallocate, so nothing dispatches through them.
 #
@@ -49,14 +49,14 @@
 #       Klepto's OnAimedAtWithEgg. Word 0x0211ddd0 -> 0x0211ce78. The whole body
 #       is `return 458752`. Slot 29 sits on the shared two-parameter ac_egg and
 #       the body takes NOTHING, not even the receiver.
-src/func_ov102_0214d6a0.c
-src/func_ov062_0211ce78.c
+src/_ZN10KoopaShell13OnYoshiTryEatEv.cpp
+src/_ZN6Klepto16OnAimedAtWithEggEv.cpp
 #
-#   NOT ov016 data_ov016_02114b00 slot 9 (0x02112b28, RockPillar's Render),
+#   NOT ov016 _ZTV10RockPillar slot 9 (0x02112b28, RockPillar's Render),
 #   which this lane looked at and put back. Its call shape is fine --
 #   hal/cxxname_bridge.cpp dual-fills _ZTV5Model[4] AND [5] with mv_render, a
 #   THREE-parameter __fastcall, so the local shadow's thiscall push is popped --
-#   but port/unmatched/Jrb_Renders.cpp DEFINES func_ov016_02112b28 as a
+#   but port/unmatched/Jrb_Renders.cpp DEFINES _ZN10RockPillar6RenderEv as a
 #   PORT_HOST_ABI host copy, so seating the src TU is an LNK2005 and the tag is
 #   a ruling that the host body is the faithful stand-in. The marker was never
 #   this one's blocker.
@@ -83,21 +83,23 @@ src/func_ov062_0211ce78.c
 #         0x02108fdc, 0x02112fa0 -> 0x0210ae38, 0x02112fa4 -> 0x020a0eac.
 #   ov091 0x021352bc s17  0x02133440  word 0x02135300. pool 0x0213348c ->
 #         0x021352bc, 0x02133490 -> 0x0210ae38, 0x02133494 -> 0x020a0eac.
-src/func_ov002_020b32c8.c
-src/func_ov002_020ec3b8.c
-src/func_ov002_020f03f4.c
-src/func_ov012_021111e4.c
-src/func_ov013_021111d0.c
-src/func_ov018_021111e4.c
-src/func_ov016_02112a44.c
-src/func_ov016_02112f44.c
-src/func_ov091_02133440.c
+src/game/actors/d_a_obj_abuku.cpp
+src/game/actors/d_a_warpkun.cpp
+src/actors/daSCoin_c.cpp
+src/game/actors/d_a_obj_c0_switch.cpp
+src/game/actors/d_a_obj_clock_huriko.cpp
+src/game/actors/d_a_pg_mthr.cpp
+# RETIRED at SLICE1: body now in src/_ZN10RockPillarD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN10RockPillarD0Ev.cpp
+src/game/actors/d_a_obj_ki_ita.cpp
+# RETIRED at SLICE1: body now in src/_ZN6FwooshD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN6FwooshD0Ev.cpp
 #
 # ---------------------------------------------------------------------------
 # ONE MORE RULED BODY ON THIS LIST'S OWN SHAPE THAT IS NOT SEATED, and the
 # reason is worth carrying because it is the trap this class of work sets.
 #
-#   ov064 data_ov064_0211c1d8 slot 17, func_ov064_02118c10. Its pool binds VT to
+#   ov064 _ZTV19BowserPuzzleManager slot 17, _ZN19BowserPuzzleManagerD0Ev. Its pool binds VT to
 #   0x0211c1d8, and the port's symbol of that name is the MOUNTED table -- raw
 #   DS words, pack-checked, never dispatchable. hal/actor_classes_bowserpuzzle.cpp
 #   dispatches through a separate FILE-STATIC host array, port_bp_shell_vtable,

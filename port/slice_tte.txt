@@ -1,7 +1,7 @@
 # Lane TTE of run mg11: dScMgTrampoline2_c, the "Trampoline Terror" minigame.
 #
-# actor id 0x181 (scene 385), spawn symbol MgTrampolineTerror_Spawn
-# (0x0212471c), SpawnInfo 0x0213fbc8, vtable data_ov006_0213fc7c. Every one of
+# actor id 0x181 (scene 385), spawn symbol dScMgTrampoline2_c_classInit
+# (0x0212471c), SpawnInfo 0x0213fbc8, vtable _ZTV18dScMgTrampoline2_c. Every one of
 # those was re-read out of the ROM by this lane rather than taken from the
 # handover. The doubled-id word 0x01810181 sits at 0x0213fbcc, which puts the
 # record at 0x0213fbc8 with the factory in the word before the id:
@@ -45,11 +45,11 @@
 #
 #     Scene -> dScMgBase_c        data_ov004_020bc0c0  36  (the framework's)
 #           -> dScMgD3DBase_c     0x0213c62c           36  ovr 17
-#           -> dScMgTrampoline2_c data_ov006_0213fc7c  36  ovr 25 (12 of its own)
+#           -> dScMgTrampoline2_c _ZTV18dScMgTrampoline2_c  36  ovr 25 (12 of its own)
 #
 # THE MIDDLE TABLE'S SYMBOL IS A SPAWN NAME AND NOT THE CLASS NAME.
 # config/arm9/overlays/ov006/symbols.txt calls 0x0213c62c
-# _ZTV17MgBounceAndPounce, which is actor 0x174's spawn symbol; the ROM's RTTI
+# _ZTV14dScMgD3DBase_c, which is actor 0x174's spawn symbol; the ROM's RTTI
 # at 0x0213c5c8 calls the class dScMgD3DBase_c. FOUR classes derive from it and
 # run mg11 seats all four at once:
 #
@@ -63,11 +63,11 @@
 # own D1/D0, from 0x020e6c5c and 0x020e6ca4) + 3 for each of the four derived
 # ids (its factory, its D2 and its D0). THIS LANE'S THREE ARE 0x02124850 (the
 # factory, in a code block config/arm9/overlays/ov006/delinks.txt does not
-# cover), 0x021226a8 (slot 16, src/func_ov006_021225ac.c) and 0x021227bc
-# (slot 17, src/func_ov006_021226b0.cpp).
+# cover), 0x021226a8 (slot 16, src/minigames/d_s_mg_trampoline2.cpp) and 0x021227bc
+# (slot 17, src/minigames/d_s_mg_trampoline2.cpp).
 #
 # ONE OF THE FOURTEEN CARRIES A MISLEADING NAME AND IT IS WORTH NAMING.
-# 0x020efbd0 sits in src/_ZN8PathLift17BaseInitResourcesEv.c, which reads like
+# 0x020efbd0 sits in src/minigames/d_s_mg_jump2.cpp, which reads like
 # a fifth claimant. It is not: hal/actor_classes_ov100pl.cpp's header already
 # ruled that 0x020efaf0 window ambiguous between ov002 and ov006 and left the
 # named TU unlinked, and lane BNT's decomposition puts that relocation in
@@ -95,7 +95,7 @@
 # All of section 11's checks were redone here, plus the fourth (relocation
 # count) and fifth (relocation stride) later lanes added.
 #
-# THE DERIVED TABLE, data_ov006_0213fc7c:
+# THE DERIVED TABLE, _ZTV18dScMgTrampoline2_c:
 #
 #   1. SPAN. The next symbol in config/arm9/overlays/ov006/symbols.txt is
 #      data_ov006_0213fd0c, exactly 0x90 = 36 words on. No over-read: this
@@ -136,7 +136,7 @@
 # AND THE HAZARD RUNS THE OTHER WAY TOO, WHICH THE SIBLING LANE NEEDS. The word
 # past 0x180's vtable (0x0213fb34 + 0x90 = 0x0213fbc4) is data_ov006_0213fbc4,
 # value 0x00000001 -- and it is NOT padding. THIS class's vtable slot 23,
-# src/func_ov006_02122f24.c, reads it and writes it on every OnAttacked2 (the
+# src/minigames/d_s_mg_trampoline2.cpp, reads it and writes it on every OnAttacked2 (the
 # literal pool at 0x021230bc carries the address, and the body's two virtual
 # probes on data_0209f5bc decide whether it becomes 0 or 1). So a 37-slot fill
 # of SCENE_MG_TRAMPOLINE would clobber a flag scene 385 owns.
@@ -168,7 +168,7 @@
 # ADDRESS ADJACENCY. This lane claims the five pairs above and nothing else in
 # the 0x0213fa9c..0x0213fd0c neighbourhood: the five pairs at
 # 0x0213faa0/faa8/fab0/fac0/fac8 are 0x180's (their loaders are
-# src/func_ov006_02121778.c, _02121848.c, _021218c4.c, _02121cf4.c and
+# src/minigames/d_s_mg_trampoline.cpp, _02121848.c, _021218c4.c, _02121cf4.c and
 # _02121f04.c, all inside 0x180's code block), and the fourteen pairs from
 # 0x0213fd0c on are dScMgBSC_c's. This lane touched none of them.
 #
@@ -179,7 +179,7 @@
 # --reconstruct reproduces all 29 rows EXACTLY on this tree.
 #
 # SEVENTEEN bodies were disassembled and ruled, not fifteen: the fifteen the
-# derived table marks, PLUS func_ov006_020e6e78 and func_ov006_020e6e54, which
+# derived table marks, PLUS _ZN14dScMgD3DBase_c8OnKickedEv and _ZN14dScMgD3DBase_c8OnPushedEv, which
 # are slots 24 and 25 of the MIDDLE table -- this seat fills that table too and
 # the derived table overrides those two slots, so vtablerows cannot see them.
 # All seventeen came out of extracted/overlays/overlay_0006.bin at base
@@ -226,7 +226,7 @@
 #   THE `::*` SWEEP over all 216 TUs of the closure -- the 204 slice lines below
 #   PLUS the 12 TUs this lane host-copies or repairs, which are not slice lines
 #   and would otherwise never be swept -- returns THREE files, and all three
-#   really do declare a `T::*`: src/func_ov006_02123340.cpp (the site above),
+#   really do declare a `T::*`: src/minigames/d_s_mg_trampoline2.cpp (the site above),
 #   src/func_ov006_020cea2c.cpp and src/func_ov006_020cf758.cpp, the last two
 #   dispatching the 3D-Mario record's member pointer at OFFSET 0.
 #   -> port/unmatched/MgTrampolineTerror_MarioDispatch.cpp
@@ -299,9 +299,9 @@
 #
 # ---- 8. THE FACTORY IS A HOST COPY BECAUSE ITS src IS WRONG ABOUT THE ROM --
 #
-# src/MgTrampolineTerror_Spawn.c passes func_020733a8's CONSTRUCTOR and
+# src/minigames/d_s_mg_trampoline2.cpp passes __cxa_vec_ctor's CONSTRUCTOR and
 # DESTRUCTOR arguments the wrong way round at ALL SIX of its call sites. The
-# helper's own hand-written asm (src/func_020733a8.c) settles which is which --
+# helper's own hand-written asm (src/__cxa_vec_ctor.cpp) settles which is which --
 # `movs r4,r3` then `blx r4` in the loop, so the FOURTH argument is the ctor --
 # and the ROM's pool at 0x02124848..0x021248a4 gives both columns. The file's
 # banner claims "Logic verified correct vs ROM", which is not true of those six
@@ -355,7 +355,7 @@
 #     that are not ModelAnims. 13 + 1 + 2 + 1 + 1 = 18, and NOT ONE of them is at
 #     index 5.
 #     THE TWO INDEX-5 HITS ARE IN HOST-COPIED FILES, NOT SLICE LINES:
-#     src/func_ov006_020c8e90.cpp and src/func_ov006_02122814.cpp left this slice
+#     src/func_ov006_020c8e90.cpp and src/minigames/d_s_mg_trampoline2.cpp left this slice
 #     the moment MgD3DBase_ModelAnimRender.cpp took them, so a sweep phrased as
 #     "every TU in slice_tte.txt" cannot see the very hits it is quoted for.
 #     18 over the slice + 2 in the two host copies = 20 over the closure, and the
@@ -388,7 +388,7 @@
 #
 # Worth recording because it is invisible for 1500 frames. This seat's vtable
 # slot 19 thunk was first written `__fastcall(void *, void *)` -- two parameters
-# -- on the correct reading that the ROM body func_ov006_02124298 never touches
+# -- on the correct reading that the ROM body _ZN18dScMgTrampoline2_c13OnTurnIntoEggEi never touches
 # r1. THE SIGNATURE IS DECIDED BY THE CALLERS, NOT THE CALLEE:
 # hal/scene_mg.cpp's mb_v19 is `(void *, void *, int)` and
 # port/unmatched/MgBase_ShadowSlot19.cpp calls slot 19 through an
@@ -399,8 +399,8 @@
 #
 #     FAULT code c0000005 at +0xffdaf3a4 accessing 001af3a4
 #       regs ... ebp=020b6c9c
-#       port_mg_try_base_state / port_mg_call0 / func_ov004_020b8778
-#       / func_ov004_020b0620 / MgBounceAndPounce::BeforeBehavior
+#       port_mg_try_base_state / port_mg_call0 / _ZN10dMgState_c8BehaviorEv
+#       / _ZN11dScMgBase_c14BeforeBehaviorEv / MgBounceAndPounce::BeforeBehavior
 #
 # 1500 frames pass and 1800 do not, deterministically, because the path is the
 # one MgBase_ShadowSlot19.cpp names: the framework state machine runs at all ->
@@ -431,24 +431,24 @@
 # ---- 12. WHAT IS OUT OF THIS SLICE, AND WHY -------------------------------
 #
 # HOST-COPIED (listing them would be an LNK2005):
-#   src/func_ov006_02123340.cpp   vtable slot 6, the field member pointer
+#   src/minigames/d_s_mg_trampoline2.cpp   vtable slot 6, the field member pointer
 #   src/func_ov006_020c8f20.cpp   the Trampoline-Mario decode, open-coded
 #   src/func_ov006_020cea2c.cpp   the 3D-Mario decode, and its nine field copies
 #   src/func_ov006_020cf758.cpp   the 3D-Mario decode, one statement
-#   src/MgTrampolineTerror_Spawn.c the factory, section 8
+#   src/minigames/d_s_mg_trampoline2.cpp the factory, section 8
 #   src/func_ov006_020c8e90.cpp   ModelAnim ROM slot 5, section 9
-#   src/func_ov006_02122814.cpp   ModelAnim ROM slot 5, section 9
+#   src/minigames/d_s_mg_trampoline2.cpp   ModelAnim ROM slot 5, section 9
 #
 # REPAIRED UNDER A port_ NAME (the flower's rule: the decomp has a real body and
 # the host copy is only the calling convention, so the src stays out rather than
 # standing beside a definition nothing dispatches):
-#   src/_ZN17MgBounceAndPounce18AfterInitResourcesEj.cpp   slot 2
-#   src/_ZN17MgBounceAndPounce12BeforeRenderEv.cpp         slot 10
-#   src/func_ov006_020e6d98.c                              slot 27
-#   src/func_ov006_020e6d8c.c                              slot 28
+#   src/actors/dScMgD3DBase_c.cpp   slot 2
+#   src/actors/dScMgD3DBase_c.cpp         slot 10
+#   src/actors/dScMgD3DBase_c.cpp                              slot 27
+#   src/actors/dScMgD3DBase_c.cpp                              slot 28
 #
 # HOST-COPIED BY THE SHARED FAMILY FILE (section 9):
-#   src/func_ov006_020e6e78.cpp   dScMgD3DBase_c slot 24. decl_common.h:1516
+#   src/actors/dScMgD3DBase_c.cpp   dScMgD3DBase_c slot 24. decl_common.h:1516
 #     declares it (void*) inside its extern "C" block while the TU defines it
 #     (char*) -- one register on the ROM, C2733 to MSVC. This lane first solved
 #     it with a port/tools/hostgen.py HEADER_SHADOW row and RETIRED that: hostgen
@@ -459,8 +459,8 @@
 #
 # COMPILED AS C++ (a //cpp marker and a top-level `extern "C" {` block, neither
 # valid C; every .c line in this slice was swept with comments stripped):
-#   src/func_ov006_020c9098.c  src/func_ov006_020c9c8c.c
-#   src/func_ov006_020cb528.c  src/func_ov006_020cc198.c
+#   src/func_ov006_020c9098.cpp  src/func_ov006_020c9c8c.cpp
+#   src/func_ov006_020cb528.cpp  src/func_ov006_020cc198.cpp
 #
 # RENAMED AT COMPILE TIME:
 #   src/func_ov006_020cd6f4.c   -D data_ov007_020cd72c=func_ov006_020cd72c. The
@@ -499,14 +499,13 @@
 # chain runs: slots 9, 10 and 11 all fire 300 times on a 300-frame rendered boot and
 # the element ModelAnims render through the repaired slot-5 dispatch.
 
-src/Sound_PlayBank1Panned.cpp
-src/_ZN17MgBounceAndPounce11AfterRenderEj.cpp
-src/_ZN17MgBounceAndPounce14BeforeBehaviorEv.cpp
-src/_ZN17MgBounceAndPounce19BeforeInitResourcesEv.cpp
-src/_ZN17MgBounceAndPounce21AfterCleanupResourcesEj.cpp
-src/_ZN17MgBounceAndPounceD0Ev.cpp
-src/_ZN17MgBounceAndPounceD1Ev.cpp
-src/_ZN6Player12St_Null_InitEv.cpp
+# QUARANTINED at the main->port sync (origin/main 9c7f38a24): main folded this
+# class into one TU, and port/ host-copies bodies inside it (the slice_bnp host copies).
+# port/CMakeLists.txt's own assertion refuses the pair, because taking both is a
+# duplicate symbol and taking the src one puts the host copy's reason back. The
+# row returns when the host copy covers the whole consolidated TU.
+#src/actors/dScMgD3DBase_c.cpp
+src/func_ov006_020cac30.cpp
 src/_ZN6Player29TryExitCharacterDoorWithIntroEv.cpp
 src/func_020169f4.c
 src/func_0203cc28.c
@@ -530,12 +529,12 @@ src/func_ov006_020c8e88.c
 src/func_ov006_020c8ecc.cpp
 src/func_ov006_020c9024.cpp
 src/func_ov006_020c905c.c
-src/func_ov006_020c9098.c
+src/func_ov006_020c9098.cpp
 src/func_ov006_020c91ac.cpp
 src/func_ov006_020c94e0.cpp
 src/func_ov006_020c97bc.cpp
 src/func_ov006_020c9aa0.cpp
-src/func_ov006_020c9c8c.c
+src/func_ov006_020c9c8c.cpp
 src/func_ov006_020c9d7c.c
 src/func_ov006_020c9e7c.c
 src/func_ov006_020c9efc.cpp
@@ -565,7 +564,7 @@ src/func_ov006_020cae9c.c
 # wins for the reason every dup-guard block in port/CMakeLists.txt gives.
 # Neither lane could see this: each checked the other's FILENAMES.
 src/func_ov006_020cb2b4.c
-src/func_ov006_020cb528.c
+src/func_ov006_020cb528.cpp
 src/func_ov006_020cb5c4.c
 src/func_ov006_020cb690.cpp
 src/func_ov006_020cb72c.c
@@ -574,7 +573,7 @@ src/func_ov006_020cb838.cpp
 src/func_ov006_020cbaec.cpp
 src/func_ov006_020cbd7c.cpp
 src/func_ov006_020cbfd8.cpp
-src/func_ov006_020cc198.c
+src/func_ov006_020cc198.cpp
 src/func_ov006_020cc2ac.c
 src/func_ov006_020cc37c.cpp
 src/func_ov006_020cc408.cpp
@@ -689,7 +688,7 @@ src/func_ov006_020cf2fc.c
 # the size, the whole literal pool and all 28 call offsets exactly the ROM's, and
 # every divergence a permutation or re-association of the same computation -- and
 # the banner in the file states each one.
-src/func_ov006_020cfc74.cpp
+src/func_ov006_020cfc74.c
 # the installer's own three callees; see the note beside them in slice_tti.txt.
 # None was in any slice before the installer was seated.
 src/func_ov006_020cf040.c
@@ -701,80 +700,35 @@ src/func_ov006_020d0b04.c
 src/func_ov006_020d0b2c.cpp
 src/func_ov006_020d0b78.c
 src/func_ov006_020d0c38.c
-src/func_ov006_020e6cac.c
-src/func_ov006_020e6d24.cpp
-src/func_ov006_020e6da4.c
-src/func_ov006_020e6e3c.c
-src/func_ov006_020e6e4c.c
-src/func_ov006_020e6e54.c
-src/func_ov006_020e7110.c
-src/func_ov006_020e7124.c
-src/func_ov006_020e72c0.c
-src/func_ov006_020e73c4.cpp
-src/func_ov006_020e740c.c
-src/func_ov006_020e7428.c
-src/func_ov006_020e7508.cpp
-src/func_ov006_020e759c.c
-src/func_ov006_020eed64.c
-src/func_ov006_020eed68.c
-src/func_ov006_020eedc8.c
-src/func_ov006_020eee3c.c
-src/func_ov006_020eeef4.c
-src/func_ov006_020eef40.c
-src/func_ov006_020eef58.c
-src/func_ov006_020eef90.c
-src/func_ov006_020eeff0.c
-src/func_ov006_020ef05c.c
-src/func_ov006_020ef0d4.c
+# QUARANTINED at the main->port sync (origin/main 9c7f38a24): this row is the raw
+# consolidated TU. slice_bnt.txt's BNT_HOSTGEN_SRCS substitutes a hostgen'd copy of
+# the WHOLE TU so its light-vector and matrix writes reach the geometry engine instead of
+# latching in the I/O window. Taking the raw copy as well would be a duplicate
+# symbol; taking it instead would put the defect back. The generated copy is in
+# this slice's target set, so the bodies still arrive.
+#src/minigames/d_s_mg_jump2.cpp
 src/func_ov006_020efc08.c
-src/func_ov006_02120938.c
-src/func_ov006_02120a64.c
-src/func_ov006_02120ab8.c
-src/func_ov006_02120b30.c
-src/func_ov006_02120b7c.c
-src/func_ov006_02120bc8.c
-src/func_ov006_02120c08.c
-src/func_ov006_02120c40.c
-src/func_ov006_02120ca0.c
-src/func_ov006_02120d0c.c
-src/func_ov006_02120d8c.c
-src/func_ov006_021225a8.c
-src/func_ov006_021225ac.c
-src/func_ov006_021226b0.cpp
-src/func_ov006_021227c8.cpp
-src/func_ov006_0212287c.c
-src/func_ov006_021228bc.cpp
-src/func_ov006_02122a1c.cpp
-src/func_ov006_02122a4c.c
-src/func_ov006_02122ab8.c
-src/func_ov006_02122b24.c
-src/func_ov006_02122b88.c
-src/func_ov006_02122c04.c
-src/func_ov006_02122c68.cpp
-src/func_ov006_02122c90.c
-src/func_ov006_02122cb0.c
-src/func_ov006_02122e20.c
-src/func_ov006_02122f24.c
-src/func_ov006_021230c4.c
-src/func_ov006_021230e8.c
-src/func_ov006_0212318c.c
-src/func_ov006_021231ac.c
-src/func_ov006_0212373c.c
-src/func_ov006_021237c8.c
-src/func_ov006_0212382c.c
-src/func_ov006_021238d0.c
-src/func_ov006_02123428.c
-src/func_ov006_02123938.c
-src/func_ov006_02123b20.c
-src/func_ov006_02123b24.c
-src/func_ov006_02123bf4.cpp
-src/func_ov006_02123c78.c
-src/func_ov006_02123cb4.c
-src/func_ov006_02124040.c
-src/func_ov006_02124088.c
-src/func_ov006_02124228.c
-src/func_ov006_02124298.c
-src/func_ov006_021242cc.cpp
-src/func_ov006_021243ec.cpp
-src/func_ov006_021245a8.c
-src/func_ov006_021248a8.cpp
+src/minigames/d_s_mg_trampoline.cpp
+# QUARANTINED at the main->port sync (origin/main 9c7f38a24): this row is the raw
+# consolidated TU. slice_tte.txt's TTE_HOSTGEN_SRCS substitutes a hostgen'd copy of
+# the WHOLE TU so its geometry register writes reach the geometry engine instead of
+# latching in the I/O window. Taking the raw copy as well would be a duplicate
+# symbol; taking it instead would put the defect back. The generated copy is in
+# this slice's target set, so the bodies still arrive.
+# The row below stays LIVE on purpose: TTE_HOSTGEN_SKIP names it, so this slice's
+# loop skips it and compiles the hostgen'd copy of the whole TU instead, and
+# CMakeLists asserts the row is still here -- a row that quietly went away would
+# take the raw TU back and its geometry register writes with it. It IS commented
+# out of slice_facef and slice_pmfb7, which have no such skip and take the
+# generated copy through TTE_HOSTGEN_GEN instead.
+src/minigames/d_s_mg_trampoline2.cpp
+# RETIRED at ALIAS2 (wave 8, the main -> port sync): main folded this body
+# into src/minigames/d_s_mg_trampoline2.cpp, which the build already compiles
+# (through hostgen), so the per-function leftover here was the second
+# definition (LNK2005).
+#src/func_ov006_02123428.c
+# RETIRED at ALIAS2 (wave 8, the main -> port sync): main folded this body
+# into src/minigames/d_s_mg_trampoline2.cpp, which the build already compiles
+# (through hostgen), so the per-function leftover here was the second
+# definition (LNK2005).
+#src/func_ov006_02123938.c

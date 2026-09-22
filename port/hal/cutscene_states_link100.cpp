@@ -98,18 +98,25 @@
  * load window -- and are not these tables.) port_ov002_patch, the generated
  * pointer rebase, writes 0 of the sixty-nine.
  *
- * ---- ONE FACE PER CELL, AND THREE OF THEM ABORT ---------------------------
+ * ---- ONE FACE PER CELL, AND ONE OF THEM ABORTS ----------------------------
  *
  * The faces are per CELL and not per body, which is lane PMFB5's rule: cells
  * 5..8 and 9..12 and 13..16 and 17..20 of data_ov002_02110f9c carry the same
  * four code words four times each and stay distinguishable that way, and the
  * census below can name the cell the game entered instead of the body.
  *
- * data_ov002_02110eec[2], [6] and [8] name func_ov002_020f5010,
- * func_ov002_020f43cc and func_ov002_020f3de4, for which there is NO src file
- * anywhere in the tree -- they are not guess-marked, they are simply not
- * decompiled. Those three cells get an ABORTING face that names itself. A cell
- * with no matched TU is never given a neighbour's body or an invented one.
+ * data_ov002_02110eec[2] and [6] named func_ov002_020f5010 and
+ * func_ov002_020f43cc, both matched TUs that link-failed on the two ov002
+ * data names their re-arm loops read (data_ov002_021000d0 and
+ * data_ov002_021000b8). Lane OV2MOUNT mounted both names in ov002_syms.txt
+ * (bare, next-symbol-delta sized -- both are 4-entry unsigned short tables,
+ * 8 bytes each) and seated the two cells as ordinary ST_FACE1 rows below.
+ *
+ * data_ov002_02110eec[8] names func_ov002_020f3de4, for which there is still
+ * NO src file anywhere in the tree -- it is not guess-marked, it is simply
+ * not decompiled. That one cell alone gets an ABORTING face that names
+ * itself. A cell with no matched TU is never given a neighbour's body or an
+ * invented one.
  *
  * PORT_HOST_ABI: the ROM's own {code, adjust} records hold DS code addresses,
  * so the port seats them with the host addresses of the faces above; the
@@ -163,9 +170,11 @@ void func_ov002_020f3ba0(void *, int);         /* src/func_ov002_020f3ba0.c */
 void func_ov002_020f3d38(void *, int);         /* src/func_ov002_020f3d38.c */
 void func_ov002_020f3d98(void *, int);         /* src/func_ov002_020f3d98.cpp */
 void func_ov002_020f40fc(void *, int);         /* src/func_ov002_020f40fc.c */
+void func_ov002_020f43cc(void *, int);         /* src/func_ov002_020f43cc.c */
 void func_ov002_020f4710(void *, int);         /* src/func_ov002_020f4710.c */
 void func_ov002_020f4a2c(void *, int);         /* src/func_ov002_020f4a2c.c */
 void func_ov002_020f4d70(void *, int);         /* src/func_ov002_020f4d70.c */
+void func_ov002_020f5010(void *, int);         /* src/func_ov002_020f5010.c */
 void func_ov002_020f5328(void *, int);         /* src/func_ov002_020f5328.c */
 void func_ov002_020f55b4(void *, int);         /* src/func_ov002_020f55b4.c */
 void func_ov002_020f562c(void *, int);         /* src/func_ov002_020f562c.cpp */
@@ -409,11 +418,11 @@ ST_FACE1 (0210b6e0, 02110ebc,  5, func_ov002_020f2a78)
 /* ---- data_ov002_02110eec: 9 cells, read by func_ov002_020f562c, arity 1 */
 ST_FACE1 (0210b758, 02110eec,  0, func_ov002_020f55b4)
 ST_FACE1 (0210b710, 02110eec,  1, func_ov002_020f5328)
-ST_FACEX (0210b748, 02110eec,  2, 020f5010)
+ST_FACE1 (0210b748, 02110eec,  2, func_ov002_020f5010)
 ST_FACE1 (0210b740, 02110eec,  3, func_ov002_020f4d70)
 ST_FACE1 (0210b738, 02110eec,  4, func_ov002_020f4a2c)
 ST_FACE1 (0210b730, 02110eec,  5, func_ov002_020f4710)
-ST_FACEX (0210b8b0, 02110eec,  6, 020f43cc)
+ST_FACE1 (0210b8b0, 02110eec,  6, func_ov002_020f43cc)
 ST_FACE1 (0210b728, 02110eec,  7, func_ov002_020f40fc)
 ST_FACEX (0210b890, 02110eec,  8, 020f3de4)
 

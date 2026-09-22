@@ -1,4 +1,6 @@
-int func_02065b94(void)
+extern unsigned char data_020a94d4[];
+
+void *func_02065b94(void)
 {
-    return 34247892;
+    return data_020a94d4;
 }

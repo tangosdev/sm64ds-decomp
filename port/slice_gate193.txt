@@ -20,14 +20,7 @@
 # gate-191 derivation) -- HOST COPY instead:
 # port/unmatched/Snowman_InitResources.cpp. Matched src stays byte-locked
 # in src/ as proof, dropped from CMakeLists' gate-193 source list.
-src/func_ov072_02120824.c
-src/func_ov072_02120874.c
-src/func_ov072_021208d8.cpp
-src/func_ov072_02120980.c
-src/func_ov072_021209bc.c
-src/func_ov072_021209c0.cpp
-src/func_ov072_02120a08.cpp
-src/func_ov072_02120c00.c
+src/game/actors/d_a_bg_snwmn.cpp
 #
 # ---- BABY_PENGUIN (daPgBby_c), a plain Actor, 31 slots (_ZTV11BabyPenguin
 # == _ZTV9daPgBby_c). D0 stays in the slice: stores its own table and
@@ -42,8 +35,9 @@ src/func_ov072_02120c00.c
 # vtable-store write -- BabyPenguin's D1/D0 never overwrite the vptr with
 # a placeholder (D0 stores _ZTV9daPgBby_c, its OWN table), so nothing to
 # redo here that D0's real body does not already do itself.
-src/_ZN11BabyPenguinD0Ev.c
-src/func_ov072_02120cfc.c
+# RETIRED at SLICE1: body now in src/_ZN11BabyPenguinD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN11BabyPenguinD0Ev.cpp
+src/_ZN11BabyPenguin13OnYoshiTryEatEv.cpp
 src/func_ov072_02120d04.cpp
 src/func_ov072_02120ddc.c
 src/func_ov072_02120e20.cpp
@@ -62,8 +56,8 @@ src/func_ov072_021218dc.cpp
 src/func_ov072_02121a28.c
 src/func_ov072_02121a84.c
 src/func_ov072_02121c94.c
-src/_ZN11BabyPenguin16CleanupResourcesEv.c
-src/_ZN11BabyPenguin16OnPendingDestroyEv.c
+src/_ZN11BabyPenguin16CleanupResourcesEv.cpp
+src/_ZN11BabyPenguin16OnPendingDestroyEv.cpp
 # _ZN11BabyPenguin6RenderEv.cpp is NOT in this list -- the ModelAnim
 # slot-5 collision (the Whomp/Butterfly/Fish case): the matched TU
 # dispatches `sub.m(&mScaleX)` through a local six-virtual ROM-order
@@ -75,11 +69,11 @@ src/_ZN11BabyPenguin16OnPendingDestroyEv.c
 # This was the whole "corrupted-IP jump in the shared actor-Process
 # pipeline" that excluded BABY_PENGUIN from this gate. HOST COPY:
 # port/unmatched/ModelAnim_Renders.cpp. The matched src stays byte-locked
-# in src/ as proof. daBgSnwmn_c's Render (func_ov072_021209c0.cpp, IN the
+# in src/ as proof. daBgSnwmn_c's Render (_ZN11daBgSnwmn_c6RenderEv.cpp, IN the
 # slice above) uses the same shadow idiom but on plain 0x50-stride Models
 # (+0xd4/+0x124), which _ZTV5Model[5]'s dual-fill serves correctly.
-src/func_ov072_02121fa0.c
-src/BabyPenguin_Spawn.c
+src/_ZN11BabyPenguin13OnTurnIntoEggER6Player.cpp
+src/d_a_pg_bby.c
 #
 # func_ov072_02121d18.cpp (the "enter" PMF dispatch, pp+0, called from
 # BabyPenguin's own state-machine transition sites) and
@@ -139,7 +133,7 @@ src/__sinit_ov072_02122350.c
 src/__sinit_ov072_02122414.c
 #
 # NOT in this slice (host copies cover them instead):
-# src/func_ov072_02120a44.c (daBgSnwmn_c InitResources, Prepare SHORT-1),
+# src/game/actors/d_a_bg_snwmn.cpp (daBgSnwmn_c InitResources, Prepare SHORT-1),
 # src/func_ov072_02121d18.cpp (PMF "enter" dispatch),
 # src/func_ov072_02121cdc.cpp (PMF "tick" dispatch),
 # src/_ZN11BabyPenguin13InitResourcesEv.cpp (BabyPenguin InitResources,
@@ -204,10 +198,10 @@ src/__sinit_ov072_02122414.c
 #
 # ALL FOUR PMF DISPATCHERS ARE HOST COPIES, the BabyPenguin_StateEnter
 # treatment, in port/unmatched/Snowman_StateDispatch.cpp:
-#   func_ov072_0211fc78  SnowmanBody enter (pp+0)   pad 0x38c
-#   func_ov072_0211fc3c  SnowmanBody tick  (pp+1)   pad 0x38c
-#   func_ov072_0212059c  SnowmanHead enter (pp+0)   pad 0x328
-#   func_ov072_02120560  SnowmanHead tick  (pp+1)   pad 0x328
+#   _ZN12daBgSnmBdy_c13CallStateInitEv  SnowmanBody enter (pp+0)   pad 0x38c
+#   _ZN12daBgSnmBdy_c17CallStateBehaviorEv  SnowmanBody tick  (pp+1)   pad 0x38c
+#   _ZN11SnowmanHead13CallStateInitEv  SnowmanHead enter (pp+0)   pad 0x328
+#   _ZN11SnowmanHead17CallStateBehaviorEv  SnowmanHead tick  (pp+1)   pad 0x328
 # Each matched src declares `struct C; typedef void (C::*PMF)(); struct C {
 # char pad[N]; PMF *pp; };` -- a REAL C++ pointer-to-member on a deliberately
 # INCOMPLETE class. mwcc's PMF there is the ROM's own 8-byte {function,delta}
@@ -218,10 +212,10 @@ src/__sinit_ov072_02122414.c
 # six-cell shape and its header says exactly this.
 #
 # NOTE the /vmg;/vmm entries port/CMakeLists.txt already carries for
-# func_ov072_0211fc3c.cpp and func_ov072_02120560.cpp. That block's own
+# _ZN12daBgSnmBdy_c17CallStateBehaviorEv.cpp and _ZN11SnowmanHead17CallStateBehaviorEv.cpp. That block's own
 # comment calls them "inert today ... not a fix that has been measured", and
 # they cover only the two TICK dispatchers -- the two ENTER ones
-# (func_ov072_0211fc78, func_ov072_0212059c) are not in the list at all. So
+# (_ZN12daBgSnmBdy_c13CallStateInitEv, _ZN11SnowmanHead13CallStateInitEv) are not in the list at all. So
 # the compile option could not have carried this seat even if the
 # representation question went the other way, and this lane did not test it.
 # All four matched TUs stay byte-locked in src/ as proof, out of the list
@@ -229,63 +223,39 @@ src/__sinit_ov072_02122414.c
 #
 # ---- SNOWMAN_BODY (daBgSnmBdy_c, 274). Six PMF state cells at
 # data_ov072_02122b64, seated with host addresses by
-# port_snowman_body_states_seat(); func_ov072_0211fcb0 is its ChangeState
+# port_snowman_body_states_seat(); _ZN12daBgSnmBdy_c8SetStateEi is its ChangeState
 # (pp = &table + state*0x10). D1 and both dispatchers excluded (above).
-src/_ZN11SnowmanBodyD0Ev.c
-src/func_ov072_0211f0a4.c
-src/func_ov072_0211f158.cpp
-src/func_ov072_0211f1dc.cpp
-src/func_ov072_0211f280.c
-src/func_ov072_0211f330.c
-src/func_ov072_0211f3e4.c
-src/func_ov072_0211f48c.cpp
-src/func_ov072_0211f578.c
-src/func_ov072_0211f598.c
-src/func_ov072_0211f63c.c
-src/func_ov072_0211f65c.cpp
-src/func_ov072_0211f804.c
-src/func_ov072_0211f81c.cpp
-src/func_ov072_0211f9c4.c
-src/func_ov072_0211fa08.cpp
-src/func_ov072_0211faf0.c
-src/func_ov072_0211fb14.cpp
-src/func_ov072_0211fb7c.c
-src/func_ov072_0211fcb0.c
-src/_ZN11SnowmanBody16CleanupResourcesEv.c
-src/_ZN11SnowmanBody16OnPendingDestroyEv.c
-src/_ZN11SnowmanBody6RenderEv.cpp
-src/_ZN11SnowmanBody8BehaviorEv.cpp
-src/_ZN11SnowmanBody13InitResourcesEv.cpp
-src/SnowmanBody_Spawn.c
+src/actors/daBgSnmBdy_c.cpp
 src/__sinit_ov072_02122018.c
 #
 # ---- SNOWMAN_HEAD (daBgSnmHed_c, 273). Four PMF state cells at
 # data_ov072_02122c00, seated by port_snowman_head_states_seat();
-# func_ov072_021205d4 is its ChangeState. D1 and both dispatchers excluded
+# _ZN11SnowmanHead8SetStateEi is its ChangeState. D1 and both dispatchers excluded
 # (above).
 #
-# T5: src/func_ov072_0212001c.c carries "recovered from vtable slot identity"
+# T5: src/_ZN11SnowmanHead6State3Ev.cpp carries "recovered from vtable slot identity"
 # and the recovered name "SnowmanBody_Kill". BOTH are wrong and the body is
 # real decomp -- it is cell 3's ENTER half of SnowmanHead's state table (the
-# source pair at 0x0212283c), reached through func_ov072_0212059c and named
+# source pair at 0x0212283c), reached through _ZN11SnowmanHead13CallStateInitEv and named
 # by NO vtable slot in either ov072 table; and match.py reproduces all 0x164
 # bytes at 2004/b56 with --strict-relocs. Ruled REAL_DECOMP before seating,
 # row appended to port/tools/inferred_stub_adjudicated.txt with the evidence.
-src/_ZN11SnowmanHeadD0Ev.c
-src/func_ov072_0211ffd8.c
-src/func_ov072_0212001c.c
-src/func_ov072_02120180.c
-src/func_ov072_021201d4.c
-src/func_ov072_02120308.c
-src/func_ov072_02120358.c
-src/func_ov072_02120430.c
-src/func_ov072_02120450.cpp
-src/func_ov072_02120514.c
-src/func_ov072_021205d4.c
-src/_ZN11SnowmanHead16CleanupResourcesEv.c
-src/_ZN11SnowmanHead16OnPendingDestroyEv.c
+# RETIRED at SLICE1: body now in src/_ZN11SnowmanHeadD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN11SnowmanHeadD0Ev.cpp
+src/_ZN11SnowmanHead11UpdateModelEv.cpp
+src/_ZN11SnowmanHead6State3Ev.cpp
+src/_ZN11SnowmanHead10InitState3Ev.cpp
+src/_ZN11SnowmanHead6State2Ev.cpp
+src/_ZN11SnowmanHead10InitState2Ev.cpp
+src/_ZN11SnowmanHead6State1Ev.cpp
+src/_ZN11SnowmanHead10InitState1Ev.cpp
+src/_ZN11SnowmanHead6State0Ev.cpp
+src/_ZN11SnowmanHead10InitState0Ev.cpp
+src/_ZN11SnowmanHead8SetStateEi.cpp
+src/_ZN11SnowmanHead16CleanupResourcesEv.cpp
+src/_ZN11SnowmanHead16OnPendingDestroyEv.cpp
 src/_ZN11SnowmanHead6RenderEv.cpp
 src/_ZN11SnowmanHead8BehaviorEv.cpp
 src/_ZN11SnowmanHead13InitResourcesEv.cpp
-src/SnowmanHead_Spawn.c
+src/d_a_bg_snm_hed.c
 src/__sinit_ov072_021221f8.c

@@ -1,7 +1,7 @@
 # Gate 89: POWER_STAR (178, ov002).
 #
 # PowerStar is an Enemy subclass whose vtable _ZTV9PowerStar (ov002 0x0210ab3c,
-# 31 slots) PowerStar_Spawn installs directly. The vtable is a host array
+# 31 slots) daStar_c_classInit_STAR installs directly. The vtable is a host array
 # hal/actor_classes_star.cpp fills; this slice is the matched lifecycle closure.
 #
 # Behavior is NOT here: it dispatches a pointer-to-member state table
@@ -19,14 +19,15 @@
 # (InitResources/Behavior/Render/Cleanup default to ActorBase; the two Virtual
 # hooks; Actor's own D1/D0). All matched src, pulled in for the base vtable fill.
 src/StarCamera_Spawn.cpp
-src/_ZN5ActorC1Ev.cpp
-src/_ZN9ActorBase13InitResourcesEv.cpp
-src/_ZN9ActorBase16CleanupResourcesEv.cpp
-src/_ZN9ActorBase8BehaviorEv.cpp
-src/_ZN9ActorBase6RenderEv.cpp
-src/_ZN5ActorD1Ev.cpp
-src/_ZN5ActorD0Ev.c
-src/PowerStar_Spawn.c
+src/_ZN8dActor_cC1Ev.cpp
+src/_ZN7fBase_c13InitResourcesEv.cpp
+src/_ZN7fBase_c16CleanupResourcesEv.cpp
+src/_ZN7fBase_c8BehaviorEv.cpp
+src/_ZN7fBase_c6RenderEv.cpp
+src/_ZN8dActor_cD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN8dActor_cD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN8dActor_cD0Ev.cpp
+src/d_a_star_star.c
 src/_ZN9PowerStar13InitResourcesEv.cpp
 src/_ZN9PowerStar16CleanupResourcesEv.cpp
 # _ZN9PowerStar6RenderEv IS NOT HERE: it dispatches ModelAnim slot 5 through a
@@ -35,8 +36,9 @@ src/_ZN9PowerStar16CleanupResourcesEv.cpp
 # of Render -- a two-arg method called with one arg, measured as a c0000005 at
 # actor+0x38 on the first drawn frame. Host copy in
 # port/unmatched/ModelAnim_Renders.cpp, the Whomp/Fish/QuestionBlock case.
-src/_ZN9PowerStarD0Ev.c
-src/_ZN9PowerStarD1Ev.c
+# RETIRED at SLICE1: body now in src/_ZN9PowerStarD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN9PowerStarD0Ev.cpp
+src/_ZN9PowerStarD1Ev.cpp
 # the fourteen state bodies the host-copy Behavior dispatches
 src/func_ov002_020e96a0.c
 src/func_ov002_020e9804.cpp
@@ -53,8 +55,8 @@ src/func_ov002_020ea824.c
 src/func_ov002_020ea90c.cpp
 src/func_ov002_020ea9d0.c
 # the two class-override tail slots (OnYoshiTryEat / egg)
-src/func_ov002_020e8ee8.c
-src/func_ov002_020e8edc.c
+src/_ZN9PowerStar13OnYoshiTryEatEv.cpp
+src/_ZN9PowerStar13OnTurnIntoEggER6Player.cpp
 # the PowerStar per-frame helpers the host-copy Behavior calls
 src/func_ov002_020e700c.c
 src/func_ov002_020e763c.c
@@ -76,7 +78,7 @@ src/func_ov002_020e8618.c
 src/func_ov002_020e7eb4.c
 src/func_ov002_020e9630.c
 src/func_ov002_020e73ac.cpp
-src/func_ov002_020ca0f4.c
+src/actors/Player.cpp
 src/func_ov002_020e8ef0.cpp
 src/func_ov002_020e7e14.c
 src/func_ov002_020e7e24.c
@@ -97,12 +99,12 @@ src/func_ov002_020e7454.c
 src/func_0203d024.c
 # named matched funcs the closure reaches
 src/NumVsStarsObtained.c
-# _ZN5Actor14FarthestPlayerEv: HOST COPY at unmatched/Actor_ClosestPlayerWrappers.cpp
+# _ZN8dActor_c14FarthestPlayerEv: HOST COPY at unmatched/Actor_ClosestPlayerWrappers.cpp
 # (wired in CMakeLists, added there alongside DistToCPlayer). The matched C calls
 # Actor::ClosestPlayer() with no argument and relies on `this` being live in ARM r0;
 # cdecl drops it, so the host copy passes `this` explicitly. See that file's header.
-src/_ZN8SaveData13GetCoinRecordEj.c
-src/_ZN8SaveData21SetCoinRecordIfHigherEah.c
+src/_ZN8SaveData13GetCoinRecordEj.cpp
+src/_ZN8SaveData21SetCoinRecordIfHigherEah.cpp
 # Particle::System::New (the star-collect effect func_ov002_020e81e0 spawns)
 # is already linked elsewhere; only the third MSVC mangling of its name needed
 # an /alternatename (in hal/actor_classes_star.cpp), not a second copy here.

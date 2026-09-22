@@ -10,8 +10,8 @@
 #
 #   1. THE SPAWN TABLE. arm9's ACTOR_SPAWN_TABLE is 0x02090864, so entry 382 is
 #      at 0x02090864 + 382*4 = 0x02090e5c. config/arm9/overlays/ov006/
-#      symbols.txt names the record MgPairAGoneAndOn_SpawnInfo at 0x0213d70c
-#      and the factory MgPairAGoneAndOn_Spawn at 0x020fa6ac, size 0x94.
+#      symbols.txt names the record g_profile_MG_MCARLO2 at 0x0213d70c
+#      and the factory dScMgMCarlo2_c_classInit at 0x020fa6ac, size 0x94.
 #   2. THE DOUBLED ID. data at 0x0213d70c reads {0x020fa6ac, 0x017e017e}, which
 #      is the mechanical SpawnInfo shape port/mg_fanout_costs.txt section 3
 #      prescribes, and 0x017e = 382 decimal.
@@ -63,12 +63,12 @@
 #           -> dScMgMCarlo2_c      0x0213d7e8  36  ovr 14, mark 11, nosrc 1
 #
 #   - the TYPEINFO's base word is 0x0213bc64, dScMgSingle3DBase_c's own record.
-#   - the FACTORY MgPairAGoneAndOn_Spawn writes 0x0213e448 into the object's
+#   - the FACTORY dScMgMCarlo2_c_classInit writes 0x0213e448 into the object's
 #     first word and then 0x0213d7e8 over it (str r1,[r4] at 0x020fa6d4 and
 #     again at 0x020fa6e8, the two pool words at 0x020fa728 and 0x020fa730).
 #   - the DESTRUCTORS unwind them in the opposite order: slot 17
-#     (func_ov006_020f8f68) and its unmarked D2 sibling slot 16
-#     (func_ov006_020f8ef4) both store 0x0213d7e8 first and 0x0213e448 last.
+#     (_ZN14dScMgMCarlo2_cD0Ev) and its unmarked D2 sibling slot 16
+#     (_ZN14dScMgMCarlo2_cD1Ev) both store 0x0213d7e8 first and 0x0213e448 last.
 #
 # The middle table is the SAME OBJECT dScMgFlower_c (0x186), dScMgMemory2_c
 # (0x16b), dScMgCup_c (0x169), dScMgBSC_c (0x184) and dScMgMCarlo_c (0x17d) sit
@@ -85,12 +85,12 @@
 #
 # SLOT 3 IS NEW TO THIS BRANCH OF THE FAMILY. The sibling overrides seven slots;
 # this class overrides eight, the extra being CleanupResources
-# (func_ov006_020f9fe0, base word arm9 0x02043bf0). Run mg9 lane WIG was the
+# (_ZN14dScMgMCarlo2_c16CleanupResourcesEv, base word arm9 0x02043bf0). Run mg9 lane WIG was the
 # first minigame to override it and its face shape is the one reused here.
 #
 # ---- THE WIDTH IS 36, CHECKED FIVE WAYS, AND THE THIRD CHECK IS FOOLED ----
 #
-#   1. SPAN. data_ov006_0213d7e8 -> next config symbol data_ov006_0213d878.
+#   1. SPAN. _ZTV14dScMgMCarlo2_c -> next config symbol data_ov006_0213d878.
 #      0x90 bytes = 36 words. (An UPPER bound only, so it refuses a width and
 #      never grants one.)
 #   2. TERMINAL SLOT. Slot 35 holds 0x020ad660, which every dScMgBase_c-derived
@@ -142,9 +142,9 @@
 # the word rather than any one of them:
 #
 #   - THE SOURCE, READ BEFORE THE FACE ARRAY WAS WIRED (section 14's rule).
-#     src/func_ov006_020fa13c.c, vtable slot 6, the Behavior, is a plain
+#     src/minigames/d_s_mg_m_carlo2.cpp, vtable slot 6, the Behavior, is a plain
 #     `switch (*(s16*)(c + 0x5928))` with cases 1, 2 and 3. Slot 19
-#     (src/func_ov006_020fa3d0.c) continues the same index with 4, 5 and 6.
+#     (src/minigames/d_s_mg_m_carlo2.cpp) continues the same index with 4, 5 and 6.
 #   - THE ROM. 0x020fa148 is add r0,r4,#0x5900 / ldrsh r0,[r0,#0x28] / cmp #1
 #     beq / cmp #2 beq / cmp #3 beq / b default, and 0x020fa3d8 is the same
 #     shape for 4 and 5 plus a dead `cmp r0,#6` (0xe3500006) whose following
@@ -162,16 +162,16 @@
 #   - AND THE RUN CONVICTS NOTHING (see the measurements below).
 #
 # THE FRAMEWORK's WALL IS STILL THE FRAMEWORK's AND IS STILL PAID. This class
-# reaches func_ov004_020b87e0 through dScMgBase_c exactly as curling does, and
+# reaches _ZN10dMgState_c8SetStateEi through dScMgBase_c exactly as curling does, and
 # unmatched/MgBase_StateSetter.cpp's eighty routed addresses are inherited
 # unchanged.
 #
 # ---- THE THIRD TABLE, AND BOTH OF ITS SLOTS ARE LIVE ----------------------
 #
 # The factory builds 0x28 records of 0x30 bytes at this+0x51a8 through
-# func_020733a8, element constructor func_ov006_020fa740 and element reset
-# func_ov006_020f8ff0. The constructor's whole body is
-# `p[0] = &data_ov006_0213d728; p[1] = 0; p[2] = 0;`, so every one of the forty
+# __cxa_vec_ctor, element constructor _ZN19dMgMCarlo2CardObj_cC1Ev and element reset
+# _ZN19dMgMCarlo2CardObj_cD1Ev. The constructor's whole body is
+# `p[0] = &_ZTV19dMgMCarlo2CardObj_c; p[1] = 0; p[2] = 0;`, so every one of the forty
 # records carries a mounted ROM table as its vptr. That table is
 # dMgMCarlo2CardObj_c's, TWO slots wide ({0x020f98dc, 0x020f9994}; span to the
 # next config symbol 8 bytes, exactly 2 load relocations inside it, and the word
@@ -179,18 +179,18 @@
 # "14dScMgMCarlo2_c", not a code address).
 #
 # BOTH SLOTS ARE DISPATCHED, which is one more than the sibling could show:
-#   - slot 0, the DRAW. src/func_ov006_020f9ffc.cpp (Render) walks the list at
+#   - slot 0, the DRAW. src/minigames/d_s_mg_m_carlo2.cpp (Render) walks the list at
 #     data_ov006_02142578 twice, 0x14 nodes each, and calls `n->m0()` --
 #     `ldr r1,[r0] / ldr r1,[r1] / blx r1` at 0x020fa0b4 and 0x020fa0f4.
-#     func_ov006_020f98dc gates on the record's +0x2e, indexes
+#     _ZN19dMgMCarlo2CardObj_c6RenderEv gates on the record's +0x2e, indexes
 #     data_ov006_0213d770 by (identity + 1) * 5 + flip-frame and hands the
 #     sprite from data_ov006_021425a8 to Hud_RenderSprite at 0x020af68c.
-#   - slot 1, the UPDATE. src/func_ov006_020f9000.cpp -- the pair matcher slot 6
+#   - slot 1, the UPDATE. src/minigames/d_s_mg_m_carlo2.cpp -- the pair matcher slot 6
 #     calls every frame -- calls `head->m1(i)` twice, `ldr r2,[r0] /
 #     ldr r2,[r2,#4] / blx r2` at 0x020f9400 and 0x020f948c.
 #
 # Nothing else in ov006 constructs an object with this vptr: the only two
-# relocations naming data_ov006_0213d728 in the whole overlay are 0x020fa758
+# relocations naming _ZTV19dMgMCarlo2CardObj_c in the whole overlay are 0x020fa758
 # (the element constructor's pool) and 0x020f8ffc (the element reset's).
 #
 # ---- ZERO FLOORS, AND WHY THE nosrc COLUMN READS 1 ------------------------
@@ -200,8 +200,8 @@
 # this address)". BOTH ARE ACCURATE AND NEITHER MEANS THE BODY IS MISSING.
 #
 # config/arm9/overlays/ov006/delinks.txt has a GAP at 0x020fa3d0..0x020fa4d4:
-# src/func_ov006_020fa13c.c ends at 0x020fa3d0 and the next block
-# (src/func_ov006_020fa4d4.cpp) starts 0x104 bytes later. src/func_ov006_
+# src/minigames/d_s_mg_m_carlo2.cpp ends at 0x020fa3d0 and the next block
+# (src/minigames/d_s_mg_m_carlo2.cpp) starts 0x104 bytes later. src/func_ov006_
 # 020fa3d0.c EXISTS and is a NONMATCHING TU, which is what a delinks gap in this
 # tree means -- 45 such gaps exist in ov006 and slice_boo.txt, slice_flw.txt and
 # slice_ccn.txt each already carry a body out of one.
@@ -212,7 +212,7 @@
 #   0x020a0e40, 0x020a0de8, 0x020a0de9, 0x592a); case 4 calls
 #   func_ov006_020c1718(self+0x4f38) and bumps +0x5928; case 5 tests
 #   data_020a0de8[idx*4] and data_020a0de9[idx*4] with idx = data_020a0e40[0],
-#   then plays 0x62, sets +0x592a = 0x1e, calls func_ov006_020f94f4 and bumps
+#   then plays 0x62, sets +0x592a = 0x1e, calls _ZN14dScMgMCarlo2_c14FlipDealtCardsEv and bumps
 #   +0x5928; the default arm calls ApproachLinear2(+0x592a, 0, 1) and returns 1
 #   if it is done. EVERY instruction, constant, offset and branch target in the
 #   ROM appears in the src, and the src has nothing the ROM does not.
@@ -233,11 +233,11 @@
 # ---- RUN mg12 LANE CRD: THE "STATE 3 DEADLOCK" DOES NOT EXIST -------------
 #
 # Run mg11's triage recorded scene 382 as a NEW BUG, "deadlock at state 3", and
-# derived a closed loop for it: the state-3 exit needs func_ov006_020f95f0 true,
+# derived a closed loop for it: the state-3 exit needs _ZN14dScMgMCarlo2_c10BoardReadyEv true,
 # which needs the sweep data_ov006_0213d700 to reach the board height
 # data_ov006_0213d6f8; the sweep is board_step * 5 << 12 with the step at
 # +0x592e pinned at 0; and the play arm forces data_ov006_0213d6fc to 0, which
-# is the first-line early-out of the selection test func_ov006_020f9bec. Every
+# is the first-line early-out of the selection test _ZN19dMgMCarlo2CardObj_c7HitTestEv. Every
 # figure in that derivation is real. THE LOOP IS NOT.
 #
 # TWO MEASUREMENTS RETIRE IT, and the second is the one that matters.
@@ -250,7 +250,7 @@
 #
 #      over EVERY body in this class's code block 0x020f8ef4..0x020fa75c:
 #      TWENTY-FOUR OF TWENTY-FIVE MATCH. The one that does not is slot 19
-#      (func_ov006_020fa3d0), the NONMATCHING TU this file already accounts
+#      (_ZN14dScMgMCarlo2_c13OnTurnIntoEggEi), the NONMATCHING TU this file already accounts
 #      for, and it is not in the tap loop. A matching body cannot be wrong
 #      about the ROM: the compiled bytes ARE the ROM's bytes, and strict-reloc
 #      mode proves every call and global DESTINATION on top of that. The same
@@ -267,7 +267,7 @@
 #
 #      The board IS settled and input IS armed. The triage's arithmetic came
 #      from case 2's `sweep = step * 5 << 12`, which does not run in state 3 at
-#      all: in state 3 the sweep is driven by func_ov006_020f9000's else arm,
+#      all: in state 3 the sweep is driven by _ZN14dScMgMCarlo2_c11UpdateBoardEv's else arm,
 #      ApproachLinear on the sweep toward min(height, 0x14) << 12 by 0x800 a
 #      frame, and it converges on 20 within forty frames of the deal. And the
 #      step reading 0 at exit is the step AFTER case 2 reset it on the frame it
@@ -311,15 +311,15 @@
 # SLOT 19 IS STILL UNENTERED HERE AND THAT IS THE HONEST KIND OF ZERO, for a
 # reason this class's own message text states: "This game of Pair-a-Gone goes on
 # forever". State 3 advances to 4 in exactly one place -- the else arm, when
-# func_ov006_020f96e0 finds NO adjacent same-face pair left -- and the board is
+# _ZN14dScMgMCarlo2_c16HasRemovablePairEv finds NO adjacent same-face pair left -- and the board is
 # always twenty cards on a five-by-four grid. That grid holds FIFTY-FIVE
-# adjacent position pairs under func_ov006_020f9cbc's own predicate, which is
+# adjacent position pairs under _ZN19dMgMCarlo2CardObj_c10IsPairWithEPS_'s own predicate, which is
 # `cmp r2,#2 / bge` at 0x020f9d34 for the column difference and `cmp r0,#2 /
 # movlt` at 0x020f9d44 for the row difference, both required under 2. The faces
 # filling them were COUNTED rather than guessed, off the trace dumps: FIVE
 # distinct faces on the opening deal, holding at five for the whole opening
 # stretch, and four to seven across the forty-clear run, out of
-# func_ov006_020f9560's TEN-entry weight table at data_ov006_0212e954 (0x28
+# _ZN14dScMgMCarlo2_c13DrawCardValueEv's TEN-entry weight table at data_ov006_0212e954 (0x28
 # bytes to the next config symbol, so ten ints). So a stuck board is a rare tail
 # event by construction rather than a state the game walks into, and the mode's
 # end for a player is leaving the minigame rather than finishing it. The
@@ -338,10 +338,10 @@
 #
 # HOST-COPIED ELSEWHERE, and listing any of them here would be an LNK2005
 # against a file already on every target:
-#   src/func_ov006_0210a6e4.cpp  slot 2 of the middle base. Drops the
+#   src/minigames/d_s_mg_single3_d_base.cpp  slot 2 of the middle base. Drops the
 #     framework's second argument; the repair is port_mg_flower_after_init in
 #     port/unmatched/MgFlower_Slot2.cpp. This is the fifth lane to call it.
-#   src/func_ov006_0210a708.c    slot 33 of the middle base. Its last two stores
+#   src/minigames/d_s_mg_single3_d_base.cpp    slot 33 of the middle base. Its last two stores
 #     reach LIGHT_COLOR at 0x040004cc, so it builds from the FLW hostgen'd copy.
 #   src/func_ov006_020c1804.cpp  the local-shadow-class model draw this class's
 #     Render reaches at this+0x4f38. Host-copied by run mg6 lane MEM as
@@ -363,7 +363,7 @@
 # WAVE the mg6 lane PPP precedent says a late minigame lane should budget rather
 # than section 10's eight. The lane's own call-target audit predicted it: of the
 # 43 external call targets leaving this code block, 38 already have a src TU in
-# a seated slice, two (__destroy_arr 0x0207328c and func_020733a8 0x020733a8)
+# a seated slice, two (__cxa_vec_cleanup 0x0207328c and __cxa_vec_ctor 0x020733a8)
 # are compiler-runtime helpers with a config symbol and no src TU in any module
 # that the host already defines, one (src/func_ov006_020c1804.cpp) is the host
 # copy named above, and two (src/LoadFile.c at 0x0201816c and
@@ -374,28 +374,4 @@
 # and closes on its own line, for the reason port/slice_s381.txt records: CMake's
 # file(STRINGS) swallows every following line into an unmatched open bracket and
 # the symptom is a link error that names the SEAT.
-src/func_ov006_020f8ef4.cpp
-src/func_ov006_020f8f68.cpp
-src/func_ov006_020f8ff0.c
-src/func_ov006_020f9000.cpp
-src/func_ov006_020f94f4.c
-src/func_ov006_020f9560.c
-src/func_ov006_020f95f0.c
-src/func_ov006_020f9668.c
-src/func_ov006_020f96e0.c
-src/func_ov006_020f9760.c
-src/func_ov006_020f98dc.c
-src/func_ov006_020f9994.c
-src/func_ov006_020f9bec.c
-src/func_ov006_020f9cbc.c
-src/func_ov006_020f9d68.c
-src/func_ov006_020f9db8.c
-src/func_ov006_020f9f40.c
-src/func_ov006_020f9fe0.c
-src/func_ov006_020f9ffc.cpp
-src/func_ov006_020fa13c.c
-src/func_ov006_020fa3d0.c
-src/func_ov006_020fa4d4.cpp
-src/func_ov006_020fa56c.cpp
-src/MgPairAGoneAndOn_Spawn.cpp
-src/func_ov006_020fa740.c
+src/minigames/d_s_mg_m_carlo2.cpp

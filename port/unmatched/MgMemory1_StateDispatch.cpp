@@ -41,7 +41,7 @@
 // lies inside 0x0213cfc0..0x0213d088, and it is 0x016a016a at 0x0213cfdc.
 //
 // A SWEEP OF THE PAIR RANGE WOULD ALSO BE WRONG, for section 4's reason and on
-// this class as visibly as on curling: MgMemoryMatch_SpawnInfo sits at
+// this class as visibly as on curling: g_profile_MG_MEMORY sits at
 // 0x0213cfd8, INSIDE the run of pair symbols (0x0213cfd0 is a pair, 0x0213cfe0
 // is the next one), so a sweep would find the factory word 0x020f5504 and the
 // doubled id as a "pair".  The constructor's own list skips it.
@@ -53,14 +53,14 @@
 //
 //   table                n  arity  dispatched by
 //   -------------------  -  -----  -------------------------------------------
-//   data_ov006_021422dc  5    0    func_ov006_020f5388  (vtable slot 6)
-//   data_ov006_02142304  6    0    func_ov006_020f5164
-//   data_ov006_021422bc  4    0    func_ov006_020f50f8
-//   data_ov006_02142334  7    1    func_ov006_020f3f10
+//   data_ov006_021422dc  5    0    _ZN13dScMgMemory_c8BehaviorEv  (vtable slot 6)
+//   data_ov006_02142304  6    0    _ZN13dScMgMemory_c9StatePlayEv
+//   data_ov006_021422bc  4    0    _ZN13dScMgMemory_c11StateResultEv
+//   data_ov006_02142334  7    1    _ZN13dScMgMemory_c11UpdateCardsEv
 //   data_ov006_021422a4  3    ?    NOTHING -- see section 3
 //
 // TWO OF THE FIVE TABLES ARE DISPATCHED BY A STATE OF ANOTHER TABLE.
-// func_ov006_020f5164 is slot 1 of data_ov006_021422dc and func_ov006_020f50f8
+// _ZN13dScMgMemory_c9StatePlayEv is slot 1 of data_ov006_021422dc and _ZN13dScMgMemory_c11StateResultEv
 // is slot 3 of it, so both appear in the arity-0 switch below AND are host
 // copies further down this file.  That is the sibling's shape (0x020f7234 and
 // 0x020f71c8) and not a new one.
@@ -71,7 +71,7 @@
 // index offset and the `this` a callee is handed are the two things a wrong
 // host copy gets silently wrong.
 //
-//   func_ov006_020f5388  vtable slot 6, Behavior, 0x5c = 23 words
+//   _ZN13dScMgMemory_c8BehaviorEv  vtable slot 6, Behavior, 0x5c = 23 words
 //                        (21 instructions + 2 pool)
 //     add r0,r4,#0x5000 / ldr r0,[r0,#0x314]      the index at +0x5314
 //     ldr r1,[pc,#0x3c]                           = 0x021422dc
@@ -82,11 +82,11 @@
 //     ldr r0,[pc,#0x14] (= 0x00004f38) / add r0,r4,r0 / bl func_ov006_020c19d0
 //     mov r0,#1
 //
-//   func_ov006_020f5164  0x4c = 19 words (18 + 1 pool).  Index at +0x5318,
+//   _ZN13dScMgMemory_c9StatePlayEv  0x4c = 19 words (18 + 1 pool).  Index at +0x5318,
 //     table 0x02142304, then a `mov r0,r4 / bl 0x020f3f10` tail.
-//   func_ov006_020f50f8  0x48 = 18 words (17 + 1 pool).  Index at +0x5318,
+//   _ZN13dScMgMemory_c11StateResultEv  0x48 = 18 words (17 + 1 pool).  Index at +0x5318,
 //     table 0x021422bc, returns nothing.
-//   func_ov006_020f3f10  0x74 = 29 words (28 + 1 pool).  The one-argument
+//   _ZN13dScMgMemory_c11UpdateCardsEv  0x74 = 29 words (28 + 1 pool).  The one-argument
 //     loop, and it is TWELVE records, not twenty:
 //       mov r7,r0          r7 = the CLASS BASE, and it never changes
 //       mov r5,r7          r5 = the per-record cursor
@@ -105,7 +105,7 @@
 //
 // So the arity-1 callee is passed (class base, i) and NOT (record base, i);
 // r5 is only ever used to fetch the two bytes.  The records are the twenty
-// halfword/byte structs at +0x51a8 with stride 0x18 -- src/func_ov006_020f4f94.c
+// halfword/byte structs at +0x51a8 with stride 0x18 -- src/minigames/d_s_mg_memory.cpp
 // clears exactly TWELVE of them -- so the two bytes the loop reads are record
 // field +0x13 (the in-play gate) and +0x14 (the per-card state).
 //
@@ -133,9 +133,9 @@
 // through a computed address ever reaches one of them, the framework's own
 // UNHANDLED line names the address and the run is the evidence.
 //
-//     0x020f3ba0   src/func_ov006_020f3ba0.c   void (char *c, int i)
-//     0x020f3a14   src/func_ov006_020f3a14.c   void (char *c, int i)
-//     0x020f3a10   src/func_ov006_020f3a10.c   void (void), 4 bytes, bx lr
+//     0x020f3ba0   src/minigames/d_s_mg_memory.cpp   void (char *c, int i)
+//     0x020f3a14   src/minigames/d_s_mg_memory.cpp   void (char *c, int i)
+//     0x020f3a10   src/minigames/d_s_mg_memory.cpp   void (void), 4 bytes, bx lr
 //
 // All three ARE in port/slice_mmt.txt, so the bodies are in the build and a
 // later lane that finds the dispatcher has only a switch arm to write.
@@ -151,12 +151,12 @@
 // state this class cannot reach, this is where it is counted.
 //
 // THE CLASS'S ONE FLOOR WAS NOT A STATE, AND IT IS CLOSED.
-// func_ov006_020f3e68, the card draw, the sixth call vtable slot 9 makes, was
+// _ZN13dScMgMemory_c9DrawCardsEv, the card draw, the sixth call vtable slot 9 makes, was
 // a named trap in unmatched/MgMemory1_Faces.cpp when this file was written.
 // Section 13's method in port/mg_fanout_costs.txt is what found it -- a
 // delinks join over every callee of every override, not over the state
 // addresses -- and it found it in exactly the place that section says to look.
-// Run mg10 lane F362 decompiled it: src/func_ov006_020f3e68.c, carried by
+// Run mg10 lane F362 decompiled it: src/minigames/d_s_mg_memory.cpp, carried by
 // port/slice_mmt.txt, NONMATCHING at 24 of 42 words on colouring and schedule.
 // The trap is deleted, so dScMgMemory_c now has NO floor of either kind.
 //
@@ -197,26 +197,26 @@ void port_mg_call1(void *self, unsigned code, int adj, int a);
    declaration has to agree with the ROM's register use, not with a type name
    that exists in one TU.
    0x020f5164 and 0x020f50f8 are host copies further down this file. */
-void  func_ov006_020f51b0(char *c);
-void  func_ov006_020f5140(void *c);
-void  func_ov006_020f50c0(char *self);
-void  func_ov006_020f4c38(char *c);
-void  func_ov006_020f4bbc(unsigned char *c);
-void  func_ov006_020f4b30(char *c);
-void  func_ov006_020f4ad4(unsigned char *c);
-void *func_ov006_020f4a40(char *c);
-void  func_ov006_020f49ac(char *c);
-void  func_ov006_020f4888(char *self);
-void  func_ov006_020f47d8(char *c);
-void  func_ov006_020f46ec(char *c);
-void  func_ov006_020f456c(void *c);           /* src spells it Ctx *       */
-void  func_ov006_020f43c4(char *self, int i);
-void  func_ov006_020f43c0(void);              /* one-argument slot, bx lr body */
-void  func_ov006_020f4248(char *self, int idx);
-void  func_ov006_020f41b0(char *base, int idx);
-void  func_ov006_020f41ac(void);              /* one-argument slot, bx lr body */
-void  func_ov006_020f411c(char *c, int i);
-void  func_ov006_020f3f84(void *p, int i);    /* src spells it Big *       */
+void  _ZN13dScMgMemory_c10StateSetupEv(char *c);
+void  _ZN13dScMgMemory_c10StateJudgeEv(void *c);
+void  _ZN13dScMgMemory_c9StateExitEv(char *self);
+void  _ZN13dScMgMemory_c10RoundStartEv(char *c);
+void  _ZN13dScMgMemory_c13RoundDealEasyEv(unsigned char *c);
+void  _ZN13dScMgMemory_c15RoundDealNormalEv(char *c);
+void  _ZN13dScMgMemory_c13RoundDealHardEv(unsigned char *c);
+void *_ZN13dScMgMemory_c13RoundWaitDealEv(char *c);
+void  _ZN13dScMgMemory_c11RoundRevealEv(char *c);
+void  _ZN13dScMgMemory_c10ResultWaitEv(char *self);
+void  _ZN13dScMgMemory_c12ResultRewardEv(char *c);
+void  _ZN13dScMgMemory_c15ResultTurnCardsEv(char *c);
+void  _ZN13dScMgMemory_c12ResultFinishEv(void *c);           /* src spells it Ctx *       */
+void  _ZN13dScMgMemory_c8CardMoveEi(char *self, int i);
+void  _ZN13dScMgMemory_c8CardIdleEi(void);              /* one-argument slot, bx lr body */
+void  _ZN13dScMgMemory_c10CardSelectEi(char *self, int idx);
+void  _ZN13dScMgMemory_c10CardFlipUpEi(char *base, int idx);
+void  _ZN13dScMgMemory_c8CardWaitEi(void);              /* one-argument slot, bx lr body */
+void  _ZN13dScMgMemory_c12CardFlipDownEi(char *c, int i);
+void  _ZN13dScMgMemory_c11CardFlyAwayEi(void *p, int i);    /* src spells it Big *       */
 
 /* the four mount tables this file dispatches, re-typed to the ROM's eight-byte
    pair.  The ov006 mount defines the storage; __sinit_ov006_021311c8 fills it
@@ -237,9 +237,9 @@ void func_ov006_020c19d0(void *c);
 /* host-copied further down this file, and called from above their own
    definitions -- 020f5164 and 020f50f8 are STATE BODIES as well as dispatchers,
    and 020f3f10 is 020f5164's tail call. */
-void func_ov006_020f5164(void *c);
-void func_ov006_020f50f8(void *c);
-void func_ov006_020f3f10(void *c);
+void _ZN13dScMgMemory_c9StatePlayEv(void *c);
+void _ZN13dScMgMemory_c11StateResultEv(void *c);
+void _ZN13dScMgMemory_c11UpdateCardsEv(void *c);
 
 /* the boot installer at the end of this file; hal/scene_mg.cpp calls it after
    the ov006 constructors have filled the tables. */
@@ -263,23 +263,23 @@ static int mem1_try_0(void *self, unsigned code)
     char *c = (char *)self;
     switch (code) {
     /* data_ov006_021422dc, dispatched by vtable slot 6 */
-    case 0x020f51b0u: func_ov006_020f51b0(c); return 1;
-    case 0x020f5164u: func_ov006_020f5164(c); return 1;   /* host copy below */
-    case 0x020f5140u: func_ov006_020f5140(c); return 1;
-    case 0x020f50f8u: func_ov006_020f50f8(c); return 1;   /* host copy below */
-    case 0x020f50c0u: func_ov006_020f50c0(c); return 1;
-    /* data_ov006_02142304, dispatched by func_ov006_020f5164 */
-    case 0x020f4c38u: func_ov006_020f4c38(c); return 1;
-    case 0x020f4bbcu: func_ov006_020f4bbc((unsigned char *)c); return 1;
-    case 0x020f4b30u: func_ov006_020f4b30(c); return 1;
-    case 0x020f4ad4u: func_ov006_020f4ad4((unsigned char *)c); return 1;
-    case 0x020f4a40u: func_ov006_020f4a40(c); return 1;
-    case 0x020f49acu: func_ov006_020f49ac(c); return 1;
-    /* data_ov006_021422bc, dispatched by func_ov006_020f50f8 */
-    case 0x020f4888u: func_ov006_020f4888(c); return 1;
-    case 0x020f47d8u: func_ov006_020f47d8(c); return 1;
-    case 0x020f46ecu: func_ov006_020f46ec(c); return 1;
-    case 0x020f456cu: func_ov006_020f456c(c); return 1;
+    case 0x020f51b0u: _ZN13dScMgMemory_c10StateSetupEv(c); return 1;
+    case 0x020f5164u: _ZN13dScMgMemory_c9StatePlayEv(c); return 1;   /* host copy below */
+    case 0x020f5140u: _ZN13dScMgMemory_c10StateJudgeEv(c); return 1;
+    case 0x020f50f8u: _ZN13dScMgMemory_c11StateResultEv(c); return 1;   /* host copy below */
+    case 0x020f50c0u: _ZN13dScMgMemory_c9StateExitEv(c); return 1;
+    /* data_ov006_02142304, dispatched by _ZN13dScMgMemory_c9StatePlayEv */
+    case 0x020f4c38u: _ZN13dScMgMemory_c10RoundStartEv(c); return 1;
+    case 0x020f4bbcu: _ZN13dScMgMemory_c13RoundDealEasyEv((unsigned char *)c); return 1;
+    case 0x020f4b30u: _ZN13dScMgMemory_c15RoundDealNormalEv(c); return 1;
+    case 0x020f4ad4u: _ZN13dScMgMemory_c13RoundDealHardEv((unsigned char *)c); return 1;
+    case 0x020f4a40u: _ZN13dScMgMemory_c13RoundWaitDealEv(c); return 1;
+    case 0x020f49acu: _ZN13dScMgMemory_c11RoundRevealEv(c); return 1;
+    /* data_ov006_021422bc, dispatched by _ZN13dScMgMemory_c11StateResultEv */
+    case 0x020f4888u: _ZN13dScMgMemory_c10ResultWaitEv(c); return 1;
+    case 0x020f47d8u: _ZN13dScMgMemory_c12ResultRewardEv(c); return 1;
+    case 0x020f46ecu: _ZN13dScMgMemory_c15ResultTurnCardsEv(c); return 1;
+    case 0x020f456cu: _ZN13dScMgMemory_c12ResultFinishEv(c); return 1;
     default:                                  return 0;
     }
 }
@@ -288,16 +288,16 @@ static int mem1_try_1(void *self, unsigned code, int a)
 {
     char *c = (char *)self;
     switch (code) {
-    /* data_ov006_02142334, dispatched by func_ov006_020f3f10.  `c` is the
+    /* data_ov006_02142334, dispatched by _ZN13dScMgMemory_c11UpdateCardsEv.  `c` is the
        CLASS BASE and `a` is the loop counter, in that order; section 2 has the
        disassembly that says so. */
-    case 0x020f43c4u: func_ov006_020f43c4(c, a);  return 1;
-    case 0x020f43c0u: func_ov006_020f43c0();      return 1;  /* bx lr body */
-    case 0x020f4248u: func_ov006_020f4248(c, a);  return 1;
-    case 0x020f41b0u: func_ov006_020f41b0(c, a);  return 1;
-    case 0x020f41acu: func_ov006_020f41ac();      return 1;  /* bx lr body */
-    case 0x020f411cu: func_ov006_020f411c(c, a);  return 1;
-    case 0x020f3f84u: func_ov006_020f3f84(c, a);  return 1;
+    case 0x020f43c4u: _ZN13dScMgMemory_c8CardMoveEi(c, a);  return 1;
+    case 0x020f43c0u: _ZN13dScMgMemory_c8CardIdleEi();      return 1;  /* bx lr body */
+    case 0x020f4248u: _ZN13dScMgMemory_c10CardSelectEi(c, a);  return 1;
+    case 0x020f41b0u: _ZN13dScMgMemory_c10CardFlipUpEi(c, a);  return 1;
+    case 0x020f41acu: _ZN13dScMgMemory_c8CardWaitEi();      return 1;  /* bx lr body */
+    case 0x020f411cu: _ZN13dScMgMemory_c12CardFlipDownEi(c, a);  return 1;
+    case 0x020f3f84u: _ZN13dScMgMemory_c11CardFlyAwayEi(c, a);  return 1;
     default:                                      return 0;
     }
 }
@@ -334,12 +334,12 @@ extern "C" unsigned port_mg_memory1_floor_hits(void) { return g_mem1_floor_hits;
 // rather than `(c->*table[i].pmf)()`).  Where anything else moved it is stated
 // on the line.
 
-/* src/func_ov006_020f5164 -- RETIRED, run link100 lane SEAT4. Its table is
+/* src/_ZN13dScMgMemory_c9StatePlayEv -- RETIRED, run link100 lane SEAT4. Its table is
    seated in port/hal/pmf_seat4.cpp and the matched TU is on
    port/slice_seat4.txt, so the host copy that stood in for it is gone and
    the declaration above is what the faces in this file reach. */
 
-/* src/func_ov006_020f50f8 -- RETIRED, run link100 lane SEAT4. Its table is
+/* src/_ZN13dScMgMemory_c11StateResultEv -- RETIRED, run link100 lane SEAT4. Its table is
    seated in port/hal/pmf_seat4.cpp and the matched TU is on
    port/slice_seat4.txt, so the host copy that stood in for it is gone and
    the declaration above is what the faces in this file reach. */
@@ -351,10 +351,10 @@ extern "C" unsigned port_mg_memory1_floor_hits(void) { return g_mem1_floor_hits;
 // compared against the ROM's own code word and a zero adjustment word, so two of
 // the four host copies are gone:
 //
-//   func_ov006_020f5388  data_ov006_021422dc   5 slots  arity 0  (vtable slot 6)
-//   func_ov006_020f3f10  data_ov006_02142334   7 slots  arity 1
+//   _ZN13dScMgMemory_c8BehaviorEv  data_ov006_021422dc   5 slots  arity 0  (vtable slot 6)
+//   _ZN13dScMgMemory_c11UpdateCardsEv  data_ov006_02142334   7 slots  arity 1
 //
-// THE TWO HOST COPIES THAT STAY are func_ov006_020f5164 and func_ov006_020f50f8,
+// THE TWO HOST COPIES THAT STAY are _ZN13dScMgMemory_c9StatePlayEv and _ZN13dScMgMemory_c11StateResultEv,
 // which are STATE BODIES of data_ov006_021422dc rather than dispatchers of a
 // table of their own. The installer writes faces that call them, so they keep
 // working from the seated cells. The switch stays live for the tables this lane
@@ -384,13 +384,13 @@ extern "C" unsigned port_mg_memory1_floor_hits(void) { return g_mem1_floor_hits;
 // loop with a peeled first iteration, and both were read); 020f5388 pushes
 // nothing. So 02142334 takes one-argument faces and 021422dc zero-argument ones.
 //
-// ONE /alternatename: src/func_ov006_020f3f10.cpp declares its table at
+// ONE /alternatename: src/minigames/d_s_mg_memory.cpp declares its table at
 // namespace scope through its own shadow class, so MSVC spells
 // ?data_ov006_02142334@@3PAP8C75@@AEXH@ZA -- the C75 is that TU's own class
 // name, part of the decoration -- read off the object with dumpbin /symbols.
-// src/func_ov006_020f5388.cpp declares its table inside extern "C".
+// src/minigames/d_s_mg_memory.cpp declares its table inside extern "C".
 //
-// ONE GUESS MARKER, ADJUDICATED: src/func_ov006_020f5388.cpp carries "recovered
+// ONE GUESS MARKER, ADJUDICATED: src/minigames/d_s_mg_memory.cpp carries "recovered
 // from vtable slot identity"; port/tools/inferred_stub_adjudicated.txt:760 rules
 // it REAL_DECOMP.
 //
@@ -399,7 +399,7 @@ extern "C" unsigned port_mg_memory1_floor_hits(void) { return g_mem1_floor_hits;
 // port/tools/aritycheck.py checks; their faces call them with nothing.
 //
 // STALE COMMENT DISCLOSED, NOT EDITED: hal/scene_mg_memory1.cpp:247-251 still
-// calls func_ov006_020f5388 "the HOST COPY". Its declaration beside it is
+// calls _ZN13dScMgMemory_c8BehaviorEv "the HOST COPY". Its declaration beside it is
 // correct: same C linkage, one pointer, int return.
 #pragma comment(linker, "/alternatename:?data_ov006_02142334@@3PAP8C75@@AEXH@ZA=_data_ov006_02142334")
 
@@ -428,19 +428,19 @@ extern "C" unsigned port_mg_memory1_floor_hits(void) { return g_mem1_floor_hits;
     }
 
 /* data_ov006_021422dc, arity 0. Slots 1 and 3 are host copies above. */
-M1_FACE0(func_ov006_020f51b0, (char *))
-M1_FACE0(func_ov006_020f5164, (char *))
-M1_FACE0(func_ov006_020f5140, (char *))
-M1_FACE0(func_ov006_020f50f8, (char *))
-M1_FACE0(func_ov006_020f50c0, (char *))
+M1_FACE0(_ZN13dScMgMemory_c10StateSetupEv, (char *))
+M1_FACE0(_ZN13dScMgMemory_c9StatePlayEv, (char *))
+M1_FACE0(_ZN13dScMgMemory_c10StateJudgeEv, (char *))
+M1_FACE0(_ZN13dScMgMemory_c11StateResultEv, (char *))
+M1_FACE0(_ZN13dScMgMemory_c9StateExitEv, (char *))
 /* data_ov006_02142334, arity 1 */
-M1_FACE1(func_ov006_020f43c4, (char *))
-M1_FACE1_VOID(func_ov006_020f43c0)
-M1_FACE1(func_ov006_020f4248, (char *))
-M1_FACE1(func_ov006_020f41b0, (char *))
-M1_FACE1_VOID(func_ov006_020f41ac)
-M1_FACE1(func_ov006_020f411c, (char *))
-M1_FACE1(func_ov006_020f3f84, (char *))
+M1_FACE1(_ZN13dScMgMemory_c8CardMoveEi, (char *))
+M1_FACE1_VOID(_ZN13dScMgMemory_c8CardIdleEi)
+M1_FACE1(_ZN13dScMgMemory_c10CardSelectEi, (char *))
+M1_FACE1(_ZN13dScMgMemory_c10CardFlipUpEi, (char *))
+M1_FACE1_VOID(_ZN13dScMgMemory_c8CardWaitEi)
+M1_FACE1(_ZN13dScMgMemory_c12CardFlipDownEi, (char *))
+M1_FACE1(_ZN13dScMgMemory_c11CardFlyAwayEi, (char *))
 
 /* run link100 lane SEAT4: this class's remaining state tables are
    seated in port/hal/pmf_seat4.cpp, from inside this installer, so the
@@ -464,19 +464,19 @@ extern "C" void port_mg_memory1_states_seat(void)
         unsigned rom;
         void *face;
     } seats[] = {
-        {data_ov006_021422dc, "021422dc", 0, 0x020f51b0u, (void *)m1_func_ov006_020f51b0},
-        {data_ov006_021422dc, "021422dc", 1, 0x020f5164u, (void *)m1_func_ov006_020f5164},
-        {data_ov006_021422dc, "021422dc", 2, 0x020f5140u, (void *)m1_func_ov006_020f5140},
-        {data_ov006_021422dc, "021422dc", 3, 0x020f50f8u, (void *)m1_func_ov006_020f50f8},
-        {data_ov006_021422dc, "021422dc", 4, 0x020f50c0u, (void *)m1_func_ov006_020f50c0},
+        {data_ov006_021422dc, "021422dc", 0, 0x020f51b0u, (void *)m1__ZN13dScMgMemory_c10StateSetupEv},
+        {data_ov006_021422dc, "021422dc", 1, 0x020f5164u, (void *)m1__ZN13dScMgMemory_c9StatePlayEv},
+        {data_ov006_021422dc, "021422dc", 2, 0x020f5140u, (void *)m1__ZN13dScMgMemory_c10StateJudgeEv},
+        {data_ov006_021422dc, "021422dc", 3, 0x020f50f8u, (void *)m1__ZN13dScMgMemory_c11StateResultEv},
+        {data_ov006_021422dc, "021422dc", 4, 0x020f50c0u, (void *)m1__ZN13dScMgMemory_c9StateExitEv},
 
-        {data_ov006_02142334, "02142334", 0, 0x020f43c4u, (void *)m1_func_ov006_020f43c4},
-        {data_ov006_02142334, "02142334", 1, 0x020f43c0u, (void *)m1_func_ov006_020f43c0},
-        {data_ov006_02142334, "02142334", 2, 0x020f4248u, (void *)m1_func_ov006_020f4248},
-        {data_ov006_02142334, "02142334", 3, 0x020f41b0u, (void *)m1_func_ov006_020f41b0},
-        {data_ov006_02142334, "02142334", 4, 0x020f41acu, (void *)m1_func_ov006_020f41ac},
-        {data_ov006_02142334, "02142334", 5, 0x020f411cu, (void *)m1_func_ov006_020f411c},
-        {data_ov006_02142334, "02142334", 6, 0x020f3f84u, (void *)m1_func_ov006_020f3f84},
+        {data_ov006_02142334, "02142334", 0, 0x020f43c4u, (void *)m1__ZN13dScMgMemory_c8CardMoveEi},
+        {data_ov006_02142334, "02142334", 1, 0x020f43c0u, (void *)m1__ZN13dScMgMemory_c8CardIdleEi},
+        {data_ov006_02142334, "02142334", 2, 0x020f4248u, (void *)m1__ZN13dScMgMemory_c10CardSelectEi},
+        {data_ov006_02142334, "02142334", 3, 0x020f41b0u, (void *)m1__ZN13dScMgMemory_c10CardFlipUpEi},
+        {data_ov006_02142334, "02142334", 4, 0x020f41acu, (void *)m1__ZN13dScMgMemory_c8CardWaitEi},
+        {data_ov006_02142334, "02142334", 5, 0x020f411cu, (void *)m1__ZN13dScMgMemory_c12CardFlipDownEi},
+        {data_ov006_02142334, "02142334", 6, 0x020f3f84u, (void *)m1__ZN13dScMgMemory_c11CardFlyAwayEi},
     };
 
     for (unsigned i = 0; i < sizeof seats / sizeof seats[0]; ++i) {

@@ -19,16 +19,16 @@
  * THE THREE, and each is a genuine hole in config/arm9/overlays/ov006/
  * delinks.txt rather than a name-shaped lookup miss:
  *
- *   func_ov006_02118b70   VTABLE SLOT 0, InitResources.
- *       The delink list runs `src/func_ov006_02118ae4.c .text start:0x02118ae4
- *       end:0x02118b70` and then jumps to `src/func_ov006_0211944c.c .text
+ *   _ZN16dScMgSmartball_c13InitResourcesEv   VTABLE SLOT 0, InitResources.
+ *       The delink list runs `src/_ZN16dScMgSmartball_c9Virtual7CEv.cpp .text start:0x02118ae4
+ *       end:0x02118b70` and then jumps to `src/_ZN16dScMgSmartball_c21AfterCleanupResourcesEj.cpp .text
  *       start:0x0211944c`. The 0x8dc bytes between are this body and nothing
  *       covers them. config/arm9/overlays/ov006/symbols.txt does not name the
  *       address at all.
  *
- *   func_ov006_021173c8   VTABLE SLOT 9, Render.
+ *   _ZN16dScMgSmartball_c6RenderEv   VTABLE SLOT 9, Render.
  *       Same shape: `src/func_ov006_02115b0c.c .text start:0x02115b0c
- *       end:0x021173c8` then `src/func_ov006_02118488.c .text
+ *       end:0x021173c8` then `src/_ZN16dScMgSmartball_c8BehaviorEv.cpp .text
  *       start:0x02118488`. The 0x10c0 bytes between are this body.
  *
  *   func_ov006_02114800   NOT a vtable slot, which is why the cost table's
@@ -118,7 +118,7 @@ unsigned port_mg_smartball_trap_mask(void)
 /* ALL THREE TRAPS ARE GONE AND THIS FILE NOW REPORTS ZERO, which is the
    result it exists to make legible rather than a reason to delete it.
 
-   Run mg5, lane INTEG: slot 0 InitResources (func_ov006_02118b70) and the aux
+   Run mg5, lane INTEG: slot 0 InitResources (_ZN16dScMgSmartball_c13InitResourcesEv) and the aux
    ball-table seeder (func_ov006_02114800) were recovered on branch
    decomp/smb-bodies and sliced. InitResources is reached through the alias in
    MgSmartball_Faces.cpp; the aux body carries its own name.
@@ -126,7 +126,7 @@ unsigned port_mg_smartball_trap_mask(void)
    Run mg5, lane SMBSEAT: the last one, slot 9 Render. The paragraph this
    replaces said its recovered form on main "is the __thiscall member
    dScMgSmartball_c::Render, which an alias cannot bridge to the cdecl
-   func_ov006_021173c8 the dispatch calls", and that is still true -- an alias
+   _ZN16dScMgSmartball_c6RenderEv the dispatch calls", and that is still true -- an alias
    cannot. What bridges it is a cdecl FORWARDER carrying the flat Itanium name
    and making the qualified non-virtual call, with the ROM address name aliased
    onto the forwarder: the shape port/unmatched/MgPachinko_Faces.cpp section 3
@@ -191,11 +191,15 @@ unsigned port_mg_smartball_trap_mask(void)
  * exists to refuse. The trap says which address was entered and returns.
  *
  * DECOMPILING IT IS A BYTE-GATED-TREE JOB, routed and not taken: 0x238 bytes
- * inside a delink hole that has to be split first. */
-void func_ov006_02115248(int, int *)
-{
-    smb_trap(2, "func_ov006_02115248",
-             "reached from func_ov006_02111b90, kinoko Update closure");
-}
+ * inside a delink hole that has to be split first.
+ *
+ * IT WAS TAKEN, AND THIS TRAP IS RETIRED (run link100 wave 14, lane SHADOWS3).
+ * PR #2351 (a47bdc18a, "Match the ov006 Smartball ball spawn") split the delink
+ * hole and banked src/func_ov006_02115248.cpp; it is on
+ * port/slice_shadows3.txt now and this trap is gone. The signature this note
+ * measured off the single call site and the single epilogue -- r0 live, one
+ * stacked pointer, nothing writing r0 on the way out -- is what the matched TU
+ * carries, spelled (dScMgSmartball_c *self, int *origin), and under C linkage
+ * the one call site in src/func_ov006_02111b90.c needs no change. */
 
 }  /* extern "C" */

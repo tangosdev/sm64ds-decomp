@@ -14,7 +14,7 @@
  * THE BODY IS SHARED, AND THAT IS A ROM FACT. relocs.txt carries EXACTLY TWO
  * arm_calls to 0x020c2924, one per class, and both are once-per-boot slots:
  *
- *     from:0x020e0018  inside func_ov006_020dfeec   dScMgCup_c   slot 18
+ *     from:0x020e0018  inside _ZN10dScMgCup_c13OnYoshiTryEatEi   dScMgCup_c   slot 18
  *                                                   (the state reset)
  *     from:0x0211c5a4  inside func_ov006_0211c478   dScMgSound_c slot 0
  *                                                   (InitResources)
@@ -99,7 +99,7 @@
  * Scene 367 has always had the repaired body (lane BOX shipped it) and boots
  * clean at 300/900/1200 frames. Scene 361 has been running the DEFECTIVE src
  * TU up to this merge, so the box merge is the first time 361 gets the correct
- * gate. The blast radius is one call per boot -- func_ov006_020dfeec is vtable
+ * gate. The blast radius is one call per boot -- _ZN10dScMgCup_c13OnYoshiTryEatEi is vtable
  * slot 18 and lane CUP's own census reports "state-reset 1" -- and it cannot
  * touch the dispatch counters, which come from func_ov006_020c2b8c. See
  * wiring.md for what the executor must re-measure and what is allowed to move.

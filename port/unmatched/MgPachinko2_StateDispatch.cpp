@@ -18,7 +18,7 @@
 //
 // reprints the join. That constructor is attributed to THIS class by address
 // containment: its copied pairs run 0x0213da5c..0x0213db4c and that range
-// brackets MgLakituLaunch_SpawnInfo at 0x0213da64.
+// brackets g_profile_MG_TAMAIRE at 0x0213da64.
 //
 //   table                n  arity  state addresses (in slot order)
 //   -------------------  -  -----  ----------------------------------------

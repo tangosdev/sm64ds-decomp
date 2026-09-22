@@ -12,24 +12,24 @@
 #       over data_ov063_0211efbc (the Painting stride trap) ->
 #       Bbh_PmfDispatch.c
 # Named-class TUs minus THREE:
-#   _ZN12MansionSteps8BehaviorEv.cpp   same PMF trap over data_ov063_0211ef38
+#   _ZN11daTrsTrap_c8BehaviorEv.cpp   same PMF trap over data_ov063_0211ef38
 #       -> Bbh_PmfDispatch.c
-#   _ZN10BigBooIconD1Ev.cpp / _ZN12MansionStepsD1Ev.cpp   real MSVC
+#   _ZN11daTrsIcon_cD1Ev.cpp / _ZN11daTrsTrap_cD1Ev.cpp   real MSVC
 #       destructors (auto-emitted member-dtor calls would resolve to MSVC
 #       names that do not exist) -> host D1 thunks in the fills, the
 #       HauntedChair hc_d1 recipe (hal/actor_classes_bbh.cpp)
 # Four bodies have NO matched TU anywhere (cons and main checked 2026-08-13);
 # each ships as a byte-verified host copy (equal size, divergences all
 # register renames/scheduling -- the banners quote the abverify numbers):
-#   _ZN3Boo8BehaviorEv               -> port/unmatched/Boo_Behavior.c
+#   _ZN7daTrs_c8BehaviorEv               -> port/unmatched/Boo_Behavior.c
 #   func_ov063_021166ac              -> port/unmatched/Boo_RenderUpdate.c
 #   func_ov063_02117cdc              -> port/unmatched/Boo_StateTalk.c
-#   _ZN12MansionSteps13InitResourcesEv -> port/unmatched/MansionSteps_InitResources.c
+#   _ZN11daTrsTrap_c13InitResourcesEv -> port/unmatched/MansionSteps_InitResources.c
 # Closure: the Boo talk sequence reaches func_02011d14 -> func_02048ed4
 # (both matched veneers, three hops end on the linked func_02048fd4) and
 # func_ov002_020c51d0 (matched, its two externs already linked).
 
-src/unnamed/ov063/func_ov063_021160c4.c
+src/game/actors/daTrs_c/_ZN7daTrs_c16OnAimedAtWithEggEv.cpp
 src/unnamed/ov063/func_ov063_021160d4.c
 src/unnamed/ov063/func_ov063_02116190.c
 src/unnamed/ov063/func_ov063_02116244.c
@@ -99,7 +99,7 @@ src/unnamed/ov063/func_ov063_0211ab68.c
 src/unnamed/ov063/func_ov063_0211ad00.c
 src/unnamed/ov063/func_ov063_0211adb4.c
 src/unnamed/ov063/func_ov063_0211adfc.c
-src/unnamed/ov063/func_ov063_0211c480.cpp
+src/game/actors/daTrs_c/_ZN7daTrs_c13OnYoshiTryEatEv.cpp
 src/unnamed/ov063/func_ov063_0211c684.c
 src/unnamed/ov063/func_ov063_0211c6f8.cpp
 src/unnamed/ov063/func_ov063_0211c770.c
@@ -121,14 +121,24 @@ src/unnamed/ov063/func_ov063_0211dd78.c
 src/unnamed/ov063/func_ov063_0211dd84.c
 
 # ---- the named Boo pack ----------------------------------------------------
-src/actors/Boo/Boo_Spawn.cpp
-# _ZN3Boo13InitResourcesEv.c: K&R ClosestPlayer declaration trips
+src/game/actors/daTrs_c/d_a_trs_teresa.cpp
+# _ZN7daTrs_c13InitResourcesEv.c: K&R ClosestPlayer declaration trips
 # tools/closestplayer_guard.py (its calls DO pass the receiver); faithful
 # mirror with the declaration reprototyped:
+#
+# TRIED AND REVERTED at the main->port sync (lane SYNC7, wave 9). main's TU
+# now declares ClosestPlayer with its receiver, so the guard's reason for the
+# mirror is gone -- but the guard is not why the copy is a .c file. The mirror
+# defines the FLAT name __ZN7daTrs_c13InitResourcesEv and the matched .cpp TU
+# defines the DECORATED member ?InitResources@daTrs_c@@UAEHXZ, which a face in
+# this slice already supplies. Swapping one for the other measured +1
+# unresolved (the flat name) and +1 LNK2005 (the decorated one) in the same
+# build. Retiring it needs the face retired in the same change, which is lane
+# FACES3's ledger and not this row.
 port/unmatched/Boo_InitResources.c
-src/actors/Boo/_ZN3Boo16CleanupResourcesEv.cpp
-src/actors/Boo/_ZN3Boo16OnPendingDestroyEv.c
-# _ZN3Boo6RenderEv.cpp OUT: dispatches the mModelAnim (+0x380) draw through a
+src/game/actors/daTrs_c/_ZN7daTrs_c16CleanupResourcesEv.cpp
+src/game/actors/daTrs_c/_ZN7daTrs_c16OnPendingDestroyEv.cpp
+# _ZN7daTrs_c6RenderEv.cpp OUT: dispatches the mModelAnim (+0x380) draw through a
 # LOCAL six-virtual shadow (ROM slot 5 = ModelAnim::Render; the host
 # _ZTV9ModelAnim slot 5 = Virtual18, two args) -- MEASURED as c0000005 at
 # func_0204488c+0x10a accessing 00000009 on frame 0 of the L2 selftest (the
@@ -136,69 +146,97 @@ src/actors/Boo/_ZN3Boo16OnPendingDestroyEv.c
 # Level 12 never showed it: all six BBH Boos sit behind the +0xb0 0x40000
 # cull bit there. Host copy in port/unmatched/ModelAnim_Renders.cpp, the
 # Whomp/Fish recipe.
-src/actors/Boo/_ZN3BooD0Ev.c
-src/actors/Boo/_ZN3BooD1Ev.c
-src/actors/BigBoo/BigBoo_Spawn.cpp
-src/actors/BigBooIcon/BigBooIcon_Spawn.c
-src/actors/BigBooIcon/_ZN10BigBooIcon13InitResourcesEv.cpp
-src/actors/BigBooIcon/_ZN10BigBooIconD0Ev.c
-src/actors/BooCage/BooCage_Spawn.c
-src/actors/BooCage/_ZN7BooCage13InitResourcesEv.cpp
-src/actors/BooCage/_ZN7BooCage16CleanupResourcesEv.c
-src/actors/BooCage/_ZN7BooCage6RenderEv.cpp
-src/actors/BooCage/_ZN7BooCage8BehaviorEv.cpp
-src/actors/BooCage/_ZN7BooCageD0Ev.c
-src/actors/BooCage/_ZN7BooCageD1Ev.c
+# RETIRED at SLICE1: body now in src/game/actors/daTrs_c/_ZN7daTrs_cD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/game/actors/daTrs_c/_ZN7daTrs_cD0Ev.cpp
+src/game/actors/daTrs_c/_ZN7daTrs_cD1Ev.cpp
+src/game/actors/daTrs_c/d_a_trs_boss_teresa.cpp
+src/game/actors/daTrsIcon_c/d_a_trs_icon.c
+src/game/actors/daTrsIcon_c/_ZN11daTrsIcon_c13InitResourcesEv.cpp
+src/game/actors/daTrsIcon_c/_ZN11daTrsIcon_cD0Ev.cpp
+src/game/actors/daTBasket_c/d_a_t_basket.c
+src/game/actors/daTBasket_c/_ZN11daTBasket_c13InitResourcesEv.cpp
+src/game/actors/daTBasket_c/_ZN11daTBasket_c16CleanupResourcesEv.cpp
+src/game/actors/daTBasket_c/_ZN11daTBasket_c6RenderEv.cpp
+src/game/actors/daTBasket_c/_ZN11daTBasket_c8BehaviorEv.cpp
+# RETIRED at SLICE1: body now in src/game/actors/daTBasket_c/_ZN11daTBasket_cD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/game/actors/daTBasket_c/_ZN11daTBasket_cD0Ev.cpp
+src/game/actors/daTBasket_c/_ZN11daTBasket_cD1Ev.cpp
 
 # ---- the furniture (one class, four ids) -----------------------------------
-src/actors/MansionSteps/MansionSteps_Spawn.c
-src/actors/Bookshelf/Bookshelf_Spawn.c
-src/actors/MerryGoRound/MerryGoRound_Spawn.c
-src/actors/TrapDoor/TrapDoor_Spawn.c
-src/actors/MansionSteps/_ZN12MansionSteps16CleanupResourcesEv.cpp
-src/actors/MansionSteps/_ZN12MansionSteps16OnPendingDestroyEv.c
-src/actors/MansionSteps/_ZN12MansionSteps6RenderEv.cpp
-src/actors/MansionSteps/_ZN12MansionStepsD0Ev.c
+src/game/actors/daTrsTrap_c/d_a_trs_trap_kaidan.c
+src/game/actors/daTrsTrap_c/d_a_trs_trap_bookshelf.c
+src/game/actors/daTrsTrap_c/d_a_trs_trap_merrygoround.c
+src/game/actors/daTrsTrap_c/d_a_trs_trap_teresapit.c
+src/game/actors/daTrsTrap_c/_ZN11daTrsTrap_c16CleanupResourcesEv.cpp
+src/game/actors/daTrsTrap_c/_ZN11daTrsTrap_c16OnPendingDestroyEv.cpp
+src/game/actors/daTrsTrap_c/_ZN11daTrsTrap_c6RenderEv.cpp
+src/game/actors/daTrsTrap_c/_ZN11daTrsTrap_cD0Ev.cpp
 
 # ---- FallBlockBbh + MadPiano -----------------------------------------------
-src/actors/FallBlockBbh/FallBlockBbh_Spawn.c
-src/actors/FallBlockBbh/_ZN12FallBlockBbh13InitResourcesEv.cpp
-src/actors/FallBlockBbh/_ZN12FallBlockBbh16CleanupResourcesEv.cpp
-src/actors/FallBlockBbh/_ZN12FallBlockBbhD0Ev.c
-src/actors/FallBlockBbh/_ZN12FallBlockBbhD1Ev.c
-src/actors/MadPiano/MadPiano_Spawn.cpp
-src/actors/MadPiano/_ZN8MadPiano13InitResourcesEv.cpp
+src/game/actors/daObjTh_Fall_Block_c/d_a_obj_th_fall_block.c
+src/game/actors/daObjTh_Fall_Block_c/_ZN12FallBlockBbh13InitResourcesEv.cpp
+src/game/actors/daObjTh_Fall_Block_c/_ZN12FallBlockBbh16CleanupResourcesEv.cpp
+# RETIRED at SLICE1: body now in src/game/actors/daObjTh_Fall_Block_c/_ZN12FallBlockBbhD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/game/actors/daObjTh_Fall_Block_c/_ZN12FallBlockBbhD0Ev.cpp
+src/game/actors/daObjTh_Fall_Block_c/_ZN12FallBlockBbhD1Ev.cpp
+src/game/actors/daPiano_c/d_a_piano.cpp
+src/game/actors/daPiano_c/_ZN8MadPiano13InitResourcesEv.cpp
 # _ZN8MadPiano16CleanupResourcesEv.cpp OUT: spells its three SharedFilePtrs
 # G0/G1/G2, and cxx_aliases.cpp binds G0/G1 to SignPost's live ov002
 # pointers -- host thunk mp_clean in hal/actor_classes_ov063.cpp instead
 # (the ov045 PoleLift ep_clean ruling)
-src/actors/MadPiano/_ZN8MadPiano6RenderEv.cpp
-src/actors/MadPiano/_ZN8MadPiano8BehaviorEv.cpp
-src/actors/MadPiano/_ZN8MadPianoD0Ev.cpp
-src/actors/MadPiano/_ZN8MadPianoD1Ev.c
+src/game/actors/daPiano_c/_ZN8MadPiano6RenderEv.cpp
+src/game/actors/daPiano_c/_ZN8MadPiano8BehaviorEv.cpp
+# RETIRED at SLICE1: body now in src/game/actors/daPiano_c/_ZN8MadPianoD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/game/actors/daPiano_c/_ZN8MadPianoD0Ev.cpp
+src/game/actors/daPiano_c/_ZN8MadPianoD1Ev.cpp
 
 # ---- the four sinits (called from ov63_bringup) ----------------------------
 src/unnamed/ov063/__sinit_ov063_0211e29c.c
 src/unnamed/ov063/__sinit_ov063_0211e3cc.c
 src/unnamed/ov063/__sinit_ov063_0211e590.c
-src/actors/MadPiano/__sinit_ov063_0211e5fc.c
+src/game/actors/daPiano_c/__sinit_ov063_0211e5fc.c
 
 # ---- closure ---------------------------------------------------------------
-src/_ZN8CapEnemy12UpdateCapPosERK7Vector3RK10Vector3_16.cpp
-src/_ZN5Actor9TrackStarEjj.c
-src/_ZNK12WithMeshClsn13JustHitGroundEv.c
-src/_ZN6Player15JumpIntoBooCageER7Vector3.cpp
+src/_ZN11dCapEnemy_c12UpdateCapPosERK7Vector3RK10Vector3_16.cpp
+src/_ZN8dActor_c9TrackStarEjj.cpp
+src/_ZNK10dBgCh_Actr13JustHitGroundEv.cpp
+src/actors/Player.cpp
 src/func_02011d14.c
 src/func_02048ed4.c
-src/func_ov002_020c51d0.cpp
 
 # ---- host copies (banners carry the byte-verification numbers) -------------
-port/unmatched/Boo_Behavior.c
-port/unmatched/Boo_RenderUpdate.c
-port/unmatched/Boo_StateTalk.c
-port/unmatched/Boo_Teleport.c
+# RETIRED (run link100 wave 14, lane SHADOWS3): both host copies named their
+# own retirement condition and the decomp met it. Boo_Behavior.c stood in for
+# _ZN7daTrs_c8BehaviorEv ("When the decomp lands a byte match for 0x0211b0a4,
+# that TU replaces this file via slice_w5a.txt") and Boo_RenderUpdate.c for
+# func_ov063_021166ac ("NOT matched in src/"). Both are on
+# port/slice_shadows3.txt now and both files are deleted. daTrs_c::Behavior is
+# recovered as a real C++ method, so the flat Itanium name its vtable face
+# calls is published by the generated reverse face its port/faces_sync.txt row
+# now asks for (F -> R).
+# RETIRED at the main->port sync (lane SYNC7, wave 9): main recovered this
+# body. src/unnamed/ov063/func_ov063_02117cdc.c owns ov063 .text
+# 0x02117cdc..0x02118458 in the merged delinks, which is the 0x77c bytes the
+# host copy's banner names, so the copy and its three host edits are a second
+# definition of a name the decomp now provides. Its ClosestPlayer call passes
+# the receiver (line 53, `_ZN8dActor_c13ClosestPlayerEv(arg0)`), so
+# closestplayer_guard has no quarrel with seating it.
+#port/unmatched/Boo_StateTalk.c
+src/unnamed/ov063/func_ov063_02117cdc.c
+# RETIRED by run link100 wave 15 lane SEAT15B (LINK15 BATCH 1): the matched TU
+# src/unnamed/ov063/func_ov063_02117650.c passes the ClosestPlayer receiver itself
+# (src:17, `(self)`), so Boo_Teleport.c had nothing left to work around. The src row
+# is on port/slice_l15cp.txt and the host copy is deleted.
+#port/unmatched/Boo_Teleport.c
 port/unmatched/Boo_CrossNamedDispatch.c
-port/unmatched/MansionSteps_InitResources.c
+# RETIRED with them: MansionSteps_InitResources.c stood in for
+# _ZN11daTrsTrap_c13InitResourcesEv ("NOT matched in src/ (the other six
+# slots all are)"); it is matched now and on port/slice_shadows3.txt. Because
+# the matched TU recovers it as a real C++ method, the flat Itanium name the
+# registry's face calls is published by the generated reverse face its
+# port/faces_sync.txt row now asks for (the row was a FORWARD row while the
+# host copy owned the flat name; it is an R row now).
 port/unmatched/Bbh_PmfDispatch.c
 port/unmatched/Bbh_MethodFaces.cpp
 
@@ -209,30 +247,32 @@ port/hal/actor_classes_ov063.cpp
 # UP_DOWN_LIFT_BBH (32, ov095): the third id of gate 173's daUdlift_c trio;
 # only the factory is new (it stores _ZTV13UpDownLiftBbh directly, its own
 # src), everything else already in the build.
-src/UpDownLiftBbh_Spawn.c
+src/d_a_udlift_udlift_teresa.c
 
 # THE BOOK CAST (ov020): Bookend 327 + BookShot 325 + BookSwitch 213 +
 # BookShotSpawner 328. src/BookSwitch_Spawn.c is a recovered-name file that
 # is NOT the 213 factory (it takes a pointer and writes two fields; the real
-# factory is the unnamed func_ov020_021127f4) and stays out.
+# factory is the unnamed daBook_c_classInit_BOOK_SWITCH) and stays out.
 # _ZN15BookShotSpawnerD1Ev.cpp OUT: real MSVC destructor, host thunk bks_d1
 # in hal/actor_classes_ov063.cpp (the hc_d1 recipe).
-src/Bookend_Spawn.c
-src/BookShot_Spawn.c
-src/BookShotSpawner_Spawn.c
-src/func_ov020_021127f4.c
-src/func_ov020_021127a4.cpp
-src/func_ov020_021127cc.c
+src/d_a_book_killer_book.c
+src/d_a_book_shoot_book.c
+src/d_a_book_gen.c
+src/d_a_book_book_switch.c
+src/_ZN8BookShot16OnAimedAtWithEggEv.cpp
+src/_ZN8BookShot13OnYoshiTryEatEv.cpp
 src/_ZN8BookShot13InitResourcesEv.cpp
 src/_ZN8BookShot16CleanupResourcesEv.cpp
 src/_ZN8BookShot6RenderEv.cpp
 src/_ZN8BookShot8BehaviorEv.cpp
-src/_ZN8BookShotD0Ev.c
-src/_ZN8BookShotD1Ev.c
+# RETIRED at SLICE1: body now in src/_ZN8BookShotD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN8BookShotD0Ev.cpp
+src/_ZN8BookShotD1Ev.cpp
 src/_ZN15BookShotSpawner13InitResourcesEv.cpp
 src/_ZN15BookShotSpawner16CleanupResourcesEv.cpp
 src/_ZN15BookShotSpawner8BehaviorEv.cpp
-src/_ZN15BookShotSpawnerD0Ev.c
+# RETIRED at SLICE1: body now in src/_ZN15BookShotSpawnerD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN15BookShotSpawnerD0Ev.cpp
 src/__sinit_ov020_02113674.c
 
 # BookShot's behaviour closure (the flying-book state machine): 12 matched
@@ -254,14 +294,14 @@ src/func_ov020_0211216c.cpp
 port/unmatched/Book_WindowAndReceiverFixes.cpp
 # ...and the last three book-closure edges: the bump-from-underneath body,
 # cstd::atan2 (the 021112b0 aim math), and two role-name aliases below.
-src/_ZN5Actor24BumpedUnderneathByPlayerER6Player.cpp
+src/_ZN8dActor_c24BumpedUnderneathByPlayerER6Player.cpp
 src/_ZN4cstd5atan2E5Fix12IiES1_.c
 
 # CRAZED_CRATE (193, ov080): everything data-side was already mounted; these
 # are the class TUs, the six state bodies, the state-set helper and the two
 # slot overrides. The two PMF dispatchers (func_ov080_02125104/021250c8) are
 # host copies in Bbh_PmfDispatch.c; the D1 is a host thunk.
-src/CrazedCrate_Spawn.c
+src/d_a_btt_bk.c
 # _ZN11CrazedCrate13InitResourcesEv.cpp: drops the state setter's second
 # argument (the r1-passthrough seam; ROM passes 0) -- mirrored with the
 # ROM's value spelled out:
@@ -275,12 +315,14 @@ src/CrazedCrate_Spawn.c
 # deleted; this line stays commented so the class's slice still says where its
 # InitResources went.
 # port/unmatched/CrazedCrate_InitResources.cpp
-src/_ZN11CrazedCrate16CleanupResourcesEv.c
-src/_ZN11CrazedCrate16OnPendingDestroyEv.c
+src/_ZN11CrazedCrate16CleanupResourcesEv.cpp
+src/_ZN11CrazedCrate16OnPendingDestroyEv.cpp
+
 src/_ZN11CrazedCrate6RenderEv.cpp
 src/_ZN11CrazedCrate8BehaviorEv.cpp
-src/_ZN11CrazedCrateD0Ev.c
-src/func_ov080_02124ac4.c
+# RETIRED at SLICE1: body now in src/_ZN11CrazedCrateD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN11CrazedCrateD0Ev.cpp
+src/_ZN11CrazedCrate13OnYoshiTryEatEv.cpp
 src/func_ov080_02124acc.cpp
 # func_ov080_02124e60.c: same dropped second argument (ROM r1=0):
 port/unmatched/CrazedCrate_State2Tick.c
@@ -291,20 +333,20 @@ src/func_ov080_0212500c.cpp
 src/func_ov080_0212509c.c
 src/func_ov080_0212513c.c
 src/func_ov080_02124c3c.cpp
-src/func_ov080_02125318.cpp
+src/_ZN11CrazedCrate13OnTurnIntoEggER6Player.cpp
 
 # COFFIN (64, ov071): fill + slice only (mount and sinit already live).
 # The two PMF dispatchers (func_ov071_021223c8/02122414) are host copies in
 # Bbh_PmfDispatch.c.
-src/Coffin_Spawn.c
-# _ZN6Coffin13InitResourcesEv.cpp: five file-scope member redeclarations
-# are C2761 under MSVC; mirrored minus those lines:
-port/unmatched/Coffin_InitResources.cpp
+src/d_a_obj_casket.c
+# _ZN6Coffin13InitResourcesEv.cpp IS NOT IN THIS LIST -- the mirror
+# port/unmatched/Coffin_InitResources.cpp is retired; the matched TU is
+# seated from port/slice_shadows3.txt instead (see that file's note).
 src/_ZN6Coffin16CleanupResourcesEv.cpp
 src/_ZN6Coffin6RenderEv.cpp
 src/_ZN6Coffin8BehaviorEv.cpp
-src/_ZN6CoffinD0Ev.c
-src/_ZN6CoffinD1Ev.c
+src/_ZN6CoffinD0Ev.cpp
+src/_ZN6CoffinD1Ev.cpp
 src/func_ov071_02122080.c
 src/func_ov071_021220c8.cpp
 src/func_ov071_02122194.c

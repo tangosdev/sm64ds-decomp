@@ -1,0 +1,129 @@
+# port/faces_sync_smoke_persist.txt -- THE smoke_persist SUBSET OF port/faces_sync.txt.
+#
+# Lane SMOKELINK4B, run link100 wave 10 round 4.
+#
+# Read port/faces_sync_smoke_heap.txt's header for the whole argument and
+# port/faces_sync_smoke_roots.txt's for the worked second copy of it; nothing
+# about either changes here.  In one line: every row of the 1925-row
+# port/faces_sync.txt CALLS a C++ member, so the file generated from it carries
+# 1925 references, and a smoke harness links a few dozen objects.  An n-row
+# ledger costs n faces.
+#
+# THE THREE GATE-9 HARNESSES SHARE ONE NAME SET.  smoke_actor, smoke_savestate
+# and smoke_persist host the same actor world (port/CMakeLists.txt gives all
+# three the same slices), and the 133 names each of them lost at the 09-14 sync
+# are the SAME 133: a diff over the three link logs' name lists is empty, which
+# is the measurement in out/SMOKELINK4B/actor_batch_names_identical.log.  So
+# this file and its two siblings carry the same twenty-one rows, and a row that
+# changes has to change in all three.
+#
+# EVERY ROW BELOW IS COPIED VERBATIM FROM port/faces_sync.txt, columns and all,
+# and the same port/tools/facegen.py --sync re-derives each one against the ROM
+# address in column three on every build.  Nothing here is hand-written and
+# nothing here is a new binding: the port/faces_sync.txt line each row came from
+# is named in the block comments below, so a grep proves the two files agree.
+#
+# TWENTY OF THE TWENTY-ONE ARE ORDINARY NON-STATIC MEMBERS OR CONSTRUCTORS,
+# receiver in ECX, so a face is the only honest mechanism: faces_sync.txt's own
+# header says an /alternatename is a NAME bridge and never an ABI bridge.  Rows
+# that CAN be closed with an alias are in port/hal/smoke_aliases_persist.cpp
+# instead, with the hal/cxx_aliases.cpp line each was copied from.  The
+# twenty-first is the one FORWARD row (column four F, not R) and it is here for
+# the opposite reason: see its own block at the end of this file.
+#
+# Counts measured at 454383169 on this tree's own ninja -j10 -k 0 over all
+# targets (out/SMOKELINK3/build_smokelink3_tip.log, re-read by this lane).
+# COLUMNS and the R/F/D meaning are port/faces_sync.txt's; read that file's
+# header before adding a row here.
+
+# THE ROOT-HEAP AND ALLOCATOR ROWS, the same rows port/faces_sync_smoke_clsn.txt
+# and the ledgers before it carry, for the same reason: gate 9 is gate 8 plus
+# the actor world and inherits the whole heap layer underneath it, so the same
+# source rows join its link and the same faces come with them.
+
+__ZN10MemoryNode6TargetC1EPS_                                            ??0Target@MemoryNode@@QAE@PAU1@@Z                                0x0204e938 R
+__ZN13ExpandingHeap11VDeallocateEPv                                      ?VDeallocate@ExpandingHeap@@UAEXPAX@Z                            0x0203c50c R
+__ZN13ExpandingHeapC1EPvjP4HeapP22ExpandingHeapAllocator                 ??0ExpandingHeap@@QAE@PAXIPAUHeap@@PAUExpandingHeapAllocator@@@Z 0x0203ca80 R
+__ZN18NestedHeapIteratorC1Ej                                             ??0NestedHeapIterator@@QAE@I@Z                                   0x0204df20 R
+__ZN22ExpandingHeapAllocator16AllocateForwardsEjj                        ?AllocateForwards@ExpandingHeapAllocator@@QAEPAXII@Z             0x0204e5c8 R
+__ZN22ExpandingHeapAllocator17AllocateBackwardsEjj                       ?AllocateBackwards@ExpandingHeapAllocator@@QAEPAXII@Z            0x0204e504 R
+__ZN22ExpandingHeapAllocatorC1EPvj                                       ??0ExpandingHeapAllocator@@QAE@PAXI@Z                            0x0204e828 R
+
+# THE FILESYSTEM AND COLLISION ROWS, also already carried by a sibling ledger
+# (port/faces_sync_smoke_fs.txt for the two SharedFilePtr rows,
+# port/faces_sync_smoke_clsn.txt for dBgPc and SurfaceInfo), and here because
+# an actor loads its own model and its own KCL and then stands on it.
+
+__ZN13SharedFilePtr8LoadFileEv                                           ?LoadFile@SharedFilePtr@@QAEPAXXZ                                0x02017bc4 R
+__ZN13SharedFilePtr7ReleaseEv                                            ?Release@SharedFilePtr@@QAEXXZ                                   0x02017b64 R
+__ZN5dBgPcC1Ev                                                           ??0dBgPc@@QAE@XZ                                                 0x02037eec R
+__ZN5dBgPcD1Ev                                                           ??1dBgPc@@QAE@XZ                                                 0x02037ee8 R
+__ZNK11SurfaceInfo12CopyNormalToER7Vector3                               ?CopyNormalTo@SurfaceInfo@@QBEXAAUVector3@@@Z                    0x02037dcc R
+
+# THE EIGHT ROWS THAT ARE NEW TO THIS BATCH, every one of them copied verbatim
+# from port/faces_sync.txt at the line named beside it.  They are what gate 9
+# adds over gate 8: an actor, its background-actor base, its shadow, the moving
+# mesh collider's transform, and the heap a dying actor gives back.
+#
+#   faces_sync.txt:317   ExpandingHeapAllocator::MemoryLeft, which the harness
+#                        itself calls to report the free space after the carve.
+#   faces_sync.txt:96    ArrowSignRight::InitResources, ROM slot 0 of the class
+#                        this batch spawns, reached from hal/actor_vtables.cpp.
+#   faces_sync.txt:2180  fBase_c::SceneNode's constructor, run by every
+#                        fBase_c the actor world builds.
+#   faces_sync.txt:389   Heap::_Destroy, the ROM's tail-call veneer that
+#                        hal/actor_vtables.cpp's Heap_Destroy forwards to when a
+#                        dying actor owns a heap.
+#   faces_sync.txt:1152  dBgActor_c's base-object constructor (C2), run by
+#                        daObjYajirusi_c's own constructor.
+#   faces_sync.txt:803   ShadowModel's constructor.
+#   faces_sync.txt:1183  dBgW_KcMbg::Transform, the moving mesh collider's
+#                        per-frame matrix apply.
+#   faces_sync.txt:1112  dActor_c::ClosestPlayer.  port/tools/closestplayer_guard.py
+#                        is the guard that exists for this row's class of
+#                        mistake, and it stays green on this tree: the row is a
+#                        FACE, which is what the guard asks for, not a raw
+#                        reader.
+
+__ZN22ExpandingHeapAllocator10MemoryLeftEv                               ?MemoryLeft@ExpandingHeapAllocator@@QAEIXZ                       0x0204e180 R
+__ZN14ArrowSignRight13InitResourcesEv                                    ?InitResources@ArrowSignRight@@QAEHXZ                            0x02137eec R
+__ZN7fBase_c9SceneNodeC1Ev                                               ??0SceneNode@fBase_c@@QAE@XZ                                     0x0203b4c4 R
+__ZN4Heap8_DestroyEv                                                     ?_Destroy@Heap@@QAEXXZ                                           0x0203c74c R
+__ZN10dBgActor_cC2Ev                                                     ??0dBgActor_c@@QAE@XZ                                            0x020eea50 R
+__ZN11ShadowModelC1Ev                                                    ??0ShadowModel@@QAE@XZ                                           0x02016068 R
+__ZN10dBgW_KcMbg9TransformERK9Matrix4x3s                                 ?Transform@dBgW_KcMbg@@QAEXABUMatrix4x3@@F@Z                     0x02039f20 R
+__ZN8dActor_c13ClosestPlayerEv                                           ?ClosestPlayer@dActor_c@@QAEPAUPlayer@@XZ                        0x02010ad8 R
+
+# THE ONE FORWARD ROW, and the only row in any of the eleven smoke ledgers that
+# is not a reverse face.  The name this target could not resolve is the
+# DECORATED one, ?InitResources@fBase_c@@UAEHXZ: hal/actor_vtables.cpp and the
+# fBase_c vtable fills spell fBase_c's first virtual as a C++ member, and the
+# body is src/_ZN7fBase_c13InitResourcesEv.cpp's flat Itanium symbol.  A forward
+# face is exactly that direction -- it DEFINES the decorated name as a forwarder
+# onto the flat one -- and port/faces_sync.txt:2179 is the row walk_window
+# already gets it from, through the full faces_sync_gen.cpp.  Copied verbatim,
+# column four F and all, so facegen emits the same forwarder here.
+#
+# out/SMOKELINK3/next_targets.md predicted this row would be a ledger copy
+# rather than a derivation, and it is.
+
+__ZN7fBase_c13InitResourcesEv                                            ?InitResources@fBase_c@@UAEHXZ                                   0x02043c80 F
+
+# THE SECOND-ORDER LEDGER ROW.  Particle::Manager::AddSystem is what
+# src/_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_.c calls, and that TU
+# arrives with dActor_c::PoofDustAt.  A non-static member, receiver in ECX, so
+# it is a face and not an alias; walk_window gets the same row out of the full
+# faces_sync_gen.cpp.  Copied verbatim from port/faces_sync.txt:2891.
+
+__ZN8Particle7Manager9AddSystemEiR7Vector3                               ?AddSystem@Manager@Particle@@QAEPAUSystem@2@HAAUVector3@@@Z      0x02049e0c R
+
+# THE THIRD-ORDER LEDGER ROW.  src/_ZN13HeapAllocator6RemoveEv.cpp arrived in
+# round 3 and calls NestedHeapIterator::Remove(HeapAllocator *), which is the
+# one row port/faces_sync_smoke_roots.txt derived by address rather than copied
+# (config/arm9/symbols.txt:1999 gives it as function(arm,size=0x70) at
+# 0x0204dd28, include/NestedHeapIterator.h:28 declares it non-static so the
+# receiver is in ECX, and dumpbin /symbols on this tree's own object prints the
+# right hand side).  Copied verbatim from that file's line 70, and its sibling
+# FindNested stays an alias for the reason that file gives.
+
+__ZN18NestedHeapIterator6RemoveEP13HeapAllocator                         ?Remove@NestedHeapIterator@@QAEXPAUHeapAllocator@@@Z             0x0204dd28 R

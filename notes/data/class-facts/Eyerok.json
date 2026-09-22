@@ -1,0 +1,130 @@
+{
+  "class": "Eyerok",
+  "name_status": "COINED. The ROM's own RTTI name for this class is daIwante_c: _ZTS10daIwante_c at ov066:0x0211ad30 spells the bytes '10daIwante_c', and build/rtti.json (tools/rtti_extract.py) records mangled='10daIwante_c'. `Eyerok` appears nowhere in the cartridge; it is a coined name that config/arm9/overlays/ov066/symbols.txt has already baked into every function symbol of this class (_ZN6EyerokD1Ev, _ZN6Eyerok8BehaviorEv, ...) and into the vtable symbol _ZTV6Eyerok -- while the two RTTI records at the SAME table are still spelled _ZTI10daIwante_c / _ZTS10daIwante_c. The tree is therefore internally inconsistent, and a text-only promotion does not repoint symbols.txt, so this work keeps the coined spelling. Measurable consequence: tools/rtti_vtables.py --own Eyerok answers 'no vtable for Eyerok' while --own daIwante_c answers 32 slots, and romdata_check.check_object rates the emitted _ZTI6Eyerok/_ZTS6Eyerok UNNAMED -- no ROM home -- so a key-function TU for this class must license those two as plain `deadstrip`, not `deadstrip-data`.",
+  "rtti_name": "10daIwante_c",
+  "rtti_name_address": "0x0211ad30",
+  "overlay": "ov066",
+  "module_base": "0x02115ee0",
+  "typeinfo": {
+    "symbol": "_ZTI10daIwante_c",
+    "address": "0x0211ad24",
+    "kind": "__si_class_type_info",
+    "words": [
+      "0x0209a764",
+      "0x0211ad30",
+      "0x021089ec"
+    ],
+    "note": "+0 = vtable-for-__si_class_type_info (main), +4 = name string (_ZTS10daIwante_c), +8 = base typeinfo = _ZTI10dBgActor_c, which is homed in ov002, NOT in this overlay"
+  },
+  "vtable": {
+    "symbol": "_ZTV6Eyerok",
+    "address": "0x0211ad64",
+    "slots": 32,
+    "symbol_extent": "0x80",
+    "storage_size": "0x88",
+    "storage_start": "0x0211ad5c",
+    "header_words": {
+      "offset_to_top": "0x0",
+      "typeinfo": "0x0211ad24"
+    },
+    "end_evidence": "Three independent tools agree on 32 slots / 0x80 from the address point. (1) Relocation gap: config/arm9/overlays/ov066/relocs.txt relocates every word from 0x0211ad64 to 0x0211ade0 with no gap and has no further relocation before .bss, so the run ends at 0x0211ade4. (2) tools/rtti_vtables.py --own daIwante_c: '32 slots (base 32)'. (3) romdata_check.check_object over a compile of src/_ZN6EyerokD1Ev.cpp (the key-function shard): bytes 128, emitted 128, blindWords 0. A direct ROM word read corroborates: slot 31 at 0x0211ade0 is 0x020ee55c and 0x0211ade4..0x0211adff is zero padding to the end of .data at 0x0211ae00. TRAPS MEASURED HERE: the naive next-symbol read gives 0x0211ae00 - 0x0211ad64 = 0x9c / 39 slots, an OVER-report by the section padding; and romdata_check's own romExtent field carries that same wrong 156, which is why its verdict for this table reads PARTIAL rather than VERIFIED even though every one of the 128 emitted bytes equals the cartridge.",
+    "storage_vs_extent_note": "0x88 storage = 8 bytes of offset-to-top + typeinfo preamble at 0x0211ad5c plus the 0x80 slot array the symbol names. Quoting one where the other is meant is its own source of confusion."
+  },
+  "base_class": "dBgActor_c",
+  "ancestor_chain": [
+    "Eyerok (RTTI daIwante_c)",
+    "dBgActor_c",
+    "dActor_c",
+    "dBase_c",
+    "fBase_c"
+  ],
+  "ancestor_chain_evidence": "Each link read from build/rtti.json via tools/rtti_vtables.py --own: daIwante_c : dBgActor_c (32 slots, base 32); dBgActor_c : dActor_c (32, base 31); dActor_c : dBase_c (31, base 18); dBase_c : fBase_c (18, base 18); fBase_c : None. Five levels counting self, the same depth as ov027/daPgDfdr_c.",
+  "rtti_homes": {
+    "_ZTV6Eyerok": "ov066:0x0211ad64",
+    "_ZTI6Eyerok": "NONE -- the ROM record is _ZTI10daIwante_c (ov066:0x0211ad24)",
+    "_ZTS6Eyerok": "NONE -- the ROM record is _ZTS10daIwante_c (ov066:0x0211ad30)",
+    "_ZTI10dBgActor_c": "ov002:0x021089ec",
+    "_ZTS10dBgActor_c": "ov002:0x02108a04",
+    "_ZTI8dActor_c": "arm9:0x0208e390",
+    "_ZTS8dActor_c": "arm9:0x0208e384",
+    "_ZTI7dBase_c": "arm9:0x02086e78",
+    "_ZTS7dBase_c": "arm9:0x02086e54",
+    "_ZTI7fBase_c": "arm9:0x02086d70",
+    "_ZTS7fBase_c": "arm9:0x02086e60"
+  },
+  "compiler_only_row_count": {
+    "for_a_key_function_TU": 13,
+    "derivation": "2 x (4 ancestors + self) + 1 vtable = 11 data rows, which romdata_check.check_object confirms exactly: compiling src/_ZN6EyerokD1Ev.cpp emits precisely those 11 data symbols and no others. +1 for _ZN7Vector3D1Ev, odr-used because the class holds Vector3 mDustPos[0x14] at 0x4dc and D1 tears it down with __destroy_arr(..., _ZN7Vector3D1Ev). +1 for _ZN4Vec4D1Ev, the implicit destructor of the file-local shadow struct `Vec4 { int a,b,c,d; ~Vec4(){} }` that ROM ordinal 50 declares. Total 13.",
+    "for_this_partial_promotion": 2,
+    "why_it_differs": "src/actors/Eyerok.cpp claims ROM ordinals 25..58 only. The destructor pair (ordinals 0 and 1) stays in src/_ZN6EyerokD1Ev.cpp / src/_ZN6EyerokD0Ev.cpp, and include/Eyerok.h declares ~Eyerok() out of line, so the destructor -- the first and only virtual the header declares -- remains the key function and remains OUTSIDE this TU. A TU that does not own the key function emits no vtable and no typeinfo, so all 11 data rows disappear and only the two function rows remain. That is the whole reason this promotion's compiler_only_output is 2 and not 13.",
+    "oracle_note": "ov066 had no sibling_oracle. These are the measured numbers for the next writer in this overlay: 5 ancestry levels, 11 data rows for a key-function TU, 13 with the two function rows, 2 for a non-key-function partial. The queue's compiler-only column for ov066 rows should be read as 13 (key-function) or 2 (not), never as a single number."
+  },
+  "overrides": [
+    {
+      "slot": 0,
+      "address": "0x02119ce8",
+      "name": "InitResources",
+      "size": "0x05f4"
+    },
+    {
+      "slot": 3,
+      "address": "0x02119654",
+      "name": "CleanupResources",
+      "size": "0x014c"
+    },
+    {
+      "slot": 6,
+      "address": "0x02119838",
+      "name": "Behavior",
+      "size": "0x04b0"
+    },
+    {
+      "slot": 9,
+      "address": "0x021197a4",
+      "name": "Render",
+      "size": "0x0094"
+    },
+    {
+      "slot": 12,
+      "address": "0x021197a0",
+      "name": "OnPendingDestroy",
+      "size": "0x0004"
+    },
+    {
+      "slot": 16,
+      "address": "0x02115ee0",
+      "name": "~Eyerok (D1)",
+      "size": "0x00a4"
+    },
+    {
+      "slot": 17,
+      "address": "0x02115f84",
+      "name": "~Eyerok (D0)",
+      "size": "0x00b8"
+    },
+    {
+      "slot": 29,
+      "address": "0x0211a2dc",
+      "name": "OnAimedAtWithEgg",
+      "size": "0x0008"
+    }
+  ],
+  "destructor_placement": {
+    "rom_order": "D1 at 0x02115ee0 sits BELOW D0 at 0x02115f84",
+    "implication": "An in-class `virtual ~Eyerok() {}` emits D1 then D0, which is the cartridge's order, so this class CAN be promoted whole on the destructor lever -- unlike ov091/daDsnBase_c. It is not what blocks the whole run here.",
+    "as_shipped": "include/Eyerok.h is left UNCHANGED (destructor still out of line) because the D1/D0 shards are outside this partial claim and still define it out of line; inlining it in the header would be a duplicate definition. A later writer who can take the whole run should inline it, and should expect the 13-row compiler_only_output above at the same time."
+  },
+  "size": "0x874",
+  "size_evidence": "The factory daIwante_c_classInit (ov066:0x0211a370, size 0xa8) calls fBase_c::operator new(0x874) and then stores 0x0211ad64 (_ZTV6Eyerok) at [this]. include/Eyerok.h closes the field span on the same number. Builder correction: this entry previously named the factory's source as a file that does not exist -- it lives in src/d_a_iwante.cpp, lines 21 and 24. tools/opnew_sizes.py agrees independently: 1 site, size 0x874, confidence inline_store, unambiguous, vtable 0x0211ad64.",
+  "linker_run": {
+    "range": "0x02115ee0..0x0211a2e4",
+    "functions": 61,
+    "promoted": "ordinals 25..58 (34 functions), 0x021184c0..0x02119ce8",
+    "dropped": "ordinals 0..24, 59, 60"
+  },
+  "unproven": [
+    "Whether the six link-blocked shards can ever join the run without a symbols.txt entry naming 0x02112c08/c88/ca8/cc8/d48. They byte-match at 2004/b56 today (tools/match.py, strict relocs) but nothing DEFINES those addresses under the spellings the shards use (func_02112c08 etc); decl_common.h's `extern char func_02112c08;` is a declaration with no definition anywhere in the tree. Builder correction to this file's earlier wording: it is not true that no module names those addresses. They lie below ov066's own base (ov066 spans 0x02115ee0..0x0211b0ec), in the lower overlay slot ov066 is co-resident with, and fourteen overlays -- ov009, ov010, ov018, ov019, ov022, ov024, ov025, ov027, ov032, ov035, ov036, ov045, ov056, ov060 -- each name an overlay-local symbol there, nearly all flagged `ambiguous`, disagreeing on kind (func_ov060_02112d48 is a function; data_ov035_02112c88 is bss). The open question is therefore which overlay is resident alongside ov066, not what to call the address.",
+    "Whether `Eyerok` or `daIwante_c` should be the tree's spelling. This work did not decide it; it only measured that the ROM says daIwante_c and the tree says Eyerok.",
+    "The signedness of data_ov066_0211ae00/04/08/0c/10 and data_ov066_0211abe0. The shards disagree (s8 in two files, unsigned char in eleven); this TU uses unsigned char and every member in the claim byte-matches under it, but only the members in the claim were tested, and all their uses are stores or equality tests where the sign cannot show."
+  ]
+}

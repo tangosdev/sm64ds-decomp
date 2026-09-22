@@ -89,7 +89,7 @@ extracted/dsd/arm9_overlays/ov006.bin was not read for any purpose.
 
 CALLEE CENSUS. NO CASCADE, for either body. Same three callees, all in main,
 all with decompiled bodies already:
-    0x0203d744  _ZN4cstd4sqrtEy              src/_ZN4cstd4sqrtEy.c
+    0x0203d744  _ZN4cstd4sqrtEy              src/_ZN4cstd4sqrtEy.cpp
     0x0203b4dc  _ZN4cstd5atan2E5Fix12IiES1_  src/_ZN4cstd5atan2E5Fix12IiES1_.c
     0x02012718  func_02012718                src/func_02012718.c
 Call sites: 020e1dc8 has 2 + 2 + 1; 020e20bc has 3 + 3 + 1. Data: data_02082214
@@ -286,7 +286,7 @@ whatever it turns out to draw:
 
   * 0x0202e78c IS NOT AN ADDRESS WITH NO SYMBOL. config/arm9/symbols.txt:1116
     reads `_ZN2GX15DisableAllBanksEv kind:function(arm,size=0x48)
-    addr:0x0202e78c`, and src/_ZN2GX15DisableAllBanksEv.c is a matched body
+    addr:0x0202e78c`, and src/_ZN2GX15DisableAllBanksEv.cpp is a matched body
     that turns off all thirteen VRAM banks. The face's own comment ("an arm9
     address with no config symbol at all") is simply wrong, and
     port/mg_fanout_costs.txt:907 and port/nfs_names_map.txt:373 repeat it.
@@ -297,7 +297,7 @@ whatever it turns out to draw:
     body was never called. hal/scene_boot.cpp:1182 already aliases a THIRD
     spelling of the same function, the MSVC-mangled one, so the tree carries
     two working routes to it and one dead stub.
-  * WHY IT IS A PLAUSIBLE TINT. Its one caller, src/func_ov004_020b265c.c, is
+  * WHY IT IS A PLAUSIBLE TINT. Its one caller, src/_ZN11dScMgBase_c9Virtual84Ev.cpp, is
     the minigame's VRAM setup: set graphics mode, DISABLE ALL BANKS, then
     re-assign BG/OBJ/sub-BG/sub-OBJ and decompress tiles into 0x6404000 and
     0x6604000. Skipping the teardown leaves the previous scene's bank
@@ -341,10 +341,10 @@ wrong turn.**
 
   * THE MUSIC START IS ALREADY DISPATCHED, through a LINKED route, and the wall
     is not in the way of it. The chain is the fourth route below --
-    func_ov004_020b08f0 (framework slot 2, hosted and entered)
+    _ZN11dScMgBase_c18AfterInitResourcesEj (framework slot 2, hosted and entered)
       -> func_ov004_020ae330
         -> _ZN5Sound22LoadAndSetMusic_Layer1Ei
-    and it runs. "Reachable only through func_ov004_020b87e0" is FALSE: that is
+    and it runs. "Reachable only through _ZN10dMgState_c8SetStateEi" is FALSE: that is
     a claim about the first three TUs (020ae20c / 020ae2c8, called from the
     unrouted 020b7124 / _020b746c / _020b77b4), and it does not generalise to
     the music start, which reaches it by the linked slot-2 path instead.
@@ -362,7 +362,7 @@ wrong turn.**
     undersized-global class, NOT the pointer-to-member wall.
 
   * ROUTED TO LANE MUS1, which owns the data_0209b308 sizing-and-seeding fix.
-    It is NOT the func_ov004_020b87e0 wall lane, and it is not the same twenty
+    It is NOT the _ZN10dMgState_c8SetStateEi wall lane, and it is not the same twenty
     addresses. The last paragraph of this section (the two-track-params-firing
     observation) still stands and is still worth MUS1's attention.
 
@@ -382,13 +382,13 @@ function a course boot uses. Four matched TUs call it on the minigame side:
     src/func_ov004_020ae20c.c   \
     src/func_ov004_020ae2c8.cpp  }  called only from func_ov004_020b7124,
                                  }  func_ov004_020b746c, func_ov004_020b77b4
-    src/func_ov004_020ae330.c   -- called from func_ov004_020b08f0
-    src/func_ov006_0211c5d0.c   -- a different minigame
+    src/func_ov004_020ae330.c   -- called from _ZN11dScMgBase_c18AfterInitResourcesEj
+    src/actors/dScMgSound_c.cpp   -- a different minigame
 
 THE FIRST THREE HAVE NO CALLER IN src/ AT ALL. Nothing in the decomp reaches
 func_ov004_020b7124, _020b746c or _020b77b4 by name; they are reachable only
 through a member-pointer dispatch. That dispatch is dScMgBase_c's state setter,
-func_ov004_020b87e0, which is THE WALL -- still a reporting trap in
+_ZN10dMgState_c8SetStateEi, which is THE WALL -- still a reporting trap in
 hal/scene_mg_faces.cpp, and unmatched/MgBase_StateDispatch.cpp's section 4 says
 in as many words that it "needs its twenty addresses routed ... and that is a
 lane of its own". The twenty addresses were read out of ov004 for this note
@@ -396,7 +396,7 @@ lane of its own". The twenty addresses were read out of ov004 for this note
 zero) and run 0x020b6c10 through 0x020b8688: the framework's whole shell --
 intro, countdown, play, results -- is behind that one setter.
 
-THE FOURTH ROUTE IS REACHABLE AND WAS MEASURED. func_ov004_020b08f0 is hosted
+THE FOURTH ROUTE IS REACHABLE AND WAS MEASURED. _ZN11dScMgBase_c18AfterInitResourcesEj is hosted
 as framework slot 2 in hal/scene_mg.cpp and a scene-374 run reports it entered
 once. It calls func_ov004_020ae330, which opens with
 
@@ -405,7 +405,7 @@ once. It calls func_ov004_020ae330, which opens with
 and a 600-frame scene-374 run with SM64DS_SND_TRACE=1 emits ZERO sound commands
 of any opcode -- not a START_SEQ, not a track param, nothing. So on the selftest
 path the descriptor is null and the one reachable music start refuses itself
-before it sends anything. src/func_ov004_020b2adc.c:37 is the only writer of
+before it sends anything. src/_ZN11dScMgBase_cC2Ev.cpp:37 is the only writer of
 that global.
 
 SO THE MUSIC HAS TWO POSSIBLE MECHANISMS AND THIS LANE COULD NOT SEPARATE THEM:
@@ -413,7 +413,7 @@ either the framework never reaches the states that start the music (the wall),
 or data_ov004_020beb68 is null when the one reachable starter runs. Both are
 ov004 framework problems, both are well past the "three new bodies" ceiling
 this lane was given, and neither is a curling problem. ROUTED to whoever takes
-the func_ov004_020b87e0 lane -- it is the same twenty addresses either way.
+the _ZN10dMgState_c8SetStateEi lane -- it is the same twenty addresses either way.
 
 WHAT THE OWNER'S SESSION ADDS, and it is worth the next lane's attention: his
 log DOES show the two track params firing, so on the kit's real boot the sound

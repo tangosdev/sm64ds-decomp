@@ -14,7 +14,7 @@ extern "C" void _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void* self, v
 extern "C" int _ZNK9Animation12WillHitFrameEi(void* a, int frame);
 extern "C" void func_ov006_020c1420(char* c, short a1, int a2);
 
-extern V* func_020beb68;
+extern V* data_ov004_020beb68;
 
 extern "C" void func_ov006_020c14bc(char* c)
 {
@@ -45,7 +45,7 @@ extern "C" void func_ov006_020c14bc(char* c)
 
     _ZN5Sound12PlayBank2_2DEj(0x141);
     if (*(short*)(c + 0x1d8) == *(short*)(c + 0x1da)) {
-        V* o = func_020beb68;
+        V* o = data_ov004_020beb68;
         if (o)
             o->v21();
     }

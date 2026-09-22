@@ -79,10 +79,10 @@ short Vec3_VertAngle(MrVec3 *v0, MrVec3 *v1);
 void Matrix4x3_FromRotationY(void *m, int angle);
 void Matrix4x3_ApplyInPlaceToRotationX(void *m, short angle);
 void MulVec3Mat4x3(MrVec3 *v, void *m, MrVec3 *out);
-void _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(void *thiz, void *clsn);
+void _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(void *thiz, void *clsn);
 void func_ov090_02132b14(void *c);
-void _ZN12CylinderClsn5ClearEv(void *c);
-void _ZN12CylinderClsn6UpdateEv(void *c);
+void _ZN5dCc_c5ClearEv(void *c);
+void _ZN5dCc_c6UpdateEv(void *c);
 void _Z14ApproachLinearRsss(short *v, short target, short step);
 void _ZN7PathPtrC1Ev(void *self);
 void _ZN7PathPtr6FromIDEj(void *self, unsigned id);
@@ -101,7 +101,7 @@ extern char data_020a0e68[];
 void *_ZN5Model8LoadFileER13SharedFilePtr(void *p);
 int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *f, int a, int b);
 void _ZN9Animation8LoadFileER13SharedFilePtr(void *p);
-void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(
+void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
         void *self, void *a, const MrVec3 *v, int b, int c, unsigned d, unsigned e);
 unsigned _ZNK7PathPtr8NumNodesEv(const void *self);
 extern char data_ov090_02134524[];

@@ -365,7 +365,42 @@ extern "C" void port_card_mount_publish_impl(void)
     }
 }
 
-/* Installed at static-init time; hal/fs.cpp calls it once its catalog is up. */
+/* Installed at static-init time, AND RUN THERE.
+ *
+ * run link100, lane LEVELBOOT. The pointer is still installed, because
+ * hal/fs.cpp's catalog load calling it a second time is free (g_published) and
+ * because a future target may bring the catalog up on its own. What changed is
+ * that the publish no longer WAITS for that call.
+ *
+ * The banner above says the publish hangs off the catalog load rather than off
+ * an archive read, and gives the right reason: Stage::InitResources calls
+ * LoadArchive for a level's archive before it reads a file out of it. The hole
+ * is that hal/fs.cpp's catalog load is itself LAZY -- it runs on the first file
+ * access through that file -- so the rule only held for a boot that happened to
+ * read a file first. A level boot does (the level model). A SCENE boot does
+ * not:
+ *
+ *     dScEntry_c::InitResources -> LoadTextNarcs -> LoadArchive(6)
+ *       -> func_02018934 -> func_02018d98 -> func_0205d518 -> func_0205d644
+ *       -> func_0205d714, `mov al,[esi]' with esi = 0
+ *
+ * Measured on scenes 4, 5 and 6: data_0208ecf4 read all thirteen entries zero
+ * at that call, so the ROM took its mount branch into the DS card loader, which
+ * on this host has no card to read. The residency word being true before any
+ * ROM code runs is what this file exists to guarantee, so it is guaranteed
+ * here rather than at whichever seam happens to touch a file first.
+ *
+ * SAFE IN A STATIC INITIALISER. port_fs_archive_get reads a catalog and a NARC
+ * with fopen/malloc into plain zero-initialised C statics; it depends on no
+ * dynamically initialised object in any translation unit, and port_archive_map
+ * is generated const data. It touches no DS memory window and no NitroSDK
+ * state, so it neither needs nor disturbs hal/fs_names.cpp's FS_Init
+ * initialiser, in either order.
+ */
 static struct PortCardMountInstall {
-    PortCardMountInstall() { port_card_mount_publish_all = port_card_mount_publish_impl; }
+    PortCardMountInstall()
+    {
+        port_card_mount_publish_all = port_card_mount_publish_impl;
+        port_card_mount_publish_impl();
+    }
 } g_card_mount_install;

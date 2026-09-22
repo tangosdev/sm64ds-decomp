@@ -1,4 +1,4 @@
-/* HOST COPY of src/_ZN6Player18St_LevelEnter_MainEv.cpp --
+/* HOST COPY of src/actors/Player.cpp --
  * Player::St_LevelEnter_Main, with its step table read as the eight-byte
  * records it is. That src file is the provenance: its line 22 is the
  * dispatch site this file replaces, (c->*data_ov002_0211075c[...])().

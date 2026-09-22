@@ -37,7 +37,7 @@ module:overlay(7)`, and 0x02090868 is ACTOR_SPAWN_TABLE + 4, the slot for actor
 id 1. The record at 0x02103264 reads, out of extracted/overlays/overlay_0007.bin
 at (addr - 0x020ad660):
 
-    +0  d0 ca 0c 02    0x020ccad0   the factory, func_ov007_020ccad0
+    +0  d0 ca 0c 02    0x020ccad0   the factory, dScDSMT_c_classInit
     +4  01 00          1            the actor id, which the registry cross-checks
     +6  03 00          3
     +8  "9dScDSMT_c\0\0"            the Itanium type name, inline
@@ -60,7 +60,7 @@ THE WIDTH IS 18, and vtspan's three routes agree with no disagreement to report:
      settle it.
   3. SEMANTIC TAIL. Every one of the eleven non-overridden slots holds the same
      arm9 address ov003's three classes hold, byte for byte. dScDSMT_c is
-     _ZTV5Scene with seven slots overridden and adds no virtual of its own.
+     _ZTV8dScene_c with seven slots overridden and adds no virtual of its own.
 
 So scene_fill_shared's hardcoded eighteen-slot shape HOLDS and was left alone.
 The caveat is discharged by measurement, not by widening: a width parameter with
@@ -126,7 +126,7 @@ the NAME was recovered and says nothing about where the BODY came from.
 THE PLACEHOLDER BLOCKER, the other thing that stopped dScTitle_c, also cleared.
 The dtor pair spells its vptr restores with per-TU stand-ins, and the ROM words
 are in each body's literal pool: _ZTV9dScDSMT_c and VT0 are 0x021032e8,
-_ZTV8dScene_c and VT1 are 0x02092680 (_ZTV5Scene), _ZTV7dBase_c and VT2 are
+_ZTV8dScene_c and VT1 are 0x02092680 (_ZTV8dScene_c), _ZTV7dBase_c and VT2 are
 0x0208e4b8 (_ZTV12ActorDerived), G0 is 0x020a0eac. Two of the six needed a face
 and four resolve to storage that already exists; hal/scene_boot.cpp has the
 full reasoning, including the one that is a KNOWN DIVERGENCE rather than a fix.
@@ -279,7 +279,7 @@ WHAT IS PROVEN, precisely, and it is most of the seat:
   - the ROM's own factory ran and returned an object whose vptr is the filled
     mount array;
   - the object became the scene tree root;
-  - SLOT 0 WAS DISPATCHED. The fault is INSIDE func_ov007_020cc4c0, three calls
+  - SLOT 0 WAS DISPATCHED. The fault is INSIDE _ZN9dScDSMT_c13InitResourcesEv, three calls
     down, not before it. The eighteen-slot fill and the +0x50 sub-object vptr
     are exercised, not merely written.
 
@@ -309,7 +309,7 @@ symbolized with port/tools/faultmap.py, innermost first:
     func_ov007_020b68e8
     func_ov007_020b7138
     ... the graph-callback chain (020cca74/68/80/98, 020ccab4)
-    func_ov007_020cc4c0        <- InitResources
+    _ZN9dScDSMT_c13InitResourcesEv        <- InitResources
     ti_init                    <- the slot 0 thunk
     func_0204335c / func_020433b8 / func_02043098   the ROM's spawn spine
 
@@ -359,7 +359,7 @@ THEM FOR REAL IS TWELVE MORE BODIES PER TABLE AND IS NOT THIS LANE'S.
 
 WHAT WAS TRIED AND REFUSED. SM64DS_SCENE_SLOT0=0 exists as the direct analogue
 of the star select's SLOT9=0 and it does NOT make a battery entry: with
-InitResources no-op'd the Render faults instead (func_ov007_020cc2b0 ->
+InitResources no-op'd the Render faults instead (_ZN9dScDSMT_c6RenderEv ->
 func_ov007_020b7040 -> func_ov007_020bcf90, accessing 0x00000004), which is what
 an uninitialised object should do. A skip that green-lit that would have been a
 green over nothing. The knob stays for diagnosis and the scene goes in
@@ -372,7 +372,7 @@ TWO EARLIER FAULTS WERE FIXED RATHER THAN RECORDED, and both are worth reading
 because both are traps the next lane will meet:
 
   a. A CALLING-CONVENTION MISMATCH DRESSED AS A VTABLE BUG.
-     `?SetFaders@Scene@@QAEXPAUFaderBrightness@@@Z` is __thiscall and the
+     `?SetFaders@dScene_c@@QAEXPAUFaderBrightness@@@Z` is __thiscall and the
      matched TU defines a __cdecl function with one stack parameter. An
      /alternatename between them LINKS, and then the callee reads the stack
      argument as `this`: InitResources calls it with this = self+0x54 and
@@ -433,7 +433,7 @@ THE NEW STOP, symbolized against this tree's own walk_window.map:
     func_ov007_020b066c   +0x124   <- the fault
     func_ov007_020aed98   +0x66
     func_ov007_020b7090   +0x70
-    func_ov007_020cc4c0   +0xcf    <- InitResources, one call further on
+    _ZN9dScDSMT_c13InitResourcesEv   +0xcf    <- InitResources, one call further on
     ti_init               +0xc
     func_0204335c / func_020433b8 / func_02043098 / func_02042fe4
     Scene::SpawnIfNecessary / port_scene_run / main
@@ -475,7 +475,7 @@ to prevent. Whoever picks up the NEXT one should want a real match first and
 reach for a transcription only if the address is genuinely stuck.
 
 ALSO STANDING IN THE SAME RUN, and none of them is the stop: func_ov007_020b46b0
-enters 24 times (the loop in src/func_ov007_020aed98.c runs it 0x18 times),
+enters 24 times (the loop in src/func_ov007_020aed98.cpp runs it 0x18 times),
 func_ov007_020c20b8 once, func_02054c80 once, and one data_0208ea6c vtable slot
 once. They return 0 and the run keeps going, so they are debt rather than
 blockers today, and the run reports them by name every time.
@@ -487,7 +487,7 @@ throwaway probe in ti_init, not reasoned:
 
     SC1PROBE ti_init entry data_0209d524=00000000
 
-src/func_ov007_020cc4c0.cpp opens `if (data_0209d524 != 0) func_0201a428();`,
+src/_ZN9dScDSMT_c13InitResourcesEv.cpp opens `if (data_0209d524 != 0) func_0201a428();`,
 so with the global null the branch is not taken and Heap::Destroy is never
 dispatched. The global has exactly one non-zero writer in the tree,
 src/func_0201a458.c (Heap::CreateRootHeap over the ov region), and nothing on
@@ -502,7 +502,7 @@ entry so the branch takes:
     SC1PROBE _ZN4Heap7DestroyEv receiver=009125F8
     SC1PROBE VDestroy slot 2 ran, self=009125F8
 
-The receiver survives func_ov007_020cc4c0 -> func_0201a428 -> the flat C face
+The receiver survives _ZN9dScDSMT_c13InitResourcesEv -> func_0201a428 -> the flat C face
 -> Heap::Destroy -> the slot 2 dispatch, one value, unchanged at every hop.
 
 THE VENEER IS NOT IN THAT CHAIN and an earlier draft of this paragraph said it
@@ -563,7 +563,7 @@ Symbolized against this tree's own walk_window.map:
     func_ov007_020b0a20   +0x6b
     func_ov007_020aed98   +0xc2
     func_ov007_020b7090   +0x70
-    func_ov007_020cc4c0   +0xcf    <- InitResources, two calls further on
+    _ZN9dScDSMT_c13InitResourcesEv   +0xcf    <- InitResources, two calls further on
     ti_init               +0x61    <- was +0xc before this lane's own marker
                                       notice moved the call site down
     func_0204335c / func_020433b8 / func_02043098 / func_02042fe4
@@ -754,7 +754,7 @@ InitResources clears its archive teardown, its graphics bring-up,
 Scene::SetFaders, the whole func_ov007_020b7138 subtree AND the widget setup at
 func_ov007_020b2998 before dying. The trap census in the same run is four names
 and none of them is the blocker: func_ov007_020b46b0 twenty-four times (the
-0x18 loop in src/func_ov007_020aed98.c), then func_ov007_020c20b8,
+0x18 loop in src/func_ov007_020aed98.cpp), then func_ov007_020c20b8,
 func_02054c80 and one data_0208ea6c slot once each. func_ov007_020b2998 is off
 that list for the first time since lane L2 wrote it.
 
@@ -851,7 +851,7 @@ these. Symbolized against this tree's own walk_window.map:
     func_ov007_020add3c   +0x9
     func_ov007_020aed98   +0x13d
     func_ov007_020b7090   +0x70
-    func_ov007_020cc4c0   +0xcf    <- InitResources
+    _ZN9dScDSMT_c13InitResourcesEv   +0xcf    <- InitResources
     ti_init               +0xc     <- 5b's run read +0x61 here
     func_0204335c / func_020433b8 / func_02043098 / func_02042fe4
     Scene::SpawnIfNecessary / port_scene_run / main
@@ -1124,7 +1124,7 @@ disagreement about method:
     of the build and the host copy declares all three. 14 becomes 13.
   * THREE ROWS BOTH EARLIER SWEEPS MISSED, verified by hand in the sources:
 
-        _ZN6Player17St_EndingFly_MainEv  defined 1, declared (void) by
+        func_ov007_020c3d1c  defined 1, declared (void) by
                                          src/func_ov007_020c05f8.c
         func_ov007_020c43bc              defined 2, declared 1 by
                                          src/func_ov007_020b4b5c.c
@@ -1322,7 +1322,7 @@ occur 22 times in overlay 7. Every one of the 22 is written in C as a one-line
 forwarder whose own signature and whose `extern` of the target BOTH say (void),
 so the two agree and there is no arity disagreement to count. What disagrees is
 the veneer's arity and its CALLERS'. Seventeen of the 22 target 0x020c3d1c, the
-symbol carrying the name _ZN6Player17St_EndingFly_MainEv, which takes `void *self`
+symbol carrying the name func_ov007_020c3d1c, which takes `void *self`
 and hands it to a function pointer; 19 of the 22 have at least one C caller that
 passes an argument the target reads, across 86 call sites.
 
@@ -1386,7 +1386,7 @@ config/arm9/overlays/ov007/relocs.txt, every hop a real arm_call:
     cc4c0 InitResources -> b7090 -> aed98 -> add3c -> ae558
 
 The position inside that chain comes from the matched sources and not from a
-guess. func_ov007_020cc4c0's last three calls are b7138, then b7090, then
+guess. _ZN9dScDSMT_c13InitResourcesEv's last three calls are b7138, then b7090, then
 Sound::LoadInitialGroup(2). func_ov007_020b7090 calls c20b8, b2e64, c1db0,
 then func_ov007_020bdebc at 0x020b70f4, and then aed98 at 0x020b70f8 with
 bdebc's return riding in r0 as aed98's argument. bdebc was missing from an
@@ -1422,7 +1422,7 @@ finishes and Behavior runs 299 clean ticks. The next-seam prediction below is
 NOT confirmed, and 5e scores both halves.)
 
 THE NEXT SEAM, AND THE EVIDENCE FOR PICKING IT. After InitResources returns,
-the scene runs Behavior, and src/func_ov007_020cc2cc.c's first substantive call
+the scene runs Behavior, and src/_ZN9dScDSMT_c8BehaviorEv.cpp's first substantive call
 is func_ov007_020b7090 again. b7090 calls func_ov007_020b2e64 BEFORE it calls
 aed98, and b2e64 reaches b3360 in one hop. So the shortest live path out of
 Behavior is
@@ -1717,7 +1717,7 @@ Symbolized against this tree's own walk_window.map:
     func_ov007_020b2370      +0xb4
     func_ov007_020bcf90      +0x18f
     func_ov007_020b7040      +0x5
-    func_ov007_020cc2b0      +0xb     <- the scene's Render slot
+    _ZN9dScDSMT_c6RenderEv      +0xb     <- the scene's Render slot
     ti_render                +0xc
     port_actor_process / func_0204322c / port_dispatch_guarded / func_02043fdc
     port_actor_render / port_scene_run / main
@@ -2100,7 +2100,7 @@ Thirteen remain after this lane's deletion:
   static DATA before it tested for a calling convention, with `@@3`, and `@@3`
   is the static-data marker only where it follows the qualified NAME. Inside an
   argument list a bare 3 is a back-reference to the third distinct type, so
-  ?BeforeClsn@MeshColliderBase@@UAEXAAUClsnResult@@PAUActor@@AAUVector3@@PAUVector3_16@@3@Z
+  ?BeforeClsn@dBgW@@UAEXAAUClsnResult@@PAUActor@@AAUVector3@@PAUVector3_16@@3@Z
   matched it and one real __thiscall row was filed as data. A function mangling
   always ends in Z and a data mangling never does, so THAT is the test that
   goes first. Fixing it also emptied a twelve-row "other-mangled" bucket into
@@ -2387,7 +2387,7 @@ exactly one place: dScDSMT_c's graphCallback_c slot 2.
 
     and dScDSMT_c::InitResources parks its own graphCallback_c sub-object
     there (`data_0209d4a8 = self + 0x50`). Slot 2 of that block's table is
-    func_ov007_020cc0f4, and that is the ROM's own relocation rather than a
+    _ZN9dScDSMT_c15graphCallback_c14GraphCallback2Ev, and that is the ROM's own relocation rather than a
     reading of the port's seat: config/arm9/overlays/ov007/relocs.txt has
     from:0x021032b8 kind:load to:0x020cc0f4 module:overlay(7). cc0f4 calls
     func_ov007_020b6eb4 and RETURNS 0.
@@ -2648,7 +2648,7 @@ cotangent by `aspect`. The host stack, resolved against walk_window.map:
       func_ov007_020b1fa4
       func_ov007_020b0a20
       func_ov007_020aed98
-      func_ov007_020cc4c0        dScDSMT_c::InitResources
+      _ZN9dScDSMT_c13InitResourcesEv        dScDSMT_c::InitResources
 
 and the same binary's OTHER PerspectiveW_ caller, the ROM's generic
 Initialise3dGraphics, passes aspect 5461 on the same boot and gets it right.
@@ -2674,7 +2674,7 @@ because cstd::ldiv RETURNED A DEAD WORD.
 
 AND THAT IS THE DEFECT, one raw MMIO caller and not a graphics bug at all.
 src/_ZN4cstd10fdiv_asyncE5Fix12IiE5Fix12IiE.c reaches DIVCNT, DIV_NUMER and
-DIV_DENOM through plain literal-address stores and src/_ZN4cstd4ldivEii.c reads
+DIV_DENOM through plain literal-address stores and src/_ZN4cstd4ldivEii.cpp reads
 DIV_RESULT the same way. ntr maps real memory across the DS I/O window, so
 those stores latch in ordinary memory and ntr::run_divide is never entered --
 the identical shape port/tools/hostgen.py's own header records for MTX_SCALE
@@ -2696,7 +2696,7 @@ to look at first, which is what the CMakeLists comment beside it says.
 
 THE BLAST RADIUS IS ONE CALLER AND IT WAS SWEPT RATHER THAN ASSUMED.
 cstd::fdiv, the divider's other client and the one every level uses, is a HOST
-FACE in port/hal/cstd_div.c and src/_ZN4cstd4fdivEii.c is not in the link at
+FACE in port/hal/cstd_div.c and src/_ZN4cstd4fdivEii.cpp is not in the link at
 all (the map has __ZN4cstd4fdivEii from cstd_div.c.obj). cstd::ldiv's only
 caller anywhere in src/ is func_ov007_020c0128, and fdiv_async's only callers
 are cstd::fdiv and cstd::ldiv. The only live path this changes is the title
@@ -2900,7 +2900,7 @@ families:
 
 FOUR MORE ARE NOT IN THE SLICE because MSVC cannot compile them:
 src/Matrix3x3_LoadIdentity.c, src/MultiStore32Bytes.c, src/func_02052ec8.c and
-src/_ZN4CP1510EnableDTCMEv.c are `asm` blocks. The first three carry the tree's
+src/_ZN4CP1510EnableDTCMEv.cpp are `asm` blocks. The first three carry the tree's
 HAND-ASM PRIMITIVE banner and are transcribed in hal/scene_boot.cpp with the asm
 quoted beside each; the fourth is a CP15 control-register write the host has no
 hardware for. None counts as linked. The whole slice was swept for the pattern,
@@ -3609,7 +3609,7 @@ same limit VP1's 12d and 5h record.
     in the commit, so re-measuring means writing it again.
   - THE FACES ARE PROVEN FOR THREE CALLERS, NOT FIVE. src/ has five flat-name
     callers of the SetDefaultValues pair; only ReadFileData, ReadMinigameData
-    and EraseSaveFile are in a slice. src/_ZN8SaveData16EraseAllSaveDataEv.c
+    and EraseSaveFile are in a slice. src/_ZN8SaveData16EraseAllSaveDataEv.cpp
     and src/PrepareVsMode.c are in none, have never compiled and have never run
     through these faces. They are right for those two by shape and by nothing
     else, which is the limit 5f's Render face carries for FaderWipe.
@@ -3838,7 +3838,7 @@ extracted/overlays/overlay_0007.bin at base 0x020ad660 for the three-word shape
 
 and resolves both ends against config/arm9/overlays/ov007/symbols.txt and
 config/arm9/symbols.txt. It finds 22, which is 5d's number, and 17 of them
-target _ZN6Player17St_EndingFly_MainEv, which is also 5d's. The 22 is DECLARED
+target func_ov007_020c3d1c, which is also 5d's. The 22 is DECLARED
 as a tripwire: a different count REFUSES rather than asserting a different set
 than the one written down. Two of the 22 leave the overlay, to Deallocate and
 LoadFile.

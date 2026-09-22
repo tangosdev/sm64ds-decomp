@@ -11,7 +11,7 @@
 # symbol that already carries a `_ZTV*` name, so the generator's own rule
 # catches all of them.
 #
-# KoopaTheQuick_SpawnInfo's +4 halfword reads 188 and its table's RTTI name is
+# g_profile_RACE_NOKO's +4 halfword reads 188 and its table's RTTI name is
 # daRNk_c (the racing nokonoko). The overlay's other five classes -- CHUCKYA,
 # KOOPA, KOOPA_SMALL, KOOPA_FLAG and KLEPTO -- are not part of this gate; their
 # data is mounted anyway because a per-symbol mount takes the whole span.
@@ -23,17 +23,17 @@ data_ov062_0211d940:0x8 data_ov062_0211d948:0x8 data_ov062_0211d950:0x8
 data_ov062_0211d958:0x8 data_ov062_0211d960:0x8 data_ov062_0211d968:0x8
 data_ov062_0211d970:0x8 data_ov062_0211d978:0x8 data_ov062_0211d980:0x8
 data_ov062_0211d988:0x8 data_ov062_0211d990:0x8 data_ov062_0211d998:0x8
-data_ov062_0211d9a0:0xc data_ov062_0211d9ac:0x10 Chuckya_SpawnInfo:0x1c
-data_ov062_0211da5c:0xc data_ov062_0211da68:0xc Koopa_SpawnInfo:0x1c
-KoopaSmall_SpawnInfo:0x1c data_ov062_0211db30:0x8 data_ov062_0211db38:0x8
+_ZTI10daHolhei_c:0xc _ZTS10daHolhei_c:0x10 g_profile_HOLHEI:0x1c
+_ZTS8daNknk_c:0xc _ZTI8daNknk_c:0xc g_profile_NOKONOKO:0x1c
+g_profile_NOKONOKO_S:0x1c data_ov062_0211db30:0x8 data_ov062_0211db38:0x8
 data_ov062_0211db40:0x8 data_ov062_0211db48:0x8 data_ov062_0211db50:0x8
-data_ov062_0211db58:0x8 data_ov062_0211db60:0xc data_ov062_0211db6c:0xc
-KoopaTheQuick_SpawnInfo:0x1c data_ov062_0211dc18:0xc data_ov062_0211dc24:0xc
-KoopaFlag_SpawnInfo:0x1c data_ov062_0211dcd0:0x8 data_ov062_0211dcd8:0x8
+data_ov062_0211db58:0x8 _ZTS7daRNk_c:0xc _ZTI7daRNk_c:0xc
+g_profile_RACE_NOKO:0x1c _ZTS9daRFlag_c:0xc _ZTI9daRFlag_c:0xc
+g_profile_RACE_FLAG:0x1c data_ov062_0211dcd0:0x8 data_ov062_0211dcd8:0x8
 data_ov062_0211dce0:0x8 data_ov062_0211dce8:0x8 data_ov062_0211dcf0:0x8
 data_ov062_0211dcf8:0x8 data_ov062_0211dd00:0x8 data_ov062_0211dd08:0x8
-data_ov062_0211dd10:0x8 data_ov062_0211dd18:0x8 data_ov062_0211dd20:0xc
-data_ov062_0211dd2c:0xc Klepto_SpawnInfo:0x1c data_ov062_0211dde0:0x8
+data_ov062_0211dd10:0x8 data_ov062_0211dd18:0x8 _ZTS9daJango_c:0xc
+_ZTI9daJango_c:0xc g_profile_JANGO:0x1c data_ov062_0211dde0:0x8
 data_ov062_0211dde8:0x8 data_ov062_0211ddf0:0x8 data_ov062_0211ddf8:0x8
 data_ov062_0211de00:0x8 data_ov062_0211de08:0x8 data_ov062_0211de10:0xc
 data_ov062_0211de1c:0xc data_ov062_0211de28:0xc data_ov062_0211de34:0xc

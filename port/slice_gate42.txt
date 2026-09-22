@@ -8,12 +8,12 @@
 # internal references to ov052's names at the shared address:
 #
 #   * PeachPainting::InitResources' `data_ov052_02111e84(this)` is really an
-#     arm_call to:0x02111e84 module:overlay(10) -- func_ov010_02111e84, a
+#     arm_call to:0x02111e84 module:overlay(10) -- _ZN13PeachPainting20UpdateModelTransformEv, a
 #     three-line helper that sets a rotation matrix and copies three scale
 #     words. ov052's 0x02111e84 is a CLPS collision table (first word "CLPS");
 #     calling it would crash. The real callee is the ov010 function, compiled
 #     here.
-#   * The `RollingRock_Spawn` the source hands Model::LoadFile is really an
+#   * The `daGrock_c_classInit` the source hands Model::LoadFile is really an
 #     ov010 load reloc to:0x02112d64 module:overlay(10) -- data_ov010_02112d64,
 #     an 8-byte BSS SharedFilePtr the ov010 sinits construct, already mounted
 #     in ov010_syms.txt. CleanupResources names the same data_ov010_02112d64
@@ -23,7 +23,7 @@
 # So the class has NO cross-overlay dependency. Its SpawnInfo is already mounted
 # (ov010_syms.txt, +4 halfword reads 38) and its methods are matched src. The
 # two mislabeled references are closed by /alternatename in hal/actor_classes.cpp
-# (data_ov052_02111e84 -> func_ov010_02111e84, RollingRock_Spawn ->
+# (data_ov052_02111e84 -> _ZN13PeachPainting20UpdateModelTransformEv, daGrock_c_classInit ->
 # data_ov010_02112d64), which is the shared-base reading gate 40/41 already used
 # for the same overlay.
 
@@ -31,15 +31,15 @@
 # InitResources 0x02111fc0, CleanupResources 0x02111ec4, Behavior 0x02111f28,
 # Render 0x02111ee8, D1 0x02111e10, D0 0x02111e40. All straight-line, no
 # pointer-to-member.
-src/PeachPainting_Spawn.c
+src/d_a_obj_c1_peach.c
 src/_ZN13PeachPainting13InitResourcesEv.cpp
 src/_ZN13PeachPainting8BehaviorEv.cpp
 src/_ZN13PeachPainting6RenderEv.cpp
-src/_ZN13PeachPainting16CleanupResourcesEv.c
-src/_ZN13PeachPaintingD0Ev.c
+src/_ZN13PeachPainting16CleanupResourcesEv.cpp
+src/_ZN13PeachPaintingD0Ev.cpp
 # D1 (slot 16) is a real C++ destructor over shadow Actor/Model classes, so it
 # is NOT compiled here (MSVC would emit references to base destructors no TU
 # defines); slot 16 is a pt_d1 thunk in hal/actor_classes.cpp instead -- Model
 # at 0xd4 then Actor::~Actor, the gate-31 recipe.
-# func_ov010_02111e84: the InitResources helper (the mislabeled data_ov052).
-src/func_ov010_02111e84.c
+# _ZN13PeachPainting20UpdateModelTransformEv: the InitResources helper (the mislabeled data_ov052).
+src/_ZN13PeachPainting20UpdateModelTransformEv.cpp

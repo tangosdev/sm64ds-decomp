@@ -22,7 +22,7 @@
 #   0x02131010 func_ov092_02131010          e92d4010  push {r4,lr}
 #   0x02131c44 _ZN6ToxBox8BehaviorEv        e92d4030  push {r4,r5,lr}
 #   0x02131da0 _ZN6ToxBox13InitResourcesEv  e92d40f0  push {r4-r7,lr}
-#   0x02132018 ToxBox_Spawn                 e92d4010  push {r4,lr}
+#   0x02132018 daOnms_c_classInit                 e92d4010  push {r4,lr}
 #   0x021320cc __sinit_ov092_021320cc       e92d4010  push {r4,lr}
 #
 # Sections, from config/arm9/overlays/ov092/delinks.txt:
@@ -43,7 +43,7 @@
 # own .text.
 #
 #   id   SpawnInfo   table slot   word[0] spawnFunc         idhalf  module
-#   309  0x021322ac  0x02090d38   0x02132018 ToxBox_Spawn   0x0135  overlay(92)
+#   309  0x021322ac  0x02090d38   0x02132018 daOnms_c_classInit   0x0135  overlay(92)
 #
 # 0x0135 = 309, and (0x02090d38 - 0x02090864) / 4 = 309. Both routes agree.
 #
@@ -51,7 +51,7 @@
 # recorded rather than papered over. dsd's next-symbol delta from 0x021322ac to
 # the vtable at 0x021322d0 is 0x24, nine words, but only the first SEVEN are
 # the SpawnInfo:
-#     w0 0x021322ac 02132018   ToxBox_Spawn
+#     w0 0x021322ac 02132018   daOnms_c_classInit
 #     w1 0x021322b0 01320135   low half 0x0135 = 309
 #     w2..w6                   flags and four Fix12 tuning words
 #     w7 0x021322c8 00000000   PAD to the vtable object's alignment
@@ -61,13 +61,13 @@
 # ov091's header states the same fact as "every *_SpawnInfo pinned to the
 # record's real 0x1c"; ov077's header calls w8 "the record's word[8]", which is
 # these same two words read one object short. Checked against ov077's own bytes
-# rather than inferred: Lakitu_SpawnInfo 0x02127848 has exactly the same shape,
+# rather than inferred: g_profile_JUGEM 0x02127848 has exactly the same shape,
 # w7 = 0 and w8 = 0x0212783c, its typeinfo.
 #
 # THIS LIST STILL MOUNTS 0x24 UNPINNED, matching ov077's three landed records,
 # and the two extra words are inert rather than merely harmless:
 #   * w7 is zero in the ROM and nothing writes it;
-#   * w8 is a relocated word into data_ov092_021322a0, which this list ALSO
+#   * w8 is a relocated word into _ZTI8daOnms_c, which this list ALSO
 #     mounts, so ovdata --pack rebases it to the host typeinfo record instead
 #     of leaving a DS address behind (ptr_audit reads 0 after this mount);
 #   * nothing on the host reads it. The host vtable is a separate 32-element
@@ -108,7 +108,7 @@
 #   * the ONE reloc from ov006 that lands inside a symbol this list mounts is
 #     `from:0x021335cc kind:load to:0x021322bc module:overlay(6)`, an ov006
 #     .ctor word pointing at an ov006 .init FUNCTION (ov006's .init spans
-#     0x0212f4c4..0x0213356c, so 0x021322bc is code there). ToxBox_SpawnInfo's
+#     0x0212f4c4..0x0213356c, so 0x021322bc is code there). g_profile_ONIMASU's
 #     word at that address is 0x002ee000, a Fix12 tuning constant. Two
 #     overlays, one address, two unrelated meanings, never co-resident.
 # Nothing in this lane spells a placeholder cxx_aliases.cpp binds, so there is
@@ -135,10 +135,10 @@
 # THE SEMANTIC TAIL SAYS PLATFORM, NOT ACTOR. slot 30 == 0x020100dc
 # Actor::OnAimedAtWithEggReturnVec is the last Actor slot, and slot 31 ==
 # 0x020ee55c, which config/arm9/overlays/ov002/symbols.txt:1175 names
-# _ZN8Platform4KillEv. So this is a 32-slot Platform close, the ov017
+# _ZN10dBgActor_c4KillEv. So this is a 32-slot Platform close, the ov017
 # ShipWater shape, not the 31-slot Actor close ov077's three classes take.
-# ToxBox_Spawn confirms it independently: it calls _ZN8PlatformC2Ev before it
-# stores _ZTV6ToxBox, and both destructors restore _ZTV8Platform on the way
+# daOnms_c_classInit confirms it independently: it calls _ZN10dBgActor_cC2Ev before it
+# stores _ZTV6ToxBox, and both destructors restore _ZTV10dBgActor_c on the way
 # down. Three independent confirmations of the same width.
 #
 # Own bodies: 0 InitResources, 3 CleanupResources, 6 Behavior, 9 Render,
@@ -157,7 +157,7 @@
 #     needs none of ov077's three /alternatename bridges;
 #   * both destructors AND the factory install the SAME address: the relocs at
 #     0x02130f54 (D1's pool), 0x02130fc0 (D0's pool) and 0x02132068
-#     (ToxBox_Spawn's pool) all read `to:0x021322d0 module:overlay(92)`.
+#     (daOnms_c_classInit's pool) all read `to:0x021322d0 module:overlay(92)`.
 # One class, one table, one spelling, three agreeing routes.
 #
 # ==== THE VTABLE IS EXCLUDED, AS HOST STORAGE ==============================
@@ -185,12 +185,12 @@
 #   the nine 0x8 rows (2240 2248 2250 2258 2260 2268 2270 2278 2280) are the
 #                              PMF SOURCE records, {function, 0} pairs, and
 #                              every one is exactly 8 bytes in the ROM
-#   data_ov092_02132288  0xc   the RTTI name string "8daOnms_c", 10 bytes used
+#   _ZTS8daOnms_c  0xc   the RTTI name string "8daOnms_c", 10 bytes used
 #   data_ov092_02132294  0xc   THREE relocated words (0x0213246c, 0x02132350,
 #                              0x021323dc), indexed [0..2] by InitResources on
 #                              the low two bits of mParam; 0xc is exact
-#   data_ov092_021322a0  0xc   the three-word typeinfo record
-#   ToxBox_SpawnInfo     0x24  the record's own 0x1c plus the vtable object's
+#   _ZTI8daOnms_c  0xc   the three-word typeinfo record
+#   g_profile_ONIMASU     0x24  the record's own 0x1c plus the vtable object's
 #                              pad word and typeinfo pointer -- derived in full
 #                              above, inert, and the ov077 precedent
 #   data_ov092_02132350  0x8c  } the three path blocks data_ov092_02132294
@@ -210,7 +210,7 @@
 data_ov092_02132074 data_ov092_02132080 data_ov092_0213208c data_ov092_02132220
 data_ov092_02132240 data_ov092_02132248 data_ov092_02132250 data_ov092_02132258
 data_ov092_02132260 data_ov092_02132268 data_ov092_02132270 data_ov092_02132278
-data_ov092_02132280 data_ov092_02132288 data_ov092_02132294 data_ov092_021322a0
-ToxBox_SpawnInfo data_ov092_02132350 data_ov092_021323dc data_ov092_0213246c
+data_ov092_02132280 _ZTS8daOnms_c data_ov092_02132294 _ZTI8daOnms_c
+g_profile_ONIMASU data_ov092_02132350 data_ov092_021323dc data_ov092_0213246c
 data_ov092_02132540 data_ov092_02132548 data_ov092_02132550 data_ov092_0213255c
 data_ov092_02132568

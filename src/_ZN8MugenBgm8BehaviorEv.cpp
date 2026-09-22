@@ -30,10 +30,10 @@ int MugenBgm::Behavior()
     int diff[3];
     int rotated[3];
 
-    Vec3_Sub(diff, (int*)(data_0209f394[data_0209f250] + 0x5c), (int*)((char*)&unk_05c));
+    Vec3_Sub(diff, (int*)(data_0209f394[data_0209f250] + 0x5c), (int*)&mPosX);
     Vec3_RotateYAndTranslate(rotated, data_020a0ebc, mAngleY, diff);
 
-    if (mParam == 1) {
+    if (param1 == 1) {
         int z = rotated[2];
         int x = rotated[0];
         int az = (z < 0) ? -z : z;
@@ -79,15 +79,15 @@ int MugenBgm::Behavior()
             _ZN3Fog4InitEt5Fix12IiES1_(fog, 0, (u16)depth, color);
     }
 
-    if (unk_098 == 0) {
+    if (mHorzSpeed == 0) {
         if (func_ov100_02144f84() == 0)
             return 1;
-        unk_098 = 1;
+        mHorzSpeed = 1;
     }
 
     if (_ZN5Sound7PlaySubEjjj5Fix12IiEb(0x2e, vol, flag, 0x1451, 0) != 0) {
         if (flag == 0)
-            unk_098 = 0;
+            mHorzSpeed = 0;
     }
     return 1;
 }

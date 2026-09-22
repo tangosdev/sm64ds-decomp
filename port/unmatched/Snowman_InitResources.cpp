@@ -1,4 +1,4 @@
-/* HOST COPY of src/func_ov072_02120a44.c -- the TextureSequence::Prepare
+/* HOST COPY of src/game/actors/d_a_bg_snwmn.cpp -- the TextureSequence::Prepare
  * calling-convention seam (the SHORT-1 argsweep row
  * __ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File), applied to
  * daBgSnwmn_c's ("SNOWMAN", actor id 272 -- NOT SnowmanBody or
@@ -11,7 +11,7 @@
  * consuming THREE ARM registers at the ABI level: r0=this, r1=&model,
  * r2=&animFile. Its ROM body is a tail-call veneer that does not touch
  * r0-r2, so whatever the caller already has loaded rides straight
- * through. The matched src/func_ov072_02120a44.c calls it as a
+ * through. The matched src/game/actors/d_a_bg_snwmn.cpp calls it as a
  * TWO-argument free function --
  *
  *   _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(
@@ -34,7 +34,7 @@
  * line for line otherwise; only the Prepare call gains its real
  * three-argument shape.
  *
- * src/func_ov072_02120a44.c is dropped from slice_gate193.txt in favour
+ * src/game/actors/d_a_bg_snwmn.cpp is dropped from slice_gate193.txt in favour
  * of this file; the byte-locked source is unchanged.
  */
 #include "decl_common.h"
@@ -42,7 +42,7 @@
 extern "C" {
 extern int IsStarCollectedInLevel(signed char levelID, int starID);
 extern void _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int id, unsigned int param, void *pos, void *ang, int a, int b);
-extern void _ZN9ActorBase18MarkForDestructionEv(void *self);
+extern void _ZN7fBase_c18MarkForDestructionEv(void *self);
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *f);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *f, int a, int b);
 extern void _ZN15TextureSequence8LoadFileER13SharedFilePtr(void *f);
@@ -50,11 +50,11 @@ extern void _ZN15TextureSequence8LoadFileER13SharedFilePtr(void *f);
 extern void _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(void *self, void *bmd, void *btp);
 extern void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void *self, void *btp, int a, int fix, unsigned int u);
 extern int _ZN11ShadowModel12InitCylinderEv(void *self);
-extern void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(void *self, void *act, void *pos, int f1, int f2, unsigned int u1, unsigned int u2);
-extern void _ZN13RaycastGroundC1Ev(void *self);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(void *self, void *pos, void *act);
-extern int _ZN13RaycastGround10DetectClsnEv(void *self);
-extern void _ZN13RaycastGroundD1Ev(void *self);
+extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void *self, void *act, void *pos, int f1, int f2, unsigned int u1, unsigned int u2);
+extern void _ZN9dBgCh_GndC1Ev(void *self);
+extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void *self, void *pos, void *act);
+extern int _ZN9dBgCh_Gnd10DetectClsnEv(void *self);
+extern void _ZN9dBgCh_GndD1Ev(void *self);
 extern void func_ov072_021208d8(void *c);
 
 extern int data_ov072_02122c70[];
@@ -65,10 +65,10 @@ extern int data_ov072_02122c40[];
 /* PORT_HOST_ABI: TextureSequence::Prepare calling-convention seam (the
    SHORT-1 argsweep row, MotherPenguin's own shape re-applied); cdecl needs
    the third argument spelled explicitly. */
-/* func_ov072_02120a44 RETIRED (run link100, lane SEAT6, batch B6).
+/* _ZN11daBgSnwmn_c13InitResourcesEv RETIRED (run link100, lane SEAT6, batch B6).
    The SHORT-1 argsweep row is one declaration and one argument per call
    site, which is all this copy ever changed.
-   The matched TU src/func_ov072_02120a44.c is seated in its place: port/tools/hostgen.py's REG_RIDE_ARG table, self=model, bmd=animFile,
+   The matched TU src/_ZN11daBgSnwmn_c13InitResourcesEv.c is seated in its place: port/tools/hostgen.py's REG_RIDE_ARG table, self=model, bmd=animFile,
    btp=animFile -- this file's own derivation, applied to the
    generated TU.
    Per-row ROM evidence (referrer, RTTI name, kind:function record, the

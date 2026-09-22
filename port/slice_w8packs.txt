@@ -6,7 +6,7 @@
 # hal/actor_classes_ov022.cpp and the mount is port/ov022_syms.txt; both
 # carry the derivation. Nothing here is a host copy: every line is a matched
 # src TU, and the ONE body this lane could not link
-# (_ZN19FloatingFloorLllBig16CleanupResourcesEv, the G0/G1 trap) is a host
+# (_ZN9LavaPlank16CleanupResourcesEv, the G0/G1 trap) is a host
 # thunk inside the fill rather than a new file.
 #
 # Each class's TU set is its own CODE BLOCK: the run of ov022 function symbols
@@ -17,54 +17,58 @@
 # Nine TUs. 02111558 and 02111564 are the two MeshColliderBase callbacks
 # InitResources hands func_020393c4/func_020393d4; 02111564 is also the body
 # ov059's dsd export names at the shared window (the alias is in the fill).
-src/func_ov022_021111a0.c
-src/func_ov022_021111e4.c
-src/func_ov022_0211123c.cpp
-src/func_ov022_02111284.cpp
-src/func_ov022_021112ac.c
-src/func_ov022_0211149c.c
+src/_ZN11VolcanoRingD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN11VolcanoRingD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN11VolcanoRingD0Ev.cpp
+src/_ZN11VolcanoRing16CleanupResourcesEv.cpp
+src/_ZN11VolcanoRing6RenderEv.cpp
+src/_ZN11VolcanoRing8BehaviorEv.cpp
+src/_ZN11VolcanoRing13InitResourcesEv.cpp
 src/func_ov022_02111558.c
 src/func_ov022_02111564.c
-src/VolcanoRing_Spawn.c
+src/d_a_obj_fl_ring.c
 
 # ---- FLOAT_ON_LAVA_PLATFORM (74), table 0x02113eac, x1 -------------------
 # Nine TUs, spelled _ZN19RotatingPlatformLll* -- the dsd naming shift; the
 # RTTI at vtable[-1] is 15daObjFl_Block_c and the spawn table's id halfword
 # reads 74. 0211191c / 0211193c are this class's two collider callbacks.
-src/_ZN19RotatingPlatformLllD1Ev.c
-src/_ZN19RotatingPlatformLllD0Ev.c
-src/_ZN19RotatingPlatformLll16CleanupResourcesEv.cpp
-src/_ZN19RotatingPlatformLll6RenderEv.cpp
-src/_ZN19RotatingPlatformLll8BehaviorEv.cpp
-src/_ZN19RotatingPlatformLll13InitResourcesEv.cpp
+src/_ZN19FloatOnLavaPlatformD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN19FloatOnLavaPlatformD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN19FloatOnLavaPlatformD0Ev.cpp
+src/_ZN19FloatOnLavaPlatform16CleanupResourcesEv.cpp
+src/_ZN19FloatOnLavaPlatform6RenderEv.cpp
+src/_ZN19FloatOnLavaPlatform8BehaviorEv.cpp
+src/_ZN19FloatOnLavaPlatform13InitResourcesEv.cpp
 src/func_ov022_0211191c.cpp
 src/func_ov022_0211193c.c
-src/FloatOnLavaPlatform_Spawn.c
+src/d_a_obj_fl_block.c
 
 # ---- FLOATING_FLOOR_LLL_SMALL (76) x3 and _BIG (75) x1 -------------------
 # One table for both ids. Small owns four bodies plus its Spawn; Big's whole
-# block is its Spawn, and slots 6/9 come from ov002 (func_ov002_020b6494 /
-# func_ov002_020b646c, both already in the baseline map).
-src/_ZN21FloatingFloorLllSmallD1Ev.c
-src/_ZN21FloatingFloorLllSmallD0Ev.c
-src/_ZN21FloatingFloorLllSmall16CleanupResourcesEv.c
-src/_ZN21FloatingFloorLllSmall13InitResourcesEv.c
-src/FloatingFloorLllSmall_Spawn.c
-src/FloatingFloorLllBig_Spawn.c
+# block is its Spawn, and slots 6/9 come from ov002 (_ZN14daObjUkiyuka_c8BehaviorEv /
+# _ZN14daObjUkiyuka_c6RenderEv, both already in the baseline map).
+src/_ZN21FloatingFloorLllSmallD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN21FloatingFloorLllSmallD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN21FloatingFloorLllSmallD0Ev.cpp
+src/_ZN21FloatingFloorLllSmall16CleanupResourcesEv.cpp
+src/_ZN21FloatingFloorLllSmall13InitResourcesEv.cpp
+src/d_a_obj_fl_ukiyuka_fl_ukiyuka_l.c
+src/d_a_obj_fl_ukiyuka_fl_ukiyuka.c
 
 # ---- LAVA_PLANK (82), table 0x021141f0, x3 -------------------------------
 # Six TUs, spelled _ZN19FloatingFloorLllBig* -- the second shifted block; the
 # RTTI is 15daObjFl_UkiKi_c and the id halfword reads 82. The SEVENTH body of
-# this block, _ZN19FloatingFloorLllBig16CleanupResourcesEv, is deliberately
+# this block, _ZN9LavaPlank16CleanupResourcesEv, is deliberately
 # NOT here: it spells its two SharedFilePtrs G0/G1 and hal/cxx_aliases.cpp has
 # those bound to the game heap pointer and to SignPost's live ov002 pointers.
 # The fill's lp_clean is its instruction-verified stand-in.
-src/_ZN19FloatingFloorLllBigD1Ev.c
-src/_ZN19FloatingFloorLllBigD0Ev.c
-src/_ZN19FloatingFloorLllBig6RenderEv.cpp
-src/_ZN19FloatingFloorLllBig8BehaviorEv.cpp
-src/_ZN19FloatingFloorLllBig13InitResourcesEv.cpp
-src/LavaPlank_Spawn.c
+src/_ZN9LavaPlankD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN9LavaPlankD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN9LavaPlankD0Ev.cpp
+src/_ZN9LavaPlank6RenderEv.cpp
+src/_ZN9LavaPlank8BehaviorEv.cpp
+src/_ZN9LavaPlank13InitResourcesEv.cpp
+src/d_a_obj_fl_uki_ki.c
 
 # ---- the four static initialisers the seated classes need ----------------
 # ov022 has ten; these four build the model/collision SharedFilePtr pairs the

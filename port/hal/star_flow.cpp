@@ -17,8 +17,9 @@
 //                           handoff, which is the level-independent half of
 //                           func_ov002_020e8ef0 plus func_ov002_020c94a4's
 //                           ExitLevel tail.
-//   HitDeathPlane           an ARM argument ride-through, hosted here for the
-//                           same reason as the five in hal/sdat/sound_abi.cpp.
+//   HitDeathPlane           RETIRED at run link100 wave 15: main fixed the
+//                           argument the host copy used to name, and the
+//                           matched TU runs. See the block below.
 //
 // plus a probe surface (port_course_probe_*) the harnesses drive so every
 // one of those paths can be shown moving with a log rather than asserted.
@@ -58,7 +59,7 @@ int  _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *self, void *src,
                                              unsigned char scaleByChar,
                                              unsigned char special,
                                              unsigned char particles);
-void _ZN5Actor15GivePlayerCoinsER6Playerhj(void *actor, void *player,
+void _ZN8dActor_c15GivePlayerCoinsER6Playerhj(void *actor, void *player,
                                            unsigned char count,
                                            unsigned int kind);
 int  func_ov002_020d82f0(void *player);   /* Player::Hurt's own entry gate */
@@ -86,7 +87,7 @@ extern void        *data_0209f394[];  /* per-player Actor* */
    0x40-entry handle table. The loop probe drives PlayLong at the player's own
    camera-space position (which the listener is centred on, so it clears the 3D
    distance cull) and reads the table to prove the level-change reap emptied it. */
-extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int j1,
+extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int j1,
     unsigned int j2, unsigned int j3, void *v, unsigned int j5);
 extern int data_0209b53c[];   /* PlayLong's handle table: 8-byte header, 0x40
                                  entries of 0x14; live when entry+0 != 0 */
@@ -113,35 +114,29 @@ extern unsigned char data_0209d45c;   /* engine A's software layer mask; the
 }  // extern "C"
 
 // =============================================================================
-// HitDeathPlane: an ARM argument ride-through
+// HitDeathPlane: RETIRED, the matched TU runs (run link100 wave 15, SEAT15F)
 // =============================================================================
 //
-// src/HitDeathPlane.c declares `extern void SetNextLevel(void)` and calls it
-// with no arguments, while src/SetNextLevel.c defines `SetNextLevel(int arg)`.
-// That is the same shape as the five in hal/sdat/sound_abi.cpp: on ARM the
-// argument is already in r0 from HitDeathPlane's own frame and the ROM's
-// `bl` never touches it, so mwccarm reproduces the bytes with the callee
-// unnamed. On x86 cdecl nothing is pushed and SetNextLevel's `arg` reads
-// whatever the caller's stack happened to hold -- and `arg` is what lands in
-// data_0209f26c, the reason-for-leaving code the next scene reads.
+// This file used to carry a host copy of HitDeathPlane, because src/ declared
+// `extern void SetNextLevel(void)` and called it with no arguments while
+// src/SetNextLevel.c defined `SetNextLevel(int arg)`: right on ARM, where the
+// value is already in r0 and the ROM's `bl` never touches it, and wrong on
+// cdecl, where `arg` read whatever the caller's stack happened to hold -- and
+// `arg` is what lands in data_0209f26c, the reason-for-leaving code the next
+// scene reads.
 //
-// `arg` is HitDeathPlane's only live value at the call, and it is the same
-// quantity SetNextLevel's parameter already carries elsewhere: ExitLevel
-// passes 1 (course cleared) and KillPlayer passes 2 (died). So the rider is
-// named here and src is left alone. src/HitDeathPlane.c is filtered out of
-// SLICE10_CAM_SOURCES in port/CMakeLists.txt.
+// MAIN HAS SINCE FIXED IT. src/HitDeathPlane.c at 8ddff3187 declares
+// `extern void SetNextLevel(int arg);` and calls `SetNextLevel(arg)`, and its
+// other two callees (StartExitFaderWipe, dScene_c::StartSceneFade) match this
+// file's own declarations of them argument for argument. So the host copy was
+// a stand-in for a defect that no longer exists, and it is gone: the matched TU
+// is back in SLICE10_CAM_SOURCES (the filter line in port/CMakeLists.txt came
+// out with the body) and the ROM's own text runs on the death-plane path.
+//
+// The one declaration the body left behind is kept: the VS fade below still
+// calls dScene_c::StartSceneFade.
 extern "C" {
-void _ZN5Scene14StartSceneFadeEjjt(unsigned a, unsigned b, unsigned short c);
-
-// PORT_HOST_ABI: ARM r0 ride-through -- src calls SetNextLevel(void) with arg in r0.
-void HitDeathPlane(int arg)
-{
-    if (data_0209f2f4[0] != 0 || arg == 0)
-        SetNextLevel(arg);
-    else
-        _ZN5Scene14StartSceneFadeEjjt(8, 0, 0);
-    StartExitFaderWipe(6);
-}
+void _ZN8dScene_c14StartSceneFadeEjjt(unsigned a, unsigned b, unsigned short c);
 }  // extern "C"
 
 /* Luigi Infection (hal/luigi_infection.cpp). The pre-round countdown driver
@@ -511,7 +506,7 @@ void seat_engine_a_layers(void)
      *         GX::SetGraphicsMode(one, 0, one);      // c = 1
      *
      * and GX::SetGraphicsMode's body is `reg = (c << 3) | reg`
-     * (src/_ZN2GX15SetGraphicsModeEiii.c), so c = 1 IS bit 3. The two lines are
+     * (src/_ZN2GX15SetGraphicsModeEiii.cpp), so c = 1 IS bit 3. The two lines are
      * one statement of the ROM's, split across the function: turn BG0 into the
      * 3D layer, then name BG0 in the layer mask. Seating the mask without the
      * bit takes half of it.
@@ -565,9 +560,9 @@ void seat_engine_a_layers(void)
      * (0x04001008) only. So all three lines are one statement of the ROM's,
      * split across the function, and this seats the third.
      *
-     * AN EARLIER REVISION WROTE 1 AND CITED src/func_02005a58.c FOR IT, calling
+     * AN EARLIER REVISION WROTE 1 AND CITED src/_ZN9BootScene13InitResourcesEv.cpp FOR IT, calling
      * that "not a guess". Both halves were wrong and review caught them.
-     * func_02005a58 is dScBoot_c::InitResources -- a BOOT scene, not the level
+     * _ZN9BootScene13InitResourcesEv is dScBoot_c::InitResources -- a BOOT scene, not the level
      * path -- and its header carries "recovered from vtable slot identity",
      * which is the GUESSED-BODY marker. This lane dropped a body in round 1 for
      * carrying exactly that marker and then quoted another one as authority in
@@ -686,7 +681,7 @@ void port_boot_course_sound(int level)
  * are in arm9: ProcessKuppaScript (0x0200eac8), this one (0x0202be08) and
  * InitResources' (0x0202d36c, guarded off in VS). The other sixteen are in
  * ov002/3/4/5/6/7 and ov075, and ov075's four are the LOBBY's own tracks
- * (0x4c/0x51/0x52) -- func_ov075_02118378 and func_ov075_0211a410, both scene
+ * (0x4c/0x51/0x52) -- func_ov075_02118378 and _ZN10dScEntry_c13InitResourcesEv, both scene
  * code, neither reachable once the arena is up. The four arena overlays
  * (ov059/ov051/ov037/ov050, levels 51/43/29/42) contain not one call. So seq
  * 0x4d, from here, is the only music a VS arena can have.
@@ -947,7 +942,7 @@ void port_luigi_countdown_render(void)
 // this port can produce -- VS is a wireless mode and there is no offline VS on
 // the cartridge -- so the else arm is the live one and VE_Init is not reachable
 // from here. Scene 7 is the VS results screen: the same dScEntry_c class as the
-// scene 6 lobby, told apart by its own id (src/func_ov075_0211a410.cpp branches
+// scene 6 lobby, told apart by its own id (src/_ZN10dScEntry_c13InitResourcesEv.cpp branches
 // on self->unk_00c == 6 and hands everything else to func_ov075_02116818, the
 // results screen with the winner calculation behind it).
 //
@@ -1992,7 +1987,7 @@ extern "C" int port_vs_match_end_poll(int frame)
                     "That arm is not hosted; nothing requested.\n");
         } else if (want_scene) {
             /* THE ROM'S OWN THREE STATEMENTS, in the ROM's own order. */
-            _ZN5Scene14StartSceneFadeEjjt(7, 0, 0);
+            _ZN8dScene_c14StartSceneFadeEjjt(7, 0, 0);
             data_02092778 = 1;
             data_0209d4b0 = 0;
             fprintf(stderr, "  [vs] Scene::StartSceneFade(7, 0, 0): the VS "
@@ -2125,12 +2120,12 @@ extern "C" int port_vs_match_end_poll(int frame)
    ONCE PER SESSION IS CORRECT, AND THE ONE-SHOT IS NOT A RESPAWN BUG. Read the
    relocs before "fixing" this: SetPlayerGlobals (0x0202acfc) has three callers
    in the ROM -- StartFile (0x0202ae88), PrepareVsMode and the ov003
-   title-confirm path func_ov003_020ad814 -- plus two the port adds, this one
+   title-confirm path _ZN10dScTitle_c8BehaviorEv -- plus two the port adds, this one
    and hal/level_change.cpp:1415 (the port's copy of that ov003 path). It is
    the NEW FILE seat: lives to 4, health to 0x880 for all four players. This
    call stands in for StartFile's, so it belongs exactly where it is.
 
-   Two of the ROM's three DO enter a level -- StartFile and func_ov003_020ad814
+   Two of the ROM's three DO enter a level -- StartFile and _ZN10dScTitle_c8BehaviorEv
    both call LoadLevelNoReturn immediately before it, so do not repeat the
    earlier claim here that "none is a level entry". The distinction that
    matters is narrower and is the whole reason this stays a one-shot: none of
@@ -2143,7 +2138,7 @@ extern "C" int port_vs_match_end_poll(int frame)
 
    The ROM's PER-ENTRY health restore is a different mechanism entirely and does
    not pass through here: the Player's own level-enter step heals to full when
-   the latched entry reason says fresh-or-death (src/func_ov002_020c75f0.c:29),
+   the latched entry reason says fresh-or-death (src/actors/Player.cpp:29),
    and the boot latches that reason -- see the data_0209f2fc seat in
    hal/level_boot.cpp. TRIAGE14 read this one-shot as the cause of the infinite
    death loop; the cause was the missing latch, and this note is here so the
@@ -2179,7 +2174,7 @@ void port_course_seat(void)
 
 void port_give_player_coins(void *actor, void *player, int count, int kind)
 {
-    _ZN5Actor15GivePlayerCoinsER6Playerhj(actor, player,
+    _ZN8dActor_c15GivePlayerCoinsER6Playerhj(actor, player,
                                           (unsigned char)count,
                                           (unsigned int)kind);
 }
@@ -2324,7 +2319,7 @@ unsigned int port_course_loop_start(unsigned int prev, unsigned int soundId)
     if (!player)
         return 0;
     void *camSpacePos = (char *)player + 0x74;
-    return _ZN5Sound8PlayLongEjjjRK7Vector3j(prev, 3, soundId, camSpacePos, 0);
+    return _ZN5Sound8PlayLongEjjjRK7Vector3s(prev, 3, soundId, camSpacePos, 0);
 }
 
 int port_course_coins(void)

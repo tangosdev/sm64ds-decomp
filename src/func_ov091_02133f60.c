@@ -1,7 +1,7 @@
 // @symbol func_ov091_02133f60
 /* recovered: shared common types */
 #include "common.h"
-void *_ZN5Actor13ClosestPlayerEv(void *thiz);
+void *_ZN8dActor_c13ClosestPlayerEv(void *thiz);
 short Vec3_HorzAngle(const struct Vector3 *a, const struct Vector3 *b);
 int ApproachAngle(short *cur, int target, int a, int b, int c);
 int Vec3_Dist(const struct Vector3 *a, const struct Vector3 *b);
@@ -11,7 +11,7 @@ extern char data_ov091_021356b0[];
 
 int func_ov091_02133f60(char *c)
 {
-    void *pl = _ZN5Actor13ClosestPlayerEv(c);
+    void *pl = _ZN8dActor_c13ClosestPlayerEv(c);
     struct Vector3 v;
     short ang;
     struct Vector3 *src;

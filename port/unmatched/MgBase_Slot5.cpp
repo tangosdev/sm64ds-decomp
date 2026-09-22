@@ -1,4 +1,4 @@
-/* HOST COPY of dScMgBase_c slot 5, func_ov004_020b0840. Run mg5, lane BASESET.
+/* HOST COPY of dScMgBase_c slot 5, _ZN11dScMgBase_c21AfterCleanupResourcesEj. Run mg5, lane BASESET.
  *
  * THE SECOND OF THE TWO ARGUMENT RIDE-THROUGHS port/mg_fanout_costs.txt section
  * 6 named and left. Section 6b is slot 7 and was taken by lane MG1, which is
@@ -9,7 +9,7 @@
  *
  * ---- THE DEFECT ----------------------------------------------------------
  *
- * src/func_ov004_020b0840.c:12 declares
+ * src/minigames/d_s_mg_base.cpp:12 declares
  *
  *     extern void func_0203cbc0(void);
  *
@@ -48,7 +48,7 @@
  * ---- WHY IT IS REAL AND WHEN IT FIRES -------------------------------------
  *
  * data_ov004_020beb60 IS ALLOCATED ON EVERY MINIGAME BOOT. Slot 1,
- * BeforeInitResources, does it: src/func_ov004_020b0930.cpp:42 and its host copy
+ * BeforeInitResources, does it: src/minigames/d_s_mg_base.cpp:42 and its host copy
  * port/unmatched/MgBase_Slot1.cpp:62 both read
  *
  *     if (data_ov004_020beb60 == 0)
@@ -79,7 +79,7 @@
  * why the src TU could carry a wrong one for as long as it did.
  *
  * Every other statement, constant, offset, call and branch is src's, in order.
- * src/func_ov004_020b0840.c is EXCLUDED from port/slice_mg1.txt and
+ * src/minigames/d_s_mg_base.cpp is EXCLUDED from port/slice_mg1.txt and
  * port/slice_smb.txt, which are the two slices that carried it, and both say so
  * where the line was.
  *
@@ -111,7 +111,7 @@ extern int data_0209d4a8[];
 extern int data_ov004_020beb60[];
 
 // PORT_HOST_ABI: src drops the pointer argument to func_0203cbc0 (operator delete) that the ROM rides through r0; MSVC __cdecl would free stack garbage, so the host copy passes it
-void func_ov004_020b0840(char *c, int arg)
+void _ZN11dScMgBase_c21AfterCleanupResourcesEj(char *c, int arg)
 {
     struct dScMgBase_c *self = (struct dScMgBase_c *)(void *)c;
     if (arg == 2) {
@@ -125,13 +125,13 @@ void func_ov004_020b0840(char *c, int arg)
             func_0203cbc0((void *)data_ov004_020beb60[0]);
             data_ov004_020beb60[0] = 0;
         }
-        if (self->unk_4628 != 0) {
+        if (self->mMenuOpen != 0) {
             func_02012e1c();
             _ZN5Sound22StopLoadedMusic_Layer1Ej(1);
         }
         func_ov004_020b2c84();
     }
-    _ZN5Scene21AfterCleanupResourcesEj(c, arg);
+    _ZN8dScene_c21AfterCleanupResourcesEj(c, arg);
 }
 
 }  /* extern "C" */

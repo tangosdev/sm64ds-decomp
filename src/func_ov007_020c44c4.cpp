@@ -1,8 +1,8 @@
 //cpp
 extern "C" {
-int _ZN6Player17St_EndingFly_MainEv(void*);
+int func_ov007_020c3d1c(void*);
 int func_ov007_020c44c4(char* r4){
-  _ZN6Player17St_EndingFly_MainEv(*(void**)(r4+0x5c));
-  return _ZN6Player17St_EndingFly_MainEv(r4);
+  func_ov007_020c3d1c(*(void**)(r4+0x5c));
+  return func_ov007_020c3d1c(r4);
 }
 }

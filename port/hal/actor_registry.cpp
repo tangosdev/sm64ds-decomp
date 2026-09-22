@@ -104,10 +104,10 @@ struct PortActorClass {
 };
 
 extern "C" {
-extern unsigned char Player_SpawnInfo[];      /* ov002 0x0210a704 */
-extern unsigned char Camera_SpawnInfo[];      /* arm9  0x02086d78 */
-void *_ZN6PlayerC3Ev(void);                   /* ov002 0x020e6c0c */
-void *_ZN6CameraC1Ev(void *);                 /* arm9  0x0200e444 */
+extern unsigned char g_profile_PLAYER[];      /* ov002 0x0210a704 */
+extern unsigned char g_profile_CAMERA[];      /* arm9  0x02086d78 */
+void *daPly_c_classInit(void);                   /* ov002 0x020e6c0c */
+void *dCamera_c_classInit(void *);                 /* arm9  0x0200e444 */
 void hal_fill_player_vtable(void);
 void hal_fill_camera_vtable(void);
 }
@@ -115,24 +115,24 @@ void hal_fill_camera_vtable(void);
 /* Both ROM factories allocate their own object and ignore the argument
    register they were entered with, which is why they can be called through a
    no-argument pointer at all. */
-static void *port_factory_player(void) { return _ZN6PlayerC3Ev(); }
-static void *port_factory_camera(void) { return _ZN6CameraC1Ev(0); }
+static void *port_factory_player(void) { return daPly_c_classInit(); }
+static void *port_factory_camera(void) { return dCamera_c_classInit(0); }
 /* The bottom screen's classes put the CONSTRUCTOR in the SpawnInfo's +0 word
    rather than a separate Spawn veneer -- it allocates and returns the object
    itself, which is all the spine asks of a factory. */
-extern "C" int *_ZN3HUDC1Ev(void);
-static void *port_factory_hud(void) { return _ZN3HUDC1Ev(); }
-extern "C" int *_ZN7MinimapC1Ev(void);
-static void *port_factory_minimap(void) { return _ZN7MinimapC1Ev(); }
+extern "C" int *dMeter_c_classInit(void);
+static void *port_factory_hud(void) { return dMeter_c_classInit(); }
+extern "C" int *dMap_c_classInit(void);
+static void *port_factory_minimap(void) { return dMap_c_classInit(); }
 
 #include "actor_classes.inc"
 
 static const PortActorClass port_actor_classes[] = {
-    {0x0bf, "PLAYER", Player_SpawnInfo, port_factory_player,
+    {0x0bf, "PLAYER", g_profile_PLAYER, port_factory_player,
      hal_fill_player_vtable},
     /* The camera's vtable fill is the gate-13 seam and runs from the same
        place the layout check does; the registry only needs its factory. */
-    {0x14c, "CAMERA", Camera_SpawnInfo, port_factory_camera, 0},
+    {0x14c, "CAMERA", g_profile_CAMERA, port_factory_camera, 0},
     PORT_ACTOR_CLASS_ROWS
     {0, 0, 0, 0, 0},
 };
@@ -200,7 +200,7 @@ static int port_host_abi_blocked(unsigned id)
        actually spawned until this lane mounted the arena; it is fault-free
        everywhere it is reachable, which is nowhere else.
 
-       MEASURED, not reasoned. Its InitResources (src/func_ov060_021182b0.cpp,
+       MEASURED, not reasoned. Its InitResources (src/_ZN9SpikeBomb13InitResourcesEv.cpp,
        daKpa3Bg_c::InitResources) calls CopyTexPalFromLevelModel(this + 0xdc),
        and src/CopyTexPalFromLevelModel.c opens on
 
@@ -434,22 +434,70 @@ extern "C" void port_actor_lists_seat(void)
 /* Phases 4, 2 and 3 of func_02044120: cleanup, the init pass for anything
    spawned since the last frame, then behaviour. */
 /* SM64DS_TRACE_LISTS=1: name every node on a list before it is walked --
-   actor id, alive state, kill flag and vtable. The only window into a frame
-   that is otherwise entirely matched code walking Nintendo's own structures. */
+   actor id, alive state, kill flag, PAUSE FLAGS and vtable. The only window
+   into a frame that is otherwise entirely matched code walking Nintendo's own
+   structures.
+
+   pauseFlags (fBase_c +0x13) is printed because being ON the list is not the
+   same as being ticked, and the two used to look identical here. ActorBase::
+   Process (func_02043288) calls slot 7 first and only calls slot 6 when it
+   returns non-zero, and fBase_c::BeforeBehavior returns 0 when shouldBeKilled
+   is set OR pauseFlags & 2; the render pair is the same shape on slots 10/9
+   with pauseFlags & 8. So an actor that is alive, unkilled, on the list and
+   nevertheless frozen is a flag-byte question, and the flag byte was the one
+   field this line did not carry.
+
+   SM64DS_TRACE_LISTS=2 adds the four dispatched vtable words, which separates
+   "the gate said no" from "the slot stopped holding the host thunk" -- what a
+   re-mounted overlay or a write through a vptr looks like, and invisible in
+   every other line this file prints. The {node ... actor ... id ...} prefix is
+   unchanged: port/tools/stage_pause_proof.py rung 2 parses it. */
 static void port_list_trace(const char *name, int *list)
 {
     static int on = -1;
-    if (on < 0) on = std::getenv("SM64DS_TRACE_LISTS") != 0;
+    if (on < 0) {
+        const char *e = std::getenv("SM64DS_TRACE_LISTS");
+        on = e ? std::atoi(e) : 0;
+        if (e && on == 0) on = 1;       /* a set but non-numeric value means 1 */
+    }
     if (!on)
         return;
-    std::printf("  [list] %s head %08x:", name, list[0]);
+    /* THE CALLBACK WORD IS PART OF THE LIST'S STATE AND IT WAS NOT PRINTED.
+       src/func_02043fdc.cpp opens `if (thiz->callback == 0) return`, so a list
+       whose callback word has been cleared is walked by NOBODY while every
+       node is still on it and every field in the node still reads healthy.
+       Printing the head and the nodes and not this word made those two states
+       -- "the list is live" and "the list is inert" -- literally identical in
+       the log. The two walked shapes differ: the scene tree at data_020a4b6c
+       is {head, callback, 0} and the four processing lists are {head, tail,
+       callback, 0}, so the index is chosen off the name rather than assumed. */
+    const int cb = (name[0] == 't') ? list[1] : list[2];   /* "tree" vs the rest */
+    /* AND THE PASS NUMBER, after the two words and still before the colon, so
+       the node text after the colon keeps its shape. The lines are otherwise
+       indistinguishable frame to frame, so five hundred identical lines cannot
+       be lined up against any other per-frame count in the run -- and "walked
+       N times, dispatched M times" is exactly such a comparison. Counted per
+       list, because the three lists are walked by the same function. */
+    static unsigned pass_beh, pass_other;
+    unsigned *pass = (name[0] == 'b') ? &pass_beh : &pass_other;
+    std::printf("  [list] %s head %08x cb %08x pass %u:", name, list[0], cb,
+                (*pass)++);
     for (int *n = (int *)(size_t)list[0]; n; n = (int *)(size_t)n[1]) {
         char *o = (char *)(size_t)n[2];
-        std::printf(" {node %p actor %p id %u alive %u kill %u vt %p}", (void *)n,
+        std::printf(" {node %p actor %p id %u alive %u kill %u pause %u vt %p",
+                    (void *)n,
                     (void *)o, o ? *(unsigned short *)(o + 0xc) : 0u,
                     o ? *(unsigned char *)(o + 0xe) : 0u,
                     o ? *(unsigned char *)(o + 0xf) : 0u,
+                    o ? *(unsigned char *)(o + 0x13) : 0u,
                     o ? *(void **)o : (void *)0);
+        if (on >= 2 && o) {
+            void **vt = *(void ***)o;
+            if (vt)
+                std::printf(" beh %p bbeh %p ren %p bren %p",
+                            vt[6], vt[7], vt[9], vt[10]);
+        }
+        std::printf("}");
     }
     std::printf("\n");
 }
@@ -480,13 +528,13 @@ extern "C" void port_bob_debug_watch(void);
    its ClsnID. The unique id is found by asking Actor::FindWithID, so no field
    offset is assumed here. */
 extern "C" {
-int _ZNK12WithMeshClsn10IsOnGroundEv(void *c);
-void *_ZNK12WithMeshClsn14GetFloorResultEv(void *c);
-void *_ZN5Actor10FindWithIDEj(unsigned id);
+int _ZNK10dBgCh_Actr10IsOnGroundEv(void *c);
+void *_ZNK10dBgCh_Actr14GetFloorResultEv(void *c);
+void *_ZN8dActor_c10FindWithIDEj(unsigned id);
 int func_ov002_020ef2a4(void *clsn, void *arg);
 int func_ov002_020eee3c(void *clsn, void *arg);
-int _ZNK12WithMeshClsn8IsOnWallEv(void *c);
-void *_ZNK12WithMeshClsn13GetWallResultEv(void *c);
+int _ZNK10dBgCh_Actr8IsOnWallEv(void *c);
+void *_ZNK10dBgCh_Actr13GetWallResultEv(void *c);
 /* the CEILING third of the same family, for SM64DS_POUND_PROBE=<id>:<f>:28.
    func_ov002_020eeca8 is func_ov002_020ef2a4 with the hit-ceiling accessors in
    place of the floor pair and slot 28, OnHitFromUnderneath, in place of slot
@@ -500,10 +548,10 @@ void *_ZNK12WithMeshClsn13GetWallResultEv(void *c);
 int func_ov002_020eeca8(void *clsn, void *arg);
 int func_02035638(void *c);
 void *func_0203567c(void *c);
-unsigned _ZNK10ClsnResult9GetClsnIDEv(void *r);
+unsigned _ZNK5dBgPi9GetClsnIDEv(void *r);
 /* the block's own refusal test and the closest-player cache it consults */
 int func_ov102_02149078(void *self);
-void *_ZN5Actor13ClosestPlayerEv(void *self);
+void *_ZN8dActor_c13ClosestPlayerEv(void *self);
 extern signed char data_0209f2f8;      /* current level */
 extern void *data_0209b458;            /* the closest-player cache itself */
 }
@@ -579,7 +627,7 @@ extern "C" void *port_first_live_actor_of_class(unsigned id)
 extern "C" unsigned port_unique_id_of_actor(void *actor)
 {
     for (unsigned u = 0; u < 65536u; ++u)
-        if (_ZN5Actor10FindWithIDEj(u) == actor)
+        if (_ZN8dActor_c10FindWithIDEj(u) == actor)
             return u;
     return 0xffffffffu;
 }
@@ -587,7 +635,7 @@ extern "C" unsigned port_unique_id_of_actor(void *actor)
 static unsigned pp_unique_id_of(void *actor)
 {
     for (unsigned u = 0; u < 65536u; ++u)
-        if (_ZN5Actor10FindWithIDEj(u) == actor)
+        if (_ZN8dActor_c10FindWithIDEj(u) == actor)
             return u;
     return 0xffffffffu;
 }
@@ -635,7 +683,7 @@ static void port_vt_audit(void)
        by asking FindWithID for every id is exact and assumes nothing about
        the list's layout. Printed with the same [vt] shape. */
     for (unsigned u = 0; u < 8192u; ++u) {
-        char *o = (char *)_ZN5Actor10FindWithIDEj(u);
+        char *o = (char *)_ZN8dActor_c10FindWithIDEj(u);
         if (!o) continue;
         unsigned id = *(unsigned short *)(o + 0xc);
         char **vt = *(char ***)o;
@@ -760,10 +808,10 @@ static void port_pound_probe(void)
             return;
         }
         *(unsigned *)((char *)res + 0x1c) = uid;
-        if (_ZNK10ClsnResult9GetClsnIDEv(res) != uid) {
+        if (_ZNK5dBgPi9GetClsnIDEv(res) != uid) {
             std::fprintf(stderr, "[pound] ceiling ClsnID readback %u != uid "
                          "%u -- the rig would dispatch on the wrong actor\n",
-                         _ZNK10ClsnResult9GetClsnIDEv(res), uid);
+                         _ZNK5dBgPi9GetClsnIDEv(res), uid);
             std::fflush(stderr);
             return;
         }
@@ -779,7 +827,7 @@ static void port_pound_probe(void)
            own inputs are printed beside it: the level it switches on, the
            cached closest player, and the +0x706 byte it actually tests. */
         {
-            void *cp_arg = _ZN5Actor13ClosestPlayerEv(target);
+            void *cp_arg = _ZN8dActor_c13ClosestPlayerEv(target);
             std::fprintf(stderr, "[pound]   gate   func_ov102_02149078 -> %d "
                          "| level %d | cache %p | ClosestPlayer(this) %p "
                          "+0x706 %u | player %p +0x706 %u\n",
@@ -808,8 +856,8 @@ static void port_pound_probe(void)
            thing, which is why it reaches players far more often than a pound
            does. */
         *(unsigned char *)(clsn + 0x90) |= 0x8u;  /* WithMeshClsn::IsOnWall */
-        void *res = _ZNK12WithMeshClsn13GetWallResultEv(clsn);
-        if (!res || !_ZNK12WithMeshClsn8IsOnWallEv(clsn)) {
+        void *res = _ZNK10dBgCh_Actr13GetWallResultEv(clsn);
+        if (!res || !_ZNK10dBgCh_Actr8IsOnWallEv(clsn)) {
             std::fprintf(stderr, "[pound] scratch collider will not report a "
                          "wall (res %p, flags %02x)\n", res,
                          *(unsigned char *)(clsn + 0x90));
@@ -825,8 +873,8 @@ static void port_pound_probe(void)
         hit = func_ov002_020eee3c(clsn, player);
     } else {
         *(unsigned *)(clsn + 0x10) |= 0x10u;      /* WithMeshClsn::IsOnGround */
-        void *res = _ZNK12WithMeshClsn14GetFloorResultEv(clsn);
-        if (!res || !_ZNK12WithMeshClsn10IsOnGroundEv(clsn)) {
+        void *res = _ZNK10dBgCh_Actr14GetFloorResultEv(clsn);
+        if (!res || !_ZNK10dBgCh_Actr10IsOnGroundEv(clsn)) {
             std::fprintf(stderr, "[pound] scratch collider will not report "
                          "ground (res %p)\n", res);
             std::fflush(stderr);
@@ -865,7 +913,7 @@ extern "C" void port_actor_tick(void)
        and it belongs exactly here. data_0209b454 is the persistent
        freeze-REQUEST word; data_0209b464 is this frame's copy of it, and it is
        the only word Actor::BeforeBehavior reads
-       (src/_ZN5Actor14BeforeBehaviorEv.cpp:74):
+       (src/_ZN8dActor_c14BeforeBehaviorEv.cpp:74):
 
            if ((f & 9) != 9 && (data_0209b464 == 0 || (f & data_0209b464) != 0))
                goto do_copy;             // -> return 1, Behavior runs
@@ -879,7 +927,7 @@ extern "C" void port_actor_tick(void)
        the actor's whole state machine stands still for the frame.
 
        WHAT USES IT. The message system. The Player talk state's Main
-       (src/func_ov002_020c8540.c:45-52, the state Player::ShowMessage2 puts the
+       (src/actors/Player.cpp:45-52, the state Player::ShowMessage2 puts the
        player into) sets its OWN mFlags |= 0x800000, CLEARS the talk partner's,
        ORs 0x800000 into data_0209b454, and only then opens the box. So a
        dialogue freezes every actor in the level except the player reading it,
@@ -964,7 +1012,7 @@ extern "C" void port_actor_tick(void)
    and counts GetPos at 1 and GetOwnerID at 2. CylinderClsn::Process is
    header-compiled and dispatches both on every node.
    hal_fill_cylinder_withpos_vtable fills ROM slots 0..3, which is right for
-   the Tree's shadow-TU callers, and _ZTV18MovingCylinderClsn -- what every
+   the Tree's shadow-TU callers, and _ZTV7dCcAc_c -- what every
    actor on this gate's roster carries -- is unfilled storage. The two
    numberings COLLIDE (ROM slot 1 is D0, MSVC slot 1 is GetPos), so one array
    cannot serve both the way _ZTV5Model's Render does at 4 and 5.
@@ -992,7 +1040,7 @@ extern "C" void port_actor_tick(void)
    So actor-vs-actor cylinder collision is LIVE by default, and MP3's rungs
    depend on it: two Player body cylinders land on the one list at
    data_0209cee8 and the host Process's symmetric branch pushes them apart. */
-extern "C" void _ZN12CylinderClsn7ProcessEv(void);
+extern "C" void _ZN5dCc_c7ProcessEv(void);
 
 static int port_cylinder_pass_on(void)
 {
@@ -1004,7 +1052,7 @@ static int port_cylinder_pass_on(void)
 extern "C" void port_actor_render(void)
 {
     if (port_cylinder_pass_on())
-        _ZN12CylinderClsn7ProcessEv();
+        _ZN5dCc_c7ProcessEv();
     data_02099f24[0] = 5;
     func_02043fdc(data_020a4b98);
     data_02099f24[0] = 0;

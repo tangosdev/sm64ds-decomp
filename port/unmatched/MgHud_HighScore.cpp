@@ -75,7 +75,7 @@
  *      value in r0 and src/func_ov004_020b19f0.c defines the parameter as a
  *      full word. The caller writes one byte of the outgoing argument.
  *   3. func_ov006_020fba48 is declared to take a parameter at all. The ROM
- *      takes none, and src/func_ov006_020fedc4.c passes the scene pointer.
+ *      takes none, and src/_ZN15dScMgPachinko_c6RenderEv.cpp passes the scene pointer.
  *
  * On ARM (2) costs nothing that shows: mwccarm still moves a whole register.
  * On the host it is the whole defect, and MSVC's own output for the src TU is
@@ -143,9 +143,9 @@
  * here, because they belong to classes this lane does not own. All four ROM
  * sites are the identical `bl 0x20adc1c; bl 0x20b19f0` r0 ride-through:
  *
- *     0x020e34ec   src/func_ov006_020e34ec.c    declares (int), passes the
+ *     0x020e34ec   src/_ZN14dScMgCurling_c6RenderEv.cpp    declares (int), passes the
  *                                               getter's result -- CORRECT
- *     0x020e67f0   src/func_ov006_020e67f0.c    declares (), calls with none
+ *     0x020e67f0   src/_ZN15dScMgCurling2_c6RenderEv.cpp    declares (), calls with none
  *     0x021004c0   src/func_ov006_021004c0.c    declares (void), calls with
  *                                               none
  *
@@ -186,7 +186,7 @@ static bool hud_hiscore_trace(void)
  * src TU invented is gone because 0x020fba48 reads none -- exactly as
  * src/func_ov006_020fba28.cpp, the SCORE half of the same HUD, is already
  * spelled (void) against the same (void *) declaration in
- * src/func_ov006_020fedc4.c. The extra argument that declaration pushes is
+ * src/_ZN15dScMgPachinko_c6RenderEv.c. The extra argument that declaration pushes is
  * harmless under cdecl: the caller cleans it up. */
 /* PORT_HOST_ABI: ARM r0 ride-through; src declares the 32-bit high score as s8 at both ends and invents a parameter the ROM does not take, so MSVC hands the drawer one byte plus stack litter */
 void func_ov006_020fba48(void)

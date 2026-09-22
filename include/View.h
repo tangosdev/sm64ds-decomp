@@ -1,0 +1,46 @@
+#ifndef VIEW_H
+#define VIEW_H
+
+#include "dBase_c.h"
+#include "math/Matrix.h"
+
+/* The shared 0x80-byte view base used by Camera.
+ *
+ * RTTI and the destruction chain establish View : dBase_c. The matched Render
+ * body pins the only added member: a Matrix4x3 at 0x50, immediately after the
+ * 0x50-byte base. View overrides fBase_c's Render and destructor slots; it adds
+ * no virtual slots of its own.
+ *
+ * The implicit default constructor is intentional. It lets derived constructors
+ * generate the original fBase_c -> dBase_c -> View vptr sequence while leaving
+ * the matrix initialization to the derived class, as Camera's C1 bytes do.
+ *
+ * The destructor is inline because Camera's ROM destructor inlines View's own
+ * vptr store before the already-inline dBase_c teardown. A declaration alone
+ * instead emits a call to ViewD2 and cannot reproduce that derived lifecycle.
+ * The standalone View D1/D0 files force out-of-line copies of this inline body.
+ */
+struct View : dBase_c {
+    Matrix4x3 viewMat; /* 0x50 */
+
+    /* The destructor pair spelled as two plain virtuals on the host, plus
+       the non-virtual destructor declaration the src/ definitions need; the
+       whole ruling is in include/ModelBase.h. An override takes its base's
+       slots, so these carry the SAME TWO NAMES the base declares -- a fresh
+       name would append a slot instead of claiming one. */
+#ifdef _MSC_VER
+    virtual void Destructor1();   /* D1 */
+    virtual void Destructor0();   /* D0 */
+    ~View() {}   /* no slot */
+#else
+    virtual ~View() {}   /* D1 and D0 */
+#endif
+    virtual s32 Render();
+};
+
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
+typedef char View_size_must_be_0x80[sizeof(View) == 0x80 ? 1 : -1];
+#endif
+
+#endif /* VIEW_H */

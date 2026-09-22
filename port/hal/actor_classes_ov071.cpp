@@ -19,9 +19,9 @@
 // record's +4 id halfword must match):
 //
 //   id  ACTOR_SPAWN_TABLE slot   SpawnInfo   word[0] spawnFunc      +4 halfword
-//   255 0x02090c60 -> 0x02122c08 Scuttlebug  0x02120618 Scuttlebug_Spawn   255
-//   262 0x02090c7c -> 0x02122cf0 MrI         0x02121a1c MrI_Spawn          262
-//   263 0x02090c80 -> 0x02122d0c BigMrI      0x021219cc BigMrI_Spawn       263
+//   255 0x02090c60 -> 0x02122c08 Scuttlebug  0x02120618 daSpd_c_classInit   255
+//   262 0x02090c7c -> 0x02122cf0 MrI         0x02121a1c daEykn_c_classInit_EYEKUN          262
+//   263 0x02090c80 -> 0x02122d0c BigMrI      0x021219cc daEykn_c_classInit_EYEKUN_BOSS       263
 //   264 0x02090c84 -> 0x02122dc4 MrI_Proj    0x02121f9c MrI_Projectile_S.  264
 //
 // read from extracted/arm9_dec.bin (base 0x02004000) for the table and from
@@ -40,10 +40,10 @@
 // 0x3f80 = 16256 = the byte length of overlay_0071.bin (overlays.yaml has no
 // ram_size key -- its size field is code_size: 16224 = 0x3f60); bss
 // 0x02123100-0x02122f80 = 0x180 = 384 = bss_size. At the glossed 0x0211f600
-// the symbol func_ov071_0211f0a4 would sit below the overlay.
+// the symbol _ZN10Scuttlebug13OnYoshiTryEatEv would sit below the overlay.
 //
 // ---- 263 IS A FREE SHARE OF 262'S FILL -------------------------------------
-// MrI_Spawn (0x02121a1c) and BigMrI_Spawn (0x021219cc) are the SAME function
+// daEykn_c_classInit_EYEKUN (0x02121a1c) and daEykn_c_classInit_EYEKUN_BOSS (0x021219cc) are the SAME function
 // twice: both `new(0x218)`, both store _ZTV3MrI (0x02122d30) as the vptr, both
 // construct ModelAnim +0xd4, TextureSequence +0x138, ShadowModel +0x14c,
 // MovingCylinderClsnWithPos +0x174. One class, one vtable, two ids. The class
@@ -55,7 +55,7 @@
 //
 // ---- WIDTHS, each pinned by the reloc run AND the next dsd symbol ----------
 //   _ZTV3MrI            0x02122d30  31 slots (Enemy shape). Declared span to
-//                       the next symbol (data_ov071_02122dac) is 0x7c = 31
+//                       the next symbol (_ZTS8daEyBm_c) is 0x7c = 31
 //                       words, and config/arm9/overlays/ov071/relocs.txt has
 //                       exactly 31 relocations in [+0x00, +0x78] and NONE at or
 //                       after 0x02122dac. Both tests agree.
@@ -82,14 +82,14 @@
 // The ov065 header's "slot 0 lands in that class's own code" test agrees and
 // is kept as corroboration -- slot 0 of _ZTV3MrI is 0x02121734 =
 // _ZN3MrI13InitResourcesEv, slot 0 of _ZTV14MrI_Projectile is 0x02121eb4 =
-// _ZN14MrI_Projectile13InitResourcesEv, and (the control) slot 0 of
+// _ZN8daEyBm_c13InitResourcesEv, and (the control) slot 0 of
 // _ZTV10Scuttlebug is 0x021203f8 = Scuttlebug's own. No label is shifted.
 //
 // ---- SLOTS EACH CLASS OWNS -------------------------------------------------
 // MrI owns 0 (Init), 3 (Cleanup), 6 (Behavior), 9 (Render), 12
 // (OnPendingDestroy), 16 (D1), 17 (D0). UNLIKE Scuttlebug it has NO 18/19/29
 // overrides -- those bind Actor's own defaults. MrI_Projectile owns the same
-// seven plus 18 (OnYoshiTryEat func_ov071_02121b00, returns 4).
+// seven plus 18 (OnYoshiTryEat _ZN8daEyBm_c13OnYoshiTryEatEv, returns 4).
 // Slots 13/14 (ActorBase::Virtual34/38) trap by name the way every sibling fill
 // traps that pair, and slot 30 (OnAimedAtWithEggReturnVec) traps because its
 // matched body is SRET -- a hidden return-slot pointer before self -- which no
@@ -129,46 +129,48 @@
 //     slot, which is why slot 16 cannot be an MSVC `~MrI()` and is a thunk.
 //
 // MrI::InitResources is NONMATCHING-but-decompiled src
-// (src/_ZN3MrI13InitResourcesEv.c, "constant / value (div=6)", logic verified
+// (src/_ZN3MrI13InitResourcesEv.cpp, "constant / value (div=6)", logic verified
 // correct vs ROM by whoever banked it). It is real behaviour, not a stub, so it
 // rides the slice; it is the one body in the closure that is not byte-matched.
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
 extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include <cstdlib>
 
-#include "Actor.h"
+#include "dActor_c.h"
 #include "dtor_faces_cpp.h"
-#include "ActorBase.h"
+#include "fBase_c.h"
 #include "MrI.h"
-#include "MrI_Projectile.h"
+#include "daEyBm_c.h"
 
 extern "C" {
 /* the shared lifecycle halves, the same functions every fill writes */
-int _ZN5Actor19BeforeInitResourcesEv(void *self);             /* slot 1  */
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a); /* slot 2  */
-int _ZN5Actor14BeforeBehaviorEv(void *self);                  /* slot 7  */
-int _ZN5Actor12BeforeRenderEv(void *self);                    /* slot 10 */
-int _ZN5Actor13OnYoshiTryEatEv(void *self);                   /* slot 18 */
-void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p);  /* slot 19 */
-int _ZN5Actor9Virtual50Ev(void *self);                        /* slot 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);     /* slot 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);         /* slot 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);         /* slot 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);             /* slot 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);             /* slot 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
-int _ZN5Actor16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);             /* slot 1  */
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a); /* slot 2  */
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);                  /* slot 7  */
+int _ZN8dActor_c12BeforeRenderEv(void *self);                    /* slot 10 */
+int _ZN8dActor_c13OnYoshiTryEatEv(void *self);                   /* slot 18 */
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void *self, void *p);  /* slot 19 */
+int _ZN8dActor_c9Virtual50Ev(void *self);                        /* slot 20 */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);     /* slot 21 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);         /* slot 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);         /* slot 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);             /* slot 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);             /* slot 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
+int _ZN8dActor_c16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
 
 extern int data_02099f24[];          /* the frame phase the lists are in */
 extern unsigned char data_020a4b4c;  /* the spawn spine's own step */
@@ -187,29 +189,29 @@ int _ZN3MrI16CleanupResourcesEv(void);         /* slot 3,  C linkage, no self */
 int _ZN3MrI6RenderEv(void *self);              /* slot 9,  HOST COPY */
 void _ZN3MrI16OnPendingDestroyEv(void);        /* slot 12, empty, no self */
 int *_ZN3MrID0Ev(int *self);                   /* slot 17, C linkage */
-void *MrI_Spawn(void);
-void *BigMrI_Spawn(void);
+void *daEykn_c_classInit_EYEKUN(void);
+void *daEykn_c_classInit_EYEKUN_BOSS(void);
 
 /* ---- MR_I_PROJECTILE's own bodies -----------------------------------------
    Init/Behavior/Render are all real C++ methods against
    include/MrI_Projectile.h -- reached qualified below. */
-int _ZN14MrI_Projectile16CleanupResourcesEv(void);      /* slot 3  */
-void _ZN14MrI_Projectile16OnPendingDestroyEv(void);     /* slot 12 */
-int *_ZN14MrI_ProjectileD0Ev(int *self);                /* slot 17 */
-int func_ov071_02121b00(void);                          /* slot 18, returns 4 */
-void *MrI_Projectile_Spawn(void);
+int _ZN8daEyBm_c16CleanupResourcesEv(void);      /* slot 3  */
+void _ZN8daEyBm_c16OnPendingDestroyEv(void);     /* slot 12 */
+int *_ZN8daEyBm_cD0Ev(int *self);                /* slot 17 */
+int _ZN8daEyBm_c13OnYoshiTryEatEv(void);                          /* slot 18, returns 4 */
+void *daEyBm_c_classInit(void);
 
 /* the D1 chains' sub-object destructors, all C-linkage in the build (the same
    node dtors the two D0 TUs call) */
-void _ZN25MovingCylinderClsnWithPosD1Ev(void *);
+void _ZN10dCcAcPos_cD1Ev(void *);
 void _ZN11ShadowModelD1Ev(void *);
 void _ZN15TextureSequenceD1Ev(void *);
 void _ZN9ModelAnimD1Ev(void *);
-void _ZN12WithMeshClsnD1Ev(void *);
-void *_ZN5ActorD2Ev(void *);
+void _ZN10dBgCh_ActrD1Ev(void *);
+void *_ZN8dActor_cD2Ev(void *);
 
-/* The arrays the ROM factories install (MrI_Spawn and BigMrI_Spawn both do
-   `p[0] = (int)_ZTV3MrI`; MrI_Projectile_Spawn stores its own); thirty-one
+/* The arrays the ROM factories install (daEykn_c_classInit_EYEKUN and daEykn_c_classInit_EYEKUN_BOSS both do
+   `p[0] = (int)_ZTV3MrI`; daEyBm_c_classInit stores its own); thirty-one
    slots each. Defined here, not just declared: the `int` type and C linkage
    match the `extern int _ZTV3MrI[]` in include/decl_common.h that the .c
    factories and D0s read. */
@@ -249,8 +251,8 @@ int _ZTV14MrI_Projectile[31];
    ov074 slice block. Nothing about ov071 changes; what changes is that the
    binding no longer depends on a name staying undefined somewhere else. */
 
-/* C++-MANGLED DATA SPELLINGS, the data_02082128 / data_020a0e68 precedent.
-   src/_ZN3MrI13InitResourcesEv.c and the two MrI_Projectile method TUs declare
+/* C++-MANGLED DATA SPELLINGS, the IDENTITY_MATRIX4X3 / data_020a0e68 precedent.
+   src/_ZN3MrI13InitResourcesEv.cpp and the two MrI_Projectile method TUs declare
    their mount data OUTSIDE any extern "C" block, so MSVC mangles the
    references while the mount defines the plain C names. Point each mangled
    spelling at the one host object. Every LHS below is the exact decorated name
@@ -292,47 +294,47 @@ MRI_TRAP(13) MRI_TRAP(14)
 
 // ---- the shared half -------------------------------------------------------
 static int __fastcall mri_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall mri_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall mri_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 static void __fastcall mri_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall mri_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall mri_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall mri_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall mri_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall mri_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int __fastcall mri_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 static int __fastcall mri_egg(void *s, void *, void *p)
-{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+{ _ZN8dActor_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall mri_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall mri_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall mri_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall mri_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall mri_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall mri_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall mri_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall mri_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall mri_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 static int __fastcall mri_aimed(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 
 // ---- MR. I's own slots ------------------------------------------------------
 static int __fastcall mri_init(void *s, void *)
@@ -357,22 +359,22 @@ static int __fastcall mri_d0(void *s, void *)
 
 // ---- MR_I_PROJECTILE's own slots -------------------------------------------
 static int __fastcall mrp_init(void *s, void *)
-{ return ((MrI_Projectile *)s)->MrI_Projectile::InitResources(); }
+{ return ((daEyBm_c *)s)->daEyBm_c::InitResources(); }
 static int __fastcall mrp_clean(void *s, void *)
-{ (void)s; return _ZN14MrI_Projectile16CleanupResourcesEv(); }
+{ (void)s; return _ZN8daEyBm_c16CleanupResourcesEv(); }
 static int __fastcall mrp_behavior(void *s, void *)
-{ return ((MrI_Projectile *)s)->MrI_Projectile::Behavior(); }
+{ return ((daEyBm_c *)s)->daEyBm_c::Behavior(); }
 /* The projectile's Render is a real method with NO vtable dispatch in it (two
    Particle::System::NewUnkCallback818 calls), so the matched TU is used --
    unlike MrI::Render, which is this lane's ModelAnim slot-5 host copy. */
 static int __fastcall mrp_render(void *s, void *)
-{ return ((MrI_Projectile *)s)->MrI_Projectile::Render(); }
+{ return ((daEyBm_c *)s)->daEyBm_c::Render(); }
 static int __fastcall mrp_pdes(void *s, void *)
-{ (void)s; _ZN14MrI_Projectile16OnPendingDestroyEv(); return 0; }
+{ (void)s; _ZN8daEyBm_c16OnPendingDestroyEv(); return 0; }
 static int __fastcall mrp_d0(void *s, void *)
-{ return (int)(size_t)_ZN14MrI_ProjectileD0Ev((int *)s); }
+{ return (int)(size_t)_ZN8daEyBm_cD0Ev((int *)s); }
 static int __fastcall mrp_yoshi(void *s, void *)
-{ (void)s; return func_ov071_02121b00(); }
+{ (void)s; return _ZN8daEyBm_c13OnYoshiTryEatEv(); }
 /* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
    the transcribed thunk that stood here (mrp_d1) spelled the same chain by hand. */
 
@@ -414,7 +416,7 @@ extern "C" void hal_fill_mri_vtable(void)
     vt[6]  = (void *)mri_behavior;
     vt[9]  = (void *)mri_render;
     vt[12] = (void *)mri_pdes;
-    vt[16] = (void *)hal_cppd1_MrI;
+    vt[16] = (void *)PORT_D16(hal_cppd1_MrI);
     vt[17] = (void *)mri_d0;
     vt[18] = (void *)mri_yoshi;   /* Actor's default; MrI has no override */
     MRI_SHARED_TAIL(vt)
@@ -428,8 +430,8 @@ extern "C" void hal_fill_mri_projectile_vtable(void)
     vt[6]  = (void *)mrp_behavior;
     vt[9]  = (void *)mrp_render;
     vt[12] = (void *)mrp_pdes;
-    vt[16] = (void *)hal_cppd1_MrI_Projectile;
+    vt[16] = (void *)PORT_D16(hal_cppd1_MrI_Projectile);
     vt[17] = (void *)mrp_d0;
-    vt[18] = (void *)mrp_yoshi;   /* its OWN, func_ov071_02121b00, returns 4 */
+    vt[18] = (void *)mrp_yoshi;   /* its OWN, _ZN8daEyBm_c13OnYoshiTryEatEv, returns 4 */
     MRI_SHARED_TAIL(vt)
 }

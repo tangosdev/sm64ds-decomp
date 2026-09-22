@@ -16,12 +16,23 @@
 
 #include "fault_probe.h"
 
+// SMOKELINK5 (run link100 wave 10 round 5), the same fix port/tests/
+// smoke_roots.cpp made for the same reason (that file's own header carries
+// the full derivation): the entry used to be declared as a flat extern "C"
+// Itanium name over a forward-declared struct, which is what src/ emitted
+// before the 09-14 sync. It is now Heap::SetupRootHeap(), a real static
+// member (include/Heap.h:236, ?SetupRootHeap@Heap@@SAPAU1@XZ), so the flat
+// spelling bought a link error. This file is HOST TEST CODE, not ROM code,
+// so it may include the class header and call the member the way C++ calls
+// it, reaching the same object it always linked,
+// src/_ZN4Heap13SetupRootHeapEv.cpp -- only the spelling changed.
+#include "Heap.h"
+
 typedef unsigned int u32;
 
 extern "C" {
 void *_ZN6PlayerC1Ev(void *self);
-void *_ZN4Heap13SetupRootHeapEv(void);
-void *_ZN9ActorBasenwEj(unsigned size);
+void *_ZN7fBase_cnwEj(unsigned size);
 extern int data_0209b3ec[12];
 extern unsigned short data_020a4b54;
 extern void **data_020a4bb8;
@@ -163,7 +174,7 @@ int main(void)
     PORT_INSTALL_FAULT_PROBE();
     setvbuf(stdout, NULL, _IONBF, 0);
     if (!ntr::io_init()) { fprintf(stderr, "io_init failed\n"); return 2; }
-    CHECK(_ZN4Heap13SetupRootHeapEv() != NULL);
+    CHECK(Heap::SetupRootHeap() != NULL);
     ident_fx(data_0209b3ec);
     hal_fill_model_vtable();
     hal_fill_shadow_vtable();
@@ -236,7 +247,7 @@ int main(void)
             _ZN22ExpandingHeapAllocator10MemoryLeftEv(
                 *(void **)((char *)data_020a0eac_c + 0x14)));
 
-    void *player = _ZN9ActorBasenwEj(0x800);
+    void *player = _ZN7fBase_cnwEj(0x800);
     CHECK(player != NULL);
     _ZN6PlayerC1Ev(player);
     printf("  player constructed at %p, vtable %p\n", player, *(void **)player);
@@ -295,18 +306,18 @@ int main(void)
     {
         static struct { unsigned short id; unsigned char refs; void *p; } kcl_ptr;
         extern void *_ZN13SharedFilePtr9ConstructEj(void *, unsigned);
-        extern void _ZN12MeshColliderC1Ev(void *);
-        extern void *_ZN12MeshCollider8LoadFileER13SharedFilePtr(void *);
-        extern void _ZN12MeshCollider7SetFileEP8KCL_FileR10CLPS_Block(
+        extern void _ZN7dBgW_KcC1Ev(void *);
+        extern void *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void *);
+        extern void _ZN7dBgW_Kc7SetFileEP8KCL_FileR10CLPS_Block(
             void *, void *, void *);
-        extern int _ZN16MeshColliderBase6EnableEP5Actor(void *, void *);
+        extern int _ZN4dBgW6EnableEP8dActor_c(void *, void *);
         _ZN13SharedFilePtr9ConstructEj(&kcl_ptr, 1941);
         static char mc_storage[0x60];
-        _ZN12MeshColliderC1Ev(mc_storage);
-        char *kcl = (char *)_ZN12MeshCollider8LoadFileER13SharedFilePtr(&kcl_ptr);
+        _ZN7dBgW_KcC1Ev(mc_storage);
+        char *kcl = (char *)_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(&kcl_ptr);
         CHECK(kcl != NULL);
         static char clps_storage[0x100];
-        _ZN12MeshCollider7SetFileEP8KCL_FileR10CLPS_Block(mc_storage, kcl,
+        _ZN7dBgW_Kc7SetFileEP8KCL_FileR10CLPS_Block(mc_storage, kcl,
                                                           clps_storage);
         /* ROOT CAUSE (found 2026-08-02): the level collider's OWNER feeds
            func_02035354's self-collision exclusion. Enabling it with the
@@ -317,7 +328,7 @@ int main(void)
            (suspect: the div-52 walk-physics draft's ground branches), so
            real collision stays opt-in until that is run down. */
         static char stage_owner[0x200];
-        _ZN16MeshColliderBase6EnableEP5Actor(
+        _ZN4dBgW6EnableEP8dActor_c(
             mc_storage, getenv("SM64DS_REAL_CLSN") ? (void *)stage_owner
                                                    : (void *)player);
         /* stand Mario inside the octree box, above the floor plane */

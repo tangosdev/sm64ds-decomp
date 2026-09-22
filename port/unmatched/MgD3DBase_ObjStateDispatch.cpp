@@ -81,7 +81,7 @@
 // `add Rd,Rn,Rm,asr #1` immediately followed by `ands Rm,Rm,#1` finds THREE
 // sites, not one:
 //
-//     020ee290  func_ov006_020ee27c   vtable slot 6, dScMgJump_c's own
+//     020ee290  _ZN11dScMgJump_c8BehaviorEv   vtable slot 6, dScMgJump_c's own
 //     020c4ce8  func_ov006_020c4cd8   the object adapter's tick, +0x30
 //     020c7898  func_ov006_020c7860   the second object's tick, +0x3c
 //
@@ -92,11 +92,11 @@
 // keeping now that the two records live together: its encoding scan over
 // dScMgJump2_c's closure found three dispatch sites too -- 0x020ef450 (that
 // class's own vtable slot 6), 0x020c4cec and 0x020c789c -- and its independent
-// `::*` source sweep returned four hits, src/func_ov004_020b87e0.cpp (the
+// `::*` source sweep returned four hits, src/_ZN10dMgState_c8SetStateEi.cpp (the
 // framework state setter, already host-copied in
 // unmatched/MgBase_StateSetter.cpp and excluded from every minigame slice),
-// src/func_ov006_020c4cd8.cpp, src/func_ov006_020c7860.cpp and
-// src/func_ov006_020ef3e0.cpp. Two lanes, two closures, two detectors each,
+// src/func_ov006_020c4cd8.cpp, src/actors/dMgJump3DMario_c.cpp and
+// src/_ZN12dScMgJump2_c8BehaviorEv.cpp. Two lanes, two closures, two detectors each,
 // and the same two shared bodies at the end of all four.
 //
 // ---- 2. THE TWO FIELDS AND THE TWENTY-FIVE STATES -------------------------
@@ -277,15 +277,15 @@ void func_ov006_020c6400(char *c);
 void func_ov006_020c66bc(char *c);
 void func_ov006_020c6a9c(char *c);
 /* ... and field +0x3c's nine */
-void func_ov006_020c78ec(char *c);
-void func_ov006_020c7a30(char *c);
-void func_ov006_020c7c68(char *c);
-void func_ov006_020c8048(void *c);
-void func_ov006_020c814c(char *c);
-void func_ov006_020c833c(char *c);
-void func_ov006_020c85bc(char *c);
-void func_ov006_020c864c(int *c);
-void func_ov006_020c8680(char *c);
+void _ZN16dMgJump3DMario_c9StateDampEv(char *c);
+void _ZN16dMgJump3DMario_c9StateHoldEv(char *c);
+void _ZN16dMgJump3DMario_c9StateMoveEv(char *c);
+void _ZN16dMgJump3DMario_c12StateFallOutEv(void *c);
+void _ZN16dMgJump3DMario_c12StateRiseOutEv(char *c);
+void _ZN16dMgJump3DMario_c11StateBounceEv(char *c);
+void _ZN16dMgJump3DMario_c11StateWindUpEv(char *c);
+void _ZN16dMgJump3DMario_c9StateIdleEv(int *c);
+void _ZN16dMgJump3DMario_c12StateRespawnEv(char *c);
 
 
 /* the witness lane BNP's seat reads (hal/scene_mg_jump.cpp) */
@@ -349,15 +349,15 @@ static int obj_try(void *self, unsigned code)
     case 0x020c6400u: func_ov006_020c6400(c); return 1;
     case 0x020c66bcu: func_ov006_020c66bc(c); return 1;
     case 0x020c6a9cu: func_ov006_020c6a9c(c); return 1;
-    case 0x020c78ecu: func_ov006_020c78ec(c); return 1;
-    case 0x020c7a30u: func_ov006_020c7a30(c); return 1;
-    case 0x020c7c68u: func_ov006_020c7c68(c); return 1;
-    case 0x020c8048u: func_ov006_020c8048(c); return 1;
-    case 0x020c814cu: func_ov006_020c814c(c); return 1;
-    case 0x020c833cu: func_ov006_020c833c(c); return 1;
-    case 0x020c85bcu: func_ov006_020c85bc(c); return 1;
-    case 0x020c864cu: func_ov006_020c864c((int *)c); return 1;
-    case 0x020c8680u: func_ov006_020c8680(c); return 1;
+    case 0x020c78ecu: _ZN16dMgJump3DMario_c9StateDampEv(c); return 1;
+    case 0x020c7a30u: _ZN16dMgJump3DMario_c9StateHoldEv(c); return 1;
+    case 0x020c7c68u: _ZN16dMgJump3DMario_c9StateMoveEv(c); return 1;
+    case 0x020c8048u: _ZN16dMgJump3DMario_c12StateFallOutEv(c); return 1;
+    case 0x020c814cu: _ZN16dMgJump3DMario_c12StateRiseOutEv(c); return 1;
+    case 0x020c833cu: _ZN16dMgJump3DMario_c11StateBounceEv(c); return 1;
+    case 0x020c85bcu: _ZN16dMgJump3DMario_c11StateWindUpEv(c); return 1;
+    case 0x020c864cu: _ZN16dMgJump3DMario_c9StateIdleEv((int *)c); return 1;
+    case 0x020c8680u: _ZN16dMgJump3DMario_c12StateRespawnEv(c); return 1;
     default:                                  return 0;
     }
 }
@@ -576,15 +576,15 @@ D3D_FACE (020c6400, 0, func_ov006_020c6400, char *)
 D3D_FACE (020c66bc, 0, func_ov006_020c66bc, char *)
 D3D_FACE (020c6a9c, 0, func_ov006_020c6a9c, char *)
 /* field +0x3c, site 1: nine code words */
-D3D_FACE (020c78ec, 1, func_ov006_020c78ec, char *)
-D3D_FACE (020c7a30, 1, func_ov006_020c7a30, char *)
-D3D_FACE (020c7c68, 1, func_ov006_020c7c68, char *)
-D3D_FACE (020c8048, 1, func_ov006_020c8048, void *)
-D3D_FACE (020c814c, 1, func_ov006_020c814c, char *)
-D3D_FACE (020c833c, 1, func_ov006_020c833c, char *)
-D3D_FACE (020c85bc, 1, func_ov006_020c85bc, char *)
-D3D_FACE (020c864c, 1, func_ov006_020c864c, int *)
-D3D_FACE (020c8680, 1, func_ov006_020c8680, char *)
+D3D_FACE (020c78ec, 1, _ZN16dMgJump3DMario_c9StateDampEv, char *)
+D3D_FACE (020c7a30, 1, _ZN16dMgJump3DMario_c9StateHoldEv, char *)
+D3D_FACE (020c7c68, 1, _ZN16dMgJump3DMario_c9StateMoveEv, char *)
+D3D_FACE (020c8048, 1, _ZN16dMgJump3DMario_c12StateFallOutEv, void *)
+D3D_FACE (020c814c, 1, _ZN16dMgJump3DMario_c12StateRiseOutEv, char *)
+D3D_FACE (020c833c, 1, _ZN16dMgJump3DMario_c11StateBounceEv, char *)
+D3D_FACE (020c85bc, 1, _ZN16dMgJump3DMario_c11StateWindUpEv, char *)
+D3D_FACE (020c864c, 1, _ZN16dMgJump3DMario_c9StateIdleEv, int *)
+D3D_FACE (020c8680, 1, _ZN16dMgJump3DMario_c12StateRespawnEv, char *)
 
 extern "C" {
 extern unsigned data_ov006_0213af18[], data_ov006_0213af20[],
@@ -666,6 +666,6 @@ extern "C" void port_mg_objstate_seat(void)
 }
 
 /* HOST COPIES RETIRED, run link100 lane PMFB6 gate 3.
-   src/func_ov006_020c4cd8.cpp and src/func_ov006_020c7860.cpp dispatch their
+   src/func_ov006_020c4cd8.cpp and src/actors/dMgJump3DMario_c.cpp dispatch their
    own fields now; the second is compiled with /Zp4 for the reason above. */
 

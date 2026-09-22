@@ -9,6 +9,12 @@ extern "C" void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *mf, short angY);
 struct BlendModelAnim { void Advance(); };
 struct Animation { void Advance(); };
 struct ShadowModel { void InitModel(Matrix4x3 *m, int b, int c, int d, unsigned int e); };
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" void _ZN11ShadowModel9InitModelEP9Matrix4x35Fix12IiES3_S3_j(void *, Matrix4x3 *m, int b, int c, int d, unsigned int e);
+
 extern "C" Matrix4x3 data_020a0e68;
 
 struct C0 {};
@@ -29,5 +35,5 @@ extern "C" void func_ov075_02114cd8(void *self)
     (((C0*)self)->*data_ov075_0211d53c[*(int*)(s + 0x114)].pmf)();
     ((BlendModelAnim*)self)->Advance();
     ((Animation*)(s + 0xd4))->Advance();
-    ((ShadowModel*)(s + 0xe8))->InitModel((Matrix4x3*)(s + 0x1c), 0x50000, 0x1f4000, 0x50000, 0xf);
+    _ZN11ShadowModel9InitModelEP9Matrix4x35Fix12IiES3_S3_j((ShadowModel*)(s + 0xe8), (Matrix4x3*)(s + 0x1c), 0x50000, 0x1f4000, 0x50000, 0xf);
 }

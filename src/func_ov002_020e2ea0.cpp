@@ -1,14 +1,9 @@
 //cpp
+#include "dBgCh_Actr.h"
+
 extern "C" {
-struct WithMeshClsn {
-    int IsOnGround() const;
-    int GetFloorResult() const;
-};
-struct ClsnResult {
-    int GetClsnID() const;
-};
-struct Actor {
-    static Actor* FindWithID(unsigned int id);
+struct dActor_c {
+    static dActor_c* FindWithID(unsigned int id);
 };
 struct Player {
     struct State {};
@@ -17,6 +12,7 @@ struct Player {
 };
 
 int func_ov002_020e3078(Player *self, Player::State *s);
+dBgPi *_ZNK10dBgCh_Actr14GetFloorResultEv(const dBgCh_Actr *self);
 }
 
 extern signed char data_0209f2f8;
@@ -40,13 +36,13 @@ extern "C" int func_ov002_020e2ea0(Player *self) {
         return 0;
     }
 
-    if (!((WithMeshClsn *)(base + 0x380))->IsOnGround()) {
+    if (!((dBgCh_Actr *)(base + 0x380))->IsOnGround()) {
         return 0;
     }
 
-    ClsnResult *cr = (ClsnResult *)((WithMeshClsn *)(base + 0x380))->GetFloorResult();
+    dBgPi *cr = _ZNK10dBgCh_Actr14GetFloorResultEv((dBgCh_Actr *)(base + 0x380));
     if (cr->GetClsnID() != -1) {
-        if (Actor::FindWithID((unsigned int)cr->GetClsnID()) != 0) {
+        if (dActor_c::FindWithID((unsigned int)cr->GetClsnID()) != 0) {
             return 0;
         }
     }

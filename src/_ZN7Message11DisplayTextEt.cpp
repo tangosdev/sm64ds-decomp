@@ -35,7 +35,7 @@ void func_0201b7cc(void);
 void func_0201b388(int a);
 }
 
-extern "C" void _ZN7Message11DisplayTextEt(unsigned short t)
+void Message::DisplayText(unsigned short t)
 {
     volatile int li;
     volatile unsigned short ls;

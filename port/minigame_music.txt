@@ -17,7 +17,7 @@ a host function the level loop already made.
 Minigame music is already dispatched on every boot, by linked code:
 
   dScMgBase_c::AfterInitResources           vtable slot 2
-    = src/func_ov004_020b08f0.cpp           (in slice_mg1.txt, linked)
+    = src/minigames/d_s_mg_base.cpp           (in slice_mg1.txt, linked)
     -> func_ov004_020ae330                  (slice_mg1.txt:249, linked)
 
 func_ov004_020ae330 (src/func_ov004_020ae330.c) is the whole decision:
@@ -32,9 +32,9 @@ func_ov004_020ae330 (src/func_ov004_020ae330.c) is the whole decision:
     Sound::LoadAndSetMusic_Layer1(func_ov004_020ae1f0());
 
 func_ov004_020ae1f0 returns self->unk_0c8; slot 1
-(src/func_ov004_020b0930.cpp:41, host copy in unmatched/MgBase_Slot1.cpp) fills
+(src/minigames/d_s_mg_base.cpp:41, host copy in unmatched/MgBase_Slot1.cpp) fills
 unk_0c8 = *(int *)(data_0209b308 + 0x28). The base ctor
-src/func_ov004_020b2adc.c:38 sets data_ov004_020beb68 = self, so the tracker
+src/_ZN11dScMgBase_cC2Ev.cpp:38 sets data_ov004_020beb68 = self, so the tracker
 gate passes on a direct scene boot; it also reads data_0209b308 + 0x30.
 
 Every input is one 0x34-byte arm9 record. Both things wrong with it were wrong
@@ -81,7 +81,7 @@ nothing on every run below. Both stay BSS-zero, which is their DS boot value.
 3. DEFECT TWO: NOTHING EVER SEEDED THE RECORD
 ---------------------------------------------
 
-The only writer is the Rec Room overlay ov005, src/func_ov005_020c0378.c:96-107:
+The only writer is the Rec Room overlay ov005, src/func_ov005_020c0378.cpp:96-107:
 it copies a 0x34-byte row out of data_ov005_020c24d8 for the minigame the player
 picked, and THEN launches the scene. ov005 is in no slice and no mount, so
 SM64DS_SCENE=374 bypasses it entirely: music id and enable both read zero,
@@ -320,7 +320,7 @@ nothing to do with audio, and it is deferred to the post-CUR2 pass.
 8. IS THE ROUND-FLOW / PAUSE MUSIC REFRESH A NEEDED FOLLOW-UP?
 --------------------------------------------------------------
 
-NO, not for music. The question is whether func_ov004_020b87e0 -- the
+NO, not for music. The question is whether _ZN10dMgState_c8SetStateEi -- the
 dScMgBase_c state setter, which is the mwcc pointer-to-member WALL stubbed at
 hal/scene_mg_faces.cpp:462 -- has to be seated before curling's BGM is really
 delivered. Two checks, both against the ROM rather than inference:
@@ -329,12 +329,12 @@ delivered. Two checks, both against the ROM rather than inference:
     dispatcher in the whole image:
         config/arm9/overlays/ov004/relocs.txt:319
         from:0x020b0914 kind:arm_call to:0x020ae330 module:overlay(4)
-    0x020b0914 is inside slot 2 (func_ov004_020b08f0, which starts at
+    0x020b0914 is inside slot 2 (_ZN11dScMgBase_c18AfterInitResourcesEj, which starts at
     0x020b08f0). So func_ov004_020ae330 is called from ONE site, the boot slot
     this lane fixed. The ROM does not re-run the music decision on a round
     change or a pause; layer 1 is started once and left playing.
 
-  * WHETHER THE STATE SETTER TOUCHES SOUND. src/func_ov004_020b87e0.cpp has no
+  * WHETHER THE STATE SETTER TOUCHES SOUND. src/_ZN10dMgState_c8SetStateEi.cpp has no
     sound, music, sseq or bgm reference anywhere in it. Its whole body assigns
     self->index and self->onUpdate from a twenty-entry member-pointer table,
     sets self->onSomething, and dispatches. It is a STATE setter.

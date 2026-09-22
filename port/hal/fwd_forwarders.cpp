@@ -45,6 +45,7 @@
 
 /* seven of the nine classes are declared in the tree's own include/ */
 #include "KnockDownPlank.h"
+#include "daObjBk_Dossunbar_c.h"
 #include "BowserFire.h"
 #include "Whomp.h"
 #include "MontyMole.h"
@@ -52,15 +53,16 @@
 #include "Cannon.h"
 #include "Fish.h"
 /* run link100 lane FWD gate 2 */
-#include "MansionSteps.h"
+#include "daTrsTrap_c.h"
 /* run link100 lane PMFB6 gate 2: the two member-defining EXTENT rows */
 #include "Key.h"
 #include "UpDownLiftBbh.h"
+#include "BowserPuzzlePiece.h"
 
 /* include/BowserPuzzleManager.h and include/Dorrie.h do NOT declare
    Behavior -- their matched TUs declare the class themselves -- so these two
    carry the matched TU's own declaration verbatim rather than an invented
-   one. src/_ZN19BowserPuzzleManager8BehaviorEv.cpp declares
+   one. src/_ZN9JetStream8BehaviorEv.cpp declares
    `struct BowserPuzzleManager { unsigned char pad[0x336]; unsigned char idx;
    int Behavior(); };` and src/_ZN6Dorrie8BehaviorEv.cpp declares
    `class Dorrie { public: int Behavior(); };`; only the access and the
@@ -70,17 +72,24 @@ struct Dorrie { int Behavior(); };
 
 extern "C" {
 
-/* ov015 0x02112090 -- ov015 data_ov015_021149ec, 7 cells */
-int _ZN14KnockDownPlank8BehaviorEv(void *self)
-{ return ((KnockDownPlank *)self)->KnockDownPlank::Behavior(); }
+/* ov015 0x02112090 -- ov015 data_ov015_021149ec, 7 cells.
+   The receiver is daObjBk_Dossunbar_c, NOT KnockDownPlank: ov015 relocs.txt
+   sends slot 6 of _ZTV19daObjBk_Dossunbar_c (0x021145a4) to 0x02112090 and
+   slot 6 of _ZTV14KnockDownPlank (0x02114438) to 0x02111720. The plank's
+   object is 0x39c bytes with a ShadowModel at 0x320; the bar's is the 0x338
+   both its factories allocate, so the plank's body wrote its shadow matrix
+   0x10 past the bar's block and over the next actor's vtable word. */
+int _ZN19daObjBk_Dossunbar_c8BehaviorEv(void *self)
+{ return ((daObjBk_Dossunbar_c *)self)->daObjBk_Dossunbar_c::Behavior(); }
 
 /* ov060 0x021176d4 -- ov060 data_ov060_0211afb4, 8 cells */
 int _ZN10BowserFire8BehaviorEv(void *self)
 { return ((BowserFire *)self)->BowserFire::Behavior(); }
 
-/* ov064 0x021190b0 -- ov064 data_ov064_0211c904, 6 cells */
-int _ZN19BowserPuzzleManager8BehaviorEv(void *self)
-{ return ((BowserPuzzleManager *)self)->BowserPuzzleManager::Behavior(); }
+/* ov064 0x021190b0 -- ov064 data_ov064_0211c904, 6 cells. 0x021190b0 is slot 6
+   of the Piece's own table 0x0211c25c; the Manager's Behavior is 0x0211915c. */
+int _ZN17BowserPuzzlePiece8BehaviorEv(void *self)
+{ return ((BowserPuzzlePiece *)self)->BowserPuzzlePiece::Behavior(); }
 
 /* ov065 0x02118df0 -- ov065 data_ov065_0211d7fc, 3 cells */
 int _ZN6Dorrie8BehaviorEv(void *self)
@@ -115,8 +124,8 @@ int _ZN4Fish8BehaviorEv(void *self)
    matched TU emits [eax*8]/[eax*8+4] with arity 0, its four sources are
    whole-pair {code,0} and its span is 32 bytes = exactly the four filled
    cells. */
-int _ZN12MansionSteps8BehaviorEv(void *self)
-{ return ((MansionSteps *)self)->MansionSteps::Behavior(); }
+int _ZN11daTrsTrap_c8BehaviorEv(void *self)
+{ return ((daTrsTrap_c *)self)->daTrsTrap_c::Behavior(); }
 
 /* ---- run link100 LANE PMFB6, GATE 2: THE TWO MEMBER-DEFINING EXTENT ROWS --
    Lane FWD measured Key and UpDownLiftBbh clean on stride, pairs and dispatch
@@ -170,7 +179,7 @@ int _ZN13UpDownLiftBbh8BehaviorEv(void *self)
 #pragma comment(linker, "/alternatename:?data_0209f318@@3HA=_data_0209f318")
 /* gate 2. MansionSteps::Behavior's table, read off its object with dumpbin */
 #pragma comment(linker, "/alternatename:?data_ov063_0211ef38@@3PAP8C@@AEXXZA=_data_ov063_0211ef38")
-/* gate 2. func_ov064_02117d24's table, the same shape. That TU defines the
+/* gate 2. _ZN12MetalNetLift8BehaviorEv's table, the same shape. That TU defines the
    FLAT C name and needs no forwarder -- only this alias. */
 #pragma comment(linker, "/alternatename:?data_ov064_0211c750@@3PAUEntry@@A=_data_ov064_0211c750")
 /* run link100 lane PMFB6 gate 2. Key's table: its TU declares
@@ -197,7 +206,8 @@ int _ZN13UpDownLiftBbh8BehaviorEv(void *self)
 /* include/decl_common.h:1896 declares ApproachLinearI and nothing defines it. RotatingUpDownPlatform::Behavior's call site at 0x021321a8 relocates to 0x0203ae58, which config/arm9/symbols.txt names ApproachLinear(int&, int, int) -- the RHS below. The two sibling state bodies func_ov091_02131ef0 and _02131f9c already spell that symbol in full and this link defines it */
 #pragma comment(linker, "/alternatename:_ApproachLinearI=__Z14ApproachLinearRiii")
 /* include/decl_common.h:1967, the same shape: the TU's own literal pool at 0x02132208 reads 0x0203923c, which config/arm9/symbols.txt names MeshColliderBase::UpdatePosWithVelocity */
-#pragma comment(linker, "/alternatename:_UpdatePosWithVelocitySym=__ZN16MeshColliderBase21UpdatePosWithVelocityERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEAD RHS and an UNREFERENCED left hand side: nothing in the build defines __ZN4dBgW21UpdatePosWithVelocityERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_, and nothing references _UpdatePosWithVelocitySym, so the row can never fire and nothing wants it to. */
+// #pragma comment(linker, "/alternatename:_UpdatePosWithVelocitySym=__ZN4dBgW21UpdatePosWithVelocityERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_")
 
 /* ---- RUN link100 LANE PMFB7 GATE 1 ---------------------------------------
  * Nine of this gate's twelve object-field rows define a real C++ MEMBER
@@ -215,9 +225,11 @@ int _ZN13UpDownLiftBbh8BehaviorEv(void *self)
 #include "WaterSuction.h"
 #include "Submarine.h"
 #include "BowserPuzzlePiece.h"
+#include "Whirlpool.h"
+#include "JetStream.h"
 #include "LavaBubble.h"
 #include "WaterRing.h"
-#include "Snufit.h"
+#include "daYurei_Mucho_c.h"
 #include "Swoop.h"
 #include "CheepCheep.h"
 
@@ -228,12 +240,15 @@ int _ZN6Bullet8BehaviorEv(void *self)
 /* ov026 0x0211233c -- cell data_ov036_02113f58, tick half at +8 */
 int _ZN12WaterSuction8BehaviorEv(void *self)
 { return ((WaterSuction *)self)->WaterSuction::Behavior(); }
-/* ov026 0x0211200c -- cells data_ov026_02113f2c / _02113f3c */
-int _ZN9Submarine8BehaviorEv(void *self)
-{ return ((Submarine *)self)->Submarine::Behavior(); }
-/* ov064 0x021198bc -- cell data_ov064_0211c934, .b half at +8 */
-int _ZN17BowserPuzzlePiece8BehaviorEv(void *self)
-{ return ((BowserPuzzlePiece *)self)->BowserPuzzlePiece::Behavior(); }
+/* ov026 0x0211200c -- cells data_ov026_02113f2c / _02113f3c. That address is
+   slot 6 of the whirlpool's table 0x02113d54; Submarine has no Behavior of its
+   own, so this used to reach the inherited base body instead. */
+int _ZN9Whirlpool8BehaviorEv(void *self)
+{ return ((Whirlpool *)self)->Whirlpool::Behavior(); }
+/* ov064 0x021198bc -- cell data_ov064_0211c934, .b half at +8. That address is
+   slot 6 of JetStream's table 0x0211c334; the Piece's Behavior is 0x021190b0. */
+int _ZN9JetStream8BehaviorEv(void *self)
+{ return ((JetStream *)self)->JetStream::Behavior(); }
 /* ov064 0x02118850 -- cells data_ov064_0211c7b8 / _0211c7c8 */
 int _ZN10LavaBubble8BehaviorEv(void *self)
 { return ((LavaBubble *)self)->LavaBubble::Behavior(); }
@@ -241,8 +256,8 @@ int _ZN10LavaBubble8BehaviorEv(void *self)
 int _ZN9WaterRing8BehaviorEv(void *self)
 { return ((WaterRing *)self)->WaterRing::Behavior(); }
 /* ov065 0x02116b84 -- cells data_ov065_0211d650/60/70/80 */
-int _ZN6Snufit8BehaviorEv(void *self)
-{ return ((Snufit *)self)->Snufit::Behavior(); }
+int _ZN15daYurei_Mucho_c8BehaviorEv(void *self)
+{ return ((daYurei_Mucho_c *)self)->daYurei_Mucho_c::Behavior(); }
 /* ov065 0x02117b64 -- cells data_ov065_0211d6e0/f0/700/710 */
 int _ZN5Swoop8BehaviorEv(void *self)
 { return ((Swoop *)self)->Swoop::Behavior(); }
@@ -261,9 +276,10 @@ int _ZN10CheepCheep8BehaviorEv(void *self)
  * runs/link100/out/PMFB7/undef_gate2.txt.
  */
 #include "HeaveHo.h"
-#include "KingBobOmb.h"
+#include "daBombking_c.h"
 #include "LakituBro.h"
 #include "Stump.h"
+#include "Fwoosh.h"
 #include "UnchainedChomp.h"
 
 extern "C" {
@@ -271,14 +287,14 @@ extern "C" {
 int _ZN7HeaveHo8BehaviorEv(void *self)
 { return ((HeaveHo *)self)->HeaveHo::Behavior(); }
 /* ov078 0x02126104 -- eighteen two-record cells from __sinit_ov078_02126660 */
-int _ZN10KingBobOmb8BehaviorEv(void *self)
-{ return ((KingBobOmb *)self)->KingBobOmb::Behavior(); }
+int _ZN12daBombking_c8BehaviorEv(void *self)
+{ return ((daBombking_c *)self)->daBombking_c::Behavior(); }
 /* ov085 0x0212eb18 -- eleven two-record cells from __sinit_ov085_0212fe4c */
 int _ZN9LakituBro8BehaviorEv(void *self)
 { return ((LakituBro *)self)->LakituBro::Behavior(); }
 /* ov091 0x021341ec -- the three FWOOSH cells 021356b0/c0/d0 */
-int _ZN5Stump8BehaviorEv(void *self)
-{ return ((Stump *)self)->Stump::Behavior(); }
+int _ZN6Fwoosh8BehaviorEv(void *self)
+{ return ((Fwoosh *)self)->Fwoosh::Behavior(); }
 /* ov100 0x02143d64 -- the cell data_ov100_021486f4, hi half at +8 */
 int _ZN14UnchainedChomp8BehaviorEv(void *self)
 { return ((UnchainedChomp *)self)->UnchainedChomp::Behavior(); }
@@ -296,7 +312,7 @@ int _ZN14UnchainedChomp8BehaviorEv(void *self)
 #pragma comment(linker, "/alternatename:?data_ov085_021307e0@@3UState@@A=_data_ov085_021307e0")
 
 /* ---- RUN link100 LANE PMFB7 GATE 3: THE THREE NAMES THE UNDEF SWEEP FOUND --
- * src/func_ov006_02123340.cpp declares its two Particle::System statics through
+ * src/minigames/d_s_mg_trampoline2.cpp declares its two Particle::System statics through
  * a local wrapper -- `struct PSys { static void *NewUnkCallback818(...);
  * static void *FromUniqueID(unsigned); };` -- and declares data_ov006_02140830
  * OUTSIDE its extern "C" block, so MSVC decorates all three references and

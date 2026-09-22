@@ -23,8 +23,8 @@
 #   0x02121b70 _ZN8Goomboss6RenderEv           e92d4010  push {r4,lr}
 #   0x02121bf0 _ZN8Goomboss8BehaviorEv         e92d4070  push {r4,r5,r6,lr}
 #   0x02121e98 _ZN8Goomboss13InitResourcesEv   e92d47f0  push {r4-r10,lr}
-#   0x02122764 ExplosionGoomba_Spawn           e92d4010  push {r4,lr}
-#   0x02122838 Goomboss_Spawn                  e92d4010  push {r4,lr}
+#   0x02122764 daKuriKing_c_classInit_KURIKING_VANISH           e92d4010  push {r4,lr}
+#   0x02122838 daKuriKing_c_classInit_KURIKING                  e92d4010  push {r4,lr}
 #
 # Sections, from config/arm9/overlays/ov074/delinks.txt:
 #   .text   0x0211f000..0x0212290c      .rodata 0x0212290c..0x02122978
@@ -42,8 +42,8 @@
 # must be a spawn function inside ov074's own .text.
 #
 #   id   SpawnInfo   table slot   word[0] spawnFunc            idhalf  module
-#  198   0x02122e78  0x02090b7c   0x02122838 Goomboss_Spawn        198  overlays(71,74)
-#  199   0x02122e94  0x02090b80   0x02122764 ExplosionGoomba_Spawn 199  overlays(71,74)
+#  198   0x02122e78  0x02090b7c   0x02122838 daKuriKing_c_classInit_KURIKING        198  overlays(71,74)
+#  199   0x02122e94  0x02090b80   0x02122764 daKuriKing_c_classInit_KURIKING_VANISH 199  overlays(71,74)
 #
 # FIFTEEN arm9 spawn-table slots relocate into this window's span. THIRTEEN of
 # them fail at least one route for ov074 and belong to a mounted sibling; the
@@ -72,7 +72,7 @@
 #                      0x02122dc4 is one of the eighteen 8-byte {fn, 0}
 #                      pointer-to-member records below, not a SpawnInfo.
 #
-# TWO IDS, ONE CLASS. src/Goomboss_Spawn.cpp and src/ExplosionGoomba_Spawn.cpp
+# TWO IDS, ONE CLASS. src/d_a_kuri_king_kuriking.cpp and src/d_a_kuri_king_kuriking_vanish.cpp
 # are the same body twice (0xd4 each): both allocate 0x610, both store
 # _ZTV8Goomboss into p[0], and both run the identical member-construction
 # sequence. ov074 has exactly ONE vtable and ONE typeinfo record. The two ids
@@ -84,7 +84,7 @@
 # 0x02122e30, an __si_class_type_info record
 # [0x0209a764][0x02122e3c][0x021081c0]; the name string at 0x02122e3c reads
 # "12daKuriKing_c" -- Kuri (Goomba) King, the ROM's own name for Goomboss --
-# and the base typeinfo is data_ov002_021081c0. The label and the class agree,
+# and the base typeinfo is _ZTI12dEnemyBase_c. The label and the class agree,
 # so the ov026/ov030/ov036 label-shift does not fire here. Confirmed a second
 # way: slot 0 of that table is 0x02121e98, which config names
 # _ZN8Goomboss13InitResourcesEv, and both factories store that table.
@@ -120,7 +120,7 @@
 # The prologue goes with the table: it is the same object, dsd just names its
 # two words separately because arm9's spawn slot 64 (ov071's) cites the
 # address. Nothing in the port reads a vtable's -8/-4 words, and the typeinfo
-# record they point at (data_ov074_02122e30) IS mounted, so the RTTI bytes are
+# record they point at (_ZTI12daKuriKing_c) IS mounted, so the RTTI bytes are
 # not lost. No dsd symbol falls inside the 31-slot span, so there is no
 # interior split to exclude with it.
 #
@@ -187,7 +187,7 @@
 #               and 0x02122f34 in the file table) as module:overlay(74), and
 #               the sinit Constructs it with file id 0x38f, so the address is
 #               a real ov074 object and the mount keeps it.
-#   0x021222e0  ov070 rodata vs ov074 CODE. src/_ZN3Amp16CleanupResourcesEv.c
+#   0x021222e0  ov070 rodata vs ov074 CODE. src/game/actors/daBrq_c.cpp
 #               reads `struct SharedFilePtr *func_ov074_021222e0[2]` -- ov070's
 #               two-pointer file table -- under the ov074 FUNCTION spelling,
 #               and hal/cxx_aliases.cpp aliased it onto data_ov070_021222e0.
@@ -228,7 +228,7 @@
 #   data_ov074_02122dfc and _02122e04 (0x8 each) are tuning tuples, not PMFs:
 #       0x02122e04 is the u16 table func_ov074_02120474 indexes by the byte at
 #       self+0x604, and it is READ AS FOUR HALFWORDS, which its 0x8 covers
-#   data_ov074_02122e30 (0xc) is the __si_class_type_info record and
+#   _ZTI12daKuriKing_c (0xc) is the __si_class_type_info record and
 #       _02122e3c (0x10) the "12daKuriKing_c" name string
 #   data_ov074_02122e5c (0x1c) is the seven-pointer level-overlay file table
 #       (0x02112404 0x0211244c 0x02112494 0x021124c4 0x02112464 0x02112434
@@ -239,8 +239,8 @@ data_ov074_02122d9c data_ov074_02122da4 data_ov074_02122dac data_ov074_02122db4
 data_ov074_02122dbc data_ov074_02122dc4 data_ov074_02122dcc data_ov074_02122dd4
 data_ov074_02122ddc data_ov074_02122de4 data_ov074_02122dec data_ov074_02122df4
 data_ov074_02122dfc data_ov074_02122e04 data_ov074_02122e0c data_ov074_02122e14
-data_ov074_02122e1c data_ov074_02122e24 data_ov074_02122e30 data_ov074_02122e3c
-data_ov074_02122e4c data_ov074_02122e5c Goomboss_SpawnInfo ExplosionGoomba_SpawnInfo
+data_ov074_02122e1c data_ov074_02122e24 _ZTI12daKuriKing_c _ZTS12daKuriKing_c
+data_ov074_02122e4c data_ov074_02122e5c g_profile_KURIKING g_profile_KURIKING_VANISH
 data_ov074_02122f34 data_ov074_02122f38 data_ov074_02122f3c data_ov074_02122fe0
 data_ov074_02122fe8 data_ov074_02122ff0 data_ov074_02122ff8 data_ov074_02123000
 data_ov074_02123008 data_ov074_02123010 data_ov074_02123018 data_ov074_02123020

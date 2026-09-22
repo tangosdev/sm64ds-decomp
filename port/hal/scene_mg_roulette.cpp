@@ -21,8 +21,8 @@
 // ---- 2. THE HIERARCHY IS THREE DEEP, AND THE ROM SAYS SO THREE TIMES ------
 //
 //     Scene -> dScMgBase_c         data_ov004_020bc0c0  36 slots
-//           -> dScMgSingle3DBase_c data_ov006_0213e448  36 slots
-//           -> dScMgRoulette_c     data_ov006_0213e39c  36 slots
+//           -> dScMgSingle3DBase_c _ZTV19dScMgSingle3DBase_c  36 slots
+//           -> dScMgRoulette_c     _ZTV15dScMgRoulette_c  36 slots
 //
 // THE CLASS NAME IS THE ROM'S OWN, not a src spelling. The word immediately
 // before the vtable, 0x0213e398, carries a load relocation to 0x0213e300, which
@@ -36,11 +36,11 @@
 //     own type_info, whose name string at 0x0213bd00 reads
 //     "19dScMgSingle3DBase_c". That is the compiler writing the inheritance
 //     down.
-//   FACTORY. MgMushroomRoulette_Spawn (0x0210a400) calls func_ov004_020b2adc
+//   FACTORY. dScMgRoulette_c_classInit (0x0210a400) calls _ZN11dScMgBase_cC2Ev
 //     (dScMgBase_c's constructor), writes 0x0213e448 into the object's first
 //     word, then writes 0x0213e39c over it.
-//   DESTRUCTORS. Slot 16 (func_ov006_0210788c, the D2) and slot 17
-//     (func_ov006_02107920, the D0) both unwind them in the opposite order,
+//   DESTRUCTORS. Slot 16 (_ZN15dScMgRoulette_cD1Ev, the D2) and slot 17
+//     (_ZN15dScMgRoulette_cD0Ev, the D0) both unwind them in the opposite order,
 //     0x0213e39c first and 0x0213e448 second.
 //
 // A hierarchy the type_info states, the constructor writes and the destructor
@@ -86,25 +86,25 @@
 //
 // ---- 4. SLOT 2 IS NOT src's BODY, AND SLOT 33 IS NOT src's EITHER ---------
 //
-// func_ov006_0210a6e4 (AfterInitResources) drops the framework's second
+// _ZN19dScMgSingle3DBase_c18AfterInitResourcesEj (AfterInitResources) drops the framework's second
 // argument: the ROM never writes r1 before its `bl 0x20b08f0`, so the flags
 // ride through in r1 and src spells the call with one argument because that is
 // the only way to spell an unnamed value in C. On the host the callee would
-// read stack litter, and func_ov004_020b08f0's tail is
+// read stack litter, and _ZN11dScMgBase_c18AfterInitResourcesEj's tail is
 // Scene::AfterInitResources(this, flags) where flags == 1 marks the actor for
 // destruction. The repair is port_mg_flower_after_init in
 // port/unmatched/MgFlower_Slot2.cpp, whose header asks the next lane to call it
 // rather than write a second one; memory2 was the second, mcarlo the third,
-// luckystars the fourth and this is the fifth. src/func_ov006_0210a6e4.cpp
+// luckystars the fourth and this is the fifth. src/minigames/d_s_mg_single3_d_base.cpp
 // stays out of port/slice_rlt.txt for the same reason it is out of the other
 // four slices.
 //
-// func_ov006_0210a708 (slot 33, the once-per-boot 3D setup) ends with two
+// _ZN19dScMgSingle3DBase_c9Virtual84Ev (slot 33, the once-per-boot 3D setup) ends with two
 // stores to LIGHT_COLOR at 0x040004cc, which a plain src build lands in the
 // memory ntr maps across the I/O window without ever telling the geometry
 // engine -- the "Yoshi is a black silhouette" defect run mg5 lane YTEX
 // measured. It builds from the hostgen'd copy port/CMakeLists.txt's
-// FLW_HOSTGEN_SYMS already emits, and src/func_ov006_0210a708.c is out of this
+// FLW_HOSTGEN_SYMS already emits, and src/minigames/d_s_mg_single3_d_base.cpp is out of this
 // slice for the same reason.
 //
 // ---- 4b. THERE IS NO FOURTH TABLE, AND THAT IS MEASURED -------------------
@@ -112,7 +112,7 @@
 // The mg9 element-vtable law says to check word 0 of every object a factory
 // builds, because dMgMCarloCardObj_c's eighty card records carry a mounted ROM
 // vtable that no vtable-axis derivation can see. This factory builds FIVE
-// records of 0x34 bytes at this+0x51a8 through func_020733a8, and the element
+// records of 0x34 bytes at this+0x51a8 through __cxa_vec_ctor, and the element
 // constructor it hands over is func_ov006_0210a4ac -- ONE WORD, 0xe12fff1e,
 // `bx lr`. The destructor func_ov006_021079c8 is the same instruction. So
 // nothing writes word 0 of a record at construction, and the only later writer
@@ -168,12 +168,12 @@
 //   - THE SOURCE, READ BEFORE THE FACE ARRAY WAS WIRED. That ordering is
 //     section 14's practical rule, added after dScMgPanel_c's Behavior turned
 //     out to open-code the ARM Itanium sequence in plain ints and read clean on
-//     every static check. src/func_ov006_02109aac.c (slot 6) is a plain
+//     every static check. src/actors/dScMgRoulette_c.cpp (slot 6) is a plain
 //     `switch (*(short *)(c + 0x53e6))` over ten cases, and slot 19
-//     (src/func_ov006_021096c8.c) is the ROM's own `cmp r0,#9 / addls pc,pc,
+//     (src/actors/dScMgRoulette_c.cpp) is the ROM's own `cmp r0,#9 / addls pc,pc,
 //     r0,lsl #2` jump table over the same index. Neither is the wall.
 //   - A `::*` SWEEP over all 41 TUs in this class's code block finds EXACTLY
-//     ONE: src/func_ov006_02107db8.cpp, the roulette wheel's tick. It is
+//     ONE: src/actors/dScMgRoulette_c.cpp, the roulette wheel's tick. It is
 //     host-copied in port/unmatched/MgRoulette_WheelDispatch.cpp, whose header
 //     carries the derivation and the two-address universe.
 //   - THE WORD-DECODE SCAN, for the third shape the sweep cannot see. Every
@@ -198,7 +198,7 @@
 //     by side so a run that never armed the pair cannot read as green.
 //
 // The FRAMEWORK's wall is still the framework's and is still paid: this class
-// reaches func_ov004_020b87e0 through dScMgBase_c exactly as curling does, and
+// reaches _ZN10dMgState_c8SetStateEi through dScMgBase_c exactly as curling does, and
 // unmatched/MgBase_StateSetter.cpp's eighty routed addresses are inherited.
 // So is the SHARED model sub-object's: slot 6 calls func_ov006_020c19d0 on
 // this+0x4f38, whose field pair is routed by
@@ -236,13 +236,13 @@ int      port_scene_env_want(void);
    array of the same name is a duplicate symbol, and leaving the mounted table
    alone leaves live wild DS pointers in a table the factory installs. */
 extern unsigned char data_ov004_020bc0c0[];   /* dScMgBase_c,         36 */
-extern unsigned char data_ov006_0213e448[];   /* dScMgSingle3DBase_c, 36 */
-extern unsigned char data_ov006_0213e39c[];   /* dScMgRoulette_c,     36 */
+extern unsigned char _ZTV19dScMgSingle3DBase_c[];   /* dScMgSingle3DBase_c, 36 */
+extern unsigned char _ZTV15dScMgRoulette_c[];   /* dScMgRoulette_c,     36 */
 
 /* THE SPAWNINFO RECORD IS NOT DECLARED HERE, and the declaration that used to
    sit above was removed rather than renamed (Andrew's third review of PR
    #2474): this file never read it. The object at 0x0213e2f0 exists and is
-   named MgMushroomRoulette_SpawnInfo -- config/arm9/overlays/ov006/symbols.txt
+   named g_profile_MG_ROULETTE -- config/arm9/overlays/ov006/symbols.txt
    row 4004, defined by the generated overlay TU (port/ov006_syms.txt:428, and
    the map publishes _MgMushroomRoulette_SpawnInfo from ov006_syms.c.obj) and
    consumed under that name by hal/scene_boot.cpp:3986/4725, which is where
@@ -253,26 +253,26 @@ extern unsigned char data_ov006_0213e39c[];   /* dScMgRoulette_c,     36 */
 /* dScMgSingle3DBase_c's eight overrides. Slot 2 is NOT src's body and slot 33
    is the hostgen'd copy: see section 4. */
 int   port_mg_flower_after_init(void *c, unsigned f);   /* slot  2 */
-void  func_ov006_0210a608(void *c, unsigned f);         /* slot  5 */
-int   func_ov006_0210a698(void *c);                     /* slot  7 */
-int   func_ov006_0210a664(void *c);                     /* slot 10 */
-int   func_ov006_0210a4b0(char *c);                     /* slot 16 D2 */
-int   func_ov006_0210a4e8(char *c);                     /* slot 17 D0 */
-int   func_ov006_0210a600(void);                        /* slot 26 */
-void  func_ov006_0210a708(char *c);                     /* slot 33 */
+void  _ZN19dScMgSingle3DBase_c21AfterCleanupResourcesEj(void *c, unsigned f);         /* slot  5 */
+int   _ZN19dScMgSingle3DBase_c14BeforeBehaviorEv(void *c);                     /* slot  7 */
+int   _ZN19dScMgSingle3DBase_c12BeforeRenderEv(void *c);                     /* slot 10 */
+int   _ZN19dScMgSingle3DBase_cD1Ev(char *c);                     /* slot 16 D2 */
+int   _ZN19dScMgSingle3DBase_cD0Ev(char *c);                     /* slot 17 D0 */
+int   _ZN19dScMgSingle3DBase_c24OnHitByCannonBlastedCharEv(void);                        /* slot 26 */
+void  _ZN19dScMgSingle3DBase_c9Virtual84Ev(char *c);                     /* slot 33 */
 
 /* dScMgRoulette_c's own eight */
-int   func_ov006_0210a194(char *c);           /* slot  0 InitResources    */
-int   func_ov006_0210980c(char *c);           /* slot  3 CleanupResources */
-int   func_ov006_02109aac(char *c);           /* slot  6 Behavior         */
-int   func_ov006_02109834(char *c);           /* slot  9 Render           */
-void *func_ov006_0210788c(char *c);           /* slot 16 D2               */
-void *func_ov006_02107920(char *c);           /* slot 17 D0               */
-void  func_ov006_021095cc(char *c);           /* slot 18 state reset      */
-int   func_ov006_021096c8(char *c);           /* slot 19                  */
+int   _ZN15dScMgRoulette_c13InitResourcesEv(char *c);           /* slot  0 InitResources    */
+int   _ZN15dScMgRoulette_c16CleanupResourcesEv(char *c);           /* slot  3 CleanupResources */
+int   _ZN15dScMgRoulette_c8BehaviorEv(char *c);           /* slot  6 Behavior         */
+int   _ZN15dScMgRoulette_c6RenderEv(char *c);           /* slot  9 Render           */
+void *_ZN15dScMgRoulette_cD1Ev(char *c);           /* slot 16 D2               */
+void *_ZN15dScMgRoulette_cD0Ev(char *c);           /* slot 17 D0               */
+void  _ZN15dScMgRoulette_c13OnYoshiTryEatEi(char *c);           /* slot 18 state reset      */
+int   _ZN15dScMgRoulette_c13OnTurnIntoEggEi(char *c);           /* slot 19                  */
 
 /* the factory, host-copied for the dropped receiver (MgRoulette_Factory.cpp) */
-void *MgMushroomRoulette_Spawn(void);
+void *dScMgRoulette_c_classInit(void);
 
 /* the wheel's member-pointer witness, from MgRoulette_WheelDispatch.cpp */
 void port_mg_roulette_wheel_counts(unsigned *calls, unsigned *hits,
@@ -332,29 +332,29 @@ static unsigned g_rlt_base_hits[36];   /* the same slots on the MIDDLE table */
 static void *__fastcall s3_ainit(void *s, void *, unsigned f)
 { R3D(2);  return (void *)(size_t)port_mg_flower_after_init(s, f); }
 static void __fastcall s3_aclean(void *s, void *, unsigned f)
-{ R3D(5);  func_ov006_0210a608(s, f); }
+{ R3D(5);  _ZN19dScMgSingle3DBase_c21AfterCleanupResourcesEj(s, f); }
 static int  __fastcall s3_bbeh(void *s, void *)
-{ R3D(7);  return func_ov006_0210a698(s); }
+{ R3D(7);  return _ZN19dScMgSingle3DBase_c14BeforeBehaviorEv(s); }
 static int  __fastcall s3_bren(void *s, void *)
-{ R3D(10); return func_ov006_0210a664(s); }
+{ R3D(10); return _ZN19dScMgSingle3DBase_c12BeforeRenderEv(s); }
 static void *__fastcall s3_d2(void *s, void *)
-{ R3D(16); return (void *)(size_t)func_ov006_0210a4b0((char *)s); }
+{ R3D(16); return (void *)(size_t)_ZN19dScMgSingle3DBase_cD1Ev((char *)s); }
 static void *__fastcall s3_d0(void *s, void *)
-{ R3D(17); return (void *)(size_t)func_ov006_0210a4e8((char *)s); }
+{ R3D(17); return (void *)(size_t)_ZN19dScMgSingle3DBase_cD0Ev((char *)s); }
 static int  __fastcall s3_v26(void *, void *)
-{ R3D(26); return func_ov006_0210a600(); }
+{ R3D(26); return _ZN19dScMgSingle3DBase_c24OnHitByCannonBlastedCharEv(); }
 static int  __fastcall s3_v33(void *s, void *)
-{ R3D(33); func_ov006_0210a708((char *)s); return 0; }
+{ R3D(33); _ZN19dScMgSingle3DBase_c9Virtual84Ev((char *)s); return 0; }
 
 /* ---- dScMgRoulette_c's own eight ---------------------------------------- */
 static int  __fastcall rlt_init(void *s, void *)
-{ RLT(0);  const int r = func_ov006_0210a194((char *)s);
+{ RLT(0);  const int r = _ZN15dScMgRoulette_c13InitResourcesEv((char *)s);
   /* the GaplessMinigames latch, for hal/scene_mg.cpp's reason: every seated
      minigame calls it so the ones the gapless table does not name can say
      "unsupported" instead of doing nothing quietly. */
   hal_gapless_minigames_latch(); return r; }
 static int  __fastcall rlt_clean(void *s, void *)
-{ RLT(3);  return func_ov006_0210980c((char *)s); }
+{ RLT(3);  return _ZN15dScMgRoulette_c16CleanupResourcesEv((char *)s); }
 /* THE PAYOUT LATCH. The class plays round after round and slot 18 wipes the
    board between them, so an atexit census can only ever see whichever round
    the frame budget happened to stop inside -- which is why every earlier run
@@ -425,7 +425,7 @@ static int  __fastcall rlt_beh(void *s, void *)
         g_rlt_shower_tick  = (int)g_rlt_hits[6];
     }
     const short before = *(const short *)(c + 0x53e6);
-    const int r = func_ov006_02109aac((char *)s);
+    const int r = _ZN15dScMgRoulette_c8BehaviorEv((char *)s);
     const short after = *(const short *)(c + 0x53e6);
     if (before == 3 && after == 4) {
         ++g_rlt_pay_round;
@@ -446,17 +446,17 @@ static int  __fastcall rlt_beh(void *s, void *)
     return r;
 }
 static int  __fastcall rlt_render(void *s, void *)
-{ RLT(9);  return func_ov006_02109834((char *)s); }
+{ RLT(9);  return _ZN15dScMgRoulette_c6RenderEv((char *)s); }
 static void *__fastcall rlt_d2(void *s, void *)
-{ RLT(16); return func_ov006_0210788c((char *)s); }
+{ RLT(16); return _ZN15dScMgRoulette_cD1Ev((char *)s); }
 static void *__fastcall rlt_d0(void *s, void *)
-{ RLT(17); return func_ov006_02107920((char *)s); }
+{ RLT(17); return _ZN15dScMgRoulette_cD0Ev((char *)s); }
 /* THE RIDE-THROUGH IS LOAD-BEARING ON BOTH OF THESE, and this class is one
    where a lane can watch it happen rather than take it on the family's word:
    slot 0's own tail dispatches slot 18 through the object's vtable at offset
    0x48 with `mvn r1,#0` -- one argument, value -1 -- at 0x0210a3bc..0x0210a3c4.
-   Both ROM bodies ignore their r1 (func_ov006_021095cc takes one parameter and
-   func_ov006_021096c8 takes one), so the parameter exists so __fastcall cleans
+   Both ROM bodies ignore their r1 (_ZN15dScMgRoulette_c13OnYoshiTryEatEi takes one parameter and
+   _ZN15dScMgRoulette_c13OnTurnIntoEggEi takes one), so the parameter exists so __fastcall cleans
    four bytes and the callee is called without it. A thunk declared
    (void*, void*) compiles to a bare ret, leaks those four bytes, and the
    caller's own `ret` then takes a garbage return address -- which is the fault
@@ -464,9 +464,9 @@ static void *__fastcall rlt_d0(void *s, void *)
    slot18_19_scan.txt is the census: 22 slot-18 sites and 14 slot-19 sites,
    argument count ONE at every one of them. */
 static int  __fastcall rlt_reset(void *s, void *, int /*ridethrough*/)
-{ RLT(18); func_ov006_021095cc((char *)s); return 1; }
+{ RLT(18); _ZN15dScMgRoulette_c13OnYoshiTryEatEi((char *)s); return 1; }
 static int  __fastcall rlt_v19(void *s, void *, int /*ridethrough*/)
-{ RLT(19); return func_ov006_021096c8((char *)s); }
+{ RLT(19); return _ZN15dScMgRoulette_c13OnTurnIntoEggEi((char *)s); }
 
 /* SM64DS_SCENE_SLOT0=0 and SM64DS_SCENE_SLOT9=0, the diagnostics every scene
    seat in this port carries, counted separately so a run can never read a
@@ -527,14 +527,14 @@ extern "C" void port_scene_roulette_hits(void);
 extern "C" void port_scene_fill_roulette(void)
 {
     void **base = (void **)data_ov004_020bc0c0;
-    void **mid  = (void **)data_ov006_0213e448;
-    void **vt   = (void **)data_ov006_0213e39c;
+    void **mid  = (void **)_ZTV19dScMgSingle3DBase_c;
+    void **vt   = (void **)_ZTV15dScMgRoulette_c;
 
     /* THE BASE TABLE IS FILLED HERE TOO AND IT IS NOT CEREMONY. Earlier rows'
        fills already did it and run first, so on a tree carrying them this is a
        second pass over words that are already host pointers and finds nothing.
        It is here so this class does not depend on another class's row
-       existing: the factory's first act is func_ov004_020b2adc, which writes
+       existing: the factory's first act is _ZN11dScMgBase_cC2Ev, which writes
        data_ov004_020bc0c0 into the object's first word before either derived
        table lands, and thirty-six raw DS words in a table the ROM installs is
        what produced the ov007 lane's wild-execute fault. */
@@ -609,7 +609,7 @@ static char *g_rlt_self;
 
 extern "C" void *port_mg_roulette_spawn(void)
 {
-    void *p = MgMushroomRoulette_Spawn();
+    void *p = dScMgRoulette_c_classInit();
     g_rlt_self = (char *)p;
     return p;
 }
@@ -872,7 +872,7 @@ extern "C" void port_scene_roulette_hits(void)
  * it is host-copied in port/unmatched/MgRoulette_WheelDispatch.cpp rather than
  * aliased, which is the distinction the corollary exists to make.
  *
- * THE FIRST THREE are src/func_ov006_02107a6c.cpp's, a //cpp TU that declares
+ * THE FIRST THREE are src/actors/dScMgRoulette_c.cpp's, a //cpp TU that declares
  * them at NAMESPACE scope rather than inside its extern "C" block, so MSVC puts
  * the TYPE into the symbol name and the ov006 mount's plain C definition cannot
  * satisfy it. What each one IS, checked before the row was written:
@@ -899,7 +899,7 @@ extern "C" void port_scene_roulette_hits(void)
  *                        and the ROM agree.
  *
  * THE FOURTH IS THE BARE-NAME SHAPE, the one MgCoin_Faces.cpp and
- * MgMemory2_Faces.cpp already carry two of. src/func_ov006_02108f2c.c declares
+ * MgMemory2_Faces.cpp already carry two of. src/actors/dScMgRoulette_c.cpp declares
  * `extern s32 func_020b9488;` -- a DATA word under a func_ name that exists in
  * no config. Its own relocation says what it is: from inside this class's code
  * block, kind:load to:0x020b9488 module:overlays(0,4), and ov004's symbols.txt

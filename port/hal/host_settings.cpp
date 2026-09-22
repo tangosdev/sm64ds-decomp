@@ -214,15 +214,30 @@ int json_int(const char *s, const char *key, int dflt)
                                 absent, unparseable, 0 itself, negatives and NaN
                                 (the !(a > 0) spelling catches NaN; the test
                                 written the other way round would not).
-     positive                -> clamped into [1.0, 3.0]. 1.0 is square, 3.0 is
-                                wider than any shipping monitor; below 1.0 is a
-                                portrait picture the HUD has no layout for, and
-                                above 3.0 the DS's vertical field is a slot. */
+     positive                -> clamped into [1.0, 4.0]. 1.0 is square; below
+                                1.0 is a portrait picture the HUD has no layout
+                                for.
+
+                                THE CEILING WAS 3.0 AND 3.0 WAS WRONG. It was
+                                picked as "wider than any shipping monitor",
+                                and 32:9 monitors exist: 32:9 is 3.5555556, so
+                                the old ceiling took a super-ultrawide panel's
+                                own ratio and quietly letterboxed it to 3.0.
+                                4.0 is still a picture -- the DS's vertical
+                                field is a slot long before the arithmetic
+                                stops working -- and the arithmetic's own limit
+                                is higher still and lives elsewhere: the
+                                stacked sub-screen presentation scales by the
+                                INTEGER active_h / 192 (ntr/ppu_sub.cpp), which
+                                must stay at least 1, so no ceiling above
+                                1024/192 = 5.33 is safe at all. 4.0 covers
+                                32:9 with room to spare and leaves that scale
+                                at 1. */
 double aspect_sanitise(double a)
 {
     if (!(a > 0.0)) return 0.0;
     if (a < 1.0) return 1.0;
-    if (a > 3.0) return 3.0;
+    if (a > 4.0) return 4.0;
     return a;
 }
 
@@ -481,7 +496,7 @@ int g_swap_camera_turn;              /* default 0 */
    input record on the way in and nothing else: the game reads the same
    fields it always read, and src/ has no idea any of this exists.
 
-     RunMode         "button" (default) | "analog" | "auto"
+     RunMode         "button" | "analog" (default) | "auto"
      RunButtonKey    Win32 virtual-key code for the keyboard binding.
                      Default 0x10, which is shift -- what the window has
                      always used. 0 means no keyboard binding at all.
@@ -490,20 +505,24 @@ int g_swap_camera_turn;              /* default 0 */
                      has always used. 0 means no pad binding.
 
    A missing file, a missing key or a value that will not parse is the
-   default, so a player who never opens the menu gets exactly the program
-   that shipped before this existed. */
-int g_run_mode;                      /* default RUN_BUTTON (0) */
+   default. The bindings and the keys are unchanged from what this window has
+   always used; the MODE now defaults to analog on Tango's order. A keyboard
+   has no stick to push, so with no pad (or the stick in its dead zone) it
+   falls back to button mode: WASD walk, the bound run key holds the run bit,
+   exactly as before. */
+int g_run_mode;                      /* default RUN_ANALOG (1) */
 int g_run_key;                       /* default 0x10, VK_SHIFT */
 int g_run_pad;                       /* default 0x4000, pad X */
 
 const char *const RUN_MODE_KEY[3] = { "button", "analog", "auto" };
 
 /* ---- CameraMode -----------------------------------------------------------
-   0 analog, 1 freecam, 2 ds -- tests/walk_window.cpp's CAM_ numbering, and the
-   default is analog because that is what main has always promoted an
-   interactive run to. The header carries the rest. Read by name and, like
-   RunMode, by number too. */
-int g_camera_mode;                   /* default 0, analog */
+   0 analog, 1 freecam, 2 ds -- tests/walk_window.cpp's CAM_ numbering. The
+   default is ds, on Tango's order, because that is the cartridge's own
+   stepped rotate and it is the mode the bumpers turn in; analog and freecam
+   stay one F1 press (or one menu row) away. The header carries the rest.
+   Read by name and, like RunMode, by number too. */
+int g_camera_mode;                   /* default 2, ds */
 const char *const CAMERA_MODE_KEY[3] = { "analog", "freecam", "ds" };
 
 /* ---- THE CONTROL BINDINGS -------------------------------------------------
@@ -725,12 +744,14 @@ int g_adventure_ghosts = 0;
    a boolean cannot express ultrawide, and a number means an odd monitor needs
    no new mode name, only its own ratio.
 
-   ACCEPTED: 0 for native, or a ratio CLAMPED TO [1.0, 3.0]. Absent,
+   ACCEPTED: 0 for native, or a ratio CLAMPED TO [1.0, 4.0]. Absent,
    unparseable, negative or otherwise not a positive number all read as 0, so a
    file written before this key existed -- or half-edited by hand -- lands on the
    shipped 4:3 look like every other key here. A positive number outside the band
-   is clamped rather than rejected: 9.0 becomes 3.0, which is a picture, where
-   rejecting it would be a surprise.
+   is clamped rather than rejected: 9.0 becomes 4.0, which is a picture, where
+   rejecting it would be a surprise. The ceiling is 4.0 and not 3.0 because
+   32:9 is 3.5555556 and those monitors are real; see aspect_sanitise for why
+   4.0 and not higher.
 
    BOOT-LATCHED, not read live: the framebuffer aspect is chosen once, at boot,
    and threaded through the whole render path (ntr::configure_aspect), so unlike
@@ -1053,15 +1074,284 @@ int read_voice_keys(const char *text)
     return changed;
 }
 
+/* ---- FrameRate: THE ONE PLACE THE PRESENTATION BAND IS SPELLED OUT -------
+   Both readers of the key -- settings.json and the SM64DS_FRAME_RATE override
+   -- come through here, so the file and the environment cannot disagree about
+   what 1000 or 45 means.
+
+     not a positive number  -> 0, the explicit native sentinel: one picture per
+                               game tick, the port's shipped behaviour. Covers
+                               absent, unparseable, 0 itself and negatives.
+     1..59                  -> 0 as well. 60 is the FLOOR because 60 is the
+                               fastest the ROM's own clock ever runs
+                               (data_0208ee44 == 1, every minigame), so a
+                               smaller number would be asking the port to
+                               present less often than the game ticks. That is
+                               not a presentation choice, it is a slower game,
+                               and this key does not do that.
+     60..240                -> that many pictures a second.
+     above 240              -> clamped to 240, the Aspect rule: a number that
+                               is a picture beats an error. */
+int frame_rate_sanitise(int n)
+{
+    if (n <= 0) return 0;
+    if (n < 60) return 0;
+    if (n > 240) return 240;
+    return n;
+}
+
+/* The primary display's refresh rate, once, for the key's "display" spelling.
+   user32 is HAND-LOADED rather than imported, the rule this whole port follows
+   (port/hal/pad_backend.cpp and hal/asset_root_refuse.cpp do the same): a
+   static import table maps over 0x02000000 and the ROM's own address space
+   lives there. A display that reports 0 or 1 (the "driver default" answer
+   EnumDisplaySettings is allowed to give) is no answer, so it reads as 0 and
+   the sanitiser turns that into native. */
+int display_refresh_hz(void)
+{
+#ifdef _WIN32
+    typedef BOOL (WINAPI *EnumDisplaySettingsA_t)(LPCSTR, DWORD, DEVMODEA *);
+    static int hz = -1;
+    if (hz >= 0) return hz;
+    hz = 0;
+    if (HMODULE u = LoadLibraryA("user32.dll")) {
+        EnumDisplaySettingsA_t f =
+            (EnumDisplaySettingsA_t)GetProcAddress(u, "EnumDisplaySettingsA");
+        if (f) {
+            DEVMODEA dm;
+            memset(&dm, 0, sizeof dm);
+            dm.dmSize = sizeof dm;
+            if (f(0, ENUM_CURRENT_SETTINGS, &dm) && dm.dmDisplayFrequency > 1)
+                hz = (int)dm.dmDisplayFrequency;
+        }
+    }
+    return hz;
+#else
+    return 0;
+#endif
+}
+
+/* FrameRate: the presentation rate in pictures a second, 0 for native (one
+   picture per game tick). BOOT-LATCHED like g_aspect and for the same kind of
+   reason: the presentation clock's shape is settled at the pacer's first turn
+   and a mid-run change would be a second code path nobody tests. The only
+   reader is walk_window's pacer. See the header for the whole contract. */
+int g_frame_rate = 0;
+
+/* ---- THE THREE PICTURE-QUALITY KEYS' BANDS (run hd1) ---------------------
+   One sanitiser each, and both readers of every key -- settings.json and the
+   environment override -- come through it, so the file and the environment
+   cannot disagree about what 9 or -1 means. The shape is FrameRate's exactly.
+
+     RenderScale   not a positive number -> 0, the explicit default sentinel:
+                   the multiplier the port picks today. Covers absent,
+                   unparseable, 0 itself and negatives. 1..4 are themselves.
+                   Above 4 clamps to 4 rather than being refused, the Aspect
+                   rule: a number that is a picture beats an error. The
+                   ceiling is 4 because 4 x 192 is 768 and 4 x 256 is 1024,
+                   which is the largest tier the render path has ever been
+                   compiled at (ntr/ppu.h's NTR_HIRES), so it is the largest
+                   one with any evidence behind it.
+     SmoothModels  the same, clamped into 0..3, which is the range the
+                   subdivision itself is defined over (ntr/smooth.h). */
+int render_scale_sanitise(int n)
+{
+    if (n <= 0) return 0;
+    if (n > 4) return 4;
+    return n;
+}
+
+int smooth_models_sanitise(int n)
+{
+    if (n <= 0) return 0;
+    if (n > 3) return 3;
+    return n;
+}
+
+/* ---- THE TWO PICTURE-SMOOTHING KEYS' BANDS (run hd2) --------------------
+   The same shape again, one sanitiser each, both readers through it.
+
+     TextureFilter  0 nearest (the sampler the port has always used), 1
+                    bilinear, 2 trilinear. Absent, unparseable, 0 itself and
+                    negative all land on 0; above 2 clamps to 2 rather than
+                    being refused, the Aspect rule. The ceiling is 2 because
+                    trilinear is the last mode the raster has a chain for:
+                    anisotropic filtering would need a per-pixel footprint
+                    the sampler does not compute.
+     AntiAliasing   0 off, 1 edge smoothing. Same band, ceiling 1, because 1
+                    is the only mode measured on this renderer. */
+int texture_filter_sanitise(int n)
+{
+    if (n <= 0) return 0;
+    if (n > 2) return 2;
+    return n;
+}
+
+int anti_aliasing_sanitise(int n)
+{
+    if (n <= 0) return 0;
+    if (n > 1) return 1;
+    return n;
+}
+
+/* ---- THE THREE PRESENT KEYS' BANDS (run hd2, lane GPU1) -----------------
+   The same shape once more, one sanitiser each, both readers through it.
+
+     PresentBackend  0 the ordinary Windows path the port has always used
+                     (StretchDIBits), 1 Direct3D 11. Absent, unparseable, 0
+                     itself and negative all land on 0; above 1 clamps to 1
+                     rather than being refused, the Aspect rule. The ceiling
+                     is 1 because Direct3D 11 is the only other path that
+                     exists.
+     PresentFilter   0 nearest (the whole-pixel drop-and-duplicate the port
+                     has always presented with), 1 smooth, 2 sharp. Ceiling 2
+                     because sharp is the last mode the present shader has.
+                     READ ONLY WHEN THE BACKEND IS 1; the Windows path has
+                     its own filter knob.
+     AntiAliasing's band shape exactly for VSync: 0 off, 1 on, ceiling 1.
+     READ ONLY WHEN THE BACKEND IS 1, because the Windows path has no vsync
+     of any kind to switch on. */
+int present_backend_sanitise(int n)
+{
+    if (n <= 0) return 0;
+    if (n > 1) return 1;
+    return n;
+}
+
+int present_filter_sanitise(int n)
+{
+    if (n <= 0) return 0;
+    if (n > 2) return 2;
+    return n;
+}
+
+int vsync_sanitise(int n)
+{
+    if (n <= 0) return 0;
+    if (n > 1) return 1;
+    return n;
+}
+
+/* ---- THE RENDERER KEY'S BAND (run hd2, lane GPU2) -----------------------
+     Renderer   0 the software rasteriser the port has always drawn the 3D
+                picture with, which is the default and the only byte-exact
+                reference; 1 Direct3D 11, which draws the opaque 3D pass on
+                the graphics card and reads it back. Absent, unparseable, 0
+                itself and negative all land on 0; above 1 clamps to 1 rather
+                than being refused, the Aspect rule. The ceiling is 1 because
+                Direct3D 11 is the only other renderer that exists.
+     It is INDEPENDENT of PresentBackend: either can be on without the other,
+     and with both on the process still makes exactly one device. */
+int renderer_sanitise(int n)
+{
+    if (n <= 0) return 0;
+    if (n > 1) return 1;
+    return n;
+}
+
+/* The three keys' stored values. BOOT-LATCHED like g_aspect and g_frame_rate
+   and for the same kind of reason: the render size is threaded into the
+   framebuffer, the pack is opened once and the subdivision level sizes
+   per-polygon work, so all three are settled before the first frame and a
+   mid-run change would be a second code path nobody tests. */
+int g_render_scale = 0;
+int g_hd_textures = 0;
+int g_smooth_models = 0;
+
+/* run hd2's two, latched beside them and for the same kind of reason: the
+   filter mode decides whether the texture cache builds a mip chain at the
+   first bind of each texture, and the smoothing pass sizes a scratch buffer
+   the width of the picture, so both are settled before the first frame. */
+int g_texture_filter = 0;
+int g_anti_aliasing = 0;
+
+/* run hd2 lane GPU1's three, latched beside them and for the same kind of
+   reason: which backend presents the picture decides which library is loaded
+   and which device exists, and the filter sizes nothing but is read at the
+   same moment, so all three are settled before the first picture is handed
+   over and a mid-run change would be a second code path nobody tests. */
+int g_present_backend = 0;
+int g_present_filter = 0;
+int g_vsync = 0;
+
+/* ---- THE IMPROVED MINIMAP'S TWO KEYS ---------------------------------------
+
+   MinimapScale is a multiplier on the panel the port draws TODAY (half a DS
+   screen, so 128x96), which is what "scaled from how it is" means: 1 is the
+   current picture, byte for byte.
+
+   IT IS A FREE NUMBER NOW, not one of six rows, because the owner asked to
+   drag the map's corner and scale it against the window by hand. The launcher
+   keeps its 1 / 1.25 / 1.5 / 2 / 3 / 4 picker and every one of those six is
+   still exact; a number between them is just as legal, and the picker's own
+   round trip shows the nearest row for one the player dragged to.
+
+   THE ONE THING A SIZE HAS TO BE is a whole number of pixels in both axes.
+   The map is drawn from a 256x192 source and keeps its 4:3 shape, so its
+   drawn width k must be a multiple of four for 3k/4 to be whole. Every size
+   is therefore quantised onto that grid -- steps of four pixels of width,
+   three of height, one thirty-second of a multiplier -- and the six picker
+   rows land on it exactly: 128, 160, 192, 256, 384 and 512.
+
+   The ratio handed to the compose and to the stylus inverse is k/256, which
+   for those six reduces to the 1/2, 5/8, 3/4, 1/1, 3/2 and 2/1 they used
+   before and draws the identical picture. */
+int g_improved_minimap = 1;   /* ABSENT MEANS ON: the owner's order */
+
+/* SaveMenuOnTop: while the level-clear save menu is up, the two DS screens
+   trade places -- the menu becomes the big picture and the course-clear tally
+   drops into the corner. ABSENT MEANS ON, the second key in this file with
+   that default and for the same reason the improved minimap has it: it is a
+   mod the owner asked for and recommended on. 0 is the picture the port drew
+   before it existed. */
+int g_save_menu_on_top = 1;   /* ABSENT MEANS ON: the owner's recommendation */
+double g_minimap_scale = 1.0; /* the multiplier, 1 or more */
+/* A HAND HAS MOVED THE SIZE THIS RUN. Set by the drag's own write and by
+   nothing else; read in host_setting_minimap_scale_value, where the block
+   above that function says what it is for. */
+int g_minimap_scale_dragged;
+
+/* THE MAP'S DRAWN WIDTH for a multiplier, on the grid above. Absent, zero,
+   negative and unparseable all read as 1, the Aspect rule: a number that is a
+   picture beats an error. The ceiling is a sanity bound only -- the real
+   limit is "the whole panel still fits in the picture" and only the drawing
+   layer knows the picture. */
+int minimap_scale_k(double v)
+{
+    if (!(v > 0.0)) v = 1.0;
+    int k = (int)(v * 128.0 + 0.5);
+    k = (k + 2) & ~3;
+    if (k < 128) k = 128;
+    if (k > 4096) k = 4096;
+    return k;
+}
+
+/* Put a multiplier on the grid, and say through `snapped` whether it had to
+   move, so the one caller that wants to say so can say it once rather than
+   every reader printing a line. */
+double minimap_scale_sanitise(double v, int *snapped)
+{
+    const double q = minimap_scale_k(v) / 128.0;
+    if (snapped) *snapped = (v != q) ? 1 : 0;
+    return q;
+}
+
+/* run hd2 lane GPU2's one, latched beside them and for the same kind of
+   reason: which rasteriser draws the frame decides which library is loaded,
+   which device exists and which buffers are allocated on the card, so it is
+   settled before the first frame and a mid-run change would be a second code
+   path nobody tests. */
+int g_renderer = 0;
+
 void load_once(void)
 {
     if (g_loaded) return;
     g_loaded = 1;
     g_swap_camera_turn = 0;
-    g_run_mode = 0;
+    g_run_mode = 1;      /* RunMode analog, on Tango's order */
     g_run_key = 0x10;
     g_run_pad = 0x4000;
-    g_camera_mode = 0;
+    g_camera_mode = 2;   /* CameraMode ds, on Tango's order */
     for (int i = 0; i < 14; ++i) g_key[i] = KEY_BIND[i].dflt;
     for (int i = 0; i < 6; ++i) g_pad[i] = PAD_BIND[i].dflt;
     g_gap_on = 1;
@@ -1094,6 +1384,31 @@ void load_once(void)
        missing file and a file that will not parse both land on it; the parse
        below only ever moves it to lockstep. */
     g_net_mode = 1;
+    /* FrameRate: native, one picture per game tick, read here with the other
+       defaults so a missing file and a file that will not parse both land on
+       the behaviour the port shipped with. */
+    g_frame_rate = 0;
+    /* The three picture-quality keys, defaulted here beside FrameRate for its
+       reason: a missing file and a file that will not parse both have to land
+       on the picture the port shipped with, and these are the values that say
+       so -- the render multiplier the port picks for itself, the ROM's own
+       textures and the ROM's own geometry. */
+    g_render_scale = 0;
+    g_hd_textures = 0;
+    g_smooth_models = 0;
+    /* run hd2's two, here for the same reason: nearest sampling and no
+       smoothing pass are the picture the port shipped with, so a missing file
+       and a file that will not parse both have to land on them. */
+    g_texture_filter = 0;
+    g_anti_aliasing = 0;
+    /* run hd2 lane GPU1's three, here for the same reason: the ordinary
+       Windows present path, its own nearest scaler and no vsync are what the
+       port has always shipped, so a missing file and a file that will not
+       parse both have to land on them. */
+    g_present_backend = 0;
+    g_renderer = 0;
+    g_present_filter = 0;
+    g_vsync = 0;
 
     char path[1024];
     if (!find_settings(path, sizeof path)) return;
@@ -1114,7 +1429,7 @@ void load_once(void)
                     matched = 1;
                 }
             if (!matched) {
-                const int n = json_int(text, "RunMode", 0);
+                const int n = json_int(text, "RunMode", 1);
                 if (n >= 0 && n <= 2) g_run_mode = n;
             }
         }
@@ -1137,7 +1452,7 @@ void load_once(void)
                         matched = 1;
                     }
                 if (!matched) {
-                    const int n = json_int(text, "CameraMode", 0);
+                    const int n = json_int(text, "CameraMode", 2);
                     if (n >= 0 && n <= 2) g_camera_mode = n;
                 }
             }
@@ -1310,6 +1625,90 @@ void load_once(void)
            pieces of code that drift apart. Every key reads against the value
            already in the variable, which at boot is its default. */
         read_voice_keys(text);
+        /* FrameRate: the presentation rate, read against its own default of 0
+           (native) so a file written before this key existed reads as one
+           picture per game tick. Either a whole number or the word "display",
+           which is the primary display's refresh rate read once here.
+           Sanitised HERE rather than at the accessor, the Aspect shape, so the
+           stored value is always one the pacer can keep. */
+        {
+            char fr[16];
+            int n;
+            if (json_str(text, "FrameRate", fr, sizeof fr) &&
+                strlen(fr) == 7 && ieq(fr, "display", 7))
+                n = display_refresh_hz();
+            else
+                n = json_int(text, "FrameRate", 0);
+            g_frame_rate = frame_rate_sanitise(n);
+        }
+        /* The three picture-quality keys, each read against its own default
+           beside FrameRate and sanitised HERE rather than at the accessor --
+           the Aspect shape -- so the stored value is always one the render
+           path can size a framebuffer, open a pack or subdivide a polygon
+           from. A file written before these keys existed reads as one that
+           left all three off, which is the shipped picture. */
+        g_render_scale = render_scale_sanitise(json_int(text, "RenderScale", 0));
+        /* THE IMPROVED MINIMAP, and the default is the odd one in this file:
+           ABSENT IS ON. Every other feature key here defaults off so a file
+           written before the key existed reads as the shipped picture; this
+           one is on by the owner's explicit order, so a file with no
+           ImprovedMinimap line gets the improved map. Both spellings of the
+           toggle, the RunMode rule: the launcher serialises a C# bool and a
+           player editing by hand may write 1. */
+        g_improved_minimap = (json_int(text, "ImprovedMinimap", 1) != 0 &&
+                              json_bool(text, "ImprovedMinimap", 1) != 0) ? 1 : 0;
+        /* THE SAVE MENU ON THE TOP SCREEN, the same absent-is-on shape and
+           both spellings of the toggle, because the launcher serialises a C#
+           bool and a player editing by hand may write 1. */
+        g_save_menu_on_top = (json_int(text, "SaveMenuOnTop", 1) != 0 &&
+                              json_bool(text, "SaveMenuOnTop", 1) != 0) ? 1 : 0;
+        {
+            int snapped = 0;
+            const double want = json_num(text, "MinimapScale", 1.0);
+            g_minimap_scale = minimap_scale_sanitise(want, &snapped);
+            if (snapped)
+                fprintf(stderr, "[settings] MinimapScale %g is not a whole "
+                        "number of pixels in both axes -- using %g, the "
+                        "nearest that is\n", want, g_minimap_scale);
+        }
+        /* Both spellings of a toggle, the RunMode rule: the launcher
+           serialises a C# bool as true/false and a player editing by hand may
+           write 1. Either says on; absent and anything else say off. */
+        g_hd_textures = (json_int(text, "HdTextures", 0) != 0 ||
+                         json_bool(text, "HdTextures", 0) != 0) ? 1 : 0;
+        g_smooth_models =
+            smooth_models_sanitise(json_int(text, "SmoothModels", 0));
+        /* run hd2's two, read the same way and sanitised here rather than at
+           the accessor, so the stored value is always one the sampler can
+           choose a tap count from and the smoothing pass can size itself
+           against. A file written before these keys existed reads as one that
+           left both off, which is the shipped picture. */
+        g_texture_filter =
+            texture_filter_sanitise(json_int(text, "TextureFilter", 0));
+        g_anti_aliasing =
+            anti_aliasing_sanitise(json_int(text, "AntiAliasing", 0));
+        /* run hd2 lane GPU1's three, read the same way and sanitised here
+           rather than at the accessor, so the stored value is always one the
+           present path can pick a backend, a sampler and a wait from. A file
+           written before these keys existed reads as one that left all three
+           off, which is the present path the port shipped with. Both
+           spellings of the two toggles, the RunMode rule: the launcher
+           serialises a C# bool as true/false and a player editing by hand may
+           write 1. */
+        g_present_backend = present_backend_sanitise(
+            (json_int(text, "PresentBackend", 0) != 0 ||
+             json_bool(text, "PresentBackend", 0) != 0) ? 1 : 0);
+        g_present_filter =
+            present_filter_sanitise(json_int(text, "PresentFilter", 0));
+        g_vsync = vsync_sanitise((json_int(text, "VSync", 0) != 0 ||
+                                  json_bool(text, "VSync", 0) != 0) ? 1 : 0);
+        /* run hd2 lane GPU2's one, read the same way and sanitised here for
+           the same reason. A file written before this key existed reads as one
+           that left it off, which is the software rasteriser the port has
+           always drawn with. Both spellings, the RunMode rule. */
+        g_renderer = renderer_sanitise(
+            (json_int(text, "Renderer", 0) != 0 ||
+             json_bool(text, "Renderer", 0) != 0) ? 1 : 0);
     }
     free(text);
 
@@ -1318,6 +1717,12 @@ void load_once(void)
        non-default choices were in force. */
     if (g_swap_camera_turn)
         fprintf(stderr, "[settings] SwapCameraTurnDirection on (%s)\n", path);
+    /* Off its default, so it is said once: this copy keeps the level-clear
+       save menu on the corner panel instead of composing it onto the big
+       picture. */
+    if (!g_save_menu_on_top)
+        fprintf(stderr, "[settings] SaveMenuOnTop off -- the save menu "
+                "after a star stays on the corner panel (%s)\n", path);
     /* Off its default (rollback again as of 0.3.7), so it is said, and said
        in plain words: a support log for "online play feels laggy" should
        carry on one line that this copy opted back into lockstep, which waits
@@ -1327,11 +1732,11 @@ void load_once(void)
                         "every player's input each frame instead of the "
                         "default rollback (predicts each peer and rewinds on "
                         "a wrong guess). (%s)\n", path);
-    if (g_run_mode || g_run_key != 0x10 || g_run_pad != 0x4000)
+    if (g_run_mode != 1 || g_run_key != 0x10 || g_run_pad != 0x4000)
         fprintf(stderr, "[settings] RunMode %s key 0x%02x pad 0x%04x (%s)\n",
                 RUN_MODE_KEY[g_run_mode], (unsigned)g_run_key,
                 (unsigned)g_run_pad, path);
-    if (g_camera_mode)
+    if (g_camera_mode != 2)
         fprintf(stderr, "[settings] CameraMode %s (%s)\n",
                 CAMERA_MODE_KEY[g_camera_mode], path);
     for (int i = 0; i < g_padlayout_n; ++i)
@@ -1426,6 +1831,95 @@ void load_once(void)
                             "is a mod, not the game. (%s)\n",
                     PALETTE_KEY[i], v, PALETTE_WHO[i], v, path);
     }
+    /* Said on its own line and in plain words, the GaplessMinigames rule: a
+       support log for "it looks smoother than a DS" should carry the reason.
+       And it says what it does NOT do, because the honest sentence at this rung
+       is that the picture repeats. */
+    if (g_frame_rate)
+        fprintf(stderr, "[settings] FrameRate %d -- the finished picture is "
+                        "handed to the display %d times a second instead of "
+                        "once per game tick. The game still ticks at its own "
+                        "rate and nothing is interpolated yet, so the same "
+                        "picture repeats. This is a mod, not the game. "
+                        "(%s)\n", g_frame_rate, g_frame_rate, path);
+    /* The three picture-quality keys, one plain line each and only when the
+       key is off its default, so an ordinary run's log is unchanged and a
+       support log for "it looks different from the video" names the reason on
+       one line. Each says what it changes and that it is a host setting and
+       not the game. */
+    if (g_render_scale)
+        fprintf(stderr, "[settings] RenderScale %d -- the 3D picture is drawn "
+                        "at %d host rows per DS row (%d rows; the width "
+                        "follows this run's Aspect) and presented into the "
+                        "same window. The game is untouched; this is how "
+                        "sharp the picture is and nothing else. (%s)\n",
+                g_render_scale, g_render_scale, g_render_scale * 192, path);
+    if (g_hd_textures)
+        fprintf(stderr, "[settings] HdTextures on -- replacement texture "
+                        "images are loaded from %s where the pack has one, and "
+                        "the ROM's own texture is used everywhere else. This "
+                        "is a mod, not the game. (%s)\n",
+                host_setting_hd_textures_dir(), path);
+    if (g_smooth_models)
+        fprintf(stderr, "[settings] SmoothModels %d -- the game's models are "
+                        "subdivided %d level(s) before they are drawn, so the "
+                        "silhouettes are rounder than the ROM's. This is a "
+                        "mod, not the game. (%s)\n",
+                g_smooth_models, g_smooth_models, path);
+    /* run hd2's two, one plain line each and only off their default, the rule
+       every key above follows. */
+    if (g_texture_filter)
+        fprintf(stderr, "[settings] TextureFilter %d -- textures are sampled "
+                        "%s instead of one texel per pixel, so surfaces read "
+                        "smoother and the texel grid stops showing up close. "
+                        "This is a mod, not the game. (%s)\n",
+                g_texture_filter,
+                g_texture_filter >= 2
+                    ? "trilinear (four texels blended, at the two texture "
+                      "sizes nearest the surface's distance)"
+                    : "bilinear (the four texels around the sample point, "
+                      "blended)",
+                path);
+    if (g_anti_aliasing)
+        fprintf(stderr, "[settings] AntiAliasing %d -- the edges of the 3D "
+                        "picture are smoothed after it is drawn and before "
+                        "anything 2D is put over it, so text and the HUD are "
+                        "untouched. This is a mod, not the game. (%s)\n",
+                g_anti_aliasing, path);
+    /* run hd2 lane GPU1's three, one plain line each and only off their
+       default, the rule every key above follows. The filter and the wait are
+       said on the backend's line rather than on lines of their own, because
+       with the backend off they are settings nothing reads and a support log
+       that listed them as if they were in force would be lying. */
+    if (g_present_backend)
+        fprintf(stderr, "[settings] PresentBackend 1 -- the finished picture is "
+                        "handed to the screen through the graphics card "
+                        "(Direct3D 11) instead of the ordinary Windows drawing "
+                        "call. Scaling %s, VSync %s. The picture itself is "
+                        "drawn exactly as before; this is only how it reaches "
+                        "the screen, and it falls back to the old way if the "
+                        "card will not have it. (%s)\n",
+                g_present_filter >= 2 ? "sharp"
+                                      : (g_present_filter == 1 ? "smooth"
+                                                               : "nearest"),
+                g_vsync ? "on" : "off", path);
+    else if (g_present_filter || g_vsync)
+        fprintf(stderr, "[settings] PresentFilter %d and VSync %d are set but "
+                        "PresentBackend is 0, so nothing reads them: the "
+                        "ordinary Windows present path has its own scaler and "
+                        "no vsync. (%s)\n", g_present_filter, g_vsync, path);
+    /* run hd2 lane GPU2's one, one plain line and only off its default. It is
+       a line of its own rather than a clause on the backend's, because the two
+       settings are independent: either can be on without the other. */
+    if (g_renderer)
+        fprintf(stderr, "[settings] Renderer 1 -- the solid part of the 3D "
+                        "picture is drawn by the graphics card instead of by "
+                        "the processor and handed straight back, so the "
+                        "see-through polygons, the shadows and everything "
+                        "after them carry on exactly as before. It is not "
+                        "pixel for pixel the same picture as the ordinary "
+                        "renderer, and it falls back to it if the card will "
+                        "not have it. (%s)\n", path);
 }
 
 /* ---- the live re-read -----------------------------------------------------
@@ -2063,4 +2557,483 @@ extern "C" int host_setting_save_pad_layout(const HostPadLayout *layout)
     const int ok = save_keys(keys, vals, 1, "pad layout");
     free(arr);
     return ok;
+}
+
+/* FrameRate: the presentation rate in pictures a second, 0 for native. Same
+   shape as host_setting_aspect above -- an environment override in front of
+   load_once and the stored value -- with the same grammar on both channels,
+   the word "display" included.
+
+     SM64DS_FRAME_RATE   the rate directly, through the same sanitiser the file
+                         goes through: 0 or anything under 60 is native, 144 is
+                         144, 1000 clamps to 240, "display" is the primary
+                         display's refresh rate, junk reads as 0.
+
+   Read once at boot -- the pacer latches the answer on its first turn and the
+   presentation clock cannot change shape mid-run. */
+extern "C" int host_setting_frame_rate(void)
+{
+    static int env_read = 0;
+    static int env = -1;             /* <0 means "the environment said nothing" */
+    if (!env_read) {
+        env_read = 1;
+        const char *e = getenv("SM64DS_FRAME_RATE");
+        if (e && *e) {
+            if (strlen(e) == 7 && ieq(e, "display", 7)) {
+                env = frame_rate_sanitise(display_refresh_hz());
+            } else {
+                char *end = 0;
+                const long v = strtol(e, &end, 10);
+                /* an unparseable override is still an override: it says
+                   "native", the same answer an unparseable file value gives */
+                env = (end != e) ? frame_rate_sanitise((int)v) : 0;
+            }
+        }
+    }
+    if (env >= 0) return env;
+    load_once();
+    return g_frame_rate;
+}
+
+/* ---- THE THREE PICTURE-QUALITY KEYS' ACCESSORS (run hd1) ----------------
+   Every one is host_setting_frame_rate's shape exactly: an environment
+   override read once, in front of load_once and the stored value, through
+   the same sanitiser the file goes through, so a proof run can pin any of
+   them off ONE build without editing a player's settings file and the two
+   channels cannot disagree about what a value means. See the header for each
+   key's contract. */
+
+/* RenderScale: host rows per DS row, 0 for the multiplier the port picks
+   today. SM64DS_RENDER_SCALE overrides; junk reads as 0, which is the answer
+   an unparseable file value gives. */
+extern "C" int host_setting_render_scale(void)
+{
+    static int env_read = 0;
+    static int env = -1;             /* <0 means "the environment said nothing" */
+    if (!env_read) {
+        env_read = 1;
+        const char *e = getenv("SM64DS_RENDER_SCALE");
+        if (e && *e) {
+            char *end = 0;
+            const long v = strtol(e, &end, 10);
+            env = (end != e) ? render_scale_sanitise((int)v) : 0;
+        }
+    }
+    if (env >= 0) return env;
+    load_once();
+    return g_render_scale;
+}
+
+/* ---- THE IMPROVED MINIMAP'S TWO GETTERS ------------------------------------
+
+   THE PIN IS HERE, IN THE GETTER, rather than in the frame loop, and that is
+   the whole reason this pair is not two more lines of boilerplate. The option
+   changes what the bottom-screen panel DRAWS. Every recorded baseline in this
+   tree -- the five level-1 capture hashes, hd1's six key-absent captures, the
+   opening gate, every sweep row -- is a picture taken on one of exactly two
+   routes: a window selftest (SM64DS_WINDOW_SELFTEST) or a scene run
+   (SM64DS_SCENE_FRAMES). A feature that moved those hashes would look like a
+   hundred regressions and be none of them. Both frame loops and every proof
+   tool in port/tools go through this one function, so pinning it once here
+   covers all of them, and tests/walk_window.cpp needs no line of its own.
+
+   THE ENVIRONMENT STILL DISPOSES, in both directions and ahead of the pin: a
+   run that means to look at the improved map sets SM64DS_IMPROVED_MINIMAP=1
+   and gets it, selftest or not, which is how this lane's own captures were
+   taken. That is the same precedence SM64DS_DUAL_SCREEN has over the layout
+   proposal in hal/sub_screen.cpp. */
+extern "C" int host_setting_improved_minimap(void)
+{
+    static int env = -2;
+    if (env == -2) {
+        const char *e = getenv("SM64DS_IMPROVED_MINIMAP");
+        env = e ? ((e[0] == 0 || (e[0] == '0' && e[1] == 0)) ? 0 : 1) : -1;
+    }
+    if (env >= 0) return env;
+    if (getenv("SM64DS_WINDOW_SELFTEST") || getenv("SM64DS_SCENE_FRAMES"))
+        return 0;
+    load_once();
+    return g_improved_minimap;
+}
+
+/* THE PIN IS A STARTING SIZE, NOT A LOCK ON THE PLAYER'S HAND.
+ *
+ * SM64DS_MINIMAP_SCALE still outranks the file and still holds for a whole run
+ * that never touches the map, which is every scripted run there is: a sweep, a
+ * capture, a proof and a gate all ask for a size and none of them has a mouse.
+ * That is the reason the override exists and it does not change.
+ *
+ * What changes is what happens after a HAND has moved it. This getter used to
+ * answer the pin ahead of g_minimap_scale unconditionally, and the drag's only
+ * write is to g_minimap_scale -- so with the pin set the grab worked, the hold
+ * worked, the release worked, and every one of them moved a number that
+ * nothing read. The owner's own preview shortcut exports the pin, so on his
+ * screen the yellow square took the press, printed that it had, printed a size
+ * on release and never once resized the map. Both scripted drags that proved
+ * this feature passed the size in settings.json instead, where the pin is not
+ * in play, which is the whole of why they were green.
+ *
+ * So: the pin answers until a drag happens, and the drag answers afterwards.
+ * One value, one hand, for the rest of the run. */
+/* ---- THE SAVE MENU ON THE TOP SCREEN ---------------------------------------
+
+   The same three-layer shape the improved minimap's getter has, and for the
+   same three reasons.
+
+   ABSENT IS ON. It is a mod the owner asked for and recommended on, so a
+   settings file written before the key existed gets the composed picture.
+
+   IT IS PINNED OFF ON EVERY COMPARATOR ROUTE. A window selftest and a scene
+   sweep row are the two shapes every recorded baseline capture in this tree
+   is taken in. This option changes what a frame LOOKS LIKE, so left free it
+   would move recorded hashes on any route that reaches a level-clear screen,
+   for a reason that has nothing to do with the code under test. Pinning it
+   here, in the getter, covers both frame loops and every proof tool in
+   port/tools at once.
+
+   THE ENVIRONMENT STILL DISPOSES, in both directions and ahead of the pin: a
+   run that means to look at the composed picture sets
+   SM64DS_SAVE_MENU_ON_TOP=1 and gets it, selftest or not, which is how every
+   capture of it was taken. */
+extern "C" int host_setting_save_menu_on_top(void)
+{
+    static int env = -2;
+    if (env == -2) {
+        const char *e = getenv("SM64DS_SAVE_MENU_ON_TOP");
+        env = e ? ((e[0] == 0 || (e[0] == '0' && e[1] == 0)) ? 0 : 1) : -1;
+    }
+    if (env >= 0) return env;
+    if (getenv("SM64DS_WINDOW_SELFTEST") || getenv("SM64DS_SCENE_FRAMES"))
+        return 0;
+    load_once();
+    return g_save_menu_on_top;
+}
+
+extern "C" double host_setting_minimap_scale_value(void)
+{
+    static int env_read = 0;
+    static double env = -1.0;        /* <0 means "the environment said nothing" */
+    if (!env_read) {
+        env_read = 1;
+        const char *e = getenv("SM64DS_MINIMAP_SCALE");
+        if (e && *e) {
+            char *end = 0;
+            const double v = strtod(e, &end);
+            env = (end != e) ? minimap_scale_sanitise(v, 0) : 1.0;
+        }
+    }
+    if (env > 0.0 && !g_minimap_scale_dragged) return env;
+    load_once();
+    return g_minimap_scale;
+}
+
+/* The chosen size as the exact rational the drawing and the touch inverse
+   share. ONE function, so a size can never mean two things in two files --
+   which is the rule the corner panel's geometry was already keeping with its
+   single integer divisor and has to keep now that the divisor is a fraction
+   the player can drag. */
+extern "C" void host_setting_minimap_scale_ratio(int *num, int *den)
+{
+    const int k = minimap_scale_k(host_setting_minimap_scale_value());
+    if (num) *num = k;
+    if (den) *den = 256;
+}
+
+/* THE DRAG'S TWO WRITES.
+ *
+ * _live moves the size for this run and nothing else: it is called on every
+ * frame of a drag, and a settings file rewritten sixty times a second would
+ * be a file the launcher is reading while it is half written.
+ *
+ * _save is the mouse-up: the same move, and then the number on disk, so the
+ * size survives a restart and the launcher's picker opens on it. It goes
+ * through save_keys like the debug menu's run and camera rows, which reloads
+ * the document and carries every key this program did not write across
+ * untouched. SM64DS_MINIMAP_SCALE keeps a run that never drags pinned exactly
+ * where it asked to be -- which is every scripted run -- and stands aside for
+ * a hand that has actually moved the map; the block above the getter is the
+ * argument for that.
+ *
+ * BOTH WRITES GO THROUGH ONE FUNCTION, and that is not tidiness: the defect
+ * this closes was a size written in one place and read from another, so a
+ * second writer that forgot to say a hand had moved it would put the map
+ * straight back to where the owner found it.
+ *
+ * %.6g is enough to print any number on the grid exactly (the grid is
+ * thirty-seconds, and 4096/128 = 32 is the ceiling), so a value written here
+ * reads back as the same value. */
+namespace {
+void minimap_scale_move_live(double s)
+{
+    load_once();
+    g_minimap_scale = minimap_scale_sanitise(s, 0);
+    g_minimap_scale_dragged = 1;
+}
+}
+
+extern "C" void host_setting_minimap_scale_set_live(double s)
+{
+    minimap_scale_move_live(s);
+}
+
+extern "C" int host_setting_save_minimap_scale(double s)
+{
+    minimap_scale_move_live(s);
+    char v[32];
+    snprintf(v, sizeof v, "%.6g", g_minimap_scale);
+    const char *const keys[1] = { "MinimapScale" };
+    const char *const vals[1] = { v };
+    return save_keys(keys, vals, 1, "minimap size");
+}
+
+/* HdTextures: 1 when the replacement pack is on. SM64DS_HD_TEXTURES has the
+   mod keys' grammar rather than a number's -- unset is the file's answer,
+   empty or "0" forces it off, anything else forces it on -- because that is
+   the spelling every other on/off override in this file uses and a player
+   reading a proof recipe should not have to learn a second one. */
+extern "C" int host_setting_hd_textures(void)
+{
+    static int env = -2;
+    if (env == -2) {
+        const char *e = getenv("SM64DS_HD_TEXTURES");
+        env = e ? ((e[0] == 0 || (e[0] == '0' && e[1] == 0)) ? 0 : 1) : -1;
+    }
+    if (env >= 0) return env;
+    load_once();
+    return g_hd_textures;
+}
+
+/* WHERE THE PACK WOULD BE LOADED FROM, whether or not it is switched on --
+   the on/off question is host_setting_hd_textures above and this one is
+   only "which directory", so a log line can name the path while the key is
+   off and a refusal can say where it looked.
+
+   The candidates, in the order every other asset reader in this port uses
+   (hal/gap_art.cpp, hal/fs_mods.cpp):
+
+     SM64DS_HD_TEXTURES_DIR   the directory outright, for a pack somewhere
+                              else entirely. Whatever it says, used as given.
+     SM64DS_ASSET_ROOT        "<root>/textures_hd". In a player's kit the
+                              launcher sets the asset root to the bundle
+                              directory, so this is the pack folder sitting
+                              beside the exe and settings.json.
+     neither                  "textures_hd", relative, which is the working
+                              directory -- the same last resort find_settings
+                              falls back to for settings.json itself.
+
+   Built once into a static buffer and never null, so a caller can print it
+   unconditionally. Does NOT call load_once: nothing here comes from the
+   file, and the log line inside load_once calls this. */
+extern "C" const char *host_setting_hd_textures_dir(void)
+{
+    static int built = 0;
+    static char dir[1024];
+    if (!built) {
+        built = 1;
+        const char *over = getenv("SM64DS_HD_TEXTURES_DIR");
+        if (over && *over) {
+            snprintf(dir, sizeof dir, "%s", over);
+        } else {
+            const char *root = getenv("SM64DS_ASSET_ROOT");
+            if (root && *root && strlen(root) + 16 < sizeof dir)
+                snprintf(dir, sizeof dir, "%s/textures_hd", root);
+            else
+                snprintf(dir, sizeof dir, "textures_hd");
+        }
+    }
+    return dir;
+}
+
+/* WHERE THE IMPROVED MAP'S PANEL ARTWORK WOULD BE READ FROM, whether or not
+   anything is there. Exactly the shape host_setting_hd_textures_dir has above,
+   and for the same reason: an asset folder beside the game data, named here so
+   a log line can say where the game looked.
+
+     SM64DS_MINIMAP_DIR    the folder outright, used as given. A test points
+                           this at a read-only folder somewhere else.
+     SM64DS_ASSET_ROOT     "<root>/minimap". In a player's kit the launcher
+                           sets the asset root to the bundle directory, so
+                           this is a folder sitting beside the exe, exactly
+                           where textures_hd sits.
+     neither               "minimap", relative to the working directory.
+
+   THE PICTURES ARE NOT PART OF THIS PROGRAM. Nothing here ships, embeds or
+   copies them: the code reads a folder, and whether a folder with those two
+   files in it travels with a download is a packaging decision made outside
+   the code. With no folder the panel is composed at run time from the
+   player's own game data, which is what hal/sub_screen.cpp did before this
+   and still does. Built once, never null. */
+extern "C" const char *host_setting_minimap_dir(void)
+{
+    static int built = 0;
+    static char dir[1024];
+    if (!built) {
+        built = 1;
+        const char *over = getenv("SM64DS_MINIMAP_DIR");
+        if (over && *over) {
+            snprintf(dir, sizeof dir, "%s", over);
+        } else {
+            const char *root = getenv("SM64DS_ASSET_ROOT");
+            if (root && *root && strlen(root) + 12 < sizeof dir)
+                snprintf(dir, sizeof dir, "%s/minimap", root);
+            else
+                snprintf(dir, sizeof dir, "minimap");
+        }
+    }
+    return dir;
+}
+
+/* SmoothModels: the subdivision level, 0 for the ROM's own geometry.
+   SM64DS_SMOOTH_MODELS overrides; junk reads as 0. */
+extern "C" int host_setting_smooth_models(void)
+{
+    static int env_read = 0;
+    static int env = -1;             /* <0 means "the environment said nothing" */
+    if (!env_read) {
+        env_read = 1;
+        const char *e = getenv("SM64DS_SMOOTH_MODELS");
+        if (e && *e) {
+            char *end = 0;
+            const long v = strtol(e, &end, 10);
+            env = (end != e) ? smooth_models_sanitise((int)v) : 0;
+        }
+    }
+    if (env >= 0) return env;
+    load_once();
+    return g_smooth_models;
+}
+
+/* ---- run hd2's two accessors, host_setting_render_scale's shape exactly --
+   an environment override read once, in front of load_once and the stored
+   value, through the same sanitiser the file goes through, so a proof run can
+   pin either off ONE build without editing a player's settings file. */
+
+/* TextureFilter: 0 nearest, 1 bilinear, 2 trilinear.
+   SM64DS_TEXTURE_FILTER overrides; junk reads as 0. */
+extern "C" int host_setting_texture_filter(void)
+{
+    static int env_read = 0;
+    static int env = -1;             /* <0 means "the environment said nothing" */
+    if (!env_read) {
+        env_read = 1;
+        const char *e = getenv("SM64DS_TEXTURE_FILTER");
+        if (e && *e) {
+            char *end = 0;
+            const long v = strtol(e, &end, 10);
+            env = (end != e) ? texture_filter_sanitise((int)v) : 0;
+        }
+    }
+    if (env >= 0) return env;
+    load_once();
+    return g_texture_filter;
+}
+
+/* AntiAliasing: 0 off, 1 edge smoothing.
+   SM64DS_ANTI_ALIASING overrides; junk reads as 0. */
+extern "C" int host_setting_anti_aliasing(void)
+{
+    static int env_read = 0;
+    static int env = -1;
+    if (!env_read) {
+        env_read = 1;
+        const char *e = getenv("SM64DS_ANTI_ALIASING");
+        if (e && *e) {
+            char *end = 0;
+            const long v = strtol(e, &end, 10);
+            env = (end != e) ? anti_aliasing_sanitise((int)v) : 0;
+        }
+    }
+    if (env >= 0) return env;
+    load_once();
+    return g_anti_aliasing;
+}
+
+/* ---- run hd2 lane GPU1's three accessors, the same shape once more -------
+   an environment override read once, in front of load_once and the stored
+   value, through the same sanitiser the file goes through, so a proof run can
+   pin any of them off ONE build without editing a player's settings file.
+
+   SM64DS_PRESENT_FILTER_D3D rather than SM64DS_PRESENT_FILTER: that name has
+   belonged to the ordinary Windows path's halftone knob since before this key
+   existed (tests/walk_window.cpp reads it), and two settings answering to one
+   variable is how a proof run comes to mean something it did not say. */
+
+/* PresentBackend: 0 the ordinary Windows path, 1 Direct3D 11. */
+extern "C" int host_setting_present_backend(void)
+{
+    static int env_read = 0;
+    static int env = -1;             /* <0 means "the environment said nothing" */
+    if (!env_read) {
+        env_read = 1;
+        const char *e = getenv("SM64DS_PRESENT_BACKEND");
+        if (e && *e) {
+            char *end = 0;
+            const long v = strtol(e, &end, 10);
+            env = (end != e) ? present_backend_sanitise((int)v) : 0;
+        }
+    }
+    if (env >= 0) return env;
+    load_once();
+    return g_present_backend;
+}
+
+/* PresentFilter: 0 nearest, 1 smooth, 2 sharp. Only read when the backend
+   is 1; this accessor answers either way and the backend is the one that
+   decides whether the answer matters. */
+extern "C" int host_setting_present_filter(void)
+{
+    static int env_read = 0;
+    static int env = -1;
+    if (!env_read) {
+        env_read = 1;
+        const char *e = getenv("SM64DS_PRESENT_FILTER_D3D");
+        if (e && *e) {
+            char *end = 0;
+            const long v = strtol(e, &end, 10);
+            env = (end != e) ? present_filter_sanitise((int)v) : 0;
+        }
+    }
+    if (env >= 0) return env;
+    load_once();
+    return g_present_filter;
+}
+
+/* Renderer: 0 the software rasteriser, 1 Direct3D 11. INDEPENDENT of
+   PresentBackend: either can be on without the other, and with both on the
+   process still makes exactly one device (hal/gpu_device.cpp). */
+extern "C" int host_setting_renderer(void)
+{
+    static int env_read = 0;
+    static int env = -1;             /* <0 means "the environment said nothing" */
+    if (!env_read) {
+        env_read = 1;
+        const char *e = getenv("SM64DS_RENDERER");
+        if (e && *e) {
+            char *end = 0;
+            const long v = strtol(e, &end, 10);
+            env = (end != e) ? renderer_sanitise((int)v) : 0;
+        }
+    }
+    if (env >= 0) return env;
+    load_once();
+    return g_renderer;
+}
+
+/* VSync: 0 off, 1 on. Only read when the backend is 1, for the same reason. */
+extern "C" int host_setting_vsync(void)
+{
+    static int env_read = 0;
+    static int env = -1;
+    if (!env_read) {
+        env_read = 1;
+        const char *e = getenv("SM64DS_VSYNC");
+        if (e && *e) {
+            char *end = 0;
+            const long v = strtol(e, &end, 10);
+            env = (end != e) ? vsync_sanitise((int)v) : 0;
+        }
+    }
+    if (env >= 0) return env;
+    load_once();
+    return g_vsync;
 }

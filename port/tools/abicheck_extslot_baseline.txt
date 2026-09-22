@@ -14,18 +14,18 @@
 #
 # This set may shrink freely. A row NOT in it fails the run.
 __ZTV10MrBlizzard slot 31 ?mb_kill@@YIHPAX0@Z
-__ZTV10ShutterBob slot 31 ?bw_kill@@YIHPAX0@Z
-__ZTV10ShutterHmc slot 31 ?ov65_kill@@YIHPAX0@Z
+__ZTV14daObjBSwdoor_c slot 31 ?bw_kill@@YIHPAX0@Z
+__ZTV16daObjCvShutter_c slot 31 ?ov65_kill@@YIHPAX0@Z
 __ZTV10StarSwitch slot 31 ?bw_kill@@YIHPAX0@Z
-__ZTV11CannonHatch slot 31 ?bw_kill@@YIHPAX0@Z
-__ZTV11FallBlockWf slot 31 ?fb_slot31@@YIHPAX0@Z
+__ZTV20daObjCannonShutter_c slot 31 ?bw_kill@@YIHPAX0@Z
+__ZTV20daObjBk_Fall_Block_c slot 31 ?fb_slot31@@YIHPAX0@Z
 __ZTV11PyramidLift slot 31 ?ov25_kill@@YIHPAX0@Z
 __ZTV11PyramidStep slot 31 ?ov25_kill@@YIHPAX0@Z
 __ZTV11daObjPile_c slot 31 ?pile_kill@@YIHPAX0@Z
 __ZTV12FallBlockBbh slot 31 ?fbb_slot31@@YIHPAX0@Z
-__ZTV12FallBlockBfs slot 31 ?fb_slot31@@YIHPAX0@Z
+__ZTV21daObjKm2_Fall_Block_c slot 31 ?fb_slot31@@YIHPAX0@Z
 __ZTV12FortressWall slot 31 ?fw_s31@@YIHPAX0@Z
-__ZTV12MetalNetLift slot 31 ?w9tp_kill@@YIHPAX0@Z
+__ZTV14daObjFl_Gura_c slot 31 ?w9tp_kill@@YIHPAX0@Z
 __ZTV12WorkElevator slot 31 ?ov65_kill@@YIHPAX0@Z
 __ZTV13BigBrickBlock slot 31 ?bbb_kill@@YIHPAX0@Z
 __ZTV13FortressTower slot 31 ?bw_kill@@YIHPAX0@Z
@@ -33,22 +33,22 @@ __ZTV13PoleBillboard slot 31 ?wf_kill@@YIHPAX0@Z
 __ZTV13QuestionBlock slot 31 ?ac_kill@@YIHPAX0@Z
 __ZTV13UpDownLiftBbh slot 31 ?udl_kill@@YIHPAX0@Z
 __ZTV14ArrowSignRight slot 31 ?as_kill@@YIHPAX0@Z
-__ZTV14BlueCoinSwitch slot 31 ?ac_kill@@YIHPAX0@Z
-__ZTV14KnockDownPlank slot 31 ?mb_kill@@YIHPAX0@Z
+__ZTV16daObjBC_Switch_c slot 31 ?ac_kill@@YIHPAX0@Z
+__ZTV19daObjBk_Dossunbar_c slot 31 ?mb_kill@@YIHPAX0@Z
 __ZTV14MovingBarSmall slot 31 ?ts_kill@@YIHPAX0@Z
 __ZTV14SquarePathLift slot 31 ?ov52_kill@@YIHPAX0@Z
 __ZTV14daObjMcWater_c slot 31 ?ac_kill@@YIHPAX0@Z
-__ZTV15ChainChompFence slot 31 ?ccf_kill@@YIHPAX0@Z
+__ZTV20daObjWanwanShutter_c slot 31 ?ccf_kill@@YIHPAX0@Z
 __ZTV15FireSeaElevator slot 31 ?ov45_kill@@YIHPAX0@Z
 __ZTV15RotatingFirebar slot 31 ?fb_kill@@YIHPAX0@Z
-__ZTV16FloatingFloorBfs slot 31 ?ov45_kill@@YIHPAX0@Z
+__ZTV15daObjKm2_Gura_c slot 31 ?ov45_kill@@YIHPAX0@Z
 __ZTV17BigMovingIceBlock slot 31 ?ov56_kill@@YIHPAX0@Z
 __ZTV17SlidingPlatformWf slot 31 ?swf_kill@@YIHPAX0@Z
 __ZTV17daObjFl_Amilift_c slot 31 ?aml_kill@@YIHPAX0@Z
 __ZTV18BowserFireSeaArena slot 31 ?ov60_kill@@YIHPAX0@Z
 __ZTV19BowserPuzzleManager slot 31 ?bp_kill@@YIHPAX0@Z
-__ZTV19FloatingFloorLllBig slot 31 ?ov22_kill@@YIHPAX0@Z
-__ZTV19RotatingPlatformLll slot 31 ?ov22_kill@@YIHPAX0@Z
+__ZTV9LavaPlank slot 31 ?ov22_kill@@YIHPAX0@Z
+__ZTV19FloatOnLavaPlatform slot 31 ?ov22_kill@@YIHPAX0@Z
 __ZTV19daObjKm1_Ukishima_c slot 31 ?o43_kill@@YIHPAX0@Z
 __ZTV20daObjFl_Fall_Block_c slot 31 ?fb83_slot31@@YIHPAX0@Z
 __ZTV21FloatingFloorLllSmall slot 31 ?ov22_kill@@YIHPAX0@Z
@@ -72,13 +72,13 @@ __ZTV8BigBully slot 35 ?bbly_v35@@YIHPAX0@Z
 __ZTV8BigBully slot 36 ?bbly_v36@@YIHPAX0@Z
 __ZTV8CccArena slot 31 ?ccc_kill@@YIHPAX0@Z
 __ZTV8IceBlock slot 31 ?icb_kill@@YIHPAX0@Z
-__ZTV8IceSheet slot 31 ?ics_kill@@YIHPAX0@Z
+__ZTV15daObjIceBoard_c slot 31 ?ics_kill@@YIHPAX0@Z
 __ZTV8MadPiano slot 31 ?ov63_kill@@YIHPAX0@Z
 __ZTV8MetalNet slot 31 ?ac_kill@@YIHPAX0@Z
 __ZTV8WallSign slot 31 ?ov85_kill@@YIHPAX0@Z
 __ZTV9SeesawBob slot 31 ?bw_kill@@YIHPAX0@Z
 __ZTV9Spindrift slot 31 ?spd_kill@@YIHPAX0@Z
-__ZTV9TowerStep slot 31 ?wf_kill@@YIHPAX0@Z
+__ZTV17daObjBk_Rotebar_c slot 31 ?wf_kill@@YIHPAX0@Z
 _data_ov002_0210af70 slot 31 ?pl_kill@@YIHPAX0@Z
 _data_ov015_021147e8 slot 31 ?wf_kill@@YIHPAX0@Z
 _data_ov016_02114b00 slot 31 ?rkp_kill@@YIHPAX0@Z
@@ -99,7 +99,7 @@ _data_ov100_0214857c slot 31 ?pl_kill@@YIHPAX0@Z
 # SHAPE ONE, two rows: slot 31 on this overlay's two Platform-derived tables
 # (SLIDING_ICE's, shared by ids 92 and 93, and DA_PG_DFDR's), both seating
 # ov27_kill -- a __fastcall thunk whose whole body is
-# `_ZN8Platform4KillEv(s); return 0;`, the same body as bw_kill, ov22_kill,
+# `_ZN10dBgActor_c4KillEv(s); return 0;`, the same body as bw_kill, ov22_kill,
 # ov25_kill, ov45_kill, ov52_kill, ov56_kill, ov63_kill, ov65_kill and the rest
 # of the 78 rows above. ov027's other two classes are CHILL_BULLY (Enemy-derived,
 # below) and SNOWMAN_BREATH, a plain 31-slot Actor with no slot 31 at all and
@@ -116,12 +116,12 @@ _data_ov100_0214857c slot 31 ?pl_kill@@YIHPAX0@Z
 #     Swept across config/arm9/relocs.txt and all 103
 #     config/arm9/overlays/*/relocs.txt, counting by kind:
 #         0x020ee55c Platform::Kill        115 load, 0 arm_call
-#         0x02111680 func_ov027_02111680     5 load, 0 arm_call
-#         0x021116f0 func_ov027_021116f0     2 load, 0 arm_call
-#         0x02116374 func_ov064_02116374     3 load, 0 arm_call
-#         0x02116360 func_ov064_02116360     3 load, 0 arm_call
-#         0x0211635c func_ov064_0211635c     3 load, 0 arm_call
-#         0x02116348 func_ov064_02116348     3 load, 0 arm_call
+#         0x02111680 _ZN12daIDonketu_c14UpdateRunStateEv     5 load, 0 arm_call
+#         0x021116f0 _ZN12daIDonketu_c16UpdateDeathStateEv     2 load, 0 arm_call
+#         0x02116374 _ZN7daOts_c13PlayStepSoundEv     3 load, 0 arm_call
+#         0x02116360 _ZN7daOts_c12PlayHitSoundEv     3 load, 0 arm_call
+#         0x0211635c _ZN7daOts_c17PlayShellHitSoundEv     3 load, 0 arm_call
+#         0x02116348 _ZN7daOts_c14PlayDeathSoundEv     3 load, 0 arm_call
 #     Every reference is a vtable load. So there is no direct-call site whose
 #     push could be read, and the pop contract for these slots rests on the same
 #     dispatch site the 78 rows above are already waiting on. Recorded as
@@ -131,12 +131,12 @@ _data_ov100_0214857c slot 31 ?pl_kill@@YIHPAX0@Z
 # (2) THE ARITY OF ALL SIX SHAPE-TWO BODIES WAS READ OFF THEIR OWN src TUs, and
 #     it turned up two receiver-less ones the fill was initially declaring
 #     wrongly (now corrected in hal/actor_classes_ov027.cpp):
-#         func_ov027_02111680  int  (char *self)   receiver only
-#         func_ov027_021116f0  int  (char *self)   receiver only
-#         func_ov064_02116374  void (char *self)   receiver only, returns void
-#         func_ov064_02116360  int  (char *self)   receiver only
-#         func_ov064_0211635c  void (void)         NO RECEIVER AT ALL
-#         func_ov064_02116348  int  (char *self)   receiver only
+#         _ZN12daIDonketu_c14UpdateRunStateEv  int  (char *self)   receiver only
+#         _ZN12daIDonketu_c16UpdateDeathStateEv  int  (char *self)   receiver only
+#         _ZN7daOts_c13PlayStepSoundEv  void (char *self)   receiver only, returns void
+#         _ZN7daOts_c12PlayHitSoundEv  int  (char *self)   receiver only
+#         _ZN7daOts_c17PlayShellHitSoundEv  void (void)         NO RECEIVER AT ALL
+#         _ZN7daOts_c14PlayDeathSoundEv  int  (char *self)   receiver only
 #     Not one of the six takes an argument past the receiver, so no dispatch
 #     site can be pushing one for them to pop, and `ret 0` is the right shape
 #     for all six. That is a stronger statement than shape one gets, and it is
@@ -167,9 +167,9 @@ _data_ov027_02113930 slot 36 ?cb_v36@@YIHPAX0@Z
 #
 # All six are the shape seventy-eight rows above already carry: slot 31 of a
 # 32-slot PLATFORM table filled with the lane's own __fastcall Kill thunk
-# (`int __fastcall ovNN_kill(void *, void *) { _ZN8Platform4KillEv(s);
+# (`int __fastcall ovNN_kill(void *, void *) { _ZN10dBgActor_c4KillEv(s);
 # return 0; }`), which the compiler emits as ?ovNN_kill@@YIHPAX0@Z and abicheck
-# reads as `ret 0`. The ROM word at slot 31 is 0x020ee55c _ZN8Platform4KillEv,
+# reads as `ret 0`. The ROM word at slot 31 is 0x020ee55c _ZN10dBgActor_c4KillEv,
 # a this-only method with no extra argument, so a zero pop is the only answer
 # that can be right -- and it is what every one of the seventy-eight
 # does. Recorded here as DEBT rather than as an ACTOR_EXT_SLOT_AUTHORITY row
@@ -192,8 +192,8 @@ _data_ov027_02113930 slot 36 ?cb_v36@@YIHPAX0@Z
 # run_checks_FINAL.log shows it did not.
 __ZTV9HugeCover slot 31 ?ov32_kill@@YIHPAX0@Z
 _data_ov032_021138e0 slot 31 ?ov32_kill@@YIHPAX0@Z
-__ZTV10RickshawBs slot 31 ?ov47_kill@@YIHPAX0@Z
-__ZTV18RickshawPlatformBs slot 31 ?ov47_kill@@YIHPAX0@Z
+__ZTV20daObjKm3_Kaitendai_c slot 31 ?ov47_kill@@YIHPAX0@Z
+__ZTV17daObjKm3_Dorifu_c slot 31 ?ov47_kill@@YIHPAX0@Z
 _data_ov047_021122a0 slot 31 ?ov47_kill@@YIHPAX0@Z
 _data_ov047_0211244c slot 31 ?ov47_kill@@YIHPAX0@Z
 # ---------------------------------------------------------------------------

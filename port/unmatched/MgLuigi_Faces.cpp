@@ -23,13 +23,13 @@
 
 /* ---- 1. the class vtable's Itanium name ----------------------------------
  *
- * src/MgWanted_Spawn.c writes `p[0] = (int)_ZTV12dScMgLuigi_c;`. That is the
+ * src/actors/dScMgLuigi_c.cpp writes `p[0] = (int)_ZTV12dScMgLuigi_c;`. That is the
  * ROM's own class name -- the RTTI string at 0x0213ce60 reads
  * "12dScMgLuigi_c" -- and it is not a config symbol name, so it needs a face
  * onto the mounted table. The address is settled by the ROM twice over:
  *   config/arm9/overlays/ov006/relocs.txt
  *   from:0x020f3830 kind:load to:0x0213cf10 module:overlay(6)
- * and 0x020f3830 is inside MgWanted_Spawn (0x020f3800, 0x34 bytes); and slot
+ * and 0x020f3830 is inside dScMgLuigi_c_classInit (0x020f3800, 0x34 bytes); and slot
  * 17's own literal pool at 0x020efc60 stores the same word into the object.
  * This is exactly the shape hal/scene_mg_faces.cpp section 2 carries for
  * _ZTV14dScMgCurling_c. */
@@ -42,14 +42,14 @@
  * below is read off the referencing body's OWN literal pool rather than
  * guessed from the name:
  *
- *   func_020beb68  src/func_ov006_020f3294.c (slot 18) and
- *                  src/func_ov006_020f0274.c. Pool at 0x020f33b4 = 020BEB68.
+ *   func_020beb68  src/actors/dScMgLuigi_c.cpp (slot 18) and
+ *                  src/_ZN12dScMgLuigi_c12UpdateRewardEv.c. Pool at 0x020f33b4 = 020BEB68.
  *                  This is the symbol port/mg_fanout_costs.txt section 4 calls
  *                  "the one symbol in the set with no LNK2019 at all"; here it
  *                  emits one, because this lane's first referencing object is
  *                  a different one.
- *   func_020bc864  src/func_ov006_020f3460.c (slot 0). Pool at 0x020f37fc.
- *   func_020bc888  src/func_ov006_020f3460.c (slot 0). Pool at 0x020f37f8.
+ *   func_020bc864  src/actors/dScMgLuigi_c.cpp (slot 0). Pool at 0x020f37fc.
+ *   func_020bc888  src/actors/dScMgLuigi_c.cpp (slot 0). Pool at 0x020f37f8.
  *
  * ov004's config names all three as data_ov004_* at those addresses, and the
  * ov006 relocations that reach them say module overlays(3,4) or overlay(4),
@@ -60,7 +60,7 @@
 
 /* ---- 3. two IRQ methods declared at C++ linkage --------------------------
  *
- * src/func_ov006_020f00a4.cpp declares
+ * src/actors/dScMgLuigi_c.cpp declares
  *     namespace IRQ { void SetIRQHandler(unsigned int, IRQHandler);
  *                     void EnableIRQs(unsigned int); }
  * OUTSIDE its extern "C" block, so MSVC mangles both and the Itanium names the
@@ -73,13 +73,13 @@
  * the port's part rather than an accident this lane should route around: the
  * baseline map defines __ZN3IRQ13SetIRQHandlerEjPFvvE and
  * __ZN3IRQ10EnableIRQsEj in ntr_2x:runtime.cpp.obj, which is where the host
- * models the DS interrupt controller. src/_ZN3IRQ10EnableIRQsEj.c exists and
+ * models the DS interrupt controller. src/_ZN3IRQ10EnableIRQsEj.cpp exists and
  * is not in the link.
  *
  * THE NAME LENGTHS DIFFER AND THAT IS THE ITANIUM ENCODING, not a typo:
  * "SetIRQHandler" is 13 characters and "EnableIRQs" is 10.
  *
- * NOTE the sibling that needs NO face: src/func_ov006_020efc68.c (slot 5)
+ * NOTE the sibling that needs NO face: src/actors/dScMgLuigi_c.cpp (slot 5)
  * calls _ZN3IRQ13SetIRQHandlerEjPFvvE by its Itanium name inside extern "C",
  * so it resolves directly. The same function, two spellings, one of which
  * costs a row. */
@@ -95,7 +95,7 @@
  * delink join is what says otherwise.
  *
  * IT IS ON THIS CLASS'S RENDER PATH, and that is the honest cost of the trap
- * rather than a footnote. dScMgLuigi_c slot 9 (func_ov006_020f33c0) opens with
+ * rather than a footnote. dScMgLuigi_c slot 9 (_ZN12dScMgLuigi_c6RenderEv) opens with
  * func_ov004_020b1e34(c, 0xe0, 0x14, 1), and src/func_ov004_020b1e34.c is a
  * two-line veneer -- `ldr r1,[r0,#0xb4]; b func_ov004_020b0e84` in the ROM --
  * whose whole body is a call to this. So the first thing this class's Render
@@ -176,8 +176,8 @@ extern "C" unsigned port_mg_luigi_ov004_trap_hits(void)
 
 /* ---- 5. THE IRQ 2 HANDLER NAMES AN MMIO REGISTER AS A C SYMBOL -----------
  *
- * src/func_ov006_020efcf8.c is dScMgLuigi_c's HBlank handler -- the one slot 5
- * tears down and src/func_ov006_020f00a4.cpp installs -- and it declares
+ * src/actors/dScMgLuigi_c.cpp is dScMgLuigi_c's HBlank handler -- the one slot 5
+ * tears down and src/actors/dScMgLuigi_c.cpp installs -- and it declares
  *
  *     extern volatile u16 data_04000006;
  *
@@ -214,6 +214,19 @@ void MultiCopy_Int(int *dst, int *src, int len);
 }
 
 // PORT_HOST_ABI: src names the MMIO register VCOUNT as a C symbol (data_04000006) the linker cannot place at its absolute address; host copy derefs the literal address 0x4000006 like every other MMIO access
+/* RETIRED, run link100 lane HOSTGEN2 -- THE BODY ONLY, not the file. The ruling
+   this copy rests on is "src names the MMIO register VCOUNT as a C symbol
+   (data_04000006) the linker cannot place at its absolute address", and that
+   spelling is gone from the tree: src/actors/dScMgLuigi_c.cpp line 250 reads
+   `line = REG_VCOUNT + 1;` and include/nitro/hw/registers.h defines REG_VCOUNT
+   as `(*(volatile u16 *)0x04000006)`, which is the literal deref this copy
+   exists to supply. No hostgen row is owed either: hostgen's own MMIO_DEREF
+   pattern matches that shape wherever it is spelled.
+
+   port_mg_luigi_ov004_trap_hits above STAYS -- hal/scene_mg.cpp calls it at two
+   sites -- so this is the retirement of one body out of a file that keeps its
+   other job. Text kept, not deleted. */
+#if 0  /* HOSTGEN2: body seated from src, see above */
 extern "C" void func_ov006_020efcf8(void)
 {
     int v;
@@ -228,3 +241,4 @@ extern "C" void func_ov006_020efcf8(void)
         }
     }
 }
+#endif  /* HOSTGEN2: func_ov006_020efcf8 retired to src */

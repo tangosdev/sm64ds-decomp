@@ -34,8 +34,8 @@ typedef struct {
 
 enum { only_minus = 0, sign_always = 1, space_holder = 2 };
 
-extern void func_02070b98(decform *f, int x0, int x1, decimal *d); /* __num2dec */
-extern int func_01ff9e2c(int a, int b, int c, int d);              /* double less-than */
+extern void func_02070b98(decform *f, double x, decimal *d); /* __num2dec */
+extern int func_01ff9e2c(double a, double b);                      /* double less-than */
 extern char *func_020706b0(char *dst, const char *src);           /* strcpy */
 extern void func_0206f338(decimal *d, int digits);                /* __round_decimal */
 extern unsigned short data_02086a58[];                            /* ctype map */
@@ -50,7 +50,7 @@ extern char data_0209a618[]; /* "nan" */
 
 #define ISUPPER(c) (((c) < 0 || (c) >= 0x80) ? 0 : (data_02086a58[c] & 0x200))
 
-char *func_0206ece0(int x0, int x1, char *buff_end, print_format format)
+char *func_0206ece0(double x, char *buff_end, print_format format)
 {
     int int_digits;
     int code;
@@ -74,7 +74,7 @@ char *func_0206ece0(int x0, int x1, char *buff_end, print_format format)
     alt = format.alternate_form;
     sign_opt = format.sign_options;
 
-    func_02070b98(&form, x0, x1, &dec);
+    func_02070b98(&form, x, &dec);
 
     p = dec.sig.text + dec.sig.length; /* strip off trailing zeroes */
 
@@ -89,7 +89,7 @@ char *func_0206ece0(int x0, int x1, char *buff_end, print_format format)
         break;
 
     case 'I':
-        if (func_01ff9e2c(x0, x1, 0, 0)) {
+        if (func_01ff9e2c(x, 0.0)) {
             p = (unsigned char *)buff_end - 5;
             if (ISUPPER(code))
                 func_020706b0((char *)p, data_0209a5ec);

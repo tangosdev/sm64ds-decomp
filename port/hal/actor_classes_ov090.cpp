@@ -15,7 +15,7 @@
  *  230   Skeeter     0x02134144  0x02134168    31   0x02132654
  *
  * ALL FOUR TABLES ARE ROM-SHAPED (T1's default). Every one of the four derives
- * from Enemy -- each _Spawn calls _ZN5EnemyC2Ev and every typeinfo record's
+ * from Enemy -- each _Spawn calls _ZN12dEnemyBase_cC2Ev and every typeinfo record's
  * base word is the same ov002 record 0x021081c0 -- and none derives from
  * Model or ModelAnim; they EMBED a ModelAnim at +0x30c. So the Model/ModelAnim
  * exception to T1 does not apply and the tables stay in ROM order.
@@ -38,7 +38,7 @@
  * +0xb0, which no ov090 body sets).
  *
  * SKEETER IS THE ONLY ONE OF THE FOUR WITH OWN 18/19/29 BODIES
- * (func_ov090_0213264c returns 4, _02132620 gives coins and kills,
+ * (_ZN7Skeeter13OnYoshiTryEatEv returns 4, _02132620 gives coins and kills,
  * _02132618 returns 0x20000). MantaRay, CheepCheep and Shark take the arm9
  * Actor defaults in all three, which is what their own relocations say
  * (0x02010160 / 0x02010154 / 0x02010124 at slots 18/19/29).
@@ -77,43 +77,45 @@
  * port_ov090_syms_patch() and the first __sinit_ov090_*. The
  * MrBlizzard/BabyPenguin/Unagi/HootTheOwl/Lakitu order.
  */
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
 extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include <cstdlib>
 #include <cstring>
-#include "Actor.h"
-#include "ActorBase.h"
+#include "dActor_c.h"
+#include "fBase_c.h"
 #include "CheepCheep.h"
 #include "Shark.h"
 
 extern "C" {
 
 /* ---- the shared arm9 half all four tables name ------------------------- */
-int _ZN5Actor19BeforeInitResourcesEv(void *self);              /* slot 1  */
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
-int _ZN5Actor14BeforeBehaviorEv(void *self);                   /* slot 7  */
-int _ZN5Actor12BeforeRenderEv(void *self);                     /* slot 10 */
-int _ZN5Actor13OnYoshiTryEatEv(void *self);                    /* slot 18 */
-void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
-int _ZN5Actor9Virtual50Ev(void *self);                         /* slot 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);              /* slot 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);              /* slot 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);  /* slot 28 */
-int _ZN5Actor16OnAimedAtWithEggEv(void *self);                 /* slot 29 */
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);              /* slot 1  */
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);                   /* slot 7  */
+int _ZN8dActor_c12BeforeRenderEv(void *self);                     /* slot 10 */
+int _ZN8dActor_c13OnYoshiTryEatEv(void *self);                    /* slot 18 */
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
+int _ZN8dActor_c9Virtual50Ev(void *self);                         /* slot 20 */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);              /* slot 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);              /* slot 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);  /* slot 28 */
+int _ZN8dActor_c16OnAimedAtWithEggEv(void *self);                 /* slot 29 */
 
 const char *port_actor_class_name(unsigned id);   /* hal/actor_registry */
 void port_actor_slot_decline(const char *what);   /* func_02043fdc_hostcopy.cpp */
@@ -133,11 +135,11 @@ int _ZN7Skeeter16CleanupResourcesEv(void);        /* matched src, flat      */
 void _ZN7Skeeter16OnPendingDestroyEv(void);       /* matched src, flat      */
 int *_ZN7SkeeterD1Ev(int *self);                  /* matched src, flat      */
 int *_ZN7SkeeterD0Ev(int *self);                  /* matched src, flat      */
-int func_ov090_0213264c(void);                    /* slot 18, own: return 4 */
-void func_ov090_02132620(void *self, void *p);    /* slot 19, own           */
-int func_ov090_02132618(void);                    /* slot 29, own: 0x20000  */
-void *Skeeter_Spawn(void);
-extern unsigned char Skeeter_SpawnInfo[];
+int _ZN7Skeeter13OnYoshiTryEatEv(void);                    /* slot 18, own: return 4 */
+void _ZN7Skeeter13OnTurnIntoEggER6Player(void *self, void *p);    /* slot 19, own           */
+int _ZN7Skeeter16OnAimedAtWithEggEv(void);                    /* slot 29, own: 0x20000  */
+void *daMenbo_c_classInit(void);
+extern unsigned char g_profile_MENBO[];
 
 /* ---- MANTA_RAY (226) --------------------------------------------------- */
 int _ZN8MantaRay13InitResourcesEv(void *self);    /* matched src, flat      */
@@ -147,8 +149,8 @@ int _ZN8MantaRay16CleanupResourcesEv(void);
 void _ZN8MantaRay16OnPendingDestroyEv(void);
 int *_ZN8MantaRayD1Ev(void *self);
 int *_ZN8MantaRayD0Ev(void *self);
-void *MantaRay_Spawn(void);
-extern unsigned char MantaRay_SpawnInfo[];
+void *daManta_c_classInit(void);
+extern unsigned char g_profile_MANTA[];
 
 /* ---- CHEEP_CHEEP (227) ------------------------------------------------- */
 /* InitResources is a REAL C++ METHOD in src (int CheepCheep::InitResources()),
@@ -159,8 +161,8 @@ int _ZN10CheepCheep16CleanupResourcesEv(void);
 void _ZN10CheepCheep16OnPendingDestroyEv(void);
 int *_ZN10CheepCheepD1Ev(int *self);
 int *_ZN10CheepCheepD0Ev(int *self);
-void *CheepCheep_Spawn(void);
-extern unsigned char CheepCheep_SpawnInfo[];
+void *daPukupuku_c_classInit(void);
+extern unsigned char g_profile_PUKUPUKU[];
 
 /* ---- SHARK (225) ------------------------------------------------------- */
 /* InitResources is a REAL C++ METHOD in src (int Shark::InitResources()). */
@@ -170,8 +172,8 @@ int _ZN5Shark16CleanupResourcesEv(void);
 void _ZN5Shark16OnPendingDestroyEv(void);
 int *_ZN5SharkD1Ev(int *self);
 int *_ZN5SharkD0Ev(int *self);
-void *Shark_Spawn(void);
-extern unsigned char Shark_SpawnInfo[];
+void *daShark_c_classInit(void);
+extern unsigned char g_profile_SHARK[];
 
 /* ---- the sixteen PMF source records the mount hosts --------------------- */
 extern unsigned int data_ov090_021340e0[];
@@ -351,47 +353,47 @@ static int __fastcall ov90_trap13(void *s, void *) { ov90_trap_report(s, 13); re
 static int __fastcall ov90_trap14(void *s, void *) { ov90_trap_report(s, 14); return 0; }
 
 static int __fastcall ov90_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall ov90_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall ov90_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 static void __fastcall ov90_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall ov90_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall ov90_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall ov90_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall ov90_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall ov90_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int __fastcall ov90_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 static int __fastcall ov90_egg(void *s, void *, void *p)
-{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+{ _ZN8dActor_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall ov90_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall ov90_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall ov90_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall ov90_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall ov90_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall ov90_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall ov90_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall ov90_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall ov90_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 static int __fastcall ov90_aimed(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 
 /* Fills 1,2,4,5,7,8,10,11,13,14,15,18..30 -- the standard 31-slot Actor half.
    18, 19 and 29 are the arm9 defaults here and are OVERWRITTEN below for
@@ -445,11 +447,11 @@ static int __fastcall skt_d1(void *s, void *)
 static int __fastcall skt_d0(void *s, void *)
 { return (int)(size_t)_ZN7SkeeterD0Ev((int *)s); }
 static int __fastcall skt_yoshi(void *s, void *)
-{ (void)s; return func_ov090_0213264c(); }
+{ (void)s; return _ZN7Skeeter13OnYoshiTryEatEv(); }
 static int __fastcall skt_egg(void *s, void *, void *p)
-{ func_ov090_02132620(s, p); return 0; }
+{ _ZN7Skeeter13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall skt_aimed(void *s, void *)
-{ (void)s; return func_ov090_02132618(); }
+{ (void)s; return _ZN7Skeeter16OnAimedAtWithEggEv(); }
 
 extern "C" void hal_fill_skeeter_vtable(void)
 {
@@ -461,7 +463,7 @@ extern "C" void hal_fill_skeeter_vtable(void)
     vt[6]  = (void *)skt_behavior;
     vt[9]  = (void *)skt_render;
     vt[12] = (void *)skt_pdes;
-    vt[16] = (void *)skt_d1;
+    vt[16] = (void *)PORT_D16(skt_d1);
     vt[17] = (void *)skt_d0;
     vt[18] = (void *)skt_yoshi;
     vt[19] = (void *)skt_egg;
@@ -497,7 +499,7 @@ extern "C" void hal_fill_manta_ray_vtable(void)
     vt[6]  = (void *)mrp_behavior;
     vt[9]  = (void *)mrp_render;
     vt[12] = (void *)mrp_pdes;
-    vt[16] = (void *)mrp_d1;
+    vt[16] = (void *)PORT_D16(mrp_d1);
     vt[17] = (void *)mrp_d0;
 }
 
@@ -531,7 +533,7 @@ extern "C" void hal_fill_cheep_cheep_vtable(void)
     vt[6]  = (void *)chp_behavior;
     vt[9]  = (void *)chp_render;
     vt[12] = (void *)chp_pdes;
-    vt[16] = (void *)chp_d1;
+    vt[16] = (void *)PORT_D16(chp_d1);
     vt[17] = (void *)chp_d0;
 }
 
@@ -565,7 +567,7 @@ extern "C" void hal_fill_shark_vtable(void)
     vt[6]  = (void *)shk_behavior;
     vt[9]  = (void *)shk_render;
     vt[12] = (void *)shk_pdes;
-    vt[16] = (void *)shk_d1;
+    vt[16] = (void *)PORT_D16(shk_d1);
     vt[17] = (void *)shk_d0;
 }
 
@@ -607,17 +609,17 @@ extern "C" void hal_fill_shark_vtable(void)
  * hal/actor_classes_ov070.cpp:281 and hal/actor_faces_bob.cpp:100 already carry
  * -- each TU spells the parameter types slightly differently and each spelling
  * decorates differently. One line per variant is the tree's convention. */
-#pragma comment(linker, "/alternatename:?_ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj@@YAXPAXPAUActor@@ABUVector3@@HHII@Z=__ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj")
-#pragma comment(linker, "/alternatename:?_ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_@@YAXPAXPAUActor@@HHPAUVector3_16@@H@Z=__ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_")
+#pragma comment(linker, "/alternatename:?_ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj@@YAXPAXPAUActor@@ABUVector3@@HHII@Z=__ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj")
+#pragma comment(linker, "/alternatename:?_ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_@@YAXPAXPAUActor@@HHPAUVector3_16@@H@Z=__ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_")
 #pragma comment(linker, "/alternatename:?_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj@@YAXPAXPAUBCA_File@@HHI@Z=__ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj")
 
 /* ONE __thiscall METHOD, AND IT IS SAFE FOR A REASON WORTH WRITING DOWN.
- * src/func_ov090_02132620.cpp (SKEETER's slot 19) declares its own
+ * src/_ZN7Skeeter13OnTurnIntoEggER6Player.cpp (SKEETER's slot 19) declares its own
  * `class Player;` and calls Actor::GivePlayerCoins as a member, so it wants
- *     ?GivePlayerCoins@Actor@@QAEXAAVPlayer@@EI@Z     (class Player,  V)
+ *     ?GivePlayerCoins@dActor_c@@QAEXAAVPlayer@@EI@Z     (class Player,  V)
  * while hal/actor_classes_ov070.cpp:782 already DEFINES the same method
  * against include/Player.h, where Player is a struct:
- *     ?GivePlayerCoins@Actor@@QAEXAAUPlayer@@EI@Z     (struct Player, U)
+ *     ?GivePlayerCoins@dActor_c@@QAEXAAUPlayer@@EI@Z     (struct Player, U)
  * -- read out of that TU's own object file with dumpbin /symbols, not guessed.
  * Both are `QAE` (public __thiscall), same return, same three parameter widths;
  * only the class/struct tag differs, and MSVC's class-vs-struct tag has no ABI
@@ -626,4 +628,4 @@ extern "C" void hal_fill_shark_vtable(void)
  * pointed a __thiscall reference at the cdecl C body, which is why ov070 wrote
  * the forwarding method instead. This one points a __thiscall reference at
  * ov070's __thiscall method. Same direction, opposite hazard. */
-#pragma comment(linker, "/alternatename:?GivePlayerCoins@Actor@@QAEXAAVPlayer@@EI@Z=?GivePlayerCoins@Actor@@QAEXAAUPlayer@@EI@Z")
+#pragma comment(linker, "/alternatename:?GivePlayerCoins@dActor_c@@QAEXAAVPlayer@@EI@Z=?GivePlayerCoins@dActor_c@@QAEXAAUPlayer@@EI@Z")

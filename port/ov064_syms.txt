@@ -1,3 +1,9 @@
+# RETIRED at SYNC6: the class translation unit main folded these bodies into
+# is back on its slice rows (today's #2660/#2663/#2666 un-quarantine) and it
+# DEFINES the names below itself, so the mount was the second definition.
+# Measured as LNK2005 rows against this file's generated object in
+# build_s2.log. Removed from the generator's INPUT, per the rule: never
+# edit the generated output. Retired here: g_profile_FL_GURA
 # Gate 177: the FIRST mount of ov064 -- BULLY (215), BIG_BULLY (216) and
 # ROTATING_FIREBAR (81). ov064 is an ACTOR overlay (base 0x02115ee0), one of the
 # seven Lethal Lava Land carries; it holds thirteen classes and this gate hosts
@@ -24,9 +30,9 @@
 # relocate to these three records. Each SpawnInfo is pinned to the record's real
 # 0x1c so the +4 id halfword the registry cross-checks reads out of the right
 # bytes (RotatingFirebar's natural next-symbol delta is 0x24, into the vtable).
-Bully_SpawnInfo:0x1c
-BigBully_SpawnInfo:0x1c
-RotatingFirebar_SpawnInfo:0x1c
+g_profile_DONKETU:0x1c
+g_profile_BOSS_DONKETU:0x1c
+g_profile_FL_KOMA_U:0x1c
 # Bully's own five-entry SharedFilePtr-pointer table (mFileTable, read by
 # InitResources and walked by CleanupResources' five Release calls). Its five
 # words relocate to the SFPs at 0x0211c660..0x0211c680 that __sinit_ov064_0211ae00
@@ -69,22 +75,22 @@ data_ov064_0211c790 data_ov064_0211c798 data_ov064_0211c7a0 data_ov064_0211c7ac
 # overlay reloc in this overlay's data (0x0211b764 -> 0x021138bc) is the base
 # vtable's typeinfo word, not a sinit body, and that vtable is not mounted.
 # gate 178: METAL_NET_LIFT (69, daObjFl_Amilift_c) resources
-MetalNetLift_SpawnInfo:0x1c
+g_profile_FL_AMILIFT:0x1c
 data_ov064_0211bb6c
 data_ov064_0211bc0c data_ov064_0211bc14 data_ov064_0211bc1c
 data_ov064_0211c728 data_ov064_0211c730 data_ov064_0211c738 data_ov064_0211c744
 data_ov064_0211c750
 # gate 178: LAVA_BUBBLE (214) resources
-LavaBubble_SpawnInfo:0x1c
+g_profile_BUBBLE:0x1c
 data_ov064_0211be90 data_ov064_0211be98 data_ov064_0211bea0 data_ov064_0211bea8
 data_ov064_0211c7b8 data_ov064_0211c7c8
 # gate 179: BOWSER_PUZZLE_PIECE (78) + BOWSER_PUZZLE_MANAGER (79)
-BowserPuzzlePiece_SpawnInfo:0x1c
-BowserPuzzleManager_SpawnInfo:0x1c
+g_profile_FL_PUZZLE:0x1c
+g_profile_FL_COIN:0x1c
 data_ov064_0211adc8
 data_ov064_0211c198
 data_ov064_0211baac
-data_ov064_0211c1d8
+_ZTV19BowserPuzzleManager
 data_ov064_0211bf68 data_ov064_0211bf70 data_ov064_0211bf78 data_ov064_0211bf80 data_ov064_0211bf88 data_ov064_0211bf90
 data_ov064_0211c2dc data_ov064_0211c2e4
 data_ov064_0211c7d8 data_ov064_0211c7e0 data_ov064_0211c7e8 data_ov064_0211c7f0 data_ov064_0211c7f8 data_ov064_0211c800 data_ov064_0211c808 data_ov064_0211c810 data_ov064_0211c818 data_ov064_0211c820 data_ov064_0211c828 data_ov064_0211c830 data_ov064_0211c838 data_ov064_0211c840 data_ov064_0211c848 data_ov064_0211c850 data_ov064_0211c85c data_ov064_0211c868 data_ov064_0211c874 data_ov064_0211c880 data_ov064_0211c88c data_ov064_0211c898 data_ov064_0211c8a4 data_ov064_0211c8b0 data_ov064_0211c8bc data_ov064_0211c8c8 data_ov064_0211c8d4 data_ov064_0211c8e0 data_ov064_0211c8ec data_ov064_0211c8f8 data_ov064_0211c904 data_ov064_0211c934
@@ -97,7 +103,7 @@ data_ov064_0211c7d8 data_ov064_0211c7e0 data_ov064_0211c7e8 data_ov064_0211c7f0 
 #   0x0211ba6c  LAVA_PLANK 82
 # Four of the five relocs read `module:overlay(64)` outright. 0x0211bbac is
 # `module:overlays(64,65)` -- ov064 and ov065 share base 0x02115ee0 -- and is
-# settled twice: ov065 has a FUNCTION at that address (TtcMovingCubeA_Spawn)
+# settled twice: ov065 has a FUNCTION at that address (daObjCtMecha08_c_classInit_CT_MECHA08A)
 # while ov064 has data, and the use site is a CLPS_Block argument; level 14's
 # object overlays are ov064/ov071/ov080/ov084/ov095, and ov065 is not among
 # them. See port/ov022_syms.txt and hal/actor_classes_ov022.cpp.
@@ -106,7 +112,7 @@ data_ov064_0211bb0c data_ov064_0211bbac
 # run rel0215 wave 3 (lane w3-e): THREE MORE of the same kind, for the three
 # ov022 classes wave 8 did not seat. Additive only -- no existing line is
 # touched, and no byte leaves the mount (see the size note below):
-#   0x0211bb2c  LAVA_BRIDGE 73            from src/func_ov022_02111bdc.cpp
+#   0x0211bb2c  LAVA_BRIDGE 73            from src/actors/daObjFl_London_c.cpp
 #   0x0211bb4c  ROTATING_PLATFORM_LLL 80  via the table data_ov022_02113da4
 #   0x0211bbcc  ROLLING_LOG_LLL 70        via the table data_ov022_02112c9c
 # All three read `module:overlay(64)` outright in ov022's own relocs.txt:
@@ -130,15 +136,15 @@ data_ov064_0211bb2c data_ov064_0211bb4c data_ov064_0211bbcc
 
 # ---- run linkw wave 9, lane w9-reg: TILTING_PLATFORM_LLL (id 72) ----------
 # The class whose bodies dsd spells _ZN12MetalNetLift* -- id 72, NOT the gate-178
-# id 69 whose record is MetalNetLift_SpawnInfo above. ACTOR_SPAWN_TABLE
+# id 69 whose record is g_profile_FL_AMILIFT above. ACTOR_SPAWN_TABLE
 # 0x02090984 -> 0x0211bd08, and the raw record there (out of
 # extracted/overlays/overlay_0064.bin at base 0x02115ee0 -- ov064 is
 # compressed:true, so the dsd export is the wrong image for a halfword read)
-# has word[0] = 0x021180fc TiltingPlatformLll_Spawn, inside ov064, and its +4
+# has word[0] = 0x021180fc daObjFl_Gura_c_classInit, inside ov064, and its +4
 # halfword is 72. Both attribution routes, which is the rule here.
 # Pinned to the record's real 0x1c so the +4 id halfword the registry
 # cross-checks reads out of the right bytes.
-TiltingPlatformLll_SpawnInfo:0x1c
+
 # Its three-word file table, read by both Init and Cleanup (they tail-call
 # ov002's base pair with this as the second argument). Words relocate to the two
 # SharedFilePtrs below and to the CLPS record; all three ends are in this mount,
@@ -167,7 +173,7 @@ data_ov064_0211c784:0xc
 # ==== RUN LINKW WAVE 12 (lane w12): CLAM (315) ==============================
 # Nine symbols appended for one class: id 315, nine instances (level 8 x5,
 # level 18 x4). Both attribution routes agree -- spawn-table site 0x02090d50 ->
-# SpawnInfo 0x0211c5a4, whose word[0] is 0x0211ad70 (Clam_Spawn, inside ov064)
+# SpawnInfo 0x0211c5a4, whose word[0] is 0x0211ad70 (daObjShell_c_classInit, inside ov064)
 # and whose +4 halfword reads 315 back. Identity from the RTTI typeinfo at
 # vtable[-1]: 0x0211c5c4 -> 0x0211c588 -> "12daObjShell_c".
 #
@@ -189,10 +195,10 @@ data_ov064_0211c784:0xc
 #   which is a reloc run overrunning a table end exactly the way ov052's id
 #   174 does. Neither table is 34 and neither is 18.
 #
-# 0x0211c588/0x0211c594 are Clam's typeinfo and its name string; Clam_SpawnInfo
+# 0x0211c588/0x0211c594 are Clam's typeinfo and its name string; g_profile_OBJ_SHELL
 # is 0x24 by next-symbol delta because the eight RTTI header bytes of the table
 # that follows it fall inside the span.
-data_ov064_0211c588 data_ov064_0211c594 Clam_SpawnInfo
+_ZTI12daObjShell_c _ZTS12daObjShell_c g_profile_OBJ_SHELL
 # Clam's three SharedFilePtrs (files 1164 model, 1165 anim, 1166 anim) and
 # their three destructor-chain nodes, all built by __sinit_ov064_0211b698 --
 # the one ov064 initialiser this lane adds, run from the registry fill in
@@ -207,7 +213,7 @@ data_ov064_0211c9d4 data_ov064_0211c9e0 data_ov064_0211c9ec
 # SQUASHER (actor 84, ov023, level 15's volcano) hands its MovingMeshCollider a
 # CLPS collision block that lives HERE, not in its own overlay. This is not a
 # shared-window naming race: the literal pool at 0x02111720 in
-# _ZN8Squasher13InitResourcesEv relocates to 0x0211ba4c with an explicit
+# _ZN16daObjFm_Battan_c13InitResourcesEv relocates to 0x0211ba4c with an explicit
 # `module:overlay(64)`, so the ROM itself says the block is ov064's. ov023 and
 # ov064 are co-resident on level 15 (the volcano loads the Lethal Lava Land
 # actor pack), which is what makes the read legal.
@@ -247,9 +253,9 @@ data_ov064_0211ba4c:0x20
 # reads its own id back; each spawn-table slot relocates to the record.
 #
 #   id   spawn slot   SpawnInfo    word[0] factory        +4 halfword
-#   245  0x02090e18   0x0211c310   0x02119a18 JetStream_Spawn      0x00f5 = 245
-#   244  0x02090e14   0x0211c3fc   0x0211a1b0 WaterRing_Spawn      0x00f4 = 244
-#    13  0x02090898   0x0211c4e8   0x0211a8f0 TreasureChest_Spawn  0x000d = 13
+#   245  0x02090e18   0x0211c310   0x02119a18 daWater_Hakidasi_c_classInit      0x00f5 = 245
+#   244  0x02090e14   0x0211c3fc   0x0211a1b0 daWater_Ring_c_classInit      0x00f4 = 244
+#    13  0x02090898   0x0211c4e8   0x0211a8f0 daObjTbox_c_classInit  0x000d = 13
 #
 # ---- IDENTITY FROM vtable[-1], NOT FROM A dsd LABEL ------------------------
 # Each factory's last vptr store names the table; the typeinfo word at table-4
@@ -261,11 +267,11 @@ data_ov064_0211ba4c:0x20
 #
 # JET_STREAM'S TABLE IS ALREADY HOSTED, under a name one class off. dsd's ov064
 # BowserPuzzle labels are ROTATED BY ONE: id 78's factory (0x02119300, dsd
-# BowserPuzzlePiece_Spawn) installs _ZTV19BowserPuzzleManager (0x0211c25c,
-# "16daObjFl_Puzzle_c"); id 79's (0x021192d0) installs data_ov064_0211c1d8
+# daObjFl_Puzzle_c_classInit) installs _ZTV19BowserPuzzleManager (0x0211c25c,
+# "16daObjFl_Puzzle_c"); id 79's (0x021192d0) installs _ZTV19BowserPuzzleManager
 # ("14daObjFl_Coin_c"); and _ZTV17BowserPuzzlePiece (0x0211c334) is JET STREAM'S,
 # which is why gate 179's own header says the only things that spell it are "this
-# D0 and JetStream_Spawn, unhosted". Gate 179 filled that array with the seven
+# D0 and daWater_Hakidasi_c_classInit, unhosted". Gate 179 filled that array with the seven
 # bodies dsd named _ZN17BowserPuzzlePiece* -- JetStream's own -- and sliced every
 # one of them, so this lane adds JET_STREAM's SpawnInfo, its factory and its
 # registry row and nothing else. NO mount line changes for it beyond the record.
@@ -276,9 +282,9 @@ data_ov064_0211ba4c:0x20
 # follows. The record is 7 words. Pinned so the +4 id halfword the registry
 # cross-checks reads out of the right bytes -- the gate-177 RotatingFirebar
 # treatment, three more times.
-JetStream_SpawnInfo:0x1c
-WaterRing_SpawnInfo:0x1c
-TreasureChest_SpawnInfo:0x1c
+g_profile_WATER_HAKIDASI:0x1c
+g_profile_WATER_RING:0x1c
+g_profile_TREASURE_BOX:0x1c
 # ---- WATER_RING (244) ------------------------------------------------------
 # Its FOUR pointer-to-member SOURCE records, the four {function, 0} pairs the
 # ROM packs immediately behind JetStream's vtable (0x0211c334 + 31*4 = 0x0211c3b0
@@ -315,9 +321,9 @@ data_ov064_0211c4bc data_ov064_0211c4c4
 data_ov064_0211c964 data_ov064_0211c96c data_ov064_0211c974 data_ov064_0211c980
 # The RUNTIME state table that sinit builds: THREE 16-byte Entry records of
 # {enter, tick}, 0x30 by natural delta, which is exactly 3 * 16 -- the width
-# func_ov064_0211a6ec / func_ov064_0211a734 index it at. Store order off the
+# _ZN13TreasureChest8SetStateEi / _ZN13TreasureChest17CallStateBehaviorEv index it at. Store order off the
 # sinit's disassembly:
-#   Entry[0]  enter func_ov064_0211a6e0   tick func_ov064_0211a4c4
-#   Entry[1]  enter func_ov064_0211a49c   tick func_ov064_0211a39c
-#   Entry[2]  enter func_ov064_0211a380   tick func_ov064_0211a2c4
+#   Entry[0]  enter _ZN13TreasureChest10InitState0Ev   tick _ZN13TreasureChest6State0Ev
+#   Entry[1]  enter _ZN13TreasureChest10InitState1Ev   tick _ZN13TreasureChest6State1Ev
+#   Entry[2]  enter _ZN13TreasureChest10InitState2Ev   tick _ZN13TreasureChest6State2Ev
 data_ov064_0211c98c

@@ -75,11 +75,11 @@ src/func_ov055_021112c4.cpp
 # ARE REFUSED BELOW, each with the measurement that stops it.
 #
 #   row                    vtable      class code block        pairs  run
-#   func_ov032_021121b4   02113824   021111a0..0211244c      10   0211377c..021137cc
-#   func_ov100_02145550   02148188   021443f4..0214589c      15   021480d4..0214814c
+#   _ZN12daBakubaku_c8BehaviorEv   02113824   021111a0..0211244c      10   0211377c..021137cc
+#   _ZN4Door8BehaviorEv   02148188   021443f4..0214589c      15   021480d4..0214814c
 #   func_ov100_021453d8   02148188   the same block, the same fifteen records
 #
-# ---- func_ov032_021121b4, BUBBA'S TICK DISPATCHER -------------------------
+# ---- _ZN12daBakubaku_c8BehaviorEv, BUBBA'S TICK DISPATCHER -------------------------
 #
 # ov032 holds three classes and dsd named only two of them; id 228 BUBBA is the
 # unnamed one, so every symbol it owns is func_ov032_*. Its vtable is 0x02113824
@@ -103,7 +103,7 @@ src/func_ov055_021112c4.cpp
 # claimed: the member sits at offset 8 of its holder, 0 mod 8.
 #
 # THE FIVE ENTER WORDS ARE NOT TOUCHED, and the reason is measured rather than
-# assumed. Their dispatcher, src/func_ov032_02111ff4.cpp, is ALREADY in the link
+# assumed. Their dispatcher, src/game/actors/d_a_bakubaku.cpp, is ALREADY in the link
 # (port/slice_pmf2.txt) and its emitted transfer is `jmp edx`, a TAIL JUMP: the
 # caller's own frame survives, so the cdecl body reads the caller's first stack
 # word, which is `c` -- exactly self. That is lane PMFB7's reading of why the
@@ -114,12 +114,12 @@ src/func_ov055_021112c4.cpp
 # frame.
 #
 # NOTHING COMPARES A STORED PAIR BY VALUE in this class. The three other readers
-# of the field -- src/func_ov032_02111254.c, _02111350.c and _021113fc.cpp, and
+# of the field -- src/game/actors/d_a_bakubaku.cpp, _02111350.c and _021113fc.cpp, and
 # the row's own `!= data_ov032_02113aac` test -- all compare the CELL POINTER,
 # not a function word, so there is no by-value sentinel and no
 # one-face-per-code-word constraint.
 #
-# ---- func_ov100_021453d8 AND func_ov100_02145550, THE DOOR'S TWO HALVES ---
+# ---- func_ov100_021453d8 AND _ZN4Door8BehaviorEv, THE DOOR'S TWO HALVES ---
 #
 # daDoor_c's vtable is 0x02148188 (dsd's own, and inferred_stub_adjudicated.txt
 # names it for slot 6), 34 slots, SEVEN of which are its own ov100 bodies, and
@@ -200,7 +200,7 @@ src/func_ov055_021112c4.cpp
 #   __tls_index, __tls_array). Both are ordinary work; the call site is the
 #   blocker.
 #
-# func_ov075_0211a194 and func_ov075_0211a26c -- THE RECORD SET IS NOT A
+# func_ov075_0211a194 and _ZN10dScEntry_c6RenderEv -- THE RECORD SET IS NOT A
 #   UNIVERSE. Both read a pair out of the OBJECT itself: 0211a194 copies six
 #   words from a source record into self+0x54..0x68 and dispatches the pair at
 #   +0x54, and 0211a26c dispatches the pair at +0x64. So the universe is the set
@@ -214,7 +214,7 @@ src/func_ov055_021112c4.cpp
 #   Player::ChangeState refusal, one overlay over.
 #   (runs/link100/out/PMFB8/sweep_g2_ov075.txt)
 #   TWO THINGS ARE BANKED ANYWAY. /Zp4 IS REQUIRED on
-#   src/func_ov075_0211a26c.cpp and this is the fifth confirmation of PMFB6's
+#   src/_ZN10dScEntry_c6RenderEv.cpp and this is the fifth confirmation of PMFB6's
 #   rule: its struct spells `char pad[0x64]; PMF pp[1];` and 0x64 mod 8 = 4, so
 #   without the option MSVC reads [eax+104]/[eax+108] -- 0x68 and 0x6c, four
 #   bytes late -- and with it [eax+100]/[eax+104], the ROM's own 0x64/0x68. Two
@@ -225,9 +225,9 @@ src/func_ov055_021112c4.cpp
 #   body that still carries the "recovered from vtable slot identity" marker
 #   with no REAL_DECOMP ruling -- which port/tools/inferred_stub_guard.py
 #   forbids seating, and is right to.
-src/func_ov032_021121b4.cpp
+src/game/actors/d_a_bakubaku.cpp
 src/func_ov100_021453d8.cpp
-src/func_ov100_02145550.cpp
+src/game/actors/d_a_star_gate.cpp
 
 # ===========================================================================
 # GATE 3 -- func_ov006_020c07e8, THE MODEL SUB-OBJECT'S +0xb4 FIELD

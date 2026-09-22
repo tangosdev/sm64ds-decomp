@@ -79,15 +79,17 @@
  * into data_ov096_02137b48, which is why port_ov96_bringup() calls it between
  * port_ov096_syms_patch() and the first sinit. TORNADO has no state machine at
  * all: none of the twelve handlers is in its .text range and its slot 12 is
- * the arm9 ActorBase default.
+ * the arm9 fBase_c default.
  */
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
@@ -96,28 +98,28 @@ extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include "dsstate_seg.h"
 #include "dtor_faces_cpp.h"
 
-#include "Actor.h"
-#include "ActorBase.h"
+#include "dActor_c.h"
+#include "fBase_c.h"
 
 extern "C" {
 
 /* ---- the shared arm9 half both tables name ------------------------------ */
-int _ZN5Actor19BeforeInitResourcesEv(void *self);              /* slot 1  */
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
-int _ZN5Actor14BeforeBehaviorEv(void *self);                   /* slot 7  */
-int _ZN5Actor12BeforeRenderEv(void *self);                     /* slot 10 */
-int _ZN5Actor13OnYoshiTryEatEv(void *self);                    /* slot 18 */
-void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
-int _ZN5Actor9Virtual50Ev(void *self);                         /* slot 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);              /* slot 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);              /* slot 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
-int _ZN5Actor16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);              /* slot 1  */
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);                   /* slot 7  */
+int _ZN8dActor_c12BeforeRenderEv(void *self);                     /* slot 10 */
+int _ZN8dActor_c13OnYoshiTryEatEv(void *self);                    /* slot 18 */
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
+int _ZN8dActor_c9Virtual50Ev(void *self);                         /* slot 20 */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);              /* slot 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);              /* slot 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
+int _ZN8dActor_c16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
 
 const char *port_actor_class_name(unsigned id);   /* hal/actor_registry */
 void port_actor_slot_decline(const char *what);   /* func_02043fdc_hostcopy.cpp */
@@ -132,20 +134,20 @@ void __sinit_ov096_0213770c(void);
 void __sinit_ov096_02137894(void);
 
 /* ---- POKEY (240) and POKEY_SEGMENT (241), one class -------------------- */
-int _ZN5Pokey13InitResourcesEv(void *self);       /* face, bottom of file  */
-int _ZN5Pokey16CleanupResourcesEv(void *self);    /* face                  */
-int _ZN5Pokey8BehaviorEv(void *self);             /* face                  */
-int _ZN5Pokey6RenderEv(void *self);               /* face; body rides from src */
-void _ZN5Pokey16OnPendingDestroyEv(void *self);   /* face                  */
-int *_ZN5PokeyD1Ev(int *self);                    /* unmatched/Pokey_HostSites */
-int *_ZN5PokeyD0Ev(int *self);                    /* matched src, flat     */
-int func_ov096_021357a4(void);                    /* slot 18, own: return 4 */
-void func_ov096_02136cd0(void *self, void *p);    /* slot 19, own          */
-int func_ov096_021357ac(void);                    /* slot 29, own: 0x3c000 */
-void *Pokey_Spawn(void);
-void *PokeySegment_Spawn(void);
-extern unsigned char Pokey_SpawnInfo[];
-extern unsigned char PokeySegment_SpawnInfo[];
+int _ZN9daSanbo_c13InitResourcesEv(void *self);       /* face, bottom of file  */
+int _ZN9daSanbo_c16CleanupResourcesEv(void *self);    /* face                  */
+int _ZN9daSanbo_c8BehaviorEv(void *self);             /* face                  */
+int _ZN9daSanbo_c6RenderEv(void *self);               /* face; body rides from src */
+void _ZN9daSanbo_c16OnPendingDestroyEv(void *self);   /* face                  */
+int *_ZN9daSanbo_cD1Ev(int *self);                    /* unmatched/Pokey_HostSites */
+int *_ZN9daSanbo_cD0Ev(int *self);                    /* matched src, flat     */
+int _ZN9daSanbo_c13OnYoshiTryEatEv(void);                    /* slot 18, own: return 4 */
+void _ZN9daSanbo_c13OnTurnIntoEggER6Player(void *self, void *p);    /* slot 19, own          */
+int _ZN9daSanbo_c16OnAimedAtWithEggEv(void);                    /* slot 29, own: 0x3c000 */
+void *daSanbo_c_classInit_SANBO(void);
+void *daSanbo_c_classInit_SANBO_BODY(void);
+extern unsigned char g_profile_SANBO[];
+extern unsigned char g_profile_SANBO_BODY[];
 
 /* ---- TORNADO (308) ----------------------------------------------------- */
 int _ZN7Tornado13InitResourcesEv(void *self);     /* unmatched/Tornado_HostSites */
@@ -154,8 +156,8 @@ int _ZN7Tornado8BehaviorEv(void *self);           /* unmatched/Tornado_HostSites
 int _ZN7Tornado6RenderEv(void *self);             /* unmatched/Tornado_HostSites */
 int *_ZN7TornadoD1Ev(int *self);                  /* unmatched/Tornado_HostSites */
 int *_ZN7TornadoD0Ev(int *self);                  /* matched src, flat     */
-void *Tornado_Spawn(void);
-extern unsigned char Tornado_SpawnInfo[];
+void *daTor_c_classInit(void);
+extern unsigned char g_profile_TORNADO[];
 
 /* ---- the two host vtables (the mount excludes both spans) --------------- */
 DSSTATE_BEGIN
@@ -181,14 +183,14 @@ DSSTATE_END
  * category-1 / cxxname_bridge.cpp:260 shape). Three matched TUs declare data
  * with a C++ type and no extern "C", so MSVC decorates the reference while the
  * plain C name is what defines it:
- *   src/_ZN5Pokey13InitResourcesEv.cpp  `extern void *data_ov096_02137b20;`
+ *   src/actors/daSanbo_c.cpp  `extern void *data_ov096_02137b20;`
  *       and the same for _02137b28 -- both DEFINED BY THIS LANE'S OWN MOUNT
  *       (port/ov096_syms.txt), the SharedFilePtrs for files 0x41b and 0x41a
- *   src/_ZN5Pokey13InitResourcesEv.cpp  `extern Block48 data_02082128;`
+ *   src/actors/daSanbo_c.cpp  `extern Block48 IDENTITY_MATRIX4X3;`
  *       -- an arm9 romdata symbol already in walk_window.map on the base tree
  *
  * ONE CODE ROW, and an alias is correct here where it would be WRONG for an
- * ordinary method. src/func_ov096_02136534.cpp declares a local shadow whose
+ * ordinary method. src/actors/daSanbo_c.cpp declares a local shadow whose
  * Actor::Spawn is STATIC -- the decoration reads `SAX...`, S for static, so
  * MSVC emits a plain cdecl call with no ECX receiver and the alias cannot
  * misdeliver a `this` the way hal/method_faces.cpp's failure mode 3 does. The
@@ -203,8 +205,9 @@ DSSTATE_END
  * port/tools/alternatename_baseline.txt. */
 #pragma comment(linker, "/alternatename:?data_ov096_02137b20@@3PAXA=_data_ov096_02137b20")
 #pragma comment(linker, "/alternatename:?data_ov096_02137b28@@3PAXA=_data_ov096_02137b28")
-#pragma comment(linker, "/alternatename:?data_02082128@@3UBlock48@@A=_data_02082128")
-#pragma comment(linker, "/alternatename:?Spawn@Actor@@SAXIIABUVector3@@PBUVector3_16@@HH@Z=__ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii")
+#pragma comment(linker, "/alternatename:?IDENTITY_MATRIX4X3@@3UBlock48@@A=_data_02082128")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEAD RHS and an UNREFERENCED left hand side: nothing in the build defines __ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as, and nothing references ?Spawn@dActor_c@@SAXIIABUVector3@@PBUVector3_16@@HH@Z, so the row can never fire and nothing wants it to. */
+// #pragma comment(linker, "/alternatename:?Spawn@dActor_c@@SAXIIABUVector3@@PBUVector3_16@@HH@Z=__ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as")
 
 // ============================================================================
 // THE STATE SEAT -- POKEY's six states, twelve records
@@ -230,6 +233,25 @@ extern unsigned int data_ov096_02137920[], data_ov096_02137928[],
 }
 
 namespace {
+// ---- POKEY'S TWELVE STATE BODIES NEED THE __fastcall THUNK ---------------
+// (a short banner in this file's own voice: the dispatcher at
+// ?Behavior@daSanbo_c@@UAEHXZ+0x25..+0x33 loads the record's delta into ECX,
+// adds `this`, and calls through the record's fn word, so the receiver
+// arrives in ECX and a raw __cdecl body reads the caller's stack instead.
+// Same family as commit 5ae983797's FlameChomp rows in ov070.)
+static int  __fastcall pk_st_60c4(void *s) { return func_ov096_021360c4(s); }
+static int  __fastcall pk_st_6134(void *s) { return func_ov096_02136134(s); }
+static int  __fastcall pk_st_6264(void *s) { return func_ov096_02136264(s); }
+static int  __fastcall pk_st_63b4(void *s) { return func_ov096_021363b4(s); }
+static int  __fastcall pk_st_63c4(void *s) { return func_ov096_021363c4(s); }
+static int  __fastcall pk_st_640c(void *s) { return func_ov096_0213640c(s); }
+static int  __fastcall pk_st_6434(void *s) { return func_ov096_02136434(s); }
+static int  __fastcall pk_st_6534(void *s) { return func_ov096_02136534(s); }
+static int  __fastcall pk_st_65d4(void *s) { return func_ov096_021365d4(s); }
+static void __fastcall pk_st_670c(void *s) {        func_ov096_0213670c(s); }
+static int  __fastcall pk_st_6754(void *s) { return func_ov096_02136754(s); }
+static int  __fastcall pk_st_68a4(void *s) { return func_ov096_021368a4(s); }
+
 struct Ov096Seat {
     unsigned int *rec;      /* the mounted source record        */
     unsigned int rom;       /* what its fn word must read first */
@@ -244,18 +266,18 @@ struct Ov096Seat {
    not the address order; the full table is in
    port/unmatched/Pokey_HostSites.cpp. */
 const Ov096Seat g_ov096_seats[] = {
-    {data_ov096_02137920, 0x02136434, (void *)func_ov096_02136434, "pokey/02137920 state2 tick"},
-    {data_ov096_02137928, 0x021365d4, (void *)func_ov096_021365d4, "pokey/02137928 state1 tick"},
-    {data_ov096_02137930, 0x02136534, (void *)func_ov096_02136534, "pokey/02137930 state2 enter"},
-    {data_ov096_02137938, 0x021363b4, (void *)func_ov096_021363b4, "pokey/02137938 state4 enter"},
-    {data_ov096_02137940, 0x02136754, (void *)func_ov096_02136754, "pokey/02137940 state0 tick"},
-    {data_ov096_02137948, 0x021368a4, (void *)func_ov096_021368a4, "pokey/02137948 state0 enter"},
-    {data_ov096_02137950, 0x0213670c, (void *)func_ov096_0213670c, "pokey/02137950 state1 enter"},
-    {data_ov096_02137958, 0x021360c4, (void *)func_ov096_021360c4, "pokey/02137958 state5 tick"},
-    {data_ov096_02137960, 0x02136134, (void *)func_ov096_02136134, "pokey/02137960 state5 enter"},
-    {data_ov096_02137968, 0x02136264, (void *)func_ov096_02136264, "pokey/02137968 state4 tick"},
-    {data_ov096_02137970, 0x021363c4, (void *)func_ov096_021363c4, "pokey/02137970 state3 tick"},
-    {data_ov096_02137978, 0x0213640c, (void *)func_ov096_0213640c, "pokey/02137978 state3 enter"},
+    {data_ov096_02137920, 0x02136434, (void *)pk_st_6434, "pokey/02137920 state2 tick"},
+    {data_ov096_02137928, 0x021365d4, (void *)pk_st_65d4, "pokey/02137928 state1 tick"},
+    {data_ov096_02137930, 0x02136534, (void *)pk_st_6534, "pokey/02137930 state2 enter"},
+    {data_ov096_02137938, 0x021363b4, (void *)pk_st_63b4, "pokey/02137938 state4 enter"},
+    {data_ov096_02137940, 0x02136754, (void *)pk_st_6754, "pokey/02137940 state0 tick"},
+    {data_ov096_02137948, 0x021368a4, (void *)pk_st_68a4, "pokey/02137948 state0 enter"},
+    {data_ov096_02137950, 0x0213670c, (void *)pk_st_670c, "pokey/02137950 state1 enter"},
+    {data_ov096_02137958, 0x021360c4, (void *)pk_st_60c4, "pokey/02137958 state5 tick"},
+    {data_ov096_02137960, 0x02136134, (void *)pk_st_6134, "pokey/02137960 state5 enter"},
+    {data_ov096_02137968, 0x02136264, (void *)pk_st_6264, "pokey/02137968 state4 tick"},
+    {data_ov096_02137970, 0x021363c4, (void *)pk_st_63c4, "pokey/02137970 state3 tick"},
+    {data_ov096_02137978, 0x0213640c, (void *)pk_st_640c, "pokey/02137978 state3 enter"},
 };
 DSSTATE_BEGIN
 bool g_ov096_seated = false;
@@ -312,51 +334,51 @@ static int __fastcall ov96_trap13(void *s, void *) { ov96_trap_report(s, 13); re
 static int __fastcall ov96_trap14(void *s, void *) { ov96_trap_report(s, 14); return 0; }
 
 static int __fastcall ov96_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall ov96_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall ov96_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 static void __fastcall ov96_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall ov96_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall ov96_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall ov96_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall ov96_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 /* slot 12: TORNADO's ROM word is 0x02043ac0, the arm9 ActorBase default.
    POKEY overrides it with its own body below. */
 static int __fastcall ov96_pdes(void *s, void *)
-{ ((ActorBase *)s)->ActorBase::OnPendingDestroy(); return 0; }
+{ ((fBase_c *)s)->fBase_c::OnPendingDestroy(); return 0; }
 static int __fastcall ov96_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int __fastcall ov96_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 static int __fastcall ov96_turn_egg(void *s, void *, void *p)
-{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+{ _ZN8dActor_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall ov96_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall ov96_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall ov96_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall ov96_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall ov96_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall ov96_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall ov96_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall ov96_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall ov96_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 static int __fastcall ov96_aimed(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 
 /* Fills 1,2,4,5,7,8,10,11,12,13,14,15,18..30 -- the standard 31-slot Actor
    half. 12, 18, 19 and 29 are the arm9 defaults here, which is what TORNADO's
@@ -416,26 +438,26 @@ extern "C" void port_ov96_bringup(void)
 // 17 D0, 18, 19, 29. The Lakitu/Spiny pattern plus an own slot 12.
 // ============================================================================
 static int __fastcall pky_init(void *s, void *)
-{ return _ZN5Pokey13InitResourcesEv(s); }
+{ return _ZN9daSanbo_c13InitResourcesEv(s); }
 static int __fastcall pky_clean(void *s, void *)
-{ return _ZN5Pokey16CleanupResourcesEv(s); }
+{ return _ZN9daSanbo_c16CleanupResourcesEv(s); }
 static int __fastcall pky_behavior(void *s, void *)
-{ return _ZN5Pokey8BehaviorEv(s); }
+{ return _ZN9daSanbo_c8BehaviorEv(s); }
 static int __fastcall pky_render(void *s, void *)
 { port_actor_render_probe("POKEY", (char *)s + 0xd4);
-  return _ZN5Pokey6RenderEv(s); }
+  return _ZN9daSanbo_c6RenderEv(s); }
 static int __fastcall pky_pdes(void *s, void *)
-{ _ZN5Pokey16OnPendingDestroyEv(s); return 0; }
+{ _ZN9daSanbo_c16OnPendingDestroyEv(s); return 0; }
 /* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
    the transcribed thunk that stood here (pky_d1) spelled the same chain by hand. */
 static int __fastcall pky_d0(void *s, void *)
-{ return (int)(size_t)_ZN5PokeyD0Ev((int *)s); }
+{ return (int)(size_t)_ZN9daSanbo_cD0Ev((int *)s); }
 static int __fastcall pky_yoshi(void *s, void *)
-{ (void)s; return func_ov096_021357a4(); }
+{ (void)s; return _ZN9daSanbo_c13OnYoshiTryEatEv(); }
 static int __fastcall pky_egg(void *s, void *, void *p)
-{ func_ov096_02136cd0(s, p); return 0; }
+{ _ZN9daSanbo_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall pky_aimed(void *s, void *)
-{ (void)s; return func_ov096_021357ac(); }
+{ (void)s; return _ZN9daSanbo_c16OnAimedAtWithEggEv(); }
 
 extern "C" void hal_fill_pokey_vtable(void)
 {
@@ -447,7 +469,7 @@ extern "C" void hal_fill_pokey_vtable(void)
     vt[6]  = (void *)pky_behavior;
     vt[9]  = (void *)pky_render;
     vt[12] = (void *)pky_pdes;
-    vt[16] = (void *)hal_cppd1_Pokey;
+    vt[16] = (void *)PORT_D16(hal_cppd1_Pokey);
     vt[17] = (void *)pky_d0;
     vt[18] = (void *)pky_yoshi;
     vt[19] = (void *)pky_egg;
@@ -483,18 +505,18 @@ extern "C" void hal_fill_tornado_vtable(void)
     vt[3]  = (void *)tor_clean;
     vt[6]  = (void *)tor_behavior;
     vt[9]  = (void *)tor_render;
-    vt[16] = (void *)hal_cppd1_Tornado;
+    vt[16] = (void *)PORT_D16(hal_cppd1_Tornado);
     vt[17] = (void *)tor_d0;
 }
 
 // ============================================================================
 // THE FIVE METHOD FACES. Five ov096 TUs define REAL C++ METHODS against the
 // generated class headers -- mwccarm mangles those Itanium, MSVC mangles them
-// ?InitResources@Pokey@@QAEHXZ and so on, so nothing in the link answers to
+// ?InitResources@daSanbo_c@@QAEHXZ and so on, so nothing in the link answers to
 // the flat name the vtable fills and the other TUs use. Faced here, the
 // BabyPenguin/IceSheet/OneUpLogo/HootTheOwl/ShipWater/ToxBox recipe.
 //
-// Tornado::CleanupResources is NOT faced: src/_ZN7Tornado16CleanupResourcesEv.c
+// Tornado::CleanupResources is NOT faced: src/_ZN7Tornado16CleanupResourcesEv.cpp
 // is a .c file and already defines the flat name. Tornado::Render,
 // Tornado::Behavior and Tornado::InitResources are not faced either: all three
 // are HOST COPIES in
@@ -505,15 +527,15 @@ extern "C" void hal_fill_tornado_vtable(void)
 // faced and its body RIDES FROM SRC -- see port/slice_ov096.txt for why the
 // two Renders differ.
 // ============================================================================
-#include "Pokey.h"
+#include "daSanbo_c.h"
 #include "Tornado.h"
-extern "C" int _ZN5Pokey13InitResourcesEv(void *self)
-{ return ((Pokey *)self)->Pokey::InitResources(); }
-extern "C" int _ZN5Pokey16CleanupResourcesEv(void *self)
-{ return ((Pokey *)self)->Pokey::CleanupResources(); }
-extern "C" int _ZN5Pokey8BehaviorEv(void *self)
-{ return ((Pokey *)self)->Pokey::Behavior(); }
-extern "C" int _ZN5Pokey6RenderEv(void *self)
-{ return ((Pokey *)self)->Pokey::Render(); }
-extern "C" void _ZN5Pokey16OnPendingDestroyEv(void *self)
-{ ((Pokey *)self)->Pokey::OnPendingDestroy(); }
+extern "C" int _ZN9daSanbo_c13InitResourcesEv(void *self)
+{ return ((daSanbo_c *)self)->daSanbo_c::InitResources(); }
+extern "C" int _ZN9daSanbo_c16CleanupResourcesEv(void *self)
+{ return ((daSanbo_c *)self)->daSanbo_c::CleanupResources(); }
+extern "C" int _ZN9daSanbo_c8BehaviorEv(void *self)
+{ return ((daSanbo_c *)self)->daSanbo_c::Behavior(); }
+extern "C" int _ZN9daSanbo_c6RenderEv(void *self)
+{ return ((daSanbo_c *)self)->daSanbo_c::Render(); }
+extern "C" void _ZN9daSanbo_c16OnPendingDestroyEv(void *self)
+{ ((daSanbo_c *)self)->daSanbo_c::OnPendingDestroy(); }

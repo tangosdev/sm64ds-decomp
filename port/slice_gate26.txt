@@ -13,7 +13,7 @@
 # +0x91c. The seam it needs -- the vtable array, the ROM SpawnInfo the
 # ActorBase constructor reads, and the one honest stub for the particle
 # tracker -- is port/hal/stage_bridges.cpp.
-src/_ZN5StageC3Ev.c
+src/d_s_stage.cpp
 
 # The level MODEL. The harness loaded it by hand -- SharedFilePtr::Construct on
 # a hard-coded 1943, Model::LoadFile, ModelBase::SetFile, into its own 0x50-byte
@@ -63,5 +63,5 @@ src/_ZN5Stage22RenderModelTransparentEv.cpp
 # LoadAndSetFile face (hal/method_faces.cpp), and data_02075620 comes from
 # romdata. The draw side is Stage::Render's own block, carried as
 # port_stage_render_skybox in hal/stage_bridges.cpp.
-src/_ZN5Stage11GetSkyboxIDEv.c
-src/_ZN5Stage10LoadSkyboxEv.c
+src/_ZN5Stage11GetSkyboxIDEv.cpp
+src/_ZN5Stage10LoadSkyboxEv.cpp

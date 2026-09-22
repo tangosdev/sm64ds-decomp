@@ -31,18 +31,18 @@
  */
 
 extern "C" {
-extern int _ZN5Actor18GetBitInDeathTableEv(void*);
+extern int _ZN8dActor_c18GetBitInDeathTableEv(void*);
 extern void* func_ov002_020b1328(void*);
 extern void _ZN10StarMarker27SpawnRedCoinStarIfNecessaryEv(void* self); /* real one-arg (this) */
-extern int _ZN5Actor24KillAndTrackInDeathTableEv(void*);
+extern int _ZN8dActor_c24KillAndTrackInDeathTableEv(void*);
 // PORT_HOST_ABI: implicit-register-arg (SpawnRedCoinStarIfNecessary receiver = the found marker, rode r0 from func_ov002_020b1328).
 int func_ov002_020b10a0(char* c){
-  if(_ZN5Actor18GetBitInDeathTableEv(c)==0) return 0;
+  if(_ZN8dActor_c18GetBitInDeathTableEv(c)==0) return 0;
   {
     void* sm = func_ov002_020b1328(c);            /* the found StarMarker, ROM's r0 */
     if(sm) _ZN10StarMarker27SpawnRedCoinStarIfNecessaryEv(sm);
   }
-  _ZN5Actor24KillAndTrackInDeathTableEv(c);
+  _ZN8dActor_c24KillAndTrackInDeathTableEv(c);
   return 1;
 }
 }

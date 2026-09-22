@@ -21,10 +21,10 @@
 #
 # THE SWAP: every `_ZN9Submarine*` TU in this overlay is the WHIRLPOOL's
 # (18daWater_Tatumaki_c, id 246), not the Submarine's. Table 0x02113d54 holds
-# _ZN9Submarine13InitResourcesEv at slot 0, _ZN9SubmarineD1Ev at 16 and
-# _ZN9SubmarineD0Ev at 17, and its own vtable[-1] typeinfo record's name string
+# _ZN9Whirlpool13InitResourcesEv at slot 0, _ZN9WhirlpoolD1Ev at 16 and
+# _ZN9WhirlpoolD0Ev at 17, and its own vtable[-1] typeinfo record's name string
 # reads 18daWater_Tatumaki_c. The real Submarine's table is 0x02113c6c, whose
-# own bodies dsd left unnamed as func_ov026_021118b8/021118fc/02111954/
+# own bodies dsd left unnamed as _ZN9SubmarineD1Ev/021118fc/02111954/
 # 02111998/021119c0. config/arm9/overlays/ov026/symbols.txt:201 puts
 # _ZTV9Submarine on 0x02113d54 and that row is the wrong one.
 #
@@ -35,28 +35,30 @@
 # a plain Model -- _ZTV5Model[5] is DUAL-FILLED (hal/cxxname_bridge.cpp:511) so
 # that dispatch is served correctly and the TU stays in the slice. This is the
 # safe half of the ModelAnim slot-5 collision, the daBgSnwmn_c reading.
-src/func_ov026_021111a0.c
-src/func_ov026_021111e0.c
+src/_ZN17daObjWlPolelift_cD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN17daObjWlPolelift_cD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN17daObjWlPolelift_cD0Ev.cpp
 src/func_ov026_02111234.cpp
 src/func_ov026_021112a4.c
-src/func_ov026_021112e4.c
-src/func_ov026_02111308.cpp
-src/func_ov026_02111330.cpp
-src/func_ov026_02111598.cpp
-src/func_ov026_02111678.c
+src/_ZN17daObjWlPolelift_c16CleanupResourcesEv.cpp
+src/_ZN17daObjWlPolelift_c6RenderEv.cpp
+src/_ZN17daObjWlPolelift_c8BehaviorEv.cpp
+src/_ZN17daObjWlPolelift_c13InitResourcesEv.cpp
+src/d_a_obj_wl_polelift.cpp
 #
 # ---- id 91, daObjWlKoopaShutter_c / BowserShutter (32 slots, Platform) ------
 # D1 021116c8, D0 0211170c, Cleanup 02111764, Render 021117a8,
 # Behavior 021117d0, InitResources 021117d8, Spawn 02111888.
 # Slot 31 is Platform::Kill (0x020ee55c) unchanged. Render is the same plain
 # Model shadow as the polelift's.
-src/func_ov026_021116c8.c
-src/func_ov026_0211170c.c
-src/func_ov026_02111764.c
-src/func_ov026_021117a8.cpp
-src/func_ov026_021117d0.c
-src/func_ov026_021117d8.c
-src/BowserShutter_Spawn.c
+src/_ZN13BowserShutterD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN13BowserShutterD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN13BowserShutterD0Ev.cpp
+src/_ZN13BowserShutter16CleanupResourcesEv.cpp
+src/_ZN13BowserShutter6RenderEv.cpp
+src/_ZN13BowserShutter8BehaviorEv.cpp
+src/_ZN13BowserShutter13InitResourcesEv.cpp
+src/d_a_obj_wl_koopa_shutter.c
 #
 # ---- id 90, daObjWlSubmarine_c / Submarine (32 slots, Platform) ------------
 # D1 021118b8, D0 021118fc, Cleanup 02111954, Render 02111998,
@@ -66,12 +68,13 @@ src/BowserShutter_Spawn.c
 # own -- their four targets (02111d4c/02111cb4/02111b24/02111ed8) all land
 # inside the WHIRLPOOL's body range, so that table is the whirlpool's file-
 # scope static emitted ahead of the whirlpool's own typeinfo/vtable group.
-src/func_ov026_021118b8.c
-src/func_ov026_021118fc.c
-src/func_ov026_02111954.c
-src/func_ov026_02111998.cpp
-src/func_ov026_021119c0.c
-src/Submarine_Spawn.c
+src/_ZN9WhirlpoolD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN9WhirlpoolD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN9WhirlpoolD0Ev.cpp
+src/_ZN9Whirlpool16CleanupResourcesEv.cpp
+src/_ZN9Whirlpool6RenderEv.cpp
+src/_ZN9Whirlpool13InitResourcesEv.cpp
+src/d_a_obj_wl_submarine.c
 #
 # ---- id 246, daWater_Tatumaki_c / Whirlpool (31 slots, Enemy) --------------
 # D1 02111aa0, D0 02111ad8, Cleanup 02111fa4, OnPendingDestroy 02111fd4 (own,
@@ -82,17 +85,13 @@ src/Submarine_Spawn.c
 # 02111ed8, tick 02111d4c) and data_ov026_02113f3c (state 1: enter 02111cb4,
 # tick 02111b24). The four handler bodies stay in the slice; only the two
 # dispatch sites are host-copied.
-src/_ZN9SubmarineD1Ev.c
-src/_ZN9SubmarineD0Ev.c
 src/func_ov026_02111b24.c
 src/func_ov026_02111cb4.c
 src/func_ov026_02111d4c.cpp
 src/func_ov026_02111ed8.c
 src/func_ov026_02111f30.c
-src/_ZN9Submarine16CleanupResourcesEv.c
-src/_ZN9Submarine16OnPendingDestroyEv.c
-src/_ZN9Submarine13InitResourcesEv.cpp
-src/Whirlpool_Spawn.c
+src/_ZN9Whirlpool16OnPendingDestroyEv.cpp
+src/d_a_water_tatumaki.c
 #
 # ---- id 247, daWater_Suikomi_c / WaterSuction (31 slots, Enemy) ------------
 # D1 021121fc, D0 02112234, Cleanup 02112328, OnPendingDestroy 02112330,
@@ -104,17 +103,18 @@ src/Whirlpool_Spawn.c
 # registered anyway because its sinit and its mount ride the same overlay and
 # leaving one class of five unregistered is the thing that makes a later lane
 # re-derive all of it.
-src/_ZN12WaterSuctionD1Ev.c
-src/_ZN12WaterSuctionD0Ev.c
+src/_ZN12WaterSuctionD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN12WaterSuctionD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN12WaterSuctionD0Ev.cpp
 src/func_ov026_02112280.c
 src/func_ov026_021122b0.c
 src/func_ov026_021122cc.c
 src/func_ov026_02112324.c
-src/_ZN12WaterSuction16CleanupResourcesEv.c
-src/_ZN12WaterSuction16OnPendingDestroyEv.c
-src/_ZN12WaterSuction6RenderEv.c
+src/_ZN12WaterSuction16CleanupResourcesEv.cpp
+src/_ZN12WaterSuction16OnPendingDestroyEv.cpp
+src/_ZN12WaterSuction6RenderEv.cpp
 src/_ZN12WaterSuction13InitResourcesEv.cpp
-src/WaterSuction_Spawn.c
+src/d_a_water_suikomi.c
 #
 # ---- the five sinits, all five classes registered, ROM .ctor order ---------
 # .ctor 0x02112da4..0x02112db8 lists them 02112b7c, 02112bbc, 02112c28,
@@ -134,16 +134,16 @@ src/__sinit_ov026_02112d68.c
 # NOT IN THIS SLICE -- five host copies. Each matched TU stays byte-locked in
 # src/ as the proof and is simply absent from the list above.
 #
-#   src/_ZN9Submarine6RenderEv.cpp  -> port/unmatched/Whirlpool_Render.cpp
+#   src/_ZN9Whirlpool6RenderEv.cpp  -> port/unmatched/Whirlpool_Render.cpp
 #       THE ModelAnim SLOT-5 COLLISION, the Whomp/Butterfly/Fish/BabyPenguin
 #       case. It dispatches slot 5 of a six-virtual ROM-order shadow at +0x114,
-#       which for this class is a ModelAnim (Whirlpool_Spawn constructs
+#       which for this class is a ModelAnim (daWater_Tatumaki_c_classInit constructs
 #       _ZN9ModelAnimC1Ev at +0x114). hal/cxxname_bridge.cpp:554 puts
 #       ma2_virtual18 in _ZTV9ModelAnim[5] and says in its own words that
 #       ModelAnim cannot be dual-filled the way Model is. Virtual18 pops two
 #       stack words where the shadow pushed one.
 #
-#   src/_ZN9Submarine8BehaviorEv.cpp -> port/unmatched/Whirlpool_Behavior.cpp
+#   src/_ZN9Whirlpool8BehaviorEv.cpp -> port/unmatched/Whirlpool_Behavior.cpp
 #   src/func_ov026_02111ee0.cpp      -> port/unmatched/Whirlpool_StateDispatch.cpp
 #   src/_ZN12WaterSuction8BehaviorEv.cpp -> port/unmatched/WaterSuction_Behavior.cpp
 #   src/func_ov026_021122d4.cpp      -> port/unmatched/WaterSuction_StateDispatch.cpp

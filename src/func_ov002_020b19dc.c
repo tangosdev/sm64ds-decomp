@@ -3,7 +3,7 @@
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (overlay ov002).
  */
 
-extern void *_ZN5Actor10FindWithIDEj(unsigned int id);
+extern void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern void func_ov002_020b16c4(char *self);
 extern void func_ov002_020b1674(char *self, char *p);
 extern void func_ov002_020b1884(char *self);
@@ -12,7 +12,7 @@ int func_ov002_020b19dc(char *self)
 {
     unsigned int id = *(unsigned int *)(self + 0x19c);
     if (id != 0) {
-        char *p = (char *)_ZN5Actor10FindWithIDEj(id);
+        char *p = (char *)_ZN8dActor_c10FindWithIDEj(id);
         if (p != 0) {
             if (*(int *)(self + 0x198) & 0x400000) {
                 *(unsigned short *)(self + 0x3a8) = 0;

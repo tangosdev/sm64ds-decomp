@@ -8,7 +8,7 @@
 #include "vs_width.h"   /* run vs16: the port's player width */
 #include <cstdlib>
 #include <cstring>
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 #include "dsstate_seg.h"
 
 extern "C" {
@@ -19,13 +19,13 @@ void _ZN13SharedFilePtr7ReleaseEv(void *self)
 {
     hal_fileptr_release(self);
 }
-int _ZN16MeshColliderBase9IsEnabledEv(void *self)
+int _ZN4dBgW9IsEnabledEv(void *self)
 {
-    return ((MeshColliderBase *)self)->MeshColliderBase::IsEnabled();
+    return ((dBgW *)self)->dBgW::IsEnabled();
 }
-void _ZN16MeshColliderBase7DisableEv(void *self)
+void _ZN4dBgW7DisableEv(void *self)
 {
-    ((MeshColliderBase *)self)->MeshColliderBase::Disable();
+    ((dBgW *)self)->dBgW::Disable();
 }
 
 // The ov098 file table's second column is addressed through its own symbol
@@ -36,17 +36,17 @@ void _ZN16MeshColliderBase7DisableEv(void *self)
 // gate-9 smoke keeps the old two-view fiction in port/tests/smoke_actor.cpp.
 
 // ---- gate-9 method bridges (C name -> MSVC method), the gx_upload pattern -
-#include "Platform.h"
+#include "dBgActor_c.h"
 #include "ShadowModel.h"
 #include "Model.h"
 /* Model.h only forward-declares SharedFilePtr; the Model::LoadFile face below
    binds a reference to one, so it needs the complete (fieldless) declaration. */
 #include "SharedFilePtr.h"
 extern "C" {
-void _ZN8Platform19UpdateClsnPosAndRotEv(void *self)
-{ ((Platform *)self)->Platform::UpdateClsnPosAndRot(); }
-void _ZN8Platform21UpdateModelPosAndRotYEv(void *self)
-{ ((Platform *)self)->Platform::UpdateModelPosAndRotY(); }
+void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self)
+{ ((dBgActor_c *)self)->dBgActor_c::UpdateClsnPosAndRot(); }
+void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *self)
+{ ((dBgActor_c *)self)->dBgActor_c::UpdateModelPosAndRotY(); }
 /* SHADOW SYSTEM DEFERRED (cosmetic). The cause recorded here was WRONG and is
    corrected: the cuboid template BMD at data_020ad524 is NOT built at runtime.
    It is static .data in OVERLAY 1 (ov001 .data spans 0x020ab800..0x020ad620),
@@ -173,7 +173,7 @@ extern "C" {
    SLICE_W1L3_SOURCES in port/CMakeLists.txt, which is not this lane's file. */
 extern "C" void hal_dropshadow_scalexyz_fallback(void *, void *, void *,
                                                  int, int, int, unsigned) {}
-#pragma comment(linker, "/alternatename:__ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j=_hal_dropshadow_scalexyz_fallback")
+#pragma comment(linker, "/alternatename:__ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j=_hal_dropshadow_scalexyz_fallback")
 /* MODEL::LOADFILE IS A FACE AGAIN, and it was not one before. This definition
    used to be a hand-expanded copy of the matched Model::LoadFile -- LoadFile,
    read filePtr, check numRefs, UpdateFileOffsets, AddToCommonModelDataArr --
@@ -239,11 +239,11 @@ DSSTATE_END
    is why the host array above had to go rather than merely be renamed. */
 #pragma comment(linker, "/alternatename:_data_020ad524=_data_ov001_020ad524")
 
-#include "MeshCollider.h"
+#include "dBgW_Kc.h"
 #include "ModelBase.h"
 extern "C" {
-void *_ZN12MeshCollider8LoadFileER13SharedFilePtr(void *fp)
-{ return MeshCollider::LoadFile(*(SharedFilePtr *)fp); }
+void *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void *fp)
+{ return dBgW_Kc::LoadFile(*(SharedFilePtr *)fp); }
 void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *bmd, int a, int b)
 {
     if (getenv("PORT_TRACE_SETFILE")) {
@@ -261,16 +261,16 @@ void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *bmd, int a, int b)
 #pragma comment(linker, "/alternatename:?data_ov098_0213c380@@3PADA=_data_ov098_0213c380")
 #pragma comment(linker, "/alternatename:?data_ov098_0213c384@@3PADA=_data_ov098_0213c384")
 
-extern "C" void _ZN12MeshCollider7SetFileEP8KCL_FileR10CLPS_Block(
+extern "C" void _ZN7dBgW_Kc7SetFileEP8KCL_FileR10CLPS_Block(
     void *self, void *kcl, void *clps)
 {
-    ((MeshCollider *)self)->MeshCollider::SetFile((KCL_File *)kcl,
+    ((dBgW_Kc *)self)->dBgW_Kc::SetFile((KCL_File *)kcl,
                                                   *(CLPS_Block *)clps);
 }
 
 // operator new support: the game heap pointer for actors (the smoke seeds
-// it with the root heap), and the zero-fill veneer -- its DS chain rides
-// arguments through registers, so the host supplies the semantics direct.
+// it with the root heap). The zero-fill veneer that used to sit here with it
+// is retired -- see the block below the storage.
 //
 // DELIBERATELY OUTSIDE .dsstate: this is the real storage behind the game
 // heap word data_020a0eac (the two /alternatename lines below), so it IS a
@@ -288,24 +288,26 @@ void *data_020a0eac_c;
 }
 #pragma comment(linker, "/alternatename:?data_020a0eac@@3PAUHeap@@A=_data_020a0eac_c")
 #pragma comment(linker, "/alternatename:_data_020a0eac=_data_020a0eac_c")
-/* C linkage since main's mangled-declaration sweep: ActorBase::operator new
-   now spells this plain, so the definition has to be the plain name. The
-   alias below still catches any TU that kept the old C++ mangling.
-   PORT_HOST_ABI: ARM r0/r1/r2 ride-through -- src veneer (int x) forwards p/v/n
-   through registers to the actual fill; host spells the args out. */
-extern "C" void func_0206e2f8(void *p, int v, unsigned n)
-{
-    unsigned char *b = (unsigned char *)p;
-    for (unsigned i = 0; i < n; ++i) b[i] = (unsigned char)v;
-}
+/* func_0206e2f8 (MSL memset) RETIRED at run link100 wave 15, lane SEAT15F.
+   This file used to carry a host fill loop for it, because the src veneer was
+   written `(int x)` and forwarded p/v/n to the real fill through r0/r1/r2.
+   Main fixed that: src/func_0206e2f8.c is now
+   `void *func_0206e2f8(void *dst, int val, unsigned int n)` forwarding all
+   three arguments to func_0206e330 and returning dst, which is memset's own
+   contract and is exactly what include/decl_common.h:2101 declares. Both TUs
+   are on port/slice_l15arm9.txt: func_0206e330 is the MSL byte-head /
+   32-byte-block / word-tail fill and is plain portable C, so the port now runs
+   the cartridge's fill instead of a rewritten one.
+   The alias below stays: it still catches any TU that kept the old C++
+   mangling, and now resolves to the matched TU's definition. */
 #pragma comment(linker, "/alternatename:?func_0206e2f8@@YAXPAXHI@Z=_func_0206e2f8")
 extern "C" void hal_m43_roty(void *m, int a);
 void Matrix4x3_FromRotationY(void *m, int a) { hal_m43_roty(m, a); }
 
-#include "MeshColliderBase.h"
-extern "C" int _ZN16MeshColliderBase6EnableEP5Actor(void *self, void *actor)
+#include "dBgW.h"
+extern "C" int _ZN4dBgW6EnableEP8dActor_c(void *self, void *actor)
 {
-    return ((MeshColliderBase *)self)->MeshColliderBase::Enable((Actor *)actor);
+    return ((dBgW *)self)->dBgW::Enable((dActor_c *)actor);
 }
 extern "C" {
 DSSTATE_BEGIN
@@ -326,11 +328,11 @@ DSSTATE_END
    one-argument binding this line used to carry was the level-change heap fault.
 
    THE CALLER THAT ACTUALLY LINKS, named precisely. `Memory_Deallocate` is the
-   placeholder src/_ZN9ActorBase21AfterCleanupResourcesEj.c spells for the last
+   placeholder src/_ZN7fBase_c21AfterCleanupResourcesEj.cpp spells for the last
    statement of the actor teardown, but that src TU is not what the binary
    compiles. What links is hostgen's --extern-data rewrite of it, generated
    from GATE9_SYMS in port/CMakeLists.txt into
-   build/host-src/src/_ZN9ActorBase21AfterCleanupResourcesEj.cpp, which keeps
+   build/host-src/src/_ZN7fBase_c21AfterCleanupResourcesEj.cpp, which keeps
    the call below verbatim and only rehomes the three role-named engine globals
    onto the HAL. (While lane w6-B ran, the caller was a third file --
    port/unmatched/ActorBase_AfterCleanupResources.cpp, the hand-written host

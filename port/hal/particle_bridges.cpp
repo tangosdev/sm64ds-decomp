@@ -4,7 +4,7 @@
 // FACES, and why an alias would not do. Four of the thirteen callback bodies
 // are compiled from .cpp files that declare a real class, so MSVC emits them
 // __thiscall (`this` in ECX). Everything that calls them -- the vtables in
-// hal/particle_vtable.cpp and the tracker's own walk in func_02021bec --
+// hal/particle_vtable.cpp and the tracker's own walk in _ZN8Particle10SysTracker8Contents6UpdateEv --
 // reaches them by Itanium C name through a plain cdecl function pointer, with
 // self pushed on the stack. A /alternatename: alias would link cleanly and
 // then read `this` out of ECX on every call, so each one gets a real
@@ -35,13 +35,65 @@ struct CleanParticleCallback {
     int OnUpdate(System &sys, bool done);
 };
 struct CheckWaterRippleCallback {
-    bool OnUpdate(System &sys, bool b);
+    /* INT, and it was BOOL until run link100 wave 9c, lane LINK21. The owning
+       translation unit,
+       src/_ZN5dPa_c7level_c26checkWaterRippleCallback_c8OnUpdateERN8Particle6SystemEb.cpp
+       on port/slice_gate29.txt, emits
+       ?OnUpdate@checkWaterRippleCallback_c@level_c@dPa_c@@UAEHAAUSystem@Particle@@_N@Z,
+       which dumpbin over its own object spells "public: virtual int __thiscall
+       dPa_c::level_c::checkWaterRippleCallback_c::OnUpdate(struct
+       Particle::System &, bool)". Declaring the shadow bool made the two sides
+       disagree about the RETURN and not only about the name: a bool-returning
+       callee writes AL alone, so a ROM value whose low byte happened to be zero
+       came back false through the `? 1 : 0` the face below used to carry. With
+       int on both sides the two agree about the call and the alias at the
+       bottom of this file is a pure name bridge, which is the standing test. */
+    int OnUpdate(System &sys, bool b);
 };
 }  // namespace Particle
 
+/* ---- THE BOTTOM HALF OF TWO FACE PAIRS -----------------------------------
+   Run link100 wave 9c, lane LINK21, and the last two rows of the shape
+   port/hal/int4_rows.cpp closed for cleanParticleCallback_c.
+
+   The three faces below are the TOP half of a pair: a vtable-slot thunk under
+   the ROM's flat Itanium name that calls a private shadow class's member. The
+   bottom half is the shadow member's own definition, and there is none,
+   because the sync gave the owning translation units the decomp's own class
+   names. Both remaining shadow spellings bridge onto the name the owning
+   object really emits, read with dumpbin over that object rather than derived
+   from a filename:
+
+     ?SpawnParticles@CheckLavaCallback@Particle@@QAEXAAUSystem@2@@Z
+       -> ?SpawnParticles@checkYoganCallback_c@level_c@dPa_c@@UAEXAAUSystem@Particle@@@Z
+     ?OnUpdate@CheckWaterRippleCallback@Particle@@QAE_NAAUSystem@2@_N@Z, now
+     ?OnUpdate@CheckWaterRippleCallback@Particle@@QAEHAAUSystem@2@_N@Z
+       -> ?OnUpdate@checkWaterRippleCallback_c@level_c@dPa_c@@UAEHAAUSystem@Particle@@_N@Z
+
+   THE LAVA ROW IS NOT A MISSING BODY, and the earlier reading that it was came
+   from searching for the wrong name. "CheckLavaCallback" is this file's own
+   host invention; the ROM class is checkYoganCallback_c, yogan being lava, and
+   its SpawnParticles is defined by
+   src/_ZN5dPa_c7level_c20checkYoganCallback_c14SpawnParticlesERN8Particle6SystemE.cpp
+   on port/slice_gate29.txt line 58. dumpbin over
+   build/port/CMakeFiles/port_slice_shared.dir/host-src/src/_ZN5dPa_c7level_c20checkYoganCallback_c14SpawnParticlesERN8Particle6SystemE.cpp.obj
+   shows that name DEFINED in SECT5. A sweep for "checkLavaCallback" finds
+   nothing and is right to; the class has never been called that.
+
+   WHY AN ALIAS AND NOT A BODY, on the standing test. Each pair is __thiscall
+   on both sides with the receiver in ecx, takes the same reference (plus the
+   same bool for OnUpdate), and returns the same type: void for SpawnParticles
+   and int for OnUpdate now that the shadow above says int. The only difference
+   in either mangle is Q against U, non-virtual against virtual, and that
+   letter is not part of the call. So the two sides already agree about the
+   call and an alias is a NAME bridge rather than an ABI bridge, which is the
+   same reading int4_rows.cpp made for cleanParticleCallback_c. */
+#pragma comment(linker, "/alternatename:?SpawnParticles@CheckLavaCallback@Particle@@QAEXAAUSystem@2@@Z=?SpawnParticles@checkYoganCallback_c@level_c@dPa_c@@UAEXAAUSystem@Particle@@@Z")
+#pragma comment(linker, "/alternatename:?OnUpdate@CheckWaterRippleCallback@Particle@@QAEHAAUSystem@2@_N@Z=?OnUpdate@checkWaterRippleCallback_c@level_c@dPa_c@@UAEHAAUSystem@Particle@@_N@Z")
+
 extern "C" {
 
-void _ZN8Particle14SimpleCallback14SpawnParticlesERNS_6SystemE(void *, void *);
+void _ZN5dPa_c7level_c16simpleCallback_c14SpawnParticlesERN8Particle6SystemE(void *, void *);
 
 /* NO C-NAMED FACE for Particle::SimpleCallback::SpawnParticles -- slot 0 of the
    SimpleCallback, SplashCallback, BubbleCallback and FitWaterSimpleCallback
@@ -51,7 +103,7 @@ void _ZN8Particle14SimpleCallback14SpawnParticlesERNS_6SystemE(void *, void *);
    METHOD face for it is below, outside this extern "C" block. */
 
 /* slot 0 of the CheckLavaCallback vtable */
-void _ZN8Particle17CheckLavaCallback14SpawnParticlesERNS_6SystemE(void *self,
+void _ZN5dPa_c7level_c20checkYoganCallback_c14SpawnParticlesERN8Particle6SystemE(void *self,
                                                                   void *sys)
 {
     ((Particle::CheckLavaCallback *)self)
@@ -59,7 +111,7 @@ void _ZN8Particle17CheckLavaCallback14SpawnParticlesERNS_6SystemE(void *self,
 }
 
 /* slot 1 of the CleanParticleCallback vtable */
-int _ZN8Particle21CleanParticleCallback8OnUpdateERNS_6SystemEb(void *self,
+int _ZN5dPa_c7level_c23cleanParticleCallback_c8OnUpdateERN8Particle6SystemEb(void *self,
                                                                void *sys,
                                                                int done)
 {
@@ -68,14 +120,12 @@ int _ZN8Particle21CleanParticleCallback8OnUpdateERNS_6SystemEb(void *self,
 }
 
 /* slot 1 of the CheckWaterRippleCallback vtable */
-int _ZN8Particle24CheckWaterRippleCallback8OnUpdateERNS_6SystemEb(void *self,
+int _ZN5dPa_c7level_c26checkWaterRippleCallback_c8OnUpdateERN8Particle6SystemEb(void *self,
                                                                   void *sys,
                                                                   int b)
 {
     return ((Particle::CheckWaterRippleCallback *)self)
-               ->OnUpdate(*(Particle::System *)sys, b != 0)
-               ? 1
-               : 0;
+        ->OnUpdate(*(Particle::System *)sys, b != 0);
 }
 
 /* Both are static/namespace-scope and therefore already cdecl, but the
@@ -91,7 +141,7 @@ void *_ZN6Memory8AllocateEj(unsigned size) { return Memory::Allocate(size); }
 /* cstd::div wears its pre-naming address in func_0204dab4, the effect VM's
    scale ramp: `0x1000 - func_02052f4c(f2e << 12, f2c)`. 0x02052f4c IS
    cstd::div -- symbols.txt names it, that source file just predates the
-   naming. The body is src/_ZN4cstd3divEii.c in this gate's slice (it drives
+   naming. The body is src/_ZN4cstd3divEii.cpp in this gate's slice (it drives
    the DS hardware divider through raw MMIO, so it needs the hostgen
    routing); this is only the name the caller spells. */
 int _ZN4cstd3divEii(int a, int b);
@@ -131,7 +181,7 @@ void func_0205256c(int *m, int s, int c)
    this on its base, and the host copy is what actually runs */
 void Particle::SimpleCallback::SpawnParticles(System &sys)
 {
-    _ZN8Particle14SimpleCallback14SpawnParticlesERNS_6SystemE(this, &sys);
+    _ZN5dPa_c7level_c16simpleCallback_c14SpawnParticlesERN8Particle6SystemE(this, &sys);
 }
 
 // ---- the lifecycle seams ---------------------------------------------------

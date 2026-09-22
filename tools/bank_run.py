@@ -5,7 +5,7 @@ they are not re-selected. Point --output at the Workflow task's .output file.
   python tools/bank_run.py --output <task.output> [--wl progress/wl_ab.jsonl]
 Then run the free post-pass:  python tools/clone.py && python tools/paramclone.py
 """
-import argparse, json, pathlib, subprocess, sys, tempfile
+import argparse, json, pathlib, shutil, subprocess, sys, tempfile
 REPO = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "tools"))
 import ledger as L
@@ -42,13 +42,20 @@ def main():
     print(f"model={res.get('model','?')}  landed {res['landed']}/{res['attempted']}  "
           f"tok/landed {res.get('tokensPerLanded')}")
 
-    # bank the matches through the independent re-verifier
-    tmp = pathlib.Path(tempfile.gettempdir()) / "coddog_bank.jsonl"
-    with open(tmp, "w", encoding="utf-8") as f:
-        for n, s in res["sources"].items():
-            f.write(json.dumps({"name": n, "c_source": s}) + "\n")
-    subprocess.run([sys.executable, str(REPO / "tools" / "bank_harvest.py"),
-                    "--glob", str(tmp), "--apply"], check=True)
+    # bank the matches through the independent re-verifier.
+    # Own directory per run: this was one shared <temp>/coddog_bank.jsonl, so two bank_run
+    # invocations overlapping (two agents, or two repos driven from one console) wrote the same
+    # path and each handed bank_harvest whatever the other had just written.
+    bankdir = pathlib.Path(tempfile.mkdtemp(prefix="coddog_bank_"))
+    tmp = bankdir / "candidates.jsonl"
+    try:
+        with open(tmp, "w", encoding="utf-8") as f:
+            for n, s in res["sources"].items():
+                f.write(json.dumps({"name": n, "c_source": s}) + "\n")
+        subprocess.run([sys.executable, str(REPO / "tools" / "bank_harvest.py"),
+                        "--glob", str(tmp), "--apply"], check=True)
+    finally:
+        shutil.rmtree(bankdir, ignore_errors=True)
 
     # link gate: the oracle wildcards reloc slots, so a candidate calling a wrong
     # same-shaped callee still byte-"matches". linkcheck reconstructs the linked
@@ -93,13 +100,19 @@ def main():
     nms = list(res.get("nearMisses") or [])
     nms += [{"name": n, "c_source": s} for n, s in res.get("sources", {}).items()]
     if nms:
-        tmp2 = pathlib.Path(tempfile.gettempdir()) / "coddog_nearmiss.jsonl"
-        with open(tmp2, "w", encoding="utf-8") as f:
-            for x in nms:
-                f.write(json.dumps({"name": x["name"], "c_source": x["c_source"]}) + "\n")
-        subprocess.run([sys.executable, str(REPO / "tools" / "nearmiss_db.py"), "ingest",
-                        "--seeds", str(tmp2), "--worklist", args.wl,
-                        "--label", f"fanout-{res.get('model', '?')}"], check=True)
+        # Same shared-path hazard as the bank file above, and worse here: a collision loses near
+        # misses, which the repo's standing rule says are never to be discarded.
+        nmdir = pathlib.Path(tempfile.mkdtemp(prefix="coddog_nearmiss_"))
+        tmp2 = nmdir / "seeds.jsonl"
+        try:
+            with open(tmp2, "w", encoding="utf-8") as f:
+                for x in nms:
+                    f.write(json.dumps({"name": x["name"], "c_source": x["c_source"]}) + "\n")
+            subprocess.run([sys.executable, str(REPO / "tools" / "nearmiss_db.py"), "ingest",
+                            "--seeds", str(tmp2), "--worklist", args.wl,
+                            "--label", f"fanout-{res.get('model', '?')}"], check=True)
+        finally:
+            shutil.rmtree(nmdir, ignore_errors=True)
 
 
 if __name__ == "__main__":

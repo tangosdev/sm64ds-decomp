@@ -11,7 +11,7 @@
  *   (?GetNode@PathPtr@@QBEHAAUVector3@@I@Z) referenced in function
  *   _func_ov092_021313b0
  *
- * It is a NAMING mismatch, not a missing body. src/_ZNK7PathPtr7GetNodeER7Vector3j.c
+ * It is a NAMING mismatch, not a missing body. src/_ZNK7PathPtr7GetNodeER7Vector3j.cpp
  * is a matched, linked, plain-C body already in this build under the flat
  * Itanium name; src/func_ov092_021313b0.cpp declares its own local shadow
  *
@@ -39,7 +39,7 @@
  * THE RETURN VALUE IS 0 AND THAT IS SAFE HERE, checked rather than assumed --
  * this is the exact place the VS lane went wrong (a face returning 0 where the
  * real body returns a pointer the caller used). Two facts settle it:
- *   * the ROM body returns NOTHING. src/_ZNK7PathPtr7GetNodeER7Vector3j.c is
+ *   * the ROM body returns NOTHING. src/_ZNK7PathPtr7GetNodeER7Vector3j.cpp is
  *     `void _ZNK7PathPtr7GetNodeER7Vector3j(void *thiz, int *vec, unsigned idx)`
  *     and writes its three results THROUGH the out-pointer, so there is no
  *     value to lose;

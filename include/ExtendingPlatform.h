@@ -1,0 +1,58 @@
+#ifndef EXTENDINGPLATFORM_H
+#define EXTENDINGPLATFORM_H
+
+#include "dActor_c.h"
+#include "Model.h"
+#include "dBgW_KcMbgSclY.h"
+
+/* The cartridge calls this class daObjKm2_Nobiru_c in RTTI. ExtendingPlatform
+ * is the readable compatibility name carried by the project's historical
+ * factory alias and every known virtual. The reconstructed factory
+ * daObjKm2_Nobiru_c_classInit (historical alias ExtendingPlatform_Spawn)
+ * allocates 0x328 and installs this class's cartridge vtable. The
+ * __si_class_type_info record points directly at dActor_c, and the vtable has
+ * exactly the same 31 slots as that base.
+ *
+ * The readable name intentionally does not claim that the compiler-generated
+ * RTTI spelling is cartridge-authentic. Per-function object isolation keeps
+ * the ROM's daObjKm2_Nobiru_c RTTI and vtable records authoritative. */
+struct ExtendingPlatform : dActor_c {
+    u8 mPad0d0[0x4];                    /* 0x0d0 */
+    u8 mGrowing;                        /* 0x0d4 */
+    u8 mPad0d5[0x3];                    /* 0x0d5 */
+    Model mModel;                       /* 0x0d8 */
+    Matrix4x3 mColliderTransform;       /* 0x128 */
+    dBgW_KcMbgSclY mCollider;           /* 0x158 */
+
+    /* The destructor pair spelled as two plain virtuals on the host, plus
+       the non-virtual destructor declaration the src/ definitions need; the
+       whole ruling is in include/ModelBase.h. An override takes its base's
+       slots, so these carry the SAME TWO NAMES the base declares -- a fresh
+       name would append a slot instead of claiming one. */
+#ifdef _MSC_VER
+    virtual void Destructor1();   /* D1 */
+    virtual void Destructor0();   /* D0 */
+    ~ExtendingPlatform();   /* no slot */
+#else
+    virtual ~ExtendingPlatform();   /* D1 and D0 */
+#endif
+
+    virtual int InitResources();        /* slot  0 */
+    virtual int CleanupResources();     /* slot  3 */
+    virtual int Behavior();             /* slot  6 */
+    virtual int Render();               /* slot  9 */
+    virtual void OnPendingDestroy();    /* slot 12 */
+
+    /* Both helpers are called only by InitResources. Their writes stay wholly
+     * inside this object's two owned transform records. */
+    void UpdateColliderTransform();
+    void UpdateModelTransform();
+};
+
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
+typedef char ExtendingPlatform_size_must_be_0x328[
+    sizeof(ExtendingPlatform) == 0x328 ? 1 : -1];
+#endif
+
+#endif

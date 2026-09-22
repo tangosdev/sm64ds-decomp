@@ -29,8 +29,8 @@
 // dScMgFlower_c's and dScMgCup_c's, and it is why only ONE face array appears
 // below.
 //
-// The factory confirms it from the other side. func_ov006_020e6bf4 calls
-// _ZN9ActorBasenwEj(21956), then func_ov004_020b2adc -- dScMgBase_c's
+// The factory confirms it from the other side. dScMgCurling2_c_classInit calls
+// _ZN7fBase_cnwEj(21956), then _ZN11dScMgBase_cC2Ev -- dScMgBase_c's
 // constructor, WITH the object in r0, which src also spells with the argument,
 // so this class does NOT need the factory host copy dScMgCup_c does -- then
 // writes 0x0213c510 into the object's first word and nothing else. One vptr
@@ -96,7 +96,7 @@
 // extracted/overlays/overlay_0006.bin at base 0x020bfec0, which is the decomp
 // transcription lanes CT1 and CUR2 did for curling and not a port job:
 //
-//   func_ov006_020e4bd4   0x300  slot 1 of state table data_ov006_02141978, a
+//   _ZN15dScMgCurling2_c10DragUpdateEv   0x300  slot 1 of state table data_ov006_02141978, a
 //                                LIVE state -- the stylus aim step. SIZE EXACT
 //                                192/192 words; register colouring only.
 //   func_ov006_020e513c   0x314  overlap depenetration over the eleven records
@@ -135,18 +135,18 @@ int      IsMinigameActorID(unsigned int id);
    alone would leave live wild DS pointers in the table the factory installs. */
 extern unsigned char data_ov006_0213c510[];   /* dScMgCurling2_c, 36 slots */
 extern unsigned char data_ov004_020bc0c0[];   /* dScMgBase_c,     36 slots */
-extern unsigned char data_ov006_0213c434[];   /* the SpawnInfo record      */
+extern unsigned char g_profile_MG_CURLING_J[];   /* the SpawnInfo record      */
 
 /* the class's six overrides */
-int   func_ov006_020e6894(char *c);           /* slot  0 InitResources */
-int   func_ov006_020e683c(char *c);           /* slot  6 Behavior      */
-int   func_ov006_020e67f0(int c);             /* slot  9 Render        */
-int   func_ov006_020e3854(int *c);            /* slot 16 D2            */
-int  *func_ov006_020e3878(int *c);            /* slot 17 D0            */
-void  func_ov006_020e6774(unsigned char *c);  /* slot 18 state reset   */
+int   _ZN15dScMgCurling2_c13InitResourcesEv(char *c);           /* slot  0 InitResources */
+int   _ZN15dScMgCurling2_c8BehaviorEv(char *c);           /* slot  6 Behavior      */
+int   _ZN15dScMgCurling2_c6RenderEv(int c);             /* slot  9 Render        */
+int   _ZN15dScMgCurling2_cD1Ev(int *c);            /* slot 16 D2            */
+int  *_ZN15dScMgCurling2_cD0Ev(int *c);            /* slot 17 D0            */
+void  _ZN15dScMgCurling2_c13OnYoshiTryEatEi(unsigned char *c);  /* slot 18 state reset   */
 
 /* the factory */
-int  *func_ov006_020e6bf4(void);
+int  *dScMgCurling2_c_classInit(void);
 
 /* the state machine's own census, from unmatched/MgCurling2_StateDispatch.cpp */
 unsigned port_mg_curling2_state_calls(void);
@@ -176,19 +176,19 @@ static unsigned g_c2_hits[36];
 #define C2(n)  (++g_c2_hits[(n)])
 
 static int __fastcall c2_init(void *s, void *)
-{ C2(0);  const int r = func_ov006_020e6894((char *)s);
+{ C2(0);  const int r = _ZN15dScMgCurling2_c13InitResourcesEv((char *)s);
   /* the GaplessMinigames latch, for hal/scene_mg.cpp's reason: every seated
      minigame calls it so the ones the gapless table does not name can say
      "unsupported" instead of doing nothing quietly. */
   hal_gapless_minigames_latch(); return r; }
 static int __fastcall c2_beh(void *s, void *)
-{ C2(6);  return func_ov006_020e683c((char *)s); }
+{ C2(6);  return _ZN15dScMgCurling2_c8BehaviorEv((char *)s); }
 static int __fastcall c2_render(void *s, void *)
-{ C2(9);  return func_ov006_020e67f0((int)(size_t)s); }
+{ C2(9);  return _ZN15dScMgCurling2_c6RenderEv((int)(size_t)s); }
 static void *__fastcall c2_d2(void *s, void *)
-{ C2(16); return (void *)(size_t)func_ov006_020e3854((int *)s); }
+{ C2(16); return (void *)(size_t)_ZN15dScMgCurling2_cD1Ev((int *)s); }
 static void *__fastcall c2_d0(void *s, void *)
-{ C2(17); return (void *)func_ov006_020e3878((int *)s); }
+{ C2(17); return (void *)_ZN15dScMgCurling2_cD0Ev((int *)s); }
 /* THE RIDE-THROUGH IS LOAD-BEARING and is not optional on any slot-18 thunk.
    Every slot-18 dispatch site in both overlay images passes one argument (lane
    BASESET's 22-site census, runs/mg5/out/baseset/slot18_19_scan.txt), and the
@@ -198,7 +198,7 @@ static void *__fastcall c2_d0(void *s, void *)
    a return address. The parameter exists so __fastcall cleans four bytes; the
    ROM body ignores its r1 and is called without it. */
 static int __fastcall c2_reset(void *s, void *, int /*ridethrough*/)
-{ C2(18); func_ov006_020e6774((unsigned char *)s); return 1; }
+{ C2(18); _ZN15dScMgCurling2_c13OnYoshiTryEatEi((unsigned char *)s); return 1; }
 
 /* SM64DS_SCENE_SLOT0=0 and SM64DS_SCENE_SLOT9=0, the diagnostics the ov003,
    ov007, curling and flower seats all carry, counted separately so a run can
@@ -251,7 +251,7 @@ extern "C" void port_scene_fill_curling2(void)
        hal/scene_mg_flower.cpp's reason: on a tree that carries the curling row
        this is a second pass over words that are already host pointers and finds
        nothing, and it is here so this class does not depend on another class's
-       row existing. The factory's first act is func_ov004_020b2adc, which
+       row existing. The factory's first act is _ZN11dScMgBase_cC2Ev, which
        writes data_ov004_020bc0c0 into the object's first word before the
        derived table lands, and thirty-six raw DS words in a table the ROM
        installs is what produced the ov007 lane's wild-execute fault. */
@@ -311,7 +311,7 @@ static void *g_c2_self;
 
 extern "C" void *port_mg_curling2_spawn(void)
 {
-    void *p = (void *)func_ov006_020e6bf4();
+    void *p = (void *)dScMgCurling2_c_classInit();
     g_c2_self = p;
     return p;
 }
@@ -351,7 +351,7 @@ extern "C" void port_scene_curling2_hits(void)
 
     std::printf("[scene] dScMgCurling2_c state dispatch: %u call(s) through "
                 "the address switches, %u UNHANDLED address(es), %u to the "
-                "retired floor (must stay 0: func_ov006_020e4bd4 has a body)\n",
+                "retired floor (must stay 0: _ZN15dScMgCurling2_c10DragUpdateEv has a body)\n",
                 port_mg_curling2_state_calls(),
                 port_mg_curling2_state_unknown(),
                 port_mg_curling2_state_floor());
@@ -421,7 +421,7 @@ extern "C" void port_scene_curling2_hits(void)
  * as `struct MgC2Pair { int code; int adj; }` at C linkage on purpose, so no
  * alias is involved in any of the seven and none could be.
  *
- * ROW 1 -- THE VTABLE UNDER ITS C++ SPELLING. src/func_ov006_020e6bf4.c is the
+ * ROW 1 -- THE VTABLE UNDER ITS C++ SPELLING. src/d_s_mg_curling2.c is the
  * factory and its recovered header names the table _ZTV15dScMgCurling2_c, which
  * the ov006 mount defines as the plain C symbol data_ov006_0213c510. The
  * ADDRESS is what the code uses -- `p[0] = (int)_ZTV15dScMgCurling2_c` -- and
@@ -430,12 +430,12 @@ extern "C" void port_scene_curling2_hits(void)
  * for _ZTV14dScMgCurling_c, one class over.
  *
  * AND THE ROW THIS FILE DELIBERATELY DOES NOT ADD, because it is already
- * there. src/func_ov006_020e6894.c (slot 0) declares
+ * there. src/_ZN15dScMgCurling2_c13InitResourcesEv.cpp (slot 0) declares
  * `extern char* func_020adc74(void*)` and hands it &data_ov006_0213c5a0, this
  * class's "/MG/..." path string; 0x020adc74 is func_ov004_020adc74 in
  * config/arm9/overlays/ov004/symbols.txt and the matched TU is already in the
  * image. That is the same misspelling port/mg_fanout_costs.txt section 6d
- * records for curling's own src/func_ov006_020e3578.c, and
+ * records for curling's own src/_ZN14dScMgCurling_c13InitResourcesEv.cpp, and
  * hal/scene_mg_faces.cpp:246 already carries the alias for it. A SECOND
  * DIRECTIVE FOR THE SAME LHS IS NOT FREE: port/tools/alternatename_guard.py
  * counts every pragma under port/ as a linker input, so a duplicate would show

@@ -1,0 +1,25 @@
+# run link100, lane FACES4 (wave 9c) -- THE NAME ROWS.
+#
+# ONE FILE, and it is a host file rather than a src TU, so this list is not a
+# seat list: nothing under src/ is compiled by it and no ROM body enters the
+# link because of it. It carries thirty rows of walk_window's wall that are
+# NAME rows, not body rows, and the file itself explains each one:
+#
+#   23  destructor adapters hal/dtor_faces_cpp.cpp defines under a class name
+#       the main -> port sync changed, while hal/dtor_faces_cpp.h and fourteen
+#       hal/actor_classes_*.cpp fillers still ask for the old one. Both
+#       spellings are the SAME MACRO EXPANSION, int __fastcall (void *, void *),
+#       so an /alternatename is a name bridge with nothing to bridge at the ABI.
+#       The old -> new mapping is read out of the sync commit's own diff and
+#       cross-checked by thirteen existing __ZTV alias rows.
+#    5  ROM free functions a caller spells at C++ linkage, either as a namespace
+#       free function or as a static member. __cdecl with no receiver on both
+#       sides, which is the whole admissibility test for an alias.
+#    2  real faces, because their left hand sides are __thiscall and an alias
+#       would put the receiver in the wrong place.
+#
+# THE TARGETS ARE walk_window AND walk_window_hires, the two that carry the
+# hal/actor_classes_*.cpp vtable fillers this answers. Neither links at this
+# tip, so nothing that worked can be broken by adding it; the count that
+# matters is walk_window's own LNK1120 line.
+port/hal/faces4_rows.cpp

@@ -9,8 +9,9 @@ one misleading percentage:
 | Coverage denominator | Configured function count and code-byte universe | Must not change silently |
 | Source-built functions and bytes | Code actually linked from our translation units instead of a ROM gap object | Must not regress |
 | Module fidelity | Linked executable-module bytes equal retail | Stock head must pass, unless base and head have the same recorded pre-existing build failure |
-| Contributor lineage | The first matcher still owns a surviving match after moves/renames | Must not change or disappear |
+| Contributor lineage | The first matcher still owns a surviving match after moves/renames | Reported when it changes or disappears; never blocks the merge |
 | Relocations | Affected source reproduces bytes and names the correct destinations | No WRONG or NO-REPRO |
+| Port references | `port/`'s manifests and symbol bridges still name files and symbols that exist | No stale reference (optional phase) |
 
 `tools/rombuild.py` emits the build/fidelity artifact. `tools/validate_merge.py` compares
 two committed revisions, combines the build artifacts with `pr_linkcheck` JSON, and emits
@@ -28,23 +29,40 @@ The compiler and ROM remain on the private worker. For each relay job:
    uncommitted move has no lineage.
 3. Run `python tools/rombuild.py --profile stock --report-json build/head-rom.json`.
 4. Run `python tools/pr_linkcheck.py --base <baseSha> --json build/link.json --md build/link.md`.
-5. Run:
+5. If the PR touched `src/` or `include/`, run
+   `python tools/port_refcheck.py --json build/port.json`. No compiler and no ROM, so
+   it costs about a second. It is optional on both sides: a worker that does not run it,
+   or a base that predates the tool, simply reports no port row.
+6. Run:
 
-   ```
+   ```sh
    python tools/validate_merge.py --base <baseSha> --head HEAD \
      --require-merge-commit --expected-pr-head <headSha> \
      --base-rom-report build/base-rom.json \
      --head-rom-report build/head-rom.json --link-report build/link.json \
+     --port-refcheck-report build/port.json \
      --out build/validate-report.json --markdown build/validate-report.md
    ```
 
-6. Return `status`, `summary`, `details` (the existing per-file table), and the new
+7. Return `status`, `summary`, `details` (the existing per-file table), and the new
    `reportMarkdown` field to the relay. The public GitHub workflow remains unable to run
    PR code or access ROM material; it only renders the worker's result.
 
 A base failure is not hidden. If base and merge fail in the same phase with the same
 failure signature, the report shows a warning and permits a non-regressing PR. If a green
 base becomes red, or the failure changes, validation fails.
+
+## Moving credit on purpose
+
+Some PRs move contributor credit as their whole point — pinning a stem in
+`attribution.json` is exactly that. Attribution never blocks a merge: the lineage gate
+only reports what moved, so a PR like this needs no label and no override flag. A lost
+match, a changed coverage denominator, or a failed ROM build still fails the merge on its
+own terms — attribution findings are informational either way.
+
+The check names the moves rather than counting them. `0 added, 2 changed, 0 lost` was
+unactionable for a PR author who cannot read the worker's log: the summary names the
+first few and the check body carries a table of up to 25.
 
 The merge gate always uses the stock profile. `--profile mods` is a developer tool for
 building intentional experiments and is never accepted as reconstruction proof.

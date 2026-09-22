@@ -5,7 +5,7 @@
 // THIS IS WHERE THE FIRST MINIGAME BOOT FAULTED, and the fault is worth stating
 // before the fix because it is a clean instance of a class this port keeps
 // meeting. Slot 1 of dScMgCurling_c's vtable dispatched into
-// func_ov004_020b0930, which calls this function, and the run died:
+// _ZN11dScMgBase_c19BeforeInitResourcesEv, which calls this function, and the run died:
 //
 //     FAULT c0000005 at _func_ov004_020b2cb8+0x3ce accessing 0x00000065
 //     eax 00000065

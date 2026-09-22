@@ -238,3 +238,78 @@ void *func_02058cd0(void *, int size, int align)
     return p;
 }
 }
+
+/* ===================================================================== *
+ * THE GLOBAL DEALLOCATOR SEAM, AND WHY IT IS DECIDED IN THIS FILE
+ * ===================================================================== *
+ *
+ * This image contains TWO programs with two separate memory systems, and
+ * C++ gives a program exactly ONE global operator new / operator delete
+ * pair. That is the whole defect.
+ *
+ *   THE CARTRIDGE'S SYSTEM. On the DS the pair is matched and both halves
+ *   are the game heap: _Znwj at 0x0203cbe4 tail-calls func_0203cc0c, which
+ *   is Heap::Allocate(data_020a0ea0, size), and _ZdlPv at 0x0203cbf0 is
+ *   Memory::defaultHeapPtr->_Deallocate(ptr). Both are matched and linked
+ *   here, and that heap is carved out of THIS FILE'S arena.
+ *
+ *   THE HOST'S SYSTEM. The ntr graphics emulation, the sound host, the
+ *   editor channel and every std::vector / std::string / std::function
+ *   inside them allocate from the CRT. There is no DS equivalent of any of
+ *   it; it does not exist on a cartridge.
+ *
+ * WHAT WENT WRONG. src/_ZdlPv.cpp is a real `operator delete(void*)`
+ * definition, so MSVC binds it as the program-wide global deallocator --
+ * correctly, because ROM code needs it: a census of the linked image finds
+ * FIVE ROM call sites reaching it (ModelD1Ev, BlendModelAnimD1Ev,
+ * CleanCommonModelDataArr, func_0203cbc0, func_02073244) plus every ROM
+ * class whose MSVC scalar deleting destructor runs. But src/_Znwj.cpp
+ * cannot match it on the allocating side: mwccarm 2004/b56 rejects
+ * `void* operator new(u32)` outright, so _Znwj stays a hand-spelled flat
+ * name and the CRT's operator new wins. Host allocations were therefore
+ * malloc'd by Windows and handed back to the cartridge's allocator, which
+ * has never seen them, and ExpandingHeapAllocator::UnlinkNode faulted
+ * walking a node header that was really somebody else's malloc block.
+ *
+ * WHY THE SIZED FORM IS THE WHOLE FIX. The census says the host reaches
+ * the ROM deallocator through exactly ONE edge: LIBCMT's sized-delete
+ * shim ??3@YAXPAXI@Z, which every host deallocation funnels through and
+ * which does nothing but forward to the unsized global. Replacing that one
+ * shim with a router splits the two systems apart and touches nothing
+ * else. src/_ZdlPv.cpp keeps its definition, stays byte-matched and stays
+ * linked; no decomp file moves; no TU leaves the link.
+ *
+ * THE TEST IS EXACT, NOT A HEURISTIC. The arena is one contiguous region
+ * reserved at a fixed base above every DS range, and the ROM heap is
+ * carved from it, so a pointer belongs to the cartridge if and only if it
+ * lies inside [g_base, g_hi). Nothing else can be allocated there: the
+ * region is reserved and committed to us for the life of the process.
+ *
+ * DELIBERATELY NO arena_init() HERE. If the arena does not exist yet then
+ * the game has not allocated anything yet, so the pointer is necessarily a
+ * host one and free() is the right answer. Reading the bounds without
+ * forcing the arena up also keeps arena creation at exactly the moment it
+ * happened before, which the determinism this file argues for depends on.
+ *
+ * NOT DONE, AND ON PURPOSE: the allocating side is left alone. ROM code
+ * never calls the global operator new in this link (34 call sites, every
+ * one host), so routing it to the game heap would buy nothing and would
+ * pour host vertex buffers into the cartridge's 8 MB arena, changing the
+ * addresses the ROM's own allocator hands out. That would be a divergence
+ * from the cartridge, not a step towards it.
+ */
+#include <new>
+
+void operator delete(void *ptr, size_t) noexcept
+{
+    if (!ptr)
+        return;
+    if ((char *)ptr >= g_base && (char *)ptr < g_hi) {
+        /* The cartridge allocated it. Hand it to the ROM's own matched
+           deallocator, which is src/_ZdlPv.cpp's operator delete(void*). */
+        ::operator delete(ptr);
+        return;
+    }
+    /* Windows allocated it, through the CRT's operator new. */
+    free(ptr);
+}

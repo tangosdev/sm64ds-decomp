@@ -16,11 +16,11 @@
 # assumed -- the first word of seven known functions is a plausible prologue:
 #
 #   0x02123740 _ZN6LakituD1Ev              e92d4010  push {r4,lr}
-#   0x02124b04 Lakitu_Spawn                e92d4010  push {r4,lr}
+#   0x02124b04 daJgm_c_classInit                e92d4010  push {r4,lr}
 #   0x02124b64 _ZN5SpinyD1Ev               e92d4010  push {r4,lr}
-#   0x021261f4 Spiny_Spawn                 e92d4010  push {r4,lr}
+#   0x021261f4 daTgz_c_classInit                 e92d4010  push {r4,lr}
 #   0x0212624c _ZN7HeaveHoD1Ev             e92d4010  push {r4,lr}
-#   0x021271d4 HeaveHo_Spawn               e92d4010  push {r4,lr}
+#   0x021271d4 daPopoi_c_classInit               e92d4010  push {r4,lr}
 #   0x02124908 _ZN6Lakitu13InitResourcesEv e92d41f0  push {r4-r8,lr}
 #
 # Sections, from config/arm9/overlays/ov077/delinks.txt:
@@ -39,9 +39,9 @@
 # must be a spawn function inside ov077's own .text.
 #
 #   id   SpawnInfo   table slot   word[0] spawnFunc   idhalf   module: field
-#  238   0x02127a74  0x02090c1c   0x021271d4 HeaveHo_Spawn  238  overlay(77)
-#  260   0x02127960  0x02090c74   0x021261f4 Spiny_Spawn    260  overlay(77)
-#  265   0x02127848  0x02090c88   0x02124b04 Lakitu_Spawn   265  overlays(77,80)
+#  238   0x02127a74  0x02090c1c   0x021271d4 daPopoi_c_classInit  238  overlay(77)
+#  260   0x02127960  0x02090c74   0x021261f4 daTgz_c_classInit    260  overlay(77)
+#  265   0x02127848  0x02090c88   0x02124b04 daJgm_c_classInit   265  overlays(77,80)
 #
 # ==== THE ALIAS RACE: THREE CONTESTED ADDRESSES, ALL THREE SETTLED =========
 # This is the lane's defining hazard (T6, the Coffin/Spindrift shape: a
@@ -50,7 +50,7 @@
 # them is a real contest with a mounted sibling. Each is settled by reading
 # the RAW BYTES of both claimants, not by trusting a label.
 #
-# (1) 0x02127848 -- Lakitu_SpawnInfo vs data_ov080_02127848.
+# (1) 0x02127848 -- g_profile_JUGEM vs data_ov080_02127848.
 #     `from:0x02090c88 kind:load to:0x02127848 module:overlays(77,80)`, and
 #     port/ov080_syms.txt ALREADY MOUNTS data_ov080_02127848 (its line 46).
 #     So the address is live in the build today under ov080's name.
@@ -58,7 +58,7 @@
 #                           01000000 01000000 00000000 0212783c
 #     ov080's bytes there:  0003a000 00001111 0016c000 00384000 00000064
 #                           0003a000 00001111 0016c000 00384000
-#     ov077's word[0] is Lakitu_Spawn, a real e92d4010 prologue inside
+#     ov077's word[0] is daJgm_c_classInit, a real e92d4010 prologue inside
 #     ov077's own .text; word[1]'s low half is 0x0109 = 265, exactly the
 #     table index that reached it; word[8] is 0x0212783c, Lakitu's own
 #     __si_class_type_info record. ov080's is a five-word tuning tuple
@@ -68,7 +68,7 @@
 #     artifact: the two overlays are alternates at one base and are never
 #     co-resident, so both dumps claim every address in the overlap.
 #     NO BRIDGE AND NO /alternatename IS NEEDED: the two mounts emit
-#     DIFFERENT C names (Lakitu_SpawnInfo vs data_ov080_02127848) at
+#     DIFFERENT C names (g_profile_JUGEM vs data_ov080_02127848) at
 #     different host storage, and the registry reaches its record by C name,
 #     never by DS address. Nothing in this lane spells a placeholder that
 #     cxx_aliases.cpp binds, so there is no G0/G1-class collision to bridge.
@@ -76,7 +76,7 @@
 # (2) and (3) 0x02127c40 and 0x02127c5c -- ov077 bss vs ov079's Whomp pair.
 #     `from:0x02090af8 -> 0x02127c40 module:overlays(77,79)`  (id 165)
 #     `from:0x02090af4 -> 0x02127c5c module:overlays(77,79)`  (id 164)
-#     config names them WhompKing_SpawnInfo and Whomp_SpawnInfo in ov079 and
+#     config names them g_profile_BATANKING and g_profile_BATAN in ov079 and
 #     data_ov077_02127c40 / _02127c5c in ov077. ov079's bytes:
 #       0x02127c40: 02126588 004b00a5 ...  word[1] low half 0xa5 = 165
 #       0x02127c5c: 021265e8 004a00a4 ...  word[1] low half 0xa4 = 164
@@ -125,9 +125,9 @@
 #   12    ::OnPendingDestroy    ::OnPendingDestroy   ::OnPendingDestroy
 #   16    LakituD1              SpinyD1              HeaveHoD1
 #   17    LakituD0              SpinyD0              HeaveHoD0
-#   18    func_ov077_02123804   func_ov077_02124c18  Actor::OnYoshiTryEat
-#   19    func_ov077_02124aa4   func_ov077_02126194  Actor::OnTurnIntoEgg
-#   29    func_ov077_0212380c   func_ov077_02124c20  Actor::OnAimedAtWithEgg
+#   18    _ZN6Lakitu13OnYoshiTryEatEv   _ZN5Spiny13OnYoshiTryEatEv  Actor::OnYoshiTryEat
+#   19    _ZN6Lakitu13OnTurnIntoEggER6Player   _ZN5Spiny13OnTurnIntoEggER6Player  Actor::OnTurnIntoEgg
+#   29    _ZN6Lakitu16OnAimedAtWithEggEv   _ZN5Spiny16OnAimedAtWithEggEv  Actor::OnAimedAtWithEgg
 # every other slot is the shared Actor/ActorBase half, byte-identical across
 # all three and to ov072's own shared half.
 #
@@ -193,14 +193,14 @@
 data_ov077_02127230 data_ov077_02127238 data_ov077_021277e0 data_ov077_021277e8
 data_ov077_021277f0 data_ov077_021277f8 data_ov077_02127800 data_ov077_02127808
 data_ov077_02127810 data_ov077_02127818 data_ov077_02127820 data_ov077_02127828
-data_ov077_02127830 data_ov077_0212783c Lakitu_SpawnInfo data_ov077_021278e8
+_ZTS7daJgm_c _ZTI7daJgm_c g_profile_JUGEM data_ov077_021278e8
 data_ov077_021278f0 data_ov077_021278f8 data_ov077_02127900 data_ov077_02127908
 data_ov077_02127910 data_ov077_02127918 data_ov077_02127920 data_ov077_02127928
-data_ov077_02127930 data_ov077_02127938 data_ov077_02127940 data_ov077_02127948
-data_ov077_02127954 Spiny_SpawnInfo data_ov077_02127a00 data_ov077_02127a08
+data_ov077_02127930 data_ov077_02127938 data_ov077_02127940 _ZTS7daTgz_c
+_ZTI7daTgz_c g_profile_TOGEZO data_ov077_02127a00 data_ov077_02127a08
 data_ov077_02127a10 data_ov077_02127a18 data_ov077_02127a20 data_ov077_02127a28
 data_ov077_02127a30 data_ov077_02127a38 data_ov077_02127a40 data_ov077_02127a48
-data_ov077_02127a50 data_ov077_02127a5c data_ov077_02127a68 HeaveHo_SpawnInfo
+_ZTS9daPopoi_c data_ov077_02127a5c _ZTI9daPopoi_c g_profile_POPOI
 data_ov077_02127b20 data_ov077_02127b28 data_ov077_02127b30 data_ov077_02127b38
 data_ov077_02127b40 data_ov077_02127b48 data_ov077_02127b50 data_ov077_02127b58
 data_ov077_02127b64 data_ov077_02127b70 data_ov077_02127b7c data_ov077_02127b88

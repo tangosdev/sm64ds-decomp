@@ -3,9 +3,9 @@
  * cast-lvl16pair. Each matched TU stays byte-locked in src/ and is simply not
  * referenced from port/slice_ov096.txt, which carries every refusal in full.
  *
- * (1) src/_ZN5PokeyD1Ev.cpp -- THE C++-MANGLING WALL. The matched TU is a real
+ * (1) src/actors/daSanbo_c.cpp -- THE C++-MANGLING WALL. The matched TU is a real
  *     C++ class definition ending `virtual ~Pokey();` with an empty body.
- *     mwccarm mangles that Itanium and emits _ZN5PokeyD1Ev, the name vtable
+ *     mwccarm mangles that Itanium and emits _ZN9daSanbo_cD1Ev, the name vtable
  *     slot 16 needs; MSVC emits ??1Pokey@@UAE@XZ and nothing by the flat name,
  *     plus its own COMDAT vtable which the destructor would store at this[0]
  *     over the ROM-shaped table the registry fills, plus member-destructor
@@ -27,10 +27,10 @@
  *                                            0x0213579c (load) 0x021379d8
  *                                            0x021357a0 (load) 0x020a0eac
  *
- *     Resolved against src/_ZN5PokeyD0Ev.c own member list, which names the
+ *     Resolved against src/actors/daSanbo_c.cpp own member list, which names the
  *     four members and their offsets: WithMeshClsn +0x180 (0x020373f8),
  *     MovingCylinderClsn +0x14c (0x020149a4), ShadowModel +0x124 (0x02015ff8),
- *     Model +0xd4 (0x02016d20), then _ZN5ActorD2Ev (0x020112c8). Three of
+ *     Model +0xd4 (0x02016d20), then _ZN8dActor_cD2Ev (0x020112c8). Three of
  *     those five arm9 addresses appear again, identically, in TORNADO
  *     destructor relocations for the same three member types -- two
  *     independently recovered destructors agreeing is the cross-check.
@@ -43,7 +43,7 @@
  *     /alternatename bridge in hal/actor_classes_ov096.cpp carries the other
  *     spelling to the same storage.
  *
- * (2) and (3) src/func_ov096_021368f0.cpp and src/func_ov096_021368b4.cpp --
+ * (2) and (3) src/actors/daSanbo_c.cpp and src/actors/daSanbo_c.cpp --
  *     THE PMF DISEASE, the ENTER and TICK halves of one two-record cell:
  *         struct C; typedef void (C::*PMF)();
  *         struct C { char pad[0x384]; PMF *pp; };
@@ -54,7 +54,7 @@
  *     dispatch would land in the middle of the enter record.
  *
  *     WHERE THE CELL POINTER COMES FROM, and it is NOT refused:
- *     src/func_ov096_02136928.c stays in the slice and computes it with plain
+ *     src/actors/daSanbo_c.cpp stays in the slice and computes it with plain
  *     integer arithmetic, `*(int *)(c + 0x384) = (int)&data_ov096_02137b48 +
  *     (a << 4)`. The `a << 4` is the proof that the cells are PAIRS of 8-byte
  *     records: six states, twelve records.
@@ -99,28 +99,28 @@ typedef void (*PortOv096StateFn)(void *);
 
 /* ---- (1) the destructor ------------------------------------------------ */
 extern int _ZTV5Pokey[];
-void _ZN12WithMeshClsnD1Ev(void *);          /* 0x020373f8, member +0x180 */
-void _ZN18MovingCylinderClsnD1Ev(void *);    /* 0x020149a4, member +0x14c */
+void _ZN10dBgCh_ActrD1Ev(void *);          /* 0x020373f8, member +0x180 */
+void _ZN7dCcAc_cD1Ev(void *);    /* 0x020149a4, member +0x14c */
 void _ZN11ShadowModelD1Ev(void *);           /* 0x02015ff8, member +0x124 */
 void _ZN5ModelD1Ev(void *);                  /* 0x02016d20, member +0xd4  */
-void _ZN5ActorD2Ev(void *);                  /* 0x020112c8               */
+void _ZN8dActor_cD2Ev(void *);                  /* 0x020112c8               */
 
 /* PORT_HOST_ABI: mwcc Itanium D1 that MSVC emits no flat name for. */
-int *_ZN5PokeyD1Ev(int *t)
+int *_ZN9daSanbo_cD1Ev(int *t)
 {
     t[0] = (int)(size_t)_ZTV5Pokey;
-    _ZN12WithMeshClsnD1Ev((char *)t + 0x180);
-    _ZN18MovingCylinderClsnD1Ev((char *)t + 0x14c);
+    _ZN10dBgCh_ActrD1Ev((char *)t + 0x180);
+    _ZN7dCcAc_cD1Ev((char *)t + 0x14c);
     _ZN11ShadowModelD1Ev((char *)t + 0x124);
     _ZN5ModelD1Ev((char *)t + 0xd4);
-    _ZN5ActorD2Ev(t);
+    _ZN8dActor_cD2Ev(t);
     return t;
 }
 
 /* ---- (2) the ENTER dispatch -------------------------------------------- */
 
 /* func_ov096_021368f0 IS NOT A HOST COPY ANY MORE. Run link100 lane PMF2 put
-   src/func_ov096_021368f0.cpp back on port/slice_pmf2.txt: with /vmg /vmm global (the
+   src/actors/daSanbo_c.cpp back on port/slice_pmf2.txt: with /vmg /vmm global (the
    R8 block in port/CMakeLists.txt) MSVC's pointer-to-member IS the ROM's
    8-byte {function, delta} pair, and the matched TU compiles to the same
    tail jump this body was -- measured, listing in that slice's header.
@@ -128,13 +128,13 @@ int *_ZN5PokeyD1Ev(int *t)
 /* ---- (3) the TICK dispatch --------------------------------------------- */
 
 /* func_ov096_021368b4 IS NOT A HOST COPY ANY MORE. Run link100 lane PMF2 put
-   src/func_ov096_021368b4.cpp back on port/slice_pmf2.txt: with /vmg /vmm global (the
+   src/actors/daSanbo_c.cpp back on port/slice_pmf2.txt: with /vmg /vmm global (the
    R8 block in port/CMakeLists.txt) MSVC's pointer-to-member IS the ROM's
    8-byte {function, delta} pair, and the matched TU compiles to the same
    tail jump this body was -- measured, listing in that slice's header.
    The reading above is kept because it is the derivation. */
 /* ---- (4) THE FALL-OFF-THE-END BODY -------------------------------------
- * src/func_ov096_02135e2c.cpp is declared `int` and has NO return statement.
+ * src/actors/daSanbo_c.cpp is declared `int` and has NO return statement.
  * mwccarm accepts that and lets r0 carry whatever the last call left;
  * MSVC refuses the translation unit outright with
  *     error C4716: 'func_ov096_02135e2c': must return a value
@@ -151,7 +151,7 @@ int *_ZN5PokeyD1Ev(int *t)
  *     e8bd40f0  pop {r4-r7,lr}
  *     e12fff1e  bx  lr
  * -- no instruction sets r0 on the way out. And the ONE caller,
- * src/func_ov096_021365d4.c:12, declares it `void func_ov096_02135e2c(int *,
+ * src/actors/daSanbo_c.cpp:12, declares it `void func_ov096_02135e2c(int *,
  * void *)` and discards the result at line 47. The `int` in this TU's own
  * signature is the recovery's placeholder, not something the ROM produces, so
  * the returned value is unobservable and 0 is as faithful as any other.
@@ -165,17 +165,17 @@ int *_ZN5PokeyD1Ev(int *t)
  * only one this lane gives up for a reason that is not a real ABI wall.
  * A later lane that owns hostgen.py should convert this: add
  *     "func_ov096_02135e2c": [(<the closing brace anchor>, ... "return 0;")]
- * to FALLS_OFF_RETURN, drop this copy, and put src/func_ov096_02135e2c.cpp
+ * to FALLS_OFF_RETURN, drop this copy, and put src/actors/daSanbo_c.cpp
  * back into port/slice_ov096.txt. Every other line below is transcribed from
  * the matched body unchanged.
  */
 int func_02038414(void *c);
-int _ZNK12WithMeshClsn10IsOnGroundEv(void *c);
-void *_ZNK12WithMeshClsn14GetFloorResultEv(void *c);
+int _ZNK10dBgCh_Actr10IsOnGroundEv(void *c);
+void *_ZNK10dBgCh_Actr14GetFloorResultEv(void *c);
 void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *s, int *out);
 int _ZN4cstd4fdivEii(int a, int b);
-int _ZNK12WithMeshClsn8IsOnWallEv(void *c);
-void *_ZNK12WithMeshClsn13GetWallResultEv(void *c);
+int _ZNK10dBgCh_Actr8IsOnWallEv(void *c);
+void *_ZNK10dBgCh_Actr13GetWallResultEv(void *c);
 
 /* PORT_HOST_ABI: mwcc lets an int body fall off the end; MSVC refuses to
    compile it. The ROM sets no r0 at the tail and the one caller declares this
@@ -185,9 +185,9 @@ int func_ov096_02135e2c(int *self, void *clsn)
     int n0[3];
     int n1[3];
     func_02038414(clsn);
-    if (_ZNK12WithMeshClsn10IsOnGroundEv(clsn)) {
+    if (_ZNK10dBgCh_Actr10IsOnGroundEv(clsn)) {
         _ZNK11SurfaceInfo12CopyNormalToER7Vector3(
-            (char *)_ZNK12WithMeshClsn14GetFloorResultEv(clsn) + 4, n0);
+            (char *)_ZNK10dBgCh_Actr14GetFloorResultEv(clsn) + 4, n0);
         if (n0[1] != 0) {
             long long a = (long long)n0[0] * (long long)self[0xa4 / 4];
             long long b = (long long)n0[2] * (long long)self[0xac / 4];
@@ -196,9 +196,9 @@ int func_ov096_02135e2c(int *self, void *clsn)
             self[0xa8 / 4] = -(_ZN4cstd4fdivEii(x + y, n0[1]) + 0x8000);
         }
     }
-    if (_ZNK12WithMeshClsn8IsOnWallEv(clsn)) {
+    if (_ZNK10dBgCh_Actr8IsOnWallEv(clsn)) {
         _ZNK11SurfaceInfo12CopyNormalToER7Vector3(
-            (char *)_ZNK12WithMeshClsn13GetWallResultEv(clsn) + 4, n1);
+            (char *)_ZNK10dBgCh_Actr13GetWallResultEv(clsn) + 4, n1);
     }
     return 0;   /* the ROM returns nothing; the caller declares this void */
 }

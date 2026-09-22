@@ -14,7 +14,7 @@
  * IT IS NOT ONE OF THIS CLASS'S vtable OR STATE BODIES.  port/tools/
  * vtablerows.py --vtable 0x0213fb34 --width 36 reports nosrc 0, and all five
  * chain links reach a matched src TU (port/slice_tti.txt section 7).  This body
- * is reached one level further down: vtable slot 23 (src/func_ov006_0212101c.c)
+ * is reached one level further down: vtable slot 23 (src/minigames/d_s_mg_trampoline.cpp)
  * calls it as the stylus HIT TEST, with two Vec2s the caller builds from the
  * object's +0x5db0..+0x5db6 block:
  *
@@ -195,7 +195,7 @@
  * This lane spelled the first two `int f(void)` -- placeholders, because a
  * count-and-return trap does not read its arguments and the arity was never
  * derived.  TTE derived all three from the ROM CALL SITES that name them
- * (src/func_ov006_0212101c.c and src/func_ov006_02122f24.c for 020d0c38,
+ * (src/minigames/d_s_mg_trampoline.cpp and src/minigames/d_s_mg_trampoline2.cpp for 020d0c38,
  * which agree with each other), so its spellings are evidenced where this
  * lane's were merely sufficient.  On a cdecl host the two behave identically
  * -- the caller cleans the stack and the callee ignores what it was passed --
@@ -228,7 +228,7 @@ extern "C" {
 
    g_floor_020d01e0 IS GONE THE SAME WAY, and it is the bigger of the two: run
    mg12 lane INST decompiled func_ov006_020d01e0, the 0x800 INSTALLER, and
-   src/func_ov006_020d01e0.c is a slice line in both slices now. It is an honest
+   src/func_ov006_020d01e0.cpp is a slice line in both slices now. It is an honest
    NONMATCHING seat (49 of 503 code words, frame exact, every call present with
    the ROM's destination) and its divergences are stated in its own banner.
    THE CONSEQUENCE FOR EVERY READER OF THIS FILE: the render gate at +0x328 is

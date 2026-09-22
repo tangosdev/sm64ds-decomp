@@ -111,12 +111,12 @@
 # extracted/overlays/overlay_0077.bin at base 0x02123740 with --strict-relocs,
 # so every relocation destination was checked as well as the instruction bytes.
 # RESULT: 8 MATCH, 0 NOMATCH, 0 genuine guesses.
-#   func_ov077_02123804  Lakitu slot 18   0x8    e3a00006 e12fff1e = MOV r0,#6
-#   func_ov077_0212380c  Lakitu slot 29   0x8    e3a0090f e12fff1e = #0x3c000
-#   func_ov077_02124aa4  Lakitu slot 19   0x60   4 calls, incl KillAndTrackInDeathTable
-#   func_ov077_02124c18  Spiny  slot 18   0x8    e3a00006 e12fff1e = MOV r0,#6
-#   func_ov077_02124c20  Spiny  slot 29   0x8    e3a00a1e e12fff1e = #0x1e000
-#   func_ov077_02126194  Spiny  slot 19   0x60   the same 4 calls, coin count 1
+#   _ZN6Lakitu13OnYoshiTryEatEv  Lakitu slot 18   0x8    e3a00006 e12fff1e = MOV r0,#6
+#   _ZN6Lakitu16OnAimedAtWithEggEv  Lakitu slot 29   0x8    e3a0090f e12fff1e = #0x3c000
+#   _ZN6Lakitu13OnTurnIntoEggER6Player  Lakitu slot 19   0x60   4 calls, incl KillAndTrackInDeathTable
+#   _ZN5Spiny13OnYoshiTryEatEv  Spiny  slot 18   0x8    e3a00006 e12fff1e = MOV r0,#6
+#   _ZN5Spiny16OnAimedAtWithEggEv  Spiny  slot 29   0x8    e3a00a1e e12fff1e = #0x1e000
+#   _ZN5Spiny13OnTurnIntoEggER6Player  Spiny  slot 19   0x60   the same 4 calls, coin count 1
 #                                                and ActorBase::MarkForDestruction
 #   func_ov077_021258dc  Spiny  PMF handler (source record data_ov077_021278e8), 0x2c
 #   func_ov077_02126640  HeaveHo PMF handler (source record data_ov077_02127a00), 0x118
@@ -133,28 +133,31 @@
 # owes its decomp-side marker correction and retires when that line goes.
 #
 # ==== THE SLICE: 79 TUs (91 - 12 host copies) =============================
-src/HeaveHo_Spawn.c
-src/Lakitu_Spawn.c
-src/Spiny_Spawn.c
+src/d_a_popoi.c
+src/d_a_jgm.c
+src/d_a_tgz.c
 src/_ZN5Spiny13InitResourcesEv.cpp
-src/_ZN5Spiny16CleanupResourcesEv.c
-src/_ZN5Spiny16OnPendingDestroyEv.c
+src/_ZN5Spiny16CleanupResourcesEv.cpp
+src/_ZN5Spiny16OnPendingDestroyEv.cpp
 src/_ZN5Spiny8BehaviorEv.cpp
-src/_ZN5SpinyD0Ev.c
-src/_ZN6Lakitu16CleanupResourcesEv.c
-src/_ZN6Lakitu16OnPendingDestroyEv.c
+# RETIRED at SLICE1: body now in src/_ZN5SpinyD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN5SpinyD0Ev.cpp
+src/_ZN6Lakitu16CleanupResourcesEv.cpp
+src/_ZN6Lakitu16OnPendingDestroyEv.cpp
 src/_ZN6Lakitu8BehaviorEv.cpp
-src/_ZN6LakituD0Ev.c
+# RETIRED at SLICE1: body now in src/_ZN6LakituD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN6LakituD0Ev.cpp
 src/_ZN7HeaveHo13InitResourcesEv.cpp
-src/_ZN7HeaveHo16CleanupResourcesEv.c
-src/_ZN7HeaveHo16OnPendingDestroyEv.c
-src/_ZN7HeaveHoD0Ev.c
-src/_ZN7HeaveHoD1Ev.c
+src/_ZN7HeaveHo16CleanupResourcesEv.cpp
+src/_ZN7HeaveHo16OnPendingDestroyEv.cpp
+# RETIRED at SLICE1: body now in src/_ZN7HeaveHoD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN7HeaveHoD0Ev.cpp
+src/_ZN7HeaveHoD1Ev.cpp
 src/__sinit_ov077_02127240.c
 src/__sinit_ov077_0212749c.c
 src/__sinit_ov077_021275fc.c
-src/func_ov077_02123804.c
-src/func_ov077_0212380c.c
+src/_ZN6Lakitu13OnYoshiTryEatEv.cpp
+src/_ZN6Lakitu16OnAimedAtWithEggEv.cpp
 src/func_ov077_02123814.c
 src/func_ov077_02123880.c
 src/func_ov077_021238bc.cpp
@@ -174,9 +177,9 @@ src/func_ov077_021244d4.cpp
 src/func_ov077_02124564.c
 src/func_ov077_02124698.c
 src/func_ov077_0212478c.c
-src/func_ov077_02124aa4.cpp
-src/func_ov077_02124c18.c
-src/func_ov077_02124c20.c
+src/_ZN6Lakitu13OnTurnIntoEggER6Player.cpp
+src/_ZN5Spiny13OnYoshiTryEatEv.cpp
+src/_ZN5Spiny16OnAimedAtWithEggEv.cpp
 src/func_ov077_02124c28.cpp
 src/func_ov077_02124ce4.c
 src/func_ov077_02124d08.cpp
@@ -198,7 +201,7 @@ src/func_ov077_02125b1c.cpp
 src/func_ov077_02125bb4.c
 src/func_ov077_02125dd4.c
 src/func_ov077_02125e94.c
-src/func_ov077_02126194.cpp
+src/_ZN5Spiny13OnTurnIntoEggER6Player.cpp
 src/func_ov077_02126300.c
 src/func_ov077_02126528.cpp
 src/func_ov077_02126640.cpp

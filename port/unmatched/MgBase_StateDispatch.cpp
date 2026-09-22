@@ -33,7 +33,7 @@
 // __sinit_ov006_021304ac names for dScMgCurling_c. Both sets were taken from
 // the constructors that copy them and not from an address range -- the ov006
 // twenty-five run from 0x0213c1e4 to 0x0213c2bc, but that span holds
-// twenty-eight slots and three of them (MgShuffleShell_SpawnInfo at
+// twenty-eight slots and three of them (g_profile_MG_CURLING at
 // 0x0213c214, plus 0x0213c264 and 0x0213c2ac) are not pairs and DO carry
 // nonzero second words. So every dispatch this seat can actually reach is the
 // DIRECT case: no this-adjustment, no vtable indirection.
@@ -119,7 +119,7 @@
 //
 // ---- 4. WHAT IS NOT HERE, AND IT IS NOT A TRAP ANY MORE --------------------
 //
-// func_ov004_020b87e0, dScMgBase_c's state SETTER, is a different problem from
+// _ZN10dMgState_c8SetStateEi, dScMgBase_c's state SETTER, is a different problem from
 // these seven: it does not dispatch a table the mount holds, it BUILDS a
 // twenty-entry static table out of twenty ov004 globals whose MSVC symbol names
 // carry the member-pointer type, so there is nothing for an alias or a stride
@@ -131,7 +131,7 @@
 // hal/scene_mg_faces.cpp, and port_mg_try_base_state below carries its forty
 // addresses: the twenty its own table holds and the twenty its state bodies
 // install as per-frame ticks. The second twenty are this file's business too,
-// because they are dispatched by func_ov004_020b8714 and func_ov004_020b8778
+// because they are dispatched by _ZN10dMgState_c6RenderEv and _ZN10dMgState_c8BehaviorEv
 // further down, both of which return on their first line while the message
 // object's +0x18 reads -1. The setter is the only writer of that field, so
 // while it was a trap NEITHER of those two host copies ever reached its call.
@@ -619,9 +619,9 @@ extern "C" void port_mg_framework_states_seat(void)
 //                        add r3,r0,#8 | ldr r1,[r3,#4] | ldreq r1,[r3] | blx r1
 //   func_ov004_020b321c  ldr r1,[r0,#0x20] cmp #0x1d | ldr r2,[r0] cmp #0
 //                        ldr r1,[r0,#4] | add r3,r0,r1,asr #1 | mov r0,r3 | blx
-//   func_ov004_020b8714  ldr r2,[r0,#0x18] cmp mvn #0 | ldr r1,[r0,#0x10] cmp 0
+//   _ZN10dMgState_c6RenderEv  ldr r2,[r0,#0x18] cmp mvn #0 | ldr r1,[r0,#0x10] cmp 0
 //                        add r3,r0,#0x10 | ldr r1,[r3,#4] | ldreq r1,[r3] | blx
-//   func_ov004_020b8778  ldr r1,[r4,#0x18] cmp mvn #0 | bl ApproachLinear on
+//   _ZN10dMgState_c8BehaviorEv  ldr r1,[r4,#0x18] cmp mvn #0 | bl ApproachLinear on
 //                        r4+0x1c | ldr r0,[r4,#8] cmp #0 | add r3,r4,#8 | blx
 //   func_ov004_020b3278  ldr r0,[r1,r2,lsl #3] cmp #0 | add r0,r8,r1,asr #1 |
 //                        ldreq r1,[r3] | blx r1 -- the ONE table dispatch, on
@@ -766,6 +766,31 @@ static void __fastcall f490_020b4a64(void *self, void *) { ++g_fwk_490_hits; fun
 
 typedef void (*SeatFn)(void *);
 
+/* One writer for both halves of the seat below. The row shape is the same in
+   each: the table, its name for the refusal, the slot, the cartridge's own code
+   word and the host body. The compare-before-write is the ROM's own word,
+   exactly as it was while the two halves were one array. */
+namespace {
+struct CellRow { MgPmf *table; const char *name; unsigned slot; unsigned rom; SeatFn host; };
+}
+
+static void mgfwk_seat_cells(const CellRow *cells, unsigned n)
+{
+    for (unsigned i = 0; i < n; ++i) {
+        MgPmf *p = &cells[i].table[cells[i].slot];
+        if (p->code != cells[i].rom || p->adj != 0) {
+            std::fprintf(stderr, "FATAL: dScMgBase_c framework table "
+                         "data_ov004_%s slot %u: __sinit_ov004_020b955c left "
+                         "%08x/%d, the ROM's own source pair says %08x/0 -- "
+                         "WRONG BYTES\n", cells[i].name, cells[i].slot,
+                         p->code, p->adj, cells[i].rom);
+            std::abort();
+        }
+        p->code = (unsigned)(size_t)cells[i].host;
+        ++g_fwk_seated;
+    }
+}
+
 extern "C" void port_mg_framework_tables_seat(void)
 {
     static int done;
@@ -773,13 +798,38 @@ extern "C" void port_mg_framework_tables_seat(void)
         return;
     done = 1;
 
-    static const struct {
-        MgPmf *table;
-        const char *name;
-        unsigned slot;
-        unsigned rom;
-        SeatFn host;
-    } cells[] = {
+
+    /* ---- THE TABLE IS SPLIT BY DISPATCHER, run link100 lane PMFSWEEP2 -------
+       The thirty rows were one array. They are two now, for the reason the
+       header above already measures per row but a checker cannot read out of
+       prose: the eighteen field cells and the twelve table cells are reached by
+       two different dispatchers with two different conventions, and
+       port/tools/pmf_guard.py decides per table.
+
+       cells_field, EIGHTEEN cells, and they stay __cdecl. func_ov004_020b3278
+       copies data_ov004_020bf428[st] into the object at +0x00 and +0x04 and
+       data_ov004_020bf4f8[st] into +0x08 and +0x0c, and those two fields have
+       exactly two readers, both FLAT C dispatchers f(self) whose first stack
+       argument IS the receiver and which both tail jump with the frame restored.
+       Read off this build:
+
+           _func_ov004_020b321c  +0x3  mov eax, [ebp+8] / +0xc  mov edx, [eax]
+                                 +0x12 mov ecx, [eax+4] / +0x15 add ecx, eax
+                                 +0x17 pop ebp / +0x18 jmp edx
+           _func_ov004_020b31b4  +0x3  mov eax, [ebp+8] / +0xc  mov edx, [eax+8]
+                                 +0x13 mov ecx, [eax+0xc] / +0x16 add ecx, eax
+                                 +0x18 pop ebp / +0x19 jmp edx
+
+       and ?BeforeBehavior@dScMgBase_c@@UAEHXZ+0xb6 reaches the second one as
+       push edi; call _func_ov004_020b321c; add esp, 4, walking the array at
+       0x18238a4 with stride 0x134. A thunk on any of these eighteen would break
+       what works, which is the BabyPenguin case 00732a5ab left alone on purpose.
+
+       cells_490, TWELVE cells, already __fastcall since lane MGWRITER, because
+       func_ov004_020b3278 dispatches data_ov004_020bf490 itself with a real
+       call, ecx = this and nothing pushed. They are in the ledger now so a
+       future edit that drops one back to a raw body refuses the build. */
+    static const CellRow cells_field[] = {
     { data_ov004_020bf428, "020bf428",  1, 0x020b4a4cu, (SeatFn)fw_020b4a4c },   /* sinit copies data_ov004_020bc22c */
     { data_ov004_020bf428, "020bf428",  2, 0x020b4a28u, (SeatFn)fw_020b4a28 },   /* sinit copies data_ov004_020bc19c */
     { data_ov004_020bf428, "020bf428",  3, 0x020b49f0u, (SeatFn)fw_020b49f0 },   /* sinit copies data_ov004_020bc184 */
@@ -798,6 +848,9 @@ extern "C" void port_mg_framework_tables_seat(void)
     { data_ov004_020bf4f8, "020bf4f8",  9, 0x020b3cb8u, (SeatFn)fw_020b3cb8 },   /* sinit copies data_ov004_020bc1cc */
     { data_ov004_020bf4f8, "020bf4f8", 10, 0x020b3b38u, (SeatFn)fw_020b3b38 },   /* sinit copies data_ov004_020bc174 */
     { data_ov004_020bf4f8, "020bf4f8", 12, 0x020b35d8u, (SeatFn)fw_020b35d8 },   /* sinit copies data_ov004_020bc194 */
+    };
+
+    static const CellRow cells_490[] = {
     { data_ov004_020bf490, "020bf490",  1, 0x020b4a64u, (SeatFn)f490_020b4a64 },   /* sinit copies data_ov004_020bc234 */
     { data_ov004_020bf490, "020bf490",  2, 0x020b4a40u, (SeatFn)f490_020b4a40 },   /* sinit copies data_ov004_020bc23c */
     { data_ov004_020bf490, "020bf490",  3, 0x020b4a1cu, (SeatFn)f490_020b4a1c },   /* sinit copies data_ov004_020bc244 */
@@ -812,19 +865,8 @@ extern "C" void port_mg_framework_tables_seat(void)
     { data_ov004_020bf490, "020bf490", 12, 0x020b3698u, (SeatFn)f490_020b3698 },   /* sinit copies data_ov004_020bc1d4 */
     };
 
-    for (unsigned i = 0; i < sizeof cells / sizeof cells[0]; ++i) {
-        MgPmf *p = &cells[i].table[cells[i].slot];
-        if (p->code != cells[i].rom || p->adj != 0) {
-            std::fprintf(stderr, "FATAL: dScMgBase_c framework table "
-                         "data_ov004_%s slot %u: __sinit_ov004_020b955c left "
-                         "%08x/%d, the ROM's own source pair says %08x/0 -- "
-                         "WRONG BYTES\n", cells[i].name, cells[i].slot,
-                         p->code, p->adj, cells[i].rom);
-            std::abort();
-        }
-        p->code = (unsigned)(size_t)cells[i].host;
-        ++g_fwk_seated;
-    }
+    mgfwk_seat_cells(cells_field, sizeof cells_field / sizeof cells_field[0]);
+    mgfwk_seat_cells(cells_490, sizeof cells_490 / sizeof cells_490[0]);
 }
 
 extern "C" void port_mg_framework_seat_counts(unsigned *seated, unsigned *field,

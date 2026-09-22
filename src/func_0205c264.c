@@ -34,7 +34,7 @@ int func_0205c264(int *thiz)
         *(short *)(r4 + 6) = 0;
         *(int *)(r4 + 8) = 0;
     } else {
-        unsigned short *q = (unsigned short *)(int)(((long long)(int)((char *)thiz + 0x22)));
+        unsigned short *q = (unsigned short *)(int)((char *)thiz + 0x22);
         *(int *)r4 = thiz[2];
         *(int *)(r4 + 4) = *(unsigned short *)((char *)thiz + 0x22);
         *q = *q + 1;

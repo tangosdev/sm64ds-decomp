@@ -14,12 +14,12 @@
 # factories installs a vtable whose slot 0 is its OWN class's InitResources
 # and whose slot 16 is its OWN D1 --
 #
-#   Toad_Spawn          -> _ZTV11daKinopio_c      slot0 Toad::InitResources
-#   PrincessPeach_Spawn -> _ZTV9daPeach_c         slot0 PrincessPeach::...
-#   Rabbit_Spawn        -> _ZTV7daMip_c           slot0 Rabbit::InitResources
-#   RabbitKey_Spawn     -> _ZTV15daObj_Mip_Key_c  slot0 RabbitKey::...
-#   LakituBro_Spawn     -> _ZTV11daC_Jugem_c      slot0 LakituBro::...
-#   WallSign_Spawn      -> _ZTV13daObjKanban_c    slot0 WallSign::...
+#   daKinopio_c_classInit          -> _ZTV11daKinopio_c      slot0 Toad::InitResources
+#   daPeach_c_classInit -> _ZTV9daPeach_c         slot0 PrincessPeach::...
+#   daMip_c_classInit        -> _ZTV7daMip_c           slot0 Rabbit::InitResources
+#   daObj_Mip_Key_c_classInit     -> _ZTV15daObj_Mip_Key_c  slot0 RabbitKey::...
+#   daC_Jugem_c_classInit     -> _ZTV11daC_Jugem_c      slot0 LakituBro::...
+#   daObjKanban_c_classInit      -> _ZTV13daObjKanban_c    slot0 WallSign::...
 #
 # -- so the block before each factory really is that factory's class, and the
 # ROM's own RTTI names agree (daMip_c is the rabbit, daC_Jugem_c the Lakitu).
@@ -30,20 +30,22 @@
 # seeds its RNG from the star count. Behavior is the chase: it takes the
 # closest player, runs the flee/idle/caught state machine and moves through
 # the two colliders.
-src/Rabbit_Spawn.c
-src/_ZN6Rabbit13InitResourcesEv.cpp
-src/_ZN6Rabbit8BehaviorEv.c
-src/_ZN6Rabbit16CleanupResourcesEv.c
-src/_ZN6Rabbit16OnPendingDestroyEv.c
+# QUARANTINED at the main->port sync (lane SYNC5, the wave-7 fold merge): MSVC
+# refuses main's shape for this TU (C2624 and C3640, an extern declaration of
+# a function-local class type: forbidden outright by C++ ([basic.link]),
+# measured unreachable by every MSVC conformance switch (/permissive included,
+# probed 2026-09-13)). It is a decomp-side item, not a port one: see
+# runs/link100/out/SYNC5/decomp_side.md. The row returns when main lands the
+# fix.
+#src/actors/daMip_c.cpp
 # slot 18: the rabbit is the first class on this level to override
 # Actor::OnYoshiTryEat rather than inherit it
-src/func_ov085_0212cc18.c
 
 # ---- LAKITU_BRO (actor 235, ov085), x1 ------------------------------------
 # The cameraman on the bridge. His Behavior reads the live Camera -- the one
 # gate 13 hosted -- and places himself relative to it, which is why he can be
 # tried at all rather than deferred with the rest of the cutscene actors.
-src/LakituBro_Spawn.c
+src/d_a_c_jugem.c
 # _ZN9LakituBro13InitResourcesEv: HOST COPY at unmatched/TexSeq_Caller_LakituBro.cpp
 # (wired in CMakeLists). Its TextureSequence::Prepare call passes two arguments; the
 # host wrapper reshapes them into a 3-param thiscall and derefs an unwritten third
@@ -53,8 +55,8 @@ src/LakituBro_Spawn.c
 # over an incomplete class as the four-word general representation -- the
 # gate-16 case for the third time. Host copy plus the state seat in
 # port/unmatched/LakituBro_Behavior.cpp.
-src/_ZN9LakituBro16CleanupResourcesEv.c
-src/_ZN9LakituBro16OnPendingDestroyEv.c
+src/_ZN9LakituBro16CleanupResourcesEv.cpp
+src/_ZN9LakituBro16OnPendingDestroyEv.cpp
 
 # ---- the overlay's own static initialisers --------------------------------
 # Six sinits. Every SharedFilePtr the two classes load through is constructed
@@ -72,8 +74,6 @@ src/__sinit_ov085_0212fdb0.c
 # 17's: each spells the SAME table by a different name -- D1 by the config's
 # _ZTV6Rabbit, D0 by the ROM's own _ZTV7daMip_c -- so one host array satisfies
 # both with the right bytes. hal/actor_classes.cpp carries the alias.
-src/_ZN6RabbitD1Ev.c
-src/_ZN6RabbitD0Ev.c
 
 # ---- RABBIT: the eight states and the ring they close over -----------------
 # __sinit_ov085_0212f5ec builds eight State objects out of sixteen
@@ -89,37 +89,15 @@ src/_ZN6RabbitD0Ev.c
 # data_0209caa0 word 2 bit 17 is clear. Measured both ways -- 3000 frames
 # fault-free as the level boots, and the named trap firing on frame one with
 # the two save bits forced on.
-src/func_ov085_0212a788.c
-src/func_ov085_0212a828.cpp
-src/func_ov085_0212a904.c
-src/func_ov085_0212aaa4.c
-src/func_ov085_0212aaec.c
-src/func_ov085_0212ac3c.c
-src/func_ov085_0212ac4c.c
-src/func_ov085_0212ad8c.c
-src/func_ov085_0212ae08.c
-src/func_ov085_0212b3fc.c
-src/func_ov085_0212b444.c
-src/func_ov085_0212b478.c
-src/func_ov085_0212b4b4.c
-src/func_ov085_0212b75c.cpp
-src/func_ov085_0212b86c.c
-src/func_ov085_0212b8a0.c
-# r0-passthrough: func_ov085_0212b8dc (the RABBIT's state Main) calls
+# r0-passthrough: _ZN7daMip_c13StateIdleMainEv (the RABBIT's state Main) calls
 # Actor::ClosestPlayer() with no argument, relying on `this` riding ARM r0. Host
 # copy port/unmatched/Ov085_Rabbit_b8dc.cpp passes `c`; the byte-locked src is
 # unchanged. (the actor-187 RABBIT null-this +0x5c crash)
-# src/func_ov085_0212b8dc.cpp
-src/func_ov085_0212bc14.c
-src/func_ov085_0212bc78.cpp
-src/func_ov085_0212bcc8.c
-src/func_ov085_0212bdbc.cpp
-src/func_ov085_0212bedc.cpp
-src/func_ov085_0212c150.cpp
+# src/actors/daMip_c.cpp
 
 # ---- RABBIT_KEY (actor 229, ov085): the caught rabbit's GRANT actor --------
 # daObj_Mip_Key_c, vtable _ZTV9RabbitKey / _ZTV15daObj_Mip_Key_c at 0x021301d8.
-# When the caught-dialog rabbit state (func_ov085_0212ae08, above) ends the talk
+# When the caught-dialog rabbit state (_ZN7daMip_c15StateCaughtMainEv, above) ends the talk
 # it calls Actor::Spawn(0xe5, ...) to make one of these at the rabbit's spot. THIS
 # is the actor that grants progress: its PMF state machine (dispatched by
 # RabbitKey::Behavior out of this+0x188, the same four-word MSVC PMF the rabbit
@@ -130,17 +108,18 @@ src/func_ov085_0212c150.cpp
 # set save bit re-entered and stuck the caught dialog on a re-talk. Registered in
 # hal/actor_classes.inc (id 229), vtable fill hal/actor_classes.cpp, three faces in
 # hal/method_faces.cpp. Every callee below is a matched TU; no host copy needed.
-src/RabbitKey_Spawn.c
+src/d_a_obj_mip_key.c
 src/_ZN9RabbitKey13InitResourcesEv.cpp
 src/_ZN9RabbitKey8BehaviorEv.cpp
 # _ZN9RabbitKey6RenderEv is NOT here: the third ov085 render host copy
 # (port/unmatched/Ov085_Renders.cpp). Its shadow-struct Model slot-5 dispatch
 # is a cdecl call into the __fastcall mv_render -- garbage `this` in ECX,
 # measured as a frame-1 DEP fault on the spawn-assisted key.
-src/_ZN9RabbitKey16CleanupResourcesEv.c
-src/_ZN9RabbitKey16OnPendingDestroyEv.c
-src/_ZN9RabbitKeyD1Ev.c
-src/_ZN9RabbitKeyD0Ev.c
+src/_ZN9RabbitKey16CleanupResourcesEv.cpp
+src/_ZN9RabbitKey16OnPendingDestroyEv.cpp
+src/_ZN9RabbitKeyD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN9RabbitKeyD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN9RabbitKeyD0Ev.cpp
 # the state machine: d268 is the PMF dispatcher, d038 the caught entry (save bit +
 # cutscene), cd80 the main (DisplaySaving/StartMinigameMenu/EndTalk), cd0c the
 # talk-teardown, d108 the approach-then-caught, d24c a small setter, d2b8 the
@@ -170,8 +149,9 @@ src/func_02013944.c
 # state machine twice the rabbit's -- twenty-two bodies, all of them matched.
 # His states are why he is here at all: they call Camera::SetPos and
 # Camera::SetLookAt, so the cameraman drives the real Camera gate 13 hosted.
-src/_ZN9LakituBroD1Ev.c
-src/_ZN9LakituBroD0Ev.c
+src/_ZN9LakituBroD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN9LakituBroD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN9LakituBroD0Ev.cpp
 # func_ov085_0212d5dc: HOST COPY at unmatched/Ov085_LakituBro_IntroEnd.cpp.
 # LakituBro's LAST OPENING STATE. It calls func_ov002_020c3e8c() with no
 # argument, the player riding ARM r0 from ClosestPlayer's return -- the same
@@ -186,12 +166,14 @@ src/func_ov085_0212d8ec.c
 # Actor::ClosestPlayer() with no argument (this rode ARM r0). HOST COPIES pass the
 # state body's own receiver at port/unmatched/Ov085_LakituBro_ClosestPlayer.cpp.
 # e4a4 is the caught/grab state caught taking a leaked receiver on a level-1 run.
-# The four byte-locked sources are unchanged.
-# src/func_ov085_0212d9b8.c
+# RETIRED by run link100 wave 15 lane SEAT15B (LINK15 BATCH 1): all four matched
+# sources now PASS the ClosestPlayer receiver, so the host copies had nothing left
+# to work around and Ov085_LakituBro_ClosestPlayer.cpp is deleted.
+src/func_ov085_0212d9b8.c
 src/func_ov085_0212db04.cpp
 src/func_ov085_0212dbdc.c
 src/func_ov085_0212dcfc.c
-# src/func_ov085_0212dd10.cpp  -- HOST COPY (Ov085_LakituBro_ClosestPlayer.cpp)
+src/func_ov085_0212dd10.cpp
 src/func_ov085_0212ddc4.cpp
 src/func_ov085_0212de5c.cpp
 src/func_ov085_0212df84.cpp
@@ -199,9 +181,8 @@ src/func_ov085_0212e078.cpp
 src/func_ov085_0212e180.c
 src/func_ov085_0212e19c.c
 src/func_ov085_0212e2ec.c
-# src/func_ov085_0212e310.cpp  -- HOST COPY (Ov085_LakituBro_ClosestPlayer.cpp)
-src/func_ov085_0212e480.c
-# src/func_ov085_0212e4a4.c  -- HOST COPY (Ov085_LakituBro_ClosestPlayer.cpp)
+src/func_ov085_0212e310.cpp
+src/func_ov085_0212e4a4.c
 src/func_ov085_0212e59c.c
 src/func_ov085_0212e5ac.c
 src/func_ov085_0212e720.c
@@ -216,25 +197,19 @@ src/func_ov085_0212e858.c
 # Camera's two setters. func_0203c178 is an arm9 veneer whose `.word` carries
 # the THUMB bit -- see the alias in hal/method_faces.cpp.
 src/Vec3_ApproachHorz.c
-src/_ZN5Actor11UpdateCarryER6PlayerRK7Vector3.cpp
-# _ZN5Actor18HorzAngleToCPlayerEv: HOST COPY at unmatched/Actor_ClosestPlayerWrappers.cpp
+src/_ZN8dActor_c11UpdateCarryER6PlayerRK7Vector3.cpp
+# _ZN8dActor_c18HorzAngleToCPlayerEv: HOST COPY at unmatched/Actor_ClosestPlayerWrappers.cpp
 # (wired in CMakeLists). The matched C calls Actor::ClosestPlayer() with no argument
 # and relies on `this` being live in ARM r0; cdecl drops it, so ClosestPlayer measures
 # from garbage+0x5c. That is the RABBIT fault in crash 9e164e92 (read at 0x0000005c).
-src/_ZN6Camera6SetPosERK7Vector3.c
-src/_ZN6Camera9SetLookAtERK7Vector3.c
-src/_ZN6Player12GetTalkStateEv.cpp
-src/_ZN6Player18HasFinishedTalkingEv.cpp
-src/_ZN7Message11PrepareTalkEv.c
+src/_ZN6Camera6SetPosERK7Vector3.cpp
+src/_ZN6Camera9SetLookAtERK7Vector3.cpp
+src/actors/Player.cpp
+src/_ZN7Message11PrepareTalkEv.cpp
 src/_ZN7Message13DisplaySavingEt.cpp
-src/_ZN7Message7EndTalkEv.c
+src/_ZN7Message7EndTalkEv.cpp
 src/_ZN8SaveData22NumGlowingRabbitsFoundEv.cpp
 src/func_02013890.c
-src/func_02013944.c
 src/func_02016acc.c
 src/func_0203c178.c
-src/func_ov002_020c3e8c.c
-src/func_ov002_020c3ea0.c
-src/func_ov002_020c3f18.c
-src/func_ov002_020c3f2c.c
 src/func_ov002_020d228c.cpp

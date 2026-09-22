@@ -59,22 +59,24 @@
  * hal/actor_overlays.cpp calls it between port_ov077_syms_patch() and the
  * first __sinit_ov077_*. The MrBlizzard/BabyPenguin/Unagi/HootTheOwl order.
  */
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
 extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include <cstdlib>
 #include <cstring>
-#include "Actor.h"
+#include "dActor_c.h"
 #include "dtor_faces_cpp.h"
-#include "ActorBase.h"
+#include "fBase_c.h"
 #include "Lakitu.h"
 #include "Spiny.h"
 #include "HeaveHo.h"
@@ -82,22 +84,22 @@ extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 extern "C" {
 
 /* ---- the shared arm9 half these three tables all name ------------------- */
-int _ZN5Actor19BeforeInitResourcesEv(void *self);              /* slot 1  */
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
-int _ZN5Actor14BeforeBehaviorEv(void *self);                   /* slot 7  */
-int _ZN5Actor12BeforeRenderEv(void *self);                     /* slot 10 */
-int _ZN5Actor13OnYoshiTryEatEv(void *self);                    /* slot 18 */
-void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
-int _ZN5Actor9Virtual50Ev(void *self);                         /* slot 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);              /* slot 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);              /* slot 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);  /* slot 28 */
-int _ZN5Actor16OnAimedAtWithEggEv(void *self);                 /* slot 29 */
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);              /* slot 1  */
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);                   /* slot 7  */
+int _ZN8dActor_c12BeforeRenderEv(void *self);                     /* slot 10 */
+int _ZN8dActor_c13OnYoshiTryEatEv(void *self);                    /* slot 18 */
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
+int _ZN8dActor_c9Virtual50Ev(void *self);                         /* slot 20 */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);              /* slot 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);              /* slot 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);  /* slot 28 */
+int _ZN8dActor_c16OnAimedAtWithEggEv(void *self);                 /* slot 29 */
 
 const char *port_actor_class_name(unsigned id);   /* hal/actor_registry */
 void port_actor_slot_decline(const char *what);   /* func_02043fdc_hostcopy.cpp */
@@ -116,11 +118,11 @@ int *_ZN6LakituD1Ev(int *self);                   /* unmatched/Lakitu_HostSites 
 int _ZN6Lakitu16CleanupResourcesEv(void);         /* matched src, flat      */
 void _ZN6Lakitu16OnPendingDestroyEv(void);        /* matched src, flat      */
 int *_ZN6LakituD0Ev(int *self);                   /* matched src, flat      */
-int func_ov077_02123804(void);                    /* slot 18, own: return 6 */
-void func_ov077_02124aa4(void *self, void *p);    /* slot 19, own           */
-int func_ov077_0212380c(void);                    /* slot 29, own: 0x3c000  */
-void *Lakitu_Spawn(void);
-extern unsigned char Lakitu_SpawnInfo[];
+int _ZN6Lakitu13OnYoshiTryEatEv(void);                    /* slot 18, own: return 6 */
+void _ZN6Lakitu13OnTurnIntoEggER6Player(void *self, void *p);    /* slot 19, own           */
+int _ZN6Lakitu16OnAimedAtWithEggEv(void);                    /* slot 29, own: 0x3c000  */
+void *daJgm_c_classInit(void);
+extern unsigned char g_profile_JUGEM[];
 
 /* ---- SPINY (260) ------------------------------------------------------- */
 int _ZN5Spiny13InitResourcesEv(void *self);       /* face                   */
@@ -130,11 +132,11 @@ int *_ZN5SpinyD1Ev(int *self);                    /* unmatched/Spiny_HostSites *
 int _ZN5Spiny16CleanupResourcesEv(void);
 void _ZN5Spiny16OnPendingDestroyEv(void);
 int *_ZN5SpinyD0Ev(int *self);
-int func_ov077_02124c18(void);                    /* slot 18, own: return 6 */
-void func_ov077_02126194(void *self, void *p);    /* slot 19, own           */
-int func_ov077_02124c20(void);                    /* slot 29, own: 0x1e000  */
-void *Spiny_Spawn(void);
-extern unsigned char Spiny_SpawnInfo[];
+int _ZN5Spiny13OnYoshiTryEatEv(void);                    /* slot 18, own: return 6 */
+void _ZN5Spiny13OnTurnIntoEggER6Player(void *self, void *p);    /* slot 19, own           */
+int _ZN5Spiny16OnAimedAtWithEggEv(void);                    /* slot 29, own: 0x1e000  */
+void *daTgz_c_classInit(void);
+extern unsigned char g_profile_TOGEZO[];
 
 /* ---- HEAVE_HO (238) ---------------------------------------------------- */
 int _ZN7HeaveHo13InitResourcesEv(void *self);     /* face                   */
@@ -144,8 +146,8 @@ int _ZN7HeaveHo16CleanupResourcesEv(void);
 void _ZN7HeaveHo16OnPendingDestroyEv(void);
 int *_ZN7HeaveHoD1Ev(int *self);                  /* matched src, flat      */
 int *_ZN7HeaveHoD0Ev(int *self);                  /* matched src, flat      */
-void *HeaveHo_Spawn(void);
-extern unsigned char HeaveHo_SpawnInfo[];
+void *daPopoi_c_classInit(void);
+extern unsigned char g_profile_POPOI[];
 
 }  /* extern "C" */
 
@@ -345,47 +347,47 @@ static int __fastcall ov77_trap13(void *s, void *) { ov77_trap_report(s, 13); re
 static int __fastcall ov77_trap14(void *s, void *) { ov77_trap_report(s, 14); return 0; }
 
 static int __fastcall ov77_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall ov77_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall ov77_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 static void __fastcall ov77_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall ov77_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall ov77_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall ov77_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall ov77_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall ov77_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int __fastcall ov77_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 static int __fastcall ov77_egg(void *s, void *, void *p)
-{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+{ _ZN8dActor_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall ov77_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall ov77_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall ov77_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall ov77_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall ov77_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall ov77_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall ov77_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall ov77_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall ov77_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 static int __fastcall ov77_aimed(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 
 /* Fills 1,2,4,5,7,8,10,11,13,14,15,18..30 -- the standard 31-slot Actor half.
    18, 19 and 29 are the arm9 defaults here and are OVERWRITTEN below for
@@ -440,11 +442,11 @@ static int __fastcall lak_pdes(void *s, void *)
 static int __fastcall lak_d0(void *s, void *)
 { return (int)(size_t)_ZN6LakituD0Ev((int *)s); }
 static int __fastcall lak_yoshi(void *s, void *)
-{ (void)s; return func_ov077_02123804(); }
+{ (void)s; return _ZN6Lakitu13OnYoshiTryEatEv(); }
 static int __fastcall lak_egg(void *s, void *, void *p)
-{ func_ov077_02124aa4(s, p); return 0; }
+{ _ZN6Lakitu13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall lak_aimed(void *s, void *)
-{ (void)s; return func_ov077_0212380c(); }
+{ (void)s; return _ZN6Lakitu16OnAimedAtWithEggEv(); }
 
 extern "C" void hal_fill_lakitu_vtable(void)
 {
@@ -456,7 +458,7 @@ extern "C" void hal_fill_lakitu_vtable(void)
     vt[6]  = (void *)lak_behavior;
     vt[9]  = (void *)lak_render;
     vt[12] = (void *)lak_pdes;
-    vt[16] = (void *)hal_cppd1_Lakitu;
+    vt[16] = (void *)PORT_D16(hal_cppd1_Lakitu);
     vt[17] = (void *)lak_d0;
     vt[18] = (void *)lak_yoshi;
     vt[19] = (void *)lak_egg;
@@ -482,11 +484,11 @@ static int __fastcall spn_pdes(void *s, void *)
 static int __fastcall spn_d0(void *s, void *)
 { return (int)(size_t)_ZN5SpinyD0Ev((int *)s); }
 static int __fastcall spn_yoshi(void *s, void *)
-{ (void)s; return func_ov077_02124c18(); }
+{ (void)s; return _ZN5Spiny13OnYoshiTryEatEv(); }
 static int __fastcall spn_egg(void *s, void *, void *p)
-{ func_ov077_02126194(s, p); return 0; }
+{ _ZN5Spiny13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall spn_aimed(void *s, void *)
-{ (void)s; return func_ov077_02124c20(); }
+{ (void)s; return _ZN5Spiny16OnAimedAtWithEggEv(); }
 
 extern "C" void hal_fill_spiny_vtable(void)
 {
@@ -498,7 +500,7 @@ extern "C" void hal_fill_spiny_vtable(void)
     vt[6]  = (void *)spn_behavior;
     vt[9]  = (void *)spn_render;
     vt[12] = (void *)spn_pdes;
-    vt[16] = (void *)hal_cppd1_Spiny;
+    vt[16] = (void *)PORT_D16(hal_cppd1_Spiny);
     vt[17] = (void *)spn_d0;
     vt[18] = (void *)spn_yoshi;
     vt[19] = (void *)spn_egg;
@@ -536,7 +538,7 @@ extern "C" void hal_fill_heave_ho_vtable(void)
     vt[6]  = (void *)hho_behavior;
     vt[9]  = (void *)hho_render;
     vt[12] = (void *)hho_pdes;
-    vt[16] = (void *)hho_d1;
+    vt[16] = (void *)PORT_D16(hho_d1);
     vt[17] = (void *)hho_d0;
 }
 

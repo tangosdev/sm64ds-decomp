@@ -9,18 +9,18 @@
 // mirror of the wrong premise hal/actor_classes_wf.cpp carried. A direct Actor
 // subclass is THIRTY-ONE: twenty is the ActorBase shape, thirty-one adds
 // Actor's own interaction list at 20..30, and only a Platform subclass gets a
-// thirty-second. _ZTV15IceSlideManager (ov019 0x021133cc) is 31 words and its
+// thirty-second. _ZTV10daSldMng_c (ov019 0x021133cc) is 31 words and its
 // 20..30 are the shared arm9 bodies, every one of them relocated in the ROM
 // image. Declared [20] and seeded to 19, slots 20..30 were never written.
 //
 // IceSlideManager (actor 356) is the one class level 11 spawns that lives in the
 // level's own overlay rather than a shared one, so it needs the per-symbol ov019
 // mount (port/ov019_syms.txt) and this host vtable, the ov015 treatment for a
-// level overlay's own class. The vtable _ZTV15IceSlideManager (ov019 0x021133cc)
+// level overlay's own class. The vtable _ZTV10daSldMng_c (ov019 0x021133cc)
 // is a host array the registry fills; a mounted vtable would hand the factory DS
 // code addresses (the ov080/ov015 rule).
 //
-// Every slot below was read out of _ZTV15IceSlideManager with its relocations
+// Every slot below was read out of _ZTV10daSldMng_c with its relocations
 // applied:
 //
 //   slot  0  InitResources    0x0211271c  ov019, hosted (ism_init)
@@ -44,13 +44,15 @@
 // three words __sinit_ov019_02112b14 wrote into data_ov019_021135d8 into
 // unk_05c/060/064 and arms a 0x78-frame timer; Behavior waits for the player
 // within 0x180000, plays a sound, counts the timer down and kills the actor.
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
@@ -59,16 +61,16 @@ extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include "dtor_faces_cpp.h"
 #include <cstdlib>
 
-#include "Actor.h"
-#include "ActorBase.h"
+#include "dActor_c.h"
+#include "fBase_c.h"
 
 extern "C" {
-int _ZN5Actor19BeforeInitResourcesEv(void *self);            /* slot 1  */
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a); /* slot 2  */
-int _ZN5Actor14BeforeBehaviorEv(void *self);                 /* slot 7  */
-int _ZN5Actor12BeforeRenderEv(void *self);                   /* slot 10 */
-int _ZN5Actor13OnYoshiTryEatEv(void *self);                  /* slot 18 */
-void *_ZN5ActorD2Ev(void *self);                             /* slot 16 tail */
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);            /* slot 1  */
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a); /* slot 2  */
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);                 /* slot 7  */
+int _ZN8dActor_c12BeforeRenderEv(void *self);                   /* slot 10 */
+int _ZN8dActor_c13OnYoshiTryEatEv(void *self);                  /* slot 18 */
+void *_ZN8dActor_cD2Ev(void *self);                             /* slot 16 tail */
 
 extern int data_02099f24[];          /* the frame phase the lists are in */
 extern unsigned char data_020a4b4c;  /* the spawn spine's own step */
@@ -76,8 +78,8 @@ const char *port_actor_class_name(unsigned id);   /* hal/actor_registry */
   void port_actor_slot_decline(const char *what);  /* func_02043fdc_hostcopy.cpp */
 
 /* The class's own two matched methods (ov019). */
-int _ZN15IceSlideManager13InitResourcesEv(void *self);       /* 0x0211271c */
-int _ZN15IceSlideManager8BehaviorEv(void *self);             /* 0x02112678 */
+int _ZN10daSldMng_c13InitResourcesEv(void *self);       /* 0x0211271c */
+int _ZN10daSldMng_c8BehaviorEv(void *self);             /* 0x02112678 */
 }
 
 // ---- the trap --------------------------------------------------------------
@@ -104,27 +106,27 @@ static int __fastcall ccm_trap19(void *s, void *) { ccm_trap_report(s, 19); retu
 
 // ---- the shared half -------------------------------------------------------
 static int __fastcall ccm_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall ccm_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall ccm_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 static void __fastcall ccm_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall ccm_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall ccm_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall ccm_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall ccm_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall ccm_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int __fastcall ccm_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 static int __fastcall ccm_pdes(void *s, void *)
-{ ((ActorBase *)s)->ActorBase::OnPendingDestroy(); return 0; }
+{ ((fBase_c *)s)->fBase_c::OnPendingDestroy(); return 0; }
 
 /* Slots 3 and 9 are ActorBase's own base bodies in the ROM vtable
    (CleanupResources 0x02043bf0, Render 0x02043af0), both empty do-nothing
@@ -132,45 +134,45 @@ static int __fastcall ccm_pdes(void *s, void *)
    reachable: the cleanup Process dispatches slot 3), they call the base member
    qualified, the same reading ac_bclean/ac_aclean take for the shared pairs. */
 static int __fastcall ccm_clean_base(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::CleanupResources(); }
+{ return ((fBase_c *)s)->fBase_c::CleanupResources(); }
 static int __fastcall ccm_render_base(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::Render(); }
+{ return ((fBase_c *)s)->fBase_c::Render(); }
 
 /* Actor's own interaction list, slots 20..30, which every table in this file
    carries. Declared here rather than in the ONE_UP_LOGO block below because
    IceSlideManager needs it too -- it is 31 slots, not 20. */
 extern "C" {
-int  _ZN5Actor9Virtual50Ev(void *self);                            /* 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);          /* 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);              /* 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);              /* 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);                  /* 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);                  /* 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* 27 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);      /* 28 */
-int  _ZN5Actor16OnAimedAtWithEggEv(void *self);                    /* 29 */
+int  _ZN8dActor_c9Virtual50Ev(void *self);                            /* 20 */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);          /* 21 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);              /* 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);              /* 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);                  /* 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);                  /* 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o); /* 26 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);     /* 27 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);      /* 28 */
+int  _ZN8dActor_c16OnAimedAtWithEggEv(void *self);                    /* 29 */
 }
 static int __fastcall ccm_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall ccm_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall ccm_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall ccm_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall ccm_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall ccm_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall ccm_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall ccm_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall ccm_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 static int __fastcall ccm_aimed(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 
 /* Slot 16, D1. The ROM body is an empty ~IceSlideManager: no member sub-objects
    (the header is plain u8 fields), so it is Actor::D2 alone, the ac_d1_actor_only
@@ -181,7 +183,7 @@ static int __fastcall ccm_aimed(void *s, void *)
 /* Slot 17, the DELETING destructor -- run rel0215 wave 3 (lane w3-e). Until
    this line slot 17 was ccm_trap17, so the class had no hosted deleting
    destructor at all and any delete through its vptr declined. Its matched body
-   is src/_ZN15IceSlideManagerD0Ev.c, now on port/slice_w3e_ov019.txt: it
+   is src/game/actors/d_a_sld_mng.cpp, now on port/slice_w3e_ov019.txt: it
    restores the vptr, runs Actor::D2 and calls Memory::Deallocate with the game
    heap. Its transient restore is spelled `VT` in src, which
    hal/cxx_aliases.cpp binds to ov002's data_ov002_021081e4, while the body's
@@ -189,22 +191,22 @@ static int __fastcall ccm_aimed(void *s, void *)
    to:0x021133cc module:overlay(19) -- so it is bound per source instead (the
    W11 block in port/CMakeLists.txt). `HEAP` needed no row: cxx_aliases already
    binds it to _data_020a0eac, which is the second pool word. */
-extern "C" int *_ZN15IceSlideManagerD0Ev(int *self);
+extern "C" int *_ZN10daSldMng_cD0Ev(int *self);
 static int __fastcall ism_d0(void *s, void *)
-{ return (int)(size_t)_ZN15IceSlideManagerD0Ev((int *)s); }
+{ return (int)(size_t)_ZN10daSldMng_cD0Ev((int *)s); }
 
 // ---- the class's own two slots ---------------------------------------------
 static int __fastcall ism_init(void *s, void *)
-{ return _ZN15IceSlideManager13InitResourcesEv(s); }
+{ return _ZN10daSldMng_c13InitResourcesEv(s); }
 static int __fastcall ism_behavior(void *s, void *)
-{ return _ZN15IceSlideManager8BehaviorEv(s); }
+{ return _ZN10daSldMng_c8BehaviorEv(s); }
 
-/* The one array the ROM factory installs (IceSlideManager_Spawn does
-   `p[0] = (int)_ZTV15IceSlideManager`); twenty slots like every ActorBase
+/* The one array the ROM factory installs (daSldMng_c_classInit does
+   `p[0] = (int)_ZTV10daSldMng_c`); twenty slots like every ActorBase
    actor. Defined here, not just declared: the `int` type and C linkage match
-   the `extern int _ZTV15IceSlideManager[]` in decl_common.h that the factory
+   the `extern int _ZTV10daSldMng_c[]` in decl_common.h that the factory
    TU sees. */
-extern "C" { int _ZTV15IceSlideManager[31]; }
+extern "C" { int _ZTV10daSldMng_c[31]; }
 
 /* IceSlideManager::InitResources (src, compiled C++) reads its construction data
    through `extern struct S3 data_ov019_021135d8;`, which MSVC decorates as a C++
@@ -219,7 +221,7 @@ extern "C" { int _ZTV15IceSlideManager[31]; }
 
 extern "C" void hal_fill_ice_slide_manager_vtable(void)
 {
-    void **vt = (void **)_ZTV15IceSlideManager;
+    void **vt = (void **)_ZTV10daSldMng_c;
     vt[1]  = (void *)ccm_binit;
     vt[2]  = (void *)ccm_ainit;
     vt[4]  = (void *)ccm_bclean;
@@ -239,7 +241,7 @@ extern "C" void hal_fill_ice_slide_manager_vtable(void)
     vt[6]  = (void *)ism_behavior;
     vt[9]  = (void *)ccm_render_base;
     vt[12] = (void *)ccm_pdes;
-    vt[16] = (void *)hal_cppd1_IceSlideManager;
+    vt[16] = (void *)PORT_D16(hal_cppd1_IceSlideManager);
     vt[17] = (void *)ism_d0;
     /* 20..30, Actor's own list, which is what the ROM table holds --
        IceSlideManager overrides none of it. Slot 30 declines: its ROM body
@@ -266,8 +268,8 @@ extern "C" void hal_fill_ice_slide_manager_vtable(void)
 //
 // ---- ICE_SHEET (295) -- a Platform (daObjIceBoard_c), 32 slots -----------
 //
-// _ZTV8IceSheet (ov018 0x02113b34) read with its relocations applied:
-//   0  InitResources    0x021129c0  own (_ZN8IceSheet13InitResourcesEv)
+// _ZTV15daObjIceBoard_c (ov018 0x02113b34) read with its relocations applied:
+//   0  InitResources    0x021129c0  own (_ZN15daObjIceBoard_c13InitResourcesEv)
 //   3  CleanupResources 0x02112924  own
 //   6  Behavior         0x02112990  own
 //   9  Render           0x02112968  own -- NOT a slot-5 shadow-class
@@ -275,9 +277,9 @@ extern "C" void hal_fill_ice_slide_manager_vtable(void)
 //                                    C name the way JRB's Unagi does),
 //                                    verified per the task's trap list
 //  12  OnPendingDestroy 0x02043ac0  ActorBase's base body (shared)
-//  16  D1               0x021127bc  own (_ZN8IceSheetD1Ev)
-//  17  D0               0x02112800  own (_ZN8IceSheetD0Ev)
-//  21  OnGroundPounded  0x021128e0  own (func_ov018_021128e0) -- dispatches
+//  16  D1               0x021127bc  own (_ZN15daObjIceBoard_cD1Ev)
+//  17  D0               0x02112800  own (_ZN15daObjIceBoard_cD0Ev)
+//  21  OnGroundPounded  0x021128e0  own (_ZN15daObjIceBoard_c15OnGroundPoundedER8dActor_c) -- dispatches
 //                                    slot 31 (Kill) VIRTUALLY through a local
 //                                    shadow struct (the gate-172 Crate shape:
 //                                    "this only" signature, calls c->f7c());
@@ -285,11 +287,11 @@ extern "C" void hal_fill_ice_slide_manager_vtable(void)
 //                                    because the shadow struct is only used
 //                                    for its ABI shape -- the real installed
 //                                    vtable pointer is what actually dispatches.
-//  27  OnHitByMegaChar  0x02112858  own (func_ov018_02112858) -- same shadow-
+//  27  OnHitByMegaChar  0x02112858  own (_ZN15daObjIceBoard_c15OnHitByMegaCharER6Player) -- same shadow-
 //                                    vtable-call shape, dispatches its OWN
 //                                    slot 31 too (c->m(), the 31st shadow
 //                                    virtual after v0..v30).
-//  31  Kill             0x02112880  own (func_ov018_02112880) -- plays a
+//  31  Kill             0x02112880  own (_ZN15daObjIceBoard_c4KillEv) -- plays a
 //                                    sound + 3 particles, then
 //                                    MarkForDestruction. Platform's own tail
 //                                    slot past Actor's 31.
@@ -297,7 +299,7 @@ extern "C" void hal_fill_ice_slide_manager_vtable(void)
 // 29/30) is the shared Actor/ActorBase half ccm190_fill_shared (below, this
 // TU's own copy of the JRB Platform recipe) writes.
 //
-// D1/D0 spell _ZTV8IceSheet then _ZTV8Platform (VT0/VT1, both REAL base
+// D1/D0 spell _ZTV15daObjIceBoard_c then _ZTV10dBgActor_c (VT0/VT1, both REAL base
 // tables, NOT the ov016 dBgActor_c/daObjKi_* SHARED PLACEHOLDER -- verified
 // against src: main's post-#1083 rename replaced the stale G0/G1 spellings
 // with IceSheet_ModelFile/IceSheet_ClsnFile, a per-class bss pair, not a
@@ -311,17 +313,17 @@ extern "C" void hal_fill_ice_slide_manager_vtable(void)
 //
 // ---- POWER_STAR_CREATE (355) -- an ActorBase-only shape, 18 slots --------
 //
-// data_ov018_02113a74 (PowerStarCreate_SpawnInfo+0x24, ov018) read with its
+// _ZTV8daSCre_c (g_profile_STAR_CREATE+0x24, ov018) read with its
 // relocations applied:
 //   0  InitResources    0x02043c80  ActorBase::InitResources, the SHARED
 //                                    base default (does nothing) -- the
 //                                    class overrides no Init at all
 //   3  CleanupResources 0x02043bf0  ActorBase's base body (shared)
-//   6  Behavior         0x02112730  own (func_ov018_02112730)
+//   6  Behavior         0x02112730  own (_ZN8daSCre_c8BehaviorEv)
 //   9  Render           0x02043af0  ActorBase::Render, a no-op base body
 //  12  OnPendingDestroy 0x02043ac0  ActorBase's base body (shared)
-//  16  D1               0x021126d4  own (func_ov018_021126d4)
-//  17  D0               0x021126f8  own (func_ov018_021126f8) -- main's
+//  16  D1               0x021126d4  own (_ZN8daSCre_cD1Ev)
+//  17  D0               0x021126f8  own (_ZN8daSCre_cD0Ev) -- main's
 //                                    "recovered name: daSCre_c_OnYoshiTryEat"
 //                                    comment on this file is a NAME DECOY:
 //                                    the reloc slot is 17 (D0's ROM position)
@@ -340,13 +342,13 @@ extern "C" void hal_fill_ice_slide_manager_vtable(void)
 //                                    factory's own p[0] write (below), not
 //                                    trusted from the src comment alone.
 //
-// PowerStarCreate_Spawn's own body confirms the vtable base: it allocates
+// daSCre_c_classInit's own body confirms the vtable base: it allocates
 // 212 bytes, runs Actor::C2 (an Actor, not a bare ActorBase -- MarkFor-
 // Destruction and the 212-byte size both fit ActorBase::new's accounting)
-// and writes `p[0] = (int)data_ov018_02113a74` -- exactly the address this
+// and writes `p[0] = (int)_ZTV8daSCre_c` -- exactly the address this
 // fill installs. No reseat wrapper needed.
 //
-// Its Behavior (func_ov018_02112730.cpp) spawns actor 0xb2 (178, POWER_STAR)
+// Its Behavior (_ZN8daSCre_c8BehaviorEv.cpp) spawns actor 0xb2 (178, POWER_STAR)
 // within 0x64000 of the camera-tracked player then calls
 // ActorBase::MarkForDestruction on itself -- so a spawned PowerStarCreate is
 // expected to vanish from the next frame's live-actor census after handing
@@ -386,55 +388,55 @@ void port_actor_render_probe(const char *cls, void *model); /* hal/actor_classes
    both ICE_SHEET and ONE_UP_LOGO. 20..29 are declared once above, for
    IceSlideManager, which is 31 slots like everything else here; 18 and 19 are
    declared here. */
-int _ZN5Actor13OnYoshiTryEatEv(void *self);                        /* 18 */
-void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p);       /* 19 */
-int _ZN5Actor9Virtual50Ev(void *self);                             /* 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);          /* 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);              /* 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);              /* 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);                  /* 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);                  /* 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* 27 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);      /* 28 */
-int _ZN5Actor16OnAimedAtWithEggEv(void *self);                     /* 29 */
+int _ZN8dActor_c13OnYoshiTryEatEv(void *self);                        /* 18 */
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void *self, void *p);       /* 19 */
+int _ZN8dActor_c9Virtual50Ev(void *self);                             /* 20 */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);          /* 21 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);              /* 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);              /* 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);                  /* 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);                  /* 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o); /* 26 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);     /* 27 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);      /* 28 */
+int _ZN8dActor_c16OnAimedAtWithEggEv(void *self);                     /* 29 */
 
 /* ---- ICE_SHEET's own bodies (all matched src) ---------------------------- */
-int _ZN8IceSheet13InitResourcesEv(void *self);
-int _ZN8IceSheet16CleanupResourcesEv(void *self);
-int _ZN8IceSheet8BehaviorEv(void *self);
-int _ZN8IceSheet6RenderEv(void *self);
-int *_ZN8IceSheetD1Ev(void *self);
-int *_ZN8IceSheetD0Ev(void *self);
-void func_ov018_021128e0(void *self, void *a);   /* slot 21, OnGroundPounded */
-void func_ov018_02112858(void *self, int a);     /* slot 27, OnHitByMegaChar */
-void func_ov018_02112880(void *self);            /* slot 31, Kill */
-void *IceSheet_Spawn(void);                      /* installs _ZTV8IceSheet itself */
-int _ZTV8IceSheet[32];
-/* Platform's OWN base table -- IceSheet's carried D1/D0 (src/_ZN8IceSheetD1Ev.c,
-   src/_ZN8IceSheetD0Ev.c) each `extern int _ZTV8Platform[]` and store it as an
+int _ZN15daObjIceBoard_c13InitResourcesEv(void *self);
+int _ZN15daObjIceBoard_c16CleanupResourcesEv(void *self);
+int _ZN15daObjIceBoard_c8BehaviorEv(void *self);
+int _ZN15daObjIceBoard_c6RenderEv(void *self);
+int *_ZN15daObjIceBoard_cD1Ev(void *self);
+int *_ZN15daObjIceBoard_cD0Ev(void *self);
+void _ZN15daObjIceBoard_c15OnGroundPoundedER8dActor_c(void *self, void *a);   /* slot 21, OnGroundPounded */
+void _ZN15daObjIceBoard_c15OnHitByMegaCharER6Player(void *self, int a);     /* slot 27, OnHitByMegaChar */
+void _ZN15daObjIceBoard_c4KillEv(void *self);            /* slot 31, Kill */
+void *daObjIceBoard_c_classInit(void);                      /* installs _ZTV15daObjIceBoard_c itself */
+int _ZTV15daObjIceBoard_c[32];
+/* Platform's OWN base table -- IceSheet's carried D1/D0 (src/game/actors/d_a_obj_ice_board.cpp,
+   src/game/actors/d_a_obj_ice_board.cpp) each `extern int _ZTV10dBgActor_c[]` and store it as an
    intermediate vptr write. Already defined as a real host array in
-   hal/actor_vtables.cpp (`void *_ZTV8Platform[32]`, the ROM's full Platform
+   hal/actor_vtables.cpp (`void *_ZTV10dBgActor_c[32]`, the ROM's full Platform
    width, and filled by hal_fill_platform_vtable) -- declared extern here
    (not redefined) so this TU only REFERENCES it, the usual second-write a
    Platform-derived class's D1/D0 takes. */
-extern int _ZTV8Platform[];
+extern int _ZTV10dBgActor_c[];
 
 /* ---- POWER_STAR_CREATE's own bodies (all matched src) -------------------- */
-int func_ov018_02112730(void *self);         /* slot 6, Behavior */
-int func_ov018_021126d4(void *self);         /* slot 16, D1 */
-int *func_ov018_021126f8(void *self);        /* slot 17, D0 (the name decoy) */
-int *PowerStarCreate_Spawn(void);            /* installs data_ov018_02113a74 */
+int _ZN8daSCre_c8BehaviorEv(void *self);         /* slot 6, Behavior */
+int _ZN8daSCre_cD1Ev(void *self);         /* slot 16, D1 */
+int *_ZN8daSCre_cD0Ev(void *self);        /* slot 17, D0 (the name decoy) */
+int *daSCre_c_classInit(void);            /* installs _ZTV8daSCre_c */
 /* THIRTY-ONE, not 18. dsd emitted an ambiguous symbol (data_ov018_02113abc)
    at word 18 of this table, so the next-symbol bound reads 18 and the earlier
    note here said "the table is 18 words, ends here". The reloc run says 31:
    18..30 are Actor's own list, and slot 31 is _ZTI15daObjIceBoard_c, the RTTI
    record of the NEXT object. A plain Actor table, no Platform Kill. */
 DSSTATE_BEGIN
-int data_ov018_02113a74[31];                 /* the unnamed vtable, host array */
+int _ZTV8daSCre_c[31];                 /* the unnamed vtable, host array */
 DSSTATE_END
 }
-/* func_ov018_02112730.cpp (Behavior) declares its OWN local `struct Actor {
+/* _ZN8daSCre_c8BehaviorEv.cpp (Behavior) declares its OWN local `struct Actor {
    static int Spawn(unsigned, unsigned, const Vector3&, const Vector3_16*,
    signed char, short); };` -- a DIFFERENT overload from the (unsigned,
    unsigned, Vector3 const&, Vector3_16 const*, int, int) one
@@ -444,7 +446,11 @@ DSSTATE_END
    (Actor::Spawn is cdecl static, no `this` to lose), so a second alias onto
    the SAME extern-C body, the Enemy::SpawnCoin precedent applied to a second
    parameter-type spelling instead of a second declaring TU. */
-#pragma comment(linker, "/alternatename:?Spawn@Actor@@SAHIIABUVector3@@PBUVector3_16@@CF@Z=__ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii")
+/* RE-POINTED at ALIAS2 (wave 8, the main -> port sync), lane ALIAS's
+   derivation: the right hand side this row carried is defined nowhere in
+   the link any more. same member, same convention, same 6 argument slots, types spelled differently
+   was: #pragma comment(linker, "/alternatename:?Spawn@dActor_c@@SAHIIABUVector3@@PBUVector3_16@@CF@Z=__ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as") */
+#pragma comment(linker, "/alternatename:?Spawn@dActor_c@@SAHIIABUVector3@@PBUVector3_16@@CF@Z=?Spawn@dActor_c@@SAPAU1@IIABUVector3@@PBUVector3_16@@CF@Z")
 extern "C" {
 
 /* ---- ONE_UP_LOGO's own bodies (all matched src) --------------------------- */
@@ -455,7 +461,7 @@ int _ZN9OneUpLogo6RenderEv(void *self);
 int *_ZN9OneUpLogoD0Ev(void *self);
 void _ZN5ModelD1Ev(void *self);              /* Model member at +0xd4 */
 void _ZN15TextureSequenceD1Ev(void *self);   /* TextureSequence member at +0x124 */
-void *OneUpLogo_Spawn(void);                 /* installs _ZTV9OneUpLogo itself */
+void *daObj1UpLogo_c_classInit(void);                 /* installs _ZTV9OneUpLogo itself */
 int _ZTV9OneUpLogo[31];
 int _ZTV14daObj1UpLogo_c[];   /* RTTI alias, ONE speller (_ZN9OneUpLogoD0Ev),
                                   not a shared placeholder -- aliased below. */
@@ -467,7 +473,7 @@ int _ZTV14daObj1UpLogo_c[];   /* RTTI alias, ONE speller (_ZN9OneUpLogoD0Ev),
    alias rather than edit the matched src, the OneUpLogo/daObj1UpLogo_c
    treatment applied to a bss pair instead of a vtable. */
 /* IceSheet_ModelFile/IceSheet_ClsnFile are declared at FILE SCOPE in
-   src/_ZN8IceSheet16CleanupResourcesEv.cpp (`extern int IceSheet_ClsnFile[];`),
+   src/game/actors/d_a_obj_ice_board.cpp (`extern int IceSheet_ClsnFile[];`),
    not through decl_common.h's extern "C" umbrella, so MSVC C++-mangles them
    (?IceSheet_ModelFile@@3PAHA / ?IceSheet_ClsnFile@@3PAHA) -- confirmed
    against the exact LNK2019 text, not guessed. */
@@ -475,41 +481,40 @@ int _ZTV14daObj1UpLogo_c[];   /* RTTI alias, ONE speller (_ZN9OneUpLogoD0Ev),
 #pragma comment(linker, "/alternatename:?IceSheet_ClsnFile@@3PAHA=_data_ov018_02113c7c")
 /* OneUpLogo's own D0 spells its table by this RTTI name (one speller only). */
 #pragma comment(linker, "/alternatename:__ZTV14daObj1UpLogo_c=__ZTV9OneUpLogo")
-/* MotherPenguin's own D0 (src/_ZN7SkiLiftD0Ev.c) spells its table by the
+/* MotherPenguin's own D0 (src/game/actors/d_a_pg_mthr.cpp) spells its table by the
    RTTI name _ZTV10daPgMthr_c (the class-identity finding: this IS
    MotherPenguin's own table, not a shared placeholder, confirmed by the
    scope report's SpawnInfo+0x24 cross-check) -- the same one-speller RTTI-
    alias treatment as OneUpLogo/daObj1UpLogo_c, applied to gate 191's host
-   array _ZTV7SkiLift. */
-#pragma comment(linker, "/alternatename:__ZTV10daPgMthr_c=__ZTV7SkiLift")
+   array _ZTV10daPgMthr_c. */
 
 // ---- the shared Actor-tail half (18..30), reused by ICE_SHEET and
 // ONE_UP_LOGO -- this TU's own copy (hal/actor_classes_jrb.cpp's
 // jrb_fill_shared_0_30 is `static`, a different TU, not linkable here). -----
 static int __fastcall ccm190_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 static int __fastcall ccm190_egg(void *s, void *, void *p)
-{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+{ _ZN8dActor_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall ccm190_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall ccm190_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall ccm190_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall ccm190_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall ccm190_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall ccm190_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall ccm190_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall ccm190_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall ccm190_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 static int __fastcall ccm190_aimed(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 static int __fastcall ccm190_trap30(void *s, void *)
 { ccm_trap_report(s, 30); return 0; }
 
@@ -547,28 +552,28 @@ static void ccm190_fill_shared(void **vt)
 
 // ---- ICE_SHEET fill (Platform, 32 slots) -----------------------------------
 static int __fastcall ics_init(void *s, void *)
-{ return _ZN8IceSheet13InitResourcesEv(s); }
+{ return _ZN15daObjIceBoard_c13InitResourcesEv(s); }
 static int __fastcall ics_clean(void *s, void *)
-{ return _ZN8IceSheet16CleanupResourcesEv(s); }
+{ return _ZN15daObjIceBoard_c16CleanupResourcesEv(s); }
 static int __fastcall ics_behavior(void *s, void *)
-{ return _ZN8IceSheet8BehaviorEv(s); }
+{ return _ZN15daObjIceBoard_c8BehaviorEv(s); }
 static int __fastcall ics_render(void *s, void *)
 { port_actor_render_probe("ICE_SHEET", (char *)s + 0xd4);
-  return _ZN8IceSheet6RenderEv(s); }
+  return _ZN15daObjIceBoard_c6RenderEv(s); }
 static int __fastcall ics_d1(void *s, void *)
-{ return (int)(size_t)_ZN8IceSheetD1Ev(s); }
+{ return (int)(size_t)_ZN15daObjIceBoard_cD1Ev(s); }
 static int __fastcall ics_d0(void *s, void *)
-{ return (int)(size_t)_ZN8IceSheetD0Ev(s); }
+{ return (int)(size_t)_ZN15daObjIceBoard_cD0Ev(s); }
 static int __fastcall ics_pounded(void *s, void *, void *o)
-{ func_ov018_021128e0(s, o); return 0; }
+{ _ZN15daObjIceBoard_c15OnGroundPoundedER8dActor_c(s, o); return 0; }
 static int __fastcall ics_mega(void *s, void *, void *p)
-{ func_ov018_02112858(s, (int)(size_t)p); return 0; }
+{ _ZN15daObjIceBoard_c15OnHitByMegaCharER6Player(s, (int)(size_t)p); return 0; }
 static int __fastcall ics_kill(void *s, void *)
-{ func_ov018_02112880(s); return 0; }
+{ _ZN15daObjIceBoard_c4KillEv(s); return 0; }
 
 extern "C" void hal_fill_ice_sheet_vtable(void)
 {
-    void **vt = (void **)_ZTV8IceSheet;
+    void **vt = (void **)_ZTV15daObjIceBoard_c;
     ccm190_fill_shared(vt);
     vt[0]  = (void *)ics_init;
     vt[3]  = (void *)ics_clean;
@@ -579,11 +584,11 @@ extern "C" void hal_fill_ice_sheet_vtable(void)
        walked from victim 14 to victim 89 and died on this table instead.
        ROM-verified the same way, config/arm9/overlays/ov018/relocs.txt:
            from:0x02113b64 kind:load to:0x02043ac0 module:main
-       where 0x02113b64 is _ZTV8IceSheet (0x02113b34) + 0x30 and 0x02043ac0 is
-       _ZN9ActorBase16OnPendingDestroyEv. Both Platform-derived fills in this
+       where 0x02113b64 is _ZTV15daObjIceBoard_c (0x02113b34) + 0x30 and 0x02043ac0 is
+       _ZN7fBase_c16OnPendingDestroyEv. Both Platform-derived fills in this
        TU missed 12; the Actor-derived ones all seat it. */
     vt[12] = (void *)ccm_pdes;
-    vt[16] = (void *)ics_d1;
+    vt[16] = (void *)PORT_D16(ics_d1);
     vt[17] = (void *)ics_d0;
     vt[21] = (void *)ics_pounded;   /* own OnGroundPounded, overrides the shared default */
     vt[27] = (void *)ics_mega;      /* own OnHitByMegaChar, overrides the shared default */
@@ -596,29 +601,29 @@ extern "C" void hal_fill_ice_sheet_vtable(void)
 // InitResources/CleanupResources/Render/OnPendingDestroy) since the class
 // overrides none of them -- confirmed by reloc target address, not assumed.
 /* ActorBase::InitResources is deliberately NOT a real qualified method
-   anywhere in this build (src/_ZN9ActorBase13InitResourcesEv.cpp's own header
+   anywhere in this build (src/_ZN7fBase_c13InitResourcesEv.cpp's own header
    comment: it is ActorBase's KEY FUNCTION -- the first virtual CW would emit
    the class's vtable into, and the ROM already supplies that vtable as data,
    so a real method definition would multiply-define it at ROM link time). It
    is a plain extern-C `s32(void)` with no `this` at all -- takes no args,
    confirmed against src (`return 1;`, VS_FAIL, unconditionally). */
-extern "C" int _ZN9ActorBase13InitResourcesEv(void);
+extern "C" int _ZN7fBase_c13InitResourcesEv(void);
 static int __fastcall psc_init_base(void *, void *)
-{ return _ZN9ActorBase13InitResourcesEv(); }
+{ return _ZN7fBase_c13InitResourcesEv(); }
 static int __fastcall psc_clean_base(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::CleanupResources(); }
+{ return ((fBase_c *)s)->fBase_c::CleanupResources(); }
 static int __fastcall psc_render_base(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::Render(); }
+{ return ((fBase_c *)s)->fBase_c::Render(); }
 static int __fastcall psc_behavior(void *s, void *)
-{ return func_ov018_02112730(s); }
+{ return _ZN8daSCre_c8BehaviorEv(s); }
 static int __fastcall psc_d1(void *s, void *)
-{ return func_ov018_021126d4(s); }
+{ return _ZN8daSCre_cD1Ev(s); }
 static int __fastcall psc_d0(void *s, void *)
-{ return (int)(size_t)func_ov018_021126f8(s); }
+{ return (int)(size_t)_ZN8daSCre_cD0Ev(s); }
 
 extern "C" void hal_fill_power_star_create_vtable(void)
 {
-    void **vt = (void **)data_ov018_02113a74;
+    void **vt = (void **)_ZTV8daSCre_c;
     vt[1]  = (void *)ccm_binit;
     vt[2]  = (void *)ccm_ainit;
     vt[4]  = (void *)ccm_bclean;
@@ -635,7 +640,7 @@ extern "C" void hal_fill_power_star_create_vtable(void)
     vt[6]  = (void *)psc_behavior;
     vt[9]  = (void *)psc_render_base;
     vt[12] = (void *)ccm_pdes;
-    vt[16] = (void *)psc_d1;
+    vt[16] = (void *)PORT_D16(psc_d1);
     vt[17] = (void *)psc_d0;
     /* 18..30: the shared Actor tail. POWER_STAR_CREATE overrides none of it --
        every one of those words in the ROM table is the arm9 base body -- so it
@@ -694,7 +699,7 @@ extern "C" void hal_fill_one_up_logo_vtable(void)
     vt[6]  = (void *)oul_behavior;
     vt[9]  = (void *)oul_render;
     vt[12] = (void *)ccm_pdes;
-    vt[16] = (void *)hal_cppd1_OneUpLogo;
+    vt[16] = (void *)PORT_D16(hal_cppd1_OneUpLogo);
     vt[17] = (void *)oul_d0;
     /* no slot 31: OneUpLogo is Actor-derived, not Platform-derived -- 31 slots total */
 }
@@ -709,7 +714,7 @@ extern "C" void hal_fill_one_up_logo_vtable(void)
 // census could not see (bisect-confirmed: SM64DS_SKIP_CLASS=POWER_STAR_CREATE
 // removes every 359 skip; SKIP_CLASS=ICE_SHEET leaves them).
 //
-// _ZTV11SoundObject (ov002 0x0210c0dc) read with its relocations applied:
+// _ZTV12daSoundObj_c (ov002 0x0210c0dc) read with its relocations applied:
 //   0  InitResources    0x020f95e0  own (C-linkage .c, no face)
 //   3  CleanupResources 0x02043bf0  ActorBase's base body (shared)
 //   6  Behavior         0x020f94fc  own -- a REAL mwcc PMF dispatch through
@@ -724,12 +729,12 @@ extern "C" void hal_fill_one_up_logo_vtable(void)
 //                                    has NO model -- no slot-5 collision
 //                                    possible; +0xd4 holds a sound id)
 //  12  OnPendingDestroy 0x02043ac0  ActorBase's base body (shared)
-//  16  D1               0x020f934c  own -- stores _ZTV11SoundObject (its OWN
+//  16  D1               0x020f934c  own -- stores _ZTV12daSoundObj_c (its OWN
 //                                    table), Actor::D2; C-linkage, clean
 //  17  D0               0x020f9370  own -- the cons copy spelled the shared
 //                                    VT/HEAP placeholders; main's copy
 //                                    (carried, hash-verified) spells
-//                                    _ZTV11SoundObject + data_020a0eac
+//                                    _ZTV12daSoundObj_c + data_020a0eac
 //                                    directly. Its "recovered name:
 //                                    daSoundObj_c_OnYoshiTryEat" comment is
 //                                    the SAME name decoy PowerStarCreate's D0
@@ -739,34 +744,34 @@ extern "C" void hal_fill_one_up_logo_vtable(void)
 // SpawnInfo 0x0210c064 (+0 factory 0x020f972c, +4 id 359); its +0x24 is
 // data_ov002_0210c088 -- a TUNING-TABLE column, NOT a vtable (the +0x24 rule
 // is the ov018 record shape, not ov002's); the factory installs
-// _ZTV11SoundObject by name directly (read from its own src), so there is no
+// _ZTV12daSoundObj_c by name directly (read from its own src), so there is no
 // installed-vtable decoy and no reseat wrapper.
 extern "C" {
-int _ZN11SoundObject13InitResourcesEv(void *self);   /* slot 0, C in src */
+int _ZN12daSoundObj_c13InitResourcesEv(void *self);   /* slot 0, C in src */
 int port_sound_object_behavior(char *self);           /* slot 6: the port-only
                                                         out-of-range refusal,
                                                         then the matched TU
-                                                        src/_ZN11SoundObject8BehaviorEv.cpp
+                                                        src/game/actors/d_a_sound_obj.cpp
                                                         (unmatched/SoundObject_Behavior.cpp) */
-int _ZN11SoundObjectD1Ev(int *self);                 /* slot 16, C in src */
-int *_ZN11SoundObjectD0Ev(int *self);                /* slot 17, C in src (carried) */
-int *SoundObject_Spawn(void);                        /* installs _ZTV11SoundObject */
-int _ZTV11SoundObject[31];
+int _ZN12daSoundObj_cD1Ev(int *self);                 /* slot 16, C in src */
+int *_ZN12daSoundObj_cD0Ev(int *self);                /* slot 17, C in src (carried) */
+int *daSoundObj_c_classInit(void);                        /* installs _ZTV12daSoundObj_c */
+int _ZTV12daSoundObj_c[31];
 void port_sound_object_states_seat(void);            /* unmatched/SoundObject_Behavior.cpp */
 }
 
 static int __fastcall sob_init(void *s, void *)
-{ return _ZN11SoundObject13InitResourcesEv(s); }
+{ return _ZN12daSoundObj_c13InitResourcesEv(s); }
 static int __fastcall sob_behavior(void *s, void *)
 { return port_sound_object_behavior((char *)s); }
 static int __fastcall sob_d1(void *s, void *)
-{ return _ZN11SoundObjectD1Ev((int *)s); }
+{ return _ZN12daSoundObj_cD1Ev((int *)s); }
 static int __fastcall sob_d0(void *s, void *)
-{ return (int)(size_t)_ZN11SoundObjectD0Ev((int *)s); }
+{ return (int)(size_t)_ZN12daSoundObj_cD0Ev((int *)s); }
 
 extern "C" void hal_fill_sound_object_vtable(void)
 {
-    void **vt = (void **)_ZTV11SoundObject;
+    void **vt = (void **)_ZTV12daSoundObj_c;
     /* seat the seven dispatch cells __sinit_ov002_02107f88 left as DS code
        addresses BEFORE anything dispatches them -- fills run after ov002's
        boot sinits, the ordering the Cap seat already proves. */
@@ -777,7 +782,7 @@ extern "C" void hal_fill_sound_object_vtable(void)
     vt[6]  = (void *)sob_behavior;
     vt[9]  = (void *)psc_render_base;  /* ActorBase base body, shared with PSC's thunk */
     vt[12] = (void *)ccm_pdes;
-    vt[16] = (void *)sob_d1;
+    vt[16] = (void *)PORT_D16(sob_d1);
     vt[17] = (void *)sob_d0;
     /* no slot 31: a plain Actor, 31 slots total */
 }
@@ -787,24 +792,24 @@ extern "C" void hal_fill_sound_object_vtable(void)
 // against include/, the hal/actor_classes_jrb.cpp recipe. IceSheet's four
 // (Init/Cleanup/Behavior/Render) and OneUpLogo's two (Init/Render) are
 // `Class::Method` .cpp definitions (MSVC mangles them off the Itanium name:
-// confirmed against dumpbin -- the .obj exports ?InitResources@IceSheet@@...,
-// not __ZN8IceSheet13InitResourcesEv), so they are faced here. IceSheet's
+// confirmed against dumpbin -- the .obj exports ?InitResources@daObjIceBoard_c@@...,
+// not __ZN15daObjIceBoard_c13InitResourcesEv), so they are faced here. IceSheet's
 // D1/D0 and OneUpLogo's Cleanup/Behavior/D0 are already C-linkage bodies (.c
 // files, or a .cpp inside an unqualified extern "C" block) -- no face.
 // PowerStarCreate has no real-method file at all (every own slot is a plain
 // C function, func_ov018_*). SoundObject's Init/D1/D0 are C-linkage .c bodies
 // and its Behavior is the host copy -- no face either.
-#include "IceSheet.h"
+#include "daObjIceBoard_c.h"
 #include "OneUpLogo.h"
 extern "C" {
-int _ZN8IceSheet13InitResourcesEv(void *self)
-{ return ((IceSheet *)self)->IceSheet::InitResources(); }
-int _ZN8IceSheet16CleanupResourcesEv(void *self)
-{ return ((IceSheet *)self)->IceSheet::CleanupResources(); }
-int _ZN8IceSheet8BehaviorEv(void *self)
-{ return ((IceSheet *)self)->IceSheet::Behavior(); }
-int _ZN8IceSheet6RenderEv(void *self)
-{ return ((IceSheet *)self)->IceSheet::Render(); }
+int _ZN15daObjIceBoard_c13InitResourcesEv(void *self)
+{ return ((daObjIceBoard_c *)self)->daObjIceBoard_c::InitResources(); }
+int _ZN15daObjIceBoard_c16CleanupResourcesEv(void *self)
+{ return ((daObjIceBoard_c *)self)->daObjIceBoard_c::CleanupResources(); }
+int _ZN15daObjIceBoard_c8BehaviorEv(void *self)
+{ return ((daObjIceBoard_c *)self)->daObjIceBoard_c::Behavior(); }
+int _ZN15daObjIceBoard_c6RenderEv(void *self)
+{ return ((daObjIceBoard_c *)self)->daObjIceBoard_c::Render(); }
 int _ZN9OneUpLogo13InitResourcesEv(void *self)
 { return ((OneUpLogo *)self)->OneUpLogo::InitResources(); }
 int _ZN9OneUpLogo6RenderEv(void *self)
@@ -817,7 +822,7 @@ int _ZN9OneUpLogo6RenderEv(void *self)
 // derivation and the class-identity finding are documented in
 // port/ov018_syms.txt's gate-191 section; the short version:
 //
-// SKI_LIFT (63) is the daObjSm_Lift_c chain, own vtable data_ov018_021138cc,
+// SKI_LIFT (63) is the daObjSm_Lift_c chain, own vtable _ZTV7SkiLift,
 // 32 words (the full 31-slot Actor shape plus Platform's Kill tail). Own
 // overrides: 0 Init, 3 Cleanup, 6 Behavior, 9 Render, 16 D1, 17 D0
 // (HOST THUNKS -- store the class's own table then OVERWRITE with the
@@ -826,7 +831,7 @@ int _ZN9OneUpLogo6RenderEv(void *self)
 // body 0x020ee55c, already in the build -- NOT overridden by this class).
 //
 // MOTHER_PENGUIN (257) is the eight src/_ZN7SkiLift* files under a dsd-era
-// class-identity mislabel: MotherPenguin_Spawn.c installs _ZTV7SkiLift ==
+// class-identity mislabel: daPgMthr_c_classInit.c installs _ZTV10daPgMthr_c ==
 // _ZTV10daPgMthr_c, MotherPenguin's OWN table, not the real SkiLift's. 31
 // words, a plain Actor shape (no Kill). Own overrides: 0 Init (HOST COPY,
 // the TextureSequence::Prepare SHORT-1 fix, port/unmatched/
@@ -837,7 +842,7 @@ int _ZN9OneUpLogo6RenderEv(void *self)
 // table under the correct RTTI name -- stays in slice, the IceSheet D0
 // treatment).
 //
-// _ZN7SkiLift13InitResourcesEv.cpp's window-shared ov036/ov056/ov022
+// _ZN10daPgMthr_c13InitResourcesEv.cpp's window-shared ov036/ov056/ov022
 // spellings (the #1308-#1310 trap family) are RESOLVED: carried
 // byte-identical from main HEAD post-c19c90882 (#1301), which renamed them
 // to their own ov018 names. tools/ovsweep.py's E2 rule no longer flags this
@@ -847,27 +852,27 @@ int _ZN9OneUpLogo6RenderEv(void *self)
 extern "C" {
 /* the real SkiLift's own bodies (all matched src, C linkage except Behavior/
    InitResources/CleanupResources/Render below which are real methods) */
-int func_ov018_021116b4(char *self);           /* slot 0, Init */
-int func_ov018_021112fc(void *self);            /* slot 3, Cleanup */
-int func_ov018_02111368(char *self);            /* slot 6, Behavior */
-int func_ov018_02111340(void *self);             /* slot 9, Render */
-void func_ov018_0211123c(char *self, void *p);  /* slot 27, OnHitByMegaChar */
-void *SkiLift_Spawn(void);                       /* installs data_ov018_021138cc */
+int _ZN7SkiLift13InitResourcesEv(char *self);           /* slot 0, Init */
+int _ZN7SkiLift16CleanupResourcesEv(void *self);            /* slot 3, Cleanup */
+int _ZN7SkiLift8BehaviorEv(char *self);            /* slot 6, Behavior */
+int _ZN7SkiLift6RenderEv(void *self);             /* slot 9, Render */
+void _ZN7SkiLift15OnHitByMegaCharER6Player(char *self, void *p);  /* slot 27, OnHitByMegaChar */
+void *daObjSm_Lift_c_classInit(void);                       /* installs _ZTV7SkiLift */
 DSSTATE_BEGIN
-int data_ov018_021138cc[32];                     /* the class's own vtable, host array */
+int _ZTV7SkiLift[32];                     /* the class's own vtable, host array */
 DSSTATE_END
-extern int _ZTV8Platform[];                      /* Platform's own base table, already
+extern int _ZTV10dBgActor_c[];                      /* Platform's own base table, already
                                                       hosted (hal/actor_vtables.cpp) */
-void _ZN18MovingMeshColliderD1Ev(void *);        /* MovingMeshCollider at +0x124 */
+void _ZN10dBgW_KcMbgD1Ev(void *);        /* MovingMeshCollider at +0x124 */
 void _ZN5ModelD1Ev(void *);                      /* Model at +0xd4 (declared above too) */
-/* _ZN5ActorD2Ev is already declared (returns void*) at this file's own
+/* _ZN8dActor_cD2Ev is already declared (returns void*) at this file's own
    line 52 -- no redeclaration here, the type must match exactly. */
 void _ZN6Memory10DeallocateEPvP4Heap(void *, void *);
 void hal_fill_platform_vtable(void);             /* hal/actor_classes.cpp, Platform's
                                                       base table (the JRB/l7/ov064
                                                       precedent for calling it here) */
 extern void *data_020a0eac;                      /* the game heap, already hosted */
-void _ZN8Platform4KillEv(void *self);             /* slot 31, shared base body (0x020ee55c) */
+void _ZN10dBgActor_c4KillEv(void *self);             /* slot 31, shared base body (0x020ee55c) */
 
 /* MotherPenguin's own bodies. SkiLift::InitResources (the HOST COPY, Prepare
    fix, port/unmatched/MotherPenguin_InitResources.cpp) and SkiLift::Behavior
@@ -875,38 +880,39 @@ void _ZN8Platform4KillEv(void *self);             /* slot 31, shared base body (
    include/SkiLift.h -- MotherPenguin's real layout under the misnamed
    header) -- faced as free functions below, the IceSheet/OneUpLogo
    treatment, not declared extern "C" directly. */
-int _ZN7SkiLift13InitResourcesEv(void *self);     /* face below -- HOST COPY */
-int _ZN7SkiLift16CleanupResourcesEv(void);
-int _ZN7SkiLift8BehaviorEv(void *self);           /* face below */
-int _ZN7SkiLift6RenderEv(char *self);
-void _ZN7SkiLift16OnPendingDestroyEv(void);       /* slot 12, own empty body */
-int *_ZN7SkiLiftD0Ev(int *self);                  /* slot 17, spells _ZTV10daPgMthr_c */
-void *MotherPenguin_Spawn(void);                  /* installs _ZTV7SkiLift == _ZTV10daPgMthr_c */
-int _ZTV7SkiLift[31];                             /* == _ZTV10daPgMthr_c, host array */
+int _ZN10daPgMthr_c13InitResourcesEv(void *self);     /* face below -- HOST COPY */
+int _ZN10daPgMthr_c16CleanupResourcesEv(void);
+int _ZN10daPgMthr_c8BehaviorEv(void *self);           /* face below */
+int port_mother_penguin_behavior(void *self);         /* port/unmatched/MotherPenguin_Behavior.cpp */
+int _ZN10daPgMthr_c6RenderEv(char *self);
+void _ZN10daPgMthr_c16OnPendingDestroyEv(void);       /* slot 12, own empty body */
+int *_ZN10daPgMthr_cD0Ev(int *self);                  /* slot 17, spells _ZTV10daPgMthr_c */
+void *daPgMthr_c_classInit(void);                  /* installs _ZTV10daPgMthr_c == _ZTV10daPgMthr_c */
+int _ZTV10daPgMthr_c[31];                             /* == _ZTV10daPgMthr_c, host array */
 void _ZN9ModelAnimD1Ev(void *);                   /* ModelAnim at +0xd4 */
 void _ZN15TextureSequenceD1Ev(void *);            /* TextureSequence at +0x138 (declared
                                                        above too) */
 void _ZN11ShadowModelD1Ev(void *);                /* ShadowModel at +0x14c */
-void _ZN18MovingCylinderClsnD1Ev(void *);         /* MovingCylinderClsn at +0x174 */
-void _ZN12WithMeshClsnD1Ev(void *);               /* WithMeshClsn at +0x1a8 */
+void _ZN7dCcAc_cD1Ev(void *);         /* MovingCylinderClsn at +0x174 */
+void _ZN10dBgCh_ActrD1Ev(void *);               /* WithMeshClsn at +0x1a8 */
 int _ZN13RacingPenguin16OnPendingDestroyEv(void); /* .c, called by MotherPenguin's Behavior */
 }
 
 // ---- SKI_LIFT fill (Platform, 32 slots, D1/D0 host thunks) -----------------
 static int __fastcall skl_init(void *s, void *)
-{ return func_ov018_021116b4((char *)s); }
+{ return _ZN7SkiLift13InitResourcesEv((char *)s); }
 static int __fastcall skl_clean(void *s, void *)
-{ return func_ov018_021112fc(s); }
+{ return _ZN7SkiLift16CleanupResourcesEv(s); }
 static int __fastcall skl_behavior(void *s, void *)
-{ return func_ov018_02111368((char *)s); }
+{ return _ZN7SkiLift8BehaviorEv((char *)s); }
 static int __fastcall skl_render(void *s, void *)
 { port_actor_render_probe("SKI_LIFT", (char *)s + 0xd4);
-  return func_ov018_02111340(s); }
+  return _ZN7SkiLift6RenderEv(s); }
 static int __fastcall skl_mega(void *s, void *, void *p)
-{ func_ov018_0211123c((char *)s, p); return 0; }
+{ _ZN7SkiLift15OnHitByMegaCharER6Player((char *)s, p); return 0; }
 static int __fastcall skl_kill(void *s, void *)
-{ _ZN8Platform4KillEv(s); return 0; }
-/* D1/D0 host thunks: the matched src stores data_ov018_021138cc (own table)
+{ _ZN10dBgActor_c4KillEv(s); return 0; }
+/* D1/D0 host thunks: the matched src stores _ZTV7SkiLift (own table)
    then OVERWRITES with the _ZTV10dBgActor_c / VT0+VT1 shared placeholders --
    the ShipUp/RockPillar gate-188 shape, dropped from the slice. Store the
    derived table once and run the chain high-address first: MovingMeshCollider
@@ -916,15 +922,15 @@ static int __fastcall skl_kill(void *s, void *)
 /* SLOT 16 IS THE MATCHED TU NOW, run link100 lane TAIL. The note above names
    the blocker as the shared PLACEHOLDERS, and a per-source -D is what removes
    a placeholder rather than working around it: the relocations inside
-   func_ov018_021111a0's own span say which addresses its two pooled words are
-     0x021111dc -> ov018 0x021138cc (data_ov018_021138cc, SkiLift's own table)
-     0x021111e0 -> ov002 0x0210ae38 (_ZTV8Platform)
+   _ZN7SkiLiftD1Ev's own span say which addresses its two pooled words are
+     0x021111dc -> ov018 0x021138cc (_ZTV7SkiLift, SkiLift's own table)
+     0x021111e0 -> ov002 0x0210ae38 (_ZTV10dBgActor_c)
    -- so port/CMakeLists.txt binds them under slice_gate216, and the body is
    this thunk plus the base-table store the ROM makes and the thunk dropped.
    Nothing dispatches between the two stores or after them; D1's caller,
    ActorBase::AfterCleanupResources, frees the object next, which is why D1
    stops before the Deallocate in both spellings.
-   SLOT 17 IS SEATED NOW (gate 228). func_ov018_021111e4 carries the
+   SLOT 17 IS SEATED NOW (gate 228). _ZN7SkiLiftD0Ev carries the
    inferred-stub marker -- dsd's recovered name even calls it OnYoshiTryEat,
    which is the recurring name defect and not a body defect -- and lane STUBADJ
    ruled the BODY REAL DECOMP against the ROM. Table word 0x021138cc + 17*4 =
@@ -932,16 +938,16 @@ static int __fastcall skl_kill(void *s, void *)
    TU from its own pool: 0x02111230 -> 0x021138cc (VT0), 0x02111234 ->
    0x0210ae38 (VT1) and 0x02111238 -> 0x020a0eac (G0), so the base-table store
    the thunk dropped comes back here the same way it did on slot 16. */
-extern "C" int *func_ov018_021111a0(int *t);   /* ov018 0x021111a0, slot 16 */
-extern "C" int *func_ov018_021111e4(int *t);   /* ov018 0x021111e4, slot 17 */
+extern "C" int *_ZN7SkiLiftD1Ev(int *t);   /* ov018 0x021111a0, slot 16 */
+extern "C" int *_ZN7SkiLiftD0Ev(int *t);   /* ov018 0x021111e4, slot 17 */
 static int __fastcall skl_d1(void *s, void *)
-{ return (int)(size_t)func_ov018_021111a0((int *)s); }
+{ return (int)(size_t)_ZN7SkiLiftD1Ev((int *)s); }
 static int __fastcall skl_d0(void *s, void *)
-{ return (int)(size_t)func_ov018_021111e4((int *)s); }
+{ return (int)(size_t)_ZN7SkiLiftD0Ev((int *)s); }
 
 extern "C" void hal_fill_ski_lift_vtable(void)
 {
-    void **vt = (void **)data_ov018_021138cc;
+    void **vt = (void **)_ZTV7SkiLift;
     hal_fill_platform_vtable();
     ccm190_fill_shared(vt);
     vt[0]  = (void *)skl_init;
@@ -959,12 +965,12 @@ extern "C" void hal_fill_ski_lift_vtable(void)
        ActorBase::OnPendingDestroy is what the ROM puts here, not a guess:
        config/arm9/overlays/ov018/relocs.txt has
            from:0x021138fc kind:load to:0x02043ac0 module:main
-       and 0x021138fc is data_ov018_021138cc + 0x30 (slot 12), while
-       0x02043ac0 is _ZN9ActorBase16OnPendingDestroyEv (an empty 4-byte body).
+       and 0x021138fc is _ZTV7SkiLift + 0x30 (slot 12), while
+       0x02043ac0 is _ZN7fBase_c16OnPendingDestroyEv (an empty 4-byte body).
        port/ov018_syms.txt's gate-191 derivation reads the same slot the same
        way; the table was documented correctly and only the fill missed it. */
     vt[12] = (void *)ccm_pdes;
-    vt[16] = (void *)skl_d1;
+    vt[16] = (void *)PORT_D16(skl_d1);
     vt[17] = (void *)skl_d0;
     vt[27] = (void *)skl_mega;   /* own OnHitByMegaChar, overrides the shared default */
     vt[31] = (void *)skl_kill;   /* Platform's shared Kill body (0x020ee55c), NOT overridden */
@@ -972,17 +978,17 @@ extern "C" void hal_fill_ski_lift_vtable(void)
 
 // ---- MOTHER_PENGUIN fill (plain Actor, 31 slots, no Kill) ------------------
 static int __fastcall mpg_init(void *s, void *)
-{ return _ZN7SkiLift13InitResourcesEv(s); }
+{ return _ZN10daPgMthr_c13InitResourcesEv(s); }
 static int __fastcall mpg_clean(void *s, void *)
-{ (void)s; return _ZN7SkiLift16CleanupResourcesEv(); }   /* .cpp body takes void */
+{ (void)s; return _ZN10daPgMthr_c16CleanupResourcesEv(); }   /* .cpp body takes void */
 static int __fastcall mpg_behavior(void *s, void *)
-{ return _ZN7SkiLift8BehaviorEv(s); }
+{ return _ZN10daPgMthr_c8BehaviorEv(s); }
 static int __fastcall mpg_render(void *s, void *)
 { port_actor_render_probe("MOTHER_PENGUIN", (char *)s + 0xd4);
-  return _ZN7SkiLift6RenderEv((char *)s); }
+  return _ZN10daPgMthr_c6RenderEv((char *)s); }
 static int __fastcall mpg_pdes(void *s, void *)
-{ (void)s; _ZN7SkiLift16OnPendingDestroyEv(); return 0; }  /* own empty body */
-/* D1: src/_ZN7SkiLiftD1Ev.cpp is a real MSVC-synthesised destructor
+{ (void)s; _ZN10daPgMthr_c16OnPendingDestroyEv(); return 0; }  /* own empty body */
+/* D1: src/game/actors/d_a_pg_mthr.cpp is a real MSVC-synthesised destructor
    (SkiLift::~SkiLift(){}) over a LOCAL shadow class (ModelAnim/
    TextureSequence/ShadowModel/MovingCylinderClsn/WithMeshClsn declared with
    no bodies of their own) -- the OneUpLogo D1 shape (gate-31 PeachPainting
@@ -995,7 +1001,7 @@ static int __fastcall mpg_pdes(void *s, void *)
 /* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
    the transcribed thunk that stood here (mpg_d1) spelled the same chain by hand. */
 static int __fastcall mpg_d0(void *s, void *)
-{ return (int)(size_t)_ZN7SkiLiftD0Ev((int *)s); }
+{ return (int)(size_t)_ZN10daPgMthr_cD0Ev((int *)s); }
 
 /* MotherPenguin overrides no Actor-tail slot (18..30) -- confirmed by reloc
    target address, every one the plain shared default -- so ccm190_fill_shared
@@ -1009,14 +1015,14 @@ extern "C" void hal_fill_mother_penguin_vtable(void)
        (func_ov018_021123d0 -> func_ov018_02112398), the SoundObject/Cap seat
        ordering. */
     port_mother_penguin_afterclsn_seat();
-    void **vt = (void **)_ZTV7SkiLift;
+    void **vt = (void **)_ZTV10daPgMthr_c;
     ccm190_fill_shared(vt);
     vt[0]  = (void *)mpg_init;
     vt[3]  = (void *)mpg_clean;
     vt[6]  = (void *)mpg_behavior;
     vt[9]  = (void *)mpg_render;
     vt[12] = (void *)mpg_pdes;   /* MotherPenguin's own OnPendingDestroy, NOT the shared default */
-    vt[16] = (void *)hal_cppd1_SkiLift;
+    vt[16] = (void *)PORT_D16(hal_cppd1_SkiLift);
     vt[17] = (void *)mpg_d0;
     /* no slot 31: MotherPenguin is Actor-derived, not Platform-derived -- 31 slots total */
 }
@@ -1032,9 +1038,49 @@ extern "C" void hal_fill_mother_penguin_vtable(void)
 // port/unmatched/MotherPenguin_Behavior.cpp (the MSVC dtor-slot-shift host
 // copy), not matched src -- this face still applies unchanged, it just
 // resolves to the host copy's definition.
+//
+// EXCEPT SLOT 0, WHICH WENT ONE CLASS OVER WHEN ITS HOST COPY WAS DROPPED.
+// port/slice_gate191.txt's own slot table says MotherPenguin's slot 0 is
+// "_ZN10daPgMthr_c13InitResourcesEv own -- RETIRED to the matched src TU", and
+// its ARGSWEEP note says port/unmatched/MotherPenguin_InitResources.cpp is
+// dropped because the matched TU is behaviourally identical. The face below was
+// not moved with it, so ?InitResources@SkiLift@@UAEHXZ kept answering -- and
+// that symbol is defined by src/_ZN7SkiLift13InitResourcesEv.cpp, which is the
+// REAL ski lift's body: it includes daObjSm_Lift_c.h and builds a moving mesh
+// collider (dBgW_Kc::LoadFile, dBgW_KcMbg::SetFile, dBgActor_c::UpdateClsnPosAndRot).
+// include/SkiLift.h spells `struct SkiLift : dBgActor_c`, and a dBgActor_c has
+// its dBgW_KcMbg at +0x124. MotherPenguin is a plain Actor (the slice's own
+// words, 31 slots, no Kill) whose members are ModelAnim 0xd4, TextureSequence
+// 0x138, ShadowModel 0x14c, dCcAc_c 0x174, dBgCh_Actr 0x1a8 -- read off
+// daPgMthr_c_classInit, which allocates 908 = 0x38c and constructs exactly
+// those five. There is no collider at +0x124.
+//
+// So level 10 (Cool Cool Mountain) died here, measured under cdb:
+//
+//   actor 3003677c, vptr 00a63738 = __ZTV10daPgMthr_c, slot 0 = mpg_init
+//   ... -> ?InitResources@SkiLift@@UAEHXZ+0x61
+//       -> ?UpdateClsnPosAndRot@dBgActor_c@@QAEXXZ+0x56 (lea eax,[ecx+0x124])
+//       -> __ZN10dBgW_KcMbg9TransformERK9Matrix4x3s -> Transform+0x202
+//          call dword ptr [eax+0x30]        ; GetVelocity, ROM slot 12
+//   FAULT c0000005 at ?DetectClsn@dBgW_Kc@@UAEHAAUdBgCh_SphCrr@@@Z+0xac
+//        accessing 00001014
+//
+// and the vptr at actor+0x124 was 007302c0, which the map names
+// ??_7ModelAnim@@6BAnimation@@@ -- the ModelAnim at +0xd4's own Animation
+// sub-object vptr, 0x50 into it. ??_7dBgW_Kc@@6B@ is sixteen bytes higher at
+// 007302d0, so byte 0x30 off the low pointer is that table's index 8, which is
+// DetectClsn(dBgCh_SphCrr &). Nothing is skewed and no class is four bytes
+// high: MotherPenguin simply ran the ski lift's InitResources.
+//
+// Slot 0 is the matched daPgMthr_c::InitResources (ROM ov018 0x021124d0, the TU
+// src/game/actors/d_a_pg_mthr.cpp, already linked as
+// ?InitResources@daPgMthr_c@@UAEHXZ). Slot 6 is NOT touched: SkiLift::Behavior
+// resolves to port/unmatched/MotherPenguin_Behavior.cpp, MotherPenguin's own
+// host copy, which is right as it stands. Run link100 wave 10, lane SINGLES2.
+#include "daPgMthr_c.h"
 extern "C" {
-int _ZN7SkiLift13InitResourcesEv(void *self)
-{ return ((SkiLift *)self)->SkiLift::InitResources(); }
-int _ZN7SkiLift8BehaviorEv(void *self)
-{ return ((SkiLift *)self)->SkiLift::Behavior(); }
+int _ZN10daPgMthr_c13InitResourcesEv(void *self)
+{ return ((daPgMthr_c *)self)->daPgMthr_c::InitResources(); }
+int _ZN10daPgMthr_c8BehaviorEv(void *self)
+{ return port_mother_penguin_behavior(self); }
 }

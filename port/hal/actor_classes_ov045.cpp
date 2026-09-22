@@ -14,14 +14,14 @@
 //
 // dsd lays each mwcc class block out as [bodies..., Spawn] and then names the
 // block as if it STARTED at the Spawn, so a body spelled _ZN15FireSeaElevator*
-// sits in the block AFTER FireSeaElevator_Spawn, which is PoleLift's. The
+// sits in the block AFTER daObjKm2_Agaru_c_classInit, which is PoleLift's. The
 // _ZTV names are shifted the same way. The Spawn names are the correct ones.
 //
 //   id   TRUE class          table       its bodies are spelled     x on L37
-//   140  FireSeaElevator     0x02112cf4  func_ov045_021111a0..      x1
+//   140  FireSeaElevator     0x02112cf4  _ZN15FireSeaElevatorD1Ev..      x1
 //   142  PoleLift            0x02112dbc  _ZN15FireSeaElevator*      x4
 //   148  ExtendingPlatform   0x02112e80  _ZN8PoleLift*              x1
-//   145  FloatingFloorBfs    0x02112f50  func_ov045_02111b14..      x3
+//   145  FloatingFloorBfs    0x02112f50  _ZN19daObjKm2_Ukishima_cD1Ev..      x3
 //   141  TiltingPlatformBfs  0x02113020  _ZN16FloatingFloorBfs*     x2
 //   139  FallBlockBfs        0x021130f4  _ZN12FallBlockBfs*         x9
 //
@@ -46,7 +46,7 @@
 //
 // Five of the six tables are 32 slots wide; only ExtendingPlatform's is 31.
 // Four of the wide ones carry Platform::Kill (ov002 0x020ee55c) at slot 31
-// (ids 140/141/142/145); FallBlockBfs's slot 31 is func_ov098_0213a17c, per
+// (ids 140/141/142/145); FallBlockBfs's slot 31 is _ZN16daObjFallBlock_c4KillEv, per
 // its own inherited-slots block below. This
 // is the bug hal/actor_classes_wf.cpp's header describes ("31 because Platform
 // WAS THE BUG" -- a [31] array left slot 31 reading past the end and took the
@@ -59,10 +59,10 @@
 // Three of the six take their Behavior and Render from a base class in ANOTHER
 // overlay, so a fill that only writes 0/3/6/9/16/17 out of ov045 would leave
 // them null:
-//   141  slot 6 func_ov002_020b616c   slot 9 func_ov002_020b6144
-//   145  slot 6 func_ov002_020b6494   slot 9 func_ov002_020b646c
-//   139  slot 6 func_ov098_0213a36c   slot 9 func_ov098_0213a314
-//        slot 27 func_ov098_0213a284  slot 31 func_ov098_0213a17c
+//   141  slot 6 _ZN15daObjGuragura_c8BehaviorEv   slot 9 _ZN15daObjGuragura_c6RenderEv
+//   145  slot 6 _ZN14daObjUkiyuka_c8BehaviorEv   slot 9 _ZN14daObjUkiyuka_c6RenderEv
+//   139  slot 6 _ZN16daObjFallBlock_c8BehaviorEv   slot 9 _ZN16daObjFallBlock_c6RenderEv
+//        slot 27 _ZN16daObjFallBlock_c15OnHitByMegaCharER6Player  slot 31 _ZN16daObjFallBlock_c4KillEv
 // 139's four are the SAME bodies FALL_BLOCK_WF already seats (see
 // hal/actor_classes_wf.cpp's gate-63 block, which also settles that the
 // "same-id chain faults on a null" worry is a phantom); all four were already
@@ -81,8 +81,8 @@
 //
 // ---- THREE PLACES THE RECOVERED SOURCE CANNOT BE CALLED AS WRITTEN --------
 //
-// 1. THE `p[0] = (int)VT1` FACTORIES. FloatingFloorBfs_Spawn,
-//    TiltingPlatformBfs_Spawn and FallBlockBfs_Spawn each end with a store of
+// 1. THE `p[0] = (int)VT1` FACTORIES. daObjKm2_Ukishima_c_classInit,
+//    daObjKm2_Gura_c_classInit and daObjKm2_Fall_Block_c_classInit each end with a store of
 //    the shared-header VT1 placeholder, which is hal/auto_bss.cpp's zeroed [8].
 //    Disassembling all three settles what the ROM does and which store is which:
 //
@@ -100,7 +100,7 @@
 //    with the same shape. The other three factories store their table by a real
 //    name and are registered directly.
 //
-// 2. _ZN8PoleLift16CleanupResourcesEv (id 148, slot 3) SPELLS ITS TWO
+// 2. _ZN17ExtendingPlatform16CleanupResourcesEv (id 148, slot 3) SPELLS ITS TWO
 //    SharedFilePtrs G0/G1, and hal/cxx_aliases.cpp has already aliased
 //    ?G0@@3PAHA / ?G1@@3PAHA onto SignPost's ov002 pointers -- single global
 //    names, the caveat that file states outright. relocs.txt says the ROM body
@@ -110,7 +110,7 @@
 //    replaces with a host thunk (ep_clean below) and the one TU held out of the
 //    slice.
 //
-// 3. _ZN8PoleLiftD1Ev is a real MSVC destructor over structs declared inside its
+// 3. _ZN17ExtendingPlatformD1Ev is a real MSVC destructor over structs declared inside its
 //    own .cpp, so there is no C name to call and no face to write. ep_d1 below
 //    is the chain its sibling D0 spells and relocs.txt confirms: store
 //    0x02112e80, ExtendingMeshCollider::~ (this+0x158), Model::~ (this+0xd8),
@@ -165,13 +165,15 @@
 // the gate-17 recipe slice_w1l4.txt names for exactly this case. It is a
 // transcription of src/__sinit_ov045_02112280.c, four calls, and the two file
 // ids in it (1635 model, 1636 clsn) are the ROM's own, read from that body.
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
@@ -180,28 +182,28 @@ extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include "dtor_faces_cpp.h"
 #include <cstdlib>
 
-#include "Actor.h"
-#include "ActorBase.h"
+#include "dActor_c.h"
+#include "fBase_c.h"
 
 extern "C" {
 /* the arm9 shared half */
-int _ZN5Actor19BeforeInitResourcesEv(void *self);              /* slot 1  */
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
-int _ZN5Actor14BeforeBehaviorEv(void *self);                   /* slot 7  */
-int _ZN5Actor12BeforeRenderEv(void *self);                     /* slot 10 */
-int _ZN5Actor13OnYoshiTryEatEv(void *self);                    /* slot 18 */
-void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
-int _ZN5Actor9Virtual50Ev(void *self);                         /* slot 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);              /* slot 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);              /* slot 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
-int _ZN5Actor16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
-void _ZN8Platform4KillEv(void *self);                              /* slot 31 */
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);              /* slot 1  */
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);                   /* slot 7  */
+int _ZN8dActor_c12BeforeRenderEv(void *self);                     /* slot 10 */
+int _ZN8dActor_c13OnYoshiTryEatEv(void *self);                    /* slot 18 */
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
+int _ZN8dActor_c9Virtual50Ev(void *self);                         /* slot 20 */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);              /* slot 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);              /* slot 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
+int _ZN8dActor_c16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
+void _ZN10dBgActor_c4KillEv(void *self);                              /* slot 31 */
 
 const char *port_actor_class_name(unsigned id);   /* hal/actor_registry */
 void port_actor_slot_decline(const char *what);   /* func_02043fdc_hostcopy.cpp */
@@ -248,56 +250,56 @@ OV45_TRAP(13) OV45_TRAP(14) OV45_TRAP(17)
 #undef OV45_TRAP
 
 static int __fastcall ov45_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall ov45_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall ov45_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 static void __fastcall ov45_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall ov45_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall ov45_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall ov45_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall ov45_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall ov45_pdes(void *s, void *)
-{ ((ActorBase *)s)->ActorBase::OnPendingDestroy(); return 0; }
+{ ((fBase_c *)s)->fBase_c::OnPendingDestroy(); return 0; }
 static int __fastcall ov45_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int __fastcall ov45_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 /* slot 19 takes the three-parameter shape so it emits `ret 4`: the dispatch
    site pushes the Player the callee pops -- the wf_turn_egg contract. */
 static int __fastcall ov45_turn_egg(void *s, void *, void *p)
-{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+{ _ZN8dActor_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall ov45_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall ov45_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall ov45_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall ov45_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall ov45_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall ov45_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall ov45_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall ov45_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall ov45_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 static int __fastcall ov45_egg(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 /* slot 31, the Platform tail; four of the six ROM tables take it unchanged
-   (140/141/142/145) -- 139's slot 31 is func_ov098_0213a17c and 148 has no
+   (140/141/142/145) -- 139's slot 31 is _ZN16daObjFallBlock_c4KillEv and 148 has no
    slot 31 at all. Fills 140/141/142/145. */
 static int __fastcall ov45_kill(void *s, void *)
-{ _ZN8Platform4KillEv(s); return 0; }
+{ _ZN10dBgActor_c4KillEv(s); return 0; }
 
 /* The shared half, slots 1..30, every word of it read off the six tables'
    relocations (they agree slot for slot outside each class's own overrides).
@@ -396,46 +398,48 @@ extern "C" void port_ov45_bringup(void)
 // MovingMeshCollider at +0x124. The rising/falling lift: its Behavior is a
 // three-case state machine on +0x327 that walks +0x60 up 0x5dc000 and back.
 extern "C" {
-int func_ov045_021113ec(char *self);   /* slot 0  InitResources */
-int func_ov045_0211123c(void *self);   /* slot 3  CleanupResources */
-int func_ov045_0211129c(char *self);   /* slot 6  Behavior */
-int func_ov045_02111274(void *self);   /* slot 9  Render (extern-C in a .cpp) */
-int *func_ov045_021111a0(int *self);   /* slot 16 D1 */
-int *func_ov045_021111e4(int *self);   /* slot 17 D0 */
-void *FireSeaElevator_Spawn(void);
+int _ZN15FireSeaElevator13InitResourcesEv(char *self);   /* slot 0  InitResources */
+int _ZN15FireSeaElevator16CleanupResourcesEv(void *self);   /* slot 3  CleanupResources */
+int _ZN15FireSeaElevator8BehaviorEv(char *self);   /* slot 6  Behavior */
+int _ZN15FireSeaElevator6RenderEv(void *self);   /* slot 9  Render (extern-C in a .cpp) */
+int *_ZN15FireSeaElevatorD1Ev(int *self);   /* slot 16 D1 */
+int *_ZN15FireSeaElevatorD0Ev(int *self);   /* slot 17 D0 */
+void *daObjKm2_Agaru_c_classInit(void);
 DSSTATE_BEGIN
-void *data_ov045_02112cf4[32];         /* dsd split it at 0x02112d48 */
+void *_ZTV15FireSeaElevator[32];         /* dsd split it at 0x02112d48 */
 DSSTATE_END
 }
-/* func_ov045_021113ec hands func_020393c4 the address of ov045's own
+/* _ZN15FireSeaElevator13InitResourcesEv hands func_020393c4 the address of ov045's own
    func_ov045_021114c8 under ov059's spelling -- another module's dsd export won
    the naming race at 0x021114c8. Both names are the same ov045 body. */
 #pragma comment(linker, "/alternatename:_data_ov059_021114c8=_func_ov045_021114c8")
 /* the RTTI name the D1 restores; agaru = rises */
-#pragma comment(linker, "/alternatename:__ZTV16daObjKm2_Agaru_c=_data_ov045_02112cf4")
+/* SYNC4: the host object at 0x02112cf4 now carries main's own name for it,
+   so the alias follows it rather than the retired data_ spelling. */
+#pragma comment(linker, "/alternatename:__ZTV16daObjKm2_Agaru_c=__ZTV15FireSeaElevator")
 static int __fastcall fse_init(void *s, void *)
-{ return func_ov045_021113ec((char *)s); }
+{ return _ZN15FireSeaElevator13InitResourcesEv((char *)s); }
 static int __fastcall fse_clean(void *s, void *)
-{ return func_ov045_0211123c(s); }
+{ return _ZN15FireSeaElevator16CleanupResourcesEv(s); }
 static int __fastcall fse_behavior(void *s, void *)
-{ return func_ov045_0211129c((char *)s); }
+{ return _ZN15FireSeaElevator8BehaviorEv((char *)s); }
 static int __fastcall fse_render(void *s, void *)
 { port_actor_render_probe("FIRE_SEA_ELEVATOR", (char *)s + 0xd4);
-  return func_ov045_02111274(s); }
+  return _ZN15FireSeaElevator6RenderEv(s); }
 static int __fastcall fse_d1(void *s, void *)
-{ return (int)(size_t)func_ov045_021111a0((int *)s); }
+{ return (int)(size_t)_ZN15FireSeaElevatorD1Ev((int *)s); }
 static int __fastcall fse_d0(void *s, void *)
-{ return (int)(size_t)func_ov045_021111e4((int *)s); }
+{ return (int)(size_t)_ZN15FireSeaElevatorD0Ev((int *)s); }
 extern "C" void hal_fill_fire_sea_elevator_vtable(void)
 {
     port_ov45_bringup();
-    void *volatile *vt = (void *volatile *)data_ov045_02112cf4;
+    void *volatile *vt = (void *volatile *)_ZTV15FireSeaElevator;
     ov45_fill_shared(vt);
     vt[0]  = (void *)fse_init;
     vt[3]  = (void *)fse_clean;
     vt[6]  = (void *)fse_behavior;
     vt[9]  = (void *)fse_render;
-    vt[16] = (void *)fse_d1;
+    vt[16] = (void *)PORT_D16(fse_d1);
     vt[17] = (void *)fse_d0;
     vt[31] = (void *)ov45_kill;
 }
@@ -449,43 +453,43 @@ extern "C" void hal_fill_fire_sea_elevator_vtable(void)
 // tear down first. Four of them on level 37. Init/Clean/Behavior/Render are all
 // real C++ methods against FireSeaElevator.h, faced at the bottom of this file.
 extern "C" {
-int _ZN15FireSeaElevator13InitResourcesEv(void *self);     /* slot 0  */
-int _ZN15FireSeaElevator16CleanupResourcesEv(void *self);  /* slot 3  */
-int _ZN15FireSeaElevator8BehaviorEv(void *self);           /* slot 6  */
-int _ZN15FireSeaElevator6RenderEv(void *self);             /* slot 9  */
-int *_ZN15FireSeaElevatorD1Ev(int *self);                  /* slot 16 */
-int *_ZN15FireSeaElevatorD0Ev(int *self);                  /* slot 17 */
-void *PoleLift_Spawn(void);
+int _ZN8PoleLift13InitResourcesEv(void *self);     /* slot 0  */
+int _ZN8PoleLift16CleanupResourcesEv(void *self);  /* slot 3  */
+int _ZN8PoleLift8BehaviorEv(void *self);           /* slot 6  */
+int _ZN8PoleLift6RenderEv(void *self);             /* slot 9  */
+int *_ZN8PoleLiftD1Ev(int *self);                  /* slot 16 */
+int *_ZN8PoleLiftD0Ev(int *self);                  /* slot 17 */
+void *daObjKm2_Ami_Bou_c_classInit(void);
 DSSTATE_BEGIN
-void *_ZTV15FireSeaElevator[32];
+void *_ZTV8PoleLift[32];
 DSSTATE_END
 }
 /* 0x02112dbc answers to both names; the D1/D0 restore it by the RTTI one
    (ami_bou = the net pole). */
-#pragma comment(linker, "/alternatename:__ZTV18daObjKm2_Ami_Bou_c=__ZTV15FireSeaElevator")
+#pragma comment(linker, "/alternatename:__ZTV18daObjKm2_Ami_Bou_c=__ZTV8PoleLift")
 static int __fastcall pl_init(void *s, void *)
-{ return _ZN15FireSeaElevator13InitResourcesEv(s); }
+{ return _ZN8PoleLift13InitResourcesEv(s); }
 static int __fastcall pl_clean(void *s, void *)
-{ return _ZN15FireSeaElevator16CleanupResourcesEv(s); }
+{ return _ZN8PoleLift16CleanupResourcesEv(s); }
 static int __fastcall pl_behavior(void *s, void *)
-{ return _ZN15FireSeaElevator8BehaviorEv(s); }
+{ return _ZN8PoleLift8BehaviorEv(s); }
 static int __fastcall pl_render(void *s, void *)
 { port_actor_render_probe("POLE_LIFT", (char *)s + 0xd4);
-  return _ZN15FireSeaElevator6RenderEv(s); }
+  return _ZN8PoleLift6RenderEv(s); }
 static int __fastcall pl_d1(void *s, void *)
-{ return (int)(size_t)_ZN15FireSeaElevatorD1Ev((int *)s); }
+{ return (int)(size_t)_ZN8PoleLiftD1Ev((int *)s); }
 static int __fastcall pl_d0(void *s, void *)
-{ return (int)(size_t)_ZN15FireSeaElevatorD0Ev((int *)s); }
+{ return (int)(size_t)_ZN8PoleLiftD0Ev((int *)s); }
 extern "C" void hal_fill_pole_lift_vtable(void)
 {
     port_ov45_bringup();
-    void *volatile *vt = (void *volatile *)_ZTV15FireSeaElevator;
+    void *volatile *vt = (void *volatile *)_ZTV8PoleLift;
     ov45_fill_shared(vt);
     vt[0]  = (void *)pl_init;
     vt[3]  = (void *)pl_clean;
     vt[6]  = (void *)pl_behavior;
     vt[9]  = (void *)pl_render;
-    vt[16] = (void *)pl_d1;
+    vt[16] = (void *)PORT_D16(pl_d1);
     vt[17] = (void *)pl_d0;
     vt[31] = (void *)ov45_kill;
 }
@@ -495,8 +499,8 @@ extern "C" void hal_fill_pole_lift_vtable(void)
 // ============================================================================
 //
 // THE ONE 31-SLOT TABLE IN THIS FILE. It is also the only class here whose
-// factory does not call Platform's constructor: ExtendingPlatform_Spawn runs
-// _ZN5ActorC2Ev, then Model's at +0xd8 and _ZN21ExtendingMeshColliderC1Ev at
+// factory does not call Platform's constructor: daObjKm2_Nobiru_c_classInit runs
+// _ZN8dActor_cC2Ev, then Model's at +0xd8 and _ZN14dBgW_KcMbgSclYC1Ev at
 // +0x158. That EMC constructor is the ROM-wide only caller of the class
 // slice_w1l4.txt spent a wave refusing to seat; hal/w2_emc_seat.cpp is the seat
 // and ov45_bringup runs it before any of this cast is registered.
@@ -509,78 +513,70 @@ extern "C" void hal_fill_pole_lift_vtable(void)
 // only class in the cast that overrides it; slot 3 is a host thunk and slot 16 a
 // host chain, both for the reasons in this file's header.
 extern "C" {
-int _ZN8PoleLift13InitResourcesEv(void *self);        /* slot 0  */
-int _ZN8PoleLift16CleanupResourcesEv(void *self);     /* slot 3  */
-int _ZN8PoleLift8BehaviorEv(char *self);              /* slot 6, extern-C .cpp */
-int _ZN8PoleLift6RenderEv(void *self);                /* slot 9  */
-void _ZN8PoleLift16OnPendingDestroyEv(void);          /* slot 12 */
-int *_ZN8PoleLiftD0Ev(int *self);                     /* slot 17 */
-void *ExtendingPlatform_Spawn(void);
-/* what the RETIRED ep_clean and ep_d1 thunks spelled out by hand; kept
-   as declarations only (B1SEAT seated slot 3, DTOR-FACES-CPP slot 16) */
-void port_b1seat_cleanup_probe(const char *cls);  /* hal/b1seat_globals.cpp */
-int _ZN16MeshColliderBase9IsEnabledEv(void *self);
-void _ZN16MeshColliderBase7DisableEv(void *self);
+int _ZN17ExtendingPlatform13InitResourcesEv(void *self);        /* slot 0  */
+int _ZN17ExtendingPlatform8BehaviorEv(char *self);              /* slot 6, extern-C .cpp */
+int _ZN17ExtendingPlatform6RenderEv(void *self);                /* slot 9  */
+void _ZN17ExtendingPlatform16OnPendingDestroyEv(void);          /* slot 12 */
+int *_ZN17ExtendingPlatformD0Ev(int *self);                     /* slot 17 */
+void *daObjKm2_Nobiru_c_classInit(void);
+/* what ep_clean and ep_d1 need to spell out by hand */
+int _ZN4dBgW9IsEnabledEv(void *self);
+void _ZN4dBgW7DisableEv(void *self);
 void _ZN13SharedFilePtr7ReleaseEv(void *sfp);
-void *_ZN21ExtendingMeshColliderD1Ev(void *self);
+void *_ZN14dBgW_KcMbgSclYD1Ev(void *self);
 void _ZN5ModelD1Ev(void *self);
-void *_ZN5ActorD2Ev(void *self);
+void *_ZN8dActor_cD2Ev(void *self);
 DSSTATE_BEGIN
-void *_ZTV8PoleLift[31];
+void *_ZTV17ExtendingPlatform[31];
 DSSTATE_END
 }
 /* nobiru = the one that stretches; the D0 restores the table by this name */
-#pragma comment(linker, "/alternatename:__ZTV17daObjKm2_Nobiru_c=__ZTV8PoleLift")
+#pragma comment(linker, "/alternatename:__ZTV17daObjKm2_Nobiru_c=__ZTV17ExtendingPlatform")
 static int __fastcall ep_init(void *s, void *)
-{ return _ZN8PoleLift13InitResourcesEv(s); }
-/* slot 3, SEATED (run link100 wave 7, lane B1SEAT). The transcription that
-   stood here is retired. It stood because
-   src/_ZN8PoleLift16CleanupResourcesEv.cpp spelled its two SharedFilePtrs as
-   the POSITIONAL placeholders G0/G1, and hal/cxx_aliases.cpp binds the single
-   global names ?G0@@3PAHA / ?G1@@3PAHA to SignPost's ov002 pointers, so linked
-   as written it would have Released SignPost's LIVE files on every level-37
-   teardown. The TU now names ov045's own two cells, data_ov045_021131d8 then
-   data_ov045_021131d0, which are exactly the words ov045/relocs.txt carries at
-   0x02111968 and 0x0211196c. tools/match.py re-verifies the body byte-exact
-   under 2004/b56 either way -- it wildcards every relocated word, so it cannot
-   see this at all -- and the tool that can is tools/linkcheck.py, which
-   resolves each relocation and relinks the function against the ROM: BLIND-2
-   on the placeholder spelling, VERIFIED with 0 blind slots on this one. The names arrive from include/decl_common.h, whose whole body is
-   one extern "C" block, so they are the plain C names port/ov045_syms.txt
-   already mounts at ROM span: no new storage and no alias.
-   One behaviour note, in the ROM's favour: the retired thunk guarded Disable
-   with IsEnabled and the ROM body at 0x02111938 does not. The seat drops the
-   guard, which is what the cartridge does. */
+{ return _ZN17ExtendingPlatform13InitResourcesEv(s); }
+/* slot 3, HOST THUNK, not the matched TU. src/_ZN17ExtendingPlatform16CleanupResourcesEv
+   .cpp spells its two SharedFilePtrs G0/G1, which hal/cxx_aliases.cpp has bound
+   to SignPost's ov002 pointers; linking it would Release those live. relocs.txt
+   (0x02111968/0x0211196c) says the ROM releases 0x021131d8 then 0x021131d0, and
+   the body ahead of them is one unconditional MeshColliderBase::Disable
+   (func_02039140) on the collider at +0x158, then SharedFilePtr::Release
+   (func_02017b64) twice, at 0x02111944/4c/54. The IsEnabled guard below is
+   behavior-identical: Disable's own body no-ops on a disabled collider
+   (slotIdx 0x18 is exactly IsEnabled's test). */
 static int __fastcall ep_clean(void *s, void *)
 {
-    port_b1seat_cleanup_probe("EXTENDING_PLATFORM");
-    return _ZN8PoleLift16CleanupResourcesEv(s);
+    char *t = (char *)s;
+    if (_ZN4dBgW9IsEnabledEv(t + 0x158))
+        _ZN4dBgW7DisableEv(t + 0x158);
+    _ZN13SharedFilePtr7ReleaseEv(data_ov045_021131d8);
+    _ZN13SharedFilePtr7ReleaseEv(data_ov045_021131d0);
+    return 1;
 }
 static int __fastcall ep_behavior(void *s, void *)
-{ return _ZN8PoleLift8BehaviorEv((char *)s); }
+{ return _ZN17ExtendingPlatform8BehaviorEv((char *)s); }
 static int __fastcall ep_render(void *s, void *)
 { port_actor_render_probe("EXTENDING_PLATFORM", (char *)s + 0xd8);
-  return _ZN8PoleLift6RenderEv(s); }
+  return _ZN17ExtendingPlatform6RenderEv(s); }
 static int __fastcall ep_pdes(void *s, void *)
-{ (void)s; _ZN8PoleLift16OnPendingDestroyEv(); return 0; }
-/* slot 16, HOST CHAIN: src/_ZN8PoleLiftD1Ev.cpp is a real MSVC destructor over
+{ (void)s; _ZN17ExtendingPlatform16OnPendingDestroyEv(); return 0; }
+/* slot 16, HOST CHAIN: src/_ZN17ExtendingPlatformD1Ev.cpp is a real MSVC destructor over
    structs local to that TU, so there is no C name to call. The chain is the one
    its D0 sibling spells and relocs.txt confirms at 0x02111854/5c/64/74. */
 /* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
    the transcribed thunk that stood here (ep_d1) spelled the same chain by hand. */
 static int __fastcall ep_d0(void *s, void *)
-{ return (int)(size_t)_ZN8PoleLiftD0Ev((int *)s); }
+{ return (int)(size_t)_ZN17ExtendingPlatformD0Ev((int *)s); }
 extern "C" void hal_fill_extending_platform_vtable(void)
 {
     port_ov45_bringup();
-    void *volatile *vt = (void *volatile *)_ZTV8PoleLift;
+    void *volatile *vt = (void *volatile *)_ZTV17ExtendingPlatform;
     ov45_fill_shared(vt);
     vt[0]  = (void *)ep_init;
     vt[3]  = (void *)ep_clean;
     vt[6]  = (void *)ep_behavior;
     vt[9]  = (void *)ep_render;
     vt[12] = (void *)ep_pdes;
-    vt[16] = (void *)hal_cppd1_PoleLift;
+    vt[16] = (void *)PORT_D16(hal_cppd1_ExtendingPlatform);
     vt[17] = (void *)ep_d0;
     /* 31 slots: this class is an Actor, not a Platform, and its table really
        does end at 30 -- the next dsd symbol is at 0x02112efc. No slot 31. */
@@ -592,59 +588,61 @@ extern "C" void hal_fill_extending_platform_vtable(void)
 //
 // 812-byte object; Model at +0xd4, MovingMeshCollider at +0x124. Its own slots
 // are only 0/3/16/17 -- Behavior and Render are ov002's shared sinking-platform
-// bodies (func_ov002_020b6494 / func_ov002_020b646c) and its Init/Cleanup are
+// bodies (_ZN14daObjUkiyuka_c8BehaviorEv / _ZN14daObjUkiyuka_c6RenderEv) and its Init/Cleanup are
 // two-line veneers onto ov002's shared pair through the three-word file table
 // data_ov045_02112f08.
 extern "C" {
-int func_ov045_02111bdc(void *self);   /* slot 0  InitResources veneer */
-int func_ov045_02111bc8(void *self);   /* slot 3  CleanupResources veneer */
-int func_ov002_020b6494(char *self);   /* slot 6  Behavior  (ov002 base) */
-int func_ov002_020b646c(void *self);   /* slot 9  Render    (ov002 base) */
-int *func_ov045_02111b14(int *self);   /* slot 16 D1 */
-int *func_ov045_02111b64(int *self);   /* slot 17 D0 */
-void *FloatingFloorBfs_Spawn(void);
+int _ZN19daObjKm2_Ukishima_c13InitResourcesEv(void *self);   /* slot 0  InitResources veneer */
+int _ZN19daObjKm2_Ukishima_c16CleanupResourcesEv(void *self);   /* slot 3  CleanupResources veneer */
+int _ZN14daObjUkiyuka_c8BehaviorEv(char *self);   /* slot 6  Behavior  (ov002 base) */
+int _ZN14daObjUkiyuka_c6RenderEv(void *self);   /* slot 9  Render    (ov002 base) */
+int *_ZN19daObjKm2_Ukishima_cD1Ev(int *self);   /* slot 16 D1 */
+int *_ZN19daObjKm2_Ukishima_cD0Ev(int *self);   /* slot 17 D0 */
+void *daObjKm2_Ukishima_c_classInit(void);
 DSSTATE_BEGIN
-void *data_ov045_02112f50[32];         /* dsd split it three ways */
+void *_ZTV19daObjKm2_Ukishima_c[32];         /* dsd split it three ways */
 DSSTATE_END
 }
 /* ukishima = floating island. The Spawn spells the ov002 BASE table with this
    name and the D1/D0 spell the OWN one with it (see the header); the alias
    points at the own table, which is what the destructors need, and the factory
    wrapper below fixes the live object. */
-#pragma comment(linker, "/alternatename:__ZTV19daObjKm2_Ukishima_c=_data_ov045_02112f50")
+/* SYNC4: the host object at 0x02112f50 IS _ZTV19daObjKm2_Ukishima_c now, so
+   the alias that used to give it that name has a defined left side and is
+   removed (alternatename_guard refuses exactly that shape). */
 /* The two ov002 veneer targets are spelled unprefixed in the ov045 bodies. */
 #pragma comment(linker, "/alternatename:_func_020b6584=_func_ov002_020b6584")
 #pragma comment(linker, "/alternatename:_func_020b6424=_func_ov002_020b6424")
 extern "C" void *port_factory_floating_floor_bfs(void)
 {
-    void *p = FloatingFloorBfs_Spawn();
+    void *p = daObjKm2_Ukishima_c_classInit();
     if (p)
-        *(void **)p = (void *)data_ov045_02112f50;
+        *(void **)p = (void *)_ZTV19daObjKm2_Ukishima_c;
     return p;
 }
 static int __fastcall ff_init(void *s, void *)
-{ return func_ov045_02111bdc(s); }
+{ return _ZN19daObjKm2_Ukishima_c13InitResourcesEv(s); }
 static int __fastcall ff_clean(void *s, void *)
-{ return func_ov045_02111bc8(s); }
+{ return _ZN19daObjKm2_Ukishima_c16CleanupResourcesEv(s); }
 static int __fastcall ff_behavior(void *s, void *)
-{ return func_ov002_020b6494((char *)s); }
+{ return _ZN14daObjUkiyuka_c8BehaviorEv((char *)s); }
 static int __fastcall ff_render(void *s, void *)
 { port_actor_render_probe("FLOATING_FLOOR_BFS", (char *)s + 0xd4);
-  return func_ov002_020b646c(s); }
+  return _ZN14daObjUkiyuka_c6RenderEv(s); }
 static int __fastcall ff_d1(void *s, void *)
-{ return (int)(size_t)func_ov045_02111b14((int *)s); }
+{ return (int)(size_t)_ZN19daObjKm2_Ukishima_cD1Ev((int *)s); }
 static int __fastcall ff_d0(void *s, void *)
-{ return (int)(size_t)func_ov045_02111b64((int *)s); }
+{ return (int)(size_t)_ZN19daObjKm2_Ukishima_cD0Ev((int *)s); }
 extern "C" void hal_fill_floating_floor_bfs_vtable(void)
 {
     port_ov45_bringup();
-    void *volatile *vt = (void *volatile *)data_ov045_02112f50;
+    void *volatile *vt = (void *volatile *)_ZTV19daObjKm2_Ukishima_c;
     ov45_fill_shared(vt);
     vt[0]  = (void *)ff_init;
     vt[3]  = (void *)ff_clean;
     vt[6]  = (void *)ff_behavior;
     vt[9]  = (void *)ff_render;
-    vt[16] = (void *)ff_d1;
+    vt[16] = (void *)PORT_D16(ff_d1);
     vt[17] = (void *)ff_d0;
     vt[31] = (void *)ov45_kill;
 }
@@ -654,7 +652,7 @@ extern "C" void hal_fill_floating_floor_bfs_vtable(void)
 // bodies. HOSTED IN WAVE 5 (lane w5-c); wave 4 held it back for the one
 // port-wide gap its chain crossed, and that gap is closed:
 //
-//   func_ov002_020b616c  (slot 6) slerps the platform toward the rider's push
+//   _ZN15daObjGuragura_c8BehaviorEv  (slot 6) slerps the platform toward the rider's push
 //   func_ov002_020b6244  (its base InitResources) installs
 //   func_ov002_020b6374  as the collider's beforeClsn callback ->
 //   func_ov002_020b62cc  -> Quaternion_FromVector3 -> Quaternion_Normalize
@@ -680,15 +678,15 @@ extern "C" void hal_fill_floating_floor_bfs_vtable(void)
 // TILTING pair, and the beforeClsn callback its base Init installs is what
 // pushes the tilt toward the rider through the quaternion chain above.
 extern "C" {
-int _ZN16FloatingFloorBfs13InitResourcesEv(void *self);     /* slot 0  */
-int _ZN16FloatingFloorBfs16CleanupResourcesEv(void *self);  /* slot 3  */
-int func_ov002_020b616c(char *self);   /* slot 6  Behavior (ov002 base) */
-int func_ov002_020b6144(void *self);   /* slot 9  Render   (ov002 base) */
-int *_ZN16FloatingFloorBfsD1Ev(int *self);                  /* slot 16 */
-int *_ZN16FloatingFloorBfsD0Ev(int *self);                  /* slot 17 */
-void *TiltingPlatformBfs_Spawn(void);
+int _ZN15daObjKm2_Gura_c13InitResourcesEv(void *self);     /* slot 0  */
+int _ZN15daObjKm2_Gura_c16CleanupResourcesEv(void *self);  /* slot 3  */
+int _ZN15daObjGuragura_c8BehaviorEv(char *self);   /* slot 6  Behavior (ov002 base) */
+int _ZN15daObjGuragura_c6RenderEv(void *self);   /* slot 9  Render   (ov002 base) */
+int *_ZN15daObjKm2_Gura_cD1Ev(int *self);                  /* slot 16 */
+int *_ZN15daObjKm2_Gura_cD0Ev(int *self);                  /* slot 17 */
+void *daObjKm2_Gura_c_classInit(void);
 DSSTATE_BEGIN
-void *_ZTV16FloatingFloorBfs[32];
+void *_ZTV15daObjKm2_Gura_c[32];
 DSSTATE_END
 }
 /* gura = the tilting one. The Spawn spells the ov002 BASE table with this
@@ -697,7 +695,6 @@ DSSTATE_END
    the alias points at the own table, the 145/Ukishima treatment exactly. The
    base-table spelling _ZTV10dBgActor_c and the D0's G0 heap word are already
    defined port-wide (hal/actor_classes.cpp, hal/cxx_aliases.cpp). */
-#pragma comment(linker, "/alternatename:__ZTV15daObjKm2_Gura_c=__ZTV16FloatingFloorBfs")
 /* The two ov002 veneer targets, spelled unprefixed in the 141 bodies. */
 #pragma comment(linker, "/alternatename:_func_020b6244=_func_ov002_020b6244")
 #pragma comment(linker, "/alternatename:_func_020b60fc=_func_ov002_020b60fc")
@@ -705,34 +702,34 @@ DSSTATE_END
    zeroed placeholder, trap (F). The wrapper reseats the ROM's final value. */
 extern "C" void *port_factory_tilting_platform_bfs(void)
 {
-    void *p = TiltingPlatformBfs_Spawn();
+    void *p = daObjKm2_Gura_c_classInit();
     if (p)
-        *(void **)p = (void *)_ZTV16FloatingFloorBfs;
+        *(void **)p = (void *)_ZTV15daObjKm2_Gura_c;
     return p;
 }
 static int __fastcall tp_init(void *s, void *)
-{ return _ZN16FloatingFloorBfs13InitResourcesEv(s); }
+{ return _ZN15daObjKm2_Gura_c13InitResourcesEv(s); }
 static int __fastcall tp_clean(void *s, void *)
-{ return _ZN16FloatingFloorBfs16CleanupResourcesEv(s); }
+{ return _ZN15daObjKm2_Gura_c16CleanupResourcesEv(s); }
 static int __fastcall tp_behavior(void *s, void *)
-{ return func_ov002_020b616c((char *)s); }
+{ return _ZN15daObjGuragura_c8BehaviorEv((char *)s); }
 static int __fastcall tp_render(void *s, void *)
 { port_actor_render_probe("TILTING_PLATFORM_BFS", (char *)s + 0xd4);
-  return func_ov002_020b6144(s); }
+  return _ZN15daObjGuragura_c6RenderEv(s); }
 static int __fastcall tp_d1(void *s, void *)
-{ return (int)(size_t)_ZN16FloatingFloorBfsD1Ev((int *)s); }
+{ return (int)(size_t)_ZN15daObjKm2_Gura_cD1Ev((int *)s); }
 static int __fastcall tp_d0(void *s, void *)
-{ return (int)(size_t)_ZN16FloatingFloorBfsD0Ev((int *)s); }
+{ return (int)(size_t)_ZN15daObjKm2_Gura_cD0Ev((int *)s); }
 extern "C" void hal_fill_tilting_platform_bfs_vtable(void)
 {
     port_ov45_bringup();
-    void *volatile *vt = (void *volatile *)_ZTV16FloatingFloorBfs;
+    void *volatile *vt = (void *volatile *)_ZTV15daObjKm2_Gura_c;
     ov45_fill_shared(vt);
     vt[0]  = (void *)tp_init;
     vt[3]  = (void *)tp_clean;
     vt[6]  = (void *)tp_behavior;
     vt[9]  = (void *)tp_render;
-    vt[16] = (void *)tp_d1;
+    vt[16] = (void *)PORT_D16(tp_d1);
     vt[17] = (void *)tp_d0;
     vt[31] = (void *)ov45_kill;
 }
@@ -748,17 +745,17 @@ extern "C" void hal_fill_tilting_platform_bfs_vtable(void)
 // same ov098 pair through the file table data_ov045_021130ac. Slot 31 is the
 // KillOrWhatever poof-dust death that slot 27 arms, not Platform::Kill.
 extern "C" {
-int _ZN12FallBlockBfs13InitResourcesEv(void *self);     /* slot 0  */
-int _ZN12FallBlockBfs16CleanupResourcesEv(void *self);  /* slot 3  */
-int func_ov098_0213a36c(char *self);                    /* slot 6  Behavior */
-int func_ov098_0213a314(char *self);                    /* slot 9  Render */
-int *_ZN12FallBlockBfsD1Ev(int *self);                  /* slot 16 */
-int *_ZN12FallBlockBfsD0Ev(int *self);                  /* slot 17 */
-void func_ov098_0213a284(char *self);                   /* slot 27 */
-void func_ov098_0213a17c(char *self);                   /* slot 31 */
-void *FallBlockBfs_Spawn(void);
+int _ZN21daObjKm2_Fall_Block_c13InitResourcesEv(void *self);     /* slot 0  */
+int _ZN21daObjKm2_Fall_Block_c16CleanupResourcesEv(void *self);  /* slot 3  */
+int _ZN16daObjFallBlock_c8BehaviorEv(char *self);                    /* slot 6  Behavior */
+int _ZN16daObjFallBlock_c6RenderEv(char *self);                    /* slot 9  Render */
+int *_ZN21daObjKm2_Fall_Block_cD1Ev(int *self);                  /* slot 16 */
+int *_ZN21daObjKm2_Fall_Block_cD0Ev(int *self);                  /* slot 17 */
+void _ZN16daObjFallBlock_c15OnHitByMegaCharER6Player(char *self);                   /* slot 27 */
+void _ZN16daObjFallBlock_c4KillEv(char *self);                   /* slot 31 */
+void *daObjKm2_Fall_Block_c_classInit(void);
 DSSTATE_BEGIN
-void *_ZTV12FallBlockBfs[32];
+void *_ZTV21daObjKm2_Fall_Block_c[32];
 DSSTATE_END
 }
 /* PORT_HOST_ABI: two names of ONE ROM table, read off the ROM rather than
@@ -767,50 +764,49 @@ DSSTATE_END
    whose word[1] points at the Itanium name string at 0x021130b8 =
    "21daObjKm2_Fall_Block_c", so 21daObjKm2_Fall_Block_c is the ROM's own
    RTTI spelling of that class. The ROM bodies whose literal pools load it
-   are FallBlockBfs_Spawn, _ZN12FallBlockBfsD0Ev, _ZN12FallBlockBfsD1Ev.
+   are daObjKm2_Fall_Block_c_classInit, _ZN21daObjKm2_Fall_Block_cD0Ev, _ZN21daObjKm2_Fall_Block_cD1Ev.
    Read out of extracted/overlays/overlay_0045.bin; the LHS is not a config
    symbol anywhere, so the alias cannot be defeated by a later slice. */
-#pragma comment(linker, "/alternatename:__ZTV21daObjKm2_Fall_Block_c=__ZTV12FallBlockBfs")
 /* The unprefixed ov098 spellings this class's Init/Cleanup veneers use are
    already aliased by hal/actor_classes_wf.cpp for FALL_BLOCK_WF's identical
    pair, so they are not repeated here. */
 extern "C" void *port_factory_fall_block_bfs(void)
 {
-    void *p = FallBlockBfs_Spawn();
+    void *p = daObjKm2_Fall_Block_c_classInit();
     if (p)
-        *(void **)p = (void *)_ZTV12FallBlockBfs;
+        *(void **)p = (void *)_ZTV21daObjKm2_Fall_Block_c;
     return p;
 }
 static int __fastcall fb_init(void *s, void *)
-{ return _ZN12FallBlockBfs13InitResourcesEv(s); }
+{ return _ZN21daObjKm2_Fall_Block_c13InitResourcesEv(s); }
 static int __fastcall fb_clean(void *s, void *)
-{ return _ZN12FallBlockBfs16CleanupResourcesEv(s); }
+{ return _ZN21daObjKm2_Fall_Block_c16CleanupResourcesEv(s); }
 static int __fastcall fb_behavior(void *s, void *)
-{ return func_ov098_0213a36c((char *)s); }
+{ return _ZN16daObjFallBlock_c8BehaviorEv((char *)s); }
 static int __fastcall fb_render(void *s, void *)
 { port_actor_render_probe("FALL_BLOCK_BFS", (char *)s + 0xd4);
-  return func_ov098_0213a314((char *)s); }
+  return _ZN16daObjFallBlock_c6RenderEv((char *)s); }
 static int __fastcall fb_d1(void *s, void *)
-{ return (int)(size_t)_ZN12FallBlockBfsD1Ev((int *)s); }
+{ return (int)(size_t)_ZN21daObjKm2_Fall_Block_cD1Ev((int *)s); }
 static int __fastcall fb_d0(void *s, void *)
-{ return (int)(size_t)_ZN12FallBlockBfsD0Ev((int *)s); }
+{ return (int)(size_t)_ZN21daObjKm2_Fall_Block_cD0Ev((int *)s); }
 /* Slot 27 is OnHitByMegaChar(Player &): the caller pushes the player, so the
    veneer takes the third parameter to pop it even though the ov098 body reads
    only the receiver -- the fb_slot27 contract in hal/actor_classes_wf.cpp. */
 static int __fastcall fb_slot27(void *s, void *, void *)
-{ func_ov098_0213a284((char *)s); return 0; }
+{ _ZN16daObjFallBlock_c15OnHitByMegaCharER6Player((char *)s); return 0; }
 static int __fastcall fb_slot31(void *s, void *)
-{ func_ov098_0213a17c((char *)s); return 0; }
+{ _ZN16daObjFallBlock_c4KillEv((char *)s); return 0; }
 extern "C" void hal_fill_fall_block_bfs_vtable(void)
 {
     port_ov45_bringup();
-    void *volatile *vt = (void *volatile *)_ZTV12FallBlockBfs;
+    void *volatile *vt = (void *volatile *)_ZTV21daObjKm2_Fall_Block_c;
     ov45_fill_shared(vt);
     vt[0]  = (void *)fb_init;
     vt[3]  = (void *)fb_clean;
     vt[6]  = (void *)fb_behavior;
     vt[9]  = (void *)fb_render;
-    vt[16] = (void *)fb_d1;
+    vt[16] = (void *)PORT_D16(fb_d1);
     vt[17] = (void *)fb_d0;
     vt[27] = (void *)fb_slot27;
     vt[31] = (void *)fb_slot31;
@@ -818,25 +814,42 @@ extern "C" void hal_fill_fall_block_bfs_vtable(void)
 
 // ---- method faces ----------------------------------------------------------
 // The six bodies src defines as real C++ methods rather than extern-C free
-// functions: four of PoleLift's (spelled FireSeaElevator::*, the shift) and two
-// of ExtendingPlatform's (spelled PoleLift::*). The IceSheet/SwitchPillar/
-// ClockPaintingHandShort recipe -- these compile from src as real methods, so
-// the face is the C-name bridge INTO them, not a host copy of them.
+// functions. The IceSheet/SwitchPillar/ClockPaintingHandShort recipe -- these
+// compile from src as real methods, so the face is the C-name bridge INTO them,
+// not a host copy of them.
+//
+// EACH NAME BRIDGES TO ITS OWN CLASS, which is not what stood here. These six
+// used to be crossed by one class -- PoleLift's C names bridged into
+// FireSeaElevator's methods and ExtendingPlatform's into PoleLift's -- under a
+// note calling it "the shift". The cartridge says there is no shift. Its three
+// vtables in this overlay each point at the bodies config names for that class,
+// read out of extracted/overlays/overlay_0045.bin at the ROM addresses:
+//
+//   _ZTV15FireSeaElevator   0x02112cf4  slot0 0x021113ec = FireSeaElevator::InitResources
+//   _ZTV8PoleLift           0x02112dbc  slot0 0x02111738 = PoleLift::InitResources
+//   _ZTV17ExtendingPlatform 0x02112e80  slot0 0x02111a30 = ExtendingPlatform::InitResources
+//
+// and each src body's @symbol header carries the same address. The crossing put
+// PoleLift's InitResources on an ExtendingPlatform, whose Model is at +0xd8 and
+// not +0xd4 (the ExtendingMeshCollider subobject moves the layout, and this
+// file's own EXTENDING_PLATFORM note says so). PoleLift's body reaches +0xd4,
+// which on that object is mGrowing, so ModelBase::SetFile ran on a byte field
+// and faulted on a null vtable pointer. That is run link100's boot sweep level
+// 37.
+#include "ExtendingPlatform.h"
 #include "FireSeaElevator.h"
 #include "PoleLift.h"
 extern "C" {
-int _ZN15FireSeaElevator13InitResourcesEv(void *self)
-{ return ((FireSeaElevator *)self)->FireSeaElevator::InitResources(); }
-int _ZN15FireSeaElevator16CleanupResourcesEv(void *self)
-{ return ((FireSeaElevator *)self)->FireSeaElevator::CleanupResources(); }
-int _ZN15FireSeaElevator8BehaviorEv(void *self)
-{ return ((FireSeaElevator *)self)->FireSeaElevator::Behavior(); }
-int _ZN15FireSeaElevator6RenderEv(void *self)
-{ return ((FireSeaElevator *)self)->FireSeaElevator::Render(); }
 int _ZN8PoleLift13InitResourcesEv(void *self)
 { return ((PoleLift *)self)->PoleLift::InitResources(); }
 int _ZN8PoleLift16CleanupResourcesEv(void *self)
 { return ((PoleLift *)self)->PoleLift::CleanupResources(); }
+int _ZN8PoleLift8BehaviorEv(void *self)
+{ return ((PoleLift *)self)->PoleLift::Behavior(); }
 int _ZN8PoleLift6RenderEv(void *self)
 { return ((PoleLift *)self)->PoleLift::Render(); }
+int _ZN17ExtendingPlatform13InitResourcesEv(void *self)
+{ return ((ExtendingPlatform *)self)->ExtendingPlatform::InitResources(); }
+int _ZN17ExtendingPlatform6RenderEv(void *self)
+{ return ((ExtendingPlatform *)self)->ExtendingPlatform::Render(); }
 }

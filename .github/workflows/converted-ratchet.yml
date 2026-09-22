@@ -1,0 +1,142 @@
+# Guards the CONVERTED tier against a silent backslide.
+#
+# `tools/tiers.py` scores every enrolled member under src/ against five readability criteria (real
+# function name, no raw offset arithmetic, no `unk_<off>` fields, no codegen tricks, no
+# calls through mangled names). `tools/tiers_ratchet.py` banks the SET of source/member
+# identities that pass all five in `config/converted-baseline.json` and fails when one
+# leaves it. One-function files use the source path itself; promoted TU members append
+# `#symbol` to that path, matching attribution's ownership granularity.
+#
+# A SET, not a count, on purpose: a count ratchet is satisfied by converting one file
+# while wrecking another, which is the exact trade this gate exists to notice.
+#
+# Costs nothing to run: pure source text over git-tracked files, stdlib only, no compiler
+# and no ROM, ~2s over 11k files. That is why it can live on a GitHub-hosted runner rather
+# than on the private build box that `pr-validate.yml` relays to.
+#
+# WHERE THE BASELINE LIVES -- and why this job is shorter than langmode-ratchet.yml.
+# `config/converted-baseline.json`, in this tree, in your PR's diff. That is the opposite
+# of the langmode ratchet, whose baseline lives on the `chaos-data` branch because it is a
+# COUNTER: every PR that lowered a count had to re-bank, so the file moved under every
+# other PR in flight and four conflicted on it in one session.
+#
+# A SET baseline has no such pressure, because staleness here only ever runs one way.
+# `--check` fails on removals alone, so a baseline that has not caught up with newly
+# converted files is PERMISSIVE, never falsely red -- no PR needs to re-bank in order to
+# pass, so the file is not in every PR's diff and does not conflict. Re-bank it
+# occasionally, on its own, to bank recent gains.
+#
+# ONE-WAY STALENESS HAS AN EXCEPTION, AND IT COST A DAY. A TU promotion REMOVES banked
+# paths: `tubuild.py` consolidates N per-symbol files into one, and the absorbing file
+# structurally cannot pass `no_mangled_refs`. So a promotion leaves the baseline stale in
+# the FAILING direction. Measured: PR #1996 promoted `ov002/daObjAbuku_c` while its own
+# checks were green -- they had run against a base predating the re-bank that first
+# banked the two files it deletes. Main went out of sync the moment it merged, and the
+# next unrelated PR to touch `src/**` (#1978) is the one that turned red for it.
+#
+# Hence the `push:` trigger below. It does not gate anything -- there is no branch
+# protection here and a red main is advisory -- but it attributes the breakage to the
+# merge that caused it instead of to whoever opens the next PR. Re-bank with
+# `--update --reason` naming the promotion; that is the designed path, not a workaround.
+#
+# Hence: no second checkout, and no root-file override the way langmode has one. The
+# escape hatch is a flag on the tool, used LOCALLY before you push.
+#
+# WHEN A FILE MUST LEAVE THE SET. It legitimately can. This project's goal ordering puts a
+# historically accurate C++ source that reproduces the ROM's exact bytes FIRST and
+# readability third, and the two genuinely collide: whether a raw cast can become a named
+# member is decided per function by the byte gate, not by taste. So a matching fix may have
+# to put offset arithmetic BACK into a file this baseline calls CONVERTED. Bank it with a
+# reason rather than reverting the match:
+#
+#     python tools/tiers_ratchet.py --update --reason "St_WallJump_Init: named members
+#         cost 0x14 bytes, reverted to offset casts to hold the match"
+#
+# That rewrites the baseline and appends every removed path to
+# `config/converted-backslide-exceptions.jsonl` with your reason, so each file that ever
+# left the set is one line with a `git blame` and a PR behind it. Commit both and this job
+# is green again. The gate's job is to make a backslide LOUD and ATTRIBUTED, not impossible
+# -- and unlike the langmode ratchet's `--update`, this one has no state-dependent refusal,
+# so there is no tree from which it cannot be re-pinned in a single command.
+name: converted ratchet
+
+on:
+  pull_request:
+    paths:
+      - "src/**"
+      - "tools/tiers.py"
+      - "tools/tiers_ratchet.py"
+      - "tools/test_tiers_ratchet.py"
+      - "tools/delaunder.py"
+      # Member identities are derived from the enrollment table, so the file that maps a
+      # source to the functions it owns decides how many identities this gate banks. A PR
+      # that only changes srcpath.py touches no other path here and would otherwise
+      # silently redefine the banked set.
+      - "tools/srcpath.py"
+      # The checker resolves a GONE path through the TU manifest before it calls that
+      # path a deletion, so the manifest reader and the manifest itself are inputs to
+      # the verdict now. A promotion PR trips `src/**` anyway (it deletes N files and
+      # adds one), but a PR that only re-labels an entry `"status": "promoted"` would
+      # not, and that alone changes what this gate says about an existing baseline.
+      - "tools/tu_manifest.py"
+      - "config/tu_manifest.d/**"
+      - "config/converted-baseline.json"
+      - ".github/workflows/converted-ratchet.yml"
+  push:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "tools/tiers.py"
+      - "tools/tiers_ratchet.py"
+      - "tools/test_tiers_ratchet.py"
+      - "tools/delaunder.py"
+      - "tools/srcpath.py"
+      - "tools/tu_manifest.py"
+      - "config/tu_manifest.d/**"
+      - "config/converted-baseline.json"
+      - ".github/workflows/converted-ratchet.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: converted-ratchet-${{ github.event.pull_request.head.sha || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ratchet:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        # No history needed: the tool reads `git ls-files src` and the working tree, both
+        # of which a depth-1 checkout provides in full.
+      - uses: actions/setup-python@v5
+        # Nothing here needs more than the stdlib -- tiers.py imports json/os/pathlib/re/sys
+        # plus tools/delaunder.py, which is stdlib too, and there is no pip step. The pin is
+        # for the same reason python-names.yml pins pyflakes: a runner's default python
+        # moving under a gate that touched no Python is indistinguishable from a regression.
+        with:
+          python-version: "3.12"
+      - name: Classifier unit tests
+        # The criteria decide a published percentage, so the two readings that were
+        # measurably wrong once are pinned in BOTH directions: MMIO must not score as a
+        # codegen trick, a volatile match hack still must, a TU promotion must read as a
+        # MOVE, and a move into a file that fails a criterion must still fail the gate.
+        run: python -m unittest tools.test_tiers -v
+      - name: Ratchet unit tests
+        # tool-tests.yml runs an ENUMERATED module list on purpose and does not include
+        # this one, so this step is the only thing that executes it. It pins the parts of
+        # the gate that decide whether a change is a backslide or an ownership change:
+        # a path banked before member scoring existed is a lossless identity upgrade only
+        # when EVERY enrolled member still passes, one failing member is still a
+        # backslide and names itself, and a member with no marker or inline lifecycle
+        # evidence falls back to whole-file scoring rather than passing speculatively.
+        run: python -m unittest tools.test_tiers_ratchet -v
+      - name: Current CONVERTED state
+        # Report only, no exit-code meaning: prints the tier percentage and names anything
+        # that backslid, so the log says what happened before the gate says whether it passed.
+        run: python tools/tiers_ratchet.py
+      - name: "Ratchet: a banked file may not stop being CONVERTED"
+        # Newly converted files that are not yet banked are fine and never fail this.
+        run: python tools/tiers_ratchet.py --check

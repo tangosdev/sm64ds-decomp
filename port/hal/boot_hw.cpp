@@ -77,7 +77,7 @@ unsigned int _ZN4CP1517MPUGetDataRegion7Ev(void) { return g_mpu_region7; }
 // integration and the modelled one stays.
 
 // --- the trap instruction ---------------------------------------------------
-// src/_ZN4cstd14__builtin_trapEv.c is literally `dcd 0xe7ffffff`, the ARM
+// src/_ZN4cstd14__builtin_trapEv.cpp is literally `dcd 0xe7ffffff`, the ARM
 // undefined instruction MSL uses to abort. cstd::__assert calls it after
 // printing. The host equivalent is a breakpoint under a debugger and abort()
 // without one -- the same "stop here, this is a bug" contract.
@@ -291,8 +291,10 @@ void func_0206a928(void *state, int first, void *ap, void *end) {
 // ---------------------------------------------------------------------------
 #pragma comment(linker, "/alternatename:?Disable@IRQ@@YAIXZ=__ZN3IRQ7DisableEv")
 #pragma comment(linker, "/alternatename:?Restore@IRQ@@YAXI@Z=__ZN3IRQ7RestoreEj")
-#pragma comment(linker, "/alternatename:?DrainWriteBuffer@CP15@@YAXXZ=__ZN4CP1516DrainWriteBufferEv")
-#pragma comment(linker, "/alternatename:?FlushAndInvalidateDataCache@CP15@@YAXII@Z=__ZN4CP1527FlushAndInvalidateDataCacheEjj")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEAD RHS and an UNREFERENCED left hand side: nothing in the build defines __ZN4CP1516DrainWriteBufferEv, and nothing references ?DrainWriteBuffer@CP15@@YAXXZ, so the row can never fire and nothing wants it to. */
+// #pragma comment(linker, "/alternatename:?DrainWriteBuffer@CP15@@YAXXZ=__ZN4CP1516DrainWriteBufferEv")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEAD RHS and an UNREFERENCED left hand side: nothing in the build defines __ZN4CP1527FlushAndInvalidateDataCacheEjj, and nothing references ?FlushAndInvalidateDataCache@CP15@@YAXII@Z, so the row can never fire and nothing wants it to. */
+// #pragma comment(linker, "/alternatename:?FlushAndInvalidateDataCache@CP15@@YAXII@Z=__ZN4CP1527FlushAndInvalidateDataCacheEjj")
 #pragma comment(linker, "/alternatename:?data_020868a0@@3DA=_data_020868a0")
 #pragma comment(linker, "/alternatename:?data_020868d4@@3DA=_data_020868d4")
 // THE TWO THREAD-RECORD BRIDGES MOVED (run link100, lane THREAD). They used to

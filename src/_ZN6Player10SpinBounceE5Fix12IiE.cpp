@@ -16,7 +16,7 @@ void _ZN6Player10SpinBounceE5Fix12IiE(struct Player *self, int f) {
   self->mVertSpeed = f;
   _ZN5Sound13PlayCharVoiceEjjRK7Vector3(self->mCharacter,0x28,(char*)((char*)self)+0x74);
   _ZN5Sound9PlayBank0EjRK7Vector3(0xb6,(char*)((char*)self)+0x74);
-  self->unk_6e6=1;
+  self->mStatePhase=1;
   _ZN6Player11ChangeStateERNS_5StateE(((char*)self), data_ov002_02110454);
 }
 }

@@ -1,37 +1,26 @@
 //cpp
-typedef int Fix12i;
+#include "types.h"
+// @symbol _ZN19BowserPuzzleManager8BehaviorEv
+#include "BowserPuzzleManager.h"
+// recovered name: daObjFl_Coin_c_Behavior
+/* recovered: renamed to Class_Method */
+/* daObjFl_Coin_c::Behavior - recovered from vtable slot identity */
+extern "C" {
+extern int _ZN8dActor_c13DistToCPlayerEv(void *self);
+}
 
-struct BowserPuzzleManager;
-typedef void (BowserPuzzleManager::*PMF)();
-struct Entry { PMF pmf; };
-extern Entry data_ov064_0211c904[];
-
-extern "C" void func_ov064_02118ee4(void* c);
-extern "C" char* _ZN5Actor10FindWithIDEj(unsigned int id);
-extern "C" void func_ov064_02119010(void* c);
-extern "C" int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void* c, Fix12i a, Fix12i b);
-extern "C" void func_ov064_02118fa4(void* c);
-
-struct BowserPuzzleManager {
-    unsigned char pad[0x336];
-    unsigned char idx;
-    int Behavior();
-};
-
-int BowserPuzzleManager::Behavior() {
-    func_ov064_02118ee4(this);
-    (this->*data_ov064_0211c904[idx].pmf)();
-    char* cc = (char*)this;
-    char* p = 0;
-    unsigned int id = *(unsigned int*)(cc + 0x320);
-    if (id != 0)
-        p = _ZN5Actor10FindWithIDEj(id);
-    if (p == 0 || *(unsigned char*)(p + 0xd6) == 0) {
-        unsigned short* ctr = (unsigned short*)(int)(((long long)(int)(cc + 0x334)));
-        *ctr = *ctr + 1;
+s32 BowserPuzzleManager::Behavior() {
+    char * a = (char *)this;
+    switch (*(u8 *)(a + 0xd5)) {
+    case 0:
+        if (*(u8 *)(a + 0xd4) == 3) {
+            if (_ZN8dActor_c13DistToCPlayerEv(a) < 0x3e8000) {
+                (*(u8 *)(((int)a + 0xd5)))++;
+            }
+        }
+        break;
+    case 1:
+        break;
     }
-    func_ov064_02119010(cc);
-    if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(cc, 0, 0) != 0)
-        func_ov064_02118fa4(cc);
     return 1;
 }

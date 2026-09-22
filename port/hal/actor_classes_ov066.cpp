@@ -15,7 +15,7 @@
 //   0x0211ad24  typeinfo   [0x0209a764 __si_class_type_info][name][base]
 //   0x0211ad30  name       "10daIwante_c"   iwa + te = ROCK HAND
 //   0x021089ec  base       its own name string reads "10dBgActor_c" = Platform
-//   0x0211ad40  SpawnInfo  word[0] Eyerok_Spawn, word[1] low half 176
+//   0x0211ad40  SpawnInfo  word[0] daIwante_c_classInit, word[1] low half 176
 //   0x0211ad64  vtable     32 slots, slot 31 = ov002 Platform::Kill
 //
 // The two hands and the head are STATES of one Platform-derived actor. That is
@@ -83,13 +83,13 @@
 // ============================================================================
 // TRAP T5: ONE MARKER-CARRYING BODY, ADJUDICATED BEFORE IT WAS SEATED.
 // ============================================================================
-// src/func_ov066_0211a2dc.c is the only file in the overlay carrying
+// src/_ZN6Eyerok16OnAimedAtWithEggEv.cpp is the only file in the overlay carrying
 // "recovered from vtable slot identity", and this file seats it at slot 29, so
 // it needs a pre-seat ROM ruling. It got one:
 //
 //   ROM 0x0211a2dc, size 0x8:  0a09a0e3  mov r0, #0x28000
 //                              1eff2fe1  bx lr
-//   src:                       int func_ov066_0211a2dc(void) { return 163840; }
+//   src:                       int _ZN6Eyerok16OnAimedAtWithEggEv(void) { return 163840; }
 //   163840 == 0x28000. Two instructions, two statements.
 //
 //   tools/match.py --module ov066 --strict-relocs against
@@ -137,13 +137,15 @@
 //  - That Eyerok is REACHABLE in normal play from level 17's walk. See the
 //    lane's report: registration and a forced spawn are what is proved.
 // ============================================================================
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
@@ -151,28 +153,28 @@ extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include <cstdlib>
 
 #include "types.h"
-#include "Actor.h"
-#include "ActorBase.h"
+#include "dActor_c.h"
+#include "fBase_c.h"
 #include "Eyerok.h"
 
 extern "C" {
 /* ---- the shared arm9 defaults, slots 1..30 ---- */
-int _ZN5Actor19BeforeInitResourcesEv(void *self);
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a);
-int _ZN5Actor14BeforeBehaviorEv(void *self);
-int _ZN5Actor12BeforeRenderEv(void *self);
-int _ZN5Actor13OnYoshiTryEatEv(void *self);
-void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p);
-int _ZN5Actor9Virtual50Ev(void *self);
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);
-void _ZN5Actor8OnKickedERS_(void *self, void *o);
-void _ZN5Actor8OnPushedERS_(void *self, void *o);
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o);
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);
-void _ZN8Platform4KillEv(void *self);                    /* slot 31, 0x020ee55c */
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a);
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);
+int _ZN8dActor_c12BeforeRenderEv(void *self);
+int _ZN8dActor_c13OnYoshiTryEatEv(void *self);
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void *self, void *p);
+int _ZN8dActor_c9Virtual50Ev(void *self);
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o);
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);
+void _ZN10dBgActor_c4KillEv(void *self);                    /* slot 31, 0x020ee55c */
 
 extern int data_02099f24[];          /* the frame phase the lists are in */
 extern unsigned char data_020a4b4c;  /* the spawn spine's own step */
@@ -194,16 +196,16 @@ int _ZN6Eyerok8BehaviorEv(char *self);                /* slot 6, HOST COPY */
 void _ZN6Eyerok16OnPendingDestroyEv(void);            /* slot 12, .c body, void */
 void *_ZN6EyerokD1Ev(void *self);                     /* slot 16 */
 void *_ZN6EyerokD0Ev(void *self);                     /* slot 17 */
-int func_ov066_0211a2dc(void);                        /* slot 29, own, T5-ruled */
+int _ZN6Eyerok16OnAimedAtWithEggEv(void);                        /* slot 29, own, T5-ruled */
 
-void *Eyerok_Spawn(void);
-extern unsigned char Eyerok_SpawnInfo[];
+void *daIwante_c_classInit(void);
+extern unsigned char g_profile_IWANTE[];
 
 /* ---- the host vtable array. A mounted vtable would hand the factory DS code
         addresses, so its span is excluded from port/ov066_syms.txt and lives
         here (the ov015/ov016/ov022/ov045/ov077/ov080/ov030 rule).
         `int`, not `void *`, because include/decl_common.h:732 already declares
-        `extern int _ZTV6Eyerok[];` and src/_ZN6EyerokD1Ev.c includes it. ---- */
+        `extern int _ZTV6Eyerok[];` and src/_ZN6EyerokD1Ev.cpp includes it. ---- */
 int _ZTV6Eyerok[32];    /* vtspan: 0x0211ad64, 32 slots */
 
 /* ---- the nineteen state records, as the seat sees them ---- */
@@ -272,7 +274,7 @@ extern PortEyerokCell data_ov066_0211b0ec;
 }
 
 /* ---- MSVC-typed spellings of mounted C storage and of the vtable ----------
-   src/Eyerok_Spawn.cpp declares `extern void *_ZTV6Eyerok[];` OUTSIDE
+   src/d_a_iwante.cpp declares `extern void *_ZTV6Eyerok[];` OUTSIDE
    extern "C" -- the ov063 MadPiano shape -- so MSVC decorates the reference
    while this file defines the one real C symbol. The LHS is a decorated
    spelling NOTHING in this link defines, which is what keeps
@@ -301,8 +303,8 @@ extern PortEyerokCell data_ov066_0211b0ec;
        twelve other TUs across ov002/ov006/ov027/ov060 declare it identically
      TextureSequence::LoadFile / MeshCollider::LoadFile  STATIC, one argument
        (the w4-c LoadFile shape, already in alternatename_baseline's prose)
-     Actor::Spawn  a STATIC factory, six arguments, no receiver
-     Actor::TrackStar, ShadowModel::InitCylinder,
+     dActor_c::Spawn  a STATIC factory, six arguments, no receiver
+     dActor_c::TrackStar, ShadowModel::InitCylinder,
      MovingCylinderClsnWithPos::Init, MovingMeshCollider::SetFile,
      func_020393d4, func_020393c4  all pass their receiver EXPLICITLY as the
        first argument, so the cdecl body and the decorated reference agree
@@ -331,7 +333,7 @@ extern PortEyerokCell data_ov066_0211b0ec;
 #pragma comment(linker, "/alternatename:?data_ov066_0211aea4@@3PAPAXA=_data_ov066_0211aea4")
 #pragma comment(linker, "/alternatename:?data_ov066_0211ae8c@@3PAPAXA=_data_ov066_0211ae8c")
 
-/* src/_ZN6Eyerok16CleanupResourcesEv.cpp -- twenty-two SharedFilePtr releases,
+/* src/actors/Eyerok.cpp -- twenty-two SharedFilePtr releases,
    each spelled `extern char data_ov066_*[]`. */
 #pragma comment(linker, "/alternatename:?data_ov066_0211ae6c@@3PADA=_data_ov066_0211ae6c")
 #pragma comment(linker, "/alternatename:?data_ov066_0211ae4c@@3PADA=_data_ov066_0211ae4c")
@@ -360,14 +362,16 @@ extern PortEyerokCell data_ov066_0211b0ec;
       twenty-two file pointers spelled `extern int data_ov066_*[]`, three
       scalars spelled `extern s8`, ten arm9 helpers and the collider
       callback, whose C name is already in the link from slice_gate59. */
-#pragma comment(linker, "/alternatename:?_ZN5Actor9TrackStarEjj@@YAEPAXII@Z=__ZN5Actor9TrackStarEjj")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEAD RHS and an UNREFERENCED left hand side: nothing in the build defines __ZN8dActor_c9TrackStarEjj, and nothing references ?_ZN8dActor_c9TrackStarEjj@@YAEPAXII@Z, so the row can never fire and nothing wants it to. */
+// #pragma comment(linker, "/alternatename:?_ZN8dActor_c9TrackStarEjj@@YAEPAXII@Z=__ZN8dActor_c9TrackStarEjj")
 #pragma comment(linker, "/alternatename:?_ZN15TextureSequence8LoadFileER13SharedFilePtr@@YAXPAX@Z=__ZN15TextureSequence8LoadFileER13SharedFilePtr")
-#pragma comment(linker, "/alternatename:?_ZN12MeshCollider8LoadFileER13SharedFilePtr@@YAXPAX@Z=__ZN12MeshCollider8LoadFileER13SharedFilePtr")
+#pragma comment(linker, "/alternatename:?_ZN7dBgW_Kc8LoadFileER13SharedFilePtr@@YAXPAX@Z=__ZN7dBgW_Kc8LoadFileER13SharedFilePtr")
 #pragma comment(linker, "/alternatename:?_ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File@@YAXHH@Z=__ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File")
 #pragma comment(linker, "/alternatename:?_ZN11ShadowModel12InitCylinderEv@@YAXPAX@Z=__ZN11ShadowModel12InitCylinderEv")
-#pragma comment(linker, "/alternatename:?_ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj@@YAXPAX0PAUVector3@@HHII@Z=__ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj")
-#pragma comment(linker, "/alternatename:?_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii@@YAPAXIIPAUVector3@@PAXHH@Z=__ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii")
-#pragma comment(linker, "/alternatename:?_ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block@@YAXPAXH0HF0@Z=__ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block")
+#pragma comment(linker, "/alternatename:?_ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj@@YAXPAX0PAUVector3@@HHII@Z=__ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEAD RHS and an UNREFERENCED left hand side: nothing in the build defines __ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as, and nothing references ?_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as@@YAPAXIIPAUVector3@@PAXHH@Z, so the row can never fire and nothing wants it to. */
+// #pragma comment(linker, "/alternatename:?_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as@@YAPAXIIPAUVector3@@PAXHH@Z=__ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as")
+#pragma comment(linker, "/alternatename:?_ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block@@YAXPAXH0HF0@Z=__ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block")
 #pragma comment(linker, "/alternatename:?func_020393d4@@YAXPAX0@Z=_func_020393d4")
 #pragma comment(linker, "/alternatename:?func_020393c4@@YAXPAX0@Z=_func_020393c4")
 #pragma comment(linker, "/alternatename:?data_ov066_0211ae6c@@3PAHA=_data_ov066_0211ae6c")
@@ -395,7 +399,7 @@ extern PortEyerokCell data_ov066_0211b0ec;
 #pragma comment(linker, "/alternatename:?data_ov066_0211abe0@@3CA=_data_ov066_0211abe0")
 #pragma comment(linker, "/alternatename:?data_ov066_0211ae04@@3CA=_data_ov066_0211ae04")
 #pragma comment(linker, "/alternatename:?data_ov066_0211ae0c@@3CA=_data_ov066_0211ae0c")
-#pragma comment(linker, "/alternatename:?_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_@@3DA=__ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_")
+#pragma comment(linker, "/alternatename:?_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_@@3DA=__ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_")
 
 // ============================================================================
 // THE TRAPS
@@ -423,57 +427,57 @@ static void ov66_trap_report(void *self, int slot, const char *what)
     (void)slot;
 }
 static int __fastcall ov66_trap13(void *s, void *)
-{ ov66_trap_report(s, 13, "vtable slot 13 ActorBase::Virtual34(u32,u32)"); return 0; }
+{ ov66_trap_report(s, 13, "vtable slot 13 fBase_c::Virtual34(u32,u32)"); return 0; }
 static int __fastcall ov66_trap14(void *s, void *)
-{ ov66_trap_report(s, 14, "vtable slot 14 ActorBase::Virtual38(u32,u32)"); return 0; }
+{ ov66_trap_report(s, 14, "vtable slot 14 fBase_c::Virtual38(u32,u32)"); return 0; }
 static int __fastcall ov66_trap30(void *s, void *)
-{ ov66_trap_report(s, 30, "vtable slot 30 Actor::OnAimedAtWithEggReturnVec (SRET)"); return 0; }
+{ ov66_trap_report(s, 30, "vtable slot 30 dActor_c::OnAimedAtWithEggReturnVec (SRET)"); return 0; }
 
 // ============================================================================
 // THE SHARED 1..30 HALF
 // ============================================================================
 static int __fastcall ov66_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall ov66_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall ov66_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 static void __fastcall ov66_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall ov66_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall ov66_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall ov66_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall ov66_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall ov66_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int __fastcall ov66_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 static int __fastcall ov66_egg(void *s, void *, void *p)
-{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+{ _ZN8dActor_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall ov66_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall ov66_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall ov66_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall ov66_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall ov66_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall ov66_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall ov66_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall ov66_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall ov66_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 static int __fastcall ov66_kill(void *s, void *)
-{ _ZN8Platform4KillEv(s); return 0; }
+{ _ZN10dBgActor_c4KillEv(s); return 0; }
 
 // ============================================================================
 // EYEROK'S OWN SLOTS
@@ -499,7 +503,7 @@ static int __fastcall ov66_d0(void *s, void *)
 /* Slot 29 is Eyerok's OWN OnAimedAtWithEgg, overriding the shared arm9
    0x02010158. Its body takes void and returns the constant 0x28000. */
 static int __fastcall ov66_aimed(void *s, void *)
-{ (void)s; return func_ov066_0211a2dc(); }
+{ (void)s; return _ZN6Eyerok16OnAimedAtWithEggEv(); }
 
 // ============================================================================
 // THE NINETEEN-CELL STATE SEAT
@@ -626,30 +630,154 @@ static void __fastcall pmfb7_ov066_02116c6c(void *self, void *dead_edx)
     ((void (*)(void *))(void *)func_ov066_02116c6c)(self);
 }
 
+/* ---- RUN link100 LANE PMFCELLS1: THE NINETEEN ENTER RECORDS NEED IT TOO ----
+ *
+ * The paragraph above rules the enter half correct because "they are reached by
+ * the class's state-change helper, which MSVC compiles as a one-call forwarder
+ * ending in `jmp`, so the caller's own frame is reused". That is true of the
+ * helper AS A SEPARATE FRAME and false of the frame the enter path actually
+ * runs in: /O2 inlines the helper into the class's own state bodies, and the
+ * inlined sequence is a REAL CALL inside the caller's live frame with NOTHING
+ * pushed. Read off this build's own image at twenty sites, not reasoned about:
+ *
+ *   _func_ov066_021188b0 +0x37
+ *     mov  dword ptr [eax+0x48c], <cell>     ; the state pointer
+ *     mov  edx, dword ptr [<cell>]           ; the enter code word
+ *     test edx,edx
+ *     je   +0x44
+ *     mov  ecx, dword ptr [<cell>+4]         ; the record's delta = 0
+ *     lea  ecx, [ecx+eax]                    ; this + delta
+ *     call edx                               ; A REAL CALL
+ *
+ * and the same five moves again in _func_ov066_02118e04 +0x45,
+ * _func_ov066_02119398 +0x5a, _func_ov066_02118cdc +0x54,
+ * _func_ov066_02118954 +0x28, _func_ov066_021189c0 +0x3a and fourteen more.
+ * A raw cdecl enter body therefore read whatever the caller last spilled as
+ * its receiver -- the Amp's defect in hal/actor_classes_ov070.cpp, one overlay
+ * over, and the same remedy: a __fastcall face per record, right whether the
+ * transfer is a call or a tail jump, because MSVC's pointer-to-member sequence
+ * puts `this + delta` in ECX either way. */
+
+static void __fastcall pmfb7e_ov066_0211944c(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the enter half */
+    ((void (*)(void *))(void *)func_ov066_0211944c)(self);
+}
+static void __fastcall pmfb7e_ov066_02119348(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the enter half */
+    ((void (*)(void *))(void *)func_ov066_02119348)(self);
+}
+static void __fastcall pmfb7e_ov066_0211901c(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the enter half */
+    ((void (*)(void *))(void *)func_ov066_0211901c)(self);
+}
+static void __fastcall pmfb7e_ov066_02118de0(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the enter half */
+    ((void (*)(void *))(void *)func_ov066_02118de0)(self);
+}
+static void __fastcall pmfb7e_ov066_02118cb8(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the enter half */
+    ((void (*)(void *))(void *)func_ov066_02118cb8)(self);
+}
+static void __fastcall pmfb7e_ov066_02118be0(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the enter half */
+    ((void (*)(void *))(void *)func_ov066_02118be0)(self);
+}
+static void __fastcall pmfb7e_ov066_02118b08(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the enter half */
+    ((void (*)(void *))(void *)func_ov066_02118b08)(self);
+}
+static void __fastcall pmfb7e_ov066_02118a30(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the enter half */
+    ((void (*)(void *))(void *)func_ov066_02118a30)(self);
+}
+static void __fastcall pmfb7e_ov066_021189a0(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the enter half */
+    ((void (*)(void *))(void *)func_ov066_021189a0)(self);
+}
+static void __fastcall pmfb7e_ov066_02118934(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the enter half */
+    ((void (*)(void *))(void *)func_ov066_02118934)(self);
+}
+static void __fastcall pmfb7e_ov066_021187c8(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the enter half */
+    ((void (*)(void *))(void *)func_ov066_021187c8)(self);
+}
+static void __fastcall pmfb7e_ov066_02118658(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the enter half */
+    ((void (*)(void *))(void *)func_ov066_02118658)(self);
+}
+static void __fastcall pmfb7e_ov066_021185e4(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the enter half */
+    ((void (*)(void *))(void *)func_ov066_021185e4)(self);
+}
+static void __fastcall pmfb7e_ov066_021184c0(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the enter half */
+    ((void (*)(void *))(void *)func_ov066_021184c0)(self);
+}
+static void __fastcall pmfb7e_ov066_02118168(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the enter half */
+    ((void (*)(void *))(void *)func_ov066_02118168)(self);
+}
+static void __fastcall pmfb7e_ov066_02117bd0(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the enter half */
+    ((void (*)(void *))(void *)func_ov066_02117bd0)(self);
+}
+static void __fastcall pmfb7e_ov066_021175bc(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the enter half */
+    ((void (*)(void *))(void *)func_ov066_021175bc)(self);
+}
+static void __fastcall pmfb7e_ov066_02117190(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the enter half */
+    ((void (*)(void *))(void *)func_ov066_02117190)(self);
+}
+static void __fastcall pmfb7e_ov066_02116d14(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* the enter half */
+    ((void (*)(void *))(void *)func_ov066_02116d14)(self);
+}
+
 static const struct {
     PortEyerokCell *cell;
     unsigned enter_rom, tick_rom;
     PortEyerokFn enter_host, tick_host;
 } g_eyerok_cells[19] = {
-    { &data_ov066_0211b09c, 0x0211944c, 0x02119398, func_ov066_0211944c, (PortEyerokFn)(void *)pmfb7_ov066_02119398 },
-    { &data_ov066_0211b0ac, 0x02119348, 0x0211903c, func_ov066_02119348, (PortEyerokFn)(void *)pmfb7_ov066_0211903c },
-    { &data_ov066_0211b0cc, 0x0211901c, 0x02118e04, func_ov066_0211901c, (PortEyerokFn)(void *)pmfb7_ov066_02118e04 },
-    { &data_ov066_0211b0dc, 0x02118de0, 0x02118cdc, func_ov066_02118de0, (PortEyerokFn)(void *)pmfb7_ov066_02118cdc },
-    { &data_ov066_0211afcc, 0x02118cb8, 0x02118c00, func_ov066_02118cb8, (PortEyerokFn)(void *)pmfb7_ov066_02118c00 },
-    { &data_ov066_0211afdc, 0x02118be0, 0x02118b28, func_ov066_02118be0, (PortEyerokFn)(void *)pmfb7_ov066_02118b28 },
-    { &data_ov066_0211affc, 0x02118b08, 0x02118a50, func_ov066_02118b08, (PortEyerokFn)(void *)pmfb7_ov066_02118a50 },
-    { &data_ov066_0211b00c, 0x02118a30, 0x021189c0, func_ov066_02118a30, (PortEyerokFn)(void *)pmfb7_ov066_021189c0 },
-    { &data_ov066_0211b02c, 0x021189a0, 0x02118954, func_ov066_021189a0, (PortEyerokFn)(void *)pmfb7_ov066_02118954 },
-    { &data_ov066_0211b03c, 0x02118934, 0x021188b0, func_ov066_02118934, (PortEyerokFn)(void *)pmfb7_ov066_021188b0 },
-    { &data_ov066_0211b05c, 0x021187c8, 0x02118678, func_ov066_021187c8, (PortEyerokFn)(void *)pmfb7_ov066_02118678 },
-    { &data_ov066_0211b06c, 0x02118658, 0x02118604, func_ov066_02118658, (PortEyerokFn)(void *)pmfb7_ov066_02118604 },
-    { &data_ov066_0211b08c, 0x021185e4, 0x021184e0, func_ov066_021185e4, (PortEyerokFn)(void *)pmfb7_ov066_021184e0 },
-    { &data_ov066_0211b0bc, 0x021184c0, 0x02118188, func_ov066_021184c0, (PortEyerokFn)(void *)pmfb7_ov066_02118188 },
-    { &data_ov066_0211b0ec, 0x02118168, 0x02117bf0, func_ov066_02118168, (PortEyerokFn)(void *)pmfb7_ov066_02117bf0 },
-    { &data_ov066_0211afec, 0x02117bd0, 0x021175e8, func_ov066_02117bd0, (PortEyerokFn)(void *)pmfb7_ov066_021175e8 },
-    { &data_ov066_0211b01c, 0x021175bc, 0x021171b0, func_ov066_021175bc, (PortEyerokFn)(void *)pmfb7_ov066_021171b0 },
-    { &data_ov066_0211b04c, 0x02117190, 0x02116db0, func_ov066_02117190, (PortEyerokFn)(void *)pmfb7_ov066_02116db0 },
-    { &data_ov066_0211b07c, 0x02116d14, 0x02116c6c, func_ov066_02116d14, (PortEyerokFn)(void *)pmfb7_ov066_02116c6c },
+    { &data_ov066_0211b09c, 0x0211944c, 0x02119398, (PortEyerokFn)(void *)pmfb7e_ov066_0211944c, (PortEyerokFn)(void *)pmfb7_ov066_02119398 },
+    { &data_ov066_0211b0ac, 0x02119348, 0x0211903c, (PortEyerokFn)(void *)pmfb7e_ov066_02119348, (PortEyerokFn)(void *)pmfb7_ov066_0211903c },
+    { &data_ov066_0211b0cc, 0x0211901c, 0x02118e04, (PortEyerokFn)(void *)pmfb7e_ov066_0211901c, (PortEyerokFn)(void *)pmfb7_ov066_02118e04 },
+    { &data_ov066_0211b0dc, 0x02118de0, 0x02118cdc, (PortEyerokFn)(void *)pmfb7e_ov066_02118de0, (PortEyerokFn)(void *)pmfb7_ov066_02118cdc },
+    { &data_ov066_0211afcc, 0x02118cb8, 0x02118c00, (PortEyerokFn)(void *)pmfb7e_ov066_02118cb8, (PortEyerokFn)(void *)pmfb7_ov066_02118c00 },
+    { &data_ov066_0211afdc, 0x02118be0, 0x02118b28, (PortEyerokFn)(void *)pmfb7e_ov066_02118be0, (PortEyerokFn)(void *)pmfb7_ov066_02118b28 },
+    { &data_ov066_0211affc, 0x02118b08, 0x02118a50, (PortEyerokFn)(void *)pmfb7e_ov066_02118b08, (PortEyerokFn)(void *)pmfb7_ov066_02118a50 },
+    { &data_ov066_0211b00c, 0x02118a30, 0x021189c0, (PortEyerokFn)(void *)pmfb7e_ov066_02118a30, (PortEyerokFn)(void *)pmfb7_ov066_021189c0 },
+    { &data_ov066_0211b02c, 0x021189a0, 0x02118954, (PortEyerokFn)(void *)pmfb7e_ov066_021189a0, (PortEyerokFn)(void *)pmfb7_ov066_02118954 },
+    { &data_ov066_0211b03c, 0x02118934, 0x021188b0, (PortEyerokFn)(void *)pmfb7e_ov066_02118934, (PortEyerokFn)(void *)pmfb7_ov066_021188b0 },
+    { &data_ov066_0211b05c, 0x021187c8, 0x02118678, (PortEyerokFn)(void *)pmfb7e_ov066_021187c8, (PortEyerokFn)(void *)pmfb7_ov066_02118678 },
+    { &data_ov066_0211b06c, 0x02118658, 0x02118604, (PortEyerokFn)(void *)pmfb7e_ov066_02118658, (PortEyerokFn)(void *)pmfb7_ov066_02118604 },
+    { &data_ov066_0211b08c, 0x021185e4, 0x021184e0, (PortEyerokFn)(void *)pmfb7e_ov066_021185e4, (PortEyerokFn)(void *)pmfb7_ov066_021184e0 },
+    { &data_ov066_0211b0bc, 0x021184c0, 0x02118188, (PortEyerokFn)(void *)pmfb7e_ov066_021184c0, (PortEyerokFn)(void *)pmfb7_ov066_02118188 },
+    { &data_ov066_0211b0ec, 0x02118168, 0x02117bf0, (PortEyerokFn)(void *)pmfb7e_ov066_02118168, (PortEyerokFn)(void *)pmfb7_ov066_02117bf0 },
+    { &data_ov066_0211afec, 0x02117bd0, 0x021175e8, (PortEyerokFn)(void *)pmfb7e_ov066_02117bd0, (PortEyerokFn)(void *)pmfb7_ov066_021175e8 },
+    { &data_ov066_0211b01c, 0x021175bc, 0x021171b0, (PortEyerokFn)(void *)pmfb7e_ov066_021175bc, (PortEyerokFn)(void *)pmfb7_ov066_021171b0 },
+    { &data_ov066_0211b04c, 0x02117190, 0x02116db0, (PortEyerokFn)(void *)pmfb7e_ov066_02117190, (PortEyerokFn)(void *)pmfb7_ov066_02116db0 },
+    { &data_ov066_0211b07c, 0x02116d14, 0x02116c6c, (PortEyerokFn)(void *)pmfb7e_ov066_02116d14, (PortEyerokFn)(void *)pmfb7_ov066_02116c6c },
 };
 
 extern "C" void port_eyerok_states_seat(void)
@@ -702,7 +830,7 @@ extern "C" void hal_fill_eyerok_vtable(void)
     vt[13] = (void *)ov66_trap13;    /* ActorBase::Virtual34(u32,u32), not linked */
     vt[14] = (void *)ov66_trap14;    /* ActorBase::Virtual38(u32,u32), not linked */
     vt[15] = (void *)ov66_heap;      /* ActorBase::OnHeapCreated */
-    vt[16] = (void *)ov66_d1;        /* D1 */
+    vt[16] = (void *)PORT_D16(ov66_d1);        /* D1 */
     vt[17] = (void *)ov66_d0;        /* D0 */
     vt[18] = (void *)ov66_yoshi;     /* Actor::OnYoshiTryEat */
     vt[19] = (void *)ov66_egg;       /* Actor::OnTurnIntoEgg(Player&) */

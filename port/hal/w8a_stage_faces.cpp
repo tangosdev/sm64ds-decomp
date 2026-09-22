@@ -130,11 +130,15 @@
 // of alternatename_guard.py, which the guard confirms (910 fired, unchanged
 // from base; 0 new defeats). They land now with their provenance so the piece
 // that adds those bodies adds translation units and not plumbing.
-#pragma comment(linker, "/alternatename:?CanPause@Stage@@SAHXZ=__ZN5Stage8CanPauseEv")
-#pragma comment(linker, "/alternatename:?IsPauseDisabled@Stage@@SAHXZ=__ZN5Stage15IsPauseDisabledEv")
-#pragma comment(linker, "/alternatename:?RenderBouncingArrows@Stage@@SAXXZ=__ZN5Stage20RenderBouncingArrowsEv")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEFEATED: the left hand side is a real definition in this link now (_ZN5Stage8CanPauseEv.cpp.obj), so the directive is inert and alternatename_guard fails on it. */
+// #pragma comment(linker, "/alternatename:?CanPause@Stage@@SAHXZ=__ZN5Stage8CanPauseEv")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEFEATED: the left hand side is a real definition in this link now (_ZN5Stage15IsPauseDisabledEv.cpp.obj), so the directive is inert and alternatename_guard fails on it. */
+// #pragma comment(linker, "/alternatename:?IsPauseDisabled@Stage@@SAHXZ=__ZN5Stage15IsPauseDisabledEv")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEFEATED: the left hand side is a real definition in this link now (_ZN5Stage20RenderBouncingArrowsEv.cpp.obj), so the directive is inert and alternatename_guard fails on it. */
+// #pragma comment(linker, "/alternatename:?RenderBouncingArrows@Stage@@SAXXZ=__ZN5Stage20RenderBouncingArrowsEv")
 #pragma comment(linker, "/alternatename:?CheckInput@Stage@@QAEXXZ=__ZN5Stage10CheckInputEv")
-#pragma comment(linker, "/alternatename:?func_020aba70@@3PAPAUOamAttr@@A=_func_020aba70")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEAD RHS and an UNREFERENCED left hand side: nothing in the build defines _func_020aba70, and nothing references ?func_020aba70@@3PAPAUOamAttr@@A, so the row can never fire and nothing wants it to. */
+// #pragma comment(linker, "/alternatename:?func_020aba70@@3PAPAUOamAttr@@A=_func_020aba70")
 
 /* An object with no code and no data would still be handed to the linker for
    its .drectve, but an empty translation unit is a warning in some MSVC

@@ -13,20 +13,20 @@
 # read one table. The fiction stays only in port/tests/smoke_actor.cpp, which
 # does not mount the overlay.
 data_ov098_0213bf60:0x4 data_ov098_0213bf64:0x4 data_ov098_0213bf68:0x28
-data_ov098_0213bf90:0xc data_ov098_0213c360:0xc data_ov098_0213c36c:0x14
+data_ov098_0213bf90:0xc _ZTI15daObjYajirusi_c:0xc _ZTS15daObjYajirusi_c:0x14
 data_ov098_0213c380:0x4 data_ov098_0213c384:0x4 data_ov098_0213c388:0x10
-ArrowSignLeft_SpawnInfo:0x1c ArrowSignRight_SpawnInfo:0x1c MgShellSmash_SpawnInfo:0x1c
+g_profile_YAJIRUSI_L:0x1c g_profile_YAJIRUSI_R:0x1c MgShellSmash_SpawnInfo:0x1c
 data_ov098_0213c458:0x8 data_ov098_0213c460:0x8 data_ov098_0213c468:0x8
 data_ov098_0213c470:0x8 data_ov098_0213c478:0x8 data_ov098_0213c480:0x8
 data_ov098_0213c488:0x8 data_ov098_0213c490:0x8 data_ov098_0213c498:0x8
 data_ov098_0213c4a0:0x8 data_ov098_0213c4a8:0x8 data_ov098_0213c4b0:0x8
 data_ov098_0213c4b8:0x8 data_ov098_0213c4c0:0x8 data_ov098_0213c4c8:0xc
-data_ov098_0213c4d4:0xc data_ov098_0213c4e0:0x10 data_ov098_0213c4f0:0x10
-data_ov098_0213c500:0x10 Crate_SpawnInfo:0x1c data_ov098_0213c5bc:0x80 data_ov098_0213c63c:0x8
+_ZTI13daObjBlockS_c:0xc data_ov098_0213c4e0:0x10 data_ov098_0213c4f0:0x10
+_ZTS13daObjBlockS_c:0x10 g_profile_BLOCK_S:0x1c _ZTV16daObjFallBlock_c:0x80 data_ov098_0213c63c:0x8
 data_ov098_0213c644:0x8 data_ov098_0213c64c:0x8 data_ov098_0213c654:0x8
-data_ov098_0213c65c:0x8 data_ov098_0213c664:0xc data_ov098_0213c670:0xc
-Cannon_SpawnInfo:0x1c data_ov098_0213c71c:0x8 data_ov098_0213c724:0x8 data_ov098_0213c72c:0x8
-data_ov098_0213c734:0xc data_ov098_0213c740:0xc WaterBomb_SpawnInfo:0x1c
+data_ov098_0213c65c:0x8 _ZTS7daCnn_c:0xc _ZTI7daCnn_c:0xc
+g_profile_CANNON:0x1c data_ov098_0213c71c:0x8 data_ov098_0213c724:0x8 data_ov098_0213c72c:0x8
+_ZTS7daWbm_c:0xc _ZTI7daWbm_c:0xc g_profile_WATERBOMB:0x1c
 data_ov098_0213c78c:0x74 data_ov098_0213c800:0x8 data_ov098_0213c808:0x8
 data_ov098_0213c810:0x8 data_ov098_0213c818:0x8 data_ov098_0213c820:0xc
 data_ov098_0213c82c:0xc data_ov098_0213c838:0xc data_ov098_0213c844:0xc

@@ -43,13 +43,21 @@
 //     is what makes dScMgCurling_c's 0x0440 light-blue shadow render. The
 //     window colour-effect bit (bit 5 of the window masks) gates it per region.
 //     SM64DS_BLEND_OFF=1 restores the old opaque path for A/B and bisection.
-//   - NOT the BLDY brightness modes (BLDCNT mode 2/3). Those are owned by the
-//     fade path: hal/fader_wipes.cpp writes BLDCNT mode 2/3 + BLDY and the
-//     sub-screen fade is applied downstream (ppu_compose_stacked's evy, and the
-//     corner panel inside walk_window's fade composite), on top of the master
-//     brightness this file applies. Applying mode 2/3 here too would double the
-//     fade, so this unit recognises them and defers. The game only ever writes
-//     mode 2/3 for fades and mode 1 (alpha) for effects, so the split is clean.
+//   - THE BLDY BRIGHTNESS MODES (BLDCNT mode 2/3), gated on the SAME
+//     first-target mask (BLDCNT bits 0-5) the alpha path above already reads,
+//     so only the layers the mask names are brightened or darkened; a layer
+//     left out of the mask (OBJ, on the title's star flight) rides through
+//     untouched. This used to be deferred downstream, to ppu_compose_stacked's
+//     flat per-panel darken -- correct for the master brightness this file
+//     ALSO applies (0x0400106C, whole-screen, a different register), wrong for
+//     BLDCNT/BLDY because the mask is per-layer and the downstream darken had
+//     no layer identity left to mask against. ov007's own func_ov007_020b7138
+//     sets mode 3 EVY 16 on both engines at the opening and leaves engine B
+//     there with first-target mask 0x2f (every BG and the backdrop, OBJ
+//     clear), which is why the flying star and its sparkles -- engine B OBJ --
+//     must ride through at full brightness on a black sky, and why the read
+//     has to be the SUB engine's own registers (port_fader_blend_state_sub)
+//     and not the main engine's.
 //   - EXTENDED AFFINE BITMAP BGs, both arms: 256-colour and DIRECT COLOUR.
 //     BGxCNT bit 7 in an extended-affine slot means bitmap rather than 256
 //     colours, and this file used to refuse the whole arm. It is how the
@@ -110,8 +118,8 @@ constexpr uint32_t kObjPlttA = 0x05000200u;
 // caller passes 0x6000 for BG3).
 constexpr uint32_t kBgExtPltt = 0x06898000u;
 // GXS::LoadOBJExtPltt's own destination base, out of the ROM rather than a
-// doc: src/_ZN3GXS14LoadOBJExtPlttEPKvjj.c computes its destination as
-// `destSlotAddr + 0x068a0000`, and src/_ZN2GX23SetBankForSubOBJExtPlttEt.c is
+// doc: src/_ZN3GXS14LoadOBJExtPlttEPKvjj.cpp computes its destination as
+// `destSlotAddr + 0x068a0000`, and src/_ZN2GX23SetBankForSubOBJExtPlttEt.cpp is
 // what puts a bank there (VRAMCNT_I = 0x83) and sets DISPCNT_B bit 31 in the
 // same two lines. One OBJ extended palette is sixteen slots of 256 colours,
 // so the slot stride is 0x200 and the whole store is 0x2000.
@@ -400,6 +408,62 @@ ObjPixel g_obj[192][256];
 // from g_obj because a mask pixel contributes no colour and has no priority.
 uint8_t g_objwin[192][256];
 
+/* ---- THE FOUR MAP ARROWS, DECLINED AT THE PRESENTATION SEAM ----------------
+ *
+ * WHAT THE OWNER ASKED FOR: "Remove the left and right arrows from the minimap
+ * since the PC doesn't need touchscreen map controls."
+ *
+ * WHAT IS NOT DONE ABOUT IT. Nothing in src/ changes and no call the ROM makes
+ * is skipped. HUD::RenderCameraButtons still runs, still reads the camera
+ * state, still submits its four sprites, and Stage::CheckCameraInput still
+ * hit-tests a record that no longer says anything was touched there (the other
+ * half of this, at hal/sub_screen.cpp's stylus seam). The host simply declines
+ * to PRESENT four entries, which is this raster's own business and nobody
+ * else's -- the same shape, and the same one-line spelling, as the seam-snow
+ * overlay's `ppu_seam_snow_owns` two lines below.
+ *
+ * WHERE THE ANSWER COMES FROM, and why it is a hook rather than a call. This
+ * file is the NTR layer: it knows DS hardware and nothing else. The tile set
+ * is ROM data (ov002) and the option is a host setting, and neither belongs in
+ * a hardware model -- ntr.lib is linked by four small smoke binaries that have
+ * no hal, no settings file and no cartridge data, and a direct call put nine
+ * unresolved externals into smoke_objwin's link. So hal/sub_screen.cpp -- which
+ * already owns the panel, the option and the stylus half of this -- installs a
+ * predicate here at boot, and with nothing installed this raster behaves
+ * exactly as it always did.
+ *
+ * The predicate answers a small bitmask so one call serves both readers:
+ *   bit 0  this entry is one of the camera buttons
+ *   bit 1  and it is not to be drawn on this run
+ * The trace wants bit 0 whether or not the option is on; the raster wants bit 1.
+ */
+int (*g_obj_veto_b)(unsigned short a2);
+
+/* DISPCNT_B bits the host wants this scan-out to treat as clear. See the use
+   at the register read, and ppu_sub_set_bg_suppress for what it is for. */
+uint32_t g_bg_suppress;
+
+/* How many entries this run declined, and the census of what engine B was
+   asked to draw on one frame. SM64DS_MINIMAP_TRACE=<frame> prints every sub
+   OBJ entry on that frame -- index, position, tile, palette -- and marks the
+   ones the filter matched, so "the arrows are gone" is a list of numbers
+   rather than an impression, and so the next reader can identify any OTHER
+   sprite on that screen (the touch target among them) without a second build.
+   It prints to stderr, which on a scene run is the playlog; see the note over
+   hal_touch_client_probe. */
+int g_mm_trace_frame = -2;
+long g_mm_skipped;
+
+int mm_trace_at(void)
+{
+    if (g_mm_trace_frame == -2) {
+        const char *e = std::getenv("SM64DS_MINIMAP_TRACE");
+        g_mm_trace_frame = (e && *e) ? std::atoi(e) : -1;
+        if (e && *e && g_mm_trace_frame == 0) g_mm_trace_frame = 1;
+    }
+    return g_mm_trace_frame;
+}
+
 void raster_obj(uint32_t dispcnt) {
     static const int kSizes[3][4][2] = {
         {{8, 8}, {16, 16}, {32, 32}, {64, 64}},
@@ -453,6 +517,20 @@ void raster_obj(uint32_t dispcnt) {
         const uint16_t a2 = rd16(oam_b + i * 8u + 4);
         /* the seam-snow overlay owns these while engaged; see seam_snow */
         if (ppu_seam_snow_owns(a2)) continue;
+        /* THE FOUR MAP ARROWS, declined. See the banner over cam_button_entry. */
+        {
+            static long frame;
+            if (i == 127) ++frame;
+            const int v = g_obj_veto_b ? g_obj_veto_b(a2) : 0;
+            const int trace = mm_trace_at() >= 0 && frame == mm_trace_at();
+            if (trace && (a0 | a1 | a2))
+                std::fprintf(stderr, "[mmtrace] f%ld e%3d y%3u x%3u tile%4u "
+                             "pal%2u a0=%04x a1=%04x a2=%04x%s\n", frame, i,
+                             (unsigned)(a0 & 0xFFu), (unsigned)(a1 & 0x1FFu),
+                             (unsigned)(a2 & 0x3FFu), (unsigned)(a2 >> 12),
+                             a0, a1, a2, (v & 1) ? "  <- camera button" : "");
+            if (v & 2) { ++g_mm_skipped; continue; }
+        }
         /* SM64DS_OAMAGE_TRACE: engine B's half of the probe in ppu.cpp. */
         {
             static int bget = -1;
@@ -603,7 +681,7 @@ void raster_obj(uint32_t dispcnt) {
                            stride is the BITMAP's width, not the sprite's.
 
                            THE ROM SETTLES WHICH ARM THIS IS, in one statement.
-                           src/func_ov006_020e7428.c, the family's own sprite
+                           src/actors/dScMgD3DBase_c.cpp, the family's own sprite
                            builder (matched, and in all four family slices),
                            opens with
 
@@ -763,9 +841,9 @@ inline uint32_t apply_bright(uint32_t c, const Bright &b) {
 
 // ---- the colour special-effects unit (BLDCNT) -------------------------------
 //
-// Only ALPHA (mode 1) and the always-on semi-transparent-OBJ alpha are applied
-// here; the BLDY brightness modes 2/3 are the fade path's, see the header note.
-// Register offsets are engine-relative: BLDCNT 0x50, BLDALPHA 0x52 on this
+// ALPHA (mode 1), the always-on semi-transparent-OBJ alpha, and the BLDY
+// brightness modes (2/3) are all applied here, see the header note. Register
+// offsets are engine-relative: BLDCNT 0x50, BLDALPHA 0x52, BLDY 0x54 on this
 // engine's kRegBase. Layer ids match the window-mask bits: 0..3 BG0..BG3, 4
 // OBJ, 5 the backdrop (BD).
 
@@ -787,6 +865,7 @@ struct Blend {
     unsigned first;    // bits 0-5: 1st-target layers
     unsigned second;   // bits 8-13: 2nd-target layers
     int eva, evb;      // BLDALPHA: 1st/2nd coefficients, 0..16 in 1/16 steps
+    int evy;           // BLDY: brightness up/down coefficient, 0..16 in 1/16 steps
 };
 
 inline Blend read_blend() {
@@ -799,6 +878,7 @@ inline Blend read_blend() {
     b.second = (cnt >> 8) & 0x3F;
     b.eva = alpha & 0x1F; if (b.eva > 16) b.eva = 16;
     b.evb = (alpha >> 8) & 0x1F; if (b.evb > 16) b.evb = 16;
+    b.evy = rd16(kRegBase + 0x54) & 0x1F; if (b.evy > 16) b.evy = 16;
     return b;
 }
 
@@ -837,7 +917,27 @@ inline uint32_t blend_apply(const Blend &bl, unsigned mask, uint32_t top,
     }
     if (bl.mode == 1 && (bl.first & (1u << top_id)) && below_second)
         return blend_alpha(top, below, bl.eva, bl.evb);
-    // modes 2/3 (brightness) belong to the fade path; recognised and deferred.
+    if ((bl.mode == 2 || bl.mode == 3) && (bl.first & (1u << top_id))) {
+        // Brightness increase/decrease, gated on the first-target mask: only
+        // the layers BLDCNT bits 0-5 name are affected, one layer at a time,
+        // same as the DS. In 5-bit space, the DS's own arithmetic, the same
+        // round trip blend_alpha uses.
+        int r = ((top >> 16) & 0xFF) >> 3, g = ((top >> 8) & 0xFF) >> 3,
+            b = (top & 0xFF) >> 3;
+        if (bl.mode == 2) {
+            r += ((31 - r) * bl.evy) >> 4;
+            g += ((31 - g) * bl.evy) >> 4;
+            b += ((31 - b) * bl.evy) >> 4;
+        } else {
+            r -= (r * bl.evy) >> 4;
+            g -= (g * bl.evy) >> 4;
+            b -= (b * bl.evy) >> 4;
+        }
+        if (r > 31) r = 31; if (g > 31) g = 31; if (b > 31) b = 31;
+        return 0xFF000000u | ((uint32_t)(r << 3 | r >> 2) << 16)
+                            | ((uint32_t)(g << 3 | g >> 2) << 8)
+                            | (uint32_t)(b << 3 | b >> 2);
+    }
     return top;
 }
 
@@ -851,7 +951,14 @@ void ppu_scanout_sub(SubFramebuffer &fb)
     // and this lane does not own that file. Inert unless SM64DS_PPU_AUDIT is set.
     ppu_audit_sample("ppu_scanout_sub");
 
-    const uint32_t dispcnt = rd32(kRegBase);
+    /* THE HOST'S LAYER SUPPRESSION, applied at the ONE read of DISPCNT_B this
+       scan-out makes, so every layer decision below -- the BG rasters, the
+       window logic, the blend targets -- sees one consistent register value.
+       Zero unless something installed a mask, and then it can only CLEAR
+       enable bits: nothing here can turn a layer on that the game turned off.
+       The register itself is not written, so the ROM reads back exactly what
+       it wrote. See ppu_sub_set_bg_suppress. */
+    const uint32_t dispcnt = rd32(kRegBase) & ~g_bg_suppress;
     const unsigned disp_mode = (dispcnt >> 16) & 3;
     const bool forced_blank = (dispcnt >> 7) & 1;
 
@@ -962,47 +1069,116 @@ bool ppu_write_bmp_sub(const char *path, const SubFramebuffer &fb)
 // Composited at 1:1 DS pixels whatever tier the top screen is drawn at, which
 // is the whole reason this file exists. A one-pixel frame around it so the
 // panel reads as a panel and not as a corruption of the 3D view.
-void ppu_compose_sub(const SubFramebuffer &sub, uint32_t *dst, int dst_w,
-                     int dst_h, int margin, int div)
+/* The host's per-entry veto over engine B's sprites. See the banner over
+   g_obj_veto_b in the raster. Installed once, at boot, by whoever owns the
+   policy; nothing installed is the behaviour this file shipped with. */
+void ppu_sub_set_obj_veto(int (*fn)(unsigned short a2))
 {
-    if (div < 1) div = 1;
-    const int out_w = SUB_W / div, out_h = SUB_H / div;
-    const int x0 = dst_w - out_w - margin;
-    const int y0 = dst_h - out_h - margin;
-    if (x0 < 1 || y0 < 1) return;      // no room; leave the frame alone
+    g_obj_veto_b = fn;
+}
+
+void ppu_sub_set_bg_suppress(uint32_t mask)
+{
+    g_bg_suppress = mask;
+}
+
+/* The host's say over the one-pixel black frame. See the header. */
+int g_compose_border = 1;
+
+void ppu_sub_set_compose_border(int on)
+{
+    g_compose_border = on ? 1 : 0;
+}
+
+/* How many entries the veto has declined this run. The proof that the arrows
+   are gone is a pixel diff of their four rectangles; this is the cheap
+   corroborating number that says the filter fired at all, so a diff of zero
+   can be told apart from a filter that never ran. */
+long ppu_sub_obj_veto_count(void)
+{
+    return g_mm_skipped;
+}
+
+void ppu_compose_sub(const SubFramebuffer &sub, uint32_t *dst, int dst_w,
+                     int dst_h, int x0, int y0, int num, int den)
+{
+    if (num < 1) num = 1;
+    if (den < 1) den = 1;
+    const int out_w = SUB_W * num / den, out_h = SUB_H * num / den;
+    if (out_w < 1 || out_h < 1) return;
+    if (x0 < 0 || y0 < 0) return;
+    if (x0 + out_w > dst_w || y0 + out_h > dst_h) return;   // would not fit
 
     /* dst_w/dst_h are the LIVE image extent (where the panel sits, bottom-right);
        the framebuffer's row STRIDE is always SCREEN_W, which equals dst_w on the
        fixed tiers and is the buffer max on NTR_WIDE_RT with a narrower active
        image. Place with the extent, index with the stride. */
     const int stride = SCREEN_W;
-    for (int x = x0 - 1; x <= x0 + out_w; ++x) {
-        dst[(y0 - 1) * stride + x] = 0xFF000000u;
-        dst[(y0 + out_h) * stride + x] = 0xFF000000u;
+    /* THE FRAME IS DRAWN EDGE BY EDGE, because at the largest size the panel
+       is flush with the picture and the lines outside it have nowhere to go.
+       Every one of these four used to be unconditional behind a single
+       `x0 < 1 || y0 < 1` early return that skipped the WHOLE panel; a player
+       who picked the biggest map would have got no map at all. */
+    if (g_compose_border) {
+        if (y0 - 1 >= 0)
+            for (int x = x0 - 1 >= 0 ? x0 - 1 : 0;
+                 x <= x0 + out_w && x < dst_w; ++x)
+                dst[(y0 - 1) * stride + x] = 0xFF000000u;
+        if (y0 + out_h < dst_h)
+            for (int x = x0 - 1 >= 0 ? x0 - 1 : 0;
+                 x <= x0 + out_w && x < dst_w; ++x)
+                dst[(y0 + out_h) * stride + x] = 0xFF000000u;
+        if (x0 - 1 >= 0)
+            for (int y = y0 - 1 >= 0 ? y0 - 1 : 0;
+                 y <= y0 + out_h && y < dst_h; ++y)
+                dst[y * stride + (x0 - 1)] = 0xFF000000u;
+        if (x0 + out_w < dst_w)
+            for (int y = y0 - 1 >= 0 ? y0 - 1 : 0;
+                 y <= y0 + out_h && y < dst_h; ++y)
+                dst[y * stride + (x0 + out_w)] = 0xFF000000u;
     }
-    for (int y = y0 - 1; y <= y0 + out_h; ++y) {
-        dst[y * stride + (x0 - 1)] = 0xFF000000u;
-        dst[y * stride + (x0 + out_w)] = 0xFF000000u;
-    }
-    if (div == 1) {
+
+    if (num == 1 && den == 1) {
         for (int y = 0; y < SUB_H; ++y)
             std::memcpy(dst + (y0 + y) * stride + x0, sub.px[y], SUB_W * 4);
         return;
     }
-    const int n = div * div;
-    for (int y = 0; y < out_h; ++y)
+    if (num > den) {
+        /* MAGNIFIED: nearest neighbour, one source pixel per destination
+           block. num/den is 3/2 or 2/1 here, so the block is never smaller
+           than one pixel and the map keeps the cartridge's own hard edges. */
+        for (int y = 0; y < out_h; ++y) {
+            const uint32_t *srow = sub.px[y * den / num];
+            uint32_t *drow = dst + (y0 + y) * stride + x0;
+            for (int x = 0; x < out_w; ++x)
+                drow[x] = 0xFF000000u | (srow[x * den / num] & 0x00FFFFFFu);
+        }
+        return;
+    }
+    /* REDUCED: the box average of the source block this destination pixel
+       covers. The block is [x*den/num, (x+1)*den/num), which is 2x2 at the
+       default 1/2 and so reduces to exactly the square average this drew
+       before; at 5/8 and 3/4 the blocks are uneven by a pixel from column to
+       column, which is what makes it an average rather than a decimation and
+       is why the minimap's one-pixel marks still show up as shading. */
+    for (int y = 0; y < out_h; ++y) {
+        const int sy0 = y * den / num, sy1 = (y + 1) * den / num;
         for (int x = 0; x < out_w; ++x) {
-            unsigned r = 0, g = 0, b = 0;
-            for (int sy = 0; sy < div; ++sy)
-                for (int sx = 0; sx < div; ++sx) {
-                    const uint32_t p = sub.px[y * div + sy][x * div + sx];
+            const int sx0 = x * den / num, sx1 = (x + 1) * den / num;
+            unsigned r = 0, g = 0, b = 0, n = 0;
+            for (int sy = sy0; sy < sy1 && sy < SUB_H; ++sy)
+                for (int sx = sx0; sx < sx1 && sx < SUB_W; ++sx) {
+                    const uint32_t p = sub.px[sy][sx];
                     r += (p >> 16) & 0xFF;
                     g += (p >> 8) & 0xFF;
                     b += p & 0xFF;
+                    ++n;
                 }
+            if (!n) { r = g = b = 0; n = 1; }
             dst[(y0 + y) * stride + (x0 + x)] =
                 0xFF000000u | ((r / n) << 16) | ((g / n) << 8) | (b / n);
         }
+    }
 }
 
 // ---- THE GAP BAND -----------------------------------------------------------
@@ -4190,6 +4366,11 @@ StackLayout stack_layout(int gap_ds, int head_ds, int obj_shift_ds,
        stacked image, pan_x0 0) or 1024x576 (scale 3, width 1024, pan_x0 128). */
     l.scale = active_h / SUB_H;
     l.w = active_w;
+    /* THE PANEL BOX FIRST, because the regions are sized from it. See the
+       note on pan_x0 / pan_w / pan_h in ntr/ppu.h. */
+    l.pan_w = SUB_W * l.scale;
+    l.pan_h = SUB_H * l.scale;
+    l.pan_x0 = (active_w - l.pan_w) / 2;
     l.head_h = head_ds * l.scale;
     /* EVERY BAND SHIFTS TOGETHER, which is the whole reason the headroom is a
        field of this struct rather than a second arithmetic somewhere: the
@@ -4197,10 +4378,10 @@ StackLayout stack_layout(int gap_ds, int head_ds, int obj_shift_ds,
        mappers read top_y / band_y / bottom_y and none of them recomputes them.
        With head_h zero all four are exactly what they were. */
     l.top_y = l.head_h;
-    l.band_y = l.head_h + active_h;
+    l.band_y = l.head_h + l.pan_h;
     l.band_h = gap_ds * l.scale;
     l.bottom_y = l.band_y + l.band_h;
-    l.h = l.head_h + active_h * 2 + l.band_h;
+    l.h = l.head_h + l.pan_h * 2 + l.band_h;
     l.fill_mode = fill_mode == GAP_FILL_SOLID   ? GAP_FILL_SOLID
                   : fill_mode == GAP_FILL_CUSTOM ? GAP_FILL_CUSTOM
                                                  : GAP_FILL_AMBIENT;
@@ -4247,8 +4428,6 @@ StackLayout stack_layout(int gap_ds, int head_ds, int obj_shift_ds,
        0 -- the panel fills the width exactly as it did before this field, and the
        compose's wide branch (gated on pan_x0 > 0) never fires. The first tier
        where they differ is NTR_WIDE169: scale 3, pan_w 768, pan_x0 128. */
-    l.pan_w = SUB_W * l.scale;
-    l.pan_x0 = (active_w - l.pan_w) / 2;
     return l;
 }
 
@@ -4472,12 +4651,19 @@ void ppu_compose_stacked(const uint32_t *top, const SubFramebuffer &sub,
         const int ry = active_h / SUB_H;   /* uniform scale, both axes */
 
         /* Engine A verbatim and full width, exactly as the square path does it. */
-        for (int y = 0; y < active_h; ++y)
+        for (int y = 0; y < lay.pan_h; ++y)
             std::memcpy(dst + (size_t)(a_y + y) * dst_w,
                         top + (size_t)y * SCREEN_W, (size_t)active_w * 4);
 
-        /* Engine B, pillarboxed: black margins, uniform-scaled centred panel. */
-        for (int y = 0; y < active_h; ++y) {
+        /* Engine B, pillarboxed: black margins, uniform-scaled centred panel.
+           sub.px already carries engine B's own BLDCNT/BLDY brightness --
+           ppu_scanout_sub's blend_apply applies it per pixel, masked by
+           BLDCNT's first-target bits -- so this stage copies it verbatim
+           rather than darkening the whole panel a second time with no layer
+           identity left to mask against. evy/to_white stay live below for the
+           gap band's own seam/straddle fade, a host UI element and not part
+           of the DS raster. */
+        for (int y = 0; y < lay.pan_h; ++y) {
             const int sy = y / ry;
             const uint32_t *src = sub.px[sy < SUB_H ? sy : SUB_H - 1];
             uint32_t *out = dst + (size_t)(b_y + y) * dst_w;
@@ -4485,22 +4671,7 @@ void ppu_compose_stacked(const uint32_t *top, const SubFramebuffer &sub,
             for (int x = px0 + pw; x < active_w; ++x) out[x] = 0xFF000000u;
             for (int x = 0; x < pw; ++x) {
                 const int sx = x / ry;
-                uint32_t p = src[sx < SUB_W ? sx : SUB_W - 1];
-                if (evy) {
-                    int r = (p >> 16) & 0xff, g = (p >> 8) & 0xff, b = p & 0xff;
-                    if (to_white) {
-                        r += ((255 - r) * evy) >> 4;
-                        g += ((255 - g) * evy) >> 4;
-                        b += ((255 - b) * evy) >> 4;
-                    } else {
-                        r -= (r * evy) >> 4;
-                        g -= (g * evy) >> 4;
-                        b -= (b * evy) >> 4;
-                    }
-                    p = 0xFF000000u | ((uint32_t)r << 16) | ((uint32_t)g << 8) |
-                        (uint32_t)b;
-                }
-                out[px0 + x] = p;
+                out[px0 + x] = src[sx < SUB_W ? sx : SUB_W - 1];
             }
         }
 
@@ -4541,15 +4712,40 @@ void ppu_compose_stacked(const uint32_t *top, const SubFramebuffer &sub,
     // ROW-WISE across the two strides: `top` is the framebuffer (stride
     // SCREEN_W), `dst` is the stacked image (stride dst_w == the live width).
     // On the fixed tiers dst_w == SCREEN_W == active_w and this is the old
-    // contiguous copy; on NTR_WIDE_RT with the toggle off dst_w is 512 and the
-    // framebuffer stride is 1024, so the copy has to step each separately.
+    // contiguous copy; on NTR_WIDE_RT with the toggle off dst_w is 512 while
+    // the framebuffer stride is SCREEN_W, which is that tier's whole
+    // allocation and not the live width, so the copy has to step each
+    // separately. This sentence used to spell that stride out as 1024. Run
+    // hd1 grew the NTR_WIDE_RT allocation to 1368x768 so RenderScale 4 has
+    // somewhere to draw, and the spelled-out number has been wrong since
+    // (found by run link100, lane INT20). The loop below always read the
+    // constant; only the prose was stale.
     for (int y = 0; y < active_h; ++y)
         std::memcpy(dst + (size_t)(a_y + y) * dst_w,
                     top + (size_t)y * SCREEN_W, (size_t)active_w * 4);
 
     /* ENGINE B. The ratio is a whole number at every tier the port
        builds (1, 2 and 4), and a SHIFT rather than a divide would be wrong the
-       day a tier is not a power of two, so it stays a divide. */
+       day a tier is not a power of two, so it stays a divide.
+
+       THIS STAGE NO LONGER DARKENS THE PANEL. sub.px already carries engine
+       B's own BLDCNT/BLDY brightness -- ppu_scanout_sub's blend_apply applies
+       modes 2/3 per pixel now, masked by BLDCNT's first-target bits, the same
+       per-engine read (port_fader_blend_state_sub, engine B's own 0x4001050
+       and 0x4001054) this loop used to re-apply wholesale. Re-applying it here
+       had no layer identity left to mask against, so it darkened every pixel
+       of the half alike.
+
+       THE RUN THAT EXPOSED IT. The title's opening screen, the first screen
+       filmed where the two engines disagree: func_ov007_020b7138 puts both at
+       brightness-decrease EVY 16 with engine B's first-target mask 0x2f --
+       every BG and the backdrop, OBJ clear -- and only engine A is faded back
+       in, so on hardware engine B's backgrounds go black while its OBJ layer,
+       the flying star and its sparkles, rides through at full brightness.
+       Darkening the whole panel here took the star down with the backgrounds;
+       masking it in blend_apply instead is what keeps it lit. evy/to_white
+       stay live below for the gap band's own seam/straddle fade, a host UI
+       element and not part of the DS raster. */
     const int rx = active_w / SUB_W, ry = active_h / SUB_H;
     for (int y = 0; y < active_h; ++y) {
         const int sy = ry > 0 ? y / ry : (y * SUB_H) / active_h;
@@ -4557,40 +4753,7 @@ void ppu_compose_stacked(const uint32_t *top, const SubFramebuffer &sub,
         uint32_t *out = dst + (size_t)(b_y + y) * dst_w;
         for (int x = 0; x < active_w; ++x) {
             const int sx = rx > 0 ? x / rx : (x * SUB_W) / active_w;
-            uint32_t p = src[sx < SUB_W ? sx : SUB_W - 1];
-            if (evy) {
-                /* the same expression walk_window's fade composite runs over
-                   the framebuffer, so the two halves fade together.
-
-                   AND THE QUESTION UNDER IT IS OPEN. evy comes from
-                   port_fader_blend_state, which reads the MAIN engine's
-                   BLDCNT/BLDY at 0x4000050 and 0x4000054. This copy exists
-                   because the corner panel gets that fade today, and it gets
-                   it by accident: the panel is inside the framebuffer when
-                   walk_window's fade loop runs over it. Whether engine A's
-                   fade belongs on the SUB screen AT ALL on hardware is a
-                   question nobody has opened. The sub engine has its own
-                   master brightness at 0x0400106C and ppu_scanout_sub above
-                   already applies it, so this may well be a second fade on
-                   top of the right one. Reproducing today's behaviour is
-                   deliberate, so that switching layout changes the layout and
-                   nothing else; it is not a claim that today's behaviour is
-                   correct. No run has yet exercised a fade in the stacked
-                   layout. */
-                int r = (p >> 16) & 0xff, g = (p >> 8) & 0xff, b = p & 0xff;
-                if (to_white) {
-                    r += ((255 - r) * evy) >> 4;
-                    g += ((255 - g) * evy) >> 4;
-                    b += ((255 - b) * evy) >> 4;
-                } else {
-                    r -= (r * evy) >> 4;
-                    g -= (g * evy) >> 4;
-                    b -= (b * evy) >> 4;
-                }
-                p = 0xFF000000u | ((uint32_t)r << 16) | ((uint32_t)g << 8) |
-                    (uint32_t)b;
-            }
-            out[x] = p;
+            out[x] = src[sx < SUB_W ? sx : SUB_W - 1];
         }
     }
 

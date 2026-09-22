@@ -1,15 +1,15 @@
-/* HOST COPY of src/func_ov018_02111b3c.c -- MOTHER_PENGUIN's chase gate (id
+/* HOST COPY of src/game/actors/d_a_pg_mthr.cpp -- MOTHER_PENGUIN's chase gate (id
  * 257, ov018, level 10). Run link100, lane MPG, gate mpg.
  *
  * WHY A HOST COPY: the r0-passthrough seam, the sixth instance of the shape
  * port/unmatched/Actor_ClosestPlayer_OverlayReaders.cpp hosts four of and
  * port/unmatched/Bubba_ChaseGate.cpp the fifth. That file's LATENT registry
- * names this exact TU -- "src/func_ov018_02111b3c.c (ov018, calls
+ * names this exact TU -- "src/game/actors/d_a_pg_mthr.cpp (ov018, calls
  * ClosestPlayer() no arg)" -- as a bug that goes live the instant the body is
  * in the build, which is what this gate does. port/tools/closestplayer_guard.py
  * failed the build rather than letting it through, and it did.
  *
- * The matched src declares `extern char *_ZN5Actor13ClosestPlayerEv(void);` and
+ * The matched src declares `extern char *_ZN8dActor_c13ClosestPlayerEv(void);` and
  * calls it with no argument. That is byte-identical on ARM because
  * Actor::ClosestPlayer reads `this` from r0 and the caller's r0 is still live
  * across the `bl` -- ROM 0x02111b3c:
@@ -42,15 +42,24 @@
 
 /* the real one-arg (this) shape, the same declaration the four copies in
  * Actor_ClosestPlayer_OverlayReaders.cpp and Bubba_ChaseGate.cpp share */
-extern "C" char *_ZN5Actor13ClosestPlayerEv(void *self);
+extern "C" char *_ZN8dActor_c13ClosestPlayerEv(void *self);
 
 extern "C" {
 extern int Vec3_Dist(const struct Vector3 *a, const struct Vector3 *b);
 extern void func_ov018_021123d0(char *c, int i);
 
+/* RETIRED, run link100 lane HOSTGEN2. The ruling is "ARM r0 passthrough into a
+   thiscall Actor::ClosestPlayer", and main's text no longer has it:
+   src/game/actors/d_a_pg_mthr.cpp declares
+   `extern char* _ZN8dActor_c13ClosestPlayerEv(char* thisptr);` at line 78 and
+   passes the receiver at both call sites, lines 359 and 613.
+   port/tools/closestplayer_guard.py re-decides that question over every
+   build-active TU before configure, so a wrong reading here refuses the build
+   rather than shipping a garbage receiver. Text kept, not deleted. */
+#if 0  /* HOSTGEN2: body seated from src, see above */
 void func_ov018_02111b3c(char *c)
 {
-    char *p = _ZN5Actor13ClosestPlayerEv(c);
+    char *p = _ZN8dActor_c13ClosestPlayerEv(c);
     char *r1;
     if (p == 0) return;
     if (Vec3_Dist((struct Vector3 *)(c + 0x364),
@@ -66,4 +75,5 @@ void func_ov018_02111b3c(char *c)
     *(char **)(c + 0x374) = p;
     func_ov018_021123d0(c, 2);
 }
+#endif  /* HOSTGEN2: func_ov018_02111b3c retired to src */
 }

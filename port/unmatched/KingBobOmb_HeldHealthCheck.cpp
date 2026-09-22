@@ -1,4 +1,4 @@
-/* HOST COPY of src/func_ov078_02123f1c.cpp -- King Bob-omb per-frame helper that
+/* HOST COPY of src/actors/daBombking_c.cpp -- King Bob-omb per-frame helper that
  * checks the health of the Player it is holding.
  *
  * THE CALLING-CONVENTION SEAM:
@@ -24,7 +24,7 @@
  * mPlayerNo. THE FIX passes the held Player explicitly -- c->field_494, the
  * ROM's r0.
  *
- * src/func_ov078_02123f1c.cpp is dropped from slice_gate32.txt in favour of this
+ * src/actors/daBombking_c.cpp is dropped from slice_gate32.txt in favour of this
  * file; the byte-locked source is unchanged.
  */
 

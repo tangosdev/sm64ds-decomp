@@ -1,0 +1,63 @@
+#ifndef DAOBJKI_ITA_C_H
+#define DAOBJKI_ITA_C_H
+
+#include "types.h"
+
+extern "C" void *_ZN7fBase_cnwEj(unsigned size);
+
+/* Jolly Roger Bay's floating plank. `ita` is a board.
+ *
+ * IT DOES NOT DERIVE FROM dBgActor_c. It derives from daObjFloatBoard_c, which derives from
+ * dBgActor_c, and the difference is in the bytes rather than only in the RTTI: its
+ * destructor stores THREE vptrs -- its own, daObjFloatBoard_c's, then dBgActor_c's.
+ * A one-level chain emits two.
+ *
+ *   _ZTI13daObjKi_Ita_c  ov016 0x02114b80
+ *   _ZTS13daObjKi_Ita_c  ov016 0x02114b98
+ *   _ZTV13daObjKi_Ita_c  ov016 0x02114bcc  (public address point)
+ *   kind  __si_class_type_info, ONE base, subobject offset 0
+ *   base  daObjFloatBoard_c, ov002 0x02108fb4
+ *
+ * NO FIELDS OF ITS OWN: daObjKi_Ita_c_classInit passes 840 = 0x348, which
+ * daObjFloatBoard_c fills. It overrides slot 0 only -- the base supplies slot 3,
+ * so this class has no CleanupResources.
+ */
+
+#ifdef __cplusplus
+
+#include "daObjFloatBoard_c.h"
+
+struct daObjKi_Ita_c : daObjFloatBoard_c {
+    int InitResources();               /* slot  0 */
+
+    static void *operator new(size_t size);
+
+    /* Declared last and inline so class instantiation can emit the retail
+       D1/D0 pair in cartridge order without a separate D2 body. */
+    /* The destructor pair spelled as two plain virtuals on the host, plus
+       the non-virtual destructor declaration the src/ definitions need; the
+       whole ruling is in include/ModelBase.h. An override takes its base's
+       slots, so these carry the SAME TWO NAMES the base declares -- a fresh
+       name would append a slot instead of claiming one. */
+#ifdef _MSC_VER
+    virtual void Destructor1();   /* D1 */
+    virtual void Destructor0();   /* D0 */
+    ~daObjKi_Ita_c() {}   /* no slot */
+#else
+    virtual ~daObjKi_Ita_c() {}   /* D1 and D0 */
+#endif
+};
+
+inline void *daObjKi_Ita_c::operator new(size_t size)
+{
+    return _ZN7fBase_cnwEj((unsigned)size);
+}
+
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
+typedef char daObjKi_Ita_c_size_must_be_0x348[sizeof(daObjKi_Ita_c) == 0x348 ? 1 : -1];
+#endif
+
+#endif /* __cplusplus */
+
+#endif /* DAOBJKI_ITA_C_H */

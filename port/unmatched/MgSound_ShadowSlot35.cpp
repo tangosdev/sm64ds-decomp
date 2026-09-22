@@ -4,7 +4,7 @@
 // data_ov006_02142df8, one of the ten per-entity states the 0x14-stride array
 // runs, and it reaches the port FOUR ways broken. All four were found by
 // disassembling 0x0211ba88 out of extracted/overlays/overlay_0006.bin at base
-// 0x020bfec0 and reading it against src/func_ov006_0211ba88.c line by line.
+// 0x020bfec0 and reading it against src/actors/dScMgSound_c.cpp line by line.
 //
 // THE SRC TU IS BANNERED "Logic verified correct vs ROM" AND IT IS NOT. That
 // sentence is the reason this file exists rather than a slice line, and the
@@ -34,12 +34,12 @@
 //     blx   r1               r0 == this, so the receiver IS passed
 //
 // hal/scene_mg.cpp's mb_v35 is `static int __fastcall mb_v35(void *s, void *)`
-// and forwards s to func_ov004_020ad660, whose matched body is
+// and forwards s to _ZN11dScMgBase_c9Virtual8CEv, whose matched body is
 // `return (r0[2] & 0xff) != 0`. With no receiver it reads whatever is in ecx.
 // This is the SAME defect port/mg_fanout_costs.txt section 14 found in mb_v35
 // itself and repaired there, arriving from the caller's side this time.
 //
-// THE FIX IS THE ONE src/func_ov006_021063a0.c ALREADY USES for its own two
+// THE FIX IS THE ONE src/actors/dScMgPanel_c.cpp ALREADY USES for its own two
 // slot-35 reads: a shadow class of thirty-five virtuals with the slot as the
 // thirty-sixth, so the compiler emits a real __thiscall and `this` rides ecx.
 //
@@ -47,7 +47,7 @@
 // lane MEM's shadow-class test is that a shadow over a HOST C++ vtable
 // (Model, ModelAnim, BlendModelAnim, built by hal/cxxname_bridge.cpp in MSVC
 // order) is wrong and a shadow over the MOUNTED ROM TABLE is right. This
-// object's vptr is data_ov006_0213f844, which hal/scene_mg_boombox.cpp fills
+// object's vptr is _ZTV12dScMgSound_c, which hal/scene_mg_boombox.cpp fills
 // BY ROM WORD and therefore leaves in ROM slot order. Slot 35 is slot 35.
 //
 // ---- 2. THE MODULO IS APPROXIMATED BY ONE SUBTRACTION ---------------------
@@ -123,7 +123,7 @@
 // port/mg_fanout_costs.txt section 10 records for the fabricated ov004
 // language table: whether the corrected source still builds byte-identically
 // under mwccarm is a byte-gated-tree question and this is not a byte-gated
-// tree. src/func_ov006_0211ba88.c is UNTOUCHED and is excluded from
+// tree. src/actors/dScMgSound_c.cpp is UNTOUCHED and is excluded from
 // port/slice_box.txt; this file defines the symbol.
 //
 // THE FULL LIST THE DECOMP SIDE OWES, so the banner can be corrected in one
@@ -139,9 +139,9 @@ extern int data_ov006_0212ef6c[];
 }
 
 /* The mounted ROM table, in ROM slot order. Thirty-five virtuals so that the
-   thirty-sixth lands on slot 35, which is func_ov004_020ad660 --
+   thirty-sixth lands on slot 35, which is _ZN11dScMgBase_c9Virtual8CEv --
    dScMgBase_c's `return (this[2] & 0xff) != 0`, the packed spawn param's low
-   byte. src/func_ov006_021063a0.c is the precedent for this spelling. */
+   byte. src/actors/dScMgPanel_c.cpp is the precedent for this spelling. */
 struct MgSoundVt {
     virtual void v00(); virtual void v01(); virtual void v02(); virtual void v03();
     virtual void v04(); virtual void v05(); virtual void v06(); virtual void v07();

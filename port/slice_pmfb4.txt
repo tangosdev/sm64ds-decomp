@@ -34,7 +34,7 @@
 #   func_ov006_020d5fec  data_ov006_02141660  4 slots  arity 1
 #   func_ov006_020d65c8  data_ov006_02141680  4 slots  arity 1
 #   func_ov006_020d6278  data_ov006_021416c0  4 slots  arity 1
-#   func_ov006_020d91b0  data_ov006_021416e0  5 slots  arity 0   (vtable slot 6)
+#   _ZN14dScMgBomroom_c8BehaviorEv  data_ov006_021416e0  5 slots  arity 0   (vtable slot 6)
 #   func_ov006_020d836c  data_ov006_02141730  7 slots  arity 1
 #
 # THE TWO TABLES NOT SEATED, and the two host copies that stay with them:
@@ -105,7 +105,7 @@
 # dumpbin /symbols -- while the ov006 mount defines the plain C name. The other
 # four TUs declare their tables inside their own extern "C" blocks.
 #
-# TWO GUESS MARKERS, BOTH ALREADY ADJUDICATED. src/func_ov006_020d91b0.cpp
+# TWO GUESS MARKERS, BOTH ALREADY ADJUDICATED. src/_ZN14dScMgBomroom_c8BehaviorEv.cpp
 # carries "recovered from vtable slot identity"; port/tools/
 # inferred_stub_adjudicated.txt:604 rules it REAL_DECOMP against the ROM (0x94,
 # 35 instructions plus a two-word pool, both pool words and both call targets
@@ -121,15 +121,13 @@
 # forever and nothing is wrong.
 #
 # STALE COMMENT DISCLOSED, NOT EDITED. hal/scene_mg_bomroom.cpp:244-248 calls
-# func_ov006_020d91b0 "the HOST COPY in port/unmatched/MgBomroom_StateDispatch.
-# cpp" and hal/scene_mg.cpp:1715-1720 says the same of func_ov006_020f3414.
+# _ZN14dScMgBomroom_c8BehaviorEv "the HOST COPY in port/unmatched/MgBomroom_StateDispatch.
+# cpp" and hal/scene_mg.cpp:1715-1720 says the same of _ZN12dScMgLuigi_c8BehaviorEv.
 # Both are the matched TU now. The declarations themselves are correct -- same C
 # linkage, same one-pointer signature, same int return -- and neither file is
 # this lane's to edit, so the prose is left alone and named here.
-src/func_ov006_020d5fec.cpp
-src/func_ov006_020d65c8.cpp
-src/func_ov006_020d6278.cpp
-src/func_ov006_020d91b0.cpp
+src/actors/dScMgBomroom_c.cpp
+src/_ZN14dScMgBomroom_c8BehaviorEv.cpp
 src/func_ov006_020d836c.cpp
 #
 # ---- BATCH 1 CONTINUED: dScMgLuigi_c, THREE TABLES --------------------------
@@ -139,13 +137,13 @@ src/func_ov006_020d836c.cpp
 # copies -- four and not three, because data_ov006_02142254 is the one table in
 # the whole remaining population that TWO rows read:
 #
-#   func_ov006_020f0d58  data_ov006_02142204   3 slots  arity 1
-#   func_ov006_020f3414  data_ov006_02142234   4 slots  arity 0  (vtable slot 6)
-#   func_ov006_020f1e90  data_ov006_02142254  10 slots  arity 1
-#   func_ov006_020f300c  data_ov006_02142254   the second reader, arity 1
+#   _ZN12dScMgLuigi_c12CurtainsDoneEv  data_ov006_02142204   3 slots  arity 1
+#   _ZN12dScMgLuigi_c8BehaviorEv  data_ov006_02142234   4 slots  arity 0  (vtable slot 6)
+#   _ZN12dScMgLuigi_c14UpdatePicturesEv  data_ov006_02142254  10 slots  arity 1
+#   _ZN12dScMgLuigi_c10StateCatchEv  data_ov006_02142254   the second reader, arity 1
 #
 # THE TWO TABLES NOT SEATED are data_ov006_021421ec and data_ov006_0214221c,
-# whose dispatchers (func_ov006_020f0044 and func_ov006_020f0ba0) are not
+# whose dispatchers (_ZN12dScMgLuigi_c10UpdateIrisEv and _ZN12dScMgLuigi_c13CurtainUpdateEi) are not
 # family-C CALL SHAPE rows on this census; their host copies stay and
 # luigi_try_1 stays live for their six addresses.
 #
@@ -171,21 +169,18 @@ src/func_ov006_020d836c.cpp
 # 020f0d58, 020f3414 and 020f1e90 declare their tables at namespace scope, so
 # MSVC spells ?data_ov006_02142204@@3PAUEntry@@A,
 # ?data_ov006_02142234@@3PAUEntry@@A and ?data_ov006_02142254@@3PAUEntry@@A --
-# all three read off the objects with dumpbin /symbols. src/func_ov006_020f300c
+# all three read off the objects with dumpbin /symbols. src/_ZN12dScMgLuigi_c10StateCatchEv
 # .cpp declares the SAME data_ov006_02142254 inside its own extern "C" block and
 # comes in as the plain _data_ov006_02142254. One table, two spellings, both
 # resolving through the mount's single definition.
 #
-# TWO OF THE FOUR ARE THEMSELVES STATE BODIES: func_ov006_020f300c is slot 3 of
-# data_ov006_02142234 and func_ov006_020f0ba0 (still a host copy) is slot 1 of
+# TWO OF THE FOUR ARE THEMSELVES STATE BODIES: _ZN12dScMgLuigi_c10StateCatchEv is slot 3 of
+# data_ov006_02142234 and _ZN12dScMgLuigi_c13CurtainUpdateEi (still a host copy) is slot 1 of
 # data_ov006_02142204. The installer writes faces that call both, so seating
 # 02142234 does not orphan the retired dispatcher: it is reached as a state
 # through its own seated cell and dispatches 02142254 through the seated cells
 # in turn.
-src/func_ov006_020f0d58.cpp
-src/func_ov006_020f3414.cpp
-src/func_ov006_020f1e90.cpp
-src/func_ov006_020f300c.cpp
+src/actors/dScMgLuigi_c.cpp
 #
 # ---- BATCH 2: dScMgTeresa_c, FOUR TABLES (the class closes) -----------------
 #
@@ -193,7 +188,7 @@ src/func_ov006_020f300c.cpp
 # tables, which is the whole class. All four tables are seated here, so NO HOST
 # COPY OF A dScMgTeresa_c DISPATCHER IS LEFT:
 #
-#   func_ov006_021203ac  data_ov006_02142eb0   5 slots  arity 0  (vtable slot 6)
+#   _ZN13dScMgTeresa_c8BehaviorEv  data_ov006_02142eb0   5 slots  arity 0  (vtable slot 6)
 #   func_ov006_0211dd0c  data_ov006_02142e88   5 slots  arity 1
 #   func_ov006_0211d5a8  data_ov006_02142f18   9 slots  arity 1
 #   func_ov006_0211f6fc  data_ov006_02142ed8   8 slots  arity 1
@@ -222,31 +217,30 @@ src/func_ov006_020f300c.cpp
 #
 # THE CENSUS RECEIVER MOVES WITH THE BEHAVIOR. hal/scene_mg_booseek.cpp reads the
 # top-level state index through port_mg_teresa_state_index, and the only place
-# that ever recorded the receiver was func_ov006_021203ac just before its
+# that ever recorded the receiver was _ZN13dScMgTeresa_c8BehaviorEv just before its
 # dispatch. That is the matched TU now, so data_ov006_02142eb0's five faces
 # record it -- same object, same instant in the frame, because the face runs from
 # inside that same dispatch. Without this the census would read -1 forever with
 # nothing wrong, which is the witness trap PMFB3 recorded.
 #
-# ONE GUESS MARKER, ADJUDICATED. src/func_ov006_021203ac.cpp carries "recovered
+# ONE GUESS MARKER, ADJUDICATED. src/_ZN13dScMgTeresa_c8BehaviorEv.cpp carries "recovered
 # from vtable slot identity"; port/tools/inferred_stub_adjudicated.txt:2316 rules
 # it REAL_DECOMP against the ROM.
 #
 # STALE COMMENT DISCLOSED, NOT EDITED. hal/scene_mg_booseek.cpp:66 says "vtable
-# slot 6 is NOT wired to src/func_ov006_021203ac.cpp ... it would stride an
+# slot 6 is NOT wired to src/_ZN13dScMgTeresa_c8BehaviorEv.cpp ... it would stride an
 # eight-byte table by four", and its face points at the host copy. The stride
 # half of that is superseded by measurement: this port compiles with /vmg /vmm,
 # under which an incomplete class's pointer to member is the general eight-byte
 # representation, and the TU's own listing reads [eax*8] against the ROM's
 # lsl #3. The file is not this lane's to edit, so the prose is left and named.
-src/func_ov006_021203ac.cpp
-src/func_ov006_0211dd0c.cpp
-src/func_ov006_0211d5a8.cpp
+src/_ZN13dScMgTeresa_c8BehaviorEv.cpp
+src/actors/dScMgTeresa_c.cpp
 src/func_ov006_0211f6fc.cpp
 #
 # ---- BATCH 2 CONTINUED: dScMgCoin_c, THREE TABLES OF FIVE -------------------
 #
-#   func_ov006_020de69c  data_ov006_02141810   6 slots  arity 0  (vtable slot 6)
+#   _ZN11dScMgCoin_c8BehaviorEv  data_ov006_02141810   6 slots  arity 0  (vtable slot 6)
 #   func_ov006_020dd2cc  data_ov006_021417b0   3 slots  arity 1
 #   func_ov006_020de26c  data_ov006_02141840   6 slots  arity 1
 #
@@ -282,11 +276,11 @@ src/func_ov006_0211f6fc.cpp
 # and the switch no longer sees that address, so the count is taken in slot 0's
 # face.
 #
-# ONE GUESS MARKER, ADJUDICATED: src/func_ov006_020de69c.cpp, ruled REAL_DECOMP
+# ONE GUESS MARKER, ADJUDICATED: src/_ZN11dScMgCoin_c8BehaviorEv.cpp, ruled REAL_DECOMP
 # at port/tools/inferred_stub_adjudicated.txt:487.
 #
 # STALE COMMENT DISCLOSED, NOT EDITED: hal/scene_mg.cpp:3002-3006 still calls
-# func_ov006_020de69c "the HOST COPY". The declaration beside it is correct.
+# _ZN11dScMgCoin_c8BehaviorEv "the HOST COPY". The declaration beside it is correct.
 #
 # A FOURTH DIRECTIVE THE LINK FOUND AND THIS LANE DID NOT PREDICT.
 # src/func_ov006_020de26c.cpp reaches ov004's data_ov004_020beb68 under the name
@@ -302,13 +296,13 @@ src/func_ov006_0211f6fc.cpp
 # storage, in this lane's own seat file, read off the object with dumpbin. The
 # failed link deleted walk_window.exe and truncated the map, which is the shape
 # the house law warns about; the gate was re-built from clean after the fix.
-src/func_ov006_020de69c.cpp
+src/_ZN11dScMgCoin_c8BehaviorEv.cpp
 src/func_ov006_020dd2cc.cpp
 src/func_ov006_020de26c.cpp
 #
 # ---- BATCH 2 CONTINUED: dScMg3DEsp_c, THREE TABLES OF SEVEN -----------------
 #
-#   func_ov006_020e9e00  data_ov006_02141f2c   3 slots  arity 0  (vtable slot 6)
+#   _ZN12dScMg3DEsp_c8BehaviorEv  data_ov006_02141f2c   3 slots  arity 0  (vtable slot 6)
 #   func_ov006_020e9374  data_ov006_02141f5c   3 slots  arity 1
 #   func_ov006_020e8d08  data_ov006_02141f74   3 slots  arity 1
 #
@@ -323,7 +317,7 @@ src/func_ov006_020de26c.cpp
 # EMITTED: [eax*8]/[eax*8+4] on all three; /Zp4 a no-op on all three.
 #
 # A WARNING IN THE SEAT FILE IS SUPERSEDED BY THIS MEASUREMENT, and the seat file
-# now says so. Its section on func_ov006_020e9e00 said the src's `extern "C" PMF
+# now says so. Its section on _ZN12dScMg3DEsp_c8BehaviorEv said the src's `extern "C" PMF
 # data_ov006_02141f2c[];` is "SILENT to a link ... the linker is satisfied while
 # MSVC strides the eight-byte table by four". The silence to the LINK is still
 # real -- the plain C name resolves, and this is the one row in the batch that
@@ -351,12 +345,12 @@ src/func_ov006_020de26c.cpp
 # to say WHICH of the seven tables ran. The faces take the counts instead, one
 # per dispatch through their own table.
 #
-# ONE GUESS MARKER, ADJUDICATED: src/func_ov006_020e9e00.cpp, ruled REAL_DECOMP
+# ONE GUESS MARKER, ADJUDICATED: src/_ZN12dScMg3DEsp_c8BehaviorEv.cpp, ruled REAL_DECOMP
 # at port/tools/inferred_stub_adjudicated.txt:1111.
 #
 # STALE COMMENT DISCLOSED, NOT EDITED: hal/scene_mg_psycheout.cpp:203-208 still
-# calls func_ov006_020e9e00 "the HOST COPY".
-src/func_ov006_020e9e00.cpp
+# calls _ZN12dScMg3DEsp_c8BehaviorEv "the HOST COPY".
+src/_ZN12dScMg3DEsp_c8BehaviorEv.cpp
 src/func_ov006_020e9374.cpp
 src/func_ov006_020e8d08.cpp
 #
@@ -399,8 +393,8 @@ src/func_ov006_0210246c.cpp
 #
 # ---- BATCH 3 CONTINUED: dScMgMemory_c, TWO TABLES --------------------------
 #
-#   func_ov006_020f5388  data_ov006_021422dc   5 slots  arity 0  (vtable slot 6)
-#   func_ov006_020f3f10  data_ov006_02142334   7 slots  arity 1
+#   _ZN13dScMgMemory_c8BehaviorEv  data_ov006_021422dc   5 slots  arity 0  (vtable slot 6)
+#   _ZN13dScMgMemory_c11UpdateCardsEv  data_ov006_02142334   7 slots  arity 1
 #
 # ROM: add r3,r1,r0,lsl #3 at 020f539c on pool 020f53dc = 021422dc, and
 # add r3,r4,r0,lsl #3 at 020f3f3c on pool 020f3f80 = 02142334. EMITTED [eax*8]
@@ -413,22 +407,21 @@ src/func_ov006_0210246c.cpp
 # one-argument cells and their faces call them with nothing, which is the
 # ride-through shape port/tools/aritycheck.py checks.
 #
-# TWO HOST COPIES STAY: func_ov006_020f5164 and func_ov006_020f50f8 are STATE
+# TWO HOST COPIES STAY: _ZN13dScMgMemory_c9StatePlayEv and _ZN13dScMgMemory_c11StateResultEv are STATE
 # BODIES of data_ov006_021422dc, not dispatchers of a table of their own, so
 # the installer writes faces that call them.
 #
 # ONE /alternatename (?data_ov006_02142334@@3PAP8C75@@AEXH@ZA) and one
-# adjudicated guess marker (src/func_ov006_020f5388.cpp, REAL_DECOMP at
+# adjudicated guess marker (src/minigames/d_s_mg_memory.cpp, REAL_DECOMP at
 # port/tools/inferred_stub_adjudicated.txt:760).
 #
 # STALE COMMENT DISCLOSED, NOT EDITED: hal/scene_mg_memory1.cpp:247-251.
-src/func_ov006_020f5388.cpp
-src/func_ov006_020f3f10.cpp
+src/minigames/d_s_mg_memory.cpp
 #
 # ---- BATCH 3 CONTINUED: dScMgMemory2_c, TWO TABLES -------------------------
 #
-#   func_ov006_020f7458  data_ov006_021423e0   5 slots  arity 0  (vtable slot 6)
-#   func_ov006_020f5c40  data_ov006_02142408   7 slots  arity 1
+#   _ZN14dScMgMemory2_c8BehaviorEv  data_ov006_021423e0   5 slots  arity 0  (vtable slot 6)
+#   _ZN14dScMgMemory2_c11UpdateCardsEv  data_ov006_02142408   7 slots  arity 1
 #
 # ROM: add r3,r1,r0,lsl #3 at 020f746c on pool 020f74ac = 021423e0, and
 # add r3,r4,r0,lsl #3 at 020f5c6c on pool 020f5cb0 = 02142408. EMITTED [eax*8]
@@ -448,17 +441,16 @@ src/func_ov006_020f3f10.cpp
 # ARITY: 020f5c40 pushes edi at both of its two call sites, 020f7458 pushes
 # nothing. Two slots are `void(void)` empty bodies in one-argument cells.
 #
-# TWO HOST COPIES STAY: func_ov006_020f7234 and func_ov006_020f71c8, state
+# TWO HOST COPIES STAY: _ZN14dScMgMemory2_c9StatePlayEv and _ZN14dScMgMemory2_c11StateResultEv, state
 # bodies of data_ov006_021423e0. The switch arm that counts the NONMATCHING body
 # at 0x020f6904 is in neither seated table and is untouched.
 #
 # ONE /alternatename (?data_ov006_02142408@@3PAP8C77@@AEXH@ZA) and one
-# adjudicated guess marker (src/func_ov006_020f7458.cpp, REAL_DECOMP at
+# adjudicated guess marker (src/actors/dScMgMemory2_c.cpp, REAL_DECOMP at
 # port/tools/inferred_stub_adjudicated.txt:326).
 #
 # STALE COMMENT DISCLOSED, NOT EDITED: hal/scene_mg_memory2.cpp:188-192.
-src/func_ov006_020f7458.cpp
-src/func_ov006_020f5c40.cpp
+src/actors/dScMgMemory2_c.cpp
 #
 # ---- BATCH 3 CONTINUED: dScMgPachinko_c, TWO TABLES ------------------------
 #
@@ -494,7 +486,7 @@ src/func_ov006_020fb60c.cpp
 # func_ov006_020e1854, the hand-transcribed body in
 # unmatched/MgCurling_State_020e1854.cpp rather than a matched src TU, so the
 # face for it has to name that file's symbol and not the ROM's. Its sibling
-# func_ov006_020e3528 (data_ov006_02141950, 5 slots) is clean and single-table
+# _ZN14dScMgCurling_c8BehaviorEv (data_ov006_02141950, 5 slots) is clean and single-table
 # but slot 1 of that table IS func_ov006_020e3078, so the two rows have to move
 # together or one of them installs a face pointing at a host copy that is about
 # to be retired. Left as one coherent piece of work for the next lane rather

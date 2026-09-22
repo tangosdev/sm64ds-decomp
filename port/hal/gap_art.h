@@ -48,7 +48,7 @@
 #include <cstdint>
 
 /* The live minigame scene object, or null when no minigame is running. This is
-   the ROM's own dScMgBase_c `this`: the base constructor func_ov004_020b2adc
+   the ROM's own dScMgBase_c `this`: the base constructor _ZN11dScMgBase_cC2Ev
    ends with `data_ov004_020beb68 = self`, and every ov004 body that needs the
    current scene reads it there. */
 unsigned char *hal_gap_scene(void);

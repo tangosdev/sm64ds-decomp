@@ -1,0 +1,81 @@
+# Gate title (run link100 wave 14, lane SEAT14D): dScTitle_c, scene id 2 --
+# the LAST of ov003's three scene classes to be seated. dScStarSel_c (id 4)
+# went in on slice_scene1.txt and dScGameOver_c (id 8) on slice_mpg2.txt; this
+# file is the third, and it closes the overlay's scene set.
+#
+# WHAT THIS CLASS IS. It is the DEBUG LEVEL SELECT, not the title screen, and
+# out/LINK14/BATCHES.md has that backwards. The title screen and file select
+# are dScDSMT_c, scene id 1 in ov007, seated by run link60 lane L2 and
+# described in port/hal/scene_boot.cpp beside this class's seat. Both
+# port/hal/scene_boot.cpp:67 and port/ov003_syms.txt:3 name id 2 "the debug
+# level select", and dScTitle_c::Behavior's own two-column table at
+# data_ov003_020b1180/0x020b1181 is a level column and an entrance column --
+# a level picker, not a menu. The opening route never enters scene 2.
+#
+# WHY THESE TUs LINK. The reference chain is the ROM's own and nothing here is
+# a link root. The arm9 ACTOR_SPAWN_TABLE (0x02090864) relocates slot 2 to
+# g_profile_TITLE (config/arm9/relocs.txt, from:0x0209086c to:0x020b1380); the
+# seat parks that record in data_020a4bb8[2] with its factory word repointed at
+# dScTitle_c_classInit, the same three statements every other scene row makes.
+# g_profile_TITLE's own +0 word relocates to 0x020adc10, which IS the factory
+# (config/arm9/overlays/ov003/relocs.txt:586), and its +4 halfword reads 2 back
+# -- the registry's own cross-check. The class vtable is the host array the
+# fill writes the ROM's own slot contents into, which is what names the six
+# bodies; everything else here is reached from one of those entry points.
+# Nothing is /include:'d, no alias points at any of it, and no call is made
+# from a place the ROM does not call.
+#
+# BOTH OF port/slice_scene1.txt's BLOCKERS ARE CLEARED, and neither by this
+# gate deciding it was fine.
+#   1. The six marker-carrying bodies are ALREADY ruled REAL_DECOMP in
+#      port/tools/inferred_stub_adjudicated.txt:2205-2210, re-derived at
+#      :2507-2512 by lane ADJ, each behind a tools/match.py 2004/b56
+#      strict-relocation byte gate. No new ruling is added here and
+#      inferred_stub_guard is not asked for one.
+#   2. The placeholder trio (_ZTV10dScTitle_c / _ZTV8dScene_c / _ZTV7dBase_c,
+#      ROM words 0x020b1650 / 0x02092680 / 0x0208e4b8) is a MWCC-SIDE spelling
+#      and there is nothing for this host build to rename. Measured, not
+#      assumed: src/_ZN10dScTitle_cD1Ev.cpp's body is empty -- the vptr stores
+#      come out of the compiler, not out of source text -- so unlike
+#      src/actors/dScGameOver_c.cpp, which spells VT0/VT1/VT2/G0 and needs
+#      port/CMakeLists.txt's per-TU renames, this TU spells none of the six
+#      names. `grep -n "VT0\|VT1\|VT2\|_ZTV" src/_ZN10dScTitle_cD1Ev.cpp` is
+#      empty. A COMPILE_DEFINITIONS row here would be dead the way the one
+#      lane CDEFS deleted from the mpg2 block was dead.
+#
+# ---- dScTitle_c, scene id 2 (SpawnInfo 0x020b1380, vtable 0x020b1650) ------
+# the factory: fBase_c::operator new(0x54), the fBase_c ctor, the three vptr
+# writes the ROM makes in order and the two +0x13 flag bits. It already spells
+# data_ov003_020b1650 and _ZTV8dScene_c by name, so it needs no rename.
+src/d_s_title.cpp
+# slot 3  CleanupResources -- 0x020ada80, one Sound::UnsetPlayerVoiceGroup call
+src/_ZN10dScTitle_c16CleanupResourcesEv.cpp
+# slot 9  Render -- 0x020ad7a4, OAM::EnableSubOAM plus one OAM word
+src/_ZN10dScTitle_c6RenderEv.cpp
+# slot 12 OnPendingDestroy -- 0x020ad7a0, 4 bytes, bx lr
+src/_ZN10dScTitle_c16OnPendingDestroyEv.cpp
+# slot 16 D2 -- 0x020ad660
+src/_ZN10dScTitle_cD1Ev.cpp
+# slot 17 D0 -- 0x020ad69c. NOT LISTED, and that is the same call
+# port/slice_scene1.txt made for src/_ZN12dScStarSel_cD0Ev.cpp: MSVC folds the
+# ROM's destructor variants into ONE symbol, so only one of a class's two
+# per-function destructor TUs can be compiled. Listing both is LNK2005.
+#src/_ZN10dScTitle_cD0Ev.cpp
+# slot 0  InitResources -- 0x020ada9c
+src/_ZN10dScTitle_c13InitResourcesEv.cpp
+# slot 6  Behavior -- 0x020ad814, the level/entrance picker state machine
+src/_ZN10dScTitle_c8BehaviorEv.cpp
+#
+# ---- the class's own closure ----------------------------------------------
+# 0x020ad6ec is named by InitResources and by Behavior and by nothing else in
+# this build, so it is a real gain rather than a re-count.
+src/func_ov003_020ad6ec.c
+#
+# THREE RIDERS ARE NOT LISTED HERE ON PURPOSE. src/func_ov003_020adc74.cpp,
+# src/func_ov003_020adcbc.cpp and src/_ZN2G212GetBG0ScrPtrEv.cpp are ALREADY
+# active lines in port/slice_scene1.txt (lines 81-95 there name all three and
+# say why they do not link yet). They are compiled today and then dropped by
+# /OPT:REF because the only thing that reaches them is func_ov003_020ad6ec,
+# which is this class's. A second slice line would enroll the same source in a
+# second target and hand the link two definitions. They land in the binary on
+# this gate without a line of their own, and they count towards this gate.

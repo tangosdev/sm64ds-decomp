@@ -581,7 +581,7 @@ bool io_init() {
        which is bit 15 (display swap), bits 1/2/3/9 (2D engine A, the 3D
        render engine, the 3D geometry engine, 2D engine B) and bit 0 (the
        LCDs) all lit -- 0x820F -- and Scene::ResetHardwareRegisters
-       (src/_ZN5Scene22ResetHardwareRegistersEv.cpp) repeats the identical
+       (src/_ZN8dScene_c22ResetHardwareRegistersEv.cpp) repeats the identical
        three lines on every scene entry after that. So by the time any game
        code that can reach func_0205f650 runs, a real, running console
        already reads 0x820F here; that is the seeded word, not a guess at

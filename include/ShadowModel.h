@@ -18,11 +18,15 @@
  * (head data_0209cef4, freeze flag data_0209ceec): InitModel links in,
  * the destructor unlinks, RenderAll walks it and CleanAll empties it.
  *
- * THE DESTRUCTOR IS DECLARED FIRST AND NEVER DEFINED AS A METHOD -- the
- * key-function arrangement from include/ModelBase.h. D0/D1 stay C files,
- * which matters more than usual here because D1 carries the unlink logic.
+ * THE DESTRUCTOR IS DECLARED FIRST AND D1 IS A REAL METHOD -- the
+ * key-function arrangement from include/ModelBase.h, and the objisolate
+ * exemption to it recorded there. That matters more than usual here, because
+ * D1 carries the unlink logic and is now the only place it is written.
+ * D0 and D1 are both retained from that real destructor definition, so the
+ * compiler owns their vptr reset, ModelBase teardown and deleting-wrapper call.
+ * The ROM has no separately enrolled D2 symbol for this class.
  *
- * LAYOUT evidence: C1 calls ModelBase::C1, stores the vptr, zeroes mat,
+ * LAYOUT evidence: C1 calls ModelBase::C2, stores the vptr, zeroes mat,
  * prev and next; InitModel fills mat/scale/opacity and links; the D1
  * unlink pins prev at 0x20 and next at 0x24.
  *
@@ -51,13 +55,21 @@ struct ShadowModel : ModelBase {
     ShadowModel *prev;         /* 0x20 */
     ShadowModel *next;         /* 0x24 */
 
+    /* DECLARED, NEVER DEFINED HERE -- same reasoning as Model (include/Model.h)
+       and ModelBase: undeclared, the compiler synthesises this constructor and
+       INLINES it into every holder; the ROM calls _ZN11ShadowModelC1Ev
+       (0x02016068) out of line instead. */
+    ShadowModel();
+
     /* --- vtable, in ROM order. Do not reorder. --- */
-    /* The destructor pair spelled as two plain virtuals on the host; the whole
+    /* The destructor pair spelled as two plain virtuals on the host, plus the
+       non-virtual destructor declaration the src/ definition needs; the whole
        ruling is in include/ModelBase.h. Overrides take their base's slots, so
        these carry the SAME TWO NAMES ModelBase declares. */
 #ifdef _MSC_VER
     virtual void Destructor1();                       /* slot 0 (D1) */
     virtual void Destructor0();                       /* slot 1 (D0) */
+    ~ShadowModel();                                   /* no slot */
 #else
     virtual ~ShadowModel();                           /* slots 0 (D1), 1 (D0) */
 #endif
@@ -66,15 +78,23 @@ struct ShadowModel : ModelBase {
     /* --- non-virtual --- */
     void InitModel(Matrix4x3 *m, Fix12<int> sx, Fix12<int> sy, Fix12<int> sz,
                    u32 opacity);   /* defined as a free function, see above */
-    void InitCylinder();
-    void InitCuboid();
+    /* RETURNS int, not void: 0x02015ebc ends in `bx ip`, a tail call, so the
+       callee's r0 is this function's. Same evidence as ModelBase::SetFile. */
+    int InitCylinder();
+    /* int for the same reason, and by the same evidence: 0x02015ed8 also ends in
+       `bx ip`, so SetFile's r0 flows straight out. YoshiEgg::InitResources and
+       func_ov091_02133254 both test the result and bail on 0. */
+    int InitCuboid();
 
     /* --- static --- */
     static void RenderAll();
     static void CleanAll();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char ShadowModel_size_must_be_0x28[sizeof(ShadowModel) == 0x28 ? 1 : -1];
+#endif
 
 #else
 
@@ -91,6 +111,22 @@ struct ShadowModel {
     struct ShadowModel *prev;          /* 0x20 */
     struct ShadowModel *next;          /* 0x24 */
 };
+
+/* In C the tag alone is not a type name, so an owner header that embeds a
+   ShadowModel BY VALUE -- which several of the cartridge's own destructors prove
+   it does, see tools/dtor_members.py -- cannot spell the member without this.
+   The definition and the typedef have to travel together: with the definition
+   and no typedef the embed gets `undefined identifier', and then the owner's
+   size assert gets `illegal constant expression' on top of it. */
+typedef struct ShadowModel ShadowModel;
+
+/* The C view substitutes for the C++ class only while it is the SAME SIZE. Once
+   an owner embeds one by value the two branches lay that owner out differently if
+   they ever disagree, and nothing else in the build compares them. */
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
+typedef char ShadowModel_size_must_be_0x28[sizeof(struct ShadowModel) == 0x28 ? 1 : -1];
+#endif
 
 #endif /* __cplusplus */
 

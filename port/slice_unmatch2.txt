@@ -11,7 +11,7 @@
 # runs/link100/out/UNMATCH/.
 #
 # ---- 1. DA_PG_DFDR (ov027), +2 --------------------------------------------
-# src/func_ov027_02111d38.cpp and src/func_ov027_02111cfc.cpp both TAIL JUMP
+# src/actors/daPgDfdr_c.cpp and src/actors/daPgDfdr_c.cpp both TAIL JUMP
 # through the ROM's own record:
 #
 #     mov  eax, DWORD PTR _c$[ebp]
@@ -39,8 +39,7 @@
 # daPgDfdr_c's Behavior reaches func_ov027_02111cfc; both are called by C name
 # from the rest of the ov027 cast, which is why the two symbols never left the
 # link -- only their bodies did.
-src/func_ov027_02111d38.cpp
-src/func_ov027_02111cfc.cpp
+src/actors/daPgDfdr_c.cpp
 
 # ---- 2. YOSHI_EGG (ov002), +2 ---------------------------------------------
 # src/func_ov002_020ed63c.cpp (the state setter) and src/func_ov002_020ed684.cpp
@@ -76,7 +75,7 @@ src/func_ov002_020ed684.cpp
 # daPicGate_c's three per-mode dispatchers. The old host copy's header said
 # MSVC "widens the PMF to the 16-byte general form" and therefore strides 0x20
 # where the ROM strides 0x18. That is no longer true under /vmg /vmm and the
-# listing says so: src/func_ov080_02126ca0.cpp emits
+# listing says so: src/_ZN8Painting13InitResourcesEv.cpp emits
 #
 #     lea eax, DWORD PTR [eax+eax*2]                      ; * 3
 #     lea eax, ?data_ov080_02128628@@3PAUDisp@@A[eax*8]   ; * 8  == 0x18
@@ -99,7 +98,7 @@ src/func_ov002_020ed684.cpp
 # port/hal/unmatch_aliases.cpp.
 # REFERRER: _ZTV11Painting slots 0/6/9 (InitResources, Behavior, Render) --
 # the three rows SEAT3's census records as PMF EXCEPTION for ov080
-# (data_ov080_021282b4 slots 0, 6 and 9).
-src/func_ov080_02126ca0.cpp
-src/func_ov080_02126c60.cpp
-src/func_ov080_02126c20.cpp
+# (_ZTV8Painting slots 0, 6 and 9).
+src/_ZN8Painting13InitResourcesEv.cpp
+src/_ZN8Painting8BehaviorEv.cpp
+src/_ZN8Painting6RenderEv.cpp

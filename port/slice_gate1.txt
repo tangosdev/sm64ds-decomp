@@ -12,7 +12,7 @@
 #       they define Itanium-mangled symbols as C functions, which satisfies
 #       the NDS link but not MSVC's mangling; the host gets real C++ dtors
 #       from port/hal/shims.cpp instead
-#   src/_ZN4cstd4fdivEii.c
+#   src/_ZN4cstd4fdivEii.cpp
 #       chains to the DS hardware divider (fdiv_async/fdiv_result MMIO);
 #       port/hal/cstd_div.c is the host divider
 

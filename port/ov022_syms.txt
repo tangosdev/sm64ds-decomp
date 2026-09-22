@@ -1,3 +1,9 @@
+# RETIRED at SYNC6: the class translation unit main folded these bodies into
+# is back on its slice rows (today's #2660/#2663/#2666 un-quarantine) and it
+# DEFINES the names below itself, so the mount was the second definition.
+# Measured as LNK2005 rows against this file's generated object in
+# build_s2.log. Removed from the generator's INPUT, per the rule: never
+# edit the generated output. Retired here: g_profile_FL_LONDON
 # run linkw wave 8 (lane w8-packs): ov022's LETHAL LAVA LAND cast, per symbol.
 #
 # ov022 (level 14, Lethal Lava Land, data/stage/fire_land, course 6) is already
@@ -32,17 +38,17 @@
 # image -- the dsd export is the wrong image to read halfwords from).
 #
 #   id   SpawnInfo   word[0] spawnFunc            idhalf   x on L14
-#   70   0x02114380  0x021125a4 RollingLogLll_Spawn          70   x1
-#   71   0x02113cf4  0x02111578 VolcanoRing_Spawn            71   x1
-#   73   0x02113f4c  0x02111c7c LavaBridge_Spawn             73   x2
-#   74   0x02113e88  0x02111950 FloatOnLavaPlatform_Spawn    74   x1
-#   75   0x021140ec  0x021120f4 FloatingFloorLllBig_Spawn    75   x1
-#   76   0x02114108  0x021120b8 FloatingFloorLllSmall_Spawn  76   x3
-#   77   0x02114010  0x02111f3c LavaSeesaw_Spawn             77   x1
-#   80   0x02113dc4  0x02111688 RotatingPlatformLll_Spawn    80   x1
-#   82   0x021141cc  0x02112350 LavaPlank_Spawn              82   x3
-#   83   0x021142a0  0x0211245c FallBlockLll_Spawn           83   x9
-#  243   0x02114458  0x02112918 VolcanoFire_Spawn           243   (not placed)
+#   70   0x02114380  0x021125a4 daObjFlMaruta_c_classInit          70   x1
+#   71   0x02113cf4  0x02111578 daObjFl_Ring_c_classInit            71   x1
+#   73   0x02113f4c  0x02111c7c daObjFl_London_c_classInit             73   x2
+#   74   0x02113e88  0x02111950 daObjFl_Block_c_classInit    74   x1
+#   75   0x021140ec  0x021120f4 daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA    75   x1
+#   76   0x02114108  0x021120b8 daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA_L  76   x3
+#   77   0x02114010  0x02111f3c daObjFl_Seesaw_c_classInit             77   x1
+#   80   0x02113dc4  0x02111688 daObjFl_Koma_D_c_classInit    80   x1
+#   82   0x021141cc  0x02112350 daObjFl_UkiKi_c_classInit              82   x3
+#   83   0x021142a0  0x0211245c daObjFl_Fall_Block_c_classInit           83   x9
+#  243   0x02114458  0x02112918 daObj_volcanoCannon_c_classInit           243   (not placed)
 #
 # ROUTE 2, each Spawn's OWN final vtable-store relocation (the last kind:load
 # in the body's literal pool):
@@ -76,9 +82,9 @@
 # class inherits the wrong name. Four blocks are shifted here and six are not:
 #
 #   TRUE class            its bodies are spelled          its table is named
-#   74 FloatOnLavaPlatform _ZN19RotatingPlatformLll*      _ZTV19RotatingPlatformLll
-#   82 LavaPlank           _ZN19FloatingFloorLllBig*      _ZTV19FloatingFloorLllBig
-#   70 RollingLogLll       _ZN12FallBlockLll*             _ZTV12FallBlockLll
+#   74 FloatOnLavaPlatform _ZN19RotatingPlatformLll*      _ZTV19FloatOnLavaPlatform
+#   82 LavaPlank           _ZN19FloatingFloorLllBig*      _ZTV9LavaPlank
+#   70 RollingLogLll       _ZN12FallBlockLll*             _ZTV13RollingLogLll
 #  243 VolcanoFire         _ZN13RollingLogLll*            _ZTV13RollingLogLll
 #
 # The other six (71/73/77/80 unnamed func_ov022_*, 75/76 FloatingFloorLllSmall,
@@ -92,21 +98,21 @@
 # hal/actor_classes_ov022.cpp (the ov015/ov016/ov045/ov080 rule -- a mounted
 # vtable hands a factory DS code addresses). Their spans, and every dsd symbol
 # inside each (interior splits are excluded with them):
-#   0x02113d18..0x02113d98  71  32 slots  data_ov022_02113d18 +02113d30 +02113d90
-#   0x02113de8..0x02113e68  80  32 slots  data_ov022_02113de8 +02113e00 +02113e50
-#   0x02113eac..0x02113f2c  74  32 slots  _ZTV19RotatingPlatformLll +02113f20
-#   0x02113f70..0x02113ff0  73  32 slots  data_ov022_02113f70 +02113f78
-#   0x02114034..0x021140b4  77  32 slots  data_ov022_02114034
+#   0x02113d18..0x02113d98  71  32 slots  _ZTV11VolcanoRing +02113d30 +02113d90
+#   0x02113de8..0x02113e68  80  32 slots  _ZTV19RotatingPlatformLll +02113e00 +02113e50
+#   0x02113eac..0x02113f2c  74  32 slots  _ZTV19FloatOnLavaPlatform +02113f20
+#   0x02113f70..0x02113ff0  73  32 slots  _ZTV16daObjFl_London_c +02113f78
+#   0x02114034..0x021140b4  77  32 slots  _ZTV10LavaSeesaw
 #   0x0211412c..0x021141ac 75/76 32 slots _ZTV21FloatingFloorLllSmall +0211417c
-#   0x021141f0..0x02114270  82  32 slots  _ZTV19FloatingFloorLllBig
-#   0x021142c4..0x02114344  83  32 slots  data_ov022_021142c4 +0211433c
-#   0x021143a4..0x02114424  70  32 slots  _ZTV12FallBlockLll +021143fc
+#   0x021141f0..0x02114270  82  32 slots  _ZTV9LavaPlank
+#   0x021142c4..0x02114344  83  32 slots  _ZTV20daObjFl_Fall_Block_c +0211433c
+#   0x021143a4..0x02114424  70  32 slots  _ZTV13RollingLogLll +021143fc
 #   0x0211447c..0x021144f8 243  31 slots  _ZTV13RollingLogLll
 #                                          == _ZTV21daObj_volcanoCannon_c
 #
 # EVERY WIDTH IS PINNED TWICE, the way the wf slot-31 bug demands. (1) the
 # reloc run: nine of the ten carry a slot-31 word (Platform::Kill 0x020ee55c on
-# eight of them, ov098's func_ov098_0213a17c on FallBlockLll 83 -- the SAME
+# eight of them, ov098's _ZN16daObjFallBlock_c4KillEv on FallBlockLll 83 -- the SAME
 # tail ov045's FallBlockBfs takes) and VolcanoFire's run stops after slot 30
 # (an Actor, not a Platform: raw words at 0x021144f8/fc are zero). (2) the next
 # dsd symbol lands EXACTLY on each computed end: 0x02113d98, 0x02113e68,
@@ -154,22 +160,22 @@ data_ov022_02113abc data_ov022_02113b10 data_ov022_02113b2c
 data_ov022_02113b50 data_ov022_02113b7c data_ov022_02113b80
 data_ov022_02113b90 data_ov022_02113c08 data_ov022_02113c14
 data_ov022_02113c20 data_ov022_02113c28 data_ov022_02113c48
-data_ov022_02113cc8 data_ov022_02113ccc data_ov022_02113cd4
-data_ov022_02113ce0 data_ov022_02113cec VolcanoRing_SpawnInfo
-data_ov022_02113d98 data_ov022_02113da4 data_ov022_02113da8
-data_ov022_02113db0 RotatingPlatformLll_SpawnInfo data_ov022_02113e68
-data_ov022_02113e6c data_ov022_02113e74 FloatOnLavaPlatform_SpawnInfo
-data_ov022_02113f2c data_ov022_02113f38 LavaBridge_SpawnInfo
-data_ov022_02113ff0 data_ov022_02113ff4 data_ov022_02113ffc
-LavaSeesaw_SpawnInfo data_ov022_021140b4 data_ov022_021140b8
-data_ov022_021140c0 data_ov022_021140d4 FloatingFloorLllBig_SpawnInfo
-data_ov022_021140f8 FloatingFloorLllSmall_SpawnInfo data_ov022_021141ac
-data_ov022_021141b8 LavaPlank_SpawnInfo data_ov022_02114270
-data_ov022_0211427c data_ov022_02114288 FallBlockLll_SpawnInfo
-data_ov022_02114344 data_ov022_02114350 data_ov022_0211435c
-data_ov022_0211436c RollingLogLll_SpawnInfo data_ov022_02114424
-data_ov022_0211442c data_ov022_02114434 data_ov022_02114440
-VolcanoFire_SpawnInfo data_ov022_02114500 data_ov022_02114508
+data_ov022_02113cc8 data_ov022_02113ccc _ZTI14daObjFl_Ring_c
+_ZTS14daObjFl_Ring_c data_ov022_02113cec g_profile_FL_RING
+_ZTI16daObjFl_Koma_D_c data_ov022_02113da4 data_ov022_02113da8
+_ZTS16daObjFl_Koma_D_c g_profile_FL_KOMA_D _ZTI15daObjFl_Block_c
+data_ov022_02113e6c _ZTS15daObjFl_Block_c g_profile_FL_BLOCK
+_ZTI16daObjFl_London_c _ZTS16daObjFl_London_c
+_ZTI16daObjFl_Seesaw_c data_ov022_02113ff4 _ZTS16daObjFl_Seesaw_c
+g_profile_FL_SEESAW _ZTI17daObjFl_Ukiyuka_c data_ov022_021140b8
+_ZTS17daObjFl_Ukiyuka_c data_ov022_021140d4 g_profile_FL_UKIYUKA
+data_ov022_021140f8 g_profile_FL_UKIYUKA_L _ZTI15daObjFl_UkiKi_c
+_ZTS15daObjFl_UkiKi_c g_profile_FL_UKI_KI _ZTI20daObjFl_Fall_Block_c
+data_ov022_0211427c _ZTS20daObjFl_Fall_Block_c g_profile_FL_KUZURE
+_ZTI15daObjFlMaruta_c _ZTI13daObjMaruta_c _ZTS13daObjMaruta_c
+_ZTS15daObjFlMaruta_c g_profile_FL_MARUTA data_ov022_02114424
+data_ov022_0211442c _ZTI21daObj_volcanoCannon_c _ZTS21daObj_volcanoCannon_c
+g_profile_OBJ_VOLCANO_CANNON data_ov022_02114500 data_ov022_02114508
 data_ov022_02114510 data_ov022_0211451c data_ov022_02114528
 data_ov022_02114530 data_ov022_02114538 data_ov022_02114544
 data_ov022_0211454c data_ov022_02114550 data_ov022_02114558

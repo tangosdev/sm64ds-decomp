@@ -1,0 +1,323 @@
+{
+  "id": "ov002/dBgActor_c",
+  "module": "ov002",
+  "source": "src/actors/dBgActor_c.cpp",
+  "promoted_source": "src/actors/dBgActor_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x20ee42c..0x20eea84, 11 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): dBgActor_c",
+    "module sinit corroboration: 26 sinit(s) / 26 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020ee42c",
+      "end": "0x020eea84"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN10dBgActor_cD1Ev",
+      "address": "0x020ee42c",
+      "size": "0x00000038",
+      "legacy_source": "src/_ZN10dBgActor_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN10dBgActor_cD0Ev",
+      "address": "0x020ee464",
+      "size": "0x0000004c",
+      "legacy_source": "src/_ZN10dBgActor_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN10dBgActor_c14KillByMegaCharER6Player",
+      "address": "0x020ee4b0",
+      "size": "0x000000ac",
+      "legacy_source": "src/_ZN10dBgActor_c14KillByMegaCharER6Player.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN10dBgActor_c4KillEv",
+      "address": "0x020ee55c",
+      "size": "0x00000074",
+      "legacy_source": "src/_ZN10dBgActor_c4KillEv.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov002_020ee5d0",
+      "address": "0x020ee5d0",
+      "size": "0x000000a4",
+      "legacy_source": "src/func_ov002_020ee5d0.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE",
+      "address": "0x020ee674",
+      "size": "0x00000158",
+      "legacy_source": "src/_ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN10dBgActor_c19UpdateClsnPosAndRotEv",
+      "address": "0x020ee7cc",
+      "size": "0x00000064",
+      "legacy_source": "src/_ZN10dBgActor_c19UpdateClsnPosAndRotEv.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_ZN10dBgActor_c21UpdateModelPosAndRotYEv",
+      "address": "0x020ee830",
+      "size": "0x00000040",
+      "legacy_source": "src/_ZN10dBgActor_c21UpdateModelPosAndRotYEv.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_",
+      "address": "0x020ee870",
+      "size": "0x000000c4",
+      "legacy_source": "src/_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "_ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_",
+      "address": "0x020ee934",
+      "size": "0x0000011c",
+      "legacy_source": "src/_ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_.cpp",
+      "ordinal": 9
+    },
+    {
+      "symbol": "_ZN10dBgActor_cC2Ev",
+      "address": "0x020eea50",
+      "size": "0x00000034",
+      "legacy_source": "src/_ZN10dBgActor_cC2Ev.cpp",
+      "ordinal": 10
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN10dBgActor_cC1Ev",
+      "disposition": "deadstrip",
+      "reason": "compiler-generated complete-object constructor, byte-identical to the enrolled C2 at 0x020eea50. The cartridge configures no C1 for this class and no relocation reaches one, so nothing in the image can tell the two apart; production isolation drops it."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Vector3's four-byte inline destructor, emitted as vague linkage because this TU takes Vector3 locals. The cartridge owns it at arm9:0x020072c0 and an enrolled source already reaches it, so this object's copy is a duplicate that production isolation discards."
+    },
+    {
+      "symbol": "_ZTV10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x0210ae38",
+      "reason": "This TU defines Kill (vtable slot 31), which is dBgActor_c's key function -- the destructor is inline in the class body -- so mwcc anchors the vtable here. The cartridge keeps it at ov002:0x0210ae38, in .data, which no section this entry licenses (.text 0x020ee42c-0x020eea84) reaches, so dsd supplies those bytes independently and production isolation discards the emitted duplicate."
+    },
+    {
+      "symbol": "_ZTI10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021089ec",
+      "reason": "This class's own typeinfo record, emitted alongside the vtable by the key function. Canonical home ov002:0x021089ec is outside this entry's licensed range (.text 0x020ee42c-0x020eea84)."
+    },
+    {
+      "symbol": "_ZTS10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108a04",
+      "reason": "This class's own type-name string, emitted alongside the vtable by the key function. Canonical home ov002:0x02108a04 is outside this entry's licensed range (.text 0x020ee42c-0x020eea84)."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Inherited vague-linkage RTTI: naming dBgActor_c's typeinfo drags its direct base's record in. Canonical copy arm9:0x0208e390, outside this entry's licensed range (.text 0x020ee42c-0x020eea84)."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Inherited vague-linkage type-name string for the direct base. Canonical copy arm9:0x0208e384, outside this entry's licensed range (.text 0x020ee42c-0x020eea84)."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Inherited vague-linkage RTTI, one link further up the fBase_c -> dBase_c -> dActor_c chain. Canonical copy arm9:0x02086e78, outside this entry's licensed range (.text 0x020ee42c-0x020eea84)."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Inherited vague-linkage type-name string for dBase_c. Canonical copy arm9:0x02086e54, outside this entry's licensed range (.text 0x020ee42c-0x020eea84)."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Inherited vague-linkage RTTI for the root of the chain. Canonical copy arm9:0x02086d70, outside this entry's licensed range (.text 0x020ee42c-0x020eea84)."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Inherited vague-linkage type-name string for fBase_c. Canonical copy arm9:0x02086e60, outside this entry's licensed range (.text 0x020ee42c-0x020eea84)."
+    }
+  ],
+  "notes": [
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+    "tubuild create warning: RAW: src/_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_.cpp (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_) did not split (the definition is inside the extern \"C\" block opened on line 8, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/_ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_.cpp (_ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_) did not split (the definition is inside the extern \"C\" block opened on line 8, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block"
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov002-dBgActor_c/dBgActor_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 11,
+    "functions_declared": 11,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN10dBgActor_cC1Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN10dBgActor_cC1Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        25,
+        40,
+        41
+      ],
+      "data": [
+        "_ZTV10dBgActor_c",
+        "_ZTI10dBgActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c"
+      ],
+      "dataExternalized": [
+        "_ZTI10dBgActor_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV10dBgActor_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov002-dBgActor_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x020ee42c",
+        "end": "0x020eea84",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020ee42c",
+          "end": "0x020eea84",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 11
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  }
+}

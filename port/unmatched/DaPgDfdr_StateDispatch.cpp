@@ -12,7 +12,7 @@
  * The old header said "MSVC's member pointer is four bytes". That was written
  * before the port built with /vmg /vmm, and it is no longer what this compiler
  * does. MEASURED on 2026-09-07 with the port's own flags out of build.ninja
- * (/O2 /Ob2 -std:c++17 -MT /Oy- /vmg /vmm), src/func_ov027_02111d38.cpp:
+ * (/O2 /Ob2 -std:c++17 -MT /Oy- /vmg /vmm), src/actors/daPgDfdr_c.cpp:
  *
  *     mov  eax, DWORD PTR _c$[ebp]
  *     mov  edx, DWORD PTR [eax+972]        ; c->pp, the ROM's +0x3cc
@@ -22,7 +22,7 @@
  *     pop  ebp
  *     jmp  eax
  *
- * and src/func_ov027_02111cfc.cpp is the same body reading [edx+8]/[edx+12] --
+ * and src/actors/daPgDfdr_c.cpp is the same body reading [edx+8]/[edx+12] --
  * the second pair of the 16-byte element, which is what `c->pp + 1` is over an
  * EIGHT-byte member pointer. So MSVC reproduces the ROM's own record layout
  * word for word, and the dispatch is a TAIL JUMP: it pops its frame and jumps,
@@ -123,13 +123,59 @@ void pair_set_code(unsigned char *p, unsigned v)
     std::memcpy(p, &v, sizeof v);
 }
 
+/* ---- THE RECEIVER ARRIVES IN ECX, AND THE HEADER'S TAIL JUMP IS NOT THE
+   ONLY PATH. The block at the top of this file rules a raw cdecl body correct
+   because the dispatcher pops its frame and jumps, leaving its own `c`
+   argument at the callee's [esp+4]. That is true OF THE DISPATCHER AS A
+   SEPARATE FRAME and it is not true of the frame the enter path runs in.
+   5ae983797 made exactly this correction for FlameChomp's twelve ov070 rows;
+   this is the same defect one overlay over, and it is what levels 19 and 20
+   were dying on.
+
+   Read off this build's own image, not reasoned about. daPgDfdr_c's InitResources
+   shares a translation unit with the dispatchers, so /O2 inlines one and the
+   PMF call comes out inside InitResources' own frame:
+
+     ?InitResources@daPgDfdr_c@@UAEHXZ +0x129
+       mov  dword ptr [edi+0x3cc], offset _data_ov027_02113ce4+0x10  ; c->pp
+       add  esp, 0x20
+       mov  ecx, dword ptr [_data_ov027_02113ce4+0x14]  ; the adjustment word
+       lea  ecx, [ecx+edi]                              ; this + delta
+       call dword ptr [_data_ov027_02113ce4+0x10]       ; A REAL CALL
+
+   Nothing is pushed. func_ov027_02111b2c is declared `(daPgDfdr_c *self)` and
+   read InitResources' own spilled stack as its receiver: measured as
+
+     level 19  FAULT c0000005 at func_ov027_02111b2c+0x10 accessing 2c32f59e
+     level 20  FAULT c0000005 at func_ov027_02111b2c+0x10 accessing 3ee11d56
+
+   two different junk addresses at the same instruction, which is what an
+   uninitialised stack slot looks like. The faulting instruction is
+   `movzx eax, byte ptr [esi+0x3d9]` with esi loaded from [ebp+8].
+
+   A __fastcall thunk is right on BOTH paths, which is why all four rows get
+   one and not just the row that was caught: MSVC's PMF sequence puts
+   `this + delta` in ECX before it transfers control whichever way it
+   transfers, so reading the receiver from ECX is right either way and reading
+   it from the stack is right only when the transfer happened to be a tail
+   jump. One register argument, so each thunk returns with a bare `ret`, which
+   is what a call site that pushed nothing wants and what a tail-jump caller
+   that cleans its own cdecl argument wants too.
+
+   The thunks NAME the four matched bodies, so trap T2's rule (a host TU must
+   name the symbol behind a relocated word) is still satisfied. */
+int __fastcall dfdr_st_1ca8(void *s) { return func_ov027_02111ca8((char *)s); }
+int __fastcall dfdr_st_1c48(void *s) { return func_ov027_02111c48((char *)s); }
+void __fastcall dfdr_st_1b2c(void *s) { func_ov027_02111b2c((char *)s); }
+int __fastcall dfdr_st_1a28(void *s) { return func_ov027_02111a28((char *)s); }
+
 DfdrRow *dfdr_rows(void)
 {
     static DfdrRow r[4] = {
-        { data_ov027_021139d4, 0x02111ca8u, (void *)&func_ov027_02111ca8, 0x00u },
-        { data_ov027_021139cc, 0x02111c48u, (void *)&func_ov027_02111c48, 0x08u },
-        { data_ov027_021139dc, 0x02111b2cu, (void *)&func_ov027_02111b2c, 0x10u },
-        { data_ov027_021139c4, 0x02111a28u, (void *)&func_ov027_02111a28, 0x18u },
+        { data_ov027_021139d4, 0x02111ca8u, (void *)&dfdr_st_1ca8, 0x00u },
+        { data_ov027_021139cc, 0x02111c48u, (void *)&dfdr_st_1c48, 0x08u },
+        { data_ov027_021139dc, 0x02111b2cu, (void *)&dfdr_st_1b2c, 0x10u },
+        { data_ov027_021139c4, 0x02111a28u, (void *)&dfdr_st_1a28, 0x18u },
     };
     return r;
 }

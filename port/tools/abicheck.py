@@ -114,7 +114,7 @@ SLOT_NAME = {
 # `dumpbin /disasm:nobytes walk_window.exe` for `call dword ptr [reg+000000
 # 80h]` -- there are exactly THREE slot-32 dispatch sites and they disagree:
 #
-#   func_ov004_020b08f0 +0xb    mov ecx,esi / call [eax+80h]     pushes 0
+#   _ZN11dScMgBase_c18AfterInitResourcesEj +0xb    mov ecx,esi / call [eax+80h]     pushes 0
 #   func_ov002_020eff90 +0xb    push [ebp+10h] / call [eax+80h]  pushes 1
 #   func_ov064_02116d1c +0x129  mov ecx,esi / call [eax+80h]     pushes 0
 #
@@ -200,16 +200,16 @@ ACTOR_EXT_SLOT_AUTHORITY = {
     # control transfers of BOTH forms over the same binary finds TWENTY-TWO:
     # fourteen calls and EIGHT TAIL JUMPS, which a call-only pattern cannot
     # see and which are dispatch sites just the same --
-    #   call: func_ov004_020b0930+0xCB, Platform::UpdateKillByMegaChar+0x130,
-    #         func_ov002_020bbb14+0x126, func_ov098_0213a36c+0x23D,
-    #         func_ov098_0213a284+0x14, IceBlock::Behavior+0x17B,
+    #   call: _ZN11dScMgBase_c19BeforeInitResourcesEv+0xCB, Platform::UpdateKillByMegaChar+0x130,
+    #         func_ov002_020bbb14+0x126, _ZN16daObjFallBlock_c8BehaviorEv+0x23D,
+    #         _ZN16daObjFallBlock_c15OnHitByMegaCharER6Player+0x14, IceBlock::Behavior+0x17B,
     #         func_ov098_021389f8+0x71, func_ov098_02138734+0x6F,
     #         func_ov098_02138344+0xD1, func_ov098_02138e6c+0x6E and +0xAE,
     #         func_ov098_021390ec+0xAD, func_ov098_02139228+0xFC,
     #         func_ov064_02116560+0xB
-    #   jmp:  func_ov002_020b382c+0x20 and +0x26, func_ov002_020bba28+0x86,
-    #         func_ov098_02137d40+0x17, func_ov081_02127ccc+0x14,
-    #         func_ov098_02139e44+0x9, func_ov018_021128e0+0x16,
+    #   jmp:  _ZN13BigBrickBlock15OnGroundPoundedER8dActor_c+0x20 and +0x26, func_ov002_020bba28+0x86,
+    #         _ZN14ArrowSignRight11OnAttacked1ER8dActor_c+0x17, _ZN8IceBlock15OnHitByMegaCharER6Player+0x14,
+    #         _ZN5Crate15OnGroundPoundedER8dActor_c+0x9, _ZN15daObjIceBoard_c15OnGroundPoundedER8dActor_c+0x16,
     #         func_ov098_021388bc+0x51
     # NO PUSH IS LIVE AT THE TRANSFER IN ANY OF THE TWENTY-TWO. That is the
     # claim, and it is narrower than "no window contains a push" -- eight of
@@ -240,24 +240,24 @@ ACTOR_EXT_SLOT_AUTHORITY = {
     # was read out of extracted/overlays/overlay_NNNN.bin for each of the
     # eighteen, at the table address config/arm9/overlays/ovNN/symbols.txt
     # gives (or that the _data_ name carries), and all eighteen hold
-    # 0x020ee55c _ZN8Platform4KillEv -- an `Ev` method with no argument past
+    # 0x020ee55c _ZN10dBgActor_c4KillEv -- an `Ev` method with no argument past
     # its receiver. The address of the slot word itself is quoted per row.
     ('__ZTV9ShipWater', 31): 0,               # ov017  @0x02111c74
-    ('__ZTV8Squasher', 31): 0,                # ov023  @0x02112060
+    ('__ZTV16daObjFm_Battan_c', 31): 0,                # ov023  @0x02112060
     ('__ZTV10PyramidTop', 31): 0,             # ov024  @0x02113944
     ('__ZTV21daObjWlKoopaShutter_c', 31): 0,  # ov026  @0x02113c20
     ('__ZTV18daObjWlSubmarine_c', 31): 0,     # ov026  @0x02113ce8
     ('__ZTV13daObjHmBskt_c', 31): 0,          # ov030  @0x021159f0
     ('__ZTV15daObjHmMaruta_c', 31): 0,        # ov030  @0x02115ac4
     ('_data_ov033_0211237c', 31): 0,          # ov033  @0x021123f8
-    ('__ZTV9TinyCover', 31): 0,               # ov033  @0x021124bc
+    ('__ZTV9TinyWater', 31): 0,               # ov033  @0x021124bc
     ('__ZTV16RotatingCogSmall', 31): 0,       # ov035  @0x02112b7c
     ('__ZTV17RotatingClockHand', 31): 0,      # ov035  @0x02112c48
     ('_data_ov036_02113a98', 31): 0,          # ov036  @0x02113b14
     ('_data_ov036_02113b74', 31): 0,          # ov036  @0x02113bf0
     ('__ZTV8ShipWing', 31): 0,                # ov036  @0x02113d74
-    ('__ZTV10DonutBlock', 31): 0,             # ov036  @0x02113e48
-    ('__ZTV21ArmedRotatingPlatform', 31): 0,  # ov036  @0x02113f48
+    ('__ZTV18daObjRc_Guruguru_c', 31): 0,             # ov036  @0x02113e48
+    ('__ZTV16daObjRc_Dorifu_c', 31): 0,  # ov036  @0x02113f48
     ('_data_ov036_02113f9c', 31): 0,          # ov036  @0x02114018
     ('__ZTV6ToxBox', 31): 0,                  # ov092  @0x0213234c
     # ------------------------------------------------------------------
@@ -283,23 +283,23 @@ ACTOR_EXT_SLOT_AUTHORITY = {
     #
     # PER TABLE, NOT PER SLOT: the word at slot 31 was read out of
     # extracted/overlays/overlay_0022.bin and overlay_0025.bin at each table
-    # address + 31*4, and all six hold 0x020ee55c _ZN8Platform4KillEv -- an
+    # address + 31*4, and all six hold 0x020ee55c _ZN10dBgActor_c4KillEv -- an
     # `Ev` method with no argument past its receiver, so ?ov22e_kill /
     # ?ov25e_kill's __fastcall(void*, void*) / ret 0 shape is right.
     # Evidence: ...runs/rel0215/out/w3-e/slot31_adjudication.txt
     ('_data_ov022_02113de8', 31): 0,          # ov022 id 80   @0x02113e64
     ('_data_ov022_02113f70', 31): 0,          # ov022 id 73   @0x02113fec
     ('_data_ov022_02114034', 31): 0,          # ov022 id 77   @0x021140b0
-    ('__ZTV12FallBlockLll', 31): 0,           # ov022 id 70   @0x02114420
+    ('__ZTV13RollingLogLll', 31): 0,           # ov022 id 70   @0x02114420
     ('_data_ov025_02113760', 31): 0,          # ov025 id 163  @0x021137dc
     ('_data_ov025_02113850', 31): 0,          # ov025 id 162  @0x021138cc
     # THE NINETEENTH IS THE SLOT-32 ONE AND IT IS THE OPPOSITE ANSWER.
     # FLYING_CARPET (130, ov036, 15daObjRcCarpet_c) owns a THIRTY-THREE slot
     # table, and its slot 32 word, read at 0x0211401c -- the last word of
-    # ov036's .data -- is 0x020eff18 _ZN8PathLift9AfterClsnEv, the SAME word
+    # ov036's .data -- is 0x020eff18 _ZN16dPathLiftActor_c9AfterClsnEi, the SAME word
     # _data_ov002_0210af70 slot 32 carries two rows above. Its dispatcher is
     # the same one too, and that is the half that had to be shown rather than
-    # inferred: src/func_ov036_0211244c.cpp:30 calls func_020efaf0, which the
+    # inferred: src/game/actors/d_a_obj_rc_carpet.cpp:30 calls func_020efaf0, which the
     # map resolves to _func_ov002_020efaf0 at 0x0056f7c0 (the alias
     # hal/actor_classes_ov100pl.cpp:209 declares), and that is the PathLift
     # base init whose last statement seats func_ov002_020eff90 as the collider
@@ -321,7 +321,7 @@ ACTOR_EXT_SLOT_AUTHORITY = {
     # HALF ONE, PER TABLE: the slot-31 WORD, read out of
     # extracted/overlays/overlay_0065.bin at base 0x02115ee0 -- the shipped
     # image, not a dsd export, whose relocated words would read as live
-    # pointers. All seven hold 0x020ee55c _ZN8Platform4KillEv, an `Ev` method
+    # pointers. All seven hold 0x020ee55c _ZN10dBgActor_c4KillEv, an `Ev` method
     # with no argument past its receiver. The slot word's own address is quoted
     # per row. Slot 30 of each is 0x020100dc
     # (Actor::OnAimedAtWithEggReturnVec), which is what makes 31 an EXTENSION
@@ -505,7 +505,7 @@ def bind_param_stores(funcs, stores):
 # target is usually a shadow-class method compiled into some src object we did
 # not disassemble. Its MSVC decoration already carries the answer: the
 # convention plus the declared parameter list. `undname` turns
-#   ?AfterBehavior@ActorBase@@UAEXI@Z
+#   ?AfterBehavior@fBase_c@@UAEXI@Z
 # into
 #   public: virtual void __thiscall ActorBase::AfterBehavior(unsigned int)
 # and __thiscall pops every declared parameter, so that one is `ret 4`.
@@ -754,9 +754,9 @@ FIX_NOBYTES = """\
   00000000: call        _RaiseException@16
   00000005: ret
 ?fwd_thunk@@YIHPAX0@Z:
-  00000000: jmp         ?AfterBehavior@ActorBase@@UAEXI@Z
+  00000000: jmp         ?AfterBehavior@fBase_c@@UAEXI@Z
 ?fwd_thunk_wrong@@YIHPAX0@Z:
-  00000000: jmp         ?OnHeapCreated@ActorBase@@UAEXXZ
+  00000000: jmp         ?OnHeapCreated@fBase_c@@UAEXXZ
 ?ext32_short@@YIHPAX0@Z:
   00000000: ret
 ?ext32_other@@YIHPAX0@Z:
@@ -812,10 +812,10 @@ def selftest():
     funcs, stores = parse(FIX_NOBYTES, 'fixture')
     # The extsig map is what the demangler produces at run time. Both entries
     # are real undname output, verified by msvc_undname's own selftest.
-    extsig = {'?AfterBehavior@ActorBase@@UAEXI@Z':
+    extsig = {'?AfterBehavior@fBase_c@@UAEXI@Z':
               'public: virtual void __thiscall ActorBase::AfterBehavior('
               'unsigned int)',
-              '?OnHeapCreated@ActorBase@@UAEXXZ':
+              '?OnHeapCreated@fBase_c@@UAEXXZ':
               'public: virtual void __thiscall ActorBase::OnHeapCreated(void)'}
     stores, _pb = bind_param_stores(funcs, stores)
     rows, actor31, slotset = analyse(funcs, stores, extsig)

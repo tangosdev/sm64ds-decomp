@@ -23,16 +23,16 @@
 // ---- 1. THE TWO NAME-SPELLING ALIASES --------------------------------------
 //
 // func_020beb68 IS ov004's data_ov004_020beb68 UNDER A NAME THAT EXISTS IN NO
-// CONFIG, and it is the same defect class as src/func_ov006_020e3578.c's bare
+// CONFIG, and it is the same defect class as src/_ZN14dScMgCurling_c13InitResourcesEv.cpp's bare
 // `func_020adc74`, which port/mg_fanout_costs.txt section 6 records and which
 // hal/scene_mg_faces.cpp line 232 already aliases. Three TUs in this seat
-// spell it: src/func_ov006_020dcd74.c, src/func_ov006_020de1d4.c and (through
+// spell it: src/actors/dScMgCoin_c.cpp, src/func_ov006_020de1d4.c and (through
 // the host copy of src/func_ov006_020de26c.cpp) this lane's
 // unmatched/MgCoin_StateDispatch.cpp, which keeps the src spelling on purpose
 // so the reference is not silently dropped.
 //
 // THE RESOLUTION IS NOT A GUESS. data_ov004_020beb68 is dScMgBase_c's own
-// "current minigame scene" pointer -- src/func_ov004_020b2adc.c, the base
+// "current minigame scene" pointer -- src/_ZN11dScMgBase_cC2Ev.cpp, the base
 // constructor, writes `data_ov004_020beb68 = self` -- and every one of the
 // three consumers uses it the same way: `g != 0 ? *(int *)(g + 0xa8) : 0`,
 // which is the scene object's +0xa8 word that slot 0 (InitResources) sets to
@@ -40,7 +40,7 @@
 // address is ov004 and ov004 is the co-resident answer.
 //
 // data_ov006_0212e3d0 and _0212e3e8 are ordinary ov006 data symbols. They are
-// unresolved only in their C++ spelling, because src/func_ov006_020dd880.c
+// unresolved only in their C++ spelling, because src/func_ov006_020dd880.cpp
 // declares them ABOVE its `extern "C"` block and that file compiles as C++
 // (it is //cpp-marked and dispatches through a thirty-six-virtual dummy
 // struct, so port/CMakeLists.txt gives it LANGUAGE CXX). The ov006 mount

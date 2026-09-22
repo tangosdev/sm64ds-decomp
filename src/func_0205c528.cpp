@@ -20,12 +20,12 @@ struct Outer {
 extern "C" void func_0205c528(Outer *thiz, int r1, int r7)
 {
     Obj *o = thiz->obj;
-    *(int *)(((int)o + 0x10) & 0xFFFFFFFFFFFFFFFFULL) |= 0x200;
+    *(int *)((int)o + 0x10) |= 0x200;
     int res = o->m44(o, r1, thiz->f4, r7);
     switch (res) {
     case 0:
     case 1:
-        *(int *)(((long)o + 0x10) & 0xFFFFFFFFFFFFFFFFULL) &= ~0x200;
+        *(int *)((long)o + 0x10) &= ~0x200;
         break;
     case 6: {
         unsigned int saved = (unsigned int)_ZN3IRQ7DisableEv();
@@ -36,5 +36,5 @@ extern "C" void func_0205c528(Outer *thiz, int r1, int r7)
         break;
     }
     }
-    *(int *)(((int)thiz + 4) & 0xFFFFFFFFFFFFFFFFULL) += r7;
+    *(int *)((int)thiz + 4) += r7;
 }

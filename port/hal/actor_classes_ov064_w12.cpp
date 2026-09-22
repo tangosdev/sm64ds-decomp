@@ -10,7 +10,7 @@
 //                L18 x4                == _ZTV12daObjShell_c
 //
 // Both attribution routes agree: spawn-table site 0x02090d50 -> SpawnInfo
-// 0x0211c5a4, word[0] = 0x0211ad70 (Clam_Spawn, inside ov064), +4 halfword =
+// 0x0211c5a4, word[0] = 0x0211ad70 (daObjShell_c_classInit, inside ov064), +4 halfword =
 // 315. Identity from the RTTI typeinfo at vtable[-1] (0x0211c5c4 -> 0x0211c588
 // -> "12daObjShell_c"), not from a dsd label.
 //
@@ -32,7 +32,7 @@
 //
 // ---- TWO BODIES CANNOT BE CALLED AS THE MATCHED SOURCE WRITES THEM --------
 //
-// 1. _ZN4Clam6RenderEv is the ModelAnim slot-5 collision. Clam_Spawn
+// 1. _ZN4Clam6RenderEv is the ModelAnim slot-5 collision. daObjShell_c_classInit
 //    constructs a ModelAnim at +0xd4 (_ZN9ModelAnimC1Ev) and the matched
 //    Render dispatches through a LOCAL six-virtual shadow class, which counts
 //    in ROM/Itanium numbering, so its slot 5 is Render; the host
@@ -62,7 +62,7 @@
 //
 // SEATED SINCE, by run rel0215 wave 3 (lane w3-c) -- this paragraph is the
 // record of what blocked it and what the block actually cost, not a live
-// refusal. The lane transcribed func_ov064_0211a4c4 from the overlay image
+// refusal. The lane transcribed _ZN13TreasureChest6State0Ev from the overlay image
 // (port/unmatched/Ov064_TreasureChest.cpp) because a loud face is not available
 // for a state-0 tick and a battery skip would have landed on three levels.
 //
@@ -70,8 +70,8 @@
 // shares this overlay and this wave's ranking put it beside Clam. It is
 // BLOCKED and the block is measured, not suspected: its Behavior dispatches a
 // six-record pointer-to-member state table at 0x0211c98c through
-// func_ov064_0211a6ec / func_ov064_0211a734, and one of the six records,
-// func_ov064_0211a4c4 (state 0's tick, 540 bytes at 0x0211a4c4), HAS NO
+// _ZN13TreasureChest8SetStateEi / _ZN13TreasureChest17CallStateBehaviorEv, and one of the six records,
+// _ZN13TreasureChest6State0Ev (state 0's tick, 540 bytes at 0x0211a4c4), HAS NO
 // MATCHED TU anywhere in src/ and is in no port host copy. State 0 is the
 // state its InitResources leaves the chest in, so that body runs on the first
 // frame a chest exists. Registering the class without it would seat a DS code
@@ -79,13 +79,15 @@
 // dispatchers' host copies are the ov073/ov060 recipe, the other five records
 // are matched, and __sinit_ov064_0211b59c builds the table -- so the whole cost
 // of that class is one verified host copy of 540 bytes of ARM.
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
@@ -94,28 +96,28 @@ extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include "dtor_faces_cpp.h"
 #include <cstdlib>
 
-#include "Actor.h"
-#include "ActorBase.h"
+#include "dActor_c.h"
+#include "fBase_c.h"
 
 extern "C" {
 /* the arm9 shared half. Slots 1/2/4/5/7/8/10..15/18..30 are the same arm9
    words ov045's, ov052's and ov073's tables carry -- checked slot for slot. */
-int _ZN5Actor19BeforeInitResourcesEv(void *self);              /* slot 1  */
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
-int _ZN5Actor14BeforeBehaviorEv(void *self);                   /* slot 7  */
-int _ZN5Actor12BeforeRenderEv(void *self);                     /* slot 10 */
-int _ZN5Actor13OnYoshiTryEatEv(void *self);                    /* slot 18 */
-void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
-int _ZN5Actor9Virtual50Ev(void *self);                         /* slot 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);              /* slot 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);              /* slot 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
-int _ZN5Actor16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);              /* slot 1  */
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);                   /* slot 7  */
+int _ZN8dActor_c12BeforeRenderEv(void *self);                     /* slot 10 */
+int _ZN8dActor_c13OnYoshiTryEatEv(void *self);                    /* slot 18 */
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
+int _ZN8dActor_c9Virtual50Ev(void *self);                         /* slot 20 */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);              /* slot 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);              /* slot 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
+int _ZN8dActor_c16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
 
 const char *port_actor_class_name(unsigned id);
 void port_actor_slot_decline(const char *what);
@@ -135,10 +137,10 @@ int _ZN4Clam8BehaviorEv(void *self);         /* slot 6  */
 int _ZN4Clam6RenderEv(void *self);           /* slot 9, HOST COPY */
 int *_ZN4ClamD0Ev(int *self);                /* slot 17 */
 void *ClamSpawn_unused(void);
-void *Clam_Spawn(void);
-void _ZN18MovingCylinderClsnD1Ev(void *self);
+void *daObjShell_c_classInit(void);
+void _ZN7dCcAc_cD1Ev(void *self);
 void _ZN9ModelAnimD1Ev(void *self);
-void *_ZN5ActorD2Ev(void *self);
+void *_ZN8dActor_cD2Ev(void *self);
 DSSTATE_BEGIN
 void *_ZTV4Clam[31];
 DSSTATE_END
@@ -147,7 +149,7 @@ DSSTATE_END
    spelling is the one _ZN4ClamD0Ev restores by. */
 #pragma comment(linker, "/alternatename:__ZTV12daObjShell_c=__ZTV4Clam")
 
-/* TWO C++-MANGLED DATA SPELLINGS, the data_02082128 / data_020a0e68 precedent.
+/* TWO C++-MANGLED DATA SPELLINGS, the IDENTITY_MATRIX4X3 / data_020a0e68 precedent.
    src/_ZN4Clam13InitResourcesEv.cpp declares two of Clam's three SharedFilePtrs
    at FILE SCOPE as `extern int data_ov064_0211c9bc[];` rather than inside its
    extern "C" block, so it emits decorated data names; the mount emits the one
@@ -176,49 +178,49 @@ OV64W12_TRAP(13) OV64W12_TRAP(14)
 #undef OV64W12_TRAP
 
 static int __fastcall cl_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall cl_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall cl_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 static void __fastcall cl_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall cl_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall cl_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall cl_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall cl_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall cl_pdes(void *s, void *)
-{ ((ActorBase *)s)->ActorBase::OnPendingDestroy(); return 0; }
+{ ((fBase_c *)s)->fBase_c::OnPendingDestroy(); return 0; }
 static int __fastcall cl_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int __fastcall cl_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 static int __fastcall cl_turn_egg(void *s, void *, void *p)
-{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+{ _ZN8dActor_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall cl_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall cl_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall cl_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall cl_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall cl_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall cl_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall cl_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall cl_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall cl_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 static int __fastcall cl_egg(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 
 static int __fastcall cl_init(void *s, void *)
 { return _ZN4Clam13InitResourcesEv(s); }
@@ -270,7 +272,7 @@ extern "C" void hal_fill_clam_vtable(void)
     vt[13] = (void *)ov64w12_trap13;
     vt[14] = (void *)ov64w12_trap14;
     vt[15] = (void *)cl_heap;
-    vt[16] = (void *)hal_cppd1_Clam;
+    vt[16] = (void *)PORT_D16(hal_cppd1_Clam);
     vt[17] = (void *)cl_d0;
     vt[18] = (void *)cl_yoshi;
     vt[19] = (void *)cl_turn_egg;

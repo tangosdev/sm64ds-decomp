@@ -1,0 +1,76 @@
+# slice_vtd1 -- run link100 wave 14, lane SEAT14C, BATCH 2 (vtable-held
+# destructor pairs, small overlays).
+#
+# BATCH 2 listed four classes whose destructor name nothing owns today and
+# whose only ROM referrer is their own class vtable. Two of the four are
+# REFUSED here rather than seated, and the reasons are in the lane's report:
+#
+#   _ZN13daObjMaruta_cD1Ev   ov080 0x02127014   (b) no port slot.
+#       _ZTV13daObjMaruta_c is a RAW PER-SYMBOL DATA MOUNT (port/ov080_syms.txt
+#       line 56, the ov085 --pack shape): its slot-16 word is a DS code address
+#       and --pack rebases only pointers whose target lands inside the emission,
+#       so the word stays a DS address and the table is never dispatchable. The
+#       base class gets no host array either -- port/CMakeLists.txt's ov030
+#       rename block states the rule outright ("derived vtables are host arrays,
+#       never mounted storage") and every daObjMaruta_c DESCENDANT (RollingLogTtm
+#       0x02115a48, daObjHmMaruta_c) carries its own host array whose slot 16 is
+#       that descendant's own destructor. Nothing in the port can honestly
+#       reference ??1daObjMaruta_c@@QAE@XZ.
+#       (The TU itself is fine: probe-compiled with walk_window's own flags it
+#       defines ??1daObjMaruta_c@@QAE@XZ and ??_GdaObjMaruta_c@@QAEPAXI@Z and its
+#       only undefined externals -- ?Destructor1@dBgActor_c@@UAEXXZ and
+#       ?Destructor0@dBgActor_c@@UAEXXZ -- are both in walk_window.map already.
+#       It is the EDGE that is missing, not the body.)
+#
+#   _ZN16daObjFallBlock_cD1Ev  ov098 0x02139fc8  (b) no port slot, same shape.
+#       _ZTV16daObjFallBlock_c is mounted per symbol at port/ov098_syms.txt line
+#       25, in a file whose own header says "the vtables are left out because
+#       they are host arrays the registry fills" -- this one is not left out, it
+#       is in the packed data span as bytes. Its four overridden members
+#       (Behavior/Render/OnHitByMegaChar/Kill) are dispatched from OTHER
+#       overlays' host arrays (hal/actor_classes_ov022_w16.cpp,
+#       hal/actor_classes_ov045.cpp), each of which seats its OWN class's
+#       destructor in slot 16. Same probe result as Maruta.
+#
+#   _ZN11daDsnBase_cD1Ev     ov091 0x02132d6c   (b) MEASURED AND REFUSED.
+#       A THIRD ARTEFACT SHAPE, alongside census.md's DTOR_VARIANT and
+#       CTOR_VARIANT rulings: call it INLINE-DTOR-COMDAT. daDsnBase_c.h defines
+#       ~daDsnBase_c() {} in the class body on purpose, so every TU that compiles
+#       a DERIVED destructor emits ??1daDsnBase_c@@QAE@XZ as its own inline
+#       COMDAT. On the base build walk_window.map already carried that symbol,
+#       out of _ZN6ThwompD1Ev.cpp.obj, and the one reference to it is
+#       hal/actorport_dtor_bridge.cpp:1166,
+#       /alternatename:@actorport_d16t_daDsnBase_c@8=??1daDsnBase_c@@QAE@XZ,
+#       which is the ROM slot-16 spelling of _ZTV11daDsnBase_c. So the ROM text
+#       ALREADY RUNS; what the row is missing is only an object of its own name.
+#       This lane put the TU on this slice and built it: the object compiled, the
+#       linker kept Thwomp's copy of the COMDAT, and linkage.py stayed exactly
+#       where it was (7954, with only the BowserPuzzleManager row moving). The
+#       row is off the slice again rather than carried as an object that
+#       contributes nothing. Nothing honest can be done here: there is no
+#       reference to add that the ROM has and the port lacks, and which of two
+#       identical COMDATs the linker keeps is not a fact about the port.
+#       The same ruling should cover any row whose class declares its destructor
+#       inline in the header and whose src/ TU is the `_force_<Class>D1(p)
+#       { p->~Class(); }` shape -- daObjMaruta_c and daObjFallBlock_c above are
+#       that shape too, which is why neither is a seat by two independent reads.
+#
+# The row below IS seated:
+#
+#   src/_ZN19BowserPuzzleManagerD1Ev.cpp   ov064 0x02118bec, 36 bytes.
+#       A true (a) stand-in retirement. hal/actor_classes_bowserpuzzle.cpp's
+#       port_bp_shell_vtable is the id-79 shell's HOST array (the mounted
+#       _ZTV19BowserPuzzleManager is raw DS words and is reseated off the object
+#       by port_factory_bowser_puzzle_shell), and its slot 16 ran a hand-written
+#       thunk -- vptr store plus _ZN8dActor_cD2Ev -- while the matched TU sat
+#       unlinked. That thunk now calls the matched destructor. The base step is
+#       the same body either way: port/faces_sync.txt line 2861 faces
+#       __ZN8dActor_cD2Ev onto ??1dActor_c@@UAE@XZ, which the ACTORPORT bridge
+#       aliases to ??1dActor_c@@QAE@XZ = src/_ZN8dActor_cD1Ev.cpp.
+#       The class's compiler-vtable slots ?Destructor1@BowserPuzzleManager@@UAEXXZ
+#       and ?Destructor0@...@@UAEXXZ are the one thing the object needed that the
+#       image did not have; they are defined in that same file under the
+#       ACTORPORT ruling (Destructor1 = the class's own complete-object
+#       destructor, Destructor0 = the shared trap, because the deleting half's
+#       free is per class and inventing one would be a guess).
+src/_ZN19BowserPuzzleManagerD1Ev.cpp

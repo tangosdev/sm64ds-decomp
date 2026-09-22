@@ -8,13 +8,13 @@
 // header for the full argument; what follows is this class's own evidence,
 // re-derived rather than inherited.
 //
-// src/func_ov006_020ff444.c is a matched TU and reads, in full:
+// src/_ZN16dScMgPachinko2_cD0Ev.cpp is a matched TU and reads, in full:
 //
 //     #include "decl_common.h"
-//     int *func_ov006_020ff444(int *t)
+//     int *_ZN16dScMgPachinko2_cD0Ev(int *t)
 //     {
 //         t[0] = (int)VT;
-//         func_ov004_020b29c0(t);
+//         _ZN11dScMgBase_cD2Ev(t);
 //         _ZN6Memory10DeallocateEPvP4Heap(t, HEAP);
 //         return t;
 //     }
@@ -36,7 +36,7 @@
 //     020FF448  ldr   r1, [pc, #0x24]     ; pool 020FF474 = 0x0213DBBC
 //     020FF44C  mov   r4, r0
 //     020FF450  str   r1, [r4]
-//     020FF454  bl    #0x20b29c0          ; func_ov004_020b29c0
+//     020FF454  bl    #0x20b29c0          ; _ZN11dScMgBase_cD2Ev
 //     020FF458  ldr   r1, [pc, #0x18]     ; pool 020FF478 = 0x020A0EAC
 //     020FF45C  mov   r0, r4
 //     020FF460  ldr   r1, [r1]
@@ -58,7 +58,7 @@
 //
 // ---- THE RULING THIS BODY CARRIES ----------------------------------------
 //
-// func_ov006_020ff444 is one of this class's four marker-carrying override
+// _ZN16dScMgPachinko2_cD0Ev is one of this class's four marker-carrying override
 // bodies. It was disassembled from the shipped overlay image and compared
 // instruction for instruction with its src before being seated in any form;
 // the verdict is REAL_DECOMP and the evidence is the listing above.
@@ -69,7 +69,7 @@
 // slot identity"; the body is a D0 deleting destructor and slot 17 is where
 // the family keeps one.
 //
-// AND THE D2 SIBLING IS THE CROSS-CHECK. src/func_ov006_020ff420.c, vtable
+// AND THE D2 SIBLING IS THE CROSS-CHECK. src/_ZN16dScMgPachinko2_cD1Ev.cpp, vtable
 // slot 16, stores the SAME word and spells it by its real config symbol name
 // (`x[0] = (int)data_ov006_0213dbbc;`), so the resolution of VT here is
 // confirmed by a second matched TU as well as by the pool. That is also why
@@ -78,7 +78,7 @@
 extern "C" {
 
 /* the base's D1, called with the object still holding this class's table */
-void func_ov004_020b29c0(void *t);
+void _ZN11dScMgBase_cD2Ev(void *t);
 
 /* Memory::Deallocate(void*, Heap*). Spelled in its Itanium form because that
    is what the matched arm9 TU defines and what every other host copy in this
@@ -97,7 +97,7 @@ void *port_mg_pachinko2_d0(void *self)
     int *t = (int *)self;
     /* the vptr store the ROM makes with r1 = 0x0213dbbc */
     t[0] = (int)(size_t)data_ov006_0213dbbc;
-    func_ov004_020b29c0(t);
+    _ZN11dScMgBase_cD2Ev(t);
     /* ldr r1,[r1] -- the heap POINTER, not the word's address */
     _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
     return t;

@@ -1,7 +1,7 @@
 # Lane PKR of run mg11: dScMgCard_c, the "Picture Poker" minigame.
 #
-# actor id 0x17b (scene 379), spawn symbol MgPicturePoker_Spawn (0x020dbd54,
-# size 0xc0), SpawnInfo 0x0213bc50, vtable data_ov006_0213bdb4.  Every one of
+# actor id 0x17b (scene 379), spawn symbol dScMgCard_c_classInit (0x020dbd54,
+# size 0xc0), SpawnInfo 0x0213bc50, vtable _ZTV11dScMgCard_c.  Every one of
 # those was re-read out of the ROM by this lane rather than taken from the
 # handover.  The doubled-id word 0x017b017b sits at 0x0213bc54, which puts the
 # record at 0x0213bc50 with the factory in the word before it:
@@ -23,15 +23,15 @@
 # So the class is dScMgCard_c and the spawn symbol is MgPicturePoker -- the same
 # spawn-symbol/class-name split port/mg_fanout_costs.txt section 2 records for
 # curling (MgShuffleShell / dScMgCurling_c).  Every recovered src header in the
-# closure agrees (src/func_ov006_020db6ec.c and its siblings include
+# closure agrees (src/minigames/d_s_mg_card.cpp and its siblings include
 # "dScMgCard_c.h") and is the weaker witness, because a per-TU placeholder can
 # be wrong and a relocation cannot.
 #
 # ---- 2. THE HIERARCHY IS THREE DEEP -------------------------------------
 #
 #     Scene -> dScMgBase_c         data_ov004_020bc0c0  36  (the framework's)
-#           -> dScMgSingle3DBase_c data_ov006_0213e448  36  ovr 8,  mark 6
-#           -> dScMgCard_c         data_ov006_0213bdb4  36  ovr 15, mark 13
+#           -> dScMgSingle3DBase_c _ZTV19dScMgSingle3DBase_c  36  ovr 8,  mark 6
+#           -> dScMgCard_c         _ZTV11dScMgCard_c  36  ovr 15, mark 13
 #
 # This is the FOURTH class the port seats under that middle table (the flower
 # 0x186, Memory Master 0x16b and Lucky Stars 0x184 are the other three).
@@ -42,11 +42,11 @@
 #
 # Both edges are read off code as well as off the RTTI:
 #
-#   src/MgPicturePoker_Spawn.cpp calls func_ov004_020b2adc(p), writes
-#   data_ov006_0213e448 into p[0], constructs Particle::SysTracker at +0x471c,
-#   then writes data_ov006_0213bdb4 over it.
-#   src/func_ov006_020d9638.cpp (slot 17, D0) unwinds in the opposite order,
-#   0x0213bdb4 first and 0x0213e448 second; src/func_ov006_020d95a4.cpp
+#   src/minigames/d_s_mg_card.cpp calls _ZN11dScMgBase_cC2Ev(p), writes
+#   _ZTV19dScMgSingle3DBase_c into p[0], constructs Particle::SysTracker at +0x471c,
+#   then writes _ZTV11dScMgCard_c over it.
+#   src/minigames/d_s_mg_card.cpp (slot 17, D0) unwinds in the opposite order,
+#   0x0213bdb4 first and 0x0213e448 second; src/minigames/d_s_mg_card.cpp
 #   (slot 16, D2) does the same without the Memory::Deallocate.
 #
 # THE OVERRIDE SPLIT, computed word by word against both base tables:
@@ -58,14 +58,14 @@
 # which is dScMgBSC_c's split plus SLOT 3, CleanupResources.  Run mg9 lane WIG
 # recorded slot 3 as new to the family; this is the second class to carry it,
 # and here it is three global counters being zeroed
-# (src/func_ov006_020da994.c, data_ov006_0214176c / _02141768 / _02141770).
+# (src/minigames/d_s_mg_card.cpp, data_ov006_0214176c / _02141768 / _02141770).
 #
 # ---- 3. THE ATTRIBUTION TRAP, AND IT IS THE BIGGEST FINDING IN THIS FILE --
 #
 # THE FIVE STATE TABLES THAT SIT IMMEDIATELY AFTER THIS CLASS'S VTABLE ARE NOT
 # THIS CLASS'S.  src/__sinit_ov006_0213014c.c copies twenty-four mwcc member-
 # pointer pairs out of the run 0x0213be44..0x0213bf04 -- the words directly
-# after data_ov006_0213bdb4 ends -- into
+# after _ZTV11dScMgCard_c ends -- into
 #
 #     data_ov006_021417b0  3 slots     data_ov006_02141810  6 slots
 #     data_ov006_021417c8  4 slots     data_ov006_02141840  6 slots
@@ -74,7 +74,7 @@
 # and every one of those tables, every one of those twenty-four states and that
 # whole constructor belong to dScMgCoin_c, actor id 0x17a, scene 378, WHICH
 # THIS PORT HAS SHIPPED AS SCENE_MG_COIN SINCE RUN mg5.  The proof is not
-# adjacency, it is the dispatchers: 0x02141810 is loaded by func_ov006_020de69c,
+# adjacency, it is the dispatchers: 0x02141810 is loaded by _ZN11dScMgCoin_c8BehaviorEv,
 # which is SLOT 6 of the vtable at 0x0213bf50, and 0x0213bf50 is 0x17a's.
 # port/unmatched/MgCoin_StateDispatch.cpp has carried all five since mg5.
 #
@@ -87,7 +87,7 @@
 # THE SAME RUN CARRIES A PHANTOM 25th PAIR AND THE CONSTRUCTOR REFUSES IT.
 # The stride-8 sequence from 0x0213be44 to 0x0213bf04 is twenty-FIVE slots; the
 # sinit names twenty-four.  The one it skips is 0x0213bedc, which holds
-# {0x020de940, 0x017a017a} -- MgCoincentration_SpawnInfo, the factory word and
+# {0x020de940, 0x017a017a} -- g_profile_MG_COIN, the factory word and
 # the id twice, exactly the shape port/mg_fanout_costs.txt section 4 warns about
 # for curling (0x0213c214) and run mg9 lane WIG hit inside its pair run.  A
 # sweep of the address range would have found a twenty-fifth "state" at
@@ -131,15 +131,15 @@
 # ---- 5. TWO ELEMENT VTABLES, AND ALL SIX SLOTS ARE DISPATCHED ------------
 #
 # Run mg9 lane S381's element-vtable law: factory-built record objects carry
-# their OWN vtable in word 0.  src/MgPicturePoker_Spawn.cpp builds two
-# five-element arrays through the MSL array constructor func_020733a8:
+# their OWN vtable in word 0.  src/minigames/d_s_mg_card.cpp builds two
+# five-element arrays through the MSL array constructor __cxa_vec_ctor:
 #
-#     +0x51a8[5] x 0x30   element ctor func_ov006_020dbe30 writes 0x0213bccc
-#     +0x5298[5] x 0x30   element ctor func_ov006_020dbe14 writes 0x0213bccc
+#     +0x51a8[5] x 0x30   element ctor _ZN12dMgCardObj_cC1Ev writes 0x0213bccc
+#     +0x5298[5] x 0x30   element ctor _ZN17dMgDilarCardObj_cC1Ev writes 0x0213bccc
 #                         and then 0x0213bcf4 over it (base then derived)
 #
-#     data_ov006_0213bccc  dMgCardObj_c       3 slots  020d9bdc 020d9c5c 020d9bd0
-#     data_ov006_0213bcf4  dMgDilarCardObj_c  3 slots  020d970c 020d978c 020d9998
+#     _ZTV12dMgCardObj_c  dMgCardObj_c       3 slots  020d9bdc 020d9c5c 020d9bd0
+#     _ZTV17dMgDilarCardObj_c  dMgDilarCardObj_c  3 slots  020d970c 020d978c 020d9998
 #
 # with the RTTI at 0x0213bc48 ("12dMgCardObj_c") and 0x0213bc58
 # ("17dMgDilarCardObj_c", base 0x0213bc48) saying the same thing the two ctors
@@ -177,7 +177,7 @@
 # `::*`, and the encoding scan finds no dispatch.
 #
 # THIS CLASS HAS NO POINTER-TO-MEMBER WALL.  Its state machine is an ordinary
-# 14-arm ARM jump table in src/func_ov006_020dac34.c:
+# 14-arm ARM jump table in src/minigames/d_s_mg_card.cpp:
 #
 #     020dac44  ldrsh r0,[r1,#0x88]     the state, at +0x5388
 #     020dac48  cmp   r0,#0xd
@@ -198,14 +198,14 @@
 # THE WORD-BY-WORD `blx Rm` SWEEP (run mg9 lane BOX's instrument) over the same
 # 37 bodies finds NINE indirect call sites, and every one is accounted for:
 #
-#     020dab40, 020daba4   func_ov006_020da9c4  `ldr r1,[r0] / ldr r1,[r1]`
+#     020dab40, 020daba4   _ZN11dScMgCard_c6RenderEv  `ldr r1,[r0] / ldr r1,[r1]`
 #                          ELEMENT SLOT 0, five elements of each array
-#     020db640, 020db650   func_ov006_020dac34  `ldr r1,[r1,#4]`
+#     020db640, 020db650   _ZN11dScMgCard_c11UpdateStateEv  `ldr r1,[r1,#4]`
 #                          ELEMENT SLOT 1, five of each array, EVERY FRAME
 #     020d9854, 020d9de0   the two element ticks, `ldr r1,[r1,#8]`
 #     020da030, 020da0e4   the two element seeders, same
 #                          ELEMENT SLOT 2
-#     020dbd0c             func_ov006_020dbaf0 -- THIS CLASS'S OWN SLOT 18,
+#     020dbd0c             _ZN11dScMgCard_c13InitResourcesEv -- THIS CLASS'S OWN SLOT 18,
 #                          dispatched with one argument, value -1.  The address
 #                          in this column is the blx ITSELF, which is what the
 #                          sweep reports; the four-instruction sequence it ends
@@ -218,19 +218,19 @@
 # SLOTS 18 AND 19 TAKE THE STACK ARGUMENT AND THIS CLASS IGNORES IT, WITNESSED
 # RATHER THAN ASSUMED.  Run mg9 lane LKY found a class whose slot-18 and slot-19
 # bodies BRANCH on the value and relayed "witness, don't assume".  Here the ROM
-# says the opposite: func_ov006_020db9dc overwrites r1 with a literal load at
-# 0x020db9f4 before ever reading it, and func_ov006_020db720's first act is a
+# says the opposite: _ZN11dScMgCard_c13OnYoshiTryEatEi overwrites r1 with a literal load at
+# 0x020db9f4 before ever reading it, and _ZN11dScMgCard_c13OnTurnIntoEggEi's first act is a
 # five-arm jump table on the state at +0x5388.  So the parameter exists only so
 # __fastcall cleans the four bytes the ROM's callers push, which is what every
 # seated class before dScMgBSC_c needed.  Both thunks take it and record it.
 #
 # ---- 7. THE ONE FLOOR, RETIRED (run mg12 lane SRT) ----------------------
 #
-# func_ov006_020da174, 0x2ac bytes, was this seat's only floor and it was on the
+# _ZN11dScMgCard_c11ArrangeHandEP12dMgCardObj_c, 0x2ac bytes, was this seat's only floor and it was on the
 # critical path.  It is now DECOMPILED, which is exactly the retirement run mg11
 # said it would take: a delink block plus a matched src TU, not a port fix.
 #
-#     src/func_ov006_020da174.c        byte-identical at mwccarm 2004/b56
+#     src/minigames/d_s_mg_card.cpp        byte-identical at mwccarm 2004/b56
 #     config/arm9/overlays/ov006/delinks.txt
 #                                      .text start:0x020da174 end:0x020da420
 #
@@ -254,14 +254,14 @@
 # second-largest scan, a tie-break swap, a five-int identity permutation copied
 # from data_ov006_0213bcd8 and bubble-sorted on a rank key (-2 for a card in the
 # largest group, -1 for the second, 0 otherwise), a `+0x2d` group flag written
-# per card, five calls to func_ov006_020d99ec(card, i), and a return of 1 if any
+# per card, five calls to _ZN12dMgCardObj_c7SetHomeEi(card, i), and a return of 1 if any
 # card moved.  The caller's use is `if (a || b) Sound::PlayBank2_2D(0x152)`.
 #
 # WHAT IT UNBLOCKS.  State 10 waits for all five cards of BOTH hands to reach
 # state 8.  State 8 has TWO writers, one per element class, and BOTH sit inside a
-# `state == 7` arm -- src/func_ov006_020d9c5c.cpp:67 (dMgCardObj_c's tick) and
-# src/func_ov006_020d978c.cpp:53 (dMgDilarCardObj_c's tick).  State 7 has exactly
-# ONE feeder, func_ov006_020d99ec, and the sorter was its only caller.  With the
+# `state == 7` arm -- src/minigames/d_s_mg_card.cpp:67 (dMgCardObj_c's tick) and
+# src/minigames/d_s_mg_card.cpp:53 (dMgDilarCardObj_c's tick).  State 7 has exactly
+# ONE feeder, _ZN12dMgCardObj_c7SetHomeEi, and the sorter was its only caller.  With the
 # trap standing the machine reached state 10 and stopped; with the body seated
 # the ten cards get slide targets and the machine walks on into the payout states
 # 0x0e..0x12, which were adjudicated by lane PKR but never once exercised.
@@ -269,7 +269,7 @@
 # port/mg_fanout_costs.txt section 3's nosrc column reads 0 for this id and was
 # always right: that column counts VTABLE SLOTS, and this is a state.
 #
-# src/func_ov006_020d99ec.c is in the list below and NOW LINKS.  /OPT:REF used to
+# src/minigames/d_s_mg_card.cpp is in the list below and NOW LINKS.  /OPT:REF used to
 # drop it because the only reference was the one the trap replaced; the seated
 # body restores that reference.  Run mg9 lane S364's lesson still holds -- being
 # in a slice means COMPILED, the linker decides LINKED -- so this is checked in
@@ -314,7 +314,7 @@
 # port/unmatched/MgCard_Faces.cpp, the two slice lines below that are not this
 # class's own bodies, and the floor.  Nothing else.
 #
-# Run mg12 lane SRT seated the floor as src/func_ov006_020da174.c, so the list is
+# Run mg12 lane SRT seated the floor as src/minigames/d_s_mg_card.cpp, so the list is
 # 41 TUs rather than 40 and the fifth of those names is resolved by a slice line
 # instead of by a trap.  THE "four" THAT WOULD FOLLOW IS NOT WRITTEN HERE AS A
 # NUMBER, because reproducing it needs the BASELINE map and this lane built only
@@ -323,47 +323,11 @@
 # from their own TUs, 0 FOREIGN-object LNK2005 candidates.
 #
 # The 37 bodies of dScMgCard_c and its two element classes, 0x020d95a4 ..
-# 0x020dbe40, in address order.  The 37th is func_ov006_020da174, the hand
+# 0x020dbe40, in address order.  The 37th is _ZN11dScMgCard_c11ArrangeHandEP12dMgCardObj_c, the hand
 # sorter run mg11 had to trap and run mg12 lane SRT decompiled; section 7.
-src/func_ov006_020d95a4.cpp
-src/func_ov006_020d9638.cpp
-src/func_ov006_020d96e0.c
-src/func_ov006_020d96f0.c
-src/func_ov006_020d970c.c
-src/func_ov006_020d978c.cpp
-src/func_ov006_020d9998.c
-src/func_ov006_020d99a4.c
-src/func_ov006_020d99ec.c
-src/func_ov006_020d9a14.c
-src/func_ov006_020d9bd0.c
-src/func_ov006_020d9bdc.c
-src/func_ov006_020d9c5c.cpp
-src/func_ov006_020da00c.cpp
-src/func_ov006_020da0ac.cpp
-src/func_ov006_020da154.c
-src/func_ov006_020da174.c
-src/func_ov006_020da420.c
-src/func_ov006_020da4ac.c
-src/func_ov006_020da5e8.c
-src/func_ov006_020da834.c
-src/func_ov006_020da860.c
-src/func_ov006_020da88c.c
-src/func_ov006_020da8b8.c
-src/func_ov006_020da8e4.c
-src/func_ov006_020da974.c
-src/func_ov006_020da994.c
-src/func_ov006_020da9c4.cpp
-src/func_ov006_020dabec.c
-src/func_ov006_020dac34.c
-src/func_ov006_020db6ec.c
-src/func_ov006_020db720.c
-src/func_ov006_020db9dc.c
-src/func_ov006_020dbaf0.cpp
-src/MgPicturePoker_Spawn.cpp
-src/func_ov006_020dbe14.c
-src/func_ov006_020dbe30.c
+src/minigames/d_s_mg_card.cpp
 # The ov004 delta: func_ov004_020b5d74 arms the framework's end-of-round timer
-# and is called from src/func_ov006_020db720.c (vtable slot 19).  No wired slice
+# and is called from src/minigames/d_s_mg_card.cpp (vtable slot 19).  No wired slice
 # reached it before this lane.
 src/func_ov004_020b5d74.c
 # and its own callee, wave two: func_ov004_020b5768 is the routine 020b5d74

@@ -38,13 +38,13 @@
  * here is inferred from a slot number and no slot is a trap -- all eighteen
  * have a body, and the four the class OWNS are the ones this file thunks.
  *
- *    0  InitResources          0x02005a58  func_02005a58        OWN
+ *    0  InitResources          0x02005a58  _ZN9BootScene13InitResourcesEv        OWN
  *    1  BeforeInitResources    0x0202e638  Scene::
  *    2  AfterInitResources     0x0202e62c  Scene::   VENEER
  *    3  CleanupResources       0x02043bf0  ActorBase::
  *    4  BeforeCleanupResources 0x0202e5f0  Scene::
  *    5  AfterCleanupResources  0x0202e5d0  Scene::
- *    6  Behavior               0x02005418  func_02005418        OWN
+ *    6  Behavior               0x02005418  _ZN9BootScene8BehaviorEv        OWN
  *    7  BeforeBehavior         0x0202e3d4  Scene::
  *    8  AfterBehavior          0x0202e3c8  Scene::   VENEER
  *    9  Render                 0x02043af0  ActorBase::
@@ -54,18 +54,18 @@
  *   13  Virtual34              0x0204357c  ActorBase::
  *   14  Virtual38              0x0204349c  ActorBase::
  *   15  OnHeapCreated          0x02043494  ActorBase::
- *   16  D2                     0x02023598  _ZN5SceneD2Ev        OWN (see 3)
+ *   16  D2                     0x02023598  _ZN9BootSceneD1Ev        OWN (see 3)
  *   17  D0                     0x020235d4  _ZN9BootSceneD0Ev    OWN
  *
  * THE WIDTH IS EIGHTEEN AND THE ROM SAYS SO TWICE. The next named symbol after
  * data_02091528 in config/arm9/symbols.txt is data_02091570, a delta of 0x48 =
- * 18 words; and src/func_02005a58.c reads data_02091570 as an LZ blob, so that
+ * 18 words; and src/_ZN9BootScene13InitResourcesEv.cpp reads data_02091570 as an LZ blob, so that
  * boundary is a real object rather than a padding artefact.
  *
  * ---- 3. SLOT 16 IS Scene::~Scene AND THAT IS NOT A MISTAKE ---------------
  *
- * config/arm9/symbols.txt names 0x02023598 _ZN5SceneD2Ev, and that address is
- * what this class's slot 16 holds. The body settles it: src/_ZN5SceneD2Ev.c's
+ * config/arm9/symbols.txt names 0x02023598 _ZN9BootSceneD1Ev, and that address is
+ * what this class's slot 16 holds. The body settles it: src/_ZN9BootSceneD1Ev.cpp's
  * FIRST vptr store is data_02091528 -- this table. CodeWarrior folded the two
  * complete-object destructors, because BootScene adds no member that needs
  * destroying and its D2 is instruction for instruction Scene's, and the linker
@@ -74,7 +74,7 @@
  *
  * ---- 4. THE TWO ADJUDICATED BODIES ---------------------------------------
  *
- * src/func_02005a58.c and src/func_02005418.c carry the "recovered from vtable
+ * src/_ZN9BootScene13InitResourcesEv.cpp and src/_ZN9BootScene8BehaviorEv.cpp carry the "recovered from vtable
  * slot identity" marker, so port/tools/inferred_stub_guard.py would refuse
  * this seat on its own. Both are ruled REAL_DECOMP in
  * port/tools/inferred_stub_adjudicated.txt off the BYTE GATE (run link100 lane
@@ -85,7 +85,7 @@
  *
  * ---- 5. WHAT THE SCENE ASKS FOR NEXT -------------------------------------
  *
- * src/func_02005418.c (Behavior) is a small state machine over self+0x50 that
+ * src/_ZN9BootScene8BehaviorEv.cpp (Behavior) is a small state machine over self+0x50 that
  * ends in
  *
  *     Scene::StartSceneFade(func_0203da3c() != 0 ? 6 : 1, 0, 0)
@@ -105,6 +105,8 @@
  * config/arm9/relocs.txt) and NOT ONE of their src/ TUs names data_02092110.
  */
 
+#include "port_d16.h"
+
 #include <cstdio>
 #include <cstdlib>
 
@@ -114,11 +116,11 @@ extern "C" {
 
 /* ---- the class's own four, plus the factory. Flat C names out of src/, the
    way every arm9 method in this tree is spelled. */
-int   func_02005a58(char *self);        /* slot  0  InitResources          */
-int   func_02005418(void *self);        /* slot  6  Behavior               */
-void *_ZN5SceneD2Ev(void *self);        /* slot 16  D2  (folded, see 3)    */
+int   _ZN9BootScene13InitResourcesEv(char *self);        /* slot  0  InitResources          */
+int   _ZN9BootScene8BehaviorEv(void *self);        /* slot  6  Behavior               */
+void *_ZN9BootSceneD1Ev(void *self);        /* slot 16  D2  (folded, see 3)    */
 void *_ZN9BootSceneD0Ev(void *self);    /* slot 17  D0                     */
-void *func_02023624(void);              /* the factory, 0x02023624         */
+void *dScBoot_c_classInit(void);              /* the factory, 0x02023624         */
 
 /* the shared halves (hal/scene_boot.cpp, hal/scene_link100_base_faces.cpp) */
 unsigned port_scene_fill_rom(void **vt, unsigned n);
@@ -131,8 +133,8 @@ void port_scene_boot_report(void);
 /* ---- THE VTABLE, a host array under the ROM'S OWN DATA NAME ---------------
  *
  * data_02091528 is what the factory writes into the object's +0 word
- * (src/func_02023624.c) and what both destructor bodies write back on the way
- * down (src/_ZN5SceneD2Ev.c, src/_ZN9BootSceneD0Ev.c), so the spelling has to
+ * (src/d_s_boot.c) and what both destructor bodies write back on the way
+ * down (src/_ZN9BootSceneD1Ev.cpp, src/_ZN9BootSceneD0Ev.cpp), so the spelling has to
  * be exactly this and at C linkage. arm9 .data is NOT mounted -- there is no
  * arm9 equivalent of port/ovNNN_syms.txt -- so this is a FRESH HOST ARRAY, the
  * shape hal/actor_vtables.cpp's data_0208e4b8 and hal/scene_boot.cpp's
@@ -183,7 +185,7 @@ void *data_02091528[18] = {
  * the same word it writes for every mounted row -- and the id halfword is the
  * ROM's, so the registry's "record says id N, the spawn table says M" check
  * still reads the ROM's own number. */
-unsigned char data_020914a8[8] = { 0, 0, 0, 0,   0x00, 0x00, 0x02, 0x00 };
+unsigned char g_profile_BOOT[8] = { 0, 0, 0, 0,   0x00, 0x00, 0x02, 0x00 };
 DSSTATE_END
 
 /* ---- THE TWO BSS OBJECTS THE PAIR'S OWN BODIES NAME ----------------------
@@ -194,7 +196,7 @@ DSSTATE_END
  * storage, and they go into .dsstate with the rest of the port's hosted DS bss
  * so a save state rolls them back with what they belong to.
  *
- * data_020a0c68 is the 0x10-byte record src/func_0203506c.c hands to
+ * data_020a0c68 is the 0x10-byte record src/_ZN7dScMB_c13InitResourcesEv.cpp hands to
  * func_02034b1c and then publishes through data_0209d4a8; data_020a0c64 is the
  * four-byte handle the same body stores func_0201a244's result in. Both belong
  * to dScMB_c and live here only because this file is the first of the pair. */
@@ -221,7 +223,7 @@ DSSTATE_END
  *   data_020a0c5c  the heap Heap::SetDefault displaced, saved and restored by
  *                  src/func_02034fbc.c.
  *   data_020a0c60  that body's own once-only bit-0 gate.
- *   data_0209f1e8  where src/func_02005a58.c parks func_0201a244's answer.
+ *   data_0209f1e8  where src/_ZN9BootScene13InitResourcesEv.cpp parks func_0201a244's answer.
  *
  * NONE OF THE SIX IS A ROMDATA CANDIDATE, and the distinction is the one
  * port/tools/romdata.py's header draws: an address at or past 0x0209b000 is
@@ -261,7 +263,7 @@ extern int overlay_2, overlay_3, overlay_4, overlay_5, overlay_6, overlay_7,
 /* ---- THE ONE REFUSED SUBTREE: func_0201a2f8, THE BOOT WORKER THREAD -------
  *
  * BOTH classes' InitResources take this body's ADDRESS and hand it to
- * func_0201a244 (src/func_02005a58.c and src/func_0203506c.c), so the symbol
+ * func_0201a244 (src/_ZN9BootScene13InitResourcesEv.cpp and src/_ZN7dScMB_c13InitResourcesEv.cpp), so the symbol
  * has to resolve or neither class links. It is faced here rather than
  * compiled, and this is the one place this seat traded linkage for honesty on
  * purpose -- the same trade, in the same direction, that hal/scene_boot.cpp's
@@ -328,15 +330,15 @@ extern "C" void func_0201a2f8(void)
 static unsigned g_boot_hits[18];
 
 static int  __fastcall bt_init(void *s, void *)
-{ ++g_boot_hits[0];  return func_02005a58((char *)s); }
+{ ++g_boot_hits[0];  return _ZN9BootScene13InitResourcesEv((char *)s); }
 static int  __fastcall bt_beh(void *s, void *)
-{ ++g_boot_hits[6];  return func_02005418(s); }
+{ ++g_boot_hits[6];  return _ZN9BootScene8BehaviorEv(s); }
 static int  __fastcall bt_render(void *s, void *)
 { ++g_boot_hits[9];  return port_scene_link100_base_render(s); }
 static void __fastcall bt_pdes(void *s, void *)
 { ++g_boot_hits[12]; port_scene_link100_base_pending_destroy(s); }
 static void *__fastcall bt_d2(void *s, void *)
-{ ++g_boot_hits[16]; return _ZN5SceneD2Ev(s); }
+{ ++g_boot_hits[16]; return _ZN9BootSceneD1Ev(s); }
 static void *__fastcall bt_d0(void *s, void *)
 { ++g_boot_hits[17]; return _ZN9BootSceneD0Ev(s); }
 
@@ -352,7 +354,7 @@ extern "C" void port_scene_fill_boot(void)
     vt[6]  = (void *)bt_beh;
     vt[9]  = (void *)bt_render;
     vt[12] = (void *)bt_pdes;
-    vt[16] = (void *)bt_d2;
+    vt[16] = (void *)PORT_D16(bt_d2);
     vt[17] = (void *)bt_d0;
 
     /* THE ACCOUNTING, and it is the transcription's only proof. Six is the
@@ -389,8 +391,8 @@ extern "C" void port_scene_fill_boot(void)
 
 /* The registry's factory column is void *(*)(void) and the matched factory
    already is one; this forwarder exists so the row names a symbol this file
-   owns, and /OPT:REF follows it to src/func_02023624.c. */
-extern "C" void *port_boot_scene_spawn(void) { return func_02023624(); }
+   owns, and /OPT:REF follows it to src/dScBoot_c_classInit.c. */
+extern "C" void *port_boot_scene_spawn(void) { return dScBoot_c_classInit(); }
 
 extern "C" void port_scene_boot_report(void)
 {

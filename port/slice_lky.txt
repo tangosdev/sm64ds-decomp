@@ -1,7 +1,7 @@
 # Lane LKY of run mg9: dScMgBSC_c, the "Lucky Stars" minigame.
 #
-# actor id 0x184 (scene 388), spawn symbol MgLuckyStars_Spawn (0x021255f8),
-# SpawnInfo 0x0213fd6c, vtable data_ov006_0213fec8. Every one of those was
+# actor id 0x184 (scene 388), spawn symbol dScMgBSC_c_classInit (0x021255f8),
+# SpawnInfo 0x0213fd6c, vtable _ZTV10dScMgBSC_c. Every one of those was
 # re-read out of the ROM by this lane rather than taken from the handover.
 # The doubled-id word 0x01840184 occurs EXACTLY ONCE in
 # extracted/overlays/overlay_0006.bin (base 0x020bfec0), at 0x0213fd70, which
@@ -23,15 +23,15 @@
 # So the class is dScMgBSC_c and the spawn symbol is MgLuckyStars -- the same
 # spawn-symbol/class-name split port/mg_fanout_costs.txt section 2 records for
 # curling (MgShuffleShell / dScMgCurling_c) and port/slice_lui.txt for 0x16e.
-# The src spelling agrees (src/func_ov006_021254c0.cpp's recovered header reads
+# The src spelling agrees (src/minigames/d_s_mg_bsc.cpp's recovered header reads
 # dScMgBSC_c) and is the weaker witness, because a per-TU placeholder can be
 # wrong and a relocation cannot.
 #
 # ---- 2. THE HIERARCHY IS THREE DEEP, AND THE HANDOVER DID NOT SAY SO ------
 #
 #     Scene -> dScMgBase_c         data_ov004_020bc0c0  36  (the framework's)
-#           -> dScMgSingle3DBase_c data_ov006_0213e448  36  ovr 8,  mark 6
-#           -> dScMgBSC_c          data_ov006_0213fec8  36  ovr 14, mark 12
+#           -> dScMgSingle3DBase_c _ZTV19dScMgSingle3DBase_c  36  ovr 8,  mark 6
+#           -> dScMgBSC_c          _ZTV10dScMgBSC_c  36  ovr 14, mark 12
 #
 # port/mg_fanout_costs.txt section 3 lists one vtable for 0x184 and says nothing
 # about an intermediate base, so a lane that filled one derived table would have
@@ -40,11 +40,11 @@
 # read off code, and the RTTI base link above is a third witness the earlier
 # lanes did not have:
 #
-#   src/MgLuckyStars_Spawn.cpp calls func_ov004_020b2adc(p), writes
-#   data_ov006_0213e448 into p[0], constructs Particle::SysTracker at +0x471c,
-#   then writes data_ov006_0213fec8 over it.
-#   src/func_ov006_0212497c.cpp (slot 17, D0) unwinds in the opposite order,
-#   0x0213fec8 first and 0x0213e448 second; src/func_ov006_02124908.c (slot 16,
+#   src/minigames/d_s_mg_bsc.cpp calls _ZN11dScMgBase_cC2Ev(p), writes
+#   _ZTV19dScMgSingle3DBase_c into p[0], constructs Particle::SysTracker at +0x471c,
+#   then writes _ZTV10dScMgBSC_c over it.
+#   src/minigames/d_s_mg_bsc.cpp (slot 17, D0) unwinds in the opposite order,
+#   0x0213fec8 first and 0x0213e448 second; src/minigames/d_s_mg_bsc.cpp (slot 16,
 #   D2) does the same without the Deallocate.
 #
 # THE OVERRIDE SPLIT, computed word by word against both base tables:
@@ -63,7 +63,7 @@
 # three of its checks were redone here, plus a fourth this lane adds:
 #
 #   1. SPAN. config/arm9/overlays/ov006/symbols.txt puts the next symbol after
-#      data_ov006_0213fec8 at data_ov006_0213ff58, exactly 0x90 = 36 words on,
+#      _ZTV10dScMgBSC_c at data_ov006_0213ff58, exactly 0x90 = 36 words on,
 #      so a 37th slot cannot exist inside the table. The middle table's next
 #      symbol is data_ov006_0213e4d8, also exactly 0x90 on.
 #   2. TERMINAL SLOT. Slot 35 of both tables holds 0x020ad660, the word every
@@ -117,20 +117,20 @@
 # routed fourteen of its states.
 #
 # AND THE OWNER RESOLVES SECTION 3's ONE BLANK ROW. The four tables belong to
-# the class whose vtable is data_ov006_0214000c: it carries the ActorBase
+# the class whose vtable is _ZTV15dScMgSnowball_c: it carries the ActorBase
 # signature at slots 13/14/15 (0x0204357c, 0x0204349c, 0x02043494 at
 # 0x02140040/44/48), its slot 35 is 0x020ad660, and its slot 6 is
-# func_ov006_021283a4, which is the only caller of func_ov006_0212a2e0, which is
+# _ZN15dScMgSnowball_c8BehaviorEv, which is the only caller of func_ov006_0212a2e0, which is
 # the only reader of data_ov006_02143038. Its .data pairs bracket
-# MgSnowballSlalom_SpawnInfo at 0x0213ffb8 and skip it, exactly the way this
-# class's pairs bracket MgLuckyStars_SpawnInfo at 0x0213fd6c and skip it.
+# g_profile_MG_SNOWBALL at 0x0213ffb8 and skip it, exactly the way this
+# class's pairs bracket g_profile_MG_BS_CARD at 0x0213fd6c and skip it.
 #
-# So data_ov006_0214000c is MgSnowballSlalom's vtable -- the row section 3
+# So _ZTV15dScMgSnowball_c is MgSnowballSlalom's vtable -- the row section 3
 # leaves blank with "no load relocation inside that factory points at any of the
 # thirty-two signature tables". THAT IS TRUE AND IT IS NOT THE WHOLE STORY:
-# src/MgSnowballSlalom_Spawn.cpp does not write a vtable at all. It allocates
+# src/d_s_mg_snowball.cpp does not write a vtable at all. It allocates
 # 0xc59c and tail-calls func_ov006_021295ac(p), and THAT body writes
-# data_ov006_0213e448 and then data_ov006_0214000c -- so 0x179 is a fourth class
+# _ZTV19dScMgSingle3DBase_c and then _ZTV15dScMgSnowball_c -- so 0x179 is a fourth class
 # under the same middle base, and the indirection section 3 hypothesised ("its
 # factory reaches its vtable through an indirection the other twenty-nine do not
 # use") is one delegated constructor. THIS LANE DOES NOT SEAT 0x179 and has not
@@ -151,7 +151,7 @@
 # this lane's reading agrees with both earlier ones.
 #
 # TWO OF THE TWELVE CARRY A LIVE ARGUMENT AND THE SEAT MUST FORWARD IT.
-# Slots 18 (func_ov006_02125364) and 19 (func_ov006_0212527c) both BRANCH on
+# Slots 18 (_ZN10dScMgBSC_c13OnYoshiTryEatEi) and 19 (_ZN10dScMgBSC_c13OnTurnIntoEggEi) both BRANCH on
 # their second argument -- 0x02125364 compares it against 4, 5 and 3, and
 # 0x0212527c against 4 and 5. Every seated class before this one had a slot-18
 # body that ignored the value, so its thunk existed only so __fastcall would
@@ -163,7 +163,7 @@
 #
 # EXCLUDED and host-copied in port/unmatched/MgBSC_StateDispatch.cpp:
 #
-#     src/func_ov006_021254c0.cpp   vtable SLOT 6, the Behavior
+#     src/minigames/d_s_mg_bsc.cpp   vtable SLOT 6, the Behavior
 #
 # Its src declares the pair table inside extern "C", so it mangles as the plain
 # C name the ov006 mount already defines: the link is satisfied, the compile is
@@ -187,7 +187,7 @@
 #     bodies, the factory)                                         0x021254dc
 #   the 8 INHERITED dScMgSingle3DBase_c bodies                     0 sites
 #
-# One site, in func_ov006_021254c0, which is slot 6. The `::*` sweep over this
+# One site, in _ZN10dScMgBSC_c8BehaviorEv, which is slot 6. The `::*` sweep over this
 # slice's closure agrees and adds nothing.
 #
 # AN EARLIER VERSION OF THIS PARAGRAPH USED A SPAN AND THE SPAN WAS WRONG TWICE.
@@ -201,7 +201,7 @@
 #
 # THE FOUR ARE NAMED SO THE NEXT LANE INHERITS A PRICE, NOT JUST A VTABLE.
 # Section 4 hands whoever takes MgSnowballSlalom a resolved vtable
-# (data_ov006_0214000c). A resolved vtable with the wall priced at zero would be
+# (_ZTV15dScMgSnowball_c). A resolved vtable with the wall priced at zero would be
 # worse than nothing, so:
 #
 #   0x02129dc0  func_ov006_02129d94   dispatches data_ov006_02143070
@@ -211,7 +211,7 @@
 #   0x0212a324  func_ov006_0212a2e0   dispatches data_ov006_02143038
 #
 # Four decode sites across THREE TUs, covering FOUR tables and 14 slots, all
-# arity 1. That class's own vtable slot 6 (func_ov006_021283a4) is NOT among
+# arity 1. That class's own vtable slot 6 (_ZN15dScMgSnowball_c8BehaviorEv) is NOT among
 # them -- it reaches the machine by CALLING func_ov006_0212a2e0 rather than
 # decoding a pair itself, so reading slot 6 alone would price its wall at zero.
 # Its machine is also TWO LEVELS DEEP: _0212a224 and _02129d94 are slots 1 and 2
@@ -219,18 +219,18 @@
 #
 # ALSO EXCLUDED, both against existing host copies rather than against this
 # class:
-#     src/func_ov006_0210a6e4.cpp   slot 2, the argument ride-through. Defined
+#     src/minigames/d_s_mg_single3_d_base.cpp   slot 2, the argument ride-through. Defined
 #                                   by unmatched/MgFlower_Slot2.cpp as
 #                                   port_mg_flower_after_init; listing it would
 #                                   be an LNK2005. Same call slice_mem.txt makes.
-#     src/func_ov004_020b0620.cpp   dScMgBase_c slot 7, host-copied in
+#     src/minigames/d_s_mg_base.cpp   dScMgBase_c slot 7, host-copied in
 #                                   unmatched/MgBase_Slot7.cpp since run link60.
 #
 # ---- 7. ONE STATE TABLE, ONE LEVEL DEEP ----------------------------------
 #
 #   table                n  arity  dispatched by
 #   -------------------  -  -----  -------------------------------------------
-#   data_ov006_02142f94  14   0    func_ov006_021254c0  (vtable slot 6)
+#   data_ov006_02142f94  14   0    _ZN10dScMgBSC_c8BehaviorEv  (vtable slot 6)
 #
 # Fourteen slots, ELEVEN distinct code words (slots 7/8, 9/10 and 12/13 share a
 # body), every adjustment word zero, and every one of the eleven has a matched
@@ -251,9 +251,9 @@
 # NOT copy them in address order: slot 0 comes from 0x0213fd7c and slot 10 from
 # 0x0213fd0c. Two words inside that span are not pairs at all:
 #
-#     0x0213fd44  an INT ARRAY. src/func_ov006_02124ec4.c and
-#                 src/func_ov006_02124fd8.c both index it and neither calls it.
-#     0x0213fd6c  MgLuckyStars_SpawnInfo, the factory word and the doubled id.
+#     0x0213fd44  an INT ARRAY. src/minigames/d_s_mg_bsc.cpp and
+#                 src/minigames/d_s_mg_bsc.cpp both index it and neither calls it.
+#     0x0213fd6c  g_profile_MG_BS_CARD, the factory word and the doubled id.
 #
 # A sweep would have produced sixteen "pairs" and routed two addresses that are
 # not code. This is section 4's curling trap and section 13's Memory Master trap
@@ -296,7 +296,7 @@
 # Eight port/slice_*.txt files are not read by port/CMakeLists.txt at all --
 # port/slice_mga361.txt among them, the 0x169 derivation that was never seated
 # -- and counting an unwired slice as coverage hides TUs a seat genuinely needs.
-# Here it hid src/func_ov004_020b0620.cpp and src/func_ov006_0210a6e4.cpp; both
+# Here it hid src/minigames/d_s_mg_base.cpp and src/minigames/d_s_mg_single3_d_base.cpp; both
 # turned out to be host-copy exclusions rather than slice lines (section 6), but
 # the check is what surfaced them.
 #
@@ -306,26 +306,8 @@
 # it; CMake appends every list to the same targets and dedupes identical
 # absolute paths, so nothing is compiled twice.
 
-src/MgLuckyStars_Spawn.cpp
+src/minigames/d_s_mg_bsc.cpp
 src/func_ov004_020b0a38.c
 src/func_ov004_020b5c18.cpp
 src/func_ov004_020b5ed0.c
 src/func_ov004_020b6324.c
-src/func_ov006_02124908.c
-src/func_ov006_0212497c.cpp
-src/func_ov006_02124a04.c
-src/func_ov006_02124a08.c
-src/func_ov006_02124ae4.c
-src/func_ov006_02124b58.c
-src/func_ov006_02124bb4.c
-src/func_ov006_02124cb4.c
-src/func_ov006_02124dc0.c
-src/func_ov006_02124e1c.cpp
-src/func_ov006_02124ec4.c
-src/func_ov006_02124fd8.c
-src/func_ov006_021250e4.c
-src/func_ov006_02125248.c
-src/func_ov006_0212527c.cpp
-src/func_ov006_02125364.c
-src/func_ov006_021253bc.c
-src/func_ov006_0212551c.cpp

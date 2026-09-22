@@ -45,15 +45,15 @@
 # the proof harness remembers them as behaviour.
 #
 #   ?DeallocateAll@ExpandingHeapAllocator@@QAEXPAP6AXPAXPAV1@I@ZI@Z
-#       = __ZN22ExpandingHeapAllocator13DeallocateAllEPPFvPvPS_jEj
+#       = __ZN22ExpandingHeapAllocator13DeallocateAllEPFvPvPS_jEj
 #                                     hal/lk4_eh_dtor_seat.cpp, thiscall face
 #   __ZN13HeapAllocator6RemoveEv = ?Remove@HeapAllocator@@QAEXXZ
 #                                     hal/lk4_eh_dtor_seat.cpp, cdecl face on
 #                                     the veneers' tail-jump ride
 #   __ZN6Player12GetHurtStateEv = ?GetHurtState@Player@@QAEHXZ
 #                                     hal/actor_classes_ov073.cpp, cdecl face
-#   ?St_EndingFly_Main@Player@@QAEHXZ = __ZN6Player17St_EndingFly_MainEv
-#   ?St_EndingFly_Main@Player@@QAEXXZ = __ZN6Player17St_EndingFly_MainEv
+#   ?St_EndingFly_Main@Player@@QAEHXZ = _func_ov007_020c3d1c
+#   ?St_EndingFly_Main@Player@@QAEXXZ = _func_ov007_020c3d1c
 #                                     hal/scene_boot.cpp, one thiscall face
 #                                     and a return-only bridge onto it
 #
@@ -65,7 +65,7 @@
 #
 # NOT EVERY INSTANCE OF THE CLASS IS CLOSED, and this file cannot see the one
 # that is left. hal/scene_boot.cpp still carries
-# `_func_020c3d1c=__ZN6Player17St_EndingFly_MainEv`, reached through SIXTEEN
+# `_func_020c3d1c=_func_ov007_020c3d1c`, reached through SIXTEEN
 # matched ov007 long-branch veneers that declare `func_020c3d1c(void)` and
 # pass nothing, six of which are themselves entered with a real pushed
 # argument. Both sides of that directive are flat __cdecl, so RULE R is right
@@ -86,21 +86,21 @@
 __ZN6Player13OnYoshiTryEatEv=?OnYoshiTryEat@Player@@UAEHXZ  # INERT: body discards this
 
 # The eight MeshColliderBase base-table bridges. Every one of the eight flat
-# names is ONLY ADDRESS-TAKEN, into _ZTV16MeshColliderBase at
+# names is ONLY ADDRESS-TAKEN, into _ZTV4dBgW at
 # hal/meshcolliderbase_vtable.cpp:76 and :80-86 (storage hal/model_host.cpp
 # :309, filled at boot from hal/level_boot.cpp:3486); a tree-wide search finds
 # no call. The live dispatchers are MSVC virtual calls that put the receiver
-# in ECX -- src/_ZN11RaycastLine10DetectClsnEv.cpp:56 and
-# src/_ZN10SphereClsn10DetectClsnEv.cpp:55 walk the collider registry and
+# in ECX -- src/_ZN9dBgCh_Lin10DetectClsnEv.cpp:56 and
+# src/_ZN12dBgCh_SphCrr10DetectClsnEv.cpp:55 walk the collider registry and
 # dispatch v7/v8 on it -- so the __thiscall bodies read it correctly.
-__ZN16MeshColliderBase9Virtual08Ev=?Virtual08@MeshColliderBase@@UAEXXZ  # INERT: address-taken only, ECX dispatch
-__ZN16MeshColliderBase10DetectClsnER13RaycastGround=?DetectClsn@MeshColliderBase@@UAEHAAURaycastGround@@@Z  # INERT: address-taken only, ECX dispatch
-__ZN16MeshColliderBase10DetectClsnER11RaycastLine=?DetectClsn@MeshColliderBase@@UAEHAAURaycastLine@@@Z  # INERT: address-taken only, ECX dispatch
-__ZN16MeshColliderBase10DetectClsnER10SphereClsn=?DetectClsn@MeshColliderBase@@UAEHAAUSphereClsn@@@Z  # INERT: address-taken only, ECX dispatch
-__ZN16MeshColliderBase10BeforeClsnER10ClsnResultP5ActorR7Vector3P10Vector3_16S7_=?BeforeClsn@MeshColliderBase@@UAEXAAUClsnResult@@PAUActor@@AAUVector3@@PAUVector3_16@@3@Z  # INERT: address-taken only, ECX dispatch
-__ZN16MeshColliderBase12TransformPosERK7Vector3RS0_=?TransformPos@MeshColliderBase@@UAEHABUVector3@@AAU2@@Z  # INERT: address-taken only, ECX dispatch
-__ZN16MeshColliderBase14GetAngularVelYEv=?GetAngularVelY@MeshColliderBase@@UAEFXZ  # INERT: address-taken only, ECX dispatch
-__ZN16MeshColliderBase11GetVelocityER7Vector3=?GetVelocity@MeshColliderBase@@UAEXAAUVector3@@@Z  # INERT: address-taken only, ECX dispatch
+__ZN4dBgW9Virtual08Ev=?Virtual08@dBgW@@UAEXXZ  # INERT: address-taken only, ECX dispatch
+__ZN4dBgW10DetectClsnER9dBgCh_Gnd=?DetectClsn@dBgW@@UAEHAAURaycastGround@@@Z  # INERT: address-taken only, ECX dispatch
+__ZN4dBgW10DetectClsnER9dBgCh_Lin=?DetectClsn@dBgW@@UAEHAAURaycastLine@@@Z  # INERT: address-taken only, ECX dispatch
+__ZN4dBgW10DetectClsnER12dBgCh_SphCrr=?DetectClsn@dBgW@@UAEHAAUSphereClsn@@@Z  # INERT: address-taken only, ECX dispatch
+__ZN4dBgW10BeforeClsnER5dBgPiP8dActor_cR7Vector3P10Vector3_16S7_=?BeforeClsn@dBgW@@UAEXAAUClsnResult@@PAUActor@@AAUVector3@@PAUVector3_16@@3@Z  # INERT: address-taken only, ECX dispatch
+__ZN4dBgW12TransformPosERK7Vector3RS0_=?TransformPos@dBgW@@UAEHABUVector3@@AAU2@@Z  # INERT: address-taken only, ECX dispatch
+__ZN4dBgW14GetAngularVelYEv=?GetAngularVelY@dBgW@@UAEFXZ  # INERT: address-taken only, ECX dispatch
+__ZN4dBgW11GetVelocityER7Vector3=?GetVelocity@dBgW@@UAEXAAUVector3@@@Z  # INERT: address-taken only, ECX dispatch
 
 # ExpandingHeapAllocator::MemoryLeft. The directive never fires: the LHS is
 # DEFINED, by the face at hal/heap_vtable.cpp:96 which re-lands the receiver

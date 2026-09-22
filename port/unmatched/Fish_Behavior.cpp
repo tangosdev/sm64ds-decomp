@@ -30,9 +30,9 @@ struct PortVec3 { int x, y, z; };
 struct PortM48 { int w[12]; };
 extern PortM48 data_020a0e68;
 
-int *_ZN5Actor10FindWithIDEj(unsigned id);
-void _ZN9ActorBase18MarkForDestructionEv(void *self);
-void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *clsn);
+int *_ZN8dActor_c10FindWithIDEj(unsigned id);
+void _ZN7fBase_c18MarkForDestructionEv(void *self);
+void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *clsn);
 void Vec3_Asr(PortVec3 *d, PortVec3 *s, int sh);
 void Matrix4x3_FromTranslation(PortM48 *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationY(PortM48 *m, short angY);

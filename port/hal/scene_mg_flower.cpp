@@ -25,13 +25,13 @@
 // ---- 2. THE HIERARCHY IS THREE DEEP, AND THE ROM SAYS SO TWICE ------------
 //
 //     Scene -> dScMgBase_c         data_ov004_020bc0c0  36 slots
-//           -> dScMgSingle3DBase_c data_ov006_0213e448  36 slots
-//           -> dScMgFlower_c       data_ov006_02140140  36 slots
+//           -> dScMgSingle3DBase_c _ZTV19dScMgSingle3DBase_c  36 slots
+//           -> dScMgFlower_c       _ZTV13dScMgFlower_c  36 slots
 //
 // Both edges are read off code rather than inferred from names. The factory
-// func_ov006_0212b7f8 calls func_ov004_020b2adc (dScMgBase_c's constructor),
+// dScMgFlower_c_classInit calls _ZN11dScMgBase_cC2Ev (dScMgBase_c's constructor),
 // then writes 0x0213e448 into the object's first word, then writes 0x02140140
-// over it; the deleting destructor func_ov006_0212a5c8 (slot 17) unwinds them
+// over it; the deleting destructor _ZN13dScMgFlower_cD0Ev (slot 17) unwinds them
 // in the opposite order, 0x02140140 first and 0x0213e448 second. A hierarchy
 // written by the constructor and unwritten by the destructor in reverse is not
 // a guess.
@@ -100,7 +100,7 @@
 // stategen has no constructor of this class's to read.
 //
 // The FRAMEWORK's wall is still the framework's and is still paid: this class
-// reaches func_ov004_020b87e0 through dScMgBase_c exactly as curling does, and
+// reaches _ZN10dMgState_c8SetStateEi through dScMgBase_c exactly as curling does, and
 // unmatched/MgBase_StateDispatch.cpp's address switch is inherited unchanged.
 // AMENDED, run mg5 lane BASESET: the trap that used to stand in
 // hal/scene_mg_faces.cpp beside that switch is GONE. The setter is host-copied
@@ -115,8 +115,8 @@
 // starts at 0x0212aa74 -- and no src file anywhere defines it. Two matched TUs
 // call it, and both are on this class's live path:
 //
-//     from:0x0212b73c  inside func_ov006_0212b480, slot 0 InitResources
-//     from:0x0212aab8  inside func_ov006_0212aa74, slot 18 the state reset
+//     from:0x0212b73c  inside _ZN13dScMgFlower_c13InitResourcesEv, slot 0 InitResources
+//     from:0x0212aab8  inside _ZN13dScMgFlower_c13OnYoshiTryEatEi, slot 18 the state reset
 //
 // It is this class's analogue of curling's func_ov006_020e1854 and it is a
 // DECOMP gap, not a port one. It gets a named trap below and deliberately not
@@ -153,33 +153,33 @@ int      IsMinigameActorID(unsigned int id);
    array -- the ov007 and curling treatment, for the same reason: a second host
    array of the same name is a duplicate symbol, and leaving the mounted table
    alone leaves live wild DS pointers in a table the factory installs. */
-extern unsigned char data_ov006_0213e448[];   /* dScMgSingle3DBase_c, 36 */
-extern unsigned char data_ov006_02140140[];   /* dScMgFlower_c,       36 */
+extern unsigned char _ZTV19dScMgSingle3DBase_c[];   /* dScMgSingle3DBase_c, 36 */
+extern unsigned char _ZTV13dScMgFlower_c[];   /* dScMgFlower_c,       36 */
 extern unsigned char data_ov004_020bc0c0[];   /* dScMgBase_c,         36 */
-extern unsigned char data_ov006_02140114[];   /* the SpawnInfo record     */
+extern unsigned char g_profile_MG_FLOWER[];   /* the SpawnInfo record     */
 
 
 /* dScMgSingle3DBase_c's eight overrides */
-void  func_ov006_0210a608(void *c, unsigned f);   /* slot  5 */
-int   func_ov006_0210a698(void *c);               /* slot  7 */
-int   func_ov006_0210a664(void *c);               /* slot 10 */
-int   func_ov006_0210a4b0(char *c);               /* slot 16 D2 */
-int   func_ov006_0210a4e8(char *c);               /* slot 17 D0 */
-int   func_ov006_0210a600(void);                  /* slot 26 */
-void  func_ov006_0210a708(char *c);               /* slot 33 */
+void  _ZN19dScMgSingle3DBase_c21AfterCleanupResourcesEj(void *c, unsigned f);   /* slot  5 */
+int   _ZN19dScMgSingle3DBase_c14BeforeBehaviorEv(void *c);               /* slot  7 */
+int   _ZN19dScMgSingle3DBase_c12BeforeRenderEv(void *c);               /* slot 10 */
+int   _ZN19dScMgSingle3DBase_cD1Ev(char *c);               /* slot 16 D2 */
+int   _ZN19dScMgSingle3DBase_cD0Ev(char *c);               /* slot 17 D0 */
+int   _ZN19dScMgSingle3DBase_c24OnHitByCannonBlastedCharEv(void);                  /* slot 26 */
+void  _ZN19dScMgSingle3DBase_c9Virtual84Ev(char *c);               /* slot 33 */
 /* slot 2 is NOT src's body: see unmatched/MgFlower_Slot2.cpp */
 int   port_mg_flower_after_init(void *c, unsigned f);
 
 /* dScMgFlower_c's six own overrides */
-int   func_ov006_0212b480(void *c);               /* slot  0 InitResources */
-int   func_ov006_0212ac74(char *c);               /* slot  6 Behavior      */
-int   func_ov006_0212aacc(char *c);               /* slot  9 Render        */
-void *func_ov006_0212a554(char *c);               /* slot 16 D2            */
-void *func_ov006_0212a5c8(char *c);               /* slot 17 D0            */
-void  func_ov006_0212aa74(char *c);               /* slot 18 state reset   */
+int   _ZN13dScMgFlower_c13InitResourcesEv(void *c);               /* slot  0 InitResources */
+int   _ZN13dScMgFlower_c8BehaviorEv(char *c);               /* slot  6 Behavior      */
+int   _ZN13dScMgFlower_c6RenderEv(char *c);               /* slot  9 Render        */
+void *_ZN13dScMgFlower_cD1Ev(char *c);               /* slot 16 D2            */
+void *_ZN13dScMgFlower_cD0Ev(char *c);               /* slot 17 D0            */
+void  _ZN13dScMgFlower_c13OnYoshiTryEatEi(char *c);               /* slot 18 state reset   */
 
 /* the factory */
-void *func_ov006_0212b7f8(void);
+void *dScMgFlower_c_classInit(void);
 
 }  /* extern "C" */
 
@@ -202,19 +202,19 @@ static unsigned g_flw_base_hits[36];   /* the same slots on the MIDDLE table */
 static void *__fastcall s3_ainit(void *s, void *, unsigned f)
 { S3D(2);  return (void *)(size_t)port_mg_flower_after_init(s, f); }
 static void __fastcall s3_aclean(void *s, void *, unsigned f)
-{ S3D(5);  func_ov006_0210a608(s, f); }
+{ S3D(5);  _ZN19dScMgSingle3DBase_c21AfterCleanupResourcesEj(s, f); }
 static int  __fastcall s3_bbeh(void *s, void *)
-{ S3D(7);  return func_ov006_0210a698(s); }
+{ S3D(7);  return _ZN19dScMgSingle3DBase_c14BeforeBehaviorEv(s); }
 static int  __fastcall s3_bren(void *s, void *)
-{ S3D(10); return func_ov006_0210a664(s); }
+{ S3D(10); return _ZN19dScMgSingle3DBase_c12BeforeRenderEv(s); }
 static void *__fastcall s3_d2(void *s, void *)
-{ S3D(16); return (void *)(size_t)func_ov006_0210a4b0((char *)s); }
+{ S3D(16); return (void *)(size_t)_ZN19dScMgSingle3DBase_cD1Ev((char *)s); }
 static void *__fastcall s3_d0(void *s, void *)
-{ S3D(17); return (void *)(size_t)func_ov006_0210a4e8((char *)s); }
+{ S3D(17); return (void *)(size_t)_ZN19dScMgSingle3DBase_cD0Ev((char *)s); }
 static int  __fastcall s3_v26(void *, void *)
-{ S3D(26); return func_ov006_0210a600(); }
+{ S3D(26); return _ZN19dScMgSingle3DBase_c24OnHitByCannonBlastedCharEv(); }
 static int  __fastcall s3_v33(void *s, void *)
-{ S3D(33); func_ov006_0210a708((char *)s); return 0; }
+{ S3D(33); _ZN19dScMgSingle3DBase_c9Virtual84Ev((char *)s); return 0; }
 
 /* ---- dScMgFlower_c's six ------------------------------------------------ */
 /* ---- THE BLOCKER THAT WAS HERE IS RETIRED -------------------------------
@@ -235,20 +235,20 @@ static int  __fastcall s3_v33(void *s, void *)
    selftest now: if the host copy is ever dropped, scene 390 faults in
    InitResources again and that row goes red on the next battery. */
 static int  __fastcall flw_init(void *s, void *)
-{ FLW(0);  const int r = func_ov006_0212b480(s);
+{ FLW(0);  const int r = _ZN13dScMgFlower_c13InitResourcesEv(s);
   /* the GaplessMinigames latch, for hal/scene_mg.cpp's reason: every seated
      minigame calls it so the ones the gapless table does not name can say
      "unsupported" instead of doing nothing quietly. 0x180 is not in that
      table -- its G is 16 and nobody has walked its consumers. */
   hal_gapless_minigames_latch(); return r; }
 static int  __fastcall flw_beh(void *s, void *)
-{ FLW(6);  return func_ov006_0212ac74((char *)s); }
+{ FLW(6);  return _ZN13dScMgFlower_c8BehaviorEv((char *)s); }
 static int  __fastcall flw_render(void *s, void *)
-{ FLW(9);  return func_ov006_0212aacc((char *)s); }
+{ FLW(9);  return _ZN13dScMgFlower_c6RenderEv((char *)s); }
 static void *__fastcall flw_d2(void *s, void *)
-{ FLW(16); return func_ov006_0212a554((char *)s); }
+{ FLW(16); return _ZN13dScMgFlower_cD1Ev((char *)s); }
 static void *__fastcall flw_d0(void *s, void *)
-{ FLW(17); return func_ov006_0212a5c8((char *)s); }
+{ FLW(17); return _ZN13dScMgFlower_cD0Ev((char *)s); }
 /* THE RIDE-THROUGH IS LOAD-BEARING. Every slot-18 dispatch in both overlay
    images passes one argument (the 22-site census in hal/scene_mg.cpp's
    mg_reset block and runs/mg5/out/baseset/slot18_19_scan.txt), and
@@ -262,7 +262,7 @@ static void *__fastcall flw_d0(void *s, void *)
    __fastcall cleans four bytes; the ROM body ignores its r1 and is called
    without it, same as mg_reset. */
 static int  __fastcall flw_reset(void *s, void *, int /*ridethrough*/)
-{ FLW(18); func_ov006_0212aa74((char *)s); return 1; }
+{ FLW(18); _ZN13dScMgFlower_c13OnYoshiTryEatEi((char *)s); return 1; }
 
 /* SM64DS_SCENE_SLOT0=0 and SM64DS_SCENE_SLOT9=0, the diagnostics the ov003,
    ov007 and curling seats all carry, counted separately so a run can never
@@ -318,8 +318,8 @@ extern "C" void port_scene_flower_hits(void);
 extern "C" void port_scene_fill_flower(void)
 {
     void **base = (void **)data_ov004_020bc0c0;
-    void **mid  = (void **)data_ov006_0213e448;
-    void **vt   = (void **)data_ov006_02140140;
+    void **mid  = (void **)_ZTV19dScMgSingle3DBase_c;
+    void **vt   = (void **)_ZTV13dScMgFlower_c;
 
     /* THE BASE TABLE IS FILLED HERE TOO AND IT IS NOT CEREMONY. The curling
        row's fill already does it and runs first, so on a tree that carries
@@ -327,7 +327,7 @@ extern "C" void port_scene_fill_flower(void)
        pointers and finds nothing -- port_scene_fill_rom and flw_apply both key
        on a DS word, and there are none left. It is here so that this class
        does not depend on another class's row existing: the factory's first act
-       is func_ov004_020b2adc, which writes data_ov004_020bc0c0 into the
+       is _ZN11dScMgBase_cC2Ev, which writes data_ov004_020bc0c0 into the
        object's first word before the derived tables land, and thirty-six raw
        DS words in a table the ROM installs is what produced the ov007 lane's
        "eip 0x01cccab4 accessing 0x020ccab4" fault. */
@@ -398,7 +398,7 @@ static void *g_flw_self;
 
 extern "C" void *port_mg_flower_spawn(void)
 {
-    void *p = func_ov006_0212b7f8();
+    void *p = dScMgFlower_c_classInit();
     g_flw_self = p;
     return p;
 }
@@ -528,7 +528,7 @@ extern "C" void port_scene_flower_hits(void)
  * become a different function the day somebody transcribes the body.
  */
 /* Run mg5, lane INTEG: the petal-array layout was recovered on branch
-   decomp/yoshi-petal as src/func_ov006_0212a764.c (NONMATCHING regperm floor)
+   decomp/yoshi-petal as src/func_ov006_0212a764.cpp (NONMATCHING regperm floor)
    and is now sliced in port/slice_flw.txt, so the trap that stood in for it is
    gone and the real body lays out the petals. The counter is kept because the
    census above prints port_mg_flower_trap_hits(); it now stays 0, the honest
@@ -549,15 +549,15 @@ extern "C" unsigned port_mg_flower_trap_hits(void) { return g_flw_trap_hits; }
  * first -- none of the eleven targets is a pair table, and this class has no
  * pointer-to-member table at all (port/slice_flw.txt).
  *
- * GROUP A -- THE C-LINKAGE FLIP, TWO ROWS. src/func_ov006_0212b7f8.cpp (the
+ * GROUP A -- THE C-LINKAGE FLIP, TWO ROWS. src/d_s_mg_flower.cpp (the
  * factory) declares
  *
- *     extern int data_ov006_0213e448;
- *     extern int data_ov006_02140140;
+ *     extern int _ZTV19dScMgSingle3DBase_c;
+ *     extern int _ZTV13dScMgFlower_c;
  *
  * OUTSIDE its extern "C" block, so MSVC mangles both as C++ globals of type
  * int while the ov006 mount defines them as the plain C symbols. The address
- * is what the code uses (`*(int*)p = (int)&data_ov006_02140140`), and the
+ * is what the code uses (`*(int*)p = (int)&_ZTV13dScMgFlower_c`), and the
  * address is the same one either spelling names, so an alias is exactly right
  * and no storage is involved. Same shape as hal/scene_mg_faces.cpp's
  * _ZTV14dScMgCurling_c row; lane MGA predicted two rows here for 0x169 with
@@ -567,7 +567,7 @@ extern "C" unsigned port_mg_flower_trap_hits(void) { return g_flw_trap_hits; }
  *
  * GROUP B -- A FUNCTION DECLARED AS DATA, ONE ROW.
  * src/func_ov006_020c3e70.cpp:9 declares `extern void* func_ov006_020c3e54;`
- * outside extern "C" and passes `&func_ov006_020c3e54` to __destroy_arr as the
+ * outside extern "C" and passes `&func_ov006_020c3e54` to __cxa_vec_cleanup as the
  * element destructor. The declaration's TYPE is wrong and its ADDRESS is
  * right: taking the address of that "variable" is taking the function's entry
  * point, which is what the ROM's literal pool holds. Its sibling
@@ -577,13 +577,13 @@ extern "C" unsigned port_mg_flower_trap_hits(void) { return g_flw_trap_hits; }
  * GROUP C -- FIVE ov004 GLOBALS SPELLED func_*, AND ONE SPELLED ov000.
  *     func_020bc86c  func_020bc898  func_020bc8a4  func_020bc8a8
  *         include/decl_common.h:1358..1367 declares all four `extern int`,
- *         and src/func_ov006_0212b480.c (InitResources) assigns 0xc0, 0xa0,
+ *         and src/_ZN13dScMgFlower_c13InitResourcesEv.cpp (InitResources) assigns 0xc0, 0xa0,
  *         0xa0 and 0x40 into them. The ROM stores those four constants into
  *         0x020bc86c, 0x020bc898, 0x020bc8a4 and 0x020bc8a8 -- read out of the
  *         disassembly at 0x0212b6f8..0x0212b720 -- and all four are
  *         `data_ov004_*` in config/arm9/overlays/ov004/symbols.txt.
  *     func_020beb6c  and  data_ov000_020beb74
- *         src/func_ov006_0210a708.c spells ov004's two bss words this way.
+ *         src/minigames/d_s_mg_single3_d_base.cpp spells ov004's two bss words this way.
  *         Both are kind:bss in ov004's symbols.txt.
  *
  * LANE MGA CALLED THE LAST TWO "HOSTED WORDS" AND THAT IS THE ONE THING IN ITS
@@ -602,8 +602,8 @@ extern "C" unsigned port_mg_flower_trap_hits(void) { return g_flw_trap_hits; }
  *                     `extern void func_020c3adc(void *);` -- ov006's own
  *                     func_ov006_020c3adc, one block away in the same file's
  *                     own overlay. The same defect port/mg_fanout_costs.txt
- *                     section 6d records for src/func_ov006_020e3578.c.
- *     func_02012754   src/func_ov006_0212ac74.c calls it nine times.
+ *                     section 6d records for src/_ZN14dScMgCurling_c13InitResourcesEv.c.
+ *     func_02012754   src/_ZN13dScMgFlower_c8BehaviorEv.cpp calls it nine times.
  *                     config/arm9/symbols.txt:382 names 0x02012754
  *                     _ZN5Sound12PlayBank2_2DEj, and the matched TU
  *                     src/_ZN5Sound12PlayBank2_2DEj.cpp is ALREADY in the
@@ -612,8 +612,8 @@ extern "C" unsigned port_mg_flower_trap_hits(void) { return g_flw_trap_hits; }
  *                     so getting it wrong would be silent rather than fatal --
  *                     which is why it is written down.
  */
-#pragma comment(linker, "/alternatename:?data_ov006_0213e448@@3HA=_data_ov006_0213e448")
-#pragma comment(linker, "/alternatename:?data_ov006_02140140@@3HA=_data_ov006_02140140")
+#pragma comment(linker, "/alternatename:?_ZTV19dScMgSingle3DBase_c@@3HA=__ZTV19dScMgSingle3DBase_c")
+#pragma comment(linker, "/alternatename:?_ZTV13dScMgFlower_c@@3HA=__ZTV13dScMgFlower_c")
 #pragma comment(linker, "/alternatename:?func_ov006_020c3e54@@3PAXA=_func_ov006_020c3e54")
 #pragma comment(linker, "/alternatename:_func_020c3adc=_func_ov006_020c3adc")
 #pragma comment(linker, "/alternatename:_func_02012754=__ZN5Sound12PlayBank2_2DEj")

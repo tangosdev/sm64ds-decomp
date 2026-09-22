@@ -4,129 +4,51 @@
     .ctor       start:0x0211b72c end:0x0211b758 kind:rodata align:4
     .data       start:0x0211b760 end:0x0211c660 kind:data align:32
     .bss        start:0x0211c660 end:0x0211ca00 kind:bss align:32
-src/func_ov064_02115ee0.c:
+src/actors/daOts_c.cpp:
     complete
-    .text start:0x02115ee0 end:0x02115f28
-
-src/func_ov064_02115f28.c:
-    complete
-    .text start:0x02115f28 end:0x02115f84
-
-src/func_ov064_02115f84.c:
-    complete
-    .text start:0x02115f84 end:0x02115f98
-
-src/func_ov064_02115f98.c:
-    complete
-    .text start:0x02115f98 end:0x02116110
-
-src/func_ov064_02116110.cpp:
-    complete
-    .text start:0x02116110 end:0x0211616c
-
-src/func_ov064_0211616c.c:
-    complete
-    .text start:0x0211616c end:0x02116220
-
-src/func_ov064_02116220.c:
-    complete
-    .text start:0x02116220 end:0x02116348
-
-src/func_ov064_02116348.c:
-    complete
-    .text start:0x02116348 end:0x0211635c
-
-src/func_ov064_0211635c.c:
-    complete
-    .text start:0x0211635c end:0x02116360
-
-src/func_ov064_02116360.c:
-    complete
-    .text start:0x02116360 end:0x02116374
-
-src/func_ov064_02116374.cpp:
-    complete
-    .text start:0x02116374 end:0x021163bc
-
-src/func_ov064_021163bc.c:
-    complete
-    .text start:0x021163bc end:0x021163c0
-
-src/func_ov064_021163c0.cpp:
-    .text start:0x021163c0 end:0x02116460
-
-src/func_ov064_02116460.cpp:
-    .text start:0x02116460 end:0x02116560
-
-src/func_ov064_02116560.cpp:
-    complete
-    .text start:0x02116560 end:0x021165d4
-
-src/func_ov064_021165d4.c:
-    complete
-    .text start:0x021165d4 end:0x021165d8
-
-src/func_ov064_021165d8.cpp:
-    complete
-    .text start:0x021165d8 end:0x021166f0
-
-src/func_ov064_021166f0.c:
-    complete
-    .text start:0x021166f0 end:0x02116754
-
-src/func_ov064_02116754.cpp:
-    .text start:0x02116754 end:0x02116bac
-
-src/func_ov064_02116bac.cpp:
-    complete
-    .text start:0x02116bac end:0x02116ca0
-
-src/_ZN5Bully16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02116ca0 end:0x02116cf0
-
-src/_ZN5Bully6RenderEv.cpp:
-    complete
-    .text start:0x02116cf0 end:0x02116d1c
+    .text start:0x02115ee0 end:0x02116d1c
 
 src/func_ov064_02116d1c.cpp:
     complete
     .text start:0x02116d1c end:0x02116ec0
 
 src/func_ov064_02116ec0.cpp:
+    complete
     .text start:0x02116ec0 end:0x02117070
 
-src/_ZN5BullyD1Ev.c:
+src/_ZN5BullyD1Ev.cpp:
+    complete
     .text start:0x02117070 end:0x021170c4
 
-src/_ZN5BullyD0Ev.c:
+src/_ZN5BullyD0Ev.cpp:
+    complete
     .text start:0x021170c4 end:0x0211712c
 
-src/func_ov064_0211712c.c:
+src/_ZN5Bully14PlayDeathSoundEv.cpp:
     complete
     .text start:0x0211712c end:0x02117140
 
-src/func_ov064_02117140.c:
+src/_ZN5Bully17PlayShellHitSoundEv.cpp:
     complete
     .text start:0x02117140 end:0x02117154
 
-src/func_ov064_02117154.c:
+src/_ZN5Bully12PlayHitSoundEv.cpp:
     complete
     .text start:0x02117154 end:0x02117168
 
-src/func_ov064_02117168.c:
+src/_ZN5Bully13PlayStepSoundEv.cpp:
     complete
     .text start:0x02117168 end:0x021171b0
 
-src/func_ov064_021171b0.c:
+src/_ZN5Bully14UpdateRunStateEv.cpp:
     complete
     .text start:0x021171b0 end:0x02117220
 
-src/func_ov064_02117220.cpp:
+src/_ZN5Bully16UpdateDeathStateEv.cpp:
     complete
     .text start:0x02117220 end:0x02117310
 
-src/_ZN5Bully8BehaviorEv.c:
+src/_ZN5Bully8BehaviorEv.cpp:
     complete
     .text start:0x02117310 end:0x02117424
 
@@ -134,20 +56,23 @@ src/_ZN5Bully13InitResourcesEv.cpp:
     complete
     .text start:0x02117424 end:0x02117444
 
-src/Bully_Spawn.c:
+src/d_a_donketu.c:
+    complete
     .text start:0x02117444 end:0x021174a0
 
-src/_ZN8BigBullyD1Ev.c:
+src/_ZN8BigBullyD1Ev.cpp:
+    complete
     .text start:0x021174a0 end:0x021174f4
 
-src/_ZN8BigBullyD0Ev.c:
+src/_ZN8BigBullyD0Ev.cpp:
+    complete
     .text start:0x021174f4 end:0x0211755c
 
-src/func_ov064_0211755c.c:
+src/_ZN8BigBully14UpdateRunStateEv.cpp:
     complete
     .text start:0x0211755c end:0x021175cc
 
-src/func_ov064_021175cc.cpp:
+src/_ZN8BigBully16UpdateDeathStateEv.cpp:
     complete
     .text start:0x021175cc end:0x0211764c
 
@@ -163,13 +88,16 @@ src/_ZN8BigBully13InitResourcesEv.cpp:
     complete
     .text start:0x02117784 end:0x0211791c
 
-src/BigBully_Spawn.c:
+src/d_a_b_donketu.c:
+    complete
     .text start:0x0211791c end:0x02117978
 
-src/func_ov064_02117978.c:
+src/_ZN12MetalNetLiftD1Ev.cpp:
+    complete
     .text start:0x02117978 end:0x021179bc
 
-src/func_ov064_021179bc.c:
+src/_ZN12MetalNetLiftD0Ev.cpp:
+    complete
     .text start:0x021179bc end:0x02117a14
 
 src/func_ov064_02117a14.cpp:
@@ -192,18 +120,19 @@ src/func_ov064_02117c24.c:
     complete
     .text start:0x02117c24 end:0x02117cc4
 
-src/func_ov064_02117cc4.c:
+src/_ZN12MetalNetLift16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02117cc4 end:0x02117cfc
 
-src/func_ov064_02117cfc.cpp:
+src/_ZN12MetalNetLift6RenderEv.cpp:
     complete
     .text start:0x02117cfc end:0x02117d24
 
-src/func_ov064_02117d24.c:
+src/_ZN12MetalNetLift8BehaviorEv.cpp:
     complete
     .text start:0x02117d24 end:0x02117e44
 
-src/func_ov064_02117e44.cpp:
+src/_ZN12MetalNetLift13InitResourcesEv.cpp:
     complete
     .text start:0x02117e44 end:0x02117fb4
 
@@ -215,31 +144,19 @@ src/func_ov064_02117fd4.c:
     complete
     .text start:0x02117fd4 end:0x02117fe8
 
-src/MetalNetLift_Spawn.c:
+src/d_a_obj_fl_amilift.c:
+    complete
     .text start:0x02117fe8 end:0x02118020
 
-src/_ZN12MetalNetLiftD1Ev.c:
-    .text start:0x02118020 end:0x02118070
-
-src/_ZN12MetalNetLiftD0Ev.c:
-    .text start:0x02118070 end:0x021180d4
-
-src/_ZN12MetalNetLift16CleanupResourcesEv.c:
+src/game/actors/d_a_obj_fl_gura.cpp:
     complete
-    .text start:0x021180d4 end:0x021180e8
+    .text start:0x02118020 end:0x02118138
 
-src/_ZN12MetalNetLift13InitResourcesEv.c:
-    complete
-    .text start:0x021180e8 end:0x021180fc
-
-src/TiltingPlatformLll_Spawn.c:
-    .text start:0x021180fc end:0x02118138
-
-src/_ZN15RotatingFirebarD1Ev.c:
+src/_ZN15RotatingFirebarD1Ev.cpp:
     complete
     .text start:0x02118138 end:0x02118194
 
-src/_ZN15RotatingFirebarD0Ev.c:
+src/_ZN15RotatingFirebarD0Ev.cpp:
     complete
     .text start:0x02118194 end:0x02118204
 
@@ -259,15 +176,15 @@ src/_ZN15RotatingFirebar13InitResourcesEv.cpp:
     complete
     .text start:0x02118480 end:0x02118564
 
-src/RotatingFirebar_Spawn.cpp:
+src/d_a_obj_fl_koma_u.cpp:
     complete
     .text start:0x02118564 end:0x021185c0
 
-src/_ZN10LavaBubbleD1Ev.c:
+src/_ZN10LavaBubbleD1Ev.cpp:
     complete
     .text start:0x021185c0 end:0x021185f8
 
-src/_ZN10LavaBubbleD0Ev.c:
+src/_ZN10LavaBubbleD0Ev.cpp:
     complete
     .text start:0x021185f8 end:0x02118644
 
@@ -291,15 +208,15 @@ src/func_ov064_021187ec.cpp:
     complete
     .text start:0x021187ec end:0x0211883c
 
-src/_ZN10LavaBubble16CleanupResourcesEv.c:
+src/_ZN10LavaBubble16CleanupResourcesEv.cpp:
     complete
     .text start:0x0211883c end:0x02118844
 
-src/_ZN10LavaBubble16OnPendingDestroyEv.c:
+src/_ZN10LavaBubble16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02118844 end:0x02118848
 
-src/_ZN10LavaBubble6RenderEv.c:
+src/_ZN10LavaBubble6RenderEv.cpp:
     complete
     .text start:0x02118848 end:0x02118850
 
@@ -311,25 +228,28 @@ src/_ZN10LavaBubble13InitResourcesEv.cpp:
     complete
     .text start:0x021189d8 end:0x02118b08
 
-src/func_ov064_02118b08.c:
+src/_ZN10LavaBubble13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x02118b08 end:0x02118b10
 
-src/LavaBubble_Spawn.c:
+src/d_a_bbl.c:
     complete
     .text start:0x02118b10 end:0x02118b50
 
-src/_ZN19BowserPuzzleManagerD1Ev.c:
+src/_ZN17BowserPuzzlePieceD1Ev.cpp:
+    complete
     .text start:0x02118b50 end:0x02118b94
 
-src/_ZN19BowserPuzzleManagerD0Ev.c:
+src/_ZN17BowserPuzzlePieceD0Ev.cpp:
+    complete
     .text start:0x02118b94 end:0x02118bec
 
-src/func_ov064_02118bec.c:
+src/_ZN19BowserPuzzleManagerD1Ev.cpp:
     complete
     .text start:0x02118bec end:0x02118c10
 
-src/func_ov064_02118c10.c:
+src/_ZN19BowserPuzzleManagerD0Ev.cpp:
+    complete
     .text start:0x02118c10 end:0x02118c48
 
 src/func_ov064_02118c48.c:
@@ -376,27 +296,27 @@ src/func_ov064_02119010.c:
     complete
     .text start:0x02119010 end:0x0211904c
 
-src/_ZN19BowserPuzzleManager16CleanupResourcesEv.cpp:
+src/_ZN17BowserPuzzlePiece16CleanupResourcesEv.cpp:
     complete
     .text start:0x0211904c end:0x02119088
 
-src/_ZN19BowserPuzzleManager6RenderEv.cpp:
+src/_ZN17BowserPuzzlePiece6RenderEv.cpp:
     complete
     .text start:0x02119088 end:0x021190b0
 
-src/_ZN19BowserPuzzleManager8BehaviorEv.cpp:
+src/_ZN17BowserPuzzlePiece8BehaviorEv.cpp:
     complete
     .text start:0x021190b0 end:0x0211915c
 
-src/func_ov064_0211915c.c:
+src/_ZN19BowserPuzzleManager8BehaviorEv.cpp:
     complete
     .text start:0x0211915c end:0x021191a8
 
-src/_ZN19BowserPuzzleManager13InitResourcesEv.cpp:
+src/_ZN17BowserPuzzlePiece13InitResourcesEv.cpp:
     complete
     .text start:0x021191a8 end:0x02119284
 
-src/func_ov064_02119284.c:
+src/_ZN19BowserPuzzleManager13InitResourcesEv.cpp:
     complete
     .text start:0x02119284 end:0x0211929c
 
@@ -408,19 +328,19 @@ src/func_ov064_021192bc.c:
     complete
     .text start:0x021192bc end:0x021192d0
 
-src/BowserPuzzleManager_Spawn.c:
+src/d_a_obj_fl_coin.c:
     complete
     .text start:0x021192d0 end:0x02119300
 
-src/BowserPuzzlePiece_Spawn.c:
+src/d_a_obj_fl_puzzle.c:
     complete
     .text start:0x02119300 end:0x02119330
 
-src/_ZN17BowserPuzzlePieceD1Ev.c:
+src/_ZN9JetStreamD1Ev.cpp:
     complete
     .text start:0x02119330 end:0x02119368
 
-src/_ZN17BowserPuzzlePieceD0Ev.c:
+src/_ZN9JetStreamD0Ev.cpp:
     complete
     .text start:0x02119368 end:0x021193b4
 
@@ -440,38 +360,40 @@ src/func_ov064_0211987c.c:
     complete
     .text start:0x0211987c end:0x02119880
 
-src/_ZN17BowserPuzzlePiece16CleanupResourcesEv.c:
+src/_ZN9JetStream16CleanupResourcesEv.cpp:
     complete
     .text start:0x02119880 end:0x021198b0
 
-src/_ZN17BowserPuzzlePiece16OnPendingDestroyEv.c:
+src/_ZN9JetStream16OnPendingDestroyEv.cpp:
     complete
     .text start:0x021198b0 end:0x021198b4
 
-src/_ZN17BowserPuzzlePiece6RenderEv.c:
+src/_ZN9JetStream6RenderEv.cpp:
     complete
     .text start:0x021198b4 end:0x021198bc
 
-src/_ZN17BowserPuzzlePiece8BehaviorEv.cpp:
+src/_ZN9JetStream8BehaviorEv.cpp:
     complete
     .text start:0x021198bc end:0x0211992c
 
-src/_ZN17BowserPuzzlePiece13InitResourcesEv.cpp:
+src/_ZN9JetStream13InitResourcesEv.cpp:
+    complete
     .text start:0x0211992c end:0x02119a18
 
-src/JetStream_Spawn.c:
+src/d_a_water_hakidasi.c:
     complete
     .text start:0x02119a18 end:0x02119a58
 
-src/_ZN9WaterRingD1Ev.c:
+src/_ZN9WaterRingD1Ev.cpp:
     complete
     .text start:0x02119a58 end:0x02119aa0
 
-src/_ZN9WaterRingD0Ev.c:
+src/_ZN9WaterRingD0Ev.cpp:
     complete
     .text start:0x02119aa0 end:0x02119afc
 
 src/func_ov064_02119afc.cpp:
+    complete
     .text start:0x02119afc end:0x02119c60
 
 src/func_ov064_02119c60.c:
@@ -498,11 +420,11 @@ src/func_ov064_02119f1c.cpp:
     complete
     .text start:0x02119f1c end:0x02119fa0
 
-src/_ZN9WaterRing16CleanupResourcesEv.c:
+src/_ZN9WaterRing16CleanupResourcesEv.cpp:
     complete
     .text start:0x02119fa0 end:0x02119fc4
 
-src/_ZN9WaterRing16OnPendingDestroyEv.c:
+src/_ZN9WaterRing16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02119fc4 end:0x02119fc8
 
@@ -518,50 +440,55 @@ src/_ZN9WaterRing13InitResourcesEv.cpp:
     complete
     .text start:0x0211a090 end:0x0211a1b0
 
-src/WaterRing_Spawn.c:
+src/d_a_water_ring.c:
     complete
     .text start:0x0211a1b0 end:0x0211a200
 
 src/_ZN13TreasureChestD1Ev.cpp:
+    complete
     .text start:0x0211a200 end:0x0211a238
 
-src/_ZN13TreasureChestD0Ev.c:
+src/_ZN13TreasureChestD0Ev.cpp:
     complete
     .text start:0x0211a238 end:0x0211a284
 
-src/func_ov064_0211a284.c:
+src/_ZN13TreasureChest20UpdateModelTransformEv.cpp:
     complete
     .text start:0x0211a284 end:0x0211a2c4
 
-src/func_ov064_0211a2c4.cpp:
+src/_ZN13TreasureChest6State2Ev.cpp:
     complete
     .text start:0x0211a2c4 end:0x0211a380
 
-src/func_ov064_0211a380.c:
+src/_ZN13TreasureChest10InitState2Ev.cpp:
     complete
     .text start:0x0211a380 end:0x0211a39c
 
-src/func_ov064_0211a39c.cpp:
+src/_ZN13TreasureChest6State1Ev.cpp:
     complete
     .text start:0x0211a39c end:0x0211a49c
 
-src/func_ov064_0211a49c.c:
+src/_ZN13TreasureChest10InitState1Ev.cpp:
     complete
     .text start:0x0211a49c end:0x0211a4c4
 
-src/func_ov064_0211a6e0.c:
+src/_ZN13TreasureChest6State0Ev.cpp:
+    complete
+    .text start:0x0211a4c4 end:0x0211a6e0
+
+src/_ZN13TreasureChest10InitState0Ev.cpp:
     complete
     .text start:0x0211a6e0 end:0x0211a6ec
 
-src/func_ov064_0211a6ec.cpp:
+src/_ZN13TreasureChest8SetStateEi.cpp:
     complete
     .text start:0x0211a6ec end:0x0211a734
 
-src/func_ov064_0211a734.cpp:
+src/_ZN13TreasureChest17CallStateBehaviorEv.cpp:
     complete
     .text start:0x0211a734 end:0x0211a77c
 
-src/_ZN13TreasureChest16CleanupResourcesEv.c:
+src/_ZN13TreasureChest16CleanupResourcesEv.cpp:
     complete
     .text start:0x0211a77c end:0x0211a7c4
 
@@ -577,14 +504,15 @@ src/_ZN13TreasureChest13InitResourcesEv.cpp:
     complete
     .text start:0x0211a814 end:0x0211a8f0
 
-src/TreasureChest_Spawn.c:
+src/d_a_obj_tbox.c:
     complete
     .text start:0x0211a8f0 end:0x0211a930
 
 src/_ZN4ClamD1Ev.cpp:
+    complete
     .text start:0x0211a930 end:0x0211a968
 
-src/_ZN4ClamD0Ev.c:
+src/_ZN4ClamD0Ev.cpp:
     complete
     .text start:0x0211a968 end:0x0211a9b4
 
@@ -592,7 +520,7 @@ src/func_ov064_0211a9b4.c:
     complete
     .text start:0x0211a9b4 end:0x0211a9f4
 
-src/_ZN4Clam16CleanupResourcesEv.c:
+src/_ZN4Clam16CleanupResourcesEv.cpp:
     complete
     .text start:0x0211a9f4 end:0x0211aa30
 
@@ -600,7 +528,7 @@ src/_ZN4Clam6RenderEv.cpp:
     complete
     .text start:0x0211aa30 end:0x0211aa58
 
-src/_ZN4Clam8BehaviorEv.c:
+src/_ZN4Clam8BehaviorEv.cpp:
     complete
     .text start:0x0211aa58 end:0x0211acc4
 
@@ -608,39 +536,50 @@ src/_ZN4Clam13InitResourcesEv.cpp:
     complete
     .text start:0x0211acc4 end:0x0211ad70
 
-src/Clam_Spawn.c:
+src/d_a_obj_shell.cpp:
     complete
     .text start:0x0211ad70 end:0x0211adb0
 
 src/__sinit_ov064_0211ae00.c:
+    complete
     .init start:0x0211ae00 end:0x0211aee0
 
 src/__sinit_ov064_0211aee0.c:
+    complete
     .init start:0x0211aee0 end:0x0211afc0
 
 src/__sinit_ov064_0211afc0.c:
+    complete
     .init start:0x0211afc0 end:0x0211b078
 
 src/__sinit_ov064_0211b078.c:
+    complete
     .init start:0x0211b078 end:0x0211b0e4
 
 src/__sinit_ov064_0211b0e4.c:
+    complete
     .init start:0x0211b0e4 end:0x0211b150
 
 src/__sinit_ov064_0211b150.c:
+    complete
     .init start:0x0211b150 end:0x0211b1d4
 
 src/__sinit_ov064_0211b1d4.c:
+    complete
     .init start:0x0211b1d4 end:0x0211b4dc
 
 src/__sinit_ov064_0211b4dc.c:
+    complete
     .init start:0x0211b4dc end:0x0211b518
 
 src/__sinit_ov064_0211b518.c:
+    complete
     .init start:0x0211b518 end:0x0211b59c
 
 src/__sinit_ov064_0211b59c.c:
+    complete
     .init start:0x0211b59c end:0x0211b698
 
 src/__sinit_ov064_0211b698.c:
+    complete
     .init start:0x0211b698 end:0x0211b72c

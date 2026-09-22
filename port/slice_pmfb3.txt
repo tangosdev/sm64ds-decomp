@@ -87,7 +87,7 @@
 #
 # ONE /alternatename, in that same seat file. Twelve of the thirteen matched TUs
 # declare their table INSIDE their own extern "C" block and come in as the plain
-# C name the ov006 mount defines. src/func_ov006_0211a2c4.cpp declares
+# C name the ov006 mount defines. src/actors/dScMgSound_c.cpp declares
 # `extern PMF data_ov006_02142cc0[];` at namespace scope, so MSVC spells the
 # reference ?data_ov006_02142cc0@@3PAP8C@@AEXH@ZA -- read off that TU's own
 # /FAsc listing, not guessed -- and without the directive the slice does not
@@ -107,19 +107,7 @@
 #     hal/scene_mg_boombox.cpp went on printing it as the witness that a tap
 #     produced an execution. Same convention in and out, same two arguments,
 #     same body called.
-src/func_ov006_0211b590.cpp
-src/func_ov006_0211b398.cpp
-src/func_ov006_0211b17c.cpp
-src/func_ov006_0211af60.cpp
-src/func_ov006_0211ad44.cpp
-src/func_ov006_0211abdc.cpp
-src/func_ov006_0211aa44.cpp
-src/func_ov006_0211a7ac.cpp
-src/func_ov006_0211a648.cpp
-src/func_ov006_0211a4b0.cpp
-src/func_ov006_0211a2c4.cpp
-src/func_ov006_0211a0d8.cpp
-src/func_ov006_02119eec.cpp
+src/actors/dScMgSound_c.cpp
 #
 # ---- BATCH 2: SoundObject::Behavior ---------------------------------------
 #
@@ -134,13 +122,13 @@ src/func_ov006_02119eec.cpp
 # face for every method of this class (sob_init, sob_d1, sob_d0 and sob_behavior
 # are all the same shape and always were); the one hunk outside this lane's own
 # files is that face's target, `port_sound_object_behavior` in place of
-# `_ZN11SoundObject8BehaviorEv`, plus its declaration. The refusal is unchanged
+# `_ZN12daSoundObj_c8BehaviorEv`, plus its declaration. The refusal is unchanged
 # text: the same param test, the same message, the same MarkForDestruction, the
 # same return 1. It is now AHEAD of the matched TU rather than instead of it.
 #
 # WHY IT MUST STAY SOMEWHERE, and this lane read both sides of the ROM's own
 # off-by-one to say why (runs/link100/out/PMFB3/rom_soundobj.txt):
-#   InitResources (src/_ZN11SoundObject13InitResourcesEv.c) returns 0 on
+#   InitResources (src/game/actors/d_a_sound_obj.cpp) returns 0 on
 #     `param > 7`, so param 7 is ACCEPTED, and it then indexes a 0xc-stride
 #     tuning table at data_ov002_0210c080 with it.
 #   That tuning table has SEVEN rows. Row 7 at 0x0210c0d4 reads
@@ -189,12 +177,12 @@ src/func_ov006_02119eec.cpp
 # plain C name. Read off the TU's own listing.
 #
 # THE GUESS MARKER IS NOT A BLOCKER HERE, and it was checked rather than
-# assumed. src/_ZN11SoundObject8BehaviorEv.cpp carries "recovered from vtable
+# assumed. src/game/actors/d_a_sound_obj.cpp carries "recovered from vtable
 # slot identity", but port/tools/inferred_stub_adjudicated.txt:2313 already
 # rules it REAL_DECOMP against the ROM: addr 0x020f94fc size 0xe4, match.py
 # 2004/b56 strict-reloc MATCH, every non-relocated word identical. The guard
 # reports the seat, it does not refuse it.
-src/_ZN11SoundObject8BehaviorEv.cpp
+src/game/actors/d_a_sound_obj.cpp
 #
 # ---- BATCH 3: the dScMgBase framework set, the THREE TABLE-BASED rows ------
 #
@@ -274,14 +262,14 @@ src/_ZN11SoundObject8BehaviorEv.cpp
 #   func_ov004_020b31b4  reads the pair at self+0x08
 #   func_ov004_020b321c  reads the pair at self+0x00
 #   func_ov004_020b52fc  reads the pair at self+0x00
-#   func_ov004_020b8714  reads the pair at self+0x10
-#   func_ov004_020b8778  reads the pair at self+0x08
+#   _ZN10dMgState_c6RenderEv  reads the pair at self+0x10
+#   _ZN10dMgState_c8BehaviorEv  reads the pair at self+0x08
 #   func_ov006_020cf758  reads the pair at self+0x00
 # None of the six reads a TABLE. Each reads the eight-byte pair out of an
 # OBJECT FIELD, so there is no storage a boot installer can verify and rewrite:
 # what has to change is the WRITER. The writers are host copies, and they store
 # the ROM's own DS code word today --
-# unmatched/MgBase_StateSetter.cpp's func_ov004_020b87e0 does
+# unmatched/MgBase_StateSetter.cpp's _ZN10dMgState_c8SetStateEi does
 # `self->pmf0 = g_table[self->index]` out of the twenty data_ov004_020bc9xx pair
 # globals and then hands that DS word to port_mg_call0, and func_ov004_020b3278
 # fills self+0x08 the same way, with dScMgMemory2_c and dScMgTrampoline_c
@@ -293,4 +281,4 @@ src/_ZN11SoundObject8BehaviorEv.cpp
 # next lane starts from the measurement rather than from the census.
 src/func_ov004_020add88.cpp
 src/func_ov004_020adf2c.cpp
-src/func_ov006_021050bc.cpp
+src/actors/dScMgPanel_c.cpp

@@ -89,7 +89,7 @@ NAMED = [
     #
     # THE -1 IS THE WHOLE REASON THEY COME FROM HERE AND NOT FROM A HAL LINE.
     # data_0208a174 is the menu's SELECTION and its boot value is the "nothing
-    # picked" sentinel; src/func_ov005_020c0378.c only ever writes a row index
+    # picked" sentinel; src/func_ov005_020c0378.cpp only ever writes a row index
     # into it, so a host that zeroed it would boot the menu with row 0 already
     # chosen and nothing in the game would ever say so. data_0208a170 is the
     # highlighted row base, advanced by func_ov005_020c0878, and 3 is where the
@@ -108,6 +108,16 @@ NAMED = [
     # .dsstate is a change to every row here and is not this lane's to make.
     "data_0208a170", "data_0208a174",
     "data_0208a178", "data_0208c178",
+    # Run link100 wave 14 (lane SEAT14D): the OBJ char blob the debug level
+    # select loads, `GX::LoadOBJ(data_0208c378, 0, 0x2000)` in
+    # src/_ZN10dScTitle_c13InitResourcesEv.cpp. It is the exact sibling of the
+    # BG char blob one row up: 0x0208c378 to the next config symbol
+    # (data_0208e378) is 0x2000, which is the length the call itself reads, it
+    # sits below BSS_START so real bytes are behind it, and config/arm9/
+    # relocs.txt has ZERO relocations from anywhere inside the span. Hosting it
+    # as zeroed HAL storage instead would have been a fabrication: the scene
+    # would load 8 KB of blank tiles and look like it worked.
+    "data_0208c378",
     "data_0208e504", "data_0208e538", "data_0208e548", "data_0208e54c",
     "data_0208e55c", "data_0208e56c", "data_0208e57c", "data_0208e58c",
     "data_0208e59c", "data_0208e5b0", "data_0208e5c0", "data_0208e5d4",
@@ -165,7 +175,7 @@ NAMED = [
     #       `scr = G2S::GetBG1ScrPtr() + data_020755c0[j];`
     #   ..:47 the same shape on data_020755c4
     #   src/_ZN5Stage25PS_UpdateOkAndBackButtonsEb.cpp:67 on data_020755cc
-    #   src/_ZN5Stage17PS_UpdateSaveMenuEb.c:28 on data_020755c8
+    #   src/_ZN5Stage17PS_UpdateSaveMenuEb.cpp:28 on data_020755c8
     # -- the POINTER is the accessor's return value and the table holds u16
     # tile INDICES added to it. So there is nothing to relocate and nothing to
     # map, which is also why the relocation check comes back clean.
@@ -184,7 +194,7 @@ NAMED = [
     "data_02075258", "data_020755c0", "data_020755c4", "data_020755c8",
     "data_020755cc", "data_02075610", "data_020756d0", "data_0208ee40",
     # Run mg11 lane TTI: the one s16 dScMgTrampoline_c's InitResources divides
-    # by. src/func_ov006_02122198.cpp reads it as `(s32)data_02082414` and the
+    # by. src/minigames/d_s_mg_trampoline.cpp reads it as `(s32)data_02082414` and the
     # ROM does `ldrsh r1,[r1]` at 0x02122210 with the pool word 0x02082414,
     # feeding cstd::fdiv(0xc0000, that) -- the scene's field of view. It is an
     # INTERIOR ADDRESS of the trig SPAN already hosted above
@@ -196,8 +206,8 @@ NAMED = [
     # delta to the next config symbol data_02082614.
     "data_02082414",
     # Run link60 lane FDR2: the two BG palette words the dWipe_c time setters
-    # push through GX/GXS::LoadBGPltt. func_0202f708 loads data_020926c8 and
-    # func_0202f928 loads data_020926cc, each with a length of 2, on the
+    # push through GX/GXS::LoadBGPltt. _ZN7dWipe_c14SetForwardTimeEj loads data_020926c8 and
+    # _ZN7dWipe_c15SetBackwardTimeEj loads data_020926cc, each with a length of 2, on the
     # `type != 2` branch; the type == 2 branch uses their bss counterparts
     # data_0209f600 / data_0209f604, which are runtime storage and are hosted
     # in port/hal/fdr_arm9_fader_seat.cpp instead. Four bytes each by ROM span
@@ -224,7 +234,7 @@ NAMED = [
     # notes, because the two lanes checked different things (that one reasons
     # from the /alternatename limitation, this one from relocs.txt) and neither
     # reading is redundant. A second entry would emit the 0x200 bytes twice.
-    "data_02082178", "data_02090e80", "data_020914a0",
+    "data_02082178", "ACTOR_DEBUG_NAMES", "data_020914a0",
     "data_02092584", "data_02092654", "data_02092668", "data_0208e500", "data_02086a58", "data_0208e430", "data_02086b58",
     "data_0208e434", "data_0208e438", "data_0208e43c", "data_0208e440",
     "data_0208e444", "data_02092124", "data_02086384", "data_0208e448", "data_02088fb8", "data_020890a0", "data_02092118", "data_02092110", "data_0208eecc", "data_02092134",
@@ -419,7 +429,7 @@ NAMED = [
     # data, byte-hosted the same as every table above.
     "data_02082714",
     # run mg11 lane BNP: the 0x100 bytes at 0x02082614, which
-    # src/func_ov006_020ee690.cpp (dScMgJump_c::InitResources, id 0x174) reads
+    # src/_ZN11dScMgJump_c13InitResourcesEv.cpp (dScMgJump_c::InitResources, id 0x174) reads
     # ONE s16 out of, as the divisor of cstd::fdiv(0xc0000, data_02082614) --
     # the projection constant it parks in the scene's two camera records. It is
     # an INTERIOR address of the TABLES entry above (data_02082214, the s16 trig
@@ -428,7 +438,7 @@ NAMED = [
     # is correct for a scalar read and would NOT be correct for anything doing
     # pointer arithmetic between the two symbols; nothing in the tree does.
     # No relocations land in the span (config/arm9/relocs.txt), so it is data.
-    # run mg11 lane BNT: dScMgJump2_c's InitResources (func_ov006_020ef834)
+    # run mg11 lane BNT: dScMgJump2_c's InitResources (_ZN12dScMgJump2_c13InitResourcesEv)
     # loads 0x02082614 and reads a SIGNED HALFWORD out of it at 0x020ef8c8
     # (ldrsh r1,[r1]) before calling func_02053258. 0x100 bytes, the delta to
     # data_02082714 above it, and no relocations in the span -- pure data,
@@ -473,7 +483,7 @@ NAMED = [
     # the emitter block, at +0x14 the size of the texture block and at +0x18
     # where the texture block starts. Emitters begin at 0x20, so +0x18 is just
     # 0x20 + emitters and the archive really ends at +0x18 plus +0x14: 0xc214,
-    # which is exactly where the next real symbol (data_02082128) begins.
+    # which is exactly where the next real symbol (IDENTITY_MATRIX4X3) begins.
     #
     # The config splits the span with nine boundary symbols (data_02078000,
     # data_02080000 and friends) that are page-aligned, referenced by nothing
@@ -675,14 +685,14 @@ NAMED = [
     # its 0x50 extent, so the next-symbol delta is the whole script and no
     # size pin is needed. Mounted because func_0200eec8 is the last
     # unresolved link on ov002's real St_EndingFly_Main chain
-    # (func_ov002_020c3d1c -> func_ov002_020c3bdc -> func_0200eec8).
+    # (_ZN6Player17St_EndingFly_MainEv -> func_ov002_020c3bdc -> func_0200eec8).
     "data_02088610",
     # the Camera's SpawnInfo, for the entrance path's actor registry
-    "Camera_SpawnInfo",
+    "g_profile_CAMERA",
     # the STAGE's, for the boot spine: the ActorBase constructor reads the
     # record's +4/+6 halfwords back as the two processing-list priorities, so
     # the Stage cannot be built without it (port/hal/stage_bridges.cpp).
-    "_ZN5Stage9spawnDataE",
+    "g_profile_STAGE",
     # sublevel -> level-part table (GetLevelPart, the death-table index)
     "data_02075264",
     # The model-walk constants the old BSS boundary hid. data_02099f88 is the
@@ -823,7 +833,7 @@ NAMED = [
     # address is below the 0x0209b000 BSS boundary pinned above).
     #
     #   data_020914e0  the boot scene's BG palette. GX::LoadBGPltt reads 0x40
-    #                  bytes of it (src/func_02005a58.c) and GXS::LoadBGPltt
+    #                  bytes of it (src/_ZN9BootScene13InitResourcesEv.cpp) and GXS::LoadBGPltt
     #                  reads 2 and 0x40. PINNED at 0x40 rather than taking the
     #                  delta-to-next-symbol default of 0x48: the last word of
     #                  that delta is 0x02091524, the RELOCATED type_info
@@ -852,7 +862,7 @@ NAMED = [
     #   data_020945d0  0x20, its second OBJ palette (GX::LoadOBJPltt at 0xa0).
     #                  Reloc-free.
     #
-    # The five per-language multiboot images src/func_02034da4.c decompresses
+    # The five per-language multiboot images src/_ZN7dScMB_c8BehaviorEv.cpp decompresses
     # are NOT here: data_0208a0e4 and its five blobs are already hosted for
     # the VS lobby (hal/scene_vs_menu.cpp and this list), and the multiboot
     # scene reads that same table.

@@ -14,17 +14,18 @@
 # (the OneUpMushroom case), so they are host copies with the table seat in
 # port/unmatched/Crate_StateDispatch.cpp. The sinit that fills the runtime
 # table (__sinit_ov098_0213c058) is already in the build.
-src/Crate_Spawn.cpp
+src/d_a_obj_block_s.cpp
 src/_ZN5Crate13InitResourcesEv.cpp
 src/_ZN5Crate16CleanupResourcesEv.cpp
 src/_ZN5Crate8BehaviorEv.cpp
 src/_ZN5Crate6RenderEv.cpp
 src/_ZN5CrateD1Ev.cpp
-src/_ZN5CrateD0Ev.c
-src/func_ov098_02139e64.c
-src/func_ov098_02139e78.c
-src/func_ov098_02139e44.cpp
-src/func_ov098_02139070.c
+# RETIRED at SLICE1: body now in src/_ZN5CrateD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN5CrateD0Ev.cpp
+src/_ZN5Crate13OnYoshiTryEatEv.cpp
+src/_ZN5Crate13OnTurnIntoEggER6Player.cpp
+src/_ZN5Crate15OnGroundPoundedER8dActor_c.cpp
+src/_ZN5Crate4KillEv.cpp
 src/func_ov098_02138ce0.c
 src/func_ov098_02138e08.c
 src/func_ov098_02138b18.c

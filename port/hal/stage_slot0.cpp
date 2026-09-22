@@ -120,7 +120,7 @@ void UnloadArchive(int)             {}
 //
 // `void _Z17LoadLevelOverlaysi(int) {}` and `void _Z19UnloadLevelOverlaysi(int)
 // {}` stood here. Both are RETIRED, and the ROM's own bodies -- src/
-// _Z17LoadLevelOverlaysi.cpp, src/_Z19UnloadLevelOverlaysi.c and the
+// _Z17LoadLevelOverlaysi.cpp, src/_Z19UnloadLevelOverlaysi.cpp and the
 // src/_Z26LoadOrUnloadObjectOverlaysPFviEi.cpp they share -- are enrolled by
 // port/slice_gate213.txt instead. The two C-linkage names come back through
 // /alternatename in hal/cxx_aliases.cpp, because both .cpp files compile as C++
@@ -547,7 +547,7 @@ void port_slot0_seed_pending_level(void)
      * HalFaderWipe (hal/fader_wipes.cpp) is vptr 0x00, currInterp 0x04, speed
        0x08, color 0x0c, unk0e 0x0e, model[0x50] 0x10 -- 0x60 bytes, the exact
        stride Stage::InitResources passes func_02073470(7, 0x60, 8, ...), and
-       src/engine/fader/_ZN9FaderWipeC1Ev.c declares the identical struct.
+       src/engine/fader/_ZN9FaderWipeC1Ev.cpp declares the identical struct.
      * that ctor's last store is `this->vtable = _ZTV9FaderWipe`, and after
        SL0's alias _ZTV9FaderWipe IS ??_7HalFaderWipe@@6B@. A FaderWipe the ROM
        constructs on the game heap carries the SAME TABLE as a static
@@ -638,9 +638,9 @@ void port_slot0_check_wipes(void *before)
 
             The RHS is __thiscall and takes its receiver in ECX. EVERY C caller
             of the LHS passes it on the stack instead --
-            src/_ZN4Heap20RestoreFromTemporaryEv.c:11,
-            src/_ZN4Heap23SetupSolidHeapAsDefaultEjPS_i.c:18,
-            src/func_ov007_020cc2cc.c:49 and :53, and
+            src/_ZN4Heap20RestoreFromTemporaryEv.cpp:11,
+            src/_ZN4Heap23SetupSolidHeapAsDefaultEjPS_i.cpp:18,
+            src/_ZN9dScDSMT_c8BehaviorEv.cpp:49 and :53, and
             src/_ZN5Stage13InitResourcesEv.cpp:234 -- so the method runs with a
             garbage `this` and its body is `int old = G; G = (int)this;
             return old`. It writes the default-heap pointer from a register

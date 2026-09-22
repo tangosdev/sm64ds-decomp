@@ -6,12 +6,15 @@
    precedent, kept in the VS seat's own include so no shared file grows.
    ?InitModel@ShadowModel@@QAE... is NOT here: it is __thiscall and an alias
    onto a cdecl body would misplace `this`; the seat defines the method. */
-#pragma comment(linker, "/alternatename:?Func_020156DC@Clipper@@YAXPAXHHHH@Z=__ZN7Clipper13Func_020156DCEv")
-#pragma comment(linker, "/alternatename:?LookAt_@G3i@@YAXPBUVector3@@00_NPAUMatrix4x3@@@Z=__ZN3G3i7LookAt_EPK7Vector3S2_S2_bP9Matrix4x3")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEAD RHS and an UNREFERENCED left hand side: nothing in the build defines __ZN7Clipper13Func_020156DCEitii, and nothing references ?Func_020156DC@Clipper@@YAXPAXHHHH@Z, so the row can never fire and nothing wants it to. */
+// #pragma comment(linker, "/alternatename:?Func_020156DC@Clipper@@YAXPAXHHHH@Z=__ZN7Clipper13Func_020156DCEitii")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEFEATED: the left hand side is a real definition in this link now (_ZN3G3i7LookAt_EPK7Vector3S2_S2_bP9Matrix4x3.cpp.obj), so the directive is inert and alternatename_guard fails on it. */
+// #pragma comment(linker, "/alternatename:?LookAt_@G3i@@YAXPBUVector3@@00_NPAUMatrix4x3@@@Z=__ZN3G3i7LookAt_EPK7Vector3S2_S2_bP9Matrix4x3")
 #pragma comment(linker, "/alternatename:?PerspectiveW_@G3i@@YAXHHHHHH_NPAUMatrix4x3@@@Z=__ZN3G3i13PerspectiveW_E5Fix12IiES1_S1_S1_S1_S1_bP9Matrix4x3")
 #pragma comment(linker, "/alternatename:?Render@OAM@@SAH_NPAUOamAttr@@HHHHH1HH@Z=__ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii")
 #pragma comment(linker, "/alternatename:?Render@OAM@@SAH_NPAUOamAttr@@HHHHHH@Z=__ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi")
-#pragma comment(linker, "/alternatename:?RenderSub@OAM@@SAXPAUOamAttr@@HH@Z=__ZN3OAM9RenderSubEP7OamAttriiii")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEFEATED: the left hand side is a real definition in this link now (_ZN3OAM9RenderSubEP7OamAttrii.cpp.obj), so the directive is inert and alternatename_guard fails on it. */
+// #pragma comment(linker, "/alternatename:?RenderSub@OAM@@SAXPAUOamAttr@@HH@Z=__ZN3OAM9RenderSubEP7OamAttriiii")
 #pragma comment(linker, "/alternatename:?data_02082214@@3PAUS4@@A=_data_02082214")
 #pragma comment(linker, "/alternatename:?data_0208a0e0@@3PADA=_data_0208a0e0")
 #pragma comment(linker, "/alternatename:?data_0208a0f8@@3PAPAUOamAttr@@A=_data_0208a0f8")
@@ -78,9 +81,15 @@
 #pragma comment(linker, "/alternatename:?data_0208a120@@3PAIA=_data_0208a120")
 #pragma comment(linker, "/alternatename:?data_0208a148@@3PAIA=_data_0208a148")
 #pragma comment(linker, "/alternatename:?data_0208a15c@@3PAIA=_data_0208a15c")
-#pragma comment(linker, "/alternatename:?GetBG2CharPtr@G2@@YAPAXXZ=__ZN2G213GetBG2CharPtrEv")
-#pragma comment(linker, "/alternatename:?GetBG2ScrPtr@G2@@YAPAXXZ=__ZN2G212GetBG2ScrPtrEv")
-#pragma comment(linker, "/alternatename:?GetBG0ScrPtr@G2S@@YAPADXZ=__ZN3G2S12GetBG0ScrPtrEv")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEFEATED: the left hand side is a real definition in this link now (_ZN2G213GetBG2CharPtrEv.cpp.obj), so the directive is inert and alternatename_guard fails on it. */
+// #pragma comment(linker, "/alternatename:?GetBG2CharPtr@G2@@YAPAXXZ=__ZN2G213GetBG2CharPtrEv")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEFEATED: the left hand side is a real definition in this link now (_ZN2G212GetBG2ScrPtrEv.cpp.obj), so the directive is inert and alternatename_guard fails on it. */
+// #pragma comment(linker, "/alternatename:?GetBG2ScrPtr@G2@@YAPAXXZ=__ZN2G212GetBG2ScrPtrEv")
+/* RE-POINTED at ALIAS2 (wave 8, the main -> port sync), lane ALIAS's
+   derivation: the right hand side this row carried is defined nowhere in
+   the link any more. same member, same convention, same 0 argument slots, types spelled differently
+   was: #pragma comment(linker, "/alternatename:?GetBG0ScrPtr@G2S@@YAPADXZ=__ZN3G2S12GetBG0ScrPtrEv") */
+#pragma comment(linker, "/alternatename:?GetBG0ScrPtr@G2S@@YAPADXZ=?GetBG0ScrPtr@G2S@@YAIXZ")
 /* the one REVERSE bridge: the matched ShadowModel::RenderAll TU defines
    the DECORATED static-member spelling; UnknownVsEntry::Render calls the
    flat one (hal/reverse_bridges.cpp is the precedent for this shape) */

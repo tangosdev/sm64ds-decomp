@@ -28,7 +28,7 @@
 // dScMgCurling2_c's and dScMgPanel_c's records carry, so there is no
 // intermediate table of the dScMgSingle3DBase_c kind and ONE face array
 // appears below. Three bodies confirm it independently: the FACTORY
-// (func_ov006_020d5974) stores 0x0213b918 into the object and nothing else,
+// (dScMgAmida_c_classInit) stores 0x0213b918 into the object and nothing else,
 // and both destructors -- slot 17 at 0x020d10b8 and slot 16 at 0x020d1018 --
 // store the same single word.
 //
@@ -187,23 +187,23 @@ int      IsMinigameActorID(unsigned int id);
    alone would leave live wild DS pointers in the table the factory installs. */
 extern unsigned char data_ov006_0213b918[];   /* dScMgAmida_c, 37 slots */
 extern unsigned char data_ov004_020bc0c0[];   /* dScMgBase_c,   36 slots */
-extern unsigned char data_ov006_0213b814[];   /* the SpawnInfo record    */
+extern unsigned char g_profile_MG_AMIDA[];   /* the SpawnInfo record    */
 
 /* the class's eleven overrides, signatures as their src TUs declare them */
-int   func_ov006_020d5384(void *c);           /* slot  0 InitResources     */
-void *func_ov006_020d5924(char *c, int f);    /* slot  5 AfterCleanup      */
-int   func_ov006_020d4b7c(char *c);           /* slot  6 Behavior          */
-int   func_ov006_020d48dc(char *c);           /* slot  9 Render            */
-void *func_ov006_020d1018(char *c);           /* slot 16 D2                */
-void *func_ov006_020d10b8(void *c);           /* slot 17 D0                */
-void  func_ov006_020d52f0(char *c, int arg);  /* slot 18 state reset       */
-void  func_ov006_020d11a0(void);              /* slot 31 sub BG1 load      */
-void  func_ov006_020d14c0(void *c, int a1, int a2, int a3);  /* slot 34    */
-int   func_ov006_020d1170(void *c);           /* slot 35 mode == 1         */
-int   func_ov006_020d1188(void *c);           /* slot 36 mode == 2         */
+int   _ZN12dScMgAmida_c13InitResourcesEv(void *c);           /* slot  0 InitResources     */
+void *_ZN12dScMgAmida_c21AfterCleanupResourcesEj(char *c, int f);    /* slot  5 AfterCleanup      */
+int   _ZN12dScMgAmida_c8BehaviorEv(char *c);           /* slot  6 Behavior          */
+int   _ZN12dScMgAmida_c6RenderEv(char *c);           /* slot  9 Render            */
+void *_ZN12dScMgAmida_cD1Ev(char *c);           /* slot 16 D2                */
+void *_ZN12dScMgAmida_cD0Ev(void *c);           /* slot 17 D0                */
+void  _ZN12dScMgAmida_c13OnYoshiTryEatEi(char *c, int arg);  /* slot 18 state reset       */
+void  _ZN12dScMgAmida_c9Virtual7CEv(void);              /* slot 31 sub BG1 load      */
+void  _ZN12dScMgAmida_c9Virtual88Eiiii(void *c, int a1, int a2, int a3);  /* slot 34    */
+int   _ZN12dScMgAmida_c9Virtual8CEv(void *c);           /* slot 35 mode == 1         */
+int   _ZN12dScMgAmida_c5Unk36Ev(void *c);           /* slot 36 mode == 2         */
 
 /* the factory */
-void *func_ov006_020d5974(void);
+void *dScMgAmida_c_classInit(void);
 
 /* THIS CLASS OWNS NO FLOORS ANY MORE, run mg10 lane WALKER, and the
    declaration that stood here is gone with the counter it read.
@@ -241,7 +241,7 @@ static unsigned g_am_v35_true, g_am_v36_true;
 #define AM(n)  (++g_am_hits[(n)])
 
 static int __fastcall am_init(void *s, void *)
-{ AM(0);  const int r = func_ov006_020d5384(s);
+{ AM(0);  const int r = _ZN12dScMgAmida_c13InitResourcesEv(s);
   /* the GaplessMinigames latch, for hal/scene_mg.cpp's reason: every seated
      minigame calls it so the ones the gapless table does not name can say
      "unsupported" instead of doing nothing quietly. */
@@ -252,15 +252,15 @@ static int __fastcall am_init(void *s, void *)
    flag rather than only on 2. This is dScMgBase_c's own slot-5 shape
    (mb_aclean declares the same third parameter) and not a ride-through. */
 static void *__fastcall am_aclean(void *s, void *, int flag)
-{ AM(5);  return func_ov006_020d5924((char *)s, flag); }
+{ AM(5);  return _ZN12dScMgAmida_c21AfterCleanupResourcesEj((char *)s, flag); }
 static int __fastcall am_beh(void *s, void *)
-{ AM(6);  return func_ov006_020d4b7c((char *)s); }
+{ AM(6);  return _ZN12dScMgAmida_c8BehaviorEv((char *)s); }
 static int __fastcall am_render(void *s, void *)
-{ AM(9);  return func_ov006_020d48dc((char *)s); }
+{ AM(9);  return _ZN12dScMgAmida_c6RenderEv((char *)s); }
 static void *__fastcall am_d2(void *s, void *)
-{ AM(16); return func_ov006_020d1018((char *)s); }
+{ AM(16); return _ZN12dScMgAmida_cD1Ev((char *)s); }
 static void *__fastcall am_d0(void *s, void *)
-{ AM(17); return func_ov006_020d10b8(s); }
+{ AM(17); return _ZN12dScMgAmida_cD0Ev(s); }
 /* SLOT 18 TAKES A REAL SECOND ARGUMENT TOO, and this one is measured rather
    than inherited: `cmp r1,#0` at 0x020d52f8 branches to two different arms --
    the flag==0 arm increments the saved clear count at +0xbc, the flag!=0 arm
@@ -269,18 +269,18 @@ static void *__fastcall am_d0(void *s, void *)
    four bytes without forwarding them would take the increment arm on every
    reset. */
 static int __fastcall am_reset(void *s, void *, int flag)
-{ AM(18); func_ov006_020d52f0((char *)s, flag); return 1; }
+{ AM(18); _ZN12dScMgAmida_c13OnYoshiTryEatEi((char *)s, flag); return 1; }
 /* SLOT 31'S ROM BODY GENUINELY TAKES NO ARGUMENT, which is not an assumption:
    0x020d11a0 opens `push {r4,lr} / ldr r3,[pc,#0x74] / mov r0,#0` and
    overwrites r0 before reading it. src declares it (void) and agrees. */
 static int __fastcall am_v31(void *, void *)
-{ AM(31); func_ov006_020d11a0(); return 0; }
+{ AM(31); _ZN12dScMgAmida_c9Virtual7CEv(); return 0; }
 /* SLOT 34 IS DECLARED WITH ITS FULL ROM SHAPE AND IS NOT DISPATCHED AT ALL.
    Both halves are worth stating because the second explains why the first is
    free. Every slot-34 dispatch site in either overlay image passes FIVE
    arguments -- r0..r3 plus one pushed word -- and all EIGHT of them are inside
    func_ov004_020ae5c4, each doing `str r7,[sp]` before
-   `ldr r4,[r4,#0x88]; blx r4`. src/func_ov004_020ae3b4.c, the BASE's own
+   `ldr r4,[r4,#0x88]; blx r4`. src/_ZN11dScMgBase_c9Virtual88Eiiii.cpp, the BASE's own
    slot-34 body, declares five parameters to match. This class's override reads
    only four of them (mov r6,r0 / mov r5,r1 / mov r4,r2 / mov r8,r3, and src
    declares four), so the fifth is dropped here on purpose and the parameter
@@ -307,14 +307,14 @@ static int __fastcall am_v31(void *, void *)
    because a repair with no dispatch to witness it is wiring without
    evidence. */
 static int __fastcall am_v34(void *s, void *, int a1, int a2, int a3, int /*a4*/)
-{ AM(34); func_ov006_020d14c0(s, a1, a2, a3); return 0; }
+{ AM(34); _ZN12dScMgAmida_c9Virtual88Eiiii(s, a1, a2, a3); return 0; }
 /* THE TWO MODE PREDICATES. Both return their answer, which is the repair lane
    PPP made to mb_v35 after finding it returned a constant 0 and read the stack
    in place of `this`. These take the receiver and return what the ROM returns. */
 static int __fastcall am_v35(void *s, void *)
-{ AM(35); const int r = func_ov006_020d1170(s); if (r) ++g_am_v35_true; return r; }
+{ AM(35); const int r = _ZN12dScMgAmida_c9Virtual8CEv(s); if (r) ++g_am_v35_true; return r; }
 static int __fastcall am_v36(void *s, void *)
-{ AM(36); const int r = func_ov006_020d1188(s); if (r) ++g_am_v36_true; return r; }
+{ AM(36); const int r = _ZN12dScMgAmida_c5Unk36Ev(s); if (r) ++g_am_v36_true; return r; }
 
 /* SM64DS_SCENE_SLOT0=0 and SM64DS_SCENE_SLOT9=0, the diagnostics the ov003,
    ov007, curling, flower and curling2 seats all carry, counted separately so a
@@ -372,7 +372,7 @@ extern "C" void port_scene_fill_amida(void)
        hal/scene_mg_flower.cpp's reason: on a tree that carries the curling row
        this is a second pass over words that are already host pointers and finds
        nothing, and it is here so this class does not depend on another class's
-       row existing. The factory's first act is func_ov004_020b2adc, which
+       row existing. The factory's first act is _ZN11dScMgBase_cC2Ev, which
        writes data_ov004_020bc0c0 into the object's first word before the
        derived table lands. THIRTY-SIX, because the base table is 36 words --
        the 37 below is this class's and nobody else's. */
@@ -455,15 +455,15 @@ extern "C" void port_scene_fill_amida(void)
 
    NO HOST COPY OF THE FACTORY IS OWED HERE, and that is measured rather than
    assumed. port/mg_fanout_costs.txt section 12 records dScMgCup_c's factory
-   calling func_ov004_020b2adc with NO argument, which on the host reads
+   calling _ZN11dScMgBase_cC2Ev with NO argument, which on the host reads
    whatever is at [esp+4] and then writes three vtable words through it. This
    factory does `movs r4,r0` and then `bl 0x020b2adc` with the object still in
-   r0 at 0x020d598c, and src/func_ov006_020d5974.cpp spells the argument. */
+   r0 at 0x020d598c, and src/d_s_mg_amida.cpp spells the argument. */
 static void *g_am_self;
 
 extern "C" void *port_mg_amida_spawn(void)
 {
-    void *p = func_ov006_020d5974();
+    void *p = dScMgAmida_c_classInit();
     g_am_self = p;
     return p;
 }
@@ -628,7 +628,7 @@ extern "C" void port_scene_amida_hits(void)
  * correct and no argument-landing face is owed.
  *
  * ROW 4 -- data_ov006_0213b8b8, AND THIS IS THE ONE THAT LOOKS LIKE THE WALL.
- * src/func_ov006_020d3ba0.c declares `typedef struct { int a; int b; } Pair;`
+ * src/func_ov006_020d3ba0.cpp declares `typedef struct { int a; int b; } Pair;`
  * and `extern Pair data_ov006_0213b8b8[11]`, which mangles @@3PAUPair@@A --
  * the exact array-of-struct spelling that slipped both of facegen's guards on
  * curling's state table. IT IS NOT A MEMBER-POINTER TABLE and there are two
@@ -649,7 +649,7 @@ extern "C" void port_scene_amida_hits(void)
  *
  * ROW 5 -- data_ov006_0213b880, the BY-VALUE struct spelling @@3UBuf14@@A that
  * facegen does refuse. Same treatment and the same two witnesses:
- * src/func_ov006_020d48dc.cpp declares `typedef struct { int v[14]; } Buf14;`
+ * src/_ZN12dScMgAmida_c6RenderEv.cpp declares `typedef struct { int v[14]; } Buf14;`
  * and copies it whole into a local, the fourteen words read
  * {2,1,1,1,2,2,2,2,2,2,2,1,1,1}, and no relocation lands anywhere in
  * 0x0213b880..0x0213b8b4. Fourteen ints are 56 bytes on both machines.
@@ -666,7 +666,11 @@ extern "C" void port_scene_amida_hits(void)
  */
 #pragma comment(linker, "/alternatename:?data_020a0dea@@3PAY03EA=_data_020a0dea")
 #pragma comment(linker, "/alternatename:?data_020a0deb@@3PAY03EA=_data_020a0deb")
-#pragma comment(linker, "/alternatename:?GetBG0CharPtr@G2S@@YAPADXZ=__ZN3G2S13GetBG0CharPtrEv")
+/* RE-POINTED at ALIAS2 (wave 8, the main -> port sync), lane ALIAS's
+   derivation: the right hand side this row carried is defined nowhere in
+   the link any more. same member, same convention, same 0 argument slots, types spelled differently
+   was: #pragma comment(linker, "/alternatename:?GetBG0CharPtr@G2S@@YAPADXZ=__ZN3G2S13GetBG0CharPtrEv") */
+#pragma comment(linker, "/alternatename:?GetBG0CharPtr@G2S@@YAPADXZ=?GetBG0CharPtr@G2S@@YAIXZ")
 #pragma comment(linker, "/alternatename:?data_ov006_0213b8b8@@3PAUPair@@A=_data_ov006_0213b8b8")
 #pragma comment(linker, "/alternatename:?data_ov006_0213b880@@3UBuf14@@A=_data_ov006_0213b880")
 #pragma comment(linker, "/alternatename:?data_ov006_0213a458@@3PAPAXA=_data_ov006_0213a458")

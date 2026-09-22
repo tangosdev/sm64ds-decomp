@@ -1,6 +1,6 @@
 // PORT_HOST_ABI.  The mwcc POINTER-TO-MEMBER WALL for dScMgJump2_c (actor id
 // 0x175, scene 373, "Bounce and Trounce"), CLASS half: vtable slot 6,
-// func_ov006_020ef3e0.  Run mg11, lane BNT.
+// _ZN12dScMgJump2_c8BehaviorEv.  Run mg11, lane BNT.
 //
 // ---- 1. THIS CLASS HAS NO STATE TABLE AT ALL ------------------------------
 //
@@ -20,7 +20,7 @@
 //
 // ---- 2. THE SHAPE, OUT OF THE ROM ----------------------------------------
 //
-// extracted/overlays/overlay_0006.bin at base 0x020bfec0, func_ov006_020ef3e0,
+// extracted/overlays/overlay_0006.bin at base 0x020bfec0, _ZN12dScMgJump2_c8BehaviorEv,
 // size 0x9c -- 38 instructions plus a one-word pool = 39 = 0x9c/4:
 //
 //     020ef440  ldr r0,[pc,#0x30]      = 0x00005004, the FIELD offset
@@ -35,14 +35,14 @@
 // THERE IS NO NULL GUARD AND NO IDLE-SENTINEL COMPARE.  dScMg3DEsp_c's field
 // dispatcher tests the pair against a sentinel and returns early; this one
 // dispatches unconditionally, so the field MUST be seeded before the first
-// behavior tick.  It is: vtable slot 18 (func_ov006_020efaa8) ends with
+// behavior tick.  It is: vtable slot 18 (_ZN12dScMgJump2_c13OnYoshiTryEatEi) ends with
 // func_ov006_020ef7f8(this), which is the writer of data_ov006_0213cc94, and
-// slot 0 (func_ov006_020ef834) dispatches slot 18 through the object's own
+// slot 0 (_ZN12dScMgJump2_c13InitResourcesEv) dispatches slot 18 through the object's own
 // vtable with r1 = -1 at 0x020efa2c..0x020efa38.  So the seed arrives on the
 // InitResources path, before Behavior ever runs.  port_mg_call0's own
 // zero-code refusal is a second net under that, not a replacement for it.
 //
-// src/func_ov006_020ef3e0.cpp spells the dispatch
+// src/minigames/d_s_mg_jump2.cpp spells the dispatch
 //
 //     (((C*)c)->**(PMF*)(c + 0x5004))();
 //
@@ -110,7 +110,7 @@ void func_ov006_020ef4ec(char *c);
 void func_ov006_020ef5ac(char *self);
 void func_ov006_020ef794(char *self);
 
-/* the ordinary callees slot 6 keeps, spelled as src/func_ov006_020ef3e0.cpp
+/* the ordinary callees slot 6 keeps, spelled as src/minigames/d_s_mg_jump2.cpp
    spells them */
 unsigned int _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
         unsigned int a, unsigned int b, int c, int d, int e, const void *f);
@@ -286,14 +286,14 @@ extern "C" unsigned port_mg_jump2_field_row(unsigned i, unsigned *code)
     return g_jump2_hits[i];
 }
 
-/* src/func_ov006_020ef3e0.cpp verbatim except that the member-pointer type is
+/* src/minigames/d_s_mg_jump2.cpp verbatim except that the member-pointer type is
    gone and the dispatch site is a routed call.  The Particle::System calls
    above it and the func_ov006_020eef90 below it are src's, unchanged, and
    every one is confirmed against the disassembly in section 2.  The field the
    ROM reads is at +0x5004 and the unique id it feeds Particle::System is at
    +0x5a6c -- `add r0,r4,#0x5000 / ldr r0,[r0,#0xa6c]` at 0x020ef400. */
 /* HOST COPY RETIRED, run link100 lane PMFB7 gate 3.
-   src/func_ov006_020ef3e0.cpp dispatches its own field now: with /vmg /vmm
+   src/minigames/d_s_mg_jump2.cpp dispatches its own field now: with /vmg /vmm
    (block R8) MSVC's pointer to member IS the ROM's eight-byte {code, adjust}
    pair, and the five records the class's own writers copy from hold
    zero-argument __fastcall faces. */

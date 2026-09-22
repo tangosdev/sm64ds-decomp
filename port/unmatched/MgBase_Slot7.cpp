@@ -1,4 +1,4 @@
-/* HOST COPY of dScMgBase_c slot 7, func_ov004_020b0620. Run link60, lane MG1.
+/* HOST COPY of dScMgBase_c slot 7, _ZN11dScMgBase_c14BeforeBehaviorEv. Run link60, lane MG1.
  *
  * THE ONLY ONE OF THE FOUR THAT CHANGES BEHAVIOUR, and it changes it toward
  * the ROM rather than away from it. See the block above the body.
@@ -23,25 +23,25 @@
 #include "types.h"
 #include "decl_common.h"
 
-/* src/_ZN5Scene14BeforeBehaviorEv.cpp's real signature, which
+/* src/_ZN8dScene_c14BeforeBehaviorEv.cpp's real signature, which
    include/decl_Scene.h does not carry. */
-extern "C" int _ZN5Scene14BeforeBehaviorEv(char *self);
+extern "C" int _ZN8dScene_c14BeforeBehaviorEv(char *self);
 
-/* ---- func_ov004_020b0620, slot 7, BeforeBehavior ------------------------- */
+/* ---- _ZN11dScMgBase_c14BeforeBehaviorEv, slot 7, BeforeBehavior ------------------------- */
 /*
  * THIS COPY REPAIRS A SECOND DEFECT AND IT IS NOT THE DECLARATION CONFLICT.
  * The src body's first statement is
  *
- *     if (_ZN5Scene14BeforeBehaviorEv() == 0)
+ *     if (_ZN8dScene_c14BeforeBehaviorEv() == 0)
  *
  * with NO ARGUMENT, because include/decl_Scene.h declares
  *
- *     extern int _ZN5Scene14BeforeBehaviorEv();
+ *     extern int _ZN8dScene_c14BeforeBehaviorEv();
  *
  * with empty parens inside extern "C". The real definition,
- * src/_ZN5Scene14BeforeBehaviorEv.cpp, is
+ * src/_ZN8dScene_c14BeforeBehaviorEv.cpp, is
  *
- *     int _ZN5Scene14BeforeBehaviorEv(char* self)
+ *     int _ZN8dScene_c14BeforeBehaviorEv(char* self)
  *
  * and it forwards self straight into ActorBase::BeforeBehavior, which
  * dereferences it. On ARM the call is CORRECT: r0 already holds self on entry
@@ -51,7 +51,7 @@ extern "C" int _ZN5Scene14BeforeBehaviorEv(char *self);
  * and the very first thing every minigame frame does is dispatch this slot.
  *
  * TWO LINES BELOW IT THE SAME HEADER SPELLS THE SIBLING CORRECTLY,
- * `_ZN5Scene19BeforeInitResourcesEv(void*)`, which is what makes this a defect
+ * `_ZN8dScene_c19BeforeInitResourcesEv(void*)`, which is what makes this a defect
  * rather than a convention -- and slot 1 above, which the same lane copied for
  * the unrelated reason, calls that sibling WITH its argument.
  *
@@ -64,7 +64,7 @@ extern "C" int _ZN5Scene14BeforeBehaviorEv(char *self);
 extern "C" {
 int func_ov004_020b8ee0(char *p);
 void func_ov004_020aeb24(char *c);
-void func_ov004_020b8778(char *c);
+void _ZN10dMgState_c8BehaviorEv(char *c);
 void func_ov004_020b321c(char *c);
 void func_ov004_020adf2c(char *c);
 void _Z14ApproachLinearRiii(int *p, int a, int b);
@@ -116,7 +116,7 @@ extern unsigned char data_020a0de8[];
 extern int data_0208ee44;
 
 // PORT_HOST_ABI: src drops the self argument to Scene::BeforeBehavior (decl_Scene.h empty parens); the ROM rides it through r0 but MSVC __cdecl drops it, so the host copy passes self
-int func_ov004_020b0620(void *cv)
+int _ZN11dScMgBase_c14BeforeBehaviorEv(void *cv)
 {
     char *self = (char *)cv;                    /* the one added line */
     int mode;
@@ -124,7 +124,7 @@ int func_ov004_020b0620(void *cv)
 
     ++g_res_slot7;
     /* the ONE semantic change: self is passed. See the block above. */
-    if (_ZN5Scene14BeforeBehaviorEv(self) == 0) {
+    if (_ZN8dScene_c14BeforeBehaviorEv(self) == 0) {
         ++g_res_bb_zero;
         return 0;
     }
@@ -157,7 +157,7 @@ int func_ov004_020b0620(void *cv)
     if (*(int *)(self + 0xf0) == 0) {
         int i;
         char *g;
-        func_ov004_020b8778(self + 0xcc);
+        _ZN10dMgState_c8BehaviorEv(self + 0xcc);
         g = data_ov004_020bf648;
         for (i = 0; i < 3; i++) {
             if (*(int *)(g + 0x20) != 0x1d)

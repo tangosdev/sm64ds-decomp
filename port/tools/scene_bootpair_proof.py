@@ -8,8 +8,8 @@ scenes, the fork Scene::PrepareToSpawnBoot picks between.
 NOT NAMED scene_menu_proof.py, and the difference is the finding rather than a
 preference: the lane brief called id 360 "the main-menu scene, on the default
 route". It is not. src/GetSceneOverlayID.c gives it no overlay, its own D2 is
-named MultiBootScene::~MultiBootScene in src/func_02034a78.c, and
-src/_ZN5Scene18PrepareToSpawnBootEv.c parks either 0 or 0x168 as the FIRST
+named MultiBootScene::~MultiBootScene in src/_ZN7dScMB_cD1Ev.cpp, and
+src/_ZN8dScene_c18PrepareToSpawnBootEv.cpp parks either 0 or 0x168 as the FIRST
 scene of the process. The pair is a boot fork; the file is named for what it
 proves.
 
@@ -72,8 +72,8 @@ REPORT = {0: "[boot] slots entered:", 360: "[mb] slots entered:"}
 # table carries (config/arm9/relocs.txt from:0x02090888 to:0x0210ad90
 # module:overlay(2)) -- it is YOSHI_EGG, hal/actor_classes.inc:3093, a regular
 # actor the port ALREADY hosts. hal/actor_registry.cpp's install runs before
-# any scene boot and writes data_020a4bb8[9] to YoshiEgg_SpawnInfo, so
-# port_scene_boot(9) does not refuse -- it calls YoshiEgg_Spawn() as if it
+# any scene boot and writes data_020a4bb8[9] to g_profile_YOSHI_EGG, so
+# port_scene_boot(9) does not refuse -- it calls daYegg_c_classInit() as if it
 # were a Scene factory and walks the returned object's ActorBase vtable as an
 # 18-slot Scene table, which is exactly the kind of type confusion this rung
 # exists to rule out, not exercise. Measured: the run printed "[scene] 9 = ?"
@@ -231,19 +231,76 @@ def rung_scene(scene, frames):
         ok &= M.verdict(c.get("init", 0) == 1,
                         "rung: InitResources entered exactly once (%s)"
                         % c.get("init"))
-        ok &= M.verdict(c.get("beh", 0) >= frames // 2,
-                        "rung: Behavior entered %s times over %d frames"
-                        % (c.get("beh"), frames))
-        ok &= M.verdict(c.get("render", 0) >= frames // 2,
-                        "rung: Render entered %s times over %d frames"
-                        % (c.get("render"), frames))
+        if scene == 0:
+            # THE CARTRIDGE'S OWN COUNT IS THE ORACLE HERE, NOT "about once per
+            # frame for the whole window" (run link100, lane BOOTSCENE1,
+            # 2026-09-20). C:/tmp/melontrace/build/romtrace.exe direct-booted the
+            # decomp's own ROM headless for 420 frames with no input and counted
+            # the ARM9's calls by address:
+            #
+            #   BootScene::InitResources 0x02005a58    1 call,   frame 17
+            #   BootScene::Behavior      0x02005418  206 calls,  one per frame,
+            #                                                    frames 21..235
+            #   BootScene::D1            0x02023598    1 call,   frame 236
+            #
+            # The ROM's boot scene is the health and safety card: it ticks 206
+            # times, asks for the title
+            # (src/_ZN9BootScene8BehaviorEv.cpp:91, StartSceneFade(1, 0, 0) with
+            # the wireless flag clear) and is torn down. IT NEVER TICKS 299 TIMES
+            # IN A 300-FRAME WINDOW, so the old `beh >= frames // 2` rung was
+            # asserting something the cartridge does not do. It read green until
+            # 2026-09-13 only because the port's scene was HUNG: the pre-sync
+            # binary 9bb3c454f reads beh 299 render 300 with pdes 0 and d2 0 and
+            # "scene request at exit: NONE", a scene that never ended, because the
+            # fader's IsAtEnd landed a slot low (045db1c9d). The rungs below would
+            # have caught that hang; the old one passed it.
+            #
+            # THE PORT'S OWN COUNT IS 123 AND THE GAP IS PRICED, NOT A DEFECT.
+            # 31 ticks with the scene's gate shut, 60 ticks of the ROM's own
+            # mFadeTimer countdown, 32 ticks of fade-out, one tick per frame
+            # throughout. The cartridge spends 174 ticks BEFORE any of that,
+            # in func_0201a1bc (frames 21..200) waiting for the boot worker
+            # thread func_0201a2f8 to load ov000 and bring up the font and
+            # sound -- and that wait also runs mFadeTimer down to 2, so the
+            # cartridge's countdown costs 3 ticks where the port's costs 60.
+            # hal/scene_link100_boot.cpp refuses that worker by design and
+            # prices the refusal: ov000 has no mount and must not get one
+            # (its footprint covers ov004's, which is permanently mounted).
+            # Padding the port with 83 idle frames would be a fabricated delay.
+            ok &= M.verdict(100 <= c.get("beh", 0) <= frames,
+                            "rung: Behavior entered %s times (a real boot screen "
+                            "that then ends; the cartridge's own count is 206 "
+                            "over frames 21..235, the port's is 123)"
+                            % c.get("beh"))
+            ok &= M.verdict(
+                abs(c.get("render", 0) - c.get("beh", 0)) <= 1,
+                "rung: Render entered %s times, within one of Behavior's %s "
+                "(it drew on every tick it behaved)"
+                % (c.get("render"), c.get("beh")))
+            ok &= M.verdict(c.get("pdes", 0) == 1 and c.get("d2", 0) == 1,
+                            "rung: the scene ENDED -- OnPendingDestroy %s and the "
+                            "destructor %s, the way the cartridge's does at its "
+                            "frame 236 (a hung scene reads 0 and 0)"
+                            % (c.get("pdes"), c.get("d2")))
+            ok &= M.verdict("CARRIER: scene 1 pending" in txt,
+                            "rung: and it handed off to the TITLE -- the carrier "
+                            "saw 'scene 1 pending', which is what "
+                            "src/_ZN9BootScene8BehaviorEv.cpp:91 asks for with "
+                            "the wireless flag clear")
+        else:
+            ok &= M.verdict(c.get("beh", 0) >= frames // 2,
+                            "rung: Behavior entered %s times over %d frames"
+                            % (c.get("beh"), frames))
+            ok &= M.verdict(c.get("render", 0) >= frames // 2,
+                            "rung: Render entered %s times over %d frames"
+                            % (c.get("render"), frames))
         print("      counters: %s" % c, flush=True)
     # AND SOMETHING REACHED THE FRAMEBUFFER.
     #
     # THE TWO SCENES ARE HELD TO DIFFERENT BARS AND THE REASON IS THE ROM'S,
     # read out of their own InitResources bodies before either was ever run:
     #
-    #   scene 0    src/func_02005a58.c ENABLES LAYERS and fills them --
+    #   scene 0    src/_ZN9BootScene13InitResourcesEv.cpp ENABLES LAYERS and fills them --
     #              `*(u32*)0x4000000 = (... & ~0x1f00) | 0x100` turns main BG0
     #              on, `0x4001000 ... | 0x400` turns sub BG2 on, and it
     #              decompresses data_020918c4 / data_020916d8 / data_02091570
@@ -262,7 +319,7 @@ def rung_scene(scene, frames):
     #              correct render measures, comfortably over the 1-3 a flat
     #              field's own dithering could produce.
     #
-    #   scene 360  src/func_0203506c.c does the opposite: it CLEARS every layer
+    #   scene 360  src/_ZN7dScMB_c13InitResourcesEv.cpp does the opposite: it CLEARS every layer
     #              enable on both engines (`&= ~0x1f00` twice) and then calls
     #              GX::DispOn, leaving the backdrop -- which the same body has
     #              just written white, MultiStore16(0xffff, 0x5000000, 2). The

@@ -5,9 +5,9 @@
  * addresses their ov065/ov066 spellings, the /alternatename:_data_ov059_...
  * =_func_ov045_... case from hal/actor_classes_ov045.cpp in source form):
  *
- *     src/unnamed/ov063/func_ov063_02116d38.c   case 0 spelled Snufit_Spawn
+ *     src/unnamed/ov063/func_ov063_02116d38.c   case 0 spelled daYurei_Mucho_c_classInit
  *         -- ov065's name for 0x02116f48; ov063's own body there is
- *         func_ov063_02116f48 (0x64 bytes vs Snufit_Spawn's 0x50: different
+ *         func_ov063_02116f48 (0x64 bytes vs daYurei_Mucho_c_classInit's 0x50: different
  *         content, so an /alternatename would go WRONG the moment lane 5-B
  *         links the real ov065 TU -- the alias only fires while undefined).
  *     src/unnamed/ov063/func_ov063_021192d4.c   case 6 spelled
@@ -24,7 +24,7 @@
  * image (extracted/overlays/overlay_0063.bin) and each dispatcher's own
  * jump-table disassembly: 02116d38 case 0 is `bl 0x2116f48` and 021192d4
  * case 6 is `bl 0x2119a50`, both with the actor still in r0, so every case
- * passes c here (the recovered Snufit_Spawn() no-arg spelling was arity
+ * passes c here (the recovered daYurei_Mucho_c_classInit() no-arg spelling was arity
  * noise from the misnamed extern). The decomp-side fix -- renaming the
  * externs by address in src/ -- belongs to a src-owning lane; flagged in the
  * lane report.
@@ -50,7 +50,7 @@ extern void func_ov063_02119a50(void *c);
 extern int func_ov063_0211ad00(char *c);
 
 /* PORT_HOST_ABI: shared-window naming race -- the matched TU spells the
-   0x02116f48 callee by ov065's Snufit_Spawn; corrected by address here. */
+   0x02116f48 callee by ov065's daYurei_Mucho_c_classInit; corrected by address here. */
 void func_ov063_02116d38(char *c)
 {
     switch (*(unsigned char *)(c + 0x5cc)) {

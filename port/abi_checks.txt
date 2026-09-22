@@ -605,7 +605,7 @@ ARITY FORM (8) -- an aritycheck ratchet must catch each when re-broken
   The first two are the reason aritycheck is in the suite at all. Both landed on
   2026-08-16, both are the receiver shape, and NEITHER is an /alternatename,
   so aliascheck cannot see them and abicheck passes them (the frames balance).
-  The Enemy fixture re-breaks src/RollingRock_Spawn.c, a sibling that carries
+  The Enemy fixture re-breaks src/d_a_grock.c, a sibling that carries
   the identical declaration today; #1543 itself fixed the ChainChomp /
   ChiefChilly / Wiggler spellings.
 
@@ -729,7 +729,7 @@ Six days of tree movement. Every resolution is in favour of what is on cons.
     call to an Itanium member name written with ZERO arguments always drops
     `this`". On this tree that fires 686 times, and the premise is false: many
     matched src bodies genuinely take no receiver, because the ROM body never
-    reads r0. src/_ZN4Tree8BehaviorEv.cpp is `int _ZN4Tree8BehaviorEv(void)`
+    reads r0. src/game/actors/d_a_tree.cpp is `int _ZN8daTree_c8BehaviorEv(void)`
     and walks a global list, so the thunk at hal/actor_classes.cpp:439 calling
     it with nothing is CORRECT. The sound version of that rule is arity
     agreement between declaration and definition, which is aritycheck. Landing
@@ -811,10 +811,10 @@ Ranked by blast radius.
   1. ExpandingHeapAllocator::DeallocateAll   FIXED
      the directive was at hal/lk4_eh_dtor_seat.cpp:43
      ?DeallocateAll@ExpandingHeapAllocator@@QAEXPAP6AXPAXPAV1@I@ZI@Z
-       = __ZN22ExpandingHeapAllocator13DeallocateAllEPPFvPvPS_jEj
+       = __ZN22ExpandingHeapAllocator13DeallocateAllEPFvPvPS_jEj
      src/_ZN13ExpandingHeap14VDeallocateAllEv.cpp:30 makes a qualified
      thiscall call with two pushed arguments, so the allocator goes into ECX.
-     The body src/_ZN22ExpandingHeapAllocator13DeallocateAllEPPFvPvPS_jEj.cpp:3
+     The body src/_ZN22ExpandingHeapAllocator13DeallocateAllEPFvPvPS_jEj.cpp:3
      is flat cdecl (void *thiz, Fn fn, void *ctx) and takes thiz from the
      first stack slot -- which holds the VISITOR, a code pointer. The
      dereference at +0x2c is UNCONDITIONAL, so the wrong-object read always
@@ -842,7 +842,7 @@ Ranked by blast radius.
                     push dword ptr [ebp+0Ch]        param
                     push dword ptr [ebp+8]          visitor
                     push ecx                        THE RECEIVER
-                    call __ZN22ExpandingHeapAllocator13DeallocateAllEPPFvPvPS_jEj
+                    call __ZN22ExpandingHeapAllocator13DeallocateAllEPFvPvPS_jEj
                     add esp,0Ch / pop ebp / ret 8
                 so both halves close in the same three lines: the receiver is
                 published from ECX into the slot the body reads, and `ret 8`
@@ -859,8 +859,8 @@ Ranked by blast radius.
      arguments. The body src/_ZN13HeapAllocator6RemoveEv.cpp:23 is __thiscall
      and PASSES `this` to two callees (FindNested(this), then
      Remove(iter, this)). The veneers are themselves entered by cdecl calls
-     that PUSH the allocator (src/_ZN13ExpandingHeap8VDestroyEv.c:23,
-     src/_ZN9SolidHeap8VDestroyEv.c:23), so nothing in the source ever loads
+     that PUSH the allocator (src/_ZN13ExpandingHeap8VDestroyEv.cpp:23,
+     src/_ZN9SolidHeap8VDestroyEv.cpp:23), so nothing in the source ever loads
      the allocator into ECX.
 
      THE HEDGE THIS DOCUMENT FIRST CARRIED WAS TOO WEAK, and the truth is
@@ -954,11 +954,11 @@ Ranked by blast radius.
      the directives were at hal/scene_boot.cpp:1124 and :1125
        ?St_EndingFly_Main@Player@@QAEHXZ
        ?St_EndingFly_Main@Player@@QAEXXZ
-       both = __ZN6Player17St_EndingFly_MainEv
+       both = _func_ov007_020c3d1c
      src/func_ov007_020cbb04.cpp declares the int form and calls it seven
      times; src/func_ov007_020b9770.cpp declares the void form and calls it
      twice. All nine put the player in ECX and push nothing. The body
-     src/_ZN6Player17St_EndingFly_MainEv.cpp:13 is flat cdecl (void *self) and
+     src/func_ov007_020c3d1c.cpp:13 is flat cdecl (void *self) and
      hands whatever sits in its first stack slot to an indirect call through
      data_ov007_02103254. Both TUs ride port/slice_ov007.txt.
 
@@ -1014,14 +1014,14 @@ Ranked by blast radius.
 
      SO THE FIX IS A BRIDGE AND NOT A TRAP. The mission this lane ran under
      allowed for a loud trap if the true body turned out to be unseated. It is
-     not: src/_ZN6Player17St_EndingFly_MainEv.cpp is matched, in the slice, and
+     not: src/func_ov007_020c3d1c.cpp is matched, in the slice, and
      correct as written. The only thing wrong was how the three spellings
      reached it.
 
      FIXED BY   both directives are DELETED.
                 ?St_EndingFly_Main@Player@@QAEXXZ is now a real __thiscall
                 method in hal/scene_boot.cpp:
-                    push ecx / call __ZN6Player17St_EndingFly_MainEv
+                    push ecx / call _func_ov007_020c3d1c
                     pop ecx / ret
                 which publishes the receiver from ECX into the stack slot the
                 flat body reads, and rets 0 as a nullary __thiscall must.
@@ -1047,7 +1047,7 @@ Ranked by blast radius.
      amended NO CHECKER IN THE SUITE COULD SEE IT.   FIXED
      the directive was at hal/scene_boot.cpp:1126:
      ?St_EndingFly_Main@Player@@YAXXZ =
-     __ZN6Player17St_EndingFly_MainEv. YA is a free function, so both sides
+     _func_ov007_020c3d1c. YA is a free function, so both sides
      agree there is no receiver and aliascheck's rule R is CORRECT to stay
      quiet -- it is not a crossing. And src/func_ov007_020b7764.cpp:9 calls
      Player::St_EndingFly_Main() with nothing, while the definition takes a
@@ -1096,7 +1096,7 @@ Ranked by blast radius.
 
                     _port_ov007_b7764_endingfly:
                       push dword ptr [_data_ov007_02103448]
-                      call __ZN6Player17St_EndingFly_MainEv
+                      call _func_ov007_020c3d1c
                       pop ecx / ret
 
                 An ALIAS and not a second face declaration, because a
@@ -1127,7 +1127,7 @@ Ranked by blast radius.
   7. A SEVENTH INSTANCE, FOUND WHILE FIXING THE SIX AND NOT FIXED.
      hal/scene_boot.cpp still carries
 
-         /alternatename:_func_020c3d1c=__ZN6Player17St_EndingFly_MainEv
+         /alternatename:_func_020c3d1c=_func_ov007_020c3d1c
 
      the fourth spelling of item 4/5's body: by ADDRESS. SIXTEEN matched ov007
      TUs reach it, every one a long-branch veneer that declares
@@ -1190,8 +1190,8 @@ Ranked by blast radius.
   ADJUDICATED INERT, for the record (11 rows, all in aliascheck_baseline.txt):
   Player::OnYoshiTryEat (the body is `(void)this; return 1;`); the eight
   MeshColliderBase base-table bridges (address-taken only, and the live
-  dispatchers at src/_ZN11RaycastLine10DetectClsnEv.cpp:56 and
-  src/_ZN10SphereClsn10DetectClsnEv.cpp:55 are MSVC virtual calls that put the
+  dispatchers at src/_ZN9dBgCh_Lin10DetectClsnEv.cpp:56 and
+  src/_ZN12dBgCh_SphCrr10DetectClsnEv.cpp:55 are MSVC virtual calls that put the
   receiver in ECX); ExpandingHeapAllocator::MemoryLeft (the directive never
   fires -- the LHS is DEFINED by the face at hal/heap_vtable.cpp:96, which is
   why the same pair is already row 68 of alternatename_baseline.txt); and
@@ -1267,7 +1267,7 @@ Ranked by blast radius.
           site it came off. The site census is the evidence and it is written
           down: sweeping the linked binary for `call dword ptr [reg+000000
           80h]` finds exactly three slot-32 dispatches --
-            func_ov004_020b08f0 +0xb    pushes 0
+            _ZN11dScMgBase_c18AfterInitResourcesEj +0xb    pushes 0
             func_ov002_020eff90 +0xb    pushes 1
             func_ov064_02116d1c +0x129  pushes 0
           -- so only the two PathLift tables have a row.

@@ -14,21 +14,21 @@
 #   .bss  0x021125e0..0x02112720
 # There is NO .rodata section in this overlay.
 # Every raw byte below was read out of extracted/overlays/overlay_0047.bin,
-# never the dsd export (T4). BASE PROOF: func_ov047_021111a0, RickshawBs_Spawn
-# (0x02111280), RickshawPlatformBs_Spawn (0x021114d4) and StairsBs_Spawn
+# never the dsd export (T4). BASE PROOF: _ZN21daObjKm3_Kurumajiku_cD1Ev, daObjKm3_Kurumajiku_c_classInit
+# (0x02111280), daObjKm3_Kuruma_c_classInit (0x021114d4) and daObjKm3_Dorifu_c_classInit
 # (0x0211164c) all read e92d4010 = push {r4,lr}.
 #
 # ==== THE CAST IS FOUR, NOT THREE. BOTH ATTRIBUTION ROUTES =================
 #
 #   id   arm9 slot   SpawnInfo   word[0]     factory                    +4
-#   151  0x02090ac0  0x02112428  0x021114d4  RickshawPlatformBs_Spawn   151
-#   152  0x02090ac4  0x0211227c  0x02111280  RickshawBs_Spawn           152
-#   153  0x02090ac8  0x021124ec  0x0211164c  StairsBs_Spawn             153
-#   156  0x02090ad4  0x02112358  0x021113bc  func_ov047_021113bc        156
+#   151  0x02090ac0  0x02112428  0x021114d4  daObjKm3_Kuruma_c_classInit   151
+#   152  0x02090ac4  0x0211227c  0x02111280  daObjKm3_Kurumajiku_c_classInit           152
+#   153  0x02090ac8  0x021124ec  0x0211164c  daObjKm3_Dorifu_c_classInit             153
+#   156  0x02090ad4  0x02112358  0x021113bc  daObjKm3_Kaitendai_c_classInit        156
 #
 # The campaign plan lists ov047 as "RickshawBs, RickshawPlatformBs, StairsBs".
 # There is a FOURTH class: id 156, whose factory dsd left as
-# func_ov047_021113bc and whose table dsd named after another class.
+# daObjKm3_Kaitendai_c_classInit and whose table dsd named after another class.
 # tools/actor_names.py already reads id 156 as ROTATING_PLATFORM_BS, which is
 # what its RTTI says too, and that is the row name.
 #
@@ -60,18 +60,18 @@
 # image:
 #
 #   table       installed by              alloc   RTTI (vtable[-1] -> name)
-#   0x021122a0  RickshawBs_Spawn          0x330   21daObjKm3_Kurumajiku_c
-#   0x0211237c  func_ov047_021113bc       0x320   20daObjKm3_Kaitendai_c
-#   0x0211244c  RickshawPlatformBs_Spawn  0x320   17daObjKm3_Kuruma_c
-#   0x0211254c  StairsBs_Spawn            0xdcc   17daObjKm3_Dorifu_c
+#   0x021122a0  daObjKm3_Kurumajiku_c_classInit          0x330   21daObjKm3_Kurumajiku_c
+#   0x0211237c  daObjKm3_Kaitendai_c_classInit       0x320   20daObjKm3_Kaitendai_c
+#   0x0211244c  daObjKm3_Kuruma_c_classInit  0x320   17daObjKm3_Kuruma_c
+#   0x0211254c  daObjKm3_Dorifu_c_classInit            0xdcc   17daObjKm3_Dorifu_c
 #
-# and dsd's two names sit at 0x0211237c (_ZTV10RickshawBs) and 0x0211254c
-# (_ZTV18RickshawPlatformBs) -- one table LATER than the class each names. So:
+# and dsd's two names sit at 0x0211237c (_ZTV20daObjKm3_Kaitendai_c) and 0x0211254c
+# (_ZTV17daObjKm3_Dorifu_c) -- one table LATER than the class each names. So:
 #
-#   id 151 RICKSHAW_PLATFORM_BS   -> 0x0211244c (dsd data_ov047_0211244c)
-#   id 152 RICKSHAW_BS            -> 0x021122a0 (dsd data_ov047_021122a0)
-#   id 153 STAIRS_BS              -> 0x0211254c (dsd _ZTV18RickshawPlatformBs)
-#   id 156 ROTATING_PLATFORM_BS   -> 0x0211237c (dsd _ZTV10RickshawBs)
+#   id 151 RICKSHAW_PLATFORM_BS   -> 0x0211244c (dsd _ZTV17daObjKm3_Kuruma_c)
+#   id 152 RICKSHAW_BS            -> 0x021122a0 (dsd _ZTV21daObjKm3_Kurumajiku_c)
+#   id 153 STAIRS_BS              -> 0x0211254c (dsd _ZTV17daObjKm3_Dorifu_c)
+#   id 156 ROTATING_PLATFORM_BS   -> 0x0211237c (dsd _ZTV20daObjKm3_Kaitendai_c)
 #
 # and every _ZN10RickshawBs* body in src/ is id 156's while every
 # _ZN18RickshawPlatformBs* body is id 153's. This is the ov036/ov045
@@ -92,7 +92,7 @@
 # ==== ALL FOUR TABLES ARE THIRTY-TWO SLOTS =================================
 #
 # Each closes on the Platform word (slot 29 0x02010124, slot 30 0x020100dc,
-# slot 31 0x020ee55c _ZN8Platform4KillEv) and each carries the SAME FOUR own
+# slot 31 0x020ee55c _ZN10dBgActor_c4KillEv) and each carries the SAME FOUR own
 # slots -- 0 InitResources, 3 CleanupResources, 16 D1, 17 D0 -- with slots 6
 # and 9 inherited from an ov002 intermediate base. dsd's next-symbol landings
 # read 0x80 (right, by luck of the layout) on 0x021122a0 and SHORT on the other
@@ -118,10 +118,10 @@
 #
 # .data -- the four SpawnInfo records, all four short and all four with a dsd
 # name INSIDE them:
-#   RickshawBs_SpawnInfo:0x1c          natural 0x18 (0x02112294 inside)
-#   data_ov047_02112358:0x1c           natural 0x10 (0x02112368 inside)
-#   RickshawPlatformBs_SpawnInfo:0x1c  natural 0x0c (0x02112434 inside)
-#   StairsBs_SpawnInfo:0x1c            natural 0x0c (0x021124f8 inside)
+#   g_profile_KM3_KURUMAJIKU:0x1c          natural 0x18 (0x02112294 inside)
+#   g_profile_KM3_KAITENDAI:0x1c           natural 0x10 (0x02112368 inside)
+#   g_profile_KM3_KURUMA:0x1c  natural 0x0c (0x02112434 inside)
+#   g_profile_KM3_DORIFU:0x1c            natural 0x0c (0x021124f8 inside)
 # A record is 0x1c (the ov032/ov033/ov034 measurement), and each pin lands
 # exactly on its vtable's offset-to-top word, which pins it independently.
 #
@@ -144,7 +144,7 @@
 #     other three classes pass, five times over. Its end is pinned
 #     independently: 0x02112508+0x3c = 0x02112544 is the vtable at 0x0211254c's
 #     own offset-to-top word. Unpinned, StairsBs would hand
-#     func_ov002_020b4d58 ten of its fifteen words and read the last five off
+#     _ZN13daObjDorifu_c13InitResourcesEP20daObjDorifuResources ten of its fifteen words and read the last five off
 #     whatever the host linker put next.
 #
 # .bss needs NO pins at all: every one of the thirty-two symbols already reads
@@ -186,7 +186,7 @@
 # lane's -D to make, sixteen renames across ov043's own TUs.
 #
 # THE ONE THAT WAS ALREADY LIVE IS ALREADY ROUTED, and this lane checked rather
-# than assumed: src/func_ov043_02111320.c (LINKED) spells data_ov047_021125e0
+# than assumed: src/game/actors/d_a_obj_km1_ukishima.cpp (LINKED) spells data_ov047_021125e0
 # and _021125e8 and already carries a per-source -D from its own lane
 # (port/CMakeLists.txt:8526).
 #
@@ -202,14 +202,14 @@
 #
 # ==== SIX "recovered from vtable slot identity" MARKERS, ALL ADJUDICATED ====
 #
-# T5: func_ov047_021111f0, 02111254, 02111268, 02111448, 021114ac and 021114c0
+# T5: _ZN21daObjKm3_Kurumajiku_cD0Ev, 02111254, 02111268, 02111448, 021114ac and 021114c0
 # all carry it -- the six lifecycle bodies of the two classes dsd left unnamed
 # (id 152 and id 151). All six were disassembled from
 # extracted/overlays/overlay_0047.bin and put through tools/match.py at
 # 2004/b56 with --strict-relocs: six MATCHING, zero guesses. Two of them,
-# func_ov047_021111f0 and func_ov047_02111448, are labelled OnYoshiTryEat by the
+# _ZN21daObjKm3_Kurumajiku_cD0Ev and _ZN17daObjKm3_Kuruma_cD0Ev, are labelled OnYoshiTryEat by the
 # RTTI recovery and are actually the deleting destructors -- the same mislabel
-# class as func_ov032_021124ec and func_ov033_021111e4. The rulings go in
+# class as _ZN13daObjTdFuta_cD0Ev and _ZN9TinyCoverD0Ev. The rulings go in
 # port/tools/inferred_stub_adjudicated.txt, never the baseline.
 
 # ---- .data: the seven CLPS collision blocks ------------------------------
@@ -219,15 +219,15 @@ data_ov047_02111bb4 data_ov047_02111bd4:0x20
 data_ov047_02111bf4
 
 # ---- .data: the four resource arguments ----------------------------------
-data_ov047_02112258 data_ov047_02112334
-data_ov047_02112408 data_ov047_02112508:0x3c
+
+data_ov047_02112508:0x3c
 
 # ---- .data: id 156's two Fix12 constants ---------------------------------
 data_ov047_02112320 data_ov047_02112324
 
 # ---- .data: the four SpawnInfo records, all pinned to the ROM's 0x1c -----
-RickshawBs_SpawnInfo:0x1c data_ov047_02112358:0x1c
-RickshawPlatformBs_SpawnInfo:0x1c StairsBs_SpawnInfo:0x1c
+
+g_profile_KM3_DORIFU:0x1c
 
 # ---- .bss: id 152's two SharedFilePtrs and two chain nodes ---------------
 data_ov047_021125e0 data_ov047_021125e8
@@ -250,3 +250,16 @@ data_ov047_021126a8 data_ov047_021126b4 data_ov047_021126c0
 data_ov047_021126cc data_ov047_021126d8 data_ov047_021126e4
 data_ov047_021126f0 data_ov047_021126fc data_ov047_02112708
 data_ov047_02112714
+
+
+# RETIRED at ALIAS2 (wave 8, the main -> port sync). Each symbol below was
+# hosted here as a ROM data blob AND is now defined by a translation unit the
+# build compiles, so the link reported it twice (LNK2005). The generator input
+# is the place to fix that: build/port/host-src/ov047_syms.c is its output and is
+# regenerated from this list on every configure.
+#   data_ov047_02112258                        now defined by d_a_obj_km3_kurumajiku.cpp.obj
+#   g_profile_KM3_KURUMAJIKU                   now defined by d_a_obj_km3_kurumajiku.cpp.obj
+#   data_ov047_02112334                        now defined by d_a_obj_km3_kaitendai.cpp.obj
+#   g_profile_KM3_KAITENDAI                    now defined by d_a_obj_km3_kaitendai.cpp.obj
+#   data_ov047_02112408                        now defined by d_a_obj_km3_kuruma.cpp.obj
+#   g_profile_KM3_KURUMA                       now defined by d_a_obj_km3_kuruma.cpp.obj

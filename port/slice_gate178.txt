@@ -6,38 +6,37 @@
 # (gate 177's ov064 mount already exists).
 #
 # METAL_NET_LIFT (id 69) IS the daObjFl_Amilift_c class, NOT the _ZN12MetalNetLift*
-# family. ACTOR_SPAWN_TABLE[69] -> MetalNetLift_SpawnInfo (+4 = 69); its factory
-# MetalNetLift_Spawn installs _ZTV17daObjFl_Amilift_c (= data_ov064_0211bc68, a
+# family. ACTOR_SPAWN_TABLE[69] -> g_profile_FL_AMILIFT (+4 = 69); its factory
+# daObjFl_Amilift_c_classInit installs _ZTV17daObjFl_Amilift_c (= _ZTV12MetalNetLift, a
 # 32-slot Platform table), whose methods are the func_ov064_02117* family. The
 # _ZN12MetalNetLift* symbols and their ov002 cross-overlay veneer chain belong to
-# id 72 (TiltingPlatformLll_SpawnInfo, +4 = 72) and are a LATER gate -- not here.
+# id 72 (g_profile_FL_GURA, +4 = 72) and are a LATER gate -- not here.
 #
 # LEFT OUT ON PURPOSE:
-#  - func_ov064_02117cfc.cpp (Amilift Render): the ROM-order model slot-5 shadow
+#  - _ZN12MetalNetLift6RenderEv.cpp (Amilift Render): the ROM-order model slot-5 shadow
 #    collision (Model at +0xd4) -- host copy in unmatched/Ov064Gate178_States.cpp.
-#  - func_ov064_02117d24.c (Amilift Behavior), func_ov064_021187ec.cpp (LavaBubble
+#  - _ZN12MetalNetLift8BehaviorEv.c (Amilift Behavior), func_ov064_021187ec.cpp (LavaBubble
 #    seeder-dispatcher) and _ZN10LavaBubble8BehaviorEv.cpp (LavaBubble Behavior):
 #    each invokes an mwcc pointer-to-member `(obj->*pmf)()` over a { fn, delta }
 #    record -- the Scuttlebug __thiscall/stride trap -- host copies in the same
 #    file, with the two source PMF tables seated there before the sinits copy them.
-#  - func_ov064_02117978.c / func_ov064_021179bc.c (Amilift D1/D0): they store the
+#  - _ZN12MetalNetLiftD1Ev.c / _ZN12MetalNetLiftD0Ev.c (Amilift D1/D0): they store the
 #    SHARED single-global placeholder tables (_ZTV10dBgActor_c, 196 spellers, and
 #    VT0/VT1) in the teardown chain, so they are host THUNKS in the fill
 #    (aml_d1/aml_d0), the gate-177 bully treatment. Their unreachable func-named
 #    bodies stay out of the slice.
 #
 # KEPT: LavaBubble's own D1/D0 (they spell _ZTV10LavaBubble / _ZTV7daBbl_c and
-# func_ov002_020aed18 / data_020a0eac, all hosted); LavaBubble Render (bare
+# _ZN12dEnemyBase_cD2Ev / data_020a0eac, all hosted); LavaBubble Render (bare
 # `return 1`, no model); the seven PMF state bodies (called by host pointer with
 # `this` as arg 0); the two RUNNABLE sinits.
 #
-# ALREADY BUILT (not here): _ZN8PlatformC2Ev (gate 9), the PathPtr family (gates
-# 10/13), _ZN5EnemyC2Ev / func_ov002_020aed18 (gate 16), _ZN6Player4BurnEv +
+# ALREADY BUILT (not here): _ZN10dBgActor_cC2Ev (gate 9), the PathPtr family (gates
+# 10/13), _ZN12dEnemyBase_cC2Ev / _ZN12dEnemyBase_cD2Ev (gate 16), _ZN6Player4BurnEv +
 # Player::ChangeState (gate 175 + unmatched/Player_ChangeState.cpp), the Platform
-# Update*/IsClsnInRange helpers, _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj.
-src/MetalNetLift_Spawn.c
-src/func_ov064_02117cc4.c
-src/func_ov064_02117e44.cpp
+# Update*/IsClsnInRange helpers, _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj.
+src/d_a_obj_fl_amilift.c
+src/game/actors/d_a_obj_fl_gura.cpp
 src/func_ov064_02117a14.cpp
 src/func_ov064_02117a44.cpp
 src/func_ov064_02117b8c.c
@@ -45,18 +44,19 @@ src/func_ov064_02117bdc.c
 src/func_ov064_02117c24.c
 src/func_ov064_02117fb4.cpp
 src/func_ov064_02117fd4.c
-src/LavaBubble_Spawn.c
+src/d_a_bbl.c
 src/_ZN10LavaBubble13InitResourcesEv.cpp
-src/_ZN10LavaBubble16CleanupResourcesEv.c
-src/_ZN10LavaBubble16OnPendingDestroyEv.c
-src/_ZN10LavaBubble6RenderEv.c
-src/_ZN10LavaBubbleD0Ev.c
-src/_ZN10LavaBubbleD1Ev.c
+src/_ZN10LavaBubble16CleanupResourcesEv.cpp
+src/_ZN10LavaBubble16OnPendingDestroyEv.cpp
+src/_ZN10LavaBubble6RenderEv.cpp
+# RETIRED at SLICE1: body now in src/_ZN10LavaBubbleD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN10LavaBubbleD0Ev.cpp
+src/_ZN10LavaBubbleD1Ev.cpp
 src/func_ov064_02118644.c
 src/func_ov064_0211873c.c
 src/func_ov064_02118760.c
 src/func_ov064_021187d0.c
-src/func_ov064_02118b08.c
+src/_ZN10LavaBubble13OnYoshiTryEatEv.cpp
 # the two RUNNABLE sinits: __sinit_ov064_0211afc0 constructs the Amilift's two
 # SharedFilePtrs (model 0x5ef, collider 0x5f0) and copies the 3 Behavior-state
 # source PMFs into data_ov064_0211c750; __sinit_ov064_0211b150 copies LavaBubble's

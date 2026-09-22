@@ -11,7 +11,7 @@
 # slots, both Spawns and the four helpers reaches EIGHTEEN ov025 functions --
 # the seventeen below plus PyramidStep's CleanupResources, held out just under
 # -- and 38 outside targets: 26 in main, 5 in ov002 (Platform's four methods
-# and _ZTV8Platform), 1 in ov002 data (data_ov002_0210d9f0, PyramidLift's
+# and _ZTV10dBgActor_c), 1 in ov002 data (data_ov002_0210d9f0, PyramidLift's
 # second model file, already mounted) and 6 in ov025 data, all mounted by
 # port/ov025_syms.txt. Every outside code target was already in
 # walk_window.map before this lane, so the slice pulls in no chain of its own.
@@ -38,7 +38,7 @@
 #
 # THE DESTRUCTORS ARE SAFE TO SLICE. PyramidStep's pair install the class table
 # then _ZTV10dBgActor_c; PyramidLift's install the class table then
-# _ZTV8Platform. Those two names are the SAME ROM table, ov002 0x0210ae38, and
+# _ZTV10dBgActor_c. Those two names are the SAME ROM table, ov002 0x0210ae38, and
 # hal/actor_classes.cpp defines both arrays and hal_fill_platform_vtable fills
 # both with the same contents, so either store lands on a live host table. Both
 # are dying-object writes: nothing dispatches between the store and ActorD2.
@@ -63,18 +63,19 @@
 src/_ZN11PyramidStep13InitResourcesEv.cpp
 src/_ZN11PyramidStep8BehaviorEv.cpp
 src/_ZN11PyramidStep6RenderEv.cpp
-src/_ZN11PyramidStepD1Ev.c
-src/_ZN11PyramidStepD0Ev.c
-src/PyramidStep_Spawn.c
+src/_ZN11PyramidStepD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN11PyramidStepD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN11PyramidStepD0Ev.cpp
+src/d_a_obj_dp_brock.c
 src/func_ov025_02111dec.cpp
 src/func_ov025_02111e30.c
 src/_ZN11PyramidLift13InitResourcesEv.cpp
-src/_ZN11PyramidLift16CleanupResourcesEv.c
+src/_ZN11PyramidLift16CleanupResourcesEv.cpp
 src/_ZN11PyramidLift8BehaviorEv.cpp
 src/_ZN11PyramidLift6RenderEv.cpp
 src/_ZN11PyramidLiftD1Ev.cpp
-src/_ZN11PyramidLiftD0Ev.c
-src/PyramidLift_Spawn.cpp
+src/_ZN11PyramidLiftD0Ev.cpp
+src/d_a_dp_lift.cpp
 src/func_ov025_021125bc.cpp
 src/func_ov025_021125dc.c
 src/__sinit_ov025_02112a44.c

@@ -1,3 +1,9 @@
+# RETIRED at SYNC6: the class translation unit main folded these bodies into
+# is back on its slice rows (today's #2660/#2663/#2666 un-quarantine) and it
+# DEFINES the names below itself, so the mount was the second definition.
+# Measured as LNK2005 rows against this file's generated object in
+# build_s2.log. Removed from the generator's INPUT, per the rule: never
+# edit the generated output. Retired here: g_profile_KM1_KURUMAJIKU, g_profile_KM1_KURUMA
 # run linkw wave 20, lane w20: ov043's BOWSER IN THE DARK WORLD cast, per symbol.
 #
 # ============================ STATE: DERIVED, NOT WIRED =====================
@@ -20,10 +26,10 @@
 # word[0] spawnFunc inside ov043's own image AND word[1] low halfword == the id.
 #
 #   id   SpawnInfo                       word[0] spawnFunc            idhalf  census
-#   134  0x021124fc StairsBdw_SpawnInfo   0x0211176c StairsBdw_Spawn     134  L35 x1
-#   135  0x02112294 DiamondLift_SpawnInfo 0x021113cc DiamondLift_Spawn   135  L35 x6
+#   134  0x021124fc g_profile_KM1_DORIFU   0x0211176c daObjKm1_Dorifu_c_classInit     134  L35 x1
+#   135  0x02112294 g_profile_KM1_UKISHIMA 0x021113cc daObjKm1_Ukishima_c_classInit   135  L35 x6
 #   136  0x02112438 RickshawPlatformBdw_  0x021115f4 RickshawPlatform    136  (not placed)
-#   137  0x02112368 RickshawBdw_SpawnInfo 0x021114dc RickshawBdw_Spawn   137  L35 x1
+#   137  0x02112368 g_profile_KM1_KURUMAJIKU 0x021114dc daObjKm1_Kurumajiku_c_classInit   137  L35 x1
 #
 # EIGHT placed instances on level 35 across three ids -- and level 35's whole
 # remaining skip list is "8 skipped (3 classes)" in this tree's own baseline
@@ -33,8 +39,8 @@
 # ==== THE NAMING SHIFT ====================================================
 # dsd lays each mwcc class block out as [typeinfo][name][SpawnInfo][...][vtable]
 # and names a table from the wrong class when a block boundary moves, so the
-# _ZTV names here are one class over: 0x0211245c is spelled _ZTV11RickshawBdw
-# but is id 136's table, and 0x0211255c is spelled _ZTV19RickshawPlatformBdw
+# _ZTV names here are one class over: 0x0211245c is spelled _ZTV17daObjKm1_Kuruma_c
+# but is id 136's table, and 0x0211255c is spelled _ZTV17daObjKm1_Dorifu_c
 # but is id 134's. Every row above is pinned by the id's OWN Spawn's final
 # vtable-store relocation, never by a dsd label.
 #
@@ -78,20 +84,20 @@
 # ==== THE SIXTEEN SYMBOLS LEFT OUT: the vtables are HOST STORAGE ===========
 # All four spans are excluded and would be host arrays (the ov015/ov016/ov022/
 # ov045/ov080 rule). Every dsd symbol inside each span goes out with it:
-#   0x021122b8..0x02112338 135  32 slots  data_ov043_021122b8 +02112320
-#   0x0211238c..0x0211240c 137  32 slots  data_ov043_0211238c +021123e4
+#   0x021122b8..0x02112338 135  32 slots  _ZTV19daObjKm1_Ukishima_c +02112320
+#   0x0211238c..0x0211240c 137  32 slots  _ZTV21daObjKm1_Kurumajiku_c +021123e4
 #                                          +021123f4 +02112404
-#   0x0211245c..0x021124dc 136  32 slots  _ZTV11RickshawBdw +02112464
+#   0x0211245c..0x021124dc 136  32 slots  _ZTV17daObjKm1_Kuruma_c +02112464
 #                                          +02112494 +021124ac +021124c4
 #                                          +021124d4
-#   0x0211255c..0x021125dc 134  32 slots  _ZTV19RickshawPlatformBdw +02112570
+#   0x0211255c..0x021125dc 134  32 slots  _ZTV17daObjKm1_Dorifu_c +02112570
 #                                          +02112590 +021125cc
 #
 # ==== THE TWO PER-SOURCE -D RENAMES THIS MOUNT STILL NEEDS ================
 # Not applied -- the lane parked before the CMake commit. Recorded here so the
 # next lane does not have to re-find them.
 #
-# (1) src/func_ov043_02111320.c (id 135 InitResources) spells two ov043 bss
+# (1) src/game/actors/d_a_obj_km1_ukishima.cpp (id 135 InitResources) spells two ov043 bss
 #     cells with ov047 names: data_ov047_021125e8 and data_ov047_021125e0. The
 #     ROM instruction encodes the right ADDRESS; the src names a symbol
 #     belonging to a different overlay at that address, and ov043/ov047 are
@@ -104,10 +110,10 @@
 #
 # (2) THE G0 TRAP, AND IT IS THE LIVE ONE. Two ov043 bodies spell a global G0
 #     and they mean DIFFERENT OBJECTS:
-#       src/func_ov043_0211123c.c (CleanupResources) releases two
+#       src/game/actors/d_a_obj_km1_ukishima.cpp (CleanupResources) releases two
 #         SharedFilePtrs as G0 and G1 -- the ROM's 0x021125e8 and 0x021125e0,
 #         this class's own bss cells.
-#       src/func_ov043_021111e4.c (the deleting destructor) passes G0 to
+#       src/game/actors/d_a_obj_km1_ukishima.cpp (the deleting destructor) passes G0 to
 #         Memory::Deallocate as the HEAP -- the ROM's 0x020a0eac, the game heap
 #         pointer.
 #     hal/cxx_aliases.cpp has already bound the single global name _G0 to
@@ -117,12 +123,12 @@
 #     (SignPost's KCL). NEITHER would fail at link. This is the CannonHatch/
 #     MetalNet failure shape and the ov100 PATH_LIFT case (CMakeLists R-block
 #     near "G0=port_pathlift_file0"), and it takes the same remedy: a per-source
-#     -D on func_ov043_0211123c.c ONLY, to private names this lane owns, bound
+#     -D on _ZN19daObjKm1_Ukishima_c16CleanupResourcesEv.c ONLY, to private names this lane owns, bound
 #     onto the mounted objects with a C-name /alternatename. It must NOT go
 #     straight to the mount names: include/decl_common.h:396-397 declares
 #     `extern int G1[];` while the same header declares the data_ov043_* cells
 #     as scalars, and MSVC rejects the redeclaration (C2040).
-#     func_ov043_021111e4.c must be left ALONE -- its G0 is already right.
+#     _ZN19daObjKm1_Ukishima_cD0Ev.c must be left ALONE -- its G0 is already right.
 #
 # ==== WHAT WOULD BE MOUNTED ================================================
 # 105 symbols: every ov043 .data / .bss symbol that is not inside one of the
@@ -146,15 +152,15 @@ data_ov043_021120d8 data_ov043_021120f8 data_ov043_02112104
 data_ov043_02112118 data_ov043_02112138 data_ov043_02112158
 data_ov043_02112178 data_ov043_02112198 data_ov043_021121b8
 data_ov043_021121c0 data_ov043_021121dc data_ov043_021121f8
-data_ov043_02112258 data_ov043_02112270 data_ov043_0211227c
-DiamondLift_SpawnInfo data_ov043_0211229c data_ov043_02112338
-data_ov043_02112344 data_ov043_02112350 data_ov043_02112358
-RickshawBdw_SpawnInfo data_ov043_0211240c data_ov043_02112418
-data_ov043_0211241c data_ov043_02112424 data_ov043_02112428
-data_ov043_02112434 RickshawPlatformBdw_SpawnInfo data_ov043_0211244c
-data_ov043_021124dc data_ov043_021124e8 data_ov043_021124ec
-data_ov043_021124f8 StairsBdw_SpawnInfo data_ov043_02112518
-data_ov043_02112530 data_ov043_021125e0 data_ov043_021125e8
+data_ov043_02112258 _ZTI19daObjKm1_Ukishima_c _ZTS19daObjKm1_Ukishima_c
+g_profile_KM1_UKISHIMA data_ov043_0211229c _ZTI21daObjKm1_Kurumajiku_c
+data_ov043_02112344 _ZTS21daObjKm1_Kurumajiku_c data_ov043_02112358
+_ZTI17daObjKm1_Kuruma_c data_ov043_02112418
+data_ov043_0211241c _ZTS17daObjKm1_Kuruma_c data_ov043_02112428
+data_ov043_02112434 data_ov043_0211244c
+_ZTI17daObjKm1_Dorifu_c _ZTS17daObjKm1_Dorifu_c
+
+ data_ov043_021125e0 data_ov043_021125e8
 data_ov043_021125f0 data_ov043_021125fc data_ov043_02112608
 data_ov043_02112610 data_ov043_02112618 data_ov043_02112624
 data_ov043_02112630 data_ov043_02112638 data_ov043_02112640
@@ -183,10 +189,10 @@ data_ov043_021126fc data_ov043_02112708 data_ov043_02112714
 # tools/vtspan.py automates the semantic-tail route the note above ran by hand.
 # `python port/tools/vtspan.py . <table>` on all four:
 #
-#   data_ov043_021122b8      32   tail 32  typeinfo 32  terminator 32  run 32
-#   data_ov043_0211238c      32   tail 32  typeinfo 32  terminator 32  run 32
-#   _ZTV11RickshawBdw        32   tail 32  typeinfo 32  terminator 32  run 32
-#   _ZTV19RickshawPlatformBdw 32  tail 32  typeinfo --  terminator 32  run 32
+#   _ZTV19daObjKm1_Ukishima_c      32   tail 32  typeinfo 32  terminator 32  run 32
+#   _ZTV21daObjKm1_Kurumajiku_c      32   tail 32  typeinfo 32  terminator 32  run 32
+#   _ZTV17daObjKm1_Kuruma_c        32   tail 32  typeinfo 32  terminator 32  run 32
+#   _ZTV17daObjKm1_Dorifu_c 32  tail 32  typeinfo --  terminator 32  run 32
 #
 # "slot 31 is Platform::Kill and slot 32 is not a code pointer" on all four,
 # and only the next-dsd-symbol route disagrees (26/22/2/5), which is the
@@ -199,26 +205,26 @@ data_ov043_021126fc data_ov043_02112708 data_ov043_02112714
 # the name string. Read out of extracted/overlays/overlay_0043.bin:
 #
 #   table       vtable[-1]  NAME (the ROM's own)        id   dsd calls it
-#   0x021122b8  0x02112270  19daObjKm1_Ukishima_c       135  data_ov043_021122b8
-#   0x0211238c  0x02112338  21daObjKm1_Kurumajiku_c     137  data_ov043_0211238c
-#   0x0211245c  0x0211240c  17daObjKm1_Kuruma_c         136  _ZTV11RickshawBdw
-#   0x0211255c  0x021124dc  17daObjKm1_Dorifu_c         134  _ZTV19RickshawPlatformBdw
+#   0x021122b8  0x02112270  19daObjKm1_Ukishima_c       135  _ZTV19daObjKm1_Ukishima_c
+#   0x0211238c  0x02112338  21daObjKm1_Kurumajiku_c     137  _ZTV21daObjKm1_Kurumajiku_c
+#   0x0211245c  0x0211240c  17daObjKm1_Kuruma_c         136  _ZTV17daObjKm1_Kuruma_c
+#   0x0211255c  0x021124dc  17daObjKm1_Dorifu_c         134  _ZTV17daObjKm1_Dorifu_c
 #
 # and the id column is re-pinned independently by each id's own Spawn: the
-# vtable-store literal in DiamondLift_Spawn 0x021113cc is 0x021122b8,
-# RickshawBdw_Spawn 0x021114dc is 0x0211238c, RickshawPlatformBdw_Spawn
-# 0x021115f4 is 0x0211245c and StairsBdw_Spawn 0x0211176c is 0x0211255c. A
+# vtable-store literal in daObjKm1_Ukishima_c_classInit 0x021113cc is 0x021122b8,
+# daObjKm1_Kurumajiku_c_classInit 0x021114dc is 0x0211238c, daObjKm1_Kuruma_c_classInit
+# 0x021115f4 is 0x0211245c and daObjKm1_Dorifu_c_classInit 0x0211176c is 0x0211255c. A
 # bijection, and it reproduces the note's cast map exactly.
 #
 # So the shift is real and it is worse than "one class over": the ENGLISH
 # recovered names and the SPAWN names disagree with each other. dsd's
-# _ZTV11RickshawBdw and the _ZN11RickshawBdw* bodies both belong to id 136,
-# while RickshawBdw_Spawn belongs to id 137. Whoever seats this must take the
+# _ZTV17daObjKm1_Kuruma_c and the _ZN11RickshawBdw* bodies both belong to id 136,
+# while daObjKm1_Kurumajiku_c_classInit belongs to id 137. Whoever seats this must take the
 # ids from the Spawn-store column above and never from a name.
 #
 # ==== THE THIRD AND FOURTH TRAPS, NEITHER ON THE NOTE ABOVE =================
 #
-# (3) src/RickshawBdw_Spawn.c (id 137's factory) has BOTH halves of the
+# (3) src/game/actors/d_a_obj_km1_kurumajiku.cpp (id 137's factory) has BOTH halves of the
 #     disease in one four-line body:
 #
 #         p[0] = (int)_ZTV21daObjKm1_Kurumajiku_c;
@@ -228,7 +234,7 @@ data_ov043_021126fc data_ov043_02112708 data_ov043_02112714
 #         LDR r1, =0x02109320   LDR r0, =0x0211238c
 #         STR r1, [r4, #0]      STR r0, [r4, #0]
 #     so the spelled name _ZTV21daObjKm1_Kurumajiku_c MEANS 0x02109320, which
-#     is data_ov002_02109320, a BASE table in another overlay -- the name is
+#     is _ZTV17daObjKurumajiku_c, a BASE table in another overlay -- the name is
 #     attached to the wrong address by a whole class. The class's real table,
 #     0x0211238c, is the one hidden behind the placeholder VT1. Seating 137
 #     without fixing both installs a base vtable and never fails at link.
@@ -238,42 +244,51 @@ data_ov043_021126fc data_ov043_02112708 data_ov043_02112714
 #
 # (4) id 135's own D1 and D0 spell the same two-step by name and by
 #     placeholder respectively, and both mean the same pair:
-#       src/func_ov043_021111a0.c writes _ZTV19daObjKm1_Ukishima_c then
+#       src/game/actors/d_a_obj_km1_ukishima.cpp writes _ZTV19daObjKm1_Ukishima_c then
 #         _ZTV10dBgActor_c -- ROM 0x021122b8 then 0x0210ae38.
-#       src/func_ov043_021111e4.c writes VT0 then VT1 -- the same two.
+#       src/game/actors/d_a_obj_km1_ukishima.cpp writes VT0 then VT1 -- the same two.
 #     0x0210ae38 is the Platform base table. THAT ONE IS ALREADY SOLVED in
 #     this tree: hal/actor_classes.cpp:583 defines `void *_ZTV10dBgActor_c[32]`
-#     and hal_fill_platform_vtable fills it and _ZTV8Platform identically, with
+#     and hal_fill_platform_vtable fills it and _ZTV10dBgActor_c identically, with
 #     a trap in every slot nothing is supposed to dispatch. So D1 needs no
 #     rename at all and D0 needs VT0/VT1 only. Its G0 is 0x020a0eac, the game
 #     heap, which cxx_aliases.cpp already binds correctly -- the note above is
-#     right that func_ov043_021111e4 must be left alone on G0.
+#     right that _ZN19daObjKm1_Ukishima_cD0Ev must be left alone on G0.
 #
-#     G0/G1 on src/func_ov043_0211123c.c re-verified by disassembly, and the
+#     G0/G1 on src/game/actors/d_a_obj_km1_ukishima.cpp re-verified by disassembly, and the
 #     note above is exact: 0x0211125c LDR -> 0x021125e8 then Release, 0x02111264
-#     LDR -> 0x021125e0 then Release. src/func_ov043_02111320.c loads the same
+#     LDR -> 0x021125e0 then Release. src/game/actors/d_a_obj_km1_ukishima.cpp loads the same
 #     two, which is why its ov047-spelled names are the same two cells.
 #
 # ==== WHAT A SEAT ACTUALLY COSTS, SO THE NEXT LANE CAN SIZE IT =============
 # Cheapest useful slice is id 135 ALONE: six of level 35's eight skipped
 # instances, and the only one of the three whose factory is clean
-# (DiamondLift_Spawn.c names data_ov043_021122b8 outright, no placeholder).
+# (daObjKm1_Ukishima_c_classInit.c names _ZTV19daObjKm1_Ukishima_c outright, no placeholder).
 # It needs: the mount line, one host array for 0x021122b8, an alias for
-# _ZTV19daObjKm1_Ukishima_c onto it, per-source -D on func_ov043_02111320
-# (the two ov047 names) and func_ov043_0211123c (G0/G1) and func_ov043_021111e4
+# _ZTV19daObjKm1_Ukishima_c onto it, per-source -D on _ZN19daObjKm1_Ukishima_c13InitResourcesEv
+# (the two ov047 names) and _ZN19daObjKm1_Ukishima_c16CleanupResourcesEv (G0/G1) and _ZN19daObjKm1_Ukishima_cD0Ev
 # (VT0/VT1), the four sinits behind a bring-up, one registry row and one 32-slot
 # fill. Its slots 6 and 9 are ov043's own bodies, so it needs no ov002 base
 # body -- ids 134 and 137 do (0x020b4bfc/0x020b4bc4 and 0x020b6b38/0x020b6b10),
 # which is four more unlinked TUs and two more classes' worth of faces.
 #
 # ONE ADJUDICATION ALREADY DONE FOR THAT SEAT: id 135's slot 9,
-# src/func_ov043_02111280.cpp, is the ModelAnim slot-5 shape wave 19 swept for
+# src/game/actors/d_a_obj_km1_ukishima.cpp, is the ModelAnim slot-5 shape wave 19 swept for
 # -- a local six-virtual shadow over the member at +0xd4 dispatching the sixth.
 # It is SAFE, and not because the header says so (wave 19's first method
 # finding is that header names cannot adjudicate this). It is safe because of
-# how the member is CONSTRUCTED: func_ov043_02111320 fills +0xd4 with
+# how the member is CONSTRUCTED: _ZN19daObjKm1_Ukishima_c13InitResourcesEv fills +0xd4 with
 # Model::LoadFile into ModelBase::SetFile and +0x124 with MeshCollider::LoadFile
 # into MovingMeshCollider::SetFile, which is the Platform base layout ov022
 # records for its own cast, so +0xd4 is a plain Model. _ZTV5Model IS
 # dual-filled at [4] and [5], so the ROM's slot 5 lands on Model::Render. This
 # is the SlideDecoration ruling, not the Snufit/Swoop/Dorrie/MontyMole one.
+
+
+# RETIRED at ALIAS2 (wave 8, the main -> port sync). Each symbol below was
+# hosted here as a ROM data blob AND is now defined by a translation unit the
+# build compiles, so the link reported it twice (LNK2005). The generator input
+# is the place to fix that: build/port/host-src/ov043_syms.c is its output and is
+# regenerated from this list on every configure.
+#   g_profile_KM1_DORIFU                       now defined by d_a_obj_km1_dorifu.cpp.obj
+#   data_ov043_02112518                        now defined by d_a_obj_km1_dorifu.cpp.obj

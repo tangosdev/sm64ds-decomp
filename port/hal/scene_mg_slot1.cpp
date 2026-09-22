@@ -56,7 +56,7 @@
 //           -> dScMgSlot1_c   data_ov006_0213eb40  36 slots
 //
 //     and a NESTED SUB-OBJECT at this+0x4660:
-//           dScMgSlot1_c::betIcon_c  data_ov006_0213e5d4   2 slots
+//           dScMgSlot1_c::betIcon_c  _ZTVN12dScMgSlot1_c9betIcon_cE   2 slots
 //
 // The hierarchy is TWO deep, checked section 13's way rather than off the
 // type_info alone: the factory writes 0x0213eb40 into [this] once and writes
@@ -74,12 +74,12 @@
 // ---- 4. THE WIDTH IS 36 AND THIS CLASS IS THE ONE SECTION 11 WARNS ABOUT --
 //
 // port/mg_fanout_costs.txt section 11 names 0x16c by hand: "Index 36 of its
-// table lands exactly on MgBingoBallSlotsShot_SpawnInfo (0x0213ebd0), so a
+// table lands exactly on g_profile_MG_SMARTBALL (0x0213ebd0), so a
 // 37-slot fill there overwrites word 0 of id 0x178's SpawnInfo, which is
 // 0x178's factory pointer." Scene 376 IS SEATED in this tree. All four checks
 // were re-run on the shipped image before a word was written here:
 //
-//   1. SPAN     0x0213eb40 to MgBingoBallSlotsShot_SpawnInfo at 0x0213ebd0 is
+//   1. SPAN     0x0213eb40 to g_profile_MG_SMARTBALL at 0x0213ebd0 is
 //               0x90 = 36 words EXACTLY, and the next symbol is a named record
 //               rather than padding, so the check is exact rather than an
 //               upper bound.
@@ -118,7 +118,7 @@
 //
 // ---- 6. THE ONE FLOOR IS RETIRED. Run mg10, lane F364 --------------------
 //
-//     func_ov006_0210c9e0   vtable slot 6, the Behavior, 0x81c bytes
+//     _ZN12dScMgSlot1_c8BehaviorEv   vtable slot 6, the Behavior, 0x81c bytes
 //
 // It is decompiled and seated. src/func_ov006_0210c9e0.cpp, slice line 24, and
 // slot 6 above is a forwarder into it rather than a counting trap.
@@ -182,35 +182,35 @@ int      IsMinigameActorID(unsigned int id);
    and leaving the mounted table alone would leave live wild DS pointers in a
    table the factory installs. */
 extern unsigned char data_ov006_0213eb40[];   /* dScMgSlot1_c,            36 */
-extern unsigned char data_ov006_0213e5d4[];   /* dScMgSlot1_c::betIcon_c,  2 */
+extern unsigned char _ZTVN12dScMgSlot1_c9betIcon_cE[];   /* dScMgSlot1_c::betIcon_c,  2 */
 extern unsigned char data_ov004_020bc0c0[];   /* dScMgBase_c,             36 */
-extern unsigned char data_ov006_0213e560[];   /* the SpawnInfo record        */
+extern unsigned char g_profile_MG_SLOT1[];   /* the SpawnInfo record        */
 
 /* the class's eight overrides, ALL EIGHT now that slot 6 has a body. Every
    signature below is the src TU's own, not a guess: slot 18 really does take
    the ride-through int, slot 9's symbol really is the mangled name its config
    symbol carries, and slot 6 takes the object as a char* and returns the 1 the
    ROM's single exit returns. */
-int   func_ov006_0210d1fc(void *c);           /* slot  0 InitResources */
-int   func_ov006_0210c9e0(char *c);           /* slot  6 Behavior      */
-int   _ZN3OAM7SECONDSE(unsigned char *c);     /* slot  9 Render        */
-void *func_ov006_0210a8c0(char *c);           /* slot 16 D2            */
-void *func_ov006_0210a900(char *c);           /* slot 17 D0            */
-void  func_ov006_0210c674(char *c, int i);    /* slot 18 state reset   */
-void  func_ov006_0210c4dc(void *c);           /* slot 27               */
-void  func_ov006_0210c4b8(void *c);           /* slot 28               */
+int   _ZN12dScMgSlot1_c13InitResourcesEv(void *c);           /* slot  0 InitResources */
+int   _ZN12dScMgSlot1_c8BehaviorEv(char *c);           /* slot  6 Behavior      */
+int   _ZN12dScMgSlot1_c6RenderEv(unsigned char *c);     /* slot  9 Render        */
+void *_ZN12dScMgSlot1_cD1Ev(char *c);           /* slot 16 D2            */
+void *_ZN12dScMgSlot1_cD0Ev(char *c);           /* slot 17 D0            */
+void  _ZN12dScMgSlot1_c13OnYoshiTryEatEi(char *c, int i);    /* slot 18 state reset   */
+void  _ZN12dScMgSlot1_c15OnHitByMegaCharEv(void *c);           /* slot 27               */
+void  _ZN12dScMgSlot1_c19OnHitFromUnderneathEv(void *c);           /* slot 28               */
 
 /* dScMgSlot1_c::betIcon_c's two */
-void  func_ov006_0210c410(char *c);           /* betIcon slot 0 Update */
-void  func_ov006_0210c374(char *c);           /* betIcon slot 1 Render */
+void  _ZN12dScMgSlot1_c9betIcon_c8BehaviorEv(char *c);           /* betIcon slot 0 Update */
+void  _ZN12dScMgSlot1_c9betIcon_c6RenderEv(char *c);           /* betIcon slot 1 Render */
 
 /* and dThIcon_c's two, the sub-object's BASE class in ov001 -- see the hosted
    table at the foot of this file */
-void  func_ov001_020ab550(char *c);           /* dThIcon_c slot 0 */
-void  func_ov001_020ab54c(void);              /* dThIcon_c slot 1, empty */
+void  _ZN9dThIcon_c8BehaviorEv(char *c);           /* dThIcon_c slot 0 */
+void  _ZN9dThIcon_c6RenderEv(void);              /* dThIcon_c slot 1, empty */
 
 /* the factory */
-void *func_ov006_0210d6b8(void);
+void *dScMgSlot1_c_classInit(void);
 
 void port_scene_slot1_hits(void);
 
@@ -233,7 +233,7 @@ static void    *g_s1_self;
 #define BET(n)  (++g_s1_bet_hits[(n)])
 
 static int __fastcall s1_init(void *s, void *)
-{ S1(0);  const int r = func_ov006_0210d1fc(s);
+{ S1(0);  const int r = _ZN12dScMgSlot1_c13InitResourcesEv(s);
   /* the GaplessMinigames latch, for hal/scene_mg.cpp's reason: every seated
      minigame calls it so the ones the gapless table does not name can say
      "unsupported" instead of doing nothing quietly. */
@@ -241,7 +241,7 @@ static int __fastcall s1_init(void *s, void *)
 
 /* ---- THE FLOOR, RETIRED. Run mg10, lane F364 -----------------------------
  *
- * func_ov006_0210c9e0, vtable slot 6, 0x81c bytes, is decompiled and seated.
+ * _ZN12dScMgSlot1_c8BehaviorEv, vtable slot 6, 0x81c bytes, is decompiled and seated.
  * src/func_ov006_0210c9e0.cpp is NONMATCHING and its banner says how far it
  * got: size exact at 519 words, 431 byte-identical, 42 relocation slots whose
  * destinations all agree with config/arm9/overlays/ov006/relocs.txt, and 46
@@ -255,14 +255,14 @@ static int __fastcall s1_init(void *s, void *)
  * and the state machine is not moving. That is a different failure from either
  * number alone, and it is the one this seat has to disprove. */
 static int __fastcall s1_beh(void *s, void *)
-{ S1(6); ++g_s1_beh_calls; return func_ov006_0210c9e0((char *)s); }
+{ S1(6); ++g_s1_beh_calls; return _ZN12dScMgSlot1_c8BehaviorEv((char *)s); }
 
 static int __fastcall s1_render(void *s, void *)
-{ S1(9);  return _ZN3OAM7SECONDSE((unsigned char *)s); }
+{ S1(9);  return _ZN12dScMgSlot1_c6RenderEv((unsigned char *)s); }
 static void *__fastcall s1_d2(void *s, void *)
-{ S1(16); return func_ov006_0210a8c0((char *)s); }
+{ S1(16); return _ZN12dScMgSlot1_cD1Ev((char *)s); }
 static void *__fastcall s1_d0(void *s, void *)
-{ S1(17); return func_ov006_0210a900((char *)s); }
+{ S1(17); return _ZN12dScMgSlot1_cD0Ev((char *)s); }
 /* THE RIDE-THROUGH IS LOAD-BEARING and is not optional on any slot-18 thunk.
    Every slot-18 dispatch site in both overlay images passes one argument (lane
    BASESET's 22-site census, runs/mg5/out/baseset/slot18_19_scan.txt), and the
@@ -271,7 +271,7 @@ static void *__fastcall s1_d0(void *s, void *)
    bytes, and the dispatcher's own `pop ebp; ret` then takes its saved frame
    pointer as a return address.
    THIS CLASS IS THE ONE WHERE THE ARGUMENT IS ALSO READ rather than only
-   pushed: src/func_ov006_0210c674.c branches on it (4 copies +0x4709 to
+   pushed: src/_ZN12dScMgSlot1_c13OnYoshiTryEatEi.cpp branches on it (4 copies +0x4709 to
    +0x4706, 3 calls func_ov006_0210c638), and the ROM Behavior dispatches this
    slot with r1 = 4 at 0x0210cf48 and r1 = 5 at 0x0210cf80. So the parameter is
    forwarded, not just absorbed. */
@@ -279,17 +279,17 @@ static unsigned g_s1_reset_args[8];   /* 0..6 seen as themselves, 7 = higher */
 static int __fastcall s1_reset(void *s, void *, int ridethrough)
 { S1(18);
   ++g_s1_reset_args[(unsigned)ridethrough < 7u ? (unsigned)ridethrough : 7u];
-  func_ov006_0210c674((char *)s, ridethrough); return 1; }
+  _ZN12dScMgSlot1_c13OnYoshiTryEatEi((char *)s, ridethrough); return 1; }
 static int __fastcall s1_v27(void *s, void *)
-{ S1(27); func_ov006_0210c4dc(s); return 0; }
+{ S1(27); _ZN12dScMgSlot1_c15OnHitByMegaCharEv(s); return 0; }
 static int __fastcall s1_v28(void *s, void *)
-{ S1(28); func_ov006_0210c4b8(s); return 0; }
+{ S1(28); _ZN12dScMgSlot1_c19OnHitFromUnderneathEv(s); return 0; }
 
 /* ---- the betIcon sub-object's two ---------------------------------------- */
 static void __fastcall s1_bet_update(void *s, void *)
-{ BET(0); func_ov006_0210c410((char *)s); }
+{ BET(0); _ZN12dScMgSlot1_c9betIcon_c8BehaviorEv((char *)s); }
 static void __fastcall s1_bet_render(void *s, void *)
-{ BET(1); func_ov006_0210c374((char *)s); }
+{ BET(1); _ZN12dScMgSlot1_c9betIcon_c6RenderEv((char *)s); }
 
 /* ---- dThIcon_c, the betIcon sub-object's BASE class, hosted --------------
  *
@@ -311,8 +311,8 @@ static void __fastcall s1_bet_render(void *s, void *)
  *   0x020ad498  0x020ab54c                slot 1
  *   0x020ad49c  the next config symbol, so the table is exactly 2 words
  *
- * and src/func_ov006_0210c410.c -- the DERIVED betIcon slot 0 -- calls
- * func_ov001_020ab550 directly, which is the base showing through the
+ * and src/_ZN12dScMgSlot1_c9betIcon_c8BehaviorEv.cpp -- the DERIVED betIcon slot 0 -- calls
+ * _ZN9dThIcon_c8BehaviorEv directly, which is the base showing through the
  * override. In overlay_0000.bin the same address is the middle of the string
  * ".../togezo.bmd", which is neither a type_info nor a table.
  *
@@ -329,9 +329,9 @@ static void __fastcall s1_bet_render(void *s, void *)
  * that is currently dead is a wild call the day someone makes it live, and
  * both bodies are already in this binary. */
 static void __fastcall s1_thicon_update(void *s, void *)
-{ func_ov001_020ab550((char *)s); }
+{ _ZN9dThIcon_c8BehaviorEv((char *)s); }
 static void __fastcall s1_thicon_render(void *, void *)
-{ func_ov001_020ab54c(); }
+{ _ZN9dThIcon_c6RenderEv(); }
 
 /* DSSTATE_BEGIN/END because this is HOSTED DS STORAGE and not host bookkeeping:
    port/tools/dsstate_guard.py failed the link over it until the segment was
@@ -395,19 +395,19 @@ extern "C" void port_scene_fill_slot1(void)
 {
     void **base = (void **)data_ov004_020bc0c0;
     void **vt   = (void **)data_ov006_0213eb40;
-    void **bet  = (void **)data_ov006_0213e5d4;
+    void **bet  = (void **)_ZTVN12dScMgSlot1_c9betIcon_cE;
 
     /* THE BASE TABLE IS FILLED HERE TOO AND IT IS NOT CEREMONY, for
        hal/scene_mg_flower.cpp's reason: on a tree that carries an earlier
        minigame row this is a second pass over words that are already host
        pointers and finds nothing, and it is here so this class does not depend
        on another class's row existing. The factory's first act is
-       func_ov004_020b2adc, which writes data_ov004_020bc0c0 into the object's
+       _ZN11dScMgBase_cC2Ev, which writes data_ov004_020bc0c0 into the object's
        first word before the derived table lands. */
     port_scene_mg_fill_shared(base, 36);
 
     /* THE DERIVED TABLE, 36 AND NOT 37. Section 11 names this exact table: a
-       37th write lands on MgBingoBallSlotsShot_SpawnInfo's factory word and
+       37th write lands on g_profile_MG_SMARTBALL's factory word and
        corrupts a SHIPPED game. The four checks are in the header and in
        port/slice_s364.txt section 3. */
     port_scene_mg_fill_shared(vt, 36);
@@ -461,13 +461,13 @@ extern "C" void port_scene_fill_slot1(void)
    factory, but the forwarder is kept anyway for the reason title_spawn,
    port_mg_curling_spawn and port_mg_flower_spawn are: it gives the seat one
    place to observe the object without the registry table growing a column.
-   THE FACTORY NEEDS NO DISPLACEMENT RULING. src/func_ov006_0210d6b8.cpp calls
-   func_ov004_020b2adc(p) WITH the pointer, where dScMgCup_c's factory calls
+   THE FACTORY NEEDS NO DISPLACEMENT RULING. src/d_s_mg_slot1.cpp calls
+   _ZN11dScMgBase_cC2Ev(p) WITH the pointer, where dScMgCup_c's factory calls
    the same base constructor with none and rides r0 through; the ROM agrees --
    `movs r4, r0` leaves r0 holding p across the call at 0x0210d6cc. */
 extern "C" void *port_mg_slot1_spawn(void)
 {
-    void *p = func_ov006_0210d6b8();
+    void *p = dScMgSlot1_c_classInit();
     g_s1_self = p;
     return p;
 }
@@ -504,13 +504,13 @@ extern "C" void port_scene_slot1_hits(void)
      * machine every frame and the state machine is not moving. This line was
      * the trap's headline and it is kept as the seat's, unchanged in shape so
      * a run against an older build compares directly. */
-    std::printf("[scene] dScMgSlot1_c BEHAVIOR func_ov006_0210c9e0 (slot 6, "
+    std::printf("[scene] dScMgSlot1_c BEHAVIOR _ZN12dScMgSlot1_c8BehaviorEv (slot 6, "
                 "0x81c, src seated): %u call(s)\n", g_s1_beh_calls);
 
     /* THE SLOT-18 SECOND ARGUMENT, CENSUSED RATHER THAN ASSUMED. Run mg9 lane
        LKY found a class whose slot-18 body READS its second argument where
        every earlier seated class ignored it. This one reads it too --
-       src/func_ov006_0210c674.c branches on 4 and on 3, and the ROM Behavior
+       src/_ZN12dScMgSlot1_c13OnYoshiTryEatEi.cpp branches on 4 and on 3, and the ROM Behavior
        dispatches the slot with 4 at 0x0210cf48 and with 5 at 0x0210cf80 -- so
        the thunk FORWARDS it rather than only cleaning it. Printing the
        distribution is what turns "forwarded" into a measurement: a run where

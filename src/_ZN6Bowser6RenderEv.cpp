@@ -10,7 +10,7 @@ extern void _ZN15TextureSequence6UpdateER15ModelComponents(void* a, void* b);
 
 int Bowser::Render()
 {
-  if(unk_41c < 8) return 1;
+  if(mOpacity < 8) return 1;
   _ZN9Animation7AdvanceEv((char*)&mTextureSequence);
   _ZN15TextureSequence6UpdateER15ModelComponents(((char*)this)+0x138, ((char*)this)+0xdc);
   ((Obj*)((char*)&mModelAnim))->m((char*)&mScaleX);

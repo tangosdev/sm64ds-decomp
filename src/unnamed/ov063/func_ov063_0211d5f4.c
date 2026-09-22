@@ -7,9 +7,9 @@ typedef short s16;
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern void MulVec3Mat4x3(struct Vector3* in, void* m, struct Vector3* out);
 extern void AddVec3(struct Vector3* a, struct Vector3* b, struct Vector3* c);
-extern void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     void* self, void* sm, void* mtx, int fx, int t, unsigned int u);
-extern void _ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
+extern void _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
     void* self, void* sm, void* mtx, int fx, int t1, int t2, unsigned int u);
 
 extern struct Vector3 data_020a0e68;
@@ -60,10 +60,10 @@ void func_ov063_0211d5f4(char* self)
     *(int*)(self + 0x454) = *(int*)(self + 0x60) >> 3;
     *(int*)(self + 0x458) = out.z >> 3;
 
-    _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+    _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
         self, self + 0x3d4, self + 0x45c, 0xf0000, 0x50000, 0xf);
-    _ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
+    _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
         self, self + 0x384, self + 0x3fc, 0xa0000, 0x50000, 0x110000, 0xf);
-    _ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
+    _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
         self, self + 0x3ac, self + 0x42c, 0x80000, 0x50000, 0xf0000, 0xf);
 }

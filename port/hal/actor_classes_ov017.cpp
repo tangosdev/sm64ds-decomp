@@ -7,7 +7,7 @@
 // skipped (0 classes).
 //
 //   id  name        x on L9  factory          table                   width
-//   62  SHIP_WATER   1       ShipWater_Spawn  0x02111bf8 _ZTV9ShipWater  32
+//   62  SHIP_WATER   1       daObjKsWater_c_classInit  0x02111bf8 _ZTV9ShipWater  32
 //
 // An 832-byte Platform: Model at +0xd4, MovingMeshCollider at +0x124, the
 // collider transform source at +0x2ec, and a TextureTransformer at +0x320 its
@@ -32,9 +32,9 @@
 // over it, says every one of InitResources's four objects is an OV017 symbol:
 //     pool 0x02111470 -> 0x02111c88   spelled correctly
 //     pool 0x02111474 -> 0x02111a60   spelled data_ov056_02111a60
-//     pool 0x02111478 -> 0x02111c80   spelled &_ZN16FloatingFloorBfsD0Ev
+//     pool 0x02111478 -> 0x02111c80   spelled &_ZN15daObjKm2_Gura_cD0Ev
 //     pool 0x0211147c -> 0x02111a94   spelled data_ov055_02111a94
-// src/_ZN16FloatingFloorBfsD0Ev.c is in port/slice_w1l4.txt and its symbol is
+// src/game/actors/d_a_obj_km2_gura.cpp is in port/slice_w1l4.txt and its symbol is
 // in build/port/walk_window.map RIGHT NOW, so without the rename
 // MeshCollider::LoadFile is handed the address of an ov045 destructor as a
 // file pointer: it resolves, it fails nowhere at link, and it reads a function
@@ -76,13 +76,15 @@
 // seated id 13 the way this paragraph asked for (a per-symbol ov064 class
 // mount, port/ov064_syms.txt's wave-3 block), so the walk now finds the level's
 // one chest and the gate is a real test again.
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
@@ -90,28 +92,28 @@ extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include "dsstate_seg.h"
 #include <cstdlib>
 
-#include "Actor.h"
-#include "ActorBase.h"
+#include "dActor_c.h"
+#include "fBase_c.h"
 
 extern "C" {
 /* the arm9 shared half */
-int _ZN5Actor19BeforeInitResourcesEv(void *self);              /* slot 1  */
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
-int _ZN5Actor14BeforeBehaviorEv(void *self);                   /* slot 7  */
-int _ZN5Actor12BeforeRenderEv(void *self);                     /* slot 10 */
-int _ZN5Actor13OnYoshiTryEatEv(void *self);                    /* slot 18 */
-void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
-int _ZN5Actor9Virtual50Ev(void *self);                         /* slot 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);              /* slot 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);              /* slot 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
-int _ZN5Actor16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
-void _ZN8Platform4KillEv(void *self);                              /* slot 31 */
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);              /* slot 1  */
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);                   /* slot 7  */
+int _ZN8dActor_c12BeforeRenderEv(void *self);                     /* slot 10 */
+int _ZN8dActor_c13OnYoshiTryEatEv(void *self);                    /* slot 18 */
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
+int _ZN8dActor_c9Virtual50Ev(void *self);                         /* slot 20 */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);              /* slot 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);              /* slot 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
+int _ZN8dActor_c16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
+void _ZN10dBgActor_c4KillEv(void *self);                              /* slot 31 */
 
 const char *port_actor_class_name(unsigned id);   /* hal/actor_registry */
 void port_actor_slot_decline(const char *what);   /* func_02043fdc_hostcopy.cpp */
@@ -126,10 +128,10 @@ void port_ov017_syms_patch(void);
 void __sinit_ov017_0211198c(void);
 
 /* the bodies src spells with C names (port/slice_sweep1_ov017.txt) */
-int *_ZN9ShipWaterD1Ev(int *self);                /* slot 16 */
-int *_ZN9ShipWaterD0Ev(int *self);                /* slot 17 */
-int _ZN9ShipWater13InitResourcesEv(char *self);   /* slot 0, a plain .c body */
-void *ShipWater_Spawn(void);                      /* id 62 */
+int *_ZN14daObjKsWater_cD1Ev(int *self);                /* slot 16 */
+int *_ZN14daObjKsWater_cD0Ev(int *self);                /* slot 17 */
+int _ZN14daObjKsWater_c13InitResourcesEv(char *self);   /* slot 0, a plain .c body */
+void *daObjKsWater_c_classInit(void);                      /* id 62 */
 
 /* the host vtable, excluded from the mount */
 DSSTATE_BEGIN
@@ -160,14 +162,14 @@ DSSTATE_END
    +0xdc and then the plain-Model slot-5 bare call over +0xd4. _ZTV5Model[5] is
    dual-filled in hal/cxxname_bridge.cpp and this class holds no ModelAnim, so
    it is the Tree/ov013 case and not the ModelAnim slot-5 collision. */
-#include "ShipWater.h"
+#include "daObjKsWater_c.h"
 extern "C" {
-int _ZN9ShipWater16CleanupResourcesEv(void *self)
-{ return ((ShipWater *)self)->ShipWater::CleanupResources(); }
-int _ZN9ShipWater8BehaviorEv(void *self)
-{ return ((ShipWater *)self)->ShipWater::Behavior(); }
-int _ZN9ShipWater6RenderEv(void *self)
-{ return ((ShipWater *)self)->ShipWater::Render(); }
+int _ZN14daObjKsWater_c16CleanupResourcesEv(void *self)
+{ return ((daObjKsWater_c *)self)->daObjKsWater_c::CleanupResources(); }
+int _ZN14daObjKsWater_c8BehaviorEv(void *self)
+{ return ((daObjKsWater_c *)self)->daObjKsWater_c::Behavior(); }
+int _ZN14daObjKsWater_c6RenderEv(void *self)
+{ return ((daObjKsWater_c *)self)->daObjKsWater_c::Render(); }
 }
 
 // ---- the trap --------------------------------------------------------------
@@ -189,68 +191,68 @@ OV17_TRAP(13) OV17_TRAP(14)
 #undef OV17_TRAP
 
 static int __fastcall ov17_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall ov17_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall ov17_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 static void __fastcall ov17_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall ov17_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall ov17_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall ov17_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall ov17_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall ov17_pdes(void *s, void *)
-{ ((ActorBase *)s)->ActorBase::OnPendingDestroy(); return 0; }
+{ ((fBase_c *)s)->fBase_c::OnPendingDestroy(); return 0; }
 static int __fastcall ov17_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int __fastcall ov17_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 static int __fastcall ov17_turn_egg(void *s, void *, void *p)
-{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+{ _ZN8dActor_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall ov17_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall ov17_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall ov17_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall ov17_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall ov17_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall ov17_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall ov17_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall ov17_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall ov17_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 static int __fastcall ov17_egg(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 static int __fastcall ov17_kill(void *s, void *)
-{ _ZN8Platform4KillEv(s); return 0; }
+{ _ZN10dBgActor_c4KillEv(s); return 0; }
 
 // ============================================================================
 // SHIP_WATER (62) -- table 0x02111bf8, 32 slots.
 // ============================================================================
 static int __fastcall sw_init(void *s, void *)
-{ return _ZN9ShipWater13InitResourcesEv((char *)s); }
+{ return _ZN14daObjKsWater_c13InitResourcesEv((char *)s); }
 static int __fastcall sw_clean(void *s, void *)
-{ return _ZN9ShipWater16CleanupResourcesEv(s); }
+{ return _ZN14daObjKsWater_c16CleanupResourcesEv(s); }
 static int __fastcall sw_behavior(void *s, void *)
-{ return _ZN9ShipWater8BehaviorEv(s); }
+{ return _ZN14daObjKsWater_c8BehaviorEv(s); }
 static int __fastcall sw_render(void *s, void *)
 { port_actor_render_probe("SHIP_WATER", (char *)s + 0xd4);
-  return _ZN9ShipWater6RenderEv(s); }
+  return _ZN14daObjKsWater_c6RenderEv(s); }
 static int __fastcall sw_d1(void *s, void *)
-{ return (int)(size_t)_ZN9ShipWaterD1Ev((int *)s); }
+{ return (int)(size_t)_ZN14daObjKsWater_cD1Ev((int *)s); }
 static int __fastcall sw_d0(void *s, void *)
-{ return (int)(size_t)_ZN9ShipWaterD0Ev((int *)s); }
+{ return (int)(size_t)_ZN14daObjKsWater_cD0Ev((int *)s); }
 
 // ---- the mount bring-up ----------------------------------------------------
 DSSTATE_BEGIN
@@ -291,7 +293,7 @@ extern "C" void hal_fill_ship_water_vtable(void)
     vt[13] = (void *)ov17_trap13;
     vt[14] = (void *)ov17_trap14;
     vt[15] = (void *)ov17_heap;
-    vt[16] = (void *)sw_d1;
+    vt[16] = (void *)PORT_D16(sw_d1);
     vt[17] = (void *)sw_d0;
     vt[18] = (void *)ov17_yoshi;
     vt[19] = (void *)ov17_turn_egg;

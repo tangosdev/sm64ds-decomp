@@ -12,7 +12,7 @@ void func_ov063_02118f74(char *c) {
     int r5v;
     unsigned char mode;
 
-    *(unsigned short *)(((long long)(int)(c + 0x5d4))) &= ~0x40;
+    *(unsigned short *)(c + 0x5d4) &= ~0x40;
     mode = *(unsigned char *)(c + 0x5ca);
     if (mode == 3) {
         a2 = 0x180;

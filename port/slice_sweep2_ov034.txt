@@ -15,7 +15,7 @@
 # _ZN7Wiggler8BehaviorEv (0x02112b5c, 0x6e0 bytes, vtable slot 6) had NO delink
 # block in config/arm9/overlays/ov034/delinks.txt and no src file anywhere in
 # the tree -- the only such symbol in the overlay. Main matched it at 36e8cbcce
-# (PR #2008) and lane prop18 propagated src/_ZN7Wiggler8BehaviorEv.c here
+# (PR #2008) and lane prop18 propagated src/_ZN7Wiggler8BehaviorEv.cpp here
 # VERBATIM, by address, blob 70a58eb36714d32803108c480fc7a9c9737a288d.
 #
 # READ THE BANNER BEFORE READING THE SLICE ROW. It is a DECLARED NONMATCHING
@@ -58,17 +58,17 @@
 #   src/func_ov034_021125b8.cpp   -> port/unmatched/Wiggler_StateEnter.cpp
 #   src/func_ov034_02112604.cpp   -> port/unmatched/Wiggler_StateTick.cpp
 #   src/_ZN7Wiggler6RenderEv.cpp  -> port/unmatched/Wiggler_Render.cpp
-#   src/Wiggler_Spawn.c           -> port_factory_wiggler in
+#   src/d_a_hanachan.c           -> port_factory_wiggler in
 #                                    hal/actor_classes_ov034.cpp
 #
 # THE FACTORY IS THE CHIEFCHILLY r0 RIDE-THROUGH, the shape port/slice_w12.txt
-# already holds src/ChiefChilly_Spawn.cpp out for. Wiggler_Spawn calls
+# already holds src/d_a_king_donketu.cpp out for. daHanachan_c_classInit calls
 # `func_020aed98();` with NO ARGUMENT because in the ROM the object operator new
 # just returned is still in r0 when Enemy::C2 is entered (0x021136b0 bl
 # ActorBase::operator new / 0x021136b4 movs r4,r0 / 0x021136bc bl 0x020aed98).
 # mwcc reproduced that, so the TU is byte-faithful and unusable under cdecl --
 # and the name it spells is an ARM9-STYLE spelling of an OV002 symbol
-# (relocs.txt: module:overlays(2,7), and ov002's 0x020aed98 is _ZN5EnemyC2Ev)
+# (relocs.txt: module:overlays(2,7), and ov002's 0x020aed98 is _ZN12dEnemyBase_cC2Ev)
 # that exists nowhere in the link, so the first build failed at LNK2019 rather
 # than silently. port_factory_wiggler is the ROM's own sequence with the
 # receiver spelled, every offset, count and stride read from the disassembly.
@@ -136,14 +136,15 @@
 # off the link, not guessed.
 
 # ---- the class: factory, destructors, and the five own slots --------------
-src/_ZN7WigglerD1Ev.c
-src/_ZN7WigglerD0Ev.c
+src/_ZN7WigglerD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN7WigglerD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN7WigglerD0Ev.cpp
 src/_ZN7Wiggler13InitResourcesEv.cpp
-src/_ZN7Wiggler16CleanupResourcesEv.c
+src/_ZN7Wiggler16CleanupResourcesEv.cpp
 # slot 6, propagated from main 36e8cbcce by lane prop18. A DECLARED NONMATCHING
 # DRAFT (div 20 of 440, all of it register/scheduling routing) -- read the
 # banner block at the top of this file before quoting this row as a match.
-src/_ZN7Wiggler8BehaviorEv.c
+src/_ZN7Wiggler8BehaviorEv.cpp
 
 # ---- the eleven states, twenty-two handlers, in table order ---------------
 # 0 DEMOWAIT

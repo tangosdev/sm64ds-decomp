@@ -34,7 +34,7 @@ void func_ov004_020b4360(char* self) {
                 m._11 = d;
                 scale = 0x1000 - scale;
                 do {
-                    s16 f = (s16)((((unsigned int)(*(int*)el << 7)) >> 23) & 0xFFFFFFFFFFFFFFFFull);
+                    s16 f = (s16)(((unsigned int)(*(int*)el << 7)) >> 23);
                     int off;
                     if (f > 0x100) f -= 0x200;
                     off = f * scale;

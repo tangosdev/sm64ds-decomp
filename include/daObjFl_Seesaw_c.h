@@ -7,11 +7,11 @@
 
 struct daObjFl_Seesaw_c {
     u8  pad_000[0x8c];
-    s16 unk_08c;            /* 0x08c */
-    s16 unk_08e;            /* 0x08e */
+    s16 mAngleX;            /* 0x08c */
+    s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x28e];
-    s16 unk_31e;            /* 0x31e */
-    u8  unk_320;            /* 0x320 */
+    s16 mSwingStep;            /* 0x31e */
+    u8  mSwingCooldown;            /* 0x320 */
 };
 
 #endif

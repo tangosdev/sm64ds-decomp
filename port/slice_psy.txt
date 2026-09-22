@@ -1,7 +1,7 @@
 # Lane PSY of run mg9: dScMg3DEsp_c, the "Psyche Out!" minigame.
 #
-# actor id 0x185 (scene 389), spawn symbol MgPsycheOut_Spawn (0x020ea1f0,
-# 0x90), SpawnInfo 0x0213c78c, vtable data_ov006_0213c8c4. Every one of those
+# actor id 0x185 (scene 389), spawn symbol dScMg3DEsp_c_classInit (0x020ea1f0,
+# 0x90), SpawnInfo 0x0213c78c, vtable _ZTV12dScMg3DEsp_c. Every one of those
 # was read out of the ROM by this lane rather than taken from the brief:
 # scanning extracted/overlays/overlay_0006.bin (base 0x020bfec0) for the
 # doubled-id word 0x01850185 returns EXACTLY ONE hit, at 0x0213c790, which puts
@@ -29,24 +29,24 @@
 # ---- THE HIERARCHY IS THREE DEEP, AND THE CODE SAYS SO IN BOTH DIRECTIONS --
 #
 #     Scene -> dScMgBase_c         data_ov004_020bc0c0  36  (the framework's)
-#           -> dScMgSingle3DBase_c data_ov006_0213e448  36  ovr 8, mark 6
-#           -> dScMg3DEsp_c        data_ov006_0213c8c4  36  ovr 14, mark 12, nosrc 0
+#           -> dScMgSingle3DBase_c _ZTV19dScMgSingle3DBase_c  36  ovr 8, mark 6
+#           -> dScMg3DEsp_c        _ZTV12dScMg3DEsp_c  36  ovr 14, mark 12, nosrc 0
 #
 # port/mg_fanout_costs.txt section 3's row for 0x185 lists one vtable and says
 # nothing about an intermediate base, which is the same gap run mg6 lane MEM
 # found for 0x16b and section 13's CORRECTION 1 warns will fire again. It fires
 # here. Both edges are read off code:
 #
-#   src/MgPsycheOut_Spawn.cpp (the factory) calls func_ov004_020b2adc(o),
-#   writes data_ov006_0213e448 into o[0], constructs the Particle::SysTracker
-#   at +0x471c, writes data_ov006_0213c8c4 over it, then constructs two Models
-#   at +0x4f38 and +0x4f88, func_ov006_020e814c(+0x4fd8) and a
+#   src/d_s_mg3_d_esp.cpp (the factory) calls _ZN11dScMgBase_cC2Ev(o),
+#   writes _ZTV19dScMgSingle3DBase_c into o[0], constructs the Particle::SysTracker
+#   at +0x471c, writes _ZTV12dScMg3DEsp_c over it, then constructs two Models
+#   at +0x4f38 and +0x4f88, _ZN15dMg3DEspModel_cC1Ev(+0x4fd8) and a
 #   TextureTransformer at +0x51f4. Object size 0x5558.
 #
-#   src/func_ov006_020e76e4.c (slot 17, D0) unwinds them in the OPPOSITE order:
+#   src/_ZN12dScMg3DEsp_cD0Ev.cpp (slot 17, D0) unwinds them in the OPPOSITE order:
 #   0x0213c8c4 first, the four sub-objects down, then 0x0213e448, then
-#   Particle::SysTracker::~SysTracker(+0x471c), func_ov004_020b29c0 and
-#   Memory::Deallocate. src/func_ov006_020e7660.cpp (slot 16, D2) does the same
+#   Particle::SysTracker::~SysTracker(+0x471c), _ZN11dScMgBase_cD2Ev and
+#   Memory::Deallocate. src/_ZN12dScMg3DEsp_cD1Ev.cpp (slot 16, D2) does the same
 #   without the Deallocate.
 #
 # So SIX of this class's fourteen overrides -- slots 2, 5, 7, 10, 26 and 33 --
@@ -73,7 +73,7 @@
 # three of its checks, plus a fourth this lane adds:
 #
 #   1. SPAN. config/arm9/overlays/ov006/symbols.txt puts the next symbol after
-#      data_ov006_0213c8c4 at data_ov006_0213c954, exactly 0x90 = 36 words on,
+#      _ZTV12dScMg3DEsp_c at data_ov006_0213c954, exactly 0x90 = 36 words on,
 #      so a 37th slot cannot exist inside the table.
 #   2. TERMINAL SLOT. Slot 35 holds 0x020ad660, the word every dScMgBase_c-
 #      derived table holds there.
@@ -111,7 +111,7 @@
 #      carry until the mg9 reviewer noticed it was only ever written down in a
 #      commit message. CMake's foreach skips a line only when it STARTS with a
 #      '#', so a TRAILING INLINE COMMENT on a src line does not get stripped:
-#      the path becomes "src/func_ov006_020e9e70.cpp      # slot 0 ..." and
+#      the path becomes "src/_ZN12dScMg3DEsp_c13InitResourcesEv.cpp      # slot 0 ..." and
 #      resolves to nothing. That kills one path per commented line rather than
 #      the whole tail, so it is quieter than the bracket, and it produced this
 #      lane's very first LNK2019 wall. Every annotation in this file therefore
@@ -130,8 +130,8 @@
 #
 #   OWN, eight     slots 0, 3, 6, 9, 16, 17, 18, 20
 #   MIDDLE, six    slots 2, 5, 7, 10, 26, 33
-#   UNMARKED, two  slot 16 (func_ov006_020e7660) and slot 33
-#                  (func_ov006_0210a708); the other twelve carry the
+#   UNMARKED, two  slot 16 (_ZN12dScMg3DEsp_cD1Ev) and slot 33
+#                  (_ZN19dScMgSingle3DBase_c9Virtual84Ev); the other twelve carry the
 #                  "recovered from vtable slot identity" marker
 #   nosrc          ZERO. All fourteen resolve to a real src TU.
 #
@@ -166,7 +166,7 @@
 # because a later lane looking for the per-source-rename precedent would look
 # at exactly this heading and take the wrong lesson from it.
 #
-# WHAT ACTUALLY HAPPENED. src/func_ov006_020e9cec.c (slot 3, CleanupResources)
+# WHAT ACTUALLY HAPPENED. src/_ZN12dScMg3DEsp_c16CleanupResourcesEv.cpp (slot 3, CleanupResources)
 # releases two SharedFilePtrs spelled G0 and G1 -- shared placeholder names for
 # globals that exist in no config. hal/cxx_aliases.cpp binds bare G0 to
 # _data_020a0eac (the game heap) and bare G1 to _data_ov002_0210e05c, and BOTH
@@ -184,13 +184,13 @@
 # indirection. Measured, not predicted: error C2372. A lane reaching for the -D
 # repair should CHECK decl_common.h FOR THE TARGET FIRST; if it is there, the
 # repair is a host copy. This one is
-# port/unmatched/Mg3DEsp_Cleanup.cpp, and src/func_ov006_020e9cec.c is out of
+# port/unmatched/Mg3DEsp_Cleanup.cpp, and src/_ZN12dScMg3DEsp_c16CleanupResourcesEv.cpp is out of
 # the list below.
 #
 # A scan of every TU in this slice for the shared placeholder names (VT, VT0,
 # HEAP, G0, G1, G2, R0, R1, R2) returns this ONE file and no other.
 #
-# func_020beb68 in src/func_ov006_020e9c20.c needs NO row: it is
+# func_020beb68 in src/_ZN12dScMg3DEsp_c13OnYoshiTryEatEi.cpp needs NO row: it is
 # data_ov004_020beb68 under a name that exists in no config, and
 # port/unmatched/MgCoin_Faces.cpp already aliases it.
 #
@@ -211,32 +211,33 @@
 # ---- wave 1: the class's own code -----------------------------------------
 
 # the factory
-src/MgPsycheOut_Spawn.cpp
+src/d_s_mg3_d_esp.cpp
 
 # the eight own overrides, less slot 6.
-# SLOT 6 IS NOT HERE ON PURPOSE. src/func_ov006_020e9e00.cpp is the Behavior
+# SLOT 6 IS NOT HERE ON PURPOSE. src/_ZN12dScMg3DEsp_c8BehaviorEv.cpp is the Behavior
 # and it is a pointer-to-member dispatcher declared inside extern "C", which is
 # one of the two shapes a link cannot see. port/mg_fanout_costs.txt section
 # 14's practical rule is to read the src before wiring slot 6 by name; this is
 # the class that rule is for. port/unmatched/Mg3DEsp_StateDispatch.cpp has it.
 # slot 0  InitResources, 0x380
-src/func_ov006_020e9e70.cpp
-# SLOT 3 IS NOT HERE ON PURPOSE EITHER. src/func_ov006_020e9cec.c releases two
+src/_ZN12dScMg3DEsp_c13InitResourcesEv.cpp
+# SLOT 3 IS NOT HERE ON PURPOSE EITHER. src/_ZN12dScMg3DEsp_c16CleanupResourcesEv.cpp releases two
 # SharedFilePtrs spelled as the shared placeholders G0 and G1, and the standing
 # per-source -D repair CANNOT be used: G1 and its target are BOTH declared in
 # include/decl_common.h (lines 396 and 3041), so the define turns one of them
 # into a redefinition with a different type of indirection. Host-copied in
 # port/unmatched/Mg3DEsp_Cleanup.cpp, which carries the derivation.
 # slot 9  Render, 0xe4
-src/func_ov006_020e9d1c.cpp
+src/_ZN12dScMg3DEsp_c6RenderEv.cpp
 # slot 16 D2, unmarked
-src/func_ov006_020e7660.cpp
+src/_ZN12dScMg3DEsp_cD1Ev.cpp
 # slot 17 D0
-src/func_ov006_020e76e4.c
+# RETIRED at SLICE1: body now in src/_ZN12dScMg3DEsp_cD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN12dScMg3DEsp_cD0Ev.cpp
 # slot 18 state reset -- READS ITS ARGUMENT
-src/func_ov006_020e9c20.c
+src/_ZN12dScMg3DEsp_c13OnYoshiTryEatEi.cpp
 # slot 20
-src/func_ov006_020e9c10.c
+src/_ZN12dScMg3DEsp_c9Virtual50Ev.cpp
 
 # the twenty routed state bodies, less the two that are also dispatchers
 # (func_ov006_020e9b70 and func_ov006_020e8830, both host-copied).
@@ -263,7 +264,7 @@ src/func_ov006_020e8cb0.c
 # f74 1
 src/func_ov006_020e8c74.c
 # f74 2
-src/func_ov006_020e8bd0.c
+src/func_ov006_020e8bd0.cpp
 # f1c 0
 src/func_ov006_020e8928.c
 # f8c 0
@@ -290,7 +291,7 @@ src/func_ov006_020e81e0.c
 # caller in the build, so /OPT:REF had already dropped it, which is the same
 # exception curling's wave 2 hit for twenty of them.
 #
-# ONE OF THE NINETEEN IS NOT HERE. func_ov006_020e7be8 is the per-frame tick of
+# ONE OF THE NINETEEN IS NOT HERE. _ZN15dMg3DEspModel_c8BehaviorEv is the per-frame tick of
 # the sub-object at this+0x4fd8, and a `::*` sweep over these additions BEFORE
 # they were wired found that it dispatches a member pointer held in an OBJECT
 # FIELD. It is the EIGHTH dispatcher in a class the cost file budgets five for,
@@ -298,14 +299,14 @@ src/func_ov006_020e81e0.c
 # no global is emitted and no symbol can fail. Host-copied in
 # port/unmatched/Mg3DEsp_FieldPmf.cpp, which carries the derivation, the four
 # routed addresses and the six source pairs.
-src/func_ov006_020e814c.c
-src/func_ov006_020e7fe8.cpp
+src/_ZN15dMg3DEspModel_cC1Ev.cpp
+src/_ZN15dMg3DEspModel_c13InitResourcesEv.cpp
 src/func_ov006_020e8aac.c
 src/func_ov006_020e81a4.c
 src/func_ov006_020e8354.c
 src/func_ov006_020e8b18.c
 src/func_ov006_020e8e10.cpp
-src/func_ov006_020e80d8.cpp
+src/_ZN15dMg3DEspModel_cD1Ev.cpp
 src/func_ov006_020e984c.c
 src/func_ov006_020e95a4.c
 src/func_ov006_020e95e4.c
@@ -318,7 +319,7 @@ src/func_020179b4.c
 # sense.
 #
 # THE OTHER READER IS NOT HERE, AND THE REASON IS A SECOND DEFECT.
-# func_ov006_020e7b44 is the RENDER half of the same idle test and does NOT
+# _ZN15dMg3DEspModel_c6RenderEv is the RENDER half of the same idle test and does NOT
 # dispatch the field, so it needed no host copy for THAT -- but it dispatches
 # the sub-object's ModelAnim at +0xc through a six-virtual local shadow, which
 # is ROM numbering, and hal/cxxname_bridge.cpp deliberately does not dual-fill
@@ -329,7 +330,7 @@ src/func_020179b4.c
 # mandatory element-vtable check, not by a fault.
 src/func_ov006_020e7d7c.c
 src/func_ov006_020e7e74.c
-src/func_ov006_020e7fb0.c
+src/_ZN15dMg3DEspModel_c5ResetEv.cpp
 #
 # ---- wave 2b: the four field states, which arrive with the dispatch --------
 #
@@ -351,12 +352,12 @@ src/func_ov006_020e7fac.c
 # `::*`, for the //cpp marker and for the shared placeholder names before it was
 # listed; all eleven come back clean, so this class's dispatcher count stays at
 # eight.
-src/func_ov006_020e7818.c
-src/func_ov006_020e7aac.c
-src/func_ov006_020e7954.c
-src/func_ov006_020e7b0c.c
-src/func_ov006_020e7a50.cpp
-# src/func_ov006_020e777c.cpp IS OUT: the SECOND shadow-class Render dispatch
+src/_ZN17dMg3DEspAnimSet_c8BehaviorEv.cpp
+src/_ZN17dMg3DEspAnimSet_cC1Ev.cpp
+src/_ZN17dMg3DEspAnimSet_c13InitResourcesEv.cpp
+src/_ZN15dMg3DEspModel_c14ResetTransformEv.cpp
+src/_ZN17dMg3DEspAnimSet_cD1Ev.cpp
+# src/_ZN17dMg3DEspAnimSet_c6RenderEv.cpp IS OUT: the SECOND shadow-class Render dispatch
 # on a plain ModelAnim, and the one that was measured as a fault rather than
 # read. Host-copied in port/unmatched/Mg3DEsp_ModelAnimRender_020e777c.cpp,
 # whose header carries the nine-dispatch sweep of the whole class code block
@@ -364,7 +365,7 @@ src/func_ov006_020e7a50.cpp
 src/func_ov006_020e7940.c
 src/func_ov006_020e794c.c
 src/func_ov006_020e792c.c
-src/func_ov006_020e7910.c
+src/_ZN17dMg3DEspAnimSet_c5ResetEv.cpp
 # the fifth writer of the field at the sub-object's +0x210, and the only one
 # that spells the eight-byte pair as a `double`
 src/func_ov006_020e7f5c.cpp

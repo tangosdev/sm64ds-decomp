@@ -10,10 +10,8 @@
 # ~Actor that the vtable fill spells inline as Actor::D2, and slot 17 traps, so
 # neither src TU is dispatched. Both spell the generic VT/HEAP placeholders that
 # only resolve inside a full class link anyway. The sinit's helper func_020731dc
-# and its callback func_020072c0 are already compiled (slice_gate10.txt); the
+# and its callback _ZN7Vector3D1Ev are already compiled (slice_gate10.txt); the
 # Behavior's externs (Actor::DistToCPlayer, Sound::PlaySub, DecIfAbove0_Short,
 # Actor::KillAndTrackInDeathTable) are provided by existing hal faces.
-src/IceSlideManager_Spawn.c
-src/_ZN15IceSlideManager13InitResourcesEv.cpp
-src/_ZN15IceSlideManager8BehaviorEv.cpp
+src/game/actors/d_a_sld_mng.cpp
 src/__sinit_ov019_02112b14.c

@@ -1,6 +1,6 @@
 # Lane CCN of run mg5: dScMgCoin_c, the Coincentration minigame.
 #
-# actor id 0x17a (scene 378), spawn symbol MgCoincentration_Spawn (0x020de940),
+# actor id 0x17a (scene 378), spawn symbol dScMgCoin_c_classInit (0x020de940),
 # SpawnInfo 0x0213bedc, vtable data_ov006_0213bf50, RTTI "11dScMgCoin_c" at
 # 0x0213bf24. Every one of those was re-derived from the ROM by this lane
 # rather than taken from the handover: the doubled-id word 0x017a017a sits at
@@ -25,9 +25,9 @@
 # before anything was seated; port/tools/inferred_stub_adjudicated.txt carries
 # the per-body evidence.
 #
-# THE HIERARCHY IS TWO DEEP. Slot 16 (D2, func_ov006_020dbe40) and slot 17
-# (D0, func_ov006_020dbe64) both store data_ov006_0213bf50 into [this] and then
-# call func_ov004_020b29c0 directly, with no intermediate table between. So the
+# THE HIERARCHY IS TWO DEEP. Slot 16 (D2, _ZN11dScMgCoin_cD1Ev) and slot 17
+# (D0, _ZN11dScMgCoin_cD0Ev) both store data_ov006_0213bf50 into [this] and then
+# call _ZN11dScMgBase_cD2Ev directly, with no intermediate table between. So the
 # seat fills ONE derived table, the way curling's does, and not the two 0x169
 # needed.
 #
@@ -86,47 +86,18 @@
 # layouts are correct and only the stride and the call sequence are wrong.
 
 # ---- ov006: dScMgCoin_c's own closure --------------------------------------
-src/MgCoincentration_Spawn.cpp
-src/func_ov006_020dbe40.c
-src/func_ov006_020dbe64.c
+src/d_s_mg_coin.cpp
+src/_ZN11dScMgCoin_cD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN11dScMgCoin_cD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN11dScMgCoin_cD0Ev.cpp
 # Run mg5, lane INTEG: the sixth callee of slot 9 (Render), recovered on branch
 # decomp/coin-render (NONMATCHING div=7). It had no source when the comment
 # above was written; it now has src/func_ov006_020dbe9c.c and a delink block, so
 # the trap in port/unmatched/MgCoin_Faces.cpp is removed and the real body links.
 src/func_ov006_020dbe9c.c
-src/func_ov006_020dbf7c.c
-src/func_ov006_020dc154.c
-src/func_ov006_020dc1c4.c
-src/func_ov006_020dc26c.c
-src/func_ov006_020dc294.c
-# HOST-COPIED (CCN): src/func_ov006_020dc298.cpp -- table data_ov006_021417c8, arity 1, SILENT (Entry declared inside extern "C")
-src/func_ov006_020dc2f8.c
-src/func_ov006_020dc334.c
-src/func_ov006_020dc348.c
-src/func_ov006_020dc370.c
-src/func_ov006_020dc3bc.c
-src/func_ov006_020dc414.c
-src/func_ov006_020dc4b0.c
-src/func_ov006_020dc4c8.c
-src/func_ov006_020dc5c4.c
-src/func_ov006_020dc6d0.c
-# HOST-COPIED (CCN): src/func_ov006_020dc754.cpp -- table data_ov006_021417e8, arity 1, SILENT (Entry declared inside extern "C")
-src/func_ov006_020dc7b4.c
-src/func_ov006_020dc7fc.c
-src/func_ov006_020dc814.c
-src/func_ov006_020dc870.c
-src/func_ov006_020dc900.c
-src/func_ov006_020dc960.c
-src/func_ov006_020dc99c.c
-src/func_ov006_020dca04.c
-src/func_ov006_020dcb1c.c
-src/func_ov006_020dcc48.c
-src/func_ov006_020dccb8.c
-src/func_ov006_020dcd74.c
-src/func_ov006_020dce3c.c
-src/func_ov006_020dcea8.c
-src/func_ov006_020dcffc.c
-src/func_ov006_020dd000.c
+src/actors/dScMgCoin_c.cpp
+# HOST-COPIED (CCN): src/actors/dScMgCoin_c.cpp -- table data_ov006_021417c8, arity 1, SILENT (Entry declared inside extern "C")
+# HOST-COPIED (CCN): src/actors/dScMgCoin_c.cpp -- table data_ov006_021417e8, arity 1, SILENT (Entry declared inside extern "C")
 src/func_ov006_020dd0e0.c
 # HOST-COPIED (CCN): src/func_ov006_020dd2cc.cpp -- table data_ov006_021417b0, arity 1, link-visible as ?..@@3PAUEntry@@A
 src/func_ov006_020dd334.c
@@ -135,7 +106,7 @@ src/func_ov006_020dd594.c
 src/func_ov006_020dd658.c
 src/func_ov006_020dd7bc.c
 src/func_ov006_020dd7c0.c
-src/func_ov006_020dd880.c
+src/func_ov006_020dd880.cpp
 src/func_ov006_020dda94.c
 src/func_ov006_020ddca0.c
 src/func_ov006_020ddcf8.c
@@ -149,10 +120,10 @@ src/func_ov006_020de1d4.c
 # HOST-COPIED (CCN): src/func_ov006_020de440.cpp -- table data_ov006_02141840, arity 1, link-visible; ALSO state slot 2 of 02141810
 src/func_ov006_020de584.c
 src/func_ov006_020de5ac.c
-src/func_ov006_020de5b0.c
-src/func_ov006_020de63c.c
-# HOST-COPIED (CCN): src/func_ov006_020de69c.cpp -- table data_ov006_02141810, arity 0, link-visible; VTABLE SLOT 6, Behavior
-src/func_ov006_020de704.c
+src/_ZN11dScMgCoin_c13OnYoshiTryEatEi.cpp
+src/_ZN11dScMgCoin_c6RenderEv.cpp
+# HOST-COPIED (CCN): src/_ZN11dScMgCoin_c8BehaviorEv.cpp -- table data_ov006_02141810, arity 0, link-visible; VTABLE SLOT 6, Behavior
+src/_ZN11dScMgCoin_c13InitResourcesEv.cpp
 
 # ---- ov004: the five the coin closure reaches that slice_mg1.txt does not ---
 # The framework half is slice_mg1.txt's and is not repeated. These five are
@@ -160,9 +131,9 @@ src/func_ov006_020de704.c
 # so /OPT:REF had dropped them. Three more ov004 TUs the closure reaches are
 # DELIBERATELY ABSENT because MG1/MG2 already answered them and adding a line
 # would put a second definition in the link:
-#     func_ov004_020aeed8  host copy, port/unmatched/MgBase_DeclConflict.cpp
-#     func_ov004_020b0620  host copy, port/unmatched/MgBase_Slot7.cpp
-#     func_ov004_020b87e0  the framework's own PMF state setter, a named trap
+#     _ZN11dScMgBase_c25OnAimedAtWithEggReturnVecEv  host copy, port/unmatched/MgBase_DeclConflict.cpp
+#     _ZN11dScMgBase_c14BeforeBehaviorEv  host copy, port/unmatched/MgBase_Slot7.cpp
+#     _ZN10dMgState_c8SetStateEi  the framework's own PMF state setter, a named trap
 #                          in port/hal/scene_mg_faces.cpp
 src/func_ov004_020adf70.c
 src/func_ov004_020adfc4.c
@@ -173,8 +144,8 @@ src/func_ov004_020b1de8.c
 # ---- ov001: two more of ov004's touch layer --------------------------------
 # slice_mg1.txt took four ov001 bodies (TouchArea_Update and three siblings);
 # this class reaches two more of the same layer.
-src/func_ov001_020ab54c.c
-src/func_ov001_020ab550.c
+src/_ZN9dThIcon_c6RenderEv.cpp
+src/_ZN9dThIcon_c8BehaviorEv.cpp
 
 # ---- SECOND WAVE: one arm9 TU the first link named ------------------------
 # src/func_020127a4.c is a matched arm9 body (0x48) that three of this class's

@@ -1,0 +1,258 @@
+# run link100, lane SLICE1 -- THE CONSOLIDATION GAP, BATCH 1.
+#
+# Every row here is a translation unit that exists in src/ on this branch, owns at
+# least one symbol walk_window.exe reported unresolved in the first link after the
+# main -> port sync (out/SYNC5/build_d10.log, 3327 unresolved externals), and is
+# compiled by NOTHING: it is on no slice list, in no CMake block and in no hostgen
+# generation list. main folded hundreds of one-function TUs into class TUs in its
+# 2026-09 consolidation and the port never took the new files.
+#
+# HOW THE SET WAS DERIVED, and why it is not a filename scan.
+#
+# 1. The universe is walk_window.exe OWN unresolved block in build_d10.log, flat C
+#    names only (2639 of the 3327; the other 688 are MSVC-decorated and belong to
+#    the alias question, not to this one).
+# 2. Each name is resolved to its ROM address out of the module symbols.txt that
+#    carries it, and then to its owning TU out of THAT MODULE OWN delinks.txt.
+#    Running every module ranges together lands ov031 bodies in Wiggler TUs; the
+#    per-module read is the only correct one (lane SYNC5 measured that trap).
+# 3. Liveness is read off the BUILD, not off the slice lists: the 8794 objects on
+#    walk_window own link line in build/port/build.ninja. A TU is a candidate only
+#    if it is not one of them. That is what separates this batch from the rows
+#    SYNC5 quarantined and from the rows another slice already carries.
+# 4. Collision prediction is per SYMBOL and definition-shaped, not a name grep: for
+#    every ROM function symbol inside the candidate .text ranges, the scan asks
+#    whether any object already on the link line DEFINES it (a per-function
+#    leftover whose stem is that symbol, or a host copy whose text has that name
+#    followed by a parameter list and an opening brace). Only TUs with ZERO
+#    predicted collisions are in this batch. The nineteen that collide are held
+#    for the next one with their colliding host copies named per symbol.
+# 5. A candidate is dropped as well when port/host-src carries a GENERATED copy of
+#    the same relative path on that link line. The per-symbol hostgen writes a
+#    patched twin of the raw TU and compiles the twin, so adding the raw file
+#    would be a duplicate of every body in it. 41 candidates went out that way and
+#    are listed in runs/link100/out/SLICE1/other_reason.txt: their names are
+#    unresolved for some reason other than nothing compiling the body.
+#
+# WHAT THIS BATCH DOES NOT DO. It retires nothing and it moves no host copy, by
+# construction: a row is here only because nothing else defines any body in it.
+# src/actors/Player.cpp is excluded by the brief, and the fourteen candidates that
+# are already quarantined by compile family (C2821, C2561, C2372, C2065) stay
+# quarantined; they are decomp-side asks, not slice rows.
+#
+# WHAT IT IS WORTH, HONESTLY. These 74 TUs own 95 of the 2639 flat unresolved
+# names. Most of the rest are not a slice gap at all: they are owned by TUs the
+# build ALREADY compiles, which since main langmode migration define the body as a
+# real C++ member or free function, so the ROM flat name needs a flat -> decorated
+# /alternatename (the tree already carries 46 of that direction) and not a row on
+# any list. That measurement is in runs/link100/out/SLICE1/other_reason.txt.
+#
+# THE ROWS, module by module. The count after each is how many of walk_window own
+# unresolved names that TU owns, and the shape is how the TU defines them:
+# FLAT means the file defines the ROM C name itself (the row resolves it outright);
+# MEMBER means the file defines a C++ member and the flat reference still needs an
+# alias afterwards, so the row is the PREREQUISITE for that alias, not a substitute.
+#
+
+# ---- config/arm9/overlays/ov002
+#   1 unresolved, {'MEMBER': 1}
+src/_ZN6Player16St_WallJump_InitEv.cpp
+#   1 unresolved, {'MEMBER': 1}
+src/_ZN6Player23St_InYoshiMouth_CleanupEv.cpp
+
+# ---- config/arm9/overlays/ov004
+#   1 unresolved, {'MEMBER': 1}
+# QUARANTINED at SLICE1 batch 1: MSVC refuses this TU with C2561 (dScMgBase_c::OnAimedAtWithEgg must return a value): same family as src/_ZN11dScMgBase_c19OnHitFromUnderneathEv.cpp, which lane SYNC5 quarantined.
+# It is a decomp-side shape, not a port one, and it is on runs/link100/out/SLICE1/quarantine_more.txt.
+#src/_ZN11dScMgBase_c16OnAimedAtWithEggEv.cpp
+
+# ---- config/arm9/overlays/ov006
+#   22 unresolved, {'MEMBER': 12, 'MENTION': 2, 'FLAT': 8}
+src/actors/dMgJump3DMario_c.cpp
+
+# ---- config/arm9/overlays/ov007
+#   1 unresolved, {'FLAT': 1}
+src/func_ov007_020c4684.c
+#   1 unresolved, {'FLAT': 1}
+src/func_ov007_020c9688.c
+
+# ---- config/arm9/overlays/ov015
+#   1 unresolved, {'MENTION': 1}
+# RETIRED at SLICE1 batch 1: this destructor inlines ShadowModel::~ShadowModel, which port/hal/dtor_faces_cpp.cpp already defines out of line, so the TU is a duplicate of that face (the same collision 126 dtor TUs already in the build have). It comes back when the face is retired: see runs/link100/out/SLICE1/faces_needed.txt.
+#src/_ZN14KnockDownPlankD0Ev.cpp
+#   1 unresolved, {'MENTION': 1}
+# RETIRED at SLICE1 batch 1: this destructor inlines ShadowModel::~ShadowModel, which port/hal/dtor_faces_cpp.cpp already defines out of line, so the TU is a duplicate of that face (the same collision 126 dtor TUs already in the build have). It comes back when the face is retired: see runs/link100/out/SLICE1/faces_needed.txt.
+#src/_ZN14KnockDownPlankD1Ev.cpp
+#   1 unresolved, {'MEMBER': 1}
+src/_ZN9TowerStep13InitResourcesEv.cpp
+#   1 unresolved, {'MENTION': 1}
+# RETIRED at SLICE1 batch 1: this destructor inlines ShadowModel::~ShadowModel, which port/hal/dtor_faces_cpp.cpp already defines out of line, so the TU is a duplicate of that face (the same collision 126 dtor TUs already in the build have). It comes back when the face is retired: see runs/link100/out/SLICE1/faces_needed.txt.
+#src/_ZN9TowerStepD0Ev.cpp
+#   1 unresolved, {'MENTION': 1}
+# RETIRED at SLICE1 batch 1: this destructor inlines ShadowModel::~ShadowModel, which port/hal/dtor_faces_cpp.cpp already defines out of line, so the TU is a duplicate of that face (the same collision 126 dtor TUs already in the build have). It comes back when the face is retired: see runs/link100/out/SLICE1/faces_needed.txt.
+#src/_ZN9TowerStepD1Ev.cpp
+
+# ---- config/arm9/overlays/ov018
+#   1 unresolved, {'MEMBER': 1}
+src/_ZN7SkiLift13InitResourcesEv.cpp
+#   1 unresolved, {'MEMBER': 1}
+src/_ZN7SkiLift16CleanupResourcesEv.cpp
+#   1 unresolved, {'MEMBER': 1}
+src/_ZN7SkiLift6RenderEv.cpp
+#   1 unresolved, {'MEMBER': 1}
+# UNRETIRED at LEVELS4B (2026-09-17). The SLICE1 note below is right about the host copy and wrong about whose body it is. port/unmatched/MotherPenguin_Behavior.cpp transcribes src/game/actors/d_a_pg_mthr.cpp, MOTHER PENGUIN's Behavior at ov018 0x02112480, and the raw shadow-vtable index it repairs is in THAT body. This TU is the real SKI_LIFT's own Behavior at ov018 0x02111368 (port/ov018_syms.txt's gate-191 slot table, read off the reloc), a different 0x34c-byte function, so it is neither a duplicate nor the source of that fault. With it out of the build SKI_LIFT's vtable slot 6 dispatched MOTHER PENGUIN's body and level 10 faulted on the ski lift's first tick. The host copy is a free function now, so the two no longer collide.
+# RETIRED at SLICE1 batch 1: port/unmatched/MotherPenguin_Behavior.cpp is a DELIBERATE host copy of this body. The matched source dispatches ModelAnim::UpdateVerts through a raw shadow-vtable index, which lands on the wrong slot under MSVC folded destructor numbering and faults; the host copy fixes exactly that. Taking the matched TU would be a duplicate AND would put the fault back.
+src/_ZN7SkiLift8BehaviorEv.cpp
+#   1 unresolved, {'MENTION': 1}
+# RETIRED at SLICE1 batch 1: MSVC folds the ROM D1 and D0 into ONE ??1SkiLift@@UAE@XZ, so compiling both per-function TUs is a duplicate symbol. The complete-object TU (D1) stays; this deleting-destructor TU leaves, and the ROM flat name _ZN7SkiLiftD0Ev wants a flat -> decorated alternatename onto that same dtor, which is lane ALIAS table, not a slice row.
+#src/_ZN7SkiLiftD0Ev.cpp
+#   1 unresolved, {'MENTION': 1}
+src/_ZN7SkiLiftD1Ev.cpp
+
+# ---- config/arm9/overlays/ov022
+#   1 unresolved, {'MENTION': 1}
+# RETIRED at SLICE1 batch 1: MSVC folds the ROM D1 and D0 into ONE ??1RollingLogLll@@UAE@XZ, so compiling both per-function TUs is a duplicate symbol. The complete-object TU (D1) stays; this deleting-destructor TU leaves, and the ROM flat name _ZN13RollingLogLllD0Ev wants a flat -> decorated alternatename onto that same dtor, which is lane ALIAS table, not a slice row.
+#src/_ZN13RollingLogLllD0Ev.cpp
+#   1 unresolved, {'MENTION': 1}
+src/_ZN13RollingLogLllD1Ev.cpp
+#   1 unresolved, {'MEMBER': 1}
+src/_ZN19RotatingPlatformLll13InitResourcesEv.cpp
+#   1 unresolved, {'MEMBER': 1}
+src/_ZN19RotatingPlatformLll16CleanupResourcesEv.cpp
+#   1 unresolved, {'MENTION': 1}
+# RETIRED at SLICE1 batch 1: MSVC folds the ROM D1 and D0 into ONE ??1RotatingPlatformLll@@UAE@XZ, so compiling both per-function TUs is a duplicate symbol. The complete-object TU (D1) stays; this deleting-destructor TU leaves, and the ROM flat name _ZN19RotatingPlatformLllD0Ev wants a flat -> decorated alternatename onto that same dtor, which is lane ALIAS table, not a slice row.
+#src/_ZN19RotatingPlatformLllD0Ev.cpp
+#   1 unresolved, {'MENTION': 1}
+src/_ZN19RotatingPlatformLllD1Ev.cpp
+
+# ---- config/arm9/overlays/ov026
+#   1 unresolved, {'MEMBER': 1}
+src/_ZN9Submarine13InitResourcesEv.cpp
+#   1 unresolved, {'MEMBER': 1}
+src/_ZN9Submarine16CleanupResourcesEv.cpp
+#   1 unresolved, {'MEMBER': 1}
+src/_ZN9Submarine6RenderEv.cpp
+#   1 unresolved, {'MENTION': 1}
+# RETIRED at SLICE1 batch 1: MSVC folds the ROM D1 and D0 into ONE ??1Submarine@@UAE@XZ, so compiling both per-function TUs is a duplicate symbol. The complete-object TU (D1) stays; this deleting-destructor TU leaves, and the ROM flat name _ZN9SubmarineD0Ev wants a flat -> decorated alternatename onto that same dtor, which is lane ALIAS table, not a slice row.
+#src/_ZN9SubmarineD0Ev.cpp
+#   1 unresolved, {'MENTION': 1}
+src/_ZN9SubmarineD1Ev.cpp
+
+# ---- config/arm9/overlays/ov030
+#   1 unresolved, {'MEMBER': 1}
+src/_ZN13RollingLogTtm13InitResourcesEv.cpp
+#   1 unresolved, {'MEMBER': 1}
+src/_ZN13RollingLogTtm16CleanupResourcesEv.cpp
+#   1 unresolved, {'MEMBER': 1}
+src/_ZN13RollingLogTtm8BehaviorEv.cpp
+#   1 unresolved, {'MENTION': 1}
+# RETIRED at SLICE1 batch 1: MSVC folds the ROM D1 and D0 into ONE ??1RollingLogTtm@@UAE@XZ, so compiling both per-function TUs is a duplicate symbol. The complete-object TU (D1) stays; this deleting-destructor TU leaves, and the ROM flat name _ZN13RollingLogTtmD0Ev wants a flat -> decorated alternatename onto that same dtor, which is lane ALIAS table, not a slice row.
+#src/_ZN13RollingLogTtmD0Ev.cpp
+#   1 unresolved, {'MENTION': 1}
+src/_ZN13RollingLogTtmD1Ev.cpp
+
+# ---- config/arm9/overlays/ov033
+#   1 unresolved, {'MEMBER': 1}
+src/_ZN9TinyCover13InitResourcesEv.cpp
+#   1 unresolved, {'MEMBER': 1}
+src/_ZN9TinyCover16CleanupResourcesEv.cpp
+#   1 unresolved, {'MEMBER': 1}
+src/_ZN9TinyCover6RenderEv.cpp
+#   1 unresolved, {'MEMBER': 1}
+src/_ZN9TinyCover8BehaviorEv.cpp
+#   1 unresolved, {'MENTION': 1}
+# RETIRED at SLICE1 batch 1: MSVC folds the ROM D1 and D0 into ONE ??1TinyCover@@UAE@XZ, so compiling both per-function TUs is a duplicate symbol. The complete-object TU (D1) stays; this deleting-destructor TU leaves, and the ROM flat name _ZN9TinyCoverD0Ev wants a flat -> decorated alternatename onto that same dtor, which is lane ALIAS table, not a slice row.
+#src/_ZN9TinyCoverD0Ev.cpp
+#   1 unresolved, {'MENTION': 1}
+src/_ZN9TinyCoverD1Ev.cpp
+
+# ---- config/arm9/overlays/ov036
+#   1 unresolved, {'MENTION': 1}
+# RETIRED at SLICE1 batch 1: MSVC folds the ROM D1 and D0 into ONE ??1DonutBlock@@UAE@XZ, so compiling both per-function TUs is a duplicate symbol. The complete-object TU (D1) stays; this deleting-destructor TU leaves, and the ROM flat name _ZN10DonutBlockD0Ev wants a flat -> decorated alternatename onto that same dtor, which is lane ALIAS table, not a slice row.
+#src/_ZN10DonutBlockD0Ev.cpp
+#   1 unresolved, {'MENTION': 1}
+src/_ZN10DonutBlockD1Ev.cpp
+
+# ---- config/arm9/overlays/ov045
+#   1 unresolved, {'MEMBER': 1}
+src/_ZN15FireSeaElevator13InitResourcesEv.cpp
+#   1 unresolved, {'MEMBER': 1}
+src/_ZN15FireSeaElevator16CleanupResourcesEv.cpp
+#   1 unresolved, {'MEMBER': 1}
+src/_ZN15FireSeaElevator6RenderEv.cpp
+#   1 unresolved, {'MEMBER': 1}
+src/_ZN15FireSeaElevator8BehaviorEv.cpp
+#   1 unresolved, {'MENTION': 1}
+# RETIRED at SLICE1 batch 1: MSVC folds the ROM D1 and D0 into ONE ??1FireSeaElevator@@UAE@XZ, so compiling both per-function TUs is a duplicate symbol. The complete-object TU (D1) stays; this deleting-destructor TU leaves, and the ROM flat name _ZN15FireSeaElevatorD0Ev wants a flat -> decorated alternatename onto that same dtor, which is lane ALIAS table, not a slice row.
+#src/_ZN15FireSeaElevatorD0Ev.cpp
+#   1 unresolved, {'MENTION': 1}
+src/_ZN15FireSeaElevatorD1Ev.cpp
+
+# ---- config/arm9/overlays/ov060
+#   1 unresolved, {'MEMBER': 1}
+src/_ZN17BowserSkyPlatform13InitResourcesEv.cpp
+#   1 unresolved, {'MEMBER': 1}
+src/_ZN17BowserSkyPlatform16CleanupResourcesEv.cpp
+#   1 unresolved, {'MEMBER': 1}
+src/_ZN17BowserSkyPlatform6RenderEv.cpp
+#   1 unresolved, {'MEMBER': 1}
+src/_ZN17BowserSkyPlatform8BehaviorEv.cpp
+#   1 unresolved, {'MENTION': 1}
+# RETIRED at SLICE1 batch 1: MSVC folds the ROM D1 and D0 into ONE ??1BowserSkyPlatform@@UAE@XZ, so compiling both per-function TUs is a duplicate symbol. The complete-object TU (D1) stays; this deleting-destructor TU leaves, and the ROM flat name _ZN17BowserSkyPlatformD0Ev wants a flat -> decorated alternatename onto that same dtor, which is lane ALIAS table, not a slice row.
+#src/_ZN17BowserSkyPlatformD0Ev.cpp
+#   1 unresolved, {'MENTION': 1}
+src/_ZN17BowserSkyPlatformD1Ev.cpp
+
+# ---- config/arm9/overlays/ov064
+#   1 unresolved, {'MEMBER': 1}
+src/_ZN12MetalNetLift13InitResourcesEv.cpp
+#   1 unresolved, {'MEMBER': 1}
+src/_ZN12MetalNetLift16CleanupResourcesEv.cpp
+#   1 unresolved, {'MENTION': 1}
+src/_ZN12MetalNetLiftD0Ev.cpp
+#   1 unresolved, {'MENTION': 1}
+src/_ZN17BowserPuzzlePieceD0Ev.cpp
+#   1 unresolved, {'MENTION': 1}
+src/_ZN17BowserPuzzlePieceD1Ev.cpp
+#   1 unresolved, {'MEMBER': 1}
+src/_ZN19BowserPuzzleManager13InitResourcesEv.cpp
+#   1 unresolved, {'MEMBER': 1}
+src/_ZN19BowserPuzzleManager8BehaviorEv.cpp
+
+# ---- config/arm9/overlays/ov091
+#   1 unresolved, {'MEMBER': 1}
+src/_ZN5Stump13InitResourcesEv.cpp
+#   1 unresolved, {'MEMBER': 1}
+src/_ZN5Stump16CleanupResourcesEv.cpp
+#   1 unresolved, {'MEMBER': 1}
+src/_ZN5Stump6RenderEv.cpp
+#   1 unresolved, {'MEMBER': 1}
+src/_ZN5Stump8BehaviorEv.cpp
+#   1 unresolved, {'MENTION': 1}
+# RETIRED at SLICE1 batch 1: MSVC folds the ROM D1 and D0 into ONE ??1Stump@@UAE@XZ, so compiling both per-function TUs is a duplicate symbol. The complete-object TU (D1) stays; this deleting-destructor TU leaves, and the ROM flat name _ZN5StumpD0Ev wants a flat -> decorated alternatename onto that same dtor, which is lane ALIAS table, not a slice row.
+#src/_ZN5StumpD0Ev.cpp
+#   1 unresolved, {'MENTION': 1}
+src/_ZN5StumpD1Ev.cpp
+
+# ---- config/arm9/overlays/ov098
+#   1 unresolved, {'MEMBER': 1}
+# QUARANTINED at SLICE1 batch 1: MSVC refuses this TU with C2561 (ArrowSignRight::OnAttacked1 must return a value): same family; lane SYNC5 already dropped this one from the hostgen generation list.
+# It is a decomp-side shape, not a port one, and it is on runs/link100/out/SLICE1/quarantine_more.txt.
+#src/_ZN14ArrowSignRight11OnAttacked1ER8dActor_c.cpp
+
+# ---- config/arm9/overlays/ov100
+#   1 unresolved, {'FLAT': 1}
+src/_ZN4Door13InitResourcesEv.c
+#   1 unresolved, {'MEMBER': 1}
+src/_ZN4Door16CleanupResourcesEv.cpp
+#   1 unresolved, {'MEMBER': 1}
+src/_ZN4Door16OnPendingDestroyEv.cpp
+#   1 unresolved, {'MEMBER': 1}
+src/_ZN4Door6RenderEv.cpp
+#   1 unresolved, {'MEMBER': 1}
+src/_ZN4Door8BehaviorEv.cpp
+#   1 unresolved, {'MENTION': 1}
+# RETIRED at SLICE1 batch 1: MSVC folds the ROM D1 and D0 into ONE ??1Door@@UAE@XZ, so compiling both per-function TUs is a duplicate symbol. The complete-object TU (D1) stays; this deleting-destructor TU leaves, and the ROM flat name _ZN4DoorD0Ev wants a flat -> decorated alternatename onto that same dtor, which is lane ALIAS table, not a slice row.
+#src/_ZN4DoorD0Ev.cpp
+#   1 unresolved, {'MENTION': 1}
+src/_ZN4DoorD1Ev.cpp

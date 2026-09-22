@@ -38,7 +38,7 @@
 // is three or five instructions later and is a different number for the same
 // site.  Both sequences in full:
 //
-//     func_ov006_021214f8   add 0x0212151c   ands 0x02121520   blx 0x02121534
+//     _ZN17dScMgTrampoline_c8BehaviorEv   add 0x0212151c   ands 0x02121520   blx 0x02121534
 //     func_ov006_020cb030   add 0x020cb068   ands 0x020cb06c   blx 0x020cb080
 //
 // An earlier version of the element file reported ITS site at the blx while

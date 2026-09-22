@@ -6,7 +6,7 @@ for, so the two can be differenced instead of argued about. Nothing here is a
 guess: every address is read out of extracted/, and the filter is the ROM's own
 line.
 
-THE FILTER, verbatim (src/_Z11LoadObjectsRN11LVL_Overlay8ObjTableEij.c:8-15):
+THE FILTER, verbatim (src/_Z11LoadObjectsRN11LVL_Overlay8ObjTableEij.cpp:8-15):
 
     unsigned char b = *e;
     int type = (b >> 5) & 7;

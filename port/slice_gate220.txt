@@ -70,13 +70,13 @@
 #                           names the same function twice.
 #
 src/Message_DrawCenteredLine.c
-src/_ZN3G2S12GetBG1ScrPtrEv.c
-src/_ZN5Sound10PauseMusicEv.c
+src/_ZN3G2S12GetBG1ScrPtrEv.cpp
+src/_ZN5Sound10PauseMusicEv.cpp
 src/_ZN5Sound12PlayBank3_2DEj.cpp
-src/_ZN5Sound12UnpauseMusicEv.c
-src/_ZN5Stage10PS_CleanupEv.c
-src/_ZN5Stage17PS_UpdateSaveMenuEb.c
-src/_ZN5Stage17UpdateMenuButtonsEb.c
+src/_ZN5Sound12UnpauseMusicEv.cpp
+src/_ZN5Stage10PS_CleanupEv.cpp
+src/_ZN5Stage17PS_UpdateSaveMenuEb.cpp
+src/_ZN5Stage17UpdateMenuButtonsEb.cpp
 src/_ZN5Stage20PS_UpdateOptionsMenuEv.cpp
 src/_ZN5Stage25PS_UpdateOkAndBackButtonsEb.cpp
 src/_ZN5Stage7PS_InitEv.cpp
@@ -85,13 +85,13 @@ src/_ZN5Stage8BehaviorEv.cpp
 src/_ZN5Stage9LC_UpdateEv.cpp
 src/_ZN5Stage9PS_UpdateEv.cpp
 src/_ZN5Stage9VE_UpdateEv.cpp
-src/_ZN6Player8CanPauseEv.cpp
+src/actors/Player.cpp
 src/_ZN7Message11DisplayTextEt.cpp
 src/_ZN7Message16DisplayPauseTextEth.cpp
 src/_ZN7Message18DisplayPauseTextVSEt.cpp
 src/_ZN7Message19DisplayDontSaveTextEt.cpp
-src/_ZN7Message19DisplaySaveMenuTextEt.c
-src/_ZN7Message21DisplayLevelClearTextEta.c
+src/_ZN7Message19DisplaySaveMenuTextEt.cpp
+src/_ZN7Message21DisplayLevelClearTextEta.cpp
 src/_ZN7Message21DisplaySaveStatusTextEt.cpp
 src/_ZN7Message22DisplayOptionsMenuTextEt.cpp
 src/_ZN7Message25DisplayControllerModeTextEt.cpp
@@ -125,6 +125,5 @@ src/func_0205f66c.c
 src/func_0205f68c.c
 src/func_0205fa78.c
 src/func_0205fab4.c
-src/_ZN5Stage8CanPauseEv.c
-src/_ZN5Stage15IsPauseDisabledEv.c
-src/func_ov002_020bd8ac.c
+src/_ZN5Stage8CanPauseEv.cpp
+src/_ZN5Stage15IsPauseDisabledEv.cpp

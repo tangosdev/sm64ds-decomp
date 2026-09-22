@@ -16,8 +16,8 @@
 # ==== THE TWO CLASSES, both attribution routes =============================
 #
 #   id   site        SpawnInfo   word[0]     name                  +4   +6
-#   174  0x02090b1c  0x021124fc  0x02111410  func_ov052_02111410   174  16
-#   175  0x02090b20  0x021125cc  0x02111830  SquarePathLift_Spawn  175  17
+#   174  0x02090b1c  0x021124fc  0x02111410  daObjEmmLog_c_classInit   174  16
+#   175  0x02090b20  0x021125cc  0x02111830  daObjEmmYuka_c_classInit  175  17
 #
 # Both records' word[0] lands inside ov052 and both read their own id back at
 # +4. Eight instances each on level 44, sixteen in all. Identity from the RTTI
@@ -36,12 +36,12 @@
 #   dsd names this address TWICE, _ZTV14SquarePathLift and _ZTV14daObjEmmYuka_c;
 #   both are excluded and the RTTI spelling is aliased onto the host array.
 #
-# data_ov052_02112520 (id 174)  THIRTY-TWO slots, ends 0x021125a0.
+# _ZTV13daObjEmmLog_c (id 174)  THIRTY-TWO slots, ends 0x021125a0.
 #   reloc run       THIRTY-EIGHT. IT OVERRUNS BY SIX WORDS.
 #   next dsd symbol 0x02112530 -- INTERIOR (slot 4); 0x02112570 (slot 20) and
 #                   0x02112590 (slot 28) are interior splits too.
 #   So NEITHER naive read is usable here, and the pin is the ROM's own layout:
-#     (1) slot 31 is 0x020ee55c, _ZN8Platform4KillEv -- the Platform tail every
+#     (1) slot 31 is 0x020ee55c, _ZN10dBgActor_c4KillEv -- the Platform tail every
 #         32-slot platform table in the port ends on (ov045's 140/141/142/145,
 #         ov060's 166/167). Slot 29 is Actor::OnAimedAtWithEgg and slot 30
 #         Actor::OnAimedAtWithEggReturnVec, the same close as every other one.
@@ -67,7 +67,7 @@
 # The two vtables are HOST ARRAYS hal/actor_classes_ov052.cpp fills (the
 # ov015/ov016/ov045/ov060 rule: a mounted vtable hands a factory DS code
 # addresses), and the five dsd symbols interior to them go with them:
-#   0x02112520..0x021125a0  id 174, 32 slots   data_ov052_02112520
+#   0x02112520..0x021125a0  id 174, 32 slots   _ZTV13daObjEmmLog_c
 #                           + data_ov052_02112530 / 02112570 / 02112590
 #   0x021125f0..0x02112670  id 175, 32 slots   _ZTV14SquarePathLift
 #                                            == _ZTV14daObjEmmYuka_c
@@ -98,12 +98,12 @@
 # CLPS ov064 0x0211ba2c}, then its typeinfo and name string, then its
 # SpawnInfo (0x1c of record + the 8 RTTI header words of the table that
 # follows, which is why its next-symbol size is 0x24).
-data_ov052_021124d4 data_ov052_021124e0 data_ov052_021124ec
-data_ov052_021124f8 data_ov052_021124fc
+data_ov052_021124d4 _ZTI13daObjEmmLog_c _ZTS13daObjEmmLog_c
+data_ov052_021124f8 g_profile_EMM_LOG
 # id 175's file table {model SFP 0x021126a8, clsn SFP 0x021126b0,
 # CLPS ov064 0x0211ba0c}, its typeinfo, its name string, its SpawnInfo.
-data_ov052_021125a0 data_ov052_021125ac data_ov052_021125b8
-SquarePathLift_SpawnInfo
+data_ov052_021125a0 _ZTI14daObjEmmYuka_c data_ov052_021125b8
+g_profile_EMM_YUKA
 
 # ---- .bss 0x02112680..0x021126e0 ------------------------------------------
 # Two SharedFilePtr pairs and their destructor-chain nodes, one pair per sinit:

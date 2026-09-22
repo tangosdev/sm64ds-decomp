@@ -1,9 +1,28 @@
 //cpp
-// NONMATCHING (TERMINAL-FLOOR): functionally-verified C at the proven compiler floor.
-// Stage::InitResources @ 0x0202cc0c (arm9, size 0xa84). 4 words diverge: one arg-register
-// phi coalesce (bank web colored r1 vs ROM r2 at +0x524, one shared merge copy). Identical
-// on every owned build; pragmas, siblings, flags, launders, TU composition, goto-pin CFG
-// all closed (notes 6av/6ay, DB row). Register-rename-only delta: functionally identical.
+// MATCHING. Stage::InitResources @ 0x0202cc0c (arm9, size 0xa84), mwccarm 2004/b56.
+//
+// This function sat at a declared floor of 3-4 words for two campaigns. The residue was
+// never an allocator preference: GetSoundGroupID takes TWO arguments and this file
+// declared it with one. The callee (0x0202de24) reads r1 before it ever writes it --
+// `cmp r1,#1`, `cmp r1,#4`, `cmp r1,#2` -- so the second argument is real, and
+// src/GetSoundGroupID.c already defines it as `(int group, int sub)`. A `bl` is
+// byte-identical whether or not an argument is passed, so no byte gate, linkcheck or
+// fdiff run could see the error.
+//
+// Passing data_0209f220 (already loaded and compared at +0x514/+0x520) keeps that value
+// live in r1 all the way to the call at +0x570. That blocks r1 for the `bank` web, so
+// bank is coloured r2 (`mov r2,#0x36` at +0x524, `ldrb r2,[r1,r2]` at +0x580) and the
+// join copy `mov r1,r2` at +0x584 becomes necessary -- all three residual words at once.
+//
+// The levers are coupled: the old draft's widening cast on the LoadGroupAndSetBank
+// argument existed only to buy back the size the missing copy cost. With the copy
+// restored it overshoots, so the plain spelling is the matching one.
+//   (2-arg, plain) = MATCH   (2-arg, widened) = 1   (1-arg, plain) = 0xa80   (1-arg, widened) = 3
+//
+// The two pairs of stores below (f284/f294 and f2d4/f20c) are in ROM statement order.
+// Swapping either pair is byte-identical -- the literal-pool words are relocations and
+// therefore wildcards to the byte gate -- but sends each address to the wrong pool slot.
+// match.py --strict-relocs is what distinguishes them; keep this order.
 typedef unsigned char u8;
 typedef signed char s8;
 typedef unsigned short u16;
@@ -86,7 +105,7 @@ extern u8 data_02092778;
 extern s32 data_0209e650;
 extern u8 data_0209f208;
 extern s32 data_0209f344;
-extern char data_02075720[][0xC];
+extern char VS_STAR_SPAWN_ORDERS[][0xC];
 
 void Enable3dEngines(void);
 void ResetInput(void);
@@ -98,7 +117,7 @@ void Initialise3dGraphics(int arg);
 void InitialiseVramGlobals(void);
 void func_02039218(void);
 void ResetKuppaScript(void);
-int GetSoundGroupID(int level);
+int GetSoundGroupID(int level, int mode);
 void LoadDebugFont(void);
 int IsLevelInsideCastle(int level);
 int IsLevelTinyHugeIslandOutside(int level);
@@ -113,7 +132,7 @@ void _ZN9FaderWipeC1Ev(void *thiz);
 void _ZN9FaderWipeD1Ev(void *thiz);
 
 void _ZN5Sound6Player19SetPlayableSeqCountEii(int a, int b);
-void _ZN5Scene20Initialise3dGraphicsEv(void);
+void _ZN8dScene_c20Initialise3dGraphicsEv(void);
 void *_ZN4Heap10SetDefaultEv(void *self);
 void _ZN2GX15DisableAllBanksEv(void);
 void _ZN5Stage12SetVramBanksEv(void);
@@ -126,7 +145,7 @@ void _ZN5Stage14LoadGraphics2DEbi(int b, int level);
 void *_ZN5Model8LoadFileER13SharedFilePtr(void *sfp);
 void _ZN9FaderWipe14LoadAndSetFileEt(int thiz, u16 fileID);
 void _ZN5Stage9LoadModelEv(void *thiz);
-void _ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR12MeshCollider(void *ov, u32 flags, void *mc);
+void _ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR7dBgW_Kc(void *ov, u32 flags, void *mc);
 void _ZN5Sound22LoadAndSetMusic_Layer1Ei(int x);
 int _ZN5Sound8SetMusicEjj(u32 a, u32 b);
 void _ZN5Stage7LoadFogEv(void *thiz);
@@ -148,7 +167,7 @@ int Stage::InitResources()
             int n = 3;
             _ZN5Sound6Player19SetPlayableSeqCountEii(n, n);
         }
-        _ZN5Scene20Initialise3dGraphicsEv();
+        _ZN8dScene_c20Initialise3dGraphicsEv();
         Enable3dEngines();
         data_0209f21c = data_0208a0e0;
         data_0209f250 = (u8)func_0203da9c();
@@ -320,9 +339,9 @@ L_after304:
                 else if (level2 == 0x2B) soundGroup = 0x2D;
             }
             if (soundGroup == 0) {
-                soundGroup = GetSoundGroupID(level2);
-                bank = level2 * 3;
-                bank = data_02075769[bank];
+                int idx = level2 * 3;
+                soundGroup = GetSoundGroupID(level2, data_0209f220);
+                bank = data_02075769[idx];
             }
             _ZN5Sound19LoadGroupAndSetBankEii(soundGroup, bank);
         }
@@ -360,7 +379,7 @@ L_after304:
         data_0209f340 = data_02092208[data_0209f2f8];
         _ZN5Stage9LoadModelEv(thiz);
         data_0208ee44 = 2;
-        _ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR12MeshCollider((void*)data_0209f340, data_0209f264, (char*)thiz + 0x91c);
+        _ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR7dBgW_Kc((void*)data_0209f340, data_0209f264, (char*)thiz + 0x91c);
 
         int v0_8 = (data_0209f2d8 == 1) ? 1 : 0;
         if (v0_8 == 0) {
@@ -391,13 +410,13 @@ L_after304:
         _ZN8Particle10SysTracker10InitialiseEv((char*)thiz + 0x50);
 
         u8 f2fc = data_0209f2fc;
-        data_0209f284 = 0;
-        data_0209f290 = 0;
         data_0209f294 = 0;
+        data_0209f290 = 0;
+        data_0209f284 = 0;
         data_0209f300 = 0;
         if (f2fc != 1) {
-            data_0209f2d4 = 0;
             data_0209f20c = 0;
+            data_0209f2d4 = 0;
         }
         data_0209d45c = 0x11;
 
@@ -424,7 +443,7 @@ L_after304:
     func_0203b9b4(&data_0209e650, func_0203dad4());
     data_0209f208 = 0;
     u32 idx = func_0203dad4() % 6;
-    data_0209f344 = (s32)&data_02075720[idx];
+    data_0209f344 = (s32)&VS_STAR_SPAWN_ORDERS[idx];
 
     return 1;
 }

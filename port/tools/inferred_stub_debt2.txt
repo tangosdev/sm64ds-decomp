@@ -1,0 +1,55 @@
+# inferred_stub_debt2.txt
+#
+# THE SECOND DISCOVERED-DEBT QUEUE. Same thing as inferred_stub_debt.txt, same
+# rules, different discovery. It is a separate file because that one says in its
+# own header that nothing is ever added to it, and that rule is worth more than
+# the tidiness of one file.
+#
+# WHAT HAPPENED. On 2026-09-15 the guard's seating test was widened from one
+# route to four (port/tools/inferred_stub_guard.py, lane STUBGUARD). It had been
+# reporting 9 seated guess-marked bodies. The build compiles 132 and every one
+# of them is reachable. The miss was three blind spots stacked: a reference
+# reader that recognised only func_ style names, a hal glob that skipped .inc,
+# and no knowledge of the roughly 1900 generated faces through which ROM vtables
+# dispatch into C++ member bodies with no hal file involved.
+#
+# So 55 bodies became visible to the ratchet at once. They were ALREADY SEATED
+# AND ALREADY SHIPPING; the guard's eyesight changed, not the tree.
+#
+# THIRTY-NINE OF THE 55 ARE NOT HERE. They were read against the cartridge
+# instruction by instruction, ruled REAL_DECOMP on evidence, and are in
+# inferred_stub_adjudicated.txt: 26 read by lane STUBGUARD and 13 by lane STUBS.
+# Neither lane found a single wrong body, in 59 bodies read between them.
+#
+# THE SIXTEEN BELOW ARE THE HONEST RESIDUE. Lane STUBS showed that each one
+# calls exactly what the cartridge calls at its address, which is real evidence
+# and is why none of them looks wrong. It is not the same as reading the
+# arithmetic, which is the bar inferred_stub_adjudicated.txt holds a symbol to,
+# and nobody has done that for these. They are the largest bodies in the batch
+# (0x4c to 0x42c) which is why they were not finished in the time available.
+#
+# RATCHET: this list may only SHRINK and it must reach zero. Nothing is ever
+# added to it. A guess seated after this file was written fails the build.
+# Each entry retires the same way as in the first queue: read the body against
+# the ROM, then either move it to inferred_stub_adjudicated.txt with its
+# evidence, or, if it is a genuine guess, de-seat it.
+#
+# Discovered 2026-09-15, run link100, lane STUBGUARD.
+#
+# One symbol per line, sorted.
+_ZN11BillBlaster16CleanupResourcesEv
+_ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj
+_ZN15dScMgPachinko_c13InitResourcesEv
+_ZN15dScMgPachinko_c8BehaviorEv
+_ZN16dScMgPachinko2_c8BehaviorEv
+_ZN19BowserPuzzleManager8BehaviorEv
+_ZN6Thwomp15OnHitByMegaCharER6Player
+dScMgJump2_c_classInit
+func_ov006_020e759c
+func_ov062_0211ba84
+func_ov064_02118760
+func_ov064_02118d3c
+func_ov073_02122200
+func_ov084_0212c4a0
+func_ov095_02136298
+func_ov098_0213b7e8

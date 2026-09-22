@@ -25,17 +25,17 @@
 //
 // and config/arm9/symbols.txt puts a class destructor on both addresses:
 //
-//     _ZN12CylinderClsnD1Ev kind:func addr:0x020150a8
-//     _ZN12CylinderClsnD0Ev kind:func addr:0x0201507c
+//     _ZN5dCc_cD1Ev kind:func addr:0x020150a8
+//     _ZN5dCc_cD0Ev kind:func addr:0x0201507c
 //
 // THE INDEX CONVENTION IS THE CLASS'S OWN, not an inference. src/
-// _ZN12CylinderClsnD1Ev.c -- byte-matched, and the body this seat names at
+// _ZN5dCc_cD1Ev.c -- byte-matched, and the body this seat names at
 // index 0 -- opens by writing the table base as the object's vptr:
 //
 //     *(int*)self = (int)data_0208e6ec; // set vptr
 //
 // so 0x0208e6ec is the vptr address, index 0 is the first virtual slot, and
-// the Itanium pair sits at 0 and 1. src/_ZN12CylinderClsnD0Ev.c writes the
+// the Itanium pair sits at 0 and 1. src/_ZN5dCc_cD0Ev.cpp writes the
 // same base and adds the Memory::operator_delete2 call, which is the D1/D0
 // split every class in this band shows.
 //
@@ -51,7 +51,7 @@
 // wrote a slot and no call site reads one, so this changes no behaviour: it
 // makes the port's copy of the table carry the two words the ROM puts there,
 // and that is the reference edge that pulls the two matched TUs into the link.
-// The callee closure was already linked before this seat (func_02014fa4 and
+// The callee closure was already linked before this seat (_ZN5dCc_c6UnlinkEv and
 // Memory::operator_delete2 are both in the map).
 //
 // ABI. The flat-C bodies are `void *f(void *this)` with `this` on the stack.
@@ -62,7 +62,7 @@
 // ===========================================================================
 //
 // ===========================================================================
-// SEATED (wave 3, lane w3-b): _ZTV5Scene, arm9 0x02092680, slot 1.
+// SEATED (wave 3, lane w3-b): _ZTV8dScene_c, arm9 0x02092680, slot 1.
 //
 // This is the head group 4 at the bottom of this file found and could not
 // take. Group 4's blocker was storage, not shape: the body's callee chain
@@ -76,8 +76,8 @@
 //
 // and config/arm9/symbols.txt puts a Scene virtual on both ends:
 //
-//     _ZTV5Scene                       kind:data(any)          addr:0x02092680
-//     _ZN5Scene19BeforeInitResourcesEv kind:function(arm,...)  addr:0x0202e638
+//     _ZTV8dScene_c                       kind:data(any)          addr:0x02092680
+//     _ZN8dScene_c19BeforeInitResourcesEv kind:function(arm,...)  addr:0x0202e638
 //
 // THE INDEX CONVENTION IS THE TABLE'S OWN. 0x02092684 is base+4, so this is
 // slot 1, and slot 1 of an ActorBase-derived table is BeforeInitResources by
@@ -112,11 +112,11 @@
 // as an ORDINARY FIRST ARGUMENT, and calls callees whose C-linkage cdecl names
 // the map already defines:
 //
-//     Scene::BeforeRender  -> _ZN9ActorBase12BeforeRenderEv, and the C name is
+//     Scene::BeforeRender  -> _ZN7fBase_c12BeforeRenderEv, and the C name is
 //                             defined by hal/method_faces.cpp:305 as
 //                             `int f(void *self)` -- receiver passed, not
 //                             dropped
-//     Scene::~Scene D1/D0  -> _ZN9ActorBaseD2Ev (flat C, pointer argument) and
+//     Scene::~Scene D1/D0  -> _ZN7fBase_cD2Ev (flat C, pointer argument) and
 //                             _ZN6Memory10DeallocateEPvP4Heap, both already
 //                             C-named in the map, plus data_0208e4b8 and
 //                             data_020a0eac which are hosted
@@ -126,7 +126,7 @@
 //
 // RE-PROVING THE THREE THINGS THE MECHANISM DEPENDS ON.
 //
-// (a) REAL HOSTED STORAGE. `void *_ZTV5Scene[20]` in hal/stage_bridges.cpp,
+// (a) REAL HOSTED STORAGE. `void *_ZTV8dScene_c[20]` in hal/stage_bridges.cpp,
 //     line 83, in that file's extern "C" block. It is the port's own array,
 //     not an alias of another table and not romdata.
 //
@@ -136,7 +136,7 @@
 //     table would still not carry the ROM's word. Swept, and this is the
 //     evidence, not a recollection:
 //
-//       - grep for `_ZTV5Scene` and `data_02092680` across the whole tree
+//       - grep for `_ZTV8dScene_c` and `data_02092680` across the whole tree
 //         (port/, src/, unmatched/, include/, config/) returns: the
 //         definition in hal/stage_bridges.cpp:83, prose in that file's
 //         comment and in this one, the config row, the decl_common.h
@@ -153,47 +153,47 @@
 //             src TUs mentioning the table    28
 //             TUs with a real code store      28
 //             store statements                28
-//             SLOT writes (_ZTV5Scene[i] = )   0
+//             SLOT writes (_ZTV8dScene_c[i] = )   0
 //             comment/declaration-only TUs     0
 //
 //         There is no set of "three that only name it in a comment": every
 //         one of the 28 has exactly one real store, and three of them were
-//         read end to end (func_ov075_0211a740.c, func_020352b4.c,
-//         func_ov003_020b1118.cpp) to confirm the classifier rather than
+//         read end to end (dScEntry_c_classInit_RESULT.c, dScMB_c_classInit.c,
+//         dScGameOver_c_classInit.cpp) to confirm the classifier rather than
 //         trust it. The conclusion the old number supported is unchanged and
 //         is in fact three TUs stronger.
 //       - hal/stage_bridges.cpp's own fill, hal_fill_stage_vtable, writes
 //         _ZTV5Stage[0..19] (a 20-iteration st_trap loop, stage_bridges.cpp
-//         :105). It does NOT touch _ZTV5Scene; that array is labelled
+//         :105). It does NOT touch _ZTV8dScene_c; that array is labelled
 //         "transient ctor install, storage only" on its own line.
 //       - ALL 28 storing src/ mentions write the table's ADDRESS into an object's
-//         vptr. Not one of them stores into _ZTV5Scene[i]. Read out:
-//           _ZN5StageC3Ev.c      *(int*)p = (int)_ZTV5Scene;
-//           _ZN5StageD0Ev.c      thiz->vtable = (void **)_ZTV5Scene;
-//           _ZN5StageD2Ev.c      thiz->vtable = (void **)_ZTV5Scene;
-//           _ZN5SceneD0Ev.c      self->vtable = (void **)_ZTV5Scene;
-//           _ZN5SceneD1Ev.c      self->vtable = &_ZTV5Scene;
-//           _ZN5SceneD2Ev.c      self->vtable = &_ZTV5Scene;
-//           _ZN9BootSceneD0Ev.c  self->vtable = (void **)_ZTV5Scene;
-//           StarSelect_Spawn.cpp *(void***)p = (void**)_ZTV5Scene;
-//         and twenty more of exactly that shape (func_02023624,
-//         func_02034a78, func_02034ac0, func_020352b4, five ov003, four
+//         vptr. Not one of them stores into _ZTV8dScene_c[i]. Read out:
+//           dScStage_c_classInit.c      *(int*)p = (int)_ZTV8dScene_c;
+//           _ZN5StageD0Ev.c      thiz->vtable = (void **)_ZTV8dScene_c;
+//           _ZN5StageD1Ev.c      thiz->vtable = (void **)_ZTV8dScene_c;
+//           _ZN8dScene_cD0Ev.c      self->vtable = (void **)_ZTV8dScene_c;
+//           _ZN8dScene_cD1Ev.c      self->vtable = &_ZTV8dScene_c;
+//           _ZN9BootSceneD1Ev.c      self->vtable = &_ZTV8dScene_c;
+//           _ZN9BootSceneD0Ev.c  self->vtable = (void **)_ZTV8dScene_c;
+//           dScStarSel_c_classInit.cpp *(void***)p = (void**)_ZTV8dScene_c;
+//         and twenty more of exactly that shape (dScBoot_c_classInit,
+//         _ZN7dScMB_cD1Ev, _ZN7dScMB_cD0Ev, dScMB_c_classInit, five ov003, four
 //         ov004, two ov005, one ov007, four ov075). So the storage has
 //         exactly one writer, and after this change that writer is this file.
 //
 // (c) NOTHING DISPATCHES IT, and the reason is structural rather than lucky.
-//     _ZTV5Scene is an INTERMEDIATE-BASE table in the Itanium ctor/dtor
+//     _ZTV8dScene_c is an INTERMEDIATE-BASE table in the Itanium ctor/dtor
 //     chain, and every one of the writers above overwrites the vptr
 //     with another table before the object is used -- there is no call
 //     between the two stores in any of them:
 //
-//       _ZN5StageC3Ev   data_0208e4b8, then _ZTV5Scene, then _ZTV5Stage (wins)
-//       _ZN5SceneD0Ev   _ZTV5Scene, then data_0208e4b8, then ~ActorBase
+//       dScStage_c_classInit   data_0208e4b8, then _ZTV8dScene_c, then _ZTV5Stage (wins)
+//       _ZN8dScene_cD0Ev   _ZTV8dScene_c, then data_0208e4b8, then ~ActorBase
 //       _ZN5SceneD1/D2  same pair
-//       _ZN5StageD0/D2  _ZTV5Stage, three sub-object dtors, then _ZTV5Scene,
+//       _ZN5StageD0/D2  _ZTV5Stage, three sub-object dtors, then _ZTV8dScene_c,
 //                       then data_0208e4b8 -- the Scene store is the second
 //                       to last statement and nothing reads it
-//       StarSelect_Spawn data_0208e4b8, then _ZTV5Scene, then
+//       dScStarSel_c_classInit data_0208e4b8, then _ZTV8dScene_c, then
 //                       data_ov003_020b1704 (wins)
 //       _ZN9BootSceneD0Ev same shape as the Scene dtors
 //
@@ -201,16 +201,16 @@
 //     slot-7 seat by looking each writer's own .obj up in walk_window.map,
 //     not by recollection:
 //
-//       _ZN5StageC3Ev.c  data_0208e4b8, _ZTV5Scene, two |= bit sets on +0x13
+//       dScStage_c_classInit.c  data_0208e4b8, _ZTV8dScene_c, two |= bit sets on +0x13
 //                        (no calls), then _ZTV5Stage -- and only then the
 //                        three sub-object constructors. Last store wins.
-//       _ZN5SceneD1Ev.c  _ZTV5Scene then data_0208e4b8, adjacent statements,
+//       _ZN8dScene_cD1Ev.c  _ZTV8dScene_c then data_0208e4b8, adjacent statements,
 //                        then ActorBase::~ActorBase.
-//       _ZN5SceneD0Ev.c  the same pair, then ~ActorBase and Memory::Deallocate.
+//       _ZN8dScene_cD0Ev.c  the same pair, then ~ActorBase and Memory::Deallocate.
 //
-//     _ZN5SceneD2Ev.c is NOT in the map (the second wave-3 commit sliced D1
+//     _ZN9BootSceneD1Ev.c is NOT in the map (the second wave-3 commit sliced D1
 //     and D0, not D2). The other twenty-four are not in walk_window.map at
-//     all. So no live object has _ZTV5Scene as its vptr at any point a
+//     all. So no live object has _ZTV8dScene_c as its vptr at any point a
 //     virtual could be called, which is the same condition the CylinderClsn
 //     seat above rests on.
 //
@@ -231,7 +231,7 @@
 // ===========================================================================
 //
 // ===========================================================================
-// SEATED (wave 4, lane w4-d): _ZTV5Scene slot 7, Scene::BeforeBehavior.
+// SEATED (wave 4, lane w4-d): _ZTV8dScene_c slot 7, Scene::BeforeBehavior.
 //
 // This is the slot group 4 below called "the biggest single remaining win on
 // this table", and it is the last one of the six that needed no other lane's
@@ -243,8 +243,8 @@
 //
 // and config/arm9/symbols.txt puts a Scene virtual on both ends:
 //
-//     _ZTV5Scene                   kind:data(any)               addr:0x02092680
-//     _ZN5Scene14BeforeBehaviorEv  kind:function(arm,size=0x1fc) addr:0x0202e3d4
+//     _ZTV8dScene_c                   kind:data(any)               addr:0x02092680
+//     _ZN8dScene_c14BeforeBehaviorEv  kind:function(arm,size=0x1fc) addr:0x0202e3d4
 //
 // (0x0209269c - 0x02092680) / 4 = 7, so the ROM's own base and its own word
 // name the index; nothing here is inferred from the ActorBase slot order. The
@@ -258,7 +258,7 @@
 // sweep and the three-in-the-link reading in (b) and (c).
 //
 // THE ABI LINES UP the same way the other four do. The matched body is
-// `int _ZN5Scene14BeforeBehaviorEv(char *self)` inside an extern "C" block --
+// `int _ZN8dScene_c14BeforeBehaviorEv(char *self)` inside an extern "C" block --
 // receiver as an ordinary first argument, return value meaningful (0 stops the
 // actor's behaviour for the frame) -- so the slot takes the ecx->arg adapter
 // and forwards the result, exactly like scene_before_init.
@@ -331,6 +331,8 @@
 // redefined. It lives here rather than in cxx_aliases.cpp only because this
 // lane owns this file and not that one; it belongs in cxx_aliases.cpp with the
 // rest of the family whenever a change that owns that file passes through.
+#include "port_d16.h"
+
 #pragma comment(linker, \
     "/alternatename:__ZN3G3X13SetClearColorEtiiib=?SetClearColor@G3X@@SAXGHHH_N@Z")
 
@@ -339,18 +341,18 @@ extern "C" {
 /* _ZTV12CylinderClsn -- storage `int data_0208e6ec[4]` in hal/cxx_aliases.cpp */
 extern int data_0208e6ec[];
 
-void *_ZN12CylinderClsnD1Ev(void *self);   /* arm9 0x020150a8 */
-void *_ZN12CylinderClsnD0Ev(void *self);   /* arm9 0x0201507c */
+void *_ZN5dCc_cD1Ev(void *self);   /* arm9 0x020150a8 */
+void *_ZN5dCc_cD0Ev(void *self);   /* arm9 0x0201507c */
 
-/* _ZTV5Scene -- storage `void *_ZTV5Scene[20]` in hal/stage_bridges.cpp */
-extern void *_ZTV5Scene[];
+/* _ZTV8dScene_c -- storage `void *_ZTV8dScene_c[20]` in hal/stage_bridges.cpp */
+extern void *_ZTV8dScene_c[];
 
-int _ZN5Scene19BeforeInitResourcesEv(void *self);   /* arm9 0x0202e638 */
-int _ZN5Scene22BeforeCleanupResourcesEv(void *self);/* arm9 0x0202e5f0 */
-int _ZN5Scene14BeforeBehaviorEv(void *self);        /* arm9 0x0202e3d4 */
-int _ZN5Scene12BeforeRenderEv(void *self);          /* arm9 0x0202e3a4 */
-void *_ZN5SceneD1Ev(void *self);                    /* arm9 0x0202e140 */
-void *_ZN5SceneD0Ev(void *self);                    /* arm9 0x0202e170 */
+int _ZN8dScene_c19BeforeInitResourcesEv(void *self);   /* arm9 0x0202e638 */
+int _ZN8dScene_c22BeforeCleanupResourcesEv(void *self);/* arm9 0x0202e5f0 */
+int _ZN8dScene_c14BeforeBehaviorEv(void *self);        /* arm9 0x0202e3d4 */
+int _ZN8dScene_c12BeforeRenderEv(void *self);          /* arm9 0x0202e3a4 */
+void *_ZN8dScene_cD1Ev(void *self);                    /* arm9 0x0202e140 */
+void *_ZN8dScene_cD0Ev(void *self);                    /* arm9 0x0202e170 */
 
 /* The two ROM tail veneers. Their matched TUs take no arguments at all -- the
    ROM rides `this` and the VirtualFuncSuccess code through r0/r1 -- so the
@@ -358,27 +360,27 @@ void *_ZN5SceneD0Ev(void *self);                    /* arm9 0x0202e170 */
    which is sound only because the bodies at the end of the chain are `ret 4`.
    The whole reading is in hal/method_faces.cpp beside the two tagged
    definitions those veneers call. */
-void _ZN5Scene13AfterBehaviorEj(void);              /* arm9 0x0202e3c8 */
-void _ZN5Scene11AfterRenderEj(void);                /* arm9 0x0202e398 */
+void _ZN8dScene_c13AfterBehaviorEj(void);              /* arm9 0x0202e3c8 */
+void _ZN8dScene_c11AfterRenderEj(void);                /* arm9 0x0202e398 */
 
 }
 
-static void __fastcall cyl_d1(void *self, void *) { _ZN12CylinderClsnD1Ev(self); }
-static void __fastcall cyl_d0(void *self, void *) { _ZN12CylinderClsnD0Ev(self); }
+static void __fastcall cyl_d1(void *self, void *) { _ZN5dCc_cD1Ev(self); }
+static void __fastcall cyl_d0(void *self, void *) { _ZN5dCc_cD0Ev(self); }
 
 static int __fastcall scene_before_init(void *self, void *)
 {
-    return _ZN5Scene19BeforeInitResourcesEv(self);
+    return _ZN8dScene_c19BeforeInitResourcesEv(self);
 }
 
 static int __fastcall scene_before_cleanup(void *self, void *)
 {
-    return _ZN5Scene22BeforeCleanupResourcesEv(self);
+    return _ZN8dScene_c22BeforeCleanupResourcesEv(self);
 }
 
 static int __fastcall scene_before_behavior(void *self, void *)
 {
-    return _ZN5Scene14BeforeBehaviorEv(self);
+    return _ZN8dScene_c14BeforeBehaviorEv(self);
 }
 
 /* slots 8 and 11: the dispatch arrives __thiscall with `this` in ecx and the
@@ -387,35 +389,35 @@ static int __fastcall scene_before_behavior(void *self, void *)
 static void __fastcall scene_after_behavior(void *self, void *, unsigned)
 {
     (void)self;
-    _ZN5Scene13AfterBehaviorEj();
+    _ZN8dScene_c13AfterBehaviorEj();
 }
 
 static void __fastcall scene_after_render(void *self, void *, unsigned)
 {
     (void)self;
-    _ZN5Scene11AfterRenderEj();
+    _ZN8dScene_c11AfterRenderEj();
 }
 
 static int __fastcall scene_before_render(void *self, void *)
 {
-    return _ZN5Scene12BeforeRenderEv(self);
+    return _ZN8dScene_c12BeforeRenderEv(self);
 }
 
-static void *__fastcall scene_d1(void *self, void *) { return _ZN5SceneD1Ev(self); }
-static void *__fastcall scene_d0(void *self, void *) { return _ZN5SceneD0Ev(self); }
+static void *__fastcall scene_d1(void *self, void *) { return _ZN8dScene_cD1Ev(self); }
+static void *__fastcall scene_d0(void *self, void *) { return _ZN8dScene_cD0Ev(self); }
 
 extern "C" void hal_seat_w2_dtor_heads(void)
 {
     data_0208e6ec[0] = (int)(size_t)cyl_d1;
     data_0208e6ec[1] = (int)(size_t)cyl_d0;
-    _ZTV5Scene[1] = (void *)scene_before_init;
-    _ZTV5Scene[4] = (void *)scene_before_cleanup;
-    _ZTV5Scene[7] = (void *)scene_before_behavior;
-    _ZTV5Scene[8] = (void *)scene_after_behavior;
-    _ZTV5Scene[10] = (void *)scene_before_render;
-    _ZTV5Scene[11] = (void *)scene_after_render;
-    _ZTV5Scene[16] = (void *)scene_d1;
-    _ZTV5Scene[17] = (void *)scene_d0;
+    _ZTV8dScene_c[1] = (void *)scene_before_init;
+    _ZTV8dScene_c[4] = (void *)scene_before_cleanup;
+    _ZTV8dScene_c[7] = (void *)scene_before_behavior;
+    _ZTV8dScene_c[8] = (void *)scene_after_behavior;
+    _ZTV8dScene_c[10] = (void *)scene_before_render;
+    _ZTV8dScene_c[11] = (void *)scene_after_render;
+    _ZTV8dScene_c[16] = (void *)PORT_D16(scene_d1);
+    _ZTV8dScene_c[17] = (void *)scene_d0;
 }
 
 // ---- how this fill gets called ---------------------------------------------
@@ -455,14 +457,14 @@ W2SeatDtorHeads g_w2_seat_dtor_heads;
 //
 // 1. THE mwcc THUNK ARTEFACTS -- four tables, eight bodies. NOT LINKABLE.
 //
-//      data_02099274[0,1]  func_020375c0 / func_020375b0
-//      data_020992b4[0,1]  func_0203781c / func_0203780c
-//      data_02099348[0,1]  func_02037d94 / func_02037d84
-//      data_02099358[0,1]  func_02037db4 / func_02037da4
+//      VTable_dBgPi_dBgCh_GndThunk[0,1]  _ZThn16_N9dBgCh_GndD1Ev / _ZThn16_N9dBgCh_GndD0Ev
+//      data_020992b4[0,1]  _ZThn16_N9dBgCh_LinD1Ev / _ZThn16_N9dBgCh_LinD0Ev
+//      data_02099348[0,1]  _ZThn16_N12dBgCh_SphCrrD1Ev / _ZThn16_N12dBgCh_SphCrrD0Ev
+//      data_02099358[0,1]  _ZThn56_N12dBgCh_SphCrrD1Ev / _ZThn56_N12dBgCh_SphCrrD0Ev
 //
 //    These four are the SECONDARY-BASE sub-vtables of the collision classes
 //    wave 1 seated: 0x02099274 is 0x10 past RaycastGround's head, 0x020992b4
-//    0x10 past RaycastLine's, and src/func_02037c40.c -- SphereClsn's matched
+//    0x10 past RaycastLine's, and src/_ZN12dBgCh_SphCrrD0Ev.cpp -- SphereClsn's matched
 //    deleting destructor, already linked -- names all three of the third
 //    class's vptrs in its own comment: [this+0] = 0x02099338, [this+0x10] =
 //    0x02099348, [this+0x38] = 0x02099358. So the addresses are right and the
@@ -474,13 +476,13 @@ W2SeatDtorHeads g_w2_seat_dtor_heads;
 //    whose only job is to make the compiler emit the thunk. Under MSVC none
 //    of them defines a symbol called func_0203xxxx at all. Measured, not
 //    assumed:
-//      - src/func_020375b0.cpp, src/func_0203780c.cpp and src/func_02037d84.cpp
+//      - src/_ZThn16_N9dBgCh_GndD0Ev.cpp, src/_ZThn16_N9dBgCh_LinD0Ev.cpp and src/_ZThn16_N12dBgCh_SphCrrD0Ev.cpp
 //        are BYTE-IDENTICAL to each other (md5 cf4b564a...). Each compiles to
 //        ??1Derived@@UAE@XZ, so any two of them together are LNK2005
-//        ("already defined in func_020375b0.obj"), and each leaves
+//        ("already defined in _ZThn16_N9dBgCh_GndD0Ev.obj"), and each leaves
 //        ??1Base1@@UAE@XZ / ??1Base2@@UAE@XZ permanently undefined.
 //      - the four .c halves are C++ inside a .c (`virtual` in a struct) and do
-//        not compile as C: func_020375c0.c gives C2061 on line 6.
+//        not compile as C: _ZThn16_N9dBgCh_GndD1Ev.c gives C2061 on line 6.
 //    This is the same class wave-1 lane l3 hit on the six _ZThn80_ Animation
 //    thunks, one family over, and it ends the same way. The four tables keep
 //    their zeros.
@@ -494,7 +496,7 @@ W2SeatDtorHeads g_w2_seat_dtor_heads;
 //      _ZTV11CommonModel[1] <- _ZN11CommonModelD0Ev: same shape --
 //        hal/actor_classes_bob_world.cpp writes [0] = cm_d1 and [1] =
 //        cm_dosetfile, so the deleting body has nowhere to go.
-//      data_0208e87c[0] <- _ZN9ModelBaseD1Ev: one slot up, and l3 already put
+//      _ZTV9ModelBase[0] <- _ZN9ModelBaseD1Ev: one slot up, and l3 already put
 //        the deleting body (the useful half) in the single folded slot.
 //
 // 3. TABLES A RUNTIME FILL OWNS. _ZTV5Stage's head is Stage::InitResources and
@@ -506,7 +508,7 @@ W2SeatDtorHeads g_w2_seat_dtor_heads;
 //    Sound, VRAM banks, skybox, fog, the 2D graphics load and the whole
 //    LVL_Overlay path), which is a lane of its own, not a head seat.
 //
-// 4. _ZTV5Scene -- TAKEN IN WAVES 3 AND 4, and this entry is now the record of
+// 4. _ZTV8dScene_c -- TAKEN IN WAVES 3 AND 4, and this entry is now the record of
 //    what is LEFT of it. Wave 2 blocked the whole table on one missing global:
 //    slot 1's callee chain reaches Scene::ResetFadersAndSound, which writes
 //    data_0209f1e4, and the port hosted that dsd BSS symbol nowhere.
@@ -526,26 +528,26 @@ W2SeatDtorHeads g_w2_seat_dtor_heads;
 //        measurement rather than a change of mind. All three matched bodies
 //        are ARM tail-call veneers that rely on the receiver riding through in
 //        r0:
-//          src/_ZN5Scene18AfterInitResourcesEj.cpp
-//            extern "C" void _ZN12ActorDerived18AfterInitResourcesEj(void);
-//            void _ZN5Scene18AfterInitResourcesEj(void) { <callee>(); }
+//          src/_ZN8dScene_c18AfterInitResourcesEj.cpp
+//            extern "C" void _ZN7dBase_c18AfterInitResourcesEj(void);
+//            void _ZN8dScene_c18AfterInitResourcesEj(void) { <callee>(); }
 //        and the same shape for Scene::AfterBehavior and Scene::AfterRender.
 //        The callees exist in the map ONLY under their MSVC decorations
-//        (?AfterInitResources@ActorDerived@@UAEXI@Z,
-//        ?AfterBehavior@ActorBase@@UAEXI@Z, ?AfterRender@ActorBase@@UAEXI@Z --
+//        (?AfterInitResources@dBase_c@@UAEXI@Z,
+//        ?AfterBehavior@fBase_c@@UAEXI@Z, ?AfterRender@fBase_c@@UAEXI@Z --
 //        all UAE, virtual __thiscall, taking an argument), so what matters is
 //        what each CALLEE does with the two values the veneer cannot deliver.
 //        Read out of their own objects:
 //
-//          ?AfterBehavior@ActorBase@@UAEXI@Z    ret 4          (three bytes)
-//          ?AfterRender@ActorBase@@UAEXI@Z      ret 4          (three bytes)
-//          ?AfterInitResources@ActorDerived@@UAEXI@Z
+//          ?AfterBehavior@fBase_c@@UAEXI@Z    ret 4          (three bytes)
+//          ?AfterRender@fBase_c@@UAEXI@Z      ret 4          (three bytes)
+//          ?AfterInitResources@dBase_c@@UAEXI@Z
 //              cmp   dword ptr [ebp+8],1        reads the ARGUMENT
 //              mov   esi,ecx
-//              call  ?MarkForDestruction@ActorBase@@QAEXXZ
+//              call  ?MarkForDestruction@fBase_c@@QAEXXZ
 //                                               reads the RECEIVER
 //              push  dword ptr [ebp+8] / mov ecx,esi
-//              call  ?AfterInitResources@ActorBase@@UAEXI@Z
+//              call  ?AfterInitResources@fBase_c@@UAEXI@Z
 //
 //        Slots 8 and 11 are therefore SEATED: their callees read neither
 //        value, so the drop cannot be wrong the way method_faces.cpp's failure
@@ -564,9 +566,9 @@ W2SeatDtorHeads g_w2_seat_dtor_heads;
 //
 //    (b) TAKEN IN WAVE 4 -- slot 4. Scene::BeforeCleanupResources is ordinary C
 //        and DOES pass its receiver
-//        (`_ZN9ActorBase22BeforeCleanupResourcesEv(thiz)`); only the C-linkage
+//        (`_ZN7fBase_c22BeforeCleanupResourcesEv(thiz)`); only the C-linkage
 //        cdecl name it calls was undefined, since only
-//        ?BeforeCleanupResources@ActorBase@@UAEHXZ existed. That is one face
+//        ?BeforeCleanupResources@fBase_c@@UAEHXZ existed. That is one face
 //        beside the BeforeRender one it copies, and this lane owned the file.
 //
 //    (c) STORAGE THE MATCHED TU DEFINES ITSELF -- slot 5. MEASURED, not
@@ -576,9 +578,9 @@ W2SeatDtorHeads g_w2_seat_dtor_heads;
 //          dsstate_guard: 1 hosted DS symbol(s) are OUTSIDE .dsstate
 //          [0x94c000, 0x99b1dc) and would NOT be captured by a save state:
 //            _data_02092660  @ 0x00826ee1
-//              (_ZN5Scene21AfterCleanupResourcesEj.cpp.obj)
+//              (_ZN8dScene_c21AfterCleanupResourcesEj.cpp.obj)
 //
-//        src/_ZN5Scene21AfterCleanupResourcesEj.cpp does not merely reference
+//        src/_ZN8dScene_c21AfterCleanupResourcesEj.cpp does not merely reference
 //        data_02092660, it DEFINES it (`extern "C" { unsigned char
 //        data_02092660; }` at namespace scope in a .cpp is a definition, not a
 //        tentative one), so the global lands in ordinary .bss and a restore
@@ -609,12 +611,12 @@ W2SeatDtorHeads g_w2_seat_dtor_heads;
 //    all thirteen particle tables against config/arm9/relocs.txt and found zero
 //    mismatches; this lane re-derived them independently before retracting,
 //    rather than taking the ruling on report. All 26 words agree with the ROM,
-//    and the four tables in question -- data_0208f3a4 (Bubble), data_0208f3c4
-//    (SimpleCallback), data_0208f3e4 (Splash) and data_0208f444
+//    and the four tables in question -- _ZTVN5dPa_c7level_c16bubbleCallback_cE (Bubble), _ZTVN5dPa_c7level_c16simpleCallback_cE
+//    (SimpleCallback), _ZTVN5dPa_c7level_c16splashCallback_cE (Splash) and _ZTVN5dPa_c7level_c24fitWaterSimpleCallback_cE
 //    (FitWaterSimple) -- already seat SimpleCallback::SpawnParticles, because
 //    the ROM's own slot-0 relocation on each of them lands on 0x02022640,
 //    which config/arm9/symbols.txt names
-//    _ZN8Particle14SimpleCallback14SpawnParticlesERNS_6SystemE. SIX seat the base (f3b4 f3f4 f424 f434 f454 f464) and three seat their
+//    _ZN5dPa_c7level_c16simpleCallback_c14SpawnParticlesERN8Particle6SystemE. SIX seat the base (f3b4 f3f4 f424 f434 f454 f464) and three seat their
 //    own class's override (f3d4 EndingStarGlitter, f404 CheckLava, f414
 //    Scale) -- w3-b recount. The six that
 //    seat the base take 0x020226d0, which is Callback::SpawnParticles. The

@@ -38,11 +38,11 @@
  * door-open crash. Both are REAL FORWARDERS instead.
  *
  *   BgCh::StopDetectingWater. src/func_ov077_02123c6c.cpp and
- *   src/func_ov077_02124c28.cpp call the flat _ZN4BgCh18StopDetectingWaterEv,
- *   but the matched body src/_ZN4BgCh18StopDetectingWaterEv.cpp (already in
+ *   src/func_ov077_02124c28.cpp call the flat _ZN5dBgCh18StopDetectingWaterEv,
+ *   but the matched body src/_ZN5dBgCh18StopDetectingWaterEv.cpp (already in
  *   the build via port/slice_gate10.txt:854) is a real C++ method, so only
- *   ?StopDetectingWater@BgCh@@QAEXXZ exists. This is the exact twin of
- *   _ZN4BgCh19StartDetectingWaterEv at hal/player_bridges.cpp:915, written the
+ *   ?StopDetectingWater@dBgCh@@QAEXXZ exists. This is the exact twin of
+ *   _ZN5dBgCh19StartDetectingWaterEv at hal/player_bridges.cpp:915, written the
  *   same way. The decompiled body is what runs; this only carries the ROM's C
  *   name to it (a FORWARDS face in port/faces_adjudicated.txt's terms).
  *
@@ -69,7 +69,7 @@
  * next owns those files should move these seven declarations there; they are
  * written so that the move is a cut and paste.
  */
-#include "BgCh.h"
+#include "dBgCh.h"
 
 /* ---- 1. the five data spellings ---------------------------------------- */
 #pragma comment(linker, "/alternatename:?data_ov077_02127b30@@3PAPAXA=_data_ov077_02127b30")
@@ -80,9 +80,9 @@
 
 /* ---- 2a. BgCh::StopDetectingWater, the C name onto the matched method ---- */
 /* PORT_HOST_ABI: C-linkage face onto a matched C++ method; the twin of
- * _ZN4BgCh19StartDetectingWaterEv in hal/player_bridges.cpp. */
-extern "C" void _ZN4BgCh18StopDetectingWaterEv(void *self)
-{ ((BgCh *)self)->BgCh::StopDetectingWater(); }
+ * _ZN5dBgCh19StartDetectingWaterEv in hal/player_bridges.cpp. */
+extern "C" void _ZN5dBgCh18StopDetectingWaterEv(void *self)
+{ ((dBgCh *)self)->dBgCh::StopDetectingWater(); }
 
 /* ---- 2b. TextureSequence::SetFile, the caller's shadow onto the C name --- */
 struct BTP_File;

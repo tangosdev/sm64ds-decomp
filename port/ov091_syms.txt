@@ -12,42 +12,42 @@
 # Actor::BeforeInitResources (arm9 0x02011268) finds seven tables. Five carry a
 # _ZTV* name and the generator's own rule drops them. Two do not:
 #
-#   data_ov091_021352bc  RTTI 11daObjPile_c   <- ACTOR 27's OWN, and the
+#   _ZTV5Stump  RTTI 11daObjPile_c   <- ACTOR 27's OWN, and the
 #                                                registry fills it: EXCLUDED
-#   data_ov091_021351fc  RTTI 11daDsnBase_c   <- THWOMP's and GRINDEL's, and
+#   _ZTV11daDsnBase_c  RTTI 11daDsnBase_c   <- THWOMP's and GRINDEL's, and
 #                                                neither is registered, so it
 #                                                stays mounted as ordinary data
 #                                                and nothing dispatches it
 #
-# THE CONFIG'S _ZTV5Stump IS NOT ACTOR 27's TABLE. Stump_SpawnInfo (0x02135298,
-# +4 halfword 27) names factory Stump_Spawn at 0x02133938, and that factory's
+# THE CONFIG'S _ZTV5Stump IS NOT ACTOR 27's TABLE. g_profile_PILE (0x02135298,
+# +4 halfword 27) names factory daObjPile_c_classInit at 0x02133938, and that factory's
 # literal pool installs 0x021352bc, whose RTTI is daObjPile_c. The table config
 # calls _ZTV5Stump lives at 0x021353ac, its RTTI is daHyuhyu_c, and it is
-# FWOOSH's -- actor 231, Fwoosh_Spawn's own literal. So the six _ZN5Stump*
+# FWOOSH's -- actor 231, daHyuhyu_c_classInit's own literal. So the six _ZN5Stump*
 # bodies in src/ are Fwoosh's methods and actor 27's are the unnamed
 # func_ov091_* block the table points at. Same shape as ov100's DOOR: the port
 # compiles what the vtable points at and renames nothing.
 data_ov091_021344e8:0xc data_ov091_021344f4:0x8 data_ov091_021344fc:0x8
 data_ov091_02134504:0x10 data_ov091_02134514:0x10 data_ov091_02134ba0:0xc
-data_ov091_02134bac:0xc data_ov091_02134bb8:0xc data_ov091_02134bc4:0xc
-data_ov091_02134bd0:0xc data_ov091_02134bdc:0x1c
-RotatingUpDownPlatform_SpawnInfo:0x1c RotatingUpDownPlatformUtm_SpawnInfo:0x1c
+data_ov091_02134bac:0xc data_ov091_02134bb8:0xc _ZTI23daObjRotateUpdownLift_c:0xc
+data_ov091_02134bd0:0xc _ZTS23daObjRotateUpdownLift_c:0x1c
+g_profile_UPDOWN_LIFT:0x1c g_profile_HS_UPDOWN_LIFT:0x1c
 data_ov091_02134c30:0x4 data_ov091_02134c34:0x4 data_ov091_02134c38:0x24
 data_ov091_02134cdc:0x40 data_ov091_02134d1c:0x128 data_ov091_02134e44:0x8
 data_ov091_02134e4c:0x8 data_ov091_02134e54:0x8 data_ov091_02134e5c:0x8
-data_ov091_02134e64:0xc data_ov091_02134e70:0x10 ArrowPathLift_SpawnInfo:0x1c
-SquareMetalNetLift_SpawnInfo:0x1c data_ov091_02134f40:0xc
-data_ov091_02134f4c:0x14 SlidingPlatformBdw_SpawnInfo:0x1c
-SlidingPlatformBsWide_SpawnInfo:0x1c SlidingPlatformBsLong_SpawnInfo:0x1c
-SlidingPlatformRr_SpawnInfo:0x1c SlidingPlatformBfsSquare_SpawnInfo:0x1c
-SlidingPlatformBfsRectangle_SpawnInfo:0x1c SlidingPlatformWf_SpawnInfo:0x1c
+_ZTI13daLinelift2_c:0xc _ZTS13daLinelift2_c:0x10 g_profile_KM3_LIFT:0x1c
+g_profile_KM2_SUSUMU:0x1c _ZTI17daObjSimpleLift_c:0xc
+_ZTS17daObjSimpleLift_c:0x14 g_profile_KM1_DERU:0x1c
+g_profile_KM3_DERU01:0x1c g_profile_KM3_DERU02:0x1c
+g_profile_RC_RIFT01:0x1c g_profile_KM2_RIFUT01:0x1c
+g_profile_KM2_RIFUT02:0x1c g_profile_BK_TRANSBAR:0x1c
 data_ov091_02135024:0x4 data_ov091_02135028:0x4 data_ov091_0213502c:0x54
-data_ov091_02135100:0x20 data_ov091_02135120:0xc data_ov091_0213512c:0xc
-data_ov091_02135138:0x18 Thwomp_SpawnInfo:0x1c data_ov091_021351fc:0x80
-data_ov091_0213527c:0xc data_ov091_02135288:0x10 Stump_SpawnInfo:0x1c
+data_ov091_02135100:0x20 _ZTS7daDsn_c:0xc _ZTI7daDsn_c:0xc
+data_ov091_02135138:0x18 g_profile_DOSUN:0x1c _ZTV11daDsnBase_c:0x80
+_ZTI11daObjPile_c:0xc _ZTS11daObjPile_c:0x10 g_profile_PILE:0x1c
 data_ov091_0213533c:0x8 data_ov091_02135344:0x8 data_ov091_0213534c:0x8
 data_ov091_02135354:0x8 data_ov091_0213535c:0x8 data_ov091_02135364:0x8
-data_ov091_0213536c:0xc data_ov091_02135378:0x10 Fwoosh_SpawnInfo:0x1c
+_ZTI10daHyuhyu_c:0xc _ZTS10daHyuhyu_c:0x10 g_profile_HYUHYU:0x1c
 data_ov091_02135440:0x8 data_ov091_02135448:0x8 data_ov091_02135450:0x8
 data_ov091_02135458:0x8 data_ov091_02135460:0xc data_ov091_0213546c:0xc
 data_ov091_02135478:0xc data_ov091_02135484:0xc data_ov091_02135490:0x8

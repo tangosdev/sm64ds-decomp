@@ -29,8 +29,8 @@ extern "C" int func_ov084_0212ccb4(Obj* self)
     Camera* cam = data_0209f318;
     int r2;
     Vector3 l1;
-    Vector3* sa = (Vector3*)(((int)cam + 0x80) & 0xFFFFFFFFFFFFFFFFULL);
-    Vector3* sb = (Vector3*)(((int)cam + 0x8c) & 0xFFFFFFFFFFFFFFFFULL);
+    Vector3* sa = (Vector3*)((int)cam + 0x80);
+    Vector3* sb = (Vector3*)((int)cam + 0x8c);
     Vector3 l2;
     l1.x = sa->x;
     l1.y = sa->y;

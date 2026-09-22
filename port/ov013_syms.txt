@@ -9,9 +9,9 @@
 # .data 0x02111780-0x02112280, .bss 0x02112280-0x021122c0 (bss_size 64).
 #
 # EIGHT SYMBOLS LEFT OUT ON PURPOSE (two host arrays the fills own):
-#   data_ov013_02112128 + data_ov013_02112138/02112158/02112178/02112198
+#   _ZTV18daObjClockHuriko_c + data_ov013_02112138/02112158/02112178/02112198
 #     (0x02112128..0x021121a4, CLOCK_PENDULUM's 31-slot vtable, unnamed by
-#     dsd and split five ways -- ONE host array data_ov013_02112128[31] in
+#     dsd and split five ways -- ONE host array _ZTV18daObjClockHuriko_c[31] in
 #     hal/actor_classes_ov013.cpp spans all five; nothing references the
 #     interior names)
 #   _ZTV22ClockPaintingHandShort == _ZTV12daObjClock_c (0x02112200) +
@@ -30,11 +30,11 @@
 # never co-resident. RESOLVED by reading the raw bytes out of extracted/
 # overlays/overlay_0013.bin (base 0x021111a0, ov013's own dump, the one
 # loaded when Mario is on the second floor):
-#   0x021121dc word[0]=0x0211163c (ClockPaintingHandShort_Spawn, INSIDE
+#   0x021121dc word[0]=0x0211163c (daObjClock_c_classInit_CLOCK_SHORT, INSIDE
 #     ov013), word[1]=0x00a20124 -> id 0x124=292
-#   0x021121c0 word[0]=0x02111674 (ClockPaintingHandLong_Spawn),
+#   0x021121c0 word[0]=0x02111674 (daObjClock_c_classInit_CLOCK_LONG),
 #     word[1]=0x00a30125 -> id 0x125=293
-#   0x02112104 word[0]=0x02111384 (ClockPaintingPendulum_Spawn),
+#   0x02112104 word[0]=0x02111384 (daObjClockHuriko_c_classInit),
 #     word[1]=0x00a40126 -> id 0x126=294
 # Every record's spawn word lands inside ov013 itself and every id byte
 # matches its spawn-table slot ((addr-0x02090864)/4). The ambiguity is the
@@ -52,7 +52,7 @@
 # family exactly -- every base slot address verified against arm9
 # symbols.txt, slot 12 = 0x02043ac0 ActorBase::OnPendingDestroy, 13/14 =
 # Virtual34/38 traps, 15 = OnHeapCreated, 30 = OnAimedAtWithEggReturnVec):
-#   0 Init 0x0211133c (func_ov013_0211133c), 3 Clean 0x02111214,
+#   0 Init 0x0211133c (_ZN18daObjClockHuriko_c13InitResourcesEv), 3 Clean 0x02111214,
 #   6 Behavior 0x021112a8 (the pendulum swing: +-8/frame accel, PlayBank3
 #   0x16 at the +-0x10 extremes), 9 Render 0x02111280 (plain-Model slot-5
 #   bare-call shape over +0xd4 -- _ZTV5Model[5] is dual-filled, serves from
@@ -61,7 +61,7 @@
 #   table then run Model +0xd4 / Actor::D2 (+Deallocate in D0) -- HOST
 #   THUNKS in the fill, member chain read from the matched D0 body; both
 #   TUs stay byte-locked in src/ as proof.
-#   DSD DECOY NOTE: func_ov013_021111d0's recovered-name comment says
+#   DSD DECOY NOTE: _ZN18daObjClockHuriko_cD0Ev's recovered-name comment says
 #   "OnYoshiTryEat" -- reloc derivation puts it at slot 17 and its body is
 #   a textbook D0 (set vptr, Model dtor, Actor::D2, Deallocate on the game
 #   heap). The same slot-identity decoy gate 199 hit on SwitchPillar's D0.
@@ -98,7 +98,7 @@
 # them. hal/actor_classes_ov089.cpp defines host zero storage under the bare C
 # name `data_02111b68` because NO MOUNT DEFINES THAT SPELLING (ov013 mounts the
 # cell as data_ov013_02111b68, ov015 hosts the same address as code under
-# KnockDownPlank_Spawn) and because KEY is reachable only under ov046, where no
+# daObjBk_Botaosi_c_classInit) and because KEY is reachable only under ov046, where no
 # owner of the cell is loaded. If either stops being true -- a build where an
 # owning overlay and the KEY can both run, or a mount generated under the bare
 # C name -- the ov089 definition MUST GO and the name must resolve to the mount
@@ -125,10 +125,19 @@ data_ov013_02111be0:0x40 data_ov013_02111c20:0x34 data_ov013_02111c54:0x74
 data_ov013_02111cc8:0x60 data_ov013_02111d28:0xf0 data_ov013_02111e18:0x100
 data_ov013_02111f18:0xa8 data_ov013_02111fc0:0xcc data_ov013_0211208c:0x18
 data_ov013_021120a4:0x18 data_ov013_021120bc:0x1c data_ov013_021120d8:0x8
-data_ov013_021120e0:0xc data_ov013_021120ec:0xc data_ov013_021120f8:0xc
-ClockPaintingPendulum_SpawnInfo:0x14 data_ov013_02112118:0x10
-data_ov013_021121a4:0xc data_ov013_021121b0:0x8 data_ov013_021121b8:0x8
-ClockPaintingHandLong_SpawnInfo:0x1c ClockPaintingHandShort_SpawnInfo:0x1c
-data_ov013_021121f8:0x8 data_ov013_0211227c:0x4
+_ZTI18daObjClockHuriko_c:0xc _ZTS18daObjClockHuriko_c:0xc data_ov013_021120f8:0xc
+g_profile_CLOCK_HURIKO:0x14 data_ov013_02112118:0x10
+_ZTI12daObjClock_c:0xc _ZTS12daObjClock_c:0x8
+
+ data_ov013_0211227c:0x4
 data_ov013_02112280:0x8 data_ov013_02112288:0xc data_ov013_02112294:0x8
 data_ov013_0211229c:0x8 data_ov013_021122a4:0xc data_ov013_021122b0:0x10
+
+
+# RETIRED at ALIAS2 (wave 8, the main -> port sync). Each symbol below was
+# hosted here as a ROM data blob AND is now defined by a translation unit the
+# build compiles, so the link reported it twice (LNK2005). The generator input
+# is the place to fix that: build/port/host-src/ov013_syms.c is its output and is
+# regenerated from this list on every configure.
+#   g_profile_CLOCK_LONG                       now defined by daObjClock_c.cpp.obj
+#   g_profile_CLOCK_SHORT                      now defined by daObjClock_c.cpp.obj

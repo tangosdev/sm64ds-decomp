@@ -52,8 +52,8 @@
 #     which is why it is in gate 1 rather than behind the slot-5 rows.
 #
 # TWO OF THESE MATCHED TUs CARRY THE INFERRED-STUB MARKER and both are
-# admitted, not smuggled: src/func_ov100_021454c8.cpp and
-# src/func_ov016_02112b28.cpp are listed in port/tools/
+# admitted, not smuggled: src/game/actors/d_a_star_gate.cpp and
+# src/_ZN10RockPillar6RenderEv.cpp are listed in port/tools/
 # inferred_stub_adjudicated.txt as REAL_DECOMP with a match.py 2004/b56
 # strict-reloc MATCH recorded against the ROM (lane STUBADJ,
 # runs/link100/out/STUBADJ/verify.txt). inferred_stub_guard.py admits an
@@ -64,9 +64,9 @@
 #
 # daDoor_c::Render (ov100) OK -- family F, the tag reads
 #   "mwcc virtual-shadow dispatch (MSVC thiscall vs the slice's cdecl)"
-#   referrer  data_ov100_02148188[9] @ 021481ac = 021454c8   (overlay_0100.bin, base 02140d80)
+#   referrer  _ZTV4Door[9] @ 021481ac = 021454c8   (overlay_0100.bin, base 02140d80)
 #             vtable-4 @ 02148184 -> typeinfo 02148158 -> name "8daDoor_c"
-#   record    func_ov100_021454c8 kind:function(arm,size=0x88) addr:0x021454c8   (overlays/ov100/symbols.txt:78)
+#   record    _ZN4Door6RenderEv kind:function(arm,size=0x88) addr:0x021454c8   (overlays/ov100/symbols.txt:78)
 #   dispatch  02145500  add r0,r4,#0xd4 / ldr r2,[r0] / mov r1,#0 /
 #                       ldr r2,[r2,#0x14] / blx r2          ModelAnim slot 5
 #             02145520  ldr r2,[r0] / ldr r1,[r4,#0xe8] /
@@ -74,7 +74,7 @@
 #             02145538  ldr r2,[r0] / ldr r2,[r2,#0x14] / blx r2   Model slot 5
 #   face      none -- the matched TU defines the C name itself
 #   retires   port/unmatched/Door_Render.cpp (whole file)
-src/func_ov100_021454c8.cpp
+src/game/actors/d_a_star_gate.cpp
 #
 # Goomboss::Render (ov074) OK -- family E leftover, held back by the OTHER
 #   body in its host file (the ov070/ov074 shared-window name race), which is
@@ -122,42 +122,42 @@ src/func_ov006_020c4c54.cpp
 #             vtable-4 @ 02114c88 -> typeinfo 02114c4c -> name "13daSlide_Box_c",
 #             which is the ROM confirming the host file's own reading: the
 #             config class name is a decoy and this table is SLIDING_BOX's (313)
-#   record    _ZN23FloatOnWaterPlatformJrb6RenderEv kind:function(arm,size=0x28) addr:0x02113130   (overlays/ov016/symbols.txt:47)
+#   record    _ZN10SlidingBox6RenderEv kind:function(arm,size=0x28) addr:0x02113130   (overlays/ov016/symbols.txt:47)
 #   dispatch  02113130  ldr r2,[r0,#0xd4]! / mov r1,#0 / ldr r2,[r2,#0x14] /
 #                       blx r2 / mov r0,#1                Model at +0xd4, slot 5
 #   face      hal/except_faces.cpp, cdecl onto FloatOnWaterPlatformJrb::Render
 #   retires   port/unmatched/Jrb_Renders.cpp (with the three rows below, whole file)
-src/_ZN23FloatOnWaterPlatformJrb6RenderEv.cpp
+src/_ZN10SlidingBox6RenderEv.cpp
 #
 # daObjKi_Hasira_c::Render / ROCK_PILLAR (ov016) OK
-#   referrer  data_ov016_02114b00[9] @ 02114b24 = 02112b28   (overlay_0016.bin, base 021111a0)
+#   referrer  _ZTV10RockPillar[9] @ 02114b24 = 02112b28   (overlay_0016.bin, base 021111a0)
 #             vtable-4 @ 02114afc -> typeinfo 02114abc -> name "16daObjKi_Hasira_c"
 #             (config/arm9/overlays/ov016/relocs.txt agrees:
 #              from:0x02114b24 kind:load to:0x02112b28 module:overlay(16))
-#   record    func_ov016_02112b28 kind:function(arm,size=0x28) addr:0x02112b28   (overlays/ov016/symbols.txt:35)
+#   record    _ZN10RockPillar6RenderEv kind:function(arm,size=0x28) addr:0x02112b28   (overlays/ov016/symbols.txt:35)
 #   dispatch  02112b28  ldr r2,[r0,#0xd4]! / mov r1,#0 / ldr r2,[r2,#0x14] /
 #                       blx r2 / mov r0,#1                Model at +0xd4, slot 5
 #   face      none -- the matched TU defines the C name itself
 #   ADJUDICATED: this matched TU carries the inferred-stub marker and is
 #             listed REAL_DECOMP in port/tools/inferred_stub_adjudicated.txt
 #             (match.py 2004/b56 strict-reloc MATCH, lane STUBADJ)
-src/func_ov016_02112b28.cpp
+src/_ZN10RockPillar6RenderEv.cpp
 #
 # the Platform base Render (ov002) OK -- FOUR ROM table slots reach it
-#   referrer  data_ov002_02108fdc[9] @ 02109000 = 020b5c24   (overlay_0002.bin, base 020ad660)
+#   referrer  _ZTV17daObjFloatBoard_c[9] @ 02109000 = 020b5c24   (overlay_0002.bin, base 020ad660)
 #             vtable-4 @ 02108fd8 -> typeinfo 02108fb4 -> name "17daObjFloatBoard_c"
-#             data_ov016_02114bcc[9] @ 02114bf0 = 020b5c24   (overlay_0016.bin)
+#             _ZTV13daObjKi_Ita_c[9] @ 02114bf0 = 020b5c24   (overlay_0016.bin)
 #             vtable-4 @ 02114bc8 -> typeinfo 02114b80 -> name "13daObjKi_Ita_c",
 #             which is FLOAT_ON_WATER_PLATFORM_JRB (60) inheriting the base
 #             Render rather than overriding it -- the host file said so and the
 #             ROM says so
 #             plus ov029 relocs.txt from:0x02113c50 and from:0x02113f68,
 #             both kind:load to:0x020b5c24 module:overlays(0,2)
-#   record    func_ov002_020b5c24 kind:function(arm,size=0x28) addr:0x020b5c24   (overlays/ov002/symbols.txt:226)
+#   record    _ZN17daObjFloatBoard_c6RenderEv kind:function(arm,size=0x28) addr:0x020b5c24   (overlays/ov002/symbols.txt:226)
 #   dispatch  020b5c24  ldr r2,[r0,#0xd4]! / mov r1,#0 / ldr r2,[r2,#0x14] /
 #                       blx r2 / mov r0,#1                Model at +0xd4, slot 5
 #   face      none -- the matched TU defines the C name itself
-src/func_ov002_020b5c24.cpp
+src/actors/daObjFloatBoard_c.cpp
 #
 # func_ov006_020c7734 (ov006) OK
 #   referrer  config/arm9/overlays/ov006/relocs.txt
@@ -167,7 +167,12 @@ src/func_ov002_020b5c24.cpp
 #                       ldr r2,[r2,#0x14] / blx r2
 #                       the ModelAnim at +0x4c, slot 5, scale = data_ov006_0212ddd0
 #   face      none -- the matched TU defines the C name itself
-src/func_ov006_020c7734.cpp
+# QUARANTINED at the main->port sync (origin/main 9c7f38a24): main folded this
+# class into one TU, and port/ host-copies bodies inside it (the slice_bnp host copies).
+# port/CMakeLists.txt's own assertion refuses the pair, because taking both is a
+# duplicate symbol and taking the src one puts the host copy's reason back. The
+# row returns when the host copy covers the whole consolidated TU.
+#src/actors/dMgJump3DMario_c.cpp
 #
 # func_ov006_020c8e90 (ov006) OK
 #   referrer  config/arm9/overlays/ov006/relocs.txt
@@ -191,7 +196,13 @@ src/func_ov006_020c8e90.cpp
 #   dispatch  0212285c  mov r0,r4 / add r1,r4,#0x50 / ldr r2,[r0] /
 #                       ldr r2,[r2,#0x14] / blx r2       the object itself, slot 5
 #   face      none -- the matched TU defines the C name itself
-src/func_ov006_02122814.cpp
+# QUARANTINED at the main->port sync (origin/main 9c7f38a24): this row is the raw
+# consolidated TU. slice_tte.txt's TTE_HOSTGEN_SRCS substitutes a hostgen'd copy of
+# the WHOLE TU so its geometry register writes reach the geometry engine instead of
+# latching in the I/O window. Taking the raw copy as well would be a duplicate
+# symbol; taking it instead would put the defect back. The generated copy is in
+# this slice's target set, so the bodies still arrive.
+#src/minigames/d_s_mg_trampoline2.cpp
 #
 # Player::BlowAway (ov002) OK -- THE ONE GENUINE FAMILY F ROW THAT SURVIVES.
 #   Its tag names the family exactly: "cdecl C name the caller wants versus the
@@ -208,7 +219,7 @@ src/func_ov006_02122814.cpp
 #               from:0x0211221c kind:arm_call to:0x020d4fe4 module:overlay(2)
 #             config/arm9/overlays/ov091/relocs.txt
 #               from:0x02133b84 kind:arm_call to:0x020d4fe4 module:overlay(2)
-#             (their C-side callers are src/func_ov027_02112170.cpp:45 and
+#             (their C-side callers are src/_ZN21SnowmanBreathParticle9HitPlayerEv.cpp:45 and
 #              src/func_ov091_021339fc.c:72, both spelling the flat name)
 #   record    _ZN6Player8BlowAwayEs kind:function(arm,size=0x54) addr:0x020d4fe4   (overlays/ov002/symbols.txt:790)
 #   dispatch  none -- this body is the callee, not a dispatcher; what made it a

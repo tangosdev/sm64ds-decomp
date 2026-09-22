@@ -10,18 +10,18 @@
 #
 # ---- 1. THE TWO CLASSES ARE A FORK, NOT A SEQUENCE -------------------------
 #
-# src/_ZN5Scene18PrepareToSpawnBootEv.c is the whole decision:
+# src/_ZN8dScene_c18PrepareToSpawnBootEv.cpp is the whole decision:
 #
 #     if (func_0203d9b4()) data_02092664 = 0;      -> dScBoot_c, id 0
 #     else                 data_02092664 = 0x168;  -> dScMB_c,   id 360
 #
 # so a cartridge boot gets dScBoot_c and a DS Download Play boot gets dScMB_c,
 # and NEITHER is downstream of the title. dScBoot_c's Behavior is what asks
-# FOR the title: src/func_02005418.c ends in
+# FOR the title: src/_ZN9BootScene8BehaviorEv.cpp ends in
 # Scene::StartSceneFade(func_0203da3c() != 0 ? 6 : 1, 0, 0). The lane brief
 # called 360 "the main-menu scene, on the default route"; the ROM does not,
 # and dScMB_c is the multiboot screen (its D2 is named
-# MultiBootScene::~MultiBootScene in src/func_02034a78.c's own header).
+# MultiBootScene::~MultiBootScene in src/_ZN7dScMB_cD1Ev.cpp's own header).
 #
 #   id 0    SpawnInfo 0x020914a8  vtable 0x02091528  factory 0x02023624
 #   id 360  SpawnInfo 0x0209435c  vtable 0x020943c4  factory 0x020352b4
@@ -49,7 +49,7 @@
 #
 # ---- 3. THE ROM'S CALL GRAPH PREDICTED FIFTEEN TIMES THAT -----------------
 #
-# port/arm9_frontier.txt ranks func_0203506c and func_02005a58 the second and
+# port/arm9_frontier.txt ranks _ZN7dScMB_c13InitResourcesEv and _ZN9BootScene13InitResourcesEv the second and
 # third largest roots in arm9, at 531 and 528 transitively reachable unlinked
 # TUs. Recomputed here from config/arm9/relocs.txt over the two classes' own
 # bodies, the ROM-graph closure is 886 arm9 functions for dScMB_c and 873 for
@@ -101,8 +101,8 @@
 # ---- 5. THE ADJUDICATED BODIES -------------------------------------------
 #
 # Seven TUs in this slice carry the "recovered from vtable slot identity"
-# marker: func_02005a58 and func_02005418 (dScBoot_c slots 0 and 6) and
-# func_0203506c, func_02034d70, func_02034da4, func_02034d9c, func_02034ac0
+# marker: _ZN9BootScene13InitResourcesEv and _ZN9BootScene8BehaviorEv (dScBoot_c slots 0 and 6) and
+# _ZN7dScMB_c13InitResourcesEv, _ZN7dScMB_c16CleanupResourcesEv, _ZN7dScMB_c8BehaviorEv, _ZN7dScMB_c6RenderEv, _ZN7dScMB_cD0Ev
 # (dScMB_c slots 0/3/6/9/17). All seven are ruled REAL_DECOMP off the byte
 # gate in port/tools/inferred_stub_adjudicated.txt (run link100 lane MATCH,
 # evidence runs/link100/out/MATCH/treeB-verify.txt): compiled with the pinned
@@ -114,32 +114,34 @@
 # ---- 6. THE TWELVE CLASS TUs ---------------------------------------------
 
 # dScMB_c: factory, then slots 0 / 3 / 6 / 9 / 16 / 17
-src/func_020352b4.c
-src/func_0203506c.c
-src/func_02034d70.c
-src/func_02034da4.c
-src/func_02034d9c.c
-src/func_02034a78.c
-src/func_02034ac0.c
+src/d_s_mb.c
+src/_ZN7dScMB_c13InitResourcesEv.cpp
+src/_ZN7dScMB_c16CleanupResourcesEv.cpp
+src/_ZN7dScMB_c8BehaviorEv.cpp
+src/_ZN7dScMB_c6RenderEv.cpp
+src/_ZN7dScMB_cD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN7dScMB_cD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN7dScMB_cD0Ev.cpp
 
-# dScBoot_c: factory, then slots 0 / 6 / 16 / 17. Slot 16 is _ZN5SceneD2Ev and
+# dScBoot_c: factory, then slots 0 / 6 / 16 / 17. Slot 16 is _ZN9BootSceneD1Ev and
 # that is the ROM's own word, not a slip -- CodeWarrior folded the two
 # complete-object destructors and the body's first vptr store is data_02091528.
-src/func_02023624.c
-src/func_02005a58.c
-src/func_02005418.c
-src/_ZN5SceneD2Ev.c
-src/_ZN9BootSceneD0Ev.c
+src/d_s_boot.c
+src/_ZN9BootScene13InitResourcesEv.cpp
+src/_ZN9BootScene8BehaviorEv.cpp
+src/_ZN9BootSceneD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN9BootSceneD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN9BootSceneD0Ev.cpp
 
 # ---- 7. THE CLOSURE, IN THE ORDER THE ROUNDS FOUND IT --------------------
 
 # round 1: what the twelve want. The two message/save leaves are the boot
-# scene's "erase all save data" path (src/func_02005418.c state 5);
+# scene's "erase all save data" path (src/_ZN9BootScene8BehaviorEv.cpp state 5);
 # func_02034b1c/func_02034fbc are the multiboot scene's own sub-object init
 # and its heap swap; func_0203d7b8 and func_02053b98 are the card-busy poll
 # and the graphics-engine reset both InitResources bodies open with.
 src/_ZN7Message21DisplaySaveStatusTextEt.cpp
-src/_ZN8SaveData16EraseAllSaveDataEv.c
+src/_ZN8SaveData16EraseAllSaveDataEv.cpp
 src/func_02005348.c
 src/func_0201cd08.cpp
 src/engine/message/func_0201fe08.c

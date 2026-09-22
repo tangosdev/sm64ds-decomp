@@ -5,15 +5,15 @@
 /* recovered: named members + shared header, real C++ method */
 #include "FortressWall.h"
 #include "SharedFilePtr.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 extern char data_ov079_02128058[];
 extern char data_ov079_0212805c[];
 
 int FortressWall::CleanupResources()
 {
-  if(((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled())
-    ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
-  ((SharedFilePtr *)(*(void**)(data_ov079_02128058 + (unsigned char)((char *)this)[0x31e]*0xc)))->Release();
-  ((SharedFilePtr *)(*(void**)(data_ov079_0212805c + (unsigned char)((char *)this)[0x31e]*0xc)))->Release();
+  if(((dBgW *)&mMeshCollider)->IsEnabled())
+    ((dBgW *)&mMeshCollider)->Disable();
+  ((SharedFilePtr *)(*(void**)(data_ov079_02128058 + mVariant*0xc)))->Release();
+  ((SharedFilePtr *)(*(void**)(data_ov079_0212805c + mVariant*0xc)))->Release();
   return 1;
 }

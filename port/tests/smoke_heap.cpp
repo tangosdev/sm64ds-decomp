@@ -1,26 +1,48 @@
 // Gate-2 smoke: the game's ExpandingHeapAllocator running on a host arena.
 //
-// Everything here goes through the exact entry points the game uses, by
-// mangled name, the way the src/ TUs call each other. A fill-pattern torture
-// test is the point: the LP64 bug class corrupted allocator node headers
-// silently, and an allocator that survives thousands of randomized
-// alloc/free cycles with per-block patterns intact is strong evidence the
-// recovered layouts are byte-faithful on the host.
+// Everything here goes through the exact entry points the game uses, the way
+// the src/ TUs call each other. A fill-pattern torture test is the point: the
+// LP64 bug class corrupted allocator node headers silently, and an allocator
+// that survives thousands of randomized alloc/free cycles with per-block
+// patterns intact is strong evidence the recovered layouts are byte-faithful
+// on the host.
+//
+// THE THREE ENTRY POINTS MOVED, and this harness follows them (lane
+// SMOKELINK2, run link100 wave 10 round 2). It used to declare them as flat
+// extern "C" Itanium names with the receiver as a first stack argument --
+//   ExpandingHeapAllocator *_ZN4Heap28CreateExpandingHeapAllocatorEPvjj(...)
+//   void *_ZN22ExpandingHeapAllocator8AllocateEji(self, size, align)
+//   int _ZN22ExpandingHeapAllocator10DeallocateEPv(self, ptr)
+// -- which is what the ROM's own callers spell and what the src/ TUs emitted
+// before the 09-14 sync. They are now real C++ members: Allocate and
+// Deallocate are __thiscall with the receiver in ECX
+// (?Allocate@ExpandingHeapAllocator@@QAEPAXIH@Z,
+// ?Deallocate@ExpandingHeapAllocator@@QAEHPAX@Z) and
+// Heap::CreateExpandingHeapAllocator is a static
+// (?CreateExpandingHeapAllocator@Heap@@SAPAUExpandingHeapAllocator@@PAXII@Z,
+// include/Heap.h:252). Spelling the flat names here bought a link error; more
+// to the point, an extern "C" declaration of a __thiscall member is the
+// receiver-in-the-wrong-place bug the port keeps finding, and a test harness
+// that calls the game wrongly proves nothing about the game.
+//
+// This file is HOST TEST CODE, not ROM code, so it may include the class
+// headers and call the members the way C++ calls members -- which is also what
+// the synced src/ TUs now do. The entry points are unchanged; only the
+// spelling is. The three bodies it reaches are src/_ZN4Heap28Create...cpp,
+// src/_ZN22ExpandingHeapAllocator8AllocateEji.cpp and
+// src/_ZN22ExpandingHeapAllocator10DeallocateEPv.cpp, the same three objects
+// this target has always linked.
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-typedef unsigned int u32;
+#include "types.h"
+#include "Heap.h"
+#include "ExpandingHeapAllocator.h"
 
-struct ExpandingHeapAllocator;
-extern "C" {
-ExpandingHeapAllocator *_ZN4Heap28CreateExpandingHeapAllocatorEPvjj(void *address, u32 size, u32 flags);
-void *_ZN22ExpandingHeapAllocator8AllocateEji(ExpandingHeapAllocator *self, u32 size, int align);
-int _ZN22ExpandingHeapAllocator10DeallocateEPv(ExpandingHeapAllocator *self, void *ptr);
-}
-#define CreateAllocator _ZN4Heap28CreateExpandingHeapAllocatorEPvjj
-#define Alloc(a, n)     _ZN22ExpandingHeapAllocator8AllocateEji((a), (n), 4)
-#define Free(a, p)      _ZN22ExpandingHeapAllocator10DeallocateEPv((a), (p))
+#define CreateAllocator Heap::CreateExpandingHeapAllocator
+#define Alloc(a, n)     ((a)->Allocate((n), 4))
+#define Free(a, p)      ((a)->Deallocate(p))
 
 static int g_failures;
 #define CHECK(cond) \

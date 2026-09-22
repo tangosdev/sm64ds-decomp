@@ -16,7 +16,7 @@ public:
 
 extern "C" int __aeabi_idiv(int, int);
 extern unsigned char data_020755b8[];
-extern OamAttr *func_020aba70[];
+extern OamAttr *_ZN3OAM7NUMBERSE[];
 
 void Stage::RenderNumber(unsigned char num, int x, int y, bool b, int p5)
 {
@@ -31,11 +31,11 @@ void Stage::RenderNumber(unsigned char num, int x, int y, bool b, int p5)
         {
             if (b == 0)
             {
-                OAM::Render(true, func_020aba70[digit], x, y, p5, -1, mtx);
+                OAM::Render(true, _ZN3OAM7NUMBERSE[digit], x, y, p5, -1, mtx);
             }
             else
             {
-                OAM::Render(false, func_020aba70[digit], x, y, p5, -1, 0);
+                OAM::Render(false, _ZN3OAM7NUMBERSE[digit], x, y, p5, -1, 0);
             }
             leading = 1;
             x += 9;

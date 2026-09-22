@@ -7,11 +7,11 @@
 // resolves the vtable section 3 of port/mg_fanout_costs.txt left blank -- is a
 // //cpp TU and declares both tables as
 //
-//     extern void* data_ov006_0213e448;
-//     extern void* data_ov006_0214000c;
+//     extern void* _ZTV19dScMgSingle3DBase_c;
+//     extern void* _ZTV15dScMgSnowball_c;
 //
-// so MSVC mangles the references as ?data_ov006_0213e448@@3PAXA and
-// ?data_ov006_0214000c@@3PAXA -- C++-linkage void pointers -- while the ov006
+// so MSVC mangles the references as ?_ZTV19dScMgSingle3DBase_c@@3PAXA and
+// ?_ZTV15dScMgSnowball_c@@3PAXA -- C++-linkage void pointers -- while the ov006
 // mount (port/tools/ovdata.py's emission) defines the plain C names. That is
 // the "C-named symbols declared at C++ linkage" case port/mg_fanout_costs.txt
 // section 4 counts twenty-two of, and an alias is the whole fix: both sides
@@ -20,9 +20,9 @@
 //
 // ONLY ONE OF THE TWO IS HERE, and the reason is worth a line because it looks
 // like an omission. The first link of this seat asked for
-// ?data_ov006_0214000c@@3PAXA and NOT for the middle base's, because an
+// ?_ZTV15dScMgSnowball_c@@3PAXA and NOT for the middle base's, because an
 // earlier seat under dScMgSingle3DBase_c already stands an alias for
-// ?data_ov006_0213e448@@3PAXA. An /alternatename with the same left and right
+// ?_ZTV19dScMgSingle3DBase_c@@3PAXA. An /alternatename with the same left and right
 // sides declared twice is deduplicated by the linker, so a duplicate would be
 // harmless -- but a row nothing asks for is a row nobody can tell is doing
 // anything, so this file carries the one the link named.
@@ -39,7 +39,11 @@
 // classifies against, so it refuses after a probe link. The refusal is correct
 // and the row is hand-written instead.
 
-#pragma comment(linker, "/alternatename:?data_ov006_0214000c@@3PAXA=_data_ov006_0214000c")
+/* RE-POINTED at ALIAS2 (wave 8, the main -> port sync), lane ALIAS's
+   derivation: the right hand side this row carried is defined nowhere in
+   the link any more. data
+   was: #pragma comment(linker, "/alternatename:?_ZTV15dScMgSnowball_c@@3PAXA=_data_ov006_0214000c") */
+#pragma comment(linker, "/alternatename:?_ZTV15dScMgSnowball_c@@3PAXA=__ZTV15dScMgSnowball_c")
 
 // ---- 2. THE THREE CLOSURE FLOORS ARE RETIRED (run mg12, lane SNO) --------
 //
@@ -49,7 +53,7 @@
 // section 17, so the stubs and their counter accessor are GONE from this file
 // rather than left beside the real bodies where both could define the symbol:
 //
-//   func_ov006_02125f68   0x9e0  -> src/func_ov006_02125f68.c
+//   func_ov006_02125f68   0x9e0  -> src/func_ov006_02125f68.cpp
 //   func_ov006_02126ee4   0xacc  -> src/func_ov006_02126ee4.cpp
 //   func_ov006_02126b4c   0x398  -> src/func_ov006_02126b4c.c
 //

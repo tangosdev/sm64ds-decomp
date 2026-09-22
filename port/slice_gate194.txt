@@ -9,11 +9,12 @@
 # the slice: both store the class's own table directly (_ZTV10HootTheOwl /
 # _ZTV7daOwl_c, a one-speller D0, the MotherPenguin/daBgSnwmn_c shape), no
 # shared-placeholder overwrite.
-src/HootTheOwl_Spawn.c
-src/_ZN10HootTheOwlD1Ev.c
-src/_ZN10HootTheOwlD0Ev.c
-src/_ZN10HootTheOwl16CleanupResourcesEv.c
-src/_ZN10HootTheOwl16OnPendingDestroyEv.c
+src/d_a_owl.c
+src/_ZN10HootTheOwlD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN10HootTheOwlD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN10HootTheOwlD0Ev.cpp
+src/_ZN10HootTheOwl16CleanupResourcesEv.cpp
+src/_ZN10HootTheOwl16OnPendingDestroyEv.cpp
 src/_ZN10HootTheOwl13InitResourcesEv.cpp
 src/func_ov094_021361d8.c
 src/func_ov094_021362e0.c
@@ -21,7 +22,7 @@ src/func_ov094_021357a4.c
 #
 # NOT in this slice (host copies cover their slots/calls instead):
 # src/_ZN10HootTheOwl8BehaviorEv.cpp (the PMF-on-incomplete-class dispatch,
-# ALSO carries the "func_ov096_021357a4" cross-overlay alias typo -- moot
+# ALSO carries the "_ZN9daSanbo_c13OnYoshiTryEatEv" cross-overlay alias typo -- moot
 # once host-copied, see ov094_syms.txt), src/func_ov094_02136188.cpp (the
 # SAME PMF disease, the state-cell installer), src/_ZN10HootTheOwl6RenderEv.cpp
 # (the ModelAnim slot-5 shadow-vtable collision, the Whomp/Bully/BabyPenguin
@@ -45,10 +46,10 @@ src/func_ov094_021357a4.c
 # 02125950.cpp, the King Bob-omb family, takes the identical local-struct
 # shape and links via the existing cxx_aliases.cpp GetTalkState bridge).
 src/func_ov094_02135c28.c
-# func_ov094_02136024: r0-passthrough. Calls Actor::ClosestPlayer() with no
-# argument (this rode ARM r0). HOST COPY passes `c` explicitly at
-# port/unmatched/Actor_ClosestPlayer_OverlayReaders.cpp. Byte-locked src unchanged.
-# src/func_ov094_02136024.c
+# func_ov094_02136024: SEATED by run link100 wave 15 lane SEAT15B (LINK15 BATCH 1).
+# The matched src passes the ClosestPlayer receiver itself (src:17, `(c)`), so the
+# host copy in port/unmatched/Actor_ClosestPlayer_OverlayReaders.cpp is retired.
+src/func_ov094_02136024.cpp
 src/func_ov094_02135bd4.cpp
 src/func_ov094_02135e64.cpp
 src/func_ov094_02136150.c

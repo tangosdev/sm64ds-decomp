@@ -1,6 +1,6 @@
 void func_0204dc84(char *self)
 {
-    unsigned char *flags6 = (unsigned char *)(((long long)(int)(self + 6)));
+    unsigned char *flags6 = (unsigned char *)(self + 6);
     *flags6 &= ~3;
     *flags6 &= ~4;
     *(short *)(self + 4) = 0;

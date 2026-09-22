@@ -60,8 +60,8 @@
  *   bodies in address order beside the four names in address order gets three
  *   of the four pairings wrong -- the two orders are not the same order:
  *
- *     func_ov065_0211a358               +0xfc  -> 0x02112198   (id 110)
- *     func_ov065_0211b1d4               +0x140 -> 0x02112258   (id 113)
+ *     _ZN16daObjCtMecha03_c13InitResourcesEv               +0xfc  -> 0x02112198   (id 110)
+ *     _ZN16daObjCtMecha05_c13InitResourcesEv               +0x140 -> 0x02112258   (id 113)
  *     TtcRotatingGear::InitResources    +0xe0  -> 0x021121b8   (ids 116/117)
  *     TtcMovingCubeA::InitResources     +0x138 -> 0x02112118   (id 118)
  *

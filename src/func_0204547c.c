@@ -37,7 +37,7 @@ void func_0204547c(Ctx *ctx, Src *s, int a2, Dst *d)
     u16 *p;
 
     d->f18 = 0;
-    p = (u16 *)(((int)d + 0x18) & 0xFFFFFFFFFFFFFFFFull);
+    p = (u16 *)((int)d + 0x18);
     *p |= s->h2;
     *p |= s->h6;
     *p |= s->hA;

@@ -2,7 +2,7 @@
 #
 # WHAT IT REPLACES. hal/sdat/consumer.cpp carried two hand-written functions,
 # sd_sound_frame_host and sd_sound_fade_host, that between them transcribed
-# src/func_0204f03c.cpp and src/func_020132d8.cpp with five calls SKIPped. Each
+# src/func_0204f03c.c and src/func_020132d8.cpp with five calls SKIPped. Each
 # skip had a written reason and all five reasons are now spent:
 #
 #   func_020508a0   the streamed-sound frame       R8

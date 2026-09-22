@@ -1,12 +1,37 @@
 // Gate-9 smoke: a real actor lives its lifecycle on host.
 //
-// ArrowSignRight_Spawn allocates from the game heap and runs the ctor
+// daObjYajirusi_c_classInit_YAJIRUSI_R allocates from the game heap and runs the ctor
 // chain (Platform -> Actor -> ActorBase, Model and MovingMeshCollider
 // subobjects, ShadowModel); then every lifecycle step dispatches THROUGH
 // THE VTABLE exactly as the game's processing lists do: InitResources
 // loads the sign's model and collider through the full asset pipeline,
 // Behavior ticks, Render walks the model into the GX. This is the vtable
 // law's first full-class workout -- the rung before Player.
+//
+// TWO THINGS THIS FILE SPELLS FOLLOWED THE 09-14 SYNC (lane SMOKELINK4B, run
+// link100 wave 10 round 4; the same two edits are in tests/smoke_savestate.cpp
+// and tests/smoke_persist.cpp, which build the same actor world).
+//
+// 1. THE BRING-UP ENTRY POINT. It used to be declared as a flat extern "C"
+//    Itanium name returning void* --
+//      void *_ZN4Heap13SetupRootHeapEv(void);
+//    -- which is what src/ emitted before the sync. It is Heap::SetupRootHeap()
+//    now, a real static member (include/Heap.h:236,
+//    ?SetupRootHeap@Heap@@SAPAU1@XZ), so the flat spelling bought a link error.
+//    This file is HOST TEST CODE, so it includes the class header and calls the
+//    member the way C++ calls it, reaching the same object it always linked.
+//    tests/smoke_roots.cpp's header block has the longer version of this.
+//
+// 2. THE ARROW SIGNS' ENTRY TABLE GREW ITS THIRD COLUMN VIEW. The ROM gives
+//    each column of the 0xc-stride table at ov098:0x0213c380 its own symbol, and
+//    the synced src/_ZN14ArrowSignRight13InitResourcesEv.cpp names all three
+//    (0x380 model, 0x384 collision, 0x388 the CLPS block it hands
+//    dBgW_KcMbg::SetFile). The pre-sync body reached that third word as
+//    data_ov098_0213c380[idx].c through the one symbol it declared, so this
+//    harness owned the storage already and never seeded it: what SetFile got
+//    was NULL. It still is, and now it has a name. See port/ov098_syms.txt,
+//    whose header records that this storage is the harness's because this
+//    harness does not mount ov098.
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
@@ -18,11 +43,11 @@
 
 #include "fault_probe.h"
 
-typedef unsigned int u32;
+#include "types.h"
+#include "Heap.h"
 
 extern "C" {
-int *ArrowSignRight_Spawn(void);
-void *_ZN4Heap13SetupRootHeapEv(void);
+int *daObjYajirusi_c_classInit_YAJIRUSI_R(void);
 extern int data_0209b3ec[12];       /* camera matrix */
 /* the spawn context ActorDerived::Spawn would have staged */
 struct SharedFilePtrC { unsigned short fileID; unsigned char numRefs;
@@ -31,11 +56,15 @@ SharedFilePtrC *_ZN13SharedFilePtr9ConstructEj(SharedFilePtrC *s, u32 id);
 extern unsigned short data_020a4b54;    /* pending actor ID */
 extern void **data_020a4bb8;            /* actorID -> SpawnInfo* */
 /* ov098's SharedFilePtr entry table for the arrow signs: three-pointer
-   entries {model, kcl, ?}, plus the column-b view the DS gets for free as
-   base+4. This smoke does not mount ov098 (walk_window does, gate 19), so it
-   owns the storage and seeds both views with its own SharedFilePtr objects. */
+   entries {model, kcl, clps}, plus the column-b and column-c views the DS gets
+   for free as base+4 and base+8. This smoke does not mount ov098 (walk_window
+   does, gate 19), so it owns the storage and seeds the two views it has
+   SharedFilePtr objects for. The column-c view is left as it was before the
+   sync named it: zero, which is the CLPS_Block pointer the pre-sync body
+   already handed dBgW_KcMbg::SetFile out of data_ov098_0213c380[idx].c. */
 void *data_ov098_0213c380[6];
 char data_ov098_0213c384[0x18];
+char data_ov098_0213c388[0x18];
 extern void *data_020a0eac_c;           /* Memory::gameHeapPtr */
 extern void *data_020a0ea0;             /* defaultHeapPtr (gate 3a) */
 void _ZN4Heap18InitializeGameHeapEjPS_(unsigned size, void *root);
@@ -83,7 +112,7 @@ int main(void)
     PORT_INSTALL_FAULT_PROBE();
     setvbuf(stdout, NULL, _IONBF, 0);
     if (!ntr::io_init()) { fprintf(stderr, "io_init failed\n"); return 2; }
-    CHECK(_ZN4Heap13SetupRootHeapEv() != NULL);
+    CHECK(Heap::SetupRootHeap() != NULL);
     ident_fx(data_0209b3ec);
 
     /* stage the spawn context: actor 0x12b = ArrowSignRight, its SpawnInfo
@@ -99,7 +128,7 @@ int main(void)
        bring-up tests/walk_window.cpp and tests/smoke_player.cpp do, so all
        four now configure the heap the way the boot spine does. This line used
        to be `data_020a0eac_c = data_020a0ea0;`, which pointed the game-heap
-       word straight at the root heap: ArrowSignRight_Spawn allocated out of
+       word straight at the root heap: daObjYajirusi_c_classInit_YAJIRUSI_R allocated out of
        the whole host arena and the ROM's own heap object never existed.
        func_0201a054 calls Heap::InitializeGameHeap(0x3b000, 0) instead -- a
        hard immediate and a NULL parent, no arena arithmetic. See
@@ -132,7 +161,7 @@ int main(void)
     data_0209f394[0] = fake_player;
     *(unsigned char *)&data_0209f21c = 1;
 
-    int *actor = ArrowSignRight_Spawn();
+    int *actor = daObjYajirusi_c_classInit_YAJIRUSI_R();
     CHECK(actor != NULL);
     printf("  spawned at %p, vtable %p\n", (void *)actor, *(void **)actor);
 

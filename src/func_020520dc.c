@@ -6,7 +6,7 @@ void func_020520dc(char *self)
     if (*(int *)(self + 0x100) == 0)
         return;
 
-    *(int *)(((long long)(int)(self + 0x100))) -= 1;
+    *(int *)(self + 0x100) -= 1;
 
     if (*(int *)(self + 0x100) != 0)
         return;

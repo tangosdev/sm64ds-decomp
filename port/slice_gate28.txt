@@ -4,7 +4,7 @@
 # bottom screen is mostly made of. Twelve matched methods; what it needed was
 # gate 27's eighteen-slot vtable law plus a registry row.
 #
-# Its SpawnInfo is ov002 0x0210c160, which config names _ZN7Minimap9spawnDataE,
+# Its SpawnInfo is ov002 0x0210c160, which config names g_profile_MAP,
 # and like the HUD the ROM puts the CONSTRUCTOR in the record's +0 word
 # (0x020fb8bc) rather than a separate Spawn veneer. The +4 halfword reads 0x14f
 # and the +6 halfword 0x14f, which is the id and the two list priorities.
@@ -33,9 +33,10 @@
 # minimap is the thing that turns BG3 on, and hal/sub_screen.cpp has been
 # publishing that mask into DISPCNT_B every frame with nothing setting the bit.
 
-src/_ZN7MinimapC1Ev.c
-src/_ZN7MinimapD0Ev.c
-src/_ZN7MinimapD1Ev.c
+src/d_map.cpp
+# RETIRED at SLICE1: body now in src/_ZN7MinimapD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN7MinimapD0Ev.cpp
+src/_ZN7MinimapD1Ev.cpp
 src/_ZN7Minimap13InitResourcesEv.cpp
 src/_ZN7Minimap16CleanupResourcesEv.cpp
 src/_ZN7Minimap16OnPendingDestroyEv.cpp
@@ -66,17 +67,17 @@ src/GetMinimapScale.c
 src/UpdateMinimap.c
 
 # BG3-sub character and screen pointers, and the extended-palette upload
-src/_ZN3G2S13GetBG3CharPtrEv.c
-src/_ZN3G2S12GetBG3ScrPtrEv.c
+src/_ZN3G2S13GetBG3CharPtrEv.cpp
+src/_ZN3G2S12GetBG3ScrPtrEv.cpp
 src/_ZN3GXS18BeginLoadBGExtPlttEv.cpp
-src/_ZN3GXS13LoadBGExtPlttEPKvjj.c
-src/_ZN3GXS16EndLoadBGExtPlttEv.c
+src/_ZN3GXS13LoadBGExtPlttEPKvjj.cpp
+src/_ZN3GXS16EndLoadBGExtPlttEv.cpp
 
 # the VRAM bank swap the extended-palette upload brackets itself with
-src/_ZN2GX22SetBankForSubBGExtPlttEt.c
+src/_ZN2GX22SetBankForSubBGExtPlttEt.cpp
 src/func_02054118.c
 src/func_020541b8.c
 
 # the callees no earlier slice pulled in
 src/Vec3_DivScalarInPlace.c
-src/_ZN6Player12Unk_020ca8f8Ev.cpp
+src/actors/Player.cpp

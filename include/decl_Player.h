@@ -25,7 +25,7 @@ extern int _ZN6Player12Unk_020c4f40Et(int, u16);
 extern int _ZN6Player13TryTalkToDoorEh(char*, unsigned char);
 extern int _ZN6Player15IsEnteringLevelEv(void*);
 extern int _ZN6Player16IsInsideOfCannonEv(void*);
-extern int _ZN6Player16St_WallJump_InitEv(char*);
+extern int func_ov006_020e17f8(char*);
 extern int _ZN6Player18HasFinishedTalkingEv(void*);
 extern int _ZN6Player9IsOnShellEv(void*);
 extern void _ZN6Player10SpinBounceE5Fix12IiE(void*, int);

@@ -1,17 +1,14 @@
 //cpp
 // @symbol _ZN4DoorD1Ev
-
-struct Actor {
-    char pad[0xd0];
-    virtual ~Actor();
-};
-
-struct CommonModel { char pad[0x4]; ~CommonModel(); };
-
-struct Door : Actor {
-    CommonModel m0;   /* 0xd4 */
-    virtual ~Door();
-};
+/* recovered: real C++ destructor -- the compiler emits the whole body
+ *
+ * The hand-written version spelled out what a complete-object destructor does
+ * anyway: store this class's vtable over the one the base constructor left,
+ * destroy the members in reverse declaration order, then run the base
+ * subobject destructor. All of it follows from `struct Door : dActor_c` and the member types
+ * in the header, so the body is empty and the bytes still reproduce.
+ */
+#include "Door.h"
 
 Door::~Door()
 {

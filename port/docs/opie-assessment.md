@@ -150,8 +150,8 @@ That grep proves nothing in a tree that names unknowns `func_XXXX`. Re-examined:
   is a flat count/offset header, and name lookup is linear `strcmp`
   (`src/func_020471ac.c`) where NNS G3d uses radix dictionaries. Hand-rolled EAD readers.
 - **FND heaps: NNS under EAD names.** The signatures are literal NNS FND tags —
-  `0x46524d48` = `'FRMH'` (`src/_ZN18SolidHeapAllocatorC1EPvj.c:14`) and `0x45585048` =
-  `'EXPH'` (`src/_ZN22ExpandingHeapAllocatorC1EPvj.c:24`).
+  `0x46524d48` = `'FRMH'` (`src/_ZN18SolidHeapAllocatorC1EPvj.cpp:14`) and `0x45585048` =
+  `'EXPH'` (`src/_ZN22ExpandingHeapAllocatorC1EPvj.cpp:24`).
 
 Correct statement: *SM64DS does not use NNS G2d/G3d; its heap and sound layers are
 NNS/SDK-shaped under EAD names.* And write "BMD/BTP/BCA," not "BMD0/BTP0/BCA0" — the
@@ -210,7 +210,7 @@ descriptors:
 
 ```c
 if (g == (int)&data_02089608)                     /* src/ContinueKuppaScriptIfNecessary.c:17 */
-(int)&func_02034fbc                                /* src/func_02034da4.c:48 — function ptr */
+(int)&func_02034fbc                                /* src/_ZN7dScMB_c8BehaviorEv.cpp:48 — function ptr */
 LoadOverlay((int)&overlay_0)                       /* src/func_0201a2f8.c:41 */
 ```
 

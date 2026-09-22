@@ -72,7 +72,7 @@
 // Three distinct callees, seven call sites, all in main, ALL already
 // decompiled. Identical set to the sibling's, and to CT1's for 0x020e1854.
 //
-//   0x0203d744  _ZN4cstd4sqrtEy               x3   src/_ZN4cstd4sqrtEy.c
+//   0x0203d744  _ZN4cstd4sqrtEy               x3   src/_ZN4cstd4sqrtEy.cpp
 //   0x0203b4dc  _ZN4cstd5atan2E5Fix12IiES1_   x3   src/_ZN4cstd5atan2E5Fix12IiES1_.c
 //   0x02012718  func_02012718                 x1   src/func_02012718.c
 //

@@ -293,7 +293,7 @@ int data_02099f24[4];
 int data_0209cefc[3 * 100]; /* 100 records x 0xc, the 0x4b0 ROM span */
 int data_0209cef8[1];       /* record count */
 int data_0208e738[1] = { 1 };   /* nonzero: upload textures on registration */
-int data_0208e87c[8];       /* ModelBase vtable storage; never dispatched */
+int _ZTV9ModelBase[8];       /* ModelBase vtable storage; never dispatched */
 int data_0209b3ec[12];      /* camera Matrix4x3 the render walk composes */
 
 // Model's Itanium vtable storage: installed by the C ctor. The gates call
@@ -305,14 +305,14 @@ void *_ZTV5Model[8];
 void *_ZTV9Animation[8];
 void *_ZTV9ModelAnim[10];
 void *VTable_Animation_ModelAnimThunk[8];
-// _ZTV16MeshColliderBase: the STORAGE (C2 installs it as the vptr, and C2 rides
+// _ZTV4dBgW: the STORAGE (C2 installs it as the vptr, and C2 rides
 // slice_gate8, which every collision-carrying target links). The gates that
 // carry the MeshColliderBase src cluster (slice_gate16) SEAT the real matched
 // bodies into these slots at boot via hal_fill_meshcolliderbase_vtable in
 // hal/meshcolliderbase_vtable.cpp -- that fill is the reference edge that pulls
 // the cluster into the link; targets without the cluster keep the zeroed base
 // (it is never dispatched there).
-void *_ZTV16MeshColliderBase[13];
+void *_ZTV4dBgW[13];
 unsigned char data_020a0c78[8]; /* the default CLPS ENTRY (8-byte storage,
                                    func_02037e9c fills it on first lookup) */
 DSSTATE_END

@@ -10,7 +10,7 @@
 // machine" rather than "how many TUs name the table".  This class is the one
 // the question was written for.
 //
-// Its vtable slot 6, func_ov006_021283a4, DECODES NOTHING.  A scan of that
+// Its vtable slot 6, _ZN15dScMgSnowball_c8BehaviorEv, DECODES NOTHING.  A scan of that
 // body for the five-instruction ARM Itanium sequence returns zero sites; it
 // reaches the machine by CALLING func_ov006_0212a2e0 at 0x02128f04, and it is
 // that callee's only caller.  A lane that read slot 6 alone -- which is the
@@ -44,7 +44,7 @@
 // 6 and port/unmatched/MgBSC_StateDispatch.cpp section 3, after its own review
 // found them swept in by a wrong address span.  THEY WERE RE-DERIVED HERE
 // RATHER THAN INHERITED: this lane wrote its own detector, reproduced LKY's
-// 114 sites over the whole of ov006 and its ONE site in func_ov006_021254c0 as
+// 114 sites over the whole of ov006 and its ONE site in _ZN10dScMgBSC_c8BehaviorEv as
 // controls, reproduced the five-site reading of the retired span
 // 0x02124908..0x0212a3c0 as a third control, and then scanned this class's own
 // body list.  The four addresses agree digit for digit.
@@ -64,7 +64,7 @@
 //
 // Read the pair run 0x0213ff58..0x0213ffc8 in address order instead and every
 // one of the fourteen slot numbers comes out wrong.  Worse, the run is not
-// even contiguous pairs: MgSnowballSlalom_SpawnInfo sits INSIDE it at
+// even contiguous pairs: g_profile_MG_SNOWBALL sits INSIDE it at
 // 0x0213ffb8 as {0x0212a520, 0x01790179} -- the factory word and the actor id
 // twice -- and a sweep would read it as a fifteenth pair with a nonzero
 // adjustment that no constructor ever copies.  That is the same shape

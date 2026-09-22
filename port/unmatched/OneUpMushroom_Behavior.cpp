@@ -1,4 +1,4 @@
-/* HOST COPY of src/_ZN13OneUpMushroom8BehaviorEv.cpp -- the mushroom-type
+/* HOST COPY of src/actors/da1up_c.cpp -- the mushroom-type
  * dispatch read as a plain function pointer, and the table seated with host
  * addresses.
  *
@@ -41,9 +41,9 @@
 
 extern "C" {
 
-int _ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(void *self, void *clsn);
-void _ZN12CylinderClsn5ClearEv(void *self);
-void _ZN12CylinderClsn6UpdateEv(void *self);
+int _ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(void *self, void *clsn);
+void _ZN5dCc_c5ClearEv(void *self);
+void _ZN5dCc_c6UpdateEv(void *self);
 void func_ov002_020af4ec(void *self);
 
 /* the fourteen type behaviours, in the order __sinit_ov002_02100adc seats
@@ -72,7 +72,7 @@ extern PortPmf data_ov002_0210dc00[];
 enum { PORT_MUSHROOM_TYPES = 14 };
 
 /* ---- THE FOURTEEN FACES (run link100, lane PMFB2) ----------------------
-   src/_ZN13OneUpMushroom8BehaviorEv.cpp is a real pointer-to-member dispatch
+   src/actors/da1up_c.cpp is a real pointer-to-member dispatch
    and MSVC emits it as
 
        mov ecx, _data_ov002_0210dc00[eax*8+4]     the adjust word
@@ -131,10 +131,10 @@ extern "C" void port_one_up_mushroom_types_seat(void)
     }
 }
 
-/* _ZN13OneUpMushroom8BehaviorEv RETIRED (run link100, lane PMFB2). It is on
+/* _ZN7da1up_c8BehaviorEv RETIRED (run link100, lane PMFB2). It is on
    port/slice_pmfb2.txt and compiles from
-   src/_ZN13OneUpMushroom8BehaviorEv.cpp. That TU recovered as a real C++
-   method (?Behavior@OneUpMushroom@@QAEHXZ) while hal/actor_classes.cpp calls
+   src/_ZN7da1up_c8BehaviorEv.cpp. That TU recovered as a real C++
+   method (?Behavior@da1up_c@@QAEHXZ) while hal/actor_classes.cpp calls
    the Itanium C name, so the C name is one cdecl line in
    hal/except_faces.cpp and no fill site changes.
 

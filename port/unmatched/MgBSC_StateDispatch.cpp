@@ -23,13 +23,13 @@
 // so the hierarchy is three deep and the ROM states both edges of it:
 //
 //     Scene -> dScMgBase_c         data_ov004_020bc0c0  36 slots
-//           -> dScMgSingle3DBase_c data_ov006_0213e448  36 slots
-//           -> dScMgBSC_c          data_ov006_0213fec8  36 slots
+//           -> dScMgSingle3DBase_c _ZTV19dScMgSingle3DBase_c  36 slots
+//           -> dScMgBSC_c          _ZTV10dScMgBSC_c  36 slots
 //
 // The RTTI is the strong witness and the code agrees with it twice:
-// src/MgLuckyStars_Spawn.cpp writes 0x0213e448 into the object and then
-// 0x0213fec8 over it, and slots 16 and 17 (src/func_ov006_02124908.c and
-// src/func_ov006_0212497c.cpp) unwind them in the opposite order.
+// src/minigames/d_s_mg_bsc.cpp writes 0x0213e448 into the object and then
+// 0x0213fec8 over it, and slots 16 and 17 (src/minigames/d_s_mg_bsc.cpp and
+// src/minigames/d_s_mg_bsc.cpp) unwind them in the opposite order.
 //
 // ---- 2. ONE TABLE, FOURTEEN SLOTS, ELEVEN DISTINCT BODIES -----------------
 //
@@ -39,10 +39,10 @@
 // straight into TWICE.  The fourteen source pairs run 0x0213fd0c..0x0213fd84,
 // and inside that run sit two words the constructor never copies:
 //
-//     0x0213fd44  an INT ARRAY, not a pair.  src/func_ov006_02124ec4.c and
-//                 src/func_ov006_02124fd8.c both index it as
+//     0x0213fd44  an INT ARRAY, not a pair.  src/minigames/d_s_mg_bsc.cpp and
+//                 src/minigames/d_s_mg_bsc.cpp both index it as
 //                 data_ov006_0213fd44[i] and neither ever calls it.
-//     0x0213fd6c  MgLuckyStars_SpawnInfo -- the factory word 0x021255f8
+//     0x0213fd6c  g_profile_MG_BS_CARD -- the factory word 0x021255f8
 //                 followed by the doubled id 0x01840184.
 //
 // A sweep of the span would have produced sixteen "pairs" and routed two
@@ -70,7 +70,7 @@
 //
 //   table                n  arity  dispatched by
 //   -------------------  -  -----  -------------------------------------------
-//   data_ov006_02142f94  14   0    func_ov006_021254c0  (vtable slot 6)
+//   data_ov006_02142f94  14   0    _ZN10dScMgBSC_c8BehaviorEv  (vtable slot 6)
 //
 // ONE TABLE AND ONE LEVEL, WHICH IS THE CHEAP END OF THE RANGE.
 // port/mg_fanout_costs.txt section 14 tells a lane to ask "how deep is the
@@ -101,7 +101,7 @@
 // SCAN THE CLASS'S BODIES, NOT AN ADDRESS SPAN.  Each body is taken at its own
 // start and size from config/arm9/overlays/ov006/symbols.txt:
 //
-//   this class's 20 OWN bodies       1 site   0x021254dc, in func_ov006_021254c0
+//   this class's 20 OWN bodies       1 site   0x021254dc, in _ZN10dScMgBSC_c8BehaviorEv
 //     (8 vtable overrides + 11 state bodies + the factory)
 //   the 8 INHERITED middle-base       0 sites
 //     bodies of dScMgSingle3DBase_c
@@ -121,7 +121,7 @@
 // an address range picked by eye can, and did.
 //
 // THE OTHER FOUR SITES ARE MgSnowballSlalom's, AND THE NEXT LANE IS OWED THEM.
-// Section 4 hands whoever takes 0x179 a resolved vtable (data_ov006_0214000c).
+// Section 4 hands whoever takes 0x179 a resolved vtable (_ZTV15dScMgSnowball_c).
 // Handing them a resolved vtable and a wall priced at zero would be worse than
 // handing them nothing, so the four sites are named here:
 //
@@ -133,7 +133,7 @@
 //
 // Four decode sites across THREE TUs, covering FOUR tables (14 slots in total,
 // all arity 1, built by src/__sinit_ov006_021333e0.c).  Its vtable slot 6,
-// func_ov006_021283a4, is NOT one of them: it reaches the machine by CALLING
+// _ZN15dScMgSnowball_c8BehaviorEv, is NOT one of them: it reaches the machine by CALLING
 // func_ov006_0212a2e0 rather than decoding a pair itself, so a lane that only
 // read slot 6 would price that class's wall at zero as well.  0x179's state
 // machine is also TWO LEVELS DEEP -- _0212a224 and _02129d94 are themselves
@@ -146,7 +146,7 @@
 // `this` a callee is handed are the two things a wrong host copy gets silently
 // wrong.
 //
-//   func_ov006_021254c0  vtable slot 6, Behavior, 0x5c
+//   _ZN10dScMgBSC_c8BehaviorEv  vtable slot 6, Behavior, 0x5c
 //     push {r4,lr} / mov r4,r0
 //     add  r0,r4,#0x5000 / ldr r0,[r0,#0x1b8]     the index at +0x51b8
 //     ldr  r1,[pc,#0x3c]                          = 0x02142f94
@@ -201,22 +201,22 @@ void port_mg_call0(void *self, unsigned code, int adj);
 /* ---- the eleven routed state bodies, in address order --------------------
    Each is declared with the parameter list ITS OWN src TU defines, so a
    ride-through is called the way the ROM calls it rather than the way the
-   slot's arity would suggest.  func_ov006_02124a04 is a four-byte `bx lr` body
+   slot's arity would suggest.  _ZN10dScMgBSC_c9StateDoneEv is a four-byte `bx lr` body
    whose src takes (void) -- there is nothing for a missing argument to be
    wrong about, which is the MgCoin_StateDispatch.cpp and
    MgMemory2_StateDispatch.cpp ruling for the same shape, and the ROM body is
    one instruction long so it cannot read r0. */
-void func_ov006_02124a04(void);               /* bx lr, slots 12 and 13 */
-void func_ov006_02124a08(void *self);
-void func_ov006_02124ae4(char *c);
-void func_ov006_02124b58(char *c);
-void func_ov006_02124bb4(char *c);
-void func_ov006_02124cb4(char *o);
-void func_ov006_02124dc0(void *arg0);
-void func_ov006_02124e1c(char *c);
-void func_ov006_02124ec4(char *sl);
-void func_ov006_02124fd8(char *c);
-void func_ov006_021250e4(char *base);
+void _ZN10dScMgBSC_c9StateDoneEv(void);               /* bx lr, slots 12 and 13 */
+void _ZN10dScMgBSC_c16StateReturnCardsEv(void *self);
+void _ZN10dScMgBSC_c14StateWaitTableEv(char *c);
+void _ZN10dScMgBSC_c18StateTableReactionEv(char *c);
+void _ZN10dScMgBSC_c15StateJudgeCardsEv(char *c);
+void _ZN10dScMgBSC_c16StateRevealCardsEv(char *o);
+void _ZN10dScMgBSC_c13StateWaitMoveEv(void *arg0);
+void _ZN10dScMgBSC_c14StateMoveCardsEv(char *c);
+void _ZN10dScMgBSC_c15StateChooseCardEv(char *sl);
+void _ZN10dScMgBSC_c13StateWaitDealEv(char *c);
+void _ZN10dScMgBSC_c14StateDealCardsEv(char *base);
 
 /* the mount table this file dispatches, re-typed to the ROM's eight-byte pair.
    The ov006 mount defines the storage; __sinit_ov006_0213326c fills it at
@@ -250,17 +250,17 @@ static int bsc_try_0(void *self, unsigned code)
     char *c = (char *)self;
     switch (code) {
     /* data_ov006_02142f94, dispatched by vtable slot 6 */
-    case 0x021250e4u: func_ov006_021250e4(c); return 1;   /* slot 0  */
-    case 0x02124fd8u: func_ov006_02124fd8(c); return 1;   /* slot 1  */
-    case 0x02124ec4u: func_ov006_02124ec4(c); return 1;   /* slot 2  */
-    case 0x02124e1cu: func_ov006_02124e1c(c); return 1;   /* slot 3  */
-    case 0x02124dc0u: func_ov006_02124dc0(c); return 1;   /* slot 4  */
-    case 0x02124cb4u: func_ov006_02124cb4(c); return 1;   /* slot 5  */
-    case 0x02124bb4u: func_ov006_02124bb4(c); return 1;   /* slot 6  */
-    case 0x02124b58u: func_ov006_02124b58(c); return 1;   /* slots 7, 8 */
-    case 0x02124ae4u: func_ov006_02124ae4(c); return 1;   /* slots 9, 10 */
-    case 0x02124a08u: func_ov006_02124a08(c); return 1;   /* slot 11 */
-    case 0x02124a04u: func_ov006_02124a04();  return 1;   /* slots 12, 13,
+    case 0x021250e4u: _ZN10dScMgBSC_c14StateDealCardsEv(c); return 1;   /* slot 0  */
+    case 0x02124fd8u: _ZN10dScMgBSC_c13StateWaitDealEv(c); return 1;   /* slot 1  */
+    case 0x02124ec4u: _ZN10dScMgBSC_c15StateChooseCardEv(c); return 1;   /* slot 2  */
+    case 0x02124e1cu: _ZN10dScMgBSC_c14StateMoveCardsEv(c); return 1;   /* slot 3  */
+    case 0x02124dc0u: _ZN10dScMgBSC_c13StateWaitMoveEv(c); return 1;   /* slot 4  */
+    case 0x02124cb4u: _ZN10dScMgBSC_c16StateRevealCardsEv(c); return 1;   /* slot 5  */
+    case 0x02124bb4u: _ZN10dScMgBSC_c15StateJudgeCardsEv(c); return 1;   /* slot 6  */
+    case 0x02124b58u: _ZN10dScMgBSC_c18StateTableReactionEv(c); return 1;   /* slots 7, 8 */
+    case 0x02124ae4u: _ZN10dScMgBSC_c14StateWaitTableEv(c); return 1;   /* slots 9, 10 */
+    case 0x02124a08u: _ZN10dScMgBSC_c16StateReturnCardsEv(c); return 1;   /* slot 11 */
+    case 0x02124a04u: _ZN10dScMgBSC_c9StateDoneEv();  return 1;   /* slots 12, 13,
                                                              bx lr body */
     default:                                  return 0;
     }
@@ -292,10 +292,10 @@ extern "C" void port_mg_bsc_index_range(int *lo, int *hi)
 // Run link100 lane PMFB5. data_ov006_02142f94's fourteen cells hold HOST
 // addresses after boot, written by port_mg_bsc_states_seat below once every
 // cell has been compared against the ROM's own code word and a zero adjustment
-// word, so src/func_ov006_021254c0.cpp (dScMgBSC_c's vtable slot 6) compiles
+// word, so src/minigames/d_s_mg_bsc.cpp (dScMgBSC_c's vtable slot 6) compiles
 // from src and this file no longer defines it.
 //
-//   func_ov006_021254c0   data_ov006_02142f94   14 slots   arity 0
+//   _ZN10dScMgBSC_c8BehaviorEv   data_ov006_02142f94   14 slots   arity 0
 //
 // THE STRIDE, ROM SIDE, read at the body's OWN address out of
 // extracted/overlays/overlay_0006.bin at ov006 base 0x020bfec0
@@ -377,20 +377,20 @@ static void bsc_note_index(int idx)
         sym();                                                                \
     }
 
-BSC_FACE(0,  func_ov006_021250e4)
-BSC_FACE(1,  func_ov006_02124fd8)
-BSC_FACE(2,  func_ov006_02124ec4)
-BSC_FACE(3,  func_ov006_02124e1c)
-BSC_FACE(4,  func_ov006_02124dc0)
-BSC_FACE(5,  func_ov006_02124cb4)
-BSC_FACE(6,  func_ov006_02124bb4)
-BSC_FACE(7,  func_ov006_02124b58)
-BSC_FACE(8,  func_ov006_02124b58)
-BSC_FACE(9,  func_ov006_02124ae4)
-BSC_FACE(10, func_ov006_02124ae4)
-BSC_FACE(11, func_ov006_02124a08)
-BSC_FACE_VOID(12, func_ov006_02124a04)
-BSC_FACE_VOID(13, func_ov006_02124a04)
+BSC_FACE(0,  _ZN10dScMgBSC_c14StateDealCardsEv)
+BSC_FACE(1,  _ZN10dScMgBSC_c13StateWaitDealEv)
+BSC_FACE(2,  _ZN10dScMgBSC_c15StateChooseCardEv)
+BSC_FACE(3,  _ZN10dScMgBSC_c14StateMoveCardsEv)
+BSC_FACE(4,  _ZN10dScMgBSC_c13StateWaitMoveEv)
+BSC_FACE(5,  _ZN10dScMgBSC_c16StateRevealCardsEv)
+BSC_FACE(6,  _ZN10dScMgBSC_c15StateJudgeCardsEv)
+BSC_FACE(7,  _ZN10dScMgBSC_c18StateTableReactionEv)
+BSC_FACE(8,  _ZN10dScMgBSC_c18StateTableReactionEv)
+BSC_FACE(9,  _ZN10dScMgBSC_c14StateWaitTableEv)
+BSC_FACE(10, _ZN10dScMgBSC_c14StateWaitTableEv)
+BSC_FACE(11, _ZN10dScMgBSC_c16StateReturnCardsEv)
+BSC_FACE_VOID(12, _ZN10dScMgBSC_c9StateDoneEv)
+BSC_FACE_VOID(13, _ZN10dScMgBSC_c9StateDoneEv)
 
 extern "C" void port_mg_bsc_states_seat(void)
 {
@@ -404,20 +404,20 @@ extern "C" void port_mg_bsc_states_seat(void)
         unsigned rom;
         void *face;
     } seats[] = {
-        {0,  0x021250e4u, (void *)bsc_s0_func_ov006_021250e4},
-        {1,  0x02124fd8u, (void *)bsc_s1_func_ov006_02124fd8},
-        {2,  0x02124ec4u, (void *)bsc_s2_func_ov006_02124ec4},
-        {3,  0x02124e1cu, (void *)bsc_s3_func_ov006_02124e1c},
-        {4,  0x02124dc0u, (void *)bsc_s4_func_ov006_02124dc0},
-        {5,  0x02124cb4u, (void *)bsc_s5_func_ov006_02124cb4},
-        {6,  0x02124bb4u, (void *)bsc_s6_func_ov006_02124bb4},
-        {7,  0x02124b58u, (void *)bsc_s7_func_ov006_02124b58},
-        {8,  0x02124b58u, (void *)bsc_s8_func_ov006_02124b58},
-        {9,  0x02124ae4u, (void *)bsc_s9_func_ov006_02124ae4},
-        {10, 0x02124ae4u, (void *)bsc_s10_func_ov006_02124ae4},
-        {11, 0x02124a08u, (void *)bsc_s11_func_ov006_02124a08},
-        {12, 0x02124a04u, (void *)bsc_s12_func_ov006_02124a04},
-        {13, 0x02124a04u, (void *)bsc_s13_func_ov006_02124a04},
+        {0,  0x021250e4u, (void *)bsc_s0__ZN10dScMgBSC_c14StateDealCardsEv},
+        {1,  0x02124fd8u, (void *)bsc_s1__ZN10dScMgBSC_c13StateWaitDealEv},
+        {2,  0x02124ec4u, (void *)bsc_s2__ZN10dScMgBSC_c15StateChooseCardEv},
+        {3,  0x02124e1cu, (void *)bsc_s3__ZN10dScMgBSC_c14StateMoveCardsEv},
+        {4,  0x02124dc0u, (void *)bsc_s4__ZN10dScMgBSC_c13StateWaitMoveEv},
+        {5,  0x02124cb4u, (void *)bsc_s5__ZN10dScMgBSC_c16StateRevealCardsEv},
+        {6,  0x02124bb4u, (void *)bsc_s6__ZN10dScMgBSC_c15StateJudgeCardsEv},
+        {7,  0x02124b58u, (void *)bsc_s7__ZN10dScMgBSC_c18StateTableReactionEv},
+        {8,  0x02124b58u, (void *)bsc_s8__ZN10dScMgBSC_c18StateTableReactionEv},
+        {9,  0x02124ae4u, (void *)bsc_s9__ZN10dScMgBSC_c14StateWaitTableEv},
+        {10, 0x02124ae4u, (void *)bsc_s10__ZN10dScMgBSC_c14StateWaitTableEv},
+        {11, 0x02124a08u, (void *)bsc_s11__ZN10dScMgBSC_c16StateReturnCardsEv},
+        {12, 0x02124a04u, (void *)bsc_s12__ZN10dScMgBSC_c9StateDoneEv},
+        {13, 0x02124a04u, (void *)bsc_s13__ZN10dScMgBSC_c9StateDoneEv},
     };
 
     for (unsigned i = 0; i < sizeof seats / sizeof seats[0]; ++i) {

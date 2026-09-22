@@ -28,7 +28,7 @@ int func_020587e4(struct MsgQueue *self, u32 *msg, int flags) {
         *msg = self->msgArray[self->firstIndex];
     }
     self->firstIndex = (self->firstIndex + 1) % self->msgCount;
-    *(int *)(((long long)(int)&self->usedCount)) -= 1;
+    *(int *)(&self->usedCount) -= 1;
     OS_WakeupThread(&self->queueSend);
 
     _ZN3IRQ7RestoreEj(enabled);

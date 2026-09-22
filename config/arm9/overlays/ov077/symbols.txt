@@ -1,7 +1,7 @@
 _ZN6LakituD1Ev kind:function(arm,size=0x58) addr:0x02123740
 _ZN6LakituD0Ev kind:function(arm,size=0x6c) addr:0x02123798
-func_ov077_02123804 kind:function(arm,size=0x8) addr:0x02123804
-func_ov077_0212380c kind:function(arm,size=0x8) addr:0x0212380c
+_ZN6Lakitu13OnYoshiTryEatEv kind:function(arm,size=0x8) addr:0x02123804
+_ZN6Lakitu16OnAimedAtWithEggEv kind:function(arm,size=0x8) addr:0x0212380c
 func_ov077_02123814 kind:function(arm,size=0x6c) addr:0x02123814
 func_ov077_02123880 kind:function(arm,size=0x3c) addr:0x02123880
 func_ov077_021238bc kind:function(arm,size=0x50) addr:0x021238bc
@@ -28,12 +28,12 @@ _ZN6Lakitu16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02124824
 _ZN6Lakitu6RenderEv kind:function(arm,size=0x90) addr:0x02124828
 _ZN6Lakitu8BehaviorEv kind:function(arm,size=0x50) addr:0x021248b8
 _ZN6Lakitu13InitResourcesEv kind:function(arm,size=0x19c) addr:0x02124908
-func_ov077_02124aa4 kind:function(arm,size=0x60) addr:0x02124aa4
-Lakitu_Spawn kind:function(arm,size=0x60) addr:0x02124b04
+_ZN6Lakitu13OnTurnIntoEggER6Player kind:function(arm,size=0x60) addr:0x02124aa4
+daJgm_c_classInit kind:function(arm,size=0x60) addr:0x02124b04
 _ZN5SpinyD1Ev kind:function(arm,size=0x50) addr:0x02124b64
 _ZN5SpinyD0Ev kind:function(arm,size=0x64) addr:0x02124bb4
-func_ov077_02124c18 kind:function(arm,size=0x8) addr:0x02124c18
-func_ov077_02124c20 kind:function(arm,size=0x8) addr:0x02124c20
+_ZN5Spiny13OnYoshiTryEatEv kind:function(arm,size=0x8) addr:0x02124c18
+_ZN5Spiny16OnAimedAtWithEggEv kind:function(arm,size=0x8) addr:0x02124c20
 func_ov077_02124c28 kind:function(arm,size=0xbc) addr:0x02124c28
 func_ov077_02124ce4 kind:function(arm,size=0x24) addr:0x02124ce4
 func_ov077_02124d08 kind:function(arm,size=0x1a8) addr:0x02124d08
@@ -62,8 +62,8 @@ _ZN5Spiny16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02125eec
 _ZN5Spiny6RenderEv kind:function(arm,size=0x78) addr:0x02125ef0
 _ZN5Spiny8BehaviorEv kind:function(arm,size=0xf0) addr:0x02125f68
 _ZN5Spiny13InitResourcesEv kind:function(arm,size=0x13c) addr:0x02126058
-func_ov077_02126194 kind:function(arm,size=0x60) addr:0x02126194
-Spiny_Spawn kind:function(arm,size=0x58) addr:0x021261f4
+_ZN5Spiny13OnTurnIntoEggER6Player kind:function(arm,size=0x60) addr:0x02126194
+daTgz_c_classInit kind:function(arm,size=0x58) addr:0x021261f4
 _ZN7HeaveHoD1Ev kind:function(arm,size=0x50) addr:0x0212624c
 _ZN7HeaveHoD0Ev kind:function(arm,size=0x64) addr:0x0212629c
 func_ov077_02126300 kind:function(arm,size=0x228) addr:0x02126300
@@ -85,7 +85,7 @@ _ZN7HeaveHo16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02126e34
 _ZN7HeaveHo6RenderEv kind:function(arm,size=0x50) addr:0x02126e38
 _ZN7HeaveHo8BehaviorEv kind:function(arm,size=0x1e4) addr:0x02126e88
 _ZN7HeaveHo13InitResourcesEv kind:function(arm,size=0x168) addr:0x0212706c
-HeaveHo_Spawn kind:function(arm,size=0x5c) addr:0x021271d4
+daPopoi_c_classInit kind:function(arm,size=0x5c) addr:0x021271d4
 data_ov077_02127230 kind:data(any) addr:0x02127230
 data_ov077_02127238 kind:data(any) addr:0x02127238
 __sinit_ov077_02127240 kind:function(arm,size=0x25c) addr:0x02127240
@@ -104,9 +104,9 @@ data_ov077_02127810 kind:data(any) addr:0x02127810
 data_ov077_02127818 kind:data(any) addr:0x02127818
 data_ov077_02127820 kind:data(any) addr:0x02127820
 data_ov077_02127828 kind:data(any) addr:0x02127828
-data_ov077_02127830 kind:data(any) addr:0x02127830
-data_ov077_0212783c kind:data(any) addr:0x0212783c
-Lakitu_SpawnInfo kind:data(any) addr:0x02127848 ambiguous
+_ZTS7daJgm_c kind:data(any) addr:0x02127830
+_ZTI7daJgm_c kind:data(any) addr:0x0212783c
+g_profile_JUGEM kind:data(any) addr:0x02127848 ambiguous
 _ZTV6Lakitu kind:data(any) addr:0x0212786c
 _ZTV7daJgm_c kind:data(any) addr:0x0212786c
 data_ov077_021278e8 kind:data(any) addr:0x021278e8
@@ -121,9 +121,9 @@ data_ov077_02127928 kind:data(any) addr:0x02127928
 data_ov077_02127930 kind:data(any) addr:0x02127930
 data_ov077_02127938 kind:data(any) addr:0x02127938
 data_ov077_02127940 kind:data(any) addr:0x02127940
-data_ov077_02127948 kind:data(any) addr:0x02127948
-data_ov077_02127954 kind:data(any) addr:0x02127954
-Spiny_SpawnInfo kind:data(any) addr:0x02127960
+_ZTS7daTgz_c kind:data(any) addr:0x02127948
+_ZTI7daTgz_c kind:data(any) addr:0x02127954
+g_profile_TOGEZO kind:data(any) addr:0x02127960
 _ZTV5Spiny kind:data(any) addr:0x02127984
 _ZTV7daTgz_c kind:data(any) addr:0x02127984
 data_ov077_02127a00 kind:data(any) addr:0x02127a00
@@ -136,10 +136,10 @@ data_ov077_02127a30 kind:data(any) addr:0x02127a30
 data_ov077_02127a38 kind:data(any) addr:0x02127a38
 data_ov077_02127a40 kind:data(any) addr:0x02127a40
 data_ov077_02127a48 kind:data(any) addr:0x02127a48
-data_ov077_02127a50 kind:data(any) addr:0x02127a50
+_ZTS9daPopoi_c kind:data(any) addr:0x02127a50
 data_ov077_02127a5c kind:data(any) addr:0x02127a5c
-data_ov077_02127a68 kind:data(any) addr:0x02127a68
-HeaveHo_SpawnInfo kind:data(any) addr:0x02127a74
+_ZTI9daPopoi_c kind:data(any) addr:0x02127a68
+g_profile_POPOI kind:data(any) addr:0x02127a74
 _ZTV7HeaveHo kind:data(any) addr:0x02127a98
 _ZTV9daPopoi_c kind:data(any) addr:0x02127a98
 data_ov077_02127b20 kind:bss addr:0x02127b20

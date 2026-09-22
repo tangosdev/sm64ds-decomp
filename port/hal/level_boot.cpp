@@ -68,14 +68,18 @@
 // only ever holds one. On the host each is its own array with its own
 // port_ovNNN_at(), so several can be mounted at once and the table below
 // picks the one the boot walks.
+#include "port_d16.h"
+
 #include <cstdio>
 #include "vs_width.h"   /* run vs16: the port's player width */
 #include <cstdlib>
 #include <cstring>
 
-#include "MeshCollider.h"
+#include "dBgW_Kc.h"
 #include "dsstate_seg.h"
 #include "hal/comms_seam.h"   /* run mg16 lane MP3: port::vs_player_count() */
+#include "fBase_c.h"   /* SYNC4: moved up out of an extern "C" block */
+#include "dActor_c.h"  /* SYNC4: same, and it reaches math/Fix12.h now */
 
 extern "C" {
 void port_ov009_patch(void);
@@ -140,7 +144,7 @@ extern const unsigned port_ov011_ds_base, port_ov011_ds_end;
        class's SpawnInfo (0x0211c4e8), its two bss SharedFilePtrs
        (data_ov064_0211c964/_0211c96c) and its six PMF sources are all on that
        list, and __sinit_ov064_0211b59c runs. What the paragraph could not know
-       is the real block wave 12 later measured: func_ov064_0211a4c4, state 0's
+       is the real block wave 12 later measured: _ZN13TreasureChest6State0Ev, state 0's
        tick, has no matched TU anywhere in the tree, and lane w3-c transcribed
        it from the overlay image. Level 9 now reads 0 skipped.
 
@@ -149,7 +153,7 @@ extern const unsigned port_ov011_ds_base, port_ov011_ds_end;
        symbol SPELLINGS (data_ov056_02111a60, data_ov055_02111a94) -- ov017,
        ov055 and ov056 share base 0x021111a0, and the decomp TU was written
        against the sibling overlays' names for the same bytes. Hosting it needs
-       a per-symbol ov017 mount (ShipWater_SpawnInfo, _ZTV9ShipWater,
+       a per-symbol ov017 mount (g_profile_KS_MIZU, _ZTV9ShipWater,
        data_ov017_02111c88) PLUS an alias-by-address that resolves the ov055/
        ov056 spellings onto ov017's host bytes -- the "propagate config renames
        BY ADDRESS" hazard. Its Behavior also gates on TREASURE_CHEST (waits for
@@ -233,7 +237,7 @@ extern const unsigned port_ov017_ds_base, port_ov017_ds_end;
    FLOAT_ON_WATER_PLATFORM_JRB (60) x1, UNAGI (242) x3, SLIDING_BOX (313) x1.
 
    THE CONFIG NAMES ARE A DECOY (the gate-178 Amilift pattern, from ov016 relocs):
-   id 60 installs data_ov016_02114bcc (the daObjKi_Ita_c base, plain Platform
+   id 60 installs _ZTV13daObjKi_Ita_c (the daObjKi_Ita_c base, plain Platform
    defaults for Behavior/Cleanup/Render); id 313 installs the DERIVED
    _ZTV23FloatOnWaterPlatformJrb, which carries the slot-5 Render and the COUPLED
    Behavior (case 0 FindWithActorID(0x39=SHIP_UP) -> self-destruct if the ship is
@@ -254,7 +258,7 @@ extern const unsigned port_ov017_ds_base, port_ov017_ds_end;
        first on-screen frame it draws (measured f17 when Mario spawns adjacent),
        NOT the collider and NOT the particle path (SM64DS_NO_FX_RENDER=1 still
        crashes; SM64DS_RP_NORENDER moves the fault elsewhere in the same
-       sequence). Its render (func_ov016_02112b28) is the identical slot-5 Model
+       sequence). Its render (_ZN10RockPillar6RenderEv) is the identical slot-5 Model
        dispatch that SHIP_UP renders through cleanly, so the difference is the
        MODEL FILE: its bmd (fs id 1173) loads but its Model at +0xd4 reaches
        Model::Render with a bad/unbuilt ModelComponents. A model-BUILD issue for
@@ -305,7 +309,7 @@ extern const unsigned port_ov017_ds_base, port_ov017_ds_end;
        WITH EVIDENCE AND COORDINATES -- a spawn, a frame number and a dump --
        rather than by citing the original text above. Idle-far and the other
        five movers were clean at gate 188 and remain so.
-     - Each ROCK_PILLAR spawns a RockTriangle child (id 59, ov102, Actor::Spawn
+     - Each ROCK_PILLAR spawns a RockTriangle child (id 59, ov102, dActor_c::Spawn
        (0x3b) in its InitResources) -- newly visible now that RockPillar runs its
        Init. RockTriangle (x6) is skipped (unregistered); the ov102 mount for it
        and KoopaShell (285) is the next follow-on. */
@@ -406,7 +410,7 @@ extern const unsigned port_ov018_ds_base, port_ov018_ds_end;
    nearing the slide used to spawn two ONE_UP_LOGO (331, 0x14b) that skipped
    as unregistered; OneUpLogo is now hosted (its registry row joined the
    level-10 CCM slice gate, ov002's already-mounted per-symbol window --
-   OneUpLogo_Spawn 0x020f1170, _ZTV9OneUpLogo 0x0210b1ac). Both now spawn. */
+   daObj1UpLogo_c_classInit 0x020f1170, _ZTV9OneUpLogo 0x0210b1ac). Both now spawn. */
 void port_ov019_patch(void);
 void *port_ov019_at(unsigned ds);
 extern unsigned char port_ov019_image[];
@@ -455,7 +459,7 @@ extern const unsigned port_ov020_ds_base, port_ov020_ds_end;
        InitResources/Behavior/Cleanup/D0 reach no other overlay's data). It is
        still blocked: its Behavior dispatches a state closure through a
        pointer-to-member table at +0x108 that InitResources seats with
-       func_ov022_02112790(this, &data_ov022_02114690), and that table lives in
+       _ZN21daObj_volcanoCannon_c11ChangeStateEPNS_5StateE(this, &data_ov022_02114690), and that table lives in
        ov022 BSS (0x02114690 is past the image end 0x02114500) built by ov022's
        own static initialisers. None of ov022's 46 decompiled func_ov022_* nor
        its __sinit_ov022_* are in any build slice -- the overlay is mounted
@@ -720,7 +724,7 @@ extern const unsigned port_ov044_ds_base, port_ov044_ds_end;
    in a file this lane may not touch. Level 40 is the only level of the
    fifty-two that places id 167, so wave 6 registered a class that had never
    actually spawned; mounting the arena ran it for the first time and it faulted
-   under FAULTS_FATAL. daKpa3Bg_c::InitResources (src/func_ov060_021182b0.cpp)
+   under FAULTS_FATAL. daKpa3Bg_c::InitResources (src/_ZN9SpikeBomb13InitResourcesEv.cpp)
    calls CopyTexPalFromLevelModel, whose first line loads through
    data_0209f320 -- the Stage's ModelComponents pointer, written ONLY by
    Stage::LoadModel. The ROM seats it first (Stage::InitResources :361 LoadModel,
@@ -2799,12 +2803,12 @@ extern "C" void port_loadfile_reset_scene(void)
 
 /* Method faces: the three MeshCollider helpers the boot calls by their
    Itanium names while their definitions are real MSVC members. */
-void _ZN12MeshCollider17UpdateFileOffsetsER8KCL_File(void *file)
-{ MeshCollider::UpdateFileOffsets(*(KCL_File *)file); }
-int _ZNK12MeshCollider16GetOctreeOriginYEv(const void *self)
-{ return ((const MeshCollider *)self)->MeshCollider::GetOctreeOriginY(); }
-int _ZNK12MeshCollider13GetUnkOctreeYEv(const void *self)
-{ return ((const MeshCollider *)self)->MeshCollider::GetUnkOctreeY(); }
+void _ZN7dBgW_Kc17UpdateFileOffsetsER8KCL_File(void *file)
+{ dBgW_Kc::UpdateFileOffsets(*(KCL_File *)file); }
+int _ZNK7dBgW_Kc16GetOctreeOriginYEv(const void *self)
+{ return ((const dBgW_Kc *)self)->dBgW_Kc::GetOctreeOriginY(); }
+int _ZNK7dBgW_Kc13GetUnkOctreeYEv(const void *self)
+{ return ((const dBgW_Kc *)self)->dBgW_Kc::GetUnkOctreeY(); }
 
 // ---- the globals the sub-loaders store through -----------------------------
 //
@@ -2914,7 +2918,7 @@ unsigned char data_0209f254[4];   /* the star / silver-star request */
    data_0209f26c (src/_ZN5Stage13InitResourcesEv.cpp:201), not a cap check. The
    old comment here said "the 'lost the cap' check gate", which is wrong and cost
    a triage pass: it is what the Player's level-enter step reads to restore
-   health on re-entry (src/func_ov002_020c75f0.c:29) and what HUD::InitResources
+   health on re-entry (src/actors/Player.cpp:29) and what HUD::InitResources
    reads to pick the meter state. The boot latches it; see the seat below. */
 unsigned char data_0209f2fc[4];
 signed char   data_02092114[4];   /* queued character swap, -1 none */
@@ -2947,7 +2951,7 @@ static void port_stage_suppress(PortLvlOverlay *o, unsigned kind_mask,
 }
 
 extern "C" {
-void _ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR12MeshCollider(void *ovl,
+void _ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR7dBgW_Kc(void *ovl,
                                                                   unsigned p,
                                                                   void *mc);
 extern signed char data_0209f2f8;    /* current level */
@@ -2958,7 +2962,12 @@ extern signed char data_0209f2f8;    /* current level */
    host allocation and the ROM reads it as a byte. */
 extern unsigned char data_0209f26c;
 extern int data_0209f264[];          /* current entrance */
+extern unsigned char data_0209f268;  /* next entrance */
 extern int data_0209f220[];          /* current star filter */
+/* next star -- the act the level change staged, which is where the star select
+   leaves the player's pick. Declared as a byte for data_0209f26c's reason:
+   auto_bss.cpp owns the wider host allocation and the ROM reads it as one. */
+extern unsigned char data_0209f1f0;
 extern unsigned char *data_0209f344; /* VS star-order pointer (host: bob_enemy_bridges.cpp) */
 /* data_0209212c (world Y max) is DEFINED above, in the retirement block. Do
    not re-declare it here: a second declaration outside the DSSTATE pragma
@@ -3100,6 +3109,7 @@ extern "C" void *port_stage_boot_arg_mc(void)  { return g_boot_mc; }
 extern "C" int   port_stage_boot_arg_spawn(void) { return g_boot_spawn; }
 extern "C" void  port_stage_boot_set_result(void *o) { g_boot_result = o; }
 extern "C" void  port_stage_lifecycle_boot(void);   /* hal/stage_bridges.cpp */
+extern "C" void hal_sub_screen_level_init(void);   /* hal/sub_screen.cpp */
 extern "C" void *port_stage_boot_body(void *mc, int spawn);
 /* The scene root, and the level model loader the boot below now calls in the
    ROM's order. port_stage_object returns null before port_stage_create has
@@ -3123,7 +3133,7 @@ void *port_stage_a_boot(void *mc, int spawn)
    decide this; scattering the condition is what this block exists to prevent.
 
    THE ROM'S OWN RULE, from matched source
-   (src/_ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR12MeshCollider.cpp:76-98):
+   (src/_ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR7dBgW_Kc.cpp:76-98):
 
        intro = (data_0209f2d8 == 0)                 // game mode 0 = single file
             && ((data_0209caa0[2] & 0x80) == 0)     // flags2 bit 7: not seen yet
@@ -3405,6 +3415,31 @@ extern "C" int port_intro_wants_play(void)
     return 1;
 }
 
+/* Stage::InitResources:381's frame divider, made per Stage init inside the
+   body below. The file's other declaration of it is in the extern "C"
+   block further down, past this function. */
+extern "C" int data_0208ee44;
+
+/* hal/actor_classes_painting.cpp: the bss clear the cartridge's overlay load
+   performs on ov080, which the port's empty LoadOverlay face does not. */
+extern "C" void port_painting_texcache_overlay_load(int id);
+
+/* The actor death table and the two per-level words the sublevel clear owns
+   (Stage::InitResources:188-196). Read here by the watch and the seed below;
+   the clear itself is at the ROM's own reading point, in hal/level_change.cpp's
+   port_level_latch, because it reads data_0209f2f8 and data_02092110 before
+   that latch advances them. */
+extern "C" {
+extern int   data_0209f4f8[];     /* 3 level parts x 16 words, 512 slots each */
+extern int   data_0209f34c;
+extern short data_0209f358[];     /* the coin counter GiveCoins increments */
+signed char GetLevelPart(int idx);
+}
+
+/* src/func_ov001_020ab2e4.c: the cap system's own per-level reset,
+   Stage::InitResources:313. Called from port_stage_boot_body below. */
+extern "C" void func_ov001_020ab2e4(void);
+
 extern "C" void *port_stage_boot_body(void *mc, int spawn)
 {
     const double lvlperf_t0 = port_lvlperf_now();
@@ -3432,6 +3467,25 @@ extern "C" void *port_stage_boot_body(void *mc, int spawn)
        logic can open a text box, so it rides the new call */
     port_message_archive_seat();
     PortLvlOverlay *o = (PortLvlOverlay *)port_level_mount();
+    /* Stage::InitResources' own sub-screen bring-up, InitResources:262-351:
+       Stage::SetVramBanks, the sub DISPCNT block, the layer mask and
+       Stage::LoadGraphics2D. This is Stage::InitResources' own position for
+       it -- after the level's archive and overlay are up and data_0209f2f8
+       names the level being entered, before Stage::LoadModel (:361) and
+       Stage::LoadClsnAndObjects (:363, which spawns the Minimap) below. It
+       runs on EVERY level entry, which is the whole fix: the port used to
+       run this half once a process, from hal_sub_screen_init at boot, and a
+       level reached by a level change kept the first level's bring-up. */
+    hal_sub_screen_level_init();
+
+    /* The ROM calls LoadLevelOverlays here (src/_ZN5Stage13InitResourcesEv.cpp
+       :328, inside the same :262-351 span the line above stands for, and
+       before Stage::LoadModel at :361 spawns the paintings), and on the
+       cartridge that load clears the loaded overlays' bss. ov080's bss holds
+       the painting texture cache, so the cartridge starts every castle entry
+       with it cold and re-uploads the picture to the current VRAM cursor.
+       hal/actor_classes_painting.cpp has the whole reading. */
+    port_painting_texcache_overlay_load(80);
 
     /* STAGE B: THE TABLES ARE BACK ON. Stage A1 zeroed the Entrance, Door and
        Exit counts in the host copy of the overlay and dropped the sub-table
@@ -3453,7 +3507,7 @@ extern "C" void *port_stage_boot_body(void *mc, int spawn)
 
        WITHOUT THIS THE PORT CANNOT LEAVE A DEATH. The ROM restores the player
        on re-entry from the Player level-enter state itself,
-       src/func_ov002_020c75f0.c:29 --
+       src/actors/Player.cpp:29 --
 
            if (data_0209f2fc == 1 || data_0209f2fc == 2)
                Player::Heal(c, 0x880);
@@ -3471,14 +3525,14 @@ extern "C" void *port_stage_boot_body(void *mc, int spawn)
 
        NOT SetPlayerGlobals. That function seats lives to 4 and health to 0x880
        for all four players. In the ROM it has three callers -- StartFile,
-       PrepareVsMode and the ov003 title-confirm path func_ov003_020ad814 --
+       PrepareVsMode and the ov003 title-confirm path _ZN10dScTitle_c8BehaviorEv --
        and the port adds two more, hal/star_flow.cpp:152 (inside
        seat_player_globals, which is port_course_seat's whole body) and
        hal/level_change.cpp:1415 (the port's copy of that same ov003 path).
 
        Be precise about what those callers are, because an earlier version of
        this note said "none of them a level entry" and that is wrong: StartFile
-       and func_ov003_020ad814 both call LoadLevelNoReturn immediately before
+       and _ZN10dScTitle_c8BehaviorEv both call LoadLevelNoReturn immediately before
        SetPlayerGlobals, so they ARE first-entry paths. (PrepareVsMode is not
        one at all -- it is VS setup and loads no level.) What is true, and is
        the only thing this seat needs, is that NONE OF THEM IS ON THE PER-ENTRY
@@ -3498,32 +3552,31 @@ extern "C" void *port_stage_boot_body(void *mc, int spawn)
        reads the byte either way.) Listed as missing, with its live readers
        named, in port/stage_lifecycle_map.txt:258.
 
-       ONLY THE FIRST OF THE ROM'S THREE STATEMENTS IS PORTED HERE. The ROM
-       site is:
+       THE OTHER TWO STATEMENTS OF THE ROM'S SITE LIVE IN hal/level_change.cpp
+       NOW, INSIDE port_level_latch, AND THEY CANNOT LIVE HERE. The ROM site is
 
            data_0209f2fc = data_0209f26c;
            if (data_0209f2fc == 1) {
-               data_02092124 = data_0209f2f8;   <- the level being LEFT
+               data_02092124 = data_0209f2f8;   <- the sublevel being LEFT
                data_02092118 = -1;
            }
+           ...
+           data_0209f2f8 = data_02092110;       <- the sublevel being ENTERED
 
-       The `== 1` half is deliberately NOT ported. It is harmless today:
-       data_02092124 and data_02092118 are romdata-hosted and the port neither
-       writes nor reads them (stage_lifecycle_map.txt:1223), and the image ships
-       6 and -1 -- 6 being exactly what StartFile writes -- so the values are
-       already the ones a fresh file would have. What the port gives up is that
-       data_02092124 is now PERMANENTLY PINNED at 6 instead of tracking the
-       level you came from on a fresh entry. Its ROM readers are Stage::Render,
-       Stage::LC_Render and Stage::LC_Update, all of which only ask
-       SublevelToLevel(it) >= 0xf, so a pinned 6 reads as "not a boss course"
-       forever.
+       and the port has split those two halves across two files: the pair reads
+       data_0209f2f8 BEFORE it is replaced, and by the time this boot body runs
+       port_level_latch has already replaced it. Written here the pair recorded
+       the level being entered rather than the one being left -- measured: a
+       Jolly Roger Bay star came out as "COURSE 30" (data_02092124 = 1, the
+       castle grounds it had just arrived in). So the pair sits at the ROM's
+       own reading point, beside the line that consumes the old value.
 
-       DO NOT COMPLETE THIS AS A TIDY-UP. Writing the missing two lines is not
-       two lines of consequence: a data_02092124 that tracks the previous level
-       arms func_ov002_020c7cbc -> LoadKeyModels -> the actor 0x11a spawn ->
-       func_ov089_0213115c, which has no null check and has never executed on
-       the port. That wants its own lane with a fault-fatal run, not a commit
-       that is nominally about a comment. */
+       The note that used to stand here said leaving the pair out was harmless
+       because "its ROM readers only ask SublevelToLevel(it) >= 0xf". THAT WAS
+       WRONG and it was the whole of the level-clear screen naming the wrong
+       course: src/_ZN5Stage9LC_UpdateEv.cpp:73 hands
+       SublevelToLevel(data_02092124) to Message::DisplayLevelClearText AS THE
+       COURSE, and :95 uses the same value for the 100-coin record. */
     data_0209f2fc[0] = data_0209f26c;
 
     data_0209f2f8 = (signed char)port_level_id();
@@ -3541,16 +3594,239 @@ extern "C" void *port_stage_boot_body(void *mc, int spawn)
        the warp-pipe pad on Bob-omb Battlefield. SM64DS_ENTRANCE picks another
        one; port_entrance_count() says how many the level has. */
     {
+        /* Stage::InitResources:228 is `data_0209f264 = data_0209f268` -- the
+           entrance the level change staged (a death stages 0xd,
+           src/SetNextLevel.c:45). Seating the current entrance from the knob
+           here instead overwrote that latch, so every change entered the
+           level at record 0. SM64DS_ENTRANCE now picks the PENDING entrance,
+           which is what a direct boot needs and what the ROM's line then
+           latches; data_0209f268 is measurably 0 on a direct boot, so an
+           unset knob leaves every direct-boot row exactly where it was. */
+        /* ONCE, on the first stage boot of the process, which is the direct
+           boot the knob exists for. port_stage_boot_body runs on EVERY Stage
+           init (hal/stage_bridges.cpp:355), so a knob re-applied here on the
+           boot half of a LEVEL CHANGE overwrites the entrance that change
+           staged -- the very defect the two hunks above removed, re-entered
+           through the test knob. Measured on level 37: with the knob unset the
+           walker's death prints `[lvl] change: level 37 -> 4, entrance 9,
+           reason 2` and the port then loads p3=9, slot 8, the painting entry;
+           with SM64DS_ENTRANCE=0 the same change loaded p3=0, slot 14, so the
+           sweep silently measured a different entrance than the game asked
+           for. Unset, nothing here runs at all and no row moves. */
+        static bool entrance_knob_seated = false;
         const char *en = std::getenv("SM64DS_ENTRANCE");
-        data_0209f264[0] = en ? std::atoi(en) : 0;
+        if (en && !entrance_knob_seated)
+            data_0209f268 = (unsigned char)std::atoi(en);
+        entrance_knob_seated = true;
+        data_0209f264[0] = data_0209f268;
     }
     /* Star filter: the sub-table's group byte (kind >> 5) loads when it is 0
        or equal to this. ADVENTURE is 1, which is grp0 + grp1; SM64DS_STAR_FILTER
-       is the knob that reads the other halves back (0 = grp0 alone). */
+       is the knob that reads the other halves back (0 = grp0 alone).
+
+       THE SAME DEFECT THE ENTRANCE BLOCK ABOVE FIXED, AND THE SAME FIX.
+       Stage::InitResources:229 is `data_0209f220 = data_0209f1f0` -- the act
+       the level change staged -- and data_0209f1f0 is where the star select
+       leaves the player's choice (src/_ZN12dScStarSel_c8BehaviorEv.cpp:147,
+       `data_0209f1f0 = FB(this, 0x115) + 1`, after StartSceneFade(3)).
+       hal/level_change.cpp's port_level_latch makes that copy for the change,
+       but THIS block ran a moment later on every stage boot and overwrote it
+       with the knob or with a flat 1, so whichever act the player picked, the
+       course came up as act 1: the object table's group filter
+       (src/_Z11LoadObjectsRN11LVL_Overlay8ObjTableEij.cpp:32,
+       `if (type == 0 || type == data_0209f220)`) never saw anything else.
+       Measured on Bob-omb Battlefield before the fix: the star select's own
+       line said "the act it chose is data_0209f1f0 = 2" and four lines later
+       the course said "[adventure table branch, star=1]", with King Bob-omb on
+       the census and no Koopa the Quick.
+
+       So the knob now picks the PENDING act, exactly as SM64DS_ENTRANCE picks
+       the pending entrance, and the ROM's own line does the latching. A direct
+       boot stages no act at all, so data_0209f1f0 is still 0 from the boot
+       clear there and ADVENTURE is seated in its place: with the knob unset
+       every direct-boot row lands on the 1 it always did. */
     {
+        static bool star_knob_seated = false;
         const char *sf = std::getenv("SM64DS_STAR_FILTER");
-        data_0209f220[0] = sf ? std::atoi(sf) : 1;
+        if (!star_knob_seated) {
+            if (sf)
+                data_0209f1f0 = (unsigned char)std::atoi(sf);
+            else if (data_0209f1f0 == 0)
+                data_0209f1f0 = 1;
+        }
+        star_knob_seated = true;
+        data_0209f220[0] = data_0209f1f0;
     }
+    /* SM64DS_EVENT_SEED=<word>:<hex>[,<word>:<hex>...] -- the level-event bits
+       a loaded save file would have left in the save block, written ONCE on the
+       first stage boot of the process. <word> indexes data_0209caa0 AS THE
+       32-BIT WORDS src/ reads it as (0..4 over its 0x14 bytes), which is the
+       only spelling the game's own readers use.
+
+       WHY IT HAS TO EXIST FOR THE CHARACTER CAPS TO BE MEASURABLE AT ALL.
+       data_0209caa0 is the save/event block, and the ROM's own game init clears
+       every byte of it (the R2a arm, func_02013e64 -> memset(data_0209caa0, 0,
+       0x32c)). On a cartridge the bits come back off the card with the chosen
+       file; a direct boot into a level takes no file-select route, so every
+       event a level reads AT SPAWN TIME reads false. Word 2 is the flags2 word
+       SaveData::IsCharacterUnlocked tests (bit 0 Mario, 1 Luigi, 2 Wario:
+       src/_ZN8SaveData19IsCharacterUnlockedEj.cpp), and word 2 bit 0x80000 is
+       the drained moat the basement's pillars set.
+
+       This ORs in the same bits the ROM's own setters OR in and does nothing
+       else; it never clears a bit and never runs twice. INERT UNLESS SET. */
+    {
+        static bool events_seeded = false;
+        const char *es = std::getenv("SM64DS_EVENT_SEED");
+        if (es && !events_seeded) {
+            unsigned *const w = (unsigned *)data_0209caa0;
+            const char *p = es;
+            while (*p) {
+                char *end;
+                const long word = std::strtol(p, &end, 10);
+                p = end;
+                if (*p == ':') {
+                    ++p;
+                    const unsigned long bits = std::strtoul(p, &end, 16);
+                    p = end;
+                    if (word >= 0 && word < 5) {
+                        w[word] |= (unsigned)bits;
+                        std::fprintf(stderr, "[event-seed] data_0209caa0 word "
+                                     "%d now %08x\n", (int)word, w[word]);
+                    }
+                }
+                while (*p && *p != ',') ++p;
+                if (*p == ',') ++p;
+            }
+            std::fflush(stderr);
+        }
+        events_seeded = true;
+    }
+    /* SM64DS_STARS_SEED=<course>:<hex>[,<course>:<hex>...] -- the collected-star
+       bitmask a loaded save file would have left in the save block, written ONCE
+       on the first stage boot of the process.
+
+       WHY IT HAS TO EXIST FOR AN ACT TO BE PROVABLE AT ALL. The star select
+       derives its grid from that block
+       (src/_ZN12dScStarSel_c13InitResourcesEv.cpp:283-320): a course with
+       nothing collected offers exactly ONE icon, so the player cannot pick a
+       second act and no headless row can either. On a cartridge the bits come
+       off the card through SaveData::ReadFileData when a file is chosen; a
+       direct boot into a level takes no file-select route, and the ROM's own
+       game init clears the whole block first (the R2a arm,
+       func_02013e64 -> memset(data_0209caa0, 0, 0x32c)).
+
+       So this writes the same bytes a loaded file would and nothing else. The
+       layout is the ROM's: bit N of data_0209cab4[course] is star N
+       (src/IsStarCollected.c), star 1 is act 1, and the select shows the
+       collected ones plus the first uncollected one. INERT UNLESS SET. */
+    {
+        static bool stars_seeded = false;
+        const char *ss = std::getenv("SM64DS_STARS_SEED");
+        if (ss && !stars_seeded) {
+            const char *p = ss;
+            while (*p) {
+                char *q;
+                const long course = std::strtol(p, &q, 10);
+                p = q;
+                if (*p == ':') {
+                    ++p;
+                    const unsigned long bits = std::strtoul(p, &q, 16);
+                    p = q;
+                    if (course >= 0 && course < 0x1e) {
+                        data_0209cab4[course] |= (unsigned char)bits;
+                        std::fprintf(stderr, "[stars-seed] course %d star bits "
+                                     "now %02x\n", (int)course,
+                                     (unsigned)data_0209cab4[course]);
+                    }
+                }
+                while (*p && *p != ',') ++p;
+                if (*p == ',') ++p;
+            }
+            std::fflush(stderr);
+        }
+        stars_seeded = true;
+    }
+    /* SM64DS_DEATH_SEED=<n> and SM64DS_DEATH_WATCH=1 -- the actor DEATH TABLE,
+       data_0209f4f8, read here because nothing else in the harness can see it.
+
+       The table is three level parts of sixteen words, 512 bits each, indexed
+       GetLevelPart(data_0209f2f8) (src/DeathTable_GetBit.c). A bit is the
+       spawn-order slot of an object that died this session: dActor_c::
+       TrackInDeathTable sets it (120 call sites in src/, every Bob-omb,
+       Goomba, 1-Up, Boo and coin among them) and dActor_c::
+       BeforeInitResources reads it -- an actor whose bit is up marks itself
+       for destruction instead of initialising
+       (src/_ZN8dActor_c19BeforeInitResourcesEv.cpp:34-38). LoadStandardObjects
+       hands each placed object the running counter data_ov002_0211118c as its
+       slot, so slot N of one level and slot N of the next are different
+       objects in the same sixteen words.
+
+       WHY A SEED HAS TO EXIST FOR THIS TO BE PROVABLE AT ALL, and it is the
+       same argument SM64DS_EVENT_SEED makes above for the save block: a
+       headless selftest holds the stick forward and kills nothing, so it sets
+       no bit and can never reach the state a played session reaches. The seed
+       is the only channel a scripted run has to it. It ORs bits in ONCE, on
+       the first stage boot, and never clears one. INERT UNLESS SET.
+
+       The watch line is the census the table owes: how many slots each part
+       is holding at the moment a level boots, which is the number that has to
+       be zero on a course change. */
+    {
+        static bool death_seeded = false;
+        const char *ds = std::getenv("SM64DS_DEATH_SEED");
+        if (ds && !death_seeded) {
+            const int n = std::atoi(ds);
+            for (int part = 0; part < 3; ++part)
+                for (int b = 0; b < n && b < 512; ++b)
+                    ((unsigned *)data_0209f4f8)[part * 16 + (b >> 5)] |=
+                        1u << (b & 0x1f);
+            std::fprintf(stderr, "[death-seed] %d slot(s) marked dead in each "
+                         "of the three level parts\n", n);
+            std::fflush(stderr);
+        }
+        death_seeded = true;
+        if (std::getenv("SM64DS_DEATH_WATCH")) {
+            int held[3] = { 0, 0, 0 };
+            for (int part = 0; part < 3; ++part)
+                for (int w = 0; w < 16; ++w) {
+                    unsigned v = ((unsigned *)data_0209f4f8)[part * 16 + w];
+                    for (; v; v &= v - 1) ++held[part];
+                }
+            std::fprintf(stderr, "[deathtab] boot of level %d (part %d): slots "
+                         "held %d/%d/%d, data_0209f34c %d, coins %d\n",
+                         (int)data_0209f2f8, (int)GetLevelPart((int)data_0209f2f8),
+                         held[0], held[1], held[2], (int)data_0209f34c,
+                         (int)data_0209f358[0]);
+            std::fflush(stderr);
+        }
+    }
+    /* Stage::InitResources:313 is `func_ov001_020ab2e4();` -- the cap system's
+       own per-level reset. It empties the three per-character cap registries
+       and then, for Mario, Luigi and Wario in turn, sets bit 0x10 of
+       data_ov001_020ad628[c] when SaveData::IsCharacterUnlocked(c) says that
+       character has been rescued (src/func_ov001_020ab2e4.c).
+
+       THAT BIT IS THE ONLY THING THAT LETS AN ORDINARY CHARACTER CAP APPEAR.
+       The adventure cap manager func_ov001_020aaa54, which Stage::Render
+       reaches every frame through func_ov001_020aaf40, skips every cap of
+       registry priority below 2 while the byte lacks it, then latches that
+       character's list to "finished" for the rest of the level; a cap the
+       manager never raises never gets bit 1 of its dCapIcon_c node, and
+       daObjMarioCap_c::Behavior (src/actors/daObjMarioCap_c.cpp:206-212) then
+       hides it and returns before its own state machine, so it can be neither
+       seen nor picked up. Measured before this line: Luigi's and Wario's caps
+       were hidden in every course for every save file, seeded or not.
+
+       WHY IT LANDS HERE. The port declines Stage::InitResources' ROM body by
+       default (hal/stage_bridges.cpp's slot-0 thunk keeps the host answer
+       unless SM64DS_SLOT0_ROM is set), so this boot body is where that
+       function's lines land, and this is the ROM's own order: :229 is the star
+       filter seated just above, :313 is this, :363 is LoadClsnAndObjects,
+       which is what spawns the caps that register themselves. It has to run
+       BEFORE them, and on EVERY stage boot -- the registries hold pointers
+       into the previous level's cap actors otherwise. */
+    func_ov001_020ab2e4();
     /* data_0209f344: the VS star-order pointer Stage::InitResources:427 seats to
        &VS_STAR_SPAWN_ORDERS[func_0203dad4() % 6]. The port hand-rolls the boot
        and skips InitResources, so without this the pointer stays NULL and the
@@ -3631,7 +3907,7 @@ extern "C" void *port_stage_boot_body(void *mc, int spawn)
        persistent actor-run mask: Stage::Behavior latches it into
        data_0209b464 every frame (hosted at hal/actor_registry.cpp:893) and
        Actor::BeforeBehavior runs an actor only if the mask is zero or the
-       actor's own +0xb0 intersects it (src/_ZN5Actor14BeforeBehaviorEv.cpp:74).
+       actor's own +0xb0 intersects it (src/_ZN8dActor_c14BeforeBehaviorEv.cpp:74).
        The star's collect handler ORs 0x4000000 into it and into the player's
        and the star's flags (src/func_ov002_020e8ef0.cpp:151-155), and the star
        camera script ORs 0x20000000 (src/RunKuppaScript.c:21). On the ROM the
@@ -3784,7 +4060,7 @@ extern "C" void *port_stage_boot_body(void *mc, int spawn)
 
        WHAT IT UNBLOCKS. Stage::LoadModel is the only writer of data_0209f320,
        the Stage's ModelComponents pointer. daKpa3Bg_c::InitResources
-       (src/func_ov060_021182b0.cpp) reaches it through
+       (src/_ZN9SpikeBomb13InitResourcesEv.cpp) reaches it through
        CopyTexPalFromLevelModel on its first line, so with the load happening
        after the object pass the pointer was still null when the object pass
        ran and actor id 167 faulted under FAULTS_FATAL. Level 40 is the only
@@ -3826,6 +4102,33 @@ extern "C" void *port_stage_boot_body(void *mc, int spawn)
             _ZN5Stage9LoadModelEv((char *)st);
     }
 
+    /* THE FRAME DIVIDER, Stage::InitResources:381 -- the statement between
+       Stage::LoadModel (:380) above and Stage::LoadClsnAndObjects (:382)
+       below, made HERE because the ROM makes it here, once per Stage init.
+
+       The port's only copy was port_a2_seat_stage's, further down this
+       file, and port_a2_seat_body gates that behind static seat_done /
+       stage_done: ONCE PER PROCESS. A level change reuses the one Stage
+       and never re-enters the seat, so a scene that ran in between left
+       its own divider standing -- dScStarSel_c::InitResources:404 writes
+       data_0208ee44 = 1 -- and the course that came up after it paced on
+       16.65ms instead of 33.3ms.
+
+       Measured on 14b9c2964, same binary, back to back: a direct boot of
+       level 6 reads "[fps] ... (divider 2, budget 33.30ms)"; the same
+       course entered through the Bob-omb painting reads "(divider 1,
+       budget 16.65ms)" for the whole rest of the run. Exactly double
+       speed, which is the owner's report on build 17.
+
+       Same correction section 2c of port/stage_lifecycle_map.txt records
+       for ResetKuppaScript and data_0209b454, and the same one
+       port_a2_seat_stage's own banner made for this word on the
+       title-entry path: a per-entry statement had been filed as bring-up.
+       The seat's store stays where it is on purpose -- it is the
+       pre-first-boot default, the ROM image's static value of this word is
+       1, and it writes the same 2 this line does. */
+    data_0208ee44 = 2;
+
     /* WATCHPOINT-EQUIVALENT for the fs floor (run lvled, lane intro-cutscene).
        data_ov085_02130744 reads fileID 291 at the intro seam and 0 by the time
        SharedFilePtr::Load sees it. Release provably cannot zero fileID
@@ -3835,7 +4138,11 @@ extern "C" void *port_stage_boot_body(void *mc, int spawn)
        already reads 0, it is in the boot above. Inert unless SM64DS_INTRO_WATCH
        is set. */
     port_intro_watch("before LoadClsnAndObjects");
-    _ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR12MeshCollider(o, 0, mc);
+    /* Stage::InitResources:382 passes data_0209f264, not a literal: it is
+       the entrance record index LoadEntranceObjects offsets its array by
+       (`e += p3`). The hard-coded 0 put every level change on record 0. */
+    _ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR7dBgW_Kc(
+        o, (unsigned)data_0209f264[0], mc);
     port_intro_watch("after LoadClsnAndObjects");
     port_scene_canary("after LoadClsnAndObjects");
     if (!intro_seen && std::getenv("SM64DS_INTRO_UNSEEN"))
@@ -3924,9 +4231,9 @@ extern "C" void *port_stage_object(void);
 extern "C" {
 unsigned char data_ov002_0210a83c[];
 int _ZN6Player13InitResourcesEv(void *self);
-int _ZN5Actor19BeforeInitResourcesEv(void *self);
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned r);
-int _ZN5Actor14BeforeBehaviorEv(void *self);
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned r);
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);
 int hal_player_behavior(void *self);
 int func_02043288(void *self);         /* port/unmatched: the behaviour Process */
 }
@@ -3935,10 +4242,12 @@ int func_02043288(void *self);         /* port/unmatched: the behaviour Process 
    reached by its Itanium name from a .c TU, i.e. cdecl, while these three
    definitions are real MSVC __thiscall methods -- a linker alias would hand
    the body an ecx that never held `this`. */
-#include "ActorBase.h"
-#include "Actor.h"
-extern "C" int _ZN9ActorBase19BeforeInitResourcesEv(void *self)
-{ return ((ActorBase *)self)->ActorBase::BeforeInitResources() ? 1 : 0; }
+/* SYNC4: fBase_c.h and dActor_c.h used to be included here, inside an open
+   extern "C" block. main's dActor_c.h now reaches include/math/Fix12.h, and
+   a template cannot be declared with C linkage (C2894), so both moved to the
+   include block at the top of this file. */
+extern "C" int _ZN7fBase_c19BeforeInitResourcesEv(void *self)
+{ return ((fBase_c *)self)->fBase_c::BeforeInitResources() ? 1 : 0; }
 
 
 static int __fastcall ps_init(void *s, void *)
@@ -3955,9 +4264,9 @@ static int __fastcall ps_init(void *s, void *)
     return r;
 }
 static int __fastcall ps_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall ps_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall ps_behavior(void *s, void *)
 { return hal_player_behavior(s); }
 /* Slots 7 and 8, read out of ov002's own _ZTV6Player at 0x0210a83c with its
@@ -3967,9 +4276,9 @@ static int __fastcall ps_behavior(void *s, void *)
    directly -- a host forward through the veneer's own C face would drop the
    argument the ARM tail call rides through in r0/r1. */
 static int __fastcall ps_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall ps_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 /* Slots 9/10/11. The render bucket (processing list 5) now dispatches every
    actor's Render through its vtable, and the Player is on that list like
    everything else -- so slot 9 can no longer be a trap. It is a no-op that
@@ -3977,7 +4286,7 @@ static void __fastcall ps_abeh(void *s, void *, unsigned a)
    particle chain and only its body walk is hosted, so the harness still draws
    him itself (hal_render_player_world) right after the bucket. The two hooks
    around it are the game's own. */
-extern "C" int _ZN5Actor12BeforeRenderEv(void *self);
+extern "C" int _ZN8dActor_c12BeforeRenderEv(void *self);
 /* hal/player_bridges.cpp -- the ROM's Player body draw, C++ linkage there so it
    is declared plainly here (an extern "C" spelling would not resolve to it). */
 void hal_render_player_world(void *player);
@@ -4015,9 +4324,9 @@ static int __fastcall ps_render(void *self, void *)
     return 1;
 }
 static int __fastcall ps_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall ps_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 
 /* ---- the DESTROY slots (gate 31) ------------------------------------------
    A level change destroys every actor the previous level spawned, the Player
@@ -4037,23 +4346,23 @@ extern "C" {
 /* Faces, in hal/method_faces.cpp: both definitions are real methods. */
 int _ZN6Player16CleanupResourcesEv(void *self);
 void _ZN6Player16OnPendingDestroyEv(void *self);
-void *_ZN6PlayerD2Ev(void *self);
+void *_ZN6PlayerD1Ev(void *self);
 void *_ZN6PlayerD0Ev(void *self);   /* slot 17, gate 224 */
 }
 static int __fastcall ps_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 static void __fastcall ps_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall ps_clean(void *s, void *)
 { return _ZN6Player16CleanupResourcesEv(s); }
 static void __fastcall ps_pdes(void *s, void *)
 { _ZN6Player16OnPendingDestroyEv(s); }
 /* D1 is the complete-object destructor the ROM's slot 16 holds. The Player
    has no virtual bases, so D1 and D2 are the same body and mwcc emits one;
-   MSVC's D2 spelling is what src/_ZN6PlayerD2Ev.cpp defines. It must NOT
+   MSVC's D2 spelling is what src/_ZN6PlayerD1Ev.cpp defines. It must NOT
    deallocate -- the caller does that one line later. */
 static int __fastcall ps_d1(void *s, void *)
-{ return (int)(size_t)_ZN6PlayerD2Ev(s); }
+{ return (int)(size_t)_ZN6PlayerD1Ev(s); }
 /* SLOT 17, THE DELETING DESTRUCTOR -- run link100 lane OV6, gate 224. The ROM
    parks _ZN6PlayerD0Ev (ov002 0x020e67a8) here and this table is NOT MSVC-
    folded: it is the ROM's own thirty-one-slot mount, slot 16 carries D1 above
@@ -4065,7 +4374,7 @@ static int __fastcall ps_d1(void *s, void *)
    and no such note was ever written.
    The body is src/_ZN6PlayerD0Ev.cpp, matched, on port/slice_gate224.txt. It
    is the ordinary Itanium deleting destructor -- reinstall the vptr, tear the
-   five members and the three __destroy_arr runs down, Actor::~Actor, then
+   five members and the three __cxa_vec_cleanup runs down, dActor_c::~dActor_c, then
    Memory::Deallocate with data_020a0eac -- and it spells every symbol it
    touches by its real name, so it needs no -D binding. port/tools/closure.py
    on the single TU reports 0 unresolved and 0 dup-def against this tree's map.
@@ -4103,19 +4412,19 @@ static int __fastcall ps_d0(void *s, void *)
    Something else would have to name the Player through a collision result.
    The ROM says what belongs in these slots either way. */
 extern "C" {
-void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p);       /* 19 */
-int  _ZN5Actor9Virtual50Ev(void *self);                            /* 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);          /* 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);              /* 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);              /* 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);                  /* 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);                  /* 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* 27 */
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void *self, void *p);       /* 19 */
+int  _ZN8dActor_c9Virtual50Ev(void *self);                            /* 20 */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);          /* 21 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);              /* 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);              /* 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);                  /* 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);                  /* 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o); /* 26 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);     /* 27 */
 /* 28 is declared but deliberately NOT forwarded -- see the slot-28 note in
    hal_fill_player_vtable. Kept so the list reads as the ROM's own. */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);      /* 28 */
-int  _ZN5Actor16OnAimedAtWithEggEv(void *self);                    /* 29 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);      /* 28 */
+int  _ZN8dActor_c16OnAimedAtWithEggEv(void *self);                    /* 29 */
 /* 18 is the Player's OWN body (ov002 0x020e69b8), not Actor's: a real MSVC
    method TU (src/_ZN6Player13OnYoshiTryEatEv.cpp, slice_gate16) whose whole
    body is `return 1` -- Yoshi cannot eat the Player. Flat name bridged to the
@@ -4129,25 +4438,25 @@ int  _ZN6Player13OnYoshiTryEatEv(void *self);                      /* 18 */
 static int __fastcall ps_yoshi18(void *s, void *)
 { return _ZN6Player13OnYoshiTryEatEv(s); }
 static int __fastcall ps_egg19(void *s, void *, void *p)
-{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+{ _ZN8dActor_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall ps_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall ps_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall ps_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall ps_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall ps_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall ps_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall ps_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall ps_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall ps_aimed(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 
 /* SLOT 28 ONLY, and the distinction matters to a player. ps_trap below
    abort()s, which takes the process down. The actor tables instead RAISE,
@@ -4241,7 +4550,7 @@ extern "C" void hal_fill_player_vtable(void)
     vt[4] = (void *)ps_bclean;
     vt[5] = (void *)ps_aclean;
     vt[12] = (void *)ps_pdes;
-    vt[16] = (void *)ps_d1;
+    vt[16] = (void *)PORT_D16(ps_d1);
     vt[17] = (void *)ps_d0;
     /* 18..29, the ROM's own contents. 17 (D0) is seated by gate 224; this used
        to read "keeps the trap on purpose, per the note above" and no such note
@@ -4362,7 +4671,7 @@ extern "C" int hal_player_process(void *self)
 extern "C" {
 struct PortVec3 { int x, y, z; };
 struct PortVec3_16 { short x, y, z; };
-void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned actorID,
+void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned actorID,
                                                    unsigned param1,
                                                    const PortVec3 *pos,
                                                    const PortVec3_16 *rot,
@@ -4373,7 +4682,7 @@ const char *port_actor_class_name(unsigned id);
 /* the ROM's actor-list walk: the first actor with this id after `prev`, or
    null. Passing null asks for the first one, so a null answer to a null
    `prev` means the level has none at all. */
-void *_ZN5Actor15FindWithActorIDEjPS_(unsigned id, void *prev);
+void *_ZN8dActor_c15FindWithActorIDEjPS_(unsigned id, void *prev);
 }
 
 /* ===========================================================================
@@ -4637,7 +4946,7 @@ extern "C" void port_vs_spawn_extra_players(void *tbl, unsigned p3)
         const unsigned wire_slot = (unsigned)(((i - 1) % (kPortNarrowPlayers - 1)) + 1);
         const unsigned flags = f2 | (f1 << 3) | (wire_slot << 6) | (sl << 8);
 
-        void *a = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+        void *a = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
             data_ov002_0210cbf4[base->raw], flags,
             (const PortVec3 *)pos, (const PortVec3_16 *)&base->rx, area, -1);
         /* mPlayerNo is Player + 0x6d8. Written here as the TRUE slot, over the
@@ -4755,7 +5064,7 @@ static int port_dbgspawn_partner_missing(unsigned id)
         unsigned needs = port_dbgspawn_partner[i].needs;
         if (port_dbgspawn_partner[i].id != id)
             continue;
-        if (_ZN5Actor15FindWithActorIDEjPS_(needs, 0))
+        if (_ZN8dActor_c15FindWithActorIDEjPS_(needs, 0))
             return 0;
         std::fprintf(stderr, "  [dbgspawn] REFUSED actor %u (%s): its ROM "
                      "Behavior walks the actor list for a partner actor %u "
@@ -4804,7 +5113,7 @@ extern "C" void *port_debug_spawn_at(unsigned id, unsigned param,
     rot.x = 0; rot.y = (short)yaw; rot.z = 0;
     seq = data_ov002_0211118c;
     data_ov002_0211118c = (short)(seq + 1);
-    a = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(id, param, &pos, &rot,
+    a = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(id, param, &pos, &rot,
                                                      area, seq);
     /* YOSHI_EGG (9): its only spawners, the egg lay (func_ov002_020d6368 /
        020d5ab4), write the laying player into the egg's +0x38c right after
@@ -4878,7 +5187,7 @@ extern "C" void *port_debug_spawn(unsigned id, unsigned param)
    of an 8-frame BTP and the first Render walks off the file into Crash() --
    rc 127 one frame after a bare SM64DS_SPAWN_ACTOR=331. Both ROM spawners
    pass a live value: the slide's proximity spawn hard-codes 8
-   (src/func_ov002_020b76ec.c:45) and IncMegaKillCount passes the running
+   (src/actors/daObjMarioCap_c.cpp:45) and IncMegaKillCount passes the running
    kill count. So a bare id here gets that class's own ROM value, an
    explicit :param is always honoured verbatim, and the substitution says
    so on stderr. A list of measured ids, not a mechanism. */
@@ -5044,7 +5353,7 @@ extern unsigned char data_ov002_0210da48[], data_ov002_0210d9b8[],
    0210da40, 0210d9a0, 0210d9c0 and 0210d9a8 -- by fourteen classes
    (BowserPuzzlePiece, Coin, Dorrie, InvisibleSecret, Klepto, MantaRay, Player,
    QuestionBlock, RollingLogTtm, SnowmanBreath, StarMarker, Stump, Toad,
-   TreasureChest) plus one free function, func_ov002_020f069c; every site but
+   TreasureChest) plus one free function, _ZN9daSCoin_c16CleanupResourcesEv; every site but
    that last is a CleanupResources body. The other EIGHT are released nowhere,
    so once the seat has run they stay loaded for the life of the process. It is
    the four that make a disagreement reachable: one of those can be back to
@@ -5450,7 +5759,7 @@ static void port_a2_seat_body(int make_stage)
     hal_fill_meshcolliderbase_vtable();
 
     /* Batch-3 linkage seat: the concrete MeshCollider's own deleting dtor (D0)
-       into slot 0 of _ZTV12MeshCollider, and D1 kept referenced. walk_window
+       into slot 0 of _ZTV7dBgW_Kc, and D1 kept referenced. walk_window
        family only; the gate-8/9 smoke targets keep the trap (they never delete
        the level collider). */
     hal_seat_meshcollider_dtor();
@@ -5652,7 +5961,7 @@ void _ZNK7PathPtr7GetNodeER7Vector3j(const void *self, int *out, unsigned idx);
 
 void port_stage_a_probe(void *mc_)
 {
-    MeshCollider *mc = (MeshCollider *)mc_;
+    dBgW_Kc *mc = (dBgW_Kc *)mc_;
     const PortLvlOverlay *o = (const PortLvlOverlay *)port_level_mount();
 
     /* CLPS: "CLPS" magic, u16 entry size, u16 count, then the records --
@@ -6157,13 +6466,17 @@ extern "C" void port_level_reset_host(void)
        on the way out in general: UntrackStar does SetStarMarker(slot, 0, 2),
        and PowerStar, Coin and QuestionBlock all call it from their cleanups.
        What has no such path is the actor that faults here -- Whomp::
-       InitResources calls Actor::TrackStar to file itself in, and no Whomp
+       InitResources calls dActor_c::TrackStar to file itself in, and no Whomp
        file anywhere calls UntrackStar. Its slot is only ever emptied by the
        InitResources loop above, so a port that skips that loop keeps a Whomp
        pointer alive into the next level.
 
-       Not carried, and why. func_ov001_020ab2e4 is in ov001, which the port
-       does not mount.
+       Carried now, and not here. func_ov001_020ab2e4 is the cap system's own
+       reset; ov001's cap half is mounted (port/slice_cap.txt) and the six
+       words it writes are hosted (port/ov001_syms.txt:54), so the call sits
+       in port_stage_boot_body at the ROM's own position instead -- it has to
+       run on every stage boot, not only on a level change, and before
+       LoadClsnAndObjects spawns the caps that register themselves.
 
        data_0209f1f8 (the view-object count) is the interesting one, and the
        first version of this comment got its reason wrong. It said the count is

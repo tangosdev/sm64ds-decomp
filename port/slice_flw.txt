@@ -14,9 +14,9 @@
 #                     closed on both sides)
 #
 # THE HIERARCHY IS THREE DEEP AND THE SEAT FILLS THREE TABLES. Read off the
-# factory and the deleting destructor rather than guessed: func_ov006_0212b7f8
+# factory and the deleting destructor rather than guessed: dScMgFlower_c_classInit
 # writes 0x0213e448 into the object's first word and then 0x02140140 over it,
-# and func_ov006_0212a5c8 (slot 17, the D0) unwinds them in the opposite order.
+# and _ZN13dScMgFlower_cD0Ev (slot 17, the D0) unwinds them in the opposite order.
 #
 #     Scene -> dScMgBase_c         0x020bc0c0  36  (ov004, curling's fill)
 #           -> dScMgSingle3DBase_c 0x0213e448  36  ovr 8,  mark 6,  nosrc 0
@@ -31,7 +31,7 @@
 # Re-run rather than inherited, because twelve of the twenty-nine widths in
 # that file's section 3 table were phantoms:
 #
-#   1. SPAN. config/arm9/overlays/ov006/symbols.txt: data_ov006_02140140 ->
+#   1. SPAN. config/arm9/overlays/ov006/symbols.txt: _ZTV13dScMgFlower_c ->
 #      next symbol data_ov006_021401d0. 0x90 bytes = 36 words. A 37th slot
 #      cannot exist inside the table. (An UPPER bound only, so it refuses a
 #      width and never grants one.)
@@ -51,7 +51,7 @@
 # mwcc member-pointer wall is "the same one for all thirty". It is not this
 # one's:
 #
-#   - src/func_ov006_0212ac74.c, vtable slot 6, the Behavior, dispatches a
+#   - src/_ZN13dScMgFlower_c8BehaviorEv.cpp, vtable slot 6, the Behavior, dispatches a
 #     PLAIN C `switch (self->unk_5fe8)` with cases 0 and 1. There is no
 #     `(c->*table[j])()` anywhere in it. The ROM agrees: 0212ad00 is
 #     `cmp r0,#0 / beq / cmp r0,#1 / beq / b default`, not the five-instruction
@@ -74,7 +74,7 @@
 # all". THE LINK CLOSED AND THE FIRST FRAME PROVED IT WRONG:
 #
 #     FAULT c0000005 at eip 020c395c accessing 020c395c
-#       flw_beh (slot 6) -> func_ov006_0212ac74 -> func_ov006_020c3d18+0x23
+#       flw_beh (slot 6) -> _ZN13dScMgFlower_c8BehaviorEv -> func_ov006_020c3d18+0x23
 #
 # eip IS the DS address. src/func_ov006_020c3d18.cpp dispatches a member
 # pointer held in the SUB-OBJECT at self+0x51f8 -- and it does it by OPEN-CODING
@@ -117,16 +117,16 @@
 #     _020b8714  _020b8778
 #   HOST-COPIED by unmatched/MgBase_DeclConflict.cpp (the decl_common.h C2733
 #   redeclaration, four TUs):
-#     func_ov004_020b0620  _020b0930  _020aeed8  _020af094
+#     _ZN11dScMgBase_c14BeforeBehaviorEv  _020b0930  _020aeed8  _020af094
 #   HOST-COPIED by unmatched/MgBase_LangTable.cpp (the fabricated 29-entry
 #   initializer MG2 found by running):
 #     func_ov004_020b2cb8
 #   TRAPPED in hal/scene_mg_faces.cpp (the state setter, the wall itself):
-#     func_ov004_020b87e0
+#     _ZN10dMgState_c8SetStateEi
 #
 # A FOURTEENTH IS REMOVED FOR A REASON THIS LANE FOUND, and it is the one
 # ride-through this class owes:
-#     func_ov006_0210a6e4   vtable slot 2, AfterInitResources
+#     _ZN19dScMgSingle3DBase_c18AfterInitResourcesEj   vtable slot 2, AfterInitResources
 # The ROM does `mov r4,r0; bl 0x20b08f0` without ever writing r1, so the
 # framework's SECOND argument rides through in r1. src declares the callee with
 # ONE parameter and calls it with one, while the real body takes two and passes
@@ -143,8 +143,8 @@
 # file anywhere defines it. Two matched TUs call it and both are on this
 # class's live path:
 #
-#     from:0x0212b73c  inside func_ov006_0212b480, slot 0 InitResources
-#     from:0x0212aab8  inside func_ov006_0212aa74, slot 18 the state reset
+#     from:0x0212b73c  inside _ZN13dScMgFlower_c13InitResourcesEv, slot 0 InitResources
+#     from:0x0212aab8  inside _ZN13dScMgFlower_c13OnYoshiTryEatEi, slot 18 the state reset
 #
 # IT GETS A NAMED TRAP in hal/scene_mg_flower.cpp, not a plausible body, for
 # the reason port/tools/inferred_stub_guard.py exists. What the trap costs is
@@ -177,7 +177,7 @@
 #
 # ---- the list ---------------------------------------------------------------
 src/Camera_UpdateMatrices.c
-src/func_ov001_020ab550.c
+src/_ZN9dThIcon_c8BehaviorEv.cpp
 # HOST-COPIED (mg5 lane FLW, under the coordinator's granted displacement
 # ruling): src/func_ov004_020ad8b8.c. It calls func_ov004_020adc3c with no
 # argument while the ROM rides the pointer loaded from data_ov004_020beb68
@@ -223,28 +223,23 @@ src/func_ov006_020c3e54.c
 src/func_ov006_020c3e70.cpp
 src/func_ov006_020c3f54.cpp
 src/func_ov006_020c402c.c
-src/func_ov006_0210a4b0.cpp
-src/func_ov006_0210a4e8.cpp
-src/func_ov006_0210a600.c
-src/func_ov006_0210a608.c
-src/func_ov006_0210a664.c
-src/func_ov006_0210a698.cpp
-src/func_ov006_0210a708.c
-src/func_ov006_0210c374.cpp
-src/func_ov006_0212a554.c
-src/func_ov006_0212a5c8.cpp
+src/minigames/d_s_mg_single3_d_base.cpp
+src/_ZN12dScMgSlot1_c9betIcon_c6RenderEv.cpp
+src/_ZN13dScMgFlower_cD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN13dScMgFlower_cD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN13dScMgFlower_cD0Ev.cpp
 src/func_ov006_0212a650.c
 src/func_ov006_0212a654.c
 # Run mg5, lane INTEG: the petal-array layout, recovered on branch
 # decomp/yoshi-petal (NONMATCHING regperm floor). It had a config symbol but no
 # delink block and no src when the comment above was written; both exist now, so
 # the trap in port/hal/scene_mg_flower.cpp is removed and the real body links.
-src/func_ov006_0212a764.c
-src/func_ov006_0212aa74.c
-src/func_ov006_0212aacc.c
-src/func_ov006_0212ac74.c
-src/func_ov006_0212b480.c
-src/func_ov006_0212b7f8.cpp
+src/func_ov006_0212a764.cpp
+src/_ZN13dScMgFlower_c13OnYoshiTryEatEi.cpp
+src/_ZN13dScMgFlower_c6RenderEv.cpp
+src/_ZN13dScMgFlower_c8BehaviorEv.cpp
+src/_ZN13dScMgFlower_c13InitResourcesEv.cpp
+src/d_s_mg_flower.cpp
 src/func_ov006_0212b88c.c
 
 # ---- the arm9 lines, and why there are only eight --------------------------
@@ -260,7 +255,7 @@ src/func_ov006_0212b88c.c
 # these eight says "map defines 37496 symbols".
 #
 # Vec2_Sub and Vec2_Len are the two the Behavior uses for its petal-vs-cursor
-# distance test (the `Vec2_Len(&d) < 0x18000` in src/func_ov006_0212ac74.c).
+# distance test (the `Vec2_Len(&d) < 0x18000` in src/_ZN13dScMgFlower_c8BehaviorEv.cpp).
 # Particle::SysTracker::~SysTracker is the one the destructor chain needs and
 # the one lane MGA's probe named for 0x169 as well.
 src/Vec2_Len.c

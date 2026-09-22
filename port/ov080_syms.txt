@@ -27,17 +27,17 @@
 # TWO KINDS OF SYMBOL ARE LEFT OUT, the ov085/ov010 rule:
 #   * _ZTV* -- the three named vtables (_ZTV13MontyMoleRock, _ZTV9MontyMole,
 #     _ZTV11CrazedCrate, each dual-named with its RTTI) AND the PAINTING's own
-#     UNNAMED vtable data_ov080_021282b4 (0x84 bytes, the 31-slot Actor table
+#     UNNAMED vtable _ZTV8Painting (0x84 bytes, the 31-slot Actor table
 #     dsd never named). All four are HOST arrays a fill installs; mounting one
-#     would hand a factory DS code addresses. Painting_Spawn stores
-#     data_ov080_021282b4 into the object's slot 0, and that reference resolves
+#     would hand a factory DS code addresses. daPicGate_c_classInit stores
+#     _ZTV8Painting into the object's slot 0, and that reference resolves
 #     to the host array hal/actor_classes_painting.cpp declares.
 #   * dsd's .p__sinit_* pointer entries -- not C identifiers; the port calls
 #     the three sinits by name.
 #
 # The four *_SpawnInfo records are pinned to the real 0x1c so the +4 id
 # halfword the registry cross-checks reads out of the right bytes
-# (Painting_SpawnInfo +4 = 307). The twelve state statics 0x02128214..0x0212826c
+# (g_profile_PICTURE_GATE +4 = 307). The twelve state statics 0x02128214..0x0212826c
 # are mounted here; hal/actor_overlays.cpp seats host bodies over them before
 # __sinit_ov080_02127b2c copies them into the bss dispatch table
 # data_ov080_02128628.
@@ -45,15 +45,15 @@ data_ov080_0212766c data_ov080_0212767c data_ov080_021276c4 data_ov080_02127714
 data_ov080_0212771c data_ov080_0212775c data_ov080_021277a8 data_ov080_02127834
 data_ov080_02127848 data_ov080_02127f80 data_ov080_02127f88 data_ov080_02127f90
 data_ov080_02127f94 data_ov080_02127f98 data_ov080_02127fa0 data_ov080_02127fa8
-data_ov080_02127fb0 data_ov080_02127fbc data_ov080_02127fc8 data_ov080_02127fd8
-MontyMole_SpawnInfo:0x1c MontyMoleRock_SpawnInfo:0x1c data_ov080_02128070 data_ov080_0212808c
+_ZTI14daChoro_Rock_c _ZTI11daChoropu_c _ZTS11daChoropu_c _ZTS14daChoro_Rock_c
+g_profile_CHOROPU:0x1c g_profile_CHORO_ROCK:0x1c data_ov080_02128070 data_ov080_0212808c
 data_ov080_0212812c data_ov080_02128134 data_ov080_0212813c data_ov080_02128144
-data_ov080_0212814c data_ov080_02128154 data_ov080_0212815c data_ov080_02128168
-CrazedCrate_SpawnInfo:0x1c data_ov080_02128214 data_ov080_0212821c data_ov080_02128224
+data_ov080_0212814c data_ov080_02128154 _ZTS9daBttBk_c _ZTI9daBttBk_c
+g_profile_BATTA_BLOCK:0x1c data_ov080_02128214 data_ov080_0212821c data_ov080_02128224
 data_ov080_0212822c data_ov080_02128234 data_ov080_0212823c data_ov080_02128244
 data_ov080_0212824c data_ov080_02128254 data_ov080_0212825c data_ov080_02128264
-data_ov080_0212826c data_ov080_02128274 data_ov080_02128280 Painting_SpawnInfo:0x1c
-data_ov080_02128338 data_ov080_021283c0 data_ov080_021283c8 data_ov080_021283d0
+data_ov080_0212826c _ZTI11daPicGate_c _ZTS11daPicGate_c g_profile_PICTURE_GATE:0x1c
+_ZTV13daObjMaruta_c data_ov080_021283c0 data_ov080_021283c8 data_ov080_021283d0
 data_ov080_021283d8 data_ov080_021283e0 data_ov080_021283e8 data_ov080_021283f0
 data_ov080_021283fc data_ov080_02128408 data_ov080_02128414 data_ov080_02128420
 data_ov080_0212842c data_ov080_02128438 data_ov080_02128468 data_ov080_02128470

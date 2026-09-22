@@ -1,6 +1,6 @@
 /* WaterfallMist::Behavior, host copy with ONE virtual call spelled at the
  * ROM's target -- lane CAPSHOW's substitution for
- * src/_ZN13WaterfallMist8BehaviorEv.cpp in slice_gate33 (the CMake loop skips
+ * src/actors/daObjMarioCap_c.cpp in slice_gate33 (the CMake loop skips
  * the src line; slice_gate33.txt itself is untouched). The Lakitu_HostSites
  * treatment.
  *
@@ -30,11 +30,11 @@
  * ROM slot-3 UpdateVerts spelled qualified.
  */
 #include "types.h"
-// @symbol _ZN13WaterfallMist8BehaviorEv
+// @symbol _ZN15daObjMarioCap_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method */
-#include "WaterfallMist.h"
+#include "daObjMarioCap_c.h"
 #include "ModelAnim.h"
-struct WithMeshClsn;
+struct dBgCh_Actr;
 struct Enemy { char pad[0x800]; };
 typedef void (Enemy::*PMF)();
 struct Holder { char pad[8]; PMF fn; };
@@ -52,20 +52,39 @@ struct Flags3eb {
 };
 
 extern "C" {
-extern void _ZN5Actor13SmallPoofDustEv(Enemy *thiz);
+extern void _ZN8dActor_c13SmallPoofDustEv(Enemy *thiz);
 extern void _Z14ApproachLinearRiii(int *x, int target, int step);
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(Enemy *thiz, void *clsn);
-extern void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(Enemy *thiz, WithMeshClsn *wm, u32 j);
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *thiz);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(Enemy *thiz, void *clsn);
+extern void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(Enemy *thiz, dBgCh_Actr *wm, u32 j);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *thiz);
 extern void func_ov002_020b7f7c(char *c);
 extern void _ZN9Animation7AdvanceEv(void *thiz);
 extern void func_020167a4(char *p);
-extern int _ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(Enemy *thiz, WithMeshClsn *wm);
-extern void _ZN12CylinderClsn5ClearEv(void *thiz);
-extern void _ZN12CylinderClsn6UpdateEv(void *thiz);
+extern int _ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(Enemy *thiz, dBgCh_Actr *wm);
+extern void _ZN5dCc_c5ClearEv(void *thiz);
+extern void _ZN5dCc_c6UpdateEv(void *thiz);
 }
 
-int WaterfallMist::Behavior()
+/* RETIRED, run link100 lane HOSTGEN4. This body is now produced by the
+ * whole-TU hostgen substitution of src/actors/daObjMarioCap_c.cpp, whose
+ * VIRTUAL_CALL row carries the same one-line correction the banner above
+ * describes: the call at +0x300 is the ROM's slot-3 ModelAnim::UpdateVerts,
+ * spelled qualified, so no host table numbering is consulted.
+ *
+ * WHY IT HAD TO MOVE. Before main's consolidation the matched body was on no
+ * slice, so this copy stood alone and slice_gate33's loop skipped the src row
+ * by name. main folded the body into the class TU, which slice_gate204 line
+ * 116 and slice_gate51 line 17 both name, so the matched body arrives whether
+ * the port wants it or not and the two definitions collide -- one of the six
+ * LNK2005 rows on walk_window's link. Retiring this side ships the defect
+ * unless the correction moves with it, which is what the substitution does.
+ *
+ * THE TEXT IS KEPT, not deleted: it is the measured record of the fault and
+ * of the ROM numbering behind it, and it is what a reviewer reads to check
+ * that the substitution says the same thing.
+ */
+#if 0
+int daObjMarioCap_c::Behavior()
 {
     char *c = (char *)((Enemy *)this);
 
@@ -80,7 +99,7 @@ int WaterfallMist::Behavior()
             *(int *)(c + 0x40c) = 0x2000;
             *(u8 *)(c + 0x402) = 1;
             *(int *)(c + 0xa8) = 0xf000;
-            _ZN5Actor13SmallPoofDustEv(((Enemy *)this));
+            _ZN8dActor_c13SmallPoofDustEv(((Enemy *)this));
         }
     }
 
@@ -93,9 +112,9 @@ int WaterfallMist::Behavior()
         _Z14ApproachLinearRiii((int *)(c + 0x80), *(int *)(c + 0x40c), 0x400);
         *(int *)(c + 0x88) = *(int *)(c + 0x80);
         *(int *)(c + 0x84) = *(int *)(c + 0x88);
-        _ZN5Actor9UpdatePosEP12CylinderClsn(((Enemy *)this), c + 0x110);
-        _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(((Enemy *)this), (WithMeshClsn *)(c + 0x144), 0);
-        if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x144) != 0) {
+        _ZN8dActor_c9UpdatePosEP5dCc_c(((Enemy *)this), c + 0x110);
+        _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(((Enemy *)this), (dBgCh_Actr *)(c + 0x144), 0);
+        if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x144) != 0) {
             if (*(int *)(c + 0x80) == 0x1000) {
                 *(u8 *)(c + 0x402) = 0;
             }
@@ -123,7 +142,7 @@ int WaterfallMist::Behavior()
         ((ModelAnim *)(c + 0x300))->ModelAnim::UpdateVerts();
     }
 
-    if (_ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(((Enemy *)this), (WithMeshClsn *)(c + 0x144)) != 0) {
+    if (_ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(((Enemy *)this), (dBgCh_Actr *)(c + 0x144)) != 0) {
         return 1;
     }
 
@@ -131,12 +150,13 @@ int WaterfallMist::Behavior()
         int v = *(int *)(c + 0x3f0);
         if (v != 4 && v != 0x11 && v != 6 && v != 8 && v != 0xc && v != 0xa
             && v != 0x13 && v != 0xf && v != 0x14 && v != 0x15 && v != 0x16 && v != 0xd) {
-            _ZN5Actor9UpdatePosEP12CylinderClsn(((Enemy *)this), c + 0x110);
-            _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(((Enemy *)this), (WithMeshClsn *)(c + 0x144), 0);
+            _ZN8dActor_c9UpdatePosEP5dCc_c(((Enemy *)this), c + 0x110);
+            _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(((Enemy *)this), (dBgCh_Actr *)(c + 0x144), 0);
         }
     }
 
-    _ZN12CylinderClsn5ClearEv(c + 0x110);
-    _ZN12CylinderClsn6UpdateEv(c + 0x110);
+    _ZN5dCc_c5ClearEv(c + 0x110);
+    _ZN5dCc_c6UpdateEv(c + 0x110);
     return 1;
 }
+#endif  /* RETIRED, lane HOSTGEN4 */

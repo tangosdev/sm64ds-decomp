@@ -1,5 +1,7 @@
 #include "types.h"
-extern char* data_0209ee74;
+// @symbol _ZN8Particle6System9NewRippleE5Fix12IiES2_S2_
+#include "Particle.h"
+extern struct Particle* data_0209ee74;
 
 extern u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     u32 uniqueID, u32 effectID,
@@ -8,13 +10,13 @@ extern u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8Callback
 
 u32 _ZN8Particle6System9NewRippleE5Fix12IiES2_S2_(Fix12i x, Fix12i y, Fix12i z)
 {
-    char* base = data_0209ee74;
+    struct Particle* tracker = data_0209ee74;
     u32 result = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-        *(u32*)(base + 0x78c),
+        tracker->mRippleSystemID,
         0x109,
         x, y, z,
         (void*)0,
-        base + 0x790);
-    *(u32*)(data_0209ee74 + 0x78c) = result;
+        (void*)&tracker->mRippleCallback);
+    data_0209ee74->mRippleSystemID = result;
     return result;
 }

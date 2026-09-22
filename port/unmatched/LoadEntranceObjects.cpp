@@ -1,4 +1,4 @@
-/* HOST COPY of src/_Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij.c
+/* HOST COPY of src/_Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij.cpp
  * -- one more ARM argument ride-through. DORMANT on every level the port
  * mounts today; it is here so it stays that way.
  *
@@ -84,12 +84,36 @@ extern void* data_0209f318;
 extern signed char data_ov002_0210cb5c[];
 
 void func_0202b0e0(struct Entry* e, int count);
-void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 id, u32 flags, const Vector3* pos, const Vector3_16* rot, int area, int death);
-void* _ZN12ActorDerived5SpawnEjP9ActorBaseii(u32 id, void* base, int a, int b);
+void* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 id, u32 flags, const Vector3* pos, const Vector3_16* rot, int area, int death);
+void* _ZN7dBase_c5SpawnEjP7fBase_cii(u32 id, void* base, int a, int b);
 void StartEntranceFaderWipe(int index);
 
 /* PORT_HOST_ABI: ARM argument ride-through into StartEntranceFaderWipe,
- * which the matched TU declares void(void). See the header. */
+ * which the matched TU declares void(void). See the header.
+ *
+ * RE-TESTED AND STILL HOLDING, run link100 wave 15, lane SEAT15E, against
+ * src/ at 8ddff3187. The LINK15 census (out/LINK15/rows.tsv) put this row in
+ * BATCH 4 as tract A with the T4 note "RIDE-THROUGH CLAIM STALE: every callee
+ * the src declares now takes a parameter". THAT IS WRONG FOR THIS ROW, and it
+ * is wrong on the one callee the banner is about. Read today, the matched TU
+ * src/_Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij.cpp still says
+ *
+ *     :34    void StartEntranceFaderWipe(void);
+ *     :100   StartEntranceFaderWipe();
+ *
+ * while src/engine/fader/StartEntranceFaderWipe.cpp:41 still defines
+ * `extern "C" void StartEntranceFaderWipe(int index)`. The ROM still leaves
+ * the wipe type the `< 0` test just loaded in r0 across the bl at 0x020fe850,
+ * so the defect this file exists for is unchanged and a host cdecl call would
+ * still index WIPES with an unwritten stack slot. LoadEntranceObjects is the
+ * only caller of StartEntranceFaderWipe in the tree, so nothing else can make
+ * the row true from the other side either.
+ *
+ * The row is therefore a STANDING host-ABI exception, not replacement work,
+ * and this tag is the ruling. It raises no linkage count. The row retires when
+ * the matched TU's own declaration carries the parameter -- a decomp-side
+ * change under the byte gate, the same shape as the two ov007 seams this lane
+ * did seat. */
 void _Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij(struct ObjSubTable* tbl, int p2, u32 p3)
 {
     u32 sl;
@@ -122,7 +146,7 @@ void _Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij(struct ObjSubTable* 
             }
             u32 flags = f2 | (f1 << 3) | (i << 6) | (sl << 8);
 
-            void* a = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+            void* a = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
                 data_ov002_0210cbf4[e->raw], flags, &pos, &e->rot,
                 (signed char)(param & 7), -1);
 
@@ -139,7 +163,7 @@ void _Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij(struct ObjSubTable* 
         }
     }
 
-    data_0209f318 = _ZN12ActorDerived5SpawnEjP9ActorBaseii(0x14c, data_0209f5c0, entranceId, 0);
+    data_0209f318 = _ZN7dBase_c5SpawnEjP7fBase_cii(0x14c, data_0209f5c0, entranceId, 0);
 
     if (std::getenv("SM64DS_FADER_WATCH")) {
         u32 c = sl >= 0x13 ? 0 : sl;

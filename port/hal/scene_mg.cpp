@@ -19,7 +19,7 @@
 //
 // ---- 1. WHY THIS IS NOT scene_boot.cpp's SHAPE ----------------------------
 //
-// The star select and the title screen are eighteen-slot _ZTV5Scene tables
+// The star select and the title screen are eighteen-slot _ZTV8dScene_c tables
 // with seven slots overridden. A minigame is not. dScMgBase_c derives from
 // Scene and ADDS EIGHTEEN VIRTUALS OF ITS OWN, so its table
 // (data_ov004_020bc0c0) is thirty-six slots, and every ov006 minigame class
@@ -67,7 +67,7 @@
 // ov006's constructors there would be a divergence with teeth rather than a
 // harmless early call: __sinit_ov004_020b948c calls func_020731dc, which
 // THREADS A NODE ONTO AN ARM9-GLOBAL DESTRUCTOR LIST, and that list is walked
-// on the level path. (The same sinit calls func_020733a8, which an earlier
+// on the level path. (The same sinit calls __cxa_vec_ctor, which an earlier
 // version of this block named as a second threader. It is not one -- it is an
 // MSL array-construction primitive -- and the argument stands on
 // func_020731dc alone.) The fill is safe to run on every boot because
@@ -98,7 +98,7 @@
 //
 //   __sinit_ov004_020b955c  is the SHARED-FILE-POINTER BUILDER shape of
 //     section 4. It fills data_ov004_020bf5d4 and a run of {a, b} pairs, and
-//     it registers destructors through func_020731dc / func_020733a8 naming
+//     it registers destructors through func_020731dc / __cxa_vec_ctor naming
 //     func_ov004_020b4a70, _020b4a7c and _020b4aa0 by address. Those three
 //     TUs entered slice_mg1.txt with it; the ROM's own constructor is what
 //     references them.
@@ -131,13 +131,13 @@
 //   TAKE THE TWENTY-FIVE FROM THE CONSTRUCTOR, NOT FROM AN ADDRESS RANGE.
 //   0x0213c1e4 and 0x0213c2bc are the lowest and highest of them, but that
 //   range holds twenty-eight slots and three are not pairs: 0x0213c214 is
-//   MgShuffleShell_SpawnInfo itself, and 0x0213c264 and 0x0213c2ac are
+//   g_profile_MG_CURLING itself, and 0x0213c264 and 0x0213c2ac are
 //   unrelated data. Sweeping the span is how a fan-out lane gets three
 //   phantom states with nonzero adjustments.
 //
 // THE PAIR TABLES ARE THE REASON THE SINITS MATTER AND ALSO THE REASON THIS
 // LANE STOPS WHERE IT DOES. The words they copy are DS CODE ADDRESSES, and
-// func_ov006_020e3528 (slot 6, the Behavior) dispatches them as
+// _ZN14dScMgCurling_c8BehaviorEv (slot 6, the Behavior) dispatches them as
 // `(c->*data_ov006_02141950[j].pmf[0])()`. That is an mwcc pointer-to-member
 // call, and the port cannot make one: MSVC's member-pointer representation is
 // not mwcc's, sizeof differs so the table stride is wrong, and the word is a
@@ -148,15 +148,15 @@
 //
 // THE CLASS IS dScMgCurling_c AND "MgShuffleShell" IS THE LOCALISED NAME OF
 // THE SAME MINIGAME. The peer screening picked actor id 0x176 by the symbol
-// MgShuffleShell_Spawn; the ROM's own RTTI string at 0x0213c2d0 reads
+// dScMgCurling_c_classInit; the ROM's own RTTI string at 0x0213c2d0 reads
 // "14dScMgCurling_c", and InitResources loads /MG/d_2d_mg_bg_curling1_ncg.bin
-// and .../curling2_ncg.bin by name. So src/MgShuffleShell_Spawn.c's
+// and .../curling2_ncg.bin by name. So src/d_s_mg_curling.c's
 // `_ZTV14dScMgCurling_c` is NOT a per-TU placeholder guess of the ov007 VT0
 // kind -- it is the right class name that happens not to be a config symbol
 // name. The address it means is settled by the ROM anyway:
 //     config/arm9/overlays/ov006/relocs.txt
 //     from:0x020e3850 kind:load to:0x0213c304 module:overlay(6)
-// and 0x020e3850 is inside MgShuffleShell_Spawn (0x020e3820, 0x34 bytes).
+// and 0x020e3850 is inside dScMgCurling_c_classInit (0x020e3820, 0x34 bytes).
 //
 // THE SPAWN RECORD, read at (addr - 0x020bfec0) out of
 // extracted/overlays/overlay_0006.bin, is EIGHT BYTES and not the ov007 shape:
@@ -244,16 +244,16 @@
 // adjudication and are recorded here because they bite the moment slots 5 and
 // 7 are dispatched, and neither is visible to the byte gate:
 //
-//   include/decl_Scene.h declares `extern int _ZN5Scene14BeforeBehaviorEv();`
-//     with EMPTY PARENS inside extern "C", so src/func_ov004_020b0620.cpp's
+//   include/decl_Scene.h declares `extern int _ZN8dScene_c14BeforeBehaviorEv();`
+//     with EMPTY PARENS inside extern "C", so src/minigames/d_s_mg_base.cpp's
 //     call at line 52 passes no `this`. The real definition
-//     (src/_ZN5Scene14BeforeBehaviorEv.cpp:47) takes `char* self` and
+//     (src/_ZN8dScene_c14BeforeBehaviorEv.cpp:47) takes `char* self` and
 //     dereferences it immediately. On ARM this is a ride-through and correct
 //     -- r0 already holds self -- and on the host the callee reads the stack.
 //     Two lines BELOW it, the same header spells the sibling correctly,
-//     `_ZN5Scene19BeforeInitResourcesEv(void*)` at line 25, which is what
+//     `_ZN8dScene_c19BeforeInitResourcesEv(void*)` at line 25, which is what
 //     makes this a defect rather than a convention.
-//   src/func_ov004_020b0840.c declares `extern void func_0203cbc0(void);` and
+//   src/minigames/d_s_mg_base.cpp declares `extern void func_0203cbc0(void);` and
 //     calls it with no argument at line 28, while the ROM has the pointer
 //     being deleted live in r0. The port's own host body is
 //     `func_0203cbc0(void *p) { _ZdlPv(p); }` in
@@ -392,69 +392,69 @@ extern int data_020a804c[];
 
 /* The third pre-flight below used to be keyed on
    hal/fdr_arm9_fader_seat.cpp's port_fdr_motion_slots_unseated(). Run link60
-   Stage 5 lane SEAT8 seated slot 0x08 on func_0202f428 and retired both the
+   Stage 5 lane SEAT8 seated slot 0x08 on _ZN7dWipe_c11AdvanceFadeEv and retired both the
    predicate and the advisory; the reasoning is kept where the pre-flight was. */
 
 /* the mount storage the fill writes into */
 extern unsigned char data_ov006_0213c304[];   /* dScMgCurling_c, 36 slots */
 extern unsigned char data_ov004_020bc0c0[];   /* dScMgBase_c,    36 slots */
-extern unsigned char MgShuffleShell_SpawnInfo[];
+extern unsigned char g_profile_MG_CURLING[];
 
 /* the class's own six overrides */
-int   func_ov006_020e3578(void *self);        /* slot  0 InitResources */
-int   func_ov006_020e3528(void *self);        /* slot  6 Behavior      */
-int   func_ov006_020e34ec(void *self);        /* slot  9 Render        */
-int   func_ov006_020e0638(void *self);        /* slot 16 D2            */
-int   func_ov006_020e065c(void *self);        /* slot 17 D0            */
-void  func_ov006_020e3470(void *self);        /* slot 18 state reset   */
+int   _ZN14dScMgCurling_c13InitResourcesEv(void *self);        /* slot  0 InitResources */
+int   _ZN14dScMgCurling_c8BehaviorEv(void *self);        /* slot  6 Behavior      */
+int   _ZN14dScMgCurling_c6RenderEv(void *self);        /* slot  9 Render        */
+int   _ZN14dScMgCurling_cD1Ev(void *self);        /* slot 16 D2            */
+int   _ZN14dScMgCurling_cD0Ev(void *self);        /* slot 17 D0            */
+void  _ZN14dScMgCurling_c13OnYoshiTryEatEi(void *self);        /* slot 18 state reset   */
 
 /* dScMgBase_c's own twenty-three, in slot order */
-int   func_ov004_020b0930(char *c);
-void  func_ov004_020b08f0(void *c, unsigned f);
-void  func_ov004_020b0840(void *c, unsigned f);
-int   func_ov004_020b0620(void *c);
-int   func_ov004_020b04f4(void *c);
-void  func_ov004_020b04e8(void);
-int   func_ov004_020b2994(void);
-void  func_ov004_020b2990(void);
-void  func_ov004_020b298c(void);
-int   func_ov004_020ae198(void);
-int   func_ov004_020ae1a0(void);
-int   func_ov004_020ae140(void *c);
-int   func_ov004_020ae128(void *c);
-int   func_ov004_020b04e0(void);
-void  func_ov004_020af27c(void *c);
-void  func_ov004_020af04c(void *c);
-void  func_ov004_020af094(void *c);
-void  func_ov004_020aeed8(void *c);
-void  func_ov004_020b2880(void);
-void  func_ov004_020b27f4(void);
-void  func_ov004_020b265c(void *c);
+int   _ZN11dScMgBase_c19BeforeInitResourcesEv(char *c);
+void  _ZN11dScMgBase_c18AfterInitResourcesEj(void *c, unsigned f);
+void  _ZN11dScMgBase_c21AfterCleanupResourcesEj(void *c, unsigned f);
+int   _ZN11dScMgBase_c14BeforeBehaviorEv(void *c);
+int   _ZN11dScMgBase_c12BeforeRenderEv(void *c);
+void  _ZN11dScMgBase_c16OnPendingDestroyEv(void);
+int   _ZN11dScMgBase_c13OnTurnIntoEggEi(void);
+void  _ZN11dScMgBase_c9Virtual50Ev(void);
+void  _ZN11dScMgBase_c15OnGroundPoundedEv(void);
+int   _ZN11dScMgBase_c11OnAttacked1Ev(void);
+int   _ZN11dScMgBase_c11OnAttacked2Ev(void);
+int   _ZN11dScMgBase_c8OnKickedEv(void *c);
+int   _ZN11dScMgBase_c8OnPushedEv(void *c);
+int   _ZN11dScMgBase_c24OnHitByCannonBlastedCharEv(void);
+void  _ZN11dScMgBase_c15OnHitByMegaCharEv(void *c);
+void  _ZN11dScMgBase_c19OnHitFromUnderneathEv(void *c);
+void  _ZN11dScMgBase_c16OnAimedAtWithEggEv(void *c);
+void  _ZN11dScMgBase_c25OnAimedAtWithEggReturnVecEv(void *c);
+void  _ZN11dScMgBase_c9Virtual7CEv(void);
+void  _ZN11dScMgBase_c9Virtual80Ev(void);
+void  _ZN11dScMgBase_c9Virtual84Ev(void *c);
 /* SLOT 34 IS THE BOARD'S BRUSH AND TAKES FIVE PARAMETERS. Run mg10, lane F371.
-   This line used to read `void func_ov004_020ae3b4(void *c);` while
-   src/func_ov004_020ae3b4.c defines
-       void func_ov004_020ae3b4(char* obj, int cx, int cy, int val, int n)
+   This line used to read `void _ZN11dScMgBase_c9Virtual88Eiiii(void *c);` while
+   src/_ZN11dScMgBase_c9Virtual88Eiiii.cpp defines
+       void _ZN11dScMgBase_c9Virtual88Eiiii(char* obj, int cx, int cy, int val, int n)
    -- an n-by-n block of `val` written at (cx,cy) through MultiCopy_Int. See
    mb_v34 below for what the one-parameter spelling cost and why nothing could
    convict it until this run. */
-void  func_ov004_020ae3b4(void *c, int cx, int cy, int val, int n);
+void  _ZN11dScMgBase_c9Virtual88Eiiii(void *c, int cx, int cy, int val, int n);
 /* SLOT 35 IS A PREDICATE ON `this` AND WAS DECLARED AS NEITHER. Run mg6, lane
-   PPP. This line used to read `void func_ov004_020ad660(void);` while
-   src/func_ov004_020ad660.c defines `int func_ov004_020ad660(int *r0)
+   PPP. This line used to read `void _ZN11dScMgBase_c9Virtual8CEv(void);` while
+   src/_ZN11dScMgBase_c9Virtual8CEv.cpp defines `int _ZN11dScMgBase_c9Virtual8CEv(int *r0)
    { return (r0[2] & 0xff) != 0; }`. See mb_v35 below for what that cost. */
-int   func_ov004_020ad660(int *c);
+int   _ZN11dScMgBase_c9Virtual8CEv(int *c);
 
 /* dScMgBase_c's OWN versions of the five slots a derived class overrides.
    Added by run link60 lane MG2; see kMgBaseFaces for why they were missing. */
-int   func_ov004_020b0618(void);
-int   func_ov004_020b04ec(void);
-void *func_ov004_020b2a84(void *c);
-void *func_ov004_020b2a18(void *self);
-void  func_ov004_020b299c(void);
+int   _ZN11dScMgBase_c8BehaviorEv(void);
+int   _ZN11dScMgBase_c6RenderEv(void);
+void *_ZN11dScMgBase_cD1Ev(void *c);
+void *_ZN11dScMgBase_cD0Ev(void *self);
+void  _ZN11dScMgBase_c13OnYoshiTryEatEi(void);
 
 /* the base ctor the factory calls, and the factory itself */
-void *func_ov004_020b2adc(char *self);
-int  *MgShuffleShell_Spawn(void);
+void *_ZN11dScMgBase_cC2Ev(char *self);
+int  *dScMgCurling_c_classInit(void);
 
 /* hal/scene_boot.cpp */
 unsigned port_scene_fill_rom(void **vt, unsigned n);
@@ -495,7 +495,7 @@ static unsigned g_mg_hits[36];
 #define MG_SLOT(n) (++g_mg_hits[(n)])
 
 static int  __fastcall mg_init(void *s, void *)
-{ MG_SLOT(0);  const int r = func_ov006_020e3578(s);
+{ MG_SLOT(0);  const int r = _ZN14dScMgCurling_c13InitResourcesEv(s);
   hal_gapless_minigames_latch(); return r; }
 static int  __fastcall mg_beh(void *s, void *)
 {
@@ -512,7 +512,7 @@ static int  __fastcall mg_beh(void *s, void *)
     }
     unsigned char *sc = (unsigned char *)s;
     if (sforce) { *(sc + 0x4689) = 0; *(sc + 0x468a) = 0; }
-    const int r = func_ov006_020e3528(s);
+    const int r = _ZN14dScMgCurling_c8BehaviorEv(s);
     if (sforce) {
         *(sc + 0x4689) = 1;
         *(sc + 0x468a) = 1;
@@ -542,11 +542,11 @@ static int  __fastcall mg_beh(void *s, void *)
     return r;
 }
 static int  __fastcall mg_render(void *s, void *)
-{ MG_SLOT(9);  return func_ov006_020e34ec(s); }
+{ MG_SLOT(9);  return _ZN14dScMgCurling_c6RenderEv(s); }
 static void *__fastcall mg_d2(void *s, void *)
-{ MG_SLOT(16); return (void *)(size_t)func_ov006_020e0638(s); }
+{ MG_SLOT(16); return (void *)(size_t)_ZN14dScMgCurling_cD1Ev(s); }
 static void *__fastcall mg_d0(void *s, void *)
-{ MG_SLOT(17); return (void *)(size_t)func_ov006_020e065c(s); }
+{ MG_SLOT(17); return (void *)(size_t)_ZN14dScMgCurling_cD0Ev(s); }
 /* ---- SLOTS 18 AND 19 TAKE ONE ARGUMENT, AND THE THUNK MUST POP IT ---------
  *
  * Run mg5, lane BASESET. Added because seating the framework state setter made
@@ -561,7 +561,7 @@ static void *__fastcall mg_d0(void *s, void *)
  * Four bytes leak per dispatch, the caller's own `ret` eventually takes a
  * garbage return address, and the fault lands at an address that MOVES WITH THE
  * BUILD because it is stack litter. Measured on scene 378 and scene 366, both
- * through func_ov004_020b8778 -> port_mg_call0 -> a framework state body.
+ * through _ZN10dMgState_c8BehaviorEv -> port_mg_call0 -> a framework state body.
  *
  * BOTH SLOTS WERE SCANNED OUT OF THE TWO OVERLAY IMAGES word by word rather
  * than argued from one call site. runs/mg5/out/baseset/slot18_19_scan.txt is
@@ -588,7 +588,7 @@ static void *__fastcall mg_d0(void *s, void *)
  * section 9 audits twelve of.
  */
 static int  __fastcall mg_reset(void *s, void *, int /*ridethrough*/)
-{ MG_SLOT(18); func_ov006_020e3470(s); return 1; }
+{ MG_SLOT(18); _ZN14dScMgCurling_c13OnYoshiTryEatEi(s); return 1; }
 
 /* SM64DS_SCENE_SLOT9=0 and SM64DS_SCENE_SLOT0=0, the two diagnostics the ov003
    and ov007 seats already carry, counted separately so a run can never read a
@@ -600,34 +600,34 @@ static int __fastcall mg_init_noop(void *, void *)
 { ++g_mg_init_skipped; return 1; }
 
 // ---- dScMgBase_c's own twenty-three ---------------------------------------
-static int  __fastcall mb_binit(void *s, void *)   { MG_SLOT(1);  return func_ov004_020b0930((char *)s); }
-static void __fastcall mb_ainit(void *s, void *, unsigned f) { MG_SLOT(2);  func_ov004_020b08f0(s, f); }
-static void __fastcall mb_aclean(void *s, void *, unsigned f){ MG_SLOT(5);  func_ov004_020b0840(s, f); }
-static int  __fastcall mb_bbeh(void *s, void *)    { MG_SLOT(7);  return func_ov004_020b0620(s); }
-static int  __fastcall mb_bren(void *s, void *)    { MG_SLOT(10); return func_ov004_020b04f4(s); }
-static int  __fastcall mb_pdes(void *, void *)     { MG_SLOT(12); func_ov004_020b04e8(); return 0; }
-static int  __fastcall mb_v19(void *, void *, int) { MG_SLOT(19); return func_ov004_020b2994(); }
-static int  __fastcall mb_v20(void *, void *)      { MG_SLOT(20); func_ov004_020b2990(); return 0; }
-static int  __fastcall mb_v21(void *, void *)      { MG_SLOT(21); func_ov004_020b298c(); return 0; }
-static int  __fastcall mb_v22(void *, void *)      { MG_SLOT(22); return func_ov004_020ae198(); }
-static int  __fastcall mb_v23(void *, void *)      { MG_SLOT(23); return func_ov004_020ae1a0(); }
-static int  __fastcall mb_v24(void *s, void *)     { MG_SLOT(24); return func_ov004_020ae140(s); }
-static int  __fastcall mb_v25(void *s, void *)     { MG_SLOT(25); return func_ov004_020ae128(s); }
-static int  __fastcall mb_v26(void *, void *)      { MG_SLOT(26); return func_ov004_020b04e0(); }
-static int  __fastcall mb_v27(void *s, void *)     { MG_SLOT(27); func_ov004_020af27c(s); return 0; }
-static int  __fastcall mb_v28(void *s, void *)     { MG_SLOT(28); func_ov004_020af04c(s); return 0; }
-static int  __fastcall mb_v29(void *s, void *)     { MG_SLOT(29); func_ov004_020af094(s); return 0; }
-static int  __fastcall mb_v30(void *s, void *)     { MG_SLOT(30); func_ov004_020aeed8(s); return 0; }
-static int  __fastcall mb_v31(void *, void *)      { MG_SLOT(31); func_ov004_020b2880(); return 0; }
-static int  __fastcall mb_v32(void *, void *)      { MG_SLOT(32); func_ov004_020b27f4(); return 0; }
-static int  __fastcall mb_v33(void *s, void *)     { MG_SLOT(33); func_ov004_020b265c(s); return 0; }
+static int  __fastcall mb_binit(void *s, void *)   { MG_SLOT(1);  return _ZN11dScMgBase_c19BeforeInitResourcesEv((char *)s); }
+static void __fastcall mb_ainit(void *s, void *, unsigned f) { MG_SLOT(2);  _ZN11dScMgBase_c18AfterInitResourcesEj(s, f); }
+static void __fastcall mb_aclean(void *s, void *, unsigned f){ MG_SLOT(5);  _ZN11dScMgBase_c21AfterCleanupResourcesEj(s, f); }
+static int  __fastcall mb_bbeh(void *s, void *)    { MG_SLOT(7);  return _ZN11dScMgBase_c14BeforeBehaviorEv(s); }
+static int  __fastcall mb_bren(void *s, void *)    { MG_SLOT(10); return _ZN11dScMgBase_c12BeforeRenderEv(s); }
+static int  __fastcall mb_pdes(void *, void *)     { MG_SLOT(12); _ZN11dScMgBase_c16OnPendingDestroyEv(); return 0; }
+static int  __fastcall mb_v19(void *, void *, int) { MG_SLOT(19); return _ZN11dScMgBase_c13OnTurnIntoEggEi(); }
+static int  __fastcall mb_v20(void *, void *)      { MG_SLOT(20); _ZN11dScMgBase_c9Virtual50Ev(); return 0; }
+static int  __fastcall mb_v21(void *, void *)      { MG_SLOT(21); _ZN11dScMgBase_c15OnGroundPoundedEv(); return 0; }
+static int  __fastcall mb_v22(void *, void *)      { MG_SLOT(22); return _ZN11dScMgBase_c11OnAttacked1Ev(); }
+static int  __fastcall mb_v23(void *, void *)      { MG_SLOT(23); return _ZN11dScMgBase_c11OnAttacked2Ev(); }
+static int  __fastcall mb_v24(void *s, void *)     { MG_SLOT(24); return _ZN11dScMgBase_c8OnKickedEv(s); }
+static int  __fastcall mb_v25(void *s, void *)     { MG_SLOT(25); return _ZN11dScMgBase_c8OnPushedEv(s); }
+static int  __fastcall mb_v26(void *, void *)      { MG_SLOT(26); return _ZN11dScMgBase_c24OnHitByCannonBlastedCharEv(); }
+static int  __fastcall mb_v27(void *s, void *)     { MG_SLOT(27); _ZN11dScMgBase_c15OnHitByMegaCharEv(s); return 0; }
+static int  __fastcall mb_v28(void *s, void *)     { MG_SLOT(28); _ZN11dScMgBase_c19OnHitFromUnderneathEv(s); return 0; }
+static int  __fastcall mb_v29(void *s, void *)     { MG_SLOT(29); _ZN11dScMgBase_c16OnAimedAtWithEggEv(s); return 0; }
+static int  __fastcall mb_v30(void *s, void *)     { MG_SLOT(30); _ZN11dScMgBase_c25OnAimedAtWithEggReturnVecEv(s); return 0; }
+static int  __fastcall mb_v31(void *, void *)      { MG_SLOT(31); _ZN11dScMgBase_c9Virtual7CEv(); return 0; }
+static int  __fastcall mb_v32(void *, void *)      { MG_SLOT(32); _ZN11dScMgBase_c9Virtual80Ev(); return 0; }
+static int  __fastcall mb_v33(void *s, void *)     { MG_SLOT(33); _ZN11dScMgBase_c9Virtual84Ev(s); return 0; }
 /* SLOT 34 DROPPED FOUR ARGUMENTS AND HAD NO POSSIBLE WITNESS. Run mg10, lane
  * F371, and it is mb_v35's defect one slot over with one extra twist.
  *
  * This thunk used to read
  *
  *     static int __fastcall mb_v34(void *s, void *)
- *     { MG_SLOT(34); func_ov004_020ae3b4(s); return 0; }
+ *     { MG_SLOT(34); _ZN11dScMgBase_c9Virtual88Eiiii(s); return 0; }
  *
  * against a ROM body that takes FIVE. Every slot-34 dispatch site in either
  * overlay image passes five -- r0..r3 plus one word stored at [sp] before the
@@ -648,18 +648,18 @@ static int  __fastcall mb_v33(void *s, void *)     { MG_SLOT(33); func_ov004_020
  *     str r7,[sp] / ldr Rd,[r0] / ldr r3,[sp,#0x3c] / ldr Rd,[Rd,#0x88]
  *     / mov r1,sb / mov r2,r8 / blx Rd
  * so r1 and r2 are the walked coordinates, r3 is the caller's `val` and the
- * pushed word is its `n`. src/func_ov004_020ae3b4.c declares the same five. */
+ * pushed word is its `n`. src/_ZN11dScMgBase_c9Virtual88Eiiii.cpp declares the same five. */
 static int  __fastcall mb_v34(void *s, void *, int cx, int cy, int val, int n)
-{ MG_SLOT(34); func_ov004_020ae3b4(s, cx, cy, val, n); return 0; }
+{ MG_SLOT(34); _ZN11dScMgBase_c9Virtual88Eiiii(s, cx, cy, val, n); return 0; }
 /* SLOT 35 DROPPED `this` AND THREW THE ANSWER AWAY. Run mg6, lane PPP.
  *
  * This thunk used to read
  *
  *     static int __fastcall mb_v35(void *, void *)
- *     { MG_SLOT(35); func_ov004_020ad660(); return 0; }
+ *     { MG_SLOT(35); _ZN11dScMgBase_c9Virtual8CEv(); return 0; }
  *
- * against a declaration of `void func_ov004_020ad660(void);` -- while the
- * matched body is `int func_ov004_020ad660(int *r0) { return (r0[2] & 0xff)
+ * against a declaration of `void _ZN11dScMgBase_c9Virtual8CEv(void);` -- while the
+ * matched body is `int _ZN11dScMgBase_c9Virtual8CEv(int *r0) { return (r0[2] & 0xff)
  * != 0; }`. So the callee read whatever was on the stack in place of `this`,
  * AND the thunk returned a hardcoded 0 instead of the answer. On ARM both
  * halves ride through and are correct, because r0 already holds `this` and the
@@ -705,7 +705,7 @@ static int  __fastcall mb_v34(void *s, void *, int cx, int cy, int val, int n)
  * A slot-35 census of exactly 1 on scene 380 is now the signature of a layout
  * picker that did not run. */
 static int  __fastcall mb_v35(void *s, void *)
-{ MG_SLOT(35); return func_ov004_020ad660((int *)s); }
+{ MG_SLOT(35); return _ZN11dScMgBase_c9Virtual8CEv((int *)s); }
 
 /* dScMgBase_c's OWN five, and they are the five the first wired boot found
    missing. Run link60 lane MG2.
@@ -732,15 +732,15 @@ static int  __fastcall mb_v35(void *s, void *)
    body both report as that slot being entered, which is what the slot
    counters mean. */
 static int  __fastcall mb_beh_base(void *, void *)
-{ MG_SLOT(6);  return func_ov004_020b0618(); }
+{ MG_SLOT(6);  return _ZN11dScMgBase_c8BehaviorEv(); }
 static int  __fastcall mb_ren_base(void *, void *)
-{ MG_SLOT(9);  return func_ov004_020b04ec(); }
+{ MG_SLOT(9);  return _ZN11dScMgBase_c6RenderEv(); }
 static void *__fastcall mb_d2_base(void *s, void *)
-{ MG_SLOT(16); return func_ov004_020b2a84(s); }
+{ MG_SLOT(16); return _ZN11dScMgBase_cD1Ev(s); }
 static void *__fastcall mb_d0_base(void *s, void *)
-{ MG_SLOT(17); return func_ov004_020b2a18(s); }
+{ MG_SLOT(17); return _ZN11dScMgBase_cD0Ev(s); }
 static int  __fastcall mb_reset_base(void *, void *, int /*ridethrough*/)
-{ MG_SLOT(18); func_ov004_020b299c(); return 1; }
+{ MG_SLOT(18); _ZN11dScMgBase_c13OnYoshiTryEatEi(); return 1; }
 
 /* The framework's own twenty-three, keyed on the ROM word each slot holds, so
    the same list serves EVERY minigame class: a derived class that overrides
@@ -869,13 +869,13 @@ static unsigned mg_raw_left(void **vt, unsigned n)
  * so the beat refused it and slot 2 never ran. All four are FORWARDERS into the
  * scene's own 36-slot table, and the port had none of them compiled:
  *
- *     word 0  func_ov004_020ae0d4 -> scene vtable +0x5c, slot 23
- *     word 1  func_ov004_020ae0a4 -> +0x58, slot 22
- *     word 2  func_ov004_020ae06c -> +0x60, slot 24, AND RETURNS ITS ANSWER
- *     word 3  func_ov004_020ae03c -> +0x64, slot 25
+ *     word 0  _ZN11dScMgBase_c15graphCallback_c14GraphCallback0Ev -> scene vtable +0x5c, slot 23
+ *     word 1  _ZN11dScMgBase_c15graphCallback_c14GraphCallback1Ev -> +0x58, slot 22
+ *     word 2  _ZN11dScMgBase_c15graphCallback_c14GraphCallback2Ev -> +0x60, slot 24, AND RETURNS ITS ANSWER
+ *     word 3  _ZN11dScMgBase_c15graphCallback_c14GraphCallback3Ev -> +0x64, slot 25
  *
  * WHAT SLOT 24 IS. For the dScMgD3DBase_c family (372, 373, 384, 385) it is the
- * SCREEN SELECTOR, func_ov006_020e6e78: it toggles the live camera between the
+ * SCREEN SELECTOR, _ZN14dScMgD3DBase_c8OnKickedEv: it toggles the live camera between the
  * two screens every frame, flips POWCNT1 bit 15 with it, arms the display
  * capture unit at alternating VRAM banks and moves those banks between LCDC and
  * engine B. That whole path is dark while this beat refuses the block.
@@ -903,7 +903,7 @@ static unsigned mg_raw_left(void **vt, unsigned n)
  * Word 24 (byte +0x60) of all THIRTY-TWO ov006 ActorBase-signature tables, read
  * straight from extracted/overlays/overlay_0006.bin at base 0x020bfec0:
  *
- *     26 tables INHERIT func_ov004_020ae140, dScMgBase_c's own
+ *     26 tables INHERIT _ZN11dScMgBase_c8OnKickedEv, dScMgBase_c's own
  *      6 tables OVERRIDE it --
  *          0x0213c62c, 0x0213cbe4, 0x0213ccfc -> 0x020e6e78  (dScMgD3DBase_c
  *              itself plus 372 and 373; the base class is one of the three and
@@ -920,7 +920,7 @@ static unsigned mg_raw_left(void **vt, unsigned n)
  * unchanged by construction". The RETURN is 1 on every path, so the tail's gate
  * is unchanged by construction and that half stands. But the body also compares
  * self+0x4628 against self+0x462c and, when they differ, dispatches slot 30 or
- * slot 29 -- func_ov004_020aeed8 and func_ov004_020af094, the display
+ * slot 29 -- _ZN11dScMgBase_c25OnAimedAtWithEggReturnVecEv and _ZN11dScMgBase_c16OnAimedAtWithEggEv, the display
  * save/restore pair, both of which write POWCNT1 -- and then syncs the two
  * words. On the inheriting scenes that path is simply not taken.
  *
@@ -934,10 +934,10 @@ static unsigned mg_raw_left(void **vt, unsigned n)
  */
 extern "C" void port_graph_block_register(void *vt);
 extern "C" unsigned char data_ov004_020bc03c[];
-extern "C" int func_ov004_020ae0d4(char *c);
-extern "C" int func_ov004_020ae0a4(char *c);
-extern "C" int func_ov004_020ae06c(char *c);
-extern "C" int func_ov004_020ae03c(char *c);
+extern "C" int _ZN11dScMgBase_c15graphCallback_c14GraphCallback0Ev(char *c);
+extern "C" int _ZN11dScMgBase_c15graphCallback_c14GraphCallback1Ev(char *c);
+extern "C" int _ZN11dScMgBase_c15graphCallback_c14GraphCallback2Ev(char *c);
+extern "C" int _ZN11dScMgBase_c15graphCallback_c14GraphCallback3Ev(char *c);
 
 /* CDECL SINCE RUNG G2(a) (run link100, lane R3G), and the paragraph above --
  * "The port dispatches a graphics-block word as __fastcall (this in ecx),
@@ -959,10 +959,10 @@ extern "C" int func_ov004_020ae03c(char *c);
  * four words. */
 extern "C" void port_r3g_gc_enter(unsigned slot, void *self);
 namespace {
-int mg_gc0(void *c) { port_r3g_gc_enter(0, c); return func_ov004_020ae0d4((char *)c); }
-int mg_gc1(void *c) { port_r3g_gc_enter(1, c); return func_ov004_020ae0a4((char *)c); }
-int mg_gc2(void *c) { port_r3g_gc_enter(2, c); return func_ov004_020ae06c((char *)c); }
-int mg_gc3(void *c) { port_r3g_gc_enter(3, c); return func_ov004_020ae03c((char *)c); }
+int mg_gc0(void *c) { port_r3g_gc_enter(0, c); return _ZN11dScMgBase_c15graphCallback_c14GraphCallback0Ev((char *)c); }
+int mg_gc1(void *c) { port_r3g_gc_enter(1, c); return _ZN11dScMgBase_c15graphCallback_c14GraphCallback1Ev((char *)c); }
+int mg_gc2(void *c) { port_r3g_gc_enter(2, c); return _ZN11dScMgBase_c15graphCallback_c14GraphCallback2Ev((char *)c); }
+int mg_gc3(void *c) { port_r3g_gc_enter(3, c); return _ZN11dScMgBase_c15graphCallback_c14GraphCallback3Ev((char *)c); }
 }  // namespace
 
 static void port_scene_mg_gc_seat(void)
@@ -1161,7 +1161,7 @@ extern "C" void port_scene_mg_prepare(int id)
  * 2. SO THE ENTROPY IS NOT IN THE SEED, IT IS IN THE DRAW COUNT. The function
  *    this seeder replicates is
  *
- *        func_ov005_020c14a0   dScMiniGm_c::Behavior, at 0x020c14a0
+ *        _ZN11dScMiniGm_c8BehaviorEv   dScMiniGm_c::Behavior, at 0x020c14a0
  *
  *    the minigame MENU scene's per-frame tick. Two of its statements are
  *
@@ -1192,7 +1192,7 @@ extern "C" void port_scene_mg_prepare(int id)
  *    the count come out 10 and 12 was not seeing entropy: those are round 1
  *    and round 4 of that one fixed sequence, reached by a run that got further
  *    in. +0x5fd8 is ALSO decremented once per petal plucked
- *    (src/func_ov006_0212ac74.c), so a run with hands on it reports a smaller
+ *    (src/_ZN13dScMgFlower_c8BehaviorEv.cpp), so a run with hands on it reports a smaller
  *    number for a third reason. All three are positions in a frozen sequence.
  *
  * 4. WHAT THIS DOES. The faithful equivalent of the journey the launcher
@@ -1340,7 +1340,7 @@ extern "C" void port_scene_mg_seed_rng(int id, int windowed)
         return;
     }
 
-    /* THE ROM'S BOOT CONSTANTS, then N frames of func_ov005_020c14a0's two
+    /* THE ROM'S BOOT CONSTANTS, then N frames of _ZN11dScMiniGm_c8BehaviorEv's two
        draws. Open-coded rather than calling RandomIntInternal so this file
        takes no link dependency on an ov-scoped body for four lines of
        arithmetic; the constants are src/RandomIntInternal.c's, verbatim. */
@@ -1356,7 +1356,7 @@ extern "C" void port_scene_mg_seed_rng(int id, int windowed)
     data_0209e650[0] = (int)b;
 
     std::fprintf(stderr, "  [rng] seeded-varying%s: %u menu frames of "
-                 "func_ov005_020c14a0 (dScMiniGm_c::Behavior, 0x020c14a0) "
+                 "_ZN11dScMiniGm_c8BehaviorEv (dScMiniGm_c::Behavior, 0x020c14a0) "
                  "replayed from the ROM's boot constants -- "
                  "data_0209d4b8=0x%08x data_0209e650=0x%08x\n",
                  pin ? " (pinned)" : "", n, a, (unsigned)b);
@@ -1384,7 +1384,7 @@ extern "C" void port_scene_fill_curling(void)
     void **vt   = (void **)data_ov006_0213c304;
 
     /* THE BASE TABLE IS FILLED TOO, and it is not ceremony. The factory calls
-       func_ov004_020b2adc, which writes data_0208e4b8, then _ZTV5Scene, then
+       _ZN11dScMgBase_cC2Ev, which writes data_0208e4b8, then _ZTV8dScene_c, then
        data_ov004_020bc0c0 into self[0] before the factory's own write of the
        derived table lands. Nothing dispatches in that window today -- every
        call the base ctor makes is direct -- but the base table is live
@@ -1454,7 +1454,7 @@ extern "C" void port_scene_fill_curling(void)
        `thiz->v24()`, which on the host compiles to
        `call dword ptr [eax+24h]` off a null vptr:
 
-           FAULT c0000005 at _ZN5Scene9SetFadersEP15FaderBrightness+0x24
+           FAULT c0000005 at _ZN8dScene_c9SetFadersEP15FaderBrightness+0x24
            accessing 0x00000024
 
        THE CHECK EXISTS TO GIVE THAT A STABLE NAME. A link offset changes on
@@ -1482,7 +1482,7 @@ extern "C" void port_scene_fill_curling(void)
        faults on something with nothing to do with faders:
 
            FAULT c0000005 at func_0205cdf4+0x22 accessing 0x00000010
-           mg_init -> func_ov006_020e3578 -> func_ov004_020adc74
+           mg_init -> _ZN14dScMgCurling_c13InitResourcesEv -> func_ov004_020adc74
                    -> func_020182bc -> func_02018e3c -> func_0205d644
                    -> func_0205d714 -> func_0205cdf4
 
@@ -1535,7 +1535,7 @@ extern "C" void port_scene_fill_curling(void)
        InitResources finish, and what the scene reached next was the fader
        again -- a defect in that seat's stub ABI.
 
-           func_02043288 -> mb_bbeh -> func_ov004_020b0620 (slot 7)
+           func_02043288 -> mb_bbeh -> _ZN11dScMgBase_c14BeforeBehaviorEv (slot 7)
                          -> Scene::BeforeBehavior
 
        Scene::BeforeBehavior pushes two arguments into slot 0x0c and cleans
@@ -1550,7 +1550,7 @@ extern "C" void port_scene_fill_curling(void)
        than a missing body: the two stubs now declare the two stack parameters
        their call sites push and clean eight, and the audit of all twelve is
        port/fader_boot_map.txt section 9. The same lane then put the ROM's own
-       func_0202f928 and func_0202f708 behind slots 0x0c and 0x10. Scene 374
+       _ZN7dWipe_c15SetBackwardTimeEj and _ZN7dWipe_c14SetForwardTimeEj behind slots 0x0c and 0x10. Scene 374
        runs its 300 frames under SM64DS_FAULTS_FATAL=1 either way, so the
        SCENE_BLOCKED row in port/tools/battery.py is retired rather than
        converted a third time.
@@ -1558,7 +1558,7 @@ extern "C" void port_scene_fill_curling(void)
        AND THE ADVISORY THAT SAT HERE IS RETIRED, run link60 Stage 5 lane
        SEAT8. It printed "MINIGAME FADE MOTION MISSING" while slot 0x08 was a
        named trap, keyed on port_fdr_motion_slots_unseated() so it could not
-       rot into a hardcoded 1. Slot 0x08 is func_0202f428 now, dispatched
+       rot into a hardcoded 1. Slot 0x08 is _ZN7dWipe_c11AdvanceFadeEv now, dispatched
        every frame by the ROM's own src/func_02018efc.c off data_0209d4ac, so
        the predicate had nothing left to ask and both it and this print are
        gone rather than left answering over a seated slot. The seat, the
@@ -1604,7 +1604,7 @@ static char *g_mg_curling_self;
 
 extern "C" void *port_mg_curling_spawn(void)
 {
-    void *p = (void *)MgShuffleShell_Spawn();
+    void *p = (void *)dScMgCurling_c_classInit();
     g_mg_curling_self = (char *)p;
     return p;
 }
@@ -1681,7 +1681,7 @@ extern "C" void port_scene_mg_hits(void)
                     unknown);
     }
     /* Run mg5 lane BASESET. THE SETTER'S OWN WITNESS, and it is a separate
-       number from the line above on purpose. func_ov004_020b87e0 is the only
+       number from the line above on purpose. _ZN10dMgState_c8SetStateEi is the only
        writer of the message object's +0x18, and the framework's two per-frame
        self-field dispatchers return on their first line while that field reads
        -1. So before this seat every minigame reported dispatch calls and zero
@@ -1693,7 +1693,7 @@ extern "C" void port_scene_mg_hits(void)
         unsigned scalls = 0, sdisp = 0, sstates = 0, sticks = 0, sclos = 0;
         port_mg_base_setter_counts(&scalls, &sdisp, &sstates, &sticks, &sclos);
         std::printf("[scene] framework state setter: %u call(s) into "
-                    "func_ov004_020b87e0, %u of them dispatched a state, %u "
+                    "_ZN10dMgState_c8SetStateEi, %u of them dispatched a state, %u "
                     "state body, %u per-frame tick and %u closure entr(ies) "
                     "routed by MgBase_StateSetter.cpp\n",
                     scalls, sdisp, sstates, sticks, sclos);
@@ -1739,16 +1739,16 @@ extern "C" void port_scene_mg_hits(void)
 // THE CLASS, RE-DERIVED FROM THE ROM RATHER THAN FROM THE COST FILE. The
 // derivation and the three width checks are in port/slice_lui.txt section 1;
 // the short form is that the doubled-id word 0x016e016e sits at 0x0213ce10, so
-// MgWanted_SpawnInfo is 0x0213ce0c and the factory word before the id pair is
+// g_profile_MG_LUIGI is 0x0213ce0c and the factory word before the id pair is
 // 0x020f3800; the factory's own load relocation (relocs.txt from:0x020f3830)
 // names data_ov006_0213cf10; and the ROM's RTTI string at 0x0213ce60 reads
 // "12dScMgLuigi_c". The spawn symbol says Wanted and the class says Luigi and
 // both are the ROM's, which is curling's MgShuffleShell/dScMgCurling_c shape
 // exactly.
 //
-// TWO TABLES, NOT THREE. Both deleting destructors (func_ov006_020efc0c slot
-// 16 and func_ov006_020efc30 slot 17) store data_ov006_0213cf10 and then call
-// func_ov004_020b29c0 with nothing in between, so the chain is
+// TWO TABLES, NOT THREE. Both deleting destructors (_ZN12dScMgLuigi_cD1Ev slot
+// 16 and _ZN12dScMgLuigi_cD0Ev slot 17) store data_ov006_0213cf10 and then call
+// _ZN11dScMgBase_cD2Ev with nothing in between, so the chain is
 // Scene -> dScMgBase_c -> dScMgLuigi_c and the fill does the base's table and
 // this one. dScMgCup_c needed a third because its destructors write an
 // intermediate base's.
@@ -1786,8 +1786,8 @@ extern "C" void port_scene_mg_hits(void)
 // this comment is the only thing this lane does about it.
 //
 // SLOT 5 IS OVERRIDDEN AND STILL REACHES THE FRAMEWORK'S BODY.
-// func_ov006_020efc68 tears the IRQ 2 handler down and then tail-calls
-// func_ov004_020b0840 with both arguments, which is the ov004 body carrying
+// _ZN12dScMgLuigi_c21AfterCleanupResourcesEj tears the IRQ 2 handler down and then tail-calls
+// _ZN11dScMgBase_c21AfterCleanupResourcesEj with both arguments, which is the ov004 body carrying
 // port/mg_fanout_costs.txt section 6c's delete-with-no-pointer defect. The
 // defect is inside that ov004 body, not in this class's override, so it is not
 // repaired here.
@@ -1795,20 +1795,20 @@ extern "C" void port_scene_mg_hits(void)
 extern "C" {
 
 extern unsigned char data_ov006_0213cf10[];   /* dScMgLuigi_c, 36 slots */
-extern unsigned char MgWanted_SpawnInfo[];
+extern unsigned char g_profile_MG_LUIGI[];
 
-/* the seven override bodies. func_ov006_020f3414 is the host copy in
+/* the seven override bodies. _ZN12dScMgLuigi_c8BehaviorEv is the host copy in
    port/unmatched/MgLuigi_StateDispatch.cpp, not the src TU: it is the class's
    pointer-to-member dispatch and the src cannot be compiled. */
-int   func_ov006_020f3460(void *self);          /* slot  0 InitResources     */
-int   func_ov006_020efc68(int self, int flag);  /* slot  5 AfterCleanup      */
-int   func_ov006_020f3414(void *self);          /* slot  6 Behavior, HOSTED  */
-int   func_ov006_020f33c0(void *self);          /* slot  9 Render            */
-int   func_ov006_020efc0c(int *self);           /* slot 16 D2                */
-int  *func_ov006_020efc30(int *self);           /* slot 17 D0                */
-void  func_ov006_020f3294(char *self, int arg); /* slot 18 state reset       */
+int   _ZN12dScMgLuigi_c13InitResourcesEv(void *self);          /* slot  0 InitResources     */
+int   _ZN12dScMgLuigi_c21AfterCleanupResourcesEj(int self, int flag);  /* slot  5 AfterCleanup      */
+int   _ZN12dScMgLuigi_c8BehaviorEv(void *self);          /* slot  6 Behavior, HOSTED  */
+int   _ZN12dScMgLuigi_c6RenderEv(void *self);          /* slot  9 Render            */
+int   _ZN12dScMgLuigi_cD1Ev(int *self);           /* slot 16 D2                */
+int  *_ZN12dScMgLuigi_cD0Ev(int *self);           /* slot 17 D0                */
+void  _ZN12dScMgLuigi_c13OnYoshiTryEatEi(char *self, int arg); /* slot 18 state reset       */
 
-int *MgWanted_Spawn(void);
+int *dScMgLuigi_c_classInit(void);
 
 /* the class's state-dispatch witness; MgLuigi_StateDispatch.cpp */
 void port_mg_luigi_counts(unsigned *hits, unsigned *floor, unsigned *nosrc);
@@ -1820,20 +1820,20 @@ void port_scene_mg_luigi_hits(void);
 }  /* extern "C" */
 
 static int  __fastcall mgl_init(void *s, void *)
-{ MG_SLOT(0);  const int r = func_ov006_020f3460(s);
+{ MG_SLOT(0);  const int r = _ZN12dScMgLuigi_c13InitResourcesEv(s);
   hal_gapless_minigames_latch(); return r; }
 static void __fastcall mgl_aclean(void *s, void *, unsigned f)
-{ MG_SLOT(5);  func_ov006_020efc68((int)(size_t)s, (int)f); }
+{ MG_SLOT(5);  _ZN12dScMgLuigi_c21AfterCleanupResourcesEj((int)(size_t)s, (int)f); }
 static int  __fastcall mgl_beh(void *s, void *)
-{ MG_SLOT(6);  return func_ov006_020f3414(s); }
+{ MG_SLOT(6);  return _ZN12dScMgLuigi_c8BehaviorEv(s); }
 static int  __fastcall mgl_render(void *s, void *)
-{ MG_SLOT(9);  return func_ov006_020f33c0(s); }
+{ MG_SLOT(9);  return _ZN12dScMgLuigi_c6RenderEv(s); }
 static void *__fastcall mgl_d2(void *s, void *)
-{ MG_SLOT(16); return (void *)(size_t)func_ov006_020efc0c((int *)s); }
+{ MG_SLOT(16); return (void *)(size_t)_ZN12dScMgLuigi_cD1Ev((int *)s); }
 static void *__fastcall mgl_d0(void *s, void *)
-{ MG_SLOT(17); return (void *)func_ov006_020efc30((int *)s); }
+{ MG_SLOT(17); return (void *)_ZN12dScMgLuigi_cD0Ev((int *)s); }
 static int  __fastcall mgl_reset(void *s, void *, int a)
-{ MG_SLOT(18); func_ov006_020f3294((char *)s, a); return 1; }
+{ MG_SLOT(18); _ZN12dScMgLuigi_c13OnYoshiTryEatEi((char *)s, a); return 1; }
 
 /* the two diagnostics, the same pair the curling fill carries */
 static int __fastcall mgl_render_noop(void *, void *)
@@ -1908,13 +1908,13 @@ extern "C" void port_scene_fill_luigi(void)
 
 /* The registry's factory column is void *(*)(void) and the matched factory
    returns int *. One typed forwarder, the shape port_mg_curling_spawn has.
-   NO ARGUMENT IS DISPLACED HERE: src/MgWanted_Spawn.c calls
-   func_ov004_020b2adc(p) WITH the object pointer, where dScMgCup_c's factory
+   NO ARGUMENT IS DISPLACED HERE: src/actors/dScMgLuigi_c.cpp calls
+   _ZN11dScMgBase_cC2Ev(p) WITH the object pointer, where dScMgCup_c's factory
    calls the same base constructor with none. This lane needs no displacement
    ruling and asks for none. */
 extern "C" void *port_mg_luigi_spawn(void)
 {
-    return (void *)MgWanted_Spawn();
+    return (void *)dScMgLuigi_c_classInit();
 }
 
 extern "C" void port_scene_mg_luigi_hits(void)
@@ -1961,8 +1961,8 @@ extern "C" void port_scene_mg_luigi_hits(void)
 //
 // IDENTITY, RE-DERIVED FROM THE ROM BY THIS LANE rather than inherited:
 //   RTTI       0x0213d960  "15dScMgPachinko_c"
-//   SpawnInfo  0x0213d910  MgBobOmbSquad_SpawnInfo, doubled id 0x01700170 at +4
-//   factory    0x020ff3ec  MgBobOmbSquad_Spawn
+//   SpawnInfo  0x0213d910  g_profile_MG_PACHINKO, doubled id 0x01700170 at +4
+//   factory    0x020ff3ec  dScMgPachinko_c_classInit
 //   vtable     0x0213d9cc  data_ov006_0213d9cc, and the factory's only ov006
 //              literal-pool load is that word, which is how the two are tied
 //              together rather than by name
@@ -1988,38 +1988,38 @@ extern "C" {
 
 /* the mount storage this fill writes into */
 extern unsigned char data_ov006_0213d9cc[];   /* dScMgPachinko_c, 36 slots */
-extern unsigned char MgBobOmbSquad_SpawnInfo[];
+extern unsigned char g_profile_MG_PACHINKO[];
 
 /* the class's own six overrides, in slot order. FOUR ARE SLICED AND TWO ARE
    NOT WHAT THEY LOOK LIKE:
-     slot  0  func_ov006_020fefc0  NO SRC AT ALL -- the named trap in
+     slot  0  _ZN15dScMgPachinko_c13InitResourcesEv  NO SRC AT ALL -- the named trap in
               port/unmatched/MgPachinko_Traps.cpp. This is the class's whole
               nosrc column in the fan-out cost table.
-     slot  6  func_ov006_020fee24  sliced
-     slot  9  func_ov006_020fedc4  sliced, MARKER, ruled REAL_DECOMP
-     slot 16  func_ov006_020fa75c  sliced
-     slot 17  func_ov006_020fa780  MARKER, ruled REAL_DECOMP, and EXCLUDED from
+     slot  6  _ZN15dScMgPachinko_c8BehaviorEv  sliced
+     slot  9  _ZN15dScMgPachinko_c6RenderEv  sliced, MARKER, ruled REAL_DECOMP
+     slot 16  _ZN15dScMgPachinko_cD1Ev  sliced
+     slot 17  _ZN15dScMgPachinko_cD0Ev  MARKER, ruled REAL_DECOMP, and EXCLUDED from
               the slice: it spells decl_common.h's shared VT/HEAP placeholders
               and bare VT is bound to the ov002 Enemy base table. Hosted as
               port_mg_pachinko_d0 in port/unmatched/MgPachinko_Dtor.cpp.
-     slot 18  func_ov006_020fed58  sliced, MARKER, ruled REAL_DECOMP
+     slot 18  _ZN15dScMgPachinko_c13OnYoshiTryEatEi  sliced, MARKER, ruled REAL_DECOMP
    The three markers were disassembled out of the shipped overlay image and
    compared instruction for instruction with src before being seated; the
    rulings and their evidence are in port/tools/inferred_stub_adjudicated.txt. */
-int   func_ov006_020fefc0(void *self);        /* slot  0 InitResources */
-int   func_ov006_020fee24(void *self);        /* slot  6 Behavior      */
-int   func_ov006_020fedc4(void *self);        /* slot  9 Render        */
-int   func_ov006_020fa75c(void *self);        /* slot 16 D2            */
+int   _ZN15dScMgPachinko_c13InitResourcesEv(void *self);        /* slot  0 InitResources */
+int   _ZN15dScMgPachinko_c8BehaviorEv(void *self);        /* slot  6 Behavior      */
+int   _ZN15dScMgPachinko_c6RenderEv(void *self);        /* slot  9 Render        */
+int   _ZN15dScMgPachinko_cD1Ev(void *self);        /* slot 16 D2            */
 void *port_mg_pachinko_d0(void *self);        /* slot 17 D0, hosted    */
-void  func_ov006_020fed58(void *self, int n); /* slot 18 state reset   */
+void  _ZN15dScMgPachinko_c13OnYoshiTryEatEi(void *self, int n); /* slot 18 state reset   */
 
 /* the factory. IT NEEDS NO DISPLACEMENT RULING, and that was checked rather
    than assumed: port/mg_fanout_costs.txt section 12 found 0x169's factory
    calling the base constructor with NO argument where ARM rides r0 through,
-   and granted a host copy for it. src/MgBobOmbSquad_Spawn.c does NOT have that
-   defect -- it reads `func_ov004_020b2adc(p);`, with the argument -- so the
+   and granted a host copy for it. src/d_s_mg_pachinko.c does NOT have that
+   defect -- it reads `_ZN11dScMgBase_cC2Ev(p);`, with the argument -- so the
    matched TU is sliced and called directly. */
-int  *MgBobOmbSquad_Spawn(void);
+int  *dScMgPachinko_c_classInit(void);
 
 /* the class's state machine, port/unmatched/MgPachinko_StateDispatch.cpp */
 void port_mg_pachinko_state_counts(unsigned *hits, unsigned *missing);
@@ -2155,7 +2155,7 @@ static void pch_ball_dump(void *self, unsigned frame)
         /* THE SLOT'S STATE BYTE, because where a ball is only means something
            next to what it is doing. src/func_ov006_020fe2e4.c writes 1 here on
            the stylus press edge (grabbed, and the ball now tracks the stylus at
-           a captured offset) and src/func_ov006_020fe394.c writes 2 on the
+           a captured offset) and src/func_ov006_020fe394.cpp writes 2 on the
            release (shot). A trace of positions alone cannot tell a ball that is
            being pulled from one that has just been fired at the same place,
            which is the distinction a drag that leaves the window turns on. */
@@ -2191,7 +2191,7 @@ static void pch_ball_dump(void *self, unsigned frame)
 static int  __fastcall pch_init(void *s, void *)
 {
     PCH_SLOT(0);
-    const int r = func_ov006_020fefc0(s);
+    const int r = _ZN15dScMgPachinko_c13InitResourcesEv(s);
     /* AFTER THE REAL BODY, NOT INSTEAD OF IT. The class's own setter call is
        inside that body, and this is where the opt-in GaplessMinigames mod
        undoes it. Every seated minigame calls this, not just this one: the
@@ -2261,7 +2261,7 @@ static int  __fastcall pch_beh(void *s, void *)
             }
         }
     }
-    const int r = func_ov006_020fee24(s);
+    const int r = _ZN15dScMgPachinko_c8BehaviorEv(s);
     hal_gapless_splice();
     return r;
 }
@@ -2277,18 +2277,18 @@ static int  __fastcall pch_render(void *s, void *)
        about to read, and counted off slot 9 so the frame column is the class's
        own render count rather than a host clock. */
     pch_ball_dump(s, g_pch_hits[9]);
-    return func_ov006_020fedc4(s);
+    return _ZN15dScMgPachinko_c6RenderEv(s);
 }
 static void *__fastcall pch_d2(void *s, void *)
-{ PCH_SLOT(16); return (void *)(size_t)func_ov006_020fa75c(s); }
+{ PCH_SLOT(16); return (void *)(size_t)_ZN15dScMgPachinko_cD1Ev(s); }
 static void *__fastcall pch_d0(void *s, void *)
 { PCH_SLOT(17); return port_mg_pachinko_d0(s); }
 /* slot 18 takes a SECOND argument in this class where curling's takes none:
-   src/func_ov006_020fed58.c is (char *c, int n) and the ROM reads r1 (cmp r1,#9
+   src/_ZN15dScMgPachinko_c13OnYoshiTryEatEi.cpp is (char *c, int n) and the ROM reads r1 (cmp r1,#9
    at 0x020fed6c). The __fastcall face lands `this` in ecx and the ROM's r1 in
    the first stack slot, which is where the third parameter of this thunk sits. */
 static int  __fastcall pch_reset(void *s, void *, int n)
-{ PCH_SLOT(18); func_ov006_020fed58(s, n); return 1; }
+{ PCH_SLOT(18); _ZN15dScMgPachinko_c13OnYoshiTryEatEi(s, n); return 1; }
 
 /* dScMgPachinko_c's own six, the per-class half. */
 static const MgFace kPachinkoFaces[] = {
@@ -2378,7 +2378,7 @@ static void pch_award_abi_check(void)
 
 extern "C" void *port_mg_pachinko_spawn(void)
 {
-    void *p = (void *)MgBobOmbSquad_Spawn();
+    void *p = (void *)dScMgPachinko_c_classInit();
     mg_score_dump("postctor");
     return p;
 }
@@ -2485,7 +2485,7 @@ extern "C" void port_scene_mg_pachinko_report(void)
 //
 //   SpawnInfo   0x0213ebd0, found by scanning overlay_0006.bin for the
 //               doubled-id word 0x01780178 (one occurrence, at 0x0213ebd4)
-//   factory     0x02119824, the word before it, = MgBingoBallSlotsShot_Spawn
+//   factory     0x02119824, the word before it, = dScMgSmartball_c_classInit
 //   vtable      0x0213eefc, from the factory's own literal pool, 36 slots
 //
 // THE RTTI STRING AT 0x0213ec7c READS "16dScMgSmartball_c".
@@ -2495,7 +2495,7 @@ extern "C" void port_scene_mg_pachinko_report(void)
 // set for curling.
 //
 // THE WIDTH IS 36 AND SECTION 11's THREE CHECKS ALL SAY SO: the next config
-// symbol after data_ov006_0213eefc is data_ov006_0213ef8c, exactly 36 words
+// symbol after _ZTV16dScMgSmartball_c is data_ov006_0213ef8c, exactly 36 words
 // on; slot 35 holds 0x020ad660, the family's terminal word; and the word past
 // it is 0x2f474d2f, ASCII "/MG/", the head of the class's own file-name table.
 //
@@ -2509,7 +2509,7 @@ extern "C" void port_scene_mg_pachinko_report(void)
 // self+0x4684 on its first statement without a null check. The pre-flight
 // below says so before the spawn.
 //
-// SLOT 18 IS A HOST COPY AND NOT THE MATCHED TU. src/func_ov006_02118a8c.cpp
+// SLOT 18 IS A HOST COPY AND NOT THE MATCHED TU. src/_ZN16dScMgSmartball_c13OnYoshiTryEatEi.cpp
 // declares func_ov006_02115b0c with no parameters and calls it with none,
 // while src/func_ov006_02115b0c.c:113 defines it taking the object; ARM rides
 // r0 through and the host does not. port/unmatched/MgSmartball_Slot18.cpp is
@@ -2518,7 +2518,7 @@ extern "C" void port_scene_mg_pachinko_report(void)
 // THIS CLASS HAS NO POINTER-TO-MEMBER STATE MACHINE. Its Behavior switches on
 // a plain int at self+0x4660, no ov006 overlay constructor copies a pair table
 // into its .data neighbourhood, and a member-pointer sweep of all 76 closure
-// TUs hits exactly one file, func_ov004_020b87e0.cpp, which is the FRAMEWORK's
+// TUs hits exactly one file, _ZN10dMgState_c8SetStateEi.cpp, which is the FRAMEWORK's
 // state setter and was a trap above when this block was written. So section 4's
 // wall costs this lane nothing, and port/slice_smb.txt records how each of the
 // three was measured. AMENDED, run mg5 lane BASESET: that setter is SEATED, in
@@ -2527,24 +2527,24 @@ extern "C" void port_scene_mg_pachinko_report(void)
 // measurement about this class's own Behavior is unchanged.
 
 extern "C" {
-extern unsigned char data_ov006_0213eefc[];   /* dScMgSmartball_c, 36 slots */
-extern unsigned char MgBingoBallSlotsShot_SpawnInfo[];
+extern unsigned char _ZTV16dScMgSmartball_c[];   /* dScMgSmartball_c, 36 slots */
+extern unsigned char g_profile_MG_SMARTBALL[];
 
 /* the class's own nine overrides, in slot order. Six carried the "recovered
    from vtable slot identity" marker and all six are ruled REAL_DECOMP against
    the shipped overlay image in port/tools/inferred_stub_adjudicated.txt before
    any of them was seated. */
-int   func_ov006_02118b70(void *self);        /* slot  0 InitResources  TRAP */
-void  func_ov006_0211944c(char *self, int f); /* slot  5 AfterCleanupResources */
-int   func_ov006_02118488(void *self);        /* slot  6 Behavior       */
-int   func_ov006_021173c8(void *self);        /* slot  9 Render         TRAP */
-void *func_ov006_0210d740(char *self);        /* slot 16 D2             */
-void *func_ov006_0210d7e0(void *self);        /* slot 17 D0             */
-void  func_ov006_02118a8c(void *self);        /* slot 18 reset, HOST COPY */
-int   func_ov006_021147ac(void *self);        /* slot 25                */
-void  func_ov006_02118ae4(void);              /* slot 31, takes nothing */
+int   _ZN16dScMgSmartball_c13InitResourcesEv(void *self);        /* slot  0 InitResources  TRAP */
+void  _ZN16dScMgSmartball_c21AfterCleanupResourcesEj(char *self, int f); /* slot  5 AfterCleanupResources */
+int   _ZN16dScMgSmartball_c8BehaviorEv(void *self);        /* slot  6 Behavior       */
+int   _ZN16dScMgSmartball_c6RenderEv(void *self);        /* slot  9 Render         TRAP */
+void *_ZN16dScMgSmartball_cD1Ev(char *self);        /* slot 16 D2             */
+void *_ZN16dScMgSmartball_cD0Ev(void *self);        /* slot 17 D0             */
+void  _ZN16dScMgSmartball_c13OnYoshiTryEatEi(void *self);        /* slot 18 reset, HOST COPY */
+int   _ZN16dScMgSmartball_c8OnPushedEv(void *self);        /* slot 25                */
+void  _ZN16dScMgSmartball_c9Virtual7CEv(void);              /* slot 31, takes nothing */
 
-int  *MgBingoBallSlotsShot_Spawn(void);
+int  *dScMgSmartball_c_classInit(void);
 
 unsigned port_mg_smartball_trap_hits(void);
 unsigned port_mg_smartball_trap_mask(void);
@@ -2557,10 +2557,10 @@ unsigned port_mg_smartball_trap_mask(void);
    it never reads r0) and slot 18's host copy takes the object the matched TU
    drops. */
 static int  __fastcall smb_init(void *s, void *)
-{ MG_SLOT(0);  const int r = func_ov006_02118b70(s);
+{ MG_SLOT(0);  const int r = _ZN16dScMgSmartball_c13InitResourcesEv(s);
   hal_gapless_minigames_latch(); return r; }
 static void __fastcall smb_aclean(void *s, void *, unsigned f)
-{ MG_SLOT(5);  func_ov006_0211944c((char *)s, (int)f); }
+{ MG_SLOT(5);  _ZN16dScMgSmartball_c21AfterCleanupResourcesEj((char *)s, (int)f); }
 /* ---- THE BLOCKER, NAMED BEFORE IT HAPPENS AND NOT PREVENTED ---------------
    The same instrument, and the same ruling, that hal/scene_mg.cpp's fader
    pre-flight used for scene 374: print the CAUSE by name when the condition
@@ -2568,16 +2568,16 @@ static void __fastcall smb_aclean(void *s, void *, unsigned f)
    cannot be a battery marker; this line can, and it names the field rather
    than the address the symptom lands on.
 
-   WHY THE CONDITION EXISTS. Slot 0 InitResources (func_ov006_02118b70) has no
+   WHY THE CONDITION EXISTS. Slot 0 InitResources (_ZN16dScMgSmartball_c13InitResourcesEv) has no
    decompiled body -- no delink block covers 0x02118b70 -- so it is a trap and
-   nothing builds the class's sub-objects. src/func_ov006_02118488.c's case 0
+   nothing builds the class's sub-objects. src/_ZN16dScMgSmartball_c8BehaviorEv.cpp's case 0
    opens with
 
        o = *(char**)(c + 0x4684);
        (**(VFunc**)o)(o);
 
    with no null guard, because on the ROM there is nothing to guard: slot 0 ran.
-   The fault is c0000005 accessing 0x00000000 at func_ov006_02118488+0x11b.
+   The fault is c0000005 accessing 0x00000000 at _ZN16dScMgSmartball_c8BehaviorEv+0x11b.
 
    NOT PREVENTED ON PURPOSE. Skipping the call, or seating a plausible object
    in that field, is the guess port/tools/inferred_stub_guard exists to refuse,
@@ -2605,30 +2605,30 @@ static int  __fastcall smb_beh(void *s, void *)
             std::printf(
                 "[scene] MINIGAME BLOCKED: dScMgSmartball_c slot 6 Behavior "
                 "is about to dereference a NULL self+0x4684, because slot 0 "
-                "InitResources (func_ov006_02118b70) has no decompiled body "
+                "InitResources (_ZN16dScMgSmartball_c13InitResourcesEv) has no decompiled body "
                 "and never built the object. This is a decomp gap, not a port "
                 "one.\n");
             std::fflush(stdout);
         }
     }
     {
-        const int r = func_ov006_02118488(s);
+        const int r = _ZN16dScMgSmartball_c8BehaviorEv(s);
         hal_gapless_splice();
         return r;
     }
 }
 static int  __fastcall smb_render(void *s, void *)
-{ MG_SLOT(9);  return func_ov006_021173c8(s); }
+{ MG_SLOT(9);  return _ZN16dScMgSmartball_c6RenderEv(s); }
 static void *__fastcall smb_d2(void *s, void *)
-{ MG_SLOT(16); return func_ov006_0210d740((char *)s); }
+{ MG_SLOT(16); return _ZN16dScMgSmartball_cD1Ev((char *)s); }
 static void *__fastcall smb_d0(void *s, void *)
-{ MG_SLOT(17); return func_ov006_0210d7e0(s); }
+{ MG_SLOT(17); return _ZN16dScMgSmartball_cD0Ev(s); }
 static int  __fastcall smb_reset(void *s, void *, int /*ridethrough*/)
-{ MG_SLOT(18); func_ov006_02118a8c(s); return 1; }
+{ MG_SLOT(18); _ZN16dScMgSmartball_c13OnYoshiTryEatEi(s); return 1; }
 static int  __fastcall smb_v25(void *s, void *)
-{ MG_SLOT(25); return func_ov006_021147ac(s); }
+{ MG_SLOT(25); return _ZN16dScMgSmartball_c8OnPushedEv(s); }
 static int  __fastcall smb_v31(void *, void *)
-{ MG_SLOT(31); func_ov006_02118ae4(); return 0; }
+{ MG_SLOT(31); _ZN16dScMgSmartball_c9Virtual7CEv(); return 0; }
 
 /* dScMgSmartball_c's own nine, the per-class half. Keyed on the ROM word each
    slot holds, exactly like kCurlingFaces, so the three key sets stay disjoint
@@ -2694,7 +2694,7 @@ static const MgFace kSmartballFaces[] = {
 //
 //   1. THE SPAN CHECK, WHICH IS WRONG HERE AND IS THE WHOLE WARNING. The next
 //      symbol in config/arm9/overlays/ov006/symbols.txt after
-//      data_ov006_0213ec98 is data_ov006_0213ecac, 0x14 bytes on, which reads
+//      _ZTV19cMgSmartball_ball_c is _ZTV20cMgSmartball_dokan_c, 0x14 bytes on, which reads
 //      as FIVE words. Five is an overrun into the next class: 0x0213eca4 holds
 //      0x00000000 and 0x0213eca8 holds 0x0213ebf8, and the record walk above
 //      identifies those two as cMgSmartball_dokan_c's OWN offset-to-top and
@@ -2724,19 +2724,19 @@ static const MgFace kSmartballFaces[] = {
 // Every other thunk in this file is __fastcall (receiver in ECX) because every
 // caller of a SCENE vtable in this binary is a host dispatcher that puts it
 // there. The sub-object tables are the opposite case: their dominant caller is
-// src/func_ov006_02118488.c, this class's own Behavior, which spells
+// src/_ZN16dScMgSmartball_c8BehaviorEv.cpp, this class's own Behavior, which spells
 // `typedef void (*VFunc)(void*)` and makes twelve `(**(VFunc**)o)(o)` calls --
 // a cdecl call with the receiver PUSHED. A vtable cannot serve both shapes, so
 // these thunks take the receiver on the stack, and the one C++ caller
 // (dScMgSmartball_c::Render, twelve `->f1()` dispatches) is made to match by
 // the __cdecl DispObj declaration in port/unmatched/MgSmartball_HostAbi.h.
-// port/CMakeLists.txt already makes the same ruling for func_02021d1c.
+// port/CMakeLists.txt already makes the same ruling for _ZN8Particle10SysTracker8Contents5Entry10InitialiseEjjR7Vector3PK11Vector3_16fPN5dPa_c7level_c10callback_cE.
 //
 // ---- TWO SLOTS ARE NOT ORDINARY BODIES -----------------------------------
 //
 //   dokan RestoreInitial (0x02110bb4) is a 0xc-byte TAIL-CALL VENEER --
 //     `ldr ip,[pc]; bx ip; .word 0x02114738` -- so it is the base class's own
-//     RestoreInitial reached under a second address. src/func_ov006_02110bb4.c
+//     RestoreInitial reached under a second address. src/_ZN20cMgSmartball_dokan_c14RestoreInitialEv.cpp
 //     spells both sides `void(void)`, which rides r0 through on ARM and drops
 //     the receiver on the host. The thunk dispatches straight to the veneer's
 //     TARGET with the receiver, which is exactly what port_scene_fill_rom does
@@ -2751,8 +2751,8 @@ static const MgFace kSmartballFaces[] = {
 //
 // Not missing -- misnamed, which reads the same from a symbol search and is
 // not the same thing at all. config/arm9/overlays/ov006/delinks.txt in this
-// tree files 0x02111144 as src/START_INTRO_MINIMAP_ZOOM.c and 0x02110154 as
-// src/_ZN6Player7ST_WAITE.cpp. Both are real, matched ov006 bodies at those
+// tree files 0x02111144 as src/_ZN24cMgSmartball_propeller_c12SaveSnapshotEv.cpp and 0x02110154 as
+// src/_ZN19cMgSmartball_slot_c14RestoreInitialEv.cpp. Both are real, matched ov006 bodies at those
 // addresses; the decomp's main has since renamed them
 // _ZN24cMgSmartball_propeller_c12SaveSnapshotEv and
 // _ZN19cMgSmartball_slot_c14RestoreInitialEv. The rename is a byte-gated-tree
@@ -2769,46 +2769,46 @@ static const MgFace kSmartballFaces[] = {
 
 extern "C" {
 /* the twelve tables, all already in the ov006 mount */
-extern unsigned char data_ov006_0213ec98[];  /* cMgSmartball_ball_c       */
-extern unsigned char data_ov006_0213ecac[];  /* cMgSmartball_dokan_c      */
-extern unsigned char data_ov006_0213ece8[];  /* cMgSmartball_propeller_c  */
-extern unsigned char data_ov006_0213ecfc[];  /* cMgSmartball_spring_c     */
-extern unsigned char data_ov006_0213ed10[];  /* cMgSmartball_object_c     */
-extern unsigned char data_ov006_0213ed24[];  /* cMgSmartball_wing_c       */
-extern unsigned char data_ov006_0213ed38[];  /* cMgSmartball_pushswitch_c */
-extern unsigned char data_ov006_0213ed4c[];  /* cMgSmartball_ana_c        */
-extern unsigned char data_ov006_0213ed60[];  /* cMgSmartball_board_c      */
-extern unsigned char data_ov006_0213ed74[];  /* cMgSmartball_slot_c       */
-extern unsigned char data_ov006_0213ed88[];  /* cMgSmartball_kinoko_c     */
-extern unsigned char data_ov006_0213ed9c[];  /* cMgSmartball_pakkun_c     */
+extern unsigned char _ZTV19cMgSmartball_ball_c[];  /* cMgSmartball_ball_c       */
+extern unsigned char _ZTV20cMgSmartball_dokan_c[];  /* cMgSmartball_dokan_c      */
+extern unsigned char _ZTV24cMgSmartball_propeller_c[];  /* cMgSmartball_propeller_c  */
+extern unsigned char _ZTV21cMgSmartball_spring_c[];  /* cMgSmartball_spring_c     */
+extern unsigned char _ZTV21cMgSmartball_object_c[];  /* cMgSmartball_object_c     */
+extern unsigned char _ZTV19cMgSmartball_wing_c[];  /* cMgSmartball_wing_c       */
+extern unsigned char _ZTV25cMgSmartball_pushswitch_c[];  /* cMgSmartball_pushswitch_c */
+extern unsigned char _ZTV18cMgSmartball_ana_c[];  /* cMgSmartball_ana_c        */
+extern unsigned char _ZTV20cMgSmartball_board_c[];  /* cMgSmartball_board_c      */
+extern unsigned char _ZTV19cMgSmartball_slot_c[];  /* cMgSmartball_slot_c       */
+extern unsigned char _ZTV21cMgSmartball_kinoko_c[];  /* cMgSmartball_kinoko_c     */
+extern unsigned char _ZTV21cMgSmartball_pakkun_c[];  /* cMgSmartball_pakkun_c     */
 
 /* the thirty-six bodies. Every one takes the receiver and nothing else; the
    two exceptions are named in the banner. The parameter types the definitions
    use vary (char *, int *, short *, a per-file struct) and are all one pointer
    wide, so one spelling here is enough and none of these is a C++ name. */
-void func_ov006_02113f1c(void *);   void func_ov006_02113e54(void *);
-void func_ov006_02114458(void *);
-void func_ov006_02110a20(void *);   void func_ov006_02110928(void *);
-void START_INTRO_MINIMAP_ZOOM(void *);
-void func_ov006_0211102c(void *);   void func_ov006_021111f0(void *);
-void func_ov006_0211134c(void *);   void func_ov006_02111268(void *);
-void func_ov006_02111560(void *);
-void func_ov006_02114724(void *);   void func_ov006_02114720(void);
-void func_ov006_02114738(void *);
-void func_ov006_0210e014(void *);   void func_ov006_0210ddf0(void *);
-void func_ov006_0210e098(void *);
-void func_ov006_0210e3e8(void *);   void func_ov006_0210e364(void *);
-void func_ov006_0210e460(void *);
-void func_ov006_021116f0(void *);   void func_ov006_02111654(void *);
-void func_ov006_02111750(void *);
-void func_ov006_0210f564(void *);   void func_ov006_0210e4f4(void *);
-void func_ov006_0210f914(void *);
-void func_ov006_021100a8(void *);   void func_ov006_0210ff1c(void *);
+void _ZN19cMgSmartball_ball_c12SaveSnapshotEv(void *);   void _ZN19cMgSmartball_ball_c6UpdateEv(void *);
+void _ZN19cMgSmartball_ball_c14RestoreInitialEv(void *);
+void _ZN20cMgSmartball_dokan_c12SaveSnapshotEv(void *);   void _ZN20cMgSmartball_dokan_c6UpdateEv(void *);
+void _ZN24cMgSmartball_propeller_c12SaveSnapshotEv(void *);
+void _ZN24cMgSmartball_propeller_c6UpdateEv(void *);   void _ZN24cMgSmartball_propeller_c14RestoreInitialEv(void *);
+void _ZN21cMgSmartball_spring_c12SaveSnapshotEv(void *);   void _ZN21cMgSmartball_spring_c6UpdateEv(void *);
+void _ZN21cMgSmartball_spring_c14RestoreInitialEv(void *);
+void _ZN21cMgSmartball_object_c12SaveSnapshotEv(void *);   void _ZN21cMgSmartball_object_c6UpdateEv(void);
+void _ZN21cMgSmartball_object_c14RestoreInitialEv(void *);
+void _ZN19cMgSmartball_wing_c12SaveSnapshotEv(void *);   void _ZN19cMgSmartball_wing_c6UpdateEv(void *);
+void _ZN19cMgSmartball_wing_c14RestoreInitialEv(void *);
+void _ZN25cMgSmartball_pushswitch_c12SaveSnapshotEv(void *);   void _ZN25cMgSmartball_pushswitch_c6UpdateEv(void *);
+void _ZN25cMgSmartball_pushswitch_c14RestoreInitialEv(void *);
+void _ZN18cMgSmartball_ana_c12SaveSnapshotEv(void *);   void _ZN18cMgSmartball_ana_c6UpdateEv(void *);
+void _ZN18cMgSmartball_ana_c14RestoreInitialEv(void *);
+void _ZN20cMgSmartball_board_c12SaveSnapshotEv(void *);   void _ZN20cMgSmartball_board_c6UpdateEv(void *);
+void _ZN20cMgSmartball_board_c14RestoreInitialEv(void *);
+void _ZN19cMgSmartball_slot_c12SaveSnapshotEv(void *);   void _ZN19cMgSmartball_slot_c6UpdateEv(void *);
 void port_mg_smartball_slot_restore(void *);
-void func_ov006_0211192c(void *);   void func_ov006_021117bc(void *);
-void func_ov006_02111b20(void *);
-void func_ov006_021106b4(void *);   void func_ov006_021104c0(void *);
-void func_ov006_02110850(void *);
+void _ZN21cMgSmartball_kinoko_c12SaveSnapshotEv(void *);   void _ZN21cMgSmartball_kinoko_c6UpdateEv(void *);
+void _ZN21cMgSmartball_kinoko_c14RestoreInitialEv(void *);
+void _ZN21cMgSmartball_pakkun_c12SaveSnapshotEv(void *);   void _ZN21cMgSmartball_pakkun_c6UpdateEv(void *);
+void _ZN21cMgSmartball_pakkun_c14RestoreInitialEv(void *);
 }  /* extern "C" */
 
 /* One counter for the whole family. Per-class counters would be thirty-six
@@ -2819,44 +2819,79 @@ static unsigned g_smb_obj_hits;
 
 #define SMB_OBJ(fn)   { ++g_smb_obj_hits; fn; }
 
-static void smb_ball_s0(void *s)  SMB_OBJ(func_ov006_02113f1c(s))
-static void smb_ball_s1(void *s)  SMB_OBJ(func_ov006_02113e54(s))
-static void smb_ball_s2(void *s)  SMB_OBJ(func_ov006_02114458(s))
-static void smb_dok_s0(void *s)   SMB_OBJ(func_ov006_02110a20(s))
-static void smb_dok_s1(void *s)   SMB_OBJ(func_ov006_02110928(s))
-/* the veneer: dispatch its target, with the receiver the veneer rides through */
-static void smb_dok_s2(void *s)   SMB_OBJ(func_ov006_02114738(s))
-static void smb_pro_s0(void *s)   SMB_OBJ(START_INTRO_MINIMAP_ZOOM(s))
-static void smb_pro_s1(void *s)   SMB_OBJ(func_ov006_0211102c(s))
-static void smb_pro_s2(void *s)   SMB_OBJ(func_ov006_021111f0(s))
-static void smb_spr_s0(void *s)   SMB_OBJ(func_ov006_0211134c(s))
-static void smb_spr_s1(void *s)   SMB_OBJ(func_ov006_02111268(s))
-static void smb_spr_s2(void *s)   SMB_OBJ(func_ov006_02111560(s))
-static void smb_obj_s0(void *s)   SMB_OBJ(func_ov006_02114724(s))
+static void smb_ball_s0(void *s)  SMB_OBJ(_ZN19cMgSmartball_ball_c12SaveSnapshotEv(s))
+static void smb_ball_s1(void *s)  SMB_OBJ(_ZN19cMgSmartball_ball_c6UpdateEv(s))
+static void smb_ball_s2(void *s)  SMB_OBJ(_ZN19cMgSmartball_ball_c14RestoreInitialEv(s))
+static void smb_dok_s0(void *s)   SMB_OBJ(_ZN20cMgSmartball_dokan_c12SaveSnapshotEv(s))
+static void smb_dok_s1(void *s)   SMB_OBJ(_ZN20cMgSmartball_dokan_c6UpdateEv(s))
+/* THE VENEER, THROUGH ITS OWN MATCHED TU (run link100 wave 15, lane SEAT15A,
+   enabler E2 of out/LINK15/BATCHES.md). This thunk used to call the veneer's
+   TARGET, _ZN21cMgSmartball_object_c14RestoreInitialEv, and skip the veneer.
+   That was right on behaviour and it left the ROM's own 0xc-byte body dead:
+   src/_ZN20cMgSmartball_dokan_c14RestoreInitialEv.cpp is on
+   port/slice_smb.txt and compiles, but nothing in the image referenced
+   ?RestoreInitial@cMgSmartball_dokan_c@@UAEXXZ, so /OPT:REF discarded it.
+
+   The reference is now the ROM's own: cMgSmartball_dokan_c's vtable at ov006
+   0x0213ecac holds 02110a20 / 02110928 / 02110bb4, this array is the port's
+   fill for those three words, and 0x02110bb4 IS the matched body.
+
+   A QUALIFIED CALL, so it is a direct call and not a vtable dispatch -- the
+   same point the matched TU's own header comment makes about the ROM's
+   qualification, for the same reason (an unqualified call here would recurse
+   through slot 2). The receiver is carried: the matched body is a __thiscall
+   member and takes it in ecx.
+
+   THE FLAT NAME IS STILL NOT DEFINED ANYWHERE. ov002 and ov006 share a DS
+   overlay load window, hal/cxx_aliases.cpp routes the sibling slot_c name at
+   0x02110154 into ov002, and alternatename_guard.py has refused a flat
+   definition in that window once already (out/SEAT14E/bugs.md item 1). This
+   reference is the MSVC member mangle, which is what the matched TU emits.
+
+   The class is re-declared locally because this file includes no game
+   headers; three virtuals in ROM slot order, which is what
+   include/cMgSmartball_dokan_c.h declares. MSVC's mangle for a member does
+   not encode the base list, and the class adds no fields over
+   cMgSmartball_object_c (allocation is _Znwj(0x34), exactly the base's
+   size), so the receiver needs no adjustment. */
+struct cMgSmartball_dokan_c {
+    virtual void SaveSnapshot();    /* slot 0 -- ROM 0x02110a20 */
+    virtual void Update();          /* slot 1 -- ROM 0x02110928 */
+    virtual void RestoreInitial();  /* slot 2 -- ROM 0x02110bb4, the veneer */
+};
+static void smb_dok_s2(void *s)
+    SMB_OBJ(((cMgSmartball_dokan_c *)s)->cMgSmartball_dokan_c::RestoreInitial())
+static void smb_pro_s0(void *s)   SMB_OBJ(_ZN24cMgSmartball_propeller_c12SaveSnapshotEv(s))
+static void smb_pro_s1(void *s)   SMB_OBJ(_ZN24cMgSmartball_propeller_c6UpdateEv(s))
+static void smb_pro_s2(void *s)   SMB_OBJ(_ZN24cMgSmartball_propeller_c14RestoreInitialEv(s))
+static void smb_spr_s0(void *s)   SMB_OBJ(_ZN21cMgSmartball_spring_c12SaveSnapshotEv(s))
+static void smb_spr_s1(void *s)   SMB_OBJ(_ZN21cMgSmartball_spring_c6UpdateEv(s))
+static void smb_spr_s2(void *s)   SMB_OBJ(_ZN21cMgSmartball_spring_c14RestoreInitialEv(s))
+static void smb_obj_s0(void *s)   SMB_OBJ(_ZN21cMgSmartball_object_c12SaveSnapshotEv(s))
 /* the empty body: `bx lr`, and it reads nothing */
-static void smb_obj_s1(void *)    SMB_OBJ(func_ov006_02114720())
-static void smb_obj_s2(void *s)   SMB_OBJ(func_ov006_02114738(s))
-static void smb_wng_s0(void *s)   SMB_OBJ(func_ov006_0210e014(s))
-static void smb_wng_s1(void *s)   SMB_OBJ(func_ov006_0210ddf0(s))
-static void smb_wng_s2(void *s)   SMB_OBJ(func_ov006_0210e098(s))
-static void smb_psw_s0(void *s)   SMB_OBJ(func_ov006_0210e3e8(s))
-static void smb_psw_s1(void *s)   SMB_OBJ(func_ov006_0210e364(s))
-static void smb_psw_s2(void *s)   SMB_OBJ(func_ov006_0210e460(s))
-static void smb_ana_s0(void *s)   SMB_OBJ(func_ov006_021116f0(s))
-static void smb_ana_s1(void *s)   SMB_OBJ(func_ov006_02111654(s))
-static void smb_ana_s2(void *s)   SMB_OBJ(func_ov006_02111750(s))
-static void smb_brd_s0(void *s)   SMB_OBJ(func_ov006_0210f564(s))
-static void smb_brd_s1(void *s)   SMB_OBJ(func_ov006_0210e4f4(s))
-static void smb_brd_s2(void *s)   SMB_OBJ(func_ov006_0210f914(s))
-static void smb_slt_s0(void *s)   SMB_OBJ(func_ov006_021100a8(s))
-static void smb_slt_s1(void *s)   SMB_OBJ(func_ov006_0210ff1c(s))
+static void smb_obj_s1(void *)    SMB_OBJ(_ZN21cMgSmartball_object_c6UpdateEv())
+static void smb_obj_s2(void *s)   SMB_OBJ(_ZN21cMgSmartball_object_c14RestoreInitialEv(s))
+static void smb_wng_s0(void *s)   SMB_OBJ(_ZN19cMgSmartball_wing_c12SaveSnapshotEv(s))
+static void smb_wng_s1(void *s)   SMB_OBJ(_ZN19cMgSmartball_wing_c6UpdateEv(s))
+static void smb_wng_s2(void *s)   SMB_OBJ(_ZN19cMgSmartball_wing_c14RestoreInitialEv(s))
+static void smb_psw_s0(void *s)   SMB_OBJ(_ZN25cMgSmartball_pushswitch_c12SaveSnapshotEv(s))
+static void smb_psw_s1(void *s)   SMB_OBJ(_ZN25cMgSmartball_pushswitch_c6UpdateEv(s))
+static void smb_psw_s2(void *s)   SMB_OBJ(_ZN25cMgSmartball_pushswitch_c14RestoreInitialEv(s))
+static void smb_ana_s0(void *s)   SMB_OBJ(_ZN18cMgSmartball_ana_c12SaveSnapshotEv(s))
+static void smb_ana_s1(void *s)   SMB_OBJ(_ZN18cMgSmartball_ana_c6UpdateEv(s))
+static void smb_ana_s2(void *s)   SMB_OBJ(_ZN18cMgSmartball_ana_c14RestoreInitialEv(s))
+static void smb_brd_s0(void *s)   SMB_OBJ(_ZN20cMgSmartball_board_c12SaveSnapshotEv(s))
+static void smb_brd_s1(void *s)   SMB_OBJ(_ZN20cMgSmartball_board_c6UpdateEv(s))
+static void smb_brd_s2(void *s)   SMB_OBJ(_ZN20cMgSmartball_board_c14RestoreInitialEv(s))
+static void smb_slt_s0(void *s)   SMB_OBJ(_ZN19cMgSmartball_slot_c12SaveSnapshotEv(s))
+static void smb_slt_s1(void *s)   SMB_OBJ(_ZN19cMgSmartball_slot_c6UpdateEv(s))
 static void smb_slt_s2(void *s)   SMB_OBJ(port_mg_smartball_slot_restore(s))
-static void smb_kin_s0(void *s)   SMB_OBJ(func_ov006_0211192c(s))
-static void smb_kin_s1(void *s)   SMB_OBJ(func_ov006_021117bc(s))
-static void smb_kin_s2(void *s)   SMB_OBJ(func_ov006_02111b20(s))
-static void smb_pak_s0(void *s)   SMB_OBJ(func_ov006_021106b4(s))
-static void smb_pak_s1(void *s)   SMB_OBJ(func_ov006_021104c0(s))
-static void smb_pak_s2(void *s)   SMB_OBJ(func_ov006_02110850(s))
+static void smb_kin_s0(void *s)   SMB_OBJ(_ZN21cMgSmartball_kinoko_c12SaveSnapshotEv(s))
+static void smb_kin_s1(void *s)   SMB_OBJ(_ZN21cMgSmartball_kinoko_c6UpdateEv(s))
+static void smb_kin_s2(void *s)   SMB_OBJ(_ZN21cMgSmartball_kinoko_c14RestoreInitialEv(s))
+static void smb_pak_s0(void *s)   SMB_OBJ(_ZN21cMgSmartball_pakkun_c12SaveSnapshotEv(s))
+static void smb_pak_s1(void *s)   SMB_OBJ(_ZN21cMgSmartball_pakkun_c6UpdateEv(s))
+static void smb_pak_s2(void *s)   SMB_OBJ(_ZN21cMgSmartball_pakkun_c14RestoreInitialEv(s))
 
 #undef SMB_OBJ
 
@@ -2891,10 +2926,10 @@ static const MgFace kSmartballObjFaces[] = {
 };
 
 static void * const kSmartballObjVts[] = {
-    data_ov006_0213ec98, data_ov006_0213ecac, data_ov006_0213ece8,
-    data_ov006_0213ecfc, data_ov006_0213ed10, data_ov006_0213ed24,
-    data_ov006_0213ed38, data_ov006_0213ed4c, data_ov006_0213ed60,
-    data_ov006_0213ed74, data_ov006_0213ed88, data_ov006_0213ed9c,
+    _ZTV19cMgSmartball_ball_c, _ZTV20cMgSmartball_dokan_c, _ZTV24cMgSmartball_propeller_c,
+    _ZTV21cMgSmartball_spring_c, _ZTV21cMgSmartball_object_c, _ZTV19cMgSmartball_wing_c,
+    _ZTV25cMgSmartball_pushswitch_c, _ZTV18cMgSmartball_ana_c, _ZTV20cMgSmartball_board_c,
+    _ZTV19cMgSmartball_slot_c, _ZTV21cMgSmartball_kinoko_c, _ZTV21cMgSmartball_pakkun_c,
 };
 
 /* THREE per table, never more, and the constant is spelled once so nothing can
@@ -2924,7 +2959,7 @@ extern "C" void port_scene_fill_smartball(void)
     port_scene_mg_mounts();
 
     void **base = (void **)data_ov004_020bc0c0;
-    void **vt   = (void **)data_ov006_0213eefc;
+    void **vt   = (void **)_ZTV16dScMgSmartball_c;
 
     /* The base table again, and it is not redundant work: the fills run in
        port_scene_classes[] order on every boot and each one is idempotent --
@@ -2982,7 +3017,7 @@ extern "C" void port_scene_fill_smartball(void)
     if (port_scene_env_want() == 376) {
         std::printf("[scene] dScMgSmartball_c SEATED: vtable 0x0213eefc, 36 "
                     "slots, 9 overrides, and ALL NINE now reach a body. Run mg5 "
-                    "lane INTEG seated slot 0 InitResources (func_ov006_02118b70 "
+                    "lane INTEG seated slot 0 InitResources (_ZN16dScMgSmartball_c13InitResourcesEv "
                     "aliased onto the plain-C "
                     "_ZN16dScMgSmartball_c13InitResourcesEv, NONMATCHING) and the "
                     "aux ball-table seeder func_ov006_02114800. Run mg5 lane "
@@ -3015,15 +3050,15 @@ extern "C" void port_scene_fill_smartball(void)
    through. At the instruction level 0x02119824 is the same shape -- `movs
    r4,r0` after the allocator returns, and r0 is never rewritten before
    `bl 0x20b2adc` -- so the object rides through here too. What differs is the
-   only thing the host sees: src/MgBingoBallSlotsShot_Spawn.cpp spells the call
-   `func_ov004_020b2adc(o)` and 0x169's src/func_ov006_020e0574.cpp spells it
-   `func_ov004_020b2adc()`. port/tools/aritycheck.py finds the same split
-   independently: it lists func_ov004_020b2adc as DROPS from
-   src/func_ov006_020e0574.cpp and src/MgMushroomRoulette_Spawn.cpp, and not
+   only thing the host sees: src/minigames/d_s_mg_smartball.cpp spells the call
+   `_ZN11dScMgBase_cC2Ev(o)` and 0x169's src/actors/dScMgCup_c.cpp spells it
+   `_ZN11dScMgBase_cC2Ev()`. port/tools/aritycheck.py finds the same split
+   independently: it lists _ZN11dScMgBase_cC2Ev as DROPS from
+   src/actors/dScMgCup_c.cpp and src/minigames/d_s_mg_roulette.cpp, and not
    from this one. */
 extern "C" void *port_mg_smartball_spawn(void)
 {
-    return (void *)MgBingoBallSlotsShot_Spawn();
+    return (void *)dScMgSmartball_c_classInit();
 }
 
 extern "C" void port_scene_mg_smartball_hits(void)
@@ -3062,9 +3097,9 @@ extern "C" void port_scene_mg_smartball_hits(void)
 // port/mg_fanout_costs.txt section 2 calls the whole cost model.
 //
 // THE HIERARCHY IS TWO DEEP AND THAT IS MEASURED, not assumed from curling.
-// Slot 16 (D2, func_ov006_020dbe40) and slot 17 (D0, func_ov006_020dbe64)
+// Slot 16 (D2, _ZN11dScMgCoin_cD1Ev) and slot 17 (D0, _ZN11dScMgCoin_cD0Ev)
 // BOTH store data_ov006_0213bf50 into [this] and then call
-// func_ov004_020b29c0, dScMgBase_c's teardown, with no table in between. So
+// _ZN11dScMgBase_cD2Ev, dScMgBase_c's teardown, with no table in between. So
 // there is no intermediate base of the dScMgSingle3DBase_c kind 0x169 needed,
 // and this seat fills ONE derived table plus the shared base one.
 //
@@ -3080,17 +3115,17 @@ extern "C" {
 /* the class's own vtable, in the ov006 mount. 36 slots, span-checked. */
 extern unsigned char data_ov006_0213bf50[];   /* dScMgCoin_c,    36 slots */
 
-/* the class's own six vtable bodies. func_ov006_020de69c is the HOST COPY in
+/* the class's own six vtable bodies. _ZN11dScMgCoin_c8BehaviorEv is the HOST COPY in
    unmatched/MgCoin_StateDispatch.cpp, not the src TU: it is the pointer-to-
    member dispatcher and the port cannot compile the src. */
-int   func_ov006_020de704(void *self);          /* slot 0  InitResources */
-int   func_ov006_020de69c(void *self);          /* slot 6  Behavior, host copy */
-int   func_ov006_020de63c(void *self);          /* slot 9  Render */
-int   func_ov006_020dbe40(int *self);           /* slot 16 D2 */
-int  *func_ov006_020dbe64(int *self);           /* slot 17 D0 */
-void  func_ov006_020de5b0(char *self);          /* slot 18 state reset */
+int   _ZN11dScMgCoin_c13InitResourcesEv(void *self);          /* slot 0  InitResources */
+int   _ZN11dScMgCoin_c8BehaviorEv(void *self);          /* slot 6  Behavior, host copy */
+int   _ZN11dScMgCoin_c6RenderEv(void *self);          /* slot 9  Render */
+int   _ZN11dScMgCoin_cD1Ev(int *self);           /* slot 16 D2 */
+int  *_ZN11dScMgCoin_cD0Ev(int *self);           /* slot 17 D0 */
+void  _ZN11dScMgCoin_c13OnYoshiTryEatEi(char *self);          /* slot 18 state reset */
 
-void *MgCoincentration_Spawn(void);
+void *dScMgCoin_c_classInit(void);
 
 /* the state machine's witnesses, from unmatched/MgCoin_StateDispatch.cpp */
 unsigned port_mg_coin_state_hits(void);
@@ -3101,7 +3136,7 @@ unsigned port_mg_coin_trap_hits(void);
 }
 
 static int  __fastcall mc_init(void *s, void *)
-{ MG_SLOT(0);  const int r = func_ov006_020de704(s);
+{ MG_SLOT(0);  const int r = _ZN11dScMgCoin_c13InitResourcesEv(s);
   hal_gapless_minigames_latch(); return r; }
 /* SM64DS_CCN_TRACE=1: dScMgCoin_c's 40-slot object array, once at beh 200. */
 static void mc_slots_dump(void *s, unsigned beh)
@@ -3124,15 +3159,15 @@ static void mc_slots_dump(void *s, unsigned beh)
     }
 }
 static int  __fastcall mc_beh(void *s, void *)
-{ MG_SLOT(6);  mc_slots_dump(s, g_mg_hits[6]); const int r = func_ov006_020de69c(s); hal_gapless_splice(); return r; }
+{ MG_SLOT(6);  mc_slots_dump(s, g_mg_hits[6]); const int r = _ZN11dScMgCoin_c8BehaviorEv(s); hal_gapless_splice(); return r; }
 static int  __fastcall mc_render(void *s, void *)
-{ MG_SLOT(9);  return func_ov006_020de63c(s); }
+{ MG_SLOT(9);  return _ZN11dScMgCoin_c6RenderEv(s); }
 static void *__fastcall mc_d2(void *s, void *)
-{ MG_SLOT(16); return (void *)(size_t)func_ov006_020dbe40((int *)s); }
+{ MG_SLOT(16); return (void *)(size_t)_ZN11dScMgCoin_cD1Ev((int *)s); }
 static void *__fastcall mc_d0(void *s, void *)
-{ MG_SLOT(17); return (void *)func_ov006_020dbe64((int *)s); }
+{ MG_SLOT(17); return (void *)_ZN11dScMgCoin_cD0Ev((int *)s); }
 static int  __fastcall mc_reset(void *s, void *, int /*ridethrough*/)
-{ MG_SLOT(18); func_ov006_020de5b0((char *)s); return 1; }
+{ MG_SLOT(18); _ZN11dScMgCoin_c13OnYoshiTryEatEi((char *)s); return 1; }
 
 /* dScMgCoin_c's own six, the per-class half. Keyed on the ROM WORD each slot
    holds, exactly like kCurlingFaces, so the array is order-independent and
@@ -3148,14 +3183,14 @@ static char *g_mg_coin_self;
 
 extern "C" void *port_mg_coin_spawn(void)
 {
-    void *p = MgCoincentration_Spawn();
+    void *p = dScMgCoin_c_classInit();
     g_mg_coin_self = (char *)p;
     return p;
 }
 
 /* THE FACTORY NEEDS NO DISPLACEMENT RULING, and that is worth recording
-   because 0x169's did. src/MgCoincentration_Spawn.cpp calls
-   func_ov004_020b2adc(o) WITH its argument, where src/func_ov006_020e0574.cpp
+   because 0x169's did. src/d_s_mg_coin.cpp calls
+   _ZN11dScMgBase_cC2Ev(o) WITH its argument, where src/actors/dScMgCup_c.cpp
    (0x169's factory) calls the same base constructor with none and rides r0
    through. That callee dereferences on its first statement and then writes
    three vtable words through the pointer, so the difference is a wild write
@@ -3280,13 +3315,13 @@ extern "C" void port_scene_mg_coin_hits(void)
 //   RTTI       0x0213db58  "16dScMgPachinko2_c", 0x64 bytes before the table,
 //              which is the same RTTI-then-vtable adjacency the sibling has at
 //              0x0213d960 / 0x0213d9cc
-//   class      dScMgPachinko2_c, and src/MgLakituLaunch_Spawn.c's own
+//   class      dScMgPachinko2_c, and src/d_s_mg_pachinko2.c's own
 //              `p[0] = (int)_ZTV16dScMgPachinko2_c;` agrees with the ROM's
 //              string. That name is bound to the address by the one
 //              /alternatename row in unmatched/MgPachinko2_Faces.cpp
-//   SpawnInfo  0x0213da64  MgLakituLaunch_SpawnInfo, doubled id 0x01710171 at
+//   SpawnInfo  0x0213da64  g_profile_MG_TAMAIRE, doubled id 0x01710171 at
 //              +4, and that word occurs exactly ONCE in the whole overlay
-//   factory    0x02104258  MgLakituLaunch_Spawn
+//   factory    0x02104258  dScMgPachinko2_c_classInit
 //   vtable     0x0213dbbc  data_ov006_0213dbbc, and the factory's only ov006
 //              literal-pool load is that word (relocs.txt from:0x02104288),
 //              which is how the two are tied together rather than by name
@@ -3320,27 +3355,27 @@ extern "C" void port_scene_mg_coin_hits(void)
 //
 // THE VICTIM OF A 37th SLOT HERE IS A THIRD CLASS. src/__sinit_ov006_02131fa4.c
 // line 64 reads `data_ov006_02142888.p1 = data_ov006_0213dc4c;`, and that
-// constructor's copied range brackets MgPuzzlePanelPuzzlePanic_SpawnInfo at
+// constructor's copied range brackets g_profile_MG_PANEL at
 // 0x0213dc64 -- id 0x17c, which nobody has seated. So the write would be a
 // wild one into a class with no seat to notice it. port_scene_fill_rom is
 // called with 36 below and mg_raw_left checks 36.
 //
 // ---- THE SIX OVERRIDES ----------------------------------------------------
 //
-//   slot  0  func_ov006_02103ed0  sliced, MARKER, ruled REAL_DECOMP
-//   slot  6  func_ov006_02103d78  sliced. A PLAIN SWITCH on the state index at
+//   slot  0  _ZN16dScMgPachinko2_c13InitResourcesEv  sliced, MARKER, ruled REAL_DECOMP
+//   slot  6  _ZN16dScMgPachinko2_c8BehaviorEv  sliced. A PLAIN SWITCH on the state index at
 //            +0x5660, not a pointer-to-member dispatch -- this class keeps its
 //            member-pointer machinery one level down, in the three tables the
 //            cases call.
-//   slot  9  func_ov006_02103d28  sliced, MARKER, ruled REAL_DECOMP
-//   slot 16  func_ov006_020ff420  sliced. Spells the vptr store by the real
+//   slot  9  _ZN16dScMgPachinko2_c6RenderEv  sliced, MARKER, ruled REAL_DECOMP
+//   slot 16  _ZN16dScMgPachinko2_cD1Ev  sliced. Spells the vptr store by the real
 //            config symbol data_ov006_0213dbbc, which is why it needs no host
 //            copy and its D0 sibling does.
-//   slot 17  func_ov006_020ff444  MARKER, ruled REAL_DECOMP, and EXCLUDED from
+//   slot 17  _ZN16dScMgPachinko2_cD0Ev  MARKER, ruled REAL_DECOMP, and EXCLUDED from
 //            the slice: it spells decl_common.h's shared VT/HEAP placeholders
 //            and bare VT is bound to the ov002 Enemy base table. Hosted as
 //            port_mg_pachinko2_d0 in port/unmatched/MgPachinko2_Dtor.cpp.
-//   slot 18  func_ov006_02103cbc  sliced, MARKER, ruled REAL_DECOMP
+//   slot 18  _ZN16dScMgPachinko2_c13OnYoshiTryEatEi  sliced, MARKER, ruled REAL_DECOMP
 //
 // The four markers were disassembled out of the shipped overlay image and
 // compared instruction for instruction with src before being seated; the
@@ -3363,26 +3398,26 @@ extern "C" {
 
 /* the mount storage this fill writes into */
 extern unsigned char data_ov006_0213dbbc[];   /* dScMgPachinko2_c, 36 slots */
-extern unsigned char MgLakituLaunch_SpawnInfo[];
+extern unsigned char g_profile_MG_TAMAIRE[];
 
 /* the class's own six overrides, in slot order. Five are sliced; slot 17 is
    the host copy, not the src TU. */
-int   func_ov006_02103ed0(void *self);        /* slot  0 InitResources */
-int   func_ov006_02103d78(void *self);        /* slot  6 Behavior      */
-int   func_ov006_02103d28(void *self);        /* slot  9 Render        */
-int   func_ov006_020ff420(void *self);        /* slot 16 D2            */
+int   _ZN16dScMgPachinko2_c13InitResourcesEv(void *self);        /* slot  0 InitResources */
+int   _ZN16dScMgPachinko2_c8BehaviorEv(void *self);        /* slot  6 Behavior      */
+int   _ZN16dScMgPachinko2_c6RenderEv(void *self);        /* slot  9 Render        */
+int   _ZN16dScMgPachinko2_cD1Ev(void *self);        /* slot 16 D2            */
 void *port_mg_pachinko2_d0(void *self);       /* slot 17 D0, hosted    */
-void  func_ov006_02103cbc(void *self, int n); /* slot 18 state reset   */
+void  _ZN16dScMgPachinko2_c13OnYoshiTryEatEi(void *self, int n); /* slot 18 state reset   */
 
 /* the factory. IT NEEDS NO DISPLACEMENT RULING, and that was checked rather
    than assumed: port/mg_fanout_costs.txt section 12 found 0x169's factory
    calling the base constructor with NO argument where ARM rides r0 through,
-   and granted a host copy for it. src/MgLakituLaunch_Spawn.c does NOT have
-   that defect -- it reads `func_ov004_020b2adc(p);`, with the argument -- so
+   and granted a host copy for it. src/d_s_mg_pachinko2.c does NOT have
+   that defect -- it reads `_ZN11dScMgBase_cC2Ev(p);`, with the argument -- so
    the matched TU is sliced and called directly. Confirmed against the ROM at
    0x02104258 (0x34 bytes): arm_call to 0x020b2adc at 0x0210426c with r0
    already holding the allocation. */
-int  *MgLakituLaunch_Spawn(void);
+int  *dScMgPachinko2_c_classInit(void);
 
 /* the class's state machine, port/unmatched/MgPachinko2_StateDispatch.cpp */
 void port_mg_pachinko2_state_counts(unsigned *hits, unsigned *missing);
@@ -3400,25 +3435,25 @@ static unsigned g_lkt_hits[36];
 #define LKT_SLOT(n) (++g_lkt_hits[(n)])
 
 static int  __fastcall lkt_init(void *s, void *)
-{ LKT_SLOT(0);  const int r = func_ov006_02103ed0(s);
+{ LKT_SLOT(0);  const int r = _ZN16dScMgPachinko2_c13InitResourcesEv(s);
   hal_gapless_minigames_latch(); return r; }
 static int  __fastcall lkt_beh(void *s, void *)
-{ LKT_SLOT(6);  const int r = func_ov006_02103d78(s); hal_gapless_splice();
+{ LKT_SLOT(6);  const int r = _ZN16dScMgPachinko2_c8BehaviorEv(s); hal_gapless_splice();
   return r; }
 static int  __fastcall lkt_render(void *s, void *)
-{ LKT_SLOT(9);  return func_ov006_02103d28(s); }
+{ LKT_SLOT(9);  return _ZN16dScMgPachinko2_c6RenderEv(s); }
 static void *__fastcall lkt_d2(void *s, void *)
-{ LKT_SLOT(16); return (void *)(size_t)func_ov006_020ff420(s); }
+{ LKT_SLOT(16); return (void *)(size_t)_ZN16dScMgPachinko2_cD1Ev(s); }
 static void *__fastcall lkt_d0(void *s, void *)
 { LKT_SLOT(17); return port_mg_pachinko2_d0(s); }
 /* slot 18 takes a SECOND argument in this class, exactly as the sibling's
-   does: src/func_ov006_02103cbc.c is (char *c, int n) and the ROM reads r1
+   does: src/_ZN16dScMgPachinko2_c13OnYoshiTryEatEi.cpp is (char *c, int n) and the ROM reads r1
    (cmp r1,#0x10 at 0x02103cd0). The __fastcall face lands `this` in ecx and
    the ROM's r1 in the first stack slot, which is where the third parameter of
    this thunk sits. Declaring it without the parameter is the four-byte stack
    leak run mg5 lane BASESET measured. */
 static int  __fastcall lkt_reset(void *s, void *, int n)
-{ LKT_SLOT(18); func_ov006_02103cbc(s, n); return 1; }
+{ LKT_SLOT(18); _ZN16dScMgPachinko2_c13OnYoshiTryEatEi(s, n); return 1; }
 
 /* dScMgPachinko2_c's own six, the per-class half. Keyed on the ROM WORD each
    slot holds, exactly like kCurlingFaces and kPachinkoFaces, so the array is
@@ -3437,7 +3472,7 @@ static char *g_mg_pachinko2_self;
 
 extern "C" void *port_mg_pachinko2_spawn(void)
 {
-    void *p = (void *)MgLakituLaunch_Spawn();
+    void *p = (void *)dScMgPachinko2_c_classInit();
     g_mg_pachinko2_self = (char *)p;
     return p;
 }
@@ -3566,7 +3601,7 @@ extern "C" void port_scene_mg_pachinko2_hits(void)
 // 0x0213dd84, which reads "12dScMgPanel_c" in the shipped image. The class is
 // dScMgPanel_c and the two player-facing titles the spawn symbol carries are
 // localised names, exactly the MgShuffleShell / dScMgCurling_c and MgWanted /
-// dScMgLuigi_c shape. src/MgPuzzlePanelPuzzlePanic_Spawn.c spelling
+// dScMgLuigi_c shape. src/d_s_mg_panel.c spelling
 // _ZTV12dScMgPanel_c agrees, and is the weaker of the two witnesses.
 //
 // ONE ACTOR ID, TWO PLAYER TITLES, AND THE SELECTOR IS INSIDE THE CLASS. A
@@ -3579,7 +3614,7 @@ extern "C" void port_scene_mg_pachinko2_hits(void)
 // face-set tables, data_ov006_0213ded0 when the gate answers nonzero and
 // data_ov006_0213e070 when it answers zero, and func_ov006_021057f0 skips its
 // whole state dispatch when vtable SLOT 35 answers nonzero. Slot 35 is
-// dScMgBase_c's func_ov004_020ad660, `return (this[2] & 0xff) != 0` -- a mode
+// dScMgBase_c's _ZN11dScMgBase_c9Virtual8CEv, `return (this[2] & 0xff) != 0` -- a mode
 // byte the framework puts in the object's third word. WHICH VALUE IS WHICH
 // TITLE IS NOT DERIVED HERE and this block does not guess it; what is derived
 // is that the split is a mode flag on one class and not two classes.
@@ -3591,11 +3626,11 @@ extern "C" void port_scene_mg_pachinko2_hits(void)
 // the body shifts left twelve into +0x4cc4+i*4 and +0x4d54+i*4. They have
 // nothing to do with the mode.
 //
-//   SpawnInfo      0x0213dc64  MgPuzzlePanelPuzzlePanic_SpawnInfo. The doubled
+//   SpawnInfo      0x0213dc64  g_profile_MG_PANEL. The doubled
 //                  id word 0x017c017c sits at 0x0213dc68 and the word before
 //                  it is 0x02107858, which is the factory -- the mechanical
 //                  derivation port/mg_fanout_costs.txt section 3 prescribes.
-//   factory        0x02107858  MgPuzzlePanelPuzzlePanic_Spawn, 0x34 bytes
+//   factory        0x02107858  dScMgPanel_c_classInit, 0x34 bytes
 //   vtable         0x0213e24c  named by the factory's OWN load relocation,
 //                  relocs.txt from:0x02107888 kind:load to:0x0213e24c
 //   width          36          all three of section 11's checks; see
@@ -3604,9 +3639,9 @@ extern "C" void port_scene_mg_pachinko2_hits(void)
 //   markers        5           all five ruled REAL_DECOMP before seating
 //   nosrc          0           among the override bodies
 //
-// TWO TABLES, NOT THREE. Slot 16 (func_ov006_0210428c) and slot 17
-// (func_ov006_021042b0) BOTH store data_ov006_0213e24c into [this] and then
-// call func_ov004_020b29c0 with nothing in between, so the chain is
+// TWO TABLES, NOT THREE. Slot 16 (_ZN12dScMgPanel_cD1Ev) and slot 17
+// (_ZN12dScMgPanel_cD0Ev) BOTH store data_ov006_0213e24c into [this] and then
+// call _ZN11dScMgBase_cD2Ev with nothing in between, so the chain is
 // Scene -> dScMgBase_c -> dScMgPanel_c and this fill does the base's table and
 // this one. dScMgCup_c needed a third because its destructors write an
 // intermediate base's.
@@ -3630,7 +3665,7 @@ extern "C" void port_scene_mg_pachinko2_hits(void)
 //        data_ov006_0213e2dc and not a code address
 //
 // SLOT 18 TAKES AN ARGUMENT AND THE THUNK CLEANS IT, the repair lane BASESET
-// audited twenty-two slot-18 sites for. src/func_ov006_021071fc.c declares
+// audited twenty-two slot-18 sites for. src/actors/dScMgPanel_c.cpp declares
 // `(char *self, int flag)` and the ROM branches on r1 at 0x02107208, so the
 // argument is real here rather than a ride-through, and mp_reset declares it.
 //
@@ -3648,10 +3683,10 @@ extern "C" void port_scene_mg_pachinko2_hits(void)
 // mb_v35 above used to read
 //
 //     static int __fastcall mb_v35(void *, void *)
-//     { MG_SLOT(35); func_ov004_020ad660(); return 0; }
+//     { MG_SLOT(35); _ZN11dScMgBase_c9Virtual8CEv(); return 0; }
 //
-// against a declaration of `void func_ov004_020ad660(void);` -- while
-// src/func_ov004_020ad660.c defines `int func_ov004_020ad660(int *r0)
+// against a declaration of `void _ZN11dScMgBase_c9Virtual8CEv(void);` -- while
+// src/_ZN11dScMgBase_c9Virtual8CEv.cpp defines `int _ZN11dScMgBase_c9Virtual8CEv(int *r0)
 // { return (r0[2] & 0xff) != 0; }`. So the thunk dropped `this` (the callee
 // read whatever was on the stack) AND discarded the answer, returning a
 // constant 0. On ARM both halves ride through and are correct; on the host
@@ -3671,18 +3706,18 @@ extern "C" void port_scene_mg_pachinko2_hits(void)
 extern "C" {
 /* the class's own vtable, in the ov006 mount. 36 slots, span-checked. */
 extern unsigned char data_ov006_0213e24c[];   /* dScMgPanel_c,   36 slots */
-extern unsigned char MgPuzzlePanelPuzzlePanic_SpawnInfo[];
+extern unsigned char g_profile_MG_PANEL[];
 
-/* the class's own six vtable bodies. func_ov006_02107358 is the HOST COPY in
+/* the class's own six vtable bodies. _ZN12dScMgPanel_c8BehaviorEv is the HOST COPY in
    unmatched/MgPanel_StateDispatch.cpp, not the src TU. */
-int   func_ov006_021073b0(void *self);          /* slot 0  InitResources */
-int   func_ov006_02107358(char *self);          /* slot 6  Behavior, host copy */
-int   func_ov006_0210730c(void *self);          /* slot 9  Render */
-int   func_ov006_0210428c(int *self);           /* slot 16 D2 */
-int  *func_ov006_021042b0(int *self);           /* slot 17 D0 */
-void  func_ov006_021071fc(char *self, int flag);/* slot 18 state reset */
+int   _ZN12dScMgPanel_c13InitResourcesEv(void *self);          /* slot 0  InitResources */
+int   _ZN12dScMgPanel_c8BehaviorEv(char *self);          /* slot 6  Behavior, host copy */
+int   _ZN12dScMgPanel_c6RenderEv(void *self);          /* slot 9  Render */
+int   _ZN12dScMgPanel_cD1Ev(int *self);           /* slot 16 D2 */
+int  *_ZN12dScMgPanel_cD0Ev(int *self);           /* slot 17 D0 */
+void  _ZN12dScMgPanel_c13OnYoshiTryEatEi(char *self, int flag);/* slot 18 state reset */
 
-int  *MgPuzzlePanelPuzzlePanic_Spawn(void);
+int  *dScMgPanel_c_classInit(void);
 
 /* the state machine's witness, from unmatched/MgPanel_StateDispatch.cpp */
 void port_mg_panel_counts(unsigned *hits, unsigned *floor, unsigned *unknown);
@@ -3691,19 +3726,19 @@ void port_scene_mg_panel_hits(void);
 }
 
 static int  __fastcall mp_init(void *s, void *)
-{ MG_SLOT(0);  const int r = func_ov006_021073b0(s);
+{ MG_SLOT(0);  const int r = _ZN12dScMgPanel_c13InitResourcesEv(s);
   hal_gapless_minigames_latch(); return r; }
 static int  __fastcall mp_beh(void *s, void *)
-{ MG_SLOT(6);  const int r = func_ov006_02107358((char *)s);
+{ MG_SLOT(6);  const int r = _ZN12dScMgPanel_c8BehaviorEv((char *)s);
   hal_gapless_splice(); return r; }
 static int  __fastcall mp_render(void *s, void *)
-{ MG_SLOT(9);  return func_ov006_0210730c(s); }
+{ MG_SLOT(9);  return _ZN12dScMgPanel_c6RenderEv(s); }
 static void *__fastcall mp_d2(void *s, void *)
-{ MG_SLOT(16); return (void *)(size_t)func_ov006_0210428c((int *)s); }
+{ MG_SLOT(16); return (void *)(size_t)_ZN12dScMgPanel_cD1Ev((int *)s); }
 static void *__fastcall mp_d0(void *s, void *)
-{ MG_SLOT(17); return (void *)func_ov006_021042b0((int *)s); }
+{ MG_SLOT(17); return (void *)_ZN12dScMgPanel_cD0Ev((int *)s); }
 static int  __fastcall mp_reset(void *s, void *, int flag)
-{ MG_SLOT(18); func_ov006_021071fc((char *)s, flag); return 1; }
+{ MG_SLOT(18); _ZN12dScMgPanel_c13OnYoshiTryEatEi((char *)s, flag); return 1; }
 
 /* dScMgPanel_c's own six, keyed on the ROM word each slot holds. None of the
    six appears in kMgBaseFaces or in any earlier class's array -- a word is one
@@ -3719,13 +3754,13 @@ static char *g_mg_panel_self;
 
 /* The registry's factory column is void *(*)(void) and the matched factory
    returns int *. One typed forwarder, the shape port_mg_curling_spawn has.
-   NO DISPLACEMENT RULING IS NEEDED: src/MgPuzzlePanelPuzzlePanic_Spawn.c calls
-   func_ov004_020b2adc(p) WITH the object pointer, where dScMgCup_c's factory
+   NO DISPLACEMENT RULING IS NEEDED: src/d_s_mg_panel.c calls
+   _ZN11dScMgBase_cC2Ev(p) WITH the object pointer, where dScMgCup_c's factory
    calls the same base constructor with none and rides r0 through. Confirmed
    against the ROM at 0x0210786c (arm_call to 0x020b2adc) with r0 = p live. */
 extern "C" void *port_mg_panel_spawn(void)
 {
-    void *p = (void *)MgPuzzlePanelPuzzlePanic_Spawn();
+    void *p = (void *)dScMgPanel_c_classInit();
     g_mg_panel_self = (char *)p;
     return p;
 }
@@ -3867,14 +3902,14 @@ extern "C" void port_scene_mg_panel_hits(void)
  * ONCE, on the named frame, and never again.
  *
  * WHAT IT ACTUALLY DOES, and it is the ROM's own entry point rather than a
- * poke: it dispatches dScMgBase_c SLOT 27, func_ov004_020af27c, on the live
+ * poke: it dispatches dScMgBase_c SLOT 27, _ZN11dScMgBase_c15OnHitByMegaCharEv, on the live
  * scene object data_ov004_020beb68. That is the function the game itself calls
  * when a minigame ends -- it seeds the three button centres at +0x4634/+0x4638/
  * +0x463c, clears the selection at +0x4646 and sets +0x4628 to 1. Everything
- * downstream is then the ROM's: func_ov004_020ae140 sees +0x4628 differ from
+ * downstream is then the ROM's: _ZN11dScMgBase_c8OnKickedEv sees +0x4628 differ from
  * +0x462c and dispatches slot 29, which for the dScMgD3DBase_c family is
- * func_ov006_020e6d24 (dual OAM back on, sub banks re-pointed, then
- * func_ov004_020af094, which SAVES POWCNT1 bit 15 and forces it SET), and slot
+ * _ZN14dScMgD3DBase_c16OnAimedAtWithEggEv (dual OAM back on, sub banks re-pointed, then
+ * _ZN11dScMgBase_c16OnAimedAtWithEggEv, which SAVES POWCNT1 bit 15 and forces it SET), and slot
  * 24's per-frame display swap stands down for as long as +0x4628 is nonzero.
  *
  * WHY A PROBE AT ALL. A headless scene run of 384 never reaches the panel: the
@@ -3907,7 +3942,7 @@ extern "C" void port_mg_results_probe(int frame)
     fired = 1;
     char *g = (char *)data_ov004_020beb68;
     std::fprintf(stderr, "  [results] f%d: dispatching slot 27 "
-                 "(func_ov004_020af27c) on %p; +0x4628 was %d, POWCNT1 %04x\n",
+                 "(_ZN11dScMgBase_c15OnHitByMegaCharEv) on %p; +0x4628 was %d, POWCNT1 %04x\n",
                  frame, (void *)g, *(int *)(g + 0x4628),
                  *(volatile unsigned short *)0x04000304);
     port_mg_d3dbase_slot27(g);
@@ -3930,7 +3965,7 @@ extern "C" void port_mg_results_probe(int frame)
  * frame, and prints the two values that decide which half of the tick is
  * running:
  *
- *   slot7  how many times dScMgBase_c slot 7 reached func_ov004_020b0620
+ *   slot7  how many times dScMgBase_c slot 7 reached _ZN11dScMgBase_c14BeforeBehaviorEv
  *   tick   how many times slot 7 reached func_ov004_020aeb24 (the STEP), and
  *          how many of those RETURNED -- a difference means it faulted inside
  *   bb0    how many times Scene::BeforeBehavior answered 0 and stopped slot 7

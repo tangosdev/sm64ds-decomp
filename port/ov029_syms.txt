@@ -20,20 +20,20 @@
 # WaterDiamond (97) reuses ArrowLift's own vtable and WDW_Water (101) reuses
 # RotatingPlatformWdw's, both by storing the borrowed table directly in their
 # own Spawn -- so neither adds a vtable of its own. CageLift (99) stores the
-# unnamed Platform table data_ov029_02113e74. The four remaining classes carry
+# unnamed Platform table _ZTV15daObjWc_Obj05_c. The four remaining classes carry
 # their own tables (below, held OUT of this list -- vtables are host arrays the
 # registry fills).
 #
 # ---- the eight SpawnInfo records (0x1c each; dsd marks every one ambiguous,
 #      so each is pinned rather than sized by next-symbol delta) --------------
-RotatingPlatformWdw_SpawnInfo:0x1c
-FloatOnWaterPlatformWdwSquare_SpawnInfo:0x1c
-ArrowLift_SpawnInfo:0x1c
-WaterDiamond_SpawnInfo:0x1c
-SwitchActivatedPlank_SpawnInfo:0x1c
-CageLift_SpawnInfo:0x1c
-FloatOnWaterPlatformWdwRectangle_SpawnInfo:0x1c
-WDW_Water_SpawnInfo:0x1c
+g_profile_WC_UKISIMA:0x1c
+g_profile_WC_OBJ01:0x1c
+g_profile_WC_OBJ02:0x1c
+g_profile_WC_OBJ03:0x1c
+g_profile_WC_OBJ04:0x1c
+g_profile_WC_OBJ05:0x1c
+g_profile_WC_OBJ06:0x1c
+g_profile_WC_MIZU:0x1c
 #
 # ---- the resource tables the InitResources bodies index --------------------
 # FloatOnWaterPlatformWdwSquare::InitResources reads data_ov029_0211302c as the
@@ -42,7 +42,7 @@ data_ov029_0211302c
 # SwitchActivatedPlank::InitResources reads data_ov029_0211304c the same way.
 data_ov029_0211304c
 # link100 SPAWN2: CageLift (99) reads data_ov029_0211306c the same way -- it is
-# the CLPS_Block src/func_ov029_02111d6c.cpp hands to
+# the CLPS_Block src/game/actors/d_a_obj_wc_obj05.cpp hands to
 # MovingMeshCollider::SetFile as its last argument, read out of the body's own
 # literal pool (from:0x02111e34 kind:load to:0x0211306c module:overlay(29)).
 # Sized 0x20 by next-symbol delta (0x0211306c -> 0x0211308c), the same 0x20 the
@@ -62,8 +62,8 @@ data_ov029_02112fec
 # data_ov029_02113fd4 (its Model/Clsn statics).
 data_ov029_02113fc4
 data_ov029_02113fd4
-# The Square and Rectangle InitResources helpers (func_ov029_02111254 /
-# func_ov029_02111f58) read two more static blocks the func_ov002_020b5e58
+# The Square and Rectangle InitResources helpers (_ZN14daObjWcObj01_c13InitResourcesEv /
+# _ZN14daObjWcObj06_c13InitResourcesEv) read two more static blocks the func_ov002_020b5e58
 # resource loader consumes.
 data_ov029_02113be8
 data_ov029_02113f00
@@ -74,7 +74,7 @@ data_ov029_02113f00
 # destruct node (func_020731dc), except ArrowLift's sinit (0x02112c10) which
 # builds a single Model file. Every cell the eight touch is reserved here so the
 # constructors' writes land in hosted memory. The cell at 0x02114278 is dsd's
-# _ZN13RollingLogTtm8BehaviorEv (a cross-overlay name collision on the shared
+# _ZN7daMky_c8BehaviorEv (a cross-overlay name collision on the shared
 # load window); it is reserved under its own ov029 name here and the collision
 # is bound in the slice/fill, never left to resolve against a real function.
 data_ov029_02114220 data_ov029_02114228 data_ov029_02114230 data_ov029_0211423c

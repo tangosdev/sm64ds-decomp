@@ -1,4 +1,4 @@
-/* HOST COPY of src/func_ov002_020b3788.cpp -- daObjBlockL_c::OnAttacked2
+/* HOST COPY of src/_ZN13BigBrickBlock11OnAttacked2ER8dActor_c.cpp -- daObjBlockL_c::OnAttacked2
  * (BigBrickBlock vtable slot 23), the handler a bro's PUNCH reaches on a brick
  * block.
  *
@@ -12,7 +12,7 @@
  * which MSVC compiles __cdecl: c is PUSHED, the vtable word is loaded into a
  * register (not `this` in ecx), `call [reg+0x7c]` runs. Slot 31 (Kill) is
  * seated in this port __thiscall with no stack argument (bbb_kill ->
- * func_ov002_020b38a0, receiver in ecx). One vtable word cannot satisfy both:
+ * _ZN13BigBrickBlock4KillEv, receiver in ecx). One vtable word cannot satisfy both:
  * MSVC loads the vtable pointer into ecx to reach the slot, so ecx holds the
  * VTABLE, not the object, when the call lands; bbb_kill reads `this` out of
  * ecx and Kill would run against _ZTV13BigBrickBlock and read the block's
@@ -25,7 +25,7 @@
  * unmatched/ArrowSign_OnAttacked1.cpp and the slot-23 DISPATCHER in
  * unmatched/Actor_OnAttacked2Dispatch.cpp.
  *
- * The underlying src (func_ov002_020b3788, size 0x64) is a verified 2004/b56
+ * The underlying src (_ZN13BigBrickBlock11OnAttacked2ER8dActor_c, size 0x64) is a verified 2004/b56
  * byte-match of the ROM overlay ov002 (match.py --module ov002 strict-reloc), so
  * this is a conversion of real recovered code, not of a guess.
  *
@@ -54,7 +54,7 @@ struct BlockL {
     virtual void Kill();   /* slot 31, vtable + 0x7c */
 };
 
-extern "C" void func_ov002_020b3788(char *c, char *arg1)
+extern "C" void _ZN13BigBrickBlock11OnAttacked2ER8dActor_c(char *c, char *arg1)
 {
     BlockL *self = (BlockL *)c;
     int b = (*(unsigned short *)(c + 0xc) == 0x11);

@@ -1,4 +1,4 @@
-/* HOST COPY of src/_ZN13RollingLogTtm8BehaviorEv.cpp -- the Ukiki's Behavior,
+/* HOST COPY of src/actors/daMky_c.cpp -- the Ukiki's Behavior,
  * ROM slot 6 of the daMky_c table at 0x02115bfc. Run rel0215, lane cast-ov030.
  *
  * THE NAME IS THE CONFIG'S AND IT IS WRONG. 0x02114278 is slot 6 of the table
@@ -30,7 +30,7 @@
  * 020c06dc.cpp measured, and the same slot.
  *
  * WHICH CLASS THE OBJECT IS, established from the CONSTRUCTOR rather than
- * guessed from the call: UkikiStar_Spawn and UkikiThief_Spawn (both factories
+ * guessed from the call: daMky_c_classInit_MONKEY_STAR and daMky_c_classInit_MONKEY_THIEF (both factories
  * for this one class) each run `_ZN9ModelAnimC1Ev((char *)p + 0xd4)`, so +0xd4
  * is a ModelAnim, whose UpdateVerts is MSVC slot 2 under include/ModelAnim.h.
  * hal/cxxname_bridge.cpp:518 states in its own words that ModelAnim gets NO
@@ -79,12 +79,12 @@
  * EVERYTHING ELSE IS TRANSCRIBED STATEMENT FOR STATEMENT. Both DELTAs are
  * marked inline below.
  *
- * THE SYMBOL IS DELIBERATELY NOT _ZN13RollingLogTtm8BehaviorEv, and that is a
+ * THE SYMBOL IS DELIBERATELY NOT _ZN7daMky_c8BehaviorEv, and that is a
  * DEPARTURE from the usual host-copy convention with two reasons, the second of
  * them a live landmine for another lane.
  *
  * 1. THE RATCHET. src/__sinit_ov029_02112c10.c:5 declares
- *    `extern int _ZN13RollingLogTtm8BehaviorEv();` -- no parameters -- and a
+ *    `extern int _ZN7daMky_c8BehaviorEv();` -- no parameters -- and a
  *    host definition under that exact name makes aritycheck's RECEIVER RATCHET
  *    fire a new row. That ratchet may only shrink, and the declaring file is in
  *    src/, which this lane does not edit. Measured against the base tree
@@ -116,9 +116,9 @@ struct Vector3;
 struct Vector3_16;
 
 extern "C" {
-int _ZN5Actor22IsTooFarAwayFromPlayerE5Fix12IiE(void *thiz, int d);
-void *_ZN5Actor13ClosestPlayerEv(void *thiz);
-void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 a, u32 b, const Vector3 *c,
+int _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(void *thiz, int d);
+void *_ZN8dActor_c13ClosestPlayerEv(void *thiz);
+void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, const Vector3 *c,
                                                    const Vector3_16 *d, int e, int f);
 int _ZN8SaveData16HasPlayerLostCapEv(void);
 void func_ov030_021141a8(void *c, int idx);
@@ -134,17 +134,17 @@ int port_ov030_ukiki_behavior(void *self);
 extern "C" int port_ov030_ukiki_behavior(void *self)
 {
     char *c = (char *)self;
-    if (_ZN5Actor22IsTooFarAwayFromPlayerE5Fix12IiE(self, 0x5dc000) != 0 &&
+    if (_ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(self, 0x5dc000) != 0 &&
         *(int *)(c + 0x3b4) != 8) {
         int b = (*(unsigned short *)(c + 0xc) == 0x10b);
         if (b != 0 && *(unsigned char *)(c + 0x3c8) == 0 &&
             _ZN8SaveData16HasPlayerLostCapEv() != 0) {
-            void *pl = _ZN5Actor13ClosestPlayerEv(self);
+            void *pl = _ZN8dActor_c13ClosestPlayerEv(self);
             unsigned cp = *(unsigned *)((char *)pl + 8);
             if (cp < 3) {
                 void *spawned;
                 *(int *)(c + 0x3b0) = (int)cp;
-                spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+                spawned = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
                     0x10d,
                     ((unsigned)*(int *)(c + 0x3b0) << 8) | 2,
                     (const Vector3 *)(c + 0x5c),

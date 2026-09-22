@@ -24,18 +24,44 @@ constexpr int SCREEN_H = 768;
 constexpr int SCREEN_W = 512;    /* 2x: the interactive window's tier */
 constexpr int SCREEN_H = 384;
 #elif defined(NTR_WIDE_RT)
-/* THE RUNTIME-SELECTABLE 16:9 TIER. One binary, either aspect, chosen at boot
-   from the Aspect settings key (a ratio) instead of a separate compile. The
-   framebuffer and every raster/stride array are sized for the WIDE MAXIMUM
-   (1024x576) so no reallocation is needed when the toggle is off; the ACTIVE
-   extent (ntr::active_w / active_h, below) is what the render, HUD, sub-screen,
-   input and present paths read, and it is set to 512x384 (byte-for-byte the old
-   2x window) when the toggle is off and to the full 1024x576 when it is on. So
-   these two constants are the STRIDE and the ALLOCATION only; they are never the
-   live screen size on this tier. See ntr/ppu.cpp for the globals and the setter,
-   and the NTR_WIDE169 tier below for the fixed-compile widescreen this replaces. */
-constexpr int SCREEN_W = 1024;
-constexpr int SCREEN_H = 576;
+/* THE RUNTIME-SELECTABLE TIER. One binary, any aspect AND any render scale,
+   both chosen at boot from settings keys (Aspect, a ratio; RenderScale, host
+   rows per DS row) instead of a separate compile. The framebuffer and every
+   raster/stride array are sized for the LARGEST COMBINATION THE SETTINGS CAN
+   ASK FOR so no reallocation is ever needed; the ACTIVE extent (ntr::active_w
+   / active_h, below) is what the render, HUD, sub-screen, input and present
+   paths read. With both keys absent it is 512x384 -- byte-for-byte the 2x
+   window the port has always shipped -- and these two constants are the STRIDE
+   and the ALLOCATION only; they are never the live screen size on this tier.
+   See ntr/ppu.cpp for the globals and the setter, and the NTR_WIDE169 tier
+   below for the fixed-compile widescreen this replaces.
+
+   WHY 1368x768 AND NOT 1024x576. The height is the anchor, as it is on every
+   tier here: 768 is 4 * 192, the largest RenderScale the key exposes, and it
+   is also NTR_HIRES's own height, so the ceiling is one the render path has
+   been compiled at before rather than a number picked here. The width is that
+   height's 16:9 partner rounded up to an even number with a little room --
+   768 * 16/9 is 1365.33, so 1368 holds a true 16:9 picture at the tallest
+   scale with the width still a multiple of 8. An aspect wider than 16:9 at a
+   tall scale asks for more width than this and is answered the way the buffer
+   has always answered it: the width pins here and the HEIGHT comes down to
+   keep the ratio the player asked for (see configure_aspect).
+
+   WHAT IT COSTS. The per-pixel buffers are the framebuffer (4 bytes), the
+   depth buffer (4), the scan-out packing buffer (4) and four one-byte masks
+   (coverage, shadow stencil, polygon id, translucent attr), and walk_window
+   holds two framebuffers -- the level path's and the scene path's. That is
+   20 bytes a pixel over one buffer set plus the second framebuffer, so
+   1368 * 768 comes to about 21 MB of host .bss where 1024 * 576 came to about
+   11.8 MB: 9.2 MB more, in a 32-bit process, and it is the same 21 MB whether
+   the keys are set or not. It is deliberately NOT sized from the settings: a
+   buffer whose size follows a key would move every host global whenever the
+   key moved, and the selftest BMP comparison this port gates on reads those
+   addresses (port/tools/battery.py's note on hosted-global layout). One
+   allocation, every run, means two runs of one binary at two scales are
+   comparable. */
+constexpr int SCREEN_W = 1368;
+constexpr int SCREEN_H = 768;
 #elif defined(NTR_WIDE169)
 /* THE FIRST NON-4:3 TIER: 16:9 widescreen, 1024x576. Unlike NTR_HIRES/HIRES2
    -- both 4:3, sharper but not wider -- this is a genuinely wider frame. The
@@ -85,14 +111,92 @@ extern bool widescreen;
 //
 //   0            -> 512x384, byte-for-byte the 2x window the port ships
 //   1.7777778    -> 1024x576, the full buffer, the measured 16:9 tier
-//   wider        -> full width, shorter picture (3.0 -> 1024x341)
+//   wider        -> full width, shorter picture (3.5555556, 32:9 -> 1024x288;
+//                   4.0, the ceiling -> 1024x256)
 //   narrower     -> full height, narrower picture (1.0 -> 576x576)
 //
-// The caller is expected to have already clamped to [1.0, 3.0] (see
+// The caller is expected to have already clamped to [1.0, 4.0] (see
 // host_setting_aspect); this clamps again rather than trusting, because a bad
 // ratio here is a divide that sizes a framebuffer. Call once, at boot, before
 // the first framebuffer use.
-void configure_aspect(double aspect);
+//
+// ---- AND THE SECOND ARGUMENT: HOW SHARP, AS WELL AS HOW WIDE ---------------
+//
+// `render_scale` is the RenderScale settings key: HOST ROWS PER DS ROW. 0 is
+// the explicit default sentinel and means "whatever this function picked for
+// itself before the key existed", so a run that does not set it is the
+// shipped build exactly, at every aspect, and the argument's default here
+// means a caller that has never heard of the key is too.
+//
+// THE RULE, and it is the height that carries it, for the reason every tier
+// above anchors on the height: the DS's 192 rows are what the 2D compositor,
+// the sub-screen scale and the HUD's uniform scale are all derived from, so a
+// scale that is a whole multiple of 192 keeps every one of those an exact
+// integer. So
+//
+//   active_h = render_scale * 192
+//   active_w = the width that height needs for THIS RUN'S ASPECT
+//              (render_scale * 256 at the native 4:3 sentinel)
+//
+// and the buffer is the only limit: a width past SCREEN_W pins there and the
+// height comes down to hold the ratio, which is the arm the 0-scale path
+// already had. Worked, on this tier:
+//
+//   scale 0, aspect 0          -> 512x384    the shipped 4:3 window
+//   scale 0, aspect 1.7777778  -> 1024x576   the shipped 16:9 picture
+//   scale 1, aspect 0          -> 256x192    the DS's own panel, 1:1
+//   scale 2, aspect 0          -> 512x384    the same picture scale 0 gives
+//   scale 3, aspect 0          -> 768x576
+//   scale 4, aspect 0          -> 1024x768
+//   scale 2, aspect 1.7777778  -> 682x384    16:9 at two rows per DS row
+//   scale 3, aspect 1.7777778  -> 1024x576   the shipped 16:9 picture again
+//   scale 4, aspect 1.7777778  -> 1364x768
+//   scale 4, aspect 3.5555556  -> 1368x386   the WIDTH pinned, height derived
+//
+// Note the two rows that land on the shipped numbers: today's 4:3 picture IS
+// scale 2 and today's 16:9 picture IS scale 3, which is a fact about the
+// buffer the port already shipped and not a coincidence this arranged.
+void configure_aspect(double aspect, int render_scale = 0);
+
+// THE EXTENT THIS RUN WOULD HAVE HAD AT RenderScale 0, which is the size the
+// WINDOW opens at whatever the scale. A player who asks for a sharper picture
+// is asking for more pixels in the same window, not for a window four times
+// the size, so the client area is sized off these and the present then scales
+// the finished picture into it (tests/walk_window.cpp's ZOOM and present()).
+// Equal to active_w / active_h on every run that leaves the key alone, so the
+// window arithmetic is token for token what it was.
+int default_active_w(void);
+int default_active_h(void);
+
+// RenderScale as it was applied: 0 when the key was absent (and the extent is
+// the default), else the multiplier in force. Reported, never used to derive
+// a size -- active_w / active_h are the size, as they have always been.
+int render_scale(void);
+
+// ---- THE PRESENT RECTANGLE -------------------------------------------------
+//
+// "Where inside the active extent this run's picture is drawn." Normally the
+// whole active extent, which is what every caller computed by hand before
+// this existed. For a scene the host presents at the DS's own 4:3 field it is
+// the centred 256:192 sub-rectangle at the uniform HUD scale, so the picture
+// is pillarboxed inside the wide framebuffer instead of being widened.
+//
+// Tango's ruling, 2026-09-17: "Minigames should not get the widescreen
+// treatment." A minigame therefore presents exactly as it does at native 4:3,
+// centred, with the spare width left as margin -- the way the full-2D
+// minigame boards already presented, because the compositor's pillarbox arm
+// already put them there.
+//
+// DERIVED, NEVER STORED, so there is no second copy of the extent to go
+// stale, and at aspect 0 (active 512x384, uni 2) the rectangle IS the extent:
+// present_w 512, present_h 384, present_x 0. Every arm that reads these is
+// then the arithmetic it was before, bit for bit.
+bool present_native(void);
+void set_present_native(bool on);
+int present_w(void);
+int present_h(void);
+int present_x(void);
+int present_y(void);
 
 enum Engine { ENGINE_A = 0, ENGINE_B = 1 };
 
@@ -182,6 +286,32 @@ bool ppu_write_bmp_sub(const char *path, const SubFramebuffer &fb);
 // filter would invent pixels nobody drew.
 void ppu_display_capture(const uint32_t *src, int w, int h);
 
+// WHAT THE CAPTURE UNIT ACTUALLY DID THIS RUN. `performed` is how many frames
+// a capture was written on; `refused` how many were armed and then turned away
+// for one of the unit's own reasons (a source this port does not model, a
+// destination that is not an LCDC block -- which is what every scene's
+// Scene::ResetHardwareRegisters write comes to -- or a size running off the
+// bank). `from_preimage` is how many of the performed captures read the
+// PRE-SMOOTHING copy of the frame rather than the live framebuffer. `hash` is
+// FNV-1a over every halfword written into VRAM, in capture order, so two runs
+// agree on it only if every captured pixel of every captured frame agrees.
+//
+// They exist so the edge-smoothing pass's promise can be CHECKED rather than
+// believed, and the check is `from_preimage` == `performed` with the setting
+// on, plus an equal hash with it on and off. A capture that read the live
+// framebuffer is exactly a frame on which the game saw the setting.
+//
+// THERE IS DELIBERATELY NO "is the capture armed" ACCESSOR HERE any more. One
+// existed and the pass used it to refuse to smooth an already-armed frame;
+// that is an assumption about when the game arms the unit, and measurement
+// broke it (see ppu_display_capture). The guarantee must not depend on order.
+//
+// Counted whether or not anything asks; reading them costs nothing.
+void ppu_capture_counters(unsigned long long &performed,
+                          unsigned long long &refused,
+                          unsigned long long &hash,
+                          unsigned long long &from_preimage);
+
 // ---- WHERE A CAPTURED BANK GOES NEXT ----------------------------------------
 //
 // A DS VRAM bank is 128 KB of SRAM that appears at exactly ONE cpu address at a
@@ -211,13 +341,75 @@ void ppu_display_capture(const uint32_t *src, int w, int h);
 // mapping made visible.
 void ppu_vram_publish(void);
 
-// Blit the bottom screen 1:1 into the bottom-right corner of a dst_w x dst_h
-// ARGB buffer, `margin` pixels in from both edges, with a one-pixel frame.
-/* div: integer downscale of the panel (1 = 1:1 DS pixels, 2 = half size).
-   Downscaled pixels are the box average of the div x div source block, so the
-   minimap's 1px marks survive as shading rather than vanishing. */
+// Blit the bottom screen into a dst_w x dst_h ARGB buffer at (x0, y0), with a
+// one-pixel frame around it.
+/* num/den: the panel's size as a fraction of one DS screen. 1/2 is the half
+   size this has always drawn by default and 1/1 is 1:1 DS pixels; the improved
+   map's six sizes are 1/2, 5/8, 3/4, 1/1, 3/2 and 2/1, every one of which is a
+   whole number of pixels in both axes at 256x192.
+   DOWNSCALED pixels (den > num) are the box average of the source block they
+   cover, so the minimap's 1px marks survive as shading rather than vanishing.
+   UPSCALED pixels (num > den) are NEAREST: every DS pixel becomes a block, no
+   interpolation, for the reason the stacked presentation gives two paragraphs
+   up -- a filter would invent pixels the DS never drew, and a magnified map
+   wants the cartridge's own pixels.
+   THE ORIGIN IS THE CALLER'S rather than a margin computed here, because the
+   touch inverse has to run this placement backwards and two sites rounding one
+   fraction independently is how a drawn picture and a stylus surface come to
+   disagree. hal/sub_screen.cpp's hal_sub_panel_geometry is the one place that
+   decides; this draws what it decided. */
 void ppu_compose_sub(const SubFramebuffer &sub, uint32_t *dst, int dst_w,
-                     int dst_h, int margin, int div = 1);
+                     int dst_h, int x0, int y0, int num, int den);
+
+/* THE ONE-PIXEL BLACK FRAME IS NOW OPTIONAL. It exists so the map reads as a
+   panel and not as a corruption of the 3D view, which is the right default for
+   a bare map floating in the corner. A map sitting inside a decorated panel
+   has a border already, and a black line drawn on top of the artist's own one
+   is exactly what the owner asked to be rid of ("Remove the black outline that
+   is usually around the minimap and make it match up with the outline ... on
+   the image"). So the host says which it wants; 1, the frame, is what this
+   file has always drawn and is the value nothing-installed keeps. */
+void ppu_sub_set_compose_border(int on);
+
+/* ---- THE HOST'S VETO OVER ENGINE B'S SPRITES -------------------------------
+ *
+ * A predicate the host may install to decline individual sub-engine OBJ
+ * entries at raster time, keyed on the entry's attr2 (tile, priority,
+ * palette). It exists for the improved minimap, which has to take the ROM's
+ * four touchscreen camera arrows out of a picture a mouse player cannot use
+ * them in -- without touching src/ and without skipping a call the ROM makes.
+ * The ROM still computes and submits the sprites; this layer declines to draw
+ * them.
+ *
+ * IT IS A HOOK BECAUSE THE POLICY IS NOT NTR'S. The tile numbers are cartridge
+ * data and the option is a settings key, and this layer models DS hardware for
+ * four smoke binaries that have neither. Nothing installed is the old
+ * behaviour exactly.
+ *
+ * The return is a bitmask: bit 0 "this is one of the entries you named", bit 1
+ * "and do not draw it". Two bits rather than one because the census wants to
+ * label an entry whether or not the option is on.  */
+void ppu_sub_set_obj_veto(int (*fn)(unsigned short a2));
+long ppu_sub_obj_veto_count(void);
+
+/* ---- AND THE SAME IDEA ONE LAYER UP: SUPPRESSING A WHOLE BG ----------------
+ *
+ * DISPCNT_B bits this engine's scan-out is to treat as CLEAR. It can only ever
+ * turn a layer off; the register is not written, so the game reads back what it
+ * wrote and its own logic is untouched.
+ *
+ * It exists for the improved minimap's other removal. The touch marker the
+ * owner calls "the target" is NOT a sprite -- measured: engine B's 128 OAM
+ * entries are byte-identical with the screen touched and untouched -- it is
+ * BG2, which the game ENABLES only while the bottom screen registers a touch
+ * (DISPCNT_B goes 0x40011803 to 0x40011c03, layer mask 0x18 to 0x1c, bit 10).
+ * On a mouse player's screen that marker is drawn in the map's top-left corner
+ * wherever the click actually was, so with the improved map on the host stops
+ * presenting that layer.
+ *
+ * Set it every frame, from the code that knows the scene and the option; zero
+ * is the behaviour this file shipped with.  */
+void ppu_sub_set_bg_suppress(uint32_t mask);
 
 // ---- the stacked presentation -----------------------------------------------
 //
@@ -239,13 +431,22 @@ void ppu_compose_sub(const SubFramebuffer &sub, uint32_t *dst, int dst_w,
 // back, which is the shape this note was written for and is still what every
 // level and every scene with no gap gets.
 //
-// evy / to_white are the MAIN engine's master-brightness fade as
-// port_fader_blend_state reports it, applied to the BOTTOM half only. The top
-// half arrives already faded, because it is the framebuffer after walk_window's
-// own fade composite has run over it. This reproduces what the corner panel
-// gets today -- the panel is inside the framebuffer when that loop runs, so
-// the main engine's fade lands on it -- so switching layout changes the
-// layout and nothing else. Pass evy 0 for no fade.
+// evy / to_white are the SUB engine's brightness blend (BLDCNT mode 2 or 3 plus
+// BLDY at 0x4001050/0x4001054) as port_fader_blend_state_sub reports it, applied
+// to the `sub` framebuffer as it is scaled in. The other half arrives ALREADY
+// faded with the MAIN engine's, because it is engine A's framebuffer after
+// walk_window's own fade composite has run over it. One engine, one blend unit,
+// one half each -- which is what the hardware does and what the title's opening
+// screen is the first screen to notice: ov007 leaves engine B at a full
+// brightness-decrease while engine A is clear, so a compose fed engine A's
+// answer for both halves draws the sub screen unblackened.
+//
+// THIS PARAMETER USED TO CARRY THE MAIN ENGINE'S for both halves, and the two
+// were the same number everywhere the port had filmed, because every fade
+// hal/fader_wipes.cpp drives writes both engines together. The corner-inset
+// path still borrows engine A's, and honestly: the panel sits inside engine A's
+// framebuffer when walk_window's fade loop runs, so it is the fade loop and not
+// a compose that lands on it. Pass evy 0 for no fade.
 constexpr int STACK_W = SCREEN_W;
 // The image with NO gap, which is what every level and every gapless scene
 // composes and what the shape of this presentation was before the gap existed.
@@ -526,6 +727,13 @@ struct StackLayout {
     // what it was before this field existed.
     int pan_x0;        // first image column of the bottom panel; 0 on 4:3 tiers
     int pan_w;         // the bottom panel's image width; STACK_W on 4:3 tiers
+    int pan_h;         // the bottom panel's image height; SUB_H * scale, and the
+                       // height of the TOP picture too. The vertical twin of pan_w:
+                       // the region a screen sits in is this tall and no taller, so
+                       // the compose, the image height, the window and the stylus
+                       // inverse all read one number. Equal to active_h on every
+                       // aspect whose active_h is a whole multiple of 192 (native
+                       // and 16:9), smaller on every other.
 };
 
 enum { GAP_FILL_SOLID = 0, GAP_FILL_AMBIENT = 1, GAP_FILL_CUSTOM = 2 };

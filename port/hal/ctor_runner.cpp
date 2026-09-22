@@ -109,7 +109,7 @@
  *     host seat writes any of them before Entry: data_0209b468 and
  *     data_0209b53c are hal/actor_vtables.cpp storage that only actor and
  *     sound code fills, later; data_020a0c68 is hal/scene_link100_boot.cpp
- *     storage whose only ROM reader (func_0203506c) is not in this link.
+ *     storage whose only ROM reader (_ZN7dScMB_c13InitResourcesEv) is not in this link.
  *   * The ov002 static initialisers tests/walk_window.cpp calls by hand keep
  *     their place AFTER this call, unchanged. That is the ROM's order too:
  *     ov002 is an overlay and is not resident at Entry, so its .ctor work
@@ -156,10 +156,10 @@
  *   _ZTV7Clipper   0x0208e730..0x0208e738, TWO words, both relocated
  *                  (config/arm9/relocs.txt 0x0208e730 -> 0x02015720 = D1,
  *                  0x0208e734 -> 0x020156fc = D0). Nothing in the port hosted
- *                  it and both readers -- src/_ZN7ClipperC1Ev.c and
- *                  src/_ZN7ClipperD1Ev.c -- are this rung's own TUs. Word 0 is
+ *                  it and both readers -- src/_ZN7ClipperC1Ev.cpp and
+ *                  src/_ZN7ClipperD1Ev.cpp -- are this rung's own TUs. Word 0 is
  *                  bound to the ROM's D1 body. WORD 1 IS A NAMED TRAP, not a
- *                  body: src/_ZN7ClipperD0Ev.c calls `base_dtor_Clipper`, an
+ *                  body: src/_ZN7ClipperD0Ev.cpp calls `base_dtor_Clipper`, an
  *                  INVENTED name for 0x0203cbcc that nothing in this tree
  *                  defines, so the deleting destructor is not linkable today.
  *                  It cannot fire either -- the only Clipper in this image is
@@ -189,8 +189,8 @@
  * reader of that vptr is func_02019144, through data_0209d4a8 -- and
  * data_0209d4a8 is null in this port: hal/w8a_stage_storage.cpp hosts it and
  * says nothing seats it, src/func_02019144.c guards the dispatch with
- * `if (p != 0)`, and the two TUs that do write it (func_0203506c,
- * func_ov004_020b265c) write a DIFFERENT object. data_0209f43c gets the ROM's
+ * `if (p != 0)`, and the two TUs that do write it (_ZN7dScMB_c13InitResourcesEv,
+ * _ZN11dScMgBase_c9Virtual84Ev) write a DIFFERENT object. data_0209f43c gets the ROM's
  * own 4:3 seed (0x1555, 0xe38, 0x1000, 0x01388000) at Entry, which
  * Camera::Render re-seeds through the same Clipper::Func_020156DC on every
  * frame anyway -- so the seed is the ROM's own value at the ROM's own point,
@@ -316,8 +316,8 @@
  * fill the same object every time they run, so a construction at Entry is the
  * ROM's own first fill and not a new writer. Both bodies it names were already
  * in the link; the only name it wanted is the destruct-node cell
- * data_020a0d00, below. Nothing in the constructor's chain (func_02035514,
- * func_0203819c, func_0203ac60) names Heap, Memory, operator new or malloc.
+ * data_020a0d00, below. Nothing in the constructor's chain (_ZN5dBgChC2Ev,
+ * _ZN5dBgPiC2Ev, _ZN8dM3dGSphC1Ev) names Heap, Memory, operator new or malloc.
  *
  * C1g, __sinit_02075054. CTOR called it a CONFLICT because hal/auto_bss.cpp's
  * generic `int data_020a0db0[8]` is 32 bytes and covers data_020a0db8,
@@ -427,26 +427,26 @@ extern unsigned int data_0209b008[4], data_0209b018[4], data_0209b028[4],
 extern void *data_020aa3f0;
 
 /* Clipper's destructor, the first word of _ZTV7Clipper below (rung C1d).
-   src/_ZN7ClipperD1Ev.c, arm9 0x02015720. */
+   src/_ZN7ClipperD1Ev.cpp, arm9 0x02015720. */
 void _ZN7ClipperD1Ev(void *self);
 
 /* Scene's four graph callbacks, the words of data_0208ee14 below. */
-int _ZN5Scene14GraphCallback0Ev(void);
-int _ZN5Scene14GraphCallback1Ev(void);
-int _ZN5Scene14GraphCallback2Ev(void);
-int _ZN5Scene14GraphCallback3Ev(void);
+int _ZN8dGraph_c10callback_c14GraphCallback0Ev(void);
+int _ZN8dGraph_c10callback_c14GraphCallback1Ev(void);
+int _ZN8dGraph_c10callback_c14GraphCallback2Ev(void);
+int _ZN8dGraph_c10callback_c14GraphCallback3Ev(void);
 
 }  /* extern "C" */
 
 /* ---- data_0208ee14, the four-slot Scene graph-callback table --------------
  *
  * ROM span 0x0208ee14..0x0208ee24 (next symbol in config/arm9/symbols.txt is
- * data_0208ee24), four words, every one of them a relocation into arm9 code:
+ * _ZTSN8dGraph_c10callback_cE), four words, every one of them a relocation into arm9 code:
  *
- *     0208ee14  02018eb8  _ZN5Scene14GraphCallback0Ev
- *     0208ee18  02018eb0  _ZN5Scene14GraphCallback1Ev
- *     0208ee1c  02018ea8  _ZN5Scene14GraphCallback2Ev
- *     0208ee20  02018ea0  _ZN5Scene14GraphCallback3Ev
+ *     0208ee14  02018eb8  _ZN8dGraph_c10callback_c14GraphCallback0Ev
+ *     0208ee18  02018eb0  _ZN8dGraph_c10callback_c14GraphCallback1Ev
+ *     0208ee1c  02018ea8  _ZN8dGraph_c10callback_c14GraphCallback2Ev
+ *     0208ee20  02018ea0  _ZN8dGraph_c10callback_c14GraphCallback3Ev
  *
  * It is hosted here and not in hal/arm9_tables_link100.cpp because the reason
  * it is needed is this rung's: src/__sinit_02074fb8.c names it, and that
@@ -455,13 +455,13 @@ int _ZN5Scene14GraphCallback3Ev(void);
  * statement with &data_02094390), so nothing in this build reads a word back
  * out of this table -- but a table of code addresses is bound to the bodies
  * whether or not this build dispatches it, because that is the contract and
- * because the next lane to link func_0203506c inherits it. */
+ * because the next lane to link _ZN7dScMB_c13InitResourcesEv inherits it. */
 DSSTATE_BEGIN
 extern "C" void *data_0208ee14[4] = {
-    (void *)&_ZN5Scene14GraphCallback0Ev,
-    (void *)&_ZN5Scene14GraphCallback1Ev,
-    (void *)&_ZN5Scene14GraphCallback2Ev,
-    (void *)&_ZN5Scene14GraphCallback3Ev,
+    (void *)&_ZN8dGraph_c10callback_c14GraphCallback0Ev,
+    (void *)&_ZN8dGraph_c10callback_c14GraphCallback1Ev,
+    (void *)&_ZN8dGraph_c10callback_c14GraphCallback2Ev,
+    (void *)&_ZN8dGraph_c10callback_c14GraphCallback3Ev,
 };
 DSSTATE_END
 
@@ -559,7 +559,7 @@ namespace {
 void ctor_trap_clipper_d0(void)
 {
     std::fprintf(stderr, "  UNHOSTED: _ZTV7Clipper slot 1, _ZN7ClipperD0Ev at "
-                         "0x020156fc -- src/_ZN7ClipperD0Ev.c calls "
+                         "0x020156fc -- src/_ZN7ClipperD0Ev.cpp calls "
                          "base_dtor_Clipper, an invented name for 0x0203cbcc "
                          "that nothing in this tree defines. The only Clipper "
                          "in this image is the static data_0209f43c and "

@@ -35,6 +35,31 @@ static int port_addr_is_exec(uintptr_t addr)
            != 0;
 }
 
+/* The module window the stack scans use. It WAS a fixed 0x200000, which is
+   smaller than walk_window.exe: the image is about 6 MB and its .text runs
+   well past base+0x200000, so every return address above that bound was
+   dropped and a "jumped to 0x0" crash recorded no caller at all (levels
+   2/4/5/50 on 15fe8e32e printed three low data-looking words and nothing
+   else). SizeOfImage off the module own PE header is the real bound;
+   port_addr_is_exec still does the labelling, so widening the window cannot
+   re-admit the .data addresses the predicate above was written to reject.
+   Falls back to the old constant if the header cannot be read, which keeps
+   the probe safe on a torn module. */
+static unsigned port_module_span(const void *modbase)
+{
+    const IMAGE_DOS_HEADER *dos = (const IMAGE_DOS_HEADER *)modbase;
+    if (modbase && !IsBadReadPtr((LPVOID)modbase, sizeof *dos) &&
+        dos->e_magic == IMAGE_DOS_SIGNATURE) {
+        const IMAGE_NT_HEADERS *nt =
+            (const IMAGE_NT_HEADERS *)((const char *)modbase + dos->e_lfanew);
+        if (!IsBadReadPtr((LPVOID)nt, sizeof *nt) &&
+            nt->Signature == IMAGE_NT_SIGNATURE)
+            return nt->OptionalHeader.SizeOfImage;
+    }
+    return 0x200000u;
+}
+
+
 /* The ROM's list walker (func_02043fdc) parks the node it is processing in
    data_020a4b68 before every callback, so at fault time node[2] names the
    actor whose phase code was running -- the question every actor-phase crash
@@ -47,6 +72,20 @@ extern int *data_020a4b68;
 __declspec(selectany) int *port_fault_no_walker = 0;
 #endif
 #pragma comment(linker, "/alternatename:_data_020a4b68=_port_fault_no_walker")
+
+/* Particle::SysTracker lives at data_0209ee74 and its callback bank starts
+   0x750 into it. A "jumped to 0/1/2" through a particle callback cannot be
+   read without knowing whether the pointer the caller passed is inside that
+   object at all, so the probe prints the owner and the bank. Weak, like the
+   walker global above, so TUs without the engine still link. */
+#ifdef __cplusplus
+extern "C" void *data_0209ee74;
+extern "C" __declspec(selectany) void *port_fault_no_particles = 0;
+#else
+extern void *data_0209ee74;
+__declspec(selectany) void *port_fault_no_particles = 0;
+#endif
+#pragma comment(linker, "/alternatename:_data_0209ee74=_port_fault_no_particles")
 
 static LONG WINAPI port_fault_probe(EXCEPTION_POINTERS *ep)
 {
@@ -86,7 +125,7 @@ static LONG WINAPI port_fault_probe(EXCEPTION_POINTERS *ep)
             if (IsBadReadPtr(sp + i, 4)) break;
             v = sp[i];
             if (v >= (unsigned)(uintptr_t)base &&
-                v < (unsigned)(uintptr_t)base + 0x200000 &&
+                v < (unsigned)(uintptr_t)base + port_module_span(base) &&
                 port_addr_is_exec((uintptr_t)v))
                 fprintf(stderr, "  stack[%02d] +0x%08x\n", i,
                         (unsigned)(v - (unsigned)(uintptr_t)base));
@@ -492,7 +531,7 @@ static void port_rich_dump(EXCEPTION_POINTERS *ep, unsigned code,
             if (IsBadReadPtr(sp + i, 4)) break;
             v = sp[i];
             if (v >= (unsigned)(uintptr_t)base &&
-                v < (unsigned)(uintptr_t)base + 0x200000 &&
+                v < (unsigned)(uintptr_t)base + port_module_span(base) &&
                 port_addr_is_exec((uintptr_t)v)) {
                 PORT_RD_STR("\r\n  +");
                 PORT_RD_HEX(v - (unsigned)(uintptr_t)base);
@@ -507,7 +546,7 @@ static void port_rich_dump(EXCEPTION_POINTERS *ep, unsigned code,
         for (i = 0; i < nn; ++i) {
             unsigned v = (unsigned)(uintptr_t)frames[i];
             if (v >= (unsigned)(uintptr_t)base &&
-                v < (unsigned)(uintptr_t)base + 0x200000 &&
+                v < (unsigned)(uintptr_t)base + port_module_span(base) &&
                 port_addr_is_exec((uintptr_t)v)) {
                 PORT_RD_STR("\r\n  +");
                 PORT_RD_HEX(v - (unsigned)(uintptr_t)base);
@@ -658,11 +697,92 @@ static void port_crash_write_file(EXCEPTION_POINTERS *ep)
             if (IsBadReadPtr(sp + i, 4)) break;
             v = sp[i];
             if (v >= (unsigned)(uintptr_t)base &&
-                v < (unsigned)(uintptr_t)base + 0x200000 &&
+                v < (unsigned)(uintptr_t)base + port_module_span(base) &&
                 port_addr_is_exec((uintptr_t)v)) {
                 PORT_CRASH_STR("\r\n  +");
                 PORT_CRASH_HEX(v - (unsigned)(uintptr_t)base);
                 ++printed;
+            }
+        }
+        /* RAW stack words, unfiltered. The filtered list above answers
+           which module code addresses are lying around; it cannot answer
+           what the call that just jumped to 0 pushed, because a word is
+           dropped the moment it is not executable module code, and the
+           first word at esp is the only one the faulting call actually
+           pushed. Sixteen values as they are, so the reader can do the
+           arithmetic the filter refuses to. */
+        PORT_CRASH_STR("\r\nesp[0..15]");
+        for (i = 0; i < 16; ++i) {
+            if (IsBadReadPtr(sp + i, 4)) break;
+            PORT_CRASH_STR("\r\n  ");
+            PORT_CRASH_HEX(sp[i]);
+        }
+        /* Candidate receivers and their dispatch tables. On a jump to 0, 1
+           or 2 through a virtual slot the receiver is in ECX when MSVC made
+           the call and on the stack (so usually still in ESI or EDI) when
+           the call came out of a shadow-struct table; dumping all three
+           costs nothing and means the crash does not have to be reproduced
+           to ask the second question. *reg is the vptr, and the null word is
+           one of the entries below: the vptr resolves in the map to the
+           class whose table it is, and the index of the 0 is the slot. */
+        {
+            unsigned regs[3];
+            const char *names[3];
+            int r;
+            regs[0] = cx->Ecx; names[0] = "ecx";
+            regs[1] = cx->Esi; names[1] = "esi";
+            regs[2] = cx->Edi; names[2] = "edi";
+            for (r = 0; r < 3; ++r) {
+                unsigned *obj = (unsigned *)regs[r];
+                PORT_CRASH_STR("\r\n");
+                PORT_CRASH_STR(names[r]);
+                PORT_CRASH_STR("-object ");
+                PORT_CRASH_HEX(regs[r]);
+                if (IsBadReadPtr(obj, 4)) {
+                    PORT_CRASH_STR(" (unreadable)");
+                    continue;
+                }
+                /* the words either side of the object. A vptr slot that
+                   holds a small integer while a ROM data address sits one
+                   or two words away is a field-offset defect, not a
+                   missing binding, and the two answers need different
+                   fixes; printing the neighbourhood tells them apart
+                   without reproducing the crash a second time. */
+                PORT_CRASH_STR(" near");
+                for (i = -12; i < 12; ++i) {
+                    if (IsBadReadPtr(obj + i, 4)) { PORT_CRASH_STR(" ????????"); continue; }
+                    PORT_CRASH_STR(" ");
+                    PORT_CRASH_HEX(obj[i]);
+                }
+                PORT_CRASH_STR(" vptr ");
+                PORT_CRASH_HEX(obj[0]);
+                {
+                    unsigned *vt = (unsigned *)obj[0];
+                    if (IsBadReadPtr(vt, 4)) {
+                        PORT_CRASH_STR(" table unreadable");
+                        continue;
+                    }
+                    PORT_CRASH_STR(" table");
+                    for (i = 0; i < 8; ++i) {
+                        if (IsBadReadPtr(vt + i, 4)) break;
+                        PORT_CRASH_STR(" ");
+                        PORT_CRASH_HEX(vt[i]);
+                    }
+                }
+            }
+        }
+    }
+    {
+        char *pt = (char *)data_0209ee74;
+        PORT_CRASH_STR("\r\nparticle-owner ");
+        PORT_CRASH_HEX((unsigned)(uintptr_t)pt);
+        if (pt && !IsBadReadPtr(pt + 0x740, 0x40)) {
+            unsigned *w = (unsigned *)(pt + 0x740);
+            int q;
+            PORT_CRASH_STR(" bank+740");
+            for (q = 0; q < 16; ++q) {
+                PORT_CRASH_STR(" ");
+                PORT_CRASH_HEX(w[q]);
             }
         }
     }
@@ -794,7 +914,7 @@ static void port_exit_write_file(unsigned code)
             unsigned v = (unsigned)(uintptr_t)frames[i];
             PORT_EXIT_STR("\r\n  ");
             if (v >= (unsigned)(uintptr_t)base &&
-                v < (unsigned)(uintptr_t)base + 0x200000) {
+                v < (unsigned)(uintptr_t)base + port_module_span(base)) {
                 PORT_EXIT_STR("+");
                 PORT_EXIT_HEX(v - (unsigned)(uintptr_t)base);
             } else {
@@ -892,7 +1012,7 @@ static DWORD WINAPI port_watchdog_thread(LPVOID p)
             if (IsBadReadPtr(sp + i, 4)) break;
             v = sp[i];
             if (v >= (unsigned)(uintptr_t)base &&
-                v < (unsigned)(uintptr_t)base + 0x200000 &&
+                v < (unsigned)(uintptr_t)base + port_module_span(base) &&
                 port_addr_is_exec((uintptr_t)v))
                 fprintf(stderr, "  stack[%02d] +0x%08x\n", i,
                         (unsigned)(v - (unsigned)(uintptr_t)base));
@@ -934,7 +1054,7 @@ static LONG WINAPI port_watch_handler(EXCEPTION_POINTERS *ep)
             if (IsBadReadPtr(sp + i, 4)) break;
             v = sp[i];
             if (v >= (unsigned)(uintptr_t)base &&
-                v < (unsigned)(uintptr_t)base + 0x200000 &&
+                v < (unsigned)(uintptr_t)base + port_module_span(base) &&
                 port_addr_is_exec((uintptr_t)v)) {
                 fprintf(stderr, "    caller? +0x%08x\n",
                         (unsigned)(v - (unsigned)(uintptr_t)base));

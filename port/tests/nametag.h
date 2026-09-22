@@ -80,7 +80,7 @@
  *   view    hal/particle_bridges.cpp already writes it out for the fx probe,
  *           and it is Model::Render's compose -- v' = p * R + T over
  *           data_0209b3ec, the Matrix4x3 View::Render parks through
- *           CopyToViewMat (src/_Z13CopyToViewMatPK9Matrix4x3.c). Its
+ *           CopyToViewMat (src/_Z13CopyToViewMatPK9Matrix4x3.cpp). Its
  *           translation row is in SCENE units because Camera::Render feeds
  *           LookAt_ its eye and look-at as (v + 4) >> 3, so the actor's Fix12
  *           WORLD position crosses that same divide first.

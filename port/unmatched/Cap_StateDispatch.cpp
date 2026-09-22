@@ -36,7 +36,7 @@
    against a cdecl (self-first) definition, so it needs a real face: ecx holds
    this, the four Fix12i ranges come off the stack. */
 extern "C" {
-void _ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_(void *self, int a, int b, int c, int d);
+void _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(void *self, int a, int b, int c, int d);
 }
 /* SetRanges is a __thiscall member (this in ecx) against the cdecl self-first
    definition, so it is a shadow-member face -- the ChangeState treatment in
@@ -44,19 +44,22 @@ void _ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_(void *self, int a, int b, int c, int
    and the alias points the caller's decorated name at the shadow member's. */
 struct ActorSetRangesFace { void SetRanges(int a, int b, int c, int d); };
 void ActorSetRangesFace::SetRanges(int a, int b, int c, int d)
-{ _ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_(this, a, b, c, d); }
-#pragma comment(linker, "/alternatename:?SetRanges@Actor@@QAEXHHHH@Z=?SetRanges@ActorSetRangesFace@@QAEXHHHH@Z")
+{ _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(this, a, b, c, d); }
+#pragma comment(linker, "/alternatename:?SetRanges@dActor_c@@QAEXHHHH@Z=?SetRanges@ActorSetRangesFace@@QAEXHHHH@Z")
 /* Spawn and the two SaveData methods are static (__cdecl), so plain aliases. */
-#pragma comment(linker, "/alternatename:?Spawn@Actor@@SAHIIABUVector3@@PBUVector3_16@@HH@Z=__ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii")
-#pragma comment(linker, "/alternatename:?HasPlayerLostCap@SaveData@@SAHXZ=__ZN8SaveData16HasPlayerLostCapEv")
-#pragma comment(linker, "/alternatename:?PlayerLoseCap@SaveData@@SAXXZ=__ZN8SaveData13PlayerLoseCapEv")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEAD RHS and an UNREFERENCED left hand side: nothing in the build defines __ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as, and nothing references ?Spawn@dActor_c@@SAHIIABUVector3@@PBUVector3_16@@HH@Z, so the row can never fire and nothing wants it to. */
+// #pragma comment(linker, "/alternatename:?Spawn@dActor_c@@SAHIIABUVector3@@PBUVector3_16@@HH@Z=__ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEFEATED: the left hand side is a real definition in this link now (_ZN8SaveData16HasPlayerLostCapEv.cpp.obj), so the directive is inert and alternatename_guard fails on it. */
+// #pragma comment(linker, "/alternatename:?HasPlayerLostCap@SaveData@@SAHXZ=__ZN8SaveData16HasPlayerLostCapEv")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEFEATED: the left hand side is a real definition in this link now (_ZN8SaveData13PlayerLoseCapEv.cpp.obj), so the directive is inert and alternatename_guard fails on it. */
+// #pragma comment(linker, "/alternatename:?PlayerLoseCap@SaveData@@SAXXZ=__ZN8SaveData13PlayerLoseCapEv")
 /* src/_Z11UpdateAngleRssis.cpp defines the angle helper as the C++ free
    function UpdateAngle (MSVC decorates it ?UpdateAngle@@YAXAAFFHF@Z), but
    func_ov002_020b781c.c calls it by its Itanium C name. Data-free cdecl on both
    sides, so the C-decorated reference aliases onto the C++ definition. */
 #pragma comment(linker, "/alternatename:__Z11UpdateAngleRssis=?UpdateAngle@@YAXAAFFHF@Z")
 /* func_ov002_020b6fcc calls Player::InitMetalWario by its Itanium C name, but
-   src/_ZN6Player14InitMetalWarioEv.cpp is a real C++ __thiscall method
+   src/actors/Player.cpp is a real C++ __thiscall method
    (?InitMetalWario@Player@@QAEXXZ, this in ecx). The C caller passes self on
    the stack, so this is a cdecl->thiscall face: read self off the stack and
    call the real method with this in ecx. InitVanishLuigi's own TU is C-linkage,

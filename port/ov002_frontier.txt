@@ -72,7 +72,7 @@ THE THREE FINDINGS WORTH CARRYING FORWARD
    in no slice", and BLACK_BRICK_BLOCK's says slot 23 "stays on ac_trap23 only
    because its real body is not sliced yet -- seating it is a follow-up".
 
-   Every one of those six bodies -- func_ov002_020bb27c, 020bb23c, 020bb374,
+   Every one of those six bodies -- _ZN8SignPost15OnGroundPoundedER8dActor_c, 020bb23c, 020bb374,
    020bb3b8, 020b3788, 020b36dc -- carries the `recovered from vtable slot
    identity` marker, so seating any of them fails port/tools/
    inferred_stub_guard.py. So does every other unlinked ov002 body the ROM's own
@@ -83,7 +83,7 @@ THE THREE FINDINGS WORTH CARRYING FORWARD
    slot 22 blocked because its body reaches slot 31 through `fn(c)`, a cdecl
    call, while the seated slot 31 is __fastcall -- and rules slot 23 unblocked
    because its DISPATCHER is now thiscall. Slot 23's BODY has the same defect as
-   slot 22's: src/func_ov002_020b3788.cpp declares
+   slot 22's: src/_ZN13BigBrickBlock11OnAttacked2ER8dActor_c.cpp declares
    `struct Vt { int dummy[0x7c/4]; void (*fn)(void*); }` and calls
    `(*(struct Vt**)c)->fn(c)`, which MSVC emits as a cdecl call through a
    function pointer onto the __fastcall bbb_kill at slot 31. Seating slot 23 as
@@ -107,7 +107,7 @@ THE THREE FINDINGS WORTH CARRYING FORWARD
      _ZN6Player16St_WallJump_MainEv    Player_St_WallJump_Main.cpp
      _ZN6Player17St_NoControl_InitEv   Player_St_NoControl_Init.cpp
      _ZN6Player8BehaviorEv             Player_Behavior.cpp
-     _ZN8PathLift12BaseBehaviorEv      PathLift_StateDispatch.cpp
+     _ZN16dPathLiftActor_c12BaseBehaviorEv      PathLift_StateDispatch.cpp
      _ZN9OneUpLogo13InitResourcesEv    OneUpLogo_InitResources.cpp
 
    Each host file's header documents a real host-ABI reason (the mwcc
@@ -170,14 +170,14 @@ Each needs one per-source COMPILE_DEFINITIONS line, which belongs to the actors
 lane this wave. `HEAP` needs nothing -- it is already bound to data_020a0eac,
 which is what all five want.
 
-    src/_ZN10BrickBlockD0Ev.c            VT=_ZTV10BrickBlock
-    src/_ZN11VirtualDoorD0Ev.c           VT=_ZTV11VirtualDoor
-    src/_ZN18PoppingLavaBubblesD0Ev.c    VT=_ZTV18PoppingLavaBubbles
-    src/_ZN19AmbientSoundEffectsD0Ev.c   VT=_ZTV19AmbientSoundEffects
-    src/_ZN8MugenBgmD0Ev.c               VT=_ZTV8MugenBgm
+    src/_ZN10BrickBlockD0Ev.cpp            VT=_ZTV10BrickBlock
+    src/game/actors/d_a_ch_scene.cpp           VT=_ZTV11daChScene_c
+    src/game/actors/d_a_obj_waterfall.cpp    VT=_ZTV16daObjWaterfall_c
+    src/game/actors/d_a_set_se.cpp   VT=_ZTV9daSetSE_c
+    src/_ZN8MugenBgmD0Ev.cpp               VT=_ZTV8MugenBgm
 
-Two more want a host object rather than a -D: src/_ZN10StarSwitchD0Ev.c and
-src/_ZN11CannonHatchD0Ev.c both store _ZTV10dBgActor_c, the shared base table,
+Two more want a host object rather than a -D: src/_ZN10StarSwitchD0Ev.cpp and
+src/game/actors/d_a_obj_cannon_shutter.cpp both store _ZTV10dBgActor_c, the shared base table,
 which nothing in the port defines. Their own class tables are already aliased
 (daObjSwitch_c, daObjCannonShutter_c); dBgActor_c is a real second table and
 wants a mount, not an alias onto one of theirs.

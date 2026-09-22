@@ -1,4 +1,4 @@
-// HOST TRANSCRIPTION of MeshCollider::DetectClsn(SphereClsn &)
+// HOST TRANSCRIPTION of dBgW_Kc::DetectClsn(dBgCh_SphCrr &)
 // ITCM 0x01ffb830, 0x1bc8 bytes (7112, 1778 ARM instructions) -- vtable slot 8
 // and the largest unmatched function in the game (notes/itcm.md).
 //
@@ -19,7 +19,7 @@
 // BASIS CONVENTION -- read this before changing any shift.
 //
 // The ROM converts world Fix12i to KCL file units with a PLAIN >>6 (0x01ffb870
-// `asr r1, r5, #6`), no scale multiply; DetectClsn(RaycastLine&) at 0x01ffb0fc
+// `asr r1, r5, #6`), no scale multiply; DetectClsn(dBgCh_Lin&) at 0x01ffb0fc
 // does the same at 0x01ffb110. SIX BITS, THE SAME SIX FOR EVERY COLLIDER IN
 // THE GAME, and that is what both passes run now:
 //
@@ -28,11 +28,11 @@
 //   push component    (depth*n) >> 16     vertex -> world   v0 << 6
 //
 // Both passes read the SAME KCL data through the SAME collider in the same
-// frame -- WithMeshClsn sweeps a RaycastLine and then places a SphereClsn at
+// frame -- WithMeshClsn sweeps a dBgCh_Lin and then places a dBgCh_SphCrr at
 // the result -- so they have to agree, and now they agree by construction.
 //
 // WHAT THIS REPLACED, and why it had to go. The conversion used to route
-// through the collider's own MeshCollider+0x2c / +0x38 words, with the level's
+// through the collider's own dBgW_Kc+0x2c / +0x38 words, with the level's
 // pair written by hand as 0x40000 / 0x40 (port/hal/level_boot.cpp) so the
 // multiply reduced to the ROM's shift. It reduced for the level and for
 // nothing else: MovingMeshCollider::SetFile leaves those words at SetFile's
@@ -42,7 +42,7 @@
 // 0x20, and no ray in the level could find it, so the Player's water probe
 // never fired and walk never became swim.
 //
-// The aliasing hazard went with it. MeshCollider+0x28..0x30 is a Vector3 "up"
+// The aliasing hazard went with it. dBgW_Kc+0x28..0x30 is a Vector3 "up"
 // axis (SetFile seeds 0, 0x1000, 0; MovingMeshCollider::SetFile and Transform
 // rewrite it through func_02039e18 as the collider's own transformed axis),
 // and +0x2c -- that vector's Y -- was the very word the port had repurposed.
@@ -53,19 +53,19 @@
 // CALLEES (all matched; slice_gate8.txt carries them)
 //   func_020396dc  triIdx = (prism - tris)/16      func_02039794  floor/wall/ceil
 //   func_020397dc  |x| <= 8 near-zero guard        func_02037e58  clps type
-//   func_02037fd4  ClsnResult <- (tri, info)       func_020379f4  -> sphere+0x74
+//   func_02037fd4  dBgPi <- (tri, info)       func_020379f4  -> sphere+0x74
 //   func_020379c0  -> sphere+0x9c                  func_0203798c  -> sphere+0xc4
 //   func_0203794c  -> sphere+0xfc best normal      func_02037a6c  push AABB
 //   DotVec3        ((s64)sum + 0x800) >> 12        cstd::fdiv     (a<<12)/b
 //   SurfaceInfo::CopyNormalTo    BgCh::ShouldPassThroughImpl
-//   MeshCollider::GetSurfaceInfo (ITCM 0x01ffd920, vtable slot 3)
+//   dBgW_Kc::GetSurfaceInfo (ITCM 0x01ffd920, vtable slot 3)
 //
 //cpp
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "MeshCollider.h"
+#include "dBgW_Kc.h"
 #include "ntr/mmio.h"
 #include "hal/dsstate_seg.h"
 
@@ -75,16 +75,16 @@
 struct SurfaceInfo { u8 clps[8]; Vector3 normal; };
 
 /* ---------------------------------------------------------------------- */
-/* SphereClsn as this function touches it. Named SphereClsnLayout and not
-   SphereClsn on purpose: include/SphereClsn.h is auto-generated from matched-
+/* dBgCh_SphCrr as this function touches it. Named SphereClsnLayout and not
+   dBgCh_SphCrr on purpose: include/dBgCh_SphCrr.h is auto-generated from matched-
    function evidence and stops well short of what the sphere walk needs (it has
    neither the centre nor the radius), and quietly redefining the game's own
    type in one translation unit is exactly how records get skewed -- see the
-   ClsnResult packing lesson in 1e6025d2a. Every offset below is pinned by
+   dBgPi packing lesson in 1e6025d2a. Every offset below is pinned by
    MATCHED code, named beside it, and asserted underneath. */
 struct SphereClsnLayout {
     u8      head_000[0x10];     /* 0x00 BgCh head                            */
-    u8      result[0x28];       /* 0x10 ClsnResult, func_02037fd4's target   */
+    u8      result[0x28];       /* 0x10 dBgPi, func_02037fd4's target   */
     u8      pad_038[0x4];       /* 0x38 the Sphere sub-object's vtable       */
     Vector3 center;             /* 0x3c func_0203abd4 via SetObjAndSphere    */
     Fix12i  radius;             /* 0x48 same call; MovingMeshCollider scales it */
@@ -125,7 +125,7 @@ typedef char SphereClsnLayout_maxNormalY_at_108[
     (offsetof(struct SphereClsnLayout, maxNormalY) == 0x108) ? 1 : -1];
 
 extern "C" {
-s32  func_020396dc(MeshCollider *self, KCL_Tri *prism);
+s32  func_020396dc(dBgW_Kc *self, KCL_Tri *prism);
 s32  func_02039794(s32 normalY);
 s32  func_020397dc(s32 x);
 s32  func_02037e58(const void *info);
@@ -138,13 +138,13 @@ void func_02037a6c(void *sph, s32 x1, s32 y1, s32 z1, s32 x2, s32 y2, s32 z2);
 s32  DotVec3(const Vector3 *a, const Vector3 *b);
 s32  _ZN4cstd4fdivEii(s32 a, s32 b);
 void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(const void *self, Vector3 *out);
-s32  _ZN4BgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b(void *self, const void *info,
+s32  _ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b(void *self, const void *info,
                                                     const void *bg, s32 isWall);
 
 /* THE GLOBAL SurfaceInfo the ROM reuses for every prism -- data_020a0cec,
-   constructed once by __sinit_02074fe4 (func_02037eec) with func_02037ee8
+   constructed once by __sinit_02074fe4 (_ZN5dBgPcC1Ev) with _ZN5dBgPcD1Ev
    registered as its atexit destructor. The port has no such sinit and no other
-   consumer, so it lives here, as five words carrying func_02037eec's exact
+   consumer, so it lives here, as five words carrying _ZN5dBgPcC1Ev's exact
    seed: c[0] = 0xfc0, c[1] = 0xff, c[2..4] = 0. GetSurfaceInfo rewrites all
    five before every read, so the seed only ever describes the state before the
    first prism of the first frame. */
@@ -191,12 +191,12 @@ static s32 hw_sqrt64(u64 v)
     return (s32)(u32)NTR_MMIO(u32, 0x040002b4); /* SQRT_RESULT */
 }
 
-/* The collider's "up" axis, MeshCollider+0x28..0x30, read as the ROM reads it.
-   MeshCollider::SetFile seeds (0, 0x1000, 0); MovingMeshCollider::SetFile and
+/* The collider's "up" axis, dBgW_Kc+0x28..0x30, read as the ROM reads it.
+   dBgW_Kc::SetFile seeds (0, 0x1000, 0); MovingMeshCollider::SetFile and
    Transform overwrite it with the collider's own transformed axis, which is
    what makes the slope gate mean anything on a rotated platform. Nothing
    aliases these three words any more -- see BASIS CONVENTION. */
-static void collider_up(const MeshCollider *self, Vector3 *out)
+static void collider_up(const dBgW_Kc *self, Vector3 *out)
 {
     out->x = self->unk_28;
     out->y = self->unk_2c;
@@ -235,7 +235,7 @@ static int corner_offset(const s16 *P, s32 dP, const s16 *Q, s32 dQ, s32 cosPQ,
 
 /* EDGE gate, 0x01ffc1ec / 0x01ffc35c / 0x01ffc4cc -- three identical ROM copies
    folded the same way. Returns 1 to accept the contact. */
-static int edge_gate(MeshCollider *self, SphereClsnLayout *sph, s32 d,
+static int edge_gate(dBgW_Kc *self, SphereClsnLayout *sph, s32 d,
                      s32 faceDot, s32 kind, const Vector3 *normal)
 {
     if (sph->flags & 2) {                                   /* 0x01ffc310 */
@@ -269,7 +269,7 @@ static int edge_gate(MeshCollider *self, SphereClsnLayout *sph, s32 d,
 
 /* ---------------------------------------------------------------------- */
 
-s32 MeshCollider::DetectClsn(SphereClsn &sphere)
+s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
 {
     SphereClsnLayout *sph = (SphereClsnLayout *)&sphere;
     KCL_File *file = this->kclFile;
@@ -454,14 +454,14 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                        ldr r3,[r3,#0xc]; blx r3). The port calls it direct --
                        same target; the precedent and the reasoning are in
                        MeshCollider_DetectClsn_RaycastLine.cpp. */
-                    MeshCollider::GetSurfaceInfo(
+                    dBgW_Kc::GetSurfaceInfo(
                         (s16)triIdx, *(SurfaceInfo *)data_020a0cec);
                     _ZNK11SurfaceInfo12CopyNormalToER7Vector3(data_020a0cec,
                                                               &normal);
                     kind = func_02039794(normal.y);  /* 0 floor 1 wall 2 ceil */
                     contactClass = 0;
 
-                    if (_ZN4BgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b(
+                    if (_ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b(
                             this, data_020a0cec, sph, kind == 1)) {
                         ++g_sphere_dbg[12];
                         continue;
@@ -555,7 +555,7 @@ post_accept:                                                /* 0x01ffcaa4 */
                     if (sph->maxNormalY < normal.y) continue;
 
                     /* WALL-HEIGHT CULL -- drop walls too short to block.
-                       Dormant in practice (SphereClsn's ctor leaves wallHeight
+                       Dormant in practice (dBgCh_SphCrr's ctor leaves wallHeight
                        0 and no matched caller raises it), and the only place
                        the ROM reconstructs the prism's other two vertices,
                        which is what pins `length` as the extent along edge

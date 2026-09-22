@@ -1,0 +1,244 @@
+# slice_hostgen4 -- run link100, lane HOSTGEN4.
+#
+# ONE TRANSLATION UNIT: src/actors/daMky_c.cpp, the Monkey (daMky_c, the thief
+# and the star carrier). It answers FOURTEEN flat ROM names on walk_window's
+# unresolved wall and it has never been on a slice, because MSVC refused it.
+#
+# WHY IT WAS REFUSED, and it is not a port problem. The decomp's convention was
+# one function per file, and the pret idiom that DECLARATION ORDER controls
+# mwccarm's register allocation means every member re-declares the externs it
+# calls AT BLOCK SCOPE, in its own spelling, where it recovered them. The file
+# says so in its own header at lines 148 to 154. main's consolidation then put
+# ONE file-scope extern "C" block at lines 155 to 169 with a single spelling per
+# name, and the two disagree on the RETURN TYPE at eighteen sites. Two spellings
+# of one C name in one translation unit is MSVC C2556 and C2371, eighteen times,
+# and mwccarm never saw the pair because each member was its own file. Six more
+# are C2624: a function-local class used to declare an extern, which C++ forbids
+# because a local class has no linkage.
+#
+# HOW IT IS SEATED. Through the whole-TU hostgen substitution, so nothing under
+# src/ is touched: tools/hostgen.py's REDECL_CONFLICT table deletes the eighteen
+# block-scope redeclarations (the file-scope spelling governs, and every call
+# site ignores the return value, which is why they disagreed about it and
+# nothing noticed), deletes the stray `struct dActor_c;` that was shadowing the
+# real class, and moves the four function-local types to file scope while
+# LEAVING EACH DATUM'S DECLARATION where it stands -- five members spell
+# data_ov030_02115d18 five different ways and one file-scope declaration makes
+# four of them a C2040. Seven of those spellings still reach the linker
+# decorated, and hostgen's ALTNAME table bridges each to the C name ov030_syms.c
+# and romdata.c emit, which is hal/actor_classes.cpp:870's own shape.
+#
+# The decomp-side edit is smaller than the substitution and would retire it.
+# It is written out with every line number in
+# runs/link100/out/HOSTGEN4/needs_main.md section 1.
+#
+# WHAT IT CLOSES, measured on the object rather than predicted: fourteen rows,
+# every one a flat ROM name the mesh of ov030 callers asks for.
+#
+#   _func_ov030_02111734  _func_ov030_02112094  _func_ov030_021122b0
+#   _func_ov030_02112400  _func_ov030_02112578  _func_ov030_02112a84
+#   _func_ov030_02112da0  _func_ov030_02113094  _func_ov030_02113324
+#   _func_ov030_02113b38  _func_ov030_02113d20  _func_ov030_02113ff0
+#   _func_ov030_02114134  _func_ov030_021141a8
+#
+# WHAT IT COSTS: NOTHING. Measured on the build rather than predicted, and the
+# prediction was wrong in the safe direction, so both are written down here.
+#
+# Compiling the TU standalone and comparing its undefined externals against the
+# DEFINED symbols of walk_window's 8660 objects said nine rows would arrive:
+# eight function names and _data_020a0eac. The build says zero. The reason is
+# that a symbol table scan cannot see an /alternatename, and this tree already
+# carries a bridge for eight of the nine:
+#
+#   port/hal/cxx_aliases.cpp:3219
+#     __ZN8SaveData16HasPlayerLostCapEv = ?HasPlayerLostCap@SaveData@@SAHXZ
+#   port/hal/cxx_aliases.cpp:3114
+#     __ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as
+#                        = ?Spawn@dActor_c@@SAPAU1@IIABUVector3@@PBUVector3_16@@CF@Z
+#   port/unmatched/Cap_StateDispatch.cpp:60
+#     __Z11UpdateAngleRssis = ?UpdateAngle@@YAXAAFFHF@Z
+#
+# and their siblings. Every one of them is a flat-to-static-member pair, cdecl
+# with no receiver on both sides, which is the admissibility rule met on every
+# clause -- the same rule that made this lane confident the remaining ones were
+# closable, and the reason it left them alone: writing a second alias for a name
+# the tree already bridges would be two declarations of one pair, and writing one
+# for a name port/faces_sync.txt is about to define would be DEFEATED the day the
+# face lands, which alternatename_guard refuses.
+#
+# _data_020a0eac does not arrive either, and the scan was wrong about it for a
+# second reason worth writing down: hal/cxx_aliases.cpp lines 1553 and 1563
+# point _G0 and _HEAP AT it, so it is a live RHS in this build and resolves,
+# while the object-table scan that predicted it looked only at defined externals
+# in the 8660 objects on the link line and found nothing there. The lesson for
+# the next lane using this method is the same in both halves: a defined-symbol
+# census OVER-predicts new rows, never under-predicts them, so a seat it clears
+# is clear and a seat it warns about is worth a build before believing.
+#
+# NO COLLISIONS. The object was compiled with the build's own flags and its
+# defined externals compared against walk_window's whole link universe (8660
+# objects, 46836 defined externals). Eighteen names are shared and every one of
+# them is a COMDAT already present in dozens of objects: the four RTTI records
+# of dActor_c, dBase_c and fBase_c, Vector3's inline destructor, and the four
+# __empty_global_delete stubs. No LNK2005 row.
+src/actors/daMky_c.cpp
+
+# ---------------------------------------------------------------------------
+# SIX PER-FUNCTION TRANSLATION UNITS THAT WERE SIMPLY NEVER SLICED
+# ---------------------------------------------------------------------------
+#
+# Nothing is wrong with any of these. Each exists in src/ under the decomp's
+# one-function-per-file convention, each owns exactly one flat ROM name that
+# walk_window still reports unresolved, and each is compiled by nothing: no
+# slice list, no CMake block, no hostgen generation list. This is lane SLICE1's
+# rule, run again against the wall as it stands after the four gates above.
+#
+# EVERY ONE WAS COMPILED STANDALONE with the build's own flags, in the language
+# its extension asks for, and its object's defined externals were compared
+# against walk_window's whole link universe (8661 objects, 46837 defined
+# externals). One row closed each, no collision anywhere, and the undefined
+# references each one brings are already answered in this link:
+#
+#   src/__sinit_ov023_02111aa8.c    ___sinit_ov023_02111aa8
+#   src/func_0205fc44.c             _func_0205fc44
+#   src/func_ov002_020e3e00.cpp     _func_ov002_020e3e00
+#
+# THREE MORE WERE TRIED HERE AND BELONG SOMEWHERE ELSE, and the build is what
+# said so. src/func_ov006_0211ea70.c, src/func_ov006_0211f9fc.c and
+# src/func_ov074_02121800.c are ALREADY on slices (slice_boo.txt line 426,
+# slice_ov074.txt line 232 and their siblings) and already compiled -- but with
+# PROPERTIES LANGUAGE CXX, because each carries the decomp's //cpp marker. So
+# each emits ?func_ov006_0211ea70@@YAXPADH@Z and not the flat ROM name its
+# callers ask for, and the flat name stayed on the wall while the body was in
+# the binary all along. A second slice row just produced the same object twice:
+#
+#   func_ov006_0211ea70.c.obj : error LNK2005:
+#       "void __cdecl func_ov006_0211ea70(char *,int)"
+#       (?func_ov006_0211ea70@@YAXPADH@Z) already defined in
+#       func_ov006_0211ea70.c.obj
+#
+# The three rows are withdrawn and the three names are bridged instead, in
+# port/unmatched/HostGen4_CxxNameBridges.cpp. A defined-symbol census cannot
+# see this shape either: the body IS defined, under the other spelling.
+#
+# The two ov006 rows each reference one flat Itanium name that the defined-symbol
+# census called new, __ZN3G2S13GetBG0CharPtrEv and __ZN4cstd4sqrtEy, and
+# hal/cxx_aliases.cpp lines 3176 and 3186 already bridge both to their MSVC
+# spellings. That is the same over-prediction the Monkey seat above ran into and
+# it is written up there.
+#
+# ONE CANDIDATE IS DELIBERATELY NOT HERE. src/func_0206a4a0.c closes
+# _func_0206a4a0 and brings five names with it (_data_020a9de0, _func_0206a37c,
+# _func_0206a3a4, _func_0206a424 and _func_0206a458). The four functions have
+# translation units of their own and could be seated in the same pass, but they
+# close nothing themselves, so the trade is five translation units for one row
+# and a fresh closure into the OS boot path that hal/boot_os.cpp already has
+# opinions about. Left for a lane that wants that whole region.
+src/__sinit_ov023_02111aa8.c
+src/func_0205fc44.c
+src/func_ov002_020e3e00.cpp
+
+# ---------------------------------------------------------------------------
+# dScMgD3DBase_c, THE MINIGAME 3D BASE CLASS
+# ---------------------------------------------------------------------------
+#
+# Nineteen rows: five flat ROM names (_Sound_PlayBank1Panned,
+# _func_ov006_020e6db4, _func_ov006_020e6e3c, _func_ov006_020e7508,
+# _func_ov006_020e759c) and fourteen decorated members that nothing in this link
+# defines -- the Before/After hooks, the five On* handlers, OnHitByMegaChar,
+# OnHitFromUnderneath, Virtual7C and Virtual84.
+#
+# It has been on no slice since lanes BNP and BNT of run mg11, which host-copied
+# four vtable slots (unmatched/MgD3DBase_Slots.cpp), the two sub-object tick
+# bodies (unmatched/MgD3DBase_ObjStateDispatch.cpp) and OnKicked
+# (unmatched/MgD3DBase_DeclConflict.cpp). MEASURED AGAINST THE WHOLE LINK, the
+# class TU as main has it today defines NONE of the six bodies those three files
+# supply, so all three stay and nothing collides with them.
+#
+# It goes through the substitution for two reasons and the first is the bigger
+# one: TWENTY-FOUR MMIO writes. Compiled raw those latch in the mapped I/O
+# window and never reach the PPU, which is the defect hostgen's MMIO rewrite
+# exists for and the reason src/actors/dScMgPanel_c.cpp is on the same list.
+#
+# The second is OnKicked, ROM ov006:0x020e6e78, vtable slot 24.
+# port/faces_sync.txt already carries it as a REVERSE face -- a definition of
+# ?OnKicked@dScMgD3DBase_c@@UAEHXZ forwarding to the flat ROM name, whose body
+# is MgD3DBase_DeclConflict.cpp -- so the class TU's own copy would be a
+# duplicate symbol. hostgen's LEDGER_PARK brackets that ONE member in the
+# generated copy. Nothing changes at run time: the face goes on serving slot 24
+# and its forward target is the same ROM body it is today.
+#
+# THE END STATE THE PARK IS WAITING FOR is a pair of edits neither of which is
+# this lane's: flip that ledger row to a FORWARD face so the flat ROM name
+# forwards to the class TU's real member, and retire
+# unmatched/MgD3DBase_DeclConflict.cpp in the same change. Its stated reason is
+# a C2733 between include/decl_common.h:1516 and this TU, and that reason is
+# OBSOLETE -- the TU compiles clean today, rc 0, with a real object.
+src/actors/dScMgD3DBase_c.cpp
+
+# ---------------------------------------------------------------------------
+# daSanbo_c AND daPkn_c, TWO CLASS TUs THE LEDGER WAS HOLDING
+# ---------------------------------------------------------------------------
+#
+# Twenty-five rows between them: fourteen for daSanbo_c (Pokey) and eleven for
+# daPkn_c (Piranha Plant), every one a flat ROM name in ov096 and ov084 plus
+# each class's factory.
+#
+# LANE SYNC6'S TABLE SAYS MSVC REFUSES BOTH. It does not, and has not for some
+# time: each compiles clean with the build's own flags, rc 0, with a real
+# object. What actually held them is smaller and was measured rather than read
+# off the table. Each defines a handful of members that port/faces_sync.txt
+# already defines as REVERSE faces -- five for daSanbo_c, three for daPkn_c --
+# and every one of those faces forwards to a flat ROM name that IS defined in
+# this link, by its own per-function TU. So the face is serving the vtable
+# correctly today, and the class TU's second definition would be a duplicate
+# symbol and nothing else. hostgen's LEDGER_PARK brackets those members in the
+# generated copy: the seat lands, the faces go on serving, and no dispatch
+# changes anywhere.
+#
+# ONE MORE MEMBER IS PARKED IN EACH, for a different reason. daSanbo_c defines
+# func_ov096_02135e2c, which unmatched/Pokey_HostSites.cpp host-copies, and
+# daPkn_c defines func_ov084_0212f204, which
+# unmatched/Actor_ClosestPlayer_OverlayReaders.cpp host-copies under a receiver
+# ruling lane SYNC6 flagged as worth re-checking. Parking the member keeps each
+# host copy's correction on the call and leaves both rulings untouched.
+#
+# THE END STATE, as with dScMgD3DBase_c above: flip those eight ledger rows to
+# FORWARD faces, retire the per-function TUs they forward to, and the parks come
+# out. That is port/faces_sync.txt's side of the work and it is written up in
+# runs/link100/out/HOSTGEN4/HANDOFF.md.
+#
+# slice_ov096.txt's own refusal block says taking daSanbo_c.cpp and the host
+# copies together would be a duplicate symbol. MEASURED AGAINST THE WHOLE LINK
+# that is true of exactly one symbol, func_ov096_02135e2c, and that one is
+# parked. The Tornado rows that block also names are untouched.
+src/actors/daSanbo_c.cpp
+src/actors/daPkn_c.cpp
+
+# ---------------------------------------------------------------------------
+# d_a_wanwan, THE CHAIN CHOMP
+# ---------------------------------------------------------------------------
+#
+# Twelve ov014 rows, the fourth and last of the class TUs this lane found held
+# by the face ledger rather than by the compiler. Three members
+# (InitResources, Behavior, Render) are reverse faces whose flat targets are
+# already defined, and daWanwan_c_classInit is the FACTORY that
+# unmatched/ChainChomp_Spawn_hostcopy.cpp supplies under the VPTR ruling's
+# sequencing. All four are parked; the host factory and its addend-0 store are
+# untouched.
+#
+# THE PARKS HERE ARE PER BODY and that was learned from a build rather than
+# reasoned out. These four members sit at the top of the file, so the
+# banner-to-banner bracket the other three seats use swallowed an
+# `#include "decl_common.h"` and the file-scope declarations of
+# data_ov014_02114968, 02114978, 02114980 and 02114970 -- four C2065s on
+# CleanupResources, a member nobody was parking. Each bracket now opens on the
+# member's own definition line, so every include and declaration between the
+# banner and the body stays outside it. daWanwan_c_classInit is the exception:
+# it lives inside an `extern "C" {` block, so its bracket closes on its own last
+# line rather than at the next banner.
+#
+# The TU also joins PORT_FALLS_OFF_END_SOURCES. Lane SYNC6 wrote that row here
+# as a comment against the day the TU was seated, naming func_ov014_02111fb8 and
+# func_ov014_0211150c; this is that day.
+src/game/actors/d_a_wanwan.cpp

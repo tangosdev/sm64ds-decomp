@@ -21,6 +21,8 @@
 //   func_0204f7cc  (1 -> 3)  pan mode + value ride into Snd_SendCommand(4).
 //   func_0204f86c  (1 -> 3)  two riders into Snd_SendCommand(5, ...).
 //   func_0204fa2c  (1 -> 2)  the fade length rides into func_0204f5a0.
+//   func_02009e70's call (3 -> 4) the stop fade rides into
+//                            Sound_PlayIfNotActive.
 //
 // The rest are not ride-throughs; each says why below.
 #include "sdat.h"
@@ -39,6 +41,7 @@ void func_0205aaf4(void *a, int b, int c);
 void func_0204f4bc(void *obj);
 void *func_0205afb4(void);
 void func_0204f5a0(u8 *thiz, int arg1);
+int  Sound_PlayIfNotActive(int a, int b, int c, int d);
 
 // func_0204f600(thiz) on ARM; r1 = sequence data, r2 = entry offset,
 // r3 = resident bank, all of which ride into func_0205adc4.
@@ -87,6 +90,22 @@ int func_0204fa2c(int *p, int fade)
     return 0;
 }
 
+// src/func_02009e70.cpp declares Sound_PlayIfNotActive with three
+// parameters and calls it with three; the definition takes four and
+// stores the fourth as the effect's stop fade (func_0201186c ->
+// func_02011b38 a5 -> entry+4 -> func_0204f5a0's arg1, where 0 stops
+// the effect at once and non-zero ramps it down). The cartridge's
+// fourth argument is the r3 = 0 it materialised two instructions
+// earlier for the data_0209b000 = 0 store, so the camera's rotate
+// effect is registered with fade 0. On the host the callee read an
+// unwritten stack slot, and the effect kept sounding for whatever
+// that word happened to say.
+// PORT_HOST_ABI: ARM r3 argument ride-through (stop fade, 0).
+int hal_Sound_PlayIfNotActive_ridethrough(int a, int b, int c)
+{
+    return Sound_PlayIfNotActive(a, b, c, 0);
+}
+
 // Sound::Play. Its src declares the resolver as func_02050cdc(void) and
 // calls it with no arguments -- the kind and id are already in r0/r1 from
 // Play's own frame, so on ARM they ride straight through. On the host the
@@ -99,15 +118,28 @@ int func_0204fa2c(int *p, int fade)
 // hardware the game is never in that state. Printing once and returning is
 // the honest answer instead of reproducing a crash the DS would not have.
 //
-// RULED (w6-c item 3). This is the ride-through class, the same one the five
-// functions at the top of this file are in, and it is documented as such
-// rather than left in the replacement queue: the src is not wrong and there
-// is nothing to replace it with. mwccarm passes kind and id in r0/r1 and the
-// callee is declared (void), which is a spelling MSVC cannot reproduce at
-// any optimisation level -- a cdecl host callee reads its own stack slots.
-// The two host additions above it (sd_consumer_init and the null guard) do
-// not change the ruling; they are why the ride-through is survivable on a
-// host, and both are argued in their own comments.
+// STALE AS OF THE 09-14 SYNC (run link100 wave 10, lane SMOKELINK5). RULED
+// (w6-c item 3) read this as the ride-through class, the same one the five
+// functions at the top of this file are in: the PRE-SYNC src declared the
+// resolver `func_02050cdc(void)` and called it with no arguments, so kind and
+// id rode through in r0/r1 from Play's own frame and a cdecl host callee had
+// no spelling that reads them -- "the src is not wrong and there is nothing
+// to replace it with" was true of THAT declaration.
+//
+// The synced src/_ZN5Sound4PlayEjjRK7Vector3.cpp no longer declares it that
+// way. It now spells `extern "C" char* func_02050cdc(int a, int idx);` and
+// calls `func_02050cdc(j1, j2)` with both arguments explicit, which is an
+// ordinary two-int cdecl call MSVC reproduces with no ride-through at all --
+// the (void) spelling this ruling turned on is simply gone from the source.
+// The declaration two lines below this comment, `void *func_02050cdc(int
+// kind, int idx);`, already matches the synced shape; only this prose still
+// described the pre-sync one. Nothing here argues the whole front door is
+// unride-through now (SetPlayableSeqCount's own w6-c note below is about a
+// different symbol and a different reason, and is untouched), only that this
+// one function's excuse for being a ride-through no longer holds against the
+// current source. The two host additions below (sd_consumer_init and the
+// null guard) are unaffected either way and are still argued in their own
+// comments.
 struct Vector3 { int x, y, z; };
 void *func_02050cdc(int kind, int idx);
 void *func_02048720(struct Vector3 *v, int kind, int id);

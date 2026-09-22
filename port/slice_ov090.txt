@@ -98,8 +98,9 @@
 #      `class Player` tag where the defined method has `struct Player`
 #      (identical __thiscall ABI, only the tag differs). All ten alias lines
 #      are at the bottom of hal/actor_classes_ov090.cpp with the reasoning.
-src/_ZN7SkeeterD1Ev.c
-src/_ZN7SkeeterD0Ev.c
+src/_ZN7SkeeterD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN7SkeeterD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN7SkeeterD0Ev.cpp
 src/func_ov090_02130f94.c
 src/func_ov090_021310b4.c
 src/func_ov090_02131378.cpp
@@ -113,44 +114,47 @@ src/func_ov090_02131b94.cpp
 src/func_ov090_02131c48.c
 src/func_ov090_02131db0.c
 src/func_ov090_02131e50.c
-src/_ZN7Skeeter16CleanupResourcesEv.c
-src/_ZN7Skeeter16OnPendingDestroyEv.c
+src/_ZN7Skeeter16CleanupResourcesEv.cpp
+src/_ZN7Skeeter16OnPendingDestroyEv.cpp
 src/_ZN7Skeeter13InitResourcesEv.cpp
-src/func_ov090_02132618.c
-src/func_ov090_02132620.cpp
-src/func_ov090_0213264c.c
-src/Skeeter_Spawn.c
-src/_ZN8MantaRayD1Ev.c
-src/_ZN8MantaRayD0Ev.c
+src/_ZN7Skeeter16OnAimedAtWithEggEv.cpp
+src/_ZN7Skeeter13OnTurnIntoEggER6Player.cpp
+src/_ZN7Skeeter13OnYoshiTryEatEv.cpp
+src/d_a_menbo.c
+src/_ZN8MantaRayD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN8MantaRayD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN8MantaRayD0Ev.cpp
 src/func_ov090_02132730.cpp
 src/func_ov090_021327e4.cpp
 src/func_ov090_02132a58.cpp
 src/func_ov090_02132b14.c
-src/_ZN8MantaRay16CleanupResourcesEv.c
-src/_ZN8MantaRay16OnPendingDestroyEv.c
-src/MantaRay_Spawn.c
-src/_ZN10CheepCheepD1Ev.c
-src/_ZN10CheepCheepD0Ev.c
+src/_ZN8MantaRay16CleanupResourcesEv.cpp
+src/_ZN8MantaRay16OnPendingDestroyEv.cpp
+src/d_a_manta.c
+src/_ZN10CheepCheepD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN10CheepCheepD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN10CheepCheepD0Ev.cpp
 src/func_ov090_021330c8.cpp
 src/func_ov090_02133190.c
 src/func_ov090_021331c4.c
 src/func_ov090_02133200.c
 src/func_ov090_02133290.c
 src/func_ov090_02133338.c
-src/_ZN10CheepCheep16CleanupResourcesEv.c
-src/_ZN10CheepCheep16OnPendingDestroyEv.c
+src/_ZN10CheepCheep16CleanupResourcesEv.cpp
+src/_ZN10CheepCheep16OnPendingDestroyEv.cpp
 src/_ZN10CheepCheep13InitResourcesEv.cpp
-src/CheepCheep_Spawn.c
-src/_ZN5SharkD1Ev.c
-src/_ZN5SharkD0Ev.c
+src/d_a_pukupuku.c
+src/_ZN5SharkD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN5SharkD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN5SharkD0Ev.cpp
 src/func_ov090_02133710.cpp
 src/func_ov090_02133830.c
 src/func_ov090_0213387c.c
 src/func_ov090_02133904.c
-src/_ZN5Shark16CleanupResourcesEv.c
-src/_ZN5Shark16OnPendingDestroyEv.c
+src/_ZN5Shark16CleanupResourcesEv.cpp
+src/_ZN5Shark16OnPendingDestroyEv.cpp
 src/_ZN5Shark13InitResourcesEv.cpp
-src/Shark_Spawn.c
+src/d_a_shark.c
 src/__sinit_ov090_02133ce8.c
 src/__sinit_ov090_02133ea8.c
 src/__sinit_ov090_02133f4c.c

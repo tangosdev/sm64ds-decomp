@@ -42,6 +42,8 @@ from match_provenance import (  # noqa: E402
     configure,
     make_id,
 )
+import ledger as L  # noqa: E402
+import nearmiss_db as NDB  # noqa: E402
 from nearmiss_db import locked, load_db, save_db, resolve_name  # noqa: E402
 
 
@@ -60,33 +62,74 @@ def load_symbol(name: str):
     return mod, _int(addr), _int(size)
 
 
+def _evaluator_available() -> bool:
+    """True only when the WHOLE evaluator is present: the Python stack (capstone,
+    pyelftools) AND the canonical mwccarm on disk.
+
+    The ImportError guard below covers the Python half only. With capstone and
+    pyelftools importable but tools/mwccarm/<CANONICAL>/mwccarm.exe absent,
+    match.compile_c returns None, evaluate_full reports status="noncompile", and the
+    upsert REFUSES every tip -- a compiler-less lane stops recording near misses
+    altogether instead of falling back to the lane's own claimed number. Loud
+    (compile_c prints the failure) but still wrong. nearmiss_db.reeval guards its pass
+    with the same exe.is_file() check; this is that check on the ingest side."""
+    try:
+        import match as M
+    except ImportError:
+        return False
+    return (M.MW / M.CANONICAL / "mwccarm.exe").is_file()
+
+
 def upsert_near_miss_tip(*, src_file, module, addr, name, divergences, size, source):
-    """Best-tip upsert into SM64DS nearmiss/db.jsonl (no ROM re-eval required)."""
+    """Best-tip upsert into SM64DS nearmiss/db.jsonl.
+
+    The claimed divergences are RE-MEASURED with the live evaluator whenever the
+    compile stack and the target bytes are available: a lane can score under
+    different headers than main tip (the row recorded at 230 that re-evaluated to
+    354 entered exactly this way), and a claimed-close draft that does not even
+    compile here is refused rather than landed as bait. Where the stack is absent
+    the claimed number lands unstamped, ranking behind pin-stamped rows if a
+    duplicate ever needs collapsing. Keep/replace is nearmiss_db.closeness --
+    strictly improving, size gap breaking divergence ties."""
     c_source = Path(src_file).read_text(encoding="utf-8", errors="replace")
-    key = (module, _int(addr))
+    key = L.make_key(module, addr)      # load_db keys by the NORMALIZED (module, addr)
+    cur0 = load_db().get(key)           # read-only peek for target/size backfill
+    rec = {
+        "module": module,
+        "addr": _int(addr),
+        "name": name,
+        "size": _int(size) if size is not None else (cur0 or {}).get("size"),
+        "lang": "cpp" if c_source.lstrip().startswith("//cpp") else "c",
+        "divergences": int(divergences),
+        "c_source": c_source,
+        "source": source or "log_attempt",
+    }
+    if cur0 and cur0.get("target_hex"):
+        rec["target_hex"] = cur0["target_hex"]
+    meta = resolve_name(name)
+    if meta:
+        _a, _s, _m, thex = meta
+        rec["target_hex"] = thex
+        rec["size"] = rec.get("size") or _s
+    if rec.get("target_hex") and _evaluator_available():
+        try:                            # evaluate OUTSIDE the lock; it compiles
+            full = NDB.evaluate_full(c_source, name, bytes.fromhex(rec["target_hex"]))
+        except ImportError:             # bare environment: the lane's word, unstamped
+            full = None
+        if full is not None:
+            if full["divergences"] is None:
+                rec.update(status=full["status"], error=full["error"])
+                return "refused", rec
+            rec["divergences"] = full["divergences"]
+            rec["cand_size"] = full["cand_size"]
+            fp = NDB.current_fingerprint()
+            if fp:
+                rec["evaluator"] = fp
     with locked():
         db = load_db()
         cur = db.get(key)
-        curdiv = cur.get("divergences") if cur and cur.get("divergences") is not None else 10**9
-        if cur is not None and int(divergences) >= int(curdiv):
+        if cur is not None and NDB.closeness(rec) >= NDB.closeness(cur):
             return "kept", cur
-        rec = {
-            "module": module,
-            "addr": _int(addr),
-            "name": name,
-            "size": _int(size) if size is not None else (cur or {}).get("size"),
-            "lang": "cpp" if c_source.lstrip().startswith("//cpp") else "c",
-            "divergences": int(divergences),
-            "c_source": c_source,
-            "source": source or "log_attempt",
-        }
-        if cur and cur.get("target_hex"):
-            rec["target_hex"] = cur["target_hex"]
-        meta = resolve_name(name)
-        if meta:
-            _a, _s, _m, thex = meta
-            rec["target_hex"] = thex
-            rec["size"] = rec.get("size") or _s
         db[key] = rec
         save_db(db)
         return ("improved" if cur else "added"), rec
@@ -288,10 +331,17 @@ def main() -> None:
                 size=size,
                 source=args.label or "log_attempt",
             )
-            print(
-                f"Near-miss tip {action}: nearmiss/db.jsonl "
-                f"div={tip.get('divergences')} c_bytes={len(tip.get('c_source') or '')}"
-            )
+            if action == "refused":
+                print(
+                    f"Near-miss tip REFUSED: source does not evaluate here "
+                    f"({tip.get('status')}: {tip.get('error')})",
+                    file=sys.stderr,
+                )
+            else:
+                print(
+                    f"Near-miss tip {action}: nearmiss/db.jsonl "
+                    f"div={tip.get('divergences')} c_bytes={len(tip.get('c_source') or '')}"
+                )
         else:
             print(
                 f"WARNING: --src {src_file} missing; attempt logged but tip C not saved",

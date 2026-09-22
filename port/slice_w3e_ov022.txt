@@ -23,11 +23,11 @@
 # decompressed image -- T4, never the dsd export).
 #
 #   id   SpawnInfo   word[0] spawnFunc              idhalf   x on L14
-#    70  0x02114380  0x021125a4 RollingLogLll_Spawn      70   x1
-#    73  0x02113f4c  0x02111c7c LavaBridge_Spawn         73   x2
-#    77  0x02114010  0x02111f3c LavaSeesaw_Spawn         77   x1
-#    80  0x02113dc4  0x02111688 RotatingPlatformLll_Spawn 80  x1
-#   243  0x02114458  0x02112918 VolcanoFire_Spawn       243   (not placed)
+#    70  0x02114380  0x021125a4 daObjFlMaruta_c_classInit      70   x1
+#    73  0x02113f4c  0x02111c7c daObjFl_London_c_classInit         73   x2
+#    77  0x02114010  0x02111f3c daObjFl_Seesaw_c_classInit         77   x1
+#    80  0x02113dc4  0x02111688 daObjFl_Koma_D_c_classInit 80  x1
+#   243  0x02114458  0x02112918 daObj_volcanoCannon_c_classInit       243   (not placed)
 #
 # Route 2 = each Spawn's own final vtable-store relocation, and route 3 = the
 # RTTI typeinfo at vtable[-1]. Both are in port/ov022_syms.txt's header and
@@ -58,8 +58,8 @@
 # out/w3-e/ov022/adjudication.txt.
 #
 # ROLLING_LOG_LLL's other blocker is gone too, and it was gone before this
-# lane started: wave 8 deferred 70 because its slot 9 (func_ov080_02127124),
-# its slot 27 (func_ov080_02127058) and the func_ov080_021274ac its
+# lane started: wave 8 deferred 70 because its slot 9 (_ZN13daObjMaruta_c6RenderEv),
+# its slot 27 (_ZN13daObjMaruta_c15OnHitByMegaCharER6Player) and the func_ov080_021274ac its
 # InitResources tail-calls were unlinked. slice_ov030cast.txt (RollingLogTtm,
 # the SAME ROM class in ov030) sliced all three plus func_ov080_021270dc,
 # 0212714c, 02127094, 02127658 and 0212758c. Checked in the map, not assumed.
@@ -68,7 +68,7 @@
 #
 # dsd lays each mwcc class block out as [bodies..., Spawn] and names the block
 # from the PRECEDING Spawn label. Two of this slice's five blocks are shifted:
-#    70 RollingLogLll  bodies spelled _ZN12FallBlockLll*   table _ZTV12FallBlockLll
+#    70 RollingLogLll  bodies spelled _ZN12FallBlockLll*   table _ZTV13RollingLogLll
 #   243 VolcanoFire    bodies spelled _ZN13RollingLogLll*  table _ZTV13RollingLogLll
 # The other three (73/77/80) sit in unnamed func_ov022_* blocks. Every row is
 # pinned by the vtable's own slot 0/3/6/9/16/17 relocations landing inside the
@@ -76,13 +76,13 @@
 #
 # ==== ONE TU IS HELD OUT, AND IT IS NOT A REFUSAL OF THE BODY ==============
 #
-#   src/_ZN13RollingLogLllD1Ev.cpp  (VolcanoFire's slot 16)
+#   src/_ZN21daObj_volcanoCannon_cD1Ev.cpp  (VolcanoFire's slot 16)
 # is a real MSVC-synthesised destructor over a shadow class with no vtable
 # store of its own. MSVC mangles `RollingLogLll::~RollingLogLll` as
-# ??1RollingLogLll@@UAE@XZ and never as the Itanium _ZN13RollingLogLllD1Ev the
+# ??1RollingLogLll@@UAE@XZ and never as the Itanium _ZN21daObj_volcanoCannon_cD1Ev the
 # slot needs -- the MotherPenguin / OneUpLogo / BabyPenguin shape that gate 191,
 # gate 193 and slice_ov030cast.txt (for this class's ov030 twin
-# _ZN13RollingLogTtmD1Ev) all keep out for the same reason. The chain is
+# _ZN7daMky_cD1Ev) all keep out for the same reason. The chain is
 # spelled directly in hal/actor_classes_ov022_w3e.cpp, HIGH ADDRESS FIRST,
 # from this file's own member list and the ROM body at 0x021125e0.
 #
@@ -90,57 +90,48 @@
 # bottom) = the 43-row census tail.
 
 # ---- ROTATING_PLATFORM_LLL (80), table 0x02113de8 -------------------------
-src/func_ov022_021115a8.c
-src/func_ov022_021115f8.c
-src/func_ov022_0211165c.c
-src/func_ov022_02111670.c
-src/RotatingPlatformLll_Spawn.c
+src/_ZN19FloatOnLavaPlatformD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN19FloatOnLavaPlatformD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN19FloatOnLavaPlatformD0Ev.cpp
+src/_ZN19FloatOnLavaPlatform16CleanupResourcesEv.cpp
+src/_ZN19FloatOnLavaPlatform13InitResourcesEv.cpp
+src/d_a_obj_fl_koma_d.c
 
 # ---- LAVA_BRIDGE (73), table 0x02113f70 ----------------------------------
-src/func_ov022_02111980.c
-src/func_ov022_021119c4.c
-src/func_ov022_02111a1c.c
-src/func_ov022_02111a64.c
-src/func_ov022_02111aa8.cpp
-src/func_ov022_02111ad0.c
-src/func_ov022_02111bdc.cpp
-src/LavaBridge_Spawn.c
+src/actors/daObjFl_London_c.cpp
 
 # ---- LAVA_SEESAW (77), table 0x02114034 ----------------------------------
-src/func_ov022_02111cac.c
-src/func_ov022_02111cf0.c
+src/_ZN10LavaSeesawD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN10LavaSeesawD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN10LavaSeesawD0Ev.cpp
 src/func_ov022_02111d48.c
-src/func_ov022_02111d90.c
-src/func_ov022_02111dd4.cpp
-src/func_ov022_02111dfc.c
-src/func_ov022_02111ea0.cpp
-src/LavaSeesaw_Spawn.c
+src/_ZN10LavaSeesaw16CleanupResourcesEv.cpp
+src/_ZN10LavaSeesaw6RenderEv.cpp
+src/_ZN10LavaSeesaw8BehaviorEv.cpp
+src/_ZN10LavaSeesaw13InitResourcesEv.cpp
+src/d_a_obj_fl_seesaw.c
 
 # ---- ROLLING_LOG_LLL (70), table 0x021143a4 (bodies spelled FallBlockLll) --
-src/_ZN12FallBlockLllD1Ev.c
-src/_ZN12FallBlockLllD0Ev.c
-src/_ZN12FallBlockLll16CleanupResourcesEv.cpp
-src/_ZN12FallBlockLll8BehaviorEv.cpp
-src/_ZN12FallBlockLll13InitResourcesEv.cpp
-src/RollingLogLll_Spawn.c
+src/_ZN21daObj_volcanoCannon_cD1Ev.cpp
+src/_ZN21daObj_volcanoCannon_cD0Ev.cpp
+src/_ZN21daObj_volcanoCannon_c16CleanupResourcesEv.cpp
+src/_ZN21daObj_volcanoCannon_c8BehaviorEv.cpp
+src/_ZN21daObj_volcanoCannon_c13InitResourcesEv.cpp
+src/d_a_obj_fl_maruta.c
 
 # ---- VOLCANO_FIRE (243), table 0x0211447c (bodies spelled RollingLogLll) --
 # 243 is NOT on level 14's object list, and it is still live: VolcanoRing's
-# Behavior (src/func_ov022_021112ac.c, linked and running on level 14 since
+# Behavior (src/_ZN11VolcanoRing8BehaviorEv.cpp, linked and running on level 14 since
 # wave 8) calls Actor_Spawn(0xf3, ...) -- the ring's fireball. It is registered
 # for that reason, not for a placement row.
-src/_ZN13RollingLogLllD0Ev.c
 src/func_ov022_02112654.cpp
 src/func_ov022_021126ac.c
 src/func_ov022_02112710.c
-src/func_ov022_02112790.cpp
-src/_ZN13RollingLogLll16CleanupResourcesEv.c
-src/_ZN13RollingLogLll8BehaviorEv.cpp
-src/_ZN13RollingLogLll13InitResourcesEv.cpp
-src/VolcanoFire_Spawn.c
+src/_ZN21daObj_volcanoCannon_c11ChangeStateEPNS_5StateE.cpp
+src/d_a_obj_volcano_cannon.c
 
 # ---- LAVA_PLANK (82)'s last body: NOT HERE, and the refusal is measured ---
-# src/_ZN19FloatingFloorLllBig16CleanupResourcesEv.cpp is wave 8's one host
+# src/_ZN9LavaPlank16CleanupResourcesEv.cpp is wave 8's one host
 # thunk (lp_clean in hal/actor_classes_ov022.cpp): it spells its two
 # SharedFilePtrs as the shared placeholders G0/G1, and hal/cxx_aliases.cpp
 # binds those to the game heap and to SignPost's ov002 file pointers. The pool

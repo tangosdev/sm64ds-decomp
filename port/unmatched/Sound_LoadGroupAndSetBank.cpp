@@ -1,4 +1,4 @@
-/* HOST COPY of src/_ZN5Sound19LoadGroupAndSetBankEii.c -- Sound::LoadGroupAndSetBank.
+/* HOST COPY of src/_ZN5Sound19LoadGroupAndSetBankEii.cpp -- Sound::LoadGroupAndSetBank.
  *
  * THE CALLING-CONVENTION SEAM:
  *
@@ -22,7 +22,7 @@
  * FIX passes the argument explicitly: the return of func_020134d8(a, data_0209b498),
  * exactly the value the ROM leaves in r0.
  *
- * src/_ZN5Sound19LoadGroupAndSetBankEii.c is dropped from slice_gate14.txt in
+ * src/_ZN5Sound19LoadGroupAndSetBankEii.cpp is dropped from slice_gate14.txt in
  * favour of this file; the byte-locked source is unchanged.
  */
 

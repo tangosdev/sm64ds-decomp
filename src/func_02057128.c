@@ -1,1 +1,2 @@
-void func_02057128(void) { *(volatile unsigned short *)0x4000204 |= 0x80; }
+#include "nitro/hw/registers.h"
+void func_02057128(void) { REG_EXMEMCNT |= 128; }

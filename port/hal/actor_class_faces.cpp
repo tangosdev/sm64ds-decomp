@@ -20,7 +20,7 @@
 // this file.
 
 struct Actor;
-struct CylinderClsn;
+struct dCc_c;
 struct Vector3_16;
 struct KCL_File;
 struct Matrix4x3;
@@ -28,63 +28,63 @@ struct CLPS_Block;
 struct SharedFilePtr;
 
 extern "C" {
-void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *clsn);
-void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void *self, void *actor,
+void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *clsn);
+void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, void *actor,
                                                         int r, int h,
                                                         unsigned e,
                                                         unsigned f);
-void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *self, void *kcl, const void *mat, int scale, short angY, void *clps);
-void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(
+void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
     void *self, void *actor, int r, int h, void *v, int t);
-void _ZN5Actor28UpdatePosWithHorzSpeedAndAngEv(void *self);
-short _ZN5Actor12ReflectAngleE5Fix12IiES1_s(void *self, int a, int b, short c);
-void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(void *self, void *clsn,
+void _ZN8dActor_c28UpdatePosWithHorzSpeedAndAngEv(void *self);
+short _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(void *self, int a, int b, short c);
+void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void *self, void *clsn,
                                               unsigned flags);
-int _ZNK12WithMeshClsn8IsOnWallEv(void *self);
-int _ZNK12WithMeshClsn13JustHitGroundEv(void *self);
+int _ZNK10dBgCh_Actr8IsOnWallEv(void *self);
+int _ZNK10dBgCh_Actr13JustHitGroundEv(void *self);
 void *_ZN5Model8LoadFileER13SharedFilePtr(void *ptr);
-void *_ZN12MeshCollider8LoadFileER13SharedFilePtr(void *ptr);
+void *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void *ptr);
 /* gate 42: the two methods PeachPainting's Behavior reaches by shadow name.
    DistToCPlayer is C-named in src (slice_gate16); the ROM's ApplyOpacity is a
    one-argument body (src/_ZN9ModelBase12ApplyOpacityEj.cpp), but the painting's
    call passes the ROM's r2=1 as a second argument the body ignores, so the face
    forwards only the opacity, the gate-16 reading of the same method. */
-int _ZN5Actor13DistToCPlayerEv(void *self);
+int _ZN8dActor_c13DistToCPlayerEv(void *self);
 void _ZN9ModelBase12ApplyOpacityEj(void *self, unsigned a);
 }
 
 /* Actor: three methods the 1-up's type bodies and the sign's thrown state
    reach.
-     ?UpdatePos@Actor@@QAEXPAUCylinderClsn@@@Z
-     ?UpdatePosWithHorzSpeedAndAng@Actor@@QAEXXZ
-     ?ReflectAngle@Actor@@QAEFHHF@Z  (the C definition spells the two Fix12i
+     ?UpdatePos@dActor_c@@QAEXPAUCylinderClsn@@@Z
+     ?UpdatePosWithHorzSpeedAndAng@dActor_c@@QAEXXZ
+     ?ReflectAngle@dActor_c@@QAEFHHF@Z  (the C definition spells the two Fix12i
        arguments as the template type, which mangles differently -- same
        function, and the reloc in the caller is what settles it) */
 struct Actor {
-    void UpdatePos(CylinderClsn *clsn);
+    void UpdatePos(dCc_c *clsn);
     void UpdatePosWithHorzSpeedAndAng();
     short ReflectAngle(int a, int b, short c);
     int DistToCPlayer();          /* gate 42: PeachPainting::Behavior */
     /* DECLARED AND NOT DEFINED, unlike the four above, and the difference is
        the whole point. Those four forward the other way, MSVC method onto a C
        name. This one is resolved BY THE MATCHED TU:
-       src/_ZN5Actor17TrackInDeathTableEv.cpp compiles
-       ?TrackInDeathTable@Actor@@QAEXXZ, so a definition here would be a
+       src/_ZN8dActor_c17TrackInDeathTableEv.cpp compiles
+       ?TrackInDeathTable@dActor_c@@QAEXXZ, so a definition here would be a
        duplicate symbol rather than a bridge. The empty-bodied members differ
        in layout from that TU's Actor and it does not matter -- MSVC mangles a
        method by name and signature, and a non-virtual call on a single class
        passes `this` unadjusted. */
     void TrackInDeathTable();
 };
-void Actor::UpdatePos(CylinderClsn *clsn)
-{ _ZN5Actor9UpdatePosEP12CylinderClsn(this, clsn); }
+void Actor::UpdatePos(dCc_c *clsn)
+{ _ZN8dActor_c9UpdatePosEP5dCc_c(this, clsn); }
 void Actor::UpdatePosWithHorzSpeedAndAng()
-{ _ZN5Actor28UpdatePosWithHorzSpeedAndAngEv(this); }
+{ _ZN8dActor_c28UpdatePosWithHorzSpeedAndAngEv(this); }
 short Actor::ReflectAngle(int a, int b, short c)
-{ return _ZN5Actor12ReflectAngleE5Fix12IiES1_s(this, a, b, c); }
+{ return _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(this, a, b, c); }
 int Actor::DistToCPlayer()
-{ return _ZN5Actor13DistToCPlayerEv(this); }
+{ return _ZN8dActor_c13DistToCPlayerEv(this); }
 
 /* gate 42: PeachPainting's Behavior/Render call ModelBase::ApplyOpacity with a
    second argument (?ApplyOpacity@ModelBase@@QAEXIH@Z); the ROM body takes one,
@@ -93,22 +93,22 @@ struct ModelBase { void ApplyOpacity(unsigned int o, int x); };
 void ModelBase::ApplyOpacity(unsigned int o, int)
 { _ZN9ModelBase12ApplyOpacityEj(this, o); }
 
-/* ?UpdateWMClsn@Enemy@@QAEXAAUWithMeshClsn@@I@Z */
+/* ?UpdateWMClsn@dEnemyBase_c@@QAEXAAUWithMeshClsn@@I@Z */
 struct WithMeshClsn;
 struct Enemy { void UpdateWMClsn(WithMeshClsn &clsn, unsigned flags); };
 void Enemy::UpdateWMClsn(WithMeshClsn &clsn, unsigned flags)
-{ _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(this, &clsn, flags); }
+{ _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(this, &clsn, flags); }
 
-/* ?Init@MovingCylinderClsn@@QAEXPAUActor@@HHII@Z */
+/* ?Init@dCcAc_c@@QAEXPAUActor@@HHII@Z */
 struct MovingCylinderClsn {
     void Init(Actor *actor, int radius, int height, unsigned e, unsigned f);
 };
 void MovingCylinderClsn::Init(Actor *actor, int radius, int height,
                               unsigned e, unsigned f)
-{ _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(this, actor, radius,
+{ _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(this, actor, radius,
                                                      height, e, f); }
 
-/* ?SetFile@MovingMeshCollider@@QAEXPAUKCL_File@@ABUMatrix4x3@@HFAAUCLPS_Block@@@Z */
+/* ?SetFile@dBgW_KcMbg@@QAEXPAUKCL_File@@ABUMatrix4x3@@HFAAUCLPS_Block@@@Z */
 struct MovingMeshCollider {
     void SetFile(KCL_File *file, const Matrix4x3 &mat, int scale, short angY,
                  CLPS_Block &clps);
@@ -116,11 +116,11 @@ struct MovingMeshCollider {
 void MovingMeshCollider::SetFile(KCL_File *file, const Matrix4x3 &mat,
                                  int scale, short angY, CLPS_Block &clps)
 {
-    _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         this, file, &mat, scale, angY, &clps);
 }
 
-/* ?Init@WithMeshClsn@@QAEXPAUActor@@HHPAUVector3_16@@H@Z */
+/* ?Init@dBgCh_Actr@@QAEXPAUActor@@HHPAUVector3_16@@H@Z */
 struct WithMeshClsn {
     void Init(Actor *actor, int radius, int height, Vector3_16 *v, int t);
     int IsOnWall() const;
@@ -130,12 +130,12 @@ struct WithMeshClsn {
     int TouchesWater() const;
 };
 int WithMeshClsn::IsOnWall() const
-{ return _ZNK12WithMeshClsn8IsOnWallEv((void *)this); }
+{ return _ZNK10dBgCh_Actr8IsOnWallEv((void *)this); }
 int WithMeshClsn::JustHitGround() const
-{ return _ZNK12WithMeshClsn13JustHitGroundEv((void *)this); }
+{ return _ZNK10dBgCh_Actr13JustHitGroundEv((void *)this); }
 void WithMeshClsn::Init(Actor *actor, int radius, int height, Vector3_16 *v,
                         int t)
-{ _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(this, actor,
+{ _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(this, actor,
                                                              radius, height,
                                                              v, t); }
 
@@ -148,11 +148,11 @@ void WithMeshClsn::Init(Actor *actor, int radius, int height, Vector3_16 *v,
 extern "C" void *ModelLoadFile(void *ptr)
 { return _ZN5Model8LoadFileER13SharedFilePtr(ptr); }
 extern "C" void *MeshColliderLoadFile(void *ptr)
-{ return _ZN12MeshCollider8LoadFileER13SharedFilePtr(ptr); }
+{ return _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(ptr); }
 #pragma comment(linker, "/alternatename:?ModelLoadFile@@YAPAXPAX@Z=_ModelLoadFile")
 #pragma comment(linker, "/alternatename:?MeshColliderLoadFile@@YAPAXPAX@Z=_MeshColliderLoadFile")
 
-/* ?TrackInDeathTable@Actor@@QAEXXZ -- the 1-up's collect path. Its own TU
+/* ?TrackInDeathTable@dActor_c@@QAEXXZ -- the 1-up's collect path. Its own TU
    defines it as a method over a locally-declared Actor; the C-name reference
    comes from a sibling .c.
 
@@ -160,14 +160,14 @@ extern "C" void *MeshColliderLoadFile(void *ptr)
 
        { DeathTable_SetBit(*(short *)((char *)self + 0xce)); }
 
-   which is exactly what src/_ZN5Actor17TrackInDeathTableEv.cpp does, that TU
+   which is exactly what src/_ZN8dActor_c17TrackInDeathTableEv.cpp does, that TU
    spelling the same 0xce as a named `deathTableId` field. Both were linked, so
    the linkage count read this symbol as decompiled code reaching the game
    while the code that actually ran was the line above. It was the only one of
    the 210 faces the wave-C adjudication found doing that
    (port/faces_adjudicated.txt); the rest were already real bridges. Now it is
    one too, and the matched body is what runs. */
-extern "C" void _ZN5Actor17TrackInDeathTableEv(void *self)
+extern "C" void _ZN8dActor_c17TrackInDeathTableEv(void *self)
 { ((Actor *)self)->Actor::TrackInDeathTable(); }
 
 /* ?InitCuboid@ShadowModel@@QAEXXZ IS GONE FROM THIS FILE (run linkw wave 3,
@@ -194,7 +194,7 @@ extern "C" void _ZN5Actor17TrackInDeathTableEv(void *self)
 
    THE MATCHED BODY OWNS THE WORK NOW (run linkw wave 3, w3-a). The host body
    here read SurfaceInfo_TestFlag0x20(this + 0x34) directly;
-   src/_ZNK12WithMeshClsn12TouchesWaterEv.cpp calls the same helper at the same
+   src/_ZNK10dBgCh_Actr12TouchesWaterEv.cpp calls the same helper at the same
    offset, so this is a swap with no behaviour change to argue about -- the
    only difference is which object file the instructions come from. The TU was
    already compiled (slice_gate16.txt) and stripped for want of a reference, so
@@ -205,12 +205,12 @@ extern "C" void _ZN5Actor17TrackInDeathTableEv(void *self)
    fresh local one. A second `struct WithMeshClsn` in this file would be a
    redefinition -- this file includes no headers, but it already declares that
    class at the Init/IsOnWall/JustHitGround face. MSVC decorates a method off
-   the class NAME and signature only, so ?TouchesWater@WithMeshClsn@@QBEHXZ
+   the class NAME and signature only, so ?TouchesWater@dBgCh_Actr@@QBEHXZ
    from that declaration is the symbol the matched TU exports; no layout is
    assumed and the `pad` the matched TU carries is not repeated.
 
    SurfaceInfo_TestFlag0x20 is no longer named here. The matched body calls it
    with the same `this + 0x34`, so the reference simply moved into the TU that
    does the work. */
-extern "C" int _ZNK12WithMeshClsn12TouchesWaterEv(const void *self)
+extern "C" int _ZNK10dBgCh_Actr12TouchesWaterEv(const void *self)
 { return ((const WithMeshClsn *)self)->WithMeshClsn::TouchesWater(); }

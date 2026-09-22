@@ -1,0 +1,81 @@
+//cpp
+// @symbol _ZN11dScMgCoin_c13InitResourcesEv
+/* dScMgCoin_c::InitResources - recovered from ROM RTTI and vtable slot identity. */
+#include "types.h"
+#include "dScMgCoin_c.h"
+#include "decl_common.h"
+
+extern "C" {
+extern int LoadFile(int handle);
+extern void DecompressLZ16(int src, void *dst);
+extern void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
+extern void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
+extern void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
+extern void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
+extern int func_ov004_020adc1c(void);
+extern u8 data_0209d45c;
+extern u8 data_0209d454;
+extern int data_0208ee44;
+}
+
+int dScMgCoin_c::InitResources() {
+    dScMgCoin_c *self = this;
+    char *c = (char*)self;
+    int a, b, d;
+
+    data_0209d45c |= 8;
+    *(volatile u16*)0x400000e &= ~3;
+    *(volatile u16*)0x400000e = (*(volatile u16*)0x400000e & 0x43) | 0x1210;
+
+    a = LoadFile(0xa9);
+    DecompressLZ16(a, (void*)(func_02054d88() + 0x4000));
+    Deallocate((void*)a);
+
+    a = LoadFile(0xaa);
+    _ZN2GX10LoadBGPlttEPKvjj((const void*)a, 0x1e0, 0x20);
+    Deallocate((void*)a);
+
+    a = LoadFile(0xab);
+    func_02056314((void*)a, 0, 0x800);
+    Deallocate((void*)a);
+
+    b = LoadFile(0x10a);
+    a = LoadFile(0x10b);
+    DecompressLZ16(b, (void*)0x6400000);
+    _ZN2GX11LoadOBJPlttEPKvjj((const void*)a, 0, 0x100);
+
+    data_0209d454 |= 8;
+    *(volatile u16*)0x400100e = (*(volatile u16*)0x400100e & ~3) | 3;
+    *(volatile u16*)0x400100e = (*(volatile u16*)0x400100e & 0x43) | 0x1210;
+
+    d = LoadFile(0xa9);
+    DecompressLZ16(d, (void*)(_ZN3G2S13GetBG3CharPtrEv() + 0x4000));
+    Deallocate((void*)d);
+
+    d = LoadFile(0xaa);
+    _ZN3GXS10LoadBGPlttEPKvjj((const void*)d, 0x1e0, 0x20);
+    Deallocate((void*)d);
+
+    d = LoadFile(0xa8);
+    func_020562b4((const void*)d, 0, 0x800);
+    Deallocate((void*)d);
+
+    DecompressLZ16(b, (void*)0x6600000);
+    _ZN3GXS11LoadOBJPlttEPKvjj((const void*)a, 0, 0x100);
+    Deallocate((void*)b);
+    Deallocate((void*)a);
+
+    self->unk_0a8 = 0;
+    *(s32 *)(c + 0xac) = self->unk_0a8;
+    data_0208ee44 = 1;
+    func_ov006_020ddf9c(c);
+    func_ov006_020dd334(c);
+    func_ov006_020dc7b4(c);
+    func_ov006_020dc2f8(c);
+    self->unk_51da = 0;
+    self->unk_51dc = 2;
+    func_ov004_020b04d0(0x20);
+    self->unk_51d4 = func_ov004_020adc1c();
+    self->unk_0a4 = 1;
+    return 1;
+}

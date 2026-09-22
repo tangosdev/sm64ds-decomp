@@ -60,7 +60,7 @@
 # than a mistake to clean up. src/func_ov004_020adc4c.c is in slice_2d1.txt
 # (the LoadFont wedge, the one ov004 body the port could already reach), and
 # src/func_ov004_020adc00.c, src/func_ov004_020adc1c.c and
-# src/_ZN5Enemy20KillByInvincibleCharERK10Vector3_16R6Player.c are in
+# src/func_ov004_020ada40.c are in
 # slice_gate192.txt, where Spindrift reaches them. CMake appends both lists to
 # the same target and dedupes identical absolute paths, so each is compiled
 # once. They are listed here anyway because this file is a statement about
@@ -80,7 +80,7 @@
 # slice does not change that either way.
 # WHAT DOES SURVIVE IS A NOTE ABOUT THE MAP'S REASONING, not about the bug.
 # Section 6 argues partly from data_ov004_020beb68 being permanently zero, and
-# that premise stops being true here: func_ov004_020b2adc, dScMgBase_c's base
+# that premise stops being true here: _ZN11dScMgBase_cC2Ev, dScMgBase_c's base
 # constructor, writes data_ov004_020beb68 = self, so once a minigame scene has
 # been constructed the ov004 body's opening guard passes. It cannot fire on a
 # level, where no minigame is ever constructed, so nothing about the shipped
@@ -127,7 +127,7 @@ src/__sinit_ov004_020b955c.c
 src/__sinit_ov004_020b9ad0.c
 src/__sinit_ov004_020b9b24.c
 # THREE DESTRUCTOR CALLBACKS THE ov004 CONSTRUCTOR NAMES BY ADDRESS. 020b955c
-# passes these to func_020731dc / func_020733a8, so they enter the slice with
+# passes these to func_020731dc / __cxa_vec_ctor, so they enter the slice with
 # it. That is the ROM's own reference edge, not a manufactured one: the three
 # src TUs already existed on this branch and were absent from the binary only
 # because nothing referenced them.
@@ -167,10 +167,11 @@ src/__sinit_ov006_0213326c.c
 src/__sinit_ov006_021333e0.c
 
 # ---- ov006: dScMgCurling_c's closure, 44 TUs ------------------------------
-src/MgShuffleShell_Spawn.c
-src/_ZN6Player16St_WallJump_InitEv.cpp
-src/func_ov006_020e0638.c
-src/func_ov006_020e065c.c
+src/d_s_mg_curling.c
+src/func_ov006_020e17f8.cpp
+src/_ZN14dScMgCurling_cD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN14dScMgCurling_cD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN14dScMgCurling_cD0Ev.cpp
 src/func_ov006_020e0694.c
 src/func_ov006_020e071c.c
 src/func_ov006_020e07b0.c
@@ -207,16 +208,16 @@ src/func_ov006_020e3210.c
 src/func_ov006_020e3250.c
 src/func_ov006_020e3378.c
 src/func_ov006_020e3388.c
-src/func_ov006_020e3470.c
-src/func_ov006_020e34ec.c
-# HOST-COPIED (MG2): src/func_ov006_020e3528.cpp
-src/func_ov006_020e3578.c
+src/_ZN14dScMgCurling_c13OnYoshiTryEatEi.cpp
+src/_ZN14dScMgCurling_c6RenderEv.cpp
+# HOST-COPIED (MG2): src/_ZN14dScMgCurling_c8BehaviorEv.cpp
+src/_ZN14dScMgCurling_c13InitResourcesEv.cpp
 
 # ---- ov004: the dScMgBase_c framework, 152 TUs ----------------------------
 # FOUR ov004 TUs ARE DELIBERATELY ABSENT from the block below -- slots 1, 7,
 # 29 and 30 -- and it is a DECLARATION CONFLICT rather than a missing body.
-# src/func_ov004_020b0930.cpp, _020b0620.cpp and _020aeed8.cpp define their
-# single parameter char*, and src/func_ov004_020af094.cpp defines its Obj*,
+# src/minigames/d_s_mg_base.cpp, _020b0620.cpp and _020aeed8.cpp define their
+# single parameter char*, and src/_ZN11dScMgBase_c16OnAimedAtWithEggEv.cpp defines its Obj*,
 # while include/decl_common.h declares all four void* -- and every one of the
 # four includes that header, so MSVC refuses each with C2733 "you cannot
 # overload a function with extern C linkage". mwccarm accepts it, which is why
@@ -230,7 +231,7 @@ src/func_ov006_020e3578.c
 # until lane LINKMG: they now compile FROM src through tools/hostgen.py's
 # HEADER_SHADOW (the header's declaration of the TU's own name is hidden
 # across the include, the same route func_ov002_020cfbdc and
-# func_ov071_02121ba4 take), so they are still not lines here -- they are
+# _ZN8daEyBm_c10HurtPlayerEv take), so they are still not lines here -- they are
 # generated objects the CMake block after SCENE_MG_SOURCES appends -- but
 # they are the matched TUs and count as such. The header fixes proper are
 # multi-file changes inside the byte-gated tree and are routed, not taken.
@@ -245,9 +246,9 @@ src/Hud_RenderSprite.cpp
 src/Ov004_Deallocate.c
 src/RenderOamBothScreens.cpp
 src/RenderOamMainScreen.cpp
-src/_ZN5Enemy12KillByAttackER5Actor.cpp
-src/_ZN5Enemy20KillByInvincibleCharERK10Vector3_16R6Player.c
-src/func_ov004_020ad660.c
+src/func_ov004_020aea30.cpp
+src/func_ov004_020ada40.c
+src/_ZN11dScMgBase_c9Virtual8CEv.cpp
 src/func_ov004_020ad6f4.c
 src/func_ov004_020ad6fc.c
 src/func_ov004_020ad90c.c
@@ -271,25 +272,25 @@ src/func_ov004_020adc74.c
 # +0x60 and +0x64 (slots 23, 22, 24 and 25). Nothing referenced them before
 # because the port never dispatched the block; hal/scene_mg.cpp's
 # port_scene_mg_gc_seat does now, through four calling-convention adapters.
-src/func_ov004_020ae03c.c
-src/func_ov004_020ae06c.c
-src/func_ov004_020ae0a4.c
-src/func_ov004_020ae0d4.c
-src/func_ov004_020ae128.c
-src/func_ov004_020ae140.cpp
-src/func_ov004_020ae198.c
-src/func_ov004_020ae1a0.c
+src/_ZN11dScMgBase_c15graphCallback_c14GraphCallback3Ev.cpp
+src/_ZN11dScMgBase_c15graphCallback_c14GraphCallback2Ev.cpp
+src/_ZN11dScMgBase_c15graphCallback_c14GraphCallback1Ev.cpp
+src/_ZN11dScMgBase_c15graphCallback_c14GraphCallback0Ev.cpp
+src/_ZN11dScMgBase_c8OnPushedEv.cpp
+src/_ZN11dScMgBase_c8OnKickedEv.cpp
+src/_ZN11dScMgBase_c11OnAttacked1Ev.cpp
+src/_ZN11dScMgBase_c11OnAttacked2Ev.cpp
 src/func_ov004_020ae1cc.c
 src/func_ov004_020ae1f0.c
 src/func_ov004_020ae20c.c
 src/func_ov004_020ae274.c
 src/func_ov004_020ae2c8.cpp
 src/func_ov004_020ae330.c
-src/func_ov004_020ae3b4.c
+src/_ZN11dScMgBase_c9Virtual88Eiiii.cpp
 src/func_ov004_020aea78.cpp
 src/func_ov004_020aeb24.cpp
-src/func_ov004_020af04c.cpp
-src/func_ov004_020af27c.c
+src/_ZN11dScMgBase_c19OnHitFromUnderneathEv.cpp
+src/_ZN11dScMgBase_c15OnHitByMegaCharEv.cpp
 src/func_ov004_020af5e0.c
 src/func_ov004_020af868.cpp
 src/func_ov004_020af948.cpp
@@ -297,12 +298,9 @@ src/func_ov004_020afc18.cpp
 src/func_ov004_020afdd0.cpp
 src/func_ov004_020b04c0.c
 src/func_ov004_020b04d0.c
-src/func_ov004_020b04e0.c
-src/func_ov004_020b04e8.c
-src/func_ov004_020b04ec.c
-src/func_ov004_020b04f4.cpp
-src/func_ov004_020b0618.c
-# Run mg5, lane BASESET. src/func_ov004_020b0840.c IS EXCLUDED, host-copied in
+src/_ZN11dScMgBase_c24OnHitByCannonBlastedCharEv.cpp
+src/minigames/d_s_mg_base.cpp
+# Run mg5, lane BASESET. src/minigames/d_s_mg_base.cpp IS EXCLUDED, host-copied in
 # port/unmatched/MgBase_Slot5.cpp. It is dScMgBase_c slot 5,
 # AfterCleanupResources, and it declares func_0203cbc0 with NO parameter and
 # calls it with none while the ROM has the pointer being freed live in r0 at
@@ -310,9 +308,8 @@ src/func_ov004_020b0618.c
 # frees a stack slot. This is section 6c of port/mg_fanout_costs.txt, the second
 # of the two argument ride-throughs that file named and left; slot 7 is the
 # first and is MgBase_Slot7.cpp. ONE CALL differs from src.
-# HOST-COPIED (BASESET): src/func_ov004_020b0840.c
-src/func_ov004_020b08f0.cpp
-src/func_ov004_020b0a54.c
+# HOST-COPIED (BASESET): src/minigames/d_s_mg_base.cpp
+src/func_ov004_020b0a54.cpp
 src/func_ov004_020b0b1c.c
 src/func_ov004_020b0cac.c
 src/func_ov004_020b0d30.c
@@ -333,20 +330,22 @@ src/func_ov004_020b1cf0.c
 src/func_ov004_020b1d60.c
 src/func_ov004_020b1ea4.c
 src/func_ov004_020b2444.c
-src/func_ov004_020b265c.c
-src/func_ov004_020b27f4.c
-src/func_ov004_020b2880.c
+src/_ZN11dScMgBase_c9Virtual84Ev.cpp
+src/_ZN11dScMgBase_c9Virtual80Ev.cpp
+src/_ZN11dScMgBase_c9Virtual7CEv.cpp
 src/func_ov004_020b290c.c
 src/func_ov004_020b2980.c
-src/func_ov004_020b298c.c
-src/func_ov004_020b2990.c
-src/func_ov004_020b2994.c
-src/func_ov004_020b299c.c
+src/_ZN11dScMgBase_c15OnGroundPoundedEv.cpp
+src/_ZN11dScMgBase_c9Virtual50Ev.cpp
+src/_ZN11dScMgBase_c13OnTurnIntoEggEi.cpp
+src/_ZN11dScMgBase_c13OnYoshiTryEatEi.cpp
 src/func_ov004_020b29a0.cpp
-src/func_ov004_020b29c0.cpp
-src/func_ov004_020b2a18.cpp
-src/func_ov004_020b2a84.cpp
-src/func_ov004_020b2adc.c
+# RETIRED at SLICE1: body now in src/_ZN11dScMgBase_cD0Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN11dScMgBase_cD2Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN11dScMgBase_cD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN11dScMgBase_cD0Ev.cpp
+src/_ZN11dScMgBase_cD1Ev.cpp
+src/_ZN11dScMgBase_cC2Ev.cpp
 src/func_ov004_020b2c84.c
 # HOST-COPIED (MG2): src/func_ov004_020b2cb8.c -- fabricated 29-entry
 #   initializer, see port/unmatched/MgBase_LangTable.cpp
@@ -424,7 +423,7 @@ src/func_ov004_020b6ad8.c
 #
 # NOTHING HAD REACHED THEM BEFORE. They are per-frame ticks the FRAMEWORK
 # state machine installs, and no seated scene had ever entered
-# func_ov004_020b87e0 -- section 13 reports zero framework calls on 363 and
+# _ZN10dMgState_c8SetStateEi -- section 13 reports zero framework calls on 363 and
 # section 14 the same on 380. Scene 387 is the first that does.
 #src/func_ov004_020b6b40.c
 src/func_ov004_020b6c10.c
@@ -475,21 +474,21 @@ src/func_ov004_020b841c.cpp
 src/func_ov004_020b853c.c
 src/func_ov004_020b8560.cpp
 src/func_ov004_020b8688.c
-# HOST-COPIED (MG2): src/func_ov004_020b8714.cpp
-# HOST-COPIED (MG2): src/func_ov004_020b8778.cpp
-src/func_ov004_020b8a70.c
+# HOST-COPIED (MG2): src/_ZN10dMgState_c6RenderEv.cpp
+# HOST-COPIED (MG2): src/_ZN10dMgState_c8BehaviorEv.cpp
+src/_ZN10dMgState_cC1Ev.cpp
 src/func_ov004_020b8a8c.c
-src/func_ov004_020b8c18.c
+src/_ZN10dMgPsOpt_c11TouchIcon_c6RenderEv.cpp
 src/func_ov004_020b8dc0.c
 src/func_ov004_020b8ee0.c
 src/func_ov004_020b8f18.cpp
 src/func_ov004_020b8f78.cpp
 src/func_ov004_020b91fc.c
 src/func_ov004_020b9220.c
-src/func_ov004_020b9280.c
-src/func_ov004_020b929c.c
-src/func_ov004_020b92c4.c
-src/func_ov004_020b9430.c
+src/_ZN10dMgPsOpt_c11TouchIcon_cD1Ev.cpp
+src/_ZN10dMgPsOpt_cD1Ev.cpp
+src/_ZN10dMgPsOpt_cC1Ev.cpp
+src/_ZN10dMgPsOpt_c11TouchIcon_cC1Ev.cpp
 
 # ---- SECOND WAVE: 33 TUs the first link named as unresolved --------------
 # The two-wave method the ov007 slice uses. These are matched TUs the closure
@@ -710,7 +709,7 @@ src/func_ov004_020b1710.c
 #
 # func_ov004_020ae5c4 is the family's LINE RASTERISER: a Bresenham walk from
 # (x0,y0) to (x1,y1) that stamps vtable slot 34 at every lattice point. Slot 34
-# is the BRUSH -- the base's own body, src/func_ov004_020ae3b4.c at line 261
+# is the BRUSH -- the base's own body, src/_ZN11dScMgBase_c9Virtual88Eiiii.cpp at line 261
 # above, writes an n-by-n block of `val` through MultiCopy_Int -- so the pair is
 # "draw a line of thickness n in colour val", and the amidakuji board is drawn
 # with it: four vertical rails at x = 0x20, 0x60, 0xa0, 0xe0 and horizontal
@@ -731,7 +730,7 @@ src/func_ov004_020b1710.c
 # It is a .c compiled as C++ (a //cpp marker and a dummy 35-virtual struct is
 # how the slot-34 dispatch is spelled), so it carries a LANGUAGE CXX row in
 # port/CMakeLists.txt beside this slice's other C++ .c files.
-src/func_ov004_020ae5c4.c
+src/func_ov004_020ae5c4.cpp
 
 # Run mg12, lane PANEL. THE LAST OF THE SIX GENUINELY-UNMATCHED BODIES THIS
 # FILE'S HEADER NAMES IS SEATED, and it is the one the owner has been reporting
@@ -747,7 +746,7 @@ src/func_ov004_020ae5c4.c
 # at the same spot.
 #
 # IT IS THE WHOLE DRAW AND IT IS NOT OPTIONAL. dScMgBase_c::BeforeRender
-# (src/func_ov004_020b04f4.cpp) hands the ENTIRE frame to this body while the
+# (src/minigames/d_s_mg_base.cpp) hands the ENTIRE frame to this body while the
 # panel is up and returns 0, so nothing else in the family submits the buttons.
 # hal/scene_mg_faces.cpp's trap for this symbol is DELETED in the same commit and
 # the symbol is defined nowhere else.

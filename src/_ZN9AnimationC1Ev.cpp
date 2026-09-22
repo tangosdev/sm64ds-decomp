@@ -1,14 +1,18 @@
 //cpp
 // @symbol _ZN9AnimationC1Ev
-/* Stays a mangled free function: the destructor is the key function and
- * defining any structor as a real method risks the compiler emitting the
- * class vtable over the gap object's ROM copy. See include/ModelBase.h. */
+/* recovered: real C++ constructor -- base step (none: root class) and the
+ * vptr store are synthesized; only the two body statements are written.
+ *
+ * The ROM stores _ZTV9Animation, zeroes currFrame (+0x8) and sets speed
+ * (+0xc) to 0x1000 = 1.0 -- in that order, which is vptr-then-body per the
+ * measured emission order (notes/ctor-migration.md section 6). The C2
+ * sibling this TU also emits is stripped by objisolate; that variant's
+ * enrolled home is src/_ZN9AnimationC2Ev.cpp.
+ */
 #include "Animation.h"
-extern "C" {
-extern int _ZTV9Animation[];   /* vtable for Animation */
-void _ZN9AnimationC1Ev(Animation *self) {
-  *(int*)((char*)self) = (int)_ZTV9Animation;
-  *(int*)((char*)&self->currFrame) = 0;
-  *(int*)((char*)&self->speed) = 0x1000;
-}
+
+Animation::Animation()
+{
+    currFrame = 0;
+    speed = 0x1000;
 }

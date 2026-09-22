@@ -5,23 +5,24 @@
 # status/SEATOV002.md.
 #
 # ---- FIREBALL (254, ov002) ------------------------------------------------
-# _ZTV8Fireball / _ZTV12daFPknBall_c 0x0210bf94, 31 slots. Fireball_SpawnInfo
+# _ZTV8Fireball / _ZTV12daFPknBall_c 0x0210bf94, 31 slots. g_profile_FPAKUN_BALL
 # (0x0210bf70, +4 reads 254) and the table joined port/ov002_syms.txt, with the
 # three particle tables Behavior's helper indexes (data_ov002_02100320/334/348).
 # Spawned by Actor::SpawnFireball (arm9, linked; asks for 0xfe), whose callers
 # func_ov084_0212ddbc (fire piranha, gate 71), func_ov070_0211f48c and
 # func_ov063_02118458 are all in the link.
-# Slot 18 func_ov002_020f92e4 carries the name marker (dsd called it
+# Slot 18 _ZN8Fireball13OnYoshiTryEatEv carries the name marker (dsd called it
 # daFPknBall_c::OnYoshiTryEat, which is what it is) and byte-matches under
 # tools/match.py with strict relocs; ruled REAL_DECOMP in
 # tools/inferred_stub_adjudicated.txt before seating.
-src/Fireball_Spawn.c
+src/d_a_f_pkn_ball.c
 src/_ZN8Fireball13InitResourcesEv.cpp
 src/_ZN8Fireball8BehaviorEv.cpp
-src/_ZN8Fireball6RenderEv.c
-src/_ZN8FireballD1Ev.c
-src/_ZN8FireballD0Ev.c
-src/func_ov002_020f92e4.c
+src/_ZN8Fireball6RenderEv.cpp
+src/_ZN8FireballD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN8FireballD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN8FireballD0Ev.cpp
+src/_ZN8Fireball13OnYoshiTryEatEv.cpp
 # Behavior's three helpers
 src/func_ov002_020f8b24.c
 src/func_ov002_020f88ec.c
@@ -36,38 +37,34 @@ src/func_ov002_020f897c.c
 # ModelAnim slot-5 collision on two ModelAnims, host copy appended to
 # unmatched/Ov060_Renders.cpp. InitResources' two BMA spellings func_021115e4/
 # f4 are the level-overlay window, aliased onto the ov046 per-symbol mount.
-src/BowserShockwaves_Spawn.c
+src/d_a_f_ring.c
 src/_ZN16BowserShockwaves13InitResourcesEv.cpp
-src/_ZN16BowserShockwaves16CleanupResourcesEv.c
+src/_ZN16BowserShockwaves16CleanupResourcesEv.cpp
 src/_ZN16BowserShockwaves8BehaviorEv.cpp
-src/_ZN16BowserShockwavesD1Ev.c
-src/_ZN16BowserShockwavesD0Ev.c
+src/_ZN16BowserShockwavesD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN16BowserShockwavesD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN16BowserShockwavesD0Ev.cpp
 #
 # ---- BUBBLE (291, ov002) --------------------------------------------------
 # daObjAbuku_c, the air bubble a treasure chest lets go of when it is opened
-# underwater (func_ov064_0211a39c, TreasureChest's open state, linked since
+# underwater (_ZN13TreasureChest6State1Ev, TreasureChest's open state, linked since
 # w3c; Actor::Spawn(0x123) when Player+0x706 mIsUnderwater is set). Its table
-# is the unnamed data_ov002_02108964 (mounted with the SpawnInfo, see
+# is the unnamed _ZTV12daObjAbuku_c (mounted with the SpawnInfo, see
 # ov002_syms.txt). The class's four own slots are all func_ov002 bodies:
-#   0  func_ov002_020b3518  InitResources  (marker: dsd's daObjAbuku_c name;
+#   0  _ZN12daObjAbuku_c13InitResourcesEv  InitResources  (marker: dsd's daObjAbuku_c name;
 #                                            match.py strict-reloc byte match,
 #                                            ruled REAL_DECOMP)
-#   6  func_ov002_020b33dc  Behavior       (same ruling)
-#   16 func_ov002_020b3298  D1             (flat C, clean)
-#   17 func_ov002_020b32c8  D0 -- NOT ENROLLED: the matched body spells its
+#   6  _ZN12daObjAbuku_c8BehaviorEv  Behavior       (same ruling)
+#   16 _ZN12daObjAbuku_cD1Ev  D1             (flat C, clean)
+#   17 _ZN12daObjAbuku_cD0Ev  D0 -- NOT ENROLLED: the matched body spells its
 #      table and heap as the VT0 / G0 shadow globals (the PoleLift trap
 #      hal/actor_classes_ov045.cpp documents); host thunk in the fill,
 #      transcribed from that body: table restore, MovingCylinderClsn::D1
 #      +0xd4, Actor::D2, Memory::Deallocate(this, *0x020a0eac).
 # Slots 3 and 9 are ActorBase's own CleanupResources / Render per the relocs.
-src/Bubble_Spawn.c
-src/func_ov002_020b3518.cpp
-src/func_ov002_020b33dc.cpp
-src/func_ov002_020b3298.c
+src/game/actors/d_a_obj_abuku.cpp
 # Behavior's two helpers: the pop (sound, particle, MarkForDestruction) and
 # the water-surface raycast
-src/func_ov002_020b330c.cpp
-src/func_ov002_020b3344.c
 #
 # ---- YOSHI_EGG (9, ov002) --------------------------------------------------
 # daYegg_c, the egg Yoshi lays after a swallow and then aims and throws.
@@ -91,12 +88,13 @@ src/func_ov002_020b3344.c
 # func_ov002_020ed0d4 (state 0 main) carries dsd's misname daWarpkun_c::Kill;
 # match.py strict-reloc byte match, ruled REAL_DECOMP in
 # tools/inferred_stub_adjudicated.txt before this seat.
-src/YoshiEgg_Spawn.c
-src/_ZN8YoshiEgg13InitResourcesEv.c
+src/d_a_yegg.c
+src/_ZN8YoshiEgg13InitResourcesEv.cpp
 src/_ZN8YoshiEgg16CleanupResourcesEv.cpp
 src/_ZN8YoshiEgg8BehaviorEv.cpp
-src/_ZN8YoshiEggD1Ev.c
-src/_ZN8YoshiEggD0Ev.c
+src/_ZN8YoshiEggD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN8YoshiEggD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN8YoshiEggD0Ev.cpp
 src/func_ov002_020ec654.c
 src/func_ov002_020ec670.c
 src/func_ov002_020ec938.cpp

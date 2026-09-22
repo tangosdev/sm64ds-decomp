@@ -18,8 +18,8 @@
 # ==== THE TWO CLASSES, both attribution routes =============================
 #
 #   id   arm9 slot   SpawnInfo   word[0]     factory          +4   x on L25
-#   104  0x02090a04  0x02112358  0x021113a4  TinyCover_Spawn  104   1
-#   105  0x02090a08  0x0211241c  0x02111690  TinyWater_Spawn  105   1
+#   104  0x02090a04  0x02112358  0x021113a4  daObjTtFuta_c_classInit  104   1
+#   105  0x02090a08  0x0211241c  0x02111690  daObjTtWater_c_classInit  105   1
 #
 # Both records' word[0] lands inside ov033 [0x021111a0, 0x021124c0) and is one
 # of the overlay's own two factories; both read their own id back at +4. Both
@@ -32,11 +32,11 @@
 #
 # ==== THE DSD LABEL IS ON THE WRONG TABLE, THREE ROUTES AGREE ==============
 #
-# dsd names ONE vtable in this overlay, _ZTV9TinyCover at 0x02112440, and it is
+# dsd names ONE vtable in this overlay, _ZTV9TinyWater at 0x02112440, and it is
 # on the WATER class. Disassembled from the overlay image:
 #
-#   0x021113a4 TinyCover_Spawn  alloc 0x320 (800)  installs 0x0211237c
-#   0x02111690 TinyWater_Spawn  alloc 0x340 (832)  installs 0x02112440
+#   0x021113a4 daObjTtFuta_c_classInit  alloc 0x320 (800)  installs 0x0211237c
+#   0x02111690 daObjTtWater_c_classInit  alloc 0x340 (832)  installs 0x02112440
 #                               + TextureTransformer ctor at this+0x320
 #
 # and the RTTI at vtable[-1] says the same thing in the ROM's own words:
@@ -45,8 +45,8 @@
 # "Futa" is the ROM's own word for the lid/cover. So:
 #
 #   id 104 TINY_COVER  ->  0x0211237c, the table dsd left UNNAMED
-#                          (data_ov033_0211237c), bodies func_ov033_*
-#   id 105 TINY_WATER  ->  0x02112440, the table dsd called _ZTV9TinyCover,
+#                          (_ZTV9TinyCover), bodies func_ov033_*
+#   id 105 TINY_WATER  ->  0x02112440, the table dsd called _ZTV9TinyWater,
 #                          bodies _ZN9TinyCover*
 #
 # Every _ZN9TinyCover* method in src/ is TINY_WATER's, and every func_ov033_*
@@ -56,27 +56,27 @@
 #
 # ==== BOTH WIDTHS ARE 32 AND NEITHER LANDING GETS THERE ====================
 #
-# data_ov033_0211237c  0x0211237c, THIRTY-TWO slots, ends 0x021123fc.
+# _ZTV9TinyCover  0x0211237c, THIRTY-TWO slots, ends 0x021123fc.
 #   next dsd symbol 0x021123e4 -- INTERIOR (slot 26). Reads 26.
 #   The two words after the close, 0x021123fc/0x02112400, are the NEXT table's
 #   typeinfo record (0x0209a764, name 0x02112408), which pins the end
 #   independently of dsd.
 #   SEVEN own slots, one more than usual: 0 InitResources, 3 CleanupResources,
 #   6 Behavior, 9 Render, 16 D1, 17 D0 -- and 21, an OnGroundPounded OVERRIDE
-#   (func_ov033_0211123c: particle, sound, Event::SetBit(0xe), destroy self).
+#   (_ZN9TinyCover15OnGroundPoundedER8dActor_c: particle, sound, Event::SetBit(0xe), destroy self).
 #   That is the class's whole point -- ground-pounding the lid opens the well
 #   -- and a fill that took the shared half's slot 21 would have silently
 #   replaced it with Actor's do-nothing.
 #
-# _ZTV9TinyCover  0x02112440, THIRTY-TWO slots, ends 0x021124c0.
+# _ZTV9TinyWater  0x02112440, THIRTY-TWO slots, ends 0x021124c0.
 #   next dsd symbol 0x0211244c -- INTERIOR (slot 3). Reads THREE.
 #   0x021124c0 is also the .data/.bss boundary, a second independent pin.
 #   Six own slots, the usual 0/3/6/9/16/17.
 #
 # Both tables close on the Platform word:
-#     slot 29  0x02010124  _ZN5Actor16OnAimedAtWithEggEv
-#     slot 30  0x020100dc  _ZN5Actor25OnAimedAtWithEggReturnVecEv
-#     slot 31  0x020ee55c  _ZN8Platform4KillEv   (ov002 symbols.txt:1175)
+#     slot 29  0x02010124  _ZN8dActor_c16OnAimedAtWithEggEv
+#     slot 30  0x020100dc  _ZN8dActor_c25OnAimedAtWithEggReturnVecEv
+#     slot 31  0x020ee55c  _ZN10dBgActor_c4KillEv   (ov002 symbols.txt:1175)
 # the same close ov024's top, ov025's two, ov035's two, ov045's six, ov052's
 # two and ov056's one all end on. Both tables are EXCLUDED from this mount and
 # hosted as arrays hal/actor_classes_ov033.cpp fills.
@@ -84,11 +84,11 @@
 # ==== SEVEN T3 WIDTH PINS, and six are real under-reads =====================
 #
 # .data
-#   TinyCover_SpawnInfo  natural next-symbol delta 0x10 (dsd named 0x02112368
+#   g_profile_TT_FUTA  natural next-symbol delta 0x10 (dsd named 0x02112368
 #     INSIDE the record). A record is 0x1c. Unpinned this mounts SIXTEEN bytes
 #     of twenty-eight, and the registry's id check at +4 sits inside those
 #     sixteen so it would have passed anyway.
-#   TinyWater_SpawnInfo  natural 0xc, the same shape one word worse.
+#   g_profile_TT_WATER  natural 0xc, the same shape one word worse.
 #   data_ov033_02111bc8  natural 0xc (dsd named 0x02111bd4 inside it). It is a
 #     six-word file descriptor -- {0x5b, bmd, bmd, bta, 1, ptr} -- that id
 #     105's InitResources hands TextureTransformer::Prepare and ::SetFile as a
@@ -126,7 +126,7 @@
 #
 # ==== ONE LIVE ALIAS RACE AT THE SHARED WINDOW (T6) ========================
 #
-# src/func_ov033_02111310.cpp -- id 104's InitResources -- hands
+# src/_ZN9TinyWater13InitResourcesEv.cpp -- id 104's InitResources -- hands
 # MovingMeshCollider::SetFile a CLPS block it spells data_ov035_02111bfc.
 # That is OV035's name for the same window address, and ov035's 0x02111bfc IS
 # MOUNTED (port/ov035_syms.txt lists it among wave 18's twelve seeds), so the
@@ -139,15 +139,15 @@
 # ==== TWO "recovered from vtable slot identity" MARKERS, BOTH ADJUDICATED ===
 #
 # T5: the marker is overloaded and sits on real decomp as well as on guesses.
-# func_ov033_02111310, func_ov033_021111e4, func_ov033_0211123c and
-# func_ov033_02111280 all carry it, and all four are REAL BODIES -- full
+# _ZN9TinyCover13InitResourcesEv, _ZN9TinyCoverD0Ev, _ZN9TinyCover15OnGroundPoundedER8dActor_c and
+# _ZN9TinyCover16CleanupResourcesEv all carry it, and all four are REAL BODIES -- full
 # statement lists that match the ROM instruction for instruction, whose NAME
 # alone was recovered from the slot. None is a stub and none is de-seated;
 # port/tools/inferred_stub_debt.txt and inferred_stub_baseline.txt name no
 # ov033 symbol at all, and the guard runs clean over this seat.
 
 # ---- .data: the two SpawnInfo records, both pinned to the ROM's 0x1c -------
-TinyCover_SpawnInfo:0x1c TinyWater_SpawnInfo:0x1c
+g_profile_TT_FUTA:0x1c g_profile_TT_WATER:0x1c
 
 # ---- .data: id 105's BTA file descriptor and the two CLPS blocks -----------
 data_ov033_02111bc8:0x18

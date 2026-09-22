@@ -7,26 +7,27 @@
 # THE CONFIG'S NAMES ARE NOT SHIFTED IN ov098 either. All five factories
 # install a vtable whose slot 0 is their own class's InitResources:
 #
-#   ArrowSignRight_Spawn -> _ZTV15daObjYajirusi_c   (both signs share it)
-#   ArrowSignLeft_Spawn  -> _ZTV15daObjYajirusi_c
-#   Crate_Spawn          -> _ZTV5Crate              RTTI daObjBlockS_c
-#   Cannon_Spawn         -> _ZTV7daCnn_c            slot0 Cannon::InitResources
-#   WaterBomb_Spawn      -> _ZTV7daWbm_c
+#   daObjYajirusi_c_classInit_YAJIRUSI_R -> _ZTV15daObjYajirusi_c   (both signs share it)
+#   daObjYajirusi_c_classInit_YAJIRUSI_L  -> _ZTV15daObjYajirusi_c
+#   daObjBlockS_c_classInit          -> _ZTV5Crate              RTTI daObjBlockS_c
+#   daCnn_c_classInit         -> _ZTV7daCnn_c            slot0 Cannon::InitResources
+#   daWbm_c_classInit      -> _ZTV7daWbm_c
 #
 # THE CANNON IS DORMANT AND THAT IS THE POINT. Its own Behavior reads the
 # save's cannon-unlock bit before it will open; with a fresh save the lid
 # stays shut, which is exactly what the level looks like before Bob-omb Buddy
 # opens it. Nothing here chases the cannon-entry path.
-src/Cannon_Spawn.c
+src/d_a_cnn.cpp
 src/_ZN6Cannon13InitResourcesEv.cpp
-src/_ZN6CannonD0Ev.c
+# RETIRED at SLICE1: body now in src/_ZN6CannonD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN6CannonD0Ev.cpp
 # _ZN6Cannon8BehaviorEv is NOT here either: it dispatches an mwcc
 # pointer-to-member out of a four-entry state table, the gate-16 case for the
 # fourth time. The dispatch frame and the state seat stay host
 # (port/unmatched/Cannon_Behavior.cpp); the state bodies are matched src.
 # State 1 (the lid opening) went byte-perfect at 2004/b56 in PR #1227:
 src/func_ov098_0213ade8.c
-src/_ZN6Cannon16CleanupResourcesEv.c
+src/_ZN6Cannon16CleanupResourcesEv.cpp
 # _ZN6Cannon6RenderEv is NOT here: it dispatches Model slots 3 and 5 through
 # a local shadow class, which is ROM numbering, and the host _ZTV5Model is
 # MSVC's. Slot 5 the host array already serves both ways (the dual fill in
@@ -58,13 +59,12 @@ src/func_ov098_0213ad08.c
 src/func_ov098_0213b0a4.cpp
 
 # --- linkloop round 1 ---
-src/_ZN5Actor10EarthquakeERK7Vector35Fix12IiE.cpp
+src/_ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE.cpp
 src/func_ov002_020df300.c
 src/func_ov002_020df34c.cpp
-src/func_ov102_0214ae1c.c
+src/actors/daBmb_c.cpp
 
 # --- linkloop round 2 ---
 src/func_0200d438.c
 src/func_0200d474.c
 src/func_ov002_020ef228.cpp
-src/func_ov102_0214baa0.c

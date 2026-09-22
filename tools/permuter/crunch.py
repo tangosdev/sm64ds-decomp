@@ -72,7 +72,13 @@ def run_one(rec, secs, jobs):
     if bo is None:
         return "nochange"
     score, src = bo
-    div, ok = DB.evaluate(src, name, bytes.fromhex(rec["target_hex"]))
+    full = DB.evaluate_full(src, name, bytes.fromhex(rec["target_hex"]))
+    div, ok = full["divergences"], full["ok"]
+    # L.make_key, NOT a raw (module, addr) tuple: load_db keys by the normalized
+    # (module, addr_int) and rec["addr"] is usually the stored hex string, so the raw
+    # tuple never hit -- banked rows were never popped and every "improved" save was
+    # a silent no-op (the exact unnormalized-key trap nearmiss_db.ingest documents).
+    key = L.make_key(rec["module"], rec["addr"])
     if ok:
         st = L.bank({"addr": rec["addr"], "name": name, "size": size,
                      "module": rec["module"], "versions": ["permuter"]}, src)
@@ -80,15 +86,16 @@ def run_one(rec, secs, jobs):
             return "nochange"
         with DB.locked():                       # dup = another shard banked it
             db = DB.load_db()
-            db.pop((rec["module"], rec["addr"]), None)
+            db.pop(key, None)
             DB.save_db(db)
         return "banked"
-    if div is not None and div < rec.get("divergences", 1e9):
+    cand = {"divergences": div, "cand_size": full["cand_size"], "size": rec.get("size")}
+    if div is not None and DB.closeness(cand) < DB.closeness(rec):
         with DB.locked():
             db = DB.load_db()
-            r = db.get((rec["module"], rec["addr"]))
-            if r and div < r.get("divergences", 1e9):
-                r["divergences"] = div
+            r = db.get(key)
+            if r and DB.closeness(cand) < DB.closeness(r):
+                DB.apply_eval(r, full)
                 r["c_source"] = src
                 r["source"] = "permuter-improved"
                 DB.save_db(db)
@@ -115,6 +122,7 @@ def main():
                          "is every module, so a module-specific push spends most of its "
                          "budget off-target.")
     args = ap.parse_args()
+    DB.warn_stale_pin()          # a stale evaluator means this whole pile is mis-ranked
     mods = {m.strip() for m in args.module.split(",")} if args.module else None
     i, n = (int(x) for x in args.shard.split("/"))
 
@@ -130,7 +138,7 @@ def main():
                        if r.get("divergences") is not None and 0 < r["divergences"] <= args.max_div
                        and r["name"] not in attempted
                        and (mods is None or r.get("module") in mods)),
-                      key=lambda r: (r["divergences"], r["module"], str(r["addr"])))
+                      key=DB.seed_rank)         # closest first; size gap breaks div ties
         if args.category:
             import json as _json
             import categorize_misses as CAT

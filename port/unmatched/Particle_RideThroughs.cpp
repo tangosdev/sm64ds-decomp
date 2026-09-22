@@ -79,7 +79,7 @@ extern void *data_0209ee74;
    slice_gate29.txt keeps this TU out of the gate-29 slice under the heading
    "NOT HERE: three ARM argument ride-throughs" for exactly that.
    PORT_HOST_ABI: ARM r1 ride-through; the matched TU never names &sys. */
-void _ZN8Particle14SimpleCallback14SpawnParticlesERNS_6SystemE(void *self,
+void _ZN5dPa_c7level_c16simpleCallback_c14SpawnParticlesERN8Particle6SystemE(void *self,
                                                                void *sys)
 {
     *(u32 *)((char *)sys + 0x1c) |= 2;

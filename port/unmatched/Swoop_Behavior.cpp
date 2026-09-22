@@ -8,19 +8,19 @@
  * were seated by port_ov065_states_seat before Swoop's sinit copied them.
  */
 extern "C" {
-int _ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(void *thiz, void *c);
-void _ZN12CylinderClsn5ClearEv(void *thiz);
-void _ZN12CylinderClsn6UpdateEv(void *thiz);
-int _ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(
+int _ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(void *thiz, void *c);
+void _ZN5dCc_c5ClearEv(void *thiz);
+void _ZN5dCc_c6UpdateEv(void *thiz);
+int _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj(
     void *thiz, void *wm, void *ma, unsigned j);
-void _ZN5Enemy11UpdateDeathER12WithMeshClsn(void *thiz, void *wm);
+void _ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr(void *thiz, void *wm);
 unsigned short DecIfAbove0_Short(unsigned short *p);
 void func_02012694(int, void *);
-void _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(void *thiz,
+void _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(void *thiz,
                                                        void *clsn);
-void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(void *thiz, void *wm,
+void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void *thiz, void *wm,
                                               unsigned j);
-char *_ZN5Actor13ClosestPlayerEv(void *thiz);
+char *_ZN8dActor_c13ClosestPlayerEv(void *thiz);
 void _ZN9Animation7AdvanceEv(void *thiz);
 int _ZNK9Animation12WillHitFrameEi(void *thiz, int frame);
 int func_ov065_02117994(char *c);

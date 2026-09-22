@@ -5,13 +5,13 @@
 /* recovered: named members + shared header, real C++ method */
 #include "TTC_MovingBar.h"
 #include "SharedFilePtr.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 
 int TTC_MovingBar::CleanupResources()
 {
-  if(((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled())
-    ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
-  ((SharedFilePtr *)(*(void**)(data_ov065_0211d35c + (unsigned char)((char *)this)[0x31e]*0xc)))->Release();
-  ((SharedFilePtr *)(*(void**)(data_ov065_0211d360 + (unsigned char)((char *)this)[0x31e]*0xc)))->Release();
+  if(((dBgW *)((char *)&(*(u8 *)&mMeshCollider)))->IsEnabled())
+    ((dBgW *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();
+  ((SharedFilePtr *)(*(void**)(data_ov065_0211d35c + mVariant*0xc)))->Release();
+  ((SharedFilePtr *)(*(void**)(data_ov065_0211d360 + mVariant*0xc)))->Release();
   return 1;
 }

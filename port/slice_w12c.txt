@@ -15,7 +15,7 @@
 #
 # ---- HOW THIS LIST WAS DERIVED ---------------------------------------------
 #
-# Reloc closure from every ov064 slot of Clam's table plus Clam_Spawn: EIGHT
+# Reloc closure from every ov064 slot of Clam's table plus daObjShell_c_classInit: EIGHT
 # functions, and every target the closure leaves ov064 for was already in
 # walk_window.map on the base tip. __sinit_ov064_0211b698 is the ninth line --
 # it builds Clam's three SharedFilePtrs (files 1164/1165/1166) and their three
@@ -42,14 +42,15 @@
 #
 # TREASURE_CHEST (id 13, eight instances, same overlay, ranked beside Clam) is
 # BLOCKED, measured: its Behavior dispatches a six-record pointer-to-member
-# state table at 0x0211c98c, and one of the six -- func_ov064_0211a4c4, state
+# state table at 0x0211c98c, and one of the six -- _ZN13TreasureChest6State0Ev, state
 # 0's tick, 540 bytes at 0x0211a4c4 -- has NO matched TU in src/ and no host
 # copy in the port. State 0 is where its InitResources leaves the chest, so
 # that body runs on the first frame one exists.
-src/Clam_Spawn.c
+src/d_a_obj_shell.cpp
 src/_ZN4Clam13InitResourcesEv.cpp
-src/_ZN4Clam16CleanupResourcesEv.c
-src/_ZN4Clam8BehaviorEv.c
-src/_ZN4ClamD0Ev.c
+src/_ZN4Clam16CleanupResourcesEv.cpp
+src/_ZN4Clam8BehaviorEv.cpp
+# RETIRED at SLICE1: body now in src/_ZN4ClamD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN4ClamD0Ev.cpp
 src/func_ov064_0211a9b4.c
 src/__sinit_ov064_0211b698.c

@@ -14,11 +14,11 @@ extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(char* m, void* f, int a, int b);
 extern void* _ZN9Animation8LoadFileER13SharedFilePtr(void* fp);
 extern void _ZN7PathPtrC1Ev(void* p);
 extern void _ZN7PathPtr6FromIDEj(void* p, unsigned int id);
-extern void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(char* self, char* actor, struct V3* pos, int r3, int sp0, int sp4, int sp8);
+extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(char* self, char* actor, struct V3* pos, int r3, int sp0, int sp4, int sp8);
 extern int IsStarCollected(int a, int b);
 extern void func_ov016_02111bf0(char* c, void* p);
-extern char* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, char* pos, void* d, int sp0, int sp4);
-extern void _ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_(char* a, int r1, int r2, int r3, int sp0);
+extern char* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, char* pos, void* d, int sp0, int sp4);
+extern void _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(char* a, int r1, int r2, int r3, int sp0);
 extern void _ZNK7PathPtr7GetNodeER7Vector3j(void* p, char* out, unsigned int n);
 extern short Vec3_HorzAngle(char* a, char* b);
 
@@ -36,7 +36,6 @@ int Unagi::InitResources()
     V3 v1;
     V3 v2;
     int i;
-    char* r3;
     void* f;
     char* spawned;
 
@@ -46,9 +45,9 @@ int Unagi::InitResources()
     _ZN9Animation8LoadFileER13SharedFilePtr(data_ov016_02114d30);
     _ZN9Animation8LoadFileER13SharedFilePtr(data_ov016_02114d28);
 
-    mPathID = mParam & 0xff;
-    mVariant = (mParam >> 8) & 0xf;
-    unk_414 = (mParam >> 0xc) & 0xf;
+    mPathID = param1 & 0xff;
+    mVariant = (param1 >> 8) & 0xf;
+    mStarParam = (param1 >> 0xc) & 0xf;
     if (mVariant == 0xff)
         mVariant = 0;
     if (mPathID < 0)
@@ -56,24 +55,24 @@ int Unagi::InitResources()
 
     _ZN7PathPtrC1Ev(&path1);
     _ZN7PathPtr6FromIDEj(&path1, mPathID);
-    unk_40c = _ZNK7PathPtr8NumNodesEv(&path1);
+    mPathNodeCount = _ZNK7PathPtr8NumNodesEv(&path1);
 
-    unk_3f0 = mPosX;
-    unk_3f4 = mPosY;
-    unk_3f8 = mPosZ;
-    unk_0a0 = -0x1e000;
+    mHomePosX = mPosX;
+    mHomePosY = mPosY;
+    mHomePosZ = mPosZ;
+    mTerminalVelocity = -0x1e000;
     v1 = data_ov016_02114d4c;
-    _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(
+    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
         ((char*)this) + 0x110, ((char*)this), &v1, 0x32000, 0x50000, 0x200004, 0);
     v2 = data_ov016_02114d4c;
-    _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(
+    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
         ((char*)this) + 0x150, ((char*)this), &v2, 0x32000, 0x50000, 0x200000, 0);
 
     _ZN7PathPtrC1Ev(&path2);
     _ZN7PathPtr6FromIDEj(&path2, mPathID);
-    unk_410 = 1;
+    mPathNodeIndex = 1;
     mStarUniqueID = 0;
-    unk_3ac = 0x1000;
+    mBlendModelAnim.speed = 0x1000;
 
     if (data_0209f220 == 1)
         goto check_param2;
@@ -85,10 +84,10 @@ check_param2:
         goto ret0_a;
     /* u64-mask forces add r2,r4,#0x3f4 materialization (ROM shape) */
     *(int*)(((int)((char*)this) + 0x3f4)) -= 0x80000;
-    unk_410 = 8;
-    if (unk_410 >= unk_40c)
-        unk_410 = 4;
-    mPosY = unk_3f4;
+    mPathNodeIndex = 8;
+    if (mPathNodeIndex >= mPathNodeCount)
+        mPathNodeIndex = 4;
+    mPosY = mHomePosY;
     func_ov016_02111bf0(((char*)this), &data_ov016_02114d8c);
     goto tail;
 ret0_a:
@@ -103,13 +102,13 @@ stage2_path:
 check_param1:
     if (mVariant != 1)
         goto ret0_b;
-    spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
-        0xb2, unk_414 | 0x50, ((char*)this) + 0x5c, 0,
+    spawned = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
+        0xb2, mStarParam | 0x50, ((char*)this) + 0x5c, 0,
         mAreaId, -1);
     if (spawned != 0) {
         mStarUniqueID = *(int*)(spawned + 4);
         *(int*)(spawned + 0xb0) = 0;
-        _ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_(spawned, 0, 0x3e8000, 0x1f40000, 0x1f40000);
+        _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(spawned, 0, 0x3e8000, 0x1f40000, 0x1f40000);
     }
     func_ov016_02111bf0(((char*)this), &data_ov016_02114d8c);
     goto tail;
@@ -131,18 +130,16 @@ ret0_c:
     return 0;
 
 tail:
-    r3 = ((char*)this);
     for (i = 0; i < 7; i++) {
         /* array index form -> add r0,r4,ip,lsl#1 (not strength-reduced i*2) */
-        ((short*)((char*)&unk_418))[i] = 0;
-        ((short*)((char*)&unk_426))[0] = 0;
-        *(int*)(r3 + 0x448) = mPosX;
-        *(int*)(r3 + 0x44c) = mPosY;
-        *(int*)(r3 + 0x450) = mPosZ;
-        r3 += 0xc;
+        mSegmentAngle[i] = 0;
+        mSegmentAngle[7] = 0;
+        mSegmentPos[i].x = mPosX;
+        mSegmentPos[i].y = mPosY;
+        mSegmentPos[i].z = mPosZ;
     }
-    unk_428 = mAngleX;
-    unk_42a = mAngleY;
-    unk_42c = mAngleZ;
+    mInitAngleX = mAngleX;
+    mInitAngleY = mAngleY;
+    mInitAngleZ = mAngleZ;
     return 1;
 }

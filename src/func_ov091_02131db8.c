@@ -5,7 +5,7 @@ extern int _ZNK7PathPtr7GetNodeER7Vector3j(void* p, Vec3* v, unsigned int i);
 extern void func_ov091_02131cb0(void* c, const Vec3* v0, const Vec3* v1);
 extern void func_02010da4(void* c);
 
-#define LAUNDER_P(base, off) ((int *)((unsigned long long)((int)(base) + (off)) & 0xFFFFFFFFFFFFFFFFULL))
+#define LAUNDER_P(base, off) ((int *)((unsigned long long)((int)(base) + (off))))
 
 int func_ov091_02131db8(char* c) {
     int r4;

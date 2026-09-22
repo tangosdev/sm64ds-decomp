@@ -160,15 +160,21 @@ src/_ZN10CheepCheep6RenderEv.cpp
 #
 # Stump (ov091) OK
 #   referrer  _ZTV5Stump[9] @ 021353d0 = 02134184   (overlay_0091.bin, base 02130f00)
-#   record    _ZN5Stump6RenderEv kind:function(arm,size=0x68) addr:0x02134184   (overlays/ov091/symbols.txt:85)
+#   record    _ZN6Fwoosh6RenderEv kind:function(arm,size=0x68) addr:0x02134184   (overlays/ov091/symbols.txt:85)
 #   retires   port/unmatched/Ov091_HostSites.cpp (body cut)
-src/_ZN5Stump6RenderEv.cpp
+src/_ZN6Fwoosh6RenderEv.cpp
 #
 # PiranhaPlant (ov084) OK
 #   referrer  _ZTV12PiranhaPlant[9] @ 02130c4c = 0212fcdc   (overlay_0084.bin, base 02129020)
-#   record    _ZN12PiranhaPlant6RenderEv kind:function(arm,size=0x70) addr:0x0212fcdc   (overlays/ov084/symbols.txt:100)
+#   record    _ZN7daPkn_c6RenderEv kind:function(arm,size=0x70) addr:0x0212fcdc   (overlays/ov084/symbols.txt:100)
 #   retires   port/unmatched/PiranhaPlant_States.cpp (body cut)
-src/_ZN12PiranhaPlant6RenderEv.cpp
+# QUARANTINED at the main->port sync (origin/main 9c7f38a24): main consolidated ov084's
+# PiranhaPlant bodies into this one TU, and the TU carries func_ov084_0212f204, whose
+# zero-argument _ZN8dActor_c13ClosestPlayerEv() call closestplayer_guard refuses (thiscall
+# with no receiver faults on null this + 0x5c). The port already hosts that function in
+# port/unmatched/Actor_ClosestPlayer_OverlayReaders.cpp, which the raw TU would now
+# duplicate. Restore this row once the host copy covers the whole consolidated TU.
+#src/actors/daPkn_c.cpp
 #
 # FirePiranhaPlantBig (ov084) OK
 #   referrer  _ZTV19FirePiranhaPlantBig[9] @ 02130b4c = 0212e5a8   (overlay_0084.bin, base 02129020)
@@ -178,9 +184,16 @@ src/_ZN19FirePiranhaPlantBig6RenderEv.cpp
 #
 # Rabbit (ov085) OK
 #   referrer  _ZTV6Rabbit[9] @ 0213011c = 0212c074   (overlay_0085.bin, base 02129020)
-#   record    _ZN6Rabbit6RenderEv kind:function(arm,size=0xdc) addr:0x0212c074   (overlays/ov085/symbols.txt:67)
+#   record    _ZN7daMip_c6RenderEv kind:function(arm,size=0xdc) addr:0x0212c074   (overlays/ov085/symbols.txt:67)
 #   retires   port/unmatched/Ov085_Renders.cpp (body cut)
-src/_ZN6Rabbit6RenderEv.cpp
+# QUARANTINED at the main->port sync (lane SYNC5, the wave-7 fold merge): MSVC
+# refuses main's shape for this TU (C2624 and C3640, an extern declaration of
+# a function-local class type: forbidden outright by C++ ([basic.link]),
+# measured unreachable by every MSVC conformance switch (/permissive included,
+# probed 2026-09-13)). It is a decomp-side item, not a port one: see
+# runs/link100/out/SYNC5/decomp_side.md. The row returns when main lands the
+# fix.
+#src/actors/daMip_c.cpp
 #
 # LakituBro (ov085) OK
 #   referrer  _ZTV9LakituBro[9] @ 02130368 = 0212ead0   (overlay_0085.bin, base 02129020)

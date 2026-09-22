@@ -1,0 +1,100 @@
+# SLICE L15STALE -- run link100 wave 15, lane SEAT15A, BATCH 1.
+# THE STALE-BANNER HARVEST, ROUND 2.
+#
+# Two rows, both the same shape as run linkw wave 9's w9harvest lane: a port
+# host copy whose own banner says "no matched TU of this name exists" while
+# src/ on this tip demonstrably has one. The banner was true when it was
+# written; the 09-14 sync made it false and nothing re-read it. Both claims
+# were re-tested on this lane's own build, not taken from the census.
+#
+# ---- ROW 1: func_ov060_021140c0 (ov060 0x021140c0, 0x1f4 = 500 bytes) ------
+#
+#   THE STALE CLAIM. port/unmatched/Ov060_StateDispatch.cpp carried it as
+#   "VERIFIED HOST COPY 7" under the banner "PORT_HOST_ABI: none -- this is a
+#   plain cdecl body; it is a host copy only because no matched TU of this name
+#   exists", and the file header said "Still genuinely unmatched: main has no
+#   TU of this name either (checked against origin/main at bc93fa767)".
+#
+#   WHAT REFUTES IT. src/func_ov060_021140c0.c, added by 83691debd
+#   ("Match func_ov060_021140c0 (ov060, 0x021140c0, 500 bytes)", 2026-09-13) --
+#   after the host copy shipped and after the check the header quotes.
+#   config/arm9/overlays/ov060/symbols.txt line 37 gives the same address and
+#   the same 0x1f4 size. The TU is plain C, ten extern declarations, no
+#   NONMATCHING banner, no asm hatch, no ROM-address literal in the body.
+#
+#   WHY IT LINKS HERE. All ten externs were checked against this tree's own
+#   build/port/walk_window.map BEFORE the edit and every one is present:
+#     _ZNK9Animation12WillHitFrameEi
+#     _ZN8dActor_c13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j
+#     _ZN6Player9GetHealthEv          RandomIntInternal
+#     func_02012694                   Bowser_IsAnimAtLastFrame
+#     func_ov060_02111cc0             data_0209e650
+#     data_02082214                   data_ov060_0211abe0
+#   The SpawnFireball spelling here is the dActor_c one the port already
+#   hosts, so unlike w9harvest's row this one needed no /alternatename.
+#
+#   REACH (not an /OPT:REF orphan). g_ov060_states in
+#   port/unmatched/Ov060_StateDispatch.cpp takes this body's address for seat
+#   row "aed4[9]", the BOWSER twenty-record table's record 9, and that object
+#   is on the link line of all three hosting targets.
+#
+#   WHAT WAS RETIRED. HOST COPY 7 (the 0x1f4-byte transcription and its
+#   banner) is deleted from port/unmatched/Ov060_StateDispatch.cpp and
+#   replaced by a declaration plus the reason. The ov60_ran() trace call the
+#   host copy carried leaves with it; the ROM's body has no trace and the
+#   other host copies in that file keep theirs.
+#
+#   CENSUS DEFECT FOUND ON THE WAY (reported, not fixed here):
+#   config/arm9/overlays/ov060/delinks.txt has NO block for this TU. The
+#   blocks run ...src/func_ov060_02113ff4.c (ends 0x021140c0) then straight to
+#   src/func_ov060_021142b4.c (starts 0x021142b4), so 0x021140c0..0x021142b4
+#   is a hole in the delinks ledger even though symbols.txt names the function
+#   and the match commit says match.py --strict-relocs is green. That is a
+#   decomp-config gap, not a port gap, and it does not affect this row.
+#
+# ---- ROW 2: _ZN13TreasureChest6State0Ev (ov064 0x0211a4c4, 0x21c = 540) -----
+#
+#   THE STALE CLAIM. port/unmatched/Ov064_TreasureChest.cpp carried it under
+#   "PORT_HOST_ABI: the ROM body at ov064 0x0211a4c4 (0x21c bytes), state 0's
+#   tick. No matched TU exists anywhere in the tree; this is transcribed from
+#   the overlay image", and the file header repeated the ov064 delinks
+#   measurement that supported it.
+#
+#   WHAT REFUTES IT. src/_ZN13TreasureChest6State0Ev.cpp exists on this tip,
+#   from 6e10cbbd1 ("Migrate TreasureChest states to real C++ class form",
+#   PR #1805), and config/arm9/overlays/ov064/delinks.txt line 475 now DOES
+#   carry a block for it. The host banner's "delinks.txt has NO block for it"
+#   sentence is the half that went stale.
+#
+#   WHY IT LINKS HERE. It is a real C++ method body on include/TreasureChest.h,
+#   like its five siblings that are already on port/slice_w3c.txt. Every
+#   symbol it calls was checked in this tree's map before the edit:
+#     ?Shock@Player@@   ?FindWithID@dActor_c@@   ?FindWithActorID@dActor_c@@
+#     ?SpawnSoundObj@dActor_c@@   ?SetState@TreasureChest@@
+#     _DecIfAbove0_Short  _AngleDiff  _Vec3_HorzAngle  _func_02012790
+#     _func_02012694
+#
+#   REACH. port_treasure_chest_states_seat in
+#   port/unmatched/Ov064_TreasureChest.cpp verifies all six ROM source records
+#   against the overlay's own words and rewrites every function word; record 0
+#   (Entry[0].tick, ROM 0x0211a4c4) is this body, through the __fastcall thunk
+#   tc_st0_pmf. That is a hard reference from an object on the link line.
+#
+#   WHAT WAS RETIRED, AND THE ONE SHAPE THAT REPLACES IT. MSVC compiles the
+#   matched TU to ?State0@TreasureChest@@QAEXXZ, a __thiscall member with the
+#   receiver in ecx; the seat's thunk calls the FLAT name with the receiver on
+#   the stack. So the transcription is replaced by the same receiver face the
+#   other five records already use (hal/faces_sync_gen.cpp's shape, generated
+#   from port/faces_sync.txt rows 979-985) written locally, because this file
+#   includes no headers by its own rule. An /alternatename between the two
+#   names would have been the ecx-versus-stack fault the campaign keeps
+#   measuring.
+#
+#   BEHAVIOUR NOTE. The host copies in that file tested `if (fn)` and silently
+#   skipped a dispatch where the ROM does not. Retiring this one restores the
+#   ROM's behaviour. That is correct and it is also a behaviour change a green
+#   battery cannot vouch for on its own, so this row owes the level captures
+#   listed in this lane's report.
+
+src/func_ov060_021140c0.c
+src/_ZN13TreasureChest6State0Ev.cpp

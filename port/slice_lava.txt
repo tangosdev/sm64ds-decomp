@@ -1,0 +1,29 @@
+# run link100 wave 14, lane SEAT14B (BATCH 5, ov022 lava platforms).
+#
+# ONE row. The other six rows of BATCH 5 needed no slice row at all: the four
+# _ZN19FloatOnLavaPlatform* bodies and the func_ov022_0211191c /
+# func_ov022_0211193c pair are already enrolled on port/slice_w8packs.txt
+# (lines 38-43), compile today, and their objects are handed to the linker;
+# /OPT:REF was dropping them for want of a reference. They come alive from the
+# vtable correction in hal/actor_classes_ov022.cpp alone (the ROM's own table
+# at 0x02113eac holds this class's four bodies, not RotatingPlatformLll's),
+# and the two func_ov022_* rows ride in behind
+# _ZN19FloatOnLavaPlatform13InitResourcesEv, which takes the address of
+# func_ov022_0211193c at 0x021118e8 (BL func_020393c4) and that body calls
+# func_ov022_0211191c.
+#
+# _ZN9LavaPlank16CleanupResourcesEv (ov022 0x021121cc, 0x44 bytes, id 82 slot 3
+# read off the ROM table at 0x021141f0) was held out of slice_w8packs.txt over
+# a measured MSVC refusal: the TU spelled its two SharedFilePtrs G0/G1, and a
+# per-source -DG1=data_ov022_02114618 rewrote include/decl_common.h line 396's
+# `extern int G1[]` into a second, differently-typed declaration of line 238's
+# `extern char data_ov022_02114618[]` -- C2371. THAT REFUSAL IS STALE. The TU
+# on this tree spells the pair FloatingFloorLllBig_ModelFile /
+# FloatingFloorLllBig_ClsnFile, two names config/arm9/overlays/ov022/symbols.txt
+# carries for exactly 0x02114620 and 0x02114618 (lines 287-290) and that
+# decl_common.h does not declare at all, so no rename and no -D is needed: two
+# /alternatename lines in hal/actor_classes_ov022.cpp bind the C++-decorated
+# array names onto the mount's plain C ones, and the host thunk lp_clean
+# retires. Release order model-then-collision matches the ROM body and
+# __sinit_ov022_02112f78's construction order.
+src/_ZN9LavaPlank16CleanupResourcesEv.cpp

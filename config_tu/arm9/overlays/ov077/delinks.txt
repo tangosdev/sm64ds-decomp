@@ -1,0 +1,26 @@
+    .text       start:0x02123740 end:0x02127230 kind:code align:32
+    .rodata     start:0x02127230 end:0x02127240 kind:rodata align:4
+    .init       start:0x02127240 end:0x021277cc kind:code align:4
+    .ctor       start:0x021277cc end:0x021277d8 kind:rodata align:4
+    .data       start:0x021277e0 end:0x02127b20 kind:data align:32
+    .bss        start:0x02127b20 end:0x02127d40 kind:bss align:32
+src_tu/actors/Lakitu.cpp:
+    .text start:0x02123740 end:0x02124b64
+    .init start:0x02127240 end:0x0212749c
+    .ctor start:0x021277cc end:0x021277d0
+    .data start:0x021277e0 end:0x021278e8
+    .bss start:0x02127b50 end:0x02127c14
+
+src_tu/actors/Spiny.cpp:
+    .text start:0x02124b64 end:0x0212624c
+    .init start:0x0212749c end:0x021275fc
+    .ctor start:0x021277d0 end:0x021277d4
+    .data start:0x021278e8 end:0x02127a00
+    .bss start:0x02127c14 end:0x02127c40
+
+src_tu/actors/HeaveHo.cpp:
+    .text start:0x0212624c end:0x02127230
+    .init start:0x021275fc end:0x021277cc
+    .ctor start:0x021277d4 end:0x021277d8
+    .data start:0x02127a00 end:0x02127b20
+    .bss start:0x02127c88 end:0x02127d40

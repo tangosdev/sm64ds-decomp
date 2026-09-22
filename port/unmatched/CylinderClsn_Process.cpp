@@ -1,4 +1,4 @@
-// HOST COPY of CylinderClsn::Process (src/_ZN12CylinderClsn7ProcessEv.cpp,
+// HOST COPY of CylinderClsn::Process (src/_ZN5dCc_c7ProcessEv.cpp,
 // arm9 0x02014b00) -- the frame's cylinder-overlap pass over the intrusive
 // list Update threads onto data_0209cee8.
 //
@@ -23,8 +23,8 @@
 // enters correctly -- this in ecx, edx dead, nothing on the stack.
 //
 // WHAT ACTUALLY CRASHED THIS ON FRAME 0, and it was not the slot shift above:
-// two of the four cylinder vtables were never filled. _ZTV18MovingCylinderClsn
-// and _ZTV25MovingCylinderClsnWithPos were bare zeroed arrays in
+// two of the four cylinder vtables were never filled. _ZTV7dCcAc_c
+// and _ZTV10dCcAcPos_c were bare zeroed arrays in
 // hal/actor_vtables.cpp, because until this pass existed nothing in the port
 // dispatched a cylinder virtual at all. The castle grounds thread 28 nodes
 // onto data_0209cee8 from the first frame: 21 CylinderClsnWithPos (the trees,
@@ -66,9 +66,9 @@ extern int port_vs_king_target(void);   /* >0 == a King of the Star match */
 Fix12i Vec3_HorzLen(const Fix12i *v);
 void func_02014f44(unsigned id, CylClsn *clsn);
 int _ZN4cstd4fdivEii(int a, int b);
-extern void *_ZTV19CylinderClsnWithPos[];
-extern void *_ZTV18MovingCylinderClsn[];
-extern void *_ZTV25MovingCylinderClsnWithPos[];
+extern void *_ZTV8dCcPos_c[];
+extern void *_ZTV7dCcAc_c[];
+extern void *_ZTV10dCcAcPos_c[];
 extern void *_ZTV9LakituBro[];
 }
 
@@ -81,9 +81,9 @@ extern void *_ZTV9LakituBro[];
 #include <stdlib.h>
 static const char *cyl_vt_name(void **vt)
 {
-    if (vt == _ZTV19CylinderClsnWithPos)       return "CylinderClsnWithPos";
-    if (vt == _ZTV18MovingCylinderClsn)        return "MovingCylinderClsn";
-    if (vt == _ZTV25MovingCylinderClsnWithPos) return "MovingCylinderClsnWithPos";
+    if (vt == _ZTV8dCcPos_c)       return "CylinderClsnWithPos";
+    if (vt == _ZTV7dCcAc_c)        return "MovingCylinderClsn";
+    if (vt == _ZTV10dCcAcPos_c) return "MovingCylinderClsnWithPos";
     return 0;
 }
 
@@ -114,9 +114,9 @@ static void cyl_trace_list(void)
     int n = 0;
     for (CylClsn *p = data_0209cee8; p; p = p->next, ++n) {
         const char *nm = "?";
-        if (p->vt == _ZTV19CylinderClsnWithPos)         nm = "CylinderClsnWithPos";
-        else if (p->vt == _ZTV18MovingCylinderClsn)     nm = "MovingCylinderClsn";
-        else if (p->vt == _ZTV25MovingCylinderClsnWithPos)
+        if (p->vt == _ZTV8dCcPos_c)         nm = "CylinderClsnWithPos";
+        else if (p->vt == _ZTV7dCcAc_c)     nm = "MovingCylinderClsn";
+        else if (p->vt == _ZTV10dCcAcPos_c)
                                                         nm = "MovingCylinderClsnWithPos";
         fprintf(stderr, "[cyl] %2d %p vt=%p %-26s GetPos=%p GetOwnerID=%p%s\n",
                 n, (void *)p, (void *)p->vt, nm, p->vt[2], p->vt[3],

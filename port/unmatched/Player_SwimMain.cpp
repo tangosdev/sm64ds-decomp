@@ -1,4 +1,4 @@
-/* HOST COPY of src/_ZN6Player12St_Swim_MainEv.cpp -- Player swimming state, per frame.
+/* HOST COPY of src/actors/Player.cpp -- Player swimming state, per frame.
  *
  * This file is BYTE-IDENTICAL to the byte-locked source except for ONE call:
  * the health check `Player::GetHealth()`. It was produced by copying the source
@@ -26,7 +26,7 @@
  * and the swim state faults -- the SIG-SWIM signature in the JRB matrix. THE FIX
  * passes `this` explicitly, exactly the value the ROM leaves in r0.
  *
- * src/_ZN6Player12St_Swim_MainEv.cpp is dropped from slice_gate10.txt in favour
+ * src/actors/Player.cpp is dropped from slice_gate10.txt in favour
  * of this file; the byte-locked source is unchanged.
  */
 //cpp
@@ -39,8 +39,8 @@ extern int func_ov002_020cec2c(void*);
 extern void func_ov002_020cd71c(void*);
 extern void func_ov002_020cd550(void*);
 extern unsigned int func_02022d44(unsigned int, unsigned int, int, int, int, void*);
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void*);
-extern void* _ZNK12WithMeshClsn14GetFloorResultEv(void*);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void*);
+extern void* _ZNK10dBgCh_Actr14GetFloorResultEv(void*);
 extern void* func_02037dc4(void*);
 extern int _ZN4cstd5atan2E5Fix12IiES1_(int, int);
 extern void Vec3_RotateYAndTranslate(int*, void*, short, int*);
@@ -59,8 +59,8 @@ extern void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int, void*);
 extern void func_ov002_020cd2c4(void*);
 extern void func_ov002_020cd308(void*);
 extern void func_ov002_020dbf4c(void*);
-extern void _ZN12CylinderClsn5ClearEv(void*);
-extern void _ZN12CylinderClsn6UpdateEv(void*);
+extern void _ZN5dCc_c5ClearEv(void*);
+extern void _ZN5dCc_c6UpdateEv(void*);
 extern void func_ov002_020bd928(void*, unsigned int);
 extern void func_ov002_020bd8c0(void*, unsigned int);
 extern void Player_ReleaseHeldActor(void*);
@@ -131,8 +131,8 @@ int _ZN6Player12St_Swim_MainEv(char* c)
         *(unsigned int*)(c+0x630) = func_02022d44(*(volatile unsigned int*)(c+0x630), eid, pos[0], pos[1], z, 0);
     }
 
-    if (*(int*)(c+0x640) == 0 && _ZNK12WithMeshClsn10IsOnGroundEv(c+0x380) != 0) {
-        fr = (int*)func_02037dc4((char*)_ZNK12WithMeshClsn14GetFloorResultEv(c+0x380) + 4);
+    if (*(int*)(c+0x640) == 0 && _ZNK10dBgCh_Actr10IsOnGroundEv(c+0x380) != 0) {
+        fr = (int*)func_02037dc4((char*)_ZNK10dBgCh_Actr14GetFloorResultEv(c+0x380) + 4);
         ang = fr[1];
         if (ang < 0x720 && ang > 0x400 && *(int*)(c+0x60) >= *(int*)(c+0x64c) - 0xc8000) {
             int at;
@@ -265,11 +265,11 @@ int _ZN6Player12St_Swim_MainEv(char* c)
                 func_ov002_020cd2c4(c);
             }
         }
-        _ZN12CylinderClsn5ClearEv(c+0x314);
+        _ZN5dCc_c5ClearEv(c+0x314);
         sub = (int*)((char*)(*(int*)(c + _ZNK6Player14GetBodyModelIDEjb(c, (unsigned char)*(int*)(c+8), 0)*4 + 0xdc)) + 0x50);
         t5 = ((unsigned int)(*(int*)((char*)sub + 8)) << 4) >> 0x10;
         if ((int)t5 >= 5 && (int)t5 <= 7) {
-            _ZN12CylinderClsn6UpdateEv(c+0x314);
+            _ZN5dCc_c6UpdateEv(c+0x314);
         }
         break;
     case 7:

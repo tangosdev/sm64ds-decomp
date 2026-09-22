@@ -21,7 +21,7 @@
 #   0x021197a4 _ZN6Eyerok6RenderEv            e92d4010  push {r4,lr}
 #   0x02119838 _ZN6Eyerok8BehaviorEv          e92d47f0  push {r4-r10,lr}
 #   0x02119ce8 _ZN6Eyerok13InitResourcesEv    e92d43f0  push {r4-r9,lr}
-#   0x0211a370 Eyerok_Spawn                   e92d4010  push {r4,lr}
+#   0x0211a370 daIwante_c_classInit                   e92d4010  push {r4,lr}
 #   0x0211a418 __sinit_ov066_0211a418         e92d4000  push {lr}
 #
 # Sections, from config/arm9/overlays/ov066/delinks.txt:
@@ -60,10 +60,10 @@
 # inside ov066's own .text.
 #
 #   id   SpawnInfo   table slot   word[0] spawnFunc        idhalf   module
-#   176  0x0211ad40  0x02090b24   0x0211a370 Eyerok_Spawn     176   overlays(60,66)
+#   176  0x0211ad40  0x02090b24   0x0211a370 daIwante_c_classInit     176   overlays(60,66)
 #
 # ==== THE ALIAS RACE ON THE SPAWNINFO: SETTLED =============================
-# dsd marks Eyerok_SpawnInfo `ambiguous` and the reloc's module column names
+# dsd marks g_profile_IWANTE `ambiguous` and the reloc's module column names
 # TWO overlays, so this is a real contest with a mounted sibling (ov060 is
 # mounted, port/ov060_syms.txt). It is settled by reading the RAW BYTES of both
 # claimants, not by trusting a label:
@@ -76,7 +76,7 @@
 # which is exactly ov060's own .bss start (0x0211abe0..0x0211b240). 0x0211ad40
 # is 0x160 bytes INSIDE that bss, so ov060 cannot be the owner of a statically
 # initialised SpawnInfo there. ov066's record, by contrast, has word[0] =
-# Eyerok_Spawn (a real e92d4010 prologue inside ov066's own .text), word[1]'s
+# daIwante_c_classInit (a real e92d4010 prologue inside ov066's own .text), word[1]'s
 # low half = 0x00b0 = 176 = exactly the table index that reached it, and
 # word[8] = 0x0211ad24, Eyerok's own __si_class_type_info record.
 # ID 176 IS ov066's EYEROK. This is the ov077 Whomp finding in mirror image:
@@ -115,10 +115,10 @@
 #
 # THIRTY-TWO, NOT THIRTY-ONE, and the 32nd slot is the whole reason:
 #   slot 30 == 0x020100dc Actor::OnAimedAtWithEggReturnVec, the last Actor slot
-#   slot 31 == 0x020ee55c ov002 _ZN8Platform4KillEv
+#   slot 31 == 0x020ee55c ov002 _ZN10dBgActor_c4KillEv
 # A plain Actor stops at 30. Eyerok carries a 32nd because it is PLATFORM-
 # DERIVED -- which the base typeinfo (10dBgActor_c) says independently, and
-# which Eyerok_Spawn says a third time by calling _ZN8PlatformC2Ev. Three
+# which daIwante_c_classInit says a third time by calling _ZN10dBgActor_cC2Ev. Three
 # independent reads, one answer. Mario stands on the hands; they are platforms.
 #
 # The fourth width shape (a pointer-to-member SOURCE table whose {function, 0}
@@ -153,10 +153,10 @@
 #       its own C declares them `S8` = 8 bytes. Exact.
 #   data_ov066_0211ad18  0xc  the three-word Vector3 _ZN6Eyerok8BehaviorEv
 #       reads as data_ov066_0211ad18[0..2]. Exact, not one word short.
-#   data_ov066_0211ad24  0xc  the 3-word typeinfo record. Exact.
-#   data_ov066_0211ad30  0x10 the name string, 12 chars + NUL, padded. Ample.
-#   Eyerok_SpawnInfo     0x24 the record's nine words, ending on the vtable's
-#       own typeinfo pointer -- the ov077 Lakitu_SpawnInfo sizing exactly.
+#   _ZTI10daIwante_c  0xc  the 3-word typeinfo record. Exact.
+#   _ZTS10daIwante_c  0x10 the name string, 12 chars + NUL, padded. Ample.
+#   g_profile_IWANTE     0x24 the record's nine words, ending on the vtable's
+#       own typeinfo pointer -- the ov077 g_profile_JUGEM sizing exactly.
 #   the twenty-two 0x8 rows (ae14 ae1c ae24 ae2c ae34 ae3c ae44 ae4c ae54 ae5c
 #       ae64 ae6c ae74 ae7c ae84 ae8c ae94 ae9c aea4 aeac aeb4 aebc) are
 #       SharedFilePtr objects, 8 bytes, none split (the ov025 half-SharedFilePtr
@@ -190,7 +190,7 @@ data_ov066_0211ac98 data_ov066_0211aca0 data_ov066_0211aca8 data_ov066_0211acb0
 data_ov066_0211acb8 data_ov066_0211acc0 data_ov066_0211acc8 data_ov066_0211acd0
 data_ov066_0211acd8 data_ov066_0211ace0 data_ov066_0211ace8 data_ov066_0211acf0
 data_ov066_0211acf8 data_ov066_0211ad00 data_ov066_0211ad08 data_ov066_0211ad10
-data_ov066_0211ad18 data_ov066_0211ad24 data_ov066_0211ad30 Eyerok_SpawnInfo
+data_ov066_0211ad18 _ZTI10daIwante_c _ZTS10daIwante_c g_profile_IWANTE
 data_ov066_0211ae00 data_ov066_0211ae04 data_ov066_0211ae08 data_ov066_0211ae0c
 data_ov066_0211ae10 data_ov066_0211ae14 data_ov066_0211ae1c data_ov066_0211ae24
 data_ov066_0211ae2c data_ov066_0211ae34 data_ov066_0211ae3c data_ov066_0211ae44

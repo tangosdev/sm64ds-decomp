@@ -15,7 +15,7 @@
 // trap is live for this class in TWO different ways at once, which is worth
 // more than the addresses:
 //
-//   MgPsycheOut_SpawnInfo sits at 0x0213c78c, INSIDE the run of pair symbols
+//   g_profile_MG_3DESP sits at 0x0213c78c, INSIDE the run of pair symbols
 //   (0x0213c784 is table 02141f44 slot 2, 0x0213c794 is table 02141fac slot 3).
 //   A sweep reads {0x020ea1f0, 0x01850185} there -- the factory word and the
 //   doubled id -- as a pair with a wild adjustment.
@@ -33,7 +33,7 @@
 //
 //   table                n  arity  dispatched by
 //   -------------------  -  -----  -------------------------------------------
-//   data_ov006_02141f2c  3    0    func_ov006_020e9e00  (VTABLE SLOT 6)
+//   data_ov006_02141f2c  3    0    _ZN12dScMg3DEsp_c8BehaviorEv  (VTABLE SLOT 6)
 //   data_ov006_02141fac  4    0    func_ov006_020e9b70  (= f2c slot 1)
 //   data_ov006_02141f5c  3    1    func_ov006_020e9374
 //   data_ov006_02141f74  3    1    func_ov006_020e8d08
@@ -130,7 +130,7 @@
 //   func_ov006_020e9374   C++-linkage `extern PMF data_ov006_02141f5c[];`
 //   func_ov006_020e8d08   C++-linkage PMF                    LINK-VISIBLE, P8
 //   func_ov006_020e9b70   `struct Entry { PMF pmf; }` array   LINK-VISIBLE, PAU
-//   func_ov006_020e9e00   `extern "C" PMF ...[]`   SILENT to the link
+//   _ZN12dScMg3DEsp_c8BehaviorEv   `extern "C" PMF ...[]`   SILENT to the link
 //   func_ov006_020e8a44   `extern "C" PMF ...[]`   SILENT to the link
 //   func_ov006_020e8830   OPEN-CODED INTS          SILENT TO BOTH
 //   func_ov006_020e82fc   OPEN-CODED INTS          SILENT TO BOTH
@@ -229,7 +229,7 @@ extern MgPmf data_ov006_02141fac[];
 /* the ordinary callees the host copies below keep, each spelled as its own src
    TU spells it */
 void _ZN9Animation7AdvanceEv(void *anim);
-void func_ov006_020e7be8(void *p);
+void _ZN15dMg3DEspModel_c8BehaviorEv(void *p);
 
 /* Host-copied further down this file, and called from above their own
    definitions: 020e9b70 and 020e8830 are STATE BODIES as well as dispatchers,
@@ -431,7 +431,7 @@ extern "C" void func_ov006_020e82fc(char *c)
 // cell has been compared against the ROM's own code word and a zero adjustment
 // word, so three of the seven host copies are gone:
 //
-//   func_ov006_020e9e00  data_ov006_02141f2c   3 slots  arity 0  (vtable slot 6)
+//   _ZN12dScMg3DEsp_c8BehaviorEv  data_ov006_02141f2c   3 slots  arity 0  (vtable slot 6)
 //   func_ov006_020e9374  data_ov006_02141f5c   3 slots  arity 1
 //   func_ov006_020e8d08  data_ov006_02141f74   3 slots  arity 1
 //
@@ -448,7 +448,7 @@ extern "C" void func_ov006_020e82fc(char *c)
 // /vmg /vmm. This port compiles with both, which is lane PMFC2's finding in one
 // line: under /vmg /vmm an incomplete class's pointer to member is the GENERAL
 // representation, eight bytes, whether the class is complete at the declaration
-// or not. src/func_ov006_020e9e00.cpp was compiled for this lane under the
+// or not. src/_ZN12dScMg3DEsp_c8BehaviorEv.cpp was compiled for this lane under the
 // port's own flags and its listing reads
 // `_data_ov006_02141f2c[eax*8]` and `[eax*8+4]`
 // (runs/link100/out/PMFB4/listings/func_ov006_020e9e00_nozp.asm), against the
@@ -490,7 +490,7 @@ extern "C" void func_ov006_020e82fc(char *c)
 // ?data_ov006_02141f74@@3PAP8C70@@AEXH@ZA -- the C70 and C71 are the shadow
 // class names those two TUs give their receiver, part of the decoration and not
 // a typo. Both read off the objects with dumpbin /symbols.
-// src/func_ov006_020e9e00.cpp declares its table inside extern "C" and comes in
+// src/_ZN12dScMg3DEsp_c8BehaviorEv.cpp declares its table inside extern "C" and comes in
 // as the plain _data_ov006_02141f2c, which is the silence section 4 records.
 #pragma comment(linker, "/alternatename:?data_ov006_02141f5c@@3PAP8C71@@AEXH@ZA=_data_ov006_02141f5c")
 #pragma comment(linker, "/alternatename:?data_ov006_02141f74@@3PAP8C70@@AEXH@ZA=_data_ov006_02141f74")

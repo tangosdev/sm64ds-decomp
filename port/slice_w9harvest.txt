@@ -14,7 +14,7 @@
 #   543  src/ TUs that exist on origin/main and not on this branch
 #   496  (c) BLOCKED -- main RENAMED a TU this branch already carries. The
 #        port's src/ already has a byte-matched TU at the SAME ROM ADDRESS
-#        under the older spelling (func_ov027_02111618 vs main's
+#        under the older spelling (_ZN12daIDonketu_cD0Ev vs main's
 #        _ZN10ChillBullyD0Ev, and 495 more). Taking main's file would seat a
 #        SECOND copy of the same ROM body under a second C name; it moves no
 #        linkage and it is exactly the duplicate the "propagate renames BY
@@ -52,9 +52,9 @@
 #
 #   WHY IT LINKS HERE. The TU's six externs all already resolve in this build:
 #     func_ov060_02116518                     ov060, mounted (ov060_syms.txt)
-#     _ZNK12WithMeshClsn10IsOnGroundEv        arm9 0x020356e8, already linked
+#     _ZNK10dBgCh_Actr10IsOnGroundEv        arm9 0x020356e8, already linked
 #     RandomIntInternal                       arm9 0x0203b990, already linked
-#     _ZN9ActorBase18MarkForDestructionEv     arm9 0x02043824, already linked
+#     _ZN7fBase_c18MarkForDestructionEv     arm9 0x02043824, already linked
 #     data_02082214, data_0209e650            arm9 data, already mounted
 #   and the one spelling difference is already paid for: the matched TU
 #   declares Actor::Spawn as

@@ -1,123 +1,152 @@
 // @symbol func_ov006_02126b4c
-// NONMATCHING: register allocation (div=64 of 230 words). Logic verified against
-// the ROM instruction by instruction, checked mechanically rather than by eye:
-// 0 shape divergences over all 230 words -- every divergent word decodes to the
-// same mnemonic with the same operand shape, and the register substitution is a
-// consistent bijection within each of the two arms, which mwccarm colours
-// independently:
-//     arm which==1  [+0x000,+0x1c4)  14 words, a 2-cycle  r8<->sl
-//     arm else      [+0x1c4,+0x398)  50 words, a six-way permutation
-// Declaration order, scope depth, use-count boosters, coalescing copies, loop
-// form, pointer retyping and every live optimizer pragma are inert here: they do
-// not merely fail to help, they return BITWISE IDENTICAL output. That is the
-// signature of an allocator decision the source cannot address, and it is why
-// this is banked as a wall rather than as an unfinished attempt. The per-family
-// sweep counts behind that sentence are the fan-out's measurement and live with
-// the near-miss row (nearmiss/db.jsonl, ov006 0x02126b4c); what is verified here
-// is the RESULT above -- the score and the two register maps -- which is checked
-// mechanically on every read rather than quoted.
-// Counts as decompiled, not matched.
+/* recovered: minigame BG2 tile-column writer.
+ *
+ * Copies one 16-row column of 2x2 BG tiles into the BG2 screen of both the
+ * main and the sub engine. Each cell index comes from the u16 grid at
+ * self+0x4f38 (row stride 0x5c0, column `col`); its four tiles are the four
+ * u16 words of data_ov006_0212f3bc[idx], written with MultiStore16 (two
+ * halfwords each) at screen offset ((col & 0xf) << 7) + 2*j, +2, +0x40,
+ * +0x42. flag == 1 targets the first half of the screen block, anything else
+ * the half at +0x800.
+ *
+ * Three spellings are load-bearing for the second loop's register colouring
+ * (notes/mwccarm-codegen.md 6cd and the 6cu addendum): the two dead
+ * assignments at the head of the first loop (`tile`, `row`), the dead
+ * initialiser on `i`, and `off` declared as long rather than int. The sixteen
+ * volatile u16 locals are the ROM's real stack traffic (each tile is stored
+ * and reloaded around the screen-pointer call).
+ */
 #include "types.h"
 
-extern void MultiStore16(u16 val, char *dst, int nbytes);
-extern u16 *_ZN2G212GetBG2ScrPtrEv(void);
-extern u16 *_ZN3G2S12GetBG2ScrPtrEv(void);
-
-typedef struct Quad { u16 a, b, c, d; } Quad;
-extern Quad data_ov006_0212f3bc[];
-
 #pragma opt_strength_reduction off
-void func_ov006_02126b4c(char *o, int row, int which)
+
+extern char *_ZN2G212GetBG2ScrPtrEv(void);
+extern char *_ZN3G2S12GetBG2ScrPtrEv(void);
+extern void MultiStore16(int val, char *dst, int n);
+extern u16 data_ov006_0212f3bc[];
+
+void func_ov006_02126b4c(char *c, int col, int flag)
 {
-    if (which == 1) {
-        char *dst;
-        char *p = o + row * 2;
-        int off = (row & 0xf) << 7;
-        volatile u16 t0, t1, t2, t3, t4, t5, t6, t7;
-        u16 v;
-        int i = 0;
-        int col = i;
-        for (; i < 0x10; i++) {
-            v = data_ov006_0212f3bc[*(u16 *)(p + 0x4f38)].a;
-            dst = (char *)_ZN2G212GetBG2ScrPtrEv() + off + col * 2;
-            t0 = v;
-            MultiStore16(t0, dst, 2);
-            v = data_ov006_0212f3bc[*(u16 *)(p + 0x4f38)].b;
-            dst = (char *)_ZN2G212GetBG2ScrPtrEv() + off + col * 2 + 0x2;
-            t1 = v;
-            MultiStore16(t1, dst, 2);
-            v = data_ov006_0212f3bc[*(u16 *)(p + 0x4f38)].c;
-            dst = (char *)_ZN2G212GetBG2ScrPtrEv() + off + col * 2 + 0x40;
-            t2 = v;
-            MultiStore16(t2, dst, 2);
-            v = data_ov006_0212f3bc[*(u16 *)(p + 0x4f38)].d;
-            dst = (char *)_ZN2G212GetBG2ScrPtrEv() + off + col * 2 + 0x42;
-            t3 = v;
-            MultiStore16(t3, dst, 2);
-            v = data_ov006_0212f3bc[*(u16 *)(p + 0x4f38)].a;
-            dst = (char *)_ZN3G2S12GetBG2ScrPtrEv() + off + col * 2;
-            t4 = v;
-            MultiStore16(t4, dst, 2);
-            v = data_ov006_0212f3bc[*(u16 *)(p + 0x4f38)].b;
-            dst = (char *)_ZN3G2S12GetBG2ScrPtrEv() + off + col * 2 + 0x2;
-            t5 = v;
-            MultiStore16(t5, dst, 2);
-            v = data_ov006_0212f3bc[*(u16 *)(p + 0x4f38)].c;
-            dst = (char *)_ZN3G2S12GetBG2ScrPtrEv() + off + col * 2 + 0x40;
-            t6 = v;
-            MultiStore16(t6, dst, 2);
-            v = data_ov006_0212f3bc[*(u16 *)(p + 0x4f38)].d;
-            dst = (char *)_ZN3G2S12GetBG2ScrPtrEv() + off + col * 2 + 0x42;
-            t7 = v;
-            MultiStore16(t7, dst, 2);
-            p += 0x5c0;
-            col += 2;
-        }
+    volatile u16 v0, v1, v2, v3, v4, v5, v6, v7;
+    volatile u16 w0, w1, w2, w3, w4, w5, w6, w7;
+    int n;
+    int i = 0;
+    u16 tile;
+    char *row;
+    int j;
+    long off;
+    int k842;
+    int masked;
+    u32 idx;
+    volatile u16 *scr;
+
+    if (flag == 1) {
+        masked = col & 0xf;
+        tile = *(u16 *)((char *)data_ov006_0212f3bc + 6);
+        row = c;
+        i = 0;
+        j = i;
+        row = c + (col << 1);
+        off = masked << 7;
+        n = 2;
+        do {
+            idx = *(u16 *)(row + 0x4f38);
+            tile = *(u16 *)((char *)data_ov006_0212f3bc + (idx << 3));
+            scr = (volatile u16 *)(_ZN2G212GetBG2ScrPtrEv() + off);
+            MultiStore16(v0 = tile, (char *)(scr + j), n);
+
+            idx = *(u16 *)(row + 0x4f38);
+            tile = *(u16 *)((char *)data_ov006_0212f3bc + (idx << 3) + 2);
+            scr = (volatile u16 *)(_ZN2G212GetBG2ScrPtrEv() + off);
+            MultiStore16(v1 = tile, (char *)(scr + j + 1), n);
+
+            idx = *(u16 *)(row + 0x4f38);
+            tile = *(u16 *)((char *)data_ov006_0212f3bc + (idx << 3) + 4);
+            scr = (volatile u16 *)(_ZN2G212GetBG2ScrPtrEv() + off);
+            MultiStore16(v2 = tile, (char *)(scr + j + 0x20), n);
+
+            idx = *(u16 *)(row + 0x4f38);
+            tile = *(u16 *)((char *)data_ov006_0212f3bc + (idx << 3) + 6);
+            scr = (volatile u16 *)(_ZN2G212GetBG2ScrPtrEv() + off);
+            MultiStore16(v3 = tile, (char *)(scr + j + 0x21), n);
+
+            idx = *(u16 *)(row + 0x4f38);
+            tile = *(u16 *)((char *)data_ov006_0212f3bc + (idx << 3));
+            scr = (volatile u16 *)(_ZN3G2S12GetBG2ScrPtrEv() + off);
+            MultiStore16(v4 = tile, (char *)(scr + j), n);
+
+            idx = *(u16 *)(row + 0x4f38);
+            tile = *(u16 *)((char *)data_ov006_0212f3bc + (idx << 3) + 2);
+            scr = (volatile u16 *)(_ZN3G2S12GetBG2ScrPtrEv() + off);
+            MultiStore16(v5 = tile, (char *)(scr + j + 1), n);
+
+            idx = *(u16 *)(row + 0x4f38);
+            tile = *(u16 *)((char *)data_ov006_0212f3bc + (idx << 3) + 4);
+            scr = (volatile u16 *)(_ZN3G2S12GetBG2ScrPtrEv() + off);
+            MultiStore16(v6 = tile, (char *)(scr + j + 0x20), n);
+
+            idx = *(u16 *)(row + 0x4f38);
+            tile = *(u16 *)((char *)data_ov006_0212f3bc + (idx << 3) + 6);
+            scr = (volatile u16 *)(_ZN3G2S12GetBG2ScrPtrEv() + off);
+            MultiStore16(v7 = tile, (char *)(scr + j + 0x21), n);
+
+            row += 0x5c0;
+            j += 2;
+            i += 1;
+        } while (i < 0x10);
         return;
     }
-    {
-        char *dst;
-        char *p = o + row * 2;
-        int off = (row & 0xf) << 7;
-        volatile u16 t0, t1, t2, t3, t4, t5, t6, t7;
-        u16 v;
-        int i = 0;
-        int col = i;
-        for (; i < 0x10; i++) {
-            v = data_ov006_0212f3bc[*(u16 *)(p + 0x4f38)].a;
-            dst = (char *)_ZN2G212GetBG2ScrPtrEv() + 0x800 + off + col * 2;
-            t0 = v;
-            MultiStore16(t0, dst, 2);
-            v = data_ov006_0212f3bc[*(u16 *)(p + 0x4f38)].b;
-            dst = (char *)_ZN2G212GetBG2ScrPtrEv() + 0x802 + off + col * 2;
-            t1 = v;
-            MultiStore16(t1, dst, 2);
-            v = data_ov006_0212f3bc[*(u16 *)(p + 0x4f38)].c;
-            dst = (char *)_ZN2G212GetBG2ScrPtrEv() + 0x840 + off + col * 2;
-            t2 = v;
-            MultiStore16(t2, dst, 2);
-            v = data_ov006_0212f3bc[*(u16 *)(p + 0x4f38)].d;
-            dst = (char *)_ZN2G212GetBG2ScrPtrEv() + 0x842 + off + col * 2;
-            t3 = v;
-            MultiStore16(t3, dst, 2);
-            v = data_ov006_0212f3bc[*(u16 *)(p + 0x4f38)].a;
-            dst = (char *)_ZN3G2S12GetBG2ScrPtrEv() + 0x800 + off + col * 2;
-            t4 = v;
-            MultiStore16(t4, dst, 2);
-            v = data_ov006_0212f3bc[*(u16 *)(p + 0x4f38)].b;
-            dst = (char *)_ZN3G2S12GetBG2ScrPtrEv() + 0x802 + off + col * 2;
-            t5 = v;
-            MultiStore16(t5, dst, 2);
-            v = data_ov006_0212f3bc[*(u16 *)(p + 0x4f38)].c;
-            dst = (char *)_ZN3G2S12GetBG2ScrPtrEv() + 0x840 + off + col * 2;
-            t6 = v;
-            MultiStore16(t6, dst, 2);
-            v = data_ov006_0212f3bc[*(u16 *)(p + 0x4f38)].d;
-            dst = (char *)_ZN3G2S12GetBG2ScrPtrEv() + 0x842 + off + col * 2;
-            t7 = v;
-            MultiStore16(t7, dst, 2);
-            p += 0x5c0;
-            col += 2;
-        }
-    }
+
+    masked = col & 0xf;
+    i = 0;
+    j = i;
+    row = c + (col << 1);
+    off = masked << 7;
+    n = 2;
+    k842 = 0x842;
+    do {
+        idx = *(u16 *)(row + 0x4f38);
+        tile = *(u16 *)((char *)data_ov006_0212f3bc + (idx << 3));
+        scr = (volatile u16 *)(_ZN2G212GetBG2ScrPtrEv() + 0x800 + off);
+        MultiStore16(w0 = tile, (char *)(scr + j), n);
+
+        idx = *(u16 *)(row + 0x4f38);
+        tile = *(u16 *)((char *)data_ov006_0212f3bc + (idx << 3) + 2);
+        scr = (volatile u16 *)(_ZN2G212GetBG2ScrPtrEv() + 0x802 + off);
+        MultiStore16(w1 = tile, (char *)(scr + j), n);
+
+        idx = *(u16 *)(row + 0x4f38);
+        tile = *(u16 *)((char *)data_ov006_0212f3bc + (idx << 3) + 4);
+        scr = (volatile u16 *)(_ZN2G212GetBG2ScrPtrEv() + 0x840 + off);
+        MultiStore16(w2 = tile, (char *)(scr + j), n);
+
+        idx = *(u16 *)(row + 0x4f38);
+        tile = *(u16 *)((char *)data_ov006_0212f3bc + (idx << 3) + 6);
+        scr = (volatile u16 *)(_ZN2G212GetBG2ScrPtrEv() + k842 + off);
+        MultiStore16(w3 = tile, (char *)(scr + j), n);
+
+        idx = *(u16 *)(row + 0x4f38);
+        tile = *(u16 *)((char *)data_ov006_0212f3bc + (idx << 3));
+        scr = (volatile u16 *)(_ZN3G2S12GetBG2ScrPtrEv() + 0x800 + off);
+        MultiStore16(w4 = tile, (char *)(scr + j), n);
+
+        idx = *(u16 *)(row + 0x4f38);
+        tile = *(u16 *)((char *)data_ov006_0212f3bc + (idx << 3) + 2);
+        scr = (volatile u16 *)(_ZN3G2S12GetBG2ScrPtrEv() + 0x802 + off);
+        MultiStore16(w5 = tile, (char *)(scr + j), n);
+
+        idx = *(u16 *)(row + 0x4f38);
+        tile = *(u16 *)((char *)data_ov006_0212f3bc + (idx << 3) + 4);
+        scr = (volatile u16 *)(_ZN3G2S12GetBG2ScrPtrEv() + 0x840 + off);
+        MultiStore16(w6 = tile, (char *)(scr + j), n);
+
+        idx = *(u16 *)(row + 0x4f38);
+        tile = *(u16 *)((char *)data_ov006_0212f3bc + (idx << 3) + 6);
+        scr = (volatile u16 *)(_ZN3G2S12GetBG2ScrPtrEv() + k842 + off);
+        MultiStore16(w7 = tile, (char *)(scr + j), n);
+
+        row += 0x5c0;
+        j += 2;
+        i += 1;
+    } while (i < 0x10);
 }

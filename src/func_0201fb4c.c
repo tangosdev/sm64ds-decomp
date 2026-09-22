@@ -5,7 +5,7 @@ extern short data_0209d6d4;
 int func_0201fb4c(void)
 {
     short v;
-    int b;
+    unsigned int b;
     if (data_0209d664 != 0) goto no;
     b = (data_0209f2d8 == 2);
     if (b != 0) goto no;

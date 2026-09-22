@@ -10,9 +10,9 @@ port/hal/cxx_aliases.cpp binds each spelled name exactly ONCE, with an
 object. When two TUs mean different objects, one of them is silently wired to
 the wrong one:
 
-  src/func_ov043_0211123c.c  (CleanupResources) means its class's own
+  src/game/actors/d_a_obj_km1_ukishima.cpp  (CleanupResources) means its class's own
       SharedFilePtrs, the ROM's 0x021125e8 and 0x021125e0, by G0 and G1
-  src/func_ov043_021111e4.c  (the deleting destructor) means the game heap
+  src/game/actors/d_a_obj_km1_ukishima.cpp  (the deleting destructor) means the game heap
       pointer 0x020a0eac by G0
   hal/cxx_aliases.cpp already binds _G0 to _data_020a0eac
 
@@ -51,12 +51,12 @@ FIVE THINGS THAT LOOK LIKE FINDINGS AND ARE NOT, each of which this got wrong
 once before it was right, and each of which costs the tool its credibility if
 it comes back:
 
-  a mention in a COMMENT. src/_ZN11CannonHatch16CleanupResourcesEv.cpp was
+  a mention in a COMMENT. src/game/actors/d_a_obj_cannon_shutter.cpp was
       fixed off the placeholders and now spells its files by address, but its
       header comment explains the old G0/G1 bug at length. Comments and string
       literals are blanked before the identifier search.
   a TU already RENAMED per source. port/CMakeLists.txt compiles
-      src/func_ov100_02147054.c with -DG0=port_pathlift_file0, so that TU never
+      src/game/actors/daObjPathLift_c.cpp with -DG0=port_pathlift_file0, so that TU never
       references the shared name. Renames are read, and the rename's own target
       is checked instead, resolved one /alternatename hop.
   the TU that DEFINES the target. KillPlayer is bound to KillPlayer's own
@@ -65,7 +65,7 @@ it comes back:
       lands in the literal pool, so branches are decoded too. Skipping them
       turned about thirty ordinary callers of AngleDiff, Vec3_Add and friends
       into collisions.
-  a LOCAL TYPE OF THE SAME NAME. src/func_02021bec.c writes
+  a LOCAL TYPE OF THE SAME NAME. src/_ZN8Particle10SysTracker8Contents6UpdateEv.cpp writes
       `typedef struct { Method m[1]; } VT;` and uses that type to walk a
       vtable. Its `VT` is its own; it has nothing to do with the shared
       placeholder, and the object it compiles to has exactly one undefined
@@ -363,7 +363,7 @@ def per_source_renames(root):
     """{TU stem: {spelled name: replacement}} from port/CMakeLists.txt.
 
     THE REMEDY FOR THIS TRAP IS A PER-SOURCE -D, so a tool that does not read
-    them reports every already-fixed TU as broken. src/func_ov100_02147054.c is
+    them reports every already-fixed TU as broken. src/game/actors/daObjPathLift_c.cpp is
     the live example: the CMake block near "G0=port_pathlift_file0" compiles it
     with G0/G1/G2 renamed to private names, so that TU never references the
     global G0 at all and flagging it is a false positive -- exactly the kind
@@ -429,7 +429,7 @@ _STRIP = re.compile(
 def code_only(text):
     """Source with comments and literals blanked out.
 
-    NOT cosmetic. src/_ZN11CannonHatch16CleanupResourcesEv.cpp was already
+    NOT cosmetic. src/game/actors/d_a_obj_cannon_shutter.cpp was already
     fixed off the placeholders and now spells its two SharedFilePtrs by
     address, but its header comment explains the old G0/G1 bug at length. A
     plain identifier search over the raw text reads that comment as a live
@@ -724,7 +724,7 @@ def main():
         # wrong pointer in the shipping build today. Run mg6 lane VTF lost a
         # defect in the gap between those two: the VT section prints nineteen
         # MISMATCH rows and exactly one of them was live and unrepaired
-        # (src/func_ov006_020dbe64.c, dScMgCoin_c's slot 17). Burying it in
+        # (src/_ZN11dScMgCoin_cD0Ev.cpp, dScMgCoin_c's slot 17). Burying it in
         # nineteen is the same as not reporting it, so it gets its own list.
         for r in mismatched:
             if r[0] in linked:

@@ -30,12 +30,12 @@ struct PortWithMeshClsn;
 struct PortCylinderClsn;
 
 extern "C" {
-int _ZN5Actor13DistToCPlayerEv(void *self);
+int _ZN8dActor_c13DistToCPlayerEv(void *self);
 void func_ov079_02123f34(void *self);
-void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *c);
-int _ZN5Enemy15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_(
+void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *c);
+int _ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actrisbbi(
     void *self, void *w, int a, short b, int c, int d, void *e);
-void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(void *self, void *w, unsigned n);
+void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void *self, void *w, unsigned n);
 void func_ov079_02124188(void *self);
 int func_ov079_021243e0(char *c, int r4);
 int func_ov079_02123a8c(void *self);

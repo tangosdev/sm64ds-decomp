@@ -14,10 +14,10 @@
 #   LoadArchive             called by nine live TUs that called the retired
 #                           face yesterday: LoadTextNarcs (the language
 #                           switch), Stage::InitResources (level archives),
-#                           func_02034fbc, func_ov003_020af8a0,
-#                           func_ov005_020c1a20, func_ov007_020cc2cc,
+#                           func_02034fbc, _ZN12dScStarSel_c13InitResourcesEv,
+#                           _ZN11dScMiniGm_c13InitResourcesEv, _ZN9dScDSMT_c8BehaviorEv,
 #                           func_ov075_02118bf8, func_ov075_02119640,
-#                           func_ov075_0211977c and func_ov075_0211a410.
+#                           func_ov075_0211977c and _ZN10dScEntry_c13InitResourcesEv.
 #   func_02018934           the ROM's mount body; LoadArchive's only callee.
 #   func_02018d98           func_02018934 opens the NARC through it.
 #   _ZN4Heap9_AllocateEji   the tail-call veneer at 0x0203c29c that

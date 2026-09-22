@@ -13,9 +13,9 @@ extern void Player_AdvanceAnims(char *);
 int Player::St_JumpQuicksand_Main()
 {
     u8 t = mStateWork;
-    (*(u8 *)(int)(((long long)(int)((char *)&mStateWork))))++;
+    (*(u8 *)(int)((char *)&mStateWork))++;
     if (t < 6) {
-        (*(int *)(int)(((long long)(int)((char *)&mSinkDepth)))) -=
+        (*(int *)(int)((char *)&mSinkDepth)) -=
             (int)((((7 - mStateWork) << 12) * 0xcccLL + 0x800) >> 12);
         if (mSinkDepth < 0x1000)
             mSinkDepth = 0x1100;

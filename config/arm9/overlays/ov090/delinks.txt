@@ -3,11 +3,11 @@
     .ctor       start:0x021340c4 end:0x021340d4 kind:rodata align:4
     .data       start:0x021340e0 end:0x02134480 kind:data align:32
     .bss        start:0x02134480 end:0x021345e0 kind:bss align:32
-src/_ZN7SkeeterD1Ev.c:
+src/_ZN7SkeeterD1Ev.cpp:
     complete
     .text start:0x02130f00 end:0x02130f40
 
-src/_ZN7SkeeterD0Ev.c:
+src/_ZN7SkeeterD0Ev.cpp:
     complete
     .text start:0x02130f40 end:0x02130f94
 
@@ -16,6 +16,7 @@ src/func_ov090_02130f94.c:
     .text start:0x02130f94 end:0x021310b4
 
 src/func_ov090_021310b4.c:
+    complete
     .text start:0x021310b4 end:0x02131378
 
 src/func_ov090_02131378.cpp:
@@ -66,11 +67,11 @@ src/func_ov090_02131e50.c:
     complete
     .text start:0x02131e50 end:0x02131edc
 
-src/_ZN7Skeeter16CleanupResourcesEv.c:
+src/_ZN7Skeeter16CleanupResourcesEv.cpp:
     complete
     .text start:0x02131edc end:0x02131f30
 
-src/_ZN7Skeeter16OnPendingDestroyEv.c:
+src/_ZN7Skeeter16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02131f30 end:0x02131f34
 
@@ -79,33 +80,34 @@ src/_ZN7Skeeter6RenderEv.cpp:
     .text start:0x02131f34 end:0x02131f88
 
 src/_ZN7Skeeter8BehaviorEv.cpp:
+    complete
     .text start:0x02131f88 end:0x0213235c
 
 src/_ZN7Skeeter13InitResourcesEv.cpp:
     complete
     .text start:0x0213235c end:0x02132618
 
-src/func_ov090_02132618.c:
+src/_ZN7Skeeter16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x02132618 end:0x02132620
 
-src/func_ov090_02132620.cpp:
+src/_ZN7Skeeter13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x02132620 end:0x0213264c
 
-src/func_ov090_0213264c.c:
+src/_ZN7Skeeter13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x0213264c end:0x02132654
 
-src/Skeeter_Spawn.c:
+src/d_a_menbo.c:
     complete
     .text start:0x02132654 end:0x0213269c
 
-src/_ZN8MantaRayD1Ev.c:
+src/_ZN8MantaRayD1Ev.cpp:
     complete
     .text start:0x0213269c end:0x021326dc
 
-src/_ZN8MantaRayD0Ev.c:
+src/_ZN8MantaRayD0Ev.cpp:
     complete
     .text start:0x021326dc end:0x02132730
 
@@ -129,11 +131,11 @@ src/func_ov090_02132b14.c:
     complete
     .text start:0x02132b14 end:0x02132c1c
 
-src/_ZN8MantaRay16CleanupResourcesEv.c:
+src/_ZN8MantaRay16CleanupResourcesEv.cpp:
     complete
     .text start:0x02132c1c end:0x02132c64
 
-src/_ZN8MantaRay16OnPendingDestroyEv.c:
+src/_ZN8MantaRay16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02132c64 end:0x02132c68
 
@@ -149,15 +151,15 @@ src/_ZN8MantaRay13InitResourcesEv.cpp:
     complete
     .text start:0x02132e38 end:0x02132fe8
 
-src/MantaRay_Spawn.c:
+src/d_a_manta.c:
     complete
     .text start:0x02132fe8 end:0x02133034
 
-src/_ZN10CheepCheepD1Ev.c:
+src/_ZN10CheepCheepD1Ev.cpp:
     complete
     .text start:0x02133034 end:0x02133074
 
-src/_ZN10CheepCheepD0Ev.c:
+src/_ZN10CheepCheepD0Ev.cpp:
     complete
     .text start:0x02133074 end:0x021330c8
 
@@ -189,11 +191,11 @@ src/func_ov090_02133338.c:
     complete
     .text start:0x02133338 end:0x021333ac
 
-src/_ZN10CheepCheep16CleanupResourcesEv.c:
+src/_ZN10CheepCheep16CleanupResourcesEv.cpp:
     complete
     .text start:0x021333ac end:0x021333dc
 
-src/_ZN10CheepCheep16OnPendingDestroyEv.c:
+src/_ZN10CheepCheep16OnPendingDestroyEv.cpp:
     complete
     .text start:0x021333dc end:0x021333e0
 
@@ -206,17 +208,18 @@ src/_ZN10CheepCheep8BehaviorEv.cpp:
     .text start:0x02133430 end:0x02133530
 
 src/_ZN10CheepCheep13InitResourcesEv.cpp:
+    complete
     .text start:0x02133530 end:0x02133634
 
-src/CheepCheep_Spawn.c:
+src/d_a_pukupuku.c:
     complete
     .text start:0x02133634 end:0x0213367c
 
-src/_ZN5SharkD1Ev.c:
+src/_ZN5SharkD1Ev.cpp:
     complete
     .text start:0x0213367c end:0x021336bc
 
-src/_ZN5SharkD0Ev.c:
+src/_ZN5SharkD0Ev.cpp:
     complete
     .text start:0x021336bc end:0x02133710
 
@@ -240,11 +243,11 @@ src/func_ov090_02133904.c:
     complete
     .text start:0x02133904 end:0x02133978
 
-src/_ZN5Shark16CleanupResourcesEv.c:
+src/_ZN5Shark16CleanupResourcesEv.cpp:
     complete
     .text start:0x02133978 end:0x021339a8
 
-src/_ZN5Shark16OnPendingDestroyEv.c:
+src/_ZN5Shark16OnPendingDestroyEv.cpp:
     complete
     .text start:0x021339a8 end:0x021339ac
 
@@ -260,18 +263,22 @@ src/_ZN5Shark13InitResourcesEv.cpp:
     complete
     .text start:0x02133b98 end:0x02133ca0
 
-src/Shark_Spawn.c:
+src/d_a_shark.c:
     complete
     .text start:0x02133ca0 end:0x02133ce8
 
 src/__sinit_ov090_02133ce8.c:
+    complete
     .init start:0x02133ce8 end:0x02133ea8
 
 src/__sinit_ov090_02133ea8.c:
+    complete
     .init start:0x02133ea8 end:0x02133f4c
 
 src/__sinit_ov090_02133f4c.c:
+    complete
     .init start:0x02133f4c end:0x02134020
 
 src/__sinit_ov090_02134020.c:
+    complete
     .init start:0x02134020 end:0x021340c4

@@ -35,9 +35,9 @@
 //     Scene -> dScMgBase_c      data_ov004_020bc0c0  36 slots
 //           -> dScMgBomroom_c   data_ov006_0213bbb4  36 slots
 //
-// Measured, not assumed from curling. Slot 16 (D2, func_ov006_020d5a54) and
-// slot 17 (D0, func_ov006_020d5a78) BOTH store data_ov006_0213bbb4 into [this]
-// and then call func_ov004_020b29c0, dScMgBase_c's teardown, with nothing in
+// Measured, not assumed from curling. Slot 16 (D2, _ZN14dScMgBomroom_cD1Ev) and
+// slot 17 (D0, _ZN14dScMgBomroom_cD0Ev) BOTH store data_ov006_0213bbb4 into [this]
+// and then call _ZN11dScMgBase_cD2Ev, dScMgBase_c's teardown, with nothing in
 // between -- read off the ROM disassembly at 0x020d5a54 and 0x020d5a78, whose
 // literal pools hold 0x0213bbb4 and nothing else. So there is no intermediate
 // base of the dScMgSingle3DBase_c kind 0x169 and 0x186 need, and this seat
@@ -108,7 +108,7 @@
 //
 // Both are reported below whether or not they fire, because a silent zero and
 // an absent instrument look the same in a log. Seating the spawner also links
-// src/func_ov006_020d66c4.cpp for the first time -- every relocation reaching
+// src/actors/dScMgBomroom_c.cpp for the first time -- every relocation reaching
 // 0x020d66c4 anywhere in ov006 comes from inside that body -- so the slice's
 // linkage delta is now the full 74 rather than slice_sos.txt's original +71.
 //
@@ -241,21 +241,21 @@ void port_mg_dispatch_counts(unsigned *calls, unsigned *unknown);
 extern unsigned char data_ov004_020bc0c0[];   /* dScMgBase_c,     36 slots */
 extern unsigned char data_ov006_0213bbb4[];   /* dScMgBomroom_c,  36 slots */
 
-/* the class's own six vtable bodies. func_ov006_020d91b0 is the HOST COPY in
+/* the class's own six vtable bodies. _ZN14dScMgBomroom_c8BehaviorEv is the HOST COPY in
    unmatched/MgBomroom_StateDispatch.cpp, not the src TU: it is the
    pointer-to-member dispatcher and the port cannot compile the src. */
-int   func_ov006_020d9244(void *self);          /* slot 0  InitResources */
-int   func_ov006_020d91b0(char *self);          /* slot 6  Behavior, host copy */
-int   func_ov006_020d9160(void *self);          /* slot 9  Render */
-int   func_ov006_020d5a54(int *self);           /* slot 16 D2 */
-int  *func_ov006_020d5a78(int *self);           /* slot 17 D0 */
-void  func_ov006_020d9104(unsigned char *self); /* slot 18 state reset */
+int   _ZN14dScMgBomroom_c13InitResourcesEv(void *self);          /* slot 0  InitResources */
+int   _ZN14dScMgBomroom_c8BehaviorEv(char *self);          /* slot 6  Behavior, host copy */
+int   _ZN14dScMgBomroom_c6RenderEv(void *self);          /* slot 9  Render */
+int   _ZN14dScMgBomroom_cD1Ev(int *self);           /* slot 16 D2 */
+int  *_ZN14dScMgBomroom_cD0Ev(int *self);           /* slot 17 D0 */
+void  _ZN14dScMgBomroom_c13OnYoshiTryEatEi(unsigned char *self); /* slot 18 state reset */
 
 /* the ROM's own drop-inside-a-bin handler, for the bin-full probe below */
 void  func_ov006_020d6b88(void *self, int idx);
 
 /* the factory */
-void *MgSortOrSplode_Spawn(void);
+void *dScMgBomroom_c_classInit(void);
 
 /* the state machine's witnesses, from unmatched/MgBomroom_StateDispatch.cpp */
 unsigned port_mg_bomroom_state_hits(void);
@@ -278,7 +278,7 @@ static unsigned g_sos_hits[36];
 #define SOS(n)  (++g_sos_hits[(n)])
 
 static int  __fastcall sos_init(void *s, void *)
-{ SOS(0);  const int r = func_ov006_020d9244(s);
+{ SOS(0);  const int r = _ZN14dScMgBomroom_c13InitResourcesEv(s);
   hal_gapless_minigames_latch(); return r; }
 /* SM64DS_SOS_STATE=<n>: pin the top-level state index at +0x62d0 before every
    Behavior tick. A DIAGNOSTIC, off unless the variable is set, and it exists
@@ -435,14 +435,14 @@ static int __fastcall sos_beh(void *s, void *)
     ++tick;
     if (trace > 0)
         sos_trace((char *)s, tick);
-    return func_ov006_020d91b0((char *)s);
+    return _ZN14dScMgBomroom_c8BehaviorEv((char *)s);
 }
 static int  __fastcall sos_render(void *s, void *)
-{ SOS(9);  return func_ov006_020d9160(s); }
+{ SOS(9);  return _ZN14dScMgBomroom_c6RenderEv(s); }
 static void *__fastcall sos_d2(void *s, void *)
-{ SOS(16); return (void *)(size_t)func_ov006_020d5a54((int *)s); }
+{ SOS(16); return (void *)(size_t)_ZN14dScMgBomroom_cD1Ev((int *)s); }
 static void *__fastcall sos_d0(void *s, void *)
-{ SOS(17); return (void *)func_ov006_020d5a78((int *)s); }
+{ SOS(17); return (void *)_ZN14dScMgBomroom_cD0Ev((int *)s); }
 /* THE RIDE-THROUGH IS LOAD-BEARING. Every slot-18 dispatch in both overlay
    images passes one argument (lane BASESET's 22-site census,
    runs/mg5/out/baseset/slot18_19_scan.txt), and the ROM caller is a __thiscall
@@ -451,7 +451,7 @@ static void *__fastcall sos_d0(void *s, void *)
    garbage return address. The parameter exists so __fastcall cleans four
    bytes; the ROM body ignores its r1 and is called without it. */
 static int  __fastcall sos_reset(void *s, void *, int /*ridethrough*/)
-{ SOS(18); func_ov006_020d9104((unsigned char *)s); return 1; }
+{ SOS(18); _ZN14dScMgBomroom_c13OnYoshiTryEatEi((unsigned char *)s); return 1; }
 
 /* SM64DS_SCENE_SLOT0=0 and SM64DS_SCENE_SLOT9=0, the diagnostics the ov003,
    ov007, curling and flower seats all carry, counted separately so a run can
@@ -512,7 +512,7 @@ extern "C" void port_scene_fill_bomroom(void)
        pointers and finds nothing, because the fill keys on a DS word and there
        are none left. It is here so this class does not depend on another
        class's registry row existing -- the factory's first act is
-       func_ov004_020b2adc, which writes data_ov004_020bc0c0 into the object's
+       _ZN11dScMgBase_cC2Ev, which writes data_ov004_020bc0c0 into the object's
        first word before the derived table lands. */
     port_scene_mg_fill_shared(base, 36);
 
@@ -565,8 +565,8 @@ extern "C" void port_scene_fill_bomroom(void)
    column.
 
    THE FACTORY ITSELF NEEDS NO DISPLACEMENT RULING, which is worth recording
-   because 0x169's did. src/MgSortOrSplode_Spawn.c calls
-   func_ov004_020b2adc(p) WITH its argument, where src/func_ov006_020e0574.cpp
+   because 0x169's did. src/d_s_mg_bomroom.c calls
+   _ZN11dScMgBase_cC2Ev(p) WITH its argument, where src/actors/dScMgCup_c.cpp
    calls the same base constructor with none and rides r0 through. That callee
    dereferences on its first statement and then writes three vtable words
    through the pointer, so the difference is a wild write versus a correct one.
@@ -577,7 +577,7 @@ static char *g_sos_self;
 
 extern "C" void *port_mg_bomroom_spawn(void)
 {
-    void *p = MgSortOrSplode_Spawn();
+    void *p = dScMgBomroom_c_classInit();
     g_sos_self = (char *)p;
     return p;
 }

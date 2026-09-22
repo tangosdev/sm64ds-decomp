@@ -32,9 +32,9 @@ struct PortOv026Cell { unsigned enter_fn, enter_adj, tick_fn, tick_adj; };
 typedef int (*PortOv026Fn)(void *);
 
 unsigned short DecIfAbove0_Short(unsigned short *p);
-void _ZN5Actor9UpdatePosEP12CylinderClsn(void *thiz, void *clsn);
-void _ZN12CylinderClsn5ClearEv(void *a);
-void _ZN12CylinderClsn6UpdateEv(void *a);
+void _ZN8dActor_c9UpdatePosEP5dCc_c(void *thiz, void *clsn);
+void _ZN5dCc_c5ClearEv(void *a);
+void _ZN5dCc_c6UpdateEv(void *a);
 void func_ov026_02112324(char *c);
 
 /* HOST COPY RETIRED, run link100 lane PMFB7 gate 1. src/_ZN12WaterSuction8BehaviorEv.cpp

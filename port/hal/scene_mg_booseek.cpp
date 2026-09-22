@@ -30,8 +30,8 @@
 //   word is 0x021207d8 = 0x0213fa0c. Contrast the flower's 0x0212b7f8, which
 //   writes 0x0213e448 and then 0x02140140 over it.
 //   SLOT 16 AND SLOT 17, the destructor pair, install ONE table on the way
-//   down (src/func_ov006_0211cbd0.c and _0211cbf4.c both write
-//   data_ov006_0213fa0c and then call the ov004 base's func_ov004_020b29c0).
+//   down (src/actors/dScMgTeresa_c.cpp and _0211cbf4.c both write
+//   data_ov006_0213fa0c and then call the ov004 base's _ZN11dScMgBase_cD2Ev).
 //
 // So this seat has ONE face array and fills TWO tables, not three. It is the
 // cheapest hierarchy shape in the family, and it is why an eight-override
@@ -63,7 +63,7 @@
 //
 // port/unmatched/MgTeresa_StateDispatch.cpp is the whole of it and carries the
 // derivation. What belongs in THIS file is the one rule it exists to obey:
-// vtable slot 6 is NOT wired to src/func_ov006_021203ac.cpp. That TU declares
+// vtable slot 6 is NOT wired to src/_ZN13dScMgTeresa_c8BehaviorEv.cpp. That TU declares
 // its table through `struct Entry { PMF pmf; }`, which mangles
 // ?data_ov006_02142eb0@@3PAUEntry@@A -- the @@3PAU spelling section 10's tool
 // finding 1 records that port/tools/facegen.py does NOT refuse. It links, it
@@ -73,7 +73,7 @@
 // ---- 5. THE RENDER TRAP IS RETIRED (run mg10, lane F387) ------------------
 //
 // func_ov006_0211e72c, ov006, size 0xac, the SIXTH call vtable slot 9 (Render)
-// makes: src/func_ov006_02120348.c runs func_ov004_020b1e34, then 0211ddcc,
+// makes: src/_ZN13dScMgTeresa_c6RenderEv.cpp runs func_ov004_020b1e34, then 0211ddcc,
 // 0211e29c, 0211e460, 0211e118, and then this one.
 //
 // Run mg9 gave it a counted trap because no src file defined it and
@@ -115,14 +115,14 @@
 //
 // ---- 6. THE TWO ALIAS ROWS ------------------------------------------------
 //
-// ROW 1, THE VTABLE UNDER ITS C++ SPELLING. src/MgHideAndBooSeek_Spawn.c
+// ROW 1, THE VTABLE UNDER ITS C++ SPELLING. src/d_s_mg_teresa.c
 // writes `p[0] = (int)_ZTV13dScMgTeresa_c` and the ov006 mount defines that
 // storage as the plain C symbol data_ov006_0213fa0c. The ADDRESS is what the
 // code uses and it is the same address either spelling names, so an alias is
 // exactly right and no storage is involved. hal/scene_mg_faces.cpp:245 and
 // hal/scene_mg_curling2.cpp:446 are the same row for their classes.
 //
-// ROW 2, A STATIC MEMBER FUNCTION'S MSVC NAME. src/func_ov006_02120248.cpp
+// ROW 2, A STATIC MEMBER FUNCTION'S MSVC NAME. src/_ZN13dScMgTeresa_c13OnYoshiTryEatEi.cpp
 // declares `struct G2S { static char* GetBG0CharPtr(); };` and calls it, which
 // mangles ?GetBG0CharPtr@G2S@@SAPADXZ. The mount defines the Itanium spelling
 // __ZN3G2S13GetBG0CharPtrEv. A STATIC member function is __cdecl with no
@@ -162,29 +162,29 @@ extern unsigned char data_ov006_0213fa0c[];   /* dScMgTeresa_c,  36 slots */
                `void*` compound assignment); unmatched/MgTeresa_InitResources
      021203ac  Behavior -- the pointer-to-member dispatcher;
                unmatched/MgTeresa_StateDispatch.cpp */
-int   func_ov006_021203fc(char *self);        /* slot  0  InitResources */
-int   func_ov006_021203ac(char *self);        /* slot  6  Behavior, host copy */
-int   func_ov006_02120348(void *self);        /* slot  9  Render */
-int   func_ov006_0211cbd0(int *self);         /* slot 16  D2 */
-int  *func_ov006_0211cbf4(int *self);         /* slot 17  D0 */
-void  func_ov006_02120248(char *self, int r); /* slot 18  state reset */
-int   func_ov006_02120238(void);              /* slot 20  FreeGfxSlotsById(8) */
+int   _ZN13dScMgTeresa_c13InitResourcesEv(char *self);        /* slot  0  InitResources */
+int   _ZN13dScMgTeresa_c8BehaviorEv(char *self);        /* slot  6  Behavior, host copy */
+int   _ZN13dScMgTeresa_c6RenderEv(void *self);        /* slot  9  Render */
+int   _ZN13dScMgTeresa_cD1Ev(int *self);         /* slot 16  D2 */
+int  *_ZN13dScMgTeresa_cD0Ev(int *self);         /* slot 17  D0 */
+void  _ZN13dScMgTeresa_c13OnYoshiTryEatEi(char *self, int r); /* slot 18  state reset */
+int   _ZN13dScMgTeresa_c9Virtual50Ev(void);              /* slot 20  FreeGfxSlotsById(8) */
 /* SLOT 34 TAKES FIVE ARGUMENTS, and the declaration says so rather than
    dropping four. The ROM's prologue at 0x021200dc is
        push {r4,r5,r6,r7,r8,sb,sl,fp,lr} / sub sp,sp,#0x1c / ldr sl,[sp,#0x40]
    where 0x40 = 0x24 + 0x1c is the first word above the frame, so it reads
-   r0..r3 plus one stack word; src/func_ov006_021200dc.c defines it the same
-   way. The dScMgBase_c body it overrides, func_ov004_020ae3b4, has the same
+   r0..r3 plus one stack word; src/_ZN13dScMgTeresa_c9Virtual88Eiiii.cpp defines it the same
+   way. The dScMgBase_c body it overrides, _ZN11dScMgBase_c9Virtual88Eiiii, has the same
    five-argument shape (ldr fp,[sp,#0x38] after push{9}+sub#0x14).
 
    A ONE-ARGUMENT DECLARATION HERE WOULD BE THE bin-softlock DISEASE, which is
    why port/tools/aritycheck.py's plain-name ratchet refused it: on ARM the
    dropped words ride registers that are still live and the byte gate stays
    green, while on the host the callee reads stack slots nobody wrote. */
-void  func_ov006_021200dc(int self, int cx, int cy, int val, int n);
+void  _ZN13dScMgTeresa_c9Virtual88Eiiii(int self, int cx, int cy, int val, int n);
 
 /* the factory */
-void *MgHideAndBooSeek_Spawn(void);
+void *dScMgTeresa_c_classInit(void);
 
 /* the state machine's witnesses, from unmatched/MgTeresa_StateDispatch.cpp */
 void port_mg_teresa_counts(unsigned *hits, unsigned *unknown);
@@ -194,7 +194,11 @@ void port_mg_teresa_state_index(int *l1);
 
 /* ---- 6. THE TWO ALIAS ROWS, and the derivation is in the header ---------- */
 #pragma comment(linker, "/alternatename:__ZTV13dScMgTeresa_c=_data_ov006_0213fa0c")
-#pragma comment(linker, "/alternatename:?GetBG0CharPtr@G2S@@SAPADXZ=__ZN3G2S13GetBG0CharPtrEv")
+/* RE-POINTED at ALIAS2 (wave 8, the main -> port sync), lane ALIAS's
+   derivation: the right hand side this row carried is defined nowhere in
+   the link any more. same member, same convention, same 0 argument slots, types spelled differently
+   was: #pragma comment(linker, "/alternatename:?GetBG0CharPtr@G2S@@SAPADXZ=__ZN3G2S13GetBG0CharPtrEv") */
+#pragma comment(linker, "/alternatename:?GetBG0CharPtr@G2S@@SAPADXZ=?GetBG0CharPtr@G2S@@YAIXZ")
 
 // ---- the tick witness ------------------------------------------------------
 //
@@ -210,7 +214,7 @@ static unsigned g_boo_hits[36];
 #define BOO(n)  (++g_boo_hits[(n)])
 
 static int __fastcall boo_init(void *s, void *)
-{ BOO(0);  const int r = func_ov006_021203fc((char *)s);
+{ BOO(0);  const int r = _ZN13dScMgTeresa_c13InitResourcesEv((char *)s);
   /* the GaplessMinigames latch, for hal/scene_mg.cpp's reason: every seated
      minigame calls it so the ones the gapless table does not name can say
      "unsupported" instead of doing nothing quietly. hal_gapless_splice() is
@@ -219,18 +223,18 @@ static int __fastcall boo_init(void *s, void *)
      per-game gapless change the day that table grows a row. */
   hal_gapless_minigames_latch(); return r; }
 static int __fastcall boo_beh(void *s, void *)
-{ BOO(6);  return func_ov006_021203ac((char *)s); }
+{ BOO(6);  return _ZN13dScMgTeresa_c8BehaviorEv((char *)s); }
 static int __fastcall boo_render(void *s, void *)
-{ BOO(9);  return func_ov006_02120348(s); }
+{ BOO(9);  return _ZN13dScMgTeresa_c6RenderEv(s); }
 static void *__fastcall boo_d2(void *s, void *)
-{ BOO(16); return (void *)(size_t)func_ov006_0211cbd0((int *)s); }
+{ BOO(16); return (void *)(size_t)_ZN13dScMgTeresa_cD1Ev((int *)s); }
 static void *__fastcall boo_d0(void *s, void *)
-{ BOO(17); return (void *)func_ov006_0211cbf4((int *)s); }
+{ BOO(17); return (void *)_ZN13dScMgTeresa_cD0Ev((int *)s); }
 /* THE RIDE-THROUGH IS LOAD-BEARING, and this class is the one that proves it
    rather than inheriting it. Every slot-18 dispatch in both overlay images
    passes one argument -- the 22-site census in hal/scene_mg.cpp's mg_reset
    block and runs/mg5/out/baseset/slot18_19_scan.txt -- and this class's own
-   slot-18 body READS IT: src/func_ov006_02120248.cpp's first statement is
+   slot-18 body READS IT: src/_ZN13dScMgTeresa_c13OnYoshiTryEatEi.cpp's first statement is
    `if (reset == 0)` and the ROM's is `cmp r1,#0 / bne`. So the parameter is
    not only there to let __fastcall clean four bytes off the stack, it carries
    a value that picks between two different bodies of work, and a thunk
@@ -249,15 +253,15 @@ static void *__fastcall boo_d0(void *s, void *)
 
    SLOT 19 IS A DIFFERENT ANSWER TO THE SAME QUESTION and belongs beside it.
    This class does NOT override slot 19: it inherits dScMgBase_c's
-   func_ov004_020b2994, whose entire body is `mov r0,#1 / bx lr`, so the second
+   _ZN11dScMgBase_c13OnTurnIntoEggEi, whose entire body is `mov r0,#1 / bx lr`, so the second
    argument the ROM's dispatch sites pass is READ BY NOTHING. That one IS
    witnessed -- the 1200-frame census reports framework slot 19 entered once --
    and it is witnessed only because this lane repaired the shadow-array call
    that reaches it (port/unmatched/MgBase_ShadowSlot19.cpp). */
 static int __fastcall boo_reset(void *s, void *, int reset)
-{ BOO(18); func_ov006_02120248((char *)s, reset); return 1; }
+{ BOO(18); _ZN13dScMgTeresa_c13OnYoshiTryEatEi((char *)s, reset); return 1; }
 static int __fastcall boo_v20(void *, void *)
-{ BOO(20); return func_ov006_02120238(); }
+{ BOO(20); return _ZN13dScMgTeresa_c9Virtual50Ev(); }
 /* THE FOUR RIDE-THROUGH PARAMETERS ARE THE ROM'S, and the shape is
    mb_reset_base's in hal/scene_mg.cpp: `this` in ecx, the unused edx word,
    then the stack arguments. NOTHING IN THE PORT DISPATCHES THIS SLOT TODAY and
@@ -281,7 +285,7 @@ static int __fastcall boo_v20(void *, void *)
    exactly as S371 reported it and only this class's own declaration is made
    honest, which is what the plain-name ratchet asked for. */
 static int __fastcall boo_v34(void *s, void *, int cx, int cy, int val, int n)
-{ BOO(34); func_ov006_021200dc((int)(size_t)s, cx, cy, val, n); return 0; }
+{ BOO(34); _ZN13dScMgTeresa_c9Virtual88Eiiii((int)(size_t)s, cx, cy, val, n); return 0; }
 
 /* SM64DS_SCENE_SLOT0=0 and SM64DS_SCENE_SLOT9=0, the diagnostics the ov003,
    ov007 and every minigame seat carry, counted separately so a run can never
@@ -339,7 +343,7 @@ extern "C" void port_scene_fill_booseek(void)
        words that are already host pointers and finds nothing, because the fill
        keys on a DS word and there are none left. It is here so this class does
        not depend on another class's registry row existing -- the factory's
-       first act is func_ov004_020b2adc, which writes data_ov004_020bc0c0 into
+       first act is _ZN11dScMgBase_cC2Ev, which writes data_ov004_020bc0c0 into
        the object's first word before the derived table lands. */
     port_scene_mg_fill_shared(base, 36);
 
@@ -393,8 +397,8 @@ extern "C" void port_scene_fill_booseek(void)
    column.
 
    THIS FACTORY NEEDS NO DISPLACEMENT RULING, which is worth recording because
-   0x169's did. src/MgHideAndBooSeek_Spawn.c calls func_ov004_020b2adc(p) WITH
-   its argument, where src/func_ov006_020e0574.cpp calls the same base
+   0x169's did. src/d_s_mg_teresa.c calls _ZN11dScMgBase_cC2Ev(p) WITH
+   its argument, where src/actors/dScMgCup_c.cpp calls the same base
    constructor with none and rides r0 through. That callee dereferences on its
    first statement and then writes a vtable word through the pointer, so the
    difference is a wild write versus a correct one. This factory is on the
@@ -407,7 +411,7 @@ static char *g_boo_self;
 
 extern "C" void *port_mg_booseek_spawn(void)
 {
-    void *p = MgHideAndBooSeek_Spawn();
+    void *p = dScMgTeresa_c_classInit();
     g_boo_self = (char *)p;
     return p;
 }

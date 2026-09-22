@@ -3,7 +3,7 @@
 #include "common.h"
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
 extern void func_02012694(int a, void* b);
-extern void _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(void* self, struct Vector3* v, int f);
+extern void _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(void* self, struct Vector3* v, int f);
 extern void func_ov060_021184bc(void* c);
 
 void func_ov060_021185c4(char* c)
@@ -19,7 +19,7 @@ void func_ov060_021185c4(char* c)
     v.x = *(int*)(c + 0x5c);
     v.y = *(int*)(c + 0x60);
     v.z = *(int*)(c + 0x64);
-    _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(c, &v, 0x7d0000);
+    _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(c, &v, 0x7d0000);
     *(short*)(c + 0x1ac) = 0;
     func_ov060_021184bc(c);
 }

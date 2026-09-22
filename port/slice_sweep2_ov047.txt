@@ -26,19 +26,19 @@
 # THE MEASURED CLOSURE GAP: EIGHT ov002 TUs, taken off the first link's own
 # unresolved list and off the four tables' slots 6 and 9. They are the last
 # eight lines below.
-#   func_ov002_020b6b38 / _020b6b10   id 152's inherited Behavior / Render
-#   func_ov002_020b6920 / _020b68f8   id 151's inherited Behavior / Render
+#   _ZN17daObjKurumajiku_c8BehaviorEv / _020b6b10   id 152's inherited Behavior / Render
+#   _ZN13daObjKuruma_c8BehaviorEv / _020b68f8   id 151's inherited Behavior / Render
 #   func_ov002_020b6ac8 / _020b6c54   what id 152's Init / Cleanup call
 #   func_ov002_020b68b0 / _020b6958   what id 151's Init / Cleanup call
-# The other two classes' four are already linked: id 156's (func_ov002_020b6718
+# The other two classes' four are already linked: id 156's (_ZN16daObjKaitendai_c8BehaviorEv
 # / _020b66f0 / _020b66a8 / _020b676c) via port/slice_gate59.txt and id 153's
-# (func_ov002_020b4bfc / _020b4bc4 / _020b4b6c / _020b4d58) via
+# (_ZN13daObjDorifu_c8BehaviorEv / _020b4bc4 / _020b4b6c / _020b4d58) via
 # port/slice_ov036cast.txt. Measured against the map, not guessed.
 #
 # THE DSD CLASS NAMES ARE ATTACHED ONE TABLE LATE. In .data address order the
 # four tables are 0x021122a0 (id 152), 0x0211237c (id 156), 0x0211244c (id 151)
 # and 0x0211254c (id 153), and dsd's two names sit on the SECOND and FOURTH:
-# _ZTV10RickshawBs is id 156's and _ZTV18RickshawPlatformBs is id 153's. So
+# _ZTV20daObjKm3_Kaitendai_c is id 156's and _ZTV17daObjKm3_Dorifu_c is id 153's. So
 # every _ZN10RickshawBs* body serves id 156 and every _ZN18RickshawPlatformBs*
 # body serves id 153. Three routes agree -- the factory installs, the RTTI at
 # vtable[-1], and the spawn records. The derivation is in port/ov047_syms.txt;
@@ -52,7 +52,7 @@
 #     02111298 ldr r1,[pc,#0x14] -> 0x021112b4 -> 0x02109320   the base
 #     0211129c ldr r0,[pc,#0x14] -> 0x021112b8 -> 0x021122a0   its own table
 #     021112a0 str r1,[r4]   021112a4 str r0,[r4]
-# while src/RickshawBs_Spawn.c writes `p[0] = _ZTV21daObjKm3_Kurumajiku_c;`
+# while src/game/actors/d_a_obj_km3_kurumajiku.cpp writes `p[0] = _ZTV21daObjKm3_Kurumajiku_c;`
 # FIRST and `p[0] = VT1;` second. So in the three factories the RTTI name means
 # the BASE and VT1 means the own table, and in the six destructors the same RTTI
 # name means the OWN table. Both readings are bound per source. Left alone the
@@ -61,24 +61,24 @@
 # in the ROM -- a null call on the first InitResources, and invisible to both
 # the byte gate and the linkage count.
 #
-#   func_ov047_021111a0.c        id 152 D1. _ZTV21daObjKm3_Kurumajiku_c -> the
+#   _ZN21daObjKm3_Kurumajiku_cD1Ev.c        id 152 D1. _ZTV21daObjKm3_Kurumajiku_c -> the
 #                                OWN table 0x021122a0; _ZTV10dBgActor_c -> the
 #                                ov002 INTERMEDIATE 0x02109320 (NOT the port's
 #                                own _ZTV10dBgActor_c, which is 0x0210ae38 --
-#                                the ov036 (3) trap); VT2 -> _ZTV8Platform.
-#   func_ov047_021111f0.c        id 152 D0. VT0/VT1/VT2/G0, same three plus the
+#                                the ov036 (3) trap); VT2 -> _ZTV10dBgActor_c.
+#   _ZN21daObjKm3_Kurumajiku_cD0Ev.c        id 152 D0. VT0/VT1/VT2/G0, same three plus the
 #                                game heap.
-#   RickshawBs_Spawn.c           id 152 factory, INVERTED (above).
-#   _ZN10RickshawBsD1Ev.c        id 156 D1. _ZTV20daObjKm3_Kaitendai_c -> the
-#   _ZN10RickshawBsD0Ev.c        id 156 D0. OWN table _ZTV10RickshawBs;
+#   daObjKm3_Kurumajiku_c_classInit.c           id 152 factory, INVERTED (above).
+#   _ZN20daObjKm3_Kaitendai_cD1Ev.c        id 156 D1. _ZTV20daObjKm3_Kaitendai_c -> the
+#   _ZN20daObjKm3_Kaitendai_cD0Ev.c        id 156 D0. OWN table _ZTV20daObjKm3_Kaitendai_c;
 #                                _ZTV10dBgActor_c -> ov002 0x021091d4;
-#                                VT2 -> _ZTV8Platform; D0 also G0.
-#   func_ov047_021113bc.c        id 156 factory, INVERTED.
-#   func_ov047_021113f8.c        id 151 D1. _ZTV17daObjKm3_Kuruma_c -> the OWN
+#                                VT2 -> _ZTV10dBgActor_c; D0 also G0.
+#   daObjKm3_Kaitendai_c_classInit.c        id 156 factory, INVERTED.
+#   _ZN17daObjKm3_Kuruma_cD1Ev.c        id 151 D1. _ZTV17daObjKm3_Kuruma_c -> the OWN
 #                                table 0x0211244c; _ZTV10dBgActor_c -> ov002
-#                                0x02109278; VT2 -> _ZTV8Platform.
-#   func_ov047_02111448.c        id 151 D0. VT0/VT1/VT2/G0.
-#   RickshawPlatformBs_Spawn.c   id 151 factory, INVERTED.
+#                                0x02109278; VT2 -> _ZTV10dBgActor_c.
+#   _ZN17daObjKm3_Kuruma_cD0Ev.c        id 151 D0. VT0/VT1/VT2/G0.
+#   daObjKm3_Kuruma_c_classInit.c   id 151 factory, INVERTED.
 #   __sinit_ov047_0211181c.c     FOUR OV052 NAMES for four of ov047's own .bss
 #                                symbols (0x02112680, 0x02112688, 0x02112690,
 #                                0x021126a8). ov052 IS MOUNTED, so all four
@@ -87,38 +87,22 @@
 #                                pool words resolve to module:overlay(47).
 #
 # id 153's five TUs need NO rename at all: src/_ZN18RickshawPlatformBs*.c
-# spell _ZTV18RickshawPlatformBs, data_ov002_02108d94 and _ZTV8Platform, which
+# spell _ZTV17daObjKm3_Dorifu_c, _ZTV13daObjDorifu_c and _ZTV10dBgActor_c, which
 # are the three addresses the ROM writes, in the ROM's own order. The dsd name
 # is on the wrong CLASS but it is on the right ADDRESS, and by address is how
 # the seat wires it.
 
 # ---- id 152 RICKSHAW_BS (0x021122a0, 21daObjKm3_Kurumajiku_c) -------------
-src/RickshawBs_Spawn.c
-src/func_ov047_021111a0.c
-src/func_ov047_021111f0.c
-src/func_ov047_02111254.c
-src/func_ov047_02111268.c
+src/game/actors/d_a_obj_km3_kurumajiku.cpp
 
 # ---- id 156 ROTATING_PLATFORM_BS (0x0211237c, 20daObjKm3_Kaitendai_c) -----
-src/func_ov047_021113bc.c
-src/_ZN10RickshawBsD1Ev.c
-src/_ZN10RickshawBsD0Ev.c
-src/_ZN10RickshawBs16CleanupResourcesEv.c
-src/_ZN10RickshawBs13InitResourcesEv.c
+src/game/actors/d_a_obj_km3_kaitendai.cpp
 
 # ---- id 151 RICKSHAW_PLATFORM_BS (0x0211244c, 17daObjKm3_Kuruma_c) --------
-src/RickshawPlatformBs_Spawn.c
-src/func_ov047_021113f8.c
-src/func_ov047_02111448.c
-src/func_ov047_021114ac.c
-src/func_ov047_021114c0.c
+src/game/actors/d_a_obj_km3_kuruma.cpp
 
 # ---- id 153 STAIRS_BS (0x0211254c, 17daObjKm3_Dorifu_c) ------------------
-src/StairsBs_Spawn.cpp
-src/_ZN18RickshawPlatformBsD1Ev.c
-src/_ZN18RickshawPlatformBsD0Ev.c
-src/_ZN18RickshawPlatformBs16CleanupResourcesEv.cpp
-src/_ZN18RickshawPlatformBs13InitResourcesEv.cpp
+src/game/actors/d_a_obj_km3_dorifu.cpp
 
 # ---- the four static initialisers, one per class -------------------------
 src/__sinit_ov047_021116dc.c
@@ -129,15 +113,15 @@ src/__sinit_ov047_0211181c.c
 # ---- THE MEASURED CLOSURE: nine ov002 bodies ----------------------------
 # The first eight came off the first link's own unresolved list; the ninth,
 # func_ov002_020b6a80, came off the SECOND link's, because it is what
-# func_ov002_020b6b38 and func_ov002_020b6c54 call and neither of those was in
+# _ZN17daObjKurumajiku_c8BehaviorEv and func_ov002_020b6c54 call and neither of those was in
 # the build until the eighth line above put them there. Two rounds, both
 # measured, neither guessed.
-src/func_ov002_020b6b38.c
-src/func_ov002_020b6b10.cpp
+src/_ZN17daObjKurumajiku_c8BehaviorEv.cpp
+src/_ZN17daObjKurumajiku_c6RenderEv.cpp
 src/func_ov002_020b6ac8.cpp
 src/func_ov002_020b6c54.c
-src/func_ov002_020b6920.cpp
-src/func_ov002_020b68f8.cpp
+src/_ZN13daObjKuruma_c8BehaviorEv.cpp
+src/_ZN13daObjKuruma_c6RenderEv.cpp
 src/func_ov002_020b68b0.cpp
 src/func_ov002_020b6958.c
 src/func_ov002_020b6a80.c

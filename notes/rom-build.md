@@ -19,7 +19,7 @@ minute, with all 106 modules byte-identical to the ROM. **9,115 functions — 1,
 code bytes, 66.7% of the project's total — are compiled from `src/` by mwccarm**; the
 rest of each module is supplied from delinked ROM bytes. All four milestones are complete. Results are recorded under each milestone below.
 
-```
+```sh
 python tools/eligible.py             # classify: which files may be compiled in
 python tools/enroll.py --complete-list build/eligible-names.txt
 python tools/rombuild.py             # build and verify the stock profile (default)
@@ -61,7 +61,7 @@ the 2004 toolchain ships no `mwldarm`.
 
 ## The pipeline
 
-```
+```sh
 src/*.c|cpp  --mwccarm-->  build/src/*.o  ─┐
                                            ├─ mwldarm ─> build/final_link.o (ELF)
 config/**/delinks.txt --dsd delink--> build/delinks/*.o  ─┘   + build/*.bin per region
@@ -79,7 +79,7 @@ config/**/delinks.txt --dsd delink--> build/delinks/*.o  ─┘   + build/*.bin 
 Commands (matching the reference dsd project, `DQIX/dqix-decomp`, adjusted for the
 0.11.0 CLI actually on disk):
 
-```
+```sh
 dsd lcf        -c config/arm9/config.yaml            # writes arm9.lcf + objects.txt to build_path
 mwldarm  -proc arm946e -nostdlib -interworking -m Entry -map closure,unused \
          -msgstyle gcc -nodead @build/objects.txt build/arm9.lcf -o build/final_link.o
@@ -100,7 +100,7 @@ for the base tree, once for the merged tree — to check a handful of edited fil
 `tools/rombuild_cache.py` keys each object on its exact inputs and skips the compiler
 on a hit:
 
-```
+```sh
 source key = sha256(schema, source path, compiler version, compiler bytes,
                     final flags, source bytes)
 manifest   = the header list mwccarm reported for that source key last time
@@ -151,7 +151,7 @@ unspent — matching the quota exactly measured slower than the old host-core de
 |---|---|
 | `dsd` (ds-decomp 0.11.0) | `tools/bin/dsd.exe` |
 | ROM extracted (`dsd rom extract`) | `extracted/dsd/` — header, banner, 2,072 asset files, arm7, arm9, overlays |
-| dsd project config | `config/arm9/config.yaml` + **106 modules** (main + itcm + dtcm + 103 overlays) of `symbols.txt` / `relocs.txt` / `delinks.txt` |
+| dsd project config | [config/arm9/config.yaml](../config/arm9/config.yaml) + **106 modules** (main + itcm + dtcm + 103 overlays) of `symbols.txt` / `relocs.txt` / `delinks.txt` |
 | Delinked gap objects | `build/delinks/*.o` — **93**, because 13 overlays are empty and emit none |
 | Linker script + object list | `build/arm9.lcf`, `build/objects.txt` |
 | Compiler **and linker** | `tools/mwccarm/1.2/sp2p3/{mwccarm,mwldarm}.exe` |
@@ -169,7 +169,7 @@ file; in the main module, 3,084 of 3,090.
 Verified by running dsd 0.11.0 against an isolated copy of the config. A *file entry* is
 an unindented path ending in `:`, followed by indented lines:
 
-```
+```text
     .text       start:0x02004000 end:0x020736f4 kind:code align:32
     ...
 src/AngleDiff.c:
@@ -201,7 +201,7 @@ and the ARM7/secure-area/CRC handling *before* any of our C is in the mix.
 
 **Settle path plumbing first (30 seconds, before interpreting any error).**
 `build/objects.txt` holds repo-root-relative paths (`build\delinks\...`), the lcf's
-MEMORY block writes `> build/arm9.bin`, but `config/arm9/config.yaml` expects built
+MEMORY block writes `> build/arm9.bin`, but [config/arm9/config.yaml](../config/arm9/config.yaml) expects built
 binaries at `../../build/build/arm9.bin`. Run mwldarm from the repo root, then `ls
 build/ build/build/` to see where the region binaries actually landed. Also
 `mkdir -p build/src build/build` up front.
@@ -266,12 +266,12 @@ show up as a failure here.
 
 ### M1 — One function from source
 
-`AngleDiff` is a verified-good pick: `config/arm9/symbols.txt:1513`
+`AngleDiff` is a verified-good pick: [config/arm9/symbols.txt](../config/arm9/symbols.txt):1513
 (`kind:function(arm,size=0x14) addr:0x0203b0e8`), the next symbol is exactly adjacent at
 `0x0203b0fc`, `src/AngleDiff.c` is pure ALU with no literal pool, no data and no calls,
 and zero relocations originate inside it.
 
-1. Add its file entry (with `complete`) to `config/arm9/delinks.txt`.
+1. Add its file entry (with `complete`) to [config/arm9/delinks.txt](../config/arm9/delinks.txt).
 2. `dsd delink` — the main gap object splits, regenerated without that range.
 3. Compile with the canonical toolchain and flags (`2004/b56`, `-O4,p -enum int
    -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc`,
@@ -283,11 +283,11 @@ function's bytes came from our C.
 
 #### M1 result — passed
 
-`config/arm9/delinks.txt` grew the three-line entry; `dsd delink` split the single
+[config/arm9/delinks.txt](../config/arm9/delinks.txt) grew the three-line entry; `dsd delink` split the single
 `_dsd_gap@main_7.o` into `_dsd_gap@main_8.o` (everything before) and `_dsd_gap@main_1.o`
 (everything after), and the generated lcf placed them back-to-back around ours:
 
-```
+```sh
 _dsd_gap@main_8.o(.text)
 AngleDiff.o(.text)
 _dsd_gap@main_1.o(.text)
@@ -399,7 +399,7 @@ mwccarm emits **one `.text` section per function** within a TU, and the lcf's
 name collides — and `-nodead` disables the dead-stripping that might otherwise hide it.
 
 Bisection on a mismatch starts at the **earliest module in the `AFTER()` partial order**
-(`build/arm9.lcf:5–109`): a size change in ov002 shifts the origins of ov008–ov102, so
+(`build/arm9.lcf:5–109`): a size change in [ov002](../config/arm9/overlays/ov002/symbols.txt) shifts the origins of [ov008](../config/arm9/overlays/ov008/symbols.txt)–[ov102](../config/arm9/overlays/ov102/symbols.txt), so
 dozens of red modules mean "look upstream", not "dozens of bugs". Verdicts land in
 `build/rombuild-eligibility.json`.
 
@@ -431,9 +431,63 @@ to pick one. Defaulting to the recovered 2004 build 0056
 7,466 → 7,923, and post-link mismatches **70 → 14**. Note b56 ships *only* `mwccarm.exe`,
 so `LD_VERSION` keeps the link on 1.2/sp2p3's `mwldarm` regardless.
 
-**3. Per-file version overrides.** `config/rombuild-versions.txt` names the exceptions;
-`tools/rombuild_versions.py` finds them by sweeping `match.py`'s version list over
-whatever `rombuild_check.py` reported. Seven functions match only under `1.2/base`.
+**3. Per-file version overrides -- now empty for the ROM build.** Every enrolled
+function reproduces under the default `2004/b56`, so the ROM build runs ONE compiler.
+`config/rombuild-versions.txt` retains a single entry,
+`_ZN11dScMgCard_c13InitResourcesEv`, which is **not enrolled** and so never reaches a
+ROM build; it is 999 words off under b56 and genuinely still needs `1.2/base` when its
+turn comes. `tools/rombuild_versions.py` regenerates the file by sweeping `match.py`'s
+version list over whatever `rombuild_check.py` reported.
+
+The eight that used to need `1.2/base` were not compiler facts, they were **source
+facts**. Retail was built with one toolchain, so a function reproducing only under a
+different one meant our reconstruction differed from the original in a way b56 exposed
+and 1.2/base happened to hide. Two source levers moved all eight, both verified by
+compiling the same snippet under both compilers in isolation:
+
+- **Spell a re-read differently from the write.** Where the ROM stores through a
+  computed address and then RE-READS the field with a base+displacement load, b56
+  recognises the second access as the first lvalue and reuses the register. Writing the
+  two accesses with different expression shapes (`(char *)p + K` vs `(int)p + K`, or an
+  index) stops it. Every sharing site has to be respelled together -- `func_02062428`
+  has three, and respelling any one alone left the other two sharing. Fixed
+  [func_ov015_02111e80](../src/game/actors/d_a_obj_bk_dossunbar.cpp) (func 12 used to assemble the TU - `d_a_obj_bk_dossunbar`), [func_ov006_020ded00](../src/actors/dScMgCup_c.cpp) (part of `dScMgCup_c.cpp`, element 11 used to assemble the TU), `func_02062428`,
+  [func_ov006_02111e90](../src/func_ov006_02111e90.c).
+- **Prefer pointer arithmetic on a typed pointer over integer arithmetic then a cast.**
+  `ldr` carries a 12-bit displacement and `ldrh`/`ldrsh`/`strh` only 8, so a large
+  offset must be split. Given pointer arithmetic b56 splits it the ROM's way; given
+  integer arithmetic it materialises the whole constant, from the literal pool if
+  needed. In `func_0206a6d0` that one extra pool entry shifted every pc-relative load in
+  the function by 4 -- a 52-word diff from a single spelling. Also fixed
+  `func_ov081_02127558` (weak ref to [daGmch_c.cpp](../src/actors/daGmch_c.cpp)), where the compound-assignment form is the only spelling b56
+  refuses to split; an explicit read-modify-write through a temporary reproduces, and
+  pre-splitting the base in the source does NOT work -- b56 has to do its own splitting.
+
+[func_ov084_0212f460](../src/actors/daPkn_c.cpp) (local helper declaration of [Piranha Plant](../src/actors/daPkn_c.cpp)) was neither: a straight r6/r7 swap. Callee-saved registers are
+handed out in **assignment order** under b56 -- declaration order moves nothing -- so
+hoisting the pointer's assignment above the other local's put them the ROM's way round.
+The ROM emits the two in the opposite order regardless, because the independent store
+schedules ahead of the address computation that feeds the compare.
+
+**The table is still keyed by file stem, and that still matters.** `compile_one` does
+`vers.get(pathlib.Path(rel).stem, VERSION)`, so **renaming a pinned function's file
+detaches its pin unless the same commit re-keys it.** That failure is uniquely
+expensive: the build falls back to `2004/b56` and emits wrong bytes for a function whose
+source is perfectly correct, while every per-file gate keeps calling it exact, because
+`build_pin.verify`, `pr_linkcheck` and `eligible.py` all read this same table and
+compile *with* the pin. Only the whole-module compare disagrees, by a handful of bytes,
+in one module. #1607 spent a day on that shape before
+`_ZN18daObjClockHuriko_c8BehaviorEv` -- the first mangled pin key a ROM build had
+ever exercised -- was identified as the cause. With the pins gone that route is closed
+for now, but it reopens the moment a new pin is recorded.
+
+`rombuild.audit_version_pins` checks the table against the tree before the first
+compile: a pin naming no `src/` or `mods/` file at all is a hard preflight error, a pin
+naming an uninstalled service pack is too, and every applied pin is printed by name in
+phase [3/6] and recorded in the report as `alternateToolchain.applied`.
+`tools/validate_merge.py` renders that alongside the failing module, so a `105/106` in a
+PR comment names the module, the function, the address and the byte count instead of
+only counting modules.
 
 **4. Per-function diffing beats bisection.** Because eligibility requires the object's
 `.text` to equal the declared size exactly, no function can shift its neighbours, so
@@ -466,11 +520,11 @@ individually with `match.py` before the link confirmed them:
 |---|---|---|
 | `_ZN13PrincessPeach6RenderEv` | `CommonModel::Render` | `Model::Render` |
 | `_ZN7Tornado6RenderEv`, `_ZN9WaterRing6RenderEv` | `TextureSequence::Update` | `TextureTransformer::Update` |
-| `func_ov079_02126e58` | `Actor::DisappearPoofDustAt` | `Actor::PoofDustAt` |
-| `func_ov085_0212e778` | `…ApplyInPlaceToRotationXYZExt` | `…ApplyInPlaceToRotationZXYExt` |
-| `func_ov006_0211a048`, `func_ov006_0211a5ec` | wrong `data_ov006_*` base | the adjacent one |
-| `func_ov006_02120c08` | `func_ov006_020eed68` | `func_ov006_02120a64` |
-| `func_ov002_020f23d0` | the veneer `func_0203cbc0` | `Memory::operator_delete2` |
+| `_ZN11BillBlaster4KillEv` (then `func_ov079_02126e58`) | `Actor::DisappearPoofDustAt` | `Actor::PoofDustAt` |
+| [func_ov085_0212e778](../src/func_ov085_0212e778.cpp) | `…ApplyInPlaceToRotationXYZExt` | `…ApplyInPlaceToRotationZXYExt` |
+| [func_ov006_0211a048](../src/actors/dScMgSound_c.cpp)(func 17 used to assemble TU), [func_ov006_0211a5ec](../src/actors/dScMgSound_c.cpp)(func 29 used to assemble TU) | wrong `data_ov006_*` base | the adjacent one |
+| [func_ov006_02120c08](../src//minigames/d_s_mg_trampoline.cpp)(func 13 used to assemble TU) | [func_ov006_020eed68](../src\minigames\d_s_mg_jump2.cpp)(func 3 used to assemble TU) | [func_ov006_02120a64](../src\minigames\d_s_mg_trampoline.cpp)(func 8 used to assemble TU) |
+| [func_ov002_020f23d0](../src/func_ov002_020f23d0.c) | the veneer `func_0203cbc0` | `Memory::operator_delete2` |
 
 The `XYZExt` → `ZXYExt` one is a genuine behavioural bug, not just a naming slip.
 
@@ -498,7 +552,8 @@ every relocated word, so all four "matched" byte-for-byte with the bug in place.
 argument for the ROM build as a gate** — it catches a class the byte oracle is blind to
 by construction.
 
-**Six remain, and all six are documented non-bugs:**
+**Three remain. All three of the original six that took the cast-and-call shape were
+retired by the C++ class migration; see the struck-through bullet below.**
 
 - three (`_ZN5ModelD1Ev`, `_ZN5ModelD2Ev`, `_ZN14BlendModelAnimD1Ev`) call `_ZdlPv`
   where the ROM goes through the 12-byte veneer at `0x0203cbc0`. That trampoline is the
@@ -512,10 +567,17 @@ by construction.
   synthesizes veneers it *needs* (out-of-range or interworking, neither of which applies
   to an in-range ARM→ARM `BL`). No linker flag routes a call through another object's
   existing trampoline. Left alone deliberately.
-- three (`_ZN11MirrorLuigiD1Ev`, `_ZN15RecRoomCupboardD0Ev`, `_ZN15RecRoomCupboardD1Ev`)
+- ~~three (`_ZN11MirrorLuigiD1Ev`, `_ZN15RecRoomCupboardD0Ev`, `_ZN15RecRoomCupboardD1Ev`)
   write `((Actor *)c)->~Actor()`, for which the compiler emits the D1 complete-object
-  destructor while the ROM calls the D2 base-object one. Only real inheritance would make
-  the compiler choose D2, so this is structural, not a rename — exactly the kind of work
+  destructor while the ROM calls the D2 base-object one.~~ **Two of the three are fixed,
+  and by exactly the route this bullet predicted.** `include/RecRoomCupboard.h` now derives
+  the class from `dActor_c` and gives it its five `dCcAcPos_c` members, and both destructor
+  files are an empty `RecRoomCupboard::~RecRoomCupboard()`; the compiler picks D2 for the
+  base step on its own. Both came off `config/rombuild-exclude.txt` and the ROM build
+  carries them: source-built functions 11,061 -> 11,063, mismatching 0,
+  106/106 exact. `_ZN11MirrorLuigiD1Ev` came off the list separately, in the MirrorLuigi
+  class migration (#1782), by the same route.
+  Only real inheritance would make the compiler choose D2, so this is structural, not a rename — exactly the kind of work
   the `readable/` C++-promotion branches do.
 - ~~one (`_ZN11ShadowModelC1Ev`) stores a vtable pointer that resolves elsewhere than
   `_ZTV11ShadowModel`.~~ **This one was a real bug, not a non-bug** — see below.
@@ -525,7 +587,7 @@ Why the rest are not source-built yet:
 | count | reason |
 |---:|---|
 | 1,972 | references a symbol name `config/**/symbols.txt` does not define — the BLIND matches. No address means nothing to link to, and gap objects import weakly, so it would silently resolve to 0. |
-| 711 | the object defines a different symbol than the file/config name (e.g. `src/func_ov091_02132a0c.c` defines `daDsn_c_OnAimedAtWithEgg`) — a src/config naming drift, likely recoverable by reconciling names. |
+| 711 | the object defines a different symbol than the file/config name (e.g. `src/func_ov091_02132a0c.c` defines [daDsn_c_OnAimedAtWithEgg](../src/_ZN6Thwomp16OnAimedAtWithEggEv.cpp)) — a src/config naming drift, likely recoverable by reconciling names. |
 | 70 | compiled `st_size` ≠ the size `symbols.txt` declares |
 | 301 | lives in a `.init` range, where a `File.o(.init)` selector would match nothing in an object whose code is in `.text` |
 | 88 | emits `.data` or `.bss` whose ROM address we do not know |
@@ -538,7 +600,7 @@ Why the rest are not source-built yet:
 The largest remaining bucket was 711 files whose object defined a different symbol than
 their filename. They turned out to share an annotation pair:
 
-```
+```sh
 // @symbol func_ov091_02132a0c        <- the symbol at this ROM address
 // @emits  daDsn_c_OnAimedAtWithEgg   <- what the C actually defines
 ```
@@ -611,7 +673,7 @@ difference, then revert and confirm the ROM returns to identical.
 
 **Overlay edits are fine after all.** The original worry was HMAC signing, but M0 showed
 dsd *clears* the per-overlay signed bit (the 103 flag bytes `3` → `1`), so the loader
-never verifies and an overlay edit loads normally — which the ov002 mod confirms in
+never verifies and an overlay edit loads normally — which the [ov002](../config/arm9/overlays/ov002/symbols.txt) mod confirms in
 practice. Still worth knowing: a white screen with green `check modules` would point at
 the header CRCs (`extracted/dsd/header.yaml`), which `check modules` does not cover.
 
@@ -632,12 +694,12 @@ tracked `delinks.txt` entry points at that mod.
 
 `mods/Player_ScaleByCharFactor.c` (shift 12 → 11, doubling the scale factor) built
 cleanly and landed exactly as intended: **3 bytes changed**, both at the shift
-instructions, all inside the function, ov002's size unchanged at 394,048 bytes, so
+instructions, all inside the function, [ov002](../config/arm9/overlays/ov002/symbols.txt)'s size unchanged at 394,048 bytes, so
 nothing downstream moved. Saved as `build/sm64ds-mod.nds`.
 
 **Confirmed in play.** A/B of `build/sm64ds-mod.nds` against `build/sm64ds.nds` shows the
 difference in the running game. `Player_ScaleByCharFactor` is called from 44 sites across
-ov002's player physics, so doubling it is felt in movement rather than seen in a still
+[ov002](../config/arm9/overlays/ov002/symbols.txt)'s player physics, so doubling it is felt in movement rather than seen in a still
 frame — which is why a screenshot comparison was the wrong instrument for it and playing
 was the right one.
 

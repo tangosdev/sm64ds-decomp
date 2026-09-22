@@ -4,32 +4,31 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "BowserFire.h"
-struct Actor;
-typedef void (Actor::*PMF)();
+struct dActor_c;
+typedef void (dActor_c::*PMF)();
 struct Entry { PMF pmf; };
 extern "C" Entry data_ov060_0211afb4[];
-extern "C" void WithMeshClsn_UpdateDiscreteNoLava_veneer(void *p);
-extern "C" int _ZNK12WithMeshClsn10IsOnGroundEv(void *c);
-struct CylinderClsn { void Clear(); void Update(); };
+extern "C" void dBgCh_Actr_UpdateDiscreteNoLava_veneer(void *p);
+extern "C" int _ZNK10dBgCh_Actr10IsOnGroundEv(void *c);
 
 int BowserFire::Behavior()
 {
-    Actor *self = (Actor*)((char *)this);
+    dActor_c *self = (dActor_c*)((char *)this);
     *(int*)(((int)((char *)this) + 0x370)) += 1;
-    (self->*data_ov060_0211afb4[unk_35c].pmf)();
-    *(unsigned short*)(((int)((char *)this) + 0x374)) += 1;
-    if (unk_09c != 0) {
-        WithMeshClsn_UpdateDiscreteNoLava_veneer((char *)&mWithMeshClsn);
-        if (unk_35c != 4) {
-            if (_ZNK12WithMeshClsn10IsOnGroundEv((char *)&mWithMeshClsn) != 0) {
-                unk_0a8 = 0;
-                unk_09c = 0;
+    (self->*data_ov060_0211afb4[mVariant].pmf)();
+    mFrameCount += 1;
+    if (mVertAccel != 0) {
+        dBgCh_Actr_UpdateDiscreteNoLava_veneer((char *)&mWithMeshClsn);
+        if (mVariant != 4) {
+            if (_ZNK10dBgCh_Actr10IsOnGroundEv((char *)&mWithMeshClsn) != 0) {
+                mVertSpeed = 0;
+                mVertAccel = 0;
             }
         }
     }
     func_ov060_02116740(((char *)this));
     func_ov060_02117624(((char *)this));
-    ((CylinderClsn*)((char *)&mMovingCylinderClsn))->Clear();
-    ((CylinderClsn*)((char *)&mMovingCylinderClsn))->Update();
+    mdCcAc_c.Clear();
+    mdCcAc_c.Update();
     return 1;
 }

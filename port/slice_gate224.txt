@@ -7,21 +7,21 @@
 # /OPT:REF without the vtable slot that references it; the slot IS the work.
 #
 # NOT HERE, and each for a measured reason in this gate's write-up:
-#   src/func_ov002_020b5c24.cpp   unmatched/Jrb_Renders.cpp defines it under a
+#   src/actors/daObjFloatBoard_c.cpp   unmatched/Jrb_Renders.cpp defines it under a
 #                                 PORT_HOST_ABI tag (closure.py named the
 #                                 LNK2005 before any link ran)
-#   src/func_ov006_02123340.cpp   same, unmatched/MgTrampolineTerror_StateDispatch
-#   src/func_ov006_02120da8.c     does not compile under MSVC: `obj + 0x6c` on a
+#   src/minigames/d_s_mg_trampoline2.cpp   same, unmatched/MgTrampolineTerror_StateDispatch
+#   src/minigames/d_s_mg_trampoline.cpp     does not compile under MSVC: `obj + 0x6c` on a
 #                                 void* at line 37, C2036. A decomp-side cast.
-#   the seven guess-marked bodies on data_ov002_021096b0 -- those slots trap.
-src/func_ov002_020b5a18.c
-src/func_ov002_020b5a70.c
-src/func_ov002_020b5fd8.c
-src/func_ov002_020b6030.c
-src/func_ov002_020b6388.c
-src/func_ov002_020b63e0.c
-src/func_ov002_020b8bf0.c
-src/func_ov002_020b8c9c.cpp
-src/func_ov002_020bab0c.c
-src/func_ov002_020bab64.c
-src/_ZN6PlayerD0Ev.cpp
+#   the seven guess-marked bodies on _ZTV16daObjPushblock_c -- those slots trap.
+src/_ZN17daObjFloatBoard_cD0Ev.cpp
+src/_ZN17daObjFloatBoard_cD1Ev.cpp
+src/_ZN15daObjGuragura_cD0Ev.cpp
+src/_ZN15daObjGuragura_cD1Ev.cpp
+src/_ZN14daObjUkiyuka_cD0Ev.cpp
+src/_ZN14daObjUkiyuka_cD1Ev.cpp
+src/game/actors/daObjPushblock_c.cpp
+src/_ZN13daObjSwdoor_cD0Ev.cpp
+src/_ZN13daObjSwdoor_cD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN6PlayerD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN6PlayerD0Ev.cpp

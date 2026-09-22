@@ -29,9 +29,9 @@ int _ZN6Player12Unk_020c4f40Et(void *self, unsigned short a)
 /* Actor::GetSubtraction (arm9 0x0200f8d4), the absolute angle difference two
    of the koopa's states run. Its definition is a real method; his own TUs
    spell it by the Itanium C name. */
-#include "Actor.h"
-extern "C" int _ZN5Actor14GetSubtractionEss(void *self, short a, short b)
-{ return ((Actor *)self)->Actor::GetSubtraction(a, b); }
+#include "dActor_c.h"
+extern "C" int _ZN8dActor_c14GetSubtractionEss(void *self, short a, short b)
+{ return ((dActor_c *)self)->dActor_c::GetSubtraction(a, b); }
 
 /* KING_BOB_OMB's four. Model::Render (arm9 0x02016d20), BlendModelAnim's
    Advance and SetAnim (0x02016468 and 0x020163e0) and Player::Unk_020c6a10

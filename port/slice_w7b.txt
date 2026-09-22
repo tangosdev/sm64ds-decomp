@@ -34,7 +34,7 @@
 #   _ZN3MrID1Ev            -- auto-emitted-member-dtor form, the flame/
 #                             Scuttlebug D1 treatment; the thunk runs the D0
 #                             chain minus the final Memory::Deallocate.
-#   _ZN14MrI_ProjectileD1Ev -- same form, same treatment.
+#   _ZN8daEyBm_cD1Ev -- same form, same treatment.
 #
 # The two vtables _ZTV3MrI and _ZTV14MrI_Projectile stay OUT (host arrays the
 # registry fills, the ov095/ov080 rule). The state records __sinit_ov071_021228c8
@@ -42,7 +42,7 @@
 # (data_ov071_02122ca8/cb0/cb8/cc0/cc8/cd0, all already mounted) rewrites them
 # to host bodies before that sinit copies them into data_ov071_02123088.
 #
-# ONE BODY IS NONMATCHING-BUT-DECOMPILED: src/_ZN3MrI13InitResourcesEv.c is
+# ONE BODY IS NONMATCHING-BUT-DECOMPILED: src/_ZN3MrI13InitResourcesEv.cpp is
 # banked "NONMATCHING: constant / value (div=6). Logic verified correct vs ROM".
 # It is real behaviour rather than a stub, so it rides the slice; it also needs
 # LANGUAGE CXX (a //cpp marker over extern "C" blocks and reference params),
@@ -56,12 +56,13 @@
 # above, by design).
 
 # ---- MR_I / BIG_MR_I (262 / 263), one class ---------------------------------
-src/MrI_Spawn.c
-src/BigMrI_Spawn.c
-src/_ZN3MrID0Ev.c
-src/_ZN3MrI13InitResourcesEv.c
+src/d_a_eykn_eyekun.c
+src/d_a_eykn_eyekun_boss.c
+# RETIRED at SLICE1: body now in src/_ZN3MrID1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN3MrID0Ev.cpp
+src/_ZN3MrI13InitResourcesEv.cpp
 src/_ZN3MrI16CleanupResourcesEv.cpp
-src/_ZN3MrI16OnPendingDestroyEv.c
+src/_ZN3MrI16OnPendingDestroyEv.cpp
 src/_ZN3MrI8BehaviorEv.cpp
 src/func_ov071_02121634.c
 src/func_ov071_0212070c.c
@@ -80,28 +81,19 @@ src/func_ov071_02121570.c
 # Actor::FindExplosionActor(CylinderClsn&) (arm9 symbols.txt, size 0x40), and
 # nothing else in the binary named it before this lane -- /OPT:REF had always
 # stripped it. Measured as a link error, not guessed.
-src/_ZN5Actor18FindExplosionActorER12CylinderClsn.c
+src/_ZN8dActor_c18FindExplosionActorER5dCc_c.cpp
 
 # ---- MR_I_PROJECTILE (264) --------------------------------------------------
-src/MrI_Projectile_Spawn.c
-src/_ZN14MrI_ProjectileD0Ev.c
-src/_ZN14MrI_Projectile13InitResourcesEv.cpp
-src/_ZN14MrI_Projectile16CleanupResourcesEv.c
-src/_ZN14MrI_Projectile16OnPendingDestroyEv.c
-src/_ZN14MrI_Projectile6RenderEv.cpp
-src/_ZN14MrI_Projectile8BehaviorEv.cpp
-src/func_ov071_02121b00.c
-src/func_ov071_02121b50.c
-src/func_ov071_02121c6c.cpp
+src/game/actors/d_a_ey_bm.cpp
 # NOT listed here -- routed through hostgen instead (${GATE_W7B_GEN} in
 # port/CMakeLists.txt), two mwcc-vs-MSVC syntax quirks the byte-verified tree
 # must not be edited for. Both are still the decomp's own bodies; hostgen only
 # rewrites the wrapper:
-#   func_ov071_02121b08 -- C++ inside a .c (`struct Callback {}`, an empty
+#   _ZN8daEyBm_c18SpawnDestroyEffectEv -- C++ inside a .c (`struct Callback {}`, an empty
 #       struct, which C rejects: MSVC error C2016). hostgen emits it as .cpp
 #       with the symbols wrapped back to C linkage -- the gate-9 /
 #       func_ov084_021298d0 case.
-#   func_ov071_02121ba4 -- decl_common.h:2793 declares it `(void*)` inside that
+#   _ZN8daEyBm_c10HurtPlayerEv -- decl_common.h:2793 declares it `(void*)` inside that
 #       header's extern "C" block while the TU defines it `(char*)`. One
 #       register on the ROM, C2733 to MSVC. hostgen's HEADER_SHADOW hides the
 #       header's declaration across the include -- the func_ov102_0214b248

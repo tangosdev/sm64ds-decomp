@@ -2,7 +2,7 @@
  *
  * NOT THE MAIN MENU. dScMB_c is the DS DOWNLOAD PLAY boot scene: the screen a
  * cartridge-less DS shows while it pulls the multiboot image, and the ROM's
- * OTHER first scene. src/_ZN5Scene18PrepareToSpawnBootEv.c is the whole of
+ * OTHER first scene. src/_ZN8dScene_c18PrepareToSpawnBootEv.cpp is the whole of
  * that decision and it is two lines --
  *
  *     if (func_0203d9b4()) data_02092664 = 0;      /- dScBoot_c,  id 0
@@ -36,24 +36,24 @@
  *
  * Every word is a `from:0x020943c4 + 4*slot` row quoted as its `to:`.
  *
- *    0  InitResources          0x0203506c  func_0203506c        OWN
+ *    0  InitResources          0x0203506c  _ZN7dScMB_c13InitResourcesEv        OWN
  *    1  BeforeInitResources    0x0202e638  Scene::
  *    2  AfterInitResources     0x0202e62c  Scene::   VENEER
- *    3  CleanupResources       0x02034d70  func_02034d70        OWN
+ *    3  CleanupResources       0x02034d70  _ZN7dScMB_c16CleanupResourcesEv        OWN
  *    4  BeforeCleanupResources 0x0202e5f0  Scene::
  *    5  AfterCleanupResources  0x0202e5d0  Scene::
- *    6  Behavior               0x02034da4  func_02034da4        OWN
+ *    6  Behavior               0x02034da4  _ZN7dScMB_c8BehaviorEv        OWN
  *    7  BeforeBehavior         0x0202e3d4  Scene::
  *    8  AfterBehavior          0x0202e3c8  Scene::   VENEER
- *    9  Render                 0x02034d9c  func_02034d9c        OWN
+ *    9  Render                 0x02034d9c  _ZN7dScMB_c6RenderEv        OWN
  *   10  BeforeRender           0x0202e3a4  Scene::
  *   11  AfterRender            0x0202e398  Scene::   VENEER
  *   12  OnPendingDestroy       0x02043ac0  ActorBase::
  *   13  Virtual34              0x0204357c  ActorBase::
  *   14  Virtual38              0x0204349c  ActorBase::
  *   15  OnHeapCreated          0x02043494  ActorBase::
- *   16  D2                     0x02034a78  func_02034a78        OWN
- *   17  D0                     0x02034ac0  func_02034ac0        OWN
+ *   16  D2                     0x02034a78  _ZN7dScMB_cD1Ev        OWN
+ *   17  D0                     0x02034ac0  _ZN7dScMB_cD0Ev        OWN
  *
  * THE WIDTH IS EIGHTEEN by the ROM's own spacing: the next relocated word
  * after slot 17 is 0x0209440c and it does not belong to this table (there is
@@ -64,7 +64,7 @@
  *
  * ---- 3. FIVE ADJUDICATED BODIES ------------------------------------------
  *
- * func_0203506c, func_02034d70, func_02034da4, func_02034d9c and func_02034ac0
+ * _ZN7dScMB_c13InitResourcesEv, _ZN7dScMB_c16CleanupResourcesEv, _ZN7dScMB_c8BehaviorEv, _ZN7dScMB_c6RenderEv and _ZN7dScMB_cD0Ev
  * carry the "recovered from vtable slot identity" marker, so
  * port/tools/inferred_stub_guard.py would refuse this seat on its own. All
  * five are ruled REAL_DECOMP in port/tools/inferred_stub_adjudicated.txt off
@@ -72,13 +72,13 @@
  * 2004/b56 and compared to the ROM by tools/match.py --strict-relocs, every
  * one reproducing its ROM bytes exactly with every relocation landing where
  * config says. The marker records how the NAME was recovered, not where the
- * BODY came from -- and for func_02034ac0 the name is provably wrong: it is
+ * BODY came from -- and for _ZN7dScMB_cD0Ev the name is provably wrong: it is
  * spelled dScMB_c_OnYoshiTryEat in src/ and the body is the deleting
  * destructor D0, which is what slot 17 holds.
  *
  * ---- 4. WHAT THE SCENE DOES ----------------------------------------------
  *
- * src/func_02034da4.c (Behavior) is an eight-state machine over self+0x60. It
+ * src/_ZN7dScMB_c8BehaviorEv.cpp (Behavior) is an eight-state machine over self+0x60. It
  * decompresses the per-language multiboot artwork out of data_0208a0e4 --
  * a five-entry pointer table indexed by func_0200f0bc(), ALREADY HOSTED with
  * host pointers in hal/scene_vs_menu.cpp for the VS lobby, which reads the
@@ -99,6 +99,8 @@
  * functions and not one of their src/ TUs names data_02092110.
  */
 
+#include "port_d16.h"
+
 #include <cstdio>
 #include <cstdlib>
 
@@ -107,16 +109,16 @@
 extern "C" {
 
 /* ---- the class's own six, plus the factory. Flat C names out of src/.
-   func_02034d70 and func_02034d9c take NO argument: the ROM bodies do not
+   _ZN7dScMB_c16CleanupResourcesEv and _ZN7dScMB_c6RenderEv take NO argument: the ROM bodies do not
    touch the receiver, and the decomp spells them the way the ROM compiled
    them. The thunks below drop self for exactly those two and no others. */
-int   func_0203506c(void *self);        /* slot  0  InitResources          */
-int   func_02034d70(void);              /* slot  3  CleanupResources       */
-int   func_02034da4(void *self);        /* slot  6  Behavior               */
-int   func_02034d9c(void);              /* slot  9  Render (mov r0,#1)     */
-void *func_02034a78(void *self);        /* slot 16  D2                     */
-void *func_02034ac0(void *self);        /* slot 17  D0                     */
-void *func_020352b4(void);              /* the factory, 0x020352b4         */
+int   _ZN7dScMB_c13InitResourcesEv(void *self);        /* slot  0  InitResources          */
+int   _ZN7dScMB_c16CleanupResourcesEv(void);              /* slot  3  CleanupResources       */
+int   _ZN7dScMB_c8BehaviorEv(void *self);        /* slot  6  Behavior               */
+int   _ZN7dScMB_c6RenderEv(void);              /* slot  9  Render (mov r0,#1)     */
+void *_ZN7dScMB_cD1Ev(void *self);        /* slot 16  D2                     */
+void *_ZN7dScMB_cD0Ev(void *self);        /* slot 17  D0                     */
+void *dScMB_c_classInit(void);              /* the factory, 0x020352b4         */
 
 /* the shared halves (hal/scene_boot.cpp, hal/scene_link100_base_faces.cpp) */
 unsigned port_scene_fill_rom(void **vt, unsigned n);
@@ -131,8 +133,8 @@ extern unsigned short data_02092664;    /* the pending scene id            */
 
 /* ---- THE VTABLE, a host array under the ROM'S OWN DATA NAME ---------------
  * Same shape and same reasoning as hal/scene_link100_boot.cpp's: the factory
- * (src/func_020352b4.c) and both destructor bodies (src/func_02034a78.c,
- * src/func_02034ac0.c) spell this name, arm9 .data is not mounted, so the
+ * (src/d_s_mb.c) and both destructor bodies (src/_ZN7dScMB_cD1Ev.cpp,
+ * src/_ZN7dScMB_cD0Ev.cpp) spell this name, arm9 .data is not mounted, so the
  * table is a fresh host array seeded with the ROM's eighteen words and then
  * rewritten by the keyed fill. The seed is what makes the fill self-checking:
  * it has to leave exactly SEVEN raw words and this file writes exactly seven.
@@ -160,7 +162,7 @@ void *data_020943c4[18] = {
  * extracted/arm9_dec.bin at 0x0209435c - 0x02004000. A host array rather than
  * a romdata blob because its +0 word is a relocation; the factory word is left
  * zero because port_scene_registry_install writes it. */
-unsigned char data_0209435c[8] = { 0, 0, 0, 0,   0x68, 0x01, 0x68, 0x01 };
+unsigned char g_profile_MULTIBOOT[8] = { 0, 0, 0, 0,   0x68, 0x01, 0x68, 0x01 };
 DSSTATE_END
 
 }  /* extern "C" */
@@ -170,19 +172,19 @@ DSSTATE_END
 static unsigned g_mb_hits[18];
 
 static int  __fastcall mb_init(void *s, void *)
-{ ++g_mb_hits[0];  return func_0203506c(s); }
+{ ++g_mb_hits[0];  return _ZN7dScMB_c13InitResourcesEv(s); }
 static int  __fastcall mb_clean(void *, void *)
-{ ++g_mb_hits[3];  return func_02034d70(); }
+{ ++g_mb_hits[3];  return _ZN7dScMB_c16CleanupResourcesEv(); }
 static int  __fastcall mb_beh(void *s, void *)
-{ ++g_mb_hits[6];  return func_02034da4(s); }
+{ ++g_mb_hits[6];  return _ZN7dScMB_c8BehaviorEv(s); }
 static int  __fastcall mb_render(void *, void *)
-{ ++g_mb_hits[9];  return func_02034d9c(); }
+{ ++g_mb_hits[9];  return _ZN7dScMB_c6RenderEv(); }
 static void __fastcall mb_pdes(void *s, void *)
 { ++g_mb_hits[12]; port_scene_link100_base_pending_destroy(s); }
 static void *__fastcall mb_d2(void *s, void *)
-{ ++g_mb_hits[16]; return func_02034a78(s); }
+{ ++g_mb_hits[16]; return _ZN7dScMB_cD1Ev(s); }
 static void *__fastcall mb_d0(void *s, void *)
-{ ++g_mb_hits[17]; return func_02034ac0(s); }
+{ ++g_mb_hits[17]; return _ZN7dScMB_cD0Ev(s); }
 
 extern "C" void port_scene_fill_mb(void)
 {
@@ -195,7 +197,7 @@ extern "C" void port_scene_fill_mb(void)
     vt[6]  = (void *)mb_beh;
     vt[9]  = (void *)mb_render;
     vt[12] = (void *)mb_pdes;
-    vt[16] = (void *)mb_d2;
+    vt[16] = (void *)PORT_D16(mb_d2);
     vt[17] = (void *)mb_d0;
 
     /* Seven: the six this class overrides (0/3/6/9/16/17) plus slot 12,
@@ -217,8 +219,8 @@ extern "C" void port_scene_fill_mb(void)
     }
 }
 
-/* the registry's factory column; /OPT:REF follows it to src/func_020352b4.c */
-extern "C" void *port_mb_scene_spawn(void) { return func_020352b4(); }
+/* the registry's factory column; /OPT:REF follows it to src/d_s_mb.c */
+extern "C" void *port_mb_scene_spawn(void) { return dScMB_c_classInit(); }
 
 extern "C" void port_scene_mb_report(void)
 {
@@ -227,7 +229,7 @@ extern "C" void port_scene_mb_report(void)
                 g_mb_hits[0], g_mb_hits[3], g_mb_hits[6], g_mb_hits[9],
                 g_mb_hits[12], g_mb_hits[16], g_mb_hits[17]);
     /* Scene::StartSceneFade parks the requested id in data_02092664
-       (src/_ZN5Scene14StartSceneFadeEjjt.c -> Scene::SetSceneToSpawn), so this
+       (src/_ZN8dScene_c14StartSceneFadeEjjt.cpp -> Scene::SetSceneToSpawn), so this
        word IS the hand-off request. At boot the harness leaves it at the id it
        spawned this scene with; 6 means the download conversation reached its
        end and asked for the VS entry menu. */

@@ -38,7 +38,7 @@
 // third -- which is exactly why the first two carry Platform::Kill at slot 31
 // and the third stops at 30).
 //
-// WHAT CONFIG SAYS INSTEAD: _ZTV9UkikiCage is on 0x02115a48 (RollingLogTtm's
+// WHAT CONFIG SAYS INSTEAD: _ZTV13RollingLogTtm is on 0x02115a48 (RollingLogTtm's
 // table), _ZTV13RollingLogTtm and _ZTV7daMky_c are BOTH on 0x02115bfc (only the
 // second is right), and UkikiCage's real table 0x02115974 has no _ZTV name at
 // all. Every _ZN9UkikiCage*Ev body below is really a RollingLogTtm method and
@@ -48,8 +48,8 @@
 // which is not a port lane's call.
 //
 // src/ IS INTERNALLY CORRECT ON THE ADDRESSES: the recovered sources took the
-// identity from the type_info route, so UkikiCage_Spawn.c writes
-// _ZTV13daObjHmBskt_c and RollingLogTtm_Spawn.c writes _ZTV15daObjHmMaruta_c
+// identity from the type_info route, so daObjHmBskt_c_classInit.c writes
+// _ZTV13daObjHmBskt_c and daObjHmMaruta_c_classInit.c writes _ZTV15daObjHmMaruta_c
 // (include/decl_common.h:535 and :595). Only the two Ukiki factories use the
 // config spelling _ZTV13RollingLogTtm (decl_common.h:524) for daMky_c's table.
 // This file defines all three host arrays under the names src actually uses.
@@ -99,8 +99,8 @@
 // THE TWO ov080 SLOTS ARE THE CLOSURE GAP, and both are measured rather than
 // guessed: relocs.txt resolves 0x02127124 and 0x02127058 as
 // `module:overlays(78,80)`, and level 22's roster loads ov080 and not ov078, so
-// the ov080 spelling is the live one. src/func_ov080_02127124.cpp and
-// src/func_ov080_02127058.c are appended to slice_ov030cast.txt for it.
+// the ov080 spelling is the live one. src/_ZN13daObjMaruta_c6RenderEv.cpp and
+// src/_ZN13daObjMaruta_c15OnHitByMegaCharER6Player.cpp are appended to slice_ov030cast.txt for it.
 //
 // THE WIDTHS (32 / 32 / 31) ARE SETTLED BY THE SEMANTIC TAIL and by nothing
 // else, because no mechanical route is right on all three. The reloc run
@@ -118,7 +118,7 @@
 //
 //   data_ov030_02115e0c[11], .bss, 16 bytes a cell, declared by
 //   src/__sinit_ov030_02114924.c's own `S16 { S8 lo, hi; }`;
-//   src/func_ov030_021141a8.c installs `&data_ov030_02115e0c[idx]` at +0x3a4;
+//   src/actors/daMky_c.cpp installs `&data_ov030_02115e0c[idx]` at +0x3a4;
 //   func_ov030_02114170 dispatches pp+0 (the enter half, the sinit's `.lo`) and
 //   func_ov030_02114134 dispatches pp+1 (the tick half, the `.hi`).
 //
@@ -138,13 +138,15 @@
 //  - What the eleven states MEAN. They are seated by address, in the sinit's
 //    own field order, and the run reports which ones were entered.
 // ============================================================================
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
@@ -153,30 +155,31 @@ extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 
 #include "types.h"
 #include "dtor_faces_cpp.h"
-#include "Actor.h"
-#include "ActorBase.h"
+#include "dActor_c.h"
+#include "fBase_c.h"
+#include "daMky_c.h"
 #include "RollingLogTtm.h"
 
 extern "C" {
 /* ---- the shared arm9 defaults, slots 1..30 ---- */
-int _ZN5Actor19BeforeInitResourcesEv(void *self);
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a);
-int _ZN5Actor14BeforeBehaviorEv(void *self);
-int _ZN5Actor12BeforeRenderEv(void *self);
-int _ZN5Actor13OnYoshiTryEatEv(void *self);
-void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p);
-int _ZN5Actor9Virtual50Ev(void *self);
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);
-void _ZN5Actor8OnKickedERS_(void *self, void *o);
-void _ZN5Actor8OnPushedERS_(void *self, void *o);
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o);
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);
-int _ZN5Actor16OnAimedAtWithEggEv(void *self);
-void _ZN8Platform4KillEv(void *self);                    /* slot 31, 0x020ee55c */
-void _ZN5ActorD2Ev(void *self);
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a);
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);
+int _ZN8dActor_c12BeforeRenderEv(void *self);
+int _ZN8dActor_c13OnYoshiTryEatEv(void *self);
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void *self, void *p);
+int _ZN8dActor_c9Virtual50Ev(void *self);
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o);
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);
+int _ZN8dActor_c16OnAimedAtWithEggEv(void *self);
+void _ZN10dBgActor_c4KillEv(void *self);                    /* slot 31, 0x020ee55c */
+void _ZN8dActor_cD2Ev(void *self);
 extern int data_02099f24[];          /* the frame phase the lists are in */
 extern unsigned char data_020a4b4c;  /* the spawn spine's own step */
 const char *port_actor_class_name(unsigned id);  /* hal/actor_registry */
@@ -186,112 +189,151 @@ void port_actor_render_probe(const char *cls, void *model);
 /* ---- the sub-object destructors the inline D1 thunk spells ---- */
 void _ZN9ModelAnimD1Ev(void *self);
 void _ZN11ShadowModelD1Ev(void *self);
-void _ZN18MovingCylinderClsnD1Ev(void *self);
-void _ZN12WithMeshClsnD1Ev(void *self);
+void _ZN7dCcAc_cD1Ev(void *self);
+void _ZN10dBgCh_ActrD1Ev(void *self);
 
 /* ---- UkikiCage (103, 13daObjHmBskt_c), own bodies ---- */
-int func_ov030_02111410(void *self);      /* slot 0  InitResources */
-int func_ov030_0211130c(void *self);      /* slot 3  CleanupResources */
-int func_ov030_02111384(void *self);      /* slot 6  Behavior */
-int func_ov030_02111350(char *self);      /* slot 9  Render */
-int *func_ov030_021111a0(int *self);      /* slot 16 D1 */
-int *func_ov030_021111ec(int *self);      /* slot 17 D0 */
-void *UkikiCage_Spawn(void);
-extern unsigned char UkikiCage_SpawnInfo[];
+int _ZN13daObjHmBskt_c13InitResourcesEv(void *self);      /* slot 0  InitResources */
+int _ZN13daObjHmBskt_c16CleanupResourcesEv(void *self);      /* slot 3  CleanupResources */
+int _ZN13daObjHmBskt_c8BehaviorEv(void *self);      /* slot 6  Behavior */
+int _ZN13daObjHmBskt_c6RenderEv(char *self);      /* slot 9  Render */
+int *_ZN13daObjHmBskt_cD1Ev(int *self);      /* slot 16 D1 */
+int *_ZN13daObjHmBskt_cD0Ev(int *self);      /* slot 17 D0 */
+void *daObjHmBskt_c_classInit(void);
+extern unsigned char g_profile_HM_BASKET[];
 
 /* ---- RollingLogTtm (102, 15daObjHmMaruta_c), own bodies.
         Every name here is the config's UkikiCage spelling and every one of them
         is really a RollingLogTtm method -- see this file's header. ---- */
-int _ZN9UkikiCage13InitResourcesEv(void *self);      /* slot 0 */
-int _ZN9UkikiCage16CleanupResourcesEv(void *self);   /* slot 3 */
-int _ZN9UkikiCage8BehaviorEv(void *self);            /* slot 6 */
-int func_ov080_02127124(void *self);                 /* slot 9, ov080 */
-void func_ov080_02127058(void *self, void *player);  /* slot 27, ov080 */
-int *_ZN9UkikiCageD1Ev(int *self);                   /* slot 16 */
-int *_ZN9UkikiCageD0Ev(int *self);                   /* slot 17 */
-void *RollingLogTtm_Spawn(void);
-extern unsigned char RollingLogTtm_SpawnInfo[];
+int _ZN13RollingLogTtm13InitResourcesEv(void *self);      /* slot 0 */
+int _ZN13RollingLogTtm16CleanupResourcesEv(void *self);   /* slot 3 */
+int _ZN13RollingLogTtm8BehaviorEv(void *self);            /* slot 6 */
+int _ZN13daObjMaruta_c6RenderEv(void *self);                 /* slot 9, ov080 */
+void _ZN13daObjMaruta_c15OnHitByMegaCharER6Player(void *self, void *player);  /* slot 27, ov080 */
+int *_ZN13RollingLogTtmD1Ev(int *self);                   /* slot 16 */
+int *_ZN13RollingLogTtmD0Ev(int *self);                   /* slot 17 */
+void *daObjHmMaruta_c_classInit(void);
+extern unsigned char g_profile_HM_MARUTA[];
 
 /* ---- the Ukiki (267 + 268, 7daMky_c), own bodies.
         Same shift the other way: every _ZN13RollingLogTtm*Ev is a Ukiki
         method. ---- */
-int _ZN13RollingLogTtm13InitResourcesEv(void *self);  /* slot 0, FACED at the bottom of this file */
-int _ZN13RollingLogTtm6RenderEv(void *self);          /* slot 9, FACED at the bottom of this file */
-int _ZN13RollingLogTtm16CleanupResourcesEv(void);    /* slot 3, .c body takes void */
+int _ZN7daMky_c13InitResourcesEv(void *self);  /* slot 0, FACED at the bottom of this file */
+int _ZN7daMky_c6RenderEv(void *self);          /* slot 9, FACED at the bottom of this file */
+int _ZN7daMky_c16CleanupResourcesEv(void);    /* slot 3, .c body takes void */
 /* Slot 6 is the HOST COPY in port/unmatched/Ukiki_Behavior.cpp and it is
    DELIBERATELY not exported under the Itanium name: src/__sinit_ov029_
-   02112c10.c declares _ZN13RollingLogTtm8BehaviorEv with no parameters and
+   02112c10.c declares _ZN7daMky_c8BehaviorEv with no parameters and
    hands its ADDRESS to func_020731dc as an ov029 SharedFilePtr destructor
    callback -- a shared-load-window mis-attribution. Defining that name here
    would trip aritycheck's receiver ratchet today and silently bind ov029's
    callback to this class's Behavior the day lane W1-C slices that sinit.
    See that file's own header for the full argument. */
 int port_ov030_ukiki_behavior(void *self);           /* slot 6, HOST COPY */
-void _ZN13RollingLogTtm16OnPendingDestroyEv(void);   /* slot 12, .c body takes void */
-int *_ZN13RollingLogTtmD0Ev(int *self);              /* slot 17 */
-int func_ov030_0211172c(void);                       /* slot 18, own OnYoshiTryEat, takes void */
+void _ZN7daMky_c16OnPendingDestroyEv(void);   /* slot 12, .c body takes void */
+int *_ZN7daMky_cD0Ev(int *self);              /* slot 17 */
+int _ZN7daMky_c13OnYoshiTryEatEv(void);                       /* slot 18, own OnYoshiTryEat, takes void */
 /* Slot 19's body is a tail-call VENEER (ldr ip,[pc]; bx ip; .word 0x02043824
-   onto _ZN9ActorBase18MarkForDestructionEv) and src declares it (void). It is
+   onto _ZN7fBase_c18MarkForDestructionEv) and src declares it (void). It is
    declared WITH a self parameter here, exactly as gate 193 declares the
-   byte-identical func_ov072_02121fa0: a veneer is a tail jump on the host too,
+   byte-identical _ZN11BabyPenguin13OnTurnIntoEggER6Player: a veneer is a tail jump on the host too,
    so it forwards whatever this thunk pushed, and pushing nothing would leave
    MarkForDestruction reading the thunk's own return address as its self. */
-void func_ov030_021145d4(void *self);                /* slot 19, own OnTurnIntoEgg */
-void *UkikiStar_Spawn(void);
-void *UkikiThief_Spawn(void);
-extern unsigned char UkikiStar_SpawnInfo[];
-extern unsigned char UkikiThief_SpawnInfo[];
+void _ZN7daMky_c13OnTurnIntoEggER6Player(void *self);                /* slot 19, own OnTurnIntoEgg */
+void *daMky_c_classInit_MONKEY_STAR(void);
+void *daMky_c_classInit_MONKEY_THIEF(void);
+extern unsigned char g_profile_MONKEY_STAR[];
+extern unsigned char g_profile_MONKEY_THIEF[];
 
 /* ---- the three host vtable arrays. A mounted vtable would hand a factory DS
         code addresses, so all three spans are excluded from port/ov030_syms.txt
         and live here (the ov015/ov016/ov022/ov045/ov080/ov072 rule). ---- */
-int _ZTV13daObjHmBskt_c[32];    /* vtspan: data_ov030_02115974 */
-int _ZTV15daObjHmMaruta_c[32];  /* vtspan: data_ov030_02115a48 */
-int _ZTV13RollingLogTtm[31];    /* vtspan: data_ov030_02115bfc, really _ZTV7daMky_c */
+int _ZTV13daObjHmBskt_c[32];    /* vtspan: _ZTV13daObjHmBskt_c */
+int _ZTV13RollingLogTtm[32];    /* vtspan: data_ov030_02115a48, config name for it */
+int _ZTV7daMky_c[31];           /* vtspan: data_ov030_02115bfc, config name for it */
 }
 
-/* ONE STORAGE, TWO NAMES, for 0x02115a48. src/RollingLogTtm_Spawn.c stores that
+/* ONE STORAGE, TWO NAMES, for 0x02115a48. src/d_a_obj_hm_maruta.c stores that
    table SECOND (its pool is 0x02111680 -> 0x02128338 then 0x02111684 ->
    0x02115a48) and spells the second store `VT1`, a placeholder, while spelling
    the FIRST store `_ZTV15daObjHmMaruta_c` -- the right name on the wrong store.
    port/CMakeLists.txt renames that TU's `_ZTV15daObjHmMaruta_c` to
-   data_ov080_02128338 and its VT1 to _ZTV9UkikiCage, and this alias points
-   _ZTV9UkikiCage at the one host array. A macro whose body is another macro is
+   _ZTV13daObjMaruta_c and its VT1 to _ZTV13RollingLogTtm, and this alias points
+   _ZTV13RollingLogTtm at the one host array. A macro whose body is another macro is
    rescanned and expanded again, so renaming VT1 straight to
    _ZTV15daObjHmMaruta_c would have collapsed BOTH stores onto the same array
    and lost the ov080 intermediate the ROM writes first.
-   _ZTV9UkikiCage is config's own name for 0x02115a48 -- mis-attributed (that
-   table is RollingLogTtm's, see this file's header) but the right ADDRESS, so
-   the alias documents the config defect rather than inventing a name.
+   _ZTV13RollingLogTtm is config's own name for 0x02115a48 and it is CORRECT,
+   not mis-attributed: the typeinfo at 0x02115a48-4 leads to the string
+   "15daObjHmMaruta_c", and maruta is the log, so RollingLogTtm and
+   daObjHmMaruta_c are one class under two names. The array now carries that
+   config name outright, so VT1 resolves to it with no join at all.
    The LHS is deliberately UNDEFINED anywhere in the link, which is what
    /alternatename needs and what port/tools/alternatename_guard.py checks: it is
    excluded from port/ov030_syms.txt with the rest of that vtable span, and no
-   host TU defines it. This is the _ZTV10dBgActor_c / _ZTV8Platform shape at
+   host TU defines it. This is the _ZTV10dBgActor_c / _ZTV10dBgActor_c shape at
    hal/actor_classes.cpp:591, one storage reached under both spellings. */
-#pragma comment(linker, "/alternatename:__ZTV9UkikiCage=__ZTV15daObjHmMaruta_c")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEFEATED: the left hand side is a real definition in this link now (actor_classes_ov030.cpp.obj), so the directive is inert and alternatename_guard fails on it.
+   STILL RETIRED after ALIAS5, and now also backwards: the live row is the other
+   way round, at the end of this section. */
+// #pragma comment(linker, "/alternatename:__ZTV13RollingLogTtm=__ZTV15daObjHmMaruta_c")
 
-/* ONE STORAGE, TWO NAMES, for 0x02115bfc as well. config gives that address
-   BOTH _ZTV13RollingLogTtm and _ZTV7daMky_c (symbols.txt lines 143 and 144),
-   and src uses whichever its own TU happened to be recovered under:
-   UkikiStar_Spawn.c and UkikiThief_Spawn.c spell _ZTV13RollingLogTtm, while
-   src/_ZN13RollingLogTtmD0Ev.c spells _ZTV7daMky_c. The host array carries the
-   first name (decl_common.h:524 declares it), so this alias points the second
-   at the same storage. Measured, not predicted: the FIRST link of this seat
-   failed with exactly this unresolved external and no other spelling.
-   _ZTV7daMky_c is the name that is actually RIGHT about the class -- see this
-   file's header -- and it is the one this lane could not use as the array's own
-   name, because src/ reaches the table under the other one from two TUs. */
-#pragma comment(linker, "/alternatename:__ZTV7daMky_c=__ZTV13RollingLogTtm")
+/* The block that used to stand here read "ONE STORAGE, TWO NAMES, for
+   0x02115bfc as well" and rested on two claims that do not hold. Both were
+   re-checked against the tree rather than taken from the note:
+     - "config gives that address BOTH _ZTV13RollingLogTtm and _ZTV7daMky_c
+       (symbols.txt lines 143 and 144)". Line 143 is _ZTV7daMky_c at 0x02115bfc;
+       line 144 is data_ov030_02115c80, a bss row. _ZTV13RollingLogTtm is on
+       line 115 at a DIFFERENT address, 0x02115a48.
+     - "daMky_c_classInit_MONKEY_STAR.c and ..._MONKEY_THIEF.c spell
+       _ZTV13RollingLogTtm". They do not: src/d_a_mky_monkey_star.c:22 and
+       src/d_a_mky_monkey_thief.c:22 both store _ZTV7daMky_c, agreeing with the
+       cartridge, and the only file in src/ that spells _ZTV13RollingLogTtm is
+       src/d_a_obj_hm_maruta.c, the rolling log. */
+/* THE TWO TABLES, read out of config rather than derived one name at a time.
+   config/arm9/overlays/ov030/symbols.txt:
+
+       0x02115a48   _ZTV13RollingLogTtm  (line 115)
+       0x02115bfc   _ZTV7daMky_c         (line 143)
+
+   ONE name each, at TWO addresses. The note that used to stand here said both
+   names were on 0x02115bfc at lines 143 and 144; line 144 is
+   data_ov030_02115c80, a bss row, and there is no second _ZTV at that address.
+   The cartridge agrees three more ways. The typeinfo word at 0x02115a48-4 leads
+   to the string "15daObjHmMaruta_c" (maruta is the log) and the one at
+   0x02115bfc-4 to "7daMky_c" (the monkey). The factories disagree:
+   daObjHmMaruta_c_classInit (0x0211164c) allocates 0x344 and stamps 0x02115a48,
+   while daMky_c_classInit_MONKEY_STAR (0x021145e0) and _MONKEY_THIEF
+   (0x02114638) each allocate 0x3cc and stamp 0x02115bfc, then build a ModelAnim
+   at +0xd4, a ShadowModel at +0x138, a dCcAc_c at +0x160, a dBgCh_Actr at +0x194
+   and a PathPtr at +0x398 that the 0x344 class never builds. And the two tables
+   differ in ten of their thirty-one slots.
+
+   So the join __ZTV7daMky_c=__ZTV13RollingLogTtm was false, and its effect was
+   that src/d_a_obj_hm_maruta.c, which stamps _ZTV13RollingLogTtm, spawned every
+   rolling log holding the MONKEY's methods -- including a Render that reads a
+   ModelAnim at +0xd4 the log's own constructor never builds -- while the array
+   this file fills with the log's methods was installed on nothing at all. Both
+   arrays now carry config's own name for the address they hold, so no join is
+   needed and none is written.
+
+   _ZTV15daObjHmMaruta_c is the port's other spelling for the SAME class as
+   _ZTV13RollingLogTtm (the RTTI string at 0x02115a48 is "15daObjHmMaruta_c");
+   config carries no _ZTV under that spelling, only the _ZTS name string, so the
+   row below is a true statement of identity and not an address join. Its LHS is
+   undefined in the link, which is what /alternatename needs and what
+   port/tools/alternatename_guard.py checks. */
+#pragma comment(linker, "/alternatename:__ZTV15daObjHmMaruta_c=__ZTV13RollingLogTtm")
 
 /* FIVE C-LINKAGE FLIPS. Five mounted data symbols are declared WITHOUT
    extern "C" by a //cpp TU in this slice, so MSVC mangles the reference while
    the mount defines the plain C name. The hal/cxx_aliases.cpp recipe applied
    verbatim; each was measured off the first link's own unresolved list, with
    the mangling MSVC actually produced, never predicted from the declaration:
-     src/func_ov030_0211360c.cpp     extern int data_ov030_02115ce0[];
-     src/func_ov030_02113b38.cpp     extern int data_ov030_02115d18[];
-     src/func_ov030_02113ff0.cpp     the same symbol again (LNK2001)
-     src/_ZN13RollingLogTtm13InitResourcesEv.cpp  extern char data_ov002_*;
+     src/actors/daMky_c.cpp     extern int data_ov030_02115ce0[];
+     src/actors/daMky_c.cpp     extern int data_ov030_02115d18[];
+     src/actors/daMky_c.cpp     the same symbol again (LNK2001)
+     src/actors/daMky_c.cpp  extern char data_ov002_*;
    All five are already mounted and already in the map as plain C symbols --
    the first two by port/ov030_syms.txt, the last three by port/ov002_syms.txt
    -- so this is a spelling bridge and not a new definition. Every LHS is
@@ -308,27 +350,27 @@ extern "C" {
 struct PortUkikiCell { unsigned enter_fn, enter_delta, tick_fn, tick_delta; };
 extern PortUkikiCell data_ov030_02115e0c[11];
 
-int func_ov030_02114124(void *c);
+int _ZN7daMky_c11EnterState0Ev(void *c);
 int func_ov030_02113ff0(void *c);
-int func_ov030_02113fd8(void *c);
+int _ZN7daMky_c11EnterState1Ev(void *c);
 int func_ov030_02113d20(void *c);
-int func_ov030_02113be8(void *c);
+int _ZN7daMky_c11EnterState2Ev(void *c);
 int func_ov030_02113b38(void *c);
-int func_ov030_02113a80(void *c);
+int _ZN7daMky_c11EnterState3Ev(void *c);
 /* state 3's tick half, func_ov030_021136b0, HAS NO BODY -- faced below */
-int func_ov030_0211360c(void *c);
+int _ZN7daMky_c11EnterState4Ev(void *c);
 int func_ov030_02113324(void *c);
-int func_ov030_021132d4(void *c);
+int _ZN7daMky_c11EnterState5Ev(void *c);
 int func_ov030_02113094(void *c);
-int func_ov030_02112ff8(void *c);
+int _ZN7daMky_c11EnterState6Ev(void *c);
 int func_ov030_02112da0(void *c);
-int func_ov030_02112c14(void *c);
+int _ZN7daMky_c11EnterState7Ev(void *c);
 int func_ov030_02112a84(void *c);
-int func_ov030_02112a14(void *c);
+int _ZN7daMky_c11EnterState8Ev(void *c);
 int func_ov030_02112578(void *c);
-int func_ov030_02112560(void *c);
+int _ZN7daMky_c11EnterState9Ev(void *c);
 int func_ov030_02112400(void *c);
-int func_ov030_021123a4(void *c);
+int _ZN7daMky_c12EnterState10Ev(void *c);
 int func_ov030_021122b0(void *c);
 }
 
@@ -355,8 +397,8 @@ static void ov30_trap_report(void *self, int slot, const char *what)
       port_actor_slot_decline(_m); }
     (void)slot;
 }
-static int __fastcall ov30_trap13(void *s, void *) { ov30_trap_report(s, 13, "vtable slot 13 ActorBase::Virtual34(u32,u32)"); return 0; }
-static int __fastcall ov30_trap14(void *s, void *) { ov30_trap_report(s, 14, "vtable slot 14 ActorBase::Virtual38(u32,u32)"); return 0; }
+static int __fastcall ov30_trap13(void *s, void *) { ov30_trap_report(s, 13, "vtable slot 13 fBase_c::Virtual34(u32,u32)"); return 0; }
+static int __fastcall ov30_trap14(void *s, void *) { ov30_trap_report(s, 14, "vtable slot 14 fBase_c::Virtual38(u32,u32)"); return 0; }
 
 // ---- THE ONE MISSING BODY -------------------------------------------------
 // func_ov030_021136b0 (0x3d0 bytes) is the Ukiki's state 3 TICK half. It has
@@ -388,56 +430,56 @@ static void ov30_missing_021136b0(void *c)
 
 // ---- the shared 1..30 half; all three tables share it ---------------------
 static int __fastcall ov30_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall ov30_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall ov30_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 static void __fastcall ov30_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall ov30_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall ov30_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall ov30_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall ov30_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall ov30_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int __fastcall ov30_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 static int __fastcall ov30_egg(void *s, void *, void *p)
-{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+{ _ZN8dActor_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall ov30_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall ov30_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall ov30_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall ov30_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall ov30_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall ov30_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall ov30_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall ov30_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall ov30_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 static int __fastcall ov30_aimed(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 /* Slot 12's ROM word on both Platform-derived tables is 0x02043ac0,
    ActorBase::OnPendingDestroy -- an empty 4-byte body. The port links it as an
-   MSVC METHOD (?OnPendingDestroy@ActorBase@@UAEXXZ), never under the Itanium
+   MSVC METHOD (?OnPendingDestroy@fBase_c@@UAEXXZ), never under the Itanium
    C name, so it is reached through the class exactly as hal/actor_classes.cpp's
    own ac_pdes_base does, and it returns void. */
 static void __fastcall ov30_pdes_default(void *s, void *)
-{ ((ActorBase *)s)->ActorBase::OnPendingDestroy(); }
+{ ((fBase_c *)s)->fBase_c::OnPendingDestroy(); }
 static int __fastcall ov30_kill(void *s, void *)
-{ _ZN8Platform4KillEv(s); return 0; }
+{ _ZN10dBgActor_c4KillEv(s); return 0; }
 
 /* Fills slots 1,2,4,5,7,8,10,11,13,14,15,18..30 -- every slot all three tables
    share. The caller writes its own 0/3/6/9/12/16/17 afterward, plus slot 12 for
@@ -486,19 +528,107 @@ static void ov30_fill_shared(void **vt)
 typedef void (*PortUkikiFn)(void *);
 static void ukiki_state3_tick(void *c) { ov30_missing_021136b0(c); }
 
+/* ---- RUN link100 LANE PMFSWEEP3'S HANDOFF: THE ELEVEN TICK CELLS TAKE THEIR
+   RECEIVER IN ECX. ?Behavior@daMky_c@@UAEHXZ +0x1f5..+0x203 dispatches the
+   TICK half inline, with nothing pushed:
+
+       mov eax,[edi+0x3a4]   the cell
+       mov ecx,[eax+0xc]     the TICK delta
+       mov eax,[eax+8]       the TICK word
+       add ecx,edi           this + delta
+       call eax              a REAL call
+
+   while the eleven tick_rom bodies below (func_ov030_* and ukiki_state3_tick)
+   are matched flat cdecl bodies that read their receiver off the stack at
+   [ebp+8]. This is 5ae983797's family at another class (daMip_c and
+   Scuttlebug already fixed on port/l7-pmfsweep2). The ENTER half is NOT
+   reached only by the flat tail jumps _func_ov030_021141a8 and _02114134,
+   _02113324, _02113d20, _02113ff0: see the UKIKI2 block below, which names
+   two more inlined readers, so the enter_host column is thunked there too.
+   Each thunk names its matched body, so trap T2's rule still holds. */
+static void __fastcall uk_02113ff0(void *self, void *)
+{ func_ov030_02113ff0(self); }
+static void __fastcall uk_02113d20(void *self, void *)
+{ func_ov030_02113d20(self); }
+static void __fastcall uk_02113b38(void *self, void *)
+{ func_ov030_02113b38(self); }
+static void __fastcall uk_021136b0(void *self, void *)
+{ ukiki_state3_tick(self); }
+static void __fastcall uk_02113324(void *self, void *)
+{ func_ov030_02113324(self); }
+static void __fastcall uk_02113094(void *self, void *)
+{ func_ov030_02113094(self); }
+static void __fastcall uk_02112da0(void *self, void *)
+{ func_ov030_02112da0(self); }
+static void __fastcall uk_02112a84(void *self, void *)
+{ func_ov030_02112a84(self); }
+static void __fastcall uk_02112578(void *self, void *)
+{ func_ov030_02112578(self); }
+static void __fastcall uk_02112400(void *self, void *)
+{ func_ov030_02112400(self); }
+static void __fastcall uk_021122b0(void *self, void *)
+{ func_ov030_021122b0(self); }
+
+/* ---- RUN link100 WAVE 15 LANE UKIKI2: THE ELEVEN *ENTER* CELLS TAKE THEIR
+   RECEIVER IN ECX TOO, and the block above is wrong about the readers. The
+   flat tail jumps are not the only callers into data_ov030_02115e0c:
+   ?InitResources@daMky_c@@UAEHXZ inlines two more dispatches into the same
+   runtime array, read back out of this lane's own build with
+   tmp/scan_inline_pmf.py (the HMC1 census tool):
+
+       ?InitResources@daMky_c@@UAEHXZ+0x1d0  call ECX -> record 0 enter
+       ?InitResources@daMky_c@@UAEHXZ+0x205  call ECX -> record 1 enter
+
+   both `lea ecx,[ecx+this]; call dword ptr [cell]` with NOTHING pushed --
+   the identical shape 65deff04d (fixer SBENTER, the same night) fixed at
+   Scuttlebug's nine ENTER cells. A thunk is correct at every other reader
+   too: the flat dispatcher _func_ov030_021141a8 (va 006d1320 on this
+   lane's build; the ledger's old 006cd080 was already stale before this
+   change) sets ecx as well as riding the receiver through:
+
+       +0x18  8b4a04  mov ecx, dword ptr [edx+4]     the delta
+       +0x1b  03c8    add ecx, eax                   ecx = this + delta
+       +0x1d  8b02    mov eax, dword ptr [edx]
+       +0x20  ffe0    jmp eax
+
+   so no cell regresses. Each thunk names its matched body, so trap T2's
+   rule still holds. */
+static void __fastcall uk_02114124(void *self, void *)
+{ _ZN7daMky_c11EnterState0Ev(self); }
+static void __fastcall uk_02113fd8(void *self, void *)
+{ _ZN7daMky_c11EnterState1Ev(self); }
+static void __fastcall uk_02113be8(void *self, void *)
+{ _ZN7daMky_c11EnterState2Ev(self); }
+static void __fastcall uk_02113a80(void *self, void *)
+{ _ZN7daMky_c11EnterState3Ev(self); }
+static void __fastcall uk_0211360c(void *self, void *)
+{ _ZN7daMky_c11EnterState4Ev(self); }
+static void __fastcall uk_021132d4(void *self, void *)
+{ _ZN7daMky_c11EnterState5Ev(self); }
+static void __fastcall uk_02112ff8(void *self, void *)
+{ _ZN7daMky_c11EnterState6Ev(self); }
+static void __fastcall uk_02112c14(void *self, void *)
+{ _ZN7daMky_c11EnterState7Ev(self); }
+static void __fastcall uk_02112a14(void *self, void *)
+{ _ZN7daMky_c11EnterState8Ev(self); }
+static void __fastcall uk_02112560(void *self, void *)
+{ _ZN7daMky_c11EnterState9Ev(self); }
+static void __fastcall uk_021123a4(void *self, void *)
+{ _ZN7daMky_c12EnterState10Ev(self); }
+
 static const struct { unsigned enter_rom, tick_rom; PortUkikiFn enter_host, tick_host; }
 g_ukiki_cells[11] = {
-    { 0x02114124, 0x02113ff0, (PortUkikiFn)func_ov030_02114124, (PortUkikiFn)func_ov030_02113ff0 },
-    { 0x02113fd8, 0x02113d20, (PortUkikiFn)func_ov030_02113fd8, (PortUkikiFn)func_ov030_02113d20 },
-    { 0x02113be8, 0x02113b38, (PortUkikiFn)func_ov030_02113be8, (PortUkikiFn)func_ov030_02113b38 },
-    { 0x02113a80, 0x021136b0, (PortUkikiFn)func_ov030_02113a80, ukiki_state3_tick },
-    { 0x0211360c, 0x02113324, (PortUkikiFn)func_ov030_0211360c, (PortUkikiFn)func_ov030_02113324 },
-    { 0x021132d4, 0x02113094, (PortUkikiFn)func_ov030_021132d4, (PortUkikiFn)func_ov030_02113094 },
-    { 0x02112ff8, 0x02112da0, (PortUkikiFn)func_ov030_02112ff8, (PortUkikiFn)func_ov030_02112da0 },
-    { 0x02112c14, 0x02112a84, (PortUkikiFn)func_ov030_02112c14, (PortUkikiFn)func_ov030_02112a84 },
-    { 0x02112a14, 0x02112578, (PortUkikiFn)func_ov030_02112a14, (PortUkikiFn)func_ov030_02112578 },
-    { 0x02112560, 0x02112400, (PortUkikiFn)func_ov030_02112560, (PortUkikiFn)func_ov030_02112400 },
-    { 0x021123a4, 0x021122b0, (PortUkikiFn)func_ov030_021123a4, (PortUkikiFn)func_ov030_021122b0 },
+    { 0x02114124, 0x02113ff0, (PortUkikiFn)(void *)uk_02114124, (PortUkikiFn)(void *)uk_02113ff0 },
+    { 0x02113fd8, 0x02113d20, (PortUkikiFn)(void *)uk_02113fd8, (PortUkikiFn)(void *)uk_02113d20 },
+    { 0x02113be8, 0x02113b38, (PortUkikiFn)(void *)uk_02113be8, (PortUkikiFn)(void *)uk_02113b38 },
+    { 0x02113a80, 0x021136b0, (PortUkikiFn)(void *)uk_02113a80, (PortUkikiFn)(void *)uk_021136b0 },
+    { 0x0211360c, 0x02113324, (PortUkikiFn)(void *)uk_0211360c, (PortUkikiFn)(void *)uk_02113324 },
+    { 0x021132d4, 0x02113094, (PortUkikiFn)(void *)uk_021132d4, (PortUkikiFn)(void *)uk_02113094 },
+    { 0x02112ff8, 0x02112da0, (PortUkikiFn)(void *)uk_02112ff8, (PortUkikiFn)(void *)uk_02112da0 },
+    { 0x02112c14, 0x02112a84, (PortUkikiFn)(void *)uk_02112c14, (PortUkikiFn)(void *)uk_02112a84 },
+    { 0x02112a14, 0x02112578, (PortUkikiFn)(void *)uk_02112a14, (PortUkikiFn)(void *)uk_02112578 },
+    { 0x02112560, 0x02112400, (PortUkikiFn)(void *)uk_02112560, (PortUkikiFn)(void *)uk_02112400 },
+    { 0x021123a4, 0x021122b0, (PortUkikiFn)(void *)uk_021123a4, (PortUkikiFn)(void *)uk_021122b0 },
 };
 
 extern "C" void port_ukiki_states_seat(void)
@@ -527,18 +657,18 @@ extern "C" void port_ukiki_states_seat(void)
 // UkikiCage (103, 13daObjHmBskt_c) -- Platform-derived, 32 slots
 // ============================================================================
 static int __fastcall cage_init(void *s, void *)
-{ return func_ov030_02111410(s); }
+{ return _ZN13daObjHmBskt_c13InitResourcesEv(s); }
 static int __fastcall cage_clean(void *s, void *)
-{ return func_ov030_0211130c(s); }
+{ return _ZN13daObjHmBskt_c16CleanupResourcesEv(s); }
 static int __fastcall cage_behavior(void *s, void *)
-{ return func_ov030_02111384(s); }
+{ return _ZN13daObjHmBskt_c8BehaviorEv(s); }
 static int __fastcall cage_render(void *s, void *)
 { port_actor_render_probe("UKIKI_CAGE", (char *)s + 0xd4);
-  return func_ov030_02111350((char *)s); }
+  return _ZN13daObjHmBskt_c6RenderEv((char *)s); }
 static int __fastcall cage_d1(void *s, void *)
-{ return (int)(size_t)func_ov030_021111a0((int *)s); }
+{ return (int)(size_t)_ZN13daObjHmBskt_cD1Ev((int *)s); }
 static int __fastcall cage_d0(void *s, void *)
-{ return (int)(size_t)func_ov030_021111ec((int *)s); }
+{ return (int)(size_t)_ZN13daObjHmBskt_cD0Ev((int *)s); }
 
 extern "C" void hal_fill_ukikicage_vtable(void)
 {
@@ -549,7 +679,7 @@ extern "C" void hal_fill_ukikicage_vtable(void)
     vt[6]  = (void *)cage_behavior;
     vt[9]  = (void *)cage_render;
     vt[12] = (void *)ov30_pdes_default;  /* ROM takes ActorBase's 0x02043ac0 */
-    vt[16] = (void *)cage_d1;
+    vt[16] = (void *)PORT_D16(cage_d1);
     vt[17] = (void *)cage_d0;
     vt[31] = (void *)ov30_kill;          /* Platform::Kill, the 32nd slot */
 }
@@ -559,35 +689,35 @@ extern "C" void hal_fill_ukikicage_vtable(void)
 // Every _ZN9UkikiCage*Ev below is one of THIS class's methods.
 // ============================================================================
 static int __fastcall log_init(void *s, void *)
-{ return _ZN9UkikiCage13InitResourcesEv(s); }
+{ return _ZN13RollingLogTtm13InitResourcesEv(s); }
 static int __fastcall log_clean(void *s, void *)
-{ return _ZN9UkikiCage16CleanupResourcesEv(s); }
+{ return _ZN13RollingLogTtm16CleanupResourcesEv(s); }
 static int __fastcall log_behavior(void *s, void *)
-{ return _ZN9UkikiCage8BehaviorEv(s); }
+{ return _ZN13RollingLogTtm8BehaviorEv(s); }
 /* Slot 9 comes from ov080, not from ov030 and not from arm9. It is the same
-   six-virtual plain-Model shadow src/func_ov030_02111350.cpp uses, calling
+   six-virtual plain-Model shadow src/_ZN13daObjHmBskt_c6RenderEv.cpp uses, calling
    index 5, which hal/cxxname_bridge.cpp:511 dual-fills as Render. */
 static int __fastcall log_render(void *s, void *)
 { port_actor_render_probe("ROLLING_LOG_TTM", (char *)s + 0xd4);
-  return func_ov080_02127124(s); }
+  return _ZN13daObjMaruta_c6RenderEv(s); }
 /* Slot 27 also comes from ov080: OnHitByMegaChar(Player&), one stack argument. */
 static int __fastcall log_mega(void *s, void *, void *p)
-{ func_ov080_02127058(s, p); return 0; }
+{ _ZN13daObjMaruta_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall log_d1(void *s, void *)
-{ return (int)(size_t)_ZN9UkikiCageD1Ev((int *)s); }
+{ return (int)(size_t)_ZN13RollingLogTtmD1Ev((int *)s); }
 static int __fastcall log_d0(void *s, void *)
-{ return (int)(size_t)_ZN9UkikiCageD0Ev((int *)s); }
+{ return (int)(size_t)_ZN13RollingLogTtmD0Ev((int *)s); }
 
 extern "C" void hal_fill_rollinglogttm_vtable(void)
 {
-    void **vt = (void **)_ZTV15daObjHmMaruta_c;
+    void **vt = (void **)_ZTV13RollingLogTtm;
     ov30_fill_shared(vt);
     vt[0]  = (void *)log_init;
     vt[3]  = (void *)log_clean;
     vt[6]  = (void *)log_behavior;
     vt[9]  = (void *)log_render;         /* ov080 override */
     vt[12] = (void *)ov30_pdes_default;  /* ROM takes ActorBase's 0x02043ac0 */
-    vt[16] = (void *)log_d1;
+    vt[16] = (void *)PORT_D16(log_d1);
     vt[17] = (void *)log_d0;
     vt[27] = (void *)log_mega;           /* ov080 override, NOT Actor's default */
     vt[31] = (void *)ov30_kill;          /* Platform::Kill, the 32nd slot */
@@ -598,17 +728,17 @@ extern "C" void hal_fill_rollinglogttm_vtable(void)
 // slots. Every _ZN13RollingLogTtm*Ev below is one of THIS class's methods.
 // ============================================================================
 static int __fastcall mky_init(void *s, void *)
-{ return _ZN13RollingLogTtm13InitResourcesEv(s); }
+{ return _ZN7daMky_c13InitResourcesEv(s); }
 static int __fastcall mky_clean(void *s, void *)
-{ (void)s; return _ZN13RollingLogTtm16CleanupResourcesEv(); }
+{ (void)s; return _ZN7daMky_c16CleanupResourcesEv(); }
 static int __fastcall mky_behavior(void *s, void *)
 { return port_ov030_ukiki_behavior(s); }
 static int __fastcall mky_render(void *s, void *)
 { port_actor_render_probe("UKIKI", (char *)s + 0xd4);
-  return _ZN13RollingLogTtm6RenderEv(s); }
+  return _ZN7daMky_c6RenderEv(s); }
 static int __fastcall mky_pdes(void *s, void *)
-{ (void)s; _ZN13RollingLogTtm16OnPendingDestroyEv(); return 0; }
-/* Slot 16, D1. src/_ZN13RollingLogTtmD1Ev.cpp is a real MSVC-synthesised
+{ (void)s; _ZN7daMky_c16OnPendingDestroyEv(); return 0; }
+/* Slot 16, D1. src/actors/daMky_c.cpp is a real MSVC-synthesised
    destructor over a local shadow class, so it is kept OUT of the slice: MSVC
    would mangle it ?1RollingLogTtm@@UAE@XZ and the Itanium name the slot needs
    would never exist. Chain spelled directly, HIGH ADDRESS FIRST, from that
@@ -623,7 +753,7 @@ static int __fastcall mky_pdes(void *s, void *)
        02111690  ldr r1, [pc, #0x34]    ; pool 0x021116cc = 0x02115bfc
        02111694  add r0, r4, #0x194
        02111698  str r1, [r4]           ; installs its OWN table at +0
-       0211169c  bl  _ZN12WithMeshClsnD1Ev ...
+       0211169c  bl  _ZN10dBgCh_ActrD1Ev ...
 
    WHY DROPPING IT IS HARMLESS HERE, AND ONLY HERE. The word it installs is the
    class's OWN table, 0x02115bfc -- not a base table -- and on the host that is
@@ -635,23 +765,23 @@ static int __fastcall mky_pdes(void *s, void *)
 
    DO NOT REUSE THIS AS A GENERAL RULE. A destructor that installs a DIFFERENT
    table is doing real work and its stores must be reproduced -- this overlay
-   has three such bodies two slots away: src/_ZN9UkikiCageD1Ev.c and
-   src/_ZN9UkikiCageD0Ev.c (which are RollingLogTtm's, not UkikiCage's) walk
-   0x02115a48 -> data_ov080_02128338 -> _ZTV8Platform, three tables deep, and
-   src/func_ov030_021111a0.c walks two. All three stay in the slice and run
+   has three such bodies two slots away: src/actors/daMky_c.cpp and
+   src/actors/daMky_c.cpp (which are RollingLogTtm's, not UkikiCage's) walk
+   0x02115a48 -> _ZTV13daObjMaruta_c -> _ZTV10dBgActor_c, three tables deep, and
+   src/_ZN13daObjHmBskt_cD1Ev.cpp walks two. All three stay in the slice and run
    their own stores. */
 /* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
    the transcribed thunk that stood here (mky_d1) spelled the same chain by hand. */
 static int __fastcall mky_d0(void *s, void *)
-{ return (int)(size_t)_ZN13RollingLogTtmD0Ev((int *)s); }
+{ return (int)(size_t)_ZN7daMky_cD0Ev((int *)s); }
 static int __fastcall mky_yoshi(void *s, void *)
-{ (void)s; return func_ov030_0211172c(); }
+{ (void)s; return _ZN7daMky_c13OnYoshiTryEatEv(); }
 /* Slot 19 is OnTurnIntoEgg(Player &player): the caller pushes the player, so
    the thunk needs the third parameter to pop it even though the ov030 body
    takes nothing of its own. The BabyPenguin slot-19 reasoning applies
    unchanged. */
 static int __fastcall mky_egg(void *s, void *, void *)
-{ func_ov030_021145d4(s); return 0; }
+{ _ZN7daMky_c13OnTurnIntoEggER6Player(s); return 0; }
 
 extern "C" void hal_fill_ukiki_vtable(void)
 {
@@ -659,14 +789,14 @@ extern "C" void hal_fill_ukiki_vtable(void)
        them: func_ov030_021141a8 installs a cell and TAIL-JUMPS straight into
        the enter half, and InitResources reaches it on the first frame. */
     port_ukiki_states_seat();
-    void **vt = (void **)_ZTV13RollingLogTtm;
+    void **vt = (void **)_ZTV7daMky_c;
     ov30_fill_shared(vt);
     vt[0]  = (void *)mky_init;
     vt[3]  = (void *)mky_clean;
     vt[6]  = (void *)mky_behavior;
     vt[9]  = (void *)mky_render;
     vt[12] = (void *)mky_pdes;   /* own body, overrides ActorBase's default */
-    vt[16] = (void *)hal_cppd1_RollingLogTtm;
+    vt[16] = (void *)PORT_D16(hal_cppd1_RollingLogTtm);
     vt[17] = (void *)mky_d0;
     vt[18] = (void *)mky_yoshi;  /* own OnYoshiTryEat, overrides the shared default */
     vt[19] = (void *)mky_egg;    /* own OnTurnIntoEgg, overrides the shared default */
@@ -674,7 +804,7 @@ extern "C" void hal_fill_ukiki_vtable(void)
 }
 
 // ---- method faces ----------------------------------------------------------
-// src/_ZN13RollingLogTtm13InitResourcesEv.cpp and _ZN13RollingLogTtm6RenderEv
+// src/actors/daMky_c.cpp and _ZN7daMky_c6RenderEv
 // .cpp are real MSVC methods against include/RollingLogTtm.h
 // (?InitResources@RollingLogTtm@@..., not __ZN13RollingLogTtm...), so the
 // Itanium names the vtable slots need are faced here -- the IceSheet /
@@ -686,12 +816,12 @@ extern "C" void hal_fill_ukiki_vtable(void)
 // aritycheck receiver ratchet, and the ov029 sinit that would otherwise bind
 // its own SharedFilePtr destructor callback to this body. The reason the TU is
 // a host copy at all is the ModelAnim slot-3 shadow, also in that header.
-// _ZN13RollingLogTtm16CleanupResourcesEv and _ZN13RollingLogTtm16OnPendingDestroyEv
+// _ZN7daMky_c16CleanupResourcesEv and _ZN7daMky_c16OnPendingDestroyEv
 // are plain C-linkage .c bodies taking (void) -- no face needed, declared
 // extern "C" above and called directly.
 extern "C" {
-int _ZN13RollingLogTtm13InitResourcesEv(void *self)
-{ return ((RollingLogTtm *)self)->RollingLogTtm::InitResources(); }
-int _ZN13RollingLogTtm6RenderEv(void *self)
-{ return ((RollingLogTtm *)self)->RollingLogTtm::Render(); }
+int _ZN7daMky_c13InitResourcesEv(void *self)
+{ return ((daMky_c *)self)->daMky_c::InitResources(); }
+int _ZN7daMky_c6RenderEv(void *self)
+{ return ((daMky_c *)self)->daMky_c::Render(); }
 }

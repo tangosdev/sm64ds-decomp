@@ -4,14 +4,14 @@
 // was right at the time and both of its reasons are now gone:
 //
 //   "THE PORT HAS NO STORAGE FOR ITS VTABLE" -- include/decl_common.h:2971
-//   declares _ZTV21ExtendingMeshCollider extern and nothing defines it. This
+//   declares _ZTV14dBgW_KcMbgSclY extern and nothing defines it. This
 //   file is that definition.
 //
 //   "NOTHING DISPATCHES IT, AND NOTHING CAN, on the overlay set the port
 //   mounts" -- config/arm9/relocs.txt loads 0x02099490 from exactly three sites
 //   (0x0203ab64 D0, 0x0203ab88 D1, 0x0203abac C1, re-read here, still three),
 //   and the ONE constructor caller in the whole ROM is ov045 0x02111b00, inside
-//   ExtendingPlatform_Spawn. Wave 3 mounted ov045 and this wave registers
+//   daObjKm2_Nobiru_c_classInit. Wave 3 mounted ov045 and this wave registers
 //   EXTENDING_PLATFORM (id 148), so that call site is now in the build and level
 //   37 places one of them. The class can be constructed, so its table is
 //   dispatched, so it has to hold real bodies.
@@ -21,11 +21,11 @@
 // 0x02099490, thirteen slots; 0x020994c4 carries no relocation because it is
 // the next class's offset-to-top word.
 //
-//   [0]  0x0203ab68  _ZN21ExtendingMeshColliderD1Ev                  OWN
-//   [1]  0x0203ab3c  _ZN21ExtendingMeshColliderD0Ev                  OWN
-//   [2]  0x0203aa0c  _ZN21ExtendingMeshCollider9Virtual08Ev          OWN
+//   [0]  0x0203ab68  _ZN14dBgW_KcMbgSclYD1Ev                  OWN
+//   [1]  0x0203ab3c  _ZN14dBgW_KcMbgSclYD0Ev                  OWN
+//   [2]  0x0203aa0c  _ZN14dBgW_KcMbgSclY9Virtual08Ev          OWN
 //   [3]  0x01ffd920  MeshCollider::GetSurfaceInfo         ITCM, inherited
-//   [4]  0x0203a4dc  _ZN21ExtendingMeshCollider9GetNormalEsR7Vector3 OWN
+//   [4]  0x0203a4dc  _ZN14dBgW_KcMbgSclY9GetNormalEsR7Vector3 OWN
 //   [5]  0x02039e60  MovingMeshCollider::GetTriangleOrigin   inherited
 //   [6]  0x0203a8fc  EMC::DetectClsn(RaycastGround &)                OWN
 //   [7]  0x0203a594  EMC::DetectClsn(RaycastLine &)                  OWN
@@ -36,7 +36,7 @@
 //   [12] 0x02039908  MovingMeshCollider::GetVelocity         inherited
 //
 // SEVEN slots overridden (0, 1, 2, 4, 6, 7, 8), six inherited. Laid beside
-// _ZTV18MovingMeshCollider (0x02099434) word for word, the shape is identical:
+// _ZTV10dBgW_KcMbg (0x02099434) word for word, the shape is identical:
 // same width, same inherited words at 3/5/9/10/11/12, different bodies at the
 // seven. The earlier reading of "four overridden" in slice_w1l4.txt counted the
 // D1/D0 pair as inherited; they are not.
@@ -83,7 +83,7 @@
 // the MSVC carry wants TransformPos. mmc_beforeclsn resolves it by parking
 // TransformPos in index 9 for the duration of the callback.
 //
-// mmc_beforeclsn writes _ZTV18MovingMeshCollider[9] BY NAME. An
+// mmc_beforeclsn writes _ZTV10dBgW_KcMbg[9] BY NAME. An
 // ExtendingMeshCollider instance dispatches through THIS array, so reusing that
 // shim would park slot 9 of the wrong table and leave BeforeClsn sitting in the
 // index UpdatePosWithTransform is about to call here -- the recursion that
@@ -102,31 +102,31 @@
 #include <cstdio>
 #include "dsstate_seg.h"
 
-#include "ExtendingMeshCollider.h"
+#include "dBgW_KcMbgSclY.h"
 
 extern "C" {
 /* THE STORAGE. include/decl_common.h:2971 declares this extern and no object
-   anywhere defined it; src/_ZN21ExtendingMeshColliderC1Ev.c, D1 and D0 all
+   anywhere defined it; src/_ZN14dBgW_KcMbgSclYC1Ev.cpp, D1 and D0 all
    store it into the object, so it has to exist before the class can be built.
    Thirteen slots, the ROM width. It is mutable game state a save state rolls
    back like every other hosted table, so it goes in .dsstate. */
 DSSTATE_BEGIN
-void *_ZTV21ExtendingMeshCollider[13];
+void *_ZTV14dBgW_KcMbgSclY[13];
 DSSTATE_END
 
 /* The seven own bodies. Virtual08 and GetNormal are real C++ methods against
    ExtendingMeshCollider.h (faced at the bottom of this file); the rest are
    extern-C free definitions in src. */
-void _ZN21ExtendingMeshCollider9Virtual08Ev(void *self);
-void _ZN21ExtendingMeshCollider9GetNormalEsR7Vector3(void *self, s16 tri,
+void _ZN14dBgW_KcMbgSclY9Virtual08Ev(void *self);
+void _ZN14dBgW_KcMbgSclY9GetNormalEsR7Vector3(void *self, s16 tri,
                                                      Vector3 *res);
-void *_ZN21ExtendingMeshColliderD1Ev(void *self);            /* ROM slot 0 */
-void *_ZN21ExtendingMeshColliderD0Ev(void *self);            /* ROM slot 1 */
-int _ZN21ExtendingMeshCollider10DetectClsnER13RaycastGround(void *self,
+void *_ZN14dBgW_KcMbgSclYD1Ev(void *self);            /* ROM slot 0 */
+void *_ZN14dBgW_KcMbgSclYD0Ev(void *self);            /* ROM slot 1 */
+int _ZN14dBgW_KcMbgSclY10DetectClsnER9dBgCh_Gnd(void *self,
                                                             void *ground);
-int _ZN21ExtendingMeshCollider10DetectClsnER11RaycastLine(void *self,
+int _ZN14dBgW_KcMbgSclY10DetectClsnER9dBgCh_Lin(void *self,
                                                           void *line);
-int _ZN21ExtendingMeshCollider10DetectClsnER10SphereClsn(void *self,
+int _ZN14dBgW_KcMbgSclY10DetectClsnER12dBgCh_SphCrr(void *self,
                                                          void *sphere);
 }
 /* The four inherited MovingMeshCollider words (ROM slots 5, 10, 11, 12) are the
@@ -138,30 +138,30 @@ int _ZN21ExtendingMeshCollider10DetectClsnER10SphereClsn(void *self,
    to by its Itanium name; the port hosts that ITCM body (0x01ffb0fc) under the
    ROM-address spelling in hal/method_faces.cpp, which is the same function, so
    the two names are bound rather than a second face written. */
-#pragma comment(linker, "/alternatename:__ZN12MeshCollider10DetectClsnER11RaycastLine=_func_01ffb0fc")
+#pragma comment(linker, "/alternatename:__ZN7dBgW_Kc10DetectClsnER9dBgCh_Lin=_func_01ffb0fc")
 
-typedef MovingMeshCollider MMC;
+typedef dBgW_KcMbg MMC;
 
 /* ---- the __fastcall veneers ---------------------------------------------- */
 /* Slot 0 is the MSVC scalar deleting destructor: one slot for the ROM's D1/D0
    pair. The ROM's own deleting body (D0, 0x0203ab3c) is the one that frees, and
    it is what a `delete` through this table has to reach -- the same choice
-   hal/mmc_vtable.cpp makes with _ZN18MovingMeshColliderD0Ev. Both bodies take
+   hal/mmc_vtable.cpp makes with _ZN10dBgW_KcMbgD0Ev. Both bodies take
    `this` as an ordinary argument (flat C), so the veneer moves ecx across. */
 static void __fastcall emc_dtor(void *s, void *)
-{ _ZN21ExtendingMeshColliderD0Ev(s); }
+{ _ZN14dBgW_KcMbgSclYD0Ev(s); }
 static void __fastcall emc_v08(void *s, void *)
-{ _ZN21ExtendingMeshCollider9Virtual08Ev(s); }
+{ _ZN14dBgW_KcMbgSclY9Virtual08Ev(s); }
 static void __fastcall emc_norm(void *s, void *, s16 tri, Vector3 *res)
-{ _ZN21ExtendingMeshCollider9GetNormalEsR7Vector3(s, tri, res); }
+{ _ZN14dBgW_KcMbgSclY9GetNormalEsR7Vector3(s, tri, res); }
 static void __fastcall emc_orig(void *s, void *, s16 tri, Vector3 *res)
 { ((MMC *)s)->MMC::GetTriangleOrigin(tri, *res); }
 static int __fastcall emc_ground(void *s, void *, void *g)
-{ return _ZN21ExtendingMeshCollider10DetectClsnER13RaycastGround(s, g); }
+{ return _ZN14dBgW_KcMbgSclY10DetectClsnER9dBgCh_Gnd(s, g); }
 static int __fastcall emc_line(void *s, void *, void *r)
-{ return _ZN21ExtendingMeshCollider10DetectClsnER11RaycastLine(s, r); }
+{ return _ZN14dBgW_KcMbgSclY10DetectClsnER9dBgCh_Lin(s, r); }
 static int __fastcall emc_sphere(void *s, void *, void *sp)
-{ return _ZN21ExtendingMeshCollider10DetectClsnER10SphereClsn(s, sp); }
+{ return _ZN14dBgW_KcMbgSclY10DetectClsnER12dBgCh_SphCrr(s, sp); }
 static int __fastcall emc_tpos(void *s, void *, const Vector3 *p, Vector3 *r)
 { return ((MMC *)s)->MMC::TransformPos(*p, *r); }
 static s16 __fastcall emc_angvel(void *s, void *)
@@ -173,15 +173,15 @@ static void __fastcall emc_vel(void *s, void *, Vector3 *r)
    this table's OWN park-and-restore. Identical in shape to mmc_beforeclsn and
    deliberately NOT a call into it: the array named on the two lines below is
    what makes the two shims different functions. */
-static void __fastcall emc_beforeclsn(void *s, void *, ClsnResult *res,
-                                      Actor *actor, Vector3 *pos,
+static void __fastcall emc_beforeclsn(void *s, void *, dBgPi *res,
+                                      dActor_c *actor, Vector3 *pos,
                                       Vector3_16 *motionAng, Vector3_16 *ang)
 {
-    MeshColliderBase *base = (MeshColliderBase *)s;
-    void *saved9 = _ZTV21ExtendingMeshCollider[9];
-    _ZTV21ExtendingMeshCollider[9] = (void *)emc_tpos;
+    dBgW *base = (dBgW *)s;
+    void *saved9 = _ZTV14dBgW_KcMbgSclY[9];
+    _ZTV14dBgW_KcMbgSclY[9] = (void *)emc_tpos;
     base->beforeClsnCallback(base, actor, res, pos, motionAng, ang);
-    _ZTV21ExtendingMeshCollider[9] = saved9;
+    _ZTV14dBgW_KcMbgSclY[9] = saved9;
 }
 
 /* EVERY SLOT IS WRITTEN. This array is fresh zeroed storage, not a seeded copy,
@@ -194,7 +194,7 @@ extern "C" void hal_seat_extending_mesh_collider_vtable(void)
     if (done)
         return;
     done = 1;
-    void **vt = _ZTV21ExtendingMeshCollider;
+    void **vt = _ZTV14dBgW_KcMbgSclY;
     vt[0]  = (void *)emc_dtor;
     vt[1]  = (void *)emc_v08;      /* MSVC index for Virtual08 */
     vt[2]  = (void *)emc_v08;      /* ROM index for Virtual08 */
@@ -218,9 +218,9 @@ extern "C" void hal_seat_extending_mesh_collider_vtable(void)
    words ("SetFile and the DetectClsn triple are launder-heavy, so those
    definitions stay extern-C free functions"). */
 extern "C" {
-void _ZN21ExtendingMeshCollider9Virtual08Ev(void *self)
-{ ((ExtendingMeshCollider *)self)->ExtendingMeshCollider::Virtual08(); }
-void _ZN21ExtendingMeshCollider9GetNormalEsR7Vector3(void *self, s16 tri,
+void _ZN14dBgW_KcMbgSclY9Virtual08Ev(void *self)
+{ ((dBgW_KcMbgSclY *)self)->dBgW_KcMbgSclY::Virtual08(); }
+void _ZN14dBgW_KcMbgSclY9GetNormalEsR7Vector3(void *self, s16 tri,
                                                      Vector3 *res)
-{ ((ExtendingMeshCollider *)self)->ExtendingMeshCollider::GetNormal(tri, *res); }
+{ ((dBgW_KcMbgSclY *)self)->dBgW_KcMbgSclY::GetNormal(tri, *res); }
 }

@@ -1,10 +1,10 @@
 //cpp
-/* _ZN4Heap7_SizeofEPv @ 0x203c274 (arm9) -- tail-call veneer to _ZN4Heap6SizeofEPv (0x203c454).
- * ldr ip, [pc]; bx ip; .word 0x203c454
- */
-extern "C" {
-extern void _ZN4Heap6SizeofEPv(void);
-void _ZN4Heap7_SizeofEPv(void) {
-    _ZN4Heap6SizeofEPv();
-}
+// @symbol _ZN4Heap7_SizeofEPv
+/* Heap::_Sizeof(void*) at 0x0203c274 -- three-word tail-call veneer to
+ * Heap::Sizeof (0x0203c454): `ldr ip,[pc] / bx ip / .word 0x0203c454'. */
+#include "Heap.h"
+
+int Heap::_Sizeof(void* ptr)
+{
+    return Sizeof(ptr);
 }

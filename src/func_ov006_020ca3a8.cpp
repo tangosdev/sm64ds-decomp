@@ -2,6 +2,12 @@
 typedef int Fix12;
 struct BCA_File;
 struct ModelAnim { int pad; void SetAnim(BCA_File *f, int a, Fix12 b, unsigned int c); };
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *, BCA_File *f, int a, Fix12 b, unsigned int c);
+
 extern "C" {
 extern int data_020a0ebc[];
 extern int data_ov006_02140564[];
@@ -19,6 +25,6 @@ extern "C" void func_ov006_020ca3a8(char *c)
     *(int *)(c + 0x44) = data_020a0ebc[2];
     *(int *)(c + 0x48) = 0;
     *(int *)(c + 0x64) = 0;
-    ((ModelAnim *)(c + 0x78))->SetAnim((BCA_File *)data_ov006_02140564[0], 0, 0x800, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((ModelAnim *)(c + 0x78), (BCA_File *)data_ov006_02140564[0], 0, 0x800, 0);
     *(double *)(c + 0x70) = data_ov006_0213b11c;
 }

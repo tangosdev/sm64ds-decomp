@@ -12,7 +12,7 @@
 # ov063 is not mounted. Hosting BookShot with that call stubbed would be a
 # non-ROM-faithful boot, so the three book classes stay skipped by name at the
 # gate and are documented blockers. HauntedChair reaches nothing outside ov020:
-# its whole helper closure (func_ov020_021129dc/02112b00/02112e94/021130c8/
+# its whole helper closure (_ZN12HauntedChair6State3Ev/02112b00/02112e94/021130c8/
 # 02113148/021131f8/02113240) is matched src in ov020, and it loads only its own
 # model. So it hosts clean on its own.
 
@@ -22,20 +22,21 @@
 # auto-generated member-dtor calls would resolve to MSVC-mangled sub-object
 # destructors the byte-matched tree has only under their Itanium names, so D1 is
 # a host thunk (the D0 chain minus the Deallocate), not that .cpp.
-src/HauntedChair_Spawn.c
+src/d_a_chair.c
 src/_ZN12HauntedChair13InitResourcesEv.cpp
-src/_ZN12HauntedChair16CleanupResourcesEv.c
+src/_ZN12HauntedChair16CleanupResourcesEv.cpp
 src/_ZN12HauntedChair8BehaviorEv.cpp
 src/_ZN12HauntedChair6RenderEv.cpp
-src/_ZN12HauntedChairD0Ev.c
-src/func_ov020_021129dc.c
-src/func_ov020_02112b00.c
-src/func_ov020_02112e94.c
-src/func_ov020_021130c8.c
-src/func_ov020_02113148.c
-src/func_ov020_021131f8.c
-src/func_ov020_02113240.cpp
-# The Euler-to-matrix helper func_ov020_02113240/0211216c build the chair's
+# RETIRED at SLICE1: body now in src/_ZN12HauntedChairD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN12HauntedChairD0Ev.cpp
+src/_ZN12HauntedChair6State3Ev.cpp
+src/_ZN12HauntedChair6State2Ev.cpp
+src/_ZN12HauntedChair6State1Ev.cpp
+src/_ZN12HauntedChair6State0Ev.cpp
+src/_ZN12HauntedChair18ApproachStateValueEPsS0_isis.cpp
+src/_ZN12HauntedChair5BreakEv.cpp
+src/_ZN12HauntedChair11UpdateModelEv.cpp
+# The Euler-to-matrix helper _ZN12HauntedChair11UpdateModelEv/0211216c build the chair's
 # orientation through. Its own deps (Matrix4x3_FromRotationX/Y/Z, MulMat4x3Mat4x3)
 # are already in the build (gate 9); this is the one new arm9 math symbol.
 src/Matrix4x3_FromRotationZXYExt.c

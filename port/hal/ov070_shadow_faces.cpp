@@ -2,12 +2,12 @@
 // func_ov070_0211f0a4 (FlyGuy's poof-coins-kill state) dispatches under its
 // own local shadow declarations:
 //
-//     ?SmallPoofDust@Actor@@QAEXXZ
-//     ?SpawnCoins@Actor@@QAEXABUVector3@@IHF@Z
+//     ?SmallPoofDust@dActor_c@@QAEXXZ
+//     ?SpawnCoins@dActor_c@@QAEXABUVector3@@IHF@Z
 //
 // (dumpbin of the compiled TU; KillAndTrackInDeathTable's spelling is already
 // defined by the matched method TU.) Both bodies exist as cdecl C functions
-// (_ZN5Actor13SmallPoofDustEv / _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs,
+// (_ZN8dActor_c13SmallPoofDustEv / _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs,
 // in today's map), so an /alternatename would be ABI-wrong -- __thiscall
 // wanted, cdecl defined. These are real forwarding faces.
 //
@@ -24,15 +24,15 @@ struct Actor {
 };
 
 extern "C" {
-void _ZN5Actor13SmallPoofDustEv(void *self);
-void _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(void *self, const void *pos,
+void _ZN8dActor_c13SmallPoofDustEv(void *self);
+void _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(void *self, const void *pos,
                                                  unsigned n, int speed,
                                                  short arg);
 }
 
 void Actor::SmallPoofDust()
-{ _ZN5Actor13SmallPoofDustEv(this); }
+{ _ZN8dActor_c13SmallPoofDustEv(this); }
 
 void Actor::SpawnCoins(Vector3 const &pos, unsigned int n, int speed,
                        short arg)
-{ _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(this, &pos, n, speed, arg); }
+{ _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(this, &pos, n, speed, arg); }

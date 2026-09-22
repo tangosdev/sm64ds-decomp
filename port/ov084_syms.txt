@@ -11,8 +11,8 @@
 # symbol that already carries a `_ZTV*` name, so the generator's own rule
 # catches all of them.
 #
-# The ids check out three ways. Goomba_SpawnInfo's +4 halfword reads 200 and
-# BobOmbBuddy_SpawnInfo's reads 181; each factory's literal pool installs the
+# The ids check out three ways. g_profile_KURIBO's +4 halfword reads 200 and
+# g_profile_RED_BOMBHEI's reads 181; each factory's literal pool installs the
 # table this file leaves out; and the ROM's RTTI names them daKrb_c (kuribo,
 # the goomba) and daRedBombhei_c (the red bomb-hei, which is the pink buddy).
 data_ov084_02130174:0x4 data_ov084_02130178:0x14 data_ov084_0213018c:0x28
@@ -25,18 +25,18 @@ data_ov084_021302c4:0x28 data_ov084_021302ec:0x8 data_ov084_021302f4:0x18
 data_ov084_0213030c:0x14 data_ov084_02130320:0x14 data_ov084_02130334:0x28
 data_ov084_02130880:0xc data_ov084_0213088c:0x10 data_ov084_0213089c:0x10
 data_ov084_021308ac:0x8 data_ov084_021308b4:0x8 data_ov084_021308bc:0x8
-data_ov084_021308c4:0x8 data_ov084_021308cc:0x8 data_ov084_021308d4:0xc
-data_ov084_021308e0:0xc Goomba_SpawnInfo:0x1c GoombaSmall_SpawnInfo:0x1c
-GoombaLarge_SpawnInfo:0x1c data_ov084_021309c4:0x8 data_ov084_021309cc:0x8
+data_ov084_021308c4:0x8 data_ov084_021308cc:0x8 _ZTS7daKrb_c:0xc
+_ZTI7daKrb_c:0xc g_profile_KURIBO:0x1c g_profile_KURIBO_S:0x1c
+g_profile_KURIBO_L:0x1c data_ov084_021309c4:0x8 data_ov084_021309cc:0x8
 data_ov084_021309d4:0x8 data_ov084_021309dc:0x8 data_ov084_021309e4:0x8
-data_ov084_021309ec:0x8 data_ov084_021309f4:0xc data_ov084_02130a00:0x14
-BobOmbBuddy_SpawnInfo:0x1c data_ov084_02130ab4:0xc data_ov084_02130ac0:0xc
-FirePiranhaPlant_SpawnInfo:0x1c FirePiranhaPlantBig_SpawnInfo:0x1c
-FirePiranhaPlantSmall_SpawnInfo:0x1c data_ov084_02130ba4:0x8
+data_ov084_021309ec:0x8 _ZTI14daRedBombhei_c:0xc _ZTS14daRedBombhei_c:0x14
+g_profile_RED_BOMBHEI:0x1c _ZTS8daFPkn_c:0xc _ZTI8daFPkn_c:0xc
+g_profile_PAKUN2:0x1c g_profile_FIREPAKUN:0x1c
+g_profile_FIREPAKUN_S:0x1c data_ov084_02130ba4:0x8
 data_ov084_02130bac:0x8 data_ov084_02130bb4:0x8 data_ov084_02130bbc:0x8
 data_ov084_02130bc4:0x8 data_ov084_02130bcc:0x8 data_ov084_02130bd4:0x8
-data_ov084_02130bdc:0x8 data_ov084_02130be4:0x8 data_ov084_02130bec:0xc
-data_ov084_02130bf8:0xc PiranhaPlant_SpawnInfo:0x1c data_ov084_02130cc0:0x8
+data_ov084_02130bdc:0x8 data_ov084_02130be4:0x8 _ZTS7daPkn_c:0xc
+_ZTI7daPkn_c:0xc g_profile_PAKUN:0x1c data_ov084_02130cc0:0x8
 data_ov084_02130cc8:0x8 data_ov084_02130cd0:0x8 data_ov084_02130cd8:0x8
 data_ov084_02130ce0:0x8 data_ov084_02130ce8:0x8 data_ov084_02130cf0:0x8
 data_ov084_02130cf8:0x8 data_ov084_02130d00:0x8 data_ov084_02130d08:0xc

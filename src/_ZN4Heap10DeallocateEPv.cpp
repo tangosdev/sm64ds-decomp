@@ -1,10 +1,14 @@
 //cpp
 // @symbol _ZN4Heap10DeallocateEPv
-/* recovered: named members + shared header, real C++ method */
+/* Heap::Deallocate(void*) at 0x0203c538 -- forwards to the concrete heap's
+ * slot 4. No guard: freeing is the one operation with nothing to fail at.
+ *
+ * Was a cast of `this' to a local `struct Base' with four anonymous virtuals
+ * padding `m' out to index 4; VDeallocate is now Heap's own slot-4 pure
+ * virtual. */
 #include "Heap.h"
-struct Base { virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3(); virtual void m(void*); };
 
-void Heap::Deallocate(void * a)
+void Heap::Deallocate(void* ptr)
 {
- ((Base *)this)->m(a);
+    VDeallocate(ptr);
 }

@@ -1,4 +1,4 @@
-/* HOST COPY of src/func_ov002_020bdb50.cpp -- the Player "let go of the held
+/* HOST COPY of src/actors/Player.cpp -- the Player "let go of the held
  * object" path that, for one held-object kind, hands the object to
  * func_ov002_020d5cec.
  *
@@ -23,7 +23,7 @@
  * ROM leaves in r0: *(char **)(c + 0x360), which the surrounding matched code
  * already spells as `obj`.
  *
- * src/func_ov002_020bdb50.cpp is dropped from slice_gate10.txt in favour of this
+ * src/actors/Player.cpp is dropped from slice_gate10.txt in favour of this
  * file; the byte-locked source is unchanged.
  */
 
@@ -71,7 +71,7 @@
 
    HOW IT IS REACHED IN ORDINARY SINGLE PLAYER. Yoshi, with an enemy in his
    mouth, picks up a character cap: the cap actor's state machine
-   (src/func_ov002_020b74d0.c:51) calls Player::SetNewHatCharacter, whose first
+   (src/actors/daObjMarioCap_c.cpp:51) calls Player::SetNewHatCharacter, whose first
    act is func_ov002_020bdb50(this, 0). Nothing guards it. The versus route
    through St_InYoshiMouth_Init is real but much narrower. Because the fault
    happens inside an actor's own callback, the actor-walk quarantine net turns

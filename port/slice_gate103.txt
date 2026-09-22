@@ -4,14 +4,14 @@
 #
 # Level 7's census printed id 0xc (12) skipped, x1. Resolved the ROM's own
 # way: ACTOR_SPAWN_TABLE entry [12] (arm9 0x02090864 + 12*4) is a load reloc
-# to:0x0210991c module:overlay(2) -- StarSwitch_SpawnInfo, whose +4 halfword
+# to:0x0210991c module:overlay(2) -- g_profile_STAR_SWITCH, whose +4 halfword
 # reads 12. The census id, the reloc target and the record's own id all agree.
 #
 # StarSwitch is a Platform subclass, RTTI 13daObjSwitch_c (the same switch the
 # port already knows: EXCLAMATION_SWITCH, id 11, is this exact class body under
-# a second SpawnInfo). Its 852-byte object is built by StarSwitch_Spawn (ov002
+# a second SpawnInfo). Its 852-byte object is built by daObjSwitch_c_classInit_STAR_SWITCH (ov002
 # 0x020baaac), which installs vtable _ZTV10StarSwitch (ov002 0x02109940) --
-# the SAME table ExclamationSwitch_Spawn installs.
+# the SAME table daObjSwitch_c_classInit_HANSWITCH installs.
 #
 # ---- everything but the factory is already in the link ---------------------
 #
@@ -22,10 +22,10 @@
 #     hal_fill_exclamation_switch_vtable, which also seats the five-state PMF
 #     table data_ov002_0210e00c (unmatched/ExclamationSwitch_StateDispatch.cpp).
 #
-# So this gate's ONLY new symbol is the factory StarSwitch_Spawn -- a distinct
-# matched TU from ExclamationSwitch_Spawn (byte-identical body, both install
+# So this gate's ONLY new symbol is the factory daObjSwitch_c_classInit_STAR_SWITCH -- a distinct
+# matched TU from daObjSwitch_c_classInit_HANSWITCH (byte-identical body, both install
 # _ZTV10StarSwitch and allocate 852 bytes, but different symbols) -- plus the
-# StarSwitch_SpawnInfo mount (added to ov002_syms.txt) and the registry row,
+# g_profile_STAR_SWITCH mount (added to ov002_syms.txt) and the registry row,
 # which reuses EXCLAMATION_SWITCH's shared vtable fill (fill 0). No new PMF
 # state table, no method face.
-src/StarSwitch_Spawn.c
+src/d_a_obj_switch_star_switch.c

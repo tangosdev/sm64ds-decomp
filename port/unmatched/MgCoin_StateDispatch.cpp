@@ -20,7 +20,7 @@
 //   data_ov006_021417b0  3    1    func_ov006_020dd2cc
 //   data_ov006_021417c8  4    1    func_ov006_020dc298
 //   data_ov006_021417e8  5    1    func_ov006_020dc754
-//   data_ov006_02141810  6    0    func_ov006_020de69c  (vtable slot 6)
+//   data_ov006_02141810  6    0    _ZN11dScMgCoin_c8BehaviorEv  (vtable slot 6)
 //   data_ov006_02141840  6    1    func_ov006_020ddd6c, _020de26c, _020de440
 //
 // THE REFUSAL AT 0x020dd0e0 IS GONE, AND A src TU LANDED FOR IT.
@@ -80,7 +80,7 @@
 // ever be named by a link:
 //
 //   LINK-VISIBLE
-//     func_ov006_020de69c   ?data_ov006_02141810@@3PAUEntry@@A
+//     _ZN11dScMgCoin_c8BehaviorEv   ?data_ov006_02141810@@3PAUEntry@@A
 //     func_ov006_020dd2cc   ?data_ov006_021417b0@@3PAUEntry@@A
 //     func_ov006_020de26c   ?data_ov006_02141840@@3PAP8Obj@@AEXH@ZA
 //     func_ov006_020de440   ?data_ov006_02141840@@3PAP8C@@AEXH@ZA
@@ -199,7 +199,7 @@ void func_ov004_020adb1c(int arg);
 
 /* THE NAME-SPELLING VARIANT src/func_ov006_020de1d4.c and
    src/func_ov006_020de26c.cpp use for ov004's data_ov004_020beb68 -- a name
-   that exists in no config, the same shape src/func_ov006_020e3578.c's bare
+   that exists in no config, the same shape src/_ZN14dScMgCurling_c13InitResourcesEv.cpp's bare
    `func_020adc74` has and which port/mg_fanout_costs.txt section 6 records as
    the ordinary kind of spelling defect. Declared here exactly as the two src
    TUs declare it so the host copy below keeps their reference. */
@@ -391,7 +391,7 @@ extern "C" void func_020ddd6c(void *c)
 // cell has been compared against the ROM's own code word and a zero adjustment
 // word, so three of the seven host copies are gone:
 //
-//   func_ov006_020de69c  data_ov006_02141810   6 slots  arity 0  (vtable slot 6)
+//   _ZN11dScMgCoin_c8BehaviorEv  data_ov006_02141810   6 slots  arity 0  (vtable slot 6)
 //   func_ov006_020dd2cc  data_ov006_021417b0   3 slots  arity 1
 //   func_ov006_020de26c  data_ov006_02141840   6 slots  arity 1
 //

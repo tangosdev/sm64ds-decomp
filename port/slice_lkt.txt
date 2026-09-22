@@ -4,14 +4,14 @@
 # EVERY ADDRESS BELOW WAS RE-DERIVED FROM THE ROM BY THIS LANE rather than
 # taken from the brief. The doubled-id word 0x01710171 occurs exactly once in
 # extracted/overlays/overlay_0006.bin, at 0x0213da68, so the SpawnInfo record
-# is MgLakituLaunch_SpawnInfo at 0x0213da64 and its first word is the factory
-# MgLakituLaunch_Spawn at 0x02104258; config/arm9/overlays/ov006/relocs.txt
+# is g_profile_MG_TAMAIRE at 0x0213da64 and its first word is the factory
+# dScMgPachinko2_c_classInit at 0x02104258; config/arm9/overlays/ov006/relocs.txt
 # has exactly one ov006 load out of that factory,
 #
 #     from:0x02104288 kind:load to:0x0213dbbc module:overlay(6)
 #
 # which is how the vtable is tied to the id rather than by name. The class
-# name is the factory's own: src/MgLakituLaunch_Spawn.c writes
+# name is the factory's own: src/d_s_mg_pachinko2.c writes
 # _ZTV16dScMgPachinko2_c into the object's first word.
 #
 # THE CLOSURE IS THE FIVE-ROOT WALK slice_pch.txt describes, run against the
@@ -71,7 +71,7 @@
 #     data_ov006_02142888.p1 = data_ov006_0213dc4c;
 #
 # __sinit_ov006_02131fa4 is NOT this class's constructor -- its copied range
-# brackets MgPuzzlePanelPuzzlePanic_SpawnInfo at 0x0213dc64, id 0x17c -- so a
+# brackets g_profile_MG_PANEL at 0x0213dc64, id 0x17c -- so a
 # 37-slot fill HERE would corrupt state 1 of a THIRD class, one no lane has
 # seated yet. port_scene_fill_rom is called with 36 in this seat and
 # mg_raw_left checks 36, so the fill writes 0x0213dbbc..0x0213dc4b and no more.
@@ -115,7 +115,7 @@
 # func_ov006_020c3d18, the one known instance, is not in this closure; the boot
 # under SM64DS_FAULTS_FATAL=1 is what stands behind the claim, not this list.
 #
-# THE DELETING DESTRUCTOR, src/func_ov006_020ff444.c, vtable slot 17. It spells
+# THE DELETING DESTRUCTOR, src/_ZN16dScMgPachinko2_cD0Ev.cpp, vtable slot 17. It spells
 # the two shared decl_common.h placeholders -- t[0] = (int)VT and
 # Memory::Deallocate(t, HEAP) -- and hal/cxx_aliases.cpp binds bare VT to
 # _data_ov002_021081e4, the ENEMY base table. Its ROM literal pool at
@@ -125,13 +125,13 @@
 # addresses spelled, exactly as lane PCH did for the sibling class.
 #
 # ITS D2 SIBLING IS AN ORDINARY SLICE LINE and the difference is worth naming:
-# src/func_ov006_020ff420.c spells the same store as
+# src/_ZN16dScMgPachinko2_cD1Ev.cpp spells the same store as
 # x[0] = (int)data_ov006_0213dbbc, by the real config symbol, so nothing about
 # it needs a host copy. It is also the cross-check on the D0's ruling.
 #
 # THE FRAMEWORK'S OWN ov004 TUs. Thirteen ov004 TUs in this closure are in no
 # slice because a port host copy already defines them -- the seven pointer-to-
-# member ones above plus func_ov004_020aeed8, _020af094 (MgBase_DeclConflict),
+# member ones above plus _ZN11dScMgBase_c25OnAimedAtWithEggReturnVecEv, _020af094 (MgBase_DeclConflict),
 # _020b0930 (MgBase_Slot1), _020b0840 (MgBase_Slot5), _020b2cb8
 # (MgBase_LangTable) and _020b19f0 (MgHud_HighScore). Adding any of them here
 # would be a duplicate definition, not a link win.
@@ -183,8 +183,8 @@
 
 # ---- ov006, dScMgPachinko2_c's own closure, wave 1 -----------------------
 
-src/MgLakituLaunch_Spawn.c
-src/func_ov006_020ff420.c
+src/d_s_mg_pachinko2.c
+src/_ZN16dScMgPachinko2_cD1Ev.cpp
 src/func_ov006_020ff47c.c
 src/func_ov006_020ff4ec.c
 src/func_ov006_020ff534.c
@@ -241,10 +241,10 @@ src/func_ov006_02103870.c
 src/func_ov006_0210397c.c
 src/func_ov006_02103994.c
 src/func_ov006_02103bfc.c
-src/func_ov006_02103cbc.c
-src/func_ov006_02103d28.c
-src/func_ov006_02103d78.c
-src/func_ov006_02103ed0.c
+src/_ZN16dScMgPachinko2_c13OnYoshiTryEatEi.cpp
+src/_ZN16dScMgPachinko2_c6RenderEv.cpp
+src/_ZN16dScMgPachinko2_c8BehaviorEv.cpp
+src/_ZN16dScMgPachinko2_c13InitResourcesEv.cpp
 # THE DELINKS JOIN MISS. src/func_ov006_02103ac0.c exists and is bannered
 # NONMATCHING; only config/arm9/overlays/ov006/delinks.txt misses it, which is
 # why the closure walk reached it as an unresolved address rather than as a
@@ -272,7 +272,7 @@ src/func_ov004_020b1e44.c
 #   src/func_ov006_02102274.c   0x1f8   MATCHED 1.2/sp2p3   state 0 of 02142734
 #   src/func_ov006_020ffb54.c   0x290   MATCHED 1.2/sp2p3   state 2 of 021426cc
 #   src/func_ov006_020ff8c8.c   0x28c   MATCHED 1.2/sp2p3   state 3 of 021426cc
-#   src/func_ov006_02102fe8.c   0x378   NONMATCHING 2004/b56, 18 words, all
+#   src/func_ov006_02102fe8.cpp   0x378   NONMATCHING 2004/b56, 18 words, all
 #                                       register naming; state 1 of 021426f4
 #   src/func_ov006_0210076c.c   0x24c   NONMATCHING 2004/b56, one induction
 #                                       variable; the per-entry follow-up
@@ -285,7 +285,7 @@ src/func_ov004_020b1e44.c
 src/func_ov006_02102274.c
 src/func_ov006_020ffb54.c
 src/func_ov006_020ff8c8.c
-src/func_ov006_02102fe8.c
+src/func_ov006_02102fe8.cpp
 src/func_ov006_0210076c.c
 
 # THE TWO TUs THE HEADER PARKED BEHIND 0x0210076c. Its own block says

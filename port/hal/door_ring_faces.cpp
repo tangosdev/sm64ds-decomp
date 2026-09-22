@@ -1,5 +1,5 @@
 // The door ring's Camera faces, split from hal/method_faces.cpp because the
-// defining TUs (src/_ZN6Camera10LookAtExitER5Actor.cpp,
+// defining TUs (src/_ZN6Camera10LookAtExitER8dActor_c.cpp,
 // src/_ZN6Camera14GoBehindPlayerEj.cpp) declare a LOCAL Camera mirror rather
 // than include/Camera.h, and this TU must mangle against the same shape
 // without colliding with the shared header.
@@ -11,11 +11,11 @@
 // the RET-to-the-door-object crash of 2026-08-07. See the note in
 // cxx_aliases.cpp's gate-22 block.
 
-struct Actor;
+struct dActor_c;
 
 struct Camera {
     struct State;
-    void LookAtExit(Actor &actor);
+    void LookAtExit(dActor_c &actor);
     void ChangeState(State *st);
     void GoBehindPlayer(unsigned int j);
 };
@@ -26,8 +26,8 @@ void _ZN6Camera11ChangeStateEPNS_5StateE(void *self, void *st);
 /* cdecl entry faces onto the __thiscall method definitions */
 void _ZN6Camera14GoBehindPlayerEj(void *self, unsigned int j)
 { ((Camera *)self)->GoBehindPlayer(j); }
-void _ZN6Camera10LookAtExitER5Actor(void *self, void *actor)
-{ ((Camera *)self)->LookAtExit(*(Actor *)actor); }
+void _ZN6Camera10LookAtExitER8dActor_c(void *self, void *actor)
+{ ((Camera *)self)->LookAtExit(*(dActor_c *)actor); }
 }  /* extern "C" */
 
 /* the reverse shim: method-form callers (LookAtExit's own body enters the

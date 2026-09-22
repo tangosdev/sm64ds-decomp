@@ -1,27 +1,27 @@
 // GATE 212: QUESTION_SWITCH (26), ov002.
 //
-// _ZTV14QuestionSwitch, ov002 0x02108e5c (RTTI daObjHatenaSwitch_c). The big
+// _ZTV19daObjHatenaSwitch_c, ov002 0x02108e5c (RTTI daObjHatenaSwitch_c). The big
 // "?" switch the player ground-pounds or lands on to flip a level-wide bit
 // (data_0209caa0[1] bit 31, the pressed flag), then a one-line message. A
 // Platform subclass on the 32-slot Platform table (slot 31 is Platform::Kill),
 // re-derived on this tree, not taken from the brief:
-//     python port/tools/vtspan.py . _ZTV14QuestionSwitch  ->  32, Platform subclass
+//     python port/tools/vtspan.py . _ZTV19daObjHatenaSwitch_c  ->  32, Platform subclass
 // Every route agrees on 32 and every one of the 32 words resolves. The class
 // owns slots 0 InitResources, 3 CleanupResources, 6 Behavior, 9 Render, 16 D1,
-// 17 D0 and 21 OnGroundPounded (func_ov002_020b4fc4); slot 12 stays
+// 17 D0 and 21 OnGroundPounded (_ZN19daObjHatenaSwitch_c15OnGroundPoundedER8dActor_c); slot 12 stays
 // ActorBase::OnPendingDestroy and 31 stays Platform::Kill. The Behavior is a
 // plain state walk with no pointer-to-member, so no state table and no host
 // state seat. Full derivation and the id cross-check are in
 // port/slice_gate212.txt.
 //
-// SLOT 21 IS THE ONE MARKER BODY. src/func_ov002_020b4fc4.c carries dsd's
+// SLOT 21 IS THE ONE MARKER BODY. src/game/actors/d_a_obj_hatena_switch.cpp carries dsd's
 // "recovered from vtable slot identity" line, so inferred_stub_guard refuses it
 // unless it has a ROM ruling. It was byte-matched FIRST (tools/match.py,
 // --module ov002, 3 of 3 words: mov r1,#0; strb r1,[r0,#0x718]; bx lr) and is
 // recorded REAL_DECOMP in port/tools/inferred_stub_adjudicated.txt. Its effect
 // is to zero the +0x718 countdown so a ground pound flips the switch on the
 // same frame the landing edge (+0x71a, set by the collider callback
-// func_ov002_020b56c4 -> _567c) arrives.
+// _ZN19daObjHatenaSwitch_c17AfterClsnCallbackEP4dBgWP8dActor_cS3_ -> _567c) arrives.
 //
 // THE LAW, same as every sibling fill: ROM slot order, host __fastcall thunks
 // that bridge cdecl/__thiscall to the matched bodies, unhosted slots trapped
@@ -37,11 +37,13 @@
 // case) and the matched TU stays off the slice.
 //
 // Both destructors are matched extern-C bodies (D1 is a .cpp with an extern
-// "C" block, D0 is .c); they store _ZTV14QuestionSwitch then _ZTV8Platform by
+// "C" block, D0 is .c); they store _ZTV19daObjHatenaSwitch_c then _ZTV10dBgActor_c by
 // hand and call the member dtors as C symbols, so both are enrolled and the
 // two slots call them directly. hal_fill_platform_vtable() runs first so the
-// _ZTV8Platform they store mid-chain is the filled host table (the
+// _ZTV10dBgActor_c they store mid-chain is the filled host table (the
 // BlueCoinSwitch precedent).
+
+#include "port_d16.h"
 
 #include <cstdio>
 
@@ -49,35 +51,35 @@
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
 extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include <cstdlib>
 
-#include "Actor.h"
-#include "ActorBase.h"
-#include "QuestionSwitch.h"
+#include "dActor_c.h"
+#include "fBase_c.h"
+#include "daObjHatenaSwitch_c.h"
 
 extern "C" {
 /* the shared lifecycle halves, the same arm9 bodies every sibling fill writes */
-int  _ZN5Actor19BeforeInitResourcesEv(void *self);            /* slot 1  */
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a); /* slot 2  */
-int  _ZN5Actor14BeforeBehaviorEv(void *self);                 /* slot 7  */
-int  _ZN5Actor12BeforeRenderEv(void *self);                   /* slot 10 */
-int  _ZN5Actor13OnYoshiTryEatEv(void *self);                  /* slot 18 */
-void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p);  /* slot 19 */
-int  _ZN5Actor9Virtual50Ev(void *self);                       /* slot 20 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);         /* slot 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);         /* slot 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);             /* slot 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);             /* slot 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
-int  _ZN5Actor16OnAimedAtWithEggEv(void *self);                    /* slot 29 */
-void _ZN8Platform4KillEv(void *self);                              /* slot 31 */
+int  _ZN8dActor_c19BeforeInitResourcesEv(void *self);            /* slot 1  */
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a); /* slot 2  */
+int  _ZN8dActor_c14BeforeBehaviorEv(void *self);                 /* slot 7  */
+int  _ZN8dActor_c12BeforeRenderEv(void *self);                   /* slot 10 */
+int  _ZN8dActor_c13OnYoshiTryEatEv(void *self);                  /* slot 18 */
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void *self, void *p);  /* slot 19 */
+int  _ZN8dActor_c9Virtual50Ev(void *self);                       /* slot 20 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);         /* slot 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);         /* slot 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);             /* slot 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);             /* slot 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
+int  _ZN8dActor_c16OnAimedAtWithEggEv(void *self);                    /* slot 29 */
+void _ZN10dBgActor_c4KillEv(void *self);                              /* slot 31 */
 
 extern int data_02099f24[];          /* the frame phase the lists are in */
 extern unsigned char data_020a4b4c;  /* the spawn spine's own step */
@@ -88,17 +90,17 @@ void port_actor_slot_decline(const char *what);   /* func_02043fdc_hostcopy.cpp 
 void hal_fill_platform_vtable(void);              /* hal/actor_classes.cpp */
 
 /* the class's own matched bodies, all on slice_gate212.txt */
-int  _ZN14QuestionSwitch8BehaviorEv(char *self);   /* slot 6, extern-C explicit this */
-int  _ZN14QuestionSwitch6RenderEv(void *self);      /* slot 9, HOST COPY in unmatched/ModelAnim_Renders.cpp */
-char *_ZN14QuestionSwitchD1Ev(struct QuestionSwitch *self); /* slot 16, extern-C */
-int *_ZN14QuestionSwitchD0Ev(struct QuestionSwitch *self);  /* slot 17, .c */
-void func_ov002_020b4fc4(char *self);               /* slot 21, OnGroundPounded */
+int  _ZN19daObjHatenaSwitch_c8BehaviorEv(char *self);   /* slot 6, extern-C explicit this */
+int  _ZN19daObjHatenaSwitch_c6RenderEv(void *self);      /* slot 9, HOST COPY in unmatched/ModelAnim_Renders.cpp */
+char *_ZN19daObjHatenaSwitch_cD1Ev(struct daObjHatenaSwitch_c *self); /* slot 16, extern-C */
+int *_ZN19daObjHatenaSwitch_cD0Ev(struct daObjHatenaSwitch_c *self);  /* slot 17, .c */
+void _ZN19daObjHatenaSwitch_c15OnGroundPoundedER8dActor_c(char *self);               /* slot 21, OnGroundPounded */
 
-/* The array the ROM factory installs: QuestionSwitch_Spawn does
-   `p[0] = (int)_ZTV14QuestionSwitch`. Defined here, not just declared: the
-   `int` type and C linkage match `extern int _ZTV14QuestionSwitch[]` in
+/* The array the ROM factory installs: daObjHatenaSwitch_c_classInit does
+   `p[0] = (int)_ZTV19daObjHatenaSwitch_c`. Defined here, not just declared: the
+   `int` type and C linkage match `extern int _ZTV19daObjHatenaSwitch_c[]` in
    include/decl_common.h that the factory and both destructors read. */
-int _ZTV14QuestionSwitch[32];
+int _ZTV19daObjHatenaSwitch_c[32];
 }
 
 /* The class's .cpp bodies reach data under C++ mangled names; bridge each to
@@ -138,49 +140,49 @@ QS_TRAP(13) QS_TRAP(14)
 
 // ---- the shared half (a Platform table's Actor-shaped middle) --------------
 static int  __fastcall qs_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall qs_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int  __fastcall qs_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 static void __fastcall qs_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int  __fastcall qs_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall qs_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int  __fastcall qs_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall qs_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int  __fastcall qs_pdes(void *s, void *)
-{ ((ActorBase *)s)->ActorBase::OnPendingDestroy(); return 0; }
+{ ((fBase_c *)s)->fBase_c::OnPendingDestroy(); return 0; }
 static int  __fastcall qs_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int  __fastcall qs_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 static int  __fastcall qs_egg(void *s, void *, void *p)
-{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+{ _ZN8dActor_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int  __fastcall qs_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int  __fastcall qs_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int  __fastcall qs_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int  __fastcall qs_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int  __fastcall qs_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int  __fastcall qs_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int  __fastcall qs_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int  __fastcall qs_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 static int  __fastcall qs_aimed(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 static int  __fastcall qs_kill(void *s, void *)
-{ _ZN8Platform4KillEv(s); return 0; }
+{ _ZN10dBgActor_c4KillEv(s); return 0; }
 
 // ---- the class's own slots -------------------------------------------------
 /* SM64DS_QS_PROBE=1: one line per Behavior tick, so a headless run shows the
@@ -209,11 +211,11 @@ static void qs_probe(char *c)
 extern "C" void port_actor_render_probe(const char *cls, void *model);
 
 static int __fastcall qs_init(void *s, void *)
-{ return ((QuestionSwitch *)s)->QuestionSwitch::InitResources(); }
+{ return ((daObjHatenaSwitch_c *)s)->daObjHatenaSwitch_c::InitResources(); }
 static int __fastcall qs_clean(void *s, void *)
-{ return ((QuestionSwitch *)s)->QuestionSwitch::CleanupResources(); }
+{ return ((daObjHatenaSwitch_c *)s)->daObjHatenaSwitch_c::CleanupResources(); }
 static int __fastcall qs_behavior(void *s, void *)
-{ qs_probe((char *)s); return _ZN14QuestionSwitch8BehaviorEv((char *)s); }
+{ qs_probe((char *)s); return _ZN19daObjHatenaSwitch_c8BehaviorEv((char *)s); }
 static int __fastcall qs_render(void *s, void *)
 {
     port_actor_render_probe("QUESTION_SWITCH", (char *)s + 0x6b4);
@@ -225,19 +227,19 @@ static int __fastcall qs_render(void *s, void *)
                      *(void *const *)(m + 0x14),
                      data_ov002_0210dd60[0], data_ov002_0210dd60[1]);
     }
-    return _ZN14QuestionSwitch6RenderEv(s);
+    return _ZN19daObjHatenaSwitch_c6RenderEv(s);
 }
 static int __fastcall qs_d1(void *s, void *)
-{ return (int)(size_t)_ZN14QuestionSwitchD1Ev((struct QuestionSwitch *)s); }
+{ return (int)(size_t)_ZN19daObjHatenaSwitch_cD1Ev((struct daObjHatenaSwitch_c *)s); }
 static int __fastcall qs_d0(void *s, void *)
-{ return (int)(size_t)_ZN14QuestionSwitchD0Ev((struct QuestionSwitch *)s); }
+{ return (int)(size_t)_ZN19daObjHatenaSwitch_cD0Ev((struct daObjHatenaSwitch_c *)s); }
 /* slot 21, OnGroundPounded(Actor&): the matched body ignores the other actor */
 static int __fastcall qs_pounded(void *s, void *, void *)
-{ func_ov002_020b4fc4((char *)s); return 0; }
+{ _ZN19daObjHatenaSwitch_c15OnGroundPoundedER8dActor_c((char *)s); return 0; }
 
 extern "C" void hal_fill_question_switch_vtable(void)
 {
-    void **vt = (void **)_ZTV14QuestionSwitch;
+    void **vt = (void **)_ZTV19daObjHatenaSwitch_c;
     hal_fill_platform_vtable();
     vt[0]  = (void *)qs_init;
     vt[1]  = (void *)qs_binit;
@@ -255,7 +257,7 @@ extern "C" void hal_fill_question_switch_vtable(void)
     vt[13] = (void *)qs_trap13;
     vt[14] = (void *)qs_trap14;
     vt[15] = (void *)qs_heap;
-    vt[16] = (void *)qs_d1;
+    vt[16] = (void *)PORT_D16(qs_d1);
     vt[17] = (void *)qs_d0;
     vt[18] = (void *)qs_yoshi;
     vt[19] = (void *)qs_egg;

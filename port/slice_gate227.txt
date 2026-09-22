@@ -58,10 +58,11 @@
 #   slot 31  0x020bb3b8  0x74  Kill. Particle 0xe at +0x28000 above the post,
 #                              DisappearPoofDustAt, bank-3 sound 0x41, then the
 #                              class's own 0x020bae9c. ONE ROM argument.
-src/func_ov002_020bb27c.c
-src/func_ov002_020bb23c.cpp
-src/func_ov002_020bb374.cpp
-src/func_ov002_020bb3b8.cpp
+src/_ZN8SignPost15OnGroundPoundedER8dActor_c.cpp
+src/_ZN8SignPost11OnAttacked1ER8dActor_c.cpp
+src/_ZN8SignPost15OnHitByMegaCharER6Player.cpp
+# RETIRED at SLICE1: body now in src/_ZN8SignPostD0Ev.cpp. main consolidation put this body in the class TU, which the build already compiles, so the per-function leftover is a second definition.
+#src/_ZN8SignPost4KillEv.cpp
 #
 # ---------------------------------------------------------------------------
 # BLACK_BRICK_BLOCK's table, ov002 0x02108adc -- slot 27 only.
@@ -71,10 +72,10 @@ src/func_ov002_020bb3b8.cpp
 #                              seated two-parameter bbb_kill unchanged. This is
 #                              the body port/ov002_frontier.txt ruled
 #                              "convention-clean, held out only by the marker".
-src/func_ov002_020b36b4.cpp
+src/_ZN13BigBrickBlock15OnHitByMegaCharER6Player.cpp
 #
 # ---------------------------------------------------------------------------
-# POPPING_LAVA_BUBBLES, data_ov002_021093e0 -- THREE SLOTS THAT WERE HAND
+# POPPING_LAVA_BUBBLES, _ZTV11daObjLava_c -- THREE SLOTS THAT WERE HAND
 # TRANSCRIPTIONS.
 #
 # hal/actor_classes_ov070.cpp did not trap these three; it re-typed them from
@@ -88,33 +89,32 @@ src/func_ov002_020b36b4.cpp
 #   slot 17  0x020b6d4c  0x38   the D0. VT and HEAP come from its own pool:
 #                               0x020b6d7c -> 0x021093e0, 0x020b6d80 ->
 #                               0x020a0eac.
-src/func_ov002_020b6dd0.c
-src/func_ov002_020b6d84.c
-src/func_ov002_020b6d4c.c
+src/actors/daObjLava_c.cpp
 #
 # ---------------------------------------------------------------------------
 # THE TWO DELETING DESTRUCTORS that were held out for the same placeholder
 # reason and are bound per-TU below.
 #
-#   data_ov100_02148188 slot 17  0x02144424  0x44  the DOOR's D0. Table word at
+#   _ZTV4Door slot 17  0x02144424  0x44  the DOOR's D0. Table word at
 #       0x021481cc relocates to it. Pool: 0x02144460 -> 0x02148188 (the table
 #       the port hosts as _ZTV8daDoor_c), 0x02144464 -> 0x020a0eac. Was
 #       ac_trap17 on the gate-22 reading that nothing destroys a door; the
 #       reading was right and the trap is still never reached, so this is a
 #       linkage seat and not a behaviour change.
 #
-#   data_ov080_021282b4 slot 17  0x02125428  0x38  the PAINTING's D0, and this
+#   _ZTV8Painting slot 17  0x02125428  0x38  the PAINTING's D0, and this
 #       one IS dispatched -- hal/actor_classes_painting.cpp hosted it as a
 #       hand-written thunk (run D1, then Memory::Deallocate). The ROM body is
 #       that thunk's own two steps written out: store the vtable, Actor::~Actor,
 #       Deallocate. Pool: 0x02125458 -> 0x021282b4, 0x0212545c -> 0x020a0eac.
 #       slice_gate50.txt excluded it for exactly the placeholder collision the
 #       -D rows below remove, and says so.
-src/func_ov100_02144424.c
-src/func_ov080_02125428.c
+src/game/actors/d_a_star_gate.cpp
+# RETIRED at SLICE1: body now in src/_ZN8PaintingD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN8PaintingD0Ev.cpp
 #
 # NOT SEATED HERE, and why, so the next lane does not re-open them:
-#   data_ov080_021282b4 slots 0/6/9 and data_ov100_02148188 slots 6/9 are ruled
+#   _ZTV8Painting slots 0/6/9 and _ZTV4Door slots 6/9 are ruled
 #   REAL_DECOMP too, but their host copies carry PORT_HOST_ABI tags: those
 #   bodies form an mwcc pointer-to-member over an INCOMPLETE class, which MSVC
 #   widens from the ROM's 8-byte {fn,delta} record to its 16-byte general form.

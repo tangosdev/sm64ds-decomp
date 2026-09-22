@@ -1,7 +1,7 @@
 /* HOST COPY of SNUFIT's (actor 236, ov065, daYurei_Mucho_c) Behavior --
  * vtable slot 6, ROM body 0x02116b84.
  *
- * Transcribed line for line from src/_ZN6Snufit8BehaviorEv.cpp; the ONE
+ * Transcribed line for line from src/actors/daYurei_Mucho_c.cpp; the ONE
  * change is the state dispatch. The matched TU forms its PMF type over
  * `struct Enemy;` while Enemy is still forward-declared, which MSVC widens
  * to the general 16-byte representation: `Holder { char pad[8]; PMF fn; }`
@@ -12,28 +12,28 @@
  * bodies because port_ov065_states_seat rewrote the SOURCE statics before
  * Snufit's sinit copied them (port/unmatched/Ov065_StateDispatch.cpp).
  *
- * C-named (extern "C" _ZN6Snufit8BehaviorEv) so the vtable thunk in
+ * C-named (extern "C" _ZN15daYurei_Mucho_c8BehaviorEv) so the vtable thunk in
  * hal/actor_classes_ov065.cpp calls it directly; the matched TU stays out of
  * slice_w5b.txt with the reason recorded there (the honesty rule -- a
  * shadowed TU would sit in the slice looking seated).
  */
 extern "C" {
-int _ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(void *thiz, void *c);
-void _ZN12CylinderClsn5ClearEv(void *thiz);
-void _ZN12CylinderClsn6UpdateEv(void *thiz);
+int _ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(void *thiz, void *c);
+void _ZN5dCc_c5ClearEv(void *thiz);
+void _ZN5dCc_c6UpdateEv(void *thiz);
 int func_ov065_0211691c(char *c, unsigned *table);
-int _ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(
+int _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj(
     void *thiz, void *wm, void *ma, unsigned j);
 int ApproachAngle(short *target, short from, short start, short speed,
                   short max);
-void _ZN5Enemy11UpdateDeathER12WithMeshClsn(void *thiz, void *wm);
+void _ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr(void *thiz, void *wm);
 unsigned short DecIfAbove0_Short(unsigned short *p);
 void _Z14ApproachLinearRiii(int *x, int target, int step);
-void _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(void *thiz,
+void _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(void *thiz,
                                                        void *clsn);
-void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(void *thiz, void *wm,
+void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void *thiz, void *wm,
                                               unsigned j);
-char *_ZN5Actor13ClosestPlayerEv(void *thiz);
+char *_ZN8dActor_c13ClosestPlayerEv(void *thiz);
 void _ZN9Animation7AdvanceEv(void *thiz);
 int func_ov065_0211696c(char *c);
 void func_ov065_02115ff0(char *c);
@@ -44,7 +44,7 @@ extern int data_ov065_0211d650[];
 extern int data_ov065_0211d660[];
 }
 
-/* HOST COPY RETIRED, run link100 lane PMFB7 gate 1. src/_ZN6Snufit8BehaviorEv.cpp
+/* HOST COPY RETIRED, run link100 lane PMFB7 gate 1. src/actors/daYurei_Mucho_c.cpp
    dispatches its own field now: with /vmg /vmm (block R8) MSVC's pointer to
    member IS the ROM's eight-byte {code, adjust} pair, so the widening this
    banner was written for does not happen. The per-frame half of every state

@@ -106,7 +106,7 @@ void func_0204b81c(Self *self, Node *node)
     *(volatile u32 *)0x40004a4 = v;
     *(volatile u32 *)0x40004a4;
     {
-        Cnt74 *qq = (Cnt74 *)(u32)(((s64)(int)((char *)c + 0x74)));
+        Cnt74 *qq = (Cnt74 *)(u32)((char *)c + 0x74);
         qq->count++;
         if (c->cnt.count > c->cnt.limit)
             qq->count = c->cnt.start;

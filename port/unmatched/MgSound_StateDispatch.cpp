@@ -3,7 +3,7 @@
 //
 // Everything below was read out of extracted/overlays/overlay_0006.bin at base
 // 0x020bfec0, never out of a dsd export. The alignment was checked first on a
-// body this lane did not write and could not have tuned: func_ov006_0210a600
+// body this lane did not write and could not have tuned: _ZN19dScMgSingle3DBase_c24OnHitByCannonBlastedCharEv
 // disassembles to `mov r0,#1 / bx lr`, which is exactly what
 // port/tools/inferred_stub_adjudicated.txt already records for it.
 //
@@ -36,7 +36,7 @@
 // only ground truth for a slot number: an overlay constructor does NOT copy
 // its pairs in address order, and this one interleaves fifteen destinations.
 // A sweep of the source span would also have manufactured phantoms --
-// MgBoomBox_SpawnInfo itself (0x0213f69c, two words) sits INSIDE the pair span
+// g_profile_MG_SOUND itself (0x0213f69c, two words) sits INSIDE the pair span
 // 0x0213f4fc..0x0213f6dc, bracketed by pair 0x0213f694 and pair 0x0213f6a4.
 //
 // ALL FIFTY-SEVEN ADJUSTMENT WORDS READ ZERO and all fifty-seven code words
@@ -83,7 +83,7 @@
 //      eight-byte table by four.
 //
 //   3. PMF-TYPED AT C++ LINKAGE -- the only one a link can name.
-//      src/func_ov006_0211a2c4.cpp declares `extern PMF data_ov006_02142cc0[];`
+//      src/actors/dScMgSound_c.cpp declares `extern PMF data_ov006_02142cc0[];`
 //      OUTSIDE its extern "C" block, so it is the class's single LNK2019.
 //
 // THE THIRTEEN SUB-DISPATCHERS ARE THE SAME NINETEEN INSTRUCTIONS THIRTEEN
@@ -112,7 +112,7 @@
 // addresses over the .data pairs before the constructor copies them) is wrong
 // for the same reason section 4 gives for func_ov006_020c3d18, and for one
 // more that is this class's own: the source pairs share their span with
-// MgBoomBox_SpawnInfo, whose factory word the registry writes.
+// g_profile_MG_SOUND, whose factory word the registry writes.
 //
 // ---- THE ONE HARD FLOOR IS RETIRED, run mg10 lane F367 --------------------
 //
@@ -153,7 +153,7 @@
 // fourth. Finally, on the SECOND tap of a round (+0x5624 == 1) it calls
 // func_ov006_020c2300 on the +0x4f38 sub-object.
 //
-// TWO SLICE LINES STOP BEING FREE. src/func_ov006_0211b654.c and
+// TWO SLICE LINES STOP BEING FREE. src/actors/dScMgSound_c.cpp and
 // src/func_ov006_020c2300.c were in port/slice_box.txt reachable only from
 // 0x0211bd88 and 0x0211bf10, both inside this body, so /OPT:REF dropped them
 // and run mg9 budgeted them as +0 on the headline. They now have a caller.
@@ -162,7 +162,7 @@
 //
 //   func_ov006_0211ba88   slot 4 of data_ov006_02142df8, 0x158 bytes
 //
-// Also outside the delinks join, but src/func_ov006_0211ba88.c EXISTS,
+// Also outside the delinks join, but src/actors/dScMgSound_c.cpp EXISTS,
 // bannered NONMATCHING (register allocation, div=35). That is section 13's
 // 0x020f6904 shape and the cost is a slice line plus a switch arm -- except
 // that this one ALSO drops its receiver, so it is host-copied in
@@ -180,7 +180,7 @@
 /* ---- THE ONE ALIAS THE THIRTEEN MATCHED TUs ASK FOR (lane PMFB3) --------
    Twelve of the thirteen sub-dispatchers declare their table INSIDE their own
    extern "C" block, so MSVC spells the reference _data_ov006_XXXXXXXX and the
-   ov006 mount's own definition satisfies it. src/func_ov006_0211a2c4.cpp is the
+   ov006 mount's own definition satisfies it. src/actors/dScMgSound_c.cpp is the
    thirteenth and declares `extern PMF data_ov006_02142cc0[];` at namespace
    scope, which mangles as the name below -- read off that TU's own /FAsc
    listing (runs/link100/out/PMFB3/listings/func_ov006_0211a2c4_zp4.asm), not
@@ -488,7 +488,7 @@ static void snd1_state1_0211bc8c(char *c, int i)
 
    WHY THIS IS THE ov085 SHAPE AND NOT THE ONE THE HEADER REFUSES. The header
    above rules out writing host addresses over the .data SOURCE pairs, because
-   this class's source span is shared with MgBoomBox_SpawnInfo. This installer
+   this class's source span is shared with g_profile_MG_SOUND. This installer
    does not touch the source pairs. It writes the DESTINATION storage, after
    __sinit_ov006_02132970 has copied into it, which is exactly what
    port_pushblock_states_seat does to data_ov002_021097bc, and it is called from
@@ -695,7 +695,7 @@ extern "C" void port_mg_sound_counts(unsigned *hits, unsigned *floor,
 //
 // SIXTEEN at run mg9, THIRTEEN after run link100 lane PMFB2 retired the two
 // level-1 dispatchers, and NONE after lane PMFB3. The thirteen level-2
-// sub-dispatchers are now src/func_ov006_0211b590.cpp and its twelve siblings,
+// sub-dispatchers are now src/actors/dScMgSound_c.cpp and its twelve siblings,
 // on port/slice_pmfb3.txt, and the boot installer above puts a host face in
 // each of their thirty-nine table words, so the ROM's own code runs the ROM's
 // own dispatch.

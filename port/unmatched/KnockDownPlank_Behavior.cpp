@@ -1,4 +1,4 @@
-/* HOST COPY of src/_ZN14KnockDownPlank8BehaviorEv.cpp -- the mwcc
+/* HOST COPY of src/game/actors/d_a_obj_bk_dossunbar.cpp -- the mwcc
  * pointer-to-member dispatch read as a plain function pointer, and BOTH of the
  * class's {function, delta} tables seated with host addresses. This is the
  * MOVING_BAR_BIG (53) / MOVING_BAR_SMALL (54) and KNOCK_DOWN_PLANK (44) state
@@ -72,18 +72,18 @@ void func_ov015_02111ee0(void *);  void func_ov015_02111e60(void *);
 void func_ov015_02111dd4(void *);  void func_ov015_02111d8c(void *);
 void func_ov015_02111d28(void *);
 
-void _ZN8Platform21UpdateModelPosAndRotYEv(void *);
-int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *, int, int);
-void _ZN8Platform19UpdateClsnPosAndRotEv(void *);
+void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *);
+int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *, int, int);
+void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *);
 
 /* the __cdecl extern-C bridge (hal/reverse_bridges.cpp) */
-void _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(void *self, void *cl);
+void _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(void *self, void *cl);
 
 }  /* extern "C" */
 
 /* func_ov015_02111d98.cpp calls ((Actor *)c)->UpdatePosWithOnlySpeed(0) through
  * its OWN local `struct Actor { void UpdatePosWithOnlySpeed(void *); }`, so MSVC
- * emits a __thiscall call to ?UpdatePosWithOnlySpeed@Actor@@QAEXPAX@Z (this in
+ * emits a __thiscall call to ?UpdatePosWithOnlySpeed@dActor_c@@QAEXPAX@Z (this in
  * ecx, one void* arg). The real body is the __cdecl(self, cl) bridge, so an
  * alias would pass this=0 and fault at &pos. This TU declares the identical
  * global `struct Actor`, so its definition mangles to that exact __thiscall
@@ -92,7 +92,7 @@ void _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(void *self, void *cl);
  * it spells the call in the __cdecl two-arg form. */
 struct Actor { void UpdatePosWithOnlySpeed(void *); };
 void Actor::UpdatePosWithOnlySpeed(void *)
-{ _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(this, 0); }
+{ _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(this, 0); }
 
 /* RUN link100, LANE FWD: THIS TABLE'S CELLS HOLD __fastcall FACES NOW.
  * The host copy below is retired and the matched TU dispatches the table
@@ -108,7 +108,7 @@ void Actor::UpdatePosWithOnlySpeed(void *)
  */
  /* ONLY THE FIRST SEVEN ROWS CHANGE. They feed data_ov015_021149ec, which
   * KnockDownPlank::Behavior dispatches. The last seven feed
-  * data_ov015_02114a24, whose dispatcher is src/func_ov015_02111fb8.c -- a .c
+  * data_ov015_02114a24, whose dispatcher is src/game/actors/d_a_obj_bk_dossunbar.cpp -- a .c
   * file with no pointer to member in it, calling the cell as a plain cdecl
   * function pointer -- so those seven keep their plain cdecl bodies.
   */
@@ -168,7 +168,7 @@ extern "C" void port_knock_down_plank_states_seat(void)
 }
 
 /* HOST COPY RETIRED, run link100 lane FWD. KnockDownPlank::Behavior
- * dispatches this table from src/_ZN14KnockDownPlank8BehaviorEv.cpp now. The flat C name the port's
+ * dispatches this table from src/game/actors/d_a_obj_bk_dossunbar.cpp now. The flat C name the port's
  * actor-class face calls is defined by the forwarder in
  * port/hal/fwd_forwarders.cpp, which receives `this` on the stack and calls
  * the member through the real class type; the member and the flat name are two

@@ -9,31 +9,23 @@ src/_ZN6Player12St_Wait_MainEv.cpp
 src/_ZN6Player12St_Walk_InitEv.cpp
 src/_ZN6Player12St_Walk_MainEv.cpp
 port/unmatched/Player_ChangeState.cpp
-src/_ZN15TextureSequenceC1Ev.c
-src/_ZN15MaterialChangerC1Ev.c
-src/_ZN25MovingCylinderClsnWithPosC1Ev.c
-src/_ZN12WithMeshClsnC1Ev.c
+src/_ZN15TextureSequenceC1Ev.cpp
+src/_ZN15MaterialChangerC1Ev.cpp
+src/_ZN10dCcAcPos_cC1Ev.cpp
+src/_ZN10dBgCh_ActrC1Ev.cpp
 src/ApproachAngle.c
 src/LoadSilverStarAndNumber.c
-src/Player_AdvanceAnims.cpp
-src/Player_ScaleByCharFactor.c
+src/actors/Player.cpp
 src/RandomIntInternal.c
 src/StartWithFarCamera.c
 src/SublevelToLevel.c
-src/func_020072c0.c
+src/_ZN7Vector3D1Ev.cpp
 src/func_0200d81c.c
 src/func_0201226c.c
 src/func_02013a00.c
-src/func_02035514.c
+src/_ZN5dBgChC2Ev.cpp
 src/func_02035644.c
 src/func_0203d384.c
-src/func_ov002_020beabc.cpp
-src/func_ov002_020c0364.c
-src/func_ov002_020c5244.c
-src/func_ov002_020c7dd0.cpp
-src/func_ov002_020c9e18.c
-src/func_ov002_020cabe0.cpp
-src/func_ov002_020caf68.c
 # ---- ST_CLIMB (record 0x021106dc): the tree/pole grab ----------------------
 # All three halves were unhosted, which is the bush freeze: Init never ran, so
 # the climb anim never started and the horizontal speed Init zeroes stayed on
@@ -42,15 +34,7 @@ src/func_ov002_020caf68.c
 # port/unmatched/Player_St_Climb.cpp. Main (0x020cb5bc) is now matched source
 # (the div-9 near-miss closed by passing the pad halfword through to
 # func_ov002_020cc05c); the climb-motion helpers ride along with it.
-src/_ZN6Player13St_Climb_InitEv.cpp
 src/_ZN6Player13St_Climb_MainEv.cpp
-src/_ZN6Player16St_Climb_CleanupEv.cpp
-src/func_ov002_020cb354.cpp
-src/func_ov002_020cb400.cpp
-src/func_ov002_020cb474.cpp
-src/func_ov002_020cbea8.c
-src/func_ov002_020cc01c.cpp
-src/func_ov002_020bf340.c
 src/func_0200d5c0.c
 src/func_0200d5fc.c
 # St_SwingPlayer_Main (0x020d9fec) is a MATCHING FLOOR with no matched src TU;
@@ -71,40 +55,36 @@ src/func_ov002_020e3078.c
 src/func_ov002_020e6330.c
 src/func_ov002_020e6350.c
 src/func_ov002_020e63a4.c
-src/_ZN10SphereClsnC1Ev.c
-src/_ZN11RaycastLineC1Ev.cpp
-src/_ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_.c
-src/_ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor.c
-src/_ZN13RaycastGroundC1Ev.c
-src/_ZN13RaycastGroundD1Ev.c
-src/_ZN15MaterialChangerD1Ev.c
-src/_ZN15TextureSequenceD1Ev.c
-src/_ZN18MovingCylinderClsnC2Ev.c
-src/_ZN4BgCh19StartDetectingWaterEv.cpp
-src/_ZN6Player12FinishedAnimEv.cpp
-src/_ZN6Player17SetNoControlStateEhih.cpp
-src/_ZN6Player6IsAnimEj.cpp
-src/_ZN6Player7SetAnimEji5Fix12IiEj.cpp
-src/_ZN6Player9GetHealthEv.cpp
-src/_ZN8SaveData16HasPlayerLostCapEv.c
-src/_ZNK6Player14GetBodyModelIDEjb.cpp
+src/_ZN12dBgCh_SphCrrC1Ev.cpp
+src/_ZN9dBgCh_LinC1Ev.cpp
+src/_ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_.c
+src/_ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c.cpp
+src/_ZN9dBgCh_GndC1Ev.cpp
+src/_ZN9dBgCh_GndD1Ev.cpp
+src/_ZN15MaterialChangerD1Ev.cpp
+src/_ZN15TextureSequenceD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN7dCcAc_cC1Ev.cpp. MSVC folds the ROM constructor variants into one symbol, so only one of a class two per-function constructor TUs can be compiled.
+#src/_ZN7dCcAc_cC2Ev.cpp
+src/_ZN5dBgCh19StartDetectingWaterEv.cpp
+src/_ZN8SaveData16HasPlayerLostCapEv.cpp
 src/AngleDiff.c
 src/func_020116c4.c
 src/func_02011934.c
 src/func_02011ee4.c
 src/func_02011f7c.c
 src/func_020353b0.c
-src/func_020354d0.c
+# RETIRED at SLICE1: body now in src/_ZN5dBgChD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN5dBgChD2Ev.cpp
 src/func_020374d4.c
-src/func_020380ec.c
-src/func_0203819c.c
-src/func_0203ac60.c
-src/func_0203ac70.c
+# RETIRED at SLICE1: body now in src/_ZN5dBgPiD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN5dBgPiD2Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN5dBgPiC1Ev.cpp. MSVC folds the ROM constructor variants into one symbol, so only one of a class two per-function constructor TUs can be compiled.
+#src/_ZN5dBgPiC2Ev.cpp
+src/_ZN8dM3dGSphC1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN8dM3dGSphC1Ev.cpp. MSVC folds the ROM constructor variants into one symbol, so only one of a class two per-function constructor TUs can be compiled.
+#src/_ZN8dM3dGSphC2Ev.cpp
 src/func_02048a1c.c
 src/func_02048c30.c
-src/func_ov002_020bec2c.cpp
-src/func_ov002_020becf4.cpp
-src/func_ov002_020c0434.c
 src/func_ov002_020d1204.cpp
 src/func_ov002_020d5c6c.c
 src/func_ov002_020d6334.c
@@ -116,8 +96,10 @@ src/func_ov002_020e6bb0.c
 src/func_02011698.c
 src/func_02011ac4.c
 src/func_020134d8.c
-src/func_02037ee4.c
-src/func_02037f18.c
+# RETIRED at SLICE1: body now in src/_ZN5dBgPcD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN5dBgPcD2Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN5dBgPcC1Ev.cpp. MSVC folds the ROM constructor variants into one symbol, so only one of a class two per-function constructor TUs can be compiled.
+#src/_ZN5dBgPcC2Ev.cpp
 src/func_020380c0.c
 src/func_0203d974.c
 src/func_02049018.c
@@ -127,31 +109,30 @@ src/func_0204fa2c.c
 src/func_02050cdc.c
 src/func_020510a4.c
 src/func_0205117c.c
-src/func_ov002_020c04ac.c
 src/func_ov002_020d600c.cpp
 src/func_ov002_020d82f0.c
-src/_ZN10ClsnResultC1Ev.c
+src/_ZN5dBgPiC1Ev.cpp
 src/_ZN10ModelAnim213Func_020162C4Eji5Fix12IiEt.c
-src/_ZN10ModelAnim2C1Ev.c
+src/_ZN10ModelAnim2C1Ev.cpp
 src/_ZN11ShadowModel12InitCylinderEv.cpp
-src/_ZN12CylinderClsnC2Ev.cpp
+src/_ZN5dCc_cC2Ev.cpp
 src/_ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File.cpp
 src/_ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj.c
 src/_ZN15TextureSequence8LoadFileER13SharedFilePtr.cpp
 src/_ZN18NestedHeapIterator6RemoveEP13HeapAllocator.cpp
 src/_ZN18NestedHeapIterator8PreviousEP13HeapAllocator.cpp
-src/_ZN18SolidHeapAllocator9LoadStateEj.c
-src/_ZN18SolidHeapAllocator9SaveStateEj.c
-src/_ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj.c
-src/_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii.c
+src/_ZN18SolidHeapAllocator9LoadStateEj.cpp
+src/_ZN18SolidHeapAllocator9SaveStateEj.cpp
+src/_ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj.cpp
+src/_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as.cpp
 src/_ZN6Camera11ChangeStateEPNS_5StateE.cpp
-src/_ZN6Player7IsStateERNS_5StateE.c
-src/_ZN6Player8HasNoCapEv.cpp
+src/_ZN6Player7IsStateERNS_5StateE.cpp
 src/_ZN8SaveData16CanPlayerHaveCapEv.cpp
 src/_ZN9Animation7AdvanceEv.cpp
 src/_ZN9Animation8FinishedEv.cpp
 src/_ZN9Animation8LoadFileER13SharedFilePtr.cpp
-src/_ZN9AnimationD2Ev.c
+# RETIRED at SLICE1: body now in src/_ZN9AnimationD0Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN9AnimationD2Ev.cpp
 src/func_02011b38.c
 src/func_0201a96c.c
 src/func_0201a9ec.c
@@ -166,12 +147,12 @@ src/func_02051918.c
 src/func_020523e0.c
 src/func_0205acac.c
 src/Player_PlaySoundEffect.c
-src/_ZN12ActorDerived5SpawnEjP9ActorBaseii.cpp
-src/_ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj.c
-src/_ZN18SolidHeapAllocator16AllocateForwardsEPvjj.c
-src/_ZN18SolidHeapAllocator5ResetEj.c
-src/_ZN18SolidHeapAllocator8AllocateEji.c
-src/_ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3.c
+src/actors/ActorDerived.cpp
+src/_ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj.cpp
+src/_ZN18SolidHeapAllocator16AllocateForwardsEPvjj.cpp
+src/_ZN18SolidHeapAllocator5ResetEj.cpp
+src/_ZN18SolidHeapAllocator8AllocateEji.cpp
+src/_ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3.cpp
 src/func_02010e78.c
 src/func_0201a8b4.c
 src/func_0201aa50.c
@@ -198,10 +179,10 @@ src/func_0205b070.c
 #   and this port therefore never made an ARM9->ARM7 send at all.
 src/Snd_SendCommand.c
 src/Vec3_RotateYAndTranslate.c
-src/_ZN12CylinderClsn4InitE5Fix12IiES1_jj.cpp
-src/_ZN18SolidHeapAllocator10ResetStartEv.c
-src/_ZN18SolidHeapAllocator17AllocateBackwardsEPvjj.c
-src/_ZN18SolidHeapAllocator8ResetEndEv.c
+src/_ZN5dCc_c4InitE5Fix12IiES1_jj.cpp
+src/_ZN18SolidHeapAllocator10ResetStartEv.cpp
+src/_ZN18SolidHeapAllocator17AllocateBackwardsEPvjj.cpp
+src/_ZN18SolidHeapAllocator8ResetEndEv.cpp
 src/_ZN5Sound17InfoSequenceEntry9GetWithIDEj.cpp
 src/_ZN5Sound23InfoInstrumentBankEntry9GetWithIDEj.cpp
 src/func_02013f28.c
@@ -279,15 +260,15 @@ src/func_0205f958.c
 src/func_02059834.c
 src/FS_ReadFile.c
 src/ResetCrashScreen.c
-src/_ZN2G212GetBG1ScrPtrEv.c
-src/_ZN2GX10LoadBGPlttEPKvjj.c
-src/_ZN2GX11LoadBG1CharEPKvjj.c
+src/_ZN2G212GetBG1ScrPtrEv.cpp
+src/_ZN2GX10LoadBGPlttEPKvjj.cpp
+src/_ZN2GX11LoadBG1CharEPKvjj.cpp
 src/_ZN2GX12SetBankForBGEt.cpp
-src/_ZN2GX6DispOnEv.c
+src/_ZN2GX6DispOnEv.cpp
 src/_ZN4Heap21MaxAllocationUnitSizeEv.cpp
 src/_ZN4Heap6IntactEv.cpp
-src/_ZN5Scene22ResetHardwareRegistersEv.cpp
-src/func_020233d4.c
+src/_ZN8dScene_c22ResetHardwareRegistersEv.cpp
+src/GetActorDebugName.c
 src/func_0202e118.c
 src/func_020427c4.c
 src/func_0204335c.c
@@ -311,12 +292,12 @@ src/nds_printt.c
 src/DMASyncHalfTransfer.c
 src/MultiStore16.c
 src/Vram__Map.c
-src/_ZN2GX15DisableAllBanksEv.c
-src/_ZN2GX15SetGraphicsModeEiii.c
+src/_ZN2GX15DisableAllBanksEv.cpp
+src/_ZN2GX15SetGraphicsModeEiii.cpp
 src/_ZN3G2x12SetBGyAffineEPVtP9Matrix2x2iiii.cpp
 src/_ZN3GXS15SetGraphicsModeEi.cpp
-src/_ZN4cstd6strlenEPKc.c
-src/_ZN9ActorBase7ProcessEMS_FivEMS_FbvEMS_FvjE.cpp
+src/_ZN4cstd6strlenEPKc.cpp
+src/_ZN7fBase_c7ProcessEMS_FivEMS_FbvEMS_FvjE.cpp
 src/func_0201473c.c
 src/func_020147bc.c
 src/func_020524c4.c
@@ -368,7 +349,7 @@ src/func_0206f820.c
 src/func_0206fb08.c
 src/func_0206fd6c.c
 src/FS_InitFile.c
-src/_ZN4cstd7strncpyEPcPKcj.c
+src/_ZN4cstd7strncpyEPcPKcj.cpp
 src/func_0205801c.c
 src/func_0206e218.c
 src/func_0206f338.c
@@ -387,13 +368,11 @@ src/func_02071708.c
 src/func_020707a4.c
 src/func_020712a0.c
 src/FUN_02029a68.c
-src/_ZN6Player4HealEi.cpp
 src/_ZN9Animation8GetFlagsEv.cpp
 src/_ZNK9Animation12WillHitFrameEi.cpp
 src/func_020089f8.c
 src/func_0200cae4.cpp
 src/func_ov002_020bcdf0.c
-src/func_ov002_020c6adc.cpp
 src/func_ov002_020d2da0.c
 src/func_ov002_020d2e74.cpp
 src/func_ov002_020d2f24.c
@@ -405,15 +384,14 @@ src/_ZN18NestedHeapIterator4NextEP13HeapAllocator.cpp
 src/GiveHealth.c
 src/Vec3_Sub.c
 src/func_02022b04.c
-src/func_ov002_020bf5e0.c
 src/func_ov002_020d4c30.cpp
-src/_ZN8Particle7Manager9AddSystemEiR7Vector3.c
-src/_ZNK8Particle10SysTracker8Contents8FindDataEj.c
+src/_ZN8Particle7Manager9AddSystemEiR7Vector3.cpp
+src/_ZNK8Particle10SysTracker8Contents8FindDataEj.cpp
 src/func_0201251c.c
-src/func_02021a74.c
+src/_ZN8Particle10SysTracker8Contents6CreateEjR7Vector3PK11Vector3_16fPN5dPa_c7level_c10callback_cE.cpp
 src/func_02022d00.c
-src/func_02021a48.c
-src/func_02021d1c.cpp
+src/_ZN8Particle10SysTracker8Contents4LinkERNS1_5EntryE.cpp
+src/_ZN8Particle10SysTracker8Contents5Entry10InitialiseEjjR7Vector3PK11Vector3_16fPN5dPa_c7level_c10callback_cE.cpp
 src/func_02048a18.c
 src/func_02048af4.c
 src/func_0204ae2c.c
@@ -452,17 +430,20 @@ src/SharedFilePtr_Destruct_Clsn.c
 src/func_0201973c.c
 src/func_0203b9b4.c
 src/func_ov002_020e6ad4.c
-src/_ZN6Player18St_LevelEnter_InitEv.cpp
-src/_ZN6Player18St_LevelEnter_MainEv.cpp
-src/Player_DisableInteraction.c
-src/_ZN13RaycastGround10DetectClsnEv.cpp
+src/_ZN9dBgCh_Gnd10DetectClsnEv.cpp
 src/_ZN6Player16InitWingFeathersEb.cpp
-src/_ZN9ModelAnimD1Ev.c
+src/_ZN9ModelAnimD1Ev.cpp
 src/func_02012790.c
-src/func_ov002_020c7cbc.c
 src/LoadKeyModels.cpp
 src/Vec3_HorzDist.c
-src/_ZN5ModelD2Ev.c
+# QUARANTINED at the main->port sync (lane SYNC5, the wave-7 fold merge): MSVC
+# refuses main's shape for this TU (C2600, the model family's destructor TUs:
+# main defines X::~X() where the host header spells the destructor as two
+# plain virtuals; port/unmatched/ModelFamily_Dtors_HostCopy.c carries the
+# merge base's own bodies instead). It is a decomp-side item, not a port one:
+# see runs/link100/out/SYNC5/decomp_side.md. The row returns when main lands
+# the fix.
+#src/_ZN5ModelD2Ev.cpp
 src/_ZN5Sound6Play2DEjj.cpp
 src/func_02035354.c
 src/func_02037464.c
@@ -471,15 +452,18 @@ src/func_0203938c.c
 src/func_0203939c.c
 src/func_020393ac.c
 src/func_020393b4.c
-src/func_ov002_020bd9ec.cpp
-src/func_ov002_020bdd2c.c
-src/func_ov002_020c43c4.c
-src/_ZN5Sound8EndMusicEjj.c
-src/_ZN5Sound8SetMusicEjj.c
-src/_ZN9ModelBaseD2Ev.c
+src/_ZN5Sound8EndMusicEjj.cpp
+src/_ZN5Sound8SetMusicEjj.cpp
+# QUARANTINED at the main->port sync (lane SYNC5, the wave-7 fold merge): MSVC
+# refuses main's shape for this TU (C2600, the model family's destructor TUs:
+# main defines X::~X() where the host header spells the destructor as two
+# plain virtuals; port/unmatched/ModelFamily_Dtors_HostCopy.c carries the
+# merge base's own bodies instead). It is a decomp-side item, not a port one:
+# see runs/link100/out/SYNC5/decomp_side.md. The row returns when main lands
+# the fix.
+#src/_ZN9ModelBaseD2Ev.cpp
 src/_ZdlPv.cpp
 src/func_02037f5c.c
-src/func_ov002_020bd984.cpp
 src/func_ov002_020db8bc.c
 src/Deallocate.c
 src/func_02011dcc.c
@@ -491,7 +475,17 @@ src/Sound_PlayIfNotActive.c
 src/func_0204f82c.c
 src/func_0204f86c.c
 src/func_02051bd0.c
-src/_ZN4Heap11_DeallocateEPv.cpp
+# RETIRED at ALIAS2 (wave 8, the main -> port sync). This is the ONE retirement
+# in this lane that takes the SRC side rather than the host side, and the reason
+# is a standing PORT_HOST_ABI ruling, not a preference. Since main's langmode
+# migration this TU emits ?_Deallocate@Heap@@QAEXPAX@Z, the same decorated name
+# hal/cxx_aliases.cpp defines, so the link reported it twice. The ruling in the
+# PORT_HOST_ABI block above Heap::_Deallocate in hal/cxx_aliases.cpp says this
+# body is a zero-argument ARM veneer whose this and ptr ride in on r0/r1, and
+# that linked under the MSVC name it would deallocate a garbage pointer from a
+# garbage heap on the first free. Retiring the host definition instead would
+# ship exactly that.
+#src/_ZN4Heap11_DeallocateEPv.cpp
 src/func_0201186c.c
 src/func_0204f720.c
 src/func_02051a28.c
@@ -502,36 +496,20 @@ src/func_0205aaf4.c
 src/func_0205acfc.c
 src/func_0204f504.c
 port/unmatched/func_ov002_020d3b9c.c
-src/func_ov002_020bf224.c
-src/func_ov002_020bf56c.cpp
-src/func_ov002_020bf88c.c
-src/func_ov002_020c031c.cpp
-src/func_ov002_020c18b0.c
 src/func_ov002_020d454c.cpp
 src/func_ov002_020d4d88.c
 src/func_ov002_020f035c.c
 src/_Z14ApproachLinearRiii.cpp
 src/func_02010844.c
-src/func_ov002_020c04e0.c
-src/func_ov002_020c179c.cpp
 src/Vec3_HorzLen.c
 src/_ZN4cstd5atan2E5Fix12IiES1_.c
 port/unmatched/Player_Behavior.cpp
 src/DecIfAbove0_Short.c
 src/GetAngleToCamera.c
-src/_ZN12CylinderClsn5ClearEv.cpp
-src/_ZN12CylinderClsn6UpdateEv.cpp
+src/_ZN5dCc_c5ClearEv.cpp
+src/_ZN5dCc_c6UpdateEv.cpp
 src/func_02035684.c
 src/func_0203568c.c
-src/func_ov002_020bdd9c.cpp
-src/func_ov002_020bdef0.cpp
-src/func_ov002_020bf13c.c
-src/func_ov002_020bf36c.cpp
-src/func_ov002_020c2db8.c
-src/func_ov002_020c2e78.cpp
-src/func_ov002_020c4188.c
-src/func_ov002_020ca940.c
-src/func_ov002_020ce8bc.c
 src/func_ov002_020d6790.cpp
 src/func_ov002_020d80d0.c
 src/func_ov002_020d8158.c
@@ -542,12 +520,11 @@ src/func_ov002_020e4bb8.c
 src/IsPlayerWarping.c
 src/_ZN10ModelAnim24CopyERKS_Pcj.cpp
 src/_ZN15TextureSequence6UpdateER15ModelComponents.cpp
-src/_ZN5Actor10FindWithIDEj.cpp
-src/_ZN5Actor13SpawnSoundObjEj.c
-src/_ZN5Actor16JumpedOnByPlayerER12CylinderClsnR6Player.c
-src/_ZN5Actor9UpdatePosEP12CylinderClsn.c
+src/_ZN8dActor_c10FindWithIDEj.cpp
+src/_ZN8dActor_c13SpawnSoundObjEj.cpp
+src/_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player.cpp
+src/_ZN8dActor_c9UpdatePosEP5dCc_c.cpp
 src/_ZN6Camera9SetFlag_3Ev.cpp
-src/_ZN6Player7IsInAirEv.cpp
 src/func_0200d064.c
 src/func_0200d0ac.c
 src/func_0200d3f8.c
@@ -555,19 +532,6 @@ src/func_0201f32c.c
 src/func_02020388.c
 src/func_02022cbc.c
 src/func_02035798.c
-src/func_ov002_020bdc18.c
-src/func_ov002_020be3b0.c
-src/func_ov002_020c0108.c
-src/func_ov002_020c0fb4.c
-src/func_ov002_020c1234.cpp
-src/func_ov002_020c14b8.c
-src/func_ov002_020c231c.c
-src/func_ov002_020c25a8.c
-src/func_ov002_020c29d4.cpp
-src/func_ov002_020c2b08.c
-src/func_ov002_020c5d60.c
-src/func_ov002_020c61ac.c
-src/func_ov002_020ce798.c
 src/func_ov002_020d7430.cpp
 src/func_ov002_020d8118.c
 src/func_ov002_020d8360.c
@@ -599,43 +563,41 @@ src/SetSubBg1Offset.c
 src/SubVec3.c
 src/Vec3_HorzAngle.c
 src/Vec3_VertAngle.c
-src/_ZN10ClsnResultD1Ev.c
-src/_ZN11RaycastLine10DetectClsnEv.cpp
-src/_ZN11RaycastLine10GetClsnPosEv.c
-src/_ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor.cpp
-src/_ZN11RaycastLineD1Ev.c
-src/_ZN12WithMeshClsn13SetLimMovFlagEv.cpp
-src/_ZN12WithMeshClsn15ClearGroundFlagEv.cpp
-src/_ZN12WithMeshClsn15ClearLimMovFlagEv.cpp
-src/_ZN12WithMeshClsn18StopDetectingWaterEv.cpp
-src/_ZN12WithMeshClsn19StartDetectingWaterEv.cpp
+src/_ZN5dBgPiD1Ev.cpp
+src/_ZN9dBgCh_Lin10DetectClsnEv.cpp
+src/_ZN9dBgCh_Lin10GetClsnPosEv.cpp
+src/_ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c.cpp
+src/_ZN9dBgCh_LinD1Ev.cpp
+src/_ZN10dBgCh_Actr13SetLimMovFlagEv.cpp
+src/_ZN10dBgCh_Actr15ClearGroundFlagEv.cpp
+src/_ZN10dBgCh_Actr15ClearLimMovFlagEv.cpp
+src/_ZN10dBgCh_Actr18StopDetectingWaterEv.cpp
+src/_ZN10dBgCh_Actr19StartDetectingWaterEv.cpp
 src/_ZN2G212GetBG3ScrPtrEv.cpp
-src/_ZN3G2S12GetBG1ScrPtrEv.c
-src/_ZN3G2S13GetBG1CharPtrEv.c
+src/_ZN3G2S12GetBG1ScrPtrEv.cpp
+src/_ZN3G2S13GetBG1CharPtrEv.cpp
 src/_ZN3G2x18SetBlendBrightnessEPVtts.cpp
-src/_ZN4BgCh19StartDetectingToxicEv.cpp
-src/_ZN4BgCh21StopDetectingOrdinaryEv.cpp
-src/_ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j.c
-src/_ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn.cpp
-src/_ZN5Actor28UpdatePosWithHorzSpeedAndAngEv.c
+src/_ZN5dBgCh19StartDetectingToxicEv.cpp
+src/_ZN5dBgCh21StopDetectingOrdinaryEv.cpp
+src/_ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j.cpp
+src/_ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c.cpp
+src/_ZN8dActor_c28UpdatePosWithHorzSpeedAndAngEv.cpp
 src/_ZN5Sound17ChangeMusicVolumeEj5Fix12IiE.c
 src/_ZN5Timer10ResetTimerEv.cpp
 src/_ZN5Timer10StartTimerEv.cpp
 src/_ZN5Timer7GetTimeEv.cpp
 src/_ZN5Timer9StopTimerEv.cpp
-src/_ZN6Player12Unk_020c9e5cEh.cpp
-src/_ZN6Player18TurnOffToonShadingEj.cpp
 src/_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj.cpp
-src/_ZN6Player7TryGrabER5Actor.cpp
+src/_ZN6Player7TryGrabER8dActor_c.cpp
 src/_ZN7Message6UpdateEv.cpp
 src/_ZN7PathPtr6FromIDEj.cpp
-src/_ZN7PathPtrC1Ev.c
-src/_ZNK10ClsnResult9GetClsnIDEv.cpp
-src/_ZNK12WithMeshClsn10IsOnGroundEv.c
-src/_ZNK12WithMeshClsn13GetWallResultEv.cpp
-src/_ZNK12WithMeshClsn14GetFloorResultEv.cpp
-src/_ZNK12WithMeshClsn8IsOnWallEv.c
-src/_ZNK7PathPtr7GetNodeER7Vector3j.c
+src/_ZN7PathPtrC1Ev.cpp
+src/_ZNK5dBgPi9GetClsnIDEv.cpp
+src/_ZNK10dBgCh_Actr10IsOnGroundEv.cpp
+src/_ZNK10dBgCh_Actr13GetWallResultEv.cpp
+src/_ZNK10dBgCh_Actr14GetFloorResultEv.cpp
+src/_ZNK10dBgCh_Actr8IsOnWallEv.cpp
+src/_ZNK7PathPtr7GetNodeER7Vector3j.cpp
 src/_ZNK7PathPtr8NumNodesEv.cpp
 src/func_020105cc.c
 src/func_0201628c.c
@@ -666,23 +628,11 @@ src/func_0203db3c.c
 src/func_02043f98.c
 src/func_02046bbc.c
 src/func_02054d88.c
-src/func_ov002_020bda48.c
 # func_ov002_020bdb50: HOST COPY at unmatched/Player_ReleaseHeldDispatch.cpp
 # (wired in CMakeLists). The matched C calls func_ov002_020d5cec with no argument
 # and relies on the held object being live in ARM r0; cdecl drops it, so the host
 # copy passes *(char**)(c+0x360) explicitly. See that file's header.
-src/func_ov002_020bf40c.c
-src/func_ov002_020bfec0.c
-src/func_ov002_020c0cbc.c
-src/func_ov002_020c0d90.c
-src/func_ov002_020c133c.c
-src/func_ov002_020c16ec.c
-src/func_ov002_020c2138.cpp
-src/func_ov002_020c2270.cpp
-src/func_ov002_020c5d0c.c
-src/func_ov002_020c5dec.cpp
-src/func_ov002_020c607c.cpp
-# src/func_ov002_020cef84.cpp -- HOST COPY: unmatched/Player_HeadBonk.cpp (slot 28 dispatch remodelled as a C++ virtual so both call sites are thiscall)
+# src/actors/Player.cpp -- HOST COPY: unmatched/Player_HeadBonk.cpp (slot 28 dispatch remodelled as a C++ virtual so both call sites are thiscall)
 src/func_ov002_020d0580.cpp
 src/func_ov002_020d06c0.cpp
 src/func_ov002_020d225c.c
@@ -715,17 +665,23 @@ src/Player_ReleaseHeldActor.c
 src/Vec3_Add.c
 src/Vec3_Asr.c
 src/_Z15ApproachLinear2Rsss.cpp
-src/_ZN10ClsnResultaSERKS_.cpp
-src/_ZN11RaycastLine4Line3SetERK7Vector3S3_.c
+src/_ZN5dBgPiaSERKS_.cpp
+src/_ZN8dM3dGLin3SetERK7Vector3S2_.cpp
 src/_ZN11ShadowModel9InitModelEP9Matrix4x35Fix12IiES3_S3_j.c
-src/_ZN12WithMeshClsn20UpdateExtraContinousEv.cpp
-src/_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii.cpp
-src/_ZN5Actor11UntrackStarERa.c
-src/_ZN5Sound8PlayLongEjjjRK7Vector3j.c
-src/_ZN9ActorBase18MarkForDestructionEv.cpp
+src/_ZN10dBgCh_Actr20UpdateExtraContinousEv.cpp
+# RE-KEYED at the main->port sync (lane SYNC7, the wave-9 fold merge): main's #2712
+# rewrote OAM::Render (arm9 0x02020994, size 0x690) as matching C and renamed the
+# file .cpp -> .c. Same address, new spelling. The C form DEFINES the flat name
+# _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii itself, which is what the port's
+# callers already ask for, so port/hal/reverse_bridges.cpp's terminator-guard
+# forwarder of the same flat name is retired in the same change.
+src/_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii.c
+src/_ZN8dActor_c11UntrackStarERa.cpp
+src/_ZN5Sound8PlayLongEjjjRK7Vector3s.cpp
+src/_ZN7fBase_c18MarkForDestructionEv.cpp
 src/func_0200d858.c
 src/func_02010da4.c
-src/func_02014fa4.c
+src/_ZN5dCc_c6UnlinkEv.cpp
 src/func_0201adfc.c
 src/func_0201b388.c
 src/func_0201b6f8.c
@@ -756,19 +712,11 @@ src/func_02037e68.c
 src/func_02037e84.c
 src/func_02037e90.c
 src/func_0203abd4.c
-src/func_0203ac50.c
+src/_ZN8dM3dGSphD1Ev.cpp
 src/func_0203acbc.c
 src/func_0203ad6c.c
 src/func_02045e2c.c
 src/func_020555a4.c
-src/func_ov002_020be008.cpp
-src/func_ov002_020bf800.cpp
-src/func_ov002_020c1ad8.c
-src/func_ov002_020c1c84.c
-src/func_ov002_020c200c.c
-src/func_ov002_020c7f10.cpp
-src/func_ov002_020cc1f4.c
-src/func_ov002_020ce9c8.c
 src/func_ov002_020d0178.c
 src/func_ov002_020d0d2c.cpp
 src/func_ov002_020d5cec.cpp
@@ -780,22 +728,20 @@ src/func_ov002_020e0478.cpp
 src/func_ov002_020e7218.c
 src/func_ov002_020ec610.c
 src/func_ov002_020ec728.c
-src/func_ov002_020feab8.c
+src/_ZN8dM3dGLinD2Ev.cpp
 src/IsStarCollected.c
 src/SetStarMarker.c
-src/_ZN10SphereClsn10DetectClsnEv.cpp
-src/_ZN10SphereClsn14SetFloorResultERK10ClsnResult.c
-src/_ZN10SphereClsn15SetObjAndSphereERK7Vector35Fix12IiEP5Actor.c
-src/_ZN12WithMeshClsn19ClearAllGroundFlagsEv.cpp
-src/_ZN3G2S13GetBG0CharPtrEv.c
-src/_ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs.c
-src/_ZN5Actor11SpawnNumberERK7Vector3jbtPS_.c
-src/_ZN6Player16St_Shell_CleanupEv.cpp
-src/_ZN6Player18SetNewHatCharacterEjjb.cpp
+src/_ZN12dBgCh_SphCrr10DetectClsnEv.cpp
+src/_ZN12dBgCh_SphCrr14SetFloorResultERK5dBgPi.cpp
+src/_ZN12dBgCh_SphCrr15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c.cpp
+src/_ZN10dBgCh_Actr19ClearAllGroundFlagsEv.cpp
+src/_ZN3G2S13GetBG0CharPtrEv.cpp
+src/_ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs.cpp
+src/_ZN8dActor_c11SpawnNumberERK7Vector3jbtPS_.cpp
 src/_ZN6Player22IsBeingShotOutOfCannonEv.cpp
 src/_ZN7Message7AddCharEc.cpp
-src/_ZNK10ClsnResult6CopyToERS_.c
-src/_ZNK12WithMeshClsn16ShouldUpdatePosYEv.c
+src/_ZNK5dBgPi6CopyToERS_.cpp
+src/_ZNK10dBgCh_Actr16ShouldUpdatePosYEv.cpp
 src/func_0201179c.c
 src/func_020123c8.c
 src/func_02022c80.c
@@ -812,12 +758,6 @@ src/func_0203859c.cpp
 src/func_02039794.c
 src/func_0203abcc.c
 src/func_0203ac00.c
-src/func_ov002_020c19d0.cpp
-src/func_ov002_020c1e44.c
-src/func_ov002_020c1eb4.cpp
-src/func_ov002_020c7ff8.c
-src/func_ov002_020cd28c.c
-src/func_ov002_020cf700.c
 src/func_ov002_020da9d4.cpp
 src/func_ov002_020db54c.cpp
 src/func_ov002_020e7554.c
@@ -828,9 +768,9 @@ src/func_ov002_020eedc0.cpp
 src/func_ov002_020fea4c.c
 src/func_ov002_020fea68.c
 src/LinkSilverStarAndStarMarker.c
-src/_ZN12WithMeshClsn13SetGroundFlagEv.cpp
-src/_ZN5Actor15FindWithActorIDEjPS_.c
-src/_ZNK12WithMeshClsn13GetLimMovFlagEv.c
+src/_ZN10dBgCh_Actr13SetGroundFlagEv.cpp
+src/_ZN8dActor_c15FindWithActorIDEjPS_.cpp
+src/_ZNK10dBgCh_Actr13GetLimMovFlagEv.cpp
 src/func_0200d4b0.c
 src/func_0200d508.c
 src/func_02011af8.c
@@ -849,7 +789,6 @@ src/func_020393cc.c
 src/func_02048528.c
 src/func_020485f0.c
 src/func_02048d80.c
-src/func_ov002_020bd8c0.cpp
 src/func_ov002_020d9c70.c
 src/func_ov002_020da95c.c
 src/func_ov002_020f0918.c
@@ -870,8 +809,13 @@ src/GetStarCameraSetting.c
 src/RunKuppaScript.c
 src/_ZN9Animation4CopyERKS_.cpp
 src/_ZN9ModelAnim4CopyERKS_Pc.cpp
-src/_ZN4BgCh18StopDetectingWaterEv.cpp
-port/unmatched/func_ov002_020bfa74.c
+src/_ZN5dBgCh18StopDetectingWaterEv.cpp
+# RETIRED at SYNC6, on the file's own retirement condition. Its header says
+# "Adopted from the banked near-miss draft ... Semantics only; retires when the
+# function matches for real": main's src/actors/Player.cpp defines
+# func_ov002_020bfa74 now, and the two collided (one LNK2005 row in
+# build_s2.log). The matched body is the one kept.
+#port/unmatched/func_ov002_020bfa74.c
 src/ProcessKuppaScript.cpp
 src/EndKuppaScript.cpp
 src/LoadLevelNoReturn.c
@@ -903,19 +847,19 @@ src/func_02011c8c.c
 # (run lvled, lane intro-cutscene)
 # src/func_ov002_020f7d74.cpp
 src/SetNextStar.c
-src/_ZN5Scene20SetAndStopColorFaderEv.c
-src/_ZN5Sound6Player19SetPlayableSeqCountEii.c
-src/_ZN8SaveData19IsCharacterUnlockedEj.c
+src/_ZN8dScene_c20SetAndStopColorFaderEv.cpp
+src/_ZN5Sound6Player19SetPlayableSeqCountEii.cpp
+src/_ZN8SaveData19IsCharacterUnlockedEj.cpp
 src/func_02011d5c.c
-src/_ZN5Scene9SetFadersEP15FaderBrightness.cpp
+src/_ZN8dScene_c9SetFadersEP15FaderBrightness.cpp
 src/func_02048e54.c
 src/func_02048e74.c
 src/func_02048e94.c
 src/func_02049c48.c
 src/func_0205a8c4.c
-src/_ZN3OAM11GetObjWidthEii.c
-src/_ZN3OAM12GetObjHeightEii.c
-src/_ZN3OAM16LoadAffineParamsEP7OamAttrPiP9Matrix2x2.c
+src/_ZN3OAM11GetObjWidthEii.cpp
+src/_ZN3OAM12GetObjHeightEii.cpp
+src/_ZN3OAM16LoadAffineParamsEP7OamAttrPiP9Matrix2x2.cpp
 src/_ZN6Player12St_Fall_InitEv.cpp
 src/_ZN6Player12St_Fall_MainEv.cpp
 src/_ZN6Player12St_Jump_InitEv.cpp
@@ -924,8 +868,6 @@ src/_ZN6Player20St_StomachSlide_MainEv.cpp
 src/func_0200d544.c
 src/func_ov002_020dba0c.c
 src/func_ov002_020dc174.c
-src/func_ov002_020bf90c.c
-src/func_ov002_020c0688.cpp
 src/func_ov002_020dc560.c
 src/func_ov002_020dd2f4.c
 src/func_ov002_020e0ccc.cpp
@@ -941,22 +883,17 @@ src/func_ov002_020e200c.c
 src/func_ov002_020e1e70.c
 src/func_ov002_020e1c20.c
 src/func_02012120.c
-src/func_ov002_020bf27c.c
 src/func_ov002_020e2be4.cpp
 src/func_ov002_020e2b6c.cpp
-src/func_ov002_020bf2d8.c
 src/func_ov002_020e2ad0.c
 src/func_ov002_020e25f0.c
 src/func_ov002_020eeca8.cpp
 src/_ZN6Player12St_Land_InitEv.cpp
 src/_ZN6Player12St_Land_MainEv.cpp
-src/_ZN12MeshCollider7SetFileEP8KCL_FileR10CLPS_Block.cpp
-src/_ZN12MeshCollider8LoadFileER13SharedFilePtr.cpp
-src/_ZN12MeshColliderC1Ev.c
-src/_ZN16MeshColliderBase6EnableEP5Actor.cpp
-src/func_ov002_020bf9d4.cpp
-src/func_ov002_020c06fc.c
-src/func_ov002_020c2f64.c
+src/_ZN7dBgW_Kc7SetFileEP8KCL_FileR10CLPS_Block.cpp
+src/_ZN7dBgW_Kc8LoadFileER13SharedFilePtr.cpp
+src/_ZN7dBgW_KcC1Ev.cpp
+src/_ZN4dBgW6EnableEP8dActor_c.cpp
 src/func_ov002_020e04a4.c
 src/func_ov002_020e0a64.c
 src/func_ov002_020e25d4.cpp
@@ -979,14 +916,10 @@ src/_ZN6Player13St_Crawl_InitEv.cpp
 src/_ZN6Player13St_Crawl_MainEv.cpp
 src/_ZN6Player14St_Crouch_InitEv.cpp
 src/_ZN6Player14St_Crouch_MainEv.cpp
-src/_ZN6Player14St_OnWall_InitEv.cpp
-src/_ZN6Player14St_OnWall_MainEv.cpp
 src/_ZN6Player16St_LongJump_InitEv.cpp
 src/_ZN6Player16St_LongJump_MainEv.cpp
 src/_ZN6Player16St_SideFlip_InitEv.cpp
 src/_ZN6Player16St_SideFlip_MainEv.cpp
-src/_ZN6Player17St_Headstand_InitEv.cpp
-src/_ZN6Player17St_Headstand_MainEv.cpp
 src/_ZN6Player17St_PunchKick_InitEv.cpp
 src/_ZN6Player17St_PunchKick_MainEv.cpp
 src/_ZN6Player17St_SlideKick_InitEv.cpp
@@ -1002,7 +935,6 @@ src/func_ov002_020d1164.cpp
 src/func_ov002_020d12b0.cpp
 src/func_ov002_020dc020.c
 src/func_ov002_020e2ba8.cpp
-src/func_ov002_020cc05c.c
 src/func_ov002_020dbaec.c
 src/func_ov002_020dd5ec.c
 src/func_ov002_020eee3c.cpp
@@ -1011,7 +943,6 @@ src/func_ov002_020dd908.c
 src/func_ov002_020ef2a4.cpp
 src/func_0200d580.c
 src/func_ov002_020d8a50.c
-src/_ZN6Player15IsCollectingCapEv.cpp
 src/func_0200cb58.c
 src/func_ov002_020d8854.cpp
 src/func_ov002_020dbbc0.c
@@ -1025,29 +956,20 @@ src/func_ov002_020d8838.c
 src/_ZN6Player15St_Balloon_MainEv.cpp
 src/_ZN6Player15St_Balloon_InitEv.cpp
 src/_ZN6Player18St_Balloon_CleanupEv.cpp
-src/_ZN6Player24St_BowserEarthquake_MainEv.cpp
-src/_ZN6Player24St_BowserEarthquake_InitEv.cpp
 src/_ZN6Player16St_BurnFire_MainEv.cpp
 src/_ZN6Player16St_BurnFire_InitEv.cpp
 src/_ZN6Player17St_ButtSlide_MainEv.cpp
 src/_ZN6Player17St_ButtSlide_InitEv.cpp
-src/_ZN6Player18St_CameraZoom_MainEv.cpp
-src/_ZN6Player18St_CameraZoom_InitEv.cpp
-src/_ZN6Player21St_CameraZoom_CleanupEv.cpp
 src/_ZN6Player14St_Cannon_MainEv.cpp
 src/_ZN6Player14St_Cannon_InitEv.cpp
 src/_ZN6Player17St_Cannon_CleanupEv.cpp
-src/_ZN6Player20St_CeilingGrate_MainEv.cpp
-src/_ZN6Player20St_CeilingGrate_InitEv.cpp
 src/_ZN6Player19St_CrazedCrate_MainEv.cpp
 src/_ZN6Player19St_CrazedCrate_InitEv.cpp
 src/_ZN6Player22St_CrazedCrate_CleanupEv.cpp
-src/_ZN6Player16St_DebugFly_MainEv.cpp
-src/_ZN6Player16St_DebugFly_InitEv.cpp
 src/_ZN6Player18St_DizzyStars_MainEv.cpp
 src/_ZN6Player18St_DizzyStars_InitEv.cpp
 src/_ZN6Player21St_DizzyStars_CleanupEv.cpp
-src/_ZN6Player19St_Electrocute_MainEv.c
+src/_ZN6Player19St_Electrocute_MainEv.cpp
 src/_ZN6Player19St_Electrocute_InitEv.cpp
 src/_ZN6Player11St_Fly_MainEv.cpp
 src/_ZN6Player11St_Fly_InitEv.cpp
@@ -1065,11 +987,9 @@ src/_ZN6Player20St_HoldLight_CleanupEv.cpp
 src/_ZN6Player12St_Hurt_MainEv.cpp
 src/_ZN6Player12St_Hurt_InitEv.cpp
 src/_ZN6Player15St_Hurt_CleanupEv.cpp
-src/_ZN6Player17St_HurtWater_MainEv.cpp
-src/_ZN6Player17St_HurtWater_InitEv.cpp
 src/_ZN6Player20St_InYoshiMouth_MainEv.cpp
 src/_ZN6Player20St_InYoshiMouth_InitEv.cpp
-src/func_ov002_020d6084.c
+src/actors/dScMgBomroom_c.cpp
 src/_ZN6Player21St_JumpQuicksand_MainEv.cpp
 src/_ZN6Player21St_JumpQuicksand_InitEv.cpp
 src/_ZN6Player17St_LedgeGrab_MainEv.cpp
@@ -1087,34 +1007,26 @@ src/_ZN6Player20St_LedgeHang_CleanupEv.cpp
 # are the wall-still-there and shimmy-forward raycast probes. The fourth,
 # func_ov002_020cfea4, has no source anywhere -- port/unmatched.
 src/func_ov002_020d0948.c
-src/func_ov002_020cfaf0.cpp
 # func_ov002_020cfbdc is NOT here: decl_common.h declares it taking void* and
 # its own TU defines it taking char*, which was two symbols while the header
 # was C++-mangled and is one extern "C" overload since main's sweep. It goes
 # through hostgen (GATE10_SYMS in CMakeLists.txt), which shadows the header's
 # declaration for that one name.
-port/unmatched/func_ov002_020cfea4.cpp
-src/_ZN6Player24St_MetalWaterGround_MainEv.cpp
-src/_ZN6Player24St_MetalWaterGround_InitEv.cpp
-src/_ZN6Player23St_MetalWaterWater_MainEv.cpp
-src/_ZN6Player23St_MetalWaterWater_InitEv.cpp
-src/_ZN6Player12St_Null_MainEv.cpp
-src/_ZN6Player15St_Null_CleanupEv.cpp
-src/func_ov002_020cac30.c
-src/_ZN6Player21St_OpeningWakeUp_MainEv.cpp
-src/_ZN6Player21St_OpeningWakeUp_InitEv.cpp
+# RETIRED at the main->port sync (lane SYNC7, wave 9): the named trap has a
+# body now. main recovered func_ov002_020cfea4 and gave it its own delink
+# block, ov002 .text 0x020cfea4..0x020d0178, which is exactly the 0x2d4 bytes
+# the trap's banner names, so the ROM's own code answers the name and the
+# unconditional 0 this file returned is gone with it. The trap is the second
+# way out of the ledge hang and into the climb, so returning 0 for it was a
+# live behaviour difference, not a placeholder for an unreachable path.
+#port/unmatched/func_ov002_020cfea4.cpp
+src/func_ov002_020cfea4.cpp
 src/_ZN6Player11St_Owl_MainEv.cpp
 src/_ZN6Player11St_Owl_InitEv.cpp
 src/_ZN6Player14St_Owl_CleanupEv.cpp
-src/_ZN6Player15St_Respawn_MainEv.cpp
-src/_ZN6Player15St_Respawn_InitEv.cpp
-src/_ZN6Player13St_Shell_MainEv.cpp
-src/_ZN6Player13St_Shell_InitEv.cpp
-src/_ZN6Player12St_Spin_MainEv.c
+src/_ZN6Player12St_Spin_MainEv.cpp
 src/_ZN6Player12St_Spin_InitEv.cpp
 src/_ZN6Player15St_Spin_CleanupEv.cpp
-src/_ZN6Player21St_StuckInGround_MainEv.cpp
-src/_ZN6Player21St_StuckInGround_InitEv.cpp
 src/_ZN6Player15St_Swallow_MainEv.cpp
 src/_ZN6Player15St_Swallow_InitEv.cpp
 src/_ZN6Player17St_SweepKick_MainEv.cpp
@@ -1123,13 +1035,6 @@ src/_ZN6Player17St_SweepKick_InitEv.cpp
 # CMakeLists). The matched C calls Player::GetHealth() with no argument and relies
 # on `this` being live in ARM r0; cdecl drops it, so the host copy passes `this`
 # explicitly. This is the JRB SIG-SWIM crash. See that file's header.
-src/_ZN6Player12St_Swim_InitEv.cpp
-src/_ZN6Player15St_Swim_CleanupEv.cpp
-src/_ZN6Player12St_Talk_MainEv.cpp
-src/_ZN6Player12St_Talk_InitEv.cpp
-src/_ZN6Player15St_Talk_CleanupEv.cpp
-src/_ZN6Player16St_Teleport_MainEv.cpp
-src/_ZN6Player16St_Teleport_InitEv.cpp
 src/_ZN6Player13St_Throw_MainEv.cpp
 src/_ZN6Player13St_Throw_InitEv.cpp
 src/_ZN6Player14St_Thrown_MainEv.cpp
@@ -1150,7 +1055,7 @@ src/_ZN6Player21St_WaitQuicksand_InitEv.cpp
 # hal_call_state_fn, following St_NoControl_Init (the table's ptr words are all
 # zero, so the virtual branch is dead and row[0] would be a DS vtable byte
 # offset). Was port/unmatched/Player_St_WallJump_Main.cpp.
-src/func_ov002_020e17f8.c
+src/func_ov006_020e17f8.cpp
 src/_ZN6Player17St_WallSlide_MainEv.cpp
 src/_ZN6Player17St_WallSlide_InitEv.cpp
 src/_ZN6Player17St_WindCarry_MainEv.cpp
@@ -1167,13 +1072,6 @@ src/func_0200d89c.c
 # src/func_0201fc88.c -- dropped: its (void) form drops the object-message id on
 #   the host ride-through; hal/cxx_aliases.cpp carries a veneer that spells it
 #   through to ObjectMessageIDToActualMessageID (the sign-box open path).
-src/func_ov002_020beb38.c
-src/func_ov002_020c47f4.cpp
-src/func_ov002_020cc660.c
-src/func_ov002_020cd190.c
-src/func_ov002_020cf20c.cpp
-src/func_ov002_020cf2f8.c
-src/func_ov002_020cf384.c
 src/func_ov002_020d1f78.c
 src/func_ov002_020d3498.c
 src/func_ov002_020d5ab4.c
@@ -1182,11 +1080,10 @@ src/func_ov002_020d9dcc.c
 src/func_ov002_020daa74.cpp
 src/func_ov002_020dcafc.c
 src/func_ov002_020e0f38.cpp
-src/func_ov002_020e3078.c
 src/func_ov100_02144fcc.cpp
 src/GetTeleportDestObj.c
 src/Vec3_MulScalarInPlace.c
-src/_ZN5Sound22LoadAndSetMusic_Layer1Ei.c
+src/_ZN5Sound22LoadAndSetMusic_Layer1Ei.cpp
 src/_ZN6Player9DropActorEv.cpp
 src/func_0200cf40.c
 src/func_0200d678.c
@@ -1195,25 +1092,6 @@ src/func_0200d7e0.c
 src/func_02012194.c
 src/func_02012694.cpp
 src/func_02022d44.c
-src/func_ov002_020bd928.cpp
-src/func_ov002_020c5444.cpp
-src/func_ov002_020cac60.c
-src/func_ov002_020cae10.c
-src/func_ov002_020cd218.cpp
-src/func_ov002_020cd2c4.c
-src/func_ov002_020cd308.c
-src/func_ov002_020cd364.c
-src/func_ov002_020cd39c.c
-src/func_ov002_020cd3e0.cpp
-src/func_ov002_020cd550.c
-src/func_ov002_020cd71c.c
-src/func_ov002_020ce324.c
-src/func_ov002_020ce5f8.c
-src/func_ov002_020ceaf4.c
-src/func_ov002_020ceb7c.c
-src/func_ov002_020cec2c.c
-src/func_ov002_020cedb0.c
-src/func_ov002_020cede0.cpp
 src/func_ov002_020d5ed0.cpp
 src/func_ov002_020d6998.cpp
 src/func_ov002_020d71ec.c
@@ -1230,7 +1108,6 @@ src/func_ov002_020df8f0.c
 # pointer-to-member over data_ov002_02110a5c; host copy in
 # unmatched/YoshiEgg_StateDispatch.cpp (the MSVC build of this TU called a raw
 # DS word). Nothing dispatched it before the egg was seated.
-src/func_ov002_020c5dec.cpp
 src/_ZN5Sound7PlaySubEjjj5Fix12IiEb.cpp
 src/func_02053274.c
 src/func_ov100_02145014.c
@@ -1240,14 +1117,14 @@ src/GiveVsStars.c
 src/ObjectMessageIDToActualMessageID.c
 src/Vec3_LslInPlace.c
 src/Vec3_MulScalar.c
-src/_ZN5Actor11LandingDustEb.c
+src/_ZN8dActor_c11LandingDustEb.cpp
 # Sound front doors. These were held out while data_020a5bb8 was null:
 # Sound::Play opens with func_02050cdc(), which walks the sound player
 # through that root, so the first Play in a level took the process with it
 # (St_Swim_Main's underwater loop found it). hal/sdat/sdat.cpp seats a real
 # parsed SDAT there and hal/sdat/consumer.cpp hosts the ARM7 behind the
 # command queue, so all four are back on their matched src.
-src/_ZN5Sound4PlayEjjRK7Vector3.c
+src/_ZN5Sound4PlayEjjRK7Vector3.cpp
 src/_ZN5Sound9PlayBank0EjRK7Vector3.cpp
 src/_ZN5Sound13PlayCharVoiceEjjRK7Vector3.cpp
 src/_ZN5Sound22StopLoadedMusic_Layer1Ej.cpp
@@ -1325,9 +1202,6 @@ src/func_02013524.c
 # are both already linked.
 src/func_02012d64.c
 src/func_020229f0.c
-src/func_ov002_020bea7c.c
-src/func_ov002_020cd448.cpp
-src/func_ov002_020ceb54.c
 # func_ov002_020d6c60 goes through hostgen for the same reason as 020cfbdc:
 # decl_common.h declares it (char*, void*) and its TU defines it (char*,
 # char*), which is one extern "C" overload since main's sweep.
@@ -1340,15 +1214,15 @@ src/_ZN6Player21St_YoshiPower_CleanupEv.cpp
 src/func_ov002_020d5f34.cpp
 src/HideArea.c
 src/ShowArea.c
-src/_ZN5Actor17HugeLandingDustAtER7Vector3b.cpp
-src/_ZN5Actor4NextEPKS_.cpp
-src/_ZN7Clipper13Func_020156DCEv.cpp
+src/_ZN8dActor_c17HugeLandingDustAtER7Vector3b.cpp
+src/_ZN8dActor_c4NextEPKS_.cpp
+src/_ZN7Clipper13Func_020156DCEitii.cpp
 src/func_0200897c.c
 src/func_0200928c.c
 src/func_02048720.c
 src/func_02048908.c
 src/func_0204f8cc.c
-src/_ZN7Clipper13Func_0201559CEv.c
+src/_ZN7Clipper13Func_0201559CEv.cpp
 src/func_02035468.c
 src/CrossVec3.c
 src/_ZN6Player12St_Dive_InitEv.cpp
@@ -1356,62 +1230,27 @@ src/_ZN6Player17St_WaterJump_InitEv.cpp
 src/_ZN6Player21St_HeadstandJump_InitEv.cpp
 src/_ZN6Player16St_BackFlip_InitEv.cpp
 src/_ZN6Player24St_SlideKickRecover_InitEv.cpp
-src/_ZN6Player15St_DeadPit_MainEv.cpp
-src/_ZN6Player15St_DeadPit_InitEv.cpp
-src/_ZN6Player15St_DeadHit_MainEv.cpp
-src/_ZN6Player15St_DeadHit_InitEv.cpp
-src/_ZN6Player14St_Squish_MainEv.cpp
-src/_ZN6Player14St_Squish_InitEv.cpp
-src/_ZN6Player17St_Squish_CleanupEv.cpp
 src/_ZN6Player16St_BurnLava_MainEv.cpp
 src/_ZN6Player16St_BurnLava_InitEv.cpp
 src/KillPlayer.c
 src/SetNextLevel.c
-src/_ZN5Scene14StartSceneFadeEjjt.c
-src/func_ov002_020c0108.c
-src/func_ov002_020c647c.cpp
-src/func_ov002_020c6538.cpp
-src/func_ov002_020c6908.cpp
-src/func_ov002_020c9718.c
+src/_ZN8dScene_c14StartSceneFadeEjjt.cpp
 src/HitDeathPlane.c
 src/FUN_020299f4.cpp
-src/_ZN5Scene15SetSceneToSpawnEjj.c
-src/_ZN6Player17St_NoControl_MainEv.cpp
+src/_ZN8dScene_c15SetSceneToSpawnEjj.cpp
 # _ZN6Player17St_NoControl_InitEv RETIRED to its matched TU via hostgen's
 # CALL_STATE_FN table (GATE10_SYMS): both branches route through
 # hal_call_state_fn (the table's ptr words are all zero, so the virtual branch
 # is dead and m->adj would be a DS vtable byte offset). Was
 # port/unmatched/Player_St_NoControl_Init.cpp.
-src/_ZN6Player20St_NoControl_CleanupEv.cpp
-src/func_ov002_020c965c.c
-src/func_ov002_020c94a4.c
-src/func_ov002_020c92fc.c
-src/func_ov002_020c9288.cpp
-src/func_ov002_020c924c.c
-src/func_ov002_020c91bc.c
-src/func_ov002_020c9128.cpp
-src/func_ov002_020c8cb0.cpp
 # the door-walk ENTRY (NoControl kind 7): plays the per-side door anim from
 # data_ov002_020ff118 and advances the step so 020c8cb0 above runs the walk.
 # Unwired until 2026-08-08, which is why doors zoomed and never warped.
-src/func_ov002_020c9c4c.c
-src/func_ov002_020c904c.c
-src/func_ov002_020c8f80.cpp
-src/func_ov002_020c8f0c.cpp
-src/func_ov002_020c8b54.c
-src/func_ov002_020c8a4c.cpp
-src/func_ov002_020c8d14.c
-src/func_ov002_020c8b78.cpp
-src/func_ov002_020c8714.c
-src/func_ov002_020c8540.c
-src/func_ov002_020c84b0.c
 src/func_0200ee68.c
-src/func_ov002_020ca108.cpp
 src/func_ov002_020e7090.cpp
 src/EnterBigBoosHaunt.c
 src/ExitLevel.c
 src/Math_Function_0203b14c.c
-src/_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj.cpp
 src/CollectStarInCurLevel.c
 src/StartExitCharacterWipe.c
 # ShowMessage2 is BACK IN (2026-08-08, the dialogue-pipeline session). It was
@@ -1422,7 +1261,6 @@ src/StartExitCharacterWipe.c
 # walk_window rasters the box over the 3D frame. Its box setup func_0201f32c is
 # ordinary matched src writing the 2D engine registers; it does not run off the
 # map. The stub is gone, so THIS matched symbol links.
-src/_ZN6Player12ShowMessage2ER9ActorBasejPK7Vector3jj.cpp
 # Message::UpdateWindow -- the box open/close animation and its WIN0/DISPCNT
 # register writes. Matched src, but was in no slice; the pump calls it, so it
 # links here.
@@ -1438,7 +1276,6 @@ src/_ZN7Message12UpdateWindowEv.cpp
 # 8); all nine State records it reads are in the ov002 mount; the two controller
 # globals data_020a0e40/data_0209f49e are backed in hal/actor_vtables.cpp. The
 # stub is gone, so THIS matched symbol links.
-src/_ZN6Player9StartTalkER9ActorBaseb.cpp
 src/func_ov002_020e6fbc.cpp
 src/func_ov002_020e9464.c
 src/CollectStarInLevel.c
@@ -1462,26 +1299,9 @@ src/CollectStar.c
 port/unmatched/CylinderClsn_Process.cpp
 src/func_02014f44.c
 src/func_02014f5c.c
-src/func_ov002_020caf98.cpp
 
 # the rest of the NoControl kind-entry family (the door's kind 7 came in
 # with the warp; these are the other nineteen kinds' entries -- pipes,
 # cutscene holds, talk/key/star doors -- wired in player_states.inc)
-src/func_ov002_020c9de4.c
-src/func_ov002_020c9d68.cpp
-src/func_ov002_020c9d1c.c
-src/func_ov002_020c9cc0.c
-src/func_ov002_020c9c00.c
-src/func_ov002_020c9b7c.c
-src/func_ov002_020c9b5c.c
-src/func_ov002_020c9ac0.cpp
-src/func_ov002_020c9b10.c
-src/func_ov002_020c9a04.c
-src/func_ov002_020c9998.c
-src/func_ov002_020c990c.c
-src/func_ov002_020c98a4.cpp
-src/func_ov002_020c9840.cpp
-src/func_ov002_020c97f8.cpp
-src/func_ov002_020c97e0.c
 # kind 0x10 (white/star door) swings the camera to state 0x0209b118
 src/func_0200d148.c

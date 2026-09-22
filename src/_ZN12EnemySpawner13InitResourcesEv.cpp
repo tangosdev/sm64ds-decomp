@@ -10,9 +10,9 @@ extern int data_ov002_0210d9e0;
 
 int EnemySpawner::InitResources()
 {
-    unk_0d4 = 0xce;
-    unk_0dc = unk_090 & 0x1f;
-    unk_0d8 = _ZN5Event6GetBitEj(unk_0dc);
+    mActorToSpawn = 0xce;
+    mEventBit = mAngleZ & 0x1f;
+    mPreviousEventBit = _ZN5Event6GetBitEj(mEventBit);
     _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9e0);
     return 1;
 }

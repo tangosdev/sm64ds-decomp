@@ -5,7 +5,7 @@
 # Level 6's census printed id 39 skipped, x1. Resolved the ROM's own way:
 # ACTOR_SPAWN_TABLE entry [39] (arm9 0x02090864 + 39*4) relocates to the
 # SpawnInfo at 0x02137484, and the overlay whose symbols name that address is
-# ov095 -- SeesawBob_SpawnInfo, +4 halfword reads 39. ov095 is one of the seven
+# ov095 -- g_profile_BOMB_SEESAW, +4 halfword reads 39. ov095 is one of the seven
 # actor overlays level 6 loads (its own base 0x02135700). The overlay data is
 # a FRESH per-symbol mount (port/ov095_syms.txt, added to PORT_ACTOR_OVERLAYS).
 #
@@ -26,10 +26,10 @@
 # from hal/actor_overlays.cpp. The HAL seam is hal/actor_classes_bob_world.cpp
 # (the SeesawBob section) and its vtable fill.
 #
-# SeesawBob_Spawn is the matched src: it installs _ZTV9SeesawBob (the class
+# daObjSeesaw_c_classInit_BOMB_SEESAW is the matched src: it installs _ZTV9SeesawBob (the class
 # name, not the RTTI name) with a SINGLE store, so it needs no host copy -- the
 # double-vtable-store misorder that forced ShutterBob's host copy is absent here.
-src/SeesawBob_Spawn.c
+src/d_a_obj_seesaw_bomb_seesaw.c
 src/_ZN9SeesawBob13InitResourcesEv.cpp
 src/_ZN9SeesawBob16CleanupResourcesEv.cpp
 src/_ZN9SeesawBob8BehaviorEv.cpp
@@ -44,13 +44,14 @@ src/_ZN9SeesawBob8BehaviorEv.cpp
 # with them, so the ONE compiled body serves every one of their dispatches; leaving
 # it in makes SeesawBob's own vtable call fault. Host copy in
 # port/unmatched/ModelAnim_Renders.cpp, dispatched by C name from the vtable fill.
-src/_ZN9SeesawBobD1Ev.c
-src/_ZN9SeesawBobD0Ev.c
+src/_ZN9SeesawBobD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN9SeesawBobD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN9SeesawBobD0Ev.cpp
 src/func_ov095_021358cc.c
 src/func_ov095_0213597c.c
 src/func_ov095_02135e90.c
 src/func_ov095_02135cdc.c
 src/func_ov095_0213579c.c
-src/func_ov095_021357d8.c
+src/_ZN9SeesawBob15OnGroundPoundedER8dActor_c.cpp
 src/__sinit_ov095_02136fe0.c
 src/__sinit_ov095_0213722c.c

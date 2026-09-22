@@ -688,10 +688,10 @@ THE CAUSE. SM64DS_MTX_LOG's call stacks, resolved through walk_window.map:
 
   363, EVERY FRAME   port_scene_run -> port_actor_render -> func_02043fdc
                      -> port_dispatch_guarded -> func_0204322c -> mem_render
-                     -> func_ov006_020f73f4 -> Camera_UpdateMatrices
+                     -> _ZN14dScMgMemory2_c6RenderEv -> Camera_UpdateMatrices
                      -> G3i_PerspectiveW_ -> gx_write_port
   361, ONCE AT INIT  port_scene_run -> Scene::SpawnIfNecessary -> ...
-                     -> cup_init -> func_ov006_020e0308 -> Camera_UpdateMatrices
+                     -> cup_init -> _ZN10dScMgCup_c13InitResourcesEv -> Camera_UpdateMatrices
 
 MTX_LOAD_4x4 runs 1 per frame on 363 and 0 per frame on 361 after boot. 361
 programs its camera once, which for a fixed-camera shell game is the ROM's
@@ -763,7 +763,7 @@ march is running: t374 top=3 sub=2, all forty bombs at state 6 substate 4.
    OAM::RenderSub at y for the bottom, the RenderOamBothScreens shape.
 
 2. THEY ARE NOT IN ENGINE A's OAM IN THAT REPRO, AND THE SEED IS WHY.
-   src/func_ov006_020d7524.c is the bomb renderer, reached from Render slot 9,
+   src/actors/dScMgBomroom_c.cpp is the bomb renderer, reached from Render slot 9,
    and it opens `if (self->e[i].b699 == 0) continue;` -- byte +0x4699. The ROM
    sets that byte in func_ov006_020d8324, the spawn-delay state, which counts
    +0x4690 down and then writes +0x4699 = 1, +0x4694 = 1, +0x4697 = 1.

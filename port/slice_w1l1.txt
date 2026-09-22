@@ -96,27 +96,30 @@
 # ---------------------------------------------------------------------------
 # THE 32 WITH A LIVE HOLDER, AND WHY EACH STAYS STRIPPED.
 #
-# (1) QUARANTINED ACTOR, 9 TUs. The whole Mr Blizzard family
+# (1) QUARANTINED ACTOR, 9 TUs. NO LONGER TRUE -- KEPT AS THE RECORD.
+#     The whole Mr Blizzard family
 #     (_ZN10MrBlizzard{13InitResourcesEv,16CleanupResourcesEv,6RenderEv,
-#     16OnPendingDestroyEv,D1Ev,D0Ev}, MrBlizzard_Spawn, func_ov081_02125eb8,
+#     16OnPendingDestroyEv,D1Ev,D0Ev}, daSnowman_c_classInit, _ZN10MrBlizzard16OnAimedAtWithEggEv,
 #     func_ov081_021261b8, plus func_ov081_021243cc and func_ov081_021254d8 in
 #     the stranded set) is held by _ZTV11daSnowman_c, whose slots the ROM fills
-#     with exactly these bodies. The port already has the fill that seats them,
-#     hal/actor_classes_ov081.cpp's hal_fill_mr_blizzard_vtable. Nothing calls
-#     it: hal/actor_classes.inc:957 says "MR_BLIZZARD (223) is NOT registered
-#     here" over a long note about an unresolved callee-saved register
-#     violation, ending "223 stays out: it cannot meet the zero-quarantine
-#     bar". The fill function is absent from the map, so _ZTV10MrBlizzard is
-#     all zeros at runtime, by design. Seating this family from another file
-#     would be a second writer for a table whose owner deliberately parked it,
-#     and would put a known-faulting actor back in the image. The honest fix is
-#     the register-state investigation actor_classes.inc asks for, not a seat.
+#     with exactly these bodies. The port already had the fill that seats them,
+#     hal/actor_classes_ov081.cpp's hal_fill_mr_blizzard_vtable, and for six
+#     weeks nothing called it, because hal/actor_classes.inc's gate-192 note
+#     said "MR_BLIZZARD (223) is NOT registered here" over an unresolved
+#     callee-saved register violation. That violation did not exist: the seam
+#     was the class's own pointer-to-member state dispatch (receiver in r0 on
+#     the ROM, ecx on the host, flat f(self) cells reading [esp+4]), and it was
+#     cured by the host copies port/unmatched/MrBlizzard_StateDispatch.cpp and
+#     port/unmatched/MrBlizzard_Behavior.cpp. 223 is registered now, the fill
+#     is called, and this family links with the rest of the trio. The paragraph
+#     stays so the "stays stripped" count above is readable against its own
+#     date; it is not a reason any more.
 #
 # (2) ROM SLOT 17, THE DELETING DESTRUCTOR THE PORT TRAPS ON PURPOSE.
 #     _ZN4CoinD0Ev            from:0x02108830 -> _ZTV8daCoin_c+0x44, slot 17
-#     _ZN4TrapD0Ev            from:0x02112bec -> _ZTV4Trap+0x44, slot 17
-#     _ZN14KnockDownPlankD0Ev from:0x021145d0 -> _ZTV14KnockDownPlank+0x44
-#     func_ov015_021111d0     from:0x0211189c -> _ZTV5Cloud+0x44, slot 17
+#     _ZN9LightBeamD0Ev            from:0x02112bec -> _ZTV4Trap+0x44, slot 17
+#     _ZN19daObjBk_Dossunbar_cD0Ev from:0x021145d0 -> _ZTV19daObjBk_Dossunbar_c+0x44
+#     _ZN18daObjBkBillboard_cD0Ev     from:0x0211189c -> _ZTV5Cloud+0x44, slot 17
 #     The port's convention is stated in three separate fills in identical
 #     terms (hal/actor_classes_bob_world.cpp's bw_trap17,
 #     hal/actor_classes.cpp's ac_trap17, hal/actor_classes_wf.cpp's wf_trap17):
@@ -128,7 +131,7 @@
 #     made for _ZN6PlayerD0Ev and lane l3 made for _ZN11ShadowModelD0Ev.
 #     Trap is worse than the others and would corrupt rather than merely
 #     double-free: hal/actor_classes.cpp's tr_d1 note records that the ROM
-#     shares _ZN4TrapD0Ev across two layouts and the body fits LIGHT_BEAM's
+#     shares _ZN9LightBeamD0Ev across two layouts and the body fits LIGHT_BEAM's
 #     only, so on a 944-byte TRAP its 0xd4/0x124 chain smashes Platform's
 #     fields. That file already chose a bounded leak over that corruption.
 #
@@ -137,7 +140,7 @@
 #       slot 1, and hal/actor_classes_bob_world.cpp writes both index 1 and
 #       index 2 there to carry the MSVC and ROM numberings at once. Lane l3
 #       ruled this one already and the reading holds.
-#     _ZN8CapEnemyD2Ev and _ZN8CapEnemyD0Ev are from:0x021082c4 and 0x021082c8
+#     _ZN11dCapEnemy_cD1Ev and _ZN11dCapEnemy_cD0Ev are from:0x021082c4 and 0x021082c8
 #       into data_ov002_02108284+0x40 and +0x44. That symbol is raw ov002
 #       romdata (port/ov002_syms.txt), aliased to _ZTV11dCapEnemy_c by
 #       hal/bob_enemy_bridges.cpp. Its words are DS addresses, so it is not a
@@ -145,7 +148,7 @@
 #       individually instead. There is no slot here to seat.
 #
 # (4) A VENEER THE PORT DELIBERATELY BYPASSES, 1 TU.
-#     func_ov079_02123b54 is from:0x02127cf8 -> _ZTV5Whomp+0x78, slot 30, and
+#     _ZN5Whomp25OnAimedAtWithEggReturnVecEv is from:0x02127cf8 -> _ZTV5Whomp+0x78, slot 30, and
 #     hal/actor_classes_wf_enemy.cpp dispatches that slot to
 #     func_ov079_02123d4c instead, on purpose. The ROM body is the
 #     ldr ip,[pc] / bx ip veneer; its C transcription is void(void), drops
@@ -166,13 +169,13 @@
 #         return 1 only because ShadowModel::DoSetFile was null, and l3 has
 #         since seated DoSetFile at _ZTV11ShadowModel[1], so the stub's stated
 #         reason may already be spent.
-#       _ZNK10ClsnResult9GetClsnIDEv       27 callers, 22 in the image. Host
+#       _ZNK5dBgPi9GetClsnIDEv       27 callers, 22 in the image. Host
 #         body hal/reverse_bridges.cpp, which also warns that forwarding it
 #         back to the method made a two-instruction jmp cycle under /O2.
-#       _ZNK12WithMeshClsn12TouchesWaterEv 7 callers, 5 in the image. Host body
+#       _ZNK10dBgCh_Actr12TouchesWaterEv 7 callers, 5 in the image. Host body
 #         hal/actor_class_faces.cpp.
-#       _ZN8Platform20UpdateKillByMegaCharEsss5Fix12IiE  7 callers, 5 live.
-#       _ZN9ActorBase7ProcessEMS_FivEMS_FbvEMS_FvjE  4 callers, all 4 live, and
+#       _ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE  7 callers, 5 live.
+#       _ZN7fBase_c7ProcessEMS_FivEMS_FbvEMS_FvjE  4 callers, all 4 live, and
 #         all four are the func_0204322c/02043288/020432e4/0204335c group the
 #         port already host-copies in port/unmatched for the mwcc
 #         pointer-to-member stride. This one is a documented host-ABI

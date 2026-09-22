@@ -7,7 +7,7 @@
  * hal/scene_mg_faces.cpp section 2 uses.
  *
  * ---------------------------------------------------------------------------
- * 1. Memory::Deallocate, wanted by func_ov006_0210d7e0, vtable slot 17.
+ * 1. Memory::Deallocate, wanted by _ZN16dScMgSmartball_cD0Ev, vtable slot 17.
  *
  *      unresolved external symbol
  *      "void __cdecl Memory::Deallocate(void *,struct Heap *)"
@@ -30,16 +30,16 @@
  *    src/, and eleven port/hal files already call it under that name. Nothing
  *    is being converted: an alias here changes a name and not a convention.
  *
- *    WHY THE SYMBOL APPEARS AT ALL. src/func_ov006_0210d7e0.cpp is one of the
+ *    WHY THE SYMBOL APPEARS AT ALL. src/_ZN16dScMgSmartball_cD0Ev.cpp is one of the
  *    ".cpp with a recovered header" bodies and it declares the callee as real
  *    C++ -- `namespace Memory { void Deallocate(void*, Heap*); }` -- so MSVC
  *    emits the namespace-qualified mangle where every C-spelled caller emits
  *    the Itanium name. dScMgCurling_c's own D0 does not hit this because
- *    src/func_ov006_020e065c spells the same call as a C name.
+ *    src/_ZN14dScMgCurling_cD0Ev spells the same call as a C name.
  *
  * ---------------------------------------------------------------------------
  * 2 and 3. Two ov004 DATA words spelled with func_ names, wanted by
- *          func_ov006_02118488, vtable slot 6, Behavior.
+ *          _ZN16dScMgSmartball_c8BehaviorEv, vtable slot 6, Behavior.
  *
  *      unresolved external symbol _func_020bc864 referenced in
  *      function _func_ov006_02118488
@@ -51,14 +51,14 @@
  *    THE REFUSAL IS RIGHT AND THE ANSWER IS "MOUNT IT", not "host it", and the
  *    difference is the whole ruling. These are not missing storage. They are
  *    the SAME name-spelling defect port/mg_fanout_costs.txt section 6 records
- *    as its fourth, smaller item -- "src/func_ov006_020e3578.c spells ov004's
+ *    as its fourth, smaller item -- "src/_ZN14dScMgCurling_c13InitResourcesEv.cpp spells ov004's
  *    func_ov004_020adc74 as bare func_020adc74, a name that exists in no
  *    config" -- in its data form:
  *
  *      include/decl_common.h:1357   extern int func_020bc864;
  *      include/decl_common.h:1362   extern int func_020bc888;
- *      src/func_ov006_02118488.c:161  func_020bc888 = 0x80;
- *      src/func_ov006_02118488.c:162  func_020bc864 = -0x30;
+ *      src/_ZN16dScMgSmartball_c8BehaviorEv.cpp:161  func_020bc888 = 0x80;
+ *      src/_ZN16dScMgSmartball_c8BehaviorEv.cpp:162  func_020bc864 = -0x30;
  *
  *    Both are DATA and both live in ov004: config/arm9/overlays/ov004/
  *    symbols.txt names them data_ov004_020bc864 and data_ov004_020bc888, and
@@ -92,7 +92,7 @@
  *    TU's, which is all an alias needs.
  *
  *    THE DECOMP-SIDE FIX IS ROUTED, NOT TAKEN: include/decl_common.h should
- *    spell both as data_ov004_* and src/func_ov006_02118488.c should follow.
+ *    spell both as data_ov004_* and src/_ZN16dScMgSmartball_c8BehaviorEv.cpp should follow.
  *    That is a byte-gated-tree change and this file leaves src/ and include/
  *    alone.
  */
@@ -106,17 +106,18 @@
 
 /* 4. Run mg5, lane INTEG. dScMgSmartball_c::InitResources (vtable slot 0) was
  * recovered on branch decomp/smb-bodies as the plain-C body
- * src/_ZN16dScMgSmartball_c13InitResourcesEv.c (NONMATCHING, the flagged weak
+ * src/_ZN16dScMgSmartball_c13InitResourcesEv.cpp (NONMATCHING, the flagged weak
  * point). hal/scene_mg.cpp's slot-0 dispatch calls it by its ROM address name
- * func_ov006_02118b70, so the flat name is aliased onto the mangled one. Both
+ * _ZN16dScMgSmartball_c13InitResourcesEv, so the flat name is aliased onto the mangled one. Both
  * sides are __cdecl taking one pointer and returning s32 -- exactly the
  * situation row 1 and section 10's ?Allocate finding describe -- so this
- * changes a name and not a convention. The func_ov006_02118b70 trap is removed
+ * changes a name and not a convention. The _ZN16dScMgSmartball_c13InitResourcesEv trap is removed
  * from MgSmartball_Traps.cpp so the flat name is undefined for the alias to
  * bind. The Render body at 0x021173c8 stays trapped: its only recovered form on
  * main is the __thiscall member dScMgSmartball_c::Render, and an alias cannot
  * cross the calling convention the way this cdecl-to-cdecl one can. */
-#pragma comment(linker, "/alternatename:_func_ov006_02118b70=__ZN16dScMgSmartball_c13InitResourcesEv")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEAD RHS and an UNREFERENCED left hand side: nothing in the build defines __ZN16dScMgSmartball_c13InitResourcesEv, and nothing references _func_ov006_02118b70, so the row can never fire and nothing wants it to. */
+// #pragma comment(linker, "/alternatename:_func_ov006_02118b70=__ZN16dScMgSmartball_c13InitResourcesEv")
 
 /* ---- 5. Run mg5, lane SMBSEAT: TWO CDECL FORWARDERS ----------------------
  *
@@ -132,7 +133,7 @@
  * the object's own table, and an /alternatename row pointing the ROM address
  * name onto the forwarder. Both LHS names are undefined everywhere else in the
  * build -- the Render trap is removed from MgSmartball_Traps.cpp and
- * func_ov006_0210f564 never had a body here -- so neither alias is defeated and
+ * _ZN20cMgSmartball_board_c12SaveSnapshotEv never had a body here -- so neither alias is defeated and
  * neither needs a row in tools/alternatename_baseline.txt.
  *
  * ---- 5a. dScMgSmartball_c::Render, vtable slot 9, 0x021173c8 -------------
@@ -184,4 +185,8 @@ extern "C" void _ZN20cMgSmartball_board_c12SaveSnapshotEv(void *self)
 
 #pragma comment(linker, "/alternatename:_func_ov006_021173c8=__ZN16dScMgSmartball_c6RenderEv")
 #pragma comment(linker, "/alternatename:_func_ov006_0210f564=__ZN20cMgSmartball_board_c12SaveSnapshotEv")
-#pragma comment(linker, "/alternatename:?PlayBank2_2D@Sound@@YAXI@Z=__ZN5Sound12PlayBank2_2DEj")
+/* RE-POINTED at ALIAS2 (wave 8, the main -> port sync), lane ALIAS's
+   derivation: the right hand side this row carried is defined nowhere in
+   the link any more. same member, same convention, same 1 argument slots, types spelled differently
+   was: #pragma comment(linker, "/alternatename:?PlayBank2_2D@Sound@@YAXI@Z=__ZN5Sound12PlayBank2_2DEj") */
+#pragma comment(linker, "/alternatename:?PlayBank2_2D@Sound@@YAXI@Z=?PlayBank2_2D@Sound@@YAII@Z")

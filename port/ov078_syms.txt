@@ -16,7 +16,7 @@
 # already carries both _ZTV10KingBobOmb and _ZTV12daBombking_c on it, so the
 # generator's own rule drops it.
 #
-# KingBobOmb_SpawnInfo's +4 halfword reads 189, KingBobOmb_Spawn's literal pool
+# g_profile_BOMBKING's +4 halfword reads 189, daBombking_c_classInit's literal pool
 # installs 0x02126e4c, and that table's RTTI name is daBombking_c. All three
 # agree, so there is nothing to settle here.
 data_ov078_02126ce0:0x8 data_ov078_02126ce8:0x8 data_ov078_02126cf0:0x8
@@ -31,8 +31,8 @@ data_ov078_02126da0:0x8 data_ov078_02126da8:0x8 data_ov078_02126db0:0x8
 data_ov078_02126db8:0x8 data_ov078_02126dc0:0x8 data_ov078_02126dc8:0x8
 data_ov078_02126dd0:0x8 data_ov078_02126dd8:0x8 data_ov078_02126de0:0x8
 data_ov078_02126de8:0x8 data_ov078_02126df0:0x8 data_ov078_02126df8:0x8
-data_ov078_02126e00:0xc data_ov078_02126e0c:0xc data_ov078_02126e18:0x10
-KingBobOmb_SpawnInfo:0x1c data_ov078_02126ee0:0x8 data_ov078_02126ee8:0x8
+data_ov078_02126e00:0xc _ZTI12daBombking_c:0xc _ZTS12daBombking_c:0x10
+g_profile_BOMBKING:0x1c data_ov078_02126ee0:0x8 data_ov078_02126ee8:0x8
 data_ov078_02126ef0:0x8 data_ov078_02126ef8:0x8 data_ov078_02126f00:0x8
 data_ov078_02126f08:0x8 data_ov078_02126f10:0x8 data_ov078_02126f18:0x8
 data_ov078_02126f20:0x8 data_ov078_02126f28:0x8 data_ov078_02126f30:0x8

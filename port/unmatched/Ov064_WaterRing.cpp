@@ -22,7 +22,7 @@
  *    declares `extern void func_ov064_02119ecc(char*, void*)`. Both visible in
  *    one TU is `error C2733: you cannot overload a function with 'extern "C"'
  *    linkage`, and src/ is not edited to fix it. The ov096 lane hit this exact
- *    class on src/func_ov096_02137088.cpp and port/CMakeLists.txt records the
+ *    class on src/_ZN7Tornado6State1Ev.cpp and port/CMakeLists.txt records the
  *    treatment in one line: "the decl_common.h redeclaration that forced that
  *    one out of the slice". The body below is that TU verbatim, in a file that
  *    includes no decl_common.h, so the two declarations never meet. It forms no
@@ -68,9 +68,9 @@ struct PortPmf { unsigned fn; int delta; };
 
 /* WaterRing::Behavior's own C-linkage helpers, all matched src (slice_w3c) */
 unsigned short DecIfAbove0_Short(unsigned short *p);
-void _ZN5Actor9UpdatePosEP12CylinderClsn(char *self, char *cc);
-void _ZN12CylinderClsn5ClearEv(char *c);
-void _ZN12CylinderClsn6UpdateEv(char *c);
+void _ZN8dActor_c9UpdatePosEP5dCc_c(char *self, char *cc);
+void _ZN5dCc_c5ClearEv(char *c);
+void _ZN5dCc_c6UpdateEv(char *c);
 void _ZN9Animation7AdvanceEv(char *c);
 void func_ov064_02119f1c(char *c);
 
@@ -88,12 +88,12 @@ extern PortPmf data_ov064_0211c3c8[];   /* {02119d28, 0} */
 
 /* what func_ov064_02119afc reaches, on top of the ring above */
 struct PortVec3 { int x, y, z; };
-void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(
+void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(
         void *t, const PortVec3 &v);
-void *_ZN5Actor10FindWithIDEj(unsigned id);
+void *_ZN8dActor_c10FindWithIDEj(unsigned id);
 short Vec3_VertAngle(const PortVec3 *v1, const PortVec3 *v0);
 int AngleDiff(int a, int b);
-short _ZN5Actor18HorzAngleToCPlayerEv(void *t);
+short _ZN8dActor_c18HorzAngleToCPlayerEv(void *t);
 void _ZN6Player4HealEi(void *p, int amt);
 extern PortVec3 data_ov064_0211c3d0;
 extern PortPmf data_ov064_0211c944[];   /* the record it switches to */
@@ -135,10 +135,10 @@ extern "C" void func_ov064_02119afc(char *c)
 
     *(int *)(c + 0x368) = 0x1000;
     v = data_ov064_0211c3d0;
-    _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(c + 0x110, v);
+    _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(c + 0x110, v);
     id = *(unsigned *)(c + 0x134);
     if (id == 0) return;
-    a = (char *)_ZN5Actor10FindWithIDEj(id);
+    a = (char *)_ZN8dActor_c10FindWithIDEj(id);
     if (a == 0) return;
     b = (*(unsigned short *)(a + 0xc) == 0xbf);
     if (b == 0) return;
@@ -152,7 +152,7 @@ extern "C" void func_ov064_02119afc(char *c)
         return;
     if (*(int *)(c + 0x37c) != 1) goto Lcheck;
     if (((*(short *)(c + 0x388) >> 16) & 1)
-        != ((_ZN5Actor18HorzAngleToCPlayerEv(c) >> 16) & 1))
+        != ((_ZN8dActor_c18HorzAngleToCPlayerEv(c) >> 16) & 1))
         goto Lpassed;
 Lcheck:
     if (*(int *)(c + 0x37c) == 1) goto Lkeep;
@@ -163,7 +163,7 @@ Lpassed:
     func_ov064_02119ecc(c, &data_ov064_0211c944[0]);
     return;
 Lkeep:
-    *(short *)(c + 0x388) = _ZN5Actor18HorzAngleToCPlayerEv(c);
+    *(short *)(c + 0x388) = _ZN8dActor_c18HorzAngleToCPlayerEv(c);
     return;
 }
 

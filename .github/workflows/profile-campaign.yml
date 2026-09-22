@@ -1,0 +1,106 @@
+# Does the tree carry the names the profile campaign says it does?
+#
+# `tools/check_rename_ledger.py` checks `_ZN...` and `_ZTV...` rows only, and its
+# own summary line prints how many it skipped, because a coined spelling has no
+# mangled counterpart it knows how to resolve. That is ~1,000 rows of
+# `symbols/actor_renames.tsv` -- every name the profile reconstruction campaign
+# produces -- with no gate on them at all. The row
+#
+#     ov070  0x02120520  FlyGuy_Spawn  daPropeller_Heyho_c_classInit
+#
+# sat on main asserting a symbol that ov070's symbols.txt, the function
+# definition and the manifest all still spelled `FlyGuy_Spawn`. Nothing was red.
+# A byte-perfect 106/106 build says nothing about a name the build never emitted,
+# which is the shape of gate this repo keeps adding after the fact: the failure
+# branch a green run never reaches.
+#
+# RATCHET, NOT A SWEEP. `config/profile-campaign-baseline.json` banks the
+# divergences that exist today -- seven where the ledger runs AHEAD of the tree
+# (the PROPELLER_HEYHO shape) and ten where it runs BEHIND it (a rename nobody
+# recorded). None of them is accepted; each is a defect with a note saying which
+# way it points. The job fails on a divergence that is NOT banked, which is the
+# shape a fresh drift makes, and a banked entry stops matching the moment either
+# side changes, so rebanking cannot turn the ratchet into an allowlist.
+#
+# PENDING IS NOT RED, YET. Waves of this campaign are still landing. A registry
+# row whose symbol still carries its pre-campaign spelling reports PENDING and
+# does not fail. `--strict` makes every pending row fatal; that is the one-word
+# change to make here when the campaign closes, and it is why "pending" is a
+# decision on the record rather than a silence.
+#
+# IT CANNOT PASS BY DOING NOTHING. The tool counts what it actually resolved and
+# exits non-zero with SCAN TOO SMALL below a floor rather than announcing a clean
+# tree. This repo has already shipped a gate that reported a pass after a
+# reformat took its match count to zero, and the two positive controls in the
+# test file exist for exactly that: a divergence MUST be reported, and an empty
+# scan MUST exit non-zero.
+#
+# THE DATASET IS NOT HERE YET. `symbols/profile_reconstruction_registry.tsv`
+# gains its `overlay_resolution` and `factory_filename` columns on PR #2235.
+# Until then the tool names the columns it could not read and skips the registry
+# scan; it never reports a pass on a dataset it did not read, and the ledger scan
+# -- which needs only files that are on main -- runs regardless.
+#
+# WHY THIS ONE MAY KEEP A PATHS FILTER when dead-references dropped its. That
+# job resolves prose against the WHOLE tree, so any rename anywhere can break it
+# and no filter can be complete. This one resolves against exactly two kinds of
+# file, `config/**/symbols.txt` and `config/**/delinks.txt`, and both are listed
+# below alongside the inputs. The resolution targets are enumerable here, so the
+# filter is not the same bet.
+#
+# Costs nothing: text files, no compiler and no ROM, so it runs here rather than
+# on the private build box pr-validate.yml relays to. About a second over 2,574
+# ledger rows, 401 registry rows and 70 symbols.txt files.
+name: profile campaign
+
+on:
+  pull_request:
+    paths:
+      - "symbols/actor_renames.tsv"
+      - "symbols/profile_reconstruction_registry.tsv"
+      - "config/**/symbols.txt"
+      - "config/**/delinks.txt"
+      - "config/profile-campaign-baseline.json"
+      - "tools/check_profile_campaign.py"
+      - "tools/test_check_profile_campaign.py"
+      - ".github/workflows/profile-campaign.yml"
+  push:
+    branches: [main]
+    paths:
+      - "symbols/actor_renames.tsv"
+      - "symbols/profile_reconstruction_registry.tsv"
+      - "config/**/symbols.txt"
+      - "config/**/delinks.txt"
+      - "config/profile-campaign-baseline.json"
+      - "tools/check_profile_campaign.py"
+      - "tools/test_check_profile_campaign.py"
+      - ".github/workflows/profile-campaign.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: profile-campaign-${{ github.event.pull_request.head.sha || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  campaign:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        # No history needed: the tool resolves against the working tree, and a
+        # shallow checkout still contains every file.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Campaign claims the tree does not carry
+        run: python tools/check_profile_campaign.py --repo .
+      - name: The gate's own tests
+        # Positive controls first: a coined ledger row naming a symbol that is
+        # not in symbols.txt MUST be reported, and a scan that resolved almost
+        # nothing MUST exit non-zero. A campaign gate that quietly finds nothing
+        # is the defect it was written to remove. stdlib unittest -- this runner
+        # installs nothing, and these cases are unittest.TestCase so that both
+        # `python -m unittest` and pytest collect all 27 of them.
+        run: python -m unittest tools.test_check_profile_campaign -v

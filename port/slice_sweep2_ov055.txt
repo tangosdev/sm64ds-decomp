@@ -44,7 +44,7 @@
 #     021111b0  add  r0, r4, #0x1b0        the two TextureSequences
 #     021111b4  mov  r1, #2   021111b8  mov r2, #0x14
 #     021111bc  str  ip, [r4]              install the own table
-#     021111c0  bl   0x0207328c            __destroy_arr
+#     021111c0  bl   0x0207328c            __cxa_vec_cleanup
 #     021111c4  add  r0, r4, #0x188 ; bl ShadowModel::~D1
 #     021111cc  add  r0, r4, #0x138 ; bl Model::~D1
 #     021111d4  add  r0, r4, #0xd4  ; bl ModelAnim::~D1
@@ -55,7 +55,7 @@
 # with C names and rides from src unchanged.
 #
 # Nothing else is refused: no asm-void block, no scheduler, no card loader, no
-# wireless wrapper, no r0 ride-through (MirrorLuigi_Spawn.cpp names its own
+# wireless wrapper, no r0 ride-through (daLuigi_c_classInit.cpp names its own
 # receiver for Actor::C2), and NO ModelAnim slot-5 collision. Render's
 # `((Sub *)&mModel)->m5(0)` dispatches slot 5 over the plain MODEL at +0x138
 # (ROM 0x021114cc: add r0,r5,#0x138; ldr r2,[r0]; ldr r2,[r2,#0x14]; blx r2),
@@ -70,7 +70,7 @@
 # SLICE -- the only overlay in this lane that needs none.
 #
 # ONE NAME THIS MOUNT DEFINES IS SPELLED BY ANOTHER OVERLAY'S TU, and it is
-# ALREADY ROUTED: src/_ZN9ShipWater13InitResourcesEv.c (ov017, LINKED) spells
+# ALREADY ROUTED: src/game/actors/d_a_obj_ks_water.cpp (ov017, LINKED) spells
 # data_ov055_02111a94 for OV017's object at that shared-window address, and the
 # wave-1 cast-sweep1 lane gave it a per-source -D when it seated ov017 --
 # foreseeing exactly this mount. A -D is not an /alternatename and is not
@@ -95,20 +95,38 @@
 # ShadowModel, TextureSequence, SharedFilePtr, Memory, the array
 # construct/destroy helpers, func_ov002_020e496c and func_ov002_020e4374.
 #
-# ONE SLICED TU DOES NOT REACH THE MAP. src/func_ov055_02111264.c (set the
-# mirror flag to 2 and play sound 0x179) has NO caller in the seated set: its
-# only ROM caller is an arm_call from ov063 at 0x02118004, whose module column
-# reads overlays(27,55) -- an unresolved cross-overlay ambiguity in a pack this
-# lane does not seat. So /OPT:REF strips it and linkage counts 9 of 13 rather
-# than 10. It stays on the slice: it is a matched body, it compiles, and it
-# becomes live the day that ov063 caller is seated.
+# ONE SLICED TU DID NOT REACH THE MAP, AND NOW DOES. src/func_ov055_02111264.c
+# (set the mirror flag to 2 and play sound 0x179) had no caller in the seated
+# set: its only ROM caller is an arm_call from ov063 at 0x02118004, whose
+# module column read overlays(27,55) -- ov027 and ov055 share one DS load
+# window (both base 0x021111a0) and both name a symbol at 0x02111264. So
+# /OPT:REF stripped it and linkage counted 9 of 13 rather than 10.
+#
+# RESOLVED 09-19 by run link100 wave 15, lane SEAT15A (enabler E3 of
+# out/LINK15/BATCHES.md): THE ROM CALLS ov055. extracted/overlays/
+# overlay_0063.bin at base 0x02115ee0 gives
+#   0x02117ff0 ldrh r0,[r0]; 0x02117ff4 cmp r0,#0x1e; the lo-conditional early
+#   return at 0x02117ff8..0x02118000; then 0x02118004 ebffe496 = bl 0x02111264
+# so r0 at the call is a halfword that just tested >= 0x1e, not a receiver.
+# ov027's symbol there is _ZN10SlidingIce16CleanupResourcesEv, a __thiscall
+# member that takes `this` in r0; ov055's is func_ov055_02111264, void(void).
+# The same ov063 function's literal pool holds 0x02111b6c (inside ov055's bss
+# window, module column 55 and not 27) and calls func_0201277c, the one call
+# src/func_ov055_02111264.c itself makes.
+#
+# The caller, src/unnamed/ov063/func_ov063_02117cdc.c, spells the callee with
+# the ov027 name (line 25 declares it, line 148 calls it with no arguments).
+# src/ is not edited for the host: port/CMakeLists.txt's R-L15B3 block renames
+# that one symbol per source, the d_a_obj_emm_log.cpp shape, and the src-side
+# defect is reported in out/SEAT15A/bugs.md. This TU is linked from that
+# commit on.
 
 # ---- the class -----------------------------------------------------------
-src/MirrorLuigi_Spawn.cpp
-src/_ZN11MirrorLuigiD0Ev.c
+src/d_a_luigi.cpp
+src/_ZN11MirrorLuigiD0Ev.cpp
 src/_ZN11MirrorLuigi13InitResourcesEv.cpp
-src/_ZN11MirrorLuigi16CleanupResourcesEv.c
-src/_ZN11MirrorLuigi16OnPendingDestroyEv.c
+src/_ZN11MirrorLuigi16CleanupResourcesEv.cpp
+src/_ZN11MirrorLuigi16OnPendingDestroyEv.cpp
 src/_ZN11MirrorLuigi6RenderEv.cpp
 
 # ---- the two state halves and the helper that enters the mirror ----------

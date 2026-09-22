@@ -29,15 +29,18 @@
  *
  * Two things about the box shape below are load-bearing, not style.  Each axis is
  * shifted once into its position local rather than at each of the four edges, and
- * the element is re-dereferenced in every edge expression rather than read through
- * a bound pointer.  Neither alone is enough.  Measured at 2004/b56 over all four
- * combinations: pointer locals with per-edge shifts scores 37 divergences,
- * re-dereferencing with per-edge shifts also 37, pointer locals with pre-shifted
+ * the object and rect pointers are re-dereferenced in every edge expression rather
+ * than bound to locals.  Neither alone is enough.  Measured at 2004/b56 over all
+ * four combinations: bound pointers with per-edge shifts scores 37 divergences,
+ * re-dereferencing with per-edge shifts also 37, bound pointers with pre-shifted
  * positions 51, and only the two together 0.
  *
- * Reusing the preamble's already-bound object pointer here, rather than re-reading
- * the element, does not just cost divergences, it breaks the size: the ROM performs
- * that reload, so folding it away compiles to 0x49c instead of 0x4ac.
+ * The re-dereferencing requirement is narrower than it looks, so measure before
+ * tidying rather than assuming the whole shape is fragile.  Binding each pointer on
+ * its own, against the shipped source: binding the rect costs 49 divergences,
+ * binding the object costs 14, and binding the transform is FREE at 0.  The
+ * transform is written out longhand below only to keep the four edges reading
+ * alike.
  */
 typedef unsigned char u8;
 typedef unsigned short u16;
@@ -56,6 +59,45 @@ extern int func_ov007_020b8f78(void);
 extern int func_ov007_020b8fa0(void);
 extern void func_ov007_020c1d78(int i);
 
+/* The ROM contains this block twice, verbatim, once per path.  Twenty lines of
+ * hand duplication is the signature of an inlined helper, so it is written as one.
+ * `inline` is required, not stylistic: plain `static` is not inlined at -O4 and
+ * emits a separate symbol, which breaks the size. Byte-identical to hand
+ * duplication either way, so this costs nothing at the gate. */
+static inline int elem_selectable(char* elem)
+{
+    char* obj = *(char**)elem;
+    int sel = 0;
+    int gate2 = 0;
+    int gate1 = 0;
+    if (*(*(s16**)(obj + 4)) == 0) {
+        if (*(s32*)(obj + 0x10) >= 0x1000
+            || (data_ov007_020d77dc[**(u16**)elem].f0 & 2))
+            gate1 = 1;
+    }
+    if (gate1) {
+        if (!(data_ov007_020d77dc[**(u16**)elem].f0 & 1))
+            gate2 = 1;
+    }
+    if (gate2) {
+        int ok = 1;
+        if (func_ov007_020b79e4()) {
+            int sub = 0;
+            if (func_ov007_020b79e4()) {
+                u16 id2 = **(u16**)elem;
+                /* NOT a plain `if (id2 == 0x16 || id2 == 0x17) sub = 1;`. That
+                 * compiles four bytes short. */
+                int x = ok;
+                if (id2 != 0x16 && id2 != 0x17) x = sub;
+                if (x) sub = 1;
+            }
+            if (!sub) ok = 0;
+        }
+        if (ok) sel = 1;
+    }
+    return sel;
+}
+
 void func_ov007_020b46b0(void* arg0, void* arg1)
 {
     char* elem = (char*)arg0;
@@ -63,35 +105,7 @@ void func_ov007_020b46b0(void* arg0, void* arg1)
     int held = 0;
 
     {
-        char* obj_a = *(char**)elem;
-        int sel_a = 0;
-        int gate2_a = 0;
-        int gate1_a = 0;
-        if (*(*(s16**)(obj_a + 4)) == 0) {
-            if (*(s32*)(obj_a + 0x10) >= 0x1000
-                || (data_ov007_020d77dc[**(u16**)elem].f0 & 2))
-                gate1_a = 1;
-        }
-        if (gate1_a) {
-            if (!(data_ov007_020d77dc[**(u16**)elem].f0 & 1))
-                gate2_a = 1;
-        }
-        if (gate2_a) {
-            int ok_a = 1;
-            if (func_ov007_020b79e4()) {
-                int sub_a = 0;
-                if (func_ov007_020b79e4()) {
-                    u16 id2 = **(u16**)elem;
-                    int x = ok_a;
-                    if (id2 != 0x16 && id2 != 0x17) x = sub_a;
-                    if (x) sub_a = 1;
-                }
-                if (!sub_a) ok_a = 0;
-            }
-            if (ok_a) sel_a = 1;
-        }
-
-        if (sel_a && func_ov007_020c1da0(0) == 0) {
+        if (elem_selectable(elem) && func_ov007_020c1da0(0) == 0) {
             int armed = 0;
             int fresh = 0;
             int touching = *(u16*)(tp + 0xc);
@@ -147,35 +161,7 @@ void func_ov007_020b46b0(void* arg0, void* arg1)
     if (*(s16*)(*(char**)(data_ov007_0210342c + 4)) == 3) {
         u16 t0 = *(u16*)(*(char**)arg0);
         if (t0 == 3 || t0 == 6) {
-            char* obj_b = *(char**)elem;
-            int sel_b = 0;
-            int gate2_b = 0;
-            int gate1_b = 0;
-            if (*(*(s16**)(obj_b + 4)) == 0) {
-                if (*(s32*)(obj_b + 0x10) >= 0x1000
-                    || (data_ov007_020d77dc[**(u16**)elem].f0 & 2))
-                    gate1_b = 1;
-            }
-            if (gate1_b) {
-                if (!(data_ov007_020d77dc[**(u16**)elem].f0 & 1))
-                    gate2_b = 1;
-            }
-            if (gate2_b) {
-                int ok_b = 1;
-                if (func_ov007_020b79e4()) {
-                    int sub_b = 0;
-                    if (func_ov007_020b79e4()) {
-                        u16 id2 = **(u16**)elem;
-                        int x = ok_b;
-                        if (id2 != 0x16 && id2 != 0x17) x = sub_b;
-                        if (x) sub_b = 1;
-                    }
-                    if (!sub_b) ok_b = 0;
-                }
-                if (ok_b) sel_b = 1;
-            }
-
-            if (sel_b && func_ov007_020c1da0(0) == 0
+            if (elem_selectable(elem) && func_ov007_020c1da0(0) == 0
                 && *(u16*)(tp + 0xc) != 0
                 && *(s16*)func_ov007_020b8f78() == 5
                 && func_ov007_020b8fa0() == 0) {
@@ -191,6 +177,9 @@ void func_ov007_020b46b0(void* arg0, void* arg1)
                     char* state = *(char**)(*(char**)elem + 4);
                     held = 1;
                     *(s32*)(state + 4) += 1;
+                    /* Re-dereferences the element rather than reusing `state`
+                     * just above it: reusing the bound local compiles eight bytes
+                     * short. Same class as the box shape in the header comment. */
                     if (*(s32*)(*(char**)(*(char**)elem + 4) + 4) > 0x3a)
                         func_ov007_020b63e4((char**)arg0);
                 }

@@ -25,29 +25,22 @@
 # .cpp; the D0, Cleanup, Render and OnPendingDestroy are flat .c carrying the
 # ROM's Itanium names). The .cpp three reach the fill through the method faces
 # in hal/actor_classes_ov_link100.cpp rather than through any src edit.
-# _ZN9CameraTagD0Ev.c spells the VT placeholder; port/CMakeLists.txt binds it
-# per source to _ZTV9CameraTag, the host array the fill writes and the factory
+# _ZN10daChRoom_cD0Ev.c spells the VT placeholder; port/CMakeLists.txt binds it
+# per source to _ZTV10daChRoom_c, the host array the fill writes and the factory
 # installs. HEAP is left alone: its binding to the game heap pointer
 # 0x020a0eac is what that body means.
-src/VirtualDoor_Spawn.c
-src/_ZN9CameraTag13InitResourcesEv.cpp
-src/_ZN9CameraTag8BehaviorEv.cpp
-src/_ZN9CameraTag16CleanupResourcesEv.c
-src/_ZN9CameraTag6RenderEv.c
-src/_ZN9CameraTag16OnPendingDestroyEv.c
-src/_ZN9CameraTagD1Ev.cpp
-src/_ZN9CameraTagD0Ev.c
+src/game/actors/d_a_ch_room.cpp
 #
 # ---- 314, ov039 (9 TUs) ---------------------------------------------------
 # Tiny-Huge Island's sky clouds: level 31 places seventeen and no other level
 # places any. 292 bytes with one plain Model at +0xd4 (so _ZTV5Model[5] is the
 # dual-filled cxxname_bridge case and the Render's local six-virtual shadow
 # lands on the right body -- the ov013/ov072/w10a ruling, not the ModelAnim
-# slot-5 collision, because Cloud_Spawn constructs the member with
+# slot-5 collision, because daObjKumo_c_classInit constructs the member with
 # _ZN5ModelC1Ev).
 #
 # func_ov039_02111214 is the matrix helper InitResources calls; the src TU
-# spells it func_ov044_02111214 (a sibling overlay's name for the same
+# spells it _ZN19daObjKb1Billboard_c20UpdateModelTransformEv (a sibling overlay's name for the same
 # shared-window address) and CMakeLists routes that per source to ov039's own
 # body, which the ROM reloc at 0x02111354 names -- module:overlay(39). The
 # same TU bumps data_ov041_021118e0, routed the same way to
@@ -58,14 +51,7 @@ src/_ZN9CameraTagD0Ev.c
 # 0x021118e4 and registers its teardown node at 0x021118ec; the fill's
 # bring-up runs it before the registry installs. Both cells come from the new
 # per-symbol ov039 mount (port/ov039_syms.txt).
-src/Cloud_Spawn.c
-src/_ZN5Cloud13InitResourcesEv.cpp
-src/_ZN5Cloud8BehaviorEv.c
-src/_ZN5Cloud16CleanupResourcesEv.c
-src/_ZN5Cloud6RenderEv.cpp
-src/_ZN5CloudD1Ev.cpp
-src/_ZN5CloudD0Ev.c
-src/func_ov039_02111214.c
+src/game/actors/d_a_obj_kumo.cpp
 src/__sinit_ov039_021113b4.c
 #
 # ---- WHAT IS DELIBERATELY NOT HERE ----------------------------------------

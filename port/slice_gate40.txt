@@ -4,22 +4,22 @@
 # skipped. It is a class in its own right, NOT the DOOR gate 22 already hosts,
 # and the config's naming is what hides that: gate 22 found that the vtable at
 # ov100 0x02148188 (RTTI 8daDoor_c) is the real door and config left it unnamed
-# as data_ov100_02148188, while config's `_ZTV4Door` is a DIFFERENT table
+# as _ZTV4Door, while config's `_ZTV4Door` is a DIFFERENT table
 # (RTTI 12daStarGate_c) and the whole _ZN4Door* method family hangs off THAT
 # one. So the star door wears the "Door" name and the real door's methods are
 # the unnamed func_ov100_* block. gate 22 hosts the real door; this hosts the
 # star door, compiling the files config's _ZN4Door* names really point at and
 # renaming nothing -- the gate-17 reading for the same overlay a second time.
 #
-# StarDoor_SpawnInfo (ov100 0x021483a8) is already mounted by the per-symbol
+# g_profile_STAR_GATE (ov100 0x021483a8) is already mounted by the per-symbol
 # ov100 mount (ov100_syms.txt); its +4 halfword reads 354. The registry
-# rewrites its +0 factory word to StarDoor_Spawn. StarDoor_Spawn installs
+# rewrites its +0 factory word to daStarGate_c_classInit. daStarGate_c_classInit installs
 # _ZTV4Door, which hal/actor_classes.cpp fills as hal_fill_star_door_vtable
 # (aliased to _ZTV12daStarGate_c, the name the class's own D0 spells -- the
 # RABBIT's dual-name treatment).
 #
-# NO CALLBACK SEAT IS NEEDED. InitResources calls func_ov100_02145f68, which
-# stores data_ov100_02148974 at the actor's +0x110 and dispatches word 0 of it
+# NO CALLBACK SEAT IS NEEDED. InitResources calls _ZN12daStarGate_c11ChangeStateEPNS_5StateEP6Player, which
+# stores _ZN12daStarGate_c7ST_WAITE at the actor's +0x110 and dispatches word 0 of it
 # only if non-zero; 0x02148974 is in ov100's .bss (past the image end
 # 0x02148600), so it loads zeroed and the dispatch is guarded off. Behavior
 # reads the same +0x110 node and guards its own dispatch on the callback being
@@ -28,26 +28,18 @@
 # representation applies and no host copy is required.
 
 # ---- the own slots --------------------------------------------------------
-# _ZN4DoorD1Ev.cpp (slot 16) is NOT here on purpose: it is a real C++
+# _ZN12daStarGate_cD1Ev.cpp (slot 16) is NOT here on purpose: it is a real C++
 # destructor over shadow Actor/CommonModel classes, so MSVC would emit
 # references to base destructors no TU defines. Slot 16 reuses ac_d1_door
 # instead -- the member chain is identical (a CommonModel at 0xd4) -- so the
 # ROM-faithful teardown runs without that shadow. D0 (slot 17) is plain C and
 # is here.
-src/StarDoor_Spawn.c
-src/_ZN4Door13InitResourcesEv.cpp
-src/_ZN4Door8BehaviorEv.cpp
-src/_ZN4Door6RenderEv.c
-src/_ZN4Door16CleanupResourcesEv.c
-src/_ZN4Door16OnPendingDestroyEv.c
-src/_ZN4DoorD0Ev.c
+src/game/actors/d_a_star_gate.cpp
 
 # ---- the two ov100 helpers the closure reaches ----------------------------
-# func_ov100_02145f00: InitResources/Behavior geometry helper (Vec3_Sub,
+# _ZN12daStarGate_c26CalculateRelativePlayerPosEv: InitResources/Behavior geometry helper (Vec3_Sub,
 # Vec3_RotateYAndTranslate, both already linked).
-# func_ov100_02145f68: the PMF store-and-guarded-dispatch InitResources drives.
-src/func_ov100_02145f00.c
-src/func_ov100_02145f68.cpp
+# _ZN12daStarGate_c11ChangeStateEPNS_5StateEP6Player: the PMF store-and-guarded-dispatch InitResources drives.
 
 # ---- the eight callback halves the door's state nodes dispatch -------------
 # __sinit_ov100_02147a70 builds five callback nodes out of these eight
@@ -55,25 +47,15 @@ src/func_ov100_02145f68.cpp
 # node holds. They are seated over the SOURCE statics before the sinit copies
 # them (hal/actor_overlays.cpp, port_star_door_callbacks_seat) with __thiscall
 # thunks, because Behavior's `(base->*pmf)(res)` lowers to a __thiscall call.
-# On a fresh boot the spawned star door's first node is data_ov100_02148974,
-# whose behaviour half is func_ov100_02145c58 -- the star check, which reaches
-# Player::ShowMessage only past func_ov100_02145e74's proximity gate (false in
+# On a fresh boot the spawned star door's first node is _ZN12daStarGate_c7ST_WAITE,
+# whose behaviour half is _ZN12daStarGate_c12St_Wait_MainEP6Player -- the star check, which reaches
+# Player::ShowMessage only past _ZN12daStarGate_c17IsInFrontOfPlayerEP6Player's proximity gate (false in
 # the selftest, the same message wall SIGN_POST and the RABBIT stop at).
-src/func_ov100_02145948.c
-src/func_ov100_02145988.cpp
-src/func_ov100_02145ab4.cpp
-src/func_ov100_02145b10.cpp
-src/func_ov100_02145b7c.c
-src/func_ov100_02145b9c.c
-src/func_ov100_02145c2c.c
-src/func_ov100_02145c58.c
 
 # ---- the two helpers only the star check reaches --------------------------
-# func_ov100_02145e74 is the proximity/angle gate; func_ov100_02145e10 the
+# _ZN12daStarGate_c17IsInFrontOfPlayerEP6Player is the proximity/angle gate; _ZN12daStarGate_c11TryOpenDoorEP6Player the
 # enter path, which calls Player::TryEnterStarDoor. The rest of each one's
 # closure (AngleDiff, the Vec3 helpers, cstd::atan2, Sound, ShowArea,
 # func_02012694, func_ov100_02145070/02145014/02144fcc) is already linked by
 # the Player/Camera/DOOR gates.
-src/func_ov100_02145e74.c
-src/func_ov100_02145e10.c
-src/_ZN6Player16TryEnterStarDoorER7Vector3s.cpp
+src/actors/Player.cpp

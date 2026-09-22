@@ -2,19 +2,19 @@
 # mounted; four data symbols joined port/ov002_syms.txt for this gate).
 # Full derivation in hal/actor_classes_ov002g200.cpp's header, including
 # the id-306 decoy: dsd's "PowerFlower" SpawnInfo/Spawn really construct
-# PushBlock (the vtable installs INSIDE PowerFlower_Spawn -- the
+# PushBlock (the vtable installs INSIDE daObjPowerUpItem_c_classInit -- the
 # SpawnInfo+0x24 rule is absent for this id, per castle2-scope correction
 # #3; re-derived fresh from relocs before any code was written).
 #
 # DROPPED from this slice, host copies/thunks instead:
-#   - _ZN9PushBlock6RenderEv.cpp: TWO plain-Model slot-5 shadow dispatches
+#   - _ZN11PowerFlower6RenderEv.cpp: TWO plain-Model slot-5 shadow dispatches
 #     (mModel1 +0xd4 / mModel2 +0x124, scale arg) -- unmatched/
 #     ModelAnim_Renders.cpp, the gate-199 treatment.
 #   - func_ov002_020b9704.cpp / func_ov002_020b9750.cpp: the 3-state PMF
 #     installer/tick pair over data_ov002_021097bc -- unmatched/
 #     PushBlock_StateDispatch.cpp (incomplete-class PMF, plus the dest seat
 #     for the DS words __sinit_ov002_021014e4 copies in).
-#   - _ZN9PushBlockD1Ev.cpp / _ZN9PushBlockD0Ev.c: D1 is a real MSVC dtor
+#   - _ZN11PowerFlowerD1Ev.cpp / _ZN11PowerFlowerD0Ev.c: D1 is a real MSVC dtor
 #     over local struct decls, D0 stores the parent daObjPowerUpItem_c
 #     table; both host thunks in the gate file, member chain read out of
 #     the matched D0 body.
@@ -22,11 +22,11 @@
 #     Actor::D2 (+Deallocate), the 212-byte no-member class.
 #
 # PUSH_BLOCK's factory + own slots
-src/PowerFlower_Spawn.c
-src/_ZN9PushBlock13InitResourcesEv.cpp
-src/_ZN9PushBlock16CleanupResourcesEv.c
-src/_ZN9PushBlock8BehaviorEv.cpp
-src/func_ov002_020b9e04.c
+src/d_a_obj_power_up_item.c
+src/_ZN11PowerFlower13InitResourcesEv.cpp
+src/_ZN11PowerFlower16CleanupResourcesEv.cpp
+src/_ZN11PowerFlower8BehaviorEv.cpp
+src/_ZN11PowerFlower13OnYoshiTryEatEv.cpp
 # the six state bodies the seated table dispatches
 src/func_ov002_020b96c0.c
 src/func_ov002_020b94c4.c
@@ -35,11 +35,11 @@ src/func_ov002_020b92c4.cpp
 src/func_ov002_020b92b8.c
 src/func_ov002_020b91fc.c
 # MUGEN_BGM's factory + own slots
-src/MugenBgm_Spawn.c
+src/d_a_mugen_bgm.c
 src/_ZN8MugenBgm13InitResourcesEv.cpp
-src/_ZN8MugenBgm16CleanupResourcesEv.c
-src/_ZN8MugenBgm16OnPendingDestroyEv.c
-src/_ZN8MugenBgm6RenderEv.c
+src/_ZN8MugenBgm16CleanupResourcesEv.cpp
+src/_ZN8MugenBgm16OnPendingDestroyEv.cpp
+src/_ZN8MugenBgm6RenderEv.cpp
 src/_ZN8MugenBgm8BehaviorEv.cpp
 # closure: the classes' own helper callees + Fog::Init (extern-C .cpp)
 src/func_ov002_020b9a1c.c

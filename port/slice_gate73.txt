@@ -1,7 +1,7 @@
 # Gate 73: ROTATING_UP_DOWN_PLATFORM (actor 29, ov091), Whomp's Fortress.
 #
-# THE ov015 NAME SHIFT again: RotatingUpDownPlatform_SpawnInfo's +4 halfword is
-# 29 and RotatingUpDownPlatform_Spawn is its factory, but that factory installs
+# THE ov015 NAME SHIFT again: g_profile_UPDOWN_LIFT's +4 halfword is
+# 29 and daObjRotateUpdownLift_c_classInit_UPDOWN_LIFT is its factory, but that factory installs
 # _ZTV25RotatingUpDownPlatformUtm (ov091 0x02134c5c), so an id-29 object runs the
 # Utm class's methods. Wired by the vtable the factory installs, read out of
 # relocs.txt, not the class name the config carries -- so the six _ZN25Rotating
@@ -9,22 +9,23 @@
 # RotatingUpDownPlatform ones are a different id's.
 #
 # A THIRTY-TWO slot Platform table with its OWN Kill (slot 31 is
-# func_ov091_02131070, not ov002's Platform::Kill). ov091 has been mounted since
+# _ZN25RotatingUpDownPlatformUtm4KillEv, not ov002's Platform::Kill). ov091 has been mounted since
 # gate 32. Its Behavior dispatches no pointer-to-member.
-src/RotatingUpDownPlatform_Spawn.c
+src/d_a_obj_rotate_updown_lift_updown_lift.c
 src/_ZN25RotatingUpDownPlatformUtm13InitResourcesEv.cpp
 src/_ZN25RotatingUpDownPlatformUtm8BehaviorEv.cpp
 src/_ZN25RotatingUpDownPlatformUtm6RenderEv.cpp
 src/_ZN25RotatingUpDownPlatformUtm16CleanupResourcesEv.cpp
-src/_ZN25RotatingUpDownPlatformUtmD1Ev.c
-src/_ZN25RotatingUpDownPlatformUtmD0Ev.c
+src/_ZN25RotatingUpDownPlatformUtmD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN25RotatingUpDownPlatformUtmD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN25RotatingUpDownPlatformUtmD0Ev.cpp
 # slot 27 (OnHitByMegaChar) and slot 31 (its own Kill)
-src/func_ov091_021310fc.cpp
-src/func_ov091_02131070.cpp
+src/_ZN25RotatingUpDownPlatformUtm15OnHitByMegaCharER6Player.cpp
+src/_ZN25RotatingUpDownPlatformUtm4KillEv.cpp
 # the platform's own closure
 src/func_ov091_02130fac.cpp
 src/func_ov091_02131160.c
 src/func_ov091_02131340.c
 # Platform::KillByMegaChar, the body slot 27 calls -- its own leaves (Earthquake,
 # Vec3_HorzAngle, the two MeshColliderBase toggles) are already linked
-src/_ZN8Platform14KillByMegaCharER6Player.c
+src/actors/dBgActor_c.cpp

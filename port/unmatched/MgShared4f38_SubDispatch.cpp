@@ -12,8 +12,8 @@
 // config/arm9/overlays/ov006/relocs.txt carries EXACTLY TWO arm_calls to
 // 0x020c2b8c and they are one per class:
 //
-//     from:0x020e02dc  inside func_ov006_020e0204   dScMgCup_c   slot 6
-//     from:0x0211c960  inside func_ov006_0211c720   dScMgSound_c slot 6
+//     from:0x020e02dc  inside _ZN10dScMgCup_c8BehaviorEv   dScMgCup_c   slot 6
+//     from:0x0211c960  inside _ZN12dScMgSound_c8BehaviorEv   dScMgSound_c slot 6
 //
 // The whole +0x4f38 family is dual-hosted the same way -- 020c2924, 020c29dc
 // and this body all have exactly one caller in 0x020e0xxx and one in
@@ -22,7 +22,7 @@
 //
 // ---- WHAT SECTION 12 AND slice_mga361 GOT WRONG ----------------------------
 //
-// port/tools/inferred_stub_adjudicated.txt's row for func_ov006_020e0204 calls
+// port/tools/inferred_stub_adjudicated.txt's row for _ZN10dScMgCup_c8BehaviorEv calls
 // it "the class ONLY pointer-to-member dispatch site", and
 // port/slice_mga361.txt section 4 says "exactly ONE TU dispatches it" and then
 // lists src/func_ov006_020c2b8c.cpp as an ORDINARY SLICE LINE.
@@ -44,7 +44,7 @@
 // THE ROM, disassembled out of extracted/overlays/overlay_0006.bin at base
 // 0x020bfec0 (size 0x5c from config/arm9/overlays/ov006/symbols.txt). Read
 // first-hand at adjudication after checking the reader on a body neither lane
-// wrote (func_ov006_0210a600 = `mov r0,#1 / bx lr`, which
+// wrote (_ZN19dScMgSingle3DBase_c24OnHitByCannonBlastedCharEv = `mov r0,#1 / bx lr`, which
 // port/tools/inferred_stub_adjudicated.txt already records):
 //
 //     020c2b8c  e92d4010  push  {r4, lr}
@@ -227,7 +227,7 @@ void _ZN14BlendModelAnim7AdvanceEv(void *anim);
 
 /* The parameter is `char *`, which is what include/decl_common.h:2401 already
    declares (`extern void func_ov006_020c2b8c(char*);`) and therefore what every
-   matched caller in the tree sees -- src/func_ov006_0211c720.c includes that
+   matched caller in the tree sees -- src/actors/dScMgSound_c.cpp includes that
    header. Both spellings link (the symbol has C linkage), but only this one
    agrees with the tree's own declaration. */
 void     func_ov006_020c2b8c(char *c);

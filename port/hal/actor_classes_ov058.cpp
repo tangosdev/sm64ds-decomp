@@ -6,11 +6,11 @@
 // zero skipped, after ov023 and level 15.
 //
 //   id   name               x on L50  factory                table       width
-//   182  REC_ROOM_CUPBOARD   1        RecRoomCupboard_Spawn  0x02111a70   31
+//   182  REC_ROOM_CUPBOARD   1        daObjCloset_c_classInit  0x02111a70   31
 //
 // A 0x21c-byte ACTOR -- not a Platform -- holding an ARRAY of five
 // MovingCylinderClsnWithPos at +0xd4, stride 0x40, that its factory builds
-// with func_020733a8 and both destructors tear down with __destroy_arr. It
+// with __cxa_vec_ctor and both destructors tear down with __cxa_vec_cleanup. It
 // loads no file at all: ov058's .rodata, .init, .ctor and .bss are ALL EMPTY,
 // so the overlay has zero static initialisers and this file's bring-up runs
 // the pack check and the syms patch and nothing else. InitResources is a
@@ -28,7 +28,7 @@
 // 0x02111ad4 (25) are interior splits too. A two-slot host array would have
 // left everything from CleanupResources onward off the end of storage.
 //
-// Slot 9 is _ZN9ActorBase6RenderEv, the BASE body: this class has no Render of
+// Slot 9 is _ZN7fBase_c6RenderEv, the BASE body: this class has no Render of
 // its own, so the fill writes 0/3/6/16/17 and takes 9 from the base.
 //
 // ---- T1: THE TABLE STAYS ROM-SHAPED ---------------------------------------
@@ -43,13 +43,15 @@
 // ov058 address, and dsd names the vtable once on the table its own factory
 // installs. After ov017's three live races, ov023's three, ov033's four and
 // ov035's two, this is the overlay that needed no per-source -D.
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
@@ -57,27 +59,27 @@ extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include "dsstate_seg.h"
 #include <cstdlib>
 
-#include "Actor.h"
-#include "ActorBase.h"
+#include "dActor_c.h"
+#include "fBase_c.h"
 
 extern "C" {
 /* the arm9 shared half */
-int _ZN5Actor19BeforeInitResourcesEv(void *self);              /* slot 1  */
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
-int _ZN5Actor14BeforeBehaviorEv(void *self);                   /* slot 7  */
-int _ZN5Actor12BeforeRenderEv(void *self);                     /* slot 10 */
-int _ZN5Actor13OnYoshiTryEatEv(void *self);                    /* slot 18 */
-void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
-int _ZN5Actor9Virtual50Ev(void *self);                         /* slot 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);              /* slot 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);              /* slot 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
-int _ZN5Actor16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);              /* slot 1  */
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);                   /* slot 7  */
+int _ZN8dActor_c12BeforeRenderEv(void *self);                     /* slot 10 */
+int _ZN8dActor_c13OnYoshiTryEatEv(void *self);                    /* slot 18 */
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
+int _ZN8dActor_c9Virtual50Ev(void *self);                         /* slot 20 */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);              /* slot 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);              /* slot 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
+int _ZN8dActor_c16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
 
 const char *port_actor_class_name(unsigned id);   /* hal/actor_registry */
 void port_actor_slot_decline(const char *what);   /* func_02043fdc_hostcopy.cpp */
@@ -96,7 +98,7 @@ int _ZN15RecRoomCupboard16CleanupResourcesEv(void);     /* slot 3, `return 1` */
 int _ZN15RecRoomCupboard8BehaviorEv(char *self);        /* slot 6  */
 int _ZN15RecRoomCupboardD1Ev(char *self);               /* slot 16 */
 void *_ZN15RecRoomCupboardD0Ev(char *self);             /* slot 17 */
-void *RecRoomCupboard_Spawn(void);                      /* id 182 */
+void *daObjCloset_c_classInit(void);                      /* id 182 */
 
 /* the host vtable, excluded from the mount. THIRTY-ONE, not thirty-two. */
 DSSTATE_BEGIN
@@ -119,11 +121,14 @@ DSSTATE_END
    forwarder, which costs one file instead of holding both destructor TUs
    out the way ov024's PyramidTag D1 had to be. */
 #pragma comment(linker, "/alternatename:?_ZTV15RecRoomCupboard@@3HA=__ZTV15RecRoomCupboard")
-#pragma comment(linker, "/alternatename:?_ZN25MovingCylinderClsnWithPosD1Ev@@3HA=__ZN25MovingCylinderClsnWithPosD1Ev")
-#pragma comment(linker, "/alternatename:?data_020a0eac@@3HA=_data_020a0eac")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEAD RHS and an UNREFERENCED left hand side: nothing in the build defines __ZN10dCcAcPos_cD1Ev, and nothing references ?_ZN10dCcAcPos_cD1Ev@@3HA, so the row can never fire and nothing wants it to. */
+// #pragma comment(linker, "/alternatename:?_ZN10dCcAcPos_cD1Ev@@3HA=__ZN10dCcAcPos_cD1Ev")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEAD RHS and an UNREFERENCED left hand side: nothing in the build defines _data_020a0eac, and nothing references ?data_020a0eac@@3HA, so the row can never fire and nothing wants it to. */
+// #pragma comment(linker, "/alternatename:?data_020a0eac@@3HA=_data_020a0eac")
 /* Memory::Deallocate is a STATIC member, so MSVC gives it __cdecl under /Gd
    and the two calling conventions agree; only the decoration differs. */
-#pragma comment(linker, "/alternatename:?Deallocate@Memory@@SAXPAXPAUHeap@@@Z=__ZN6Memory10DeallocateEPvP4Heap")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEAD RHS and an UNREFERENCED left hand side: nothing in the build defines __ZN6Memory10DeallocateEPvP4Heap, and nothing references ?Deallocate@Memory@@SAXPAXPAUHeap@@@Z, so the row can never fire and nothing wants it to. */
+// #pragma comment(linker, "/alternatename:?Deallocate@Memory@@SAXPAXPAUHeap@@@Z=__ZN6Memory10DeallocateEPvP4Heap")
 
 // ---- the trap --------------------------------------------------------------
 static void ov58_trap_report(void *self, int slot)
@@ -144,52 +149,52 @@ OV58_TRAP(13) OV58_TRAP(14)
 #undef OV58_TRAP
 
 static int __fastcall ov58_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall ov58_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall ov58_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 static void __fastcall ov58_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall ov58_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall ov58_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 /* slot 9 is the BASE Render: this class has no Render of its own. */
 static int __fastcall ov58_render(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::Render(); }
+{ return ((fBase_c *)s)->fBase_c::Render(); }
 static int __fastcall ov58_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall ov58_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall ov58_pdes(void *s, void *)
-{ ((ActorBase *)s)->ActorBase::OnPendingDestroy(); return 0; }
+{ ((fBase_c *)s)->fBase_c::OnPendingDestroy(); return 0; }
 static int __fastcall ov58_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int __fastcall ov58_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 static int __fastcall ov58_turn_egg(void *s, void *, void *p)
-{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+{ _ZN8dActor_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall ov58_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall ov58_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall ov58_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall ov58_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall ov58_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall ov58_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall ov58_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall ov58_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall ov58_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 static int __fastcall ov58_egg(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 
 // ---- the class's own slots -------------------------------------------------
 static int __fastcall rc_init(void *s, void *)
@@ -244,7 +249,7 @@ extern "C" void hal_fill_rec_room_cupboard_vtable(void)
     vt[13] = (void *)ov58_trap13;
     vt[14] = (void *)ov58_trap14;
     vt[15] = (void *)ov58_heap;
-    vt[16] = (void *)rc_d1;
+    vt[16] = (void *)PORT_D16(rc_d1);
     vt[17] = (void *)rc_d0;
     vt[18] = (void *)ov58_yoshi;
     vt[19] = (void *)ov58_turn_egg;

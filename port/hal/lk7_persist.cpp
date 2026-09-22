@@ -579,6 +579,23 @@ int lk7_persist_available(void)
     return port_arena_is_fixed();
 }
 
+// 1 if a savestate.bin is sitting beside the exe. Asks nothing about whether
+// it would LOAD -- that is lk7_persist_read's job and it costs a full header
+// check plus a refusal message. This is the cheap question the startup line
+// and the debug menu's load row need: is there a file there at all, so the
+// player can be told F9 would reach it. Opening and closing the file is the
+// only portable way to ask; the header is deliberately not read here.
+int lk7_persist_present(void)
+{
+    if (!lk7_persist_available()) return 0;
+    char path[512];
+    if (!state_path(path, sizeof path)) return 0;
+    FILE *f = fopen(path, "rb");
+    if (!f) return 0;
+    fclose(f);
+    return 1;
+}
+
 // Write the current live world to <exedir>\savestate.bin. The caller invokes
 // this right after a successful lk6_savestate_save, so live memory IS the slot
 // content. Returns 1 if the file was written, 0 otherwise (disk states off, no

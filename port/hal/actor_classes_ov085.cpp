@@ -40,7 +40,7 @@
 // route reads 54. It is wrong, and it is wrong in the documented way -- the
 // FOURTH width-trap shape lane w20 found on ov026, a class's pointer-to-member
 // SOURCE TABLE packed immediately behind its vtable. Slot 31 at 0x0212ff34 is
-// a real relocated code pointer (func_ov085_0212a0b8), slot 32 is a literal
+// a real relocated code pointer (_ZN13PrincessPeach10InitState0Ev), slot 32 is a literal
 // zero, and dsd names one symbol per pair at 8-byte stride from there --
 // data_ov085_0212ff34, _0212ff3c, _0212ff44, _0212ff4c and on, which
 // port/ov085_syms.txt has carried as 0x8-sized rows since gate 18. Those are
@@ -116,18 +116,20 @@
 // Toad::InitResources spawns actor 0x10d = 269 when its +0x20b variant byte is
 // 1 and func_02013a44 (the save's can-have-cap test) passes -- the cap a Toad
 // hands back. 269 IS REGISTERED: CAP, hal/actor_classes.inc gate 51, with
-// Cap_SpawnInfo at ov002 0x021095cc. ov002 is the always-resident engine
+// g_profile_OBJ_MARIO_CAP at ov002 0x021095cc. ov002 is the always-resident engine
 // overlay, so the class is available on every level and this is not the
 // MontyMoleRock shape (an unregistered id declined by the pre-spawn gate, then
 // a ROM-faithful store through the NULL it returns).
 // ===========================================================================
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
@@ -136,8 +138,8 @@ extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include "dtor_faces_cpp.h"
 #include <cstdlib>
 
-#include "Actor.h"
-#include "ActorBase.h"
+#include "dActor_c.h"
+#include "fBase_c.h"
 /* Four of this pair's bodies are REAL C++ METHODS in src/ and are called as
    methods against the generated headers; the rest are extern "C" in src/ and
    are declared as C names below. Which is which was read off the link, not
@@ -151,23 +153,23 @@ extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 
 extern "C" {
 /* ---- the arm9 shared half, read off both tables' own reloc runs ---------- */
-int _ZN5Actor19BeforeInitResourcesEv(void *self);              /* slot 1  */
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
-int _ZN5Actor14BeforeBehaviorEv(void *self);                   /* slot 7  */
-int _ZN5Actor12BeforeRenderEv(void *self);                     /* slot 10 */
-int _ZN5Actor13OnYoshiTryEatEv(void *self);                    /* slot 18 */
-void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
-int _ZN5Actor9Virtual50Ev(void *self);                         /* slot 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);              /* slot 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);              /* slot 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
-int _ZN5Actor16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
-void _ZN8Platform4KillEv(void *self);                              /* slot 31 */
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);              /* slot 1  */
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);                   /* slot 7  */
+int _ZN8dActor_c12BeforeRenderEv(void *self);                     /* slot 10 */
+int _ZN8dActor_c13OnYoshiTryEatEv(void *self);                    /* slot 18 */
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
+int _ZN8dActor_c9Virtual50Ev(void *self);                         /* slot 20 */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);              /* slot 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);              /* slot 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
+int _ZN8dActor_c16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
+void _ZN10dBgActor_c4KillEv(void *self);                              /* slot 31 */
 
 const char *port_actor_class_name(unsigned id);   /* hal/actor_registry */
 void port_actor_slot_decline(const char *what);   /* func_02043fdc_hostcopy */
@@ -178,20 +180,20 @@ int _ZN8WallSign16CleanupResourcesEv(void);        /* slot 3, takes nothing */
 int _ZN8WallSign8BehaviorEv(void *self);           /* slot 6, HOST REIMPL   */
 int *_ZN8WallSignD1Ev(int *self);                  /* slot 16 */
 int *_ZN8WallSignD0Ev(int *self);                  /* slot 17 */
-void *WallSign_Spawn(void);                        /* the factory */
+void *daObjKanban_c_classInit(void);                        /* the factory */
 
 /* ---- TOAD (185), _ZTV4Toad / _ZTV11daKinopio_c 0x0212feb8 ---------------- */
 int _ZN4Toad13InitResourcesEv(char *self);         /* slot 0  */
 int _ZN4Toad8BehaviorEv(void *self);               /* slot 6, HOST REIMPL   */
 int _ZN4Toad6RenderEv(char *self);                 /* slot 9  */
 int *_ZN4ToadD0Ev(int *self);                      /* slot 17 */
-void *Toad_Spawn(void);                            /* the factory */
+void *daKinopio_c_classInit(void);                            /* the factory */
 
 /* what Toad's hosted slot 16 has to spell out by hand */
 void _ZN11ShadowModelD1Ev(void *self);
 void _ZN9ModelAnimD1Ev(void *self);
-void *_ZN18MovingCylinderClsnD1Ev(void *self);
-void *_ZN5ActorD2Ev(void *self);
+void *_ZN7dCcAc_cD1Ev(void *self);
+void *_ZN8dActor_cD2Ev(void *self);
 
 /* ---- the two host vtable arrays ------------------------------------------
    Both tables answer to TWO names at ONE address, the gate-18 shape: each
@@ -219,7 +221,7 @@ DSSTATE_END
    NAMESPACE SCOPE in a .cpp without extern "C", so MSVC decorates what is a
    C name everywhere else, and the link says so by name:
      _ZN4Toad16CleanupResourcesEv.cpp  four SharedFilePtrs it releases
-     func_ov085_0212943c.cpp           the TALK animation's file pointer
+     _ZN4Toad12St_Talk_InitEv.cpp           the TALK animation's file pointer
    Decorated names lifted verbatim from the link log. Every LHS is REFERENCED
    only and defined nowhere, which is what port/tools/alternatename_guard.py
    requires; every RHS is defined by the generated ov002/ov085 mounts. */
@@ -250,51 +252,51 @@ static int __fastcall ov85_trap14(void *s, void *) { ov85_trap_report(s, 14); re
 
 // ---- the shared 1..30 half -------------------------------------------------
 static int __fastcall ov85_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall ov85_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall ov85_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 static void __fastcall ov85_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall ov85_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall ov85_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall ov85_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall ov85_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall ov85_pdes(void *s, void *)
-{ ((ActorBase *)s)->ActorBase::OnPendingDestroy(); return 0; }
+{ ((fBase_c *)s)->fBase_c::OnPendingDestroy(); return 0; }
 static int __fastcall ov85_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int __fastcall ov85_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 static int __fastcall ov85_egg(void *s, void *, void *p)
-{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+{ _ZN8dActor_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall ov85_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall ov85_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall ov85_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall ov85_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall ov85_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall ov85_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall ov85_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall ov85_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall ov85_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 static int __fastcall ov85_aimed(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 static int __fastcall ov85_kill(void *s, void *)
-{ _ZN8Platform4KillEv(s); return 0; }
+{ _ZN10dBgActor_c4KillEv(s); return 0; }
 
 static void ov85_fill_shared(void **vt)
 {
@@ -352,7 +354,7 @@ extern "C" void hal_fill_wall_sign_vtable(void)
     vt[3]  = (void *)ws_clean;
     vt[6]  = (void *)ws_behavior;
     vt[9]  = (void *)ws_render;
-    vt[16] = (void *)ws_d1;
+    vt[16] = (void *)PORT_D16(ws_d1);
     vt[17] = (void *)ws_d0;
     vt[31] = (void *)ov85_kill;   /* Platform::Kill, inherited */
 }
@@ -389,7 +391,7 @@ extern "C" void hal_fill_toad_vtable(void)
     vt[3]  = (void *)td_clean;
     vt[6]  = (void *)td_behavior;
     vt[9]  = (void *)td_render;
-    vt[16] = (void *)hal_cppd1_Toad;
+    vt[16] = (void *)PORT_D16(hal_cppd1_Toad);
     vt[17] = (void *)td_d0;
     /* no slot 31: a plain Actor, 31 slots total, ends at 30 */
 }
@@ -403,9 +405,9 @@ extern "C" void hal_fill_toad_vtable(void)
 //
 // ---- IDENTITY, BOTH ROUTES -------------------------------------------------
 //
-// PrincessPeach_SpawnInfo (ov085 0x0212ff9c) holds factory 0x0212a684 and the
+// g_profile_PEACH_PRINCESS (ov085 0x0212ff9c) holds factory 0x0212a684 and the
 // +4 halfword 186; the arm9 spawn table slot at 0x02090864 + 186*4 = 0x02090b4c
-// holds 0x0212ff9c, that same record. PrincessPeach_Spawn's literal pool at
+// holds 0x0212ff9c, that same record. daPeach_c_classInit's literal pool at
 // +0x4c installs 0x0212ffc0, which the config labels BOTH _ZTV13PrincessPeach
 // and _ZTV9daPeach_c -- the ROM's own RTTI name for the princess. Gate 18's
 // header screened this factory with the rest of the six and reached the same
@@ -464,7 +466,7 @@ extern "C" void hal_fill_toad_vtable(void)
 //            Reverse declaration order, which is the order the ROM runs. Her
 //            D0 is NOT hosted: it is a flat .c TU under the ROM's C name, it is
 //            on the slice, and it already does that chain plus Deallocate.
-//   both PMF dispatchers (func_ov085_0212a430 / _0212a46c) are host copies in
+//   both PMF dispatchers (_ZN13PrincessPeach17CallStateBehaviorEv / _0212a46c) are host copies in
 //            port/unmatched/Ov085_PrincessPeach_States.cpp, the gate-16 case.
 //
 // ---- RENDER LINKS, AND THAT IS THE OTHER HALF OF THE SAME RULING -----------
@@ -484,18 +486,18 @@ int _ZN13PrincessPeach8BehaviorEv(void *self);      /* slot 6,  HOST COPY     */
 int _ZN13PrincessPeach6RenderEv(char *self);        /* slot 9                 */
 void _ZN13PrincessPeach16OnPendingDestroyEv(void);  /* slot 12, own override  */
 int *_ZN13PrincessPeachD0Ev(int *self);             /* slot 17                */
-void *PrincessPeach_Spawn(void);                    /* the factory            */
+void *daPeach_c_classInit(void);                    /* the factory            */
 
 /* what her hosted slot 16 has to spell out by hand, beside the four TOAD's
    already declares above */
-void *_ZN12WithMeshClsnD1Ev(void *self);
+void *_ZN10dBgCh_ActrD1Ev(void *self);
 
 DSSTATE_BEGIN
 void *_ZTV13PrincessPeach[31];
 DSSTATE_END
 }
 /* The LHS is declared extern by include/decl_common.h:835 and DEFINED nowhere
-   in this link -- src/_ZN13PrincessPeachD0Ev.c is the one reader, and it only
+   in this link -- src/_ZN13PrincessPeachD0Ev.cpp is the one reader, and it only
    stores it -- which is what port/tools/alternatename_guard.py requires.
    port/ov085_syms.txt leaves every _ZTV* out of the mount on purpose, so
    nothing else can define either name. */
@@ -532,7 +534,7 @@ extern "C" void hal_fill_princess_peach_vtable(void)
     /* her own OnPendingDestroy, not ActorBase's -- the one slot this class
        takes back from ov85_fill_shared */
     vt[12] = (void *)pp_pdes;
-    vt[16] = (void *)hal_cppd1_PrincessPeach;
+    vt[16] = (void *)PORT_D16(hal_cppd1_PrincessPeach);
     vt[17] = (void *)pp_d0;
     /* no slot 31: a plain Actor, 31 slots total, ends at 30 */
 }

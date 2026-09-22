@@ -14,18 +14,23 @@
  */
 #include "common.h"
 
-class Actor;
+class dActor_c;
 extern "C" {
-void func_ov072_02121d50(Actor *a, int i);
+void func_ov072_02121d50(dActor_c *a, int i);
 int func_0201267c(int id, void *p);
-bool _ZN5Actor17DetectRaycastClsnER7Vector3S1_b(Actor *thiz, Vector3 &a, Vector3 &b, bool c);
+/* int, not bool: port/faces_sync.txt:1127 marks this flat name R, so it is a
+   GENERATED reverse face and THE RETURN WIDTH RULE widens it to int. The other
+   port declaration of the same symbol (unmatched/MrI_StateMains.cpp:162) already
+   says int; this one contradicted it. The result is discarded at the one call
+   below, so the spelling was never load-bearing, only wrong. */
+int _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(dActor_c *thiz, Vector3 &a, Vector3 &b, bool c);
 void _ZN9Animation7AdvanceEv(void *anim);
-void _ZN12CylinderClsn5ClearEv(void *clsn);
+void _ZN5dCc_c5ClearEv(void *clsn);
 
 /* PORT_HOST_ABI: func_ov072_02121d50 SHORT-1 seam (BabyPenguin_InitResources'
    own shape re-applied); the one-argument matched call needs its real
    second argument (0) spelled explicitly under cdecl. */
-int func_ov072_021217ac(Actor *thiz)
+int func_ov072_021217ac(dActor_c *thiz)
 {
     char *c = (char *)thiz;
     short h = *(short *)(*(char **)(c + 0x360) + 0x8e);
@@ -47,7 +52,7 @@ int func_ov072_021217ac(Actor *thiz)
         v.x = x;
         v.y = y2;
         v.z = z;
-        _ZN5Actor17DetectRaycastClsnER7Vector3S1_b(thiz, v, *(Vector3 *)(c + 0x5c), true);
+        _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(thiz, v, *(Vector3 *)(c + 0x5c), true);
         {
             int z0 = 0;
             *(int *)(c + 0x360) = z0;
@@ -56,7 +61,7 @@ int func_ov072_021217ac(Actor *thiz)
     }
 after_ray:
     _ZN9Animation7AdvanceEv(c + 0x124);
-    _ZN12CylinderClsn5ClearEv(c + 0x160);
+    _ZN5dCc_c5ClearEv(c + 0x160);
     if (*(int *)(c + 8) == 0) {
         unsigned int t = (unsigned int)(*(int *)(c + 0x12c) << 4) >> 16;
         if (t == 0x10 || t == 0x25) {

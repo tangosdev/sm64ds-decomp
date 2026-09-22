@@ -1,3 +1,9 @@
+# RETIRED at SYNC6: the class translation unit main folded these bodies into
+# is back on its slice rows (today's #2660/#2663/#2666 un-quarantine) and it
+# DEFINES the names below itself, so the mount was the second definition.
+# Measured as LNK2005 rows against this file's generated object in
+# build_s2.log. Removed from the generator's INPUT, per the rule: never
+# edit the generated output. Retired here: g_profile_KI_ITA
 # Gate 188: the per-symbol mount of ov016 -- Jolly Roger Bay's own overlay
 # (data/stage/kaizoku_irie, base 0x021111a0) -- for its six MOVER classes:
 # SHIP_DOWN (56), SHIP_UP (57), ROCK_PILLAR (58), FLOAT_ON_WATER_PLATFORM_JRB
@@ -12,7 +18,7 @@
 # contiguous.
 #
 # THE VTABLES STAY OUT, the ov080/ov095/ov064 rule. _ZTV5Unagi (0x02114958, 31
-# words), _ZTV6ShipUp (0x02114a3c, 32), the RockPillar table data_ov016_02114b00
+# words), _ZTV6ShipUp (0x02114a3c, 32), the RockPillar table _ZTV10RockPillar
 # (32) and _ZTV23FloatOnWaterPlatformJrb == _ZTV13daSlide_Box_c (0x02114c8c, 37;
 # an RTTI alias, one table two names) each carry the vtable signature (the +4
 # word relocates to Actor::BeforeInitResources, arm9 0x02011268) and are HOST
@@ -26,12 +32,12 @@
 # SpawnInfo is pinned to the record's real 0x1c (or Unagi's 0x10) so the +4 id
 # halfword the registry cross-checks reads out of the right bytes; the natural
 # next-symbol delta on four of them is 0x24, which runs into trailing padding.
-Unagi_SpawnInfo:0x10
-ShipDown_SpawnInfo:0x1c
-ShipUp_SpawnInfo:0x1c
-RockPillar_SpawnInfo:0x1c
-FloatOnWaterPlatformJrb_SpawnInfo:0x1c
-SlidingBox_SpawnInfo:0x1c
+g_profile_MORAY:0x10
+g_profile_KI_FUNE:0x1c
+g_profile_KI_FUNE_UP:0x1c
+g_profile_KI_HASIRA:0x1c
+
+g_profile_SLIDE_BOX:0x1c
 #
 # ---- UNAGI (242) source statics --------------------------------------------
 # Unagi is an Enemy with a five-variant PMF state table. __sinit_ov016_021136ec
@@ -48,7 +54,7 @@ data_ov016_021148c0
 data_ov016_02114908
 #
 # ---- FLOAT_ON_WATER_PLATFORM_JRB (60, daObjKi_Ita_c) Init config block -------
-# func_ov016_02112fa8 (id 60's InitResources) passes &data_ov016_02114b8c to the
+# _ZN13daObjKi_Ita_c13InitResourcesEv (id 60's InitResources) passes &data_ov016_02114b8c to the
 # arm9 Platform helper func_020b5e58. Plain 0xc-byte config, mount it.
 data_ov016_02114b8c
 #
@@ -60,7 +66,7 @@ data_ov016_021136dc data_ov016_021136e4
 #
 # ---- the CLPS collision blocks the MovingMeshColliders take by reference -----
 # FloatOnWaterPlatformJrb::InitResources passes data_ov016_02113bac to
-# MovingMeshCollider::SetFile; RockPillar's (func_ov016_02112e1c) passes
+# MovingMeshCollider::SetFile; RockPillar's (_ZN10RockPillar13InitResourcesEv) passes
 # data_ov016_02113cac. ShipUp picks its block by mModelIndex out of the two-word
 # pointer table data_ov016_021149d4 -> {0x02113c6c, 0x02113c4c}; mount the table
 # and both blocks so the reloc lands inside this mount. Plain data, one CLPS

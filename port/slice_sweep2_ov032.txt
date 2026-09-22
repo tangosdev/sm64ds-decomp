@@ -15,10 +15,10 @@
 # Four TUs are HELD OUT and host-copied because MSVC cannot deliver their
 # dispatch or their receiver, and all four belong to BUBBA (id 228):
 #
-#   src/func_ov032_02111ff4.cpp   -> port/unmatched/Bubba_StateEnter.cpp
-#   src/func_ov032_021121b4.cpp   -> port/unmatched/Bubba_Behavior.cpp
-#   src/func_ov032_02112164.cpp   -> port/unmatched/Bubba_Render.cpp
-#   src/func_ov032_02111350.c     -> port/unmatched/Bubba_ChaseGate.cpp
+#   src/game/actors/d_a_bakubaku.cpp   -> port/unmatched/Bubba_StateEnter.cpp
+#   src/game/actors/d_a_bakubaku.cpp   -> port/unmatched/Bubba_Behavior.cpp
+#   src/game/actors/d_a_bakubaku.cpp   -> port/unmatched/Bubba_Render.cpp
+#   src/game/actors/d_a_bakubaku.cpp     -> port/unmatched/Bubba_ChaseGate.cpp
 #
 # The first two are the mwcc pointer-to-member state machine: both form a PMF
 # type on an INCOMPLETE class, where MSVC's representation is the "unknown
@@ -38,7 +38,7 @@
 #
 # THREE CLASSES, THREE TABLES, AND DSD'S ONLY VTABLE LABEL IS ON THE WRONG ONE
 # (and it is on the same address twice). id 106 HUGE_COVER takes 0x021138e0
-# (RTTI 13daObjTdFuta_c) and the func_ov032_02112544/02112588/021125b0/
+# (RTTI 13daObjTdFuta_c) and the _ZN13daObjTdFuta_c16CleanupResourcesEv/02112588/021125b0/
 # 021125d4/021124a8/021124ec bodies; id 107 HUGE_WATER takes 0x021139a4 (dsd
 # _ZTV9HugeCover AND _ZTV14daObjTdWater_c, RTTI 14daObjTdWater_c) and the
 # _ZN9HugeCover* bodies; id 228 BUBBA takes 0x02113824 (RTTI 12daBakubaku_c)
@@ -48,7 +48,7 @@
 #
 # FIVE PER-SOURCE -D RENAMES travel with this slice (port/CMakeLists.txt):
 #
-#   func_ov032_021124ec.c    id 106's D0. VT0 -> the OWN table 0x021138e0,
+#   _ZN13daObjTdFuta_cD0Ev.c    id 106's D0. VT0 -> the OWN table 0x021138e0,
 #                            VT1 -> Platform's base _ZTV10dBgActor_c
 #                            (0x0210ae38), G0 -> the game heap 0x020a0eac.
 #                            Pool order read off the ROM body: 0x02112538 own,
@@ -57,14 +57,14 @@
 #                            order the source already writes. Unlike ov033's
 #                            pair the resolver got this one the right way round;
 #                            it was checked, not assumed.
-#   _ZN9HugeCoverD0Ev.c      id 107's D0. G0 -> data_020a0eac, the game heap,
+#   _ZN14daObjTdWater_cD0Ev.c      id 107's D0. G0 -> data_020a0eac, the game heap,
 #                            read off the pool at 0x02112740.
-#   _ZN9HugeCover16CleanupResourcesEv.cpp
+#   _ZN14daObjTdWater_c16CleanupResourcesEv.cpp
 #                            id 107's CleanupResources. G0 -> the model
 #                            SharedFilePtr data_ov032_02113afc, G1 -> the clsn
 #                            SharedFilePtr data_ov032_02113af4, read off the
 #                            pool at 0x02112780/0x02112784.
-#   func_ov032_02111d7c.cpp  BUBBA's state-2 tick. func_ov047_02111254 ->
+#   func_ov032_02111d7c.cpp  BUBBA's state-2 tick. _ZN21daObjKm3_Kurumajiku_c16CleanupResourcesEv ->
 #                            func_ov032_02111254. A LIVE wrong-name: OV047 is
 #                            seated by this same lane two commits later, so the
 #                            ov047 spelling would resolve to Bowser-in-the-Sky's
@@ -79,46 +79,15 @@
 # Measured off the link, not guessed.
 
 # ---- BUBBA (228) -- factory, destructors, lifecycle slots ------------------
-src/func_ov032_021111a0.c
-src/func_ov032_021111f0.c
-src/func_ov032_0211244c.c
-src/func_ov032_021122dc.c
-src/func_ov032_02112124.c
-src/func_ov032_02112160.c
-src/func_ov032_02112444.c
+src/game/actors/d_a_bakubaku.cpp
 
 # ---- BUBBA -- the five state cells' ten handler bodies and their helpers ---
-src/func_ov032_02111254.c
-src/func_ov032_021113fc.cpp
-src/func_ov032_02111620.cpp
-src/func_ov032_02111814.c
-src/func_ov032_02111830.c
-src/func_ov032_02111b50.c
-src/func_ov032_02111b9c.cpp
-src/func_ov032_02111d58.c
-src/func_ov032_02111d7c.cpp
-src/func_ov032_02111dd8.c
-src/func_ov032_02111e24.c
-src/func_ov032_02111f9c.c
-src/func_ov032_02112044.cpp
 
 # ---- HUGE_COVER (106) -----------------------------------------------------
-src/HugeCover_Spawn.c
-src/func_ov032_021124a8.c
-src/func_ov032_021124ec.c
-src/func_ov032_02112544.c
-src/func_ov032_02112588.cpp
-src/func_ov032_021125b0.cpp
-src/func_ov032_021125d4.cpp
+src/game/actors/d_a_obj_td_futa.cpp
 
 # ---- HUGE_WATER (107) -----------------------------------------------------
-src/HugeWater_Spawn.c
-src/_ZN9HugeCoverD1Ev.c
-src/_ZN9HugeCoverD0Ev.c
-src/_ZN9HugeCover16CleanupResourcesEv.cpp
-src/_ZN9HugeCover6RenderEv.cpp
-src/_ZN9HugeCover8BehaviorEv.cpp
-src/_ZN9HugeCover13InitResourcesEv.cpp
+src/game/actors/d_a_obj_td_water.cpp
 
 # ---- the three static initialisers ----------------------------------------
 src/__sinit_ov032_02112c10.c

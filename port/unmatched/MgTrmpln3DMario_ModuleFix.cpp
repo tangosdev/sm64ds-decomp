@@ -51,7 +51,7 @@
  *
  * func_ov006_020cb16c is one of the twenty-one dMgTrmpln3DMario_c STATE bodies
  * (unmatched/MgTrmpln3DMario_StateDispatch.cpp, the pair at 0x0213b20c that
- * src/func_ov006_020cb1a8.c installs), so it is on the play path rather than
+ * src/func_ov006_020cb1a8.cpp installs), so it is on the play path rather than
  * only the construction path.
  *
  * IT ALSO DROPS THE RECEIVER.  The ROM's `bl 0x020ccd78` leaves r0 holding this

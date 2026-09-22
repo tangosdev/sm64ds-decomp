@@ -16,7 +16,7 @@
  * tables."
  *
  * THAT SENTENCE IS TRUE AND THE REASON IS ONE DELEGATED CONSTRUCTOR.
- * src/MgSnowballSlalom_Spawn.cpp (0x0212a520, 12 instructions plus a one-word
+ * src/d_s_mg_snowball.cpp (0x0212a520, 12 instructions plus a one-word
  * pool = 13 = 0x34/4) writes no vtable at all.  It allocates 0xc59c through
  * func_02043444, returns early on a null, and then calls func_ov006_021295ac
  * with the object in r0 and returns that callee's value:
@@ -32,18 +32,18 @@
  *     0x021295c8  str  r1,[r4]           ; r1 = 0x0213e448  dScMgSingle3DBase_c
  *     0x021295dc  str  r1,[r4]           ; r1 = 0x0214000c  THIS CLASS
  *
- * so the object this factory produces carries data_ov006_0214000c, and this
+ * so the object this factory produces carries _ZTV15dScMgSnowball_c, and this
  * class is a FOURTH class under the same middle base.
  *
  * IT IS NOT ADOPTED FROM THE HANDOVER, IT IS RE-DERIVED, and four independent
  * readings of the relocation set close the ring rather than one:
  *
- *   - MgSnowballSlalom_Spawn is the ONLY caller of func_ov006_021295ac
+ *   - dScMgSnowball_c_classInit is the ONLY caller of func_ov006_021295ac
  *     anywhere in ov006 (one arm_call, from:0x0212a540).
  *   - func_ov006_021295ac is the ONLY body that writes 0x0214000c into an
  *     object it constructs.
  *   - The other two references to 0x0214000c in the entire overlay are
- *     func_ov006_0212568c and func_ov006_0212573c, which are SLOTS 16 AND 17
+ *     _ZN15dScMgSnowball_cD1Ev and _ZN15dScMgSnowball_cD0Ev, which are SLOTS 16 AND 17
  *     OF THE TABLE ITSELF -- the D2 and the D0 -- and both write 0x0214000c on
  *     entry and 0x0213e448 on the way out.  The vtable names its own
  *     destructors and its own destructors name it.
@@ -61,8 +61,8 @@
  *               MgMemoryMatch, MgMemoryMaster, MgPairAGoneAndOn,
  *               MgMushroomRoulette, MgBoomBox, MgLuckyStars and this one among
  *               them).  It is dScMgSingle3DBase_c, the shared middle base.
- *   0x0213c62c  14 load relocations, from MgBounceAndPounce_Spawn,
- *               MgTrampolineTime_Spawn, MgTrampolineTerror_Spawn,
+ *   0x0213c62c  14 load relocations, from dScMgJump_c_classInit,
+ *               dScMgTrampoline_c_classInit, dScMgTrampoline2_c_classInit,
  *               PathLift::BaseInitResources and the MgBounceAndPounce
  *               destructors.  A second shared base, one family further along.
  *
@@ -88,7 +88,7 @@
  * THE WIDTH WORD IS ALSO AN IDENTITY WITNESS, which is a coincidence worth
  * writing down because it makes the check unusually cheap to re-run.  The
  * string a thirty-seventh slot would have eaten is a FILE THIS CLASS LOADS:
- * src/func_ov006_02129268 (slot 0, InitResources) calls func_020adc74 on
+ * src/_ZN15dScMgSnowball_c13InitResourcesEv (slot 0, InitResources) calls func_020adc74 on
  * &data_ov006_0214009c, and yukidama is Japanese for snowball.
  *
  * ---- 3. FIVE INDEPENDENT WITNESSES SAY THIS IS SNOWBALL SLALOM ----------
@@ -144,7 +144,7 @@
  *
  * Of the sixteen, SIX are the middle base's own overrides rather than this
  * class's: slots 2, 5, 7, 10, 26 and 33 hold the same words
- * data_ov006_0213e448 holds.  TEN are this class's own, which is what the
+ * _ZTV19dScMgSingle3DBase_c holds.  TEN are this class's own, which is what the
  * kSnowFaces array below covers.  Five of the fourteen markers are the middle
  * base's shared glue and already carried rulings from run link60 lane MGB and
  * run mg9 lanes LKY, MMT and PSY; they are RE-READ here rather than cited.
@@ -154,7 +154,7 @@
  *
  * SLOT 18 READS ITS SECOND ARGUMENT AND THE THUNK MUST FORWARD IT.  This is
  * the trap run mg9 lane LKY found in dScMgBSC_c and relayed, and this class is
- * the second instance: func_ov006_0212921c saves r1 into r4 at 0x0212922c and
+ * the second instance: _ZN15dScMgSnowball_c13OnYoshiTryEatEi saves r1 into r4 at 0x0212922c and
  * compares it against 0x13 at 0x0212923c, and only on a match does it run
  * func_ov006_02126ee4 and func_ov006_02126a98.  A thunk that merely POPPED the
  * argument -- which is all most seated classes needed -- would hand the body
@@ -203,21 +203,21 @@ int      port_scene_env_want(void);
    host array of the same name is a duplicate symbol, and leaving the mounted
    table alone leaves live wild DS pointers in a table the factory installs. */
 extern unsigned char data_ov004_020bc0c0[];   /* dScMgBase_c,         36 */
-extern unsigned char data_ov006_0213e448[];   /* dScMgSingle3DBase_c, 36 */
-extern unsigned char data_ov006_0214000c[];   /* dScMgSnowball_c,     36 */
-extern unsigned char MgSnowballSlalom_SpawnInfo[];
+extern unsigned char _ZTV19dScMgSingle3DBase_c[];   /* dScMgSingle3DBase_c, 36 */
+extern unsigned char _ZTV15dScMgSnowball_c[];   /* dScMgSnowball_c,     36 */
+extern unsigned char g_profile_MG_SNOWBALL[];
 
 /* The middle base's eight, spelled with the parameter list each src TU
    defines.  port_mg_flower_after_init is unmatched/MgFlower_Slot2.cpp's
    repair of slot 2's ride-through, not the src body. */
 int   port_mg_flower_after_init(void *c, unsigned f);   /* slot  2 */
-void  func_ov006_0210a608(void *c, unsigned f);         /* slot  5 */
-int   func_ov006_0210a698(void *c);                     /* slot  7 */
-int   func_ov006_0210a664(void *c);                     /* slot 10 */
-int   func_ov006_0210a4b0(char *c);                     /* slot 16 D2 */
-int   func_ov006_0210a4e8(char *c);                     /* slot 17 D0 */
-int   func_ov006_0210a600(void);                        /* slot 26 */
-void  func_ov006_0210a708(char *c);                     /* slot 33 */
+void  _ZN19dScMgSingle3DBase_c21AfterCleanupResourcesEj(void *c, unsigned f);         /* slot  5 */
+int   _ZN19dScMgSingle3DBase_c14BeforeBehaviorEv(void *c);                     /* slot  7 */
+int   _ZN19dScMgSingle3DBase_c12BeforeRenderEv(void *c);                     /* slot 10 */
+int   _ZN19dScMgSingle3DBase_cD1Ev(char *c);                     /* slot 16 D2 */
+int   _ZN19dScMgSingle3DBase_cD0Ev(char *c);                     /* slot 17 D0 */
+int   _ZN19dScMgSingle3DBase_c24OnHitByCannonBlastedCharEv(void);                        /* slot 26 */
+void  _ZN19dScMgSingle3DBase_c9Virtual84Ev(char *c);                     /* slot 33 */
 
 /* This class's own ten.  Slot 6 is the src TU and NOT a host copy: it holds
    no pointer-to-member dispatch of its own -- a body-by-body scan of the ROM
@@ -225,23 +225,23 @@ void  func_ov006_0210a708(char *c);                     /* slot 33 */
    reaches the state machine by calling func_ov006_0212a2e0, which IS host-
    copied.  That is the whole shape port/mg_fanout_costs.txt section 14 warns
    about, read the right way round. */
-int   func_ov006_02129268(void *self);        /* slot  0 InitResources     */
-int   func_ov006_021291f8(void *self);        /* slot  3 CleanupResources  */
-int   func_ov006_021283a4(char *self);        /* slot  6 Behavior          */
-int   func_ov006_02127d10(char *self);        /* slot  9 Render            */
-void *func_ov006_0212568c(char *c);           /* slot 16 D2                */
-void *func_ov006_0212573c(char *c);           /* slot 17 D0                */
-void  func_ov006_0212921c(void *c, int mode); /* slot 18 state reset       */
-int   func_ov006_021291d4(void *self);        /* slot 23                   */
-int   func_ov006_02128fb8(char *self);        /* slot 24                   */
-int   func_ov006_021291b0(void *self);        /* slot 25                   */
+int   _ZN15dScMgSnowball_c13InitResourcesEv(void *self);        /* slot  0 InitResources     */
+int   _ZN15dScMgSnowball_c16CleanupResourcesEv(void *self);        /* slot  3 CleanupResources  */
+int   _ZN15dScMgSnowball_c8BehaviorEv(char *self);        /* slot  6 Behavior          */
+int   _ZN15dScMgSnowball_c6RenderEv(char *self);        /* slot  9 Render            */
+void *_ZN15dScMgSnowball_cD1Ev(char *c);           /* slot 16 D2                */
+void *_ZN15dScMgSnowball_cD0Ev(char *c);           /* slot 17 D0                */
+void  _ZN15dScMgSnowball_c13OnYoshiTryEatEi(void *c, int mode); /* slot 18 state reset       */
+int   _ZN15dScMgSnowball_c11OnAttacked2Ev(void *self);        /* slot 23                   */
+int   _ZN15dScMgSnowball_c8OnKickedEv(char *self);        /* slot 24                   */
+int   _ZN15dScMgSnowball_c8OnPushedEv(void *self);        /* slot 25                   */
 
 /* The factory, linked from the slice.  It needs no displacement ruling: it
    calls func_02043444 with its own size argument and hands the RESULT to
    func_ov006_021295ac, which is the constructor -- there is no dropped
    argument riding through in r0.  (The section-12 grant exists for 0x169,
    whose factory calls the base constructor with no argument at all.) */
-void *MgSnowballSlalom_Spawn(void);
+void *dScMgSnowball_c_classInit(void);
 
 /* unmatched/MgSnowball_StateDispatch.cpp */
 unsigned port_mg_snowball_state_hits(void);
@@ -288,23 +288,23 @@ static int g_snw_mode18 = -1;
 static void *__fastcall s3_ainit(void *s, void *, unsigned f)
 { B3D(2);  return (void *)(size_t)port_mg_flower_after_init(s, f); }
 static void __fastcall s3_aclean(void *s, void *, unsigned f)
-{ B3D(5);  func_ov006_0210a608(s, f); }
+{ B3D(5);  _ZN19dScMgSingle3DBase_c21AfterCleanupResourcesEj(s, f); }
 static int  __fastcall s3_bbeh(void *s, void *)
-{ B3D(7);  return func_ov006_0210a698(s); }
+{ B3D(7);  return _ZN19dScMgSingle3DBase_c14BeforeBehaviorEv(s); }
 static int  __fastcall s3_bren(void *s, void *)
-{ B3D(10); return func_ov006_0210a664(s); }
+{ B3D(10); return _ZN19dScMgSingle3DBase_c12BeforeRenderEv(s); }
 static void *__fastcall s3_d2(void *s, void *)
-{ B3D(16); return (void *)(size_t)func_ov006_0210a4b0((char *)s); }
+{ B3D(16); return (void *)(size_t)_ZN19dScMgSingle3DBase_cD1Ev((char *)s); }
 static void *__fastcall s3_d0(void *s, void *)
-{ B3D(17); return (void *)(size_t)func_ov006_0210a4e8((char *)s); }
+{ B3D(17); return (void *)(size_t)_ZN19dScMgSingle3DBase_cD0Ev((char *)s); }
 static int  __fastcall s3_v26(void *, void *)
-{ B3D(26); return func_ov006_0210a600(); }
+{ B3D(26); return _ZN19dScMgSingle3DBase_c24OnHitByCannonBlastedCharEv(); }
 static int  __fastcall s3_v33(void *s, void *)
-{ B3D(33); func_ov006_0210a708((char *)s); return 0; }
+{ B3D(33); _ZN19dScMgSingle3DBase_c9Virtual84Ev((char *)s); return 0; }
 
 /* ---- this class's own ten ---------------------------------------------- */
 static int  __fastcall snw_init(void *s, void *)
-{ SNW(0);  const int r = func_ov006_02129268(s);
+{ SNW(0);  const int r = _ZN15dScMgSnowball_c13InitResourcesEv(s);
   /* Latch the gapless machine so a minigame the gapless table does not name
      can say "unsupported" rather than doing nothing quietly.
      hal_gapless_splice() is deliberately NOT called: scene 377 has no row in
@@ -313,7 +313,7 @@ static int  __fastcall snw_init(void *s, void *)
      ruling as hal/scene_mg_luckystars.cpp and hal/scene_mg_flower.cpp. */
   hal_gapless_minigames_latch(); return r; }
 static int  __fastcall snw_clean(void *s, void *)
-{ SNW(3);  return func_ov006_021291f8(s); }
+{ SNW(3);  return _ZN15dScMgSnowball_c16CleanupResourcesEv(s); }
 /* ---- SM64DS_SNW_TRACE: the ROLL CHAIN, link by link ---------------------
  *
  * A scroll-word census answers "did the number move" and NOTHING ELSE, and a
@@ -357,7 +357,7 @@ static unsigned g_snw_t_back;
 static int  __fastcall snw_beh(void *s, void *)
 {
     SNW(6);
-    const int r = func_ov006_021283a4((char *)s);
+    const int r = _ZN15dScMgSnowball_c8BehaviorEv((char *)s);
     if (g_snw_trace > 0 && s) {
         const char *c = (const char *)s;
         const int vx = *(const int *)(c + 0xab60);
@@ -381,21 +381,21 @@ static int  __fastcall snw_beh(void *s, void *)
     return r;
 }
 static int  __fastcall snw_render(void *s, void *)
-{ SNW(9);  return func_ov006_02127d10((char *)s); }
+{ SNW(9);  return _ZN15dScMgSnowball_c6RenderEv((char *)s); }
 static void *__fastcall snw_d2(void *s, void *)
-{ SNW(16); return func_ov006_0212568c((char *)s); }
+{ SNW(16); return _ZN15dScMgSnowball_cD1Ev((char *)s); }
 static void *__fastcall snw_d0(void *s, void *)
-{ SNW(17); return func_ov006_0212573c((char *)s); }
+{ SNW(17); return _ZN15dScMgSnowball_cD0Ev((char *)s); }
 /* The forwarding thunk section 5 argues for.  The value is kept for the
    census so the run can show it arrived rather than assert it. */
 static int  __fastcall snw_reset(void *s, void *, int mode)
-{ SNW(18); g_snw_mode18 = mode; func_ov006_0212921c(s, mode); return 1; }
+{ SNW(18); g_snw_mode18 = mode; _ZN15dScMgSnowball_c13OnYoshiTryEatEi(s, mode); return 1; }
 static int  __fastcall snw_v23(void *s, void *)
-{ SNW(23); return func_ov006_021291d4(s); }
+{ SNW(23); return _ZN15dScMgSnowball_c11OnAttacked2Ev(s); }
 static int  __fastcall snw_v24(void *s, void *)
-{ SNW(24); return func_ov006_02128fb8((char *)s); }
+{ SNW(24); return _ZN15dScMgSnowball_c8OnKickedEv((char *)s); }
 static int  __fastcall snw_v25(void *s, void *)
-{ SNW(25); return func_ov006_021291b0(s); }
+{ SNW(25); return _ZN15dScMgSnowball_c8OnPushedEv(s); }
 
 /* The two env no-ops every seat carries, counted separately so a run can
    never read a no-op as the real body having run. */
@@ -459,13 +459,13 @@ static unsigned g_snw_mid_claimed;
 extern "C" void port_scene_fill_snowball(void)
 {
     void **base = (void **)data_ov004_020bc0c0;
-    void **mid  = (void **)data_ov006_0213e448;
-    void **vt   = (void **)data_ov006_0214000c;
+    void **mid  = (void **)_ZTV19dScMgSingle3DBase_c;
+    void **vt   = (void **)_ZTV15dScMgSnowball_c;
 
     /* dScMgBase_c's own 36 first.  On a tree carrying the earlier rows this is
        a second pass over words that are already host pointers and finds
        nothing; it is here so this class does not depend on another class's row
-       existing.  The constructor's first act is func_ov004_020b2adc, which
+       existing.  The constructor's first act is _ZN11dScMgBase_cC2Ev, which
        writes data_ov004_020bc0c0 into the object's first word before either
        derived table lands. */
     port_scene_mg_fill_shared(base, 36);
@@ -561,7 +561,7 @@ static int snw_corridor_hi(void) { return snw_corridor_edge(1); }
 
 extern "C" void *port_mg_snowball_spawn(void)
 {
-    void *p = MgSnowballSlalom_Spawn();
+    void *p = dScMgSnowball_c_classInit();
     g_snw_self = (char *)p;
     /* Read once, at the spawn, so the per-tick sampler is a plain int test and
        an unset variable costs the Behavior face nothing. */
@@ -682,7 +682,7 @@ extern "C" void port_scene_snowball_hits(void)
                         "nonzero over %d row(s) x 16 column(s), %u distinct "
                         "tile id(s); %u snowball slot(s) and %u scenery slot(s) "
                         "in use. The three CLOSURE floors are retired and "
-                        "seated (src/func_ov006_02125f68.c, _02126ee4.cpp, "
+                        "seated (src/func_ov006_02125f68.cpp, _02126ee4.cpp, "
                         "_02126b4c.c); a zero here would mean the layout ran "
                         "and wrote nothing\n",
                         tiles, n * 16, n, kinds, balls, scen);

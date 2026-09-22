@@ -3,18 +3,14 @@
 // @symbol func_ov060_02113b5c
 /* recovered: shared common types */
 #include "common.h"
-struct RaycastGround { char buf[0x50]; };
+#include "dBgCh_Gnd.h"
 
 extern "C" {
-    void _ZN13RaycastGroundC1Ev(RaycastGround* self);
-    void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(RaycastGround* self, const Vector3* p, void* a);
-    int _ZN13RaycastGround10DetectClsnEv(RaycastGround* self);
-    void _ZN13RaycastGroundD1Ev(RaycastGround* self);
     void func_ov060_02111cc0(char* c, int a, int b);
     void _Z14ApproachLinearRiii(int* v, int a, int b);
     void func_ov060_02115a84(char* c, char* arg);
-    int _ZNK12WithMeshClsn10IsOnGroundEv(void* self);
-    int _ZNK12WithMeshClsn13JustHitGroundEv(void* self);
+    int _ZNK10dBgCh_Actr10IsOnGroundEv(void* self);
+    int _ZNK10dBgCh_Actr13JustHitGroundEv(void* self);
     int Bowser_IsAnimAtLastFrame(char* c);
     int func_ov060_02113d20(char* c);
 }
@@ -27,9 +23,8 @@ extern "C" void func_ov060_02113b5c(char* c)
 
     int r4 = *(s32*)(c + 0x60);
     if (*(s32*)(c + 0x60) > *(s32*)(c + 0x3b4)) {
-        RaycastGround rg;
         Vector3 v;
-        _ZN13RaycastGroundC1Ev(&rg);
+        dBgCh_Gnd rg;
         int base = *(s32*)(c + 0x3b4);
         int zz = *(s32*)(c + 0x64);
         int xx = *(s32*)(c + 0x5c);
@@ -37,12 +32,11 @@ extern "C" void func_ov060_02113b5c(char* c)
         v.x = xx;
         v.y = yy;
         v.z = zz;
-        _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(&rg, &v, c);
-        if (_ZN13RaycastGround10DetectClsnEv(&rg) != 0) {
-            int hy = *(s32*)(rg.buf + 0x44);
+        rg.SetObjAndPos(v, (dActor_c*)c);
+        if (rg.DetectClsn() != 0) {
+            int hy = rg.clsnY;
             if (hy >= *(s32*)(c + 0x3b4) - 0x64000) r4 = hy;
         }
-        _ZN13RaycastGroundD1Ev(&rg);
     }
 
     if (*(u8*)(c + 0x423) == 0) {
@@ -57,8 +51,8 @@ extern "C" void func_ov060_02113b5c(char* c)
 
         func_ov060_02115a84(c, c + 0x3fe);
 
-        if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x14c) != 0) {
-            if (_ZNK12WithMeshClsn13JustHitGroundEv(c + 0x14c) == 0) {
+        if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x14c) != 0) {
+            if (_ZNK10dBgCh_Actr13JustHitGroundEv(c + 0x14c) == 0) {
                 *(s32*)(c + 0x98) = 0;
                 *(u8*)(c + 0x427) = 0;
                 u8* p = (u8*)(((int)c + 0x423));

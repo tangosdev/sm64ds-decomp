@@ -9,8 +9,8 @@
 #                     whole overlay image
 #   SpawnInfo         0x0213f974 = {factory 0x021207a8, id 0x0183 twice}, which
 #                     config/arm9/overlays/ov006/symbols.txt names
-#                     MgHideAndBooSeek_SpawnInfo
-#   factory           MgHideAndBooSeek_Spawn, 0x021207a8, size 0x34
+#                     g_profile_MG_TERESA
+#   factory           dScMgTeresa_c_classInit, 0x021207a8, size 0x34
 #   type_info         0x0213f9b4 {0x0209a764, name 0x0213f9c0, base 0x020bbf6c}
 #                     reached through the word BEFORE the vtable: relocs.txt
 #                     has from:0x0213fa08 kind:load to:0x0213f9b4
@@ -37,12 +37,12 @@
 #       bl  0x020b2adc      -> dScMgBase_c's constructor
 #       ldr r0,[pc,#0x10]   -> pool 0x021207d8 = 0x0213fa0c
 #       str r0,[r4]
-#   src/MgHideAndBooSeek_Spawn.c agrees word for word: operator new(19496),
+#   src/d_s_mg_teresa.c agrees word for word: operator new(19496),
 #   19496 == 0x4c28, then p[0] = _ZTV13dScMgTeresa_c.
 #
 #   SLOT 16 / SLOT 17, the destructor pair, unwind ONE table and not two.
-#   src/func_ov006_0211cbd0.c writes data_ov006_0213fa0c and calls
-#   func_ov004_020b29c0 (the base's), and src/func_ov006_0211cbf4.c does the
+#   src/actors/dScMgTeresa_c.cpp writes data_ov006_0213fa0c and calls
+#   _ZN11dScMgBase_cD2Ev (the base's), and src/actors/dScMgTeresa_c.cpp does the
 #   same and then Memory::Deallocate. No second vtable address appears in
 #   either body or in either literal pool (0x0211cc24 = 0213fa0c,
 #   0x0211cc28 = 020a0eac, the game heap).
@@ -98,14 +98,14 @@
 #
 #   slot  symbol                size    instructions + pool = words
 #   ----  --------------------  ------  ---------------------------
-#     0   func_ov006_021203fc   0x3ac   217 + 18 = 235
-#     6   func_ov006_021203ac   0x50     19 +  1 =  20
-#     9   func_ov006_02120348   0x64     25 +  0 =  25
-#    17   func_ov006_0211cbf4   0x38     12 +  2 =  14
-#    18   func_ov006_02120248   0x100    61 +  3 =  64
-#    20   func_ov006_02120238   0x10      3 +  1 =   4
+#     0   _ZN13dScMgTeresa_c13InitResourcesEv   0x3ac   217 + 18 = 235
+#     6   _ZN13dScMgTeresa_c8BehaviorEv   0x50     19 +  1 =  20
+#     9   _ZN13dScMgTeresa_c6RenderEv   0x64     25 +  0 =  25
+#    17   _ZN13dScMgTeresa_cD0Ev   0x38     12 +  2 =  14
+#    18   _ZN13dScMgTeresa_c13OnYoshiTryEatEi   0x100    61 +  3 =  64
+#    20   _ZN13dScMgTeresa_c9Virtual50Ev   0x10      3 +  1 =   4
 #
-# Slots 16 (func_ov006_0211cbd0, 8+1=9) and 34 (func_ov006_021200dc, 85+2=87)
+# Slots 16 (_ZN13dScMgTeresa_cD1Ev, 8+1=9) and 34 (_ZN13dScMgTeresa_c9Virtual88Eiiii, 85+2=87)
 # carry no marker and needed no ruling; both were counted anyway and both close.
 #
 # ---- THE STATE MACHINE IS TWO LEVELS DEEP ---------------------------------
@@ -132,7 +132,7 @@
 # TWENTY-SEVEN PAIRS, READ ONE ASSIGNMENT AT A TIME OUT OF
 # src/__sinit_ov006_02132f68.c AND NOT BY SWEEPING THE .data SPAN. That warning
 # is not decorative here: the pair addresses run 0x0213f8d4..0x0213f9ac and
-# MgHideAndBooSeek_SpawnInfo itself sits at 0x0213f974, inside that range. A
+# g_profile_MG_TERESA itself sits at 0x0213f974, inside that range. A
 # sweep would have manufactured this class's own SpawnInfo as a state pair.
 # The constructor is already in port/slice_mg1.txt (all 31 ov006 sinits are),
 # so the tables are built on every boot and nothing new is wired for them.
@@ -157,10 +157,10 @@
 # consumer names a member-pointer type needs a host copy, whether it is called
 # or only copied. All four name one, so all four are copied:
 #
-#   src/func_ov006_021203ac.cpp   Entry { PMF pmf; }   02142eb0  arity 0
-#   src/func_ov006_0211dd0c.cpp   bare PMF             02142e88  arity 1
+#   src/_ZN13dScMgTeresa_c8BehaviorEv.cpp   Entry { PMF pmf; }   02142eb0  arity 0
+#   src/actors/dScMgTeresa_c.cpp   bare PMF             02142e88  arity 1
 #   src/func_ov006_0211f6fc.cpp   bare PMF             02142ed8  arity 1
-#   src/func_ov006_0211d5a8.cpp   bare PMF             02142f18  arity 1
+#   src/actors/dScMgTeresa_c.cpp   bare PMF             02142f18  arity 1
 #
 # THE FIRST IS THE DANGEROUS ONE AND IT IS VTABLE SLOT 6. Its table is declared
 # through a struct wrapper, so it mangles ?data_ov006_02142eb0@@3PAUEntry@@A --
@@ -193,7 +193,7 @@
 # a NONMATCHING banner.
 #
 #   func_ov006_0211e72c  0xac   THE RENDER FLOOR, RETIRED. It is the sixth call
-#       vtable slot 9 makes (src/func_ov006_02120348.c, after func_ov004_
+#       vtable slot 9 makes (src/_ZN13dScMgTeresa_c6RenderEv.cpp, after func_ov004_
 #       020b1e34 and four ov006 bodies). Delink blocks run .text
 #       0x0211e658..0x0211e72c and resume at 0x0211e7d8, so the gap is exactly
 #       this function. mg9 read it as walking records off self+0x4000 with a
@@ -242,7 +242,7 @@
 #   1. ALLOCATIONS. A sweep of all 80 src TUs in the closure for
 #      ActorBase::operator new, Memory::Allocate and the raw allocator
 #      addresses finds exactly ONE hit in the whole class:
-#      src/MgHideAndBooSeek_Spawn.c's own 19496-byte scene object. Nothing else
+#      src/d_s_mg_teresa.c's own 19496-byte scene object. Nothing else
 #      this class reaches allocates anything, so there is no second object for
 #      a second vtable to sit in. Its sixteen 0x24-stride records at +0x4600
 #      and its twenty at +0x4660 are FIELDS OF THE SCENE OBJECT, not separate
@@ -266,7 +266,7 @@
 #
 # ---- ONE TU IS HOST-COPIED FOR A COMPILE DEFECT, NOT FOR THE WALL ---------
 #
-# src/func_ov006_021203fc.c is vtable slot 0 (InitResources) and MSVC refuses
+# src/_ZN13dScMgTeresa_c13InitResourcesEv.cpp is vtable slot 0 (InitResources) and MSVC refuses
 # it with C2036 "'void *': unknown size" at its line 69, `f2 += 0;` on a
 # `void *f2`. That is a no-op the ROM does not contain (the two instructions
 # either side of it are the LoadFile(0x102) return and func_ov004_020af2f8),
@@ -289,7 +289,7 @@
 #
 #   __ZTV13dScMgTeresa_c            the vtable's Itanium spelling; an ordinary
 #                                   /alternatename row onto _data_ov006_0213fa0c
-#   ?GetBG0CharPtr@G2S@@SAPADXZ     src/func_ov006_02120248.cpp declares it as
+#   ?GetBG0CharPtr@G2S@@SAPADXZ     src/_ZN13dScMgTeresa_c13OnYoshiTryEatEi.cpp declares it as
 #                                   a static member; both sides are __cdecl
 #                                   with no arguments, so a plain alias onto
 #                                   __ZN3G2S13GetBG0CharPtrEv is correct and no
@@ -304,7 +304,7 @@
 # because MgTeresa_StateDispatch.cpp reported it rather than calling it. The
 # two new bodies name five external things between them and the image already
 # carries every one: _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii,
-# _ZN5Sound12PlayBank2_2DEj, _ZN3G2x13SetBlendAlphaEPVttttt and data_02082214
+# _ZN5Sound12PlayBank2_2DEj, _ZN3G2x13SetBlendAlphaEPVttttj and data_02082214
 # are arm9 and three of the four are already reached by
 # src/func_ov006_0211ee34.c in this same slice, and data_ov006_0213a964 is a
 # plain ov006 mount symbol. So this lane's link wave is EMPTY, and that is a
@@ -324,7 +324,7 @@
 #
 # THIS PARAGRAPH PROVED IT ON ITSELF. Its first draft quoted the character
 # instead of naming it, and the very next build failed with LNK2019 on
-# func_ov006_02120348 and func_ov006_0211cbd0 -- the two slice lines whose
+# _ZN13dScMgTeresa_c6RenderEv and _ZN13dScMgTeresa_cD1Ev -- the two slice lines whose
 # names happen to sort after the comment -- while every static check over the
 # file still counted 75 source lines. THAT IS THE WHOLE HAZARD IN ONE
 # OBSERVATION: the file reads correct to every reader except the one that
@@ -418,53 +418,8 @@
 #     guessed vtable body seated
 #   post-link -- gxband_guard layout OK, tailjump_guard forms OK
 #
-src/MgHideAndBooSeek_Spawn.c
-src/func_ov006_0211cbd0.c
-src/func_ov006_0211cbf4.c
-src/func_ov006_0211cc2c.c
-src/func_ov006_0211cc90.c
-src/func_ov006_0211cca8.c
-src/func_ov006_0211cd24.c
-src/func_ov006_0211ce90.c
-src/func_ov006_0211ce94.c
-src/func_ov006_0211cef4.c
-src/func_ov006_0211d018.c
-src/func_ov006_0211d0f8.c
-src/func_ov006_0211d224.c
-src/func_ov006_0211d368.c
-src/func_ov006_0211d4e8.c
-src/func_ov006_0211d608.c
-src/func_ov006_0211d688.c
-src/func_ov006_0211d69c.c
-src/func_ov006_0211d75c.c
-src/func_ov006_0211d7b0.c
-src/func_ov006_0211d7b4.c
-src/func_ov006_0211d7d8.c
-src/func_ov006_0211d7ec.c
-src/func_ov006_0211d86c.cpp
-src/func_ov006_0211d924.c
-src/func_ov006_0211dad0.c
-src/func_ov006_0211db7c.c
-src/func_ov006_0211dce0.c
-src/func_ov006_0211dd6c.c
-src/func_ov006_0211ddb8.c
-src/func_ov006_0211ddcc.c
-src/func_ov006_0211de54.c
-src/func_ov006_0211de7c.c
-src/func_ov006_0211dec0.c
-src/func_ov006_0211e020.c
-src/func_ov006_0211e0c8.cpp
-src/func_ov006_0211e118.c
-src/func_ov006_0211e184.c
-src/func_ov006_0211e220.c
-src/func_ov006_0211e29c.c
-src/func_ov006_0211e318.c
-src/func_ov006_0211e3e0.c
-src/func_ov006_0211e460.c
-src/func_ov006_0211e4e0.c
-src/func_ov006_0211e55c.c
-src/func_ov006_0211e5cc.c
-src/func_ov006_0211e658.c
+src/d_s_mg_teresa.c
+src/actors/dScMgTeresa_c.cpp
 src/func_ov006_0211e72c.c
 src/func_ov006_0211e7d8.c
 src/func_ov006_0211e8a8.c
@@ -491,7 +446,7 @@ src/func_ov006_0211fe78.c
 src/func_ov006_02120008.c
 src/func_ov006_021200a8.c
 src/func_ov006_021200cc.c
-src/func_ov006_021200dc.c
-src/func_ov006_02120238.c
-src/func_ov006_02120248.cpp
-src/func_ov006_02120348.c
+src/_ZN13dScMgTeresa_c9Virtual88Eiiii.cpp
+src/_ZN13dScMgTeresa_c9Virtual50Ev.cpp
+src/_ZN13dScMgTeresa_c13OnYoshiTryEatEi.cpp
+src/_ZN13dScMgTeresa_c6RenderEv.cpp

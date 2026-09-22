@@ -38,7 +38,7 @@
 # publishes ?CleanupResources@Stage@@QAEHXZ and no C caller can spell it. The
 # slot takes a face, the same shape slot 12's does.
 #
-# SLOT 16 and 17. src/_ZN5StageD2Ev.c and src/_ZN5StageD0Ev.c are flat C,
+# SLOT 16 and 17. src/_ZN5StageD1Ev.cpp and src/_ZN5StageD0Ev.cpp are flat C,
 # `struct Stage *f(struct Stage *thiz)` with the receiver as an ordinary first
 # argument, so each slot takes the ecx->arg adapter every seat in this family
 # uses. Their whole callee closure -- MeshCollider::~MeshCollider,
@@ -97,10 +97,11 @@
 #
 # ---- the slice -------------------------------------------------------------
 src/_ZN5Stage16CleanupResourcesEv.cpp
-src/_ZN5Sound21ResetPlayerVoiceGroupEv.c
-src/_ZN7Message15ResetAllGlobalsEv.c
-src/_ZN5StageD2Ev.c
-src/_ZN5StageD0Ev.c
+src/_ZN5Sound21ResetPlayerVoiceGroupEv.cpp
+src/_ZN7Message15ResetAllGlobalsEv.cpp
+src/_ZN5StageD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN5StageD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN5StageD0Ev.cpp
 src/func_01ffb0c8.cpp
 
 # ---- THE OVERLAY TRIO, and the ruling it settles ---------------------------
@@ -175,5 +176,5 @@ src/func_01ffb0c8.cpp
 # marked for destruction" is not the reason nothing runs, and this line used to
 # say it was.
 src/_Z17LoadLevelOverlaysi.cpp
-src/_Z19UnloadLevelOverlaysi.c
+src/_Z19UnloadLevelOverlaysi.cpp
 src/_Z26LoadOrUnloadObjectOverlaysPFviEi.cpp

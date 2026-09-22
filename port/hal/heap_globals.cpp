@@ -45,7 +45,8 @@ void MultiStore_Int(int val, int *dst, int len)
 #pragma comment(linker, "/alternatename:?_ZN6Memory25isRootHeapIterInitializedE@@3HA=__ZN6Memory25isRootHeapIterInitializedE")
 // FUNCTION alias only where the conventions MATCH: this reference and the C
 // definition are both __cdecl free functions.
-#pragma comment(linker, "/alternatename:?_ZN18NestedHeapIteratorC1Ej@@YAXPAXI@Z=__ZN18NestedHeapIteratorC1Ej")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEAD RHS and an UNREFERENCED left hand side: nothing in the build defines __ZN18NestedHeapIteratorC1Ej, and nothing references ?_ZN18NestedHeapIteratorC1Ej@@YAXPAXI@Z, so the row can never fire and nothing wants it to. */
+// #pragma comment(linker, "/alternatename:?_ZN18NestedHeapIteratorC1Ej@@YAXPAXI@Z=__ZN18NestedHeapIteratorC1Ej")
 
 // FUNCTION BRIDGES where aliasing would be a silent ABI bug: C TUs call the
 // iterator entry points as __cdecl free functions under Itanium names, but

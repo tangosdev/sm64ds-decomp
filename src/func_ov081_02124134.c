@@ -1,17 +1,17 @@
 // @symbol func_ov081_02124134
 /* recovered: shared common types */
 #include "common.h"
-extern char* _ZN5Actor10FindWithIDEj(unsigned int id);
+extern char* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern int RandomIntInternal(int* seed);
 extern void func_02012790(int);
-extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int, unsigned int, struct Vector3*, void*, int, int);
+extern int _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int, unsigned int, struct Vector3*, void*, int, int);
 extern int data_0209e650;
 
 void func_ov081_02124134(char* c){
   char* a;
   unsigned int id = *(unsigned int*)(c+0x3fc);
   if (id) {
-    a = _ZN5Actor10FindWithIDEj(id);
+    a = _ZN8dActor_c10FindWithIDEj(id);
     if (a) {
       *(int*)(a+0x9c) = -0x2000;
       *(int*)(a+0xa0) = -0x28000;
@@ -20,7 +20,7 @@ void func_ov081_02124134(char* c){
   }
   id = *(unsigned int*)(c+0x400);
   if (id) {
-    a = _ZN5Actor10FindWithIDEj(id);
+    a = _ZN8dActor_c10FindWithIDEj(id);
     if (a) {
       unsigned int rv;
       *(int*)(a+0x9c) = -0x2000;
@@ -39,6 +39,6 @@ void func_ov081_02124134(char* c){
     *(int*)(c+0x400) = 0;
   }
   if (*(int*)(c+0x41c) == 2) {
-    _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0xdf, 0x300, (struct Vector3*)(c+0x44c), 0, *(signed char*)(c+0xcc), -1);
+    _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0xdf, 0x300, (struct Vector3*)(c+0x44c), 0, *(signed char*)(c+0xcc), -1);
   }
 }

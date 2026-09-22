@@ -24,7 +24,7 @@
 # All four factories store the SAME table 0x02111984 (_ZTV18daObjHsBillboard_c ==
 # _ZTV25SlideDecorationSilverStar, two dsd names at one address), and the class
 # picks its model from its OWN actor id:
-# src/_ZN25SlideDecorationSilverStar13InitResourcesEv.cpp switches on unk_00c
+# src/game/actors/d_a_obj_hs_billboard.cpp switches on unk_00c
 # (the id field at +0xc) over 0x12e/0x12f/0x130/0x131 = 302/303/304/305 and
 # indexes data_ov031_02111424 with the result. One fill, one closure of bodies,
 # four registry rows, twelve instances on level 23.
@@ -41,10 +41,10 @@
 # (base 0x021111a0 -- ov031 is compressed:true in overlays.yaml, so the dsd
 # export extracted/dsd/arm9_overlays/ov031.bin is the COMPRESSED image and
 # reading halfwords out of it is reading noise):
-#   0x0211190c word[0]=0x021113ec SlideDecorationSilverStar_Spawn    +4 = 302
-#   0x02111928 word[0]=0x021113b4 SlideDecorationYellowStar_Spawn    +4 = 303
-#   0x02111944 word[0]=0x0211137c SlideDecorationOrangeSmiley_Spawn  +4 = 304
-#   0x02111960 word[0]=0x02111344 SlideDecorationBlueSmiley_Spawn    +4 = 305
+#   0x0211190c word[0]=0x021113ec daObjHsBillboard_c_classInit_HS_MOON    +4 = 302
+#   0x02111928 word[0]=0x021113b4 daObjHsBillboard_c_classInit_HS_STAR    +4 = 303
+#   0x02111944 word[0]=0x0211137c daObjHsBillboard_c_classInit_HS_Y_STAR  +4 = 304
+#   0x02111960 word[0]=0x02111344 daObjHsBillboard_c_classInit_HS_B_STAR    +4 = 305
 # Every record's spawn word lands inside ov031 itself and every id matches the
 # spawn-table slot it was reached from. Sweeping ALL 110 overlays with both
 # routes returns exactly one owner for each of the four (owners: [31]); the
@@ -107,8 +107,8 @@
 # +4 -> 0x02111a00, +8 -> 0x02111a10, +0xc -> 0x02111a18). Its next symbol is
 # the sinit at 0x02111434, so the delta rule already sizes it 0x10.
 data_ov031_02111424
-SlideDecorationSilverStar_SpawnInfo:0x1c SlideDecorationYellowStar_SpawnInfo:0x1c
-SlideDecorationOrangeSmiley_SpawnInfo:0x1c SlideDecorationBlueSmiley_SpawnInfo:0x1c
+g_profile_HS_MOON:0x1c g_profile_HS_STAR:0x1c
+g_profile_HS_Y_STAR:0x1c g_profile_HS_B_STAR:0x1c
 
 # ---- .bss 0x02111a00..0x02111a60 ------------------------------------------
 # Four SharedFilePtrs (8 bytes each, sized by the delta rule) and their four

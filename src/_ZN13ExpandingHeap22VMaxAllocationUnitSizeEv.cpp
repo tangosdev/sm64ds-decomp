@@ -1,13 +1,12 @@
 //cpp
 // @symbol _ZN13ExpandingHeap22VMaxAllocationUnitSizeEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-#include "decl_ExpandingHeapAllocator.h"
-/* recovered: named members + shared header, real C++ method */
+/* ExpandingHeap::VMaxAllocationUnitSize() at 0x0203c5f8 -- Heap vtable slot 10.
+ * Same call as slot 11 on this heap: the largest allocatable block and the
+ * largest allocation unit are both "the biggest free node". */
 #include "ExpandingHeap.h"
-extern "C" {
-}
+#include "ExpandingHeapAllocator.h"
 
-unsigned int ExpandingHeap::VMaxAllocationUnitSize()
+u32 ExpandingHeap::VMaxAllocationUnitSize()
 {
-    return _ZN22ExpandingHeapAllocator18MaxAllocatableSizeEi(*(void**)((char*)&unk_014), 4);
+    return allocator->MaxAllocatableSize(4);
 }

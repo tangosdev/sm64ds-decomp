@@ -45,11 +45,11 @@
 # adjudicate it, so the member's TYPE is taken from how the class CONSTRUCTS
 # it. Three independent witnesses, all in matched src, all agreeing:
 #
-#   src/MontyMoleRock_Spawn.c            _ZN5ModelC1Ev(p + 0x110)
+#   src/d_a_choro_rock.c            _ZN5ModelC1Ev(p + 0x110)
 #   src/..._13InitResourcesEv.cpp        Model::LoadFile -> ModelBase::SetFile
 #                                        on this + 0x110
-#   src/_ZN13MontyMoleRockD1Ev.c         _ZN5ModelD1Ev(t + 0x110)
-#   src/_ZN13MontyMoleRockD0Ev.c         _ZN5ModelD1Ev(t + 0x110)
+#   src/_ZN13MontyMoleRockD1Ev.cpp         _ZN5ModelD1Ev(t + 0x110)
+#   src/_ZN13MontyMoleRockD0Ev.cpp         _ZN5ModelD1Ev(t + 0x110)
 #
 # The member at +0x110 is constructed by Model's own ctor, filled through
 # ModelBase::SetFile and destroyed by Model's own dtor. It is a plain Model.
@@ -73,17 +73,17 @@
 # named from config/arm9/symbols.txt, never from the friendly name:
 #
 #   0x021245ac -> 0x0200f7a8  Actor_MakeVanishLuigiWork
-#                             _ZN5Actor19MakeVanishLuigiWorkER12CylinderClsn
-#   0x021245bc -> 0x02010f3c  Actor_FindWithID      _ZN5Actor10FindWithIDEj
+#                             _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c
+#   0x021245bc -> 0x02010f3c  Actor_FindWithID      _ZN8dActor_c10FindWithIDEj
 #   0x02124614 -> 0x020d8e70  Player_Hurt
 #   0x0212465c -> 0x020d8e70  (the second call)
 #                             _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj
 #   0x02124748 -> 0x02010c30  Actor_UpdatePos
-#                             _ZN5Actor9UpdatePosEP12CylinderClsn
+#                             _ZN8dActor_c9UpdatePosEP5dCc_c
 #   0x02124758 -> 0x020aebf8  Enemy_UpdateWMClsn
-#                             _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj
-#   0x02124768 -> 0x02015024  CylinderClsn_Clear   _ZN12CylinderClsn5ClearEv
-#   0x02124770 -> 0x02014ff0  CylinderClsn_Update  _ZN12CylinderClsn6UpdateEv
+#                             _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj
+#   0x02124768 -> 0x02015024  CylinderClsn_Clear   _ZN5dCc_c5ClearEv
+#   0x02124770 -> 0x02014ff0  CylinderClsn_Update  _ZN5dCc_c6UpdateEv
 #
 # All seven real names are already in walk_window.map. Routed as a per-source
 # -D and not as /alternatename directives on purpose: these are SINGLE GLOBAL
@@ -102,15 +102,16 @@
 # vtspan prints both at 0x0212802c -- and that gets the daChoropu_c
 # treatment, a C-name /alternatename onto the one host array.
 #
-# The id is cross-checked the gate-174 way: MontyMoleRock_SpawnInfo
+# The id is cross-checked the gate-174 way: g_profile_CHORO_ROCK
 # (ov080 0x02128008, mounted at the real 0x1c stride) +0 word =
-# MontyMoleRock_Spawn 0x02124998, +4 halfword = 0x0137 = 311, and
-# MontyMoleRock_Spawn's own vtable-store reloc names 0x0212802c.
-src/MontyMoleRock_Spawn.c
+# daChoro_Rock_c_classInit 0x02124998, +4 halfword = 0x0137 = 311, and
+# daChoro_Rock_c_classInit's own vtable-store reloc names 0x0212802c.
+src/d_a_choro_rock.c
 src/_ZN13MontyMoleRock13InitResourcesEv.cpp
-src/_ZN13MontyMoleRock16CleanupResourcesEv.c
+src/_ZN13MontyMoleRock16CleanupResourcesEv.cpp
 src/_ZN13MontyMoleRock6RenderEv.cpp
 src/_ZN13MontyMoleRock8BehaviorEv.cpp
-src/_ZN13MontyMoleRockD1Ev.c
-src/_ZN13MontyMoleRockD0Ev.c
+src/_ZN13MontyMoleRockD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN13MontyMoleRockD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN13MontyMoleRockD0Ev.cpp
 src/func_ov080_02124418.c

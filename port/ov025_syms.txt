@@ -17,8 +17,8 @@
 # ==== THE TWO CLASSES, both attribution routes =============================
 #
 #   id  site        SpawnInfo   word[0]     name               +4  +6  x on L17
-#   87  0x020909c0  0x021138f0  0x021120ac  PyramidStep_Spawn  87  246   4
-#   88  0x020909c4  0x021139b0  0x021125f0  PyramidLift_Spawn  88  247   1
+#   87  0x020909c0  0x021138f0  0x021120ac  daObjDpBrock_c_classInit  87  246   4
+#   88  0x020909c4  0x021139b0  0x021125f0  daDpLift_c_classInit  88  247   1
 #
 # Both records' word[0] lands inside ov025 [0x021111a0,0x02113a60) and both
 # read their own id back at +4. Level 17 spawns 83 actors and skips 11; these
@@ -49,9 +49,9 @@
 #
 # So on BOTH tables the pin is the ROM's own layout, and it is the slot-31
 # Platform check:
-#     slot 29  0x02010124  _ZN5Actor16OnAimedAtWithEggEv
-#     slot 30  0x020100dc  _ZN5Actor25OnAimedAtWithEggReturnVecEv
-#     slot 31  0x020ee55c  _ZN8Platform4KillEv
+#     slot 29  0x02010124  _ZN8dActor_c16OnAimedAtWithEggEv
+#     slot 30  0x020100dc  _ZN8dActor_c25OnAimedAtWithEggReturnVecEv
+#     slot 31  0x020ee55c  _ZN10dBgActor_c4KillEv
 # the close every 32-slot platform table in the port ends on (ov045's four,
 # ov060's two, ov052's two, ov056's one). For id 88 the twelve bytes after the
 # table (0x02113a54..0x02113a60) are ROM ZEROS to the .data end -- align-32
@@ -136,7 +136,7 @@ data_ov025_02112c08:0x20 data_ov025_02112c88
 data_ov025_02112ca8 data_ov025_02112cc8:0x20 data_ov025_02112d48
 # The two SpawnInfo records, both PINNED to the record's real 0x1c.
 #
-#   PyramidStep_SpawnInfo 0x021138f0 -- the pin that MATTERS. Its natural
+#   g_profile_DP_BROCK 0x021138f0 -- the pin that MATTERS. Its natural
 #   next-symbol delta is 0xc, because dsd split the record itself at
 #   0x021138fc; the four words 0x021138fc..0x0211390c are the record's own
 #   tail, and the two words after that (0x0211390c = 0 offset-to-top,
@@ -144,9 +144,9 @@ data_ov025_02112ca8 data_ov025_02112cc8:0x20 data_ov025_02112d48
 #   Unpinned this mount would have been TWELVE bytes of a twenty-eight byte
 #   record.
 #
-#   PyramidLift_SpawnInfo 0x021139b0 -- natural delta 0x24, the usual 8 bytes
+#   g_profile_DP_LIFT 0x021139b0 -- natural delta 0x24, the usual 8 bytes
 #   of vtable prologue past the end; pinned to 0x1c the same way.
-PyramidStep_SpawnInfo:0x1c PyramidLift_SpawnInfo:0x1c
+g_profile_DP_BROCK:0x1c g_profile_DP_LIFT:0x1c
 # run rel0215 wave 3 (lane w3-e): ov025's OTHER TWO IDS, GRINDEL (162) and
 # SPINDEL (163) -- the rest of level 17's own skip list. Additive only; no
 # existing line is touched.
@@ -158,7 +158,7 @@ PyramidStep_SpawnInfo:0x1c PyramidLift_SpawnInfo:0x1c
 # fills, the ov015/ov016/ov045 rule -- and neither pin can reach one:
 # 0x0211382c + 0x1c = 0x02113848 and 0x0211373c + 0x1c = 0x02113758, both short
 # of their table.
-Grindel_SpawnInfo:0x1c data_ov025_0211373c:0x1c
+g_profile_DONKAKU:0x1c g_profile_DONGURU:0x1c
 # THE TWO CLPS_BLOCKS, one per class, both carrying the "CLPS" magic at +0 and
 # both reaching MovingMeshCollider::SetFile -- 163's by literal out of its
 # InitResources, 162's through the three-word resource table below. Pinned to
@@ -167,7 +167,7 @@ Grindel_SpawnInfo:0x1c data_ov025_0211373c:0x1c
 # (0x60 and 0x40) into the neighbouring blocks.
 data_ov025_02112c28:0x20 data_ov025_02112d28:0x20
 # 162's THREE-WORD RESOURCE TABLE, { model SharedFilePtr 0x02113a88, collision
-# SharedFilePtr 0x02113a90, CLPS_Block 0x02112d28 }, which func_ov025_02111c24
+# SharedFilePtr 0x02113a90, CLPS_Block 0x02112d28 }, which _ZN7daDkk_c13InitResourcesEv
 # stores at +0x320. All three targets are mounted, so ovdata's pointer pass
 # rebases all three words rather than leaving DS addresses -- T2 satisfied by
 # construction. Next-symbol delta is 0xc, which is exact.
@@ -205,11 +205,11 @@ data_ov025_02113814
 # DEFINE those names and an /alternatename would be defeated silently -- the
 # Coffin/Spindrift shape. ov025's own relocs resolve all three to ov025:
 #   from:0x02112a34 kind:load to:0x02113a90 module:overlay(25)
-#     src/__sinit_ov025_021129dc.c spells data_ov027_02113a90
+#     src/__sinit_ov025_021129dc.c spells _ZTV10daPgDfdr_c
 #   from:0x02112a30 kind:load to:0x02113a98 module:overlay(25)
-#     src/__sinit_ov025_021129dc.c spells data_ov036_02113a98
+#     src/__sinit_ov025_021129dc.c spells _ZTV16daObjRcBuranko_c
 #   from:0x021113c4 kind:load to:0x02113a60 module:overlay(25)
-#     src/func_ov025_02111384.cpp spells data_ov036_02113a60
+#     src/actors/daDgr_c.cpp spells _ZTS16daObjRcBuranko_c
 data_ov025_02113a60 data_ov025_02113a68 data_ov025_02113a70
 data_ov025_02113a7c data_ov025_02113a88 data_ov025_02113a90
 data_ov025_02113a98 data_ov025_02113aa4

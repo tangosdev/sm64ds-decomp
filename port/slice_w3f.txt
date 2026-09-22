@@ -9,12 +9,12 @@
 #
 # ---- IDENTITY, BOTH ROUTES (PLAN 3.A.2) ------------------------------------
 #
-#   PrincessPeach_SpawnInfo  ov085 0x0212ff9c
-#       word[0] = 0x0212a684  PrincessPeach_Spawn
+#   g_profile_PEACH_PRINCESS  ov085 0x0212ff9c
+#       word[0] = 0x0212a684  daPeach_c_classInit
 #       word[1] = 0x00ac00ba -> id 186
 #   arm9 spawn table 0x02090864 + 186*4 = 0x02090b4c holds 0x0212ff9c, which is
 #       that same record. The two routes agree.
-#   PrincessPeach_Spawn's own literal pool (+0x4c) installs 0x0212ffc0, and the
+#   daPeach_c_classInit's own literal pool (+0x4c) installs 0x0212ffc0, and the
 #       config carries TWO names on that address -- _ZTV13PrincessPeach and
 #       _ZTV9daPeach_c. daPeach_c is the ROM's RTTI for the princess, so the
 #       recovered name and the ROM's own name agree from both sides.
@@ -46,10 +46,10 @@
 # ---- THE BLOCK IS CONTIGUOUS AND IT IS HERS --------------------------------
 #
 # ov085's .text is laid out one class per block, each ending in that class's
-# factory (Toad_Spawn after Toad's methods, Rabbit_Spawn after Rabbit's, and so
+# factory (daKinopio_c_classInit after Toad's methods, daMip_c_classInit after Rabbit's, and so
 # on). PRINCESS_PEACH's block runs 0x02129d18 .. 0x0212a6d3: D1, D0, seventeen
 # unnamed helpers, CleanupResources, OnPendingDestroy, Render, Behavior,
-# InitResources, then PrincessPeach_Spawn. Everything below is inside it.
+# InitResources, then daPeach_c_classInit. Everything below is inside it.
 #
 # ---- SIX BODIES ARE HELD OUT, AND EACH ONE FOR A NAMED REASON --------------
 #
@@ -78,24 +78,24 @@
 #       is spelled inline in the fill from the ROM D1's own five relocs; see
 #       hal/actor_classes_ov085.cpp.
 #
-#   func_ov085_0212a430               \  the two mwcc pointer-to-member
-#   func_ov085_0212a46c               /  dispatchers, the gate-16 case for the
+#   _ZN13PrincessPeach17CallStateBehaviorEv               \  the two mwcc pointer-to-member
+#   _ZN13PrincessPeach13CallStateInitEv               /  dispatchers, the gate-16 case for the
 #       sixth time in this port. Both spell `struct C; typedef void (C::*PMF)();`
 #       and MSVC forms a PMF over an INCOMPLETE class as the four-word general
 #       representation, so 0212a430's `c->pp + 1` steps sixteen bytes where the
 #       ROM's pair is eight. HOST COPIES with the {value, adjustment} dispatch
 #       hand-rolled: port/unmatched/Ov085_PrincessPeach_States.cpp.
-#       (func_ov085_0212a430.cpp already carries /vmg;/vmm from the wave-18 R9
+#       (_ZN13PrincessPeach17CallStateBehaviorEv.cpp already carries /vmg;/vmm from the wave-18 R9
 #       sweep, which listed it as INERT because nothing referenced it. It stays
 #       inert: this lane hosts the body rather than compiling it.)
 #
 # ---- T5, ONE MARKER-CARRYING BODY, RULED BEFORE SEATING --------------------
 #
-# src/func_ov085_0212a0b8.c carries `/* daKinopio_c::Kill - recovered from
+# src/_ZN13PrincessPeach10InitState0Ev.cpp carries `/* daKinopio_c::Kill - recovered from
 # vtable slot identity */`. The NAME is wrong twice over and the BODY is real
 # decomp:
 #   * 0x0212a0b8 is inside PRINCESS_PEACH's block, not TOAD's, and it calls
-#     func_ov085_02129ebc and func_ov085_02129f8c, both hers.
+#     _ZN13PrincessPeach21UpdateGroundCollisionEP10dBgCh_Actr and func_ov085_02129f8c, both hers.
 #   * it is not a vtable slot at all. data_ov085_0212ff34 = {0x0212a0b8, 0} is
 #     a POINTER-TO-MEMBER PAIR, and __sinit_ov085_0212f3a0 copies it into this
 #     class's state table as state 4's MAIN half.
@@ -106,7 +106,7 @@
 #
 # ---- THE STATE TABLE, ten pairs, five states ------------------------------
 #
-# func_ov085_0212a4a4(c, i) writes `c->0x350 = data_ov085_0213055c + i*0x10`
+# _ZN13PrincessPeach8SetStateEi(c, i) writes `c->0x350 = data_ov085_0213055c + i*0x10`
 # and tail-calls the ENTER dispatcher; 0x0213055c is BSS (ov085's image ends at
 # 0x02130480), so nothing is there until __sinit_ov085_0212f3a0 fills it. That
 # sinit copies TEN eight-byte statics in from 0x0212ff34..0x0212ff7c, two per
@@ -126,12 +126,12 @@
 # that sinit runs, the same seat TOAD's four and the RABBIT_KEY's four take.
 #
 # ---- WHAT LINKS -----------------------------------------------------------
-src/PrincessPeach_Spawn.c
+src/d_a_peach.c
 src/_ZN13PrincessPeach13InitResourcesEv.cpp
-src/_ZN13PrincessPeach16CleanupResourcesEv.c
-src/_ZN13PrincessPeach16OnPendingDestroyEv.c
+src/_ZN13PrincessPeach16CleanupResourcesEv.cpp
+src/_ZN13PrincessPeach16OnPendingDestroyEv.cpp
 src/_ZN13PrincessPeach6RenderEv.cpp
-src/_ZN13PrincessPeachD0Ev.c
+src/_ZN13PrincessPeachD0Ev.cpp
 # Render is the LINKABLE half of the wave-19 split, unlike Behavior above: the
 # ROM calls _ZN5Model6RenderEPK7Vector3 NON-virtually (`add r0,r0,#0xd4 /
 # mov r1,#0 / bl 0x02016b78` at 0x0212a508) and the matched TU spells exactly
@@ -139,37 +139,37 @@ src/_ZN13PrincessPeachD0Ev.c
 #
 # The seventeen unnamed helpers, all inside her block. Ten of them are the
 # state bodies above; the rest are the per-frame work those states call.
-# func_ov085_02129dbc and func_ov085_02129ebc are HOST COPIES in
+# _ZN13PrincessPeach12UpdateLookAtEv and _ZN13PrincessPeach21UpdateGroundCollisionEP10dBgCh_Actr are HOST COPIES in
 # port/unmatched/Ov085_PrincessPeach_Declshapes.cpp -- two MEASURED MSVC
 # front-end refusals, neither of them a behaviour question:
 #   02129dbc  C2733, decl_common.h:1622 declares it `int (void*)` inside its
 #             extern "C" block and the TU defines it `void (Actor*)`. One
 #             register on the ROM, two C-linkage overloads to MSVC. The
-#             func_ov102_0214b248 / func_ov071_02121ba4 case.
+#             func_ov102_0214b248 / _ZN8daEyBm_c10HurtPlayerEv case.
 #   02129ebc  C4716, an int body that falls off the end. mwccarm leaves r0;
 #             MSVC refuses. relocs.txt names both callers and both discard it.
 # hostgen.py's HEADER_SHADOW and FALLS_OFF_RETURN tables are the reclaim
 # route for both; that file's header carries the derivation.
 src/func_ov085_02129f8c.c
-src/func_ov085_02129fdc.cpp
-src/func_ov085_0212a0b8.c
-src/func_ov085_0212a0e8.c
-src/func_ov085_0212a148.c
-src/func_ov085_0212a150.c
-src/func_ov085_0212a19c.c
-src/func_ov085_0212a1d4.c
-src/func_ov085_0212a220.c
-src/func_ov085_0212a328.c
-src/func_ov085_0212a37c.cpp
-src/func_ov085_0212a3ec.c
-src/func_ov085_0212a4a4.c
+src/_ZN13PrincessPeach11UpdateModelEv.cpp
+src/_ZN13PrincessPeach10InitState0Ev.cpp
+src/_ZN13PrincessPeach6State0Ev.cpp
+src/_ZN13PrincessPeach6State2Ev.cpp
+src/_ZN13PrincessPeach10InitState2Ev.cpp
+src/_ZN13PrincessPeach10InitState4Ev.cpp
+src/_ZN13PrincessPeach6State1Ev.cpp
+src/_ZN13PrincessPeach6State3Ev.cpp
+src/_ZN13PrincessPeach10InitState1Ev.cpp
+src/_ZN13PrincessPeach10InitState3Ev.cpp
+src/_ZN13PrincessPeach6State4Ev.cpp
+src/_ZN13PrincessPeach8SetStateEi.cpp
 #
 # LANGUAGE: the fifteen .c files above were swept comment-stripped for C++
 # tokens and carry none, so none needs LANGUAGE CXX. The six .cpp files carry
 # the tree's own //cpp marker on line 1.
 #
-# func_ov085_02129dbc.cpp calls Actor::ClosestPlayer THROUGH A RECEIVER
+# _ZN13PrincessPeach12UpdateLookAtEv.cpp calls Actor::ClosestPlayer THROUGH A RECEIVER
 # (`self->ClosestPlayer()` over its own `struct Actor`), not with empty
 # parentheses, so it is not a closestplayer_guard row -- and the MSVC name that
-# shape mangles to, ?ClosestPlayer@Actor@@QAEPAU1@XZ, is already defined by
+# shape mangles to, ?ClosestPlayer@dActor_c@@QAEPAU1@XZ, is already defined by
 # hal/reverse_bridges.cpp.

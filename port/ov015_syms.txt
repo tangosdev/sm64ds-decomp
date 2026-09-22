@@ -9,10 +9,10 @@
 # disjoint pointer graphs on purpose.
 #
 # THE SEVEN VTABLES ARE LEFT OUT, the ov085/ov010/ov080 rule. Five are named
-# (_ZTV13PoleBillboard, _ZTV14KnockDownPlank, _ZTV14MovingBarSmall,
-# _ZTV9TowerStep, _ZTV11FallBlockWf) and TWO are real actor vtables dsd left as
-# plain data (data_ov015_02114360 -- PoleBillboard's own daObjBkBillboard base
-# table -- and data_ov015_021147e8 -- RotatingPlatformWf's). All seven are HOST
+# (_ZTV13PoleBillboard, _ZTV19daObjBk_Dossunbar_c, _ZTV14MovingBarSmall,
+# _ZTV17daObjBk_Rotebar_c, _ZTV20daObjBk_Fall_Block_c) and TWO are real actor vtables dsd left as
+# plain data (_ZTV18daObjBkBillboard_c -- PoleBillboard's own daObjBkBillboard base
+# table -- and _ZTV17daObjBk_Ukisima_c -- RotatingPlatformWf's). All seven are HOST
 # arrays the registry fills; mounting one would hand a factory DS code
 # addresses. Identified by the vtable signature (the +4 word relocates to
 # Actor::BeforeInitResources, arm9 0x02011268).
@@ -31,7 +31,7 @@
 # them. hal/actor_classes_ov089.cpp defines host zero storage under the bare C
 # name `data_02111b68` because NO MOUNT DEFINES THAT SPELLING (ov013 mounts the
 # cell as data_ov013_02111b68, ov015 hosts the same address as code under
-# KnockDownPlank_Spawn) and because KEY is reachable only under ov046, where no
+# daObjBk_Botaosi_c_classInit) and because KEY is reachable only under ov046, where no
 # owner of the cell is loaded. If either stops being true -- a build where an
 # owning overlay and the KEY can both run, or a mount generated under the bare
 # C name -- the ov089 definition MUST GO and the name must resolve to the mount
@@ -63,21 +63,21 @@ data_ov015_02113dc4 data_ov015_02113e00 data_ov015_02113e50 data_ov015_02113e6c
 data_ov015_02113e88 data_ov015_02113f20 data_ov015_02113f4c data_ov015_02113f78
 data_ov015_02113ff4 data_ov015_02114010 data_ov015_021140b8 data_ov015_021140ec
 data_ov015_021140f8 data_ov015_02114108 data_ov015_0211417c data_ov015_021141cc
-data_ov015_021142a0 data_ov015_02114318 data_ov015_02114324 PoleBillboard_SpawnInfo:0x1c
-data_ov015_02114380 data_ov015_021143dc data_ov015_021143e8 KnockDownPlank_SpawnInfo:0x1c
+data_ov015_021142a0 _ZTI18daObjBkBillboard_c _ZTS18daObjBkBillboard_c g_profile_BK_BILLBOARD:0x1c
+data_ov015_02114380 _ZTI17daObjBk_Botaosi_c _ZTS17daObjBk_Botaosi_c g_profile_BK_BOTAOSI:0x1c
 data_ov015_02114458 data_ov015_02114498 data_ov015_021144a0 data_ov015_021144a8
 data_ov015_021144b0 data_ov015_021144b8 data_ov015_021144c0 data_ov015_021144c8
 data_ov015_021144d0 data_ov015_021144d8 data_ov015_021144e0 data_ov015_021144e8
 data_ov015_021144f0 data_ov015_021144f8 data_ov015_02114500 data_ov015_02114508
-data_ov015_02114510 data_ov015_0211451c data_ov015_02114534 data_ov015_02114538
-data_ov015_0211453c MovingBarSmall_SpawnInfo:0x1c MovingBarBig_SpawnInfo:0x1c data_ov015_02114598
-data_ov015_021145e4 data_ov015_0211460c data_ov015_02114618 TowerStep_SpawnInfo:0x1c
-data_ov015_021146d0 data_ov015_021146dc RotatingBridge_SpawnInfo:0x1c data_ov015_02114750
-data_ov015_02114768 data_ov015_02114794 data_ov015_02114798 data_ov015_021147a4
-data_ov015_021147b0 RotatingPlatformWf_SpawnInfo:0x1c data_ov015_02114824 data_ov015_02114860
-data_ov015_02114868 data_ov015_02114874 data_ov015_0211487c data_ov015_02114880
-data_ov015_0211488c data_ov015_02114898 data_ov015_021148a0 data_ov015_021148b4
-FallBlockWf_SpawnInfo:0x1c data_ov015_021148e0 data_ov015_021148f0 data_ov015_02114960
+_ZTI19daObjBk_Dossunbar_c _ZTS19daObjBk_Dossunbar_c data_ov015_02114534 data_ov015_02114538
+data_ov015_0211453c g_profile_BK_DOSSUNBAR_S:0x1c g_profile_BK_DOSSUNBAR_L:0x1c data_ov015_02114598
+data_ov015_021145e4 _ZTI14daObjBk_Lift_c _ZTS14daObjBk_Lift_c g_profile_BK_LIFT01:0x1c
+_ZTI17daObjBk_Rotebar_c _ZTS17daObjBk_Rotebar_c g_profile_BK_ROTEBAR:0x1c data_ov015_02114750
+data_ov015_02114768 data_ov015_02114794 _ZTI17daObjBk_Ukisima_c data_ov015_021147a4
+_ZTS17daObjBk_Ukisima_c g_profile_BK_UKISIMA:0x1c data_ov015_02114824 data_ov015_02114860
+_ZTI20daObjBk_Fall_Block_c _ZTI16daObjFallBlock_c data_ov015_0211487c data_ov015_02114880
+_ZTS16daObjFallBlock_c data_ov015_02114898 _ZTS20daObjBk_Fall_Block_c data_ov015_021148b4
+g_profile_BK_DOWN_B:0x1c data_ov015_021148e0 data_ov015_021148f0 data_ov015_02114960
 data_ov015_02114968 data_ov015_02114974 data_ov015_0211497c data_ov015_02114984
 data_ov015_02114990 data_ov015_0211499c data_ov015_021149a4 data_ov015_021149ac
 data_ov015_021149b4 data_ov015_021149bc data_ov015_021149c8 data_ov015_021149d4

@@ -1,0 +1,92 @@
+# SLICE L15ENAB -- run link100 wave 15, lane SEAT15A, BATCH 2.
+# THE TWO NAMED-ENABLER ROWS (E1 and E2 of out/LINK15/BATCHES.md).
+#
+# Both rows were re-tested on this lane's own build before anything was
+# edited, by compiling the matched TU standalone with the port's exact
+# command line (the DEFINES/FLAGS/INCLUDES block build/port/build.ninja
+# gives every src row) and dumping the object's symbols. One of the two
+# named enablers turned out not to exist any more; that is written down
+# here rather than left as a fixer card nobody closes.
+#
+# ---- ROW 1: func_ov098_0213a794 (ov098 0x0213a794, 332 bytes) --------------
+#
+#   THE CLAIMED ENABLER (E1): "MSVC C2733 rejects the matched TU's second
+#   extern-C decl", the shape the COFFIN1 fixer closed on Coffin. The host
+#   copy port/unmatched/FallBlockWf_InitVeneer.cpp carried that as its whole
+#   reason for existing: "it declares its own extern "C" int
+#   func_ov098_0213a794(char*, char**) while decl_common.h (which it includes)
+#   already declares extern int func_ov098_0213a794(void*, void*), and MSVC's
+#   C++ front end rejects two extern "C" declarations that differ only in
+#   pointer type (C2733)".
+#
+#   MEASURED, NOT ASSUMED: src/func_ov098_0213a794.cpp COMPILES CLEAN under
+#   the port's own command line today. cl /c ... -std:c++17 /vmg /vmm with
+#   -DSM64DS_PLATFORM_PC and the three port include roots exits 0 with no
+#   diagnostic, and dumpbin /symbols on the object gives
+#       SECT5 External  _func_ov098_0213a794
+#   plus five undefined externals and nothing else. So E1 needed no fixer and
+#   no /alternatename: the enabler is STALE. The matched TU's own text no
+#   longer carries a second extern-C declaration of itself -- it declares
+#   func_ov098_0213a8ec and the seven other externs, not its own name.
+#
+#   WHY IT LINKS HERE. The five undefined externals of the matched object were
+#   each checked in this tree's build/port/walk_window.map before the swap:
+#       ??1dBgCh_Gnd@@UAE@XZ
+#       ??0dBgCh_Gnd@@QAE@XZ
+#       ?SetObjAndPos@dBgCh_Gnd@@QAEXABUVector3@@PAUdActor_c@@@Z
+#       ?DetectClsn@dBgCh_Gnd@@QAEHXZ
+#       _func_ov098_0213a8ec
+#   The matched TU spells dBgCh_Gnd as the real C++ class and gets the member
+#   mangles; the host copy spelled the same four as flat Itanium C names. Both
+#   spellings are already in the image, so the swap needs no new face.
+#
+#   REACH. ov015's InitResources tail-calls this body through the
+#   cross-overlay veneer, and the caller spells the flat cdecl name
+#   func_ov098_0213a794, which is exactly what the matched TU defines
+#   (extern "C" in the source). Nothing else changes.
+#
+#   WHAT WAS RETIRED. port/unmatched/FallBlockWf_InitVeneer.cpp held this one
+#   body and nothing else, so the whole file goes and its three rows in
+#   port/CMakeLists.txt (walk_window, walk_window_hires, smoke_player) become
+#   a named retirement comment.
+#
+# ---- ROW 2: _ZN20cMgSmartball_dokan_c14RestoreInitialEv (ov006 0x02110bb4) --
+#
+#   NOT A SLICE ROW. It is already on port/slice_smb.txt:272 and it already
+#   compiles; this file carries it for the record only, because the fix is a
+#   reference, not an enrolment. Listing it again would be LNK2005.
+#
+#   THE ENABLER (E2), measured: the object compiles to
+#   ?RestoreInitial@cMgSmartball_dokan_c@@UAEXXZ (dumpbin: SECT3 External),
+#   whose single undefined external is
+#   ?RestoreInitial@cMgSmartball_object_c@@UAEXXZ -- already in this tree's
+#   map. Nothing in the image referenced the dokan mangle, so /OPT:REF
+#   discarded the body and linkage.py could not count it.
+#
+#   WHAT REFERENCED IT INSTEAD. port/hal/scene_mg.cpp's smb_dok_s2 thunk, the
+#   host face for ROM word 0x02110bb4 in kSmartballObjFaces, called
+#   _ZN21cMgSmartball_object_c14RestoreInitialEv directly -- the veneer's
+#   TARGET, skipping the veneer. That is right on behaviour and it is why the
+#   ROM's own 0xc-byte body was dead code in the port.
+#
+#   THE FIX. smb_dok_s2 now calls the matched body with the receiver:
+#   ((cMgSmartball_dokan_c *)s)->cMgSmartball_dokan_c::RestoreInitial(), over
+#   a local shadow declaration of the class, because this file includes no
+#   game headers by its own rule. A qualified call is a direct call, so it
+#   does not dispatch through the vtable and does not recurse, which is the
+#   same point src/_ZN20cMgSmartball_dokan_c14RestoreInitialEv.cpp's own
+#   header comment makes about the ROM's qualification.
+#
+#   THE FLAT NAME IS NOT DEFINED, on purpose. out/SEAT14E/bugs.md item 1:
+#   ov002 and ov006 share a DS overlay load window and both cover 0x02110154,
+#   so hal/cxx_aliases.cpp routes the SIBLING slot_c name at that address and
+#   alternatename_guard.py has refused a flat definition there once already.
+#   This row defines no flat name at all -- the reference is the MSVC member
+#   mangle, which is what the matched TU emits.
+#
+#   REACH. The reference is the ROM's own vtable slot: cMgSmartball_dokan_c's
+#   vtable at ov006 0x0213ecac holds 02110a20 / 02110928 / 02110bb4, and
+#   0x02110bb4 IS this body. kSmartballObjFaces is the port's fill for those
+#   three words, so the call is the one the cartridge makes.
+
+src/func_ov098_0213a794.cpp

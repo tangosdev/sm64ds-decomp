@@ -1,7 +1,7 @@
 #include "types.h"
 /* func_0200897c @ 0x0200897c, size 0x5c, ARM.
  * Camera-cluster member taking (Camera *self, void *arg).
- * Always runs func_02035414(arg). Then, if the camera's owner Actor
+ * Always runs func_02035414(arg). Then, if the camera's owner dActor_c
  * (self->owner @0x110) has actorID 0xbf (a specific actor type) AND a byte
  * flag at owner+0x6fb is set, runs func_02035428(arg). Finally always runs
  * func_02035468(arg).
@@ -15,16 +15,16 @@
  */
 enum Bool { FALSE, TRUE };
 
-typedef struct Actor {
+typedef struct dActor_c {
     char _pad0[0xc];
     u16 actorID;        /* 0x0c */
     char _pad1[0x6fb - (0xc + 2)];
     u8 flag6fb;         /* 0x6fb */
-} Actor;
+} dActor_c;
 
 typedef struct Camera {
     char _pad0[0x110];
-    Actor *owner;       /* 0x110 */
+    dActor_c *owner;       /* 0x110 */
 } Camera;
 
 extern void func_02035414(void *arg);
@@ -32,7 +32,7 @@ extern void func_02035428(void *arg);
 extern void func_02035468(void *arg);
 
 void func_0200897c(Camera *self, void *arg) {
-    Actor *owner;
+    dActor_c *owner;
     enum Bool isType;
     func_02035414(arg);
     owner = self->owner;

@@ -39,6 +39,15 @@ void port_os_lock_words_seed(void)
     w[1] = 0xffff0000u;   /* ids 0x60..0x6f free, 0x70..0x7f reserved */
 }
 
+// PORT_HOST_ABI: ARM `clz` primitive (func_02057020, OS_GetLockID): the ROM
+//   body is an `asm` block whose search is two `clz` instructions over the
+//   two words at 0x027fffb0, and MSVC's x86 inline assembler has no such
+//   instruction, so there is no seat to take. TAG MOVED HERE, run link100
+//   wave 14, lane SHADOWS3: the same ruling is written at the head of this
+//   file, but linkage.py binds a reason to the first code line under it and
+//   that is the `#include`, so the tag documented nothing and this row read as
+//   an undocumented shadow. The host body below is the same search written as
+//   C and is unchanged by this lane.
 int func_02057020(void) {
     volatile unsigned int *w = lock_words();
     unsigned int base;

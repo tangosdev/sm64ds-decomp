@@ -21,8 +21,8 @@
 // ---- 2. THE HIERARCHY IS THREE DEEP, AND THE ROM SAYS SO THREE TIMES ------
 //
 //     Scene -> dScMgBase_c         data_ov004_020bc0c0  36 slots
-//           -> dScMgSingle3DBase_c data_ov006_0213e448  36 slots
-//           -> dScMg3DEsp_c        data_ov006_0213c8c4  36 slots
+//           -> dScMgSingle3DBase_c _ZTV19dScMgSingle3DBase_c  36 slots
+//           -> dScMg3DEsp_c        _ZTV12dScMg3DEsp_c  36 slots
 //
 // port/mg_fanout_costs.txt section 3 lists 0x185 as "vtable 0x0213c8c4, 36
 // slots, 14 overrides" and says nothing about an intermediate base, which is
@@ -34,14 +34,14 @@
 //   0x0213c7d4, which reads "12dScMg3DEsp_c", and its +8 points at 0x0213bc64,
 //   whose name at 0x0213bd00 reads "19dScMgSingle3DBase_c".
 //
-//   THE FACTORY.  src/MgPsycheOut_Spawn.cpp calls func_ov004_020b2adc(o),
-//   writes data_ov006_0213e448 into o[0], constructs the Particle::SysTracker
-//   at +0x471c, then writes data_ov006_0213c8c4 over it.
+//   THE FACTORY.  src/d_s_mg3_d_esp.cpp calls _ZN11dScMgBase_cC2Ev(o),
+//   writes _ZTV19dScMgSingle3DBase_c into o[0], constructs the Particle::SysTracker
+//   at +0x471c, then writes _ZTV12dScMg3DEsp_c over it.
 //
-//   THE DESTRUCTORS.  src/func_ov006_020e76e4.c (slot 17, D0) unwinds in the
+//   THE DESTRUCTORS.  src/_ZN12dScMg3DEsp_cD0Ev.cpp (slot 17, D0) unwinds in the
 //   opposite order -- 0x0213c8c4, the four sub-objects, 0x0213e448,
-//   ~SysTracker, func_ov004_020b29c0, Memory::Deallocate -- and
-//   src/func_ov006_020e7660.cpp (slot 16, D2) does the same without the
+//   ~SysTracker, _ZN11dScMgBase_cD2Ev, Memory::Deallocate -- and
+//   src/_ZN12dScMg3DEsp_cD1Ev.cpp (slot 16, D2) does the same without the
 //   Deallocate.
 //
 // Six of the fourteen overrides (slots 2, 5, 7, 10, 26 and 33) are therefore
@@ -70,10 +70,10 @@
 // is APPENDED AFTER both the flower's and memory2's, so on any tree carrying
 // all three:
 //
-//   - data_ov006_0213e448 keeps hal/scene_mg_flower.cpp's thunks and that
+//   - _ZTV19dScMgSingle3DBase_c keeps hal/scene_mg_flower.cpp's thunks and that
 //     file's witness keeps counting exactly what it counted before this seat
 //     existed;
-//   - data_ov006_0213c8c4 gets THIS file's thunks in its six inherited slots,
+//   - _ZTV12dScMg3DEsp_c gets THIS file's thunks in its six inherited slots,
 //     which is the only table this seat needs to own;
 //   - this seat's own dScMgSingle3DBase_c counter reads its DERIVED table's
 //     six and zero from the middle table, and the census below prints both so
@@ -81,7 +81,7 @@
 //
 // ---- 4. SLOT 2 IS NOT src's BODY -----------------------------------------
 //
-// func_ov006_0210a6e4 (AfterInitResources) drops the framework's second
+// _ZN19dScMgSingle3DBase_c18AfterInitResourcesEj (AfterInitResources) drops the framework's second
 // argument: the ROM never writes r1 before its `bl 0x20b08f0`, so the flags
 // ride through in r1, and src spells the call with one argument because that is
 // the only way to spell an unnamed value in C.  port/unmatched/MgFlower_Slot2.
@@ -100,7 +100,7 @@
 // so __fastcall cleans four bytes.  Every seated class's slot-18 body ignores
 // its r1.
 //
-// THIS ONE DOES NOT.  src/func_ov006_020e9c20.c takes (char *c, int a) and the
+// THIS ONE DOES NOT.  src/_ZN12dScMg3DEsp_c13OnYoshiTryEatEi.cpp takes (char *c, int a) and the
 // ROM says so at 0x020e9c2c:
 //
 //     020e9c20  push {r4,r5,lr} / sub sp,sp,#0xc
@@ -116,7 +116,7 @@
 // which is the field func_ov004_020adb1c draws as the star badge and the field
 // section 17 of port/mg_fanout_costs.txt traces to the save record.
 //
-// AND ITS OWN InitResources IS ONE OF THE 22 SITES.  src/func_ov006_020e9e70.
+// AND ITS OWN InitResources IS ONE OF THE 22 SITES.  src/_ZN12dScMg3DEsp_c13InitResourcesEv.
 // cpp ends with `((Obj*)c)->v48(-1);` through a shadow class over the SELF
 // object, and the ROM at 0x020ea110 is `ldr r2,[r0] / ldr r2,[r2,#0x48] /
 // blx r2` with `mvn r1,#0` before it.  -1 is neither 0 nor 0x12, so both
@@ -126,7 +126,7 @@
 // ---- 6. THE TWO SHADOW-CLASS MODEL DISPATCHES ARE SAFE, AND THAT IS -------
 //         MEASURED RATHER THAN ASSUMED
 //
-// src/func_ov006_020e9d1c.cpp (slot 9, Render) draws through
+// src/_ZN12dScMg3DEsp_c6RenderEv.cpp (slot 9, Render) draws through
 // `((Obj *)(c + 0x4f38))->vcall(0)` and the same at +0x4f88, where Obj is a
 // local six-virtual shadow -- the construct hal/scene_mg_memory2.cpp section
 // "THE SHADOW-CLASS TEST" rules on.  That ruling is: a shadow over the MOUNTED
@@ -135,7 +135,7 @@
 // for a reason that is one line of hal/cxxname_bridge.cpp:
 //
 //   WHICH CLASS EACH OBJECT IS comes from the CONSTRUCTOR, not the call.
-//   src/MgPsycheOut_Spawn.cpp runs _ZN5ModelC1Ev(o + 0x4f38) and
+//   src/d_s_mg3_d_esp.cpp runs _ZN5ModelC1Ev(o + 0x4f38) and
 //   _ZN5ModelC1Ev(o + 0x4f88), so both are plain Model.  slot 17 agrees:
 //   it destroys both with _ZN5ModelD1Ev.
 //
@@ -185,35 +185,35 @@ int      port_scene_env_want(void);
    mounted table alone leaves live wild DS pointers in a table the factory
    installs. */
 extern unsigned char data_ov004_020bc0c0[];   /* dScMgBase_c,         36 */
-extern unsigned char data_ov006_0213e448[];   /* dScMgSingle3DBase_c, 36 */
-extern unsigned char data_ov006_0213c8c4[];   /* dScMg3DEsp_c,        36 */
-extern unsigned char MgPsycheOut_SpawnInfo[];
+extern unsigned char _ZTV19dScMgSingle3DBase_c[];   /* dScMgSingle3DBase_c, 36 */
+extern unsigned char _ZTV12dScMg3DEsp_c[];   /* dScMg3DEsp_c,        36 */
+extern unsigned char g_profile_MG_3DESP[];
 
 /* dScMgSingle3DBase_c's eight overrides.  Slot 2 is NOT src's body: see
    section 4 and port/unmatched/MgFlower_Slot2.cpp. */
 int   port_mg_flower_after_init(void *c, unsigned f);   /* slot  2 */
-void  func_ov006_0210a608(void *c, unsigned f);         /* slot  5 */
-int   func_ov006_0210a698(void *c);                     /* slot  7 */
-int   func_ov006_0210a664(void *c);                     /* slot 10 */
-int   func_ov006_0210a4b0(char *c);                     /* slot 16 D2 */
-int   func_ov006_0210a4e8(char *c);                     /* slot 17 D0 */
-int   func_ov006_0210a600(void);                        /* slot 26 */
-void  func_ov006_0210a708(char *c);                     /* slot 33 */
+void  _ZN19dScMgSingle3DBase_c21AfterCleanupResourcesEj(void *c, unsigned f);         /* slot  5 */
+int   _ZN19dScMgSingle3DBase_c14BeforeBehaviorEv(void *c);                     /* slot  7 */
+int   _ZN19dScMgSingle3DBase_c12BeforeRenderEv(void *c);                     /* slot 10 */
+int   _ZN19dScMgSingle3DBase_cD1Ev(char *c);                     /* slot 16 D2 */
+int   _ZN19dScMgSingle3DBase_cD0Ev(char *c);                     /* slot 17 D0 */
+int   _ZN19dScMgSingle3DBase_c24OnHitByCannonBlastedCharEv(void);                        /* slot 26 */
+void  _ZN19dScMgSingle3DBase_c9Virtual84Ev(char *c);                     /* slot 33 */
 
-/* dScMg3DEsp_c's own eight.  func_ov006_020e9e00 is the HOST COPY in
+/* dScMg3DEsp_c's own eight.  _ZN12dScMg3DEsp_c8BehaviorEv is the HOST COPY in
    unmatched/Mg3DEsp_StateDispatch.cpp, not the src TU: it is the
    pointer-to-member Behavior and the port cannot compile the src. */
-int   func_ov006_020e9e70(char *self);        /* slot  0 InitResources */
-int   func_ov006_020e9cec(void);              /* slot  3 CleanupResources */
-int   func_ov006_020e9e00(void *self);        /* slot  6 Behavior, host copy */
-int   func_ov006_020e9d1c(char *c);           /* slot  9 Render */
-void *func_ov006_020e7660(int c);             /* slot 16 D2 */
-void *func_ov006_020e76e4(char *c);           /* slot 17 D0 */
-void  func_ov006_020e9c20(char *c, int a);    /* slot 18 state reset, TAKES a */
-int   func_ov006_020e9c10(void);              /* slot 20 */
+int   _ZN12dScMg3DEsp_c13InitResourcesEv(char *self);        /* slot  0 InitResources */
+int   _ZN12dScMg3DEsp_c16CleanupResourcesEv(void);              /* slot  3 CleanupResources */
+int   _ZN12dScMg3DEsp_c8BehaviorEv(void *self);        /* slot  6 Behavior, host copy */
+int   _ZN12dScMg3DEsp_c6RenderEv(char *c);           /* slot  9 Render */
+void *_ZN12dScMg3DEsp_cD1Ev(int c);             /* slot 16 D2 */
+void *_ZN12dScMg3DEsp_cD0Ev(char *c);           /* slot 17 D0 */
+void  _ZN12dScMg3DEsp_c13OnYoshiTryEatEi(char *c, int a);    /* slot 18 state reset, TAKES a */
+int   _ZN12dScMg3DEsp_c9Virtual50Ev(void);              /* slot 20 */
 
 /* the factory */
-void *MgPsycheOut_Spawn(void);
+void *dScMg3DEsp_c_classInit(void);
 
 /* the dispatch file's witnesses */
 unsigned port_mg_esp3d_state_hits(void);
@@ -258,44 +258,44 @@ static unsigned g_psy_base_hits[36];   /* the same slots on the MIDDLE table */
 static void *__fastcall s3_ainit(void *s, void *, unsigned f)
 { P3D(2);  return (void *)(size_t)port_mg_flower_after_init(s, f); }
 static void __fastcall s3_aclean(void *s, void *, unsigned f)
-{ P3D(5);  func_ov006_0210a608(s, f); }
+{ P3D(5);  _ZN19dScMgSingle3DBase_c21AfterCleanupResourcesEj(s, f); }
 static int  __fastcall s3_bbeh(void *s, void *)
-{ P3D(7);  return func_ov006_0210a698(s); }
+{ P3D(7);  return _ZN19dScMgSingle3DBase_c14BeforeBehaviorEv(s); }
 static int  __fastcall s3_bren(void *s, void *)
-{ P3D(10); return func_ov006_0210a664(s); }
+{ P3D(10); return _ZN19dScMgSingle3DBase_c12BeforeRenderEv(s); }
 static void *__fastcall s3_d2(void *s, void *)
-{ P3D(16); return (void *)(size_t)func_ov006_0210a4b0((char *)s); }
+{ P3D(16); return (void *)(size_t)_ZN19dScMgSingle3DBase_cD1Ev((char *)s); }
 static void *__fastcall s3_d0(void *s, void *)
-{ P3D(17); return (void *)(size_t)func_ov006_0210a4e8((char *)s); }
+{ P3D(17); return (void *)(size_t)_ZN19dScMgSingle3DBase_cD0Ev((char *)s); }
 static int  __fastcall s3_v26(void *, void *)
-{ P3D(26); return func_ov006_0210a600(); }
+{ P3D(26); return _ZN19dScMgSingle3DBase_c24OnHitByCannonBlastedCharEv(); }
 static int  __fastcall s3_v33(void *s, void *)
-{ P3D(33); func_ov006_0210a708((char *)s); return 0; }
+{ P3D(33); _ZN19dScMgSingle3DBase_c9Virtual84Ev((char *)s); return 0; }
 
 /* ---- dScMg3DEsp_c's own eight ------------------------------------------- */
 static int  __fastcall psy_init(void *s, void *)
-{ PSY(0);  const int r = func_ov006_020e9e70((char *)s);
+{ PSY(0);  const int r = _ZN12dScMg3DEsp_c13InitResourcesEv((char *)s);
   /* the GaplessMinigames latch, for hal/scene_mg.cpp's reason: every seated
      minigame calls it so the ones the gapless table does not name can say
      "unsupported" instead of doing nothing quietly. */
   hal_gapless_minigames_latch(); return r; }
 static int  __fastcall psy_clean(void *, void *)
-{ PSY(3);  return func_ov006_020e9cec(); }
+{ PSY(3);  return _ZN12dScMg3DEsp_c16CleanupResourcesEv(); }
 static int  __fastcall psy_beh(void *s, void *)
-{ PSY(6);  const int r = func_ov006_020e9e00(s); hal_gapless_splice(); return r; }
+{ PSY(6);  const int r = _ZN12dScMg3DEsp_c8BehaviorEv(s); hal_gapless_splice(); return r; }
 static int  __fastcall psy_render(void *s, void *)
-{ PSY(9);  return func_ov006_020e9d1c((char *)s); }
+{ PSY(9);  return _ZN12dScMg3DEsp_c6RenderEv((char *)s); }
 static void *__fastcall psy_d2(void *s, void *)
-{ PSY(16); return func_ov006_020e7660((int)(size_t)s); }
+{ PSY(16); return _ZN12dScMg3DEsp_cD1Ev((int)(size_t)s); }
 static void *__fastcall psy_d0(void *s, void *)
-{ PSY(17); return func_ov006_020e76e4((char *)s); }
+{ PSY(17); return _ZN12dScMg3DEsp_cD0Ev((char *)s); }
 /* SLOT 18 TAKES ONE STACK ARGUMENT AND THIS CLASS READS IT.  Section 5 has the
    disassembly; the parameter is FORWARDED here where every other seated seat
    drops it, because this body branches on it. */
 static int  __fastcall psy_reset(void *s, void *, int a)
-{ PSY(18); func_ov006_020e9c20((char *)s, a); return 1; }
+{ PSY(18); _ZN12dScMg3DEsp_c13OnYoshiTryEatEi((char *)s, a); return 1; }
 static int  __fastcall psy_v20(void *, void *)
-{ PSY(20); return func_ov006_020e9c10(); }
+{ PSY(20); return _ZN12dScMg3DEsp_c9Virtual50Ev(); }
 
 /* SM64DS_SCENE_SLOT0=0 and SM64DS_SCENE_SLOT9=0, the diagnostics every scene
    seat in this port carries, counted separately so a run can never read a no-op
@@ -358,14 +358,14 @@ static unsigned g_psy_mid_claimed, g_psy_vt_claimed_mid, g_psy_vt_claimed_own;
 extern "C" void port_scene_fill_esp3d(void)
 {
     void **base = (void **)data_ov004_020bc0c0;
-    void **mid  = (void **)data_ov006_0213e448;
-    void **vt   = (void **)data_ov006_0213c8c4;
+    void **mid  = (void **)_ZTV19dScMgSingle3DBase_c;
+    void **vt   = (void **)_ZTV12dScMg3DEsp_c;
 
     /* THE BASE TABLE IS FILLED HERE TOO AND IT IS NOT CEREMONY.  Earlier rows'
        fills already did it and run first, so on a tree carrying them this is a
        second pass over words that are already host pointers and finds nothing.
        It is here so this class does not depend on another class's row existing:
-       the factory's first act is func_ov004_020b2adc, which writes
+       the factory's first act is _ZN11dScMgBase_cC2Ev, which writes
        data_ov004_020bc0c0 into the object's first word before either derived
        table lands. */
     port_scene_mg_fill_shared(base, 36);
@@ -436,8 +436,8 @@ extern "C" void port_scene_fill_esp3d(void)
    without the registry table growing a second column.
 
    THE FACTORY NEEDS NO DISPLACEMENT RULING, and it is worth recording because
-   0x169's did.  src/MgPsycheOut_Spawn.cpp calls func_ov004_020b2adc(o) WITH its
-   argument, where src/func_ov006_020e0574.cpp (0x169's factory) calls the same
+   0x169's did.  src/d_s_mg3_d_esp.cpp calls _ZN11dScMgBase_cC2Ev(o) WITH its
+   argument, where src/actors/dScMgCup_c.cpp (0x169's factory) calls the same
    base constructor with none and rides r0 through -- and that callee
    dereferences on its first statement and then writes vtable words through the
    pointer.  This class's factory is on the correct side of it and is linked
@@ -446,7 +446,7 @@ static char *g_psy_self;
 
 extern "C" void *port_mg_esp3d_spawn(void)
 {
-    void *p = MgPsycheOut_Spawn();
+    void *p = dScMg3DEsp_c_classInit();
     g_psy_self = (char *)p;
     return p;
 }

@@ -1,19 +1,37 @@
 //cpp
 // @symbol _ZN6Player23St_InYoshiMouth_CleanupEv
-/* NOT a Player method, despite the name. ov006, 0x020d6084.
+/* recovered: named members + shared header, real C++ method
  *
- * sizeof(Player) is 0x768 (its allocating constructor _ZN6PlayerC3Ev asks
- * operator new for exactly that). This function writes this+0x62ad and
- * this+0x62af -- roughly 0x5b00 bytes past the end of the object. It is some
- * other ov006 class that happens to sit at a shared RAM address; the Player
- * name is a community label applied to the wrong overlay's bytes.
+ * ov002, 0x020d6084, size 0x34. Leaving the state Yoshi has you in: two body
+ * collision bits are cleared and two markers set, then it returns 1.
  *
- * Detached from Player.h so it stops contributing false evidence to that
- * header. Kept under the mangled name because renaming the symbol is a config
- * change; this commit is src-only.
+ * `return 1` is not decoration here. ChangeState calls mCleanup FIRST, on the
+ * state being left, and TESTS the result -- a 0 vetoes the transition. So this
+ * handler's return value is what lets the player leave Yoshi's mouth at all.
+ *
+ * The word at 0x2ec used to be a Player field called mBodyClsnFlags. It is
+ * not one: it is the body collider's own `flags` -- dCc_c's, at +0x18
+ * -- reached through mdCcAcPos_c now that the member has its
+ * real type. Clearing 0x2000 and 0x2 in it is what a cleanup of a carried
+ * state looks like. The other two writes are still unnamed offsets -- 0x713
+ * and 0x6f5 -- and are left as such rather than guessed at.
+ *
+ * THE TWO CLEARS DO NOT MERGE. `*p &= ~0x2002` is one instruction shorter and
+ * changes the size, so the ROM really does mask twice; measured, not assumed.
+ * The `(long long)` round-trip the placeholder body carried was free, and is
+ * gone.
+ *
+ * This file carried the placeholder name func_ov002_020d6084 until the symbol
+ * was moved here from ov006. See the commit and include/Player.h.
  */
-extern "C" void _ZN6Player23St_InYoshiMouth_CleanupEv(char *self)
+#include "Player.h"
+
+int Player::St_InYoshiMouth_Cleanup()
 {
-    *(char *)(self + 0x62ad) = 0;
-    *(char *)(self + 0x62af) = 0;
+    unsigned int *p = (unsigned int *)&mdCcAcPos_c.flags;
+    *p &= ~0x2000;
+    *p &= ~2;
+    mIsBodyClsnEnabled = 1;
+    mOpacity = 0x1f;
+    return 1;
 }

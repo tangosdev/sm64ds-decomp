@@ -1,0 +1,19 @@
+    .text       start:0x021111a0 end:0x021134e4 kind:code align:32
+    .rodata     start:0x021134e4 end:0x02113674 kind:rodata align:4
+    .init       start:0x02113674 end:0x02113768 kind:code align:4
+    .ctor       start:0x02113768 end:0x02113770 kind:rodata align:4
+    .data       start:0x02113780 end:0x02114aa0 kind:data align:32
+    .bss        start:0x02114aa0 end:0x02114b20 kind:bss align:32
+src_tu/actors/BookShot+BookShotSpawner+Bookend.cpp:
+    .text start:0x021111a0 end:0x02112938
+    .init start:0x02113674 end:0x0211372c
+    .ctor start:0x02113768 end:0x0211376c
+    .data start:0x0211482c end:0x021149d8
+    .bss start:0x02114aa0 end:0x02114af0
+
+src_tu/actors/HauntedChair.cpp:
+    .text start:0x02112938 end:0x021134e4
+    .init start:0x0211372c end:0x02113768
+    .ctor start:0x0211376c end:0x02113770
+    .data start:0x021149f0 end:0x02114aa0
+    .bss start:0x02114af0 end:0x02114b20

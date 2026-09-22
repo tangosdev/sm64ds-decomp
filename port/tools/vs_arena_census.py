@@ -141,7 +141,7 @@ def run_map(mi, frames):
 # the behaviour list is legitimately below the count placed. Each row is the
 # file:line that settles it; nothing goes in here without one.
 FOLDED = {
-    286: ("TREE", "src/_ZN4Tree13InitResourcesEv.cpp:34-38 - each tree links "
+    286: ("TREE", "src/game/actors/d_a_tree.cpp:34-38 - each tree links "
                   "itself into data_ov002_02110a48[modelIndex] and returns 1 "
                   "only when that slot was empty, so ONE tree per model index "
                   "stays on the behaviour list and renders the whole list"),

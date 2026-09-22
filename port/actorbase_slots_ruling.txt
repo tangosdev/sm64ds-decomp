@@ -72,17 +72,17 @@
 #
 # All four carry the identical words in the four slots:
 #
-#   slot  4   0x02011220   _ZN5Actor22BeforeCleanupResourcesEv  size 0x24
-#   slot  5   0x02011214   _ZN5Actor21AfterCleanupResourcesEj   size 0x0c
-#   slot  8   0x02010fc8   _ZN5Actor13AfterBehaviorEj           size 0x0c
-#   slot 11   0x02010f6c   _ZN5Actor11AfterRenderEj             size 0x0c
+#   slot  4   0x02011220   _ZN8dActor_c22BeforeCleanupResourcesEv  size 0x24
+#   slot  5   0x02011214   _ZN8dActor_c21AfterCleanupResourcesEj   size 0x0c
+#   slot  8   0x02010fc8   _ZN8dActor_c13AfterBehaviorEj           size 0x0c
+#   slot 11   0x02010f6c   _ZN8dActor_c11AfterRenderEj             size 0x0c
 #
 # The ActorBase counterparts, from config/arm9/symbols.txt:
 #
-#   0x02043bac   _ZN9ActorBase22BeforeCleanupResourcesEv   size 0x44
-#   0x02043b2c   _ZN9ActorBase21AfterCleanupResourcesEj    size 0x80
-#   0x02043af8   _ZN9ActorBase13AfterBehaviorEj            size 0x04
-#   0x02043ac4   _ZN9ActorBase11AfterRenderEj              size 0x04
+#   0x02043bac   _ZN7fBase_c22BeforeCleanupResourcesEv   size 0x44
+#   0x02043b2c   _ZN7fBase_c21AfterCleanupResourcesEj    size 0x80
+#   0x02043af8   _ZN7fBase_c13AfterBehaviorEj            size 0x04
+#   0x02043ac4   _ZN7fBase_c11AfterRenderEj              size 0x04
 #
 # Three of the four Actor bodies are 0xc bytes. That is two instructions and a
 # literal, and it is the shape the ruling turns on.
@@ -95,7 +95,7 @@
 #   02010F74  02043AC4   .word 0x02043AC4      ; ActorBase::AfterRender
 #
 # The literal is at PC+8+0 = 0x02010F74 and holds 0x02043AC4, which
-# config/arm9/symbols.txt names _ZN9ActorBase11AfterRenderEj.
+# config/arm9/symbols.txt names _ZN7fBase_c11AfterRenderEj.
 # config/arm9/relocs.txt line 1374 records the same edge independently:
 #
 #   from:0x02010f74 kind:load to:0x02043ac4 module:main
@@ -283,9 +283,9 @@
 # The three matched TUs for the names the port map does not carry, read
 # against the disassembly above rather than summarised:
 #
-#   src/_ZN5Actor11AfterRenderEj.cpp
-#   src/_ZN5Actor13AfterBehaviorEj.cpp
-#   src/_ZN5Actor21AfterCleanupResourcesEj.cpp
+#   src/_ZN8dActor_c11AfterRenderEj.cpp
+#   src/_ZN8dActor_c13AfterBehaviorEj.cpp
+#   src/_ZN8dActor_c21AfterCleanupResourcesEj.cpp
 #
 # All three are the same three lines, and all three say in their header
 # comment what the bytes say: "tail-call veneer to <the ActorBase name>",
@@ -294,15 +294,15 @@
 # C name and nothing else. A matched TU that is a forwarder looks like one
 # here, which is the check that was asked for and it passes.
 #
-#   src/_ZN5Actor22BeforeCleanupResourcesEv.c
+#   src/_ZN8dActor_c22BeforeCleanupResourcesEv.cpp
 #
 # is the slot 4 wrapper and reads `if (ActorBase::BeforeCleanupResources() != 0)
 # return 1; return 0;`, which is ruling 4 exactly.
 #
 # ONE STALE COMMENT worth recording and NOT edited here, because the file is
 # matched arm9 territory and a comment change there is not this lane's to
-# make. src/_ZN9ActorBase13AfterBehaviorEj.cpp and
-# src/_ZN9ActorBase11AfterRenderEj.cpp both say "Base ActorBase does nothing;
+# make. src/_ZN7fBase_c13AfterBehaviorEj.cpp and
+# src/_ZN7fBase_c11AfterRenderEj.cpp both say "Base ActorBase does nothing;
 # leaf classes override." The first clause is right. The second is wrong for
 # this game: count 1 above shows no leaf class overrides either slot in any of
 # the 288 tables. Harmless as a comment, misleading if a later reader treats it

@@ -23,7 +23,7 @@
 //
 //     Scene -> dScMgBase_c        data_ov004_020bc0c0   36 slots
 //           -> dScMgD3DBase_c     data_ov006_0213c62c   36 slots, ovr 17
-//           -> dScMgTrampoline_c  data_ov006_0213fb34   36 slots, ovr 25
+//           -> dScMgTrampoline_c  _ZTV17dScMgTrampoline_c   36 slots, ovr 25
 //
 // port/mg_fanout_costs.txt section 3 lists ONE vtable for 0x180 and says
 // nothing about an intermediate base -- the same gap section 13's CORRECTION 1
@@ -41,14 +41,14 @@
 //     0x0213fb30 -> 0x0213fad0 +4 -> 0x0213faf0 = "17dScMgTrampoline_c"
 //                                +8 -> 0x0213c5c8 +4 -> "14dScMgD3DBase_c"
 //
-// and the code agrees twice: src/MgTrampolineTime_Spawn.c writes the middle
-// table into the object and then data_ov006_0213fb34 over it, and slot 17's
+// and the code agrees twice: src/minigames/d_s_mg_trampoline.cpp writes the middle
+// table into the object and then _ZTV17dScMgTrampoline_c over it, and slot 17's
 // literal pool (0x02120914 = 0x0213fb34, 0x02120930 = 0x0213c62c) unwinds them
 // in the opposite order.
 //
 // THE MIDDLE TABLE IS MISNAMED IN config AND FOUR CLASSES SHARE IT.
 // config/arm9/overlays/ov006/symbols.txt calls 0x0213c62c
-// `_ZTV17MgBounceAndPounce`; the ROM's RTTI says dScMgD3DBase_c, and five
+// `_ZTV14dScMgD3DBase_c`; the ROM's RTTI says dScMgD3DBase_c, and five
 // type_info records in ov006 carry 0x0213c5c8 as their base:
 // dScMgD3DBase_c itself, dScMgJump_c (0x174), dScMgJump2_c (0x175),
 // THIS class (0x180) and dScMgTrampoline2_c (0x181).
@@ -84,7 +84,7 @@
 //
 // THE MIDDLE TABLE IS FILLED IN TWO SPANS AND THAT IS NOT COSMETIC.  The ov006
 // mount emits one host array per config symbol, and config puts an interior
-// symbol inside this table: `_ZTV17MgBounceAndPounce` is 80 bytes (20 slots)
+// symbol inside this table: `_ZTV14dScMgD3DBase_c` is 80 bytes (20 slots)
 // and `data_ov006_0213c67c` is the next 64 (16 slots).  Writing 36 words
 // through the first array would be an out-of-bounds write that happens to land
 // correctly only because the pack keeps ROM adjacency.  The fill is
@@ -139,8 +139,8 @@
 //
 // THE SINGLE MOST IMPORTANT THING THIS SEAT DOES THAT THE VTABLE AXIS CANNOT
 // SEE, and it is the check run mg9 lane S381 turned into law: check word 0 of
-// every factory product.  src/MgTrampolineTime_Spawn.c builds three arrays
-// through func_020733a8:
+// every factory product.  src/minigames/d_s_mg_trampoline.cpp builds three arrays
+// through __cxa_vec_ctor:
 //
 //   this+0x500c   4 records of 0xd0    ctor func_ov006_020cd12c   VTABLE
 //   this+0x534c   3 records of 0x32c   ctor func_ov006_020d100c   no vtable
@@ -189,15 +189,15 @@
 // The middle base has the flower's slot-2 disease in TWO of its own bodies,
 // and both were found by reading the ROM rather than by a run:
 //
-//   SLOT 2, func_ov006/_ZN17MgBounceAndPounce18AfterInitResourcesEj at
+//   SLOT 2, func_ov006/_ZN14dScMgD3DBase_c18AfterInitResourcesEj at
 //   0x020e70c0.  The ROM does `mov r4,r0` and then `bl 0x020b08f0` with r1
 //   NEVER WRITTEN, so the framework's flags word rides through in r1.  src
 //   spells the call with one argument because that is the only way to spell an
 //   unnamed value in C.  On the host the second argument would be stack litter.
 //
-//   SLOT 10, _ZN17MgBounceAndPounce12BeforeRenderEv at 0x020e7040.  The ROM
+//   SLOT 10, _ZN14dScMgD3DBase_c12BeforeRenderEv at 0x020e7040.  The ROM
 //   does `bl 0x020b04f4` with r0 UNTOUCHED from entry, so `this` itself rides
-//   through.  src takes NO parameter at all and calls func_ov004_020b04f4()
+//   through.  src takes NO parameter at all and calls _ZN11dScMgBase_c12BeforeRenderEv()
 //   with none -- a DROPPED RECEIVER, which is the bin-softlock disease the run
 //   law names, and it would hand dScMgBase_c::BeforeRender a garbage `this`.
 //
@@ -230,7 +230,7 @@
 #include <cstdio>
 #include <cstdlib>
 
-#include "MgBounceAndPounce.h"
+#include "dScMgD3DBase_c.h"
 
 extern "C" {
 
@@ -250,11 +250,11 @@ unsigned port_mg_scene_spawn_param(int scene_id);
    THE MIDDLE TABLE IS TWO ARRAYS because config puts an interior symbol
    inside it; see section 3. */
 extern unsigned char data_ov004_020bc0c0[];        /* dScMgBase_c,        36 */
-extern unsigned char _ZTV17MgBounceAndPounce[];    /* dScMgD3DBase_c,  0..19 */
+extern unsigned char _ZTV14dScMgD3DBase_c[];    /* dScMgD3DBase_c,  0..19 */
 extern unsigned char data_ov006_0213c67c[];        /* dScMgD3DBase_c, 20..35 */
-extern unsigned char data_ov006_0213fb34[];        /* dScMgTrampoline_c,  36 */
+extern unsigned char _ZTV17dScMgTrampoline_c[];        /* dScMgTrampoline_c,  36 */
 extern unsigned char data_ov006_0213b2c4[];        /* dMgTrmpln3DMario_c,   5 */
-extern unsigned char MgTrampolineTime_SpawnInfo[];
+extern unsigned char g_profile_MG_TRAMPOLINE[];
 
 /* dScMgD3DBase_c's seventeen overrides.  Slots 2 and 10 are NOT src's bodies:
    see section 7 and port/unmatched/MgD3DBase_Slots.cpp. */
@@ -268,31 +268,31 @@ void port_mg_d3dbase_slot28(void *c);                        /* slot 28 */
    AfterRender) are reached through MgBounceAndPounce.h instead, because MSVC
    compiles them __thiscall and a C declaration of one would be a different
    symbol. */
-int  _ZN17MgBounceAndPounceD1Ev(void *self);                 /* slot 16 D1 */
-int  _ZN17MgBounceAndPounceD0Ev(void *self);                 /* slot 17 D0 */
-int  func_ov006_020e6e78(char *self);                        /* slot 24 */
-int  func_ov006_020e6e54(void *t);                           /* slot 25 */
-int  func_ov006_020e6e4c(void);                              /* slot 26 */
-void func_ov006_020e6d24(char *c);                           /* slot 29 */
-void func_ov006_020e6cac(char *c);                           /* slot 30 */
-void func_ov006_020e72c0(char *c);                           /* slot 31 */
-void func_ov006_020e7124(char *obj);                         /* slot 33 */
+int  _ZN14dScMgD3DBase_cD1Ev(void *self);                 /* slot 16 D1 */
+int  _ZN14dScMgD3DBase_cD0Ev(void *self);                 /* slot 17 D0 */
+int  _ZN14dScMgD3DBase_c8OnKickedEv(char *self);                        /* slot 24 */
+int  _ZN14dScMgD3DBase_c8OnPushedEv(void *t);                           /* slot 25 */
+int  _ZN14dScMgD3DBase_c24OnHitByCannonBlastedCharEv(void);                              /* slot 26 */
+void _ZN14dScMgD3DBase_c16OnAimedAtWithEggEv(char *c);                           /* slot 29 */
+void _ZN14dScMgD3DBase_c25OnAimedAtWithEggReturnVecEv(char *c);                           /* slot 30 */
+void _ZN14dScMgD3DBase_c9Virtual7CEv(char *c);                           /* slot 31 */
+void _ZN14dScMgD3DBase_c9Virtual84Ev(char *obj);                         /* slot 33 */
 
-/* dScMgTrampoline_c's own twelve.  func_ov006_021214f8 is the HOST COPY in
+/* dScMgTrampoline_c's own twelve.  _ZN17dScMgTrampoline_c8BehaviorEv is the HOST COPY in
    unmatched/MgTrampolineTime_StateDispatch.cpp, not the src TU: it is the
    pointer-to-member dispatcher and the port cannot compile the src. */
-int   func_ov006_02122198(char *base);        /* slot  0 InitResources     */
-int   func_ov006_021212e0(void *t);           /* slot  3 CleanupResources  */
-int   func_ov006_021214f8(void *self);        /* slot  6 Behavior, host cp */
-int   func_ov006_021212fc(int self);          /* slot  9 Render            */
-void *func_ov006_021207dc(void *thiz);        /* slot 16 D2                */
-void *func_ov006_02120880(char *thiz);        /* slot 17 D0                */
-void  func_ov006_02121fa4(char *o);           /* slot 18 state reset       */
-int   func_ov006_02121f70(void);              /* slot 19                   */
-int   func_ov006_0212101c(char *self);        /* slot 23                   */
-int   func_ov006_021211e0(char *self);        /* slot 24                   */
-int   func_ov006_021211bc(void *t);           /* slot 25                   */
-void  func_ov006_02120da8(void *obj, int x_base, int y, int val, int n);
+int   _ZN17dScMgTrampoline_c13InitResourcesEv(char *base);        /* slot  0 InitResources     */
+int   _ZN17dScMgTrampoline_c16CleanupResourcesEv(void *t);           /* slot  3 CleanupResources  */
+int   _ZN17dScMgTrampoline_c8BehaviorEv(void *self);        /* slot  6 Behavior, host cp */
+int   _ZN17dScMgTrampoline_c6RenderEv(int self);          /* slot  9 Render            */
+void *_ZN17dScMgTrampoline_cD1Ev(void *thiz);        /* slot 16 D2                */
+void *_ZN17dScMgTrampoline_cD0Ev(char *thiz);        /* slot 17 D0                */
+void  _ZN17dScMgTrampoline_c13OnYoshiTryEatEi(char *o);           /* slot 18 state reset       */
+int   _ZN17dScMgTrampoline_c13OnTurnIntoEggEi(void);              /* slot 19                   */
+int   _ZN17dScMgTrampoline_c11OnAttacked2Ev(char *self);        /* slot 23                   */
+int   _ZN17dScMgTrampoline_c8OnKickedEv(char *self);        /* slot 24                   */
+int   _ZN17dScMgTrampoline_c8OnPushedEv(void *t);           /* slot 25                   */
+void  _ZN17dScMgTrampoline_c9Virtual88Eiiii(void *obj, int x_base, int y, int val, int n);
                                               /* slot 34, five parameters  */
 
 /* dMgTrmpln3DMario_c's five, section 5 */
@@ -303,7 +303,7 @@ int  func_ov006_020caf4c(int *r0);
 void func_ov006_020cd720(short *p);
 
 /* the factory */
-void *MgTrampolineTime_Spawn(void);
+void *dScMgTrampoline_c_classInit(void);
 
 /* the dispatch file's witnesses */
 unsigned port_mg_tti_state_hits(void);
@@ -360,28 +360,48 @@ static unsigned g_mario_hits[5];   /* the element vtable */
 static int g_tti_mode18 = -1, g_tti_mode19 = -1;
 
 /* ---- dScMgD3DBase_c's seventeen ------------------------------------------ */
+/* THE FOUR CALLS BELOW ARE QUALIFIED, AND THAT IS THE WHOLE OF THE FIX FOR THE
+   STACK OVERFLOW THESE SEATS WERE TAKING. Run link100, lane SCENES1.
+
+   These faces ARE dScMgD3DBase_c's vtable slots 1, 5, 7 and 11: the fill writes
+   them over the ROM words 0x020e70e4, 0x020e6f60, 0x020e7074 and 0x020e700c.
+   On 9bb3c454f each line read `((MgBounceAndPounce *)s)->BeforeInitResources()`
+   against a class whose methods were plain members -- MSVC emitted
+   ?BeforeInitResources@MgBounceAndPounce@@QAEHXZ, a QAE, and the call was
+   direct. The sync renamed the class to its real ROM name and gave it
+   include/dScMgD3DBase_c.h, which declares all four VIRTUAL (this build's map:
+   ?BeforeInitResources@dScMgD3DBase_c@@UAE_NXZ). An unqualified call on a
+   virtual member is a vtable dispatch, and the slot it reads is the one this
+   face was just written into, so the face called itself until the stack ran
+   out: scenes 372 and 385 died with c00000fd at bnp_v1+0xb and d3_v1+0xb, esp
+   on the guard page, no crash stack at all.
+
+   `->dScMgD3DBase_c::Method()` is the same call the old line made and the same
+   body the cartridge's word names. Nothing else changes: the receiver, the
+   arguments and the return value are untouched, and the per-slot witnesses
+   still count. */
 static int  __fastcall d3_binit(void *s, void *)
-{ D3D(1);  return ((MgBounceAndPounce *)s)->BeforeInitResources(); }
+{ D3D(1);  return ((dScMgD3DBase_c *)s)->dScMgD3DBase_c::BeforeInitResources(); }
 static int  __fastcall d3_ainit(void *s, void *, unsigned f)
 { D3D(2);  return port_mg_d3dbase_after_init(s, f); }
 static void __fastcall d3_aclean(void *s, void *, unsigned f)
-{ D3D(5);  ((MgBounceAndPounce *)s)->AfterCleanupResources(f); }
+{ D3D(5);  ((dScMgD3DBase_c *)s)->dScMgD3DBase_c::AfterCleanupResources(f); }
 static int  __fastcall d3_bbeh(void *s, void *)
-{ D3D(7);  return ((MgBounceAndPounce *)s)->BeforeBehavior(); }
+{ D3D(7);  return ((dScMgD3DBase_c *)s)->dScMgD3DBase_c::BeforeBehavior(); }
 static int  __fastcall d3_bren(void *s, void *)
 { D3D(10); return port_mg_d3dbase_before_render(s); }
 static void __fastcall d3_aren(void *s, void *, unsigned f)
-{ D3D(11); ((MgBounceAndPounce *)s)->AfterRender(f); }
+{ D3D(11); ((dScMgD3DBase_c *)s)->dScMgD3DBase_c::AfterRender(f); }
 static void *__fastcall d3_d1(void *s, void *)
-{ D3D(16); return (void *)(size_t)_ZN17MgBounceAndPounceD1Ev(s); }
+{ D3D(16); return (void *)(size_t)_ZN14dScMgD3DBase_cD1Ev(s); }
 static void *__fastcall d3_d0(void *s, void *)
-{ D3D(17); return (void *)(size_t)_ZN17MgBounceAndPounceD0Ev(s); }
+{ D3D(17); return (void *)(size_t)_ZN14dScMgD3DBase_cD0Ev(s); }
 static int  __fastcall d3_v24(void *s, void *)
-{ D3D(24); return func_ov006_020e6e78((char *)s); }
+{ D3D(24); return _ZN14dScMgD3DBase_c8OnKickedEv((char *)s); }
 static int  __fastcall d3_v25(void *s, void *)
-{ D3D(25); return func_ov006_020e6e54(s); }
+{ D3D(25); return _ZN14dScMgD3DBase_c8OnPushedEv(s); }
 static int  __fastcall d3_v26(void *, void *)
-{ D3D(26); return func_ov006_020e6e4c(); }
+{ D3D(26); return _ZN14dScMgD3DBase_c24OnHitByCannonBlastedCharEv(); }
 /* SLOTS 27 AND 28 TAKE THE RECEIVER AND THIS LANE HAD DROPPED IT.  The two
    ROM bodies are `ldr ip,[pc] / bx ip` veneers onto dScMgBase_c's own slot-27
    and slot-28 bodies, so r0 rides through untouched; their src TUs take no
@@ -393,17 +413,17 @@ static int  __fastcall d3_v27(void *s, void *)
 static int  __fastcall d3_v28(void *s, void *)
 { D3D(28); port_mg_d3dbase_slot28(s); return 1; }
 static int  __fastcall d3_v29(void *s, void *)
-{ D3D(29); func_ov006_020e6d24((char *)s); return 1; }
+{ D3D(29); _ZN14dScMgD3DBase_c16OnAimedAtWithEggEv((char *)s); return 1; }
 static int  __fastcall d3_v30(void *s, void *)
-{ D3D(30); func_ov006_020e6cac((char *)s); return 1; }
+{ D3D(30); _ZN14dScMgD3DBase_c25OnAimedAtWithEggReturnVecEv((char *)s); return 1; }
 static int  __fastcall d3_v31(void *s, void *)
-{ D3D(31); func_ov006_020e72c0((char *)s); return 1; }
+{ D3D(31); _ZN14dScMgD3DBase_c9Virtual7CEv((char *)s); return 1; }
 static int  __fastcall d3_v33(void *s, void *)
-{ D3D(33); func_ov006_020e7124((char *)s); return 0; }
+{ D3D(33); _ZN14dScMgD3DBase_c9Virtual84Ev((char *)s); return 0; }
 
 /* ---- dScMgTrampoline_c's own twelve --------------------------------------- */
 static int  __fastcall tti_init(void *s, void *)
-{ TTI(0);  const int r = func_ov006_02122198((char *)s);
+{ TTI(0);  const int r = _ZN17dScMgTrampoline_c13InitResourcesEv((char *)s);
   /* the GaplessMinigames latch, for hal/scene_mg.cpp's reason: every seated
      minigame calls it so the ones the gapless table does not name can say
      "unsupported" instead of doing nothing quietly.  hal_gapless_splice() is
@@ -413,29 +433,29 @@ static int  __fastcall tti_init(void *s, void *)
      hal/scene_mg_bomroom.cpp section 8 and hal/scene_mg_luckystars.cpp. */
   hal_gapless_minigames_latch(); return r; }
 static int  __fastcall tti_clean(void *s, void *)
-{ TTI(3);  return func_ov006_021212e0(s); }
+{ TTI(3);  return _ZN17dScMgTrampoline_c16CleanupResourcesEv(s); }
 static int  __fastcall tti_beh(void *s, void *)
-{ TTI(6);  return func_ov006_021214f8(s); }
+{ TTI(6);  return _ZN17dScMgTrampoline_c8BehaviorEv(s); }
 static int  __fastcall tti_render(void *s, void *)
-{ TTI(9);  return func_ov006_021212fc((int)(size_t)s); }
+{ TTI(9);  return _ZN17dScMgTrampoline_c6RenderEv((int)(size_t)s); }
 static void *__fastcall tti_d2(void *s, void *)
-{ TTI(16); return func_ov006_021207dc(s); }
+{ TTI(16); return _ZN17dScMgTrampoline_cD1Ev(s); }
 static void *__fastcall tti_d0(void *s, void *)
-{ TTI(17); return func_ov006_02120880((char *)s); }
+{ TTI(17); return _ZN17dScMgTrampoline_cD0Ev((char *)s); }
 /* SLOTS 18 AND 19 TAKE ONE STACK ARGUMENT AND THIS CLASS IGNORES IT -- section
    7, read off the ROM.  The parameter is declared so __fastcall cleans the four
    bytes, and its value is recorded so the census can show what arrived rather
    than assert that it does not matter. */
 static int  __fastcall tti_reset(void *s, void *, int mode)
-{ TTI(18); g_tti_mode18 = mode; func_ov006_02121fa4((char *)s); return 1; }
+{ TTI(18); g_tti_mode18 = mode; _ZN17dScMgTrampoline_c13OnYoshiTryEatEi((char *)s); return 1; }
 static int  __fastcall tti_v19(void *, void *, int mode)
-{ TTI(19); g_tti_mode19 = mode; return func_ov006_02121f70(); }
+{ TTI(19); g_tti_mode19 = mode; return _ZN17dScMgTrampoline_c13OnTurnIntoEggEi(); }
 static int  __fastcall tti_v23(void *s, void *)
-{ TTI(23); return func_ov006_0212101c((char *)s); }
+{ TTI(23); return _ZN17dScMgTrampoline_c11OnAttacked2Ev((char *)s); }
 static int  __fastcall tti_v24(void *s, void *)
-{ TTI(24); return func_ov006_021211e0((char *)s); }
+{ TTI(24); return _ZN17dScMgTrampoline_c8OnKickedEv((char *)s); }
 static int  __fastcall tti_v25(void *s, void *)
-{ TTI(25); return func_ov006_021211bc(s); }
+{ TTI(25); return _ZN17dScMgTrampoline_c8OnPushedEv(s); }
 /* SLOT 34 TAKES FOUR ARGUMENTS PAST `this`, which is the mb_v34 shape run mg9
    lane S371 reported as a latent defect and lane LKY closed: slot 34's only
    dispatcher tree-wide is func_ov004_020ae5c4, and no scene reaches it.  This
@@ -443,7 +463,7 @@ static int  __fastcall tti_v25(void *s, void *)
    corroborates rather than contradicts.  The thunk forwards all four anyway --
    an unreachable slot is not a licence to write a wrong one. */
 static void __fastcall tti_v34(void *s, void *, int a, int b, int c, int d)
-{ TTI(34); func_ov006_02120da8(s, a, b, c, d); }
+{ TTI(34); _ZN17dScMgTrampoline_c9Virtual88Eiiii(s, a, b, c, d); }
 
 /* ---- dMgTrmpln3DMario_c's five, section 5 --------------------------------- */
 static int  __fastcall mario_v0(void *s, void *)
@@ -535,16 +555,16 @@ static unsigned g_tti_mario_claimed;
 extern "C" void port_scene_fill_trampoline(void)
 {
     void **base = (void **)data_ov004_020bc0c0;
-    void **midA = (void **)_ZTV17MgBounceAndPounce;   /* slots  0..19 */
+    void **midA = (void **)_ZTV14dScMgD3DBase_c;   /* slots  0..19 */
     void **midB = (void **)data_ov006_0213c67c;       /* slots 20..35 */
-    void **vt   = (void **)data_ov006_0213fb34;
+    void **vt   = (void **)_ZTV17dScMgTrampoline_c;
     void **elem = (void **)data_ov006_0213b2c4;
 
     /* THE BASE TABLE IS FILLED HERE TOO AND IT IS NOT CEREMONY.  Earlier rows'
        fills already did it and run first, so on a tree carrying them this is a
        second pass over words that are already host pointers and finds nothing.
        It is here so this class does not depend on another class's row existing:
-       the factory's first act is func_ov004_020b2adc, which writes
+       the factory's first act is _ZN11dScMgBase_cC2Ev, which writes
        data_ov004_020bc0c0 into the object's first word before either derived
        table lands. */
     port_scene_mg_fill_shared(base, 36);
@@ -630,17 +650,17 @@ extern "C" void port_scene_fill_trampoline(void)
 
    THE FACTORY NEEDS NO DISPLACEMENT RULING, re-checked rather than assumed.
    port/mg_fanout_costs.txt section 12 grants one to 0x169 because
-   src/func_ov006_020e0574.cpp calls the base constructor func_ov004_020b2adc
+   src/actors/dScMgCup_c.cpp calls the base constructor _ZN11dScMgBase_cC2Ev
    with NO argument and rides r0 through, and that callee dereferences on its
    first statement and then writes three vtable words through the pointer.
-   src/MgTrampolineTime_Spawn.c calls func_ov004_020b2adc(p) WITH its argument,
+   src/minigames/d_s_mg_trampoline.cpp calls _ZN11dScMgBase_cC2Ev(p) WITH its argument,
    so this class is on the correct side of it and the factory is linked from the
    slice rather than host-copied. */
 static char *g_tti_self;
 
 extern "C" void *port_mg_trampoline_spawn(void)
 {
-    void *p = MgTrampolineTime_Spawn();
+    void *p = dScMgTrampoline_c_classInit();
     g_tti_self = (char *)p;
     return p;
 }
@@ -747,7 +767,7 @@ extern "C" void port_scene_trampoline_hits(void)
 
     /* THE STYLUS CHAIN. This class's object is 0x5dc8 bytes and its stroke
        block sits at +0x5db0..+0x5db6 rather than 0x181's +0x7b9c..+0x7ba2 --
-       src/func_ov006_0212101c.c (this class's slot 23) is what says so, and it
+       src/minigames/d_s_mg_trampoline.cpp (this class's slot 23) is what says so, and it
        is the caller that hands the two Vec2s to the hit test. The release latch
        it keys on is +0x5dc4/+0x5dc5, which slot 23 clears on both arms. */
     if (g_tti_self)

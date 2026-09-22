@@ -1,7 +1,7 @@
 /* ==========================================================================
  * RETIRED -- THIS FILE IS NOT IN ANY BUILD. Run linkw wave 6, lane w6-C item 3.
  *
- * The MATCHED source _ZN9ActorBase21AfterCleanupResourcesEj now hosts itself
+ * The MATCHED source _ZN7fBase_c21AfterCleanupResourcesEj now hosts itself
  * through hostgen's ROLE_DATA map (--extern-data binds the three role-named
  * engine globals by address), driven from HOSTABI_RETIRE_SYMS in
  * port/CMakeLists.txt; the source-list entry there is commented out.
@@ -16,7 +16,7 @@
  * Nothing below this banner is compiled.
  * ==========================================================================
  *
- * HOST COPY of src/_ZN9ActorBase21AfterCleanupResourcesEj.cpp -- the actor
+ * HOST COPY of src/_ZN7fBase_c21AfterCleanupResourcesEj.cpp -- the actor
  * teardown, with its three engine globals pointed at the engine.
  *
  * The matched source spells them as file-scope DEFINITIONS:
@@ -62,7 +62,7 @@ extern void *data_020a0eac;        /* Memory::gameHeapPtr */
 
 typedef void(__fastcall *ActorDtor)(void *self, void *dummy);
 
-void _ZN9ActorBase21AfterCleanupResourcesEj(void *selfv, unsigned vfSuccess)
+void _ZN7fBase_c21AfterCleanupResourcesEj(void *selfv, unsigned vfSuccess)
 {
     char *self = (char *)selfv;
     if (vfSuccess != 2)

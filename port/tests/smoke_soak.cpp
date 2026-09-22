@@ -23,12 +23,24 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
+// THE BRING-UP ENTRY POINT MOVED, and this harness follows it (lane SMOKELINK3,
+// run link100 wave 10 round 2, continuing SMOKELINK2's rule for
+// port/tests/smoke_heap.cpp). It used to declare the entry as a flat extern "C"
+// Itanium name returning an opaque pointer, which is what the ROM's own callers
+// spell and what src/ emitted before the 09-14 sync. It is Heap::SetupRootHeap()
+// now, a real static member (include/Heap.h:236, ?SetupRootHeap@Heap@@SAPAU1@XZ),
+// so the flat spelling bought a link error. This file is HOST TEST CODE, not ROM
+// code, so it may include the class header and call the member the way C++ calls
+// it, which is also what the synced src/ TUs now do. It reaches the same object
+// it always linked, src/_ZN4Heap13SetupRootHeapEv.cpp; only the spelling changed.
+#include "types.h"
+#include "Heap.h"
+
 extern "C" {
 void _ZN5ModelC1Ev(void *self);
 struct SharedFilePtrC { u16 fileID; u8 numRefs; void *filePtr; };
 SharedFilePtrC *_ZN13SharedFilePtr9ConstructEj(SharedFilePtrC *self, u32 ov0FileID);
 void _ZN13SharedFilePtr7ReleaseEv(SharedFilePtrC *self);
-void *_ZN4Heap13SetupRootHeapEv(void);
 extern Matrix4x3 data_0209b3ec;
 /* per-model resets */
 extern u32 data_020a4bc8, data_020a4be8, data_020a4be0, data_020a4bdc;
@@ -94,7 +106,7 @@ static int run_one_seh(unsigned handle, size_t *tris, unsigned *code)
 int main(int argc, char **argv)
 {
     if (!ntr::io_init()) { fprintf(stderr, "io_init failed\n"); return 2; }
-    if (!_ZN4Heap13SetupRootHeapEv()) { fprintf(stderr, "no heap\n"); return 2; }
+    if (!Heap::SetupRootHeap()) { fprintf(stderr, "no heap\n"); return 2; }
     ident_fx(&data_0209b3ec);
 
     char path[512];

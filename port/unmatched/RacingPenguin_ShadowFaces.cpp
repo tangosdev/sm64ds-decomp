@@ -35,7 +35,7 @@
  *      method is __thiscall and takes its receiver in ECX while the flat
  *      Itanium body is cdecl and takes it on the stack, so this is a REAL
  *      FORWARDER, the ToxBox / Lakitu_ShadowFaces recipe. The ROM body returns
- *      nothing (src/_ZNK7PathPtr7GetNodeER7Vector3j.c is `void`) and writes its
+ *      nothing (src/_ZNK7PathPtr7GetNodeER7Vector3j.cpp is `void`) and writes its
  *      result through the out-pointer, so the void shadow is the truthful one
  *      and there is no value to lose.
  *
@@ -48,13 +48,13 @@ struct Vector3;
 
 extern "C" {
 /* the matched plain-C bodies these forward to, all already linked */
-int _ZN5Actor9TrackStarEjj(void *self, unsigned int a, unsigned int b);
-void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(
+int _ZN8dActor_c9TrackStarEjj(void *self, unsigned int a, unsigned int b);
+void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
     void *self, void *actor, int radius, int height, unsigned flags,
     unsigned vulnFlags);
 void _ZN7PathPtr6FromIDEj(void *self, unsigned int id);
 void _ZNK7PathPtr7GetNodeER7Vector3j(void *thiz, void *vec, unsigned int idx);
-void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(
+void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
     void *self, void *actor, int a2, int a3, void *sp0, int sp1);
 }
 
@@ -69,13 +69,13 @@ void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(
 //   2973 void *TextureSequence_LoadFile(void*)
 extern "C" unsigned char Actor_TrackStar(void *self, unsigned int a,
                                          unsigned int b)
-{ return (unsigned char)_ZN5Actor9TrackStarEjj(self, a, b); }
+{ return (unsigned char)_ZN8dActor_c9TrackStarEjj(self, a, b); }
 
 extern "C" void MovingCylinderClsn_Init(void *self, void *actor, int radius,
                                         int height, unsigned int flags,
                                         unsigned int vulnFlags)
 {
-    _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(self, actor, radius,
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(self, actor, radius,
                                                        height, flags,
                                                        vulnFlags);
 }
@@ -89,7 +89,7 @@ extern "C" void PathPtr_GetNode(void *self, void *vec, unsigned int idx)
 extern "C" void WithMeshClsn_Init(void *self, void *actor, int a2, int a3,
                                   void *sp0, int sp1)
 {
-    _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(self, actor, a2,
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(self, actor, a2,
                                                                a3, sp0, sp1);
 }
 
@@ -108,8 +108,8 @@ extern "C" void *TextureSequence_LoadFile(void *ptr)
 // Free functions, cdecl on both sides, so these are aliases. All three targets
 // are defined in this build as plain C names.
 #pragma comment(linker, "/alternatename:?_ZN9Animation7AdvanceEv@@YAXPAD@Z=__ZN9Animation7AdvanceEv")
-#pragma comment(linker, "/alternatename:?_ZN12CylinderClsn5ClearEv@@YAXPAD@Z=__ZN12CylinderClsn5ClearEv")
-#pragma comment(linker, "/alternatename:?_ZN12CylinderClsn6UpdateEv@@YAXPAD@Z=__ZN12CylinderClsn6UpdateEv")
+#pragma comment(linker, "/alternatename:?_ZN5dCc_c5ClearEv@@YAXPAD@Z=__ZN5dCc_c5ClearEv")
+#pragma comment(linker, "/alternatename:?_ZN5dCc_c6UpdateEv@@YAXPAD@Z=__ZN5dCc_c6UpdateEv")
 
 // ---- 3. the method face ------------------------------------------------------
 //
@@ -120,7 +120,12 @@ extern "C" void *TextureSequence_LoadFile(void *ptr)
 struct PathPtr { void GetNode(Vector3 &v, unsigned int i) const; };
 
 /* PORT_HOST_ABI: __thiscall receiver in ECX forwarded to the cdecl flat name. */
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync): src/_ZNK7PathPtr7GetNodeER7Vector3j.cpp defines ?GetNode@PathPtr@@QBEXAAUVector3@@I@Z itself since main langmode migration, so this face was the second definition (LNK2005). The six flat faces in this file are untouched.
+   The body is kept below under #if 0 rather than deleted, so the
+   evidence in it stays readable. */
+#if 0
 void PathPtr::GetNode(Vector3 &v, unsigned int i) const
 {
     _ZNK7PathPtr7GetNodeER7Vector3j((void *)this, (void *)&v, i);
 }
+#endif

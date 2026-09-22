@@ -10,7 +10,7 @@ extern "C" {
 void _ZN9Animation7AdvanceEv(void* self);
 int _ZN9Animation8FinishedEv(void* self);
 void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, struct BCA_File* f, int a, int b, unsigned int c);
-char* _ZN5Actor13ClosestPlayerEv(char* self);
+char* _ZN8dActor_c13ClosestPlayerEv(char* self);
 short Vec3_HorzAngle(const struct Vector3* v0, const struct Vector3* v1);
 int AngleDiff(int a, int b);
 Fix12i Vec3_HorzDist(const struct Vector3* a, const struct Vector3* b);
@@ -24,7 +24,7 @@ void func_ov080_02123924(char* c){
         return;
     }
     {
-        char* p = _ZN5Actor13ClosestPlayerEv(c);
+        char* p = _ZN8dActor_c13ClosestPlayerEv(c);
         struct Vector3 v;
         Fix12i* q;
         if (p == 0) return;

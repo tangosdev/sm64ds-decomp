@@ -1,0 +1,397 @@
+{
+  "class": "dScMgRoulette_c",
+  "overlay": "ov006",
+  "module_base": "0x020bfec0",
+  "produced_by": "writer stage (notes/agents/roles/writer.md), not a scout run -- no scout facts file existed for this class. Everything below is read from config/arm9/**/symbols.txt, config/arm9/overlays/ov006/relocs.txt and the extracted overlay bytes; nothing is inferred from a sibling.",
+  "candidate_text": {
+    "start": "0x0210788c",
+    "end": "0x0210a400",
+    "size": "0x2b74",
+    "partition": "40 functions, all with a legacy src/ file and a delinks.txt entry. 7 are vtable-targeted dScMgRoulette_c methods (slots 0, 3, 6, 9, 16, 17, 18, 19 -- eight slots, D1 and D0 being two of them); the other 32 are file-local helpers reached only from inside the run, plus the 0xc-byte veneer func_ov006_02109aa0."
+  },
+  "rtti_name": "15dScMgRoulette_c",
+  "rtti": {
+    "symbol": "_ZTI15dScMgRoulette_c",
+    "address": "0x0213e300",
+    "kind_vptr": "0x0209a764",
+    "kind": "abi::__si_class_type_info",
+    "name_pointer": "0x0213e30c",
+    "direct_base_pointer": "0x0213bc64",
+    "evidence": "The three linked ov006 words at 0x0213e300 are {0x0209a764, 0x0213e30c, 0x0213bc64}. The bytes at 0x0213e30c are the NUL-terminated string \"15dScMgRoulette_c\". 0x0213bc64 is _ZTI19dScMgSingle3DBase_c in ov006's own symbols.txt."
+  },
+  "base_class": "dScMgSingle3DBase_c",
+  "base_evidence": "_ZTI15dScMgRoulette_c is a __si_class_type_info (single public base, offset 0) whose +0x08 word is 0x0213bc64 = _ZTI19dScMgSingle3DBase_c. Full chain, each link proved the same way: dScMgRoulette_c -> dScMgSingle3DBase_c -> dScMgBase_c (ov004 0x020bbf6c) -> dScene_c (arm9 0x020914d4) -> dBase_c (arm9 0x02086e78) -> fBase_c (arm9 0x02086d70). Six levels including self, which is why this TU's compiler_only_output carries 2*6+1 = 13 rows.",
+  "related_modules": [
+    {
+      "module": "arm9",
+      "module_base": "0x02004000",
+      "role": "fBase_c / dBase_c / dScene_c RTTI and inherited slot bodies"
+    },
+    {
+      "module": "ov004",
+      "module_base": "0x020ad660",
+      "role": "dScMgBase_c RTTI and 16 inherited vtable slot bodies"
+    },
+    {
+      "module": "ov006",
+      "module_base": "0x020bfec0",
+      "role": "this class's RTTI, vtable, factory, own overrides and all 40 TU functions"
+    }
+  ],
+  "vtable": {
+    "symbol": "_ZTV15dScMgRoulette_c",
+    "address": "0x0213e39c",
+    "header_start": "0x0213e394",
+    "offset_to_top_address": "0x0213e394",
+    "offset_to_top": "0x00000000",
+    "rtti_pointer_address": "0x0213e398",
+    "rtti_pointer": "0x0213e300",
+    "last_slot_address": "0x0213e428",
+    "storage_end": "0x0213e42c",
+    "storage_size": "0x98",
+    "slots": 36,
+    "extent_evidence": "config/arm9/overlays/ov006/relocs.txt has a relocated word at every 4-byte address from 0x0213e39c through 0x0213e428 inclusive -- 36 words -- and the next relocated word is 0x0213e444, which is the typeinfo header of _ZTV19dScMgSingle3DBase_c (symbol at 0x0213e448). With the 8-byte header the storage runs 0x0213e394..0x0213e42c = 0x98 bytes. mwccarm 2004/b56 emits a 0x98 .data section for this symbol, which is the same number from the compiler's side. Reading the extent as (next symbols.txt row 0x0213e42c) - (symbol 0x0213e39c) = 0x90 UNDER-reports it, because the _ZTV symbol is the ADDRESS POINT and not the storage start.",
+    "entries": [
+      {
+        "slot": 0,
+        "slot_address": "0x0213e39c",
+        "target": "0x0210a194",
+        "module": "ov006",
+        "name": "_ZN15dScMgRoulette_c13InitResourcesEv"
+      },
+      {
+        "slot": 1,
+        "slot_address": "0x0213e3a0",
+        "target": "0x020b0930",
+        "module": "ov004",
+        "name": "_ZN11dScMgBase_c19BeforeInitResourcesEv"
+      },
+      {
+        "slot": 2,
+        "slot_address": "0x0213e3a4",
+        "target": "0x0210a6e4",
+        "module": "ov006",
+        "name": "_ZN19dScMgSingle3DBase_c18AfterInitResourcesEj"
+      },
+      {
+        "slot": 3,
+        "slot_address": "0x0213e3a8",
+        "target": "0x0210980c",
+        "module": "ov006",
+        "name": "_ZN15dScMgRoulette_c16CleanupResourcesEv"
+      },
+      {
+        "slot": 4,
+        "slot_address": "0x0213e3ac",
+        "target": "0x0202e5f0",
+        "module": "arm9",
+        "name": "_ZN8dScene_c22BeforeCleanupResourcesEv"
+      },
+      {
+        "slot": 5,
+        "slot_address": "0x0213e3b0",
+        "target": "0x0210a608",
+        "module": "ov006",
+        "name": "_ZN19dScMgSingle3DBase_c21AfterCleanupResourcesEj"
+      },
+      {
+        "slot": 6,
+        "slot_address": "0x0213e3b4",
+        "target": "0x02109aac",
+        "module": "ov006",
+        "name": "_ZN15dScMgRoulette_c8BehaviorEv"
+      },
+      {
+        "slot": 7,
+        "slot_address": "0x0213e3b8",
+        "target": "0x0210a698",
+        "module": "ov006",
+        "name": "_ZN19dScMgSingle3DBase_c14BeforeBehaviorEv"
+      },
+      {
+        "slot": 8,
+        "slot_address": "0x0213e3bc",
+        "target": "0x0202e3c8",
+        "module": "arm9",
+        "name": "_ZN8dScene_c13AfterBehaviorEj"
+      },
+      {
+        "slot": 9,
+        "slot_address": "0x0213e3c0",
+        "target": "0x02109834",
+        "module": "ov006",
+        "name": "_ZN15dScMgRoulette_c6RenderEv"
+      },
+      {
+        "slot": 10,
+        "slot_address": "0x0213e3c4",
+        "target": "0x0210a664",
+        "module": "ov006",
+        "name": "_ZN19dScMgSingle3DBase_c12BeforeRenderEv"
+      },
+      {
+        "slot": 11,
+        "slot_address": "0x0213e3c8",
+        "target": "0x0202e398",
+        "module": "arm9",
+        "name": "_ZN8dScene_c11AfterRenderEj"
+      },
+      {
+        "slot": 12,
+        "slot_address": "0x0213e3cc",
+        "target": "0x020b04e8",
+        "module": "ov004",
+        "name": "_ZN11dScMgBase_c16OnPendingDestroyEv"
+      },
+      {
+        "slot": 13,
+        "slot_address": "0x0213e3d0",
+        "target": "0x0204357c",
+        "module": "arm9",
+        "name": "_ZN7fBase_c9Virtual34Ejj"
+      },
+      {
+        "slot": 14,
+        "slot_address": "0x0213e3d4",
+        "target": "0x0204349c",
+        "module": "arm9",
+        "name": "_ZN7fBase_c9Virtual38Ejj"
+      },
+      {
+        "slot": 15,
+        "slot_address": "0x0213e3d8",
+        "target": "0x02043494",
+        "module": "arm9",
+        "name": "_ZN7fBase_c13OnHeapCreatedEv"
+      },
+      {
+        "slot": 16,
+        "slot_address": "0x0213e3dc",
+        "target": "0x0210788c",
+        "module": "ov006",
+        "name": "_ZN15dScMgRoulette_cD1Ev"
+      },
+      {
+        "slot": 17,
+        "slot_address": "0x0213e3e0",
+        "target": "0x02107920",
+        "module": "ov006",
+        "name": "_ZN15dScMgRoulette_cD0Ev"
+      },
+      {
+        "slot": 18,
+        "slot_address": "0x0213e3e4",
+        "target": "0x021095cc",
+        "module": "ov006",
+        "name": "_ZN15dScMgRoulette_c13OnYoshiTryEatEi"
+      },
+      {
+        "slot": 19,
+        "slot_address": "0x0213e3e8",
+        "target": "0x021096c8",
+        "module": "ov006",
+        "name": "_ZN15dScMgRoulette_c13OnTurnIntoEggEi"
+      },
+      {
+        "slot": 20,
+        "slot_address": "0x0213e3ec",
+        "target": "0x020b2990",
+        "module": "ov004",
+        "name": "_ZN11dScMgBase_c9Virtual50Ev"
+      },
+      {
+        "slot": 21,
+        "slot_address": "0x0213e3f0",
+        "target": "0x020b298c",
+        "module": "ov004",
+        "name": "_ZN11dScMgBase_c15OnGroundPoundedEv"
+      },
+      {
+        "slot": 22,
+        "slot_address": "0x0213e3f4",
+        "target": "0x020ae198",
+        "module": "ov004",
+        "name": "_ZN11dScMgBase_c11OnAttacked1Ev"
+      },
+      {
+        "slot": 23,
+        "slot_address": "0x0213e3f8",
+        "target": "0x020ae1a0",
+        "module": "ov004",
+        "name": "_ZN11dScMgBase_c11OnAttacked2Ev"
+      },
+      {
+        "slot": 24,
+        "slot_address": "0x0213e3fc",
+        "target": "0x020ae140",
+        "module": "ov004",
+        "name": "_ZN11dScMgBase_c8OnKickedEv"
+      },
+      {
+        "slot": 25,
+        "slot_address": "0x0213e400",
+        "target": "0x020ae128",
+        "module": "ov004",
+        "name": "_ZN11dScMgBase_c8OnPushedEv"
+      },
+      {
+        "slot": 26,
+        "slot_address": "0x0213e404",
+        "target": "0x0210a600",
+        "module": "ov006",
+        "name": "_ZN19dScMgSingle3DBase_c24OnHitByCannonBlastedCharEv"
+      },
+      {
+        "slot": 27,
+        "slot_address": "0x0213e408",
+        "target": "0x020af27c",
+        "module": "ov004",
+        "name": "_ZN11dScMgBase_c15OnHitByMegaCharEv"
+      },
+      {
+        "slot": 28,
+        "slot_address": "0x0213e40c",
+        "target": "0x020af04c",
+        "module": "ov004",
+        "name": "_ZN11dScMgBase_c19OnHitFromUnderneathEv"
+      },
+      {
+        "slot": 29,
+        "slot_address": "0x0213e410",
+        "target": "0x020af094",
+        "module": "ov004",
+        "name": "_ZN11dScMgBase_c16OnAimedAtWithEggEv"
+      },
+      {
+        "slot": 30,
+        "slot_address": "0x0213e414",
+        "target": "0x020aeed8",
+        "module": "ov004",
+        "name": "_ZN11dScMgBase_c25OnAimedAtWithEggReturnVecEv"
+      },
+      {
+        "slot": 31,
+        "slot_address": "0x0213e418",
+        "target": "0x020b2880",
+        "module": "ov004",
+        "name": "_ZN11dScMgBase_c9Virtual7CEv"
+      },
+      {
+        "slot": 32,
+        "slot_address": "0x0213e41c",
+        "target": "0x020b27f4",
+        "module": "ov004",
+        "name": "_ZN11dScMgBase_c9Virtual80Ev"
+      },
+      {
+        "slot": 33,
+        "slot_address": "0x0213e420",
+        "target": "0x0210a708",
+        "module": "ov006",
+        "name": "_ZN19dScMgSingle3DBase_c9Virtual84Ev"
+      },
+      {
+        "slot": 34,
+        "slot_address": "0x0213e424",
+        "target": "0x020ae3b4",
+        "module": "ov004",
+        "name": "_ZN11dScMgBase_c9Virtual88Eiiii"
+      },
+      {
+        "slot": 35,
+        "slot_address": "0x0213e428",
+        "target": "0x020ad660",
+        "module": "ov004",
+        "name": "_ZN11dScMgBase_c9Virtual8CEv",
+        "note": "cross-overlay phantom hazard: 0x020ad660 is func_ov002_020ad660, _ZN10dScTitle_cD1Ev in ov003, func_ov007_020ad660 and data_ov000_020ad660 as well. dScMgBase_c is this class's grandparent and lives in ov004, so ov004's row is the one that applies."
+      }
+    ]
+  },
+  "own_override_count": 8,
+  "overrides": [
+    {
+      "slot": 0,
+      "symbol": "_ZN15dScMgRoulette_c13InitResourcesEv",
+      "address": "0x0210a194",
+      "size": "0x26c"
+    },
+    {
+      "slot": 3,
+      "symbol": "_ZN15dScMgRoulette_c16CleanupResourcesEv",
+      "address": "0x0210980c",
+      "size": "0x28"
+    },
+    {
+      "slot": 6,
+      "symbol": "_ZN15dScMgRoulette_c8BehaviorEv",
+      "address": "0x02109aac",
+      "size": "0x6e8"
+    },
+    {
+      "slot": 9,
+      "symbol": "_ZN15dScMgRoulette_c6RenderEv",
+      "address": "0x02109834",
+      "size": "0x26c"
+    },
+    {
+      "slot": 16,
+      "symbol": "_ZN15dScMgRoulette_cD1Ev",
+      "address": "0x0210788c",
+      "size": "0x94"
+    },
+    {
+      "slot": 17,
+      "symbol": "_ZN15dScMgRoulette_cD0Ev",
+      "address": "0x02107920",
+      "size": "0xa8"
+    },
+    {
+      "slot": 18,
+      "symbol": "_ZN15dScMgRoulette_c13OnYoshiTryEatEi",
+      "address": "0x021095cc",
+      "size": "0xfc"
+    },
+    {
+      "slot": 19,
+      "symbol": "_ZN15dScMgRoulette_c13OnTurnIntoEggEi",
+      "address": "0x021096c8",
+      "size": "0x144"
+    }
+  ],
+  "destructor": {
+    "d1_address": "0x0210788c",
+    "d0_address": "0x02107920",
+    "d2_address": null,
+    "order": "D1 below D0",
+    "placement": "inline, in-class, declared first",
+    "evidence": "ov006 lays D1 at 0x0210788c and D0 at 0x02107920, and no D2 exists anywhere in the image. In mwccarm 2004/b56 an inline in-class destructor emits D1 then D0, which is this order; an out-of-line definition emits D2, D0, D1. The pair is therefore inside the licensed run and the TU promotes whole. Slots 16 and 17 of the class vtable are the only references to either address in config/."
+  },
+  "key_function": {
+    "name": "InitResources",
+    "address": "0x0210a194",
+    "evidence": "With the destructor inline, the first DECLARED non-inline virtual in include/dScMgRoulette_c.h is InitResources. Its body is in this TU, so this TU emits _ZTV/_ZTI/_ZTS -- confirmed by `tubuild verify`, which reports exactly those 13 vague-linkage symbols as unlicensed extras."
+  },
+  "size": "0x00005400",
+  "size_evidence": {
+    "kind": "direct allocation immediate",
+    "direct_allocation_site": "0x0210a400",
+    "direct_allocation_size": "0x00005400",
+    "detail": "dScMgRoulette_c_classInit at ov006 0x0210a400 -- the MG_ROULETTE registry factory, already a promoted TU in src/minigames/d_s_mg_roulette.cpp -- opens with _ZN7fBase_cnwEj(0x5400). The same body then stores _ZTV15dScMgRoulette_c into the vptr, constructs the 0x270-byte table at +0x4f38, the 5 x 0x34 array at +0x51a8 and two Models at +0x532c/+0x536c, which is the layout include/dScMgRoulette_c.h asserts with sizeof(dScMgRoulette_c) == 0x5400."
+  },
+  "compiler_only_output_measured": {
+    "rows": 13,
+    "formula": "2 * (ancestors + self) + 1 vtable = 2 * 6 + 1",
+    "all_homed": true,
+    "externalized_output": [],
+    "note": "notes/data/tu-promotion-queue.tsv estimated ~11 by copying the sibling oracle dScMgSingle3DBase_c, which sits ONE level shallower. The measured figure is 13. Every one of the 13 has a configured ROM home in some module's own symbols.txt, so all 13 are deadstrip-data and externalized_output is empty."
+  },
+  "unproven": [
+    "Element type of the 5 x 0x34 array at 0x51a8: __destroy_arr is called with func_ov006_021079c8 as the element destructor and that body is empty, so the elements have no ROM RTTI identity. The header keeps them as raw bytes.",
+    "Identity of the 0x270-byte subobject at 0x4f38: it is constructed by func_ov006_020c1d80 and destroyed by func_ov006_020c1c64, both shared with five sibling minigame scenes, but neither carries a class name.",
+    "The two 0x50-byte spans at 0x531c and 0x536c are Models by construction (_ZN5ModelC1Ev in the factory) and destruction (_ZN5ModelD1Ev in the destructor), but they are still spelled as raw bytes because the ROM destructor interleaves the array and table teardown between them, which Itanium auto-destruction of typed members cannot reproduce.",
+    "0x52ac..0x531c (0x70 bytes) is reached only through raw-offset helper calls (func_ov006_02107b70, func_ov006_02108524, func_ov006_02107d80, func_ov006_021085c0) and has no named field.",
+    "Whether any of the 32 non-virtual functions in this run had external linkage in the original source: none is referenced from outside 0x0210788c..0x0210a400, and func_ov006_0210858c and func_ov006_02109aa0 were referenced ONLY by their sibling shards, but adjacency does not prove static versus external linkage.",
+    "Source-style names for the inherited placeholder slots Virtual34, Virtual38, Virtual50, Virtual7C, Virtual80, Virtual84, Virtual88 and Virtual8C; their indices and targets are proved by the linked table, their names are this tree's coinage.",
+    "Any vtable slot after 35: the linked bytes end the table at 0x0213e42c and there is no trailing null slot to preserve an otherwise unobservable declaration."
+  ]
+}

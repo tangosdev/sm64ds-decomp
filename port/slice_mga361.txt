@@ -18,7 +18,7 @@
 #
 # RTTI "10dScMgCup_c" at 0x0213c054. The hierarchy, read off the two deleting
 # destructors rather than guessed -- 0x020dea1c and 0x0210a4e8 both write
-# data_ov006_0213e448 into the object's first word, and 0x0213e448 carries the
+# _ZTV19dScMgSingle3DBase_c into the object's first word, and 0x0213e448 carries the
 # ActorBase signature at slots 13/14/15:
 #
 #     Scene -> dScMgBase_c        0x020bc0c0  36  (mounted, curling's fill)
@@ -29,7 +29,7 @@
 # override bodies, ten marker-carrying and all ten already ruled REAL_DECOMP in
 # port/tools/inferred_stub_adjudicated.txt.
 #
-# SpawnInfo data_ov006_0213c020, factory func_ov006_020e0574 (0xc0 bytes).
+# SpawnInfo g_profile_MG_CUP, factory dScMgCup_c_classInit (0xc0 bytes).
 #
 # ---- 2. HOW THE LIST WAS DERIVED ------------------------------------------
 #
@@ -46,7 +46,7 @@
 # port/unmatched/MgBase_StateDispatch.cpp already HOST-COPIES them (the mwcc
 # pointer-to-member wall): 020add88, 020adf2c, 020b31b4, 020b321c, 020b3278,
 # 020b8714, 020b8778, and 020b87e0 which stays trapped. A ninth,
-# src/func_ov006_020e0204.cpp, is removed for the same reason and is THIS
+# src/actors/dScMgCup_c.cpp, is removed for the same reason and is THIS
 # CLASS'S half of the wall -- see section 4.
 #
 # The arm9 half is not listed for slice_mg1.txt's reason: the closure reaches
@@ -64,8 +64,8 @@
 # written; that is what "in no target" means.
 #
 #   2 NAME-SPELLING FACES, the C-linkage flip.
-#       ?data_ov006_0213c154@@3PAXA   ?data_ov006_0213e448@@3PAXA
-#     src/func_ov006_020e0574.cpp declares both vtables OUTSIDE its extern "C"
+#       ?_ZTV10dScMgCup_c@@3PAXA   ?_ZTV19dScMgSingle3DBase_c@@3PAXA
+#     src/actors/dScMgCup_c.cpp declares both vtables OUTSIDE its extern "C"
 #     block, so it wants them at C++ linkage while the mount defines them at C
 #     linkage. Both are already in port/ov006_syms.txt, so this is an alias and
 #     not a body -- the _ZTV14dScMgCurling_c shape from
@@ -86,7 +86,7 @@
 #     that reports itself, the hal/scene_mg_faces.cpp section 3 shape.
 #
 #   1 COMPILE FIX.
-#       src/func_ov004_020b0620.cpp(47): C2733, cannot overload a function with
+#       src/minigames/d_s_mg_base.cpp(47): C2733, cannot overload a function with
 #       extern "C" linkage, against include/decl_common.h(1475). The
 #       decl_common redecl trap. src/ is read-only, so the answer is on the
 #       decl side or a per-TU shim, not in the TU.
@@ -112,7 +112,7 @@
 #     data_ov006_02141870  8 slots:
 #       020dfd48 020dfcd8 020df5b8 020df540 020df3bc 020df28c 020df1c0 020df1bc
 #
-# And exactly ONE TU dispatches it: src/func_ov006_020e0204.cpp, the class's
+# And exactly ONE TU dispatches it: src/actors/dScMgCup_c.cpp, the class's
 # Behavior at vtable slot 6, whose single pointer-to-member site is
 # (c->*data_ov006_02141870[*(int *)(c + 0x5418)])(). Curling needs five host
 # copies; this needs one. The per-class cost is therefore NOT one number:
@@ -133,18 +133,18 @@
 # Both found by reading, neither repairable in src/, both needing a written
 # ruling if the answer costs a linked function.
 #
-#   func_ov006_0210a6e4, vtable slot 2. The ROM never writes r1 before its bl
+#   _ZN19dScMgSingle3DBase_c18AfterInitResourcesEj, vtable slot 2. The ROM never writes r1 before its bl
 #   to 0x20b08f0, so the framework's second argument rides through. src
 #   declares the callee with ONE parameter; hal/scene_mg.cpp declares the same
 #   extern "C" symbol with two. Nothing diagnoses that. The face must pass both.
 #
-#   src/func_ov006_020e0574, the factory. It calls func_ov004_020b2adc() with
+#   src/dScMgCup_c_classInit, the factory. It calls _ZN11dScMgBase_cC2Ev() with
 #   NO argument where curling's factory passes p, and the callee is the base
 #   constructor. On ARM r0 already holds p; on the host nothing is pushed.
 #   IT WRITES THROUGH THE GARBAGE `this` RATHER THAN ONLY READING IT (lane
 #   MAR1's verification, stronger than this lane's first filing):
-#   src/func_ov004_020b2adc.c dereferences on its first statement,
-#   _ZN9ActorBaseC1Ev(self), then stores &data_0208e4b8, &_ZTV5Scene and
+#   src/_ZN11dScMgBase_cC2Ev.cpp dereferences on its first statement,
+#   _ZN7fBase_cC2Ev(self), then stores &data_0208e4b8, &_ZTV8dScene_c and
 #   &data_ov004_020bc0c0 through it. A wild write to an uninitialised value
 #   faults only by luck, so the likely symptom is silent corruption elsewhere.
 #   Caller-displacement shape, in a matched read-only TU, so the port-side
@@ -157,12 +157,12 @@ src/Camera_UpdateMatrices.c
 src/_ZN8Particle10SysTrackerD1Ev.cpp
 src/func_02012174.c
 src/func_02016a04.c
-src/func_02021b98.c
+src/_ZN8Particle10SysTracker8Contents5ClearEv.cpp
 src/func_0203ccd4.c
 src/func_0203cd80.c
 src/func_0203d738.c
 src/func_ov004_020af770.cpp
-src/func_ov004_020b0620.cpp
+src/minigames/d_s_mg_base.cpp
 src/func_ov004_020b0cac.c
 src/func_ov004_020b1b78.c
 src/func_ov004_020b1e34.c
@@ -182,42 +182,5 @@ src/func_ov006_020c2be8.c
 src/func_ov006_020c3050.c
 src/func_ov006_020c3288.c
 src/func_ov006_020c33dc.c
-src/func_ov006_020de988.cpp
-src/func_ov006_020dea1c.cpp
-src/func_ov006_020deac4.c
-src/func_ov006_020deac8.c
-src/func_ov006_020deaf0.c
-src/func_ov006_020deb48.c
-src/func_ov006_020debb4.c
-src/func_ov006_020debfc.c
-src/func_ov006_020dec3c.c
-src/func_ov006_020dec5c.c
-src/func_ov006_020dec88.cpp
-src/func_ov006_020ded00.c
-src/func_ov006_020ded84.c
-src/func_ov006_020dedfc.c
-src/func_ov006_020deed8.c
-src/func_ov006_020def80.c
-src/func_ov006_020df024.c
-src/func_ov006_020df1bc.c
-src/func_ov006_020df1c0.cpp
-src/func_ov006_020df28c.c
-src/func_ov006_020df3bc.c
-src/func_ov006_020df540.c
-src/func_ov006_020df5b8.c
-src/func_ov006_020dfcd8.c
-src/func_ov006_020dfd48.c
-src/func_ov006_020dfed4.c
-src/func_ov006_020dfeec.c
-src/func_ov006_020e0068.c
-src/func_ov006_020e0308.cpp
-src/func_ov006_020e0574.cpp
-src/func_ov006_020e0634.c
-src/func_ov006_0210a4b0.cpp
-src/func_ov006_0210a4e8.cpp
-src/func_ov006_0210a600.c
-src/func_ov006_0210a608.c
-src/func_ov006_0210a664.c
-src/func_ov006_0210a698.cpp
-src/func_ov006_0210a6e4.cpp
-src/func_ov006_0210a708.c
+src/actors/dScMgCup_c.cpp
+src/minigames/d_s_mg_single3_d_base.cpp

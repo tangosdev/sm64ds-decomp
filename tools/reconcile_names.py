@@ -36,9 +36,7 @@ import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import srcpath as SP  # noqa: E402
-import match as M           # noqa: E402
-import modules as MOD       # noqa: E402
-from rombuild import VERSION as BUILD_VERSION  # noqa: E402
+import build_pin as BP      # noqa: E402
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
 SRC = REPO / "src"
@@ -83,7 +81,6 @@ def main():
     args = ap.parse_args()
 
     info = symbol_info()
-    mods = {("arm9" if m["name"] == "main" else m["name"]): m for m in MOD.modules()}
 
     jobs = []
     skipped = collections.Counter()
@@ -121,30 +118,16 @@ def main():
         original = f.read_text(encoding="utf-8", errors="ignore")
         new = rewrite(original, emits, symbol)
         f.write_text(new, encoding="utf-8", newline="\n")
-        flags = M.DEFAULT_FLAGS
-        if new.startswith("//cpp"):
-            flags = flags.replace("-lang c99", "-lang c++")
-        tgt = (M.target_bytes(addr, size) if label == "arm9"
-               else M.target_bytes(addr, size, mods[label]["bin"], mods[label]["base"])
-               if label in mods else None)
-        verdict = "no module binary"
-        if tgt is not None:
-            # Build default first, so the reported version tells you whether the file
-            # needs a config/rombuild-versions.txt override, not just sweep order.
-            for v in [BUILD_VERSION] + [x for x in M.SWEEP if x != BUILD_VERSION]:
-                obj = M.compile_c(f, v, flags)
-                if obj is None:
-                    continue
-                code, relocs = M.extract_func(obj, symbol)
-                if code is None:
-                    continue
-                ok, _ = M.compare(tgt, code, relocs, verbose=False)
-                if ok:
-                    verdict = v
-                    break
-            else:
-                verdict = "no version matches"
-        if verdict.startswith("no ") or not args.apply:
+        # Verified under the compiler the ROM build will use for THIS file, and no
+        # other. The loop this replaces tried the build default first and then the rest
+        # of match.SWEEP, and kept the rename on whichever version happened to answer --
+        # so a file that only reproduced under, say, 1.2/sp4 was applied and reported as
+        # verified while the link would emit different bytes for it. Reporting which
+        # version won does not make that safe: the rename is already on disk by then.
+        # See tools/build_pin.py.
+        ok, why = BP.verify(f, symbol, addr, size, label)
+        verdict = BP.version_for(f, symbol) if ok else f"no match: {why}"
+        if not ok or not args.apply:
             f.write_text(original, encoding="utf-8", newline="\n")
         return f.name, symbol, emits, verdict
 

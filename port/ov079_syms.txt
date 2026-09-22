@@ -8,7 +8,7 @@
 #                                            factories build the same object,
 #                                            the SpawnInfo param picks the king
 #   BULLET_BILL (222)                     -- _ZTV10BulletBill / daKlr_c
-#   BILL_BLASTER (43)                     -- vtable is data_ov079_02127fb8, dsd
+#   BILL_BLASTER (43)                     -- vtable is _ZTV11BillBlaster, dsd
 #                                            left it a plain data symbol
 #   FORTRESS_WALL (47) and
 #   FORTRESS_WALL_BREAKABLE (48)          -- one class (_ZTV12FortressWall);
@@ -28,7 +28,7 @@
 #
 # THE FOUR VTABLES ARE LEFT OUT, the ov085/ov080/ov015 rule. _ZTV5Whomp
 # (0x02127c80, 31 slots), _ZTV10BulletBill (0x02127ee8, 31 slots; also named
-# _ZTV7daKlr_c), the BillBlaster table data_ov079_02127fb8 (0x02127fb8, 31
+# _ZTV7daKlr_c), the BillBlaster table _ZTV11BillBlaster (0x02127fb8, 31
 # slots; dsd named two words INSIDE it, data_ov079_02127fec and _02128008, so
 # those two are dropped with it) and _ZTV12FortressWall (0x021280b0, 32 slots).
 # All four are HOST arrays the registry fills; mounting one would hand a factory
@@ -44,12 +44,12 @@ data_ov079_021275dc data_ov079_021275e4 data_ov079_021275ec data_ov079_02127600
 data_ov079_02127ba0 data_ov079_02127bc0 data_ov079_02127bc8 data_ov079_02127bd0
 data_ov079_02127bd8 data_ov079_02127be0 data_ov079_02127be8 data_ov079_02127bf0
 data_ov079_02127bf8 data_ov079_02127c00 data_ov079_02127c08 data_ov079_02127c10
-data_ov079_02127c18 data_ov079_02127c20 data_ov079_02127c28 data_ov079_02127c34
-WhompKing_SpawnInfo:0x1c Whomp_SpawnInfo:0x1c data_ov079_02127cfc data_ov079_02127e7c
-data_ov079_02127e9c data_ov079_02127ea4 data_ov079_02127eac data_ov079_02127eb8
-BulletBill_SpawnInfo:0x1c data_ov079_02127f64 data_ov079_02127f70 data_ov079_02127f7c
-BillBlaster_SpawnInfo:0x1c data_ov079_02128038 data_ov079_02128044 data_ov079_02128058
-data_ov079_0212805c data_ov079_02128060 FortressWallBreakable_SpawnInfo:0x1c FortressWall_SpawnInfo:0x1c
+data_ov079_02127c18 data_ov079_02127c20 _ZTS7daBtn_c _ZTI7daBtn_c
+g_profile_BATANKING:0x1c g_profile_BATAN:0x1c data_ov079_02127cfc data_ov079_02127e7c
+data_ov079_02127e9c data_ov079_02127ea4 _ZTS7daKlr_c _ZTI7daKlr_c
+g_profile_KILLER:0x1c data_ov079_02127f64 _ZTI18daObjBkKillerdai_c _ZTS18daObjBkKillerdai_c
+g_profile_BK_KILLER_DAI:0x1c _ZTI14daObjBk_Kabe_c _ZTS14daObjBk_Kabe_c data_ov079_02128058
+data_ov079_0212805c data_ov079_02128060 g_profile_BK_KABE00:0x1c g_profile_BK_KABE01:0x1c
 data_ov079_02128140 data_ov079_02128148 data_ov079_02128150 data_ov079_02128158
 data_ov079_02128160 data_ov079_02128168 data_ov079_02128170 data_ov079_02128174
 data_ov079_02128178 data_ov079_02128180 data_ov079_02128188 data_ov079_02128190

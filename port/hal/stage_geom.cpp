@@ -24,7 +24,7 @@
    BOTH of the level's ground files reach that seam. Read off the matched TUs,
    not off a description of them:
 
-     src/_ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR12MeshCollider.cpp
+     src/_ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR7dBgW_Kc.cpp
          if (ovl->kclFileId != 0) { f = LoadFile(ovl->kclFileId); ... }
          LoadFile is SharedFilePtr, so the KCL is filtered.
 
@@ -397,7 +397,7 @@ int probe_dir(const char *want)
    THE LAYOUTS ARE THE REPO'S OWN, not a format wiki's. KCL is
    include/MeshCollider.h:49-71 (the header) and KCL_Tri at :33-47 (the plane
    record), with the walk taken from the byte-matched
-   src/_ZN12MeshCollider10DetectClsnER13RaycastGround.cpp:130-151. BMD is
+   src/_ZN7dBgW_Kc10DetectClsnER9dBgCh_Gnd.cpp:130-151. BMD is
    include/BMD_File.h:61-76 with the section walk taken from
    src/_ZN5Model17UpdateFileOffsetsER8BMD_File.cpp, which is the function that
    decides which BMD words are offsets at all -- a word it relocates is an

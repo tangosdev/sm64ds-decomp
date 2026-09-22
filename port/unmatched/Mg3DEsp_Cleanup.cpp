@@ -1,4 +1,27 @@
-/* PORT_HOST_ABI. func_ov006_020e9cec, dScMg3DEsp_c's vtable slot 3
+/* ==========================================================================
+ * RETIRED -- THIS FILE IS NOT IN ANY BUILD. Run link100 wave 15, lane ESP3D,
+ * off LINK15 BATCH 3 / lane SEAT15D's out/SEAT15D/bugs.md section 2. The
+ * THE DECOMP-SIDE FIX IS ROUTED, NOT TAKEN paragraph below asked for exactly
+ * this: src/_ZN12dScMg3DEsp_c16CleanupResourcesEv.cpp now names
+ * data_ov006_02141e9c and data_ov006_02141e74 directly (declared as the real
+ * SharedFilePtr type, not through decl_common.h's G0/G1 placeholders), so the
+ * LNK2005 this banner describes no longer applies to the args -- it applies
+ * to the NAME instead, because the matched TU is a real C++ member
+ * (`s32 dScMg3DEsp_c::CleanupResources()`) and does not itself define the
+ * flat Itanium name this file's one caller (hal/scene_mg_psycheout.cpp)
+ * calls. The seat is a one-row flip: port/faces_sync.txt's row for this
+ * symbol moves F -> R, so facegen generates the REVERSE face -- it defines
+ * the flat name and calls the matched member -- instead of a forwarder that
+ * would now collide with the src TU. The matched TU is taken through
+ * port/slice_l15mg.txt. The body is deleted so the two copies cannot both be
+ * taken; the banner below is kept because the disassembly in it is the
+ * derivation and the G0/G1 finding stays true and reusable.
+ *
+ * The rest of the file, from here down, is the note as it was written.
+ * ==========================================================================
+ */
+
+/* PORT_HOST_ABI. _ZN12dScMg3DEsp_c16CleanupResourcesEv, dScMg3DEsp_c's vtable slot 3
  * (CleanupResources), and the reason it cannot be compiled from src: BOTH OF
  * ITS ARGUMENTS ARE SPELLED AS SHARED PLACEHOLDER GLOBALS THAT EXIST IN NO
  * CONFIG, AND ONE OF THE TWO IS ALREADY BOUND TO A DIFFERENT ADDRESS.
@@ -10,7 +33,7 @@
  *
  * ---- WHAT src SAYS -------------------------------------------------------
  *
- *     extern int G0[];                       // src/func_ov006_020e9cec.c
+ *     extern int G0[];                       // src/_ZN12dScMg3DEsp_c16CleanupResourcesEv.cpp
  *     _ZN13SharedFilePtr7ReleaseEv(G0);
  *     _ZN13SharedFilePtr7ReleaseEv(G1);      // G1 comes from decl_common.h
  *     return 1;
@@ -47,7 +70,7 @@
  *
  * The tree's standing repair for a bare placeholder is a per-source rename:
  * port/CMakeLists.txt already carries `VT=data_ov006_0213e24c` for
- * src/func_ov006_021042b0.c and `VT0=_ZTV13daObjWakame_c` for another. That
+ * src/actors/dScMgPanel_c.cpp and `VT0=_ZTV13daObjWakame_c` for another. That
  * repair works when the placeholder is declared in the TU and the target is
  * not declared anywhere the TU can see.
  *
@@ -65,7 +88,7 @@
  *
  * ---- THE DELTA FROM src, line by line ------------------------------------
  *
- * The body below is src/func_ov006_020e9cec.c verbatim except:
+ * The body below is src/_ZN12dScMg3DEsp_c16CleanupResourcesEv.cpp verbatim except:
  *
  *   1. the `extern int G0[];` declaration is gone and decl_common.h is not
  *      included, so G1 does not arrive either;
@@ -73,8 +96,8 @@
  *
  * Nothing else. Two releases in the ROM's order and `return 1`.
  *
- * src/func_ov006_020e9cec.c is therefore OUT of port/slice_psy.txt: listing it
- * beside this file would be an LNK2005 on func_ov006_020e9cec.
+ * src/_ZN12dScMg3DEsp_c16CleanupResourcesEv.cpp is therefore OUT of port/slice_psy.txt: listing it
+ * beside this file would be an LNK2005 on _ZN12dScMg3DEsp_c16CleanupResourcesEv.
  *
  * THE DECOMP-SIDE FIX IS ROUTED, NOT TAKEN. The src TU should name
  * data_ov006_02141e9c and data_ov006_02141e74 rather than two shared
@@ -82,21 +105,11 @@
  * a byte-gated-tree question this lane does not answer.
  */
 
-extern "C" {
-
-void _ZN13SharedFilePtr7ReleaseEv(void *p);
-
-/* the ov006 mount's own storage, the two SharedFilePtrs
-   __sinit_ov006_02130a08 builds for file ids 0x1ef and 0x202 */
-extern void *data_ov006_02141e9c;
-extern void *data_ov006_02141e74;
-
-// PORT_HOST_ABI: src spells both Release arguments as placeholder globals G0/G1 that resolve nowhere (G1 also collides in decl_common.h); host copy names the mount symbols the pool words resolve to
-int func_ov006_020e9cec(void)
-{
-    _ZN13SharedFilePtr7ReleaseEv(&data_ov006_02141e9c);
-    _ZN13SharedFilePtr7ReleaseEv(&data_ov006_02141e74);
-    return 1;
-}
-
-}  /* extern "C" */
+/* THE BODY LIVES IN src/_ZN12dScMg3DEsp_c16CleanupResourcesEv.cpp, on
+   port/slice_l15mg.txt, and is reached by the GENERATED REVERSE FACE now
+   that port/faces_sync.txt's row for this symbol reads R. It declares
+   data_ov006_02141e9c and data_ov006_02141e74 as the real SharedFilePtr type
+   (include/SharedFilePtr.h) rather than the void* this file's mount-symbol
+   declarations used, and calls .Release() on each rather than the bare flat
+   function this file forwards through -- the same two addresses, the same
+   ROM order, `return 1`. */

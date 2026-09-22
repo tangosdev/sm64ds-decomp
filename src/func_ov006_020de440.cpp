@@ -4,7 +4,7 @@ struct C;
 typedef void (C::*PMF)(int);
 
 extern PMF data_ov006_02141840[];
-extern void* func_020beb68;
+extern void* data_ov004_020beb68;
 
 extern "C" void func_ov006_020dde28(char* c, int i);
 extern "C" void func_ov006_020dd2cc(char* c);
@@ -47,7 +47,7 @@ extern "C" void func_ov006_020de440(char* c) {
     *(u8*)(c + 0x51df) = 1;
     {
         int t;
-        void* g = func_020beb68;
+        void* g = data_ov004_020beb68;
         if (g != 0) {
             t = *(s32*)((char*)g + 0xa8);
         } else {

@@ -3,13 +3,13 @@
 //
 // ---- WHY THIS IS A HOST COPY AND NOT A SLICE LINE -------------------------
 //
-// src/func_ov006_020fa780.c is a matched TU and reads, in full:
+// src/_ZN15dScMgPachinko_cD0Ev.cpp is a matched TU and reads, in full:
 //
 //     #include "decl_common.h"
-//     int *func_ov006_020fa780(int *t)
+//     int *_ZN15dScMgPachinko_cD0Ev(int *t)
 //     {
 //         t[0] = (int)VT;
-//         func_ov004_020b29c0(t);
+//         _ZN11dScMgBase_cD2Ev(t);
 //         _ZN6Memory10DeallocateEPvP4Heap(t, HEAP);
 //         return t;
 //     }
@@ -35,7 +35,7 @@
 //     020fa784  ldr   r1, [pc, #0x24]     ; pool 020fa7b0 = 0x0213d9cc
 //     020fa788  mov   r4, r0
 //     020fa78c  str   r1, [r4]
-//     020fa790  bl    0x20b29c0           ; func_ov004_020b29c0
+//     020fa790  bl    0x20b29c0           ; _ZN11dScMgBase_cD2Ev
 //     020fa794  ldr   r1, [pc, #0x18]     ; pool 020fa7b4 = 0x020a0eac
 //     020fa798  mov   r0, r4
 //     020fa79c  ldr   r1, [r1]
@@ -56,7 +56,7 @@
 // and is routed rather than taken.
 //
 // THE SAME DEFECT IS LIVE ON CURLING'S SEAT TODAY and this lane did not fix it,
-// because it is another lane's file. src/func_ov006_020e065c.c is
+// because it is another lane's file. src/_ZN14dScMgCurling_cD0Ev.cpp is
 // dScMgCurling_c's slot 17, is byte-for-byte the same four statements, IS in
 // port/slice_mg1.txt line 151, and has no per-source -D in port/CMakeLists.txt.
 // Its own ROM pool holds 0x0213c304 (curling's table). So on a scene 374 boot
@@ -68,7 +68,7 @@
 //
 // ---- THE RULING THIS BODY CARRIES ----------------------------------------
 //
-// func_ov006_020fa780 is one of this class's three marker-carrying override
+// _ZN15dScMgPachinko_cD0Ev is one of this class's three marker-carrying override
 // bodies. It was disassembled from the shipped overlay image and compared
 // instruction for instruction with its src before being seated in any form;
 // the verdict is REAL_DECOMP and the evidence is the listing above.
@@ -83,7 +83,7 @@
 extern "C" {
 
 /* the base's D1, called with the object still holding this class's table */
-void func_ov004_020b29c0(void *t);
+void _ZN11dScMgBase_cD2Ev(void *t);
 
 /* Memory::Deallocate(void*, Heap*). Spelled in its Itanium form because that
    is what the matched arm9 TU defines and what every other host copy in this
@@ -102,7 +102,7 @@ void *port_mg_pachinko_d0(void *self)
     int *t = (int *)self;
     /* the vptr store the ROM makes with r1 = 0x0213d9cc */
     t[0] = (int)(size_t)data_ov006_0213d9cc;
-    func_ov004_020b29c0(t);
+    _ZN11dScMgBase_cD2Ev(t);
     /* ldr r1,[r1] -- the heap POINTER, not the word's address */
     _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
     return t;

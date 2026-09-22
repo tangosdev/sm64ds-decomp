@@ -6,9 +6,9 @@ extern "C" {
 struct Base{ virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3(); virtual void v4(); virtual void m(void*); };
 }
 
-int MontyMoleRock::Render()
+s32 MontyMoleRock::Render()
 {
-  Base*b=(Base*)((char*)&mModel);
-  b->m((char*)&unk_080);
+  Base*b=(Base*)((char*)&(*(Model *)&mModel));
+  b->m((char*)&mScaleX);
   return 1;
 }

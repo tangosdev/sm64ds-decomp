@@ -63,7 +63,7 @@
 #
 # RESULT: 209 FORWARDS, 1 DUPLICATES, 0 UNCLEAR.
 #
-# The one duplicate is _ZN5Actor17TrackInDeathTableEv. Everything else in the
+# The one duplicate is _ZN8dActor_c17TrackInDeathTableEv. Everything else in the
 # bucket is a real bridge, so the 210 faces are not hidden scaffolding inside
 # the linked percentage, which is what this pass was asked to find out.
 # ---------------------------------------------------------------------------
@@ -72,54 +72,54 @@ _Z14ApproachLinearRiii                                         FORWARDS    hal/p
 _Z14ApproachLinearRsss                                         FORWARDS    hal/method_faces.cpp:266 -- calls ApproachLinear, the s16 overload, NOT the ApproachLinear2 sibling this face once had
 _Z15ApproachLinear2Rsss                                        FORWARDS    hal/method_faces.cpp:97 -- calls ApproachLinear2, its own target
 _ZN10ModelAnim24CopyERKS_Pcj                                   FORWARDS    hal/method_faces.cpp:120 -- one statement calling ModelAnim2::Copy
-_ZN10SphereClsn10DetectClsnEv                                  FORWARDS    hal/reverse_bridges.cpp:257 -- one statement calling SphereClsn::DetectClsn
+_ZN12dBgCh_SphCrr10DetectClsnEv                                  FORWARDS    hal/reverse_bridges.cpp:257 -- one statement calling SphereClsn::DetectClsn
 _ZN10StarMarker27SpawnRedCoinStarIfNecessaryEv                 FORWARDS    hal/actor_classes_bob_world.cpp:312 -- shadow-class idiom, alias pragma at actor_classes_bob_world.cpp:311
 _ZN11CommonModel6RenderEPK7Vector3                             FORWARDS    hal/actor_classes_bob_world.cpp:299 -- qualified CommonModel::Render, returns 1 for a caller that ignores it
-_ZN11RaycastLine10DetectClsnEv                                 FORWARDS    hal/reverse_bridges.cpp:238 -- one statement calling RaycastLine::DetectClsn
+_ZN9dBgCh_Lin10DetectClsnEv                                 FORWARDS    hal/reverse_bridges.cpp:238 -- one statement calling RaycastLine::DetectClsn
 _ZN11ShadowModel10InitCuboidEv                                 FORWARDS    hal/cxxname_bridge.cpp:88 -- one statement calling ShadowModel::InitCuboid
 _ZN11ShadowModel12InitCylinderEv                               FORWARDS    hal/player_bridges.cpp:853 -- null-vtable guard then ShadowModel::InitCylinder
-_ZN12CylinderClsn5ClearEv                                      FORWARDS    hal/method_faces.cpp:125 -- one statement calling CylinderClsn::Clear
-_ZN12CylinderClsn6UpdateEv                                     FORWARDS    hal/method_faces.cpp:127 -- one statement calling CylinderClsn::Update
-_ZN12MeshCollider17UpdateFileOffsetsER8KCL_File                FORWARDS    hal/level_boot.cpp:1693 -- one statement calling MeshCollider::UpdateFileOffsets
-_ZN12MeshCollider7SetFileEP8KCL_FileR10CLPS_Block              FORWARDS    hal/cxxname_bridge.cpp:263 -- one statement calling MeshCollider::SetFile
-_ZN12MeshCollider8LoadFileER13SharedFilePtr                    FORWARDS    hal/cxxname_bridge.cpp:244 -- one statement calling MeshCollider::LoadFile
-_ZN12WithMeshClsn12Unk_0203589cEv                              FORWARDS    hal/bob_enemy_shadow_faces.cpp:49 -- one statement calling WithMeshClsn::Unk_0203589c
-_ZN12WithMeshClsn13SetGroundFlagEv                             FORWARDS    hal/method_faces.cpp:130 -- one statement calling WithMeshClsn::SetGroundFlag
-_ZN12WithMeshClsn13SetLimMovFlagEv                             FORWARDS    hal/method_faces.cpp:132 -- one statement calling WithMeshClsn::SetLimMovFlag
-_ZN12WithMeshClsn15ClearGroundFlagEv                           FORWARDS    hal/method_faces.cpp:134 -- one statement calling WithMeshClsn::ClearGroundFlag
-_ZN12WithMeshClsn15ClearLimMovFlagEv                           FORWARDS    hal/method_faces.cpp:136 -- one statement calling WithMeshClsn::ClearLimMovFlag
-_ZN12WithMeshClsn18StopDetectingWaterEv                        FORWARDS    hal/method_faces.cpp:138 -- one statement calling WithMeshClsn::StopDetectingWater
-_ZN12WithMeshClsn19ClearAllGroundFlagsEv                       FORWARDS    hal/method_faces.cpp:140 -- one statement calling WithMeshClsn::ClearAllGroundFlags
-_ZN12WithMeshClsn19StartDetectingWaterEv                       FORWARDS    hal/method_faces.cpp:142 -- one statement calling WithMeshClsn::StartDetectingWater
-_ZN12WithMeshClsn20UpdateDiscreteNoLavaEv                      FORWARDS    hal/method_faces.cpp:532 -- one statement calling WithMeshClsn::UpdateDiscreteNoLava
-_ZN12WithMeshClsn22ClearJustHitGroundFlagEv                    FORWARDS    hal/bob_enemy_bridges.cpp:227 -- one statement calling WithMeshClsn::ClearJustHitGroundFlag
-_ZN12WithMeshClsn22UpdateDiscreteNoLava_2Ev                    FORWARDS    hal/method_faces.cpp:534 -- one statement calling WithMeshClsn::UpdateDiscreteNoLava_2
+_ZN5dCc_c5ClearEv                                      FORWARDS    hal/method_faces.cpp:125 -- one statement calling CylinderClsn::Clear
+_ZN5dCc_c6UpdateEv                                     FORWARDS    hal/method_faces.cpp:127 -- one statement calling CylinderClsn::Update
+_ZN7dBgW_Kc17UpdateFileOffsetsER8KCL_File                FORWARDS    hal/level_boot.cpp:1693 -- one statement calling MeshCollider::UpdateFileOffsets
+_ZN7dBgW_Kc7SetFileEP8KCL_FileR10CLPS_Block              FORWARDS    hal/cxxname_bridge.cpp:263 -- one statement calling MeshCollider::SetFile
+_ZN7dBgW_Kc8LoadFileER13SharedFilePtr                    FORWARDS    hal/cxxname_bridge.cpp:244 -- one statement calling MeshCollider::LoadFile
+_ZN10dBgCh_Actr12Unk_0203589cEv                              FORWARDS    hal/bob_enemy_shadow_faces.cpp:49 -- one statement calling WithMeshClsn::Unk_0203589c
+_ZN10dBgCh_Actr13SetGroundFlagEv                             FORWARDS    hal/method_faces.cpp:130 -- one statement calling WithMeshClsn::SetGroundFlag
+_ZN10dBgCh_Actr13SetLimMovFlagEv                             FORWARDS    hal/method_faces.cpp:132 -- one statement calling WithMeshClsn::SetLimMovFlag
+_ZN10dBgCh_Actr15ClearGroundFlagEv                           FORWARDS    hal/method_faces.cpp:134 -- one statement calling WithMeshClsn::ClearGroundFlag
+_ZN10dBgCh_Actr15ClearLimMovFlagEv                           FORWARDS    hal/method_faces.cpp:136 -- one statement calling WithMeshClsn::ClearLimMovFlag
+_ZN10dBgCh_Actr18StopDetectingWaterEv                        FORWARDS    hal/method_faces.cpp:138 -- one statement calling WithMeshClsn::StopDetectingWater
+_ZN10dBgCh_Actr19ClearAllGroundFlagsEv                       FORWARDS    hal/method_faces.cpp:140 -- one statement calling WithMeshClsn::ClearAllGroundFlags
+_ZN10dBgCh_Actr19StartDetectingWaterEv                       FORWARDS    hal/method_faces.cpp:142 -- one statement calling WithMeshClsn::StartDetectingWater
+_ZN10dBgCh_Actr20UpdateDiscreteNoLavaEv                      FORWARDS    hal/method_faces.cpp:532 -- one statement calling WithMeshClsn::UpdateDiscreteNoLava
+_ZN10dBgCh_Actr22ClearJustHitGroundFlagEv                    FORWARDS    hal/bob_enemy_bridges.cpp:227 -- one statement calling WithMeshClsn::ClearJustHitGroundFlag
+_ZN10dBgCh_Actr22UpdateDiscreteNoLava_2Ev                    FORWARDS    hal/method_faces.cpp:534 -- one statement calling WithMeshClsn::UpdateDiscreteNoLava_2
 _ZN13PeachPainting13InitResourcesEv                            FORWARDS    hal/method_faces.cpp:773 -- one statement calling PeachPainting::InitResources
 _ZN13PeachPainting6RenderEv                                    FORWARDS    hal/method_faces.cpp:777 -- one statement calling PeachPainting::Render
 _ZN13PeachPainting8BehaviorEv                                  FORWARDS    hal/method_faces.cpp:775 -- one statement calling PeachPainting::Behavior
 _ZN13QuestionBlock16CleanupResourcesEv                         FORWARDS    hal/method_faces.cpp:868 -- one statement calling QuestionBlock::CleanupResources
 _ZN13QuestionBlock8BehaviorEv                                  FORWARDS    hal/method_faces.cpp:866 -- one statement calling QuestionBlock::Behavior
-_ZN13RaycastGround10DetectClsnEv                               FORWARDS    hal/cxx_aliases.cpp:456 -- one statement calling RaycastGround::DetectClsn
+_ZN9dBgCh_Gnd10DetectClsnEv                               FORWARDS    hal/cxx_aliases.cpp:456 -- one statement calling RaycastGround::DetectClsn
 _ZN14BlendModelAnim7AdvanceEv                                  FORWARDS    hal/bob_enemy_header_faces.cpp:46 -- one statement calling BlendModelAnim::Advance
 _ZN15FaderBrightness14SetForwardTimeEj                         FORWARDS    hal/method_faces.cpp:943 -- one statement calling FaderBrightness::SetForwardTime
 _ZN15FaderBrightness7IsAtEndEv                                 FORWARDS    hal/method_faces.cpp:941 -- one statement calling FaderBrightness::IsAtEnd
-_ZN15IceSlideManager13InitResourcesEv                          FORWARDS    hal/method_faces.cpp:633 -- one statement calling IceSlideManager::InitResources
-_ZN15IceSlideManager8BehaviorEv                                FORWARDS    hal/method_faces.cpp:635 -- one statement calling IceSlideManager::Behavior
+_ZN10daSldMng_c13InitResourcesEv                          FORWARDS    hal/method_faces.cpp:633 -- one statement calling IceSlideManager::InitResources
+_ZN10daSldMng_c8BehaviorEv                                FORWARDS    hal/method_faces.cpp:635 -- one statement calling IceSlideManager::Behavior
 _ZN15MaterialChanger6UpdateER15ModelComponents                 FORWARDS    hal/bob_enemy_bridges.cpp:180 -- one statement calling MaterialChanger::Update
 _ZN15MaterialChanger7PrepareER8BMD_FileR8BMA_File              FORWARDS    hal/bob_enemy_bridges.cpp:176 -- one statement calling MaterialChanger::Prepare
 _ZN15TextureSequence6UpdateER15ModelComponents                 FORWARDS    hal/method_faces.cpp:145 -- one statement calling TextureSequence::Update
 _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File              FORWARDS    hal/player_bridges.cpp:870 -- one statement calling TextureSequence::Prepare
 _ZN15TextureSequence8LoadFileER13SharedFilePtr                 FORWARDS    hal/player_bridges.cpp:874 -- one statement calling TextureSequence::LoadFile
-_ZN16MeshColliderBase6EnableEP5Actor                           FORWARDS    hal/cxxname_bridge.cpp:305 -- one statement calling MeshColliderBase::Enable
-_ZN16MeshColliderBase7DisableEv                                FORWARDS    hal/method_faces.cpp:512 -- one statement calling MeshColliderBase::Disable
-_ZN16MeshColliderBase9IsEnabledEv                              FORWARDS    hal/method_faces.cpp:510 -- one statement calling MeshColliderBase::IsEnabled
+_ZN4dBgW6EnableEP8dActor_c                           FORWARDS    hal/cxxname_bridge.cpp:305 -- one statement calling MeshColliderBase::Enable
+_ZN4dBgW7DisableEv                                FORWARDS    hal/method_faces.cpp:512 -- one statement calling MeshColliderBase::Disable
+_ZN4dBgW9IsEnabledEv                              FORWARDS    hal/method_faces.cpp:510 -- one statement calling MeshColliderBase::IsEnabled
 _ZN18NestedHeapIterator4InitEP13HeapAllocator                  FORWARDS    hal/heap_globals.cpp:69 -- one statement calling NestedHeapIterator::Init
 _ZN18NestedHeapIterator4NextEP13HeapAllocator                  FORWARDS    hal/heap_globals.cpp:61 -- one statement calling NestedHeapIterator::Next
 _ZN18NestedHeapIterator6RemoveEP13HeapAllocator                FORWARDS    hal/player_bridges.cpp:877 -- one statement calling NestedHeapIterator::Remove
 _ZN18NestedHeapIterator7AddLastEP13HeapAllocator               FORWARDS    hal/heap_globals.cpp:57 -- one statement calling NestedHeapIterator::AddLast
 _ZN18NestedHeapIterator8AddFirstEP13HeapAllocator              FORWARDS    hal/heap_globals.cpp:59 -- one statement calling NestedHeapIterator::AddFirst
 _ZN18NestedHeapIterator8PreviousEP13HeapAllocator              FORWARDS    hal/player_bridges.cpp:880 -- one statement calling NestedHeapIterator::Previous
-_ZN18PoppingLavaBubbles13InitResourcesEv                       FORWARDS    hal/method_faces.cpp:830 -- one statement calling PoppingLavaBubbles::InitResources
+_ZN16daObjWaterfall_c13InitResourcesEv                       FORWARDS    hal/method_faces.cpp:830 -- one statement calling PoppingLavaBubbles::InitResources
 _ZN18TextureTransformer6UpdateER15ModelComponents              FORWARDS    hal/method_faces.cpp:685 -- one statement calling TextureTransformer::Update
 _ZN18TextureTransformer7PrepareER8BMD_FileR8BTA_File           FORWARDS    hal/method_faces.cpp:683 -- one statement calling TextureTransformer::Prepare
 _ZN2GX7LoadTexEPKvjj                                           FORWARDS    hal/model_host.cpp:336 -- optional texture log then GX::LoadTex
@@ -129,16 +129,16 @@ _ZN3HUD15RenderTimeTimerEv                                     FORWARDS    hal/s
 _ZN3HUD17RenderHealthMeterEv                                   FORWARDS    hal/sub_actors.cpp:294 -- HUD_FACE macro (defined at sub_actors.cpp:283), expands to ((HUD *)s)->HUD::RenderHealthMeter()
 _ZN3HUD19RenderCameraButtonsEv                                 FORWARDS    hal/sub_actors.cpp:302 -- one statement calling HUD::RenderCameraButtons
 _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii                    FORWARDS    hal/reverse_bridges.cpp:281 -- 0xffff terminator guard then OAM::Render; the guard turns a runaway walk off the end of main RAM into one skipped sprite
-_ZN4BgCh19StartDetectingToxicEv                                FORWARDS    hal/method_faces.cpp:149 -- one statement calling BgCh::StartDetectingToxic
-_ZN4BgCh19StartDetectingWaterEv                                FORWARDS    hal/player_bridges.cpp:794 -- one statement calling BgCh::StartDetectingWater
-_ZN4BgCh21StopDetectingOrdinaryEv                              FORWARDS    hal/method_faces.cpp:151 -- one statement calling BgCh::StopDetectingOrdinary
+_ZN5dBgCh19StartDetectingToxicEv                                FORWARDS    hal/method_faces.cpp:149 -- one statement calling BgCh::StartDetectingToxic
+_ZN5dBgCh19StartDetectingWaterEv                                FORWARDS    hal/player_bridges.cpp:794 -- one statement calling BgCh::StartDetectingWater
+_ZN5dBgCh21StopDetectingOrdinaryEv                              FORWARDS    hal/method_faces.cpp:151 -- one statement calling BgCh::StopDetectingOrdinary
 _ZN4Bird13InitResourcesEv                                      FORWARDS    hal/method_faces.cpp:551 -- one statement calling Bird::InitResources
-_ZN4Door13InitResourcesEv                                      FORWARDS    hal/method_faces.cpp:743 -- one statement calling Door::InitResources
-_ZN4Door8BehaviorEv                                            FORWARDS    hal/method_faces.cpp:745 -- one statement calling Door::Behavior
+_ZN12daStarGate_c13InitResourcesEv                                      FORWARDS    hal/method_faces.cpp:743 -- one statement calling Door::InitResources
+_ZN12daStarGate_c8BehaviorEv                                            FORWARDS    hal/method_faces.cpp:745 -- one statement calling Door::Behavior
 _ZN4Fish13InitResourcesEv                                      FORWARDS    hal/method_faces.cpp:846 -- one statement calling Fish::InitResources
 _ZN4Fish16CleanupResourcesEv                                   FORWARDS    hal/method_faces.cpp:848 -- one statement calling Fish::CleanupResources
-_ZN4Flag13InitResourcesEv                                      FORWARDS    hal/method_faces.cpp:610 -- one statement calling Flag::InitResources
-_ZN4Flag8BehaviorEv                                            FORWARDS    hal/method_faces.cpp:612 -- one statement calling Flag::Behavior
+_ZN10daMcFlag_c13InitResourcesEv                                      FORWARDS    hal/method_faces.cpp:610 -- one statement calling Flag::InitResources
+_ZN10daMcFlag_c8BehaviorEv                                            FORWARDS    hal/method_faces.cpp:612 -- one statement calling Flag::Behavior
 _ZN4Heap10DeallocateEPv                                        FORWARDS    hal/heap_vtable.cpp:133 -- one statement calling Heap::Deallocate
 _ZN4Heap10ReallocateEPvj                                       FORWARDS    hal/method_faces.cpp:478 -- one statement calling Heap::Reallocate
 _ZN4Heap21MaxAllocationUnitSizeEv                              FORWARDS    hal/player_bridges.cpp:886 -- one statement calling Heap::MaxAllocationUnitSize
@@ -146,23 +146,23 @@ _ZN4Heap6IntactEv                                              FORWARDS    hal/p
 _ZN4Heap6RescueEv                                              FORWARDS    hal/player_bridges.cpp:884 -- one statement calling Heap::Rescue
 _ZN4Heap8AllocateEj                                            FORWARDS    hal/lk4_eh_dtor_seat.cpp:119 -- one statement calling Heap::Allocate
 _ZN4Heap8AllocateEji                                           FORWARDS    hal/heap_vtable.cpp:131 -- one statement calling Heap::Allocate
-_ZN4Trap13InitResourcesEv                                      FORWARDS    hal/method_faces.cpp:756 -- one statement calling Trap::InitResources
-_ZN4Trap6RenderEv                                              FORWARDS    hal/method_faces.cpp:760 -- one statement calling Trap::Render
-_ZN4Trap8BehaviorEv                                            FORWARDS    hal/method_faces.cpp:758 -- one statement calling Trap::Behavior
+_ZN9LightBeam13InitResourcesEv                                      FORWARDS    hal/method_faces.cpp:756 -- one statement calling Trap::InitResources
+_ZN9LightBeam6RenderEv                                              FORWARDS    hal/method_faces.cpp:760 -- one statement calling Trap::Render
+_ZN9LightBeam8BehaviorEv                                            FORWARDS    hal/method_faces.cpp:758 -- one statement calling Trap::Behavior
 _ZN4cstd6strchrEPKcc                                           FORWARDS    hal/cxx_aliases.cpp:79 -- one statement calling cstd::strchr
 _ZN4cstd6strcmpEPKcS1_                                         FORWARDS    hal/cxx_aliases.cpp:77 -- one statement calling cstd::strcmp
-_ZN5Actor10FindWithIDEj                                        FORWARDS    hal/method_faces.cpp:117 -- one statement calling Actor::FindWithID
-_ZN5Actor11UpdateCarryER6PlayerRK7Vector3                      FORWARDS    hal/reverse_bridges.cpp:156 -- one statement calling Actor::UpdateCarry
-_ZN5Actor13SpawnSoundObjEj                                     FORWARDS    hal/method_faces.cpp:105 -- one statement calling Actor::SpawnSoundObj
-_ZN5Actor14GetSubtractionEss                                   FORWARDS    hal/bob_enemy_header_faces.cpp:33 -- one statement calling Actor::GetSubtraction
-_ZN5Actor17TrackInDeathTableEv                                 DUPLICATES  hal/actor_class_faces.cpp:170 -- restates the matched body instead of calling it: the face is DeathTable_SetBit(*(short *)(self + 0xce)) and src/_ZN5Actor17TrackInDeathTableEv.cpp is DeathTable_SetBit(deathTableId) with deathTableId at 0xce. Same work, but the matched code is not what runs on the C-name path
-_ZN5Actor18AfterInitResourcesEj                                FORWARDS    hal/method_faces.cpp:338 -- one statement calling Actor::AfterInitResources
-_ZN5Actor18GetBitInDeathTableEv                                FORWARDS    hal/method_faces.cpp:336 -- one statement calling Actor::GetBitInDeathTable
-_ZN5Actor19UntrackInDeathTableEv                               FORWARDS    hal/bob_enemy_shadow_faces.cpp:52 -- one statement calling Actor::UntrackInDeathTable
-_ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn              FORWARDS    hal/reverse_bridges.cpp:309 -- one statement calling Actor::UpdatePosWithOnlySpeed
-_ZN5Actor24KillAndTrackInDeathTableEv                          FORWARDS    hal/method_faces.cpp:110 -- one statement calling Actor::KillAndTrackInDeathTable
-_ZN5Enemy22SpawnMegaCharParticlesER5ActorPc                    FORWARDS    hal/bob_enemy_bridges.cpp:95 -- one statement calling Enemy::SpawnMegaCharParticles
-_ZN5Enemy9SpawnCoinEv                                          FORWARDS    hal/bob_enemy_bridges.cpp:93 -- one statement calling Enemy::SpawnCoin
+_ZN8dActor_c10FindWithIDEj                                        FORWARDS    hal/method_faces.cpp:117 -- one statement calling Actor::FindWithID
+_ZN8dActor_c11UpdateCarryER6PlayerRK7Vector3                      FORWARDS    hal/reverse_bridges.cpp:156 -- one statement calling Actor::UpdateCarry
+_ZN8dActor_c13SpawnSoundObjEj                                     FORWARDS    hal/method_faces.cpp:105 -- one statement calling Actor::SpawnSoundObj
+_ZN8dActor_c14GetSubtractionEss                                   FORWARDS    hal/bob_enemy_header_faces.cpp:33 -- one statement calling Actor::GetSubtraction
+_ZN8dActor_c17TrackInDeathTableEv                                 DUPLICATES  hal/actor_class_faces.cpp:170 -- restates the matched body instead of calling it: the face is DeathTable_SetBit(*(short *)(self + 0xce)) and src/_ZN8dActor_c17TrackInDeathTableEv.cpp is DeathTable_SetBit(deathTableId) with deathTableId at 0xce. Same work, but the matched code is not what runs on the C-name path
+_ZN8dActor_c18AfterInitResourcesEj                                FORWARDS    hal/method_faces.cpp:338 -- one statement calling Actor::AfterInitResources
+_ZN8dActor_c18GetBitInDeathTableEv                                FORWARDS    hal/method_faces.cpp:336 -- one statement calling Actor::GetBitInDeathTable
+_ZN8dActor_c19UntrackInDeathTableEv                               FORWARDS    hal/bob_enemy_shadow_faces.cpp:52 -- one statement calling Actor::UntrackInDeathTable
+_ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c              FORWARDS    hal/reverse_bridges.cpp:309 -- one statement calling Actor::UpdatePosWithOnlySpeed
+_ZN8dActor_c24KillAndTrackInDeathTableEv                          FORWARDS    hal/method_faces.cpp:110 -- one statement calling Actor::KillAndTrackInDeathTable
+_ZN12dEnemyBase_c22SpawnMegaCharParticlesER8dActor_cPc                    FORWARDS    hal/bob_enemy_bridges.cpp:95 -- one statement calling Enemy::SpawnMegaCharParticles
+_ZN12dEnemyBase_c9SpawnCoinEv                                          FORWARDS    hal/bob_enemy_bridges.cpp:93 -- one statement calling Enemy::SpawnCoin
 _ZN5Model12HideMaterialEii                                     FORWARDS    hal/bob_enemy_header_faces.cpp:64 -- one statement calling Model::HideMaterial
 _ZN5Model12SetPolygonIDEi                                      FORWARDS    hal/actor_classes_ov063.cpp:650 -- one statement calling Model::SetPolygonID
 _ZN5Model13GetVramOffsetEj                                     FORWARDS    hal/particle_bridges.cpp:84 -- one statement calling Model::GetVramOffset
@@ -172,14 +172,14 @@ _ZN5Model17UpdateFileOffsetsER8BMD_File                        FORWARDS    hal/m
 _ZN5Model23AddToCommonModelDataArrER8BMD_File                  FORWARDS    hal/cxxname_bridge.cpp:608 -- one statement calling Model::AddToCommonModelDataArr
 _ZN5Model6RenderEPK7Vector3                                    FORWARDS    hal/actor_faces_bob.cpp:173 -- shadow-class idiom, alias pragma at actor_faces_bob.cpp:172
 _ZN5Model8LoadFileER13SharedFilePtr                            FORWARDS    hal/cxxname_bridge.cpp:208 -- PORT_TRACE_SETFILE tracing around Model::LoadFile
-_ZN5Scene22ResetHardwareRegistersEv                            FORWARDS    hal/cxx_aliases.cpp:373 -- one statement calling Scene::ResetHardwareRegisters
+_ZN8dScene_c22ResetHardwareRegistersEv                            FORWARDS    hal/cxx_aliases.cpp:373 -- one statement calling Scene::ResetHardwareRegisters
 _ZN5Sound13Func_02048eb4Ev                                     FORWARDS    hal/bob_enemy_shadow_faces.cpp:147 -- one statement calling Sound::Func_02048eb4
 _ZN5Sound22LoadAndSetMusic_Layer3Ej                            FORWARDS    hal/bob_enemy_shadow_faces.cpp:145 -- one statement calling Sound::LoadAndSetMusic_Layer3
 _ZN5Timer10ResetTimerEv                                        FORWARDS    hal/method_faces.cpp:157 -- one statement calling Timer::ResetTimer
 _ZN5Timer10StartTimerEv                                        FORWARDS    hal/method_faces.cpp:159 -- one statement calling Timer::StartTimer
 _ZN5Timer7GetTimeEv                                            FORWARDS    hal/method_faces.cpp:161 -- one statement calling Timer::GetTime
 _ZN5Timer9StopTimerEv                                          FORWARDS    hal/method_faces.cpp:163 -- one statement calling Timer::StopTimer
-_ZN6Camera10LookAtExitER5Actor                                 FORWARDS    hal/door_ring_faces.cpp:29 -- one statement calling Camera::LookAtExit
+_ZN6Camera10LookAtExitER8dActor_c                                 FORWARDS    hal/door_ring_faces.cpp:29 -- one statement calling Camera::LookAtExit
 _ZN6Camera14GoBehindPlayerEj                                   FORWARDS    hal/door_ring_faces.cpp:27 -- one statement calling Camera::GoBehindPlayer
 _ZN6Camera25SaveCameraStateBeforeTalkEv                        FORWARDS    hal/camera_bridges.cpp:280 -- one statement calling Camera::SaveCameraStateBeforeTalk
 _ZN6Camera9SetFlag_3Ev                                         FORWARDS    hal/reverse_bridges.cpp:313 -- one statement calling Camera::SetFlag_3
@@ -231,31 +231,31 @@ _ZN6Player8HasNoCapEv                                          FORWARDS    hal/p
 _ZN6Player9DropActorEv                                         FORWARDS    hal/method_faces.cpp:330 -- one statement calling Player::DropActor
 _ZN6Player9GetHealthEv                                         FORWARDS    hal/player_bridges.cpp:791 -- one statement calling Player::GetHealth
 _ZN6Player9IsOnShellEv                                         FORWARDS    hal/bob_enemy_header_faces.cpp:14 -- one statement calling Player::IsOnShell
-_ZN6Rabbit13InitResourcesEv                                    FORWARDS    hal/method_faces.cpp:711 -- one statement calling Rabbit::InitResources
+_ZN7daMip_c13InitResourcesEv                                    FORWARDS    hal/method_faces.cpp:711 -- one statement calling Rabbit::InitResources
 _ZN7Message6UpdateEv                                           FORWARDS    hal/reverse_bridges.cpp:261 -- one statement calling Message::Update
 _ZN7Message7AddCharEc                                          FORWARDS    hal/reverse_bridges.cpp:263 -- one statement calling Message::AddChar
 _ZN7Minimap19UpdateLevelSpecificEv                             FORWARDS    hal/sub_actors.cpp:148 -- one statement calling Minimap::UpdateLevelSpecific
-_ZN8CapEnemy11GetCapStateEv                                    FORWARDS    hal/bob_enemy_shadow_faces.cpp:46 -- one statement calling CapEnemy::GetCapState
-_ZN8CapEnemy12Unk_02005d94Ev                                   FORWARDS    hal/bob_enemy_bridges.cpp:216 -- one statement calling CapEnemy::Unk_02005d94
-_ZN8CapEnemy12UpdateCapPosERK7Vector3RK10Vector3_16            FORWARDS    hal/actor_classes_ov063.cpp:671 -- one statement calling CapEnemy::UpdateCapPos
-_ZN8CapEnemy14RenderCapModelEPK7Vector3                        FORWARDS    hal/bob_enemy_bridges.cpp:218 -- one statement calling CapEnemy::RenderCapModel
-_ZN8CapEnemy15RespawnIfHasCapEv                                FORWARDS    hal/bob_enemy_bridges.cpp:214 -- one statement calling CapEnemy::RespawnIfHasCap
-_ZN8CapEnemy21DestroyIfCapNotNeededEv                          FORWARDS    hal/bob_enemy_bridges.cpp:212 -- one statement calling CapEnemy::DestroyIfCapNotNeeded
-_ZN8MetalNet13InitResourcesEv                                  FORWARDS    hal/method_faces.cpp:602 -- one statement calling MetalNet::InitResources
-_ZN8MetalNet16CleanupResourcesEv                               FORWARDS    hal/method_faces.cpp:608 -- one statement calling MetalNet::CleanupResources
-_ZN8MetalNet6RenderEv                                          FORWARDS    hal/method_faces.cpp:606 -- one statement calling MetalNet::Render
-_ZN8MetalNet8BehaviorEv                                        FORWARDS    hal/method_faces.cpp:604 -- one statement calling MetalNet::Behavior
-_ZN8Particle17CheckLavaCallback14SpawnParticlesERNS_6SystemE   FORWARDS    hal/particle_bridges.cpp:54 -- nested-namespace method through a cast
-_ZN8Particle21CleanParticleCallback8OnUpdateERNS_6SystemEb     FORWARDS    hal/particle_bridges.cpp:62 -- nested-namespace method through a cast
-_ZN8Particle24CheckWaterRippleCallback8OnUpdateERNS_6SystemEb  FORWARDS    hal/particle_bridges.cpp:71 -- nested-namespace method through a cast
-_ZN8Platform19UpdateClsnPosAndRotEv                            FORWARDS    hal/cxxname_bridge.cpp:45 -- one statement calling Platform::UpdateClsnPosAndRot
-_ZN8Platform20UpdateKillByMegaCharEsss5Fix12IiE                FORWARDS    hal/wf_enemy_bridges.cpp:110 -- both branches call Platform::UpdateKillByMegaChar; the probe only counts
-_ZN8Platform21UpdateModelPosAndRotYEv                          FORWARDS    hal/cxxname_bridge.cpp:47 -- one statement calling Platform::UpdateModelPosAndRotY
-_ZN9ActorBase12BeforeRenderEv                                  FORWARDS    hal/method_faces.cpp:344 -- one statement calling ActorBase::BeforeRender
-_ZN9ActorBase14BeforeBehaviorEv                                FORWARDS    hal/method_faces.cpp:228 -- one statement calling ActorBase::BeforeBehavior
-_ZN9ActorBase18MarkForDestructionEv                            FORWARDS    hal/method_faces.cpp:189 -- one statement calling ActorBase::MarkForDestruction
-_ZN9ActorBase19BeforeInitResourcesEv                           FORWARDS    hal/level_boot.cpp:2155 -- one statement calling ActorBase::BeforeInitResources
-_ZN9ActorBase22BeforeCleanupResourcesEv                        FORWARDS    hal/method_faces.cpp:355 -- one statement calling ActorBase::BeforeCleanupResources
+_ZN11dCapEnemy_c11GetCapStateEv                                    FORWARDS    hal/bob_enemy_shadow_faces.cpp:46 -- one statement calling CapEnemy::GetCapState
+_ZN11dCapEnemy_c12Unk_02005d94Ev                                   FORWARDS    hal/bob_enemy_bridges.cpp:216 -- one statement calling CapEnemy::Unk_02005d94
+_ZN11dCapEnemy_c12UpdateCapPosERK7Vector3RK10Vector3_16            FORWARDS    hal/actor_classes_ov063.cpp:671 -- one statement calling CapEnemy::UpdateCapPos
+_ZN11dCapEnemy_c14RenderCapModelEPK7Vector3                        FORWARDS    hal/bob_enemy_bridges.cpp:218 -- one statement calling CapEnemy::RenderCapModel
+_ZN11dCapEnemy_c15RespawnIfHasCapEv                                FORWARDS    hal/bob_enemy_bridges.cpp:214 -- one statement calling CapEnemy::RespawnIfHasCap
+_ZN11dCapEnemy_c21DestroyIfCapNotNeededEv                          FORWARDS    hal/bob_enemy_bridges.cpp:212 -- one statement calling CapEnemy::DestroyIfCapNotNeeded
+_ZN18daObjMc_Metalnet_c13InitResourcesEv                                  FORWARDS    hal/method_faces.cpp:602 -- one statement calling MetalNet::InitResources
+_ZN18daObjMc_Metalnet_c16CleanupResourcesEv                               FORWARDS    hal/method_faces.cpp:608 -- one statement calling MetalNet::CleanupResources
+_ZN18daObjMc_Metalnet_c6RenderEv                                          FORWARDS    hal/method_faces.cpp:606 -- one statement calling MetalNet::Render
+_ZN18daObjMc_Metalnet_c8BehaviorEv                                        FORWARDS    hal/method_faces.cpp:604 -- one statement calling MetalNet::Behavior
+_ZN5dPa_c7level_c20checkYoganCallback_c14SpawnParticlesERN8Particle6SystemE   FORWARDS    hal/particle_bridges.cpp:54 -- nested-namespace method through a cast
+_ZN5dPa_c7level_c23cleanParticleCallback_c8OnUpdateERN8Particle6SystemEb     FORWARDS    hal/particle_bridges.cpp:62 -- nested-namespace method through a cast
+_ZN5dPa_c7level_c26checkWaterRippleCallback_c8OnUpdateERN8Particle6SystemEb  FORWARDS    hal/particle_bridges.cpp:71 -- nested-namespace method through a cast
+_ZN10dBgActor_c19UpdateClsnPosAndRotEv                            FORWARDS    hal/cxxname_bridge.cpp:45 -- one statement calling Platform::UpdateClsnPosAndRot
+_ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE                FORWARDS    hal/wf_enemy_bridges.cpp:110 -- both branches call Platform::UpdateKillByMegaChar; the probe only counts
+_ZN10dBgActor_c21UpdateModelPosAndRotYEv                          FORWARDS    hal/cxxname_bridge.cpp:47 -- one statement calling Platform::UpdateModelPosAndRotY
+_ZN7fBase_c12BeforeRenderEv                                  FORWARDS    hal/method_faces.cpp:344 -- one statement calling ActorBase::BeforeRender
+_ZN7fBase_c14BeforeBehaviorEv                                FORWARDS    hal/method_faces.cpp:228 -- one statement calling ActorBase::BeforeBehavior
+_ZN7fBase_c18MarkForDestructionEv                            FORWARDS    hal/method_faces.cpp:189 -- one statement calling ActorBase::MarkForDestruction
+_ZN7fBase_c19BeforeInitResourcesEv                           FORWARDS    hal/level_boot.cpp:2155 -- one statement calling ActorBase::BeforeInitResources
+_ZN7fBase_c22BeforeCleanupResourcesEv                        FORWARDS    hal/method_faces.cpp:355 -- one statement calling ActorBase::BeforeCleanupResources
 _ZN9Animation7AdvanceEv                                        FORWARDS    hal/player_bridges.cpp:769 -- one statement calling Animation::Advance
 _ZN9Animation8FinishedEv                                       FORWARDS    hal/player_bridges.cpp:771 -- one statement calling Animation::Finished
 _ZN9Animation8GetFlagsEv                                       FORWARDS    hal/player_bridges.cpp:40 -- one statement calling Animation::GetFlags
@@ -268,12 +268,12 @@ _ZN9ModelBase7SetFileEP8BMD_Fileii                             FORWARDS    hal/c
 _ZN9PowerStar13AddStarMarkerEv                                 FORWARDS    hal/method_faces.cpp:536 -- one statement calling PowerStar::AddStarMarker
 _ZN9RabbitKey13InitResourcesEv                                 FORWARDS    hal/method_faces.cpp:729 -- one statement calling RabbitKey::InitResources
 _ZN9RabbitKey8BehaviorEv                                       FORWARDS    hal/method_faces.cpp:731 -- one statement calling RabbitKey::Behavior
-_ZNK10ClsnResult9GetClsnIDEv                                   FORWARDS    hal/reverse_bridges.cpp:328 -- qualified ClsnResult::GetClsnID
-_ZNK12MeshCollider13GetUnkOctreeYEv                            FORWARDS    hal/level_boot.cpp:1697 -- qualified MeshCollider::GetUnkOctreeY
-_ZNK12MeshCollider16GetOctreeOriginYEv                         FORWARDS    hal/level_boot.cpp:1695 -- qualified MeshCollider::GetOctreeOriginY
-_ZNK12WithMeshClsn12TouchesWaterEv                             FORWARDS    hal/actor_class_faces.cpp:215 -- qualified WithMeshClsn::TouchesWater
-_ZNK12WithMeshClsn13GetWallResultEv                            FORWARDS    hal/reverse_bridges.cpp:240 -- WithMeshClsn::GetWallResult through a const cast
-_ZNK12WithMeshClsn14GetFloorResultEv                           FORWARDS    hal/reverse_bridges.cpp:242 -- WithMeshClsn::GetFloorResult through a const cast
+_ZNK5dBgPi9GetClsnIDEv                                   FORWARDS    hal/reverse_bridges.cpp:328 -- qualified ClsnResult::GetClsnID
+_ZNK7dBgW_Kc13GetUnkOctreeYEv                            FORWARDS    hal/level_boot.cpp:1697 -- qualified MeshCollider::GetUnkOctreeY
+_ZNK7dBgW_Kc16GetOctreeOriginYEv                         FORWARDS    hal/level_boot.cpp:1695 -- qualified MeshCollider::GetOctreeOriginY
+_ZNK10dBgCh_Actr12TouchesWaterEv                             FORWARDS    hal/actor_class_faces.cpp:215 -- qualified WithMeshClsn::TouchesWater
+_ZNK10dBgCh_Actr13GetWallResultEv                            FORWARDS    hal/reverse_bridges.cpp:240 -- WithMeshClsn::GetWallResult through a const cast
+_ZNK10dBgCh_Actr14GetFloorResultEv                           FORWARDS    hal/reverse_bridges.cpp:242 -- WithMeshClsn::GetFloorResult through a const cast
 _ZNK7PathPtr5LoopsEv                                           FORWARDS    hal/camera_bridges.cpp:286 -- qualified PathPtr::Loops
 _ZNK7PathPtr8NumNodesEv                                        FORWARDS    hal/method_faces.cpp:231 -- qualified PathPtr::NumNodes
 _ZNK9Animation12WillHitFrameEi                                 FORWARDS    hal/cxx_aliases.cpp:210 -- two hops: hal_anim_willhit at player_bridges.cpp:763 calls Animation::WillHitFrame
@@ -312,18 +312,18 @@ _ZNK9Animation13GetFrameCountEv                                FORWARDS    hal/m
 # ---------------------------------------------------------------------------
 # SAME WAVE, AFTER THE RULINGS ABOVE: the one DUPLICATES is closed.
 #
-# _ZN5Actor17TrackInDeathTableEv is now
+# _ZN8dActor_c17TrackInDeathTableEv is now
 #
 #     { ((Actor *)self)->Actor::TrackInDeathTable(); }
 #
 # at hal/actor_class_faces.cpp, with the method DECLARED and not defined in
 # that file's local `struct Actor` so the matched TU keeps ownership of
-# ?TrackInDeathTable@Actor@@QAEXXZ. Defining it there would have been a
+# ?TrackInDeathTable@dActor_c@@QAEXXZ. Defining it there would have been a
 # duplicate symbol, not a bridge, which is the difference between this face and
 # the four above it in the same struct that forward the other way.
 #
-# The map confirms the direction: ?TrackInDeathTable@Actor@@QAEXXZ resolves to
-# _ZN5Actor17TrackInDeathTableEv.cpp.obj and the C name to
+# The map confirms the direction: ?TrackInDeathTable@dActor_c@@QAEXXZ resolves to
+# _ZN8dActor_c17TrackInDeathTableEv.cpp.obj and the C name to
 # actor_class_faces.cpp.obj. gate.py GREEN, battery ALL GREEN, linkage 4888 ->
 # 4888 (0), which is the right delta: both halves were already linked and what
 # changed is which one runs.

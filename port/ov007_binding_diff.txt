@@ -159,7 +159,7 @@ with a matched src TU, not TUs. Counted as TUs:
 config/arm9/overlays/ov007/delinks.txt names 527 source blocks, every one of
 them with a .text range and every one present on disk, and 492 of the 527 are
 marked complete. Three of the 527 are not ov007-named -- src/RequestScreenFade.c,
-src/Sprite_SetAnimation.c, and src/_ZN6Player17St_EndingFly_MainEv.cpp, which is
+src/Sprite_SetAnimation.c, and src/func_ov007_020c3d1c.cpp, which is
 the naming trap section 1 of the 2d map warns about and not an ending sequence
 in the title scene. 525 files on disk carry ov007 in the name, one more than the
 524 ov007-named blocks in delinks, so the disk set and the delink set are not
@@ -167,7 +167,7 @@ the same set and neither is 528.
 
 One of the 18 is worth naming because the spine lane needs it:
 
-    data_ov007_02103264 + 0  ->  0x020ccad0
+    g_profile_DSMT + 0  ->  0x020ccad0
 
 0x02103264 is the TITLE_SCREEN spawninfo the arm9 spawn table points at
 (config/arm9/relocs.txt: from:0x02090868 kind:load to:0x02103264

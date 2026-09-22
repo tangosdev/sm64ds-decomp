@@ -1,0 +1,49 @@
+# run link100 wave 9b, lane DTORS-A -- THE INLINE-IN-HEADER DESTRUCTORS.
+#
+# THIS LIST IS DELIBERATELY EMPTY OF src ROWS, and that is the finding rather
+# than an omission.  Lane FACES3's out/FACES3/inline_in_header.txt measured all
+# 192 of these rows as "on a live slice row: YES": every owning translation unit
+# is ALREADY compiled into walk_window.  Nothing here is a seat.
+#
+# WHAT IS MISSING IS A DEFINITION, not a file.  main's header declares the
+# destructor inline --
+#
+#     virtual ~daCamTag_c() {}           /* slots 16 (D1), 17 (D0) */
+#
+# -- and mwccarm emits the body out of line anyway, because the class's vtable
+# odr-uses it, which is why the cartridge has _ZN10daCamTag_cD1Ev at ov002
+# 0x020b0748 at all.  MSVC emits NOTHING for it, because on the host nothing
+# odr-uses it: the port's vtables are hand-written arrays in
+# hal/actor_classes_*.cpp, not vtables MSVC generates from the class.  So the
+# owning TU compiles, links, and still leaves the flat ROM name unresolved, and
+# no slice row can change that.
+#
+# THE ANSWER IS ONE GENERATED FILE, hal/dtor_forwarders_gen.cpp, which includes
+# the real header and defines the flat name as a forwarder whose QUALIFIED call
+# odr-uses the inline body.  port/tools/dtorfwd.py generates it and
+# port/tools/dtor_store_guard.py carries the PORT_HOST_ABI ruling it exists
+# under, with the measurement behind that ruling: MSVC's destructor stores its
+# own ??_7Cls@@6B@ into the object, which is not ROM-shaped, and that store is
+# inert only because nothing dispatches through the object's vptr between it and
+# the base destructor call.  All 192 cartridge bodies were measured; none
+# dispatches in that window; the guard re-measures on every build and refuses a
+# class that flips.
+#
+# SO THE ROWS BELOW ARE THE GENERATED FILES THEMSELVES and not src TUs, which is
+# the whole finding: what this gate adds to the link is a definition, not a file
+# the port had forgotten to compile.  The CMake block that reads this list puts
+# them on walk_window.  A later batch that does need a real src row (a class
+# whose header is not compiled anywhere yet) has somewhere to put it.
+
+# THE GENERATED FILES, and why there is more than one.  Two of the headers
+# involved CANNOT SHARE A TRANSLATION UNIT: include/Stage.h line 26 and
+# include/dScMgSingle3DBase_c.h line 18 each DEFINE struct Particle::SysTracker,
+# each behind its own guard, so a TU that includes both is C2011 and no ordering
+# fixes it.  Measured with the build's own flags before a build slot was spent
+# on it (cl /Zs over the whole 192-row emission) and written up in
+# out/DTORS-A/bugs.md; fixing a decomp header is not this lane's to do, so the
+# emission splits instead.  It is the only such conflict over all 192 rows.
+# tools/dtorfwd.py's SPLITS block owns the rule and --verify refuses if this
+# list stops naming exactly the files it generates.
+port/hal/dtor_forwarders_gen.cpp
+port/hal/dtor_forwarders_gen_stage.cpp

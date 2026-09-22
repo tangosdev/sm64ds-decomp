@@ -16,7 +16,7 @@
    four bytes of real packed ov004 storage at DS 0x020beb6c, with a PACK BROKEN
    check on its offset, and every ROM body that touches the gap -- the setter
    func_ov004_020b04d0, the reader func_ov004_020b04c0, RenderOamBothScreens,
-   func_ov004_020ae3b4 -- reaches it there. Hosting a second copy here would put
+   _ZN11dScMgBase_c9Virtual88Eiiii -- reaches it there. Hosting a second copy here would put
    this file's idea of G beside the game's and let them drift apart silently,
    which is the exact defect hal/scene_mg_flower.cpp's note records for the two
    words either side of it.
@@ -414,7 +414,7 @@ const ntr::StackLayout *hal_screen_layout(void)
        0 sends display A to the LOWER screen, 1 to the upper one.
 
        PER FRAME AND NOT PER SCENE. The dScMgD3DBase_c family's slot 24
-       (func_ov006_020e6e78) TOGGLES this bit every frame -- one camera view
+       (_ZN14dScMgD3DBase_c8OnKickedEv) TOGGLES this bit every frame -- one camera view
        rendered live on the screen the bit names, the other showing the display
        capture unit's copy of the previous frame -- so a value cached at the
        G-latch would be one frame's answer serving a whole minigame. Scene 377
@@ -613,7 +613,7 @@ unsigned hal_screen_layout_generation(void)
  *     func_ov004_020b023c  0x020b023c   top engine, matrix form. The falling
  *                                       bob-ombs go through it.
  *     func_ov004_020b0380  0x020b0380   top engine, matrix form
- *     func_ov004_020ae3b4  0x020ae3b4   the BG pixel plotter, dScMgBase_c slot
+ *     _ZN11dScMgBase_c9Virtual88Eiiii  0x020ae3b4   the BG pixel plotter, dScMgBase_c slot
  *                                       34: picks a char base by the same band
  *                                       test and adds G + 0xc0 for the top
  *     func_ov004_020b04c0  0x020b04c0   the getter itself
@@ -621,7 +621,7 @@ unsigned hal_screen_layout_generation(void)
  *   WRITERS:
  *     func_ov004_020b04d0  0x020b04d0   the setter, called once per minigame
  *                                       from its InitResources
- *     func_ov004_020b265c  0x020b265c   slot 33, stores 0 during scene setup,
+ *     _ZN11dScMgBase_c9Virtual84Ev  0x020b265c   slot 33, stores 0 during scene setup,
  *                                       which is why G already reads 0 on
  *                                       entry to any InitResources
  *
@@ -642,7 +642,7 @@ unsigned hal_screen_layout_generation(void)
  * *(short *)(r0 + 0x12) = -(G + 0x60), a cached park), _020b4e78, _020b53f0,
  * _020b556c, _020b5f6c, _020b612c, _020b682c -- and ov006's own G readers,
  * including the player clamp func_ov006_020eee3c at -(184 + G) << 12 and the
- * BG2 scroller func_ov006_021211e0, are in src/ but appear in no
+ * BG2 scroller _ZN17dScMgTrampoline_c8OnKickedEv, are in src/ but appear in no
  * port/slice_*.txt, so nothing compiles them and nothing can run them. They
  * are named here so a later lane that seats one of them knows this audit has
  * to be re-run rather than inherited.

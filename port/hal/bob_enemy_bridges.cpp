@@ -21,17 +21,17 @@ extern "C" {
 /* the C-named definitions the aliases below land on */
 void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);      /* cxxname_bridge */
 char *_ZN9Animation8LoadFileER13SharedFilePtr(void *fp);  /* player_bridges */
-void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned, unsigned,
+void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned, unsigned,
                                                    const void *, const void *,
                                                    int, int);
-unsigned _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned, unsigned, unsigned,
+unsigned _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned, unsigned, unsigned,
                                            const void *, unsigned);
 void *_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     unsigned, unsigned, int, int, int, const void *, void *);
-int _ZNK12WithMeshClsn13JustHitGroundEv(void *self);
-int _ZNK12WithMeshClsn10IsOnGroundEv(const void *self);
-void _ZN5Actor8PoofDustEv(void *self);
-int func_ov002_020ada40(void *self, void *v, void *other, unsigned r);
+int _ZNK10dBgCh_Actr13JustHitGroundEv(void *self);
+int _ZNK10dBgCh_Actr10IsOnGroundEv(const void *self);
+void _ZN8dActor_c8PoofDustEv(void *self);
+int _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(void *self, void *v, void *other, unsigned r);
 /* data_020ad560 was declared here for the InitCylinder stub below, which no
    longer exists; the matched TU declares the template itself. */
 }
@@ -45,8 +45,9 @@ int func_ov002_020ada40(void *self, void *v, void *other, unsigned r);
    name inside C++ without extern "C", so MSVC mangles the mangled name. */
 #pragma comment(linker, "/alternatename:?LoadFile@Animation@@SAXAAUSharedFilePtr@@@Z=__ZN9Animation8LoadFileER13SharedFilePtr")
 #pragma comment(linker, "/alternatename:?LoadFile@Model@@SAPAUBMD_File@@AAUSharedFilePtr@@@Z=__ZN5Model8LoadFileER13SharedFilePtr")
-#pragma comment(linker, "/alternatename:?Spawn@Actor@@SAPAU1@IIABUVector3@@PBUVector3_16@@HH@Z=__ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii")
-#pragma comment(linker, "/alternatename:?PlayLong@Sound@@YAIIIIABUVector3@@I@Z=__ZN5Sound8PlayLongEjjjRK7Vector3j")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEAD RHS and an UNREFERENCED left hand side: nothing in the build defines __ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as, and nothing references ?Spawn@dActor_c@@SAPAU1@IIABUVector3@@PBUVector3_16@@HH@Z, so the row can never fire and nothing wants it to. */
+// #pragma comment(linker, "/alternatename:?Spawn@dActor_c@@SAPAU1@IIABUVector3@@PBUVector3_16@@HH@Z=__ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as")
+#pragma comment(linker, "/alternatename:?PlayLong@Sound@@YAIIIIABUVector3@@I@Z=__ZN5Sound8PlayLongEjjjRK7Vector3s")
 #pragma comment(linker, "/alternatename:?_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE@@YAPAXIIHHHPBXPAX@Z=__ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE")
 
 /* ---- the ov002 name without its overlay tag -------------------------------
@@ -61,7 +62,7 @@ int func_ov002_020ada40(void *self, void *v, void *other, unsigned r);
 #pragma comment(linker, "/alternatename:?data_ov102_0214e9c8@@3USharedFilePtr@@A=_data_ov102_0214e9c8")
 #pragma comment(linker, "/alternatename:?data_ov102_0214e9c8@@3UG2@@A=_data_ov102_0214e9c8")
 #pragma comment(linker, "/alternatename:?data_ov002_0210d9e0@@3USharedFilePtr@@A=_data_ov002_0210d9e0")
-#pragma comment(linker, "/alternatename:?data_02082128@@3US48@@A=_data_02082128")
+#pragma comment(linker, "/alternatename:?IDENTITY_MATRIX4X3@@3US48@@A=_data_02082128")
 #pragma comment(linker, "/alternatename:?data_ov002_020ff014@@3GA=_data_ov002_020ff014")
 #pragma comment(linker, "/alternatename:?data_ov002_0210dbc0@@3PAP8Enemy@@AEHAAUWithMeshClsn@@@ZA=_data_ov002_0210dbc0")
 
@@ -75,13 +76,13 @@ int func_ov002_020ada40(void *self, void *v, void *other, unsigned r);
    +0x144. Both methods are the plain WithMeshClsn ones. */
 struct WithMeshClsn2 { int JustHitGround() const; int IsOnGround() const; };
 int WithMeshClsn2::JustHitGround() const
-{ return _ZNK12WithMeshClsn13JustHitGroundEv((void *)this); }
+{ return _ZNK10dBgCh_Actr13JustHitGroundEv((void *)this); }
 int WithMeshClsn2::IsOnGround() const
-{ return _ZNK12WithMeshClsn10IsOnGroundEv((const void *)this); }
+{ return _ZNK10dBgCh_Actr10IsOnGroundEv((const void *)this); }
 
 /* Actor::PoofDust, reached as a method by Enemy::SpawnCoin. */
 struct Actor { void PoofDust(); };
-void Actor::PoofDust() { _ZN5Actor8PoofDustEv(this); }
+void Actor::PoofDust() { _ZN8dActor_c8PoofDustEv(this); }
 
 /* Enemy's two methods that the rest of the Enemy tier reaches by their Itanium
    C names. Their own TUs define them as real methods over locally-declared
@@ -90,9 +91,9 @@ struct Enemy {
     void SpawnCoin();
     void SpawnMegaCharParticles(Actor &a, char *p);
 };
-extern "C" void _ZN5Enemy9SpawnCoinEv(void *self)
+extern "C" void _ZN12dEnemyBase_c9SpawnCoinEv(void *self)
 { ((Enemy *)self)->Enemy::SpawnCoin(); }
-extern "C" void _ZN5Enemy22SpawnMegaCharParticlesER5ActorPc(void *self,
+extern "C" void _ZN12dEnemyBase_c22SpawnMegaCharParticlesER8dActor_cPc(void *self,
                                                             void *a, char *p)
 { ((Enemy *)self)->Enemy::SpawnMegaCharParticles(*(Actor *)a, p); }
 
@@ -129,10 +130,18 @@ extern "C" void _ZN6Player16IncMegaKillCountEv(void *self)
    fold pulled everything below the destructor up by one. Every slot there is a
    __fastcall thunk; dispatching it here is what returns the real value. */
 struct BMD_File;
-struct ModelBase { int SetFile(BMD_File *file, int a, int b); };
+/* main -> port sync (SYNC4): include/ModelBase.h now declares this class,
+   with this exact signature, and something in this TU includes it, so the
+   local shim became a C2011 redefinition. The definition below stands and
+   still emits ?SetFile@ModelBase@@QAEHPAUBMD_File@@HH@Z. */
+#include "ModelBase.h"
 
 typedef int(__fastcall *PortDoSetFile)(void *, void *, char *, int, int);
 
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync): src/_ZN9ModelBase7SetFileEP8BMD_Fileii.cpp is a real int-returning member since main langmode migration and its body is `return DoSetFile((char *)file, a, b);`, the same virtual dispatch this host copy did, so the ride-through return the note above records is carried by the src body itself and this definition was the second one (LNK2005). What is lost is only the null-vtable fprintf/abort guard.
+   The body is kept below under #if 0 rather than deleted, so the
+   evidence in it stays readable. */
+#if 0
 int ModelBase::SetFile(BMD_File *file, int a, int b)
 {
     void **vt = *(void ***)this;
@@ -143,6 +152,7 @@ int ModelBase::SetFile(BMD_File *file, int a, int b)
     }
     return ((PortDoSetFile)vt[2])(this, 0, (char *)file, a, b);
 }
+#endif
 
 /* ?InitCylinder@ShadowModel@@QAEHXZ IS GONE FROM THIS FILE (run linkw wave 4,
    lane w4-a), the same handover hal/actor_class_faces.cpp made for InitCuboid
@@ -169,16 +179,28 @@ int ModelBase::SetFile(BMD_File *file, int a, int b)
 // a material animation and casts its own ground ray, so three more method
 // faces come with it. All three are the ordinary direction: the definitions
 // are real MSVC methods against include/ and the callers spell the C name.
-#include "BgCh.h"
+#include "dBgCh.h"
 #include "MaterialChanger.h"
 
 extern "C" {
 /* MaterialChanger: two of its three are methods (SetFile already defines the
-   C name in its own TU). */
-void _ZN15MaterialChanger7PrepareER8BMD_FileR8BMA_File(void *self, void *bmd,
-                                                       void *bma)
-{ ((MaterialChanger *)self)->MaterialChanger::Prepare(*(BMD_File *)bmd,
-                                                      *(BMA_File *)bma); }
+   C name in its own TU).
+
+   FACEFIX 2026-09-14: PREPARE IS STATIC AND THIS FACE CARRIED CRASH3'S BUG IN A
+   SECOND FILE. include/MaterialChanger.h:53 declares it static and the map
+   agrees (?Prepare@MaterialChanger@@SAXAAUBMD_File@@AAUBMA_File@@@Z at 00548630,
+   SA = static __cdecl). Written with a receiver, `self` was evaluated and
+   DISCARDED, so a three-parameter face forwarded arguments two and three of a
+   call that only ever pushes two words. The emitted body at 0054e940 was
+   push [ebp+0x10] / push [ebp+0xc] / call / add esp,8 and never read [ebp+8],
+   byte for byte what TextureSequence::Prepare did before CRASH3 fixed it, so
+   every caller got Prepare(bma, whatever sat above the arguments) on the Goomba
+   and Goomboss material-animation path. Two parameters is the ROM's shape and is
+   right for every caller at this cdecl ABI; it is also what
+   port/unmatched/Goomboss_InitResources.cpp:99 already declares, so the
+   declaration and the definition agree now as well. */
+void _ZN15MaterialChanger7PrepareER8BMD_FileR8BMA_File(void *bmd, void *bma)
+{ MaterialChanger::Prepare(*(BMD_File *)bmd, *(BMA_File *)bma); }
 void _ZN15MaterialChanger6UpdateER15ModelComponents(void *self, void *model)
 { ((MaterialChanger *)self)->MaterialChanger::Update(*(ModelComponents *)model); }
 }
@@ -195,11 +217,11 @@ struct RaycastGround {
     void StopDetectingOrdinary();
 };
 void RaycastGround::StartDetectingWater()
-{ ((BgCh *)this)->BgCh::StartDetectingWater(); }
+{ ((dBgCh *)this)->dBgCh::StartDetectingWater(); }
 void RaycastGround::StartDetectingToxic()
-{ ((BgCh *)this)->BgCh::StartDetectingToxic(); }
+{ ((dBgCh *)this)->dBgCh::StartDetectingToxic(); }
 void RaycastGround::StopDetectingOrdinary()
-{ ((BgCh *)this)->BgCh::StopDetectingOrdinary(); }
+{ ((dBgCh *)this)->dBgCh::StopDetectingOrdinary(); }
 
 /* ov084 data under a second declared type, the cxx_aliases direction. */
 #pragma comment(linker, "/alternatename:?data_ov084_02130cf8@@3PADA=_data_ov084_02130cf8")
@@ -209,31 +231,31 @@ void RaycastGround::StopDetectingOrdinary()
 /* ---- the CAP TIER's method faces ------------------------------------------
    Nine of CapEnemy's methods are real MSVC methods against include/CapEnemy.h
    while every caller in ov084 spells the Itanium C name. */
-#include "CapEnemy.h"
+#include "dCapEnemy_c.h"
 extern "C" {
-int _ZN8CapEnemy21DestroyIfCapNotNeededEv(void *self)
-{ return ((CapEnemy *)self)->CapEnemy::DestroyIfCapNotNeeded(); }
-void *_ZN8CapEnemy15RespawnIfHasCapEv(void *self)
-{ return ((CapEnemy *)self)->CapEnemy::RespawnIfHasCap(); }
-void _ZN8CapEnemy12Unk_02005d94Ev(void *self)
-{ ((CapEnemy *)self)->CapEnemy::Unk_02005d94(); }
-void _ZN8CapEnemy14RenderCapModelEPK7Vector3(void *self, const void *v)
-{ ((CapEnemy *)self)->CapEnemy::RenderCapModel((const Vector3 *)v); }
+int _ZN11dCapEnemy_c21DestroyIfCapNotNeededEv(void *self)
+{ return ((dCapEnemy_c *)self)->dCapEnemy_c::DestroyIfCapNotNeeded(); }
+void *_ZN11dCapEnemy_c15RespawnIfHasCapEv(void *self)
+{ return ((dCapEnemy_c *)self)->dCapEnemy_c::RespawnIfHasCap(); }
+void _ZN11dCapEnemy_c12Unk_02005d94Ev(void *self)
+{ ((dCapEnemy_c *)self)->dCapEnemy_c::Unk_02005d94(); }
+void _ZN11dCapEnemy_c14RenderCapModelEPK7Vector3(void *self, const void *v)
+{ ((dCapEnemy_c *)self)->dCapEnemy_c::RenderCapModel((const Vector3 *)v); }
 }
 
 /* WithMeshClsn's flag helper. Its sibling Unk_0203589c is NOT declared in
    include/WithMeshClsn.h -- its own TU invents a shadow for it -- so that one
    is in hal/bob_enemy_shadow_faces.cpp with the other two of its kind. */
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 extern "C" {
-void _ZN12WithMeshClsn22ClearJustHitGroundFlagEv(void *self)
-{ ((WithMeshClsn *)self)->WithMeshClsn::ClearJustHitGroundFlag(); }
+void _ZN10dBgCh_Actr22ClearJustHitGroundFlagEv(void *self)
+{ ((dBgCh_Actr *)self)->dBgCh_Actr::ClearJustHitGroundFlag(); }
 }
 
 /* ---- three more names spelled without their overlay, or with the wrong one -
    func_020ff028 is data_ov002_020ff028 (the six per-character cap
    SharedFilePtrs, read as an array of pointers); data_ov000_020ab3c4 is
-   func_ov001_020ab3c4, and the reloc at arm9 0x02006574 says module:overlay(1)
+   _ZN10dCapIcon_cC1Ev, and the reloc at arm9 0x02006574 says module:overlay(1)
    outright; func_020aea30 is ov002's, and the port hosts that one
    (port/unmatched/Enemy_UpdateDeath.cpp). */
 #pragma comment(linker, "/alternatename:_func_020ff028=_data_ov002_020ff028")
@@ -304,22 +326,22 @@ DSSTATE_END
    reference to the wrong one: ChainChomp's two destructors spell their own
    vtable data_ov034_021147ec, and ChainChompFence's InitResources spells three
    ov014 symbols with ov021 and ov022 tags. Every one is settled by ADDRESS --
-   0x021147ec is _ZTV10ChainChomp in ov014, 0x021149b8/0x021149c0 are ov014 bss
+   0x021147ec is _ZTV10daWanwan_c in ov014, 0x021149b8/0x021149c0 are ov014 bss
    and 0x02114558 is ov014 data -- and by the reloc, which names overlay(14).
 
-   ChainChomp_Spawn's `func_020aed98` is NOT one of these and is NOT aliased.
-   It is the same address as _ZN5EnemyC2Ev, but the source calls it with no
+   daWanwan_c_classInit's `func_020aed98` is NOT one of these and is NOT aliased.
+   It is the same address as _ZN12dEnemyBase_cC2Ev, but the source calls it with no
    argument and relies on the r0 ride-through, so an alias would hand the
    constructor stack garbage for `this`. That factory is a host copy instead --
    port/unmatched/ChainChomp_Spawn_hostcopy.cpp says what the measurement was. */
 /* RETIRED, run rel0215 wave 2 lane cast-sweep2: DEAD, and now defeated.
-   src/_ZN10ChainChompD1Ev.c:21 and src/_ZN10ChainChompD0Ev.cpp:26 both
-   spell _ZTV10ChainChomp directly today, so nothing referenced the ov034
+   src/game/actors/d_a_wanwan.cpp:21 and src/game/actors/d_a_wanwan.cpp:26 both
+   spell _ZTV10daWanwan_c directly today, so nothing referenced the ov034
    name any more; and the ov034 mount that lane adds DEFINES
    data_ov034_021147ec (a destructor chain node in the Wiggler's .bss),
    which makes the alias inert as well as unused. Deleted rather than
    re-routed: there is no reader to route.
-   was: /alternatename:_data_ov034_021147ec=__ZTV10ChainChomp */
+   was: /alternatename:_data_ov034_021147ec=__ZTV10daWanwan_c */
 #pragma comment(linker, "/alternatename:?data_ov021_021149b8@@3PAHA=_data_ov014_021149b8")
 #pragma comment(linker, "/alternatename:_data_ov021_021149c0=_data_ov014_021149c0")
 #pragma comment(linker, "/alternatename:?data_ov022_02114558@@3PAHA=_data_ov014_02114558")
@@ -338,7 +360,7 @@ DSSTATE_END
    func_ov019_02111f54, so this LHS is now DEFINED at its own address and the
    alias is inert -- alternatename_guard caught it on the first link. The
    routing is still needed, so it moved to a per-source -D on the ONE reader
-   (src/func_ov014_02111af0.c, which declares the name itself and includes no
+   (src/game/actors/d_a_wanwan.cpp, which declares the name itself and includes no
    header that declares it too); see the W13 block in port/CMakeLists.txt. Left
    unrouted, this would have been the silent half of the alias race: the
    chomp's state-2 main would have called the PENGUIN's body.
@@ -391,12 +413,12 @@ DSSTATE_END
    per-source -D in port/CMakeLists.txt, which cannot be defeated.
 
    WithMeshClsn_IsOnGround is the same object under a different spelling: the
-   ROM's method is _ZNK12WithMeshClsn10IsOnGroundEv and one of his TUs declares
+   ROM's method is _ZNK10dBgCh_Actr10IsOnGroundEv and one of his TUs declares
    it as a plain C function under a hand-written name.
 
    The rest is his thirteen SharedFilePtrs and two state records, each spelled
    with whatever type its TU happened to declare. */
-#pragma comment(linker, "/alternatename:_WithMeshClsn_IsOnGround=__ZNK12WithMeshClsn10IsOnGroundEv")
+#pragma comment(linker, "/alternatename:_WithMeshClsn_IsOnGround=__ZNK10dBgCh_Actr10IsOnGroundEv")
 #pragma comment(linker, "/alternatename:?data_ov078_0212710c@@3UPMF@@A=_data_ov078_0212710c")
 #pragma comment(linker, "/alternatename:?data_ov078_0212709c@@3PADA=_data_ov078_0212709c")
 #pragma comment(linker, "/alternatename:?data_ov078_02126ee8@@3PAPAHA=_data_ov078_02126ee8")
@@ -415,7 +437,7 @@ DSSTATE_END
 #pragma comment(linker, "/alternatename:?data_ov078_02126f40@@3USharedFilePtr@@A=_data_ov078_02126f40")
 #pragma comment(linker, "/alternatename:?data_ov078_0212703c@@3HA=_data_ov078_0212703c")
 #pragma comment(linker, "/alternatename:?data_ov078_02126f30@@3PAHA=_data_ov078_02126f30")
-#pragma comment(linker, "/alternatename:?data_02082128@@3UMatrix4x3@@A=_data_02082128")
+#pragma comment(linker, "/alternatename:?IDENTITY_MATRIX4X3@@3UMatrix4x3@@A=_data_02082128")
 #pragma comment(linker, "/alternatename:?data_ov062_0211e03c@@3USharedFilePtr@@A=_data_ov062_0211e03c")
 
 /* BlendModelAnim::SetAnim takes THIS FILE'S SECOND RULE, not its first.

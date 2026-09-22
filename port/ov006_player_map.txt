@@ -28,11 +28,11 @@ describes the PRE-#1336 state. On current main:
       _ZN6Player29TryExitCharacterDoorWithIntroEv at 0x020ca78c
     ov002 carries 175 _ZN6Player*St_* symbols, including all three
       disputed addresses:
-        _ZN6Player12St_Null_InitEv            0x020cac30  size 0x8
-        _ZN6Player23St_InYoshiMouth_CleanupEv 0x020d6084  size 0x34
-        _ZN6Player16St_WallJump_InitEv        0x020e17f8  size 0xb0
+        func_ov006_020cac30            0x020cac30  size 0x8
+        func_ov006_020d6084 0x020d6084  size 0x34
+        func_ov006_020e17f8        0x020e17f8  size 0xb0
     the ov006 bodies at those addresses are now
-      src/func_ov006_020cac30.cpp, src/func_ov006_020d6084.cpp and
+      src/func_ov006_020cac30.cpp, src/actors/dScMgBomroom_c.cpp and
       src/func_ov006_020e17f8.cpp
 
 MAIN GOT IT RIGHT AND THE PORT'S COMMENT HAS IT BACKWARDS. See section
@@ -48,25 +48,25 @@ config/arm9/overlays/ov006/symbols.txt AT THIS LANE'S BASE, complete
 list of _ZN6Player symbols (grep -c gives 6):
 
     _ZN6Player29TryExitCharacterDoorWithIntroEv  0x020ca78c  0x2c
-    _ZN6Player12St_Null_InitEv                   0x020cac30  0x6c
-    _ZN6Player23St_InYoshiMouth_CleanupEv        0x020d6084  0x14
-    _ZN6Player16St_WallJump_InitEv               0x020e17f8  0x5c
-    _ZN6Player7ST_WAITE                          0x02110154  0x68
-    _ZN6Player6ST_OWLE                           0x02110244  0x27c
+    func_ov006_020cac30                   0x020cac30  0x6c
+    func_ov006_020d6084        0x020d6084  0x14
+    func_ov006_020e17f8               0x020e17f8  0x5c
+    _ZN19cMgSmartball_slot_c14RestoreInitialEv                          0x02110154  0x68
+    func_ov006_02110244                           0x02110244  0x27c
 
 Three of those six carry a header in their own matched source saying
 they are not Player methods at all:
 
-  src/_ZN6Player23St_InYoshiMouth_CleanupEv.cpp -- writes this+0x62ad
+  src/actors/dScMgBomroom_c.cpp -- writes this+0x62ad
     and this+0x62af. sizeof(Player) is 0x768. "the Player name is a
     community label applied to the wrong overlay's bytes."
-  src/_ZN6Player16St_WallJump_InitEv.cpp -- reads this+0x4eb0/0x4eb4/
+  src/func_ov006_020e17f8.cpp -- reads this+0x4eb0/0x4eb4/
     0x4ee5, ~0x4700 past the end of a Player.
   src/_ZN6Player29TryExitCharacterDoorWithIntroEv.cpp -- constructor
     shape (base call, vptr store, member ctor at this+0x78), not a
     state handler.
 
-A fourth, src/_ZN6Player12St_Null_InitEv.cpp, reads data_ov006_021405bc
+A fourth, src/func_ov006_020cac30.cpp, reads data_ov006_021405bc
 and walks an array of 0xdc-byte records at data_ov006_02140554. That is
 ov006's own storage, not Player's.
 
@@ -118,8 +118,8 @@ ov006, holding different code in each. ov002 has an 8-byte stub there:
     ov006 @0x020cac30  f0402de9 04d04de2 ... PUSH {r4-r7,lr} / SUB sp,#4
 
 verified by reading both raw images at (addr - base). ov002's config
-names it func_ov002_020cac30 size 8; ov006's config names it
-_ZN6Player12St_Null_InitEv size 0x6c. Different sizes, different
+names it _ZN6Player12St_Null_InitEv size 8; ov006's config names it
+func_ov006_020cac30 size 0x6c. Different sizes, different
 prologues, different code. The 0x6c body is ov006's.
 
 
@@ -166,9 +166,9 @@ method translation, which exists because MSVC cannot call an mwcc PMF.
 The three ov006-named addresses appear in that switch as ov002 bodies,
 which is the correct ROM-faithful answer:
 
-    player_states.inc:125  case 0x020d6084: func_ov002_020d6084(...)
-    player_states.inc:155  case 0x020cac30: func_ov002_020cac30()
-    player_states.inc:213  case 0x020e17f8: func_ov002_020e17f8(...)
+    player_states.inc:125  case 0x020d6084: _ZN6Player23St_InYoshiMouth_CleanupEv(...)
+    player_states.inc:155  case 0x020cac30: _ZN6Player12St_Null_InitEv()
+    player_states.inc:213  case 0x020e17f8: _ZN6Player16St_WallJump_InitEv(...)
 
 Those three cases dispatch the OV002 body at the address, not the
 ov006 body that carries the St_ name. That is right: the running
@@ -192,8 +192,8 @@ points, the eight _ZN17MgBounceAndPounce* methods (the one minigame
 class with real C++ names, plus its _Spawn already counted in the 22),
 the six mislabelled Player names above, and a handful of others
 (Camera_UpdateMatrices, Sound_PlayBank1Panned,
-_ZN8PathLift17BaseInitResourcesEv, _ZN3OAM7SECONDSE,
-START_INTRO_MINIMAP_ZOOM).
+dScMgJump2_c_classInit, _ZN12dScMgSlot1_c6RenderEv,
+_ZN24cMgSmartball_propeller_c12SaveSnapshotEv).
 
 Reach today is zero, with one asterisk, and the whole entry chain is
 unlinked. Checked by name against build/port/walk_window.map:
@@ -247,9 +247,9 @@ has already broken on main:
     calls, because on main ov002 owns those three names.
 
   port/hal/player_bridges.cpp still declares them at C linkage:
-    line 470  extern "C" int func_ov002_020cac30(void);
-    line 471  extern "C" int func_ov002_020d6084(char *c);
-    line 472  extern "C" int func_ov002_020e17f8(void *c);
+    line 470  extern "C" int _ZN6Player12St_Null_InitEv(void);
+    line 471  extern "C" int _ZN6Player23St_InYoshiMouth_CleanupEv(char *c);
+    line 472  extern "C" int _ZN6Player16St_WallJump_InitEv(void *c);
   and calls them at
     player_states.inc:125  case 0x020d6084
     player_states.inc:155  case 0x020cac30
@@ -257,9 +257,9 @@ has already broken on main:
 
   the matched sources moved too. On main the func_ov002_* stems for
   these three no longer exist; the bodies are
-  src/_ZN6Player12St_Null_InitEv.cpp,
-  src/_ZN6Player23St_InYoshiMouth_CleanupEv.cpp and
-  src/_ZN6Player16St_WallJump_InitEv.cpp, and the func_ov006_* stems
+  src/func_ov006_020cac30.cpp,
+  src/actors/dScMgBomroom_c.cpp and
+  src/func_ov006_020e17f8.cpp, and the func_ov006_* stems
   now hold the ov006 bodies.
 
 So a rebase that regenerates the .inc leaves three cases calling

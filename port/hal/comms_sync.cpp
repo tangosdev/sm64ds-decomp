@@ -76,7 +76,7 @@
 
 extern "C" {
 // SetAnim IS DECLARED void HERE, WHICH IS ITS ACTUAL RETURN TYPE.
-// src/_ZN6Player7SetAnimEji5Fix12IiEj.cpp:14 defines it `void`; 74 matched
+// src/actors/Player.cpp:14 defines it `void`; 74 matched
 // sources declare it `extern int`. Those 74 are BYTE-VERIFIED ROM TUs and are
 // not mine to edit -- and their callers all discard the result, so the lie
 // costs them nothing. This declaration is the port's own, so it gets to be
@@ -1599,11 +1599,11 @@ bool g_gated_now = false;
 // -- see the banner on hal/editor_channel.cpp, which walks this same list the
 // same way. It never writes anything.
 //
-// Actor::Next is src/_ZN5Actor4NextEPKS_.cpp, a byte-matched ROM TU already
+// Actor::Next is src/_ZN8dActor_c4NextEPKS_.cpp, a byte-matched ROM TU already
 // linked into walk_window -- the same traversal the game's own Behavior loops
 // use, so the set this reports is the set that is actually being ticked.
 // ---------------------------------------------------------------------------
-extern "C" void *_ZN5Actor4NextEPKS_(const void *prev);
+extern "C" void *_ZN8dActor_c4NextEPKS_(const void *prev);
 
 namespace {
 
@@ -1673,8 +1673,8 @@ void dh_frame() {
     int dig_len = 0;
     dig[0] = 0;
 
-    for (const char *a = (const char *)_ZN5Actor4NextEPKS_(0); a;
-         a = (const char *)_ZN5Actor4NextEPKS_(a)) {
+    for (const char *a = (const char *)_ZN8dActor_c4NextEPKS_(0); a;
+         a = (const char *)_ZN8dActor_c4NextEPKS_(a)) {
         const unsigned uid = *(const unsigned *)(a + 0x04);
         const unsigned id = *(const unsigned short *)(a + 0x0c);
         const unsigned alive = *(const unsigned char *)(a + 0x0e);
@@ -1712,7 +1712,7 @@ void dh_frame() {
         dh_mix(h, (unsigned)sh);
         dh_mix(h, (unsigned)sv);
         // THE CULL BITS ARE MASKED OUT OF THE HASH, AND THIS IS NOT A
-        // CONVENIENCE. Actor::BeforeBehavior (src/_ZN5Actor14BeforeBehaviorEv
+        // CONVENIENCE. Actor::BeforeBehavior (src/_ZN8dActor_c14BeforeBehaviorEv
         // .cpp) transforms the actor by data_0209b3ec -- THE CAMERA'S view
         // matrix -- runs a Clipper distance test on the result and then writes
         // bits 0x08/0x10/0x20 of this very word from the answer (|= 0x38,

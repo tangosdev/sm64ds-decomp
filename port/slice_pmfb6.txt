@@ -117,4 +117,9 @@ src/_ZN6ToxBox8BehaviorEv.cpp
 # dispatch still looked right. A face per code word gives them the same address.
 src/func_ov006_020c2b8c.cpp
 src/func_ov006_020c4cd8.cpp
-src/func_ov006_020c7860.cpp
+# QUARANTINED at the main->port sync (origin/main 9c7f38a24): main folded this
+# class into one TU, and port/ host-copies bodies inside it (the slice_bnp host copies).
+# port/CMakeLists.txt's own assertion refuses the pair, because taking both is a
+# duplicate symbol and taking the src one puts the host copy's reason back. The
+# row returns when the host copy covers the whole consolidated TU.
+#src/actors/dMgJump3DMario_c.cpp

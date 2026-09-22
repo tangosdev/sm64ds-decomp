@@ -11,7 +11,7 @@
 # dual-mounted the same way; this is the seventh.
 #
 # ==== WHY THE NAMED HALF EXISTS ============================================
-# The registry rewrites OrangeBallBillboard_SpawnInfo's +0 word to the host
+# The registry rewrites g_profile_KB1_BILLBOARD's +0 word to the host
 # factory and ActorBase's constructor reads the two list priorities back out of
 # the SAME record, so it has to be storage the actor code and the registry
 # agree on -- which the whole image is not (it emits no names). The class's
@@ -19,7 +19,7 @@
 # name for the same reason.
 #
 # ==== MANDATORY WINDOW-ALIAS CHECK (the gate-199/202 rule) =================
-# OrangeBallBillboard_SpawnInfo is flagged `ambiguous` in
+# g_profile_KB1_BILLBOARD is flagged `ambiguous` in
 # config/arm9/overlays/ov044/symbols.txt -- 0x021115e0 sits in the level-overlay
 # window every one of the fifty-two level overlays is linked into (base
 # 0x021111a0), so the label alone proves nothing. RESOLVED by reading the raw
@@ -28,7 +28,7 @@
 # image and reading halfwords out of it is reading noise -- the ov045 trap):
 #
 #   arm9 ACTOR_SPAWN_TABLE 0x02090864 + 301*4 = 0x02090d18 -> 0x021115e0
-#   0x021115e0 word[0] = 0x021112dc  OrangeBallBillboard_Spawn
+#   0x021115e0 word[0] = 0x021112dc  daObjKb1Billboard_c_classInit
 #   0x021115e0 word[1] & 0xffff = 0x012d = 301
 #
 # BOTH attribution tests pass and both are needed: the spawn word lands inside
@@ -38,7 +38,7 @@
 # they do not share both of those.
 #
 # ==== CLASS IDENTITY COMES FROM RTTI, NOT THE LABEL ========================
-# _ZTV19OrangeBallBillboard sits at 0x02111604 and its vtable[-1] word
+# _ZTV19daObjKb1Billboard_c sits at 0x02111604 and its vtable[-1] word
 # (0x02111600) points at 0x021115bc, a typeinfo record whose name string at
 # 0x021115c8 reads "19daObjKb1Billboard_c" -- kb1 = koopa boss 1, the ROM's own
 # name for this arena. The asset agrees: the sinit constructs its SharedFilePtr
@@ -48,7 +48,7 @@
 # exactly ONE class, so there is no neighbour for a shift to land on.
 #
 # ==== ONE SYMBOL LEFT OUT ==================================================
-# _ZTV19OrangeBallBillboard (0x02111604..0x02111680, 31 slots) is a HOST ARRAY
+# _ZTV19daObjKb1Billboard_c (0x02111604..0x02111680, 31 slots) is a HOST ARRAY
 # hal/actor_classes_ov044.cpp fills -- the ov015/ov016/ov045/ov060 rule: a
 # mounted vtable hands a factory DS code addresses. Its width is pinned TWICE:
 # by the reloc run (config/arm9/overlays/ov044/relocs.txt carries an unbroken
@@ -69,7 +69,7 @@
 # 0x021115e0..0x02111604 run. The last word of it (0x02111600) is the excluded
 # vtable's typeinfo-pointer header; it is carried for spacing and nothing reads
 # it by name.
-OrangeBallBillboard_SpawnInfo data_ov044_021115e4 data_ov044_021115f4
+
 
 # ==== THE TWO BSS CELLS ====================================================
 # .bss is 0x02111680..0x021116a0 (delinks.txt), two symbols, both zero in the
@@ -84,5 +84,14 @@ OrangeBallBillboard_SpawnInfo data_ov044_021115e4 data_ov044_021115f4
 #               the section end and not a 4-byte fallback: the ov018
 #               ICE_SLIDE_MANAGER trample is what that rule exists for). The
 #               node is three host pointers = 12 bytes, comfortably inside 0x18.
-data_ov044_02111680
-data_ov044_02111688:0x18
+
+data_ov044_02111688@0x02111688:0x18
+
+
+# RETIRED at ALIAS2 (wave 8, the main -> port sync). Each symbol below was
+# hosted here as a ROM data blob AND is now defined by a translation unit the
+# build compiles, so the link reported it twice (LNK2005). The generator input
+# is the place to fix that: build/port/host-src/ov044_syms.c is its output and is
+# regenerated from this list on every configure.
+#   g_profile_KB1_BILLBOARD                    now defined by d_a_obj_kb1_billboard.cpp.obj
+#   data_ov044_02111680                        now defined by d_a_obj_kb1_billboard.cpp.obj

@@ -22,8 +22,8 @@
 # (10432 B, decompressed -- T4).
 #
 #   id   SpawnInfo   word[0] spawnFunc          idhalf   x on L17
-#   162  0x0211382c  0x02111cf4 Grindel_Spawn      162   x3
-#   163  0x0211373c  0x02111898 func_ov025_02111898 163   x1
+#   162  0x0211382c  0x02111cf4 daDkk_c_classInit      162   x3
+#   163  0x0211373c  0x02111898 daDgr_c_classInit 163   x1
 #
 # Route 2, each Spawn's own final vtable store, and route 3, the RTTI typeinfo
 # at vtable[-1]:
@@ -39,7 +39,7 @@
 #   NOVTABLE actor 162 Grindel (alloc=0x3a0)
 #   AMBIG actor 163 SPINDEL: ['ov021','ov025'] -> ov021
 #   NOVTABLE actor 163 Spindel (alloc=?)
-# The alloc figure confirms 162 independently: Grindel_Spawn asks
+# The alloc figure confirms 162 independently: daDkk_c_classInit asks
 # ActorBase::operator new for 928 bytes = 0x3a0. The AMBIG line resolves the
 # WRONG WAY, and both routes say so: at 0x0211373c ov021's image holds
 # w0=0x021136c8 (inside ov021, so route 1 passes) but w1 low half = 0, while
@@ -58,14 +58,14 @@
 # ==== GRINDEL'S SLOTS 3 AND 9 ARE THWOMP'S, AND THEY ARE ALREADY LINKED ====
 #
 # 162 derives from daDsnBase_c, which is ov091's Thwomp base, so its table
-# takes slot 3 from 0x021331b8 (_ZN6Thwomp16CleanupResourcesEv) and slot 9 from
-# 0x02133210 (_ZN6Thwomp6RenderEv), and its Behavior and InitResources call
+# takes slot 3 from 0x021331b8 (_ZN11daDsnBase_c16CleanupResourcesEv) and slot 9 from
+# 0x02133210 (_ZN11daDsnBase_c6RenderEv), and its Behavior and InitResources call
 # eight more ov091 bodies. All TEN are in walk_window.map on this lane's
 # baseline -- checked in the map, so this slice needs no ov091 line and no
 # ov091 mount edit.
 #
 # 162 also overrides slot 29 (Actor::OnAimedAtWithEgg) with an eight-byte body
-# that returns 0xce000, src/func_ov025_0211199c.c. Read off the table, not
+# that returns 0xce000, src/_ZN7daDkk_c16OnAimedAtWithEggEv.c. Read off the table, not
 # inferred from the name.
 #
 # ==== ONE TU COMES BACK FROM A HOST THUNK ==================================
@@ -84,27 +84,21 @@
 # 22 lines below = the whole 22-row census tail.
 
 # ---- SPINDEL (163), table 0x02113760 --------------------------------------
-src/func_ov025_021111a0.c
-src/func_ov025_021111e4.c
-src/func_ov025_0211123c.cpp
-src/func_ov025_021112e0.cpp
-src/func_ov025_02111344.c
-src/func_ov025_02111384.cpp
-src/func_ov025_021113c8.cpp
-src/func_ov025_021113f0.c
-src/func_ov025_021117dc.cpp
-src/func_ov025_02111898.c
+src/actors/daDgr_c.cpp
+# RE-KEYED at the main->port sync (lane SYNC7, the wave-9 fold merge): main folded
+# this body into src/actors/daDgr_c.cpp (ov025 delinks, .text 0x02111898..0x021118c8, one
+# absorbed range), which port/slice_w3e_ov025.txt:87 already compile, so the
+# symbols this row seated now come from there and the per-function file is gone
+# from main's tree.
+#src/d_a_dgr.c
 
 # ---- GRINDEL (162), table 0x02113850 --------------------------------------
-src/func_ov025_021118c8.c
-src/func_ov025_02111928.c
-src/func_ov025_0211199c.c
-src/func_ov025_021119a4.cpp
-src/func_ov025_021119f4.c
-src/func_ov025_02111a84.cpp
-src/func_ov025_02111b64.cpp
-src/func_ov025_02111c24.cpp
-src/Grindel_Spawn.c
+src/actors/daDkk_c.cpp
+# RE-KEYED at the main->port sync (lane SYNC7, the wave-9 fold merge): main folded
+# this body into src/actors/daDkk_c.cpp (ov025 delinks, .text 0x02111cf4..0x02111d40, one
+# absorbed range), which port/slice_w3e_ov025.txt's daDkk_c.cpp row already compiles, so the symbols this row seated
+# now come from there and the per-function file is gone from main's tree.
+#src/d_a_dkk.c
 
 # ---- PYRAMID_STEP (87)'s slot 3, reclaimed from wave 15's host thunk -------
 src/_ZN11PyramidStep16CleanupResourcesEv.cpp

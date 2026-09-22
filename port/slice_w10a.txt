@@ -10,7 +10,7 @@
 #     302 303 304 305  ->  0x02111984
 #
 # and the class picks its model out of its OWN actor id rather than out of four
-# separate classes: src/_ZN25SlideDecorationSilverStar13InitResourcesEv.cpp
+# separate classes: src/game/actors/d_a_obj_hs_billboard.cpp
 # switches on unk_00c (the id halfword at +0xc) over 0x12e/0x12f/0x130/0x131 =
 # 302/303/304/305, writes 0..3 into mVariant, and indexes the four-entry
 # SharedFilePtr table data_ov031_02111424 with it. CleanupResources releases
@@ -23,13 +23,13 @@
 # halfword read):
 #
 #     id 302  0x02090d1c -> 0x0211190c  word[0]=0x021113ec
-#                           SlideDecorationSilverStar_Spawn    +4 = 302, +6 = 191
+#                           daObjHsBillboard_c_classInit_HS_MOON    +4 = 302, +6 = 191
 #     id 303  0x02090d20 -> 0x02111928  word[0]=0x021113b4
-#                           SlideDecorationYellowStar_Spawn    +4 = 303, +6 = 192
+#                           daObjHsBillboard_c_classInit_HS_STAR    +4 = 303, +6 = 192
 #     id 304  0x02090d24 -> 0x02111944  word[0]=0x0211137c
-#                           SlideDecorationOrangeSmiley_Spawn  +4 = 304, +6 = 193
+#                           daObjHsBillboard_c_classInit_HS_Y_STAR  +4 = 304, +6 = 193
 #     id 305  0x02090d28 -> 0x02111960  word[0]=0x02111344
-#                           SlideDecorationBlueSmiley_Spawn    +4 = 305, +6 = 194
+#                           daObjHsBillboard_c_classInit_HS_B_STAR    +4 = 305, +6 = 194
 #
 # Every spawn word lands inside ov031 and every id halfword matches the slot it
 # was reached from. A both-routes sweep of all 110 overlays returns exactly one
@@ -61,7 +61,7 @@
 # reseat wrapper is needed (the ov045/ov095 shape, not gate 177's bullies).
 #
 # ==== THE RENDER IS SLICED, AND THAT IS A MEASURED CALL ====================
-# src/_ZN25SlideDecorationSilverStar6RenderEv.cpp is the ROM-order slot-5
+# src/game/actors/d_a_obj_hs_billboard.cpp is the ROM-order slot-5
 # dispatch through a local six-virtual shadow (`Base *b = &((Derived *)this)
 # ->base; b->m(0)`, member at +0xd4) -- the shape that is a HOST COPY for Bird,
 # Flag, BabyPenguin and the ov064 Amilift. Those are all ModelAnim members:
@@ -78,15 +78,15 @@
 # level-23 census run under SM64DS_FAULTS_FATAL=1 is the check.
 #
 # ==== ONE dsd LABEL SHIFT, LEFT AS IT IS AND WHY ===========================
-# InitResources calls `func_ov044_02111214`. The ROM reloc at 0x0211132c says
+# InitResources calls `_ZN19daObjKb1Billboard_c20UpdateModelTransformEv`. The ROM reloc at 0x0211132c says
 # `to:0x02111214 module:overlay(31)` -- the callee is ov031's OWN
 # func_ov031_02111214, and the src TU carries a SIBLING overlay's spelling of
 # the same shared-window address. src/ is not this lane's to edit, so the call
-# stays as written, and it is correct: src/func_ov044_02111214.c and
-# src/func_ov031_02111214.c are character-for-character the same body (a
+# stays as written, and it is correct: src/game/actors/d_a_obj_kb1_billboard.cpp and
+# src/game/actors/d_a_obj_hs_billboard.cpp are character-for-character the same body (a
 # Matrix4x3_FromRotationY on this+0xf0 from the s16 at this+0x8e, then three
 # >>3 stores into +0x114/+0x118/+0x11c), and ov044's is ALREADY linked from
-# port/slice_w7c.txt. src/func_ov031_02111214.c is deliberately NOT added here:
+# port/slice_w7c.txt. src/game/actors/d_a_obj_hs_billboard.cpp is deliberately NOT added here:
 # nothing would reference it by that name, so /OPT:REF would strip it and the
 # line would be zero linkage.
 #
@@ -101,7 +101,7 @@
 # installs, so the pointers exist by the time any InitResources runs.
 #
 # ==== ONE TU HELD OUT: THE D1 (slot 16) ====================================
-# src/_ZN25SlideDecorationSilverStarD1Ev.cpp is NOT here. It is the shadow-class
+# src/game/actors/d_a_obj_hs_billboard.cpp is NOT here. It is the shadow-class
 # MSVC destructor shape that port/slice_w7c.txt already held out for its own
 # class: the TU declares its OWN `struct Actor` / `struct Model` /
 # `struct SlideDecorationSilverStar : Actor` and defines
@@ -109,23 +109,36 @@
 # ??1SlideDecorationSilverStar@@UAE@XZ whose body calls ??1Model@@QAE@XZ and
 # ??1Actor@@UAE@XZ -- two decorated C++ names that do not exist anywhere in this
 # link (the port carries those bodies under their ROM C names _ZN5ModelD1Ev and
-# _ZN5ActorD2Ev). Adding the TU is an unresolved-external link failure, not a
+# _ZN8dActor_cD2Ev). Adding the TU is an unresolved-external link failure, not a
 # linkage gain. Slot 16 is spelled inline in the fill instead, as the ROM's own
 # three relocs inside 0x021111a0 spell it: store the table (0x021111cc ->
 # 0x02111984), _ZN5ModelD1Ev (0x021111b4 -> arm9 0x02016d20) on this+0xd4, then
-# _ZN5ActorD2Ev (0x021111bc -> arm9 0x020112c8). The D0 IS in the slice: it is a
+# _ZN8dActor_cD2Ev (0x021111bc -> arm9 0x020112c8). The D0 IS in the slice: it is a
 # .c TU carrying the ROM's Itanium name in extern "C", and its body is that same
 # chain plus Memory::Deallocate on the game heap (0x021111fc -> 0x0203c1e8).
 #
 # ==== NO GUESSED BODIES ====================================================
 # None of these nine TUs is marked "recovered from vtable slot identity", so
 # port/tools/inferred_stub_guard.py's ratchet is untouched by this slice.
-src/SlideDecorationSilverStar_Spawn.c
-src/SlideDecorationYellowStar_Spawn.c
-src/SlideDecorationOrangeSmiley_Spawn.c
-src/SlideDecorationBlueSmiley_Spawn.c
-src/_ZN25SlideDecorationSilverStar13InitResourcesEv.cpp
-src/_ZN25SlideDecorationSilverStar16CleanupResourcesEv.cpp
-src/_ZN25SlideDecorationSilverStar6RenderEv.cpp
-src/_ZN25SlideDecorationSilverStarD0Ev.c
+# RE-KEYED at the main->port sync (lane SYNC7, the wave-9 fold merge): main folded
+# this body into src/game/actors/d_a_obj_hs_billboard.cpp (ov031 delinks, .text 0x021113ec..0x02111424, one
+# absorbed range), which port/slice_w10a.txt's own d_a_obj_hs_billboard.cpp row and port/slice_dtorfaces.txt:57 already compiles, so the symbols this row seated
+# now come from there and the per-function file is gone from main's tree.
+#src/d_a_obj_hs_billboard_hs_moon.c
+# RE-KEYED at the main->port sync (lane SYNC7, the wave-9 fold merge): main folded
+# this body into src/game/actors/d_a_obj_hs_billboard.cpp (ov031 delinks, .text 0x021113b4..0x021113ec, one
+# absorbed range), which port/slice_w10a.txt's own d_a_obj_hs_billboard.cpp row and port/slice_dtorfaces.txt:57 already compiles, so the symbols this row seated
+# now come from there and the per-function file is gone from main's tree.
+#src/d_a_obj_hs_billboard_hs_star.c
+# RE-KEYED at the main->port sync (lane SYNC7, the wave-9 fold merge): main folded
+# this body into src/game/actors/d_a_obj_hs_billboard.cpp (ov031 delinks, .text 0x0211137c..0x021113b4, one
+# absorbed range), which port/slice_w10a.txt's own d_a_obj_hs_billboard.cpp row and port/slice_dtorfaces.txt:57 already compiles, so the symbols this row seated
+# now come from there and the per-function file is gone from main's tree.
+#src/d_a_obj_hs_billboard_hs_y_star.c
+# RE-KEYED at the main->port sync (lane SYNC7, the wave-9 fold merge): main folded
+# this body into src/game/actors/d_a_obj_hs_billboard.cpp (ov031 delinks, .text 0x02111344..0x0211137c, one
+# absorbed range), which port/slice_w10a.txt's own d_a_obj_hs_billboard.cpp row and port/slice_dtorfaces.txt:57 already compiles, so the symbols this row seated
+# now come from there and the per-function file is gone from main's tree.
+#src/d_a_obj_hs_billboard_hs_b_star.c
+src/game/actors/d_a_obj_hs_billboard.cpp
 src/__sinit_ov031_02111434.c

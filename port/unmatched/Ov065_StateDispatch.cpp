@@ -99,7 +99,7 @@ extern unsigned data_ov065_0211cd1c[], data_ov065_0211cd24[],
    FACES. The paragraph above says the sixteen non-Dorrie rows "DO NOT CHANGE"
    because the two helpers tail jump -- that is still true of the EIGHT ENTER
    records, and no longer true of the eight PER-FRAME ones. With the two host
-   Behaviors retired, src/_ZN6Snufit8BehaviorEv.cpp and
+   Behaviors retired, src/actors/daYurei_Mucho_c.cpp and
    src/_ZN5Swoop8BehaviorEv.cpp read the cell's +8 half as a real pointer to
    member and CALL it with the receiver in ecx and nothing pushed (mov
    eax,[cell+8] / test / je / mov ecx,[cell+12] / add ecx,this / call eax,
@@ -124,6 +124,60 @@ OV065_FACE(02117780, func_ov065_02117780)   /* swoop  0211cc40 */
 OV065_FACE(02117404, func_ov065_02117404)   /* swoop  0211cc48 */
 OV065_FACE(02117888, func_ov065_02117888)   /* swoop  0211cc50 */
 
+/* RUN link100 LANE MODELS: THE EIGHT ENTER RECORDS ARE FACES TOO.
+   The paragraph above keeps the eight ENTER records raw because
+   func_ov065_0211691c and func_ov065_02117944 tail jump, so the caller's own
+   first argument is still at [esp+4] when a raw body reads it. That is true of
+   those two helpers AS SEPARATE FRAMES and it is not true of the frame the
+   spawn path actually runs in. func_ov065_0211691c and
+   daYurei_Mucho_c::InitResources are the same translation unit
+   (src/actors/daYurei_Mucho_c.cpp), so /O2 inlines the helper into
+   InitResources' last statement and the pointer-to-member call comes out in
+   InitResources' own frame. Read off this build's own walk_window.exe, not
+   reasoned about:
+
+     ?InitResources@daYurei_Mucho_c@@UAEHXZ +0xDD
+       mov  dword ptr [ecx],eax
+       mov  edx,dword ptr [_data_ov065_0211d670]       ; the cell's enter fn
+       test edx,edx
+       je   +0xF2
+       mov  ecx,dword ptr [_data_ov065_0211d670+4]     ; the cell's delta
+       lea  ecx,[ecx+esi]                              ; this + delta
+       call edx                                        ; a REAL CALL
+
+   Nothing is pushed. func_ov065_021168a8 is a raw cdecl body that reads its
+   `c' from [ebp+8] -- InitResources' own spilled stack, the constant 1 on this
+   build -- and writes through it at +0x3e0. Run link100's boot sweep saw that
+   as level 13 faulting at func_ov065_021168a8+0x1e on the address 0x3e1.
+
+   The face is right on BOTH paths, which is why all eight enter rows take one
+   and not just the row that was caught: func_ov065_0211691c's own out-of-line
+   body ends `mov ecx,[ecx+4] / add ecx,eax / pop ebp / jmp edx`, so the
+   receiver is in ECX on the tail-jump path too (the linker folds that body with
+   FlyGuy_ChangeState, which run link100's ov070 lane read the same way).
+   Reading the receiver from the stack is right only while the tail jump is the
+   path taken. Which record is the enter half is read out of
+   __sinit_ov065_0211c110 and __sinit_ov065_0211c2a8, as above: snufit
+   cb20/cb28/cb30/cb38, swoop cc20/cc28/cc30/cc58.
+
+   These return int where the per-frame faces return void, because the helper
+   returns the pointer-to-member's own result to its caller. */
+#define OV065_ENTER_FACE(tag, sym)                                        \
+    static int __fastcall ov065_e##tag(void *self, void *dead_edx)        \
+    {                                                                     \
+        (void)dead_edx;                                                   \
+        return sym((char *)self);                                         \
+    }
+
+OV065_ENTER_FACE(0211672c, func_ov065_0211672c)   /* snufit 0211cb20 */
+OV065_ENTER_FACE(02116588, func_ov065_02116588)   /* snufit 0211cb28 */
+OV065_ENTER_FACE(021168a8, func_ov065_021168a8)   /* snufit 0211cb30 */
+OV065_ENTER_FACE(02116328, func_ov065_02116328)   /* snufit 0211cb38 */
+OV065_ENTER_FACE(021177e4, func_ov065_021177e4)   /* swoop  0211cc20 */
+OV065_ENTER_FACE(021176fc, func_ov065_021176fc)   /* swoop  0211cc28 */
+OV065_ENTER_FACE(021178fc, func_ov065_021178fc)   /* swoop  0211cc30 */
+OV065_ENTER_FACE(021175b0, func_ov065_021175b0)   /* swoop  0211cc58 */
+
 DORRIE_FACE(0, func_ov065_021183c8)
 DORRIE_FACE(1, func_ov065_021182e4)
 DORRIE_FACE(2, func_ov065_02118634)
@@ -139,22 +193,22 @@ typedef int (*StateFn)(char *);
 /* every fn word re-read from extracted/overlays/overlay_0065.bin for this
    lane (raw dwords at each record address), never carried from a comment */
 const SeatRow g_ov065_states[] = {
-    { data_ov065_0211cb20, 0x0211672c, func_ov065_0211672c },
-    { data_ov065_0211cb28, 0x02116588, (StateFn)func_ov065_02116588 },
-    { data_ov065_0211cb30, 0x021168a8, func_ov065_021168a8 },
-    { data_ov065_0211cb38, 0x02116328, func_ov065_02116328 },
+    { data_ov065_0211cb20, 0x0211672c, (StateFn)(void *)ov065_e0211672c },
+    { data_ov065_0211cb28, 0x02116588, (StateFn)(void *)ov065_e02116588 },
+    { data_ov065_0211cb30, 0x021168a8, (StateFn)(void *)ov065_e021168a8 },
+    { data_ov065_0211cb38, 0x02116328, (StateFn)(void *)ov065_e02116328 },
     { data_ov065_0211cb40, 0x021165d8, (StateFn)(void *)ov065_f021165d8 },
     { data_ov065_0211cb48, 0x021162c0, (StateFn)(void *)ov065_f021162c0 },
     { data_ov065_0211cb50, 0x02116364, (StateFn)(void *)ov065_f02116364 },
     { data_ov065_0211cb58, 0x02116744, (StateFn)(void *)ov065_f02116744 },
-    { data_ov065_0211cc20, 0x021177e4, func_ov065_021177e4 },
-    { data_ov065_0211cc28, 0x021176fc, func_ov065_021176fc },
-    { data_ov065_0211cc30, 0x021178fc, func_ov065_021178fc },
+    { data_ov065_0211cc20, 0x021177e4, (StateFn)(void *)ov065_e021177e4 },
+    { data_ov065_0211cc28, 0x021176fc, (StateFn)(void *)ov065_e021176fc },
+    { data_ov065_0211cc30, 0x021178fc, (StateFn)(void *)ov065_e021178fc },
     { data_ov065_0211cc38, 0x02117624, (StateFn)(void *)ov065_f02117624 },
     { data_ov065_0211cc40, 0x02117780, (StateFn)(void *)ov065_f02117780 },
     { data_ov065_0211cc48, 0x02117404, (StateFn)(void *)ov065_f02117404 },
     { data_ov065_0211cc50, 0x02117888, (StateFn)(void *)ov065_f02117888 },
-    { data_ov065_0211cc58, 0x021175b0, func_ov065_021175b0 },
+    { data_ov065_0211cc58, 0x021175b0, (StateFn)(void *)ov065_e021175b0 },
     /* DORRIE's three: __fastcall faces, run link100 lane FWD. The cast goes
        through void* because the column's type is the table's, not the face's;
        what the seat stores is an ADDRESS. */
@@ -194,7 +248,7 @@ extern "C" void port_ov065_states_seat(void)
  * both words the seat rewrote. */
 
 /* func_ov065_0211691c IS NOT A HOST COPY ANY MORE. Run link100 lane PMF2 put
-   src/func_ov065_0211691c.cpp back on port/slice_pmf2.txt: with /vmg /vmm global (the
+   src/actors/daYurei_Mucho_c.cpp back on port/slice_pmf2.txt: with /vmg /vmm global (the
    R8 block in port/CMakeLists.txt) MSVC's pointer-to-member IS the ROM's
    8-byte {function, delta} pair, and the matched TU compiles to the same
    tail jump this body was -- measured, listing in that slice's header.

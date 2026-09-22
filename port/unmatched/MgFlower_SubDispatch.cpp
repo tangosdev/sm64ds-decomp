@@ -54,7 +54,7 @@
  *
  *     FAULT c0000005 at eip 020c395c accessing 020c395c
  *       port_scene_tick -> port_actor_tick -> func_02043288
- *         -> flw_beh (slot 6) -> func_ov006_0212ac74 -> func_ov006_020c3d18+0x23
+ *         -> flw_beh (slot 6) -> _ZN13dScMgFlower_c8BehaviorEv -> func_ov006_020c3d18+0x23
  *
  * eip IS the DS address. That is what an unrouted code word looks like when it
  * is finally called, and it is why "the link closed" is not evidence that the
@@ -102,7 +102,7 @@
  *     int *g = data_ov006_0213aee0;
  *     if (c[0] == g[0] && (c[1] == g[1] || c[0] == 0)) ...
  *
- * -- an "is this object in the idle state" test, and src/func_ov006_0212ac74.c
+ * -- an "is this object in the idle state" test, and src/_ZN13dScMgFlower_c8BehaviorEv.cpp
  * (the class's Behavior) calls it twice. Rewriting the stored words would make
  * that comparison ask whether a host address equals a DS address, which is
  * false forever, and the minigame would silently never see its own idle state.

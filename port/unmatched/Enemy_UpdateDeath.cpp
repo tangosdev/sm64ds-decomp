@@ -1,4 +1,4 @@
-/* HOST COPY of src/_ZN5Enemy11UpdateDeathER12WithMeshClsn.cpp -- the mwcc
+/* HOST COPY of src/_ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr.cpp -- the mwcc
  * pointer-to-member dispatch, for the eighth time in this port and the first
  * one that belongs to a BASE class rather than to a single actor.
  *
@@ -52,8 +52,8 @@
 extern "C" {
 
 void DecIfAbove0_Short(short *p);
-int _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *clsn);
-int _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(void *self, void *clsn,
+int _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *clsn);
+int _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void *self, void *clsn,
                                              unsigned sel);
 
 /* the eight ROM statics the sinit copies, and the bss table it copies into */
@@ -93,13 +93,13 @@ typedef int (*PortEnemyDeathFn)(void *, void *);
    and both dispatch a real pointer-to-member, which MSVC emits as
    `call <reg>` with the receiver in ECX and the arguments PUSHED:
 
-     src/_ZN5Enemy11UpdateDeathER12WithMeshClsn.cpp
+     src/_ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr.cpp
          push DWORD PTR _clsn$[ebp]
          mov  ecx, <table 0210dbc0>[eax*8-4]     the adjust word
          mov  eax, <table 0210dbc0>[eax*8-8]     the code word (index-1 folded
                                                   into the displacement)
          add  ecx, ebx  /  call eax
-     src/func_ov002_020aea30.c   (a //cpp-marked .c, compiled as C++)
+     src/func_ov002_020aea30.cpp   (a //cpp-marked .c, compiled as C++)
          push DWORD PTR _b$[ebp]  /  push DWORD PTR _a$[ebp]
          mov  ecx, <table 0210db80>[edx*8-4]
          mov  eax, <table 0210db80>[edx*8-8]
@@ -229,10 +229,10 @@ extern "C" void port_enemy_death_states_seat(void)
 }
 
 /* BOTH HOST COPIES RETIRED (run link100, lane PMFB2).
-   func_ov002_020aea30 and _ZN5Enemy11UpdateDeathER12WithMeshClsn are on
-   port/slice_pmfb2.txt and compile from src/func_ov002_020aea30.c (a
+   func_ov002_020aea30 and _ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr are on
+   port/slice_pmfb2.txt and compile from src/func_ov002_020aea30.cpp (a
    //cpp-marked .c, given LANGUAGE CXX in CMake block R10a) and
-   src/_ZN5Enemy11UpdateDeathER12WithMeshClsn.cpp. Both define the Itanium C
+   src/_ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr.cpp. Both define the Itanium C
    name themselves, so neither needs a face for its own symbol.
 
    MEASURED FOR THAT LANE, both ways round:

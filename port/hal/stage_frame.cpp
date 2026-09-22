@@ -43,7 +43,7 @@
 //   ?LC_Update@Stage@@SAXXZ                       itself   (_ZN5Stage9LC_UpdateEv.cpp)
 //   ?PS_Update@Stage@@SAXXZ                       itself   (_ZN5Stage9PS_UpdateEv.cpp)
 //   ?PS_Init@Stage@@SAXXZ                         itself   (_ZN5Stage7PS_InitEv.cpp -- the .cpp, see below)
-//   ?StartSceneFade@Scene@@SAXIIG@Z               itself   (already in the image)
+//   ?StartSceneFade@dScene_c@@SAXIIG@Z               itself   (already in the image)
 //   ?StopTimer@Timer@@QAEXXZ                      itself   (already in the image)
 //   ?CleanAll@ShadowModel@@SAXXZ                  itself   (already in the image)
 //   ---- these THREE the tree already had plumbing for; see below ----
@@ -54,7 +54,7 @@
 //   ?PS_Cleanup@Stage@@SAXXZ                      _ZN5Stage10PS_CleanupEv       (flat C name)
 //   ?VE_Init@Stage@@SAXXZ                         _ZN5Stage7VE_InitEv           (flat C name)
 //   ?VE_Update@Stage@@SAXXZ                       _ZN5Stage9VE_UpdateEv         (flat C name)
-//   ?SetSceneToSpawn@Scene@@SAXII@Z               _ZN5Scene15SetSceneToSpawnEjj (flat C name)
+//   ?SetSceneToSpawn@dScene_c@@SAXII@Z               _ZN8dScene_c15SetSceneToSpawnEjj (flat C name)
 //
 // THE FOUR ARE A PURE SPELLING DIFFERENCE and the faces below are one-line
 // forwarders. All are __cdecl on both sides -- a `static` member is __cdecl in
@@ -96,7 +96,7 @@
 // face points there. The stub stays out of the link, and hal/message_pump.cpp's
 // header keeps the whole derivation.
 //
-// PS_Init HAS TWO FILES WITH THE SAME STEM. src/_ZN5Stage7PS_InitEv.c is flat C
+// PS_Init HAS TWO FILES WITH THE SAME STEM. src/_ZN5Stage7PS_InitEv.cpp is flat C
 // and publishes _ZN5Stage7PS_InitEv; src/_ZN5Stage7PS_InitEv.cpp declares
 // `struct Stage { static void PS_Init(); }` and publishes ?PS_Init@Stage@@SAXXZ,
 // which is what Stage::Behavior calls. config/match_attempts.jsonl records the
@@ -113,7 +113,7 @@ extern "C" {
 void _ZN5Stage10PS_CleanupEv(void);
 void _ZN5Stage7VE_InitEv(void);
 void _ZN5Stage9VE_UpdateEv(void);
-void _ZN5Scene15SetSceneToSpawnEjj(unsigned int a, unsigned int b);
+void _ZN8dScene_c15SetSceneToSpawnEjj(unsigned int a, unsigned int b);
 /* Stage::UpdateMessage's body, on the port: hal/message_pump.cpp */
 void port_message_pump(void);
 /* run link100, lane RENDER9: the flat-C matched bodies slot 9's faces forward
@@ -149,8 +149,8 @@ public:
 };
 
 /* Scene::SetSceneToSpawn is the same shape one class over. Stage::Behavior's
-   level-change arm spells the static member ?SetSceneToSpawn@Scene@@SAXII@Z,
-   and src/_ZN5Scene15SetSceneToSpawnEjj.c -- already in the image on
+   level-change arm spells the static member ?SetSceneToSpawn@dScene_c@@SAXII@Z,
+   and src/_ZN8dScene_c15SetSceneToSpawnEjj.cpp -- already in the image on
    port/slice_gate10.txt -- is flat C. Declared here rather than taken from a
    header for the same reason class Stage is: this file must not pull in a
    second declaration of either class. */
@@ -161,12 +161,17 @@ public:
 
 /* ---- the faces ---------------------------------------------------------- */
 
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync): main's tree defines these
+   three as real Stage statics now, so src/ emits ?PS_Cleanup@Stage@@SAXXZ,
+   ?VE_Init@Stage@@SAXXZ and ?VE_Update@Stage@@SAXXZ itself and these faces
+   were the second definition (LNK2005). UpdateMessage stays: it is a host
+   substitution, not a forward to a ROM body.
 void Stage::PS_Cleanup()            { _ZN5Stage10PS_CleanupEv(); }
 void Stage::VE_Init()               { _ZN5Stage7VE_InitEv(); }
-void Stage::VE_Update()             { _ZN5Stage9VE_UpdateEv(); }
+void Stage::VE_Update()             { _ZN5Stage9VE_UpdateEv(); }             */
 void Stage::UpdateMessage()         { port_message_pump(); }
 void Scene::SetSceneToSpawn(unsigned int a, unsigned int b)
-{ _ZN5Scene15SetSceneToSpawnEjj(a, b); }
+{ _ZN8dScene_c15SetSceneToSpawnEjj(a, b); }
 
 /* ---- SLOT 9's SPELLING FACES (run link100, lane RENDER9) ------------------
  *
@@ -224,6 +229,17 @@ void Scene::SetSceneToSpawn(unsigned int a, unsigned int b)
  * own header says a hand-typed constant is "a value nobody can re-derive from
  * the image". */
 
+/* PORT_HOST_ABI: ARM asm primitive (32-byte block copy), MSVC cannot assemble.
+ * TAG MOVED HERE, run link100 wave 14, lane SHADOWS3. The identical ruling is
+ * already written twenty lines up, inside the block comment, and
+ * hal/model_host.cpp carries it verbatim for this function's sibling
+ * MultiCopy32Bytes -- but linkage.py binds a reason to the first CODE line
+ * under the tag and a blank line ends the run, so the tag up there documented
+ * nothing and this row read as owed work. src/Copy32Bytes.c is seven ARM
+ * instructions (three ldmia/stmia pairs and a bx lr) in an `asm` block; there
+ * is no C form of it to seat, now or later. The arity argument above still
+ * stands unchanged: r0 and r1, one caller, src/_ZN3G3X11SetFogTableEPv.cpp,
+ * passing (src, dst) in that order. */
 extern "C" void Copy32Bytes(void *src, void *dst)
 {
     const unsigned char *s = (const unsigned char *)src;
@@ -247,10 +263,16 @@ struct Particle {
     };
 };
 
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync): both bodies below are
+   defined by the tree itself now. Stage::RenderVsModeCountdown comes out of
+   src/ as ?RenderVsModeCountdown@Stage@@SAXXZ; Particle::SysTracker::Update
+   comes out of the hostgen copy of src/_ZN8Particle10SysTracker6UpdateEv.cpp
+   as ?Update@SysTracker@Particle@@QAEXXZ. Both faces were the second
+   definition (LNK2005).
 void Stage::RenderVsModeCountdown() { _ZN5Stage21RenderVsModeCountdownEv(); }
 
 void Particle::SysTracker::Update()
-{ _ZN8Particle10SysTracker6UpdateEv(this); }
+{ _ZN8Particle10SysTracker6UpdateEv(this); }                                 */
 
 int OAM::Render(bool draw, OamAttr *obj, int px, int py, int pal, int prio,
                 Matrix2x2 *mtx)
@@ -343,7 +365,7 @@ void Stage::RenderVsModeNewStar()
  * Player::CanPause. src/func_02029408.c calls `func_020bd828(data_0209f394
  * [data_0209f250])` -- one __cdecl argument, the local player. 0x020bd828 is
  * _ZN6Player8CanPauseEv in config/arm9/overlays/ov002/symbols.txt line 435,
- * and src/_ZN6Player8CanPauseEv.cpp compiles it as a real C++ method against
+ * and src/actors/Player.cpp compiles it as a real C++ method against
  * Player.h, so it publishes ?CanPause@Player@@QAEHXZ and takes its receiver in
  * ecx. The face moves the argument into the receiver, which is what the ARM
  * call did with r0.
@@ -487,10 +509,100 @@ extern "C" unsigned port_stage_behavior_calls(void) { return g_beh_calls; }
    nothing to what Stage::Behavior does. */
 extern "C" void port_frame_ctrl_publish(void);
 
+extern "C" unsigned char data_0209f49c[], data_0209f49e[], data_0209f4a0[],
+                         data_0209f4a2[], data_0209f4a4[], data_0209f4a6[],
+                         data_0209f4a8[], data_0209f4a9[], data_0209f4ac[];
+extern "C" int data_0209f498[];
+
+/* A SECOND COPY, AND IT RUNS BEFORE Stage::Behavior, NOT AFTER.
+
+   On the cartridge Ctrl is one block, four 0x18-byte records at
+   data_0209f498, and two ROM functions clear its button words every frame
+   through that one spelling: Stage::CheckCameraInput zeroes held and
+   pressed over data_0209f21c records, and Stage::CheckInput, when it does
+   not reach main_part, walks a LITERAL FOUR records and zeroes touching,
+   delay, cnt, mag, nx, ny, ang, held and pressed in each. Stage::Behavior
+   calls both, then ProcessKuppaScript, then the actor walk -- so on
+   hardware a cutscene script writes the characters' records strictly
+   between the ROM's clear and the ROM's read, every frame.
+
+   The port does not host Ctrl as one block. Seven of its interior fields
+   are separate objects (data_0209f49c/9e/a0/a2/a4/a6/ac, declared above),
+   and port_frame_ctrl_publish -- this file's own bridge, called AFTER
+   Stage::Behavior below -- is what carries data_0209f498 out to them,
+   bounded by the live player count (data_0209f21c, which InitResources
+   sets from the ROM's own single-player byte and which SetNumPlayers only
+   raises for VS). So the ROM's clear of records 1, 2 and 3 never reached
+   the split objects: CheckInput zeroes them inside data_0209f498, but the
+   only copy out of that struct runs after Stage::Behavior, which is after
+   ProcessKuppaScript has already written the cutscene's press into the
+   split objects for this frame. Records 1..3 of the split objects were
+   therefore written by the opening's own script command
+   (src/func_ov002_020bd3a0.c, the ONLY writer of data_0209f49e in all of
+   src/) and by nothing else, ever -- one scripted press stayed set for
+   every later frame, so the driven characters kept re-entering
+   St_Jump_Init / St_PunchKick_Init instead of walking to the castle.
+
+   The existing copy below cannot simply be widened to four records where
+   it stands: it runs after ProcessKuppaScript, so a four-slot loop there
+   would immediately overwrite the script's own press with data_0209f498's
+   (still-scripted, not-yet-recleared) contents -- INPUT1 measured exactly
+   that failure shape, the puppets' split records pinned at the script's
+   values with no cartridge clear ever landing.
+
+   So this copy runs at the HEAD of the frame instead, before the ROM's own
+   Stage::Behavior (and therefore before CheckInput's clear and before
+   ProcessKuppaScript). That is equivalent to the cartridge, not a
+   deviation from it: CheckInput's clear branch writes the SAME zeros every
+   frame it fires, so priming the split objects with the previous frame's
+   already-cleared struct value carries forward a value the ROM was about
+   to write again anyway. The width is a literal four -- the ROM's own
+   Ctrl block width and the bound of CheckInput's own clear loop -- not
+   data_0209f21c, because CheckInput's clear reaches all four records
+   regardless of live player count; only the post-Behavior publish below is
+   bounded by player count, because that is the copy that feeds actors that
+   read player state. */
+static void port_frame_ctrl_prime(void)
+{
+    for (int pi = 0; pi < 4; ++pi) {
+        const char *r = (const char *)data_0209f498 + pi * 0x18;
+        const int o = pi * 0x18;
+        *(short *)(data_0209f49c + o) = *(const short *)(r + 0x04);
+        *(short *)(data_0209f49e + o) = *(const short *)(r + 0x06);
+        *(short *)(data_0209f4a0 + o) = *(const short *)(r + 0x08);
+        *(short *)(data_0209f4a2 + o) = *(const short *)(r + 0x0a);
+        *(short *)(data_0209f4a4 + o) = *(const short *)(r + 0x0c);
+        *(short *)(data_0209f4a6 + o) = *(const short *)(r + 0x0e);
+        /* THE STYLUS POINT, Ctrl +0x10 and +0x11, and leaving it out was a
+           visible bug for every player. Minimap::Behavior places the touch
+           marker with `SetSubBg2Offset(0x100 - x, 0x80 - y)` reading exactly
+           these two bytes, so with them stuck at zero the marker was drawn at
+           the map's top-left corner wherever the player actually touched --
+           measured on 0.4.0: a click at the middle of the map moves 1260
+           pixels and every one of them is inside a quarter disc of radius 40
+           at DS (0,0), and the scroll registers read 0x100 / 0x80 for three
+           different touch points. The flag at +0x14 below was fanned out and
+           the two coordinates beside it were not, which is why the marker
+           appeared at all and never moved. */
+        *(unsigned char *)(data_0209f4a8 + o) = *(const unsigned char *)(r + 0x10);
+        *(unsigned char *)(data_0209f4a9 + o) = *(const unsigned char *)(r + 0x11);
+        *(unsigned char *)(data_0209f4ac + o) = *(const unsigned char *)(r + 0x14);
+    }
+}
+
+/* THE STAR-SELECT INTERLUDE HAS NO STAGE, and these two slots are the
+   ROM's own Stage bodies, so they must not run while it is live.
+   hal/level_change.cpp's port_level_scene_interlude carries the whole
+   derivation and the two measured faults. */
+extern "C" int port_level_interlude_live(void);   /* hal/level_change.cpp */
+
 extern "C" int port_stage_rom_behavior(void *self)
 {
+    if (port_level_interlude_live())
+        return 1;
     stage_frame_arm();
     ++g_beh_calls;
+    port_frame_ctrl_prime();
     const int r = ((Stage *)self)->Stage::Behavior();
     port_frame_ctrl_publish();
     return r;
@@ -525,6 +637,8 @@ extern "C" unsigned port_stage_render_calls(void) { return g_ren_calls; }
 
 extern "C" int port_stage_rom_render(void *self)
 {
+    if (port_level_interlude_live())
+        return 1;
     stage_frame_arm();
     ++g_ren_calls;
     port_stage_anims_load(self);

@@ -1,7 +1,7 @@
 typedef struct { int x, y, z; } Vector3;
 typedef long long s64;
 
-extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int, unsigned int, unsigned int, const Vector3 *, unsigned int);
+extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int, unsigned int, unsigned int, const Vector3 *, unsigned int);
 extern void Matrix4x3_FromRotationY(void *m, short ang);
 extern void MulVec3Mat4x3(void *v, void *m, void *out);
 extern int Vec3_ApproachHorz(void *out, void *a, int maxStep);
@@ -34,7 +34,7 @@ int func_ov073_02120910(char *c)
         return 1;
     }
 
-    *(unsigned int *)(c + 0x500) = _ZN5Sound8PlayLongEjjjRK7Vector3j(*(unsigned int *)(c + 0x500), 3, 0x16e, (Vector3 *)(c + 0x74), 0);
+    *(unsigned int *)(c + 0x500) = _ZN5Sound8PlayLongEjjjRK7Vector3s(*(unsigned int *)(c + 0x500), 3, 0x16e, (Vector3 *)(c + 0x74), 0);
 
     in.z = 0;
     in.z = 0x78000;

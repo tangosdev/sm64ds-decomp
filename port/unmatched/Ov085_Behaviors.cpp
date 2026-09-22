@@ -85,13 +85,13 @@
  *   WallSign  this+0x360 is null every frame, so only the toucher test runs
  *             (the +0x340 bit, Actor::FindWithID, the id-0xbf check and the
  *             facing test), and it never reaches Player::StartTalk.
- *   Toad      the seated state stays 0, so func_ov085_02129570 dispatches the
+ *   Toad      the seated state stays 0, so _ZN4Toad8RunStateEv dispatches the
  *             WAIT main every frame and the head tracking runs.
  *
  * -- and the TALK half is LINKED AND SEATED AND NEVER EXECUTED. Nothing
- * automated has ever run func_ov085_0212943c (TALK enter) or
- * func_ov085_021291ac (TALK main), which means the message id picker
- * (func_ov085_021290b4), the star spawn, the cap hand-back through
+ * automated has ever run _ZN4Toad12St_Talk_InitEv (TALK enter) or
+ * _ZN4Toad12St_Talk_MainEv (TALK main), which means the message id picker
+ * (_ZN4Toad12GetMessageIDEv), the star spawn, the cap hand-back through
  * Actor::Spawn(0x10d) and Message::EndTalk are all unproven; and on the sign,
  * the three-step approach at this+0x364 and the Player::ShowMessage2 call are
  * unproven for the same reason. Both classes' talk paths end in the dialogue
@@ -116,23 +116,23 @@ short Vec3_VertAngle(const void *v1, const void *v0);
 int Vec3_ApproachHorz(void *out, const void *target, int maxStep);
 int AngleDiff(int a, int b);
 int _Z14ApproachLinearRsss(short *cur, short target, short step);
-void *_ZN5Actor10FindWithIDEj(unsigned id);
-void *_ZN5Actor13ClosestPlayerEv(void *self);
+void *_ZN8dActor_c10FindWithIDEj(unsigned id);
+void *_ZN8dActor_c13ClosestPlayerEv(void *self);
 int _ZN6Player12GetTalkStateEv(void *self);          /* face: method_faces */
-int _ZN6Player9StartTalkER9ActorBaseb(void *self, void *actor, int b);
-void _ZN6Player12ShowMessage2ER9ActorBasejPK7Vector3jj(
+int _ZN6Player9StartTalkER7fBase_cb(void *self, void *actor, int b);
+void _ZN6Player12ShowMessage2ER7fBase_cjPK7Vector3hh(
         void *self, void *actor, unsigned msg, const void *pos,
         unsigned d, unsigned e);
 int func_ov002_020bec9c(void *player, unsigned a, int b, int d,
                         unsigned short e);
-void _ZN12CylinderClsn5ClearEv(void *self);
-void _ZN12CylinderClsn6UpdateEv(void *self);
+void _ZN5dCc_c5ClearEv(void *self);
+void _ZN5dCc_c6UpdateEv(void *self);
 void _ZN9Animation7AdvanceEv(void *self);
 void _ZN9ModelBase12ApplyOpacityEj(void *self, unsigned opacity);
 
 /* ov085's own, all matched and in port/slice_gate205.txt */
-void func_ov085_02129570(void *self);    /* the state machine's Main half */
-void func_ov085_021295bc(void *self);    /* the matrices and the shadow  */
+void _ZN4Toad8RunStateEv(void *self);    /* the state machine's Main half */
+void _ZN4Toad15UpdateModelPoseEv(void *self);    /* the matrices and the shadow  */
 
 extern short data_02082214[];            /* {sin, cos} pairs, angle>>4 */
 extern signed char data_0209f2f8;        /* the level id */
@@ -231,7 +231,7 @@ int _ZN8WallSign8BehaviorEv(void *selfv)
                     *(unsigned short *)(c + 0x366) = 0;
                     if (param != 0xffff)
                         *(unsigned short *)(c + 0x366) = (unsigned short)param;
-                    _ZN6Player12ShowMessage2ER9ActorBasejPK7Vector3jj(
+                    _ZN6Player12ShowMessage2ER7fBase_cjPK7Vector3hh(
                         pl, c, (unsigned)*(short *)(c + 0x366), &selfPos, 0, 1);
                     *(unsigned char *)(c + 0x364) = 0;
                 }
@@ -246,7 +246,7 @@ int _ZN8WallSign8BehaviorEv(void *selfv)
             break;
         }
     } else if ((*(unsigned *)(c + 0x340) & 0x8000000) != 0) {
-        char *o = (char *)_ZN5Actor10FindWithIDEj(*(unsigned *)(c + 0x344));
+        char *o = (char *)_ZN8dActor_c10FindWithIDEj(*(unsigned *)(c + 0x344));
         if (o != 0 && *(unsigned short *)(o + 0xc) == 0xbf) {
             PortVec3 pv;
             pv.x = *(int *)(o + 0x5c);
@@ -254,13 +254,13 @@ int _ZN8WallSign8BehaviorEv(void *selfv)
             pv.z = *(int *)(o + 0x64);
             if (AngleDiff(Vec3_HorzAngle(c + 0x5c, &pv),
                           *(short *)(c + 0x8e)) < 0x4000
-                && _ZN6Player9StartTalkER9ActorBaseb(o, c, 0))
+                && _ZN6Player9StartTalkER7fBase_cb(o, c, 0))
                 *(void **)(c + 0x360) = o;
         }
     }
 
-    _ZN12CylinderClsn5ClearEv(c + 0x320);
-    _ZN12CylinderClsn6UpdateEv(c + 0x320);
+    _ZN5dCc_c5ClearEv(c + 0x320);
+    _ZN5dCc_c6UpdateEv(c + 0x320);
     return 1;
 }
 
@@ -294,11 +294,11 @@ int _ZN4Toad8BehaviorEv(void *selfv)
     int dist, range;
     short horz = 0, vert = 0;
 
-    func_ov085_02129570(c);
+    _ZN4Toad8RunStateEv(c);
     /* ((Sub *)&mModelAnim)->g3(): ModelAnim at +0x108, ROM slot 3. */
     ((ModelAnim *)(c + 0x108))->ModelAnim::UpdateVerts();
 
-    p = (char *)_ZN5Actor13ClosestPlayerEv(c);
+    p = (char *)_ZN8dActor_c13ClosestPlayerEv(c);
     if (p == 0) {
         *(unsigned char *)(c + 0x20e) = 0x3c;
     } else {
@@ -337,7 +337,7 @@ int _ZN4Toad8BehaviorEv(void *selfv)
 
     /* the cap this Toad is holding, if it still exists, keeps him visible */
     if (*(unsigned *)(c + 0x1f4) != 0
-        && _ZN5Actor10FindWithIDEj(*(unsigned *)(c + 0x1f4)) != 0)
+        && _ZN8dActor_c10FindWithIDEj(*(unsigned *)(c + 0x1f4)) != 0)
         *(unsigned char *)(c + 0x20e) = 0xff;
     if (data_0209f2f8 == 0x32)
         *(unsigned char *)(c + 0x20e) = 0xff;
@@ -347,13 +347,13 @@ int _ZN4Toad8BehaviorEv(void *selfv)
     ApproachLinear2(*(int *)(c + 0x20d), *(unsigned char *)(c + 0x20e), 6);
 
     _ZN9Animation7AdvanceEv(c + 0x158);
-    func_ov085_021295bc(c);
+    _ZN4Toad15UpdateModelPoseEv(c);
     *(int *)(c + 0x164) = 0x1000;
     _ZN9ModelBase12ApplyOpacityEj(c + 0x108,
                                   (unsigned)((*(unsigned char *)(c + 0x20d) >> 3) & 0xff));
 
-    _ZN12CylinderClsn5ClearEv(c + 0xd4);
-    _ZN12CylinderClsn6UpdateEv(c + 0xd4);
+    _ZN5dCc_c5ClearEv(c + 0xd4);
+    _ZN5dCc_c6UpdateEv(c + 0xd4);
     return 1;
 }
 

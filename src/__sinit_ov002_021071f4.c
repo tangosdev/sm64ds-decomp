@@ -32,6 +32,12 @@ struct Dest {
 };
 extern struct Dest data_ov002_0210af2c;
 
+/* The destination is data_ov002_0210af2c, not data_ov002_021097bc. The ROM
+   materialises the base into r5 from the literal pool and stores through
+   [r5, #off]; those stores carry no relocation, so only the single pool word
+   differed -- and match.py wildcards relocated words, so the per-function gate
+   passed this happily. Only the full ROM link sees it, and it could not see it
+   before either, because .init functions were not enrolled at all. */
 void __sinit_ov002_021071f4(void) {
     data_ov002_0210af2c.p0 = data_ov002_0210aed0;
     data_ov002_0210af2c.p1 = data_ov002_0210aee8;

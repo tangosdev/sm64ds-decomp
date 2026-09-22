@@ -14,11 +14,24 @@
 #include <cstdlib>
 #include <cstring>
 
-#include "MeshCollider.h"
+#include "dBgW_Kc.h"
 
 #include "ntr/mmio.h"
 
 #include "fault_probe.h"
+
+// THE BRING-UP ENTRY POINT MOVED, and this harness follows it (lane SMOKELINK3,
+// run link100 wave 10 round 2, continuing SMOKELINK2's rule for
+// port/tests/smoke_heap.cpp). It used to declare the entry as a flat extern "C"
+// Itanium name returning an opaque pointer, which is what the ROM's own callers
+// spell and what src/ emitted before the 09-14 sync. It is Heap::SetupRootHeap()
+// now, a real static member (include/Heap.h:236, ?SetupRootHeap@Heap@@SAPAU1@XZ),
+// so the flat spelling bought a link error. This file is HOST TEST CODE, not ROM
+// code, so it may include the class header and call the member the way C++ calls
+// it, which is also what the synced src/ TUs now do. It reaches the same object
+// it always linked, src/_ZN4Heap13SetupRootHeapEv.cpp; only the spelling changed.
+#include "types.h"
+#include "Heap.h"
 
 struct SurfaceInfoS { unsigned char clps[8]; int nx, ny, nz; };
 struct RayS {
@@ -34,9 +47,9 @@ struct RayS {
     unsigned char tail[0x10];
 };
 
-/* SphereClsn as the slot-8 pass reads it. Offsets, not fields: the same
+/* dBgCh_SphCrr as the slot-8 pass reads it. Offsets, not fields: the same
    discipline port/unmatched/MeshCollider_DetectClsn_Sphere.cpp uses, and the
-   same reason (include/SphereClsn.h is auto-generated and has neither the
+   same reason (include/dBgCh_SphCrr.h is auto-generated and has neither the
    centre nor the radius). 0x140 bytes so the three ClsnResults at 0x74/0x9c/
    0xc4 and the watermarks at 0xfc..0x108 all land inside. */
 struct SphereS {
@@ -45,7 +58,7 @@ struct SphereS {
     void seed(int x, int y, int z, int r)
     {
         memset(raw, 0, sizeof raw);
-        raw[4] = 1;                         /* func_02035514's BgCh default */
+        raw[4] = 1;                         /* _ZN5dBgChC2Ev's BgCh default */
         at(0x3c) = x; at(0x40) = y; at(0x44) = z;
         at(0x48) = r;
         /* func_02037b5c: flags cleared, best-floor-normal seeded (0,-1,0) */
@@ -66,8 +79,7 @@ extern int g_sphere_dbg[16];
 int func_02039794(int normalY);     /* 0 floor / 1 wall / 2 ceiling */
 struct SharedFilePtrC { u16 fileID; u8 numRefs; void *filePtr; };
 SharedFilePtrC *_ZN13SharedFilePtr9ConstructEj(SharedFilePtrC *self, u32 ov0FileID);
-void *_ZN4Heap13SetupRootHeapEv(void);
-void *_ZN12MeshColliderC1Ev(void *self);
+void *_ZN7dBgW_KcC1Ev(void *self);
 }
 
 /* THE FILE/WORLD BOUNDARY, and it is these two functions only.
@@ -86,12 +98,12 @@ enum { F2W = 6 };
 static void v3_shl(int *v, int n) { v[0] <<= n; v[1] <<= n; v[2] <<= n; }
 static void v3_shr(int *v, int n) { v[0] >>= n; v[1] >>= n; v[2] >>= n; }
 
-static int sphere_probe(MeshCollider *mc, SphereS *s)
+static int sphere_probe(dBgW_Kc *mc, SphereS *s)
 {
     v3_shl(&s->at(0x3c), F2W);              /* centre */
     s->at(0x48) <<= F2W;                    /* radius */
     s->at(0xec) <<= F2W;                    /* wallHeight */
-    int r = mc->MeshCollider::DetectClsn(*(SphereClsn *)s->raw);
+    int r = mc->dBgW_Kc::DetectClsn(*(dBgCh_SphCrr *)s->raw);
     v3_shr(&s->at(0x3c), F2W);
     s->at(0x48) >>= F2W;
     s->at(0xec) >>= F2W;
@@ -101,11 +113,11 @@ static int sphere_probe(MeshCollider *mc, SphereS *s)
     return r;
 }
 
-static int probe_one(MeshCollider *mc, RayS *ray)
+static int probe_one(dBgW_Kc *mc, RayS *ray)
 {
     v3_shl(&ray->sx, F2W);
     v3_shl(&ray->ex, F2W);
-    int r = mc->MeshCollider::DetectClsn(*(RaycastLine *)ray);
+    int r = mc->dBgW_Kc::DetectClsn(*(dBgCh_Lin *)ray);
     v3_shr(&ray->sx, F2W);
     v3_shr(&ray->ex, F2W);                  /* the walk writes the hit here */
     return r;
@@ -118,7 +130,7 @@ static int probe_filter(EXCEPTION_POINTERS *ep)
            (unsigned)((char *)ep->ExceptionRecord->ExceptionAddress - base));
     return EXCEPTION_EXECUTE_HANDLER;
 }
-static int probe_seh(MeshCollider *mc, RayS *ray)
+static int probe_seh(dBgW_Kc *mc, RayS *ray)
 {
     __try {
         return probe_one(mc, ray);
@@ -137,7 +149,7 @@ int main(void)
     PORT_INSTALL_FAULT_PROBE();
     setvbuf(stdout, NULL, _IONBF, 0);   /* crashes must not eat the trail */
     if (!ntr::io_init()) { fprintf(stderr, "io_init failed\n"); return 2; }
-    CHECK(_ZN4Heap13SetupRootHeapEv() != NULL);
+    CHECK(Heap::SetupRootHeap() != NULL);
 
     /* the castle grounds KCL, handle 1941: real level floors
        (the piano's KCL turned out to be four wall prisms and nothing
@@ -145,15 +157,15 @@ int main(void)
     SharedFilePtrC ptr;
     _ZN13SharedFilePtr9ConstructEj(&ptr, 1941);
     static char mc_storage[0x60];
-    MeshCollider *mc = (MeshCollider *)mc_storage;
-    _ZN12MeshColliderC1Ev(mc_storage);
-    char *kcl = MeshCollider::LoadFile(*(SharedFilePtr *)&ptr);
+    dBgW_Kc *mc = (dBgW_Kc *)mc_storage;
+    _ZN7dBgW_KcC1Ev(mc_storage);
+    char *kcl = dBgW_Kc::LoadFile(*(SharedFilePtr *)&ptr);
     CHECK(kcl != NULL);
 
     /* CLPS_Block is opaque; a zeroed buffer takes the lookup's
        wrong-version default path, which is what stages without a CLPS do */
     static char clps_storage[0x100];
-    mc->MeshCollider::SetFile((KCL_File *)kcl, *(CLPS_Block *)clps_storage);
+    mc->dBgW_Kc::SetFile((KCL_File *)kcl, *(CLPS_Block *)clps_storage);
 
     {
         KCL_File *f = (KCL_File *)kcl;
@@ -180,7 +192,7 @@ int main(void)
             RayS ray;
             memset(&ray, 0, sizeof ray);
             ray.head[4] = 1;    /* the BgCh "collide with ordinary surfaces"
-                                   default (func_02035514 sets it; the pass-
+                                   default (_ZN5dBgChC2Ev sets it; the pass-
                                    through predicate reads head[4] & 1) */
             ray.sx = cx + gx * sx_step; ray.sy = top; ray.sz = cz + gz * sz_step;
             ray.ex = ray.sx;            ray.ey = bot; ray.ez = ray.sz;

@@ -63,7 +63,7 @@ public:
     static void LoadAndSetMusic_Layer1(int a);
     static void StopLoadedMusic_Layer1(unsigned int a);
 };
-class Scene {
+class dScene_c {
 public:
     static void StartSceneFade(unsigned int a, unsigned int b, unsigned short c);
     static void SetSceneToSpawn(unsigned int a, unsigned int b);
@@ -179,7 +179,7 @@ int Stage::Behavior()
                             VE_Update();
                     }
                 } else {
-                    Scene::StartSceneFade(7, 0, 0);
+                    dScene_c::StartSceneFade(7, 0, 0);
                     data_02092778 = 1;
                     data_0209d4b0 = 0;
                 }
@@ -193,9 +193,9 @@ int Stage::Behavior()
         int bb = (data_0209f2d8 == 2);
         if (bb == 0 && lvl <= 0xe && lvl != lvl2 && data_02092118 < 0
             && (data_02092110 != 0xc || data_0209f268 != 4)) {
-            Scene::SetSceneToSpawn(4, 0);
+            dScene_c::SetSceneToSpawn(4, 0);
         } else {
-            Scene::SetSceneToSpawn(3, 0);
+            dScene_c::SetSceneToSpawn(3, 0);
         }
         if ((IsLevelInsideCastle(data_0209f2f8) == 0 || IsLevelInsideCastle(data_02092110) == 0)
             && (IsLevelTinyHugeIslandOutside(data_0209f2f8) == 0 || IsLevelTinyHugeIslandOutside(data_02092110) == 0)) {

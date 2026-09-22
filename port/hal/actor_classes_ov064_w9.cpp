@@ -17,7 +17,7 @@
 //
 // dsd lays each mwcc class block out as [bodies..., Spawn] and names the block
 // as if it STARTED at the Spawn, so the bodies of id 72 are spelled
-// _ZN12MetalNetLift* and its table is spelled _ZTV12MetalNetLift -- both are the
+// _ZN12MetalNetLift* and its table is spelled _ZTV14daObjFl_Gura_c -- both are the
 // NEIGHBOUR's names. id 69 (METAL_NET_LIFT, hosted by gate 178) is a different
 // class with a different table (_ZTV17daObjFl_Amilift_c, 0x0211bc68) and the
 // func_ov064_02117* bodies. hal/actor_classes_ov064_gate178.cpp's own header
@@ -28,7 +28,7 @@
 //            extracted/overlays/overlay_0064.bin at base 0x02115ee0 (ov064 is
 //            compressed:true in overlays.yaml, so the dsd export is the
 //            COMPRESSED image and halfword reads out of it are noise):
-//              word[0] = 0x021180fc  TiltingPlatformLll_Spawn, INSIDE ov064
+//              word[0] = 0x021180fc  daObjFl_Gura_c_classInit, INSIDE ov064
 //                                    [0x02115ee0, 0x0211c640)
 //              +4 halfword = 72      the id the registry itself cross-checks
 //            BOTH attribution routes, which is the rule -- sibling overlays
@@ -47,19 +47,19 @@
 // The reloc run at 0x0211bd2c is 32 entries and ends at 0x0211bdac; the next
 // dsd data symbol is data_ov064_0211bdac, landing EXACTLY on that end. Both
 // pins agree, so the width is 32 and slot 31 (ov002 0x020ee55c,
-// _ZN8Platform4KillEv, already in walk_window.map) is real rather than a read
+// _ZN10dBgActor_c4KillEv, already in walk_window.map) is real rather than a read
 // past the end -- the [31] bug hal/actor_classes_wf.cpp's header describes.
 //
 // ---- SLOTS 6 AND 9 ARE ov002's, NOT ov064's -------------------------------
 //
-// Behavior and Render are func_ov002_020b616c / func_ov002_020b6144, the shared
+// Behavior and Render are _ZN15daObjGuragura_c8BehaviorEv / _ZN15daObjGuragura_c6RenderEv, the shared
 // TILTING pair -- the SAME two bodies ov045's id 141 dispatches through, both
 // already linked, so they cost this lane no new TU. A fill that only wrote
 // 0/3/16/17 out of ov064 would leave this class's Behavior and Render null.
 //
 // ---- THE FACTORY TRAP: base store then own store --------------------------
 //
-// src/TiltingPlatformLll_Spawn.c ends `p[0] = _ZTV14daObjFl_Gura_c; p[0] = VT1;`
+// src/game/actors/d_a_obj_fl_gura.cpp ends `p[0] = _ZTV14daObjFl_Gura_c; p[0] = VT1;`
 // and the recovered NAMING IS SHIFTED against what the ROM does. Disassembling
 // the body (ov064 0x021180fc, 0x3c bytes) settles which store is which:
 //
@@ -130,43 +130,45 @@
 //
 // 0x0211bd2c is EXCLUDED from the ov064 per-symbol mount and declared here as a
 // host array -- the ov015/ov016/ov080 rule, since a mounted vtable hands the
-// factory DS code addresses. Its two names (the dsd _ZTV12MetalNetLift and the
+// factory DS code addresses. Its two names (the dsd _ZTV14daObjFl_Gura_c and the
 // RTTI _ZTV14daObjFl_Gura_c) are aliased onto the one array.
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
 extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include "dsstate_seg.h"
 
-#include "Actor.h"
-#include "ActorBase.h"
+#include "dActor_c.h"
+#include "fBase_c.h"
 
 extern "C" {
 /* the arm9 shared half, slots 1..30 */
-int _ZN5Actor19BeforeInitResourcesEv(void *self);              /* slot 1  */
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
-int _ZN5Actor14BeforeBehaviorEv(void *self);                   /* slot 7  */
-int _ZN5Actor12BeforeRenderEv(void *self);                     /* slot 10 */
-int _ZN5Actor13OnYoshiTryEatEv(void *self);                    /* slot 18 */
-void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
-int _ZN5Actor9Virtual50Ev(void *self);                         /* slot 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);              /* slot 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);              /* slot 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
-int _ZN5Actor16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
-void _ZN8Platform4KillEv(void *self);                              /* slot 31 */
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);              /* slot 1  */
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);                   /* slot 7  */
+int _ZN8dActor_c12BeforeRenderEv(void *self);                     /* slot 10 */
+int _ZN8dActor_c13OnYoshiTryEatEv(void *self);                    /* slot 18 */
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
+int _ZN8dActor_c9Virtual50Ev(void *self);                         /* slot 20 */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);              /* slot 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);              /* slot 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
+int _ZN8dActor_c16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
+void _ZN10dBgActor_c4KillEv(void *self);                              /* slot 31 */
 
 const char *port_actor_class_name(unsigned id);   /* hal/actor_registry */
 void port_actor_slot_decline(const char *what);   /* func_02043fdc_hostcopy.cpp */
@@ -174,28 +176,27 @@ void port_actor_render_probe(const char *cls, void *model); /* hal/actor_classes
 
 /* id 72's own four bodies, spelled with the neighbour's class name (the dsd
    block shift documented above). Init/Cleanup are the ov002 veneers. */
-int _ZN12MetalNetLift13InitResourcesEv(void *self);     /* slot 0  */
-int _ZN12MetalNetLift16CleanupResourcesEv(void *self);  /* slot 3  */
-int *_ZN12MetalNetLiftD1Ev(int *self);                  /* slot 16 */
-int *_ZN12MetalNetLiftD0Ev(int *self);                  /* slot 17 */
+int _ZN14daObjFl_Gura_c13InitResourcesEv(void *self);     /* slot 0  */
+int _ZN14daObjFl_Gura_c16CleanupResourcesEv(void *self);  /* slot 3  */
+int *_ZN14daObjFl_Gura_cD1Ev(int *self);                  /* slot 16 */
+int *_ZN14daObjFl_Gura_cD0Ev(int *self);                  /* slot 17 */
 /* slots 6 and 9: ov002's shared TILTING pair, already linked for ov045's id
    141. Behavior slerps the platform toward the rider's push; Render is its
    sibling. */
-int func_ov002_020b616c(char *self);                    /* slot 6  */
-int func_ov002_020b6144(void *self);                    /* slot 9  */
-void *TiltingPlatformLll_Spawn(void);
+int _ZN15daObjGuragura_c8BehaviorEv(char *self);                    /* slot 6  */
+int _ZN15daObjGuragura_c6RenderEv(void *self);                    /* slot 9  */
+void *daObjFl_Gura_c_classInit(void);
 
 /* the one ov064 initialiser this class needs (see the header) */
 void __sinit_ov064_0211b078(void);
 
 DSSTATE_BEGIN
-void *_ZTV12MetalNetLift[32];
+void *_ZTV14daObjFl_Gura_c[32];
 DSSTATE_END
 }
 /* gura = the tilting one. The D1/D0 restore the OWN table by this RTTI
    spelling; the relocs at 0x02118064 / 0x021180c4 say 0x0211bd2c, which is this
    array. */
-#pragma comment(linker, "/alternatename:__ZTV14daObjFl_Gura_c=__ZTV12MetalNetLift")
 
 // ---- the trap --------------------------------------------------------------
 static void w9tp_trap_report(void *self, int slot)
@@ -217,53 +218,53 @@ W9TP_TRAP(13) W9TP_TRAP(14) W9TP_TRAP(17)
 #undef W9TP_TRAP
 
 static int __fastcall w9tp_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall w9tp_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall w9tp_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 static void __fastcall w9tp_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall w9tp_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall w9tp_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall w9tp_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall w9tp_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall w9tp_pdes(void *s, void *)
-{ ((ActorBase *)s)->ActorBase::OnPendingDestroy(); return 0; }
+{ ((fBase_c *)s)->fBase_c::OnPendingDestroy(); return 0; }
 static int __fastcall w9tp_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int __fastcall w9tp_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 /* slot 19 takes the three-parameter shape so it emits `ret 4`: the dispatch
    site pushes the Player the callee pops -- the wf_turn_egg contract. */
 static int __fastcall w9tp_turn_egg(void *s, void *, void *p)
-{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+{ _ZN8dActor_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall w9tp_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall w9tp_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall w9tp_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall w9tp_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall w9tp_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall w9tp_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall w9tp_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall w9tp_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall w9tp_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 static int __fastcall w9tp_egg(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 static int __fastcall w9tp_kill(void *s, void *)
-{ _ZN8Platform4KillEv(s); return 0; }
+{ _ZN10dBgActor_c4KillEv(s); return 0; }
 
 /* Slots 1..30, every word read off the ROM table's relocations. The caller
    writes its own 0/3/6/9/16/17 and its 31. Slots 13/14 are the ActorBase
@@ -334,40 +335,40 @@ static void w9tp_bringup(void)
 // MovingMeshCollider at +0x124 (both straight out of the D1/D0 chains, which
 // also settle the member order).
 static int __fastcall w9tp_init(void *s, void *)
-{ return _ZN12MetalNetLift13InitResourcesEv(s); }
+{ return _ZN14daObjFl_Gura_c13InitResourcesEv(s); }
 static int __fastcall w9tp_clean(void *s, void *)
-{ return _ZN12MetalNetLift16CleanupResourcesEv(s); }
+{ return _ZN14daObjFl_Gura_c16CleanupResourcesEv(s); }
 static int __fastcall w9tp_behavior(void *s, void *)
-{ return func_ov002_020b616c((char *)s); }
+{ return _ZN15daObjGuragura_c8BehaviorEv((char *)s); }
 static int __fastcall w9tp_render(void *s, void *)
 { port_actor_render_probe("TILTING_PLATFORM_LLL", (char *)s + 0xd4);
-  return func_ov002_020b6144(s); }
+  return _ZN15daObjGuragura_c6RenderEv(s); }
 static int __fastcall w9tp_d1(void *s, void *)
-{ return (int)(size_t)_ZN12MetalNetLiftD1Ev((int *)s); }
+{ return (int)(size_t)_ZN14daObjFl_Gura_cD1Ev((int *)s); }
 static int __fastcall w9tp_d0(void *s, void *)
-{ return (int)(size_t)_ZN12MetalNetLiftD0Ev((int *)s); }
+{ return (int)(size_t)_ZN14daObjFl_Gura_cD0Ev((int *)s); }
 
 /* The factory ends on `p[0] = <base>; p[0] = VT1;` -- base store then the
    zeroed placeholder (the disassembly is in this file's header). The wrapper
    reseats the ROM's final value. */
 extern "C" void *port_factory_tilting_platform_lll(void)
 {
-    void *p = TiltingPlatformLll_Spawn();
+    void *p = daObjFl_Gura_c_classInit();
     if (p)
-        *(void **)p = (void *)_ZTV12MetalNetLift;
+        *(void **)p = (void *)_ZTV14daObjFl_Gura_c;
     return p;
 }
 
 extern "C" void hal_fill_tilting_platform_lll_vtable(void)
 {
     w9tp_bringup();
-    void *volatile *vt = (void *volatile *)_ZTV12MetalNetLift;
+    void *volatile *vt = (void *volatile *)_ZTV14daObjFl_Gura_c;
     w9tp_fill_shared(vt);
     vt[0]  = (void *)w9tp_init;
     vt[3]  = (void *)w9tp_clean;
     vt[6]  = (void *)w9tp_behavior;
     vt[9]  = (void *)w9tp_render;
-    vt[16] = (void *)w9tp_d1;
+    vt[16] = (void *)PORT_D16(w9tp_d1);
     vt[17] = (void *)w9tp_d0;
     vt[31] = (void *)w9tp_kill;
 }

@@ -27,7 +27,7 @@ What IS observable, and what the seven rungs check:
 
   RUNG 1  STATIC.  walk_window.map carries all five matched symbols the gate
           enrolled: ?CleanupResources@Stage@@QAEHXZ (slot 3's body),
-          __ZN5StageD2Ev and __ZN5StageD0Ev (slots 16 and 17), and slot 3's two
+          __ZN5StageD1Ev and __ZN5StageD0Ev (slots 16 and 17), and slot 3's two
           leaves __ZN5Sound21ResetPlayerVoiceGroupEv and
           __ZN7Message15ResetAllGlobalsEv. Before the seat /OPT:REF dropped
           every one of them for want of a reference.
@@ -107,7 +107,7 @@ WANT_SYMS = (
     "?CleanupResources@Stage@@QAEHXZ",
     "__ZN5Sound21ResetPlayerVoiceGroupEv",
     "__ZN7Message15ResetAllGlobalsEv",
-    "__ZN5StageD2Ev",
+    "__ZN5StageD1Ev",
     "__ZN5StageD0Ev",
 )
 
@@ -228,7 +228,7 @@ def main():
         mt = M.text(mapf)
         for s in WANT_SYMS:
             # Whole-token match: a substring test would let
-            # __ZN5StageD2Ev pass on a row that only mentions it inside
+            # __ZN5StageD1Ev pass on a row that only mentions it inside
             # another name, and the D0/D2 pair is exactly the shape that
             # invites that mistake.
             check(re.search(r"(?<![A-Za-z0-9_?@$])" + re.escape(s) +

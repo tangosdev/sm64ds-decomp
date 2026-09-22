@@ -233,7 +233,7 @@ def check_peek(scene):
 # (128, 40), drag to (128, 180), let go. See src/func_ov006_020fe2e4.c for the
 # grab -- it arms on the press EDGE and captures ball-minus-stylus, so the press
 # has to land on the ball or the pull holds the wrong offset -- and
-# src/func_ov006_020fe394.c for the release, which fires towards (128, 32) with
+# src/func_ov006_020fe394.cpp for the release, which fires towards (128, 32) with
 # a speed the pull distance sets. Straight up, across the band.
 LAUNCH = "200:128:40,201-210:128:180,211-215"
 

@@ -17,7 +17,7 @@
 # matched TUs already dispatch them __thiscall. It does not settle where the
 # ONE disagreeing call site has to be spelled. lane FOLD2 had already shipped
 # exactly that fix for dScMgSnowball_c (hostgen VIRTUAL_CALL row
-# func_ov006_02127d10, "one VIRTUAL_CALL row in port/tools/hostgen.py away"),
+# _ZN15dScMgSnowball_c6RenderEv, "one VIRTUAL_CALL row in port/tools/hostgen.py away"),
 # and every host copy this lane retires ALREADY makes the same one-line change
 # by hand -- it just makes it in a transcribed copy of the body instead of in
 # the byte-locked source's own generated TU. So the change to what runs is
@@ -186,12 +186,12 @@ src/func_ov074_021222e0.cpp
 #             was outside its files; the call site needs no reshaping at all.
 #   retires   port/unmatched/MgShared4f38_ShadowFader_020c2924.cpp
 #
-# func_ov098_02137d40 (ov098), ArrowSignRight::OnAttacked1
+# _ZN14ArrowSignRight11OnAttacked1ER8dActor_c (ov098), ArrowSignRight::OnAttacked1
 #   referrer  _ZTV15daObjYajirusi_c (= _ZTV14ArrowSignRight) @ 0213c3d8, word 22
 #             config/arm9/overlays/ov098/relocs.txt
 #             from:0x0213c430 kind:load to:0x02137d40 module:overlay(98)
 #             (0x0213c430 - 0x0213c3d8 = 0x58 = word 22)
-#   record    func_ov098_02137d40 kind:function(arm,size=0x40) addr:0x02137d40   (overlays/ov098/symbols.txt:5)
+#   record    _ZN14ArrowSignRight11OnAttacked1ER8dActor_c kind:function(arm,size=0x40) addr:0x02137d40   (overlays/ov098/symbols.txt:5)
 #   dispatch  02137d68  ldr r1,[r0] / ldr r1,[r1,#0x7c] / blx r1
 #                       byte +0x7c = word 31, Kill, no argument, r0 = this
 #   patch     word 31 __fastcall(c, 0). FACEF called the fix decomp-side
@@ -232,7 +232,7 @@ src/func_ov074_021222e0.cpp
 #             from:0x02111648 kind:arm_call to:0x02111350 module:overlay(32)
 #   record    func_ov032_02111350 kind:function(arm,size=0xac) addr:0x02111350   (overlays/ov032/symbols.txt:4)
 #   dispatch  02111350  push {r4,lr} / mov r4,r0 / bl 0x02010ad8
-#             and 0x02010ad8 is _ZN5Actor13ClosestPlayerEv
+#             and 0x02010ad8 is _ZN8dActor_c13ClosestPlayerEv
 #             (config/arm9/symbols.txt:297), reached with r0 still holding the
 #             receiver -- mwccarm had nothing to move
 #   patch     the declaration gains its receiver and the call passes `c`
@@ -244,16 +244,16 @@ src/func_ov074_021222e0.cpp
 #             file for that reason as well as the mechanical one.
 #   retires   port/unmatched/Bubba_ChaseGate.cpp
 #
-# func_ov002_020e5948 (ov002) and func_ov072_02120a44 (ov072), the two
+# func_ov002_020e5948 (ov002) and _ZN11daBgSnwmn_c13InitResourcesEv (ov072), the two
 # TextureSequence::Prepare callers -- the SHORT-1 argsweep row
 #   referrer  ov002: from:0x020e56d4 kind:arm_call to:0x020e5948 module:overlay(2)
 #                    (inside _ZN6Player13InitResourcesEv)
-#             ov072: data_ov072_02122978[0] @ 02122978 = 02120a44   (overlay_0072.bin, base 0211f000)
+#             ov072: _ZTV11daBgSnwmn_c[0] @ 02122978 = 02120a44   (overlay_0072.bin, base 0211f000)
 #                    vtable-4 @ 02122974 -> typeinfo 02122938 -> name "11daBgSnwmn_c"
 #                    (config/arm9/overlays/ov072/relocs.txt agrees:
 #                     from:0x02122978 kind:load to:0x02120a44 module:overlay(72))
 #   record    func_ov002_020e5948 kind:function(arm,size=0x9e8) addr:0x020e5948   (overlays/ov002/symbols.txt:1024)
-#             func_ov072_02120a44 kind:function(arm,size=0x1bc) addr:0x02120a44   (overlays/ov072/symbols.txt:57)
+#             _ZN11daBgSnwmn_c13InitResourcesEv kind:function(arm,size=0x1bc) addr:0x02120a44   (overlays/ov072/symbols.txt:57)
 #   dispatch  not a vtable word: TextureSequence::Prepare is a real non-static
 #             method consuming r0 this / r1 model / r2 animFile, its ROM body
 #             is a 0xc tail-call veneer into func_02046d50 which touches none
@@ -265,7 +265,7 @@ src/func_ov074_021222e0.cpp
 #             repeats its own second argument -- a known-valid BTP_File
 #             pointer, which is the shape both retired host copies already ship
 #             and which MotherPenguin_InitResources.cpp derived
-#   ADJUDICATED (ov072): src/func_ov072_02120a44.c carries the inferred-stub
+#   ADJUDICATED (ov072): src/_ZN11daBgSnwmn_c13InitResourcesEv.c carries the inferred-stub
 #             marker and is listed REAL_DECOMP in
 #             port/tools/inferred_stub_adjudicated.txt (lane STUBADJ)
 #   retires   port/unmatched/TexSeq_Caller_ov002_020e5948.cpp and
@@ -331,7 +331,7 @@ src/func_ov074_021222e0.cpp
 # func_ov006_02107db8 (ov006), the roulette WHEEL's per-frame tick.
 #   referrer  config/arm9/overlays/ov006/relocs.txt
 #             from:0x0210a120 kind:arm_call to:0x02107db8 module:overlay(6)
-#             (vtable slot 6, func_ov006_02109aac, the class's Behavior; the
+#             (vtable slot 6, _ZN15dScMgRoulette_c8BehaviorEv, the class's Behavior; the
 #              only arm_call in the whole overlay that reaches this body)
 #   record    func_ov006_02107db8 kind:function(arm,size=0xf0) addr:0x02107db8   (overlays/ov006/symbols.txt:1330)
 #   WHY NOT: it is not one seam but three, and the third is a LAYOUT. The

@@ -5,8 +5,8 @@
 # which is why they carry no position in the object tables the other classes
 # come out of. The overlay is already mounted (gate 21, port/ov100_syms.txt).
 #
-# THE CLASS IS UNNAMED IN CONFIG AND ITS NAME IS TAKEN. Door_Spawn installs
-# the vtable at ov100 0x02148188, which config calls data_ov100_02148188 and
+# THE CLASS IS UNNAMED IN CONFIG AND ITS NAME IS TAKEN. daDoor_c_classInit installs
+# the vtable at ov100 0x02148188, which config calls _ZTV4Door and
 # the ROM's RTTI calls 8daDoor_c; config's `_ZTV4Door` is a DIFFERENT table at
 # 0x021483cc whose RTTI reads 12daStarGate_c, and the whole _ZN4Door* method
 # family hangs off that one. So the star door wears the door's name and the
@@ -16,19 +16,18 @@
 #
 # That is also why port/ov100_syms.txt has to exclude 0x02148188 by address:
 # the "_ZTV*" rule cannot see a vtable dsd left as data_ov100_*, and mounting
-# it would hand Door_Spawn a table of DS code addresses instead of the host
+# it would hand daDoor_c_classInit a table of DS code addresses instead of the host
 # array hal/actor_classes.cpp fills.
 
 # ---- the six own slots ----------------------------------------------------
-src/Door_Spawn.c
-src/func_ov100_021455a0.c
+src/d_a_door.c
+src/game/actors/d_a_star_gate.cpp
 # CleanupResources moved to a HOST COPY at gate 31 (port/unmatched/
 # Door_CleanupResources.cpp): it deletes the door's second Model through a
 # local shadow class at ROM slot 1, which the port's MSVC-ordered
 # _ZTV5Model uses for DoSetFile. Nothing dispatched it until there was a
 # level teardown; the first one faulted inside Model::AddToCommonModelDataArr.
-src/func_ov100_021454c4.c
-# func_ov100_02145550 (Behavior) and func_ov100_021453d8 (its callback
+# _ZN4Door8BehaviorEv (Behavior) and func_ov100_021453d8 (its callback
 # installer) are NOT here: both form an mwcc pointer-to-member of an
 # INCOMPLETE class, the gate-16 case for the sixth time, and this is the first
 # one whose table is a POINTER THE ACTOR CARRIES (+0x140) rather than an index
@@ -36,7 +35,7 @@ src/func_ov100_021454c4.c
 # port/unmatched/Door_Behavior.cpp; all fifteen callbacks are matched src, so
 # that file carries no trap.
 #
-# func_ov100_021454c8 (Render) is NOT here either: it dispatches ModelAnim
+# _ZN4Door6RenderEv (Render) is NOT here either: it dispatches ModelAnim
 # slot 5, Model slot 4 and Model slot 5 through local shadow classes, which is
 # ROM numbering. Slot 5 the dual fill serves on both classes; SLOT 4 IT CANNOT
 # -- MSVC's Model slot 4 is Render where the ROM's is Virtual10. Gate 19's
@@ -87,29 +86,20 @@ src/UnloadKeyModels.cpp
 # at, the same wall SIGN_POST's read branch and the RABBIT's catch path meet
 # (hal/actor_vtables.cpp). Nothing on the castle grounds reaches them with the
 # entrance gate the level boot leaves in place.
-src/_ZN6Player11OpenBigDoorEv.cpp
-src/_ZN6Player12Unk_020ca488Ev.cpp
-src/_ZN6Player13TryTalkToDoorEh.cpp
-src/_ZN6Player16TryTalkToKeyDoorEv.cpp
-src/_ZN6Player16SetRealCharacterEj.cpp
-src/_ZN6Player17PlayMammaMiaSoundEv.cpp
-src/_ZN6Player21IsOpeningDoorWithStarEv.cpp
+src/actors/Player.cpp
 src/_ZN6Camera14GoBehindPlayerEj.cpp
-src/_ZN8SaveData17SetCharacterIntroEi.c
+src/_ZN8SaveData17SetCharacterIntroEi.cpp
 src/func_0201277c.c
 
 # --- linkloop round 1 ---
 # func_020ca78c is ov002's own func_ov002_020ca78c; the door's TU declares it
 # without the overlay prefix, the same slip as func_02132894 above.
-src/func_ov002_020ca78c.c
-src/_ZN6Player24TryExitWhiteDoorWithStarEv.cpp
 src/SetTouchScreenDelay.c
 # CanEnterDoor was the one hole in the door (NONMATCHING, trapped by name in
 # port/unmatched/Door_Behavior.cpp) until 2026-08-07, when the div=1 residue
 # fell: the +0x48 vcall respelled as real C++ virtual dispatch restores the
 # natural arg homing and the plain source matches byte-identically (PR #1223,
 # notes/mwccarm-codegen.md 6bc). Matched src, so it compiles like any other.
-src/_ZN6Player12CanEnterDoorEh.c
 
 # ---- ov089's single static initialiser ------------------------------------
 # The one thing the fourth overlay is mounted for: it constructs the sixteen

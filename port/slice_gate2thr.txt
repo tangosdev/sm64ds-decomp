@@ -35,7 +35,7 @@ src/func_02057e34.c
 #   src/ARMProcessorMode.c   hand-asm mrs cpsr. Already PORT_HOST_ABI in
 #       hal/cxx_aliases.cpp:321, answering 0x1f (system mode), which is the
 #       right answer for a host that runs every handler as a plain call.
-#   src/_ZN4CP1516WaitForInterruptEv.c   the CP15 halt instruction itself.
+#   src/_ZN4CP1516WaitForInterruptEv.cpp   the CP15 halt instruction itself.
 #       PORT_HOST_ABI in hal/boot2_thread.cpp.
 #   src/func_02058308.c   the ROM thread-system init. It reads the ITCM entry
 #       symbols and DTCM for the main thread's stack bounds and writes

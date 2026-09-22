@@ -1,6 +1,6 @@
 // HOST ADOPTION of the banked near-miss draft -- not byte-verified.
 //
-// Source: nearmiss/db.jsonl, _ZN12MeshCollider10DetectClsnER11RaycastLine,
+// Source: nearmiss/db.jsonl, _ZN7dBgW_Kc10DetectClsnER9dBgCh_Lin,
 // banked at div=476. Per notes/itcm.md the residual is REGISTER ALLOCATION
 // (the ROM's 0xfc frame vs our 0xc4 -- fourteen spilled scalars), not
 // logic: every step of the algorithm is confirmed against the disassembly
@@ -8,14 +8,14 @@
 // When the byte match lands in src/, this file retires per the port rule.
 //
 //cpp
-#include "MeshCollider.h"
+#include "dBgW_Kc.h"
 
-struct ClsnResult { u8 raw[0x1c]; };
+struct dBgPi { u8 raw[0x1c]; };
 struct SurfaceInfo { u8 clps[8]; Vector3 normal; };
 
-struct RaycastLine {
+struct dBgCh_Lin {
     u8      head[0x10];
-    ClsnResult result;      /* 0x10 */
+    dBgPi result;      /* 0x10 */
     u8      pad_02c[0xc];
     Vector3 lineStart;      /* 0x38 */
     u8      pad_044[0xc];
@@ -28,13 +28,13 @@ struct RaycastLine {
 extern "C" {
 int  func_020397dc(s32 x);
 int  func_020397b8(s32 x);
-void func_02037eec(SurfaceInfo *info);
-void func_02037ee8(SurfaceInfo *info);
-void func_02037fd4(ClsnResult *res, s16 triIdx, SurfaceInfo *info);
-void func_020375ec(RaycastLine *ray, Vector3 *pos);
-u32  func_020396dc(MeshCollider *self, KCL_Tri *prism);
-int  _ZN4BgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b(void *self, SurfaceInfo *surf,
-                                                    RaycastLine *ray, int isSteep);
+void _ZN5dBgPcC1Ev(SurfaceInfo *info);
+void _ZN5dBgPcD1Ev(SurfaceInfo *info);
+void func_02037fd4(dBgPi *res, s16 triIdx, SurfaceInfo *info);
+void func_020375ec(dBgCh_Lin *ray, Vector3 *pos);
+u32  func_020396dc(dBgW_Kc *self, KCL_Tri *prism);
+int  _ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b(void *self, SurfaceInfo *surf,
+                                                    dBgCh_Lin *ray, int isSteep);
 Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
 s32  _ZN4cstd4fdivEii(s32 a, s32 b);
 void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(SurfaceInfo *self, Vector3 *out);
@@ -45,7 +45,7 @@ extern "C" int g_walk_dbg[16] = {0};
    [4] planeE [5..7] edge rejections [8] e3-high [9] denom [10] parallel
    [11] dist [12] pass-through. Cheap enough to keep permanently. */
 
-s32 MeshCollider::DetectClsn(RaycastLine &ray)
+s32 dBgW_Kc::DetectClsn(dBgCh_Lin &ray)
 {
     s32 loX, hiX;
     s32 loY, hiY;
@@ -74,7 +74,7 @@ s32 MeshCollider::DetectClsn(RaycastLine &ray)
        same six bits for every collider in the game. That is what runs here.
 
        This used to route the conversion through the collider's own
-       MeshCollider+0x2c / +0x38 words instead, with the level's pair written
+       dBgW_Kc+0x2c / +0x38 words instead, with the level's pair written
        by hand as 0x40000 / 0x40 so the multiply reduced to the ROM's shift.
        It reduced for the level and for nothing else: MovingMeshCollider::
        SetFile leaves those words at SetFile's 1.0, so every actor-owned
@@ -220,16 +220,16 @@ s32 MeshCollider::DetectClsn(RaycastLine &ray)
                     dist = Vec3_Dist(&hit, &s) >> 6;
                     if (bestDist <= dist) { ++g_walk_dbg[11]; continue; }
 
-                    func_02037eec(&info);
+                    _ZN5dBgPcC1Ev(&info);
                     triIdx = func_020396dc(this, prism);
                     g_walk_dbg[13] = (s32)triIdx;
                     g_walk_dbg[14] = prism->attribute;
                     /* the ROM dispatches this virtually (notes/itcm.md, the
                        one lever); the port calls it direct -- same target,
                        no dependence on the synthetic vtable being filled */
-                    MeshCollider::GetSurfaceInfo(triIdx, info);
+                    dBgW_Kc::GetSurfaceInfo(triIdx, info);
                     _ZNK11SurfaceInfo12CopyNormalToER7Vector3(&info, &normal);
-                    if (!_ZN4BgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b(
+                    if (!_ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b(
                             this, &info, &ray, func_020397b8(normal.y))) {
                         best.x = hit.x;
                         best.y = hit.y;
@@ -238,7 +238,7 @@ s32 MeshCollider::DetectClsn(RaycastLine &ray)
                         func_02037fd4(&ray.result, triIdx, &info);
                         found = 1;
                     } else ++g_walk_dbg[12];
-                    func_02037ee8(&info);
+                    _ZN5dBgPcD1Ev(&info);
                 }
             }
             prevLeaf = rowLeaf;

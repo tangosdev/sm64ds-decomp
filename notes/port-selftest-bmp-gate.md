@@ -12,22 +12,30 @@ defect that made the rule necessary.
 ## The rule
 
 **Compare selftest BMPs byte-exact only between builds whose `.dsstate` section
-lands at the same base address.** If the bases differ, the comparison says nothing.
+lands at the same base address with the same interior layout.** An equal base is
+necessary and not sufficient (the doctrine block in `port/tools/battery.py`,
+measured 2026-08-16): an insertion inside `.dsstate` shifts every hosted global
+past it while leaving the section base exactly where it was, and the frame follows
+the addresses. If base or span differ, the comparison says nothing.
 
 `.dsstate` is the PE section holding the hosted DS globals (`hal/dsstate_seg.cpp`
 brackets it with the `dsstate_lo` / `dsstate_hi` sentinels). Any change that grows
 port code or data past a 4 KB page boundary moves that base, and a naive byte
 compare then reports a difference with nothing wrong in the change. The difference
 looks exactly like a rendering regression: a handful of pixels, plausible colours,
-in a plausible place.
+in a plausible place. A change that adds or grows a hosted global moves the
+interior instead, to the same effect, with no base movement to flag it.
 
-To compare across a base change, pad the smaller build with an inert file-scope
-`.data` blob in 4 KB steps, outside any DSSTATE bracket, until the bases agree, then
-compare. Read the base from `dumpbin /headers`, or from the layout line the selftest
-prints beside the BMP.
+To compare across a layout change, pad the smaller build with an inert file-scope
+`.data` blob in 4 KB steps, outside any DSSTATE bracket, until base and span both
+agree, then compare. Read both from the `dsstate_guard` line the link prints, or
+from the layout line the selftest prints beside the BMP. Verify any pad is actually
+present in the .obj or the map before trusting what it measures; the retired row
+below is what happens otherwise.
 
-Do not answer a base-shift failure by adopting a pixel budget. A tolerance would hide
-the class of defect described below, which is what the gate exists to catch.
+Do not answer a base- or span-shift failure by adopting a pixel budget. A tolerance
+would hide the class of defect described below, which is what the gate exists to
+catch.
 
 ## The measurement that established it
 
@@ -37,9 +45,15 @@ all reaching an identical final player position (-4915200, 2805556, 9342995):
 | build | `.dsstate` base | BMP md5 |
 |---|---|---|
 | base as-is | 0x9ee000 | eb32dcab491562c27348aad32273cd8a |
-| base + 16B inert `.bss` | 0x9ee000 | eb32dcab491562c27348aad32273cd8a |
+| base + 16B inert `.bss` (retired) | 0x9ee000 | eb32dcab491562c27348aad32273cd8a |
 | base + 4KB inert `.data` | 0x9ef000 | 518ba22ae2604117409491e0c4f38056 |
 | base + 8KB inert `.data` | 0x9f0000 | 15fde8a893d010d8d46e3c7dc284ac47 |
+
+The `.bss` row is retired as a null result (measured 2026-08-16, recorded in
+`battery.py`): a volatile `.bss` pad is dropped by the compiler, absent from the
+recompiled .obj and not merely from the map, so that build was the base build under
+another name and its row measures nothing. Check any pad for presence in the .obj
+or the map before believing what it measures.
 
 Padding used: `extern "C" __declspec(dllexport) unsigned char rev_pad_data[4096] = {1};`
 
@@ -54,12 +68,11 @@ The address dependence was not a blend step or a draw-order step keyed off a poi
 It was an array running off the end of the block that hosted it, into memory whose
 contents depend on the image base.
 
-The castle moat water is a texgen mode 1 material whose S/T translation comes from a
+The *castle moat water* is a **texgen mode 1 material** whose S/T translation comes from a
 91 frame BTA track: `src/func_020469e8.c` reads `tableC[idx+frame]`,
 `TextureTransformer::Update` supplies the frame, and `Animation::Advance` wraps modulo
-the BTA header's 91. The track is one contiguous run of 91 Fix12 words at ov009 DS
+the BTA header's 91. The track is one contiguous run of 91 `Fix12` words at [ov009](../config/arm9/overlays/ov009/symbols.txt) DS
 address 0x021122ec.
-
 Nothing named that track, so the only thing hosting it was the synthetic gap block
 `port_ov009_gap_0211222c`. A gap block is sized by the next entry in dsd's
 `symbols.txt`, and dsd guessed eleven `ambiguous` boundaries inside the track's span.
@@ -82,7 +95,7 @@ The fix is one line in `port/ov009_syms.txt` naming the array with its ROM exten
 
 Sizing the symbol reshapes the gap runs around it (`port_ov009_gap_02112228` grows
 24 to 96 bytes, `port_ov009_gap_0211222c` shrinks 244 to 40, and a zeroed pad appears
-up to `data_ov009_02112bc4`). Net hosted coverage is +312 bytes of real track and
+up to [data_ov009_02112bc4](../config/arm9/overlays/ov009/symbols.txt)). Net hosted coverage is +312 bytes of real track and
 -100 bytes of unreferenced neighbour span. The track also moves out of ordinary
 `.data` into `.dsstate`, so save states now capture it.
 
@@ -93,19 +106,19 @@ render code it appeared to implicate. Wherever a real array is hosted only by a
 synthetic gap block, a dsd `ambiguous` boundary guess inside its span silently clips
 it, and the overrun reads whatever the linker parked next.
 
-A sweep of the 44 gap blocks found five more proven truncations (two ov009 path
-tables, ov016 CLPS, an ov021 class name string, and an ov070 curve cut at its apex),
+A sweep of the 44 gap blocks found five more proven truncations (two [ov009](../config/arm9/overlays/ov009/symbols.txt) path
+tables, [ov016](../config/arm9/overlays/ov016/symbols.txt) CLPS, an [ov021](../config/arm9/overlays/ov021/symbols.txt) class name string, and an [ov070](../config/arm9/overlays/ov070/symbols.txt) curve cut at its apex),
 all byte-verified against the raw ndspy overlay images in `extracted/overlays/`
-rather than the dsd export copies, which are stale or compressed for ov021.
+rather than the dsd export copies, which are stale or compressed for [ov021](../config/arm9/overlays/ov021/symbols.txt).
 
 Known leftovers, none of them fixed:
 
-- ov009 0x02113104, a path array never hosted at all (contested window).
-- ov002 plain mount named sizing, unaudited (383 targets, no `--pack` protection).
+- [ov009](../config/arm9/overlays/ov009/symbols.txt) 0x02113104, a path array never hosted at all (contested window).
+- [ov002](../config/arm9/overlays/ov002/symbols.txt) plain mount named sizing, unaudited (383 targets, no `--pack` protection).
 - Four spurious `kind:load` relocs inside `data_ov009_021133d4` in
-  `config/arm9/overlays/ov009/relocs.txt`. They are dsd misreading s16 path
-  coordinates that parse as ov006/ov007/ov089 addresses. Harmless while those
-  targets are unhosted; the ov089 leg is one symbol line away from arming a cross
+  [arm9/overlays/ov009/relocs.txt](../config/arm9/overlays/ov009/relocs.txt). They are dsd misreading s16 path
+  coordinates that parse as [ov006](../config/arm9/overlays/ov006/symbols.txt)/[ov007](../config/arm9/overlays/ov007/symbols.txt)/[ov089](../config/arm9/overlays/ov089/symbols.txt) addresses. Harmless while those
+  targets are unhosted; the [ov089](../config/arm9/overlays/ov089/symbols.txt) leg is one symbol line away from arming a cross
   pass overwrite. The banner in `port/ov009_syms.txt` documents it. Suppressing
   entries in shared dsd config is a call for the repo owner, so they are left in
   place deliberately.
@@ -115,8 +128,8 @@ Known leftovers, none of them fixed:
 The rule above is the durable part and applies whether or not the fix lands.
 
 The fix itself is not on `main` and not on any remote. It sits on the local branch
-`bmp-hunt` (six commits, based on the wave 6 port lane commit `daeeb9b29`, fix at
-`95154b8a5`, tip `e4f25f862`), which is the only branch that carries it. The
+`bmp-hunt` (six commits, based on the wave 6 port lane commit `9051ae114`, fix at
+`b6f1b3f79`, tip `4acb6277c`), which is the only branch that carries it. The
 selftest's `.dsstate` layout print landed on the same branch. `main`'s port tree
 predates `walk_window` entirely, so none of this infrastructure exists there yet.
 Post fix, the three layouts above were reported to produce a single md5.

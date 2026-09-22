@@ -35,8 +35,8 @@
 // useless.
 //
 // ONE SYMBOL HAS TWO C++ SPELLINGS AND BOTH ARE REAL.  data_ov006_0214042c is
-// declared `void *` by src/func_ov006_020c8084.cpp and `int` by
-// src/func_ov006_020c893c.cpp, so the link asks for ?...@@3PAXA AND ?...@@3HA.
+// declared `void *` by src/actors/dMgJump3DMario_c.cpp and `int` by
+// src/actors/dMgJump3DMario_c.cpp, so the link asks for ?...@@3PAXA AND ?...@@3HA.
 // Two rows, one right-hand side; that is the two TUs disagreeing about the
 // type of one DS word, not two objects.
 
@@ -52,8 +52,10 @@
 #pragma comment(linker, "/alternatename:?data_ov006_02140468@@3USharedFilePtr@@A=_data_ov006_02140468")
 
 /* the plain-integer and pointer spellings */
-#pragma comment(linker, "/alternatename:?data_ov006_0213afd8@@3HA=_data_ov006_0213afd8")
-#pragma comment(linker, "/alternatename:?data_ov006_0213b0cc@@3HA=_data_ov006_0213b0cc")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEAD RHS and an UNREFERENCED left hand side: nothing in the build defines _data_ov006_0213afd8, and nothing references ?_ZTV22dMg3DHeyhoObjAdapter_c@@3HA, so the row can never fire and nothing wants it to. */
+// #pragma comment(linker, "/alternatename:?_ZTV22dMg3DHeyhoObjAdapter_c@@3HA=_data_ov006_0213afd8")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEAD RHS and an UNREFERENCED left hand side: nothing in the build defines _data_ov006_0213b0cc, and nothing references ?_ZTV16dMgJump3DMario_c@@3HA, so the row can never fire and nothing wants it to. */
+// #pragma comment(linker, "/alternatename:?_ZTV16dMgJump3DMario_c@@3HA=_data_ov006_0213b0cc")
 #pragma comment(linker, "/alternatename:?data_ov006_02140408@@3HA=_data_ov006_02140408")
 #pragma comment(linker, "/alternatename:?data_ov006_0214040c@@3HA=_data_ov006_0214040c")
 #pragma comment(linker, "/alternatename:?data_ov006_02140424@@3HA=_data_ov006_02140424")
@@ -75,10 +77,10 @@
 
 // ---- 2. THE ONE BARE NAME ------------------------------------------------
 //
-// src/func_ov006_020e7124.c declares `extern int func_020beb74[];` and reads
+// src/actors/dScMgD3DBase_c.cpp declares `extern int func_020beb74[];` and reads
 // it.  There is no func_020beb74 in any config: the address 0x020beb74 is
 // ov004's data_ov004_020beb74, a bss symbol.  This is the same defect class as
-// src/func_ov006_020e3578.c's bare `func_020adc74` (port/mg_fanout_costs.txt
+// src/_ZN14dScMgCurling_c13InitResourcesEv.cpp's bare `func_020adc74` (port/mg_fanout_costs.txt
 // section 6) and unmatched/MgCoin_Faces.cpp's `func_020beb68` -- a DATA symbol
 // spelled with the func_ prefix, which no linker can be expected to guess.
 //
@@ -91,10 +93,10 @@
 
 // ---- 2b. A SECOND BARE NAME, AND IT IS A FUNCTION ------------------------
 //
-// src/func_ov006_020c7c68.c declares and calls `func_ov006_020e6df0`, which is
+// src/actors/dMgJump3DMario_c.cpp declares and calls `func_ov006_020e6df0`, which is
 // the ADDRESS-SHAPED spelling of an ov006 body the config gives a real name:
 // config/arm9/overlays/ov006/symbols.txt:  Sound_PlayBank1Panned
-// kind:function(arm,size=0x4c) addr:0x020e6df0.  src/Sound_PlayBank1Panned.cpp
+// kind:function(arm,size=0x4c) addr:0x020e6df0.  src/actors/dScMgD3DBase_c.cpp
 // is in port/slice_bnt.txt and defines it under the NAME, so this is a
 // spelling and not a slice line -- the same shape scene_mg_flower.cpp's
 // `_func_02012754 = __ZN5Sound12PlayBank2_2DEj` row records for the arm9 half
@@ -115,20 +117,20 @@
 //   src/_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj.c define both, and the
 //   second is already in port/slice_gate7.txt, so nothing new is linked.
 //
-//   src/_ZN17MgBounceAndPounce11AfterRenderEj.cpp calls the bare name
+//   src/actors/dScMgD3DBase_c.cpp calls the bare name
 //   `Scene_AfterRender`, which include/decl_common.h declares as
 //   `void(void*, unsigned int)` and which exists in no config.  The address is
 //   0x0202e398 -- dScMgBase_c's own slot 11 in the base table -- and
-//   src/_ZN5Scene11AfterRenderEj.cpp is that body, already in
+//   src/_ZN8dScene_c11AfterRenderEj.cpp is that body, already in
 //   port/slice_w1l2.txt.  IT IS AN ARM TAIL VENEER, spelled in src as
-//   `void(void)` calling _ZN9ActorBase11AfterRenderEj, which is why the arity
+//   `void(void)` calling _ZN7fBase_c11AfterRenderEj, which is why the arity
 //   difference is safe rather than the dropped-receiver defect
 //   hal/method_faces.cpp's checklist warns about: both sides are CDECL, the
 //   CALLER cleans, and the callee reads neither argument.  The ROM does the
 //   same thing -- r0 and r1 ride through the veneer untouched into an empty
 //   body.
 #pragma comment(linker, "/alternatename:?LoadFile@Animation@@SAPAUBCA_File@@AAUSharedFilePtr@@@Z=__ZN9Animation8LoadFileER13SharedFilePtr")
-#pragma comment(linker, "/alternatename:_Scene_AfterRender=__ZN5Scene11AfterRenderEj")
+#pragma comment(linker, "/alternatename:_Scene_AfterRender=__ZN8dScene_c11AfterRenderEj")
 
 // ---- 3b. THE THIRD ONE IS NOT AN ALIAS, AND THE FIRST RUN PROVED IT ------
 //
@@ -190,7 +192,7 @@ int ModelAnimFace::SetAnim(BCA_File *animFile, int flags, int speed,
 //
 //   data_02082614 is a 0x100-byte arm9 .data table -- the delta to
 //   data_02082714, which port/tools/romdata.py already emits -- that
-//   func_ov006_020ef834 loads and reads a SIGNED HALFWORD out of at
+//   _ZN12dScMgJump2_c13InitResourcesEv loads and reads a SIGNED HALFWORD out of at
 //   0x020ef8c8.  It is added to romdata.py's NAMED list rather than hosted
 //   here, because it has REAL ROM BYTES behind it (it is below bss_start and
 //   carries no relocations in its span, both checked) and a zeroed host array

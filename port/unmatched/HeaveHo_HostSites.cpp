@@ -6,7 +6,7 @@
  * out here.
  *
  * HEAVEHO'S DESTRUCTORS NEED NOTHING. Unlike Lakitu's and Spiny's,
- * src/_ZN7HeaveHoD1Ev.c and src/_ZN7HeaveHoD0Ev.c are already plain C bodies
+ * src/_ZN7HeaveHoD1Ev.cpp and src/_ZN7HeaveHoD0Ev.cpp are already plain C bodies
  * that store their table by name (_ZTV7HeaveHo and _ZTV9daPopoi_c) and call
  * flat member destructors, so both stay in the slice as matched source. That
  * asymmetry is the ROM's, not a choice: the three classes were recovered by
@@ -79,18 +79,18 @@ extern int data_0209f32c;
    The reading above is kept because it is the derivation. */
 /* ---- (3) Behavior ------------------------------------------------------ */
 unsigned short DecIfAbove0_Short(unsigned short *p);
-void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *cc);
-int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
-void *_ZNK12WithMeshClsn14GetFloorResultEv(void *self);
+void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *cc);
+int _ZNK10dBgCh_Actr10IsOnGroundEv(void *self);
+void *_ZNK10dBgCh_Actr14GetFloorResultEv(void *self);
 void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *self, void *v);
 int func_02010844(void *unused, void *v, s16 angle);
-int _ZN5Enemy15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_(
+int _ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actrisbbi(
         void *self, void *wm, Fix12i a, s16 b, int c, int d, void *e);
-void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(void *self, void *wm, unsigned int j);
+void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void *self, void *wm, unsigned int j);
 void func_ov077_02126dac(char *t);
 void func_ov077_02126528(char *c);
-void _ZN12CylinderClsn5ClearEv(void *self);
-void _ZN12CylinderClsn6UpdateEv(void *self);
+void _ZN5dCc_c5ClearEv(void *self);
+void _ZN5dCc_c6UpdateEv(void *self);
 void _ZN9Animation7AdvanceEv(void *self);
 extern int data_ov077_02127cd8[];
 

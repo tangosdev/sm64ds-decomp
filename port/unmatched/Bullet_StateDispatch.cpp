@@ -43,12 +43,12 @@ struct PortPmf { unsigned fn; int delta; };
 
 /* Behavior's C-linkage helpers (matched src or hosted) */
 unsigned short DecIfAbove0_Short(unsigned short *p);
-void _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(void *self, void *cc);
-void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(void *self, void *wm,
+void _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(void *self, void *cc);
+void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void *self, void *wm,
                                               unsigned int j);
 void func_ov002_020fed7c(void *self);
-void _ZN12CylinderClsn5ClearEv(void *self);
-void _ZN12CylinderClsn6UpdateEv(void *self);
+void _ZN5dCc_c5ClearEv(void *self);
+void _ZN5dCc_c6UpdateEv(void *self);
 
 /* the descriptor the sinit fills: [0] = enter half, [1] = main half */
 extern PortPmf data_ov002_02111190[2];

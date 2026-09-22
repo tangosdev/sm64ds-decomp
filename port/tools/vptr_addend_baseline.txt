@@ -1,0 +1,114 @@
+# port/tools/vptr_addend_baseline.txt -- the vtable stores this tree is KNOWN to
+# make at a nonzero addend, one row per (object, vtable symbol, applied value).
+#
+# Every row here is a class whose factory writes its object's vptr TWO SLOTS HIGH
+# on the host: the decomp spells the Itanium address point, which mwcc needs
+# because its own vtable symbol denotes the object start, and the port's tables
+# have no header words for that bias to skip. Lane VPTR's measurement and the
+# five-class disassembly are in runs/link100/out/VPTR/report.md.
+#
+# THE FILE IS MEANT TO SHRINK. A row leaves it when its TU joins
+# port/CMakeLists.txt's PORT_HOSTGEN_TU list, where tools/hostgen.py's
+# VPTR_ADDRESS_POINT rewrite drops the bias, or when the decomp side settles it.
+# port/tools/vptr_addend_guard.py refuses any row that is NOT here, so a class
+# main promotes to a key-function TU tomorrow stops the build instead of
+# dispatching silently wrong.
+#
+# A ROW IS A DEFECT ON HOLD, NOT AN EXEMPTION. Retiring one of these stores is a
+# DISPATCH CHANGE (in3/COMMON.md): the port's four factory host copies are the
+# only correct stores in the tree today, and the VPTR ruling sequences the swap
+# behind a linking tree and a scene-to-level capture. Until then the rows sit
+# here so that the SEVENTY-SECOND one stops the build.
+#
+#   <source path>.obj  <vtable symbol>  <applied value>
+# RETIRED 2026-09-16, run link100 wave 10 round 2, lanes SCENES1 and SCENES2:
+# THE OV006 MINIGAME SCENE FAMILY, the nine rows the VPTR16 block above named
+# as the residue and left as one coherent follow-up. They are gone because
+# their seven translation units joined port/CMakeLists.txt's PORT_HOSTGEN_TU
+# list, where tools/hostgen.py's VPTR_ADDRESS_POINT rewrite drops the bias.
+#
+# This one was CONVICTED AT RUN TIME before it was retired, which is what the
+# header above asks for. Seven scene boots -- 362 MEMORY1, 363 MEMORY2, 379
+# CARD, 381 MCARLO, 382 MCARLO2, 384 TRAMPOLINE, 388 LUCKYSTARS -- all died at
+# one instruction, CopyUpLargeMov+0xa, memcpying 0x4000 bytes to address 0.
+# cdb on scene 362 read the object holding __ZTV13dScMgMemory_c + 8, so
+# fBase_c::Process entered vtable slot 2 where it meant slot 0,
+# dScMgBase_c::BeforeInitResources (slot 1, the only writer of
+# data_ov004_020beb60) never ran, and LoadFont(2) loaded the font into a null
+# pointer. The commit before this one carries the whole measurement.
+#
+# Verified after the build rather than predicted: vptr_addend_guard now reads
+# ZERO nonzero addends over 380 vtable relocations in 301 in-scope objects,
+# down from eleven. Not one vptr store at a nonzero addend is left in this
+# tree.
+#
+# RETIRED 2026-09-17, run link100 wave 10 round 5, lane TRIAGE1 and fixer VPTRBASE:
+# THE LAST THIRTY-TWO ROWS. SCENES2 flagged them as stale and left them in place
+# rather than delete them on a guess, and SCENES3 re-confirmed the reading and
+# asked for a lane that would measure each row. This is that measurement, taken
+# with the guard's own live_objects(), source_key() and vtable_addends() on
+# port/l7-boot4 9c034d8d3 so the criterion is the guard's own.
+#
+# THREE rows named an object build.ninja does not build at all, so there was no
+# object and no store: dScMgSound_c, daBombking_c and d_a_obj_b_swdoor. That is
+# the shape the PORT_HOSTGEN_TU note above already caught once.
+#
+# The other TWENTY-NINE named an object that IS compiled and present and that
+# carries no relocation whatever against the vtable symbol its row named, and no
+# nonzero vtable relocation of any kind. Nought for thirty-two: not one row
+# described a store this tree makes. The per-row table is in
+# runs/link100/out/TRIAGE1/vptr_addend_rows_measured_9c034d8d3.txt.
+#
+# THE FILE IS NOW EMPTY AND THAT IS THE STRONGEST STATE IT HAS EVER BEEN IN. The
+# guard refuses any nonzero row the baseline does not carry, so an empty baseline
+# refuses every nonzero vptr store in the tree. If one of these thirty-two TUs
+# comes back to raw compilation with the +8 spelling, the build stops, which is
+# what the header above asks for. Thirty-two rows nobody had re-measured since
+# the main-to-port sync of 09-14 were doing the opposite.
+# All seven scenes exit 0 three times in a row, headless, 600 frames,
+# SM64DS_FAULTS_FATAL=1.
+#
+# RETIRED 2026-09-15, run link100 lane VPTR16: the sixteen rows below this
+# line are gone because their translation units joined port/CMakeLists.txt's
+# PORT_HOSTGEN_TU list. These are the sixteen CRASH6 left open on the reading
+# that they named .dsstate ROM MOUNTS, where a vtable mwcc built does carry
+# offset-to-top and typeinfo in front of its slots, so +8 might have been the
+# ROM's own address point. READ OUT OF THE CARTRIDGE, BOTH HALVES OF THAT
+# READING WERE WRONG AND ALL SIXTEEN WERE THE SAME DEFECT AS CRASH6's SIX.
+#
+# They are not ROM mounts: every one is a host array declared in
+# port/hal/actor_classes_*.cpp, 31 to 33 wide, that lands in .dsstate only
+# because it sits inside a DSSTATE_BEGIN/END bracket so the save state captures
+# it. And +8 is not the ROM's address point: for all sixteen the ROM's Itanium
+# header sits BEFORE the symbol the config names (symbol-8 is offset-to-top,
+# symbol-4 points at _ZTI<Class>), and symbol+0/+4/+8 are InitResources,
+# dActor_c::BeforeInitResources and dActor_c::AfterInitResources, which is the
+# exact front triplet CRASH6 convicted at run time on daObjWaterfall_c.
+# Counted from the symbol, slots 16 and 17 also land on each class's own D1 and
+# D0, which is the index port/hal already seats them at.
+#
+# Verified after the build rather than predicted: all sixteen factories were
+# re-found BY NAME in the new walk_window.map and the bytes they ship read
+# table+0, none table+8. The guard went from 27 nonzero rows to 11.
+#
+# WHAT IS LEFT IS EXPLAINED, NOT TOLERATED. The 11 remaining relocations are 9
+# distinct rows and every one was settled the same way out of the cartridge:
+# dScMgMemory2_c, dScMgBSC_c, dScMgCard_c, dMgCardObj_c, dMgDilarCardObj_c,
+# dScMgMCarlo_c, dScMgMCarlo2_c, dScMgMemory_c, dScMgTrampoline_c. All nine
+# live in ov006, all nine have the header in front of the symbol, all nine are
+# this same defect. They are one coherent follow-up, the ov006 minigame scene
+# family, and they are outside lane VPTR16's brief rather than undecided.
+#
+# RETIRED 2026-09-15, run link100 lane CRASH6: the six rows below this line
+# are gone because their translation units joined port/CMakeLists.txt's
+# PORT_HOSTGEN_TU list, where tools/hostgen.py's VPTR_ADDRESS_POINT rewrite
+# drops the bias. Every one of the six names a .data HOST ARRAY declared in
+# port/hal and filled from vt[0], so on those +8 is two slots past the first
+# virtual with no header in front of it to skip. daObjWaterfall_c was the one
+# that convicted the class at run time: it killed the level-1 boot in
+# daObjMcWater_c::InitResources, and the CMakeLists block carries the
+# instruction-level measurement. The sixteen remaining .dsstate rows are NOT
+# the same finding: those tables are ROM mounts and a vtable mwcc built does
+# carry offset-to-top and typeinfo in front of its slots, so +8 may be the
+# ROM's own address point there. Reading that layout is owed work, not done.
+#

@@ -15,16 +15,17 @@
 # (CMakeLists.txt GATE13_SYMS).
 
 # ---- the actor itself
-src/_ZN6CameraC1Ev.c
-src/_ZN6CameraD1Ev.c
-src/_ZN6CameraD0Ev.c
+src/d_camera.cpp
+src/_ZN6CameraD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN6CameraD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN6CameraD0Ev.cpp
 src/_ZN6Camera13InitResourcesEv.cpp
 src/_ZN6Camera8BehaviorEv.cpp
-src/_ZN6Camera16CleanupResourcesEv.c
+src/_ZN6Camera16CleanupResourcesEv.cpp
 src/_ZN6Camera16OnPendingDestroyEv.cpp
-src/_ZNK6Camera12IsUnderwaterEv.c
-src/_ZN4View6RenderEv.c
-src/_Z13CopyToViewMatPK9Matrix4x3.c
+src/_ZNK6Camera12IsUnderwaterEv.cpp
+src/_ZN4View6RenderEv.cpp
+src/_Z13CopyToViewMatPK9Matrix4x3.cpp
 
 # ---- the follow core: state 0's main is func_02009e70, THE follow camera
 src/func_02009e70.cpp
@@ -73,7 +74,7 @@ src/func_02005000.c
 
 # ---- plumbing the camera's probes and the comms chain need
 src/func_020092c4.c
-src/func_ov002_020ca270.cpp
+src/actors/Player.cpp
 src/func_0201a03c.c
 src/func_0203dafc.c
 src/func_0203e0ac.c
@@ -81,7 +82,7 @@ src/func_0203ad44.c
 src/func_0203ce80.c
 src/func_0203cf00.c
 src/func_0203cf94.c
-src/func_020440e8.c
+src/_ZN11fLiNdBaPr_cD1Ev.cpp
 
 # Matrix4x3_LoadIdentity, func_0206e2f8 and func_0206e330 are ARM asm-hatch
 # primitives; the HAL already implements the first two (model_host.cpp,
@@ -103,17 +104,18 @@ src/func_02008abc.c
 src/func_02008b08.c
 src/func_02009138.c
 src/func_020091f8.c
-src/_ZN9ActorBaseD2Ev.c
+# RETIRED at SLICE1: body now in src/_ZN7fBase_cD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN7fBase_cD2Ev.cpp
 # Lane DTOR-PAIRS-C: the three root tables' own D1/D0 pairs, seated into
 # words 16/17 of the host arrays by hal/dtor_seats_base.cpp (ROM relocs named
 # there). Nothing dispatches them; the seat is the ROM's word and the edge.
-src/_ZN9ActorBaseD1Ev.c
-src/_ZN9ActorBaseD0Ev.c
-src/_ZN12ActorDerivedD1Ev.c
-src/_ZN12ActorDerivedD0Ev.c
-src/_ZN4ViewD1Ev.c
-src/_ZN4ViewD0Ev.c
+src/_ZN7fBase_cD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN7fBase_cD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN7fBase_cD0Ev.cpp
+src/actors/ActorDerived.cpp
+src/_ZN4ViewD1Ev.cpp
+src/_ZN4ViewD0Ev.cpp
 src/_ZNK7PathPtr5LoopsEv.cpp
 src/_ZN6Camera25SaveCameraStateBeforeTalkEv.cpp
-src/_ZN3G2x13SetBlendAlphaEPVttttt.cpp
+src/_ZN3G2x13SetBlendAlphaEPVttttj.cpp
 src/_ZN8Particle6System10NewWeatherEjj5Fix12IiES2_S2_PK11Vector3_16fj.c

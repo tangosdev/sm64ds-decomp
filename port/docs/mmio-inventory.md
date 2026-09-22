@@ -63,12 +63,12 @@ or used as a DMA destination — it cannot be redirected by redefining an lvalue
 
 ## Spin-waits (deadlock risk)
 
-- `src/_ZN4cstd11fdiv_resultEv.c:2` — `while(*(volatile unsigned short*)0x4000280 & 0x8000);`
-- `src/_ZN4cstd11ldiv_resultEv.c:2` — `while(*(volatile unsigned short*)0x4000280 & 0x8000);`
-- `src/_ZN4cstd3divEii.c:5` — `while(*(volatile unsigned short*)0x4000280 & 0x8000);`
-- `src/_ZN4cstd3modEii.c:5` — `while(*(volatile unsigned short*)0x4000280 & 0x8000);`
-- `src/_ZN4cstd4ldivEii.c:4` — `while(*(volatile unsigned short*)0x4000280 & 0x8000);`
-- `src/_ZN4cstd4sqrtEy.c:9` — `while(*(volatile unsigned short*)0x40002b0 & 0x8000);`
+- `src/_ZN4cstd11fdiv_resultEv.cpp:2` — `while(*(volatile unsigned short*)0x4000280 & 0x8000);`
+- `src/_ZN4cstd11ldiv_resultEv.cpp:2` — `while(*(volatile unsigned short*)0x4000280 & 0x8000);`
+- `src/_ZN4cstd3divEii.cpp:5` — `while(*(volatile unsigned short*)0x4000280 & 0x8000);`
+- `src/_ZN4cstd3modEii.cpp:5` — `while(*(volatile unsigned short*)0x4000280 & 0x8000);`
+- `src/_ZN4cstd4ldivEii.cpp:4` — `while(*(volatile unsigned short*)0x4000280 & 0x8000);`
+- `src/_ZN4cstd4sqrtEy.cpp:9` — `while(*(volatile unsigned short*)0x40002b0 & 0x8000);`
 - `src/func_02013f4c.c:89` — `while ((int)*(volatile u16*)0x4000006 >= 0xc0) {}`
 - `src/func_02013f4c.c:90` — `while ((int)*(volatile u16*)0x4000006 < 0xc0) {}`
 - `src/func_02049018.c:17` — `while (*(volatile unsigned short *)0x40002b0 & 0x8000);`
@@ -78,7 +78,7 @@ or used as a DMA destination — it cannot be redirected by redefining an lvalue
 
 ## Address-passed sites (not lvalue-redirectable)
 
-- `src/_ZN8Squasher8BehaviorEv.c:42` — `_ZN5Actor10EarthquakeERK7Vector35Fix12IiE(c, &pos, 0x4000000);`
+- `src/game/actors/d_a_obj_fm_battan.cpp:42` — `_ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(c, &pos, 0x4000000);`
 - `src/func_02053c40.c:19` — `DMASyncFillTransfer((&data_02099fd0)[0], 0x4000008, 0, 0x60);`
 - `src/func_02053c40.c:21` — `DMASyncFillTransfer((&data_02099fd0)[0], 0x4001000, 0, 0x70);`
 - `src/func_020554bc.c:10` — `func_0205a064((&data_02099fd0)[0], 0x4000330, 0, 0x10, 0, 0);`

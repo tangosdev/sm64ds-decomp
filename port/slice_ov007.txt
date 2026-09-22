@@ -10,7 +10,7 @@
 # a link root. The arm9 ACTOR_SPAWN_TABLE (0x02090864) relocates slot 1 to
 # 0x02103264 (config/arm9/relocs.txt: from:0x02090868 kind:load to:0x02103264
 # module:overlay(7), and 0x02090868 is ACTOR_SPAWN_TABLE + 4). That record is
-# hosted by the ov007 mount and its +0 word is the factory func_ov007_020ccad0;
+# hosted by the ov007 mount and its +0 word is the factory dScDSMT_c_classInit;
 # hal/scene_boot.cpp seats it in data_020a4bb8[1] with the factory word
 # repointed at the host compilation, exactly as it does for id 4. The class
 # vtable is the MOUNT'S OWN data_ov007_021032e8, filled in place with host
@@ -137,30 +137,31 @@
 
 # ---- the class's own eight entry points ------------------------------------
 # the factory. ActorBase::operator new(0x64), the base ctor, the three vptr writes in construction order, the +0x13 flag bits, and the +0x50 graphCallback_c sub-object vptr.
-src/func_ov007_020ccad0.c
+src/d_s_dsmt.c
 # slot 0  InitResources
-src/func_ov007_020cc4c0.cpp
+src/_ZN9dScDSMT_c13InitResourcesEv.cpp
 # slot 3  CleanupResources
-src/func_ov007_020cc45c.c
+src/_ZN9dScDSMT_c16CleanupResourcesEv.cpp
 # slot 6  Behavior
-src/func_ov007_020cc2cc.c
+src/_ZN9dScDSMT_c8BehaviorEv.cpp
 # slot 9  Render
-src/func_ov007_020cc2b0.c
+src/_ZN9dScDSMT_c6RenderEv.cpp
 # slot 12 OnPendingDestroy (bx lr, a real empty body)
-src/func_ov007_020cc2ac.c
+src/_ZN9dScDSMT_c16OnPendingDestroyEv.cpp
 # slot 16 D2
-src/func_ov007_020cc028.c
+src/_ZN9dScDSMT_cD1Ev.cpp
 # slot 17 D0
-src/func_ov007_020cc070.c
+# RETIRED at SLICE1: body now in src/_ZN9dScDSMT_cD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN9dScDSMT_cD0Ev.cpp
 # graphCallback_c slot 0 (0x021032b0)
-src/func_ov007_020cc110.c
+src/_ZN9dScDSMT_c15graphCallback_c14GraphCallback0Ev.cpp
 # graphCallback_c slot 2 (0x021032b0)
-src/func_ov007_020cc0f4.c
+src/_ZN9dScDSMT_c15graphCallback_c14GraphCallback2Ev.cpp
 
 # ---- the rest of ov007's closure -------------------------------------------
 src/RequestScreenFade.c
 src/Sprite_SetAnimation.c
-src/_ZN6Player17St_EndingFly_MainEv.cpp
+src/func_ov007_020c3d1c.cpp
 src/func_ov007_020ad660.c
 src/func_ov007_020ada70.cpp
 src/func_ov007_020adb84.c
@@ -321,6 +322,15 @@ src/func_ov007_020b7a78.c
 src/func_ov007_020b7d94.c
 src/func_ov007_020b7eec.c
 src/func_ov007_020b8070.c
+# SEATED 2026-09-17 (run link100 wave 12, fixer OV7TRAPS, card
+# out/FILESEL1/card_ov7traps.md). The minigame results / record-board text layout,
+# eighteen rows, called from src/func_ov007_020afc44.c. Matched on main by 5a52e6f5b
+# (PR #2301) and enrolled at .text 0x020b8188-0x020b84e8; re-verified here against
+# extracted/overlays/overlay_0007.bin at the config base, tools/match.py MATCH at
+# 2004/b56 with strict relocs. Its L2_UNMATCHED trap in hal/scene_boot.cpp is deleted in
+# this same change: a trap and a body for one name is an LNK2005. No MMIO and no geometry
+# command port in it, so it compiles plain and needs no hostgen row.
+src/func_ov007_020b8188.c
 src/func_ov007_020b84e8.c
 src/func_ov007_020b84f4.c
 src/func_ov007_020b8500.c
@@ -351,6 +361,13 @@ src/func_ov007_020b9880.c
 src/func_ov007_020b9ca8.c
 src/func_ov007_020b9f0c.c
 src/func_ov007_020b9fc0.c
+# SEATED 2026-09-17 (run link100 wave 12, fixer OV7TRAPS, card
+# out/FILESEL1/card_ov7traps.md). The ov007 manager's proximity and heading gate against
+# the last path node, called from src/func_ov007_020b9640.c. Matched on main by b66831c7e
+# (PR #2365) and enrolled at .text 0x020ba05c-0x020ba2e0; re-verified here,
+# tools/match.py MATCH at 2004/b56 with strict relocs. Its trap is deleted in the same
+# change. Plain C, no MMIO, no hostgen row.
+src/func_ov007_020ba05c.c
 src/func_ov007_020ba2e0.c
 src/func_ov007_020ba368.c
 src/func_ov007_020ba9bc.c
@@ -525,6 +542,19 @@ src/func_ov007_020c33d0.cpp
 src/func_ov007_020c3544.c
 src/func_ov007_020c3550.c
 src/func_ov007_020c3598.c
+# SEATED 2026-09-17 (run link100 wave 12, fixer FILESEL, card out/FILESEL1/card_filesel.md).
+# The hardware divider/square-root vector normalise. Matched on main by 7dba86b5d (PR
+# #2361) and enrolled at .text 0x020c368c-0x020c39f8; re-verified here against
+# extracted/overlays/overlay_0007.bin at the config base, tools/match.py MATCH at 2004/b56
+# with strict relocs. It is called twice a frame on the FILE SELECT -- from
+# func_ov007_020cb7c0+0x2a8 over 0x16c vectors and from func_ov007_020cb3dc+0xc4 over the
+# 0xd2 grid normals at 0x022997bc, which is the array the textured emitter one row down
+# reads -- so its L2_UNMATCHED trap in hal/scene_boot.cpp was returning 0 over the whole
+# screen. That trap is deleted in this same change: a trap and a body for one name is an
+# LNK2005. Its register traffic (DIVCNT/DIV_NUMER/DIV_DENOM/DIV_RESULT/SQRTCNT/
+# SQRT_RESULT/SQRT_PARAM and IME) reaches ntr/io.cpp through hostgen, so the row is
+# SUBSTITUTED by PORT_HOSTGEN_TU in port/CMakeLists.txt.
+src/func_ov007_020c368c.c
 src/func_ov007_020c39f8.c
 src/func_ov007_020c3abc.c
 src/func_ov007_020c3ba8.c
@@ -671,6 +701,19 @@ src/func_ov007_020ca308.c
 src/func_ov007_020ca578.c
 src/func_ov007_020ca5f0.c
 src/func_ov007_020ca86c.c
+# SEATED 2026-09-17 (run link100 wave 12, fixer FILESEL, card out/FILESEL1/card_filesel.md).
+# The TEXTURED triangle-strip emitter for the ov007 water grid, sibling of
+# func_ov007_020ca86c one row up (the untextured one) and called twice a frame from
+# func_ov007_020ca5f0+0x1b8 on the FILE SELECT with the grid's vertices, its normals and
+# its two texcoord runs. Matched on main by 726f28f24 (PR #2308) and enrolled at .text
+# 0x020caeac-0x020cb3dc; re-verified here against extracted/overlays/overlay_0007.bin at
+# the config base, tools/match.py MATCH at 2004/b56 with strict relocs. Its L2_UNMATCHED
+# trap in hal/scene_boot.cpp returned 0 every call, so the strip was never emitted -- the
+# top screen's animated band (cartridge rows 128-191, measured; the port's was still) is
+# what that cost. The trap is deleted in this same change. Geometry command ports
+# (BEGIN_VTXS/END_VTXS/NORMAL/TEXCOORD/VTX_16), so the row also joins TITEX_GX_SYMS and
+# the plain entry is cut there in favour of the hostgen copy, exactly as its sibling is.
+src/func_ov007_020caeac.c
 src/func_ov007_020cb3dc.c
 src/func_ov007_020cb4b0.c
 src/func_ov007_020cb7c0.c
@@ -788,22 +831,22 @@ src/ARMMathSaveState.c
 src/TurnBacklightOff.c
 src/TurnBacklightOn.c
 src/_ZN15TextureSequence17UpdateFileOffsetsER8BTP_File.cpp
-src/_ZN2GX11LoadBG0CharEPKvjj.c
-src/_ZN2GX7LoadOBJEPKvjj.c
-src/_ZN3GXS11LoadBG0CharEPKvjj.c
-src/_ZN3GXS11LoadBG1CharEPKvjj.c
-src/_ZN4cstd3modEii.c
-src/_ZN4cstd4ldivEii.c
+src/_ZN2GX11LoadBG0CharEPKvjj.cpp
+src/_ZN2GX7LoadOBJEPKvjj.cpp
+src/_ZN3GXS11LoadBG0CharEPKvjj.cpp
+src/_ZN3GXS11LoadBG1CharEPKvjj.cpp
+src/_ZN4cstd3modEii.cpp
+src/_ZN4cstd4ldivEii.cpp
 src/_ZN5Model13LoadTexAndPalER8BMD_File.cpp
-src/_ZN5Scene14GraphCallback1Ev.c
-src/_ZN5Scene14GraphCallback3Ev.c
+src/_ZN8dGraph_c10callback_c14GraphCallback1Ev.cpp
+src/_ZN8dGraph_c10callback_c14GraphCallback3Ev.cpp
 src/_ZN8SaveData12ReadFileDataEjP12FileSaveData.cpp
-src/_ZN8SaveData13EraseSaveFileEjPc.c
-src/_ZN8SaveData13SaveMinigamesEP16MinigameSaveData.c
-src/_ZN8SaveData16ReadMinigameDataEP16MinigameSaveData.c
+src/_ZN8SaveData13EraseSaveFileEjPc.cpp
+src/_ZN8SaveData13SaveMinigamesEP16MinigameSaveData.cpp
+src/_ZN8SaveData16ReadMinigameDataEP16MinigameSaveData.cpp
 src/_ZN9Animation17UpdateFileOffsetsER8BCA_File.cpp
 src/func_02013c84.c
-src/func_02017254.c
+src/_ZN10dFdDummy_cD1Ev.cpp
 src/func_02017278.c
 src/func_0201a428.c
 src/func_0201a458.c
@@ -852,7 +895,7 @@ src/func_02059eb0.c
 src/func_0205efc0.c
 src/func_0205f040.c
 src/func_02070348.c
-src/func_ov007_020bfd70.c
+src/func_ov007_020bfd70.cpp
 
 # ---- the closure's second wave ---------------------------------------------
 # The first link of the block above named these; same method, same standard.
@@ -866,8 +909,9 @@ src/func_ov007_020bfd70.c
 # linking the chain would host data_0208ecf4's DS string pointers and
 # data_02075998's tables to drive a load the fs seam then ignores. Eleven TUs
 # of linkage deliberately not taken.
-src/_ZN3G2S13GetBG2CharPtrEv.c
-src/_ZN5ColorD1Ev.c
+src/_ZN3G2S13GetBG2CharPtrEv.cpp
+# RETIRED at SLICE1: body now in src/engine/fader/_ZN10FaderColorD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN10FaderColorD2Ev.cpp
 src/_ZN8SaveData16SetDefaultValuesEP12FileSaveData.cpp
 src/_ZN8SaveData18SetDefaultValuesMgEP16MinigameSaveData.cpp
 src/_ZN8SaveData8SaveFileEjP12FileSaveData.cpp
@@ -884,8 +928,10 @@ src/func_0205ad54.c
 src/func_0205ea10.c
 src/func_0205efe0.c
 src/func_0205f9ac.c
-src/func_020177c4.c
+# RETIRED at SLICE1: body now in src/engine/fader/_ZN15FaderBrightnessD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN15FaderBrightnessD2Ev.cpp
 src/func_02047218.c
 src/func_0205ea28.c
 src/func_0205f9e8.c
-src/func_02017838.c
+# RETIRED at SLICE1: body now in src/engine/fader/_ZN5FaderD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN5FaderD2Ev.cpp

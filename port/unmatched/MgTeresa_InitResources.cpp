@@ -3,10 +3,10 @@
 //
 // ---- THIS IS NOT WALL WORK, IT IS A COMPILE DEFECT -----------------------
 //
-// src/func_ov006_021203fc.c is a MATCHED body and nothing about it is a
+// src/_ZN13dScMgTeresa_c13InitResourcesEv.cpp is a MATCHED body and nothing about it is a
 // pointer-to-member problem. MSVC refuses one statement in it:
 //
-//     src\func_ov006_021203fc.c(69): error C2036: 'void *': unknown size
+//     src\_ZN13dScMgTeresa_c13InitResourcesEv.c(69): error C2036: 'void *': unknown size
 //
 // which is `f2 += 0;` on a `void *f2`. The ROM contains no such operation --
 // the instructions either side of that point are the LoadFile(0x102) return
@@ -36,7 +36,7 @@
 // copy writes the mount's own symbols and no alias is involved. The ov004
 // mount's initial values are {128,0,0,0} and {96,0,0,0}, i.e. 0x80 and 0x60,
 // which is why the first of the two writes is a no-op on frame 0 and the
-// second is not. src/func_ov006_021203fc.c is the only file in the whole
+// second is not. src/_ZN13dScMgTeresa_c13InitResourcesEv.cpp is the only file in the whole
 // decomp that uses either name; a decomp-side rename is routed, not taken.
 //
 // ---- THE TRANSCRIPTION IS CHECKED AGAINST THE ROM ------------------------
@@ -104,12 +104,12 @@ extern u8 data_0209d454;
 extern u8 data_ov004_020bc880[];
 extern u8 data_ov004_020bc884[];
 
-int func_ov006_021203fc(char *self);
+int _ZN13dScMgTeresa_c13InitResourcesEv(char *self);
 
 }  /* extern "C" */
 
 // PORT_HOST_ABI: slot 0 InitResources host copy; src carries a mwcc codegen-nudge f2 += 0 on a void* that MSVC rejects as C2036 and the ROM never performs, so the host drops that one no-op statement.
-extern "C" int func_ov006_021203fc(char *self)
+extern "C" int _ZN13dScMgTeresa_c13InitResourcesEv(char *self)
 {
     void *f1;
     void *f2;
@@ -160,7 +160,7 @@ extern "C" int func_ov006_021203fc(char *self)
         fb = 0;
         MultiStore16(fb, p, 0x800);
     }
-    /* src/func_ov006_021203fc.c has `f2 += 0;` here. THE ROM HAS NO SUCH
+    /* src/_ZN13dScMgTeresa_c13InitResourcesEv.cpp has `f2 += 0;` here. THE ROM HAS NO SUCH
        OPERATION and MSVC rejects it as C2036; see this file's header. */
     func_ov004_020af2f8(self, 0, 0, 0);
     {

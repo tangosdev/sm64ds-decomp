@@ -22,7 +22,7 @@ void func_02060228(void *fn)
     *(void **)(base + 0xd0) = base + 0x3c;
     *(void **)(base + 0x30) = fn;
     {
-        unsigned int *fp = (unsigned int *)(((long long)(int)(base + 0x34)));
+        unsigned int *fp = (unsigned int *)(base + 0x34);
         *fp |= 8;
     }
     func_02058048(base + 0x3c);

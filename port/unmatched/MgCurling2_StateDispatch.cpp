@@ -22,11 +22,11 @@
  *   func_ov006_020e4800   02141988                  nothing: PMF typedef at
  *                                                   C++ linkage, the link
  *                                                   names the global
- *   func_ov006_020e42b4   021419f8, 021419a0        same, two globals
+ *   _ZN15dScMgCurling2_c9StepXAndYEi   021419f8, 021419a0        same, two globals
  *   func_ov006_020e6354   02141978, 021419d8        PMF typedefs INSIDE
  *                                                   extern "C" -- silent
- *   func_ov006_020e4744   021419b8                  same -- silent
- *   func_ov006_020e683c   02141a18                  NO member-pointer type at
+ *   _ZN15dScMgCurling2_c9StepXOnlyEi   021419b8                  same -- silent
+ *   _ZN15dScMgCurling2_c8BehaviorEv   02141a18                  NO member-pointer type at
  *                                                   all, the pair read as
  *                                                   `struct Ent{int a,b;}` and
  *                                                   the five-instruction
@@ -82,9 +82,9 @@
  * seven tables. Nineteen of the twenty-five sites take an index argument and a
  * switch generated from that output would have dropped it at every one.
  *
- * The arities above are read off the ROM. func_ov006_020e42b4 sets `mov r1,r5`
+ * The arities above are read off the ROM. _ZN15dScMgCurling2_c9StepXAndYEi sets `mov r1,r5`
  * -- the loop index -- immediately before both of its `blx r2`;
- * func_ov006_020e4744 never touches r1 after entry, so the incoming index rides
+ * _ZN15dScMgCurling2_c9StepXOnlyEi never touches r1 after entry, so the incoming index rides
  * through to the callee. They then agree with the matched src signature of all
  * twenty-four bodies that have one: every body in a 0-arity table takes the
  * receiver alone (or nothing), and every body in a 1-arity table takes
@@ -95,7 +95,7 @@
  * 0x020e4bd4, slot 1 of data_ov006_02141978, was this class's analogue of
  * curling's func_ov006_020e1854: a config symbol with no delink block and no
  * src, reported here rather than called. Run mg7 lane L375 decompiled it
- * (src/func_ov006_020e4bd4.c, NONMATCHING-bannered, size exact, register
+ * (src/actors/dScMgCurling2_c.cpp, NONMATCHING-bannered, size exact, register
  * colouring only) together with func_ov006_020e513c and func_ov006_020e5450, so
  * all twenty-five of this class's states now have a body and the address
  * switches below have no reported case left.
@@ -151,26 +151,26 @@ void func_ov006_020e64e4(int c);
 void func_ov006_020e628c(char *c);
 void func_ov006_020e61c4(char *c);
 void func_ov006_020e61c0(void);
-void func_ov006_020e4ed4(char *c);
-void func_ov006_020e4bd4(char *c);
+void _ZN15dScMgCurling2_c9DragBeginEv(char *c);
+void _ZN15dScMgCurling2_c10DragUpdateEv(char *c);
 
 /* the 1-arity state bodies */
 void func_ov006_020e5e3c(char *c, int i);
 void func_ov006_020e5b7c(char *c, int i);
 void func_ov006_020e5b70(char *c, int i);
 void func_ov006_020e5a0c(char *c, int i);
-void func_ov006_020e4794(char *c, int i);
-void func_ov006_020e4630(char *c, int i);
-void func_ov006_020e4520(char *c, int i);
-void func_ov006_020e440c(char *c, int i);
-void func_ov006_020e4348(char *c, int i);
-void func_ov006_020e41d0(char *c, int i);
-void func_ov006_020e4094(char *c, int i);
-void func_ov006_020e3f54(char *c, int i);
-void func_ov006_020e3e4c(char *c, int i);
-void func_ov006_020e3db4(char *c, int i);
-void func_ov006_020e3ce0(char *c, int i);
-void func_ov006_020e3c4c(char *c, int i);
+void _ZN15dScMgCurling2_c12PickStepModeEi(char *c, int i);
+void _ZN15dScMgCurling2_c13StepXPickFastEi(char *c, int i);
+void _ZN15dScMgCurling2_c16StepXPushPosFastEi(char *c, int i);
+void _ZN15dScMgCurling2_c16StepXPushNegFastEi(char *c, int i);
+void _ZN15dScMgCurling2_c15StepXSettleFastEi(char *c, int i);
+void _ZN15dScMgCurling2_c9StepXPickEi(char *c, int i);
+void _ZN15dScMgCurling2_c12StepXPushPosEi(char *c, int i);
+void _ZN15dScMgCurling2_c12StepXPushNegEi(char *c, int i);
+void _ZN15dScMgCurling2_c11StepXSettleEi(char *c, int i);
+void _ZN15dScMgCurling2_c12StepYRestartEi(char *c, int i);
+void _ZN15dScMgCurling2_c11StepYRampUpEi(char *c, int i);
+void _ZN15dScMgCurling2_c13StepYRampDownEi(char *c, int i);
 
 /* the rest of what the five dispatchers call, verbatim from src */
 int  RandomIntInternal(int *seed);
@@ -182,9 +182,9 @@ void func_ov006_020e3948(char *c);
 /* the five this file defines */
 void func_ov006_020e6354(char *c);
 void func_ov006_020e4800(char *o);
-void func_ov006_020e42b4(char *c, int i);
-void func_ov006_020e4744(char *o, int i);
-int  func_ov006_020e683c(char *c);
+void _ZN15dScMgCurling2_c9StepXAndYEi(char *c, int i);
+void _ZN15dScMgCurling2_c9StepXOnlyEi(char *o, int i);
+int  _ZN15dScMgCurling2_c8BehaviorEv(char *c);
 
 unsigned port_mg_curling2_state_calls(void);
 unsigned port_mg_curling2_state_unknown(void);
@@ -264,8 +264,8 @@ static void c2_call0(void *p, const MgC2Pair &e)
     case 0x020e628cu: func_ov006_020e628c((char *)p);       return;
     case 0x020e61c4u: func_ov006_020e61c4((char *)p);       return;
     case 0x020e61c0u: func_ov006_020e61c0();                return;
-    case 0x020e4ed4u: func_ov006_020e4ed4((char *)p);       return;
-    case 0x020e4bd4u: ++g_4bd4; func_ov006_020e4bd4((char *)p); return;
+    case 0x020e4ed4u: _ZN15dScMgCurling2_c9DragBeginEv((char *)p);       return;
+    case 0x020e4bd4u: ++g_4bd4; _ZN15dScMgCurling2_c10DragUpdateEv((char *)p); return;
     default: break;
     }
     c2_unhandled("UNHANDLED at a zero-argument site", (unsigned)e.code, e.adj);
@@ -299,26 +299,26 @@ static void c2_call1(void *p, const MgC2Pair &e, int i)
        record array by that index. Both halves are fixed. */
     case 0x020e5b70u: func_ov006_020e5b70((char *)p, i);   return;
     case 0x020e5a0cu: func_ov006_020e5a0c((char *)p, i);    return;
-    case 0x020e4794u: func_ov006_020e4794((char *)p, i);    return;
-    case 0x020e4744u: func_ov006_020e4744((char *)p, i);    return;
-    case 0x020e42b4u: func_ov006_020e42b4((char *)p, i);    return;
-    case 0x020e4630u: func_ov006_020e4630((char *)p, i);    return;
-    case 0x020e4520u: func_ov006_020e4520((char *)p, i);    return;
-    case 0x020e440cu: func_ov006_020e440c((char *)p, i);    return;
-    case 0x020e4348u: func_ov006_020e4348((char *)p, i);    return;
-    case 0x020e41d0u: func_ov006_020e41d0((char *)p, i);    return;
-    case 0x020e4094u: func_ov006_020e4094((char *)p, i);    return;
-    case 0x020e3f54u: func_ov006_020e3f54((char *)p, i);    return;
-    case 0x020e3e4cu: func_ov006_020e3e4c((char *)p, i);    return;
-    case 0x020e3db4u: func_ov006_020e3db4((char *)p, i);    return;
-    case 0x020e3ce0u: func_ov006_020e3ce0((char *)p, i);    return;
-    case 0x020e3c4cu: func_ov006_020e3c4c((char *)p, i);    return;
+    case 0x020e4794u: _ZN15dScMgCurling2_c12PickStepModeEi((char *)p, i);    return;
+    case 0x020e4744u: _ZN15dScMgCurling2_c9StepXOnlyEi((char *)p, i);    return;
+    case 0x020e42b4u: _ZN15dScMgCurling2_c9StepXAndYEi((char *)p, i);    return;
+    case 0x020e4630u: _ZN15dScMgCurling2_c13StepXPickFastEi((char *)p, i);    return;
+    case 0x020e4520u: _ZN15dScMgCurling2_c16StepXPushPosFastEi((char *)p, i);    return;
+    case 0x020e440cu: _ZN15dScMgCurling2_c16StepXPushNegFastEi((char *)p, i);    return;
+    case 0x020e4348u: _ZN15dScMgCurling2_c15StepXSettleFastEi((char *)p, i);    return;
+    case 0x020e41d0u: _ZN15dScMgCurling2_c9StepXPickEi((char *)p, i);    return;
+    case 0x020e4094u: _ZN15dScMgCurling2_c12StepXPushPosEi((char *)p, i);    return;
+    case 0x020e3f54u: _ZN15dScMgCurling2_c12StepXPushNegEi((char *)p, i);    return;
+    case 0x020e3e4cu: _ZN15dScMgCurling2_c11StepXSettleEi((char *)p, i);    return;
+    case 0x020e3db4u: _ZN15dScMgCurling2_c12StepYRestartEi((char *)p, i);    return;
+    case 0x020e3ce0u: _ZN15dScMgCurling2_c11StepYRampUpEi((char *)p, i);    return;
+    case 0x020e3c4cu: _ZN15dScMgCurling2_c13StepYRampDownEi((char *)p, i);    return;
     default: break;
     }
     c2_unhandled("UNHANDLED at a one-argument site", (unsigned)e.code, e.adj);
 }
 
-/* src/func_ov006_020e683c -- RETIRED, run link100 lane SEAT4. Its table is
+/* src/_ZN15dScMgCurling2_c8BehaviorEv -- RETIRED, run link100 lane SEAT4. Its table is
    seated in port/hal/pmf_seat4.cpp and the matched TU is on
    port/slice_seat4.txt, so the host copy that stood in for it is gone and
    the declaration above is what the faces in this file reach. */
@@ -375,7 +375,7 @@ extern "C" void func_ov006_020e6354(char *c)
  * Run link100 lane PMFB5. data_ov006_02141988's three cells hold HOST addresses
  * after boot, written by port_mg_curling2_states_seat below once every cell has
  * been compared against the ROM's own code word and a zero adjustment word, so
- * src/func_ov006_020e4800.cpp compiles from src and this file no longer defines
+ * src/actors/dScMgCurling2_c.cpp compiles from src and this file no longer defines
  * it.
  *
  *   func_ov006_020e4800   data_ov006_02141988   3 slots   arity 1
@@ -407,7 +407,7 @@ extern "C" void func_ov006_020e6354(char *c)
  * argument(s)" for this row and the listing says otherwise, which is the census
  * error lane PMFB4 recorded.
  *
- * ONE /alternatename. src/func_ov006_020e4800.cpp names the member-pointer type
+ * ONE /alternatename. src/actors/dScMgCurling2_c.cpp names the member-pointer type
  * at C++ linkage, so MSVC spells the reference
  * ?data_ov006_02141988@@3PAP8C@@AEXH@ZA -- read off the object with
  * dumpbin /symbols, not guessed -- while the ov006 mount defines the plain C
@@ -416,8 +416,8 @@ extern "C" void func_ov006_020e6354(char *c)
  * which is why this row adds one directive and not two.
  *
  * TWO OF THE THREE CELLS ARE THIS FILE'S OWN HOST COPIES, which is why the seat
- * does not orphan them: slots 1 and 2 are func_ov006_020e4744 and
- * func_ov006_020e42b4, both defined below, and both keep dispatching their own
+ * does not orphan them: slots 1 and 2 are _ZN15dScMgCurling2_c9StepXOnlyEi and
+ * _ZN15dScMgCurling2_c9StepXAndYEi, both defined below, and both keep dispatching their own
  * unseated tables through c2_call1. Slot 0 is the matched src body.
  *
  * THE WITNESS MOVES INTO THE FACES. c2_call1 increments g_calls on every routed
@@ -436,9 +436,9 @@ extern "C" void func_ov006_020e6354(char *c)
         sym((char *)self, i);                                             \
     }
 
-C2_FACE(0, func_ov006_020e4794)
-C2_FACE(1, func_ov006_020e4744)
-C2_FACE(2, func_ov006_020e42b4)
+C2_FACE(0, _ZN15dScMgCurling2_c12PickStepModeEi)
+C2_FACE(1, _ZN15dScMgCurling2_c9StepXOnlyEi)
+C2_FACE(2, _ZN15dScMgCurling2_c9StepXAndYEi)
 
 /* run link100 lane SEAT4: this class's remaining state tables are
    seated in port/hal/pmf_seat4.cpp, from inside this installer, so the
@@ -460,9 +460,9 @@ extern "C" void port_mg_curling2_states_seat(void)
         unsigned rom;
         void *face;
     } seats[] = {
-        {0, 0x020e4794u, (void *)c2_s0_func_ov006_020e4794},
-        {1, 0x020e4744u, (void *)c2_s1_func_ov006_020e4744},
-        {2, 0x020e42b4u, (void *)c2_s2_func_ov006_020e42b4},
+        {0, 0x020e4794u, (void *)c2_s0__ZN15dScMgCurling2_c12PickStepModeEi},
+        {1, 0x020e4744u, (void *)c2_s1__ZN15dScMgCurling2_c9StepXOnlyEi},
+        {2, 0x020e42b4u, (void *)c2_s2__ZN15dScMgCurling2_c9StepXAndYEi},
     };
 
     for (unsigned k = 0; k < sizeof seats / sizeof seats[0]; ++k) {
@@ -478,12 +478,62 @@ extern "C" void port_mg_curling2_states_seat(void)
     }
 }
 
-/* src/func_ov006_020e42b4 -- RETIRED, run link100 lane SEAT4. Its table is
-   seated in port/hal/pmf_seat4.cpp and the matched TU is on
-   port/slice_seat4.txt, so the host copy that stood in for it is gone and
-   the declaration above is what the faces in this file reach. */
+/* src/_ZN15dScMgCurling2_c9StepXAndYEi -- RETIRED by lane SEAT4, then RESTORED at
+   the main->port sync (lane SYNC5).  SEAT4 retired this host copy in favour of
+   the matched per-function TU on port/slice_seat4.txt, and main has since folded
+   that body into src/actors/dScMgCurling2_c.cpp (ov006 delinks, .text
+   0x020e3854..0x020e5450).  The port cannot take the consolidated TU:
+   port/slice_s75.txt already compiles the per-function leftovers whose
+   addresses that range covers, so taking both is a duplicate symbol.  The
+   slice_seat4 row is quarantined and this copy stands in again; the pair
+   retires together when s75 moves to the consolidated TU. */
+/* RETIRED, run link100 lane HOSTGEN2. The reason this copy was RESTORED at the
+   sync is spelled out above: main folded the body into
+   src/actors/dScMgCurling2_c.cpp and the port could not take the consolidated
+   TU. It can now. Every one of this class's four dispatch tables --
+   data_ov006_021419f8, 021419a0 and 021419b8 (hal/pmf_seat4.cpp) and
+   data_ov006_02141988 (lane PMFB5) -- is SEATED with host addresses at boot,
+   and the faces seated there are `__fastcall (void *self, void *dead_edx, int
+   arg)`, which is exactly how MSVC enters a pointer-to-member call under the
+   /vmg /vmm pair port/CMakeLists.txt compiles with: receiver in ecx, the one
+   argument pushed. So the matched TU's own `(self->*table[k])(i)` is already
+   the right call, and the stride the restore note worries about is the ROM's
+   eight bytes on both machines.
 
-/* src/func_ov006_020e4744 -- RETIRED, run link100 lane SEAT4. Its table is
-   seated in port/hal/pmf_seat4.cpp and the matched TU is on
-   port/slice_seat4.txt, so the host copy that stood in for it is gone and
-   the declaration above is what the faces in this file reach. */
+   Text kept, not deleted. */
+#if 0  /* HOSTGEN2: body seated from src, see above */
+extern "C" void _ZN15dScMgCurling2_c9StepXAndYEi(char *c, int i)
+{
+    const int idx = i * 0x24;
+    const unsigned char k0 = *(unsigned char *)(c + idx + 0x48de);
+    c2_call1(c, data_ov006_021419f8[k0], i);
+    const unsigned char k1 = *(unsigned char *)(c + idx + 0x48df);
+    c2_call1(c, data_ov006_021419a0[k1], i);
+}
+#endif  /* HOSTGEN2: _ZN15dScMgCurling2_c9StepXAndYEi retired to src */
+
+/* src/_ZN15dScMgCurling2_c9StepXOnlyEi -- RETIRED by lane SEAT4, then RESTORED at
+   the main->port sync (lane SYNC5), for the reason spelled out on StepXAndY
+   directly above: main folded the matched TU into src/actors/dScMgCurling2_c.cpp
+   and slice_s75's per-function leftovers cover the same range. */
+/* RETIRED, run link100 lane HOSTGEN2. The reason this copy was RESTORED at the
+   sync is spelled out above: main folded the body into
+   src/actors/dScMgCurling2_c.cpp and the port could not take the consolidated
+   TU. It can now. Every one of this class's four dispatch tables --
+   data_ov006_021419f8, 021419a0 and 021419b8 (hal/pmf_seat4.cpp) and
+   data_ov006_02141988 (lane PMFB5) -- is SEATED with host addresses at boot,
+   and the faces seated there are `__fastcall (void *self, void *dead_edx, int
+   arg)`, which is exactly how MSVC enters a pointer-to-member call under the
+   /vmg /vmm pair port/CMakeLists.txt compiles with: receiver in ecx, the one
+   argument pushed. So the matched TU's own `(self->*table[k])(i)` is already
+   the right call, and the stride the restore note worries about is the ROM's
+   eight bytes on both machines.
+
+   Text kept, not deleted. */
+#if 0  /* HOSTGEN2: body seated from src, see above */
+extern "C" void _ZN15dScMgCurling2_c9StepXOnlyEi(char *o, int i)
+{
+    const unsigned char idx = *(unsigned char *)(o + i * 0x24 + 0x48de);
+    c2_call1(o, data_ov006_021419b8[idx], i);
+}
+#endif  /* HOSTGEN2: _ZN15dScMgCurling2_c9StepXOnlyEi retired to src */

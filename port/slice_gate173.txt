@@ -3,7 +3,7 @@
 # 83 for SEESAW_BOB). One class UpDownLiftBbh, three ids (Bbh 32 / Hmc 33 / Rr
 # 131); this gate registers id 33, the 0x21 variant.
 #
-# The matched closure the host build compiles: the factory (UpDownLiftHmc_Spawn),
+# The matched closure the host build compiles: the factory (daUdlift_c_classInit_UDLIFT),
 # the two lifecycle methods and Render (real C++ methods against
 # include/UpDownLiftBbh.h, called qualified by the vtable fill in
 # hal/actor_classes_updownlift.cpp), both destructors (explicit-chain .c forms),
@@ -21,7 +21,7 @@
 #
 # Everything else in the closure is base/lifecycle code already linked by an
 # earlier gate (Actor/Platform/Model/MeshCollider/Memory), so it is not listed.
-src/UpDownLiftHmc_Spawn.c
+src/d_a_udlift_udlift.c
 src/_ZN13UpDownLiftBbh13InitResourcesEv.cpp
 src/_ZN13UpDownLiftBbh16CleanupResourcesEv.cpp
 # _ZN13UpDownLiftBbh6RenderEv IS NOT HERE: like PowerStar/Whomp/Scuttlebug it
@@ -31,8 +31,9 @@ src/_ZN13UpDownLiftBbh16CleanupResourcesEv.cpp
 # method called with one arg, measured as a c0000005 in Model::Virtual10 reached
 # via UpDownLiftBbh::Render -> ModelAnim::Virtual18 -> Virtual10 -> Model::Virtual10
 # on the natural king-defeat path. Host copy in port/unmatched/ModelAnim_Renders.cpp.
-src/_ZN13UpDownLiftBbhD1Ev.c
-src/_ZN13UpDownLiftBbhD0Ev.c
+src/_ZN13UpDownLiftBbhD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN13UpDownLiftBbhD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN13UpDownLiftBbhD0Ev.cpp
 src/func_ov095_02136368.c
 src/func_ov095_02136298.cpp
 src/func_ov095_02136178.c

@@ -3,7 +3,7 @@ extern void func_020731dc(void*, void*, void**);
 extern int _ZN13SharedFilePtr9ConstructEj(void*, int);
 extern void func_02017ab4(void);
 extern void SharedFilePtr_Destruct_Anim(void);
-extern void func_020072c0(void);
+extern void _ZN7Vector3D1Ev(void);
 
 extern void* data_ov062_0211ddf0;
 extern void* data_ov062_0211de10;
@@ -66,13 +66,13 @@ void __sinit_ov062_0211cf30(void)
     data_ov062_0211df10.x = 0x2c000;
     data_ov062_0211df10.y = -0x14000;
     data_ov062_0211df10.z = -0x78000;
-    func_020731dc(&data_ov062_0211df10, (void*)&func_020072c0, (void**)&data_ov062_0211de58);
+    func_020731dc(&data_ov062_0211df10, (void*)&_ZN7Vector3D1Ev, (void**)&data_ov062_0211de58);
 
     int* p_df1c = (int*)&data_ov062_0211df1c;
     *p_df1c = 0x44000;
     p_df1c[1] = -0x14000;
     p_df1c[2] = -0x78000;
-    func_020731dc(&data_ov062_0211df1c, (void*)&func_020072c0, (void**)&data_ov062_0211de64);
+    func_020731dc(&data_ov062_0211df1c, (void*)&_ZN7Vector3D1Ev, (void**)&data_ov062_0211de64);
 
     data_ov062_0211ded0.a = data_ov062_0211d940;
     data_ov062_0211ded0.b = data_ov062_0211d938;

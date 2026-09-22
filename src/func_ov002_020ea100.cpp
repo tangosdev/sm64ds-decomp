@@ -38,16 +38,16 @@ void func_ov002_020ea100(char *c)
             *(u8 *)(c + 0x49c) = 2;
         }
 
-        int *posY = (int *)(((long long)(int)(c + 0x60)));
+        int *posY = (int *)(c + 0x60);
 
         *(int *)(c + 0x440) = 6;
-        *(u16 *)(((long long)(int)(c + 0x4a2))) &= ~4;
-        *(u16 *)(((long long)(int)(c + 0x4a2))) |= 2;
+        *(u16 *)(c + 0x4a2) &= ~4;
+        *(u16 *)(c + 0x4a2) |= 2;
         *(u16 *)(c + 0x490) = 0;
 
         {
-            int *src = (int *)(((long long)(int)(*(int *)(c + 0x438) + 0x5c)));
-            int *cache = (int *)(((long long)(int)(c + 0x454)));
+            int *src = (int *)(*(int *)(c + 0x438) + 0x5c);
+            int *cache = (int *)(c + 0x454);
             *(int *)(c + 0x454) = src[0];
             *(int *)(c + 0x458) = src[1];
             *(int *)(c + 0x45c) = src[2];
@@ -80,7 +80,7 @@ void func_ov002_020ea100(char *c)
 
         {
             struct VObj *vobj = (struct VObj *)(c + 0x3d4);
-            { u16 *_p = (u16 *)(((long long)(int)(c + 0x4a2))); *_p = (*_p & ~1) | 1; }
+            { u16 *_p = (u16 *)(c + 0x4a2); *_p = (*_p & ~1) | 1; }
             vobj->unk0();
         }
 
@@ -89,8 +89,8 @@ void func_ov002_020ea100(char *c)
         }
     } else {
         if (func_ov002_020ca0f4(common) != 0) {
-            int *posY2 = (int *)(((long long)(int)(c + 0x60)));
-            int *s = (int *)(((long long)(int)(*(int *)(c + 0x438) + 0x5c)));
+            int *posY2 = (int *)(c + 0x60);
+            int *s = (int *)(*(int *)(c + 0x438) + 0x5c);
             *(int *)(c + 0x5c) = s[0];
             *(int *)(c + 0x60) = s[1];
             *(int *)(c + 0x64) = s[2];
@@ -107,7 +107,7 @@ void func_ov002_020ea100(char *c)
             *(int *)(c + 0xa8) = 0x20000;
             *(int *)(c + 0x98) = 0xc000;
             func_ov002_020e9448((unsigned char *)c);
-            *(int *)(((long long)(int)(c + 0x128))) &= ~1;
+            *(int *)(c + 0x128) &= ~1;
         }
     }
 

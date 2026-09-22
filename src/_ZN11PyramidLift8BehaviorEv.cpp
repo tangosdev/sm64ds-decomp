@@ -4,16 +4,16 @@
 #include "PyramidLift.h"
 extern "C" {
 extern short data_02082214[];
-extern void _ZN8Platform21UpdateModelPosAndRotYEv(void*);
-extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void*, int, int);
-extern void _ZN8Platform19UpdateClsnPosAndRotEv(void*);
+extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void*);
+extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void*, int, int);
+extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void*);
 }
 
 int PyramidLift::Behavior()
 {
     switch (mState) {
     case 0:
-        if (unk_3f7 != 0) {
+        if (mHadClsn != 0) {
             mState = 1;
             mShakeTimer = 0;
         }
@@ -24,10 +24,10 @@ int PyramidLift::Behavior()
         int idx = t >> 4;
         int s = *(short*)((char*)data_02082214 + (idx << 2));
         int d = (int)(((long long)s * 0xa + 0x800) >> 0xc);
-        mPosY = unk_374 + d;
+        mPosY = mBasePosY + d;
         if (mShakeTimer == 8) {
             mState = 2;
-            unk_0a8 = -0xa000;
+            mVertSpeed = -0xa000;
         }
         {
             unsigned short *pa = (unsigned short*)(((int)((char*)this) + 0x3f4));
@@ -37,7 +37,7 @@ int PyramidLift::Behavior()
     }
     case 2: {
         int v = mPosY;
-        int idx = unk_3f8;
+        int idx = mNextBullet;
         int* p = (int*)(((char*)this) + idx * 0xc + 0x380);
         int lim = *p + 0x14000;
         if (v <= lim) {
@@ -46,7 +46,7 @@ int PyramidLift::Behavior()
         }
         {
             int *py = (int*)(((int)((char*)this) + 0x60));
-            *py = *py + unk_0a8;
+            *py = *py + mVertSpeed;
         }
         if (mPosY < 0x80000) {
             mPosY = 0x80000;
@@ -66,7 +66,7 @@ int PyramidLift::Behavior()
         {
             unsigned short *pa = (unsigned short*)(((int)((char*)this) + 0x3f4));
             if (mShakeTimer >= 8) {
-                unk_0a8 = z;
+                mVertSpeed = z;
                 mPosY = 0x80000;
             }
             *pa = *pa + 1;
@@ -74,9 +74,9 @@ int PyramidLift::Behavior()
         break;
     }
     }
-    _ZN8Platform21UpdateModelPosAndRotYEv(((char*)this));
-    if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(((char*)this), 0, 0))
-        _ZN8Platform19UpdateClsnPosAndRotEv(((char*)this));
-    unk_3f7 = 0;
+    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char*)this));
+    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(((char*)this), 0, 0))
+        _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char*)this));
+    mHadClsn = 0;
     return 1;
 }

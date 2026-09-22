@@ -6,10 +6,10 @@
 // own cast, and they are the largest single block on the level:
 //
 //   id   name                 x on L27  factory                  table
-//   119  ROTATING_CLOCK_HAND   2        RotatingClockHand_Spawn  0x02112b00
-//   120  SPINNING_PLATFORM    13        SpinningPlatform_Spawn   0x02112bcc
-//   121  ROTATING_COG_BIG      2        func_ov035_0211168c      0x02112b00
-//   122  ROTATING_COG_SMALL    2        RotatingCogSmall_Spawn   0x02112b00
+//   119  ROTATING_CLOCK_HAND   2        daObjCtMecha10_c_classInit_CT_MECHA10  0x02112b00
+//   120  SPINNING_PLATFORM    13        daObjCtMecha11_c_classInit   0x02112bcc
+//   121  ROTATING_COG_BIG      2        daObjCtMecha10_c_classInit_CT_MECHA12L      0x02112b00
+//   122  ROTATING_COG_SMALL    2        daObjCtMecha10_c_classInit_CT_MECHA12S   0x02112b00
 //
 // ov035 is a LEVEL overlay, whole-mounted since wave 17 and per-symbol mounted
 // since wave 18. This lane adds its OWN cast to that per-symbol mount, the
@@ -22,10 +22,10 @@
 //
 // Disassembled from extracted/overlays/overlay_0035.bin (T4), all four
 // factories:
-//     0x0211165c RotatingCogSmall_Spawn   alloc 0x330  installs 0x02112b00
-//     0x0211168c func_ov035_0211168c      alloc 0x330  installs 0x02112b00
-//     0x021116bc RotatingClockHand_Spawn  alloc 0x330  installs 0x02112b00
-//     0x02111b98 SpinningPlatform_Spawn   alloc 0x380  installs 0x02112bcc
+//     0x0211165c daObjCtMecha10_c_classInit_CT_MECHA12S   alloc 0x330  installs 0x02112b00
+//     0x0211168c daObjCtMecha10_c_classInit_CT_MECHA12L      alloc 0x330  installs 0x02112b00
+//     0x021116bc daObjCtMecha10_c_classInit_CT_MECHA10  alloc 0x330  installs 0x02112b00
+//     0x02111b98 daObjCtMecha11_c_classInit   alloc 0x380  installs 0x02112bcc
 // THREE ids share the table dsd named _ZTV16RotatingCogSmall; the table dsd
 // named _ZTV17RotatingClockHand is SPINNING_PLATFORM's alone. The method
 // bodies follow the tables, not the ids -- the _ZN16RotatingCogSmall* bodies
@@ -43,9 +43,9 @@
 // +0xd4 as a MEMBER (their destructors call _ZN5ModelD1Ev on this+0xd4), so
 // the default applies and both tables stay ROM-shaped: [16] D1, [17] D0, and
 // the 32-slot Platform close
-//     29 _ZN5Actor16OnAimedAtWithEggEv        0x02010124
-//     30 _ZN5Actor25OnAimedAtWithEggReturnVecEv 0x020100dc  (trapped here)
-//     31 _ZN8Platform4KillEv                  0x020ee55c
+//     29 _ZN8dActor_c16OnAimedAtWithEggEv        0x02010124
+//     30 _ZN8dActor_c25OnAimedAtWithEggReturnVecEv 0x020100dc  (trapped here)
+//     31 _ZN10dBgActor_c4KillEv                  0x020ee55c
 // verified slot by slot against config/arm9/overlays/ov035/relocs.txt before
 // a single word was replaced. Both dsd landings under-read badly (2 slots and
 // 4 slots), so both tables are EXCLUDED from the mount and hosted here.
@@ -65,13 +65,15 @@
 // wave 18 landed the list and the CMake row and no caller. The twelve
 // cross-overlay blocks that mount exists for were still holding whatever the
 // emitter left them.
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
@@ -79,30 +81,30 @@ extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include "dsstate_seg.h"
 #include <cstdlib>
 
-#include "Actor.h"
-#include "ActorBase.h"
+#include "dActor_c.h"
+#include "fBase_c.h"
 
 extern "C" {
 /* the arm9 shared half -- the same words ov025's two platform tables, ov045's
    six, ov052's two and ov056's one carry, checked slot for slot against BOTH
    ROM tables before this fill was written. */
-int _ZN5Actor19BeforeInitResourcesEv(void *self);              /* slot 1  */
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
-int _ZN5Actor14BeforeBehaviorEv(void *self);                   /* slot 7  */
-int _ZN5Actor12BeforeRenderEv(void *self);                     /* slot 10 */
-int _ZN5Actor13OnYoshiTryEatEv(void *self);                    /* slot 18 */
-void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
-int _ZN5Actor9Virtual50Ev(void *self);                         /* slot 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);              /* slot 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);              /* slot 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
-int _ZN5Actor16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
-void _ZN8Platform4KillEv(void *self);                              /* slot 31 */
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);              /* slot 1  */
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);                   /* slot 7  */
+int _ZN8dActor_c12BeforeRenderEv(void *self);                     /* slot 10 */
+int _ZN8dActor_c13OnYoshiTryEatEv(void *self);                    /* slot 18 */
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
+int _ZN8dActor_c9Virtual50Ev(void *self);                         /* slot 20 */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);              /* slot 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);              /* slot 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
+int _ZN8dActor_c16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
+void _ZN10dBgActor_c4KillEv(void *self);                              /* slot 31 */
 
 const char *port_actor_class_name(unsigned id);   /* hal/actor_registry */
 void port_actor_slot_decline(const char *what);   /* func_02043fdc_hostcopy.cpp */
@@ -122,12 +124,12 @@ void __sinit_ov035_02111fc0(void);
 /* the bodies src spells with C names (port/slice_sweep1_ov035.txt) */
 int *_ZN16RotatingCogSmallD1Ev(int *self);        /* 0x02112b00 slot 16 */
 int *_ZN16RotatingCogSmallD0Ev(int *self);        /* 0x02112b00 slot 17 */
-int *_ZN17RotatingClockHandD1Ev(int *self);       /* 0x02112bcc slot 16 */
-int *_ZN17RotatingClockHandD0Ev(int *self);       /* 0x02112bcc slot 17 */
-void *RotatingCogSmall_Spawn(void);               /* id 122 */
-void *func_ov035_0211168c(void);                  /* id 121 */
-void *RotatingClockHand_Spawn(void);              /* id 119 */
-void *SpinningPlatform_Spawn(void);               /* id 120 */
+int *_ZN16SpinningPlatformD1Ev(int *self);       /* 0x02112bcc slot 16 */
+int *_ZN16SpinningPlatformD0Ev(int *self);       /* 0x02112bcc slot 17 */
+void *daObjCtMecha10_c_classInit_CT_MECHA12S(void);               /* id 122 */
+void *daObjCtMecha10_c_classInit_CT_MECHA12L(void);                  /* id 121 */
+void *daObjCtMecha10_c_classInit_CT_MECHA10(void);              /* id 119 */
+void *daObjCtMecha11_c_classInit(void);               /* id 120 */
 
 /* the two host vtables, both 32-slot Platform, both excluded from the mount */
 DSSTATE_BEGIN
@@ -193,14 +195,14 @@ DSSTATE_END
    by the 119/121/122 InitResources (the ov060 precedent at line 262 of
    hal/actor_classes_ov060.cpp, which is the same alias with a different return
    type in the decoration: that TU declares it int, this one void). */
-#pragma comment(linker, "/alternatename:?_ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block@@YAXPAX00HF0@Z=__ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block")
+#pragma comment(linker, "/alternatename:?_ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block@@YAXPAX00HF0@Z=__ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block")
 /* id 120's InitResources installs MeshColliderBase::UpdatePosWithTransform as
    the collider's BeforeClsn callback -- the contested-slot family c9a1731da
    seats -- but takes its address through the resolver's own invented name
    UpdatePosWithTransformSym (decl_common.h:1966, declared and defined
    nowhere). Bound to the same static method the bob_world / updownlift /
    ov060 aliases bind their three spellings to. */
-#pragma comment(linker, "/alternatename:_UpdatePosWithTransformSym=?UpdatePosWithTransform@MeshColliderBase@@SAXAAU1@PAUActor@@AAUClsnResult@@AAUVector3@@PAUVector3_16@@4@Z")
+#pragma comment(linker, "/alternatename:_UpdatePosWithTransformSym=?UpdatePosWithTransform@dBgW@@SAXAAU1@PAUActor@@AAUClsnResult@@AAUVector3@@PAUVector3_16@@4@Z")
 
 /* The four class bodies src defines as real C++ methods rather than extern-"C"
    free functions, faced here -- the ov013/ov025 recipe. Render IS faced: both
@@ -209,7 +211,7 @@ DSSTATE_END
    precedent, NOT the ModelAnim slot-5 collision -- neither class holds a
    ModelAnim). */
 #include "RotatingCogSmall.h"
-#include "RotatingClockHand.h"
+#include "SpinningPlatform.h"
 extern "C" {
 int _ZN16RotatingCogSmall13InitResourcesEv(void *self)
 { return ((RotatingCogSmall *)self)->RotatingCogSmall::InitResources(); }
@@ -219,14 +221,14 @@ int _ZN16RotatingCogSmall8BehaviorEv(void *self)
 { return ((RotatingCogSmall *)self)->RotatingCogSmall::Behavior(); }
 int _ZN16RotatingCogSmall6RenderEv(void *self)
 { return ((RotatingCogSmall *)self)->RotatingCogSmall::Render(); }
-int _ZN17RotatingClockHand13InitResourcesEv(void *self)
-{ return ((RotatingClockHand *)self)->RotatingClockHand::InitResources(); }
-int _ZN17RotatingClockHand16CleanupResourcesEv(void *self)
-{ return ((RotatingClockHand *)self)->RotatingClockHand::CleanupResources(); }
-int _ZN17RotatingClockHand8BehaviorEv(void *self)
-{ return ((RotatingClockHand *)self)->RotatingClockHand::Behavior(); }
-int _ZN17RotatingClockHand6RenderEv(void *self)
-{ return ((RotatingClockHand *)self)->RotatingClockHand::Render(); }
+int _ZN16SpinningPlatform13InitResourcesEv(void *self)
+{ return ((SpinningPlatform *)self)->SpinningPlatform::InitResources(); }
+int _ZN16SpinningPlatform16CleanupResourcesEv(void *self)
+{ return ((SpinningPlatform *)self)->SpinningPlatform::CleanupResources(); }
+int _ZN16SpinningPlatform8BehaviorEv(void *self)
+{ return ((SpinningPlatform *)self)->SpinningPlatform::Behavior(); }
+int _ZN16SpinningPlatform6RenderEv(void *self)
+{ return ((SpinningPlatform *)self)->SpinningPlatform::Render(); }
 }
 
 // ---- the trap --------------------------------------------------------------
@@ -248,54 +250,54 @@ OV35_TRAP(13) OV35_TRAP(14)
 #undef OV35_TRAP
 
 static int __fastcall ov35_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall ov35_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall ov35_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 static void __fastcall ov35_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall ov35_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall ov35_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall ov35_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall ov35_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall ov35_pdes(void *s, void *)
-{ ((ActorBase *)s)->ActorBase::OnPendingDestroy(); return 0; }
+{ ((fBase_c *)s)->fBase_c::OnPendingDestroy(); return 0; }
 static int __fastcall ov35_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int __fastcall ov35_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 /* slot 19 takes the three-parameter shape so it emits `ret 4`: the dispatch
    site pushes the Player the callee pops -- the wf_turn_egg contract. */
 static int __fastcall ov35_turn_egg(void *s, void *, void *p)
-{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+{ _ZN8dActor_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall ov35_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall ov35_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall ov35_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall ov35_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall ov35_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall ov35_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall ov35_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall ov35_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall ov35_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 static int __fastcall ov35_egg(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 /* slot 31, the Platform tail, the word both widths are pinned by. */
 static int __fastcall ov35_kill(void *s, void *)
-{ _ZN8Platform4KillEv(s); return 0; }
+{ _ZN10dBgActor_c4KillEv(s); return 0; }
 
 /* The shared half of both tables. The caller writes its own 0/3/6/9/16/17 and
    31.
@@ -402,7 +404,7 @@ extern "C" void hal_fill_rotating_cog_vtable(void)
     vt[3]  = (void *)rcs_clean;
     vt[6]  = (void *)rcs_behavior;
     vt[9]  = (void *)rcs_render;
-    vt[16] = (void *)rcs_d1;
+    vt[16] = (void *)PORT_D16(rcs_d1);
     vt[17] = (void *)rcs_d0;
     vt[31] = (void *)ov35_kill;
 }
@@ -419,23 +421,23 @@ extern "C" void hal_fill_rotating_cog_vtable(void)
 // MeshColliderBase::UpdatePosWithTransform as the BeforeClsn callback (the
 // contested-slot family c9a1731da seats), then raycasts straight down from
 // 0xa000 above its own origin and parks the ground height in +0x324 -- which
-// is what func_ov035_02111798 later reads to scale the drop shadow by the
+// is what _ZN16SpinningPlatform12UpdateShadowEv later reads to scale the drop shadow by the
 // platform's height above the floor. Behavior indexes the four-short table
 // data_ov035_02112b80 with the selector data_0209f2c0[0] for its per-frame
 // spin, and on selector 2 re-randomises sign and dwell.
 static int __fastcall sp_init(void *s, void *)
-{ return _ZN17RotatingClockHand13InitResourcesEv(s); }
+{ return _ZN16SpinningPlatform13InitResourcesEv(s); }
 static int __fastcall sp_clean(void *s, void *)
-{ return _ZN17RotatingClockHand16CleanupResourcesEv(s); }
+{ return _ZN16SpinningPlatform16CleanupResourcesEv(s); }
 static int __fastcall sp_behavior(void *s, void *)
-{ return _ZN17RotatingClockHand8BehaviorEv(s); }
+{ return _ZN16SpinningPlatform8BehaviorEv(s); }
 static int __fastcall sp_render(void *s, void *)
 { port_actor_render_probe("SPINNING_PLATFORM", (char *)s + 0xd4);
-  return _ZN17RotatingClockHand6RenderEv(s); }
+  return _ZN16SpinningPlatform6RenderEv(s); }
 static int __fastcall sp_d1(void *s, void *)
-{ return (int)(size_t)_ZN17RotatingClockHandD1Ev((int *)s); }
+{ return (int)(size_t)_ZN16SpinningPlatformD1Ev((int *)s); }
 static int __fastcall sp_d0(void *s, void *)
-{ return (int)(size_t)_ZN17RotatingClockHandD0Ev((int *)s); }
+{ return (int)(size_t)_ZN16SpinningPlatformD0Ev((int *)s); }
 
 extern "C" void hal_fill_spinning_platform_vtable(void)
 {
@@ -446,7 +448,7 @@ extern "C" void hal_fill_spinning_platform_vtable(void)
     vt[3]  = (void *)sp_clean;
     vt[6]  = (void *)sp_behavior;
     vt[9]  = (void *)sp_render;
-    vt[16] = (void *)sp_d1;
+    vt[16] = (void *)PORT_D16(sp_d1);
     vt[17] = (void *)sp_d0;
     vt[31] = (void *)ov35_kill;
 }

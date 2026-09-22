@@ -1,0 +1,75 @@
+{
+  "class": "daPgDfdr_c",
+  "rtti_name": "10daPgDfdr_c",
+  "rtti_name_address": "0x021139f0",
+  "overlay": "ov027",
+  "module_base": "0x021111a0",
+  "typeinfo": {
+    "symbol": "_ZTI10daPgDfdr_c",
+    "address": "0x021139e4",
+    "kind": "__si_class_type_info",
+    "words": ["0x0209a764", "0x021139f0", "0x021089ec"],
+    "note": "+0 = vtable-for-__si_class_type_info, +4 = name string, +8 = base typeinfo"
+  },
+  "vtable": {
+    "symbol": "_ZTV10daPgDfdr_c",
+    "address": "0x02113a90",
+    "slots": 32,
+    "header_words": {"offset_to_top": "0x0", "typeinfo": "0x021139e4"},
+    "end_evidence": "slot 32 would be 0x0209a764, which is the vtable-for-__si_class_type_info word that opens the NEXT RTTI record; the table therefore stops at slot 31"
+  },
+  "base_class": "dBgActor_c",
+  "base_evidence": "_ZTI10daPgDfdr_c (ov027:0x021139e4) is a __si_class_type_info whose +8 word is 0x021089ec = _ZTI10dBgActor_c (ov002). Single-inheritance record, offset 0, so dBgActor_c is the direct base and there is no intermediate. Corroboration only: 32 slots, one more than dActor_c's 31, matching dBgActor_c's own 32.",
+  "overrides": [
+    {"slot": 0,  "address": "0x02111eb4", "name": "InitResources",    "size": "0x01c8", "note": "fBase_c slot 0; first DECLARED non-inline virtual once the destructor is inlined, therefore this TU's key function"},
+    {"slot": 3,  "address": "0x02111d8c", "name": "CleanupResources", "size": "0x0070"},
+    {"slot": 6,  "address": "0x02111e34", "name": "Behavior",         "size": "0x0080"},
+    {"slot": 9,  "address": "0x02111e00", "name": "Render",           "size": "0x0034"},
+    {"slot": 12, "address": "0x02111dfc", "name": "OnPendingDestroy", "size": "0x0004", "note": "body is a bare `bx lr`; the override exists only to occupy the slot"},
+    {"slot": 16, "address": "0x021118c8", "name": "~daPgDfdr_c (D1)", "size": "0x005c"},
+    {"slot": 17, "address": "0x02111924", "name": "~daPgDfdr_c (D0)", "size": "0x0070"}
+  ],
+  "not_overridden": [
+    {"slot": 31, "word": "0x020ee55c", "name": "Kill", "note": "identical to dBgActor_c's own slot-31 word; inherited, not overridden"},
+    {"slots": "1,2,4,5,7,8,10,11,13,14,15,18-30", "note": "every remaining word points into arm9 (dActor_c/dBase_c/fBase_c) or 0x0204349c-0x0204357c; none lands in ov027"}
+  ],
+  "non_virtual": [
+    {"address": "0x02111994", "size": "0x0094", "kind": "file-local helper", "callers": ["0x02111ea4 (InitResources)", "0x02111f5c (InitResources)", "0x02111e4c-adjacent (Behavior)"], "note": "rebuilds mClsnMat from mAngleY and the position, then dBgW_KcMbg::Transform"},
+    {"address": "0x02111a28", "size": "0x0104", "kind": "state callback", "callers": ["referenced as data from 0x021139c4 (the state-callback table)"]},
+    {"address": "0x02111b2c", "size": "0x011c", "kind": "state callback", "callers": ["referenced as data from 0x021139dc"]},
+    {"address": "0x02111c48", "size": "0x0060", "kind": "state callback", "callers": ["referenced as data from 0x021139cc"]},
+    {"address": "0x02111ca8", "size": "0x0054", "kind": "state callback", "callers": ["referenced as data from 0x021139d4"]},
+    {"address": "0x02111cfc", "size": "0x003c", "kind": "file-local helper", "callers": ["0x02111e4c (Behavior)"], "note": "calls state-table entry [1] through `this`"},
+    {"address": "0x02111d38", "size": "0x0038", "kind": "file-local helper", "callers": ["0x02111d88 (as data, from 0x02111d70)"], "note": "calls state-table entry [0] through `this`"},
+    {"address": "0x02111d70", "size": "0x001c", "kind": "file-local helper", "callers": ["0x02111a68", "0x02111c90", "0x02111fcc"], "note": "sets mStateTable = &data_ov027_02113ce4[idx] then runs entry [0]"}
+  ],
+  "callers_outside_the_span": "none. Every reference to every one of the eight helpers comes from inside 0x021118c8..0x0211207c or from the ov027 state table at 0x021139c4. grep of config/arm9/overlays/ov027/relocs.txt for `to:0x0211{1994,1a28,1b2c,1c48,1ca8,1cfc,1d38,1d70}` returns only those rows.",
+  "size": "0x3dc",
+  "size_evidence": "daPgDfdr_c_classInit (ov027:0x0211207c, size 0x48) is `mov r0,#0x3dc; bl fBase_c::operator new`. The same routine then calls dBgActor_c::dBgActor_c (0x020ef92c), stores the literal 0x02113a90 (= _ZTV10daPgDfdr_c) at [r4], and runs exactly three member constructors at +0x320, +0x384 and +0x398.",
+  "fields": [
+    {"offset": "0x320", "type": "ModelAnim",       "name": "mModelAnim",       "evidence": "ctor call at +0x320 in the factory (0x02017834), dtor call in D1"},
+    {"offset": "0x384", "type": "TextureSequence", "name": "mTextureSequence", "evidence": "ctor call at +0x384 in the factory (0x0201692c), dtor call in D1"},
+    {"offset": "0x398", "type": "dCcAc_c",         "name": "mdCcAc_c",         "evidence": "ctor call at +0x398 in the factory (0x020158a4), dtor call in D1"},
+    {"offset": "0x3cc", "type": "void *",          "name": "mStateTable",      "evidence": "func_ov027_02111d70 stores &data_ov027_02113ce4[idx] here; func_ov027_02111d38/02111cfc read *(p) and *(p+1) and call through `this`"},
+    {"offset": "0x3d0", "type": "s32",             "name": "unk_3d0",          "evidence": "written 0 by func_ov027_02111ca8 and 1 by func_ov027_02111b2c; a flag, purpose unproven"},
+    {"offset": "0x3d4", "type": "s32",             "name": "mDistanceLeft",    "evidence": "loaded from data_ov027_02113a1c[mStepIndex], decremented by mHorzSpeed each frame in func_ov027_02111a28"},
+    {"offset": "0x3d8", "type": "u8",              "name": "mTimer",           "evidence": "set to 0x14 by func_ov027_02111ca8, decremented via DecIfAbove0_Byte by func_ov027_02111c48"},
+    {"offset": "0x3d9", "type": "u8",              "name": "mStepIndex",       "evidence": "incremented and wrapped at 9 in func_ov027_02111a28; used as the index into data_ov027_02113a1c/20/24/26"},
+    {"offset": "0x3da", "type": "u8[2]",           "name": "pad_3da",          "evidence": "never dereferenced; closes the object to 0x3dc"}
+  ],
+  "data_referenced": {
+    "0x021139c4": "state-callback table (4 words -> 0x02111a28, 0x02111c48, 0x02111ca8, 0x02111b2c)",
+    "0x02113a00": "g_profile_PENGUIN_DEFENDER (registry descriptor; symbols.txt marks it `ambiguous`)",
+    "0x02113a1c/20/24/26": "per-step tables indexed by mStepIndex, stride 0xc",
+    "0x02113ce4": "bss; base of the runtime state table mStateTable points into",
+    "0x02112ca4": "3-entry SharedFilePtr table (animations)",
+    "0x02113c6c/7c/84/8c/94": "SharedFilePtr slots: KCL, BMD, and three BCA/BTP files",
+    "0x021130e8": "CLPS_Block passed to dBgW_KcMbg::SetFile"
+  },
+  "unproven": [
+    "the exact function-pointer type behind mStateTable (the two callees are reached as `(this->**p)()`; the shards spell it as a pointer-to-member-function through a stand-in struct and that spelling is byte-exact, but it is not proof of the original declaration)",
+    "unk_3d0 - proven to be a 0/1 s32 flag, but nothing names what it gates",
+    "the field the state tables at 0x02113a1c/20/24/26 belong to; they are read as a stride-0xc array of some per-step record whose full shape is not recovered",
+    "the original spelling of the eight file-local helper names; they keep their func_ov027_<addr> identity because nothing in the ROM names them"
+  ]
+}

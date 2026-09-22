@@ -2,8 +2,8 @@ typedef struct { int x, y, z; } V3;
 extern V3 data_ov094_02136a1c;
 extern signed char data_0209f2f8;
 extern int data_ov094_02136b70;
-extern int _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void* self, V3* v);
-extern int _ZN5Actor10FindWithIDEj(unsigned id);
+extern int _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void* self, V3* v);
+extern int _ZN8dActor_c10FindWithIDEj(unsigned id);
 extern int func_ov002_020df840(void* a, void* b, void* d);
 extern int func_ov094_02136188(void* c, void* p);
 void func_ov094_021357a4(char* c){
@@ -12,9 +12,9 @@ void func_ov094_021357a4(char* c){
   tmp.x = data_ov094_02136a1c.x;
   tmp.y = data_ov094_02136a1c.y;
   tmp.z = data_ov094_02136a1c.z;
-  _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(c+0x110, &tmp);
+  _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(c+0x110, &tmp);
   if(*(int*)(c+0x134) == 0) return;
-  int a = _ZN5Actor10FindWithIDEj(*(int*)(c+0x134));
+  int a = _ZN8dActor_c10FindWithIDEj(*(int*)(c+0x134));
   if(a == 0) return;
   int t = *(unsigned short*)(a+0xc);
   unsigned eq = (t == 0xbf);

@@ -18,7 +18,7 @@
 // through slot 21 the moment Mario ground-pounds one. So the arrays below are
 // [31] and ac31_fill_shared writes all of the shared ones.
 //
-// THE CALL SITES COUNT ROM SLOTS. ov002's combat paths (func_ov002_020b36b4
+// THE CALL SITES COUNT ROM SLOTS. ov002's combat paths (_ZN13BigBrickBlock15OnHitByMegaCharER6Player
 // and its family) dispatch through LOCAL SHADOW CLASSES declaring thirty-one
 // virtuals, so the numbering these arrays are filled in is the numbering the
 // caller uses. The header-compiled direction is the one that would diverge --
@@ -31,46 +31,48 @@
 // `this` in r1 while MSVC's __thiscall pushes sret on the stack behind ecx.
 // A thunk cannot bridge that without a shape the port has no caller for:
 // nothing aims a Yoshi egg at anything while the character is Mario.
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
 extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include <cstdlib>
 
-#include "Actor.h"
+#include "dActor_c.h"
 #include "dtor_faces_cpp.h"
-#include "ActorBase.h"
+#include "fBase_c.h"
 #include "dsstate_seg.h"
 
 extern "C" {
 /* the ten shared lifecycle halves, the same functions hal/actor_classes.cpp
    writes into every class it carries */
-int _ZN5Actor19BeforeInitResourcesEv(void *self);          /* slot 1  */
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a); /* slot 2 */
-int _ZN5Actor14BeforeBehaviorEv(void *self);               /* slot 7  */
-int _ZN5Actor12BeforeRenderEv(void *self);                 /* slot 10 */
-int _ZN5Actor13OnYoshiTryEatEv(void *self);                /* slot 18 */
-int _ZN5Actor16OnAimedAtWithEggEv(void *self);             /* slot 29 default */
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);          /* slot 1  */
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a); /* slot 2 */
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);               /* slot 7  */
+int _ZN8dActor_c12BeforeRenderEv(void *self);                 /* slot 10 */
+int _ZN8dActor_c13OnYoshiTryEatEv(void *self);                /* slot 18 */
+int _ZN8dActor_c16OnAimedAtWithEggEv(void *self);             /* slot 29 default */
 /* ...and Actor's own tail, slots 20 through 28. Every one is a two-line ROM
    body: Virtual50 answers VS_FAIL and the eight combat hooks do nothing, which
    is what a class that does not care about being hit inherits. */
-int _ZN5Actor9Virtual50Ev(void *self);                     /* slot 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);  /* slot 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);      /* slot 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);      /* slot 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);          /* slot 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);          /* slot 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* 27 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);      /* 28 */
-void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p);       /* 19 */
+int _ZN8dActor_c9Virtual50Ev(void *self);                     /* slot 20 */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);  /* slot 21 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);      /* slot 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);      /* slot 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);          /* slot 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);          /* slot 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o); /* 26 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);     /* 27 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);      /* 28 */
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void *self, void *p);       /* 19 */
 
 extern int data_02099f24[];          /* the frame phase the lists are in */
 extern unsigned char data_020a4b4c;  /* the spawn spine's own step */
@@ -104,37 +106,37 @@ E31_TRAP(13) E31_TRAP(14) E31_TRAP(16) E31_TRAP(17)
 #undef E31_TRAP
 
 static int __fastcall e31_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall e31_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall e31_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 /* Slots 5, 8 and 11 are ARM tail-call veneers on the ROM: two instructions
    that drop into ActorBase's implementation with the argument still riding in
    r1. A host forward through the veneer's own C face would lose it, so the
    thunk calls the target directly. */
 static void __fastcall e31_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall e31_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall e31_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall e31_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall e31_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall e31_pdes(void *s, void *)
-{ ((ActorBase *)s)->ActorBase::OnPendingDestroy(); return 0; }
+{ ((fBase_c *)s)->fBase_c::OnPendingDestroy(); return 0; }
 static int __fastcall e31_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int __fastcall e31_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 static int __fastcall e31_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 /* slot 29, Actor::OnAimedAtWithEgg -- the INHERITED default for every class in
    this gate that has no egg-aim body of its own. Read the ROM tables + 0x74
-   with relocs applied (_ZTV10ChainChomp, _ZTV13KoopaTheQuick, _ZTV9KoopaFlag,
-   _ZTV11BobOmbBuddy, _ZTV15ChainChompFence, _ZTV11daObjPile_c) and slot 29
+   with relocs applied (_ZTV10daWanwan_c, _ZTV13KoopaTheQuick, _ZTV9KoopaFlag,
+   _ZTV11BobOmbBuddy, _ZTV20daObjWanwanShutter_c, _ZTV11daObjPile_c) and slot 29
    lands on arm9 0x02010124, Actor::OnAimedAtWithEgg -- the same default bbh's
    bbh_aimed and painting's pt_aimed seat. It returns the egg auto-aim lock-on
    radius (81920 == 20.0 in 20.12); the caller reads it thiscall (this in ecx,
@@ -142,23 +144,23 @@ static int __fastcall e31_v50(void *s, void *)
    three classes with their own body (BobOmb, Goomba, KingBobOmb) overwrite it
    below; the six without inherit this, where a trap used to sit. */
 static int __fastcall e31_aimed(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 static int __fastcall e31_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall e31_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall e31_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall e31_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall e31_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall e31_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall e31_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall e31_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 /* slot 19, OnTurnIntoEgg(Player &player): the caller PUSHES the player, so the
    three-parameter veneer pops it. The ROM reloc at each of these tables + 0x4c
    lands on arm9 0x02010154, Actor::OnTurnIntoEgg (a tail-call veneer to
@@ -166,7 +168,7 @@ static int __fastcall e31_under(void *s, void *, void *o)
    ROM does; trapping it froze the actor forever. Classes with their OWN egg
    body (BobOmb, Goomba) override this slot below. */
 static int __fastcall e31_turn_egg(void *s, void *, void *p)
-{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+{ _ZN8dActor_c13OnTurnIntoEggER6Player(s, p); return 0; }
 
 /* The shared half of a 31-slot table: Actor's four Before/After pairs,
    ActorBase::OnHeapCreated, Actor::OnYoshiTryEat, Virtual50 and the eight
@@ -188,7 +190,7 @@ void ac31_fill_shared(void **vt)
     vt[13] = (void *)e31_trap13;
     vt[14] = (void *)e31_trap14;
     vt[15] = (void *)e31_heap;
-    vt[16] = (void *)e31_trap16;
+    vt[16] = (void *)PORT_D16(e31_trap16);
     vt[17] = (void *)e31_trap17;
     vt[18] = (void *)e31_yoshi;
     vt[19] = (void *)e31_turn_egg;
@@ -223,44 +225,44 @@ void ac31_fill_shared(void **vt)
 // Object layout, from its own factory: MovingCylinderClsn at 0x110,
 // WithMeshClsn at 0x144, ModelAnim at 0x300, ShadowModel at 0x364, 1024 bytes.
 extern "C" {
-int _ZN6BobOmb13InitResourcesEv(void *self);       /* face: below */
-int _ZN6BobOmb8BehaviorEv(char *self);
-int _ZN6BobOmb6RenderEv(void *self);               /* host copy */
-int _ZN6BobOmb16CleanupResourcesEv(void);          /* three file releases */
-int *_ZN6BobOmbD1Ev(int *self);
-int *_ZN6BobOmbD0Ev(int *self);
-int func_ov102_0214c6e4(unsigned char *self);      /* slot 18, its own */
-void func_ov102_0214adc8(void *self, void *player); /* slot 19, its own */
-int func_ov102_0214aa10(void);                     /* slot 29, its own */
+int _ZN7daBmb_c13InitResourcesEv(void *self);       /* face: below */
+int _ZN7daBmb_c8BehaviorEv(char *self);
+int _ZN7daBmb_c6RenderEv(void *self);               /* host copy */
+int _ZN7daBmb_c16CleanupResourcesEv(void);          /* three file releases */
+int *_ZN7daBmb_cD1Ev(int *self);
+int *_ZN7daBmb_cD0Ev(int *self);
+int _ZN7daBmb_c13OnYoshiTryEatEv(unsigned char *self);      /* slot 18, its own */
+void _ZN7daBmb_c13OnTurnIntoEggER6Player(void *self, void *player); /* slot 19, its own */
+int _ZN7daBmb_c16OnAimedAtWithEggEv(void);                     /* slot 29, its own */
 void *_ZTV6BobOmb[31];
 }
 /* The bomb's own D0 spells its table by the RTTI name. */
 #pragma comment(linker, "/alternatename:__ZTV7daBmb_c=__ZTV6BobOmb")
 
 static int __fastcall bmb_init(void *s, void *)
-{ return _ZN6BobOmb13InitResourcesEv(s); }
+{ return _ZN7daBmb_c13InitResourcesEv(s); }
 static int __fastcall bmb_clean(void *, void *)
-{ return _ZN6BobOmb16CleanupResourcesEv(); }
+{ return _ZN7daBmb_c16CleanupResourcesEv(); }
 static int __fastcall bmb_behavior(void *s, void *)
-{ return _ZN6BobOmb8BehaviorEv((char *)s); }
+{ return _ZN7daBmb_c8BehaviorEv((char *)s); }
 static int __fastcall bmb_render(void *s, void *)
 { port_actor_render_probe("BOB_OMB", (char *)s + 0x300);
-  return _ZN6BobOmb6RenderEv(s); }
+  return _ZN7daBmb_c6RenderEv(s); }
 /* SLOT 16 IS LIVE. A bomb that is lit reaches its own blast and marks itself
    for destruction, so the D1 the cleanup pass dispatches has to be the class's
-   own -- and src/_ZN6BobOmbD1Ev.c is already exactly the D0 body minus the
+   own -- and src/actors/daBmb_c.cpp is already exactly the D0 body minus the
    final Deallocate, which is what ActorBase::AfterCleanupResources performs
    itself after the dispatch returns. */
 static int __fastcall bmb_d1(void *s, void *)
-{ return (int)(size_t)_ZN6BobOmbD1Ev((int *)s); }
+{ return (int)(size_t)_ZN7daBmb_cD1Ev((int *)s); }
 static int __fastcall bmb_d0(void *s, void *)
-{ return (int)(size_t)_ZN6BobOmbD0Ev((int *)s); }
+{ return (int)(size_t)_ZN7daBmb_cD0Ev((int *)s); }
 static int __fastcall bmb_yoshi(void *s, void *)
-{ return func_ov102_0214c6e4((unsigned char *)s); }
+{ return _ZN7daBmb_c13OnYoshiTryEatEv((unsigned char *)s); }
 static int __fastcall bmb_egg(void *s, void *, void *p)
-{ func_ov102_0214adc8(s, p); return 0; }
+{ _ZN7daBmb_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall bmb_aimed(void *, void *)
-{ return func_ov102_0214aa10(); }
+{ return _ZN7daBmb_c16OnAimedAtWithEggEv(); }
 
 /* The Enemy tier's own eight-entry death table (port/unmatched): its statics
    carry DS code addresses until they are seated, and __sinit_ov002_02100938
@@ -277,7 +279,7 @@ extern "C" void hal_fill_bob_omb_vtable(void)
     vt[3] = (void *)bmb_clean;
     vt[6] = (void *)bmb_behavior;
     vt[9] = (void *)bmb_render;
-    vt[16] = (void *)bmb_d1;
+    vt[16] = (void *)PORT_D16(bmb_d1);
     vt[17] = (void *)bmb_d0;
     vt[18] = (void *)bmb_yoshi;
     vt[19] = (void *)bmb_egg;
@@ -288,10 +290,10 @@ extern "C" void hal_fill_bob_omb_vtable(void)
    The C-named references the vtables take onto definitions that are real MSVC
    methods against include/. Everything else in this gate's classes is already
    a C-named free function in its own TU. */
-#include "BobOmb.h"
+#include "daBmb_c.h"
 extern "C" {
-int _ZN6BobOmb13InitResourcesEv(void *self)
-{ return ((BobOmb *)self)->BobOmb::InitResources(); }
+int _ZN7daBmb_c13InitResourcesEv(void *self)
+{ return ((daBmb_c *)self)->daBmb_c::InitResources(); }
 }
 
 // ============================================================================
@@ -302,7 +304,7 @@ int _ZN6BobOmb13InitResourcesEv(void *self)
 // Koopa leaves behind and the item a GREEN_SHELL_BLOCK_TAG cracks open. An Enemy
 // subclass on the same 31-slot table shape as BOB_OMB, overriding the six
 // lifecycle slots. Slot 18 (OnYoshiTryEat) CARRIES THE ROM'S OWN WORD as of
-// gate 228. It kept the shared Actor default while func_ov102_0214d6a0 was only
+// gate 228. It kept the shared Actor default while _ZN10KoopaShell13OnYoshiTryEatEv was only
 // a vtable-slot-identity name rather than a named decompilation; lane STUBADJ
 // disassembled the body and ruled it REAL DECOMP, so the fill takes it.
 //
@@ -311,7 +313,7 @@ int _ZN6BobOmb13InitResourcesEv(void *self)
 // dynamically, not placed: BrickBlock::SpawnKoopaShell (GREEN_SHELL_BLOCK_TAG id
 // 323, ov002) and a stomped Koopa (id 203, ov062) both call Actor::Spawn(0x11d).
 //
-// Object layout, from its own factory (KoopaShell_Spawn ov102 0x0214d6b4):
+// Object layout, from its own factory (daShl_c_classInit ov102 0x0214d6b4):
 // MovingCylinderClsn at 0x110, WithMeshClsn at 0x144, Model at 0x300,
 // ShadowModel at 0x350, MovingCylinderClsn at 0x378, 992 bytes.
 extern "C" {
@@ -337,10 +339,10 @@ void *_ZTV10KoopaShell[31];
 #pragma comment(linker, "/alternatename:?data_ov102_0214ea68@@3DA=_data_ov102_0214ea68")
 #pragma comment(linker, "/alternatename:?data_ov102_0214ea78@@3DA=_data_ov102_0214ea78")
 /* func_ov102_0214ce60 calls Actor::UpdateCarry returning Matrix4x3& (AAU); the
-   real matched method src/_ZN5Actor11UpdateCarryER6PlayerRK7Vector3.cpp (gate 18,
+   real matched method src/_ZN8dActor_c11UpdateCarryER6PlayerRK7Vector3.cpp (gate 18,
    in this target) returns Matrix4x3* (PAU). Same __thiscall ABI, return-mangling
    only; bridge the reference form to the pointer definition. */
-#pragma comment(linker, "/alternatename:?UpdateCarry@Actor@@QAEAAUMatrix4x3@@AAUPlayer@@ABUVector3@@@Z=?UpdateCarry@Actor@@QAEPAUMatrix4x3@@AAUPlayer@@ABUVector3@@@Z")
+#pragma comment(linker, "/alternatename:?UpdateCarry@dActor_c@@QAEAAUMatrix4x3@@AAUPlayer@@ABUVector3@@@Z=?UpdateCarry@dActor_c@@QAEPAUMatrix4x3@@AAUPlayer@@ABUVector3@@@Z")
 
 static int __fastcall ksh_init(void *s, void *)
 { return _ZN10KoopaShell13InitResourcesEv(s); }
@@ -358,9 +360,9 @@ static int __fastcall ksh_d1(void *s, void *)
 static int __fastcall ksh_d0(void *s, void *)
 { return (int)(size_t)_ZN10KoopaShellD0Ev((int *)s); }
 /* slot 18, OnYoshiTryEat. GATE 228; see the fill for the table word. */
-extern "C" int func_ov102_0214d6a0(unsigned char *self);   /* ov102 0x0214d6a0 */
+extern "C" int _ZN10KoopaShell13OnYoshiTryEatEv(unsigned char *self);   /* ov102 0x0214d6a0 */
 static int __fastcall ksh_yoshi(void *s, void *)
-{ return func_ov102_0214d6a0((unsigned char *)s); }
+{ return _ZN10KoopaShell13OnYoshiTryEatEv((unsigned char *)s); }
 
 extern "C" void port_koopa_shell_states_seat(void);   /* port/unmatched */
 
@@ -375,10 +377,10 @@ extern "C" void hal_fill_koopa_shell_vtable(void)
     vt[6] = (void *)ksh_behavior;
     vt[9] = (void *)ksh_render;
     vt[12] = (void *)ksh_pdes;
-    vt[16] = (void *)ksh_d1;
+    vt[16] = (void *)PORT_D16(ksh_d1);
     vt[17] = (void *)ksh_d0;
     /* slot 18 (OnYoshiTryEat) IS THE ROM'S OWN WORD NOW (gate 228). It stayed
-       on the shared Actor default while func_ov102_0214d6a0 was only a
+       on the shared Actor default while _ZN10KoopaShell13OnYoshiTryEatEv was only a
        vtable-slot-identity name; lane STUBADJ disassembled the body and ruled it
        REAL DECOMP. Table word 0x0214e650 + 18*4 = 0x0214e698 relocates to
        0x0214d6a0, kind:function(arm,size=0x14), and the whole body is
@@ -405,44 +407,44 @@ extern "C" void hal_fill_koopa_shell_vtable(void)
 // WithMeshClsn at 0x1b4, ModelAnim at 0x370, ShadowModel at 0x3d4,
 // MaterialChanger at 0x3fc.
 extern "C" {
-int _ZN6Goomba13InitResourcesEv(char *self);        /* C-named in its own TU */
-int _ZN6Goomba8BehaviorEv(void *self);              /* face: below */
-int _ZN6Goomba6RenderEv(void *self);                /* host copy */
-int _ZN6Goomba16CleanupResourcesEv(void *self);     /* face: below */
-void _ZN6Goomba16OnPendingDestroyEv(void);
-int *_ZN6GoombaD1Ev(int *self);
-int *_ZN6GoombaD0Ev(int *self);
-int func_ov084_0212bfc0(void *self);                /* slot 18, its own */
+int _ZN7daKrb_c13InitResourcesEv(char *self);        /* C-named in its own TU */
+int _ZN7daKrb_c8BehaviorEv(void *self);              /* face: below */
+int _ZN7daKrb_c6RenderEv(void *self);                /* host copy */
+int _ZN7daKrb_c16CleanupResourcesEv(void *self);     /* face: below */
+void _ZN7daKrb_c16OnPendingDestroyEv(void);
+int *_ZN7daKrb_cD1Ev(int *self);
+int *_ZN7daKrb_cD0Ev(int *self);
+int _ZN7daKrb_c13OnYoshiTryEatEv(void *self);                /* slot 18, its own */
 void func_ov084_0212b344(void *self, void *player); /* slot 19, its own */
-int func_ov084_0212b30c(void *self);                /* slot 29, its own */
+int _ZN7daKrb_c16OnAimedAtWithEggEv(void *self);                /* slot 29, its own */
 void *_ZTV6Goomba[31];
 }
 /* The goomba's own D0 spells its table by the RTTI name. */
 #pragma comment(linker, "/alternatename:__ZTV7daKrb_c=__ZTV6Goomba")
 
 static int __fastcall gmb_init(void *s, void *)
-{ return _ZN6Goomba13InitResourcesEv((char *)s); }
+{ return _ZN7daKrb_c13InitResourcesEv((char *)s); }
 static int __fastcall gmb_clean(void *s, void *)
-{ return _ZN6Goomba16CleanupResourcesEv(s); }
+{ return _ZN7daKrb_c16CleanupResourcesEv(s); }
 static int __fastcall gmb_behavior(void *s, void *)
-{ return _ZN6Goomba8BehaviorEv(s); }
+{ return _ZN7daKrb_c8BehaviorEv(s); }
 static int __fastcall gmb_render(void *s, void *)
 { port_actor_render_probe("GOOMBA", (char *)s + 0x370);
-  return _ZN6Goomba6RenderEv(s); }
+  return _ZN7daKrb_c6RenderEv(s); }
 static int __fastcall gmb_pdes(void *, void *)
-{ _ZN6Goomba16OnPendingDestroyEv(); return 0; }
+{ _ZN7daKrb_c16OnPendingDestroyEv(); return 0; }
 /* SLOT 16 IS LIVE: a squashed goomba marks itself for destruction and the
    cleanup pass dispatches D1 the next frame. */
 static int __fastcall gmb_d1(void *s, void *)
-{ return (int)(size_t)_ZN6GoombaD1Ev((int *)s); }
+{ return (int)(size_t)_ZN7daKrb_cD1Ev((int *)s); }
 static int __fastcall gmb_d0(void *s, void *)
-{ return (int)(size_t)_ZN6GoombaD0Ev((int *)s); }
+{ return (int)(size_t)_ZN7daKrb_cD0Ev((int *)s); }
 static int __fastcall gmb_yoshi(void *s, void *)
-{ return func_ov084_0212bfc0(s); }
+{ return _ZN7daKrb_c13OnYoshiTryEatEv(s); }
 static int __fastcall gmb_egg(void *s, void *, void *p)
 { func_ov084_0212b344(s, p); return 0; }
 static int __fastcall gmb_aimed(void *s, void *)
-{ return func_ov084_0212b30c(s); }
+{ return _ZN7daKrb_c16OnAimedAtWithEggEv(s); }
 
 extern "C" void port_goomba_states_seat(void);          /* port/unmatched */
 
@@ -457,7 +459,7 @@ extern "C" void hal_fill_goomba_vtable(void)
     vt[6] = (void *)gmb_behavior;
     vt[9] = (void *)gmb_render;
     vt[12] = (void *)gmb_pdes;
-    vt[16] = (void *)gmb_d1;
+    vt[16] = (void *)PORT_D16(gmb_d1);
     vt[17] = (void *)gmb_d0;
     vt[18] = (void *)gmb_yoshi;
     vt[19] = (void *)gmb_egg;
@@ -486,8 +488,8 @@ int *_ZN11BobOmbBuddyD0Ev(int *self);
 /* the three member teardowns the hosted D1 runs, plus Actor's D2 */
 void _ZN11ShadowModelD1Ev(void *);
 void _ZN9ModelAnimD1Ev(void *);
-void *_ZN18MovingCylinderClsnD1Ev(void *);
-void *_ZN5ActorD2Ev(void *);
+void *_ZN7dCcAc_cD1Ev(void *);
+void *_ZN8dActor_cD2Ev(void *);
 void *_ZTV11BobOmbBuddy[31];
 }
 /* PORT_HOST_ABI: two names of ONE ROM table, read off the ROM rather than
@@ -496,7 +498,7 @@ void *_ZTV11BobOmbBuddy[31];
    whose word[1] points at the Itanium name string at 0x02130a00 =
    "14daRedBombhei_c", so 14daRedBombhei_c is the ROM's own RTTI spelling of
    that class. The ROM bodies whose literal pools load it are
-   BobOmbBuddy_Spawn, _ZN11BobOmbBuddyD0Ev, _ZN11BobOmbBuddyD1Ev. Read out
+   daRedBombhei_c_classInit, _ZN11BobOmbBuddyD0Ev, _ZN11BobOmbBuddyD1Ev. Read out
    of extracted/overlays/overlay_0084.bin; the LHS is not a config symbol
    anywhere, so the alias cannot be defeated by a later slice. */
 #pragma comment(linker, "/alternatename:__ZTV14daRedBombhei_c=__ZTV11BobOmbBuddy")
@@ -514,7 +516,7 @@ static int __fastcall bbud_render(void *s, void *)
    is a REAL C++ DESTRUCTOR -- `BobOmbBuddy::~BobOmbBuddy() {}` over a shadow
    class with three members -- so MSVC emits ??1BobOmbBuddy@@UAE@XZ and calls
    ??1ModelAnim@@QAE@XZ and two more that exist nowhere in this build. The body
-   below is src/_ZN11BobOmbBuddyD0Ev.c minus its final Memory::Deallocate,
+   below is src/_ZN11BobOmbBuddyD0Ev.cpp minus its final Memory::Deallocate,
    which ActorBase::AfterCleanupResources performs itself after the dispatch
    returns -- the Bird's treatment. */
 /* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
@@ -534,18 +536,18 @@ extern "C" void hal_fill_bob_omb_buddy_vtable(void)
     vt[3] = (void *)bbud_clean;
     vt[6] = (void *)bbud_behavior;
     vt[9] = (void *)bbud_render;
-    vt[16] = (void *)hal_cppd1_BobOmbBuddy;
+    vt[16] = (void *)PORT_D16(hal_cppd1_BobOmbBuddy);
     vt[17] = (void *)bbud_d0;
 }
 
 /* ---- ov084's method faces ------------------------------------------------- */
-#include "Goomba.h"
+#include "daKrb_c.h"
 #include "BobOmbBuddy.h"
 extern "C" {
-int _ZN6Goomba8BehaviorEv(void *self)
-{ return ((Goomba *)self)->Goomba::Behavior(); }
-int _ZN6Goomba16CleanupResourcesEv(void *self)
-{ return ((Goomba *)self)->Goomba::CleanupResources(); }
+int _ZN7daKrb_c8BehaviorEv(void *self)
+{ return ((daKrb_c *)self)->daKrb_c::Behavior(); }
+int _ZN7daKrb_c16CleanupResourcesEv(void *self)
+{ return ((daKrb_c *)self)->daKrb_c::CleanupResources(); }
 int _ZN11BobOmbBuddy13InitResourcesEv(void *self)
 { return ((BobOmbBuddy *)self)->BobOmbBuddy::InitResources(); }
 int _ZN11BobOmbBuddy8BehaviorEv(void *self)
@@ -556,7 +558,7 @@ int _ZN11BobOmbBuddy8BehaviorEv(void *self)
 // CHAIN_CHOMP (actor 219, ov014) and CHAIN_CHOMP_FENCE (actor 41, ov014)
 // ============================================================================
 //
-// _ZTV10ChainChomp at ov014 0x021147ec and _ZTV15ChainChompFence at
+// _ZTV10daWanwan_c at ov014 0x021147ec and _ZTV20daObjWanwanShutter_c at
 // 0x021148b0. ov014 is Bob-omb Battlefield's OWN LEVEL OVERLAY, so it is
 // mounted twice: whole, for the loaders the level boot walks, and per symbol,
 // for the SharedFilePtrs and state tables these two classes reach by name.
@@ -565,41 +567,41 @@ int _ZN11BobOmbBuddy8BehaviorEv(void *self)
 // Neither overrides anything past slot 17. The chomp's six-state machine is
 // its own pair of dispatchers (port/unmatched/ChainChomp_States.cpp).
 extern "C" {
-int _ZN10ChainChomp13InitResourcesEv(void *self);       /* face: below */
-int _ZN10ChainChomp8BehaviorEv(void *self);             /* face: below */
-int _ZN10ChainChomp6RenderEv(void *self);               /* host copy */
-int _ZN10ChainChomp16CleanupResourcesEv(void);
-void *_ZN10ChainChompD1Ev(void *self);
-void *_ZN10ChainChompD0Ev(void *self);
-void *_ZTV10ChainChomp[31];
+int _ZN10daWanwan_c13InitResourcesEv(void *self);       /* face: below */
+int _ZN10daWanwan_c8BehaviorEv(void *self);             /* face: below */
+int _ZN10daWanwan_c6RenderEv(void *self);               /* host copy */
+int _ZN10daWanwan_c16CleanupResourcesEv(void);
+void *_ZN10daWanwan_cD1Ev(void *self);
+void *_ZN10daWanwan_cD0Ev(void *self);
+void *_ZTV10daWanwan_c[31];
 
-void _ZN8Platform4KillEv(void *self);                   /* slot 31 */
-int _ZN15ChainChompFence13InitResourcesEv(void *self);  /* face: below */
-int _ZN15ChainChompFence8BehaviorEv(void *self);        /* face: below */
-int _ZN15ChainChompFence6RenderEv(void *self);          /* host copy */
-int _ZN15ChainChompFence16CleanupResourcesEv(void *self); /* face: below */
-int *_ZN15ChainChompFenceD1Ev(int *self);
-int *_ZN15ChainChompFenceD0Ev(int *self);
+void _ZN10dBgActor_c4KillEv(void *self);                   /* slot 31 */
+int _ZN20daObjWanwanShutter_c13InitResourcesEv(void *self);  /* face: below */
+int _ZN20daObjWanwanShutter_c8BehaviorEv(void *self);        /* face: below */
+int _ZN20daObjWanwanShutter_c6RenderEv(void *self);          /* host copy */
+int _ZN20daObjWanwanShutter_c16CleanupResourcesEv(void *self); /* face: below */
+int *_ZN20daObjWanwanShutter_cD1Ev(int *self);
+int *_ZN20daObjWanwanShutter_cD0Ev(int *self);
 /* THIRTY-TWO, not 31: the fence is a Platform subclass (ov014 0x021148b0) and
    its slot 31 is Platform::Kill. Thirty-one is the plain Actor width. dsd left
    an ambiguous symbol at word 1, so the next-symbol bound reads 1 here and the
    reloc run is what says 32. */
-void *_ZTV15ChainChompFence[32];
+void *_ZTV20daObjWanwanShutter_c[32];
 }
 
 static int __fastcall cc_init(void *s, void *)
-{ return _ZN10ChainChomp13InitResourcesEv(s); }
+{ return _ZN10daWanwan_c13InitResourcesEv(s); }
 static int __fastcall cc_clean(void *, void *)
-{ return _ZN10ChainChomp16CleanupResourcesEv(); }
+{ return _ZN10daWanwan_c16CleanupResourcesEv(); }
 static int __fastcall cc_behavior(void *s, void *)
-{ return _ZN10ChainChomp8BehaviorEv(s); }
+{ return _ZN10daWanwan_c8BehaviorEv(s); }
 static int __fastcall cc_render(void *s, void *)
 { port_actor_render_probe("CHAIN_CHOMP", (char *)s + 0x150);
-  return _ZN10ChainChomp6RenderEv(s); }
+  return _ZN10daWanwan_c6RenderEv(s); }
 static int __fastcall cc_d1(void *s, void *)
-{ return (int)(size_t)_ZN10ChainChompD1Ev(s); }
+{ return (int)(size_t)_ZN10daWanwan_cD1Ev(s); }
 static int __fastcall cc_d0(void *s, void *)
-{ return (int)(size_t)_ZN10ChainChompD0Ev(s); }
+{ return (int)(size_t)_ZN10daWanwan_cD0Ev(s); }
 
 extern "C" void port_chain_chomp_states_seat(void);     /* port/unmatched */
 /* The fence is a Platform, and its destructor installs the base table between
@@ -608,7 +610,7 @@ extern "C" void hal_fill_platform_vtable(void);
 
 extern "C" void hal_fill_chain_chomp_vtable(void)
 {
-    void **vt = _ZTV10ChainChomp;
+    void **vt = _ZTV10daWanwan_c;
     port_chain_chomp_states_seat();
     port_enemy_death_states_seat();
     ac31_fill_shared(vt);
@@ -616,29 +618,29 @@ extern "C" void hal_fill_chain_chomp_vtable(void)
     vt[3] = (void *)cc_clean;
     vt[6] = (void *)cc_behavior;
     vt[9] = (void *)cc_render;
-    vt[16] = (void *)cc_d1;
+    vt[16] = (void *)PORT_D16(cc_d1);
     vt[17] = (void *)cc_d0;
 }
 
 static int __fastcall ccf_init(void *s, void *)
-{ return _ZN15ChainChompFence13InitResourcesEv(s); }
+{ return _ZN20daObjWanwanShutter_c13InitResourcesEv(s); }
 static int __fastcall ccf_clean(void *s, void *)
-{ return _ZN15ChainChompFence16CleanupResourcesEv(s); }
+{ return _ZN20daObjWanwanShutter_c16CleanupResourcesEv(s); }
 static int __fastcall ccf_behavior(void *s, void *)
-{ return _ZN15ChainChompFence8BehaviorEv(s); }
+{ return _ZN20daObjWanwanShutter_c8BehaviorEv(s); }
 static int __fastcall ccf_render(void *s, void *)
 { port_actor_render_probe("CHAIN_CHOMP_FENCE", (char *)s + 0xd4);
-  return _ZN15ChainChompFence6RenderEv(s); }
+  return _ZN20daObjWanwanShutter_c6RenderEv(s); }
 static int __fastcall ccf_kill(void *s, void *)
-{ _ZN8Platform4KillEv(s); return 0; }
+{ _ZN10dBgActor_c4KillEv(s); return 0; }
 static int __fastcall ccf_d1(void *s, void *)
-{ return (int)(size_t)_ZN15ChainChompFenceD1Ev((int *)s); }
+{ return (int)(size_t)_ZN20daObjWanwanShutter_cD1Ev((int *)s); }
 static int __fastcall ccf_d0(void *s, void *)
-{ return (int)(size_t)_ZN15ChainChompFenceD0Ev((int *)s); }
+{ return (int)(size_t)_ZN20daObjWanwanShutter_cD0Ev((int *)s); }
 
 extern "C" void hal_fill_chain_chomp_fence_vtable(void)
 {
-    void **vt = _ZTV15ChainChompFence;
+    void **vt = _ZTV20daObjWanwanShutter_c;
     hal_fill_platform_vtable();
     port_enemy_death_states_seat();
     ac31_fill_shared(vt);
@@ -646,10 +648,10 @@ extern "C" void hal_fill_chain_chomp_fence_vtable(void)
     vt[3] = (void *)ccf_clean;
     vt[6] = (void *)ccf_behavior;
     vt[9] = (void *)ccf_render;
-    vt[16] = (void *)ccf_d1;
+    vt[16] = (void *)PORT_D16(ccf_d1);
     vt[17] = (void *)ccf_d0;
     /* slot 31, the Platform tail; the fence does not override it. pile_kill is
-       the same one-line forward to _ZN8Platform4KillEv the stump takes. */
+       the same one-line forward to _ZN10dBgActor_c4KillEv the stump takes. */
     vt[31] = (void *)ccf_kill;
 }
 
@@ -661,34 +663,37 @@ extern "C" void hal_fill_chain_chomp_fence_vtable(void)
 // WRONG TABLE, the ov100 DOOR case for the second time in this port and the
 // third naming bug the RTTI has settled this session.
 //
-//   Stump_SpawnInfo   ov091 0x02135298, +4 halfword 27, factory Stump_Spawn
-//   Stump_Spawn       ov091 0x02133938, and its literal pool installs
+//   g_profile_PILE   ov091 0x02135298, +4 halfword 27, factory daObjPile_c_classInit
+//   daObjPile_c_classInit       ov091 0x02133938, and its literal pool installs
 //                     0x021352bc, whose RTTI reads daObjPile_c
-//   _ZTV5Stump        ov091 0x021353ac, RTTI daHyuhyu_c -- and that table is
-//                     FWOOSH's, installed by Fwoosh_Spawn for actor 231
+//   _ZTV5Stump        ov091 0x021352bc per config:157 -- THIS array. (The note
+//                     that used to stand here put it on 0x021353ac, RTTI
+//                     daHyuhyu_c; that address is _ZTV6Fwoosh / _ZTV10daHyuhyu_c
+//                     at config:167 and :168, and that table is
+//                     FWOOSH's, installed by daHyuhyu_c_classInit for actor 231
 //
 // So the six _ZN5Stump* bodies in src/ implement FWOOSH, actor 27's own are
 // the unnamed func_ov091_* block the real table points at, and the port
 // compiles what the vtable points at and renames nothing.
 //
-// THIRTY-TWO SLOTS, not thirty-one. This is a Platform (Stump_Spawn calls
+// THIRTY-TWO SLOTS, not thirty-one. This is a Platform (daObjPile_c_classInit calls
 // Platform's constructor and the D1 installs _ZTV10dBgActor_c between its two
 // member teardowns), and Platform appends Kill after Actor's tail: slot 31 of
-// the ROM's table is _ZN8Platform4KillEv.
+// the ROM's table is _ZN10dBgActor_c4KillEv.
 //
 // It is the ground-pound target. InitResources sets its hit counter at +0x31e
 // to 3; slot 21 (OnGroundPounded) and slot 27 (OnHitByMegaChar) both end in
 // func_ov091_021334b8, which takes one hit off it, and Behavior spawns five
 // coins when the player has twisted it far enough.
 extern "C" {
-int func_ov091_021338ac(char *self);            /* InitResources */
-int func_ov091_021336cc(void *self);            /* CleanupResources */
-int func_ov091_02133738(char *self);            /* Behavior */
-int func_ov091_02133710(void *self);            /* Render */
-int *func_ov091_021333fc(int *self);            /* D1 */
-void func_ov091_02133648(char *self, void *o);  /* slot 21, its own */
-void func_ov091_021335d4(char *self, void *o);  /* slot 27, its own */
-void _ZN8Platform4KillEv(void *self);           /* slot 31 */
+int _ZN5Stump13InitResourcesEv(char *self);            /* InitResources */
+int _ZN5Stump16CleanupResourcesEv(void *self);            /* CleanupResources */
+int _ZN5Stump8BehaviorEv(char *self);            /* Behavior */
+int _ZN5Stump6RenderEv(void *self);            /* Render */
+int *_ZN5StumpD1Ev(int *self);            /* D1 */
+void _ZN5Stump15OnGroundPoundedER8dActor_c(char *self, void *o);  /* slot 21, its own */
+void _ZN5Stump15OnHitByMegaCharER6Player(char *self, void *o);  /* slot 27, its own */
+void _ZN10dBgActor_c4KillEv(void *self);           /* slot 31 */
 /* A hosted vtable array, not a ROM constant: hal fills its slots at boot, so
    it is mutable hosted state and belongs in the captured section along with
    the /alternatename alias below, which is the same storage under the name
@@ -697,40 +702,54 @@ DSSTATE_BEGIN
 void *_ZTV11daObjPile_c[32];
 DSSTATE_END
 }
-/* Stump_Spawn spells the table by the address config left unnamed. */
+/* daObjPile_c_classInit spells the table by the address config left unnamed. */
 #pragma comment(linker, "/alternatename:_data_ov091_021352bc=__ZTV11daObjPile_c")
 
+/* CONFIG DID NOT LEAVE 0x021352bc UNNAMED: symbols.txt:157 calls it _ZTV5Stump,
+   and src/d_a_obj_pile.c:13 stamps exactly that name. Until now _ZTV5Stump was
+   the label on a DIFFERENT array -- hal/actor_classes_ov091.cpp's 0x021353ac,
+   Fwoosh's table -- so every stump spawned holding Fwoosh's methods while this
+   array, filled with the stump's own, was installed on nothing at all. The
+   cartridge settles which is which: daObjPile_c_classInit (0x02133938)
+   allocates 0x330 and stamps 0x021352bc, whose typeinfo names "11daObjPile_c"
+   and whose slot 0 config calls _ZN5Stump13InitResourcesEv; daHyuhyu_c_classInit
+   (0x021344a0) allocates 0x378 and stamps 0x021353ac, whose typeinfo names
+   "10daHyuhyu_c". _ZTV11daObjPile_c is the port's own spelling (config carries
+   no _ZTV under it, only the RTTI string), so this row states an identity
+   rather than joining two addresses. */
+#pragma comment(linker, "/alternatename:__ZTV5Stump=__ZTV11daObjPile_c")
+
 static int __fastcall pile_init(void *s, void *)
-{ return func_ov091_021338ac((char *)s); }
+{ return _ZN5Stump13InitResourcesEv((char *)s); }
 static int __fastcall pile_clean(void *s, void *)
-{ return func_ov091_021336cc(s); }
+{ return _ZN5Stump16CleanupResourcesEv(s); }
 static int __fastcall pile_behavior(void *s, void *)
-{ return func_ov091_02133738((char *)s); }
+{ return _ZN5Stump8BehaviorEv((char *)s); }
 static int __fastcall pile_render(void *s, void *)
 { port_actor_render_probe("STUMP", (char *)s + 0xd4);
-  return func_ov091_02133710(s); }
+  return _ZN5Stump6RenderEv(s); }
 /* SLOT 16 IS LIVE: a post that has taken its third pound marks itself for
    destruction and the cleanup pass dispatches D1 the next frame. SLOT 17 IS
    SEATED NOW (gate 228). The old note here was right about the defect and wrong
-   about the remedy: src/func_ov091_02133440 IS written over the shared-header
+   about the remedy: src/_ZN5StumpD0Ev IS written over the shared-header
    VT0/VT1/G0 placeholders, and those are single global names -- which is why
    port/CMakeLists.txt binds them PER SOURCE out of this body's own literal pool
    (0x0213348c -> ov091 0x021352bc, this class's table; 0x02133490 -> ov002
-   0x0210ae38, _ZTV8Platform; 0x02133494 -> 0x020a0eac, the game heap word)
+   0x0210ae38, _ZTV10dBgActor_c; 0x02133494 -> 0x020a0eac, the game heap word)
    instead of leaving them to resolve to another TU's objects. Table word
    0x021352bc + 17*4 = 0x02135300 relocates to 0x02133440,
    kind:function(arm,size=0x58); lane STUBADJ ruled the body REAL DECOMP. */
-extern "C" int *func_ov091_02133440(int *t);   /* ov091 0x02133440, slot 17 */
+extern "C" int *_ZN5StumpD0Ev(int *t);   /* ov091 0x02133440, slot 17 */
 static int __fastcall pile_d0(void *s, void *)
-{ return (int)(size_t)func_ov091_02133440((int *)s); }
+{ return (int)(size_t)_ZN5StumpD0Ev((int *)s); }
 static int __fastcall pile_d1(void *s, void *)
-{ return (int)(size_t)func_ov091_021333fc((int *)s); }
+{ return (int)(size_t)_ZN5StumpD1Ev((int *)s); }
 static int __fastcall pile_pounded(void *s, void *, void *o)
-{ func_ov091_02133648((char *)s, o); return 0; }
+{ _ZN5Stump15OnGroundPoundedER8dActor_c((char *)s, o); return 0; }
 static int __fastcall pile_mega(void *s, void *, void *o)
-{ func_ov091_021335d4((char *)s, o); return 0; }
+{ _ZN5Stump15OnHitByMegaCharER6Player((char *)s, o); return 0; }
 static int __fastcall pile_kill(void *s, void *)
-{ _ZN8Platform4KillEv(s); return 0; }
+{ _ZN10dBgActor_c4KillEv(s); return 0; }
 
 extern "C" void hal_fill_stump_vtable(void)
 {
@@ -741,7 +760,7 @@ extern "C" void hal_fill_stump_vtable(void)
     vt[3] = (void *)pile_clean;
     vt[6] = (void *)pile_behavior;
     vt[9] = (void *)pile_render;
-    vt[16] = (void *)pile_d1;
+    vt[16] = (void *)PORT_D16(pile_d1);
     vt[17] = (void *)pile_d0;      /* gate 228 */
     vt[21] = (void *)pile_pounded;
     vt[27] = (void *)pile_mega;
@@ -776,7 +795,7 @@ void *_ZTV13KoopaTheQuick[31];
    record: the word at 0x0211db98 relocates to the typeinfo at 0x0211db6c,
    whose word[1] points at the Itanium name string at 0x0211db60 =
    "7daRNk_c", so 7daRNk_c is the ROM's own RTTI spelling of that class. The
-   ROM bodies whose literal pools load it are KoopaTheQuick_Spawn,
+   ROM bodies whose literal pools load it are daRNk_c_classInit,
    _ZN13KoopaTheQuickD0Ev, _ZN13KoopaTheQuickD1Ev. Read out of
    extracted/overlays/overlay_0062.bin; the LHS is not a config symbol
    anywhere, so the alias cannot be defeated by a later slice. */
@@ -805,7 +824,7 @@ extern "C" void hal_fill_koopa_the_quick_vtable(void)
     vt[3] = (void *)ktq_clean;
     vt[6] = (void *)ktq_behavior;
     vt[9] = (void *)ktq_render;
-    vt[16] = (void *)ktq_d1;
+    vt[16] = (void *)PORT_D16(ktq_d1);
     vt[17] = (void *)ktq_d0;
 }
 
@@ -834,14 +853,14 @@ extern "C" void hal_fill_koopa_the_quick_vtable(void)
 // at 0x2cc, MovingCylinderClsnWithPos at 0x33c and 0x37c, CommonModel at
 // 0x3bc, ShadowModel at 0x3f8, 1292 bytes.
 extern "C" {
-int _ZN10KingBobOmb13InitResourcesEv(void *self);      /* face: below */
-int _ZN10KingBobOmb8BehaviorEv(void *self);            /* host copy */
-int _ZN10KingBobOmb6RenderEv(void *self);              /* face: below */
-int _ZN10KingBobOmb16CleanupResourcesEv(void);         /* thirteen releases */
-void _ZN10KingBobOmb16OnPendingDestroyEv(void);
-int *_ZN10KingBobOmbD1Ev(int *self);
-int *_ZN10KingBobOmbD0Ev(int *self);
-int func_ov078_021265f4(void);                         /* slot 29, his own */
+int _ZN12daBombking_c13InitResourcesEv(void *self);      /* face: below */
+int _ZN12daBombking_c8BehaviorEv(void *self);            /* host copy */
+int _ZN12daBombking_c6RenderEv(void *self);              /* face: below */
+int _ZN12daBombking_c16CleanupResourcesEv(void);         /* thirteen releases */
+void _ZN12daBombking_c16OnPendingDestroyEv(void);
+int *_ZN12daBombking_cD1Ev(int *self);
+int *_ZN12daBombking_cD0Ev(int *self);
+int _ZN12daBombking_c16OnAimedAtWithEggEv(void);                         /* slot 29, his own */
 void *_ZTV10KingBobOmb[31];
 }
 /* PORT_HOST_ABI: two names of ONE ROM table, read off the ROM rather than
@@ -850,28 +869,28 @@ void *_ZTV10KingBobOmb[31];
    whose word[1] points at the Itanium name string at 0x02126e18 =
    "12daBombking_c", so 12daBombking_c is the ROM's own RTTI spelling of
    that class. The ROM bodies whose literal pools load it are
-   KingBobOmb_Spawn, _ZN10KingBobOmbD0Ev, _ZN10KingBobOmbD1Ev. Read out of
+   daBombking_c_classInit, _ZN12daBombking_cD0Ev, _ZN12daBombking_cD1Ev. Read out of
    extracted/overlays/overlay_0078.bin; the LHS is not a config symbol
    anywhere, so the alias cannot be defeated by a later slice. */
 #pragma comment(linker, "/alternatename:__ZTV12daBombking_c=__ZTV10KingBobOmb")
 
 static int __fastcall kbo_init(void *s, void *)
-{ return _ZN10KingBobOmb13InitResourcesEv(s); }
+{ return _ZN12daBombking_c13InitResourcesEv(s); }
 static int __fastcall kbo_clean(void *, void *)
-{ return _ZN10KingBobOmb16CleanupResourcesEv(); }
+{ return _ZN12daBombking_c16CleanupResourcesEv(); }
 static int __fastcall kbo_behavior(void *s, void *)
-{ return _ZN10KingBobOmb8BehaviorEv(s); }
+{ return _ZN12daBombking_c8BehaviorEv(s); }
 static int __fastcall kbo_render(void *s, void *)
 { port_actor_render_probe("KING_BOB_OMB", (char *)s + 0x2cc);
-  return _ZN10KingBobOmb6RenderEv(s); }
+  return _ZN12daBombking_c6RenderEv(s); }
 static int __fastcall kbo_pdes(void *, void *)
-{ _ZN10KingBobOmb16OnPendingDestroyEv(); return 0; }
+{ _ZN12daBombking_c16OnPendingDestroyEv(); return 0; }
 static int __fastcall kbo_d1(void *s, void *)
-{ return (int)(size_t)_ZN10KingBobOmbD1Ev((int *)s); }
+{ return (int)(size_t)_ZN12daBombking_cD1Ev((int *)s); }
 static int __fastcall kbo_d0(void *s, void *)
-{ return (int)(size_t)_ZN10KingBobOmbD0Ev((int *)s); }
+{ return (int)(size_t)_ZN12daBombking_cD0Ev((int *)s); }
 static int __fastcall kbo_aimed(void *, void *)
-{ return func_ov078_021265f4(); }
+{ return _ZN12daBombking_c16OnAimedAtWithEggEv(); }
 
 /* He is the first actor the port carries that owns a BlendModelAnim, so gate
    24's own table has to be filled before his factory installs it -- and the
@@ -905,7 +924,7 @@ extern "C" void hal_fill_king_bob_omb_vtable(void)
     vt[6] = (void *)kbo_behavior;
     vt[9] = (void *)kbo_render;
     vt[12] = (void *)kbo_pdes;
-    vt[16] = (void *)kbo_d1;
+    vt[16] = (void *)PORT_D16(kbo_d1);
     vt[17] = (void *)kbo_d0;
     vt[29] = (void *)kbo_aimed;
 }
@@ -916,7 +935,7 @@ extern "C" void hal_fill_king_bob_omb_vtable(void)
 //
 // _ZTV9KoopaFlag / _ZTV9daRFlag_c, ov062 0x0211dc54 -- the racing flag, and
 // the other half of the koopa's race. It is a plain Actor rather than an
-// Enemy (KoopaFlag_Spawn calls Actor's constructor, not Enemy's), but its
+// Enemy (daRFlag_c_classInit calls Actor's constructor, not Enemy's), but its
 // table is still the thirty-one-slot shape, so ac31_fill_shared serves it.
 //
 // Its Behavior is the finish line: it asks Actor::FindWithID for the id it
@@ -935,7 +954,7 @@ void *_ZTV9KoopaFlag[31];
    record: the word at 0x0211dc50 relocates to the typeinfo at 0x0211dc24,
    whose word[1] points at the Itanium name string at 0x0211dc18 =
    "9daRFlag_c", so 9daRFlag_c is the ROM's own RTTI spelling of that class.
-   The ROM bodies whose literal pools load it are KoopaFlag_Spawn,
+   The ROM bodies whose literal pools load it are daRFlag_c_classInit,
    _ZN9KoopaFlagD0Ev, _ZN9KoopaFlagD1Ev. Read out of
    extracted/overlays/overlay_0062.bin; the LHS is not a config symbol
    anywhere, so the alias cannot be defeated by a later slice. */
@@ -954,7 +973,7 @@ static int __fastcall kfl_render(void *s, void *)
    the second time: src/_ZN9KoopaFlagD1Ev.cpp is a REAL C++ DESTRUCTOR over a
    shadow class with two members, so MSVC emits ??1KoopaFlag@@UAE@XZ and calls
    two member dtors that exist nowhere in this build. The body below is
-   src/_ZN9KoopaFlagD0Ev.c minus its final Memory::Deallocate, which
+   src/_ZN9KoopaFlagD0Ev.cpp minus its final Memory::Deallocate, which
    ActorBase::AfterCleanupResources performs itself after the dispatch. */
 /* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
    the transcribed thunk that stood here (kfl_d1) spelled the same chain by hand. */
@@ -969,25 +988,25 @@ extern "C" void hal_fill_koopa_flag_vtable(void)
     vt[3] = (void *)kfl_clean;
     vt[6] = (void *)kfl_behavior;
     vt[9] = (void *)kfl_render;
-    vt[16] = (void *)hal_cppd1_KoopaFlag;
+    vt[16] = (void *)PORT_D16(hal_cppd1_KoopaFlag);
     vt[17] = (void *)kfl_d0;
 }
 
 /* ---- the last four classes' method faces ---------------------------------- */
-#include "ChainChomp.h"
-#include "ChainChompFence.h"
+#include "daWanwan_c.h"
+#include "daObjWanwanShutter_c.h"
 #include "KoopaTheQuick.h"
 extern "C" {
-int _ZN10ChainChomp13InitResourcesEv(void *self)
-{ return ((ChainChomp *)self)->ChainChomp::InitResources(); }
-int _ZN10ChainChomp8BehaviorEv(void *self)
-{ return ((ChainChomp *)self)->ChainChomp::Behavior(); }
-int _ZN15ChainChompFence13InitResourcesEv(void *self)
-{ return ((ChainChompFence *)self)->ChainChompFence::InitResources(); }
-int _ZN15ChainChompFence8BehaviorEv(void *self)
-{ return ((ChainChompFence *)self)->ChainChompFence::Behavior(); }
-int _ZN15ChainChompFence16CleanupResourcesEv(void *self)
-{ return ((ChainChompFence *)self)->ChainChompFence::CleanupResources(); }
+int _ZN10daWanwan_c13InitResourcesEv(void *self)
+{ return ((daWanwan_c *)self)->daWanwan_c::InitResources(); }
+int _ZN10daWanwan_c8BehaviorEv(void *self)
+{ return ((daWanwan_c *)self)->daWanwan_c::Behavior(); }
+int _ZN20daObjWanwanShutter_c13InitResourcesEv(void *self)
+{ return ((daObjWanwanShutter_c *)self)->daObjWanwanShutter_c::InitResources(); }
+int _ZN20daObjWanwanShutter_c8BehaviorEv(void *self)
+{ return ((daObjWanwanShutter_c *)self)->daObjWanwanShutter_c::Behavior(); }
+int _ZN20daObjWanwanShutter_c16CleanupResourcesEv(void *self)
+{ return ((daObjWanwanShutter_c *)self)->daObjWanwanShutter_c::CleanupResources(); }
 int _ZN13KoopaTheQuick13InitResourcesEv(void *self)
 { return ((KoopaTheQuick *)self)->KoopaTheQuick::InitResources(); }
 int _ZN13KoopaTheQuick8BehaviorEv(void *self)
@@ -1002,10 +1021,10 @@ int _ZN9KoopaFlag13InitResourcesEv(void *self)
 int _ZN9KoopaFlag8BehaviorEv(void *self)
 { return ((KoopaFlag *)self)->KoopaFlag::Behavior(); }
 }
-#include "KingBobOmb.h"
+#include "daBombking_c.h"
 extern "C" {
-int _ZN10KingBobOmb13InitResourcesEv(void *self)
-{ return ((KingBobOmb *)self)->KingBobOmb::InitResources(); }
-int _ZN10KingBobOmb6RenderEv(void *self)
-{ return ((KingBobOmb *)self)->KingBobOmb::Render(); }
+int _ZN12daBombking_c13InitResourcesEv(void *self)
+{ return ((daBombking_c *)self)->daBombking_c::InitResources(); }
+int _ZN12daBombking_c6RenderEv(void *self)
+{ return ((daBombking_c *)self)->daBombking_c::Render(); }
 }

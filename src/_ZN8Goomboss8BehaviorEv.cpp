@@ -7,14 +7,14 @@
 typedef long long s64;
 
 extern "C" {
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *thiz, void *clsn);
-extern void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(void *thiz, void *clsn, unsigned int a);
-extern void _ZN12CylinderClsn5ClearEv(void *c);
-extern void _ZN12CylinderClsn6UpdateEv(void *c);
-extern void _ZN5Actor17HugeLandingDustAtER7Vector3b(void *thiz, Vector3 *v, int b);
-extern void _ZN5Actor13LandingDustAtER7Vector3b(void *thiz, Vector3 *v, int b);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *thiz, void *clsn);
+extern void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void *thiz, void *clsn, unsigned int a);
+extern void _ZN5dCc_c5ClearEv(void *c);
+extern void _ZN5dCc_c6UpdateEv(void *c);
+extern void _ZN8dActor_c17HugeLandingDustAtER7Vector3b(void *thiz, Vector3 *v, int b);
+extern void _ZN8dActor_c13LandingDustAtER7Vector3b(void *thiz, Vector3 *v, int b);
 extern void func_02012694(int a, void *p);
-extern void _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(void *thiz, Vector3 *v, int f);
+extern void _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(void *thiz, Vector3 *v, int f);
 }
 
 extern char *data_0209f318;
@@ -25,83 +25,83 @@ int Goomboss::Behavior()
     int u;
     int quake;
 
-    if (mParam == 0x1111) {
+    if (param1 == 0x1111) {
         return func_ov074_021223bc(((char *)this));
     }
 
-    t = ((s64)unk_5f6 * 0x646 + 0x800) >> 12;
+    t = ((s64)mWalkSpeed * 0x646 + 0x800) >> 12;
     u = ((s64)t * 0x546000 + 0x800) >> 12;
-    unk_5e8 = u < 0 ? -u : u;
+    mGoombaTargetSpeed = u < 0 ? -u : u;
 
-    if (unk_5cc != 7) {
+    if (mState != 7) {
         *(void **)(data_0209f318 + 0x114) = ((char *)this);
     }
 
     func_ov074_0212199c(((char *)this));
     func_ov074_0212042c(((char *)this));
-    _ZN5Actor9UpdatePosEP12CylinderClsn(((char *)this), 0);
-    _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(((char *)this), ((char *)this) + 0x40c, 0);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(((char *)this), 0);
+    _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(((char *)this), &mWithMeshClsn, 0);
     func_ov074_02120d74(((char *)this));
     func_ov074_02121380(((char *)this));
 
     {
         int i;
-        char *p = ((char *)this) + 0x110;
+        char *p = (char *)mdCc_cs;
         for (i = 0; i < 4; i++) {
-            _ZN12CylinderClsn5ClearEv(p);
-            _ZN12CylinderClsn6UpdateEv(p);
+            _ZN5dCc_c5ClearEv(p);
+            _ZN5dCc_c6UpdateEv(p);
             p += 0x40;
         }
     }
 
-    if (unk_5cc != 1 && unk_5cc != 0) {
+    if (mState != 1 && mState != 0) {
         quake = data_ov074_0212290c[mSizeIndex];
 
-        if (unk_5fe != 0) {
+        if (mLeftFootSteppedOnGround != 0) {
             if (mSizeIndex >= 2) {
                 Vector3 v;
-                v.x = unk_3c4;
-                v.y = unk_3c8;
-                v.z = unk_3cc;
-                _ZN5Actor17HugeLandingDustAtER7Vector3b(((char *)this), &v, 1);
+                v.x = mCylClsnPos[2].x;
+                v.y = mCylClsnPos[2].y;
+                v.z = mCylClsnPos[2].z;
+                _ZN8dActor_c17HugeLandingDustAtER7Vector3b(((char *)this), &v, 1);
             } else {
                 Vector3 v;
-                v.x = unk_3c4;
-                v.y = unk_3c8;
-                v.z = unk_3cc;
-                _ZN5Actor13LandingDustAtER7Vector3b(((char *)this), &v, 1);
+                v.x = mCylClsnPos[2].x;
+                v.y = mCylClsnPos[2].y;
+                v.z = mCylClsnPos[2].z;
+                _ZN8dActor_c13LandingDustAtER7Vector3b(((char *)this), &v, 1);
             }
-            func_02012694(0x15e, ((char *)this) + 0x74);
+            func_02012694(0x15e, &mCamSpacePosX);
             {
                 Vector3 v;
-                v.x = unk_3c4;
-                v.y = unk_3c8;
-                v.z = unk_3cc;
-                _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(((char *)this), &v, quake);
+                v.x = mCylClsnPos[2].x;
+                v.y = mCylClsnPos[2].y;
+                v.z = mCylClsnPos[2].z;
+                _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(((char *)this), &v, quake);
             }
         }
 
-        if (unk_5ff != 0) {
+        if (mRightFootSteppedOnGround != 0) {
             if (mSizeIndex >= 2) {
                 Vector3 v;
-                v.x = unk_3b8;
-                v.y = unk_3bc;
-                v.z = unk_3c0;
-                _ZN5Actor17HugeLandingDustAtER7Vector3b(((char *)this), &v, 1);
+                v.x = mCylClsnPos[1].x;
+                v.y = mCylClsnPos[1].y;
+                v.z = mCylClsnPos[1].z;
+                _ZN8dActor_c17HugeLandingDustAtER7Vector3b(((char *)this), &v, 1);
             } else {
                 Vector3 v;
-                v.x = unk_3b8;
-                v.y = unk_3bc;
-                v.z = unk_3c0;
-                _ZN5Actor13LandingDustAtER7Vector3b(((char *)this), &v, 1);
+                v.x = mCylClsnPos[1].x;
+                v.y = mCylClsnPos[1].y;
+                v.z = mCylClsnPos[1].z;
+                _ZN8dActor_c13LandingDustAtER7Vector3b(((char *)this), &v, 1);
             }
-            func_02012694(0x15e, ((char *)this) + 0x74);
+            func_02012694(0x15e, &mCamSpacePosX);
             {
                 Vector3 v;
-                v.x = unk_3b8;
-                v.y = unk_3bc;
-                v.z = unk_3c0;
-                _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(((char *)this), &v, quake);
+                v.x = mCylClsnPos[1].x;
+                v.y = mCylClsnPos[1].y;
+                v.z = mCylClsnPos[1].z;
+                _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(((char *)this), &v, quake);
             }
         }
     }

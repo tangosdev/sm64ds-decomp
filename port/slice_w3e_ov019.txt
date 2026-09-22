@@ -24,8 +24,8 @@
 # ==== THE ID, BOTH ATTRIBUTION ROUTES ======================================
 #
 #   id   SpawnInfo   word[0] spawnFunc            idhalf   x on L11
-#   259  0x021132ec  0x021125bc RacingPenguin_Spawn  259   (not placed)
-#   356  0x021133a8  0x0211274c IceSlideManager_Spawn 356  x1  (gate 142)
+#   259  0x021132ec  0x021125bc daPgRcer_c_classInit  259   (not placed)
+#   356  0x021133a8  0x0211274c daSldMng_c_classInit 356  x1  (gate 142)
 #
 # Route 2, the Spawn's own vtable store: 0x02113310. Route 3, the RTTI at
 # vtable[-1]: 0x0211330c -> 0x021132d0 -> name string 0x021132dc
@@ -72,7 +72,7 @@
 # ==== THREE TUs HELD OUT, EACH FOR A RULING THE TREE ALREADY MADE ==========
 #
 #   src/_ZN13RacingPenguinD1Ev.cpp   (259 slot 16)
-#   src/_ZN15IceSlideManagerD1Ev.cpp (356 slot 16)
+#   src/game/actors/d_a_sld_mng.cpp (356 slot 16)
 # are real MSVC-synthesised destructors over shadow classes with no vtable
 # store of their own: MSVC mangles them ??1RacingPenguin@@UAE@XZ and
 # ??1IceSlideManager@@UAE@XZ, never as the Itanium names the slots need. That
@@ -113,7 +113,8 @@
 # tail.
 
 # ---- RACING_PENGUIN (259), table 0x02113310 -------------------------------
-src/_ZN13RacingPenguinD0Ev.c
+# RETIRED at SLICE1: body now in src/_ZN13RacingPenguinD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN13RacingPenguinD0Ev.cpp
 src/func_ov019_02111254.c
 src/func_ov019_0211127c.cpp
 src/func_ov019_021112b8.c
@@ -138,7 +139,7 @@ src/func_ov019_021122dc.c
 src/_ZN13RacingPenguin16CleanupResourcesEv.cpp
 src/_ZN13RacingPenguin8BehaviorEv.cpp
 src/_ZN13RacingPenguin13InitResourcesEv.cpp
-src/RacingPenguin_Spawn.c
+src/d_a_pg_rcer.c
 
 # ---- ICE_SLIDE_MANAGER (356)'s deleting destructor -------------------------
 # Gate 143 trap-filled slot 17 (ccm_trap17), so the class had no hosted
@@ -148,7 +149,7 @@ src/RacingPenguin_Spawn.c
 # its own table (from:0x02112670 kind:load to:0x021133cc module:overlay(19)).
 # HEAP needs nothing: cxx_aliases already binds it to _data_020a0eac, which is
 # what the second pool word holds.
-src/_ZN15IceSlideManagerD0Ev.c
+src/game/actors/d_a_sld_mng.cpp
 
 # ---- RACING_PENGUIN's static initialiser -----------------------------------
 # Twelve SharedFilePtrs (one model, seven animations, three texture sequences,

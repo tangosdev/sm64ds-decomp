@@ -1,0 +1,25 @@
+    .text       start:0x021111a0 end:0x0211203c kind:code align:32
+    .init       start:0x0211203c end:0x0211219c kind:code align:4
+    .ctor       start:0x0211219c end:0x021121a8 kind:rodata align:4
+    .data       start:0x021121c0 end:0x02112d00 kind:data align:32
+    .bss        start:0x02112d00 end:0x02112d80 kind:bss align:32
+src_tu/actors/Trap.cpp:
+    .text start:0x021111a0 end:0x021119d0
+    .init start:0x0211203c end:0x0211211c
+    .ctor start:0x0211219c end:0x021121a0
+    .data start:0x02112a78 end:0x02112b64
+    .bss start:0x02112d00 end:0x02112d48
+
+src_tu/actors/LightBeam.cpp:
+    .text start:0x021119d0 end:0x02111e10
+    .init start:0x0211211c end:0x0211215c
+    .ctor start:0x021121a0 end:0x021121a4
+    .data start:0x02112b64 end:0x02112c08
+    .bss start:0x02112d50 end:0x02112d64
+
+src_tu/actors/PeachPainting.cpp:
+    .text start:0x02111e10 end:0x0211203c
+    .init start:0x0211215c end:0x0211219c
+    .ctor start:0x021121a4 end:0x021121a8
+    .data start:0x02112c44 end:0x02112cc8
+    .bss start:0x02112d64 end:0x02112d80

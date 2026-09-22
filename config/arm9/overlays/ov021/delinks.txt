@@ -8,7 +8,7 @@ src/_ZN12WorkElevatorD1Ev.cpp:
     complete
     .text start:0x021111a0 end:0x02111214
 
-src/_ZN12WorkElevatorD0Ev.c:
+src/_ZN12WorkElevatorD0Ev.cpp:
     complete
     .text start:0x02111214 end:0x0211129c
 
@@ -26,6 +26,14 @@ src/_ZN12WorkElevator16CleanupResourcesEv.cpp:
 src/_ZN12WorkElevator6RenderEv.cpp:
     complete
     .text start:0x02111650 end:0x021116c8
+
+src/_ZN12WorkElevator8BehaviorEv.cpp:
+    complete
+    .text start:0x021116c8 end:0x02111c6c
+
+src/_ZN12WorkElevator13InitResourcesEv.cpp:
+    complete
+    .text start:0x02111c6c end:0x02111ec4
 
 src/func_ov021_02111ec4.c:
     complete
@@ -67,19 +75,19 @@ src/func_ov021_02112128.c:
     complete
     .text start:0x02112128 end:0x02112168
 
-src/WorkElevator_Spawn.cpp:
+src/d_a_obj_cv_news_lift.cpp:
     complete
     .text start:0x02112168 end:0x021121e8
 
-src/_ZN11RollingRockD1Ev.c:
+src/_ZN11RollingRockD1Ev.cpp:
     complete
     .text start:0x021121e8 end:0x02112230
 
-src/_ZN11RollingRockD0Ev.c:
+src/_ZN11RollingRockD0Ev.cpp:
     complete
     .text start:0x02112230 end:0x0211228c
 
-src/func_ov021_0211228c.c:
+src/_ZN11RollingRock16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x0211228c end:0x02112294
 
@@ -96,13 +104,14 @@ src/func_ov021_021123b0.c:
     .text start:0x021123b0 end:0x02112544
 
 src/func_ov021_02112544.cpp:
+    complete
     .text start:0x02112544 end:0x021127b4
 
 src/func_ov021_021127b4.c:
     complete
     .text start:0x021127b4 end:0x021127f8
 
-src/_ZN11RollingRock16CleanupResourcesEv.c:
+src/_ZN11RollingRock16CleanupResourcesEv.cpp:
     complete
     .text start:0x021127f8 end:0x0211281c
 
@@ -110,7 +119,7 @@ src/_ZN11RollingRock6RenderEv.cpp:
     complete
     .text start:0x0211281c end:0x02112854
 
-src/_ZN11RollingRock8BehaviorEv.c:
+src/_ZN11RollingRock8BehaviorEv.cpp:
     complete
     .text start:0x02112854 end:0x02112b2c
 
@@ -118,36 +127,22 @@ src/_ZN11RollingRock13InitResourcesEv.cpp:
     complete
     .text start:0x02112b2c end:0x02112d64
 
-src/RollingRock_Spawn.c:
+src/d_a_grock.c:
     complete
     .text start:0x02112d64 end:0x02112db4
 
-src/_ZN10ShutterHmcD1Ev.c:
-    .text start:0x02112db4 end:0x02112e04
-
-src/_ZN10ShutterHmcD0Ev.c:
-    .text start:0x02112e04 end:0x02112e68
-
-src/_ZN10ShutterHmc16CleanupResourcesEv.cpp:
+src/game/actors/d_a_obj_cv_shutter.cpp:
     complete
-    .text start:0x02112e68 end:0x02112e7c
-
-src/_ZN10ShutterHmc8BehaviorEv.cpp:
-    complete
-    .text start:0x02112e7c end:0x02112ec0
-
-src/_ZN10ShutterHmc13InitResourcesEv.cpp:
-    complete
-    .text start:0x02112ec0 end:0x02112ed4
-
-src/ShutterHmc_Spawn.c:
-    .text start:0x02112ed4 end:0x02112f10
+    .text start:0x02112db4 end:0x02112f10
 
 src/__sinit_ov021_02113500.c:
+    complete
     .init start:0x02113500 end:0x02113688
 
 src/__sinit_ov021_02113688.c:
+    complete
     .init start:0x02113688 end:0x021136c8
 
 src/__sinit_ov021_021136c8.c:
+    complete
     .init start:0x021136c8 end:0x02113734

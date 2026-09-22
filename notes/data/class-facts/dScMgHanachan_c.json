@@ -1,0 +1,68 @@
+{
+  "class": "dScMgHanachan_c",
+  "overlay": "ov006",
+  "module_base": "0x020bfec0",
+  "produced_by": "writer (no scout ran for this class); tools/rtti_extract.py plus a direct read of extracted/dsd/arm9_overlays/ov006.bin and ov004.bin",
+  "rtti_name": "15dScMgHanachan_c",
+  "rtti": {
+    "symbol": "_ZTI15dScMgHanachan_c",
+    "address": "0x0213ca7c",
+    "kind_vptr": "0x0209a764",
+    "kind": "abi::__si_class_type_info",
+    "name_pointer": "0x0213ca88",
+    "direct_base_pointer": "0x020bbf6c",
+    "evidence": "Linked ov006 words at 0x0213ca7c are {0x0209a764, 0x0213ca88, 0x020bbf6c}; the NUL-terminated bytes at 0x0213ca88 are '15dScMgHanachan_c'."
+  },
+  "base_class": "dScMgBase_c",
+  "base_evidence": "The __si_class_type_info record at 0x0213ca7c has +0x08 = 0x020bbf6c. Linked ov004 bytes at 0x020bbf6c have name pointer 0x020bbf84, whose NUL-terminated string is '11dScMgBase_c'. Same base, and the same 0x020bbf6c record, that ov006/dScMgD3DBase_c's facts file records.",
+  "leaf": true,
+  "leaf_evidence": "No RTTI record in build/rtti.json names 0x0213ca7c as a direct base.",
+  "vtable": {
+    "symbol": "_ZTV15dScMgHanachan_c",
+    "address": "0x0213cab8",
+    "header_start": "0x0213cab0",
+    "offset_to_top_address": "0x0213cab0",
+    "offset_to_top": "0x00000000",
+    "rtti_pointer_address": "0x0213cab4",
+    "rtti_pointer": "0x0213ca7c",
+    "slots": 36,
+    "last_slot_address": "0x0213cb44",
+    "end": "0x0213cb48",
+    "extent_evidence": "The 36 consecutive words from the address point 0x0213cab8 through 0x0213cb44 are all plausible code addresses in main/ov004/ov006. The next word, 0x0213cb48, is 0xffffffff, which is not a code pointer, so the vtable ends there and there are no trailing null slots to qualify. 36 slots matches the sibling ov006/dScMgD3DBase_c, which has the same base. NOTE: tools/rtti_vtables.py is known to over-report slot counts (the _ZTV extent overrun); this count is the direct read, not that tool's.",
+    "own_overrides": [
+      { "slot": 0,  "target": "0x020edb04", "symbol": "_ZN15dScMgHanachan_c13InitResourcesEv" },
+      { "slot": 3,  "target": "0x020ecec8", "symbol": "_ZN15dScMgHanachan_c16CleanupResourcesEv" },
+      { "slot": 6,  "target": "0x020ed18c", "symbol": "_ZN15dScMgHanachan_c8BehaviorEv" },
+      { "slot": 9,  "target": "0x020ecee4", "symbol": "_ZN15dScMgHanachan_c6RenderEv" },
+      { "slot": 16, "target": "0x020ea280", "symbol": "_ZN15dScMgHanachan_cD1Ev" },
+      { "slot": 17, "target": "0x020ea2c8", "symbol": "_ZN15dScMgHanachan_cD0Ev" },
+      { "slot": 18, "target": "0x020eda48", "symbol": "_ZN15dScMgHanachan_c13OnYoshiTryEatEi" }
+    ]
+  },
+  "destructors": {
+    "D1": "0x020ea280",
+    "D0": "0x020ea2c8",
+    "D2": null,
+    "rom_order": "D1 below D0",
+    "significance": "D1-below-D0 is the reproducible direction: an inline in-class `virtual ~X() {}` makes mwccarm 2004/b56 emit D1 then D0, and no D2. This class is therefore NOT one of the destructor-order refusals (daObjFloatBoard_c, daObjFallBlock_c, daDsnBase_c all have ROM D0 below D1). The pair is nevertheless outside the promoted TU here, for the unrelated reason recorded in candidate_text below."
+  },
+  "candidate_text": {
+    "tu_map_run": { "start": "0x020ea280", "end": "0x020ede18", "functions": 61 },
+    "licensed": { "start": "0x020eb018", "end": "0x020ec458", "functions": 22, "ordinals": "13..34" },
+    "why_partial": [
+      "A sourceless hole splits the run. ROM ordinal 11, func_ov006_020ea914 (0x020ea914, size 0x324), has no source in the tree: it is a banked near-miss (config/match_attempts.jsonl, best 113 divergences) and has no entry in config/arm9/overlays/ov006/delinks.txt, so the cartridge's own bytes cover it. It is in the MIDDLE of the run, and no delink block and no TU manifest anywhere in this tree carries two .text runs, so a claim with a hole in it cannot be expressed.",
+      "Two file-global pragmas contradict each other on the larger side. Four functions reproduce only with #pragma opt_strength_reduction off (func_ov006_020eac38, func_ov006_020ec458, func_ov006_020ec93c, func_ov006_020ec9c0) and three only with it on (func_ov006_020ebf20, func_ov006_020ec2bc, func_ov006_020ecba4); _ZN15dScMgHanachan_c6RenderEv wants #pragma opt_common_subs off, which costs five other members. Both are file-global last-wins in mwccarm 2004/b56, re-measured on this TU: bracketing opt_strength_reduction off/on around exactly the four members that want it gave byte-for-byte the same 41/49 as omitting it. Whole-side scores: SR off / OCS on = 44/49, SR on / OCS on = 42/49, SR off / OCS off = 40/49. Ordinals 13..34 under SR on is the longest contiguous all-matching run over all three."
+    ]
+  },
+  "unproven": [
+    "That the 61-function tu_map run was ever a single original translation unit. The contradictory file-global pragma requirements are positive evidence AGAINST it, but they do not by themselves establish where the real cut was: several of those legacy per-function sources may simply be locally-tuned reconstructions whose pragma masks a wrong source shape, rather than faithful copies of the original file.",
+    "That ordinals 13..34 are a whole original TU. They are the longest contiguous run this tree can currently license, which is a build fact, not a boundary fact. boundary_confidence stays medium.",
+    "The per-element type of the class's own 15-entry 0x98-byte array at +0x4678, and the type behind the function-pointer-shaped value at +0x4660. Six legacy files describe offset-compatible windows onto the 0x98 element; the union used in the promoted source is offset-proved but the real field names and types are not recovered.",
+    "Whether func_ov006_020ea914 belongs to this class at all. It is called only from _ZN15dScMgHanachan_c6RenderEv via *(void**)(this + 0x4f60), so adjacency and one call site are all that place it."
+  ],
+  "related_modules": [
+    { "module": "main",  "module_base": "0x02004000", "role": "inherited slots and ABI type-info implementation" },
+    { "module": "ov004", "module_base": "0x020ad660", "role": "direct-base RTTI (dScMgBase_c) and its method bodies" },
+    { "module": "ov006", "module_base": "0x020bfec0", "role": "class RTTI, vtable, own overrides, and candidate text" }
+  ]
+}

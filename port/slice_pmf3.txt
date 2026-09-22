@@ -67,13 +67,13 @@
 # ---- THE ROM'S OWN REFERENCE GRAPH REACHES EVERY ROW ----------------------
 #
 #   func_ov080_02125104  <- src/func_ov080_0212513c.c (the state seat itself)
-#   func_ov085_0212a430  <- src/_ZN13PrincessPeach8BehaviorEv.cpp
-#   func_ov085_0212a46c  <- src/func_ov085_0212a4a4.c
+#   _ZN13PrincessPeach17CallStateBehaviorEv  <- src/_ZN13PrincessPeach8BehaviorEv.cpp
+#   _ZN13PrincessPeach13CallStateInitEv  <- src/_ZN13PrincessPeach8SetStateEi.cpp
 #   func_ov085_0212d268  <- src/_ZN9RabbitKey13InitResourcesEv.cpp,
 #                           src/func_ov085_0212d108.c
 #   func_ov094_02136188  <- src/_ZN10HootTheOwl13InitResourcesEv.cpp and
 #                           seven more ov094 state bodies
-#   KingBobOmb_SetState  <- src/_ZN10KingBobOmb13InitResourcesEv.cpp and
+#   KingBobOmb_SetState  <- src/actors/daBombking_c.cpp and
 #                           eight more ov078 state bodies, plus
 #                           unmatched/KingBobOmb_States.cpp's own Behavior
 #
@@ -113,13 +113,13 @@
 # become free once /vmg /vmm is target-wide. MEASURED on 2026-09-07 with the
 # flags above, they do not:
 #
-#   func_ov080_02126c60   push ebp / mov ebp,esp
+#   _ZN8Painting8BehaviorEv   push ebp / mov ebp,esp
 #                         mov eax,[ebp+8] / mov edx,[eax+420]
 #                         mov ecx,[edx+12] / add ecx,eax
 #                         mov eax,[edx+8]
 #                         call eax                <-- a CALL, not a jump
 #                         mov eax,1 / pop ebp / ret 0
-#   func_ov080_02126c20   the same, at [edx+16]/[edx+20]
+#   _ZN8Painting6RenderEv   the same, at [edx+16]/[edx+20]
 #
 # The stride and the record offsets are now RIGHT (Entry is 0x18, the update
 # pair at +8 and the render pair at +0x10, exactly the ROM's layout). What
@@ -132,9 +132,9 @@
 # (func_ov055_021112c4, func_ov100_021453d8), reached from the other
 # direction: there the extra argument forces the call, here the return value
 # does. Both need a receiver convention, not a width flag, and neither is on
-# this slice. func_ov080_02126ca0 (the Painting's InitResources) dispatches
+# this slice. _ZN8Painting13InitResourcesEv (the Painting's InitResources) dispatches
 # in the middle of a long body and cannot tail jump for the same reason.
-# Listings: runs/link100/out/PMF3/func_ov080_02126c60.asm and _02126c20.asm.
+# Listings: runs/link100/out/PMF3/_ZN8Painting8BehaviorEv.asm and _02126c20.asm.
 #
 # unmatched/Door_Render.cpp is not this family at all -- its own banner says
 # mwcc VIRTUAL-SHADOW dispatch (MSVC thiscall against the slice's cdecl), a
@@ -156,11 +156,11 @@
 #
 # ---- THE SIX --------------------------------------------------------------
 src/func_ov080_02125104.cpp
-src/func_ov085_0212a430.cpp
-src/func_ov085_0212a46c.cpp
+src/_ZN13PrincessPeach17CallStateBehaviorEv.cpp
+src/_ZN13PrincessPeach13CallStateInitEv.cpp
 src/func_ov085_0212d268.cpp
 src/func_ov094_02136188.cpp
-src/KingBobOmb_SetState.cpp
+src/actors/daBombking_c.cpp
 
 # ---- BATCH 2: THE INDEXED-TABLE FAMILY, AND IT WAS A NAME ALL ALONG -------
 #
@@ -245,7 +245,7 @@ src/KingBobOmb_SetState.cpp
 #       That one a green battery cannot vouch for, because a skip is quiet.
 #       What makes it unreachable is the seat: all six records are verified
 #       against the ROM's own addresses and rewritten with host bodies before
-#       a chest can exist, and one of those six (func_ov064_0211a4c4, state 0's
+#       a chest can exist, and one of those six (_ZN13TreasureChest6State0Ev, state 0's
 #       tick) is the hand-transcribed body in that same file. This row is named
 #       here as the one whose safety rests on the seat rather than on an
 #       observed abort.
@@ -259,7 +259,7 @@ src/KingBobOmb_SetState.cpp
 #       nine state bodies stay
 #   unmatched/Ov064_TreasureChest.cpp         the two dispatchers, replaced by a
 #       forward declaration -- this file's own transcribed body calls
-#       func_ov064_0211a6ec twice
+#       _ZN13TreasureChest8SetStateEi twice
 #   unmatched/BobOmbBuddy_States.cpp          the two dispatchers; both seats,
 #       port_buddy_call and the goomba half stay
 #   unmatched/Crate_StateDispatch.cpp         the two dispatchers; the
@@ -287,10 +287,9 @@ src/func_ov002_020ba4d8.cpp
 src/func_ov002_020ba520.cpp
 src/func_ov002_020bbd5c.cpp
 src/func_ov002_020bbda4.cpp
-src/func_ov064_0211a6ec.cpp
-src/func_ov064_0211a734.cpp
-src/func_ov074_021203e4.cpp
-src/func_ov074_0212042c.cpp
+src/_ZN13TreasureChest8SetStateEi.cpp
+src/_ZN13TreasureChest17CallStateBehaviorEv.cpp
+src/actors/Goomboss.cpp
 src/func_ov084_0212c960.cpp
 src/func_ov084_0212c9a8.cpp
 src/Crate_SetState.cpp

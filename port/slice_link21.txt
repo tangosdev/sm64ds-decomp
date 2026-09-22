@@ -1,0 +1,79 @@
+# slice_link21.txt -- run link100 wave 9c, lane LINK21, the last lane before
+# the link.
+#
+# ---- THE TWO BANNERED DRAFTS main GAINED TODAY -----------------------------
+#
+# Four of walk_window's last 21 rows were two functions with BOTH their flat
+# Itanium and their MSVC-decorated spelling on the wall, which is the signature
+# of a function no translation unit defines under any spelling:
+#
+#     __ZN12dScMgSlot1_c8BehaviorEv      ?Behavior@dScMgSlot1_c@@UAEHXZ
+#     __ZN11dScMgJump_c13OnYoshiTryEatEi ?OnYoshiTryEat@dScMgJump_c@@UAEXH@Z
+#
+# main gained a bannered NONMATCHING draft for each today (PR #2716), under
+# Tango's ruling that a functionally equivalent draft lives on main with an
+# honest banner so the port and readers have source. Both files are here
+# verbatim from origin/main; neither was edited in any way. The banners say the
+# logic is functionally equivalent and not byte exact, which is what the port
+# needs: tools/enroll.py leaves a bannered draft out of the ROM build, so the
+# byte gate keeps the cartridge's own bytes for both ranges.
+#
+#     src/_ZN12dScMgSlot1_c8BehaviorEv.cpp       ov006 0x0210c9e0, size 0x81c
+#                                                vtable slot 6
+#     src/_ZN11dScMgJump_c13OnYoshiTryEatEi.cpp  ov006 0x020ee994, size 0x168
+#                                                vtable slot 18
+#
+# MEASURED BEFORE THEY WENT ON A SLICE ROW, not after. Each was run through
+# port/tools/hostgen.py into a scratch directory (0 MMIO rewrites for both, so
+# no hostgen row is needed for either) and compiled standalone with this
+# build's own flags, definitions and include paths. Both compile clean. dumpbin
+# over the two objects says each defines exactly the decorated name the wall
+# asks for, plus the four ??_empty_global_delete COMDATs every C++ TU in this
+# tree carries, and references nothing that is not already in the link except
+# ONE name, answered in port/hal/link21_rows.cpp:
+#
+#     ?PlayBank2_2D@Sound@@YAXI@Z
+#
+# ALL THREE HOSTING TARGETS, not walk_window alone. All four rows are on
+# walk_window's, walk_window_hires's and smoke_player's LNK1120 blocks in
+# tmp/build_link21_0.log, and the two reverse faces that answer the flat half
+# are ledger rows in port/faces_sync.txt, which reaches all three targets. A
+# walk_window-only block would leave the other two asking for a decorated name
+# the ledger's own face calls.
+src/_ZN12dScMgSlot1_c8BehaviorEv.cpp
+src/_ZN11dScMgJump_c13OnYoshiTryEatEi.cpp
+
+# ---- TWO SEATS NOBODY MADE -------------------------------------------------
+#
+# Both go through hostgen (they are PORT_HOSTGEN_TU rows near the top of
+# port/CMakeLists.txt), so the rows here are the raw paths and port_read_lines
+# substitutes the generated ones.
+#
+# src/_ZN14ArrowSignRight11OnAttacked1ER8dActor_c.cpp   ov098 0x02137d40, 0x40
+#     Quarantined since lane SLICE1 for a C2561: a bare `return;` inside an int
+#     body, which /wd4716 cannot answer. Its host copy,
+#     port/unmatched/ArrowSign_OnAttacked1.cpp, was retired at lane SEAT6 on the
+#     promise of a hostgen row lane SYNC5 then removed, which is how the row
+#     became a seat nobody made. hostgen's FALLS_OFF_RETURN table turns the early
+#     exit into the absence of the call (the ROM leaves r0 holding the receiver
+#     on that path, so there is no value to invent), and the raw path is on
+#     PORT_FALLS_OFF_END_SOURCES for the C4716 that is left. Measured after the
+#     patch and before the row: compiles clean, defines exactly
+#     ?OnAttacked1@ArrowSignRight@@QAEHAAUdActor_c@@@Z, references nothing
+#     outside the link. The FLAT name the wall asks for is a reverse face, one R
+#     row in port/faces_sync.txt beside this class's four existing ones.
+#
+# src/_ZN3IRQ7SetIRQsEj.cpp                             arm9 0x02056e18, 0x34
+#     On no slice list at all, which is what "a seat nobody made" means here.
+#     Needs hostgen for the IME and IE pokes (two MMIO rewrites). Defines exactly
+#     ?SetIRQs@IRQ@@YAII@Z, references nothing at all, and the decorated static
+#     spelling the wall asks for is one alias row in port/hal/link21_rows.cpp.
+src/_ZN14ArrowSignRight11OnAttacked1ER8dActor_c.cpp
+src/_ZN3IRQ7SetIRQsEj.cpp
+
+# ---- THIS LANE'S OWN HAL ROWS ----------------------------------------------
+#
+# port/hal/link21_rows.cpp, and the file's own header carries every derivation
+# in it. It is the int4_rows.cpp shape one wave on: alias rows and host bodies
+# for the residue that no generator can emit.
+port/hal/link21_rows.cpp

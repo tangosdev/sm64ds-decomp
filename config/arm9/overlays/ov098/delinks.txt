@@ -4,25 +4,27 @@
     .ctor       start:0x0213c33c end:0x0213c34c kind:rodata align:4
     .data       start:0x0213c360 end:0x0213c800 kind:data align:32
     .bss        start:0x0213c800 end:0x0213c960 kind:bss align:32
-src/_ZN14ArrowSignRightD1Ev.c:
+src/_ZN14ArrowSignRightD1Ev.cpp:
+    complete
     .text start:0x02137be0 end:0x02137c2c
 
-src/_ZN14ArrowSignRightD0Ev.c:
+src/_ZN14ArrowSignRightD0Ev.cpp:
+    complete
     .text start:0x02137c2c end:0x02137c8c
 
 src/func_ov098_02137c8c.c:
     complete
     .text start:0x02137c8c end:0x02137ccc
 
-src/func_ov098_02137ccc.cpp:
+src/_ZN14ArrowSignRight4KillEv.cpp:
     complete
     .text start:0x02137ccc end:0x02137d40
 
-src/func_ov098_02137d40.cpp:
+src/_ZN14ArrowSignRight11OnAttacked1ER8dActor_c.cpp:
     complete
     .text start:0x02137d40 end:0x02137d80
 
-src/func_ov098_02137d80.c:
+src/_ZN14ArrowSignRight15OnHitByMegaCharER6Player.cpp:
     complete
     .text start:0x02137d80 end:0x02137dbc
 
@@ -42,11 +44,11 @@ src/_ZN14ArrowSignRight13InitResourcesEv.cpp:
     complete
     .text start:0x02137eec end:0x02137fd0
 
-src/ArrowSignRight_Spawn.c:
+src/d_a_obj_yajirusi_yajirusi_r.c:
     complete
     .text start:0x02137fd0 end:0x02138008
 
-src/ArrowSignLeft_Spawn.c:
+src/d_a_obj_yajirusi_yajirusi_l.c:
     complete
     .text start:0x02138008 end:0x02138040
 
@@ -54,7 +56,7 @@ src/_ZN5CrateD1Ev.cpp:
     complete
     .text start:0x02138040 end:0x021380bc
 
-src/_ZN5CrateD0Ev.c:
+src/_ZN5CrateD0Ev.cpp:
     complete
     .text start:0x021380bc end:0x0213814c
 
@@ -142,11 +144,12 @@ src/func_ov098_02138e6c.cpp:
     complete
     .text start:0x02138e6c end:0x02139070
 
-src/func_ov098_02139070.c:
+src/_ZN5Crate4KillEv.cpp:
     complete
     .text start:0x02139070 end:0x021390ec
 
 src/func_ov098_021390ec.cpp:
+    complete
     .text start:0x021390ec end:0x02139228
 
 src/func_ov098_02139228.cpp:
@@ -181,69 +184,36 @@ src/_ZN5Crate13InitResourcesEv.cpp:
     complete
     .text start:0x02139d14 end:0x02139e44
 
-src/func_ov098_02139e44.cpp:
+src/_ZN5Crate15OnGroundPoundedER8dActor_c.cpp:
     complete
     .text start:0x02139e44 end:0x02139e64
 
-src/func_ov098_02139e64.c:
+src/_ZN5Crate13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x02139e64 end:0x02139e78
 
-src/func_ov098_02139e78.c:
+src/_ZN5Crate13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x02139e78 end:0x02139f04
 
-src/Crate_Spawn.cpp:
+src/d_a_obj_block_s.cpp:
     complete
     .text start:0x02139f04 end:0x02139f70
 
-src/func_ov098_02139f70.c:
+src/_ZN16daObjFallBlock_cD0Ev.cpp:
+    complete
     .text start:0x02139f70 end:0x02139fc8
 
-src/func_ov098_02139fc8.c:
+src/_ZN16daObjFallBlock_cD1Ev.cpp:
+    complete
     .text start:0x02139fc8 end:0x0213a00c
 
-src/func_ov098_0213a00c.cpp:
+src/actors/daObjFallBlock_c.cpp:
     complete
-    .text start:0x0213a00c end:0x0213a0a8
-
-src/func_ov098_0213a0a8.cpp:
-    complete
-    .text start:0x0213a0a8 end:0x0213a0e8
-
-src/func_ov098_0213a0e8.c:
-    complete
-    .text start:0x0213a0e8 end:0x0213a148
-
-src/func_ov098_0213a148.c:
-    complete
-    .text start:0x0213a148 end:0x0213a17c
-
-src/func_ov098_0213a17c.cpp:
-    complete
-    .text start:0x0213a17c end:0x0213a23c
-
-src/func_ov098_0213a23c.c:
-    complete
-    .text start:0x0213a23c end:0x0213a284
-
-src/func_ov098_0213a284.cpp:
-    complete
-    .text start:0x0213a284 end:0x0213a2cc
-
-src/func_ov098_0213a2cc.c:
-    complete
-    .text start:0x0213a2cc end:0x0213a314
-
-src/func_ov098_0213a314.cpp:
-    complete
-    .text start:0x0213a314 end:0x0213a36c
-
-src/func_ov098_0213a36c.cpp:
-    complete
-    .text start:0x0213a36c end:0x0213a794
+    .text start:0x0213a00c end:0x0213a794
 
 src/func_ov098_0213a794.cpp:
+    complete
     .text start:0x0213a794 end:0x0213a8e0
 
 src/func_ov098_0213a8e0.c:
@@ -255,9 +225,10 @@ src/func_ov098_0213a8ec.c:
     .text start:0x0213a8ec end:0x0213a900
 
 src/_ZN6CannonD1Ev.cpp:
+    complete
     .text start:0x0213a900 end:0x0213a938
 
-src/_ZN6CannonD0Ev.c:
+src/_ZN6CannonD0Ev.cpp:
     complete
     .text start:0x0213a938 end:0x0213a984
 
@@ -273,6 +244,10 @@ src/func_ov098_0213ad08.c:
     complete
     .text start:0x0213ad08 end:0x0213ade8
 
+src/func_ov098_0213ade8.c:
+    complete
+    .text start:0x0213ade8 end:0x0213b0a4
+
 src/func_ov098_0213b0a4.cpp:
     complete
     .text start:0x0213b0a4 end:0x0213b15c
@@ -281,7 +256,7 @@ src/func_ov098_0213b15c.cpp:
     complete
     .text start:0x0213b15c end:0x0213b1d8
 
-src/_ZN6Cannon16CleanupResourcesEv.c:
+src/_ZN6Cannon16CleanupResourcesEv.cpp:
     complete
     .text start:0x0213b1d8 end:0x0213b214
 
@@ -297,15 +272,15 @@ src/_ZN6Cannon13InitResourcesEv.cpp:
     complete
     .text start:0x0213b2d4 end:0x0213b43c
 
-src/Cannon_Spawn.c:
+src/d_a_cnn.cpp:
     complete
     .text start:0x0213b43c end:0x0213b47c
 
-src/_ZN9WaterBombD1Ev.c:
+src/_ZN9WaterBombD1Ev.cpp:
     complete
     .text start:0x0213b47c end:0x0213b4c4
 
-src/_ZN9WaterBombD0Ev.c:
+src/_ZN9WaterBombD0Ev.cpp:
     complete
     .text start:0x0213b4c4 end:0x0213b520
 
@@ -350,20 +325,25 @@ src/_ZN9WaterBomb8BehaviorEv.cpp:
     .text start:0x0213bc20 end:0x0213bd14
 
 src/_ZN9WaterBomb13InitResourcesEv.cpp:
+    complete
     .text start:0x0213bd14 end:0x0213bf10
 
-src/WaterBomb_Spawn.c:
+src/d_a_wbm.c:
     complete
     .text start:0x0213bf10 end:0x0213bf60
 
 src/__sinit_ov098_0213bf9c.c:
+    complete
     .init start:0x0213bf9c end:0x0213c058
 
 src/__sinit_ov098_0213c058.c:
+    complete
     .init start:0x0213c058 end:0x0213c214
 
 src/__sinit_ov098_0213c214.c:
+    complete
     .init start:0x0213c214 end:0x0213c2b4
 
 src/__sinit_ov098_0213c2b4.c:
+    complete
     .init start:0x0213c2b4 end:0x0213c33c

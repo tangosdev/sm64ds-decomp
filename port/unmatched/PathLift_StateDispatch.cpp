@@ -1,5 +1,5 @@
 /* HOST COPIES of src/func_ov002_020efa54.cpp (the state installer) and
- * src/_ZN8PathLift12BaseBehaviorEv.cpp (the per-frame tick dispatcher) --
+ * src/_ZN16dPathLiftActor_c12BaseBehaviorEv.cpp (the per-frame tick dispatcher) --
  * the PathLift base branch's own 3-state machine, shared by PATH_LIFT (31,
  * ov100) and, when its overlay mounts, FLYING_CARPET (130, ov036).
  * The PushBlock/Unagi/MrBlizzard/BabyPenguin/HootTheOwl shape: a REAL C++
@@ -65,11 +65,11 @@ void func_ov002_020ef57c(void *c);   /* FALL enter */
 void func_ov002_020ef408(void *c);   /* FALL tick  */
 
 void port_pathlift_states_seat(void);
-void _ZN8PathLift12BaseBehaviorEv(void *c);
+void _ZN16dPathLiftActor_c12BaseBehaviorEv(void *c);
 }
 
 /* ---- THE THREE TICK FACES (run link100, lane PMFB2) ---------------------
-   src/_ZN8PathLift12BaseBehaviorEv.cpp is a real pointer-to-member dispatch
+   src/_ZN16dPathLiftActor_c12BaseBehaviorEv.cpp is a real pointer-to-member dispatch
    and MSVC emits it as
 
        mov ecx, _data_ov002_0210af2c[eax*4+12]     the adjust word
@@ -133,7 +133,7 @@ void port_pathlift_states_seat(void)
    lane PMFB2). It open-coded the two-case mwcc decode -- delta>>1 adjusts
    `this`, delta&1 selects the virtual path, and in the virtual path word0 is a
    byte offset into the adjusted object's vtable -- for a host copy that no
-   longer exists. src/_ZN8PathLift12BaseBehaviorEv.cpp does that decode itself,
+   longer exists. src/_ZN16dPathLiftActor_c12BaseBehaviorEv.cpp does that decode itself,
    because /vmg /vmm (block R8) makes MSVC's pointer-to-member exactly the
    ROM's pair, and its unconditional call is the ROM's own unconditional blx.
    Lane PMFB1's closing note said this helper was still needed; that was true
@@ -149,12 +149,12 @@ void port_pathlift_states_seat(void)
    twenty up to twenty-four. A per-TU /Zp4 (block R9d) makes the matched TU
    stride the ROM's 0x14 exactly.
 
-   _ZN8PathLift12BaseBehaviorEv RETIRED TOO (run link100, lane PMFB2). It is on
+   _ZN16dPathLiftActor_c12BaseBehaviorEv RETIRED TOO (run link100, lane PMFB2). It is on
    port/slice_pmfb2.txt and compiles from
-   src/_ZN8PathLift12BaseBehaviorEv.cpp, which defines the Itanium C name
+   src/_ZN16dPathLiftActor_c12BaseBehaviorEv.cpp, which defines the Itanium C name
    itself -- so it needs no face for its own symbol, and the
    PathLift::BaseBehavior forwarder below is unchanged and is still the only
-   bridge src/func_ov100_021470f4.cpp's mangle needs.
+   bridge src/game/actors/daObjPathLift_c.cpp's mangle needs.
 
    WHAT MADE IT POSSIBLE, measured for that lane rather than argued:
      RECORD STRIDE. The ROM strides 20 (`mov r0,#0x14 / mla r0,r1,r0,r2` at
@@ -174,9 +174,9 @@ void port_pathlift_states_seat(void)
    port_pathlift_states_seat above STAYS, still asserting {the ROM's own
    address, 0} on all six words before it writes a host one. */
 
-/* THE FACE. src/func_ov100_021470f4.cpp calls the tick half as a real C++
+/* THE FACE. src/game/actors/daObjPathLift_c.cpp calls the tick half as a real C++
    method on its own local `struct PathLift { void BaseBehavior(); };`, so
-   MSVC wants ?BaseBehavior@PathLift@@QAEXXZ. A @@QAE target can never be an
+   MSVC wants ?BaseBehavior@dPathLiftActor_c@@QAEXXZ. A @@QAE target can never be an
    /alternatename (the receiver would never have been a `this`), so this is a
    two-line forwarder. It lives here rather than in
    hal/actor_classes_ov100pl.cpp because that file includes PathLift.h, whose
@@ -185,4 +185,4 @@ void port_pathlift_states_seat(void)
    character-for-character the caller's own. */
 struct PathLift { void BaseBehavior(); };
 void PathLift::BaseBehavior()
-{ _ZN8PathLift12BaseBehaviorEv(this); }
+{ _ZN16dPathLiftActor_c12BaseBehaviorEv(this); }

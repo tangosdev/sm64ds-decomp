@@ -36,7 +36,7 @@
 extern "C" {
 
 unsigned short DecIfAbove0_Short(unsigned short *p);
-void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *clsn);
+void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *clsn);
 void _ZN9Animation7AdvanceEv(void *anim);
 void func_ov085_0212e778(void *self);
 void func_ov085_0212e858(void *self);

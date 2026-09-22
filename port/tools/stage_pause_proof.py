@@ -200,7 +200,13 @@ def rung1(mappath):
 
 
 # ---------------------------------------------------------------- rung 2
-LIST_RE = re.compile(r"\[list\] behaviour head [0-9a-f]+:(.*)")
+# The ` cb <word>` and ` pass <n>` fields are hal/actor_registry.cpp's list
+# callback word and its per-list walk counter, printed so an INERT list can be
+# told from a live one and so a walk count can be lined up against a dispatch
+# count. Both optional here rather than required, so this rung reads a log from
+# either build. What this rung actually needs is the node text after the colon.
+LIST_RE = re.compile(r"\[list\] behaviour head [0-9a-f]+"
+                     r"(?: cb [0-9a-f]+)?(?: pass \d+)?:(.*)")
 NODE_RE = re.compile(r"\{node (\S+) actor (\S+) id (\d+)")
 
 

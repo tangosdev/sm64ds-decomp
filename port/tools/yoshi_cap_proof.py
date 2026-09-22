@@ -3,7 +3,7 @@
 
 WHAT IT PROVES. On Bob-omb Battlefield, Yoshi tongues a Goomba and takes it
 into his mouth. While it is in there, a character cap is picked up. The cap
-actor's own state machine (src/func_ov002_020b74d0.c:51) calls
+actor's own state machine (src/actors/daObjMarioCap_c.cpp:51) calls
 Player::SetNewHatCharacter, whose first act is func_ov002_020bdb50(this, 0) --
 and that, with an object still in the mouth, dispatches the held enemy's vtable
 slots 18 (OnYoshiTryEat) and 19 (OnTurnIntoEgg). Nothing guards it.

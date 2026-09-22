@@ -30,7 +30,7 @@
 // ---- 2. func_ov006_020c19d0, THE MODEL SUB-OBJECT'S TICK -------------------
 //
 // dScMgMemory2_c::Behavior calls it on `this + 0x4f38` every frame (the last
-// statement of func_ov006_020f7458, disassembled in the state-dispatch file).
+// statement of _ZN14dScMgMemory2_c8BehaviorEv, disassembled in the state-dispatch file).
 // It is SHARED ov006 glue, not this class's: eight src TUs name it, among them
 // bodies belonging to four other minigames.  This is the first lane to reach
 // it, so this file is where it lands.
@@ -84,11 +84,11 @@
 // ---- 4. func_ov004_020b52fc IS A FIND, NOT AN INHERITANCE ------------------
 //
 // The handover for this class named six ov006 TUs to host-copy and said the
-// framework's own (func_ov004_020b87e0) was already trapped.  The sweep found a
+// framework's own (_ZN10dMgState_c8SetStateEi) was already trapped.  The sweep found a
 // SEVENTH ov004 dispatcher that no lane has ever handled, and it is on this
 // class's live path:
 //
-//     func_ov006_020f7458  (vtable slot 6, every frame)
+//     _ZN14dScMgMemory2_c8BehaviorEv  (vtable slot 6, every frame)
 //       -> func_ov004_020b65e4
 //            -> for i in 0..0x13: func_ov004_020b52fc(&data_ov004_020bfa34[i*0x24])
 //
@@ -111,7 +111,7 @@
 //
 // THE TWENTY RECORDS' PMF UNIVERSE IS BOUNDED FROM THE SOURCE, the way lane
 // BASESET bounded ov004's.  data_ov004_020bfa34 is twenty records of 0x24
-// bytes, constructed by __sinit_ov004_020b9ad0 through func_020733a8 with
+// bytes, constructed by __sinit_ov004_020b9ad0 through __cxa_vec_ctor with
 // func_ov004_020b67e4 as the element constructor -- and that constructor is
 // EMPTY, so the pairs start as the .bss zeros the null guard above is about.
 // The writers are func_ov004_020b506c (`*(struct W2*)c = data_ov004_020bc7d8`)

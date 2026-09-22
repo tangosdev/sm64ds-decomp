@@ -8,8 +8,8 @@
 # slot every frame, and DRAW NOTHING. Lane VSMAP measured the whole chain
 # (status/VSMAP.md, "THE CAPS DO NOT DRAW"); this slice is the other end of it.
 #
-#   src/_ZN13WaterfallMist6RenderEv.cpp:14   returns while unk_3ff == 1
-#   src/_ZN13WaterfallMist8BehaviorEv.cpp:41 writes that 1 every frame while
+#   src/actors/daObjMarioCap_c.cpp:14   returns while unk_3ff == 1
+#   src/actors/daObjMarioCap_c.cpp:41 writes that 1 every frame while
 #                                            bit 1 of +0x3eb is clear
 #   +0x3eb is byte +0x1b of the registry node WaterfallMist::InitResources
 #   builds at this+0x3d0 through func_ov001_020ab228, which zeroes it
@@ -40,7 +40,7 @@
 # cap: wing, metal, vanish) and unk_400 = (p >> 12) & 0xf, clamped to 0..2 for
 # mType 4. It then registers the node with
 # func_ov001_020ab228(this+0x3d0, this, mModelIndex, unk_400, 0)
-# (src/_ZN13WaterfallMist13InitResourcesEv.cpp:193), so the node's list index
+# (src/_ZN15daObjMarioCap_c13InitResourcesEv.cpp:193), so the node's list index
 # is the cap TYPE and its node+0x19 priority is unk_400.
 #
 # Each arena therefore gives each of the three cap types exactly two nodes, one
@@ -80,7 +80,7 @@
 #
 # Four more of the chain's ov001 functions were in the link before this slice
 # and are deliberately NOT listed here -- func_ov001_020aa6b0,
-# func_ov001_020aa6cc, func_ov001_020ab110 and func_ov001_020ab228, all in
+# func_ov001_020aa6cc, _ZN10dCapIcon_c6UnlinkEv and func_ov001_020ab228, all in
 # slice_gate32.txt / slice_gate33.txt. Listing any of them again is LNK2005;
 # the guard for that is in CMakeLists beside this slice.
 #

@@ -30,12 +30,12 @@
 
 extern "C" {
 void *_ZN5Model8LoadFileER13SharedFilePtr(void *ptr);
-void *_ZN12MeshCollider8LoadFileER13SharedFilePtr(void *ptr);
+void *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void *ptr);
 int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *file, int a, int b);
-void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *self, void *kcl, const void *mat, int scale, short angY, void *clps);
-void _ZN8Platform19UpdateClsnPosAndRotEv(void *self);
-void _ZN8Platform21UpdateModelPosAndRotYEv(void *self);
+void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
+void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *self);
 int _ZN11ShadowModel12InitCylinderEv(void *self);
 }
 
@@ -47,20 +47,20 @@ int _ZN11ShadowModel12InitCylinderEv(void *self);
 extern "C" void *Model_LoadFile(void *ptr)
 { return _ZN5Model8LoadFileER13SharedFilePtr(ptr); }
 extern "C" void *MeshCollider_LoadFile(void *ptr)
-{ return _ZN12MeshCollider8LoadFileER13SharedFilePtr(ptr); }
+{ return _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(ptr); }
 extern "C" int ModelBase_SetFile(void *self, void *file, int a, int b)
 { return _ZN9ModelBase7SetFileEP8BMD_Fileii(self, file, a, b); }
 extern "C" void MovingMeshCollider_SetFile(void *self, void *kcl,
                                            const void *mat, int scale,
                                            short angY, void *clps)
 {
-    _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         self, kcl, mat, scale, angY, clps);
 }
 extern "C" void Platform_UpdateClsnPosAndRot(void *self)
-{ _ZN8Platform19UpdateClsnPosAndRotEv(self); }
+{ _ZN10dBgActor_c19UpdateClsnPosAndRotEv(self); }
 extern "C" void Platform_UpdateModelPosAndRotY(void *self)
-{ _ZN8Platform21UpdateModelPosAndRotYEv(self); }
+{ _ZN10dBgActor_c21UpdateModelPosAndRotYEv(self); }
 
 // ---- 3. the method faces ---------------------------------------------------
 //
@@ -88,7 +88,8 @@ int ModelBaseFace::SetFile(BMD_File *file, int a, int b)
 struct ShadowModelFace { int InitCylinder(); };
 int ShadowModelFace::InitCylinder()
 { return _ZN11ShadowModel12InitCylinderEv(this); }
-#pragma comment(linker, "/alternatename:?InitCylinder@ShadowModel@@QAEHXZ=?InitCylinder@ShadowModelFace@@QAEHXZ")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEFEATED: the left hand side is a real definition in this link now (_ZN11ShadowModel12InitCylinderEv.cpp.obj), so the directive is inert and alternatename_guard fails on it. */
+// #pragma comment(linker, "/alternatename:?InitCylinder@ShadowModel@@QAEHXZ=?InitCylinder@ShadowModelFace@@QAEHXZ")
 
 // ---- C++-LINKAGE references onto C definitions ------------------------------
 //
@@ -96,8 +97,8 @@ int ShadowModelFace::InitCylinder()
 // Itanium-spelled ones are TUs that put the mangled name inside a C++ block
 // instead of an extern "C" one, which makes MSVC mangle the mangling.
 #pragma comment(linker, "/alternatename:?Vec3_Equal@@YAHPAX0@Z=_Vec3_Equal")
-#pragma comment(linker, "/alternatename:?_ZN5Actor13ClosestPlayerEv@@YAHPAX@Z=__ZN5Actor13ClosestPlayerEv")
-#pragma comment(linker, "/alternatename:?_ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_@@YAXPAX0HH0H@Z=__ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_")
+#pragma comment(linker, "/alternatename:?_ZN8dActor_c13ClosestPlayerEv@@YAHPAX@Z=__ZN8dActor_c13ClosestPlayerEv")
+#pragma comment(linker, "/alternatename:?_ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_@@YAXPAX0HH0H@Z=__ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_")
 #pragma comment(linker, "/alternatename:?func_ov001_020ab228@@YAXPAX0HHH@Z=_func_ov001_020ab228")
 #pragma comment(linker, "/alternatename:?func_ov002_020b7f2c@@YAXPAX0@Z=_func_ov002_020b7f2c")
 #pragma comment(linker, "/alternatename:?func_ov002_020b7f7c@@YAXPAX@Z=_func_ov002_020b7f7c")
@@ -158,8 +159,10 @@ int ShadowModelFace::InitCylinder()
    Two more static members and two more data spellings. Actor::Spawn and
    Actor::FindWithActorID are STATICS, cdecl on both sides, so the aliases are
    exact -- there is no `this` to lose. */
-#pragma comment(linker, "/alternatename:?Spawn@Actor@@SAPAU1@IIABUVector3@@PBUVector3_16@@HH@Z=__ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii")
-#pragma comment(linker, "/alternatename:?FindWithActorID@Actor@@SAPAV1@IPAV1@@Z=__ZN5Actor15FindWithActorIDEjPS_")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEAD RHS and an UNREFERENCED left hand side: nothing in the build defines __ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as, and nothing references ?Spawn@dActor_c@@SAPAU1@IIABUVector3@@PBUVector3_16@@HH@Z, so the row can never fire and nothing wants it to. */
+// #pragma comment(linker, "/alternatename:?Spawn@dActor_c@@SAPAU1@IIABUVector3@@PBUVector3_16@@HH@Z=__ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEAD RHS and an UNREFERENCED left hand side: nothing in the build defines __ZN8dActor_c15FindWithActorIDEjPS_, and nothing references ?FindWithActorID@dActor_c@@SAPAV1@IPAV1@@Z, so the row can never fire and nothing wants it to. */
+// #pragma comment(linker, "/alternatename:?FindWithActorID@dActor_c@@SAPAV1@IPAV1@@Z=__ZN8dActor_c15FindWithActorIDEjPS_")
 #pragma comment(linker, "/alternatename:?data_ov002_0210e00c@@3PAUEntry@@A=_data_ov002_0210e00c")
 #pragma comment(linker, "/alternatename:?data_ov098_0213bf90@@3PAGA=_data_ov098_0213bf90")
 
@@ -173,8 +176,8 @@ struct ModelRenderFace { void Render(const Vector3 *scale); };
 extern "C" void _ZN5Model6RenderEPK7Vector3(void *self, const void *scale)
 { ((ModelRenderFace *)self)->Render((const Vector3 *)scale); }
 
-/* Player::CanWarp -- the warp's own gate. src/_ZN6Player7CanWarpEv.cpp defines
-   it against include/Player.h, where it returns int; func_ov002_020ec410
+/* Player::CanWarp -- the warp's own gate. src/actors/Player.cpp defines
+   it against include/Player.h, where it returns int; _ZN11daWarpkun_c8BehaviorEv
    declares it on its own shadow Player returning bool, and bool and int are
    different types in a decorated name (_N against H). Same class, same
    __thiscall, same absence of arguments, so the alias is exact -- and the ROM
@@ -184,13 +187,14 @@ extern "C" void _ZN5Model6RenderEPK7Vector3(void *self, const void *scale)
 /* CylinderClsn::Process is a STATIC member (it walks a global list and takes
    no `this`), so it is cdecl on both sides and the alias is exact. The
    registry's call site spells it by its Itanium name. */
-#pragma comment(linker, "/alternatename:__ZN12CylinderClsn7ProcessEv=?Process@CylinderClsn@@SAXXZ")
+#pragma comment(linker, "/alternatename:__ZN5dCc_c7ProcessEv=?Process@dCc_c@@SAXXZ")
 
 /* src/func_02014f5c.c calls ov002 0x020caf98 by an UNPREFIXED name: its own TU
    had no way to know the address lands in an overlay, so it spelled it
    func_020caf98 while the definition carries the ov002 prefix. One function,
    two spellings, both cdecl. */
-#pragma comment(linker, "/alternatename:_func_020caf98=_func_ov002_020caf98")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEAD RHS and an UNREFERENCED left hand side: nothing in the build defines _func_ov002_020caf98, and nothing references _func_020caf98, so the row can never fire and nothing wants it to. */
+// #pragma comment(linker, "/alternatename:_func_020caf98=_func_ov002_020caf98")
 
 /* CylinderClsn::Process's own closure ends in ov002 0x020caf98, the Player's
    "you were hit" path, which reaches four Player::State objects and

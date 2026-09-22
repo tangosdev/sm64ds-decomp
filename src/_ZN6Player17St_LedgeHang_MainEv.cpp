@@ -25,7 +25,7 @@ int Player::St_LedgeHang_Main()
         if (d < 0x28000) {
             mPosY = v;
             mIsAirborne = 0;
-            if (unk_558 < 0xddb) {
+            if (mFloorNormalY < 0xddb) {
                 func_ov002_020d0948(((char*)this));
                 return 1;
             }

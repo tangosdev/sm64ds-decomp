@@ -32,7 +32,7 @@
 # them. hal/actor_classes_ov089.cpp defines host zero storage under the bare C
 # name `data_02111b68` because NO MOUNT DEFINES THAT SPELLING (ov013 mounts the
 # cell as data_ov013_02111b68, ov015 hosts the same address as code under
-# KnockDownPlank_Spawn) and because KEY is reachable only under ov046, where no
+# daObjBk_Botaosi_c_classInit) and because KEY is reachable only under ov046, where no
 # owner of the cell is loaded. If either stops being true -- a build where an
 # owning overlay and the KEY can both run, or a mount generated under the bare
 # C name -- the ov089 definition MUST GO and the name must resolve to the mount
@@ -41,7 +41,7 @@ data_ov089_02132880:0x14 data_ov089_02132894:0x20 data_ov089_021328b4:0x20
 data_ov089_02132b00:0x8 data_ov089_02132b08:0x8 data_ov089_02132b10:0x8
 data_ov089_02132b18:0x8 data_ov089_02132b20:0x8 data_ov089_02132b28:0x8
 data_ov089_02132b30:0x8 data_ov089_02132b38:0x8 data_ov089_02132b40:0xc
-data_ov089_02132b4c:0xc data_ov089_02132b58:0x10 Key_SpawnInfo:0x1c LastStar_SpawnInfo:0x1c
+_ZTI10daObjKey_c:0xc _ZTS10daObjKey_c:0x10 g_profile_OBJ_KEY:0x1c g_profile_LAST_STAR:0x1c
 data_ov089_02132c40:0x8 data_ov089_02132c48:0x8 data_ov089_02132c50:0x8
 data_ov089_02132c58:0x8 data_ov089_02132c60:0x8 data_ov089_02132c68:0x8
 data_ov089_02132c70:0x8 data_ov089_02132c78:0x8 data_ov089_02132c80:0xc

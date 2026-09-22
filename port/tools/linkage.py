@@ -419,7 +419,7 @@ def split_msvc_by_tag(root, rows):
     The tag is a human ruling and wins here for the same reason it wins in the
     stem queue. It is looked up under the MATCHED STEM, not the MSVC symbol,
     because that is the name a tag can actually bind to: the tagged definition
-    in these files is the ROM's C name (`void _ZN8PathLift12BaseBehaviorEv(void
+    in these files is the ROM's C name (`void _ZN16dPathLiftActor_c12BaseBehaviorEv(void
     *c)`), and the MSVC spelling next to it is the thin C++ face over it. A
     `?...@...@@` string is not an identifier and no tag will ever name one.
     """

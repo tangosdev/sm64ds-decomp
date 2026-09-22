@@ -607,8 +607,10 @@ extern "C" void *port_wm8_wmq_head(void)
 // back a spelling, so the answer is a linker alias and not a forwarding body:
 // no new code, no new call, the same address under both names.
 // ---------------------------------------------------------------------------
-#pragma comment(linker, "/alternatename:_func_02059d1c=__ZN3IRQ7DisableEv")
-#pragma comment(linker, "/alternatename:_func_02059d30=__ZN3IRQ7RestoreEj")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEAD RHS and an UNREFERENCED left hand side: nothing in the build defines __ZN3IRQ7DisableEv, and nothing references _func_02059d1c, so the row can never fire and nothing wants it to. */
+// #pragma comment(linker, "/alternatename:_func_02059d1c=__ZN3IRQ7DisableEv")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEAD RHS and an UNREFERENCED left hand side: nothing in the build defines __ZN3IRQ7RestoreEj, and nothing references _func_02059d30, so the row can never fire and nothing wants it to. */
+// #pragma comment(linker, "/alternatename:_func_02059d30=__ZN3IRQ7RestoreEj")
 
 // AND ONE SPELLING OF THE SAME KIND, ONE LEVEL UP. src/func_02062d10.cpp is one
 // of the four C++ TUs on this rung, and it reaches CP15::InvalidateDataCache as

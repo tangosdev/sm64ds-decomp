@@ -1,5 +1,5 @@
 # gate 226 (run link100 wave 2, lane STUBADJ): the seven slots of
-# data_ov002_021096b0 that gate 224 had to trap.
+# _ZTV16daObjPushblock_c that gate 224 had to trap.
 #
 # Gate 224 hosted the table in hal/actor_base_tables_ov002.cpp and left slots
 # 0, 3, 6, 9, 17, 25 and 27 calling ob2_guessN, because each of those ROM words
@@ -28,10 +28,4 @@
 #                               MATCH, here). The body is the D0.
 #   slot 25  0x020b8d3c  0x2c   OnPushed(Actor&)
 #   slot 27  0x020b8d14  0x28   OnHitByMegaChar(Player&)
-src/func_ov002_020b8fe0.cpp
-src/func_ov002_020b8d68.c
-src/func_ov002_020b8dd4.c
-src/func_ov002_020b8dac.cpp
-src/func_ov002_020b8c3c.c
-src/func_ov002_020b8d3c.c
-src/func_ov002_020b8d14.cpp
+src/game/actors/daObjPushblock_c.cpp

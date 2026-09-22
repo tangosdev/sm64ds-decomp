@@ -20,10 +20,10 @@
 # resolves the three static {slot, 1} records to the vtable slots they name.
 
 # ---- the spine
-# _ZN5Actor14BeforeBehaviorEv is a .cpp that spells its eight engine BSS
+# _ZN8dActor_c14BeforeBehaviorEv is a .cpp that spells its eight engine BSS
 # symbols as bare file-scope definitions (the mwccarm tentative-definition
 # idiom). MSVC's C++ front end makes those STRONG, and every one of them is
 # already the HAL's, so the file goes through hostgen --extern-data; see
 # GATE15_SYMS in CMakeLists.txt.
 src/IsAreaShowing.c
-src/_ZN7Clipper13Func_020150E8ER7Vector35Fix12IiEPh.c
+src/_ZN7Clipper13Func_020150E8ER7Vector35Fix12IiEPh.cpp

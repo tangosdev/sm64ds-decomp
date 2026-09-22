@@ -9,7 +9,7 @@ the link succeeds, the bytes are wrong.
 
 Wave 5 hit this class twice (w5b_review.md R1/R2):
 
-  R1  slicing src/RollingRock_Spawn.c defeated
+  R1  slicing src/d_a_grock.c defeated
       /alternatename:_RollingRock_Spawn=_data_ov010_02112d64 and
       PeachPainting::InitResources' SharedFilePtr became a code address --
       level 2 faulted (c0000005 at _RollingRock_Spawn+2).

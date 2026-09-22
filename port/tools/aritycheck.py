@@ -5,11 +5,11 @@ arguments are still wrong.
 C has no cross-translation-unit prototype checking for extern "C" symbols.
 The linker matches on the NAME alone, so one TU may declare
 
-    extern void _ZN9ActorBase18MarkForDestructionEv(void);   /* src/... */
+    extern void _ZN7fBase_c18MarkForDestructionEv(void);   /* src/... */
 
 while another DEFINES
 
-    void _ZN9ActorBase18MarkForDestructionEv(void *self)     /* port/hal/... */
+    void _ZN7fBase_c18MarkForDestructionEv(void *self)     /* port/hal/... */
     { ((ActorBase *)self)->ActorBase::MarkForDestruction(); }
 
 and nothing complains. The caller pushes nothing, the callee reads `self` off
@@ -55,9 +55,9 @@ TWO SUBSETS DO GATE. THE FIRST IS THE ONE THAT KEPT RECURRING.
       #1539  include/decl_FaderColor.h
              -extern void _ZN10FaderColor11AdvanceFadeEv(void);
              +extern void _ZN10FaderColor11AdvanceFadeEv(void*);
-      #1543  src/ChainChomp_Spawn.cpp, ChiefChilly_Spawn.cpp, Wiggler_Spawn.c
-             -void _ZN5EnemyC2Ev(void);          -> _ZN5EnemyC2Ev();
-             +void _ZN5EnemyC2Ev(void*);         -> _ZN5EnemyC2Ev(c);
+      #1543  src/game/actors/d_a_wanwan.cpp, daKing_Donketu_c_classInit.cpp, daHanachan_c_classInit.c
+             -void _ZN12dEnemyBase_cC2Ev(void);          -> _ZN12dEnemyBase_cC2Ev();
+             +void _ZN12dEnemyBase_cC2Ev(void*);         -> _ZN12dEnemyBase_cC2Ev(c);
 
     Both were found by a person reading a fault. Both are in this subset, and
     both are ABSENT from it now, which is what makes it a usable ratchet. The
@@ -185,7 +185,7 @@ import tailjump_guard as tj  # noqa: E402
 #              decoration to that flat name. `namespace Player { void
 #              St_EndingFly_Main(); }` emits a ?St_EndingFly_Main@Player@@YA...
 #              decoration and nothing else. With no directive pointing that at
-#              __ZN6Player17St_EndingFly_MainEv, the callee is whatever defines
+#              _func_ov007_020c3d1c, the callee is whatever defines
 #              the MSVC name, and comparing arities against the flat body
 #              compares two unrelated functions. Without this the checker
 #              cannot tell a FIXED site from a broken one, because the
@@ -270,7 +270,7 @@ PLAIN = re.compile(r'^func_(?:ov\d+_)?[0-9a-f]{8}$')
 #
 #     namespace Player { void St_EndingFly_Main(); }
 #
-# emits the symbol _ZN6Player17St_EndingFly_MainEv, exactly like the flat
+# emits the symbol func_ov007_020c3d1c, exactly like the flat
 # spelling four sibling TUs use -- but nothing above matches it, so the site
 # is invisible to this checker. That is not hypothetical: it is the SIXTH live
 # receiver defect on cons (src/func_ov007_020b7764.cpp:9 calls
@@ -552,15 +552,15 @@ def selftest():
               % ('ok' if ok else 'FAIL', want, got, note))
 
     print('\n  DECL/DEFN RECOGNITION')
-    sample = ('extern void _ZN9ActorBase18MarkForDestructionEv(void);\n'
-              'void _ZN9ActorBase18MarkForDestructionEv(void *self)\n'
+    sample = ('extern void _ZN7fBase_c18MarkForDestructionEv(void);\n'
+              'void _ZN7fBase_c18MarkForDestructionEv(void *self)\n'
               '{ return; }\n'
               '/* void _ZN4Fake4CommentEv(void); */\n')
     s = strip_comments(sample)
     d = [m.group('name') for m in DECL.finditer(s)]
     f = [m.group('name') for m in DEFN.finditer(s)]
-    ok = d == ['_ZN9ActorBase18MarkForDestructionEv'] and \
-        f == ['_ZN9ActorBase18MarkForDestructionEv']
+    ok = d == ['_ZN7fBase_c18MarkForDestructionEv'] and \
+        f == ['_ZN7fBase_c18MarkForDestructionEv']
     bad += 0 if ok else 1
     print('    %-4s one declaration, one definition, comment ignored '
           '(decls=%s defns=%s)' % ('ok' if ok else 'FAIL', d, f))
@@ -568,10 +568,10 @@ def selftest():
     print('\n  NAMESPACED C++ DECLARATION (the sixth-defect blind spot)')
     ns_cases = [
         ('namespace Player { void St_EndingFly_Main(); }',
-         ['_ZN6Player17St_EndingFly_MainEv'],
+         ['func_ov007_020c3d1c'],
          'the real shape, src/func_ov007_020b7764.cpp:2'),
         ('namespace Player { void St_EndingFly_Main(void); }',
-         ['_ZN6Player17St_EndingFly_MainEv'],
+         ['func_ov007_020c3d1c'],
          'explicit void is the same symbol'),
         ('namespace A { int f(); }', ['_ZN1A1fEv'], 'short names'),
         # Everything below is OUT OF SCOPE ON PURPOSE. A half-written Itanium
@@ -599,8 +599,8 @@ def selftest():
     import tempfile
     PRAGMA = ('#pragma comment(linker, "/alternatename:'
               '?St_EndingFly_Main@Player@@YAXXZ='
-              '__ZN6Player17St_EndingFly_MainEv")\n')
-    SYM = '_ZN6Player17St_EndingFly_MainEv'
+              '_func_ov007_020c3d1c")\n')
+    SYM = 'func_ov007_020c3d1c'
     ns_bind_cases = [
         ('port/hal/f.cpp', PRAGMA, True,
          'a real pragma in port/hal BINDS the spelling'),
@@ -612,7 +612,7 @@ def selftest():
         ('port/hal/f.cpp',
          '// (DELETED by lane RF1) /alternatename:'
          '?St_EndingFly_Main@Player@@YAXXZ='
-         '__ZN6Player17St_EndingFly_MainEv\n', False,
+         '_func_ov007_020c3d1c\n', False,
          'the directive QUOTED in a comment, no pragma, binds nothing'),
         ('port/notes.txt', PRAGMA, False,
          'and quoted in a .txt binds nothing either'),
@@ -641,7 +641,7 @@ def selftest():
         (('src/func_0204ebb8.c', '_ZN13HeapAllocator6RemoveEv'), True,
          'its SolidHeap sibling'),
         (('src/func_ov007_020c05f8.c',
-          '_ZN6Player17St_EndingFly_MainEv'), True,
+          'func_ov007_020c3d1c'), True,
          'a Class C row that predates this exclusion'),
         (('src/func_ov007_020add3c.c', 'func_ov007_020ae558'), False,
          'CLASS A is form=call: a REAL seam and NOT excluded'),

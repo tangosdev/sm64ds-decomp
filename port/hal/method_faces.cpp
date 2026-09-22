@@ -15,7 +15,7 @@
 //
 //   2. DROPPED RECEIVER. A method face reached in the zero-argument ()-form
 //      drops the `this` the ROM delivered in a register. Actor::FarthestPlayer
-//      calls _ZN5Actor13ClosestPlayerEv() with no receiver, so ClosestPlayer
+//      calls _ZN8dActor_c13ClosestPlayerEv() with no receiver, so ClosestPlayer
 //      reads this+0x5c off a null or garbage base. For a direct ClosestPlayer
 //      reader that is a crash (the rabbit soft-lock); for FarthestPlayer it is
 //      a SILENT wrong result, which is worse.
@@ -23,7 +23,7 @@
 //   3. MIS-BRIDGED RECEIVER. A face entered by a thunk (or tail-called into)
 //      with the object pushed on the stack must move it into ECX before the
 //      real __thiscall body. Actor::OnTurnIntoEgg is a jmp tail-call into the
-//      extern-C _ZN5Actor24KillAndTrackInDeathTableEv face (below), which is
+//      extern-C _ZN8dActor_c24KillAndTrackInDeathTableEv face (below), which is
 //      correct only because that bridge is sized right. A cdecl body entered
 //      with `this` still in ECX (or an aliased __thiscall body entered from a
 //      cdecl frame) is the 2026-08-07 door-open crash; see the gate-22 note.
@@ -46,7 +46,7 @@
 // body into the face inside the same TU, and /OPT:REF then drops the external
 // nothing references any more -- so the symbol is ABSENT from walk_window.map
 // while the behaviour it carries is fully present, folded into the face.
-// _ZN8PathLift12BaseBehaviorEv is the measured instance: PORT_HOST_ABI tagged
+// _ZN16dPathLiftActor_c12BaseBehaviorEv is the measured instance: PORT_HOST_ABI tagged
 // on its definition, live in the binary, invisible as a public.
 //
 // Two consequences worth carrying. An absence from the map is NOT evidence
@@ -63,13 +63,13 @@
 // their .c-file callers reference Itanium C names. Each face forwards with
 // a qualified call, the player_bridges pattern, batched here because the
 // include surface spans most of the actor stack.
-#include "Actor.h"
-#include "ActorBase.h"
-#include "BgCh.h"
+#include "dActor_c.h"
+#include "fBase_c.h"
+#include "dBgCh.h"
 #include "Camera.h"
-#include "ClsnResult.h"
-#include "CylinderClsn.h"
-#include "CylinderClsnWithPos.h"
+#include "dBgPi.h"
+#include "dCc_c.h"
+#include "dCcPos_c.h"
 #include "Heap.h"
 #include "Message.h"
 #include "ModelBase.h"
@@ -78,11 +78,11 @@
 #include "OAM.h"
 #include "PathPtr.h"
 #include "Player.h"
-#include "RaycastLine.h"
-#include "SphereClsn.h"
+#include "dBgCh_Lin.h"
+#include "dBgCh_SphCrr.h"
 #include "TextureSequence.h"
 #include "Timer.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 
 extern "C++" int ApproachLinear2(short &x, short target, short step);
 /* src/_Z14ApproachLinearRsss.cpp -- a DIFFERENT function from ApproachLinear2,
@@ -102,54 +102,54 @@ int _Z15ApproachLinear2Rsss(short *x, short target, short step)
    name as a free function taking the actor. Void like the method and like the
    free function it replaced -- the callers that read a return value were
    already reading whatever Actor::Spawn left behind. */
-void _ZN5Actor13SpawnSoundObjEj(void *self, u32 soundObjParam)
-{ ((Actor *)self)->Actor::SpawnSoundObj(soundObjParam); }
+void _ZN8dActor_c13SpawnSoundObjEj(void *self, u32 soundObjParam)
+{ ((dActor_c *)self)->dActor_c::SpawnSoundObj(soundObjParam); }
 
 /* Same rewrite, same story: a method now, spelled as a free function by every
    ov002 death path that calls it. */
-void _ZN5Actor24KillAndTrackInDeathTableEv(void *self)
-{ ((Actor *)self)->Actor::KillAndTrackInDeathTable(); }
+void _ZN8dActor_c24KillAndTrackInDeathTableEv(void *self)
+{ ((dActor_c *)self)->dActor_c::KillAndTrackInDeathTable(); }
 
 /* Actor::FindWithID is static -- no `this`, so the face is a plain forward.
    hal/reverse_bridges.cpp used to run this the other way, wrapping a C-form
    src definition into a method; main made the src file the method, so the
    wrapper there is gone and this replaces it. */
-Actor *_ZN5Actor10FindWithIDEj(u32 id)
-{ return Actor::FindWithID(id); }
+dActor_c *_ZN8dActor_c10FindWithIDEj(u32 id)
+{ return dActor_c::FindWithID(id); }
 
 void _ZN10ModelAnim24CopyERKS_Pcj(void *self, const void *src, char *nf,
                                   unsigned nof)
 { ((ModelAnim2 *)self)->ModelAnim2::Copy(*(const ModelAnim2 *)src, nf, nof); }
 
 
-void _ZN12CylinderClsn5ClearEv(void *self)
-{ ((CylinderClsn *)self)->CylinderClsn::Clear(); }
-void _ZN12CylinderClsn6UpdateEv(void *self)
-{ ((CylinderClsn *)self)->CylinderClsn::Update(); }
+void _ZN5dCc_c5ClearEv(void *self)
+{ ((dCc_c *)self)->dCc_c::Clear(); }
+void _ZN5dCc_c6UpdateEv(void *self)
+{ ((dCc_c *)self)->dCc_c::Update(); }
 
-void _ZN12WithMeshClsn13SetGroundFlagEv(void *self)
-{ ((WithMeshClsn *)self)->WithMeshClsn::SetGroundFlag(); }
-void _ZN12WithMeshClsn13SetLimMovFlagEv(void *self)
-{ ((WithMeshClsn *)self)->WithMeshClsn::SetLimMovFlag(); }
-void _ZN12WithMeshClsn15ClearGroundFlagEv(void *self)
-{ ((WithMeshClsn *)self)->WithMeshClsn::ClearGroundFlag(); }
-void _ZN12WithMeshClsn15ClearLimMovFlagEv(void *self)
-{ ((WithMeshClsn *)self)->WithMeshClsn::ClearLimMovFlag(); }
-void _ZN12WithMeshClsn18StopDetectingWaterEv(void *self)
-{ ((WithMeshClsn *)self)->WithMeshClsn::StopDetectingWater(); }
-void _ZN12WithMeshClsn19ClearAllGroundFlagsEv(void *self)
-{ ((WithMeshClsn *)self)->WithMeshClsn::ClearAllGroundFlags(); }
-void _ZN12WithMeshClsn19StartDetectingWaterEv(void *self)
-{ ((WithMeshClsn *)self)->WithMeshClsn::StartDetectingWater(); }
+void _ZN10dBgCh_Actr13SetGroundFlagEv(void *self)
+{ ((dBgCh_Actr *)self)->dBgCh_Actr::SetGroundFlag(); }
+void _ZN10dBgCh_Actr13SetLimMovFlagEv(void *self)
+{ ((dBgCh_Actr *)self)->dBgCh_Actr::SetLimMovFlag(); }
+void _ZN10dBgCh_Actr15ClearGroundFlagEv(void *self)
+{ ((dBgCh_Actr *)self)->dBgCh_Actr::ClearGroundFlag(); }
+void _ZN10dBgCh_Actr15ClearLimMovFlagEv(void *self)
+{ ((dBgCh_Actr *)self)->dBgCh_Actr::ClearLimMovFlag(); }
+void _ZN10dBgCh_Actr18StopDetectingWaterEv(void *self)
+{ ((dBgCh_Actr *)self)->dBgCh_Actr::StopDetectingWater(); }
+void _ZN10dBgCh_Actr19ClearAllGroundFlagsEv(void *self)
+{ ((dBgCh_Actr *)self)->dBgCh_Actr::ClearAllGroundFlags(); }
+void _ZN10dBgCh_Actr19StartDetectingWaterEv(void *self)
+{ ((dBgCh_Actr *)self)->dBgCh_Actr::StartDetectingWater(); }
 
 void _ZN15TextureSequence6UpdateER15ModelComponents(void *self, void *mc)
 { ((TextureSequence *)self)->TextureSequence::Update(
       *(ModelComponents *)mc); }
 
-void _ZN4BgCh19StartDetectingToxicEv(void *self)
-{ ((BgCh *)self)->BgCh::StartDetectingToxic(); }
-void _ZN4BgCh21StopDetectingOrdinaryEv(void *self)
-{ ((BgCh *)self)->BgCh::StopDetectingOrdinary(); }
+void _ZN5dBgCh19StartDetectingToxicEv(void *self)
+{ ((dBgCh *)self)->dBgCh::StartDetectingToxic(); }
+void _ZN5dBgCh21StopDetectingOrdinaryEv(void *self)
+{ ((dBgCh *)self)->dBgCh::StopDetectingOrdinary(); }
 
 void _ZN5Model14SetPolygonModeEi(void *self, int mode)
 { ((Model *)self)->Model::SetPolygonMode(mode); }
@@ -186,8 +186,8 @@ void _ZN6Player4HealEi(void *self, int amt)
 { ((Player *)self)->Player::Heal(amt); }
 
 
-void _ZN9ActorBase18MarkForDestructionEv(void *self)
-{ ((ActorBase *)self)->ActorBase::MarkForDestruction(); }
+void _ZN7fBase_c18MarkForDestructionEv(void *self)
+{ ((fBase_c *)self)->fBase_c::MarkForDestruction(); }
 
 /* Gate 31: the Player's two DESTROY faces. Both definitions are real
    __thiscall methods -- Player::OnPendingDestroy in src, CleanupResources in
@@ -225,8 +225,8 @@ void _ZN6Player16OnPendingDestroyEv(void *self)
 
 /* Gate 15: Actor::BeforeBehavior is a .c-style TU that calls its base by
    Itanium name, while the definition is a real __thiscall method. */
-int _ZN9ActorBase14BeforeBehaviorEv(void *self)
-{ return ((ActorBase *)self)->ActorBase::BeforeBehavior() ? 1 : 0; }
+int _ZN7fBase_c14BeforeBehaviorEv(void *self)
+{ return ((fBase_c *)self)->fBase_c::BeforeBehavior() ? 1 : 0; }
 
 unsigned _ZNK7PathPtr8NumNodesEv(const void *self)
 { return ((const PathPtr *)self)->PathPtr::NumNodes(); }
@@ -238,12 +238,17 @@ unsigned _ZNK7PathPtr8NumNodesEv(const void *self)
 
 /* REVERSE faces: these St_ files define the ITANIUM C name; the state
    dispatcher references the MSVC method. Forward method -> C def. */
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync): both of these St_ TUs are
+   real Player methods in main's tree now, so src/ defines
+   ?St_GroundPound_Main@Player@@QAEHXZ and ?St_LongJump_Init@Player@@QAEHXZ
+   itself and these faces were the second definition (LNK2005). The src body is
+   the ROM's; the face only forwarded to it.
 extern "C" int _ZN6Player19St_GroundPound_MainEv(void *self);
 extern "C" int _ZN6Player16St_LongJump_InitEv(void *self);
 int Player::St_GroundPound_Main()
 { return _ZN6Player19St_GroundPound_MainEv(this); }
 int Player::St_LongJump_Init()
-{ return _ZN6Player16St_LongJump_InitEv(this); }
+{ return _ZN6Player16St_LongJump_InitEv(this); }                             */
 
 /* State Init refs the Main TUs call by Itanium name. Both are C linkage
    since main's mangled-declaration sweep, so the face defines the plain
@@ -271,31 +276,51 @@ extern "C" int _ZN6Player15IsCollectingCapEv(char *self)
 /* gate-10 tier-2 wave: these St_ files define the ITANIUM C name, the
    state dispatcher calls the MSVC method. Forward method -> C def only;
    never the other way round for the same function. */
+extern "C" int _ZN6Player18St_CameraZoom_MainEv(void *self);
+extern "C" int _ZN6Player23St_MetalWaterWater_MainEv(void *self);
+extern "C" int _ZN6Player15St_Respawn_InitEv(void *self);
+extern "C" int _ZN6Player12St_Swim_MainEv(void *self);
+extern "C" int _ZN6Player15St_Talk_CleanupEv(void *self);
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync): the thirteen rows below.
+   Each of those St_ TUs is a real Player method in main's tree now, so src/
+   defines ?St_<name>@Player@@QAEHXZ itself and the face here was the second
+   definition (LNK2005). The five faces kept above are the ones whose src TU
+   still defines only the flat Itanium C name, so they are still load bearing.
 extern "C" int _ZN6Player15St_Balloon_MainEv(void *self);
 extern "C" int _ZN6Player16St_BurnFire_InitEv(void *self);
 extern "C" int _ZN6Player16St_BurnFire_MainEv(void *self);
-extern "C" int _ZN6Player18St_CameraZoom_MainEv(void *self);
 extern "C" int _ZN6Player18St_DizzyStars_MainEv(void *self);
 extern "C" int _ZN6Player19St_Electrocute_MainEv(void *self);
 extern "C" int _ZN6Player18St_Grabbed_CleanupEv(void *self);
 extern "C" int _ZN6Player12St_Hurt_MainEv(void *self);
-extern "C" int _ZN6Player23St_MetalWaterWater_MainEv(void *self);
-extern "C" int _ZN6Player15St_Respawn_InitEv(void *self);
 extern "C" int _ZN6Player12St_Spin_MainEv(void *self);
 extern "C" int _ZN6Player17St_SweepKick_InitEv(void *self);
-extern "C" int _ZN6Player12St_Swim_MainEv(void *self);
-extern "C" int _ZN6Player15St_Talk_CleanupEv(void *self);
 extern "C" int _ZN6Player13St_Throw_InitEv(void *self);
 extern "C" int _ZN6Player14St_Thrown_InitEv(void *self);
-extern "C" int _ZN6Player19St_TornadoSpin_MainEv(void *self);
+extern "C" int _ZN6Player19St_TornadoSpin_MainEv(void *self);                */
+/* RETIRED at SYNC6, the same reason as the ALIAS2 block below and the one
+   above it, one sync later: src/actors/Player.cpp is back on its seventeen
+   slice rows now that main's #2666 made it compile on the host, and it
+   defines ?St_<name>@Player@@QAEHXZ for all five of these itself. Measured:
+   five LNK2005 rows against method_faces.cpp.obj in build_s2.log. The flat
+   Itanium bodies these forwarded to are unchanged and still linked.
+int Player::St_CameraZoom_Main()
+{ return _ZN6Player18St_CameraZoom_MainEv(this); }
+int Player::St_MetalWaterWater_Main()
+{ return _ZN6Player23St_MetalWaterWater_MainEv(this); }
+int Player::St_Respawn_Init()
+{ return _ZN6Player15St_Respawn_InitEv(this); }
+int Player::St_Swim_Main()
+{ return _ZN6Player12St_Swim_MainEv(this); }
+int Player::St_Talk_Cleanup()
+{ return _ZN6Player15St_Talk_CleanupEv(this); }                              */
+/* RETIRED at ALIAS2, same reason as the declarations above:
 int Player::St_Balloon_Main()
 { return _ZN6Player15St_Balloon_MainEv(this); }
 int Player::St_BurnFire_Init()
 { return _ZN6Player16St_BurnFire_InitEv(this); }
 int Player::St_BurnFire_Main()
 { return _ZN6Player16St_BurnFire_MainEv(this); }
-int Player::St_CameraZoom_Main()
-{ return _ZN6Player18St_CameraZoom_MainEv(this); }
 int Player::St_DizzyStars_Main()
 { return _ZN6Player18St_DizzyStars_MainEv(this); }
 int Player::St_Electrocute_Main()
@@ -304,18 +329,10 @@ int Player::St_Grabbed_Cleanup()
 { return _ZN6Player18St_Grabbed_CleanupEv(this); }
 int Player::St_Hurt_Main()
 { return _ZN6Player12St_Hurt_MainEv(this); }
-int Player::St_MetalWaterWater_Main()
-{ return _ZN6Player23St_MetalWaterWater_MainEv(this); }
-int Player::St_Respawn_Init()
-{ return _ZN6Player15St_Respawn_InitEv(this); }
 int Player::St_Spin_Main()
 { return _ZN6Player12St_Spin_MainEv(this); }
 int Player::St_SweepKick_Init()
 { return _ZN6Player17St_SweepKick_InitEv(this); }
-int Player::St_Swim_Main()
-{ return _ZN6Player12St_Swim_MainEv(this); }
-int Player::St_Talk_Cleanup()
-{ return _ZN6Player15St_Talk_CleanupEv(this); }
 int Player::St_Throw_Init()
 { return _ZN6Player13St_Throw_InitEv(this); }
 int Player::St_Thrown_Init()
@@ -324,7 +341,7 @@ int Player::St_TornadoSpin_Main()
 { return _ZN6Player19St_TornadoSpin_MainEv(this); }
 extern "C" int _ZN6Player18St_YoshiPower_MainEv(void *self);
 int Player::St_YoshiPower_Main()
-{ return _ZN6Player18St_YoshiPower_MainEv(this); }
+{ return _ZN6Player18St_YoshiPower_MainEv(this); }                           */
 /* St_Grabbed_Main calls DropActor by its Itanium name; the definition is a
    real method. Forward C name -> method (no face the other way). */
 extern "C" int _ZN6Player9DropActorEv(void *self)
@@ -333,33 +350,33 @@ extern "C" int _ZN6Player9DropActorEv(void *self)
 /* gate 14: the init chain the actor spawn spine dispatches. Both are real
    __thiscall methods, so a linker alias onto the Itanium name their .c
    callers use would enter the body with `this` in whatever ecx held. */
-extern "C" int _ZN5Actor18GetBitInDeathTableEv(void *self)
-{ return ((Actor *)self)->Actor::GetBitInDeathTable(); }
-extern "C" void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a)
-{ ((Actor *)self)->Actor::AfterInitResources(a); }
+extern "C" int _ZN8dActor_c18GetBitInDeathTableEv(void *self)
+{ return ((dActor_c *)self)->dActor_c::GetBitInDeathTable(); }
+extern "C" void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a)
+{ ((dActor_c *)self)->dActor_c::AfterInitResources(a); }
 
 /* gate 16: Actor::BeforeRender is the same shape -- a .c TU calling its base
    by Itanium name over a real __thiscall definition. Slot 10 of every actor
    class the registry carries goes through it. */
-extern "C" int _ZN9ActorBase12BeforeRenderEv(void *self)
-{ return ((ActorBase *)self)->ActorBase::BeforeRender(); }
+extern "C" int _ZN7fBase_c12BeforeRenderEv(void *self)
+{ return ((fBase_c *)self)->fBase_c::BeforeRender(); }
 
-/* wave 4 lane d: the same shape one slot over, for _ZTV5Scene slot 4.
-   src/_ZN5Scene22BeforeCleanupResourcesEv.c is ordinary C and DOES pass its
-   receiver (`_ZN9ActorBase22BeforeCleanupResourcesEv(thiz)`); only the
+/* wave 4 lane d: the same shape one slot over, for _ZTV8dScene_c slot 4.
+   src/_ZN8dScene_c22BeforeCleanupResourcesEv.cpp is ordinary C and DOES pass its
+   receiver (`_ZN7fBase_c22BeforeCleanupResourcesEv(thiz)`); only the
    C-linkage cdecl name was undefined. The matched ActorBase body is already in
-   the link as ?BeforeCleanupResources@ActorBase@@UAEHXZ -- UAE, so a face and
+   the link as ?BeforeCleanupResources@fBase_c@@UAEHXZ -- UAE, so a face and
    not an alias, and the checklist reads the same as its BeforeRender sibling
    above: qualified target (its near-sibling BeforeInitResources is a different
    slot and a different predicate), no arguments, receiver passed and cast. */
-extern "C" int _ZN9ActorBase22BeforeCleanupResourcesEv(void *self)
-{ return ((ActorBase *)self)->ActorBase::BeforeCleanupResources(); }
+extern "C" int _ZN7fBase_c22BeforeCleanupResourcesEv(void *self)
+{ return ((fBase_c *)self)->fBase_c::BeforeCleanupResources(); }
 
-/* ---- wave 4 lane d: _ZTV5Scene slots 8 and 11, the two ROM TAIL VENEERS ----
+/* ---- wave 4 lane d: _ZTV8dScene_c slots 8 and 11, the two ROM TAIL VENEERS ----
    A no-op forwarder is exactly the kind of plumbing this file's header says
    gets skimmed, so here is the full reading before the two lines.
 
-   src/_ZN5Scene13AfterBehaviorEj.cpp and src/_ZN5Scene11AfterRenderEj.cpp are
+   src/_ZN8dScene_c13AfterBehaviorEj.cpp and src/_ZN8dScene_c11AfterRenderEj.cpp are
    ARM tail-call veneers -- `ldr ip,[pc]; bx ip; .word <ActorBase body>` -- so
    the ROM never gives them a frame at all: r0 (`this`) and r1 (the
    VirtualFuncSuccess code) ride straight through. The decompilation spells
@@ -372,8 +389,8 @@ extern "C" int _ZN9ActorBase22BeforeCleanupResourcesEv(void *self)
 
    and MSVC agrees, three bytes each, dumpbin /disasm on their own objects:
 
-       ?AfterBehavior@ActorBase@@UAEXI@Z:   00000000: C2 04 00   ret 4
-       ?AfterRender@ActorBase@@UAEXI@Z:     00000000: C2 04 00   ret 4
+       ?AfterBehavior@fBase_c@@UAEXI@Z:   00000000: C2 04 00   ret 4
+       ?AfterRender@fBase_c@@UAEXI@Z:     00000000: C2 04 00   ret 4
 
    -- so identical that /OPT:ICF folds them onto one address in the map
    (both at 0043dd10). Neither reads ecx, neither reads [ebp+8]. A dropped
@@ -384,13 +401,13 @@ extern "C" int _ZN9ActorBase22BeforeCleanupResourcesEv(void *self)
    SO THIS DEFINITION IS THE BEHAVIOUR, EXACTLY, and it is correct for every
    caller rather than only for the Scene path. The only other src/ TU that
    spells either C name is the Actor veneer of the same pair
-   (src/_ZN5Actor13AfterBehaviorEj.cpp, src/_ZN5Actor11AfterRenderEj.cpp,
+   (src/_ZN8dActor_c13AfterBehaviorEj.cpp, src/_ZN8dActor_c11AfterRenderEj.cpp,
    neither in the map today), and the ROM tail-jumps those to the SAME empty
    bodies -- so if a later lane links them, they resolve here and are still
    right.
 
    THE ONE THING IT IS NOT is a bridge into the matched body: the port's slot-8
-   dispatch reaches this, not ?AfterBehavior@ActorBase@@UAEXI@Z. That gap is
+   dispatch reaches this, not ?AfterBehavior@fBase_c@@UAEXI@Z. That gap is
    three bytes of `ret 4`, and both definitions are TAGGED rather than left to
    linkage.py's face heuristic, which would otherwise call them faces over a
    linked matched TU and be wrong about what they are. The fuller-fidelity
@@ -402,10 +419,10 @@ extern "C" int _ZN9ActorBase22BeforeCleanupResourcesEv(void *self)
    argument, so this IS its behaviour; the matched body is emitted
    __thiscall-with-an-argument and the veneer's own void() declaration cannot
    enter it without leaving ESP four bytes light on every dispatch. */
-extern "C" void _ZN9ActorBase13AfterBehaviorEj(void) {}
+extern "C" void _ZN7fBase_c13AfterBehaviorEj(void) {}
 /* PORT_HOST_ABI: same as AfterBehavior above -- `ret 4`, no receiver read, no
    argument read; /OPT:ICF folds the two matched bodies onto one address. */
-extern "C" void _ZN9ActorBase11AfterRenderEj(void) {}
+extern "C" void _ZN7fBase_c11AfterRenderEj(void) {}
 
 /* gate 16: ModelBase::ApplyOpacity is a real method whose only caller,
    Tree::Render, spells it as an Itanium C name (and passes a third argument
@@ -435,8 +452,8 @@ extern "C" void _ZN5Model17UpdateFileOffsetsER8BMD_File(BMD_File *f)
    ordinary reverse-bridge shape. Qualified call, so the C name reaches
    ActorBase's body rather than re-dispatching through the vptr it was
    presumably called through. */
-extern "C" void _ZN9ActorBase21AfterCleanupResourcesEj(void *self, unsigned a)
-{ ((ActorBase *)self)->ActorBase::AfterCleanupResources(a); }
+extern "C" void _ZN7fBase_c21AfterCleanupResourcesEj(void *self, unsigned a)
+{ ((fBase_c *)self)->fBase_c::AfterCleanupResources(a); }
 
 /* src/_ZN4Heap7_SizeofEPv.cpp exists and stays unlinked, and this is the
    reason, written down so the row stops reading as replacement work. Two lanes
@@ -482,14 +499,17 @@ extern "C" void _ZN4Heap10ReallocateEPvj(void *self, void *p, unsigned n)
    linkage in its own TU while Tree::InitResources declares it as a method on
    a local class shape and calls it __thiscall. An /alternatename would enter
    the cdecl body with `this` still in ecx, so this is a face. */
-extern "C" void _ZN19CylinderClsnWithPos4InitERK7Vector35Fix12IiES4_jj(
+extern "C" void _ZN8dCcPos_c4InitERK7Vector35Fix12IiES4_jj(
     void *self, const void *pos, int radius, int height, unsigned flags,
     unsigned vulnFlags);
-void CylinderClsnWithPos::Init(const Vector3 &pos, Fix12i radius,
-                               Fix12i height, u32 flags, u32 vulnFlags)
+/* SYNC4: include/dCcPos_c.h declares this with the real Fix12<int> scalars
+   (include/types.h keeps Fix12i as a plain s32), so the face follows the
+   header and reads .val out of each. */
+void dCcPos_c::Init(const Vector3 &pos, Fix12<int> radius,
+                               Fix12<int> height, u32 flags, u32 vulnFlags)
 {
-    _ZN19CylinderClsnWithPos4InitERK7Vector35Fix12IiES4_jj(
-        this, &pos, radius, height, flags, vulnFlags);
+    _ZN8dCcPos_c4InitERK7Vector35Fix12IiES4_jj(
+        this, &pos, radius.val, height.val, flags, vulnFlags);
 }
 
 
@@ -500,17 +520,17 @@ void CylinderClsnWithPos::Init(const Vector3 &pos, Fix12i radius,
    through a vtable -- after transforming the ray or sphere into the
    collider's own space. func_01ffb0fc is the line walk's ROM address, which
    is how the matched source spells it. */
-#include "MeshCollider.h"
-#include "SphereClsn.h"
+#include "dBgW_Kc.h"
+#include "dBgCh_SphCrr.h"
 extern "C" {
 int func_01ffb0fc(void *self, void *ray)
-{ return ((MeshCollider *)self)->MeshCollider::DetectClsn(*(RaycastLine *)ray); }
-int _ZN12MeshCollider10DetectClsnER10SphereClsn(void *self, void *sph)
-{ return ((MeshCollider *)self)->MeshCollider::DetectClsn(*(SphereClsn *)sph); }
-int _ZN16MeshColliderBase9IsEnabledEv(void *self)
-{ return ((MeshColliderBase *)self)->MeshColliderBase::IsEnabled(); }
-int _ZN16MeshColliderBase7DisableEv(void *self)
-{ return ((MeshColliderBase *)self)->MeshColliderBase::Disable(); }
+{ return ((dBgW_Kc *)self)->dBgW_Kc::DetectClsn(*(dBgCh_Lin *)ray); }
+int _ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr(void *self, void *sph)
+{ return ((dBgW_Kc *)self)->dBgW_Kc::DetectClsn(*(dBgCh_SphCrr *)sph); }
+int _ZN4dBgW9IsEnabledEv(void *self)
+{ return ((dBgW *)self)->dBgW::IsEnabled(); }
+int _ZN4dBgW7DisableEv(void *self)
+{ return ((dBgW *)self)->dBgW::Disable(); }
 }
 
 /* ---- gate 16: five more C-named references onto method definitions -------
@@ -529,10 +549,10 @@ int _ZN6Player20IsStateEnteringLevelEv(void *self)
 
 #include "PowerStar.h"
 extern "C" {
-void _ZN12WithMeshClsn20UpdateDiscreteNoLavaEv(void *self)
-{ ((WithMeshClsn *)self)->WithMeshClsn::UpdateDiscreteNoLava(); }
-void _ZN12WithMeshClsn22UpdateDiscreteNoLava_2Ev(void *self)
-{ ((WithMeshClsn *)self)->WithMeshClsn::UpdateDiscreteNoLava_2(); }
+void _ZN10dBgCh_Actr20UpdateDiscreteNoLavaEv(void *self)
+{ ((dBgCh_Actr *)self)->dBgCh_Actr::UpdateDiscreteNoLava(); }
+void _ZN10dBgCh_Actr22UpdateDiscreteNoLava_2Ev(void *self)
+{ ((dBgCh_Actr *)self)->dBgCh_Actr::UpdateDiscreteNoLava_2(); }
 void _ZN9PowerStar13AddStarMarkerEv(void *self)
 { ((PowerStar *)self)->PowerStar::AddStarMarker(); }
 }
@@ -545,14 +565,14 @@ void _ZN9PowerStar13AddStarMarkerEv(void *self)
    CASTLE_WATER is not here: its four src files spell their own Itanium names
    in extern "C", so a face would be a second definition of each. */
 #include "Bird.h"
-#include "MetalNet.h"
-#include "Flag.h"
+#include "daObjMc_Metalnet_c.h"
+#include "daMcFlag_c.h"
 extern "C" {
 int _ZN4Bird13InitResourcesEv(void *self)
 { return ((Bird *)self)->Bird::InitResources(); }
 /* BIRD::RENDER AND FLAG::RENDER ARE RETIRED (run link100, lane PMFB2). Both
    are on port/slice_pmfb2.txt and compile from src/_ZN4Bird6RenderEv.cpp and
-   src/_ZN4Flag6RenderEv.cpp; each matched TU recovered as a real C++ method
+   src/game/actors/d_a_mc_flag.cpp; each matched TU recovered as a real C++ method
    (`int Bird::Render()`) while hal/actor_classes.cpp:1334 and :1506 call the
    Itanium C name, so each takes a cdecl face in hal/except_faces.cpp and NOT
    ONE FILL SITE CHANGES.
@@ -581,7 +601,7 @@ int _ZN4Bird13InitResourcesEv(void *self)
    overlay_0009.bin at ov009 base 0x021111a0 (runs/link100/out/PMFB2/
    rom_renders.txt). Both ROM bodies are the same ten instructions:
      02111870 _ZN4Bird6RenderEv   ldr r2,[r0,#0xd4]!   mov r1,#0
-     0211211c _ZN4Flag6RenderEv   ldr r2,[r2,#0x14]    blx r2    mov r0,#1
+     0211211c _ZN10daMcFlag_c6RenderEv   ldr r2,[r2,#0x14]    blx r2    mov r0,#1
    `[r0,#0xd4]!` is pre-indexed WITH WRITEBACK, so the receiver at the blx is
    the ModelAnim sub-object and not the actor; `[r2,#0x14]` is vtable slot 5;
    `mov r1,#0` is the one argument, which ma2_render lands as
@@ -631,21 +651,21 @@ int _ZN4Bird13InitResourcesEv(void *self)
    wiring that makes the matched TU behave here. Retiring it needs a
    ROM-ordered ModelAnim table, which is the opposite of what every MSVC caller
    of the same object needs. */
-int _ZN8MetalNet13InitResourcesEv(void *self)
-{ return ((MetalNet *)self)->MetalNet::InitResources(); }
-int _ZN8MetalNet8BehaviorEv(void *self)
-{ return ((MetalNet *)self)->MetalNet::Behavior(); }
-int _ZN8MetalNet6RenderEv(void *self)
-{ return ((MetalNet *)self)->MetalNet::Render(); }
-int _ZN8MetalNet16CleanupResourcesEv(void *self)
-{ return ((MetalNet *)self)->MetalNet::CleanupResources(); }
-int _ZN4Flag13InitResourcesEv(void *self)
-{ return ((Flag *)self)->Flag::InitResources(); }
-int _ZN4Flag8BehaviorEv(void *self)
-{ return ((Flag *)self)->Flag::Behavior(); }
-/* _ZN4Flag6RenderEv is retired with Bird's, on the same measurement.
+int _ZN18daObjMc_Metalnet_c13InitResourcesEv(void *self)
+{ return ((daObjMc_Metalnet_c *)self)->daObjMc_Metalnet_c::InitResources(); }
+int _ZN18daObjMc_Metalnet_c8BehaviorEv(void *self)
+{ return ((daObjMc_Metalnet_c *)self)->daObjMc_Metalnet_c::Behavior(); }
+int _ZN18daObjMc_Metalnet_c6RenderEv(void *self)
+{ return ((daObjMc_Metalnet_c *)self)->daObjMc_Metalnet_c::Render(); }
+int _ZN18daObjMc_Metalnet_c16CleanupResourcesEv(void *self)
+{ return ((daObjMc_Metalnet_c *)self)->daObjMc_Metalnet_c::CleanupResources(); }
+int _ZN10daMcFlag_c13InitResourcesEv(void *self)
+{ return ((daMcFlag_c *)self)->daMcFlag_c::InitResources(); }
+int _ZN10daMcFlag_c8BehaviorEv(void *self)
+{ return ((daMcFlag_c *)self)->daMcFlag_c::Behavior(); }
+/* _ZN10daMcFlag_c6RenderEv is retired with Bird's, on the same measurement.
    include/Flag.h:17 puts its ModelAnim at +0xd4 too and
-   src/_ZN4Flag6RenderEv.cpp is byte-for-byte the same shape -- the same local
+   src/game/actors/d_a_mc_flag.cpp is byte-for-byte the same shape -- the same local
    six-virtual shadow, the same `b->m(0)` at index 5. Its face is in
    hal/except_faces.cpp with Bird's. */
 }
@@ -654,15 +674,15 @@ int _ZN4Flag8BehaviorEv(void *self)
    The Cool Cool Mountain slide manager (actor 356). Its InitResources and
    Behavior are real __thiscall methods in src (.cpp against the generated
    IceSlideManager.h), dispatched through vtable slots 0 and 6 by the
-   host-filled _ZTV15IceSlideManager (hal/actor_classes_ccm.cpp). Its D1/D0 are
+   host-filled _ZTV10daSldMng_c (hal/actor_classes_ccm.cpp). Its D1/D0 are
    not faced: slot 16 is the empty-~Actor form the vtable fill spells inline and
    slot 17 traps. */
-#include "IceSlideManager.h"
+#include "daSldMng_c.h"
 extern "C" {
-int _ZN15IceSlideManager13InitResourcesEv(void *self)
-{ return ((IceSlideManager *)self)->IceSlideManager::InitResources(); }
-int _ZN15IceSlideManager8BehaviorEv(void *self)
-{ return ((IceSlideManager *)self)->IceSlideManager::Behavior(); }
+int _ZN10daSldMng_c13InitResourcesEv(void *self)
+{ return ((daSldMng_c *)self)->daSldMng_c::InitResources(); }
+int _ZN10daSldMng_c8BehaviorEv(void *self)
+{ return ((daSldMng_c *)self)->daSldMng_c::Behavior(); }
 }
 
 /* TextureTransformer: two slots (the destructor pair) and nothing else, so
@@ -734,11 +754,11 @@ void _ZN5Model14LoadAndSetFileEtii(void *self, unsigned short id, int a, int b)
    ModelAnim through a local shadow class, which is ROM numbering where the
    host array is MSVC's -- gate 17's Bird/FLAG case with a body attached.
    port/unmatched/Ov085_Renders.cpp. */
-#include "Rabbit.h"
+#include "daMip_c.h"
 #include "LakituBro.h"
 extern "C" {
-int _ZN6Rabbit13InitResourcesEv(void *self)
-{ return ((Rabbit *)self)->Rabbit::InitResources(); }
+int _ZN7daMip_c13InitResourcesEv(void *self)
+{ return ((daMip_c *)self)->daMip_c::InitResources(); }
 int _ZN9LakituBro13InitResourcesEv(void *self)
 { return ((LakituBro *)self)->LakituBro::InitResources(); }
 }
@@ -767,12 +787,13 @@ int _ZN9RabbitKey8BehaviorEv(void *self)
    its Render, CleanupResources, OnPendingDestroy and D0 are already C-named in
    src, and slot 16 reuses ac_d1_door (the member is a CommonModel at 0xd4, the
    real door's layout), so only these two need a face. */
+#include "daStarGate_c.h"
 #include "Door.h"
 extern "C" {
-int _ZN4Door13InitResourcesEv(void *self)
-{ return ((Door *)self)->Door::InitResources(); }
-int _ZN4Door8BehaviorEv(void *self)
-{ return ((Door *)self)->Door::Behavior(); }
+int _ZN12daStarGate_c13InitResourcesEv(void *self)
+{ return ((daStarGate_c *)self)->daStarGate_c::InitResources(); }
+int _ZN12daStarGate_c8BehaviorEv(void *self)
+{ return ((daStarGate_c *)self)->daStarGate_c::Behavior(); }
 }
 
 /* ---- gate 41: ov010's TRAP (shared by LIGHT_BEAM) ------------------------
@@ -780,14 +801,14 @@ int _ZN4Door8BehaviorEv(void *self)
    InitResources, Behavior and Render are real C++ methods; its
    CleanupResources and D0 are already C-named in src, and slots 16/17 trap
    (nothing destroys one on the castle-interior boot -- the gate-17 reading). */
-#include "Trap.h"
+#include "LightBeam.h"
 extern "C" {
-int _ZN4Trap13InitResourcesEv(void *self)
-{ return ((Trap *)self)->Trap::InitResources(); }
-int _ZN4Trap8BehaviorEv(void *self)
-{ return ((Trap *)self)->Trap::Behavior(); }
-int _ZN4Trap6RenderEv(void *self)
-{ return ((Trap *)self)->Trap::Render(); }
+int _ZN9LightBeam13InitResourcesEv(void *self)
+{ return ((LightBeam *)self)->LightBeam::InitResources(); }
+int _ZN9LightBeam8BehaviorEv(void *self)
+{ return ((LightBeam *)self)->LightBeam::Behavior(); }
+int _ZN9LightBeam6RenderEv(void *self)
+{ return ((LightBeam *)self)->LightBeam::Render(); }
 }
 
 /* ---- gate 42: ov010's PEACH_PAINTING ------------------------------------
@@ -853,11 +874,30 @@ int _ZN6Cannon13InitResourcesEv(void *self)
    One more, the same shape as the cannon's. src's body is a real C++ method
    against include/PoppingLavaBubbles.h (the class the ROM's RTTI calls
    daObjWaterfall_c), so MSVC emits it under ?InitResources@... and the
-   vtable fill wants the Itanium name. */
-#include "PoppingLavaBubbles.h"
+   vtable fill wants the Itanium name.
+
+   THE CALL MUST BE QUALIFIED, run link100 lane CRASH6. InitResources is
+   VIRTUAL, so the unqualified `self->InitResources()` this line used to carry
+   was not a call to the body at all: MSVC compiled the whole face down to
+   `mov ecx,[ebp+8] / mov eax,[ecx] / jmp dword ptr [eax]`, a dispatch through
+   slot 0 of the object's own vtable. Slot 0 is hal/actor_classes.cpp's wm_init,
+   whose entire body is `push ecx / call _ZN16daObjWaterfall_c13InitResourcesEv`,
+   so the two called each other until the stack ran out. Measured: c00000fd with
+   32 identical return words at wm_init+6, eax and ebx both holding the table
+   base. It was unreachable until the vptr came back to the address point in the
+   commit before this one, which is why it is only being found now.
+
+   Every face in this tree is the qualified shape for exactly this reason
+   (1595 qualified against 108 unqualified when the sweep was run). Of the 24
+   unqualified ones that name their own class and method, this was the ONLY one
+   that compiled to an indirect dispatch: the other 23 call non-virtual members,
+   where an unqualified call is already direct. facecycle_guard cannot see this
+   shape, because the cycle closes through `jmp dword ptr [eax]` and the guard
+   follows direct calls. */
+#include "daObjWaterfall_c.h"
 extern "C" {
-int _ZN18PoppingLavaBubbles13InitResourcesEv(void *self)
-{ return ((PoppingLavaBubbles *)self)->InitResources(); }
+int _ZN16daObjWaterfall_c13InitResourcesEv(void *self)
+{ return ((daObjWaterfall_c *)self)->daObjWaterfall_c::InitResources(); }
 }
 
 /* ---- gate 21: ov100's BUTTERFLY and FISH ---------------------------------
@@ -899,7 +939,7 @@ int _ZN13QuestionBlock16CleanupResourcesEv(void *self)
 }
 
 /* ---- wave 4 lane d: the two FaderBrightness faces Scene::BeforeBehavior needs
-   src/_ZN5Scene14BeforeBehaviorEv.cpp declares both of these as C-linkage free
+   src/_ZN8dScene_c14BeforeBehaviorEv.cpp declares both of these as C-linkage free
    functions TAKING THE RECEIVER:
 
        extern void _ZN15FaderBrightness14SetForwardTimeEj(FaderBrightness*, u32);
@@ -1137,3 +1177,20 @@ void port_texseq_prepare_r1(void *self, void *bmd)
  * battery, its eight proofs and its level-1 capture all ran with the shrink
  * live. hostgen's own switch is untouched and is the A/B for the other half. */
 #pragma comment(linker, "/alternatename:?ReallocateModelFile@SharedFilePtr@@QAEXXZ=?ReallocateModelFile@SharedFilePtr@@QAEIXZ")
+
+/* ---- gate shadows3 -----------------------------------------------------
+   Run link100 wave 14, lane SHADOWS3 seated three rows whose recovered form
+   is a REAL C++ METHOD -- daTrs_c::Behavior, daTrsTrap_c::InitResources and
+   dEnemyBase_c::UpdateYoshiEat -- so the flat Itanium name their callers and
+   registry faces spell stopped being defined when the host copies went away.
+   THE FORWARDERS ARE NOT WRITTEN HERE. They were, for one build, and that
+   build named the reason not to: port/faces_sync.txt already carried all
+   three names as FORWARD rows -- the face DEFINING the member and calling the
+   host copy under its flat C name -- so a hand-written reverse face collided
+   with the generated one (LNK2005 on ?Behavior@daTrs_c@@UAEHXZ and its two
+   siblings, from faces_sync_gen.cpp.obj) and, worse, the pair would have
+   forwarded to each other. The ledger owns the direction, so the three rows
+   are flipped F -> R there instead: the generated face now defines the flat
+   name and makes the qualified call into the matched TU's member, which is
+   the same one-line body this file would have held, derived and re-checked
+   at every build by facegen.py --sync rather than typed once. */

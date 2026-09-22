@@ -23,9 +23,9 @@
 # reviewed set moved with it.
 #
 # RATCHET TURNED AGAIN, run link100 (Andrew's third review of PR #2474):
-# __ZN5EnemyC2Ev=_func_ov002_020aed98 is GONE. That pragma was not a fallback
+# __ZN12dEnemyBase_cC2Ev=_func_ov002_020aed98 is GONE. That pragma was not a fallback
 # with a live reader at all -- its RHS had no definition anywhere in the tree,
-# and its LHS is published by src/_ZN5EnemyC2Ev.cpp.obj, so the directive could
+# and its LHS is published by src/_ZN12dEnemyBase_cC2Ev.cpp.obj, so the directive could
 # never fire. The pragma was deleted in hal/cxx_aliases.cpp (the evidence is at
 # that line) and this row followed it BY HAND, one line, so the list stays
 # exactly the set of pairs that are still defeated. 23 pairs to 22.
@@ -79,6 +79,33 @@
 # without linking os_arena.cpp the stub fires and the dump prints no install
 # block, which is correct -- such a binary has no verdict to give.
 #
+# SCOPE HOLD, run link100 lane SMOKELINK6: __ZN4Heap21MaxAllocationUnitSizeEv=
+# ?MaxAllocationUnitSize@Heap@@QAEIXZ and __ZN13HeapAllocator6RemoveEv=
+# ?Remove@HeapAllocator@@QAEXXZ were ADDED, and they are NOT the weak-symbol
+# idiom the rest of this list documents. Both pragmas live in
+# hal/smoke_heap_seam_actor.cpp:111,:120 (SMOKELINK5's 59bced026), which
+# port/CMakeLists.txt's PORT_SMOKE_ACTOR_SRC puts on smoke_actor, smoke_savestate
+# and smoke_persist ONLY -- none of it is compiled into walk_window at all.
+# This guard's directive scan walks the whole port/ tree by text and then checks
+# every pair it finds against ONE map, walk_window.map by default, regardless of
+# which target the directive's file is actually compiled into (read in full:
+# out/SMOKELINK5B/bugs.md item 3). So the "defeated" reading here is the guard
+# comparing an actor-target-only directive against a map that was never asked to
+# resolve it -- not a newly sliced TU defeating a real walk_window alias, and not
+# the fallback-stub design this list otherwise records. None of the three actor
+# targets links yet (Sound::Play, out/SMOKELINK5/bugs.md), so there is no map of
+# their own to check this pair against instead. Held here, named and reasoned
+# rather than silently passed, until an actor target links and produces a map:
+# then re-derive against THAT map and either confirm the alias fires there (row
+# comes out) or it is truly defeated there too (row stays, reclassified). Not a
+# claim that these are correct; a documented hold on an inapplicable check.
+#
+# GROWTH, run link100 lane PROBEBASE: _data_0209ee74=_port_fault_no_particles
+# was ADDED. fault_probe.h:88, the crash probe's deliberate weak-link fallback
+# for harnesses without a particle tracker; inert in walk_window where
+# _data_0209ee74 is always defined; baselined by lane PROBEBASE 2026-09-17,
+# not a defect.
+#
 # THE THREE THAT ARE NOT HERE. The same lane needed port_romdata_sha,
 # port_romdata_bytes and port_asset_root_seen readable from hal/lk7_persist.cpp,
 # which is compiled into targets hal/romdata_loader.cpp is not. The weak-symbol
@@ -89,16 +116,19 @@
 #
 # One LHS=RHS pair per line, sorted.
 ?ChangeState@Player@@QAEHAAUState@1@@Z=?ChangeState@PlayerChangeStateFace@@QAEHAAUState@1@@Z
-?Enable@MeshColliderBase@@QAEXPAUActor@@@Z=?Enable@MeshColliderBase@@QAEHPAUActor@@@Z
-?FindWithID@Actor@@SAPAU1@I@Z=__ZN5Actor10FindWithIDEj
+?Enable@dBgW@@QAEXPAUActor@@@Z=?Enable@dBgW@@QAEHPAUActor@@@Z
+?FindWithID@dActor_c@@SAPAU1@I@Z=__ZN8dActor_c10FindWithIDEj
 ?InitCuboid@ShadowModel@@QAEXXZ=?InitCuboid@ShadowModelCuboidFallback@@QAEXXZ
-?LoadFile@MeshCollider@@SAPAUKCL_File@@AAUSharedFilePtr@@@Z=__ZN12MeshCollider8LoadFileER13SharedFilePtr
+?LoadFile@dBgW_Kc@@SAPAUKCL_File@@AAUSharedFilePtr@@@Z=__ZN7dBgW_Kc8LoadFileER13SharedFilePtr
 ?MemoryLeft@ExpandingHeapAllocator@@QAEIXZ=__ZN22ExpandingHeapAllocator10MemoryLeftEv
 ?SetFile@ModelBase@@QAEHPAUBMD_File@@HH@Z=?SetFile@ModelBaseFace@@QAEHPAUBMD_File@@HH@Z
 __ZN11ShadowModelD1Ev=_hal_shadow_d1_fallback
+__ZN13HeapAllocator6RemoveEv=?Remove@HeapAllocator@@QAEXXZ
+__ZN4Heap21MaxAllocationUnitSizeEv=?MaxAllocationUnitSize@Heap@@QAEIXZ
 __ZN4Heap8AllocateEj=_hal_heap_allocate_align4
-__ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j=_hal_dropshadow_scalexyz_fallback
+__ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j=_hal_dropshadow_scalexyz_fallback
 __ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_=_port_l7_particle_newsimple_stub
+_data_0209ee74=_port_fault_no_particles
 _data_0209f250=_port_fault_no_pidx
 _data_0209f2f8=_port_fault_no_level
 _data_0209f394=_port_fault_no_players

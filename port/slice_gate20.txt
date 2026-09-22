@@ -10,10 +10,10 @@
 # factory's own literal pool names the vtable it installs, and the ROM's RTTI
 # names that vtable from the other side:
 #
-#   Exit_Spawn          0x020b0f24 -> _ZTV11VirtualDoor        = 0x021086b4,
+#   daChScene_c_classInit          0x020b0f24 -> _ZTV11daChScene_c        = 0x021086b4,
 #                                     RTTI 11daChScene_c -- "change scene",
 #                                     which is what an exit is
-#   WaterfallMist_Spawn 0x020b6ee8 -> _ZTV18PoppingLavaBubbles = 0x021094a0,
+#   daObjWaterfall_c_classInit 0x020b6ee8 -> _ZTV16daObjWaterfall_c = 0x021094a0,
 #                                     RTTI 16daObjWaterfall_c
 #
 # So the bodies these two classes are built from are spelled with the
@@ -35,12 +35,7 @@
 # exits sit in the lists and measure distances. That is the ROM's own gate,
 # not a port guard, and it is why the walk does not fall through the castle
 # door into a level the port cannot load.
-src/Exit_Spawn.c
-src/_ZN11VirtualDoor13InitResourcesEv.cpp
-src/_ZN11VirtualDoor8BehaviorEv.cpp
-src/_ZN11VirtualDoor6RenderEv.c
-src/_ZN11VirtualDoor16CleanupResourcesEv.c
-src/_ZN11VirtualDoor16OnPendingDestroyEv.c
+src/game/actors/d_a_ch_scene.cpp
 
 # ---- WATERFALL_MIST (actor 197, ov002) x7 ---------------------------------
 # The moat's waterfall spray. These are NOT in the level's object tables:
@@ -60,17 +55,14 @@ src/_ZN11VirtualDoor16OnPendingDestroyEv.c
 # actors spawn, sit at the ROM's own positions and tick their Behavior into a
 # stub. Every one of their eighteen vtable slots is matched src; the day the
 # particle subsystem is hosted they start spraying with no change here.
-src/WaterfallMist_Spawn.c
-src/_ZN18PoppingLavaBubbles13InitResourcesEv.cpp
-src/_ZN18PoppingLavaBubbles8BehaviorEv.cpp
+src/game/actors/d_a_obj_waterfall.cpp
 
 # --- linkloop round 0 ---
 # ActorBase's own slot 3 and slot 9 -- the do-nothing bases the mist inherits.
 # No class the port carried before gate 20 left either slot unoverridden, so
 # this is the first time either body is compiled.
-src/_ZN9ActorBase16CleanupResourcesEv.cpp
-src/_ZN9ActorBase6RenderEv.cpp
+src/_ZN7fBase_c16CleanupResourcesEv.cpp
+src/_ZN7fBase_c6RenderEv.cpp
 # The exit's hand-off: 020b0a0c is the LoadLevel call its Behavior makes once
 # the Player has crossed, and LookAtExit is the camera move that precedes it.
-src/func_ov002_020b0a0c.c
-src/_ZN6Camera10LookAtExitER5Actor.cpp
+src/_ZN6Camera10LookAtExitER8dActor_c.cpp

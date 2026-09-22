@@ -13,7 +13,7 @@
 // D1/D0: Spindrift and MrBlizzard's own D1/D0 store their own table
 // directly (no shared-placeholder overwrite) and STAY IN THE SLICE, faced
 // below. IceBlock's D1/D0 store their own table then overwrite with the
-// shared _ZTV8Platform placeholder (the ShipUp/RockPillar/SkiLift shape)
+// shared _ZTV10dBgActor_c placeholder (the ShipUp/RockPillar/SkiLift shape)
 // -- HOST THUNKS, out of the slice.
 //
 // MR_BLIZZARD'S PMF SEAT: a real ten-cell (5 states x enter/tick) function-
@@ -66,54 +66,56 @@
 // table that seeds it, in hal/scene_mg_sound.cpp. Nothing here defines it now,
 // so this file no longer needs the dsstate_seg bracket.
 
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
 extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include <cstdlib>
 
-#include "Actor.h"
+#include "dActor_c.h"
 #include "dtor_faces_cpp.h"
-#include "ActorBase.h"
+#include "fBase_c.h"
 
 extern "C" {
-int _ZN5Actor19BeforeInitResourcesEv(void *self);             /* slot 1  */
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
-int _ZN5Actor14BeforeBehaviorEv(void *self);                  /* slot 7  */
-int _ZN5Actor12BeforeRenderEv(void *self);                    /* slot 10 */
-int _ZN5Actor13OnYoshiTryEatEv(void *self);                   /* slot 18 */
-void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p);  /* slot 19 */
-int _ZN5Actor9Virtual50Ev(void *self);                        /* slot 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);     /* slot 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);         /* slot 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);         /* slot 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);             /* slot 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);             /* slot 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o); /* slot 28 */
-int _ZN5Actor16OnAimedAtWithEggEv(void *self);                /* slot 29 */
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);             /* slot 1  */
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);                  /* slot 7  */
+int _ZN8dActor_c12BeforeRenderEv(void *self);                    /* slot 10 */
+int _ZN8dActor_c13OnYoshiTryEatEv(void *self);                   /* slot 18 */
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void *self, void *p);  /* slot 19 */
+int _ZN8dActor_c9Virtual50Ev(void *self);                        /* slot 20 */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);     /* slot 21 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);         /* slot 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);         /* slot 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);             /* slot 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);             /* slot 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o); /* slot 28 */
+int _ZN8dActor_c16OnAimedAtWithEggEv(void *self);                /* slot 29 */
 
 const char *port_actor_class_name(unsigned id);   /* hal/actor_registry */
 void port_actor_slot_decline(const char *what);   /* func_02043fdc_hostcopy.cpp */
 void port_actor_render_probe(const char *cls, void *model); /* hal/actor_classes */
 void hal_fill_platform_vtable(void);              /* hal/actor_classes.cpp, Platform's
                                                        own base table */
-extern int _ZTV8Platform[];
-void _ZN18MovingMeshColliderD1Ev(void *);         /* MovingMeshCollider at +0x124 */
-void _ZN18MovingCylinderClsnD1Ev(void *);        /* MovingCylinderClsn (Moneybag +0x1b0) */
+extern int _ZTV10dBgActor_c[];
+void _ZN10dBgW_KcMbgD1Ev(void *);         /* MovingMeshCollider at +0x124 */
+void _ZN7dCcAc_cD1Ev(void *);        /* MovingCylinderClsn (Moneybag +0x1b0) */
 void _ZN5ModelD1Ev(void *);                       /* Model at +0xd4 */
-void *_ZN5ActorD2Ev(void *);                      /* the Actor base D2 (returns void*) */
+void *_ZN8dActor_cD2Ev(void *);                      /* the Actor base D2 (returns void*) */
 void _ZN6Memory10DeallocateEPvP4Heap(void *, void *);
 extern void *data_020a0eac;                       /* the game heap, already hosted */
-void *_ZN5EnemyD2Ev(void *);                      /* the Enemy base D2 (returns void*) */
+void *_ZN12dEnemyBase_cD1Ev(void *);                      /* the Enemy base D2 (returns void*) */
 }
 
 // ---- the trap ----------------------------------------------------------
@@ -133,49 +135,49 @@ static int __fastcall ov81_trap14(void *s, void *) { ov81_trap_report(s, 14); re
 
 // ---- the shared 1..30 half, both Enemy tables share it -------------------
 static int __fastcall ov81_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall ov81_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall ov81_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 static void __fastcall ov81_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall ov81_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall ov81_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall ov81_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall ov81_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall ov81_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int __fastcall ov81_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 static int __fastcall ov81_egg(void *s, void *, void *p)
-{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+{ _ZN8dActor_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall ov81_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall ov81_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall ov81_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall ov81_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall ov81_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall ov81_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall ov81_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall ov81_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall ov81_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 static int __fastcall ov81_aimed(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 static int __fastcall ov81_pdes(void *s, void *)
-{ ((ActorBase *)s)->ActorBase::OnPendingDestroy(); return 0; }
+{ ((fBase_c *)s)->fBase_c::OnPendingDestroy(); return 0; }
 
 /* Fills slots 1,2,4,5,7,8,10,11,13,14,15,18..30 -- every shared slot the
    standard 32-slot Enemy/Platform tables share. The caller writes its own
@@ -221,17 +223,17 @@ int _ZN9Spindrift8BehaviorEv(void *self);             /* slot 6, faced */
 int _ZN9Spindrift6RenderEv(void *self);               /* slot 9, faced */
 int _ZN9SpindriftD1Ev(void *self);                    /* slot 16, .c, spells own table */
 int _ZN9SpindriftD0Ev(void *self);                    /* slot 17, .c, spells own table */
-int func_ov081_02124038(void);                        /* slot 18, OnYoshiTryEat -- no
+int _ZN9Spindrift13OnYoshiTryEatEv(void);                        /* slot 18, OnYoshiTryEat -- no
                                                            args at all, returns int */
-void func_ov081_02123fd8(void *self, void *p);        /* slot 19, OnTurnIntoEgg */
-int func_ov081_021237e4(void);                        /* slot 29, OnAimedAtWithEgg --
+void _ZN9Spindrift13OnTurnIntoEggER6Player(void *self, void *p);        /* slot 19, OnTurnIntoEgg */
+int _ZN9Spindrift16OnAimedAtWithEggEv(void);                        /* slot 29, OnAimedAtWithEgg --
                                                            no args, returns int */
 int func_ov081_02124e64(void *self);                  /* slot 31, Kill -- returns int;
                                                            ALSO MrBlizzard's own PMF
                                                            cell-0 tick target, one real
                                                            ROM address serving both
                                                            roles, see the note below */
-void *Spindrift_Spawn(void);                          /* installs _ZTV9Spindrift */
+void *daHuwa_c_classInit(void);                          /* installs _ZTV9Spindrift */
 int _ZTV9Spindrift[32];
 }
 
@@ -249,11 +251,11 @@ static int __fastcall spd_d1(void *s, void *)
 static int __fastcall spd_d0(void *s, void *)
 { return _ZN9SpindriftD0Ev(s); }
 static int __fastcall spd_yoshi(void *s, void *)
-{ (void)s; return func_ov081_02124038(); }
+{ (void)s; return _ZN9Spindrift13OnYoshiTryEatEv(); }
 static int __fastcall spd_egg(void *s, void *, void *p)
-{ func_ov081_02123fd8(s, p); return 0; }
+{ _ZN9Spindrift13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall spd_aimed(void *s, void *)
-{ (void)s; return func_ov081_021237e4(); }
+{ (void)s; return _ZN9Spindrift16OnAimedAtWithEggEv(); }
 static int __fastcall spd_kill(void *s, void *)
 { return func_ov081_02124e64(s); }
 
@@ -265,7 +267,7 @@ extern "C" void hal_fill_spindrift_vtable(void)
     vt[3]  = (void *)spd_clean;
     vt[6]  = (void *)spd_behavior;
     vt[9]  = (void *)spd_render;
-    vt[16] = (void *)spd_d1;
+    vt[16] = (void *)PORT_D16(spd_d1);
     vt[17] = (void *)spd_d0;
     vt[18] = (void *)spd_yoshi;      /* own OnYoshiTryEat, overrides the shared default */
     vt[19] = (void *)spd_egg;        /* own OnTurnIntoEgg */
@@ -286,13 +288,13 @@ void _ZN10MrBlizzard16OnPendingDestroyEv(void);       /* slot 12, own -- NOT sha
 int _ZN10MrBlizzardD1Ev(void *self);                  /* slot 16, .c, spells own table */
 int _ZN10MrBlizzardD0Ev(void *self);                  /* slot 17, .c, spells own table
                                                            under RTTI alias daSnowman_c */
-int func_ov081_02125eb8(void);                        /* slot 29, OnAimedAtWithEgg --
+int _ZN10MrBlizzard16OnAimedAtWithEggEv(void);                        /* slot 29, OnAimedAtWithEgg --
                                                            no args, returns int */
 /* func_ov081_021261b8 is NOT a virtual -- see the [31] note below. It is the
    ENTER half of the Snowball state cell at 0x02128eb4 and is reached through
    port_snowball_states_seat further down this file. */
 int func_ov081_021261b8(void *self);
-void *MrBlizzard_Spawn(void);                         /* installs _ZTV10MrBlizzard */
+void *daSnowman_c_classInit(void);                         /* installs _ZTV10MrBlizzard */
 /* THIRTY-ONE SLOTS, NOT THIRTY-TWO, and the four sibling Enemy classes in this
    tree were right where this one was wrong. Settled from the ROM three ways,
    re-read for this gate rather than taken on trust:
@@ -412,19 +414,51 @@ static int __fastcall mb_init(void *s, void *)
 { return _ZN10MrBlizzard13InitResourcesEv(s); }
 static int __fastcall mb_clean(void *s, void *)
 { (void)s; return _ZN10MrBlizzard16CleanupResourcesEv(); }
+/* SM64DS_ACTOR_PROBE=3: is MrBlizzard's own Behavior really being dispatched,
+   and is its state machine moving? The class was parked unregistered for six
+   weeks on a "frame-0 fault in Behavior's callee chain" that the PMF host
+   copies later cured, so the claim that the tick runs is worth an instrument
+   rather than an inference from "nothing crashed". Prints the first tick and
+   every 300th, per call: the instance, the live position at +0x5c and the
+   state-record pointer at +0x3f8, which func_ov081_02125488 rewrites on every
+   state change. A pointer that never moves is a state machine that is not
+   running. Costs one getenv and one counter when the knob is off. */
 static int __fastcall mb_behavior(void *s, void *)
-{ return _ZN10MrBlizzard8BehaviorEv(s); }
-/* HISTORY: the func_0204488c raw-DMA fear that first excluded MR_BLIZZARD
-   is RESOLVED (the dma verdict -- Part.fc/f8 are rebased at load; the
-   garbage fc the original probe read was pre-rebase, not a bad forward).
-   Registration was then attempted and found a DIFFERENT real blocker: a
-   deterministic frame-0 register-state corruption in Behavior's callee
-   chain (the `this` register comes back from a callee skewed to
-   this+0x150, the mWithMeshClsn; the tail's +0x368 store then stomps the
-   NEXT instance's render node). Full evidence chain + candidate list in
-   the gate-192 registry comment (port/hal/actor_classes.inc). 223 stays
-   unregistered until that seam is pinned; MrBlizzard::Render itself is
-   clean (calls Model::Render BY NAME -- no ModelAnim slot-5 exposure). */
+{
+    static int on = -1;
+    if (on < 0) {
+        const char *e = std::getenv("SM64DS_ACTOR_PROBE");
+        on = e && e[0] == '3';
+    }
+    if (on) {
+        static unsigned long n;
+        if (++n == 1 || n % 300 == 0) {
+            const char *c = (const char *)s;
+            const int *p = (const int *)(c + 0x5c);
+            std::printf("[mb-beh] tick %lu  actor %p  pos (%d,%d,%d)  "
+                        "state %p\n", n, s, p[0] >> 12, p[1] >> 12, p[2] >> 12,
+                        *(void *const *)(c + 0x3f8));
+        }
+    }
+    return _ZN10MrBlizzard8BehaviorEv(s);
+}
+/* HISTORY, CLOSED: both reasons MR_BLIZZARD was kept out of the registry are
+   spent. The func_0204488c raw-DMA fear is RESOLVED (the dma verdict --
+   Part.fc/f8 are rebased at load; the garbage fc the original probe read was
+   pre-rebase, not a bad forward). The second one, "a frame-0 register-state
+   corruption in Behavior's callee chain", was the POINTER-TO-MEMBER RECEIVER
+   seam, not a callee-saved violation: the ROM dispatches the tick half with
+   the receiver in r0 and nothing on the stack (0x02125a98), MSVC spells that
+   as ecx with an empty stack, and the ten seated cells are flat f(self)
+   bodies reading [esp+4]. The stale word one of them read was a spilled
+   &this->mWithMeshClsn = this+0x150, and 0x150 + 0x368 = 0x4b8 is the stomp
+   that was measured. Cured before this registration by the host copies
+   port/unmatched/MrBlizzard_StateDispatch.cpp (the installer 0x02125488) and
+   port/unmatched/MrBlizzard_Behavior.cpp (the tick dispatch), which call the
+   cell as a plain function pointer through PortMrBlizzardPair. Full
+   derivation in the gate-192 registry comment (port/hal/actor_classes.inc).
+   MrBlizzard::Render itself was always clean (calls Model::Render BY NAME --
+   no ModelAnim slot-5 exposure). */
 static int __fastcall mb_render(void *s, void *)
 { port_actor_render_probe("MR_BLIZZARD", (char *)s + 0x30c);
   return _ZN10MrBlizzard6RenderEv(s); }
@@ -435,7 +469,7 @@ static int __fastcall mb_d1(void *s, void *)
 static int __fastcall mb_d0(void *s, void *)
 { return _ZN10MrBlizzardD0Ev(s); }
 static int __fastcall mb_aimed(void *s, void *)
-{ (void)s; return func_ov081_02125eb8(); }
+{ (void)s; return _ZN10MrBlizzard16OnAimedAtWithEggEv(); }
 /* No mb_kill: there is no slot 31 on a 31-slot table. See the [31] note. */
 
 extern "C" void hal_fill_mr_blizzard_vtable(void)
@@ -450,7 +484,7 @@ extern "C" void hal_fill_mr_blizzard_vtable(void)
     vt[6]  = (void *)mb_behavior;
     vt[9]  = (void *)mb_render;
     vt[12] = (void *)mb_pdes;        /* own OnPendingDestroy, NOT the shared default */
-    vt[16] = (void *)mb_d1;
+    vt[16] = (void *)PORT_D16(mb_d1);
     vt[17] = (void *)mb_d0;
     vt[29] = (void *)mb_aimed;       /* own OnAimedAtWithEgg */
     /* no vt[31]: 31 slots, ends at 30 */
@@ -459,7 +493,7 @@ extern "C" void hal_fill_mr_blizzard_vtable(void)
 // ============================================================================
 // ICE_BLOCK (18), a Platform, 32 slots (own Kill). D1/D0 host thunks: the
 // matched src stores its own table then OVERWRITES with the shared
-// _ZTV8Platform placeholder (the ShipUp/RockPillar/SkiLift shape).
+// _ZTV10dBgActor_c placeholder (the ShipUp/RockPillar/SkiLift shape).
 // ============================================================================
 extern "C" {
 int _ZN8IceBlock13InitResourcesEv(void *self);        /* slot 0, faced */
@@ -468,15 +502,15 @@ int _ZN8IceBlock8BehaviorEv(void *self);              /* slot 6, faced */
 int _ZN8IceBlock6RenderEv(void *self);                /* slot 9, faced */
 int *_ZN8IceBlockD1Ev(int *self);                     /* slot 16, .c, DTOR-PAIRS seat (0x02127b34) */
 int *_ZN8IceBlockD0Ev(int *self);                     /* slot 17, .c, DTOR-PAIRS seat (0x02127b80) */
-void func_ov081_02127ccc(void *self, void *p);        /* slot 27, OnHitByMegaChar */
-void func_ov081_02127cf4(void *self);                 /* slot 31, Kill */
-void *IceBlock_Spawn(void);                           /* installs _ZTV15daObjIceBlock_c */
+void _ZN8IceBlock15OnHitByMegaCharER6Player(void *self, void *p);        /* slot 27, OnHitByMegaChar */
+void _ZN8IceBlock4KillEv(void *self);                 /* slot 31, Kill */
+void *daObjIceBlock_c_classInit(void);                           /* installs _ZTV15daObjIceBlock_c */
 int _ZTV8IceBlock[32];
 extern int _ZTV15daObjIceBlock_c[];
 }
 /* IceBlock's own D0/D1 spell the RTTI name _ZTV15daObjIceBlock_c for their
    FIRST (later overwritten) store, but the factory installs it too --
-   confirmed against IceBlock_Spawn.c. Alias the RTTI name onto this fill's
+   confirmed against daObjIceBlock_c_classInit.c. Alias the RTTI name onto this fill's
    host array (the OneUpLogo/daObj1UpLogo_c treatment). */
 #pragma comment(linker, "/alternatename:__ZTV15daObjIceBlock_c=__ZTV8IceBlock")
 
@@ -490,13 +524,13 @@ static int __fastcall icb_render(void *s, void *)
 { port_actor_render_probe("ICE_BLOCK", (char *)s + 0xd4);
   return _ZN8IceBlock6RenderEv(s); }
 static int __fastcall icb_mega(void *s, void *, void *p)
-{ func_ov081_02127ccc(s, p); return 0; }
+{ _ZN8IceBlock15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall icb_kill(void *s, void *)
-{ func_ov081_02127cf4(s); return 0; }
+{ _ZN8IceBlock4KillEv(s); return 0; }
 /* D1/D0 (DTOR-PAIRS seat): the matched flat-C pair behind ecx->arg adapters,
-   replacing the host copies of the chain that stood here. The "_ZTV8Platform
+   replacing the host copies of the chain that stood here. The "_ZTV10dBgActor_c
    placeholder" the copies were written to avoid is the ONE Platform base table
-   by relocation (ov002 0x0210ae38, hosted as _ZTV8Platform / _ZTV10dBgActor_c,
+   by relocation (ov002 0x0210ae38, hosted as _ZTV10dBgActor_c / _ZTV10dBgActor_c,
    hal/lk2_platform_dtor_seat.cpp), and the first store is this table by its
    RTTI name, aliased above. */
 static int __fastcall icb_d1(void *s, void *)
@@ -513,7 +547,7 @@ extern "C" void hal_fill_ice_block_vtable(void)
     vt[3]  = (void *)icb_clean;
     vt[6]  = (void *)icb_behavior;
     vt[9]  = (void *)icb_render;
-    vt[16] = (void *)icb_d1;
+    vt[16] = (void *)PORT_D16(icb_d1);
     vt[17] = (void *)icb_d0;
     vt[27] = (void *)icb_mega;       /* own OnHitByMegaChar, overrides the shared default */
     vt[31] = (void *)icb_kill;       /* own Kill */
@@ -552,7 +586,7 @@ int _ZN8Snowball6RenderEv(void *self);                /* slot 9,  faced below */
 void _ZN8Snowball16OnPendingDestroyEv(void);          /* slot 12, OWN, .c, empty */
 int _ZN8SnowballD1Ev(void *self);                     /* slot 16, .c, own table */
 int _ZN8SnowballD0Ev(void *self);                     /* slot 17, .c, RTTI spelling */
-void *Snowball_Spawn(void);                           /* installs _ZTV8Snowball */
+void *daSnowball_c_classInit(void);                           /* installs _ZTV8Snowball */
 int _ZTV8Snowball[31];
 
 /* The class's TWO PMF halves. func_ov081_021261d4 (InitResources' last call)
@@ -652,7 +686,7 @@ static int __fastcall sb_behavior(void *s, void *)
 { return _ZN8Snowball8BehaviorEv(s); }
 /* Render is the MATCHED TU, not a host copy: its six-virtual ROM-order shadow
    sits over a plain Model at +0x300 (constructed by _ZN5ModelC1Ev in
-   Snowball_Spawn, filled through ModelBase::SetFile in InitResources,
+   daSnowball_c_classInit, filled through ModelBase::SetFile in InitResources,
    destroyed by _ZN5ModelD1Ev in both destructors -- three witnesses, all
    matched src, the MontyMoleRock adjudication-from-construction), and
    _ZTV5Model is DUAL-FILLED at [4] and [5] by hal/cxxname_bridge.cpp so its
@@ -681,7 +715,7 @@ extern "C" void hal_fill_snowball_vtable(void)
     vt[6]  = (void *)sb_behavior;
     vt[9]  = (void *)sb_render;
     vt[12] = (void *)sb_pdes;        /* own OnPendingDestroy, NOT the shared default */
-    vt[16] = (void *)sb_d1;
+    vt[16] = (void *)PORT_D16(sb_d1);
     vt[17] = (void *)sb_d0;
 }
 
@@ -689,59 +723,59 @@ extern "C" void hal_fill_snowball_vtable(void)
 // MONEYBAG (261), an Actor, 31 slots
 // ============================================================================
 extern "C" {
-int _ZN8Moneybag13InitResourcesEv(void *self);        /* slot 0,  faced below */
-int _ZN8Moneybag16CleanupResourcesEv(void);           /* slot 3,  .c, takes void */
-int _ZN8Moneybag8BehaviorEv(void *self);              /* slot 6,  faced below */
-int _ZN8Moneybag6RenderEv(void *self);                /* slot 9,  HOST COPY in
+int _ZN8daGmch_c13InitResourcesEv(void *self);        /* slot 0,  faced below */
+int _ZN8daGmch_c16CleanupResourcesEv(void);           /* slot 3,  .c, takes void */
+int _ZN8daGmch_c8BehaviorEv(void *self);              /* slot 6,  faced below */
+int _ZN8daGmch_c6RenderEv(void *self);                /* slot 9,  HOST COPY in
                                                            port/unmatched/
                                                            ModelAnim_Renders.cpp */
-void _ZN8Moneybag16OnPendingDestroyEv(void);          /* slot 12, OWN, .c, empty */
-/* slot 16 is a HOST THUNK below -- the matched _ZN8MoneybagD1Ev.cpp is the
+void _ZN8daGmch_c16OnPendingDestroyEv(void);          /* slot 12, OWN, .c, empty */
+/* slot 16 is a HOST THUNK below -- the matched _ZN8daGmch_cD1Ev.cpp is the
    auto-emitted-member-dtor .cpp form (the MontyMole gate-174 case). */
-int _ZN8MoneybagD0Ev(void *self);                     /* slot 17, .c, RTTI spelling */
-int func_ov081_021265b8(void);                        /* slot 18, OnYoshiTryEat --
+int _ZN8daGmch_cD0Ev(void *self);                     /* slot 17, .c, RTTI spelling */
+int _ZN8daGmch_c13OnYoshiTryEatEv(void);                        /* slot 18, OnYoshiTryEat --
                                                            no args, returns 6 */
-void func_ov081_02127a7c(void *self, void *p);        /* slot 19, OnTurnIntoEgg */
-int func_ov081_021265c0(void);                        /* slot 29, OnAimedAtWithEgg --
+void _ZN8daGmch_c13OnTurnIntoEggER6Player(void *self, void *p);        /* slot 19, OnTurnIntoEgg */
+int _ZN8daGmch_c16OnAimedAtWithEggEv(void);                        /* slot 29, OnAimedAtWithEgg --
                                                            no args, returns a radius */
-void *Moneybag_Spawn(void);                           /* installs _ZTV8Moneybag */
+void *daGmch_c_classInit(void);                           /* installs _ZTV8Moneybag */
 int _ZTV8Moneybag[31];
 
 void _ZN9ModelAnimD1Ev(void *);                       /* ModelAnim at +0xd4 */
 void _ZN11ShadowModelD1Ev(void *);                    /* ShadowModel at +0x188 */
-void _ZN12WithMeshClsnD1Ev(void *);                   /* WithMeshClsn at +0x1e4 */
+void _ZN10dBgCh_ActrD1Ev(void *);                   /* WithMeshClsn at +0x1e4 */
 
 /* NINE STATES x {enter, tick}: the eighteen records __sinit_ov081_021284f0
    copies out of the mounted source records at 0x02128b38..0x02128bc0 into the
-   mutable table at 0x02128f40. func_ov081_0212777c sets
-   `pp = &table + (state << 4)`; func_ov081_02127744 dispatches index 0
-   (enter) and func_ov081_02127708 index 1 (tick -- the /vmg /vmm row run
+   mutable table at 0x02128f40. _ZN8daGmch_c8SetStateEi sets
+   `pp = &table + (state << 4)`; _ZN8daGmch_c14CallStateEnterEv dispatches index 0
+   (enter) and _ZN8daGmch_c15CallStateUpdateEv index 1 (tick -- the /vmg /vmm row run
    linkw wave 18 put in port/CMakeLists.txt ahead of this lane). */
 struct PortMoneybagRec { unsigned fn, delta; };
 extern PortMoneybagRec data_ov081_02128f40[18];
-int func_ov081_021276b0(void *self);   /* state 0 enter */
-int func_ov081_02127558(void *self);   /* state 0 tick  */
-int func_ov081_021274c8(void *self);   /* state 1 enter */
-int func_ov081_02127440(void *self);   /* state 1 tick  */
-int func_ov081_021273e8(void *self);   /* state 2 enter */
-int func_ov081_02127398(void *self);   /* state 2 tick  */
-int func_ov081_02127314(void *self);   /* state 3 enter */
-int func_ov081_02127240(void *self);   /* state 3 tick  */
-int func_ov081_021271e8(void *self);   /* state 4 enter */
-int func_ov081_02127188(void *self);   /* state 4 tick  */
-int func_ov081_02127134(void *self);   /* state 5 enter */
-int func_ov081_02127070(void *self);   /* state 5 tick  */
-int func_ov081_02127044(void *self);   /* state 6 enter */
-int func_ov081_02126fa4(void *self);   /* state 6 tick  */
-int func_ov081_02126e28(void *self);   /* state 7 enter */
-int func_ov081_02126d64(void *self);   /* state 7 tick  */
-int func_ov081_02126c8c(void *self);   /* state 8 enter */
-int func_ov081_02126c20(void *self);   /* state 8 tick  */
+int _ZN8daGmch_c11EnterState0Ev(void *self);   /* state 0 enter */
+int _ZN8daGmch_c12UpdateState0Ev(void *self);   /* state 0 tick  */
+int _ZN8daGmch_c11EnterState1Ev(void *self);   /* state 1 enter */
+int _ZN8daGmch_c12UpdateState1Ev(void *self);   /* state 1 tick  */
+int _ZN8daGmch_c11EnterState2Ev(void *self);   /* state 2 enter */
+int _ZN8daGmch_c12UpdateState2Ev(void *self);   /* state 2 tick  */
+int _ZN8daGmch_c11EnterState3Ev(void *self);   /* state 3 enter */
+int _ZN8daGmch_c12UpdateState3Ev(void *self);   /* state 3 tick  */
+int _ZN8daGmch_c11EnterState4Ev(void *self);   /* state 4 enter */
+int _ZN8daGmch_c12UpdateState4Ev(void *self);   /* state 4 tick  */
+int _ZN8daGmch_c11EnterState5Ev(void *self);   /* state 5 enter */
+int _ZN8daGmch_c12UpdateState5Ev(void *self);   /* state 5 tick  */
+int _ZN8daGmch_c11EnterState6Ev(void *self);   /* state 6 enter */
+int _ZN8daGmch_c12UpdateState6Ev(void *self);   /* state 6 tick  */
+int _ZN8daGmch_c11EnterState7Ev(void *self);   /* state 7 enter */
+int _ZN8daGmch_c12UpdateState7Ev(void *self);   /* state 7 tick  */
+int _ZN8daGmch_c11EnterState8Ev(void *self);   /* state 8 enter */
+int _ZN8daGmch_c12UpdateState8Ev(void *self);   /* state 8 tick  */
 }
 
 /* D0 stores the RTTI spelling _ZTV8daGmch_c; D1's ROM body and the factory
    both store _ZTV8Moneybag (0x02128c04, read off ov081's relocs at 0x02126550,
-   0x021265b0 and Moneybag_Spawn's own store). Same alias argument as
+   0x021265b0 and daGmch_c_classInit's own store). Same alias argument as
    Snowball's above -- the LHS is undefined everywhere once the vtable leaves
    the mount, so the alias cannot be defeated. */
 #pragma comment(linker, "/alternatename:__ZTV8daGmch_c=__ZTV8Moneybag")
@@ -752,11 +786,11 @@ int func_ov081_02126c20(void *self);   /* state 8 tick  */
    (the measured-gap rule), and both are the montymolerock
    `?data_ov080_021283c8@@3USharedFilePtr@@A` shape:
 
-     src/func_ov081_02126a20.cpp declares `extern Vector3
+     src/actors/daGmch_c.cpp declares `extern Vector3
        data_ov081_02128ef8;` OUTSIDE its own extern "C" block -- the +0x2000
        Y-offset record __sinit_ov081_021284f0 initialises. Mounted by
        port/ov081_syms.txt.
-     src/_ZN8Moneybag13InitResourcesEv.cpp declares `extern int
+     src/actors/daGmch_c.cpp declares `extern int
        data_ov002_0210d9b8[];` outside extern "C" -- the ov002 bss pair whose
        word 1 is the shared BMD file the plain Model at +0x138 is given.
        Mounted by port/ov002_syms.txt, and 8 bytes to its next config symbol
@@ -773,26 +807,81 @@ int func_ov081_02126c20(void *self);   /* state 8 tick  */
    sinit's OWN copy order (data_ov081_02128f40[i] <- the source record
    src/__sinit_ov081_021284f0.c names on line i), each fn resolved out of
    ov081's relocs.txt rather than inferred from the copy order. */
-typedef int (*PortMnFn)(void *);
+/* ---- THE EIGHTEEN WORDS CARRY A __fastcall THUNK, NOT THE FLAT C FACE.
+   The names above are the flat C ones, and every one of them resolves to a
+   face in hal/faces_sync_gen.cpp of the shape
+
+     __ZN8daGmch_c11EnterState0Ev:
+       push ebp / mov ebp,esp / mov ecx,[ebp+8] / pop ebp / jmp EnterState0
+
+   i.e. it takes the receiver as a STACK argument and moves it into ECX for the
+   MSVC method. That is right for the flat C callers src makes, and it is wrong
+   for a pointer-to-member call, which pushes nothing. daGmch_c::InitResources
+   carries its dispatcher inlined, so the call comes out in its own frame:
+
+     ?InitResources@daGmch_c@@UAEHXZ +0xf3
+       mov  dword ptr [edi+0x3dc], offset _data_ov081_02128f40   ; c->pp
+       mov  ecx, dword ptr [_data_ov081_02128f40+4]              ; the delta, 0
+       add  ecx, edi                                             ; this + delta
+       call dword ptr [_data_ov081_02128f40]                     ; a REAL CALL
+
+   Nothing is pushed, so the face read an uninitialised stack word as the
+   receiver and passed it on. Measured on levels 19 (Snowman's Land) and 20 (SL
+   igloo) after 651b5e853 moved them past the ov027 row:
+
+     FAULT c0000005 at ?SetAnim@ModelAnim@@... +0xd, esi from [ebp+8]
+     level 19  accessing 0948e5fb    level 20  accessing 4097023f
+     and under cdb a third run gave 11efe53f -- three different junk words
+
+   with the record itself clean (dds of data_ov081_02128f40 shows fn 005c9e30,
+   delta 0) and the actor at 30038f10, so it is the SHAPE and not the seat.
+
+   Same family and same fix as 5ae983797, 27a24ff5a and 651b5e853: one register
+   argument, bare `ret`, correct on the tail-jump path too, all eighteen rows
+   and not only the one that was caught. The thunks name the eighteen flat
+   faces, so the seat's references are still load-bearing. */
+typedef int (__fastcall *PortMnFn)(void *);
+#define MN_ST(tag, fn) \
+    static int __fastcall tag(void *s) { return fn(s); }
+MN_ST(mn_st_e0, _ZN8daGmch_c11EnterState0Ev)
+MN_ST(mn_st_u0, _ZN8daGmch_c12UpdateState0Ev)
+MN_ST(mn_st_e1, _ZN8daGmch_c11EnterState1Ev)
+MN_ST(mn_st_u1, _ZN8daGmch_c12UpdateState1Ev)
+MN_ST(mn_st_e2, _ZN8daGmch_c11EnterState2Ev)
+MN_ST(mn_st_u2, _ZN8daGmch_c12UpdateState2Ev)
+MN_ST(mn_st_e3, _ZN8daGmch_c11EnterState3Ev)
+MN_ST(mn_st_u3, _ZN8daGmch_c12UpdateState3Ev)
+MN_ST(mn_st_e4, _ZN8daGmch_c11EnterState4Ev)
+MN_ST(mn_st_u4, _ZN8daGmch_c12UpdateState4Ev)
+MN_ST(mn_st_e5, _ZN8daGmch_c11EnterState5Ev)
+MN_ST(mn_st_u5, _ZN8daGmch_c12UpdateState5Ev)
+MN_ST(mn_st_e6, _ZN8daGmch_c11EnterState6Ev)
+MN_ST(mn_st_u6, _ZN8daGmch_c12UpdateState6Ev)
+MN_ST(mn_st_e7, _ZN8daGmch_c11EnterState7Ev)
+MN_ST(mn_st_u7, _ZN8daGmch_c12UpdateState7Ev)
+MN_ST(mn_st_e8, _ZN8daGmch_c11EnterState8Ev)
+MN_ST(mn_st_u8, _ZN8daGmch_c12UpdateState8Ev)
+#undef MN_ST
+
 static const struct { unsigned rom; PortMnFn host; } g_mn_recs[18] = {
-    {0x021276b0, func_ov081_021276b0},   /* [ 0] <- 02128b58, state 0 enter */
-    {0x02127558, func_ov081_02127558},   /* [ 1] <- 02128b68, state 0 tick  */
-    {0x021274c8, func_ov081_021274c8},   /* [ 2] <- 02128b40, state 1 enter */
-    {0x02127440, func_ov081_02127440},   /* [ 3] <- 02128b48, state 1 tick  */
-    {0x021273e8, func_ov081_021273e8},   /* [ 4] <- 02128b38, state 2 enter */
-    {0x02127398, func_ov081_02127398},   /* [ 5] <- 02128bc0, state 2 tick  */
-    {0x02127314, func_ov081_02127314},   /* [ 6] <- 02128bb8, state 3 enter */
-    {0x02127240, func_ov081_02127240},   /* [ 7] <- 02128bb0, state 3 tick  */
-    {0x021271e8, func_ov081_021271e8},   /* [ 8] <- 02128ba8, state 4 enter */
-    {0x02127188, func_ov081_02127188},   /* [ 9] <- 02128ba0, state 4 tick  */
-    {0x02127134, func_ov081_02127134},   /* [10] <- 02128b88, state 5 enter */
-    {0x02127070, func_ov081_02127070},   /* [11] <- 02128b98, state 5 tick  */
-    {0x02127044, func_ov081_02127044},   /* [12] <- 02128b90, state 6 enter */
-    {0x02126fa4, func_ov081_02126fa4},   /* [13] <- 02128b70, state 6 tick  */
-    {0x02126e28, func_ov081_02126e28},   /* [14] <- 02128b50, state 7 enter */
-    {0x02126d64, func_ov081_02126d64},   /* [15] <- 02128b60, state 7 tick  */
-    {0x02126c8c, func_ov081_02126c8c},   /* [16] <- 02128b80, state 8 enter */
-    {0x02126c20, func_ov081_02126c20},   /* [17] <- 02128b78, state 8 tick  */
+    {0x021276b0, mn_st_e0},   /* [ 0] <- 02128b58, state 0 enter */
+    {0x02127558, mn_st_u0},   /* [ 1] <- 02128b68, state 0 tick  */
+    {0x021274c8, mn_st_e1},   /* [ 2] <- 02128b40, state 1 enter */
+    {0x02127440, mn_st_u1},   /* [ 3] <- 02128b48, state 1 tick  */
+    {0x021273e8, mn_st_e2},   /* [ 4] <- 02128b38, state 2 enter */
+    {0x02127398, mn_st_u2},   /* [ 5] <- 02128bc0, state 2 tick  */
+    {0x02127314, mn_st_e3},   /* [ 6] <- 02128bb8, state 3 enter */
+    {0x02127240, mn_st_u3},   /* [ 7] <- 02128bb0, state 3 tick  */
+    {0x021271e8, mn_st_e4},   /* [ 8] <- 02128ba8, state 4 enter */
+    {0x02127188, mn_st_u4},   /* [ 9] <- 02128ba0, state 4 tick  */
+    {0x02127134, mn_st_e5},   /* [10] <- 02128b88, state 5 enter */
+    {0x02127070, mn_st_u5},   /* [11] <- 02128b98, state 5 tick  */
+    {0x02127044, mn_st_e6},   /* [12] <- 02128b90, state 6 enter */
+    {0x02126fa4, mn_st_u6},   /* [13] <- 02128b70, state 6 tick  */
+    {0x02126e28, mn_st_e7},   /* [14] <- 02128b50, state 7 enter */
+    {0x02126d64, mn_st_u7},   /* [15] <- 02128b60, state 7 tick  */
+    {0x02126c8c, mn_st_e8},   /* [16] <- 02128b80, state 8 enter */
+    {0x02126c20, mn_st_u8},   /* [17] <- 02128b78, state 8 tick  */
 };
 
 extern "C" void port_moneybag_states_seat(void)
@@ -804,7 +893,7 @@ extern "C" void port_moneybag_states_seat(void)
     for (int i = 0; i < 18; ++i) {
         PortMoneybagRec &r = data_ov081_02128f40[i];
         if (r.fn != g_mn_recs[i].rom || r.delta != 0) {
-            std::fprintf(stderr, "FATAL: Moneybag state record %d: the sinit "
+            std::fprintf(stderr, "FATAL: daGmch_c state record %d: the sinit "
                          "left %08x/%u, the ROM's own record says %08x/0 -- "
                          "WRONG BYTES\n", i, r.fn, r.delta, g_mn_recs[i].rom);
             std::abort();
@@ -814,16 +903,16 @@ extern "C" void port_moneybag_states_seat(void)
 }
 
 static int __fastcall mn_init(void *s, void *)
-{ return _ZN8Moneybag13InitResourcesEv(s); }
+{ return _ZN8daGmch_c13InitResourcesEv(s); }
 static int __fastcall mn_clean(void *s, void *)
-{ (void)s; return _ZN8Moneybag16CleanupResourcesEv(); }
+{ (void)s; return _ZN8daGmch_c16CleanupResourcesEv(); }
 static int __fastcall mn_behavior(void *s, void *)
-{ return _ZN8Moneybag8BehaviorEv(s); }
+{ return _ZN8daGmch_c8BehaviorEv(s); }
 static int __fastcall mn_render(void *s, void *)
 { port_actor_render_probe("MONEYBAG", (char *)s + 0xd4);
-  return _ZN8Moneybag6RenderEv(s); }
+  return _ZN8daGmch_c6RenderEv(s); }
 static int __fastcall mn_pdes(void *s, void *)
-{ (void)s; _ZN8Moneybag16OnPendingDestroyEv(); return 0; }
+{ (void)s; _ZN8daGmch_c16OnPendingDestroyEv(); return 0; }
 /* D1 host thunk: the matched .cpp is the auto-emitted-member-dtor form. The
    chain is D0's own matched .c minus the Deallocate, in the ROM's order --
    confirmed against ov081's relocs for 0x02126504..0x02126554: the table
@@ -833,18 +922,18 @@ static int __fastcall mn_pdes(void *s, void *)
 /* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
    the transcribed thunk that stood here (mn_d1) spelled the same chain by hand. */
 static int __fastcall mn_d0(void *s, void *)
-{ return _ZN8MoneybagD0Ev(s); }
+{ return _ZN8daGmch_cD0Ev(s); }
 static int __fastcall mn_yoshi(void *s, void *)
-{ (void)s; return func_ov081_021265b8(); }
+{ (void)s; return _ZN8daGmch_c13OnYoshiTryEatEv(); }
 static int __fastcall mn_egg(void *s, void *, void *p)
-{ func_ov081_02127a7c(s, p); return 0; }
+{ _ZN8daGmch_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall mn_aimed(void *s, void *)
-{ (void)s; return func_ov081_021265c0(); }
+{ (void)s; return _ZN8daGmch_c16OnAimedAtWithEggEv(); }
 
 extern "C" void hal_fill_moneybag_vtable(void)
 {
     /* seat the eighteen records BEFORE InitResources can dispatch through
-       them -- its own func_ov081_0212777c(this, 0) call selects state 0 and
+       them -- its own _ZN8daGmch_c8SetStateEi(this, 0) call selects state 0 and
        runs the enter half immediately. */
     port_moneybag_states_seat();
     void **vt = (void **)_ZTV8Moneybag;
@@ -854,7 +943,7 @@ extern "C" void hal_fill_moneybag_vtable(void)
     vt[6]  = (void *)mn_behavior;
     vt[9]  = (void *)mn_render;
     vt[12] = (void *)mn_pdes;        /* own OnPendingDestroy, NOT the shared default */
-    vt[16] = (void *)hal_cppd1_Moneybag;
+    vt[16] = (void *)PORT_D16(hal_cppd1_Moneybag);
     vt[17] = (void *)mn_d0;
     vt[18] = (void *)mn_yoshi;       /* own OnYoshiTryEat */
     vt[19] = (void *)mn_egg;         /* own OnTurnIntoEgg */
@@ -868,7 +957,7 @@ extern "C" void hal_fill_moneybag_vtable(void)
 #include "MrBlizzard.h"
 #include "IceBlock.h"
 #include "Snowball.h"
-#include "Moneybag.h"
+#include "daGmch_c.h"
 extern "C" {
 int _ZN8Snowball13InitResourcesEv(void *self)
 { return ((Snowball *)self)->Snowball::InitResources(); }
@@ -876,11 +965,11 @@ int _ZN8Snowball8BehaviorEv(void *self)
 { return ((Snowball *)self)->Snowball::Behavior(); }
 int _ZN8Snowball6RenderEv(void *self)
 { return ((Snowball *)self)->Snowball::Render(); }
-int _ZN8Moneybag13InitResourcesEv(void *self)
-{ return ((Moneybag *)self)->Moneybag::InitResources(); }
-int _ZN8Moneybag8BehaviorEv(void *self)
-{ return ((Moneybag *)self)->Moneybag::Behavior(); }
-/* _ZN8Moneybag6RenderEv is NOT faced here -- the ModelAnim slot-5 collision.
+int _ZN8daGmch_c13InitResourcesEv(void *self)
+{ return ((daGmch_c *)self)->daGmch_c::InitResources(); }
+int _ZN8daGmch_c8BehaviorEv(void *self)
+{ return ((daGmch_c *)self)->daGmch_c::Behavior(); }
+/* _ZN8daGmch_c6RenderEv is NOT faced here -- the ModelAnim slot-5 collision.
    The matched Moneybag::Render dispatches ROM slot 5 through a six-virtual
    shadow off mModelAnim (+0xd4); host copy in
    port/unmatched/ModelAnim_Renders.cpp spells it as qualified

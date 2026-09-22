@@ -1,0 +1,65 @@
+# port/arm9_globals_allow.txt -- adjudicated exceptions for
+# port/tools/arm9_globals_guard.py.
+#
+# FORMAT:  SYMBOL  CLASS  reason
+#
+#   CLASS is FILL, INDEX, PIN or OVERHANG.  The reason is REQUIRED and the
+#   guard refuses a short one, because the entire point of this file is that an
+#   exception is argued in writing rather than taken silently.  A row here says
+#   "somebody looked at this and here is why it is correct", and the next person
+#   to read it gets the argument instead of having to re-derive it.
+#
+# WHY THIS FILE EXISTS AT ALL.  The defect the guard catches has shipped five
+# times, and every time it was found the fix looked like one token.  So the
+# opposite mistake is just as easy: a span that LOOKS wrong under a naive
+# "make it match the ROM" rule and is deliberately right.  Lane FACEFIX proved
+# the shape on the Player vtable, lane GLOBALS found 112 more of it on the
+# overlay side, and lane ARM9GLOBALS found five on arm9.  Shrinking or growing
+# any of those to its delta would ship a real bug in the name of tidiness.
+#
+# BEFORE ADDING A ROW: a row is not a way to quiet the guard.  If a hosted
+# object really is smaller than what the ROM writes through it, the fix is the
+# size, not a line here.  Add a row only when the ACCESS is provably correct
+# and the delta rule is the thing that is wrong, and write the proof.
+#
+# CLASSES:
+#   FILL      a fill/copy primitive writes a constant byte count through the
+#             symbol that is larger than the host object.
+#   INDEX     ROM code indexes the symbol with a runtime index and the host
+#             object is smaller than the symbol's ROM span.
+#   PIN       an explicit name:0xSIZE pin in port/tools/romdata.py's NAMED list
+#             disagrees with the delta-to-next-symbol rule.
+#   OVERHANG  RESERVED, nothing uses it yet.  Lane GLOBALS ruled 112 overlay
+#             mounts load-bearing: their span ends exactly at a _ZTV so the
+#             last word is that vtable's own vtable[-1] typeinfo pointer, and
+#             because the vtable is not separately mounted the overhang is the
+#             only thing that emits and relocates it.  Shrinking one to the
+#             ROM's array size drops a live pointer.  This guard covers arm9
+#             only, so none of those 112 is checked here today -- the class is
+#             declared now so that list can be carried in later by adding rows,
+#             with no change to this file's shape or to the guard's parser.
+#
+# ---------------------------------------------------------------------------
+
+# --- INDEX -----------------------------------------------------------------
+
+data_02099d90 INDEX _ZTV4Heap, and the delta rule over-measures it by exactly one neighbouring vtable's RTTI prefix. config/arm9/symbols.txt names the address 0x02099d90 TWICE, as data_02099d90 and as _ZTV4Heap, so the delta runs past the duplicate to the next distinct symbol _ZTV13ExpandingHeap at 0x02099dd8 and reads 72 bytes. The Heap vtable is 16 slots = 64 bytes, and the remaining 8 are _ZTV13ExpandingHeap's own offset-to-top and typeinfo words. _ZTV13ExpandingHeap is separately hosted and seated (port/hal/lk4_eh_dtor_seat.cpp writes its slots 0, 1, 2, 5 and 12), so that prefix already has an owner and growing data_02099d90 to 72 would host it a second time. The write the guard saw is port/hal/lk4_eh_dtor_seat.cpp:316, a loop bounded i < 16, which is exactly the host array, so nothing can leave it. NOTE FOR WHOEVER CARRIES IN GLOBALS' OVERLAY LIST: this is the same shape as the data_0208e498 and data_020914e0 rows below and as all 112 of GLOBALS' load-bearing overhangs -- a span that appears short or long only because a vtable's RTTI prefix sits on the boundary. Three instances on arm9, 112 on the overlays, one rule.
+
+data_020a813c INDEX On the DS 0x020a8138 and 0x020a813c are ONE interleaved table: four 8-byte entries from 0x020a8138, where data_020a8138 names each entry's flag halfword and data_020a813c names its pointer four bytes on. The delta rule measures data_020a813c to the next config symbol (0x020a8160) and calls that 36 bytes, but those 36 bytes include the partner name's fields and eight bytes of trailing pad, so 36 is not this name's own extent. The only indexed use in the tree is src/func_0205fcfc.c:41, data_020a813c[idx].ptr, and idx is bounded 0..3 by the enclosing if (cmd >= 0x70 && cmd <= 0x73). PtrEntry is {short *ptr; int pad;}, 8 bytes, so the furthest byte touched is 3*8+8 = 32 and the host object is exactly 0x20 = 32. It fits with nothing to spare and nothing missing. port/hal/boot2_ipc.cpp already carries the argument above the definition, including the condition that would end it: if a future body ever computes one name from the other, the pair has to become a single backing block, and then this row goes away.
+
+# --- PIN -------------------------------------------------------------------
+#
+# Five pins in romdata.py's NAMED list disagree with the delta rule on purpose.
+# romdata.c emits RAW ROM BYTES, so a pin that is too large ships bytes that
+# belong to the next object and a pin that is too small drops bytes the ROM
+# reads -- and for these five the delta rule is the one that is wrong.
+
+data_02075768 PIN Column 0 of a three-byte-stride sound row. 0x02075768..0x02075804 is 0x34 rows of {group, bank, bgm} and config names each COLUMN as its own one-byte symbol, so the delta to the next symbol is ONE BYTE while GetSoundGroupID indexes data_02075768[level*3] up to level 0x33. The pin of 0x9c covers the last index the column can form. The three overlapping copies are deliberate and romdata.py records the check that nothing does pointer arithmetic across the three names.
+
+data_02075769 PIN Column 1 of the same three-byte-stride sound row, read by Stage::InitResources as the SEQARC bank. The delta to data_0207576a is ONE BYTE, so the delta rule would hand this column a single-byte array while ROM code indexes it to level 0x33. The pin of 0x9a is the real extent. Same run as data_02075768; see that row.
+
+data_02075f14 PIN The SPA particle archive, sized from its own header rather than from the delta to the next symbol, which is 0x20ec against a real length of 0xc214. romdata.py verifies the SPA magic at this address on every run and exits if the blob has moved, so the pin cannot drift silently. Recorded as proven safe in the memory note sm64ds-port-romdata-pointer-tables.
+
+data_0208e498 PIN Stops eight bytes SHORT of its 0x20 delta on purpose. The next symbol is _ZTV7dBase_c and those eight bytes are that vtable's own RTTI prefix, carrying a relocation at 0x0208e4b4 to 0x02086e78 (_ZTI7dBase_c). Both _ZTV7dBase_c and _ZTI7dBase_c are separately hosted and referenced from real C++ in src/, so the prefix already has an owner. Growing this to the delta would double-host that prefix and, because romdata.c emits raw ROM bytes, ship a DS address into the PC build as data.
+
+data_020914e0 PIN The boot scene's BG palette, which GX::LoadBGPltt reads as exactly 0x40 bytes. The eight bytes between the pin and its 0x48 delta are _ZTV9BootScene's RTTI prefix, with a relocation at 0x02091524 to 0x020914c8 (_ZTI9dScBoot_c). _ZTV9BootScene is in no map and referenced nowhere, so nothing reads that prefix either. Same reason as data_0208e498 not to grow it to the delta.

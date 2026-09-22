@@ -1,4 +1,4 @@
-/* HOST COPIES of src/func_ov100_02145550.cpp (daDoor_c::Behavior) and
+/* HOST COPIES of src/game/actors/d_a_star_gate.cpp (daDoor_c::Behavior) and
  * src/func_ov100_021453d8.cpp (the callback installer it shares a table
  * with), plus the seat for the fifteen {function, delta} statics both
  * dispatch. The gate-16 pointer-to-member case for the sixth time, and the
@@ -89,7 +89,7 @@ int func_ov100_0214491c(void *, void *);
 typedef int (*PortDoorFn)(void *, void *);
 
 /* RUN link100 LANE PMFB8 GATE 2: THE FIFTEEN STATICS TAKE __fastcall FACES.
-   src/func_ov100_021453d8.cpp and src/func_ov100_02145550.cpp are in the link
+   src/func_ov100_021453d8.cpp and src/game/actors/d_a_star_gate.cpp are in the link
    (port/slice_pmfb8.txt) and dispatch these records themselves. Their emitted
    sides agree word for word --
        021453d8   mov edx,[ecx] / test / mov ecx,[ecx+4] / push a2 /
@@ -167,7 +167,7 @@ extern "C" void port_door_callbacks_seat(void)
 }
 
 /* HOST COPIES RETIRED, run link100 lane PMFB8 gate 2. src/func_ov100_021453d8.cpp
-   (the node installer) and src/func_ov100_02145550.cpp (daDoor_c::Behavior)
+   (the node installer) and src/game/actors/d_a_star_gate.cpp (daDoor_c::Behavior)
    dispatch the node themselves now, and the three helpers that only they used
    -- port_door_call, port_door_watch and port_door_fn_in_image -- went with
    them.

@@ -1,7 +1,7 @@
 # Gate 71: FIRE_PIRANHA_PLANT (actor 253, ov084), Whomp's Fortress.
 #
-# THE ov015 NAME SHIFT: FirePiranhaPlant_SpawnInfo's +4 halfword is 253 and
-# FirePiranhaPlant_Spawn is its factory, but that factory installs
+# THE ov015 NAME SHIFT: g_profile_PAKUN2's +4 halfword is 253 and
+# daFPkn_c_classInit_PAKUN2 is its factory, but that factory installs
 # _ZTV19FirePiranhaPlantBig (ov084 0x02130b28), so an id-253 object runs the
 # FirePiranhaPlantBig class. Wired by the vtable the factory installs, read out
 # of relocs.txt, not the class name the config carries. RTTI daFPkn_c.
@@ -10,18 +10,19 @@
 # table; its Behavior is a straight switch on mState, no pointer-to-member. Only
 # its Render is a host copy (the ModelAnim slot-5 case,
 # port/unmatched/PiranhaPlant_States.cpp).
-src/FirePiranhaPlant_Spawn.c
+src/d_a_f_pkn_pakun2.c
 src/_ZN19FirePiranhaPlantBig13InitResourcesEv.cpp
 src/_ZN19FirePiranhaPlantBig8BehaviorEv.cpp
 # _ZN19FirePiranhaPlantBig6RenderEv IS NOT HERE: the ModelAnim slot-5 case.
 # port/unmatched/PiranhaPlant_States.cpp.
 src/_ZN19FirePiranhaPlantBig16CleanupResourcesEv.cpp
-src/_ZN19FirePiranhaPlantBigD1Ev.c
-src/_ZN19FirePiranhaPlantBigD0Ev.c
+src/_ZN19FirePiranhaPlantBigD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN19FirePiranhaPlantBigD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN19FirePiranhaPlantBigD0Ev.cpp
 # slots 18 (OnYoshiTryEat), 19 (OnTurnIntoEgg) and 29 (OnAimedAtWithEgg)
-src/func_ov084_0212e9f8.cpp
-src/func_ov084_0212e9d4.cpp
-src/func_ov084_0212e998.c
+src/_ZN19FirePiranhaPlantBig13OnYoshiTryEatEv.cpp
+src/_ZN19FirePiranhaPlantBig13OnTurnIntoEggER6Player.cpp
+src/_ZN19FirePiranhaPlantBig16OnAimedAtWithEggEv.cpp
 # the fire piranha's own closure: the four states its switch dispatches, the
 # fireball spit and the shared helpers
 src/func_ov084_0212e4e0.c
@@ -33,7 +34,13 @@ src/func_ov084_0212d564.cpp
 src/func_ov084_0212d560.c
 src/func_ov084_0212d42c.c
 src/func_ov084_0212d2dc.c
-src/func_ov084_0212ec04.c
+# QUARANTINED at the main->port sync (origin/main 9c7f38a24): main consolidated ov084's
+# PiranhaPlant bodies into this one TU, and the TU carries func_ov084_0212f204, whose
+# zero-argument _ZN8dActor_c13ClosestPlayerEv() call closestplayer_guard refuses (thiscall
+# with no receiver faults on null this + 0x5c). The port already hosts that function in
+# port/unmatched/Actor_ClosestPlayer_OverlayReaders.cpp, which the raw TU would now
+# duplicate. Restore this row once the host copy covers the whole consolidated TU.
+#src/actors/daPkn_c.cpp
 # Actor::SpawnFireball, which the fire piranha's spit state calls -- its only
 # leaf is Actor::Spawn, already in the build
-src/_ZN5Actor13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j.c
+src/_ZN8dActor_c13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j.cpp

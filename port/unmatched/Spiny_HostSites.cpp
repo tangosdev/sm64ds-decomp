@@ -12,14 +12,14 @@
  *
  *     ROM-CONFIRMED BODY. D1 is 0x02124b64..0x02124bb4, D0 is
  *     0x02124bb4..0x02124c18. config/arm9/overlays/ov077/relocs.txt on D1:
- *       0x02124b78 0x020373f8 _ZN12WithMeshClsnD1Ev
- *       0x02124b80 0x020149a4 _ZN18MovingCylinderClsnD1Ev
+ *       0x02124b78 0x020373f8 _ZN10dBgCh_ActrD1Ev
+ *       0x02124b80 0x020149a4 _ZN7dCcAc_cD1Ev
  *       0x02124b88 0x02015ff8 _ZN11ShadowModelD1Ev
  *       0x02124b90 0x0201691c _ZN9ModelAnimD1Ev
  *       0x02124b98 0x02016d20 _ZN5ModelD1Ev
- *       0x02124ba0 0x020112c8 _ZN5ActorD2Ev
+ *       0x02124ba0 0x020112c8 _ZN8dActor_cD2Ev
  *       0x02124bb0 load       0x02127984  (_ZTV5Spiny)
- *     -- the same six calls in the same order as src/_ZN5SpinyD0Ev.c, which
+ *     -- the same six calls in the same order as src/_ZN5SpinyD0Ev.cpp, which
  *     adds only _ZN6Memory10DeallocateEPvP4Heap. Offsets are that D0's own
  *     (0x1e4 / 0x1b0 / 0x188 / 0x124 / 0xd4), and note Spiny takes the PLAIN
  *     MovingCylinderClsn where Lakitu takes the WithPos child -- relocation
@@ -51,24 +51,24 @@ extern "C" {
 
 /* ---- (1) the destructor ------------------------------------------------ */
 extern int _ZTV5Spiny[];
-void _ZN12WithMeshClsnD1Ev(void *);
-void _ZN18MovingCylinderClsnD1Ev(void *);
+void _ZN10dBgCh_ActrD1Ev(void *);
+void _ZN7dCcAc_cD1Ev(void *);
 void _ZN11ShadowModelD1Ev(void *);
 void _ZN9ModelAnimD1Ev(void *);
 void _ZN5ModelD1Ev(void *);
-void _ZN5ActorD2Ev(void *);
+void _ZN8dActor_cD2Ev(void *);
 
 /* PORT_HOST_ABI: mwcc-Itanium destructor name MSVC cannot emit; ROM call
  * order and offsets from relocs.txt + src/_ZN5SpinyD0Ev.c. */
 int *_ZN5SpinyD1Ev(int *t)
 {
     t[0] = (int)(size_t)_ZTV5Spiny;
-    _ZN12WithMeshClsnD1Ev((char *)t + 0x1e4);
-    _ZN18MovingCylinderClsnD1Ev((char *)t + 0x1b0);
+    _ZN10dBgCh_ActrD1Ev((char *)t + 0x1e4);
+    _ZN7dCcAc_cD1Ev((char *)t + 0x1b0);
     _ZN11ShadowModelD1Ev((char *)t + 0x188);
     _ZN9ModelAnimD1Ev((char *)t + 0x124);
     _ZN5ModelD1Ev((char *)t + 0xd4);
-    _ZN5ActorD2Ev(t);
+    _ZN8dActor_cD2Ev(t);
     return t;
 }
 

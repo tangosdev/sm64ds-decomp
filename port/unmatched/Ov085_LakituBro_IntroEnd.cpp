@@ -8,7 +8,7 @@
  *
  * THE MISMATCH. The matched source ends with:
  *
- *     if (_ZN5Actor13ClosestPlayerEv(c) != 0) {
+ *     if (_ZN8dActor_c13ClosestPlayerEv(c) != 0) {
  *         func_ov002_020c3e8c();          <-- declared (void) in that TU
  *         data_0209caa0[2] |= 0x80;
  *     }
@@ -54,7 +54,7 @@ void _ZN6Camera6SetPosERK7Vector3(void* self, const void* v);
 int Vec3_Dist(const void* a, const void* b);
 int _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b,
                                     unsigned int c, int d, bool e);
-void* _ZN5Actor13ClosestPlayerEv(void* self);
+void* _ZN8dActor_c13ClosestPlayerEv(void* self);
 void func_ov002_020c3e8c(void* player);   /* real one-arg (the player) shape */
 void func_ov085_0212e728(void* c, void* p);
 }
@@ -129,7 +129,7 @@ extern "C" int func_ov085_0212d5dc(char* c) {
       *(int*)(c+0xac) = 0;
       *(short*)(c+0x8c) = 0;
       {
-        void* pl = _ZN5Actor13ClosestPlayerEv(c);   /* <-- the ROM's r0 */
+        void* pl = _ZN8dActor_c13ClosestPlayerEv(c);   /* <-- the ROM's r0 */
         if (lb_watch_on())
             std::fprintf(stderr, "  [lakitu] handing control back: "
                          "ClosestPlayer %p\n", pl);

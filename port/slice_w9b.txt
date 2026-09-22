@@ -9,13 +9,13 @@
 # 0x02129020) and resolving each record's factory to the table its Spawn
 # stores, THREE ids share one vtable and THREE more share another:
 #
-#     id 200 Goomba_SpawnInfo               -> 0x02130948   REGISTERED
-#     id 201 GoombaSmall_SpawnInfo          -> 0x02130948
-#     id 202 GoombaLarge_SpawnInfo          -> 0x02130948   this slice
-#     id 250 PiranhaPlant_SpawnInfo         -> 0x02130c28   REGISTERED
-#     id 251 FirePiranhaPlantBig_SpawnInfo  -> 0x02130b28   this slice
-#     id 252 FirePiranhaPlantSmall_SpawnInfo-> 0x02130b28   this slice
-#     id 253 FirePiranhaPlant_SpawnInfo     -> 0x02130b28   REGISTERED
+#     id 200 g_profile_KURIBO               -> 0x02130948   REGISTERED
+#     id 201 g_profile_KURIBO_S          -> 0x02130948
+#     id 202 g_profile_KURIBO_L          -> 0x02130948   this slice
+#     id 250 g_profile_PAKUN         -> 0x02130c28   REGISTERED
+#     id 251 g_profile_FIREPAKUN  -> 0x02130b28   this slice
+#     id 252 g_profile_FIREPAKUN_S-> 0x02130b28   this slice
+#     id 253 g_profile_PAKUN2     -> 0x02130b28   REGISTERED
 #
 # 0x02130948 is already the host array _ZTV6Goomba[31] that
 # hal/actor_classes_bob_enemy.cpp fills (with the RTTI alias _ZTV7daKrb_c;
@@ -32,7 +32,7 @@
 #
 # BOTH ATTRIBUTION ROUTES were run for all three, out of the raw ndspy image
 # and not the dsd export:
-#     id 202  0x02090b8c -> 0x02130924  word[0]=0x0212bff8 GoombaLarge_Spawn
+#     id 202  0x02090b8c -> 0x02130924  word[0]=0x0212bff8 daKrb_c_classInit_KURIBO_L
 #                                       +4 halfword = 202
 #     id 251  0x02090c4c -> 0x02130ae8  word[0] inside ov084, +4 = 251
 #     id 252  0x02090c50 -> 0x02130b04  word[0] inside ov084, +4 = 252
@@ -41,10 +41,10 @@
 # its table by a REAL name, not the zeroed VT1 placeholder, so the registry
 # calls the matched Spawn directly. Each is also shape-identical to the
 # sibling that is already registered and already works --
-# GoombaLarge_Spawn is 1144 bytes over CapEnemy with the same five
-# sub-object constructors as Goomba_Spawn, and both FirePiranhaPlant{Big,
+# daKrb_c_classInit_KURIBO_L is 1144 bytes over CapEnemy with the same five
+# sub-object constructors as daKrb_c_classInit_KURIBO, and both FirePiranhaPlant{Big,
 # Small}_Spawn are 556 bytes over Enemy with the same three as
-# FirePiranhaPlant_Spawn.
-src/GoombaLarge_Spawn.c
-src/FirePiranhaPlantBig_Spawn.c
-src/FirePiranhaPlantSmall_Spawn.c
+# daFPkn_c_classInit_PAKUN2.
+src/d_a_krb_kuribo_l.c
+src/d_a_f_pkn_firepakun.c
+src/d_a_f_pkn_firepakun_s.c

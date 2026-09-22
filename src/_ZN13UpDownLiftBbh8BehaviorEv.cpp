@@ -1,41 +1,47 @@
 //cpp
 #include "types.h"
 // @symbol _ZN13UpDownLiftBbh8BehaviorEv
-/* recovered: named members + shared header, real C++ method */
+/* recovered: real C++ method over the reconstructed actor hierarchy */
 #include "UpDownLiftBbh.h"
-struct Plat;
-typedef void (Plat::*PMF)();
-extern "C" PMF data_ov095_02137910[];
+#include "Player.h"
 
-extern "C" void* _ZN5Actor13ClosestPlayerEv(void* c);
-extern "C" void _ZN8Platform21UpdateModelPosAndRotYEv(void* c);
-extern "C" int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void* c, int a, int b);
-extern "C" void _ZN8Platform19UpdateClsnPosAndRotEv(void* c);
-extern "C" int _ZN6Player7IsInAirEv(void* c);
+typedef void (UpDownLiftBbh::*State)();
+extern State data_ov095_02137910[];
+
+/* A real Fix12<int> by-value call homes the two zero arguments to the stack
+   under this compiler, while the ROM passes their scalar representation in
+   registers. Keep this one proven codegen boundary until wall 6az is solved. */
+extern "C" int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void* c, int a, int b);
+
 int UpDownLiftBbh::Behavior()
 {
     int old;
-    *(void**)((char*)&unk_324) = _ZN5Actor13ClosestPlayerEv(((char*)this));
+    mClosestPlayer = ClosestPlayer();
     old = mState;
-    (((Plat*)((char*)this))->*data_ov095_02137910[old])();
-    *(u16*)(((int)((char*)this) + 0x344)) += 1;
-    if (old != mState) *(u16*)(((char*)&unk_300) + 0x44) = 0;
-    _ZN8Platform21UpdateModelPosAndRotYEv(((char*)this));
-    if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(((char*)this), 0, 0) != 0)
-        _ZN8Platform19UpdateClsnPosAndRotEv(((char*)this));
+    (this->*data_ov095_02137910[old])();
+    mStateTimer += 1;
+    if (old != mState)
+        mStateTimer = 0;
+
+    UpdateModelPosAndRotY();
+    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0) != 0)
+        UpdateClsnPosAndRot();
+
+    /* Waiting at either end, or on the way back: once the rider has landed
+       somewhere else, forget them and arm the trigger again. */
     if (mState == 0 || (unsigned)(mState - 3) <= 1) {
-        void* pl = *(void**)((char*)&unk_320);
-        if (pl != 0) {
-            if (_ZN6Player7IsInAirEv(pl) == 0) {
-                if (unk_348 == 0) {
-                    unk_320 = 0;
-                    unk_347 = 1;
+        Player *player = mRider;
+        if (player != 0) {
+            if (player->IsInAir() == 0) {
+                if (mIsRidden == 0) {
+                    mRider = 0;
+                    mIsArmed = 1;
                 }
             }
         }
     }
-    unk_348 = 0;
-    if (*(void**)((char*)&unk_324) != 0)
-        unk_330 = *(int*)(*(char**)((char*)&unk_324) + 0x60);
+    mIsRidden = 0;
+    if (mClosestPlayer != 0)
+        mPlayerPosY = mClosestPlayer->mPosY;
     return 1;
 }

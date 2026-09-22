@@ -1,4 +1,4 @@
-/* HOST COPY of src/func_ov064_02117220.cpp -- BULLY's AfterClsn extension
+/* HOST COPY of src/_ZN5Bully16UpdateDeathStateEv.cpp -- BULLY's AfterClsn extension
  * virtual (daDonketu_c::AfterClsn, vtable SLOT 32 -- this comment said 35 and
  * that was wrong; hal/actor_classes_ov064.cpp fills this body at vt[32], which
  * is also where PathLift carries the same extension virtual, and the slot is
@@ -33,12 +33,13 @@ extern int func_ov064_0211616c(void *thiz);
 /* the shadow's static spellings onto the hosted C bodies; the Spawn one
    already exists twice (actor_faces_bob / bob_enemy_bridges), FindWithID's
    is new */
-#pragma comment(linker, "/alternatename:?Spawn@Actor@@SAPAU1@IIABUVector3@@PBUVector3_16@@HH@Z=__ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii")
-#pragma comment(linker, "/alternatename:?FindWithID@Actor@@SAPAU1@I@Z=__ZN5Actor10FindWithIDEj")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEAD RHS and an UNREFERENCED left hand side: nothing in the build defines __ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as, and nothing references ?Spawn@dActor_c@@SAPAU1@IIABUVector3@@PBUVector3_16@@HH@Z, so the row can never fire and nothing wants it to. */
+// #pragma comment(linker, "/alternatename:?Spawn@dActor_c@@SAPAU1@IIABUVector3@@PBUVector3_16@@HH@Z=__ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as")
+#pragma comment(linker, "/alternatename:?FindWithID@dActor_c@@SAPAU1@I@Z=__ZN8dActor_c10FindWithIDEj")
 
 /* PORT_HOST_ABI: MSVC C2761 rejects the matched TU's out-of-class member
    redeclarations; body is the matched source's line for line. */
-extern "C" void func_ov064_02117220(char *self)
+extern "C" void _ZN5Bully16UpdateDeathStateEv(char *self)
 {
     if (func_ov064_0211616c(self) == 0) return;
     int pz = *(int *)(self + 0x64);

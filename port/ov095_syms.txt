@@ -6,7 +6,7 @@
 # SeesawUtm/Bdw/Bfs/Bs/Rr, the UpDownLift trio and a Flamethrower -- of which
 # level 6's census names only SEESAW_BOB (39). Its id and its SpawnInfo's own
 # +4 halfword were read from the arm9 ACTOR_SPAWN_TABLE (0x02090864): entry 39
-# relocates to SeesawBob_SpawnInfo at 0x02137484 and that record's +4 reads 39.
+# relocates to g_profile_BOMB_SEESAW at 0x02137484 and that record's +4 reads 39.
 #
 # This is the per-symbol mount (the gate-32/gate-77 ov085/ov080/ov079 shape):
 # SEESAW_BOB reaches its SpawnInfo, its three parallel file-pointer tables
@@ -33,13 +33,13 @@
 # hosted rather than the 4 bytes the next-symbol delta would give (it is the
 # last symbol, tail into bss).
 #
-# SeesawBob_SpawnInfo is pinned to the record's real 0x1c so the +4 id halfword
+# g_profile_BOMB_SEESAW is pinned to the record's real 0x1c so the +4 id halfword
 # the registry cross-checks reads out of the right bytes (39).
 # data_ov095_02136f58 is the 4-int table func_ov095_0213579c indexes by the
 # rider's (p+8)&3 -- the seesaw's tilt-response coefficients. Plain ints, no
 # relocs; it sits well before the SpawnInfo, which --pack spans with a gap.
 data_ov095_02136f58
-SeesawBob_SpawnInfo:0x1c
+g_profile_BOMB_SEESAW:0x1c
 data_ov095_021374a0 data_ov095_021374a4 data_ov095_021374a8
 data_ov095_0213757c data_ov095_02137584 data_ov095_0213758c data_ov095_02137594
 data_ov095_0213759c
@@ -63,18 +63,18 @@ data_ov095_02137910:0x28
 # words, relocs a4/a8/ac). The five state statics and the runtime table
 # data_ov095_02137910 are already in the mount from gate 83; the vtable
 # _ZTV13UpDownLiftBbh stays OUT, a host array (hal/actor_classes_updownlift.cpp).
-UpDownLiftHmc_SpawnInfo:0x1c
+g_profile_UDLIFT:0x1c
 data_ov095_02136f68:0xc data_ov095_02136f74:0xc
 data_ov095_021375a4:0xc
 # run linkw wave 5 (lane w5-A): UP_DOWN_LIFT_BBH (32), the 0x20 variant of the
 # same daUdlift_c trio, joins for Big Boo's Haunt. Its SpawnInfo is flagged
 # `ambiguous` in config (the ov095 window is shared); resolved by the raw
 # record in extracted/overlays/overlay_0095.bin: word[0] = 0x021367fc =
-# UpDownLiftBbh_Spawn, +4 halfword = 32, +6 = 300. Everything else the
+# daUdlift_c_classInit_UDLIFT_TERESA, +4 halfword = 32, +6 = 300. Everything else the
 # variant reads (the f68/f74 file tables, the CLPS table, the state machine)
 # is variant-indexed storage already mounted above; the class code and vtable
 # are gate 173's, shared across all three ids.
-UpDownLiftBbh_SpawnInfo:0x1c
+g_profile_UDLIFT_TERESA:0x1c
 # run linkw wave 6 (lane w6-f): FLAMETHROWER (318), the last ov095 class and
 # the one that skips on FOUR mounted levels (13/14/15/37). Its record is
 # `ambiguous` in config the same way every ov095 record is (ov006 spans this
@@ -84,7 +84,7 @@ UpDownLiftBbh_SpawnInfo:0x1c
 # 0x021376cc - 0x02135700 reads
 #     d4 6e 13 02  3e 01  3c 01  02 00 00 00  00 00 00 00
 #     00 00 50 00  00 00 00 01  00 00 00 00
-# = word[0] 0x02136ed4 = Flamethrower_Spawn, +4 halfword 0x013e = 318, +6
+# = word[0] 0x02136ed4 = daObjFlamethrower_c_classInit, +4 halfword 0x013e = 318, +6
 # halfword 0x013c = 316.
 #
 # WIDTH 0x1c, and here the default would be WRONG, not merely loose: the next
@@ -103,7 +103,7 @@ UpDownLiftBbh_SpawnInfo:0x1c
 # The vtable itself stays OUT, the rule this file's header already states: it
 # is the host array hal/actor_classes_flamethrower.cpp defines and the registry
 # fills.
-Flamethrower_SpawnInfo:0x1c
+g_profile_OBJ_FLAMETHROWER:0x1c
 # and the three constant tables the class indexes by segment. The matched
 # InitResources reads two of them BY NAME already (data_ov095_02136fb0 the
 # reach, data_ov095_02136f80 the collider radius/height scale, both declared in
@@ -124,16 +124,16 @@ data_ov095_02136f80 data_ov095_02136f98 data_ov095_02136fb0
 # filled before any of them spawns; these three lines add only the records the
 # registry rewrites and the ActorBase constructor reads its two priorities back
 # out of. Both attribution routes for each, out of the RAW ndspy image:
-#   0x02090a78 -> 0x021373f8  word[0]=0x02135f64 SeesawBdw_Spawn      +4 = 133
-#   0x02090ab8 -> 0x02137430  word[0]=0x02135f04 SeesawBsPlank_Spawn  +4 = 149
-#   0x02090abc -> 0x0213744c  word[0]=0x02135ed4 SeesawBsZigZag_Spawn +4 = 150
+#   0x02090a78 -> 0x021373f8  word[0]=0x02135f64 daObjSeesaw_c_classInit_KM1_SEESAW      +4 = 133
+#   0x02090ab8 -> 0x02137430  word[0]=0x02135f04 daObjSeesaw_c_classInit_KM3_SEESAW  +4 = 149
+#   0x02090abc -> 0x0213744c  word[0]=0x02135ed4 daObjSeesaw_c_classInit_KM3_YOKOSEESAW +4 = 150
 # 0x1c each, the stride this file's SeesawBob block already measured for every
 # record in the overlay -- the seven Seesaws at 0x021373dc/f8/0x02137414/30/4c/
 # 68/84 are all exactly 0x1c apart. The natural next-symbol deltas here are 0x4,
 # 0x1c and 0x8, so two of the three would be wrong and the 0x4 would truncate
 # the record before the +4 id halfword the registry cross-checks.
-SeesawBdw_SpawnInfo:0x1c SeesawBsPlank_SpawnInfo:0x1c
-SeesawBsZigZag_SpawnInfo:0x1c
+g_profile_KM1_SEESAW:0x1c g_profile_KM3_SEESAW:0x1c
+g_profile_KM3_YOKOSEESAW:0x1c
 
 # ---- run linkw wave 11, lane w11: the last four ov095 records ---------------
 # The widened sweep (all 512 spawn-table ids, not the census worklist) shows the
@@ -145,10 +145,10 @@ SeesawBsZigZag_SpawnInfo:0x1c
 # add only the records the registry rewrites and ActorBase reads its two
 # priorities back out of. Both attribution routes for each, out of the RAW
 # ndspy image (ov095 is compressed:true):
-#   0x020908d4 -> 0x021373dc  word[0]=0x02135fc4 SeesawUtm_Spawn    +4 = 28,  +6 = 296
-#   0x02090a64 -> 0x02137468  word[0]=0x02135ea4 SeesawRr_Spawn     +4 = 128, +6 = 258
-#   0x02090aa0 -> 0x02137414  word[0]=0x02135f34 SeesawBfs_Spawn    +4 = 143, +6 = 214
-#   0x02090a70 -> 0x02137604  word[0]=0x0213679c UpDownLiftRr_Spawn +4 = 131, +6 = 261
+#   0x020908d4 -> 0x021373dc  word[0]=0x02135fc4 daObjSeesaw_c_classInit_SEESAW    +4 = 28,  +6 = 296
+#   0x02090a64 -> 0x02137468  word[0]=0x02135ea4 daObjSeesaw_c_classInit_RC_SEESAW     +4 = 128, +6 = 258
+#   0x02090aa0 -> 0x02137414  word[0]=0x02135f34 daObjSeesaw_c_classInit_KM2_YOKOSEESAW    +4 = 143, +6 = 214
+#   0x02090a70 -> 0x02137604  word[0]=0x0213679c daUdlift_c_classInit_RC_RIFT02 +4 = 131, +6 = 261
 # 0x1c each. For the three Seesaws the pin agrees with the natural next-symbol
 # delta and is there for the reason the SeesawBob block above states: 0x1c is
 # the measured stride of every record in this overlay, and the three sit inside
@@ -159,10 +159,10 @@ SeesawBsZigZag_SpawnInfo:0x1c
 # next symbol is _ZTV13UpDownLiftBbh at 0x02137628, so a next-symbol delta would
 # pin 0x24 and swallow the vtable's mwcc RTTI header word at 0x02137624 into an
 # actor record. 0x1c lands at 0x02137620, clear of it, and 0x02137604 is exactly
-# 0x1c past UpDownLiftBbh_SpawnInfo at 0x021375e8 -- the third of the three
+# 0x1c past g_profile_UDLIFT_TERESA at 0x021375e8 -- the third of the three
 # UpDownLift records this file's header already walked (0x021375cc/e8/0x02137604).
 #
 # The two vtables stay OUT, the rule this file's header states: both are host
 # arrays the registry fills.
-SeesawUtm_SpawnInfo:0x1c SeesawRr_SpawnInfo:0x1c
-SeesawBfs_SpawnInfo:0x1c UpDownLiftRr_SpawnInfo:0x1c
+g_profile_SEESAW:0x1c g_profile_RC_SEESAW:0x1c
+g_profile_KM2_YOKOSEESAW:0x1c g_profile_RC_RIFT02:0x1c

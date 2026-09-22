@@ -1,0 +1,335 @@
+{
+  "id": "ov014/daWanwan_c",
+  "module": "ov014",
+  "source": "src/game/actors/d_a_wanwan.cpp",
+  "promoted_source": "src/game/actors/d_a_wanwan.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous linker run: 0x2111308..0x2112e0c, 29 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): daWanwan_c",
+    "module sinit corroboration: 3 sinit(s) / 3 .ctor entries, sinit_vs_tu=ok, corroborated=True (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02111308",
+      "end": "0x02112e0c"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN10daWanwan_cD1Ev",
+      "address": "0x02111308",
+      "size": "0x000000b4",
+      "legacy_source": "src/_ZN10daWanwan_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN10daWanwan_cD0Ev",
+      "address": "0x021113bc",
+      "size": "0x000000c8",
+      "legacy_source": "src/_ZN10daWanwan_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov014_02111484",
+      "address": "0x02111484",
+      "size": "0x00000054",
+      "legacy_source": "src/func_ov014_02111484.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov014_021114d8",
+      "address": "0x021114d8",
+      "size": "0x00000034",
+      "legacy_source": "src/func_ov014_021114d8.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov014_0211150c",
+      "address": "0x0211150c",
+      "size": "0x000000b4",
+      "legacy_source": "src/func_ov014_0211150c.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov014_021115c0",
+      "address": "0x021115c0",
+      "size": "0x0000002c",
+      "legacy_source": "src/func_ov014_021115c0.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov014_021115ec",
+      "address": "0x021115ec",
+      "size": "0x00000480",
+      "legacy_source": "src/func_ov014_021115ec.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov014_02111a6c",
+      "address": "0x02111a6c",
+      "size": "0x00000084",
+      "legacy_source": "src/func_ov014_02111a6c.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov014_02111af0",
+      "address": "0x02111af0",
+      "size": "0x00000080",
+      "legacy_source": "src/func_ov014_02111af0.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov014_02111b70",
+      "address": "0x02111b70",
+      "size": "0x00000138",
+      "legacy_source": "src/func_ov014_02111b70.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov014_02111ca8",
+      "address": "0x02111ca8",
+      "size": "0x0000011c",
+      "legacy_source": "src/func_ov014_02111ca8.cpp",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov014_02111dc4",
+      "address": "0x02111dc4",
+      "size": "0x00000050",
+      "legacy_source": "src/func_ov014_02111dc4.cpp",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov014_02111e14",
+      "address": "0x02111e14",
+      "size": "0x00000060",
+      "legacy_source": "src/func_ov014_02111e14.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_ov014_02111e74",
+      "address": "0x02111e74",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov014_02111e74.cpp",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_ov014_02111ebc",
+      "address": "0x02111ebc",
+      "size": "0x0000004c",
+      "legacy_source": "src/func_ov014_02111ebc.cpp",
+      "ordinal": 14
+    },
+    {
+      "symbol": "func_ov014_02111f08",
+      "address": "0x02111f08",
+      "size": "0x0000004c",
+      "legacy_source": "src/func_ov014_02111f08.cpp",
+      "ordinal": 15
+    },
+    {
+      "symbol": "func_ov014_02111f54",
+      "address": "0x02111f54",
+      "size": "0x00000064",
+      "legacy_source": "src/func_ov014_02111f54.cpp",
+      "ordinal": 16
+    },
+    {
+      "symbol": "func_ov014_02111fb8",
+      "address": "0x02111fb8",
+      "size": "0x00000028",
+      "legacy_source": "src/func_ov014_02111fb8.c",
+      "ordinal": 17
+    },
+    {
+      "symbol": "func_ov014_02111fe0",
+      "address": "0x02111fe0",
+      "size": "0x00000134",
+      "legacy_source": "src/func_ov014_02111fe0.c",
+      "ordinal": 18
+    },
+    {
+      "symbol": "func_ov014_02112114",
+      "address": "0x02112114",
+      "size": "0x000001c8",
+      "legacy_source": "src/func_ov014_02112114.c",
+      "ordinal": 19
+    },
+    {
+      "symbol": "func_ov014_021122dc",
+      "address": "0x021122dc",
+      "size": "0x00000090",
+      "legacy_source": "src/func_ov014_021122dc.c",
+      "ordinal": 20
+    },
+    {
+      "symbol": "func_ov014_0211236c",
+      "address": "0x0211236c",
+      "size": "0x000001a0",
+      "legacy_source": "src/func_ov014_0211236c.c",
+      "ordinal": 21
+    },
+    {
+      "symbol": "func_ov014_0211250c",
+      "address": "0x0211250c",
+      "size": "0x0000027c",
+      "legacy_source": "src/func_ov014_0211250c.c",
+      "ordinal": 22
+    },
+    {
+      "symbol": "func_ov014_02112788",
+      "address": "0x02112788",
+      "size": "0x000001c4",
+      "legacy_source": "src/func_ov014_02112788.c",
+      "ordinal": 23
+    },
+    {
+      "symbol": "_ZN10daWanwan_c16CleanupResourcesEv",
+      "address": "0x0211294c",
+      "size": "0x00000048",
+      "legacy_source": "src/_ZN10daWanwan_c16CleanupResourcesEv.cpp",
+      "ordinal": 24
+    },
+    {
+      "symbol": "_ZN10daWanwan_c6RenderEv",
+      "address": "0x02112994",
+      "size": "0x00000058",
+      "legacy_source": "src/_ZN10daWanwan_c6RenderEv.cpp",
+      "ordinal": 25
+    },
+    {
+      "symbol": "_ZN10daWanwan_c8BehaviorEv",
+      "address": "0x021129ec",
+      "size": "0x00000128",
+      "legacy_source": "src/_ZN10daWanwan_c8BehaviorEv.cpp",
+      "ordinal": 26
+    },
+    {
+      "symbol": "_ZN10daWanwan_c13InitResourcesEv",
+      "address": "0x02112b14",
+      "size": "0x00000208",
+      "legacy_source": "src/_ZN10daWanwan_c13InitResourcesEv.cpp",
+      "ordinal": 27
+    },
+    {
+      "symbol": "daWanwan_c_classInit",
+      "address": "0x02112d1c",
+      "size": "0x000000f0",
+      "legacy_source": "src/daWanwan_c_classInit.cpp",
+      "ordinal": 28
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+    "tubuild create warning: hand-assembled: raw concatenation in reverse ROM order; tubuild create refused this TU (extern \"C\"-wrapped legacy bodies)",
+    "29/29 MATCH, objisolate clean, reloc-destinations clean. Hand-assembled. The state table data_ov014_0211476c has TWO honest views (pmf at +0 and at +8) -- the +0 view lives in namespace ent0; a member byte-requires a THREE-argument call to func_0201267c (namespaced view); func_ov014_021115ec's entire declaration battery moved to block scope (its parameter widths diverge from the TU's canonical views and are byte-load-bearing). One ~daWanwan_c() emits D0+D1; Spawn stores &_ZTV10daWanwan_c[2].",
+    "Reconstructed source-style factory symbol daWanwan_c_classInit: class identity is ROM-proven by RTTI/allocation/vtable and profile identity by literal ROM ID WANWAN; classInit spelling is later-EAD lineage reconstruction. Historical alias: ChainChomp_Spawn."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov014-daWanwan_c/d_a_wanwan.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 29,
+    "functions_declared": 29,
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 12 record(s) emitted alongside the 29 functions, every one licensed in compiler_only_output: 11 vague-linkage RTTI/vtable data records (the class has NO key function -- mwcc picks the first DECLARED virtual, and ~daWanwan_c is declared first and is inline -- so the records land in every TU that needs them, this one included), and _ZN7Vector3D1Ev, a 4-byte vague-linkage function body with a ROM home at arm9:0x020072c0 -- licensed deadstrip-duplicate, which may only be discarded once the body is proved to be the cartridge's own: objisolate compares the words no relocation covers and rombuild._duplicate_body_reasons links the body and compares the rest. There is no unlicensed_output_observed key in this manifest.",
+      "functions_occur_in_expected_order": "PASS -- ordinal pair (0, 1) read out of ROM order while the destructor was defined out of line, because mwccarm then emitted D2, D0, D1. The destructor is now inline in include/daWanwan_c.h, mwccarm emits D1 then D0 and no D2, and that is the ROM's own order: D1 at 0x02111308, D0 at 0x021113bc.",
+      "relocation_destinations_verified": "PASS"
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Emitted as vague linkage because daWanwan_c has no key function -- mwcc picks the first DECLARED virtual, and ~daWanwan_c is declared first and is defined inline -- so every TU that needs the record emits its own copy, this one included. The cartridge keeps its canonical copy at arm9:0x02086d70, outside this entry's only licensed range (.text 0x02111308-0x02112e0c), so dsd supplies that ROM data independently. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70"
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Emitted as vague linkage because daWanwan_c has no key function -- mwcc picks the first DECLARED virtual, and ~daWanwan_c is declared first and is defined inline -- so every TU that needs the record emits its own copy, this one included. The cartridge keeps its canonical copy at arm9:0x02086e54, outside this entry's only licensed range (.text 0x02111308-0x02112e0c), so dsd supplies that ROM data independently. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54"
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Emitted as vague linkage because daWanwan_c has no key function -- mwcc picks the first DECLARED virtual, and ~daWanwan_c is declared first and is defined inline -- so every TU that needs the record emits its own copy, this one included. The cartridge keeps its canonical copy at arm9:0x02086e60, outside this entry's only licensed range (.text 0x02111308-0x02112e0c), so dsd supplies that ROM data independently. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60"
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "reason": "Emitted as vague linkage because daWanwan_c has no key function -- mwcc picks the first DECLARED virtual, and ~daWanwan_c is declared first and is defined inline -- so every TU that needs the record emits its own copy, this one included. The cartridge keeps its canonical copy at arm9:0x0208e384, outside this entry's only licensed range (.text 0x02111308-0x02112e0c), so dsd supplies that ROM data independently. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384"
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Emitted as vague linkage because daWanwan_c has no key function -- mwcc picks the first DECLARED virtual, and ~daWanwan_c is declared first and is defined inline -- so every TU that needs the record emits its own copy, this one included. The cartridge keeps its canonical copy at arm9:0x02086e78, outside this entry's only licensed range (.text 0x02111308-0x02112e0c), so dsd supplies that ROM data independently. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78"
+    },
+    {
+      "symbol": "_ZTI12dEnemyBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Emitted as vague linkage because daWanwan_c has no key function -- mwcc picks the first DECLARED virtual, and ~daWanwan_c is declared first and is defined inline -- so every TU that needs the record emits its own copy, this one included. The cartridge keeps its canonical copy at ov002:0x021081c0, outside this entry's only licensed range (.text 0x02111308-0x02112e0c), so dsd supplies that ROM data independently. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081c0"
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "reason": "Emitted as vague linkage because daWanwan_c has no key function -- mwcc picks the first DECLARED virtual, and ~daWanwan_c is declared first and is defined inline -- so every TU that needs the record emits its own copy, this one included. The cartridge keeps its canonical copy at arm9:0x0208e390, outside this entry's only licensed range (.text 0x02111308-0x02112e0c), so dsd supplies that ROM data independently. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390"
+    },
+    {
+      "symbol": "_ZTI10daWanwan_c",
+      "disposition": "deadstrip-data",
+      "reason": "Emitted as vague linkage because daWanwan_c has no key function -- mwcc picks the first DECLARED virtual, and ~daWanwan_c is declared first and is defined inline -- so every TU that needs the record emits its own copy, this one included. The cartridge keeps its canonical copy at ov014:0x02114718, outside this entry's only licensed range (.text 0x02111308-0x02112e0c), so dsd supplies that ROM data independently. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov014",
+      "canonical_address": "0x02114718"
+    },
+    {
+      "symbol": "_ZTS10daWanwan_c",
+      "disposition": "deadstrip-data",
+      "reason": "Emitted as vague linkage because daWanwan_c has no key function -- mwcc picks the first DECLARED virtual, and ~daWanwan_c is declared first and is defined inline -- so every TU that needs the record emits its own copy, this one included. The cartridge keeps its canonical copy at ov014:0x02114740, outside this entry's only licensed range (.text 0x02111308-0x02112e0c), so dsd supplies that ROM data independently. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov014",
+      "canonical_address": "0x02114740"
+    },
+    {
+      "symbol": "_ZTS12dEnemyBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Emitted as vague linkage because daWanwan_c has no key function -- mwcc picks the first DECLARED virtual, and ~daWanwan_c is declared first and is defined inline -- so every TU that needs the record emits its own copy, this one included. The cartridge keeps its canonical copy at ov002:0x021081cc, outside this entry's only licensed range (.text 0x02111308-0x02112e0c), so dsd supplies that ROM data independently. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081cc"
+    },
+    {
+      "symbol": "_ZTV10daWanwan_c",
+      "disposition": "deadstrip-data",
+      "reason": "Emitted as vague linkage because daWanwan_c has no key function -- mwcc picks the first DECLARED virtual, and ~daWanwan_c is declared first and is defined inline -- so every TU that needs the record emits its own copy, this one included. The cartridge keeps its canonical copy at ov014:0x021147ec, outside this entry's only licensed range (.text 0x02111308-0x02112e0c), so dsd supplies that ROM data independently. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov014",
+      "canonical_address": "0x021147ec"
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "include/types.h defines ~Vector3() {} in-class -- deliberately, because the ROM's __destroy_arr over Vector3 arrays proves the element type has a destructor -- so every TU holding a Vector3 emits this 4-byte vague-linkage bx lr. This one holds fourteen (two Vector3[7]). It is not compiler-only: it has a ROM home at arm9:0x020072c0 owned by src/_ZN7Vector3D1Ev.cpp, so the disposition is deadstrip-duplicate, whose precondition is the opposite of deadstrip's -- the body must be proved to be the cartridge's own at that address before it may be discarded. objisolate checks STB_LOPROC and compares the words no relocation covers; rombuild._duplicate_body_reasons links the body against arm9:0x020072c0 and compares the words objisolate had to mask. Both run before anything is discarded."
+    }
+  ]
+}

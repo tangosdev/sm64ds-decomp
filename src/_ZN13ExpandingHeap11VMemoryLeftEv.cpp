@@ -1,25 +1,14 @@
 //cpp
-#include "types.h"
-/* ExpandingHeap::VMemoryLeft() at 0x0203c5ac -- Heap vtable slot.
- * Forwards to the allocator (ExpandingHeapAllocator* at this+0x14). */
-class ExpandingHeapAllocator
-{
-public:
-    u32 MemoryLeft();
-};
-
-class ExpandingHeap
-{
-public:
-    u32 unk00;
-    u32 unk04;
-    u32 unk08;
-    u32 unk0c;
-    u32 unk10;
-    ExpandingHeapAllocator* allocator; /* 0x14 */
-
-    u32 VMemoryLeft();
-};
+// @symbol _ZN13ExpandingHeap11VMemoryLeftEv
+/* ExpandingHeap::VMemoryLeft() at 0x0203c5ac -- Heap vtable slot 12. The SUM of
+ * every free node's size.
+ *
+ * Slots 10, 11 and 12 are three different numbers on an expanding heap and one
+ * number on a solid one. Here 12 sums the free list while 10 and 11 ask for the
+ * largest single node -- so a fragmented heap can report plenty of memory left
+ * and still refuse an allocation. */
+#include "ExpandingHeap.h"
+#include "ExpandingHeapAllocator.h"
 
 u32 ExpandingHeap::VMemoryLeft()
 {

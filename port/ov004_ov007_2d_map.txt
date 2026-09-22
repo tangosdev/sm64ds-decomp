@@ -50,7 +50,7 @@ HUD::RenderCoinCount and Minimap::Render are arm9/ov002 and are linked, with
 hal/oam_lists.cpp acting as a static guard over their sprite-template tables
 rather than as a stand-in for any of them.
 
-One naming trap to carry forward: src/_ZN6Player17St_EndingFly_MainEv.cpp is
+One naming trap to carry forward: src/func_ov007_020c3d1c.cpp is
 counted as ov007 by stem lookup, but notes/actor-vtables.md already records
 that eight _ZN6Player* names belong to other overlays (seven ov006, one
 ov007) as community labels applied to another class's bytes at a shared RAM
@@ -124,7 +124,7 @@ matched TU:
             func_02013edc(id, param, 1)
               -> func_02042fe4  -> func_02043098(id, 0, param, 1)
                  which calls (*data_020a4bb8[id])(), the ACTOR SPAWN TABLE
-                 factory. data_020a4bb8 is set to data_02090864 in
+                 factory. data_020a4bb8 is set to ACTOR_SPAWN_TABLE in
                  func_0201a054, so this is ACTOR_SPAWN_TABLE[id].
 
     Scene::PrepareToSpawnBoot()         0x0202e300   sets id = 0 or 0x168
@@ -219,13 +219,13 @@ Three ov004 TUs are counted as linked in walk_window today:
 
     src/func_ov004_020adc1c.c
     src/func_ov004_020adc00.c
-    src/_ZN5Enemy20KillByInvincibleCharERK10Vector3_16R6Player.c
+    src/func_ov004_020ada40.c
 
 They are reached from ov081's Spindrift, per the note at the top of
 hal/actor_classes_ov081.cpp.
 
 ov002 defines a function at ONE of those three addresses and not the other
-two: func_ov002_020ada40 sits at KillByInvincibleChar's 0x020ada40, and ov002
+two: _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE sits at KillByInvincibleChar's 0x020ada40, and ov002
 has no function boundary at all at 0x020adc1c or 0x020adc00. (It also has
 func_ov002_020aea30 at Enemy::KillByAttack's 0x020aea30, which is a fourth
 address, not one of the three seated here.) dsd tagged every level-overlay
@@ -263,20 +263,20 @@ co-residency reasoning above was right; what it actually catches is a
 misrouted call, and the port already contradicts itself about the address:
 
   - walk_window.map holds BOTH `_func_020ada40` out of
-    func_ov002_020ada40.cpp.obj AND the ov004
-    _ZN5Enemy20KillByInvincibleCharERK10Vector3_16R6Player out of its .c.obj.
+    _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE.cpp.obj AND the ov004
+    func_ov004_020ada40 out of its .c.obj.
     Two different bodies for one ROM address, both live in one binary.
   - hal/bob_enemy_bridges.cpp ALREADY RULED ov002 for that address, in as many
     words: "ov102 0x0214c328 targets 0x020ada40 in module overlays(2,4), and
     ov002 is the overlay this port mounts", with
     `#pragma comment(linker, "/alternatename:_func_020ada40=_func_ov002_020ada40")`
     and a four-parameter declaration,
-    `int func_ov002_020ada40(void *self, void *v, void *other, unsigned r);`
+    `int _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(void *self, void *v, void *other, unsigned r);`
   - include/decl_Enemy.h:24 agrees on the shape:
-    `extern void _ZN5Enemy20KillByInvincibleCharERK10Vector3_16R6Player(void*, Vector3_16*, void*, int);`
+    `extern void func_ov004_020ada40(void*, Vector3_16*, void*, int);`
     four parameters.
   - the SEATED ov004 TU defines three:
-    `void _ZN5Enemy20KillByInvincibleCharERK10Vector3_16R6Player(int thiz, int a1, int a2)`.
+    `void func_ov004_020ada40(int thiz, int a1, int a2)`.
   - src/func_ov081_02123910.cpp:53 routes Spindrift into that three-parameter
     ov004 body with four arguments, `(c, &kv, other, tmp)`.
 
@@ -300,7 +300,7 @@ the owner, and was never updated after that lane landed.
 
 Lane A2 took it. The fix is a per-source COMPILE_DEFINITIONS in
 port/CMakeLists.txt, on src/func_ov081_02123910.cpp, redirecting
-_ZN5Enemy20KillByInvincibleCharERK10Vector3_16R6Player onto func_020ada40 --
+func_ov004_020ada40 onto func_020ada40 --
 ov002's body, which is the answer co-residency gives. Spindrift's
 kill-by-invincible-character path reaches real work today and the "SILENT
 NO-OP IN THE SHIPPED PORT" sentence above is history rather than current
@@ -324,7 +324,7 @@ comment above the CMakeLists block.
 ONE PREMISE OF THE ARGUMENT ABOVE HAS EXPIRED, separately from the fix, and it
 is flagged here so nobody rebuilds the case on it. The reasoning leans on
 data_ov004_020beb68 being permanently zero, which made the ov004 body return
-immediately. From lane MG1 onward that global is written: func_ov004_020b2adc,
+immediately. From lane MG1 onward that global is written: _ZN11dScMgBase_cC2Ev,
 dScMgBase_c's base constructor, does data_ov004_020beb68 = self. No minigame
 scene is ever constructed on a level, so no shipped behaviour changes and the
 fix above is unaffected -- but the global is no longer a constant zero and an
@@ -422,7 +422,7 @@ Gaps, per cluster, from what the two overlays actually poke:
      frame; a layer was being invented into it.
 
      The bit is pinned by the decomp's own code, not by docs:
-     src/_ZN2GX15SetGraphicsModeEiii.c is GX::SetGraphicsMode(dispMode, bgMode,
+     src/_ZN2GX15SetGraphicsModeEiii.cpp is GX::SetGraphicsMode(dispMode, bgMode,
      bg0_3d) and its whole use of the third argument is `reg = (c << 3) | reg`.
      ntr/ppu.cpp's OBJ note says the same thing from the other side and
      ntr/ppu_audit.cpp's 3D section already printed the rule as prose. Three

@@ -4,38 +4,16 @@
     .ctor       start:0x02111c3c end:0x02111c44 kind:rodata align:4
     .data       start:0x02111c60 end:0x02112680 kind:data align:32
     .bss        start:0x02112680 end:0x021126e0 kind:bss align:32
-src/func_ov052_021111a0.c:
+src/game/actors/d_a_obj_emm_log.cpp:
     complete
-    .text start:0x021111a0 end:0x021111e4
+    .text start:0x021111a0 end:0x02111440
 
-src/func_ov052_021111e4.c:
+src/_ZN14SquarePathLiftD1Ev.cpp:
     complete
-    .text start:0x021111e4 end:0x0211123c
-
-src/func_ov052_0211123c.c:
-    complete
-    .text start:0x0211123c end:0x02111284
-
-src/func_ov052_02111284.cpp:
-    complete
-    .text start:0x02111284 end:0x021112ac
-
-src/func_ov052_021112ac.c:
-    complete
-    .text start:0x021112ac end:0x02111348
-
-src/func_ov052_02111348.cpp:
-    complete
-    .text start:0x02111348 end:0x02111410
-
-src/func_ov052_02111410.c:
-    complete
-    .text start:0x02111410 end:0x02111440
-
-src/_ZN14SquarePathLiftD1Ev.c:
     .text start:0x02111440 end:0x02111484
 
-src/_ZN14SquarePathLiftD0Ev.c:
+src/_ZN14SquarePathLiftD0Ev.cpp:
+    complete
     .text start:0x02111484 end:0x021114dc
 
 src/_ZN14SquarePathLift16CleanupResourcesEv.cpp:
@@ -54,12 +32,14 @@ src/_ZN14SquarePathLift13InitResourcesEv.cpp:
     complete
     .text start:0x0211177c end:0x02111830
 
-src/SquarePathLift_Spawn.c:
+src/d_a_obj_emm_yuka.c:
     complete
     .text start:0x02111830 end:0x02111868
 
 src/__sinit_ov052_02111b64.c:
+    complete
     .init start:0x02111b64 end:0x02111bd0
 
 src/__sinit_ov052_02111bd0.c:
+    complete
     .init start:0x02111bd0 end:0x02111c3c

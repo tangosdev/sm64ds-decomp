@@ -13,7 +13,7 @@ extern int func_0203da3c(void);
 extern void func_02030aa4(int arg);
 extern void func_ov075_0211a194(void *p, const void *data);
 extern void func_ov075_02116e00(void *p);
-extern void *_ZN12ActorDerived5SpawnEjP9ActorBaseii(u32 a, void *b, int c, int d);
+extern void *_ZN7dBase_c5SpawnEjP7fBase_cii(u32 a, void *b, int c, int d);
 
 extern void *data_0208a0e4[];
 extern int data_ov075_0211c9a4[];
@@ -60,6 +60,6 @@ int func_ov075_02116ad4(void *arg) {
         mode = 2;
     }
 
-    *(void **)((char *)arg + 0x50) = _ZN12ActorDerived5SpawnEjP9ActorBaseii(0x15a, data_0209f5c0, mode, 0);
+    *(void **)((char *)arg + 0x50) = _ZN7dBase_c5SpawnEjP7fBase_cii(0x15a, data_0209f5c0, mode, 0);
     return 1;
 }

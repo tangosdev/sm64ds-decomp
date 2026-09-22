@@ -27,7 +27,7 @@
 # the shipped image, never a dsd export, whose relocated words would make
 # literals read as live pointers.
 #
-# MgSnowballSlalom_Spawn, 0x0212a520, size 0x34 = 12 instructions plus a
+# dScMgSnowball_c_classInit, 0x0212a520, size 0x34 = 12 instructions plus a
 # ONE-word pool = 13 = 0x34/4:
 #
 #   0x0212a520  stmdb sp!,{lr}
@@ -58,12 +58,12 @@
 #   0x021295c8  str r1,[r4]     r1 loaded from 0x02129664 = 0x0213e448
 #   0x021295dc  str r1,[r4]     r1 loaded from 0x0212966c = 0x0214000c
 #
-# with func_ov004_020b2adc (the base constructor) called FIRST at 0x021295b8
+# with _ZN11dScMgBase_cC2Ev (the base constructor) called FIRST at 0x021295b8
 # with the object in r0, then Particle::SysTracker::Initialise at this+0x471c,
-# ModelBase at this+0xaba4, and three func_020733a8 sub-object builds at
+# ModelBase at this+0xaba4, and three __cxa_vec_ctor sub-object builds at
 # +0xacd8, +0xb5d8 and +0xba14.
 #
-# So the object MgSnowballSlalom_Spawn produces carries data_ov006_0214000c,
+# So the object dScMgSnowball_c_classInit produces carries _ZTV15dScMgSnowball_c,
 # and the indirection section 3 hypothesised is ONE DELEGATED CONSTRUCTOR.
 #
 # ---- 3. THE ATTRIBUTION CLOSES ON ITSELF ---------------------------------
@@ -71,15 +71,15 @@
 # "An offset match is a candidate; a blx on the loaded word is the finding."
 # Four readings of the relocation set, and the last one is a ring:
 #
-#   a. MgSnowballSlalom_Spawn is the ONLY caller of func_ov006_021295ac in the
+#   a. dScMgSnowball_c_classInit is the ONLY caller of func_ov006_021295ac in the
 #      whole overlay -- one arm_call, from:0x0212a540.  Nothing else builds
 #      this object.
 #   b. func_ov006_021295ac is the only body that writes 0x0214000c into an
 #      object it constructs.
 #   c. 0x0214000c has exactly THREE load relocations in all of ov006:
 #         from:0x0212966c  in func_ov006_021295ac+0xc0   the constructor
-#         from:0x0212571c  in func_ov006_0212568c+0x90   D2
-#         from:0x021257dc  in func_ov006_0212573c+0xa0   D0
+#         from:0x0212571c  in _ZN15dScMgSnowball_cD1Ev+0x90   D2
+#         from:0x021257dc  in _ZN15dScMgSnowball_cD0Ev+0xa0   D0
 #   d. AND SLOTS 16 AND 17 OF THE TABLE ARE THOSE TWO DESTRUCTORS.  The vtable
 #      names its own destructors and its own destructors write the vtable.
 #      Both also write 0x0213e448 back on the way out -- 0x02125738 and
@@ -97,15 +97,15 @@
 # ov006.  Section 3's table names 29 of them.  The three no id claims are:
 #
 #   0x0213e448   41 load relocations, from at least FOURTEEN different classes'
-#                constructors and destructors: MgPicturePoker_Spawn,
-#                MgPsycheOut_Spawn, MgMemoryMatch_Spawn, MgMemoryMaster_Spawn,
-#                MgPairAGoneAndOn_Spawn, MgMushroomRoulette_Spawn,
-#                MgBoomBox_Spawn, MgLuckyStars_Spawn, func_ov006_021295ac
+#                constructors and destructors: dScMgCard_c_classInit,
+#                dScMg3DEsp_c_classInit, dScMgMemory_c_classInit, dScMgMemory2_c_classInit,
+#                dScMgMCarlo2_c_classInit, dScMgRoulette_c_classInit,
+#                dScMgSound_c_classInit, dScMgBSC_c_classInit, func_ov006_021295ac
 #                (this class) and their destructor pairs.
 #                It is dScMgSingle3DBase_c, the shared middle base.
-#   0x0213c62c   14 load relocations, from MgBounceAndPounce_Spawn,
-#                MgTrampolineTime_Spawn, MgTrampolineTerror_Spawn,
-#                _ZN8PathLift17BaseInitResourcesEv, the MgBounceAndPounce
+#   0x0213c62c   14 load relocations, from dScMgJump_c_classInit,
+#                dScMgTrampoline_c_classInit, dScMgTrampoline2_c_classInit,
+#                dScMgJump2_c_classInit, the MgBounceAndPounce
 #                destructor pair and four more constructor/destructor groups.
 #                Its own name-carrying slots are MgBounceAndPounce's methods,
 #                so it is that family's shared base.
@@ -140,7 +140,7 @@
 #      would have caught an over-read, not because it derives the 36.
 #
 # THE WIDTH WORD IS ALSO AN IDENTITY WITNESS.  The string a 37th slot would
-# have eaten is a file THIS CLASS LOADS: src/func_ov006_02129268 (slot 0,
+# have eaten is a file THIS CLASS LOADS: src/_ZN15dScMgSnowball_c13InitResourcesEv (slot 0,
 # InitResources) calls func_020adc74(&data_ov006_0214009c).  Three more follow
 # it in the same run of strings, and all four are read by that one body:
 #
@@ -163,7 +163,7 @@
 #      377 is checked against the ROM on every boot.
 #   3. The config's recovered names -- dScMgSnowball_c_InitResources,
 #      _CleanupResources, _Behavior, _OnKicked, _OnPushed, _OnAttacked2 -- and
-#      a generated header dScMgSnowball_c.h that src/func_ov006_02128fb8.c
+#      a generated header dScMgSnowball_c.h that src/_ZN15dScMgSnowball_c8OnKickedEv.cpp
 #      includes.
 #   4. The four ROM strings in section 5.
 #   5. The ov005 launch table and the BMG chain (section 7).
@@ -213,7 +213,7 @@
 #   0x179  MgSnowballSlalom            0214000c      36   16    14      0
 #
 # SIX OF THE SIXTEEN ARE THE MIDDLE BASE'S, not this class's.  Diffing all 36
-# words against data_ov006_0213e448 word by word: slots 2, 5, 7, 10, 26 and 33
+# words against _ZTV19dScMgSingle3DBase_c word by word: slots 2, 5, 7, 10, 26 and 33
 # hold the same address the middle base holds, so they are inherited from
 # dScMgSingle3DBase_c and only appear as overrides because vtablerows measures
 # against dScMgBase_c at 0x020bc0c0.  TEN are this class's own:
@@ -246,7 +246,7 @@
 #   delta                    +8                             +8
 #
 # NINE of the fourteen are this class's own, so the naive expectation is +9.
-# The ninth is func_ov006_02127d10, vtable slot 9, and section 14 HOST-COPIES
+# The ninth is _ZN15dScMgSnowball_c6RenderEv, vtable slot 9, and section 14 HOST-COPIES
 # it: its src TU leaves the slice, so the guard stops counting it as seated
 # while its ruling stays true and stays needed.  That is the same standing the
 # five middle-base rows have -- ruled here, linked from somewhere else or not
@@ -260,7 +260,7 @@
 #
 # SLOT 18 READS ITS SECOND ARGUMENT AND THE THUNK FORWARDS IT.  This is the
 # second class to do it -- run mg9 lane LKY found the first, in dScMgBSC_c, and
-# relayed it as "witness, don't assume".  func_ov006_0212921c saves r1 into r4
+# relayed it as "witness, don't assume".  _ZN15dScMgSnowball_c13OnYoshiTryEatEi saves r1 into r4
 # at 0x0212922c and compares it against 0x13 at 0x0212923c; only on a match
 # does it run func_ov006_02126ee4 and func_ov006_02126a98.  A thunk that merely
 # popped the argument would hand the body stack litter and let that arm fire at
@@ -277,7 +277,7 @@
 #                                                 AND data_ov006_02143020
 #
 # THIS CLASS'S VTABLE SLOT 6 IS NOT ONE OF THEM, and that is the finding.  The
-# slot every seat wires by name, func_ov006_021283a4, contains ZERO decode
+# slot every seat wires by name, _ZN15dScMgSnowball_c8BehaviorEv, contains ZERO decode
 # sites.  It reaches the machine by CALLING func_ov006_0212a2e0 at 0x02128f04,
 # and it is that body's only caller anywhere in ov006.  A lane that priced this
 # class by reading slot 6 would have priced its wall at zero.
@@ -311,7 +311,7 @@
 # written fresh here rather than inherited:
 #
 #   over all of ov006, body by body            114 sites   (LKY's figure)
-#   over func_ov006_021254c0 (LKY's slot 6)      1 site    at 0x021254dc
+#   over _ZN10dScMgBSC_c8BehaviorEv (LKY's slot 6)      1 site    at 0x021254dc
 #   over the span 0x02124908..0x0212a3c0         5 sites   (LKY's corrected
 #     -- the address range LKY's review retired            reading, which is
 #                                                          this class's four
@@ -322,7 +322,7 @@
 #
 # THE FOUR TABLES' SLOT NUMBERS COME FROM THE CONSTRUCTOR.  Reading the pair
 # run in address order gives fourteen wrong slot numbers, and the run is not
-# even pairs throughout: MgSnowballSlalom_SpawnInfo sits INSIDE it at
+# even pairs throughout: g_profile_MG_SNOWBALL sits INSIDE it at
 # 0x0213ffb8 as {0x0212a520, 0x01790179} and a sweep would read it as a
 # fifteenth pair with a nonzero adjustment.  src/__sinit_ov006_021333e0.c is
 # the ground truth and its own order is:
@@ -392,17 +392,18 @@
 # with #, so a trailing comment kills the line silently and the linkage delta
 # comes up short.  Run mg9 lane PSY banked that one.
 #
-src/MgSnowballSlalom_Spawn.cpp
+src/d_s_mg_snowball.cpp
 src/func_ov006_021295ac.cpp
-src/func_ov006_02129268.c
-src/func_ov006_021291f8.c
-src/func_ov006_021283a4.c
-src/func_ov006_0212568c.cpp
-src/func_ov006_0212573c.cpp
-src/func_ov006_0212921c.c
-src/func_ov006_021291d4.c
-src/func_ov006_02128fb8.c
-src/func_ov006_021291b0.c
+src/_ZN15dScMgSnowball_c13InitResourcesEv.cpp
+src/_ZN15dScMgSnowball_c16CleanupResourcesEv.cpp
+src/_ZN15dScMgSnowball_c8BehaviorEv.cpp
+src/_ZN15dScMgSnowball_cD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN15dScMgSnowball_cD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN15dScMgSnowball_cD0Ev.cpp
+src/_ZN15dScMgSnowball_c13OnYoshiTryEatEi.cpp
+src/_ZN15dScMgSnowball_c11OnAttacked2Ev.cpp
+src/_ZN15dScMgSnowball_c8OnKickedEv.cpp
+src/_ZN15dScMgSnowball_c8OnPushedEv.cpp
 src/func_ov006_0212a274.c
 src/func_ov006_0212a110.c
 src/func_ov006_0212a000.c
@@ -422,7 +423,7 @@ src/func_ov006_0212972c.c
 #
 # ONE is an /alternatename row, in port/unmatched/MgSnowball_Faces.cpp: the
 # constructor's src declares this class's vtable at C++ linkage, so the
-# reference mangles as ?data_ov006_0214000c@@3PAXA against the mount's plain
+# reference mangles as ?_ZTV15dScMgSnowball_c@@3PAXA against the mount's plain
 # _data_ov006_0214000c.  It did NOT ask for the middle base's twin, because an
 # earlier seat under dScMgSingle3DBase_c already stands that row.
 #
@@ -487,7 +488,7 @@ src/func_ov006_0212a3c0.c
 #
 # EXCLUDED and host-copied in port/unmatched/MgSnowball_ModelRender.cpp:
 #
-#     src/func_ov006_02127d10.c   vtable SLOT 9, Render
+#     src/_ZN15dScMgSnowball_c6RenderEv.cpp   vtable SLOT 9, Render
 #
 # It is not a pointer-to-member TU and the Itanium scan is right to find no
 # site in it.  It carries the OTHER shadow-dispatch shape, the one
@@ -530,7 +531,7 @@ src/func_ov006_0212a3c0.c
 # builds that sub-object with _ZN5ModelC1Ev.  Everything else in the 167-line
 # body is transcribed unchanged.
 #
-# The slice line for src/func_ov006_02127d10.c is REMOVED from section 11
+# The slice line for src/_ZN15dScMgSnowball_c6RenderEv.cpp is REMOVED from section 11
 # rather than left in beside the host copy, so the two cannot both define the
 # symbol.  The headline delta in SECTION 15 counts 33 slice lines, not 34, for
 # that reason -- this line used to say "the delta below" with nothing below it.
@@ -557,7 +558,7 @@ src/func_ov006_0212a3c0.c
 #
 # BOTH DIRECTIONS RECONCILE, and the intermediate reading is kept because it is
 # the check.  The wave-1 and wave-2 build read 34 src/ lines and measured 7155,
-# +34.  Wave 3 removed src/func_ov006_02127d10.c in favour of
+# +34.  Wave 3 removed src/_ZN15dScMgSnowball_c6RenderEv.cpp in favour of
 # port/unmatched/MgSnowball_ModelRender.cpp, and the headline moved to 7154 --
 # down by exactly the one line that left.  A slice line and a headline point
 # are the same thing in both directions.
@@ -603,7 +604,7 @@ src/func_ov006_0212a3c0.c
 # port/unmatched/MgSnowball_Faces.cpp is gone and the rocks message 554
 # promises are no longer an expected gap.
 #
-#   src/func_ov006_02125f68.c   0x9e0  the obstacle and collision pass
+#   src/func_ov006_02125f68.cpp   0x9e0  the obstacle and collision pass
 #   src/func_ov006_02126ee4.cpp  0xacc  the course layout generator
 #   src/func_ov006_02126b4c.c   0x398  the BG2 course-row tile writer
 #
@@ -619,11 +620,11 @@ src/func_ov006_0212a3c0.c
 # change. It stood at 9 of 691 -- one idiom, the ROM reading the vtable pointer
 # through the argument copy at all three virtual-call sites -- and the seat
 # FAULTED on the first boot of scene 377 under SM64DS_FAULTS_FATAL=1: ecx = 0
-# inside func_ov004_020ad660 reading [0+8], because the port's face for that
+# inside _ZN11dScMgBase_c9Virtual8CEv reading [0+8], because the port's face for that
 # slot is `static int __fastcall mb_v35(void *s, void *)` and a C
 # function-pointer call leaves the receiver on the stack. Spelling it as a real
 # C++ virtual call through a dummy-vtable struct -- the spelling
-# src/func_ov006_021063a0.cpp, _02106168.cpp and _021057f0.cpp already use for
+# src/actors/dScMgPanel_c.cpp, _02106168.cpp and _021057f0.cpp already use for
 # this same slot -- fixes the convention AND closes all nine words, because the
 # ROM's idiom IS the C++ virtual call. The language mode alone is not the lever:
 # compiling the C spelling with -lang c++ is bitwise identical, still 9 of 691.
@@ -670,7 +671,7 @@ src/func_ov006_0212a3c0.c
 #                               +0xac58/+0xacd8 that func_ov006_02126ee4 fills
 #   src/func_ov006_02125cdc.c   the course-geometry (wall) probe
 #
-src/func_ov006_02125f68.c
+src/func_ov006_02125f68.cpp
 src/func_ov006_02126ee4.cpp
 src/func_ov006_02126b4c.c
 src/func_ov006_021259d8.c
@@ -714,7 +715,7 @@ src/func_ov006_02125cdc.c
 # +0xab74, not from a screen-absolute position, so moving the rub to a different
 # x does not aim the ball anywhere different.  Every straight-line rub therefore
 # arrives at the same rock, and one contact costs most of the velocity: the
-# contact arm of src/func_ov006_02125f68.c keeps v/8 of the incoming speed and
+# contact arm of src/func_ov006_02125f68.cpp keeps v/8 of the incoming speed and
 # adds a quarter of the table-scaled term back.  Twelve full-width strokes still
 # stop at scroll 2235.
 #

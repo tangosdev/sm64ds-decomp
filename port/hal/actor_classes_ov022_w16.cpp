@@ -24,7 +24,7 @@
 // destructors and the sinit; everything else is a second consumer of bindings
 // that already exist.
 //
-// Slot 31 is NOT Platform::Kill. It is func_ov098_0213a17c, the KillOrWhatever
+// Slot 31 is NOT Platform::Kill. It is _ZN16daObjFallBlock_c4KillEv, the KillOrWhatever
 // poof-dust death that slot 27 arms -- the reading hal/actor_classes_ov045.cpp
 // records for the identical tail. The eight OTHER ov022 tables do end in
 // Platform::Kill; this one does not, because its base is the ov098 class and
@@ -38,13 +38,15 @@
 // actor_classes_ov002_w15.cpp did for the same reason. port_ov22_bringup IS
 // extern and IS done-guarded, so it is called rather than duplicated.
 
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
@@ -52,44 +54,51 @@ extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include "dsstate_seg.h"
 #include <cstdlib>
 
-#include "Actor.h"
-#include "ActorBase.h"
+#include "dActor_c.h"
+#include "fBase_c.h"
 
 extern "C" {
-int _ZN5Actor19BeforeInitResourcesEv(void *self);              /* slot 1  */
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
-int _ZN5Actor14BeforeBehaviorEv(void *self);                   /* slot 7  */
-int _ZN5Actor12BeforeRenderEv(void *self);                     /* slot 10 */
-int _ZN5Actor13OnYoshiTryEatEv(void *self);                    /* slot 18 */
-void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
-int _ZN5Actor9Virtual50Ev(void *self);                         /* slot 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);              /* slot 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);              /* slot 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
-int _ZN5Actor16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);              /* slot 1  */
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);                   /* slot 7  */
+int _ZN8dActor_c12BeforeRenderEv(void *self);                     /* slot 10 */
+int _ZN8dActor_c13OnYoshiTryEatEv(void *self);                    /* slot 18 */
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
+int _ZN8dActor_c9Virtual50Ev(void *self);                         /* slot 20 */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);              /* slot 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);              /* slot 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
+int _ZN8dActor_c16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
 
 /* the class's own four, plus the factory (port/slice_w16a.txt) */
-int func_ov022_02112448(void *self);      /* slot 0  InitResources veneer   */
-int func_ov022_02112434(void *self);      /* slot 3  CleanupResources veneer*/
-int *func_ov022_02112380(int *self);      /* slot 16 D1                     */
-/* Slot 17, the deleting destructor. Its TU is src/func_ov022_021123d0.c but it
-   EMITS daObjFl_Fall_Block_c_OnYoshiTryEat -- the recovered name is wrong (the
-   body is the D0; OnYoshiTryEat is slot 18) and the TU took its name from the
-   recovery, so that is the spelling the linker sees. Declared under the name
-   the object file actually exports, seated into the slot the ROM table puts it
-   in. The wrong name is on the decomp-side correction list. */
-int *daObjFl_Fall_Block_c_OnYoshiTryEat(int *self);   /* slot 17 D0 */
-void *FallBlockLll_Spawn(void);
+int _ZN20daObjFl_Fall_Block_c13InitResourcesEv(void *self);      /* slot 0  InitResources veneer   */
+int _ZN20daObjFl_Fall_Block_c16CleanupResourcesEv(void *self);      /* slot 3  CleanupResources veneer*/
+int *_ZN20daObjFl_Fall_Block_cD1Ev(int *self);      /* slot 16 D1                     */
+/* Slot 17, the deleting destructor. RE-SPELLED (run link100 wave 9c, lane
+   DTORS2, on lane SEATS3's handoff item 3). The note that stood here said the
+   TU emitted daObjFl_Fall_Block_c_OnYoshiTryEat because the recovered name was
+   wrong, and that the wrong name was on the decomp-side correction list. main
+   has since made the correction: config/arm9/overlays/ov022/symbols.txt:54
+   carries _ZN20daObjFl_Fall_Block_cD0Ev at 0x021123d0, size 0x64, and
+   src/game/actors/daObjFl_Fall_Block_c.cpp carries `// @symbol
+   _ZN20daObjFl_Fall_Block_cD0Ev` with no body under it, because the class
+   header spells the destructor inline. So the stale name asked for a symbol
+   nothing exports any more, and this slot pointed at an unresolved row.
+   hal/dtor_forwarders_gen_w9c.cpp now defines the D0 under the ROM's own name,
+   the same way hal/dtor_forwarders_gen.cpp already defines this class's D1 one
+   line above, and the slot asks for that. */
+int *_ZN20daObjFl_Fall_Block_cD0Ev(int *self);   /* slot 17 D0 */
+void *daObjFl_Fall_Block_c_classInit(void);
 
 /* the four ov098 base bodies, all already in walk_window.map */
-int func_ov098_0213a36c(char *self);      /* slot 6  Behavior */
-int func_ov098_0213a314(char *self);      /* slot 9  Render   */
-void func_ov098_0213a284(char *self);     /* slot 27 */
-void func_ov098_0213a17c(char *self);     /* slot 31 */
+int _ZN16daObjFallBlock_c8BehaviorEv(char *self);      /* slot 6  Behavior */
+int _ZN16daObjFallBlock_c6RenderEv(char *self);      /* slot 9  Render   */
+void _ZN16daObjFallBlock_c15OnHitByMegaCharER6Player(char *self);     /* slot 27 */
+void _ZN16daObjFallBlock_c4KillEv(char *self);     /* slot 31 */
 
 /* the sinit that constructs the file table's SharedFilePtr pair */
 void __sinit_ov022_02112fe4(void);
@@ -134,13 +143,13 @@ static void fb83_bringup(void)
 
 // The registry rewrites the SpawnInfo's +0 word to this wrapper, and the
 // wrapper forces the vptr to the host array after Spawn returns. That is what
-// makes FallBlockLll_Spawn.c's placeholder stores inert: the ROM body stores
+// makes daObjFl_Fall_Block_c_classInit.c's placeholder stores inert: the ROM body stores
 // the intermediate base 0x0213c5bc and then its own table, and whichever way
 // the two spellings in that TU resolve, this store is the last one. Identical
 // to port_factory_fall_block_bfs.
 extern "C" void *port_factory_fall_block_lll(void)
 {
-    void *p = FallBlockLll_Spawn();
+    void *p = daObjFl_Fall_Block_c_classInit();
     if (p)
         *(void **)p = (void *)_ZTV20daObjFl_Fall_Block_c;
     return p;
@@ -165,69 +174,69 @@ FB83_TRAP(13) FB83_TRAP(14)
 #undef FB83_TRAP
 
 static int __fastcall fb83_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall fb83_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall fb83_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 static void __fastcall fb83_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall fb83_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall fb83_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall fb83_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall fb83_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall fb83_pdes(void *s, void *)
-{ ((ActorBase *)s)->ActorBase::OnPendingDestroy(); return 0; }
+{ ((fBase_c *)s)->fBase_c::OnPendingDestroy(); return 0; }
 static int __fastcall fb83_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int __fastcall fb83_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 static int __fastcall fb83_turn_egg(void *s, void *, void *p)
-{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+{ _ZN8dActor_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall fb83_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall fb83_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall fb83_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall fb83_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall fb83_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall fb83_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall fb83_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall fb83_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 static int __fastcall fb83_egg(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 
 /* the class's own six */
 static int __fastcall fb83_init(void *s, void *)
-{ return func_ov022_02112448(s); }
+{ return _ZN20daObjFl_Fall_Block_c13InitResourcesEv(s); }
 static int __fastcall fb83_clean(void *s, void *)
-{ return func_ov022_02112434(s); }
+{ return _ZN20daObjFl_Fall_Block_c16CleanupResourcesEv(s); }
 static int __fastcall fb83_behavior(void *s, void *)
-{ return func_ov098_0213a36c((char *)s); }
+{ return _ZN16daObjFallBlock_c8BehaviorEv((char *)s); }
 static int __fastcall fb83_render(void *s, void *)
 { port_actor_render_probe("FALL_BLOCK_LLL", (char *)s + 0xd4);
-  return func_ov098_0213a314((char *)s); }
+  return _ZN16daObjFallBlock_c6RenderEv((char *)s); }
 static int __fastcall fb83_d1(void *s, void *)
-{ return (int)(size_t)func_ov022_02112380((int *)s); }
+{ return (int)(size_t)_ZN20daObjFl_Fall_Block_cD1Ev((int *)s); }
 static int __fastcall fb83_d0(void *s, void *)
-{ return (int)(size_t)daObjFl_Fall_Block_c_OnYoshiTryEat((int *)s); }
+{ return (int)(size_t)_ZN20daObjFl_Fall_Block_cD0Ev((int *)s); }
 /* Slot 27 is OnHitByMegaChar(Player &): the caller pushes the player, so the
    veneer takes the third parameter to pop it even though the ov098 body reads
    only the receiver -- the fb_slot27 contract in hal/actor_classes_wf.cpp. */
 static int __fastcall fb83_slot27(void *s, void *, void *)
-{ func_ov098_0213a284((char *)s); return 0; }
+{ _ZN16daObjFallBlock_c15OnHitByMegaCharER6Player((char *)s); return 0; }
 static int __fastcall fb83_slot31(void *s, void *)
-{ func_ov098_0213a17c((char *)s); return 0; }
+{ _ZN16daObjFallBlock_c4KillEv((char *)s); return 0; }
 
 extern "C" void hal_fill_fall_block_lll_vtable(void)
 {
@@ -251,7 +260,7 @@ extern "C" void hal_fill_fall_block_lll_vtable(void)
     vt[13] = (void *)fb83_trap13;
     vt[14] = (void *)fb83_trap14;
     vt[15] = (void *)fb83_heap;
-    vt[16] = (void *)fb83_d1;
+    vt[16] = (void *)PORT_D16(fb83_d1);
     vt[17] = (void *)fb83_d0;
     vt[18] = (void *)fb83_yoshi;
     vt[19] = (void *)fb83_turn_egg;

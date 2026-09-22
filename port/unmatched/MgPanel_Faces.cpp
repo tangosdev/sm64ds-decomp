@@ -15,8 +15,8 @@
 // slots call it directly, both adjudicated out of the ROM by lane PPP and both
 // re-checked here:
 //
-//   slot 0  InitResources  func_ov006_021073b0, bl #0x2106168 at 0x021077a4
-//   slot 18 state reset    func_ov006_021071fc, bl #0x2106168 at 0x0210729c
+//   slot 0  InitResources  _ZN12dScMgPanel_c13InitResourcesEv, bl #0x2106168 at 0x021077a4
+//   slot 18 state reset    _ZN12dScMgPanel_c13OnYoshiTryEatEi, bl #0x2106168 at 0x0210729c
 //
 // and it is the sole writer of the two panel arrays func_ov006_021067a4 zeroes
 // just before it runs: the CURRENT face at c+0x4f1e+i and the TARGET face at
@@ -42,20 +42,20 @@
 //
 // The virtual call needs no help from this file. src/func_ov006_02106168.cpp
 // dispatches slot 35 through the seated table the same way
-// src/func_ov006_021063a0.cpp already does, and by the time either runs
+// src/actors/dScMgPanel_c.cpp already does, and by the time either runs
 // port_scene_fill_panel has replaced that slot's raw DS word with
 // hal/scene_mg.cpp's mb_v35 thunk.
 
 // ---- THE CLASS VTABLE'S ITANIUM NAME ---------------------------------------
 //
-// src/MgPuzzlePanelPuzzlePanic_Spawn.c writes the class vtable into the new
+// src/d_s_mg_panel.c writes the class vtable into the new
 // object as `_ZTV12dScMgPanel_c`, which is the ROM's own class name -- the
 // type_info the word before the table points at reads "12dScMgPanel_c" -- and
 // is not a config symbol name, so it needs a face onto the mounted table. The
 // address is settled by the ROM twice over:
 //   config/arm9/overlays/ov006/relocs.txt
 //   from:0x02107888 kind:load to:0x0213e24c module:overlay(6)
-// and 0x02107888 is inside MgPuzzlePanelPuzzlePanic_Spawn (0x02107858, 0x34
+// and 0x02107888 is inside dScMgPanel_c_classInit (0x02107858, 0x34
 // bytes); and slot 17's own literal pool at 0x021042e0 stores the same word
 // into the object, as does slot 16's at 0x021042e4's sibling. This is exactly
 // the shape hal/scene_mg_faces.cpp section 2 carries for _ZTV14dScMgCurling_c

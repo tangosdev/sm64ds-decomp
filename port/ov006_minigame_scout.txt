@@ -179,15 +179,15 @@ vtable and jump-table words count, not just direct calls; roots are each
 id's SpawnInfo record from the ROM spawn table).
 
     id      entry                     src TUs  ov006 data  external refs
-    0x176   MgShuffleShell_Spawn           19          22   37 arm9 + ~40 ov004
-    0x16e   MgWanted_Spawn                 19         188   43 arm9 + ~45 ov004
-    0x177   func_ov006_020e3854            24         138
+    0x176   dScMgCurling_c_classInit           19          22   37 arm9 + ~40 ov004
+    0x16e   dScMgLuigi_c_classInit                 19         188   43 arm9 + ~45 ov004
+    0x177   _ZN15dScMgCurling2_cD1Ev            24         138
     0x016d  (Camera_UpdateMatrices in
              closure)                      26         149
-    0x17a   MgCoincentration_Spawn         26         152
-    0x0172  MgSortOrSplode_Spawn           29          79
+    0x17a   dScMgCoin_c_classInit         26         152
+    0x0172  dScMgBomroom_c_classInit           29          79
     ...
-    0x181   MgTrampolineTerror_Spawn      192         391
+    0x181   dScMgTrampoline2_c_classInit      192         391
 
     union of all 30 : 1275 of the 1839 TUs, 1968 data symbols
 
@@ -196,7 +196,7 @@ ov006 data symbols, the smallest data footprint by a wide margin.
 
 Side confirmation, restated against main's layout: MgShuffleShell's own
 closure contains the 0x5c-byte ov006 body at 0x020e17f8. At this lane's
-base that body wore the name _ZN6Player16St_WallJump_InitEv. On main it
+base that body wore the name func_ov006_020e17f8. On main it
 does not: commit 93a666154 (#1336) gave that name to the 0xb0-byte
 ov002 function at the same shared address, and the ov006 body is
 src/func_ov006_020e17f8.cpp. So the sentence is that a minigame's own
@@ -269,11 +269,11 @@ have to be told apart before anyone trusts a name:
     with mwccarm 1.2/sp2p3 (ov006)". Each mode overlay is its own link,
     so shared source genuinely appears in several of them.
 
-  mislabelled minigame bodies. _ZN3OAM7SECONDSE at 0x0210c6c0 calls
+  mislabelled minigame bodies. _ZN12dScMgSlot1_c6RenderEv at 0x0210c6c0 calls
     Hud_RenderSprite, two ov004 sprite routines and GetGameLanguage --
     it is a minigame's timer display, not anything to do with OAM. The
     _ZN6Player names were the same class, and
-    _ZN8PathLift17BaseInitResourcesEv at 0x020efaf0 sits inside
+    dScMgJump2_c_classInit at 0x020efaf0 sits inside
     minigame id 0x175's closure.
 
 The Player half of that set is already fixed on main: #1336 took three

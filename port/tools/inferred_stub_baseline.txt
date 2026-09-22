@@ -18,4 +18,4 @@
 #
 # One symbol per line, sorted.
 func_ov084_0212b344
-func_ov100_021455a0
+_ZN4Door13InitResourcesEv

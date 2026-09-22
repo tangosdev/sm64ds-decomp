@@ -5,15 +5,15 @@
 # else the class reaches is already linked, which is why the slice is this
 # short:
 #
-#   slots 6 and 9   func_ov002_020b616c / func_ov002_020b6144, the shared ov002
+#   slots 6 and 9   _ZN15daObjGuragura_c8BehaviorEv / _ZN15daObjGuragura_c6RenderEv, the shared ov002
 #                   TILTING pair -- both already in walk_window.map for ov045's
 #                   id 141 (hal/actor_classes_ov045.cpp, TILTING_PLATFORM_BFS)
 #   the veneer      func_ov002_020b6244 / func_ov002_020b60fc, the ov002 base
 #     targets       Init/Cleanup pair the two veneers tail-call -- both already
 #                   in the map, same reason
-#   the factory     _ZN9ActorBasenwEj, _ZN8PlatformC2Ev -- already in the map
+#   the factory     _ZN7fBase_cnwEj, _ZN10dBgActor_cC2Ev -- already in the map
 #     spine
-#   slot 31         _ZN8Platform4KillEv (ov002 0x020ee55c) -- already in the map
+#   slot 31         _ZN10dBgActor_c4KillEv (ov002 0x020ee55c) -- already in the map
 #   slots 1..30     the arm9 Actor/ActorBase defaults, all already linked
 #
 # So the marginal linkage of this class is exactly the five lines below, and
@@ -23,7 +23,7 @@
 # (factory + fill) that lands with them.
 #
 # NOT IN THIS SLICE, on purpose: hal/actor_classes_ov064_w9.cpp declares
-# _ZTV12MetalNetLift as HOST storage (the ov015/ov016/ov080 rule), so the
+# _ZTV14daObjFl_Gura_c as HOST storage (the ov015/ov016/ov080 rule), so the
 # vtable is not mounted and no TU spells it but the fill.
 #
 # THE SIXTH TU is the class's own static initialiser, the gate-177/178
@@ -33,9 +33,5 @@
 # 1524 into 0x0211c770 with SharedFilePtr_Destruct_Clsn and node 0x0211c784 --
 # and its body reads back exactly the cells the reloc sweep predicted, which is
 # what says the mount list and the sinit agree.
-src/TiltingPlatformLll_Spawn.c
-src/_ZN12MetalNetLift13InitResourcesEv.c
-src/_ZN12MetalNetLift16CleanupResourcesEv.c
-src/_ZN12MetalNetLiftD1Ev.c
-src/_ZN12MetalNetLiftD0Ev.c
+src/game/actors/d_a_obj_fl_gura.cpp
 src/__sinit_ov064_0211b078.c

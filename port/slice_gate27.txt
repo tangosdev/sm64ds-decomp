@@ -6,7 +6,7 @@
 # method here is matched; what it needed was gate 25's sub-OAM path and a
 # registry row.
 #
-# Its SpawnInfo is ov002 0x0210c210, which config names _ZN3HUD9spawnDataE, and
+# Its SpawnInfo is ov002 0x0210c210, which config names g_profile_METER, and
 # its factory is the CONSTRUCTOR at 0x020fe154 -- the ROM stores the ctor itself
 # in the record's +0 word for this class rather than a separate Spawn veneer.
 #
@@ -20,16 +20,17 @@
 # port/unmatched/HUD_InitResources.cpp, the hand copy that carried both by
 # hand, is retired. See status/HUDINITRES.md.
 
-src/_ZN3HUDC1Ev.c
-src/_ZN3HUDD0Ev.c
-src/_ZN3HUDD1Ev.c
+src/d_meter.cpp
+# RETIRED at SLICE1: body now in src/_ZN3HUDD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN3HUDD0Ev.cpp
+src/_ZN3HUDD1Ev.cpp
 src/_ZN3HUD16CleanupResourcesEv.cpp
 src/_ZN3HUD16OnPendingDestroyEv.cpp
 src/_ZN3HUD8BehaviorEv.cpp
 src/_ZN3HUD6RenderEv.cpp
 
 # the render leaves
-src/_ZN3HUD15CalculateDigitsEt.c
+src/_ZN3HUD15CalculateDigitsEt.cpp
 src/_ZN3HUD15RenderCoinCountEv.cpp
 src/_ZN3HUD15RenderLifeCountEv.cpp
 src/_ZN3HUD15RenderStarCountEv.cpp
@@ -51,15 +52,15 @@ src/_ZN3HUD17UpdateHealthMeterEv.cpp
 src/_ZN5Stage21RenderVsModeCountdownEv.cpp
 
 # the two OAM entry points the leaves emit through that gate 25 did not need
-src/_ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2.c
+src/_ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2.cpp
 src/_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi.c
 
 # the arm9 leaf HUD::InitResources ends on: clears the pad-repeat latch
 src/func_0203da4c.c
 
 # the leaves' own callees
-src/_ZN2GX11LoadOBJPlttEPKvjj.c
-src/_ZN3GXS11LoadOBJPlttEPKvjj.c
+src/_ZN2GX11LoadOBJPlttEPKvjj.cpp
+src/_ZN3GXS11LoadOBJPlttEPKvjj.cpp
 src/_ZN5Timer7GetTimeEv.cpp
 src/_ZN6Player16IsInsideOfCannonEv.cpp
 src/GiveLives.c

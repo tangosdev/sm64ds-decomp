@@ -50,11 +50,11 @@
 //   0x020da9d4 func_ov002_020da9d4
 //   0x0203aed8 _Z15ApproachLinear2Rsss
 //   0x02022d80 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE
-//   0x02012328 _ZN5Sound8PlayLongEjjjRK7Vector3j
+//   0x02012328 _ZN5Sound8PlayLongEjjjRK7Vector3s
 //   0x0201264c _ZN5Sound9PlayBank0EjRK7Vector3
 //   0x020dc174 func_ov002_020dc174
-//   0x02015024 _ZN12CylinderClsn5ClearEv
-//   0x02014ff0 _ZN12CylinderClsn6UpdateEv
+//   0x02015024 _ZN5dCc_c5ClearEv
+//   0x02014ff0 _ZN5dCc_c6UpdateEv
 //   0x020e30a0 _ZN6Player11ChangeStateERNS_5StateE
 //   0x020bedd4 Player_AdvanceAnims
 // and the data words in the literal pool at 0x020da390..0x020da3ac:
@@ -86,14 +86,14 @@ int  _Z15ApproachLinear2Rsss(short *ref, short target, short step);
 unsigned int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     unsigned int a, unsigned int b, int x, int y, int z, const void *pos,
     void *cb);
-unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int a, unsigned int b,
+unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b,
                                                unsigned int c, const void *pos,
                                                unsigned int e);
 void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int id, const void *pos);
 void func_ov002_020dc174(char *c, void *r1, int r2, int r3, unsigned int a5,
                          unsigned int a6);
-void _ZN12CylinderClsn5ClearEv(void *self);
-void _ZN12CylinderClsn6UpdateEv(void *self);
+void _ZN5dCc_c5ClearEv(void *self);
+void _ZN5dCc_c6UpdateEv(void *self);
 void _ZN6Player11ChangeStateERNS_5StateE(void *self, void *state);
 void Player_AdvanceAnims(char *c);
 
@@ -178,7 +178,7 @@ int port_player_st_swingplayer_main(void *self)
                     _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
                         *(unsigned int *)(c + 0x628), pid, px, py, pz, 0, 0);
                 *(unsigned int *)(c + 0x620) =
-                    _ZN5Sound8PlayLongEjjjRK7Vector3j(
+                    _ZN5Sound8PlayLongEjjjRK7Vector3s(
                         *(unsigned int *)(c + 0x620), 0, 0x1c,
                         (const void *)(c + 0x74), 0);
             }
@@ -208,8 +208,8 @@ int port_player_st_swingplayer_main(void *self)
             int vec[3] = {0, 0x32000, 0x64000};
             func_ov002_020dc174(c, vec, 0x32000, 0x32000, 0x80, 0);
         }
-        _ZN12CylinderClsn5ClearEv((void *)(c + 0x314));
-        _ZN12CylinderClsn6UpdateEv((void *)(c + 0x314));
+        _ZN5dCc_c5ClearEv((void *)(c + 0x314));
+        _ZN5dCc_c6UpdateEv((void *)(c + 0x314));
         return swing_tail(c);
     }
 

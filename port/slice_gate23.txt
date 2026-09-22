@@ -6,7 +6,7 @@
 # because the cannon's link closure reached two of its functions, but its data
 # has never been mounted until now.
 #
-# THE CONFIG'S NAME CHECKS OUT. QuestionBlock_Spawn installs _ZTV13QuestionBlock
+# THE CONFIG'S NAME CHECKS OUT. daObjHatenaBlock_c_classInit_HATENA_BLOCK installs _ZTV13QuestionBlock
 # at ov102 0x0214e47c, whose RTTI reads 18daObjHatenaBlock_c -- hatena is the
 # question mark -- and the SpawnInfo's own +4 halfword says 20. ov102 does
 # carry one shifted name (0x0214e1d8 is spelled _ZTV13FortressTower and its
@@ -19,8 +19,8 @@
 # dispatch on both ModelAnim and Model, which the dual fill in
 # hal/cxxname_bridge.cpp already serves on both classes. The door's slot 4
 # problem does not come up.
-src/QuestionBlock_Spawn.c
-src/_ZN13QuestionBlock13InitResourcesEv.c
+src/d_a_obj_hatena_block_hatena_block.c
+src/_ZN13QuestionBlock13InitResourcesEv.cpp
 src/_ZN13QuestionBlock8BehaviorEv.cpp
 # _ZN13QuestionBlock6RenderEv IS NOT HERE: the ModelAnim slot-5 case for
 # the third time this session. Host copy in

@@ -4,22 +4,22 @@
 //
 // ---- 1. THE TRAP THAT USED TO BE HERE WAS THE CARD DRAW -------------------
 //
-// func_ov006_020f3e68, ov006, size 0xa8, forty instructions plus two pool
+// _ZN13dScMgMemory_c9DrawCardsEv, ov006, size 0xa8, forty instructions plus two pool
 // words.  It is the SIXTH call vtable slot 9 (Render) makes -- see
-// src/func_ov006_020f5324.c, whose call list is
+// src/minigames/d_s_mg_memory.cpp, whose call list is
 //
 //     func_ov006_020c0aa8(c + 0x4660)
 //     func_ov004_020b1bc8(c, 0xc, 0xc, 0)
 //     func_ov004_020b6430()
-//     func_ov006_020f38f0(c)
-//     func_ov006_020f392c(c)
-//     func_ov006_020f3e68(c)      <-- this one
+//     _ZN13dScMgMemory_c11DrawMessageEv(c)
+//     _ZN13dScMgMemory_c10DrawCursorEv(c)
+//     _ZN13dScMgMemory_c9DrawCardsEv(c)      <-- this one
 //     func_ov006_020c1804(c + 0x4f38)
 //
 // and it is the ONLY code in dScMgMemory_c that puts a card pixel anywhere.
 //
 // THE SIBLING HAD THE IDENTICAL FLOOR AND IT COST A WHOLE LANE.
-// port/mg_fanout_costs.txt section 15 is dScMgMemory2_c's func_ov006_020f5b98:
+// port/mg_fanout_costs.txt section 15 is dScMgMemory2_c's _ZN14dScMgMemory2_c9DrawCardsEv:
 // same 0xa8, same sixth-call position under Render, same "the hand and the
 // table are the same records and the same loop", and run mg7 lane MEMCARDS
 // decompiled it as a NONMATCHING body after about thirty source shapes, ten
@@ -28,7 +28,7 @@
 // instead; a seat with a trap here booted, ticked, dealt and played its state
 // machine, and drew NO CARDS.
 //
-// RUN mg10 LANE F362 DECOMPILED IT.  src/func_ov006_020f3e68.c is the body and
+// RUN mg10 LANE F362 DECOMPILED IT.  src/minigames/d_s_mg_memory.cpp is the body and
 // port/slice_mmt.txt carries it, so this file no longer defines the symbol at
 // all.  It is NONMATCHING at 24 of 42 words and the file's own banner is the
 // measurement: the ROM body is the sibling's 0x020f5b98 with FOUR constants
@@ -52,7 +52,7 @@
 // sibling's floor twice.
 //
 // WHAT THE BODY DOES, read out of extracted/overlays/overlay_0006.bin at base
-// 0x020bfec0 (alignment checked first on func_ov006_020f5324, whose
+// 0x020bfec0 (alignment checked first on _ZN13dScMgMemory_c6RenderEv, whose
 // disassembly reproduces its src call for call).  Recorded here so a later
 // decomp lane starts from the ROM rather than from this paragraph's absence:
 //
@@ -70,7 +70,7 @@
 //   {0, 1, 2, 2k+2, 2k+1}, so SIX card types over sprite indices 0..0x0e,
 //   which is exactly the fifteen words __sinit_ov006_021311c8 copies from
 //   data_ov006_02133810 into data_ov006_0214236c.  Six types dealt twice is
-//   twelve cards, and src/func_ov006_020f4cd8.c deals 8, 10 or 12 of them on
+//   twelve cards, and src/minigames/d_s_mg_memory.cpp deals 8, 10 or 12 of them on
 //   the board byte at +0x533c.
 //   The row count was READ, not divided out of a span: rows 0..6 are 70 bytes
 //   and end at 0x0213d1ae, then six pad bytes, then a RELOCATED POINTER at
@@ -121,8 +121,8 @@
 // WAVE 1 PRODUCED EXACTLY ONE UNRESOLVED EXTERNAL, on all three targets, line
 // for line:
 //
-//     func_ov006_020f3834.cpp.obj : error LNK2019: unresolved external symbol
-//     "void * data_ov006_0213d1b8" (?data_ov006_0213d1b8@@3PAXA)
+//     _ZN13dScMgMemory_cD1Ev.cpp.obj : error LNK2019: unresolved external symbol
+//     "void * _ZTV13dScMgMemory_c" (?_ZTV13dScMgMemory_c@@3PAXA)
 //
 // and that is the whole of this seat's wall bill.  The reason it is one row and
 // not the sibling's forty-one is that this class's ov004 closure and its shared
@@ -130,16 +130,16 @@
 // for the same sub-object at the same +0x4f38, and run mg5 lane BASESET paid
 // the framework's.
 //
-// THE RULING.  src/func_ov006_020f3834.cpp (slot 16, the D2) declares
-// `extern void* data_ov006_0213d1b8;` OUTSIDE an extern "C" block, so MSVC
+// THE RULING.  src/minigames/d_s_mg_memory.cpp (slot 16, the D2) declares
+// `extern void* _ZTV13dScMgMemory_c;` OUTSIDE an extern "C" block, so MSVC
 // mangles it, while the ov006 mount defines the plain C name.  Its sibling
-// src/func_ov006_020f3888.cpp (slot 17, the D0) declares the same table through
+// src/minigames/d_s_mg_memory.cpp (slot 17, the D0) declares the same table through
 // include/decl_common.h at C linkage and resolves without help, which is why
 // only one of the two destructors shows up in the link -- the same one-of-a-
 // pair spelling defect port/mg_fanout_costs.txt section 6 catalogues.
 //
 // IT IS AN ALIAS AND NOT A HOST COPY, and the rulebook corollary section 4
-// states is why.  The consumer is `*(void**)c = &data_ov006_0213d1b8;`: it
+// states is why.  The consumer is `*(void**)c = &_ZTV13dScMgMemory_c;`: it
 // takes the ADDRESS of a vtable, so a name that resolves to the same address is
 // exactly right and no stride is involved.  The member-pointer half of the
 // corollary cannot apply -- this symbol is a 36-word virtual table, not a
@@ -153,11 +153,12 @@
 // of section 10), and a one-row wall does not repay rebuilding that universe
 // out of the object symbol tables.  The row was ruled by hand against the
 // consumer, which is the standard the corollary sets.
-#pragma comment(linker, "/alternatename:?data_ov006_0213d1b8@@3PAXA=_data_ov006_0213d1b8")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEAD RHS and an UNREFERENCED left hand side: nothing in the build defines _data_ov006_0213d1b8, and nothing references ?_ZTV13dScMgMemory_c@@3PAXA, so the row can never fire and nothing wants it to. */
+// #pragma comment(linker, "/alternatename:?_ZTV13dScMgMemory_c@@3PAXA=_data_ov006_0213d1b8")
 
 // ---- 4. the card draw is a real body now -----------------------------------
 //
-// Nothing is defined here for 0x020f3e68 any more.  src/func_ov006_020f3e68.c
+// Nothing is defined here for 0x020f3e68 any more.  src/minigames/d_s_mg_memory.cpp
 // defines it and port/slice_mmt.txt compiles it, so a tree that loses that
 // slice line fails to LINK rather than quietly drawing nothing.  The trap is
 // DELETED rather than emptied: an emptied trap still satisfies the symbol and

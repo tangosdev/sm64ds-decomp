@@ -15,11 +15,11 @@
 #
 #   data_02099fe4  the arm9 IRQ vector table, 22 slots, 9 distinct bodies.
 #                  The eight forwarders tail into 0x02056cc0, so
-#                  _ZN3IRQ13DmaTimHandlerEv rides in behind them (tenth line).
-#   data_02094390  dScMB_c's 4-slot graph descriptor, 3 bodies; func_02034b40
+#                  _ZN3IRQ13DmaTimHandlerEj rides in behind them (tenth line).
+#   data_02094390  dScMB_c's 4-slot graph descriptor, 3 bodies; _ZN7dScMB_c15graphCallback_c14GraphCallback3Ev
 #                  names func_02034d34, so that one rides in behind it.
 #   data_02092188  the Stage's graph callback table, 4 words (delta to
-#                  data_02092198 is 0x10). ONE body: slot 1. Slots 0 and 3 are
+#                  _ZTSN10dScStage_c15graphCallback_cE is 0x10). ONE body: slot 1. Slots 0 and 3 are
 #                  already linked, and slot 2, Stage::GraphCallback2, TRAPS on
 #                  port/slice_w8a.txt's standing ruling -- it takes the address
 #                  of reg_G2S_DB_BG3PA and MSVC cannot put a global at
@@ -27,9 +27,9 @@
 #                  unresolved external before the line was written.
 #   data_0209a424  a callback pair, 2 words (delta to data_0209a42c is 0x8).
 #                  Two leaf predicates with no callees at all.
-#   data_0209a744  a two-slot vtable hosted 4 words wide (the symbol span; the
+#   _ZTVSt9type_info  a two-slot vtable hosted 4 words wide (the symbol span; the
 #                  last two words are the NEXT table's Itanium header). ONE
-#                  body: slot 0. Slot 1 is func_020736c0, an .exceptix census
+#                  body: slot 0. Slot 1 is _ZNSt9type_infoD0Ev, an .exceptix census
 #                  row and not this lane's, so it traps.
 #   data_0208eacc  slots +0x00 and +0x04 only (gate 225b), the FaderBrightness
 #   data_0208eafc  destructor pair on each of the three sibling tables
@@ -61,7 +61,7 @@
 #                              require 40 unlinked TUs and 17 arm9 data symbols
 #                              the port hosts nowhere -- the wireless/WM stack,
 #                              through func_0203d950 and func_02030790 -- and
-#                              one of the 40 is src/_ZN3IRQ13SetIRQHandlerEjPFvvE.c,
+#                              one of the 40 is src/_ZN3IRQ13SetIRQHandlerEjPFvvE.cpp,
 #                              which is an LNK2005 against ntr/runtime.cpp's
 #                              host copy of that symbol on sight. That is a
 #                              lane, not a line, and it is a bigger one than
@@ -72,7 +72,7 @@
 #                              func_0204322c_hostcopy.cpp.obj before any link
 #                              ran. The tables stay unhosted; a seat would buy
 #                              nothing and break the build.
-#   src/_ZN5Stage14GraphCallback2EP12SceneRelated.c
+#   src/_ZN5Stage14GraphCallback2Ev.cpp
 #                              data_02092188 slot 2, and the reason is above.
 #   src/__sinit_02074fb8.c     it WRITES data_020a0c68 before main. Slicing it
 #                              would buy one TU and change what the port does
@@ -83,20 +83,20 @@
 #                              func_02018a40 / func_02018a58. Its own two ROM
 #                              referrers are FS_LoadOverlay+0x8c and
 #                              func_0201a2f8+0x6c, and BOTH are unlinked --
-#                              func_0201a2f8's own referrers are func_02005a58
-#                              and func_0203506c, the two scene-boot roots
+#                              func_0201a2f8's own referrers are _ZN9BootScene13InitResourcesEv
+#                              and _ZN7dScMB_c13InitResourcesEv, the two scene-boot roots
 #                              port/arm9_frontier.txt ranks first and second.
 #                              There is no cheap edge; the census marks it
 #                              `unreferenced` and that is correct.
-#   src/func_020171c8.cpp      data_0208ea6c slots +0x10, +0x0c and +0x08. All
-#   src/func_020171f0.cpp      three carry the "recovered from vtable slot
-#   src/func_0201721c.c        identity" marker, so they are GUESSES, and
+#   src/_ZN10dFdDummy_c14SetForwardTimeEj.cpp      data_0208ea6c slots +0x10, +0x0c and +0x08. All
+#   src/_ZN10dFdDummy_c15SetBackwardTimeEj.cpp      three carry the "recovered from vtable slot
+#   src/_ZN10dFdDummy_c11AdvanceFadeEv.cpp        identity" marker, so they are GUESSES, and
 #                              hal/scene_boot.cpp already routes those three
 #                              slots past them (two transcriptions and a
 #                              forward). port/tools/inferred_stub_guard.py is
 #                              there to refuse exactly this and this gate does
 #                              not argue with it.
-src/_ZN3IRQ12EmptyHandlerEv.c
+src/_ZN3IRQ12EmptyHandlerEv.cpp
 src/_ZN3IRQ19Tim0OverflowHandlerEv.cpp
 src/_ZN3IRQ19Tim1OverflowHandlerEv.cpp
 src/_ZN3IRQ19Tim2OverflowHandlerEv.cpp
@@ -105,23 +105,27 @@ src/_ZN3IRQ11Dma0HandlerEv.cpp
 src/_ZN3IRQ11Dma1HandlerEv.cpp
 src/_ZN3IRQ11Dma2HandlerEv.cpp
 src/_ZN3IRQ11Dma3HandlerEv.cpp
-src/_ZN3IRQ13DmaTimHandlerEv.c
-src/func_02034d2c.c
-src/func_02034d24.c
-src/func_02034b40.c
+src/_ZN3IRQ13DmaTimHandlerEj.cpp
+src/_ZN7dScMB_c15graphCallback_c14GraphCallback0Ev.cpp
+src/_ZN7dScMB_c15graphCallback_c14GraphCallback2Ev.cpp
+src/_ZN7dScMB_c15graphCallback_c14GraphCallback3Ev.cpp
 src/func_02034d34.cpp
-src/func_02017228.c
-src/engine/fader/_ZN15FaderBrightnessD1Ev.c
-src/engine/fader/_ZN15FaderBrightnessD0Ev.c
-src/engine/fader/_ZN5FaderD1Ev.c
-src/engine/fader/_ZN5FaderD0Ev.c
-src/engine/fader/_ZN10FaderColorD0Ev.c
-src/_ZN5Stage14GraphCallback1Ev.c
+# RETIRED at SLICE1: body now in src/_ZN10dFdDummy_cD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN10dFdDummy_cD0Ev.cpp
+src/engine/fader/_ZN15FaderBrightnessD1Ev.cpp
+# RETIRED at SLICE1: body now in src/engine/fader/_ZN15FaderBrightnessD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/engine/fader/_ZN15FaderBrightnessD0Ev.cpp
+src/engine/fader/_ZN5FaderD1Ev.cpp
+# RETIRED at SLICE1: body now in src/engine/fader/_ZN5FaderD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/engine/fader/_ZN5FaderD0Ev.cpp
+# RETIRED at SLICE1: body now in src/engine/fader/_ZN10FaderColorD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/engine/fader/_ZN10FaderColorD0Ev.cpp
+src/_ZN5Stage14GraphCallback1Ev.cpp
 src/func_0206e254.c
 src/func_0206e240.c
-src/func_020736e4.c
-# A LINK FIX, NOT A ROW. src/func_02034b40.c (data_02094390 slot 3) calls
-# OAM::Flush as well as OAM::Reset. src/_ZN3OAM5FlushEv.c is already on
+src/_ZNSt9type_infoD1Ev.cpp
+# A LINK FIX, NOT A ROW. src/_ZN7dScMB_c15graphCallback_c14GraphCallback3Ev.cpp (data_02094390 slot 3) calls
+# OAM::Flush as well as OAM::Reset. src/_ZN3OAM5FlushEv.cpp is already on
 # slice_gate6.txt and slice_gate214.txt, which reach walk_window and
 # walk_window_hires but NOT smoke_player -- so the first link of this gate gave
 # walk_window and walk_window_hires clean and smoke_player one LNK2019,
@@ -130,4 +134,4 @@ src/func_020736e4.c
 # too; CMake dedupes the identical absolute path on the two that already had
 # it, so nothing is compiled twice and the linked count does not move (this TU
 # was already counted through walk_window).
-src/_ZN3OAM5FlushEv.c
+src/_ZN3OAM5FlushEv.cpp

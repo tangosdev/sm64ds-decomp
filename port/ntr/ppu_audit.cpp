@@ -305,7 +305,7 @@ void census_oam(int e) {
 // byte 0x60), so the comparison is exact and needs no emulator.
 //
 // EVERY BASE HERE COMES OUT OF THE ROM'S OWN CODE, not from a doc:
-//   0x068a0000  src/_ZN3GXS14LoadOBJExtPlttEPKvjj.c computes its destination as
+//   0x068a0000  src/_ZN3GXS14LoadOBJExtPlttEPKvjj.cpp computes its destination as
 //               destSlotAddr + 0x068a0000, and src/_ZN2GX23SetBankForSubOBJ
 //               ExtPlttEt.c is what maps a bank there (VRAMCNT_I = 0x83) and
 //               sets DISPCNT_B bit 31 in the same breath.

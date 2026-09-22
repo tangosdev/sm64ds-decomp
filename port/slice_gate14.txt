@@ -14,12 +14,12 @@
 # setters fill.
 
 # ---- the boot itself
-src/_ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR12MeshCollider.cpp
-src/_Z11LoadObjectsRN11LVL_Overlay8ObjTableEij.c
+src/_ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR7dBgW_Kc.cpp
+src/_Z11LoadObjectsRN11LVL_Overlay8ObjTableEij.cpp
 
 # ---- the fifteen sub-loaders, in dispatch-table order (index 0..14)
 src/_Z19LoadStandardObjectsRN11LVL_Overlay11ObjSubTableEij.cpp
-# src/_Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij.c is hosted in
+# src/_Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij.cpp is hosted in
 # port/unmatched/LoadEntranceObjects.cpp (LEVELBOOT_HOST_SOURCES): its last
 # call is an ARM r0 ride-through into StartEntranceFaderWipe, and the ROM
 # `ldrsb r0, [r0, sl]` two instructions ahead of the `bl` is the argument.
@@ -30,14 +30,14 @@ src/_Z19LoadPathNodeObjectsRN11LVL_Overlay11ObjSubTableEij.cpp
 src/_Z15LoadPathObjectsRN11LVL_Overlay11ObjSubTableEij.cpp
 src/_Z15LoadViewObjectsRN11LVL_Overlay11ObjSubTableEij.cpp
 src/_Z17LoadSimpleObjectsRN11LVL_Overlay11ObjSubTableEij.cpp
-src/_Z25LoadTeleportSourceObjectsRN11LVL_Overlay11ObjSubTableEij.c
+src/_Z25LoadTeleportSourceObjectsRN11LVL_Overlay11ObjSubTableEij.cpp
 src/_Z23LoadTeleportDestObjectsRN11LVL_Overlay11ObjSubTableEij.cpp
 src/_Z14LoadFogObjectsRN11LVL_Overlay11ObjSubTableEij.cpp
 src/_Z15LoadDoorObjectsRN11LVL_Overlay11ObjSubTableEij.cpp
-src/_Z15LoadExitObjectsRN11LVL_Overlay11ObjSubTableEij.c
+src/_Z15LoadExitObjectsRN11LVL_Overlay11ObjSubTableEij.cpp
 src/_Z22LoadMinimapTileObjectsRN11LVL_Overlay11ObjSubTableEij.cpp
 src/_Z23LoadMinimapScaleObjectsRN11LVL_Overlay11ObjSubTableEij.cpp
-src/_Z23LoadUnusedType13ObjectsRN11LVL_Overlay11ObjSubTableEij.c
+src/_Z23LoadUnusedType13ObjectsRN11LVL_Overlay11ObjSubTableEij.cpp
 src/_Z21LoadStarCameraObjectsRN11LVL_Overlay11ObjSubTableEij.cpp
 
 # ---- the pointer-store setters the sub-loaders are veneers over
@@ -55,8 +55,8 @@ src/func_0202a850.c
 src/_Z23LoadMinimapChangeObjecti5Fix12IiEh.c
 
 # ---- the octree extent the world-Y bounds come out of
-src/_ZNK12MeshCollider16GetOctreeOriginYEv.cpp
-src/_ZNK12MeshCollider13GetUnkOctreeYEv.cpp
+src/_ZNK7dBgW_Kc16GetOctreeOriginYEv.cpp
+src/_ZNK7dBgW_Kc13GetUnkOctreeYEv.cpp
 
 # ---- the two tails LoadClsnAndObjects ends in
 src/ContinueKuppaScriptIfNecessary.c
@@ -75,7 +75,7 @@ src/_ZN5Sound16LoadInitialGroupEi.cpp
 # (wired in CMakeLists). The matched C calls func_0203d7d4() with no argument and
 # relies on func_020134d8's return being live in ARM r0; cdecl drops it, so the host
 # copy passes func_020134d8(a, data_0209b498) explicitly. See that file's header.
-# src/_ZN5Sound6Player19SetPlayableSeqCountEii.c is also listed in
+# src/_ZN5Sound6Player19SetPlayableSeqCountEii.cpp is also listed in
 # slice_gate10.txt, where SLICE10_CAM_SOURCES now filters it out: it writes
 # through data_020a4d84, which is data_020a4d6c + 0x18 on the DS but a
 # separate object on the host, so hal/sdat/sound_abi.cpp hosts it. Listing it
@@ -95,27 +95,19 @@ src/func_020510a4.c
 # The two factories the registry calls, the Actor init hooks the spawn
 # spine's Process dispatches, and the St_LevelEnter trio with the seven
 # entrance-step handlers its Main dispatches through the ov002 PMF table.
-src/_ZN6PlayerC3Ev.cpp
-src/_ZN5Actor19BeforeInitResourcesEv.c
-# _ZN5Actor18AfterInitResourcesEj is C++ inside a .c (the gate-9 case
+src/d_a_ply.cpp
+src/_ZN8dActor_c19BeforeInitResourcesEv.cpp
+# _ZN8dActor_c18AfterInitResourcesEj is C++ inside a .c (the gate-9 case
 # again); it goes through hostgen, see GATE14_SYMS in CMakeLists.txt
-src/_ZN6Player21St_LevelEnter_CleanupEv.cpp
-src/func_ov002_020c75f0.c
-src/func_ov002_020c7350.cpp
-src/func_ov002_020c71e0.cpp
-src/func_ov002_020c7194.cpp
-src/func_ov002_020c72a4.cpp
-src/func_ov002_020c70ac.c
+src/actors/Player.cpp
 # func_ov002_020c6fe4 does void-pointer arithmetic on the anim probe
 # (the NoControl case); hostgen retypes the deref -- GATE14_SYMS
 # the ring the step handlers reach: the death-table guard the init hook
 # tests, the message/star-count branches steps 2 and 3 take, and the ov089
 # animation setter step 1 calls.
-src/_ZN5Actor18GetBitInDeathTableEv.cpp
-src/func_ov002_020c44c4.c
-src/func_ov002_020c6e14.c
+src/_ZN8dActor_c18GetBitInDeathTableEv.cpp
 src/func_ov089_0213115c.cpp
 src/DeathTable_GetBit.c
-src/_ZN8SaveData26CountStarsCollectedInLevelEj.c
+src/_ZN8SaveData26CountStarsCollectedInLevelEj.cpp
 src/func_ov100_02145070.c
 src/GetLevelPart.c

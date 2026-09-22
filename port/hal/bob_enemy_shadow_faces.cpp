@@ -43,13 +43,13 @@ struct Actor {
     void LandingDust(bool b);
 };
 
-extern "C" int _ZN8CapEnemy11GetCapStateEv(void *self)
+extern "C" int _ZN11dCapEnemy_c11GetCapStateEv(void *self)
 { return ((CapEnemy *)self)->CapEnemy::GetCapState(); }
 
-extern "C" void _ZN12WithMeshClsn12Unk_0203589cEv(void *self)
+extern "C" void _ZN10dBgCh_Actr12Unk_0203589cEv(void *self)
 { ((WithMeshClsn *)self)->WithMeshClsn::Unk_0203589c(); }
 
-extern "C" void _ZN5Actor19UntrackInDeathTableEv(void *self)
+extern "C" void _ZN8dActor_c19UntrackInDeathTableEv(void *self)
 { ((Actor *)self)->Actor::UntrackInDeathTable(); }
 
 void CapEnemy::UpdateCapPos(const Vector3 &pos, const Vector3_16_local &rot)
@@ -80,19 +80,23 @@ void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *f, int flags,
                                                  int speed, unsigned start);
 }
 
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync): main defines both of these
+   as real Camera members now, so src/ emits ?SetLookAt@Camera@@QAEXABUVector3@@@Z
+   and ?SetPos@Camera@@QAEXABUVector3@@@Z itself and these faces were the second
+   definition (LNK2005). ModelAnim::SetAnim below is untouched.
 void Camera::SetLookAt(const Vector3 &v)
 { _ZN6Camera9SetLookAtERK7Vector3(this, &v); }
 void Camera::SetPos(const Vector3 &v)
-{ _ZN6Camera6SetPosERK7Vector3(this, &v); }
+{ _ZN6Camera6SetPosERK7Vector3(this, &v); }                                  */
 void ModelAnim::SetAnim(BCA_File *f, int flags, int speed, unsigned start)
 { _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(this, f, flags, speed, start); }
 
 extern "C" {
-void _ZN5Actor15HugeLandingDustEb(void *self, int b);
-void _ZN5Actor11LandingDustEb(void *self, int b);
+void _ZN8dActor_c15HugeLandingDustEb(void *self, int b);
+void _ZN8dActor_c11LandingDustEb(void *self, int b);
 }
-void Actor::HugeLandingDust(bool b) { _ZN5Actor15HugeLandingDustEb(this, b); }
-void Actor::LandingDust(bool b) { _ZN5Actor11LandingDustEb(this, b); }
+void Actor::HugeLandingDust(bool b) { _ZN8dActor_c15HugeLandingDustEb(this, b); }
+void Actor::LandingDust(bool b) { _ZN8dActor_c11LandingDustEb(this, b); }
 
 /* ApproachLinear, a plain free function whose definition already carries the
    Itanium C name (hal/method_faces.cpp bridges the reference form). ov084's
@@ -102,7 +106,7 @@ void ApproachLinear(short &x, short target, short step)
 { _Z14ApproachLinearRsss(&x, target, step); }
 
 /* ---- ov014's four ---------------------------------------------------------
-   src/func_ov014_02112ea8.cpp -- the CHAIN_CHOMP_FENCE breaking apart --
+   src/game/actors/d_a_obj_wanwan_shutter.cpp -- the CHAIN_CHOMP_FENCE breaking apart --
    declares its own shadow for each of these, and it names the actor class
    `ActorS`, so MSVC decorates PoofDustAt against that name rather than against
    Actor. Every definition is an Itanium C-named free function already in the
@@ -127,16 +131,16 @@ struct System { static void *NewSimple(unsigned t, int x, int y, int z); };
 }
 
 extern "C" {
-void _ZN16MeshColliderBase7DisableEv(void *self);
-void _ZN5Actor10PoofDustAtERK7Vector3(void *self, const void *v);
+void _ZN4dBgW7DisableEv(void *self);
+void _ZN8dActor_c10PoofDustAtERK7Vector3(void *self, const void *v);
 void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned id, const void *v);
 void *_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned t, int x, int y,
                                                      int z);
 }
 
-void MeshColliderBase::Disable() { _ZN16MeshColliderBase7DisableEv(this); }
+void MeshColliderBase::Disable() { _ZN4dBgW7DisableEv(this); }
 void ActorS::PoofDustAt(const Vector3 &v)
-{ _ZN5Actor10PoofDustAtERK7Vector3(this, &v); }
+{ _ZN8dActor_c10PoofDustAtERK7Vector3(this, &v); }
 void Sound::PlayBank3(unsigned id, const Vector3 &v)
 { _ZN5Sound9PlayBank3EjRK7Vector3(id, &v); }
 void *Particle::System::NewSimple(unsigned t, int x, int y, int z)

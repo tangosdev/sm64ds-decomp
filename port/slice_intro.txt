@@ -67,9 +67,10 @@ src/func_0203db0c.c
 # hierarchy, and D0 reaches the vtable and heap through decl_common.h's generic
 # `VT`/`HEAP` placeholders rather than the real symbols, so it would have linked
 # and stored the wrong vtable pointer. See that file's header.
-src/CutsceneObject_Spawn.c
+src/d_a_demo.c
 src/_ZN14CutsceneObject13InitResourcesEv.cpp
-src/_ZN14CutsceneObjectD0Ev.c
+# RETIRED at SLICE1: body now in src/_ZN14CutsceneObjectD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN14CutsceneObjectD0Ev.cpp
 src/_ZN14CutsceneObject8BehaviorEv.cpp
 # src/_ZN14CutsceneObject6RenderEv.cpp -- carried by port/slice_unmatch.txt since
 #   run link100 lane UNMATCH; the host copy is retired.
@@ -85,7 +86,7 @@ src/_ZN14CutsceneObject8BehaviorEv.cpp
 #   Render, one file over: it destroys its model through a shadow whose `m04` is
 #   index 1, which is the ROM's DELETING destructor and MSVC's Model::DoSetFile.
 #   Cleaning up the cast would have called DoSetFile on a model being freed.
-src/_ZN14CutsceneObject16OnPendingDestroyEv.c
+src/_ZN14CutsceneObject16OnPendingDestroyEv.cpp
 # its own ov002 closure, all matched and previously unoffered
 src/func_ov002_020f23d0.c
 src/func_ov002_020f23f0.c
@@ -204,7 +205,8 @@ src/func_0201f108.c
 #   ProcessKuppaScript+0x329 -> func_0200e494+0x22 -> func_0200e4e4+0x36
 #   -> Actor::Spawn+0x27 -> func_02043098+0x7c -> 0x020f69a8
 # Matched, unoffered, same shape as everything else in this file.
-src/func_ov002_020f69a8.cpp
+# RETIRED at SLICE1: body now in src/_ZN8daDemo_c13simpleModel_cD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN8daDemo_c13simpleModel_cD0Ev.cpp
 
 # ---- THE SCRIPT POINTER PATCHER ------------------------------------------
 # The opening is a FOUR-script chain -- data_020890a0 -> data_02088a94 ->
@@ -228,10 +230,10 @@ src/__sinit_02073e6c.c
 # its slots are code and four of the six were matched-but-unoffered, so
 # ModelBase::SetFile called through DS addresses. Seated in
 # hal/actor_classes_intro.cpp; the bodies ride in here.
-#   +0x00 func_ov002_020f6a00            +0x04 func_ov002_020f69a8 (D0)
+#   +0x00 _ZN8daDemo_c13simpleModel_cD1Ev            +0x04 _ZN8daDemo_c13simpleModel_cD0Ev (D0)
 #   +0x08 Model::DoSetFile               +0x0c Model::UpdateVerts
 #   +0x10 Model::Virtual10               +0x14 Model::Render (already hosted)
-src/func_ov002_020f6a00.cpp
+src/_ZN8daDemo_c13simpleModel_cD1Ev.cpp
 src/_ZN5Model9DoSetFileEPcii.cpp
 src/_ZN5Model11UpdateVertsEv.cpp
 src/_ZN5Model9Virtual10ER9Matrix4x3.cpp
@@ -239,8 +241,8 @@ src/_ZN5Model9Virtual10ER9Matrix4x3.cpp
 # The SECOND model class's destructors. CutsceneObject::InitResources builds a
 # Model AND a ModelAnim; data_ov002_0210bcc4 is the ModelAnim one and its two
 # destructor slots were matched-but-unoffered.
-src/func_ov002_020f6870.cpp
-# src/func_ov002_020f6778.cpp -- HOST COPY at
+src/_ZN8daDemo_c10anmModel_cD1Ev.cpp
+# src/_ZN8daDemo_c10anmModel_cD0Ev.cpp -- HOST COPY at
 #   unmatched/Ov002_ModelAnimD0_020f6778.cpp. The THIRD instance of the
 #   one-slot shift: it destroys its TextureSequence through a hand-indexed
 #   vtable word at ROM slot 1, which MSVC folds to slot 0 and which
@@ -250,4 +252,4 @@ src/func_ov002_020f6870.cpp
 # Lane shadow-A: the static FaderColor's D1, which the sinit registers with
 # func_020731dc. hal/intro_script_records.cpp carried a no-op for it under a
 # stale "no matched src TU" banner; the TU is matched and this is it.
-src/engine/fader/_ZN10FaderColorD1Ev.c
+src/engine/fader/_ZN10FaderColorD1Ev.cpp

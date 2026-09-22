@@ -48,8 +48,7 @@
 # code words are still DS addresses and their host copies still route through
 # port_mg_sound_call1. Installing them is the same shape one level down and is
 # the next lane's work.
-src/func_ov006_0211b954.cpp
-src/func_ov006_0211b5e0.cpp
+src/actors/dScMgSound_c.cpp
 #
 # ---- BATCH 2: Bird::Render and Flag::Render (lane FACEF's two proposals) ---
 #
@@ -66,7 +65,7 @@ src/func_ov006_0211b5e0.cpp
 # extracted/overlays/overlay_0009.bin at ov009 base 0x021111a0
 # (runs/link100/out/PMFB2/rom_renders.txt). Ten instructions, identical in both:
 #     02111870  _ZN4Bird6RenderEv  kind:function(arm,size=0x28)
-#     0211211c  _ZN4Flag6RenderEv  kind:function(arm,size=0x28)
+#     0211211c  _ZN10daMcFlag_c6RenderEv  kind:function(arm,size=0x28)
 #         ldr r2,[r0,#0xd4]!    pre-indexed WITH WRITEBACK: the receiver at the
 #                               blx is the ModelAnim sub-object, not the actor
 #         mov r1,#0             the one argument
@@ -78,7 +77,7 @@ src/func_ov006_0211b5e0.cpp
 # THE FACE, in port/hal/except_faces.cpp (this lane's own section). Both matched
 # TUs recovered as real C++ methods, so they define ?Render@Bird@@QAEHXZ while
 # hal/actor_classes.cpp:1334 and :1506 call _ZN4Bird6RenderEv and
-# _ZN4Flag6RenderEv at C linkage. One cdecl line each; no fill site changes.
+# _ZN10daMcFlag_c6RenderEv at C linkage. One cdecl line each; no fill site changes.
 #
 # CONVENTION: MSVC compiles the matched TU's `b->m(0)` as a __thiscall indirect
 # call (receiver in ecx, the 0 pushed, callee cleans four) and the host slot
@@ -86,7 +85,7 @@ src/func_ov006_0211b5e0.cpp
 # Same receiver register, same stack argument, same cleanup -- the rule lane
 # EXCEPT measured and lane FACEF re-measured.
 src/_ZN4Bird6RenderEv.cpp
-src/_ZN4Flag6RenderEv.cpp
+src/game/actors/d_a_mc_flag.cpp
 #
 # ---- BATCH 3: family-C CALL SHAPE rows over a table that already has an ----
 # ---- installing seat                                                    ----
@@ -123,11 +122,11 @@ src/_ZN4Flag6RenderEv.cpp
 # (runs/link100/out/PMFB2/listings/, emit_familyc.py):
 #
 #   row                            ROM stride                     emitted
-#   _ZN8PathLift12BaseBehaviorEv   20  mla r0,r1,#0x14 @020efab4  lea [eax+eax*4] then [eax*4+8]  = 20*i+8   /Zp4
-#   _ZN13OneUpMushroom8BehaviorEv   8  add r3,r1,r0,lsl#3 @020b0138  [eax*8]                       = 8*i
+#   _ZN16dPathLiftActor_c12BaseBehaviorEv   20  mla r0,r1,#0x14 @020efab4  lea [eax+eax*4] then [eax*4+8]  = 20*i+8   /Zp4
+#   _ZN7da1up_c8BehaviorEv   8  add r3,r1,r0,lsl#3 @020b0138  [eax*8]                       = 8*i
 #   _ZN4Coin8BehaviorEv             8  add r3,r1,r0,lsl#3 @020b2410  [eax*8]                       = 8*i
 #   _ZN9PowerStar8BehaviorEv        8  add r3,r1,r0,lsl#3 @020eb164  [eax*8]                       = 8*i
-#   _ZN12PiranhaPlant8BehaviorEv    8  add r3,r0,r4,lsl#3 @0212fde0  [esi*8]                       = 8*i
+#   _ZN7daPkn_c8BehaviorEv    8  add r3,r0,r4,lsl#3 @0212fde0  [esi*8]                       = 8*i
 #
 # PathLift is the only one of the five whose record is a STRUCT CONTAINING a
 # pointer-to-member ({char pad[8]; PLFn fn; char tail[4]}), so it is the only
@@ -149,8 +148,8 @@ src/_ZN4Flag6RenderEv.cpp
 # ONE ROW OF THIS BATCH DEFINES ITS OWN C NAME and needs no face for its own
 # symbol (PathLift; so do the two ov006 rows of batch 1). FOUR recovered as
 # real C++ methods and take one cdecl line each in port/hal/except_faces.cpp:
-# ?Behavior@Coin@@QAEHXZ, ?Behavior@OneUpMushroom@@QAEHXZ,
-# ?Behavior@PowerStar@@QAEHXZ, ?Behavior@PiranhaPlant@@QAEHXZ.
+# ?Behavior@Coin@@QAEHXZ, ?Behavior@da1up_c@@QAEHXZ,
+# ?Behavior@PowerStar@@QAEHXZ, ?Behavior@daPkn_c@@QAEHXZ.
 #
 # THREE NEED AN /alternatename, because the matched TU declares its table
 # OUTSIDE its extern "C" block and so names it at C++ linkage while the mount
@@ -165,13 +164,13 @@ src/_ZN4Flag6RenderEv.cpp
 #
 # ONE ROW ONLY GETS A FACE ON HALF ITS TABLE. data_ov002_0210af2c is read by
 # TWO dispatchers: src/func_ov002_020efa54.cpp takes the ENTER pair at
-# record+0 and _ZN8PathLift12BaseBehaviorEv takes the TICK pair at record+8.
+# record+0 and _ZN16dPathLiftActor_c12BaseBehaviorEv takes the TICK pair at record+8.
 # PMFB1 seated the first as a FREE row because MSVC compiles it as a TAIL JUMP,
 # and a tail jump hands the callee the forwarder's own cdecl frame, so a plain
 # cdecl body is correct there. Only the three TICK words change.
 #
 # THE SIX NOT TAKEN, each with its own reason and not with "no time":
-#   _ZN11SoundObject8BehaviorEv (data_ov002_0211110c). The host copy carries a
+#   _ZN12daSoundObj_c8BehaviorEv (data_ov002_0211110c). The host copy carries a
 #     PORT-ONLY out-of-range refusal the matched TU does not have: actor param
 #     7 passes InitResources' own `> 7` gate and has no cell in a seven-cell
 #     table, and the host copy names it, destroys the emitter and returns
@@ -190,11 +189,17 @@ src/_ZN4Flag6RenderEv.cpp
 #     func_ov002_020f3310, itself a dispatcher over 02110e24, and cell 3 of
 #     02110e7c is func_ov002_020f3d98 over 02110e34. Three tables, two files
 #     and a nest is a lane, not a row.
-src/_ZN8PathLift12BaseBehaviorEv.cpp
-src/_ZN13OneUpMushroom8BehaviorEv.cpp
+src/_ZN16dPathLiftActor_c12BaseBehaviorEv.cpp
+src/actors/da1up_c.cpp
 src/_ZN4Coin8BehaviorEv.cpp
 src/_ZN9PowerStar8BehaviorEv.cpp
-src/_ZN12PiranhaPlant8BehaviorEv.cpp
+# QUARANTINED at the main->port sync (origin/main 9c7f38a24): main consolidated ov084's
+# PiranhaPlant bodies into this one TU, and the TU carries func_ov084_0212f204, whose
+# zero-argument _ZN8dActor_c13ClosestPlayerEv() call closestplayer_guard refuses (thiscall
+# with no receiver faults on null this + 0x5c). The port already hosts that function in
+# port/unmatched/Actor_ClosestPlayer_OverlayReaders.cpp, which the raw TU would now
+# duplicate. Restore this row once the host copy covers the whole consolidated TU.
+#src/actors/daPkn_c.cpp
 #
 # ---- BATCH 4: the Enemy death / enter-death pair ---------------------------
 #
@@ -203,7 +208,7 @@ src/_ZN12PiranhaPlant8BehaviorEv.cpp
 # each face's arity comes from that row's OWN listing and from nowhere else,
 # which is the standing wrong-arity trap.
 #
-#   _ZN5Enemy11UpdateDeathER12WithMeshClsn  table data_ov002_0210dbc0
+#   _ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr  table data_ov002_0210dbc0
 #       ROM  0x020ae6e0  add r3, r1, r0, lsl #3           stride 8
 #       emit ?data_ov002_0210dbc0@@3PAP8Enemy@@AEHAAUWithMeshClsn@@@ZA[eax*8-8]
 #            with `push DWORD PTR _clsn$[ebp]` before the call: ONE argument
@@ -231,8 +236,8 @@ src/_ZN12PiranhaPlant8BehaviorEv.cpp
 # file. Both TUs define their own Itanium C name, so neither needs a method
 # face.
 #
-# src/func_ov002_020aea30.c is a //cpp-marked .c -- `typedef void (C::*PMF)
+# src/func_ov002_020aea30.cpp is a //cpp-marked .c -- `typedef void (C::*PMF)
 # (int, int);` is not C -- and is given LANGUAGE CXX in CMake block R10a, the
 # same treatment the tree gives every other //cpp-marked .c it compiles.
-src/_ZN5Enemy11UpdateDeathER12WithMeshClsn.cpp
-src/func_ov002_020aea30.c
+src/_ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr.cpp
+src/func_ov002_020aea30.cpp

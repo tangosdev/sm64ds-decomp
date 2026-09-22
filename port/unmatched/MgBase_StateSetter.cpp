@@ -1,5 +1,5 @@
 // PORT_HOST_ABI. The mwcc POINTER-TO-MEMBER WALL, the framework's STATE SETTER:
-// src/func_ov004_020b87e0.cpp, host-copied against an address switch. Run mg5,
+// src/_ZN10dMgState_c8SetStateEi.cpp, host-copied against an address switch. Run mg5,
 // lane BASESET.
 //
 // This is the TU port/mg_fanout_costs.txt section 4 calls "worth more than any
@@ -14,7 +14,7 @@
 // running. In Coincentration (scene 378) a tap did the same thing. Both left
 // one line in the playlog:
 //
-//   [scene] mwcc POINTER-TO-MEMBER WALL: func_ov004_020b87e0(idx=1) is the
+//   [scene] mwcc POINTER-TO-MEMBER WALL: _ZN10dMgState_c8SetStateEi(idx=1) is the
 //   state-setter for dScMgBase_c and MSVC cannot compile its TU ... No state
 //   was set and nothing was dispatched.
 //
@@ -132,15 +132,15 @@
 // .bin with no relocation on either word. It is the NULL member pointer, and
 // the port already hosts it that way: build/port/host-src/romdata.c defines
 // `data_02086b58[8] = { 0,0,0,0,0,0,0,0 }`. So `self->pmf2 = data_02086b58` is
-// a CLEAR, not a call, and the ROM's own reader (func_ov004_020b8714) skips a
+// a CLEAR, not a call, and the ROM's own reader (_ZN10dMgState_c6RenderEv) skips a
 // zero code word.
 //
 // ---- 5. THE OBJECT, AND THE HALF OF THE SEAT THE COST FILE DOES NOT NAME ---
 //
 // The setter's `self` is the framework's MESSAGE object, at scene + 0xcc. Its
-// only caller is src/func_ov004_020b0a54.c:
+// only caller is src/func_ov004_020b0a54.cpp:
 //
-//     func_ov004_020b87e0((char *)data_ov004_020beb68 + 0xcc, c);
+//     _ZN10dMgState_c8SetStateEi((char *)data_ov004_020beb68 + 0xcc, c);
 //
 // and the layout the disassembly above forces, offset by offset, is
 //
@@ -155,8 +155,8 @@
 // self-field dispatchers, both already host-copied in
 // unmatched/MgBase_StateDispatch.cpp:
 //
-//     func_ov004_020b8714   if (*(int *)(c + 0x18) == -1) return;   pmf at +0x10
-//     func_ov004_020b8778   if (*(int *)(c + 0x18) == -1) return;   pmf at +0x08
+//     _ZN10dMgState_c6RenderEv   if (*(int *)(c + 0x18) == -1) return;   pmf at +0x10
+//     _ZN10dMgState_c8BehaviorEv   if (*(int *)(c + 0x18) == -1) return;   pmf at +0x08
 //
 // While the setter was a trap, +0x18 was never written, so both returned on
 // their first line on every frame of every minigame and NEITHER pmf slot was
@@ -538,7 +538,7 @@ static void setter_bad_index(int idx)
             return;
     if (nsaid < 8)
         said[nsaid++] = idx;
-    std::fprintf(stderr, "  [scene] func_ov004_020b87e0: message index %d is "
+    std::fprintf(stderr, "  [scene] _ZN10dMgState_c8SetStateEi: message index %d is "
                  "outside the ROM's twenty-entry table. The ROM has no bounds "
                  "check and would read the .bss word after the table; the host "
                  "refuses rather than reading past a 20 entry array. No state "
@@ -555,8 +555,8 @@ static void setter_bad_index(int idx)
    pair global, directly, with no switch: mgbase_dispatch_seated below.
 
    GROUP B, the twenty the state bodies install as the per-frame tick. Their
-   only two dispatchers were the host copies of func_ov004_020b8714 (the pmf at
-   +0x10) and func_ov004_020b8778 (the pmf at +0x08). Both are src/ TUs again
+   only two dispatchers were the host copies of _ZN10dMgState_c6RenderEv (the pmf at
+   +0x10) and _ZN10dMgState_c8BehaviorEv (the pmf at +0x08). Both are src/ TUs again
    on port/slice_mgwriter.txt, and both compile their dispatch to a TAIL JUMP
    through the object's own field, so they reach the seated host word with
    nothing in between.
@@ -581,7 +581,7 @@ static void setter_bad_index(int idx)
 
 // ---- the host copy ---------------------------------------------------------
 //
-// src/func_ov004_020b87e0.cpp, statement for statement, with the twenty-entry
+// src/_ZN10dMgState_c8SetStateEi.cpp, statement for statement, with the twenty-entry
 // PMF table re-typed and the one dispatch replaced. Everything else, including
 // the read-back of self->index and the null-CODE guard, is the src's and the
 // ROM's.
@@ -635,7 +635,7 @@ static unsigned g_writer_seated;
 static void mgbase_dispatch_seated(void *self, MgPmf p);
 
 /* PORT_HOST_ABI: mwcc pointer-to-member state setter (dScMgBase_c); builds and indexes an 8-byte {code,adj} table and dispatches through it, host-copied because MSVC cannot compile the src TU */
-extern "C" void func_ov004_020b87e0(void *cv, int idx)
+extern "C" void _ZN10dMgState_c8SetStateEi(void *cv, int idx)
 {
     SetterObj *self = (SetterObj *)cv;
 
@@ -716,7 +716,7 @@ extern "C" unsigned port_mg_base_setter_index_hits(unsigned *out, unsigned n)
 static void mgbase_dispatch_seated(void *self, MgPmf p)
 {
     if (p.adj != 0) {
-        std::fprintf(stderr, "FATAL: func_ov004_020b87e0: state pair "
+        std::fprintf(stderr, "FATAL: _ZN10dMgState_c8SetStateEi: state pair "
                      "%08x/%d carries a NONZERO ADJUSTMENT. Every measured pair "
                      "in this family reads zero and no host body implements the "
                      "this-adjustment or the virtual branch. "
@@ -725,7 +725,7 @@ static void mgbase_dispatch_seated(void *self, MgPmf p)
         std::abort();
     }
     if (p.code >= 0x02000000u && p.code < 0x02400000u) {
-        std::fprintf(stderr, "FATAL: func_ov004_020b87e0: state pair code "
+        std::fprintf(stderr, "FATAL: _ZN10dMgState_c8SetStateEi: state pair code "
                      "%08x is still a DS ADDRESS. The seat did not rewrite the "
                      "pair global this state came from, so there is no host "
                      "body to call. port/unmatched/MgBase_StateSetter.cpp\n",
@@ -748,39 +748,47 @@ static void mgbase_dispatch_seated(void *self, MgPmf p)
    and out, same body called, one increment. It is the shape lane PMFB3 used for
    the tapped-pad witness (snd1_state1_0211bc8c).
 
-   The dispatcher tail-jumps into the wrapper's frame, so the wrapper reads the
-   receiver at [esp+4] exactly where the body would, and cleans nothing --
-   the argument belongs to the dispatcher's caller. Group A does NOT get one:
-   the setter dispatches those itself, three lines above, and counts there. */
+   THE CONVENTION IS PER DISPATCHER, run link100 lane PMFSWEEP2, and the seat
+   block below carries the disassembly. The six bw_ wrappers keep __cdecl: their
+   cells land in the 020b3278 object, whose two readers are FLAT C dispatchers
+   f(self) that tail jump, so the wrapper reads the receiver at [esp+4] exactly
+   where the body would and cleans nothing, because the argument belongs to the
+   dispatcher's caller. The twenty-three bwf_ wrappers are __fastcall: their
+   cells land in the dMgState_c message object at +0x08 and +0x10, whose only two
+   readers are ?Behavior@dMgState_c@@QAEXXZ and ?Render@dMgState_c@@QAEXXZ,
+   __thiscall members with no stack argument that tail jump with ecx = this plus
+   the adjustment and NOTHING pushed. Group A does not get a wrapper at all: the
+   setter dispatches those itself, three lines above, with a plain cdecl call
+   that pushes the receiver, and counts there. */
 static void bw_020b369c(void *c) { ++g_base_closure_hits; func_ov004_020b369c((char *)c); }
 static void bw_020b37c4(void *c) { ++g_base_closure_hits; func_ov004_020b37c4((char *)c); }
 static void bw_020b38ac(void *c) { ++g_base_closure_hits; func_ov004_020b38ac((char *)c); }
 static void bw_020b3978(void *c) { ++g_base_closure_hits; func_ov004_020b3978((char *)c); }
 static void bw_020b410c(void *c) { ++g_base_closure_hits; func_ov004_020b410c((char *)c); }
 static void bw_020b4214(void *c) { ++g_base_closure_hits; func_ov004_020b4214((char *)c); }
-static void bw_020b68e8(void *c) { ++g_base_tick_hits; func_ov004_020b68e8((int *)c); }
-static void bw_020b6948(void *c) { ++g_base_tick_hits; func_ov004_020b6948(); }
-static void bw_020b6ad8(void *c) { ++g_base_tick_hits; func_ov004_020b6ad8(); }
-static void bw_020b6b40(void *c) { ++g_base_tick_hits; func_ov004_020b6b40(c); }
-static void bw_020b6c9c(void *c) { ++g_base_tick_hits; func_ov004_020b6c9c(c); }
-static void bw_020b6ddc(void *c) { ++g_base_tick_hits; func_ov004_020b6ddc((char *)c); }
-static void bw_020b6f88(void *c) { ++g_base_tick_hits; func_ov004_020b6f88((char *)c); }
-static void bw_020b7124(void *c) { ++g_base_tick_hits; func_ov004_020b7124((char *)c); }
-static void bw_020b72d4(void *c) { ++g_base_tick_hits; func_ov004_020b72d4((char *)c); }
-static void bw_020b746c(void *c) { ++g_base_tick_hits; func_ov004_020b746c((char *)c); }
-static void bw_020b75e4(void *c) { ++g_base_tick_hits; func_ov004_020b75e4((char *)c); }
-static void bw_020b77b4(void *c) { ++g_base_tick_hits; func_ov004_020b77b4((char *)c); }
-static void bw_020b78f4(void *c) { ++g_base_tick_hits; func_ov004_020b78f4((char *)c); }
-static void bw_020b7a18(void *c) { ++g_base_closure_hits; func_ov004_020b7a18((char *)c); }
-static void bw_020b7b20(void *c) { ++g_base_tick_hits; func_ov004_020b7b20((char *)c); }
-static void bw_020b7c04(void *c) { ++g_base_closure_hits; func_ov004_020b7c04((char *)c); }
-static void bw_020b7cd0(void *c) { ++g_base_tick_hits; func_ov004_020b7cd0((char *)c); }
-static void bw_020b7eac(void *c) { ++g_base_tick_hits; func_ov004_020b7eac((char *)c); }
-static void bw_020b7fec(void *c) { ++g_base_closure_hits; func_ov004_020b7fec((char *)c); }
-static void bw_020b8098(void *c) { ++g_base_tick_hits; func_ov004_020b8098((char *)c); }
-static void bw_020b8284(void *c) { ++g_base_tick_hits; func_ov004_020b8284((char *)c); }
-static void bw_020b841c(void *c) { ++g_base_tick_hits; func_ov004_020b841c((char *)c); }
-static void bw_020b8560(void *c) { ++g_base_tick_hits; func_ov004_020b8560((char *)c); }
+static void __fastcall bwf_020b68e8(void *c, void *) { ++g_base_tick_hits; func_ov004_020b68e8((int *)c); }
+static void __fastcall bwf_020b6948(void *c, void *) { ++g_base_tick_hits; func_ov004_020b6948(); }
+static void __fastcall bwf_020b6ad8(void *c, void *) { ++g_base_tick_hits; func_ov004_020b6ad8(); }
+static void __fastcall bwf_020b6b40(void *c, void *) { ++g_base_tick_hits; func_ov004_020b6b40(c); }
+static void __fastcall bwf_020b6c9c(void *c, void *) { ++g_base_tick_hits; func_ov004_020b6c9c(c); }
+static void __fastcall bwf_020b6ddc(void *c, void *) { ++g_base_tick_hits; func_ov004_020b6ddc((char *)c); }
+static void __fastcall bwf_020b6f88(void *c, void *) { ++g_base_tick_hits; func_ov004_020b6f88((char *)c); }
+static void __fastcall bwf_020b7124(void *c, void *) { ++g_base_tick_hits; func_ov004_020b7124((char *)c); }
+static void __fastcall bwf_020b72d4(void *c, void *) { ++g_base_tick_hits; func_ov004_020b72d4((char *)c); }
+static void __fastcall bwf_020b746c(void *c, void *) { ++g_base_tick_hits; func_ov004_020b746c((char *)c); }
+static void __fastcall bwf_020b75e4(void *c, void *) { ++g_base_tick_hits; func_ov004_020b75e4((char *)c); }
+static void __fastcall bwf_020b77b4(void *c, void *) { ++g_base_tick_hits; func_ov004_020b77b4((char *)c); }
+static void __fastcall bwf_020b78f4(void *c, void *) { ++g_base_tick_hits; func_ov004_020b78f4((char *)c); }
+static void __fastcall bwf_020b7a18(void *c, void *) { ++g_base_closure_hits; func_ov004_020b7a18((char *)c); }
+static void __fastcall bwf_020b7b20(void *c, void *) { ++g_base_tick_hits; func_ov004_020b7b20((char *)c); }
+static void __fastcall bwf_020b7c04(void *c, void *) { ++g_base_closure_hits; func_ov004_020b7c04((char *)c); }
+static void __fastcall bwf_020b7cd0(void *c, void *) { ++g_base_tick_hits; func_ov004_020b7cd0((char *)c); }
+static void __fastcall bwf_020b7eac(void *c, void *) { ++g_base_tick_hits; func_ov004_020b7eac((char *)c); }
+static void __fastcall bwf_020b7fec(void *c, void *) { ++g_base_closure_hits; func_ov004_020b7fec((char *)c); }
+static void __fastcall bwf_020b8098(void *c, void *) { ++g_base_tick_hits; func_ov004_020b8098((char *)c); }
+static void __fastcall bwf_020b8284(void *c, void *) { ++g_base_tick_hits; func_ov004_020b8284((char *)c); }
+static void __fastcall bwf_020b841c(void *c, void *) { ++g_base_tick_hits; func_ov004_020b841c((char *)c); }
+static void __fastcall bwf_020b8560(void *c, void *) { ++g_base_tick_hits; func_ov004_020b8560((char *)c); }
 
 typedef void (*SeatFn)(void *);
 
@@ -810,6 +818,29 @@ typedef void (*SeatFn)(void *);
    the same word as data_ov004_020bc224, which func_ov004_020b422c installs into
    the same field, so both sides move together and the test answers what the
    cartridge answers. */
+/* One writer for both halves of the seat below. The row shape is the same in
+   each: the cell, its name for the refusal, the cartridge's own code word and
+   the host body. The compare-before-write is the ROM's own word, exactly as it
+   was while the two halves were one array. */
+namespace {
+struct SeatRow { MgPmf *cell; const char *name; unsigned rom; SeatFn host; };
+}
+
+static void mgbase_seat_rows(const SeatRow *rows, unsigned n)
+{
+    for (unsigned i = 0; i < n; ++i) {
+        if (rows[i].cell->code != rows[i].rom || rows[i].cell->adj != 0) {
+            std::fprintf(stderr, "FATAL: dScMgBase_c pair global data_ov004_%s: "
+                         "the mount holds %08x/%d, the ROM's own bytes say "
+                         "%08x/0 -- WRONG BYTES\n", rows[i].name,
+                         rows[i].cell->code, rows[i].cell->adj, rows[i].rom);
+            std::abort();
+        }
+        rows[i].cell->code = (unsigned)(size_t)rows[i].host;
+        ++g_writer_seated;
+    }
+}
+
 extern "C" void port_mg_base_writer_seat(void)
 {
     static int done;
@@ -821,12 +852,104 @@ extern "C" void port_mg_base_writer_seat(void)
        the time anything can dispatch out of either object */
     port_mg_framework_tables_seat();
 
-    static const struct {
-        MgPmf *cell;
-        const char *name;
-        unsigned rom;
-        SeatFn host;
-    } seats[] = {
+
+    /* ---- THE TABLE IS SPLIT BY DISPATCHER, run link100 lane PMFSWEEP2 -------
+       The fifty-six rows were one array while every row held a __cdecl word.
+       They are two arrays now, because the fifty-six cells are reached by THREE
+       different dispatchers, only one of the three puts a receiver on the stack,
+       and a table that mixes the two conventions cannot be checked by
+       port/tools/pmf_guard.py, whose criterion is per table.
+
+       seats_ecx, TWENTY-NINE cells, every one installed by a state body into the
+       dMgState_c message object at +0x08 or +0x10 (the header's section 5 table
+       lists the slot per pair global, and every one of those bodies writes
+       *(P2 *)(c + 8) or *(P2 *)(c + 0x10)). Those two fields have exactly two
+       readers in the whole image, both matched __thiscall members that take NO
+       stack argument. Read off this build:
+
+           ?Render@dMgState_c@@QAEXXZ     +0x0  mov   eax, ecx
+                                          +0x2  cmp   [eax+0x18], -1
+                                          +0x8  mov   edx, [eax+0x10]   the code
+                                          +0xf  mov   ecx, [eax+0x14]   the adjust
+                                          +0x12 add   ecx, eax          this + adj
+                                          +0x14 jmp   edx
+           ?Behavior@dMgState_c@@QAEXXZ   +0x1  mov   esi, ecx
+                                          +0x16 mov   eax, [esi+8]      the code
+                                          +0x20 mov   ecx, [esi+0xc]    the adjust
+                                          +0x23 add   ecx, esi
+                                          +0x26 jmp   eax
+
+       and their own callers push nothing, because a QAEXXZ member has no stack
+       argument to push:
+
+           ?BeforeBehavior@dScMgBase_c@@UAEHXZ +0x92 push ebx
+                                               +0x93 push edi
+                                               +0x96 lea  ecx, [esi+0xcc]
+                                               +0x9c call ?Behavior@dMgState_c@@QAEXXZ
+           ?BeforeRender@dScMgBase_c@@UAEHXZ   +0x8d call ?Render@dMgState_c@@QAEXXZ
+
+       So at the jmp the word at [esp+4] is the caller's saved edi, not a
+       receiver. All twenty-nine now hold a __fastcall wrapper. This is
+       5ae983797's correction (FlameChomp) at the minigame framework base, the
+       shape 27a24ff5a, 651b5e853, f9936e798, 45ce69707, 00732a5ab and PMFSWEEP's
+       five classes each had to make one class over.
+
+       seats_cdecl, TWENTY-SEVEN cells, and a thunk on any of them would break
+       what works. Twenty are group A, the setter's own table, dispatched three
+       lines above by mgbase_dispatch_seated, which is a plain cdecl call that
+       PUSHES the receiver, and the object's +0x00 field has no other reader:
+       dMgState_c has three members in the whole image, SetState, which writes
+       +0x00, Behavior, which reads +0x08, and Render, which reads +0x10. The
+       other seven land in the 020b3278 object (the header's group C:
+       func_ov004_020b37f0, _020b39a4 and _020b422c write them at +0x00 and
+       +0x08, and data_ov004_020bc254 is the sentinel func_ov004_020b40c0
+       compares against). That object's two readers are FLAT C dispatchers whose
+       first stack argument IS the receiver, and both tail jump, so [esp+4]
+       really does hold it:
+
+           _func_ov004_020b321c  +0x3  mov eax, [ebp+8] / +0xc  mov edx, [eax]
+                                 +0x12 mov ecx, [eax+4] / add ecx, eax
+                                 +0x17 pop ebp / +0x18 jmp edx
+           _func_ov004_020b31b4  +0x3  mov eax, [ebp+8] / +0xc  mov edx, [eax+8]
+                                 +0x13 mov ecx, [eax+0xc] / add ecx, eax
+                                 +0x18 pop ebp / +0x19 jmp edx
+
+       and ?BeforeBehavior@dScMgBase_c@@UAEHXZ+0xb6 reaches the second as
+       push edi; call _func_ov004_020b321c; add esp, 4. This is the BabyPenguin
+       case 00732a5ab left alone on purpose. */
+    static const SeatRow seats_ecx[] = {
+    { &data_ov004_020bc8bc, "020bc8bc", 0x020b841cu, (SeatFn)bwf_020b841c },
+    { &data_ov004_020bc8c4, "020bc8c4", 0x020b8284u, (SeatFn)bwf_020b8284 },
+    { &data_ov004_020bc8cc, "020bc8cc", 0x020b6ad8u, (SeatFn)bwf_020b6ad8 },
+    { &data_ov004_020bc8d4, "020bc8d4", 0x020b8098u, (SeatFn)bwf_020b8098 },
+    { &data_ov004_020bc8dc, "020bc8dc", 0x020b7fecu, (SeatFn)bwf_020b7fec },
+    { &data_ov004_020bc8e4, "020bc8e4", 0x020b6f88u, (SeatFn)bwf_020b6f88 },
+    { &data_ov004_020bc8ec, "020bc8ec", 0x020b7eacu, (SeatFn)bwf_020b7eac },
+    { &data_ov004_020bc8f4, "020bc8f4", 0x020b7cd0u, (SeatFn)bwf_020b7cd0 },
+    { &data_ov004_020bc8fc, "020bc8fc", 0x020b72d4u, (SeatFn)bwf_020b72d4 },
+    { &data_ov004_020bc904, "020bc904", 0x020b7c04u, (SeatFn)bwf_020b7c04 },
+    { &data_ov004_020bc90c, "020bc90c", 0x020b7b20u, (SeatFn)bwf_020b7b20 },
+    { &data_ov004_020bc914, "020bc914", 0x020b7fecu, (SeatFn)bwf_020b7fec },
+    { &data_ov004_020bc91c, "020bc91c", 0x020b68e8u, (SeatFn)bwf_020b68e8 },
+    { &data_ov004_020bc924, "020bc924", 0x020b6c9cu, (SeatFn)bwf_020b6c9c },
+    { &data_ov004_020bc93c, "020bc93c", 0x020b7a18u, (SeatFn)bwf_020b7a18 },
+    { &data_ov004_020bc98c, "020bc98c", 0x020b7c04u, (SeatFn)bwf_020b7c04 },
+    { &data_ov004_020bc994, "020bc994", 0x020b7124u, (SeatFn)bwf_020b7124 },
+    { &data_ov004_020bc9ac, "020bc9ac", 0x020b78f4u, (SeatFn)bwf_020b78f4 },
+    { &data_ov004_020bc9b4, "020bc9b4", 0x020b78f4u, (SeatFn)bwf_020b78f4 },
+    { &data_ov004_020bc9c4, "020bc9c4", 0x020b6948u, (SeatFn)bwf_020b6948 },
+    { &data_ov004_020bc9cc, "020bc9cc", 0x020b6ddcu, (SeatFn)bwf_020b6ddc },
+    { &data_ov004_020bc9e4, "020bc9e4", 0x020b77b4u, (SeatFn)bwf_020b77b4 },
+    { &data_ov004_020bc9fc, "020bc9fc", 0x020b75e4u, (SeatFn)bwf_020b75e4 },
+    { &data_ov004_020bca04, "020bca04", 0x020b7124u, (SeatFn)bwf_020b7124 },
+    { &data_ov004_020bca14, "020bca14", 0x020b7fecu, (SeatFn)bwf_020b7fec },
+    { &data_ov004_020bca1c, "020bca1c", 0x020b8560u, (SeatFn)bwf_020b8560 },
+    { &data_ov004_020bca24, "020bca24", 0x020b746cu, (SeatFn)bwf_020b746c },
+    { &data_ov004_020bca2c, "020bca2c", 0x020b68e8u, (SeatFn)bwf_020b68e8 },
+    { &data_ov004_020bca34, "020bca34", 0x020b6b40u, (SeatFn)bwf_020b6b40 },
+    };
+
+    static const SeatRow seats_cdecl[] = {
     { &data_ov004_020bc17c, "020bc17c", 0x020b3978u, (SeatFn)bw_020b3978 },
     { &data_ov004_020bc1b4, "020bc1b4", 0x020b369cu, (SeatFn)bw_020b369c },
     { &data_ov004_020bc1ec, "020bc1ec", 0x020b38acu, (SeatFn)bw_020b38ac },
@@ -834,23 +957,8 @@ extern "C" void port_mg_base_writer_seat(void)
     { &data_ov004_020bc224, "020bc224", 0x020b4214u, (SeatFn)bw_020b4214 },
     { &data_ov004_020bc254, "020bc254", 0x020b4214u, (SeatFn)bw_020b4214 },
     { &data_ov004_020bc274, "020bc274", 0x020b410cu, (SeatFn)bw_020b410c },
-    { &data_ov004_020bc8bc, "020bc8bc", 0x020b841cu, (SeatFn)bw_020b841c },
-    { &data_ov004_020bc8c4, "020bc8c4", 0x020b8284u, (SeatFn)bw_020b8284 },
-    { &data_ov004_020bc8cc, "020bc8cc", 0x020b6ad8u, (SeatFn)bw_020b6ad8 },
-    { &data_ov004_020bc8d4, "020bc8d4", 0x020b8098u, (SeatFn)bw_020b8098 },
-    { &data_ov004_020bc8dc, "020bc8dc", 0x020b7fecu, (SeatFn)bw_020b7fec },
-    { &data_ov004_020bc8e4, "020bc8e4", 0x020b6f88u, (SeatFn)bw_020b6f88 },
-    { &data_ov004_020bc8ec, "020bc8ec", 0x020b7eacu, (SeatFn)bw_020b7eac },
-    { &data_ov004_020bc8f4, "020bc8f4", 0x020b7cd0u, (SeatFn)bw_020b7cd0 },
-    { &data_ov004_020bc8fc, "020bc8fc", 0x020b72d4u, (SeatFn)bw_020b72d4 },
-    { &data_ov004_020bc904, "020bc904", 0x020b7c04u, (SeatFn)bw_020b7c04 },
-    { &data_ov004_020bc90c, "020bc90c", 0x020b7b20u, (SeatFn)bw_020b7b20 },
-    { &data_ov004_020bc914, "020bc914", 0x020b7fecu, (SeatFn)bw_020b7fec },
-    { &data_ov004_020bc91c, "020bc91c", 0x020b68e8u, (SeatFn)bw_020b68e8 },
-    { &data_ov004_020bc924, "020bc924", 0x020b6c9cu, (SeatFn)bw_020b6c9c },
     { &data_ov004_020bc92c, "020bc92c", 0x020b79b0u, (SeatFn)func_ov004_020b79b0 },
     { &data_ov004_020bc934, "020bc934", 0x020b798cu, (SeatFn)func_ov004_020b798c },
-    { &data_ov004_020bc93c, "020bc93c", 0x020b7a18u, (SeatFn)bw_020b7a18 },
     { &data_ov004_020bc944, "020bc944", 0x020b7b90u, (SeatFn)func_ov004_020b7b90 },
     { &data_ov004_020bc94c, "020bc94c", 0x020b7e38u, (SeatFn)func_ov004_020b7e38 },
     { &data_ov004_020bc954, "020bc954", 0x020b7f5cu, (SeatFn)func_ov004_020b7f5c },
@@ -860,42 +968,19 @@ extern "C" void port_mg_base_writer_seat(void)
     { &data_ov004_020bc974, "020bc974", 0x020b8688u, (SeatFn)func_ov004_020b8688 },
     { &data_ov004_020bc97c, "020bc97c", 0x020b7854u, (SeatFn)func_ov004_020b7854 },
     { &data_ov004_020bc984, "020bc984", 0x020b7744u, (SeatFn)func_ov004_020b7744 },
-    { &data_ov004_020bc98c, "020bc98c", 0x020b7c04u, (SeatFn)bw_020b7c04 },
-    { &data_ov004_020bc994, "020bc994", 0x020b7124u, (SeatFn)bw_020b7124 },
     { &data_ov004_020bc99c, "020bc99c", 0x020b7594u, (SeatFn)func_ov004_020b7594 },
     { &data_ov004_020bc9a4, "020bc9a4", 0x020b7460u, (SeatFn)func_ov004_020b7460 },
-    { &data_ov004_020bc9ac, "020bc9ac", 0x020b78f4u, (SeatFn)bw_020b78f4 },
-    { &data_ov004_020bc9b4, "020bc9b4", 0x020b78f4u, (SeatFn)bw_020b78f4 },
     { &data_ov004_020bc9bc, "020bc9bc", 0x020b724cu, (SeatFn)func_ov004_020b724c },
-    { &data_ov004_020bc9c4, "020bc9c4", 0x020b6948u, (SeatFn)bw_020b6948 },
-    { &data_ov004_020bc9cc, "020bc9cc", 0x020b6ddcu, (SeatFn)bw_020b6ddc },
     { &data_ov004_020bc9d4, "020bc9d4", 0x020b70b4u, (SeatFn)func_ov004_020b70b4 },
     { &data_ov004_020bc9dc, "020bc9dc", 0x020b7020u, (SeatFn)func_ov004_020b7020 },
-    { &data_ov004_020bc9e4, "020bc9e4", 0x020b77b4u, (SeatFn)bw_020b77b4 },
     { &data_ov004_020bc9ec, "020bc9ec", 0x020b6f14u, (SeatFn)func_ov004_020b6f14 },
     { &data_ov004_020bc9f4, "020bc9f4", 0x020b6d6cu, (SeatFn)func_ov004_020b6d6c },
-    { &data_ov004_020bc9fc, "020bc9fc", 0x020b75e4u, (SeatFn)bw_020b75e4 },
-    { &data_ov004_020bca04, "020bca04", 0x020b7124u, (SeatFn)bw_020b7124 },
     { &data_ov004_020bca0c, "020bca0c", 0x020b6c10u, (SeatFn)func_ov004_020b6c10 },
-    { &data_ov004_020bca14, "020bca14", 0x020b7fecu, (SeatFn)bw_020b7fec },
-    { &data_ov004_020bca1c, "020bca1c", 0x020b8560u, (SeatFn)bw_020b8560 },
-    { &data_ov004_020bca24, "020bca24", 0x020b746cu, (SeatFn)bw_020b746c },
-    { &data_ov004_020bca2c, "020bca2c", 0x020b68e8u, (SeatFn)bw_020b68e8 },
-    { &data_ov004_020bca34, "020bca34", 0x020b6b40u, (SeatFn)bw_020b6b40 },
     { &data_ov004_020bca3c, "020bca3c", 0x020b743cu, (SeatFn)func_ov004_020b743c },
     };
 
-    for (unsigned i = 0; i < sizeof seats / sizeof seats[0]; ++i) {
-        if (seats[i].cell->code != seats[i].rom || seats[i].cell->adj != 0) {
-            std::fprintf(stderr, "FATAL: dScMgBase_c pair global data_ov004_%s: "
-                         "the mount holds %08x/%d, the ROM's own bytes say "
-                         "%08x/0 -- WRONG BYTES\n", seats[i].name,
-                         seats[i].cell->code, seats[i].cell->adj, seats[i].rom);
-            std::abort();
-        }
-        seats[i].cell->code = (unsigned)(size_t)seats[i].host;
-        ++g_writer_seated;
-    }
+    mgbase_seat_rows(seats_ecx, sizeof seats_ecx / sizeof seats_ecx[0]);
+    mgbase_seat_rows(seats_cdecl, sizeof seats_cdecl / sizeof seats_cdecl[0]);
 
     /* The setter's function-local static table is a COPY of twenty of those
        globals, built on the first call. Nothing can have called the setter this

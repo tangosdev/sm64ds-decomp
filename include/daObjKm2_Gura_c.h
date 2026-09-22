@@ -1,0 +1,50 @@
+#ifndef DAOBJKM2_GURA_C_H
+#define DAOBJKM2_GURA_C_H
+
+#include "types.h"
+#include "daObjGuragura_c.h"
+
+/* Bowser in the Fire Sea's tilting slab.
+ *
+ * The class identity and inheritance are ROM evidence:
+ *
+ *   _ZTI15daObjKm2_Gura_c  ov045 0x02112fd0
+ *   _ZTS15daObjKm2_Gura_c  ov045 0x02112fe8
+ *   _ZTV15daObjKm2_Gura_c  ov045 0x02113020
+ *   base                   daObjGuragura_c, ov002 0x0210905c
+ *
+ * The factory allocates 0x350 bytes, exactly sizeof(daObjGuragura_c), so this
+ * leaf adds no fields. Historical project class alias: TiltingPlatformBfs.
+ */
+
+#ifdef __cplusplus
+
+struct daObjKm2_Gura_c : daObjGuragura_c {
+    /* The inline body makes mwccarm emit only the retail D1/D0 pair, in retail
+     * order, with this TU's RTTI and vtable. */
+    /* The destructor pair spelled as two plain virtuals on the host, plus
+       the non-virtual destructor declaration the src/ definitions need; the
+       whole ruling is in include/ModelBase.h. An override takes its base's
+       slots, so these carry the SAME TWO NAMES the base declares -- a fresh
+       name would append a slot instead of claiming one. */
+#ifdef _MSC_VER
+    virtual void Destructor1();   /* D1 */
+    virtual void Destructor0();   /* D0 */
+    ~daObjKm2_Gura_c() {}   /* no slot */
+#else
+    virtual ~daObjKm2_Gura_c() {}   /* D1 and D0 */
+#endif
+
+    int CleanupResources();                /* slot  3 */
+    int InitResources();                   /* slot  0 */
+};
+
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
+typedef char daObjKm2_Gura_c_size_must_be_0x350[
+    sizeof(daObjKm2_Gura_c) == 0x350 ? 1 : -1];
+#endif
+
+#endif /* __cplusplus */
+
+#endif /* DAOBJKM2_GURA_C_H */

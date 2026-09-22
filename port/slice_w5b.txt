@@ -13,14 +13,18 @@
 # FIVE MATCHED ov065 TUs ARE DELIBERATELY ABSENT, each with a host copy
 # instead (the gate-173 PMF ruling, measured -- see
 # port/unmatched/Ov065_StateDispatch.cpp's banner):
-#   src/_ZN6Snufit8BehaviorEv.cpp     incomplete-class PMF read at table+8
+#   src/actors/daYurei_Mucho_c.cpp     incomplete-class PMF read at table+8
 #   src/_ZN5Swoop8BehaviorEv.cpp      same
 #   src/_ZN6Dorrie8BehaviorEv.cpp     16-byte PMF stride over 8-byte records
-#   src/func_ov065_0211691c.cpp       16-byte PMF over the whole table
+#   src/actors/daYurei_Mucho_c.cpp       16-byte PMF over the whole table
 #   src/func_ov065_02117944.cpp       same
-# ONE MORE IS ABSENT BECAUSE src/ NEVER BANKED IT: func_ov065_02118838
+# ONE MORE WAS ABSENT BECAUSE src/ NEVER BANKED IT: func_ov065_02118838
 # (Dorrie's neck chain, 0x414 bytes) -- hosted in
-# port/unmatched/Dorrie_Behavior.cpp until the decomp matches it.
+# port/unmatched/Dorrie_Behavior.cpp until the decomp matched it. IT IS
+# MATCHED NOW (PR #2363, 5dfb50c26) and src/func_ov065_02118838.cpp is on
+# port/slice_shadows3.txt; the host file held nothing else once lane FWD
+# retired Dorrie::Behavior, so it is deleted and its line below with it
+# (run link100 wave 14, lane SHADOWS3).
 # src/func_ov065_02116364 exists TWICE (.c and .cpp); the .c is the
 # delinks-bound TU (config/arm9/overlays/ov065/delinks.txt) and is the one
 # sliced.
@@ -29,34 +33,15 @@
 # the measured gate-6 mistake.
 
 # ---- SNUFIT (236): factory, methods, states ---------------------------------
-src/Snufit_Spawn.c
-src/_ZN6SnufitD1Ev.c
-src/_ZN6SnufitD0Ev.c
-src/_ZN6Snufit16CleanupResourcesEv.c
-src/_ZN6Snufit16OnPendingDestroyEv.c
-src/_ZN6Snufit6RenderEv.cpp
-src/_ZN6Snufit13InitResourcesEv.cpp
-src/func_ov065_02115f84.c
-src/func_ov065_02115ff0.c
-src/func_ov065_021162c0.c
-src/func_ov065_02116328.c
-src/func_ov065_02116364.c
-src/func_ov065_02116588.cpp
-src/func_ov065_021165d8.cpp
-src/func_ov065_0211672c.c
-src/func_ov065_02116744.c
-src/func_ov065_021168a8.cpp
-src/func_ov065_0211696c.c
-src/func_ov065_02116f0c.c
-src/func_ov065_02116f14.cpp
-src/func_ov065_02116f40.c
+src/actors/daYurei_Mucho_c.cpp
 
 # ---- SWOOP (237) ------------------------------------------------------------
-src/Swoop_Spawn.c
-src/_ZN5SwoopD1Ev.c
-src/_ZN5SwoopD0Ev.c
-src/_ZN5Swoop16CleanupResourcesEv.c
-src/_ZN5Swoop16OnPendingDestroyEv.c
+src/d_a_basabasa.c
+src/_ZN5SwoopD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN5SwoopD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN5SwoopD0Ev.cpp
+src/_ZN5Swoop16CleanupResourcesEv.cpp
+src/_ZN5Swoop16OnPendingDestroyEv.cpp
 src/_ZN5Swoop6RenderEv.cpp
 src/_ZN5Swoop13InitResourcesEv.cpp
 src/func_ov065_0211704c.c
@@ -69,24 +54,24 @@ src/func_ov065_021177e4.cpp
 src/func_ov065_02117888.c
 src/func_ov065_021178fc.c
 src/func_ov065_02117994.c
-src/func_ov065_02117eac.c
-src/func_ov065_02117eb4.cpp
-src/func_ov065_02117ee0.c
+src/_ZN5Swoop16OnAimedAtWithEggEv.cpp
+src/_ZN5Swoop13OnTurnIntoEggER6Player.cpp
+src/_ZN5Swoop13OnYoshiTryEatEv.cpp
 
 # ---- DORRIE (168) + DORRIE_CAP (169) ---------------------------------------
-src/Dorrie_Spawn.cpp
-src/DorrieCap_Spawn.c
+src/d_a_dossy.c
+src/d_a_dossy_cap.c
 src/_ZN6DorrieD1Ev.cpp
 src/_ZN6DorrieD0Ev.cpp
-src/_ZN9DorrieCapD1Ev.c
-src/_ZN9DorrieCapD0Ev.c
+src/_ZN12daDossyCap_cD1Ev.cpp
+src/_ZN12daDossyCap_cD0Ev.cpp
 src/_ZN6Dorrie16CleanupResourcesEv.cpp
 src/_ZN6Dorrie6RenderEv.cpp
-src/_ZN9DorrieCap6RenderEv.cpp
-src/_ZN9DorrieCap8BehaviorEv.cpp
+src/_ZN12daDossyCap_c6RenderEv.cpp
+src/_ZN12daDossyCap_c8BehaviorEv.cpp
 src/_ZN6Dorrie13InitResourcesEv.cpp
-src/_ZN9DorrieCap13InitResourcesEv.cpp
-src/func_ov065_021180b8.c
+src/_ZN12daDossyCap_c13InitResourcesEv.cpp
+src/_ZN14DorriePlatformD1Ev.cpp
 src/func_ov065_021180d4.c
 src/func_ov065_02118248.cpp
 src/func_ov065_021182e4.cpp
@@ -99,8 +84,8 @@ src/func_ov065_0211956c.c
 src/func_ov065_02119594.c
 src/func_ov065_021195bc.c
 src/func_ov065_021195d0.c
-src/func_ov065_021195e4.c
-src/func_ov065_021196bc.c
+src/_ZN12daDossyCap_c13OnYoshiTryEatEv.cpp
+src/_ZN14DorriePlatformC1Ev.cpp
 
 # ---- ov065's three HMC sinits (edge: ov65_bringup) --------------------------
 src/__sinit_ov065_0211c110.c
@@ -108,12 +93,13 @@ src/__sinit_ov065_0211c2a8.c
 src/__sinit_ov065_0211c440.c
 
 # ---- WORK_ELEVATOR (68) -----------------------------------------------------
-src/WorkElevator_Spawn.cpp
+src/d_a_obj_cv_news_lift.cpp
 src/_ZN12WorkElevatorD1Ev.cpp
-src/_ZN12WorkElevatorD0Ev.c
+# RETIRED at SLICE1: body now in src/_ZN12WorkElevatorD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN12WorkElevatorD0Ev.cpp
 src/_ZN12WorkElevator16CleanupResourcesEv.cpp
 src/_ZN12WorkElevator6RenderEv.cpp
-src/_ZN12WorkElevator8BehaviorEv.c
+src/_ZN12WorkElevator8BehaviorEv.cpp
 src/_ZN12WorkElevator13InitResourcesEv.cpp
 src/func_ov021_0211129c.c
 # src/func_ov021_02111434.c is NOT here: it ends in a two-instruction mwcc
@@ -131,14 +117,15 @@ src/func_ov021_02112024.cpp
 src/func_ov021_02112128.c
 
 # ---- ROLLING_ROCK (221) -----------------------------------------------------
-src/RollingRock_Spawn.c
-src/_ZN11RollingRockD1Ev.c
-src/_ZN11RollingRockD0Ev.c
-src/_ZN11RollingRock16CleanupResourcesEv.c
+src/d_a_grock.c
+src/_ZN11RollingRockD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN11RollingRockD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN11RollingRockD0Ev.cpp
+src/_ZN11RollingRock16CleanupResourcesEv.cpp
 src/_ZN11RollingRock6RenderEv.cpp
-src/_ZN11RollingRock8BehaviorEv.c
+src/_ZN11RollingRock8BehaviorEv.cpp
 src/_ZN11RollingRock13InitResourcesEv.cpp
-src/func_ov021_0211228c.c
+src/_ZN11RollingRock16OnAimedAtWithEggEv.cpp
 src/func_ov021_02112294.c
 src/func_ov021_021122fc.cpp
 src/func_ov021_021123b0.c
@@ -146,12 +133,7 @@ src/func_ov021_02112544.cpp
 src/func_ov021_021127b4.c
 
 # ---- SHUTTER_HMC (67): no Render TU -- slot 9 is ov002's shared body --------
-src/ShutterHmc_Spawn.c
-src/_ZN10ShutterHmcD1Ev.c
-src/_ZN10ShutterHmcD0Ev.c
-src/_ZN10ShutterHmc16CleanupResourcesEv.cpp
-src/_ZN10ShutterHmc8BehaviorEv.cpp
-src/_ZN10ShutterHmc13InitResourcesEv.cpp
+src/game/actors/d_a_obj_cv_shutter.cpp
 
 # ---- ov021's three sinits (edge: ov65_bringup) ------------------------------
 src/__sinit_ov021_02113500.c
@@ -174,12 +156,11 @@ src/func_0203cebc.c
 # (call target 0x02010518 re-derived from the reloc runs; the probe's other
 # class-b suggestion, _ZN6EyerokD0Ev, was a shared-window NAME RACE and is
 # aliased by address in hal/actor_classes_ov065.cpp instead of sliced)
-src/_ZN5Actor24BumpedUnderneathByPlayerER6Player.cpp
+src/_ZN8dActor_c24BumpedUnderneathByPlayerER6Player.cpp
 
 # ---- the lane's host files (the slice reader takes any repo path) -----------
 port/hal/actor_classes_ov065.cpp
 port/unmatched/Ov065_StateDispatch.cpp
 port/unmatched/Snufit_Behavior.cpp
 port/unmatched/Swoop_Behavior.cpp
-port/unmatched/Dorrie_Behavior.cpp
 port/unmatched/WorkElevator_Mtx.cpp

@@ -3,12 +3,12 @@
 // Particle::SysTracker's constructor builds fourteen callback sub-objects
 // inside itself and points each one's vptr at one of these:
 //
-//     func_020226a4(p)  ->  *(void **)p = &data_0208f3b4;   /* then f3c4 */
-//     func_020225fc(p)  ->  func_020226a4(p); p->vt = &data_0208f414;
+//     _ZN5dPa_c7level_c16simpleCallback_cC2Ev(p)  ->  *(void **)p = &_ZTVN5dPa_c7level_c10callback_cE;   /* then f3c4 */
+//     _ZN5dPa_c7level_c15scaleCallback_cC1Ev(p)  ->  _ZN5dPa_c7level_c16simpleCallback_cC2Ev(p); p->vt = &_ZTVN5dPa_c7level_c15scaleCallback_cE;
 //
 // so the vptr is the ADDRESS of the symbol, and the two words at and just
 // after it are the class's two virtual functions. The dispatch that matters
-// is in func_02021bec, the tracker's per-frame walk over its 0x40 system
+// is in _ZN8Particle10SysTracker8Contents6UpdateEv, the tracker's per-frame walk over its 0x40 system
 // slots:
 //
 //     e->f10->vt->m[1](e->f10, e->fc, m)
@@ -65,7 +65,7 @@
 //                              0x020226d0 = Callback::SpawnParticles (size 4)
 //
 // WHAT THE SWEEP WAS PROBABLY SEEING, because it is a real and separate fact:
-// the matched TU src/_ZN8Particle14SimpleCallback14SpawnParticlesERNS_6SystemE
+// the matched TU src/_ZN5dPa_c7level_c16simpleCallback_c14SpawnParticlesERN8Particle6SystemE
 // .cpp does NOT link. It is one of the three ARM argument ride-throughs
 // (slice_gate29.txt keeps it out on purpose), so the body those four slot-0
 // seats actually reach is the host copy in
@@ -81,103 +81,103 @@
 extern "C" {
 
 /* the two base implementations, shared by most of the table */
-void _ZN8Particle8Callback14SpawnParticlesERNS_6SystemE(void *, void *);
-void _ZN8Particle8Callback8OnUpdateERNS_6SystemEb(void *, void *, int);
-void _ZN8Particle14SimpleCallback14SpawnParticlesERNS_6SystemE(void *, void *);
-void _ZN8Particle14SimpleCallback8OnUpdateERNS_6SystemEb(void *, void *, int);
+void _ZN5dPa_c7level_c10callback_c14SpawnParticlesERN8Particle6SystemE(void *, void *);
+void _ZN5dPa_c7level_c10callback_c8OnUpdateERN8Particle6SystemEb(void *, void *, int);
+void _ZN5dPa_c7level_c16simpleCallback_c14SpawnParticlesERN8Particle6SystemE(void *, void *);
+void _ZN5dPa_c7level_c16simpleCallback_c8OnUpdateERN8Particle6SystemEb(void *, void *, int);
 
 /* the eleven overriding OnUpdates */
-void _ZN8Particle14BubbleCallback8OnUpdateERNS_6SystemEb(void *, void *, int);
-void _ZN8Particle25EndingStarGlitterCallback8OnUpdateERNS_6SystemEb(void *, void *, int);
-void _ZN8Particle25EndingStarGlitterCallback14SpawnParticlesERNS_6SystemE(void *, void *);
-void _ZN8Particle14SplashCallback8OnUpdateERNS_6SystemEb(void *, void *, int);
-void _ZN8Particle18CheckWaterCallback8OnUpdateERNS_6SystemEb(void *, void *, int);
-void _ZN8Particle17CheckLavaCallback8OnUpdateERNS_6SystemEb(void *, void *, int);
-void _ZN8Particle17CheckLavaCallback14SpawnParticlesERNS_6SystemE(void *, void *);
-void _ZN8Particle13ScaleCallback8OnUpdateERNS_6SystemEb(void *, void *, int);
-void _ZN8Particle13ScaleCallback14SpawnParticlesERNS_6SystemE(void *, void *);
-void _ZN8Particle24CheckWaterRippleCallback8OnUpdateERNS_6SystemEb(void *, void *, int);
-void _ZN8Particle12ClipCallback8OnUpdateERNS_6SystemEb(void *, void *, int);
-void _ZN8Particle22FitWaterSimpleCallback8OnUpdateERNS_6SystemEb(void *, void *, int);
-void _ZN8Particle16FitWaterCallback8OnUpdateERNS_6SystemEb(void *, void *, int);
-void _ZN8Particle21CleanParticleCallback8OnUpdateERNS_6SystemEb(void *, void *, int);
+void _ZN5dPa_c7level_c16bubbleCallback_c8OnUpdateERN8Particle6SystemEb(void *, void *, int);
+void _ZN5dPa_c7level_c20edStarKiraCallback_c8OnUpdateERN8Particle6SystemEb(void *, void *, int);
+void _ZN5dPa_c7level_c20edStarKiraCallback_c14SpawnParticlesERN8Particle6SystemE(void *, void *);
+void _ZN5dPa_c7level_c16splashCallback_c8OnUpdateERN8Particle6SystemEb(void *, void *, int);
+void _ZN5dPa_c7level_c20checkWaterCallback_c8OnUpdateERN8Particle6SystemEb(void *, void *, int);
+void _ZN5dPa_c7level_c20checkYoganCallback_c8OnUpdateERN8Particle6SystemEb(void *, void *, int);
+void _ZN5dPa_c7level_c20checkYoganCallback_c14SpawnParticlesERN8Particle6SystemE(void *, void *);
+void _ZN5dPa_c7level_c15scaleCallback_c8OnUpdateERN8Particle6SystemEb(void *, void *, int);
+void _ZN5dPa_c7level_c15scaleCallback_c14SpawnParticlesERN8Particle6SystemE(void *, void *);
+void _ZN5dPa_c7level_c26checkWaterRippleCallback_c8OnUpdateERN8Particle6SystemEb(void *, void *, int);
+void _ZN5dPa_c7level_c14clipCallback_c8OnUpdateERN8Particle6SystemEb(void *, void *, int);
+void _ZN5dPa_c7level_c24fitWaterSimpleCallback_c8OnUpdateERN8Particle6SystemEb(void *, void *, int);
+void _ZN5dPa_c7level_c18fitWaterCallback_c8OnUpdateERN8Particle6SystemEb(void *, void *, int);
+void _ZN5dPa_c7level_c23cleanParticleCallback_c8OnUpdateERN8Particle6SystemEb(void *, void *, int);
 
 #define SPAWN(f) ((void *)&f)
 #define UPDATE(f) ((void *)&f)
 
 DSSTATE_BEGIN
 /* BubbleCallback.  from:0x0208f3a4 to:0x02022640 | 0x0208f3a8 to:0x02022464 */
-void *data_0208f3a4[2] = {
-    SPAWN(_ZN8Particle14SimpleCallback14SpawnParticlesERNS_6SystemE),
-    UPDATE(_ZN8Particle14BubbleCallback8OnUpdateERNS_6SystemEb),
+void *_ZTVN5dPa_c7level_c16bubbleCallback_cE[2] = {
+    SPAWN(_ZN5dPa_c7level_c16simpleCallback_c14SpawnParticlesERN8Particle6SystemE),
+    UPDATE(_ZN5dPa_c7level_c16bubbleCallback_c8OnUpdateERN8Particle6SystemEb),
 };
 /* Callback (the base).
    from:0x0208f3b4 to:0x020226d0 | 0x0208f3b8 to:0x020226c8 */
-void *data_0208f3b4[2] = {
-    SPAWN(_ZN8Particle8Callback14SpawnParticlesERNS_6SystemE),
-    UPDATE(_ZN8Particle8Callback8OnUpdateERNS_6SystemEb),
+void *_ZTVN5dPa_c7level_c10callback_cE[2] = {
+    SPAWN(_ZN5dPa_c7level_c10callback_c14SpawnParticlesERN8Particle6SystemE),
+    UPDATE(_ZN5dPa_c7level_c10callback_c8OnUpdateERN8Particle6SystemEb),
 };
 /* SimpleCallback.  from:0x0208f3c4 to:0x02022640 | 0x0208f3c8 to:0x02022630 */
-void *data_0208f3c4[2] = {
-    SPAWN(_ZN8Particle14SimpleCallback14SpawnParticlesERNS_6SystemE),
-    UPDATE(_ZN8Particle14SimpleCallback8OnUpdateERNS_6SystemEb),
+void *_ZTVN5dPa_c7level_c16simpleCallback_cE[2] = {
+    SPAWN(_ZN5dPa_c7level_c16simpleCallback_c14SpawnParticlesERN8Particle6SystemE),
+    UPDATE(_ZN5dPa_c7level_c16simpleCallback_c8OnUpdateERN8Particle6SystemEb),
 };
 /* EndingStarGlitterCallback.
    from:0x0208f3d4 to:0x0202222c | 0x0208f3d8 to:0x020221dc */
-void *data_0208f3d4[2] = {
-    SPAWN(_ZN8Particle25EndingStarGlitterCallback14SpawnParticlesERNS_6SystemE),
-    UPDATE(_ZN8Particle25EndingStarGlitterCallback8OnUpdateERNS_6SystemEb),
+void *_ZTVN5dPa_c7level_c20edStarKiraCallback_cE[2] = {
+    SPAWN(_ZN5dPa_c7level_c20edStarKiraCallback_c14SpawnParticlesERN8Particle6SystemE),
+    UPDATE(_ZN5dPa_c7level_c20edStarKiraCallback_c8OnUpdateERN8Particle6SystemEb),
 };
 /* SplashCallback.  from:0x0208f3e4 to:0x02022640 | 0x0208f3e8 to:0x020224fc */
-void *data_0208f3e4[2] = {
-    SPAWN(_ZN8Particle14SimpleCallback14SpawnParticlesERNS_6SystemE),
-    UPDATE(_ZN8Particle14SplashCallback8OnUpdateERNS_6SystemEb),
+void *_ZTVN5dPa_c7level_c16splashCallback_cE[2] = {
+    SPAWN(_ZN5dPa_c7level_c16simpleCallback_c14SpawnParticlesERN8Particle6SystemE),
+    UPDATE(_ZN5dPa_c7level_c16splashCallback_c8OnUpdateERN8Particle6SystemEb),
 };
 /* CheckWaterCallback.
    from:0x0208f3f4 to:0x020226d0 | 0x0208f3f8 to:0x02022160 */
-void *data_0208f3f4[2] = {
-    SPAWN(_ZN8Particle8Callback14SpawnParticlesERNS_6SystemE),
-    UPDATE(_ZN8Particle18CheckWaterCallback8OnUpdateERNS_6SystemEb),
+void *_ZTVN5dPa_c7level_c20checkWaterCallback_cE[2] = {
+    SPAWN(_ZN5dPa_c7level_c10callback_c14SpawnParticlesERN8Particle6SystemE),
+    UPDATE(_ZN5dPa_c7level_c20checkWaterCallback_c8OnUpdateERN8Particle6SystemEb),
 };
 /* CheckLavaCallback.
    from:0x0208f404 to:0x02022328 | 0x0208f408 to:0x020222f0 */
-void *data_0208f404[2] = {
-    SPAWN(_ZN8Particle17CheckLavaCallback14SpawnParticlesERNS_6SystemE),
-    UPDATE(_ZN8Particle17CheckLavaCallback8OnUpdateERNS_6SystemEb),
+void *_ZTVN5dPa_c7level_c20checkYoganCallback_cE[2] = {
+    SPAWN(_ZN5dPa_c7level_c20checkYoganCallback_c14SpawnParticlesERN8Particle6SystemE),
+    UPDATE(_ZN5dPa_c7level_c20checkYoganCallback_c8OnUpdateERN8Particle6SystemEb),
 };
 /* ScaleCallback.  from:0x0208f414 to:0x020225d0 | 0x0208f418 to:0x020225a8 */
-void *data_0208f414[2] = {
-    SPAWN(_ZN8Particle13ScaleCallback14SpawnParticlesERNS_6SystemE),
-    UPDATE(_ZN8Particle13ScaleCallback8OnUpdateERNS_6SystemEb),
+void *_ZTVN5dPa_c7level_c15scaleCallback_cE[2] = {
+    SPAWN(_ZN5dPa_c7level_c15scaleCallback_c14SpawnParticlesERN8Particle6SystemE),
+    UPDATE(_ZN5dPa_c7level_c15scaleCallback_c8OnUpdateERN8Particle6SystemEb),
 };
 /* CheckWaterRippleCallback.
    from:0x0208f424 to:0x020226d0 | 0x0208f428 to:0x020220a4 */
-void *data_0208f424[2] = {
-    SPAWN(_ZN8Particle8Callback14SpawnParticlesERNS_6SystemE),
-    UPDATE(_ZN8Particle24CheckWaterRippleCallback8OnUpdateERNS_6SystemEb),
+void *_ZTVN5dPa_c7level_c26checkWaterRippleCallback_cE[2] = {
+    SPAWN(_ZN5dPa_c7level_c10callback_c14SpawnParticlesERN8Particle6SystemE),
+    UPDATE(_ZN5dPa_c7level_c26checkWaterRippleCallback_c8OnUpdateERN8Particle6SystemEb),
 };
 /* ClipCallback.  from:0x0208f434 to:0x020226d0 | 0x0208f438 to:0x02021e70 */
-void *data_0208f434[2] = {
-    SPAWN(_ZN8Particle8Callback14SpawnParticlesERNS_6SystemE),
-    UPDATE(_ZN8Particle12ClipCallback8OnUpdateERNS_6SystemEb),
+void *_ZTVN5dPa_c7level_c14clipCallback_cE[2] = {
+    SPAWN(_ZN5dPa_c7level_c10callback_c14SpawnParticlesERN8Particle6SystemE),
+    UPDATE(_ZN5dPa_c7level_c14clipCallback_c8OnUpdateERN8Particle6SystemEb),
 };
 /* FitWaterSimpleCallback.
    from:0x0208f444 to:0x02022640 | 0x0208f448 to:0x02022418 */
-void *data_0208f444[2] = {
-    SPAWN(_ZN8Particle14SimpleCallback14SpawnParticlesERNS_6SystemE),
-    UPDATE(_ZN8Particle22FitWaterSimpleCallback8OnUpdateERNS_6SystemEb),
+void *_ZTVN5dPa_c7level_c24fitWaterSimpleCallback_cE[2] = {
+    SPAWN(_ZN5dPa_c7level_c16simpleCallback_c14SpawnParticlesERN8Particle6SystemE),
+    UPDATE(_ZN5dPa_c7level_c24fitWaterSimpleCallback_c8OnUpdateERN8Particle6SystemEb),
 };
 /* FitWaterCallback.
    from:0x0208f454 to:0x020226d0 | 0x0208f458 to:0x0202202c */
-void *data_0208f454[2] = {
-    SPAWN(_ZN8Particle8Callback14SpawnParticlesERNS_6SystemE),
-    UPDATE(_ZN8Particle16FitWaterCallback8OnUpdateERNS_6SystemEb),
+void *_ZTVN5dPa_c7level_c18fitWaterCallback_cE[2] = {
+    SPAWN(_ZN5dPa_c7level_c10callback_c14SpawnParticlesERN8Particle6SystemE),
+    UPDATE(_ZN5dPa_c7level_c18fitWaterCallback_c8OnUpdateERN8Particle6SystemEb),
 };
 /* CleanParticleCallback.
    from:0x0208f464 to:0x020226d0 | 0x0208f468 to:0x02021e40 */
-void *data_0208f464[2] = {
-    SPAWN(_ZN8Particle8Callback14SpawnParticlesERNS_6SystemE),
-    UPDATE(_ZN8Particle21CleanParticleCallback8OnUpdateERNS_6SystemEb),
+void *_ZTVN5dPa_c7level_c23cleanParticleCallback_cE[2] = {
+    SPAWN(_ZN5dPa_c7level_c10callback_c14SpawnParticlesERN8Particle6SystemE),
+    UPDATE(_ZN5dPa_c7level_c23cleanParticleCallback_c8OnUpdateERN8Particle6SystemEb),
 };
 
 /* ---- the two dispatch tables func_0204b028 / func_0204b244 index ---------
@@ -228,10 +228,10 @@ DSSTATE_END
 void port_particle_vtables_check(void)
 {
     void **vts[13] = {
-        data_0208f3a4, data_0208f3b4, data_0208f3c4, data_0208f3d4,
-        data_0208f3e4, data_0208f3f4, data_0208f404, data_0208f414,
-        data_0208f424, data_0208f434, data_0208f444, data_0208f454,
-        data_0208f464,
+        _ZTVN5dPa_c7level_c16bubbleCallback_cE, _ZTVN5dPa_c7level_c10callback_cE, _ZTVN5dPa_c7level_c16simpleCallback_cE, _ZTVN5dPa_c7level_c20edStarKiraCallback_cE,
+        _ZTVN5dPa_c7level_c16splashCallback_cE, _ZTVN5dPa_c7level_c20checkWaterCallback_cE, _ZTVN5dPa_c7level_c20checkYoganCallback_cE, _ZTVN5dPa_c7level_c15scaleCallback_cE,
+        _ZTVN5dPa_c7level_c26checkWaterRippleCallback_cE, _ZTVN5dPa_c7level_c14clipCallback_cE, _ZTVN5dPa_c7level_c24fitWaterSimpleCallback_cE, _ZTVN5dPa_c7level_c18fitWaterCallback_cE,
+        _ZTVN5dPa_c7level_c23cleanParticleCallback_cE,
     };
     static const unsigned addr[13] = {
         0x0208f3a4, 0x0208f3b4, 0x0208f3c4, 0x0208f3d4, 0x0208f3e4,

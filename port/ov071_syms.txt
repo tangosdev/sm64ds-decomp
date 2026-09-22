@@ -5,9 +5,9 @@
 # (255), MrI/BigMrI (198/199, the eyeball), MrI_Projectile (262?) and Coffin
 # (218) -- of which THIS gate hosts only Scuttlebug. Its id and its SpawnInfo's
 # own +4 halfword were read from the arm9 ACTOR_SPAWN_TABLE (0x02090864): entry
-# 255 (0x02090864 + 255*4 = 0x02090c60) relocates to Scuttlebug_SpawnInfo at
+# 255 (0x02090864 + 255*4 = 0x02090c60) relocates to g_profile_SPIDER at
 # 0x02122c08, and that record's +4 halfword reads 0x00ff = 255. Its +0 word
-# relocates to Scuttlebug_Spawn (0x02120618).
+# relocates to daSpd_c_classInit (0x02120618).
 #
 # This is the per-symbol mount (the gate-83/gate-50 ov095/ov080 shape):
 # SCUTTLEBUG reaches its SpawnInfo, the two SharedFilePtr statics its
@@ -39,10 +39,10 @@
 # _02122f90 / _02122f9c are the aux blocks the sinit passes to their
 # constructors (0x020731dc). All bss; --pack keeps the delta-sized run contiguous.
 #
-# Scuttlebug_SpawnInfo is pinned to the record's real 0x1c so the +4 id halfword
+# g_profile_SPIDER is pinned to the record's real 0x1c so the +4 id halfword
 # the registry cross-checks reads out of the right bytes (255); the next-symbol
 # delta (0x24, into the vtable) would over-size it into a host/ROM gap.
-Scuttlebug_SpawnInfo:0x1c
+g_profile_SPIDER:0x1c
 # the eighteen SOURCE state PMFs the sinit copies, address order (each 8 bytes,
 # {fn, 0}); the seat rewrites their fn words before the copy
 data_ov071_02122b60 data_ov071_02122b68 data_ov071_02122b70 data_ov071_02122b78
@@ -73,9 +73,9 @@ data_ov071_021230b8 data_ov071_021230c4 data_ov071_021230d0 data_ov071_021230d8
 data_ov071_021230e0 data_ov071_021230ec:0x14
 # run linkw wave 5 (lane w5-A): COFFIN (64) joins. Its record is config-named
 # and `ambiguous` (the shared ov070/071/073/074 window); settled by the raw
-# readback in overlay_0071.bin: w0 = 0x02122670 = Coffin_Spawn, +4 reads 64.
+# readback in overlay_0071.bin: w0 = 0x02122670 = daObjCasket_c_classInit, +4 reads 64.
 # Span 0x1c by the next symbol (data_ov071_02122ecc, the state table).
-Coffin_SpawnInfo
+g_profile_CASKET
 
 # ---------------------------------------------------------------------------
 # run linkw wave 7 (lane w7b): THE MR. I FAMILY joins -- MR_I (262), BIG_MR_I
@@ -89,21 +89,21 @@ Coffin_SpawnInfo
 # halfword must match -- the real map is:
 #
 #   id  spawn-table slot        SpawnInfo   word[0]                  +4 reads
-#   262 0x02090c7c -> 0x02122cf0 MrI        0x02121a1c MrI_Spawn          262
-#   263 0x02090c80 -> 0x02122d0c BigMrI     0x021219cc BigMrI_Spawn       263
+#   262 0x02090c7c -> 0x02122cf0 MrI        0x02121a1c daEykn_c_classInit_EYEKUN          262
+#   263 0x02090c80 -> 0x02122d0c BigMrI     0x021219cc daEykn_c_classInit_EYEKUN_BOSS       263
 #   264 0x02090c84 -> 0x02122dc4 MrI_Proj   0x02121f9c MrI_Projectile_S.  264
 #
 # Ids 198 and 199 DO point at records inside this overlay's window, but their
 # word[0] spawnFuncs land OUTSIDE ov071 -- another module sharing the window,
 # which is precisely the trap the double test exists for.
 #
-# Each record is pinned to its real 0x1c. MrI_SpawnInfo would take 0x1c from the
+# Each record is pinned to its real 0x1c. g_profile_EYEKUN would take 0x1c from the
 # next symbol anyway; the other two would take 0x24 (the next symbol is the
 # class's VTABLE, which is a HOST array deliberately left out of this mount) and
-# would over-size into a host/ROM gap -- the Scuttlebug_SpawnInfo lesson.
-MrI_SpawnInfo:0x1c
-BigMrI_SpawnInfo:0x1c
-MrI_Projectile_SpawnInfo:0x1c
+# would over-size into a host/ROM gap -- the g_profile_SPIDER lesson.
+g_profile_EYEKUN:0x1c
+g_profile_EYEKUN_BOSS:0x1c
+
 
 # The .rodata pointer table MrI's InitResources and CleanupResources index, the
 # only data this lane adds. .rodata is 0x021226a0..0x021226ac (3 words) and the
@@ -117,3 +117,11 @@ MrI_Projectile_SpawnInfo:0x1c
 # its real 0x8. All three pointees (02123038/40/48) were already mounted above.
 data_ov071_021226a0
 data_ov071_021226a4:0x8
+
+
+# RETIRED at ALIAS2 (wave 8, the main -> port sync). Each symbol below was
+# hosted here as a ROM data blob AND is now defined by a translation unit the
+# build compiles, so the link reported it twice (LNK2005). The generator input
+# is the place to fix that: build/port/host-src/ov071_syms.c is its output and is
+# regenerated from this list on every configure.
+#   g_profile_EYEKUN_BEAM                      now defined by d_a_ey_bm.cpp.obj

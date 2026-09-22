@@ -5,7 +5,7 @@
 // one is this class -- so this seat takes level 26 to zero skipped.
 //
 //   id   name      x on L26  factory        table          width
-//   248  WIGGLER    1        Wiggler_Spawn  _ZTV7Wiggler    31
+//   248  WIGGLER    1        daHanachan_c_classInit  _ZTV7Wiggler    31
 //
 // ---- NO IDENTITY SHIFT, AND THE RTTI SAYS SO ------------------------------
 //
@@ -13,7 +13,7 @@
 // class and its inferred vtable width is the right 31. _ZTV7Wiggler is
 // 0x021144bc, its typeinfo at vtable[-1] is 0x0211445c and the name string at
 // 0x02114478 reads "12daHanachan_c" -- Hanachan is the ROM's own word for the
-// Wiggler. Wiggler_Spawn installs 0x021144bc and every _ZN7Wiggler* method sits
+// Wiggler. daHanachan_c_classInit installs 0x021144bc and every _ZN7Wiggler* method sits
 // in that table's own slots. Checked against the image, not assumed.
 //
 // ---- THE MISSING BODY LANDED (run rel0215 lane prop18) ---------------------
@@ -21,7 +21,7 @@
 // _ZN7Wiggler8BehaviorEv (0x02112b5c, 0x6e0 bytes, slot 6) used to be the ONE
 // symbol in this overlay with neither a delink block nor a src file (36
 // function symbols, 35 with a body). Main matched it -- 36e8cbcce, PR #2008 --
-// and lane prop18 propagated src/_ZN7Wiggler8BehaviorEv.c here BY ADDRESS,
+// and lane prop18 propagated src/_ZN7Wiggler8BehaviorEv.cpp here BY ADDRESS,
 // VERBATIM, blob 70a58eb36714d32803108c480fc7a9c9737a288d.
 //
 // WHAT IT IS, HONESTLY: a DECLARED NONMATCHING DRAFT at div 20 of 440 words.
@@ -86,14 +86,16 @@
 // The ov025/ov033/ov035/ov045/ov052/ov056/ov073 lane-ownership pattern, behind
 // one DSSTATE-bracketed done-guard. It runs the pack check, the syms patch,
 // hal_fill_enemy_base_vtable (both destructors tail into the Enemy base D2
-// func_ov002_020aed18) and then the overlay's single sinit.
+// _ZN12dEnemyBase_cD2Ev) and then the overlay's single sinit.
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
@@ -101,27 +103,27 @@ extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include "dsstate_seg.h"
 #include <cstdlib>
 
-#include "Actor.h"
-#include "ActorBase.h"
+#include "dActor_c.h"
+#include "fBase_c.h"
 
 extern "C" {
 /* the arm9 shared half */
-int _ZN5Actor19BeforeInitResourcesEv(void *self);              /* slot 1  */
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
-int _ZN5Actor14BeforeBehaviorEv(void *self);                   /* slot 7  */
-int _ZN5Actor12BeforeRenderEv(void *self);                     /* slot 10 */
-int _ZN5Actor13OnYoshiTryEatEv(void *self);                    /* slot 18 */
-void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
-int _ZN5Actor9Virtual50Ev(void *self);                         /* slot 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);              /* slot 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);              /* slot 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
-int _ZN5Actor16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);              /* slot 1  */
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);                   /* slot 7  */
+int _ZN8dActor_c12BeforeRenderEv(void *self);                     /* slot 10 */
+int _ZN8dActor_c13OnYoshiTryEatEv(void *self);                    /* slot 18 */
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
+int _ZN8dActor_c9Virtual50Ev(void *self);                         /* slot 20 */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);              /* slot 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);              /* slot 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
+int _ZN8dActor_c16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
 
 const char *port_actor_class_name(unsigned id);   /* hal/actor_registry */
 void port_actor_slot_decline(const char *what);   /* func_02043fdc_hostcopy.cpp */
@@ -135,18 +137,18 @@ void port_ov034_syms_patch(void);
    destructor chain nodes and the twenty-two state pmfs. */
 void __sinit_ov034_021138ec(void);
 
-/* what port_factory_wiggler spells by hand (src/Wiggler_Spawn.c is held out --
+/* what port_factory_wiggler spells by hand (src/d_a_hanachan.c is held out --
    it rides the ROM's r0 through into Enemy::C2, the ChiefChilly shape) */
-void *_ZN9ActorBasenwEj(unsigned int sz);
-void _ZN5EnemyC2Ev(void *self);
-int func_020733a8(void *p, int n, int stride, void *ctor, void *dtor);
-int _ZN12WithMeshClsnC1Ev(void *p);
-int _ZN25MovingCylinderClsnWithPosC1Ev(void *p);
-int _ZN25MovingCylinderClsnWithPosD1Ev(void *p);
+void *_ZN7fBase_cnwEj(unsigned int sz);
+void _ZN12dEnemyBase_cC2Ev(void *self);
+int __cxa_vec_ctor(void *p, int n, int stride, void *ctor, void *dtor);
+int _ZN10dBgCh_ActrC1Ev(void *p);
+int _ZN10dCcAcPos_cC1Ev(void *p);
+int _ZN10dCcAcPos_cD1Ev(void *p);
 int func_0203d73c(void *p);
-int func_02011508(void *p);
+int _ZN8Vector3sD1Ev(void *p);
 int func_0203d384(void *p);
-int func_020072c0(void *p);
+int _ZN7Vector3D1Ev(void *p);
 int _ZN15TextureSequenceC1Ev(void *p);
 int _ZN15TextureSequenceD1Ev(void *p);
 int _ZN15MaterialChangerC1Ev(void *p);
@@ -195,12 +197,14 @@ DSSTATE_END
 #pragma comment(linker, "/alternatename:?data_ov034_02114488@@3HA=_data_ov034_02114488")
 #pragma comment(linker, "/alternatename:?data_ov034_0211389c@@3PAPAPAXA=_data_ov034_0211389c")
 #pragma comment(linker, "/alternatename:?data_ov034_02113860@@3PAPAPAXA=_data_ov034_02113860")
-#pragma comment(linker, "/alternatename:?_ZN5Actor10PoofDustAtERK7Vector3@@YAXPAXPBUVector3@@@Z=__ZN5Actor10PoofDustAtERK7Vector3")
-#pragma comment(linker, "/alternatename:?_ZN5Actor19UntrackAndSpawnStarERajRK7Vector3j@@YAXPAXPACIPBUVector3@@I@Z=__ZN5Actor19UntrackAndSpawnStarERajRK7Vector3j")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEAD RHS and an UNREFERENCED left hand side: nothing in the build defines __ZN8dActor_c10PoofDustAtERK7Vector3, and nothing references ?_ZN8dActor_c10PoofDustAtERK7Vector3@@YAXPAXPBUVector3@@@Z, so the row can never fire and nothing wants it to. */
+// #pragma comment(linker, "/alternatename:?_ZN8dActor_c10PoofDustAtERK7Vector3@@YAXPAXPBUVector3@@@Z=__ZN8dActor_c10PoofDustAtERK7Vector3")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEAD RHS and an UNREFERENCED left hand side: nothing in the build defines __ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h, and nothing references ?_ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h@@YAXPAXPACIPBUVector3@@I@Z, so the row can never fire and nothing wants it to. */
+// #pragma comment(linker, "/alternatename:?_ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h@@YAXPAXPACIPBUVector3@@I@Z=__ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h")
 
 /* THE ALIAS THIS MOUNT DEFEATED, RE-ROUTED (T6). ov014, ov015, ov021, ov022 and
    ov034 share the level-overlay base 0x021111a0, and ov034's dsd export won the
-   naming race at 0x02114538, so src/_ZN14KnockDownPlank13InitResourcesEv.cpp:30
+   naming race at 0x02114538, so src/game/actors/d_a_obj_bk_dossunbar.cpp:30
    (ov015's KNOCK_DOWN_PLANK, LINKED via port/slice_gate59.txt) reaches OV015's
    own collider-file table under ov034's spelling. hal/actor_classes_wf.cpp
    routed that with an /alternatename, and an /alternatename is defeated the
@@ -217,7 +221,7 @@ extern "C" char port_ov015_kdp_clsn_files[];
 #pragma comment(linker, "/alternatename:_port_ov015_kdp_clsn_files=_data_ov015_02114538")
 
 /* ---- THE NAMING DELTA BETWEEN THE TWO LINES, BRIDGED BY ADDRESS ----------
-   run rel0215 lane prop18. src/_ZN7Wiggler8BehaviorEv.c is taken VERBATIM off
+   run rel0215 lane prop18. src/_ZN7Wiggler8BehaviorEv.cpp is taken VERBATIM off
    the decomp line and that line has taken a C++ rename this branch has not, so
    six of the names the body spells have no symbol here. They are the SAME SIX
    FUNCTIONS, and the join is the ROM ADDRESS, which is the only thing both
@@ -225,17 +229,17 @@ extern "C" char port_ov015_kdp_clsn_files[];
    the ROM records inside 0x02112b5c..0x0211323c:
 
      0x02010c30  body `_ZN5Actor9UpdatePosEP5dCc_c`
-              -> here `_ZN5Actor9UpdatePosEP12CylinderClsn`
+              -> here `_ZN8dActor_c9UpdatePosEP5dCc_c`
      0x02014ff0  body `_ZN5dCc_c6UpdateEv`
-              -> here `_ZN12CylinderClsn6UpdateEv`
+              -> here `_ZN5dCc_c6UpdateEv`
      0x02015024  body `_ZN5dCc_c5ClearEv`
-              -> here `_ZN12CylinderClsn5ClearEv`
+              -> here `_ZN5dCc_c5ClearEv`
      0x020356e8  body `_ZNK10dBgCh_Actr10IsOnGroundEv`
-              -> here `_ZNK12WithMeshClsn10IsOnGroundEv`
+              -> here `_ZNK10dBgCh_Actr10IsOnGroundEv`
      0x0203571c  body `_ZNK10dBgCh_Actr13JustHitGroundEv`
-              -> here `_ZNK12WithMeshClsn13JustHitGroundEv`
+              -> here `_ZNK10dBgCh_Actr13JustHitGroundEv`
      0x020aebf8  body `_ZN5Enemy12UpdateWMClsnER10dBgCh_Actrj`   (ov002)
-              -> here `_ZN5Enemy12UpdateWMClsnER12WithMeshClsnj`
+              -> here `_ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj`
 
    Bridged rather than renamed at the source so the two lines reconcile without
    a conflict, which is this tree's standing rule for a propagated body, and
@@ -243,8 +247,8 @@ extern "C" char port_ov015_kdp_clsn_files[];
 
    THE BODY'S EXTERN SET IS A MIX OF THE TWO LINES' SPELLINGS, and that is
    worth writing down because it explains why nobody upstream noticed. It also
-   spells `_ZN5Actor11LandingDustEb` (0x0200fc0c) and
-   `_ZN9ActorBase18MarkForDestructionEv` (0x02043824), which are THIS
+   spells `_ZN8dActor_c11LandingDustEb` (0x0200fc0c) and
+   `_ZN7fBase_c18MarkForDestructionEv` (0x02043824), which are THIS
    branch's spellings and do NOT exist on main -- main has
    `_ZN8dActor_c11LandingDustEb` and `_ZN7fBase_c18MarkForDestructionEv`. The
    file is a declared draft that is not enrolled in delinks.txt, so nothing
@@ -255,10 +259,10 @@ extern "C" char port_ov015_kdp_clsn_files[];
    ASSUMED, because a pure rename is only safe if both sides are the same ABI.
    All six targets are cdecl C names taking the receiver as their FIRST STACK
    ARGUMENT, which is exactly how the propagated body calls them:
-     src/_ZN5Actor9UpdatePosEP12CylinderClsn.c        `(struct Actor *, struct CylinderClsn *)`
-     src/_ZNK12WithMeshClsn10IsOnGroundEv.c           `(const struct WithMeshClsn *)`
-     src/_ZNK12WithMeshClsn13JustHitGroundEv.c        `(const struct WithMeshClsn *)`
-     src/_ZN5Enemy12UpdateWMClsnER12WithMeshClsnj.cpp `(struct Enemy *, struct WithMeshClsn *, u32)`
+     src/_ZN8dActor_c9UpdatePosEP5dCc_c.cpp        `(struct Actor *, struct CylinderClsn *)`
+     src/_ZNK10dBgCh_Actr10IsOnGroundEv.cpp           `(const struct WithMeshClsn *)`
+     src/_ZNK10dBgCh_Actr13JustHitGroundEv.cpp        `(const struct WithMeshClsn *)`
+     src/_ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj.cpp `(struct Enemy *, struct WithMeshClsn *, u32)`
    The two CylinderClsn ones are REAL C++ METHODS in src (`CylinderClsn::Clear`
    and `::Update`, which MSVC mangles and calls __thiscall), so the C name the
    ROM uses is not theirs -- it is the cdecl FACE in hal/method_faces.cpp:125
@@ -270,12 +274,8 @@ extern "C" char port_ov015_kdp_clsn_files[];
    reason the bridge exists -- so no alias here can be defeated by a real
    definition, and port/tools/alternatename_guard.py fails the build post-link
    if that ever stops being true. */
-#pragma comment(linker, "/alternatename:__ZN5Actor9UpdatePosEP5dCc_c=__ZN5Actor9UpdatePosEP12CylinderClsn")
-#pragma comment(linker, "/alternatename:__ZN5dCc_c6UpdateEv=__ZN12CylinderClsn6UpdateEv")
-#pragma comment(linker, "/alternatename:__ZN5dCc_c5ClearEv=__ZN12CylinderClsn5ClearEv")
-#pragma comment(linker, "/alternatename:__ZNK10dBgCh_Actr10IsOnGroundEv=__ZNK12WithMeshClsn10IsOnGroundEv")
-#pragma comment(linker, "/alternatename:__ZNK10dBgCh_Actr13JustHitGroundEv=__ZNK12WithMeshClsn13JustHitGroundEv")
-#pragma comment(linker, "/alternatename:__ZN5Enemy12UpdateWMClsnER10dBgCh_Actrj=__ZN5Enemy12UpdateWMClsnER12WithMeshClsnj")
+#pragma comment(linker, "/alternatename:__ZN5Actor9UpdatePosEP5dCc_c=__ZN8dActor_c9UpdatePosEP5dCc_c")
+#pragma comment(linker, "/alternatename:__ZN5Enemy12UpdateWMClsnER10dBgCh_Actrj=__ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj")
 
 /* The one body src defines as a real C++ method against include/Wiggler.h,
    faced here -- the ov013/ov024/ov025/ov032/ov033/ov035 recipe. Render is NOT
@@ -290,44 +290,44 @@ int _ZN7Wiggler13InitResourcesEv(void *self)
 // ============================================================================
 // THE FACTORY, SPELLED BY HAND -- the ChiefChilly r0 ride-through
 // ============================================================================
-/* src/Wiggler_Spawn.c is HELD OUT of the slice. It calls `func_020aed98();`
+/* src/d_a_hanachan.c is HELD OUT of the slice. It calls `func_020aed98();`
    with NO ARGUMENT because in the ROM the object operator new just returned is
    still in r0 when Enemy::C2 is entered:
        021136b0 bl 0x02043444   ActorBase::operator new(0x8e8)
        021136b4 movs r4, r0
-       021136bc bl 0x020aed98   module:overlays(2,7) = ov002 _ZN5EnemyC2Ev
+       021136bc bl 0x020aed98   module:overlays(2,7) = ov002 _ZN12dEnemyBase_cC2Ev
    mwcc reproduced that, so the TU is byte-faithful and unusable under cdecl --
    and the name it spells, func_020aed98, is an arm9-style spelling of an ov002
    symbol that exists nowhere in the link. Exactly the shape
-   port/slice_w12.txt holds src/ChiefChilly_Spawn.cpp out for, and this is that
+   port/slice_w12.txt holds src/d_a_king_donketu.cpp out for, and this is that
    lane's remedy: the ROM's own sequence with the receiver spelled, every
    offset, count and stride read from the disassembly at 0x021136a4. The
    allocation size 0x8e8 is the ROM's own literal pool word at 0x021137d4. */
 extern "C" void *port_factory_wiggler(void)
 {
-    char *c = (char *)_ZN9ActorBasenwEj(0x8e8);
+    char *c = (char *)_ZN7fBase_cnwEj(0x8e8);
     if (c) {
-        _ZN5EnemyC2Ev(c);                     /* ROM: entered with r0 = c */
+        _ZN12dEnemyBase_cC2Ev(c);                     /* ROM: entered with r0 = c */
         *(void **)c = (void *)_ZTV7Wiggler;
-        func_020733a8(c + 0x110, 5, 0x64, (void *)&_ZN9ModelAnimC1Ev,
+        __cxa_vec_ctor(c + 0x110, 5, 0x64, (void *)&_ZN9ModelAnimC1Ev,
                       (void *)&_ZN9ModelAnimD1Ev);
-        func_020733a8(c + 0x304, 5, 0x14, (void *)&_ZN15MaterialChangerC1Ev,
+        __cxa_vec_ctor(c + 0x304, 5, 0x14, (void *)&_ZN15MaterialChangerC1Ev,
                       (void *)&_ZN15MaterialChangerD1Ev);
-        func_020733a8(c + 0x368, 5, 0x14, (void *)&_ZN15TextureSequenceC1Ev,
+        __cxa_vec_ctor(c + 0x368, 5, 0x14, (void *)&_ZN15TextureSequenceC1Ev,
                       (void *)&_ZN15TextureSequenceD1Ev);
-        func_020733a8(c + 0x3cc, 5, 0xc, (void *)&func_0203d384,
-                      (void *)&func_020072c0);
-        func_020733a8(c + 0x408, 5, 0xc, (void *)&func_0203d384,
-                      (void *)&func_020072c0);
-        func_020733a8(c + 0x444, 5, 6, (void *)&func_0203d73c,
-                      (void *)&func_02011508);
-        func_020733a8(c + 0x478, 5, 0x40,
-                      (void *)&_ZN25MovingCylinderClsnWithPosC1Ev,
-                      (void *)&_ZN25MovingCylinderClsnWithPosD1Ev);
-        func_020733a8(c + 0x5b8, 5, 0x40,
-                      (void *)&_ZN25MovingCylinderClsnWithPosC1Ev,
-                      (void *)&_ZN25MovingCylinderClsnWithPosD1Ev);
-        _ZN12WithMeshClsnC1Ev(c + 0x708);
+        __cxa_vec_ctor(c + 0x3cc, 5, 0xc, (void *)&func_0203d384,
+                      (void *)&_ZN7Vector3D1Ev);
+        __cxa_vec_ctor(c + 0x408, 5, 0xc, (void *)&func_0203d384,
+                      (void *)&_ZN7Vector3D1Ev);
+        __cxa_vec_ctor(c + 0x444, 5, 6, (void *)&func_0203d73c,
+                      (void *)&_ZN8Vector3sD1Ev);
+        __cxa_vec_ctor(c + 0x478, 5, 0x40,
+                      (void *)&_ZN10dCcAcPos_cC1Ev,
+                      (void *)&_ZN10dCcAcPos_cD1Ev);
+        __cxa_vec_ctor(c + 0x5b8, 5, 0x40,
+                      (void *)&_ZN10dCcAcPos_cC1Ev,
+                      (void *)&_ZN10dCcAcPos_cD1Ev);
+        _ZN10dBgCh_ActrC1Ev(c + 0x708);
     }
     return c;
 }
@@ -366,49 +366,49 @@ OV34_TRAP(13) OV34_TRAP(14)
    ov034 now has NO missing body: 36 of 36 function symbols have source. */
 
 static int __fastcall ov34_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall ov34_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall ov34_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 static void __fastcall ov34_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall ov34_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall ov34_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall ov34_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall ov34_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall ov34_pdes(void *s, void *)
-{ ((ActorBase *)s)->ActorBase::OnPendingDestroy(); return 0; }
+{ ((fBase_c *)s)->fBase_c::OnPendingDestroy(); return 0; }
 static int __fastcall ov34_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int __fastcall ov34_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 static int __fastcall ov34_turn_egg(void *s, void *, void *p)
-{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+{ _ZN8dActor_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall ov34_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall ov34_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall ov34_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall ov34_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall ov34_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall ov34_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall ov34_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall ov34_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall ov34_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 static int __fastcall ov34_egg(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 
 // ============================================================================
 // THE ELEVEN-STATE PMF SEAT
@@ -550,7 +550,7 @@ extern "C" void hal_fill_wiggler_vtable(void)
     vt[3]  = (void *)wg_clean;
     vt[6]  = (void *)wg_behavior;
     vt[9]  = (void *)wg_render;
-    vt[16] = (void *)wg_d1;
+    vt[16] = (void *)PORT_D16(wg_d1);
     vt[17] = (void *)wg_d0;
     /* no slot 31: an Enemy is a plain Actor, 31 slots total, ends at 30. */
 }

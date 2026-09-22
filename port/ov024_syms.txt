@@ -19,8 +19,8 @@
 # ==== THE TWO CLASSES, both attribution routes =============================
 #
 #   id  arm9 slot   SpawnInfo   word[0]     factory           +4  x on L16
-#   85  0x020909b8  0x02113804  0x02111874  PyramidTop_Spawn  85   1
-#   86  0x020909bc  0x02113820  0x0211183c  PyramidTag_Spawn  86   4
+#   85  0x020909b8  0x02113804  0x02111874  daObjDlPyramid_c_classInit  85   1
+#   86  0x020909bc  0x02113820  0x0211183c  daObjDlPyramidDummy_c_classInit  86   4
 #
 # Both records' word[0] lands inside ov024 [0x021111a0, 0x02113960) and is one
 # of this overlay's own two factories; both read their own id back at +4, the
@@ -40,7 +40,7 @@
 #   0x021138c8  _ZTV10PyramidTop == _ZTV16daObjDlPyramid_c
 # DL is the level's own prefix (Desert Land), "PyramidDummy" is the tag and
 # "Pyramid" the top. Both factories install the table their own methods sit in
-# -- PyramidTag_Spawn 0x02113844, PyramidTop_Spawn 0x021138c8, both verified
+# -- daObjDlPyramidDummy_c_classInit 0x02113844, daObjDlPyramid_c_classInit 0x021138c8, both verified
 # in the ROM -- so there is no ov035/ov045/ov060-style class-identity shift.
 #
 # ==== THE WIDTHS ARE 31 AND 32, AND THEY ARE DIFFERENT WIDTHS ==============
@@ -49,11 +49,11 @@
 # an error in both directions:
 #
 # _ZTV10PyramidTag  0x02113844, THIRTY-ONE slots, ends 0x021138c0.
-#   It is an ACTOR table, not a Platform one. PyramidTag_Spawn allocates 268
+#   It is an ACTOR table, not a Platform one. daObjDlPyramidDummy_c_classInit allocates 268
 #   bytes and calls Actor's constructor (not Platform's), and the table's tail
 #   is the plain Actor close:
-#       slot 29  0x02010124  _ZN5Actor16OnAimedAtWithEggEv
-#       slot 30  0x020100dc  _ZN5Actor25OnAimedAtWithEggReturnVecEv
+#       slot 29  0x02010124  _ZN8dActor_c16OnAimedAtWithEggEv
+#       slot 30  0x020100dc  _ZN8dActor_c25OnAimedAtWithEggReturnVecEv
 #       slot 31  0x00000000  -- NOT a relocation. There is no Platform::Kill.
 #   The eight bytes at 0x021138c0 are the next table's Itanium prologue
 #   (offset-to-top 0, typeinfo 0x02113830), which is what pins the end
@@ -63,9 +63,9 @@
 #   next dsd symbol 0x021138a8 -- INTERIOR (slot 25). The landing reads 25.
 #
 # _ZTV10PyramidTop  0x021138c8, THIRTY-TWO slots, ends 0x02113948.
-#   PyramidTop_Spawn allocates 952 bytes and calls Platform's constructor, and
+#   daObjDlPyramid_c_classInit allocates 952 bytes and calls Platform's constructor, and
 #   the table closes on the Platform word:
-#       slot 31  0x020ee55c  _ZN8Platform4KillEv   (ov002 symbols.txt:1175)
+#       slot 31  0x020ee55c  _ZN10dBgActor_c4KillEv   (ov002 symbols.txt:1175)
 #   the same close ov025's two, ov035's two, ov045's six, ov052's two and
 #   ov056's one all end on.
 #   next dsd symbol 0x021138d8 -- INTERIOR (slot 4), and 0x021138f0,
@@ -78,12 +78,12 @@
 #
 # ==== THE T3 WIDTH PINS ====================================================
 #
-#   PyramidTag_SpawnInfo  natural next-symbol delta 0xc: dsd named 0x0211382c
+#   g_profile_DL_PYRAMID_DUMMY  natural next-symbol delta 0xc: dsd named 0x0211382c
 #     INSIDE the record. A record is 0x1c. Unpinned this mounts TWELVE bytes of
 #     a twenty-eight byte record, and the registry's own id check at +4 sits
 #     inside those twelve, so it would have passed while the last four words
 #     belonged to somebody else.
-#   PyramidTop_SpawnInfo  natural 0x1c already; pinned so both records read
+#   g_profile_DL_PYRAMID  natural 0x1c already; pinned so both records read
 #     identically in the diff.
 #   data_ov024_021129f0   natural 0x20 already. It is the CLPS collision block
 #     id 85's InitResources hands MovingMeshCollider::SetFile -- 'CLPS' magic
@@ -115,7 +115,7 @@
 # for the lane and reads clean.
 
 # ---- .data: the two SpawnInfo records, both pinned to the ROM's 0x1c -------
-PyramidTop_SpawnInfo:0x1c PyramidTag_SpawnInfo:0x1c
+g_profile_DL_PYRAMID:0x1c g_profile_DL_PYRAMID_DUMMY:0x1c
 
 # ---- .data: id 85's CLPS collision block, pinned by its own header ---------
 data_ov024_021129f0:0x20

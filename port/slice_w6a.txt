@@ -11,7 +11,7 @@
 #
 #  SPIKE BOMB (284, x8 placed in level 38) -- the whole class, under the
 #  SHIFTED _ZN17BowserSkyPlatform* spellings (port/ov060_syms.txt's label-shift
-#  note; SpikeBomb_Spawn stores the table dsd labelled _ZTV17BowserSkyPlatform,
+#  note; daKirai_c_classInit stores the table dsd labelled _ZTV17BowserSkyPlatform,
 #  and the class registers itself in the eight-slot global data_0209f3a4 the
 #  level fills exactly eight of -- the shift's own confirmation).
 #  Its Behavior decodes its state record BY HAND into a two-int struct and
@@ -28,13 +28,13 @@
 #  faults on his first init frame. Verified in src, not inherited.
 #
 #  BOWSER SKY PLATFORM (167, daKpa3Bg_c) -- the koopa3 arena's floor. Its
-#  vtable is the UNNAMED data_ov060_0211a9b0 (the other half of the label
+#  vtable is the UNNAMED _ZTV17BowserSkyPlatform (the other half of the label
 #  shift) and all six own bodies are func_ov060_* already in slice_w5e.txt;
 #  only its Spawn joins here.
 #
 # HELD OUT (host copies in port/unmatched/Ov060_StateDispatch.cpp, banner
 # there carries the measured pointer-to-member sizes):
-#   func_ov060_02112434, func_ov060_02115b84, func_ov060_02118254
+#   func_ov060_02112434, func_ov060_02115b84, _ZN17BowserSkyPlatform8BehaviorEv
 #     (commented out of slice_w5e.txt in this lane's first commit)
 #   _ZN10BowserFire13InitResourcesEv, _ZN10BowserFire8BehaviorEv
 #     (never in a slice)
@@ -54,65 +54,70 @@ port/unmatched/Ov060_StateDispatch.cpp
 #   the matched TU(s) it stood in for are on port/slice_fold2.txt.
 
 # ---- SPIKE BOMB (284) -- the shifted spellings ----------------------------
-# D1 is HELD OUT: src/_ZN17BowserSkyPlatformD1Ev.cpp is a real MSVC destructor
+# D1 is HELD OUT: src/_ZN9SpikeBombD1Ev.cpp is a real MSVC destructor
 # over a shadow class, so it emits ??1BowserSkyPlatform@@UAE@XZ and auto-calls
 # member destructors that exist nowhere in this build -- the BigBooIcon case.
 # Host thunk (its matched D0's chain minus the Deallocate) in
 # hal/actor_classes_ov060.cpp.
-src/SpikeBomb_Spawn.c
-src/_ZN17BowserSkyPlatform13InitResourcesEv.cpp
-src/_ZN17BowserSkyPlatform8BehaviorEv.cpp
-src/_ZN17BowserSkyPlatform6RenderEv.cpp
-src/_ZN17BowserSkyPlatform16CleanupResourcesEv.c
-src/_ZN17BowserSkyPlatformD0Ev.c
+src/d_a_kirai.c
+src/_ZN9SpikeBomb13InitResourcesEv.cpp
+src/_ZN9SpikeBomb8BehaviorEv.cpp
+src/_ZN9SpikeBomb6RenderEv.cpp
+src/_ZN9SpikeBomb16CleanupResourcesEv.cpp
+# RETIRED at SLICE1: body now in src/_ZN9SpikeBombD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN9SpikeBombD0Ev.cpp
 
 # ---- BOWSER (279) ----------------------------------------------------------
 # D1 held out for the same reason as SpikeBomb's; Render held out as the
 # ModelAnim slot-5 collision (Ov060_Renders.cpp).
-src/Bowser_Spawn.c
-src/_ZN6Bowser13InitResourcesEv.c
-src/_ZN6Bowser16CleanupResourcesEv.c
+src/d_a_kpa.c
+src/_ZN6Bowser13InitResourcesEv.cpp
+src/_ZN6Bowser16CleanupResourcesEv.cpp
 # src/_ZN6Bowser8BehaviorEv.cpp -- HELD OUT: does not compile under MSVC
 #   (C2761 x6, shadow members re-declared at namespace scope). Host copy in
 #   port/unmatched/Ov060_StateDispatch.cpp.
-src/_ZN6Bowser16OnPendingDestroyEv.c
-src/_ZN6BowserD0Ev.c
+src/_ZN6Bowser16OnPendingDestroyEv.cpp
+# RETIRED at SLICE1: body now in src/_ZN6BowserD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN6BowserD0Ev.cpp
 
 # ---- BOWSER TAIL (278) -- Bowser's init spawns it unchecked ----------------
 # D1 held out (real MSVC destructor), the same host thunk shape.
-src/BowserTail_Spawn.c
+src/d_a_kpa_tail.c
 src/_ZN10BowserTail13InitResourcesEv.cpp
-src/_ZN10BowserTail16CleanupResourcesEv.c
+src/_ZN10BowserTail16CleanupResourcesEv.cpp
 src/_ZN10BowserTail8BehaviorEv.cpp
-src/_ZN10BowserTail6RenderEv.c
-src/_ZN10BowserTailD0Ev.c
+src/_ZN10BowserTail6RenderEv.cpp
+# RETIRED at SLICE1: body now in src/_ZN10BowserTailD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN10BowserTailD0Ev.cpp
 
 # ---- BOWSER FIRE (280) -- Bowser's init spawns it unchecked ----------------
 # InitResources and Behavior are host copies (pointer-to-member stride 4 and
 # 16 against the ROM's 8); both D-bodies are .c and link.
-src/BowserFire_Spawn.c
-src/_ZN10BowserFire16CleanupResourcesEv.c
-src/_ZN10BowserFire6RenderEv.c
-src/_ZN10BowserFireD1Ev.c
-src/_ZN10BowserFireD0Ev.c
+src/d_a_kpa_fire.c
+src/_ZN10BowserFire16CleanupResourcesEv.cpp
+src/_ZN10BowserFire6RenderEv.cpp
+src/_ZN10BowserFireD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN10BowserFireD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN10BowserFireD0Ev.cpp
 
 # ---- BOWSER SKY PLATFORM (167) -- level 40's floor, all bodies already wired
-src/BowserSkyPlatform_Spawn.c
+src/d_a_kpa3_bg.c
 
 # ---- KEY (282) + LAST_STAR (283), ov089 -- the boss reward ------------------
 # Bowser's defeat path (func_ov060_021135fc) spawns 282 and writes through the
 # result unchecked. One vtable serves both ids. Render is the ModelAnim slot-5
 # collision (Ov089_Renders.cpp).
-src/Key_Spawn.c
-src/LastStar_Spawn.c
+src/d_a_obj_key_obj_key.c
+src/d_a_obj_key_last_star.c
 src/_ZN3Key13InitResourcesEv.cpp
 src/_ZN3Key16CleanupResourcesEv.cpp
 # src/_ZN3Key8BehaviorEv.cpp -- HELD OUT: forms its pointer-to-member over a
 #   complete single-inheritance class with a vtable, which MSVC represents in
 #   FOUR bytes against the ROM record's eight. Host copy + the eight-record
 #   seat in port/unmatched/Ov089_StateDispatch.cpp.
-src/_ZN3KeyD1Ev.c
-src/_ZN3KeyD0Ev.c
+src/_ZN3KeyD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN3KeyD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN3KeyD0Ev.cpp
 port/unmatched/Ov089_StateDispatch.cpp
 # ov089's remaining bodies -- the whole overlay's code, ten TUs. Nothing here
 # was ever linked: the gate-18 mount took ov089's DATA (the doors' key-model
@@ -124,8 +129,8 @@ src/func_ov089_0213162c.c
 src/func_ov089_02131b18.c
 src/func_ov089_02131dcc.c
 src/func_ov089_02131df4.c
-src/func_ov089_02131f04.cpp
-src/func_ov089_02131f4c.c
+src/_ZN3Key13OnTurnIntoEggER6Player.cpp
+src/_ZN3Key13OnYoshiTryEatEv.cpp
 src/func_ov089_02131f54.cpp
 src/LoadKeyModels.cpp
 src/UnloadKeyModels.cpp

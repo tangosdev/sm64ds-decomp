@@ -46,6 +46,20 @@
 // pointers relocate. If that pin ever fails, lk7_persist_available returns 0 and
 // this test reports the run as skipped rather than failing, because a disk state
 // is legitimately off when the arena is not fixed.
+//
+// TWO THINGS THIS FILE SPELLS FOLLOWED THE 09-14 SYNC (lane SMOKELINK4B, run
+// link100 wave 10 round 4).  Both edits are the same in tests/smoke_actor.cpp,
+// which builds the same actor world, and its header block carries the long
+// version of each:
+//
+//   1. the bring-up entry point is Heap::SetupRootHeap() now, a real static
+//      member (include/Heap.h:236), not the flat extern "C" Itanium name src/
+//      emitted before the sync;
+//   2. the arrow signs' entry table at ov098:0x0213c380 has THREE column
+//      symbols in the synced source, so the harness that owns the storage
+//      names the third one too.  It is left zero, which is the CLPS_Block
+//      pointer the pre-sync body already handed dBgW_KcMbg::SetFile out of
+//      data_ov098_0213c380[idx].c.
 
 #include <cstdio>
 #include <cstdlib>
@@ -61,11 +75,11 @@
 
 #include "fault_probe.h"
 
-typedef unsigned int u32;
+#include "types.h"
+#include "Heap.h"
 
 extern "C" {
-int *ArrowSignRight_Spawn(void);
-void *_ZN4Heap13SetupRootHeapEv(void);
+int *daObjYajirusi_c_classInit_YAJIRUSI_R(void);
 extern int data_0209b3ec[12];       /* camera matrix */
 struct SharedFilePtrC { unsigned short fileID; unsigned char numRefs;
                         unsigned char pad; void *filePtr; };
@@ -74,6 +88,7 @@ extern unsigned short data_020a4b54;    /* pending actor ID */
 extern void **data_020a4bb8;            /* actorID -> SpawnInfo* */
 void *data_ov098_0213c380[6];
 char data_ov098_0213c384[0x18];
+char data_ov098_0213c388[0x18];
 extern void *data_020a0eac_c;           /* Memory::gameHeapPtr */
 extern void *data_020a0ea0;             /* defaultHeapPtr */
 void _ZN4Heap18InitializeGameHeapEjPS_(unsigned size, void *root);
@@ -155,7 +170,7 @@ static uint64_t arena_hash()
 // Boot the shared actor world both phases stand on. Returns the spawned actor.
 static int *boot_actor_world()
 {
-    CHECK(_ZN4Heap13SetupRootHeapEv() != NULL);
+    CHECK(Heap::SetupRootHeap() != NULL);
     ident_fx(data_0209b3ec);
 
     hal_fill_model_vtable();
@@ -170,7 +185,7 @@ static int *boot_actor_world()
        `data_020a0eac_c = data_020a0ea0;`, the game-heap word aliased onto the
        root heap, and the retained-hand-seed comment here said the conversion
        goes with the port/CMakeLists.txt line that carries
-       src/_ZN4Heap18InitializeGameHeapEjPS_.c onto this target. That line is
+       src/_ZN4Heap18InitializeGameHeapEjPS_.cpp onto this target. That line is
        in, so this is that conversion.
        BOTH PROCESSES CONVERT TOGETHER, which is what that comment required and
        what this placement gives for free: the parent and the spawned child are
@@ -200,7 +215,7 @@ static int *boot_actor_world()
     data_0209f394[0] = fake_player;
     *(unsigned char *)&data_0209f21c = 1;
 
-    int *actor = ArrowSignRight_Spawn();
+    int *actor = daObjYajirusi_c_classInit_YAJIRUSI_R();
     CHECK(actor != NULL);
     if (!actor) return NULL;
     /* where the actor landed, printed for the same reason smoke_actor prints

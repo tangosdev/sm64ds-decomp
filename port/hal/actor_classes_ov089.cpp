@@ -40,8 +40,8 @@
 // ---- ONE TABLE, TWO IDS ----------------------------------------------------
 //
 // ov089 defines exactly ONE vtable, _ZTV3Key at 0x02132ba8 (31 slots, plain
-// Actor), and BOTH factories store it -- src/Key_Spawn.c and
-// src/LastStar_Spawn.c are byte-identical apart from their names, down to the
+// Actor), and BOTH factories store it -- src/d_a_obj_key_obj_key.c and
+// src/d_a_obj_key_last_star.c are byte-identical apart from their names, down to the
 // 1136-byte allocation and the five member constructors. So LAST_STAR's
 // registry row carries a null fill and rides KEY's, the BLUE_FLAME/RED_FLAME
 // and GreenShellBlockTag shape. Both factories store the table by a REAL name,
@@ -49,7 +49,7 @@
 //
 // Own slots, read off the table's reloc run: 0/3/6/9/16/17 plus 18 and 19 --
 // this class overrides Actor::OnYoshiTryEat and Actor::OnTurnIntoEgg
-// (func_ov089_02131f4c / func_ov089_02131f04), which no other class in this
+// (_ZN3Key13OnYoshiTryEatEv / _ZN3Key13OnTurnIntoEggER6Player), which no other class in this
 // lane does, so the fill writes them after the shared half.
 //
 // ---- THE ONE HELD-OUT BODY -------------------------------------------------
@@ -59,13 +59,15 @@
 // src and links: Init/Behavior/Cleanup are real C++ methods against Key.h and
 // get C-name faces at the bottom of this file; D1/D0 and the two slot-18/19
 // bodies are .c and are callable directly.
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
@@ -73,25 +75,25 @@ extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 
 #include "dsstate_seg.h"
 
-#include "Actor.h"
-#include "ActorBase.h"
+#include "dActor_c.h"
+#include "fBase_c.h"
 
 extern "C" {
 /* the arm9 shared half, the same family every hosted 31-slot table carries */
-int _ZN5Actor19BeforeInitResourcesEv(void *self);              /* slot 1  */
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
-int _ZN5Actor14BeforeBehaviorEv(void *self);                   /* slot 7  */
-int _ZN5Actor12BeforeRenderEv(void *self);                     /* slot 10 */
-int _ZN5Actor9Virtual50Ev(void *self);                         /* slot 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);              /* slot 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);              /* slot 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
-int _ZN5Actor16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);              /* slot 1  */
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);                   /* slot 7  */
+int _ZN8dActor_c12BeforeRenderEv(void *self);                     /* slot 10 */
+int _ZN8dActor_c9Virtual50Ev(void *self);                         /* slot 20 */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);              /* slot 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);              /* slot 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
+int _ZN8dActor_c16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
 
 const char *port_actor_class_name(unsigned id);   /* hal/actor_registry */
 void port_actor_slot_decline(const char *what);   /* func_02043fdc_hostcopy.cpp */
@@ -108,10 +110,10 @@ int *_ZN3KeyD0Ev(int *self);                      /* slot 17 */
    the receiver); slot 19 takes the Player the dispatch site pushes and USES
    it -- it forwards it to func_ov089_02131df4/02131dcc. Both signatures are
    the matched TUs' own, so the thunks below drop nothing. */
-int func_ov089_02131f4c(void);                    /* slot 18, OnYoshiTryEat  */
-int func_ov089_02131f04(void *self, void *p);     /* slot 19, OnTurnIntoEgg  */
-void *Key_Spawn(void);
-void *LastStar_Spawn(void);
+int _ZN3Key13OnYoshiTryEatEv(void);                    /* slot 18, OnYoshiTryEat  */
+int _ZN3Key13OnTurnIntoEggER6Player(void *self, void *p);     /* slot 19, OnTurnIntoEgg  */
+void *daObjKey_c_classInit_OBJ_KEY(void);
+void *daObjKey_c_classInit_LAST_STAR(void);
 
 DSSTATE_BEGIN
 void *_ZTV3Key[31];
@@ -128,12 +130,12 @@ void *_ZTV3Key[31];
 
      ov013 mounts it as DATA -- ov013_syms.txt carries
      `data_ov013_02111b68:0x4`, four bytes of the clock furniture's statics.
-     ov015 hosts it as CODE -- KnockDownPlank_Spawn IS ov015 0x02111b68
+     ov015 hosts it as CODE -- daObjBk_Botaosi_c_classInit IS ov015 0x02111b68
      (hal/actor_classes.inc, the MOVING_BAR / KNOCK_DOWN_PLANK row).
 
    What is true is narrower and is the only reason this definition is legal:
    NO MOUNT DEFINES THIS C NAME. ov013 spells its cell `data_ov013_02111b68`
-   and ov015 spells its body `KnockDownPlank_Spawn`, so the plain
+   and ov015 spells its body `daObjBk_Botaosi_c_classInit`, so the plain
    `data_02111b68` the KEY body names is undefined without the line below, and
    nothing in this build reads it. It gets hosted zero storage (the
    auto_bss.cpp shape, kept here because this lane owns the only reference)
@@ -195,45 +197,45 @@ OV89_TRAP(13) OV89_TRAP(14)
 #undef OV89_TRAP
 
 static int __fastcall ov89_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall ov89_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall ov89_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 static void __fastcall ov89_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall ov89_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall ov89_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall ov89_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall ov89_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall ov89_pdes(void *s, void *)
-{ ((ActorBase *)s)->ActorBase::OnPendingDestroy(); return 0; }
+{ ((fBase_c *)s)->fBase_c::OnPendingDestroy(); return 0; }
 static int __fastcall ov89_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int __fastcall ov89_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall ov89_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall ov89_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall ov89_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall ov89_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall ov89_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall ov89_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall ov89_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall ov89_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 static int __fastcall ov89_egg(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 
 /* KEY's own slots */
 static int __fastcall key_init(void *s, void *)
@@ -250,15 +252,15 @@ static int __fastcall key_d1(void *s, void *)
 static int __fastcall key_d0(void *s, void *)
 { return (int)(size_t)_ZN3KeyD0Ev((int *)s); }
 static int __fastcall key_yoshi(void *s, void *)
-{ (void)s; return func_ov089_02131f4c(); }
+{ (void)s; return _ZN3Key13OnYoshiTryEatEv(); }
 /* slot 19 takes the three-parameter shape so it emits `ret 4`: the dispatch
    site pushes the Player the callee pops -- the wf_turn_egg contract. And it
-   FORWARDS that Player: func_ov089_02131f04 hands it to
+   FORWARDS that Player: _ZN3Key13OnTurnIntoEggER6Player hands it to
    func_ov089_02131df4/02131dcc, so dropping the argument here would be a
    silent wrong call, not a harmless extra. Slot 18 next to it genuinely takes
    nothing, which is what made the wrong shape look plausible. */
 static int __fastcall key_turn_egg(void *s, void *, void *p)
-{ return func_ov089_02131f04(s, p); }
+{ return _ZN3Key13OnTurnIntoEggER6Player(s, p); }
 
 extern "C" void hal_fill_key_vtable(void)
 {
@@ -290,7 +292,7 @@ extern "C" void hal_fill_key_vtable(void)
     vt[3]  = (void *)key_clean;
     vt[6]  = (void *)key_behavior;
     vt[9]  = (void *)key_render;
-    vt[16] = (void *)key_d1;
+    vt[16] = (void *)PORT_D16(key_d1);
     vt[17] = (void *)key_d0;
     vt[18] = (void *)key_yoshi;
     vt[19] = (void *)key_turn_egg;

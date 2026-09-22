@@ -1,8 +1,8 @@
-/* HOST COPY of src/_ZN7SkiLift8BehaviorEv.cpp -- the MSVC dtor-slot-shift
+/* HOST COPY of src/game/actors/d_a_pg_mthr.cpp -- the MSVC dtor-slot-shift
  * seam (sm64ds-port-msvc-dtor-slot-shift), applied to a raw shadow-vtable
  * index call instead of a real vtable fill.
  *
- * CLASS IDENTITY NOTE: despite the mangled name _ZN7SkiLift8BehaviorEv,
+ * CLASS IDENTITY NOTE: despite the mangled name _ZN10daPgMthr_c8BehaviorEv,
  * this method belongs to MOTHER_PENGUIN (257) -- see
  * MotherPenguin_InitResources.cpp's header and port/slice_gate191.txt.
  *
@@ -32,7 +32,7 @@
  * call instead of the raw shadow index -- the ma2_updateverts treatment
  * (hal/cxxname_bridge.cpp) applied to a host copy instead of a fresh
  * vtable fill. Matched source line for line otherwise.
- * src/_ZN7SkiLift8BehaviorEv.cpp stays byte-locked and untouched, dropped
+ * src/game/actors/d_a_pg_mthr.cpp stays byte-locked and untouched, dropped
  * from slice_gate191.txt in favour of this file.
  *
  * THE SECOND BUG, and it is the bigger one (gate mpg). The matched src's
@@ -62,23 +62,56 @@
  * no byte gate ever caught this); the crossing is reported decomp-side.
  */
 #include "SkiLift.h"
+#include "Animation.h"
+#include "daPgMthr_c.h"
+/* SYNC4: include/SkiLift.h used to carry MOTHER PENGUIN's layout under the
+   misnamed header, which is what this transcription reads its fields out of.
+   main has since split the two: SkiLift is the real SkiLift (a thin
+   dBgActor_c) and MotherPenguin's members live on daPgMthr_c.
+
+   LEVELS4B, 2026-09-17: THIS FILE USED TO EMIT SkiLift::Behavior, and that was
+   the wrong decoration. port/ov018_syms.txt's gate-191 slot table separates the
+   two classes by ADDRESS:
+
+     slot 6  ov018 0x02111368  _ZN7SkiLift8BehaviorEv      SKI_LIFT (63), 0x34c bytes
+     slot 6  ov018 0x02112480  _ZN10daPgMthr_c8BehaviorEv  MOTHER_PENGUIN (257)
+
+   The transcription below is of the SECOND one, which is why every field read
+   goes through daPgMthr_c. Emitting it as SkiLift::Behavior handed MOTHER
+   PENGUIN's body to the real SKI_LIFT, whose own vtable slot 6 is filled by
+   hal/actor_classes_ccm.cpp's skl_behavior, and level 10 Cool Cool Mountain
+   died on the ski lift's first tick with control on a data word (eip a600a500,
+   caller ?Behavior@SkiLift@@+0xb via skl_behavior+0x6). It also kept
+   src/_ZN7SkiLift8BehaviorEv.cpp, the real SKI_LIFT body, commented out of
+   port/slice_slice1.txt as a supposed duplicate of this one.
+
+   It is a FREE FUNCTION now rather than daPgMthr_c::Behavior, because the
+   matched src/game/actors/d_a_pg_mthr.cpp is itself in the build (slice_gate216,
+   gate228, mpg, pmf2, smalls and dtorfaces all name it) and already defines
+   that method -- the file header's old claim that the matched TU was "dropped
+   from slice_gate191.txt in favour of this file" is stale. So the repaired body
+   gets its own name, hal/actor_classes_ccm.cpp's MOTHER_PENGUIN slot-6 face
+   calls it directly, and the matched method stays linked but out of the
+   dispatch path, which is what keeps its raw shadow-index defect out. */
+#define MP(f) (self->f)
 
 extern "C" {
 extern void _ZN9Animation7AdvanceEv(void*);
-extern void _ZN12CylinderClsn5ClearEv(void*);
-extern void _ZN12CylinderClsn6UpdateEv(void*);
+extern void _ZN5dCc_c5ClearEv(void*);
+extern void _ZN5dCc_c6UpdateEv(void*);
 extern int func_ov018_02111d28(void*);
 extern void func_ov018_0211235c(void*);   /* ov018's own TICK DISPATCHER */
 }
 
-int SkiLift::Behavior()
+extern "C" int port_mother_penguin_behavior(void *selfv)
 {
-  func_ov018_0211235c((char*)this);
-  _ZN9Animation7AdvanceEv((char*)(Animation *)&mModelAnim);
-  _ZN9Animation7AdvanceEv((char*)&mTextureSequence);
-  _ZN12CylinderClsn5ClearEv((char*)&mMovingCylinderClsn);
-  _ZN12CylinderClsn6UpdateEv((char*)&mMovingCylinderClsn);
-  mModelAnim.ModelAnim::UpdateVerts();
-  func_ov018_02111d28(((char*)this));
+  daPgMthr_c *self = (daPgMthr_c *)selfv;
+  func_ov018_0211235c((char*)self);
+  _ZN9Animation7AdvanceEv((char*)(Animation *)&MP(mModelAnim));
+  _ZN9Animation7AdvanceEv((char*)&MP(mTextureSequence));
+  _ZN5dCc_c5ClearEv((char*)&MP(mdCcAc_c));
+  _ZN5dCc_c6UpdateEv((char*)&MP(mdCcAc_c));
+  MP(mModelAnim).ModelAnim::UpdateVerts();
+  func_ov018_02111d28(((char*)self));
   return 1;
 }

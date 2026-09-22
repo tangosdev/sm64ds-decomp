@@ -19,12 +19,13 @@
 # Deallocate (the HauntedChair treatment). func_ov080_02124088.cpp is a host
 # copy too (unmatched/MontyMole_1Up.cpp): its self-decl fights decl_common's
 # void* spelling, the FallBlockWf C2733.
-src/MontyMole_Spawn.c
+src/d_a_choropu.c
 src/_ZN9MontyMole13InitResourcesEv.cpp
-src/_ZN9MontyMole16CleanupResourcesEv.c
+src/_ZN9MontyMole16CleanupResourcesEv.cpp
 src/_ZN9MontyMole6RenderEv.cpp
-src/_ZN9MontyMoleD0Ev.c
-src/func_ov080_02123858.c
+# RETIRED at SLICE1: body now in src/_ZN9MontyMoleD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN9MontyMoleD0Ev.cpp
+src/_ZN9MontyMole16OnAimedAtWithEggEv.cpp
 src/func_ov080_02123860.c
 src/func_ov080_02123924.cpp
 src/func_ov080_02123a34.cpp

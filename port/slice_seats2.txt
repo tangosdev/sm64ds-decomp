@@ -1,0 +1,50 @@
+# port/slice_seats2.txt -- lane SEATS2, run link100 wave 9b, GATE 3 ONLY.
+#
+# RECONSTRUCTED AT THE FOLD (lane INT3, 2026-09-14). The coordinator's FOLD
+# RULING takes SEATS2's gate 3 and drops its gates 1 and 2: gate 1's three
+# consolidated actor TUs (daSanbo_c, daPkn_c, d_a_wanwan) are seated by lane
+# HOSTGEN4 instead, and gate 2 (d_s_mg_roulette, daGmch_c) is held for tonight
+# because it needs a SEAT_PARK the fold is not taking. Gate 3's commit
+# b214e6def could not be cherry-picked on its own: it ADDS to this file and to
+# port/unmatched/Seats2_NameBridges.cpp, both of which gate 1 created, so git
+# reported both as deleted-by-us. Its two blocks are reproduced here verbatim
+# from the sha, with nothing of gates 1 and 2 carried in.
+#
+# Neither row goes through hostgen. Both were measured the same way every
+# SEATS2 row was: the candidate compiled STANDALONE with the build's own flags,
+# its object's symbol table read against the wall and against the defined
+# externals of walk_window's own link inputs, and a row written only when the
+# object CLOSES rows, DUPLICATES nothing and REFERENCES nothing the link cannot
+# already answer.
+
+# ---- GATE 3: two one-row seats, neither needing hostgen --------------------
+#
+# Both were found by a sweep from the SOURCE side rather than from the delinks
+# side (out/SEATS2/sweep.txt): every src TU on no live slice row, indexed by
+# the ROM names its own "// @symbol" lines claim and by the out-of-line
+# members it defines, intersected with the wall. A scan keyed on file names
+# misses both, and misses more than that: src/_ZN9JetStream8BehaviorEv.cpp
+# defines BowserPuzzleManager::Behavior.
+
+# dPa_c::level_c::simpleCallback_c::SpawnParticles, the base of nine particle
+# callback classes. Closes ?SpawnParticles@simpleCallback_c@level_c@dPa_c@@
+# UAEXAAUSystem@Particle@@@Z, which Particle::SysTracker's constructor and
+# three derived callbacks all reference. Duplicates nothing, references
+# nothing new.
+src/_ZN5dPa_c7level_c16simpleCallback_c14SpawnParticlesERN8Particle6SystemE.cpp
+
+# TTC_MovingBeam::Behavior. The TU declares the member itself, non-virtual,
+# so it compiles to ?Behavior@TTC_MovingBeam@@QAEHXZ while the reference the
+# link carries is the virtual spelling out of the class header
+# (_ZN14TTC_MovingBeamD1Ev.cpp.obj, which emits the class vftable). Seating
+# the TU alone therefore closes nothing; it is seated WITH the access-letter
+# bridge in port/unmatched/Seats2_NameBridges.cpp, and the pair closes the
+# row. Duplicates nothing: the flat ROM name stays with the hand face in
+# port/hal/actor_classes_ov065.cpp, which now has a real body under it.
+src/_ZN14TTC_MovingBeam8BehaviorEv.cpp
+
+# ---- the name bridges the class seats need --------------------------------
+# Sixteen decorated ROM data names, each a C++ declaration of a hosted symbol
+# that MSVC decorates because the declaration carries no linkage
+# specification. The file says which flat symbol each one is.
+port/unmatched/Seats2_NameBridges.cpp

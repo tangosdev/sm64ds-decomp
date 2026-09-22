@@ -12,13 +12,13 @@
 #                          falls off its end into a void face) -- built from
 #                          the hostgen emission instead (OV70GEN in
 #                          port/CMakeLists.txt, FALLS_OFF_RETURN table)
-#   func_ov070_021211bc    \  the seven "recovered from vtable slot identity"
-#   func_ov070_02121bdc    |  marker bodies in the pack. Wave 5 kept all seven
+#   _ZN8daKrpa_c13OnYoshiTryEatEv    \  the seven "recovered from vtable slot identity"
+#   _ZN8daKpFr_c13OnYoshiTryEatEv    |  marker bodies in the pack. Wave 5 kept all seven
 #   func_ov070_02121438    |  out and inlined the four it needed. Lane w3-d
 #   func_ov070_02121fb0    |  byte-matched and adjudicated FlyGuy's three
-#   func_ov070_021204e4    |  (below); lane mount-ov070 did the same for the
-#   func_ov070_02120518    |  other four (end of file), so ALL SEVEN now link
-#   func_ov070_021204ec    /  from src and no transcription remains in
+#   _ZN19daPropeller_Heyho_c16OnAimedAtWithEggEv    |  (below); lane mount-ov070 did the same for the
+#   _ZN19daPropeller_Heyho_c13OnYoshiTryEatEv    |  other four (end of file), so ALL SEVEN now link
+#   _ZN19daPropeller_Heyho_c13OnTurnIntoEggER6Player    /  from src and no transcription remains in
 #                             actor_classes_ov070.cpp.
 #
 # The four class D1Ev.cpp TUs are also deliberately absent: real MSVC
@@ -27,94 +27,31 @@
 # fill file, each verified against the ROM listing.
 
 # ---- the 51 probed pack bodies --------------------------------------------
-src/func_ov070_0211f100.cpp
-src/func_ov070_0211f368.cpp
-src/func_ov070_0211f450.c
-src/func_ov070_0211f48c.c
-src/func_ov070_0211f5f0.cpp
-src/func_ov070_0211f62c.c
-src/func_ov070_0211f694.cpp
-src/func_ov070_0211f6e0.c
-src/func_ov070_0211fa80.c
-src/func_ov070_0211fae4.c
-src/func_ov070_0211fd60.c
-src/func_ov070_0211fd98.c
-src/func_ov070_0211ffa8.cpp
-src/func_ov070_02120070.cpp
-src/func_ov070_02120644.cpp
-src/func_ov070_02120724.c
-src/func_ov070_021208a4.c
-src/func_ov070_02120910.cpp
-src/func_ov070_021209e4.cpp
-src/func_ov070_02120bf8.cpp
-src/func_ov070_02120cac.cpp
-src/func_ov070_02120ce4.c
-src/func_ov070_02120d34.cpp
-src/func_ov070_02120d70.cpp
-src/func_ov070_02120da8.c
-src/func_ov070_021211c4.cpp
-src/func_ov070_02121298.cpp
-src/func_ov070_02121310.cpp
-src/func_ov070_021213cc.c
-src/func_ov070_021214f8.cpp
-src/func_ov070_02121548.c
-src/func_ov070_0212156c.c
-src/func_ov070_021216b8.c
-src/func_ov070_02121710.cpp
-src/func_ov070_021217ac.c
-src/func_ov070_0212180c.cpp
-src/func_ov070_02121848.cpp
-src/func_ov070_02121880.c
-src/func_ov070_02121a64.c
-src/func_ov070_02121ae0.c
-src/func_ov070_02121be4.cpp
-src/func_ov070_02121c8c.c
-src/func_ov070_02121cbc.c
-src/func_ov070_02121d50.cpp
-src/func_ov070_02121e14.cpp
-src/func_ov070_02121eb0.c
-src/func_ov070_02121ef8.c
-src/func_ov070_02121f18.cpp
-src/func_ov070_02121fd0.cpp
-src/func_ov070_0212200c.cpp
-src/func_ov070_02122044.c
+src/game/actors/d_a_propeller_heyho.cpp
+src/game/actors/daBrq_c.cpp
+src/game/actors/d_a_krpa.cpp
+src/game/actors/d_a_kp_fr.cpp
 
 # ---- the three registered classes' named bodies and factories -------------
 # Reference edge: the three fills. The D1Ev TUs are host chains (header).
-src/Amp_Spawn.c
-src/_ZN3Amp13InitResourcesEv.cpp
-src/_ZN3Amp16CleanupResourcesEv.c
-src/_ZN3Amp16OnPendingDestroyEv.c
-src/_ZN3Amp6RenderEv.cpp
-src/_ZN3Amp8BehaviorEv.cpp
-src/_ZN3AmpD0Ev.c
-src/FlameChomp_Spawn.c
-src/_ZN10FlameChomp13InitResourcesEv.cpp
-src/_ZN10FlameChomp16CleanupResourcesEv.c
-src/_ZN10FlameChomp16OnPendingDestroyEv.c
-src/_ZN10FlameChomp6RenderEv.cpp
-src/_ZN10FlameChomp8BehaviorEv.cpp
-src/_ZN10FlameChompD0Ev.c
-src/FlameChompFire_Spawn.c
-src/_ZN14FlameChompFire13InitResourcesEv.cpp
-src/_ZN14FlameChompFire16CleanupResourcesEv.c
-src/_ZN14FlameChompFire16OnPendingDestroyEv.c
-src/_ZN14FlameChompFire6RenderEv.cpp
-src/_ZN14FlameChompFire8BehaviorEv.cpp
-src/_ZN14FlameChompFireD0Ev.c
+# RE-KEYED at the main->port sync (lane SYNC7, the wave-9 fold merge): main folded
+# this body into src/game/actors/daBrq_c.cpp (ov070 delinks, .text 0x021210ac..0x02121118, one
+# absorbed range), which port/slice_w5c.txt:31 and port/slice_dtorfaces.txt:22 already compile, so the
+# symbols this row seated now come from there and the per-function file is gone
+# from main's tree.
+#src/d_a_brq.c
 # ...and the collider initialiser both chomp InitResources bodies call (the
 # link named it; its decorated free-function spelling is aliased in the fill
 # file).
-src/_ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj.c
+src/_ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj.cpp
 
 # ---- the probe's class-b closure ------------------------------------------
 # The two TUs whose absence the census link measured (LNK2019 with all 59
 # wired): the FlyGuy state machine names both.
-# src/_ZN5Actor23HorzAngleToCPlayerOrAngEv.c IS NOT LINKED RAW: it is a
+# src/_ZN8dActor_c23HorzAngleToCPlayerOrAngEv.cpp IS NOT LINKED RAW: it is a
 # zero-argument Actor::ClosestPlayer reader (the r0-passthrough seam; the
 # closestplayer seat gate catches it by name). The receiver-passing host copy
 # below stands in, the OverlayReaders recipe; the matched source is unchanged.
-src/FlyGuy_ChangeState.cpp
 port/unmatched/Actor_HorzAngleToCPlayerOrAng.cpp
 
 # ---- ov070's four static initialisers -------------------------------------
@@ -140,8 +77,7 @@ src/_ZN6Player5ShockEj.cpp
 # listings quoted there, same rule as the ov070 pair. func_02022c3c, the
 # particle position tracker Behavior calls, is NOT here: gate 29 already
 # builds it (a line here was the link's one duplicate-definition finding).
-src/PoppingLavaBubbles_Spawn.c
-src/func_ov002_020b6d28.c
+src/actors/daObjLava_c.cpp
 
 # ---- the two host files, carried as slice lines ---------------------------
 # The wave-2 self-registration pattern (slice lines resolve against the repo
@@ -165,17 +101,17 @@ port/hal/ov070_shadow_faces.cpp
 # there -- _ZTV6FlyGuy was left out of the mount as host storage, and
 # ov70_seat_state_pmfs already rewrites all twelve of FlyGuy's PMF source
 # records with host addresses along with the other eighteen. The one thing
-# that note did not cover was FlyGuy_SpawnInfo, which was not mounted either;
+# that note did not cover was g_profile_PROPELLER_HEYHO, which was not mounted either;
 # it is now.
 #
 # A 31-slot table like its three siblings, and ov70_fill_shared serves it, but
 # FlyGuy overrides MORE slots than they do: 0/3/6/9/12/16/17 plus its own
-# 18 (OnYoshiTryEat, func_ov070_02120518), 19 (OnTurnIntoEgg,
-# func_ov070_021204ec) and 29 (OnAimedAtWithEgg, func_ov070_021204e4). Read
+# 18 (OnYoshiTryEat, _ZN19daPropeller_Heyho_c13OnYoshiTryEatEv), 19 (OnTurnIntoEgg,
+# _ZN19daPropeller_Heyho_c13OnTurnIntoEggER6Player) and 29 (OnAimedAtWithEgg, _ZN19daPropeller_Heyho_c16OnAimedAtWithEggEv). Read
 # out of extracted/overlays/overlay_0070.bin at 0x02123168..0x021231e4; every
 # other slot is byte-identical to the three tables this file already serves.
 #
-# _ZN6FlyGuy6RenderEv.cpp IS NOT IN THIS LIST -- the ModelAnim slot-5
+# _ZN19daPropeller_Heyho_c6RenderEv.cpp IS NOT IN THIS LIST -- the ModelAnim slot-5
 # collision, and this one is the real thing rather than a false alarm. The
 # matched TU takes a LOCAL six-virtual ROM-order shadow off &mModelAnim and
 # calls its slot 5, and the member really is a ModelAnim: both destructors
@@ -186,19 +122,19 @@ port/hal/ov070_shadow_faces.cpp
 # TU stays byte-locked in src/ as proof.
 #
 # BOTH DESTRUCTORS ARE IN THE LIST, unlike SnowmanBody's and SnowmanHead's:
-# _ZN6FlyGuyD1Ev is a plain .c body that names every member destructor and
+# _ZN19daPropeller_Heyho_cD1Ev is a plain .c body that names every member destructor and
 # offset outright, so there are no local shadow classes for MSVC to emit
 # undefined member dtors against and no host chain is needed. It stores
-# _ZTV6FlyGuy, the same spelling FlyGuy_Spawn.c uses. _ZN6FlyGuyD0Ev.c stores
+# _ZTV6FlyGuy, the same spelling daPropeller_Heyho_c_classInit.c uses. _ZN19daPropeller_Heyho_cD0Ev.c stores
 # the SAME ADDRESS under dsd's other name, _ZTV19daPropeller_Heyho_c
 # (symbols.txt carries both on 0x02123168), and gets a per-source rename in
 # port/CMakeLists.txt -- the same one-TU-one-name shape the two ov072 D0s got.
 #
-# Both destructors also end in func_ov002_020aed18 rather than Actor::D2:
+# Both destructors also end in _ZN12dEnemyBase_cD2Ev rather than Actor::D2:
 # FlyGuy derives from Enemy, not straight from Actor. That is ov002 code the
 # port already links and nothing here has to bridge.
 #
-# _ZN6FlyGuy13InitResourcesEv.cpp IS NOT IN THIS LIST EITHER -- a host
+# _ZN19daPropeller_Heyho_c13InitResourcesEv.cpp IS NOT IN THIS LIST EITHER -- a host
 # MIRROR, port/unmatched/FlyGuy_InitResources.cpp, whose only delta is
 # eight declarations moved. The matched TU declares its eight mounted
 # globals (seven SharedFilePtr, one PMF) OUTSIDE its own extern "C"
@@ -208,15 +144,6 @@ port/hal/ov070_shadow_faces.cpp
 # lines inside the block and changes nothing else; the body is character
 # for character the matched TU's. Coffin_InitResources.cpp is the same
 # shape. Matched TU stays byte-locked in src/ as proof.
-src/_ZN6FlyGuyD1Ev.c
-src/_ZN6FlyGuyD0Ev.c
-src/_ZN6FlyGuy16CleanupResourcesEv.c
-src/_ZN6FlyGuy16OnPendingDestroyEv.c
-src/_ZN6FlyGuy8BehaviorEv.cpp
-src/func_ov070_021204e4.c
-src/func_ov070_021204ec.cpp
-src/func_ov070_02120518.c
-src/FlyGuy_Spawn.c
 
 # ============================================================================
 # LANE mount-ov070: the last four marker bodies, byte-matched and adjudicated.
@@ -228,7 +155,3 @@ src/FlyGuy_Spawn.c
 # Particle::System::NewSimple), 02121fb0 is FlameChompFire's 0x20-byte one.
 # Rulings in port/tools/inferred_stub_adjudicated.txt; the fill's inline
 # transcriptions were retired in favour of these.
-src/func_ov070_021211bc.c
-src/func_ov070_02121bdc.c
-src/func_ov070_02121438.cpp
-src/func_ov070_02121fb0.c

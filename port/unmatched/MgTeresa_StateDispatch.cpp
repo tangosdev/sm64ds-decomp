@@ -38,10 +38,10 @@
 // A PAIR WHOSE CONSUMER NAMES A MEMBER-POINTER TYPE NEEDS A HOST COPY,
 // WHETHER IT IS CALLED OR ONLY COPIED."
 //
-//   src/func_ov006_021203ac.cpp   struct Entry { PMF pmf; }   02142eb0  arity 0
-//   src/func_ov006_0211dd0c.cpp   typedef void (C::*PMF)(int) 02142e88  arity 1
+//   src/_ZN13dScMgTeresa_c8BehaviorEv.cpp   struct Entry { PMF pmf; }   02142eb0  arity 0
+//   src/actors/dScMgTeresa_c.cpp   typedef void (C::*PMF)(int) 02142e88  arity 1
 //   src/func_ov006_0211f6fc.cpp   typedef void (C::*PMF)(int) 02142ed8  arity 1
-//   src/func_ov006_0211d5a8.cpp   typedef void (C::*PMF)(int) 02142f18  arity 1
+//   src/actors/dScMgTeresa_c.cpp   typedef void (C::*PMF)(int) 02142f18  arity 1
 //
 // THE FIRST IS VTABLE SLOT 6 AND IT IS THE SPELLING facegen MISSES. Section 10
 // tool finding 1: the WALL test is "P8" in the mangled name, and a struct that
@@ -73,7 +73,7 @@
 //
 // SWEEPING THE SPAN WOULD HAVE BEEN WRONG HERE IN THE EXACT WAY SECTION 4
 // WARNS. The source pairs run 0x0213f8d4..0x0213f9ac, and 0x0213f974 inside
-// that range is MgHideAndBooSeek_SpawnInfo -- this class's own SpawnInfo, the
+// that range is g_profile_MG_TERESA -- this class's own SpawnInfo, the
 // factory word followed by 0x01830183. A sweep would have manufactured it as
 // a twenty-eighth "pair" whose adjustment is 0x01830183.
 //
@@ -200,8 +200,8 @@ void func_ov006_0211f664(char *c, int i);
    named them; they name the matched TUs now, at the same C linkage and the same
    signatures, and nothing in this file calls any of them. They are kept because
    hal/scene_mg_booseek.cpp's vtable thunk for slot 6 declares
-   func_ov006_021203ac the same way and the two must agree. */
-int  func_ov006_021203ac(char *c);
+   _ZN13dScMgTeresa_c8BehaviorEv the same way and the two must agree. */
+int  _ZN13dScMgTeresa_c8BehaviorEv(char *c);
 void func_ov006_0211dd0c(char *c);
 void func_ov006_0211f6fc(char *c);
 void func_ov006_0211d5a8(char *c);
@@ -336,7 +336,7 @@ extern "C" void port_mg_teresa_state_index(int *l1)
 // the ROM's own code word and a zero adjustment word, so the four matched TUs
 // dispatch through the tables directly:
 //
-//   func_ov006_021203ac  data_ov006_02142eb0   5 slots  arity 0  (vtable slot 6)
+//   _ZN13dScMgTeresa_c8BehaviorEv  data_ov006_02142eb0   5 slots  arity 0  (vtable slot 6)
 //   func_ov006_0211dd0c  data_ov006_02142e88   5 slots  arity 1
 //   func_ov006_0211d5a8  data_ov006_02142f18   9 slots  arity 1
 //   func_ov006_0211f6fc  data_ov006_02142ed8   8 slots  arity 1
@@ -408,7 +408,7 @@ extern "C" void port_mg_teresa_state_index(int *l1)
    port_mg_teresa_callN counted them while the host copies routed through the
    switch. g_teresa_self is the harder one: hal/scene_mg_booseek.cpp reads the
    top-level state index through port_mg_teresa_state_index, and the only place
-   that ever recorded the receiver was func_ov006_021203ac -- the Behavior --
+   that ever recorded the receiver was _ZN13dScMgTeresa_c8BehaviorEv -- the Behavior --
    just before its dispatch. The Behavior is the matched TU now, so its table's
    five faces record it instead. Same object, same instant in the frame: the
    face runs from inside that same dispatch. Without this the census would read

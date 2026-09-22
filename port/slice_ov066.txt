@@ -24,14 +24,14 @@
 # ROW FOR A PLACEHOLDER EITHER: a sweep of all 65 for the bare G0, G1, G2, VT,
 # VT0, VT1, VT2, HEAP, R0, R1 and R2 spellings returns NOTHING. Only three TUs
 # name a vtable at all and all three name it in full (_ZTV6Eyerok and
-# _ZTV8Platform, both real, both already host storage).
+# _ZTV10dBgActor_c, both real, both already host storage).
 #
 # ==== FOUR TUs ARE NOT IN THIS LIST ON PURPOSE =============================
 # Each is host-copied under port/unmatched/ and its matched src stays
 # byte-locked in src/ as the proof. Listing both copies would be an LNK2005;
 # listing neither would drop the body silently.
 #
-# (1) src/_ZN6Eyerok8BehaviorEv.cpp  ->  unmatched/Eyerok_Behavior.cpp
+# (1) src/actors/Eyerok.cpp  ->  unmatched/Eyerok_Behavior.cpp
 #     The TICK half of the state machine, dispatched INLINE inside Behavior:
 #         struct C; typedef int (C::*PMF)();
 #         struct State { char pad[8]; PMF fn; };
@@ -42,7 +42,7 @@
 #     an incomplete class is the "unknown inheritance" form and does not
 #     reproduce it. The Ukiki/BabyPenguin shape (unmatched/Ukiki_StateTick.cpp).
 #
-# (2) src/func_ov066_02119454.cpp  ->  unmatched/Eyerok_StateEnter.cpp
+# (2) src/actors/Eyerok.cpp  ->  unmatched/Eyerok_StateEnter.cpp
 #     The ENTER half, and the state INSTALLER in the same three statements:
 #         extern "C" int func_ov066_02119454(C *c, PMF *p)
 #         { c->pp = p; PMF *q = c->pp; if (*q == 0) return 1; return (c->**q)(); }
@@ -50,7 +50,7 @@
 #     installing a state IS entering it -- the Ukiki func_ov030_021141a8
 #     relationship, here fused into one body.
 #
-# (3) src/_ZN6Eyerok6RenderEv.cpp  ->  unmatched/Eyerok_Render.cpp
+# (3) src/actors/Eyerok.cpp  ->  unmatched/Eyerok_Render.cpp
 #     THE BlendModelAnim SLOT-5 COLLISION, which hal/blend_vtable.cpp predicted
 #     in writing: "if a shadow-class TU ever dispatches BlendModelAnim::Render
 #     it will land on blend_virtual18 and read its scale off the stack". This
@@ -63,8 +63,8 @@
 #     argument). Hosted whole rather than half, with both dispatches spelled
 #     as the qualified methods the ROM means.
 #
-# (4) src/func_ov066_02119398.cpp  ->  unmatched/Eyerok_ClosestPlayerRead.cpp
-#     A RECEIVER-DROPPING READER: `_ZN5Actor13ClosestPlayerEv()` with empty
+# (4) src/actors/Eyerok.cpp  ->  unmatched/Eyerok_ClosestPlayerRead.cpp
+#     A RECEIVER-DROPPING READER: `_ZN8dActor_c13ClosestPlayerEv()` with empty
 #     parentheses. ClosestPlayer is a thiscall and a zero-argument call leaves
 #     the receiver register holding whatever was there. This TU is already
 #     named in port/unmatched/Actor_ClosestPlayer_OverlayReaders.cpp's own
@@ -86,7 +86,7 @@
 # All six rows are in port/CMakeLists.txt beside this slice's reader block.
 #
 #   #  alias removed from                     foreign caller TU (in a slice)
-#   1  hal/actor_classes_ov065.cpp:151        src/func_ov065_021162c0.c
+#   1  hal/actor_classes_ov065.cpp:151        src/actors/daYurei_Mucho_c.cpp
 #      __ZN6EyerokD0Ev=_func_ov065_02115f84
 #      -> -D_ZN6EyerokD0Ev=func_ov065_02115f84
 #      ov065's Snufit state body calls 0x02115f84, which the reloc
@@ -141,7 +141,7 @@
 # THE THIRD NAME IS SIMPLY WRONG. There is no reloc to 0x02112cd8 anywhere in
 # ov066. The pool word the second argument of func_020393d4 is loaded from
 # holds 0x02039348, module:main, which config/arm9/symbols.txt names
-# _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_
+# _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_
 # -- an arm9 body, and the callback the collider genuinely wants. The
 # recovered name invented an overlay address out of the "updatepos" role. A -D
 # rename fixes it at the one call site; src/ is not edited.
@@ -184,8 +184,9 @@
 src/func_020398fc.c
 src/func_02011d2c.c
 src/func_02048ef4.c
-src/_ZN6EyerokD1Ev.c
-src/_ZN6EyerokD0Ev.c
+src/_ZN6EyerokD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN6EyerokD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN6EyerokD0Ev.cpp
 src/func_ov066_0211603c.c
 src/func_ov066_021162e8.c
 src/func_ov066_0211632c.c
@@ -209,39 +210,15 @@ src/func_ov066_02117bd0.c
 src/func_ov066_02117bf0.c
 src/func_ov066_02118168.c
 src/func_ov066_02118188.c
-src/func_ov066_021184c0.c
-src/func_ov066_021184e0.c
-src/func_ov066_021185e4.c
-src/func_ov066_02118604.c
-src/func_ov066_02118658.c
-src/func_ov066_02118678.c
-src/func_ov066_021187c8.cpp
-src/func_ov066_021188b0.c
-src/func_ov066_02118934.c
-src/func_ov066_02118954.c
-src/func_ov066_021189a0.c
-src/func_ov066_021189c0.c
-src/func_ov066_02118a30.c
-src/func_ov066_02118a50.c
-src/func_ov066_02118b08.c
-src/func_ov066_02118b28.c
-src/func_ov066_02118be0.c
-src/func_ov066_02118c00.c
-src/func_ov066_02118cb8.c
-src/func_ov066_02118cdc.cpp
-src/func_ov066_02118de0.c
-src/func_ov066_02118e04.c
-src/func_ov066_0211901c.c
-src/func_ov066_0211903c.c
-src/func_ov066_02119348.c
-src/func_ov066_0211944c.c
-src/func_ov066_021194a4.cpp
-src/func_ov066_021194fc.cpp
-src/_ZN6Eyerok16CleanupResourcesEv.cpp
-src/_ZN6Eyerok16OnPendingDestroyEv.c
+# QUARANTINED at the main->port sync (origin/main 9c7f38a24): main folded this
+# class into one TU, and port/ host-copies bodies inside it (the slice_ov066 host copies).
+# port/CMakeLists.txt's own assertion refuses the pair, because taking both is a
+# duplicate symbol and taking the src one puts the host copy's reason back. The
+# row returns when the host copy covers the whole consolidated TU.
+#src/actors/Eyerok.cpp
 src/_ZN6Eyerok13InitResourcesEv.cpp
-src/func_ov066_0211a2dc.c
+src/_ZN6Eyerok16OnAimedAtWithEggEv.cpp
 src/func_ov066_0211a2e4.c
 src/func_ov066_0211a35c.c
-src/Eyerok_Spawn.cpp
+src/d_a_iwante.cpp
 src/__sinit_ov066_0211a418.c

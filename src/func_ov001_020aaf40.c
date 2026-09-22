@@ -27,7 +27,7 @@ void func_ov001_020aaf40(void)
             while (node) {
                 if (*(int*)(node + 0x14) != -1 && *(unsigned char*)(node + 0x1a) != 0) {
                     int v;
-                    *(unsigned char *)(int)(((long long)(int)(node + 0x1a))) -= 1;
+                    *(unsigned char *)(int)(node + 0x1a) -= 1;
                     v = *(unsigned char*)(node + 0x1a);
                     if (v == 0) {
                         func_ov001_020aa6b0(node, 1);

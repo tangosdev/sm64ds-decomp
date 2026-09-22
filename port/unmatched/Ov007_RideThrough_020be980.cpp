@@ -1,4 +1,4 @@
-/* HOST COPY of src/func_ov007_020be980.c -- SCENE 1'S ARM REGISTER
+/* RETIRED HOST COPY of src/func_ov007_020be980.c -- SCENE 1'S ARM REGISTER
  * RIDE-THROUGH, with the two ridden arguments spelled out.
  * ov007 0x020be980, 0x2c bytes (44, 11 ARM instructions).
  *
@@ -99,18 +99,40 @@
  * pointer are set to 1, each after its own reload, exactly as the ROM reloads
  * them.
  */
-extern "C" {
-
-void func_ov007_020bc3dc(void *c, int i, int a2);
-
-/* PORT_HOST_ABI: ARM register ride-through: the matched src declares one
- * parameter and its callee takes three, leaving i and a2 in r1/r2 across the
- * call. See the header. */
-void func_ov007_020be980(void *p, int i, int a2)
-{
-    func_ov007_020bc3dc(*(void **)((char *)p + 4), i, a2);
-    *(int *)(*(char **)((char *)p + 4) + 0x94) = 1;
-    *(int *)(*(char **)((char *)p + 4) + 0x98) = 1;
-}
-
-}
+/* ======================== RETIRED, AND WHY =================================
+ *
+ * run link100 wave 15, lane SEAT15E (LINK15 BATCH 4). THIS FILE CARRIES NO
+ * BODY ANY MORE. The matched TU is back in port/slice_ov007.txt's own build --
+ * the `continue()` that cut it out of the loop in port/CMakeLists.txt is gone
+ * and so is the branch that appended this file instead -- because the defect
+ * the header below derives is not in the source any anymore.
+ *
+ * WHAT WAS RE-READ, against src/ at 8ddff3187, before the cut was removed. The
+ * header says the seam is three matched TUs disagreeing about this function's
+ * arity, and quotes the middle one as `void func_ov007_020be980(int r0)` with
+ * `extern int func_ov007_020bc3dc(int)` beside it. It is now
+ *
+ *     extern void func_ov007_020bc3dc(void* c, int i, int a2);
+ *     void func_ov007_020be980(char *r0, int i, int a2){
+ *       func_ov007_020bc3dc(*(void**)(r0+4), i, a2);
+ *       *(int*)(*(int*)(r0+4)+0x94)=1;
+ *       *(int*)(*(int*)(r0+4)+0x98)=1;
+ *     }
+ *
+ * -- three parameters declared and three passed, and src/func_ov007_020bc3dc.c
+ * defines the callee `void func_ov007_020bc3dc(void* c, int i, int a2)`. There
+ * is no frame left that fails to name a value its callee reads, so there is
+ * nothing for a stack ABI to lose. The statement list this file used to carry
+ * was the same source's, line for line; the host copy was spelling out an
+ * argument the source now spells itself.
+ *
+ * The four call sites the header derives are unchanged and still settle the
+ * arity at three (config/arm9/overlays/ov007/relocs.txt), so the source's
+ * present spelling is the ROM's and not a convenience.
+ *
+ * THE HEADER ABOVE IS KEPT ON PURPOSE. It carries the capstone reading at the
+ * config-aligned base 0x020ad660, the call-site sweep, and the correction to
+ * the prose about r1 being "untouched across the whole body" (it is not; the
+ * sufficient condition is that r1 and r2 are LIVE AT THE BRANCH). Those are
+ * readings of the cartridge and stay true whichever side of the seam runs.
+ */

@@ -1,25 +1,14 @@
 //cpp
-#include "types.h"
-/* ExpandingHeap::VAllocate(unsigned, int) at 0x0203c6bc -- Heap vtable slot.
- * Forwards to the allocator (ExpandingHeapAllocator* at this+0x14). */
-class ExpandingHeapAllocator
-{
-public:
-    void* Allocate(u32 size, int align);
-};
-
-class ExpandingHeap
-{
-public:
-    u32 unk00;
-    u32 unk04;
-    u32 unk08;
-    u32 unk0c;
-    u32 unk10;
-    ExpandingHeapAllocator* allocator; /* 0x14 */
-
-    void* VAllocate(u32 size, int align);
-};
+// @symbol _ZN13ExpandingHeap9VAllocateEji
+/* ExpandingHeap::VAllocate(u32, int) at 0x0203c6bc -- Heap vtable slot 3. Four
+ * instructions: load the allocator from this+0x14 and tail-call it, passing
+ * r1/r2 through untouched.
+ *
+ * This override always had the right spelling -- `Eji', (u32, int). SolidHeap's
+ * claimed `Ejj' for the same slot, and the ROM agreed with this one; see
+ * include/SolidHeap.h for the signed `blt' that settles it. */
+#include "ExpandingHeap.h"
+#include "ExpandingHeapAllocator.h"
 
 void* ExpandingHeap::VAllocate(u32 size, int align)
 {

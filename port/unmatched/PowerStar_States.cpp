@@ -63,12 +63,12 @@ void port_king_power_star_state5(void *);
 void port_king_power_star_state13(void *);
 
 /* the matched-src calls PowerStar::Behavior makes around the dispatch */
-int _ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(char *c, char *clsn);
+int _ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(char *c, char *clsn);
 void func_ov002_020d718c(void *p);
-void _ZN12CylinderClsn5ClearEv(char *c);
-void _ZN5Actor9UpdatePosEP12CylinderClsn(char *c, void *clsn);
-void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(char *c, const void *v);
-void _ZN12CylinderClsn6UpdateEv(char *c);
+void _ZN5dCc_c5ClearEv(char *c);
+void _ZN8dActor_c9UpdatePosEP5dCc_c(char *c, void *clsn);
+void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(char *c, const void *v);
+void _ZN5dCc_c6UpdateEv(char *c);
 void func_ov002_020e700c(void *p);
 void func_ov002_020e763c(void *p);
 void func_ov002_020e84ec(void *p);

@@ -23,9 +23,9 @@ run mg6's merge corrected both ends to the rows.
 IT IS THIRTY ROWS NOW, NOT TWENTY-NINE, and the thirtieth is the one
 this tool could never have produced on its own. Section 3's row for
 0x179 read "NOT FOUND -- see below" because no load relocation inside
-MgSnowballSlalom_Spawn points at any signature table: that factory
+dScMgSnowball_c_classInit points at any signature table: that factory
 allocates and DELEGATES, and func_ov006_021295ac is the body that
-writes the vtable. Run mg11 lane SNW derived data_ov006_0214000c and
+writes the vtable. Run mg11 lane SNW derived _ZTV15dScMgSnowball_c and
 its width 36 BY HAND out of the ROM and filled the row. What this tool
 does with it is the useful half and the honest division of labour:
 given a vtable and a width it MEASURES ovr/mark/nosrc from the image,
@@ -35,7 +35,7 @@ and does reconstruct the row. The totals moved to 369/278/4 with the
 row, and the twenty-nine that always resolved still sum to 353/264/4.
 The unclaimed-table count printed by --reconstruct drops from three to
 TWO, and those two are shared bases rather than any id's vtable:
-data_ov006_0213e448 (dScMgSingle3DBase_c, 41 load relocations from
+_ZTV19dScMgSingle3DBase_c (dScMgSingle3DBase_c, 41 load relocations from
 fourteen classes) and data_ov006_0213c62c (the bounce/trampoline
 family's base, 14 from five).
 
@@ -501,8 +501,11 @@ def cmd_reconstruct(root):
             diverged.append(cid)
         print("  0x%03x  vt 0x%08x  w%d  ovr %2d  mark %2d  nosrc %d%s"
               % (cid, vt, width, n_ovr, n_mark, n_nosrc, tag))
-    print("totals ovr/mark/nosrc: %d/%d/%d (section 3's table: 369/278/4; "
-          "the 29 that always resolved are 353/264/4)" % tuple(tot))
+    print("totals ovr/mark/nosrc: %d/%d/%d (section 3's table: 369/127/2 since "
+          "the 2026-09-14 sync refresh; it was 369/148/2 after the 2026-09-12 "
+          "one, read 369/278/4 when the table was first reviewed, and the 29 "
+          "that always resolved were 353/264/4)"
+          % tuple(tot))
     if diverged:
         print("vtablerows: %d row(s) DIVERGE. A divergence is a "
               "CONTRADICTION TO INVESTIGATE, not automatically the doc's "

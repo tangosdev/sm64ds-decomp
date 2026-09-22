@@ -93,23 +93,23 @@
  * has port_actor_census(), which looks like one and is not: g_spawned[] and
  * g_skipped[] are CUMULATIVE SPAWN COUNTERS bumped at spawn time, so they say
  * how many of each class were ever created, never which objects are alive now.
- * Reporting off them would list a Goomba that died ten minutes ago.
+ * Reporting off them would list a daKrb_c that died ten minutes ago.
  *
  * The live list is the ROM's, reached the way the ROM reaches it:
  *
- *     Actor *a = Actor::Next(nullptr);          // First
- *     while (a) a = Actor::Next(a);
+ *     dActor_c *a = dActor_c::Next(nullptr);          // First
+ *     while (a) a = dActor_c::Next(a);
  *
- * Actor::Next is src/_ZN5Actor4NextEPKS_.cpp -- a BYTE-MATCHED decompiled TU
+ * dActor_c::Next is src/_ZN8dActor_c4NextEPKS_.cpp -- a BYTE-MATCHED decompiled TU
  * that is ALREADY LINKED into walk_window. Verified, not assumed: walk_window
- * .map resolves __ZN5Actor4NextEPKS_ to _ZN5Actor4NextEPKS_.cpp.obj, the
+ * .map resolves __ZN8dActor_c4NextEPKS_ to _ZN8dActor_c4NextEPKS_.cpp.obj, the
  * matched object, not to a host stand-in. So this file adds no object to the
  * link and invents no traversal -- the walk an editor sees is the same one the
  * game's own Behavior loops see. Nine ROM TUs in src/ use exactly this idiom
  * (func_ov002_020b10e4, BrickBlock::Behavior, func_ov002_020f051c, ...).
  *
- * It walks data_0209b468, the actor list every Actor::Actor links itself into
- * (the node is embedded at Actor+0x50, with owner at node+8). The port's other
+ * It walks data_0209b468, the actor list every dActor_c::dActor_c links itself into
+ * (the node is embedded at dActor_c+0x50, with owner at node+8). The port's other
  * probes tend to walk data_020a4b78, the BEHAVIOUR list, which is a subset --
  * it holds what is being ticked. The editor wants everything that exists, and
  * it wants the same set the recomp's channel produced, so the ROM's own list is
@@ -123,17 +123,17 @@
  * file touches game state at all: the socket thread is forbidden from it.
  *
  * FIELD OFFSETS, NOT THE C++ HEADER. actorID and the position are read at +0xc
- * and +0x5c off the real Actor object. include/Actor.h is the authority for
- * both -- `u16 actorID;` at 0x00c (inherited from ActorBase), `s32 mPosX/mPosY/
- * mPosZ;` at 0x05c, with a static assert pinning sizeof(Actor) == 0xd0 -- and
+ * and +0x5c off the real dActor_c object. include/dActor_c.h is the authority for
+ * both -- `u16 actorID;` at 0x00c (inherited from fBase_c), `s32 mPosX/mPosY/
+ * mPosZ;` at 0x05c, with a static assert pinning sizeof(dActor_c) == 0xd0 -- and
  * raw-offset reads are the established convention in port/hal, where several
- * TUs deliberately declare their own local struct Actor rather than include the
+ * TUs deliberately declare their own local struct dActor_c rather than include the
  * real header. walk_window.cpp reads these very fields this very way in its
  * ambush census (`*(int *)(o + 0x5c)`). Four scalar reads is not worth dragging
  * the class hierarchy, its vtable and the MSVC/Itanium ABI question into a new
  * TU.
  *
- * NOTE: Actor+0x50 and +0x54 are the list node (unk_050/unk_054 in the header),
+ * NOTE: dActor_c+0x50 and +0x54 are the list node (unk_050/unk_054 in the header),
  * NOT spare words. This file never writes them.
  *
  * =============================================================================
@@ -202,19 +202,19 @@
  * driving the handoff from here would leave those stale.
  */
 extern "C" {
-struct Actor;
-struct Actor *_ZN5Actor4NextEPKS_(struct Actor *prev);
+struct dActor_c;
+struct dActor_c *_ZN8dActor_c4NextEPKS_(struct dActor_c *prev);
 void LoadLevelNoReturn(int level, unsigned entrance, unsigned star,
                        unsigned reason);
 int port_level_is_mounted(int level);
 int port_actor_live_count(void);        /* hal/level_change.cpp, cross-check */
-/* The ROM's own "kill this actor", src/_ZN9ActorBase18MarkForDestructionEv.cpp,
+/* The ROM's own "kill this actor", src/_ZN7fBase_c18MarkForDestructionEv.cpp,
    declared for host callers exactly as hal/level_change.cpp:127 declares it.
    Idempotent and self-guarding; it marks +0x0f and runs OnPendingDestroy, and
    the game's own cleanup phase frees the object on a later frame. Nothing here
    frees an actor by hand -- that is hal/level_change.cpp's stated contract and
    this file does not get an exception to it. */
-void _ZN9ActorBase18MarkForDestructionEv(void *self);
+void _ZN7fBase_c18MarkForDestructionEv(void *self);
 /* hal/level_boot.cpp:3776. Runs the ROM's Actor::Spawn with an explicit
    position, yaw and area, allocates the death-table sequence the ROM allocates,
    and refuses (returning 0, in its own words on stdout) when the class belongs
@@ -267,14 +267,14 @@ static const unsigned OFF_ACTOR_ANGLE = 0x8C;
 
 /* SPAWN IDENTITY, for objrespawn. include/ActorBase.h:57 `u32 param1;` at
    0x08 -- and that name is not a guess by this file:
-   src/_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii.c declares its own second
+   src/_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as.cpp declares its own second
    parameter `param1` and hands it straight to
    `ActorDerived::Spawn(actorID, data_0209f5c0, param1, 2)`. So the word this
    file reads back at +0x08 is the same word a spawn was given. */
 static const unsigned OFF_ACTOR_PARAM = 0x08;
 
 /* The area the actor was spawned into. include/Actor.h:110 `s8 mAreaId;` at
-   0x0cc, and src/_ZN5ActorC1Ev.cpp:49 is literally
+   0x0cc, and src/_ZN8dActor_cC1Ev.cpp:49 is literally
    `self->mAreaId = data_0209b44c;` -- the global src/func_02010e78.c stages
    from Actor::Spawn's areaID argument. SIGNED, because the header says a
    negative value means "not area-bound" and passing 0xff back as 255 would
@@ -414,21 +414,21 @@ void push_reply(const char *s)
  * failure a debug channel must not be able to cause. 8192 matches the bound the
  * reference channel and the port's own list probes use.
  */
-void walk_actors(std::vector<struct Actor *> &out)
+void walk_actors(std::vector<struct dActor_c *> &out)
 {
-    struct Actor *a = _ZN5Actor4NextEPKS_(0);
+    struct dActor_c *a = _ZN8dActor_c4NextEPKS_(0);
     for (int guard = 0; a && guard < 8192; ++guard) {
         out.push_back(a);
-        a = _ZN5Actor4NextEPKS_(a);
+        a = _ZN8dActor_c4NextEPKS_(a);
     }
 }
 
-unsigned actor_id_of(struct Actor *a)
+unsigned actor_id_of(struct dActor_c *a)
 {
     return *(const unsigned short *)((const char *)a + OFF_ACTOR_ID);
 }
 
-const int *actor_pos_of(struct Actor *a)
+const int *actor_pos_of(struct dActor_c *a)
 {
     return (const int *)((const char *)a + OFF_ACTOR_POS);
 }
@@ -437,7 +437,7 @@ const int *actor_pos_of(struct Actor *a)
 
 void exec_objlist()
 {
-    std::vector<struct Actor *> live;
+    std::vector<struct dActor_c *> live;
     walk_actors(live);
     char ln[96];
     for (size_t i = 0; i < live.size(); ++i) {
@@ -471,9 +471,9 @@ void exec_objlist()
    Returns 0 when the pointer is stale; every caller answers `err no such
    object`, which is the reply objmove has always given and the one objrot and
    objrespawn give too. */
-struct Actor *find_live(unsigned ptr)
+struct dActor_c *find_live(unsigned ptr)
 {
-    std::vector<struct Actor *> live;
+    std::vector<struct dActor_c *> live;
     walk_actors(live);
     for (size_t i = 0; i < live.size(); ++i)
         if ((unsigned)(uintptr_t)live[i] == ptr)
@@ -483,7 +483,7 @@ struct Actor *find_live(unsigned ptr)
 
 void exec_objmove(const Cmd &c)
 {
-    struct Actor *a = find_live(c.objptr);
+    struct dActor_c *a = find_live(c.objptr);
     if (!a) {
         push_reply("err no such object\n");
         return;
@@ -497,7 +497,7 @@ void exec_objmove(const Cmd &c)
 
 void exec_objrot(const Cmd &c)
 {
-    struct Actor *a = find_live(c.objptr);
+    struct dActor_c *a = find_live(c.objptr);
     if (!a) {
         push_reply("err no such object\n");
         return;
@@ -524,21 +524,21 @@ void exec_objrot(const Cmd &c)
  *   actorID  ActorBase+0x0c. Already what exec_objlist reports.
  *
  *   param    ActorBase+0x08. src/func_02043180.c stores Spawn's `param1`
- *            (r2) to data_020a4b60, and src/_ZN9ActorBaseC1Ev.cpp loads that
+ *            (r2) to data_020a4b60, and src/_ZN7fBase_cC2Ev.cpp loads that
  *            global and does `str r2, [r4, #8]`. Copied 32 bits wide with no
  *            mask, shift or merge anywhere on that path -- see OFF_ACTOR_PARAM.
  *            THE TWO EXCEPTIONS ARE HANDLED BELOW; they are real.
  *
- *   area     Actor+0xcc. src/_ZN5ActorC1Ev.cpp:49 is
+ *   area     Actor+0xcc. src/_ZN8dActor_cC1Ev.cpp:49 is
  *            `self->mAreaId = data_0209b44c;`, and data_0209b44c is exactly
  *            what src/func_02010e78.c staged from Spawn's areaID argument.
  *            include/Actor.h:110 types it `s8 mAreaId` and says a negative
  *            value means "not area-bound", so it is read SIGNED.
  *
  *            NOT +0x10 and NOT +0x12, both of which look plausible and are
- *            wrong. +0x12 is the 4th ActorDerived::Spawn argument, which
- *            Actor::Spawn hardcodes to 2, so it carries no area at all. +0x10
- *            is a boolean written by ActorBase::AfterInitResources meaning
+ *            wrong. +0x12 is the 4th dBase_c::Spawn argument, which
+ *            dActor_c::Spawn hardcodes to 2, so it carries no area at all. +0x10
+ *            is a boolean written by fBase_c::AfterInitResources meaning
  *            "init'd while data_02099f24[0] == 3". port/hal/level_boot.cpp's
  *            port_debug_spawn read +0x10 as the area for a while -- this
  *            lane reported it, and it is FIXED: that file now reads mAreaId
@@ -546,7 +546,7 @@ void exec_objrot(const Cmd &c)
  *            every debug spawn. It was invisible in most testing because
  *            area 0 is the common case and that boolean is usually 0 too.
  *
- *   yaw      Actor+0x8e when the caller did not give one, so a plain
+ *   yaw      dActor_c+0x8e when the caller did not give one, so a plain
  *            reposition keeps the facing it had.
  *
  * WHY ONLY THE YAW IS CARRIED. port_debug_spawn_at takes a single yaw and
@@ -557,8 +557,8 @@ void exec_objrot(const Cmd &c)
  * pitch or roll is not silently half-applied. Callers that want those use
  * objrot and accept that it may not move a baked actor.
  *
- * THE KILL is ActorBase::MarkForDestruction, the ROM's own
- * (src/_ZN9ActorBase18MarkForDestructionEv.cpp), declared for host callers at
+ * THE KILL is fBase_c::MarkForDestruction, the ROM's own
+ * (src/_ZN7fBase_c18MarkForDestructionEv.cpp), declared for host callers at
  * hal/level_change.cpp:127. It is idempotent and self-guarding: it returns
  * early if shouldBeKilled is already set or aliveState is 2. Nothing here
  * frees an actor by hand -- marking sets +0x0f, and the game's own cleanup
@@ -582,7 +582,7 @@ void exec_objrot(const Cmd &c)
  */
 void exec_objrespawn(const Cmd &c)
 {
-    struct Actor *a = find_live(c.objptr);
+    struct dActor_c *a = find_live(c.objptr);
     if (!a) {
         push_reply("err no such object\n");
         return;
@@ -610,7 +610,7 @@ void exec_objrespawn(const Cmd &c)
     int yaw = c.has_rot ? c.ry
                         : *(const short *)(o + OFF_ACTOR_ANGLE + 2);
 
-    /* GOOMBA EDITS ITS OWN PARAM. src/_ZN6Goomba13InitResourcesEv.cpp:59-60
+    /* GOOMBA EDITS ITS OWN PARAM. src/_ZN7daKrb_c13InitResourcesEv.cpp:59-60
        does `*(int *)(c + 8) &= 0xf0ff` under a condition, so the word read
        back above is the MASKED one and not what the goomba was spawned with.
        The respawn still works and still produces a goomba; what it cannot
@@ -623,7 +623,7 @@ void exec_objrespawn(const Cmd &c)
                              "carried over is the masked one, not necessarily "
                              "the one it was first spawned with\n");
 
-    _ZN9ActorBase18MarkForDestructionEv(o);
+    _ZN7fBase_c18MarkForDestructionEv(o);
 
     void *n = port_debug_spawn_at(id, param, c.x, c.y, c.z, yaw, area);
     if (!n) {
@@ -660,7 +660,7 @@ void exec_objrespawn(const Cmd &c)
  * above rather than having discovered it here: Actor+0x10 is a BOOLEAN written
  * by ActorBase::AfterInitResources meaning "init'd while data_02099f24[0] == 3",
  * not an area. The area is Actor+0xcc -- include/Actor.h:110 types it
- * `s8 mAreaId`, and src/_ZN5ActorC1Ev.cpp:49 is literally
+ * `s8 mAreaId`, and src/_ZN8dActor_cC1Ev.cpp:49 is literally
  * `self->mAreaId = data_0209b44c;`, the global src/func_02010e78.c stages from
  * Actor::Spawn's areaID argument. exec_objrespawn reads +0xcc for exactly this
  * reason and has done since it shipped.
@@ -752,7 +752,7 @@ void exec_objspawn(const Cmd &c)
  */
 void exec_objkill(const Cmd &c)
 {
-    struct Actor *a = find_live(c.objptr);
+    struct dActor_c *a = find_live(c.objptr);
     if (!a) {
         push_reply("err no such object\n");
         return;
@@ -764,7 +764,7 @@ void exec_objkill(const Cmd &c)
             return;
         }
     }
-    _ZN9ActorBase18MarkForDestructionEv(o);
+    _ZN7fBase_c18MarkForDestructionEv(o);
     push_reply("ok\n");
 }
 

@@ -18,7 +18,7 @@
 // statically placed: Snufit spawns it. Reachability proof: SM64DS_SPAWN_ACTOR=233
 // in any ov002-loaded level (ov002 is the engine overlay, always mounted).
 //
-// Object layout, from Bullet_Spawn (ov002 0x020fefcc, 860 bytes):
+// Object layout, from daPropeller_Heyho_Fire_c_classInit (ov002 0x020fefcc, 860 bytes):
 // MovingCylinderClsn at 0x110, WithMeshClsn at 0x144, Model at 0x300.
 //
 // BULLET IS A ONE-PMF-STATE-MACHINE CLASS. func_ov002_020fed2c (the state setter)
@@ -30,6 +30,8 @@
 // through a slot-5 local shadow; model_host.cpp seats the Model vtable MSVC-slot-
 // ordered, so Render stays a faced .cpp method here (the FlameChomp treatment),
 // not a host copy.
+#include "port_d16.h"
+
 #include <cstdio>
 
 extern "C" {
@@ -62,8 +64,8 @@ void ac31_fill_shared(void **vt);
    (the ov065 / cxx_aliases per-signature pattern). */
 #pragma comment(linker, "/alternatename:?_ZN5Model8LoadFileER13SharedFilePtr@@YAPAUBMD_File@@PAX@Z=__ZN5Model8LoadFileER13SharedFilePtr")
 #pragma comment(linker, "/alternatename:?_ZN9ModelBase7SetFileEP8BMD_Fileii@@YAHPADPAUBMD_File@@HH@Z=__ZN9ModelBase7SetFileEP8BMD_Fileii")
-#pragma comment(linker, "/alternatename:?_ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj@@YAXPADPAUActor@@HHII@Z=__ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj")
-#pragma comment(linker, "/alternatename:?_ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_@@YAXPADPAUActor@@HHPAUVector3_16@@H@Z=__ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_")
+#pragma comment(linker, "/alternatename:?_ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj@@YAXPADPAUActor@@HHII@Z=__ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj")
+#pragma comment(linker, "/alternatename:?_ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_@@YAXPADPAUActor@@HHPAUVector3_16@@H@Z=__ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_")
 
 static int __fastcall bl_init(void *s, void *)
 { return _ZN6Bullet13InitResourcesEv(s); }
@@ -92,7 +94,7 @@ extern "C" void hal_fill_bullet_vtable(void)
     vt[6]  = (void *)bl_behavior;
     vt[9]  = (void *)bl_render;
     vt[12] = (void *)bl_pdes;
-    vt[16] = (void *)bl_d1;
+    vt[16] = (void *)PORT_D16(bl_d1);
     vt[17] = (void *)bl_d0;
     /* slots 13/14/18/19/29/30 stay the shared defaults ac31_fill_shared seats:
        the reloc run lands them on the Enemy/Actor base bodies, none an ov002

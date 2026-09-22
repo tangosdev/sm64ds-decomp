@@ -183,7 +183,7 @@ and made section 4's fix look like a one line header edit.
     src/func_0203bc7c.c:15,24   calls func_0203dae4(i), argument PASSED, and
                                 declares it locally as `u16 (int idx)`. This is
                                 the pad half of the same fan out.
-    src/func_ov007_020cc2cc.c:30,33  calls BOTH bare, on the header's
+    src/_ZN9dScDSMT_c8BehaviorEv.cpp:30,33  calls BOTH bare, on the header's
                                 no argument declarations. dScDSMT_c::Behavior,
                                 the TITLE SCREEN, and the read path for the
                                 file select, the options and the route into the
@@ -232,7 +232,7 @@ Grep of build/port/walk_window.map at the baseline commit:
     func_ov004_020aeb24             func_0205edd8  (stability params)
     func_ov006_020e1b54             func_0205f0e0, func_0205f1e4, func_0205f270
     func_ov006_020e26f8
-    func_ov007_020cc2cc
+    _ZN9dScDSMT_c8BehaviorEv
     func_ov007_020b7090
 
 Links 0 through 3 do not exist on the host at all. Link 4 exists as storage but
@@ -334,7 +334,7 @@ mirror it should take the stylus record's fix, not the pad probe's workaround.
 4. THE TITLE SCREEN READS A LINK THE PORT DOES NOT FILL
 --------------------------------------------------------
 
-func_ov007_020cc2cc, dScDSMT_c::Behavior, is LINKED. Its input read is:
+_ZN9dScDSMT_c8BehaviorEv, dScDSMT_c::Behavior, is LINKED. Its input read is:
 
     func_0203da9c();
     u16 *p = func_0203dabc();
@@ -366,7 +366,7 @@ the DS that is correct and deliberate: func_0203da9c leaves the index in r0 and
 the next call reads r0. On x86 the return comes back in eax and nothing is
 pushed. dumpbin on this tree's own objects, walk_window.dir:
 
-    func_ov007_020cc2cc.c.obj
+    _ZN9dScDSMT_c8BehaviorEv.c.obj
         00000036: 56              push  esi
         00000037: E8 ...          call  _func_0203da9c
         0000003C: E8 ...          call  _func_0203dabc     no argument pushed
@@ -420,9 +420,9 @@ the right place to ask the question.
 
 THE CURLING TOUCH GATE, DERIVED BEFORE IT WAS RUN.
 
-    dScMgCurling_c::InitResources (func_ov006_020e3578) sets the top state
+    dScMgCurling_c::InitResources (_ZN14dScMgCurling_c13InitResourcesEv) sets the top state
     index at self+0x4eac to 1.
-    Behavior (func_ov006_020e3528, host copied in
+    Behavior (_ZN14dScMgCurling_c8BehaviorEv, host copied in
     port/unmatched/MgCurling_StateDispatch.cpp) dispatches
     data_ov006_02141950[index]. Index 1 is func_ov006_020e3078.
     func_ov006_020e3078 dispatches data_ov006_021418b0[self+0x4ee4]. Slot 0 is
@@ -603,7 +603,7 @@ double dispatch reason with it. This lane does not rule between them.
 
     what it does NOT fix
       the ride through in section 4. func_0203dabc and func_0203dae4 are still
-      called with no argument from func_ov007_020cc2cc. Filling data_020a1154
+      called with no argument from _ZN9dScDSMT_c8BehaviorEv. Filling data_020a1154
       without fixing the index makes the title screen read a filled record at a
       garbage offset. Order matters: the index fix comes first.
 
@@ -1092,7 +1092,7 @@ THE GAME BELIEVED IT. dScMgPachinko_c slot 0's state byte at +0x4f0d went
                 frames 195      st = 4
                 frames 272..    st = 0    respawned
 
-src/func_ov006_020fe394.c is one branch on `data_020a0de8[k * 4] != 0`, and its
+src/func_ov006_020fe394.cpp is one branch on `data_020a0de8[k * 4] != 0`, and its
 else side writes 2 into +0x4f0d and snaps or launches the ball. So the player
 pulling back did not pause the pull when their hand left the window. They took
 the shot. The ball's world y in the same trace walks 40, -207, -279 over the

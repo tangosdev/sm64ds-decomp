@@ -120,11 +120,11 @@ SELFTEST_PAIRS = [
      "public: int __thiscall Heap::SetDefault(void)"),
     ("?TryGrab@Player@@QAE_NAAUActor@@@Z",
      "public: bool __thiscall Player::TryGrab(struct Actor &)"),
-    ("?AfterBehavior@ActorBase@@UAEXI@Z",
+    ("?AfterBehavior@fBase_c@@UAEXI@Z",
      "public: virtual void __thiscall ActorBase::AfterBehavior(unsigned int)"),
     ("?LoadInitialGroup@Sound@@SAXH@Z",
      "public: static void __cdecl Sound::LoadInitialGroup(int)"),
-    ("?data_02082128@@3UM48@@A", "struct M48 data_02082128"),
+    ("?IDENTITY_MATRIX4X3@@3UM48@@A", "struct M48 IDENTITY_MATRIX4X3"),
 ]
 
 

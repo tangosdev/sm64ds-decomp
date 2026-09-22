@@ -1,0 +1,87 @@
+# slice_int4.txt -- run link100 wave 9c, lane INT4 (the fold).
+#
+# TWO STRUCTOR TRANSLATION UNITS NOBODY CLAIMED, seated so lane DTORS2's
+# out-of-line forwarder premise can reach two more classes.
+#
+# THE ROWS THIS CLOSES, all four flat and all four measured on the fold's own
+# wall at tmp/build_int4_r2.log:
+#
+#     __ZN14KnockDownPlankD0Ev   __ZN14KnockDownPlankD1Ev
+#     __ZN9TowerStepD0Ev         __ZN9TowerStepD1Ev
+#
+# WHY A SEAT AND NOT A FORWARDER ON ITS OWN. dtorfwd's out-of-line premise
+# (BATCHES[5]) needs the class's MSVC destructor ??1<Cls>@@UAE@XZ already in
+# the link, because the forwarder only calls it. include/KnockDownPlank.h:46
+# and include/TowerStep.h:37 both declare the destructor OUT OF LINE, so no
+# other translation unit emits it, and the per-function structor TUs that do
+# define it sat on no slice row at all. Putting one of them on a slice row is
+# the whole of what the premise needs, and it is the same route DTORS2 used for
+# the five classes whose structor TUs happened to be compiled already
+# (TextureSequence, TextureTransformer, ModelAnim, dCapEnemy_c, dScMgSnowball_c).
+#
+# ONE OF EACH PAIR, NOT BOTH. src/_ZN14KnockDownPlankD0Ev.cpp and
+# src/_ZN14KnockDownPlankD1Ev.cpp are the same four lines of C++ --
+# `KnockDownPlank::~KnockDownPlank() {}` -- because MSVC folds the complete and
+# deleting destructors into one symbol. Compiling both halves of one class is an
+# LNK2005, which is out/SEATS2/seat_table.md's stated reason nobody put these on
+# a slice row before. The D1 file of each pair goes on; the D0 file stays off.
+#
+# WALK_WINDOW ONLY, matching the scope of the forwarders that use these
+# definitions: port/slice_dtors2.txt's own CMake block is
+# target_sources(walk_window ...), so on the other two hosting targets these
+# objects would carry a class vftable nothing references and close nothing.
+src/_ZN14KnockDownPlankD1Ev.cpp
+src/_ZN9TowerStepD1Ev.cpp
+
+# ---- THE COST OF THE KNOCKDOWNPLANK SEAT, AND ITS ANSWER --------------------
+#
+# Seating the destructor made MSVC emit ??_7KnockDownPlank@@6B@, which
+# references every virtual slot, and two of this class's slots had no decorated
+# definition in the link. tmp/build_int4_r3.log measured it exactly: the four
+# flat rows left and these two arrived.
+#
+#     ?OnAttacked2@KnockDownPlank@@UAEHAAUdActor_c@@@Z   slot 23, ov015 0x02111408
+#     ?OnKicked@KnockDownPlank@@UAEXAAUdActor_c@@@Z      slot 24, ov015 0x021113fc
+#
+# That is the failure mode DTORS-A's note in port/tools/dtorfwd.py describes for
+# Toad and daTree_c and DTORS2's describes for Tornado, on a fourth class. Their
+# answer was a reverse face per slot, and it cannot be used here: a reverse face
+# needs the FLAT ROM body defined, and neither flat name is defined anywhere in
+# this link (0 hits over the 49804-name defined-external universe).
+#
+# The direct answer is available instead, because both members have a real
+# matched C++ translation unit that was simply never on a slice row. Each is a
+# tail-call veneer onto the shared hit handler func_ov015_02111414, so that
+# handler's own TU goes on with them; it is self-contained C, and its only two
+# externs, Vec3_HorzAngle and AngleDiff, are both already defined in the link.
+#
+# port/slice_adj.txt lists these two TUs commented out under an ov015 blocker.
+# That blocker is about SEATING THE DELETING DESTRUCTORS through slots 23 and 24
+# of _ZTV13PoleBillboard, which this does not do and does not need: nothing here
+# changes a vtable fill or what any live object dispatches. It only gives two
+# already-referenced decorated names the bodies the cartridge has for them.
+src/_ZN14KnockDownPlank8OnKickedER8dActor_c.cpp
+src/_ZN14KnockDownPlank11OnAttacked2ER8dActor_c.cpp
+src/func_ov015_02111414.c
+
+# ---- THE MODEL FAMILY'S TWELVE Destructor1 / Destructor0 ROWS --------------
+#
+# port/hal/int4_rows.cpp, and the file's own header carries the derivation.
+# Short version: the decomp headers spell two ordinary virtuals in vtable slots
+# 0 and 1 under the host-invented names Destructor1 and Destructor0 so MSVC's
+# class layout keeps the ROM's numbering (include/ModelBase.h line 110 says so
+# in its own words), and holding a slot still needs a definition, because a
+# constructor emits its class's vftable and a vftable references every slot.
+# Twelve rows, six classes, and all twelve ROM bodies are already defined in
+# this link, which is why none of the twelve FLAT names is on the wall.
+#
+# A face and not an /alternatename: the decorated side is __thiscall with the
+# receiver in ecx and the flat side is the ROM body under C linkage taking it
+# as an ordinary first argument, so the two sides do not agree about the call
+# and an alias would be an ABI bridge, which the standing test forbids.
+#
+# Measured before it went on a slice row rather than after: a standalone
+# compile with the build's own flags produces an object that defines exactly
+# the twelve decorated names and references exactly the twelve flat ROM names,
+# with no vftable of its own emitted and nothing else undefined.
+port/hal/int4_rows.cpp

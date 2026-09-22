@@ -78,9 +78,9 @@ typedef signed short s16;
 typedef unsigned int u32;
 typedef signed int s32;
 
-extern void *_ZN5Actor13ClosestPlayerEv(void *self);   /* host edit 1: receiver */
+extern void *_ZN8dActor_c13ClosestPlayerEv(void *self);   /* host edit 1: receiver */
 extern int LenVec3(int *v);
-extern u16 _ZN6Player9StartTalkER9ActorBaseb(void *p, void *a, int b);
+extern u16 _ZN6Player9StartTalkER7fBase_cb(void *p, void *a, int b);
 extern void _ZN6Camera9SetFlag_3Ev(void *c);
 extern s16 Vec3_HorzAngle(const int *v0, const int *v1);
 extern int func_020092c4(void *a, void *out, void *target);
@@ -88,7 +88,7 @@ extern int _Z14ApproachLinearRsss(s16 *a, s16 b, s16 c);
 extern u16 func_0201277c(int a);
 extern int func_ov002_020c51d0(void *c, int *st);
 extern int _ZN6Player12GetTalkStateEv(void *p);
-extern u16 _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void *a, void *b, u32 c, const int *d, u32 e, u32 f);
+extern u16 _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void *a, void *b, u32 c, const int *d, u32 e, u32 f);
 extern void _ZN5Sound22LoadAndSetMusic_Layer3Ej(u32 x);
 extern int RandomIntInternal(int *seed);
 extern u16 func_02011d14(void);
@@ -112,7 +112,7 @@ void func_ov063_02117cdc(u8 *arg0) {
     r5 = (&data_0209f318)[0];
     switch (arg0[0x5ce]) {
     case 0:
-        *(void **)(arg0 + 0x488) = _ZN5Actor13ClosestPlayerEv(arg0);  /* host edit 1 */
+        *(void **)(arg0 + 0x488) = _ZN8dActor_c13ClosestPlayerEv(arg0);  /* host edit 1 */
         if (*(int *)(*(int *)(arg0 + 0x488) + 0x5c) <= -0x2bc000) {
             return;
         }
@@ -144,7 +144,7 @@ void func_ov063_02117cdc(u8 *arg0) {
         if (LenVec3(w) >= 0x12c000) {
             return;
         }
-        if (_ZN6Player9StartTalkER9ActorBaseb(*(void **)(arg0 + 0x488), arg0, 1) == 0) {
+        if (_ZN6Player9StartTalkER7fBase_cb(*(void **)(arg0 + 0x488), arg0, 1) == 0) {
             return;
         }
         _ZN6Camera9SetFlag_3Ev(r5);
@@ -327,7 +327,7 @@ void func_ov063_02117cdc(u8 *arg0) {
             else
                 msg = data_ov063_0211e1dc[*(int *)(*(int *)(arg0 + 0x488) + 8)];
         }
-        if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(*(void **)(arg0 + 0x484), arg0, (u32)msg, w, 0, 2) == 0) {
+        if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(*(void **)(arg0 + 0x484), arg0, (u32)msg, w, 0, 2) == 0) {
             return;
         }
         _ZN5Sound22LoadAndSetMusic_Layer3Ej(0x2c);

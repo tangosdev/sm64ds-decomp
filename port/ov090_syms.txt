@@ -19,13 +19,13 @@
 # of them is e92d4010 (push {r4,lr}):
 #
 #   0x02130f00 _ZN7SkeeterD1Ev                e92d4010
-#   0x02132654 Skeeter_Spawn                  e92d4010
+#   0x02132654 daMenbo_c_classInit                  e92d4010
 #   0x0213269c _ZN8MantaRayD1Ev               e92d4010
-#   0x02132fe8 MantaRay_Spawn                 e92d4010
+#   0x02132fe8 daManta_c_classInit                 e92d4010
 #   0x02133034 _ZN10CheepCheepD1Ev            e92d4010
-#   0x02133634 CheepCheep_Spawn               e92d4010
+#   0x02133634 daPukupuku_c_classInit               e92d4010
 #   0x0213367c _ZN5SharkD1Ev                  e92d4010
-#   0x02133ca0 Shark_Spawn                    e92d4010
+#   0x02133ca0 daShark_c_classInit                    e92d4010
 #   0x0213235c _ZN7Skeeter13InitResourcesEv   e92d4010
 #   0x02132e38 _ZN8MantaRay13InitResourcesEv  e92d4010
 #
@@ -44,10 +44,10 @@
 # own .text (0x02130f00..0x02133ce8).
 #
 #   id   SpawnInfo   table slot   word[0] spawnFunc         idhalf  module
-#  225   0x021343c8  0x02090be8   0x02133ca0 Shark_Spawn      225   overlays(6,90)
-#  226   0x02134218  0x02090bec   0x02132fe8 MantaRay_Spawn   226   overlays(6,90)
-#  227   0x02134300  0x02090bf0   0x02133634 CheepCheep_Spawn 227   overlays(6,90)
-#  230   0x02134144  0x02090bfc   0x02132654 Skeeter_Spawn    230   overlays(6,90)
+#  225   0x021343c8  0x02090be8   0x02133ca0 daShark_c_classInit      225   overlays(6,90)
+#  226   0x02134218  0x02090bec   0x02132fe8 daManta_c_classInit   226   overlays(6,90)
+#  227   0x02134300  0x02090bf0   0x02133634 daPukupuku_c_classInit 227   overlays(6,90)
+#  230   0x02134144  0x02090bfc   0x02132654 daMenbo_c_classInit    230   overlays(6,90)
 #
 # ==== ID 230 AND ITS THREE SIBLINGS: THE "ov006-or-ov090" QUESTION, SETTLED =
 # A wave-1 review flagged id 230's attribution as ambiguous between ov006 and
@@ -129,14 +129,14 @@
 # ov091's spelling. ov091 shares the 0x02130f00 window and its .text runs to
 # 0x021344e8, so both addresses are code in ov091 and data-or-code in ov090:
 #
-#   src/func_ov090_02131608.cpp  spells func_ov091_02134498
+#   src/func_ov090_02131608.cpp  spells _ZN6Fwoosh13OnYoshiTryEatEv
 #       ov090's reloc: from:0x02131644 -> 0x02134498 module:overlay(90)
 #       0x02134498 in ov090 is data_ov090_02134498, a SharedFilePtr in .bss
 #       that __sinit_ov090_02133ce8 constructs with file id 0x3a3. The TU reads
 #       `.w[1]` off it and hands it to ModelAnim::SetAnim -- a FILE POINTER,
 #       which is what a SharedFilePtr's second word is. It is not a function.
 #
-#   src/func_ov090_02133830.c    spells func_ov091_02133710
+#   src/func_ov090_02133830.c    spells _ZN5Stump6RenderEv
 #       ov090's reloc: from:0x02133874 -> 0x02133710 module:overlay(90)
 #       0x02133710 in ov090 is func_ov090_02133710, Shark's own helper, inside
 #       Shark's .text block (0x0213367c..0x02133ca0). The call sits at the end
@@ -159,7 +159,7 @@
 # ALL FOUR ARE 31 SLOTS, the plain Actor layout. The SEMANTIC TAIL pins every
 # one: slot 30 == 0x020100dc Actor::OnAimedAtWithEggReturnVec is the last Actor
 # slot, and none of the four is Platform-derived, so none carries a 32nd. All
-# four derive from Enemy (each _Spawn calls _ZN5EnemyC2Ev), not from
+# four derive from Enemy (each _Spawn calls _ZN12dEnemyBase_cC2Ev), not from
 # Model/ModelAnim -- they EMBED a ModelAnim at +0x30c -- so T1's DEFAULT
 # applies and all four tables stay ROM-SHAPED.
 #
@@ -180,9 +180,9 @@
 #   12    ::OnPendingDestroy    ::OnPendingDestroy    ::OnPendingDestroy    ::OnPendingDestroy
 #   16    SkeeterD1             MantaRayD1            CheepCheepD1          SharkD1
 #   17    SkeeterD0             MantaRayD0            CheepCheepD0          SharkD0
-#   18    func_ov090_0213264c   Actor::OnYoshiTryEat  Actor::OnYoshiTryEat  Actor::OnYoshiTryEat
-#   19    func_ov090_02132620   Actor::OnTurnIntoEgg  Actor::OnTurnIntoEgg  Actor::OnTurnIntoEgg
-#   29    func_ov090_02132618   Actor::OnAimedAtWithEgg (x3)
+#   18    _ZN7Skeeter13OnYoshiTryEatEv   Actor::OnYoshiTryEat  Actor::OnYoshiTryEat  Actor::OnYoshiTryEat
+#   19    _ZN7Skeeter13OnTurnIntoEggER6Player   Actor::OnTurnIntoEgg  Actor::OnTurnIntoEgg  Actor::OnTurnIntoEgg
+#   29    _ZN7Skeeter16OnAimedAtWithEggEv   Actor::OnAimedAtWithEgg (x3)
 # Skeeter is the only one of the four with own bodies in 18/19/29; the other
 # three take the arm9 Actor defaults there. MantaRay additionally lacks
 # Skeeter's slot-18/19 pair, so its table's slots 18/19/29 are all arm9.
@@ -215,7 +215,7 @@
 # RTTI name. MantaRay has only _ZTV8MantaRay in config (no _ZTV9daManta_c row)
 # and every MantaRay TU spells that one name, so it needs no bridge.
 # hal/actor_classes_ov090.cpp defines the C++ name and aliases the RTTI name
-# onto it, the _ZTV10dBgActor_c / _ZTV8Platform shape.
+# onto it, the _ZTV10dBgActor_c / _ZTV10dBgActor_c shape.
 #
 # ==== THE PER-CLASS .data LAYOUT IS UNIFORM AND SELF-CHECKING ==============
 #     [PMF source pairs][name string][tuning triple][typeinfo][SpawnInfo][vtable]
@@ -322,13 +322,13 @@
 # Coffin/Spindrift condition.
 data_ov090_021340e0 data_ov090_021340e8 data_ov090_021340f0 data_ov090_021340f8
 data_ov090_02134100 data_ov090_02134108 data_ov090_02134110 data_ov090_02134118
-data_ov090_02134120 data_ov090_0213412c data_ov090_02134138 Skeeter_SpawnInfo
-data_ov090_021341e4 data_ov090_021341ec data_ov090_021341f4 data_ov090_02134200
-data_ov090_0213420c MantaRay_SpawnInfo
+_ZTS9daMenbo_c data_ov090_0213412c _ZTI9daMenbo_c g_profile_MENBO
+data_ov090_021341e4 data_ov090_021341ec _ZTS9daManta_c data_ov090_02134200
+_ZTI9daManta_c g_profile_MANTA
 data_ov090_021342b8 data_ov090_021342c0 data_ov090_021342c8 data_ov090_021342d0
-data_ov090_021342d8 data_ov090_021342e4 data_ov090_021342f0 CheepCheep_SpawnInfo
-data_ov090_021343a0 data_ov090_021343a8 data_ov090_021343b0 data_ov090_021343bc
-Shark_SpawnInfo
+data_ov090_021342d8 _ZTI12daPukupuku_c _ZTS12daPukupuku_c g_profile_PUKUPUKU
+data_ov090_021343a0 data_ov090_021343a8 data_ov090_021343b0 _ZTI9daShark_c
+g_profile_SHARK
 data_ov090_02134480 data_ov090_02134488 data_ov090_02134490 data_ov090_02134498
 data_ov090_021344a0 data_ov090_021344a8 data_ov090_021344b4 data_ov090_021344c0
 data_ov090_021344cc data_ov090_021344d8 data_ov090_021344e4 data_ov090_021344f4

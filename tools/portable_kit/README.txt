@@ -111,6 +111,8 @@ Extra keys:
              character
          F5 does nothing during a multiplayer match, on purpose.
     Tab  show or hide the DS bottom screen under the main view
+    F8   save a state (not during cutscenes)
+    F9   load the saved state (it is not loaded automatically at startup)
 
 
 WHAT YOU CAN DO IN IT

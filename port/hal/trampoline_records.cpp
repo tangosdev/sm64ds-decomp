@@ -61,7 +61,7 @@
 //
 // THAT SENTENCE USED TO END "which is still a trapped floor -- so on this build
 // the gate stays 0". IT NO LONGER DOES. Run mg12 lane INST decompiled the
-// installer and seated it (src/func_ov006_020d01e0.c, an honest NONMATCHING
+// installer and seated it (src/func_ov006_020d01e0.cpp, an honest NONMATCHING
 // seat with its divergences in its banner), and the trap in
 // unmatched/MgTrampolineTime_Floors.cpp is retired with it. So the gate is a
 // LIVE MEASUREMENT now, not a known floor: 3 means the installer accepted an

@@ -1,0 +1,123 @@
+# slice_ov2t -- run link100 wave 14, lane SEAT14C, BATCH 6 (ov002 data-table
+# roots). ov002 is the shared actor overlay every level loads, so a wrong seat
+# here is a global fault and not a local one: every body below was
+# disassemble-verified against extracted/overlays/overlay_0002.bin (load base
+# 0x020ad660, the config/arm9/overlays/ov002/delinks.txt .text start) and never
+# against the dsd copies, per the sm64ds-dsd-overlay-bins-shifted note.
+#
+# TWO ROWS ARE LIVE (seated by OV2MOUNT); the other three of BATCH 6 stay
+# refused, on the same evidence SEAT14C gathered. The CMake block that reads
+# this file needed no new plumbing: the two src rows below are ordinary
+# target_sources() entries on all three hosting targets, same as slice_link21.
+#
+# SEATED BY OV2MOUNT -- the two nearest-miss rows on the batch
+#
+#   src/func_ov002_020f43cc.c   0x020f43cc, 836 bytes
+#   src/func_ov002_020f5010.c   0x020f5010, 792 bytes
+#     Two of the sixty-nine CUTSCENE_OBJECT pointer-to-member state cells that
+#     __sinit_ov002_02107370 copies into ov002 bss. Their referrers in the
+#     census (data_ov002_0210b8b0 and data_ov002_0210b748) are the ROM's own
+#     {function, this-adjustment} records, and lane PMFB6 already seated the
+#     whole family in hal/cutscene_states_link100.cpp -- these two cells alone
+#     carried an ABORTING face (ST_FACEX) over the sentence "for which there is
+#     NO src file anywhere in the tree". THAT SENTENCE WAS STALE: the main->port
+#     sync brought both TUs in after PMFB6 wrote it. Both cells are now ordinary
+#     ST_FACE1 rows in hal/cutscene_states_link100.cpp, retiring two of the
+#     three aborts there (one, func_ov002_020f3de4, is still undecompiled and
+#     still aborts). Disassembly at the two addresses, read out of the overlay
+#     image:
+#       0x020f43cc  push {r4,r5,r6,r7,r8,sb,sl,fp,lr} / sub sp,sp,#4 /
+#                   mov r5,r1 / mov r1,#0x4c / mul r4,r5,r1 / mov sl,r0
+#       0x020f5010  push {r4,r5,r6,r7,r8,sb,lr} / sub sp,sp,#4 /
+#                   mov r5,r1 / mov r1,#0x4c / mul r4,r5,r1 / mov r6,r0
+#     Real function entries, not interior addresses of a tail-shared body. Both
+#     read r1 as an int index into 0x4c-byte records, which is the arity-1 shape
+#     data_ov002_02110eec dispatches with (the reader is func_ov002_020f562c and
+#     the emitted operand pair is [eax*8],[eax*8+4], measured by PMFB6) and the
+#     (char *c, int i) signature both matched TUs declare. No cast, no
+#     adaptation.
+#
+#     WHAT STOPPED THEM, measured by SEAT14C: both TUs compile and both
+#     LINK-FAIL on ov002 DATA the port did not publish.
+#         func_ov002_020f43cc.c.obj : error LNK2019: unresolved external symbol
+#             _data_ov002_021000b8 referenced in function _func_ov002_020f43cc
+#         func_ov002_020f5010.c.obj : error LNK2019: unresolved external symbol
+#             _data_ov002_021000d0 referenced in function _func_ov002_020f5010
+#     (walk_window and walk_window_hires alike, LNK1120 2 unresolved.) Both are
+#     the per-slot INITIAL HEADING tables the re-arm loop at the tail of each
+#     body reads: both src files declare them `extern unsigned short
+#     data_ov002_021000b8[]` / `..._021000d0[]` and index j 0..3, so each table
+#     is 4 shorts, 8 bytes -- NOT the 0x10 SEAT14C's note estimated for b8.
+#     config/arm9/overlays/ov002/symbols.txt names data_ov002_021000c0 between
+#     b8 and c8 (b8's real next symbol is c0, not c8), so OV2MOUNT added both
+#     names BARE, no size override: ov002_syms.txt's next-symbol-delta rule
+#     gives b8 the correct 8 bytes (to c0) and d0 the correct 8 bytes (to d8)
+#     on its own, matching the matched TUs' own array types exactly. c0 stays
+#     unmounted -- nothing in src/ or port/ references it. relocs.txt confirms
+#     no relocation source falls inside the b8..c0, c0..c8 or d0..d8 spans
+#     (plain data, not pointers), so a raw byte copy is correct.
+#     port/ov002_syms.txt mounts this neighbourhood per symbol and published
+#     data_ov002_021000a0, ...a8, ...c8, ...d8, ...e0 and ...f0 while skipping
+#     exactly these two; build/port/host-src/ov002_data.c.map confirmed neither
+#     name was emitted. THE ENABLER WAS TWO ROWS IN port/ov002_syms.txt -- one
+#     named thing, not a mechanism. SEAT14C read the mount as a --pack list and
+#     held off widening it unreviewed; it is not: the CMakeLists.txt line that
+#     mounts ov002 (`ovdata.py ov002 ... --from-list ov002_syms.txt`, no
+#     --pack) emits every symbol as its own independent host global under the
+#     shared .dsstate$mmm section, not into address-sorted packed slots, so
+#     there is no packed layout for a new entry to disturb and no ordering
+#     requirement either way. OV2MOUNT inserted both names in address order
+#     into the existing TAIL2 line purely for readability.
+#
+src/func_ov002_020f43cc.c
+src/func_ov002_020f5010.c
+#
+# REFUSED, and why
+#
+#   func_ov002_020bb614   0x020bb614, 988 bytes, referrer data_ov002_02109a84
+#   func_ov002_020e96a0   0x020e96a0, 356 bytes, referrer data_ov002_0210a9c0
+#     (b): the port lacks a named thing, and it is the same thing for both.
+#     Neither referrer is a vtable: each is an 8-byte {function, adjust}
+#     pointer-to-member cell that a STATIC INITIALISER copies into an ov002 bss
+#     array, and the array's reader then indexes it.
+#       data_ov002_02109a84 is loaded at 0x02101874, inside
+#         __sinit_ov002_02101738 (0x02101738, 0x15c bytes).
+#       data_ov002_0210a9c0 is loaded at 0x02107114, inside
+#         __sinit_ov002_02106e40 (0x02106e40, 0x2d8 bytes).
+#     Disassembling __sinit_ov002_02101738 shows the copy outright: pairs of
+#     `ldr lr,[rN] / ldr rN,[rN,#4] / str lr,[r0,#k] / str rN,[r0,#k+4]`,
+#     eight bytes at a time into one destination -- the identical shape
+#     __sinit_ov002_02107370 has for the CUTSCENE_OBJECT tables.
+#     The port hosts exactly ONE of these families: the ten CUTSCENE_OBJECT
+#     arrays (0x02110e24..0x0211104c, 69 cells), in
+#     hal/cutscene_states_link100.cpp. These two cells belong to OTHER families
+#     that nothing in port/ hosts -- grep of port/hal and port/unmatched for
+#     data_ov002_02109a84 and data_ov002_0210a9c0 returns nothing -- so in the
+#     port their words are still the mounted DS addresses and no host face
+#     stands behind them. Seating either one means standing up a new
+#     pointer-to-member table host (PMFB6's whole gate for the family it did),
+#     which is a new mechanism file, not an edit to a file this batch owns.
+#     func_ov002_020e96a0 is additionally already on slice_gate89.txt with its
+#     object on the walk_window link line, so it is a STRIPPED row: /OPT:REF
+#     discards it for want of a reference and only a real edge moves it. An
+#     address-take would "link" it and W14_COMMON bans exactly that.
+#
+#   _ZN13BigBrickBlock11OnAttacked1ER8dActor_c  0x020b37ec, 64 bytes,
+#   referrer _ZTV13daObjBlockL_c
+#     (c)-adjacent: a SRC DEFECT, reported rather than worked around.
+#     src/_ZN13BigBrickBlock11OnAttacked1ER8dActor_c.cpp declares
+#     `int BigBrickBlock::OnAttacked1(dActor_c &other)` and its third statement
+#     is a bare `if (b) return;`. Probe-compiled standalone with walk_window's
+#     own flags (cl 19.44, /GR /EHsc /O2 /Ob2 -std:c++17 /vmg /vmm, the port's
+#     include set) it is
+#       error C2561: 'BigBrickBlock::OnAttacked1': function must return a value
+#     at line 23. The TU cannot enter a host build at all, and src/ is never
+#     edited for the host. Two further reasons stand behind that one, so the row
+#     is not a near miss: the ROM table's slot 22 is filled in
+#     hal/actor_classes.cpp, which this batch does not own; and that file's own
+#     ruling (line 840) already records why the slot stays trapped -- "a bro's
+#     punch/kick never dispatches it, and its body reaches slot 31 through the
+#     same cdecl fn(c), so seating it needs its own host copy" -- and a host
+#     copy is what slot 23 got, which links the HOST file and leaves the matched
+#     TU exactly as unlinked as it is now.
+# (these three stay refused; the two live rows are in the block above)

@@ -24,10 +24,10 @@
 
 extern "C" {
 // the C-named __cdecl bodies the shadow methods forward to
-void *_ZN5Actor13ClosestPlayerEv(void *self);
-void *_ZN5Actor18ClosestWithActorIDEj(void *self, unsigned id);
-int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
-int _ZN8Platform20UpdateKillByMegaCharEsss5Fix12IiE(void *self, short a,
+void *_ZN8dActor_c13ClosestPlayerEv(void *self);
+void *_ZN8dActor_c18ClosestWithActorIDEj(void *self, unsigned id);
+int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
+int _ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE(void *self, short a,
                                                     short b, short c, int d);
 }
 
@@ -39,21 +39,21 @@ struct Actor {
     Actor *ClosestWithActorID(unsigned id);
 };
 Actor *Actor::ClosestWithActorID(unsigned id)
-{ return (Actor *)_ZN5Actor18ClosestWithActorIDEj(this, id); }
+{ return (Actor *)_ZN8dActor_c18ClosestWithActorIDEj(this, id); }
 
-/* func_ov079_02126f8c spells ClosestPlayer on a local `Actor_s`. */
+/* _ZN11BillBlaster8BehaviorEv spells ClosestPlayer on a local `Actor_s`. */
 struct Actor_s {
     Actor *ClosestPlayer();
 };
 Actor *Actor_s::ClosestPlayer()
-{ return (Actor *)_ZN5Actor13ClosestPlayerEv(this); }
+{ return (Actor *)_ZN8dActor_c13ClosestPlayerEv(this); }
 
 /* The matched Platform::UpdateKillByMegaChar spells its fourth parameter
    Fix12<int> against a template it declares itself; the ov079 callers above
    spell the same method with a plain int. Two different decorated symbols, so
    both can be declared on one shadow class. This is the matched TU's spelling,
    reproduced so the call below decorates as
-   ?UpdateKillByMegaChar@Platform@@QAEHFFFU?$Fix12@H@@@Z -- mangling depends on
+   ?UpdateKillByMegaChar@dBgActor_c@@QAEHFFFU?$Fix12@H@@@Z -- mangling depends on
    the template's NAME and argument, not on its members. */
 template<class T> struct Fix12 { T v; };
 
@@ -63,9 +63,9 @@ struct Platform {
     int UpdateKillByMegaChar(short a, short b, short c, Fix12<int> d);
 };
 int Platform::IsClsnInRange(int a, int b)
-{ return _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(this, a, b); }
+{ return _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, a, b); }
 int Platform::UpdateKillByMegaChar(short a, short b, short c, int d)
-{ return _ZN8Platform20UpdateKillByMegaCharEsss5Fix12IiE(this, a, b, c, d); }
+{ return _ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE(this, a, b, c, d); }
 
 /* THE GATE-16 FLIP for UpdateKillByMegaChar (lane w8-shadows). hal/megachar_stub.cpp
    owned the ROM's C name with a `return 0` stub and is now compiled only into
@@ -79,9 +79,9 @@ int Platform::UpdateKillByMegaChar(short a, short b, short c, int d)
    WHAT IT COSTS, measured against walk_window.map at the lane base rather than
    estimated. The matched TU names nine externals and EIGHT are already linked:
    Matrix4x3_FromRotationY, MulVec3Mat4x3, Vec3_Add, DecIfAbove0_Byte,
-   data_020a0e68, ?UpdatePos@Actor@@ (actor_class_faces.cpp), and the RaycastLine
+   data_020a0e68, ?UpdatePos@dActor_c@@ (actor_class_faces.cpp), and the RaycastLine
    trio ??0/??1/?SetObjAndLine@ (reverse_bridges.cpp) plus
-   ?DetectClsn@RaycastLine@@QAEHXZ (its own matched TU). The ninth,
+   ?DetectClsn@dBgCh_Lin@@QAEHXZ (its own matched TU). The ninth,
    func_ov002_020ee5d0, is in slice_gate16.txt line 302 and was dropped for the
    same reason; the matched body's call to it is the edge that seats it. So the
    flip seats TWO TUs and adds no slice line.
@@ -99,7 +99,7 @@ int Platform::UpdateKillByMegaChar(short a, short b, short c, int d)
    Vtable numbering is safe here, unlike the Bird/Flag renders: the matched TU
    dispatches ((PlatformVT*)this)->v31() through a THIRTY-TWO virtual local
    struct, and hal/actor_classes.cpp's hal_fill_platform_vtable writes
-   _ZTV8Platform in ROM order with vt[31] = ac_kill. Index 31 is Platform::Kill
+   _ZTV10dBgActor_c in ROM order with vt[31] = ac_kill. Index 31 is Platform::Kill
    in both numberings. */
 /* SM64DS_MEGACHAR_PROBE=1 counts the calls and how many of them get past the
    matched body's first line. That first line is `if (this->f_31c == 0) return
@@ -107,7 +107,7 @@ int Platform::UpdateKillByMegaChar(short a, short b, short c, int d)
    green proves nothing on its own -- the seat would look identical to the old
    stub if every platform early-outs. The probe is what separates "linked" from
    "running", and it reports both halves: reached, and past-the-early-out. */
-extern "C" int _ZN8Platform20UpdateKillByMegaCharEsss5Fix12IiE(
+extern "C" int _ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE(
     void *self, short a, short b, short c, int d)
 {
     Fix12<int> fd;
@@ -147,15 +147,17 @@ extern "C" {
 // ---- __cdecl static / free calls (a direct alias is exact) -----------------
 // Sound::PlaySecretSound is a free function (YAH... = __cdecl), and the two
 // Actor_s statics have no `this`, so the arg layout already matches the body.
-#pragma comment(linker, "/alternatename:?PlaySecretSound@Sound@@YAHPAUActor@@PAG@Z=__ZN5Sound15PlaySecretSoundEP5ActorPt")
-#pragma comment(linker, "/alternatename:?FindWithID@Actor_s@@SAPAUActor@@I@Z=__ZN5Actor10FindWithIDEj")
-#pragma comment(linker, "/alternatename:?Spawn@Actor_s@@SAPAUActor@@IIABUVector3@@PBUVector3_16@@HH@Z=__ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEAD RHS and an UNREFERENCED left hand side: nothing in the build defines __ZN5Sound15PlaySecretSoundEP8dActor_cPt, and nothing references ?PlaySecretSound@Sound@@YAHPAUActor@@PAG@Z, so the row can never fire and nothing wants it to. */
+// #pragma comment(linker, "/alternatename:?PlaySecretSound@Sound@@YAHPAUActor@@PAG@Z=__ZN5Sound15PlaySecretSoundEP8dActor_cPt")
+#pragma comment(linker, "/alternatename:?FindWithID@Actor_s@@SAPAUActor@@I@Z=__ZN8dActor_c10FindWithIDEj")
+#pragma comment(linker, "/alternatename:?Spawn@Actor_s@@SAPAUActor@@IIABUVector3@@PBUVector3_16@@HH@Z=__ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as")
 
 // Whomp::InitResources takes the ADDRESS of MeshColliderBase::UpdatePosAndAngs
 // (declared _ZN... at file scope without extern "C", so MSVC mangles the
 // mangled name). It is only ever used as a function pointer, so the alias onto
 // the real body is exact.
-#pragma comment(linker, "/alternatename:?_ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_@@YAXXZ=__ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEAD RHS and an UNREFERENCED left hand side: nothing in the build defines __ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_, and nothing references ?_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_@@YAXXZ, so the row can never fire and nothing wants it to. */
+// #pragma comment(linker, "/alternatename:?_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_@@YAXXZ=__ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_")
 
 // ---- func_021135d4: a CROSS-OVERLAY CLPS block -----------------------------
 // Whomp::InitResources passes &func_021135d4 as a CLPS_Block* to

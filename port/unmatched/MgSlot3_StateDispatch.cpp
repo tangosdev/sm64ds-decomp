@@ -17,8 +17,8 @@
 // hands a lane another class's dispatchers. This table's eight pair symbols
 // (0x0213e4e0, 0x0213e520, 0x0213e530, 0x0213e538, 0x0213e548, 0x0213e550,
 // 0x0213e578, 0x0213e580) are scattered through a run that ALSO contains
-// data_ov006_0213e508 -- this class's own SpawnInfo, {0x0210c120, 0x016d016d}
-// -- and data_ov006_0213e560, which is id 0x16c's SpawnInfo and belongs to
+// g_profile_MG_SLOT3 -- this class's own SpawnInfo, {0x0210c120, 0x016d016d}
+// -- and g_profile_MG_SLOT1, which is id 0x16c's SpawnInfo and belongs to
 // dScMgSlot1_c, the SEATED scene-364 class. A sweep of the address range would
 // have taken both and a factory word.
 //
@@ -40,7 +40,7 @@
 //   THE DISPATCH SITE. config/arm9/overlays/ov006/relocs.txt carries exactly
 //     TWO relocations naming 0x02142bdc in the whole overlay: the constructor's
 //     own, at 0x0213296c, and one literal-pool load at 0x0210bd94 -- which is
-//     inside func_ov006_0210bcb0, this class's vtable SLOT 6. No other code in
+//     inside _ZN12dScMgSlot3_c8BehaviorEv, this class's vtable SLOT 6. No other code in
 //     ov006 names the table. "An offset match is a candidate; a blx on the
 //     loaded word is the finding" (mg9 section 19), and the blx is at
 //     0x0210bce4.
@@ -49,7 +49,7 @@
 //
 // Read out of extracted/overlays/overlay_0006.bin at base 0x020bfec0, not from
 // src, because the index offset and the `this` a callee is handed are the two
-// things a wrong host copy gets silently wrong. func_ov006_0210bcb0 is 0x100 =
+// things a wrong host copy gets silently wrong. _ZN12dScMgSlot3_c8BehaviorEv is 0x100 =
 // 64 words, 57 instructions plus a seven-word literal pool.
 //
 //     0210bcb8  add   r0, r4, #0x5000
@@ -75,7 +75,7 @@
 // `add Rd,Rn,Rm,lsl #3` stride -- which is the detector run mg9 lane LKY
 // invented for the third shape, the open-coded-in-plain-ints one that neither
 // a link nor a `::*` source sweep can see. THREE hits, all three inside
-// func_ov006_0210bcb0 and all three part of the sequence above. So there is no
+// _ZN12dScMgSlot3_c8BehaviorEv and all three part of the sequence above. So there is no
 // second dispatcher, no field-held member pointer and no open-coded site in
 // this class, and that is a measurement rather than an absence of evidence.
 //
@@ -105,7 +105,7 @@
 //   1 -> 2   src/func_ov006_0210af64.c's tail: once the third reel has been
 //            stopped (`*(u8 *)(c + 0x503d) >= 3`) it sets +0x503e to 0x1e and
 //            writes 2
-//   3 / 4    src/func_ov006_0210ac3c.c, the payout and the round reset, which
+//   3 / 4    src/func_ov006_0210ac3c.cpp, the payout and the round reset, which
 //            dispatches vtable slot 18 with the argument 4
 //   6 -> 7   src/func_ov006_0210ab94.c's countdown
 //
@@ -283,10 +283,10 @@ extern "C" void port_mg_slot3_state_slots(unsigned *out8)
 // Run link100 lane PMFB5. data_ov006_02142bdc's eight cells hold HOST addresses
 // after boot, written by port_mg_slot3_states_seat below once every cell has
 // been compared against the ROM's own code word and a zero adjustment word, so
-// src/func_ov006_0210bcb0.cpp (dScMgSlot3_c's vtable slot 6) compiles from src
+// src/_ZN12dScMgSlot3_c8BehaviorEv.cpp (dScMgSlot3_c's vtable slot 6) compiles from src
 // and this file no longer defines it.
 //
-//   func_ov006_0210bcb0   data_ov006_02142bdc   8 slots   arity 0
+//   _ZN12dScMgSlot3_c8BehaviorEv   data_ov006_02142bdc   8 slots   arity 0
 //
 // THE STRIDE, ROM SIDE, read at the body's OWN address out of
 // extracted/overlays/overlay_0006.bin at ov006 base 0x020bfec0
@@ -313,7 +313,7 @@ extern "C" void port_mg_slot3_state_slots(unsigned *out8)
 // is `(self->*data_ov006_02142bdc[self->idx])()` with an empty argument list.
 // So all eight faces are ZERO-ARGUMENT __fastcall.
 //
-// ONE /alternatename. src/func_ov006_0210bcb0.cpp names the member-pointer type
+// ONE /alternatename. src/_ZN12dScMgSlot3_c8BehaviorEv.cpp names the member-pointer type
 // at C++ linkage, so MSVC spells the reference
 // ?data_ov006_02142bdc@@3PAP8Obj@@AEXXZA -- the `Obj` is the shadow class name
 // that TU gives its receiver, and the whole spelling was read off the object

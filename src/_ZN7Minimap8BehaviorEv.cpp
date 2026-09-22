@@ -1,13 +1,28 @@
 //cpp
-typedef unsigned char u8;
-typedef signed char s8;
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned int u32;
-typedef int s32;
-typedef int Fix12;
-
-struct Vector3 { s32 x, y, z; };
+// @symbol _ZN7Minimap8BehaviorEv
+/* recovered: named members + shared header, real C++ method, shadow struct removed
+ *
+ * One frame of the minimap. This file's whole point is that it no longer
+ * carries its own idea of what a Minimap is: the pre-image declared a private
+ * `struct Minimap` describing the object in full, and every field access went
+ * through it. That shadow is gone and the shared header serves instead.
+ *
+ * The shadow was RICHER than Minimap.h, which is why it existed. It declared
+ * twelve ranges as ARRAYS and indexed them -- 0x070, 0x080, 0x0a0, 0x0d0,
+ * 0x100, 0x124, 0x180, 0x1a0, 0x21e, 0x222, 0x23a, 0x249 -- where the header
+ * had flat padding, so the header simply could not express what this function
+ * does. Those arrays are in the header now and the reconstruction is
+ * offset-neutral: the struct still spans 0x256.
+ *
+ * Two disagreements between the two views, both settled toward the header:
+ *   0x1e0 and 0x1f4  the shadow called each a Vector3; only two sites need
+ *                    that, and they take `(Vector3*)&mMapCenterWorldX` rather than the
+ *                    header asserting a type the other eight matched
+ *                    functions never see.
+ *   0x21c            the shadow said s16 and then cast EVERY read to (u16).
+ *                    The header's u16 says the same thing without the casts.
+ */
+#include "Minimap.h"
 
 struct Obj {
     char pad0[0x5c];
@@ -22,44 +37,6 @@ struct Obj {
     s16 f17c;           /* 0x17c */
 };
 
-struct Minimap {
-    char pad0[0x50];
-    s32 f50, f54, f58, f5c, f60, f64;   /* 0x50 */
-    char padA[8];
-    s32 a70[4];         /* 0x70 */
-    s32 a80[4];         /* 0x80 */
-    char pad1[0x10];    /* 0x90 */
-    s32 aa0[12];        /* 0xa0 */
-    s32 ad0[12];        /* 0xd0 */
-    s32 a100[9];        /* 0x100 */
-    s32 a124[9];        /* 0x124 */
-    char pad2[0x178 - 0x148];
-    s32 f178, f17c;     /* 0x178 */
-    s32 a180[8];        /* 0x180 */
-    s32 a1a0[8];        /* 0x1a0 */
-    char pad3[0x1d4 - 0x1c0];
-    Fix12 f1d4;         /* 0x1d4 */
-    s32 f1d8;
-    s32 f1dc;           /* 0x1dc */
-    Vector3 v1e0;       /* 0x1e0 */
-    s32 f1ec;
-    Fix12 f1f0;         /* 0x1f0 */
-    Vector3 v1f4;       /* 0x1f4 */
-    char pad4[0x214 - 0x200];
-    s32 f214;           /* 0x214 */
-    s32 f218;           /* 0x218 */
-    s16 ang;            /* 0x21c */
-    s8 a21e[4];         /* 0x21e */
-    s8 a222[12];        /* 0x222 */
-    char pad5[0x23a - 0x22e];
-    s8 a23a[9];         /* 0x23a */
-    char pad6[0x248 - 0x243];
-    s8 f248;            /* 0x248 */
-    s8 a249[8];         /* 0x249 */
-    char pad7[0x254 - 0x251];
-    u8 f254;            /* 0x254 */
-    u8 f255;            /* 0x255 */
-};
 
 struct VtblOwner;
 struct Vtbl { s32 (*f[8])(void *); };
@@ -102,12 +79,12 @@ extern s8   data_ov002_02111148;
 
 extern s32  _ZN6Player12Unk_020ca8f8Ev(Obj *p);
 extern void SetSubBg2Offset(s32 a, s32 b);
-extern void _ZN3G2x13SetBlendAlphaEPVttttt(volatile u16 *p, u16 a, u16 b, u16 c, u16 d);
+extern void _ZN3G2x13SetBlendAlphaEPVttttj(volatile u16 *p, u16 a, u16 b, u16 c, u16 d);
 extern s32  SublevelToLevel(s32 i);
-extern Fix12 _ZN4cstd4fdivEii(s32 a, s32 b);
+extern int _ZN4cstd4fdivEii(s32 a, s32 b);
 extern void _ZN7Minimap21FixTHIPaintingRoomPosER7Vector3(Vector3 *v);
-extern void _ZN7Minimap15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_(Vector3 *a, Vector3 *b, Fix12 c, s16 d, Vector3 *e);
-extern void _ZN7Minimap20GetPosFromMinimapPosER7Vector3S1_5Fix12IiEsS1_(Vector3 *a, Vector3 *b, Fix12 c, s16 d, Vector3 *e);
+extern void _ZN7Minimap15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_(Vector3 *a, Vector3 *b, int c, s16 d, Vector3 *e);
+extern void _ZN7Minimap20GetPosFromMinimapPosER7Vector3S1_5Fix12IiEsS1_(Vector3 *a, Vector3 *b, int c, s16 d, Vector3 *e);
 extern void Vec3_Sub(Vector3 *out, Vector3 *a, Vector3 *b);
 extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern s32  GetMinimapID(Obj *obj, s32 arg);
@@ -120,10 +97,10 @@ extern void UpdateMinimap(s32 *a, s32 b, s32 c, s32 d, s32 e);
 #define F254 (*(u8 *)(((int)self + 0x254)))
 #define FMUL(a, b) ((s32)((((long long)(a) * (b)) + 0x800) >> 12))
 
-extern "C" s32 _ZN7Minimap8BehaviorEv(Minimap *self);
 
-s32 _ZN7Minimap8BehaviorEv(Minimap *self)
+s32 Minimap::Behavior()
 {
+    Minimap *self = this;
     Obj *obj;
     Vector3 v8, v14, v20, v2c, v38;
     Vector3 *op;
@@ -142,7 +119,7 @@ s32 _ZN7Minimap8BehaviorEv(Minimap *self)
     if (data_0209f350[data_0209f250] != 0) goto L274;
     if (_ZN6Player12Unk_020ca8f8Ev(player) == 1) goto L274;
 
-    if (self->f254 != 0) {
+    if (self->mTouchCircleTimer != 0) {
         F254 -= data_0208ee44;
     }
 
@@ -154,14 +131,14 @@ s32 _ZN7Minimap8BehaviorEv(Minimap *self)
     if (data_0209d660 != 0) goto L200;
     {
         u8 v = data_0209f4ac[data_020a0e40 * 0x18];
-        if (v == 0 && self->f254 == 0) goto L200;
+        if (v == 0 && self->mTouchCircleTimer == 0) goto L200;
         data_0209d454 |= 4;
         if (v != 0) {
-            self->f254 = 0x1e;
+            self->mTouchCircleTimer = 0x1e;
             SetSubBg2Offset(0x100 - data_0209f4a8[data_020a0e40 * 0x18],
                             0x80 - data_0209f4a9[data_020a0e40 * 0x18]);
         }
-        _ZN3G2x13SetBlendAlphaEPVttttt((volatile u16 *)0x4001050, 4, 0x28, 4, 0xd);
+        _ZN3G2x13SetBlendAlphaEPVttttj((volatile u16 *)0x4001050, 4, 0x28, 4, 0xd);
         if (data_0209f4ae[data_020a0e40 * 0x18] != 2)
             *(volatile u16 *)0x400100c = (u16)((*(volatile u16 *)0x400100c & 0x43) | 0x5300);
         else
@@ -180,7 +157,7 @@ L200:
             *(volatile s32 *)0x4001000 = (*(volatile s32 *)0x4001000 & ~0x1f00) | (data_0209d454 << 8);
             *(volatile u16 *)0x4001050 = 0;
         }
-        self->f254 = 0;
+        self->mTouchCircleTimer = 0;
         goto L2a4;
     }
 
@@ -205,17 +182,17 @@ L318:
         s32 b = (data_0209f2d8 == 0);
         if (b == 0) goto L360;
         if (data_0209caa0[2] & 0x80) goto L360;
-        if (self->f255 != 0) goto L360;
+        if (self->mInIntroCutscene != 0) goto L360;
     }
 L350:
-    self->ang = 0;
+    self->mAngle = 0;
     goto L3e0;
 
 L360:
-    if (self->f255 == 0) goto L3a4;
+    if (self->mInIntroCutscene == 0) goto L3a4;
     if (data_ov002_0211114c == 0) goto L3e0;
     FANG += 0x40;
-    if ((u16)self->ang >= 0x8000)
+    if ((u16)self->mAngle >= 0x8000)
         data_ov002_0211114c = 0;
     goto L3e0;
 
@@ -226,7 +203,7 @@ L3a4:
         if (f & 0xc000) goto L3e0;
         if (f & 8) goto L3e0;
     }
-    self->ang = (s16)(cam->f17c & 0xffe0);
+    self->mAngle = (s16)(cam->f17c & 0xffe0);
 
 L3e0:
     obj = (Obj *)cam->f110;
@@ -234,56 +211,56 @@ L3e0:
 L3e8:
     if (obj == 0) goto Lae4;
 
-    if (self->f255 == 0) goto L44c;
+    if (self->mInIntroCutscene == 0) goto L44c;
     if (data_ov002_02111144 == 0) goto L4d8;
     F218 -= 9;
-    if (self->f214 <= self->f218) goto L4d8;
-    self->f218 = self->f214;
+    if (self->mTargetInvScale <= self->mInvScale) goto L4d8;
+    self->mInvScale = self->mTargetInvScale;
     data_ov002_02111144 = 0;
     data_ov002_0211114c = 1;
     goto L4d8;
 
 L44c:
     if (data_0209d660 == 0) goto L47c;
-    if (self->f218 < 0xbb8)
+    if (self->mInvScale < 0xbb8)
         F218 += 0x1c;
     goto L4d8;
 
 L47c:
-    if (self->f214 <= self->f218) goto L4b0;
+    if (self->mTargetInvScale <= self->mInvScale) goto L4b0;
     F218 += 0x1c;
-    if (self->f214 < self->f218)
-        self->f218 = self->f214;
+    if (self->mTargetInvScale < self->mInvScale)
+        self->mInvScale = self->mTargetInvScale;
     goto L4d8;
 
 L4b0:
-    if (self->f214 >= self->f218) goto L4d8;
+    if (self->mTargetInvScale >= self->mInvScale) goto L4d8;
     F218 -= 0x1c;
-    if (self->f214 > self->f218)
-        self->f218 = self->f214;
+    if (self->mTargetInvScale > self->mInvScale)
+        self->mInvScale = self->mTargetInvScale;
 
 L4d8:
-    self->f1f0 = _ZN4cstd4fdivEii(self->f1d4, self->f218);
-    { s32 s1 = data_02082214[(((s32)(u16)self->ang >> 4) * 2) + 1];
-      self->f50 = FMUL(s1, self->f218); }
-    { s32 s2 = data_02082214[((s32)(u16)self->ang >> 4) * 2];
-      self->f54 = FMUL(s2, self->f218); }
-    self->f58 = -self->f54;
-    self->f5c = self->f50;
-    self->v1f4.x = self->v1e0.x;
-    self->v1f4.y = self->v1e0.y;
-    self->v1f4.z = self->v1e0.z;
-    self->f60 = self->f1dc + ((FMUL(self->v1f4.x, self->f1d4) + 0x800) >> 12);
-    self->f64 = self->f1dc + ((FMUL(self->v1f4.z, self->f1d4) + 0x800) >> 12);
+    self->mCurrentScale = _ZN4cstd4fdivEii(self->mScale, self->mInvScale);
+    { s32 s1 = data_02082214[(((s32)(u16)self->mAngle >> 4) * 2) + 1];
+      self->mBgMatrixA = FMUL(s1, self->mInvScale); }
+    { s32 s2 = data_02082214[((s32)(u16)self->mAngle >> 4) * 2];
+      self->mBgMatrixB = FMUL(s2, self->mInvScale); }
+    self->mBgMatrixC = -self->mBgMatrixB;
+    self->mBgMatrixD = self->mBgMatrixA;
+    ((Vector3*)&self->mMapCenterWorldX)->x = ((Vector3*)&self->mMapOriginX)->x;
+    ((Vector3*)&self->mMapCenterWorldX)->y = ((Vector3*)&self->mMapOriginX)->y;
+    ((Vector3*)&self->mMapCenterWorldX)->z = ((Vector3*)&self->mMapOriginX)->z;
+    self->mMapCenterX = self->mMapCenterOffset + ((FMUL(((Vector3*)&self->mMapCenterWorldX)->x, self->mScale) + 0x800) >> 12);
+    self->mMapCenterY = self->mMapCenterOffset + ((FMUL(((Vector3*)&self->mMapCenterWorldX)->z, self->mScale) + 0x800) >> 12);
 
     op = (Vector3 *)(((int)obj + 0x5c));
     v14 = *op;
     _ZN7Minimap21FixTHIPaintingRoomPosER7Vector3(&v14);
-    _ZN7Minimap15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_(&v14, &self->v1f4, self->f1f0, self->ang, &v8);
+    _ZN7Minimap15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_(&v14, (Vector3*)&self->mMapCenterWorldX, self->mCurrentScale, self->mAngle, &v8);
     {
         s32 p = data_0209f250;
-        self->a70[p] = (v8.x + 0x800) >> 12;
-        self->a80[p] = (v8.z + 0x800) >> 12;
+        self->mPlayerIconX[p] = (v8.x + 0x800) >> 12;
+        self->mPlayerIconY[p] = (v8.z + 0x800) >> 12;
 
         if (SublevelToLevel(data_0209f2f8) != 0x1d) goto B1;
         if (data_0209f2f8 != 1) goto L6a4;
@@ -293,86 +270,86 @@ B1:
         if (SublevelToLevel(data_0209f2f8) != 0x13) goto L6f0;
         if (data_0209f2f8 != 0x2e) goto L6f0;
 L6a4:
-        if (self->a70[p] < 0x60) { v8.x = 0x60000; }
-        else if (self->a70[p] > 0xa0) { v8.x = 0xa0000; }
-        if (self->a80[p] < 0x40) { v8.z = 0x40000; }
-        else if (self->a80[p] > 0x80) { v8.z = 0x80000; }
+        if (self->mPlayerIconX[p] < 0x60) { v8.x = 0x60000; }
+        else if (self->mPlayerIconX[p] > 0xa0) { v8.x = 0xa0000; }
+        if (self->mPlayerIconY[p] < 0x40) { v8.z = 0x40000; }
+        else if (self->mPlayerIconY[p] > 0x80) { v8.z = 0x80000; }
         goto L738;
 L6f0:
-        if (self->a70[p] < 0x24) { v8.x = 0x24000; }
-        else if (self->a70[p] > 0xdc) { v8.x = 0xdc000; }
-        if (self->a80[p] < 0x24) { v8.z = 0x24000; }
-        else if (self->a80[p] > 0x9c) { v8.z = 0x9c000; }
+        if (self->mPlayerIconX[p] < 0x24) { v8.x = 0x24000; }
+        else if (self->mPlayerIconX[p] > 0xdc) { v8.x = 0xdc000; }
+        if (self->mPlayerIconY[p] < 0x24) { v8.z = 0x24000; }
+        else if (self->mPlayerIconY[p] > 0x9c) { v8.z = 0x9c000; }
     }
 L738:
-    _ZN7Minimap20GetPosFromMinimapPosER7Vector3S1_5Fix12IiEsS1_(&v8, &self->v1f4, self->f1f0, self->ang, &v20);
+    _ZN7Minimap20GetPosFromMinimapPosER7Vector3S1_5Fix12IiEsS1_(&v8, (Vector3*)&self->mMapCenterWorldX, self->mCurrentScale, self->mAngle, &v20);
     Vec3_Sub(&v38, &v14, &v20);
-    AddVec3(&self->v1f4, &v38, &self->v1f4);
-    self->f60 = self->f1dc + ((FMUL(self->v1f4.x, self->f1d4) + 0x800) >> 12);
-    self->f64 = self->f1dc + ((FMUL(self->v1f4.z, self->f1d4) + 0x800) >> 12);
+    AddVec3((Vector3*)&self->mMapCenterWorldX, &v38, (Vector3*)&self->mMapCenterWorldX);
+    self->mMapCenterX = self->mMapCenterOffset + ((FMUL(((Vector3*)&self->mMapCenterWorldX)->x, self->mScale) + 0x800) >> 12);
+    self->mMapCenterY = self->mMapCenterOffset + ((FMUL(((Vector3*)&self->mMapCenterWorldX)->z, self->mScale) + 0x800) >> 12);
 
     for (i = 0; i < 4; i++) {
         Obj *o = data_0209f394[i];
         if (o != 0) {
         v2c = *(Vector3 *)(((int)o + 0x5c));
         _ZN7Minimap21FixTHIPaintingRoomPosER7Vector3(&v2c);
-        _ZN7Minimap15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_(&v2c, &self->v1f4, self->f1f0, self->ang, &v8);
-        self->a70[i] = (v8.x + 0x800) >> 12;
-        self->a80[i] = (v8.z + 0x800) >> 12;
+        _ZN7Minimap15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_(&v2c, (Vector3*)&self->mMapCenterWorldX, self->mCurrentScale, self->mAngle, &v8);
+        self->mPlayerIconX[i] = (v8.x + 0x800) >> 12;
+        self->mPlayerIconY[i] = (v8.z + 0x800) >> 12;
         if (i != data_0209f250)
-            self->a21e[i] = (s8)GetMinimapID(o, -1);
+            self->mPlayerMapIDs[i] = (s8)GetMinimapID(o, -1);
         else
-            self->a21e[i] = (s8)GetMinimapID(o, data_ov002_02111148);
+            self->mPlayerMapIDs[i] = (s8)GetMinimapID(o, data_ov002_02111148);
         } else {
-            self->a21e[i] = -1;
+            self->mPlayerMapIDs[i] = -1;
         }
     }
 
     for (i = 0; i < 0xc; i++) {
         Obj *o = data_0209f40c[i];
         if (o != 0) {
-        _ZN7Minimap15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_(&o->pos, &self->v1f4, self->f1f0, self->ang, &v8);
-        self->aa0[i] = (v8.x + 0x800) >> 12;
-        self->ad0[i] = (v8.z + 0x800) >> 12;
+        _ZN7Minimap15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_(&o->pos, (Vector3*)&self->mMapCenterWorldX, self->mCurrentScale, self->mAngle, &v8);
+        self->mStarIconX[i] = (v8.x + 0x800) >> 12;
+        self->mStarIconY[i] = (v8.z + 0x800) >> 12;
         if (data_0209f37c[i] != 4)
-            self->a222[i] = (s8)GetMinimapID(o, -1);
+            self->mStarMapIDs[i] = (s8)GetMinimapID(o, -1);
         else
-            self->a222[i] = 1;
+            self->mStarMapIDs[i] = 1;
         } else {
-            self->a222[i] = -1;
+            self->mStarMapIDs[i] = -1;
         }
     }
 
     for (i = 0; i < 9; i++) {
         Obj *o = data_0209f3e8[i];
         if (o != 0) {
-        _ZN7Minimap15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_(&o->pos, &self->v1f4, self->f1f0, self->ang, &v8);
-        self->a100[i] = (v8.x + 0x800) >> 12;
-        self->a124[i] = (v8.z + 0x800) >> 12;
-        self->a23a[i] = (s8)GetMinimapID(o, -1);
-        } else { self->a23a[i] = -1; }
+        _ZN7Minimap15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_(&o->pos, (Vector3*)&self->mMapCenterWorldX, self->mCurrentScale, self->mAngle, &v8);
+        self->mCapIconX[i] = (v8.x + 0x800) >> 12;
+        self->mCapIconY[i] = (v8.z + 0x800) >> 12;
+        self->mCapMapIDs[i] = (s8)GetMinimapID(o, -1);
+        } else { self->mCapMapIDs[i] = -1; }
     }
 
     if (data_0209caa0[1] & 0x40) goto La64;
     if ((data_0209caa0[2] & 0x20000) == 0) goto La64;
     {
         Obj *o = data_0209f33c;
-        if (o == 0) { self->f248 = -1; goto La64; }
-        _ZN7Minimap15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_(&o->pos, &self->v1f4, self->f1f0, self->ang, &v8);
-        self->f178 = (v8.x + 0x800) >> 12;
-        self->f17c = (v8.z + 0x800) >> 12;
-        self->f248 = 1;
+        if (o == 0) { self->mStarKeyMapID = -1; goto La64; }
+        _ZN7Minimap15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_(&o->pos, (Vector3*)&self->mMapCenterWorldX, self->mCurrentScale, self->mAngle, &v8);
+        self->mStarKeyIconX = (v8.x + 0x800) >> 12;
+        self->mStarKeyIconY = (v8.z + 0x800) >> 12;
+        self->mStarKeyMapID = 1;
     }
 
 La64:
     for (i = 0; i < 8; i++) {
         Obj *o = data_0209f3a4[i];
         if (o != 0) {
-        _ZN7Minimap15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_(&o->pos, &self->v1f4, self->f1f0, self->ang, &v8);
-        self->a180[i] = (v8.x + 0x800) >> 12;
-        self->a1a0[i] = (v8.z + 0x800) >> 12;
-        self->a249[i] = o->f0cc;
-        } else { self->a249[i] = -1; }
+        _ZN7Minimap15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_(&o->pos, (Vector3*)&self->mMapCenterWorldX, self->mCurrentScale, self->mAngle, &v8);
+        self->mSpikeBombIconX[i] = (v8.x + 0x800) >> 12;
+        self->mSpikeBombIconY[i] = (v8.z + 0x800) >> 12;
+        self->mSpikeBombMapIDs[i] = o->f0cc;
+        } else { self->mSpikeBombMapIDs[i] = -1; }
     }
 
 Lae4:
@@ -405,9 +382,9 @@ Lbf0:
 Lc00:
         *(volatile s32 *)0x4001000 = (*(volatile s32 *)0x4001000 & ~0x1f00) | (data_0209d454 << 8);
         data_ov002_02111148 = (s8)id;
-        self->f214 = GetMinimapScale(id);
+        self->mTargetInvScale = GetMinimapScale(id);
     }
 Lc30:
-    UpdateMinimap(&self->f50, self->f60, self->f64, self->f60 - 0x80, self->f64 - 0x60);
+    UpdateMinimap(&self->mBgMatrixA, self->mMapCenterX, self->mMapCenterY, self->mMapCenterX - 0x80, self->mMapCenterY - 0x60);
     return 1;
 }

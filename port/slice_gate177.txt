@@ -13,72 +13,57 @@
 # chain, and the ROM's relocation for that store is data_ov064_0211b768 (the
 # bullies' base table) in all four, so port/CMakeLists.txt compiles them with
 # VT1=data_ov064_0211b768 per source; the fill seats them behind adapters.
-# RotatingFirebar's D0/D1 stay here: they spell _ZTV8Platform and data_020a0eac
+# RotatingFirebar's D0/D1 stay here: they spell _ZTV10dBgActor_c and data_020a0eac
 # by name, both already hosted, so the fill just calls them.
 #
 # Also NOT here (already built): the Enemy base ctor/dtor func_ov002_020aed98 /
-# func_ov002_020aed18 and _ZN5EnemyC2Ev came in with gate 16; the Player::Burn
+# _ZN12dEnemyBase_cD2Ev and _ZN12dEnemyBase_cC2Ev came in with gate 16; the Player::Burn
 # RotatingFirebar::Behavior reaches came in with gate 175's flame.
-src/BigBully_Spawn.c
-src/Bully_Spawn.c
-src/RotatingFirebar_Spawn.cpp
+src/d_a_b_donketu.c
+src/d_a_donketu.c
+src/d_a_obj_fl_koma_u.cpp
 src/_ZN15RotatingFirebar13InitResourcesEv.cpp
 src/_ZN15RotatingFirebar16CleanupResourcesEv.cpp
 src/_ZN15RotatingFirebar8BehaviorEv.cpp
-src/_ZN15RotatingFirebarD0Ev.c
-src/_ZN15RotatingFirebarD1Ev.c
-src/_ZN5BullyD1Ev.c
-src/_ZN5BullyD0Ev.c
+# RETIRED at SLICE1: body now in src/_ZN15RotatingFirebarD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN15RotatingFirebarD0Ev.cpp
+src/_ZN15RotatingFirebarD1Ev.cpp
+src/_ZN5BullyD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN5BullyD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN5BullyD0Ev.cpp
 src/_ZN5Bully13InitResourcesEv.cpp
-src/_ZN5Bully16CleanupResourcesEv.cpp
-src/_ZN5Bully8BehaviorEv.c
-src/_ZN8BigBullyD1Ev.c
-src/_ZN8BigBullyD0Ev.c
+src/actors/daOts_c.cpp
+src/_ZN5Bully8BehaviorEv.cpp
+src/_ZN8BigBullyD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN8BigBullyD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN8BigBullyD0Ev.cpp
 src/_ZN8BigBully13InitResourcesEv.cpp
 src/_ZN8BigBully8BehaviorEv.cpp
-src/func_ov064_02115f84.c
-src/func_ov064_02115f98.c
-src/func_ov064_02116110.cpp
-src/func_ov064_0211616c.c
-src/func_ov064_02116220.c
-src/func_ov064_02116348.c
-src/func_ov064_0211635c.c
-src/func_ov064_02116360.c
-src/func_ov064_02116374.cpp
-src/func_ov064_021163bc.c
-src/func_ov064_021163c0.cpp
-src/func_ov064_02116460.cpp
-src/func_ov064_02116560.cpp
-src/func_ov064_021165d4.c
-src/func_ov064_021165d8.cpp
-src/func_ov064_021166f0.c
-src/func_ov064_02116754.cpp
-src/func_ov064_02116bac.cpp
 src/func_ov064_02116d1c.cpp
 src/func_ov064_02116ec0.cpp
-src/func_ov064_0211712c.c
-src/func_ov064_02117140.c
-src/func_ov064_02117154.c
-src/func_ov064_02117168.c
-src/func_ov064_021171b0.c
-src/func_ov064_0211755c.c
-src/func_ov064_021175cc.cpp
+src/_ZN5Bully14PlayDeathSoundEv.cpp
+src/_ZN5Bully17PlayShellHitSoundEv.cpp
+src/_ZN5Bully12PlayHitSoundEv.cpp
+src/_ZN5Bully13PlayStepSoundEv.cpp
+src/_ZN5Bully14UpdateRunStateEv.cpp
+src/_ZN8BigBully14UpdateRunStateEv.cpp
+src/_ZN8BigBully16UpdateDeathStateEv.cpp
 # The three Renders are NOT here: each is the ROM-order slot-5 dispatch
 # (the Whomp/Scuttlebug case); host copies in
 # port/unmatched/ModelAnim_Renders.cpp.
-# func_ov064_02117220 (AfterClsn) is a host copy: MSVC C2761 on the matched
+# _ZN5Bully16UpdateDeathStateEv (AfterClsn) is a host copy: MSVC C2761 on the matched
 # TU's out-of-class member redeclarations -- unmatched/Bully_AfterClsn.cpp.
 # The three sinits that construct the trio's SharedFilePtrs, the range
-# helper the census sweep missed, and NOT func_ov064_02115ee0/f28 (the
+# helper the census sweep missed, and NOT _ZN7daOts_cD1Ev/f28 (the
 # unreachable base-table dtor bodies the host thunks replace).
 src/__sinit_ov064_0211ae00.c
 src/__sinit_ov064_0211aee0.c
 src/__sinit_ov064_0211b0e4.c
-# _ZN5Actor15IsPlayerInRangeE5Fix12IiES1_S1_i: HOST COPY at unmatched/Actor_ClosestPlayerWrappers.cpp
+# _ZN8dActor_c15IsPlayerInRangeE5Fix12IiES1_S1_i: HOST COPY at unmatched/Actor_ClosestPlayerWrappers.cpp
 # (wired in CMakeLists). The matched C calls Actor::ClosestPlayer() with no argument
 # and relies on `this` being live in ARM r0; cdecl drops it, so ClosestPlayer measures
 # from garbage+0x5c. That is the RABBIT fault in crash 9e164e92 (read at 0x0000005c).
-# _ZN5Actor15IsPlayerInRangeERK7Vector3i: HOST COPY at unmatched/Actor_ClosestPlayerWrappers.cpp
+# _ZN8dActor_c15IsPlayerInRangeERK7Vector3i: HOST COPY at unmatched/Actor_ClosestPlayerWrappers.cpp
 # (wired in CMakeLists). The matched C calls Actor::ClosestPlayer() with no argument
 # and relies on `this` being live in ARM r0; cdecl drops it, so ClosestPlayer measures
 # from garbage+0x5c. That is the RABBIT fault in crash 9e164e92 (read at 0x0000005c).

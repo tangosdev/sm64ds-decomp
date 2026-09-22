@@ -1,0 +1,30 @@
+// @symbol daRNk_c_classInit
+/* recovered: vtable identified, globals resolved, declarations from a shared header */
+#include "decl_ActorBase.h"
+#include "decl_Enemy.h"
+#include "decl_ModelAnim.h"
+#include "decl_dCcAc_c.h"
+#include "decl_ShadowModel.h"
+#include "decl_dBgCh_Actr.h"
+#include "decl_common.h"
+/* recovered: vtable identified, globals resolved */
+/* resolved: VT0 = _ZTV13KoopaTheQuick */
+extern void _ZN7PathPtrC1Ev(void *);
+/* Reconstructed source-style name: SM64DS proves daRNk_c through RTTI,
+ * allocation size, vtable identity, and the RACE_NOKO registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: KoopaTheQuick_Spawn. */
+int *daRNk_c_classInit(void)
+{
+    int *p = (int *)_ZN7fBase_cnwEj(992);
+    if (p) {
+        _ZN12dEnemyBase_cC2Ev(p);
+        p[0] = (int)_ZTV13KoopaTheQuick;
+        _ZN7dCcAc_cC1Ev((char *)p + 0x110);
+        _ZN10dBgCh_ActrC1Ev((char *)p + 0x144);
+        _ZN9ModelAnimC1Ev((char *)p + 0x300);
+        _ZN11ShadowModelC1Ev((char *)p + 0x364);
+        _ZN7PathPtrC1Ev((char *)p + 0x3d8);
+    }
+    return p;
+}

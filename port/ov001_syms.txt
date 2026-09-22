@@ -178,7 +178,7 @@ data_ov001_020ad5dc data_ov001_020ad640
 _ZN3OAM14BOUNCING_ARROWE
 
 # run link60 (lane S1, the scene boot spine): TEN MORE OAM SPRITE TEMPLATES,
-# the ones dScStarSel_c::Render (src/func_ov003_020ae6f4.cpp) emits the star
+# the ones dScStarSel_c::Render (src/_ZN12dScStarSel_c6RenderEv.cpp) emits the star
 # grid, the course thumbnails and the character row through. Same overlay, same
 # treatment, and the same reason the sixteen above are here.
 #

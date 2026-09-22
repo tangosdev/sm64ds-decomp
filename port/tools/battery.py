@@ -449,7 +449,7 @@ SCENE_SKIPS = {
     # stood from lane FLW, which seated the class and found that it booted and
     # ticked but could not RENDER:
     #
-    #   flw_render (slot 9) -> func_ov006_0212aacc -> func_ov006_020c3bf4
+    #   flw_render (slot 9) -> _ZN13dScMgFlower_c6RenderEv -> func_ov006_020c3bf4
     #     -> ModelAnim::Virtual18 -> ModelAnim::Virtual10
     #   FAULT c0000005 accessing 00000000, eax=0
     #
@@ -509,7 +509,7 @@ SCENE_BLOCKED = {
     # family port/mg_fanout_costs.txt section 6 records for slots 5 and 7, and
     # the first of the three found by running instead of by reading:
     #
-    #   flw_init -> func_ov006_0212b480 (slot 0) +0xa
+    #   flw_init -> _ZN13dScMgFlower_c13InitResourcesEv (slot 0) +0xa
     #            -> func_ov004_020ad8b8 +0x10 -> func_ov004_020adc3c +0x6
     #   FAULT c0000005 accessing 0x00000009
     #
@@ -594,7 +594,7 @@ SCENE_BLOCKED = {
     # were still named traps and that hal/scene_mg.cpp printed a FADE MOTION
     # MISSING advisory keyed on port_fdr_motion_slots_unseated(), "which goes
     # quiet by itself when the ROM bodies are seated". Run link60 Stage 5 lane
-    # SEAT8 seated the last of them (slot 0x08, func_0202f428) and wired the
+    # SEAT8 seated the last of them (slot 0x08, _ZN7dWipe_c11AdvanceFadeEv) and wired the
     # ROM's own driver for it, so the predicate and the advisory are both
     # retired. The rule they were written under stands unchanged: an advisory
     # is not a battery row and must not become one again.
@@ -604,11 +604,11 @@ SCENE_BLOCKED = {
     # recorded that two of the class's nine vtable overrides had no source at
     # all, lane INTEG retired slot 0 InitResources and the aux ball-table
     # seeder, and the blocker moved one floor deeper to "a sub-object whose
-    # ov006 vtable at 0x0213eca0 holds raw DS addresses (func_ov006_02114458,
+    # ov006 vtable at 0x0213eca0 holds raw DS addresses (_ZN19cMgSmartball_ball_c14RestoreInitialEv,
     # not seated), so its first method call jumps into DS space".
     #
     # THAT LAST BLOCKER WAS NOT A DECOMP GAP AND THE ADDRESS IN IT WAS OFF BY
-    # ONE TABLE, which is the part worth keeping. func_ov006_02114458 was
+    # ONE TABLE, which is the part worth keeping. _ZN19cMgSmartball_ball_c14RestoreInitialEv was
     # already in src/ here and always had been -- it was simply in no slice,
     # which reads identically to "no body" from a symbol search and is not the
     # same thing. And 0x0213eca0 is not a vtable: it is the WORD that holds
@@ -678,106 +678,6 @@ LEVEL_SKIPS = {
     # section; new debts go here with the class, the owning lane, and the
     # evidence, never a raw fault offset.
     #
-    # THIS ROW IS NOT A PORT DEFECT AND NO PORT LANE CAN CLOSE IT.
-    # run rel0215 wave 2, lane w2-ov074 seated ov074's whole cast and took
-    # level 45 to zero skipped -- census 5 spawned (5 classes), 0 skipped --
-    # and GOOMBOSS then quarantines on its FIRST behaviour frame because the
-    # DECOMP does not have a body Goomboss::Behavior needs.
-    #
-    # THE REASON MOVED ON 2026-08-30 (run rel0215, lane prop17) AND THE ROW DID
-    # NOT RETIRE. Until then the blocker was func_ov074_021201f0, the state-0
-    # tick. main 6906f2af5 (PR #2006) matched it and prop17 propagated it here
-    # by address, along with func_ov074_021204c0. The state machine is now
-    # complete and the boss gets further into its own frame than it ever has --
-    # and it quarantines on frame 0 anyway, one call later:
-    #
-    #   func_ov074_02121380 (0x374 bytes, ROM 0x02121380) is the COLLISION-
-    #   CYLINDER REBUILD. It has no delink block in config/arm9/overlays/ov074/
-    #   delinks.txt and no src file anywhere in the tree, and it is the LAST
-    #   ov074 symbol in that state. Goomboss::Behavior calls it UNCONDITIONALLY
-    #   (the single arm_call at 0x02121ccc) right after func_ov074_02120d74 --
-    #   which is AFTER the state dispatch func_ov074_0212042c, so it was
-    #   unreachable while the state-0 face froze the actor first. It is what
-    #   would move the four MovingCylinderClsnWithPos members at +0x110 stride
-    #   0x40; while it declines, the boss's collision volumes stay where the
-    #   constructor put them. An honest div-11 near-miss is banked on the
-    #   decomp side.
-    #
-    # THE EVIDENCE, both directions. The run logs live in the lane's
-    # orchestration directory, NOT in this repo -- nothing under any
-    # runs/rel0215 path is checked in, and an earlier revision of this comment
-    # cited one as though it were repo-relative. Each run below is reproducible
-    # from the command given, which is the part that has to survive. All four
-    # were re-measured by prop17 on the tree that has the two new bodies:
-    #   BARE, no FAULTS_FATAL, SM64DS_LEVEL=45, 300 and 600 frames: rc 0,
-    #       census 5 spawned (5 classes) 0 skipped, and EXACTLY ONE quarantined
-    #       actor, named -- "[quarantine] actor 30039760 id 198 (GOOMBOSS)
-    #       faulted -- FROZEN, frame continues", now attributed to
-    #       func_ov074_02121380 rather than to the state-0 tick.
-    #   BARE + FAULTS_FATAL (what retire_probe below runs): rc 3221226505,
-    #       "UNHOSTED: func_ov074_02121380 ... -> hard abort". THE ROW IS STILL
-    #       NEEDED, and that is the measurement, not an assumption.
-    #   WITH THIS SKIP, FAULTS_FATAL=1, level 45, 300 and 600 frames: rc 0,
-    #       census 4 spawned (4 classes) 1 skipped, zero UNHOSTED lines, zero
-    #       quarantine lines.
-    #   THE CLASS ITSELF is proven on its OTHER half, and on a different level
-    #       for the reason hal/actor_classes_ov074.cpp gives at length:
-    #       SM64DS_LEVEL=13 SM64DS_SPAWN_ACTOR=198:0x1111 FAULTS_FATAL=1, 600
-    #       frames -> rc 0, census 189 spawned (43 classes) 0 skipped + 198 x1
-    #       GOOMBOSS, zero faults and zero quarantine lines. Level 45 cannot
-    #       host that probe under FAULTS_FATAL and the skip would make it
-    #       vacuous (SM64DS_SKIP_CLASS matches by substring).
-    #   AND THE STATE-0 TICK IS PROVEN TO RUN, quantitatively, off the bare
-    #       run's own camera trace. The boss stands at (516.5, 300, 1247.2) and
-    #       the tick pins the camera to look-at = boss + (+304, ., -672) with y
-    #       forced to 461.0 and eye = boss + (-752, +32, +596). Frame 0 shows
-    #       the entrance camera; from frame 1 to the end of the run the trace
-    #       reads eye(-235.5,332.0,1843.2) at(820.5,461.0,575.2) and never
-    #       changes again -- all six components exactly what the body computes.
-    #       So this row is no longer "the cutscene does not run". It does.
-    # The class stays REGISTERED, so the day func_ov074_02121380 is matched the
-    # bare re-probe below goes green and this row retires itself with no
-    # further port work.
-    45: ("GOOMBOSS", "the decomp (func_ov074_02121380 has no matched body)",
-         "quarantines on frame 0 of Goomboss::Behavior, in the collision-"
-         "cylinder rebuild the loud face in hal/actor_classes_ov074.cpp names "
-         "-- the state machine itself is complete and its cutscene runs"),
-    #
-    # THE SECOND ROW OF THE SAME CLASS, AND NO PORT LANE CAN CLOSE IT EITHER.
-    # run rel0215 wave 3, lane w3-a2 seated ov065's whole Tick Tock Clock
-    # cluster -- eleven ids, seven classes, seven tables, seven sinits -- and
-    # TTC_MOVING_BEAM then quarantines on its first behaviour frame because the
-    # DECOMP does not have the body its vtable slot 6 dispatches:
-    #
-    #   _ZN14TtcMovingCubeA8BehaviorEv (0x0211bd8c, 0x178 bytes) is id 118's
-    #   Behavior -- slot 6 of table 0x0211d568. There is no src/ TU for it, no
-    #   delink block in config/arm9/overlays/ov065/delinks.txt and no host copy
-    #   anywhere in the tree. Being unmatched it is invisible to linkage.py and
-    #   to a census of ov065's unlinked rows, which is why the wave-5 mount
-    #   note never listed it.
-    #
-    # WHY IT IS A SKIP AND NOT A STUB. A beam that returns 1 from a quiet stub
-    # is a platform that never moves and never says so, which is exactly the
-    # silent-failure shape this cluster was taken back out over in wave 17. The
-    # face in hal/actor_classes_ov065.cpp announces the missing body by name and
-    # declines through the receiver, so under FAULTS_FATAL the run aborts and
-    # under a real play it quarantines the beam and keeps going.
-    #
-    # THE EVIDENCE, both directions, reproducible from the commands:
-    #   BARE, no FAULTS_FATAL, SM64DS_LEVEL=27, 300 and 600 frames: rc 0, the
-    #       ten other Ttc ids spawn and tick, and the only quarantined actor is
-    #       id 118, named.
-    #   WITH THIS SKIP, FAULTS_FATAL=1, level 27, 300 and 600 frames: rc 0.
-    # SM64DS_SKIP_CLASS matches a registry name as a SUBSTRING OF THE SKIP
-    # STRING, so "TTC_MOVING_BEAM" leaves TTC_MOVING_BAR and the two
-    # TTC_MOVING_CUBE rows registered -- checked, because three of this
-    # cluster's names share a prefix.
-    # The class stays REGISTERED, so the day 0x0211bd8c is matched the bare
-    # re-probe goes green and this row retires itself with no port work.
-    27: ("TTC_MOVING_BEAM",
-         "the decomp (_ZN14TtcMovingCubeA8BehaviorEv has no matched body)",
-         "quarantines on frame 0 of id 118's Behavior, in the vtable slot 6 "
-         "the loud face in hal/actor_classes_ov065.cpp names"),
 }
 # The bare re-probe is expected to FAULT while the debt stands, and a fault
 # under FAULTS_FATAL exits fast. A probe that instead hangs is not evidence of

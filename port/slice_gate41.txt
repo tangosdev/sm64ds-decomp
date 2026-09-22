@@ -8,26 +8,26 @@
 #
 # The vtable at ov010 0x02112ba8 wears three names -- config's _ZTV4Trap,
 # LIGHT_BEAM's RTTI _ZTV15daObjC1Hikari_c and TRAP's own _ZTV14daObjC1_Trap_c
-# (which Trap_Spawn and Trap::~Trap spell) -- all aliased to one host array in
+# (which daObjC1_Trap_c_classInit and Trap::~Trap spell) -- all aliased to one host array in
 # hal/actor_classes.cpp. Nothing here dispatches a pointer-to-member.
 
 # ---- TRAP's six own slots (D1 excluded: slot 16 traps) --------------------
-# _ZN4TrapD1Ev.cpp is a real C++ destructor over shadow Model/Cylinder
-# classes whose member offsets do not match Trap_Spawn's, so it is NOT here;
+# _ZN9LightBeamD1Ev.cpp is a real C++ destructor over shadow Model/Cylinder
+# classes whose member offsets do not match daObjC1_Trap_c_classInit's, so it is NOT here;
 # slot 16 traps instead (nothing destroys a trap on the interior boot).
-src/Trap_Spawn.c
-src/_ZN4Trap13InitResourcesEv.cpp
-src/_ZN4Trap8BehaviorEv.cpp
-src/_ZN4Trap6RenderEv.cpp
-src/_ZN4Trap16CleanupResourcesEv.c
-src/_ZN4TrapD0Ev.c
+src/game/actors/d_a_obj_c1_trap.cpp
+src/_ZN9LightBeam13InitResourcesEv.cpp
+src/_ZN9LightBeam8BehaviorEv.cpp
+src/_ZN9LightBeam6RenderEv.cpp
+src/_ZN9LightBeam16CleanupResourcesEv.cpp
+src/_ZN9LightBeamD0Ev.cpp
 # the two the closure reaches: an ov010 InitResources helper and the secret
 # sound Behavior plays. Everything else they touch is already linked.
 src/func_ov010_02111a54.c
-src/_ZN5Sound20PlaySmallSecretSoundEP5ActorPt.c
+src/_ZN5Sound20PlaySmallSecretSoundEP8dActor_cPt.cpp
 
 # ---- LIGHT_BEAM: just the factory, it shares TRAP's table -----------------
-src/LightBeam_Spawn.c
+src/d_a_obj_c1_hikari.c
 
 # ---- ov010's three static initialisers ------------------------------------
 # SharedFilePtr construction and one five-element Vector3 copy; no state table.

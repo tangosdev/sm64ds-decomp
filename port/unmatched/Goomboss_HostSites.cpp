@@ -3,8 +3,8 @@
  * collision, the Butterfly/Fish/QuestionBlock/Whomp/FlyingCarpet case
  * documented at length in port/unmatched/ModelAnim_Renders.cpp.
  *
- * WHY BOTH: Goomboss HOLDS a ModelAnim at +0x210 (Goomboss_Spawn.cpp and
- * ExplosionGoomba_Spawn.cpp both construct it there with _ZN9ModelAnimC1Ev,
+ * WHY BOTH: Goomboss HOLDS a ModelAnim at +0x210 (daKuriKing_c_classInit_KURIKING.cpp and
+ * daKuriKing_c_classInit_KURIKING_VANISH.cpp both construct it there with _ZN9ModelAnimC1Ev,
  * and both destructors tear it down with _ZN9ModelAnimD1Ev at the same
  * offset). Each of these two TUs dispatches through a LOCAL SIX-VIRTUAL
  * ROM-order shadow over that member:

@@ -17,7 +17,7 @@
 # ==== THE CLASS, both attribution routes ===================================
 #
 #   id   site        SpawnInfo   word[0]     name                     +4   +6
-#   173  0x02090b18  0x02113344  0x02111594  BigMovingIceBlock_Spawn  173  15
+#   173  0x02090b18  0x02113344  0x02111594  daObjEwmIceBlock_c_classInit  173  15
 #
 # The record's word[0] lands inside ov056 [0x021111a0,0x02113400) and the
 # record reads its own id back at +4. Level 48 ("Wario's key course", ex_w_map,
@@ -41,9 +41,9 @@
 #                   here. The ov052 shape, mirrored: there the run over-read
 #                   and here the landing under-reads.
 #   The pin is the ROM's own layout, and it is the slot-31 Platform check:
-#     slot 29  0x02010124  _ZN5Actor16OnAimedAtWithEggEv
-#     slot 30  0x020100dc  _ZN5Actor25OnAimedAtWithEggReturnVecEv
-#     slot 31  0x020ee55c  _ZN8Platform4KillEv
+#     slot 29  0x02010124  _ZN8dActor_c16OnAimedAtWithEggEv
+#     slot 30  0x020100dc  _ZN8dActor_c25OnAimedAtWithEggReturnVecEv
+#     slot 31  0x020ee55c  _ZN10dBgActor_c4KillEv
 #   the same close every 32-slot platform table in the port ends on (ov045's
 #   140/141/142/145, ov060's 166/167, ov052's 174/175). The six words after
 #   0x021133e8 are ROM ZEROS to the .data end at 0x02113400 -- align-32
@@ -94,14 +94,14 @@
 data_ov056_02113314
 # The Itanium typeinfo {0x0209a764 __si_class_type_info, name 0x0211332c,
 # base ov002 0x021089ec} and its NUL-terminated name string.
-data_ov056_02113320 data_ov056_0211332c
+_ZTI18daObjEwmIceBlock_c _ZTS18daObjEwmIceBlock_c
 # The SpawnInfo, PINNED to the record's real 0x1c. The natural next-symbol
 # delta is 0x24, which would run 8 bytes past the record into the vtable's own
 # Itanium prologue (offset-to-top 0x02113360 = 0, typeinfo 0x02113364 ->
-# 0x02113320) -- the same MegaMushroom_SpawnInfo reasoning as ov002_syms.txt,
+# 0x02113320) -- the same g_profile_SCALEUP_KINOKO reasoning as ov002_syms.txt,
 # and pinning also means a later dsd relabel cannot silently move the +4 id
 # halfword the registry cross-checks.
-BigMovingIceBlock_SpawnInfo:0x1c
+g_profile_EWM_ICE_BLOCK:0x1c
 
 # ---- .bss 0x02113400..0x02113440 ------------------------------------------
 # The SharedFilePtr pair and their destructor-chain nodes, all four written by

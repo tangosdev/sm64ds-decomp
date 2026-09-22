@@ -1,4 +1,4 @@
-/* PORT_HOST_ABI. dScMgD3DBase_c vtable SLOT 24, func_ov006_020e6e78, which MSVC
+/* PORT_HOST_ABI. dScMgD3DBase_c vtable SLOT 24, _ZN14dScMgD3DBase_c8OnKickedEv, which MSVC
  * refuses to compile from src for a reason that has nothing to do with the body.
  *
  * SHARED FILE, NOT A LANE FILE, and the second half of a convergence: lanes BNP
@@ -9,8 +9,8 @@
  *
  * TWO THINGS IN ONE FILE, both mechanical:
  *
- *   1. include/decl_common.h:1516 declares func_ov006_020e6e78 `(void*)` inside
- *      its extern "C" block while src/func_ov006_020e6e78.cpp defines it
+ *   1. include/decl_common.h:1516 declares _ZN14dScMgD3DBase_c8OnKickedEv `(void*)` inside
+ *      its extern "C" block while src/actors/dScMgD3DBase_c.cpp defines it
  *      `(char*)`. One register on the ROM, C2733 to MSVC -- the
  *      func_ov102_0214b248 case exactly. Taking the parameter as void* and
  *      casting inside is the whole of the fix.
@@ -27,24 +27,24 @@
  * output path, so two lanes each adding the add_custom_command for this symbol
  * is a CMake error rather than a dedupe.
  *
- * Everything below is src/func_ov006_020e6e78.cpp verbatim except the parameter
+ * Everything below is src/actors/dScMgD3DBase_c.cpp verbatim except the parameter
  * type and the one cast that follows from it. Every offset, constant, branch and
  * call is src's.
  */
 
 #include "decl_common.h"
 
-extern "C" int func_ov004_020ae140(void *self);
+extern "C" int _ZN11dScMgBase_c8OnKickedEv(void *self);
 extern "C" void Camera_UpdateMatrices(int arg);
 
 extern unsigned char data_0209f5f8;
 
 // PORT_HOST_ABI: decl_common.h declares this (void*) while src defines it (char*), one register on the ROM but C2733 to MSVC, so the host takes the parameter as void* and casts inside, with the raw *(int*)0x4001000 I/O latch write landing through the ntr mmio map.
-extern "C" int func_ov006_020e6e78(void *cv)
+extern "C" int _ZN14dScMgD3DBase_c8OnKickedEv(void *cv)
 {
     char *self = (char *)cv;
 
-    if (func_ov004_020ae140(self) == 0) return 0;
+    if (_ZN11dScMgBase_c8OnKickedEv(self) == 0) return 0;
     if (*(int *)(self + 0x4628) == 0) {
         if (data_0209d464 == 0) return 0;
         if (*(unsigned short *)(self + 0x4664) == 0)

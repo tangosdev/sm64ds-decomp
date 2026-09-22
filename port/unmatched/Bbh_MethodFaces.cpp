@@ -8,12 +8,12 @@
  * forwards `this` into the C body. An /alternatename can never do this: the
  * targets are __thiscall (the method_faces.cpp law).
  *
- *   ?TrackStar@Actor@@QAEIII@Z            <- _ZN5Actor9TrackStarEjj (arm9
+ *   ?TrackStar@dActor_c@@QAEIII@Z            <- _ZN8dActor_c9TrackStarEjj (arm9
  *       0x0200ff94, matched .c on slice_w5a.txt); wanted by
- *       _ZN10BigBooIcon13InitResourcesEv.cpp (the boss star marker)
- *   ?JustHitGround@WithMeshClsn@@QBE_NXZ  <- _ZNK12WithMeshClsn
+ *       _ZN11daTrsIcon_c13InitResourcesEv.cpp (the boss star marker)
+ *   ?JustHitGround@dBgCh_Actr@@QBE_NXZ  <- _ZNK12WithMeshClsn
  *       13JustHitGroundEv (arm9 0x0203571c, matched .c); wanted by
- *       _ZN7BooCage8BehaviorEv.cpp (the cage's landing bounce). Const
+ *       _ZN11daTBasket_c8BehaviorEv.cpp (the cage's landing bounce). Const
  *       method, bool return -- the C body returns s32, normalized != 0.
  *   ?JumpIntoBooCage@Player@@QAEXAAUVector3@@@Z <- _ZN6Player
  *       15JumpIntoBooCageER7Vector3 (ov002, matched extern-C .cpp); wanted
@@ -24,18 +24,18 @@ struct Vector3;
 struct Vector3_16;
 
 extern "C" {
-int _ZN5Actor9TrackStarEjj(void *self, unsigned a, unsigned b);
-int _ZNK12WithMeshClsn13JustHitGroundEv(const void *self);
+int _ZN8dActor_c9TrackStarEjj(void *self, unsigned a, unsigned b);
+int _ZNK10dBgCh_Actr13JustHitGroundEv(const void *self);
 int _ZN6Player15JumpIntoBooCageER7Vector3(void *self, Vector3 *v);
 }
 
 struct Actor { unsigned TrackStar(unsigned a, unsigned b); };
 unsigned Actor::TrackStar(unsigned a, unsigned b)
-{ return (unsigned)_ZN5Actor9TrackStarEjj(this, a, b); }
+{ return (unsigned)_ZN8dActor_c9TrackStarEjj(this, a, b); }
 
 struct WithMeshClsn { bool JustHitGround() const; };
 bool WithMeshClsn::JustHitGround() const
-{ return _ZNK12WithMeshClsn13JustHitGroundEv(this) != 0; }
+{ return _ZNK10dBgCh_Actr13JustHitGroundEv(this) != 0; }
 
 struct Player { void JumpIntoBooCage(Vector3 &v); };
 void Player::JumpIntoBooCage(Vector3 &v)
@@ -55,8 +55,8 @@ struct CLPS_Block;
 typedef int Fix12_;
 
 extern "C" {
-void *_ZN12MeshCollider8LoadFileER13SharedFilePtr(SharedFilePtr *f);
-int _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+void *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(SharedFilePtr *f);
+int _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *self, KCL_File *f, const Matrix4x3 *m, int s, short n, CLPS_Block *c);
 }
 
@@ -65,11 +65,11 @@ int _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Bloc
 
 struct MeshCollider { static KCL_File *LoadFile(SharedFilePtr &f); };
 KCL_File *MeshCollider::LoadFile(SharedFilePtr &f)
-{ return (KCL_File *)_ZN12MeshCollider8LoadFileER13SharedFilePtr(&f); }
+{ return (KCL_File *)_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(&f); }
 
 struct MovingMeshCollider {
     int SetFile(KCL_File *f, const Matrix4x3 &m, Fix12_ s, short n, CLPS_Block &c);
 };
 int MovingMeshCollider::SetFile(KCL_File *f, const Matrix4x3 &m, Fix12_ s,
                                 short n, CLPS_Block &c)
-{ return _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(this, f, &m, s, n, &c); }
+{ return _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(this, f, &m, s, n, &c); }

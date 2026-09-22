@@ -27,10 +27,10 @@
 #
 # ONE dsd LABEL SHIFT (the shared-window naming trap the census documents):
 # the table at 0x0211aa8c labeled _ZTV17BowserSkyPlatform == _ZTV9daKirai_c is
-# SPIKE BOMB's (SpikeBomb_Spawn stores it; kirai = the naval mine; the slot
+# SPIKE BOMB's (daKirai_c_classInit stores it; kirai = the naval mine; the slot
 # bodies carry the shifted _ZN17BowserSkyPlatform* method spellings).
-# BowserSkyPlatform's true table is the UNNAMED data_ov060_0211a9b0 -- its own
-# D1/D0 (func_ov060_02117d1c/02117d60) restore it as _ZTV10daKpa3Bg_c, the
+# BowserSkyPlatform's true table is the UNNAMED _ZTV17BowserSkyPlatform -- its own
+# D1/D0 (_ZN17BowserSkyPlatformD1Ev/02117d60) restore it as _ZTV10daKpa3Bg_c, the
 # koopa3 arena platform. The spawn names are the correct ones; use the table.
 #
 # ==== SEVEN SYMBOLS LEFT OUT ================================================
@@ -38,7 +38,7 @@
 # hands a factory DS code addresses); hal/actor_classes_ov060.cpp hosts the
 # one this lane registers (166) and documents the other six for wave 6.
 # BowserTail's dsd _ZTV span is 33 words but the table is 31: the last two
-# words (0x0211a6b0/0x0211a6b4, a zero and a pointer to data_ov060_0211a5cc)
+# words (0x0211a6b0/0x0211a6b4, a zero and a pointer to _ZTI7daKpa_c)
 # are _ZTV6Bowser's {offset-to-top, typeinfo} RTTI header -- the NEXT table's
 # header words, not an orphan word plus a ROM zero; dsd folded them into the
 # span. BowserShockwaves' span floors at 35 words; the last four
@@ -81,7 +81,7 @@
 #   0x0211aa30..aa48  SPIKE BOMB's four -> bss 0x0211b1d8, read by its own
 #                     Behavior. Not in the wave-5 bank at all.
 #   0x0211a930/38/40  SKY PLATFORM's three -> bss 0x0211b1ac, read by
-#                     func_ov060_02118254 (idx +0x328).
+#                     _ZN17BowserSkyPlatform8BehaviorEv (idx +0x328).
 #
 # All 50 records read adj == 0. port/unmatched/Ov060_StateDispatch.cpp seats
 # every one over the SOURCE static before the sinits copy it (the Crate
@@ -107,22 +107,22 @@ data_ov060_0211a558 data_ov060_0211a560 data_ov060_0211a568
 data_ov060_0211a570 data_ov060_0211a578 data_ov060_0211a580
 data_ov060_0211a588 data_ov060_0211a590 data_ov060_0211a598
 data_ov060_0211a5a0 data_ov060_0211a5a8 data_ov060_0211a5b0
-data_ov060_0211a5b8 data_ov060_0211a5c0 data_ov060_0211a5cc
-data_ov060_0211a5d8 data_ov060_0211a5e4 Bowser_SpawnInfo
-BowserTail_SpawnInfo data_ov060_0211a734 data_ov060_0211a73c
+data_ov060_0211a5b8 _ZTS7daKpa_c _ZTI7daKpa_c
+_ZTI11daKpaTail_c _ZTS11daKpaTail_c g_profile_KOOPA
+g_profile_KOOPATAIL data_ov060_0211a734 data_ov060_0211a73c
 data_ov060_0211a744 data_ov060_0211a74c data_ov060_0211a754
 data_ov060_0211a75c data_ov060_0211a764 data_ov060_0211a76c
 data_ov060_0211a774 data_ov060_0211a77c data_ov060_0211a784
 data_ov060_0211a78c data_ov060_0211a794 data_ov060_0211a79c
-data_ov060_0211a7a4 data_ov060_0211a7ac data_ov060_0211a7b4
-data_ov060_0211a7c0 BowserFire_SpawnInfo data_ov060_0211a870
-data_ov060_0211a87c BowserFireSeaArena_SpawnInfo data_ov060_0211a930
-data_ov060_0211a938 data_ov060_0211a940 data_ov060_0211a948
-data_ov060_0211a954 BowserSkyPlatform_SpawnInfo data_ov060_0211a980
+data_ov060_0211a7a4 data_ov060_0211a7ac _ZTI11daKpaFire_c
+_ZTS11daKpaFire_c g_profile_KOOPAFIRE _ZTI10daKpa2Bg_c
+_ZTS10daKpa2Bg_c g_profile_KOOPA2BG data_ov060_0211a930
+data_ov060_0211a938 data_ov060_0211a940 _ZTI10daKpa3Bg_c
+_ZTS10daKpa3Bg_c g_profile_KOOPA3BG data_ov060_0211a980
 data_ov060_0211aa30 data_ov060_0211aa38 data_ov060_0211aa40
-data_ov060_0211aa48 data_ov060_0211aa50 data_ov060_0211aa5c
-SpikeBomb_SpawnInfo data_ov060_0211ab08 data_ov060_0211ab14
-data_ov060_0211ab20 BowserShockwaves_SpawnInfo data_ov060_0211abe0
+data_ov060_0211aa48 _ZTS9daKirai_c _ZTI9daKirai_c
+g_profile_KIRAI _ZTS9daFRing_c _ZTI9daFRing_c
+data_ov060_0211ab20 g_profile_FIRERING data_ov060_0211abe0
 data_ov060_0211abe8 data_ov060_0211abf0 data_ov060_0211abf8
 data_ov060_0211ac00 data_ov060_0211ac08 data_ov060_0211ac10
 data_ov060_0211ac18 data_ov060_0211ac20 data_ov060_0211ac28

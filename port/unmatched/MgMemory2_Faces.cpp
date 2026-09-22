@@ -54,14 +54,14 @@
 //                                   A pointer to a one-int struct; the global
 //                                   is dScMgBase_c's own "current minigame
 //                                   scene" pointer, which
-//                                   src/func_ov004_020b2adc.c writes.
+//                                   src/_ZN11dScMgBase_cC2Ev.cpp writes.
 //   ?func_020beb68@@3PAUV@@A        THE SAME GLOBAL under a name that exists in
 //                                   no config, and at C++ linkage on top of it.
 //                                   src/func_ov006_020c14bc.cpp declares
 //                                   `extern V* func_020beb68;` where V is a
 //                                   22-virtual dummy class -- a POINTER, not a
 //                                   pair. Same defect class as
-//                                   src/func_ov006_020e3578.c's bare
+//                                   src/_ZN14dScMgCurling_c13InitResourcesEv.cpp's bare
 //                                   `func_020adc74`, which
 //                                   port/mg_fanout_costs.txt section 6 records
 //                                   and hal/scene_mg_faces.cpp already aliases,
@@ -84,10 +84,10 @@
 //                                   same global also arrives spelled @@3HA and
 //                                   @@3PAXA from two other TUs; all three
 //                                   alias onto the one mount definition.
-//   ?LoadBGPltt@GXS@@YAXPBXII@Z     src/func_ov006_0210a534.cpp declares
+//   ?LoadBGPltt@GXS@@YAXPBXII@Z     src/minigames/d_s_mg_single3_d_base.cpp declares
 //                                   `namespace GXS { void LoadBGPltt(const
 //                                   void*, u32, u32); }` while the matched TU
-//                                   src/_ZN3GXS10LoadBGPlttEPKvjj.c defines the
+//                                   src/_ZN3GXS10LoadBGPlttEPKvjj.cpp defines the
 //                                   plain C name with the identical three
 //                                   arguments. Both __cdecl, so a plain alias
 //                                   is right and facegen's refusal is the right
@@ -128,18 +128,18 @@
 //     not collide -- the baseline map carries the H form and the wave-1 link
 //     named the X form unresolved beside it, which is the check passing rather
 //     than an argument that it would.
-//   SysTracker::~SysTracker  src/func_ov006_020f5564.cpp -- vtable slot 16, D2
+//   SysTracker::~SysTracker  src/actors/dScMgMemory2_c.cpp -- vtable slot 16, D2
 //     -- declares a LOCAL `struct SysTracker { ~SysTracker(); char pad[4]; };`
 //     and calls `((SysTracker*)(c + 0x471c))->~SysTracker()`. MSVC emits ??1
 //     and the scalar-deleting ??_G that references it. Its sibling
-//     src/func_ov006_020f55b8.cpp (slot 17, D0) spells the SAME call as the C
+//     src/actors/dScMgMemory2_c.cpp (slot 17, D0) spells the SAME call as the C
 //     name _ZN8Particle10SysTrackerD1Ev, which is why only one of the two
 //     destructors produced a symbol. The face is one line and lands `this`.
 //
 // ---- 3. THE TRAP THAT USED TO BE HERE, AND WHAT REPLACED IT ----------------
 //
-// func_ov006_020f5b98 is the sixth call vtable slot 9 (Render) makes:
-// src/func_ov006_020f73f4.c line 16 calls it on `this`.
+// _ZN14dScMgMemory2_c9DrawCardsEv is the sixth call vtable slot 9 (Render) makes:
+// src/actors/dScMgMemory2_c.cpp line 16 calls it on `this`.
 // config/arm9/overlays/ov006/symbols.txt names it and sizes it 0xa8, there is
 // NO delink block covering it -- the block before it ends exactly at
 // 0x020f5b98 and the next starts after -- and, until run mg7 lane MEMCARDS,
@@ -154,7 +154,7 @@
 // thing for a body nobody has read. Reading it out of the overlay image ended
 // that: it is the ONLY code in dScMgMemory2_c that draws a card, and with it
 // stubbed the whole minigame deals sixteen cards into an empty green table.
-// src/func_ov006_020f5b98.c is the decompilation and port/slice_mem.txt carries
+// src/actors/dScMgMemory2_c.cpp is the decompilation and port/slice_mem.txt carries
 // it, so this file no longer defines the symbol at all.
 //
 // hal/scene_mg_memory2.cpp reports the card records themselves now, which is
@@ -181,7 +181,7 @@ void BlendModelAnim::SetAnim(BCA_File & a0, int a1, int a2, int a3, unsigned sho
 { _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(this, &a0, a1, a2, a3, a4); }
 
 /* Hand-written, section 2. The declaration matches the one
-   src/func_ov006_020f5564.cpp spells; MSVC's ??1 mangle does not encode
+   src/actors/dScMgMemory2_c.cpp spells; MSVC's ??1 mangle does not encode
    members, so `char pad[4]` there and here need not agree for the join, and it
    is kept identical anyway so a reader sees the same shape. */
 struct SysTracker { ~SysTracker(); char pad[4]; };
@@ -210,8 +210,13 @@ SysTracker::~SysTracker() { _ZN8Particle10SysTrackerD1Ev(this); }
 #pragma comment(linker, "/alternatename:?data_ov004_020bfa34@@3DA=_data_ov004_020bfa34")
 #pragma comment(linker, "/alternatename:?data_ov004_020bfa34@@3PADA=_data_ov004_020bfa34")
 #pragma comment(linker, "/alternatename:?data_ov004_020bfa56@@3PAEA=_data_ov004_020bfa56")
-#pragma comment(linker, "/alternatename:?data_ov006_0213d4d4@@3PAXA=_data_ov006_0213d4d4")
-#pragma comment(linker, "/alternatename:?data_ov006_0213e448@@3PAXA=_data_ov006_0213e448")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEAD RHS and an UNREFERENCED left hand side: nothing in the build defines _data_ov006_0213d4d4, and nothing references ?_ZTV14dScMgMemory2_c@@3PAXA, so the row can never fire and nothing wants it to. */
+// #pragma comment(linker, "/alternatename:?_ZTV14dScMgMemory2_c@@3PAXA=_data_ov006_0213d4d4")
+/* RE-POINTED at ALIAS2 (wave 8, the main -> port sync), lane ALIAS's
+   derivation: the right hand side this row carried is defined nowhere in
+   the link any more. data
+   was: #pragma comment(linker, "/alternatename:?_ZTV19dScMgSingle3DBase_c@@3PAXA=_data_ov006_0213e448") */
+#pragma comment(linker, "/alternatename:?_ZTV19dScMgSingle3DBase_c@@3PAXA=__ZTV19dScMgSingle3DBase_c")
 
 // ---- the nine hand rulings, section 1 --------------------------------------
 
@@ -223,12 +228,17 @@ SysTracker::~SysTracker() { _ZN8Particle10SysTrackerD1Ev(this); }
 #pragma comment(linker, "/alternatename:?data_020a0ebc@@3UVector3@@A=_data_020a0ebc")
 #pragma comment(linker, "/alternatename:?data_020a0edc@@3UVector3_16@@A=_data_020a0edc")
 #pragma comment(linker, "/alternatename:?data_ov004_020bfa20@@3P6AXXZA=_data_ov004_020bfa20")
-#pragma comment(linker, "/alternatename:?LoadBGPltt@GXS@@YAXPBXII@Z=__ZN3GXS10LoadBGPlttEPKvjj")
-#pragma comment(linker, "/alternatename:?PlayBank2_2D@Sound@@SAXI@Z=__ZN5Sound12PlayBank2_2DEj")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEFEATED: the left hand side is a real definition in this link now (_ZN3GXS10LoadBGPlttEPKvjj.cpp.obj), so the directive is inert and alternatename_guard fails on it. */
+// #pragma comment(linker, "/alternatename:?LoadBGPltt@GXS@@YAXPBXII@Z=__ZN3GXS10LoadBGPlttEPKvjj")
+/* RE-POINTED at ALIAS2 (wave 8, the main -> port sync), lane ALIAS's
+   derivation: the right hand side this row carried is defined nowhere in
+   the link any more. same member, same convention, same 1 argument slots, types spelled differently
+   was: #pragma comment(linker, "/alternatename:?PlayBank2_2D@Sound@@SAXI@Z=__ZN5Sound12PlayBank2_2DEj") */
+#pragma comment(linker, "/alternatename:?PlayBank2_2D@Sound@@SAXI@Z=?PlayBank2_2D@Sound@@YAII@Z")
 #pragma comment(linker, "/alternatename:?RenderAll@ShadowModel@@YAXXZ=?RenderAll@ShadowModel@@SAXXZ")
 
-/* THE NAME-SPELLING ALIAS ONTO A DATA WORD. src/func_ov006_020f7394.c (slot 18)
-   and src/func_ov006_020f74b4.cpp (slot 0) both store through a symbol they
+/* THE NAME-SPELLING ALIAS ONTO A DATA WORD. src/actors/dScMgMemory2_c.cpp (slot 18)
+   and src/actors/dScMgMemory2_c.cpp (slot 0) both store through a symbol they
    spell `func_020bc7d4`, a name that exists in no config; the reloc's module is
    ov004 and data_ov004_020bc7d4 is the co-resident answer, a plain int the ov004
    mount defines. Twelve ov004 src TUs already spell it the right way, which is
@@ -237,6 +247,6 @@ SysTracker::~SysTracker() { _ZN8Particle10SysTrackerD1Ev(this); }
 
 // ---- section 3: the card draw is a real body now ---------------------------
 //
-// Nothing is defined here for 0x020f5b98 any more. src/func_ov006_020f5b98.c
+// Nothing is defined here for 0x020f5b98 any more. src/actors/dScMgMemory2_c.cpp
 // defines it and port/slice_mem.txt compiles it, so a tree that loses that
 // slice line fails to LINK rather than quietly drawing nothing.

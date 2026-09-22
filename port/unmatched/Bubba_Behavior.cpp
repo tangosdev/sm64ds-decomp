@@ -1,4 +1,4 @@
-/* HOST COPY of src/func_ov032_021121b4.cpp -- BUBBA's Behavior, the TICK half
+/* HOST COPY of src/game/actors/d_a_bakubaku.cpp -- BUBBA's Behavior, the TICK half
  * of its five-cell pointer-to-member state machine (id 228, ov032, level 24).
  * Run rel0215, lane cast-sweep2.
  *
@@ -45,25 +45,25 @@
  */
 extern "C" {
 
-struct CylinderClsn;
-struct WithMeshClsn;
+struct dCc_c;
+struct dBgCh_Actr;
 struct ModelAnim;
 
-int _ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(
-    void *self, WithMeshClsn *wm, ModelAnim *ma, unsigned int j);
+int _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj(
+    void *self, dBgCh_Actr *wm, ModelAnim *ma, unsigned int j);
 unsigned short DecIfAbove0_Short(unsigned short *p);
-void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, CylinderClsn *cc);
-void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(void *self, WithMeshClsn *wm,
+void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, dCc_c *cc);
+void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void *self, dBgCh_Actr *wm,
                                               unsigned int j);
 void func_ov032_02112044(char *c);
 void _ZN9Animation7AdvanceEv(void *self);
 void func_ov032_021113fc(void *self);
-void _ZN12CylinderClsn5ClearEv(CylinderClsn *self);
-void *_ZN5Actor13ClosestPlayerEv(void *self);
-void _ZN12CylinderClsn6UpdateEv(CylinderClsn *self);
+void _ZN5dCc_c5ClearEv(dCc_c *self);
+void *_ZN8dActor_c13ClosestPlayerEv(void *self);
+void _ZN5dCc_c6UpdateEv(dCc_c *self);
 extern char data_ov032_02113aac[];
 
-/* HOST COPY RETIRED, run link100 lane PMFB8 gate 2. src/func_ov032_021121b4.cpp
+/* HOST COPY RETIRED, run link100 lane PMFB8 gate 2. src/game/actors/d_a_bakubaku.cpp
    dispatches BUBBA's tick half itself now: with block R8's /vmg /vmm the
    emitted member pointer IS the ROM's eight-byte {function, delta} pair, read
    at offset 8 of the cell exactly where `struct M { char pad[8]; PMF pmf; }`
@@ -74,7 +74,7 @@ extern char data_ov032_02113aac[];
    __fastcall faces rather than the raw cdecl bodies, because the matched TU's
    `call eax` puts the receiver in ecx and pushes nothing. The faces live beside
    the seat in hal/actor_classes_ov032.cpp. The five ENTER words are UNCHANGED:
-   their dispatcher, src/func_ov032_02111ff4.cpp, is already in the link and
+   their dispatcher, src/game/actors/d_a_bakubaku.cpp, is already in the link and
    emits a TAIL JUMP, so the cdecl body it reaches reads the caller's own first
    stack word, which is self.
 

@@ -18,7 +18,7 @@
 #            (read out of extracted/arm9_dec.bin at base 0x02004000)
 #   route 2  the record at 0x02109b94, read out of the SHIPPED image
 #            extracted/overlays/overlay_0002.bin at the overlays.yaml base
-#            0x020ad660: word[0] = 0x020bc5a8 = Seaweed_Spawn, which lands
+#            0x020ad660: word[0] = 0x020bc5a8 = daObjWakame_c_classInit, which lands
 #            inside ov002, and word[1] & 0xffff = 0x0128 = 296, the id the
 #            route arrived from. Both routes agree.
 #
@@ -38,7 +38,7 @@
 # been seating them under that name since gate 33
 # (hal/actor_classes_bob_world.cpp:845 records the same RTTI reading). Nothing
 # has to move: id 296's own bodies are the func_ov002_020bc4xx/5xx run below
-# and they are spelled by address. Seaweed_Spawn IS id 296's, because the
+# and they are spelled by address. daObjWakame_c_classInit IS id 296's, because the
 # record points at it.
 #
 # ---- WIDTH: 31 SLOTS, AND THE RECORD IS 0x1c NOT 0x24 ---------------------
@@ -62,7 +62,7 @@
 # This is the EXACT shape lane w15 pinned on MEGA_MUSHROOM_CREATE_TAG
 # (0x02108cec/0x02108cf0 ahead of 0x02108cf4), and the reason that block's
 # comment says a record this file mounts is pinned to its measured width. So
-# the mount line is `Seaweed_SpawnInfo:0x1c`, and 0x24 would have quietly
+# the mount line is `g_profile_WAKAME:0x1c`, and 0x24 would have quietly
 # handed the ovdata pointer pass two words of a table that is deliberately NOT
 # mounted.
 #
@@ -71,12 +71,12 @@
 # 0x02109bb8 is excluded from the mount and declared as a host array
 # _ZTV13daObjWakame_c[31] in hal/actor_classes_ov002_w17.cpp -- the
 # ov015/ov016/ov080/ov095 rule. Both TUs that spell the table by name
-# (Seaweed_Spawn.c and func_ov002_020bc414.c) spell it _ZTV13daObjWakame_c, the
+# (daObjWakame_c_classInit.c and _ZN13daObjWakame_cD1Ev.c) spell it _ZTV13daObjWakame_c, the
 # RTTI spelling, so they bind straight to the host array with no alias.
 #
 # ---- ONE PER-SOURCE -D, AND IT IS NOT COSMETIC ----------------------------
 #
-# src/func_ov002_020bc444.c (slot 17, the deleting destructor) restores the
+# src/game/actors/d_a_obj_wakame.cpp (slot 17, the deleting destructor) restores the
 # table through the shared-header placeholder `VT0`, and VT0 IS A LIVE OBJECT
 # IN THIS LINK: hal/actor_vtables.cpp:336 defines `int VT0[20]` for an
 # unrelated ov002 TU and its own comment warns that "two classes can spell
@@ -95,7 +95,7 @@
 #
 # ---- SLOT 9 IS A HOST COPY: THE ModelAnim SLOT-5 COLLISION, LIVE ----------
 #
-# src/func_ov002_020bc4f8.cpp is the trap that hal/cxxname_bridge.cpp:513
+# src/game/actors/d_a_obj_wakame.cpp is the trap that hal/cxxname_bridge.cpp:513
 # predicted in writing -- "trap-by-Virtual18 will name it if such a TU ever
 # appears". It dispatches through a LOCAL SIX-VIRTUAL SHADOW at +0xd4, so its
 # `b->m(0)` is slot 5 in the ROM's Itanium numbering (D1, D0, DoSetFile,
@@ -107,12 +107,12 @@
 # _ZTV5Model is dual-filled and can serve both numberings; _ZTV9ModelAnim
 # cannot, because Virtual18 really is there.
 #
-# The member at +0xd4 is a ModelAnim and not a Model: Seaweed_Spawn constructs
+# The member at +0xd4 is a ModelAnim and not a Model: daObjWakame_c_classInit constructs
 # it with _ZN9ModelAnimC1Ev and both destructors run _ZN9ModelAnimD1Ev on it,
 # and InitResources calls ModelAnim::SetAnim on it. So this is the collision
 # and not the benign variant.
 #
-# The TU is therefore DROPPED from this slice and func_ov002_020bc4f8 is a host
+# The TU is therefore DROPPED from this slice and _ZN13daObjWakame_c6RenderEv is a host
 # copy in hal/actor_classes_ov002_w17.cpp, the Whomp/Butterfly recipe:
 # `((ModelAnim *)(c + 0xd4))->ModelAnim::Render(0); return 1;` -- the ROM body
 # line for line (ldr r2,[r0,#0xd4]! / mov r1,#0 / ldr r2,[r2,#0x14] / blx r2),
@@ -129,15 +129,15 @@
 # ---- THE SIX TUs -----------------------------------------------------------
 #
 #   src file                       slot  what
-#   func_ov002_020bc540.cpp         0    InitResources (LoadFile/SetFile/SetAnim)
+#   _ZN13daObjWakame_c13InitResourcesEv.cpp         0    InitResources (LoadFile/SetFile/SetAnim)
 #   func_ov002_020bc488.c           -    the helper InitResources tail-calls
-#   func_ov002_020bc4c8.c           3    CleanupResources, two Releases
-#   func_ov002_020bc520.c           6    Behavior, Animation::Advance(+0x124)
-#   func_ov002_020bc414.c          16    D1
-#   func_ov002_020bc444.c          17    D0  (-DVT0)
-#   Seaweed_Spawn.c                 -    the factory, stores the table itself
+#   _ZN13daObjWakame_c16CleanupResourcesEv.c           3    CleanupResources, two Releases
+#   _ZN13daObjWakame_c8BehaviorEv.c           6    Behavior, Animation::Advance(+0x124)
+#   _ZN13daObjWakame_cD1Ev.c          16    D1
+#   _ZN13daObjWakame_cD0Ev.c          17    D0  (-DVT0)
+#   daObjWakame_c_classInit.c                 -    the factory, stores the table itself
 #
-# Seaweed_Spawn's LAST vptr write is `p[0] = (int)_ZTV13daObjWakame_c`, so it
+# daObjWakame_c_classInit's LAST vptr write is `p[0] = (int)_ZTV13daObjWakame_c`, so it
 # registers directly with no factory wrapper -- the MegaMushroom shape, not the
 # FallBlock one.
 #
@@ -145,10 +145,4 @@
 # against the ROM by lane w16; the rulings are in
 # port/tools/inferred_stub_adjudicated.txt with their evidence.
 
-src/func_ov002_020bc540.cpp
-src/func_ov002_020bc488.c
-src/func_ov002_020bc4c8.c
-src/func_ov002_020bc520.c
-src/func_ov002_020bc414.c
-src/func_ov002_020bc444.c
-src/Seaweed_Spawn.c
+src/game/actors/d_a_obj_wakame.cpp

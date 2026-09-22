@@ -1,0 +1,495 @@
+{
+  "id": "ov006/dScMgCurling2_c",
+  "module": "ov006",
+  "source": "src/actors/dScMgCurling2_c.cpp",
+  "promoted_source": "src/actors/dScMgCurling2_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "PARTIAL RUN, 31 of 52. tools/tu_map.py calls 0x020e3854..0x020e6bf4 one contiguous linker run of 52 function(s) (build/tu_map.json), and queue_audit.py extends it over the zero-gap factory dScMgCurling2_c_classInit at 0x020e6bf4 for 53 in a 0x020e3854..0x020e6c28 span. This TU licenses 0x020e3854..0x020e5450, 31 function(s), ROM ordinals 0..30. The other 21 keep their own shards and their own delinks.txt entries; the 22nd is the sourceless hole in EDGE 1 below, which has neither.",
+    "class label(s): dScMgCurling2_c",
+    "EDGE 1 -- a sourceless hole splits the run, and it is the only edge. ROM ordinal 31, func_ov006_020e5450 (0x020e5450, size 0x560), has no source anywhere in the tree: it carries a symbols.txt row but NO src/ file and NO entry in config/arm9/overlays/ov006/delinks.txt at all (the blocks jump from 0x020e513c-0x020e5450 straight to 0x020e59b0), so the cartridge's own bytes cover that range. It is a banked near-miss whose best recorded attempt sits at 29 divergences (config/match_attempts.jsonl). It sits in the MIDDLE of the run, and no delink block and no TU manifest in this tree expresses a .text claim with a hole in it, so the run can only be licensed as one of its two contiguous sides.",
+    "WHY THE LOWER SIDE. This TU is the larger side by member count: 31 below the hole against 21 above it. It is also the side that holds the class's key function -- the destructor, which include/dScMgCurling2_c.h declares out of line and declares FIRST -- so it is the side that can emit and license the class's _ZTV/_ZTI/_ZTS. It is the larger side in bytes too: 0x1bfc against the upper side's 0x1278. The upper side holds four of the six own vtable overrides (InitResources, Behavior, Render, OnYoshiTryEat) and the classInit factory, but not the key function, so a promotion there would carry compiler_only_output: 0 -- the dScMgCoin_c outcome -- and would leave the destructor pair enrolled as shards.",
+    "module sinit corroboration: 31 sinit(s) / 31 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020e3854",
+      "end": "0x020e5450"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN15dScMgCurling2_cD1Ev",
+      "address": "0x020e3854",
+      "size": "0x00000024",
+      "legacy_source": "src/_ZN15dScMgCurling2_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN15dScMgCurling2_cD0Ev",
+      "address": "0x020e3878",
+      "size": "0x00000038",
+      "legacy_source": "src/_ZN15dScMgCurling2_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov006_020e38b0",
+      "address": "0x020e38b0",
+      "size": "0x00000098",
+      "legacy_source": "src/func_ov006_020e38b0.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov006_020e3948",
+      "address": "0x020e3948",
+      "size": "0x00000098",
+      "legacy_source": "src/func_ov006_020e3948.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN15dScMgCurling2_c10SpawnValueEii",
+      "address": "0x020e39e0",
+      "size": "0x000001bc",
+      "legacy_source": "src/func_ov006_020e39e0.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov006_020e3b9c",
+      "address": "0x020e3b9c",
+      "size": "0x00000028",
+      "legacy_source": "src/func_ov006_020e3b9c.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov006_020e3bc4",
+      "address": "0x020e3bc4",
+      "size": "0x00000088",
+      "legacy_source": "src/func_ov006_020e3bc4.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_ZN15dScMgCurling2_c13StepYRampDownEi",
+      "address": "0x020e3c4c",
+      "size": "0x00000094",
+      "legacy_source": "src/func_ov006_020e3c4c.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "_ZN15dScMgCurling2_c11StepYRampUpEi",
+      "address": "0x020e3ce0",
+      "size": "0x000000d4",
+      "legacy_source": "src/func_ov006_020e3ce0.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "_ZN15dScMgCurling2_c12StepYRestartEi",
+      "address": "0x020e3db4",
+      "size": "0x00000098",
+      "legacy_source": "src/func_ov006_020e3db4.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "_ZN15dScMgCurling2_c11StepXSettleEi",
+      "address": "0x020e3e4c",
+      "size": "0x00000108",
+      "legacy_source": "src/func_ov006_020e3e4c.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "_ZN15dScMgCurling2_c12StepXPushNegEi",
+      "address": "0x020e3f54",
+      "size": "0x00000140",
+      "legacy_source": "src/func_ov006_020e3f54.c",
+      "ordinal": 11
+    },
+    {
+      "symbol": "_ZN15dScMgCurling2_c12StepXPushPosEi",
+      "address": "0x020e4094",
+      "size": "0x0000013c",
+      "legacy_source": "src/func_ov006_020e4094.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "_ZN15dScMgCurling2_c9StepXPickEi",
+      "address": "0x020e41d0",
+      "size": "0x000000e4",
+      "legacy_source": "src/func_ov006_020e41d0.c",
+      "ordinal": 13
+    },
+    {
+      "symbol": "_ZN15dScMgCurling2_c9StepXAndYEi",
+      "address": "0x020e42b4",
+      "size": "0x00000094",
+      "legacy_source": "src/func_ov006_020e42b4.cpp",
+      "ordinal": 14
+    },
+    {
+      "symbol": "_ZN15dScMgCurling2_c15StepXSettleFastEi",
+      "address": "0x020e4348",
+      "size": "0x000000c4",
+      "legacy_source": "src/func_ov006_020e4348.c",
+      "ordinal": 15
+    },
+    {
+      "symbol": "_ZN15dScMgCurling2_c16StepXPushNegFastEi",
+      "address": "0x020e440c",
+      "size": "0x00000114",
+      "legacy_source": "src/func_ov006_020e440c.c",
+      "ordinal": 16
+    },
+    {
+      "symbol": "_ZN15dScMgCurling2_c16StepXPushPosFastEi",
+      "address": "0x020e4520",
+      "size": "0x00000110",
+      "legacy_source": "src/func_ov006_020e4520.c",
+      "ordinal": 17
+    },
+    {
+      "symbol": "_ZN15dScMgCurling2_c13StepXPickFastEi",
+      "address": "0x020e4630",
+      "size": "0x00000114",
+      "legacy_source": "src/func_ov006_020e4630.c",
+      "ordinal": 18
+    },
+    {
+      "symbol": "_ZN15dScMgCurling2_c9StepXOnlyEi",
+      "address": "0x020e4744",
+      "size": "0x00000050",
+      "legacy_source": "src/func_ov006_020e4744.cpp",
+      "ordinal": 19
+    },
+    {
+      "symbol": "_ZN15dScMgCurling2_c12PickStepModeEi",
+      "address": "0x020e4794",
+      "size": "0x0000006c",
+      "legacy_source": "src/func_ov006_020e4794.c",
+      "ordinal": 20
+    },
+    {
+      "symbol": "func_ov006_020e4800",
+      "address": "0x020e4800",
+      "size": "0x000000d4",
+      "legacy_source": "src/func_ov006_020e4800.cpp",
+      "ordinal": 21
+    },
+    {
+      "symbol": "func_ov006_020e48d4",
+      "address": "0x020e48d4",
+      "size": "0x000001b0",
+      "legacy_source": "src/func_ov006_020e48d4.c",
+      "ordinal": 22
+    },
+    {
+      "symbol": "func_ov006_020e4a84",
+      "address": "0x020e4a84",
+      "size": "0x0000007c",
+      "legacy_source": "src/func_ov006_020e4a84.c",
+      "ordinal": 23
+    },
+    {
+      "symbol": "func_ov006_020e4b00",
+      "address": "0x020e4b00",
+      "size": "0x00000078",
+      "legacy_source": "src/func_ov006_020e4b00.c",
+      "ordinal": 24
+    },
+    {
+      "symbol": "func_ov006_020e4b78",
+      "address": "0x020e4b78",
+      "size": "0x0000005c",
+      "legacy_source": "src/func_ov006_020e4b78.c",
+      "ordinal": 25
+    },
+    {
+      "symbol": "_ZN15dScMgCurling2_c10DragUpdateEv",
+      "address": "0x020e4bd4",
+      "size": "0x00000300",
+      "legacy_source": "src/func_ov006_020e4bd4.cpp",
+      "ordinal": 26
+    },
+    {
+      "symbol": "_ZN15dScMgCurling2_c9DragBeginEv",
+      "address": "0x020e4ed4",
+      "size": "0x00000114",
+      "legacy_source": "src/func_ov006_020e4ed4.c",
+      "ordinal": 27
+    },
+    {
+      "symbol": "func_ov006_020e4fe8",
+      "address": "0x020e4fe8",
+      "size": "0x00000094",
+      "legacy_source": "src/func_ov006_020e4fe8.c",
+      "ordinal": 28
+    },
+    {
+      "symbol": "func_ov006_020e507c",
+      "address": "0x020e507c",
+      "size": "0x000000c0",
+      "legacy_source": "src/func_ov006_020e507c.c",
+      "ordinal": 29
+    },
+    {
+      "symbol": "func_ov006_020e513c",
+      "address": "0x020e513c",
+      "size": "0x00000314",
+      "legacy_source": "src/func_ov006_020e513c.cpp",
+      "ordinal": 30
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTI15dScMgCurling2_c",
+      "disposition": "deadstrip-data",
+      "reason": "Own record. This TU defines dScMgCurling2_c's key function -- the destructor, which include/dScMgCurling2_c.h declares out of line and declares FIRST -- so mwcc emits the whole inheritance chain's typeinfo records as vague linkage. The cartridge keeps its canonical copy at ov006:0x0213c4bc, outside this TU's only licensed range (.text 0x020e3854-0x020e5450), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213c4bc"
+    },
+    {
+      "symbol": "_ZTS15dScMgCurling2_c",
+      "disposition": "deadstrip-data",
+      "reason": "Own record. This TU defines dScMgCurling2_c's key function -- the destructor, which include/dScMgCurling2_c.h declares out of line and declares FIRST -- so mwcc emits the whole inheritance chain's typeinfo names as vague linkage. The cartridge keeps its canonical copy at ov006:0x0213c4c8, outside this TU's only licensed range (.text 0x020e3854-0x020e5450), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213c4c8"
+    },
+    {
+      "symbol": "_ZTI11dScMgBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgCurling2_c's key function -- the destructor, which include/dScMgCurling2_c.h declares out of line and declares FIRST -- so mwcc emits the whole inheritance chain's typeinfo records as vague linkage. The cartridge keeps its canonical copy at ov004:0x020bbf6c, outside this TU's only licensed range (.text 0x020e3854-0x020e5450), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov004",
+      "canonical_address": "0x020bbf6c"
+    },
+    {
+      "symbol": "_ZTS11dScMgBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgCurling2_c's key function -- the destructor, which include/dScMgCurling2_c.h declares out of line and declares FIRST -- so mwcc emits the whole inheritance chain's typeinfo names as vague linkage. The cartridge keeps its canonical copy at ov004:0x020bbf84, outside this TU's only licensed range (.text 0x020e3854-0x020e5450), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov004",
+      "canonical_address": "0x020bbf84"
+    },
+    {
+      "symbol": "_ZTI8dScene_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgCurling2_c's key function -- the destructor, which include/dScMgCurling2_c.h declares out of line and declares FIRST -- so mwcc emits the whole inheritance chain's typeinfo records as vague linkage. The cartridge keeps its canonical copy at arm9:0x020914d4, outside this TU's only licensed range (.text 0x020e3854-0x020e5450), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020914d4"
+    },
+    {
+      "symbol": "_ZTS8dScene_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgCurling2_c's key function -- the destructor, which include/dScMgCurling2_c.h declares out of line and declares FIRST -- so mwcc emits the whole inheritance chain's typeinfo names as vague linkage. The cartridge keeps its canonical copy at arm9:0x020914b0, outside this TU's only licensed range (.text 0x020e3854-0x020e5450), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020914b0"
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgCurling2_c's key function -- the destructor, which include/dScMgCurling2_c.h declares out of line and declares FIRST -- so mwcc emits the whole inheritance chain's typeinfo records as vague linkage. The cartridge keeps its canonical copy at arm9:0x02086e78, outside this TU's only licensed range (.text 0x020e3854-0x020e5450), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78"
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgCurling2_c's key function -- the destructor, which include/dScMgCurling2_c.h declares out of line and declares FIRST -- so mwcc emits the whole inheritance chain's typeinfo names as vague linkage. The cartridge keeps its canonical copy at arm9:0x02086e54, outside this TU's only licensed range (.text 0x020e3854-0x020e5450), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54"
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgCurling2_c's key function -- the destructor, which include/dScMgCurling2_c.h declares out of line and declares FIRST -- so mwcc emits the whole inheritance chain's typeinfo records as vague linkage. The cartridge keeps its canonical copy at arm9:0x02086d70, outside this TU's only licensed range (.text 0x020e3854-0x020e5450), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70"
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgCurling2_c's key function -- the destructor, which include/dScMgCurling2_c.h declares out of line and declares FIRST -- so mwcc emits the whole inheritance chain's typeinfo names as vague linkage. The cartridge keeps its canonical copy at arm9:0x02086e60, outside this TU's only licensed range (.text 0x020e3854-0x020e5450), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60"
+    },
+    {
+      "symbol": "_ZTV15dScMgCurling2_c",
+      "disposition": "deadstrip-data",
+      "reason": "The class's own vtable, emitted because this TU owns the key function. Extent corroborated three ways, per notes/agents/roles/writer.md: (a) the relocated run in config/arm9/overlays/ov006/relocs.txt is unbroken from 0x0213c50c (the typeinfo word of the 8-byte offset-to-top/typeinfo preamble) through 0x0213c59c, with the first gap at 0x0213c5a0 and the next relocation not until 0x0213c5c8; (b) tools/rtti_vtables.py --own dScMgCurling2_c reports 36 slots (base dScMgBase_c also 36, six of them overridden: slots 0, 6, 9, 16, 17, 18); (c) the next symbols.txt row after the address point is data_ov006_0213c5a0 at 0x0213c5a0. All three give symbol extent 0x0213c510..0x0213c5a0 = 0x90 = 36 slots, and STORAGE 0x0213c508..0x0213c5a0 = 0x98, which is exactly the size tubuild verify reports for the .data section this TU emits (EXTRA .data _ZTV15dScMgCurling2_c size=0x98). (The naive next-symbol read happens to be RIGHT here: this table's phantom interior symbol, data_ov006_0213c510, sits ON the address point rather than inside the table.) The cartridge keeps its canonical copy at ov006:0x0213c510, outside this TU's only licensed range (.text 0x020e3854-0x020e5450), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte.",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213c510"
+    },
+    {
+      "symbol": "_ZN15dScMgCurling2_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Homeless. mwcc emits three destructor variants from the one out-of-line definition -- D1, D0, D2 in that order under defer_codegen off -- but the cartridge carries only D1 (0x020e3854) and D0 (0x020e3878). dScMgCurling2_c is a confirmed leaf: no edge in build/rtti.json names it as a base, so its own D2 is never odr-used, no address anywhere in config/ names a D2 for this class and no instruction in the image calls one. It has no ROM home, so plain deadstrip rather than deadstrip-duplicate, and production isolation discards it. It is emitted AFTER D0 and before ordinal 2, so it does not disturb the licensed run's ROM-ascending emission order."
+    }
+  ],
+  "externalized_output": [],
+  "notes": [
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+    "tubuild create warning: SOURCELESS: func_ov006_020e5450 has no legacy file under src/; a banner marks its slot and verify will report the member MISSING",
+    "tubuild create warning: RAW: src/_ZN15dScMgCurling2_c13OnYoshiTryEatEi.cpp (_ZN15dScMgCurling2_c13OnYoshiTryEatEi) did not split (the definition is inside the extern \"C\" block opened on line 7, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'RandomIntInternal' differs between the legacy file that used to hold func_ov006_020e3ce0 and the one that held func_ov006_020e3db4; kept the first, the other is commented out for review. RESOLVED: the four recovered spellings differ only in where the `*` sits (`int *seed` vs `int* seed`) and one carried a redundant `extern \"C\"`; they name one type. This TU declares it once, `extern int RandomIntInternal(int *seed);`, inside the file-scope extern \"C\" region.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'RandomIntInternal' differs between the legacy file that used to hold func_ov006_020e3ce0 and the one that held func_ov006_020e4800; kept the first, the other is commented out for review. RESOLVED: the four recovered spellings differ only in where the `*` sits (`int *seed` vs `int* seed`) and one carried a redundant `extern \"C\"`; they name one type. This TU declares it once, `extern int RandomIntInternal(int *seed);`, inside the file-scope extern \"C\" region.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_02012718' differs between the legacy file that used to hold func_ov006_020e4bd4 and the one that held func_ov006_020e4ed4; kept the first, the other is commented out for review. RESOLVED: a real disagreement -- func_ov006_020e4bd4 and func_ov006_020e513c recovered `void func_02012718(int id, int v)` while func_ov006_020e4ed4 recovered `void func_02012718(void *a, int b)`. The int spelling is kept and func_ov006_020e4ed4's one call site drops its `(void *)` cast on the 0x1d2 literal, which is the same immediate either way.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov004_020b2444' differs between the legacy file that used to hold func_ov006_020e4a84 and the one that held func_ov006_020e4fe8; kept the first, the other is commented out for review. RESOLVED: both spellings are `void func_ov004_020b2444(int, int, int, int, int, int, int)` and differ only in parameter names; declared once.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Sound12PlayBank2_2DEj' differs between the legacy file that used to hold func_ov006_020e5ffc and the one that held func_ov006_020e628c; kept the first, the other is commented out for review. RESOLVED: both members are above the sourceless hole and are not in this TU. Nothing in the licensed range references the symbol under either spelling.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'RandomIntInternal' differs between the legacy file that used to hold func_ov006_020e3ce0 and the one that held func_ov006_020e6528; kept the first, the other is commented out for review. RESOLVED: the four recovered spellings differ only in where the `*` sits (`int *seed` vs `int* seed`) and one carried a redundant `extern \"C\"`; they name one type. This TU declares it once, `extern int RandomIntInternal(int *seed);`, inside the file-scope extern \"C\" region.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov004_020adc1c' differs between the legacy file that used to hold _ZN15dScMgCurling2_c6RenderEv and the one that held _ZN15dScMgCurling2_c13InitResourcesEv; kept the first, the other is commented out for review. RESOLVED: both members are above the sourceless hole and are not in this TU.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_0209d45c' differs between the legacy file that used to hold func_ov006_020e6528 and the one that held _ZN15dScMgCurling2_c13InitResourcesEv; kept the first, the other is commented out for review. RESOLVED: both members are above the sourceless hole and are not in this TU.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('typedef', 'void') differs between the legacy file that used to hold func_ov006_020e42b4 and the one that held func_ov006_020e6354; kept the first, the other is commented out for review. RESOLVED: func_ov006_020e6354 is above the sourceless hole and is not in this TU. Only func_ov006_020e42b4's `typedef void (C::*PMF)(int);` survives, and func_ov006_020e4744 and func_ov006_020e4800 recovered it identically, so one file-scope declaration serves all three. `struct C` is left INCOMPLETE, as all three shards had it: completing it would change mwccarm's pointer-to-member representation.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('typedef', 'void') differs between the legacy file that used to hold func_ov006_020e42b4 and the one that held func_ov006_020e6354; kept the first, the other is commented out for review. RESOLVED: func_ov006_020e6354 is above the sourceless hole and is not in this TU. Only func_ov006_020e42b4's `typedef void (C::*PMF)(int);` survives, and func_ov006_020e4744 and func_ov006_020e4800 recovered it identically, so one file-scope declaration serves all three. `struct C` is left INCOMPLETE, as all three shards had it: completing it would change mwccarm's pointer-to-member representation.",
+    "SOURCELESS and RAW above both name members ABOVE the sourceless hole (func_ov006_020e5450 itself, and _ZN15dScMgCurling2_c13OnYoshiTryEatEi at 0x020e6774). Neither is in this TU's licensed range; both keep their own shard and their own delinks.txt entry.",
+    "The generated preamble was discarded and the TU hand-curated, per notes/agents/roles/writer.md: create's shared block carried a nested extern \"C\", two contradictory declarations of data_0209d4b8 (scalar and array) and of data_02082214 and data_020a0e40, and PMF0/PMF1 typedefs that its own CONFLICT comments had removed. Each member's own recovered declarations were re-merged by hand into one file-scope extern \"C\" region.",
+    "decl_common.h is deliberately NOT included. It declares nine of this TU's 31 members (func_ov006_020e38b0, 020e3948, 020e3bc4, 020e4800, 020e4a84, 020e4b78, 020e4fe8, 020e507c as `void*`/`int` and 020e48d4 as `char*`), and eight of the nine contradict the byte-matched shard. Including it would raise `illegal function overloading` against code that already matches. Precedent: ov006/dScMgPanel_c, ov002/Player.",
+    "func_ov006_020e4b00 and func_ov006_020e4ed4 each spelled their receiver parameter `this`, which mwccarm 2004/b56 rejects in a C++ TU; both were renamed to `self`. func_ov006_020e4ed4 has since become dScMgCurling2_c::DragBegin, so its receiver really is `this` again.",
+    "METHOD-CONVERSION PASS (stage 3.5). Seventeen of the 29 non-destructor members are now real dScMgCurling2_c:: methods declared in include/dScMgCurling2_c.h: SpawnValue, StepYRampDown, StepYRampUp, StepYRestart, StepXSettle, StepXPushNeg, StepXPushPos, StepXPick, StepXAndY, StepXSettleFast, StepXPushNegFast, StepXPushPosFast, StepXPickFast, StepXOnly, PickStepMode, DragUpdate and DragBegin. Every conversion is byte-neutral: 31/31 MATCH, objisolate clean, ROM-ascending emission order, unchanged from the pre-conversion run. The bodies keep the shard's raw-offset spellings behind a `char *x = (char *)this;` prologue, so none of the humanizer's measured levers moved.",
+    "SYMBOLS.TXT IS PART OF THIS EDIT. Sixteen of the seventeen renamed members are the target of an 8-byte {code pointer, zero adjustment} pointer-to-member record in unowned ov006 .data (0x0213c40c..0x0213c4b4), which __sinit_ov006_02130758 copies into the BSS dispatch arrays. dsd resolves those records BY SYMBOL NAME, so all seventeen rows in config/arm9/overlays/ov006/symbols.txt move to the mangled spelling in the same commit; a row left behind would link its .data code word as 0x00000000 with a green compile. SpawnValue is the seventeenth: it carries no .data record and is reached only from inside this TU and from the sourceless hole's own cartridge bytes.",
+    "TWELVE MEMBERS REFUSED CONVERSION, AND THE REASON IS MEASURED AND IS NOT BYTES. With all 29 converted the TU still reports 31/31 MATCH / objisolate clean / ROM-ascending, but `python tools/rombuild.py -j 6 --no-rom` fails with exactly twelve `mwldarm.exe: Undefined` lines: func_ov006_020e38b0, _020e3948, _020e3bc4, _020e4a84, _020e4b78, _020e4fe8, _020e507c (referenced from dScMgCurling2_c::Render()), _020e4800 and _020e3948 (Behavior()), _020e48d4 (InitResources()), _020e3b9c (func_ov006_020e668c), _020e4b00 (func_ov006_020e628c) and _020e513c (func_ov006_020e5e3c). Those callers are still one-function shards above the sourceless hole, and they -- and include/decl_common.h -- spell the target by its C name. The twelve convert byte-neutrally the day segment B is promoted; nothing else blocks them.",
+    "THE SEVENTEEN NAMES ARE COINED. The ROM proves member-ness (a zero-adjustment pointer-to-member record) and each handler's index in its own table, both read out of __sinit_ov006_02130758 and quoted in include/dScMgCurling2_c.h. It does not carry the original identifiers, and the gameplay semantics of the 0x48c0 and 0x4fe0 record arrays remain on the scout's `unproven` list; no name asserts them."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov006-dScMgCurling2_c/dScMgCurling2_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 31,
+    "functions_declared": 31,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN15dScMgCurling2_cD2Ev"
+      ],
+      "deadstripped": [
+        "_ZN15dScMgCurling2_cD2Ev"
+      ],
+      "droppedSections": [
+        9,
+        10,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78
+      ],
+      "data": [
+        "_ZTI15dScMgCurling2_c",
+        "_ZTS15dScMgCurling2_c",
+        "_ZTI11dScMgBase_c",
+        "_ZTS11dScMgBase_c",
+        "_ZTI8dScene_c",
+        "_ZTS8dScene_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTV15dScMgCurling2_c"
+      ],
+      "dataExternalized": [
+        "_ZTI11dScMgBase_c",
+        "_ZTI15dScMgCurling2_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dScene_c",
+        "_ZTS11dScMgBase_c",
+        "_ZTS15dScMgCurling2_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dScene_c",
+        "_ZTV15dScMgCurling2_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov006-dScMgCurling2_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x020e3854",
+        "end": "0x020e5450",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020e3854",
+          "end": "0x020e5450",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 31
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  }
+}

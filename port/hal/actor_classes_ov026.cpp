@@ -64,8 +64,8 @@
 // ============================ THE CLASS-IDENTITY SWAP =======================
 // dsd's METHOD NAMES on this overlay are class-swapped for one class. Every
 // `_ZN9Submarine*` TU is the WHIRLPOOL's (18daWater_Tatumaki_c, id 246):
-// table 0x02113d54 carries _ZN9Submarine13InitResourcesEv at slot 0,
-// _ZN9SubmarineD1Ev at 16 and _ZN9SubmarineD0Ev at 17, and its own vtable[-1]
+// table 0x02113d54 carries _ZN9Whirlpool13InitResourcesEv at slot 0,
+// _ZN9WhirlpoolD1Ev at 16 and _ZN9WhirlpoolD0Ev at 17, and its own vtable[-1]
 // __si_class_type_info record's name string reads "18daWater_Tatumaki_c".
 // The real Submarine's table is 0x02113c6c ("18daObjWlSubmarine_c"), whose own
 // bodies dsd left unnamed. config/arm9/overlays/ov026/symbols.txt:201 puts
@@ -74,9 +74,9 @@
 // labels (_ZTV12WaterSuction, _ZTV17daWater_Suikomi_c) are the same class under
 // two spellings and both are right.
 //
-// Consequence for this file: _ZN9Submarine13InitResourcesEv is filled into the
+// Consequence for this file: _ZN9Whirlpool13InitResourcesEv is filled into the
 // WHIRLPOOL's slot 0, not the Submarine's, and the Submarine's slot 0 is
-// func_ov026_021119c0. Getting that backwards would put a whirlpool's
+// _ZN9Submarine13InitResourcesEv. Getting that backwards would put a whirlpool's
 // ModelAnim/TextureTransformer setup on a Platform-shaped 800-byte object.
 //
 // ============================ HOST STORAGE ==================================
@@ -114,8 +114,8 @@
 //   anything.
 //
 // The other three are undefined today and renamed anyway for the same reason:
-//   src/func_ov026_02111598.cpp  data_ov032_02113a9c -> ov026's own
-//   src/func_ov026_02111598.cpp  func_ov053_021112a4 -> ov026's own
+//   src/_ZN17daObjWlPolelift_c13InitResourcesEv.cpp  data_ov032_02113a9c -> ov026's own
+//   src/_ZN17daObjWlPolelift_c13InitResourcesEv.cpp  func_ov053_021112a4 -> ov026's own
 //   src/__sinit_ov026_02112d68.c data_ov036_02113f58 -> ov026's own bss cell
 //
 // ============================ WHAT IS AND IS NOT TRAPPED ====================
@@ -125,23 +125,26 @@
 // ActorBase-side SRET whose hidden return pointer no thunk shape here models.
 // Every other slot in every one of the five tables is seated.
 
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
 extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include <cstdlib>
 
-#include "Actor.h"
-#include "ActorBase.h"
+#include "dActor_c.h"
+#include "fBase_c.h"
 #include "Submarine.h"
 #include "WaterSuction.h"
+#include "Whirlpool.h"
 
 // ---- the two private names the G0/G1 routing needs -------------------------
 // include/decl_common.h:244-247 declares data_ov026_02113ebc / _02113eb4 /
@@ -156,7 +159,7 @@ extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #pragma comment(linker, "/alternatename:_port_ov026_submarine_kcl=_data_ov026_02113edc")
 // And the polelift's own collision vector, for the same reason one address
 // over: decl_common.h declares data_ov026_02113a9c as `Vector3` while
-// src/func_ov026_02111598.cpp declares its (wrong-overlay-spelled) reference as
+// src/_ZN17daObjWlPolelift_c13InitResourcesEv.cpp declares its (wrong-overlay-spelled) reference as
 // a local `struct V3`.
 #pragma comment(linker, "/alternatename:_port_ov026_polelift_clsn=_data_ov026_02113a9c")
 
@@ -166,7 +169,7 @@ extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 // spellings of the three data ones itself ("Hint on symbols that are defined
 // and could potentially match: _data_ov026_02113f0c").
 //
-// src/_ZN9Submarine13InitResourcesEv.cpp declares its three mount references
+// src/_ZN9Whirlpool13InitResourcesEv.cpp declares its three mount references
 // OUTSIDE its own `extern "C"` block -- `extern struct FilePtr4
 // data_ov026_02113f0c;` and friends -- so MSVC emits C++-decorated names for
 // storage the mount defines with C linkage. The cxx_aliases.cpp idiom: alias
@@ -190,28 +193,28 @@ extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 // 0x8000`, which truncates to s16 regardless of what the upper half of eax
 // holds. The other two shadow methods in that file (Actor::ClosestPlayer,
 // Player::EnterWhirlpool) declare compatible shapes and resolve on their own.
-#pragma comment(linker, "/alternatename:?HorzAngleToCPlayer@Actor@@QAEHXZ=?HorzAngleToCPlayer@Actor@@QAEFXZ")
+#pragma comment(linker, "/alternatename:?HorzAngleToCPlayer@dActor_c@@QAEHXZ=?HorzAngleToCPlayer@dActor_c@@QAEFXZ")
 
 extern "C" {
 
 // ---- the shared arm9 halves -------------------------------------------------
-int _ZN5Actor19BeforeInitResourcesEv(void *self);              /* slot 1  */
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
-int _ZN5Actor14BeforeBehaviorEv(void *self);                   /* slot 7  */
-int _ZN5Actor12BeforeRenderEv(void *self);                     /* slot 10 */
-int _ZN5Actor13OnYoshiTryEatEv(void *self);                    /* slot 18 */
-void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
-int _ZN5Actor9Virtual50Ev(void *self);                         /* slot 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);              /* slot 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);              /* slot 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
-int _ZN5Actor16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
-void _ZN8Platform4KillEv(void *self);                              /* slot 31 */
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);              /* slot 1  */
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);                   /* slot 7  */
+int _ZN8dActor_c12BeforeRenderEv(void *self);                     /* slot 10 */
+int _ZN8dActor_c13OnYoshiTryEatEv(void *self);                    /* slot 18 */
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
+int _ZN8dActor_c9Virtual50Ev(void *self);                         /* slot 20 */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);              /* slot 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);              /* slot 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
+int _ZN8dActor_c16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
+void _ZN10dBgActor_c4KillEv(void *self);                              /* slot 31 */
 
 const char *port_actor_class_name(unsigned id);   /* hal/actor_registry */
 void port_actor_slot_decline(const char *what);   /* func_02043fdc_hostcopy.cpp */
@@ -223,50 +226,50 @@ void port_ov026_syms_patch(void);
 
 // ---- the five vtables, host arrays -----------------------------------------
 int _ZTV17daObjWlPolelift_c[31];      /* vtspan: data_ov026_02113ae0 */
-int _ZTV21daObjWlKoopaShutter_c[32];  /* vtspan: data_ov026_02113ba4 */
-int _ZTV18daObjWlSubmarine_c[32];     /* vtspan: data_ov026_02113c6c */
+int _ZTV21daObjWlKoopaShutter_c[32];  /* vtspan: _ZTV13BowserShutter */
+int _ZTV18daObjWlSubmarine_c[32];     /* vtspan: _ZTV9Submarine */
 int _ZTV18daWater_Tatumaki_c[31];     /* vtspan: _ZTV18daWater_Tatumaki_c */
 int _ZTV12WaterSuction[31];           /* vtspan: _ZTV12WaterSuction */
 
 // ---- the class bodies -------------------------------------------------------
 /* id 89, daObjWlPolelift_c -- all seven flat C/C++ bodies, no faces needed */
-int func_ov026_02111598(char *self);       /* slot 0  InitResources */
-int func_ov026_021112e4(void);             /* slot 3  CleanupResources, (void) */
-int func_ov026_02111330(char *self);       /* slot 6  Behavior */
-int func_ov026_02111308(void *self);       /* slot 9  Render (plain Model shadow) */
-int *func_ov026_021111a0(int *self);       /* slot 16 D1 */
-int *func_ov026_021111e0(int *self);       /* slot 17 D0 */
-void *func_ov026_02111678(void);           /* factory, installs the table */
+int _ZN17daObjWlPolelift_c13InitResourcesEv(char *self);       /* slot 0  InitResources */
+int _ZN17daObjWlPolelift_c16CleanupResourcesEv(void);             /* slot 3  CleanupResources, (void) */
+int _ZN17daObjWlPolelift_c8BehaviorEv(char *self);       /* slot 6  Behavior */
+int _ZN17daObjWlPolelift_c6RenderEv(void *self);       /* slot 9  Render (plain Model shadow) */
+int *_ZN17daObjWlPolelift_cD1Ev(int *self);       /* slot 16 D1 */
+int *_ZN17daObjWlPolelift_cD0Ev(int *self);       /* slot 17 D0 */
+void *daObjWlPolelift_c_classInit(void);           /* factory, installs the table */
 
 /* id 91, daObjWlKoopaShutter_c */
-int func_ov026_021117d8(char *self);       /* slot 0  */
-int func_ov026_02111764(void *self);       /* slot 3  */
-int func_ov026_021117d0(void);             /* slot 6  Behavior, (void) */
-int func_ov026_021117a8(void *self);       /* slot 9  Render (plain Model shadow) */
-int *func_ov026_021116c8(int *self);       /* slot 16 D1 */
-int *func_ov026_0211170c(int *self);       /* slot 17 D0 */
-void *BowserShutter_Spawn(void);
-extern unsigned char BowserShutter_SpawnInfo[];   /* ov026 0x02113b80 */
+int _ZN13BowserShutter13InitResourcesEv(char *self);       /* slot 0  */
+int _ZN13BowserShutter16CleanupResourcesEv(void *self);       /* slot 3  */
+int _ZN13BowserShutter8BehaviorEv(void);             /* slot 6  Behavior, (void) */
+int _ZN13BowserShutter6RenderEv(void *self);       /* slot 9  Render (plain Model shadow) */
+int *_ZN13BowserShutterD1Ev(int *self);       /* slot 16 D1 */
+int *_ZN13BowserShutterD0Ev(int *self);       /* slot 17 D0 */
+void *daObjWlKoopaShutter_c_classInit(void);
+extern unsigned char g_profile_WL_KOOPA_SHUTTER[];   /* ov026 0x02113b80 */
 
 /* id 90, daObjWlSubmarine_c -- NO own Behavior */
-int func_ov026_021119c0(char *self);       /* slot 0  */
-int func_ov026_02111954(void *self);       /* slot 3  */
-int func_ov026_02111998(void *self);       /* slot 9  Render (plain Model shadow) */
-int *func_ov026_021118b8(int *self);       /* slot 16 D1 */
-int *func_ov026_021118fc(int *self);       /* slot 17 D0 */
-void *Submarine_Spawn(void);
-extern unsigned char Submarine_SpawnInfo[];       /* ov026 0x02113c48 */
+int _ZN9Submarine13InitResourcesEv(char *self);       /* slot 0  */
+int _ZN9Submarine16CleanupResourcesEv(void *self);       /* slot 3  */
+int _ZN9Submarine6RenderEv(void *self);       /* slot 9  Render (plain Model shadow) */
+int *_ZN9SubmarineD1Ev(int *self);       /* slot 16 D1 */
+int *_ZN9SubmarineD0Ev(int *self);       /* slot 17 D0 */
+void *daObjWlSubmarine_c_classInit(void);
+extern unsigned char g_profile_WL_SUBMARINE[];       /* ov026 0x02113c48 */
 
 /* id 246, daWater_Tatumaki_c -- the `_ZN9Submarine*` names are ITS methods */
-int _ZN9Submarine13InitResourcesEv(void *self);    /* slot 0, FACED below     */
-int _ZN9Submarine16CleanupResourcesEv(void);       /* slot 3, .c body, (void) */
-int _ZN9Submarine8BehaviorEv(void *self);          /* slot 6, HOST COPY       */
-int _ZN9Submarine6RenderEv(void *self);            /* slot 9, HOST COPY       */
-void _ZN9Submarine16OnPendingDestroyEv(void);      /* slot 12, own, empty     */
-int *_ZN9SubmarineD1Ev(int *self);                 /* slot 16 D1              */
-int *_ZN9SubmarineD0Ev(int *self);                 /* slot 17 D0              */
-void *Whirlpool_Spawn(void);
-extern unsigned char Whirlpool_SpawnInfo[];        /* ov026 0x02113d30 */
+int _ZN9Whirlpool13InitResourcesEv(void *self);    /* slot 0, FACED below     */
+int _ZN9Whirlpool16CleanupResourcesEv(void);       /* slot 3, .c body, (void) */
+int _ZN9Whirlpool8BehaviorEv(void *self);          /* slot 6, HOST COPY       */
+int _ZN9Whirlpool6RenderEv(void *self);            /* slot 9, HOST COPY       */
+void _ZN9Whirlpool16OnPendingDestroyEv(void);      /* slot 12, own, empty     */
+int *_ZN9WhirlpoolD1Ev(int *self);                 /* slot 16 D1              */
+int *_ZN9WhirlpoolD0Ev(int *self);                 /* slot 17 D0              */
+void *daWater_Tatumaki_c_classInit(void);
+extern unsigned char g_profile_WATER_TATUMAKI[];        /* ov026 0x02113d30 */
 
 /* id 247, daWater_Suikomi_c */
 int _ZN12WaterSuction13InitResourcesEv(void *self); /* slot 0, FACED below     */
@@ -276,8 +279,8 @@ int _ZN12WaterSuction6RenderEv(void);               /* slot 9, .c body, (void) *
 void _ZN12WaterSuction16OnPendingDestroyEv(void);   /* slot 12, own, empty     */
 int *_ZN12WaterSuctionD1Ev(int *self);              /* slot 16 D1              */
 int *_ZN12WaterSuctionD0Ev(int *self);              /* slot 17 D0              */
-void *WaterSuction_Spawn(void);
-extern unsigned char WaterSuction_SpawnInfo[];      /* ov026 0x02113e00 */
+void *daWater_Suikomi_c_classInit(void);
+extern unsigned char g_profile_WATER_SUIKOMI[];      /* ov026 0x02113e00 */
 
 /* THE SIX PMF SOURCE PAIRS, the Scuttlebug/ov070 treatment: seated with host
    bodies BEFORE the sinits copy them into bss, so the mounted romdata never
@@ -323,55 +326,55 @@ OV26_TRAP(13) OV26_TRAP(14)
 
 // ---- the shared 1..30 half --------------------------------------------------
 static int __fastcall ov26_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall ov26_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall ov26_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 static void __fastcall ov26_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall ov26_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall ov26_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall ov26_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall ov26_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall ov26_pdes(void *s, void *)
-{ ((ActorBase *)s)->ActorBase::OnPendingDestroy(); return 0; }
+{ ((fBase_c *)s)->fBase_c::OnPendingDestroy(); return 0; }
 static int __fastcall ov26_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int __fastcall ov26_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 /* slot 19 takes the three-parameter shape so it emits `ret 4`: the dispatch
    site pushes the Player the callee pops -- the wf_turn_egg contract. */
 static int __fastcall ov26_turn_egg(void *s, void *, void *p)
-{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+{ _ZN8dActor_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall ov26_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall ov26_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall ov26_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall ov26_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall ov26_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall ov26_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall ov26_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall ov26_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall ov26_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 static int __fastcall ov26_aimed(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 /* slot 31, the Platform tail -- 91 and 90 take it unchanged, 89/246/247 have
    no slot 31 at all. */
 static int __fastcall ov26_kill(void *s, void *)
-{ _ZN8Platform4KillEv(s); return 0; }
+{ _ZN10dBgActor_c4KillEv(s); return 0; }
 
 /* Fills slots 1,2,4,5,7,8,10,11,12,13,14,15,18..30 -- every word the five
    tables share. The caller writes its own 0/3/6/9/16/17, its own 12 where it
@@ -429,7 +432,7 @@ static void ov26_fill_shared(void *volatile *vt)
 // hand the state machine garbage silently.
 
 /* RUN link100 LANE PMFB7 GATE 1: THE THREE TICK RECORDS ARE FACES.
- * src/_ZN9Submarine8BehaviorEv.cpp and src/_ZN12WaterSuction8BehaviorEv.cpp
+ * src/_ZN9Whirlpool8BehaviorEv.cpp and src/_ZN12WaterSuction8BehaviorEv.cpp
  * are matched TUs now and each dispatches its cell's +8 half as a real pointer
  * to member: mov eax,[cell+8] / test / je / mov ecx,[cell+12] / add ecx,this /
  * call eax -- ARITY ZERO, receiver in ecx, /Zp4 diff 0 lines. The three ENTER
@@ -497,18 +500,18 @@ extern "C" void port_ov026_states_seat(void)
 // slot 31 -- Actor-derived, the virtual list ends at 30.
 // ============================================================================
 static int __fastcall pl_init(void *s, void *)
-{ return func_ov026_02111598((char *)s); }
+{ return _ZN17daObjWlPolelift_c13InitResourcesEv((char *)s); }
 static int __fastcall pl_clean(void *s, void *)
-{ (void)s; return func_ov026_021112e4(); }
+{ (void)s; return _ZN17daObjWlPolelift_c16CleanupResourcesEv(); }
 static int __fastcall pl_behavior(void *s, void *)
-{ return func_ov026_02111330((char *)s); }
+{ return _ZN17daObjWlPolelift_c8BehaviorEv((char *)s); }
 static int __fastcall pl_render(void *s, void *)
 { port_actor_render_probe("POLE_LIFT_DDD", (char *)s + 0xd4);
-  return func_ov026_02111308(s); }
+  return _ZN17daObjWlPolelift_c6RenderEv(s); }
 static int __fastcall pl_d1(void *s, void *)
-{ return (int)(size_t)func_ov026_021111a0((int *)s); }
+{ return (int)(size_t)_ZN17daObjWlPolelift_cD1Ev((int *)s); }
 static int __fastcall pl_d0(void *s, void *)
-{ return (int)(size_t)func_ov026_021111e0((int *)s); }
+{ return (int)(size_t)_ZN17daObjWlPolelift_cD0Ev((int *)s); }
 
 extern "C" void hal_fill_ov026_polelift_vtable(void)
 {
@@ -518,7 +521,7 @@ extern "C" void hal_fill_ov026_polelift_vtable(void)
     vt[3]  = (void *)pl_clean;
     vt[6]  = (void *)pl_behavior;
     vt[9]  = (void *)pl_render;
-    vt[16] = (void *)pl_d1;
+    vt[16] = (void *)PORT_D16(pl_d1);
     vt[17] = (void *)pl_d0;
     /* no slot 31: plain Actor, 31 slots total, ends here */
 }
@@ -528,18 +531,18 @@ extern "C" void hal_fill_ov026_polelift_vtable(void)
 // Own overrides: 0, 3, 6, 9, 16, 17. Slot 31 is Platform::Kill unchanged.
 // ============================================================================
 static int __fastcall ks_init(void *s, void *)
-{ return func_ov026_021117d8((char *)s); }
+{ return _ZN13BowserShutter13InitResourcesEv((char *)s); }
 static int __fastcall ks_clean(void *s, void *)
-{ return func_ov026_02111764(s); }
+{ return _ZN13BowserShutter16CleanupResourcesEv(s); }
 static int __fastcall ks_behavior(void *s, void *)
-{ (void)s; return func_ov026_021117d0(); }
+{ (void)s; return _ZN13BowserShutter8BehaviorEv(); }
 static int __fastcall ks_render(void *s, void *)
 { port_actor_render_probe("BOWSER_SHUTTER", (char *)s + 0xd4);
-  return func_ov026_021117a8(s); }
+  return _ZN13BowserShutter6RenderEv(s); }
 static int __fastcall ks_d1(void *s, void *)
-{ return (int)(size_t)func_ov026_021116c8((int *)s); }
+{ return (int)(size_t)_ZN13BowserShutterD1Ev((int *)s); }
 static int __fastcall ks_d0(void *s, void *)
-{ return (int)(size_t)func_ov026_0211170c((int *)s); }
+{ return (int)(size_t)_ZN13BowserShutterD0Ev((int *)s); }
 
 extern "C" void hal_fill_ov026_bowser_shutter_vtable(void)
 {
@@ -549,7 +552,7 @@ extern "C" void hal_fill_ov026_bowser_shutter_vtable(void)
     vt[3]  = (void *)ks_clean;
     vt[6]  = (void *)ks_behavior;
     vt[9]  = (void *)ks_render;
-    vt[16] = (void *)ks_d1;
+    vt[16] = (void *)PORT_D16(ks_d1);
     vt[17] = (void *)ks_d0;
     vt[31] = (void *)ov26_kill;      /* Platform::Kill */
 }
@@ -562,18 +565,18 @@ extern "C" void hal_fill_ov026_bowser_shutter_vtable(void)
 // Slot 31 is Platform::Kill.
 // ============================================================================
 static int __fastcall sb_init(void *s, void *)
-{ return func_ov026_021119c0((char *)s); }
+{ return _ZN9Submarine13InitResourcesEv((char *)s); }
 static int __fastcall sb_clean(void *s, void *)
-{ return func_ov026_02111954(s); }
+{ return _ZN9Submarine16CleanupResourcesEv(s); }
 static int __fastcall sb_behavior(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::Behavior(); }
+{ return ((fBase_c *)s)->fBase_c::Behavior(); }
 static int __fastcall sb_render(void *s, void *)
 { port_actor_render_probe("SUBMARINE", (char *)s + 0xd4);
-  return func_ov026_02111998(s); }
+  return _ZN9Submarine6RenderEv(s); }
 static int __fastcall sb_d1(void *s, void *)
-{ return (int)(size_t)func_ov026_021118b8((int *)s); }
+{ return (int)(size_t)_ZN9SubmarineD1Ev((int *)s); }
 static int __fastcall sb_d0(void *s, void *)
-{ return (int)(size_t)func_ov026_021118fc((int *)s); }
+{ return (int)(size_t)_ZN9SubmarineD0Ev((int *)s); }
 
 extern "C" void hal_fill_ov026_submarine_vtable(void)
 {
@@ -583,7 +586,7 @@ extern "C" void hal_fill_ov026_submarine_vtable(void)
     vt[3]  = (void *)sb_clean;
     vt[6]  = (void *)sb_behavior;    /* ActorBase::Behavior, the ROM's own word */
     vt[9]  = (void *)sb_render;
-    vt[16] = (void *)sb_d1;
+    vt[16] = (void *)PORT_D16(sb_d1);
     vt[17] = (void *)sb_d0;
     vt[31] = (void *)ov26_kill;      /* Platform::Kill */
 }
@@ -595,20 +598,20 @@ extern "C" void hal_fill_ov026_submarine_vtable(void)
 // header and port/slice_ov026cast.txt.
 // ============================================================================
 static int __fastcall wp_init(void *s, void *)
-{ return _ZN9Submarine13InitResourcesEv(s); }
+{ return _ZN9Whirlpool13InitResourcesEv(s); }
 static int __fastcall wp_clean(void *s, void *)
-{ (void)s; return _ZN9Submarine16CleanupResourcesEv(); }
+{ (void)s; return _ZN9Whirlpool16CleanupResourcesEv(); }
 static int __fastcall wp_behavior(void *s, void *)
-{ return _ZN9Submarine8BehaviorEv(s); }
+{ return _ZN9Whirlpool8BehaviorEv(s); }
 static int __fastcall wp_render(void *s, void *)
 { port_actor_render_probe("WHIRLPOOL", (char *)s + 0x114);
-  return _ZN9Submarine6RenderEv(s); }
+  return _ZN9Whirlpool6RenderEv(s); }
 static int __fastcall wp_pdes(void *s, void *)
-{ (void)s; _ZN9Submarine16OnPendingDestroyEv(); return 0; }
+{ (void)s; _ZN9Whirlpool16OnPendingDestroyEv(); return 0; }
 static int __fastcall wp_d1(void *s, void *)
-{ return (int)(size_t)_ZN9SubmarineD1Ev((int *)s); }
+{ return (int)(size_t)_ZN9WhirlpoolD1Ev((int *)s); }
 static int __fastcall wp_d0(void *s, void *)
-{ return (int)(size_t)_ZN9SubmarineD0Ev((int *)s); }
+{ return (int)(size_t)_ZN9WhirlpoolD0Ev((int *)s); }
 
 extern "C" void hal_fill_ov026_whirlpool_vtable(void)
 {
@@ -619,7 +622,7 @@ extern "C" void hal_fill_ov026_whirlpool_vtable(void)
     vt[6]  = (void *)wp_behavior;
     vt[9]  = (void *)wp_render;
     vt[12] = (void *)wp_pdes;        /* own, empty; overrides the shared default */
-    vt[16] = (void *)wp_d1;
+    vt[16] = (void *)PORT_D16(wp_d1);
     vt[17] = (void *)wp_d0;
     /* no slot 31: Enemy-derived, the virtual list ends at Actor's 30 */
 }
@@ -654,21 +657,26 @@ extern "C" void hal_fill_ov026_water_suction_vtable(void)
     vt[6]  = (void *)ws_behavior;
     vt[9]  = (void *)ws_render;
     vt[12] = (void *)ws_pdes;
-    vt[16] = (void *)ws_d1;
+    vt[16] = (void *)PORT_D16(ws_d1);
     vt[17] = (void *)ws_d0;
     /* no slot 31: Enemy-derived, the virtual list ends at Actor's 30 */
 }
 
 // ---- method faces -----------------------------------------------------------
-// _ZN9Submarine13InitResourcesEv.cpp and _ZN12WaterSuction13InitResourcesEv.cpp
+// _ZN9Whirlpool13InitResourcesEv.cpp and _ZN12WaterSuction13InitResourcesEv.cpp
 // are real MSVC methods against Submarine.h / WaterSuction.h, so their compiled
 // names are ?InitResources@Submarine@@... and not the Itanium spelling the
 // vtable fills above call. Faced here, the IceSheet/OneUpLogo/BabyPenguin
 // recipe. Everything else in this cast is a plain C-linkage body and is called
 // directly.
 extern "C" {
-int _ZN9Submarine13InitResourcesEv(void *self)
-{ return ((Submarine *)self)->Submarine::InitResources(); }
+/* ov026 0x021120ec is _ZN9Whirlpool13InitResourcesEv and slot 0 of table
+   0x02113d54 (the whirlpool's); Submarine's own InitResources is 0x021119c0 and
+   sits in table 0x02113c6c. src/_ZN9Whirlpool13InitResourcesEv.cpp defines
+   Whirlpool::InitResources and reads its ModelAnim at +0x114, where the
+   Submarine body reads a Model at +0xd4. */
+int _ZN9Whirlpool13InitResourcesEv(void *self)
+{ return ((Whirlpool *)self)->Whirlpool::InitResources(); }
 int _ZN12WaterSuction13InitResourcesEv(void *self)
 { return ((WaterSuction *)self)->WaterSuction::InitResources(); }
 }

@@ -17,8 +17,9 @@
 # config/arm9/relocs.txt names both bodies at those two words:
 #   from:0x02099d90 to:0x0203ca44 _ZN4HeapD1Ev
 #   from:0x02099d94 to:0x0203ca20 _ZN4HeapD0Ev
-src/_ZN4HeapD1Ev.c
-src/_ZN4HeapD0Ev.c
+src/_ZN4HeapD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN4HeapD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN4HeapD0Ev.cpp
 # Heap::Allocate(unsigned) at 0x0203c28c, the body behind the flat name gate
 # 4b's func_0203cc0c calls. The converting face is in hal/lk4_eh_dtor_seat.cpp;
 # hal/heap_vtable.cpp keeps its old host copy as an alternatename fallback for
@@ -34,30 +35,31 @@ port/hal/w2_dtor_heads.cpp
 # ---- _ZTV12CylinderClsn (arm9 0x0208e6ec) slots 0 and 1 -------------------
 # Reference edge: hal_seat_w2_dtor_heads in port/hal/w2_dtor_heads.cpp, which
 # writes the two words config/arm9/relocs.txt puts there:
-#   from:0x0208e6ec to:0x020150a8 _ZN12CylinderClsnD1Ev
-#   from:0x0208e6f0 to:0x0201507c _ZN12CylinderClsnD0Ev
+#   from:0x0208e6ec to:0x020150a8 _ZN5dCc_cD1Ev
+#   from:0x0208e6f0 to:0x0201507c _ZN5dCc_cD0Ev
 # The D1 body writes 0x0208e6ec as the object's own vptr, which is what fixes
 # the index convention. Storage is hal/cxx_aliases.cpp and no fill in the tree
 # ever wrote a slot in it.
-src/_ZN12CylinderClsnD1Ev.c
-src/_ZN12CylinderClsnD0Ev.c
+src/_ZN5dCc_cD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN5dCc_cD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN5dCc_cD0Ev.cpp
 
 # ==== WAVE 3, LANE w3-b ====================================================
-# ---- _ZTV5Scene (arm9 0x02092680) slot 1, and the chain behind it ---------
+# ---- _ZTV8dScene_c (arm9 0x02092680) slot 1, and the chain behind it ---------
 # Reference edge: hal_seat_w2_dtor_heads writes the word config/arm9/relocs.txt
 # puts at base+4:
-#   from:0x02092684 to:0x0202e638 _ZN5Scene19BeforeInitResourcesEv
-# Storage is `void *_ZTV5Scene[20]` in hal/stage_bridges.cpp; no fill in the
+#   from:0x02092684 to:0x0202e638 _ZN8dScene_c19BeforeInitResourcesEv
+# Storage is `void *_ZTV8dScene_c[20]` in hal/stage_bridges.cpp; no fill in the
 # tree writes a slot of it, and the src/ TUs that name the table (28 mention it,
 # 28 store, 0 write a slot -- re-measured for the wave-4 slot-7 seat, which
 # CORRECTS the "25 store" this line carried from the w3-b review) only store
 # its ADDRESS as a transient vptr. The sweep is written out in the seat's own
 # comment. What blocked this head in wave 2 was data_0209f1e4, the DS BSS word
 # Scene::ResetFadersAndSound clears; hal/auto_bss.cpp hosts it now.
-src/_ZN5Scene19BeforeInitResourcesEv.c
+src/_ZN8dScene_c19BeforeInitResourcesEv.cpp
 # the two faces the head calls
-src/_ZN5Scene19ResetFadersAndSoundEv.c
-src/_ZN5Scene20Initialise3dGraphicsEv.c
+src/_ZN8dScene_c19ResetFadersAndSoundEv.cpp
+src/_ZN8dScene_c20Initialise3dGraphicsEv.cpp
 # Scene::Initialise3dGraphics' own callees. The global Initialise3dGraphics(int)
 # is listed in slice_gate36.txt, but that list is INERT: CMakeLists.txt builds
 # SLICE36_SOURCES and then never adds it to a target, so the TU was not even
@@ -88,36 +90,36 @@ src/func_02055490.c
 src/func_0205a064.c
 src/DMASyncFillTransfer.c
 
-# ---- _ZTV5Scene slots 10, 16 and 17 --------------------------------------
+# ---- _ZTV8dScene_c slots 10, 16 and 17 --------------------------------------
 # The same table, the same three re-proven conditions, three more of the ROM's
 # own words:
-#   from:0x020926a8 to:0x0202e3a4 _ZN5Scene12BeforeRenderEv
-#   from:0x020926c0 to:0x0202e140 _ZN5SceneD1Ev
-#   from:0x020926c4 to:0x0202e170 _ZN5SceneD0Ev
+#   from:0x020926a8 to:0x0202e3a4 _ZN8dScene_c12BeforeRenderEv
+#   from:0x020926c0 to:0x0202e140 _ZN8dScene_cD1Ev
+#   from:0x020926c4 to:0x0202e170 _ZN8dScene_cD0Ev
 # These three and slot 1 are the four whose matched bodies take the receiver as
 # an ordinary first argument and whose callees are already C-named in the map,
 # so no face and no adapter has to be invented for them. The other six unlinked
 # slots of this table are blocked on hal/method_faces.cpp, which this lane does
 # not own -- the reasons are in the seat file's group 4.
-src/_ZN5Scene12BeforeRenderEv.c
-src/_ZN5SceneD1Ev.c
-src/_ZN5SceneD0Ev.c
+src/_ZN8dScene_c12BeforeRenderEv.cpp
+src/_ZN8dScene_cD1Ev.cpp
+src/_ZN8dScene_cD0Ev.cpp
 
 # ==== WAVE 4, LANE w4-d ====================================================
-# ---- _ZTV5Scene slot 7, and the eight TUs behind it -----------------------
+# ---- _ZTV8dScene_c slot 7, and the eight TUs behind it -----------------------
 # Reference edge: hal_seat_w2_dtor_heads writes the word config/arm9/relocs.txt
 # puts at base+0x1c:
-#   from:0x0209269c to:0x0202e3d4 _ZN5Scene14BeforeBehaviorEv
-# and config/arm9/symbols.txt puts _ZN5Scene14BeforeBehaviorEv
+#   from:0x0209269c to:0x0202e3d4 _ZN8dScene_c14BeforeBehaviorEv
+# and config/arm9/symbols.txt puts _ZN8dScene_c14BeforeBehaviorEv
 # kind:function(arm,size=0x1fc) at 0x0202e3d4. (0x0209269c - 0x02092680)/4 = 7.
 # Same storage, same three re-proven conditions as slots 1/10/16/17 -- the
 # sweep is re-run in the seat's own comment, not carried from wave 3.
 #
 # THE HEAD ITSELF. Its receiver arrives as an ordinary first argument
-# (`int _ZN5Scene14BeforeBehaviorEv(char *self)` inside extern "C"), so slot 7
+# (`int _ZN8dScene_c14BeforeBehaviorEv(char *self)` inside extern "C"), so slot 7
 # takes the same ecx->arg adapter the other four use and needs no face of its
 # own.
-src/_ZN5Scene14BeforeBehaviorEv.cpp
+src/_ZN8dScene_c14BeforeBehaviorEv.cpp
 # the pause branch: func_02023544 resets sound and the two mode bytes, and its
 # own callees func_02011c8c / GetSoundMode / SetSoundMode are already linked.
 src/func_02023544.c
@@ -159,36 +161,36 @@ src/engine/fader/_ZN15FaderBrightness14SetForwardTimeEj.cpp
 #     also the reason the head's whole first branch is dead in the port, which
 #     two comments (hal/auto_bss.cpp and hal/method_faces.cpp) depend on.
 
-# ---- _ZTV5Scene slots 4, 8 and 11 -----------------------------------------
+# ---- _ZTV8dScene_c slots 4, 8 and 11 -----------------------------------------
 # Three of the four faces wave 3 left blocked in hal/method_faces.cpp, which
 # this lane owns this wave. The ROM's own three words:
-#   from:0x02092690 to:0x0202e5f0 _ZN5Scene22BeforeCleanupResourcesEv
-#   from:0x020926a0 to:0x0202e3c8 _ZN5Scene13AfterBehaviorEj
-#   from:0x020926ac to:0x0202e398 _ZN5Scene11AfterRenderEj
+#   from:0x02092690 to:0x0202e5f0 _ZN8dScene_c22BeforeCleanupResourcesEv
+#   from:0x020926a0 to:0x0202e3c8 _ZN8dScene_c13AfterBehaviorEj
+#   from:0x020926ac to:0x0202e398 _ZN8dScene_c11AfterRenderEj
 # (0x10/4 = 4, 0x20/4 = 8, 0x2c/4 = 11.)
 #
 # Slot 4 is the straightforward one: the body passes its own receiver and only
 # the C-linkage name of its base call was undefined. Its other two references
 # (func_02011974 and data_0209b53c) were already resolved.
-src/_ZN5Scene22BeforeCleanupResourcesEv.c
+src/_ZN8dScene_c22BeforeCleanupResourcesEv.cpp
 # Slots 8 and 11 are the ROM's TAIL VENEERS, and they are here because their
 # callees turned out to be empty -- `ret 4`, three bytes, no receiver read and
 # no argument read, folded onto one address by /OPT:ICF. The dropped receiver
 # the veneers' void() shape implies therefore cannot be wrong the way
 # method_faces.cpp's failure mode 2 means. The two listings and the reading are
 # beside the tagged definitions in that file.
-src/_ZN5Scene13AfterBehaviorEj.cpp
-src/_ZN5Scene11AfterRenderEj.cpp
+src/_ZN8dScene_c13AfterBehaviorEj.cpp
+src/_ZN8dScene_c11AfterRenderEj.cpp
 #
 # SLOT 2 IS RULED OUT, and this is the listing that rules it out rather than a
 # judgement call. Scene::AfterInitResources is the same veneer shape, but its
 # callee is not empty:
-#   ?AfterInitResources@ActorDerived@@UAEXI@Z:
+#   ?AfterInitResources@dBase_c@@UAEXI@Z:
 #     cmp   dword ptr [ebp+8],1                reads the ARGUMENT
-#     mov   esi,ecx / call ?MarkForDestruction@ActorBase@@QAEXXZ
+#     mov   esi,ecx / call ?MarkForDestruction@fBase_c@@QAEXXZ
 #                                              reads the RECEIVER
 #     push  dword ptr [ebp+8] / mov ecx,esi
-#     call  ?AfterInitResources@ActorBase@@UAEXI@Z
+#     call  ?AfterInitResources@fBase_c@@UAEXI@Z
 # so a dropped-receiver definition would run MarkForDestruction on whatever
 # ecx held. That is the crash half of failure mode 2, not the silent half, and
 # there is no side-channel-free way to hand it the two values the ROM rides
@@ -196,7 +198,7 @@ src/_ZN5Scene11AfterRenderEj.cpp
 #
 # SLOT 5 STAYS OUT, re-confirmed rather than carried: config/arm9/symbols.txt
 # puts data_02092660 at 0x02092660 kind:data(any), and
-# src/_ZN5Scene21AfterCleanupResourcesEj.cpp DEFINES it at namespace scope
+# src/_ZN8dScene_c21AfterCleanupResourcesEj.cpp DEFINES it at namespace scope
 # inside extern "C" -- a definition, not a tentative one -- so the symbol lands
 # in ordinary .bss, outside .dsstate, and dsstate_guard rejects it. Hosting it
 # in hal/auto_bss.cpp would be a second definition. The fix is in src/, which

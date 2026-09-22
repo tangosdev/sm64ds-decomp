@@ -51,7 +51,7 @@ int func_ov002_020d8360(void *self, void *other, unsigned int flags)
         }
         {
             Vector3 out, tr, v, cp;
-            int *p = (int *)(int)(((long long)(int)(o + 0x5c)));
+            int *p = (int *)(int)(o + 0x5c);
             v.x = p[0];
             v.y = p[1];
             v.z = p[2];
@@ -82,7 +82,7 @@ int func_ov002_020d8360(void *self, void *other, unsigned int flags)
             if (flag != 0) {
                 *(int *)(c + 0xa8) = t98 + 0x20000;
                 {
-                    int *hp = (int *)(int)(((long long)(int)(c + 0x98)));
+                    int *hp = (int *)(int)(c + 0x98);
                     int half = *hp >> 1;
                     *hp = half;
                     return half;

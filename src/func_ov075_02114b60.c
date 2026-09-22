@@ -31,7 +31,7 @@ typedef struct Self {
 
 void func_ov075_02114b60(Self *self)
 {
-    Inner *q = (Inner *)((long long)(int)&self->inner);
+    Inner *q = (Inner *)(&self->inner);
     char *dp;
     A *a = q->a;
     DstTbl *d = q->dst;

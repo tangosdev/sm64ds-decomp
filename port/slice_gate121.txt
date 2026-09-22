@@ -5,11 +5,11 @@
 # Level 8's census printed id 61 skipped, x33 -- the single biggest skipped
 # class on the bay. Resolved the ROM's own way: ACTOR_SPAWN_TABLE entry [61]
 # (arm9 0x02090864 + 61*4 = 0x02090958) is a load reloc to:0x0214e0e0
-# module:overlay(102) -- StaticRock_SpawnInfo, whose +4 halfword reads 61. So
+# module:overlay(102) -- g_profile_KI_IWA, whose +4 halfword reads 61. So
 # the census id, the reloc target and the record's own id all agree.
 #
 # StaticRock is a Platform subclass. Its 800-byte object is built by
-# StaticRock_Spawn (ov102 0x02148f8c), which installs vtable _ZTV13FortressTower
+# daObjSimpleBg_c_classInit_KI_IWA (ov102 0x02148f8c), which installs vtable _ZTV13FortressTower
 # (ov102 0x0214e1d8) -- the SAME table FORTRESS_TOWER (gate 102) and WARP_PIPE
 # (id 298, gate 33) install. StaticRock defines no virtual methods of its own;
 # it reuses that shared FortressTower/daObjSimpleBg_c body entirely.
@@ -22,10 +22,10 @@
 #     (gate 33's WARP_PIPE slice named them),
 #   - the host vtable array _ZTV13FortressTower is already filled by
 #     hal_fill_warp_pipe_vtable (hal/actor_classes_bob_world.cpp), and
-#   - StaticRock_SpawnInfo is already mounted (ov102_syms.txt).
+#   - g_profile_KI_IWA is already mounted (ov102_syms.txt).
 #
-# So this gate's ONLY new symbol is the factory StaticRock_Spawn -- a distinct
-# matched TU from FortressTower_Spawn (same 0x0214e1d8 store, 800-byte object)
+# So this gate's ONLY new symbol is the factory daObjSimpleBg_c_classInit_KI_IWA -- a distinct
+# matched TU from daObjSimpleBg_c_classInit_BK_TOWER (same 0x0214e1d8 store, 800-byte object)
 # -- plus the registry row, which reuses FORTRESS_TOWER's shared vtable fill
 # (fill 0). No new overlay data, no PMF state table, no method face.
-src/StaticRock_Spawn.c
+src/d_a_obj_simple_bg_ki_iwa.c

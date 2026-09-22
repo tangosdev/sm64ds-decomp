@@ -9,7 +9,7 @@ int NestedHeapIterator::Previous(HeapAllocator * h_)
 {
     char* h = (char*)h_;
 
-  if (h == 0) return mLast;
+  if (h == 0) return (int)mLast;
   unsigned short off = mLinkOffset;
   return *(int*)(h+off);
 }

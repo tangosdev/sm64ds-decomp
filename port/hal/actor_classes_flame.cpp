@@ -1,6 +1,6 @@
 // GATE 175: BLUE_FLAME (317) and RED_FLAME (316), the cave's flames (ov002).
 //
-// One class, two ids: RedFlame_Spawn (0x020b59e0) and BlueFlame_Spawn
+// One class, two ids: daObjFire_c_classInit_OBJ_RED_FIRE (0x020b59e0) and daObjFire_c_classInit_OBJ_BLUE_FIRE
 // (0x020b59a8) both install _ZTV9BlueFlame (ov002 0x02108f38, RTTI
 // daObjFire_c), and both factories are matched src. Level 13 names RED_FLAME
 // x17, the largest skipped class on any mounted level; hosting the pair is the
@@ -9,8 +9,8 @@
 // Same law as hal/actor_classes_montymole.cpp -- ROM slot order, __fastcall
 // thunks, unhosted slots trap by name -- and THIRTY-ONE SLOTS, the Enemy shape:
 // the reloc span [0x02108f38, 0x02108fb4). The class owns 0 (InitResources), 6
-// (Behavior), 16 (D1), 17 (D0), 18 (func_ov002_020b59a0, the OnYoshiTryEat
-// override) and 19 (func_ov002_020b599c, the OnTurnIntoEgg no-op). Slots 3 and
+// (Behavior), 16 (D1), 17 (D0), 18 (_ZN11daObjFire_c13OnYoshiTryEatEv, the OnYoshiTryEat
+// override) and 19 (_ZN11daObjFire_c13OnTurnIntoEggER6Player, the OnTurnIntoEgg no-op). Slots 3 and
 // 9 are ActorBase's own base bodies in the ROM table (CleanupResources
 // 0x02043bf0, Render 0x02043af0 -- the flame draws through particles in its
 // Behavior, not a model), the IceSlideManager reading. 13/14 (Virtual34/38)
@@ -29,43 +29,45 @@
 // catching fire is a fully hosted path.
 //
 // The id pair was cross-checked: ACTOR_SPAWN_TABLE entries 0x02090d54/0x02090d58
-// ((addr - 0x02090864) / 4 = 316 / 317) reloc to RedFlame_SpawnInfo (0x02108ef8)
-// and BlueFlame_SpawnInfo (0x02108f14); the registry cross-checks each record's
+// ((addr - 0x02090864) / 4 = 316 / 317) reloc to g_profile_OBJ_RED_FIRE (0x02108ef8)
+// and g_profile_OBJ_BLUE_FIRE (0x02108f14); the registry cross-checks each record's
 // +4 halfword at boot.
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
 extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include <cstdlib>
 
-#include "Actor.h"
+#include "dActor_c.h"
 #include "dtor_faces_cpp.h"
-#include "ActorBase.h"
+#include "fBase_c.h"
 #include "Player.h"
 
 extern "C" {
 /* the shared lifecycle halves, the same functions every fill writes */
-int _ZN5Actor19BeforeInitResourcesEv(void *self);            /* slot 1  */
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a); /* slot 2  */
-int _ZN5Actor14BeforeBehaviorEv(void *self);                 /* slot 7  */
-int _ZN5Actor12BeforeRenderEv(void *self);                   /* slot 10 */
-int _ZN5Actor9Virtual50Ev(void *self);                       /* slot 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);    /* slot 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);        /* slot 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);        /* slot 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);            /* slot 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);            /* slot 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
-int _ZN5Actor16OnAimedAtWithEggEv(void *self);               /* slot 29 */
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);            /* slot 1  */
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a); /* slot 2  */
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);                 /* slot 7  */
+int _ZN8dActor_c12BeforeRenderEv(void *self);                   /* slot 10 */
+int _ZN8dActor_c9Virtual50Ev(void *self);                       /* slot 20 */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);    /* slot 21 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);        /* slot 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);        /* slot 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);            /* slot 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);            /* slot 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
+int _ZN8dActor_c16OnAimedAtWithEggEv(void *self);               /* slot 29 */
 
 extern int data_02099f24[];          /* the frame phase the lists are in */
 extern unsigned char data_020a4b4c;  /* the spawn spine's own step */
@@ -73,17 +75,17 @@ const char *port_actor_class_name(unsigned id);   /* hal/actor_registry */
   void port_actor_slot_decline(const char *what);  /* func_02043fdc_hostcopy.cpp */
 
 /* BlueFlame's own C-linkage bodies (matched src, slice_gate175.txt) */
-int _ZN9BlueFlame13InitResourcesEv(char *t);      /* slot 0  */
-int _ZN9BlueFlame8BehaviorEv(char *self);         /* slot 6  */
-int *_ZN9BlueFlameD0Ev(int *t);                   /* slot 17 */
-int func_ov002_020b59a0(void);                    /* slot 18, yoshi override */
-void func_ov002_020b599c(void);                   /* slot 19, egg no-op */
-void *BlueFlame_Spawn(void);
-void *RedFlame_Spawn(void);
+int _ZN11daObjFire_c13InitResourcesEv(char *t);      /* slot 0  */
+int _ZN11daObjFire_c8BehaviorEv(char *self);         /* slot 6  */
+int *_ZN11daObjFire_cD0Ev(int *t);                   /* slot 17 */
+int _ZN11daObjFire_c13OnYoshiTryEatEv(void);                    /* slot 18, yoshi override */
+void _ZN11daObjFire_c13OnTurnIntoEggER6Player(void);                   /* slot 19, egg no-op */
+void *daObjFire_c_classInit_OBJ_BLUE_FIRE(void);
+void *daObjFire_c_classInit_OBJ_RED_FIRE(void);
 
 /* the D1 chain's sub-object destructor, C-linkage in the build */
-void _ZN18MovingCylinderClsnD1Ev(void *);  /* the MovingCylinderClsn at +0xe4 */
-void *_ZN5ActorD2Ev(void *);
+void _ZN7dCcAc_cD1Ev(void *);  /* the MovingCylinderClsn at +0xe4 */
+void *_ZN8dActor_cD2Ev(void *);
 
 /* The one array both ROM factories install; thirty-one slots. Defined here:
    the `int` type and C linkage match the `extern int _ZTV9BlueFlame[]` in
@@ -124,62 +126,62 @@ FL_TRAP(13) FL_TRAP(14)
 
 // ---- the shared half -------------------------------------------------------
 static int __fastcall fl_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall fl_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall fl_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 static void __fastcall fl_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall fl_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall fl_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall fl_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall fl_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall fl_pdes(void *s, void *)
-{ ((ActorBase *)s)->ActorBase::OnPendingDestroy(); return 0; }
+{ ((fBase_c *)s)->fBase_c::OnPendingDestroy(); return 0; }
 static int __fastcall fl_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 /* slots 3 and 9: the ROM table's own base bodies, reached on a clean run */
 static int __fastcall fl_clean_base(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::CleanupResources(); }
+{ return ((fBase_c *)s)->fBase_c::CleanupResources(); }
 static int __fastcall fl_render_base(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::Render(); }
+{ return ((fBase_c *)s)->fBase_c::Render(); }
 static int __fastcall fl_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall fl_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall fl_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall fl_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall fl_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall fl_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall fl_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall fl_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall fl_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 static int __fastcall fl_aimed(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 
 // ---- the flame's own slots -------------------------------------------------
 static int __fastcall fl_init(void *s, void *)
-{ return _ZN9BlueFlame13InitResourcesEv((char *)s); }
+{ return _ZN11daObjFire_c13InitResourcesEv((char *)s); }
 static int __fastcall fl_behavior(void *s, void *)
-{ return _ZN9BlueFlame8BehaviorEv((char *)s); }
+{ return _ZN11daObjFire_c8BehaviorEv((char *)s); }
 static int __fastcall fl_yoshi(void *s, void *)
-{ (void)s; return func_ov002_020b59a0(); }
+{ (void)s; return _ZN11daObjFire_c13OnYoshiTryEatEv(); }
 static int __fastcall fl_egg(void *s, void *, void *)
-{ (void)s; func_ov002_020b599c(); return 0; }
+{ (void)s; _ZN11daObjFire_c13OnTurnIntoEggER6Player(); return 0; }
 static int __fastcall fl_d0(void *s, void *)
-{ return (int)(size_t)_ZN9BlueFlameD0Ev((int *)s); }
+{ return (int)(size_t)_ZN11daObjFire_cD0Ev((int *)s); }
 /* D1, the HauntedChair treatment: the matched D1 is the auto-emitted-member-
    dtor .cpp form, so the thunk runs the D0 chain minus the tail Deallocate. */
 /* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
@@ -204,7 +206,7 @@ extern "C" void hal_fill_blue_flame_vtable(void)
     vt[13] = (void *)fl_trap13;
     vt[14] = (void *)fl_trap14;
     vt[15] = (void *)fl_heap;
-    vt[16] = (void *)hal_cppd1_BlueFlame;
+    vt[16] = (void *)PORT_D16(hal_cppd1_BlueFlame);
     vt[17] = (void *)fl_d0;
     vt[18] = (void *)fl_yoshi;
     vt[19] = (void *)fl_egg;

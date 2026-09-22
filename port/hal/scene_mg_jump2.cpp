@@ -28,7 +28,7 @@
 //
 //     Scene -> dScMgBase_c        data_ov004_020bc0c0  36 slots
 //           -> dScMgD3DBase_c     data_ov006_0213c62c  36 slots
-//           -> dScMgJump2_c       data_ov006_0213ccfc  36 slots
+//           -> dScMgJump2_c       _ZTV12dScMgJump2_c  36 slots
 //
 // The ROM's own type_info, read the way hal/scene_mg_panel's lane established:
 // the word BEFORE a vtable is its type_info, that record's second word is the
@@ -49,7 +49,7 @@
 //
 // THE MIDDLE TABLE'S CONFIG NAME IS WRONG AND THE ROM SAYS SO.
 // config/arm9/overlays/ov006/symbols.txt calls 0x0213c62c
-// `_ZTV17MgBounceAndPounce`, i.e. the vtable of the class 0x174 is named for.
+// `_ZTV14dScMgD3DBase_c`, i.e. the vtable of the class 0x174 is named for.
 // Its own type_info reads "14dScMgD3DBase_c", and the table is the base of
 // FOUR ids -- 0x174, 0x175, 0x180 and 0x181, whose type_info records all link
 // to 0x0213c5c8 (relocs at 0x0213cba0, 0x0213ccac, 0x0213fad8, 0x0213fc0c).
@@ -146,7 +146,7 @@
 
 #include "hal/screen_gap.h"
 
-#include "MgBounceAndPounce.h"
+#include "dScMgD3DBase_c.h"
 
 #include <cstdio>
 #include <cstdlib>
@@ -165,20 +165,20 @@ unsigned port_mg_scene_spawn_param(int scene_id);
    host array of the same name is a duplicate symbol, and leaving the mounted
    table alone leaves live wild DS pointers in a table the factory installs. */
 extern unsigned char data_ov004_020bc0c0[];        /* dScMgBase_c,     36 */
-extern unsigned char _ZTV17MgBounceAndPounce[];    /* dScMgD3DBase_c,  36 */
-extern unsigned char data_ov006_0213ccfc[];        /* dScMgJump2_c,    36 */
-extern unsigned char MgBounceAndTrounce_SpawnInfo[];
+extern unsigned char _ZTV14dScMgD3DBase_c[];    /* dScMgD3DBase_c,  36 */
+extern unsigned char _ZTV12dScMgJump2_c[];        /* dScMgJump2_c,    36 */
+extern unsigned char g_profile_MG_JUMP2[];
 
 /* dScMgD3DBase_c's seventeen overrides.  Four of them are REAL C++ METHODS in
    src (MgBounceAndPounce::BeforeInitResources, ::AfterCleanupResources,
    ::BeforeBehavior and ::AfterRender), so they are called through the class
    below rather than declared here -- a C-linkage face for them would be a
    symbol three other lanes in this wave also define. */
-int   _ZN17MgBounceAndPounceD1Ev(void *self);                     /* slot 16 */
-int   _ZN17MgBounceAndPounceD0Ev(void *self);                     /* slot 17 */
-int   func_ov006_020e6e78(void *self);                            /* slot 24 */
-int   func_ov006_020e6e54(void *t);                               /* slot 25 */
-int   func_ov006_020e6e4c(void);                                  /* slot 26 */
+int   _ZN14dScMgD3DBase_cD1Ev(void *self);                     /* slot 16 */
+int   _ZN14dScMgD3DBase_cD0Ev(void *self);                     /* slot 17 */
+int   _ZN14dScMgD3DBase_c8OnKickedEv(void *self);                            /* slot 24 */
+int   _ZN14dScMgD3DBase_c8OnPushedEv(void *t);                               /* slot 25 */
+int   _ZN14dScMgD3DBase_c24OnHitByCannonBlastedCharEv(void);                                  /* slot 26 */
 
 /* FOUR OF THE SEVENTEEN ARE HOST COPIES, not the src TUs: slots 2, 10, 27 and
    28 each drop an argument the ROM rides through in a register, and
@@ -186,18 +186,18 @@ int   func_ov006_020e6e4c(void);                                  /* slot 26 */
    short version is that slot 2's dropped RETURN is what put this class's actor
    on the cleanup list instead of the behaviour list on this lane's first run.
    The four src TUs stay out of port/slice_bnt.txt for the reason
-   src/func_ov006_0210a6e4.cpp stays out of slice_flw.txt: nothing should claim
+   src/minigames/d_s_mg_single3_d_base.cpp stays out of slice_flw.txt: nothing should claim
    a decompilation the build does not use. */
 int   port_mg_d3dbase_after_init(void *c, unsigned int flags);    /* slot  2 */
 int   port_mg_d3dbase_before_render(void *c);                     /* slot 10 */
 void  port_mg_d3dbase_slot27(void *c);                            /* slot 27 */
 void  port_mg_d3dbase_slot28(void *c);                            /* slot 28 */
-void  func_ov006_020e6d24(char *c);                               /* slot 29 */
-void  func_ov006_020e6cac(char *c);                               /* slot 30 */
-void  func_ov006_020e72c0(char *c);                               /* slot 31 */
-void  func_ov006_020e7124(char *obj);                             /* slot 33 */
+void  _ZN14dScMgD3DBase_c16OnAimedAtWithEggEv(char *c);                               /* slot 29 */
+void  _ZN14dScMgD3DBase_c25OnAimedAtWithEggReturnVecEv(char *c);                               /* slot 30 */
+void  _ZN14dScMgD3DBase_c9Virtual7CEv(char *c);                               /* slot 31 */
+void  _ZN14dScMgD3DBase_c9Virtual84Ev(char *obj);                             /* slot 33 */
 
-/* dScMgJump2_c's own eight.  func_ov006_020ef3e0 is the HOST COPY in
+/* dScMgJump2_c's own eight.  _ZN12dScMgJump2_c8BehaviorEv is the HOST COPY in
    unmatched/MgJump2_FieldPmf.cpp, not the src TU: it is the pointer-to-member
    dispatcher and the port cannot compile the src.
 
@@ -208,33 +208,33 @@ void  func_ov006_020e7124(char *obj);                             /* slot 33 */
    read -- and 0x020efa84 does the same at 0x020efa8c.  So the parameter exists
    here only so __fastcall cleans four bytes, and the thunks do not forward it.
    The value is recorded for the census so the claim is measured. */
-int   func_ov006_020ef834(char *self);      /* slot  0 InitResources */
-int   func_ov006_020ef110(void);            /* slot  3 CleanupResources */
-int   func_ov006_020ef3e0(char *self);      /* slot  6 Behavior, host copy */
-int   func_ov006_020ef148(char *self);      /* slot  9 Render */
-void *func_ov006_020eebe8(char *c);         /* slot 16 D2 */
-void *func_ov006_020eec9c(char *c);         /* slot 17 D0 */
-void  func_ov006_020efaa8(char *c);         /* slot 18 state reset */
-int   func_ov006_020efa84(void);            /* slot 19 */
+int   _ZN12dScMgJump2_c13InitResourcesEv(char *self);      /* slot  0 InitResources */
+int   _ZN12dScMgJump2_c16CleanupResourcesEv(void);            /* slot  3 CleanupResources */
+int   _ZN12dScMgJump2_c8BehaviorEv(char *self);      /* slot  6 Behavior, host copy */
+int   _ZN12dScMgJump2_c6RenderEv(char *self);      /* slot  9 Render */
+void *_ZN12dScMgJump2_cD1Ev(char *c);         /* slot 16 D2 */
+void *_ZN12dScMgJump2_cD0Ev(char *c);         /* slot 17 D0 */
+void  _ZN12dScMgJump2_c13OnYoshiTryEatEi(char *c);         /* slot 18 state reset */
+int   _ZN12dScMgJump2_c13OnTurnIntoEggEi(void);            /* slot 19 */
 
 /* THE ELEMENT VTABLE, run mg9 lane S381's headline arriving in this family.
-   func_ov006_020c8a04 -- the constructor the factory runs over the THREE
-   0xb8-byte records at this+0x500c -- writes data_ov006_0213b0cc into each
+   _ZN16dMgJump3DMario_cC1Ev -- the constructor the factory runs over the THREE
+   0xb8-byte records at this+0x500c -- writes _ZTV16dMgJump3DMario_c into each
    record's word 0.  That is a THREE-SLOT vtable of its own, mounted ROM data,
    and nothing in the port filled it: a dispatch through slot 2 jumped to the
    raw DS address 0x020c762c and the fault probe caught it
    (FAULT c0000005 at +0x01cc762c accessing 020c762c, walker node 307FA5B0
    actor 307FA588 id 0x175).  All three bodies have matched src TUs. */
-int  func_ov006_020c76d8(int p);      /* element slot 0, returns p + 20 */
-int  func_ov006_020c76d0(int p);      /* element slot 1, returns p + 32 */
-int  func_ov006_020c762c(char *c);    /* element slot 2, the state selector */
-extern unsigned char data_ov006_0213b0cc[];   /* the element table, 3 slots */
+int  _ZN16dMgJump3DMario_c12Unk_020c76d8Ev(int p);      /* element slot 0, returns p + 20 */
+int  _ZN16dMgJump3DMario_c12Unk_020c76d0Ev(int p);      /* element slot 1, returns p + 32 */
+int  _ZN16dMgJump3DMario_c12Unk_020c762cEv(char *c);    /* element slot 2, the state selector */
+extern unsigned char _ZTV16dMgJump3DMario_c[];   /* the element table, 3 slots */
 
-/* the factory.  The config names 0x020efaf0 _ZN8PathLift17BaseInitResourcesEv,
+/* the factory.  The config names 0x020efaf0 dScMgJump2_c_classInit,
    which is ov002's name for the same address in a DIFFERENT overlay; the body
    in ov006 is this class's factory, and section 8 of port/slice_bnt.txt is the
    disassembly that says so. */
-void *_ZN8PathLift17BaseInitResourcesEv(void);
+void *dScMgJump2_c_classInit(void);
 
 /* the dispatch files' witnesses */
 void     port_mg_jump2_field_counts(unsigned *calls, unsigned *routed,
@@ -289,46 +289,46 @@ static int g_j2_mode18 = -1, g_j2_mode19 = -1;
 
 /* ---- dScMgD3DBase_c's seventeen ----------------------------------------- */
 static int  __fastcall d3_binit(void *s, void *)
-{ D3B(1);  return ((MgBounceAndPounce *)s)->MgBounceAndPounce::BeforeInitResources(); }
+{ D3B(1);  return ((dScMgD3DBase_c *)s)->dScMgD3DBase_c::BeforeInitResources(); }
 /* SLOT 2 RETURNS A VALUE THE FRAMEWORK READS, and the flag it is handed is
    read too. Both were dropped in this lane's first build and the actor went
    straight to the cleanup list; see unmatched/MgD3DBase_Slots.cpp. */
 static int __fastcall d3_ainit(void *s, void *, unsigned f)
 { D3B(2);  return port_mg_d3dbase_after_init(s, f); }
 static void __fastcall d3_aclean(void *s, void *, unsigned f)
-{ D3B(5);  ((MgBounceAndPounce *)s)->MgBounceAndPounce::AfterCleanupResources(f); }
+{ D3B(5);  ((dScMgD3DBase_c *)s)->dScMgD3DBase_c::AfterCleanupResources(f); }
 static int  __fastcall d3_bbeh(void *s, void *)
-{ D3B(7);  return ((MgBounceAndPounce *)s)->MgBounceAndPounce::BeforeBehavior(); }
+{ D3B(7);  return ((dScMgD3DBase_c *)s)->dScMgD3DBase_c::BeforeBehavior(); }
 static int  __fastcall d3_bren(void *s, void *)
 { D3B(10); return port_mg_d3dbase_before_render(s); }
 static void __fastcall d3_aren(void *s, void *, unsigned f)
-{ D3B(11); ((MgBounceAndPounce *)s)->MgBounceAndPounce::AfterRender(f); }
+{ D3B(11); ((dScMgD3DBase_c *)s)->dScMgD3DBase_c::AfterRender(f); }
 static void *__fastcall d3_d2(void *s, void *)
-{ D3B(16); return (void *)(size_t)_ZN17MgBounceAndPounceD1Ev(s); }
+{ D3B(16); return (void *)(size_t)_ZN14dScMgD3DBase_cD1Ev(s); }
 static void *__fastcall d3_d0(void *s, void *)
-{ D3B(17); return (void *)(size_t)_ZN17MgBounceAndPounceD0Ev(s); }
+{ D3B(17); return (void *)(size_t)_ZN14dScMgD3DBase_cD0Ev(s); }
 static int  __fastcall d3_v24(void *s, void *)
-{ D3B(24); return func_ov006_020e6e78(s); }
+{ D3B(24); return _ZN14dScMgD3DBase_c8OnKickedEv(s); }
 static int  __fastcall d3_v25(void *s, void *)
-{ D3B(25); return func_ov006_020e6e54(s); }
+{ D3B(25); return _ZN14dScMgD3DBase_c8OnPushedEv(s); }
 static int  __fastcall d3_v26(void *, void *)
-{ D3B(26); return func_ov006_020e6e4c(); }
+{ D3B(26); return _ZN14dScMgD3DBase_c24OnHitByCannonBlastedCharEv(); }
 static int  __fastcall d3_v27(void *s, void *)
 { D3B(27); port_mg_d3dbase_slot27(s); return 0; }
 static int  __fastcall d3_v28(void *s, void *)
 { D3B(28); port_mg_d3dbase_slot28(s); return 0; }
 static int  __fastcall d3_v29(void *s, void *)
-{ D3B(29); func_ov006_020e6d24((char *)s); return 0; }
+{ D3B(29); _ZN14dScMgD3DBase_c16OnAimedAtWithEggEv((char *)s); return 0; }
 static int  __fastcall d3_v30(void *s, void *)
-{ D3B(30); func_ov006_020e6cac((char *)s); return 0; }
+{ D3B(30); _ZN14dScMgD3DBase_c25OnAimedAtWithEggReturnVecEv((char *)s); return 0; }
 static int  __fastcall d3_v31(void *s, void *)
-{ D3B(31); func_ov006_020e72c0((char *)s); return 0; }
+{ D3B(31); _ZN14dScMgD3DBase_c9Virtual7CEv((char *)s); return 0; }
 static int  __fastcall d3_v33(void *s, void *)
-{ D3B(33); func_ov006_020e7124((char *)s); return 0; }
+{ D3B(33); _ZN14dScMgD3DBase_c9Virtual84Ev((char *)s); return 0; }
 
 /* ---- dScMgJump2_c's own eight ------------------------------------------- */
 static int  __fastcall j2_init(void *s, void *)
-{ J2(0);  const int r = func_ov006_020ef834((char *)s);
+{ J2(0);  const int r = _ZN12dScMgJump2_c13InitResourcesEv((char *)s);
   /* the GaplessMinigames latch, for hal/scene_mg.cpp's reason: every seated
      minigame calls it so the ones the gapless table does not name can say
      "unsupported" instead of doing nothing quietly.  hal_gapless_splice() is
@@ -337,19 +337,19 @@ static int  __fastcall j2_init(void *s, void *)
      has not played it and does not get to vote. */
   hal_gapless_minigames_latch(); return r; }
 static int  __fastcall j2_clean(void *, void *)
-{ J2(3);  return func_ov006_020ef110(); }
+{ J2(3);  return _ZN12dScMgJump2_c16CleanupResourcesEv(); }
 static int  __fastcall j2_beh(void *s, void *)
-{ J2(6);  return func_ov006_020ef3e0((char *)s); }
+{ J2(6);  return _ZN12dScMgJump2_c8BehaviorEv((char *)s); }
 static int  __fastcall j2_render(void *s, void *)
-{ J2(9);  return func_ov006_020ef148((char *)s); }
+{ J2(9);  return _ZN12dScMgJump2_c6RenderEv((char *)s); }
 static void *__fastcall j2_d2(void *s, void *)
-{ J2(16); return func_ov006_020eebe8((char *)s); }
+{ J2(16); return _ZN12dScMgJump2_cD1Ev((char *)s); }
 static void *__fastcall j2_d0(void *s, void *)
-{ J2(17); return func_ov006_020eec9c((char *)s); }
+{ J2(17); return _ZN12dScMgJump2_cD0Ev((char *)s); }
 static int  __fastcall j2_reset(void *s, void *, int mode)
-{ J2(18); g_j2_mode18 = mode; func_ov006_020efaa8((char *)s); return 1; }
+{ J2(18); g_j2_mode18 = mode; _ZN12dScMgJump2_c13OnYoshiTryEatEi((char *)s); return 1; }
 static int  __fastcall j2_v19(void *, void *, int mode)
-{ J2(19); g_j2_mode19 = mode; return func_ov006_020efa84(); }
+{ J2(19); g_j2_mode19 = mode; return _ZN12dScMgJump2_c13OnTurnIntoEggEi(); }
 
 /* SM64DS_SCENE_SLOT0=0 and SM64DS_SCENE_SLOT9=0, the diagnostics every scene
    seat in this port carries, counted separately so a run can never read a
@@ -367,11 +367,11 @@ static int __fastcall j2_render_noop(void *, void *)
 static unsigned g_j2_elem_hits[3];
 
 static int __fastcall el_v0(void *s, void *)
-{ ++g_j2_elem_hits[0]; return func_ov006_020c76d8((int)(size_t)s); }
+{ ++g_j2_elem_hits[0]; return _ZN16dMgJump3DMario_c12Unk_020c76d8Ev((int)(size_t)s); }
 static int __fastcall el_v1(void *s, void *)
-{ ++g_j2_elem_hits[1]; return func_ov006_020c76d0((int)(size_t)s); }
+{ ++g_j2_elem_hits[1]; return _ZN16dMgJump3DMario_c12Unk_020c76d0Ev((int)(size_t)s); }
 static int __fastcall el_v2(void *s, void *)
-{ ++g_j2_elem_hits[2]; return func_ov006_020c762c((char *)s); }
+{ ++g_j2_elem_hits[2]; return _ZN16dMgJump3DMario_c12Unk_020c762cEv((char *)s); }
 
 struct J2Face { unsigned ds; void *host; };
 
@@ -437,14 +437,14 @@ static unsigned g_j2_elem_claimed;
 extern "C" void port_scene_fill_jump2(void)
 {
     void **base = (void **)data_ov004_020bc0c0;
-    void **mid  = (void **)_ZTV17MgBounceAndPounce;
-    void **vt   = (void **)data_ov006_0213ccfc;
+    void **mid  = (void **)_ZTV14dScMgD3DBase_c;
+    void **vt   = (void **)_ZTV12dScMgJump2_c;
 
     /* THE BASE TABLE IS FILLED HERE TOO AND IT IS NOT CEREMONY.  Earlier rows'
        fills already did it and run first, so on a tree carrying them this is a
        second pass over words that are already host pointers and finds nothing.
        It is here so this class does not depend on another class's row
-       existing: the factory's second act is func_ov004_020b2adc, which writes
+       existing: the factory's second act is _ZN11dScMgBase_cC2Ev, which writes
        data_ov004_020bc0c0 into the object's first word before either derived
        table lands. */
     port_scene_mg_fill_shared(base, 36);
@@ -473,12 +473,12 @@ extern "C" void port_scene_fill_jump2(void)
 
     /* THE ELEMENT VTABLE.  Three slots, address-keyed like every other fill
        here, so it is idempotent and cannot land on a slot the ROM did not park
-       that body in.  0x174's factory ALSO runs func_ov006_020c8a04 over its own
+       that body in.  0x174's factory ALSO runs _ZN16dMgJump3DMario_cC1Ev over its own
        +0x500c array (relocs from:0x020eebd8 and from:0x020efbe8 are the only
        two that reach the constructor), so this table is shared with lane BNP
        and the fill that runs first claims it -- the same rule as the middle
        vtable, and the count is printed for the same reason. */
-    g_j2_elem_claimed = jump2_apply((void **)data_ov006_0213b0cc, 3, kElemFaces,
+    g_j2_elem_claimed = jump2_apply((void **)_ZTV16dMgJump3DMario_c, 3, kElemFaces,
                                     sizeof kElemFaces / sizeof kElemFaces[0]);
 
     /* the two diagnostics, applied after the fill so they override it */
@@ -524,18 +524,18 @@ extern "C" void port_scene_fill_jump2(void)
 
    THE FACTORY NEEDS NO DISPLACEMENT RULING, re-checked rather than assumed.
    port/mg_fanout_costs.txt section 12 grants one to 0x169 because
-   src/func_ov006_020e0574.cpp calls the base constructor func_ov004_020b2adc
+   src/actors/dScMgCup_c.cpp calls the base constructor _ZN11dScMgBase_cC2Ev
    with NO argument and rides r0 through.  The ROM body here does
    `movs r4,r0 / beq / bl 0x020b2adc` at 0x020efb00..0x020efb08 with r0 STILL
-   holding the allocation, and src/_ZN8PathLift17BaseInitResourcesEv.c spells
-   func_ov004_020b2adc(p) WITH its argument, so this class is on the correct
+   holding the allocation, and src/minigames/d_s_mg_jump2.cpp spells
+   _ZN11dScMgBase_cC2Ev(p) WITH its argument, so this class is on the correct
    side of the ruling and the factory is linked from the slice rather than
    host-copied. */
 static char *g_j2_self;
 
 extern "C" void *port_mg_jump2_spawn(void)
 {
-    void *p = _ZN8PathLift17BaseInitResourcesEv();
+    void *p = dScMgJump2_c_classInit();
     g_j2_self = (char *)p;
     return p;
 }
@@ -568,7 +568,7 @@ extern "C" void port_scene_jump2_hits(void)
                 "word(s) (0 is EXPECTED once 0x174's row exists, section 3)\n",
                 mtotal, g_j2_mid_claimed);
 
-    std::printf("[scene] dScMgJump2_c element vtable data_ov006_0213b0cc "
+    std::printf("[scene] dScMgJump2_c element vtable _ZTV16dMgJump3DMario_c "
                 "(3 slots, on each of the three 0xb8 records at +0x500c): this "
                 "seat's fill claimed %u word(s); slots entered 0(x%u) 1(x%u) "
                 "2(x%u)\n", g_j2_elem_claimed, g_j2_elem_hits[0],
@@ -627,9 +627,9 @@ extern "C" void port_scene_jump2_hits(void)
     }
 
     /* THE SCREEN THE 3D IS ON.  The halfword at +0x4664 is this family's
-       screen selector: dScMgD3DBase_c slot 24 (func_ov006_020e6e78) TOGGLES it
+       screen selector: dScMgD3DBase_c slot 24 (_ZN14dScMgD3DBase_c8OnKickedEv) TOGGLES it
        and then re-points the camera at self+0x466c + it*0xbc, and this class's
-       Render (src/func_ov006_020ef148.c) gates its whole OAM block on it being
+       Render (src/minigames/d_s_mg_jump2.cpp) gates its whole OAM block on it being
        1.  Two independent readers of one field, so printing it says which
        screen the run was drawing to rather than leaving it inferred. */
     if (g_j2_self)
@@ -674,9 +674,9 @@ extern "C" void port_scene_jump2_hits(void)
     /* The SpawnInfo cross-check every seat prints: word 0 is the factory and
        word 1 is the id twice.  Read out of the mount at run time, so a mount
        that stopped rebasing says so here rather than in a fault. */
-    std::printf("[scene] dScMgJump2_c SpawnInfo MgBounceAndTrounce_SpawnInfo "
+    std::printf("[scene] dScMgJump2_c SpawnInfo g_profile_MG_JUMP2 "
                 "word1 = %08x (the ROM's 0x01750175), factory word = %p\n",
-                *(const unsigned *)(MgBounceAndTrounce_SpawnInfo + 4),
-                *(void *const *)MgBounceAndTrounce_SpawnInfo);
+                *(const unsigned *)(g_profile_MG_JUMP2 + 4),
+                *(void *const *)g_profile_MG_JUMP2);
     std::fflush(stdout);
 }

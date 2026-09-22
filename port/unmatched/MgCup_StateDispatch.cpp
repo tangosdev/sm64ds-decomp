@@ -34,7 +34,7 @@
 //
 // ---- ARITY 0, READ OFF THE ROM RATHER THAN OFF THE TABLE -------------------
 //
-// func_ov006_020e0204's own bytes, disassembled out of
+// _ZN10dScMgCup_c8BehaviorEv's own bytes, disassembled out of
 // extracted/overlays/overlay_0006.bin at base 0x020bfec0:
 //
 //     020e0204  push {r4,r5,r6,r7,r8,sb,sl,lr}
@@ -53,11 +53,11 @@
 // NOTHING WRITES r1 AS AN ARGUMENT, so the callee is passed the advanced
 // `this` and nothing else. That is what "arity 0" means here, and it agrees
 // with all eight state TUs' own signatures: seven take one `char *` receiver
-// and func_ov006_020df1bc takes (void) because its ROM body is four bytes,
+// and _ZN10dScMgCup_c9StateIdleEv takes (void) because its ROM body is four bytes,
 // a bare `bx lr`.
 //
 // THE STATE INDEX IS AT +0x5418 and it is cross-confirmed: vtable slot 18,
-// src/func_ov006_020dfeec.c, is the state reset and zeroes the same offset.
+// src/actors/dScMgCup_c.cpp, is the state reset and zeroes the same offset.
 // hal/scene_mg_cup.cpp's census prints it at exit.
 //
 // EVERY ADJUSTMENT WORD IS ZERO. All eight pairs were read out of the overlay
@@ -83,7 +83,7 @@
 // that decides what a null code word means, what a nonzero adjustment means
 // and how an UNHANDLED address is reported. Only one link is added in front.
 //
-// IT DEFINES func_ov006_020e0204, so src/func_ov006_020e0204.cpp is OUT of
+// IT DEFINES _ZN10dScMgCup_c8BehaviorEv, so src/actors/dScMgCup_c.cpp is OUT of
 // port/slice_cup.txt. That is one linked function traded for a working
 // dispatch, the trade MG2 made five times for curling.
 //
@@ -108,16 +108,16 @@ void port_mg_call0(void *self, unsigned code, int adj);
 /* ---- the eight matched state bodies, in table-slot order ------------------
    Each is declared with the parameter list ITS OWN src TU defines, so a
    receiver is passed the way the ROM passes it rather than the way the slot's
-   arity would suggest. func_ov006_020df1bc is the (void) one: its ROM body is
+   arity would suggest. _ZN10dScMgCup_c9StateIdleEv is the (void) one: its ROM body is
    0x4 bytes, `bx lr`, and its src is an empty function. */
-void func_ov006_020dfd48(char *c);      /* slot 0 */
-void func_ov006_020dfcd8(char *o);      /* slot 1 */
-void func_ov006_020df5b8(char *c);      /* slot 2 */
-void func_ov006_020df540(char *c);      /* slot 3 */
-void func_ov006_020df3bc(char *c);      /* slot 4 */
-void func_ov006_020df28c(char *self);   /* slot 5 */
-void func_ov006_020df1c0(char *c);      /* slot 6 */
-void func_ov006_020df1bc(void);         /* slot 7, the empty state */
+void _ZN10dScMgCup_c10StateSetupEv(char *c);      /* slot 0 */
+void _ZN10dScMgCup_c19StatePrepareShuffleEv(char *o);      /* slot 1 */
+void _ZN10dScMgCup_c12StateShuffleEv(char *c);      /* slot 2 */
+void _ZN10dScMgCup_c17StateWaitForInputEv(char *c);      /* slot 3 */
+void _ZN10dScMgCup_c11StateSelectEv(char *c);      /* slot 4 */
+void _ZN10dScMgCup_c11StateResultEv(char *self);   /* slot 5 */
+void _ZN10dScMgCup_c11StateFinishEv(char *c);      /* slot 6 */
+void _ZN10dScMgCup_c9StateIdleEv(void);         /* slot 7, the empty state */
 
 /* the mount table, re-typed to the ROM's eight-byte pair. The mount defines
    the storage; __sinit_ov006_021303d0 fills it at overlay-constructor time. */
@@ -129,7 +129,7 @@ void func_ov006_020dedfc(char *r7, int r6, int r5, int r4);
 void func_ov006_020debfc(char *c);
 void func_ov006_020c2b8c(char *c);      /* host copy, MgShared4f38_SubDispatch.cpp */
 
-/* src/func_ov006_020e0204.cpp's own animation-frame table: an array of
+/* src/actors/dScMgCup_c.cpp's own animation-frame table: an array of
    POINTERS to {advance, hold} pairs. All seven words carry a relocation in
    config/arm9/overlays/ov006/relocs.txt (0x0213c0d8..0x0213c0f0 -> 0x02139db4
    .. 0x0213a274), so the mount rebases every one of them and the double
@@ -138,9 +138,9 @@ struct MgCupFrame { int a, b; };
 extern MgCupFrame *data_ov006_0213c0d8[];
 
 /* this file's own definition, and the two witnesses hal/scene_mg_cup.cpp
-   prints. func_ov006_020e0204 is DEFINED at the foot of this file with the
-   signature src/func_ov006_020e0204.cpp defines, `int (char *)`. */
-int      func_ov006_020e0204(char *o);
+   prints. _ZN10dScMgCup_c8BehaviorEv is DEFINED at the foot of this file with the
+   signature src/actors/dScMgCup_c.cpp defines, `int (char *)`. */
+int      _ZN10dScMgCup_c8BehaviorEv(char *o);
 void     port_mg_cup_call0(void *self, unsigned code, int adj);
 unsigned port_mg_cup_state_hits(void);
 unsigned port_mg_cup_floor_hits(void);
@@ -169,17 +169,17 @@ static int cup_try_0(void *self, unsigned code)
 {
     char *c = (char *)self;
     switch (code) {
-    case 0x020dfd48u: ++g_cup_state_slot[0]; func_ov006_020dfd48(c); return 1;
-    case 0x020dfcd8u: ++g_cup_state_slot[1]; func_ov006_020dfcd8(c); return 1;
-    case 0x020df5b8u: ++g_cup_state_slot[2]; func_ov006_020df5b8(c); return 1;
-    case 0x020df540u: ++g_cup_state_slot[3]; func_ov006_020df540(c); return 1;
-    case 0x020df3bcu: ++g_cup_state_slot[4]; func_ov006_020df3bc(c); return 1;
-    case 0x020df28cu: ++g_cup_state_slot[5]; func_ov006_020df28c(c); return 1;
-    case 0x020df1c0u: ++g_cup_state_slot[6]; func_ov006_020df1c0(c); return 1;
+    case 0x020dfd48u: ++g_cup_state_slot[0]; _ZN10dScMgCup_c10StateSetupEv(c); return 1;
+    case 0x020dfcd8u: ++g_cup_state_slot[1]; _ZN10dScMgCup_c19StatePrepareShuffleEv(c); return 1;
+    case 0x020df5b8u: ++g_cup_state_slot[2]; _ZN10dScMgCup_c12StateShuffleEv(c); return 1;
+    case 0x020df540u: ++g_cup_state_slot[3]; _ZN10dScMgCup_c17StateWaitForInputEv(c); return 1;
+    case 0x020df3bcu: ++g_cup_state_slot[4]; _ZN10dScMgCup_c11StateSelectEv(c); return 1;
+    case 0x020df28cu: ++g_cup_state_slot[5]; _ZN10dScMgCup_c11StateResultEv(c); return 1;
+    case 0x020df1c0u: ++g_cup_state_slot[6]; _ZN10dScMgCup_c11StateFinishEv(c); return 1;
     /* the empty state: `bx lr` in the ROM, `{}` in src, and its src signature
        is (void). Called with no argument for that reason and not because the
        receiver was dropped -- there is no body to drop it from. */
-    case 0x020df1bcu: ++g_cup_state_slot[7]; func_ov006_020df1bc();  return 1;
+    case 0x020df1bcu: ++g_cup_state_slot[7]; _ZN10dScMgCup_c9StateIdleEv();  return 1;
     default:                                                         return 0;
     }
 }
@@ -208,10 +208,10 @@ extern "C" void port_mg_cup_state_slots(unsigned *out8)
 // Run link100 lane PMFB5. data_ov006_02141870's eight cells hold HOST addresses
 // after boot, written by port_mg_cup_states_seat below once every cell has been
 // compared against the ROM's own code word and a zero adjustment word, so
-// src/func_ov006_020e0204.cpp (dScMgCup_c's vtable slot 6 Behavior) compiles
+// src/actors/dScMgCup_c.cpp (dScMgCup_c's vtable slot 6 Behavior) compiles
 // from src and this file no longer defines it.
 //
-//   func_ov006_020e0204   data_ov006_02141870   8 slots   arity 0
+//   _ZN10dScMgCup_c8BehaviorEv   data_ov006_02141870   8 slots   arity 0
 //
 // THE STRIDE, ROM SIDE, read at the body's OWN address out of
 // extracted/overlays/overlay_0006.bin at ov006 base 0x020bfec0
@@ -287,14 +287,14 @@ extern "C" void port_mg_cup_state_slots(unsigned *out8)
         sym();                                                            \
     }
 
-CUP_FACE(0, func_ov006_020dfd48)
-CUP_FACE(1, func_ov006_020dfcd8)
-CUP_FACE(2, func_ov006_020df5b8)
-CUP_FACE(3, func_ov006_020df540)
-CUP_FACE(4, func_ov006_020df3bc)
-CUP_FACE(5, func_ov006_020df28c)
-CUP_FACE(6, func_ov006_020df1c0)
-CUP_FACE_VOID(7, func_ov006_020df1bc)
+CUP_FACE(0, _ZN10dScMgCup_c10StateSetupEv)
+CUP_FACE(1, _ZN10dScMgCup_c19StatePrepareShuffleEv)
+CUP_FACE(2, _ZN10dScMgCup_c12StateShuffleEv)
+CUP_FACE(3, _ZN10dScMgCup_c17StateWaitForInputEv)
+CUP_FACE(4, _ZN10dScMgCup_c11StateSelectEv)
+CUP_FACE(5, _ZN10dScMgCup_c11StateResultEv)
+CUP_FACE(6, _ZN10dScMgCup_c11StateFinishEv)
+CUP_FACE_VOID(7, _ZN10dScMgCup_c9StateIdleEv)
 
 extern "C" void port_mg_cup_states_seat(void)
 {
@@ -308,14 +308,14 @@ extern "C" void port_mg_cup_states_seat(void)
         unsigned rom;
         void *face;
     } seats[] = {
-        {0, 0x020dfd48u, (void *)cup_s0_func_ov006_020dfd48},
-        {1, 0x020dfcd8u, (void *)cup_s1_func_ov006_020dfcd8},
-        {2, 0x020df5b8u, (void *)cup_s2_func_ov006_020df5b8},
-        {3, 0x020df540u, (void *)cup_s3_func_ov006_020df540},
-        {4, 0x020df3bcu, (void *)cup_s4_func_ov006_020df3bc},
-        {5, 0x020df28cu, (void *)cup_s5_func_ov006_020df28c},
-        {6, 0x020df1c0u, (void *)cup_s6_func_ov006_020df1c0},
-        {7, 0x020df1bcu, (void *)cup_s7_func_ov006_020df1bc},
+        {0, 0x020dfd48u, (void *)cup_s0__ZN10dScMgCup_c10StateSetupEv},
+        {1, 0x020dfcd8u, (void *)cup_s1__ZN10dScMgCup_c19StatePrepareShuffleEv},
+        {2, 0x020df5b8u, (void *)cup_s2__ZN10dScMgCup_c12StateShuffleEv},
+        {3, 0x020df540u, (void *)cup_s3__ZN10dScMgCup_c17StateWaitForInputEv},
+        {4, 0x020df3bcu, (void *)cup_s4__ZN10dScMgCup_c11StateSelectEv},
+        {5, 0x020df28cu, (void *)cup_s5__ZN10dScMgCup_c11StateResultEv},
+        {6, 0x020df1c0u, (void *)cup_s6__ZN10dScMgCup_c11StateFinishEv},
+        {7, 0x020df1bcu, (void *)cup_s7__ZN10dScMgCup_c9StateIdleEv},
     };
 
     for (unsigned i = 0; i < sizeof seats / sizeof seats[0]; ++i) {

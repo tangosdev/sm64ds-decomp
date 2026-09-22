@@ -20,10 +20,10 @@
 #               is {0x0209a764, 0x0213c5d4} and 0x0213c5d4 reads
 #               "14dScMgD3DBase_c". FOUR classes point at it -- 0x174, 0x175,
 #               0x180, 0x181 -- and its own vtable is at 0x0213c62c.
-# spawn symbol  MgBounceAndPounce_SpawnInfo, 0x0213cb64 =
+# spawn symbol  g_profile_MG_JUMP, 0x0213cb64 =
 #               {0x020eeafc, 0x01740174}: the factory word and the doubled id.
-# vtable        data_ov006_0213cbe4, 36 slots.
-# factory       MgBounceAndPounce_Spawn, 0x020eeafc, 0xec bytes.
+# vtable        _ZTV11dScMgJump_c, 36 slots.
+# factory       dScMgJump_c_classInit, 0x020eeafc, 0xec bytes.
 # code block    0x020edec0..0x020eebe8, 19 bodies.
 # data span     0x0213cb48..0x0213cc74.
 # player title  BMG message 552, "Bounce and Pounce".
@@ -50,7 +50,7 @@
 #
 # ---- 2. THE WIDTH IS 36, AND ALL FIVE CHECKS AGREE -------------------------
 #
-# 1  SPAN. config/arm9/overlays/ov006/symbols.txt has data_ov006_0213cbe4 and
+# 1  SPAN. config/arm9/overlays/ov006/symbols.txt has _ZTV11dScMgJump_c and
 #    then data_ov006_0213cc74. 0x0213cc74 - 0x0213cbe4 = 0x90 = 36 words, so a
 #    37th slot cannot exist inside the table.
 # 2  TERMINAL SLOT. Slot 35 (0x0213cc70) holds 0x020ad660, the word every
@@ -89,7 +89,7 @@
 #
 # A STRIDE-8 PAIR SWEEP PAST THIS TABLE OVERCOUNTS, and lane PGO's note about
 # phantom entries applies to this class in its own pair run rather than past
-# the vtable: MgBounceAndPounce_SpawnInfo at 0x0213cb64 is {factory, doubled
+# the vtable: g_profile_MG_JUMP at 0x0213cb64 is {factory, doubled
 # id} and reads as a pair to any stride-8 walk. Section 7 anchors the run on
 # the relocation set for that reason, and section 3 is the sinit half of the
 # same discipline.
@@ -139,8 +139,8 @@
 # THE CONFIG NAMES THEM AFTER THIS CLASS AND THAT IS A TRAP FOR THE NEXT LANE.
 # config/arm9/overlays/ov006/symbols.txt gives the BASE's code block
 # (0x020e6c28..0x020e740c) names like _ZN17MgBounceAndPounce19BeforeInitResour
-# cesEv, and it gives _ZTV17MgBounceAndPounce to 0x0213c62c -- the BASE's
-# vtable. This class's own table is only ever spelled data_ov006_0213cbe4. A
+# cesEv, and it gives _ZTV14dScMgD3DBase_c to 0x0213c62c -- the BASE's
+# vtable. This class's own table is only ever spelled _ZTV11dScMgJump_c. A
 # seat that wired "the class's vtable" by NAME would fill the base's table and
 # leave this class's thirty-six words raw.
 #
@@ -166,7 +166,7 @@
 # and the correction is the more useful half.
 #
 # A `::*` / `->*` sweep over the 41 TUs of THIS CLASS's code block and the
-# base's returns exactly ONE file, src/func_ov006_020ee27c.cpp -- vtable slot 6,
+# base's returns exactly ONE file, src/_ZN11dScMgJump_c8BehaviorEv.cpp -- vtable slot 6,
 # `(c->*c->m)()` over self+0x5004. That statement is still true and it is not
 # the answer to the question a seat has to ask, because A SEAT LINKS THE
 # CLOSURE, NOT THE CLASS.
@@ -177,7 +177,7 @@
 # finds 114 sites, which reproduces lane WIG's figure for the same overlay
 # digit for digit. Over this slice's TUs it finds THREE:
 #
-#   020ee290  func_ov006_020ee27c   vtable slot 6, this class's own
+#   020ee290  _ZN11dScMgJump_c8BehaviorEv   vtable slot 6, this class's own
 #   020c4ce8  func_ov006_020c4cd8   an object adapter's tick, the pair at +0x30
 #   020c7898  func_ov006_020c7860   a second object's tick, the pair at +0x3c
 #
@@ -268,7 +268,7 @@
 #
 # ---- 8. THE ONE FLOOR ------------------------------------------------------
 #
-# func_ov006_020ee994, vtable slot 18, 0x168 bytes.
+# _ZN11dScMgJump_c13OnYoshiTryEatEi, vtable slot 18, 0x168 bytes.
 #
 # IT IS A GENUINE ABSENCE AND NOT A DELINKS GAP OVER AN EXISTING TU, and that
 # distinction is checked here rather than assumed because lane PGO's nosrc row
@@ -278,14 +278,14 @@
 # absence:
 #
 #   1  config/arm9/overlays/ov006/symbols.txt line 857 names it
-#      func_ov006_020ee994, kind:function(arm,size=0x168) -- an address-shaped
-#      name, not a mangled one, so lane S364's _ZN3OAM7SECONDSE shape (a real
+#      _ZN11dScMgJump_c13OnYoshiTryEatEi, kind:function(arm,size=0x168) -- an address-shaped
+#      name, not a mangled one, so lane S364's _ZN12dScMgSlot1_c6RenderEv shape (a real
 #      src file hiding behind a C++ name) is not what is happening here;
 #   2  delinks.txt HAS a gap at exactly this range: the block before ends at
 #      0x020ee994 and the next starts at 0x020eeafc, which is 0x168, the body's
 #      own size to the byte;
 #   3  NO src file exists under either extension: src/func_ov006_020ee994.c and
-#      src/func_ov006_020ee994.cpp are both absent;
+#      src/func_ov006_020ee994.c are both absent;
 #   4  a CONTENT grep of the whole src/ tree for the string "020ee994" returns
 #      ZERO files, so no differently-named TU claims the address either -- which
 #      is the check that would have caught PGO's case and does not fire here.
@@ -375,7 +375,7 @@
 # construction.
 #
 # unmatched/MgBounceAndPounce_StateDispatch.cpp -- THIS LANE'S OWN. Replaces
-# src/func_ov006_020ee27c.cpp, which is OUT of the list below: vtable slot 6,
+# src/_ZN11dScMgJump_c8BehaviorEv.cpp, which is OUT of the list below: vtable slot 6,
 # `(c->*c->m)()` over self+0x5004. Taking both is a duplicate symbol; taking the
 # src one puts the mwcc member-pointer stride back.
 #
@@ -385,7 +385,7 @@
 #           DESTROYED on frame 0 (measured: behavior 0 and cleanup 1 before,
 #           behavior 253 and cleanup 0 after, on the same binary, with scene 386
 #           as the control);
-#   slot 10 drops the receiver into func_ov004_020b04f4, which reads self+0x4628
+#   slot 10 drops the receiver into _ZN11dScMgBase_c12BeforeRenderEv, which reads self+0x4628
 #           / +0xf0 / +0xcc. It is not a one-call forwarder, so the tail-jump
 #           mechanism cannot carry it;
 #   slots 27 and 28 are one-call veneers whose targets read the receiver. The
@@ -394,15 +394,15 @@
 #           assertion set (35 frames / 22 veneer derived, unchanged from base
 #           with both TUs sliced), so nothing would notice if the form stopped
 #           holding.
-# src/_ZN17MgBounceAndPounce18AfterInitResourcesEj.cpp,
-# src/_ZN17MgBounceAndPounce12BeforeRenderEv.cpp, src/func_ov006_020e6d98.c and
-# src/func_ov006_020e6d8c.c are all OUT of the list below. The four bodies carry
+# src/actors/dScMgD3DBase_c.cpp,
+# src/actors/dScMgD3DBase_c.cpp, src/actors/dScMgD3DBase_c.cpp and
+# src/actors/dScMgD3DBase_c.cpp are all OUT of the list below. The four bodies carry
 # port_ names and do NOT define the decomp symbols, which is
 # unmatched/MgFlower_Slot2.cpp's rule: the port's map never claims a
 # decompilation that does not exist.
 #
 # unmatched/MgD3DBase_DeclConflict.cpp -- SHARED. Replaces
-# src/func_ov006_020e6e78.cpp (slot 24), OUT of the list below:
+# src/actors/dScMgD3DBase_c.cpp (slot 24), OUT of the list below:
 # decl_common.h:1516 declares it `(void*)` while the TU defines it `(char*)`,
 # which is one register on the ROM and C2733 to MSVC. THIS LANE'S FIRST ROUTE
 # WAS tools/hostgen.py's HEADER_SHADOW list and it is RETIRED, for two merge
@@ -413,7 +413,7 @@
 # dedupe.
 #
 # unmatched/MgD3DBase_ModelAnimRender.cpp -- SHARED. Replaces
-# src/func_ov006_020c4c54.cpp and src/func_ov006_020c7734.cpp, both OUT of the
+# src/func_ov006_020c4c54.cpp and src/actors/dMgJump3DMario_c.cpp, both OUT of the
 # list below. Both spell their per-frame ModelAnim sub-object as a local
 # SIX-virtual struct and call the sixth method -- the ROM's numbering -- where
 # the host _ZTV9ModelAnim is MSVC-numbered and its slot 5 is Virtual18 rather
@@ -423,7 +423,7 @@
 # 600 and 1200 frames, 3 of 3; with it all three exit 0.
 #
 # unmatched/MgD3DBase_ObjStateDispatch.cpp -- SHARED. Replaces
-# src/func_ov006_020c4cd8.cpp and src/func_ov006_020c7860.cpp, both OUT of the
+# src/func_ov006_020c4cd8.cpp and src/actors/dMgJump3DMario_c.cpp, both OUT of the
 # list below. Section 6 is how they were found and what they cost; that file's
 # header carries the twenty-five-state enumeration and the relocation-set method
 # that produced it.
@@ -434,8 +434,8 @@
 # defect above. The rest were each checked against the ROM and none is owed a
 # repair:
 #
-#   func_ov004_020af04c / func_ov004_020af27c declared 0-param by
-#   src/func_ov006_020e6d8c.c and src/func_ov006_020e6d98.c. Both ROM bodies
+#   _ZN11dScMgBase_c19OnHitFromUnderneathEv / _ZN11dScMgBase_c15OnHitByMegaCharEv declared 0-param by
+#   src/actors/dScMgD3DBase_c.cpp and src/_ZN14dScMgD3DBase_c15OnHitByMegaCharEv.c. Both ROM bodies
 #   ARE one-instruction tail jumps (`ldr ip,[pc]; bx ip`), so the port's
 #   tail-jump mechanism carries the receiver and tailjump_guard asserts the
 #   form. The seat's thunks pass the receiver into them.
@@ -446,7 +446,7 @@
 #   the extra argument is a harmless cdecl push the caller cleans.
 #
 #   func_ov004_020b1e34 is called with four arguments by
-#   src/func_ov006_020ee034.c and defined with one. The ROM body is
+#   src/_ZN11dScMgJump_c6RenderEv.cpp and defined with one. The ROM body is
 #   `ldr ip,[pc,#4]; ldr r1,[r0,#0xb4]; bx ip` onto func_ov004_020b0e84, whose
 #   prologue reads r0 and r1 and immediately overwrites r2, so the caller's
 #   0xe0/0x14/1 are dead on the ROM as well. Ten sites in ov006 call this
@@ -457,8 +457,8 @@
 #   a K&R-style declaration in a .c file, and the call DOES pass its argument.
 #
 #   The func_ov006_020c6f3c / _020c6f70 / _020c8a04 / _020c893c rows are
-#   ADDRESS-TAKEN, not called: the factory hands them to func_020733a8 and the
-#   destructors to __destroy_arr, both of which are host-defined and call the
+#   ADDRESS-TAKEN, not called: the factory hands them to __cxa_vec_ctor and the
+#   destructors to __cxa_vec_cleanup, both of which are host-defined and call the
 #   pointer as a cdecl `void (*)(void *)`. This is the mg10 invisible-defect
 #   shape and it was checked rather than assumed; none of the four is a
 #   __thiscall thunk.
@@ -474,7 +474,7 @@
 # compiled-versus-linked lesson in practice:
 #
 #   129  TUs in the list below
-#  -  1  src/func_ov006_020e6db4.c, COMPILED but DROPPED BY /OPT:REF. It is in
+#  -  1  src/actors/dScMgD3DBase_c.cpp, COMPILED but DROPPED BY /OPT:REF. It is in
 #        the slice because it sits inside dScMgD3DBase_c's code block, not
 #        because anything in this closure calls it: its four arm_call
 #        relocations in ov006 come from 0x020cffec, 0x020d0024, 0x020d08ec and
@@ -495,20 +495,19 @@
 # dScMgD3DBase_c half of this list too, and that dedupe is the mechanism that
 # makes it correct.
 #
-src/MgBounceAndPounce_Spawn.cpp
-src/Sound_PlayBank1Panned.cpp
-src/_ZN17MgBounceAndPounce11AfterRenderEj.cpp
-src/_ZN17MgBounceAndPounce14BeforeBehaviorEv.cpp
-src/_ZN17MgBounceAndPounce19BeforeInitResourcesEv.cpp
-src/_ZN17MgBounceAndPounce21AfterCleanupResourcesEj.cpp
-src/_ZN17MgBounceAndPounceD0Ev.cpp
-src/_ZN17MgBounceAndPounceD1Ev.cpp
+src/d_s_mg_jump.cpp
+# QUARANTINED at the main->port sync (origin/main 9c7f38a24): main folded this
+# class into one TU, and port/ host-copies bodies inside it (the slice_bnp host copies).
+# port/CMakeLists.txt's own assertion refuses the pair, because taking both is a
+# duplicate symbol and taking the src one puts the host copy's reason back. The
+# row returns when the host copy covers the whole consolidated TU.
+#src/actors/dScMgD3DBase_c.cpp
 src/func_02053ea0.c
 src/func_02053eb0.c
 src/func_02054748.c
 src/func_ov006_020bfec0.cpp
 src/func_ov006_020bfff8.cpp
-src/func_ov006_020c4048.c
+src/_ZN22dMg3DHeyhoObjAdapter_cC2Ev.cpp
 src/func_ov006_020c4060.c
 src/func_ov006_020c40e8.c
 src/func_ov006_020c425c.c
@@ -564,29 +563,12 @@ src/func_ov006_020c7388.c
 src/func_ov006_020c7418.c
 src/func_ov006_020c7490.c
 src/func_ov006_020c7574.c
-src/func_ov006_020c76e0.cpp
-src/func_ov006_020c78ec.cpp
-src/func_ov006_020c79a8.cpp
-src/func_ov006_020c7a30.c
-src/func_ov006_020c7ba4.c
-src/func_ov006_020c7c68.c
-src/func_ov006_020c802c.c
-src/func_ov006_020c8048.c
-src/func_ov006_020c8084.cpp
-src/func_ov006_020c814c.cpp
-src/func_ov006_020c81e0.c
-src/func_ov006_020c8270.c
-src/func_ov006_020c833c.c
-src/func_ov006_020c85a0.c
-src/func_ov006_020c85bc.cpp
-src/func_ov006_020c862c.c
-src/func_ov006_020c864c.c
-src/func_ov006_020c8658.c
-src/func_ov006_020c8680.c
-src/func_ov006_020c8768.c
-src/func_ov006_020c87d0.cpp
-src/func_ov006_020c893c.cpp
-src/func_ov006_020c8a04.c
+# QUARANTINED at the main->port sync (origin/main 9c7f38a24): main folded this
+# class into one TU, and port/ host-copies bodies inside it (the slice_bnp host copies).
+# port/CMakeLists.txt's own assertion refuses the pair, because taking both is a
+# duplicate symbol and taking the src one puts the host copy's reason back. The
+# row returns when the host copy covers the whole consolidated TU.
+#src/actors/dMgJump3DMario_c.cpp
 src/func_ov006_020c8a30.c
 src/func_ov006_020c8a64.c
 src/func_ov006_020c8a9c.c
@@ -594,25 +576,11 @@ src/func_ov006_020c8af4.c
 src/func_ov006_020c8ba8.cpp
 src/func_ov006_020c8c6c.c
 src/func_ov006_020c8c78.c
-src/func_ov006_020e6cac.c
-src/func_ov006_020e6d24.cpp
-src/func_ov006_020e6da4.c
-src/func_ov006_020e6db4.c
-src/func_ov006_020e6e3c.c
-src/func_ov006_020e6e4c.c
-src/func_ov006_020e6e54.c
-src/func_ov006_020e7110.c
-src/func_ov006_020e7124.c
-src/func_ov006_020e72c0.c
-src/func_ov006_020e73c4.cpp
-src/func_ov006_020e740c.c
-src/func_ov006_020e7428.c
-src/func_ov006_020e7508.cpp
-src/func_ov006_020e759c.c
-src/func_ov006_020edec0.cpp
-src/func_ov006_020edf54.cpp
-src/func_ov006_020edffc.c
-src/func_ov006_020ee034.c
+src/_ZN11dScMgJump_cD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN11dScMgJump_cD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN11dScMgJump_cD0Ev.cpp
+src/_ZN11dScMgJump_c16CleanupResourcesEv.cpp
+src/_ZN11dScMgJump_c6RenderEv.cpp
 src/func_ov006_020ee2c0.c
 src/func_ov006_020ee2c4.c
 src/func_ov006_020ee3bc.c
@@ -623,9 +591,13 @@ src/func_ov006_020ee508.c
 src/func_ov006_020ee598.c
 src/func_ov006_020ee5b8.c
 src/func_ov006_020ee658.c
-src/func_ov006_020ee690.cpp
-src/func_ov006_020ee8dc.cpp
+src/_ZN11dScMgJump_c13InitResourcesEv.cpp
+src/_ZN11dScMgJump_c13OnTurnIntoEggEi.cpp
 src/func_ov006_020ee994.c
-src/func_ov006_020eee3c.c
-src/func_ov006_020eef40.c
-src/func_ov006_020ef05c.c
+# QUARANTINED at the main->port sync (origin/main 9c7f38a24): this row is the raw
+# consolidated TU. slice_bnt.txt's BNT_HOSTGEN_SRCS substitutes a hostgen'd copy of
+# the WHOLE TU so its light-vector and matrix writes reach the geometry engine instead of
+# latching in the I/O window. Taking the raw copy as well would be a duplicate
+# symbol; taking it instead would put the defect back. The generated copy is in
+# this slice's target set, so the bodies still arrive.
+#src/minigames/d_s_mg_jump2.cpp

@@ -7,8 +7,8 @@
 #
 # THE CLASS-IDENTITY WORK IS IN port/ov036_syms.txt AND IS LOAD-BEARING HERE.
 # config's C++ method and _ZTV names are attached ONE CLASS EARLY, so the file
-# named _ZN8ShipWing8BehaviorEv.cpp is DONUT_BLOCK's Behavior, the file named
-# _ZN10DonutBlock6RenderEv.cpp is ARMED_ROTATING_PLATFORM's Render, and so on.
+# named _ZN10DonutBlock8BehaviorEv.cpp is DONUT_BLOCK's Behavior, the file named
+# _ZN18daObjRc_Guruguru_c6RenderEv.cpp is ARMED_ROTATING_PLATFORM's Render, and so on.
 # The Spawn and SpawnInfo names are correct. Every grouping below is by the
 # block the ROM lays the code out in, not by the filename.
 #
@@ -18,97 +18,79 @@
 # their own table then Platform's, with no call between the stores, so both
 # stay in the slice unchanged; their VT0/VT1 placeholders are bound by
 # per-file COMPILE_DEFINITIONS in port/CMakeLists.txt.
-# func_ov036_021112c8.cpp (Render) dispatches ROM slot 5 through a local
+# _ZN16daObjRcBuranko_c6RenderEv.cpp (Render) dispatches ROM slot 5 through a local
 # six-virtual shadow over the plain Model at +0xd4 -- SAFE, that is the
 # dual-filled _ZTV5Model, not the ModelAnim collision.
-src/func_ov036_021111a0.c
-src/func_ov036_021111e4.c
-src/func_ov036_0211123c.c
-src/func_ov036_02111284.c
-src/func_ov036_021112c8.cpp
-src/func_ov036_021112f0.c
-src/func_ov036_0211137c.cpp
-src/SwingingPlatform_Spawn.c
+src/game/actors/d_a_obj_rc_buranko.cpp
 #
 # ---- block 2: ROTATING_PLATFORM_RR (129, 19daObjRc_Kaitendai_c),
 # vt 0x02113b74, 32 slots, daObjKaitendai_c <- dBgActor_c. Own slots 0/3/16/17;
-# slots 6 and 9 are ov002's shared bodies (func_ov002_020b6718 /
-# func_ov002_020b66f0, both already in the binary). Its Init and Cleanup are
+# slots 6 and 9 are ov002's shared bodies (_ZN16daObjKaitendai_c8BehaviorEv /
+# _ZN16daObjKaitendai_c6RenderEv, both already in the binary). Its Init and Cleanup are
 # ARM veneers that tail-jump into ov002 with an extra register argument; the
 # matched src spells both as ordinary calls with the argument passed, which is
 # what a host compiler can deliver, so both stay in the slice.
-# RotatingPlatformRr_Spawn.c carries the one MIS-BOUND NAME in this overlay
+# daObjRc_Kaitendai_c_classInit.c carries the one MIS-BOUND NAME in this overlay
 # (its first store's literal is the ov002 BASE table, not its own); the two
 # COMPILE_DEFINITIONS in port/CMakeLists.txt bind each spelling to the address
 # its own literal pool carries.
-src/func_ov036_02111444.c
-src/func_ov036_02111494.c
-src/func_ov036_021114f8.c
-src/func_ov036_0211150c.c
-src/RotatingPlatformRr_Spawn.c
+src/game/actors/d_a_obj_rc_kaitendai.cpp
 #
 # ---- block 3: SHIP_WING (125, 14daObjRc_Hane_c), vt 0x02113c38, 31 slots,
 # the one PLAIN ACTOR of the seven (its Spawn calls Actor::C2 and
 # CommonModel::C1, not Platform::C2, and its table stops at Actor's slot 30).
 # Own slots 0/3/6/9/16/17.
 #
-# src/_ZN18RotatingPlatformRrD1Ev.cpp IS NOT IN THIS LIST. It is a real
+# src/game/actors/d_a_obj_rc_hane.cpp IS NOT IN THIS LIST. It is a real
 # MSVC-synthesised destructor over a LOCAL shadow class (`struct Actor { char
 # pad[0xd0]; virtual ~Actor(); }` and a CommonModel member), so it defines
-# ??1RotatingPlatformRr@@UAE@XZ and provides no _ZN18RotatingPlatformRrD1Ev
+# ??1RotatingPlatformRr@@UAE@XZ and provides no _ZN14daObjRc_Hane_cD1Ev
 # symbol at all -- the MotherPenguin/OneUpLogo/BabyPenguin D1 shape (gate-31
 # PeachPainting recipe). The chain is spelled directly as sw_d1 in
 # hal/actor_classes_ov036.cpp: store the own table, CommonModel::~CommonModel
 # at +0xd4, Actor::~Actor. The matched src stays byte-locked in src/ as proof.
-src/_ZN18RotatingPlatformRrD0Ev.c
-src/_ZN18RotatingPlatformRr16CleanupResourcesEv.c
-src/func_ov036_02111618.c
-src/_ZN18RotatingPlatformRr6RenderEv.cpp
-src/_ZN18RotatingPlatformRr8BehaviorEv.cpp
-src/_ZN18RotatingPlatformRr13InitResourcesEv.cpp
-src/ShipWing_Spawn.c
+src/game/actors/d_a_obj_rc_hane.cpp
 #
 # ---- block 4: DONUT_BLOCK (126, 16daObjRc_Tikuwa_c), vt 0x02113cf8, 32 slots,
 # Platform-derived. Own slots 0/3/6/9/16/17 AND its own slot 12
-# (_ZN8ShipWing16OnPendingDestroyEv, a one-instruction body), the only one of
+# (_ZN10DonutBlock16OnPendingDestroyEv, a one-instruction body), the only one of
 # the seven with an own OnPendingDestroy. 31 instances on level 28, the
 # largest single id in the level's skip list.
-# _ZN8ShipWing6RenderEv.cpp dispatches ROM slot 5 through a local six-virtual
+# _ZN10DonutBlock6RenderEv.cpp dispatches ROM slot 5 through a local six-virtual
 # shadow over the plain Model at +0xd4 -- SAFE (dual-filled _ZTV5Model).
-src/_ZN8ShipWingD1Ev.c
-src/_ZN8ShipWingD0Ev.c
-src/_ZN8ShipWing16CleanupResourcesEv.cpp
-src/_ZN8ShipWing16OnPendingDestroyEv.c
-src/_ZN8ShipWing6RenderEv.cpp
-src/_ZN8ShipWing8BehaviorEv.cpp
-src/_ZN8ShipWing13InitResourcesEv.cpp
-src/func_ov036_02111ca4.cpp
-src/func_ov036_02111cc4.c
-src/DonutBlock_Spawn.c
-#
-# ---- block 5: ARMED_ROTATING_PLATFORM (132, 18daObjRc_Guruguru_c),
-# vt 0x02113dcc, 32 slots, Platform-derived. Own slots 0/3/6/9/16/17.
-# _ZN10DonutBlock6RenderEv.cpp is the same safe +0xd4 plain-Model shadow draw.
-src/_ZN10DonutBlockD1Ev.c
-src/_ZN10DonutBlockD0Ev.c
+src/game/actors/d_a_obj_rc_guruguru.cpp
+src/_ZN10DonutBlock16OnPendingDestroyEv.cpp
+# FACEFIX 2026-09-14: DONUT_BLOCK's OWN FOUR VIRTUALS WERE IN NO SLICE, and the
+# hole was invisible because two forwarders filled it. Nothing in the link
+# defined ?InitResources/?CleanupResources/?Render/?Behavior@DonutBlock@@UAEHXZ,
+# so the generated ledger forwarder (port/faces_sync.txt, four F rows, now
+# retired) and hal/actor_classes_ov036.cpp's flat faces at lines 881-888 called
+# each other with no exit. The process died of stack exhaustion at 00415870 on
+# the first Render of level 28 (CRASH4's fifth defect, c00000fd with esp on the
+# guard page and thirty-two identical return words). These four are the ROM's
+# own matched bodies against include/DonutBlock.h, the same shape the block's
+# OnPendingDestroy above already takes, and with them in the slice the flat
+# faces forward to real code.
+src/_ZN10DonutBlock13InitResourcesEv.cpp
 src/_ZN10DonutBlock16CleanupResourcesEv.cpp
 src/_ZN10DonutBlock6RenderEv.cpp
 src/_ZN10DonutBlock8BehaviorEv.cpp
-src/_ZN10DonutBlock13InitResourcesEv.cpp
-src/ArmedRotatingPlatform_Spawn.c
+src/func_ov036_02111ca4.cpp
+src/func_ov036_02111cc4.c
+src/d_a_obj_rc_tikuwa.c
+#
+# ---- block 5: ARMED_ROTATING_PLATFORM (132, 18daObjRc_Guruguru_c),
+# vt 0x02113dcc, 32 slots, Platform-derived. Own slots 0/3/6/9/16/17.
+# _ZN18daObjRc_Guruguru_c6RenderEv.cpp is the same safe +0xd4 plain-Model shadow draw.
 #
 # ---- block 6: TRICKY_TRIANGLES (123, 16daObjRc_Dorifu_c), vt 0x02113ecc,
 # 32 slots, daObjDorifu_c <- dBgActor_c. Own slots 0/3/16/17; slots 6 and 9 are
-# ov002's shared bodies func_ov002_020b4bfc / func_ov002_020b4bc4, which the
+# ov002's shared bodies _ZN13daObjDorifu_c8BehaviorEv / _ZN13daObjDorifu_c6RenderEv, which the
 # measured closure below adds. Its Init and Cleanup are veneers into ov002's
-# func_ov002_020b4d58 / func_ov002_020b4b6c with the class's own 3-word record
+# _ZN13daObjDorifu_c13InitResourcesEP20daObjDorifuResources / _ZN13daObjDorifu_c16CleanupResourcesEP20daObjDorifuResources with the class's own 3-word record
 # (data_ov036_02113e88) as the second argument; the matched src spells both as
 # ordinary two-argument calls, so both stay in the slice.
-src/_ZN21ArmedRotatingPlatformD1Ev.cpp
-src/_ZN21ArmedRotatingPlatformD0Ev.c
-src/_ZN21ArmedRotatingPlatform16CleanupResourcesEv.cpp
-src/_ZN21ArmedRotatingPlatform13InitResourcesEv.cpp
-src/TrickyTriangles_Spawn.cpp
+src/game/actors/d_a_obj_rc_dorifu.cpp
 #
 # ---- block 7: FLYING_CARPET (130, 15daObjRcCarpet_c), vt 0x02113f9c,
 # THIRTY-THREE slots, dPathLiftActor_c <- dBgActor_c -- the only PathLift
@@ -116,23 +98,16 @@ src/TrickyTriangles_Spawn.cpp
 # hal/actor_classes_ov100pl.cpp and port/unmatched/PathLift_StateDispatch.cpp
 # already landed for PATH_LIFT (31). Its slot 32 is the inherited
 # 0x020eff18 PathLift::AfterClsn, and its Behavior calls
-# _ZN8PathLift12BaseBehaviorEv, the host copy that dispatches the base's
+# _ZN16dPathLiftActor_c12BaseBehaviorEv, the host copy that dispatches the base's
 # three-state PMF machine. Own slots 0/3/6/9/16/17 plus the inherited 32.
 #
-# src/func_ov036_02112378.cpp IS NOT IN THIS LIST -- the ModelAnim slot-5
+# src/game/actors/d_a_obj_rc_carpet.cpp IS NOT IN THIS LIST -- the ModelAnim slot-5
 # collision. It dispatches ROM slot 5 through a local six-virtual shadow over
 # the object at +0x450, and that member is a ModelAnim (constructed by
-# FlyingCarpet_Spawn with _ZN9ModelAnimC1Ev, destroyed by func_ov036_02112158
+# daObjRcCarpet_c_classInit with _ZN9ModelAnimC1Ev, destroyed by _ZN15daObjRcCarpet_cD1Ev
 # with _ZN9ModelAnimD1Ev), whose host table numbers slot 5 as Virtual18. HOST
 # COPY: port/unmatched/FlyingCarpet_Render.cpp. Matched src stays byte-locked.
-src/func_ov036_02112158.cpp
-src/func_ov036_021121c8.cpp
-src/func_ov036_0211224c.cpp
-src/func_ov036_021122c0.cpp
-src/func_ov036_02112318.cpp
-src/func_ov036_021123c8.cpp
-src/func_ov036_0211244c.cpp
-src/FlyingCarpet_Spawn.cpp
+src/game/actors/d_a_obj_rc_carpet.cpp
 #
 # ---- all seven own-class sinits, self-contained, RUN in ROM order ---------
 # Each builds its own class's SharedFilePtrs in ov036 bss and registers the
@@ -158,27 +133,27 @@ src/__sinit_ov036_02112944.c
 # name, comment-stripped, checked against build/port/walk_window.map before
 # this slice existed. 146 external symbols, 57 absent -- 55 of them the ov036
 # data this lane's own mount supplies, one an ov002 vtable this lane's fill
-# declares as host storage (data_ov002_02108d94), and TWO real code bodies:
-#   func_ov002_020b4b6c   TRICKY_TRIANGLES' Cleanup target (5x MeshCollider
+# declares as host storage (_ZTV13daObjDorifu_c), and TWO real code bodies:
+#   _ZN13daObjDorifu_c16CleanupResourcesEP20daObjDorifuResources   TRICKY_TRIANGLES' Cleanup target (5x MeshCollider
 #                         disable + 10 SharedFilePtr releases)
-#   func_ov002_020b4d58   TRICKY_TRIANGLES' InitResources target (5x model
+#   _ZN13daObjDorifu_c13InitResourcesEP20daObjDorifuResources   TRICKY_TRIANGLES' InitResources target (5x model
 #                         SetFile + 5x MovingMeshCollider SetFile)
 # Two more are named by the vtable fill rather than by any src TU, so the
 # by-name sweep could not see them and the slot map did:
-#   func_ov002_020b4bfc   TRICKY_TRIANGLES' Behavior, vtable slot 6
-#   func_ov002_020b4bc4   TRICKY_TRIANGLES' Render,   vtable slot 9
-# All four are in no other slice and in no map today. func_ov002_020b4bc4.cpp
+#   _ZN13daObjDorifu_c8BehaviorEv   TRICKY_TRIANGLES' Behavior, vtable slot 6
+#   _ZN13daObjDorifu_c6RenderEv   TRICKY_TRIANGLES' Render,   vtable slot 9
+# All four are in no other slice and in no map today. _ZN13daObjDorifu_c6RenderEv.cpp
 # dispatches ROM slot 5 over a plain 0x50-stride Model array element at +0x320
 # -- the dual-filled _ZTV5Model, safe.
-src/func_ov002_020b4b6c.c
-src/func_ov002_020b4d58.c
-src/func_ov002_020b4bfc.c
-src/func_ov002_020b4bc4.cpp
+src/_ZN13daObjDorifu_c16CleanupResourcesEP20daObjDorifuResources.cpp
+src/_ZN13daObjDorifu_c13InitResourcesEP20daObjDorifuResources.cpp
+src/_ZN13daObjDorifu_c8BehaviorEv.cpp
+src/_ZN13daObjDorifu_c6RenderEv.cpp
 #
 # NOT in this slice (host copies or host thunks cover them instead):
-#   src/_ZN18RotatingPlatformRrD1Ev.cpp  (SHIP_WING's D1: MSVC-synthesised over
+#   src/game/actors/d_a_obj_rc_hane.cpp  (SHIP_WING's D1: MSVC-synthesised over
 #       a local shadow class, provides no C name; chain spelled as sw_d1)
-#   src/func_ov036_02112378.cpp          (FLYING_CARPET's Render: ModelAnim
+#   src/game/actors/d_a_obj_rc_carpet.cpp          (FLYING_CARPET's Render: ModelAnim
 #       slot-5 collision; port/unmatched/FlyingCarpet_Render.cpp)
 # Both stay byte-locked in src/ as the matched proof and neither is referenced
 # from CMakeLists' ov036-cast source list.

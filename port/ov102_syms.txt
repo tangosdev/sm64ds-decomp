@@ -16,9 +16,9 @@
 # _ZTV13FortressTower and its RTTI reads daObjSimpleBg_c -- but nothing here
 # depends on that, and QUESTION_BLOCK's own table checks out against
 # daObjHatenaBlock_c (hatena: the question mark).
-data_ov102_0214d70c:0x8 data_ov102_0214e0c0:0xc data_ov102_0214e0cc:0x14
-StaticRock_SpawnInfo:0x1c RockTriangle_SpawnInfo:0x1c FortressTower_SpawnInfo:0x1c
-WarpPipe_SpawnInfo:0x1c CgStairs_SpawnInfo:0x1c RopeBarrier_SpawnInfo:0x1c
+data_ov102_0214d70c:0x8 _ZTI15daObjSimpleBg_c:0xc _ZTS15daObjSimpleBg_c:0x14
+g_profile_KI_IWA:0x1c g_profile_KI_HASIRA_DAI:0x1c g_profile_BK_TOWER:0x1c
+g_profile_DOKAN:0x1c g_profile_MC_DODAI:0x1c g_profile_MC_HAZAD:0x1c
 data_ov102_0214e188:0x4 data_ov102_0214e18c:0x4 data_ov102_0214e190:0xc8
 data_ov102_0214e258:0x8 data_ov102_0214e260:0x8 data_ov102_0214e268:0x8
 data_ov102_0214e270:0x8 data_ov102_0214e278:0x8 data_ov102_0214e280:0x8
@@ -34,14 +34,14 @@ data_ov102_0214e348:0x8 data_ov102_0214e350:0x8 data_ov102_0214e358:0x8
 data_ov102_0214e360:0x8 data_ov102_0214e368:0x8 data_ov102_0214e370:0x8
 data_ov102_0214e378:0x8 data_ov102_0214e380:0x8 data_ov102_0214e388:0x8
 data_ov102_0214e390:0x8 data_ov102_0214e398:0x8 data_ov102_0214e3a0:0x8
-data_ov102_0214e3a8:0xc data_ov102_0214e3b4:0x18 ExclamationBlockVs_SpawnInfo:0x1c
-QuestionBlock_SpawnInfo:0x1c ExclamationBlock_SpawnInfo:0x1c CapBlockMario_SpawnInfo:0x1c
-CapBlockLuigi_SpawnInfo:0x1c CapBlockWario_SpawnInfo:0x1c data_ov102_0214e4fc:0xc
-data_ov102_0214e508:0xc data_ov102_0214e514:0x10 data_ov102_0214e524:0x10
-BobOmb_SpawnInfo:0x1c data_ov102_0214e5d4:0x8 data_ov102_0214e5dc:0x8 data_ov102_0214e5e4:0x8
+_ZTI18daObjHatenaBlock_c:0xc _ZTS18daObjHatenaBlock_c:0x18 g_profile_VS_ITEM_BLOCK:0x1c
+g_profile_HATENA_BLOCK:0x1c g_profile_ITEM_BLOCK:0x1c g_profile_CAP_BLOCK_M:0x1c
+g_profile_CAP_BLOCK_L:0x1c g_profile_CAP_BLOCK_W:0x1c _ZTS7daBmb_c:0xc
+_ZTI7daBmb_c:0xc data_ov102_0214e514:0x10 data_ov102_0214e524:0x10
+g_profile_BOMBHEI:0x1c data_ov102_0214e5d4:0x8 data_ov102_0214e5dc:0x8 data_ov102_0214e5e4:0x8
 data_ov102_0214e5ec:0x8 data_ov102_0214e5f4:0x8 data_ov102_0214e5fc:0x8
-data_ov102_0214e604:0x8 data_ov102_0214e60c:0x8 data_ov102_0214e614:0xc
-data_ov102_0214e620:0xc KoopaShell_SpawnInfo:0x1c data_ov102_0214e6e0:0x8
+data_ov102_0214e604:0x8 data_ov102_0214e60c:0x8 _ZTS7daShl_c:0xc
+_ZTI7daShl_c:0xc g_profile_SHELL:0x1c data_ov102_0214e6e0:0x8
 data_ov102_0214e6e8:0x8 data_ov102_0214e6f0:0x8 data_ov102_0214e6f8:0x8
 data_ov102_0214e700:0x8 data_ov102_0214e708:0x8 data_ov102_0214e710:0x8
 data_ov102_0214e718:0x8 data_ov102_0214e720:0x8 data_ov102_0214e728:0x8

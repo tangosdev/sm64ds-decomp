@@ -13,7 +13,7 @@
 // Resolving every one of the 512 spawn-table entries to the table its factory
 // stores puts all four of these ids on ONE table, 0x02111984, and the class
 // reads its variant out of its OWN actor id rather than out of four classes:
-// src/_ZN25SlideDecorationSilverStar13InitResourcesEv.cpp switches on unk_00c
+// src/game/actors/d_a_obj_hs_billboard.cpp switches on unk_00c
 // (the id halfword ActorBase stamps at +0xc) over 0x12e/0x12f/0x130/0x131 =
 // 302/303/304/305, writes 0..3 into mVariant, and indexes the four-entry
 // SharedFilePtr table data_ov031_02111424 with it. CleanupResources releases
@@ -30,7 +30,7 @@
 // ---- THE TABLE: 31 SLOTS, TWO NAMES, ONE ADDRESS --------------------------
 //
 // 0x02111984 is spelled BOTH _ZTV18daObjHsBillboard_c (the RTTI name, which is
-// what src/_ZN25SlideDecorationSilverStarD0Ev.c stores) and
+// what src/game/actors/d_a_obj_hs_billboard.cpp stores) and
 // _ZTV25SlideDecorationSilverStar (which is what all four factories store).
 // config/arm9/overlays/ov031/symbols.txt carries both labels at that one
 // address. The host array is defined under the RTTI name and the factories'
@@ -45,13 +45,13 @@
 // the plain-Actor shape, which agrees with the width.
 //
 // Own overrides, from the reloc run: 0 InitResources, 3 CleanupResources,
-// 9 Render, 16 D1, 17 D0. Slot 6 is _ZN9ActorBase8BehaviorEv (arm9 0x02043b24)
-// and slot 12 is _ZN9ActorBase16OnPendingDestroyEv (0x02043ac0) -- this class
+// 9 Render, 16 D1, 17 D0. Slot 6 is _ZN7fBase_c8BehaviorEv (arm9 0x02043b24)
+// and slot 12 is _ZN7fBase_c16OnPendingDestroyEv (0x02043ac0) -- this class
 // has NO Behavior of its own, it is scenery.
 //
 // ---- SLOT 16 IS SPELLED HERE, AND WHY -------------------------------------
 //
-// src/_ZN25SlideDecorationSilverStarD1Ev.cpp is the shadow-class MSVC
+// src/game/actors/d_a_obj_hs_billboard.cpp is the shadow-class MSVC
 // destructor shape: the TU declares its own `struct Actor` / `struct Model` /
 // `struct SlideDecorationSilverStar : Actor` and defines the destructor, so
 // MSVC emits ??1SlideDecorationSilverStar@@UAE@XZ whose body calls
@@ -61,7 +61,7 @@
 // inline from the ROM D1's own three relocs inside 0x021111a0:
 //     0x021111cc load  -> 0x02111984            store the table
 //     0x021111b4 call  -> arm9 0x02016d20       _ZN5ModelD1Ev on this+0xd4
-//     0x021111bc call  -> arm9 0x020112c8       _ZN5ActorD2Ev
+//     0x021111bc call  -> arm9 0x020112c8       _ZN8dActor_cD2Ev
 // The D0 is NOT hosted: it is a .c TU carrying the ROM's Itanium name in
 // extern "C", it is in the slice, and it already does that chain plus
 // Memory::Deallocate (0x021111fc -> 0x0203c1e8) on the game heap.
@@ -100,13 +100,15 @@
 // a different address and a different symbol, and that TU is in no slice. No
 // /alternatename anywhere in port/ has this name as its LHS.
 // ===========================================================================
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
@@ -115,32 +117,32 @@ extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include "dtor_faces_cpp.h"
 #include <cstdlib>
 
-#include "Actor.h"
-#include "ActorBase.h"
-#include "SlideDecorationSilverStar.h"
+#include "dActor_c.h"
+#include "fBase_c.h"
+#include "daObjHsBillboard_c.h"
 
 extern "C" {
 /* the arm9 shared half */
-int _ZN5Actor19BeforeInitResourcesEv(void *self);              /* slot 1  */
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
-int _ZN5Actor14BeforeBehaviorEv(void *self);                   /* slot 7  */
-int _ZN5Actor12BeforeRenderEv(void *self);                     /* slot 10 */
-int _ZN5Actor13OnYoshiTryEatEv(void *self);                    /* slot 18 */
-void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
-int _ZN5Actor9Virtual50Ev(void *self);                         /* slot 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);              /* slot 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);              /* slot 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
-int _ZN5Actor16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);              /* slot 1  */
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);                   /* slot 7  */
+int _ZN8dActor_c12BeforeRenderEv(void *self);                     /* slot 10 */
+int _ZN8dActor_c13OnYoshiTryEatEv(void *self);                    /* slot 18 */
+void _ZN8dActor_c13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
+int _ZN8dActor_c9Virtual50Ev(void *self);                         /* slot 20 */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);              /* slot 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);              /* slot 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
+int _ZN8dActor_c16OnAimedAtWithEggEv(void *self);                     /* slot 29 */
 
 /* what the hosted slot 16 has to spell out by hand */
 void _ZN5ModelD1Ev(void *self);
-void *_ZN5ActorD2Ev(void *self);
+void *_ZN8dActor_cD2Ev(void *self);
 
 const char *port_actor_class_name(unsigned id);   /* hal/actor_registry */
 void port_actor_slot_decline(const char *what);   /* func_02043fdc_hostcopy.cpp */
@@ -151,20 +153,20 @@ void port_ov031_syms_patch(void);
 
 /* the class's own bodies, all matched src in port/slice_w10a.txt.
    Slot 0/3/9 are real C++ METHODS (MSVC decorates them
-   ?InitResources@SlideDecorationSilverStar@@QAEHXZ and friends) and are called
+   ?InitResources@daObjHsBillboard_c@@QAEHXZ and friends) and are called
    as methods against include/SlideDecorationSilverStar.h -- never through a C
    name that does not exist. Slot 17 is a .c TU carrying the ROM's Itanium name
    in extern "C" and is called by that name. */
-int *_ZN25SlideDecorationSilverStarD0Ev(int *self);   /* slot 17 */
+int *_ZN18daObjHsBillboard_cD0Ev(int *self);   /* slot 17 */
 
 /* the four factories: ActorBase::operator new(296), Actor::Actor(),
    `p[0] = _ZTV25SlideDecorationSilverStar`, Model::Model(this+0xd4). The vptr
    store is the LAST write of each and it is by a real name, so none of the
    four needs a reseat wrapper. */
-void *SlideDecorationSilverStar_Spawn(void);
-void *SlideDecorationYellowStar_Spawn(void);
-void *SlideDecorationOrangeSmiley_Spawn(void);
-void *SlideDecorationBlueSmiley_Spawn(void);
+void *daObjHsBillboard_c_classInit_HS_MOON(void);
+void *daObjHsBillboard_c_classInit_HS_STAR(void);
+void *daObjHsBillboard_c_classInit_HS_Y_STAR(void);
+void *daObjHsBillboard_c_classInit_HS_B_STAR(void);
 
 /* the static initialiser that builds the four SharedFilePtrs the variant
    switch reads (files 1565/1566/1569/1564), in port/slice_w10a.txt */
@@ -219,59 +221,59 @@ static int __fastcall hsb_trap14(void *s, void *) { hsb_trap_report(s, 14); retu
 
 /* ---- the shared 1..30 half ---------------------------------------------- */
 static int __fastcall hsb_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall hsb_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall hsb_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 static void __fastcall hsb_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall hsb_behavior(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::Behavior(); }
+{ return ((fBase_c *)s)->fBase_c::Behavior(); }
 static int __fastcall hsb_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall hsb_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall hsb_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall hsb_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall hsb_pdes(void *s, void *)
-{ ((ActorBase *)s)->ActorBase::OnPendingDestroy(); return 0; }
+{ ((fBase_c *)s)->fBase_c::OnPendingDestroy(); return 0; }
 static int __fastcall hsb_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int __fastcall hsb_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 static int __fastcall hsb_egg(void *s, void *, void *p)
-{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+{ _ZN8dActor_c13OnTurnIntoEggER6Player(s, p); return 0; }
 static int __fastcall hsb_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall hsb_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall hsb_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall hsb_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall hsb_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall hsb_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall hsb_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall hsb_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall hsb_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 static int __fastcall hsb_aimed(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 
 /* ---- the class's own five ----------------------------------------------- */
 static int __fastcall hsb_init(void *s, void *)
-{ return ((SlideDecorationSilverStar *)s)
-             ->SlideDecorationSilverStar::InitResources(); }
+{ return ((daObjHsBillboard_c *)s)
+             ->daObjHsBillboard_c::InitResources(); }
 static int __fastcall hsb_clean(void *s, void *)
-{ return ((SlideDecorationSilverStar *)s)
-             ->SlideDecorationSilverStar::CleanupResources(); }
+{ return ((daObjHsBillboard_c *)s)
+             ->daObjHsBillboard_c::CleanupResources(); }
 /* The ROM slot 9. The matched TU is the ROM-order slot-5 dispatch through a
    local six-virtual shadow over the member at +0xd4, and here that member is a
    plain Model (the factories build it with _ZN5ModelC1Ev, which stores
@@ -280,13 +282,13 @@ static int __fastcall hsb_clean(void *s, void *)
    NOT the Bird/Flag/BabyPenguin/Amilift case: those dispatch over a ModelAnim,
    whose host table numbers slot 5 as Virtual18. */
 static int __fastcall hsb_render(void *s, void *)
-{ return ((SlideDecorationSilverStar *)s)
-             ->SlideDecorationSilverStar::Render(); }
+{ return ((daObjHsBillboard_c *)s)
+             ->daObjHsBillboard_c::Render(); }
 /* Slot 16, the ROM D1's own three relocs; see this file's header. */
 /* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
    the transcribed thunk that stood here (hsb_d1) spelled the same chain by hand. */
 static int __fastcall hsb_d0(void *s, void *)
-{ return (int)(size_t)_ZN25SlideDecorationSilverStarD0Ev((int *)s); }
+{ return (int)(size_t)_ZN18daObjHsBillboard_cD0Ev((int *)s); }
 
 extern "C" void hal_fill_slide_decoration_vtable(void)
 {
@@ -309,7 +311,7 @@ extern "C" void hal_fill_slide_decoration_vtable(void)
     vt[13] = (void *)hsb_trap13;    /* ActorBase::Virtual34(u32,u32), not linked */
     vt[14] = (void *)hsb_trap14;    /* ActorBase::Virtual38(u32,u32), not linked */
     vt[15] = (void *)hsb_heap;      /* ActorBase::OnHeapCreated */
-    vt[16] = (void *)hal_cppd1_SlideDecorationSilverStar;        /* D1, hosted; see the header */
+    vt[16] = (void *)PORT_D16(hal_cppd1_SlideDecorationSilverStar);        /* D1, hosted; see the header */
     vt[17] = (void *)hsb_d0;        /* D0, the matched .c TU */
     vt[18] = (void *)hsb_yoshi;     /* Actor::OnYoshiTryEat */
     vt[19] = (void *)hsb_egg;       /* Actor::OnTurnIntoEgg(Player&) */

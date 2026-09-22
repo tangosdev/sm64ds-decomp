@@ -1,4 +1,4 @@
-// PORT_HOST_ABI. HOST COPY of src/func_ov006_02107db8.cpp, the roulette
+// PORT_HOST_ABI. HOST COPY of src/actors/dScMgRoulette_c.cpp, the roulette
 // WHEEL's per-frame tick -- and it carries TWO of this port's known defect
 // classes in eleven lines of source. Run mg11, lane RLT (dScMgRoulette_c,
 // actor id 0x17f, scene 383).
@@ -7,20 +7,20 @@
 //
 // The wheel lives at `this + 0x530c` inside dScMgRoulette_c and it is built by
 // the class's own factory, not by any overlay constructor:
-// MgMushroomRoulette_Spawn runs `_ZN5ModelC1Ev(m + 0x10)` and
+// dScMgRoulette_c_classInit runs `_ZN5ModelC1Ev(m + 0x10)` and
 // `_ZN5ModelC1Ev(m + 0x60)` on it, and vtable slot 0's
 // func_ov006_021085c0 gives those two Models NitroFS files 0x21d and 0x21e
 // through ModelBase::SetFile. So +0x10 and +0x60 are HOST C++ Model objects
 // with MSVC vtables, and offset 0 is an mwcc member-pointer pair. Both facts
 // are what this file is about.
 //
-// Its callers are vtable slot 6 (the Behavior, func_ov006_02109aac, at
+// Its callers are vtable slot 6 (the Behavior, _ZN15dScMgRoulette_c8BehaviorEv, at
 // 0x0210a120 -- the ONLY arm_call relocation in the whole overlay that reaches
 // 0x02107db8) and nothing else.
 //
 // ---- 2. THE MEMBER POINTER, AND ITS UNIVERSE IS TWO -----------------------
 //
-// src/func_ov006_02107db8.cpp is the ONE `::*` TU in this class's whole code
+// src/actors/dScMgRoulette_c.cpp is the ONE `::*` TU in this class's whole code
 // block (0x0210788c..0x0210a4ac, 41 symbols, all with a matched src file). It
 // spells
 //
@@ -127,7 +127,7 @@
 //
 // ---- 4. WHAT CHANGED FROM src, LINE BY LINE -------------------------------
 //
-// The body below is src/func_ov006_02107db8.cpp verbatim except:
+// The body below is src/actors/dScMgRoulette_c.cpp verbatim except:
 //
 //   1. `struct C`, its `PMF` typedef and its `struct Obj` shadow are gone. The
 //      layout they described is spelled with byte offsets, which is what the
@@ -148,7 +148,7 @@
 // disassembly instruction for instruction (58 instructions plus a two-word
 // literal pool = 60 words = 0xf0, the size config gives).
 //
-// IT DEFINES func_ov006_02107db8, so src/func_ov006_02107db8.cpp is OUT of
+// IT DEFINES func_ov006_02107db8, so src/actors/dScMgRoulette_c.cpp is OUT of
 // port/slice_rlt.txt -- listing both would be an LNK2005.
 //
 // WHAT THE DISPLACEMENT COSTS IS COUNTERFACTUAL AND IS MEASURED AS SUCH. This
@@ -233,6 +233,16 @@ extern "C" unsigned port_mg_roulette_wheel_state_addr(unsigned i)
 
 // PORT_HOST_ABI: mwcc member-pointer dispatch and a virtual-shadow dispatch
 // (ROM vtable numbering vs MSVC's), in one body.
+/* RETIRED, run link100 lane HOSTGEN2. Both of this body's deltas are carried by
+   the whole-TU hostgen substitution of src/actors/dScMgRoulette_c.cpp now: the
+   member-pointer dispatch routes to port_mg_roulette_call0 through hostgen's
+   PMF_SEAM table, and the shadow-class call of ROM slot 3 on the Model at +0x10
+   is respelled as ((Model *)(c + 0x10))->UpdateVerts() by hostgen's VIRTUAL_CALL
+   table -- the same two edits this copy made, out of the decomp's own text and
+   with the reading above cited in both rows.
+
+   Text kept, not deleted. */
+#if 0  /* HOSTGEN2: body seated from src, see above */
 extern "C" void func_ov006_02107db8(void *self)
 {
     char *b = (char *)self;
@@ -266,3 +276,4 @@ extern "C" void func_ov006_02107db8(void *self)
                 Sound_PlayIfNotActive(*(int *)(b + 0xbc), 2, 0x157, 0);
     }
 }
+#endif  /* HOSTGEN2: func_ov006_02107db8 retired to src */

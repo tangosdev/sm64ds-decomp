@@ -1,4 +1,4 @@
-/* HOST COPY of src/func_ov085_0212b8dc.cpp -- the RABBIT's (daMip_c) state Main,
+/* HOST COPY of src/actors/daMip_c.cpp -- the RABBIT's (daMip_c) state Main,
  * the closest-Player flee/idle machine that Rabbit::InitResources enters on its
  * last line (the Main half of state 0x021306cc, seated by name in
  * hal/actor_overlays.cpp).
@@ -6,12 +6,12 @@
  * THE r0-PASSTHROUGH SEAM (the same class as Actor_ClosestPlayerWrappers.cpp and
  * the LakituBro state Ov085_ClosestPlayer_e4a4.cpp on the sibling lane):
  *
- * func_ov085_0212b8dc receives the rabbit's `this` as its first parameter (`c`,
+ * _ZN7daMip_c13StateIdleMainEv receives the rabbit's `this` as its first parameter (`c`,
  * the ROM's r0). It calls Actor::ClosestPlayer() with NO argument -- byte-
  * identical on ARM because ClosestPlayer is a nonstatic member that reads `this`
  * from r0, and the caller's own r0 (c) is still live across the `bl`.
  *
- * The matched src spells the call `_ZN5Actor13ClosestPlayerEv()` (the extern is
+ * The matched src spells the call `_ZN8dActor_c13ClosestPlayerEv()` (the extern is
  * declared `()`), so on the host the zero-argument call pushes nothing and the
  * ClosestPlayer bridge (hal/reverse_bridges.cpp, `(void *self)` cdecl) reads
  * stack garbage as `this`. ClosestPlayer's body is
@@ -34,14 +34,14 @@
  * the declaration and the call line, and the port's own guard names it:
  *
  *     $ python -c "import closestplayer_guard as g; \
- *                  print(g.scan_file(P, P))"    # P = src/func_ov085_0212b8dc.cpp
- *     src/func_ov085_0212b8dc.cpp:13: zero-argument _ZN5Actor13ClosestPlayerEv
- *     src/func_ov085_0212b8dc.cpp:34: zero-argument _ZN5Actor13ClosestPlayerEv
+ *                  print(g.scan_file(P, P))"    # P = src/actors/daMip_c.cpp
+ *     src/actors/daMip_c.cpp:13: zero-argument _ZN8dActor_c13ClosestPlayerEv
+ *     src/actors/daMip_c.cpp:34: zero-argument _ZN8dActor_c13ClosestPlayerEv
  *
  * The host face it would land on is one-argument cdecl --
- * hal/reverse_bridges.cpp:45 declares `void *_ZN5Actor13ClosestPlayerEv(void *self)`
+ * hal/reverse_bridges.cpp:45 declares `void *_ZN8dActor_c13ClosestPlayerEv(void *self)`
  * and :141 defines `Player *Actor::ClosestPlayer() { return (Player *)
- * _ZN5Actor13ClosestPlayerEv(this); }` -- so a zero-argument call hands it
+ * _ZN8dActor_c13ClosestPlayerEv(this); }` -- so a zero-argument call hands it
  * whatever word sits at [esp+4]. There is no host-side repair for that: the
  * receiver is not merely in the wrong register, it was never materialised, and
  * MSVC has no calling convention that invents it. Only the caller can supply
@@ -57,11 +57,11 @@
 #include "types.h"
 
 extern "C" {
-    void* _ZN5Actor13ClosestPlayerEv(void* self);   /* real one-arg (this) shape */
-    int func_ov085_0212a788(char* c);
+    void* _ZN8dActor_c13ClosestPlayerEv(void* self);   /* real one-arg (this) shape */
+    int _ZN7daMip_c14TestWaterBelowEv(char* c);
     u32 func_02022cbc(u32 uid, u32 eid, Fix12i x, Fix12i y, Fix12i z, const void* dir);
     Fix12i Vec3_HorzDist(const Vector3* a, const Vector3* b);
-    void func_ov085_0212bc78(char* c, void* p);
+    void _ZN7daMip_c8SetStateEPv(char* c, void* p);
     int RandomIntInternal(int* seed);
     s16 Vec3_HorzAngle(const Vector3* a, const Vector3* b);
     int _ZN9Animation8FinishedEv(void* a);
@@ -77,12 +77,12 @@ extern "C" {
 }
 
 /* PORT_HOST_ABI: implicit-register-arg -- Actor::ClosestPlayer is a nonstatic member whose `this` rode the caller's own r0 into the bl, so the raw src calls it with zero arguments; the host face is one-argument cdecl (hal/reverse_bridges.cpp:45,141) and reads stack garbage as `this`, the live RABBIT crash (null base + 0x5c in Vec3_Dist). Only the caller can supply the receiver. */
-extern "C" int func_ov085_0212b8dc(char* c)
+extern "C" int _ZN7daMip_c13StateIdleMainEv(char* c)
 {
-    char* player = (char*)_ZN5Actor13ClosestPlayerEv(c);   /* <- this rode r0 */
+    char* player = (char*)_ZN8dActor_c13ClosestPlayerEv(c);   /* <- this rode r0 */
     if (player == 0) return 1;
 
-    if (func_ov085_0212a788(c) == 1) {
+    if (_ZN7daMip_c14TestWaterBelowEv(c) == 1) {
         Vector3 sp;
         s32 pair[2];
         pair[0] = *((s32*)(c + 0x5c));
@@ -115,7 +115,7 @@ extern "C" int func_ov085_0212b8dc(char* c)
         }
         if (!cond) {
             *(int*)(c + 0x98) = 0;
-            func_ov085_0212bc78(c, &data_ov085_0213066c);
+            _ZN7daMip_c8SetStateEPv(c, &data_ov085_0213066c);
             return 1;
         }
     }
@@ -167,20 +167,20 @@ extern "C" int func_ov085_0212b8dc(char* c)
 
    This fix stops the rabbit FAULTING, so it is no longer frozen and no longer
    vanishes. It does NOT by itself restore the dialogue: that needs a player
-   pointer at rabbit+0x45c, which two places READ (_ZN6Rabbit8BehaviorEv.c:85
-   gating the whole talk block, and func_ov085_0212ae08.c:44, the caught-dialog
+   pointer at rabbit+0x45c, which two places READ (_ZN7daMip_c8BehaviorEv.c:85
+   gating the whole talk block, and _ZN7daMip_c15StateCaughtMainEv.c:44, the caught-dialog
    state that ends by spawning the key).
 
    WHAT THIS NOTE USED TO SAY AND WHY IT WAS WRONG. It claimed NOTHING in the
-   tree writes rabbit+0x45c, that the only writer was _ZN6Rabbit8BehaviorEv.c:150
+   tree writes rabbit+0x45c, that the only writer was _ZN7daMip_c8BehaviorEv.c:150
    behind the Enemy::UpdateYoshiEat host stub, and therefore that "the key spawn
    is unreachable" dead code. The first clause is false and the conclusion with
    it. There is a SECOND writer, on a different path entirely:
 
-     src/func_ov085_0212a828.cpp:19   *(void**)(c + 0x45c) = o;
+     src/actors/daMip_c.cpp:19   *(void**)(c + 0x45c) = o;
 
-   after a successful Player::TryGrab, and func_ov085_0212a828 is called from
-   _ZN6Rabbit8BehaviorEv.c:204 -- OUTSIDE the UpdateYoshiEat block, which opens
+   after a successful Player::TryGrab, and _ZN7daMip_c10UpdateGrabEv is called from
+   _ZN7daMip_c8BehaviorEv.c:204 -- OUTSIDE the UpdateYoshiEat block, which opens
    at line 130 and returns at 155. The call is in the ROM's own relocs:
    config/arm9/overlays/ov085/relocs.txt:456,
    from:0x0212c778 kind:arm_call to:0x0212a828 module:overlay(85).
@@ -201,7 +201,7 @@ extern "C" int func_ov085_0212b8dc(char* c)
    Re-measured here on 2026-08-27 rather than argued: driving the rabbit's own
    grab check with its collision-detect fields armed (SM64DS_RABBIT_TRIGGER,
    hal/input_probe.cpp) runs the real Player::TryGrab and the real
-   func_ov085_0212a828, and rabbit+0x45c comes out written --
+   _ZN7daMip_c10UpdateGrabEv, and rabbit+0x45c comes out written --
      [rabbit] f92 GRABBED: Player::TryGrab succeeded, rabbit+0x45c = 30039F38
    on SM64DS_LEVEL=1. UpdateYoshiEat is still a real open item; it is just not
    the only way in, and this key spawn is not dead code. A comment that says a

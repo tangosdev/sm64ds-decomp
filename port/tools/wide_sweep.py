@@ -140,7 +140,7 @@ def active_extent(aspect):
     """ntr::configure_aspect's arithmetic, mirrored. 0 is the native sentinel."""
     if not (aspect > 0.0):
         return 512, 384
-    a = min(max(aspect, 1.0), 3.0)
+    a = min(max(aspect, 1.0), 4.0)
     w, h = BUF_W, int(BUF_W / a + 0.5)
     if h > BUF_H:
         h = BUF_H

@@ -1,7 +1,7 @@
-/* HOST COPY of _ZN3Boo13InitResourcesEv (ov063 0x0211b9bc, 0x9a0 bytes),
- * vtable slot 0 of _ZTV3Boo -- a FAITHFUL MIRROR of the matched TU
- * src/actors/Boo/_ZN3Boo13InitResourcesEv.c with exactly ONE line changed:
- * the K&R-style `extern int _ZN5Actor13ClosestPlayerEv();` declaration is
+/* HOST COPY of _ZN7daTrs_c13InitResourcesEv (ov063 0x0211b9bc, 0x9a0 bytes),
+ * vtable slot 0 of _ZTV7daTrs_c -- a FAITHFUL MIRROR of the matched TU
+ * src/game/actors/daTrs_c/_ZN7daTrs_c13InitResourcesEv.cpp with exactly ONE line changed:
+ * the K&R-style `extern int _ZN8dActor_c13ClosestPlayerEv();` declaration is
  * reprototyped to the one-argument form. Both of the TU's call sites ALREADY
  * pass the receiver (`ClosestPlayerEv(c)` -- the OverlayReaders registry
  * noted this TU as "safe on the host as written"), but
@@ -11,21 +11,21 @@
  */
 extern int LoadKeyModels();
 extern int _ZN9Animation8LoadFileER13SharedFilePtr();
-extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii();
+extern int _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as();
 extern int _ZN5Model8LoadFileER13SharedFilePtr();
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii();
 extern int _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj();
-extern int _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj();
-extern int _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_();
+extern int _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj();
+extern int _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_();
 extern int LoadBlueCoinModel();
-extern int _ZN8CapEnemy6AddCapEj();
-extern int _ZN8CapEnemy21DestroyIfCapNotNeededEv();
+extern int _ZN11dCapEnemy_c6AddCapEj();
+extern int _ZN11dCapEnemy_c21DestroyIfCapNotNeededEv();
 extern int NumStars();
-extern int _ZN9ActorBase18MarkForDestructionEv();
+extern int _ZN7fBase_c18MarkForDestructionEv();
 extern int IsStarCollectedInCurLevel();
 extern int _ZN11ShadowModel12InitCylinderEv();
 extern int func_02035800();
-extern void *_ZN5Actor13ClosestPlayerEv(void *self);
+extern void *_ZN8dActor_c13ClosestPlayerEv(void *self);
 extern int Matrix4x3_FromTranslation();
 extern int MulMat4x3Mat4x3();
 extern int SubVec3();
@@ -59,7 +59,7 @@ extern struct H data_020a0e68;
 #define FLAGS16T (*(unsigned short *)((long long)((char *)((long long)c) + 0x5d4)))
 
 /* PORT_HOST_ABI: faithful mirror of the matched TU; its K&R ClosestPlayer declaration trips closestplayer_guard, reprototyped one-arg (calls already pass the receiver) */
-int _ZN3Boo13InitResourcesEv(char *c)
+int _ZN7daTrs_c13InitResourcesEv(char *c)
 {
     int cond;
     int tmp598;
@@ -77,7 +77,7 @@ int _ZN3Boo13InitResourcesEv(char *c)
             _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov063_0211edd4);
             _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov063_0211edcc);
         } else if (U8(0x5cf) == 0xc) {
-            PTR(0x48c) = (char *)_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0xd3, U32(8), c + 0x5c, 0, S8(0x5d0), -1);
+            PTR(0x48c) = (char *)_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0xd3, U32(8), c + 0x5c, 0, S8(0x5d0), -1);
             if (PTR(0x48c) != 0) {
                 S32(0x49c) = *(int *)(PTR(0x48c) + 4);
             }
@@ -94,11 +94,11 @@ int _ZN3Boo13InitResourcesEv(char *c)
         S32(0x534) = 0;
         S32(0x538) = 0;
         S32(0x53c) = tmp598;
-        _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(c + 0x184, c, c + 0x534, S32(0x590) << 0xc, S32(0x594) << 0xc, 0x200000, 0x207e0);
+        _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(c + 0x184, c, c + 0x534, S32(0x590) << 0xc, S32(0x594) << 0xc, 0x200000, 0x207e0);
         if (U8(0x5cf) != 0xf) {
-            _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(c + 0x1c4, c, 0xdc000, 0xdc000, 0, 0);
+            _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(c + 0x1c4, c, 0xdc000, 0xdc000, 0, 0);
         } else {
-            _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(c + 0x1c4, c, 0xc8000, 0xb4000, 0, 0);
+            _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(c + 0x1c4, c, 0xc8000, 0xb4000, 0, 0);
         }
     } else {
         U8(0x5cf) = U32(8) & 0xf;
@@ -123,11 +123,11 @@ int _ZN3Boo13InitResourcesEv(char *c)
             S32(0x590) = 0x4a;
             S32(0x594) = 0x64;
         }
-        _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(c + 0x184, c, c + 0x534, S32(0x590) << 0xc, S32(0x594) << 0xc, 0x200000, 0x207e0);
+        _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(c + 0x184, c, c + 0x534, S32(0x590) << 0xc, S32(0x594) << 0xc, 0x200000, 0x207e0);
         if (data_0209f2f8 == 0xc && S32(0x5c) == 0xbb8000 && S8(0xcc) == 2) {
             FLAGS16 = (FLAGS16 & ~1) | 1;
         }
-        _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(c + 0x1c4, c, 0x32000, 0x32000, 0, 0);
+        _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(c + 0x1c4, c, 0x32000, 0x32000, 0, 0);
     }
 
     U16(0x4a0) = 0x187;
@@ -158,22 +158,22 @@ int _ZN3Boo13InitResourcesEv(char *c)
         unsigned char capIdx;
         U8(0x112) = (U32(8) >> 0xc) & 0xf;
         capIdx = (U32(8) >> 8) & 0xf;
-        _ZN8CapEnemy6AddCapEj(c, capIdx);
+        _ZN11dCapEnemy_c6AddCapEj(c, capIdx);
         if ((U8(0x113) & 7) < 6) {
             U32(8) = U32(8) & 0xfff;
         }
-        if (_ZN8CapEnemy21DestroyIfCapNotNeededEv(c) == 0) {
+        if (_ZN11dCapEnemy_c21DestroyIfCapNotNeededEv(c) == 0) {
             return 0;
         }
     }
 
     if ((unsigned)(unsigned char)(U8(0x5cf) + 0xf6) <= 1) {
         if ((unsigned)NumStars() < 3) {
-            _ZN9ActorBase18MarkForDestructionEv(c);
+            _ZN7fBase_c18MarkForDestructionEv(c);
             return 0;
         }
         if (U8(0x5cf) == 0xb && (unsigned)NumStars() >= 0xf) {
-            _ZN9ActorBase18MarkForDestructionEv(c);
+            _ZN7fBase_c18MarkForDestructionEv(c);
             return 0;
         }
         if (IsStarCollectedInCurLevel(1) != 0) {
@@ -224,14 +224,14 @@ int _ZN3Boo13InitResourcesEv(char *c)
 
     if (U8(0x5cf) == 5) {
         if ((unsigned)NumStars() < 0xf) {
-            _ZN9ActorBase18MarkForDestructionEv(c);
+            _ZN7fBase_c18MarkForDestructionEv(c);
             return 1;
         }
         if (data_0209f264 == 0) {
-            spawned = (void *)_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(U16(0x4a0), 0, c + 0x5c, 0, S8(0x5d0), -1);
+            spawned = (void *)_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(U16(0x4a0), 0, c + 0x5c, 0, S8(0x5d0), -1);
             if (spawned != 0) {
                 *(unsigned char *)((char *)spawned + 0x37e) = 1;
-                _ZN9ActorBase18MarkForDestructionEv(c);
+                _ZN7fBase_c18MarkForDestructionEv(c);
                 return 1;
             }
         }
@@ -247,7 +247,7 @@ int _ZN3Boo13InitResourcesEv(char *c)
         }
         if (U8(0x5cf) == 0xb) {
             S8(0xcc) = -1;
-            pp = (void *)_ZN5Actor13ClosestPlayerEv(c);
+            pp = (void *)_ZN8dActor_c13ClosestPlayerEv(c);
             if (pp != 0 && *(int *)((char *)pp + 0x64) > (int)0xffaec000) {
                 FLAGS16T |= 0x10;
             }
@@ -258,7 +258,7 @@ int _ZN3Boo13InitResourcesEv(char *c)
         }
         if (U8(0x5cf) == 4) {
             S8(0xcc) = -1;
-            pp = (void *)_ZN5Actor13ClosestPlayerEv(c);
+            pp = (void *)_ZN8dActor_c13ClosestPlayerEv(c);
             if (pp != 0 && *(int *)((char *)pp + 0x64) > (int)0xffaec000) {
                 FLAGS16T |= 0x10;
             }

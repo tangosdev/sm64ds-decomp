@@ -24,27 +24,27 @@
 // destructor slots (SphereClsn::DetectClsn dispatches v8, RaycastGround's v6,
 // MovingMeshCollider::Transform's v12). Index 5 takes GetTriangleOrigin as
 // well as index 4, the same fill-the-table-twice the Model render seam uses.
-#include "MovingMeshCollider.h"
+#include "dBgW_KcMbg.h"
 #include <cstdio>
 
 extern "C" {
-extern void *_ZTV18MovingMeshCollider[16];   /* storage: hal/clsn_vtable.cpp */
-int _ZN18MovingMeshCollider10DetectClsnER13RaycastGround(void *self, void *g);
-int _ZN18MovingMeshCollider10DetectClsnER11RaycastLine(void *self, void *r);
-int _ZN18MovingMeshCollider10DetectClsnER10SphereClsn(void *self, void *s);
+extern void *_ZTV10dBgW_KcMbg[16];   /* storage: hal/clsn_vtable.cpp */
+int _ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Gnd(void *self, void *g);
+int _ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Lin(void *self, void *r);
+int _ZN10dBgW_KcMbg10DetectClsnER12dBgCh_SphCrr(void *self, void *s);
 extern unsigned char data_020a0d0c[], data_020a0d1c[], data_020a0d60[];
 /* BATCH-3 LINKAGE SEAT: the MovingMeshCollider's OWN deleting dtor (D0, arm9
    0x0203a444, 2004/b56 byte-match). The seed table copies MeshCollider's D0
    into slot 0, which is the wrong class body for a moving collider; this seats
    MMC's own. Flat-C `MMC *D0(MMC *this)` (this on the stack), so slot 0 takes
    the ecx->arg adapter below rather than the body directly. */
-void *_ZN18MovingMeshColliderD0Ev(void *self);
+void *_ZN10dBgW_KcMbgD0Ev(void *self);
 }
 
-typedef MovingMeshCollider MMC;
+typedef dBgW_KcMbg MMC;
 
 static void __fastcall mmc_dtor(void *s, void *)
-{ _ZN18MovingMeshColliderD0Ev(s); }
+{ _ZN10dBgW_KcMbgD0Ev(s); }
 static void __fastcall mmc_v08(void *s, void *)
 { ((MMC *)s)->MMC::Virtual08(); }
 static void __fastcall mmc_norm(void *s, void *, s16 tri, Vector3 *res)
@@ -52,11 +52,11 @@ static void __fastcall mmc_norm(void *s, void *, s16 tri, Vector3 *res)
 static void __fastcall mmc_orig(void *s, void *, s16 tri, Vector3 *res)
 { ((MMC *)s)->MMC::GetTriangleOrigin(tri, *res); }
 static int __fastcall mmc_ground(void *s, void *, void *g)
-{ return _ZN18MovingMeshCollider10DetectClsnER13RaycastGround(s, g); }
+{ return _ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Gnd(s, g); }
 static int __fastcall mmc_line(void *s, void *, void *r)
-{ return _ZN18MovingMeshCollider10DetectClsnER11RaycastLine(s, r); }
+{ return _ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Lin(s, r); }
 static int __fastcall mmc_sphere(void *s, void *, void *sp)
-{ return _ZN18MovingMeshCollider10DetectClsnER10SphereClsn(s, sp); }
+{ return _ZN10dBgW_KcMbg10DetectClsnER12dBgCh_SphCrr(s, sp); }
 static int __fastcall mmc_tpos(void *s, void *, const Vector3 *p, Vector3 *r)
 { return ((MMC *)s)->MMC::TransformPos(*p, *r); }
 static s16 __fastcall mmc_angvel(void *s, void *)
@@ -67,7 +67,7 @@ static void __fastcall mmc_vel(void *s, void *, Vector3 *r)
    MeshColliderBase (MovingMeshCollider.h: "Overrides every slot except
    BeforeClsn (slot 9) and GetSurfaceInfo"). A rider standing on a moving
    collider fires this every collision step to run the beforeClsnCallback that
-   carries it along. The seed copy from _ZTV12MeshCollider now brings the base
+   carries it along. The seed copy from _ZTV7dBgW_Kc now brings the base
    body's shim across (hal/clsn_vtable.cpp slot_beforeclsn), but this table names
    every slot it owns, so it is pinned here too rather than left implicit. Same
    inlined ROM body as the base shim -- `beforeClsnCallback(this, actor, &res,
@@ -106,41 +106,41 @@ static void __fastcall mmc_vel(void *s, void *, Vector3 *r)
  * shim parks TransformPos in index 9 for the duration of the callback and puts
  * BeforeClsn back on the way out. Single-threaded; the callback fully returns
  * before this frame does. */
-static void __fastcall mmc_beforeclsn(void *s, void *, ClsnResult *res,
-                                      Actor *actor, Vector3 *pos,
+static void __fastcall mmc_beforeclsn(void *s, void *, dBgPi *res,
+                                      dActor_c *actor, Vector3 *pos,
                                       Vector3_16 *motionAng, Vector3_16 *ang)
 {
-    MeshColliderBase *base = (MeshColliderBase *)s;
+    dBgW *base = (dBgW *)s;
     /* Park TransformPos in the MSVC carry index (9) for the callback, restore
        BeforeClsn after. See the block comment above. */
-    void *saved9 = _ZTV18MovingMeshCollider[9];
-    _ZTV18MovingMeshCollider[9] = (void *)mmc_tpos;
+    void *saved9 = _ZTV10dBgW_KcMbg[9];
+    _ZTV10dBgW_KcMbg[9] = (void *)mmc_tpos;
     base->beforeClsnCallback(base, actor, res, pos, motionAng, ang);
-    _ZTV18MovingMeshCollider[9] = saved9;
+    _ZTV10dBgW_KcMbg[9] = saved9;
 }
 
 extern "C" void hal_fill_moving_mesh_collider_vtable(void)
 {
     /* Batch-3: slot 0 gets MovingMeshCollider's OWN deleting dtor, replacing
        the MeshCollider D0 the seed copy left there (the wrong class body). */
-    _ZTV18MovingMeshCollider[0] = (void *)mmc_dtor;
-    _ZTV18MovingMeshCollider[2] = (void *)mmc_v08;
-    _ZTV18MovingMeshCollider[3] = (void *)mmc_norm;
-    _ZTV18MovingMeshCollider[4] = (void *)mmc_orig;
-    _ZTV18MovingMeshCollider[5] = (void *)mmc_orig;
-    _ZTV18MovingMeshCollider[6] = (void *)mmc_ground;
-    _ZTV18MovingMeshCollider[7] = (void *)mmc_line;
-    _ZTV18MovingMeshCollider[8] = (void *)mmc_sphere;
+    _ZTV10dBgW_KcMbg[0] = (void *)mmc_dtor;
+    _ZTV10dBgW_KcMbg[2] = (void *)mmc_v08;
+    _ZTV10dBgW_KcMbg[3] = (void *)mmc_norm;
+    _ZTV10dBgW_KcMbg[4] = (void *)mmc_orig;
+    _ZTV10dBgW_KcMbg[5] = (void *)mmc_orig;
+    _ZTV10dBgW_KcMbg[6] = (void *)mmc_ground;
+    _ZTV10dBgW_KcMbg[7] = (void *)mmc_line;
+    _ZTV10dBgW_KcMbg[8] = (void *)mmc_sphere;
     /* Carry slots seated at the MSVC indices their matched callers read
        (TransformPos 9, GetAngularVelY 10, GetVelocity 11), plus GetVelocity at
        the ROM index 12 for MovingMeshCollider::Transform's v12 shadow. Index 9
        starts as BeforeClsn for the ROM func_02038324 -> m9 entry; mmc_beforeclsn
        parks mmc_tpos there for the duration of the callback. See the block
        comment on mmc_beforeclsn for the full index-skew reasoning. */
-    _ZTV18MovingMeshCollider[9] = (void *)mmc_beforeclsn;
-    _ZTV18MovingMeshCollider[10] = (void *)mmc_angvel;
-    _ZTV18MovingMeshCollider[11] = (void *)mmc_vel;
-    _ZTV18MovingMeshCollider[12] = (void *)mmc_vel;
+    _ZTV10dBgW_KcMbg[9] = (void *)mmc_beforeclsn;
+    _ZTV10dBgW_KcMbg[10] = (void *)mmc_angvel;
+    _ZTV10dBgW_KcMbg[11] = (void *)mmc_vel;
+    _ZTV10dBgW_KcMbg[12] = (void *)mmc_vel;
     /* The three moving-collider DetectClsn bodies fill ONE static
        RaycastLine at arm9 0x020a0d0c and read the answer back out of two
        symbols dsd split off its interior. Say so once if the linker ever

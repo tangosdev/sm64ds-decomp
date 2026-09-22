@@ -43,7 +43,7 @@
 #   func_0203bd24   empty in the ROM. Enrolled because func_02019440 calls it.
 #   func_0200f4f4   Initialise3dGraphics(0), GX::SetBankForTex(3),
 #                   GX::SetBankForTexPltt(0x30), func_02045d9c, and the
-#                   data_02082128 -> data_0209b3ec matrix copy with its inverse.
+#                   IDENTITY_MATRIX4X3 -> data_0209b3ec matrix copy with its inverse.
 #                   walk_window.cpp seeds data_0209b3ec by hand five lines after
 #                   port_boot_rom_main_head(); this is the ROM's own writer of
 #                   the same words and it runs later, so the ROM's value stands.

@@ -20,7 +20,7 @@
 # `PyramidTag::~PyramidTag() {}`, so MSVC emits ??1PyramidTag@@UAE@XZ and
 # generates the member-destructor chain as THISCALL calls to ??1Actor@@UAE@XZ
 # and ??1MovingCylinderClsn@@QAE@XZ -- two names the port defines only as
-# CDECL C bodies (_ZN5ActorD2Ev, _ZN18MovingCylinderClsnD1Ev). Aliasing across
+# CDECL C bodies (_ZN8dActor_cD2Ev, _ZN7dCcAc_cD1Ev). Aliasing across
 # that is a receiver-shape mismatch, not a spelling one: the call site would
 # pass `this` in ecx and the callee would read it off the stack. This is the
 # gate-199/200 treatment ov013 applied to ClockPaintingHandShort's D1 for the
@@ -51,9 +51,11 @@
 # MovingCylinderClsn, CylinderClsn, MeshColliderBase, Event, SharedFilePtr) is
 # already in the walk_window link for other classes. Measured off the link.
 
-src/_ZN10PyramidTopD1Ev.c
-src/_ZN10PyramidTopD0Ev.c
-src/_ZN10PyramidTagD0Ev.c
+src/_ZN10PyramidTopD1Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN10PyramidTopD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN10PyramidTopD0Ev.cpp
+# RETIRED at SLICE1: body now in src/_ZN10PyramidTagD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
+#src/_ZN10PyramidTagD0Ev.cpp
 src/func_ov024_021112c0.c
 src/func_ov024_02111350.c
 src/func_ov024_02111480.cpp
@@ -64,6 +66,6 @@ src/_ZN10PyramidTop8BehaviorEv.cpp
 src/_ZN10PyramidTag8BehaviorEv.cpp
 src/_ZN10PyramidTop13InitResourcesEv.cpp
 src/_ZN10PyramidTag13InitResourcesEv.cpp
-src/PyramidTag_Spawn.c
-src/PyramidTop_Spawn.c
+src/d_a_obj_dl_pyramid_dummy.c
+src/d_a_obj_dl_pyramid.c
 src/__sinit_ov024_02112808.c

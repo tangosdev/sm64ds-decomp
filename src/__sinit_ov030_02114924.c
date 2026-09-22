@@ -3,7 +3,7 @@ extern void func_020731dc(void*, void*, void**);
 extern int _ZN13SharedFilePtr9ConstructEj(void*, int);
 extern void func_02017ab4(void);
 extern void SharedFilePtr_Destruct_Anim(void);
-extern void func_020072c0(void);
+extern void _ZN7Vector3D1Ev(void);
 
 extern void* data_ov030_02115d00;
 extern void* data_ov030_02115d28;
@@ -116,26 +116,26 @@ void __sinit_ov030_02114924(void)
     *(unsigned int*)&data_ov030_02115ddc = 0x1c000;
     *(unsigned int*)((char*)&data_ov030_02115ddc + 4) = (unsigned int)-0x42000;
     *(unsigned int*)((char*)&data_ov030_02115ddc + 8) = 0x18000;
-    func_020731dc(&data_ov030_02115ddc, (void*)&func_020072c0, (void**)&data_ov030_02115d58);
+    func_020731dc(&data_ov030_02115ddc, (void*)&_ZN7Vector3D1Ev, (void**)&data_ov030_02115d58);
     {
         unsigned int *p = (unsigned int*)&data_ov030_02115de8;
         p[0] = 0x1c000;
         p[1] = (unsigned int)-0x28000;
         p[2] = 0x28000;
-        func_020731dc(p, (void*)&func_020072c0, (void**)&data_ov030_02115d4c);
+        func_020731dc(p, (void*)&_ZN7Vector3D1Ev, (void**)&data_ov030_02115d4c);
     }
     {
         unsigned int *p = (unsigned int*)&data_ov030_02115df4;
         p[0] = 0x2b000;
         p[1] = (unsigned int)-0x42000;
         p[2] = 0x18000;
-        func_020731dc(p, (void*)&func_020072c0, (void**)&data_ov030_02115d7c);
+        func_020731dc(p, (void*)&_ZN7Vector3D1Ev, (void**)&data_ov030_02115d7c);
     }
     {
         unsigned int *p = (unsigned int*)&data_ov030_02115e00;
         p[0] = 0x30000;
         p[1] = (unsigned int)-0x1e000;
         p[2] = 0x1e000;
-        func_020731dc(p, (void*)&func_020072c0, (void**)&data_ov030_02115da0);
+        func_020731dc(p, (void*)&_ZN7Vector3D1Ev, (void**)&data_ov030_02115da0);
     }
 }

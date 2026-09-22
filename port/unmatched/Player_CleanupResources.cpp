@@ -54,7 +54,7 @@ extern "C" void port_model_family_delete(void *obj);
 
 extern "C" {
 void func_0203cbc0(int p);
-void func_020072c0(void);
+void _ZN7Vector3D1Ev(void);
 void func_ov002_020bebd4(char *c);
 void UnloadSilverStarAndNumber(void);
 void UnloadKeyModels(int n);

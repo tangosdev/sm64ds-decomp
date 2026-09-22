@@ -1,0 +1,68 @@
+# slice_l15ov7.txt -- lane-owned slice for run link100 wave 15, lane SEAT15E
+# (LINK15 BATCH 4: the ov007 / ov002 / ov096 singles). One matched src TU per
+# line, path relative to the repo root, comments with #. ONE OWNER (SEAT15E).
+#
+# WHAT THIS BATCH IS. Every row here is a host copy in port/unmatched/ whose
+# banner names a defect in the matched source and works around it. The
+# main-to-port sync brought fixed sources in and nothing re-read the banners.
+# Each line below was re-read against src/ at 8ddff3187 BEFORE it was seated,
+# and the sentence that was tested is quoted next to it. A row whose sentence
+# still holds is NOT here: see the REFUSED block at the bottom.
+#
+# ---- ov096 TORNADO (actor 308, daTor_c), 2 rows seated of 2 --------------
+# Tornado::Behavior, ov096 0x02137448, 284 bytes. Old banner ("the ROM carries
+# this method's receiver through r0 into three callees the source calls with
+# no arguments") is equally stale -- src is `int Tornado::Behavior()` and the
+# three state calls are member calls at :14..:16. SEATED run link100 wave 15,
+# lane TORNADO1: the row that blocked it was outside this file, and one
+# question settled it. port/faces_sync.txt:3231 carried a FORWARD (F) row
+# that made facegen define ?Behavior@Tornado@@UAEHXZ onto the host body, which
+# the seated TU also defines (LNK2005, measured on lane SEAT15E's tree).
+# Deleting the row was not the answer: hal/actor_classes_ov096.cpp's
+# tor_behavior thunk (the _ZTV7Tornado slot 6 host vtable fill) calls the FLAT
+# name _ZN7Tornado8BehaviorEv directly, so something still needed to define
+# it. Same shape as SHADOWS3's Flamethrower::Behavior seat (git 62fe1fd00):
+# the row flips F -> R, so facegen defines the flat name as a wrapper onto the
+# matched member instead, and the matched TU alone defines the decorated one.
+# Evidence in port/unmatched/Tornado_HostSites.cpp section (3).
+src/_ZN7Tornado8BehaviorEv.cpp
+# Tornado::State1, ov096 0x02137088, 568 bytes. Old banner: MSVC C2733, the
+# TU's own `extern "C"` declaration against include/decl_common.h:2928's
+# `extern void _ZN7Tornado6State1Ev(void);`. STALE BOTH WAYS: decl_common.h
+# carries one Tornado line today (`extern int _ZTV7Tornado[];` at :712) and no
+# State1 declaration at all, and the src TU is `void Tornado::State1()`, which
+# declares func_ov002_020de328 itself at :7 and calls UpdateSpin as a member at
+# :80 -- the second reason the old banner named. Reached as a member call from
+# the seated Tornado::Behavior, so it needs no face.
+src/_ZN7Tornado6State1Ev.cpp
+#
+# ---- ov007 SCENE 1, the title and file-select route, 2 rows --------------
+# func_ov007_020add3c, ov007 0x020add3c, 216 bytes. Old banner: "the matched
+# src declares its callee `(void)` and calls it with nothing, because on ARM
+# the caller's own incoming argument is still in r0 at the branch". STALE:
+# src/func_ov007_020add3c.c:1 declares `extern int func_ov007_020ae558(char
+# *self);` and calls it `func_ov007_020ae558(c)`, and
+# src/func_ov007_020ae558.c defines it with that one parameter. The host copy's
+# statement list is the same source's, line for line.
+# HELD for sub-batch 2 (seated one at a time, opening route):
+#src/func_ov007_020add3c.c
+# func_ov007_020be980, ov007 0x020be980, 44 bytes. Old banner: "the matched src
+# declares one parameter and its callee takes three, leaving i and a2 in r1/r2
+# across the call". STALE: src/func_ov007_020be980.c is
+# `void func_ov007_020be980(char *r0, int i, int a2)` and passes all three into
+# func_ov007_020bc3dc(void*, int, int). The four arm_call sites in
+# config/arm9/overlays/ov007/relocs.txt all pass three, so the arity the src
+# now spells is the ROM's.
+# HELD for sub-batch 3 (seated one at a time, opening route):
+#src/func_ov007_020be980.c
+#
+# ---- REFUSED, and why, so the next census does not re-offer it -----------
+# _Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij, ov002 0x020fe6c8,
+# 484 bytes, port/unmatched/LoadEntranceObjects.cpp. LINK15 rows.tsv calls its
+# ride-through claim stale. IT IS NOT. At 8ddff3187 the matched TU still
+# declares `void StartEntranceFaderWipe(void);` at :34 and still calls
+# `StartEntranceFaderWipe();` with no argument at :100, while
+# src/engine/fader/StartEntranceFaderWipe.cpp:41 defines
+# `extern "C" void StartEntranceFaderWipe(int index)`. The ROM leaves the wipe
+# type in r0; a host cdecl call would index WIPES with an unwritten stack slot.
+# The host copy stays and keeps its PORT_HOST_ABI tag.

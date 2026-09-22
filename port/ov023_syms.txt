@@ -16,7 +16,7 @@
 # ==== THE ONE CLASS, both attribution routes ===============================
 #
 #   id  arm9 slot   SpawnInfo   word[0]     factory         +4  x on L15
-#   84  0x020909b4  0x02111fc0  0x02111728  Squasher_Spawn  84   1
+#   84  0x020909b4  0x02111fc0  0x02111728  daObjFm_Battan_c_classInit  84   1
 #
 # The record's word[0] lands inside ov023 [0x021111a0, 0x02112080) and is the
 # overlay's only factory; the record reads its own id back at +4. Both routes
@@ -28,7 +28,7 @@
 #
 # ==== ONE TABLE, 32 SLOTS, AND THE DSD LANDING OVER-READS ==================
 #
-# _ZTV8Squasher  0x02111fe4, THIRTY-TWO slots, ends 0x02112064.
+# _ZTV16daObjFm_Battan_c  0x02111fe4, THIRTY-TWO slots, ends 0x02112064.
 #   next dsd symbol 0x02112080 -- the .bss base, 0x9c away. The landing reads
 #   THIRTY-NINE, seven words past the end, straight through the 0x1c of .data
 #   padding between the table and the section boundary. This is the OPPOSITE
@@ -36,9 +36,9 @@
 #   for a host array: seven extra slots of storage nothing ever writes, sitting
 #   where a reader that walked past slot 31 would find zeros instead of a fault.
 #   The pin is the ROM's own close:
-#       slot 29  0x02010124  _ZN5Actor16OnAimedAtWithEggEv
-#       slot 30  0x020100dc  _ZN5Actor25OnAimedAtWithEggReturnVecEv
-#       slot 31  0x020ee55c  _ZN8Platform4KillEv   (ov002 symbols.txt:1175)
+#       slot 29  0x02010124  _ZN8dActor_c16OnAimedAtWithEggEv
+#       slot 30  0x020100dc  _ZN8dActor_c25OnAimedAtWithEggReturnVecEv
+#       slot 31  0x020ee55c  _ZN10dBgActor_c4KillEv   (ov002 symbols.txt:1175)
 #   the 32-slot Platform close ov024's top, ov025's two, ov033's two, ov035's
 #   two, ov045's six, ov052's two and ov056's one all end on. The table is
 #   EXCLUDED from this mount and hosted as an array
@@ -46,7 +46,7 @@
 #
 # ==== THREE T3 WIDTH PINS ==================================================
 #
-#   Squasher_SpawnInfo   natural next-symbol delta 0x24 -- the usual eight
+#   g_profile_FM_BATTAN   natural next-symbol delta 0x24 -- the usual eight
 #     bytes of the next vtable's Itanium prologue past the end. Pinned to the
 #     record's real 0x1c.
 #   data_ov023_02112088  natural 0x4 (dsd named 0x0211208c INSIDE it). It is a
@@ -66,19 +66,19 @@
 #
 # ==== THREE ALIAS RACES, ALL LIVE, ALL IN ONE FUNCTION =====================
 #
-# src/_ZN8Squasher13InitResourcesEv.cpp is the worst-spelled body in this lane.
+# src/game/actors/d_a_obj_fm_battan.cpp is the worst-spelled body in this lane.
 # Its ROM pool at 0x02111718..0x02111724 and the relocations over it say what
 # each argument really is; the recovered source names two of the four wrong:
 #
 #   pool 0x02111718 -> 0x02112088  ov023's model SharedFilePtr.  Source spells
 #                      it data_ov023_02112088. CORRECT.
 #   pool 0x0211171c -> 0x02112080  ov023's collision SharedFilePtr.  Source
-#                      spells it &_ZN32FloatOnWaterPlatformWdwRectangleD1Ev --
+#                      spells it &_ZN15daObjWc_Obj07_cD1Ev --
 #                      an OV029 FUNCTION name at the same window address. Left
 #                      alone, MeshCollider::LoadFile is handed the address of a
 #                      destructor as a file pointer. Routed by -D.
 #   the call at 0x021116a4 -> 0x02111308  ov023's OWN transform helper. Source
-#                      calls it func_ov026_02111308 -- an OV026 name for the
+#                      calls it _ZN17daObjWlPolelift_c6RenderEv -- an OV026 name for the
 #                      same address, and lane W1-A is seating ov026 in this
 #                      same wave, so that name is about to become DEFINED.
 #                      Routed by -D.
@@ -93,7 +93,7 @@
 #
 # ==== THE DESTRUCTOR LABELS ARE INVERTED, THE OV033 SHAPE AGAIN ============
 #
-# src/_ZN8SquasherD1Ev.c and D0Ev.c write _ZTV10dBgActor_c first and VT1
+# src/game/actors/d_a_obj_fm_battan.cpp and D0Ev.c write _ZTV10dBgActor_c first and VT1
 # second. The ROM writes the OWN table first (0x021111e4 holds 0x02111fe4) and
 # Platform's base second (0x021111e8 holds 0x0210ae38). Same inversion ov033's
 # id-105 pair carries. Both spellings go to private names this lane owns; a
@@ -101,8 +101,18 @@
 # host array for every Platform in the port.
 
 # ---- .data: the one SpawnInfo record, pinned to the ROM's 0x1c ------------
-Squasher_SpawnInfo:0x1c
+
 
 # ---- .bss 0x02112080..0x021120c0: two SharedFilePtrs and two chain nodes --
-data_ov023_02112080 data_ov023_02112088:0x8
-data_ov023_02112090 data_ov023_0211209c:0xc
+
+data_ov023_02112090@0x02112090 data_ov023_0211209c@0x0211209c:0xc
+
+
+# RETIRED at ALIAS2 (wave 8, the main -> port sync). Each symbol below was
+# hosted here as a ROM data blob AND is now defined by a translation unit the
+# build compiles, so the link reported it twice (LNK2005). The generator input
+# is the place to fix that: build/port/host-src/ov023_syms.c is its output and is
+# regenerated from this list on every configure.
+#   g_profile_FM_BATTAN                        now defined by d_a_obj_fm_battan.cpp.obj
+#   data_ov023_02112080                        now defined by d_a_obj_fm_battan.cpp.obj
+#   data_ov023_02112088                        now defined by d_a_obj_fm_battan.cpp.obj

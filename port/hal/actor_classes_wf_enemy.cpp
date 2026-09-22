@@ -13,14 +13,14 @@
 // 164, not 47 -- so every row below is the ROM's number:
 //
 //   WHOMP (164) and WHOMP_KING (165)  -> _ZTV5Whomp (0x02127c80, 31 slots).
-//        ONE CLASS. Whomp_Spawn and WhompKing_Spawn build the same object with
+//        ONE CLASS. daBtn_c_classInit_BATAN and daBtn_c_classInit_BATANKING build the same object with
 //        the same table; the SpawnInfo param picks the king variant. Its
 //        Behavior dispatches a pointer-to-member (host copy, see
 //        port/unmatched/Whomp_Behavior.cpp).
 //   BULLET_BILL (222)  -> _ZTV10BulletBill (0x02127ee8, also _ZTV7daKlr_c).
 //        Its Behavior dispatches a two-entry PMF table (host copy,
 //        port/unmatched/BulletBill_Behavior.cpp).
-//   BILL_BLASTER (43)  -> data_ov079_02127fb8, a table dsd left as a PLAIN DATA
+//   BILL_BLASTER (43)  -> _ZTV11BillBlaster, a table dsd left as a PLAIN DATA
 //        symbol (the RotatingPlatformWf case). All seven overrides are
 //        func_ov079_* free functions; no host copy, no state seat.
 //   FORTRESS_WALL (47) and FORTRESS_WALL_BREAKABLE (48)  -> _ZTV12FortressWall
@@ -41,13 +41,15 @@
 // returns a Vector3 by value, an ABI a thunk cannot bridge, and nothing aims a
 // Yoshi egg at anything as Mario. FortressWall is a Platform whose slot 30 is
 // the arm9 base body, filled by the shared pass.
+#include "port_d16.h"
+
 #include <cstdio>
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
    this file fills IS the arm9 base body 0x020100dc (checked against
    config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   link from src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
    The three-parameter __fastcall is the sret contract MSVC uses for a
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
@@ -55,24 +57,24 @@ extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include "dsstate_seg.h"
 #include <cstdlib>
 
-#include "Actor.h"
-#include "ActorBase.h"
+#include "dActor_c.h"
+#include "fBase_c.h"
 
 extern "C" {
-int _ZN5Actor19BeforeInitResourcesEv(void *self);          /* slot 1  */
-void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a); /* slot 2 */
-int _ZN5Actor14BeforeBehaviorEv(void *self);               /* slot 7  */
-int _ZN5Actor12BeforeRenderEv(void *self);                 /* slot 10 */
-int _ZN5Actor13OnYoshiTryEatEv(void *self);                /* slot 18 */
-int _ZN5Actor9Virtual50Ev(void *self);                     /* slot 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);  /* slot 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);      /* slot 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);      /* slot 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);          /* slot 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);          /* slot 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* 27 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);      /* 28 */
+int _ZN8dActor_c19BeforeInitResourcesEv(void *self);          /* slot 1  */
+void _ZN8dActor_c18AfterInitResourcesEj(void *self, unsigned a); /* slot 2 */
+int _ZN8dActor_c14BeforeBehaviorEv(void *self);               /* slot 7  */
+int _ZN8dActor_c12BeforeRenderEv(void *self);                 /* slot 10 */
+int _ZN8dActor_c13OnYoshiTryEatEv(void *self);                /* slot 18 */
+int _ZN8dActor_c9Virtual50Ev(void *self);                     /* slot 20 */
+void _ZN8dActor_c15OnGroundPoundedERS_(void *self, void *o);  /* slot 21 */
+void _ZN8dActor_c11OnAttacked1ERS_(void *self, void *o);      /* slot 22 */
+void _ZN8dActor_c11OnAttacked2ERS_(void *self, void *o);      /* slot 23 */
+void _ZN8dActor_c8OnKickedERS_(void *self, void *o);          /* slot 24 */
+void _ZN8dActor_c8OnPushedERS_(void *self, void *o);          /* slot 25 */
+void _ZN8dActor_c24OnHitByCannonBlastedCharERS_(void *self, void *o); /* 26 */
+void _ZN8dActor_c15OnHitByMegaCharER6Player(void *self, void *p);     /* 27 */
+void _ZN8dActor_c19OnHitFromUnderneathERS_(void *self, void *o);      /* 28 */
 
 extern int data_02099f24[];          /* the frame phase the lists are in */
 extern unsigned char data_020a4b4c;  /* the spawn spine's own step */
@@ -107,54 +109,54 @@ WE_TRAP(13) WE_TRAP(14) WE_TRAP(16) WE_TRAP(17) WE_TRAP(19)
 
 // ---- the ten shared lifecycle halves plus Actor's tail ---------------------
 static int __fastcall we_binit(void *s, void *)
-{ return _ZN5Actor19BeforeInitResourcesEv(s); }
+{ return _ZN8dActor_c19BeforeInitResourcesEv(s); }
 static void __fastcall we_ainit(void *s, void *, unsigned a)
-{ _ZN5Actor18AfterInitResourcesEj(s, a); }
+{ _ZN8dActor_c18AfterInitResourcesEj(s, a); }
 static int __fastcall we_bclean(void *s, void *)
-{ return ((Actor *)s)->Actor::BeforeCleanupResources(); }
+{ return ((dActor_c *)s)->dActor_c::BeforeCleanupResources(); }
 static void __fastcall we_aclean(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)s)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall we_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{ return _ZN8dActor_c14BeforeBehaviorEv(s); }
 static void __fastcall we_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)s)->fBase_c::AfterBehavior(a); }
 static int __fastcall we_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{ return _ZN8dActor_c12BeforeRenderEv(s); }
 static void __fastcall we_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)s)->fBase_c::AfterRender(a); }
 static int __fastcall we_pdes(void *s, void *)
-{ ((ActorBase *)s)->ActorBase::OnPendingDestroy(); return 0; }
+{ ((fBase_c *)s)->fBase_c::OnPendingDestroy(); return 0; }
 static int __fastcall we_heap(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)s)->fBase_c::OnHeapCreated(); }
 static int __fastcall we_yoshi(void *s, void *)
-{ return _ZN5Actor13OnYoshiTryEatEv(s); }
+{ return _ZN8dActor_c13OnYoshiTryEatEv(s); }
 /* Slot 29, OnAimedAtWithEgg. The shared default used to be we_trap19, which
    is the slot-19 trap wearing the wrong hat; the two classes that never
-   overwrite it -- BILL_BLASTER (data_ov079_02127fb8) and FORTRESS_WALL
+   overwrite it -- BILL_BLASTER (_ZTV11BillBlaster) and FORTRESS_WALL
    (_ZTV12FortressWall) -- both hold the arm9 base 0x02010124 in ROM slot 29,
    so the base body IS their word. It has to answer now because the shared
    slot 30 is the Actor base body, which dispatches slot 29. */
-extern "C" int _ZN5Actor16OnAimedAtWithEggEv(void *self);
+extern "C" int _ZN8dActor_c16OnAimedAtWithEggEv(void *self);
 static int __fastcall we_aimed(void *s, void *)
-{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+{ return _ZN8dActor_c16OnAimedAtWithEggEv(s); }
 static int __fastcall we_v50(void *s, void *)
-{ return _ZN5Actor9Virtual50Ev(s); }
+{ return _ZN8dActor_c9Virtual50Ev(s); }
 static int __fastcall we_pounded(void *s, void *, void *o)
-{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+{ _ZN8dActor_c15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall we_atk1(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked1ERS_(s, o); return 0; }
 static int __fastcall we_atk2(void *s, void *, void *o)
-{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+{ _ZN8dActor_c11OnAttacked2ERS_(s, o); return 0; }
 static int __fastcall we_kicked(void *s, void *, void *o)
-{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnKickedERS_(s, o); return 0; }
 static int __fastcall we_pushed(void *s, void *, void *o)
-{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+{ _ZN8dActor_c8OnPushedERS_(s, o); return 0; }
 static int __fastcall we_cannon(void *s, void *, void *o)
-{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+{ _ZN8dActor_c24OnHitByCannonBlastedCharERS_(s, o); return 0; }
 static int __fastcall we_mega(void *s, void *, void *p)
-{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+{ _ZN8dActor_c15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall we_under(void *s, void *, void *o)
-{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+{ _ZN8dActor_c19OnHitFromUnderneathERS_(s, o); return 0; }
 
 /* The shared half of a 31-slot table: Actor's four Before/After pairs,
    ActorBase::OnHeapCreated/OnPendingDestroy, Actor::OnYoshiTryEat, Virtual50
@@ -174,7 +176,7 @@ static void we31_fill_shared(void **vt)
     vt[13] = (void *)we_trap13;
     vt[14] = (void *)we_trap14;
     vt[15] = (void *)we_heap;
-    vt[16] = (void *)we_trap16;
+    vt[16] = (void *)PORT_D16(we_trap16);
     vt[17] = (void *)we_trap17;
     vt[18] = (void *)we_yoshi;
     vt[19] = (void *)we_trap19;
@@ -197,12 +199,12 @@ static void we31_fill_shared(void **vt)
 //
 // One class. Behavior is a host copy (the PMF, port/unmatched/Whomp_Behavior).
 // It overrides slots 27 (OnHitByMegaChar), 29 (OnAimedAtWithEgg) and 30's
-// neighbour -- read the table: 27 is func_ov079_02123e60(self, player), 29 is
-// func_ov079_02123b60(self) and 30 is func_ov079_02123b54(void). D1/D0 are C-
+// neighbour -- read the table: 27 is _ZN5Whomp15OnHitByMegaCharER6Player(self, player), 29 is
+// _ZN5Whomp16OnAimedAtWithEggEv(self) and 30 is _ZN5Whomp25OnAimedAtWithEggReturnVecEv(void). D1/D0 are C-
 // named free functions; InitResources/Render/CleanupResources are real methods
 // faced below.
 //
-// Object layout, from Whomp_Spawn: WithMeshClsn at 0x110, ModelAnim at 0x2cc,
+// Object layout, from daBtn_c_classInit_BATAN: WithMeshClsn at 0x110, ModelAnim at 0x2cc,
 // TextureSequence at 0x330, ShadowModel at 0x344, MovingMeshCollider at 0x418,
 // 0x610 bytes.
 extern "C" {
@@ -212,9 +214,9 @@ int _ZN5Whomp16CleanupResourcesEv(void *self);/* face: below */
 int _ZN5Whomp8BehaviorEv(void *self);         /* host copy */
 int *_ZN5WhompD1Ev(int *self);
 int *_ZN5WhompD0Ev(int *self);
-void func_ov079_02123e60(char *self, void *player);  /* slot 27 */
-int func_ov079_02123b60(char *self);                 /* slot 29 */
-void func_ov079_02123b54(void);                      /* slot 30 veneer */
+void _ZN5Whomp15OnHitByMegaCharER6Player(char *self, void *player);  /* slot 27 */
+int _ZN5Whomp16OnAimedAtWithEggEv(char *self);                 /* slot 29 */
+void _ZN5Whomp25OnAimedAtWithEggReturnVecEv(void);                      /* slot 30 veneer */
 void func_ov079_02123d4c(int *out, char *self);      /* slot 30, the body */
 void *_ZTV5Whomp[31];
 }
@@ -233,12 +235,12 @@ static int __fastcall whomp_d1(void *s, void *)
 static int __fastcall whomp_d0(void *s, void *)
 { return (int)(size_t)_ZN5WhompD0Ev((int *)s); }
 static int __fastcall whomp_mega(void *s, void *, void *p)
-{ func_ov079_02123e60((char *)s, p); return 0; }
+{ _ZN5Whomp15OnHitByMegaCharER6Player((char *)s, p); return 0; }
 static int __fastcall whomp_aimed(void *s, void *)
-{ return func_ov079_02123b60((char *)s); }
+{ return _ZN5Whomp16OnAimedAtWithEggEv((char *)s); }
 /* Slot 30 is OnAimedAtWithEggReturnVec(), which returns a Vector3 BY VALUE:
    MSVC passes the hidden result pointer as the one stack argument and the
-   callee returns it in eax and pops it. func_ov079_02123b54 is the ROM's
+   callee returns it in eax and pops it. _ZN5Whomp25OnAimedAtWithEggReturnVecEv is the ROM's
    `ldr ip,[pc]; bx ip` veneer, which forwards r0/r1 untouched to
    func_ov079_02123d4c(out, self); the veneer's x86 transcription is declared
    void(void) and so drops both, which is why this dispatches the veneer's
@@ -259,7 +261,7 @@ static void hal_fill_whomp_vtable(void)
     vt[3] = (void *)whomp_clean;
     vt[6] = (void *)whomp_behavior;
     vt[9] = (void *)whomp_render;
-    vt[16] = (void *)whomp_d1;
+    vt[16] = (void *)PORT_D16(whomp_d1);
     vt[17] = (void *)whomp_d0;
     vt[27] = (void *)whomp_mega;
     vt[29] = (void *)whomp_aimed;
@@ -271,10 +273,10 @@ static void hal_fill_whomp_vtable(void)
 // ============================================================================
 //
 // Behavior is a host copy (the two-entry PMF, port/unmatched/BulletBill_Behavior).
-// It overrides slot 29 (func_ov079_021266fc, self-less). InitResources/Cleanup
+// It overrides slot 29 (_ZN10BulletBill16OnAimedAtWithEggEv, self-less). InitResources/Cleanup
 // and D1/D0 are C-named free functions; only Render is a method faced below.
 //
-// Object layout, from BulletBill_Spawn: MovingCylinderClsnWithPos at 0x110,
+// Object layout, from daKlr_c_classInit: MovingCylinderClsnWithPos at 0x110,
 // WithMeshClsn at 0x150, Model at 0x30c and 0x35c, ShadowModel at 0x3ac,
 // 0x3e0 bytes.
 extern "C" {
@@ -284,7 +286,7 @@ int _ZN10BulletBill6RenderEv(void *self);            /* face: below */
 int _ZN10BulletBill8BehaviorEv(void *self);          /* host copy */
 int *_ZN10BulletBillD1Ev(int *self);
 int *_ZN10BulletBillD0Ev(int *self);
-int func_ov079_021266fc(void);                       /* slot 29 */
+int _ZN10BulletBill16OnAimedAtWithEggEv(void);                       /* slot 29 */
 void *_ZTV10BulletBill[31];
 }
 /* PORT_HOST_ABI: two names of ONE ROM table, read off the ROM rather than
@@ -292,7 +294,7 @@ void *_ZTV10BulletBill[31];
    record: the word at 0x02127ee4 relocates to the typeinfo at 0x02127eb8,
    whose word[1] points at the Itanium name string at 0x02127eac =
    "7daKlr_c", so 7daKlr_c is the ROM's own RTTI spelling of that class. The
-   ROM bodies whose literal pools load it are BulletBill_Spawn,
+   ROM bodies whose literal pools load it are daKlr_c_classInit,
    _ZN10BulletBillD0Ev, _ZN10BulletBillD1Ev. Read out of
    extracted/overlays/overlay_0079.bin; the LHS is not a config symbol
    anywhere, so the alias cannot be defeated by a later slice. */
@@ -312,7 +314,7 @@ static int __fastcall klr_d1(void *s, void *)
 static int __fastcall klr_d0(void *s, void *)
 { return (int)(size_t)_ZN10BulletBillD0Ev((int *)s); }
 static int __fastcall klr_aimed(void *, void *)
-{ return func_ov079_021266fc(); }
+{ return _ZN10BulletBill16OnAimedAtWithEggEv(); }
 
 extern "C" void port_bullet_bill_states_seat(void); /* port/unmatched/BulletBill_Behavior */
 
@@ -326,30 +328,30 @@ static void hal_fill_bullet_bill_vtable(void)
     vt[3] = (void *)klr_clean;
     vt[6] = (void *)klr_behavior;
     vt[9] = (void *)klr_render;
-    vt[16] = (void *)klr_d1;
+    vt[16] = (void *)PORT_D16(klr_d1);
     vt[17] = (void *)klr_d0;
     vt[29] = (void *)klr_aimed;
 }
 
 // ============================================================================
-// BILL_BLASTER (actor 43), vtable data_ov079_02127fb8 @ ov079 0x02127fb8
+// BILL_BLASTER (actor 43), vtable _ZTV11BillBlaster @ ov079 0x02127fb8
 // ============================================================================
 //
 // dsd left the table a plain data symbol (the RotatingPlatformWf case), so it
 // is excluded from the mount and declared here as the host array
-// BillBlaster_Spawn installs. Every override is a func_ov079_* free function:
+// daObjBkKillerdai_c_classInit installs. Every override is a func_ov079_* free function:
 // slot 0 init (02127090), 3 cleanup (02126f04), 6 behavior (02126f8c -- plain,
 // no PMF), 9 render (02126f64), 16/17 dtor (02126dbc/02126e00) and 27
 // OnHitByMegaChar (02126ecc, self+player). No host copy, no state seat.
 extern "C" {
-int func_ov079_02127090(void *self);          /* slot 0  */
-int func_ov079_02126f04(char *self);          /* slot 3  */
-int func_ov079_02126f8c(char *self);          /* slot 6  */
-int func_ov079_02126f64(void *self);          /* slot 9  */
-int *func_ov079_02126dbc(int *self);          /* slot 16 */
-int *func_ov079_02126e00(int *self);          /* slot 17 */
-void func_ov079_02126ecc(char *self, void *player); /* slot 27 */
-int func_ov079_02126e58(char *self);          /* slot 31, its own Kill */
+int _ZN11BillBlaster13InitResourcesEv(void *self);          /* slot 0  */
+int _ZN11BillBlaster16CleanupResourcesEv(char *self);          /* slot 3  */
+int _ZN11BillBlaster8BehaviorEv(char *self);          /* slot 6  */
+int _ZN11BillBlaster6RenderEv(void *self);          /* slot 9  */
+int *_ZN11BillBlasterD1Ev(int *self);          /* slot 16 */
+int *_ZN11BillBlasterD0Ev(int *self);          /* slot 17 */
+void _ZN11BillBlaster15OnHitByMegaCharER6Player(char *self, void *player); /* slot 27 */
+int _ZN11BillBlaster4KillEv(char *self);          /* slot 31, its own Kill */
 /* THIRTY-TWO slots, not 31. BillBlaster is a dBgActor_c (Platform) subclass,
    so its table has Platform's tail slot, and here it is the class's OWN Kill
    (ov079 0x02126e58: a poof particle, dust, bank-3 sound 0xf, then
@@ -357,43 +359,43 @@ int func_ov079_02126e58(char *self);          /* slot 31, its own Kill */
    nothing ever wrote it -- the same wild call as the ROTATING_BRIDGE repro in
    hal/actor_classes_wf.cpp, in Whomp's Fortress, on a Bill Blaster that gets
    killed.
-   Declared as bytes rather than void*[] because BillBlaster_Spawn installs it
+   Declared as bytes rather than void*[] because daObjBkKillerdai_c_classInit installs it
    through a char* face; the count is the slot count times four, so it moves
    with the slot count. */
 DSSTATE_BEGIN
-unsigned char data_ov079_02127fb8[32 * 4];    /* the host vtable BillBlaster_Spawn installs */
+unsigned char _ZTV11BillBlaster[32 * 4];    /* the host vtable daObjBkKillerdai_c_classInit installs */
 DSSTATE_END
 }
 
 static int __fastcall blz_init(void *s, void *)
-{ return func_ov079_02127090(s); }
+{ return _ZN11BillBlaster13InitResourcesEv(s); }
 static int __fastcall blz_clean(void *s, void *)
-{ return func_ov079_02126f04((char *)s); }
+{ return _ZN11BillBlaster16CleanupResourcesEv((char *)s); }
 static int __fastcall blz_behavior(void *s, void *)
-{ return func_ov079_02126f8c((char *)s); }
+{ return _ZN11BillBlaster8BehaviorEv((char *)s); }
 static int __fastcall blz_render(void *s, void *)
-{ return func_ov079_02126f64(s); }
+{ return _ZN11BillBlaster6RenderEv(s); }
 static int __fastcall blz_d1(void *s, void *)
-{ return (int)(size_t)func_ov079_02126dbc((int *)s); }
+{ return (int)(size_t)_ZN11BillBlasterD1Ev((int *)s); }
 static int __fastcall blz_d0(void *s, void *)
-{ return (int)(size_t)func_ov079_02126e00((int *)s); }
+{ return (int)(size_t)_ZN11BillBlasterD0Ev((int *)s); }
 static int __fastcall blz_mega(void *s, void *, void *p)
-{ func_ov079_02126ecc((char *)s, p); return 0; }
+{ _ZN11BillBlaster15OnHitByMegaCharER6Player((char *)s, p); return 0; }
 /* slot 31, the Platform tail. BillBlaster overrides Platform::Kill with its
    own body, which IS in the build (slice_gate64), so this runs the real thing
    rather than declining. */
 static int __fastcall blz_kill(void *s, void *)
-{ return func_ov079_02126e58((char *)s); }
+{ return _ZN11BillBlaster4KillEv((char *)s); }
 
 static void hal_fill_bill_blaster_vtable(void)
 {
-    void **vt = (void **)data_ov079_02127fb8;
+    void **vt = (void **)_ZTV11BillBlaster;
     we31_fill_shared(vt);
     vt[0] = (void *)blz_init;
     vt[3] = (void *)blz_clean;
     vt[6] = (void *)blz_behavior;
     vt[9] = (void *)blz_render;
-    vt[16] = (void *)blz_d1;
+    vt[16] = (void *)PORT_D16(blz_d1);
     vt[17] = (void *)blz_d0;
     vt[27] = (void *)blz_mega;
     vt[31] = (void *)blz_kill;
@@ -405,11 +407,11 @@ static void hal_fill_bill_blaster_vtable(void)
 // ============================================================================
 //
 // One class, a Platform (through Actor). THIRTY-TWO slots -- one past the usual
-// 31 -- with slot 31 being func_ov079_02127280, a class-specific tail virtual.
+// 31 -- with slot 31 being _ZN12FortressWall4KillEv, a class-specific tail virtual.
 // Behavior is PLAIN (no PMF): src/_ZN12FortressWall8BehaviorEv.cpp is matched
 // and goes in the slice. InitResources/Render/CleanupResources are methods
 // faced below; D1/D0 are C-named free functions. Slot 26 override is
-// func_ov079_021272e0 (OnHitByCannonBlastedChar). It is NOT an Enemy, so no
+// _ZN12FortressWall24OnHitByCannonBlastedCharER8dActor_c (OnHitByCannonBlastedChar). It is NOT an Enemy, so no
 // death-states seat.
 extern "C" {
 int _ZN12FortressWall13InitResourcesEv(void *self);   /* face: below */
@@ -418,8 +420,8 @@ int _ZN12FortressWall16CleanupResourcesEv(void *self);/* face: below */
 int _ZN12FortressWall8BehaviorEv(void *self);         /* matched src (slice) */
 int *_ZN12FortressWallD1Ev(int *self);
 int *_ZN12FortressWallD0Ev(int *self);
-void func_ov079_021272e0(void *self);                 /* slot 26 */
-void func_ov079_02127280(char *self);                 /* slot 31 */
+void _ZN12FortressWall24OnHitByCannonBlastedCharER8dActor_c(void *self);                 /* slot 26 */
+void _ZN12FortressWall4KillEv(char *self);                 /* slot 31 */
 void *_ZTV12FortressWall[32];
 }
 
@@ -436,9 +438,9 @@ static int __fastcall fw_d1(void *s, void *)
 static int __fastcall fw_d0(void *s, void *)
 { return (int)(size_t)_ZN12FortressWallD0Ev((int *)s); }
 static int __fastcall fw_cannon(void *s, void *, void *)
-{ func_ov079_021272e0(s); return 0; }
+{ _ZN12FortressWall24OnHitByCannonBlastedCharER8dActor_c(s); return 0; }
 static int __fastcall fw_s31(void *s, void *)
-{ func_ov079_02127280((char *)s); return 0; }
+{ _ZN12FortressWall4KillEv((char *)s); return 0; }
 
 static void hal_fill_fortress_wall_vtable(void)
 {
@@ -448,7 +450,7 @@ static void hal_fill_fortress_wall_vtable(void)
     vt[3] = (void *)fw_clean;
     vt[6] = (void *)fw_behavior;
     vt[9] = (void *)fw_render;
-    vt[16] = (void *)fw_d1;
+    vt[16] = (void *)PORT_D16(fw_d1);
     vt[17] = (void *)fw_d0;
     /* slot 26 is FortressWall's own OnHitByCannonBlastedChar */
     vt[26] = (void *)fw_cannon;

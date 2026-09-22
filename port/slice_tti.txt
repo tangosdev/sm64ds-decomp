@@ -1,7 +1,7 @@
 # Lane TTI of run mg11: dScMgTrampoline_c, the "Trampoline Time" minigame.
 #
-# actor id 0x180 (scene 384), spawn symbol MgTrampolineTime_Spawn (0x02122490),
-# SpawnInfo 0x0213fab8, vtable data_ov006_0213fb34.  Every one of those was
+# actor id 0x180 (scene 384), spawn symbol dScMgTrampoline_c_classInit (0x02122490),
+# SpawnInfo 0x0213fab8, vtable _ZTV17dScMgTrampoline_c.  Every one of those was
 # re-read out of the ROM by this lane rather than taken from the handover.  The
 # doubled-id word 0x01800180 sits at 0x0213fabc, which puts the record at
 # 0x0213fab8 with the factory in the word before it:
@@ -22,7 +22,7 @@
 # So the class is dScMgTrampoline_c and the spawn symbol is MgTrampolineTime --
 # the same spawn-symbol/class-name split port/mg_fanout_costs.txt section 2
 # records for curling (MgShuffleShell / dScMgCurling_c).  The src spelling
-# agrees (src/func_ov006_021214f8.cpp's recovered header reads
+# agrees (src/minigames/d_s_mg_trampoline.cpp's recovered header reads
 # dScMgTrampoline_c) and is the weaker witness, because a per-TU placeholder
 # can be wrong and a relocation cannot.
 #
@@ -30,7 +30,7 @@
 #
 #     Scene -> dScMgBase_c        data_ov004_020bc0c0  36  (the framework's)
 #           -> dScMgD3DBase_c     data_ov006_0213c62c  36  ovr 17
-#           -> dScMgTrampoline_c  data_ov006_0213fb34  36  ovr 25, mark 16
+#           -> dScMgTrampoline_c  _ZTV17dScMgTrampoline_c  36  ovr 25, mark 16
 #
 # port/mg_fanout_costs.txt section 3 lists ONE vtable for 0x180 and says nothing
 # about an intermediate base, which is section 13's CORRECTION 1 firing for a
@@ -42,12 +42,12 @@
 #     middle  slots 1, 2, 5, 7, 10, 11, 26, 27, 28, 29, 30, 31, 33
 #
 # A seat that filled one derived table would have left THIRTEEN slots holding
-# raw DS words.  The code states both edges: src/MgTrampolineTime_Spawn.c writes
-# the middle table into the object and then data_ov006_0213fb34 over it, and
+# raw DS words.  The code states both edges: src/minigames/d_s_mg_trampoline.cpp writes
+# the middle table into the object and then _ZTV17dScMgTrampoline_c over it, and
 # slot 17's literal pool holds 0x0213fb34 at 0x02120914 and 0x0213c62c at
 # 0x02120930 -- the destructor unwinding them in the opposite order.
 #
-# config CALLS THE MIDDLE TABLE `_ZTV17MgBounceAndPounce` AND THAT IS AN
+# config CALLS THE MIDDLE TABLE `_ZTV14dScMgD3DBase_c` AND THAT IS AN
 # ATTRIBUTION ERROR, not a body error.  FIVE type_info records in ov006 carry
 # 0x0213c5c8 as their base pointer:
 #
@@ -93,7 +93,7 @@
 # added:
 #
 #   1. SPAN.  config/arm9/overlays/ov006/symbols.txt puts the next symbol after
-#      data_ov006_0213fb34 at data_ov006_0213fbc4, exactly 0x90 = 36 words on.
+#      _ZTV17dScMgTrampoline_c at data_ov006_0213fbc4, exactly 0x90 = 36 words on.
 #   2. TERMINAL SLOT.  Slot 35 holds 0x020ad660, the word every
 #      dScMgBase_c-derived table holds there.
 #   3. WHAT THE WORD PAST IT IS.  Index 36 reads 0x00000001 -- an int, not a
@@ -146,7 +146,7 @@
 #
 # EXCLUDED and host-copied in port/unmatched/MgTrampolineTime_StateDispatch.cpp:
 #
-#     src/func_ov006_021214f8.cpp   vtable SLOT 6, the Behavior
+#     src/minigames/d_s_mg_trampoline.cpp   vtable SLOT 6, the Behavior
 #
 # THIS CLASS HAS NO STATE TABLE.  Its member pointer lives in the OBJECT, at
 # this+0x5004 (code) and this+0x5008 (adjustment) -- the field-held shape run
@@ -173,7 +173,7 @@
 # written this way:
 #
 #   this class's 43 own bodies (0x021207dc..0x021225a4)          1 site
-#                                        0x0212151c, in func_ov006_021214f8
+#                                        0x0212151c, in _ZN17dScMgTrampoline_c8BehaviorEv
 #   the 13 INHERITED dScMgD3DBase_c bodies                       0 sites
 #
 # THE ADDRESS A DECODE SITE IS REPORTED AT IS THE `add`, the FIRST instruction
@@ -182,7 +182,7 @@
 # is three or five instructions later and is a different number for the same
 # site.  Both sequences in full:
 #
-#     func_ov006_021214f8   add 0x0212151c   ands 0x02121520   blx 0x02121534
+#     _ZN17dScMgTrampoline_c8BehaviorEv   add 0x0212151c   ands 0x02121520   blx 0x02121534
 #     func_ov006_020cb030   add 0x020cb068   ands 0x020cb06c   blx 0x020cb080
 #
 # An earlier version of the element file reported ITS site at the blx while
@@ -203,24 +203,24 @@
 #
 #   pair addr   pair words          installed by            reached from
 #   ---------   -----------------   --------------------    --------------------
-#   0213fab0    {02121d64, 0}       func_ov006_02121f04     slot 18 (the reset)
-#   0213fac0    {021218fc, 0}       func_ov006_02121cf4     link 0
-#   0213fac8    {02121848, 0}       func_ov006_021218c4     link 1
-#   0213faa0    {02121778, 0}       func_ov006_02121848     link 2 itself
-#   0213faa8    {02121774, 0}       func_ov006_02121778     link 3 itself
+#   0213fab0    {02121d64, 0}       _ZN17dScMgTrampoline_c10BeginIntroEv     slot 18 (the reset)
+#   0213fac0    {021218fc, 0}       _ZN17dScMgTrampoline_c9BeginPlayEv     link 0
+#   0213fac8    {02121848, 0}       _ZN17dScMgTrampoline_c12BeginResultsEv     link 1
+#   0213faa0    {02121778, 0}       _ZN17dScMgTrampoline_c12StateResultsEv     link 2 itself
+#   0213faa8    {02121774, 0}       _ZN17dScMgTrampoline_c13StateWaitExitEv     link 3 itself
 #
 # so the machine is a five-link CHAIN -- reset installs link 0, and each link
-# installs the next -- ending at func_ov006_02121774, which is a four-byte
+# installs the next -- ending at _ZN17dScMgTrampoline_c9StateDoneEv, which is a four-byte
 # `bx lr`.  The port numbers them 0..4 in that install order because the object
 # holds no state INDEX for a census to read.
 #
 # THE PAIR RUN BRACKETS THE SpawnInfo AND SKIPS IT.  Two words inside
 # 0x0213fa9c..0x0213fac8 are not pairs at all:
 #
-#     0x0213fa9c  an INT FLAG.  src/func_ov006_0212101c.c (slot 23) writes 0 or
+#     0x0213fa9c  an INT FLAG.  src/minigames/d_s_mg_trampoline.cpp (slot 23) writes 0 or
 #                 1 into it from two virtual dispatches on data_0209f5bc and
 #                 then early-returns on it; it is never called.
-#     0x0213fab8  MgTrampolineTime_SpawnInfo -- the factory word 0x02122490
+#     0x0213fab8  g_profile_MG_TRAMPOLINE -- the factory word 0x02122490
 #                 followed by the doubled id 0x01800180.
 #
 # A sweep of the span would have produced seven "pairs" and routed two words
@@ -232,7 +232,7 @@
 # class's vtable is dScMgTrampoline2_c's, and it is FIVE PAIRS, not six:
 #
 #     0213fbc8  {0212471c, 01810181}   NOT A PAIR -- it is
-#                                      MgTrampolineTerror_SpawnInfo, the
+#                                      g_profile_MG_TRAMPOLINE2, the
 #                                      factory word and the doubled id 0x181
 #     0213fbd0  {02123b20, 0}
 #     0213fbd8  {02124088, 0}
@@ -244,7 +244,7 @@
 # SECTIONS EARLIER.  Section 7 names the SpawnInfo-inside-the-pair-run trap for
 # THIS class (0x0213fab8) and this paragraph then walked into the sibling's copy
 # of it.  config/arm9/overlays/ov006/symbols.txt has the answer in one line --
-# `MgTrampolineTerror_SpawnInfo ... addr:0x0213fbc8` -- and the word after it is
+# `g_profile_MG_TRAMPOLINE2 ... addr:0x0213fbc8` -- and the word after it is
 # the doubled id 0x01810181.  A rule you can state is not a rule you have
 # applied.
 #
@@ -264,7 +264,7 @@
 # ---- 8. THE ELEMENT VTABLE, AND IT IS DISPATCHED --------------------------
 #
 # Run mg9 lane S381 turned this into law: check word 0 of every factory product.
-# src/MgTrampolineTime_Spawn.c builds three arrays through func_020733a8:
+# src/minigames/d_s_mg_trampoline.cpp builds three arrays through __cxa_vec_ctor:
 #
 #   this+0x500c   4 records of 0xd0    ctor func_ov006_020cd12c   VTABLE
 #   this+0x534c   3 records of 0x32c   ctor func_ov006_020d100c   no vtable
@@ -307,10 +307,10 @@
 #
 # ALSO EXCLUDED, and repaired in port/unmatched/MgD3DBase_Slots.cpp:
 #
-#     src/_ZN17MgBounceAndPounce18AfterInitResourcesEj.cpp   middle slot  2
-#     src/_ZN17MgBounceAndPounce12BeforeRenderEv.cpp         middle slot 10
-#     src/func_ov006_020e6d98.c                              middle slot 27
-#     src/func_ov006_020e6d8c.c                              middle slot 28
+#     src/actors/dScMgD3DBase_c.cpp   middle slot  2
+#     src/actors/dScMgD3DBase_c.cpp         middle slot 10
+#     src/actors/dScMgD3DBase_c.cpp                              middle slot 27
+#     src/actors/dScMgD3DBase_c.cpp                              middle slot 28
 #
 # Slot 2 is the flower's disease exactly: the ROM does `mov r4,r0` then
 # `bl 0x020b08f0` with r1 NEVER WRITTEN, so the framework's flags word rides
@@ -335,7 +335,7 @@
 # ALSO EXCLUDED, and repaired in port/unmatched/MgD3DBase_DeclConflict.cpp
 # (the same family file, same reason -- adopted rather than duplicated):
 #
-#     src/func_ov006_020e6e78.cpp                            middle slot 24
+#     src/actors/dScMgD3DBase_c.cpp                            middle slot 24
 #
 # include/decl_common.h opens an extern "C" block at line 20 and declares that
 # symbol taking `void*` at line 1516, while the TU that includes it defines it
@@ -347,7 +347,7 @@
 # ALSO EXCLUDED, under its own name because the port cannot compile the src at
 # all rather than because the src is wrong:
 #
-#     src/func_ov006_02120da8.c   vtable slot 34, the brush
+#     src/minigames/d_s_mg_trampoline.cpp   vtable slot 34, the brush
 #
 # It reads `*(int *)(obj + 0x6c)` with obj declared void*, which is a GNU/mwcc
 # extension MSVC refuses with C2036.  port/unmatched/MgTrampolineTime_Brush.cpp
@@ -361,8 +361,8 @@
 # is now scoped to the twenty-one classes seated before this one:
 # func_ov004_020ae5c4 is not a floor any more (hal/scene_mg_faces.cpp records it
 # as a real decompilation, a Bresenham walk that stamps slot 34 at every lattice
-# point) and THIS class calls it from src/func_ov006_0212157c.c, which vtable
-# slot 6 calls on every behavior tick, and from src/func_ov006_02121d64.cpp,
+# point) and THIS class calls it from src/minigames/d_s_mg_trampoline.cpp, which vtable
+# slot 6 calls on every behavior tick, and from src/minigames/d_s_mg_trampoline.cpp,
 # which is chain link 0.
 #
 # ---- 10. SLOTS 18 AND 19 DO NOT READ A SECOND ARGUMENT HERE ---------------
@@ -488,14 +488,13 @@
 # bodiless closure members its nosrc column cannot see, and the two
 # cross-module misbindings.
 
-src/MgTrampolineTime_Spawn.c
-src/Sound_PlayBank1Panned.cpp
-src/_ZN17MgBounceAndPounce11AfterRenderEj.cpp
-src/_ZN17MgBounceAndPounce14BeforeBehaviorEv.cpp
-src/_ZN17MgBounceAndPounce19BeforeInitResourcesEv.cpp
-src/_ZN17MgBounceAndPounce21AfterCleanupResourcesEj.cpp
-src/_ZN17MgBounceAndPounceD0Ev.cpp
-src/_ZN17MgBounceAndPounceD1Ev.cpp
+src/minigames/d_s_mg_trampoline.cpp
+# QUARANTINED at the main->port sync (origin/main 9c7f38a24): main folded this
+# class into one TU, and port/ host-copies bodies inside it (the slice_bnp host copies).
+# port/CMakeLists.txt's own assertion refuses the pair, because taking both is a
+# duplicate symbol and taking the src one puts the host copy's reason back. The
+# row returns when the host copy covers the whole consolidated TU.
+#src/actors/dScMgD3DBase_c.cpp
 src/_ZN5Model17LoadTextureToVramEPcj.cpp
 src/_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj.c
 src/func_02053ea0.c
@@ -515,7 +514,7 @@ src/func_ov006_020c91ac.cpp
 src/func_ov006_020c94e0.cpp
 src/func_ov006_020c97bc.cpp
 src/func_ov006_020c9aa0.cpp
-src/func_ov006_020c9c8c.c
+src/func_ov006_020c9c8c.cpp
 src/func_ov006_020c9d7c.c
 src/func_ov006_020c9e7c.c
 src/func_ov006_020c9efc.cpp
@@ -531,9 +530,9 @@ src/func_ov006_020cafa4.c
 src/func_ov006_020cafac.c
 src/func_ov006_020cafdc.cpp
 src/func_ov006_020cb134.cpp
-src/func_ov006_020cb1a8.c
+src/func_ov006_020cb1a8.cpp
 src/func_ov006_020cb2b4.c
-src/func_ov006_020cb528.c
+src/func_ov006_020cb528.cpp
 src/func_ov006_020cb5c4.c
 src/func_ov006_020cb690.cpp
 src/func_ov006_020cb72c.c
@@ -542,7 +541,7 @@ src/func_ov006_020cb838.cpp
 src/func_ov006_020cbaec.cpp
 src/func_ov006_020cbd7c.cpp
 src/func_ov006_020cbfd8.cpp
-src/func_ov006_020cc198.c
+src/func_ov006_020cc198.cpp
 src/func_ov006_020cc2ac.c
 src/func_ov006_020cc37c.cpp
 src/func_ov006_020cc408.cpp
@@ -638,58 +637,3 @@ src/func_ov006_020d0b04.c
 src/func_ov006_020d0b2c.cpp
 src/func_ov006_020d0bd8.c
 src/func_ov006_020d0c38.c
-src/func_ov006_020e6cac.c
-src/func_ov006_020e6d24.cpp
-src/func_ov006_020e6da4.c
-src/func_ov006_020e6e3c.c
-src/func_ov006_020e6e4c.c
-src/func_ov006_020e6e54.c
-src/func_ov006_020e7110.c
-src/func_ov006_020e7124.c
-src/func_ov006_020e72c0.c
-src/func_ov006_020e73c4.cpp
-src/func_ov006_020e740c.c
-src/func_ov006_020e7428.c
-src/func_ov006_020e7508.cpp
-src/func_ov006_020e759c.c
-src/func_ov006_021207dc.c
-src/func_ov006_02120880.cpp
-src/func_ov006_02120938.c
-src/func_ov006_0212093c.c
-src/func_ov006_021209ac.cpp
-src/func_ov006_02120a18.c
-src/func_ov006_02120a44.c
-src/func_ov006_02120a54.c
-src/func_ov006_02120a64.c
-src/func_ov006_02120ab8.c
-src/func_ov006_02120b30.c
-src/func_ov006_02120b7c.c
-src/func_ov006_02120bc8.c
-src/func_ov006_02120c08.c
-src/func_ov006_02120c40.c
-src/func_ov006_02120ca0.c
-src/func_ov006_02120d0c.c
-src/func_ov006_02120d8c.c
-src/func_ov006_02120f18.c
-src/func_ov006_0212101c.c
-src/func_ov006_021211bc.c
-src/func_ov006_021211e0.cpp
-src/func_ov006_021212e0.c
-src/func_ov006_021212fc.c
-src/func_ov006_0212157c.c
-src/func_ov006_02121750.c
-src/func_ov006_02121768.c
-src/func_ov006_02121774.c
-src/func_ov006_02121778.c
-src/func_ov006_02121848.c
-src/func_ov006_021218c4.c
-src/func_ov006_021218fc.c
-src/func_ov006_02121bc8.cpp
-src/func_ov006_02121cf4.c
-src/func_ov006_02121d64.cpp
-src/func_ov006_02121f04.c
-src/func_ov006_02121f70.c
-src/func_ov006_02121fa4.c
-src/func_ov006_02122198.cpp
-src/func_ov006_0212231c.c
-src/func_ov006_021225a8.c

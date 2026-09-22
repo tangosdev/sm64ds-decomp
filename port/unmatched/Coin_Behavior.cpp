@@ -35,8 +35,8 @@
 extern "C" {
 
 void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned id, void *pos);
-void _ZN12CylinderClsn5ClearEv(void *self);
-void _ZN12CylinderClsn6UpdateEv(void *self);
+void _ZN5dCc_c5ClearEv(void *self);
+void _ZN5dCc_c6UpdateEv(void *self);
 int LenVec3(void *v);
 extern unsigned char data_0209f2d8;      /* the mega-char state byte */
 

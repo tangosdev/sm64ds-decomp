@@ -10,7 +10,7 @@
 
      defaults    no file at all: every key and pad default the header
                  promises, RunButtonKey/RunButtonPad agreeing with
-                 KeyRun/PadRun, CameraMode analog.
+                 KeyRun/PadRun, CameraMode ds, RunMode analog.
      remap       a file that moves jump, attack, the walk keys, a pad button
                  and the camera mode, and leaves everything else alone --
                  the moved ones move, the rest stay at their defaults, an
@@ -133,7 +133,8 @@ static int child(const char *which)
                  "KeyRun agrees with RunButtonKey");
         check_eq(host_setting_pad(HOST_PAD_RUN), host_setting_run_pad(),
                  "PadRun agrees with RunButtonPad");
-        check_eq(host_setting_camera_mode(), 0, "CameraMode analog");
+        check_eq(host_setting_camera_mode(), 2, "CameraMode ds");
+        check_eq(host_setting_run_mode(), 1, "RunMode analog");
         check_eq(host_setting_key(-1), 0, "out of range key is unbound");
         check_eq(host_setting_pad(99), 0, "out of range pad is unbound");
     } else if (!strcmp(which, "remap")) {
@@ -291,6 +292,141 @@ static int child(const char *which)
         check_eq(host_setting_pad_layout_count(), 0, "unusable PadLayouts is none");
         check_eq(host_setting_key(HOST_KEY_JUMP), 0x4a, "KeyJump J still parsed");
         check_eq(host_setting_camera_mode(), 2, "CameraMode ds still parsed");
+    } else if (!strcmp(which, "quality_defaults")) {
+        /* no file at all: the three picture keys are the shipped picture.
+           0 is the explicit sentinel for "the multiplier the port picks
+           today" and is NOT 1, which is a real choice (the DS's own
+           256x192). The pack directory answers even with the pack off,
+           because it is "where would it be", not "is it on". */
+        check_eq(host_setting_render_scale(), 0, "RenderScale default 0");
+        check_eq(host_setting_hd_textures(), 0, "HdTextures default off");
+        check_eq(host_setting_smooth_models(), 0, "SmoothModels default 0");
+        check(host_setting_hd_textures_dir() != 0, "pack dir is never null");
+        check(!strcmp(host_setting_hd_textures_dir(), "textures_hd"),
+              "pack dir with no asset root is the working directory's");
+        /* run hd2's two: nearest sampling and no smoothing pass are the
+           picture the port shipped with, so no file at all must read as both
+           off and NOT as "some filtering, probably" */
+        check_eq(host_setting_texture_filter(), 0, "TextureFilter default 0");
+        check_eq(host_setting_anti_aliasing(), 0, "AntiAliasing default 0");
+        /* run hd2 lane GPU1's three: the ordinary Windows present path, its
+           own nearest scaler and no vsync are what the port shipped with, so
+           no file at all must read as all three off */
+        check_eq(host_setting_present_backend(), 0, "PresentBackend default 0");
+        check_eq(host_setting_present_filter(), 0, "PresentFilter default 0");
+        check_eq(host_setting_vsync(), 0, "VSync default 0");
+        /* run hd2 lane GPU2: the software rasteriser is what the port shipped
+           with and is the only path with a byte-exact reference, so no file at
+           all must read as off and never as "the card, probably" */
+        check_eq(host_setting_renderer(), 0, "Renderer default 0");
+        /* SaveMenuOnTop is the second key in this file whose ABSENT is ON,
+           so "no file at all" is the one case that has to say so out loud. */
+        check_eq(host_setting_save_menu_on_top(), 1,
+                 "SaveMenuOnTop absent is ON");
+    } else if (!strcmp(which, "quality")) {
+        check_eq(host_setting_render_scale(), 3, "RenderScale 3");
+        check_eq(host_setting_hd_textures(), 1, "HdTextures 1 is on");
+        check_eq(host_setting_smooth_models(), 2, "SmoothModels 2");
+        check_eq(host_setting_texture_filter(), 1, "TextureFilter 1 bilinear");
+        check_eq(host_setting_anti_aliasing(), 1, "AntiAliasing 1");
+        /* the keys around them still parse: a new key must not move an old
+           one, which is the whole reason this case carries CameraMode */
+        check_eq(host_setting_camera_mode(), 2, "CameraMode ds still parsed");
+    } else if (!strcmp(which, "present")) {
+        /* run hd2 lane GPU1: all three set, each to a value that is not the
+           default, read from a file */
+        check_eq(host_setting_present_backend(), 1, "PresentBackend 1");
+        check_eq(host_setting_present_filter(), 2, "PresentFilter 2 sharp");
+        check_eq(host_setting_vsync(), 1, "VSync 1");
+        /* the keys around them still parse: a new key must not move an old
+           one, the rule the quality case carries CameraMode for */
+        check_eq(host_setting_render_scale(), 3, "RenderScale beside them");
+        check_eq(host_setting_camera_mode(), 2, "CameraMode ds still parsed");
+        /* AND THE RENDERER IS STILL OFF. The two settings are independent and
+           a file that only asked for the card to PRESENT must not be read as
+           one that asked it to DRAW. */
+        check_eq(host_setting_renderer(), 0, "Renderer absent beside them is 0");
+    } else if (!strcmp(which, "present_bool")) {
+        /* the launcher serialises a C# bool, so true means on for both
+           toggles, and the middle value of the filter is read from a file
+           rather than only through a clamp */
+        check_eq(host_setting_present_backend(), 1, "PresentBackend true is on");
+        check_eq(host_setting_vsync(), 1, "VSync true is on");
+        check_eq(host_setting_present_filter(), 1, "PresentFilter 1 smooth");
+    } else if (!strcmp(which, "present_clamp")) {
+        /* out of range is a setting that presents, not an error: the Aspect
+           rule the header states for all three */
+        check_eq(host_setting_present_backend(), 1, "PresentBackend 5 clamps to 1");
+        check_eq(host_setting_present_filter(), 2, "PresentFilter 9 clamps to 2");
+        check_eq(host_setting_vsync(), 1, "VSync 3 clamps to 1");
+    } else if (!strcmp(which, "present_junk")) {
+        /* unparseable and negative both read as the default, like every other
+           key in this file */
+        check_eq(host_setting_present_backend(), 0, "PresentBackend junk is 0");
+        check_eq(host_setting_present_filter(), 0, "PresentFilter -4 is 0");
+        check_eq(host_setting_vsync(), 0, "VSync junk is off");
+    } else if (!strcmp(which, "renderer")) {
+        /* run hd2 lane GPU2: the key on its own, read from a file, with the
+           present keys absent, because the two are independent settings */
+        check_eq(host_setting_renderer(), 1, "Renderer 1");
+        check_eq(host_setting_present_backend(), 0, "PresentBackend absent is 0");
+        check_eq(host_setting_camera_mode(), 2, "CameraMode ds still parsed");
+    } else if (!strcmp(which, "renderer_bool")) {
+        /* the launcher serialises a C# bool, the RunMode rule every toggle in
+           this file follows */
+        check_eq(host_setting_renderer(), 1, "Renderer true is on");
+        check_eq(host_setting_texture_filter(), 2, "TextureFilter beside it");
+    } else if (!strcmp(which, "renderer_clamp")) {
+        /* out of range is a setting that draws, not an error; junk and
+           negative are the default, which is the software rasteriser */
+        check_eq(host_setting_renderer(), 1, "Renderer 7 clamps to 1");
+    } else if (!strcmp(which, "renderer_junk")) {
+        check_eq(host_setting_renderer(), 0, "Renderer junk is 0");
+        check_eq(host_setting_render_scale(), 4, "RenderScale beside the junk");
+    } else if (!strcmp(which, "quality_filter")) {
+        /* run hd2: the other filter value on its own, so both 1 and 2 are
+           read from a file somewhere rather than only through a clamp */
+        check_eq(host_setting_texture_filter(), 2, "TextureFilter 2 trilinear");
+        check_eq(host_setting_anti_aliasing(), 0, "AntiAliasing 0 is off");
+        check_eq(host_setting_render_scale(), 2, "RenderScale beside them");
+    } else if (!strcmp(which, "quality_bool")) {
+        /* the launcher serialises a C# bool, so true means on */
+        check_eq(host_setting_hd_textures(), 1, "HdTextures true is on");
+        check_eq(host_setting_render_scale(), 1, "RenderScale 1 is DS native");
+    } else if (!strcmp(which, "quality_clamp")) {
+        /* out of range is a number that is a picture, not an error: the
+           Aspect rule the header states for all three */
+        check_eq(host_setting_render_scale(), 4, "RenderScale 9 clamps to 4");
+        check_eq(host_setting_smooth_models(), 3, "SmoothModels 99 clamps to 3");
+        check_eq(host_setting_hd_textures(), 0, "HdTextures 0 is off");
+        check_eq(host_setting_texture_filter(), 2, "TextureFilter 7 clamps to 2");
+        check_eq(host_setting_anti_aliasing(), 1, "AntiAliasing 4 clamps to 1");
+    } else if (!strcmp(which, "quality_junk")) {
+        /* unparseable and negative both read as the default, like every
+           other key in this file */
+        check_eq(host_setting_render_scale(), 0, "RenderScale -2 is the default");
+        check_eq(host_setting_smooth_models(), 0, "SmoothModels junk is 0");
+        check_eq(host_setting_hd_textures(), 0, "HdTextures junk is off");
+        check_eq(host_setting_texture_filter(), 0, "TextureFilter junk is 0");
+        check_eq(host_setting_anti_aliasing(), 0, "AntiAliasing -5 is 0");
+    } else if (!strcmp(which, "savemenutop_off")) {
+        check_eq(host_setting_save_menu_on_top(), 0, "SaveMenuOnTop 0 is off");
+        /* the keys around it still parse: a new key must not move an old one */
+        check_eq(host_setting_camera_mode(), 2, "CameraMode ds still parsed");
+        check_eq(host_setting_improved_minimap(), 1,
+                 "ImprovedMinimap still absent-is-on beside it");
+    } else if (!strcmp(which, "savemenutop_bool")) {
+        /* the launcher serialises a C# bool, so false means off */
+        check_eq(host_setting_save_menu_on_top(), 0,
+                 "SaveMenuOnTop false is off");
+        check_eq(host_setting_volume(), 44, "Volume beside it survived");
+    } else if (!strcmp(which, "savemenutop_true")) {
+        check_eq(host_setting_save_menu_on_top(), 1, "SaveMenuOnTop true is on");
+    } else if (!strcmp(which, "savemenutop_junk")) {
+        /* unparseable reads as the default, like every other key in this file,
+           and the default here is ON */
+        check_eq(host_setting_save_menu_on_top(), 1,
+                 "SaveMenuOnTop junk is the default, which is on");
     } else if (!strcmp(which, "padtranslate")) {
         check(port_pad_selftest(), "pad_backend translation selftest");
     } else {
@@ -369,6 +505,21 @@ int main(int argc, char **argv)
     /* the working directory must be the file that is read */
     _putenv("SM64DS_ASSET_ROOT=");
     _putenv("SM64DS_INSTANCE=");
+    /* run hd1's three keys each have an environment override in front of the
+       file, the Aspect contract. A developer who exported one for a capture
+       run would otherwise turn every quality case below into a test of his
+       own shell, so they are cleared for the children exactly as the asset
+       root is. SM64DS_HD_TEXTURES_DIR goes with them because the default pack
+       directory is one of the answers pinned. */
+    _putenv("SM64DS_RENDER_SCALE=");
+    _putenv("SM64DS_HD_TEXTURES=");
+    _putenv("SM64DS_HD_TEXTURES_DIR=");
+    _putenv("SM64DS_SMOOTH_MODELS=");
+    /* and the swap's own override, for the same reason: a developer who
+       exported it for a capture run must not turn the four cases below into a
+       test of his own shell */
+    _putenv("SM64DS_SAVE_MENU_ON_TOP=");
+    _putenv("SM64DS_IMPROVED_MINIMAP=");
 
     char tmp[MAX_PATH], dir[MAX_PATH];
     if (!GetTempPathA(MAX_PATH, tmp)) return 1;
@@ -443,12 +594,66 @@ int main(int argc, char **argv)
         "  \"PadLayouts\": [ 5, \"x\", { \"vid\": \"abc\", \"pid\": 1 }, [ ] ],\n"
         "  \"CameraMode\": \"ds\"\n"
         "}\n");
+    /* run hd1's three picture-quality keys: the default, a file that sets all
+       three, the launcher's boolean spelling, the clamps and the junk */
+    bad |= run_case(exe, dir, "quality_defaults", 0);
+    bad |= run_case(exe, dir, "quality",
+        "{ \"RenderScale\": 3, \"HdTextures\": 1, \"SmoothModels\": 2,\n"
+        "  \"TextureFilter\": 1, \"AntiAliasing\": 1,\n"
+        "  \"CameraMode\": \"ds\" }");
+    bad |= run_case(exe, dir, "quality_bool",
+        "{ \"HdTextures\": true, \"RenderScale\": 1 }");
+    bad |= run_case(exe, dir, "quality_clamp",
+        "{ \"RenderScale\": 9, \"SmoothModels\": 99, \"HdTextures\": 0,\n"
+        "  \"TextureFilter\": 7, \"AntiAliasing\": 4 }");
+    bad |= run_case(exe, dir, "quality_junk",
+        "{ \"RenderScale\": -2, \"SmoothModels\": \"lots\",\n"
+        "  \"HdTextures\": \"maybe\", \"TextureFilter\": \"smooth\",\n"
+        "  \"AntiAliasing\": -5 }");
+    /* run hd2: TextureFilter 2 read from a file rather than through a clamp */
+    bad |= run_case(exe, dir, "quality_filter",
+        "{ \"TextureFilter\": 2, \"AntiAliasing\": 0, \"RenderScale\": 2 }");
+    /* run hd2 lane GPU1's three present keys: all three set, the launcher's
+       boolean spelling, the clamps and the junk. The default case is covered
+       by quality_defaults above, which runs with no file at all. */
+    bad |= run_case(exe, dir, "present",
+        "{ \"PresentBackend\": 1, \"PresentFilter\": 2, \"VSync\": 1,\n"
+        "  \"RenderScale\": 3, \"CameraMode\": \"ds\" }");
+    bad |= run_case(exe, dir, "present_bool",
+        "{ \"PresentBackend\": true, \"VSync\": true, \"PresentFilter\": 1 }");
+    bad |= run_case(exe, dir, "present_clamp",
+        "{ \"PresentBackend\": 5, \"PresentFilter\": 9, \"VSync\": 3 }");
+    bad |= run_case(exe, dir, "present_junk",
+        "{ \"PresentBackend\": \"card\", \"PresentFilter\": -4,\n"
+        "  \"VSync\": \"yes please\" }");
+    /* run hd2 lane GPU2's renderer key: on its own, the launcher's boolean
+       spelling, the clamp and the junk. The default is covered by
+       quality_defaults, which runs with no file at all, and the "present"
+       case above checks that asking the card to PRESENT does not read as
+       asking it to DRAW. */
+    bad |= run_case(exe, dir, "renderer",
+        "{ \"Renderer\": 1, \"CameraMode\": \"ds\" }");
+    bad |= run_case(exe, dir, "renderer_bool",
+        "{ \"Renderer\": true, \"TextureFilter\": 2 }");
+    bad |= run_case(exe, dir, "renderer_clamp", "{ \"Renderer\": 7 }");
+    bad |= run_case(exe, dir, "renderer_junk",
+        "{ \"Renderer\": \"the card\", \"RenderScale\": 4 }");
+    bad |= run_case(exe, dir, "savemenutop_off",
+        "{ \"SaveMenuOnTop\": 0, \"CameraMode\": \"ds\" }");
+    bad |= run_case(exe, dir, "savemenutop_bool",
+        "{ \"SaveMenuOnTop\": false, \"Volume\": 44 }");
+    bad |= run_case(exe, dir, "savemenutop_true",
+        "{ \"SaveMenuOnTop\": true }");
+    bad |= run_case(exe, dir, "savemenutop_junk",
+        "{ \"SaveMenuOnTop\": \"maybe\" }");
     bad |= run_case(exe, dir, "padtranslate", 0);
     _rmdir(dir);
     if (bad) {
         printf("smoke_settings: FAIL\n");
         return 1;
     }
-    printf("smoke_settings: ok, 15 cases\n");
+    /* the count is the run_case calls above, counted rather than remembered:
+       it was one out of date before run hd1 added five cases to it */
+    printf("smoke_settings: ok, 32 cases\n");
     return 0;
 }

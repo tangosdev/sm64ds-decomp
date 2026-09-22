@@ -3,12 +3,12 @@
 //
 // ---- TWO ALIASES, AND BOTH ARE THE ORDINARY KIND -------------------------
 //
-// src/MgPicturePoker_Spawn.cpp is a //cpp TU and declares the class's vtable
+// src/minigames/d_s_mg_card.cpp is a //cpp TU and declares the class's vtable
 // OUTSIDE its extern "C" block:
 //
-//     extern int data_ov006_0213bdb4;
+//     extern int _ZTV11dScMgCard_c;
 //
-// so MSVC mangles the reference as ?data_ov006_0213bdb4@@3HA -- a C++-linkage
+// so MSVC mangles the reference as ?_ZTV11dScMgCard_c@@3HA -- a C++-linkage
 // int -- while the ov006 mount (port/tools/ovdata.py's emission) defines the
 // plain C name _data_ov006_0213bdb4.  That is the "C-named symbols declared at
 // C++ linkage" case port/mg_fanout_costs.txt section 4 counts twenty-two of,
@@ -21,14 +21,15 @@
 // that would have needed a re-landing face is vtable slot 18, and that is
 // handled where it belongs -- hal/scene_mg_card.cpp's card_reset takes the
 // stack argument the ROM's callers push -- not by a name.
-#pragma comment(linker, "/alternatename:?data_ov006_0213bdb4@@3HA=_data_ov006_0213bdb4")
+/* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEAD RHS and an UNREFERENCED left hand side: nothing in the build defines _data_ov006_0213bdb4, and nothing references ?_ZTV11dScMgCard_c@@3HA, so the row can never fire and nothing wants it to. */
+// #pragma comment(linker, "/alternatename:?_ZTV11dScMgCard_c@@3HA=_data_ov006_0213bdb4")
 
 // The second is the SAME SHAPE in a different TU and it is not this class's
-// vtable: src/func_ov006_020da9c4.cpp (vtable slot 9, Render) declares
+// vtable: src/minigames/d_s_mg_card.cpp (vtable slot 9, Render) declares
 //
 //     extern int data_ov006_02134028;
 //
-// outside its own extern "C" block, while src/func_ov006_020dbaf0.cpp (slot 0)
+// outside its own extern "C" block, while src/minigames/d_s_mg_card.cpp (slot 0)
 // declares the same object INSIDE one, as `extern u32 *data_ov006_02134028`.
 // Two TUs of one class disagreeing about the linkage of one symbol is what
 // leaves a single unresolved C++ name against a defined C one.  The mount owns

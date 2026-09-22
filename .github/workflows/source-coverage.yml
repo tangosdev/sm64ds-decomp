@@ -1,0 +1,144 @@
+# Did this change stop building bytes from source?
+#
+# `config/**/delinks.txt` decides, range by range, whether mwccarm compiles a range out
+# of `src/` (the entry is marked `complete` and the file it names exists) or whether dsd
+# hands that range back to the RETAIL CARTRIDGE (anything else). Handing a range back
+# produces a byte-PERFECT ROM: module fidelity stays 106/106, romdata_check stays green,
+# the reference and relocation audits stay green, because cartridge bytes are correct by
+# construction. There is no red anywhere. The only trace is that fewer bytes came out of
+# src/, and that is a number nobody diffs -- so this job diffs it.
+#
+# WHY layout_check.py IS NOT ENOUGH. Its L1 catches ONE of the four ways a range gets
+# reclaimed: a delinks entry naming a path with no file there. It cannot see `complete`
+# being removed (L1 keys on the entry header and never reads that line), an entry being
+# deleted outright (that is L5, which is INFO by design and can never fail), or a range
+# being narrowed (layout_check parses no addresses at all). And it counts ENTRIES in the
+# working tree -- it has no base ref and no notion of a byte, so it cannot tell a TU
+# promotion that re-partitions 38 entries into 3 covering the same bytes from a genuine
+# loss. Both jobs are wanted; they answer different questions.
+#
+# WHY BOTH pull_request AND push-to-main. A PR is judged against its own MERGE BASE,
+# which is the only honest question for a branch -- comparing against a main that moved
+# invents losses (measured 2026-08-30: three PRs each appeared to lose 4,028 bytes that
+# way and lost exactly zero against their fork points). But a PR that is green against a
+# stale base can still desync main the moment it merges, which is precisely what happened
+# to the converted ratchet on 2026-08-30. So main is also checked against its own
+# previous tip on every push, which is the check nothing else in this repo performs.
+#
+# WHY IT RUNS ON A GITHUB RUNNER AND NOT THE BUILD BOX. It compiles nothing and reads no
+# ROM -- `git cat-file` plus text parsing, about a second over 106 modules. That is a
+# design requirement, not luck: `build/` is shared between worktrees here, so a gate that
+# needed a ROM build could not run alongside the work it gates.
+#
+# WHEN A DECREASE IS LEGITIMATE -- a retracted fakematch, a demotion to a ROM-byte
+# placeholder -- record the range with a reason in
+# `config/source-coverage-exceptions.jsonl` and this job is green again. A row with no
+# reason is rejected rather than honoured.
+name: source coverage
+
+on:
+  pull_request:
+    paths:
+      - "config/**/delinks.txt"
+      - "config/source-coverage-exceptions.jsonl"
+      - "src/**"
+      # mods/** too, and this is not hypothetical: `src/**` is not the whole enrolled
+      # surface. `mods/` is a first-class location for deliberate ROM divergences (see
+      # notes/rom-build.md), enrolled in delinks.txt the same as src/ -- deleting an
+      # enrolled mods/ file makes source_coverage.py exit 1 with the correct byte loss
+      # and blame (measured, when mods/Player_ScaleByCharFactor.c was the sole occupant),
+      # but a PR touching only mods/ would match no filter here, so the job would never
+      # run and the loss would land silent. A missing check reads exactly like a passing
+      # one.
+      - "mods/**"
+      - "tools/source_coverage.py"
+      - "tools/test_source_coverage.py"
+      - ".github/workflows/source-coverage.yml"
+  push:
+    branches: [main]
+    paths:
+      - "config/**/delinks.txt"
+      - "config/source-coverage-exceptions.jsonl"
+      - "src/**"
+      - "mods/**"
+      - "tools/source_coverage.py"
+      - "tools/test_source_coverage.py"
+      - ".github/workflows/source-coverage.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Cancelling is safe for a PR and DESTRUCTIVE for a push, so the two are keyed apart.
+#
+# A PR run is superseded when a newer commit arrives -- the old verdict is about code that
+# no longer exists, so cancelling it costs nothing. Grouping by PR NUMBER is what makes
+# that possible; the previous `head.sha` key was unique per commit, so every PR run sat in
+# its own group and `cancel-in-progress` could never actually fire for a pull request.
+#
+# A push run is NOT superseded by the next push. Each one checks a DIFFERENT range --
+# `--base ${{ github.event.before }}`, i.e. exactly its own before..head -- and no other
+# run ever revisits it. Cancel push run X (A..B) because push Y (B..C) arrived, and Y
+# checks B..C while A..B is never checked by anything, ever. A merge that handed bytes
+# back to the cartridge inside that window is then invisible, which is the precise failure
+# this whole workflow exists to catch. Runs take ~26s, so the window is small but wholly
+# reachable when a merge queue is drained back to back.
+#
+# Note that `cancel-in-progress: false` alone would NOT have been enough: GitHub keeps at
+# most one PENDING run per group and cancels any earlier pending one, so three rapid
+# pushes would still drop the middle range. Pushes therefore get a group key that is
+# unique per commit (`github.sha`) and can never collide in the first place.
+concurrency:
+  group: source-coverage-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Full history, unlike the other static gates: this one has to resolve a base
+          # commit and, for pull requests, compute a merge base. A shallow checkout makes
+          # `git merge-base` return nothing, which the tool reports as a configuration
+          # error rather than passing.
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        # Stdlib only -- argparse/collections/json/pathlib/re/subprocess -- and no pip
+        # step. Pinned for the same reason python-names.yml pins pyflakes: a runner's
+        # default python moving under a gate that touched no Python is indistinguishable
+        # from a regression.
+        with:
+          python-version: "3.12"
+
+      - name: The gate's own tests
+        # FIRST, and deliberately. The four DowngradeTests are negative controls: each
+        # constructs a delinks.txt that has genuinely handed bytes back -- `complete`
+        # removed, entry deleted, file missing, range narrowed -- and asserts the tool
+        # exits non-zero AND names the range. This repo has shipped a gate that reported
+        # a clean tree after its match count silently went to zero, so a run where the
+        # gate can no longer fail must not be reported as a pass.
+        run: python -m unittest tools.test_source_coverage -v
+
+      - name: Source-built bytes in this tree
+        # Report only, no exit-code meaning: the log says what the number IS before the
+        # gate says whether it moved.
+        run: python tools/source_coverage.py
+
+      - name: "PR: no bytes handed back relative to the MERGE BASE"
+        if: github.event_name == 'pull_request'
+        # merge-base, not the base branch tip. A branch is answerable for what IT
+        # removed, not for what main added while it was open.
+        run: |
+          python tools/source_coverage.py --check \
+            --merge-base "origin/${{ github.base_ref }}"
+
+      - name: "main: no bytes handed back relative to the previous tip"
+        if: github.event_name == 'push'
+        # `github.event.before` is main's tip before this push -- so this asks whether
+        # the merge itself lost bytes, which no PR-time check can answer. It is forty
+        # zeros on a branch's first push, and --allow-empty-base makes that a skip
+        # rather than a red X.
+        run: |
+          python tools/source_coverage.py --check \
+            --base "${{ github.event.before }}" --allow-empty-base
