@@ -4485,6 +4485,21 @@
     "src/actors/daRFlag_c.cpp#_ZN9daRFlag_c16CleanupResourcesEv": "tangosdev",
     "src/actors/daRFlag_c.cpp#_ZN9daRFlag_c6RenderEv": "tangosdev",
     "src/actors/daRFlag_c.cpp#_ZN9daRFlag_c8BehaviorEv": "tangosdev",
-    "src/actors/daRFlag_c.cpp#_ZN9daRFlag_c13InitResourcesEv": "tangosdev"
+    "src/actors/daRFlag_c.cpp#_ZN9daRFlag_c13InitResourcesEv": "tangosdev",
+    "src/actors/daBtfly_c.cpp#_ZN9daBtfly_cD1Ev": "andrewboudreau",
+    "src/actors/daBtfly_c.cpp#_ZN9daBtfly_cD0Ev": "andrewboudreau",
+    "src/actors/daBtfly_c.cpp#_ZN9daBtfly_c6State7Ev": "lunavyqo",
+    "src/actors/daBtfly_c.cpp#_ZN9daBtfly_c6State6Ev": "tangosdev",
+    "src/actors/daBtfly_c.cpp#_ZN9daBtfly_c6State5Ev": "andrewboudreau",
+    "src/actors/daBtfly_c.cpp#_ZN9daBtfly_c6State4Ev": "tangosdev",
+    "src/actors/daBtfly_c.cpp#_ZN9daBtfly_c6State3Ev": "andrewboudreau",
+    "src/actors/daBtfly_c.cpp#_ZN9daBtfly_c6State2Ev": "lunavyqo",
+    "src/actors/daBtfly_c.cpp#_ZN9daBtfly_c6State1Ev": "tangosdev",
+    "src/actors/daBtfly_c.cpp#_ZN9daBtfly_c6State0Ev": "tangosdev",
+    "src/actors/daBtfly_c.cpp#_ZN9daBtfly_c16CleanupResourcesEv": "tangosdev",
+    "src/actors/daBtfly_c.cpp#_ZN9daBtfly_c16OnPendingDestroyEv": "andrewboudreau",
+    "src/actors/daBtfly_c.cpp#_ZN9daBtfly_c6RenderEv": "tangosdev",
+    "src/actors/daBtfly_c.cpp#_ZN9daBtfly_c8BehaviorEv": "lunavyqo",
+    "src/actors/daBtfly_c.cpp#_ZN9daBtfly_c13InitResourcesEv": "tangosdev"
   }
 }

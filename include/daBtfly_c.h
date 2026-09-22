@@ -52,15 +52,15 @@ struct daBtfly_c : dActor_c {
     Model mModel;            /* 0x138 */
     /* ShadowModel member, named by the class's own destructor calling
        ShadowModel's D1 at +0x188 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN9daBtfly_cD0Ev.cpp] */
+       checks. Was a u8 marker. [_ZN9daBtfly_cD0Ev, now in src/actors/daBtfly_c.cpp] */
     ShadowModel mShadowModel1;            /* 0x188 */
     /* ShadowModel member, named by the class's own destructor calling
        ShadowModel's D1 at +0x1b0 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN9daBtfly_cD0Ev.cpp] */
+       checks. Was a u8 marker. [_ZN9daBtfly_cD0Ev, now in src/actors/daBtfly_c.cpp] */
     ShadowModel mShadowModel2;            /* 0x1b0 */
     /* dBgCh_Actr member, named by the class's own destructor calling
        dBgCh_Actr's D1 at +0x1d8 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN9daBtfly_cD0Ev.cpp] */
+       checks. Was a u8 marker. [_ZN9daBtfly_cD0Ev, now in src/actors/daBtfly_c.cpp] */
     dBgCh_Actr mWithMeshClsn;            /* 0x1d8 */
     /* dCcAcPos_c member. The cartridge's own ~daBtfly_c calls _ZN10dCcAcPos_cD1Ev at
        +0x394 (D0/D1), a relocation the ROM build checks; recovered by
