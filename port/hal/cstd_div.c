@@ -56,3 +56,39 @@ int ds_idiv(int a, int b) { return b ? a / b : a; }
 int ds_imod(int a, int b) { return b ? a % b : 0; }
 unsigned ds_udiv(unsigned a, unsigned b) { return b ? a / b : a; }
 unsigned ds_umod(unsigned a, unsigned b) { return b ? a % b : 0u; }
+
+/* ---- DS SHIFT SEMANTICS ---------------------------------------------------
+ *
+ * The same shape as the division helpers above and for the same reason: a
+ * shift whose COUNT COMES FROM A REGISTER means different things on the two
+ * machines, and the difference is not a corner case.
+ *
+ * On the ARM a register-specified shift reads the bottom byte of the count
+ * register and saturates: LSR by 32 or more yields ZERO. mwccarm compiles a
+ * variable `x >> n` straight into `mov rD, rX, lsr rN`, so that is what the
+ * cartridge does.
+ *
+ * On x86 the shift count is masked to five bits, so a count of 32 becomes a
+ * count of 0 and `x >> 32` returns X UNCHANGED. In C the expression is
+ * undefined at or above the operand width, so the compiler owes nothing
+ * either way.
+ *
+ * src/func_0201b100.c -- the composer that lays the level-clear save menu's
+ * button captions into the sub engine's BG0 tiles -- reaches exactly that
+ * count. It takes the pen's sub-tile offset `sh = acc & 7`, forms
+ * `rshift = (8 - sh) << 2`, and uses it to pull the part of a glyph cell that
+ * spills into the next tile column. Its fast path is taken only when
+ * (acc & 0xf) == 0, so a pen position that is a multiple of 8 but not of 16
+ * arrives here with sh == 0 and rshift == 32. Hosted raw, the spill statement
+ * then wrote the glyph's LEFT tile unshifted into the column to its right:
+ * every caption glyph that happened to land on an odd tile boundary came out
+ * with a ghost of its own left half eight pixels further along, which is the
+ * stray mark after the "&" and the merged "IT" of SAVE & QUIT.
+ *
+ * Message::AddChar spells the same idiom for the other composer and guards it
+ * with `if (sh != 0)`, which is why the top screen's text was never affected.
+ *
+ * hostgen.py routes the two spill expressions here (DS_SHIFT in its patch
+ * table); src/ itself is untouched.
+ */
+unsigned ds_lsr(unsigned x, unsigned n) { return n >= 32u ? 0u : (x >> n); }

@@ -3540,32 +3540,31 @@ extern "C" void *port_stage_boot_body(void *mc, int spawn)
        reads the byte either way.) Listed as missing, with its live readers
        named, in port/stage_lifecycle_map.txt:258.
 
-       ONLY THE FIRST OF THE ROM'S THREE STATEMENTS IS PORTED HERE. The ROM
-       site is:
+       THE OTHER TWO STATEMENTS OF THE ROM'S SITE LIVE IN hal/level_change.cpp
+       NOW, INSIDE port_level_latch, AND THEY CANNOT LIVE HERE. The ROM site is
 
            data_0209f2fc = data_0209f26c;
            if (data_0209f2fc == 1) {
-               data_02092124 = data_0209f2f8;   <- the level being LEFT
+               data_02092124 = data_0209f2f8;   <- the sublevel being LEFT
                data_02092118 = -1;
            }
+           ...
+           data_0209f2f8 = data_02092110;       <- the sublevel being ENTERED
 
-       The `== 1` half is deliberately NOT ported. It is harmless today:
-       data_02092124 and data_02092118 are romdata-hosted and the port neither
-       writes nor reads them (stage_lifecycle_map.txt:1223), and the image ships
-       6 and -1 -- 6 being exactly what StartFile writes -- so the values are
-       already the ones a fresh file would have. What the port gives up is that
-       data_02092124 is now PERMANENTLY PINNED at 6 instead of tracking the
-       level you came from on a fresh entry. Its ROM readers are Stage::Render,
-       Stage::LC_Render and Stage::LC_Update, all of which only ask
-       SublevelToLevel(it) >= 0xf, so a pinned 6 reads as "not a boss course"
-       forever.
+       and the port has split those two halves across two files: the pair reads
+       data_0209f2f8 BEFORE it is replaced, and by the time this boot body runs
+       port_level_latch has already replaced it. Written here the pair recorded
+       the level being entered rather than the one being left -- measured: a
+       Jolly Roger Bay star came out as "COURSE 30" (data_02092124 = 1, the
+       castle grounds it had just arrived in). So the pair sits at the ROM's
+       own reading point, beside the line that consumes the old value.
 
-       DO NOT COMPLETE THIS AS A TIDY-UP. Writing the missing two lines is not
-       two lines of consequence: a data_02092124 that tracks the previous level
-       arms func_ov002_020c7cbc -> LoadKeyModels -> the actor 0x11a spawn ->
-       func_ov089_0213115c, which has no null check and has never executed on
-       the port. That wants its own lane with a fault-fatal run, not a commit
-       that is nominally about a comment. */
+       The note that used to stand here said leaving the pair out was harmless
+       because "its ROM readers only ask SublevelToLevel(it) >= 0xf". THAT WAS
+       WRONG and it was the whole of the level-clear screen naming the wrong
+       course: src/_ZN5Stage9LC_UpdateEv.cpp:73 hands
+       SublevelToLevel(data_02092124) to Message::DisplayLevelClearText AS THE
+       COURSE, and :95 uses the same value for the 100-coin record. */
     data_0209f2fc[0] = data_0209f26c;
 
     data_0209f2f8 = (signed char)port_level_id();

@@ -829,6 +829,56 @@ int ds_imod(int, int);
 """
 
 
+# ---- A SHIFT WHOSE COUNT REACHES THE OPERAND WIDTH ---------------------------
+#
+# The division table's sibling, and the same kind of fact: a shift whose count
+# comes from a REGISTER means different things on the two machines.
+#
+# On the ARM a register-specified shift reads the bottom byte of the count and
+# saturates -- LSR by 32 or more is ZERO -- and mwccarm compiles a variable
+# `x >> n` straight into `mov rD, rX, lsr rN`. On x86 the count is masked to
+# five bits, so 32 becomes 0 and `x >> 32` returns x UNCHANGED. C calls the
+# expression undefined at the operand width, so neither compiler owes the
+# other anything: the ROM's own answer is the one that has to be reproduced.
+#
+# src/func_0201b100.c reaches the count. It is the composer that lays the
+# level-clear save menu's button captions into the sub engine's BG0 tiles: it
+# takes the pen's sub-tile offset `sh = acc & 7`, forms `rshift = (8 - sh) << 2`
+# and uses it for the part of a glyph cell that spills into the next tile
+# column. Its fast path is taken only when (acc & 0xf) == 0, so a pen position
+# that is a multiple of 8 but not of 16 arrives with sh == 0 and rshift == 32.
+# Hosted raw, the spill wrote the glyph's LEFT tile unshifted into the column
+# to its right, and every caption glyph landing on an odd tile boundary came
+# out with a ghost of its own left half eight pixels along -- the stray mark
+# after the "&" and the merged "IT" of SAVE & QUIT.
+#
+# Exact strings and a hard error if one stops matching, for DS_DIV's reason:
+# finding a shift's operands in C text means matching parens and precedence,
+# and a regex that got that subtly wrong would compile and compute the wrong
+# picture. Message::AddChar spells the same idiom for the other composer but
+# GUARDS it with `if (sh != 0)`, so it needs no entry and gets none.
+DS_SHIFT = {
+    "func_0201b100": [
+        # the glyph's spill into the next tile column
+        ("(*(unsigned int *)r8addr >> rshift)",
+         "(ds_lsr(*(unsigned int *)r8addr, rshift))"),
+        # and into the one after it, for a glyph wider than two columns
+        ("*(unsigned int *)r7addr >> rshift",
+         "ds_lsr(*(unsigned int *)r7addr, rshift)"),
+    ],
+}
+
+DS_SHIFT_DECL = """/* hostgen: DS register-shift semantics, see hal/cstd_div.c */
+#ifdef __cplusplus
+extern "C" {
+#endif
+unsigned ds_lsr(unsigned, unsigned);
+#ifdef __cplusplus
+}
+#endif
+"""
+
+
 # ---- MMIO REACHED THROUGH ROLE-NAMED EXTERNS ---------------------------------
 #
 # One register-access shape the two passes above cannot see: a TU that declares
@@ -3033,6 +3083,11 @@ def ds_div_patch(text, sym):
     return apply_patches(text, sym, DS_DIV, "DS_DIV", DS_DIV_DECL)
 
 
+def ds_shift_patch(text, sym):
+    """Reroute the named shifts through the DS register-shift helper."""
+    return apply_patches(text, sym, DS_SHIFT, "DS_SHIFT", DS_SHIFT_DECL)
+
+
 def virtual_call_patch(text, sym):
     """Make a C++ virtual call on a C vtable dispatch cdecl, like its peers."""
     return apply_patches(text, sym, VIRTUAL_CALL, "VIRTUAL_CALL")
@@ -3098,6 +3153,7 @@ def emit(src_path, out_dir, decomp_root, extern_data=False):
         text, _ = shadow_header_decl(text, sym, HEADER_SHADOW[sym])
     text, _ = asm_excision_patch(text, sym)
     text, _ = ds_div_patch(text, sym)
+    text, _ = ds_shift_patch(text, sym)
     text, _ = mmio_extern_patch(text, sym)
     text, _ = falls_off_return_patch(text, sym)
     text, _ = virtual_call_patch(text, sym)

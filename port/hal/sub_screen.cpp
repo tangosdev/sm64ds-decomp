@@ -2984,6 +2984,42 @@ extern "C" void hal_sub_screen_level_init(void)
        off after the second and every later level entry. */
     _ZN5Stage12SetVramBanksEv();
 
+    /* ENGINE A'S BG SCREEN BASE OFFSET, Stage::InitResources:272:
+     *
+     *     *p0 = (*p0 & ~0x38000000) | 0x08000000;      p0 = DISPCNT_A
+     *
+     * DISPCNT bits 27-29 are engine A's BG SCREEN base offset in 64K pages and
+     * the ROM sets it to ONE. It is the statement that keeps the main engine's
+     * four tilemaps out of its own character data, and the port was not making
+     * it: DISPCNT_A read back 0x00001d08 at the level-clear menu, bits 27-29
+     * zero, so every engine-A tilemap sat 0x10000 BELOW where the cartridge
+     * puts it.
+     *
+     * WHAT THAT COST, measured on a star return with the save menu up. The
+     * fonts live at func_02054d88() (src/func_02054d88.c), which on this path
+     * is 0x06000000: the small 8x16 message font at +0, and the big 16x16 menu
+     * font that LoadFont(0) decompresses at +0x8000 (src/LoadFont.cpp:39).
+     * With the offset missing BG3_A's tilemap lands at 0x06008800 and BG1_A's
+     * at 0x0600f800, both INSIDE the big font. So the moment the level-clear
+     * banner drew its own text, func_0201d850's MultiStore16(0x2ff, ...) wrote
+     * 0x800 bytes of blank-tile entries straight through the menu font, and
+     * the three save-menu buttons came up as combed stripes instead of
+     * letters. The 0x02ff halfwords and the runs of 0x0200, 0x0201, 0x0202
+     * were readable in a dump of the font, which is how this was found.
+     *
+     * Nothing else has to change for it. The ROM's own pointer helpers read
+     * the same bits (src/_ZN2G212GetBG3ScrPtrEv.cpp computes `sbase` from
+     * DISPCNT & 0x38000000), and port/ntr/ppu.cpp:300-301 already honours the
+     * offset on engine A, so the write and the scan-out move together.
+     *
+     * It sits here because this function is the port's copy of
+     * Stage::InitResources:262-351, and :272 is inside that span, one
+     * statement above the sub engine's own DISPCNT block below. */
+    {
+        volatile unsigned *p0 = (volatile unsigned *)0x04000000;
+        *p0 = (*p0 & ~0x38000000u) | 0x08000000u;
+    }
+
     /* THE SUB ENGINE'S OWN DISPCNT, which nothing in the port was setting --
        it read back 0, meaning "display off, no layers, no sprites".
        Every value here is Stage::InitResources', the ROM function that puts

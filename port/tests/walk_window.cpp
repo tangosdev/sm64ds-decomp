@@ -856,6 +856,16 @@ extern "C" unsigned char data_0209f248[];  /* the pause sub-state that RAN */
 extern "C" unsigned char data_0209f1ec[];  /* the pause sub-state asked for */
 extern "C" unsigned char data_0209f22c[];  /* the whole-function cooldown */
 extern "C" unsigned char data_0209f2b4[];  /* how many menu buttons are up */
+/* THE LEVEL-CLEAR SCREEN'S OWN WORDS, for the SM64DS_LC_WATCH instrument
+   below: the state Stage::LC_Update is in, the entry reason the boot latched,
+   the sublevel the player came out of (which is what the screen names the
+   course from, src/_ZN5Stage9LC_UpdateEv.cpp:73) and the message id
+   Message::DisplayLevelClearText selected. */
+extern "C" unsigned char data_0209f2d4;
+extern "C" unsigned char data_02092124[];
+extern "C" unsigned char data_0209f2fc[];
+extern "C" unsigned short data_0209d6d4;
+extern "C" int SublevelToLevel(int i);
 /* the fader CURRENTLY IN MOTION (run link100, lane FRAME: read by the
    SM64DS_PAUSE_WATCH line). hal/cxx_aliases.cpp defines it as an int[8];
    its first word is the installed fader or 0, which is the term
@@ -15853,6 +15863,93 @@ int main(void)
                     char nm[64];
                     snprintf(nm, sizeof nm, "walk_frame_%03d.bmp", rf);
                     ntr::ppu_write_bmp(nm, fb);
+                }
+            }
+        }
+        /* SM64DS_LC_WATCH=1 -- AN INERT INSTRUMENT for the level-clear screen.
+           It prints, and only when one of the words moves, the pair that gates
+           Stage::LC_Update (data_0209f20c, data_0209f2d4), the word the screen
+           names the course from (data_02092124, plus SUBLEVEL_LEVEL_TABLE's
+           answer for it and the course number the text will print, which is
+           that answer + 1) and the message id Message::DisplayLevelClearText
+           left in data_0209d6d4. Absent, nothing here runs. */
+        {
+            static int lcw = -1;
+            static unsigned last_lc[5];
+            if (lcw < 0) lcw = getenv("SM64DS_LC_WATCH") ? 1 : 0;
+            if (lcw) {
+                const int sub = (int)(signed char)data_02092124[0];
+                const unsigned now[5] = {
+                    (unsigned)(data_0209f20c[0] & 0xff), (unsigned)data_0209f2d4,
+                    (unsigned)(sub & 0xff), (unsigned)data_0209d6d4,
+                    (unsigned)(data_0209f2fc[0] & 0xff),
+                };
+                if (memcmp(now, last_lc, sizeof now) != 0) {
+                    memcpy(last_lc, now, sizeof now);
+                    const int course = SublevelToLevel(sub);
+                    fprintf(stderr, "[lcwatch] f%d f20c=%u f2d4=%u f2fc=%u "
+                            "data_02092124=%d SublevelToLevel=%d COURSE %d "
+                            "msgid=0x%x\n", frame, now[0], now[1], now[4],
+                            sub, course, course + 1, now[3]);
+                }
+            }
+        }
+        /* SM64DS_SUBBG_DUMP=N -- AN INERT INSTRUMENT for the sub engine's
+           backgrounds, which is where the level-clear menu lives: BG1 carries
+           the three plates Stage::UpdateMenuButtons recolours, and BG0 carries
+           the lettering func_0201b388 composes into it while the message
+           window is up. On frame N it writes engine B's whole BG window out
+           raw (0x06200000, 128K) and prints all four BGxCNT with the bases the
+           DS itself would derive from them. Absent, nothing here runs. */
+        {
+            static int at = -2, subframe;
+            if (at == -2) {
+                const char *e = getenv("SM64DS_SUBBG_DUMP");
+                at = e ? atoi(e) : -1;
+            }
+            if (at >= 0 && subframe++ == at) {
+                const unsigned dis = *(volatile unsigned *)0x04001000;
+                FILE *f = fopen("subbg_vram.bin", "wb");
+                if (f) {
+                    for (unsigned i = 0; i < 0x20000u; ++i)
+                        fputc(*(volatile unsigned char *)(0x06200000u + i), f);
+                    fclose(f);
+                }
+                printf("[subbg] frame %d DISPCNT_B %08x\n", at, dis);
+                for (int bg = 0; bg < 4; ++bg) {
+                    const unsigned cnt = *(volatile unsigned short *)
+                        (0x04001008u + (unsigned)bg * 2u);
+                    printf("[subbg]   BG%dCNT %04x char@%08x screen@%08x "
+                           "%s prio %u size %u\n", bg, cnt,
+                           0x06200000u + (((cnt >> 2) & 0xfu) << 14),
+                           0x06200000u + (((cnt >> 8) & 0x1fu) << 11),
+                           (cnt & 0x80) ? "256-colour" : "16-colour",
+                           cnt & 3u, (cnt >> 14) & 3u);
+                }
+                /* AND THE FONTS THE COMPOSERS READ, which live on engine A:
+                   func_02054d88() (src/func_02054d88.c) is the address both
+                   Message::AddChar and func_0201b100 resolve the glyph cells
+                   against -- the small 8x16 font at +0, the big 16x16 menu
+                   font LoadFont(0) decompresses at +0x8000. Same formula as
+                   the ROM's, out of DISPCNT_A and BG3CNT_A. */
+                {
+                    const unsigned disA = *(volatile unsigned *)0x04000000;
+                    const unsigned bg3A = *(volatile unsigned short *)0x0400000e;
+                    const unsigned mode = disA & 7u;
+                    unsigned fbase = 0;
+                    if (mode < 3u || (mode < 6u && !(bg3A & 0x80u)))
+                        fbase = 0x06000000u + (((disA & 0x7000000u) >> 24) << 16)
+                                            + (((bg3A & 0x3cu) >> 2) << 14);
+                    printf("[subbg]   DISPCNT_A %08x BG3CNT_A %04x "
+                           "func_02054d88()=%08x\n", disA, bg3A, fbase);
+                    if (fbase) {
+                        FILE *g = fopen("mainfont.bin", "wb");
+                        if (g) {
+                            for (unsigned i = 0; i < 0x18000u; ++i)
+                                fputc(*(volatile unsigned char *)(fbase + i), g);
+                            fclose(g);
+                        }
+                    }
                 }
             }
         }
