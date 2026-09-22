@@ -320,7 +320,7 @@ int daObjBlockL_c::CleanupResources()
  * == 0x11)` folds the test into the branch -- cmp/beq, two instructions. The ROM
  * materialises the comparison into a register first and then tests THAT:
  * cmp/moveq #1/movne #0/cmp #0/b, five. Writing the int is what asks for the
- * second shape. Argued in full in src/_ZN16daObjFallBlock_c4KillEv.cpp; here the
+ * second shape. Argued in full at daObjFallBlock_c::Kill; here the
  * first one is doubly load-bearing, because the else-branch reuses the very
  * register it was materialised into for `isF || is11`.
  *
@@ -331,7 +331,7 @@ int daObjBlockL_c::CleanupResources()
  * Particle::System::NewSimple and dActor_c::SpawnCoins stay spelled as their
  * mangled names -- both take Fix12<int> BY VALUE and declaring the true types
  * changes how the caller passes them. include/dActor_c.h says the same thing at the
- * bottom of the class, src/_ZN10dBgActor_c4KillEv.cpp argues it in full, and
+ * bottom of the class, dBgActor_c::Kill argues it in full, and
  * notes/mwccarm-codegen.md 6az is the rule. */
 void daObjBlockL_c::Kill()
 {

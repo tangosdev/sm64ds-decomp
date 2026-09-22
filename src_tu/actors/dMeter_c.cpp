@@ -260,7 +260,9 @@ void func_0203da4c(void);
 /* TUBUILD CONFLICT -- alternate declaration of data_0209f2fc, from the legacy file for _ZN8dMeter_c13InitResourcesEv, NOT applied: extern u8 data_0209f2fc; */
 /* TUBUILD CONFLICT -- alternate declaration of data_0209f250, from the legacy file for _ZN8dMeter_c13InitResourcesEv, NOT applied: extern u8 data_0209f250; */
 /* TUBUILD CONFLICT -- alternate declaration of data_ov002_02111178, from the legacy file for _ZN8dMeter_c13InitResourcesEv, NOT applied: extern s8 data_ov002_02111178; */
-/* TUBUILD CONFLICT -- alternate declaration of data_ov002_0211117c[0], from the legacy file for _ZN8dMeter_c13InitResourcesEv, NOT applied: extern u8 data_ov002_0211117c[0]; */
+/* reconciled: data_ov002_0211117c is declared above as `unsigned char []`. The legacy file for InitResources spelled it `u8 data_ov002_0211117c[0]`, a zero-length
+ * array; the unsized form is the one every use here needs -- the element reads at
+ * [0] and the byte read at line 663 takes its address directly. */
 /* TUBUILD CONFLICT -- alternate declaration of data_ov002_02111184, from the legacy file for _ZN8dMeter_c13InitResourcesEv, NOT applied: extern s8 data_ov002_02111184; */
 /* TUBUILD CONFLICT -- alternate declaration of data_ov002_02111188, from the legacy file for _ZN8dMeter_c13InitResourcesEv, NOT applied: extern s16 data_ov002_02111188; */
 }
