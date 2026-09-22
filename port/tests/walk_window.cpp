@@ -866,6 +866,23 @@ extern "C" unsigned char data_02092124[];
 extern "C" unsigned char data_0209f2fc[];
 extern "C" unsigned short data_0209d6d4;
 extern "C" int SublevelToLevel(int i);
+/* THE THREE PER-COURSE COUNTERS, for the SM64DS_COIN_WATCH / SM64DS_COIN_POKE
+   instruments below. All three are per-player arrays indexed by the local
+   player data_0209f250: data_0209f358 is the coin count (GiveCoins /
+   NumCoins), data_0209f30c the red-coin count (GiveRedCoins / NumRedCoins)
+   and data_0209f310 the silver-star count (GiveVsStars /
+   NumVsStarsObtained). Stage::InitResources clears all three when the course
+   changes (src/_ZN5Stage13InitResourcesEv.cpp, the three loops under the
+   `temp_r4 != temp_r0` guard). */
+extern "C" short data_0209f358[];
+extern "C" signed char data_0209f30c[];
+extern "C" signed char data_0209f310[];
+extern "C" void GiveCoins(int idx, int amount);
+extern "C" int GiveRedCoins(int idx, int amount);
+extern "C" void GiveVsStars(int idx, int delta);
+extern "C" short NumCoins(void);
+extern "C" signed char NumRedCoins(void);
+extern "C" signed char NumVsStarsObtained(void);
 /* the fader CURRENTLY IN MOTION (run link100, lane FRAME: read by the
    SM64DS_PAUSE_WATCH line). hal/cxx_aliases.cpp defines it as an int[8];
    its first word is the installed fader or 0, which is the term
@@ -12949,6 +12966,75 @@ int main(void)
                                     *(int *)(star + 0x440), sd_hold);
                     }
                     sd_fired = 1;
+                }
+            }
+
+            /* ---- SM64DS_COIN_WATCH / SM64DS_COIN_POKE -------------------
+               The three per-course counters, read out, plus a test-only way
+               to put non-zero values in them. TEST CODE: it lives here and
+               nowhere else, and nothing runs unless a key is set.
+
+               SM64DS_COIN_WATCH=1 prints one line whenever the local
+               player's coin / red-coin / silver-star count changes, one
+               whenever the level id changes, and one every 100 frames -- so
+               a log says exactly what the three held on the last frame of a
+               course and on the first frame of the next one.
+
+               SM64DS_COIN_POKE=<coins>,<red>,<silver>[,<frame>] (default
+               frame 300) hands those amounts to the ROM'S OWN WRITERS:
+               GiveCoins, GiveRedCoins and GiveVsStars, which are the three
+               functions the yellow coin's collect handler, the red coin's
+               (src/func_ov002_020b16c4.c) and the VS star's own code call.
+               The counters therefore end up holding exactly what a real
+               pickup would have left them holding. It exists because the
+               walking selftest reaches no coin on the routes this measures
+               (measured: coins=0 at frame 390 of a Bob-omb Battlefield
+               walk), and because nothing raises a red coin or a silver star
+               without an actor the selftest cannot reach. */
+            {
+                static int cw = -1;
+                static int cw_lvl = -999, cw_c = -1, cw_r = -1, cw_s = -1;
+                static int cwp_read, cwp_frame = 300;
+                static int cwp_c, cwp_r, cwp_s, cwp_done;
+                if (cw < 0) cw = getenv("SM64DS_COIN_WATCH") ? 1 : 0;
+                if (!cwp_read) {
+                    const char *e = getenv("SM64DS_COIN_POKE");
+                    cwp_read = 1;
+                    if (e && sscanf(e, "%d,%d,%d,%d", &cwp_c, &cwp_r, &cwp_s,
+                                    &cwp_frame) >= 3)
+                        cw = 1;          /* a poke always wants the read-out */
+                    else
+                        cwp_c = cwp_r = cwp_s = 0;
+                }
+                if (cw) {
+                    const int p = (int)data_0209f250;
+                    if ((cwp_c || cwp_r || cwp_s) && !cwp_done &&
+                        frame == cwp_frame) {
+                        cwp_done = 1;
+                        if (cwp_c) GiveCoins(p, cwp_c);
+                        if (cwp_r) GiveRedCoins(p, cwp_r);
+                        if (cwp_s) GiveVsStars(p, cwp_s);
+                        fprintf(stderr, "[coinpoke] f%d level=%d player=%d "
+                                "gave coins+%d red+%d silver+%d through the "
+                                "ROM's own Give* writers\n", frame,
+                                (int)data_0209f2f8, p, cwp_c, cwp_r, cwp_s);
+                    }
+                    {
+                        const int lvl = (int)data_0209f2f8;
+                        const int cc = (int)data_0209f358[p];
+                        const int rr = (int)data_0209f30c[p];
+                        const int ss = (int)data_0209f310[p];
+                        if (lvl != cw_lvl || cc != cw_c || rr != cw_r ||
+                            ss != cw_s || (frame % 100) == 0) {
+                            cw_lvl = lvl; cw_c = cc; cw_r = rr; cw_s = ss;
+                            fprintf(stderr, "[coinwatch] f%d level=%d "
+                                    "player=%d coins=%d red=%d silver=%d | "
+                                    "sums coins=%d red=%d silver=%d\n",
+                                    frame, lvl, p, cc, rr, ss,
+                                    (int)NumCoins(), (int)NumRedCoins(),
+                                    (int)NumVsStarsObtained());
+                        }
+                    }
                 }
             }
 

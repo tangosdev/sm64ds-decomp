@@ -126,6 +126,25 @@ extern unsigned char data_0209f26c;  /* why we are entering (1 fresh, 2 death) *
 extern unsigned char data_02092124[];
 extern unsigned char data_02092118[];
 
+/* THE COURSE COUNTERS Stage::InitResources CLEARS, and the two words it
+   clears beside them. data_0209f358 is the per-player coin count
+   (GiveCoins / NumCoins, hosted sixteen wide in hal/actor_vtables.cpp),
+   data_0209f30c the red-coin count (GiveRedCoins / NumRedCoins,
+   hal/auto_bss.cpp, sixteen wide), data_0209f310 the silver-star count
+   (GiveVsStars / NumVsStarsObtained, hal/actor_classes_star.cpp, one byte
+   plus data_0209f311s thirty-one as one contiguous band). data_0209f34c is
+   the level event bitfield Event::SetBit / GetBit / ClearBit walk and
+   data_0209f4f8 the 3 x 16 death table DeathTable_SetBit / GetBit /
+   ClearBit walk (hal/auto_bss.cpp, the ROMs whole 0xc0 span). */
+extern short data_0209f358[];
+extern unsigned char data_0209f30c[];
+extern signed char data_0209f310[];
+extern int data_0209f34c;
+extern int data_0209f4f8[];
+extern unsigned char data_0209f21c;  /* how many players the ROM counts */
+extern unsigned char data_0209f2d8;  /* game mode, 1 = VS */
+int SublevelToLevel(int sublevel);
+
 /* the ROM tables, from romdata.py */
 extern unsigned char data_02092208[];   /* level -> LVL_Overlay (DS address) */
 extern unsigned char data_020758c8[];   /* level -> overlay id */
@@ -1064,8 +1083,85 @@ extern "C" unsigned port_level_heap_free_bytes(void)
    0x31 -- the five Bowser fights -- so it arms on a key handover and on
    nothing else; every course sublevel falls through the switch, leaves the
    key slot at its -1 and returns 0. */
+/* ---- THE COURSES OWN COUNTERS, CLEARED WHERE THE CARTRIDGE CLEARS THEM ----
+ *
+ * src/_ZN5Stage13InitResourcesEv.cpp runs this block immediately above the
+ * three statements the latch below stands for. On a course change it zeroes
+ * the level event bits, the per-area death table and the three per-player
+ * counters -- coins, red coins and silver stars -- and THE PORT RAN NONE OF
+ * IT. port/stage_lifecycle_map.txt section 2c lists the three clear loops
+ * among what the port does not do at all, its section 2d row for
+ * data_0209f34c / f4f8 / f358 / f30c / f310 says "none. The per-player
+ * star/coin clear loops are not run at all", and hal/star_flow.cpp names the
+ * same block and leaves it "for the lane that needs it with its guard".
+ *
+ * WHAT THE PLAYER SAW: coins, red coins and silver stars followed him out of
+ * a course and into the next one, so a course could be entered with red
+ * coins already on the counter -- and both red-coin star spawners test
+ * NumRedCoins() for EXACT equality with 8 (src/func_ov002_020b16c4.c and
+ * src/_ZN10StarMarker27SpawnRedCoinStarIfNecessaryEv.cpp), so the star came
+ * out early and the remaining red coins produced nothing at all. Measured on
+ * Bob-omb Battlefield with five coins, three red coins and two silver stars
+ * on the counter: after a void death, a star exit or a pause-menu exit and a
+ * re-entry, the first frame of the new course still read red=3 silver=2
+ * (coins=5 too on the death and pause routes; the star routes coin total is
+ * zeroed later by Stage::LC_Updates own tally).
+ *
+ * THE GUARD IS THE ROMS, TERM FOR TERM: VS mode, a death, an entry into one
+ * of the six boss / key arenas (the 0x2a15 bit test over sublevel - 0x24),
+ * the course whose SublevelToLevel is 0x1d, or -- the term that carries
+ * ordinary play -- the course actually changing. The arena term is why the
+ * counters survive the drop into a Bowser arena, and the `!= 1` term on the
+ * coin line alone is why the coin total survives a STAR exit long enough for
+ * the level-clear screen to tally it.
+ *
+ * IT READS data_0209f2f8 BEFORE THE LATCH REPLACES IT, which is why it is
+ * here and first: one statement later the course being left is gone. All
+ * three counter arrays are sixteen players wide on the host and every writer
+ * of data_0209f21c in the port leaves it between 1 and that width, so the
+ * ROMs own loop bound is in range here. */
+static void port_level_course_clear(void)
+{
+    const int entering = SublevelToLevel((int)data_02092110);
+    const int leaving  = SublevelToLevel((int)data_0209f2f8);
+    const unsigned bits =
+        ((unsigned)(unsigned char)data_02092110 + 0xDCu) & 0xFFu;
+    const int arena = (bits <= 0xD && ((1u << bits) & 0x2A15u)) ? 1 : 0;
+    const int vs = (data_0209f2d8 == 1) ? 1 : 0;
+    int idx;
+
+    if (!(vs || data_0209f26c == 2 || arena || entering == 0x1D ||
+          entering != leaving))
+        return;
+
+    {
+        const int was_c = (int)data_0209f358[0];
+        const int was_r = (int)data_0209f30c[0];
+        const int was_s = (int)data_0209f310[0];
+        const int count = (int)data_0209f21c;
+
+        data_0209f34c = 0;
+        for (idx = 0; idx < 0x30; idx++)
+            data_0209f4f8[idx] = 0;
+
+        for (idx = 0; idx < count; idx++) {
+            if (vs || (arena == 0 && data_0209f26c != 1))
+                data_0209f358[idx] = 0;
+            data_0209f30c[idx] = 0;
+            data_0209f310[idx] = 0;
+        }
+
+        if (was_c || was_r || was_s)
+            std::fprintf(stderr, "  [lvl] course counters cleared: coins %d"
+                         " -> %d, red coins %d -> 0, silver stars %d -> 0\n",
+                         was_c, (int)data_0209f358[0], was_r, was_s);
+    }
+}
+
 static void port_level_latch(void)
 {
+    port_level_course_clear();
+
     if (data_0209f26c == 1) {
         data_02092124[0] = (unsigned char)data_0209f2f8;
         data_02092118[0] = 0xffu;         /* -1 */
