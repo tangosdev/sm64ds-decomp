@@ -14936,10 +14936,6 @@
       "src/func_ov060_021180e0.cpp": [
         "return:int"
       ],
-      "src/func_ov064_02118644.c": [
-        "param:#1 int",
-        "return:int"
-      ],
       "src/game/actors/d_a_obj_fl_maruta.cpp": [
         "return:int"
       ],
@@ -15287,10 +15283,6 @@
       "src/func_ov060_02116518.c": [
         "param:#6 const void *",
         "return:unsigned int"
-      ],
-      "src/func_ov064_02118644.c": [
-        "param:#6 int",
-        "param:#7 int"
       ],
       "src/func_ov064_021193b4.c": [
         "param:#1 int",
@@ -19286,11 +19278,6 @@
       "src/func_ov002_020d8a50.c": [
         "arity:1",
         "return:void"
-      ]
-    },
-    "_ZNK10dBgCh_Actr10IsOnGroundEv": {
-      "src/func_ov064_02118644.c": [
-        "param:#1 int"
       ]
     },
     "_ZNK10dBgCh_Actr13GetLimMovFlagEv": {
