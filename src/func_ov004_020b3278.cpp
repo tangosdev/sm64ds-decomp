@@ -5,7 +5,7 @@
  * default-arm guard spelled if(==0){...;break;} return; suppresses the pool-ldr
  * hoist over the strh */
 extern "C" {
-void DecompressLZ16(int src, int dst);
+void DecompressLZ16(void *src, void *dst);
 int func_ov004_020af5e0(int a, void *b, int c, int d);
 }
 
@@ -34,7 +34,8 @@ extern PMF data_ov004_020bf490[];
 extern Pair data_ov004_020bf428[];
 extern Pair data_ov004_020bf4f8[];
 
-extern "C" void func_ov004_020b3278(char *self, int arg1, short arg2, short arg3, int arg4, int arg5, short arg6)
+extern "C" void func_ov004_020b3278(char *self, int resourceIndex, short x, short y,
+                                      int screen, int priority, short initialState)
 {
     int a, b;
 
@@ -46,31 +47,31 @@ extern "C" void func_ov004_020b3278(char *self, int arg1, short arg2, short arg3
         b = 0x6400000;
     }
 
-    switch (arg1) {
+    switch (resourceIndex) {
     case 3: case 4: case 5: case 6:
     case 8: case 9: case 10: case 11: case 12:
     case 14: case 16: case 17: case 18: case 19: case 20: case 21:
         if (data_ov004_020bf3e8[0] != 0)
             return;
-        DecompressLZ16(data_ov004_020bf560[arg1], a + 0x7000);
+        DecompressLZ16((void *)data_ov004_020bf560[resourceIndex], (void *)(a + 0x7000));
         if (b != 0)
-            DecompressLZ16(data_ov004_020bf560[arg1], b + 0x7000);
+            DecompressLZ16((void *)data_ov004_020bf560[resourceIndex], (void *)(b + 0x7000));
         *(short *)(self + 0x30) = 0;
         data_ov004_020bf3e8[0] = 1;
         break;
     default:
         if (data_ov004_020bf3e8[1] == 0) {
-            DecompressLZ16(data_ov004_020bf560[arg1], a + 0x6000);
+            DecompressLZ16((void *)data_ov004_020bf560[resourceIndex], (void *)(a + 0x6000));
             if (b != 0)
-                DecompressLZ16(data_ov004_020bf560[arg1], b + 0x6000);
+                DecompressLZ16((void *)data_ov004_020bf560[resourceIndex], (void *)(b + 0x6000));
             *(short *)(self + 0x30) = 1;
             data_ov004_020bf3e8[1] = 1;
             break;
         }
         if (data_ov004_020bf3e8[2] == 0) {
-            DecompressLZ16(data_ov004_020bf560[arg1], a + 0x6800);
+            DecompressLZ16((void *)data_ov004_020bf560[resourceIndex], (void *)(a + 0x6800));
             if (b != 0)
-                DecompressLZ16(data_ov004_020bf560[arg1], b + 0x6800);
+                DecompressLZ16((void *)data_ov004_020bf560[resourceIndex], (void *)(b + 0x6800));
             *(short *)(self + 0x30) = 2;
             data_ov004_020bf3e8[2] = 1;
             break;
@@ -78,19 +79,19 @@ extern "C" void func_ov004_020b3278(char *self, int arg1, short arg2, short arg3
         return;
     }
 
-    *(int *)(self + 0x20) = arg1;
-    *(short *)(self + 0x10) = arg2;
-    *(short *)(self + 0x12) = arg3;
+    *(int *)(self + 0x20) = resourceIndex;
+    *(short *)(self + 0x10) = x;
+    *(short *)(self + 0x12) = y;
     *(short *)(self + 0x14) = *(short *)(self + 0x10);
     *(short *)(self + 0x16) = *(short *)(self + 0x12);
-    *(int *)(self + 0x1c) = arg4;
-    *(int *)(self + 0x18) = arg5;
+    *(int *)(self + 0x1c) = screen;
+    *(int *)(self + 0x18) = priority;
     *(short *)(self + 0x32) = 0;
 
-    if (arg6 != 0xd) {
-        *(short *)(self + 0x2e) = arg6;
+    if (initialState != 0xd) {
+        *(short *)(self + 0x2e) = initialState;
     } else {
-        switch (arg1) {
+        switch (resourceIndex) {
         case 11:
             *(short *)(self + 0x2e) = 7;
             break;
@@ -116,33 +117,33 @@ extern "C" void func_ov004_020b3278(char *self, int arg1, short arg2, short arg3
     }
 
     {
-        S3 tmp = data_ov004_020bc27c;
+        S3 tileOffsets = data_ov004_020bc27c;
         *(short *)(self + 0x2c) = (short)func_ov004_020af5e0(
             data_ov004_020bf5d4[*(int *)(self + 0x20)],
             self + 0x34,
-            tmp.v[*(short *)(self + 0x30)],
+            tileOffsets.v[*(short *)(self + 0x30)],
             *(int *)(self + 0x20));
     }
 
     {
-        int st = *(short *)(self + 0x2e);
-        if (data_ov004_020bf490[st])
-            (((Base *)self)->*data_ov004_020bf490[st])();
+        int stateIndex = *(short *)(self + 0x2e);
+        if (data_ov004_020bf490[stateIndex])
+            (((Base *)self)->*data_ov004_020bf490[stateIndex])();
     }
 
     {
-        short st;
-        Pair *e;
-        st = *(short *)(self + 0x2e);
-        e = &data_ov004_020bf428[st];
-        a = data_ov004_020bf428[st].w0;
-        b = e->w1;
+        short stateIndex;
+        Pair *stateEntry;
+        stateIndex = *(short *)(self + 0x2e);
+        stateEntry = &data_ov004_020bf428[stateIndex];
+        a = data_ov004_020bf428[stateIndex].w0;
+        b = stateEntry->w1;
         *(int *)(self + 0) = b ? a : a;
         *(int *)(self + 4) = b;
-        st = *(short *)(self + 0x2e);
-        e = &data_ov004_020bf4f8[st];
-        a = data_ov004_020bf4f8[st].w0;
-        b = e->w1;
+        stateIndex = *(short *)(self + 0x2e);
+        stateEntry = &data_ov004_020bf4f8[stateIndex];
+        a = data_ov004_020bf4f8[stateIndex].w0;
+        b = stateEntry->w1;
         *(int *)(self + 8) = b ? a : a;
         *(int *)(self + 0xc) = b;
     }
