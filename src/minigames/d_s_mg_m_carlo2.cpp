@@ -55,8 +55,8 @@
  * optimize_for_size). Two legacy files carried one:
  *   func_ov006_020f95f0: #pragma opt_propagation off   [NOT carried]
  *   _ZN14dScMgMCarlo2_c13OnTurnIntoEggEi: #pragma opt_propagation off   [NOT carried]
- * Neither is carried, and the measurements say the cartridge's own
- * translation unit did not have it either. opt_propagation is file-global
+ * Neither is carried. The measured source forms require propagation ON
+ * to match all 25 functions in one translation unit. opt_propagation is file-global
  * last-wins, so a TU has exactly one setting for all 25 functions, and there
  * is only one place it could go -- the top. Set there it costs four OTHER
  * members their match (ordinals 3, 5, 10 and 18), and prepending it to the
@@ -65,24 +65,18 @@
  * whose shape had been tuned against it one file at a time.
  *
  * Both members verify byte-exact with propagation ON once their source is
- * shaped the way the cartridge's was -- see the note on each below. That
+ * shaped as documented below. That
  * is the load-bearing evidence: a single setting, no pragma, all bodies exact.
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending
  * processing order. NOT verified for header ordering constraints (e.g. a
  * common.h-before-X rule) -- watch for new compile errors after this. */
-/* STILL MACHINE-SHAPED (audit 2026-09-18) -- byte-exact; what blocks each part:
- *  21 func_ov004_* + 30 data_*   unnamed in config symbols.txt; each needs a
- *                                coined, behaviour-justified name.
- *  5 ctor/dtor/op-new call(s)    C1/C2/D0/D1/D2 is not expressible
- *                                in C++ source; only a real ctor emits it.
- *  2 _ZTV vptr store(s)          stands in for the ctor that would emit it.
- *  5 `(void *)this` launder(s)   bisect before removing -- some are free,
- *                                some hold the register allocation.
- *  ~7 *(T *)(p + 0x..)           class layout does not name these offsets.
- *  7 unk_NN                      slot/field name not evidenced.
- */
+/* Remaining reconstruction: the factory still spells runtime construction
+ * explicitly, the shared state and inherited camera remain partly opaque,
+ * and the scene state/timer fields and data_* globals need stronger names.
+ * The BoardReady branch shape and OnTurnIntoEgg touch predicate below retain
+ * measured matching constraints. Promotion alone does not complete this work. */
 
 #include "dScMgMCarlo2_c.h"
 #include "types.h"
@@ -125,16 +119,16 @@ extern u8 data_020a0de9[];
 extern u8 data_020a0dea[];
 extern u8 data_020a0deb[];
 
-int  RandomIntInternal(void* seed);
-int  RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
+int  RandomIntInternal(int* seed);
+void RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
 void Hud_RenderSprite(void* a0, int a1, int a2, int a3, int a4);
 int  GetGameLanguage(void);
 int  LoadFile(int handle);
-void DecompressLZ16(int src, int dst);
+void DecompressLZ16(void* src, void* dst);
 void Vec2_Sub(int* out, int* a, int* b);
 unsigned int func_02012790(unsigned int id);
 int  func_0203d5dc(void* a, void* b);
-void func_ov004_020ad90c(void* t);
+void func_ov004_020ad90c(void);
 void func_ov004_020adb1c(int score);
 void func_ov006_0210a534(void* c);
 void func_ov006_020c0aa8(void* c);
@@ -148,7 +142,9 @@ void* _ZN7fBase_cnwEj(unsigned int);
 void _ZN11dScMgBase_cC2Ev(void*);
 void _ZN8Particle10SysTrackerC1Ev(void*);
 void func_ov006_020c1d80(void*);
-void __cxa_vec_ctor(void*, int, int, void*, void*);
+typedef void (*ArrayCtor)(void*);
+typedef void (*ArrayDtor)(void*);
+void __cxa_vec_ctor(void*, unsigned int, unsigned int, ArrayCtor, ArrayDtor);
 extern int _ZTV19dScMgSingle3DBase_c;
 extern int _ZTV14dScMgMCarlo2_c[];
 void _ZN19dMgMCarlo2CardObj_cC1Ev(void*);
@@ -156,9 +152,9 @@ void _ZN19dMgMCarlo2CardObj_cC1Ev(void*);
 
 namespace GX { void LoadOBJPltt(const void*, unsigned int, unsigned int); }
 namespace GXS { void LoadOBJPltt(const void*, unsigned int, unsigned int); }
-namespace Sound { void PlayBank2_2D(unsigned int); }
+namespace Sound { unsigned int PlayBank2_2D(unsigned int); }
 
-/* The ROM's own symbols demangle to these, so this is how they are spelled:
+/* The configured C++ symbol spellings correspond to these signatures:
  * _Z14ApproachLinearRiii is ApproachLinear(int&, int, int) and
  * _Z15ApproachLinear2Rsss is ApproachLinear2(short&, short, short). Declared
  * with C++ linkage -- the reference parameter is what mangles them. */
@@ -180,18 +176,18 @@ dMgMCarlo2CardObj_c::dMgMCarlo2CardObj_c()
 // @symbol dScMgMCarlo2_c_classInit
 extern "C" void* dScMgMCarlo2_c_classInit()
 {
-    char* p = (char*)_ZN7fBase_cnwEj(0x5930);
-    if (p) {
-        _ZN11dScMgBase_cC2Ev(p);
-        *(int*)p = (int)&_ZTV19dScMgSingle3DBase_c;
-        _ZN8Particle10SysTrackerC1Ev(p + 0x471c);
-        *(int*)p = (int)&_ZTV14dScMgMCarlo2_c[2];
-        func_ov006_020c1d80(p + 0x4f38);
-        __cxa_vec_ctor(p + 0x51a8, 0x28, 0x30,
-                     (void*)_ZN19dMgMCarlo2CardObj_cC1Ev,
-                     (void*)_ZN19dMgMCarlo2CardObj_cD1Ev);
+    char* scene = (char*)_ZN7fBase_cnwEj(0x5930);
+    if (scene) {
+        _ZN11dScMgBase_cC2Ev(scene);
+        *(int*)scene = (int)&_ZTV19dScMgSingle3DBase_c;
+        _ZN8Particle10SysTrackerC1Ev(scene + 0x471c);
+        *(int*)scene = (int)&_ZTV14dScMgMCarlo2_c[2];
+        func_ov006_020c1d80(scene + 0x4f38);
+        __cxa_vec_ctor(scene + 0x51a8, 0x28, 0x30,
+                     _ZN19dMgMCarlo2CardObj_cC1Ev,
+                     _ZN19dMgMCarlo2CardObj_cD1Ev);
     }
-    return p;
+    return scene;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -207,26 +203,25 @@ extern "C" void* dScMgMCarlo2_c_classInit()
  * The final call is the scene's own slot-18 reset hook. */
 s32 dScMgMCarlo2_c::InitResources()
 {
-    char *c = (char *)this;
-    int handle;
-    int f1, f2;
+    int language;
+    int spriteData, paletteData;
     func_ov004_020b04d0(0x20);
-    func_ov006_0210a534(c);
-    handle = GetGameLanguage();
-    f1 = LoadFile(data_ov006_0213d744[handle]);
-    f2 = LoadFile(0xbb);
-    DecompressLZ16(f1, 0x6400000);
-    DecompressLZ16(f1, 0x6600000);
-    GX::LoadOBJPltt((void *)f2, 0, 0x100);
-    GXS::LoadOBJPltt((void *)f2, 0, 0x100);
-    Deallocate((void *)f1);
-    Deallocate((void *)f2);
+    func_ov006_0210a534(this);
+    language = GetGameLanguage();
+    spriteData = LoadFile(data_ov006_0213d744[language]);
+    paletteData = LoadFile(0xbb);
+    DecompressLZ16((void*)spriteData, (void*)0x6400000);
+    DecompressLZ16((void*)spriteData, (void*)0x6600000);
+    GX::LoadOBJPltt((void *)paletteData, 0, 0x100);
+    GXS::LoadOBJPltt((void *)paletteData, 0, 0x100);
+    Deallocate((void *)spriteData);
+    Deallocate((void *)paletteData);
     data_0209d45c = 0x11;
     data_0209d454 = 0x18;
     *(volatile unsigned short *)0x4000008 = (*(volatile unsigned short *)0x4000008 & ~3) | 1;
     *(volatile unsigned short *)0x400100a = *(volatile unsigned short *)0x400100a & ~3;
-    func_ov006_020c0aa8((void *)(c + 0x4660));
-    if (func_ov006_020c1a88((void *)(c + 0x4f38)) == 0) return 0;
+    func_ov006_020c0aa8((char*)this + 0x4660);
+    if (func_ov006_020c1a88(&mShared) == 0) return 0;
     func_ov004_020b682c();
     OnYoshiTryEat(-1);
     this->unk_592a = 0;
@@ -244,17 +239,15 @@ s32 dScMgMCarlo2_c::InitResources()
  * re-arm the shared table, then hand the score display a zero. */
 void dScMgMCarlo2_c::OnYoshiTryEat(int /* arg */)
 {
-    char *c = (char *)this;
-
-  dScMgMCarlo2_c::SetupBoard(mArray);
-  data_ov006_0213d6fc = 0;
-  unk_592e = 0;
-  mShared.unk_1e6 = 1;
-  func_ov006_020c1604(c + 0x4f38, 4, 4, c + 0x592e);
-  mShared.unk_01a = 1;
-  unk_592a = 0;
-  func_ov004_020adb1c(0);
-  unk_5928 = 1;
+    dScMgMCarlo2_c::SetupBoard(mArray);
+    data_ov006_0213d6fc = 0;
+    unk_592e = 0;
+    mShared.unk_1e6 = 1;
+    func_ov006_020c1604((char*)&mShared, 4, 4, &unk_592e);
+    mShared.unk_01a = 1;
+    unk_592a = 0;
+    func_ov004_020adb1c(0);
+    unk_5928 = 1;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -263,40 +256,33 @@ void dScMgMCarlo2_c::OnYoshiTryEat(int /* arg */)
 // @symbol _ZN14dScMgMCarlo2_c13OnTurnIntoEggEi
 int dScMgMCarlo2_c::OnTurnIntoEgg(int /* mode */)
 {
-    char *self = (char *)this;
-
-    short st = *(short *)(self + 0x5928);
-    switch (st) {
+    short state = unk_5928;
+    switch (state) {
     case 4:
-        if (func_ov006_020c1718((int *)(self + 0x4f38)) != 0) {
-            short *p = (short *)(self + 0x5928);
-            *p += 1;
+        if (func_ov006_020c1718(&mShared) != 0) {
+            ++unk_5928;
         }
         break;
     case 5: {
-        unsigned char idx = data_020a0e40[0];
-        /* Written as a nested test rather than `found = A && B`, which is what
-         * the ROM's code shape says the original was: the cartridge materialises
-         * `found` (mov r3,#0 ... movne r3,#1) and then tests it (cmp r3,#0).
-         * Fused into one && expression the compiler folds the variable away and
-         * branches straight out -- three instructions short. */
+        unsigned char inputIndex = data_020a0e40[0];
+        /* Keep the materialized touch predicate. With this typed TU under
+         * 2004/b56, combining the two tests into && grows this function from
+         * 0x104 to 0x108 bytes and changes its branches. */
         int found = 0;
-        if (data_020a0de8[idx * 4] != 0) {
-            found = data_020a0de9[idx * 4] != 0;
+        if (data_020a0de8[inputIndex * 4] != 0) {
+            found = data_020a0de9[inputIndex * 4] != 0;
         }
         if (found != 0) {
-            short *p;
             func_02012790(0x62);
-            *(short *)(self + 0x592a) = 0x1e;
+            unk_592a = 0x1e;
             dScMgMCarlo2_c::FlipDealtCards();
-            p = (short *)(self + 0x5928);
-            *p += 1;
+            ++unk_5928;
         }
         break;
     }
     case 6:
     default:
-        if (ApproachLinear2(*(s16 *)(self + 0x592a), 0, 1) != 0) {
+        if (ApproachLinear2(unk_592a, 0, 1) != 0) {
             return 1;
         }
         break;
@@ -314,33 +300,20 @@ int dScMgMCarlo2_c::OnTurnIntoEgg(int /* mode */)
  * its slot 6 relocates here. The signature is include/dScMgBase_c.h's own slot
  * 6, `virtual s32 Behavior()`.
  *
- * THE STATE COUNTER IS BUMPED THROUGH A LAUNDERED POINTER, three times, and
- * that is not a leftover: `unk_5928++` recomputes the address for the store
- * where `s16 *p = (s16 *)((int)this + 0x5928); (*p)++;` makes mwccarm CSE it
- * into a register, which is what the cartridge does. Same lever
- * notes/mwccarm-codegen.md records for compound assignment. Everything the
- * class owns outright and reads once -- unk_592e, unk_4f52, unk_511e -- reads
- * as a member.
- *
- * The 0x270-byte shared table at 0x4f38 stays opaque, as
- * include/dScMgMCarlo2_c.h's banner says: five siblings use the same one, and
- * the helpers here take its base address rather than anything inside it. The
- * two fields that ARE named within it, unk_4f52 and unk_511e, are named
- * because this function and its siblings write them by hand. */
+ * The shared 0x270-byte state at 0x4f38 is represented by mShared. Only
+ * unk_01a and unk_1e6 are modeled fields; helper calls receive its base.
+ * Direct increments of unk_5928 now reproduce the unchanged production object
+ * under 2004/b56; the older pointer-increment workaround is unnecessary in
+ * this typed source form. */
 s32 dScMgMCarlo2_c::Behavior()
 {
-    unsigned char *c = (unsigned char *)this;
-
     switch (unk_5928) {
     case 1:
-        {
-            s16 *p = (s16 *)((int)c + 0x5928);
-            (*p)++;
-        }
-        if (c[0xc4] == 0) {
-            c[0xc3] = 1;
-            c[0xc4] = 1;
-            *(s16 *)(c + 0xc0) = 0;
+        ++unk_5928;
+        if (mPromptBlinkCount == 0) {
+            mPromptEnabled = 1;
+            mPromptBlinkCount = 1;
+            mPromptBlinkTimer = 0;
         }
         /* fall through */
     case 2:
@@ -348,32 +321,29 @@ s32 dScMgMCarlo2_c::Behavior()
         if (unk_592e == 4) {
             if (dScMgMCarlo2_c::BoardBusy() == 0) {
                 unk_592e = 0;
-                {
-                    s16 *p = (s16 *)((int)c + 0x5928);
-                    (*p)++;
-                }
+                ++unk_5928;
             }
         }
         break;
     case 3:
         if (dScMgMCarlo2_c::BoardReady() == 0) {
-            int r5;
+            int dealtCount;
             if (data_ov006_0213d6fc == 1)
                 data_ov006_0213d6fc = 0;
-            r5 = data_ov006_0213d700 >> 12;
-            if (data_ov006_0213d6f4 != 0 && r5 > 10 && r5 <= 18
-                && func_ov006_020c1718(c + 0x4f38) != 0) {
+            dealtCount = data_ov006_0213d700 >> 12;
+            if (data_ov006_0213d6f4 != 0 && dealtCount > 10 && dealtCount <= 18
+                && func_ov006_020c1718(&mShared) != 0) {
                 unk_592e = 0;
                 mShared.unk_1e6 = 0;
-                func_ov006_020c1164(c + 0x4f38, 2, &unk_592e);
+                func_ov006_020c1164(&mShared, 2, &unk_592e);
                 if (data_ov006_0213d6f4 == 2)
                     mShared.unk_01a = 0;
             } else {
-                int lim = unk_592e + 0x12;
-                if (r5 >= lim) {
-                    int flag = (data_ov006_02142570 != 0 && data_ov006_02142574 != 0);
-                    if (flag == 0)
-                        data_ov006_0213d700 = lim << 12;
+                int dealLimit = unk_592e + 0x12;
+                if (dealtCount >= dealLimit) {
+                    int pairSelected = (data_ov006_02142570 != 0 && data_ov006_02142574 != 0);
+                    if (pairSelected == 0)
+                        data_ov006_0213d700 = dealLimit << 12;
                 }
             }
         } else {
@@ -384,14 +354,11 @@ s32 dScMgMCarlo2_c::Behavior()
                     if (data_ov006_0213d6f8 != 0) {
                         if (mShared.unk_01a == 1) {
                             mShared.unk_01a = 0;
-                        } else if (func_ov006_020c16b4(c + 0x4f38) != 0) {
-                            func_ov006_020c0d68(c + 0x4f38);
+                        } else if (func_ov006_020c16b4(&mShared) != 0) {
+                            func_ov006_020c0d68(&mShared);
                             func_ov004_020b0a54(0x12);
-                            c[0xc3] = 0;
-                            {
-                                s16 *p = (s16 *)((int)c + 0x5928);
-                                (*p)++;
-                            }
+                            mPromptEnabled = 0;
+                            ++unk_5928;
                         }
                     }
                     data_ov006_0213d6fc = 0;
@@ -401,7 +368,7 @@ s32 dScMgMCarlo2_c::Behavior()
         break;
     }
 
-    func_ov006_020c19d0(c + 0x4f38);
+    func_ov006_020c19d0(&mShared);
     dScMgMCarlo2_c::UpdateBoard();
     return 1;
 }
@@ -425,44 +392,43 @@ s32 dScMgMCarlo2_c::Behavior()
  * dScMgMCarlo2_c_Render` agreed. */
 s32 dScMgMCarlo2_c::Render()
 {
-    char *c = (char *)this;
-    short v;
-    dMgMCarlo2CardObj_c *n6;
-    int i5;
-    int i6;
-    dMgMCarlo2CardObj_c *n5;
+    short score;
+    dMgMCarlo2CardObj_c *movingCard;
+    int movingSlot;
+    int settledSlot;
+    dMgMCarlo2CardObj_c *settledCard;
 
-    func_ov006_020c0aa8(c + 0x4660);
+    func_ov006_020c0aa8((char*)this + 0x4660);
 
-    v = data_ov006_02142564;
-    if (v > 0x270f)
-        v = 0x270f;
-    func_ov004_020b1ea4(0xe8, 0x28, v, 1, -1, 0, 0);
+    score = data_ov006_02142564;
+    if (score > 0x270f)
+        score = 0x270f;
+    func_ov004_020b1ea4(0xe8, 0x28, score, 1, -1, 0, 0);
 
     RenderOamMainScreen(data_ov006_02133f18, 0xe8, 0x18, -1, -1);
 
     if (this->unk_5928 == 5)
-        func_ov004_020b0d8c(c, 0xe0, 0xa0);
+        func_ov004_020b0d8c(this, 0xe0, 0xa0);
 
-    n6 = data_ov006_02142578;
-    for (i5 = 0; i5 < 0x14; i5++) {
-        if (n6 == 0)
+    movingCard = data_ov006_02142578;
+    for (movingSlot = 0; movingSlot < 0x14; movingSlot++) {
+        if (movingCard == 0)
             break;
-        if (n6->mYStep > 0)
-            n6->Render();
-        n6 = n6->mPrev;
+        if (movingCard->mYStep > 0)
+            movingCard->Render();
+        movingCard = movingCard->mPrev;
     }
 
-    n5 = data_ov006_02142578;
-    for (i6 = 0; i6 < 0x14; i6++) {
-        if (n5 == 0)
+    settledCard = data_ov006_02142578;
+    for (settledSlot = 0; settledSlot < 0x14; settledSlot++) {
+        if (settledCard == 0)
             break;
-        if (n5->mYStep == 0)
-            n5->Render();
-        n5 = n5->mPrev;
+        if (settledCard->mYStep == 0)
+            settledCard->Render();
+        settledCard = settledCard->mPrev;
     }
 
-    func_ov006_020c1804(c + 0x4f38);
+    func_ov006_020c1804(&mShared);
     return 1;
 }
 
@@ -477,14 +443,11 @@ s32 dScMgMCarlo2_c::Render()
  * it inherits from dScMgSingle3DBase_c. The signature is include/fBase_c.h's
  * own slot 3, `virtual s32 CleanupResources()`.
  *
- * func_ov004_020ad90c IS ARITY-AMBIGUOUS ACROSS THE FAMILY, and this file does
- * not settle it: dScMgJump2_c's and dScMgTrampoline2_c's CleanupResources both
- * call it with no argument at all, this one passes the scene. `this` is
- * already in r0 at the call, so both spellings produce the same word and
- * neither is evidence. Kept as the pre-migration file had it. */
+ * func_ov004_020ad90c uses the current scene global. Its existing definition
+ * takes no argument; the call here follows that contract. */
 s32 dScMgMCarlo2_c::CleanupResources()
 {
-    func_ov004_020ad90c(this);
+    func_ov004_020ad90c();
     return 1;
 }
 
@@ -492,15 +455,15 @@ s32 dScMgMCarlo2_c::CleanupResources()
 /* ROM ordinal 16 -- dMgMCarlo2CardObj_c::Init, 0x020f9f40, size 0xa0 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN19dMgMCarlo2CardObj_c4InitEi
-void dMgMCarlo2CardObj_c::Init(int r1){
-    mSlot = (short)r1;
-    if (r1 >= 0x14) {
+void dMgMCarlo2CardObj_c::Init(int slot){
+    mSlot = (short)slot;
+    if (slot >= 0x14) {
         mDealDelay = 1;
     } else {
-        mDealDelay = (short)(((r1 % 5) << 1) + 1);
+        mDealDelay = (short)(((slot % 5) << 1) + 1);
     }
     mLift = 0;
-    if (r1 == 0x13) data_ov006_02142578 = this;
+    if (slot == 0x13) data_ov006_02142578 = this;
     mVisible = 1;
     mXStep = 0;
     mYStep = 0;
@@ -514,11 +477,11 @@ void dMgMCarlo2CardObj_c::Init(int r1){
 /* ROM ordinal 15 -- dMgMCarlo2CardObj_c::DealIn, 0x020f9db8, size 0x188 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN19dMgMCarlo2CardObj_c6DealInEi
-void dMgMCarlo2CardObj_c::DealIn(int a)
+void dMgMCarlo2CardObj_c::DealIn(int slot)
 {
-    int v[3];
+    int targetDelta[3];
 
-    if (a >= 0x14)
+    if (slot >= 0x14)
         return;
 
     if (mSlot >= 0x14) {
@@ -536,14 +499,14 @@ void dMgMCarlo2CardObj_c::DealIn(int a)
         data_ov006_0214255c++;
     }
 
-    mTargetX = ((a % 5) * 32 + 0x30) << 12;
-    mTargetY = ((a / 5) * 0x30) << 12;
-    mSlot = (short)a;
+    mTargetX = ((slot % 5) * 32 + 0x30) << 12;
+    mTargetY = ((slot / 5) * 0x30) << 12;
+    mSlot = (short)slot;
 
-    Vec2_Sub(v, &mTargetX, &mX);
+    Vec2_Sub(targetDelta, &mTargetX, &mX);
 
-    mXStep = v[0];
-    mYStep = v[1];
+    mXStep = targetDelta[0];
+    mYStep = targetDelta[1];
     func_0203d630(&mXStep, 0x124);
 
     if (mXStep < 0)
@@ -556,8 +519,8 @@ void dMgMCarlo2CardObj_c::DealIn(int a)
 /* ROM ordinal 14 -- dMgMCarlo2CardObj_c::FlipAway, 0x020f9d68, size 0x50 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN19dMgMCarlo2CardObj_c8FlipAwayEi
-void dMgMCarlo2CardObj_c::FlipAway(int n) {
-    mDealDelay = (short)((4 - n % 5) * 2);
+void dMgMCarlo2CardObj_c::FlipAway(int slot) {
+    mDealDelay = (short)((4 - slot % 5) * 2);
     mState = 5;
 }
 
@@ -565,22 +528,22 @@ void dMgMCarlo2CardObj_c::FlipAway(int n) {
 /* ROM ordinal 13 -- dMgMCarlo2CardObj_c::IsPairWith, 0x020f9cbc, size 0xac */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN19dMgMCarlo2CardObj_c10IsPairWithEPS_
-int dMgMCarlo2CardObj_c::IsPairWith(dMgMCarlo2CardObj_c *b)
+int dMgMCarlo2CardObj_c::IsPairWith(dMgMCarlo2CardObj_c *other)
 {
-    int ai, bi, dm, dd;
-    if (b->mFace != mFace)
+    int slot, otherSlot, columnDistance, rowDistance;
+    if (other->mFace != mFace)
         goto fail;
-    bi = b->mSlot;
-    ai = mSlot;
-    dm = ai % 5 - bi % 5;
-    dd = ai / 5 - bi / 5;
-    if (dm < 0)
-        dm = -dm;
-    if (dm >= 2)
+    otherSlot = other->mSlot;
+    slot = mSlot;
+    columnDistance = slot % 5 - otherSlot % 5;
+    rowDistance = slot / 5 - otherSlot / 5;
+    if (columnDistance < 0)
+        columnDistance = -columnDistance;
+    if (columnDistance >= 2)
         goto fail;
-    if (dd < 0)
-        dd = -dd;
-    if (dd >= 2)
+    if (rowDistance < 0)
+        rowDistance = -rowDistance;
+    if (rowDistance >= 2)
         goto fail;
     return 1;
 fail:
@@ -593,25 +556,25 @@ fail:
 // @symbol _ZN19dMgMCarlo2CardObj_c7HitTestEv
 int dMgMCarlo2CardObj_c::HitTest()
 {
-    u8 idx;
-    int off;
-    int has;
-    int a, b;
+    u8 inputIndex;
+    int inputOffset;
+    int touchActive;
+    int localX, localY;
 
     if (data_ov006_0213d6fc == 0) return 0;
     if (dScMgMCarlo2_c::BoardBusy() != 0) goto fail;
 
-    idx = data_020a0e40[0];
-    off = idx * 4;
-    has = 0;
-    if (data_020a0de8[off]) {
-        if (data_020a0de9[off]) has = 1;
+    inputIndex = data_020a0e40[0];
+    inputOffset = inputIndex * 4;
+    touchActive = 0;
+    if (data_020a0de8[inputOffset]) {
+        if (data_020a0de9[inputOffset]) touchActive = 1;
     }
-    if (has == 0) goto fail;
+    if (touchActive == 0) goto fail;
 
-    a = data_020a0dea[idx * 4] - (mX >> 12);
-    b = data_020a0deb[idx * 4] - (mY >> 12);
-    if (a > 7 && a < 0x28 && b > 0 && b < 0x31) return 1;
+    localX = data_020a0dea[inputIndex * 4] - (mX >> 12);
+    localY = data_020a0deb[inputIndex * 4] - (mY >> 12);
+    if (localX > 7 && localX < 0x28 && localY > 0 && localY < 0x31) return 1;
 fail:
     return 0;
 }
@@ -620,23 +583,19 @@ fail:
 /* ROM ordinal 11 -- dMgMCarlo2CardObj_c::Update, 0x020f9994, size 0x258 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN19dMgMCarlo2CardObj_c6UpdateEi
-void dMgMCarlo2CardObj_c::Update(int b)
+void dMgMCarlo2CardObj_c::Update(int slot)
 {
     switch (mState) {
     case 0:
-        {
-            short *p = &mDealDelay;
-            short v = *(short *)p;
-            *(short *)p = (short)(v - 1);
-        }
+        --mDealDelay;
         if (mDealDelay != 0)
             return;
         data_ov006_0213d6f4--;
-        DealIn(b);
+        DealIn(slot);
         return;
     case 2:
-        if (mSlot != b) {
-            DealIn(b);
+        if (mSlot != slot) {
+            DealIn(slot);
             return;
         }
         if (HitTest() == 0)
@@ -696,18 +655,18 @@ void dMgMCarlo2CardObj_c::Update(int b)
 // @symbol _ZN19dMgMCarlo2CardObj_c6RenderEv
 void dMgMCarlo2CardObj_c::Render()
 {
-    unsigned char k;
+    unsigned char state;
     if (mVisible == 0) return;
-    k = mState;
-    if (k == 0) return;
-    if (k == 3) {
-        if (((&data_020a0db0)[0] & 8) != 0) return;
+    state = mState;
+    if (state == 0) return;
+    if (state == 3) {
+        if ((data_020a0db0 & 8) != 0) return;
     }
     {
-        int idx = (mFace + 1) * 5 + (mLift >> 12);
-        unsigned short e = data_ov006_0213d770[idx];
+        int frameIndex = (mFace + 1) * 5 + (mLift >> 12);
+        unsigned short spriteIndex = data_ov006_0213d770[frameIndex];
         Hud_RenderSprite(
-            (void*)data_ov006_021425a8[e],
+            (void*)data_ov006_021425a8[spriteIndex],
             (mX >> 12) + 0x18,
             (mY >> 12) + 0x18,
             -1,
@@ -719,27 +678,27 @@ void dMgMCarlo2CardObj_c::Render()
 /* ROM ordinal 9 -- dScMgMCarlo2_c::SetupBoard, 0x020f9760, size 0x17c */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN14dScMgMCarlo2_c10SetupBoardEP19dMgMCarlo2CardObj_c
-void dScMgMCarlo2_c::SetupBoard(dMgMCarlo2CardObj_c* base)
+void dScMgMCarlo2_c::SetupBoard(dMgMCarlo2CardObj_c* cards)
 {
     do {
         {
-            s16 i = 0;
+            s16 index = 0;
             do {
-                data_ov006_02142580[i] = data_ov006_0212e954[i];
-                i = i + 1;
-            } while (i < 10);
+                data_ov006_02142580[index] = data_ov006_0212e954[index];
+                index = index + 1;
+            } while (index < 10);
         }
         {
-            s16 j = 0;
-            dMgMCarlo2CardObj_c* p = base;
+            s16 slot = 0;
+            dMgMCarlo2CardObj_c* card = cards;
             do {
-                p->Init(j);
-                p = p + 1;
-                j = j + 1;
-            } while (j < 0x28);
+                card->Init(slot);
+                card = card + 1;
+                slot = slot + 1;
+            } while (slot < 0x28);
         }
         data_ov006_02142568 = 0;
-        data_ov006_0214257c = base;
+        data_ov006_0214257c = cards;
         data_ov006_0214256c = 0;
         data_ov006_02142570 = 0;
         data_ov006_02142574 = 0;
@@ -751,24 +710,24 @@ void dScMgMCarlo2_c::SetupBoard(dMgMCarlo2CardObj_c* base)
         data_ov006_02142564 = 0;
         data_ov006_0213d700 = 0;
         {
-            s16 i = 0;
-            dMgMCarlo2CardObj_c* h = base;
+            s16 index = 0;
+            dMgMCarlo2CardObj_c* card = cards;
             do {
-                dMgMCarlo2CardObj_c* t = &base[i + 1];
-                dMgMCarlo2CardObj_c* save = h->mNext;
-                h->mNext = t;
-                t->mPrev = h;
+                dMgMCarlo2CardObj_c* tail = &cards[index + 1];
+                dMgMCarlo2CardObj_c* savedNext = card->mNext;
+                card->mNext = tail;
+                tail->mPrev = card;
                 {
-                    dMgMCarlo2CardObj_c* u = t->mNext;
-                    if (u != 0) {
-                        do { t = u; u = u->mNext; } while (u != 0);
+                    dMgMCarlo2CardObj_c* next = tail->mNext;
+                    if (next != 0) {
+                        do { tail = next; next = next->mNext; } while (next != 0);
                     }
                 }
-                t->mNext = save;
-                if (t->mNext == 0) data_ov006_02142568 = t;
-                h = h + 1;
-                i++;
-            } while (i < 0x27);
+                tail->mNext = savedNext;
+                if (tail->mNext == 0) data_ov006_02142568 = tail;
+                card = card + 1;
+                index++;
+            } while (index < 0x27);
         }
     } while (HasRemovablePair() == 0);
 }
@@ -779,15 +738,15 @@ void dScMgMCarlo2_c::SetupBoard(dMgMCarlo2CardObj_c* base)
 // @symbol _ZN14dScMgMCarlo2_c16HasRemovablePairEv
 int dScMgMCarlo2_c::HasRemovablePair()
 {
-    dMgMCarlo2CardObj_c *p, *q;
-    p = data_ov006_0214257c;
-    while (p != 0 && p->mSlot < 0x14) {
-        q = p->mNext;
-        while (q != 0 && q->mSlot < 0x14) {
-            if (p->IsPairWith(q) != 0) return 1;
-            q = q->mNext;
+    dMgMCarlo2CardObj_c *card, *other;
+    card = data_ov006_0214257c;
+    while (card != 0 && card->mSlot < 0x14) {
+        other = card->mNext;
+        while (other != 0 && other->mSlot < 0x14) {
+            if (card->IsPairWith(other) != 0) return 1;
+            other = other->mNext;
         }
-        p = p->mNext;
+        card = card->mNext;
     }
     return 0;
 }
@@ -797,16 +756,16 @@ int dScMgMCarlo2_c::HasRemovablePair()
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN14dScMgMCarlo2_c9BoardBusyEv
 int dScMgMCarlo2_c::BoardBusy() {
-    int ret = 1;
-    int a = (data_ov006_0213d700 << 4) >> 0x10;
-    int b = data_ov006_0213d6f8;
-    if (b > 0x14) b = 0x14;
-    if (a == b && data_ov006_0214255c == 0) {
+    int busy = 1;
+    int dealtCount = (data_ov006_0213d700 << 4) >> 0x10;
+    int visibleCount = data_ov006_0213d6f8;
+    if (visibleCount > 0x14) visibleCount = 0x14;
+    if (dealtCount == visibleCount && data_ov006_0214255c == 0) {
         if (data_ov006_02142570 == 0 || data_ov006_02142574 == 0) {
-            ret = 0;
+            busy = 0;
         }
     }
-    return ret;
+    return busy;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -818,18 +777,18 @@ int dScMgMCarlo2_c::BoardBusy() {
  * spelling the guards as early `return 0`s instead lets the compiler
  * rematerialise the zero at each exit, which is the extra 8 bytes. */
 int dScMgMCarlo2_c::BoardReady() {
-    int a = (data_ov006_0213d700 << 4) >> 16;
-    int r = 0;
-    int b = data_ov006_0213d6f8;
+    int dealtCount = (data_ov006_0213d700 << 4) >> 16;
+    int ready = 0;
+    int visibleCount = data_ov006_0213d6f8;
 
-    if (b > 0x14) {
-        b = 0x14;
+    if (visibleCount > 0x14) {
+        visibleCount = 0x14;
     }
-    if (a == b && data_ov006_0214255c == 0
+    if (dealtCount == visibleCount && data_ov006_0214255c == 0
         && (data_ov006_02142570 == 0 || data_ov006_02142574 == 0)) {
-        r = 1;
+        ready = 1;
     }
-    return r;
+    return ready;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -839,16 +798,16 @@ int dScMgMCarlo2_c::BoardReady() {
 int dScMgMCarlo2_c::DrawCardValue(){
     unsigned char pick = 0;
     int total = 0;
-    int i;
-    int r;
-    for(i=0;i<0xa;i++) total += data_ov006_02142580[i];
-    r = (int)(((unsigned int)RandomIntInternal(data_0209e650) & 0x7fffffff) >> 0x13);
-    total = (total * r) >> 0xc;
-    for(i=0;i<0xa;i++){
-        total -= data_ov006_02142580[i];
+    int face;
+    int randomFraction;
+    for(face=0;face<0xa;face++) total += data_ov006_02142580[face];
+    randomFraction = (int)(((unsigned int)RandomIntInternal(data_0209e650) & 0x7fffffff) >> 0x13);
+    total = (total * randomFraction) >> 0xc;
+    for(face=0;face<0xa;face++){
+        total -= data_ov006_02142580[face];
         if(total < 0){
-            pick = (unsigned char)i;
-            data_ov006_02142580[i]--;
+            pick = (unsigned char)face;
+            data_ov006_02142580[face]--;
             break;
         }
     }
@@ -860,15 +819,15 @@ int dScMgMCarlo2_c::DrawCardValue(){
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN14dScMgMCarlo2_c14FlipDealtCardsEv
 void dScMgMCarlo2_c::FlipDealtCards(){
-    dMgMCarlo2CardObj_c* node = data_ov006_0214257c;
-    short i = 0;
+    dMgMCarlo2CardObj_c* card = data_ov006_0214257c;
+    short slot = 0;
     if((data_ov006_0213d700>>12) <= 0) return;
     do {
-        if(node == 0) return;
-        node->FlipAway(i);
-        i = i+1;
-        node = node->mNext;
-    } while(i < (data_ov006_0213d700>>12));
+        if(card == 0) return;
+        card->FlipAway(slot);
+        slot = slot+1;
+        card = card->mNext;
+    } while(slot < (data_ov006_0213d700>>12));
 }
 
 /* -------------------------------------------------------------------------- */
@@ -877,68 +836,68 @@ void dScMgMCarlo2_c::FlipDealtCards(){
 // @symbol _ZN14dScMgMCarlo2_c11UpdateBoardEv
 void dScMgMCarlo2_c::UpdateBoard()
 {
-    dMgMCarlo2CardObj_c* head = data_ov006_0214257c;
+    dMgMCarlo2CardObj_c* cardCursor = data_ov006_0214257c;
 
     if (data_ov006_02142570 != 0 && data_ov006_02142574 != 0) {
         data_ov006_02142558 -= 1;
         if (data_ov006_02142558 == 0) {
-            dMgMCarlo2CardObj_c* a;
-            dMgMCarlo2CardObj_c* b;
-            dMgMCarlo2CardObj_c* t;
-            dMgMCarlo2CardObj_c* u;
-            s16 kb = data_ov006_02142574->mSlot;
-            s16 ka = data_ov006_02142570->mSlot;
-            if (ka > kb)
-                data_ov006_0213d700 = kb << 12;
+            dMgMCarlo2CardObj_c* firstCard;
+            dMgMCarlo2CardObj_c* secondCard;
+            dMgMCarlo2CardObj_c* tail;
+            dMgMCarlo2CardObj_c* next;
+            s16 secondSlot = data_ov006_02142574->mSlot;
+            s16 firstSlot = data_ov006_02142570->mSlot;
+            if (firstSlot > secondSlot)
+                data_ov006_0213d700 = secondSlot << 12;
             else
-                data_ov006_0213d700 = ka << 12;
+                data_ov006_0213d700 = firstSlot << 12;
 
-            a = data_ov006_02142570;
-            if (data_ov006_0214257c == a) data_ov006_0214257c = a->mNext;
-            if (data_ov006_0214256c == a) data_ov006_0214256c = a->mNext;
-            if (data_ov006_02142578 == a) data_ov006_02142578 = a->mPrev;
-            if (data_ov006_02142568 == a) data_ov006_02142568 = a->mPrev;
-            if (a->mPrev != 0) a->mPrev->mNext = a->mNext;
-            if (a->mNext != 0) a->mNext->mPrev = a->mPrev;
-            a->mNext = 0;
-            a->mPrev = a->mNext;
+            firstCard = data_ov006_02142570;
+            if (data_ov006_0214257c == firstCard) data_ov006_0214257c = firstCard->mNext;
+            if (data_ov006_0214256c == firstCard) data_ov006_0214256c = firstCard->mNext;
+            if (data_ov006_02142578 == firstCard) data_ov006_02142578 = firstCard->mPrev;
+            if (data_ov006_02142568 == firstCard) data_ov006_02142568 = firstCard->mPrev;
+            if (firstCard->mPrev != 0) firstCard->mPrev->mNext = firstCard->mNext;
+            if (firstCard->mNext != 0) firstCard->mNext->mPrev = firstCard->mPrev;
+            firstCard->mNext = 0;
+            firstCard->mPrev = firstCard->mNext;
 
-            b = data_ov006_02142574;
-            if (data_ov006_0214257c == b) data_ov006_0214257c = b->mNext;
-            if (data_ov006_0214256c == b) data_ov006_0214256c = b->mNext;
-            if (data_ov006_02142578 == b) data_ov006_02142578 = b->mPrev;
-            if (data_ov006_02142568 == b) data_ov006_02142568 = b->mPrev;
-            if (b->mPrev != 0) b->mPrev->mNext = b->mNext;
-            if (b->mNext != 0) b->mNext->mPrev = b->mPrev;
-            b->mNext = 0;
-            b->mPrev = b->mNext;
+            secondCard = data_ov006_02142574;
+            if (data_ov006_0214257c == secondCard) data_ov006_0214257c = secondCard->mNext;
+            if (data_ov006_0214256c == secondCard) data_ov006_0214256c = secondCard->mNext;
+            if (data_ov006_02142578 == secondCard) data_ov006_02142578 = secondCard->mPrev;
+            if (data_ov006_02142568 == secondCard) data_ov006_02142568 = secondCard->mPrev;
+            if (secondCard->mPrev != 0) secondCard->mPrev->mNext = secondCard->mNext;
+            if (secondCard->mNext != 0) secondCard->mNext->mPrev = secondCard->mPrev;
+            secondCard->mNext = 0;
+            secondCard->mPrev = secondCard->mNext;
 
-            a = data_ov006_02142570;
-            t = data_ov006_0214256c;
-            if (t == 0) {
-                data_ov006_0214256c = a;
+            firstCard = data_ov006_02142570;
+            tail = data_ov006_0214256c;
+            if (tail == 0) {
+                data_ov006_0214256c = firstCard;
             } else {
-                u = t->mNext;
-                if (u != 0) {
-                    do { t = u; u = u->mNext; } while (u != 0);
+                next = tail->mNext;
+                if (next != 0) {
+                    do { tail = next; next = next->mNext; } while (next != 0);
                 }
-                t->mNext = a;
-                a->mPrev = t;
-                a->mNext = 0;
+                tail->mNext = firstCard;
+                firstCard->mPrev = tail;
+                firstCard->mNext = 0;
             }
 
-            b = data_ov006_02142574;
-            t = data_ov006_0214256c;
-            if (t == 0) {
-                data_ov006_0214256c = b;
+            secondCard = data_ov006_02142574;
+            tail = data_ov006_0214256c;
+            if (tail == 0) {
+                data_ov006_0214256c = secondCard;
             } else {
-                u = t->mNext;
-                if (u != 0) {
-                    do { t = u; u = u->mNext; } while (u != 0);
+                next = tail->mNext;
+                if (next != 0) {
+                    do { tail = next; next = next->mNext; } while (next != 0);
                 }
-                t->mNext = b;
-                b->mPrev = t;
-                b->mNext = 0;
+                tail->mNext = secondCard;
+                secondCard->mPrev = tail;
+                secondCard->mNext = 0;
             }
 
             data_ov006_02142574 = 0;
@@ -949,41 +908,41 @@ void dScMgMCarlo2_c::UpdateBoard()
 
             if (data_ov006_0213d6f8 <= 0x14) {
                 {
-                    int i = 0;
-                    s16 idx = *(volatile s16*)&data_ov006_02142560;
-                    int* row = (int*)((char*)data_ov006_0212e97c + idx * 0x28);
+                    int face = 0;
+                    s16 difficulty = *(volatile s16*)&data_ov006_02142560;
+                    int* weights = data_ov006_0212e97c[difficulty];
                     do {
-                        data_ov006_02142580[i] = data_ov006_02142580[i] + row[i];
-                        i += 1;
-                    } while (i < 10);
+                        data_ov006_02142580[face] = data_ov006_02142580[face] + weights[face];
+                        face += 1;
+                    } while (face < 10);
                 }
                 {
-                    dMgMCarlo2CardObj_c* p = data_ov006_0214256c;
-                    if (p != 0) {
+                    dMgMCarlo2CardObj_c* card = data_ov006_0214256c;
+                    if (card != 0) {
                         do {
-                            dMgMCarlo2CardObj_c* nxt = p->mNext;
-                            if (data_ov006_0214257c == p) data_ov006_0214257c = nxt;
-                            if (data_ov006_0214256c == p) data_ov006_0214256c = p->mNext;
-                            if (data_ov006_02142578 == p) data_ov006_02142578 = p->mPrev;
-                            if (data_ov006_02142568 == p) data_ov006_02142568 = p->mPrev;
-                            if (p->mPrev != 0) p->mPrev->mNext = p->mNext;
-                            if (p->mNext != 0) p->mNext->mPrev = p->mPrev;
-                            p->mNext = 0;
-                            p->mPrev = p->mNext;
-                            p->Init((s16)(data_ov006_02142568->mSlot + 1));
+                            dMgMCarlo2CardObj_c* nextCard = card->mNext;
+                            if (data_ov006_0214257c == card) data_ov006_0214257c = nextCard;
+                            if (data_ov006_0214256c == card) data_ov006_0214256c = card->mNext;
+                            if (data_ov006_02142578 == card) data_ov006_02142578 = card->mPrev;
+                            if (data_ov006_02142568 == card) data_ov006_02142568 = card->mPrev;
+                            if (card->mPrev != 0) card->mPrev->mNext = card->mNext;
+                            if (card->mNext != 0) card->mNext->mPrev = card->mPrev;
+                            card->mNext = 0;
+                            card->mPrev = card->mNext;
+                            card->Init((s16)(data_ov006_02142568->mSlot + 1));
                             {
-                                dMgMCarlo2CardObj_c* h = data_ov006_02142568;
-                                dMgMCarlo2CardObj_c* save = h->mNext;
-                                h->mNext = p;
-                                p->mPrev = h;
-                                if (p->mNext != 0) {
-                                    do { p = *(dMgMCarlo2CardObj_c* volatile*)&p->mNext; } while (p->mNext != 0);
+                                dMgMCarlo2CardObj_c* oldTail = data_ov006_02142568;
+                                dMgMCarlo2CardObj_c* savedNext = oldTail->mNext;
+                                oldTail->mNext = card;
+                                card->mPrev = oldTail;
+                                if (card->mNext != 0) {
+                                    do { card = *(dMgMCarlo2CardObj_c* volatile*)&card->mNext; } while (card->mNext != 0);
                                 }
-                                p->mNext = save;
-                                if (p->mNext == 0) data_ov006_02142568 = p;
+                                card->mNext = savedNext;
+                                if (card->mNext == 0) data_ov006_02142568 = card;
                             }
-                            p = nxt;
-                        } while (p != 0);
+                            card = nextCard;
+                        } while (card != 0);
                     }
                 }
                 ApproachLinear2(data_ov006_02142560, 9, 1);
@@ -992,29 +951,29 @@ void dScMgMCarlo2_c::UpdateBoard()
             }
         }
         {
-            s16 i = 0;
+            s16 slot = 0;
             if ((data_ov006_0213d700 >> 12) <= 0) return;
             do {
-                if (head == 0) return;
-                if (head->mState == 1)
-                    head->Update(i);
-                i = i + 1;
-                head = head->mNext;
-            } while (i < (data_ov006_0213d700 >> 12));
+                if (cardCursor == 0) return;
+                if (cardCursor->mState == 1)
+                    cardCursor->Update(slot);
+                slot = slot + 1;
+                cardCursor = cardCursor->mNext;
+            } while (slot < (data_ov006_0213d700 >> 12));
         }
     } else {
-        int v = data_ov006_0213d6f8;
-        if (v > 0x14) v = 0x14;
-        ApproachLinear(data_ov006_0213d700, v << 12, 0x800);
+        int visibleCount = data_ov006_0213d6f8;
+        if (visibleCount > 0x14) visibleCount = 0x14;
+        ApproachLinear(data_ov006_0213d700, visibleCount << 12, 0x800);
         {
-            s16 i = 0;
+            s16 slot = 0;
             if ((data_ov006_0213d700 >> 12) <= 0) return;
             do {
-                if (head == 0) return;
-                head->Update(i);
-                i = i + 1;
-                head = head->mNext;
-            } while (i < (data_ov006_0213d700 >> 12));
+                if (cardCursor == 0) return;
+                cardCursor->Update(slot);
+                slot = slot + 1;
+                cardCursor = cardCursor->mNext;
+            } while (slot < (data_ov006_0213d700 >> 12));
         }
     }
 }
