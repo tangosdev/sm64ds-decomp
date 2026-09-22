@@ -3,7 +3,7 @@
 **Written 2026-08-27**, branch `cpp/period-accurate-form`. Scope: every `src/` file
 whose mangled stem names a class that derives, transitively, from `dEnemyBase_c`.
 Companions: `notes/ctor-migration.md`, `notes/dtor-migration.md`,
-`notes/plan-cpp-conversion-queue.md`, and the `decomp-cpp-class-form` skill.
+`notes/plan-cpp-conversion-queue.md`, and [class-form compiler observations](cpp-class-form.md).
 
 The goal this sweep serves is narrow and worth stating: a file where the compiler
 generates the constructor, the destructor variants and the name mangling is a

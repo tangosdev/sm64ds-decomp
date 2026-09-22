@@ -44,9 +44,9 @@ about the codegen they produced. What no byte gate does is compare ONE translati
 unit's declaration against ANOTHER's definition: the link resolves by NAME, the ROM
 records no types, and `check_references.py` only asks whether the name exists. That
 cross-TU contract is the gap this fills, and it is the whole of it.
-`.claude/skills/decomp-match-review` calls it "the highest-value unbuilt item"; read
-"the one the byte gate can never do" as being about that comparison, not about whether
-a compiler ever sees a declaration.
+See `notes/source-review-observations.md` for declaration and source-review pitfalls.
+The cross-TU comparison is separate from byte proof; neither establishes that an
+inferred declaration is the original source type.
 
 WHY IT IS WORTH FIXING. The host port compiles these same files with a compiler that
 DOES check across the tree, where `signature-mismatch` is the largest non-trivial

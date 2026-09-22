@@ -99,6 +99,10 @@ stop. Do not guess shared layout.
 
 ## 3. Write real class-form source
 
+For measured destructor, vtable, constructor and language-mode behavior, consult
+[class-form compiler observations](cpp-class-form.md). These are candidate
+techniques to verify, not another launch workflow.
+
 The first line of a C++ source must be exactly:
 
 ```cpp

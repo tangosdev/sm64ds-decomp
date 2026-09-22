@@ -8,7 +8,8 @@
 
 Combining one-function files back into the translation units the linker erased.
 Ground truth and counts: `notes/tu-cpp-census-2026-08.md`. Data: `notes/data/tu-merge-candidates.json`.
-Execution loop: the `decomp-tu-build` skill. Map-reading limits: `decomp-tu-slicing`.
+Current execution: [TU promotion](tu-promotion-conventions.md).
+Map-reading limits: [TU boundaries](tu-boundaries.md).
 
 Planned 2026-08-25 against a freshly regenerated `tu_map` chain. No builds were run
 during planning; every wall-clock figure below is an estimate that B0 and the pilots
@@ -523,7 +524,7 @@ same signature shape, reported MATCH, cost a day. If any of the three could not 
 status is "not verified", never "probably fine".
 
 `999 word(s) differ` means **sizes** differ (usually the D0/D1/D2 variant collapse), not
-a type error — go to `decomp-cpp-class-form`.
+a type error — go to [class-form observations](cpp-class-form.md).
 
 Every TU in this pool is a key-function TU, so vtable/RTTI emission appears as
 *unlicensed-but-expected* output. `linkcheck --no-rom` is where a wrong vtable anchor
@@ -589,7 +590,7 @@ range. `_ZTV8Squasher` is emitted as unlicensed-but-expected — record it, do n
 as a failure.
 **FAIL**: <9/9 → per-member triage, a reconcile bug. Audits dirty at 9/9 → wrong-callee
 (the [ov077](../config/arm9/overlays/ov077/symbols.txt) class); do **not** record `text-verified`. `linkcheck` failing at 9/9 clean →
-vtable-anchor / class-form; go to `decomp-cpp-class-form` before touching the merge.
+vtable-anchor / class-form; go to [class-form observations](cpp-class-form.md) before touching the merge.
 
 Then run `python tools/rombuild.py` once, serially. It is the final verdict.
 

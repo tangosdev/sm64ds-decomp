@@ -63,7 +63,7 @@ Two shapes cover almost everything now:
   real member names, give the class its real base and vtable, replace offset
   arithmetic and mangled-name free functions with real method calls — while
   staying byte-identical. See
-  [`.claude/skills/decomp-cpp-class-form/SKILL.md`](.claude/skills/decomp-cpp-class-form/SKILL.md)
+  [`notes/cpp-class-form.md`](notes/cpp-class-form.md)
   for the codegen levers this actually turns on (destructor variant order,
   key-function/vtable ownership, struct-copy and bool-widening quirks).
 - **A promoted translation unit**, once a class's files are all real methods:

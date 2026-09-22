@@ -32,6 +32,10 @@ not a count of removed casts. Use rework for unresolved correctness/provenance
 findings and for reconstruction findings whose deferral has not been accepted.
 The reviewer must not be any contributing writer, including earlier attempts.
 
+[Source-review observations](../../source-review-observations.md) collect technical
+pitfalls involving declarations, textual gates and host references. Read the
+relevant observation when needed; it does not add another acceptance workflow.
+
 For existing classes, track review pending until an actual review has been
 recorded. Reuse the class issue and facts; cite the reviewed SHA and related PRs.
 Build/promotion reports remain a separate dimension from source acceptance.

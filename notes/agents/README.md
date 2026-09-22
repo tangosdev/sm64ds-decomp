@@ -21,6 +21,13 @@ defines the production result and the limited reasons to retain a shadow. Folder
 regrouping and local shadow commits are not completed promotions. Technical
 runbooks supply experiments, not additional mandatory staging phases.
 
+The repository documents are the workflow authorities: [AGENTS.md](../../AGENTS.md)
+for repository rules, [PIPELINE.md](PIPELINE.md) for coordination, and
+[TU promotion](../tu-promotion-conventions.md) for production completion. The
+former class/TU/review skill wrappers are retired; no installed coordinator skill
+is needed. Compiler and review observations remain ordinary technical references.
+Keep using the [worktree automation](../worktree-inputs.md) for private inputs.
+
 ## Read only what your task needs
 
 - Everyone: PIPELINE, then their current task and accepted handoff.

@@ -117,7 +117,7 @@ data/RTTI ownership established for each of `daObjC1_Trap_c`, `daObjC1Hikari_c`,
 `--tu-module ov010` can become a verified whole-module build; the production mechanism
 is ready, but those three source/manifest inputs are not.
 
-## Invariants (from decomp-tu-slicing / decomp-tu-build)
+## Invariants of the generated-profile experiment
 
 - Module-level exclusivity: a module is old-shape or ph-shape, never both. `--tu-module`
   enforces this by replacing the whole module's delinks.

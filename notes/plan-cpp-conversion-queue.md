@@ -3,7 +3,7 @@
 Which `.c` files the ROM proves are C++ translation units, and the staged queue for
 migrating them. Ground truth and counts: `notes/tu-cpp-census-2026-08.md`. Per-file
 evidence tiers: `notes/data/c-cpp-classification.tsv`. Source form: the
-`decomp-cpp-class-form` skill. Prior plan this inherits from: `notes/plan-cpp-language-mode.md`.
+[class-form compiler observations](cpp-class-form.md). Prior plan this inherits from: `notes/plan-cpp-language-mode.md`.
 
 **Destructors are out of scope** as evidence and as work, per the scope call. The 37
 by-value-class-param files are permanently unconvertible — excluded, not backlogged.

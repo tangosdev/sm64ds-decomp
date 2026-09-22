@@ -12,7 +12,7 @@ Choose the technical reference for the assigned work:
 - [TU promotion](tu-promotion-conventions.md): consolidate the evidenced compiler
   input, enroll it in production `src/`, retire absorbed sources, and carry the
   reviewed result through its authorized publication/integration endpoint.
-- [Class-form compiler observations](../.claude/skills/decomp-cpp-class-form/SKILL.md):
+- [Class-form compiler observations](cpp-class-form.md):
   measured source forms to test, including destructor and vtable emission.
 - [Partitioned experiments](agent-partitioned-tu-workflow.md): only when the
   candidate needs explicit output partitioning or ownership investigation.

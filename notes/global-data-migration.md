@@ -340,8 +340,8 @@ unit**, and a TU is many functions. Putting [data_ov016_02114d4c](../config/arm9
 falsify, because any file in the module can host the range and still link identically.
 
 This is the goal-1 problem at the centre of the whole idea. `build/tu_map.json` and
-the `decomp-tu-slicing` skill exist precisely to answer "which functions shared a
-TU", and any serious data migration should be driven off TU reconstruction, not off
+[TU boundary evidence](tu-boundaries.md) help investigate which functions shared a
+TU, and any serious data migration should be driven off TU reconstruction, not off
 "who mentions the symbol". A pilot that ignores this is proving plumbing, not
 recovering source — which is fine as long as it is labelled that way and the 72
 entries are not left in the tree as if they were recovered structure.

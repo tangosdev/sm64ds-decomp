@@ -116,6 +116,10 @@ For a new manifest-backed shadow:
 python tools/tubuild.py create <module/TU-id>
 ```
 
+If `create` cannot split a legacy body wrapped in `extern "C" { ... }`, curate
+that candidate and use `tubuild.build_manifest_entry` for the manifest schema.
+The splitter failure does not justify changing linkage or inventing another owner.
+
 The generated file is a starting point, not the readability goal. Curate it under
 `src_tu/`:
 
@@ -136,6 +140,27 @@ affected consumers within the task's scope, then run `tools/affected_src.py` and
 the header-consumer gates required by `AGENTS.md`. Separate an independent header
 dependency when its scope warrants it.
 
+### Diagnosing combined compilation
+
+Read function order from ELF section indices: `st_value` is normally zero in
+these per-function sections. Distinct functions can appear in reverse source
+order, while destructor variants follow their own emission rules; see
+[class-form observations](cpp-class-form.md).
+
+A pragma can affect the whole TU rather than the following function. The
+[codegen notes](mwccarm-codegen.md) record `opt_propagation` and
+`optimize_for_size` experiments. Compare the whole owned scope after a change;
+a diagnostic subset is not promotion of the full TU.
+
+When separate declarations meet, preserve required declaration order, remove
+duplicates and reconcile conflicts against definitions, call sites and ROM
+behavior. A shared `decl_common.h` declaration can be wrong. In a disposable
+probe, C linkage can reveal conflicting declarations that C++ treated as
+overloads; do not retain blanket C linkage as a substitute for real methods.
+
+`999 word(s) differ` can indicate a size mismatch, including destructor variant
+emission. Inspect the object before assuming a type mismatch.
+
 ## 4. Prove text before claiming data
 
 Run `tubuild.py verify` for the candidate. Standalone `compile`, `partial`, and
@@ -149,7 +174,16 @@ python tools/tubuild.py verify <module/TU-id>
 python tools/tubuild.py partial <module/TU-id>
 ```
 
-Do not reason past a mismatch. Record whether it is:
+Inspect all three parts of `verify`'s result, for example:
+
+```text
+byte comparison   : 7/7 MATCH
+objisolate check  : clean
+Result: 7/7 MATCH, objisolate clean, reloc-destinations clean -> TEXT-VERIFIED
+```
+
+A wrong destination appears on the offending symbol's row and degrades the
+verdict. Missing audit coverage is not a pass. Record whether a failure is:
 
 - wrong function order or section size;
 - ordinary instruction mismatch;

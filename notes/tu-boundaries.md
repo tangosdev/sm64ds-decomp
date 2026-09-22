@@ -80,7 +80,9 @@ The naive union merged them. The sinit count adjudicates: [ov081](../config/arm9
 and five sinits, so five TUs is right. [ov090](../config/arm9/overlays/ov090/symbols.txt) fails identically (`daMenbo_c` bridging
 daManta_c and daMenbo_c; four classes, four sinits). An RTTI span is *inferred* from a
 slot list, and a slot can point at inherited or shared code in a neighbouring object;
-a mangled name cannot be wrong about its own function. Hence the asymmetry.
+configured class labels are a different input from slot reachability. Those
+labels may themselves be inferred; preserve their provenance rather than treating
+a coined mangling as original ROM text.
 
 ## Sinits are a count, not a cut
 
@@ -128,26 +130,77 @@ where they are not. `--check` re-runs the known answers with mangled names strip
 | [ov080](../config/arm9/overlays/ov080/symbols.txt) | 3 | 4 | 6 | **3** |
 | [ov020](../config/arm9/overlays/ov020/symbols.txt) | 2 | 2 | 4 | **2** |
 
-Read it as: **RTTI alone recovers the class clusters perfectly** — blind-classed hits
-the known answer in all four. What it loses is the non-polymorphic remainder, which
-fragments into orphan runs and roughly doubles the raw TU count. So in an anonymous
-overlay, trust a TU that carries a class name and treat the unattributed runs between
-them as unresolved rather than as TUs.
+In that snapshot, the blind-classed counts agreed with the recorded known answers.
+A later map used four classed TUs for ov080 and recovered only three without names.
+The negative control is calibration, not a guarantee: unnamed runs and incomplete
+labels remain unresolved, and raw map counts need their measured confidence.
 
-## Usage
+## Usage and map provenance
+
+When generating or refreshing a map, prepare its inputs in order:
 
 ```sh
+python tools/rtti_extract.py
+python tools/rtti_vtables.py
 python tools/tu_map.py                    # all modules -> build/tu_map.json
 python tools/tu_map.py --module ov062     # one module, printed
-python tools/tu_map.py --module ov080 --verbose  # with per-function detail
-python tools/tu_map.py --check            # gates V1-V3 + the negative control
+python tools/tu_map.py --module ov080 --verbose
+python tools/tu_map.py --check            # diagnostics and negative control
 ```
+
+Current `tu_map.py` rejects missing or stale vtable inputs. Verify provenance when
+adopting an existing map; it can outlive the inputs it describes. `--check` does
+not regenerate the JSON and printed failures do not produce a failing exit status.
+Read the diagnostics, including the negative control, before relying on a boundary.
+
+`corroborated` means the sinit count independently supports the cut count; it does
+not certify every class label or function assignment. A low-confidence boundary
+needs further evidence. Reconcile co-resident classes with the task's reservations
+before editing: inferred TU extent does not expand the assigned scope by itself.
+
+## Inventory and ownership pitfalls
+
+These observations incorporate the technical material formerly called
+`decomp-tu-slicing`; older manifest/fact notes retain that historical name.
+Use the current map and symbols to remeasure a candidate rather than copying counts.
+
+- A text-based map cannot see a data-only object, even inside a module that also
+  contains code. A claimed 2,128-byte data-only band in ov045 was an unconfirmed
+  investigation lead, not a license to assign those bytes to a neighboring code TU.
+- Some zero-size function symbols are aliases at a sized function's address.
+  Historical `main`/`itcm` maps counted eight such aliases as overlapping runs.
+  Inspect aliases by `(module, address)` and retain the real sized contribution;
+  do not invent another four-byte function or assume every zero size is an alias.
+- Read the function inventory from `symbols.txt`. `delinks.txt` describes current
+  build ownership and can be repartitioned; it is not the original file boundary.
+- Key addresses by module. Overlays can share load addresses, and this map names
+  ARM9 `main`, not `arm9`.
+- Join files through address, symbol and `units[].functions`, not their filename
+  or containment in a TU interval. `absorb_unlabelled` can attach proven file-local
+  helpers without widening the anchor span. An earlier map had 109 such functions
+  outside their units' start/end, alongside eight alias overlaps and 85 gaps.
+  Check disjoint actual contributions; do not impose interval containment or
+  forbid every gap as a shortcut.
+- A code load from an address does not establish which TU owns that data. For an
+  evidenced linker object order, check ordered, disjoint section contributions
+  and follow contained pointers through vtable, typeinfo and type-name records.
+  Some ownership will remain unresolved. The earlier ov045 experiment left all
+  840 `.rodata` bytes unattributed; that is a limit, not proof of absent data.
+
+RTTI slots can point to inherited or shared code in another TU, as the bridging
+examples above show. For lifecycle output, see [class-form observations](cpp-class-form.md)
+and [object isolation](objisolate.md): isolation can make a function eligible while
+discarding unreviewed vtable/RTTI data. Eligibility, default enrollment and complete
+emitted-output proof remain distinct.
 
 ## Not done here
 
-Merging files. A merged TU must emit its functions in exactly the ROM's order, and
-`notes/mwccarm-codegen.md` records that TUs carrying `#pragma opt_*` cannot be merged
-as-is. `rombuild.py` is the verdict on any such change, not this map.
+Merging files. Whole-object placement needs the emitted contributions in the
+required ROM order; a verified derived-object partition can restore linker order
+from a single compiler input. Neither follows from this map. File-global pragmas
+can also change codegen when sources combine; see [the codegen notes](mwccarm-codegen.md).
+The [promotion workflow](tu-promotion-conventions.md) distinguishes experimental
+partitioning from supported default-build enrollment and defines the final proof.
 
 ## Worked example: a class is not a TU (ov065, `daDossyCap_c`)
 
