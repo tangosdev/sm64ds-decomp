@@ -596,6 +596,17 @@ const unsigned char kGlyphMAP[3][7] = {
  * WHICH FOLDER: host_setting_minimap_dir() -- "<asset root>/minimap", the same
  * root textures_hd uses, with SM64DS_MINIMAP_DIR to point somewhere else.
  *
+ * AT WHATEVER SIZE THEY COME. Nothing below counts on the two files being the
+ * size the first pair happened to be. The well, the notch and the plaque's
+ * place are all found as PROPORTIONS of the picture that carries them, so a
+ * pair drawn at twice or four times the pixels lands on exactly the same
+ * screen rectangles and simply has more detail to give when the map is small,
+ * which is the whole point of sending a bigger one. The only thing the two
+ * files owe each other is ONE PIXEL GRID: the plaque is drawn at the plate's
+ * own scale, so both files have to be at the same multiple. The boot line
+ * below prints both sizes so a mismatched pair is visible at a glance.
+ * Filtering cost does not follow the file's size either: see ArtScaled.
+ *
  * WHAT IS READ OUT OF THEM, AND IT IS MEASURED RATHER THAN ASSUMED. The panel
  * carries an inner outlined rectangle -- a dark line inset from its border --
  * and the map has to sit exactly inside it. Rather than trust a pixel count,
@@ -814,52 +825,157 @@ inline int fdiv(int a, int b)
  *
  * MAGNIFIED: nearest neighbour, one source pixel per destination block, for
  * the reason ntr's own compose gives for the map -- a filter would invent
- * pixels the artist did not draw.
+ * pixels the artist did not draw. That is the answer at every ratio above
+ * 1:1, exact multiple or not, and it is the answer this file already gave.
  *
- * REDUCED: the box average of the block, and NOT nearest, because this artwork
- * is mostly flat plate with THIN DARK LINES on it: the well's outline is one
- * pixel wide, and at the smallest map the plate is drawn at about half size,
- * where nearest neighbour simply steps over that line about half the time and
- * the panel loses the very border this was asked to match up with. An average
- * turns it into a softer line instead of no line. Same argument, same answer,
- * as the map's own reduction in ntr/ppu_sub.cpp. */
-void art_blit(const ArtImage *im, unsigned *dst, int w, int h,
+ * REDUCED: THE AREA AVERAGE, each source pixel counted by HOW MUCH OF IT the
+ * destination pixel actually covers. It used to count whole source pixels --
+ * the block from one integer boundary to the next -- and that is what put the
+ * owner's MAP lettering out of focus at the small sizes. At the default map
+ * the plate is drawn at eight fifteenths of its own size, so a destination
+ * pixel covers 1.875 source ones: a whole-pixel block is therefore one pixel
+ * wide about an eighth of the time and two the rest, so a letter's stroke is
+ * copied at full ink in the wrong place on some columns and mixed half and
+ * half with the plate on others. The eye reads that unevenness as blur. With
+ * fractional coverage every column gets the same, correct share of the stroke
+ * and the lettering holds its shape all the way down.
+ *
+ * The source's alpha is a stencil (0 or 255 is all this artwork has, and
+ * anything between reads as present -- the plate is a stencil, not a blend),
+ * so a pixel the artist left empty contributes nothing to the average and a
+ * destination pixel with no opaque source under it is not drawn at all.
+ *
+ * AND IT IS DONE ONCE PER SIZE, NOT ONCE PER FRAME. See ArtScaled below. */
+struct ArtScaled {
+    const ArtImage *src;                 /* what it was made from */
+    int sx, sy, sw, sh, dw, dh;          /* and at what ratio */
+    int ox, oy;                          /* its corner, relative to the anchor */
+    int w, h;
+    unsigned *px;                        /* ARGB; alpha 0 means draw nothing */
+};
+
+/* how much of source pixel u, whose own span is [u*den, u*den+den), falls
+   inside the destination pixel's span [A, B) -- all three in units of den */
+inline long long art_cov(long long A, long long B, long long u, long long den)
+{
+    const long long lo = u * den, hi = lo + den;
+    const long long l = A > lo ? A : lo, r = B < hi ? B : hi;
+    return r > l ? r - l : 0;
+}
+
+inline long long lfdiv(long long a, long long b)
+{
+    return a >= 0 ? a / b : -((-a + b - 1) / b);
+}
+
+/* THE ARTWORK AT THE SIZE IT IS BEING DRAWN AT, KEPT.
+ *
+ * This is what lets the artist hand over a file of ANY size. Filtering a
+ * picture properly costs work in proportion to the SOURCE's pixels, so a plate
+ * four times as wide is sixteen times the work -- about a million weighted
+ * samples a frame at the default map size, every frame, for a picture that has
+ * not changed. Scaling it once and keeping the result costs that only when the
+ * map's size changes, which is when the player drags the corner, and the draw
+ * itself is then a copy whose cost depends on the size on screen and not at
+ * all on the size of the file. A 4x file and a 1x file draw at the same speed.
+ *
+ * Rebuilt when any of the seven numbers that define the scaling changes, and
+ * not otherwise. */
+void art_scaled_build(ArtScaled *o, const ArtImage *im,
+                      int sx, int sy, int sw, int sh, int dw, int dh)
+{
+    if (o->src == im && o->sx == sx && o->sy == sy && o->sw == sw
+        && o->sh == sh && o->dw == dw && o->dh == dh && o->px)
+        return;
+    std::free(o->px);
+    o->px = 0;
+    o->src = im;
+    o->sx = sx; o->sy = sy; o->sw = sw; o->sh = sh; o->dw = dw; o->dh = dh;
+    o->ox = fdiv(-sx * dw, sw);
+    o->oy = fdiv(-sy * dh, sh);
+    o->w = fdiv((im->w - sx) * dw, sw) - o->ox;
+    o->h = fdiv((im->h - sy) * dh, sh) - o->oy;
+    if (o->w < 1 || o->h < 1) { o->w = o->h = 0; return; }
+    o->px = (unsigned *)std::calloc((size_t)o->w * (size_t)o->h, 4u);
+    if (!o->px) { o->w = o->h = 0; return; }
+
+    const int shrinkx = dw < sw, shrinky = dh < sh;
+    for (int Y = 0; Y < o->h; ++Y) {
+        /* this row's span in source rows, in units of dh */
+        const long long Ay = (long long)(o->oy + Y) * sh + (long long)sy * dh;
+        const long long By = Ay + sh;
+        int v0 = (int)lfdiv(Ay, dh);
+        int v1 = shrinky ? (int)lfdiv(By + dh - 1, dh) : v0 + 1;
+        if (v0 < 0) v0 = 0;
+        if (v1 > im->h) v1 = im->h;
+        if (v0 >= im->h || v1 <= v0) continue;
+        for (int X = 0; X < o->w; ++X) {
+            const long long Ax = (long long)(o->ox + X) * sw + (long long)sx * dw;
+            const long long Bx = Ax + sw;
+            int u0 = (int)lfdiv(Ax, dw);
+            int u1 = shrinkx ? (int)lfdiv(Bx + dw - 1, dw) : u0 + 1;
+            if (u0 < 0) u0 = 0;
+            if (u1 > im->w) u1 = im->w;
+            if (u0 >= im->w || u1 <= u0) continue;
+            unsigned long long r = 0, g = 0, b = 0, t = 0;
+            for (int v = v0; v < v1; ++v) {
+                const long long cy = shrinky ? art_cov(Ay, By, v, dh) : dh;
+                if (cy <= 0) continue;
+                const unsigned *srow = im->px + (size_t)v * im->w;
+                for (int u = u0; u < u1; ++u) {
+                    const unsigned c = srow[u];
+                    if (!(c >> 24)) continue;
+                    const long long cx = shrinkx ? art_cov(Ax, Bx, u, dw) : dw;
+                    if (cx <= 0) continue;
+                    const unsigned long long k = (unsigned long long)(cx * cy);
+                    r += k * ((c >> 16) & 0xFF);
+                    g += k * ((c >> 8) & 0xFF);
+                    b += k * (c & 0xFF);
+                    t += k;
+                }
+            }
+            if (!t) continue;        /* nothing opaque under it: stays empty */
+            o->px[(size_t)Y * o->w + X] =
+                0xFF000000u | ((unsigned)((r + t / 2) / t) << 16)
+                | ((unsigned)((g + t / 2) / t) << 8) | (unsigned)((b + t / 2) / t);
+        }
+    }
+    if (std::getenv("SM64DS_MINIMAP_TRACE"))
+        std::fprintf(stderr, "[mmtrace] artwork scaled: %dx%d -> %dx%d at "
+                     "%d/%d, %s\n", im->w, im->h, o->w, o->h, dw, sw,
+                     (shrinkx || shrinky) ? "area average" : "nearest");
+}
+
+/* The copy. The anchor rectangle still decides where it lands: the scaled
+   picture's own corner is the anchor plus the offset the scaling worked out,
+   so the well still sits exactly on the map and the rest of the plate falls
+   where that puts it. */
+void art_draw(const ArtScaled *o, unsigned *dst, int w, int h, int dx, int dy)
+{
+    if (!o->px) return;
+    for (int Y = 0; Y < o->h; ++Y) {
+        const int D = dy + o->oy + Y;
+        if (D < 0 || D >= h) continue;
+        const unsigned *srow = o->px + (size_t)Y * o->w;
+        unsigned *drow = dst + (size_t)D * ntr::SCREEN_W;
+        for (int X = 0; X < o->w; ++X) {
+            const int E = dx + o->ox + X;
+            if (E < 0 || E >= w) continue;
+            const unsigned c = srow[X];
+            if (c >> 24) drow[E] = c;
+        }
+    }
+}
+
+ArtScaled g_scaled_base, g_scaled_tab;
+
+void art_blit(ArtScaled *o, const ArtImage *im, unsigned *dst, int w, int h,
               int sx, int sy, int sw, int sh,
               int dx, int dy, int dw, int dh)
 {
     if (sw < 1 || sh < 1 || dw < 1 || dh < 1) return;
-    const int shrink = (dw < sw || dh < sh);
-    const int X0 = dx + fdiv(-sx * dw, sw), X1 = dx + fdiv((im->w - sx) * dw, sw);
-    const int Y0 = dy + fdiv(-sy * dh, sh), Y1 = dy + fdiv((im->h - sy) * dh, sh);
-    for (int Y = Y0; Y < Y1; ++Y) {
-        if (Y < 0 || Y >= h) continue;
-        int v0 = sy + fdiv((Y - dy) * sh, dh);
-        int v1 = shrink ? sy + fdiv((Y + 1 - dy) * sh, dh) : v0 + 1;
-        if (v0 < 0) v0 = 0;
-        if (v1 > im->h) v1 = im->h;
-        if (v0 >= im->h || v1 <= v0) continue;
-        unsigned *drow = dst + (size_t)Y * ntr::SCREEN_W;
-        for (int X = X0; X < X1; ++X) {
-            if (X < 0 || X >= w) continue;
-            int u0 = sx + fdiv((X - dx) * sw, dw);
-            int u1 = shrink ? sx + fdiv((X + 1 - dx) * sw, dw) : u0 + 1;
-            if (u0 < 0) u0 = 0;
-            if (u1 > im->w) u1 = im->w;
-            if (u0 >= im->w || u1 <= u0) continue;
-            unsigned r = 0, g = 0, b = 0, n = 0;
-            for (int v = v0; v < v1; ++v)
-                for (int u = u0; u < u1; ++u) {
-                    const unsigned c = im->px[(size_t)v * im->w + u];
-                    if (!(c >> 24)) continue;
-                    r += (c >> 16) & 0xFF;
-                    g += (c >> 8) & 0xFF;
-                    b += c & 0xFF;
-                    ++n;
-                }
-            if (!n) continue;             /* the block is all notch: draw nothing */
-            drow[X] = 0xFF000000u | ((r / n) << 16) | ((g / n) << 8) | (b / n);
-        }
-    }
+    art_scaled_build(o, im, sx, sy, sw, sh, dw, dh);
+    art_draw(o, dst, w, h, dx, dy);
 }
 
 void px_put(unsigned *dst, int dw, int dh, int x, int y, unsigned c)
@@ -1055,10 +1171,27 @@ void panel_extents(int *l, int *t, int *r, int *b)
  * composed panel takes from the player's palette when it is not. Nothing here
  * picks a colour.
  *
- * ITS SIZE IS THE PICTURE'S: ten pixels against a 384-row picture, growing
- * with the render scale, never below six. */
+ * ITS SIZE IS THE MAP'S, NOT THE PICTURE'S. The owner, on seeing it against a
+ * small map: "the yellow square on the minimap doesnt scale with map size so
+ * when the map is small its massive". It used to be ten pixels against a
+ * 384-row PICTURE, a number the map had no say in, so on the smallest map the
+ * square took a thirteenth of the map's width and on the largest it was a
+ * speck in the corner. It is EIGHT PERCENT OF THE MAP'S OWN WIDTH now,
+ * rounded to a whole pixel, so it reads the same against the thing it resizes
+ * at every size: 10 pixels on a 128-wide map, 15 on 192, 20 on 256.
+ *
+ * WITH A FLOOR AND A CEILING, both in picture pixels, because a share of a
+ * width is the wrong answer at the two ends: under eight pixels the square is
+ * too small to put a pointer on, and over thirty-two it stops being a grip and
+ * starts covering the artist's corner. The ceiling binds from a map 400 wide
+ * up, so the biggest maps all carry the same 32-pixel square.
+ *
+ * The picture's height is still the parameter and is no longer read. It stays
+ * so that the draw, the trace and the press go on asking this one function,
+ * which is the whole reason the square cannot drift from the thing you grab. */
 int handle_rect(int *hx, int *hy, int *hs, int h)
 {
+    (void)h;
     if (!improved_map_on() || hal_sub_screen_stacked()) return 0;
     /* AND NOT WHILE THE SCREENS ARE SWAPPED: the corner is the top screen's
        for those frames and the map is not on the picture at all, so there is
@@ -1068,8 +1201,9 @@ int handle_rect(int *hx, int *hy, int *hs, int h)
     if (host_setting_mouse_capture()) return 0;
     PanelGeom g;
     panel_geom(&g);
-    int s = 10 * h / 384;
-    if (s < 6) s = 6;
+    int s = (g_pan_w * 8 + 50) / 100;
+    if (s < 8) s = 8;
+    if (s > 32) s = 32;
     if (hx) *hx = g.vx;
     if (hy) *hy = g.vy;
     if (hs) *hs = s;
@@ -1625,7 +1759,7 @@ void hal_sub_panel_decor(unsigned *dst, int w, int h)
     if (panel_geom(&g)) {
         /* THE WELL ONTO THE MAP, and the rest of the picture wherever that
            puts it. See the banner over art_blit. */
-        art_blit(&g_art_base, dst, w, h,
+        art_blit(&g_scaled_base, &g_art_base, dst, w, h,
                  g_art_ix0, g_art_iy0,
                  g_art_ix1 - g_art_ix0 + 1, g_art_iy1 - g_art_iy0 + 1,
                  g.wx, g.wy, g.ww, g.wh);
@@ -1689,7 +1823,7 @@ void hal_sub_panel_plaque(unsigned *dst, int w, int h)
     if (art) {
         /* the plaque rides the plate's scale exactly -- the same well-to-map
            ratio -- with its own top-left corner as the anchor */
-        art_blit(&g_art_tab, dst, w, h,
+        art_blit(&g_scaled_tab, &g_art_tab, dst, w, h,
                  0, 0,
                  g_art_ix1 - g_art_ix0 + 1, g_art_iy1 - g_art_iy0 + 1,
                  tx, ty, g.ww, g.wh);
