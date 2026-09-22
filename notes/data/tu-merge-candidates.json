@@ -9760,15 +9760,15 @@
    "start": "0x2111f6c",
    "end": "0x21120f4",
    "classes": [
-    "FloatingFloorLllSmall"
+    "daObjFl_Ukiyuka_c"
    ],
    "n_functions_map": 5,
    "n_files": 5,
    "files": [
-    "src/_ZN21FloatingFloorLllSmallD1Ev.cpp",
-    "src/_ZN21FloatingFloorLllSmallD0Ev.c",
-    "src/_ZN21FloatingFloorLllSmall16CleanupResourcesEv.c",
-    "src/_ZN21FloatingFloorLllSmall13InitResourcesEv.c",
+    "src/_ZN17daObjFl_Ukiyuka_cD1Ev.cpp",
+    "src/_ZN17daObjFl_Ukiyuka_cD0Ev.c",
+    "src/_ZN17daObjFl_Ukiyuka_c16CleanupResourcesEv.c",
+    "src/_ZN17daObjFl_Ukiyuka_c13InitResourcesEv.c",
     "src/d_a_obj_fl_ukiyuka_fl_ukiyuka_l.c"
    ],
    "ext_mix": {

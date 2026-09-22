@@ -1,5 +1,5 @@
-#ifndef FLOATINGFLOORLLLSMALL_H
-#define FLOATINGFLOORLLLSMALL_H
+#ifndef DAOBJFL_UKIYUKA_C_H
+#define DAOBJFL_UKIYUKA_C_H
 
 #include "types.h"
 
@@ -12,7 +12,7 @@
  *
  *   _ZTI17daObjFl_Ukiyuka_c  ov022 0x021140b4
  *   _ZTS17daObjFl_Ukiyuka_c  ov022 0x021140c0
- *   _ZTV21FloatingFloorLllSmall  ov022 0x0211412c  (its record sits at V-4)
+ *   _ZTV17daObjFl_Ukiyuka_c  ov022 0x0211412c  (its record sits at V-4)
  *   kind  __si_class_type_info, ONE base, subobject offset 0
  *   base  daObjUkiyuka_c, ov002 0x02109104
  *
@@ -34,11 +34,11 @@
 
 #include "daObjUkiyuka_c.h"
 
-struct FloatingFloorLllSmall : daObjUkiyuka_c {
+struct daObjFl_Ukiyuka_c : daObjUkiyuka_c {
     /* Field NAME is a placeholder; the offset and the width are observed. */
     u8  mVariant;           /* 0x32c */
     /* --- vtable --- */
-    virtual ~FloatingFloorLllSmall(); /* slots 16 (D1), 17 (D0) */
+    virtual ~daObjFl_Ukiyuka_c(); /* slots 16 (D1), 17 (D0) */
 
     int CleanupResources();            /* slot  3 */
     int InitResources();               /* slot  0 */
@@ -46,9 +46,9 @@ struct FloatingFloorLllSmall : daObjUkiyuka_c {
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char FloatingFloorLllSmall_size_must_be_0x330[sizeof(FloatingFloorLllSmall) == 0x330 ? 1 : -1];
+typedef char daObjFl_Ukiyuka_c_size_must_be_0x330[sizeof(daObjFl_Ukiyuka_c) == 0x330 ? 1 : -1];
 #endif
 
 #endif /* __cplusplus */
 
-#endif /* FLOATINGFLOORLLLSMALL_H */
+#endif /* DAOBJFL_UKIYUKA_C_H */

@@ -992,10 +992,10 @@ ov022	0x02111c7c	func_ov022_02111c7c	LavaBridge_Spawn	spawnfunc
 ov022	0x02111c7c	LavaBridge_Spawn	daObjFl_London_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov022	0x02111f3c	func_ov022_02111f3c	LavaSeesaw_Spawn	spawnfunc
 ov022	0x02111f3c	LavaSeesaw_Spawn	daObjFl_Seesaw_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
-ov022	0x02111f6c	func_ov022_02111f6c	_ZN21FloatingFloorLllSmallD1Ev	vtable slot 16
-ov022	0x02111fbc	func_ov022_02111fbc	_ZN21FloatingFloorLllSmallD0Ev	vtable slot 17
-ov022	0x02112020	func_ov022_02112020	_ZN21FloatingFloorLllSmall16CleanupResourcesEv	vtable slot 3
-ov022	0x02112040	func_ov022_02112040	_ZN21FloatingFloorLllSmall13InitResourcesEv	vtable slot 0
+ov022	0x02111f6c	func_ov022_02111f6c	_ZN17daObjFl_Ukiyuka_cD1Ev	vtable slot 16
+ov022	0x02111fbc	func_ov022_02111fbc	_ZN17daObjFl_Ukiyuka_cD0Ev	vtable slot 17
+ov022	0x02112020	func_ov022_02112020	_ZN17daObjFl_Ukiyuka_c16CleanupResourcesEv	vtable slot 3
+ov022	0x02112040	func_ov022_02112040	_ZN17daObjFl_Ukiyuka_c13InitResourcesEv	vtable slot 0
 ov022	0x021120b8	func_ov022_021120b8	FloatingFloorLllSmall_Spawn	spawnfunc
 ov022	0x021120b8	FloatingFloorLllSmall_Spawn	daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA_L	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov022	0x021120f4	func_ov022_021120f4	FloatingFloorLllBig_Spawn	spawnfunc
@@ -1039,7 +1039,7 @@ ov022	0x021140ec	data_ov022_021140ec	FloatingFloorLllBig_SpawnInfo	spawninfo
 ov022	0x021140ec	FloatingFloorLllBig_SpawnInfo	g_profile_FL_UKIYUKA	reconstructed profile global; literal ROM ID FL_UKIYUKA+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov022	0x02114108	data_ov022_02114108	FloatingFloorLllSmall_SpawnInfo	spawninfo
 ov022	0x02114108	FloatingFloorLllSmall_SpawnInfo	g_profile_FL_UKIYUKA_L	reconstructed profile global; literal ROM ID FL_UKIYUKA_L+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov022	0x0211412c	data_ov022_0211412c	_ZTV21FloatingFloorLllSmall	vtable alloc=0x330
+ov022	0x0211412c	data_ov022_0211412c	_ZTV17daObjFl_Ukiyuka_c	vtable alloc=0x330
 ov022	0x021141cc	data_ov022_021141cc	LavaPlank_SpawnInfo	spawninfo
 ov022	0x021141cc	LavaPlank_SpawnInfo	g_profile_FL_UKI_KI	reconstructed profile global; literal ROM ID FL_UKI_KI+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov022	0x021141f0	data_ov022_021141f0	_ZTV15daObjFl_UkiKi_c	vtable alloc=? (was _ZTV9LavaPlank, earlier _ZTV19FloatingFloorLllBig)

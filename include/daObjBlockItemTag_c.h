@@ -23,8 +23,9 @@ struct daObjBlockItemTag_c : dActor_c {
     u8 mIsAttached;                /* 0x0d8 -- linked to a physical block */
     u8 pad_0d9[0x3];
 
-    /* Declared first so the two per-symbol destructor objects retain this as
-     * their key function and emit the same verified data passengers. */
+    /* Declared first so the single out-of-line definition in
+     * src/actors/daObjBlockItemTag_c.cpp stays the key function and the TU
+     * emits the same verified data passengers. */
     virtual ~daObjBlockItemTag_c();                         /* slots 16, 17 */
 
     virtual int InitResources();                   /* slot  0 */
@@ -44,7 +45,7 @@ struct daObjBlockItemTag_c : dActor_c {
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char BrickBlock_size_must_be_0xdc[sizeof(daObjBlockItemTag_c) == 0xdc ? 1 : -1];
+typedef char daObjBlockItemTag_c_size_must_be_0xdc[sizeof(daObjBlockItemTag_c) == 0xdc ? 1 : -1];
 #endif
 
 #endif /* DAOBJBLOCKITEMTAG_C_H */

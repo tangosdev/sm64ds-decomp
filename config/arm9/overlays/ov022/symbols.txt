@@ -37,10 +37,10 @@ _ZN10LavaSeesaw6RenderEv kind:function(arm,size=0x28) addr:0x02111dd4
 _ZN10LavaSeesaw8BehaviorEv kind:function(arm,size=0xa4) addr:0x02111dfc
 _ZN10LavaSeesaw13InitResourcesEv kind:function(arm,size=0x9c) addr:0x02111ea0
 daObjFl_Seesaw_c_classInit kind:function(arm,size=0x30) addr:0x02111f3c
-_ZN21FloatingFloorLllSmallD1Ev kind:function(arm,size=0x50) addr:0x02111f6c
-_ZN21FloatingFloorLllSmallD0Ev kind:function(arm,size=0x64) addr:0x02111fbc
-_ZN21FloatingFloorLllSmall16CleanupResourcesEv kind:function(arm,size=0x20) addr:0x02112020
-_ZN21FloatingFloorLllSmall13InitResourcesEv kind:function(arm,size=0x78) addr:0x02112040
+_ZN17daObjFl_Ukiyuka_cD1Ev kind:function(arm,size=0x50) addr:0x02111f6c
+_ZN17daObjFl_Ukiyuka_cD0Ev kind:function(arm,size=0x64) addr:0x02111fbc
+_ZN17daObjFl_Ukiyuka_c16CleanupResourcesEv kind:function(arm,size=0x20) addr:0x02112020
+_ZN17daObjFl_Ukiyuka_c13InitResourcesEv kind:function(arm,size=0x78) addr:0x02112040
 daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA_L kind:function(arm,size=0x3c) addr:0x021120b8
 daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA kind:function(arm,size=0x3c) addr:0x021120f4
 _ZN15daObjFl_UkiKi_cD1Ev kind:function(arm,size=0x44) addr:0x02112130
@@ -226,7 +226,7 @@ data_ov022_021140d4 kind:data(any) addr:0x021140d4
 g_profile_FL_UKIYUKA kind:data(any) addr:0x021140ec ambiguous
 data_ov022_021140f8 kind:data(any) addr:0x021140f8 ambiguous
 g_profile_FL_UKIYUKA_L kind:data(any) addr:0x02114108 ambiguous
-_ZTV21FloatingFloorLllSmall kind:data(any) addr:0x0211412c
+_ZTV17daObjFl_Ukiyuka_c kind:data(any) addr:0x0211412c
 data_ov022_0211417c kind:data(any) addr:0x0211417c ambiguous
 _ZTI15daObjFl_UkiKi_c kind:data(any) addr:0x021141ac
 _ZTS15daObjFl_UkiKi_c kind:data(any) addr:0x021141b8

@@ -168,7 +168,7 @@ cheapest possible probe of post-regeneration [ov006](../config/arm9/overlays/ov0
 **B3 — R0 · 10 TUs / 53 files / net −43 / 1,076 lines**
 | TU | Address | Files | Lines | Description | Status |
 |----|---------|-------|-------|-------------|--------|
-|[ov022](../config/arm9/overlays/ov022/symbols.txt)| 0x2111f6c|  n=5|  L=86|   `FloatingFloorLllSmall`|            pcov=3|
+|[ov022](../config/arm9/overlays/ov022/symbols.txt)| 0x2111f6c|  n=5|  L=86|   `daObjFl_Ukiyuka_c`|            pcov=3|
 |[ov022](../config/arm9/overlays/ov022/symbols.txt)| 0x2112380|  n=4|  L=60|   `daObjFl_Fall_Block_c`|             pcov=2|
 |[ov022](../config/arm9/overlays/ov022/symbols.txt)| 0x2112498|  n=6|  L=100|  `daObjFlMaruta_c`| |
 |[ov026](../config/arm9/overlays/ov026/symbols.txt)| 0x21118b8|  n=6|  L=115|  `Submarine`| |

@@ -38,6 +38,10 @@
     "src/actors/daObjFl_London_c.cpp#_ZN16daObjFl_London_c8BehaviorEv": "lunavyqo",
     "src/actors/daObjFl_London_c.cpp#_ZN16daObjFl_London_c13InitResourcesEv": "tangosdev",
     "src/actors/daObjFl_London_c.cpp#daObjFl_London_c_classInit": "tangosdev",
+    "src/actors/daObjFl_Ukiyuka_c.cpp#_ZN17daObjFl_Ukiyuka_c13InitResourcesEv": "tangosdev",
+    "src/actors/daObjFl_Ukiyuka_c.cpp#_ZN17daObjFl_Ukiyuka_c16CleanupResourcesEv": "ruspecial",
+    "src/actors/daObjFl_Ukiyuka_c.cpp#_ZN17daObjFl_Ukiyuka_cD0Ev": "tangosdev",
+    "src/actors/daObjFl_Ukiyuka_c.cpp#_ZN17daObjFl_Ukiyuka_cD1Ev": "tangosdev",
     "src/actors/daObjClock_c.cpp#_ZN12daObjClock_cD1Ev": "tangosdev",
     "src/actors/daObjClock_c.cpp#_ZN12daObjClock_cD0Ev": "tangosdev",
     "src/actors/daObjClock_c.cpp#func_ov013_02111430": "tangosdev",
@@ -4411,6 +4415,16 @@
     "src/actors/daPeach_c.cpp#_ZN9daPeach_c6RenderEv": "tangosdev",
     "src/actors/daPeach_c.cpp#_ZN9daPeach_c8BehaviorEv": "tangosdev",
     "src/actors/daPeach_c.cpp#_ZN9daPeach_c13InitResourcesEv": "tangosdev",
-    "src/actors/daPeach_c.cpp#daPeach_c_classInit": "tangosdev"
+    "src/actors/daPeach_c.cpp#daPeach_c_classInit": "tangosdev",
+    "src/actors/daObjBlockItemTag_c.cpp#_ZN19daObjBlockItemTag_c11GetSpawnPosER7Vector3RS_": "andrewboudreau",
+    "src/actors/daObjBlockItemTag_c.cpp#_ZN19daObjBlockItemTag_c8BehaviorEv": "tangosdev",
+    "src/actors/daObjBlockItemTag_c.cpp#_ZN19daObjBlockItemTag_c15SpawnSilverStarEv": "andrewboudreau",
+    "src/actors/daObjBlockItemTag_c.cpp#_ZN19daObjBlockItemTag_c18SpawnOneUpMushroomEv": "andrewboudreau",
+    "src/actors/daObjBlockItemTag_c.cpp#_ZN19daObjBlockItemTag_cD1Ev": "tangosdev",
+    "src/actors/daObjBlockItemTag_c.cpp#_ZN19daObjBlockItemTag_c16CleanupResourcesEv": "tangosdev",
+    "src/actors/daObjBlockItemTag_c.cpp#_ZN19daObjBlockItemTag_cD0Ev": "tangosdev",
+    "src/actors/daObjBlockItemTag_c.cpp#_ZN19daObjBlockItemTag_c17SpawnMegaMushroomEv": "andrewboudreau",
+    "src/actors/daObjBlockItemTag_c.cpp#_ZN19daObjBlockItemTag_c13InitResourcesEv": "tangosdev",
+    "src/actors/daObjBlockItemTag_c.cpp#_ZN19daObjBlockItemTag_c15SpawnKoopaShellEv": "andrewboudreau"
   }
 }

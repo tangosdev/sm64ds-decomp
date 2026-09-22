@@ -196,45 +196,9 @@ src/d_a_obj_block_l_block_l.c:
     complete
     .text start:0x020b412c end:0x020b415c
 
-src/_ZN19daObjBlockItemTag_cD1Ev.cpp:
+src/actors/daObjBlockItemTag_c.cpp:
     complete
-    .text start:0x020b415c end:0x020b4180
-
-src/_ZN19daObjBlockItemTag_cD0Ev.cpp:
-    complete
-    .text start:0x020b4180 end:0x020b41b8
-
-src/_ZN19daObjBlockItemTag_c11GetSpawnPosER7Vector3RS_.cpp:
-    complete
-    .text start:0x020b41b8 end:0x020b41f8
-
-src/_ZN19daObjBlockItemTag_c15SpawnKoopaShellEv.cpp:
-    complete
-    .text start:0x020b41f8 end:0x020b4250
-
-src/_ZN19daObjBlockItemTag_c17SpawnMegaMushroomEv.cpp:
-    complete
-    .text start:0x020b4250 end:0x020b429c
-
-src/_ZN19daObjBlockItemTag_c18SpawnOneUpMushroomEv.cpp:
-    complete
-    .text start:0x020b429c end:0x020b42e4
-
-src/_ZN19daObjBlockItemTag_c15SpawnSilverStarEv.cpp:
-    complete
-    .text start:0x020b42e4 end:0x020b4394
-
-src/_ZN19daObjBlockItemTag_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x020b4394 end:0x020b440c
-
-src/_ZN19daObjBlockItemTag_c8BehaviorEv.cpp:
-    complete
-    .text start:0x020b440c end:0x020b451c
-
-src/_ZN19daObjBlockItemTag_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x020b451c end:0x020b45e0
+    .text start:0x020b415c end:0x020b45e0
 
 src/d_a_obj_block_item_tag_blk_slvstar_tag.c:
     complete
