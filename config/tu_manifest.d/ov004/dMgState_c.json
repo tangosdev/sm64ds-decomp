@@ -1,0 +1,221 @@
+{
+  "id": "ov004/dMgState_c",
+  "module": "ov004",
+  "source": "src_tu/actors/dMgState_c.cpp",
+  "promoted_source": "src/actors/dMgState_c.cpp",
+  "status": "text-verified",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x20b8714..0x20b8a8c, 4 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): dMgState_c",
+    "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020b8714",
+      "end": "0x020b8a8c"
+    },
+    {
+      "name": ".bss",
+      "start": "0x020bfd04",
+      "end": "0x020bfda8"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN10dMgState_c6RenderEv",
+      "address": "0x020b8714",
+      "size": "0x00000064",
+      "legacy_source": "src/_ZN10dMgState_c6RenderEv.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN10dMgState_c8BehaviorEv",
+      "address": "0x020b8778",
+      "size": "0x00000068",
+      "legacy_source": "src/_ZN10dMgState_c8BehaviorEv.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN10dMgState_c8SetStateEi",
+      "address": "0x020b87e0",
+      "size": "0x00000290",
+      "legacy_source": "src/_ZN10dMgState_c8SetStateEi.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN10dMgState_cC1Ev",
+      "address": "0x020b8a70",
+      "size": "0x0000001c",
+      "legacy_source": "src/_ZN10dMgState_cC1Ev.cpp",
+      "ordinal": 3
+    }
+  ],
+  "data": [],
+  "bss": [
+    {
+      "symbol": "_ZGVsEnterTable$26",
+      "address": "0x020bfd04",
+      "size": "0x4",
+      "binding": "STB_LOCAL",
+      "evidence": "guard word for SetState's function-local static enter table; ov004 keeps 4 bytes at 0x020bfd04 immediately below the 0xa0 table"
+    },
+    {
+      "symbol": "sEnterTable$26",
+      "address": "0x020bfd08",
+      "size": "0xa0",
+      "binding": "STB_LOCAL",
+      "evidence": "SetState's function-local static array of 20 pointer-to-member enter handlers; 20 * 8 = 0xa0, and the next configured ov004 bss symbol is at 0x020bfda8"
+    }
+  ],
+  "notes": [
+    "Consolidated from four one-function sources by tools/tubuild.py create and then rewritten by hand: the shadow banner was replaced with a real file comment, the generator's extern \"C\" wrapper around the enter-table externs was dropped (a namespace-scope variable is not mangled, so the block was inert), and SetState's `mRender = data_02086b58;` became `mRender = 0;` -- mwccarm lowers a null pointer-to-member assignment to a reference to arm9's __ptmf_null at 0x02086b58 itself, so the address literal was carrying no information the compiler did not already supply. All four functions still byte-match.",
+    "dMgState_c is a COINED class name. tools/rtti_extract.py recovers 429 RTTI records from the cartridge and none of them names it, flat or nested -- the probe does see nested spellings (dMgPsOpt_c::TouchIcon_c, dScMgBase_c::graphCallback_c and dScMgSlot1_c::betIcon_c are all in the same extraction), so the absence is a measurement, not a blind spot. The class is non-polymorphic: no base, no virtual member, no _ZTV/_ZTI/_ZTS emitted by the object and none configured at any address in any symbols.txt. A coined name only blocks promotion when the TU emits RTTI whose home would have to be licensed under the coined spelling, so it does not block here.",
+    "This TU is NOT text-only production. SetState owns a function-local static array and its guard word, and tools/objisolate.py plan_many refuses any surviving non-.text section: 'unlicensed content in text-only multi-symbol object: section[5] .bss size 0x4 defines [...]; section[6] .bss size 0xa0 defines [...]'. One-function production isolation escapes that by externalising the two statics, which is why the per-function shard linked and why ov004's symbols.txt carries names for them at all; the multi-symbol path has no externalise step. Hence production_mode intact-object with an explicit .bss claim at 0x020bfd04..0x020bfda8 -- 0x4 for the guard and 0xa0 for twenty 8-byte pointer-to-member slots, ending exactly where ov004's next configured bss symbol begins. Nothing outside this TU reaches those bytes: the only two relocations to them in ov004's relocs.txt come from 0x020b8a14 and 0x020b8a1c, both inside SetState.",
+    "The $NN suffix on the two statics is a per-TU mwccarm counter, and it is reconstruction-dependent rather than cartridge evidence -- a Nintendo DS cartridge carries no symbol table. Measured on this tree: SetState compiled alone with only the enter-table externs lands on $19, which is the spelling ov004's symbols.txt was given when the one-function shard was matched; adding the ApproachLinear declaration moves it to $22, adding the constructor to $23, and the whole consolidated TU to $26. No source form of a four-function TU can reach 19, so $19 is an artifact of the shard rather than a property of the original translation unit. This entry licenses the consolidated TU's own $26 spellings.",
+    "BLOCKED SHORT OF PRODUCTION, and the refusals are the tools' own. Three routes were measured on this candidate. (1) Text-only multi-symbol production: tools/objisolate.py plan_many refuses 'unlicensed content in text-only multi-symbol object: section[5] .bss size 0x4 defines [_ZGVsEnterTable$26]; section[6] .bss size 0xa0 defines [sEnterTable$26]; section[13] .text size 0x1c defines [_ZN10dMgState_cC2Ev]'. (2) Text-only plus a compiler-only deadstrip that re-imports the two statics the way one-function isolation does: 'compiler-only deadstrip refused: surviving section[10] .text references compiler-only data _ZGVsEnterTable$26 at 0x234; only _ZTV/_ZTI/_ZTS may be imported this way'. (3) The intact-object route recorded above, which LINKS: 4/4 licensed functions byte-identical in the linked image, 106/106 modules exact at 100.000000%, objectAudit LICENSED 6/6 with no non-licensed symbol and no unlicensed section, and a full ROM byte-identical to the strict stock control. Its only failure is dsd check symbols --fail, 6 new lines over the tree's 9 pre-existing ones, all four naming the same two bss addresses: data_ov004_020bfd04 and data_ov004_020bfd08 are no longer in the linked binary once the TU supplies those bytes (dsd itself offers _ZGVsEnterTable$26 and sEnterTable$26 as the replacement names), and _ZGVsEnterTable$19 and sEnterTable$19 are 'expected to be global but is local'.",
+    "What would clear it, and why it cannot be done from here. The two statics need a second spelling at the same storage so the pre-promotion one-function source and the post-promotion TU can both resolve: the shard emits and externalises $19, the consolidated TU emits $26, and ov004's symbols.txt can serve exactly one of them. That is the storage-alias feature, and rombuild.py refuses it in as many words -- 'automatic intact-object storage aliases are not supported until baseline bootstrapping is non-circular'. Editing symbols.txt instead makes the change atomic with the promotion, and the proof harness cannot straddle it: rombuild.intact_tu_policies requires linkcheck.symbolCheckNewVsBaseline to be empty against a baseline control, and 'tubuild.py linkcheck --baseline' does no TU substitution, so with the rows re-pointed it dies on the still-enrolled shard with \"Error: Failed to delink 'src/_ZN10dMgState_c8SetStateEi.cpp'\". Next action: either storage aliases land, or a promotion path that accepts a symbols.txt re-point as part of the same change. Everything else about this TU is proved."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov004-dMgState_c/dMgState_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 4,
+    "functions_declared": 4,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN10dMgState_cC2Ev"
+      ],
+      "deadstripped": [
+        "_ZN10dMgState_cC2Ev"
+      ],
+      "droppedSections": [
+        13
+      ],
+      "data": [],
+      "dataExternalized": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "failed",
+      "scratch": "build/tu/ov004-dMgState_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x020b8714",
+        "end": "0x020b8a8c",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020b8714",
+          "end": "0x020b8a8c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x020bfd04",
+          "end": "0x020bfda8",
+          "comparison": "NOBITS -- symbol/module gates"
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 6
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".bss",
+            "original": [
+              5,
+              6
+            ],
+            "desired": [
+              5,
+              6
+            ]
+          }
+        ],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [
+        "[ERROR]   Possible name: _ZGVsEnterTable$26",
+        "[ERROR]   Possible name: sEnterTable$26",
+        "[ERROR] Symbol '_ZGVsEnterTable$19' at 0x020bfd04 in overlay 4 is expected to be global but is local",
+        "[ERROR] Symbol 'data_ov004_020bfd04' in overlay 4 at 0x020bfd04 not found in linked binary",
+        "[ERROR] Symbol 'data_ov004_020bfd08' in overlay 4 at 0x020bfd08 not found in linked binary",
+        "[ERROR] Symbol 'sEnterTable$19' at 0x020bfd08 in overlay 4 is expected to be global but is local"
+      ],
+      "symbolCheckErrors": [
+        "[ERROR]   Possible name: _ZGVsEnterTable$26",
+        "[ERROR]   Possible name: sEnterTable$26",
+        "[ERROR] Symbol '_ZGVsEnterTable$19' at 0x020bfd04 in overlay 4 is expected to be global but is local",
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'data_ov004_020bfd04' in overlay 4 at 0x020bfd04 not found in linked binary",
+        "[ERROR] Symbol 'data_ov004_020bfd08' in overlay 4 at 0x020bfd08 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary",
+        "[ERROR] Symbol 'sEnterTable$19' at 0x020bfd08 in overlay 4 is expected to be global but is local"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN10dMgState_cC2Ev",
+      "disposition": "deadstrip",
+      "reason": "dMgState_c has no virtual bases and no virtual functions, so mwccarm emits the C1 complete-object constructor and the identical C2 base-object variant from the one written definition. The cartridge kept only C1 (ov004:0x020b8a70); nothing constructs a dMgState_c as a base subobject, so the retail link discarded C2 and no configured symbol in any of the 106 symbols.txt files names it. Homeless, therefore a plain deadstrip rather than deadstrip-duplicate; tools/tubuild.py all_symbol_homes() returns None for it."
+    }
+  ],
+  "production_mode": "intact-object"
+}
