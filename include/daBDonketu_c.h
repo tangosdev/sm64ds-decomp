@@ -25,7 +25,7 @@ struct daBDonketu_c : daOts_c {
     u8  mNumBulliesKilled;                    /* 0x3fe */
     u8  pad_3ff[0x1];
 
-    virtual ~daBDonketu_c();
+    virtual ~daBDonketu_c() {}
 
     /* methods */
     int Behavior();
