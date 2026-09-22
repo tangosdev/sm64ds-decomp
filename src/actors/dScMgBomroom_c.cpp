@@ -48,16 +48,13 @@
  *   [54] 0x020d7c00  src/func_ov006_020d7c00.cpp
  */
 
-/* STILL MACHINE-SHAPED (audit 2026-09-18) -- byte-exact; what blocks each part:
- *  48 func_ov006_* + 19 data_*   unnamed in config symbols.txt; each needs a
- *                                coined, behaviour-justified name.
- *  1 _ZN..E call(s)              class header exists, member not yet
- *                                declared in it.
- *  2 _ZN..E call(s)              no include/<class>.h yet, so there is
- *                                no member to call.
- *  ~126 *(T *)(p + 0x..)         class layout does not name these offsets.
- */
+/* Partial source reconstruction: these 41 entries remain C-linkage helpers.
+ * The remaining 39 entries, including the class's lifecycle/key function,
+ * lie outside this licensed slice. Existing bomb fields are used where they fit; the UI state
+ * blocks, PMF receiver views and many scene fields still need reconstruction.
+ * Keep defer_codegen and the measured positional optimization brackets. */
 
+#include "dScMgBomroom_c.h"
 #include "types.h"
 #include "decl_common.h"
 
@@ -83,6 +80,8 @@ extern unsigned char* data_ov006_0213bb28[];
 extern void* data_ov006_0213bb4c[];
 extern void func_ov006_020d5e3c(void *a);
 }
+
+namespace Sound { unsigned int PlayBank2_2D(unsigned int); }
 
 #pragma defer_codegen off
 
@@ -123,37 +122,37 @@ void func_ov006_020d5f28(void)
 /* ---------------------------------------------------------------- */
 // @symbol func_ov006_020d5f2c
 extern "C" {
-void func_ov006_020d5f2c(char *c, int i)
+void func_ov006_020d5f2c(char *sceneBytes, int slot)
 {
-  char *new_var2;
-  char *ip;
-  unsigned char new_var;
-  new_var2 = c + (i * 0x10);
-  if (((unsigned char) (*((unsigned char *) ((new_var2 + 0x6000) + 0x2ae)))) >= 4)
+  char *slotBase;
+  char *stateBase;
+  unsigned char level;
+  slotBase = sceneBytes + (slot * 0x10);
+  if (((unsigned char) (*((unsigned char *) ((slotBase + 0x6000) + 0x2ae)))) >= 4)
   {
-    *((unsigned char *) ((new_var2 + 0x6000) + 0x2ae)) = 4;
-    *((unsigned char *) ((new_var2 + 0x6000) + 0x2ac)) = 2;
+    *((unsigned char *) ((slotBase + 0x6000) + 0x2ae)) = 4;
+    *((unsigned char *) ((slotBase + 0x6000) + 0x2ac)) = 2;
     return;
   }
   {
-    unsigned short *p = (unsigned short *) ((c + 0x62a8) + (i * 0x10));
-    *p = (*p) + 1;
+    unsigned short *timer = (unsigned short *) ((sceneBytes + 0x62a8) + (slot * 0x10));
+    *timer = (*timer) + 1;
   }
-  if ((*((unsigned short *) (new_var2 + 0x62a8))) < 3)
+  if ((*((unsigned short *) (slotBase + 0x62a8))) < 3)
   {
     return;
   }
-  *((unsigned short *) (new_var2 + 0x62a8)) = 0;
-  ip = new_var2 + 0x6000;
+  *((unsigned short *) (slotBase + 0x62a8)) = 0;
+  stateBase = slotBase + 0x6000;
   {
-    unsigned char *q = (unsigned char *) ((c + 0x62ae) + (i * 0x10));
-    *q = (*q) + 1;
+    unsigned char *levelField = (unsigned char *) ((sceneBytes + 0x62ae) + (slot * 0x10));
+    *levelField = (*levelField) + 1;
   }
-  new_var = (unsigned char) (*((unsigned char *) (ip + 0x2ae)));
-  if (new_var >= 4)
+  level = (unsigned char) (*((unsigned char *) (stateBase + 0x2ae)));
+  if (level >= 4)
   {
-    *((unsigned char *) ((new_var2 + 0x6000) + 0x2ae)) = 4;
-    *((unsigned char *) (ip + 0x2ac)) = 2;
+    *((unsigned char *) ((slotBase + 0x6000) + 0x2ae)) = 4;
+    *((unsigned char *) (stateBase + 0x2ac)) = 2;
   }
 }
 }
@@ -190,16 +189,15 @@ extern "C" void func_ov006_020d5fec(C_5fec* c) {
 /* ---------------------------------------------------------------- */
 // @symbol func_ov006_020d604c
 extern "C" {
-struct S_604c{char b[0x10000];};
 void func_ov006_020d604c(void *p){
-  struct S_604c *c = (struct S_604c *)p;
-  *(unsigned char*)((char*)c+0x62ad)=1;
-  *(unsigned char*)((char*)c+0x62ac)=0;
-  *(unsigned char*)((char*)c+0x62ae)=0;
-  *(unsigned char*)((char*)c+0x62af)=1;
-  *(short*)((char*)c+0x62a8)=0;
-  *(int*)((char*)c+0x62a0)=0x80000;
-  *(int*)((char*)c+0x62a4)=0x8000;
+  char* sceneBytes = (char*)p;
+  *(unsigned char*)(sceneBytes+0x62ad)=1;
+  *(unsigned char*)(sceneBytes+0x62ac)=0;
+  *(unsigned char*)(sceneBytes+0x62ae)=0;
+  *(unsigned char*)(sceneBytes+0x62af)=1;
+  *(short*)(sceneBytes+0x62a8)=0;
+  *(int*)(sceneBytes+0x62a0)=0x80000;
+  *(int*)(sceneBytes+0x62a4)=0x8000;
 }
 }
 
@@ -230,15 +228,15 @@ typedef struct {
     char head[0x6280];
     Rec_6098 recs[2];
 } Obj_6098;
-void func_ov006_020d6098(void *p) {
-    Obj_6098 *a0 = (Obj_6098 *)p;
-    int i;
-    for (i = 0; i < 2; i++) {
-        int xv = a0->recs[i].x >> 12;
-        int yv = a0->recs[i].y >> 12;
-        int k = a0->recs[i].idx;
-        if (i != 0) k += 5;
-        Hud_RenderSprite((void*)data_ov006_021344ec[k], xv, yv, -1, -1);
+void func_ov006_020d6098(void *sceneData) {
+    Obj_6098 *sceneView = (Obj_6098 *)sceneData;
+    int slot;
+    for (slot = 0; slot < 2; slot++) {
+        int x = sceneView->recs[slot].x >> 12;
+        int y = sceneView->recs[slot].y >> 12;
+        int spriteIndex = sceneView->recs[slot].idx;
+        if (slot != 0) spriteIndex += 5;
+        Hud_RenderSprite((void*)data_ov006_021344ec[spriteIndex], x, y, -1, -1);
     }
 }
 }
@@ -333,24 +331,33 @@ void func_ov006_020d6264(int c, int i){
 /* ---------------------------------------------------------------- */
 /* ROM ordinal 26 -- func_ov006_020d6278, 0x020d6278, size 0x68 */
 /* ---------------------------------------------------------------- */
+/* The two 0x10-stride UI entries are addressed within scene storage. Four
+ * helpers (6278, 63ac, 65c8, 669c) previously indexed past a 16-byte subarray.
+ * Their scoped byte-base forms need strength reduction off: otherwise the
+ * dispatchers grow by 0x10 and the clearing loops by 8 bytes under 2004/b56.
+ * These brackets preserve the existing linked code without asserting a full
+ * UI-entry class layout. The PMF receiver classes remain opaque. */
 // @symbol func_ov006_020d6278
+#pragma push
+#pragma opt_strength_reduction off
 extern "C" {
 class C_6278;
 typedef void (C_6278::*PMF_6278)(int);
-class C_6278 { public: int dummy; };
-struct Row_6278 { u8 d[0x10]; };
 extern "C" PMF_6278 data_ov006_021416c0[];
 extern "C" void func_ov006_020d6278(C_6278 *self)
 {
-    Row_6278 *rows = (Row_6278 *)self;
-    for (int i = 0; i < 2; i++) {
-        if (rows[i].d[0x628d]) {
-            u8 k = rows[i].d[0x628c];
-            (self->*data_ov006_021416c0[k])(i);
+    u8* sceneBytes = (u8*)self;
+    for (int slot = 0; slot < 2; slot++) {
+        u8* slotBase = sceneBytes + slot * 0x10;
+        if (slotBase[0x628d]) {
+            u8 state = slotBase[0x628c];
+            (self->*data_ov006_021416c0[state])(slot);
         }
     }
 }
 }
+
+#pragma pop
 
 /* ---------------------------------------------------------------- */
 /* ROM ordinal 27 -- func_ov006_020d62e0, 0x020d62e0, size 0x6c */
@@ -402,12 +409,21 @@ void func_ov006_020d634c(char *c, int i)
 /* ROM ordinal 29 -- func_ov006_020d63ac, 0x020d63ac, size 0x28 */
 /* ---------------------------------------------------------------- */
 // @symbol func_ov006_020d63ac
+#pragma push
+#pragma opt_strength_reduction off
 extern "C" {
-void func_ov006_020d63ac(char (*c)[16]){
-  int i;
-  for(i=0;i<2;i++){ c[i][0x628d]=0; c[i][0x628e]=0; }
+void func_ov006_020d63ac(char* sceneBytes)
+{
+    int slot;
+    for (slot = 0; slot < 2; slot++) {
+        char* slotBase = sceneBytes + slot * 0x10;
+        slotBase[0x628d] = 0;
+        slotBase[0x628e] = 0;
+    }
 }
 }
+
+#pragma pop
 
 /* ---------------------------------------------------------------- */
 /* ROM ordinal 30 -- func_ov006_020d63d4, 0x020d63d4, size 0x80 */
@@ -425,16 +441,16 @@ typedef struct {
     char head[0x6260];
     Rec_63d4 recs[2];
 } Obj_63d4;
-void func_ov006_020d63d4(void *p) {
-    Obj_63d4 *a0 = (Obj_63d4 *)p;
-    int i;
-    for (i = 0; i < 2; i++) {
-        if (a0->recs[i].flag != 0) {
-            int xv = a0->recs[i].x >> 12;
-            int yv = a0->recs[i].y >> 12;
-            int k = a0->recs[i].idx;
-            int v = (i == 0) ? data_ov006_021343b0[k] : data_ov006_021342bc[k];
-            Hud_RenderSprite((void*)v, xv, yv, -1, 1);
+void func_ov006_020d63d4(void *sceneData) {
+    Obj_63d4 *sceneView = (Obj_63d4 *)sceneData;
+    int slot;
+    for (slot = 0; slot < 2; slot++) {
+        if (sceneView->recs[slot].flag != 0) {
+            int x = sceneView->recs[slot].x >> 12;
+            int y = sceneView->recs[slot].y >> 12;
+            int frame = sceneView->recs[slot].idx;
+            int spriteHandle = (slot == 0) ? data_ov006_021343b0[frame] : data_ov006_021342bc[frame];
+            Hud_RenderSprite((void*)spriteHandle, x, y, -1, 1);
         }
     }
 }
@@ -516,23 +532,26 @@ void func_ov006_020d65b4(int c, int i){
 /* ROM ordinal 35 -- func_ov006_020d65c8, 0x020d65c8, size 0x68 */
 /* ---------------------------------------------------------------- */
 // @symbol func_ov006_020d65c8
+#pragma push
+#pragma opt_strength_reduction off
 extern "C" {
 class C_65c8;
 typedef void (C_65c8::*PMF_65c8)(int);
-class C_65c8 { public: int dummy; };
-struct Row_65c8 { u8 d[0x10]; };
 extern "C" PMF_65c8 data_ov006_02141680[];
 extern "C" void func_ov006_020d65c8(C_65c8 *self)
 {
-    Row_65c8 *rows = (Row_65c8 *)self;
-    for (int i = 0; i < 2; i++) {
-        if (rows[i].d[0x626d]) {
-            u8 k = rows[i].d[0x626c];
-            (self->*data_ov006_02141680[k])(i);
+    u8* sceneBytes = (u8*)self;
+    for (int slot = 0; slot < 2; slot++) {
+        u8* slotBase = sceneBytes + slot * 0x10;
+        if (slotBase[0x626d]) {
+            u8 state = slotBase[0x626c];
+            (self->*data_ov006_02141680[state])(slot);
         }
     }
 }
 }
+
+#pragma pop
 
 /* ---------------------------------------------------------------- */
 /* ROM ordinal 36 -- func_ov006_020d6630, 0x020d6630, size 0x6c */
@@ -561,12 +580,21 @@ void func_ov006_020d6630(void *p) {
 /* ROM ordinal 37 -- func_ov006_020d669c, 0x020d669c, size 0x28 */
 /* ---------------------------------------------------------------- */
 // @symbol func_ov006_020d669c
+#pragma push
+#pragma opt_strength_reduction off
 extern "C" {
-void func_ov006_020d669c(char (*c)[16]){
-  int i;
-  for(i=0;i<2;i++){ c[i][0x626d]=0; c[i][0x626e]=0; }
+void func_ov006_020d669c(char* sceneBytes)
+{
+    int slot;
+    for (slot = 0; slot < 2; slot++) {
+        char* slotBase = sceneBytes + slot * 0x10;
+        slotBase[0x626d] = 0;
+        slotBase[0x626e] = 0;
+    }
 }
 }
+
+#pragma pop
 
 /* ---------------------------------------------------------------- */
 /* ROM ordinal 38 -- func_ov006_020d66c4, 0x020d66c4, size 0x68 */
@@ -577,7 +605,7 @@ extern "C" void func_ov006_020d66c4(char *base, int idx) {
     char *ip = base + idx * 16;
     if (*(unsigned char*)(ip + 0x6000 + 0x26c) != 0) return;
     *(unsigned char*)(ip + 0x6000 + 0x26c) = 1;
-    _ZN5Sound12PlayBank2_2DEj(0x1e2);
+    Sound::PlayBank2_2D(0x1e2);
     if (idx != 0) return;
     func_ov006_020d5d90(base, idx);
 }
@@ -604,35 +632,36 @@ void func_ov006_020d672c(void *p){
 #pragma push
 #pragma opt_strength_reduction off
 extern "C" {
-void func_ov006_020d6784(char *c)
+void func_ov006_020d6784(char* sceneBytes)
 {
-    int b, a, i;
-    a = 0;
-    b = 0;
-    for (i = 0; i < 0x70; i++) {
-        if (*(unsigned char *)(c + (i << 6) + 0x4698) == 0) continue;
-        if (*(unsigned char *)(c + (i << 6) + 0x4697) != 5) continue;
-        if (*(unsigned char *)(c + (i << 6) + 0x4696) != 0) a++;
-        else b++;
+    dScMgBomroom_c* scene = (dScMgBomroom_c*)sceneBytes;
+    int leftRoomCount, rightRoomCount, bombIndex;
+    rightRoomCount = 0;
+    leftRoomCount = 0;
+    for (bombIndex = 0; bombIndex < 0x70; bombIndex++) {
+        if (scene->mBombs[bombIndex].unk_38 == 0) continue;
+        if (scene->mBombs[bombIndex].unk_37 != 5) continue;
+        if (scene->mBombs[bombIndex].unk_36 != 0) rightRoomCount++;
+        else leftRoomCount++;
     }
-    if (b >= 0x28) {
-        *(int *)(c + 0x62d0) = 3;
-        *(int *)(c + 0x62d4) = 0;
-        *(unsigned char *)(c + 0x62f8) = 0;
-        *(unsigned char *)(c + 0x62f5) = 0;
-        *(volatile unsigned int *)(c + 0xbc) = *(unsigned int *)(c + 0xbc) + 1;
-        if (*(unsigned int *)(c + 0xbc) > 0x270e) *(unsigned int *)(c + 0xbc) = 0x270e;
-        *(unsigned char *)(c + 0x62fb) = 1;
-        _ZN5Sound12PlayBank2_2DEj(0x1e6);
-    } else if (a >= 0x28) {
-        *(int *)(c + 0x62d0) = 3;
-        *(int *)(c + 0x62d4) = 0;
-        *(unsigned char *)(c + 0x62f8) = 0;
-        *(unsigned char *)(c + 0x62f5) = 1;
-        *(volatile unsigned int *)(c + 0xbc) = *(unsigned int *)(c + 0xbc) + 1;
-        if (*(unsigned int *)(c + 0xbc) > 0x270e) *(unsigned int *)(c + 0xbc) = 0x270e;
-        *(unsigned char *)(c + 0x62fb) = 1;
-        _ZN5Sound12PlayBank2_2DEj(0x1e6);
+    if (leftRoomCount >= 0x28) {
+        scene->unk_62d0 = 3;
+        *(int *)(sceneBytes + 0x62d4) = 0;
+        *(unsigned char *)(sceneBytes + 0x62f8) = 0;
+        *(unsigned char *)(sceneBytes + 0x62f5) = 0;
+        *(volatile u32*)&scene->unk_0bc = scene->unk_0bc + 1;
+        if (scene->unk_0bc > 0x270e) scene->unk_0bc = 0x270e;
+        *(unsigned char *)(sceneBytes + 0x62fb) = 1;
+        Sound::PlayBank2_2D(0x1e6);
+    } else if (rightRoomCount >= 0x28) {
+        scene->unk_62d0 = 3;
+        *(int *)(sceneBytes + 0x62d4) = 0;
+        *(unsigned char *)(sceneBytes + 0x62f8) = 0;
+        *(unsigned char *)(sceneBytes + 0x62f5) = 1;
+        *(volatile u32*)&scene->unk_0bc = scene->unk_0bc + 1;
+        if (scene->unk_0bc > 0x270e) scene->unk_0bc = 0x270e;
+        *(unsigned char *)(sceneBytes + 0x62fb) = 1;
+        Sound::PlayBank2_2D(0x1e6);
     }
 }
 }
@@ -766,32 +795,32 @@ void func_ov006_020d69b8(char *a, int i)
 // @symbol func_ov006_020d6b88
 extern "C" {
 
-void func_ov006_020d6b88(char *self_, int idx)
+void func_ov006_020d6b88(char *sceneBytes, int bombIndex)
 {
-    char *b = self_ + idx * 0x40;
-    u8 flag = *(u8*)(b + 0x4696);
-    int v3 = *(int*)(b + 0x4660) >> 0xc;
-    int v0 = *(int*)(b + 0x4664) >> 0xc;
-    if (flag != 0) {
-        if (v3 <= 0xc0) return;
-        if (v0 <= 0x40) return;
-        if (v0 >= 0x80) return;
-        *(u8*)(b + 0x4697) = 5;
-        *(u8*)(b + 0x4694) = 0;
-        *(u8*)(b + 0x4695) = 0;
-        *(u16*)(b + 0x468e) = 0;
-        *(int*)(b + 0x4670) = 0x999;
-        func_02012718((int)0x1dc, *(int*)(b + 0x4660));
+    char *indexedScene = sceneBytes + bombIndex * 0x40;
+    u8 room = *(u8*)(indexedScene + 0x4696);
+    int x = *(int*)(indexedScene + 0x4660) >> 0xc;
+    int y = *(int*)(indexedScene + 0x4664) >> 0xc;
+    if (room != 0) {
+        if (x <= 0xc0) return;
+        if (y <= 0x40) return;
+        if (y >= 0x80) return;
+        *(u8*)(indexedScene + 0x4697) = 5;
+        *(u8*)(indexedScene + 0x4694) = 0;
+        *(u8*)(indexedScene + 0x4695) = 0;
+        *(u16*)(indexedScene + 0x468e) = 0;
+        *(int*)(indexedScene + 0x4670) = 0x999;
+        func_02012718((int)0x1dc, *(int*)(indexedScene + 0x4660));
     } else {
-        if (v3 >= 0x40) return;
-        if (v0 <= 0x40) return;
-        if (v0 >= 0x80) return;
-        *(u8*)(b + 0x4697) = 5;
-        *(u8*)(b + 0x4694) = 0;
-        *(u8*)(b + 0x4695) = 0;
-        *(u16*)(b + 0x468e) = 0;
-        *(int*)(b + 0x4670) = 0x999;
-        func_02012718((int)0x1dc, *(int*)(b + 0x4660));
+        if (x >= 0x40) return;
+        if (y <= 0x40) return;
+        if (y >= 0x80) return;
+        *(u8*)(indexedScene + 0x4697) = 5;
+        *(u8*)(indexedScene + 0x4694) = 0;
+        *(u8*)(indexedScene + 0x4695) = 0;
+        *(u16*)(indexedScene + 0x468e) = 0;
+        *(int*)(indexedScene + 0x4670) = 0x999;
+        func_02012718((int)0x1dc, *(int*)(indexedScene + 0x4660));
     }
 }
 }
@@ -1088,59 +1117,59 @@ void func_ov006_020d7524(void *p) {
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off
 extern "C" {
-void func_ov006_020d7604(void *a)
+void func_ov006_020d7604(void *sceneData)
 {
-    unsigned char *base = (unsigned char *)a;
-    int ca = 0;
-    int cb = 0;
-    int cc = 0;
-    int i;
+    unsigned char *base = (unsigned char *)sceneData;
+    int rightRoomCount = 0;
+    int leftRoomCount = 0;
+    int displaySlot = 0;
+    int bombIndex;
 
-    for (i = 0; i < 0x70; i++) {
-        unsigned char *p = base + i * 64;
+    for (bombIndex = 0; bombIndex < 0x70; bombIndex++) {
+        unsigned char *p = base + bombIndex * 64;
         if (p[0x4698] != 0) {
             if (base[0x62f8] == 1) {
                 if (p[0x4696] != 0) {
-                    int v;
-                    int q;
+                    int column;
+                    int row;
                     p[0x469b] = 3;
-                    v = ca;
-                    q = 0;
-                    *(unsigned short *)(p + 0x4690) = (unsigned short)(cc * 8);
-                    while (v >= 5) { v -= 5; q++; }
-                    ((unsigned char *)(int)(base + i * 64))[0x469c] = (unsigned char)(q * 10 + v);
-                    ca++;
-                    cc++;
+                    column = rightRoomCount;
+                    row = 0;
+                    *(unsigned short *)(p + 0x4690) = (unsigned short)(displaySlot * 8);
+                    while (column >= 5) { column -= 5; row++; }
+                    ((unsigned char *)(int)(base + bombIndex * 64))[0x469c] = (unsigned char)(row * 10 + column);
+                    rightRoomCount++;
+                    displaySlot++;
                 } else {
-                    int v;
-                    int q;
-                    unsigned char *d = (unsigned char *)(int)(p + 0x469c);
-                    *d = (unsigned char)cb;
+                    int column;
+                    int row;
+                    unsigned char *slotField = (unsigned char *)(int)(p + 0x469c);
+                    *slotField = (unsigned char)leftRoomCount;
                     p[0x469b] = 3;
-                    v = cb;
-                    *(unsigned short *)(p + 0x4690) = (unsigned short)(cc * 8);
-                    q = 0;
-                    while (v >= 5) { v -= 5; q++; }
-                    *d = (unsigned char)(q * 10 + v + 5);
-                    cb++;
-                    cc++;
+                    column = leftRoomCount;
+                    *(unsigned short *)(p + 0x4690) = (unsigned short)(displaySlot * 8);
+                    row = 0;
+                    while (column >= 5) { column -= 5; row++; }
+                    *slotField = (unsigned char)(row * 10 + column + 5);
+                    leftRoomCount++;
+                    displaySlot++;
                 }
             } else if (base[0x62f8] != 0) {
-                p[0x469c] = (unsigned char)cc;
+                p[0x469c] = (unsigned char)displaySlot;
                 p[0x469b] = 3;
-                *(unsigned short *)(p + 0x4690) = (unsigned short)(cc * 8);
-                cc++;
+                *(unsigned short *)(p + 0x4690) = (unsigned short)(displaySlot * 8);
+                displaySlot++;
             } else {
                 if (base[0x62f5] == p[0x4696] && p[0x4697] == 6) {
-                    p[0x469c] = (unsigned char)cc;
+                    p[0x469c] = (unsigned char)displaySlot;
                     p[0x469b] = 3;
-                    *(unsigned short *)(p + 0x4690) = (unsigned short)(cc * 8);
-                    cc++;
+                    *(unsigned short *)(p + 0x4690) = (unsigned short)(displaySlot * 8);
+                    displaySlot++;
                 }
             }
         }
     }
-    func_ov006_020d5e3c(a);
+    func_ov006_020d5e3c(sceneData);
 }
 }
 #pragma pop
@@ -1163,47 +1192,47 @@ void func_ov006_020d7778(void)
 #pragma opt_common_subs off
 extern "C" {
 
-void func_ov006_020d777c(char *self_, int idx)
+void func_ov006_020d777c(char *sceneBytes, int bombIndex)
 {
-    int n = idx << 6;
-    if (*(u16*)(self_ + (idx << 6) + 0x4600 + 0x90) != 0) {
-        *(u16*)(self_ + 0x4690 + n) -= 1;
-        if (*(s16*)(self_ + (idx << 6) + 0x4600 + 0x90) < 0)
-            *(u16*)(self_ + (idx << 6) + 0x4600 + 0x90) = 0;
+    int offset = bombIndex << 6;
+    if (*(u16*)(sceneBytes + (bombIndex << 6) + 0x4600 + 0x90) != 0) {
+        *(u16*)(sceneBytes + 0x4690 + offset) -= 1;
+        if (*(s16*)(sceneBytes + (bombIndex << 6) + 0x4600 + 0x90) < 0)
+            *(u16*)(sceneBytes + (bombIndex << 6) + 0x4600 + 0x90) = 0;
         return;
     }
     {
-        int rp = *(u8*)(self_ + (idx << 6) + 0x4000 + 0x69c);
-        int quo = 0;
+        int column = *(u8*)(sceneBytes + (bombIndex << 6) + 0x4000 + 0x69c);
+        int row = 0;
         int curX, curY, targetY, targetX;
-        while (rp >= 10) { rp -= 10; quo++; }
-        n = quo * 20;
-        targetX = rp * 16 + 0x38;
-        targetY = n - 0xC0;
-        curX = *(int*)(self_ + (idx << 6) + 0x4000 + 0x660) >> 12;
-        curY = *(int*)(self_ + (idx << 6) + 0x4000 + 0x664) >> 12;
+        while (column >= 10) { column -= 10; row++; }
+        offset = row * 20;
+        targetX = column * 16 + 0x38;
+        targetY = offset - 0xC0;
+        curX = *(int*)(sceneBytes + (bombIndex << 6) + 0x4000 + 0x660) >> 12;
+        curY = *(int*)(sceneBytes + (bombIndex << 6) + 0x4000 + 0x664) >> 12;
         if (targetX == curX && targetY == curY) {
-            *(u8*)(self_ + (idx << 6) + 0x4000 + 0x69b) = 4;
-            if (*(u8*)(self_ + (idx << 6) + 0x4000 + 0x696) != 0)
-                func_02012718((int)0x1d9, *(int*)(self_ + (idx << 6) + 0x4000 + 0x660));
+            *(u8*)(sceneBytes + (bombIndex << 6) + 0x4000 + 0x69b) = 4;
+            if (*(u8*)(sceneBytes + (bombIndex << 6) + 0x4000 + 0x696) != 0)
+                func_02012718((int)0x1d9, *(int*)(sceneBytes + (bombIndex << 6) + 0x4000 + 0x660));
             else
-                func_02012718((int)0x1da, *(int*)(self_ + (idx << 6) + 0x4000 + 0x660));
+                func_02012718((int)0x1da, *(int*)(sceneBytes + (bombIndex << 6) + 0x4000 + 0x660));
             return;
         }
         if (targetY != curY) {
-            *(int*)(self_ + 0x4664 + (idx << 6)) += *(int*)(self_ + (idx << 6) + 0x4000 + 0x670);
-            if ((*(int*)(self_ + (idx << 6) + 0x4000 + 0x664) >> 12) >= targetY)
-                *(int*)(self_ + (idx << 6) + 0x4000 + 0x664) = targetY << 12;
+            *(int*)(sceneBytes + 0x4664 + (bombIndex << 6)) += *(int*)(sceneBytes + (bombIndex << 6) + 0x4000 + 0x670);
+            if ((*(int*)(sceneBytes + (bombIndex << 6) + 0x4000 + 0x664) >> 12) >= targetY)
+                *(int*)(sceneBytes + (bombIndex << 6) + 0x4000 + 0x664) = targetY << 12;
             return;
         }
         if (targetX > curX) {
-            *(int*)(self_ + 0x4660 + (idx << 6)) += *(int*)(self_ + (idx << 6) + 0x4000 + 0x670);
-            if (targetX <= (*(int*)(self_ + (idx << 6) + 0x4000 + 0x660) >> 12))
-                *(int*)(self_ + (idx << 6) + 0x4000 + 0x660) = targetX << 12;
+            *(int*)(sceneBytes + 0x4660 + (bombIndex << 6)) += *(int*)(sceneBytes + (bombIndex << 6) + 0x4000 + 0x670);
+            if (targetX <= (*(int*)(sceneBytes + (bombIndex << 6) + 0x4000 + 0x660) >> 12))
+                *(int*)(sceneBytes + (bombIndex << 6) + 0x4000 + 0x660) = targetX << 12;
         } else if (targetX < curX) {
-            *(int*)(self_ + 0x4660 + (idx << 6)) -= *(int*)(self_ + (idx << 6) + 0x4000 + 0x670);
+            *(int*)(sceneBytes + 0x4660 + (bombIndex << 6)) -= *(int*)(sceneBytes + (bombIndex << 6) + 0x4000 + 0x670);
             if (targetX >= curX)
-                *(int*)(self_ + (idx << 6) + 0x4000 + 0x660) = targetX << 12;
+                *(int*)(sceneBytes + (bombIndex << 6) + 0x4000 + 0x660) = targetX << 12;
         }
     }
 }
@@ -1228,35 +1257,35 @@ void func_ov006_020d7958(void)
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off
 extern "C" {
-void func_ov006_020d795c(char *o, int i)
+void func_ov006_020d795c(char *sceneBytes, int bombIndex)
 {
-    int b, v;
+    int room, x;
     {
-        s16 tv = data_02082214[((*(u16 *)(o + i * 0x40 + 0x468c)) >> 4) * 2 + 1];
-        *(int *)((char *)(((int)o + 0x4660)) + i * 0x40) +=
-            (int)(((s64)tv * *(int *)(o + i * 0x40 + 0x4670) + 0x800) >> 12);
+        s16 trigValue = data_02082214[((*(u16 *)(sceneBytes + bombIndex * 0x40 + 0x468c)) >> 4) * 2 + 1];
+        *(int *)((char *)(((int)sceneBytes + 0x4660)) + bombIndex * 0x40) +=
+            (int)(((s64)trigValue * *(int *)(sceneBytes + bombIndex * 0x40 + 0x4670) + 0x800) >> 12);
     }
     {
-        s16 tv = data_02082214[((*(u16 *)(o + i * 0x40 + 0x468c)) >> 4) * 2];
-        *(int *)((char *)(((int)o + 0x4664)) + i * 0x40) +=
-            (int)(((s64)tv * *(int *)(o + i * 0x40 + 0x4670) + 0x800) >> 12);
+        s16 trigValue = data_02082214[((*(u16 *)(sceneBytes + bombIndex * 0x40 + 0x468c)) >> 4) * 2];
+        *(int *)((char *)(((int)sceneBytes + 0x4664)) + bombIndex * 0x40) +=
+            (int)(((s64)trigValue * *(int *)(sceneBytes + bombIndex * 0x40 + 0x4670) + 0x800) >> 12);
     }
-    b = *(u8 *)(o + i * 0x40 + 0x4696);
-    v = *(int *)(o + i * 0x40 + 0x4660) >> 12;
-    if (b != 0) {
-        if (v >= 0x110) {
-            *(u8 *)(o + i * 0x40 + 0x469b) = 2;
-            *(int *)(o + i * 0x40 + 0x4660) = 0x80000;
-            *(int *)(o + i * 0x40 + 0x4664) = -0xf0000;
+    room = *(u8 *)(sceneBytes + bombIndex * 0x40 + 0x4696);
+    x = *(int *)(sceneBytes + bombIndex * 0x40 + 0x4660) >> 12;
+    if (room != 0) {
+        if (x >= 0x110) {
+            *(u8 *)(sceneBytes + bombIndex * 0x40 + 0x469b) = 2;
+            *(int *)(sceneBytes + bombIndex * 0x40 + 0x4660) = 0x80000;
+            *(int *)(sceneBytes + bombIndex * 0x40 + 0x4664) = -0xf0000;
         }
     } else {
-        if (v <= -0x10) {
-            *(u8 *)(o + i * 0x40 + 0x469b) = 2;
-            *(int *)(o + i * 0x40 + 0x4660) = 0x80000;
-            *(int *)(o + i * 0x40 + 0x4664) = -0xf0000;
+        if (x <= -0x10) {
+            *(u8 *)(sceneBytes + bombIndex * 0x40 + 0x469b) = 2;
+            *(int *)(sceneBytes + bombIndex * 0x40 + 0x4660) = 0x80000;
+            *(int *)(sceneBytes + bombIndex * 0x40 + 0x4664) = -0xf0000;
         }
     }
-    func_ov006_020d634c(o, *(u8 *)(o + i * 0x40 + 0x4696));
+    func_ov006_020d634c(sceneBytes, *(u8 *)(sceneBytes + bombIndex * 0x40 + 0x4696));
 }
 }
 #pragma pop
@@ -1269,60 +1298,60 @@ void func_ov006_020d795c(char *o, int i)
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off
 extern "C" {
-void func_ov006_020d7a84(char *c, int i)
+void func_ov006_020d7a84(char *sceneBytes, int bombIndex)
 {
-    int b, x, z, tx, ty;
+    int room, x, y, tx, ty;
 
-    tx = (*(u8 *)(c + i * 0x40 + 0x4696) != 0) ? 0x100 : 0;
+    tx = (*(u8 *)(sceneBytes + bombIndex * 0x40 + 0x4696) != 0) ? 0x100 : 0;
     ty = 0x60;
-    tx -= *(int *)(c + i * 0x40 + 0x4660) >> 12;
-    ty -= *(int *)(c + i * 0x40 + 0x4664) >> 12;
+    tx -= *(int *)(sceneBytes + bombIndex * 0x40 + 0x4660) >> 12;
+    ty -= *(int *)(sceneBytes + bombIndex * 0x40 + 0x4664) >> 12;
 
-    *(s16 *)(c + i * 0x40 + 0x468c) =
+    *(s16 *)(sceneBytes + bombIndex * 0x40 + 0x468c) =
         _ZN4cstd5atan2E5Fix12IiES1_(ty, tx);
 
     {
-        s16 tv = data_02082214[
-            ((*(u16 *)(c + i * 0x40 + 0x468c) >> 4) * 2) + 1];
+        s16 trigValue = data_02082214[
+            ((*(u16 *)(sceneBytes + bombIndex * 0x40 + 0x468c) >> 4) * 2) + 1];
 
-        *(int *)((char *)(((int)c + 0x4660)) +
-                  i * 0x40) +=
-            (int)(((s64)tv *
-                   *(int *)(c + i * 0x40 + 0x4670) + 0x800) >> 12);
+        *(int *)((char *)(((int)sceneBytes + 0x4660)) +
+                  bombIndex * 0x40) +=
+            (int)(((s64)trigValue *
+                   *(int *)(sceneBytes + bombIndex * 0x40 + 0x4670) + 0x800) >> 12);
     }
 
     {
-        s16 tv = data_02082214[
-            (*(u16 *)(c + i * 0x40 + 0x468c) >> 4) * 2];
+        s16 trigValue = data_02082214[
+            (*(u16 *)(sceneBytes + bombIndex * 0x40 + 0x468c) >> 4) * 2];
 
-        *(int *)((char *)(((int)c + 0x4664)) +
-                  i * 0x40) +=
-            (int)(((s64)tv *
-                   *(int *)(c + i * 0x40 + 0x4670) + 0x800) >> 12);
+        *(int *)((char *)(((int)sceneBytes + 0x4664)) +
+                  bombIndex * 0x40) +=
+            (int)(((s64)trigValue *
+                   *(int *)(sceneBytes + bombIndex * 0x40 + 0x4670) + 0x800) >> 12);
     }
 
-    b = *(u8 *)(c + i * 0x40 + 0x4696);
-    x = *(int *)(c + i * 0x40 + 0x4660) >> 12;
-    z = *(int *)(c + i * 0x40 + 0x4664) >> 12;
-    tx = b ? 0x100 : 0;
+    room = *(u8 *)(sceneBytes + bombIndex * 0x40 + 0x4696);
+    x = *(int *)(sceneBytes + bombIndex * 0x40 + 0x4660) >> 12;
+    y = *(int *)(sceneBytes + bombIndex * 0x40 + 0x4664) >> 12;
+    tx = room ? 0x100 : 0;
 
     if (x > tx + 2)
         goto done;
     if (x < tx - 2)
         goto done;
-    if (z > 0x62)
+    if (y > 0x62)
         goto done;
-    if (z < 0x5e)
+    if (y < 0x5e)
         goto done;
 
-    *(u8 *)(c + i * 0x40 + 0x469b) = 1;
-    if (*(u8 *)(c + i * 0x40 + 0x4696) != 0)
-        *(s16 *)(c + i * 0x40 + 0x468c) = 0;
+    *(u8 *)(sceneBytes + bombIndex * 0x40 + 0x469b) = 1;
+    if (*(u8 *)(sceneBytes + bombIndex * 0x40 + 0x4696) != 0)
+        *(s16 *)(sceneBytes + bombIndex * 0x40 + 0x468c) = 0;
     else
-        *(u16 *)(c + i * 0x40 + 0x468c) = 0x8000;
+        *(u16 *)(sceneBytes + bombIndex * 0x40 + 0x468c) = 0x8000;
 
 done:
-    func_ov006_020d634c(c, *(u8 *)(c + i * 0x40 + 0x4696));
+    func_ov006_020d634c(sceneBytes, *(u8 *)(sceneBytes + bombIndex * 0x40 + 0x4696));
 }
 }
 #pragma pop
