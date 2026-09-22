@@ -46,7 +46,7 @@ struct Base { char pad[0xd4]; Sub sub; };
 extern "C" {
 extern int data_ov033_021124f0[];
 int  _ZN5Event6GetBitEj(u32 bit);
-void _ZN7Minimap19UpdateLevelSpecificEv(void);
+void _ZN6dMap_c19UpdateLevelSpecificEv(void);
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* fp);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* thiz, void* f, int a, int b);
 extern void _ZN18TextureTransformer7PrepareER8BMD_FileR8BTA_File(void* bmd, void* bta);
@@ -103,7 +103,7 @@ int TinyWater::Behavior()
             mSoundID = Sound::PlayLong(mSoundID, 3, 0x96, *(const Vector3 *)&mCamSpacePosX, 0);
             if (mPosY <= mMinPosY) {
                 mPosY = mMinPosY;
-                _ZN7Minimap19UpdateLevelSpecificEv();
+                _ZN6dMap_c19UpdateLevelSpecificEv();
             }
         }
     }
