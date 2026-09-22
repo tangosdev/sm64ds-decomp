@@ -641,6 +641,53 @@ void port_fader_advance(void)
     }
 }
 
+/* ---- THE WIPE POOL'S CONSTRUCTED STATE, given back at every level boot ----
+ *
+ * On the cartridge the seven wipes do not survive a level. Stage::InitResources
+ * BUILDS them every time a level is opened -- the array note at the top of this
+ * file has the line, func_02073470(7, 0x60, 8, FaderWipe::FaderWipe, ...) -- so
+ * a level always starts with seven fresh FaderWipes holding the constructor's
+ * two words, `currInterp = 0x1000; speed = 0` (include/FaderBrightness.h says
+ * why those two belong to the constructor and what they mean: a fade starts
+ * fully opaque and stationary). The port's stand-ins are the static objects in
+ * this file, and Stage slot 3 (CleanupResources) is not hosted, so with nothing
+ * to hand them back their state they carried one transition's interpolator into
+ * the next one.
+ *
+ * WHAT THAT COST, measured rather than reasoned. The return from a course after
+ * a star installs hal_wipes[0] and then, one frame later, hal_wipes[5], both
+ * through dScene_c::SetFaders (src/_ZN8dScene_c9SetFadersEP15FaderBrightness.cpp),
+ * whose whole job is to carry the outgoing fader's end state onto the incoming
+ * one -- start onto start, end onto end, and NOTHING when the outgoing one is
+ * mid-fade.
+ *   FIRST star of a session: both wipes are still at 0x1000 with speed 0, so
+ *   the outgoing one reads exactly at the start, the incoming one is snapped to
+ *   the start, and the arrival fades in over thirty frames.
+ *   SECOND star: hal_wipes[0] still carries the first transition's speed, so it
+ *   steps on the very frame it is installed (0x1000 -> 0xf78) and writes EVY 16
+ *   into 0x4000050 / 0x4000054. SetFaders then reads it as between start and
+ *   end and leaves hal_wipes[5] alone -- and hal_wipes[5] is at 0 from the first
+ *   fade-in, already at its target, so AdvanceFade's own `if (currInterp == old)
+ *   return` means nobody writes those two registers again. The picture stays
+ *   fully black, every pixel of it, until some other writer of the blend
+ *   registers happens along: the level-clear menu's own dim, or a message box.
+ *
+ * The vptr is left alone on purpose: these are live host C++ objects whose table
+ * is the one the constructor would store anyway, and a placement-new over an
+ * object other code holds a pointer to is a bigger claim than this fix makes.
+ * Every other word the constructor writes is written here. */
+void port_fader_wipes_reset(void)
+{
+    for (int i = 0; i < 7; ++i) {
+        hal_wipes[i].currInterp = 0x1000;
+        hal_wipes[i].speed = 0;
+        hal_wipes[i].color = 0;
+        hal_wipes[i].unk0e = 0;
+        for (int b = 0; b < 0x50; ++b)
+            hal_wipes[i].model[b] = 0;
+    }
+}
+
 /* Start a COLOR fade on the installed color fader (data_0209f5e8) and put it in
    motion. frames is the fade length; toEnd != 0 fades toward interp 1.0 (screen
    fully covered -- a fade-OUT to color), toEnd == 0 fades toward 0.0 (fade-IN,
