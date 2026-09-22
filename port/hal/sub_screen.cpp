@@ -298,6 +298,17 @@ int g_size_force;
 int g_swap;                      /* composed this frame? the compose's answer */
 int g_menu_up;                   /* the ROM pair's answer for this frame */
 
+/* THE LIFT/DRAW DRIFT DETECTOR, and it is one int. The engine-A compositor
+   lifts the level-clear lettering and the coin sprites out of the picture on
+   every frame hal_lc_compose_rows answers 1 for, and swap_present is the only
+   thing that draws them again. This word is set where the lift is promised
+   and cleared where the draw honours it, and hal_lc_compose_rows says so once
+   per process if a promise was ever left unhonoured. It costs one store and
+   one test a frame and it is the net under the whole mechanism: the 0.4.1
+   gate's red row was exactly that drift, silent, with the pixels simply gone
+   from the picture. */
+int g_lc_lift_pending;
+
 /* SM64DS_MINIMAP_TRACE=1: every rectangle the geometry above and the panel's
    own settled on, printed when one of them changes. It exists so that a
    capture can be MEASURED against the numbers the program actually drew,
@@ -1778,6 +1789,8 @@ void swap_glyph_band(unsigned *dst, int w, int h, int src_y, int dst_y,
 void swap_present(unsigned *dst, int w, int h)
 {
     if (w <= 0 || h <= 0 || g_sw.pnum <= 0) return;
+    /* the lift's promise, honoured: see g_lc_lift_pending's banner */
+    g_lc_lift_pending = 0;
     /* WHAT IS UNDER ALL THREE IS THE GAME'S OWN PICTURE, EVERY ROW OF IT
        WHERE THE GAME PUT IT. The owner's two rulings are one ruling: "I want
        just the buttons not the whole background" and "the screen height
@@ -1959,11 +1972,41 @@ void swap_layout_selftest(void)
 /* Is the picture COMPOSED right now, for a reader that is not the compose?
    The rectangles are recomputed every frame whatever the answer, so a reader
    asking this on the same frame the plates come on gets the rectangles that
-   frame's compose is using. */
+   frame's compose is using.
+
+   THIS IS THE COMPOSE'S ONE TRUTH, AND EVERY TERM THE DRAW DEPENDS ON HAS TO
+   BE IN IT. The engine-A compositor asks this question -- through
+   hal_lc_compose_rows, below -- to decide whether to LIFT the level-clear
+   lettering and the coin sprites out of the picture, and swap_present is what
+   puts them back. The two halves are one mechanism, so a condition that stops
+   the draw without stopping the lift takes those pixels out of the picture
+   and never puts them back.
+
+   g_on -- the bottom-screen panel option, SM64DS_SUB_PANEL -- was exactly
+   such a term. hal_sub_screen_present has one early return, `if (!g_on)
+   return;`, and the compose's call to swap_present is below it, so with the
+   panel off the lift ran and the draw did not: the course text, the coin
+   total and "TOUCH TO SELECT" came out of the top screen and nothing was
+   drawn back. That is the 0.4.1 gate's one red row -- the level-clear picture
+   went course-independent, the same picture for Jolly Roger Bay and for
+   Bob-omb Battlefield, and its whole difference from the game's own picture
+   was BG3's 5971 glyph pixels plus the coin sprites' 1792 plus BG2's 8556,
+   with nothing drawn in their place.
+
+   Hoisting the draw above that early return is the other repair and it is the
+   wrong one: with the panel off engine B is never scanned out at all (the
+   `if (g_on) ppu_scanout_sub` a few lines above the return), so the plates
+   would have no source to draw from. With the panel off the compose does not
+   happen and the player keeps the game's own untouched top screen, text,
+   coins and all.
+
+   Anything added to hal_sub_screen_present that can skip swap_present belongs
+   in this predicate too. The one-shot note in hal_lc_compose_rows below is
+   the net for the day somebody forgets. */
 int swap_now(void)
 {
     return save_menu_on_top() && save_menu_is_up() &&
-           !hal_sub_screen_stacked() && g_sw.pnum > 0;
+           !hal_sub_screen_stacked() && g_on && g_sw.pnum > 0;
 }
 
 /* The square itself, drawn in the pass above the map so nothing covers it. */
@@ -3870,7 +3913,27 @@ extern "C" int hal_save_menu_up(void)
 extern "C" int hal_lc_compose_rows(int *text_r0, int *text_r1,
                                    int *coin_r0, int *coin_r1)
 {
+    /* THE PROMISE FROM LAST FRAME, CHECKED. If the lift was armed and
+       swap_present never ran, the lettering and the coin total were taken out
+       of that frame's picture and nothing put them back -- the defect this
+       file's swap_now banner describes. It cannot happen while every term the
+       draw depends on is in swap_now, which is the point of saying so here
+       rather than trusting the two to stay in step. Once per process, to
+       stderr, never fatal: a sweep row that trips it stays readable. */
+    if (g_lc_lift_pending) {
+        static int said;
+        if (!said) {
+            said = 1;
+            std::fprintf(stderr, "[compose] LIFT WITHOUT DRAW: the level-clear "
+                         "lettering was lifted out of a frame swap_present "
+                         "never reached; swap_now is missing a term the draw "
+                         "depends on\n");
+            std::fflush(stderr);
+        }
+        g_lc_lift_pending = 0;
+    }
     if (!swap_now()) return 0;
+    g_lc_lift_pending = 1;
     *text_r0 = g_sw.ty_src;
     *text_r1 = g_sw.ty_src + g_sw.t_h;
     *coin_r0 = g_sw.cy_src;
