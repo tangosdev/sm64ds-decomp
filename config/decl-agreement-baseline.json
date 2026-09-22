@@ -3062,9 +3062,6 @@
       "src/_ZN16SpinningPlatform8BehaviorEv.cpp": [
         "param:#1 char *"
       ],
-      "src/_ZN9daBtfly_c6State4Ev.cpp": [
-        "return:unsigned int"
-      ],
       "src/actors/daGmch_c.cpp": [
         "return:unsigned int"
       ],
@@ -4945,18 +4942,6 @@
         "param:#1 const void *",
         "param:#2 const void *"
       ],
-      "src/_ZN9daBtfly_c6State1Ev.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
-      "src/_ZN9daBtfly_c6State2Ev.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
-      "src/_ZN9daBtfly_c6State3Ev.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
       "src/_ZN9daShark_c8BehaviorEv.cpp": [
         "param:#1 Vector3 *",
         "param:#2 Vector3 *"
@@ -4970,6 +4955,10 @@
         "param:#2 const void *"
       ],
       "src/actors/daBombking_c.cpp": [
+        "param:#1 const void *",
+        "param:#2 const void *"
+      ],
+      "src/actors/daBtfly_c.cpp": [
         "param:#1 const void *",
         "param:#2 const void *"
       ],
@@ -5366,7 +5355,7 @@
       "src/Vec3_ApproachHorz.c": [
         "param:#1 Vec3 *"
       ],
-      "src/_ZN9daBtfly_c6State2Ev.cpp": [
+      "src/actors/daBtfly_c.cpp": [
         "param:#1 Vector3 *"
       ],
       "src/actors/daKing_Donketu_c.cpp": [
@@ -5716,9 +5705,6 @@
         "param:#2 int *",
         "param:#3 int *"
       ],
-      "src/_ZN9daBtfly_c6State2Ev.cpp": [
-        "param:#1 Vector3 *"
-      ],
       "src/_ZN9daManta_c8BehaviorEv.cpp": [
         "param:#1 Vector3 *",
         "param:#2 Vector3 *",
@@ -5743,6 +5729,9 @@
         "param:#1 Jump3DVec *",
         "param:#2 Jump3DVec *",
         "param:#3 Jump3DVec *"
+      ],
+      "src/actors/daBtfly_c.cpp": [
+        "param:#1 Vector3 *"
       ],
       "src/actors/daJango_c.cpp": [
         "param:#1 Vector3 *",
@@ -5921,14 +5910,6 @@
     },
     "Vec3_VertAngle": {
       "src/_ZN6Camera8BehaviorEv.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
-      "src/_ZN9daBtfly_c6State2Ev.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
-      "src/_ZN9daBtfly_c6State3Ev.cpp": [
         "param:#1 const void *",
         "param:#2 const void *"
       ],
@@ -7063,11 +7044,6 @@
         "param:#2 dActor_c *",
         "param:#5 Vector3_16 *"
       ],
-      "src/_ZN9daBtfly_c13InitResourcesEv.cpp": [
-        "param:#2 void *",
-        "param:#5 void *",
-        "param:#6 void *"
-      ],
       "src/_ZN9daDossy_c13InitResourcesEv.cpp": [
         "param:#2 void *",
         "param:#5 void *",
@@ -7105,6 +7081,11 @@
         "param:#2 dActor_c *",
         "param:#5 Vector3_16 *",
         "param:#6 Vector3_16 *"
+      ],
+      "src/actors/daBtfly_c.cpp": [
+        "param:#2 void *",
+        "param:#5 void *",
+        "param:#6 void *"
       ],
       "src/actors/daChair_c.cpp": [
         "param:#2 dActor_c *",
@@ -7488,11 +7469,11 @@
       "src/_ZN9SpikeBomb8BehaviorEv.cpp": [
         "param:#2 void *"
       ],
-      "src/_ZN9daBtfly_c6State7Ev.cpp": [
-        "param:#2 Vector3 *"
-      ],
       "src/actors/Eyerok.cpp": [
         "param:#2 const void *"
+      ],
+      "src/actors/daBtfly_c.cpp": [
+        "param:#2 Vector3 *"
       ],
       "src/func_ov065_02118634.c": [
         "param:#2 const Vector3 *"
@@ -11521,9 +11502,6 @@
       "src/_ZN9Whirlpool13InitResourcesEv.cpp": [
         "return:BMD_File *"
       ],
-      "src/_ZN9daBtfly_c13InitResourcesEv.cpp": [
-        "param:#1 void *"
-      ],
       "src/_ZN9daDossy_c13InitResourcesEv.cpp": [
         "param:#1 void *"
       ],
@@ -11541,6 +11519,9 @@
         "param:#1 void *"
       ],
       "src/actors/dScMgJump_c.cpp": [
+        "param:#1 void *"
+      ],
+      "src/actors/daBtfly_c.cpp": [
         "param:#1 void *"
       ],
       "src/actors/daGmch_c.cpp": [
@@ -13573,12 +13554,6 @@
         "param:#7 unsigned int",
         "return:void"
       ],
-      "src/_ZN9daBtfly_c6State7Ev.cpp": [
-        "param:#5 unsigned int",
-        "param:#6 unsigned int",
-        "param:#7 unsigned int",
-        "return:void"
-      ],
       "src/actors/Goomboss.cpp": [
         "param:#1 char *",
         "param:#5 unsigned int",
@@ -13593,6 +13568,12 @@
       ],
       "src/actors/daBgSnmBdy_c.cpp": [
         "param:#1 dActor_c *",
+        "param:#5 unsigned int",
+        "param:#6 unsigned int",
+        "param:#7 unsigned int",
+        "return:void"
+      ],
+      "src/actors/daBtfly_c.cpp": [
         "param:#5 unsigned int",
         "param:#6 unsigned int",
         "param:#7 unsigned int",
@@ -15946,9 +15927,6 @@
       "src/_ZN9PowerStar13InitResourcesEv.cpp": [
         "return:char *"
       ],
-      "src/_ZN9daBtfly_c6State7Ev.cpp": [
-        "return:void *"
-      ],
       "src/actors/Goomboss.cpp": [
         "return:char *"
       ],
@@ -15963,6 +15941,9 @@
       ],
       "src/actors/daBombking_c.cpp": [
         "return:int"
+      ],
+      "src/actors/daBtfly_c.cpp": [
+        "return:void *"
       ],
       "src/actors/daGmch_c.cpp": [
         "return:void *"
@@ -16950,9 +16931,6 @@
         "param:#3 char *",
         "param:#6 unsigned int"
       ],
-      "src/_ZN9daBtfly_c8BehaviorEv.cpp": [
-        "param:#6 unsigned int"
-      ],
       "src/actors/Eyerok.cpp": [
         "param:#6 unsigned int"
       ],
@@ -16963,6 +16941,9 @@
         "param:#6 unsigned int"
       ],
       "src/actors/daBombking_c.cpp": [
+        "param:#6 unsigned int"
+      ],
+      "src/actors/daBtfly_c.cpp": [
         "param:#6 unsigned int"
       ],
       "src/actors/daChair_c.cpp": [
@@ -17370,25 +17351,6 @@
         "param:#6 int",
         "return:char *"
       ],
-      "src/_ZN9daBtfly_c6State0Ev.cpp": [
-        "param:#3 Vector3 *",
-        "param:#4 Vector3_16 *",
-        "param:#5 int",
-        "param:#6 int",
-        "return:char *"
-      ],
-      "src/_ZN9daBtfly_c6State4Ev.cpp": [
-        "param:#3 const Vector3 *",
-        "param:#5 int",
-        "param:#6 int",
-        "return:int"
-      ],
-      "src/_ZN9daBtfly_c6State6Ev.cpp": [
-        "param:#3 const Vector3 *",
-        "param:#5 int",
-        "param:#6 int",
-        "return:int"
-      ],
       "src/_ZN9daDossy_c13InitResourcesEv.cpp": [
         "param:#3 void *",
         "param:#5 int",
@@ -17404,6 +17366,12 @@
       "src/actors/daBombking_c.cpp": [
         "param:#3 void *",
         "param:#4 int",
+        "param:#5 int",
+        "param:#6 int",
+        "return:int"
+      ],
+      "src/actors/daBtfly_c.cpp": [
+        "param:#3 const Vector3 *",
         "param:#5 int",
         "param:#6 int",
         "return:int"
@@ -18041,10 +18009,6 @@
       "src/_ZN9Whirlpool13InitResourcesEv.cpp": [
         "return:void"
       ],
-      "src/_ZN9daBtfly_c13InitResourcesEv.cpp": [
-        "param:#1 void *",
-        "return:void *"
-      ],
       "src/_ZN9daDossy_c13InitResourcesEv.cpp": [
         "param:#1 void *",
         "return:void *"
@@ -18064,6 +18028,10 @@
       "src/actors/Scuttlebug.cpp": [
         "param:#1 void *",
         "return:void"
+      ],
+      "src/actors/daBtfly_c.cpp": [
+        "param:#1 void *",
+        "return:void *"
       ],
       "src/actors/daGmch_c.cpp": [
         "param:#1 void *",
@@ -18239,9 +18207,6 @@
       "src/_ZN9Whirlpool13InitResourcesEv.cpp": [
         "param:#5 unsigned int"
       ],
-      "src/_ZN9daBtfly_c13InitResourcesEv.cpp": [
-        "param:#5 unsigned int"
-      ],
       "src/_ZN9daDossy_c13InitResourcesEv.cpp": [
         "param:#5 unsigned int"
       ],
@@ -18252,6 +18217,9 @@
         "param:#5 unsigned int"
       ],
       "src/actors/dMgJump3DMario_c.cpp": [
+        "param:#5 unsigned int"
+      ],
+      "src/actors/daBtfly_c.cpp": [
         "param:#5 unsigned int"
       ],
       "src/actors/daGmch_c.cpp": [
@@ -19781,7 +19749,7 @@
       "include/decl_Animation.h": [
         "return:int"
       ],
-      "src/_ZN9daBtfly_c13InitResourcesEv.cpp": [
+      "src/actors/daBtfly_c.cpp": [
         "return:int"
       ],
       "src/func_ov060_0211747c.c": [
@@ -20359,9 +20327,6 @@
       "src/_ZN8Fireball8BehaviorEv.cpp": [
         "arity:1"
       ],
-      "src/_ZN9daBtfly_c6State7Ev.cpp": [
-        "arity:1"
-      ],
       "src/_ZN9daDossy_c8BehaviorEv.cpp": [
         "arity:1"
       ],
@@ -20369,6 +20334,9 @@
         "arity:1"
       ],
       "src/actors/daBgSnmBdy_c.cpp": [
+        "arity:1"
+      ],
+      "src/actors/daBtfly_c.cpp": [
         "arity:1"
       ],
       "src/actors/daChair_c.cpp": [
@@ -24835,9 +24803,6 @@
       ]
     },
     "data_ov002_0210d9d8": {
-      "src/_ZN9daBtfly_c13InitResourcesEv.cpp": [
-        "return:SFP"
-      ],
       "src/__sinit_ov002_02100560.c": [
         "return:void *"
       ],
@@ -26348,6 +26313,9 @@
     "data_ov004_020beb60": {
       "src/func_ov004_020adc4c.c": [
         "return:int []"
+      ],
+      "src/minigames/d_s_mg_base.cpp": [
+        "return:void *"
       ]
     },
     "data_ov004_020beb68": {
@@ -32209,26 +32177,17 @@
       ]
     },
     "data_ov100_02148600": {
-      "src/_ZN9daBtfly_c13InitResourcesEv.cpp": [
-        "return:SFP"
-      ],
-      "src/_ZN9daBtfly_c16CleanupResourcesEv.cpp": [
-        "return:SharedFilePtr"
+      "src/__sinit_ov100_021473bc.c": [
+        "return:char []"
       ]
     },
     "data_ov100_02148608": {
-      "src/_ZN9daBtfly_c13InitResourcesEv.cpp": [
-        "return:SFP"
-      ],
-      "src/_ZN9daBtfly_c16CleanupResourcesEv.cpp": [
-        "return:SharedFilePtr"
+      "src/__sinit_ov100_021473bc.c": [
+        "return:char []"
       ]
     },
     "data_ov100_02148668": {
-      "src/_ZN9daBtfly_c13InitResourcesEv.cpp": [
-        "return:SFP"
-      ],
-      "src/_ZN9daBtfly_c16CleanupResourcesEv.cpp": [
+      "src/actors/daBtfly_c.cpp": [
         "return:SharedFilePtr"
       ]
     },

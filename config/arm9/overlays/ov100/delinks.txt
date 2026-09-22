@@ -4,65 +4,9 @@
     .ctor       start:0x02147de8 end:0x02147e04 kind:rodata align:4
     .data       start:0x02147e20 end:0x02148600 kind:data align:32
     .bss        start:0x02148600 end:0x02148a80 kind:bss align:32
-src/_ZN9daBtfly_cD1Ev.cpp:
+src/actors/daBtfly_c.cpp:
     complete
-    .text start:0x02140d80 end:0x02140dd8
-
-src/_ZN9daBtfly_cD0Ev.cpp:
-    complete
-    .text start:0x02140dd8 end:0x02140e44
-
-src/_ZN9daBtfly_c6State7Ev.cpp:
-    complete
-    .text start:0x02140e44 end:0x0214109c
-
-src/_ZN9daBtfly_c6State6Ev.cpp:
-    complete
-    .text start:0x0214109c end:0x0214117c
-
-src/_ZN9daBtfly_c6State5Ev.cpp:
-    complete
-    .text start:0x0214117c end:0x021412d8
-
-src/_ZN9daBtfly_c6State4Ev.cpp:
-    complete
-    .text start:0x021412d8 end:0x02141470
-
-src/_ZN9daBtfly_c6State3Ev.cpp:
-    complete
-    .text start:0x02141470 end:0x021415bc
-
-src/_ZN9daBtfly_c6State2Ev.cpp:
-    complete
-    .text start:0x021415bc end:0x02141800
-
-src/_ZN9daBtfly_c6State1Ev.cpp:
-    complete
-    .text start:0x02141800 end:0x02141848
-
-src/_ZN9daBtfly_c6State0Ev.cpp:
-    complete
-    .text start:0x02141848 end:0x02141988
-
-src/_ZN9daBtfly_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02141988 end:0x021419d0
-
-src/_ZN9daBtfly_c16OnPendingDestroyEv.cpp:
-    complete
-    .text start:0x021419d0 end:0x021419d4
-
-src/_ZN9daBtfly_c6RenderEv.cpp:
-    complete
-    .text start:0x021419d4 end:0x02141a40
-
-src/_ZN9daBtfly_c8BehaviorEv.cpp:
-    complete
-    .text start:0x02141a40 end:0x02141c6c
-
-src/_ZN9daBtfly_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x02141c6c end:0x02141ea4
+    .text start:0x02140d80 end:0x02141ea4
 
 src/d_a_btfly.c:
     complete

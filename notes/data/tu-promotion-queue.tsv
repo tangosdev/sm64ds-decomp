@@ -149,7 +149,7 @@ LavaSeesaw	7	147	ov022	yes	no	compiler-only:>=11(derived from own chain: 5 class
 daObjSlIceBlock_c	7	189	ov027	yes	yes	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	daIDonketu_c	text-only
 RickshawBdw	4	79	ov043	yes	no	compiler-only:unknown(no chain for RickshawBdw: no RTTI record in build/rtti.json and no include/ base clause; measure with tubuild verify)	daObjKm1_Ukishima_c	text-only
 daObjKm2_Ukishima_c	1	90	ov045	yes	yes	compiler-only:>=13(derived from own chain: 6 classes incl. self via build/rtti.json; floor 2x6+1)	daObjKm2_Ami_Bou_c	text-only
-daBDonketu_c	7	207	ov064	yes	no	compiler-only:>=13(derived from own chain: 6 classes incl. self via build/rtti.json + include/ base clause; floor 2x6+1)	daObjFl_Gura_c	text-only
+daBDonketu_c	7	207	ov064	yes	yes	compiler-only:>=13(derived from own chain: 6 classes incl. self via build/rtti.json + include/ base clause; floor 2x6+1)	daObjFl_Gura_c	text-only
 daObjShell_c	7	221	ov064	yes	no	compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json + include/ base clause; floor 2x4+1)	daObjFl_Gura_c	text-only
 PyramidStep	8	176	ov025	yes	no	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	-	text-only
 SpinningPlatform	8	186	ov035	yes	no	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	-	text-only
@@ -178,7 +178,7 @@ daMenbo_c	24	1041	ov090	yes	no	pragma:1;compiler-only:>=11(derived from own chai
 daSnmBth_c+SnowmanBreathParticle	16	450	ov027	partial	no	multi-class-tu:2;compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json + include/ base clause; floor 2x4+1; excludes 1 unresolved: SnowmanBreathParticle)	daIDonketu_c	text-only
 dMap_c	11	1104	ov002	yes	no	pragma:2;compiler-only:>=7(derived from own chain: 3 classes incl. self via build/rtti.json + include/ base clause; floor 2x3+1)	daBar_c	text-only
 Fish	17	437	ov100	yes	no	pragma:1;compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json + include/ base clause; floor 2x4+1)	daObjPathLift_c	text-only
-daBtfly_c	15	662	ov100	yes	no	pragma:1;compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json + include/ base clause; floor 2x4+1)	daObjPathLift_c	text-only
+daBtfly_c	15	662	ov100	yes	yes	pragma:1;compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json + include/ base clause; floor 2x4+1)	daObjPathLift_c	text-only
 daPiano_c	3	609	ov063	yes	yes	pragma:2;compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)	-	text-only
 SpikeBomb	15	391	ov060	yes	no	pragma:1;compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json + include/ base clause; floor 2x4+1)	-	text-only
 daKinopio_c	1	746	ov085	yes	yes	pragma:2;compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json; floor 2x4+1)	-	text-only

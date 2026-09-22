@@ -1,9 +1,9 @@
 {
   "id": "ov100/daBtfly_c",
   "module": "ov100",
-  "source": "src_tu/actors/daBtfly_c.cpp",
+  "source": "src/actors/daBtfly_c.cpp",
   "promoted_source": "src/actors/daBtfly_c.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x2140d80..0x2141ea4, 15 function(s), from build/tu_map.json (tools/tu_map.py)",
@@ -157,7 +157,8 @@
     "Class naming: the ROM's own RTTI spells this class daBtfly_c; the tree's class is daBtfly_c. Left as found -- renaming is out of scope for this fold.",
     "SOURCE ORDER IS ROM-ASCENDING IN THIS TU, deliberately, and is coupled to the '#pragma defer_codegen off' it carries. State2 needs the per-member '#pragma opt_common_subs off' that tubuild create flagged [NOT carried]; bracketed alone the pragma does not bind (last file-global state wins) and State2 compiles 8 bytes short of its 0x244. Adding 'defer_codegen off' makes the bracket bind AND flips section emission from reverse to forward source order, so the source was reordered to compensate. Net result is better than the usual convention: all 15 functions land in ROM-ascending section order including the destructor pair, where the other three TUs in this batch still report the (0,1) destructor pair out of order. Do not change one of the two without the other.",
     "Pragmas re-added by hand: '#pragma opt_common_subs off' / '... on' bracketing _ZN9daBtfly_c6State2Ev, plus the file-global '#pragma defer_codegen off' that makes that bracket bind. Both are load-bearing; without them the TU is 14/15.",
-    "Declarations reconciled by hand, from 23 conflicts tubuild flagged: (1) RandomIntInternal was declared 'int' by State5 and 'unsigned int' by State4, and State4 depends on the unsigned semantics -- it does % 3 and >> 0x10 on the result. Kept the int declaration and cast the five State4 call sites to unsigned int; that alone moved State4 from 9 words differing to MATCH. (2) Vec3_HorzAngle was kept with opaque const void* parameters, the spelling three of its four call sites use. (3) func_02035638's local void* redeclaration was dropped in favour of decl_common.h's int(u8*), with a cast at the one call site. (4) The four SharedFilePtr handles were declared as a local two-word SFP struct by InitResources and as SharedFilePtr by CleanupResources. include/SharedFilePtr.h is deliberately fieldless because the layout is not recovered, so the SFP shadow was dropped and the two '.b' reads rewritten as ((void**)and-sym)[1], which is the same address. The remaining flagged conflicts were parameter-name or discarded-return-type differences and needed no change."
+    "Declarations reconciled by hand, from 23 conflicts tubuild flagged: (1) RandomIntInternal was declared 'int' by State5 and 'unsigned int' by State4, and State4 depends on the unsigned semantics -- it does % 3 and >> 0x10 on the result. Kept the int declaration and cast the five State4 call sites to unsigned int; that alone moved State4 from 9 words differing to MATCH. (2) Vec3_HorzAngle was kept with opaque const void* parameters, the spelling three of its four call sites use. (3) func_02035638's local void* redeclaration was dropped in favour of decl_common.h's int(u8*), with a cast at the one call site. (4) The four SharedFilePtr handles were declared as a local two-word SFP struct by InitResources and as SharedFilePtr by CleanupResources. include/SharedFilePtr.h is deliberately fieldless because the layout is not recovered, so the SFP shadow was dropped and the two '.b' reads rewritten as ((void**)and-sym)[1], which is the same address. The remaining flagged conflicts were parameter-name or discarded-return-type differences and needed no change.",
+    "Promotion licensing (2026-09-22): the object's 11 unlicensed outputs are dispositioned through compiler_only_output rather than by licensing a .data section, which is the dominant landed shape for a text-only key-function TU (184 manifest entries carry deadstrip-data rows; ov002/daFeather_c is the same _ZTV/_ZTI/_ZTS + three-ancestor chain). A .data license is NOT possible at this boundary: the compiler emits _ZTS/_ZTI/_ZTV contiguously, but in ROM g_profile_BUTTERFLY (0x02147e78..0x02147e94) sits between _ZTI9daBtfly_c and the vtable storage start at _ZTV-8 = 0x02147e94, and g_profile_BUTTERFLY is emitted by daBtfly_c_classInit at 0x02141ea4, which is outside this TU's evidenced 15-function .text run. That supersedes the earlier 'not one contiguous interval' reading in the note above: with the two-word vtable preamble accounted for, _ZTI end (0x02147e78) and _ZTV-8 (0x02147e94) bracket the profile exactly, so the obstacle is factory ownership, not interval arithmetic. Folding daBtfly_c_classInit and licensing .data remains open follow-up work."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -181,6 +182,156 @@
       "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 11 unlicensed section/symbol(s), 2 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov100-daBtfly_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x02140d80",
+        "end": "0x02141ea4",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x02140d80",
+          "end": "0x02141ea4",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 15
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
     }
-  }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "include/types.h gives Vector3 a deliberately empty inline destructor, so every TU that destroys a Vector3 re-emits it as vague linkage -- here the Vector3 automatics in State7 (the position passed to Player::Hurt, and the cylinder offset handed to dCcAcPos_c::SetPosRelativeToActor), in State2 (the two vectors it builds toward the chased player) and in State0 (the spawn position) pull it in. The cartridge keeps one copy at arm9:0x020072c0, owned by src/_ZN7Vector3D1Ev.cpp; this object's copy is the identical 4-byte `bx lr` body and no surviving section here references it. deadstrip-duplicate makes rombuild compare this body against those cartridge bytes before dropping it; plain deadstrip is the one disposition never compared against the cartridge."
+    },
+    {
+      "symbol": "_ZN9daBtfly_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Homeless. ~daBtfly_c is declared in include/daBtfly_c.h and written out of line in this TU, so mwcc emits three variants -- under the file-global `#pragma defer_codegen off` this TU carries, in the ROM-ascending source order D1, D0, D2 -- but the cartridge carries only D1 (ov100:0x02140d80, 0x58) and D0 (ov100:0x02140dd8, 0x6c), which are exactly the two destructor slots of _ZTV9daBtfly_c. No address anywhere in config/ names a D2 for this class: config/arm9/overlays/ov100/symbols.txt has no such row and a search of every module symbol file finds none, so tubuild.all_symbol_homes() returns no home for it. Plain `deadstrip` is therefore the correct disposition -- deadstrip-duplicate requires a single unambiguous ROM home and would be refused. Nothing in the surviving sections references it."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "The out-of-line ~daBtfly_c is this class's key function, so this TU emits the inherited fBase_c typeinfo record as vague linkage -- emitting one _ZTI drags the whole ancestor chain daBtfly_c -> dActor_c -> dBase_c -> fBase_c. Its canonical arm9 home (0x02086d70) lies outside this entry's claimed .text range 0x02140d80..0x02141ea4, so the cartridge's own record survives and this copy is discarded."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "The out-of-line ~daBtfly_c is this class's key function, so this TU emits the inherited fBase_c type-name string as vague linkage -- emitting one _ZTI drags the whole ancestor chain daBtfly_c -> dActor_c -> dBase_c -> fBase_c. Its canonical arm9 home (0x02086e60) lies outside this entry's claimed .text range 0x02140d80..0x02141ea4, so the cartridge's own record survives and this copy is discarded."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "The out-of-line ~daBtfly_c is this class's key function, so this TU emits the inherited dBase_c typeinfo record as vague linkage -- emitting one _ZTI drags the whole ancestor chain daBtfly_c -> dActor_c -> dBase_c -> fBase_c. Its canonical arm9 home (0x02086e78) lies outside this entry's claimed .text range 0x02140d80..0x02141ea4, so the cartridge's own record survives and this copy is discarded."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "The out-of-line ~daBtfly_c is this class's key function, so this TU emits the inherited dBase_c type-name string as vague linkage -- emitting one _ZTI drags the whole ancestor chain daBtfly_c -> dActor_c -> dBase_c -> fBase_c. Its canonical arm9 home (0x02086e54) lies outside this entry's claimed .text range 0x02140d80..0x02141ea4, so the cartridge's own record survives and this copy is discarded."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "The out-of-line ~daBtfly_c is this class's key function, so this TU emits the inherited dActor_c typeinfo record as vague linkage -- emitting one _ZTI drags the whole ancestor chain daBtfly_c -> dActor_c -> dBase_c -> fBase_c. Its canonical arm9 home (0x0208e390) lies outside this entry's claimed .text range 0x02140d80..0x02141ea4, so the cartridge's own record survives and this copy is discarded."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "The out-of-line ~daBtfly_c is this class's key function, so this TU emits the inherited dActor_c type-name string as vague linkage -- emitting one _ZTI drags the whole ancestor chain daBtfly_c -> dActor_c -> dBase_c -> fBase_c. Its canonical arm9 home (0x0208e384) lies outside this entry's claimed .text range 0x02140d80..0x02141ea4, so the cartridge's own record survives and this copy is discarded."
+    },
+    {
+      "symbol": "_ZTS9daBtfly_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov100",
+      "canonical_address": "0x02147e60",
+      "reason": "Key-function emission: the class type-name string '9daBtfly_c' (0xb). The cartridge's own record is at ov100:0x02147e60, inside the ov100 .data range 0x02147e20..0x02148600 and outside this entry's claimed .text range 0x02140d80..0x02141ea4, so the ROM's copy survives and this one is discarded."
+    },
+    {
+      "symbol": "_ZTI9daBtfly_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov100",
+      "canonical_address": "0x02147e6c",
+      "reason": "Key-function emission: companion of the vtable below -- the single-inheritance RTTI record naming dActor_c as the sole base, which is what _ZTV9daBtfly_c - 4 points at in the cartridge. Its canonical ov100 home (0x02147e6c) lies outside this entry's claimed .text range; the cartridge owns the record and this copy is discarded with the vtable."
+    },
+    {
+      "symbol": "_ZTV9daBtfly_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov100",
+      "canonical_address": "0x02147e9c",
+      "reason": "Key-function emission: ~daBtfly_c is the first declared virtual and is written out of line here, so this TU emits daBtfly_c's own vtable as vague linkage (0x84 of compiler storage, which is the ROM's 0x7c of slots plus the two-word offset-to-top/typeinfo preamble the configured address point sits past). Its canonical ov100 home is the address point 0x02147e9c, inside the ov100 .data range and outside this entry's claimed .text range 0x02140d80..0x02141ea4. The cartridge owns the record; this copy is discarded and the surviving vptr store in ~daBtfly_c rebinds to it. NOTE the entry does NOT license this .data: g_profile_BUTTERFLY (ov100:0x02147e78, 0x1c) sits between _ZTI9daBtfly_c and the vtable's storage start at 0x02147e94, and it is emitted by daBtfly_c_classInit (ov100:0x02141ea4), which this TU's evidenced 15-function boundary does not contain -- so the emitted .data cannot be laid down as one interval matching ROM. Licensing it would require folding the factory in first; compare ov070/daBrq_c, whose 19-function boundary does include its classInit and which therefore licenses one contiguous .data span across g_profile_BIRIKYU."
+    }
+  ]
 }

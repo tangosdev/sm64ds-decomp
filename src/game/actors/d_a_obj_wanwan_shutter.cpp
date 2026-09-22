@@ -3,32 +3,8 @@
  * tethered in front of. ov014/daObjWanwanShutter_c, profile WANWAN_SHUTTER
  * (CHAIN_CHOMP_FENCE 41). This is the fence, not the chomp (daWanwan_c).
  *
- * A GENUINE TRANSLATION UNIT, ENROLLED AND CANONICAL. It is the whole of the
- * cartridge's contiguous linker run .text 0x02112e0c..0x021130ac, eight
- * functions and nothing else, and the production build links this object rather
- * than eight per-function ones. The filename is tools/tu_names.py's:
- * candidate_stem('daObjWanwanShutter_c') is d_a_obj_wanwan_shutter.
- *
- * THE CLASS IS NAMED FROM THE CARTRIDGE, not coined. ov014 0x02114868 is a
- * __si_class_type_info whose _ZTS at 0x02114874 reads exactly
- * `20daObjWanwanShutter_c`, and whose one base, at subobject offset 0, is
- * ov002 0x021089ec -- _ZTI10dBgActor_c. That is why the header says
- * `struct daObjWanwanShutter_c : dBgActor_c`. The historical spelling was
- * ChainChompFence.
- *
- * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S -- mwccarm 2004/b56
- * emits one .text section per function, in the REVERSE of source order, so the
- * highest-address ROM function is written FIRST here. Do not reorder.
- *
- * THE SIZE ARITHMETIC CLOSES. The factory's literal is 800 = 0x320, which is
- * exactly sizeof(dBgActor_c); this class adds only mDisabled at 0x31e, inside
- * the tail padding the base already had, so the derived size is the base's.
- *
- * THE VTABLE IS 32 SLOTS and diffs against _ZTV10dBgActor_c (ov002 0x0210ae38)
- * at exactly six: 0 InitResources, 3 CleanupResources, 6 Behavior, 9 Render,
- * 16 D1, 17 D0. Slot 31 is dBgActor_c::Kill at 0x020ee55c in both tables --
- * inherited, not overridden.
- *
+ * Order is load-bearing: source runs REVERSE of ROM (highest address
+ * first). Do not reorder. The destructor stays inline in the header.
  */
 
 /* daObjWanwanShutter_c.h FIRST: it pulls in dBgActor_c.h, which must reach
@@ -62,8 +38,6 @@ extern SharedFilePtr data_ov014_021149b8;   /* the KCL collision mesh */
 extern CLPS_Block    data_ov014_02114558;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol daObjWanwanShutter_c_classInit
 /* Reconstructed source-style name. Historical alias: ChainChompFence_Spawn.
  *
@@ -77,8 +51,6 @@ extern "C" daObjWanwanShutter_c *daObjWanwanShutter_c_classInit(void)
     return new daObjWanwanShutter_c();
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN20daObjWanwanShutter_c13InitResourcesEv
 /* Vtable slot 0. Loads the fence's model and collision mesh and plants both at
    the actor's position. Scale 0x1000 is 1.0. */
@@ -100,8 +72,6 @@ int daObjWanwanShutter_c::InitResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN20daObjWanwanShutter_c8BehaviorEv
 int daObjWanwanShutter_c::Behavior()
 {
@@ -113,8 +83,6 @@ int daObjWanwanShutter_c::Behavior()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN20daObjWanwanShutter_c6RenderEv
 int daObjWanwanShutter_c::Render()
 {
@@ -124,8 +92,6 @@ int daObjWanwanShutter_c::Render()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN20daObjWanwanShutter_c16CleanupResourcesEv
 int daObjWanwanShutter_c::CleanupResources()
 {
@@ -136,8 +102,6 @@ int daObjWanwanShutter_c::CleanupResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov014_02112ea8
 /* The chomp's "break the fence" trigger, reached from daWanwan_c when the
    chomp finishes its lunge at the gate. Plays bank-3 sound 0xf at camera-space
@@ -171,8 +135,6 @@ extern "C" void func_ov014_02112ea8(daObjWanwanShutter_c *a)
         a->mMeshCollider.Disable();
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN20daObjWanwanShutter_cD1Ev
 // @symbol _ZN20daObjWanwanShutter_cD0Ev
 /* NOT WRITTEN HERE ON PURPOSE. The inline `~daObjWanwanShutter_c() {}` in the

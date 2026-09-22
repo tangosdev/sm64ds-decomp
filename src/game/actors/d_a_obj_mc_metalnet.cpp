@@ -6,19 +6,12 @@
  *
  * 8 function(s), .text 0x02111dc4..0x02112078.
  *
- * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S -- mwccarm 2004/b56
- * emits one .text section per function in the REVERSE of source order, so the
- * highest-address ROM function is written FIRST here. Do not reorder.
+ * Order is load-bearing: source runs REVERSE of ROM (highest address
+ * first). Do not reorder.
  *
- * Consolidated from these legacy one-function sources (ROM address order):
- *   [0] 0x02111dc4  src/_ZN18daObjMc_Metalnet_cD1Ev.cpp
- *   [1] 0x02111e08  src/_ZN18daObjMc_Metalnet_cD0Ev.cpp
- *   [2] 0x02111e60  src/_ZN18daObjMc_Metalnet_c16CleanupResourcesEv.cpp
- *   [3] 0x02111ea4  src/_ZN18daObjMc_Metalnet_c16OnPendingDestroyEv.cpp
- *   [4] 0x02111ea8  src/_ZN18daObjMc_Metalnet_c6RenderEv.cpp
- *   [5] 0x02111ed0  src/_ZN18daObjMc_Metalnet_c8BehaviorEv.cpp
- *   [6] 0x02111f40  src/_ZN18daObjMc_Metalnet_c13InitResourcesEv.cpp
- *   [7] 0x02112048  src/daObjMc_Metalnet_c_classInit.c
+ * deslop
+ * Leftover: NumStars is the shared coined star-count helper
+ *   (src/func_0203128c.c); naming belongs at its definition.
  */
 
 /* daObjMc_Metalnet_c.h FIRST: it pulls in dBgActor_c.h, which must reach
@@ -53,8 +46,6 @@ void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *clps);
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol daObjMc_Metalnet_c_classInit
 /* Reconstructed source-style name. Historical alias: MetalNet_Spawn.
  *
@@ -68,8 +59,6 @@ extern "C" daObjMc_Metalnet_c *daObjMc_Metalnet_c_classInit(void)
     return new daObjMc_Metalnet_c();
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN18daObjMc_Metalnet_c13InitResourcesEv
 /* Load the model, place it, hand the collision mesh to the collider -- and then
  * decide whether this net should exist at all. Returning 0 from InitResources
@@ -110,8 +99,6 @@ keep:
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN18daObjMc_Metalnet_c8BehaviorEv
 /* The net never moves, but it still re-derives its collider transform every
  * frame -- that is what lets a moving parent carry it.
@@ -138,8 +125,6 @@ s32 daObjMc_Metalnet_c::Behavior()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN18daObjMc_Metalnet_c6RenderEv
 s32 daObjMc_Metalnet_c::Render()
 {
@@ -147,8 +132,6 @@ s32 daObjMc_Metalnet_c::Render()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN18daObjMc_Metalnet_c16OnPendingDestroyEv
 /* Four bytes: a bare `bx lr`. The override exists to occupy slot 12 so that
  * fBase_c's own OnPendingDestroy does not run for this class. */
@@ -156,8 +139,6 @@ void daObjMc_Metalnet_c::OnPendingDestroy()
 {
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN18daObjMc_Metalnet_c16CleanupResourcesEv
 s32 daObjMc_Metalnet_c::CleanupResources()
 {
@@ -169,8 +150,6 @@ s32 daObjMc_Metalnet_c::CleanupResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN18daObjMc_Metalnet_cD1Ev
 // @symbol _ZN18daObjMc_Metalnet_cD0Ev
 /* NOT WRITTEN HERE ON PURPOSE. The inline `~daObjMc_Metalnet_c() {}` in the

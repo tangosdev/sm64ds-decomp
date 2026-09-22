@@ -2,7 +2,15 @@
 /* Shared minigame scene behavior. Production TU ov004/dScMgBase_c;
  * the manifest owns eight functions in [0x020b04e8, 0x020b0a38).
  * Keep definition order: the pinned compiler reverses ordinary function
- * sections. Strength reduction remains disabled for BeforeBehavior. */
+ * sections. Strength reduction remains disabled for BeforeBehavior.
+ *
+ * deslop
+ * Leftover: the func_ov004_* helpers and data_ov004_* homes come from
+ *   decl_common.h, not here; naming belongs at their definitions.
+ * Leftover: unk_0a4/0a8/0ac/0b8/0c8/462c/465c are unrecovered scene
+ *   state (header); the Ent and SceneVCall6 local views stand in for
+ *   unrecovered types and do not establish bases.
+ */
 
 #include "dScMgBase_c.h"
 #include "decl_common.h"
@@ -45,7 +53,6 @@ extern void func_02012e1c(void);
 void func_ov004_020ae330();
 extern void Enable3dEngines(void);
 extern char data_0209b308[];
-extern void* data_ov004_020beb60;
 extern char data_0209f61c[];
 extern unsigned char data_0209d460[];
 extern unsigned char data_0209d458[];
