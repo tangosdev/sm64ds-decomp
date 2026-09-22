@@ -109,8 +109,9 @@ def after_final_target_read(calls):
     """Calls made after the last target ref read.
 
     The tip is read last on purpose. stable_target() then resolves the anchor
-    from that tip, so the ref read is now followed by its own commit walk and
-    nothing else; assert on that shape rather than on a fixed offset.
+    from that tip, and review_anchor() probes whether the head still contains
+    it, so the ref read is followed by that walk and that probe and nothing
+    else; assert on that shape rather than on a fixed offset.
     """
     last = max(i for i, call in enumerate(calls) if call.endswith("/git/ref/heads/main"))
     return calls[last + 1:]
@@ -152,6 +153,12 @@ class TargetBranchReviewTest(unittest.TestCase):
                 return [[{"filename": "src/actor.cpp" if source else "tools/inert.py"}]]
             if path.endswith("/git/ref/heads/agents/coordination"):
                 return {"object": {"sha": "d" * 40}}
+            if "/compare/" in path:
+                # These cases are all about the target ref moving, not about the
+                # PR falling behind it, so the head always contains the anchor.
+                anchor = path.split("/compare/")[1].split("...")[0]
+                return {"base_commit": {"sha": anchor},
+                        "merge_base_commit": {"sha": anchor}, "status": "ahead"}
             if "/commits/" in path:
                 sha = path.rsplit("/", 1)[1]
                 return commits.get(sha, reviewable_commit_response(sha))
@@ -196,7 +203,8 @@ class TargetBranchReviewTest(unittest.TestCase):
         self.assertEqual(result["result"], "fail")
         self.assertEqual(result["observed_base"], "e" * 40)
         self.assertEqual(posts, [])
-        self.assertTrue(all("/commits/" in call for call in after_final_target_read(calls)))
+        self.assertTrue(all("/commits/" in call or "/compare/" in call
+                            for call in after_final_target_read(calls)))
 
     def test_final_read_failure_also_blocks_read_only_integrator_check(self):
         result, _, posts, _ = self.run_fixture([BASE, RuntimeError("ref unavailable")])
@@ -222,7 +230,7 @@ class TargetBranchReviewTest(unittest.TestCase):
         self.assertIn("Target branch changed", result["summary"])
         self.assertEqual(posts[0]["conclusion"], "failure")
         tail = after_final_target_read(calls)
-        self.assertTrue(all("/commits/" in call for call in tail[:-1]))
+        self.assertTrue(all("/commits/" in call or "/compare/" in call for call in tail[:-1]))
         self.assertTrue(tail[-1].endswith("/check-runs"))
 
     def test_report_records_whether_the_verdict_reached_a_check_run(self):
@@ -383,7 +391,8 @@ class TreeAPI:
                                   evidence=evidence(head=self.head, base=self.base))
         task["outputs"][0]["evidence"]["source_review"]["files"] = list(reviewed)
         with patch.object(gate, "api", side_effect=self.api), patch.object(
-                gate, "target_branch", return_value=("main", self.base, [self.base])), patch.object(
+                gate, "live_target", return_value=("main", self.base)), patch.object(
+                gate, "review_anchor", return_value=(self.base, [self.base], None)), patch.object(
                 gate, "queue_state", return_value=("d" * 40, snapshot)):
             return gate.check_pr("tangosdev/sm64ds-decomp", 2445)
 
@@ -724,6 +733,147 @@ class StableTargetTest(unittest.TestCase):
         self.assertEqual(result["base"], self.SOURCE)
         self.assertEqual(result["live_tip"], self.BOT1)
         self.assertEqual(result["base_window"], [self.BOT1, self.SOURCE])
+
+
+class ScopedTargetTest(unittest.TestCase):
+    """A source merge must expire only the reviews it actually touches.
+
+    stable_target() already walked over the progress bot. It could not walk
+    over a real merge, so every merge to main expired every other open PR's
+    review at once: measured 2026-09-21, merging #2884 turned 9 of 13 open PRs
+    red, and none of the 9 shared a file with it. These cover the relaxation
+    and, more importantly, everything it must still refuse.
+    """
+    TIP = "e" * 40
+    MID = "f" * 40
+    MB = "1" * 40
+
+    def anchor(self, commits, pr_paths, scope=None, tip=None):
+        calls, cache = [], {}
+
+        def api(path, payload=None, paginate=False, raw=False):
+            calls.append(path)
+            if "/compare/" in path:
+                base = path.split("/compare/")[1].split("...")[0]
+                return {"base_commit": {"sha": base},
+                        "merge_base_commit": {"sha": self.MB},
+                        "status": "identical" if base == self.MB else "diverged"}
+            if "/commits/" in path:
+                value = commits[path.rsplit("/", 1)[1]]
+                if isinstance(value, Exception):
+                    raise value
+                return value
+            raise AssertionError("Unexpected API request: " + path)
+
+        with patch.object(gate, "api", side_effect=api), patch.object(
+                gate, "changed_paths", return_value=pr_paths):
+            result = gate.review_anchor("tangosdev/sm64ds-decomp", tip or self.TIP,
+                                        HEAD, scope, cache)
+        return result, calls, cache
+
+    def merge(self, sha, parent, files):
+        return {"sha": sha, "parents": [{"sha": parent}],
+                "files": [{"filename": name} for name in files]}
+
+    def test_a_merge_that_misses_this_pr_no_longer_expires_its_review(self):
+        # main landed real source work; this PR touches none of those files.
+        (base, window, scope), _, _ = self.anchor(
+            {self.TIP: self.merge(self.TIP, self.MB, ["src/other.cpp", "include/other.h"])},
+            ["src/actor.cpp", "config/arm9/overlays/ov072/delinks.txt"])
+        self.assertEqual(base, self.MB)
+        self.assertEqual(window, [self.TIP, self.MB])
+        self.assertEqual(scope, frozenset({"src/actor.cpp",
+                                           "config/arm9/overlays/ov072/delinks.txt"}))
+
+    def test_every_commit_walked_over_is_accepted_as_a_tested_base(self):
+        # Same contract the unscoped window has: a reviewer names whichever tip
+        # was live when they measured, and must not have to guess which one.
+        commits = {self.TIP: self.merge(self.TIP, self.MID, ["src/other.cpp"]),
+                   self.MID: self.merge(self.MID, self.MB, ["src/third.cpp"])}
+        (base, window, _), _, _ = self.anchor(commits, ["src/actor.cpp"])
+        self.assertEqual(base, self.MB)
+        self.assertEqual(window, [self.TIP, self.MID, self.MB])
+
+    def test_a_merge_touching_one_of_this_prs_files_still_demands_a_restack(self):
+        for overlap in ("src/actor.cpp", "config/arm9/overlays/ov072/delinks.txt"):
+            with self.subTest(path=overlap):
+                with self.assertRaises(gate.sr.ReviewError) as caught:
+                    self.anchor({self.TIP: self.merge(self.TIP, self.MB,
+                                                      ["src/other.cpp", overlap])},
+                                ["src/actor.cpp", "config/arm9/overlays/ov072/delinks.txt"])
+                self.assertIn("restack", str(caught.exception))
+
+    def test_overlap_is_matched_case_insensitively_like_the_rest_of_the_check(self):
+        with self.assertRaises(gate.sr.ReviewError):
+            self.anchor({self.TIP: self.merge(self.TIP, self.MB, ["src/Actor.cpp"])},
+                        ["src/actor.cpp"])
+
+    def test_a_rename_on_main_counts_against_both_of_its_paths(self):
+        # Source leaving src/ still moves the file this review names.
+        for entry in ({"filename": "notes/moved.md", "previous_filename": "src/actor.cpp"},
+                      {"filename": "src/actor.cpp", "previous_filename": "notes/moved.md"}):
+            with self.subTest(rename=entry["filename"]):
+                with self.assertRaises(gate.sr.ReviewError):
+                    self.anchor({self.TIP: {"sha": self.TIP, "parents": [{"sha": self.MB}],
+                                            "files": [entry]}}, ["src/actor.cpp"])
+
+    def test_an_unreadable_commit_still_fails_closed_under_a_scope(self):
+        cases = {
+            "unreadable": RuntimeError("commit unavailable"),
+            "merge": {"sha": self.TIP, "files": [],
+                      "parents": [{"sha": self.MB}, {"sha": "8" * 40}]},
+            "identity mismatch": {"sha": "7" * 40, "parents": [{"sha": self.MB}], "files": []},
+            "files at the API cap": {
+                "sha": self.TIP, "parents": [{"sha": self.MB}],
+                "files": [{"filename": f"docs/p{n}.html"} for n in range(gate.COMMIT_FILES_CAP)]},
+            "missing files": {"sha": self.TIP, "parents": [{"sha": self.MB}]},
+            "malformed entry": {"sha": self.TIP, "parents": [{"sha": self.MB}],
+                                "files": [{"filename": None}]},
+            "unusable parent": {"sha": self.TIP, "parents": [{"sha": "short"}], "files": []},
+        }
+        for label, response in cases.items():
+            with self.subTest(case=label):
+                with self.assertRaises(gate.sr.ReviewError):
+                    self.anchor({self.TIP: response}, ["src/actor.cpp"])
+
+    def test_a_pr_with_no_reviewable_source_does_not_walk_main_at_all(self):
+        # Nothing here needs review, so no commit on main can expire it and
+        # there is nothing to compare against: take the PR's own base and stop.
+        (base, window, scope), calls, _ = self.anchor(
+            {self.TIP: self.merge(self.TIP, self.MB, ["src/other.cpp"])},
+            ["docs/class-reference.html", "tools/fdiff.py"])
+        self.assertEqual((base, window, scope), (self.MB, [self.TIP, self.MB], frozenset()))
+        # Only the unscoped probe of the tip itself, never a walk down main.
+        self.assertEqual([call for call in calls if "/commits/" in call],
+                         ["repos/tangosdev/sm64ds-decomp/commits/" + self.TIP])
+
+    def test_a_walk_that_never_reaches_the_prs_base_fails_closed(self):
+        shas = ["%040x" % n for n in range(gate.SCOPED_WALK_LIMIT + 5)]
+        commits = {sha: self.merge(sha, shas[n + 1], ["src/other.cpp"])
+                   for n, sha in enumerate(shas[:-1])}
+        with self.assertRaises(gate.sr.ReviewError):
+            self.anchor(commits, ["src/actor.cpp"], tip=shas[0])
+
+    def test_mains_history_is_read_once_per_run_not_once_per_pr(self):
+        # The scoped walk reaches much further back than the bot cadence did,
+        # so this cache is what keeps a 5-minute refresh inside the rate limit.
+        commits = {self.TIP: self.merge(self.TIP, self.MID, ["src/other.cpp"]),
+                   self.MID: self.merge(self.MID, self.MB, ["src/third.cpp"])}
+        _, calls, cache = self.anchor(commits, ["src/actor.cpp"])
+        self.assertEqual(len([c for c in calls if "/commits/" in c]), 2)
+        self.assertEqual(set(cache), {self.TIP, self.MID})
+
+    def test_an_unrelated_header_on_main_is_walked_over_by_design(self):
+        # A documented gap, not an oversight: main edits a header this PR's
+        # sources may include, the paths do not intersect, and the walk steps
+        # over it. Compile and link drift is the ROM build gate's measurement,
+        # taken against the actual merge; this check judges whether source is
+        # admissible. Scoping by include graph is unavailable here -- this
+        # workflow is privileged and must never check out or run PR code.
+        (base, _, _), _, _ = self.anchor(
+            {self.TIP: self.merge(self.TIP, self.MB, ["include/decl_common.h"])},
+            ["src/actor.cpp"])
+        self.assertEqual(base, self.MB)
 
 
 class ExitCodeTest(unittest.TestCase):

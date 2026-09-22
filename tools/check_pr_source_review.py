@@ -84,47 +84,81 @@ def queue_state(repo):
 # measured 2026-09-10).
 TARGET_WALK_LIMIT = 25
 
+# The scoped walk steps over real source merges that miss this PR's files, so
+# it has to reach far past the bot cadence: main took 26 source merges in the
+# 24h before 2026-09-21. Each commit is read once per run and shared by every
+# PR (see commit_source_paths), so the cost of raising this is bounded by the
+# length of main's history, not by that length times the number of open PRs.
+SCOPED_WALK_LIMIT = 200
+
 # The commit endpoint caps its file list at 300 entries and reports no
 # truncation flag, so a list at the cap cannot prove a commit is inert.
 COMMIT_FILES_CAP = 300
 
 
-def reviewable_commit(repo, sha):
-    """Say whether one commit changes anything a source review could be about.
+def commit_source_paths(repo, sha, cache=None):
+    """Return (the source paths one commit changes, its parent).
 
-    Reuses the source_path() predicate the check already uses to decide what
-    needs review, so this can never skip a commit that changes a reviewer's
-    answer. Fails closed in every uncertain case -- an unreadable commit, a
-    merge, a file list at the API cap, or a malformed entry all read reviewable,
-    which leaves the target on the live tip exactly as before.
+    (None, None) means the commit could not be established as a single-parent
+    commit with a complete file list, so nothing may be concluded about it --
+    an unreadable commit, a merge, a file list at the API cap, or a malformed
+    entry all read that way, and every caller treats it as reviewable.
+
+    Results are keyed by commit id and immutable, so they are cached across the
+    whole run. Every open PR walks the same main history; without the cache a
+    single refresh would re-read it once per PR.
     """
+    if cache is not None and sha in cache:
+        return cache[sha]
+    result = (None, None)
     try:
         data = api(f"repos/{repo}/commits/{sha}")
     except (RuntimeError, ValueError):
-        return True, None
-    if not isinstance(data, dict) or data.get("sha") != sha:
-        return True, None
-    parents, files = data.get("parents"), data.get("files")
-    if not isinstance(parents, list) or len(parents) != 1:
-        return True, None
-    if not isinstance(files, list) or len(files) >= COMMIT_FILES_CAP:
-        return True, None
-    for entry in files:
-        if not isinstance(entry, dict) or not isinstance(entry.get("filename"), str):
-            return True, None
-        previous = entry.get("previous_filename")
-        if previous is not None and not isinstance(previous, str):
-            return True, None
-        # A rename retains both sides, so source leaving src/ still needs review.
-        if sr.source_path(entry["filename"]) or sr.source_path(previous or ""):
-            return True, None
-    parent = parents[0].get("sha") if isinstance(parents[0], dict) else None
-    if not isinstance(parent, str) or not re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", parent):
-        return True, None
-    return False, parent
+        data = None
+    if isinstance(data, dict) and data.get("sha") == sha:
+        parents, files = data.get("parents"), data.get("files")
+        if (isinstance(parents, list) and len(parents) == 1 and
+                isinstance(files, list) and len(files) < COMMIT_FILES_CAP):
+            paths, usable = set(), True
+            for entry in files:
+                if not isinstance(entry, dict) or not isinstance(entry.get("filename"), str):
+                    usable = False
+                    break
+                previous = entry.get("previous_filename")
+                if previous is not None and not isinstance(previous, str):
+                    usable = False
+                    break
+                # A rename retains both sides, so source leaving src/ still
+                # needs review, and still counts as touching where it came from.
+                for path in (entry["filename"], previous or ""):
+                    if sr.source_path(path):
+                        paths.add(path.casefold())
+            parent = parents[0].get("sha") if isinstance(parents[0], dict) else None
+            if usable and isinstance(parent, str) and re.fullmatch(
+                    r"[0-9a-f]{40}|[0-9a-f]{64}", parent):
+                result = (frozenset(paths), parent)
+    if cache is not None:
+        cache[sha] = result
+    return result
 
 
-def stable_target(repo, tip):
+def reviewable_commit(repo, sha, scope=None, cache=None):
+    """Say whether one commit changes anything this review could be about.
+
+    Without a scope: anything matching source_path(), the same predicate the
+    check uses to decide what needs review. With a scope -- the set of source
+    paths the PR itself changes -- only a commit touching one of those paths.
+
+    Fails closed in every uncertain case, which leaves the target on the live
+    tip exactly as before.
+    """
+    paths, parent = commit_source_paths(repo, sha, cache)
+    if paths is None:
+        return True, None
+    return bool(paths if scope is None else paths & scope), parent
+
+
+def stable_target(repo, tip, scope=None, cache=None, stop=None):
     """Anchor the target to the newest commit that changed review-relevant source.
 
     Reading the live tip is deliberate: a composition has to be current. But
@@ -141,10 +175,32 @@ def stable_target(repo, tip):
     over are returned as the accepted base window: a review tested against any
     of them was tested against the same reviewable tree, so they are
     interchangeable as evidence and a reviewer need not guess which one to name.
+
+    That covered the bot, not the fleet. A *source* merge stops the unscoped
+    walk for every open PR at once, so each merge expired every other PR's
+    review: measured 2026-09-21, merging #2884 turned 9 of 13 open PRs red
+    without any of them being touched, and none of the 9 shared a single file
+    with it. With a scope, the walk steps over commits that change reviewable
+    source the PR's review says nothing about, and the window then means the
+    narrower thing it has to mean -- the same tree *in the paths this review
+    covers*. Any commit touching one of those paths still stops the walk.
+
+    What this deliberately stops catching is the indirect case: main edits a
+    header the PR's sources include, the paths do not intersect, and the walk
+    steps over it. That drift is a compile/link fact, and it is the ROM build
+    gate that measures it against the actual merge -- not this check, which
+    judges whether reconstructed source is admissible. Scoping by include graph
+    was the alternative and it is not available here: this workflow is
+    privileged and must never check out or execute PR code.
     """
     target, window = tip, [tip]
-    for _ in range(TARGET_WALK_LIMIT):
-        reviewable, parent = reviewable_commit(repo, target)
+    for _ in range(TARGET_WALK_LIMIT if scope is None else SCOPED_WALK_LIMIT):
+        # The commit the PR branched from ends the walk: everything the review
+        # has to be current with has been accounted for by the time we reach it,
+        # and walking past it would anchor the review behind its own base.
+        if target == stop:
+            break
+        reviewable, parent = reviewable_commit(repo, target, scope, cache)
         if reviewable or parent is None:
             break
         target = parent
@@ -152,7 +208,7 @@ def stable_target(repo, tip):
     return target, window
 
 
-def target_branch(repo, pr):
+def live_target(repo, pr):
     """Resolve the live target ref; PR base.sha can retain an older commit."""
     base = pr["base"]
     base_repo = base["repo"]["full_name"]
@@ -163,8 +219,13 @@ def target_branch(repo, pr):
     ref = api(f"repos/{repo}/git/ref/heads/{quote(branch, safe='')}")
     sr.require(ref["ref"] == "refs/heads/" + branch, "API returned a different target ref")
     sr.require(ref["object"]["type"] == "commit", "Target branch does not identify a commit")
-    tip = sr.commit(ref["object"]["sha"], "target branch commit")
-    target, window = stable_target(repo, tip)
+    return branch, sr.commit(ref["object"]["sha"], "target branch commit")
+
+
+def target_branch(repo, pr, scope=None, cache=None):
+    """Resolve the live target ref and anchor it, ignoring how the PR relates."""
+    branch, tip = live_target(repo, pr)
+    target, window = stable_target(repo, tip, scope, cache)
     return branch, target, window
 
 
@@ -237,6 +298,52 @@ def complete_tree(repo, sha, cache):
     return leaves
 
 
+STALE_COMPOSITION = ("PR head does not contain the live target base; "
+                     "restack and review the composition")
+
+
+def contains(repo, base, head):
+    """Return (does head already contain base, the commit they actually share).
+
+    Ancestry only. Separated from changed_paths() so review_anchor() can ask
+    where a PR branched from without that question being fatal on its own.
+    """
+    base = sr.commit(base, "comparison base")
+    head = sr.commit(head, "comparison head")
+    comparison = api(f"repos/{repo}/compare/{base}...{head}?per_page=1")
+    sr.require(comparison["base_commit"]["sha"] == base,
+               "Comparison returned a different base")
+    merge_base = sr.commit(comparison["merge_base_commit"]["sha"], "merge base commit")
+    return (merge_base == base and
+            comparison["status"] in ("ahead", "identical")), merge_base
+
+
+def review_anchor(repo, tip, head, scope=None, cache=None):
+    """Resolve the base a review is measured against, and the accepted window.
+
+    Anchors on the live tip first, so a PR that is current keeps exactly the
+    behaviour and the API cost it had. Only once main is found to have moved
+    ahead of the PR does this pay for the PR's own diff, and re-anchor the walk
+    to the paths that diff covers. See stable_target() for why that is sound
+    and what it gives up.
+    """
+    if scope is None:
+        target, window = stable_target(repo, tip, None, cache)
+        contained, merge_base = contains(repo, target, head)
+        if contained:
+            return target, window, None
+        scope = frozenset(p.casefold() for p in changed_paths(repo, merge_base, head)
+                          if sr.source_path(p))
+    else:
+        _, merge_base = contains(repo, tip, head)
+    if not scope:
+        # Nothing here needs review at all, so no commit on main can expire it.
+        return merge_base, [tip, merge_base], scope
+    target, window = stable_target(repo, tip, scope, cache, stop=merge_base)
+    sr.require(target == merge_base, STALE_COMPOSITION)
+    return target, window, scope
+
+
 def changed_paths(repo, base, head):
     """Compare the exact composition, not PR /files metadata for a cached base.
 
@@ -247,14 +354,8 @@ def changed_paths(repo, base, head):
     Leaf comparison retains both rename sides and mode/type changes, including
     symlinks, submodules, and file/directory replacements.
     """
-    base = sr.commit(base, "comparison base")
-    head = sr.commit(head, "comparison head")
-    comparison = api(f"repos/{repo}/compare/{base}...{head}?per_page=1")
-    sr.require(comparison["base_commit"]["sha"] == base,
-               "Comparison returned a different base")
-    sr.require(comparison["merge_base_commit"]["sha"] == base and
-               comparison["status"] in ("ahead", "identical"),
-               "PR head does not contain the live target base; restack and review the composition")
+    contained, _ = contains(repo, base, head)
+    sr.require(contained, STALE_COMPOSITION)
     before_tree, after_tree = commit_tree(repo, base), commit_tree(repo, head)
     if before_tree == after_tree:
         return []
@@ -265,15 +366,18 @@ def changed_paths(repo, base, head):
                   if before.get(path) != after.get(path))
 
 
-def check_pr(repo, number, publish=False):
+def check_pr(repo, number, publish=False, cache=None):
     pr = api(f"repos/{repo}/pulls/{number}")
     if pr["state"] != "open":
         return {"pr": number, "result": "closed"}
     head = pr["head"]["sha"]
     base, branch, window = None, None, []
-    state_sha = None
+    state_sha, scope = None, None
+    if cache is None:
+        cache = {}
     try:
-        branch, base, window = target_branch(repo, pr)
+        branch, tip = live_target(repo, pr)
+        base, window, scope = review_anchor(repo, tip, head, None, cache)
         paths = changed_paths(repo, base, head)
         if any(sr.source_path(p) for p in paths):
             state_sha, state = queue_state(repo)
@@ -284,7 +388,10 @@ def check_pr(repo, number, publish=False):
         report = {"result": "fail", "summary": "Source review could not be established: " + str(exc)}
     report.update(pr=number, head=head, base=base, base_ref=branch,
                   live_tip=window[0] if window else None, base_window=window,
-                  pr_base=pr["base"].get("sha"), queue_commit=state_sha, published=False)
+                  pr_base=pr["base"].get("sha"), queue_commit=state_sha, published=False,
+                  # Present only when main moved ahead of this PR: the paths the
+                  # walk was narrowed to, so a reader can see what was compared.
+                  review_scope=None if scope is None else sorted(scope))
     if not publish and report["result"] != "pass":
         return report
     current_head_confirmed = False
@@ -299,7 +406,8 @@ def check_pr(repo, number, publish=False):
                 report.update(result="fail", summary="Queue changed during review; refresh the check.")
         # Read the actual branch tip last, before returning or creating a check.
         # Re-reading the PR's cached base.sha cannot detect main advancing.
-        current_branch, current_base, _ = target_branch(repo, current)
+        current_branch, current_tip = live_target(repo, current)
+        current_base, _, _ = review_anchor(repo, current_tip, head, scope, cache)
         if (current_branch, current_base) != (branch, base):
             report.update(result="fail", summary="Target branch changed during review; refresh the check.",
                           observed_base=current_base, observed_base_ref=current_branch)
@@ -329,7 +437,9 @@ def main(argv=None):
     try:
         numbers = [args.pr] if args.pr else [pr["number"] for page in api(
             f"repos/{args.repo}/pulls?state=open&per_page=100", paginate=True) for pr in page]
-        reports = [check_pr(args.repo, n, args.publish) for n in numbers]
+        # One commit cache for the whole run: every PR walks the same main.
+        cache = {}
+        reports = [check_pr(args.repo, n, args.publish, cache) for n in numbers]
         print(json.dumps(reports, indent=2))
         # A published failure is already reported by its own "Source review"
         # check run. Failing the job too states the same verdict a second
