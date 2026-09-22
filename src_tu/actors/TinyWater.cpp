@@ -88,8 +88,11 @@ int TinyWater::InitResources()
  * unit a frame while looping the drain sound, and when the surface reaches
  * mMinPosY play the secret jingle and destroy the actor once it finishes.
  *
- * Sound, Event and Minimap have no headers in this tree, so those three stay
- * extern-C mangled free functions. Animation::Advance and
+ * Sound and Event have no headers in this tree, so those two stay extern-C
+ * mangled free functions. dMap_c::UpdateLevelSpecific is declared in
+ * include/dMap_c.h since #2899, but no manifest entry names this staging TU, so
+ * no gate compiles it -- converting that call to a member is left to the fold,
+ * where the include can be proven. Animation::Advance and
  * fBase_c::MarkForDestruction are declared, and are reached as members.
  */
 int TinyWater::Behavior()
