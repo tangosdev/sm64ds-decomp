@@ -391,6 +391,12 @@ endfunction()
 #       the ROM's, so linkage does not move.
 set(PORT_HOSTGEN_TU
     src/func_0201b100.c
+    # run link100 wave 20, lane CAMSWIM3: the camera follow state. The
+    # CAM_TERMS table in tools/hostgen.py traces the eye-height terms
+    # (inert unless SM64DS_CAM_TERMS is set) and DS_SHIFT_FX carries the
+    # host-arithmetic correction the trace found. src/ is untouched, and
+    # the body in the link is still the ROM's, so linkage does not move.
+    src/func_02009e70.cpp
     src/actors/Player.cpp
     src/actors/daBmb_c.cpp
     src/game/actors/d_a_ey_bm.cpp
@@ -2993,8 +2999,12 @@ set_source_files_properties(
 # THAT ONE TU sends its call to the ride-through in port/hal/sdat/sound_abi.cpp,
 # which supplies the fourth argument as 0; the definition and every other
 # caller are untouched.
+# The TU is on PORT_HOSTGEN_TU (lane CAMSWIM3), so the compiled source is
+# the generated twin; the property has to name both paths or the
+# ride-through would silently leave the build. See the refusal above.
 set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_02009e70.cpp"
+    "${CMAKE_BINARY_DIR}/host-src/src/func_02009e70.cpp"
     PROPERTIES COMPILE_DEFINITIONS
     "Sound_PlayIfNotActive=hal_Sound_PlayIfNotActive_ridethrough")
 # R3, run linkw wave 12 (lane w12): THE SAME DISEASE, a fourth time, and this

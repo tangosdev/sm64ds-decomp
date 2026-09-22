@@ -1943,6 +1943,102 @@ UNINIT_LOCAL = {
 }
 
 
+# ---- CAM_TERMS: an inert per-frame trace of the follow state's own terms ----
+#
+# MEASUREMENT ONLY, and gated on SM64DS_CAM_TERMS so an unset environment
+# compiles to a handful of dead array stores and one early return. The camera
+# follow state's eye height is built from a dozen intermediates that no
+# existing instrument can see -- the ground probe under the EYE, the ceiling
+# caps, the mode record's own min/max band, the movement-pitch swing -- and
+# a wrong eye height can come from any of them. Printing the terms is the only
+# way to say WHICH one disagrees with the ARM instead of guessing from the
+# picture. src/ is not edited: every anchor below is an exact string and
+# apply_patches hard-errors if one stops matching.
+CAM_TERMS_DECL = r"""/* hostgen CAM_TERMS: see the table in tools/hostgen.py */
+#include <stdio.h>
+#include <stdlib.h>
+static int camterm_v[32];
+static int camterm_seq;
+#define CT(i, x) (camterm_v[(i)] = (int)(x))
+static void camterm_emit(const void *self)
+{
+    static int on = -1;
+    if (on < 0)
+        on = getenv("SM64DS_CAM_TERMS") ? 1 : 0;
+    if (!on)
+        return;
+    fprintf(stderr,
+            "[camt] n%d self=%p mode=%d r6=%d sp04=%d sl=%d fp=%d d0=%d "
+            "mv=%d mvsb=%d mvpitch=%d mvdy=%d "
+            "pty=%d gnd=%d gndy=%d ceil=%d probey=%d "
+            "hRaw=%d hRatchet=%d f08=%d f0c=%d bandLo=%d bandHi=%d dyPre=%d "
+            "hBand=%d lo=%d hi=%d hFinal=%d eyey=%d aty=%d "
+            "atanRaw=%d dy34=%d dx34=%d dz34=%d\n",
+            camterm_seq++, self,
+            camterm_v[25], camterm_v[0], camterm_v[1], camterm_v[2],
+            camterm_v[3], camterm_v[4],
+            camterm_v[5], camterm_v[26], camterm_v[6], camterm_v[7],
+            camterm_v[8], camterm_v[9], camterm_v[10], camterm_v[11],
+            camterm_v[12],
+            camterm_v[13], camterm_v[14], camterm_v[15], camterm_v[16],
+            camterm_v[18], camterm_v[19], camterm_v[27],
+            camterm_v[17], camterm_v[20], camterm_v[21], camterm_v[22],
+            camterm_v[23], camterm_v[24],
+            camterm_v[28], camterm_v[29], camterm_v[30], camterm_v[31]);
+}
+"""
+
+CAM_TERMS = {
+    "func_02009e70": [
+        ("    r6 = func_0200c66c(self, (struct Vector3 *)(self + 0x98), &sp20, &sp1c, &sp24);",
+         "    r6 = func_0200c66c(self, (struct Vector3 *)(self + 0x98), &sp20, &sp1c, &sp24);\n"
+         "    CT(0, r6);\n"
+         "    CT(25, sp1c ? (int)(((const char *)sp1c - (const char *)&data_02086fcc) / 0x28) : -1);"),
+        ("    sp04 = func_0200bec4(self, (struct Vector3 *)(self + 0x98), r6, sp1c, r7);",
+         "    sp04 = func_0200bec4(self, (struct Vector3 *)(self + 0x98), r6, sp1c, r7);\n"
+         "    CT(1, sp04); CT(2, sl); CT(3, fp);"),
+        ("    sp14 = sp28;",
+         "    sp14 = sp28;\n"
+         "    CT(4, sp28); CT(5, 0); CT(26, 0); CT(6, 0); CT(7, 0);"),
+        ("    sb = _ZN4cstd5atan2E5Fix12IiES1_(sp34.y, Vec3_HorzLen(&sp34));",
+         "    sb = _ZN4cstd5atan2E5Fix12IiES1_(sp34.y, Vec3_HorzLen(&sp34));\n"
+         "    CT(28, sb); CT(29, sp34.y); CT(30, sp34.x); CT(31, sp34.z);"),
+        ("    sp40.y = FXMUL(sp28, -data_02082214[t0]);",
+         "    CT(5, 1); CT(26, sb); CT(6, (s16)sp18);\n"
+         "    sp40.y = FXMUL(sp28, -data_02082214[t0]);\n"
+         "    CT(7, sp40.y);"),
+        ("    sb = *(s32 *)(self + 0x9c);",
+         "    sb = *(s32 *)(self + 0x9c);\n"
+         "    CT(8, sb); CT(11, r4); CT(12, sp4c.y);"),
+        ("    if (ground.DetectClsn() != 0) sb = ground.clsnY;",
+         "    { int ct_hit = (ground.DetectClsn() != 0);\n"
+         "      CT(9, ct_hit);\n"
+         "      if (ct_hit) sb = ground.clsnY; }\n"
+         "    CT(10, sb);"),
+        ("    r7h = r7h + func_020093d4(self, (r6 - sp04) + ((*(s32 *)(self + 0x154) & 2) ? 0x1e8000 : 0x138000));",
+         "    r7h = r7h + func_020093d4(self, (r6 - sp04) + ((*(s32 *)(self + 0x154) & 2) ? 0x1e8000 : 0x138000));\n"
+         "    CT(13, r7h);"),
+        ("    func_0200c9e0(self, &sp2c, &sp30);",
+         "    CT(14, r7h);\n"
+         "    func_0200c9e0(self, &sp2c, &sp30);\n"
+         "    CT(15, sp2c); CT(16, sp30);"),
+        ("    if (data_0209f2f8 == 0x26) {",
+         "    CT(17, r7h); CT(18, r6); CT(19, t0); CT(27, sp40.y);\n"
+         "    if (data_0209f2f8 == 0x26) {"),
+        ("    Math_Function_0203b14c((s32 *)(self + 0x90), r7h, 0x300, 0x14000, 0x100);",
+         "    CT(20, sp10); CT(21, r4); CT(22, r7h);\n"
+         "    CT(23, *(s32 *)(self + 0x90)); CT(24, *(s32 *)(self + 0x84));\n"
+         "    camterm_emit(self);\n"
+         "    Math_Function_0203b14c((s32 *)(self + 0x90), r7h, 0x300, 0x14000, 0x100);"),
+    ],
+}
+
+
+def cam_terms_patch(text, sym):
+    """Trace the follow state's eye-height terms; inert unless the env is set."""
+    return apply_patches(text, sym, CAM_TERMS, "CAM_TERMS", CAM_TERMS_DECL)
+
+
 def uninit_local_patch(text, sym):
     """Give a local the value the ROM's register happened to hold."""
     return apply_patches(text, sym, UNINIT_LOCAL, "UNINIT_LOCAL")
@@ -2025,6 +2121,40 @@ ARG_WIDTH = {
         ("extern s32 GetStarCameraSetting(s32 star);",
          "extern unsigned char GetStarCameraSetting(s32 star);"
          "  /* hostgen ARG_WIDTH: the definition returns u8, see the table */"),
+    ],
+    # Run link100 wave 20, lane CAMSWIM3: THE CAMERA THAT SWAM UNDER THE
+    # PLAYER. The same disagreement once more, on a SIGNED narrow return, and
+    # this one is visible on screen.
+    #
+    # src/_ZN4cstd5atan2E5Fix12IiES1_.c DEFINES cstd::atan2 `s16`; the camera's
+    # follow state declares it `extern s32`. On the cartridge that costs
+    # nothing, because the ROM body SIGN-EXTENDS its own result before it
+    # returns -- the epilogue at 0x0203766c is
+    #     lsl r0, r0, #0x10
+    #     asr r0, r0, #0x10
+    # so a negative angle arrives in the caller's r0 as a negative 32-bit int.
+    # MSVC's callee writes AX and the cdecl caller reads the whole of EAX with
+    # the high half NOT sign-extended, so the same negative angle arrives as a
+    # large POSITIVE number.
+    #
+    # Where that shows: func_02009e70's movement-pitch branch (the mode-0 arm)
+    # takes the TARGET'S OWN movement pitch, `cstd::atan2(dy, horizontal step)`,
+    # and clamps it to +-0x3f80 before swinging the eye to it. Swimming DOWN,
+    # dy is negative and the true angle is about -14 degrees; measured on the
+    # host the call returned 62990 (0xf60e, which IS -2546 in sixteen bits) and
+    # the clamp pinned it at +0x3f80, +89.3 degrees. The eye was then placed
+    # 285 to 560 units BELOW the look-at and the camera spent a deep dive
+    # looking UP at the player. Measured per frame with CAM_TERMS below.
+    #
+    # Declaring the return the width the definition really has makes MSVC read
+    # AX and sign-extend it, which is what the ARM did. The two other call
+    # sites in the same file are bit-identical either way: one assigns to a u16
+    # and one casts the sum to s16.
+    "func_02009e70": [
+        ("extern s32 _ZN4cstd5atan2E5Fix12IiES1_(s32 y, s32 x);",
+         "extern s16 _ZN4cstd5atan2E5Fix12IiES1_(s32 y, s32 x);"
+         "  /* hostgen ARG_WIDTH: the definition returns s16 and the ROM body"
+         " sign-extends it in its epilogue, see the table */"),
     ],
 }
 
@@ -3160,6 +3290,7 @@ def emit(src_path, out_dir, decomp_root, extern_data=False):
     text, _ = mg_pmf_call_patch(text, sym)
     text, _ = pmf_seam_patch(text, sym)
     text, _ = uninit_local_patch(text, sym)
+    text, _ = cam_terms_patch(text, sym)
     text, _ = member_redecl_patch(text, sym)
     text, _ = redecl_conflict_patch(text, sym)
     text, _ = ledger_park(text, sym)
