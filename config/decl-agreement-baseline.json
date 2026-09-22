@@ -9515,9 +9515,6 @@
       ]
     },
     "_ZN3G2S12GetBG1ScrPtrEv": {
-      "src/_ZN10dMgPsOpt_c11TouchIcon_c6RenderEv.cpp": [
-        "return:unsigned short *"
-      ],
       "src/_ZN11dScMgBase_c9Virtual7CEv.cpp": [
         "return:void *"
       ],
@@ -9544,6 +9541,9 @@
       ],
       "src/_ZN9BootScene8BehaviorEv.cpp": [
         "return:void *"
+      ],
+      "src/actors/dMgPsOpt_c.cpp": [
+        "return:unsigned short *"
       ],
       "src/actors/dScGameOver_c.cpp": [
         "return:unsigned short *"
@@ -33613,6 +33613,10 @@
         "param:#1 int",
         "return:void"
       ],
+      "src/actors/dMgPsOpt_c.cpp": [
+        "param:#1 int",
+        "return:void"
+      ],
       "src/actors/dScGameOver_c.cpp": [
         "param:#1 int",
         "return:void"
@@ -33737,10 +33741,6 @@
         "return:void"
       ],
       "src/func_ov004_020b6f88.c": [
-        "param:#1 int",
-        "return:void"
-      ],
-      "src/func_ov004_020b8f78.cpp": [
         "param:#1 int",
         "return:void"
       ],

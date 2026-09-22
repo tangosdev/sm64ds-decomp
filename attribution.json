@@ -4507,6 +4507,17 @@
     "src/actors/daBtfly_c.cpp#_ZN9daBtfly_c16OnPendingDestroyEv": "andrewboudreau",
     "src/actors/daBtfly_c.cpp#_ZN9daBtfly_c6RenderEv": "tangosdev",
     "src/actors/daBtfly_c.cpp#_ZN9daBtfly_c8BehaviorEv": "lunavyqo",
-    "src/actors/daBtfly_c.cpp#_ZN9daBtfly_c13InitResourcesEv": "tangosdev"
+    "src/actors/daBtfly_c.cpp#_ZN9daBtfly_c13InitResourcesEv": "tangosdev",
+    "src/actors/dMgPsOpt_c.cpp#_ZN10dMgPsOpt_c11TouchIcon_c6RenderEv": "andrewboudreau",
+    "src/actors/dMgPsOpt_c.cpp#func_ov004_020b8dc0": "tangosdev",
+    "src/actors/dMgPsOpt_c.cpp#func_ov004_020b8ee0": "tangosdev",
+    "src/actors/dMgPsOpt_c.cpp#func_ov004_020b8f18": "tangosdev",
+    "src/actors/dMgPsOpt_c.cpp#func_ov004_020b8f78": "tangosdev",
+    "src/actors/dMgPsOpt_c.cpp#func_ov004_020b91fc": "tangosdev",
+    "src/actors/dMgPsOpt_c.cpp#func_ov004_020b9220": "tangosdev",
+    "src/actors/dMgPsOpt_c.cpp#_ZN10dMgPsOpt_c11TouchIcon_cD1Ev": "tangosdev",
+    "src/actors/dMgPsOpt_c.cpp#_ZN10dMgPsOpt_cD1Ev": "tangosdev",
+    "src/actors/dMgPsOpt_c.cpp#_ZN10dMgPsOpt_cC1Ev": "tangosdev",
+    "src/actors/dMgPsOpt_c.cpp#_ZN10dMgPsOpt_c11TouchIcon_cC1Ev": "tangosdev"
   }
 }

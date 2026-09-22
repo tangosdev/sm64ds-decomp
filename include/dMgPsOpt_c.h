@@ -16,16 +16,22 @@ struct dMgPsOpt_c {
            of it. The cartridge's _ZTVN10dMgPsOpt_c11TouchIcon_cE holds
            ov004:0x020b8c18 there where dThIcon_c's own table holds
            _ZN9dThIcon_c6RenderEv; without this declaration mwcc emitted the
-           inherited address and romdata_check scored the table DIFFERS. Body in
-           src/_ZN10dMgPsOpt_c11TouchIcon_c6RenderEv.cpp. Behavior (slot 0) is
-           NOT overridden -- the cartridge keeps dThIcon_c's there. */
+           inherited address and romdata_check scored the table DIFFERS. Defined
+           by _ZN10dMgPsOpt_c11TouchIcon_c6RenderEv at ov004:0x020b8c18, in the
+           class's own translation unit. Behavior (slot 0) is NOT overridden --
+           the cartridge keeps dThIcon_c's there. */
         void Render();
     };
 
     TouchIcon_c mIcons[8];   /* 0x000..0x120 */
     s32 mSelectedIcon;       /* 0x120 */
     u8 mActive;              /* 0x124 */
-    u8 pad_125[0x3];         /* 0x125 */
+    /* Frames left on the close delay. The back button (icon 5) loads 0x14 here
+       and moves mActive to 2; state 2 counts it down and closes at zero. The
+       byte is live, not padding -- ov004:0x020b8f78 both stores and decrements
+       it -- so it is named rather than absorbed into the trailing pad. */
+    u8 mCloseTimer;          /* 0x125 */
+    u8 pad_126[0x2];         /* 0x126 */
 
     dMgPsOpt_c();
     ~dMgPsOpt_c();
