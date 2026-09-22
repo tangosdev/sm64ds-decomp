@@ -195,17 +195,17 @@ int FortressWall::OnHitByCannonBlastedChar(dActor_c &other)
  * The odd one out of this family. It plays the sound FIRST, spawns particle
  * 0x121 at the wall's own position with no vertical offset, and does NOT call
  * PoofDustAt at all. Then it branches on the actor id: id 0x30 is the breakable
- * fortress wall (src/daObjBk_Kabe_c_classInit_BK_KABE00.c), which only sets mBroken and
+ * fortress wall (daObjBk_Kabe_c_classInit_BK_KABE00), which only sets mBroken and
  * stays alive; every other id falls through to MarkForDestruction.
  *
  * THE `int b` INTERMEDIATE IS LOAD-BEARING, the same way it is in
- * src/_ZN16daObjFallBlock_c4KillEv.cpp: `if (actorID == 0x30)` folds the test
+ * daObjFallBlock_c::Kill: `if (actorID == 0x30)` folds the test
  * into one cmp/branch, while the ROM materialises the comparison into a register
  * and then tests THAT. Writing the int is what asks for the second shape.
  *
  * Particle::System::NewSimple stays spelled as its mangled name -- its
  * parameters are Fix12<int> BY VALUE and declaring the true types changes how
- * the caller passes them; argued in full in src/_ZN10dBgActor_c4KillEv.cpp. */
+ * the caller passes them; argued in full at dBgActor_c::Kill. */
 void FortressWall::Kill()
 {
     Sound::PlayBank3(0xf, *(Vector3 *)&mCamSpacePosX);

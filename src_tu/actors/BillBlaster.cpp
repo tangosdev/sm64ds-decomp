@@ -265,7 +265,7 @@ void BillBlaster::OnHitByMegaChar(Player& p) {
  * pair, four instructions where the ROM has six. Particle::System::NewSimple
  * stays spelled as its mangled name -- its parameters are Fix12<int> BY VALUE
  * and declaring the true types changes how the caller passes them. Both points
- * are argued in full in src/_ZN10dBgActor_c4KillEv.cpp. */
+ * are argued in full at dBgActor_c::Kill. */
 void BillBlaster::Kill()
 {
     Vector3 pos;
