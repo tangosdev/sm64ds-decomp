@@ -1291,11 +1291,12 @@ void inset_map_selftest(int w, int h)
  *   3. the TOP screen's coin total at the VERY BOTTOM.
  *
  * Everything else of both screens -- the lives counter, the course scenery,
- * the "TOUCH TO SELECT" band, the bottom screen's map and its backdrop above
- * and below the plates -- is not drawn at all. The frame the menu is answered
- * the picture goes back to the ordinary one. The ROM draws exactly what it
- * drew before: THIS IS COMPOSITING OF THE TWO FRAMES THE GAME ALREADY
- * PRODUCED, and nothing else changes.
+ * the "TOUCH TO SELECT" band, the bottom screen's map, and the backdrop the
+ * plates sit on -- is not drawn at all, and the middle of the picture is the
+ * game's own, so what the player sees is three buttons floating over it. The
+ * frame the menu is answered the picture goes back to the ordinary one.
+ * The ROM draws exactly what it drew before: THIS IS COMPOSITING OF THE TWO
+ * FRAMES THE GAME ALREADY PRODUCED, and nothing else changes.
  *
  * THE TRIGGER IS THE ROM'S OWN STATE AND NEVER A TIMER, and it is a PAIR:
  *
@@ -1396,6 +1397,69 @@ int save_menu_is_up(void)
 const int kMenuFirstRow = 0x28;
 const int kMenuLastRow = 0x78 + 0x20;
 const int kMenuRows = kMenuLastRow - kMenuFirstRow;
+
+/* AND THE PLATES INSIDE THAT SPAN, because the span is not all plate. The
+   three touch boxes are 0x20 rows on a 0x28 pitch, so six rows of every
+   forty belong to neither box -- and a census of the bottom screen's own
+   raster while the menu is up says what is in them: THE LEVEL MAP. Engine B
+   draws the course map behind the menu, and rows 0x4a..0x4f carry 169 to 172
+   pixels of it each at x 45..216, rows 0x72..0x77 the same at x 41..213.
+   They are not backdrop and no colour key can reach them.
+
+   A PLATE IS TWO ROWS TALLER THAN ITS TOUCH BOX. Under each box's last body
+   row the cartridge draws a solid black edge and a rounded shadow row under
+   that -- a full-width run at 0x48 and a 238-wide one at 0x49, and the same
+   pair at 0x70/0x71 and at 0x98/0x99 -- matching the rounded top edge at
+   0x28. Both rows are plate and both are drawn, so a plate is 0x22 rows from
+   its box's first row. The third plate's pair falls past kMenuLastRow and
+   stays clipped away, which is what the span has always done with it. */
+const int kPlatePitch = 0x28;
+const int kPlateRows = 0x22;
+
+/* Is this bottom-screen row one of the three plates' own rows? */
+int menu_plate_row(int sy)
+{
+    const int o = sy - kMenuFirstRow;
+    return o >= 0 && o < kMenuRows && o % kPlatePitch < kPlateRows;
+}
+
+/* THE COLOUR THE PLATES SIT ON, read off the machine rather than guessed.
+   The PPU's backdrop is entry 0 of the engine's own BG palette -- engine B's
+   is at 0x05000400 -- and it is the colour ppu_scanout_sub starts every
+   pixel of the bottom screen from, so a pixel that is still it is a pixel
+   engine B drew nothing on. Two things happen to it before it reaches the
+   raster and both happen here: BGR555 is widened to eight bits a channel the
+   way ntr's own bgr555 does it, and engine B's MASTER_BRIGHT (0x0400106C,
+   mode in bits 14-15, factor in bits 0-4) is applied the way
+   ppu_scanout_sub applies it to every pixel it writes -- without that a
+   fading bottom screen would carry a backdrop this key no longer matched.
+   Measured on the level-clear menu: palette entry 0x0FAB and the brightness
+   unit off, so the raster's backdrop is (90,239,24), which the ROM's own -7
+   on the finished picture then darkens to the (51,135,14) a capture shows.
+   That pair is the fallback value if this read ever has to be replaced by a
+   constant. */
+unsigned menu_backdrop_px(void)
+{
+    const unsigned c = *(volatile unsigned short *)0x05000400u;
+    const unsigned r5 = c & 0x1Fu, g5 = (c >> 5) & 0x1Fu,
+                   b5 = (c >> 10) & 0x1Fu;
+    int r = (int)(r5 << 3 | r5 >> 2), g = (int)(g5 << 3 | g5 >> 2),
+        b = (int)(b5 << 3 | b5 >> 2);
+    const unsigned mb = *(volatile unsigned short *)0x0400106Cu;
+    const unsigned mode = (mb >> 14) & 3u;
+    int f = (int)(mb & 0x1Fu);
+    if (f > 16) f = 16;
+    if (f && mode == 1) {
+        r += (255 - r) * f / 16;
+        g += (255 - g) * f / 16;
+        b += (255 - b) * f / 16;
+    } else if (f && mode == 2) {
+        r -= r * f / 16;
+        g -= g * f / 16;
+        b -= b * f / 16;
+    }
+    return ((unsigned)r << 16) | ((unsigned)g << 8) | (unsigned)b;
+}
 
 /* The top screen's two bands, in DS rows. Both measured; see the banner. */
 const int kTextRow0 = 0x22;      /* 34: one row above the COURSE N line */
@@ -1507,8 +1571,8 @@ void swap_band(unsigned *dst, int w, int h, int src_y, int dst_y, int rows)
                     (size_t)w * sizeof *dst);
 }
 
-/* THE COMPOSED PRESENT. Keep the top screen, black the picture, then the
-   three things the banner names and no fourth. */
+/* THE COMPOSED PRESENT. Keep the top screen, move its two bands, then lay
+   the three plates over the game's own picture and nothing else. */
 void swap_present(unsigned *dst, int w, int h)
 {
     const int n = w * h;
@@ -1528,20 +1592,34 @@ void swap_present(unsigned *dst, int w, int h)
         std::memcpy(g_swap_snap + (size_t)y * w,
                     dst + (size_t)y * ntr::SCREEN_W,
                     (size_t)w * sizeof *dst);
-    px_fill(dst, w, h, 0, 0, w, h, 0xFF000000u);
+    /* WHAT IS UNDER ALL THREE IS THE GAME'S OWN PICTURE. The two bands below
+       cover the top and the bottom of it row for row; the middle is left
+       exactly as engine A drew it, because the owner asked for the buttons
+       and not for the screen they came off -- "I want just the buttons not
+       the whole background". So nothing here blacks or clears the picture
+       and the only pixels written over the middle are plate. */
     swap_band(dst, w, h, g_sw.ty_src, g_sw.ty_dst, g_sw.t_h);
     swap_band(dst, w, h, g_sw.cy_src, g_sw.cy_dst, g_sw.c_h);
-    /* the three plates, nearest neighbour out of engine B's own raster and
-       out of its rows 0x28..0x97 alone */
+    /* THE THREE PLATES, nearest neighbour out of engine B's own raster, and
+       only the plates. TWO TESTS, both on the SOURCE pixel, before the ROM's
+       own fade reaches the finished picture, and neither of them moves a
+       rectangle: a source row between two plates is not drawn at all (it is
+       the course map, see the banner over kPlateRows), and a source pixel
+       still carrying the backdrop is not drawn either (the eight columns of
+       margin either side of every plate, and the rounded corners). What
+       lands on the picture is the plate, its outline and its lettering. */
+    const unsigned key = menu_backdrop_px();
     for (int y = 0; y < g_sw.ph; ++y) {
         int sy = kMenuFirstRow + (int)(((long long)y * g_sw.pden) / g_sw.pnum);
         if (sy >= kMenuLastRow) sy = kMenuLastRow - 1;
+        if (!menu_plate_row(sy)) continue;
         const unsigned *srow = g_sub.px[sy];
         for (int x = 0; x < g_sw.pw; ++x) {
             int sx = (int)(((long long)x * g_sw.pden) / g_sw.pnum);
             if (sx >= ntr::SUB_W) sx = ntr::SUB_W - 1;
-            px_put(dst, w, h, g_sw.px + x, g_sw.py + y,
-                   0xFF000000u | (srow[sx] & 0x00FFFFFFu));
+            const unsigned c = srow[sx] & 0x00FFFFFFu;
+            if (c == key) continue;
+            px_put(dst, w, h, g_sw.px + x, g_sw.py + y, 0xFF000000u | c);
         }
     }
 }
@@ -1551,7 +1629,7 @@ void swap_present(unsigned *dst, int w, int h)
    goes out, read off the very rectangle the compose just drew. A point off
    the plates is refused (inside = 0) rather than mapped, because nothing else
    on the composed picture is a touch surface: not the course text, not the
-   coin row, and not the black margins beside the plates. */
+   coin row, and not the game's own picture either side of the plates. */
 void swap_inverse(int bx, int by, int *dsx, int *dsy, int *inside)
 {
     const SwapGeom &g = g_sw;
@@ -2366,8 +2444,9 @@ void poll_touch(void)
                        are things a player may have learned to click: the
                        course text at the top and the coin row at the bottom
                        are the TOP screen and no stylus has ever reached it;
-                       the black margins beside the plates are not a screen at
-                       all; and the corner panel's old three button points --
+                       the picture either side of the plates is the game's
+                       own and not a screen at all; and the corner panel's
+                       old three button points --
                        and the old full-picture swapped ones -- are not on the
                        plates any more, which is the honest answer, because
                        the buttons are not there any more. */
@@ -3772,9 +3851,10 @@ void hal_sub_screen_present(unsigned int *dst, int w, int h)
        ppu_write_bmp site in the tree at 512x384 and unmoved. */
     if (!hal_sub_screen_stacked() && g_swap) {
         /* THE PICTURE IS COMPOSED OUT OF BOTH SCREENS THIS FRAME. Nothing of
-           the map panel is drawn: the picture is three named rectangles and
-           black, and the plate, the banner, the handle and the attention
-           arrows are none of them one of the three. */
+           the map panel is drawn: the picture is two bands of the top screen,
+           the three plates, and the game's own picture under them, and the
+           plate, the banner, the handle and the attention arrows are none of
+           those. */
         swap_present(dst, w, h);
     } else if (!hal_sub_screen_stacked()) {
         /* THE DECORATIVE PANEL FIRST, because it goes BEHIND the map: the
