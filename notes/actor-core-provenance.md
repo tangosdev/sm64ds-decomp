@@ -15,7 +15,7 @@ See also `notes/actor-vtables.md`, `notes/mwccarm-codegen.md`, `notes/actor-nami
 `fBase_c`'s code is one contiguous run, `0x02043444..0x02043f4c`, 25 functions.
 
 That range is a correction. The banner used to say `0x02043494..0x02043e04` and
-both ends were wrong; `src_tu/actors/ActorBase.cpp` reconciled it against the
+both ends were wrong; `src/actors/ActorBase.cpp` reconciled it against the
 cartridge while rebuilding the translation unit.
 
 * `0x02043444` is the real start: `_ZN7fBase_cnwEj`, this class's own
@@ -102,7 +102,7 @@ Stated precisely: the key function -- the first non-inline virtual declared --
 must never be defined as a real method in any translation unit. Declaring the
 destructor first pins that role to TUs which by construction never will.
 `include/fBase_c.h` reaches the same end differently: it does declare
-`InitResources` (slot 0) in-class, but `src/_ZN7fBase_c13InitResourcesEv.cpp`
+`InitResources` (slot 0) in-class, but `src/actors/ActorBase.cpp`
 deliberately defines it as an `extern "C"` free function rather than a method. Do
 not "fix" that file into a real method, and do not remove the declaration from
 `fBase_c.h` -- removing it would delete slot 0 and shift all 18 slots.
@@ -162,7 +162,7 @@ once, for every caller at the same time.
 
 CW 1.2 rejects an in-class declaration of `operator new` ("illegal 'operator'
 declaration"), and it is neither virtual nor layout-affecting, so
-`src/_ZN7fBase_cnwEj.cpp` defines it under its mangled name instead.
+`src/actors/ActorBase.cpp` defines it under its mangled name instead.
 
 ## 7. `dActor_c` field widths -- the `0x080..0x0ab` block
 

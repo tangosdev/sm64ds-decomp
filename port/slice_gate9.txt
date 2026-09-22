@@ -14,8 +14,10 @@ src/_ZN8dActor_cC2Ev.cpp
 # SceneNode's constructor and Reset now share their production translation unit.
 src/actors/ActorBase_SceneNode.cpp
 src/func_0203b438.c
-src/func_02043810.c
-src/_ZN7fBase_cnwEj.cpp
+# fBase_c is one production translation unit; operator new, the framework
+# hook virtuals and the helper at 0x02043810 this slice used to name
+# separately all live in it.
+src/actors/ActorBase.cpp
 src/_ZN11ShadowModelC1Ev.cpp
 src/_ZN10dBgW_KcMbgC1Ev.cpp
 src/_ZN4dBgW7DisableEv.cpp
@@ -45,15 +47,8 @@ src/func_01ffb0bc.cpp
 src/func_01ffb0c8.cpp
 src/func_020393fc.c
 src/func_020395fc.c
-src/_ZN7fBase_c19BeforeInitResourcesEv.cpp
-src/_ZN7fBase_c18AfterInitResourcesEj.cpp
-src/_ZN7fBase_c22BeforeCleanupResourcesEv.cpp
-src/_ZN7fBase_c14BeforeBehaviorEv.cpp
-src/_ZN7fBase_c13AfterBehaviorEj.cpp
-src/_ZN7fBase_c12BeforeRenderEv.cpp
-src/_ZN7fBase_c11AfterRenderEj.cpp
-src/_ZN7fBase_c16OnPendingDestroyEv.cpp
-src/_ZN7fBase_c13OnHeapCreatedEv.cpp
+# The fBase_c framework hook virtuals are already covered above by
+# src/actors/ActorBase.cpp, the single translation unit that defines them.
 src/func_0203b27c.c
 src/func_0204405c.c
 src/func_0203b3c0.c

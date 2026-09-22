@@ -138,7 +138,7 @@ failure did not discard either set of findings.
   identity with the adopted PR: this rework intentionally changes C++ source.
 - **SNM-03 fixed in source and manifest.** The descriptor halfwords at +0x04 and
   +0x06 are behavior/render priorities, as read by `fBase_c::fBase_c()` in
-  `src/_ZN7fBase_cC2Ev.cpp`. `dActor_c::dActor_c()` in
+  `src/actors/ActorBase.cpp`. `dActor_c::dActor_c()` in
   `src/_ZN8dActor_cC2Ev.cpp` reads flags at +0x08 and sends words at
   +0x0c/+0x10/+0x14/+0x18 to SetRanges as clip offset Y, clip radius, clip
   distance and far distance. The BIG_SNOWMAN_BODY registry entry corroborates

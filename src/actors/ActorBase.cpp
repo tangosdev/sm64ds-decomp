@@ -111,7 +111,8 @@ extern "C" {
  * the same failure mode daObjKm3_Dorifu_c hit. Declared under the real mangled
  * name: same address, same relocation, a reference that resolves.
  *
- * This is still a poorer recovery than the legacy src/_ZN7fBase_cD1Ev.cpp,
+ * This is still a poorer recovery than the legacy one-function file that held
+ * fBase_c::~fBase_c,
  * which is a real `fBase_c::~fBase_c() {}` and lets the compiler synthesize
  * both member teardowns. Restoring that here means unwinding the three
  * hand-mangled D0/D1/D2 definitions below, and a hand-mangled D0 beside a real
@@ -124,11 +125,11 @@ extern "C" void _ZN11fLiNdBaPr_cD1Ev(void *node);
    `int[]` in different files and passed `&x` or `x` accordingly. Unified on the
    array spelling, so every call site passes the bare name and every reloc is
    the same addend-0 reference it always was. */
-extern void func_0203b3c0(void *list, void *node);
-extern void func_0203b27c(void *list, void *node);
-extern void func_0203b20c(void *list, void *node);
-extern void func_0203b244(void *list, void *node);
-extern void func_0204405c(void *list, void *node);
+extern int  func_0203b3c0(void *list, void *node);
+extern int  func_0203b27c(void *list, void *node);
+extern int  func_0203b20c(void *list, void *node);
+extern int  func_0203b244(void *list, void *node);
+extern int  func_0204405c(void *list, void *node);
 extern int  func_0203b438(void *root, void *node, void *parent);
 
 extern int  data_020a4b6c[];
@@ -145,8 +146,8 @@ extern void *data_020a4b64;
 extern fBaseActorInfo **data_020a4bb8;
 
 extern void func_02044334(void *p);
-extern int  func_0204424c(int p);
-extern void func_0206e2f8(void *p, int fill, unsigned int size);
+extern int  func_0204424c(char *p);
+extern void *func_0206e2f8(void *p, int fill, unsigned int size);
 
 /* Defined LOWER DOWN in this file (ROM ordinal 4) but called from ordinal 6,
    which the reverse-emission order puts above it. Declared here rather than
@@ -180,13 +181,14 @@ extern void *_ZN6Memory8AllocateEjiP4Heap(unsigned int size, int align, void *he
 extern void  _ZN4Heap20RestoreFromTemporaryEv(void);
 extern void  _ZN4Heap8_DestroyEv(void *h);
 extern u32   _ZN4Heap21MaxAllocationUnitSizeEv(void *h);
-extern void  _ZN4Heap11ResizeToFitEv(void *h);
+extern u32   _ZN4Heap11ResizeToFitEv(void *h);
 
 }
 
 /* ------------------------------------------------------------------------- */
 /* ROM ordinal 24 -- fBase_c::fBase_c, 0x02043dec, size 0x160             */
 /* ------------------------------------------------------------------------- */
+// @symbol _ZN7fBase_cC2Ev
 fBase_c::fBase_c() : manager(this)
 {
     uniqueID = data_02099e70;
@@ -225,6 +227,7 @@ fBase_c::fBase_c() : manager(this)
  * what an inline `operator delete` compiles to -- see include/fBase_c.h.
  * D1 and D2 are byte-identical, which for a root class they must be.
  * ========================================================================= */
+// @symbol _ZN7fBase_cD1Ev
 extern "C" fBase_c *_ZN7fBase_cD1Ev(fBase_c *self)
 {
     *(int *)self = (int)_ZTV7fBase_c;
@@ -233,6 +236,7 @@ extern "C" fBase_c *_ZN7fBase_cD1Ev(fBase_c *self)
     return self;
 }
 
+// @symbol _ZN7fBase_cD0Ev
 extern "C" fBase_c *_ZN7fBase_cD0Ev(fBase_c *self)
 {
     *(int *)self = (int)_ZTV7fBase_c;
@@ -242,6 +246,7 @@ extern "C" fBase_c *_ZN7fBase_cD0Ev(fBase_c *self)
     return self;
 }
 
+// @symbol _ZN7fBase_cD2Ev
 extern "C" fBase_c *_ZN7fBase_cD2Ev(fBase_c *self)
 {
     *(int *)self = (int)_ZTV7fBase_c;
@@ -276,6 +281,7 @@ struct ActorBase_ProcessSelf {
 typedef int  (ActorBase_ProcessSelf::*ActorBase_PMFi)();
 typedef void (ActorBase_ProcessSelf::*ActorBase_PMFv)(int);
 
+// @symbol _ZN7fBase_c7ProcessEMS_FivEMS_FbvEMS_FvjE
 extern "C" int _ZN7fBase_c7ProcessEMS_FivEMS_FbvEMS_FvjE(
     ActorBase_ProcessSelf *self, ActorBase_PMFi b, ActorBase_PMFi a,
     ActorBase_PMFv c)
@@ -304,6 +310,7 @@ extern "C" int _ZN7fBase_c7ProcessEMS_FivEMS_FbvEMS_FvjE(
  * _ZTV7fBase_c and collide with the gap object's copy of the ROM's own
  * vtable. Its DECLARATION in the class is required and harmless -- removing it
  * would delete slot 0 and shift the other seventeen. */
+// @symbol _ZN7fBase_c13InitResourcesEv
 extern "C" int _ZN7fBase_c13InitResourcesEv(void)
 {
     return 1; /* VS_FAIL */
@@ -313,6 +320,7 @@ extern "C" int _ZN7fBase_c13InitResourcesEv(void)
 /* ROM ordinal 18 -- fBase_c::BeforeInitResources, 0x02043c78, size 0x8    */
 /* ------------------------------------------------------------------------- */
 /* vtable slot 1, the init guard. Base returns VS_FAIL (1). */
+// @symbol _ZN7fBase_c19BeforeInitResourcesEv
 bool fBase_c::BeforeInitResources()
 {
     return 1; /* VS_FAIL */
@@ -325,6 +333,7 @@ bool fBase_c::BeforeInitResources()
  * then either flag the actor as deferred (when the global at data_02099f24
  * reads 3) or link it into both the behaviour and render lists and mark it
  * alive. */
+// @symbol _ZN7fBase_c18AfterInitResourcesEj
 void fBase_c::AfterInitResources(u32 vfSuccess)
 {
     if (vfSuccess != 2)
@@ -345,6 +354,7 @@ void fBase_c::AfterInitResources(u32 vfSuccess)
 /* ROM ordinal 16 -- fBase_c::CleanupResources, 0x02043bf0, size 0x8       */
 /* ------------------------------------------------------------------------- */
 /* vtable slot 3. Base releases nothing and returns VS_FAIL (1). */
+// @symbol _ZN7fBase_c16CleanupResourcesEv
 s32 fBase_c::CleanupResources()
 {
     return 1; /* VS_FAIL */
@@ -355,11 +365,12 @@ s32 fBase_c::CleanupResources()
 /* ------------------------------------------------------------------------- */
 /* vtable slot 4. Refuses cleanup while lifecycleState is still busy, or once the
  * scene node has been unlinked. */
+// @symbol _ZN7fBase_c22BeforeCleanupResourcesEv
 int fBase_c::BeforeCleanupResources()
 {
     int v = (int)lifecycleState;
     if (v != 0) {
-        if (func_0204424c(v) == 0)
+        if (func_0204424c((char *)v) == 0)
             goto ret0;
     }
     if (manager.sceneNode.child == 0)
@@ -396,6 +407,7 @@ ret1:
  * cartridge instead. It does reproduce -- verified under the pin both as the
  * legacy file and here -- but "matching" and "enrolled" are different
  * questions, and this one was only ever the former. */
+// @symbol _ZN7fBase_c21AfterCleanupResourcesEj
 void fBase_c::AfterCleanupResources(u32 vfSuccess)
 {
     if (vfSuccess != 2)
@@ -414,6 +426,7 @@ void fBase_c::AfterCleanupResources(u32 vfSuccess)
 /* ROM ordinal 13 -- fBase_c::Behavior, 0x02043b24, size 0x8              */
 /* ------------------------------------------------------------------------- */
 /* vtable slot 6, the per-frame update tick. Base does nothing, VS_FAIL (1). */
+// @symbol _ZN7fBase_c8BehaviorEv
 s32 fBase_c::Behavior()
 {
     return 1; /* VS_FAIL */
@@ -424,6 +437,7 @@ s32 fBase_c::Behavior()
 /* ------------------------------------------------------------------------- */
 /* vtable slot 7. Skips the tick once the actor is marked for death, or when
  * bit 1 of the spawn-flag byte is set. */
+// @symbol _ZN7fBase_c14BeforeBehaviorEv
 int fBase_c::BeforeBehavior()
 {
     if (shouldBeKilled != 0)
@@ -440,6 +454,7 @@ ret1:
 /* ROM ordinal 11 -- fBase_c::AfterBehavior(u32), 0x02043af8, size 0x4    */
 /* ------------------------------------------------------------------------- */
 /* vtable slot 8. Base does nothing; leaf classes override. */
+// @symbol _ZN7fBase_c13AfterBehaviorEj
 void fBase_c::AfterBehavior(u32 vfSuccess)
 {
     u32 unused = vfSuccess;
@@ -449,6 +464,7 @@ void fBase_c::AfterBehavior(u32 vfSuccess)
 /* ROM ordinal 10 -- fBase_c::Render, 0x02043af0, size 0x8                */
 /* ------------------------------------------------------------------------- */
 /* vtable slot 9. Base draws nothing and returns VS_FAIL (1). */
+// @symbol _ZN7fBase_c6RenderEv
 s32 fBase_c::Render()
 {
     return 1; /* VS_FAIL */
@@ -458,6 +474,7 @@ s32 fBase_c::Render()
 /* ROM ordinal 9 -- fBase_c::BeforeRender, 0x02043ac8, size 0x28          */
 /* ------------------------------------------------------------------------- */
 /* vtable slot 10. The render twin of BeforeBehavior, on bit 3 instead of 1. */
+// @symbol _ZN7fBase_c12BeforeRenderEv
 int fBase_c::BeforeRender()
 {
     if (shouldBeKilled != 0)
@@ -474,6 +491,7 @@ ret1:
 /* ROM ordinal 8 -- fBase_c::AfterRender(u32), 0x02043ac4, size 0x4       */
 /* ------------------------------------------------------------------------- */
 /* vtable slot 11. Base does nothing; leaf classes override. */
+// @symbol _ZN7fBase_c11AfterRenderEj
 void fBase_c::AfterRender(u32 vfSuccess)
 {
     u32 unused = vfSuccess;
@@ -484,10 +502,12 @@ void fBase_c::AfterRender(u32 vfSuccess)
 /* ------------------------------------------------------------------------- */
 /* vtable slot 12 (vtable+0x30), fired by MarkForDestruction. Base does
  * nothing; leaf classes override to release or notify. */
+// @symbol _ZN7fBase_c16OnPendingDestroyEv
 void fBase_c::OnPendingDestroy()
 {
 }
 
+// @symbol func_02043880
 /* ------------------------------------------------------------------------- */
 /* ROM ordinal 6 -- func_02043880, 0x02043880, size 0x240                   */
 /* ------------------------------------------------------------------------- */
@@ -659,6 +679,7 @@ extern "C" int func_02043880(ActorBase_Raw *o)
 /* ------------------------------------------------------------------------- */
 /* Non-virtual. Idempotent, and a no-op once the actor is already dying;
  * otherwise sets the flag and fires slot 12. */
+// @symbol _ZN7fBase_c18MarkForDestructionEv
 void fBase_c::MarkForDestruction()
 {
     if (shouldBeKilled != 0)
@@ -678,9 +699,10 @@ void fBase_c::MarkForDestruction()
  * return the owner back-pointer the constructor writes at its +0x10. Reads as
  * fBase_c but is unnamed in config, and func_02043880 above is its only
  * caller in this run. */
-extern "C" void *func_02043810(void *p)
+// @symbol func_02043810
+extern "C" void *func_02043810(void *base)
 {
-    int *q = (int *)((int *)p)[0x14 / 4];
+    int *q = (int *)((int *)base)[0x14 / 4];
     if (q)
         return (void *)q[0x10 / 4];
     return 0;
@@ -698,6 +720,7 @@ extern "C" void *func_02043810(void *p)
  * OnHeapCreated -- so this now reads as the virtual it is. The heap's flags
  * word (+4) and top (+8) are still reached by raw offset: see the note on the
  * Heap declarations above. */
+// @symbol _ZN7fBase_c9Virtual34Ejj
 int fBase_c::Virtual34(u32 a, u32 b)
 {
     void *h = 0;
@@ -818,6 +841,7 @@ fail:
  * direct calls, but two definitions of `struct Heap` cannot coexist in one TU,
  * so this member is reconciled onto Virtual34's mangled-name form -- the one of
  * the two that needs no class definition at all. */
+// @symbol _ZN7fBase_c9Virtual38Ejj
 int fBase_c::Virtual38(u32 a, u32 b)
 {
     if (heap != 0)
@@ -853,6 +877,7 @@ int fBase_c::Virtual38(u32 a, u32 b)
 /* ------------------------------------------------------------------------- */
 /* vtable slot 15 (vtable+0x3c), fired by Virtual34/Virtual38 once the actor's
  * heap exists. Base returns VS_FAIL (1); leaf classes override. */
+// @symbol _ZN7fBase_c13OnHeapCreatedEv
 bool fBase_c::OnHeapCreated()
 {
     return 1; /* VS_FAIL */
@@ -870,6 +895,7 @@ bool fBase_c::OnHeapCreated()
  * in-class declaration of operator new outright ("illegal 'operator'
  * declaration"). Its counterpart operator delete IS accepted in-class and is
  * declared there, which is what lets the destructors above reproduce D0. */
+// @symbol _ZN7fBase_cnwEj
 extern "C" void *_ZN7fBase_cnwEj(unsigned int size)
 {
     void *p = _ZN6Memory8AllocateEjiP4Heap(size, -4, data_020a0eac);

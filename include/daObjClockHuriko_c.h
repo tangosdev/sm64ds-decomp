@@ -58,7 +58,7 @@
  * nothing in the cartridge says whether it is a member.
  *
  * REAL METHODS, NOT THE FREE-FUNCTION IDIOM. Older recoveries (include/Door.h,
- * src/_ZN7fBase_c13InitResourcesEv.cpp) declare the override here but define
+ * src/actors/ActorBase.cpp) declare the override here but define
  * it as a free function under a hand-written mangled `extern "C"` name. That
  * idiom cannot survive promotion. With the destructor inline the key function
  * is the first DECLARED non-inline virtual -- InitResources -- and a
