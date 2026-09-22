@@ -43,6 +43,14 @@ do not infer readability from a promoted manifest, passing byte gate or grep
 count. Record the reviewed SHA and findings on the class issue, and link repair
 PRs without closing the remaining reconstruction scope prematurely.
 
+For TU assignments, use [the promotion workflow](../../tu-promotion-conventions.md)
+to define production completion. Prefer finishing an existing viable candidate to
+creating another shadow. A producer's local handoff needs an independent verifier
+and a named integration owner; it is not the endpoint of the overall assignment.
+Do not invent preliminary folder moves or per-function backport phases. Require a
+specific measured blocker for persistent staging or an independently useful partial
+production slice, and honor the user's publication/merge limits.
+
 ## At each checkpoint
 
 - Reconcile claims with actual sessions and published handoffs.

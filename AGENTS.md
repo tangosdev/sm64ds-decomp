@@ -19,8 +19,8 @@ the tools below works fine too.
 
 For multi-agent class/TU work, start at [notes/agents/README.md](notes/agents/README.md).
 The GitHub-backed v2 protocol defines ownership, independent verification, and
-handoffs across harnesses. Complete its cutover checklist before restarting old
-workers; installing the files alone does not switch the live fleet.
+handoffs across harnesses. Resume adopted work and the live queue; the cutover
+checklist applies when adopting a legacy fleet, not on every restart.
 
 ## The one rule that matters
 
@@ -73,6 +73,10 @@ Two shapes cover almost everything now:
   [`notes/tu-promotion-conventions.md`](notes/tu-promotion-conventions.md)
   before opening or reviewing one; `tools/tu_promote.py` does the mechanical
   part (file move, manifest flip, attribution overrides).
+  That note is the canonical promotion workflow: the default build must consume
+  the consolidated `src/` file and absorbed sources must be retired. Folder moves
+  and shadow-only commits do not complete a TU assignment. Temporary `src_tu/`
+  experiments need a production continuation or a concrete recorded blocker.
 
 New byte-matches from scratch (previously-unclaimed ROM functions) still happen
 and follow the same rule — one function per file, filename is the symbol,

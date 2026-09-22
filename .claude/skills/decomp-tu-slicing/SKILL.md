@@ -1,16 +1,21 @@
 ---
 name: decomp-tu-slicing
-description: Find which classes shared an original .cpp translation unit in sm64ds-decomp, so a C++ conversion PR ships the right set of classes together instead of splitting a file the ROM says is one. Use before slicing a per-class migration PR, when deciding whether two classes belong in one header, when eligible.py rejects a file for extra sections or a multi-function TU, when asked which functions belong to a class in an unnamed overlay, or when reading build/tu_map.json. To then execute the merge and byte-verify it, use decomp-tu-build.
+description: Find which classes shared an original .cpp translation unit in sm64ds-decomp, so a promotion follows evidenced compiler boundaries without expanding an assigned source slice. Use before slicing a per-class migration PR, when deciding whether two classes belong in one header, when eligible.py rejects a file for extra sections or a multi-function TU, when asked which functions belong to a class in an unnamed overlay, or when reading build/tu_map.json. To then execute the merge and byte-verify it, use decomp-tu-build.
 ---
 
 # Translation-unit slicing
 
-The linker erased the original `.cpp` boundaries; `tools/tu_map.py` reads them back
-out. Full derivation and limits: `notes/tu-boundaries.md`. **To execute a merge and
+The linker erased the original `.cpp` boundaries; `tools/tu_map.py` infers
+candidates from the remaining evidence. Full derivation and limits: `notes/tu-boundaries.md`. **To execute a merge and
 verify it, use `decomp-tu-build`** — this skill is about reading the map, not acting
 on it.
 
-## 0. Regenerate the map, in this order
+Execution and completion rules live in
+[the promotion workflow](../../../notes/tu-promotion-conventions.md).
+A map is boundary evidence, not a file merger, a production enrollment, or an
+instruction to move per-function sources into a class folder.
+
+## 0. Generate or refresh the map when needed
 
 ```sh
 python tools/rtti_extract.py     # -> build/rtti.json
@@ -18,37 +23,15 @@ python tools/rtti_vtables.py     # -> build/rtti_vtables.json
 python tools/tu_map.py           # -> build/tu_map.json
 ```
 
-`build/` is gitignored, so a fresh worktree has none of this.
+Current `tu_map.py` refuses missing or stale vtable inputs. Confirm the provenance
+of an existing map before using it; gitignored build outputs do not follow a
+source branch automatically. Do not regenerate or recreate an existing candidate
+merely because a new agent resumed its task.
 
-**Nothing enforces that order, and skipping it fails silently.** `vtable_labels()`
-returns `{}` when `build/rtti_vtables.json` is absent, and `tu_map.py` then writes a
-complete, self-consistent, **wrong** map and exits **0**. Measured on `main` from an
-empty `build/`:
-
-| | full chain | `rtti_vtables.json` absent |
-|---|---|---|
-| whole-ROM TUs | 532 | 516 |
-| boundaries | `{low: 68, medium: 110, high: 280}` | `{low: 72, medium: 124, high: 246}` |
-| TUs with a class | 400/532 | 370/516 |
-| under-segmented | ov007, main, ov075, ov084 | ov007, main, **ov005**, ov084 |
-| ov080 | 5 TUs, 4 classed | **6 TUs**, 4 classed |
-| `--check` | all gates PASS, exit 0 | **all gates PASS**, exit 0 |
-
-The known-answer gate asserts ov080's *classed* TU count, which is 4 either way, so it
-passes for the wrong reason. The under-segmented list is itself a casualty, so you
-cannot use it to detect the problem either. The one visible tell is the negative-control
-table, which collapses to `blind 1 / blind-classed 0`. There is no exit code to lean on:
-check the prerequisites yourself.
-
-`--blind` is **not** an opt-out — it is the negative control, dropping the mangled-name
-signal to score what RTTI alone recovers. The whole flag set is `--module`, `--verbose`,
-`--check`, `--blind`, `--split-swallowers [K]`, `--out`; nothing suppresses the RTTI
-labels while keeping the names. `tubuild.py` regenerates the map only when it is
-*entirely absent* — a stale-but-present map is reported as a note and used as-is.
-
-Figures move whenever the map changes, so run the command rather than quoting these.
-Measured on `main` at `980af6241`: **74 modules, 11,091 functions, 532 TUs, 305 sinits**,
-boundaries `{low: 68, medium: 110, high: 280}`, 400/532 carrying a class.
+`--blind` drops the mangled-name signal to measure what RTTI alone recovers. It is
+a negative control, not a normal selection mode. Counts and controls below are
+historical observations; refresh the relevant module and inspect the current
+checks before relying on them.
 
 ## The one rule that matters
 
@@ -67,16 +50,19 @@ ov080: 86 functions -> 5 TUs (4 with a class), 3 sinits / 3 ctor entries [ok]
   boundaries: {'high': 3, 'medium': 1}
 ```
 
-MontyMole and MontyMoleRock ship together or not at all. Splitting them into two PRs
-invents a structure the ROM contradicts, and any later consolidation has to undo it.
+For full promotion, preserve an evidenced shared TU rather than inventing one
+production file per class. A narrower method conversion or production fix can still
+be a valid assigned slice; report it as partial reconstruction, not a complete TU
+promotion. The map does not expand a worker's reservation or authorize unrelated work.
 
 ## Before slicing a per-class PR
 
 1. `python tools/tu_map.py --module <ovNNN>` — find the TU holding your class.
-2. **Every class listed on that line is in scope.** Names like `daChoropu_c` are the
-   RTTI (EAD internal) name for a class you already know by its English name — the
-   same class, not an extra one. Two *different* English names on one line means two
-   classes genuinely co-resided.
+2. Reconcile the TU's classes with the assigned scope and dependency reservations.
+   Names like `daChoropu_c` may be the RTTI name for a class already listed by its
+   English alias. Distinct labels suggest co-residence; establish identity and
+   boundary confidence before claiming a combined production owner. Arrange any
+   necessary scope expansion through the coordinator before editing.
 3. Check `corroborated` for the module in `build/tu_map.json`. `true` means the sinit
    count independently confirms the cut count — a witness that never informed the
    cuts. `false` means the boundaries rest on labels alone.
@@ -103,7 +89,7 @@ known-answer modules — ov062 5/5, ov063 4/4, ov020 2/2 — and falls one short
 (3 against 4). Its `blind` column is much larger than `known` (10, 9, 6, 4) because
 without mangled names the unlabelled runs never get absorbed.
 
-## Gotchas that have already bitten
+## Historical boundary pitfalls to check against current tools
 
 * **A module can contain an object with NO `.text` at all.** `tu_map --module ov045`
   reports 6 TUs; ov045 has a seventh, data-only object — 2,128 bytes at the head of
@@ -120,9 +106,9 @@ without mangled names the unlabelled runs never get absorbed.
   `_s32_div_f`, `_dadd`, `_dmul`, `_ll_udiv`, `_ll_sdiv`, `_ull_mod`) plus
   `__cxa_vec_cleanup`. They are not unrecorded sizes: no size-0 symbol is alone at its
   address and no address carries two sized ones, so the extent is never ambiguous.
-  **This is NOT fixed on `main`.** `functions()` reads symbols.txt straight through with
+  **In the recorded map/tool revision,** `functions()` reads symbols.txt straight through with
   no collapse by address, so these 8 still fragment real runs into 4-byte units that
-  overlap their neighbours — 8 overlapping unit pairs in today's map, all of them in
+  overlap their neighbours — 8 overlapping unit pairs in that map, all of them in
   `main` and `itcm`, which are therefore **not partitions**. If you inventory symbols
   yourself, collapse by address (one entry per address, survivor is the sized symbol) or
   you inherit the same defect.
@@ -166,28 +152,28 @@ addend must lose 8 on rebinding, because mwcc's vtable symbol addresses the obje
 start while symbols.txt's addresses the slot array. Getting that wrong links clean
 and corrupts 34 modules.
 
-**mwcc anchors the vtable to the TU that DEFINES the destructor out of line** — which
-is why a vtable is also a `.data` anchor for its TU, and why moving that definition
-inline removes the anchor entirely. The full source-form rules are in
-`decomp-cpp-class-form`.
+Vtable emission depends on the candidate's key function, destructor source form
+and instantiation. Moving a destructor inline can change ownership and variant
+order; it does not guarantee that the TU stops emitting a vtable. Measure the
+actual object using the examples in `decomp-cpp-class-form`.
 
-## After changing tu_map.py
+## Historical map checks and limits
 
 `python tools/tu_map.py --check` must stay green — but **read the output, never the exit
-status.** On `main` it prints `[PASS]`/`[FAIL]` per gate and returns; the exit code is
+status.** The recorded version printed `[PASS]`/`[FAIL]` per gate and returns; the exit code is
 **0 either way**. `--check --blind` fails two gates and still exits 0. `--check` also
 does not rewrite `build/tu_map.json`.
 
-The gates on `main` are V1 (known-answer classed-TU counts for ov062/ov063/ov080/ov020),
+The recorded gates were V1 (known-answer classed-TU counts for ov062/ov063/ov080/ov020),
 V1b (`daNknk_c_classInit_NOKONOKO_S` lands inside the Koopa TU), V2a (sinit count == `.ctor` entry
 count), V2b (no module has more sinits than TUs) and V3 (every function in exactly one
 TU), followed by the blind negative-control table. V2b earns its keep — it caught the
 RTTI-bridge bug.
 
-**There is no partition gate.** Nothing asserts that a module's units are disjoint, and
+**The recorded version had no partition gate.** Nothing asserted that a module's units are disjoint, and
 the JSON carries no `meta.partition_defects` — `meta` is exactly `modules`, `total_tus`,
 `total_functions`, `total_sinits`, `boundaries`, `tus_with_class`, `under_segmented`,
-`caveat`. Today's map has 8 overlapping unit pairs (the alias defect above) and 85 gaps,
+`caveat`. That map had 8 overlapping unit pairs (the alias defect above) and 85 gaps,
 and nothing reports either. If such a gate is ever added it must **not** assert that
 every function lies inside its unit's range: 109 functions across 10 modules violate
 that on purpose, because `absorb_unlabelled` attaches call-graph-proven file-local

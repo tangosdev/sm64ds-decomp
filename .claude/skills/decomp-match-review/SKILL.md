@@ -5,6 +5,12 @@ description: Review a decompilation matching change the way a decomp maintainer 
 
 # Decompilation match review
 
+For SM64DS, current acceptance and ownership are defined by
+[AGENTS.md](../../../AGENTS.md), [PIPELINE](../../../notes/agents/PIPELINE.md) and
+[the promotion workflow](../../../notes/tu-promotion-conventions.md). Historical
+measurements and tooling proposals below do not supersede their required checks
+or create extra staging work.
+
 ## What the project is for — read this before you rank anything
 
 sm64ds-decomp's goal, in the maintainer's words and in this order:
@@ -14,12 +20,11 @@ sm64ds-decomp's goal, in the maintainer's words and in this order:
 2. **Portability.**
 3. **Readability.**
 
-The two halves of goal 1 are not equally defended. **The byte match is falsifiable and gated;
-the C++ accuracy is neither.** `match.py` fails loudly when the bytes are wrong. Nothing fails
-when a file byte-matches while spelling `_ZN9ActorBasenwEj` as a C identifier, declaring a
-destructor `int(char*)`, or leaving a member filed as a free function. That asymmetry is why
-the C++ half rots, and it is what a human reviewer is *for* — everything the gates catch, they
-already caught before you opened the diff.
+Byte validation and independent **Source review** are separate acceptance gates.
+A byte pass cannot establish genuine C++ reconstruction; source review must record
+remaining bridges, compiler constraints and explicitly accepted partial scope.
+Use the current protocol's exact candidate/base evidence, not the absence of a
+byte failure, to decide whether the source is accepted.
 
 **The pass order below is review sequencing, not this ranking.** Pass 0 runs first because it is
 the cheapest disqualifier and a fake match is a lie in the progress bar — not because bytes
@@ -456,7 +461,8 @@ them again reads as not having looked:
 - **Reloc-destination check** → default-on in `match.py` (Pass 0 rule 3).
 - **Port reference integrity** → `tools/port_refcheck.py` (Pass A12).
 
-Genuinely unbuilt, and still worth proposing:
+Historical tooling proposals; inspect current tools before scheduling new work.
+Declaration agreement is implemented as noted below:
 
 1. **Per-symbol byte-neutrality gate** — build base and head, dump per-symbol match % (objdiff
    report JSON), diff, fail on any symbol that moved and is *not* in the PR's claimed list. This
@@ -466,11 +472,12 @@ Genuinely unbuilt, and still worth proposing:
    pairs as renames so the bot's "broken matches" table becomes trustworthy.
 3. **Laundering-idiom grep** — `<< 16) >> 16`, `BOOL(...) [!=]= (TRUE|FALSE)`, function-pointer
    `reinterpret_cast`, `(void *)…Callback` — each hit needs a comment or an upstream type fix.
-4. **Declaration-agreement gate** — the highest-value unbuilt item, and the one the byte gate
-   can never do. For each symbol declared `extern` in more than one file, compare the
-   declarations against the *demangled* truth (`python tools/demangle.py`), which already
-   states the real signature. A host-compiler sweep approximates this today; a demangle-based
-   check would be exact and need no compiler. Scale: `fakematch.md` Claim 2/4.
+4. **Declaration agreement is implemented** — run
+   `python tools/check_decl_agreement.py --changed <base>` as specified in AGENTS.
+   It compares declarations with definitions and ratchets existing disagreements.
+   Demangling reveals the signature a spelling asserts, not proof that an inferred
+   spelling recovers the original type. Signature repairs still need caller byte
+   and relocation proof; do not commission a replacement checker by default.
 5. **Offset-name consistency** — auto-generate an offset guard from each `unkNNN`/`unusedNNN`
    field name; a name that lies about its offset fails the build.
 

@@ -4,6 +4,11 @@ Own one assigned scope from existing evidence through readable C++ and a locally
 proved candidate. Read [the protocol](../PIPELINE.md), the issue, accepted input,
 handoff, and [queue commands](../queue-v2.md). A successful claim precedes edits.
 
+For promotion work, [the canonical workflow](../../tu-promotion-conventions.md)
+defines the deliverable: a proved production TU with absorbed sources retired.
+Reuse existing candidates; do not add a folder move or shadow-only PR by habit.
+A concrete blocker or explicitly smaller assignment must be recorded as such.
+
 ## Resume and reconstruct
 
 Use your own wired worktree. Preserve prior facts, local-only commits and WIP;
@@ -15,11 +20,13 @@ original filenames. Ask scouts for specific missing evidence. Ask the source
 reviewer to examine the candidate before final proof. Do not share an editing
 worktree or let a helper silently expand your reservation.
 
-Resolve source-review findings before offering a finished candidate. A retained
-bridge needs the cleaner alternative tested under the pinned compiler, with the
-result and durable experiment artifact recorded. Accepted deferred reconstruction
-belongs on the class issue with its next owner. Keep the PR's completion claims
-consistent with that remaining work.
+Resolve source-review findings before offering a finished candidate. If a retained
+bridge is claimed to be a compiler constraint, test the cleaner alternative under
+the pinned compiler and record the result and durable experiment artifact.
+Otherwise preserve any explicitly accepted deferred reconstruction with its issue,
+next owner and partial completion assessment, as PIPELINE requires. Keep the PR's
+claims consistent with that remaining work; deferral does not excuse correctness
+or provenance defects.
 
 The target is plausible 2004 C++ with exact emitted bytes and destinations:
 real methods and fields where evidenced, compiler-generated lifecycle machinery
@@ -33,7 +40,7 @@ their reconciliation with the integrator.
 
 ## Prove, then hand off
 
-Follow repository AGENTS.md and the TU promotion conventions for the actual
+Follow repository AGENTS.md and [TU promotion conventions](../../tu-promotion-conventions.md) for the actual
 change. Use explicit module-aware, relocation-aware checks; a masked local match
 is not proof of correct destinations. Re-run proof after source-quality edits.
 Record full-ROM, affected-consumer, emitted-object/data and reference gates as

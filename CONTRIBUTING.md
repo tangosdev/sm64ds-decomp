@@ -98,7 +98,11 @@ instruction gap refuses to close, that may be why. Ask on Discord.
 
 ## Coordinating your work: get a claims key
 
-Coordination runs through a lock service at tangos.dev. The scheduler already
+For coordinated class/TU agents, use [the v2 protocol](notes/agents/README.md) and
+[the promotion workflow](notes/tu-promotion-conventions.md). Resume existing work
+and claims; a missing key for the separate service below does not bypass v2.
+
+For standalone matching outside that fleet, coordination uses the lock service at tangos.dev. The scheduler already
 **reads** it — it won't hand you work someone else holds — even with no key.
 To **announce** the work you take, mint one:
 

@@ -40,84 +40,33 @@ belong in `src/`.
 
 ## 1. Start safely and coordinate
 
-Begin from current `origin/main`, never from an old migration branch. Protect a
-dirty primary checkout by using a wired worktree:
+Read [AGENTS.md](../AGENTS.md), [the agent protocol](agents/PIPELINE.md), and the
+assigned task's accepted input and handoff. Resume existing work and proof before
+creating a new branch; only a new scope starts from current main. Use a separate
+[wired worktree](worktree-inputs.md) to protect the primary checkout. Keep build
+outputs private and dispose of linked worktrees with the setup helper's safe
+removal counterpart.
 
-```powershell
-git fetch origin main
-C:\Users\andre\.codex\skills\decomp-worktree\wt-setup.ps1 `
-  -Name realcpp-<slice> `
-  -Branch cpp/real-cpp-<slice> `
-  -Base origin/main
-```
+Use the current [v2 queue](agents/queue-v2.md) before edits and reserve shared
+headers, lifecycle owners and ROM ranges. Schedule an independent verifier for
+every source candidate; independence is required even with a small agent budget.
+The producer, verifier and integrator follow their protocol roles, not a second
+claim/release workflow in this guide. Launch/resume prompts live in
+[LAUNCH.md](agents/LAUNCH.md).
 
-Read `AGENTS.md`, `.claude/skills/decomp-cpp-class-form/SKILL.md`,
-`notes/dtor-migration.md`, and the current class claims in `CLAIMS.md`. Claim a
-class or coherent class chain before changing it. Do not overlap an active
-claim.
-
-Check the current frontier rather than trusting an old list:
+Check the current source frontier rather than trusting an old list:
 
 ```powershell
 python tools/langmode_audit.py --by-class
 python tools/langmode_audit.py --list c-mangled
 python tools/langmode_audit.py --list cpp-handspelled
+python tools/srcpath.py <symbol>
 ```
 
-Use `python tools/srcpath.py <symbol>` for every existing source path. Do not
-invent `src/` paths.
-
-### Parallel agent protocol
-
-Parallelize by class ownership, not by individual function or pipeline stage.
-Each migration agent owns one non-overlapping class or dependency chain from
-header evidence through final verification. Two agents must not concurrently
-edit the same class layout, base class, destructor graph, shared header, delink
-range, or production TU.
-
-No local lock tooling is available now. The orchestrator, not the worker, must
-still confirm the complete file and half-open ROM-range set for each lane is
-disjoint from every other lane before dispatch. A conflict means assign different
-work or wait; do not launch an agent and let it discover the overlap after editing.
-
-A practical four-agent team is:
-
-| Role | Owns | Must not own |
-| --- | --- | --- |
-| Coordinator/integrator | current-main refresh, class claims, dependency map, branch review, merge order | speculative source rewrites on worker branches |
-| Migration worker A | one unclaimed class/chain and all affected consumers | any class/header assigned to another worker |
-| Migration worker B | a disjoint class/chain and all affected consumers | shared bases that worker A is changing |
-| TU reconstruction worker | already-genuine C++ classes, `src_tu/`, TU manifests, combined-TU evidence | production promotion before `verify`, `partial`, and `linkcheck` pass |
-
-With a fifth agent, make it verification-only. It independently reruns strict
-relocations, affected-header consumers, full ROM link, attribution, port, dead
-references, language-mode, and TU-state gates against each proposed branch.
-
-The coordinator gives every worker a written packet:
-
-```text
-claim: <class or dependency chain>
-base commit: <origin/main commit>
-owned headers: <paths>
-owned sources/symbols: <paths and addresses>
-known bases/members: <dependencies>
-excluded active claims: <classes/chains>
-required gates: <commands>
-deliverable: <small source-only PR or shadow-TU evidence PR>
-```
-
-Every worker uses its own short-path wired worktree and branch. Workers regularly
-report discovered header dependencies to the coordinator; the coordinator
-serializes dependent branches and rebases/re-verifies the downstream one after
-the prerequisite merges. Unrelated leaf classes can proceed together. Shared
-base-class, member-lifetime, and production-TU changes must form an explicit
-merge train.
-
-Do not split one class into a "header agent" and a "method agent." That handoff
-loses ABI context and lets both branches appear green against incompatible
-layouts. Do not let multiple workers append speculative fixes to one large PR.
-Publish small, independently green slices so a failed class does not block the
-others.
+For a TU promotion assignment, use [the canonical promotion workflow](tu-promotion-conventions.md).
+Do not add separate folder-localization or per-function staging PRs by habit.
+This runbook supplies source-form techniques; it does not turn a production task
+into a shadow-only research task.
 
 ## 2. Choose a coherent slice
 
@@ -251,7 +200,7 @@ Then prove relocation identity:
 
 ```powershell
 python tools/linkcheck.py --c src/<symbol>.cpp `
-  --func <symbol> --addr 0x<addr> --size 0x<size> --module <module>
+  --name <symbol> --addr 0x<addr> --size 0x<size> --module <module>
 ```
 
 For a group, use:
@@ -302,6 +251,10 @@ python tools/affected_src.py include/<Class>.h
 python tools/prepush_linkcheck.py --range origin/main..HEAD
 ```
 
+Commit-range checks inspect the committed candidate. Commit reviewed changes
+before using `--range ...HEAD`, and refresh the relevant proof if the candidate
+changes again. Use explicit `--files` checks for local iteration.
+
 For every rename or move:
 
 ```powershell
@@ -332,61 +285,23 @@ the `chaos-data` branch.
 Finally run the repository's normal reference and test gates required by
 `AGENTS.md` and any changed subsystem.
 
-## 7. Consolidate proven methods into class translation units
+## 7. Consolidate into a production translation unit
 
-The destination is not permanently one source file per symbol. Once a class has
-several genuine C++ methods, reconstructing their original translation unit is
-the next step. One class per file is the default hypothesis, but the ROM may
-show that a class was split across files or shared a file with helpers or nearby
-classes. Follow compiler and link evidence, not aesthetics.
+Follow [TU promotion: workflow and review conventions](tu-promotion-conventions.md).
+It defines the production result, the actual `tu_promote.py` command, retirement of
+absorbed sources, required proof and the handoff through integration.
 
-Do this in two stages:
+A separate per-function conversion phase is not mandatory. Reconstruct directly
+in the combined candidate when that is the shortest verifiable path. Smaller
+production method slices remain useful when explicitly assigned or when a measured
+whole-TU blocker prevents promotion. Preserve the evidenced boundary and report
+which functions remain C-shaped; grouping them into one file does not change that.
 
-1. migrate methods to compiler-spelled class form while each remains
-   independently byte- and relocation-verifiable;
-2. combine only a compatibility-proven ordered group into one production TU.
-
-A combined TU can change more than the individual function bodies:
-
-- function and literal-pool order;
-- inline and out-of-line helper emission;
-- constructor/destructor variant emission;
-- vtable, RTTI, and COMDAT ownership;
-- static initialization order;
-- relocation addends and section layout.
-
-The repository's production surfaces support multi-function sources, but prove
-that readiness from the current checkout before each promotion:
-
-```powershell
-python tools/cpp_tu_compat.py --require-ready
-python tools/cpp_tu_state.py --check-note
-```
-
-Use the shadow-TU workflow to reconstruct and test the boundary without changing
-production enrollment:
-
-```powershell
-python tools/tubuild.py list
-python tools/tubuild.py inspect <module>/<candidate>
-python tools/tubuild.py create <module>/<candidate>
-python tools/tubuild.py compile <module>/<candidate>
-python tools/tubuild.py verify <module>/<candidate>
-python tools/tubuild.py partial <module>/<candidate>
-python tools/tubuild.py linkcheck <module>/<candidate>
-```
-
-`verify` proves licensed text and relocations. `partial` proves that one TU
-compile can yield the same per-function contributions as the current production
-objects. `linkcheck` is the whole-range/module proof. None of them alone enrolls
-the TU, and `tubuild.py promote` is currently dry-run only; production promotion
-must deliberately update the tracked source, TU manifest, and delink ownership.
-
-When promoting, preserve the ROM-supported method order and license every
-non-text section the TU owns. Re-run all per-function strict relocation checks,
-the full linked ROM gate, attribution, `port_refcheck`, language-mode audit, and
-`cpp_tu_state.py --write-note`/`--check-note`. Reject a consolidation that makes
-the final link less exact even when every method matched in isolation.
+Combined compilation can change function order, literal pools, helper and lifecycle
+emission, vtable/RTTI ownership, static initialization and relocation addends.
+Use a temporary shadow for those experiments when needed, then continue through
+production enrollment. Read the [partitioned reference](agent-partitioned-tu-workflow.md)
+only for the relevant output-ownership or partitioning problem.
 
 ## 8. Failure and restoration discipline
 
@@ -421,36 +336,9 @@ attribution metadata, and the completed class claim. Its body should list:
 
 Do not describe a probe success as a verified migration.
 
-## Agent handoff prompt
+## Agent handoff
 
-Copy this prompt to another AI agent:
-
-> Continue the SM64DS real-C++ migration from the latest `origin/main`. Read
-> `AGENTS.md`, `.claude/skills/decomp-cpp-class-form/SKILL.md`, and
-> `notes/real-cpp-migration-runbook.md` completely. Work in a wired short-path
-> worktree and claim a currently unclaimed class or coherent class chain. A real
-> migration must define `Class::Method`, a constructor, a destructor, or a real
-> namespace entity and let mwccarm generate the mangled symbol. Do not submit a
-> hand-spelled `_ZN...` definition or an `extern "C"` wrapper as C++.
->
-> Proceed in small independently verified slices. Map base/member lifetime,
-> delete paths, vtable/RTTI ownership, key functions, and manual lifecycle
-> consumers before destructor or header work. For every candidate require exact
-> mwccarm 2004/b56 bytes, `linkcheck`/`prepush_linkcheck` `VERIFIED` relocation
-> identity, regenerated enrollment, a full `rombuild.py -j16 --no-rom` result of
-> zero mismatches and 106/106 exact modules, plus `port_refcheck`, dead-reference,
-> attribution, affected-header, and language-mode gates as applicable. Restore
-> any failure exactly and leave compiler walls unmigrated. Put documentation and
-> tooling changes in a separate PR from source migrations. After a class has
-> several genuine methods,
-> use the shadow-TU workflow to prove their original order and ownership, then
-> consolidate only compatibility-proven groups into a production class TU.
-> Report concrete evidence, not optimism.
-
-When finished with a disposable wired worktree, remove it only with the skill's
-safe teardown command:
-
-```powershell
-C:\Users\andre\.codex\skills\decomp-worktree\wt-remove.ps1 `
-  -Path C:\tmp\sm64ds-realcpp-<slice>
-```
+Use [the shared launch/resume prompts](agents/LAUNCH.md) and
+[handoff template](agents/templates/handoff.md). Preserve the exact candidate,
+base, commands, findings and continuation owner. A local source commit is a role
+handoff; report the production PR and landing state separately.

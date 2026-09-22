@@ -1,12 +1,18 @@
 ---
 name: decomp-cpp-class-form
-description: Choose the C++ source form that makes mwccarm 2004/b56 emit what the SM64DS ROM actually contains - destructor variant order (D1/D0/D2), vtable and RTTI anchoring, constructor inlining, struct copies, bool widening, and virtual-vs-direct calls. Use when converting a shadow struct into a real C++ class, when D0/D1 are missing or emitted in the wrong order, when _ZTV/_ZTI is absent or multiply-defined, when a .c -> .cpp rename costs bytes, or when a class compiles but the whole-range link will not reproduce.
+description: Choose the C++ source form that makes mwccarm 2004/b56 emit what the SM64DS ROM actually contains - destructor variant order (D1/D0/D2), vtable and RTTI anchoring, constructor inlining, struct copies, bool widening, and virtual-vs-direct calls. Use when converting a shadow struct into a real C++ class, when D0/D1 are missing or emitted in the wrong order, when _ZTV/_ZTI is absent or multiply-defined, when a .c to .cpp rename costs bytes, or when a class compiles but the whole-range link will not reproduce.
 ---
 
 # Making mwccarm emit the ROM's shape
 
 Byte-matching a real C++ class is a question about **source form**, not about being
 "more correct". The compiler is an oracle — ask it rather than reasoning about the ABI.
+
+These are measured source forms to test against the assigned ROM ranges, not
+universal class-layout rules. Keep source reconstruction and byte proof separate.
+For TU delivery, follow [the promotion workflow](../../../notes/tu-promotion-conventions.md);
+for ownership and handoffs, follow [PIPELINE](../../../notes/agents/PIPELINE.md).
+The examples below do not require creating a shadow or a separate staging PR.
 
 ## Ask the compiler, don't hand-mangle
 

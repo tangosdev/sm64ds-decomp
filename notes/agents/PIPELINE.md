@@ -153,6 +153,19 @@ TU/lifecycle work also requires complete emitted-object and metadata evidence.
 Treat queued validation, masked byte matches, unexplained blind relocations, and
 report-only success as incomplete. Record the exact tested source and base SHAs.
 
+## TU promotion deliverables
+
+[The promotion workflow](../tu-promotion-conventions.md) owns the completion
+contract and technical gates. Assign a production TU, not a folder of per-function
+files or an indefinite shadow. Reuse existing candidates and edit already promoted
+sources directly. Temporary staging stays within the promotion task unless a
+specific blocker or research-only scope justifies a separate evidence result.
+
+A producer's local commit and a verifier's accepted handoff finish roles, not the
+whole delivery. The coordinator retains a named integration owner and next action.
+Respect the task's publication/merge limits; report PR-ready, published and merged
+states distinctly instead of declaring a shadow or queue stage fully delivered.
+
 ## Integration and completion
 
 Only the integrator composes independently accepted candidates, reconciles shared

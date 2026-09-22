@@ -1,20 +1,148 @@
-# Genuine-TU promotion: conventions for the PR
+# Genuine-TU promotion: workflow and review conventions
 
-Grounded only in what has landed on `main`. Every rule below cites a promotion that is
-already merged; nothing here is proposed from taste. Read it before you open the next
-promotion PR, and check it as a reviewer before you approve one.
+This is the canonical workflow for TU promotion. Read [AGENTS.md](../AGENTS.md)
+for repository gates and [the agent protocol](agents/PIPELINE.md) for ownership,
+independent review and publication. Other TU guides are technical references;
+they do not create extra staging tasks or replace this completion contract.
 
-A *genuine-TU promotion* collapses N per-function files into one real C++ translation
-unit and replaces that class's N per-function `delinks.txt` entries with a single
-`complete` span. `tools/tu_promote.py` drives the mechanical half (the `git mv` R100 so
-attribution follows, the `git rm` of absorbed sources, the manifest flip to
-`status: promoted`, the per-symbol attribution overrides, the CONVERTED identity
-migration to `promoted-path#symbol`). This note covers the half the tool does not do,
-which is the half every review has spent its time on.
+## What a promotion delivers
+
+A translation unit is one compiler input. For a promotion, consolidate the evidenced
+functions into one authoritative `.cpp` under `src/`, and make the **default build**
+consume it through complete tracked `config/**/delinks.txt` ownership. Retire the
+absorbed per-function sources and the shadow copy, preserve each symbol's credit,
+and verify the final production arrangement. Follow the evidenced boundary: a TU
+can contain multiple classes, and a class can span multiple TUs.
+
+Moving `.c` and `.cpp` files into a class folder leaves separate compiler inputs.
+Renaming extensions, adding a wrapper that includes the old implementation files,
+or committing a better `src_tu/` copy does not complete a promotion. Do not schedule
+a folder-localization PR or a separate per-function backport as a routine precursor.
+A new wired worktree provides isolation; it is not a new reconstruction to start
+when a usable branch, PR or candidate already exists.
+
+Production packaging and source reconstruction are separate claims. Aim for
+readable, period-accurate class definitions and compiler-spelled methods. Original
+C helpers may remain C helpers. Retained ABI bridges or unresolved reconstruction
+need the explicit source-review dispositions in [PIPELINE](agents/PIPELINE.md#source-quality-and-proof-are-separate);
+a `promoted` manifest does not certify that the class is fully reconstructed.
+
+## One path from candidate to production
+
+1. **Resume and reserve.** Inspect the existing issue, task, PR, worktree, manifest,
+   source and proof before creating anything. Resume the accepted input or adopted
+   checkpoint; start new work from current main only when no continuation exists.
+   Follow the v2 queue and reserve shared dependencies before edits. Assign the
+   independent verifier and integration owner before the producer finishes.
+2. **Resolve the actual owner.** Use `python tools/srcpath.py <symbol>` and inspect
+   its complete delinks entry. For an already promoted TU, edit its production
+   `src/` file directly in the isolated worktree. Do not recreate a shadow fork.
+   For new consolidation, establish the boundary and emitted-output ownership;
+   the map is evidence, not authority to expand the assigned scope.
+3. **Consolidate and prove.** Reuse an existing candidate. If none exists, the
+   current helper creates a temporary `src_tu/` input; use it to resolve combined
+   codegen and ownership within the promotion task. There is no mandatory separate
+   shadow PR or per-function conversion PR. Review genuine C++ form, all declared
+   functions and relocation destinations, affected header consumers, and the whole
+   emitted object, including lifecycle variants, RTTI, vtables and static data.
+4. **Promote with the actual tool.** Review `tu_promote.py`'s dry-run, then apply
+   it in the same workstream once the candidate is proved. It moves the source,
+   removes absorbed legacy files, updates delinks and the manifest, preserves
+   `attribution.json` `path#symbol` overrides, and migrates CONVERTED identities.
+   Check the proposed destination against `srcpath` and the repository conventions.
+   A successful plan is mechanical readiness, not byte or source approval.
+5. **Verify the production result.** Inspect the diff and normal build's source
+   coverage: each absorbed function must now be built from the production TU,
+   with no duplicate owner or fallback to ROM. Run the required gates below and
+   obtain independent review of the exact final candidate and base. A shadow's
+   earlier proof does not prove the changed production arrangement.
+6. **Carry the handoff through.** The producer offers the exact commit to the
+   verifier; the coordinator keeps a named integration owner and next action.
+   A local commit or successful queue stage is a role handoff, not a landed result.
+   The integrator publishes the reviewed production PR and follows it through the
+   authorized endpoint. Record the PR and, when merged, the resulting main SHA.
+   Honor explicit local-only or PR-only requests and publication/merge authority;
+   these instructions do not grant broader permissions or bypass required checks.
+
+Typical commands, with the assigned TU ID and immutable base substituted:
+
+```sh
+python tools/cpp_tu_compat.py --require-ready
+python tools/tubuild.py inspect <module/TU-id>
+# Only if a new candidate is needed:
+python tools/tubuild.py create <module/TU-id>
+python tools/tubuild.py verify <module/TU-id>
+python tools/tubuild.py linkcheck --baseline --module <module> -j16 --clean
+python tools/tubuild.py linkcheck <module/TU-id> -j16
+# After candidate proof; inspect the plan before applying:
+python tools/tu_promote.py <module/TU-id> --dry-run
+python tools/tu_promote.py <module/TU-id>
+# Recheck the resulting production arrangement:
+python tools/rombuild.py -j16
+# Review and commit the production candidate before commit-range checks:
+git diff --check
+git add <reviewed-paths>
+git commit -m "Promote the assigned translation unit"
+python tools/prepush_linkcheck.py --range <base>..HEAD
+python tools/prepush_attribution.py --base <base> --head HEAD
+python tools/port_refcheck.py
+python tools/check_decl_agreement.py --changed <base>
+```
+
+`--range <base>..HEAD` and `--head HEAD` inspect commits, not uncommitted edits.
+If a check causes further source or manifest changes, commit them and refresh the
+relevant proof before handing off the final immutable SHA. The local checkpoint
+commit is part of this task, not a separate staging PR.
+
+`cpp_tu_compat` is a synthetic tooling probe, not candidate verification. The
+older `tubuild.py promote` command is only a planner and its refusal messages can
+lag production support; use `tu_promote.py` for the actual promotion plan. Neither
+a compatibility pass nor a successful promotion dry-run substitutes for proof.
+
+Use the candidate's required link mode and inspect every emitted output. For owned
+non-text data, run `python tools/romdata_check.py --files <source.cpp> --json <report.json>`.
+It compiles the source without isolation. Inspect emitted-symbol coverage and
+individual verdicts; its exit status is not a pass/fail gate, and a failed compile
+can leave no records. For a shadow source, confirm its filename-based compiler pin
+agrees with the TU's pin. Normal isolation can discard the metadata under review.
+Apply the header, references, attribution and source-state gates required by
+AGENTS and the changed surfaces. The private byte validator and independent
+**Source review** must pass for the proposed candidate/base before landing.
+
+## When staging or a smaller production change is justified
+
+Temporary `src_tu/` work is useful when combined compilation changes bytes,
+file-global pragmas conflict, compiler pins disagree, or lifecycle/data ownership
+is unresolved. It is also the current promotion helper's staging input. It is
+not a second permanent implementation or a required separately published phase.
+
+A persistent blocker needs a concrete symbol/range, failed gate or unsupported
+policy, the pinned experiment, remaining production changes, and a next owner/action.
+Tell the user why production cannot yet be completed. Missing build inputs and an
+explicit research-only assignment are also valid limits; neither is a byte pass.
+Keep useful evidence without presenting folder counts or shadow status as progress
+in the production build.
+
+For measured partitioning problems, use the [partitioned TU reference](agent-partitioned-tu-workflow.md).
+A single compiler input may produce multiple derived linker objects; that is still
+one compiler TU. However, `rombuild.py --partitioned-tu <id>` currently uses an
+opt-in generated profile and retains legacy sources as controls. Its success does
+not retire those sources or complete default production enrollment. Supported
+intact-object promotions do exist; evaluate the current tool's actual restrictions
+instead of repeating a blanket claim that all data-owning TUs are blocked.
+
+A narrow fix to existing production sources can land independently when whole-TU
+promotion has a measured blocker, or when the user assigned a smaller method slice.
+Record why that intermediate result is useful and what remains. Do not duplicate
+already promoted code into a shadow to make routine readability or matching fixes.
+Keep a required tooling repair separate from the source PR, then resume and reprove
+the existing candidate after that dependency lands.
 
 ## The landed corpus
 
-Seven classes across six PRs. When this note says "landed precedent" it means these:
+These historical case studies explain the review conventions below; they are not a
+live inventory or universal compiler rules. Recheck each technique on the candidate.
+The initial corpus was seven classes across six PRs:
 
 | PR | class | promoted TU |
 | --- | --- | --- |
@@ -26,14 +154,10 @@ Seven classes across six PRs. When this note says "landed precedent" it means th
 | #2051 | daObjKinokoTag_c | [src/game/actors/d_a_obj_kinoko_tag.cpp](../src/game/actors/d_a_obj_kinoko_tag.cpp) |
 | #2055 | daEyBm_c | [src/game/actors/d_a_ey_bm.cpp](../src/game/actors/d_a_ey_bm.cpp) |
 
-PR #2004 (daObjKm3_Kurumajiku_c) is an open draft. It is a data point, not precedent.
-Do not cite it as settled, and do not copy a pattern that appears only there.
-
-*Update.* #2004 was since closed and that class landed instead through #2057 ("first
-compiler-built vtable — promote [ov047](../config/arm9/overlays/ov047/symbols.txt)/[daObjKm3_Kurumajiku_c](../include/daObjKm3_Kurumajiku_c.h) to intact-object
-production"), so [src/game/actors/d_a_obj_km3_kurumajiku.cpp](../src/game/actors/d_a_obj_km3_kurumajiku.cpp) is on `main` and is precedent.
-Section 2's Kurumajiku measurements were written while it was a draft; they still hold,
-and section 6 cites the landed file.
+PR #2004 was superseded by #2057, which landed
+[src/game/actors/d_a_obj_km3_kurumajiku.cpp](../src/game/actors/d_a_obj_km3_kurumajiku.cpp)
+as an intact-object promotion. Section 2 retains the original experiment's
+measurements; section 6 cites the landed file.
 
 ---
 
@@ -268,7 +392,7 @@ machine-read `legacy_source` fields, which are the historical record.
 
 ---
 
-## 5. Ledger-touching PRs land one at a time, with regeneration between
+## 5. Serialize shared ledger updates and regenerate the composed result
 
 Every promotion touches `config/converted-baseline.json` and its overlay's `delinks.txt`
 and `symbols.txt`.
@@ -283,12 +407,15 @@ and `symbols.txt`.
   per-member `path#symbol`. A hand-resolved merge produces a baseline that is neither
   branch's and still passes a casual read.
 
-**The rule.** Do not batch promotions. Land one, then **regenerate** — `python
-tools/tiers_ratchet.py --update` — and rebase the next one onto the result. Never
-hand-merge the baseline array.
+**The rule.** Reserve and serialize shared bookkeeping through the integrator.
+Regenerate with `python tools/tiers_ratchet.py --update` after composing the
+accepted source changes; inspect symbol identities and credit, not just counts.
+Never resolve the baseline array by blindly taking one side or unioning text.
 
-With roughly a dozen promotions queued, this is the rule most likely to cost a day. Plan
-the queue as a chain, not a fan.
+Independently accepted, coherent promotions may share an integration PR under
+[PIPELINE](agents/PIPELINE.md#integration-and-completion). Reprove the resulting
+composition and current base. Separate PRs remain useful for unrelated scope or
+dependencies; a ledger overlap does not mandate a preliminary staging PR.
 
 ---
 

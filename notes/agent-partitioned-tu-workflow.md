@@ -1,72 +1,19 @@
-# Agent runbook: readable C++ through partitioned translation units
+# Partitioned translation units: experiment reference
 
-Use this file to start a fresh agent on the readable-C++ translation-unit (TU)
-workflow without relying on chat history. It is an operational companion to:
+Use this reference when a candidate needs text partitioning, non-text ownership
+proof or compiler-output policy investigation. Start normal promotion work at
+[TU promotion: workflow and review conventions](tu-promotion-conventions.md);
+use [agents/LAUNCH.md](agents/LAUNCH.md) for assignments and resumption.
 
-- [`translation-unit-reconstruction-plan.md`](translation-unit-reconstruction-plan.md)
-  for the architecture and invariants;
-- [`tu-boundaries.md`](tu-boundaries.md) for how candidate TU boundaries are inferred;
-- [`tu-reconstruction-pilot-report.md`](tu-reconstruction-pilot-report.md) for the
-  original text-only `daObjKm2_Ami_Bou_c` experiment;
-- [`dtor-migration.md`](dtor-migration.md) for destructor-specific codegen traps;
-- `ov002/daObjAbuku_c` in [`config/tu_manifest.d/`](../config/tu_manifest.d/)
-  for the first landed partitioned text-plus-data proof.
+The commands here are intermediate experiments within that task. They do not
+require a separate shadow PR or permission to continue an already assigned
+production promotion. An explicitly research-only task still stops at its agreed
+scope. Preserve an existing candidate instead of starting a second copy.
 
-The older plan begins with a historical statement that the tooling was only proposed.
-That is no longer the current state. `tools/tubuild.py` now implements shadow creation,
-compilation, verification, partial isolation, scratch link checks, multi-section
-ownership checks, exact vague-output externalization, and scratch-only partitioned
-link verification. Production promotion remains intentionally narrower.
-
-## Copy-paste bootstrap prompt
-
-Replace the bracketed values and give this block to a fresh agent:
-
-```text
-Work in sm64ds-decomp on a new worktree based on current origin/main.
-
-Goal: reconstruct and verify one small readable C++ translation unit without reducing
-source-built coverage or changing production enrollment prematurely.
-
-Candidate: [module/TU-id, or ask the agent to select one]
-Branch: [cpp/<short-name>-tu]
-Worktree: C:\tmp\sm64ds-[short-name]
-
-Read first:
-- AGENTS.md
-- notes/agent-partitioned-tu-workflow.md
-- notes/tu-boundaries.md
-- notes/translation-unit-reconstruction-plan.md
-- notes/dtor-migration.md when the TU emits destructors
-- the ov002/daObjAbuku_c entry in config/tu_manifest.d/
-
-Rules:
-- Fetch and inspect current origin/main; do not trust old worktree or chat state.
-- Claim the span before changing source.
-- Use a wired worktree with the ROM, mwccarm, dsd, and a private build/ directory.
-- Keep experimental consolidated source in src_tu/. Do not edit production src/ or
-  config/**/delinks.txt unless a separate, explicit promotion task is authorized.
-- Treat every emitted function, data object, section, relocation, helper, RTTI record,
-  vtable, alias, and destructor variant as output that needs an exact license or an
-  independently verified disposition. Unexpected output is failure.
-- Compile with the repository-selected pin, normally mwccarm 2004/b56.
-- Require byte and relocation equality, exact module output, no new symbol errors, and
-  a scratch ROM identical to an independently built stock ROM.
-- A partitioned-link-verified result is scratch evidence only. Never describe it as
-  promoted or production-enrolled.
-- Keep tooling and CI changes in a separate PR from the TU evidence change.
-- Commit and open a focused PR only after the gates in this runbook pass. Do not commit
-  build/tu/ or any other generated build artifact.
-
-Expected handoff:
-- target and boundary evidence;
-- readable source changes;
-- exact owned ranges and compiler-generated outputs;
-- commands and verdicts for baseline, partial/partitioned link, module, symbols, ROM;
-- contamination or pre-existing baseline failures, clearly separated from new failures;
-- what remains before production promotion;
-- branch, commit, PR, and clean-worktree status.
-```
+Boundary evidence is in [tu-boundaries.md](tu-boundaries.md); destructor experiments
+are in [dtor-migration.md](dtor-migration.md). The original text-only pilot is
+[tu-reconstruction-pilot-report.md](tu-reconstruction-pilot-report.md), and
+`ov002/daObjAbuku_c` supplies a historical partitioned text-plus-data example.
 
 ## Ownership model in one minute
 
@@ -79,8 +26,8 @@ code, data, relocations, RTTI, vtables, and compiler helpers.
 - A vtable usually belongs to the TU containing the class's key function or destructor,
   not to every TU that contains one of the class's methods.
 - `src/` is production source. Its delinks entries decide what contributes to the ROM.
-- `src_tu/` is a shadow/incubator tree. It contributes only when `tubuild.py` constructs
-  an isolated scratch experiment.
+- `src_tu/` is a shadow/incubator tree. It contributes through explicit scratch or
+  opt-in generated-profile builds, not ordinary production enrollment.
 - `config/tu_manifest.d/` licenses exact artifacts and address ranges. It does not
   enroll a file by itself.
 - `build/tu/` contains generated objects and reports and is never committed.
@@ -92,67 +39,38 @@ Destructor suffixes are ABI variants for the same class, not inheritance levels:
 - `D2` destroys the base subobject during another destructor's inheritance-chain work.
 
 A real `Class::~Class()` definition may emit all three. The manifest must account for
-each emitted variant. For example, Abuku licenses the surviving retail `D1` and `D0`
-text contributions and permits its otherwise homeless `D2` only through an exact,
-evidence-backed `compiler_only_output` policy.
+each variant the candidate actually emits. An extra variant requires an exact,
+evidence-backed output policy; do not infer its existence from another class.
 
-## Current safe stopping points
-
-Use the result name precisely:
+## Proof states are not task endpoints
 
 | Result | What it proves | What it does not prove |
 | --- | --- | --- |
-| `text-verified` | Declared functions match when compiled in one TU context | Link ordering, owned data, or production enrollment |
-| partial link verified | One TU compile can be isolated into exact legacy text contributions and linked in the existing ROM order | One whole object can replace the legacy objects |
-| `partitioned-link-verified` | Exact derived text objects plus one reduced, licensed non-text object reproduce the module and stock ROM | Production `rombuild` knows how to perform that partition |
-| `promoted` | One canonical production TU has replaced the legacy sources and passes normal build gates | Nothing; this is the actual end state |
+| `text-verified` | Declared functions match in one TU context | Whole link, owned data, production enrollment |
+| partial link verified | One TU compile yields exact derived text contributions | A whole object can replace legacy objects |
+| `partitioned-link-verified` | Licensed derived text and non-text output reproduce the tested module and ROM | Default production enrollment or retirement of legacy sources |
+| `promoted` with normal build proof | A canonical production TU replaces absorbed sources | Complete source reconstruction, independent acceptance, or Git merge |
 
-At the time of this runbook, partitioned mode is deliberately scratch-only. The normal
-build does not apply `compiler_only_output`, `externalized_output`, non-text partition
-reduction, storage-alias rewriting, or per-function text reordering to a whole TU.
-`tubuild.py promote --dry-run` must refuse such an entry. That refusal is a safety
-property, not an unfinished proof being waved through.
+Current tooling supports some intact-object production promotions, including
+explicitly admitted non-text and compiler-output policies. The opt-in
+`rombuild.py --partitioned-tu <id>` profile is different: it retains legacy sources
+as controls and is not default enrollment. Check the actual `tu_promote.py` plan;
+unsupported retargeting, aliases or layout remain real blockers. Do not bypass a
+refusal, or rely on the older `tubuild.py promote` planner as the final authority.
 
-## 1. Start clean and establish the control
+## 1. Resume safely and establish the control
 
-Read `AGENTS.md` and claim the target span before doing reconstruction work. Prefer
-tangOS Console for claims and coordination when it is available; otherwise use the
-repository's documented claims flow.
-
-Fetch current main, then create a short-path worktree. A plain `git worktree add` is
-not enough because ignored toolchain inputs are absent. Use the local worktree setup
-helper when available:
+Follow [PIPELINE](agents/PIPELINE.md) for v2 ownership and exact accepted input,
+and [worktree-inputs.md](worktree-inputs.md) for isolated toolchain/build state.
+Before interpreting a candidate failure, establish that its baseline is valid:
 
 ```powershell
-git fetch origin --prune
-~\.codex\skills\decomp-worktree\wt-setup.ps1 `
-  -Name abuku-next `
-  -Branch cpp/abuku-next-tu `
-  -Base origin/main
-cd C:\tmp\sm64ds-abuku-next
+python tools/rombuild.py -j16 --no-rom
 ```
 
-The helper must report a working compiler, license, ROM dump, dsd executable, and
-canary build. Keep `build/` private to the worktree; only `build/objcache` may be
-shared.
-
-Never remove a wired worktree with `git worktree remove`. Git follows these Windows
-junctions and can empty the real ROM/compiler directories. Use:
-
-```powershell
-~\.codex\skills\decomp-worktree\wt-remove.ps1 `
-  -Path C:\tmp\sm64ds-abuku-next
-```
-
-Before changing the candidate, establish that current main can build:
-
-```powershell
-python tools/rombuild.py -j 16 --no-rom
-```
-
-Expected high-level result: all 106 modules exact and `ROM-build analysis: PASS`.
-If main does not pass, stop and distinguish repository/toolchain failure from candidate
-work before editing anything.
+Record the tested baseline and resolve toolchain/control failures before claiming
+a regression. The strict partitioned experiment below also compares a complete
+scratch ROM against its stock control; a module-only result is not that proof.
 
 ## 2. Select a small TU
 
@@ -164,6 +82,9 @@ first attempt.
 Generate or refresh the TU map when needed:
 
 ```powershell
+python tools/rtti_extract.py
+python tools/rtti_vtables.py
+python tools/tu_map.py
 python tools/tu_map.py --check
 python tools/tu_map.py --module ov002 --verbose
 python tools/tubuild.py list
@@ -207,15 +128,20 @@ The generated file is a starting point, not the readability goal. Curate it unde
 - define functions in the order required by measured compiler section output, which
   may differ from increasing ROM address order;
 - explain only codegen artifacts that remain necessary;
-- do not copy candidates into production `src/` and do not edit delinks enrollment.
+- keep unproved experiments out of production; once proved, continue through
+  the canonical promotion workflow rather than leaving a duplicate shadow.
 
-Shared-header changes widen the verification surface. Put them in a separately scoped
-change unless they are essential, then run `tools/affected_src.py` and the full header
-consumer gates from `AGENTS.md`.
+Shared-header changes widen the verification surface. Reserve the headers and
+affected consumers within the task's scope, then run `tools/affected_src.py` and
+the header-consumer gates required by `AGENTS.md`. Separate an independent header
+dependency when its scope warrants it.
 
 ## 4. Prove text before claiming data
 
-Run the cheap layers first:
+Run `tubuild.py verify` for the candidate. Standalone `compile`, `partial`, and
+`linkcheck --partial` are optional diagnostics when isolating a failure. Once the
+candidate and control are ready, run the link mode required by its ownership model.
+The diagnostic commands are:
 
 ```powershell
 python tools/tubuild.py compile <module/TU-id>
@@ -236,7 +162,7 @@ Do not reason past a mismatch. Record whether it is:
 when calls, globals, RTTI, or vtables are present. `objisolate`, relocation auditing,
 scratch linking, and final module comparison are mandatory.
 
-Then run a no-substitution control before the partial link:
+For a partial-link diagnostic, establish its no-substitution control first:
 
 ```powershell
 python tools/rombuild.py -j 16
@@ -262,16 +188,9 @@ Common cases:
 
 ### Own class RTTI, type name, descriptor, and vtable
 
-Abuku's landed `.data` claim is the reference shape:
-
-```text
-0x02108924  class typeinfo
-0x02108930  class type-name string
-0x02108940  0x1c-byte Bubble_SpawnInfo
-0x0210895c  8-byte vtable storage preamble / retail alias
-0x02108964  public vtable address point
-0x021089e0  end of licensed data band
-```
+Establish the candidate's configured homes for class typeinfo, type-name storage,
+spawn descriptor and vtable before claiming the band. Record exact addresses and
+sizes from that candidate; a neighboring class's layout is not ownership proof.
 
 For an Itanium-style vtable, mwcc's `_ZTV...` definition begins at storage including
 the two-word preamble, while this repository may configure `_ZTV...` at the public
@@ -295,9 +214,9 @@ a wildcard for “compiler noise.”
 ### Account for compiler-only destructor output
 
 Use `compiler_only_output` only for an exact emitted function with a measured reason.
-Abuku's `D2` is permitted because it is byte/relocation-identical to `D1`, has no
-configured retail home, and has no inbound relocation. A configured, referenced, or
-unexplained helper must fail.
+For an unconfigured duplicate destructor variant, prove the required byte and
+relocation identity and absence of inbound relocations under the current tool's
+policy. A configured, referenced or unexplained helper must fail.
 
 ### Refuse uncertain BSS and cross-section mapping
 
@@ -344,115 +263,34 @@ The persistent `partitioned_link` record keeps compact hashes and evidence in
 `config/tu_manifest.d/`; the complete report remains under the ignored
 `build/tu/<id>/link-partitioned/linkcheck.json`.
 
-Known-good control after Abuku landed:
+Run the commands above against the assigned candidate and its pinned manifest.
+Abuku is already promoted as a text-only TU and is not a runnable partitioned
+control; do not recreate its retired sources to replay an old experiment.
 
-```powershell
-python tools/rombuild.py -j 16
-python tools/tubuild.py linkcheck ov002/daObjAbuku_c --baseline -j 16 --clean
-python tools/tubuild.py linkcheck ov002/daObjAbuku_c --partitioned -j 16 --clean
-```
+## 7. Continue through promotion or record the measured blocker
 
-The last command should report seven exact text contributions, a `0xbc` exact data
-range with 36 relocations, exact vtable storage-alias fidelity, all 106 modules exact,
-no new symbol errors relative to baseline, and a ROM identical to stock.
+Return to [the canonical promotion workflow](tu-promotion-conventions.md) after
+this experiment. Use `python tools/tu_promote.py <module/TU-id> --dry-run` to
+inspect the actual production plan. A passing scratch link is not proof that the
+normal build can consume all of its policies, and a successful plan is not a byte
+verification result. Apply a supported promotion, retire the absorbed sources,
+and verify the final default build before independent review.
 
-## 7. Decide whether to stop, fix tooling, or promote
+When the plan refuses a needed policy, preserve the exact experiment, refusal,
+owned ranges and remaining production changes. Schedule the required tooling
+repair separately and name the source continuation owner. Publish a bounded
+evidence-only result only when the assignment or a concrete blocker justifies it;
+label it as incomplete production work. Do not weaken ownership or source coverage
+to make the promotion tool accept it.
 
-Stop with evidence when any required output lacks a trustworthy model. That is useful
-progress: record the exact blocker and leave production untouched.
+## Handoff evidence specific to this experiment
 
-If the blocker is generic tooling, make a separate tools branch and PR. Add focused
-negative tests that prove the prior false-green path is closed, merge the tooling, then
-restack and rerun the candidate from current main. Never bundle speculative tool
-relaxation with the object that benefits from it.
+Use [the shared handoff](agents/templates/handoff.md), adding:
 
-Before considering production enrollment, run:
+- boundary and complete emitted-output ownership, including disposition of extras;
+- exact baseline, partial/partitioned and full-ROM commands, tested commits and verdicts;
+- the current production plan and any specific refusal, with next action and owner.
 
-```powershell
-python tools/tubuild.py promote <module/TU-id> --dry-run
-```
-
-Read every refusal. A partitioned proof that depends on scratch-only deadstrip,
-externalization, symbol rebias, or text splitting is not promotable until the ordinary
-build has an equivalent fail-closed mechanism. Do not hand-edit `src/` and delinks to
-bypass that boundary.
-
-When promotion eventually becomes legal, ask `tools/srcpath.py` for the canonical
-destination instead of composing a `src/...` path by hand, and run the port-reference
-gate for every move or `.c`-to-`.cpp` transition.
-
-## 8. Validate and publish an evidence PR
-
-An evidence PR may contain the readable `src_tu/` file, its manifest entry/proof, and
-the exact configured symbol names needed by the proof. It must not contain generated
-`build/tu/` artifacts. Keep unrelated tools, CI, broad headers, production `src/`, and
-delinks changes out.
-
-At minimum, run:
-
-```powershell
-python tools/rombuild.py -j 16
-python tools/port_refcheck.py
-git diff --check
-```
-
-If tools changed, also run their complete focused suites, including:
-
-```powershell
-python -m py_compile tools/objisolate.py tools/tubuild.py `
-  tools/test_objisolate.py tools/test_tubuild.py
-python -m pytest tools/test_objisolate.py tools/test_tubuild.py -q
-```
-
-Do not silently waive a failure. If a focused test also fails on current
-`origin/main`, demonstrate that the candidate branch does not touch its inputs and
-report it as baseline drift; repair it in a separate tooling or CI PR.
-
-After committing, generate the clean-tree eligibility report before the reference
-gate, because a report made from a dirty tree is intentionally rejected:
-
-```powershell
-python tools/eligible.py
-python tools/check_references.py
-python tools/prepush_attribution.py --base origin/main --head HEAD
-git status --short --branch
-```
-
-Fetch again immediately before pushing. If main moved, restack and rerun the affected
-content-bound baseline and partition proof.
-
-The PR description should say exactly what is owned, what is verified, and what remains
-scratch-only. Do not imply that a shadow TU is production-enrolled. Wait for hosted
-validation and report the live mergeability/check state rather than assuming the local
-result is the final PR verdict.
-
-## Fresh-context handoff checklist
-
-Leave the next agent this compact state, even when the attempt does not finish:
-
-```text
-Target / manifest id:
-Current origin/main commit:
-Worktree / branch:
-Claim owner and span:
-Shadow source and real headers:
-Boundary evidence and confidence:
-Ordered functions and legacy owners:
-Owned non-text ranges:
-Compiler-only output and evidence:
-Externalized output and canonical homes:
-Vtable storage/public-address convention:
-Last stock build verdict and SHA:
-Last baseline verdict/report path:
-Last partial or partitioned verdict/report path:
-New symbol errors versus baseline:
-Current blocker:
-Tracked files changed:
-Commit / PR / CI state:
-Explicitly forbidden next actions:
-```
-
-The most important sentence in the handoff is the blocker. “The class looks right” is
-not a blocker description. “Retained `_ZTV...` has an unresolved `R_ARM_ABS32` import
-with addend 8 because symbols.txt exposes only the public address point” is actionable
-and lets a fresh agent continue without redoing the entire investigation.
+The coordinator carries the accepted candidate into the independent review and
+integration stages. A local commit, shadow PR or scratch proof is not evidence
+that the production sources were replaced or the work landed.

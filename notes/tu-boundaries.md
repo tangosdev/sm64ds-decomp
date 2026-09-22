@@ -3,20 +3,24 @@
 `tools/tu_map.py` → `build/tu_map.json`. What it knows, how it knows it, and where
 it stops knowing.
 
+This note preserves the boundary method and its historical measurements. Current
+execution and completion rules live in [the promotion workflow](tu-promotion-conventions.md).
+Refresh the relevant map and tool behavior; older counts and blockers below are
+not a live work queue or instructions to repeat staging phases.
+
 ## Why
 
 `src/` holds 11,122 one-function files. The original build had nothing of the sort:
 it had `.cpp` files, and the linker emitted each one's `.text` as a single contiguous
 run. That structure is still legible in the ROM, and three workstreams want it:
 
-* **The ctor/dtor endgame is blocked on it.** `tools/eligible.py:135` rejects a file
-  with `"N .text sections (multi-function TU)"`, and per `notes/plan-cpp-language-mode.md`
-  all 72 compiling D1 destructors and 3 D0s are rejected that way — **zero enrolled**,
-  ~517 ctor/dtor functions stranded. Enrolling them needs per-TU objects carrying
-  per-TU `.data` (the vtables), which needs to know what a TU is.
-* **Per-class PR slicing is wrong-grained where classes co-reside.** MontyMole and
-  MontyMoleRock share a file; shipping them in separate PRs invents a structure the
-  ROM contradicts.
+* **Lifecycle ownership needs TU evidence.** Early per-function enrollment could
+  not retain some multi-function destructor output. Production TU support now
+  exists; measure the candidate's emitted code/data and current tool restrictions
+  instead of treating the old zero-enrollment census as a current blocker.
+* **A production TU can contain several classes.** MontyMole and MontyMoleRock
+  provide a co-residence example. Preserve the evidenced boundary for promotion;
+  an explicitly scoped method conversion or fix can still ship independently.
 * **`static` decisions during langmode conversion** want the file-locality evidence.
 
 This is *not* the file-consolidation question that was measured and declined on

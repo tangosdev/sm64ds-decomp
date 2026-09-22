@@ -2,8 +2,8 @@
 
 Use the same prompts in Codex, Kimi K3, Claude, or another shell-capable harness.
 The protocol lives in the repository; prior conversation memory is supporting
-context. Install this revision first and complete [CUTOVER.md](CUTOVER.md)
-before v2 workers start.
+context. Read the current [protocol](PIPELINE.md). Use [CUTOVER.md](CUTOVER.md)
+only for an unadopted legacy fleet; normal work resumes the existing v2 queue.
 
 Repository: `C:/Users/andre/source/tangosdev/sm64ds-decomp`.
 
@@ -34,19 +34,22 @@ source worktree. Keep the protocol/tool checkout separate from the source input.
 The coordinator records both commits. Do not merge workflow files into every
 in-flight source branch just to get a launcher.
 
-## Fleet coordinator: stop, inventory, and adopt
+## Fleet coordinator: continue assigned work
 
-> Read notes/agents/README.md, PIPELINE.md, CUTOVER.md, queue-v2.md, and
-> roles/coordinator.md in the updated repository checkout.
-> Coordinate the v1-to-v2 cutover. Inventory the existing workers, worktrees,
-> claims, branches, PRs and facts; distinguish unknown liveness from abandonment.
-> Use a GitHub issue for each active class/evidenced TU and record its current
-> output and remaining scope. The human is stopping old workers: verify their
-> checkpoint/release acknowledgments before initializing v2.
-> Reuse existing research and branches. Keep shared-header overlaps serialized.
-> Register explicit continuation tasks with exact input SHAs, resources,
-> producer identity when known, and remaining stages. Start with a small pilot.
-> Never infer that an agent stopped merely because its claim is old.
+> Read notes/agents/README.md, PIPELINE.md, queue-v2.md and roles/coordinator.md.
+> Inspect live tasks, sessions, worktrees, branches, PRs and accepted handoffs.
+> Resume existing candidates and facts; do not infer abandonment from claim age.
+> For each assigned task, name the production deliverable, exact input, remaining
+> scope, independent verifier and integration owner. Reserve shared dependencies.
+> For TU promotion, use notes/tu-promotion-conventions.md. Finish existing viable
+> candidates through their authorized endpoint before opening redundant shadows.
+> Keep offered or blocked work attached to a next owner/action; report production
+> enrollment, source reconstruction and PR/merge state separately.
+> Do not reinitialize the queue or begin a competing integration train.
+> Assigned scope: [issues/tasks and publication or merge limits].
+
+For a genuinely unadopted legacy fleet, use CUTOVER's inventory/adoption procedure
+before this prompt. Installing documentation alone does not stop old workers.
 
 ## Producer: one class/TU through reconstruction
 
@@ -59,6 +62,22 @@ in-flight source branch just to get a launcher.
 > editing them. Commit a concise handoff with the final candidate, publish its
 > exact SHA to the next stage, and report the remaining reconstruction work.
 > Task: [issue URL and task ID].
+
+## TU promotion assignment
+
+Use this alongside the producer prompt, preserving an existing candidate:
+
+> Promote the assigned evidenced TU using notes/tu-promotion-conventions.md.
+> Resolve its current source owner and reuse prior work. Deliver one canonical
+> production compiler input under src/, complete default-build enrollment,
+> retirement of absorbed source copies and per-symbol attribution. Reconstruct
+> genuine C++ and prove bytes, relocations, emitted output and affected consumers.
+> Do not add folder-localization or shadow-only PRs as routine phases. If a concrete
+> blocker requires staging or a smaller production slice, record its exact proof,
+> remaining promotion changes and next owner, and report that limit to the user.
+> Hand the final candidate to independent review and the named integrator;
+> follow the task's authorized publication/landing endpoint.
+> TU/task: [ID, accepted input and intended scope].
 
 ## Independent verifier
 

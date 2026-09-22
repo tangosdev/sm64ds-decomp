@@ -8,12 +8,18 @@ harnesses on the same machine. [PIPELINE.md](PIPELINE.md) defines ownership and
 handoffs. [CUTOVER.md](CUTOVER.md) covers stopping the old fleet and adopting its
 work. [queue-v2.md](queue-v2.md) documents the executable queue.
 
-The workflow files can be installed before cutover. Installation does not stop
-old agents or activate the new queue. Do not start v2 work until CUTOVER is complete.
+For an unadopted legacy fleet, follow CUTOVER before starting v2 work. For normal
+resumption, inspect the live queue and resume the recorded task; do not rerun
+cutover or initialize a second queue.
 
 The 2026-09-07 cutover is done: [CUTOVER-0907.md](CUTOVER-0907.md) records the
 pinned workflow commit, what the branch inventory found, and what is deliberately
 not adopted yet. Read it before assuming a branch is abandoned.
+
+For TU assignments, [the promotion workflow](../tu-promotion-conventions.md)
+defines the production result and the limited reasons to retain a shadow. Folder
+regrouping and local shadow commits are not completed promotions. Technical
+runbooks supply experiments, not additional mandatory staging phases.
 
 ## Read only what your task needs
 

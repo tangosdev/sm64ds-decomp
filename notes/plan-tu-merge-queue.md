@@ -1,4 +1,10 @@
-# TU merge queue
+# TU merge queue (historical August 2026 campaign)
+
+> This is a historical plan and experiment log, not the active queue or launch
+> recipe. Its shadow-only endpoints, review shortcuts, tool availability claims
+> and census counts are superseded by [the promotion workflow](tu-promotion-conventions.md)
+> and [the agent protocol](agents/PIPELINE.md). Preserve its measured compiler
+> observations as evidence; do not repeat the campaign's staging phases by default.
 
 Combining one-function files back into the translation units the linker erased.
 Ground truth and counts: `notes/tu-cpp-census-2026-08.md`. Data: `notes/data/tu-merge-candidates.json`.
