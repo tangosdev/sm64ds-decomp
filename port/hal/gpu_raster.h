@@ -50,6 +50,16 @@ void port_gpu_raster_configure(void);
  * the perf line; nothing in the render path asks. */
 int port_gpu_raster_active(void);
 
+/* THE READBACK WAIT, summed in milliseconds over every frame the card has
+ * drawn. This is the CPU side of the opaque pass: the copy out of the render
+ * targets, the Map -- which is synchronous and therefore waits for the card
+ * to finish -- and the copy of the covered pixels into the software
+ * rasteriser's buffers. It is the same quantity the [renderer] cost line
+ * calls "readback", and it is the cost the next stage of this road removes,
+ * which is why the overlay shows it beside the card's own time rather than
+ * folded into it. 0.0 with the setting off. */
+double port_gpu_raster_readback_ms(void);
+
 #ifdef __cplusplus
 }
 #endif

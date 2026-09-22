@@ -1125,10 +1125,14 @@ extern "C" void port_gpu_present_offscreen_frame(const void *pixels,
     }
 
     const long long t0 = qpc();
+    /* the same bracket the windowed path takes, so the offscreen proof mode
+       measures the card over exactly the work a real present does */
+    port_gpu_timer_span_begin(PORT_GPU_SPAN_PRESENT);
     if (!upload(pixels, stride_px, src_w, src_h)) return;
     const long long t1 = qpc();
     if (!set_params(0, 0, dw, dh, dw, dh, src_w, src_h, g_filter)) return;
     draw_quad(g_off_rtv, dw, dh, g_filter);
+    port_gpu_timer_span_end(PORT_GPU_SPAN_PRESENT);
     g_ctx->Flush();
     const long long t2 = qpc();
     g_up_ms += ms_between(t0, t1);
@@ -1178,12 +1182,18 @@ extern "C" int port_gpu_present_frame(void *hwnd, const void *pixels,
     }
 
     const long long t0 = qpc();
+    /* The card's own clock over the handover: the upload and the quad. The
+       Present itself is deliberately outside it -- a blocking Present is the
+       monitor's wait, not the card's work, and folding it in would make the
+       overlay's card line read as a vsync meter. */
+    port_gpu_timer_span_begin(PORT_GPU_SPAN_PRESENT);
     if (!upload(pixels, stride_px, src_w, src_h)) return 0;
     const long long t1 = qpc();
     if (!set_params(dst_x, dst_y, dst_w, dst_h, client_w, client_h, src_w,
                     src_h, g_filter))
         return 0;
     draw_quad(g_scrtv, client_w, client_h, g_filter);
+    port_gpu_timer_span_end(PORT_GPU_SPAN_PRESENT);
     const long long t2 = qpc();
 
     const int interval = vsync_interval(budget_ms, frame_rate_key);

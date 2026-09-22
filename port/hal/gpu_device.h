@@ -58,6 +58,60 @@ double port_gpu_device_create_ms(void);      /* what creation cost, once */
 /* 1 once an acquire has been tried and failed, so a caller can stop asking. */
 int port_gpu_device_failed(void);
 
+/* ---- WHAT THE CARD ITSELF SPENT ----------------------------------------
+ *
+ * The F3 overlay shows a cpu percentage and, until now, nothing about the
+ * card, which is the one number a player with the card renderer on actually
+ * wants. A stopwatch on the CPU cannot answer it: the renderer's readback is
+ * a synchronous Map, so a CPU timer around the opaque pass measures HOW LONG
+ * THE PROCESSOR WAITED, not how long the card was busy, and the present path
+ * hands its work over and returns before any of it has run.
+ *
+ * So the card is asked directly. A D3D11_QUERY_TIMESTAMP pair brackets each
+ * span of card work, and one D3D11_QUERY_TIMESTAMP_DISJOINT per picture
+ * carries the clock rate those stamps are in and says whether the clock was
+ * reliable over that picture at all (it is not across a power-state change,
+ * and such a picture is dropped rather than reported).
+ *
+ * NOTHING HERE EVER WAITS. The results are collected with GetData's
+ * do-not-flush flag from a ring of four pictures, so a stamp that is not
+ * ready yet is simply read one or two pictures later. When the ring is full
+ * the picture is not measured; it is counted and the game carries on.
+ *
+ * Costs nothing when nobody calls it: the query objects are created on the
+ * first span and never at all if there is no device. SM64DS_GPU_TIMER=0
+ * turns the whole thing off, which is how the A/B against a build that never
+ * asks is run.
+ */
+enum {
+    PORT_GPU_SPAN_OPAQUE = 0,   /* hal/gpu_raster.cpp: clear, draw, copy out */
+    PORT_GPU_SPAN_PRESENT = 1,  /* hal/gpu_present.cpp: upload and the quad */
+    PORT_GPU_SPAN_COUNT = 2
+};
+
+/* Bracket one span of card work. Both are safe with no device, with the timer
+   off, and when a span is abandoned half way (a fallback between the two: the
+   picture then reports the spans that did finish and nothing else). */
+void port_gpu_timer_span_begin(int span);
+void port_gpu_timer_span_end(int span);
+
+/* End the current picture's measurement and collect whatever has come back.
+   Called once per picture from the present path; everything else is driven
+   from it. */
+void port_gpu_timer_frame_end(void);
+
+/* The running totals: the card's own busy milliseconds since the process
+   started, the same split by span, how many pictures carried a completed
+   measurement, and how many pictures were DROPPED (the disjoint-clock query
+   came back bad, or every ring slot was still waiting when a new picture
+   wanted one): a dropped picture contributes nothing to card_ms, so it would
+   silently under-report the card's cost if nobody counted it. Returns 1 when
+   the timer is live, 0 when it is off or there is no device. Every pointer is
+   optional. */
+int port_gpu_timer_totals(double *card_ms, double *opaque_ms,
+                          double *present_ms, unsigned long long *pictures,
+                          unsigned long long *dropped);
+
 /* THE SIX DS RANGES, THE SAVE-STATE ARENA AND THE FREE ADDRESS SPACE, printed
  * as one block. This is the stage-0 probe's measurement kept as a gate: a
  * 32-bit process that loses one of the fixed ranges to a driver's own mapping
