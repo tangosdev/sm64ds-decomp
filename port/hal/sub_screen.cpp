@@ -128,6 +128,18 @@ void hal_touch_client_probe(void);
    the ordinary case: the ROM raises the cue only on a map event. */
 void port_bounce_arrows_present(unsigned int *dst, int dst_w, int dst_h,
                                 int px0, int py0, int pw, int ph);
+/* THE LEVEL-CLEAR GLYPH OVERLAY (hal/message_compositor.cpp, which owns engine
+   A's layers; this file owns the compose that reads it). While the composed
+   level-clear picture is up, that unit sends the pixels of the layers carrying
+   the menu's own lettering into these two framebuffer-shaped buffers instead
+   of into the picture, so what the picture holds is the game's own frame with
+   the lettering lifted off it -- no row moved and no region copied -- and this
+   file draws the lifted pixels where the owner asked for them. `live` is that
+   unit's answer for THIS frame; the buffers are indexed at a stride of
+   ntr::SCREEN_W, the same as dst. See the banner over swap_present. */
+int hal_lc_overlay_live(void);
+const unsigned int *hal_lc_overlay_colour(void);
+const unsigned char *hal_lc_overlay_mask(void);
 /* the two engines' brightness blends (hal/fader_wipes.cpp). The SUB one is what
    the sub framebuffer is composed with; the main one is still read by the inset
    path, where the panel is inside engine A's framebuffer when walk_window's own
@@ -1290,11 +1302,34 @@ void inset_map_selftest(int w, int h)
  *      space between (1) and (3) allows with their proportions kept,
  *   3. the TOP screen's coin total at the VERY BOTTOM.
  *
- * Everything else of both screens -- the lives counter, the course scenery,
- * the "TOUCH TO SELECT" band, the bottom screen's map, and the backdrop the
- * plates sit on -- is not drawn at all, and the middle of the picture is the
- * game's own, so what the player sees is three buttons floating over it. The
- * frame the menu is answered the picture goes back to the ordinary one.
+ * AND THE PICTURE UNDER ALL THREE IS THE TOP SCREEN'S OWN FRAME, UNMOVED.
+ * That sentence is the correction of 09-21 and it is the whole of this block's
+ * third cut. The first two cuts moved RECTANGLES OF THE FINISHED PICTURE: the
+ * text band copied picture rows 68..231 up to rows 0..163 and the coin band
+ * copied rows 244..287 down to 340..383, and each of those carried the 3D
+ * scene behind the glyphs along with them. The picture's own top 68 rows were
+ * therefore never drawn and its rows 164..231 and 244..287 were drawn twice,
+ * which is what the owner saw: "why is the background picture like stretched?
+ * The screen height shouldnt change, just slot it in."
+ *
+ * So no row of the picture moves any more. hal/message_compositor.cpp lifts
+ * the LAYERS that carry the menu's lettering out of the frame as it composites
+ * engine A -- the glyphs alone, not the scene behind them -- and this file
+ * draws those lifted pixels at the top and at the bottom over the picture's
+ * own rows. The two bands below are now destinations for an overlay and no
+ * longer copies of anything. The banner over LcOverlay in that file carries
+ * the per-layer census that says which layers those are (BG3 the course text,
+ * the sprites the coin total, BG2 the "TOUCH TO SELECT" band, which is hidden
+ * because the owner asked for it gone).
+ *
+ * Everything else of both screens -- the course scenery, the bottom screen's
+ * map, and the backdrop the plates sit on -- is not drawn at all, and the
+ * middle of the picture is the game's own, so what the player sees is three
+ * buttons floating over it. The lives counter in the top-left corner is the
+ * top screen's own and STAYS WHERE IT IS: it is not re-slotted anywhere, the
+ * picture's own top rows are in the picture now, and it does not touch the
+ * lettering (the counter is x 12..95, the text x 96..393). The frame the menu
+ * is answered the picture goes back to the ordinary one.
  * The ROM draws exactly what it drew before: THIS IS COMPOSITING OF THE TWO
  * FRAMES THE GAME ALREADY PRODUCED, and nothing else changes.
  *
@@ -1340,16 +1375,24 @@ void inset_map_selftest(int w, int h)
  *   the margin the same way.
  *
  *   AND "TOUCH TO SELECT" IS ON THE TOP SCREEN, not on the bottom one: it is
- *   the orange band at picture rows 338..363, DS rows 169..181. It is outside
- *   both of the bands above, so the composed picture cannot draw a pixel of
- *   it. That is the whole of "remove touch to select": no pixel of the top
- *   screen is drawn except the two bands this block names.
+ *   an orange band low on the picture, and the per-layer census of 09-21 puts
+ *   it exactly at picture rows 336..367, x 54..457, on engine A's BG2 and
+ *   nothing else. With the picture no longer cropped it would be back in view,
+ *   so the compose now HIDES that layer outright while it is up. That is the
+ *   whole of "remove touch to select".
  *
- * THE TWO BANDS ARE COPIED ROW FOR ROW, at the size the top screen was
- * already drawn at -- the same number of picture rows out as in, the full
- * picture width, no resampling of any kind. So the text is the size the
- * player is used to seeing it, at every render scale and every aspect,
- * because it is literally the same pixels moved up or down the picture.
+ *   The same census re-measured the other two, and these are the numbers this
+ *   block's row constants answer to: the course text is engine A's BG3, every
+ *   one of its 5971 pixels the colour (144,144,144), picture rows 72..221,
+ *   x 96..393; the coin total is a sprite, picture rows 256..287, x 196..271.
+ *   Both lie inside the bands below, which is what makes the lift lossless.
+ *
+ * THE TWO BANDS ARE WHERE THE LIFTED GLYPHS GO, row for row, at the size the
+ * top screen was already drawn at -- the same number of picture rows out as
+ * in, the full picture width, no resampling of any kind. So the text is the
+ * size the player is used to seeing it, at every render scale and every
+ * aspect, because it is literally the same pixels moved up or down the
+ * picture. What they are drawn OVER is the picture's own rows, untouched.
  *
  * THE PLATES TAKE WHAT IS LEFT. DS rows 0x28..0x97 of the bottom screen --
  * the three touch boxes at 0x28, 0x50 and 0x78, each 0x20 tall, and the two
@@ -1368,14 +1411,13 @@ struct SwapGeom {
        the only part of the picture a stylus reaches */
     int px, py, pw, ph;
     int pnum, pden;              /* their size as a fraction of DS pixels */
-    /* the two bands of the top screen. A band is a straight row copy, so its
-       height is the same number on both sides and only its origin moves. */
+    /* the two bands of the top screen's LETTERING. A band is a straight row
+       move, so its height is the same number on both sides and only its
+       origin changes; what travels is the lifted glyph pixels alone. */
     int ty_src, ty_dst, t_h;     /* the course-clear text block, at the top */
     int cy_src, cy_dst, c_h;     /* the coin total, at the very bottom */
 };
 SwapGeom g_sw;
-unsigned *g_swap_snap;           /* the top screen, kept while it is overdrawn */
-int g_swap_snap_n;
 
 /* The option, asked once per process and latched, like the improved map's. */
 int save_menu_on_top(void)
@@ -1472,11 +1514,24 @@ void swap_geom_for(int w, int h, SwapGeom *o)
     SwapGeom g;
     std::memset(&g, 0, sizeof g);
     if (w < 8 || h < 8) { *o = g; return; }
-    /* THE TWO BANDS FIRST, because what is left over is the plates'. A DS row
-       of the top screen is h / SUB_H picture rows: the same scale the top
-       screen itself was drawn at, so the copy is one for one. */
-    g.t_h = (kTextRow1 - kTextRow0) * h / ntr::SUB_H;
-    g.c_h = (kCoinRow1 - kCoinRow0) * h / ntr::SUB_H;
+    /* THE TWO BANDS FIRST, because what is left over is the plates'.
+       A DS ROW OF THE TOP SCREEN IS (h / SUB_H) PICTURE ROWS, FLOORED, and
+       the floor is the correction of 09-21 rather than a rounding taste. That
+       integer is the scale engine A's own compositor draws its 2D at
+       (hal/message_compositor.cpp: sy = active_h / 192), so it is where the
+       lettering this band carries actually IS. The old form multiplied first
+       -- kTextRow0 * h / SUB_H -- which agrees at every picture whose height
+       is a whole multiple of 192 (the 512x384 default, RenderScale 4, 16:9)
+       and disagrees at the two that are not: at 21:9 the picture is 1024x440,
+       the 2D is drawn at 2x, and the old text band began at picture row 77
+       while the first glyph row is 72, so the top five rows of "COURSE N"
+       fell outside it; at 32:9 the coin band began at row 183 and the coin
+       total is drawn at 256..287, so it missed the coins entirely. Flooring
+       first puts every band on the rows the glyphs are on, at every shape. */
+    int vs = h / ntr::SUB_H;
+    if (vs < 1) vs = 1;
+    g.t_h = (kTextRow1 - kTextRow0) * vs;
+    g.c_h = (kCoinRow1 - kCoinRow0) * vs;
     if (g.t_h < 1) g.t_h = 1;
     if (g.c_h < 1) g.c_h = 1;
     /* a picture too short to hold both bands and a plate between them gives
@@ -1485,11 +1540,11 @@ void swap_geom_for(int w, int h, SwapGeom *o)
         g.t_h = h / 3;
         g.c_h = h / 3;
     }
-    g.ty_src = kTextRow0 * h / ntr::SUB_H;
+    g.ty_src = kTextRow0 * vs;
     if (g.ty_src + g.t_h > h) g.ty_src = h - g.t_h;
     if (g.ty_src < 0) g.ty_src = 0;
     g.ty_dst = 0;
-    g.cy_src = kCoinRow0 * h / ntr::SUB_H;
+    g.cy_src = kCoinRow0 * vs;
     if (g.cy_src + g.c_h > h) g.cy_src = h - g.c_h;
     if (g.cy_src < 0) g.cy_src = 0;
     g.cy_dst = h - g.c_h;
@@ -1558,48 +1613,45 @@ void swap_trace(int w, int h, int frame)
    it. Same object, same internal linkage. */
 extern ntr::SubFramebuffer g_sub;
 
-/* One band of the kept top screen, moved up or down the picture. The source
-   is the snapshot, packed at w; the destination is the framebuffer, whose row
-   stride is always SCREEN_W. */
-void swap_band(unsigned *dst, int w, int h, int src_y, int dst_y, int rows)
+/* One band of the LIFTED LETTERING, moved up or down the picture. Both the
+   overlay and the framebuffer are indexed at a stride of SCREEN_W -- the
+   overlay is written by hal/message_compositor.cpp's own blit, at the host
+   pixels that blit would have written -- so a band is a row offset and
+   nothing else, and only the pixels the overlay marks opaque are drawn. What
+   is not marked is left alone, which is how the game's own picture comes
+   through between the glyphs. */
+void swap_glyph_band(unsigned *dst, int w, int h, int src_y, int dst_y,
+                     int rows)
 {
     if (rows < 1 || src_y < 0 || dst_y < 0) return;
     if (src_y + rows > h || dst_y + rows > h) return;
-    for (int y = 0; y < rows; ++y)
-        std::memcpy(dst + (size_t)(dst_y + y) * ntr::SCREEN_W,
-                    g_swap_snap + (size_t)(src_y + y) * w,
-                    (size_t)w * sizeof *dst);
+    if (!hal_lc_overlay_live()) return;
+    const unsigned *col = hal_lc_overlay_colour();
+    const unsigned char *msk = hal_lc_overlay_mask();
+    if (!col || !msk) return;
+    for (int y = 0; y < rows; ++y) {
+        const size_t s = (size_t)(src_y + y) * ntr::SCREEN_W;
+        const size_t d = (size_t)(dst_y + y) * ntr::SCREEN_W;
+        for (int x = 0; x < w; ++x)
+            if (msk[s + x]) dst[d + x] = col[s + x];
+    }
 }
 
-/* THE COMPOSED PRESENT. Keep the top screen, move its two bands, then lay
-   the three plates over the game's own picture and nothing else. */
+/* THE COMPOSED PRESENT. The picture is already the game's own frame with the
+   menu's lettering lifted out of it, so nothing here moves a row of it: the
+   two bands below put the lifted glyphs at the top and at the bottom, and the
+   three plates go over the middle. */
 void swap_present(unsigned *dst, int w, int h)
 {
-    const int n = w * h;
-    if (n <= 0 || g_sw.pnum <= 0) return;
-    if (g_swap_snap_n < n) {
-        unsigned *p = (unsigned *)std::realloc(g_swap_snap,
-                                               (size_t)n * sizeof *p);
-        if (!p) return;              /* no room to keep it, so nothing moves */
-        g_swap_snap = p;
-        g_swap_snap_n = n;
-    }
-    /* THE STRIDE IS SCREEN_W, NOT w. Every drawing helper in this file reads
-       the framebuffer that way: on a wide render target the buffer's pitch is
-       the tier's maximum and w is the narrower live picture inside it. The
-       snapshot is packed at w, which is its own buffer's business. */
-    for (int y = 0; y < h; ++y)
-        std::memcpy(g_swap_snap + (size_t)y * w,
-                    dst + (size_t)y * ntr::SCREEN_W,
-                    (size_t)w * sizeof *dst);
-    /* WHAT IS UNDER ALL THREE IS THE GAME'S OWN PICTURE. The two bands below
-       cover the top and the bottom of it row for row; the middle is left
-       exactly as engine A drew it, because the owner asked for the buttons
-       and not for the screen they came off -- "I want just the buttons not
-       the whole background". So nothing here blacks or clears the picture
-       and the only pixels written over the middle are plate. */
-    swap_band(dst, w, h, g_sw.ty_src, g_sw.ty_dst, g_sw.t_h);
-    swap_band(dst, w, h, g_sw.cy_src, g_sw.cy_dst, g_sw.c_h);
+    if (w <= 0 || h <= 0 || g_sw.pnum <= 0) return;
+    /* WHAT IS UNDER ALL THREE IS THE GAME'S OWN PICTURE, EVERY ROW OF IT
+       WHERE THE GAME PUT IT. The owner's two rulings are one ruling: "I want
+       just the buttons not the whole background" and "the screen height
+       shouldnt change, just slot it in". So nothing here blacks, clears,
+       copies or scrolls the picture, and the only pixels written are plate
+       and lifted glyph. */
+    swap_glyph_band(dst, w, h, g_sw.ty_src, g_sw.ty_dst, g_sw.t_h);
+    swap_glyph_band(dst, w, h, g_sw.cy_src, g_sw.cy_dst, g_sw.c_h);
     /* THE THREE PLATES, nearest neighbour out of engine B's own raster, and
        only the plates. TWO TESTS, both on the SOURCE pixel, before the ROM's
        own fade reaches the finished picture, and neither of them moves a
@@ -3630,6 +3682,30 @@ int hal_minimap_arrow_reanchor_on(void)
 extern "C" int hal_save_menu_up(void)
 {
     return save_menu_is_up() ? 1 : 0;
+}
+
+/* THE COMPOSE'S TWO SOURCE BANDS, for hal/message_compositor.cpp, asked once
+   at the head of engine A's composite. It is the ONE question that file asks
+   this one, and it is the whole of the gate: off, it answers 0 and that file
+   allocates nothing, clears nothing and changes no pixel.
+   The rows are HOST rows of the picture, out of the very rectangles this
+   frame's compose will draw into, so the pixels engine A lifts out are the
+   pixels the compose puts back, and the two cannot drift apart.
+   ASKED BEFORE hal_sub_screen_present HAS RUN THIS FRAME, which is why the
+   rectangles read here are last frame's. They depend only on the picture's
+   size, which does not change inside a frame, and swap_geom_for runs every
+   frame whatever the answer -- so the numbers are right from the first
+   composed frame. swap_now's own g_sw.pnum > 0 term is what keeps this quiet
+   before the first frame's geometry exists. */
+extern "C" int hal_lc_compose_rows(int *text_r0, int *text_r1,
+                                   int *coin_r0, int *coin_r1)
+{
+    if (!swap_now()) return 0;
+    *text_r0 = g_sw.ty_src;
+    *text_r1 = g_sw.ty_src + g_sw.t_h;
+    *coin_r0 = g_sw.cy_src;
+    *coin_r1 = g_sw.cy_src + g_sw.c_h;
+    return 1;
 }
 
 /* Bottom of the frame: upload the shadows the game filled, rasterise engine B,

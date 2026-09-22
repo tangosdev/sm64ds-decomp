@@ -160,6 +160,16 @@ extern "C" {
    C linkage because that file's whole tail is one extern "C" block. */
 int hal_minimap_arrow_reanchor_on(void);
 
+/* THE LEVEL-CLEAR COMPOSE'S TWO SOURCE BANDS, asked once a frame. Returns 0
+   whenever the composed level-clear picture is not being drawn, which is every
+   frame of every ordinary run, and then this file does exactly what it did
+   before the overlay existed. With it on it fills the two DS row spans the
+   compose lifts off the top screen and redraws elsewhere: the course-clear
+   text block and the coin total. The banner is over hal/sub_screen.cpp's own
+   definition, which owns the option, the trigger and the rectangles; this file
+   owns the layers. */
+int hal_lc_compose_rows(int *text_r0, int *text_r1, int *coin_r0, int *coin_r1);
+
 /* Stage::RenderBouncingArrows' own sprite template, ov001 0x020abd88, mounted
    by name (port/ov001_syms.txt) and bound to the matched body's func_020abd88
    spelling in hal/sub_actors.cpp. The arrows are identified out of this table
@@ -686,6 +696,129 @@ const char *const kOwnerName[kOwnerN] = {"BG0", "BG1", "BG2", "BG3", "OBJ"};
 // disables BG0 exactly then, so no pixel is ever owned by it.
 inline bool layer_behind_3d(unsigned owner, int prio, int p3d) {
     return (owner == (unsigned)kOwnerObj) ? (prio > p3d) : (prio >= p3d);
+}
+
+/* ---- THE LEVEL-CLEAR GLYPH OVERLAY ----------------------------------------
+ *
+ * WHAT IT IS FOR. hal/sub_screen.cpp composes the level-clear save menu onto
+ * the top screen: the course-clear text at the top of the picture, the three
+ * button plates in the middle, the coin total at the bottom. Its first two
+ * cuts moved RECTANGLES OF THE FINISHED PICTURE -- the glyphs and the 3D scene
+ * behind them together -- so the picture's own top rows were thrown away and
+ * its middle rows appeared twice. The owner read that as a stretch: "why is
+ * the background picture like stretched? The screen height shouldnt change,
+ * just slot it in."
+ *
+ * THE ANSWER IS TO SEPARATE THE 2D LAYER FROM THE 3D PICTURE, which this file
+ * is the only place that can do: it is the unit that resolves engine A's four
+ * backgrounds and its sprites into one image and blits them over the 3D frame
+ * the GX path already rendered. While the compose is up it sends the pixels of
+ * the layers that carry the menu's own lettering into a separate buffer INSTEAD
+ * of the framebuffer, keeping their colour and their host position and marking
+ * which ones are opaque. What is left in the framebuffer is the game's own
+ * frame with those layers lifted off it -- no row moved, no region copied --
+ * and the compose then draws the lifted pixels where the owner asked for them.
+ *
+ * WHICH LAYERS, AND IT IS MEASURED AND NOT ASSUMED. Each of engine A's five
+ * composited layers was masked off in turn with SM64DS_ENGINE_A_LAYERS on the
+ * SAME frame of the same row (level 6, a star, the menu up, frame 900, the
+ * plain top screen at 512x384), counting the pixels each one puts on the
+ * picture that the no-2D picture does not have:
+ *
+ *   BG0     0 px  -- DISPCNT bit 3 is set, so BG0 IS the 3D layer and read_bg
+ *                    never treats it as a background at all
+ *   BG1     0 px
+ *   BG2  8556 px  picture rows 336..367, x 54..457  -- "TOUCH TO SELECT"
+ *   BG3  5971 px  picture rows  72..221, x 96..393  -- THE COURSE-CLEAR TEXT,
+ *                    every one of the 5971 the single colour (144,144,144), in
+ *                    the four line bands 72..93, 104..125, 166..189, 200..221
+ *   OBJ  3646 px  two bands: 2..35 x 12..95 the LIVES COUNTER, and
+ *                    256..287 x 196..271 THE COIN TOTAL
+ *   all 18173 px  = 8556 + 5971 + 3646 exactly, so the three sets are disjoint
+ *
+ * SO THERE ARE THREE LAYERS AND EACH GETS ITS OWN RULE:
+ *
+ *   BG3, on the text band's rows -> LIFTED. It is the whole course-clear text
+ *     block and its footprint (72..221) lies inside the band the compose lifts
+ *     (68..231), so the lift loses none of it.
+ *   OBJ, on the coin band's rows -> LIFTED. The coin total, 256..287, inside
+ *     that band (244..287).
+ *   BG2 -> HIDDEN, drawn nowhere. It is "TOUCH TO SELECT", which the owner
+ *     asked to be removed and which the compose has never drawn.
+ *   OBJ anywhere else -> LEFT EXACTLY WHERE IT IS. That is the lives counter
+ *     in the top-left corner. It is part of the top screen's own picture, it
+ *     is not re-slotted anywhere, and "the screen height shouldnt change" is a
+ *     picture whose own top is still there. It cannot collide with the text
+ *     either: the lifted text lands at x 96..393 and the counter is x 12..95.
+ *
+ * A COLOUR KEY WAS NOT AN OPTION and was never tried: the 3D picture behind
+ * the text can hold any colour, including the glyphs' own grey, so keying on
+ * colour would punch holes in the scenery. The layer is the only honest key,
+ * and this unit already knows it per pixel (Cell::owner).
+ *
+ * THE COST WHEN THE COMPOSE IS OFF IS ONE INTEGER TEST PER FRAME.
+ * hal_lc_compose_rows answers 0, lc_ov.lift is 0, the buffer is never
+ * allocated, and every per-pixel test below short-circuits on a zero that was
+ * read once for the whole frame. */
+struct LcOverlay {
+    uint32_t *col;               /* the lifted pixels, framebuffer-shaped */
+    uint8_t *msk;                /* 1 where a lifted pixel was written */
+    int n;                       /* allocated pixels */
+    unsigned lift;               /* owner bits sent to the overlay this frame */
+    unsigned hide;               /* owner bits drawn nowhere this frame */
+    int t0, t1;                  /* the text band, HOST rows [t0, t1) */
+    int c0, c1;                  /* the coin band, HOST rows [c0, c1) */
+    int live;                    /* the overlay holds THIS frame's pixels */
+};
+LcOverlay lc_ov;
+
+/* Asked once a frame, at the head of the composite. Everything the overlay
+   does is behind the answer. */
+void lc_overlay_begin(void)
+{
+    lc_ov.lift = 0;
+    lc_ov.hide = 0;
+    lc_ov.live = 0;
+    if (!hal_lc_compose_rows(&lc_ov.t0, &lc_ov.t1, &lc_ov.c0, &lc_ov.c1))
+        return;
+    const int n = ntr::SCREEN_W * ntr::SCREEN_H;
+    if (lc_ov.n < n) {
+        uint32_t *c = (uint32_t *)std::realloc(lc_ov.col, (size_t)n * sizeof *c);
+        if (!c) return;
+        lc_ov.col = c;
+        uint8_t *m = (uint8_t *)std::realloc(lc_ov.msk, (size_t)n);
+        if (!m) return;
+        lc_ov.msk = m;
+        lc_ov.n = n;
+    }
+    std::memset(lc_ov.msk, 0, (size_t)n);
+    lc_ov.lift = (1u << 3) | (1u << kOwnerObj);   /* BG3 and the sprites */
+    lc_ov.hide = (1u << 2);                       /* BG2, "TOUCH TO SELECT" */
+    lc_ov.live = 1;
+}
+
+/* What to do with a composited pixel's LAYER: 0 draw it, 1 lift it on its own
+   band, 2 hide it. Zero for everything while the compose is off, on one test
+   of a word that was written once for the frame. */
+inline int lc_overlay_verdict(unsigned owner)
+{
+    if (!(lc_ov.lift | lc_ov.hide)) return 0;
+    const unsigned b = 1u << owner;
+    if (b & lc_ov.hide) return 2;
+    return (b & lc_ov.lift) ? 1 : 0;
+}
+
+/* AND THE BAND THAT LAYER IS LIFTED ON, IN HOST ROWS, which is the same
+   rectangle the compose redraws it into. Host rows and not DS rows, and the
+   band is the compose's own: the lift and the redraw then cover EXACTLY the
+   same pixels, so a glyph can never be taken out of the picture and then
+   fall outside the band that puts it back. A pixel of a lifted layer outside
+   its band is left in the picture where the game put it -- which is the lives
+   counter, a sprite far above the coin band. */
+inline bool lc_overlay_in_band(unsigned owner, int hy)
+{
+    return (owner == 3) ? (hy >= lc_ov.t0 && hy < lc_ov.t1)
+                        : (hy >= lc_ov.c0 && hy < lc_ov.c1);
 }
 
 // ---- PER-ELEMENT HUD ANCHORING (widescreen) --------------------------------
@@ -1882,6 +2015,12 @@ extern "C" void port_message_composite_engine_a(void *fbp)
 {
     ntr::Framebuffer &fb = *reinterpret_cast<ntr::Framebuffer *>(fbp);
 
+    /* THE LEVEL-CLEAR GLYPH OVERLAY'S ONE QUESTION FOR THE FRAME, asked here
+       -- above every early return -- so that a frame this unit declines is a
+       frame the overlay reports as empty rather than as last frame's. Off, it
+       is one call that answers 0 and nothing else in this file changes. */
+    lc_overlay_begin();
+
     /* ---- func_02019144 LINE 46, THE ENGINE-A LAYER-MASK PUBLISH -----------
      *
      * On the DS the BG and OBJ enables are not written by the code that turns
@@ -2445,6 +2584,21 @@ extern "C" void port_message_composite_engine_a(void *fbp)
             bw = sx;
             hx0 = x * sx;
             }
+            /* THE LEVEL-CLEAR COMPOSE'S LAYER SPLIT, and it is one read of a
+               zero on every frame of every ordinary run (see the LcOverlay
+               banner). Verdict 1 sends this pixel to the overlay INSTEAD of
+               the framebuffer wherever it falls inside its layer's own band,
+               so the picture keeps what engine A's 3D path drew under it;
+               verdict 2 drops it. The 3D priority, the placement and
+               the pre-smoothing copy are all still this loop's own answers --
+               nothing here re-decides where a pixel goes, only which buffer it
+               lands in, so the lifted glyphs are exactly the pixels the player
+               would have seen at these rows. The capture copy keeps them at
+               their own rows either way: the display capture unit is the ROM
+               reading its own screen back and it is not part of this mod. */
+            const unsigned lcow = g_a[y][x].owner;
+            const int lcv = lc_overlay_verdict(lcow);
+            if (lcv == 2) continue;
             if (!honour3d
                 || !layer_behind_3d(g_a[y][x].owner, g_a[y][x].prio, p3d)) {
                 /* the owning 2D layer is in FRONT of the 3D layer (or there is
@@ -2453,7 +2607,12 @@ extern "C" void port_message_composite_engine_a(void *fbp)
                     for (int dx = 0; dx < bw; ++dx) {
                         const int hy = y * sy + dy, hx = hx0 + dx;
                         if (cover && cover[hy * ntr::SCREEN_W + hx]) ++buried;
-                        fb.px[hy][hx] = c;
+                        if (lcv && lc_overlay_in_band(lcow, hy)) {
+                            lc_ov.col[(size_t)hy * ntr::SCREEN_W + hx] = c;
+                            lc_ov.msk[(size_t)hy * ntr::SCREEN_W + hx] = 1;
+                        } else {
+                            fb.px[hy][hx] = c;
+                        }
                         if (pre) pre[(size_t)hy * ntr::SCREEN_W + hx] = c;
                     }
                 continue;
@@ -2463,7 +2622,12 @@ extern "C" void port_message_composite_engine_a(void *fbp)
                 for (int dx = 0; dx < bw; ++dx) {
                     const int hy = y * sy + dy, hx = hx0 + dx;
                     if (cover[hy * ntr::SCREEN_W + hx]) { ++kept; continue; }
-                    fb.px[hy][hx] = c;
+                    if (lcv && lc_overlay_in_band(lcow, hy)) {
+                        lc_ov.col[(size_t)hy * ntr::SCREEN_W + hx] = c;
+                        lc_ov.msk[(size_t)hy * ntr::SCREEN_W + hx] = 1;
+                    } else {
+                        fb.px[hy][hx] = c;
+                    }
                     if (pre) pre[(size_t)hy * ntr::SCREEN_W + hx] = c;
                 }
         }
@@ -2482,4 +2646,33 @@ extern "C" void port_message_composite_engine_a(void *fbp)
     }
     g_kept3d = kept;
     g_buried3d = buried;
+}
+
+/* ---- WHAT THE COMPOSE READS BACK -----------------------------------------
+ *
+ * The three the level-clear compose in hal/sub_screen.cpp calls, and nothing
+ * else in the program calls any of them. The buffers are framebuffer-shaped:
+ * one entry per host pixel at a stride of ntr::SCREEN_W, exactly the way
+ * ntr::Framebuffer and every drawing helper in that file index dst, so the
+ * compose moves a lifted pixel by adding rows to its index and never by
+ * re-deriving where it was.
+ *
+ * `live` is this frame's own answer and not a latch: the composite above
+ * clears it on every frame the compose is not up and sets it on every frame it
+ * is, above its own early returns, so a compose that asks on a frame this unit
+ * declined is told the overlay is empty instead of being handed the last
+ * frame's glyphs. */
+extern "C" int hal_lc_overlay_live(void)
+{
+    return lc_ov.live && lc_ov.msk && lc_ov.col ? 1 : 0;
+}
+
+extern "C" const unsigned int *hal_lc_overlay_colour(void)
+{
+    return lc_ov.col;
+}
+
+extern "C" const unsigned char *hal_lc_overlay_mask(void)
+{
+    return lc_ov.msk;
 }
