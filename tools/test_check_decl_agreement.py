@@ -2022,5 +2022,80 @@ class RealTreeStaticMemberTests(unittest.TestCase):
         self.assertEqual(verdicts.count(CDA.AMBIGUOUS_MEMBER), 0)
 
 
+
+class NativeFreeOverloadTests(unittest.TestCase):
+    """Native short/int overloads must not share whichever body was scanned first."""
+
+    def fixture(self, declarations, reverse=False, symbols=()):
+        def tree(t):
+            bodies = [
+                ("src/_Z14ApproachLinearRiii.cpp",
+                 "int ApproachLinear(int &x, int target, int step) { return 0; }\n"),
+                ("src/_Z14ApproachLinearRsss.cpp",
+                 "int ApproachLinear(short &x, short target, short step) { return 1; }\n"),
+            ]
+            for path, body in bodies:
+                t.write(path, body)
+            t.write("src/user.cpp", declarations)
+            t.symbols(symbols)
+        findings, decls, defs, files = build(tree)
+        if reverse:
+            findings = CDA.disagreements(decls, list(reversed(defs)), set(symbols))
+        return findings, decls, defs, files
+
+    def test_both_genuine_overloads_agree_in_either_definition_order(self):
+        declarations = ("extern int ApproachLinear(int &, int, int);\n"
+                        "extern int ApproachLinear(short &, short, short);\n")
+        for reverse in (False, True):
+            findings, _, _, _ = self.fixture(declarations, reverse=reverse)
+            self.assertEqual(findings, [])
+
+    def test_typedef_equivalence_selects_the_short_overload(self):
+        findings, _, _, _ = self.fixture(
+            "extern int ApproachLinear(s16 &, s16, s16);\n")
+        self.assertEqual(findings, [])
+
+    def test_wrong_return_is_compared_to_the_selected_definition(self):
+        findings, _, _, _ = self.fixture(
+            "extern void ApproachLinear(short &, short, short);\n")
+        self.assertEqual([(f["kind"], f["got"], f["want"]) for f in findings],
+                         [("return", "void", "int")])
+        self.assertEqual(findings[0]["ref_file"],
+                         "src/_Z14ApproachLinearRsss.cpp")
+
+    def test_unmatched_parameter_types_still_report(self):
+        findings, _, _, _ = self.fixture(
+            "extern int ApproachLinear(int &, short, int);\n")
+        self.assertEqual([f["kind"] for f in findings], ["param"])
+        self.assertEqual(findings[0]["got"], "#2 short")
+
+    def test_wrong_arity_still_reports(self):
+        findings, _, _, _ = self.fixture("extern int ApproachLinear(int &);\n")
+        self.assertEqual([f["kind"] for f in findings], ["arity"])
+
+    def test_c_linkage_does_not_select_a_cpp_overload(self):
+        findings, _, _, _ = self.fixture(
+            'extern "C" int ApproachLinear(short &, short, short);\n')
+        self.assertEqual([f["kind"] for f in findings], ["param"] * 3)
+
+    def test_a_known_c_symbol_still_reports_linkage(self):
+        findings, _, _, _ = self.fixture(
+            "extern int ApproachLinear(short &, short, short);\n",
+            symbols=("ApproachLinear",))
+        self.assertIn("linkage", [f["kind"] for f in findings])
+
+    def test_explicit_linker_identity_still_reports_true_parameters(self):
+        def tree(t):
+            t.write("src/callee.cpp", '// @symbol _Z3fooi\nint foo(int x) { return x; }\n')
+            t.write("src/user.c", 'extern int _Z3fooi(short);\n')
+        findings, _, _, _ = build(tree)
+        self.assertEqual([f["kind"] for f in findings], ["param"])
+
+    def test_reference_pointer_difference_is_not_blanket_suppressed(self):
+        findings, _, _, _ = self.fixture(
+            "extern int ApproachLinear(int *, int, int);\n")
+        self.assertEqual([f["kind"] for f in findings], ["param"])
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
