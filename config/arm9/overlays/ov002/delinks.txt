@@ -172,61 +172,9 @@ src/game/actors/d_a_obj_abuku.cpp:
     complete
     .text start:0x020b3298 end:0x020b35a0
 
-src/_ZN13daObjBlockL_cD1Ev.cpp:
+src/actors/daObjBlockL_c.cpp:
     complete
-    .text start:0x020b35a0 end:0x020b35e4
-
-src/_ZN13daObjBlockL_cD0Ev.cpp:
-    complete
-    .text start:0x020b35e4 end:0x020b363c
-
-src/_ZN13daObjBlockL_c17NotifyLinkedActorEv.cpp:
-    complete
-    .text start:0x020b363c end:0x020b36a0
-
-src/_ZN13daObjBlockL_c16HasNonzeroAngleXEv.cpp:
-    complete
-    .text start:0x020b36a0 end:0x020b36b4
-
-src/_ZN13daObjBlockL_c15OnHitByMegaCharER6Player.cpp:
-    complete
-    .text start:0x020b36b4 end:0x020b36dc
-
-src/_ZN13daObjBlockL_c8OnKickedER8dActor_c.cpp:
-    complete
-    .text start:0x020b36dc end:0x020b3788
-
-src/_ZN13daObjBlockL_c11OnAttacked2ER8dActor_c.cpp:
-    complete
-    .text start:0x020b3788 end:0x020b37ec
-
-src/_ZN13daObjBlockL_c11OnAttacked1ER8dActor_c.cpp:
-    complete
-    .text start:0x020b37ec end:0x020b382c
-
-src/_ZN13daObjBlockL_c15OnGroundPoundedER8dActor_c.cpp:
-    complete
-    .text start:0x020b382c end:0x020b38a0
-
-src/_ZN13daObjBlockL_c4KillEv.cpp:
-    complete
-    .text start:0x020b38a0 end:0x020b3ab0
-
-src/_ZN13daObjBlockL_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x020b3ab0 end:0x020b3b14
-
-src/_ZN13daObjBlockL_c6RenderEv.cpp:
-    complete
-    .text start:0x020b3b14 end:0x020b3c0c
-
-src/_ZN13daObjBlockL_c8BehaviorEv.cpp:
-    complete
-    .text start:0x020b3c0c end:0x020b3d78
-
-src/_ZN13daObjBlockL_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x020b3d78 end:0x020b406c
+    .text start:0x020b35a0 end:0x020b406c
 
 src/d_a_obj_block_l_bk_futa.c:
     complete

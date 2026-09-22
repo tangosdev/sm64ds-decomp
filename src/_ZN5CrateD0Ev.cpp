@@ -6,7 +6,7 @@
  * then return the object to its heap. Declaring `~Crate()` is enough; mwcc
  * emits D2, D0 and D1 together and objisolate keeps the one this file is
  * bound to. The deallocation is an inline operator delete, matching
- * daObjBlockL_c's D0 (include/daObjBlockL_c.h, src/_ZN13daObjBlockL_cD0Ev.cpp).
+ * daObjBlockL_c's D0 (include/daObjBlockL_c.h, src/actors/daObjBlockL_c.cpp).
  */
 #include "Crate.h"
 
