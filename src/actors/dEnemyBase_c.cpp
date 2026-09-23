@@ -66,9 +66,7 @@
 #include "decl_dBgPi.h"
 #include "dBgCh_Lin.h"
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 30 -- _ZN12dEnemyBase_cC2Ev, 0x020aed98, size 0x24                      */
-/* -------------------------------------------------------------------------- */
 /* Written as the real constructor, which is the form the legacy shard recovered
    and byte-matched. Two steps, and neither is spelled below: the dActor_c
    base-subobject call, then this class's own vptr store. `dEnemyBase_c : dActor_c`
@@ -106,9 +104,7 @@ dEnemyBase_c::~dEnemyBase_c()
 {
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 26 -- _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj, 0x020aebf8, 0x120 */
-/* -------------------------------------------------------------------------- */
 /* Runs the mesh collision (sel picks which of four update flavours), then caches
    whichever surface normals came back: the floor result's into mFloorNormal*,
    the wall result's into mWallNormal*. Those two CopyNormalTo calls are what
@@ -165,9 +161,7 @@ void dEnemyBase_c::UpdateWMClsn(dBgCh_Actr & clsn_, unsigned int sel)
 
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 25 -- _ZN12dEnemyBase_c9SpawnCoinEv, 0x020aeabc, size 0x13c             */
-/* -------------------------------------------------------------------------- */
 /* Its legacy file built this from a local `struct dEnemyBase_c : dActor_c` shadow with a
    local POD `struct Vector3`; both are the real ones now. Measured: using
    types.h's Vector3 -- which declares ~Vector3(){} and is therefore NOT a POD --
@@ -211,9 +205,7 @@ void dEnemyBase_c::SpawnCoin()
     this->PoofDust();
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 24 -- func_ov002_020aea30, 0x020aea30, size 0x8c               */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020aea30
 /* Start the selected enemy death sequence. This reconstructed interface uses
    receiver, attacker and nullable collision pointers, matching all callers.
@@ -253,26 +245,20 @@ extern "C" void func_ov002_020aea30(Aea30C* c, dActor_c* a, dBgCh_Actr* b) {
   (*(unsigned int*)((char*)c + 0xb0)) &= ~0x10000000;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 23 -- func_ov002_020aea2c, 0x020aea2c, size 0x4                */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020aea2c
 extern "C" void func_ov002_020aea2c(void)
 {
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 22 -- func_ov002_020aea24, 0x020aea24, size 0x8                */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020aea24
 extern "C" int func_ov002_020aea24(void)
 {
     return 0;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 21 -- func_ov002_020ae9f8, 0x020ae9f8, size 0x2c               */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020ae9f8
 /* Zero two u32 fields, set a u16 field to 0xf, then clear bit 0x1 in the u32 at
    self+0xb0. */
@@ -284,9 +270,7 @@ extern "C" void func_ov002_020ae9f8(char *self)
     *(unsigned int *)(self + 0xb0) &= ~0x1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 20 -- func_ov002_020ae968, 0x020ae968, size 0x90               */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020ae968
 extern "C" {
 extern int _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int id, void *v);
@@ -309,9 +293,7 @@ extern "C" void func_ov002_020ae968(char* c, char* arg)
     _ZN5Sound9PlayBank0EjRK7Vector3(9, (void*)(c + 0x74));
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 19 -- func_ov002_020ae954, 0x020ae954, size 0x14               */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020ae954
 struct Unk954A
 {
@@ -331,9 +313,7 @@ extern "C" void func_ov002_020ae954(Unk954A *a, Unk954B *b)
     func_ov002_020ae968((char *)a, (char *)b);
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 18 -- func_ov002_020ae8b8, 0x020ae8b8, size 0x9c               */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020ae8b8
 extern "C" void func_ov002_020ae8b8(char* c, char* arg)
 {
@@ -355,9 +335,7 @@ extern "C" void func_ov002_020ae8b8(char* c, char* arg)
     *(int *)(((int)c + 0xb0)) &= ~1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 17 -- func_ov002_020ae890, 0x020ae890, size 0x28               */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020ae890
 extern "C" int func_ov002_020ae890(void* c, void* a)
 {
@@ -366,9 +344,7 @@ extern "C" int func_ov002_020ae890(void* c, void* a)
     return _ZN5Sound9PlayBank0EjRK7Vector3(0xa, (char*)c+0x74);
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 16 -- func_ov002_020ae87c, 0x020ae87c, size 0x14               */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020ae87c
 struct Unk87cA
 {
@@ -388,9 +364,7 @@ extern "C" void func_ov002_020ae87c(Unk87cA *a, Unk87cB *b)
     func_ov002_020ae8b8((char *)a, (char *)b);
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 15 -- func_ov002_020ae844, 0x020ae844, size 0x38               */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020ae844
 extern "C" s16 Vec3_HorzAngle(const void *v0, const void *v1);
 
@@ -401,9 +375,7 @@ extern "C" void func_ov002_020ae844(void *c, void *a)
     func_ov002_020ae968((char *)c, (char *)a);
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 14 -- func_ov002_020ae80c, 0x020ae80c, size 0x38               */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020ae80c
 extern "C" void func_ov002_020ae80c(void* c, void* a)
 {
@@ -411,9 +383,7 @@ extern "C" void func_ov002_020ae80c(void* c, void* a)
     func_ov002_020ae8b8((char*)c, (char*)a);
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 13 -- func_ov002_020ae73c, 0x020ae73c, size 0xd0               */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020ae73c
 extern "C" void func_ov002_020ae73c(char* c, char* arg)
 {
@@ -434,9 +404,7 @@ extern "C" void func_ov002_020ae73c(char* c, char* arg)
     _ZN5Sound9PlayBank0EjRK7Vector3(0xa, c + 0x74);
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 12 -- _ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr, 0x020ae6a8, 0x94  */
-/* -------------------------------------------------------------------------- */
 /* unk_10c selects which death handler from a table of POINTERS TO MEMBER
    FUNCTION, then the position and mesh collision are updated regardless. */
 extern int (dEnemyBase_c::*data_ov002_0210dbc0[])(dBgCh_Actr &);
@@ -460,9 +428,7 @@ int dEnemyBase_c::UpdateDeath(dBgCh_Actr & clsn_)
     return ret;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 11 -- func_ov002_020ae64c, 0x020ae64c, size 0x5c               */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020ae64c
 /* Forward declaration, because ordinal 9 is written LOWER in this file (the whole
    TU runs highest ROM address first).
@@ -488,9 +454,7 @@ extern "C" int func_ov002_020ae64c(char* c, int x){
   return func_ov002_020ae5c8(c, x);
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 10 -- func_ov002_020ae608, 0x020ae608, size 0x44               */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020ae608
 extern "C" int func_ov002_020ae608(void* c, void* a){
   if(_ZNK10dBgCh_Actr10IsOnGroundEv(a)==0) return 0;
@@ -500,9 +464,7 @@ extern "C" int func_ov002_020ae608(void* c, void* a){
   return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 9 -- func_ov002_020ae5c8, 0x020ae5c8, size 0x40                */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020ae5c8
 /* `x` is unused on purpose -- see the note on ordinal 11, which passes it. */
 extern "C" int func_ov002_020ae5c8(void* c, int x){
@@ -514,9 +476,7 @@ extern "C" int func_ov002_020ae5c8(void* c, int x){
   return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 8 -- func_ov002_020ae4cc, 0x020ae4cc, size 0xfc               */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020ae4cc
 extern "C" {
 extern void* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
@@ -556,9 +516,7 @@ extern "C" int func_ov002_020ae4cc(char* self, char* clsn){
   return 0;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 7 -- func_ov002_020ae454, 0x020ae454, size 0x78               */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020ae454
 extern "C" int func_ov002_020ae454(char* c, void* a){
   if(*(unsigned short*)(c+0x102)==0 || _ZNK10dBgCh_Actr10IsOnGroundEv(a)!=0 || _ZNK10dBgCh_Actr8IsOnWallEv(a)!=0){

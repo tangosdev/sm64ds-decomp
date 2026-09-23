@@ -225,9 +225,7 @@ daMip_c::~daMip_c()
 {
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 2 -- daMip_c::TestWaterBelow, 0x0212a788, size 0xa0             */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c14TestWaterBelowEv
 /* Probes the ground 0xc8000 above the rabbit with a water-detecting dBgCh_Gnd,
    caches the surface height at +0x464 and answers whether the surface carries
@@ -266,9 +264,7 @@ int daMip_c::TestWaterBelow()
     return 0;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 3 -- daMip_c::UpdateGrab, 0x0212a828, size 0xdc                 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c10UpdateGrabEv
 /* The pick-up handshake. +0x134 is the id of the actor currently touching this
    one; if it resolves to a Player (actor type 0xbf), the touch carries the grab
@@ -298,9 +294,7 @@ void daMip_c::UpdateGrab()
     }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 4 -- daMip_c::StateSaveTalkMain, 0x0212a904, size 0x1a0         */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c17StateSaveTalkMainEv
 /* The eighth-rabbit epilogue, reached only from StateCaughtMain's flag path
    once SaveData says all eight glowing rabbits are found. The rabbit turns to
@@ -378,9 +372,7 @@ int daMip_c::StateSaveTalkMain()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 5 -- daMip_c::StateSaveTalkInit, 0x0212aaa4, size 0x48          */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c17StateSaveTalkInitEv
 int daMip_c::StateSaveTalkInit()
 {
@@ -393,9 +385,7 @@ int daMip_c::StateSaveTalkInit()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 6 -- daMip_c::StateTalkMain, 0x0212aaec, size 0x150             */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c13StateTalkMainEv
 /* The ordinary conversation, entered from StateReleasedMain once
    Player::StartTalk agrees. Faces the player, picks the line from mRabbitId,
@@ -453,9 +443,7 @@ int daMip_c::StateTalkMain()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 7 -- daMip_c::StateTalkInit, 0x0212ac3c, size 0x10              */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c13StateTalkInitEv
 int daMip_c::StateTalkInit()
 {
@@ -463,9 +451,7 @@ int daMip_c::StateTalkInit()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 8 -- daMip_c::StateReleasedMain, 0x0212ac4c, size 0x140         */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c17StateReleasedMainEv
 /* Standing free again. Lets go of the carrier at +0x45c once the carry flags
    clear, refuses to act while the closest player is mid-message, and re-opens
@@ -541,9 +527,7 @@ int daMip_c::StateReleasedMain()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 9 -- daMip_c::StateReleasedInit, 0x0212ad8c, size 0x7c          */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c17StateReleasedInitEv
 int daMip_c::StateReleasedInit()
 {
@@ -563,9 +547,7 @@ int daMip_c::StateReleasedInit()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 10 -- daMip_c::StateCaughtMain, 0x0212ae08, size 0x5f4          */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c15StateCaughtMainEv
 /* Held in the player's hands: the whole caught conversation, the star spawn
    (actor 0xe5) and the branch that ends with all eight glowing rabbits found. */
@@ -834,9 +816,7 @@ final_return:
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 11 -- daMip_c::StateCaughtInit, 0x0212b3fc, size 0x48           */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c15StateCaughtInitEv
 int daMip_c::StateCaughtInit()
 {
@@ -850,9 +830,7 @@ int daMip_c::StateCaughtInit()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 12 -- daMip_c::StateRestMain, 0x0212b444, size 0x34             */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c13StateRestMainEv
 int daMip_c::StateRestMain()
 {
@@ -865,9 +843,7 @@ int daMip_c::StateRestMain()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 13 -- daMip_c::StateRestInit, 0x0212b478, size 0x3c             */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c13StateRestInitEv
 int daMip_c::StateRestInit()
 {
@@ -878,9 +854,7 @@ int daMip_c::StateRestInit()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 14 -- daMip_c::StateFleeMain, 0x0212b4b4, size 0x2a8            */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c13StateFleeMainEv
 /* Running the level's path away from the player: dust or splash at every node,
    PathPtr node stepping in the direction StateFleeInit chose, and a fall back to
@@ -1027,9 +1001,7 @@ int daMip_c::StateFleeMain()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 15 -- daMip_c::StateFleeInit, 0x0212b75c, size 0x110            */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c13StateFleeInitEv
 /* Picks which way round the path to run: whichever of the two neighbouring
    nodes is further from the closest player becomes the step direction at
@@ -1078,9 +1050,7 @@ int daMip_c::StateFleeInit()
   return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 16 -- daMip_c::StateStartleMain, 0x0212b86c, size 0x34          */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c16StateStartleMainEv
 int daMip_c::StateStartleMain()
 {
@@ -1092,9 +1062,7 @@ int daMip_c::StateStartleMain()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 17 -- daMip_c::StateStartleInit, 0x0212b8a0, size 0x3c          */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c16StateStartleInitEv
 int daMip_c::StateStartleInit()
 {
@@ -1105,9 +1073,7 @@ int daMip_c::StateStartleInit()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 18 -- daMip_c::StateIdleMain, 0x0212b8dc, size 0x338            */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c13StateIdleMainEv
 /* The resting rabbit's own machine: startle and flee when the closest player
    comes inside 0x3e8000 from below, otherwise cycle the three-step idle
@@ -1208,9 +1174,7 @@ int daMip_c::StateIdleMain()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 19 -- daMip_c::StateIdleInit, 0x0212bc14, size 0x64             */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c13StateIdleInitEv
 int daMip_c::StateIdleInit()
 {
@@ -1226,9 +1190,7 @@ int daMip_c::StateIdleInit()
   return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 20 -- daMip_c::SetState, 0x0212bc78, size 0x50                  */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c8SetStateEPv
 /* Stores the 16-byte state record at mState and immediately runs its first
    pointer-to-member -- the state's Init. The record's second is what Behavior
@@ -1240,9 +1202,7 @@ int daMip_c::SetState(void *record)
     c->pp = p; daMip_cStateFn *q = c->pp; if (*q == 0) return 1; return (c->**q)();
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 21 -- daMip_c::UpdateMatrixAndShadow, 0x0212bcc8, size 0xf4     */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c21UpdateMatrixAndShadowEv
 /* Name coined; member-ness not proven. The flat Matrix4x3 shadow is
    deliberate -- see the file header. */
@@ -1270,9 +1230,7 @@ void daMip_c::UpdateMatrixAndShadow()
         c, (void*)(c + 0x368), (void*)(c + 0x390), 0x46000, 0x258000, 0xf);
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 22 -- daMip_c::UpdateCarriedMatrix, 0x0212bdbc, size 0x120      */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c19UpdateCarriedMatrixEv
 /* While a player is carrying the rabbit its matrix comes from
    dActor_c::UpdateCarry, offset by one of four hold positions in ov085 .bss at
@@ -1304,9 +1262,7 @@ void daMip_c::UpdateCarriedMatrix()
         c, c + 0x368, c + 0x390, 0x46000, 0x258000, 0xf);
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 23 -- daMip_c::UpdateMirrorShadow, 0x0212bedc, size 0x128       */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c18UpdateMirrorShadowEv
 /* The second shadow, for the mirrored copy RenderMirrorImage draws. Both are
    gated on the same pair of globals, and this one places the shadow on the far
@@ -1356,9 +1312,7 @@ void daMip_c::UpdateMirrorShadow()
     _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(c, &c->shadowmodel, &c->mtx, 0x46000, 0x258000, 0xf);
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 24 -- daMip_c::CleanupResources, 0x0212c004, size 0x6c          */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c16CleanupResourcesEv
 /* Seven releases, straight-line, no loop -- the ROM writes them out one after
  * another and so does this. They are not in address order, which is why the
@@ -1385,9 +1339,7 @@ int daMip_c::CleanupResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 25 -- daMip_c::OnPendingDestroy, 0x0212c070, size 0x4           */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c16OnPendingDestroyEv
 /* Empty -- the ROM body is a single `bx lr`. The override exists to suppress
  * whatever the base does on pending destroy, not to do anything itself. */
@@ -1395,9 +1347,7 @@ void daMip_c::OnPendingDestroy()
 {
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 26 -- daMip_c::Render, 0x0212c074, size 0xdc                    */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c6RenderEv
 int daMip_c::Render()
 {
@@ -1433,9 +1383,7 @@ int daMip_c::Render()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 27 -- daMip_c::RenderMirrorImage, 0x0212c150, size 0xe0         */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c17RenderMirrorImageEv
 /* The mirrored second copy: negate the model matrix's X scale, render the model
    again at half opacity, then put the matrix back. Only ever reached with the
@@ -1461,9 +1409,7 @@ void daMip_c::RenderMirrorImage()
     *(struct Mtx43 *)(c + 0x31c) = tmp;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 28 -- daMip_c::Behavior, 0x0212c230, size 0x5cc                 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c8BehaviorEv
 /* The glowing-rabbit chase, and it is mostly a conversation.
  *
@@ -1683,9 +1629,7 @@ int daMip_c::Behavior()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 29 -- daMip_c::InitResources, 0x0212c7fc, size 0x41c            */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c13InitResourcesEv
 int daMip_c::InitResources()
 {
@@ -1841,9 +1785,7 @@ block_out:
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 30 -- daMip_c::OnYoshiTryEat, 0x0212cc18, size 0x14             */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daMip_c13OnYoshiTryEatEv
 s32 daMip_c::OnYoshiTryEat() {
   unsigned char v = mEatenByYoshi;
@@ -1851,9 +1793,7 @@ s32 daMip_c::OnYoshiTryEat() {
   return 7;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 31 -- daMip_c_classInit, 0x0212cc2c, size 0x5c                  */
-/* -------------------------------------------------------------------------- */
 // @symbol daMip_c_classInit
 /* The registry factory behind the MIP profile. `return new daMip_c()` MATCHES
  * (size 0x5c); the synthesized ctor stores `_ZTV7daMip_c + 2`.

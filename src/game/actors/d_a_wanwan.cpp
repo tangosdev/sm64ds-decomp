@@ -255,10 +255,8 @@ int daWanwan_c::CleanupResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 23 -- func_ov014_02112788, 0x02112788, size 0x1c4 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov014_02112788
 typedef short s16;
 extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void* self, void* sm, void* mtx, int a, int b, unsigned int g);
@@ -311,10 +309,8 @@ void func_ov014_02112788(char* c) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 22 -- func_ov014_0211250c, 0x0211250c, size 0x27c */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov014_0211250c
 typedef struct { int x, y, z; } Vec3;
 
@@ -440,10 +436,8 @@ void func_ov014_0211250c(char *c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 21 -- func_ov014_0211236c, 0x0211236c, size 0x1a0 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov014_0211236c
 extern void Vec3_Sub(void* out, void* a, void* b);
 extern short _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);
@@ -528,10 +522,8 @@ void func_ov014_0211236c(char* c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 20 -- func_ov014_021122dc, 0x021122dc, size 0x90 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov014_021122dc
 extern void Vec3_Sub(void *out, void *a, void *b);
 extern void Vec3_MulScalar(void *out, void *v, int s);
@@ -556,10 +548,8 @@ void func_ov014_021122dc(char *c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 19 -- func_ov014_02112114, 0x02112114, size 0x1c8 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov014_02112114
 extern void *_ZN8dActor_c10FindWithIDEj(unsigned id);
 extern void func_ov014_02111ebc(void *c, int i);
@@ -628,10 +618,8 @@ void func_ov014_02112114(void *cc)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 18 -- func_ov014_02111fe0, 0x02111fe0, size 0x134 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov014_02111fe0
 typedef int Fix12i;
 typedef long long s64;
@@ -665,10 +653,8 @@ void func_ov014_02111fe0(char* c){
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 17 -- func_ov014_02111fb8, 0x02111fb8, size 0x28 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov014_02111fb8
 extern int func_0201267c(int,void*);
 extern void _ZN8dActor_c15HugeLandingDustEb(void*,int);
@@ -678,9 +664,7 @@ int func_ov014_02111fb8(char* c){
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 16 -- func_ov014_02111f54, 0x02111f54, size 0x64 */
-/* -------------------------------------------------------------------------- */
 extern "C" {
 // @symbol func_ov014_02111f54
 void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
@@ -703,9 +687,7 @@ fail:
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 15 -- func_ov014_02111f08, 0x02111f08, size 0x4c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov014_02111f08
 /* C IS COMPLETE BEFORE THE POINTER-TO-MEMBER TYPE, and that ordering is
    load-bearing on the host. CodeWarrior gives every pointer-to-member the same
@@ -726,9 +708,7 @@ extern "C" void func_ov014_02111f08(void *vc) {
   (c->*data_ov014_0211476c[j].pmf)();
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 14 -- func_ov014_02111ebc, 0x02111ebc, size 0x4c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov014_02111ebc
 namespace ent0 {  /* this member reads the state table's +0 field; ordinal 15's view
                      reads +8 -- two honest views of one table, isolated by namespace */
@@ -742,9 +722,7 @@ extern "C" void func_ov014_02111ebc(void *vc, int i) {
   (c->*ent0::data_ov014_0211476c[j].pmf)();
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 13 -- func_ov014_02111e74, 0x02111e74, size 0x48 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov014_02111e74
 struct BCA_File;
 /* (ModelAnim: real header type in scope; call stays on the mangled spelling with
@@ -757,10 +735,8 @@ extern "C" void func_ov014_02111e74(char* c){
   _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((ModelAnim*)(c+0x150), *(BCA_File**)((char*)&data_ov014_02114980 + 4), 0, 0x1000, 0);
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 12 -- func_ov014_02111e14, 0x02111e14, size 0x60 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov014_02111e14
 extern unsigned short DecIfAbove0_Short(unsigned short*);
 extern void func_ov014_02111ebc(void*, int);
@@ -775,9 +751,7 @@ void func_ov014_02111e14(char* c){
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 11 -- func_ov014_02111dc4, 0x02111dc4, size 0x50 */
-/* -------------------------------------------------------------------------- */
 extern "C" {
 // @symbol func_ov014_02111dc4
 void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void*,void*,int,int,unsigned int);
@@ -789,9 +763,7 @@ void func_ov014_02111dc4(char *c){
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 10 -- func_ov014_02111ca8, 0x02111ca8, size 0x11c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov014_02111ca8
 typedef short s16;
 extern "C" {
@@ -830,10 +802,8 @@ void func_ov014_02111ca8(char* c){
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 9 -- func_ov014_02111b70, 0x02111b70, size 0x138 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov014_02111b70
 namespace call3_267c { extern "C" int func_0201267c(int, void *, int); } /* this member byte-requires the three-argument call (r2 set); the TU's file-scope view is (int, void*) */
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *, void *, int, int, unsigned int);
@@ -879,10 +849,8 @@ void func_ov014_02111b70(char *c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 8 -- func_ov014_02111af0, 0x02111af0, size 0x80 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov014_02111af0
 extern int func_ov014_02111f54(void*);
 extern int Math_Function_0203b14c(void*,int,int,int,int);
@@ -900,9 +868,7 @@ adv:
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 7 -- func_ov014_02111a6c, 0x02111a6c, size 0x84 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov014_02111a6c
 struct BCA_File;
 /* (ModelAnim: real header type in scope; call stays on the mangled spelling with
@@ -920,9 +886,7 @@ extern "C" void func_ov014_02111a6c(char* c){
   *(int*)(c+0x60)=*(int*)(c+0x5f0)+0xc8000;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 6 -- func_ov014_021115ec, 0x021115ec, size 0x480 */
-/* -------------------------------------------------------------------------- */
 #include "types.h"
 // @symbol func_ov014_021115ec
 static inline void inc604(u8 *self) {
@@ -1079,10 +1043,8 @@ extern "C" void func_ov014_021115ec(u8 *self)
     _ZN9Animation7AdvanceEv(self + 0x1a0);
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 5 -- func_ov014_021115c0, 0x021115c0, size 0x2c */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov014_021115c0
 extern int func_0201267c(int,void*);
 
@@ -1093,10 +1055,8 @@ void func_ov014_021115c0(char *r4) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 4 -- func_ov014_0211150c, 0x0211150c, size 0xb4 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov014_0211150c
 /* THE EARLY EXITS ARE SPELT AS NESTED IFS, NOT `return;`. mwccarm accepts a
    valueless `return` in a non-void function; C++ does not, and no host option
@@ -1126,10 +1086,8 @@ int func_ov014_0211150c(char *c) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 3 -- func_ov014_021114d8, 0x021114d8, size 0x34 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov014_021114d8
 void func_ov014_021114d8(char *c) {
     short v = *(short *)(c + 0x94);
@@ -1141,10 +1099,8 @@ void func_ov014_021114d8(char *c) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 2 -- func_ov014_02111484, 0x02111484, size 0x54 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov014_02111484
 extern unsigned short DecIfAbove0_Short(unsigned short*);
 extern void func_ov014_02111ebc(void*, int);
@@ -1158,9 +1114,7 @@ void func_ov014_02111484(char* c){
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 1 -- _ZN10daWanwan_cD0Ev, 0x021113bc, size 0xc8 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN10daWanwan_cD0Ev
 /* recovered: real C++ deleting destructor -- the compiler emits the whole body
  *
@@ -1173,9 +1127,7 @@ void func_ov014_02111484(char* c){
 /* (no separate definition: the single ~daWanwan_c() below emits the D0 and
  * D1 variants together.) */
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 0 -- _ZN10daWanwan_cD1Ev, 0x02111308, size 0xb4 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN10daWanwan_cD1Ev
 /* recovered: real C++ destructor -- the compiler emits the whole body
  *

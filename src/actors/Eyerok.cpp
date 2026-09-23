@@ -204,11 +204,9 @@ extern int func_ov066_02119454(void *c, void *p);
 
 typedef struct { int w[12]; } M48;
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 25 -- func_ov066_021184c0, 0x021184c0, size 0x20 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov066_021184c0
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov066_021184c0(char *p)
 {
     Eyerok *self = (Eyerok *)p;
@@ -220,11 +218,9 @@ int func_ov066_021184c0(char *p)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 26 -- func_ov066_021184e0, 0x021184e0, size 0x104 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov066_021184e0
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov066_021184e0(char *c)
 {
     Eyerok *self = (Eyerok *)c;
@@ -261,11 +257,9 @@ int func_ov066_021184e0(char *c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 27 -- func_ov066_021185e4, 0x021185e4, size 0x20 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov066_021185e4
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov066_021185e4(char *p)
 {
     Eyerok *self = (Eyerok *)p;
@@ -277,11 +271,9 @@ int func_ov066_021185e4(char *p)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 28 -- func_ov066_02118604, 0x02118604, size 0x54 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov066_02118604
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov066_02118604(void *c) {
     int r = func_ov066_021168ec(c);
     if (r != 0) {
@@ -294,11 +286,9 @@ int func_ov066_02118604(void *c) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 29 -- func_ov066_02118658, 0x02118658, size 0x20 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov066_02118658
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov066_02118658(char *p)
 {
     Eyerok *self = (Eyerok *)p;
@@ -310,11 +300,9 @@ int func_ov066_02118658(char *p)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 30 -- func_ov066_02118678, 0x02118678, size 0x150 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov066_02118678
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov066_02118678(char* c)
 {
     Eyerok *self = (Eyerok *)c;
@@ -356,9 +344,7 @@ int func_ov066_02118678(char* c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 31 -- func_ov066_021187c8, 0x021187c8, size 0xe8 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov066_021187c8
 extern "C" {
 int func_ov066_021187c8(char* c){
@@ -377,11 +363,9 @@ int func_ov066_021187c8(char* c){
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 32 -- func_ov066_021188b0, 0x021188b0, size 0x84 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov066_021188b0
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov066_021188b0(char* c){
     Eyerok *self = (Eyerok *)c;
   if(data_ov066_0211abe0==0){
@@ -397,11 +381,9 @@ int func_ov066_021188b0(char* c){
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 33 -- func_ov066_02118934, 0x02118934, size 0x20 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov066_02118934
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov066_02118934(char *p)
 {
     Eyerok *self = (Eyerok *)p;
@@ -413,11 +395,9 @@ int func_ov066_02118934(char *p)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 34 -- func_ov066_02118954, 0x02118954, size 0x4c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov066_02118954
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 s32 func_ov066_02118954(char* c) {
     s32 r = func_ov066_021168b0(c);
     if (r == 0) {
@@ -430,11 +410,9 @@ s32 func_ov066_02118954(char* c) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 35 -- func_ov066_021189a0, 0x021189a0, size 0x20 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov066_021189a0
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov066_021189a0(char *p)
 {
     Eyerok *self = (Eyerok *)p;
@@ -446,11 +424,9 @@ int func_ov066_021189a0(char *p)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 36 -- func_ov066_021189c0, 0x021189c0, size 0x70 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov066_021189c0
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int RandomIntInternal(int* seed);
 int func_ov066_021189c0(char* c){
   if(func_ov066_021168b0(c) == 0) return 1;
@@ -464,11 +440,9 @@ int func_ov066_021189c0(char* c){
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 37 -- func_ov066_02118a30, 0x02118a30, size 0x20 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov066_02118a30
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov066_02118a30(char *p)
 {
     Eyerok *self = (Eyerok *)p;
@@ -480,11 +454,9 @@ int func_ov066_02118a30(char *p)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 38 -- func_ov066_02118a50, 0x02118a50, size 0xb8 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov066_02118a50
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 s32 func_ov066_02118a50(char* c) {
     s32 r = func_ov066_021168b0(c);
     if (r == 0) return 1;
@@ -505,11 +477,9 @@ s32 func_ov066_02118a50(char* c) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 39 -- func_ov066_02118b08, 0x02118b08, size 0x20 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov066_02118b08
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov066_02118b08(char *p)
 {
     Eyerok *self = (Eyerok *)p;
@@ -521,11 +491,9 @@ int func_ov066_02118b08(char *p)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 40 -- func_ov066_02118b28, 0x02118b28, size 0xb8 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov066_02118b28
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 s32 func_ov066_02118b28(char* c) {
     s32 r = func_ov066_021168b0(c);
     if (r == 0) return 1;
@@ -546,11 +514,9 @@ s32 func_ov066_02118b28(char* c) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 41 -- func_ov066_02118be0, 0x02118be0, size 0x20 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov066_02118be0
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov066_02118be0(char *p)
 {
     Eyerok *self = (Eyerok *)p;
@@ -562,11 +528,9 @@ int func_ov066_02118be0(char *p)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 42 -- func_ov066_02118c00, 0x02118c00, size 0xb8 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov066_02118c00
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 s32 func_ov066_02118c00(char* c) {
     s32 r = func_ov066_021168b0(c);
     if (r == 0) return 1;
@@ -587,11 +551,9 @@ s32 func_ov066_02118c00(char* c) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 43 -- func_ov066_02118cb8, 0x02118cb8, size 0x24 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov066_02118cb8
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov066_02118cb8(char *p)
 {
     Eyerok *self = (Eyerok *)p;
@@ -603,9 +565,7 @@ int func_ov066_02118cb8(char *p)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 44 -- func_ov066_02118cdc, 0x02118cdc, size 0x104 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov066_02118cdc
 struct dActor_c;
 typedef struct { int x; } Obj44;
@@ -643,11 +603,9 @@ int func_ov066_02118cdc(char* c) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 45 -- func_ov066_02118de0, 0x02118de0, size 0x24 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov066_02118de0
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov066_02118de0(char *p)
 {
     Eyerok *self = (Eyerok *)p;
@@ -659,11 +617,9 @@ int func_ov066_02118de0(char *p)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 46 -- func_ov066_02118e04, 0x02118e04, size 0x218 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov066_02118e04
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov066_02118e04(void* self)
 {
     u8* c = (u8*)self;
@@ -723,11 +679,9 @@ int func_ov066_02118e04(void* self)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 47 -- func_ov066_0211901c, 0x0211901c, size 0x20 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov066_0211901c
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov066_0211901c(char *p)
 {
     Eyerok *self = (Eyerok *)p;
@@ -739,11 +693,9 @@ int func_ov066_0211901c(char *p)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 48 -- func_ov066_0211903c, 0x0211903c, size 0x30c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov066_0211903c
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov066_0211903c(char* self) {
     Eyerok *obj = (Eyerok *)self;
     struct Vector3 v1, v2, in, out, star;
@@ -831,11 +783,9 @@ int func_ov066_0211903c(char* self) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 49 -- func_ov066_02119348, 0x02119348, size 0x50 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov066_02119348
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov066_02119348(void *c)
 {
     if (_ZN4dBgW9IsEnabledEv((char *)c + 0x674) != 0) {
@@ -849,9 +799,7 @@ int func_ov066_02119348(void *c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 50 -- func_ov066_02119398, 0x02119398, size 0xb4 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov066_02119398
 struct Vec4 { int a, b, c, d; ~Vec4(){} };
 extern "C" {
@@ -882,27 +830,21 @@ int func_ov066_02119398(char* c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 51 -- func_ov066_0211944c, 0x0211944c, size 0x8 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov066_0211944c
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov066_0211944c(void)
 {
     return 1;
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 52 -- func_ov066_02119454, 0x02119454, size 0x50 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov066_02119454
 struct C { char pad[0x48c]; PMF *pp; };
 extern "C" int func_ov066_02119454(void *cv, void *pv) { C *c = (C *)cv; PMF *p = (PMF *)pv; c->pp = p; PMF *q = c->pp; if (*q == 0) return 1; return (c->**q)(); }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 53 -- func_ov066_021194a4, 0x021194a4, size 0x58 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov066_021194a4
 extern "C" void func_ov066_021194a4(char *c) {
   Matrix4x3_FromRotationY(c+0x83c, *(short*)(c+0x8e));
@@ -912,9 +854,7 @@ extern "C" void func_ov066_021194a4(char *c) {
   _ZN10dBgW_KcMbg9TransformERK9Matrix4x3s(c+0x674, c+0x83c, *(short*)(c+0x8e));
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 54 -- func_ov066_021194fc, 0x021194fc, size 0x158 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov066_021194fc
 extern "C" {
 
@@ -951,9 +891,7 @@ void func_ov066_021194fc(char* c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 55 -- _ZN6Eyerok16CleanupResourcesEv, 0x02119654, size 0x14c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN6Eyerok16CleanupResourcesEv
 int Eyerok::CleanupResources()
 {
@@ -986,9 +924,7 @@ int Eyerok::CleanupResources()
   return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 56 -- _ZN6Eyerok16OnPendingDestroyEv, 0x021197a0, size 0x4 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN6Eyerok16OnPendingDestroyEv
 /* Eyerok::OnPendingDestroy -- vtable slot 12. The ROM body is empty: the
  * override exists only to occupy the slot. */
@@ -996,9 +932,7 @@ void Eyerok::OnPendingDestroy()
 {
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 57 -- _ZN6Eyerok6RenderEv, 0x021197a4, size 0x94 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN6Eyerok6RenderEv
 int Eyerok::Render()
 {
@@ -1027,9 +961,7 @@ int Eyerok::Render()
  * the shipped source.) */
 #pragma opt_common_subs off
 #pragma opt_strength_reduction off
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 58 -- _ZN6Eyerok8BehaviorEv, 0x02119838, size 0x4b0 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN6Eyerok8BehaviorEv
 /* Eyerok::Behavior -- vtable slot 6. Real C++ method over the shared header.
  * EVec3 is a local plain-int triple (stack temps); callees whose ROM symbols

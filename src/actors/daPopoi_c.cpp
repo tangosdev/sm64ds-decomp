@@ -33,10 +33,8 @@
  *   [21] 0x021271d4  daPopoi_c_classInit
  */
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 21 -- daPopoi_c_classInit, 0x021271d4, size 0x5c */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol daPopoi_c_classInit
 #include "decl_ActorBase.h"
 #include "decl_Enemy.h"
@@ -54,9 +52,7 @@ int *daPopoi_c_classInit(void)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 20 -- _ZN9daPopoi_c13InitResourcesEv, 0x0212706c, size 0x168 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daPopoi_c13InitResourcesEv
 extern "C" {
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
@@ -100,9 +96,7 @@ int daPopoi_c::InitResources()
   return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 19 -- _ZN9daPopoi_c8BehaviorEv, 0x02126e88, size 0x1e4 */
-/* -------------------------------------------------------------------------- */
 #include "types.h"
 // @symbol _ZN9daPopoi_c8BehaviorEv
 struct Klass; typedef void (Klass::*PMF)();
@@ -187,9 +181,7 @@ writeback:
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 18 -- _ZN9daPopoi_c6RenderEv, 0x02126e38, size 0x50 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daPopoi_c6RenderEv
 extern int data_0209f32c;
 
@@ -210,9 +202,7 @@ int daPopoi_c::Render()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 17 -- _ZN9daPopoi_c16OnPendingDestroyEv, 0x02126e34, size 0x4 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daPopoi_c16OnPendingDestroyEv
 /* recovered: shared header, real C++ method
  *
@@ -223,9 +213,7 @@ void daPopoi_c::OnPendingDestroy()
 {
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 16 -- _ZN9daPopoi_c16CleanupResourcesEv, 0x02126dec, size 0x48 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daPopoi_c16CleanupResourcesEv
 /* recovered: shared header, real C++ method
  *
@@ -246,11 +234,9 @@ int daPopoi_c::CleanupResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 15 -- func_ov077_02126dac, 0x02126dac, size 0x40 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov077_02126dac
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 extern void Matrix4x3_FromRotationY(void *, int);
 void func_ov077_02126dac(char *t)
 {
@@ -261,17 +247,13 @@ void func_ov077_02126dac(char *t)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 14 -- func_ov077_02126d5c, 0x02126d5c, size 0x50 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov077_02126d5c
 struct Cst; typedef int (Cst::*PMFst)();  /* renamed: another member's shadow PMF has a different signature */
 struct Cst { char pad[0x3fc]; PMFst *pp; };
 extern "C" int func_ov077_02126d5c(void *vc, void *vp) { Cst *c = (Cst *)vc; PMFst *p = (PMFst *)vp; c->pp = p; PMFst *q = c->pp; if (*q == 0) return 1; return (c->**q)(); }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 13 -- func_ov077_02126cd4, 0x02126cd4, size 0x88 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov077_02126cd4
 extern "C" {
 extern unsigned int RandomIntInternal(void* s);
@@ -288,10 +270,8 @@ int func_ov077_02126cd4(char* c){
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 12 -- func_ov077_02126ad0, 0x02126ad0, size 0x204 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov077_02126ad0
 #include "decl_Player.h"
 #include "common.h"
@@ -363,10 +343,8 @@ int func_ov077_02126ad0(char* c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 11 -- func_ov077_02126a84, 0x02126a84, size 0x4c */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* bca, int frame, int speed, unsigned int flags);
 int func_ov077_02126a84(char *c) {
     *(int*)(c + 0x98) = 0;
@@ -377,10 +355,8 @@ int func_ov077_02126a84(char *c) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 10 -- func_ov077_02126a50, 0x02126a50, size 0x34 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 extern int func_ov077_02126d5c(void*, void*);
 
 int func_ov077_02126a50(char *c) {
@@ -392,10 +368,8 @@ int func_ov077_02126a50(char *c) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 9 -- func_ov077_02126a04, 0x02126a04, size 0x4c */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void*, void*, int, int, unsigned int);
 
 int func_ov077_02126a04(char *c) {
@@ -406,9 +380,7 @@ int func_ov077_02126a04(char *c) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 8 -- func_ov077_021269a8, 0x021269a8, size 0x5c */
-/* -------------------------------------------------------------------------- */
 extern "C" {
 extern void _Z14ApproachLinearRsss(short*, short, short);
 extern int func_ov077_02126d5c(void*, void*);
@@ -425,9 +397,7 @@ int func_ov077_021269a8(char* c) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 7 -- func_ov077_02126930, 0x02126930, size 0x78 */
-/* -------------------------------------------------------------------------- */
 extern "C" {
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* bca, int a, int fix, unsigned int j);
 extern unsigned int RandomIntInternal(void* s);
@@ -443,10 +413,8 @@ int func_ov077_02126930(char* c){
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 6 -- func_ov077_0212679c, 0x0212679c, size 0x194 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov077_0212679c
 extern int Vec3_Dist(void *a, void *b);
 extern int func_ov077_02126300(void *c);
@@ -507,9 +475,7 @@ int func_ov077_0212679c(char *c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 5 -- func_ov077_02126758, 0x02126758, size 0x44 */
-/* -------------------------------------------------------------------------- */
 extern "C" {
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* c, void* f, int a, int b, unsigned int u);
 int func_ov077_02126758(char* c){
@@ -520,9 +486,7 @@ int func_ov077_02126758(char* c){
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 4 -- func_ov077_02126640, 0x02126640, size 0x118 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov077_02126640
 // recovered name: Spiny_Kill
 /* daTgz_c::Kill - recovered from vtable slot identity */
@@ -576,9 +540,7 @@ extern "C" int func_ov077_02126640(char *c)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 3 -- func_ov077_02126528, 0x02126528, size 0x118 */
-/* -------------------------------------------------------------------------- */
 /* (Vector3: real header type in scope) */
 extern "C" {
 void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void *thiz, const Vector3 &v);
@@ -613,10 +575,8 @@ extern "C" void func_ov077_02126528(char *c)
     func_ov077_02126d5c(c, &data_ov077_02127cd8);
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 2 -- func_ov077_02126300, 0x02126300, size 0x228 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 /* (Vector3: real header type in scope) */
 
 typedef struct dBgCh_LinPad {
@@ -735,9 +695,7 @@ int func_ov077_02126300(void *vc)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 1 -- _ZN9daPopoi_cD0Ev, 0x0212629c, size 0x64 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daPopoi_cD0Ev
 /* D0 is the DELETING destructor: destroy through this class (dEnemyBase_c
  * chain) then return the object to its heap via an inline operator delete.
@@ -747,9 +705,7 @@ int func_ov077_02126300(void *vc)
 /* (no separate definition: the single ~daPopoi_c() below emits the D0 and
  * D1 variants together; mwccarm orders the variant group itself.) */
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 0 -- _ZN9daPopoi_cD1Ev, 0x0212624c, size 0x50 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daPopoi_cD1Ev
 /* D1 is emitted from the inline destructor in daPopoi_c.h alongside D0
  * (class-form skill); this marker at D1's ROM ordinal keeps the

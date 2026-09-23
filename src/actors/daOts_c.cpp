@@ -163,7 +163,6 @@ void func_ov064_02116bac(daOts_c* self);
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daOts_c19InitResourcesCommonEv
 /* recovered: named members + shared header, real C++ method
  *
@@ -247,7 +246,6 @@ int daOts_c::InitResourcesCommon()
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daOts_c14BehaviorCommonEv
 /* recovered: named members + shared header, real C++ method
  *
@@ -323,7 +321,6 @@ int daOts_c::BehaviorCommon()
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daOts_c6RenderEv
 /* recovered: named members + shared header, real C++ method -- vtable slot 9
  *
@@ -338,7 +335,6 @@ int daOts_c::Render()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN7daOts_c16CleanupResourcesEv
 /* recovered: named members + shared header, real C++ method -- vtable slot 3
@@ -367,7 +363,6 @@ int daOts_c::CleanupResources()
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 extern "C" void func_ov064_02116bac(daOts_c* self){
   char* r6 = (char*)self;
   Matrix4x3_FromRotationY(&self->mModelAnim.mat4x3, self->mAngleY);
@@ -386,7 +381,6 @@ extern "C" void func_ov064_02116bac(daOts_c* self){
   _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(self, &self->mShadowModel, r6+0x3b4, h, d+0x28000, 0xf);
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 extern "C" void func_ov064_02116754(daOts_c* self)
 {
@@ -518,9 +512,8 @@ extern "C" void func_ov064_02116754(daOts_c* self)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov064_021166f0
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov064_021166f0(daOts_c *t)
 {
     Vector3 v;
@@ -534,7 +527,6 @@ int func_ov064_021166f0(daOts_c *t)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 extern "C" void func_ov064_021165d8(daOts_c* c)
 {
@@ -571,13 +563,11 @@ extern "C" void func_ov064_021165d8(daOts_c* c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daOts_c14UpdateRunStateEv
 int daOts_c::UpdateRunState()
 {
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 extern "C" int func_ov064_02116560(daOts_c* c){
   char *p = (char *)c;
@@ -588,7 +578,6 @@ extern "C" int func_ov064_02116560(daOts_c* c){
   return _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&c->mModelAnim, (BCA_File*)*(int*)((char*)((BullyResourceConfig *)c->mFileTable)->files[4] + 4), 0, 0x1000, 0);
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 extern "C" void func_ov064_02116460(daOts_c *self)
 {
@@ -619,7 +608,6 @@ extern "C" void func_ov064_02116460(daOts_c *self)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 extern "C" void func_ov064_021163c0(char *c)
 {
     /* Named mPrevAngleY / mWithMeshClsn / mHorzSpeed size-DIFF. The
@@ -641,13 +629,11 @@ extern "C" void func_ov064_021163c0(char *c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daOts_c16UpdateDeathStateEv
 void daOts_c::UpdateDeathState()
 {
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN7daOts_c13PlayStepSoundEv
 void daOts_c::PlayStepSound()
@@ -660,7 +646,6 @@ void daOts_c::PlayStepSound()
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daOts_c12PlayHitSoundEv
 void daOts_c::PlayHitSound()
 {
@@ -668,13 +653,11 @@ void daOts_c::PlayHitSound()
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daOts_c17PlayShellHitSoundEv
 void daOts_c::PlayShellHitSound()
 {
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN7daOts_c14PlayDeathSoundEv
 void daOts_c::PlayDeathSound()
@@ -682,7 +665,6 @@ void daOts_c::PlayDeathSound()
     func_0201267c(0xce, (const Vector3 *)&mCamSpacePosX);
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 extern "C" void func_ov064_02116220(daOts_c* c){
   dBgCh_Gnd rg;
@@ -721,8 +703,7 @@ extern "C" void func_ov064_02116220(daOts_c* c){
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov064_0211616c(daOts_c* c) {
     char *p = (char *)c;
     /* mStateTimer is s16; the ROM compares ldrh (unsigned). Named signed > DIFFs. */
@@ -752,7 +733,6 @@ int func_ov064_0211616c(daOts_c* c) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov064_02116110
 extern "C" int func_ov064_02116110(daOts_c *self, short step){
     dActor_c *p = (dActor_c *)self->ClosestPlayer();
@@ -764,8 +744,7 @@ extern "C" int func_ov064_02116110(daOts_c *self, short step){
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 void func_ov064_02115f98(daOts_c* a0, char* a1)
 {
     int scratch[3];
@@ -843,7 +822,6 @@ void func_ov064_02115f98(daOts_c* a0, char* a1)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daOts_c16OnAimedAtWithEggEv
 int daOts_c::OnAimedAtWithEgg()
 {
@@ -855,7 +833,6 @@ int daOts_c::OnAimedAtWithEgg()
     return aimHeight;
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN7daOts_cD0Ev
 /* recovered: real C++ deleting destructor, defined inline in the header
@@ -872,7 +849,6 @@ int daOts_c::OnAimedAtWithEgg()
  * dEnemyBase_c, then hand the object back through Memory::Deallocate.
  */
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN7daOts_cD1Ev
 /* recovered: real C++ destructor, defined inline in the header

@@ -167,9 +167,7 @@ extern Matrix4x3 IDENTITY_MATRIX4X3;
 /* Both factories are `return new daSanbo_c()`. The synthesized ctor stores
  * `_ZTV9daSanbo_c + 2`; do not restate a file-local `extern _ZTV`. */
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 35 -- daSanbo_c_classInit_SANBO, 0x02136d60, size 0x50 */
-/* -------------------------------------------------------------------------- */
 // @symbol daSanbo_c_classInit_SANBO
 /* The registry factory behind the SANBO profile. `return new daSanbo_c()`
  * MATCHES (size 0x50); the synthesized ctor stores `_ZTV9daSanbo_c + 2`. */
@@ -178,9 +176,7 @@ extern "C" daSanbo_c *daSanbo_c_classInit_SANBO(void)
     return new daSanbo_c();
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 34 -- daSanbo_c_classInit_SANBO_BODY, 0x02136d10, size 0x50 */
-/* -------------------------------------------------------------------------- */
 // @symbol daSanbo_c_classInit_SANBO_BODY
 /* Same class, SANBO_BODY profile (actor id 0xf1). */
 extern "C" daSanbo_c *daSanbo_c_classInit_SANBO_BODY(void)
@@ -188,9 +184,7 @@ extern "C" daSanbo_c *daSanbo_c_classInit_SANBO_BODY(void)
     return new daSanbo_c();
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 33 -- _ZN9daSanbo_c13OnTurnIntoEggER6Player, 0x02136cd0, size 0x40 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daSanbo_c13OnTurnIntoEggER6Player
 /* daSanbo_c::OnTurnIntoEgg -- vtable slot 19, recovered from vtable slot identity.
  * Only the head segment (actorID 0xf0) pays out a coin; every segment marks
@@ -203,9 +197,7 @@ void daSanbo_c::OnTurnIntoEgg(Player &player)
     MarkForDestruction();
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 32 -- _ZN9daSanbo_c13InitResourcesEv, 0x02136ab0, size 0x220 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daSanbo_c13InitResourcesEv
 int daSanbo_c::InitResources()
 {
@@ -270,9 +262,7 @@ int daSanbo_c::InitResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 31 -- _ZN9daSanbo_c8BehaviorEv, 0x02136a50, size 0x60 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daSanbo_c8BehaviorEv
 int daSanbo_c::Behavior()
 {
@@ -286,9 +276,7 @@ int daSanbo_c::Behavior()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 30 -- _ZN9daSanbo_c6RenderEv, 0x021369fc, size 0x54 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daSanbo_c6RenderEv
 int daSanbo_c::Render()
 {
@@ -300,9 +288,7 @@ int daSanbo_c::Render()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 29 -- _ZN9daSanbo_c16OnPendingDestroyEv, 0x021369b0, size 0x4c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daSanbo_c16OnPendingDestroyEv
 void daSanbo_c::OnPendingDestroy()
 {
@@ -317,9 +303,7 @@ void daSanbo_c::OnPendingDestroy()
     } while (p);
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 28 -- _ZN9daSanbo_c16CleanupResourcesEv, 0x02136944, size 0x6c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daSanbo_c16CleanupResourcesEv
 int daSanbo_c::CleanupResources()
 {
@@ -338,9 +322,7 @@ int daSanbo_c::CleanupResources()
   return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 27 -- func_ov096_02136928, 0x02136928, size 0x1c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov096_02136928
 extern "C" {
 void func_ov096_02136928(void *cc, int a) {
@@ -350,9 +332,7 @@ void func_ov096_02136928(void *cc, int a) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 26 -- func_ov096_021368f0, 0x021368f0, size 0x38 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov096_021368f0
 extern "C" void func_ov096_021368f0(char *cc)
 {
@@ -361,9 +341,7 @@ extern "C" void func_ov096_021368f0(char *cc)
     (c->**p)();
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 25 -- func_ov096_021368b4, 0x021368b4, size 0x3c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov096_021368b4
 extern "C" void func_ov096_021368b4(void *cc)
 {
@@ -372,9 +350,7 @@ extern "C" void func_ov096_021368b4(void *cc)
     (c->**p)();
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 24 -- func_ov096_021368a4, 0x021368a4, size 0x10 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov096_021368a4
 extern "C" {
 int func_ov096_021368a4(int *p)
@@ -384,9 +360,7 @@ int func_ov096_021368a4(int *p)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 23 -- func_ov096_02136754, 0x02136754, size 0x150 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov096_02136754
 extern "C" {
 int func_ov096_02136754(char* self)
@@ -446,9 +420,7 @@ int func_ov096_02136754(char* self)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 22 -- func_ov096_0213670c, 0x0213670c, size 0x48 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov096_0213670c
 extern "C" {
 void func_ov096_0213670c(void *c) {
@@ -467,9 +439,7 @@ void func_ov096_0213670c(void *c) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 21 -- func_ov096_021365d4, 0x021365d4, size 0x138 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov096_021365d4
 extern "C" {
 void _Z14ApproachLinearRiii(int* dst, int target, int step);
@@ -517,9 +487,7 @@ int func_ov096_021365d4(char* c) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 20 -- func_ov096_02136534, 0x02136534, size 0xa0 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov096_02136534
 extern "C" int func_ov096_02136534(char *c)
 {
@@ -538,9 +506,7 @@ extern "C" int func_ov096_02136534(char *c)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 19 -- func_ov096_02136434, 0x02136434, size 0x100 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov096_02136434
 extern "C" {
 
@@ -578,9 +544,7 @@ int func_ov096_02136434(void *c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 18 -- func_ov096_0213640c, 0x0213640c, size 0x28 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov096_0213640c
 extern "C" {
 int func_ov096_0213640c(char *c)
@@ -592,9 +556,7 @@ int func_ov096_0213640c(char *c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 17 -- func_ov096_021363c4, 0x021363c4, size 0x48 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov096_021363c4
 extern "C" {
 int func_ov096_021363c4(void *c) {
@@ -609,9 +571,7 @@ int func_ov096_021363c4(void *c) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 16 -- func_ov096_021363b4, 0x021363b4, size 0x10 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov096_021363b4
 extern "C" {
 int func_ov096_021363b4(int *p)
@@ -621,9 +581,7 @@ int func_ov096_021363b4(int *p)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 15 -- func_ov096_02136264, 0x02136264, size 0x150 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov096_02136264
 extern "C" {
 int func_ov096_02136264(char* self)
@@ -675,9 +633,7 @@ int func_ov096_02136264(char* self)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 14 -- func_ov096_02136134, 0x02136134, size 0x130 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov096_02136134
 extern "C" int func_ov096_02136134(char* c){
   int cond = (*(unsigned short*)(c+0xc) == SANBO_HEAD);
@@ -702,9 +658,7 @@ extern "C" int func_ov096_02136134(char* c){
   return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 13 -- func_ov096_021360c4, 0x021360c4, size 0x70 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov096_021360c4
 extern "C" {
 int func_ov096_021360c4(char *c) {
@@ -721,9 +675,7 @@ int func_ov096_021360c4(char *c) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 12 -- func_ov096_02135efc, 0x02135efc, size 0x1c8 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov096_02135efc
 extern "C" void func_ov096_02135efc(void* cv)
 {
@@ -772,9 +724,7 @@ extern "C" void func_ov096_02135efc(void* cv)
     }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 11 -- func_ov096_02135e2c, 0x02135e2c, size 0xd0 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov096_02135e2c
 extern "C" {
 void* _ZNK10dBgCh_Actr14GetFloorResultEv(void* c);
@@ -804,9 +754,7 @@ void func_ov096_02135e2c(int* self, void* clsn)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 10 -- func_ov096_02135948, 0x02135948, size 0x4e4 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov096_02135948
 #include "decl_Actor.h"
 #include "decl_Player.h"
@@ -967,9 +915,7 @@ void func_ov096_02135948(char* c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 9 -- func_ov096_021358c8, 0x021358c8, size 0x80 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov096_021358c8
 extern "C" {
 int _ZN8dActor_c22ClosestNonVanishPlayerEv(void*);
@@ -993,9 +939,7 @@ void func_ov096_021358c8(char* c){
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 8 -- func_ov096_02135878, 0x02135878, size 0x50 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov096_02135878
 extern "C" int func_ov096_02135878(void* unused, int x){
   if(x>0x190000) return 0;
@@ -1007,9 +951,7 @@ extern "C" int func_ov096_02135878(void* unused, int x){
   return (short)r;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 7 -- func_ov096_0213585c, 0x0213585c, size 0x1c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov096_0213585c
 extern "C" {
 void func_ov096_0213585c(void *t)
@@ -1020,9 +962,7 @@ void func_ov096_0213585c(void *t)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 6 -- func_ov096_02135838, 0x02135838, size 0x24 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov096_02135838
 extern "C" {
 int func_ov096_02135838(char *c) {
@@ -1037,9 +977,7 @@ int func_ov096_02135838(char *c) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 5 -- func_ov096_02135800, 0x02135800, size 0x38 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov096_02135800
 extern "C" void func_ov096_02135800(char* c){
   daSanbo_c *segment = (daSanbo_c *)c;
@@ -1052,9 +990,7 @@ extern "C" void func_ov096_02135800(char* c){
   if(next) next->mPrevSegment = segment->mPrevSegment;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 4 -- func_ov096_021357b4, 0x021357b4, size 0x4c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov096_021357b4
 extern "C" {
 char *func_ov096_021357b4(char *cc){
@@ -1070,9 +1006,7 @@ char *func_ov096_021357b4(char *cc){
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 3 -- _ZN9daSanbo_c16OnAimedAtWithEggEv, 0x021357ac, size 0x8 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daSanbo_c16OnAimedAtWithEggEv
 /* daSanbo_c::OnAimedAtWithEgg -- vtable slot 29, recovered from vtable slot identity.
  * The ROM body ignores `this` and returns a constant. */
@@ -1081,9 +1015,7 @@ int daSanbo_c::OnAimedAtWithEgg()
     return 245760;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 2 -- _ZN9daSanbo_c13OnYoshiTryEatEv, 0x021357a4, size 0x8 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daSanbo_c13OnYoshiTryEatEv
 /* daSanbo_c::OnYoshiTryEat -- vtable slot 18, recovered from vtable slot identity.
  * The ROM body ignores `this` and returns a constant. */
@@ -1092,9 +1024,7 @@ int daSanbo_c::OnYoshiTryEat()
     return 4;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 1 -- _ZN9daSanbo_cD0Ev, 0x02135748, size 0x5c */
-/* -------------------------------------------------------------------------- */
 /* _ZN9daSanbo_cD0Ev, 0x02135748, size 0x5c -- vtable slot 17.
  * No definition here and no @symbol marker: the destructor is written inline in
  * include/daSanbo_c.h, so mwccarm emits the vague-linkage D1/D0 pair itself, in
@@ -1102,9 +1032,7 @@ int daSanbo_c::OnYoshiTryEat()
  * of line here would emit D2,D0,D1 and put D0 below D1, which is not the ROM's
  * layout and which production isolation refuses. */
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 0 -- _ZN9daSanbo_cD1Ev, 0x02135700, size 0x48 */
-/* -------------------------------------------------------------------------- */
 /* _ZN9daSanbo_cD1Ev, 0x02135700, size 0x48 -- vtable slot 16. Also emitted from
  * the inline body in include/daSanbo_c.h: one vptr store, then mModel /
  * mShadowModel / mdCcAc_c / mWithMeshClsn destroyed in reverse declaration

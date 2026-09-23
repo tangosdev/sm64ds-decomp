@@ -77,20 +77,16 @@ extern int data_ov062_0211e02c[];
 extern int data_ov062_0211e004[];
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 17 -- daRNk_c_classInit, 0x0211aee0, size 0x58 */
-/* -------------------------------------------------------------------------- */
 // @symbol daRNk_c_classInit
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int *daRNk_c_classInit(void)
 {
     return (int *)new daRNk_c;
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 16 -- _ZN7daRNk_c13InitResourcesEv, 0x0211ac94, size 0x24c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daRNk_c13InitResourcesEv
 int daRNk_c::InitResources()
 {
@@ -150,9 +146,7 @@ int daRNk_c::InitResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 15 -- _ZN7daRNk_c16CleanupResourcesEv, 0x0211ac10, size 0x84 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daRNk_c16CleanupResourcesEv
 int daRNk_c::CleanupResources()
 {
@@ -168,9 +162,7 @@ int daRNk_c::CleanupResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 14 -- _ZN7daRNk_c8BehaviorEv, 0x0211ab88, size 0x88 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daRNk_c8BehaviorEv
 int daRNk_c::Behavior()
 {
@@ -187,9 +179,7 @@ int daRNk_c::Behavior()
   return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 13 -- _ZN7daRNk_c6RenderEv, 0x0211ab50, size 0x38 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daRNk_c6RenderEv
 /* Model is the real class now, through daRNk_c.h: HideMaterial is its own
    non-virtual and the slot-5 virtual is Render, which ModelAnim overrides. */
@@ -200,11 +190,9 @@ int daRNk_c::Render()
   return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 12 -- func_ov062_0211aac0, 0x0211aac0, size 0x90 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov062_0211aac0
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 void func_ov062_0211aac0(char* r6){
   struct Vector3 v;
   Vec3_Asr(&v, (struct Vector3*)(r6 + 0x5c), 3);
@@ -216,11 +204,9 @@ void func_ov062_0211aac0(char* r6){
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 11 -- func_ov062_0211a9c4, 0x0211a9c4, size 0xfc */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov062_0211a9c4
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 
 void func_ov062_0211a9c4(char *c)
 {
@@ -265,9 +251,7 @@ void func_ov062_0211a9c4(char *c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 10 -- func_ov062_0211a740, 0x0211a740, size 0x284 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov062_0211a740
 /* Offer the race after the player finishes talking. */
 extern "C" void func_ov062_0211a740(char* c)
@@ -343,11 +327,9 @@ extern "C" void func_ov062_0211a740(char* c)
     }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 9 -- func_ov062_0211a1f4, 0x0211a1f4, size 0x54c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov062_0211a1f4
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 void func_ov062_0211a1f4(char *a)
 {
         int r6;
@@ -478,11 +460,9 @@ void func_ov062_0211a1f4(char *a)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 8 -- func_ov062_0211a168, 0x0211a168, size 0x8c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov062_0211a168
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 void func_ov062_0211a168(char* r4){
   ApproachLinear(*(int*)(r4 + 0x98), 0x3000, 0x1000);
   if (((Animation *)(r4 + 0x350))->WillHitFrame(
@@ -494,11 +474,9 @@ void func_ov062_0211a168(char* r4){
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 7 -- func_ov062_0211a0f0, 0x0211a0f0, size 0x78 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov062_0211a0f0
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 void func_ov062_0211a0f0(char* c)
 {
     ApproachLinear(*(int*)(c + 0x98), 0, 0x4000);
@@ -510,11 +488,9 @@ void func_ov062_0211a0f0(char* c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 6 -- func_ov062_02119be0, 0x02119be0, size 0x510 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov062_02119be0
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 void func_ov062_02119be0(char* self)
 {
     Vector3 playerPos;
@@ -666,9 +642,7 @@ void func_ov062_02119be0(char* self)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 5 -- func_ov062_02119af0, 0x02119af0, size 0xf0 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov062_02119af0
 extern "C" int func_ov062_02119af0(char *p) {
     int dxc;
@@ -712,11 +686,9 @@ extern "C" int func_ov062_02119af0(char *p) {
     return 0;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 4 -- func_ov062_021199ac, 0x021199ac, size 0x144 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov062_021199ac
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov062_021199ac(char *self)
 {
     char *other;
@@ -770,11 +742,9 @@ ret0:
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 3 -- func_ov062_02119954, 0x02119954, size 0x58 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov062_02119954
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 void func_ov062_02119954(void *c)
 {
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((char*)c + 0x300, (void*)data_ov062_0211e02c[1], 0x40000000, 0x1000, 0);
@@ -784,9 +754,7 @@ void func_ov062_02119954(void *c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 2 -- func_ov062_02119800, 0x02119800, size 0x154 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov062_02119800
 extern "C" void func_ov062_02119800(char *c)
 {
@@ -856,17 +824,13 @@ reset:
     *(unsigned char *)(self + 0x3b2) = 0;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 1 -- _ZN7daRNk_cD0Ev, 0x021197a4, size 0x5c */
-/* -------------------------------------------------------------------------- */
 /* D0 is the DELETING destructor: destroy through this class (dEnemyBase_c
  * chain) then return the object to its heap via an inline operator delete.
  * Both variants are emitted from the single inline destructor in
  * daRNk_c.h (class-form skill): D1 then D0 in ROM order, no leaf D2. */
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 0 -- _ZN7daRNk_cD1Ev, 0x0211975c, size 0x48 */
-/* -------------------------------------------------------------------------- */
 /* D1 is emitted from the inline destructor in daRNk_c.h alongside D0
  * alongside D0. Members are destroyed in reverse declaration
  * order, then dEnemyBase_c::~dEnemyBase_c. */

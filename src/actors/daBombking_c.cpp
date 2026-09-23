@@ -265,7 +265,6 @@ extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* se
 daBombking_c::~daBombking_c() {}
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN12daBombking_cD1Ev
 /* recovered: real C++ destructor -- the compiler emits the whole body
  *
@@ -278,7 +277,6 @@ daBombking_c::~daBombking_c() {}
  * DEFINED OUT OF LINE at the top of this file, and DECLARED FIRST in the
  * header. Both halves are load-bearing; see the block above the definition.
  */
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN12daBombking_cD0Ev
 /* recovered: real C++ deleting destructor -- the compiler emits the whole body
@@ -295,9 +293,8 @@ daBombking_c::~daBombking_c() {}
  */
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02123804
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov078_02123804(char *c){
     unsigned int v=*(unsigned int*)(c+0x3a0);
     if(v==0) return 0;
@@ -309,9 +306,8 @@ int func_ov078_02123804(char *c){
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02123864
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 void func_ov078_02123864(char* r7) {
   int i = 0;
   do {
@@ -326,9 +322,8 @@ void func_ov078_02123864(char* r7) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov078_021238ac
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov078_021238ac(char *c)
 {
     void *cam = data_0209f318;
@@ -380,9 +375,8 @@ int func_ov078_021238ac(char *c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02123a3c
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov078_02123a3c(char* c){
     *(int*)(c+0x4fc)=2;
     *(int*)(c+0x98)=0;
@@ -394,9 +388,8 @@ int func_ov078_02123a3c(char* c){
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02123aa0
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov078_02123aa0(char* c){
     short ang = Vec3_HorzAngle(c+0x5c, c+0x4e0);
     if(func_ov078_02123804(c) == 1) return 1;
@@ -424,7 +417,6 @@ int func_ov078_02123aa0(char* c){
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02123bc4
 /* This caller retains the reconstructed SetAnim ABI declaration above.
    The callee's Fix12 definition experiment in notes/mwccarm-codegen.md 6az
@@ -437,7 +429,6 @@ extern "C" int func_ov078_02123bc4(char* c){
   return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02123c20
 extern "C" {
@@ -472,7 +463,6 @@ int func_ov078_02123c20(char* c){
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02123cf0
 struct BCA_File;
 extern "C" {
@@ -482,9 +472,8 @@ int func_ov078_02123cf0(char* c){
 }}
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02123d3c
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov078_02123d3c(char* c)
 {
     if (func_ov078_02123804(c) == 1) {
@@ -534,9 +523,8 @@ int func_ov078_02123d3c(char* c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02123eb8
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov078_02123eb8(int *t)
 {
     daBombking_c *self = (daBombking_c *)t;
@@ -548,7 +536,6 @@ int func_ov078_02123eb8(int *t)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02123f1c
 extern "C" int func_ov078_02123f1c(CView* c)
@@ -572,7 +559,6 @@ L6c:
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02123fb4
 extern "C" {
 int func_ov078_02123fb4(char *c){
@@ -583,9 +569,8 @@ int func_ov078_02123fb4(char *c){
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02124000
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov078_02124000(char* c){
   int ang = _ZN8dActor_c18HorzAngleToCPlayerEv(c);
   ApproachAngle((char*)c+0x94, ang, 1, 0x500, 0x500);
@@ -598,7 +583,6 @@ int func_ov078_02124000(char* c){
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02124060
 extern "C" {
 int func_ov078_02124060(char *c){
@@ -610,9 +594,8 @@ int func_ov078_02124060(char *c){
 #pragma push
 #pragma opt_propagation off
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov078_021240a0
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov078_021240a0(char* c)
 {
     struct Vector3 v;
@@ -708,7 +691,6 @@ int func_ov078_021240a0(char* c)
 #pragma pop
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov078_021243c0
 extern "C" {
 int func_ov078_021243c0(char* c){
@@ -727,9 +709,8 @@ int func_ov078_021243c0(char* c){
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02124470
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov078_02124470(char* c)
 {
     s16 ang = _ZN8dActor_c18HorzAngleToCPlayerEv(c);
@@ -742,9 +723,8 @@ int func_ov078_02124470(char* c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov078_021244d0
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov078_021244d0(char *c) {
     _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt((void*)(c+0x2cc), (void*)((void*)data_ov078_02126f20[1]), 0, 0, 0x1000, 0);
     *(short*)(c+0x100) = 0x32;
@@ -753,9 +733,8 @@ int func_ov078_021244d0(char *c) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02124520
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov078_02124520(char *c)
 {
     Vector3 a;
@@ -834,7 +813,6 @@ int func_ov078_02124520(char *c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02124778
 extern "C" {
 int func_ov078_02124778(char *c){
@@ -844,9 +822,8 @@ int func_ov078_02124778(char *c){
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov078_021247bc
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov078_021247bc(void *thiz)
 {
     char *c = (char *)thiz;
@@ -949,9 +926,8 @@ int func_ov078_021247bc(void *thiz)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02124b40
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov078_02124b40(char *c)
 {
     _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt((void*)(c + 0x2cc), (void*)((void *)data_ov078_02126f10[1]), 0, 0x40000000, 0x1000, 0);
@@ -968,7 +944,6 @@ int func_ov078_02124b40(char *c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02124bc4
 extern "C" {
@@ -1002,9 +977,8 @@ int func_ov078_02124bc4(char* c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02124c94
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov078_02124c94(char *p) {
     *(int*)(p+0x9c) = -0x2000;
     *(int*)(p+0xa8) = 0x1e000;
@@ -1018,7 +992,6 @@ int func_ov078_02124c94(char *p) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02124cf4
 extern "C" int func_ov078_02124cf4(unsigned char* thiz)
@@ -1063,9 +1036,8 @@ done:
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02124e9c
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov078_02124e9c(char *c)
 {
     _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt((void*)(c + 0x2cc), (void*)((void *)data_ov078_02126f20[1]), 0, 0, 0x1000, 0);
@@ -1081,7 +1053,6 @@ int func_ov078_02124e9c(char *c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02124f28
 extern "C" {
@@ -1162,9 +1133,8 @@ done:
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov078_021250d0
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov078_021250d0(char *c)
 {
     int *flags = (int *)(c + 0x354);
@@ -1177,9 +1147,8 @@ int func_ov078_021250d0(char *c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov078_021250f8
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov078_021250f8(char* c) {
     struct Vector3 in, out, v[2];
     void* target;
@@ -1254,9 +1223,8 @@ int func_ov078_021250f8(char* c) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02125350
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov078_02125350(int sl)
 {
     daBombking_c *self = (daBombking_c *)sl;
@@ -1290,9 +1258,8 @@ int func_ov078_02125350(int sl)
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02125448
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov078_02125448(char* c)
 {
     char* p;
@@ -1400,9 +1367,8 @@ int func_ov078_02125448(char* c)
 #pragma pop
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02125734
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov078_02125734(char *c) {
     *(int*)(c + 0x4fc) = 1;
     *(int*)(c + 0x98) = 0x5000;
@@ -1412,7 +1378,6 @@ int func_ov078_02125734(char *c) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02125790
 extern "C" int func_ov078_02125790(char* self)
@@ -1450,9 +1415,8 @@ extern "C" int func_ov078_02125790(char* self)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov078_021258e4
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov078_021258e4(int *t)
 {
     *(int*)((char*)t+0x9c) = -0x2000;
@@ -1465,7 +1429,6 @@ int func_ov078_021258e4(int *t)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02125950
 void ApproachLinear(short &v, short t, short step);
@@ -1494,9 +1457,8 @@ extern "C" int func_ov078_02125950(char *c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov078_021259e4
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov078_021259e4(void)
 {
     return 1;
@@ -1504,9 +1466,8 @@ int func_ov078_021259e4(void)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov078_021259ec
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov078_021259ec(char* c)
 {
     int dist;
@@ -1574,7 +1535,6 @@ int func_ov078_021259ec(char* c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02125bc8
 extern "C" int func_ov078_02125bc8(char* c) {
     *(int*)(c+0x98) = 0;
@@ -1586,15 +1546,13 @@ extern "C" int func_ov078_02125bc8(char* c) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02125c24
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 void func_ov078_02125c24(char* c, int strength) {
     func_0200d8c8(data_0209f318, c + 0x5c, strength);
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol KingBobOmb_SetState
 extern "C" int KingBobOmb_SetState(void *cv, void *pv) {
@@ -1606,7 +1564,6 @@ extern "C" int KingBobOmb_SetState(void *cv, void *pv) {
     return (c->**q)();
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02125c98
 /* func_ov078_02125c98 at 0x02125c98 (ov078), size 0x148
@@ -1643,9 +1600,8 @@ extern "C" void func_ov078_02125c98(void* cv) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02125de0
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 void func_ov078_02125de0(char *c)
 {
     struct Vector3 lv;
@@ -1692,7 +1648,6 @@ void func_ov078_02125de0(char *c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02125f8c
 
 
@@ -1709,7 +1664,6 @@ void func_ov078_02125f8c(void* c_){
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN12daBombking_c16CleanupResourcesEv
 int daBombking_c::CleanupResources()
@@ -1731,13 +1685,11 @@ int daBombking_c::CleanupResources()
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN12daBombking_c16OnPendingDestroyEv
 void daBombking_c::OnPendingDestroy()
 {
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN12daBombking_c6RenderEv
 int daBombking_c::Render()
@@ -1756,7 +1708,6 @@ int daBombking_c::Render()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN12daBombking_c8BehaviorEv
 
@@ -1847,7 +1798,6 @@ int daBombking_c::Behavior()
 #pragma push
 #pragma opt_strength_reduction off
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN12daBombking_c13InitResourcesEv
 /* SharedFilePtr's complete declaration is included above. The file handles
    below still use their existing ROM-backed data declarations. */
@@ -1912,7 +1862,6 @@ int daBombking_c::InitResources()
 #pragma pop
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN12daBombking_c16OnAimedAtWithEggEv
 // recovered name: KingBobOmb_OnAimedAtWithEgg
 /* daBombking_c::OnAimedAtWithEgg - recovered from vtable slot identity */
@@ -1920,7 +1869,6 @@ s32 daBombking_c::OnAimedAtWithEgg() {
     return 1024000;
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 /* The factory immediately follows ordinal 50 and ends at the .init boundary. */
 // @symbol daBombking_c_classInit

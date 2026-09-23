@@ -66,7 +66,6 @@ struct V3w { int w[3]; };  /* array-wrapper: C++ scalarizes a plain struct copy;
 struct V3h { short h[3]; };
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol daPropeller_Heyho_c_classInit
 /* The registry factory behind the PROPELLER_HEYHO profile.
  * `return new daPropeller_Heyho_c()` MATCHES (size 0x50); the synthesized
@@ -77,13 +76,11 @@ extern "C" daPropeller_Heyho_c *daPropeller_Heyho_c_classInit(void)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN19daPropeller_Heyho_c13OnYoshiTryEatEv
 s32 daPropeller_Heyho_c::OnYoshiTryEat() {
     return 5;
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN19daPropeller_Heyho_c13OnTurnIntoEggER6Player
 // recovered name: FlyGuy_OnTurnIntoEgg
@@ -101,7 +98,6 @@ void daPropeller_Heyho_c::OnTurnIntoEgg(Player &player)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN19daPropeller_Heyho_c16OnAimedAtWithEggEv
 // recovered name: FlyGuy_OnAimedAtWithEgg
 /* daPropeller_Heyho_c::OnAimedAtWithEgg - recovered from vtable slot identity */
@@ -109,7 +105,6 @@ s32 daPropeller_Heyho_c::OnAimedAtWithEgg() {
     return 0x2b000; /* Fix12 egg-aim HEIGHT added to pos.y, per dEnemyBase_c.h slot-29 */
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN19daPropeller_Heyho_c13InitResourcesEv
 #include "SharedFilePtr.h"
@@ -151,7 +146,6 @@ int daPropeller_Heyho_c::InitResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN19daPropeller_Heyho_c8BehaviorEv
 
@@ -238,7 +232,6 @@ int daPropeller_Heyho_c::Behavior()
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN19daPropeller_Heyho_c6RenderEv
 
 int daPropeller_Heyho_c::Render()
@@ -250,7 +243,6 @@ int daPropeller_Heyho_c::Render()
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN19daPropeller_Heyho_c16OnPendingDestroyEv
 /* recovered: shared header, real C++ method
  *
@@ -261,7 +253,6 @@ void daPropeller_Heyho_c::OnPendingDestroy()
 {
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN19daPropeller_Heyho_c16CleanupResourcesEv
 /* recovered: shared header, real C++ method
@@ -285,7 +276,6 @@ int daPropeller_Heyho_c::CleanupResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov070_02120070
 #include "common.h"
@@ -314,7 +304,6 @@ void func_ov070_02120070(daPropeller_Heyho_c* c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol FlyGuy_ChangeState
 extern "C" int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p)
 {
@@ -325,7 +314,6 @@ extern "C" int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::S
     return (c->*(q->mInit))();
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov070_0211ffa8
 extern "C" {
@@ -341,9 +329,8 @@ int func_ov070_0211ffa8(daPropeller_Heyho_c* c){
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov070_0211fd98
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 typedef short s16;
 
 extern int Vec3_Dist(void *a, void *b);
@@ -418,9 +405,8 @@ int func_ov070_0211fd98(daPropeller_Heyho_c *c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov070_0211fd60
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* bca, int a, int fix, unsigned int j);
 /* (data_ov070_02123520: SharedFilePtr view declared earlier in this TU) */
 int func_ov070_0211fd60(daPropeller_Heyho_c *p) {
@@ -430,9 +416,8 @@ int func_ov070_0211fd60(daPropeller_Heyho_c *p) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov070_0211fae4
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 
 extern Player *_ZN8dActor_c22ClosestNonVanishPlayerEv(daPropeller_Heyho_c *self);
 extern short Vec3_HorzAngle(void *v0, void *v1);
@@ -538,9 +523,8 @@ int func_ov070_0211fae4(daPropeller_Heyho_c *c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov070_0211fa80
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 extern int _ZN8dActor_c23HorzAngleToCPlayerOrAngEv(void *);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* bca, int a, int fix, unsigned int j);
 int func_ov070_0211fa80(daPropeller_Heyho_c *c) {
@@ -554,9 +538,8 @@ int func_ov070_0211fa80(daPropeller_Heyho_c *c) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov070_0211f6e0
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 typedef int s32;
 typedef short s16;
 typedef unsigned int u32;
@@ -696,7 +679,6 @@ int func_ov070_0211f6e0(char* c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov070_0211f694
 extern "C" {
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* bca, int a, int fix, unsigned int j);
@@ -710,9 +692,8 @@ int func_ov070_0211f694(daPropeller_Heyho_c *c) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov070_0211f62c
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 extern int _ZN9Animation8FinishedEv(void *p);
 extern signed char data_0209f2f8;
 extern int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
@@ -731,7 +712,6 @@ int func_ov070_0211f62c(char *c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov070_0211f5f0
 struct BCA_File;
@@ -753,8 +733,7 @@ extern "C" int func_ov070_0211f5f0(daPropeller_Heyho_c *c) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 // @symbol func_ov070_0211f48c
 char* _ZN8dActor_c13ClosestPlayerEv(void* self);
 short Vec3_HorzAngle(void* a, void* b);
@@ -814,9 +793,8 @@ hitframe:
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov070_0211f450
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 short func_ov070_0211f450(daPropeller_Heyho_c *c) {
     c->unk_0a4 = 0;
     c->mVertSpeed = 0;
@@ -829,7 +807,6 @@ short func_ov070_0211f450(daPropeller_Heyho_c *c) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov070_0211f368
 extern "C" int func_ov070_0211f0a4(daPropeller_Heyho_c *c);
@@ -863,7 +840,6 @@ extern "C" int func_ov070_0211f368(daPropeller_Heyho_c* c)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov070_0211f100
 typedef int s32;
@@ -966,7 +942,6 @@ extern "C" void func_ov070_0211f100(daPropeller_Heyho_c* c)
     c->mHitDuringAttack = 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov070_0211f0a4
 

@@ -120,7 +120,6 @@ extern void func_ov065_0211696c(char *c);
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol daYurei_Mucho_c_classInit
 /* The registry factory behind the YUREI_MUCHO / SNUFIT profile. `return new
    daYurei_Mucho_c()` MATCHES (size 0x50); the synthesized ctor stores
@@ -132,7 +131,6 @@ extern "C" daYurei_Mucho_c *daYurei_Mucho_c_classInit(void)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daYurei_Mucho_c13OnYoshiTryEatEv
 /* dActor_c vtable slot 18. */
 s32 daYurei_Mucho_c::OnYoshiTryEat()
@@ -140,7 +138,6 @@ s32 daYurei_Mucho_c::OnYoshiTryEat()
     return 4;
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN15daYurei_Mucho_c13OnTurnIntoEggER6Player
 /* dActor_c vtable slot 19, confirmed by address: _ZTV15daYurei_Mucho_c
@@ -156,7 +153,6 @@ void daYurei_Mucho_c::OnTurnIntoEgg(Player &player)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daYurei_Mucho_c16OnAimedAtWithEggEv
 /* dActor_c vtable slot 29. */
 s32 daYurei_Mucho_c::OnAimedAtWithEgg()
@@ -164,7 +160,6 @@ s32 daYurei_Mucho_c::OnAimedAtWithEgg()
     return 0;
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN15daYurei_Mucho_c13InitResourcesEv
 /* Both Init methods are declared. The current dCcAc_c fixed-point aggregate
@@ -191,7 +186,6 @@ int daYurei_Mucho_c::InitResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN15daYurei_Mucho_c8BehaviorEv
 /* dActor_c vtable slot 6. */
@@ -281,7 +275,6 @@ int daYurei_Mucho_c::Behavior()
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daYurei_Mucho_c6RenderEv
 /* dActor_c vtable slot 9. */
 int daYurei_Mucho_c::Render()
@@ -293,14 +286,12 @@ int daYurei_Mucho_c::Render()
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daYurei_Mucho_c16OnPendingDestroyEv
 /* fBase_c slot 12. Empty in the ROM: four bytes, `bx lr`. */
 void daYurei_Mucho_c::OnPendingDestroy()
 {
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN15daYurei_Mucho_c16CleanupResourcesEv
 /* dActor_c vtable slot 3. Releases the four files InitResources claimed.
@@ -322,7 +313,6 @@ int daYurei_Mucho_c::CleanupResources()
 /* ========================================================================== */
 extern "C" {
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov065_0211696c
 /* Rebuilds the model matrix from the actor's position and Z/X/Y angles, then
@@ -368,7 +358,6 @@ void func_ov065_0211696c(char *self)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov065_0211691c
 /* The state setter. Stores the State into mCurrentState, RE-READS it -- the ROM
    really does reload the field it has just written -- null-tests the entry hook
@@ -390,7 +379,6 @@ int func_ov065_0211691c(daYurei_Mucho_c *c, daYurei_Mucho_c::State *s)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov065_021168a8
 /* State entry hook at 0x0211d670 +0x00: randomise the facing angle and the
    timer, then start the wait animation. The BCA file is read straight out of
@@ -406,7 +394,6 @@ int func_ov065_021168a8(daYurei_Mucho_c *c)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov065_02116744
 /* State main hook at 0x0211d670 +0x08: drift, and switch to the attack state
@@ -458,7 +445,6 @@ int func_ov065_02116744(daYurei_Mucho_c *c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov065_0211672c
 /* State entry hook at 0x0211d680 +0x00: stop the actor dead. */
 int func_ov065_0211672c(daYurei_Mucho_c *p)
@@ -469,7 +455,6 @@ int func_ov065_0211672c(daYurei_Mucho_c *p)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov065_021165d8
 /* State main hook at 0x0211d680 +0x08: steer toward the nearest non-vanishing
@@ -517,7 +502,6 @@ int func_ov065_021165d8(daYurei_Mucho_c *c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov065_02116588
 /* State entry hook at 0x0211d650 +0x00: start the attack animation. As at
    ordinal 11, the BCA file is the SharedFilePtr's second word, read directly
@@ -531,7 +515,6 @@ short func_ov065_02116588(daYurei_Mucho_c *c)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov065_02116364
 /* State main hook at 0x0211d650 +0x08: aim, and spawn the projectile (profile
@@ -596,7 +579,6 @@ int func_ov065_02116364(daYurei_Mucho_c *c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov065_02116328
 /* State entry hook at 0x0211d660 +0x00: the bumped-from-below pop. */
 int func_ov065_02116328(daYurei_Mucho_c *c)
@@ -611,7 +593,6 @@ int func_ov065_02116328(daYurei_Mucho_c *c)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov065_021162c0
 /* State main hook at 0x0211d660 +0x08.
@@ -631,7 +612,6 @@ int func_ov065_021162c0(daYurei_Mucho_c *t)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov065_02115ff0
 /* The collision response, called once from Behavior. */
@@ -715,7 +695,6 @@ void func_ov065_02115ff0(char *self)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov065_02115f84
 /* The death helper: poof, drop the coins, unregister. */
 int func_ov065_02115f84(daYurei_Mucho_c *c)
@@ -732,7 +711,6 @@ int func_ov065_02115f84(daYurei_Mucho_c *c)
 
 }  /* extern "C" */
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 /* No separate body lives here. The inline virtual destructor in the directly
  * included class header makes mwccarm emit retail's D1 then D0 pair without

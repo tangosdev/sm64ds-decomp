@@ -52,7 +52,6 @@ extern int data_ov027_021138f4[];
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol daIDonketu_c_classInit
 /* Reconstructed source-style name: SM64DS proves daIDonketu_c through RTTI,
  * allocation size, vtable identity, and the ICE_DONKETU registry profile;
@@ -74,7 +73,6 @@ extern "C" daIDonketu_c *daIDonketu_c_classInit(void)
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN12daIDonketu_c13InitResourcesEv
 /* daIDonketu_c::InitResources -- vtable slot 0, ov027 0x0211181c.
  *
@@ -90,7 +88,6 @@ int daIDonketu_c::InitResources()
     return r;
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN12daIDonketu_c8BehaviorEv
 /* daIDonketu_c::Behavior -- vtable slot 6, ov027 0x02111770, and THE KEY FUNCTION
@@ -124,9 +121,7 @@ int daIDonketu_c::Behavior()
     return BehaviorCommon();
 }
 
-/* -------------------------------------------------------------------------- */
 /* size 0x80                                                                   */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN12daIDonketu_c16UpdateDeathStateEv
 /* daIDonketu_c::UpdateDeathState -- vtable slot 32, daOts_c's state-4 hook. The
  * same star drop as Behavior's kill path without the invincible-character test: by
@@ -145,7 +140,6 @@ void daIDonketu_c::UpdateDeathState()
     UntrackAndSpawnStar(mStarSlot, (mStarIdx | 0x40) & 0xff, pos, 4);
 }
 
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN12daIDonketu_c14UpdateRunStateEv
 /* daIDonketu_c::UpdateRunState -- vtable slot 31, daOts_c's state-1 hook. The

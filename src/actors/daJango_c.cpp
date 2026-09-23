@@ -276,9 +276,7 @@ extern void *data_0209f394;
 /* TUBUILD CONFLICT -- alternate declaration of data_ov062_0211e17c, from the legacy file for _ZN9daJango_c13InitResourcesEv, NOT applied: extern char data_ov062_0211e17c; */
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 22 -- _ZN9daJango_c16OnAimedAtWithEggEv, 0x0211ce78, size 0x8 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daJango_c16OnAimedAtWithEggEv
 // recovered name: Klepto_OnAimedAtWithEgg
 /* daJango_c::OnAimedAtWithEgg - recovered from vtable slot identity */
@@ -286,9 +284,7 @@ s32 daJango_c::OnAimedAtWithEgg() {
     return 458752;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 21 -- _ZN9daJango_c13InitResourcesEv, 0x0211cb4c, size 0x32c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daJango_c13InitResourcesEv
 /* SharedFilePtr stays incomplete: Model.h forward-declares it and its layout is
    deliberately not recovered (include/SharedFilePtr.h). Used only by address here. */
@@ -382,9 +378,7 @@ int daJango_c::InitResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 20 -- _ZN9daJango_c8BehaviorEv, 0x0211c94c, size 0x200 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daJango_c8BehaviorEv
 struct Klass; typedef void (Klass::*PMF)();
 struct M { char pad[8]; PMF pmf; };
@@ -483,18 +477,14 @@ skip_destroy:
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 19 -- _ZN9daJango_c6RenderEv, 0x0211c920, size 0x2c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daJango_c6RenderEv
 int daJango_c::Render()
 {
  Base *b = (Base *)&mBlendModelAnim; b->m(0); return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 18 -- _ZN9daJango_c16OnPendingDestroyEv, 0x0211c91c, size 0x4 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daJango_c16OnPendingDestroyEv
 /* recovered: shared header, real C++ method
  *
@@ -504,9 +494,7 @@ void daJango_c::OnPendingDestroy()
 {
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 17 -- _ZN9daJango_c16CleanupResourcesEv, 0x0211c8b0, size 0x6c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daJango_c16CleanupResourcesEv
 /* recovered: shared header, real C++ method
  *
@@ -528,11 +516,9 @@ int daJango_c::CleanupResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 16 -- func_ov062_0211c6a8, 0x0211c6a8, size 0x208 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov062_0211c6a8
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 void func_ov062_0211c6a8(char* c)
 {
     int v[3];
@@ -579,19 +565,15 @@ void func_ov062_0211c6a8(char* c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 15 -- func_ov062_0211c658, 0x0211c658, size 0x50 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov062_0211c658
 struct C658; typedef int (C658::*PMF658)();
 struct C658 { char pad[0x42c]; PMF658 *pp; };
 extern "C" int func_ov062_0211c658(void *c, void *p) { C658 *cc = (C658 *)c; PMF658 *qq = (PMF658 *)p; cc->pp = qq; PMF658 *q = cc->pp; if (*q == 0) return 1; return (cc->**q)(); }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 14 -- func_ov062_0211c594, 0x0211c594, size 0xc4 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov062_0211c594
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov062_0211c594(char *c) {
     Vector3 in;
     Vector3 out;
@@ -616,9 +598,7 @@ int func_ov062_0211c594(char *c) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 13 -- func_ov062_0211c2f4, 0x0211c2f4, size 0x2a0 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov062_0211c2f4
 extern "C" int func_ov062_0211c2f4(char *self) {
     /* Real PathPtr object (as legacy had it via PathPtr.h): its implicit
@@ -696,11 +676,9 @@ ret1:
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 12 -- func_ov062_0211c218, 0x0211c218, size 0xdc */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov062_0211c218
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov062_0211c218(char *c)
 {
     *(short *)(c + 0x44a) = *(short *)(c + 0x8e);
@@ -721,11 +699,9 @@ int func_ov062_0211c218(char *c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 11 -- func_ov062_0211bd10, 0x0211bd10, size 0x508 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov062_0211bd10
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 /* data_ov062_0211e104/114 are TU-wide SharedFilePtr scalars (legacy InitResources view); words beside them go through casts (same addresses, no second type). */
 extern char data_ov062_0211e18c[];
 
@@ -874,9 +850,7 @@ int func_ov062_0211bd10(char *c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 10 -- func_ov062_0211bc54, 0x0211bc54, size 0xbc */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov062_0211bc54
 /* Signature deliberately copied from the local declaration above: the
    ROM name carries by-value class parameters (e.g. Fix12<int>), which
@@ -900,9 +874,7 @@ extern "C" int func_ov062_0211bc54(char *thiz)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 9 -- func_ov062_0211ba84, 0x0211ba84, size 0x1d0 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov062_0211ba84
 /* C function in this class TU. The ROM copy is the C front end's block
    move (movs ip, r0; ldm/stm of 12 bytes). C++ scalarizes that assignment
@@ -966,9 +938,7 @@ int func_ov062_0211ba84(char *c)
 }
 #pragma cplusplus on
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 8 -- func_ov062_0211b930, 0x0211b930, size 0x154 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov062_0211b930
 /* Signature deliberately copied from the local declaration above: the
    ROM name carries by-value class parameters (e.g. Fix12<int>), which
@@ -1008,9 +978,7 @@ extern "C" int func_ov062_0211b930(Obj* o)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 7 -- func_ov062_0211b8d8, 0x0211b8d8, size 0x58 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov062_0211b8d8
 extern "C" int func_ov062_0211b8d8(unsigned char* c) {
     int f = *(int*)(c + 0x38c);
@@ -1022,9 +990,7 @@ extern "C" int func_ov062_0211b8d8(unsigned char* c) {
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 6 -- func_ov062_0211b880, 0x0211b880, size 0x58 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov062_0211b880
 /* Signature deliberately copied from the local declaration above: the
    ROM name carries by-value class parameters (e.g. Fix12<int>), which
@@ -1040,11 +1006,9 @@ extern "C" int func_ov062_0211b880(unsigned char* c) {
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 5 -- func_ov062_0211b800, 0x0211b800, size 0x80 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov062_0211b800
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov062_0211b800(char *c) {
     *(int*)(c + 0xa8) = 0x14000;
     _Z14ApproachLinearRsss((short*)(c + 0x92), 0, 0x300);
@@ -1061,11 +1025,9 @@ int func_ov062_0211b800(char *c) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 4 -- func_ov062_0211b51c, 0x0211b51c, size 0x2e4 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov062_0211b51c
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov062_0211b51c(char *c)
 {
     void *pl;
@@ -1169,9 +1131,7 @@ int func_ov062_0211b51c(char *c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 3 -- func_ov062_0211b3ac, 0x0211b3ac, size 0x170 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov062_0211b3ac
 extern "C" int func_ov062_0211b3ac(char* sl)
 {
@@ -1231,11 +1191,9 @@ extern "C" int func_ov062_0211b3ac(char* sl)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 2 -- func_ov062_0211b2fc, 0x0211b2fc, size 0xb0 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov062_0211b2fc
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 void func_ov062_0211b2fc(char* c){
   Vector3 v[2];
   v[0].z = 0;
@@ -1261,9 +1219,7 @@ void func_ov062_0211b2fc(char* c){
 }
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 1 -- _ZN9daJango_cD0Ev, 0x0211b298, size 0x64 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daJango_cD0Ev
 /* recovered: real C++ deleting destructor -- the compiler emits the whole body
  *
@@ -1279,9 +1235,7 @@ void func_ov062_0211b2fc(char* c){
  * definition for the merged TU; the compiler emits D0 from the visible body.)
  */
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 0 -- _ZN9daJango_cD1Ev, 0x0211b248, size 0x50 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daJango_cD1Ev
 /* recovered: real C++ destructor -- the compiler emits the whole body
  *
