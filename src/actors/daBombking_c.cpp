@@ -396,8 +396,6 @@ int func_ov078_02123a3c(char* c){
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02123aa0
-/* recovered: shared common types, declarations from a shared header */
-/* recovered: shared common types */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov078_02123aa0(char* c){
     short ang = Vec3_HorzAngle(c+0x5c, c+0x4e0);
@@ -614,8 +612,6 @@ int func_ov078_02124060(char *c){
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_021240a0
-/* recovered: shared common types, declarations from a shared header */
-/* recovered: shared common types */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov078_021240a0(char* c)
 {
@@ -1025,8 +1021,6 @@ int func_ov078_02124c94(char *p) {
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02124cf4
-/* recovered: shared common types, declarations from a shared header */
-/* recovered: shared common types */
 extern "C" int func_ov078_02124cf4(unsigned char* thiz)
 {
     if (_ZNK10dBgCh_Actr10IsOnGroundEv(thiz + 0x110) == 0) goto done;
@@ -1090,10 +1084,6 @@ int func_ov078_02124e9c(char *c)
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02124f28
-/* recovered: shared common types, declarations from a shared header */
-#include "decl_common.h"
-/* recovered: shared common types */
-#include "common.h"
 extern "C" {
 extern int Vec3_Dist(const void* a, const void* b);
 extern void _ZN6Player9DropActorEv(void* self);
@@ -1189,8 +1179,6 @@ int func_ov078_021250d0(char *c)
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_021250f8
-/* recovered: shared common types, declarations from a shared header */
-/* recovered: shared common types */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov078_021250f8(char* c) {
     struct Vector3 in, out, v[2];
@@ -1304,8 +1292,6 @@ int func_ov078_02125350(int sl)
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02125448
-/* recovered: shared common types, declarations from a shared header */
-/* recovered: shared common types */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov078_02125448(char* c)
 {
@@ -1429,8 +1415,6 @@ int func_ov078_02125734(char *c) {
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02125790
-/* recovered: shared common types, declarations from a shared header */
-/* recovered: shared common types */
 extern "C" int func_ov078_02125790(char* self)
 {
   Vector3 s;
@@ -1484,8 +1468,6 @@ int func_ov078_021258e4(int *t)
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02125950
-/* recovered: shared common types, declarations from a shared header */
-/* recovered: shared common types */
 void ApproachLinear(short &v, short t, short step);
 extern "C" void _ZN7Message7EndTalkEv();
 
@@ -1524,8 +1506,6 @@ int func_ov078_021259e4(void)
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_021259ec
-/* recovered: shared common types, declarations from a shared header */
-/* recovered: shared common types */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov078_021259ec(char* c)
 {
@@ -1629,7 +1609,6 @@ extern "C" int KingBobOmb_SetState(void *cv, void *pv) {
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02125c98
-/* recovered: shared common types */
 /* func_ov078_02125c98 at 0x02125c98 (ov078), size 0x148
  * Matched byte-for-byte with mwccarm 1.2/sp2p3.
  * flags: -O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
@@ -1666,7 +1645,6 @@ extern "C" void func_ov078_02125c98(void* cv) {
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02125de0
-/* recovered: shared common types */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov078_02125de0(char *c)
 {
@@ -1716,10 +1694,6 @@ void func_ov078_02125de0(char *c)
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02125f8c
-/* recovered: shared common types, declarations from a shared header */
-#include "decl_common.h"
-/* recovered: shared common types */
-#include "common.h"
 
 
 extern "C" {
@@ -1766,8 +1740,6 @@ void daBombking_c::OnPendingDestroy()
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN12daBombking_c6RenderEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-/* recovered: named members + shared header, real C++ method */
 int daBombking_c::Render()
 {
     void *r1 = mHeldActor;
@@ -1787,8 +1759,6 @@ int daBombking_c::Render()
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN12daBombking_c8BehaviorEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-/* recovered: named members + shared header, real C++ method */
 
 
 extern "C" {
@@ -1879,8 +1849,6 @@ int daBombking_c::Behavior()
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN12daBombking_c13InitResourcesEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-/* recovered: named members + shared header, real C++ method */
 /* SharedFilePtr's complete declaration is included above. The file handles
    below still use their existing ROM-backed data declarations. */
 int daBombking_c::InitResources()
@@ -1947,7 +1915,6 @@ int daBombking_c::InitResources()
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN12daBombking_c16OnAimedAtWithEggEv
 // recovered name: KingBobOmb_OnAimedAtWithEgg
-/* recovered: renamed to Class_Method */
 /* daBombking_c::OnAimedAtWithEgg - recovered from vtable slot identity */
 s32 daBombking_c::OnAimedAtWithEgg() {
     return 1024000;

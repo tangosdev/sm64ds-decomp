@@ -303,7 +303,6 @@ int daHolhei_c::CleanupResources()
 /* ROM ordinal 28 -- func_ov062_02116edc, 0x02116edc, size 0xe4 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov062_02116edc
-/* recovered: shared common types, declarations from a shared header */
 extern "C" {
 int Math_Function_0203b14c(void*, int, int, int, int);
 void* _ZN8dActor_c11UpdateCarryER6PlayerRK7Vector3(void*, int, void*);
@@ -343,7 +342,6 @@ void func_ov062_02116e80(void *c) {
 /* ROM ordinal 26 -- func_ov062_02116dbc, 0x02116dbc, size 0xc4 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov062_02116dbc
-/* recovered: shared common types */
 extern "C" void func_ov062_02116dbc(char* thiz)
 {
     char* c = thiz;
@@ -365,7 +363,6 @@ extern "C" void func_ov062_02116dbc(char* thiz)
 /* ROM ordinal 25 -- func_ov062_02116d28, 0x02116d28, size 0x94 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov062_02116d28
-/* recovered: shared common types */
 /* Signature deliberately copied from the local declaration above: the
    ROM name carries by-value class parameters (e.g. Fix12<int>), which
    mwccarm passes differently at the call site, so declaring the true
@@ -607,8 +604,6 @@ int func_ov062_02116784(char *c) {
 /* ROM ordinal 14 -- func_ov062_021165e8, 0x021165e8, size 0x19c */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov062_021165e8
-/* recovered: shared common types, declarations from a shared header */
-/* recovered: shared common types */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov062_021165e8(char* c)
 {
@@ -872,8 +867,6 @@ int func_ov062_021161a8(char *c)
 /* ROM ordinal 3 -- func_ov062_02116010, 0x02116010, size 0x198 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov062_02116010
-/* recovered: shared common types, declarations from a shared header */
-/* recovered: shared common types */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 namespace tu {  /* namespaced: a (void*) view of this symbol is in scope */
 void func_ov062_02116010(char *c)

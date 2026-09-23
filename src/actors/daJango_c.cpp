@@ -281,7 +281,6 @@ extern void *data_0209f394;
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN9daJango_c16OnAimedAtWithEggEv
 // recovered name: Klepto_OnAimedAtWithEgg
-/* recovered: renamed to Class_Method */
 /* daJango_c::OnAimedAtWithEgg - recovered from vtable slot identity */
 s32 daJango_c::OnAimedAtWithEgg() {
     return 458752;
@@ -291,8 +290,6 @@ s32 daJango_c::OnAimedAtWithEgg() {
 /* ROM ordinal 21 -- _ZN9daJango_c13InitResourcesEv, 0x0211cb4c, size 0x32c */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN9daJango_c13InitResourcesEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-/* recovered: named members + shared header, real C++ method */
 /* SharedFilePtr stays incomplete: Model.h forward-declares it and its layout is
    deliberately not recovered (include/SharedFilePtr.h). Used only by address here. */
 int daJango_c::InitResources()
@@ -389,8 +386,6 @@ int daJango_c::InitResources()
 /* ROM ordinal 20 -- _ZN9daJango_c8BehaviorEv, 0x0211c94c, size 0x200 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN9daJango_c8BehaviorEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-/* recovered: named members + shared header, real C++ method */
 struct Klass; typedef void (Klass::*PMF)();
 struct M { char pad[8]; PMF pmf; };
 struct dCc_c;
@@ -492,7 +487,6 @@ skip_destroy:
 /* ROM ordinal 19 -- _ZN9daJango_c6RenderEv, 0x0211c920, size 0x2c */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN9daJango_c6RenderEv
-/* recovered: named members + shared header, real C++ method */
 int daJango_c::Render()
 {
  Base *b = (Base *)&mBlendModelAnim; b->m(0); return 1;
@@ -626,8 +620,6 @@ int func_ov062_0211c594(char *c) {
 /* ROM ordinal 13 -- func_ov062_0211c2f4, 0x0211c2f4, size 0x2a0 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov062_0211c2f4
-/* recovered: shared common types, declarations from a shared header */
-/* recovered: shared common types */
 extern "C" int func_ov062_0211c2f4(char *self) {
     /* Real PathPtr object (as legacy had it via PathPtr.h): its implicit
        ctor call is genuine ROM bytes. Do NOT byte-buffer this one. */
@@ -978,7 +970,6 @@ int func_ov062_0211ba84(char *c)
 /* ROM ordinal 8 -- func_ov062_0211b930, 0x0211b930, size 0x154 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov062_0211b930
-/* recovered: shared common types */
 /* Signature deliberately copied from the local declaration above: the
    ROM name carries by-value class parameters (e.g. Fix12<int>), which
    mwccarm passes differently at the call site, so declaring the true
@@ -1182,7 +1173,6 @@ int func_ov062_0211b51c(char *c)
 /* ROM ordinal 3 -- func_ov062_0211b3ac, 0x0211b3ac, size 0x170 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov062_0211b3ac
-/* recovered: shared common types */
 extern "C" int func_ov062_0211b3ac(char* sl)
 {
     char* player;

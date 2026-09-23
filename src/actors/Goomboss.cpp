@@ -234,7 +234,6 @@ extern int func_ov074_021216f4(void* c);
 /* ROM ordinal 37 -- func_ov074_02121300, 0x02121300, size 0x80 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov074_02121300
-/* recovered: shared common types */
 #include "common.h"
 extern "C" {
 
@@ -256,7 +255,6 @@ void func_ov074_02121300(char* c){
 /* ROM ordinal 36 -- func_ov074_02121270, 0x02121270, size 0x90 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov074_02121270
-/* recovered: shared common types */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov074_02121270(char* r4, char* r8, int r7){
   char* dst;
@@ -277,8 +275,6 @@ void func_ov074_02121270(char* r4, char* r8, int r7){
 /* ROM ordinal 35 -- func_ov074_02120d74, 0x02120d74, size 0x4fc */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov074_02120d74
-/* recovered: shared common types, declarations from a shared header */
-/* recovered: shared common types */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov074_02120d74(char *a)
 {
@@ -979,8 +975,6 @@ void func_ov074_0211ffac(char* c) {
 /* ROM ordinal 14 -- func_ov074_0211fd74, 0x0211fd74, size 0x238 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov074_0211fd74
-/* recovered: shared common types, declarations from a shared header */
-/* recovered: shared common types */
 extern "C" void func_ov074_0211fd74(void* self)
 {
     u8* c = (u8*)self;
@@ -1331,8 +1325,6 @@ extern "C" void func_ov074_0211f5b8(char* c)
 /* ROM ordinal 5 -- func_ov074_0211f38c, 0x0211f38c, size 0x22c */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov074_0211f38c
-/* recovered: shared common types, declarations from a shared header */
-/* recovered: shared common types */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov074_0211f38c(u8* c){
     struct Vector3 p0, p1;
@@ -1405,7 +1397,6 @@ void func_ov074_0211f344(void* r6, unsigned char r5) {
 /* ROM ordinal 3 -- func_ov074_0211f244, 0x0211f244, size 0x100 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov074_0211f244
-/* recovered: shared common types */
 extern "C" void func_ov074_0211f244(dActor_c *self)
 {
     dActor_c *a = dActor_c::FindWithActorID(0xc7, 0);
@@ -1442,7 +1433,6 @@ extern "C" void func_ov074_0211f244(dActor_c *self)
 /* ROM ordinal 2 -- func_ov074_0211f154, 0x0211f154, size 0xf0 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov074_0211f154
-/* recovered: shared common types */
 /* func_ov074_0211f154 at 0x0211f154
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov074).

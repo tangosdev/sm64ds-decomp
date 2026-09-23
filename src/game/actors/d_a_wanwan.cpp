@@ -260,10 +260,6 @@ int daWanwan_c::CleanupResources()
 /* -------------------------------------------------------------------------- */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 // @symbol func_ov014_02112788
-/* recovered: shared common types, declarations from a shared header */
-#include "decl_common.h"
-/* recovered: shared common types */
-#include "common.h"
 typedef short s16;
 extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void* self, void* sm, void* mtx, int a, int b, unsigned int g);
 
@@ -637,8 +633,6 @@ void func_ov014_02112114(void *cc)
 /* -------------------------------------------------------------------------- */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 // @symbol func_ov014_02111fe0
-/* recovered: shared common types */
-#include "common.h"
 typedef int Fix12i;
 typedef long long s64;
 
@@ -931,8 +925,6 @@ extern "C" void func_ov014_02111a6c(char* c){
 /* -------------------------------------------------------------------------- */
 #include "types.h"
 // @symbol func_ov014_021115ec
-/* recovered: shared common types */
-#include "common.h"
 static inline void inc604(u8 *self) {
     u8 *p = (u8 *)(self + 0x604);
     *p = (u8)(*p + 1);
@@ -1177,7 +1169,6 @@ void func_ov014_02111484(char* c){
  * `data_020a0eac` for the actor heap, which collides with the `void *` dActor_c.h
  * supplies for that same symbol once the real header is in scope.
  */
-#include "daWanwan_c.h"
 
 /* (no separate definition: the single ~daWanwan_c() below emits the D0 and
  * D1 variants together.) */
@@ -1193,7 +1184,6 @@ void func_ov014_02111484(char* c){
  * at 0x1dc, ShadowModel[7] at 0x40c, and two Vector3[7] at 0x524 and 0x578 for
  * the per-link positions. Every element type was already named in the tree.
  */
-#include "daWanwan_c.h"
 
 /* (no out-of-line body: the destructor is defined inline in daWanwan_c.h, which
  * is what makes mwccarm emit D1 then D0 and no D2 -- the ROM's own order.) */

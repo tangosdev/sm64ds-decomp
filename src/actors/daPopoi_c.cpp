@@ -38,7 +38,6 @@
 /* -------------------------------------------------------------------------- */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 // @symbol daPopoi_c_classInit
-/* recovered: vtable identified, globals resolved, declarations from a shared header */
 #include "decl_ActorBase.h"
 #include "decl_Enemy.h"
 #include "decl_ModelAnim.h"
@@ -48,7 +47,6 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
 #include "decl_dBgCh_Actr.h"
 #include "decl_common.h"
 #include "daPopoi_c.h"
-/* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV9daPopoi_c */
 int *daPopoi_c_classInit(void)
 {
@@ -60,10 +58,6 @@ int *daPopoi_c_classInit(void)
 /* ROM ordinal 20 -- _ZN9daPopoi_c13InitResourcesEv, 0x0212706c, size 0x168 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN9daPopoi_c13InitResourcesEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-#include "decl_common.h"
-/* recovered: named members + shared header, real C++ method */
-#include "daPopoi_c.h"
 extern "C" {
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void*, void*, int, int);
@@ -111,10 +105,6 @@ int daPopoi_c::InitResources()
 /* -------------------------------------------------------------------------- */
 #include "types.h"
 // @symbol _ZN9daPopoi_c8BehaviorEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-#include "decl_common.h"
-/* recovered: named members + shared header, real C++ method */
-#include "daPopoi_c.h"
 struct Klass; typedef void (Klass::*PMF)();
 struct M { char pad[8]; PMF pmf; };
 struct dCc_c;
@@ -201,8 +191,6 @@ writeback:
 /* ROM ordinal 18 -- _ZN9daPopoi_c6RenderEv, 0x02126e38, size 0x50 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN9daPopoi_c6RenderEv
-/* recovered: named members + shared header, real C++ method */
-#include "daPopoi_c.h"
 extern int data_0209f32c;
 
 struct Cls {
@@ -230,7 +218,6 @@ int daPopoi_c::Render()
  *
  * fBase_c slot 12. Empty in the ROM: four bytes, `bx lr`.
  */
-#include "daPopoi_c.h"
 
 void daPopoi_c::OnPendingDestroy()
 {
@@ -247,11 +234,8 @@ void daPopoi_c::OnPendingDestroy()
  * TOUCHES NO FIELD. The ROM body takes no `this`; as a method it now receives
  * one and ignores it, which measured byte-free.
  */
-#include "daPopoi_c.h"
 #include "SharedFilePtr.h"
 
-extern "C" {
-}
 
 int daPopoi_c::CleanupResources()
 {
@@ -309,10 +293,7 @@ int func_ov077_02126cd4(char* c){
 /* -------------------------------------------------------------------------- */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 // @symbol func_ov077_02126ad0
-/* recovered: shared common types, declarations from a shared header */
 #include "decl_Player.h"
-#include "decl_common.h"
-/* recovered: shared common types */
 #include "common.h"
 extern int Vec3_Dist(void* a, void* b);
 extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int cc, void* v, unsigned int d);
@@ -467,10 +448,6 @@ int func_ov077_02126930(char* c){
 /* -------------------------------------------------------------------------- */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 // @symbol func_ov077_0212679c
-/* recovered: shared common types, declarations from a shared header */
-#include "decl_common.h"
-/* recovered: shared common types */
-#include "common.h"
 extern int Vec3_Dist(void *a, void *b);
 extern int func_ov077_02126300(void *c);
 extern int func_ov077_02126d5c(void *c, void *p);
@@ -548,7 +525,6 @@ int func_ov077_02126758(char* c){
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov077_02126640
 // recovered name: Spiny_Kill
-/* recovered: renamed to Class_Method */
 /* daTgz_c::Kill - recovered from vtable slot identity */
 /* (Vector3: real header type in scope) */
 extern "C" {
@@ -767,7 +743,6 @@ int func_ov077_02126300(void *vc)
  * chain) then return the object to its heap via an inline operator delete.
  * Both variants are emitted from the single inline destructor in
  * daPopoi_c.h (class-form skill): D1 then D0 in ROM order, no leaf D2. */
-#include "daPopoi_c.h"
 
 /* (no separate definition: the single ~daPopoi_c() below emits the D0 and
  * D1 variants together; mwccarm orders the variant group itself.) */
@@ -780,5 +755,4 @@ int func_ov077_02126300(void *vc)
  * (class-form skill); this marker at D1's ROM ordinal keeps the
  * accounting naming it. Members are destroyed in reverse declaration
  * order, then dEnemyBase_c::~dEnemyBase_c. */
-#include "daPopoi_c.h"
 

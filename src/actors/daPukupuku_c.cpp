@@ -187,7 +187,6 @@ void *thisp, struct BCA_File *, int, int, unsigned int);
 /* ROM ordinal 14 -- daPukupuku_c_classInit, 0x02133634, size 0x48 */
 /* -------------------------------------------------------------------------- */
 // @symbol daPukupuku_c_classInit
-/* recovered: vtable identified, globals resolved, declarations from a shared header */
 /* resolved: VT0 = _ZTV12daPukupuku_c */
 /* Reconstructed source-style name: SM64DS proves daPukupuku_c through RTTI,
  * allocation size, vtable identity, and the PUKUPUKU registry profile;
@@ -204,8 +203,6 @@ int *daPukupuku_c_classInit(void)
 /* ROM ordinal 13 -- _ZN12daPukupuku_c13InitResourcesEv, 0x02133530, size 0x104 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN12daPukupuku_c13InitResourcesEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-/* recovered: named members + shared header, real C++ method */
 int daPukupuku_c::InitResources()
 {
     struct BMD_File *bmd;
@@ -238,8 +235,6 @@ int daPukupuku_c::InitResources()
 /* ROM ordinal 12 -- _ZN12daPukupuku_c8BehaviorEv, 0x02133430, size 0x100 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN12daPukupuku_c8BehaviorEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-/* recovered: named members + shared header, real C++ method */
 int daPukupuku_c::Behavior()
 {
     char *c = (char *)((dEnemyBase_c *)this);
@@ -279,7 +274,6 @@ int daPukupuku_c::Behavior()
 /* ROM ordinal 11 -- _ZN12daPukupuku_c6RenderEv, 0x021333e0, size 0x50 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN12daPukupuku_c6RenderEv
-/* recovered: named members + shared header, real C++ method */
 int daPukupuku_c::Render()
 {
     int b = ((mFlags & 0x40000) != 0);
@@ -312,7 +306,6 @@ int daPukupuku_c::CleanupResources()
 /* ROM ordinal 8 -- func_ov090_02133338, 0x02133338, size 0x74 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov090_02133338
-/* recovered: shared common types */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov090_02133338(char *c) {
     int v[3];
@@ -353,7 +346,6 @@ int func_ov090_02133290(char* c){
 /* ROM ordinal 5 -- func_ov090_02133200, 0x02133200, size 0x90 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov090_02133200
-/* recovered: declarations from a shared header */
 /* The legacy shard that carried func_ov090_02133200 -- absorbed into this
  * file by promotion -- carried
  * `// recovered name: daManta_c_Kill` and `daManta_c::Kill - recovered from
@@ -412,7 +404,6 @@ int func_ov090_02133190(char *c) {
 /* ROM ordinal 2 -- func_ov090_021330c8, 0x021330c8, size 0xc8 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov090_021330c8
-/* recovered: shared common types */
 extern "C" void func_ov090_021330c8(char* thiz)
 {
     char* c = thiz;

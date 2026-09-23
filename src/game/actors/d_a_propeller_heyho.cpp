@@ -79,8 +79,6 @@ extern "C" daPropeller_Heyho_c *daPropeller_Heyho_c_classInit(void)
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN19daPropeller_Heyho_c13OnYoshiTryEatEv
-#include "daPropeller_Heyho_c.h"
-/* recovered: renamed to Class_Method */
 s32 daPropeller_Heyho_c::OnYoshiTryEat() {
     return 5;
 }
@@ -94,7 +92,6 @@ s32 daPropeller_Heyho_c::OnYoshiTryEat() {
  * placeholder's former address (former name func_ov070_021204ec).
  * Matched byte-for-byte with mwccarm 2004/b56 (ov070).
  */
-#include "daPropeller_Heyho_c.h"
 #include "Player.h"
 
 void daPropeller_Heyho_c::OnTurnIntoEgg(Player &player)
@@ -106,9 +103,7 @@ void daPropeller_Heyho_c::OnTurnIntoEgg(Player &player)
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN19daPropeller_Heyho_c16OnAimedAtWithEggEv
-#include "daPropeller_Heyho_c.h"
 // recovered name: FlyGuy_OnAimedAtWithEgg
-/* recovered: renamed to Class_Method */
 /* daPropeller_Heyho_c::OnAimedAtWithEgg - recovered from vtable slot identity */
 s32 daPropeller_Heyho_c::OnAimedAtWithEgg() {
     return 0x2b000; /* Fix12 egg-aim HEIGHT added to pos.y, per dEnemyBase_c.h slot-29 */
@@ -117,8 +112,6 @@ s32 daPropeller_Heyho_c::OnAimedAtWithEgg() {
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN19daPropeller_Heyho_c13InitResourcesEv
-/* recovered: named members + shared header, real C++ method */
-#include "daPropeller_Heyho_c.h"
 #include "SharedFilePtr.h"
 extern SharedFilePtr data_ov070_02123530;
 extern SharedFilePtr data_ov070_02123520;
@@ -161,10 +154,7 @@ int daPropeller_Heyho_c::InitResources()
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN19daPropeller_Heyho_c8BehaviorEv
-/* recovered: named members + shared header, real C++ method */
-#include "daPropeller_Heyho_c.h"
 
-#include "Player.h"
 extern daPropeller_Heyho_c::State data_ov070_021235cc;
 extern daPropeller_Heyho_c::State data_ov070_021235bc;
 extern "C" {
@@ -250,8 +240,6 @@ int daPropeller_Heyho_c::Behavior()
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN19daPropeller_Heyho_c6RenderEv
-/* recovered: named members + shared header, real C++ method */
-#include "daPropeller_Heyho_c.h"
 
 int daPropeller_Heyho_c::Render()
 {
@@ -268,7 +256,6 @@ int daPropeller_Heyho_c::Render()
  *
  * fBase_c slot 12. Empty in the ROM: four bytes, `bx lr`.
  */
-#include "daPropeller_Heyho_c.h"
 
 void daPropeller_Heyho_c::OnPendingDestroy()
 {
@@ -284,11 +271,7 @@ void daPropeller_Heyho_c::OnPendingDestroy()
  * TOUCHES NO FIELD. The ROM body takes no `this`; as a method it now receives
  * one and ignores it, which measured byte-free.
  */
-#include "daPropeller_Heyho_c.h"
-#include "SharedFilePtr.h"
 
-extern "C" {
-}
 
 int daPropeller_Heyho_c::CleanupResources()
 {
@@ -305,7 +288,6 @@ int daPropeller_Heyho_c::CleanupResources()
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov070_02120070
-/* recovered: shared common types */
 #include "common.h"
 extern "C" {
 
@@ -774,8 +756,6 @@ extern "C" int func_ov070_0211f5f0(daPropeller_Heyho_c *c) {
 /* -------------------------------------------------------------------------- */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 // @symbol func_ov070_0211f48c
-/* recovered: shared common types */
-#include "common.h"
 char* _ZN8dActor_c13ClosestPlayerEv(void* self);
 short Vec3_HorzAngle(void* a, void* b);
 /* (ApproachAngle: this file's own int-target view, declared inside the function body) */
@@ -852,8 +832,6 @@ short func_ov070_0211f450(daPropeller_Heyho_c *c) {
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov070_0211f368
-/* recovered: shared common types */
-#include "common.h"
 extern "C" int func_ov070_0211f0a4(daPropeller_Heyho_c *c);
 typedef int Fix12i;
 
@@ -991,8 +969,6 @@ extern "C" void func_ov070_0211f100(daPropeller_Heyho_c* c)
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov070_0211f0a4
-/* recovered: shared common types */
-#include "common.h"
 
 
 /* (dActor_c: real header type in scope; SpawnCoins goes through the mangled extern below) */

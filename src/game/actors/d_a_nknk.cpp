@@ -600,8 +600,6 @@ void func_ov062_02118b4c(char *self) {
 /* ROM ordinal 25 -- func_ov062_02118a50, 0x02118a50, size 0xfc */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov062_02118a50
-/* recovered: shared common types, declarations from a shared header */
-/* recovered: shared common types */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 namespace tu {  /* namespaced: a conflicting file-scope view exists */
 void func_ov062_02118a50(char *c)
@@ -838,7 +836,6 @@ void func_ov062_021183e0(char *c)
 /* ROM ordinal 20 -- func_ov062_02118334, 0x02118334, size 0xac */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov062_02118334
-/* recovered: shared common types */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 
 void Vec3_Asr(struct Vec3 *d, struct Vec3 *s, int sh);
@@ -1156,7 +1153,6 @@ tail:
 /* ROM ordinal 12 -- func_ov062_02117bf4, 0x02117bf4, size 0xa4 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov062_02117bf4
-/* recovered: shared common types */
 namespace tu {  /* namespaced: a conflicting file-scope view exists */
 extern "C" void func_ov062_02117bf4(char* c){
     daNknk_c *self = (daNknk_c *)c;

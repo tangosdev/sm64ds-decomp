@@ -743,8 +743,6 @@ int func_ov066_0211901c(char *p)
 /* ROM ordinal 48 -- func_ov066_0211903c, 0x0211903c, size 0x30c */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov066_0211903c
-/* recovered: shared common types, declarations from a shared header */
-/* recovered: shared common types */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov066_0211903c(char* self) {
     Eyerok *obj = (Eyerok *)self;
@@ -957,8 +955,6 @@ void func_ov066_021194fc(char* c)
 /* ROM ordinal 55 -- _ZN6Eyerok16CleanupResourcesEv, 0x02119654, size 0x14c */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN6Eyerok16CleanupResourcesEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-/* recovered: named members + shared header, real C++ method */
 int Eyerok::CleanupResources()
 {
   if(((dBgW *)&mMeshCollider2)->IsEnabled())
@@ -1004,7 +1000,6 @@ void Eyerok::OnPendingDestroy()
 /* ROM ordinal 57 -- _ZN6Eyerok6RenderEv, 0x021197a4, size 0x94 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN6Eyerok6RenderEv
-/* recovered: named members + shared header, real C++ method */
 int Eyerok::Render()
 {
   if (mPartIdx == 0) {

@@ -207,7 +207,6 @@ void daSanbo_c::OnTurnIntoEgg(Player &player)
 /* ROM ordinal 32 -- _ZN9daSanbo_c13InitResourcesEv, 0x02136ab0, size 0x220 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN9daSanbo_c13InitResourcesEv
-/* recovered: named members + shared header, real C++ method */
 int daSanbo_c::InitResources()
 {
     int t;
@@ -275,8 +274,6 @@ int daSanbo_c::InitResources()
 /* ROM ordinal 31 -- _ZN9daSanbo_c8BehaviorEv, 0x02136a50, size 0x60 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN9daSanbo_c8BehaviorEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-/* recovered: named members + shared header, real C++ method */
 int daSanbo_c::Behavior()
 {
     int s = mState;
@@ -293,7 +290,6 @@ int daSanbo_c::Behavior()
 /* ROM ordinal 30 -- _ZN9daSanbo_c6RenderEv, 0x021369fc, size 0x54 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN9daSanbo_c6RenderEv
-/* recovered: named members + shared header, real C++ method */
 int daSanbo_c::Render()
 {
     unsigned int f = mFlags;
@@ -308,8 +304,6 @@ int daSanbo_c::Render()
 /* ROM ordinal 29 -- _ZN9daSanbo_c16OnPendingDestroyEv, 0x021369b0, size 0x4c */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN9daSanbo_c16OnPendingDestroyEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-/* recovered: named members + shared header, real C++ method */
 void daSanbo_c::OnPendingDestroy()
 {
     int r1 = *(unsigned short *)((char *)&actorID);
@@ -327,7 +321,6 @@ void daSanbo_c::OnPendingDestroy()
 /* ROM ordinal 28 -- _ZN9daSanbo_c16CleanupResourcesEv, 0x02136944, size 0x6c */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN9daSanbo_c16CleanupResourcesEv
-/* recovered: named members + shared header, real C++ method */
 int daSanbo_c::CleanupResources()
 {
   int id = actorID;
@@ -478,7 +471,6 @@ void func_ov096_0213670c(void *c) {
 /* ROM ordinal 21 -- func_ov096_021365d4, 0x021365d4, size 0x138 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov096_021365d4
-/* recovered: shared common types */
 extern "C" {
 void _Z14ApproachLinearRiii(int* dst, int target, int step);
 void func_ov096_021358c8(char* c);
@@ -550,10 +542,6 @@ extern "C" int func_ov096_02136534(char *c)
 /* ROM ordinal 19 -- func_ov096_02136434, 0x02136434, size 0x100 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov096_02136434
-/* recovered: shared common types, declarations from a shared header */
-#include "decl_common.h"
-/* recovered: shared common types */
-#include "common.h"
 extern "C" {
 
 extern unsigned _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unsigned a, unsigned b, int f, int t1, int t2, const void *v, void *cb);
@@ -691,7 +679,6 @@ int func_ov096_02136264(char* self)
 /* ROM ordinal 14 -- func_ov096_02136134, 0x02136134, size 0x130 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov096_02136134
-/* recovered: shared common types */
 extern "C" int func_ov096_02136134(char* c){
   int cond = (*(unsigned short*)(c+0xc) == SANBO_HEAD);
   if(cond){
@@ -738,7 +725,6 @@ int func_ov096_021360c4(char *c) {
 /* ROM ordinal 12 -- func_ov096_02135efc, 0x02135efc, size 0x1c8 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov096_02135efc
-/* recovered: shared common types */
 extern "C" void func_ov096_02135efc(void* cv)
 {
     char* c = (char*)cv;
@@ -822,12 +808,8 @@ void func_ov096_02135e2c(int* self, void* clsn)
 /* ROM ordinal 10 -- func_ov096_02135948, 0x02135948, size 0x4e4 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov096_02135948
-/* recovered: shared common types, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_Player.h"
-#include "decl_common.h"
-/* recovered: shared common types */
-#include "common.h"
 typedef long long s64;
 
 

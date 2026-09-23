@@ -281,8 +281,6 @@ void func_ov084_021290d4(char *c)
 
 // @symbol func_ov084_02129168
 #include "decl_dBgCh_Actr.h"
-#include "decl_common.h"
-#include "common.h"
 extern "C" {
 
 extern int _ZN4cstd4fdivEii(int a, int b);
