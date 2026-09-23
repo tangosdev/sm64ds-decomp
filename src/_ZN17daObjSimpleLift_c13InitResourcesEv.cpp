@@ -1,8 +1,8 @@
 //cpp
 #include "types.h"
-// @symbol _ZN17SlidingPlatformWf13InitResourcesEv
+// @symbol _ZN17daObjSimpleLift_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method */
-#include "SlidingPlatformWf.h"
+#include "daObjSimpleLift_c.h"
 extern "C" {
     void* _ZN5Model8LoadFileER13SharedFilePtr(void* shared);
     void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* mb, void* bmd, int a, int b);
@@ -25,7 +25,7 @@ extern void _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vec
 
 /* Wing-of-the-Fortress sliding slab: it walks along its own heading, waits, then
    turns 180 degrees and walks back. Which slab it is comes from the actor ID. */
-int SlidingPlatformWf::InitResources()
+int daObjSimpleLift_c::InitResources()
 {
     u8* c = (u8*)((void*)this);
     u16 t = *(u16*)(c+0xc);

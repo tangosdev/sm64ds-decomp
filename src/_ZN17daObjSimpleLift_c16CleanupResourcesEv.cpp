@@ -1,13 +1,13 @@
 //cpp
-// @symbol _ZN17SlidingPlatformWf16CleanupResourcesEv
+// @symbol _ZN17daObjSimpleLift_c16CleanupResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "SlidingPlatformWf.h"
+#include "daObjSimpleLift_c.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 
-int SlidingPlatformWf::CleanupResources()
+int daObjSimpleLift_c::CleanupResources()
 {
   if(((dBgW *)((char *)&(*(u8 *)&mMeshCollider)))->IsEnabled())
     ((dBgW *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();

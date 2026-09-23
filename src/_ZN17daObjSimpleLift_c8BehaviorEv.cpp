@@ -1,10 +1,10 @@
 //cpp
 #include "types.h"
-// @symbol _ZN17SlidingPlatformWf8BehaviorEv
+// @symbol _ZN17daObjSimpleLift_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "SlidingPlatformWf.h"
+#include "daObjSimpleLift_c.h"
 extern "C" {
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 extern unsigned short DecIfAbove0_Short(unsigned short* p);
@@ -14,7 +14,7 @@ extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(char* c, Fix12i a, Fix12i
 extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(char* c);
 }
 
-int SlidingPlatformWf::Behavior()
+int daObjSimpleLift_c::Behavior()
 {
   if (DecIfAbove0_Byte((unsigned char*)((char*)&mPauseTimer)) == 0) {
     if (DecIfAbove0_Short((unsigned short*)((char*)&mMoveTimer)) == 0) {
