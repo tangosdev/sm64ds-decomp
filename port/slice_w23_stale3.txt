@@ -1,0 +1,65 @@
+# slice_w23_stale3 -- run linkfull wave 23, lane BANNER3, LINK15 batch W23-3:
+# stale-banner round 3. Six candidate rows were re-read; four seat here (the
+# fileptr family below), two do not. See hal/cxx_aliases.cpp's and
+# hal/cstd_div.c's retirement/re-check comments at each row for the full
+# evidence; this file only carries the enrolled sources.
+#
+# ---- NOT SEATED, BLOCKED: fdiv, the DS hardware divider wrapper -----------
+# hal/cstd_div.c:16 said "src is a thin wrapper over the DS hardware
+# divider's MMIO ... and cannot run on a host". LINK15 called this CONFIRMED
+# stale, and the callee half of that holds: the divider is now modelled
+# (port/ntr/io.cpp run_divide), and fdiv's own callees (fdiv_async,
+# fdiv_result) are already linked matched TUs on walk_window,
+# walk_window_hires and smoke_player. But src/_ZN4cstd4fdivEii.cpp is not a
+# flat function any more to seat beside them -- it was already
+# language-mode-flipped to real C++ (notes/plan-cpp-language-mode.md phase 1)
+# and defines `namespace cstd { fdiv }` directly, so seating it collides
+# LNK2005 with hal/reverse_bridges.cpp:224's now-redundant bridge of the same
+# `?fdiv@cstd@@YAHHH@Z` symbol (measured: two build attempts, not assumed;
+# a first attempt also tried adding an /alternatename beside fdiv_result's,
+# which collided the same way and was reverted). Clearing this needs
+# reverse_bridges.cpp's bridge retired, and that file is outside this lane's
+# owned files (port/hal/cstd_div.c, port/hal/cxx_aliases.cpp) --
+# `blocked: port/hal/reverse_bridges.cpp` in status/BANNER3.md rather than
+# edited. hal/cstd_div.c's host body is UNCHANGED. b == 0 checked anyway
+# since the re-read asked for it: this file and run_divide disagree on the
+# zero-divisor quotient SIGN (see hal/cstd_div.c's comment) -- a real, small,
+# pre-existing behaviour gap left for whoever clears the block above.
+# NOT ENROLLED:
+#   src/_ZN4cstd4fdivEii.cpp
+
+# ---- sub-batch FILEPTR: the SharedFilePtr release-side veneer chain -------
+# hal/cxx_aliases.cpp:464-483's "host card seam does not refcount" reason
+# does not hold for these four: each is called DIRECTLY (never only through
+# the data_020aa3f0 MSL dtor-chain head) from the already-linked class
+# destructor family func_ov006_020c09f8 / 020c1c64 / 020c21e4 / 020c3288 /
+# 020c3e70 (dScMgBSC_c / dScMgMemory_c; confirmed linked because
+# ninja_objs.json's build graph compiles them from their own real src/ path,
+# not a hal/ substitute, and they are absent from LINK15's 922-row unlinked
+# census). That family runs whenever an instance of the class is torn down in
+# normal play -- not an overlay-unload-only path.
+#
+# func_02017e34 additionally writes data_0209d3bc, the "last fileID touched"
+# breadcrumb port/hal/fs.cpp:171/590 already keeps for the LOAD side; this is
+# the RELEASE side of the same breadcrumb, read back by the ROM's own
+# ShowCrashScreen (linked; not in the unlinked census).
+#
+# ONLY THE THREE MAIN TARGETS need these: hal/cxx_aliases.cpp (where the
+# retired host bodies lived) is target_sourced only into walk_window,
+# walk_window_hires and smoke_player (measured, not assumed -- grepped before
+# writing this file). The CMake anchor below adds this row to those three.
+src/func_02017ab4.c
+src/func_02017e34.c
+src/SharedFilePtr_Destruct_TexSeq.c
+src/SharedFilePtr_Destruct_Anim.c
+
+# ---- KEPT OUT, re-checked and not seated ------------------------------------
+# func_020178b4: RE-CHECKED AND KEPT OUT. Its only src/ reference is
+# __sinit_ov075_0211c51c and __sinit_ov080_02127b2c passing its address to
+# func_020731dc, which pushes {prev, fn, obj} onto the data_020aa3f0 MSL
+# global-dtor chain -- a REGISTRATION, not a call. port/hal/ctor_runner.cpp's
+# dtor_chain_len() walks that chain's node[0] only (a diagnostic counter) and
+# never invokes node[1]; port/fader_boot_map.txt independently documents the
+# identical pattern elsewhere as "registered on data_020aa3f0's chain,
+# nothing in the port walks that chain". No honest edge: stays a host no-op
+# in hal/cxx_aliases.cpp, not enrolled here.

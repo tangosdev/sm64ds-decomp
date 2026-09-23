@@ -461,8 +461,15 @@ void *_ZN13SharedFilePtr9ConstructEj(void *self, unsigned id);
    it off its slice. Seated last and alone, and gated on the whole sweep
    exactly as the paragraph above asks, because it runs in every ov006
    constructor. port/slice_l15fs.txt carries the row. */
-/* PORT_HOST_ABI: fileptr dtor veneer; host card seam does not refcount. */
-int func_02017ab4(int x) { return x; }   /* static-dtor veneer: no-op */
+/* RETIRED, run linkfull wave 23 lane BANNER3, LINK15 batch W23-3: the "host
+   card seam does not refcount" reason (this comment's old text) is stale for
+   this row. src/func_02017ab4.c is `func_02017e34(x); return x;` and is
+   directly called (not through the data_020aa3f0 MSL dtor-chain head) from
+   the already-linked class destructor family func_ov006_020c09f8 /
+   020c1c64 / 020c21e4 / 020c3e70 (dScMgBSC_c / dScMgMemory_c, ninja_objs.json
+   confirms these compile from their real src/ paths, not a hal/ substitute),
+   which runs whenever an instance of that class is torn down in normal play.
+   See port/slice_w23_stale3.txt. */
 /* RETIRED, run link100 wave 15 lane SEAT15C: src/func_02017b4c.c now spells
    both arguments. See port/slice_l15fs.txt. */
 /* RETIRED, run link100 wave 15 lane SEAT15C: src/func_020178cc.c now spells
@@ -472,15 +479,36 @@ int func_02017ab4(int x) { return x; }   /* static-dtor veneer: no-op */
    hal/fs.cpp's Construct ends too. func_020178b4 below is the matching
    dtor-chain callback the sinit registers by address and stays a host no-op,
    because the card seam does not refcount. See port/slice_l15fs.txt. */
+/* RE-CHECKED, run linkfull wave 23 lane BANNER3, LINK15 batch W23-3: KEPT AS
+   HOST. The refcount reason above may be stale, but that is not why this one
+   stays out. func_020731dc (src/func_020731dc.c) is the MSL global-dtor-chain
+   push: node[0]=data_020aa3f0 (prev head), node[1]=fn, node[2]=obj,
+   data_020aa3f0=node. __sinit_ov075_0211c51c and __sinit_ov080_02127b2c pass
+   &func_020178b4 as that node[1] to register it on the chain, not to call it.
+   port/hal/ctor_runner.cpp's dtor_chain_len() only walks node[0] (a counter,
+   for the [ctor] diagnostic line) and never reads or calls node[1]; the same
+   pattern is independently documented as undriven in port/fader_boot_map.txt
+   ("registered on data_020aa3f0's chain, nothing in the port walks that
+   chain"). No honest edge: stays a host no-op. */
 /* PORT_HOST_ABI: fileptr dtor callback the third ov080 sinit registers by
    address; host card seam does not refcount, so the body is a no-op. */
 int func_020178b4(int x) { return x; }   /* fileptr dtor callback: host no-op */
-/* PORT_HOST_ABI: fileptr dtor body; host card seam does not refcount. */
-int func_02017e34(int x) { return x; }   /* fileptr dtor body: host no-op */
-/* PORT_HOST_ABI: fileptr dtor veneer; host card seam does not refcount. */
-void SharedFilePtr_Destruct_TexSeq(void) {}
-/* PORT_HOST_ABI: fileptr dtor veneer; host card seam does not refcount. */
-void SharedFilePtr_Destruct_Anim(void) {}
+/* RETIRED, run linkfull wave 23 lane BANNER3, LINK15 batch W23-3: the "host
+   card seam does not refcount" reason (this comment's old text) is stale for
+   this row. src/func_02017e34.c is `data_0209d3bc=*(unsigned short*)c;
+   return c;`, writing the same "last fileID touched" breadcrumb
+   port/hal/fs.cpp:171/590 already keeps for the load side; this is the
+   release side. Called directly from func_02017ab4 and from the
+   already-linked func_ov006_020c09f8/020c1c64/020c21e4/020c3288/020c3e70
+   destructor family (see the func_02017ab4 retirement note above) -- 104
+   src/ files call this chain in all. See port/slice_w23_stale3.txt. */
+/* RETIRED, run linkfull wave 23 lane BANNER3, LINK15 batch W23-3: same
+   stale reason and same honest edge as func_02017e34/func_02017ab4 above:
+   src/SharedFilePtr_Destruct_TexSeq.c and src/SharedFilePtr_Destruct_Anim.c
+   are each `func_02017e34(x); return x;`, directly called from the
+   already-linked func_ov006_020c09f8/020c1c64/020c21e4/020c3288/020c3e70
+   destructor family (dScMgBSC_c / dScMgMemory_c). See
+   port/slice_w23_stale3.txt. */
 DSSTATE_BEGIN
 void *data_020aa3f0;                     /* MSL global-dtor chain head */
 DSSTATE_END

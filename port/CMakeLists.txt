@@ -22493,3 +22493,35 @@ endif()
 # wide caller got wrong, written out at exit); every other target that links
 # a wrapper gets the null default the generated TUs carry by /alternatename.
 target_sources(walk_window PRIVATE hal/narrow_return.cpp)
+
+
+# ===========================================================================
+# W23-3 STALE BANNERS 3 (LINK15 batch W23-3, run linkfull, lane BANNER3)
+# ===========================================================================
+#
+# Six re-read rows from LINK15's stale-banner sweep; four seat here. The
+# fifth (fdiv) does NOT seat -- BLOCKED, see hal/cstd_div.c's comment: its
+# real TU is already real C++ (`namespace cstd { fdiv }`) and collides,
+# LNK2005, with hal/reverse_bridges.cpp's now-redundant bridge of the same
+# symbol, a file outside this lane's owned files. The sixth
+# (func_020178b4) stays a host no-op on its own evidence. See
+# hal/cxx_aliases.cpp and hal/cstd_div.c for the per-row comments and
+# port/slice_w23_stale3.txt for the full per-row list, including the two
+# not enrolled here.
+#
+# ONE TARGET SET, corrected by two failed builds rather than assumed the
+# first time. hal/cxx_aliases.cpp (the four fileptr rows' old home) is
+# target_sourced into exactly three targets: smoke_player, walk_window and
+# walk_window_hires (measured by grep, not assumed).
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w23_stale3.txt" SLICE_W23_STALE3_LINES)
+set(SLICE_W23_STALE3_SOURCES "")
+foreach(line IN LISTS SLICE_W23_STALE3_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_W23_STALE3_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_tw23s3 smoke_player walk_window walk_window_hires)
+    target_sources(${_tw23s3} PRIVATE ${SLICE_W23_STALE3_SOURCES})
+endforeach()

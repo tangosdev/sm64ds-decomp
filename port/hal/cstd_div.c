@@ -1,15 +1,36 @@
-/* Host implementation of the cstd fixed-point divide.
+/* RE-READ, run linkfull wave 23 lane BANNER3, LINK15 batch W23-3: NOT
+ * RETIRED. KEPT AS HOST, blocked outside this lane's owned files.
+ *
+ * The batch's premise held for the body but not for the symbol: fdiv's own
+ * callees (fdiv_async, fdiv_result) ARE linked matched TUs on walk_window,
+ * walk_window_hires and smoke_player, and the divider is modelled at
+ * port/ntr/io.cpp's run_divide(). But src/_ZN4cstd4fdivEii.cpp is not a flat
+ * function to seat beside them -- it was already language-mode-flipped to
+ * real C++ (notes/plan-cpp-language-mode.md phase 1) and defines
+ * `namespace cstd { s32 fdiv(s32, s32) {...} }` directly, mangling to
+ * `?fdiv@cstd@@YAHHH@Z`. hal/reverse_bridges.cpp:224 already defines that
+ * exact symbol -- `int cstd::fdiv(int,int) { return _ZN4cstd4fdivEii(a,b); }`,
+ * a bridge written for when this row was still flat-named -- so seating the
+ * real TU on any of the three targets is LNK2005, multiply defined, against
+ * reverse_bridges.cpp.obj (measured: two build attempts, not assumed).
+ * Clearing it means retiring reverse_bridges.cpp's now-redundant bridge
+ * (its declaration at line ~43, its definition at line ~223-224), and that
+ * file is not one this lane's brief owns; recorded here as `blocked:` rather
+ * than edited. This host body is UNCHANGED and still serves all nine
+ * targets that reference it.
+ *
+ * THE b == 0 CASE, checked anyway since the re-read asked for it, for
+ * whoever picks the block up: this file returns `a < 0 ? -1 : 1`.
+ * port/ntr/io.cpp's run_divide() returns `n < 0 ? 1 : -1` (GBATEK: division
+ * by zero yields remainder = numerator and a sign-based quotient; see
+ * io.cpp's own comment there) -- the OPPOSITE sign. They disagree; per this
+ * batch's own ruling the ROM (run_divide) would be right, so this is a
+ * real, narrow, pre-existing behaviour gap on the zero-divisor case, left
+ * as found and unfixed pending the reverse_bridges.cpp retirement above.
  *
  * On the DS, cstd::fdiv feeds the hardware divider (fdiv_async writes the
- * DIV registers, fdiv_result spins on DIV_BUSY) -- src/_ZN4cstd4fdivEii.cpp is
- * a thin wrapper over MMIO and cannot run on a host. The operation itself is
+ * DIV registers, fdiv_result spins on DIV_BUSY). The operation itself is
  * just a 20.12 divide: (a / b) in Fix12 is (a << 12) / b.
- *
- * DS divider edge cases, preserved deliberately:
- *   b == 0  -> the hardware yields +/-1 with the sign of the numerator (and
- *              sets DIV_DIV0); callers in this codebase never rely on it, but
- *              matching the hardware costs one branch and removes a class of
- *              "host differs on garbage input" surprises.
  */
 typedef int s32;
 
