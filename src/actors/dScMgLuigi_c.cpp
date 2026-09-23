@@ -88,7 +88,7 @@ char *GetBG2CharPtr();
 char *GetBG2ScrPtr();
 char *GetBG3ScrPtr();
 }
-namespace CP15 { void FlushAndInvalidateDataCache(void *addr, unsigned int size); }
+namespace CP15 { void FlushAndInvalidateDataCache(u32 addr, u32 size); }
 
 namespace cstd { int sqrt(unsigned long long x); }
 
@@ -208,7 +208,7 @@ void dScMgLuigi_c::BuildIrisTable(int i)
         data_0209f648[toggle][m + 0x60].b = mirrored;
         data_0209f648[toggle][m + 0x60].a = data_0209f648[toggle][n].a;
     }
-    CP15::FlushAndInvalidateDataCache(data_0209f648, 0x600);
+    CP15::FlushAndInvalidateDataCache((u32)data_0209f648, 0x600);
     data_0209f60c = toggle;
 }
 #pragma pop
