@@ -8,23 +8,23 @@ src/game/actors/d_a_obj_hm_bskt.cpp:
     complete
     .text start:0x021111a0 end:0x0211155c
 
-src/_ZN13RollingLogTtmD1Ev.cpp:
+src/_ZN15daObjHmMaruta_cD1Ev.cpp:
     complete
     .text start:0x0211155c end:0x021115ac
 
-src/_ZN13RollingLogTtmD0Ev.cpp:
+src/_ZN15daObjHmMaruta_cD0Ev.cpp:
     complete
     .text start:0x021115ac end:0x02111610
 
-src/_ZN13RollingLogTtm16CleanupResourcesEv.cpp:
+src/_ZN15daObjHmMaruta_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x02111610 end:0x02111624
 
-src/_ZN13RollingLogTtm8BehaviorEv.cpp:
+src/_ZN15daObjHmMaruta_c8BehaviorEv.cpp:
     complete
     .text start:0x02111624 end:0x02111638
 
-src/_ZN13RollingLogTtm13InitResourcesEv.cpp:
+src/_ZN15daObjHmMaruta_c13InitResourcesEv.cpp:
     complete
     .text start:0x02111638 end:0x0211164c
 

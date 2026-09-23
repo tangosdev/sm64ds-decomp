@@ -369,7 +369,7 @@ src/d_a_obj_ki_hasira.c	S1-stores-rom-vptr	ov016			stores _ZTV10RockPillar	1		No
 src/d_a_obj_simple_bg_ki_hasira_dai.c	WEAK-refs-only	ov102				1		None		-
 src/d_a_ibl.c	WEAK-refs-only	ov100				1		None		-
 src/d_a_obj_fl_maruta.c	S1-stores-rom-vptr	ov022			stores _ZTV15daObjFlMaruta_c	1		None	_ZTV15daObjFlMaruta_c/_ZTV13daObjMaruta_c	-
-src/d_a_obj_hm_maruta.c	S1-stores-rom-vptr	ov030			stores _ZTV13RollingLogTtm	1		None	_ZTV13RollingLogTtm/_ZTV13daObjMaruta_c	-
+src/d_a_obj_hm_maruta.c	S1-stores-rom-vptr	ov030			stores _ZTV15daObjHmMaruta_c	1		None	_ZTV15daObjHmMaruta_c/_ZTV13daObjMaruta_c	-
 src/d_a_grock.c	S1-stores-rom-vptr	ov021			stores _ZTV11RollingRock	1		None	_ZTV11RollingRock	-
 src/d_a_obj_simple_bg_mc_hazad.c	WEAK-refs-only	ov102				1		None		-
 src/d_a_obj_ct_mecha10_ct_mecha10.c	WEAK-refs-only	ov035				1		None		-
@@ -706,10 +706,10 @@ src/_ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c.c	P3-mangled-method-on
 src/_ZN13RaycastGroundC1Ev.c	P3-mangled-method-only	arm9		RaycastGround	_ZN13RaycastGroundC1Ev	1		True		-
 src/_ZN13RaycastGroundD1Ev.c	DTOR-ONLY	arm9	dBgCh_Gnd	RaycastGround/dBgCh_Gnd	_ZN13RaycastGroundD1Ev	1		True		-
 src/_ZN15daObjFlMaruta_cD0Ev.c	DTOR-ONLY	ov022	daObjFlMaruta_c	daObjFlMaruta_c/daObjFlMaruta_c	_ZN15daObjFlMaruta_cD0Ev	1		True	_ZTV10dBgActor_c/_ZTV15daObjFlMaruta_c/_ZTV13daObjMaruta_c	-
-src/_ZN13RollingLogTtm13InitResourcesEv.c	P1-vtable+mangled	ov030	daObjHmMaruta_c	RollingLogTtm/daObjHmMaruta_c	vtable daObjHmMaruta_c slot 0 @0x2111638 | _ZN13RollingLogTtm13InitResourcesEv	1		True		-
-src/_ZN13RollingLogTtm16CleanupResourcesEv.c	P1-vtable+mangled	ov030	daObjHmMaruta_c	RollingLogTtm/daObjHmMaruta_c	vtable daObjHmMaruta_c slot 3 @0x2111610 | _ZN13RollingLogTtm16CleanupResourcesEv	1		True		-
-src/_ZN13RollingLogTtm8BehaviorEv.c	P1-vtable+mangled	ov030	daObjHmMaruta_c	RollingLogTtm/daObjHmMaruta_c	vtable daObjHmMaruta_c slot 6 @0x2111624 | _ZN13RollingLogTtm8BehaviorEv	1		True		-
-src/_ZN13RollingLogTtmD0Ev.c	DTOR-ONLY	ov030	daObjHmMaruta_c	RollingLogTtm/daObjHmMaruta_c	_ZN13RollingLogTtmD0Ev	1		True	_ZTV10dBgActor_c/_ZTV13RollingLogTtm/_ZTV13daObjMaruta_c	-
+src/_ZN15daObjHmMaruta_c13InitResourcesEv.c	P1-vtable+mangled	ov030	daObjHmMaruta_c	daObjHmMaruta_c/daObjHmMaruta_c	vtable daObjHmMaruta_c slot 0 @0x2111638 | _ZN15daObjHmMaruta_c13InitResourcesEv	1		True		-
+src/_ZN15daObjHmMaruta_c16CleanupResourcesEv.c	P1-vtable+mangled	ov030	daObjHmMaruta_c	daObjHmMaruta_c/daObjHmMaruta_c	vtable daObjHmMaruta_c slot 3 @0x2111610 | _ZN15daObjHmMaruta_c16CleanupResourcesEv	1		True		-
+src/_ZN15daObjHmMaruta_c8BehaviorEv.c	P1-vtable+mangled	ov030	daObjHmMaruta_c	daObjHmMaruta_c/daObjHmMaruta_c	vtable daObjHmMaruta_c slot 6 @0x2111624 | _ZN15daObjHmMaruta_c8BehaviorEv	1		True		-
+src/_ZN15daObjHmMaruta_cD0Ev.c	DTOR-ONLY	ov030	daObjHmMaruta_c	daObjHmMaruta_c/daObjHmMaruta_c	_ZN15daObjHmMaruta_cD0Ev	1		True	_ZTV10dBgActor_c/_ZTV15daObjHmMaruta_c/_ZTV13daObjMaruta_c	-
 src/_ZN13SharedFilePtr7ReleaseEv.c	P3-mangled-method-only	arm9		SharedFilePtr	_ZN13SharedFilePtr7ReleaseEv	1		True		-
 src/_ZN13SharedFilePtr8LoadFileEv.c	P3-mangled-method-only	arm9		SharedFilePtr	_ZN13SharedFilePtr8LoadFileEv	1		True		-
 src/_ZN13SharedFilePtr9ConstructEj.c	P3-mangled-method-only	arm9		SharedFilePtr	_ZN13SharedFilePtr9ConstructEj	1		True		-

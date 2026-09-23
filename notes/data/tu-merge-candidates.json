@@ -8647,16 +8647,16 @@
    "start": "0x211155c",
    "end": "0x2111688",
    "classes": [
-    "RollingLogTtm"
+    "daObjHmMaruta_c"
    ],
    "n_functions_map": 6,
    "n_files": 6,
    "files": [
-    "src/_ZN13RollingLogTtmD1Ev.cpp",
-    "src/_ZN13RollingLogTtmD0Ev.c",
-    "src/_ZN13RollingLogTtm16CleanupResourcesEv.c",
-    "src/_ZN13RollingLogTtm8BehaviorEv.c",
-    "src/_ZN13RollingLogTtm13InitResourcesEv.c",
+    "src/_ZN15daObjHmMaruta_cD1Ev.cpp",
+    "src/_ZN15daObjHmMaruta_cD0Ev.c",
+    "src/_ZN15daObjHmMaruta_c16CleanupResourcesEv.c",
+    "src/_ZN15daObjHmMaruta_c8BehaviorEv.c",
+    "src/_ZN15daObjHmMaruta_c13InitResourcesEv.c",
     "src/d_a_obj_hm_maruta.c"
    ],
    "ext_mix": {
