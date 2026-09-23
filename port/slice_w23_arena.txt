@@ -1,0 +1,53 @@
+# SLICE W23 ARENA -- run linkfull wave 23, lane OSARENA1, LINK15 batch W23-4.
+# THE OS ARENA ACCESSORS ON THE SHARED BLOCK.
+#
+# Three of NitroSDK's OS arena accessors, run as the ROM's own bodies over the
+# arena table in the shared system block (lo[id] at 0x027ffda0, hi[id] at
+# 0x027ffdc4). Their host copies in port/hal/os_arena.cpp all carried the
+# PORT_HOST_ABI reason "DS OS-arena globals live at unmapped 0x27ffda0"; the
+# shared block 0x027ff000..0x027fffff has been a REQUIRED ntr::kRegions
+# mapping since 08-26 (port/ntr/include/ntr/mmio.h SHARED_BASE), so the reason
+# had stopped being true. hal/os_arena.cpp now seeds OS_ARENA_MAIN's two words
+# from the port's own arena block at the first arena read and keeps the host
+# stand-ins for the narrow smoke harnesses only (SM64DS_OS_ARENA_ROM).
+#
+# VERIFIED BY ROM ADDRESS, not by filename: config/arm9/delinks.txt carries
+# each file as a complete .text block at its address, config/arm9/symbols.txt
+# gives the same address and size, the cartridge's bytes (extracted/
+# arm9_dec.bin, load base 0x02004000) disassemble to what each file says, and
+# tools/match.py --version 2004/b56 reports MATCHING for all three.
+#
+#   src/func_02058eb4.c  0x02058eb4 0x14  OS_GetArenaHi
+#       lsl r0,#2 / add 0x2700000 / add 0xff000 / ldr r0,[r0,#0xdc4] / bx lr
+#   src/func_02058d58.c  0x02058d58 0x14  OS_SetArenaLo
+#       lsl r0,#2 / add 0x2700000 / add 0xff000 / str r1,[r0,#0xda0] / bx lr
+#   src/func_02058cd0.c  0x02058cd0 0x88  OS_AllocFromArenaLo
+#       lo = GetArenaLo(id), 0 -> 0; start = round(lo, align);
+#       end = round(start + size, align); end > GetArenaHi(id) -> 0;
+#       SetArenaLo(id, end); return start
+#
+# REACH. The only linked ROM referrer of all three is Heap::SetupRootHeap
+# (src/_ZN4Heap13SetupRootHeapEv.cpp, arm9 0x0203cb04, linked): its relocs
+# name 0x02058eb4 twice, 0x02058d58 and 0x02058cd0, and it runs once at boot
+# on every hosting target (walk_window, walk_window_hires, smoke_player).
+# func_02058cd0 also reaches func_02058ea0 / func_02058eb4 / func_02058d58.
+#
+# NOT ON THIS SLICE, with the measured reason (both stay in hal/os_arena.cpp):
+#   src/func_02058ea0.c  OS_GetArenaLo  the port's seed point. Heap::SetupRootHeap
+#       reads the table through it first, after ntr::io_init on every hosting
+#       target; a start-up seed would miss a launch whose shared block ntr's
+#       early claim lost and io_init's retry won. Retires when the seed moves
+#       to the ROM's own point in the order (hal/boot_os.cpp's func_02058f28
+#       line; not this lane's file).
+#   src/func_02059040.c  OS_InitAlloc  the ROM body reserves its OS heap-info
+#       block and starts the root heap at arena base + 0x60 (size - 0x60);
+#       W23-4's rule keeps the root heap bounds identical, so it waits for a
+#       ruling.
+#
+# The retired host bodies were in hal/os_arena.cpp, which is compiled into the
+# shared object of all three hosting targets, so every one of them takes this
+# slice (a definition retired on one and not the others would leave the
+# others asking for a name nothing defines).
+src/func_02058eb4.c
+src/func_02058d58.c
+src/func_02058cd0.c
