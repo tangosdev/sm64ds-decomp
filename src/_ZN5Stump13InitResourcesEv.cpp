@@ -5,7 +5,7 @@
 /* Stump::InitResources -- vtable slot 0, ov091 0x021338ac.
  *
  * Real member function, same idiom as src/_ZN8SignPost13InitResourcesEv.cpp
- * and src/_ZN14daObjFl_Ring_c13InitResourcesEv.cpp (#1554): mModel/mMeshCollider/
+ * and ov022's _ZN14daObjFl_Ring_c13InitResourcesEv (#1554): mModel/mMeshCollider/
  * mClsnMat/mAngleY are dBgActor_c's/dActor_c's own named fields. mState is
  * this class's own (include/Stump.h). Model::LoadFile, dBgW_Kc::LoadFile
  * and dBgW_KcMbg::SetFile stay extern "C" under their exact ROM

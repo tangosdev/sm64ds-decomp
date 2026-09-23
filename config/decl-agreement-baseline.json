@@ -228,7 +228,7 @@
       ]
     },
     "ApproachAngle": {
-      "src/_ZN14daObjFl_Ring_c8BehaviorEv.cpp": [
+      "src/actors/daObjFl_Ring_c.cpp": [
         "param:#2 int"
       ],
       "src/_ZN14UnchainedChomp8BehaviorEv.cpp": [
@@ -10944,7 +10944,7 @@
         "mangled:0 parameter(s)",
         "return:int"
       ],
-      "src/_ZN14daObjFl_Ring_c13InitResourcesEv.cpp": [
+      "src/actors/daObjFl_Ring_c.cpp": [
         "kind:data"
       ],
       "src/_ZN15RotatingFirebar13InitResourcesEv.cpp": [
@@ -11314,7 +11314,7 @@
         "param:#1 void *",
         "return:void"
       ],
-      "src/_ZN14daObjFl_Ring_c13InitResourcesEv.cpp": [
+      "src/actors/daObjFl_Ring_c.cpp": [
         "param:#1 void *"
       ],
       "src/_ZN11dCapEnemy_c6AddCapEj.cpp": [
@@ -12582,7 +12582,7 @@
       "src/_ZN10RockPillar8BehaviorEv.cpp": [
         "param:#2 const void *"
       ],
-      "src/_ZN14daObjFl_Ring_c8BehaviorEv.cpp": [
+      "src/actors/daObjFl_Ring_c.cpp": [
         "param:#2 void *"
       ],
       "src/_ZN12HealingHeart8BehaviorEv.cpp": [
@@ -14712,7 +14712,7 @@
       "src/_ZN11PyramidStep13InitResourcesEv.cpp": [
         "return:KCL_File *"
       ],
-      "src/_ZN14daObjFl_Ring_c13InitResourcesEv.cpp": [
+      "src/actors/daObjFl_Ring_c.cpp": [
         "param:#1 void *",
         "return:void *"
       ],
@@ -17250,7 +17250,7 @@
         "param:#6 int",
         "return:void *"
       ],
-      "src/_ZN14daObjFl_Ring_c8BehaviorEv.cpp": [
+      "src/actors/daObjFl_Ring_c.cpp": [
         "param:#3 void *",
         "param:#5 int",
         "param:#6 int",
@@ -28629,11 +28629,6 @@
         "return:SharedFilePtr"
       ]
     },
-    "data_ov022_02113cc8": {
-      "src/_ZN14daObjFl_Ring_c16CleanupResourcesEv.cpp": [
-        "return:void *"
-      ]
-    },
     "data_ov022_02113da4": {
       "src/_ZN19RotatingPlatformLll16CleanupResourcesEv.cpp": [
         "return:int []"
@@ -37082,7 +37077,7 @@
       "src/_ZN11PyramidLift13InitResourcesEv.cpp": [
         "param:#2 void *"
       ],
-      "src/_ZN14daObjFl_Ring_c13InitResourcesEv.cpp": [
+      "src/actors/daObjFl_Ring_c.cpp": [
         "param:#2 void *"
       ],
       "src/_ZN12MetalNetLift13InitResourcesEv.cpp": [
@@ -37184,7 +37179,7 @@
       "src/_ZN11PyramidLift13InitResourcesEv.cpp": [
         "param:#2 void *"
       ],
-      "src/_ZN14daObjFl_Ring_c13InitResourcesEv.cpp": [
+      "src/actors/daObjFl_Ring_c.cpp": [
         "param:#2 void *"
       ],
       "src/_ZN12MetalNetLift13InitResourcesEv.cpp": [
@@ -46603,7 +46598,7 @@
       ]
     },
     "func_ov022_02111564": {
-      "src/_ZN14daObjFl_Ring_c13InitResourcesEv.cpp": [
+      "src/actors/daObjFl_Ring_c.cpp": [
         "arity:1"
       ]
     },

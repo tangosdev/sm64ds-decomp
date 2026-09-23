@@ -43,12 +43,26 @@ struct daObjFl_Ring_c : dBgActor_c {
     u16 mSpawnCount;        /* 0x324 -- incremented once per actorID 0xf3 spawn */
     u8  pad_326[0x2];
 
-    virtual ~daObjFl_Ring_c();            /* slots 16 (D1), 17 (D0) */
+    /* MEASURED -- DEFINED INLINE, EMPTY, AND DECLARED FIRST. This is the key
+       function, so the TU that defines it emits _ZTV14daObjFl_Ring_c together
+       with _ZTI14daObjFl_Ring_c and _ZTS14daObjFl_Ring_c as vague linkage, and
+       drags the inherited bases' records along. All of them are the
+       cartridge's own spellings and carry configured ROM homes, so they
+       license as deadstrip-data and the six-function run isolates as one
+       object.
 
-    int InitResources();     /* slot 0 */
-    int CleanupResources();  /* slot 3 */
-    int Behavior();          /* slot 6 */
-    int Render();            /* slot 9 */
+       Inline and empty is what puts D1 ahead of D0, the cartridge's order
+       (0x021111a0 then 0x021111e4): written out of line mwccarm emits the
+       synthesized D0 first, which isolation refuses, and it also emits a D2
+       this class has no home for. The brace stays on the signature line --
+       tools/check_header_offsets.py recognises an inline body only when the
+       signature line carries it. */
+    virtual ~daObjFl_Ring_c() {}     /* slots 16 (D1), 17 (D0) */
+
+    virtual s32 InitResources();     /* slot  0 */
+    virtual s32 CleanupResources();  /* slot  3 */
+    virtual s32 Behavior();          /* slot  6 */
+    virtual s32 Render();            /* slot  9 */
 };
 
 #ifndef SM64DS_PLATFORM_PC
