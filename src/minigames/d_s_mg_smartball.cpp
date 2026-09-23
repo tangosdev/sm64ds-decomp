@@ -29,7 +29,8 @@ extern "C" void func_ov006_02119900(void)
 }
 
 // @symbol dScMgSmartball_c_classInit
-/* Allocates and constructs the scene; returns null if allocation fails. */
+/* Allocates and constructs the scene; returns null if allocation fails.
+ * Historical alias: MgBingoBallSlotsShot_Spawn. */
 extern "C" void *dScMgSmartball_c_classInit(void) {
     dScMgSmartball_c *scene = (dScMgSmartball_c *)_ZN7fBase_cnwEj(0x629c);
     if (scene != 0) {
