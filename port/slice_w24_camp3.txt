@@ -1,0 +1,100 @@
+# slice_w24_camp3 -- run linkfull, lane CAMP3, LINK15 batches D0ARM-07/08/09.
+#
+# THE D0-ARM CAMPAIGN CONTINUED FROM THE W23-2 PILOT (lane D0ARM1, reviewed
+# PASS by REVD0ARM1). Each file below is a per-function src D0 TU that gained
+# the Model family's `#ifdef _MSC_VER` arm (src/_ZN5ModelD0Ev.cpp is the
+# shape), with the pilot's one deliberate difference: the destructor call is
+# QUALIFIED. This tree's headers declare these destructors non-virtual under
+# _MSC_VER (the Destructor1 / Destructor0 house pattern); main's headers
+# declare them `virtual`, where a plain `thiz->~Cls()` would be a virtual call
+# through the port's ROM-shaped table. Under MSVC the file compiles only
+#     extern "C" Cls *_ZN<Cls>D0Ev(Cls *thiz)
+#     { thiz->Cls::~Cls(); Cls::operator delete(thiz); return thiz; }
+# and mwccarm, which never defines _MSC_VER, compiles the unchanged `#else`
+# arm to the same object bytes as before: match.py 2004/b56 strict MATCHING
+# and linkcheck VERIFIED with 0 blind slots, before and after, byte-identical
+# objects, for every file below (d0arm_bytecheck.py, both header sets).
+#
+# WHY THE ROWS WERE UNLINKED: the same reason as the pilot's. MSVC folds the
+# Itanium D1/D0 pair into one ??1Cls@@QAE@XZ, which the class's D1 TU already
+# defines, so the D0 TU could not be compiled as well; the flat name the
+# port's ROM-shaped vtable slot 17 calls was defined by a generated face out
+# of port/faces_sync.txt instead. That face and this arm make the same two
+# calls: the D1 body, then the row's own deallocation (Memory::Deallocate
+# with the row's heap word, or Memory::operator_delete2), proved against
+# config relocs by facegen's D0 rule and checked object-side by
+# d0arm_check.py. The retired D rows are in port/faces_sync.txt, so exactly
+# one definition of each flat name remains.
+#
+# THE EDGE IS THE ONE THE PORT ALREADY HAS: the ROM's own table word 17 of
+# each class relocates to its D0, and the port's slot-17 thunks call the flat
+# name. No new reference and no keep-alive. Slot 17 is not the actor teardown
+# path (fBase_c::AfterCleanupResources dispatches slot 16 and frees directly,
+# on the cartridge as here per the pilot's own cdb measurement); these bodies
+# are linked but idle in every scenario the pilot measured.
+#
+# Batches D0ARM-07 (ov066/071-074/077/079-080), D0ARM-08 (ov081/084/085/089-
+# 091), D0ARM-09 (ov092/094-095/098/100/102), from campaign_recipe.txt /
+# campaign_batches.txt (out/D0ARM1, reviewed SAFE by REVD0ARM1). Proof levels
+# and per-file addr/module/heap detail are in campaign_batches.txt; this file
+# only carries the enrolled path list, appended one batch's checkpoint commit
+# at a time.
+#
+# ALL THREE HOSTING TARGETS (walk_window, walk_window_hires, smoke_player):
+# faces_sync_gen.cpp.obj and the hal slot-17 thunks are on all three link
+# lines in build.ninja, so a flat name retired from the ledger must be
+# defined on all three (checked per batch).
+src/_ZN6EyerokD0Ev.cpp
+src/_ZN10ScuttlebugD0Ev.cpp
+src/_ZN3MrID0Ev.cpp
+src/_ZN11SnowmanHeadD0Ev.cpp
+src/_ZN11BabyPenguinD0Ev.cpp
+src/_ZN11ChiefChillyD0Ev.cpp
+src/_ZN8CccArenaD0Ev.cpp
+src/_ZN8GoombossD0Ev.cpp
+src/_ZN6LakituD0Ev.cpp
+src/_ZN5SpinyD0Ev.cpp
+src/_ZN7HeaveHoD0Ev.cpp
+src/_ZN5WhompD0Ev.cpp
+src/_ZN10BulletBillD0Ev.cpp
+src/_ZN11BillBlasterD0Ev.cpp
+src/_ZN12FortressWallD0Ev.cpp
+src/_ZN9MontyMoleD0Ev.cpp
+src/_ZN13MontyMoleRockD0Ev.cpp
+src/_ZN11CrazedCrateD0Ev.cpp
+src/_ZN8PaintingD0Ev.cpp
+src/_ZN9SpindriftD0Ev.cpp
+src/_ZN8SnowballD0Ev.cpp
+src/_ZN8IceBlockD0Ev.cpp
+src/_ZN7daKrb_cD0Ev.cpp
+src/_ZN11BobOmbBuddyD0Ev.cpp
+src/_ZN19FirePiranhaPlantBigD0Ev.cpp
+src/_ZN9RabbitKeyD0Ev.cpp
+src/_ZN9LakituBroD0Ev.cpp
+src/_ZN3KeyD0Ev.cpp
+src/_ZN7SkeeterD0Ev.cpp
+src/_ZN8MantaRayD0Ev.cpp
+src/_ZN10CheepCheepD0Ev.cpp
+src/_ZN5SharkD0Ev.cpp
+src/_ZN25RotatingUpDownPlatformUtmD0Ev.cpp
+src/_ZN22RotatingUpDownPlatformD0Ev.cpp
+src/_ZN17SlidingPlatformWfD0Ev.cpp
+src/_ZN6ThwompD0Ev.cpp
+src/_ZN5StumpD0Ev.cpp
+src/_ZN6FwooshD0Ev.cpp
+src/_ZN8WallSignD0Ev.cpp
+src/_ZN6ToxBoxD0Ev.cpp
+src/_ZN10HootTheOwlD0Ev.cpp
+src/_ZN9SeesawBobD0Ev.cpp
+src/_ZN13UpDownLiftBbhD0Ev.cpp
+src/_ZN12FlamethrowerD0Ev.cpp
+src/_ZN5CrateD0Ev.cpp
+src/_ZN6CannonD0Ev.cpp
+src/_ZN9WaterBombD0Ev.cpp
+src/_ZN9ButterflyD0Ev.cpp
+src/_ZN15RollingIronBallD0Ev.cpp
+src/_ZN14UnchainedChompD0Ev.cpp
+src/_ZN4DoorD0Ev.cpp
+src/_ZN4FishD0Ev.cpp
+src/_ZN13FortressTowerD0Ev.cpp
+src/_ZN10KoopaShellD0Ev.cpp
