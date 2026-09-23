@@ -16,6 +16,8 @@
 
 #include "ntr/gx.h"
 
+#include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include "hal/dsstate_seg.h"
 
@@ -183,6 +185,32 @@ void (*g_vblank_handler)(void);     // handler for mask 0x1, the VBlank edge
 constexpr uintptr_t REG_IME = 0x04000208u;
 constexpr uintptr_t REG_DISPSTAT = 0x04000004u;
 constexpr unsigned DISPSTAT_HBLANK_IRQ_ENABLE = 0x10u;
+
+// THE DELIVERY CENSUS (run linkfull, lane IRQTAB1). SM64DS_IRQ_CENSUS=1 prints,
+// at exit, how many times DMAStartTransfer below delivered each interrupt it
+// synthesises: the geometry-FIFO handler (mask 0x200000, the display-list
+// pump's func_0205a290) and the DMA-completion callbacks out of data_020a60c4
+// (the pump's last chunk, func_0205a21c). ntr/rt.cpp's "[det4] hblank" line
+// already counts the HBlank deliveries and hal/boot2_thread.cpp's EXIT-STATS
+// line (SM64DS_THREAD_PROOF=1) the VBlank ones, so together the three lines
+// are every handler this layer dispatches. It exists so a change to WHERE
+// those handlers are looked up can be held to the same number of deliveries
+// on the same run, which is the before/after a dispatch change needs and no
+// picture gives. Counting only: nothing here changes what runs.
+unsigned long long g_census_gxfifo;
+unsigned long long g_census_dmadone;
+
+void irq_census_report() {
+    std::fprintf(stderr, "[irqtab] census: gxfifo=%llu dmadone=%llu\n",
+                 g_census_gxfifo, g_census_dmadone);
+    std::fflush(stderr);
+}
+
+struct IrqCensusReg {
+    IrqCensusReg() {
+        if (std::getenv("SM64DS_IRQ_CENSUS")) std::atexit(irq_census_report);
+    }
+} g_irq_census_reg;
 }  // namespace
 
 // PORT_HOST_ABI: src walks the DS IRQ vector tables (data_02099fe4,
@@ -314,9 +342,15 @@ extern "C" void DMAStartTransfer(int ch, int src, int dst, int ctrl) {
     if (static_cast<uintptr_t>(dst) == 0x04000400u) {
         if (ctrl & 0x40000000) {
             const unsigned h = data_020a60c4[ch & 7].handler;
-            if (h) reinterpret_cast<void (*)(unsigned)>(h)(data_020a60c4[ch & 7].arg);
+            if (h) {
+                ++g_census_dmadone;
+                reinterpret_cast<void (*)(unsigned)>(h)(data_020a60c4[ch & 7].arg);
+            }
         } else if (g_ie & 0x200000u) {
-            if (g_gxfifo_handler) g_gxfifo_handler();
+            if (g_gxfifo_handler) {
+                ++g_census_gxfifo;
+                g_gxfifo_handler();
+            }
         }
     }
 }
