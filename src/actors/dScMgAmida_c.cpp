@@ -679,6 +679,8 @@ extern "C" void func_ov006_020d47f4(char *raw){
 #pragma pop
 
 // @symbol _ZN12dScMgAmida_c6RenderEv
+/* These two pragmas are load-bearing: without them Render compiles 0xc
+ * bytes larger than the ROM (0x2ac vs 0x2a0) and rombuild drops to 102/106. */
 #pragma push
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off
