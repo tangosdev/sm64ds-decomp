@@ -322,10 +322,10 @@ extern "C" void func_ov002_020ae8b8(char* c, char* arg)
     b = b == 0xbf;
     if (b != 0) {
         u16 t = data_ov002_020ff01c[(u16)*(int*)(arg + 8)];
-        int r4 = (int)t << 3;
-        int ip = r4 << 12;
+        int scaled = (int)t << 3;
+        int ip = scaled << 12;
         int d1 = ip / 100;
-        int d2 = r4 / 100;
+        int d2 = scaled / 100;
         *(int*)(c + 0x98) = d1;
         *(int*)(c + 0xa8) = (d2 + 0x20) << 12;
     } else {

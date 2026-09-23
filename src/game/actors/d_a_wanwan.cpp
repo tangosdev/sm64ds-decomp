@@ -672,14 +672,14 @@ char* _ZN8dActor_c13ClosestPlayerEv(char* a);
 int _ZN6Player17SetNoControlStateEhih(void* p, unsigned char a, int b, unsigned char c);
 void func_ov014_02111ebc(void* c, int i);
 int func_ov014_02111f54(void* c){
-  char* r4=(char*)c;
-  void* a=_ZN8dActor_c10FindWithIDEj(*(unsigned int*)(r4+0x608));
+  char* self=(char*)c;
+  void* a=_ZN8dActor_c10FindWithIDEj(*(unsigned int*)(self+0x608));
   if(*(unsigned char*)((char*)a+0x31e)!=0) goto fail;
   {
-    void* p=_ZN8dActor_c13ClosestPlayerEv(r4);
+    void* p=_ZN8dActor_c13ClosestPlayerEv(self);
     if(_ZN6Player17SetNoControlStateEhih(p,4,-1,0)==0) goto fail;
-    func_ov014_02111ebc(r4,3);
-    *(unsigned char*)(r4+0x605)=1;
+    func_ov014_02111ebc(self,3);
+    *(unsigned char*)(self+0x605)=1;
     return 1;
   }
 fail:
@@ -917,35 +917,35 @@ extern "C" void func_ov014_021115ec(u8 *self)
     int _ZN9Animation7AdvanceEv(void *self_);
     extern s16 data_02082214[];
     extern void *data_0209f318;
-    Vector3 sp4;
-    u8 *r4; s16 r7; s16 r6; u8 *r8;
+    Vector3 partnerPos;
+    u8 *partner; s16 angleToPlayer; s16 angleToAnchor; u8 *camera;
     _ZN5Sound15PlaySecretSoundEP8dActor_cPt(self, (u16 *)(self + 0x5fe));
-    r4 = (u8 *)_ZN8dActor_c10FindWithIDEj(*(unsigned *)(self + 0x60c));
+    partner = (u8 *)_ZN8dActor_c10FindWithIDEj(*(unsigned *)(self + 0x60c));
     {
-        s32 *src = (s32 *)(r4 + 0x5c);
+        s32 *src = (s32 *)(partner + 0x5c);
         s32 fifth = 0x80;
-        sp4.x = src[0];
+        partnerPos.x = src[0];
         void *ap = self + 0x8c;
-        sp4.y = src[1];
+        partnerPos.y = src[1];
         s32 z = 0;
-        sp4.z = src[2];
+        partnerPos.z = src[2];
         ApproachAngle(ap, z, 4, 0x200, fifth);
     }
-    r8 = *(u8 **)&data_0209f318;
-    r7 = _ZN8dActor_c18HorzAngleToCPlayerEv(self);
-    r6 = Vec3_HorzAngle((Vector3 *)(self + 0x5c), (Vector3 *)(self + 0x5ec));
+    camera = *(u8 **)&data_0209f318;
+    angleToPlayer = _ZN8dActor_c18HorzAngleToCPlayerEv(self);
+    angleToAnchor = Vec3_HorzAngle((Vector3 *)(self + 0x5c), (Vector3 *)(self + 0x5ec));
     switch (*(u8 *)(self + 0x604)) {
     case 0:
-        *(u8 **)(r8 + 0x118) = self;
-        if (_Z14ApproachLinearRsss(self + 0x8e, r7, 0x320) != 0 && DecIfAbove0_Short(self + 0x5fc) == 0)
+        *(u8 **)(camera + 0x118) = self;
+        if (_Z14ApproachLinearRsss(self + 0x8e, angleToPlayer, 0x320) != 0 && DecIfAbove0_Short(self + 0x5fc) == 0)
             inc604(self);
         *(s16 *)(self + 0x94) = *(s16 *)(self + 0x8e);
         break;
     case 1: case 2: case 3: case 4:
-        *(u8 **)(r8 + 0x118) = self;
+        *(u8 **)(camera + 0x118) = self;
         _Z14ApproachLinearRiii(self + 0x98, 0, 0x400);
         if (*(u8 *)(self + 0x61c) != 0) {
-            *(s16 *)(self + 0x94) = (s16)(r6 + 0x2000);
+            *(s16 *)(self + 0x94) = (s16)(angleToAnchor + 0x2000);
             *(s16 *)(self + 0x8e) = *(s16 *)(self + 0x94);
             *(s32 *)(self + 0xa8) = 0x32000;
             *(s32 *)(self + 0x98) = 0x1e000;
@@ -953,55 +953,55 @@ extern "C" void func_ov014_021115ec(u8 *self)
         }
         break;
     case 5:
-        *(u8 **)(r8 + 0x118) = self;
+        *(u8 **)(camera + 0x118) = self;
         _Z14ApproachLinearRiii(self + 0x98, 0, 0x400);
         if (*(u8 *)(self + 0x61c) != 0) {
-            *(s16 *)(self + 0x94) = r6;
+            *(s16 *)(self + 0x94) = angleToAnchor;
             *(s16 *)(self + 0x8e) = *(s16 *)(self + 0x94);
             *(s32 *)(self + 0xa8) = 0x32000;
             *(s32 *)(self + 0x98) = 0x1e000;
             inc604(self);
-            if (*(u8 *)(r4 + 0x31e) != 0) *(u8 *)(self + 0x604) = 7;
+            if (*(u8 *)(partner + 0x31e) != 0) *(u8 *)(self + 0x604) = 7;
         }
         break;
     case 6: {
-        *(u8 **)(r8 + 0x118) = self;
+        *(u8 **)(camera + 0x118) = self;
         _Z14ApproachLinearRiii(self + 0x618, 0x1000, 0x400);
         if (*(u8 *)(self + 0x61c) != 0) {
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(self + 0x150, ((void**)&data_ov014_02114970)[1], 0, 0x1000, 0);
-            *(s16 *)(self + 0x8e) = Vec3_HorzAngle((Vector3 *)(self + 0x5c), &sp4);
+            *(s16 *)(self + 0x8e) = Vec3_HorzAngle((Vector3 *)(self + 0x5c), &partnerPos);
             *(s16 *)(self + 0x94) = *(s16 *)(self + 0x8e);
             *(s32 *)(self + 0xa8) = 0x14000;
             *(s32 *)(self + 0x618) = 0x64000;
         }
         {
             Vector3 target;
-            s32 x = sp4.x;
+            s32 x = partnerPos.x;
             target.x = x;
-            s32 z = sp4.z;
+            s32 z = partnerPos.z;
             target.z = z;
-            s32 y = sp4.y;
+            s32 y = partnerPos.y;
             target.y = y;
             {
                 s16 *tbl = data_02082214;
-                u16 ang = *(u16 *)(r4 + 0x8e);
+                u16 ang = *(u16 *)(partner + 0x8e);
                 s32 s = tbl[(ang >> 4) << 1];
                 s32 add = (s32)(((((long long)s) * 0x96000) + 0x800) >> 12);
                 target.x = x + add;
             }
             {
                 s16 *tbl = data_02082214;
-                u16 ang = *(u16 *)(r4 + 0x8e);
+                u16 ang = *(u16 *)(partner + 0x8e);
                 s32 s = tbl[(((ang >> 4) << 1) + 1)];
                 s32 add = (s32)(((((long long)s) * 0x96000) + 0x800) >> 12);
                 target.z = z + add;
             }
             if (Vec3_ApproachHorz((Vector3 *)(self + 0x5c), &target, *(s32 *)(self + 0x618)) != 0) {
                 inc604(self);
-                *(s16 *)(self + 0x94) = (s16)(Vec3_HorzAngle((Vector3 *)(self + 0x5c), &sp4) + 0x8000);
+                *(s16 *)(self + 0x94) = (s16)(Vec3_HorzAngle((Vector3 *)(self + 0x5c), &partnerPos) + 0x8000);
                 *(s32 *)(self + 0x98) = 0x28000;
                 *(s32 *)(self + 0xa8) = 0xa000;
-                func_ov014_02112ea8(r4);
+                func_ov014_02112ea8(partner);
             }
         }
         break;
@@ -1009,22 +1009,22 @@ extern "C" void func_ov014_021115ec(u8 *self)
     case 7:
         if (*(u8 *)(self + 0x61c) != 0) {
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(self + 0x150, ((void**)&data_ov014_02114980)[1], 0, 0x1000, 0);
-            *(s16 *)(self + 0x94) = Vec3_HorzAngle((Vector3 *)(self + 0x5c), &sp4);
+            *(s16 *)(self + 0x94) = Vec3_HorzAngle((Vector3 *)(self + 0x5c), &partnerPos);
             *(u16 *)(self + 0x5fc) = 0x3c;
             *(s16 *)(self + 0x8e) = *(s16 *)(self + 0x94);
-            if (*(u8 *)(r4 + 0x31e) != 0) {
+            if (*(u8 *)(partner + 0x31e) != 0) {
                 *(s32 *)(self + 0x98) = 0x28000; *(s32 *)(self + 0xa8) = 0x5a000;
             } else {
                 *(s32 *)(self + 0x98) = 0x1e000; *(s32 *)(self + 0xa8) = 0x50000;
             }
-            _ZN6Camera9SetFlag_3Ev(r8);
+            _ZN6Camera9SetFlag_3Ev(camera);
             inc604(self);
         }
         break;
     case 8:
         if (DecIfAbove0_Short(self + 0x5fc) == 0) {
             {
-                unsigned *flag = (unsigned *)(r8 + 0x154);
+                unsigned *flag = (unsigned *)(camera + 0x154);
                 *flag &= ~8u;
             }
             if (_ZN6Player12Unk_020ca150Eh(_ZN8dActor_c13ClosestPlayerEv(self), 4) != 0) {
@@ -1032,7 +1032,7 @@ extern "C" void func_ov014_021115ec(u8 *self)
                 *(u16 *)(self + 0x5fc) = 0x3c;
             }
         } else {
-            _ZN6Camera9SetLookAtERK7Vector3(r8, (Vector3 *)(self + 0x5c));
+            _ZN6Camera9SetLookAtERK7Vector3(camera, (Vector3 *)(self + 0x5c));
         }
         break;
     case 9:
@@ -1048,10 +1048,10 @@ extern "C" {
 // @symbol func_ov014_021115c0
 extern int func_0201267c(int,void*);
 
-void func_ov014_021115c0(char *r4) {
-    func_0201267c(0x3a, r4 + 0x74);
-    *(int *)(r4 + 0xa8) = 0x12c000;
-    *(int *)(r4 + 0x9c) = 0;
+void func_ov014_021115c0(char *self) {
+    func_0201267c(0x3a, self + 0x74);
+    *(int *)(self + 0xa8) = 0x12c000;
+    *(int *)(self + 0x9c) = 0;
 }
 }
 

@@ -624,7 +624,7 @@ int func_ov066_02118e04(void* self)
 {
     u8* c = (u8*)self;
     void* p = _ZN8dActor_c13ClosestPlayerEv(self);
-    int r4;
+    int coinFlip;
     int v;
 
     if (data_ov066_0211abe0 == 0) {
@@ -636,7 +636,7 @@ int func_ov066_02118e04(void* self)
     if (p == 0 || *(u16*)(c + 0x4d2) != 0)
         return 1;
 
-    r4 = ((unsigned int)RandomIntInternal(&data_0209e650) >> 31) & 1;
+    coinFlip = ((unsigned int)RandomIntInternal(&data_0209e650) >> 31) & 1;
 
     data_ov066_0211ae08 = 0;
     data_ov066_0211ae0c = 0;
@@ -668,7 +668,7 @@ int func_ov066_02118e04(void* self)
         return 1;
     }
 
-    if (r4 == 0) {
+    if (coinFlip == 0) {
         data_ov066_0211ae04 = 7;
         func_ov066_02119454(c, &data_ov066_0211affc);
     } else {
@@ -809,9 +809,9 @@ int func_ov066_02119398(char* c)
     Vec4 sp;
     char* p = (char *)_ZN8dActor_c13ClosestPlayerEv(c);
     if (p != 0) {
-        char* sp2 = p + 0x5c;
-        int v1 = *(int*)(sp2 + 4);
-        int v2 = *(int*)(sp2 + 8);
+        char* playerPos = p + 0x5c;
+        int v1 = *(int*)(playerPos + 4);
+        int v2 = *(int*)(playerPos + 8);
         if (v1 < -0x300000) {
             int f = (int)((*(int*)(c + 0xb0) & 8) != 0);
             if (f == 0) {

@@ -292,9 +292,9 @@ int daSanbo_c::Render()
 // @symbol _ZN9daSanbo_c16OnPendingDestroyEv
 void daSanbo_c::OnPendingDestroy()
 {
-    int r1 = *(unsigned short *)((char *)&actorID);
-    r1 = (r1 == SANBO_BODY);
-    if (r1) return;
+    int isBody = *(unsigned short *)((char *)&actorID);
+    isBody = (isBody == SANBO_BODY);
+    if (isBody) return;
     daSanbo_c *p = mNextSegment;
     if (!p) return;
     do {
@@ -424,18 +424,18 @@ int func_ov096_02136754(char* self)
 // @symbol func_ov096_0213670c
 extern "C" {
 void func_ov096_0213670c(void *c) {
-    s32 r4 = (s32)c;
+    s32 self = (s32)c;
     void *ret = func_ov096_021357b4((char *)c);
-    u8 r0 = *(u8*)((char*)ret + 0x3a8);
-    if (r0 != 0) r0 = 0; else r0 = 0x5a;
-    ((daSanbo_c *)r4)->mTimer = r0;
-    r0 = ((daSanbo_c *)r4)->mTimer;
-    if (r0 == 0) {
-        *(s32*)((char*)(s32)r4 + 0x80) = 0x1000;
-        *(s32*)((char*)(s32)r4 + 0x84) = 0x1000;
-        *(s32*)((char*)(s32)r4 + 0x88) = 0x1000;
+    u8 timer = *(u8*)((char*)ret + 0x3a8);
+    if (timer != 0) timer = 0; else timer = 0x5a;
+    ((daSanbo_c *)self)->mTimer = timer;
+    timer = ((daSanbo_c *)self)->mTimer;
+    if (timer == 0) {
+        *(s32*)((char*)(s32)self + 0x80) = 0x1000;
+        *(s32*)((char*)(s32)self + 0x84) = 0x1000;
+        *(s32*)((char*)(s32)self + 0x88) = 0x1000;
     }
-    ((daSanbo_c *)r4)->mState = 1;
+    ((daSanbo_c *)self)->mState = 1;
 }
 }
 
@@ -560,11 +560,11 @@ int func_ov096_0213640c(char *c)
 // @symbol func_ov096_021363c4
 extern "C" {
 int func_ov096_021363c4(void *c) {
-    int r2 = *(int *)((char *)c + 0xb0);
-    int r1 = (r2 & 0x20000) ? 1 : 0;
-    if (r1 == 0) {
-        r1 = (r2 & 0x40000) ? 1 : 0;
-        if (r1 == 0)
+    int flags = *(int *)((char *)c + 0xb0);
+    int flag = (flags & 0x20000) ? 1 : 0;
+    if (flag == 0) {
+        flag = (flags & 0x40000) ? 1 : 0;
+        if (flag == 0)
             func_ov096_0213585c(c);
     }
     return 1;
@@ -966,14 +966,14 @@ void func_ov096_0213585c(void *t)
 // @symbol func_ov096_02135838
 extern "C" {
 int func_ov096_02135838(char *c) {
-    daSanbo_c *r1 = ((daSanbo_c *)c)->mPrevSegment;
-    int r0 = 0;
-    if (r1 == 0) return r0;
+    daSanbo_c *seg = ((daSanbo_c *)c)->mPrevSegment;
+    int count = 0;
+    if (seg == 0) return count;
     do {
-        r1 = r1->mPrevSegment;
-        r0 = r0 + 1;
-    } while (r1 != 0);
-    return r0;
+        seg = seg->mPrevSegment;
+        count = count + 1;
+    } while (seg != 0);
+    return count;
 }
 }
 
@@ -998,8 +998,8 @@ char *func_ov096_021357b4(char *cc){
     daSanbo_c *p = c->mPrevSegment;
     if(p==0) return (char *)c;
     while(p){
-        unsigned r2 = (p->actorID != SANBO_HEAD) ? 1u : 0u;
-        if(!r2) return (char *)p;
+        unsigned notHead = (p->actorID != SANBO_HEAD) ? 1u : 0u;
+        if(!notHead) return (char *)p;
         p = p->mPrevSegment;
     }
     return 0;
