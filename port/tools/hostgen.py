@@ -2453,9 +2453,10 @@ def reg_ride_arg_patch(text, sym):
 # AX and leaves the upper bytes of EAX unspecified, so that same caller reads
 # junk there on the PC. ARG_WIDTH above cures one CALLER at a time (the
 # GetStarCameraSetting and swim-camera rows); port/tools/narrowret_census.py
-# finds 34 flat ROM bodies of the shape with a wide declarer somewhere, five
-# static members reached by flat aliases and one wide decorated alias, so the
-# cure goes on the BODY instead, once per definition.
+# finds 36 flat ROM names of the shape with a wide declarer somewhere (31 are
+# rows below; the other five are named in the census), five static members
+# reached by flat aliases and one wide decorated alias, so the cure goes on
+# the BODY instead, once per definition.
 #
 # THE SHAPE, per row:
 #   "flat"     the body is a C-linkage function under its own ROM name. Its
