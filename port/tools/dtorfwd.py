@@ -115,6 +115,23 @@ import sys
 #   _ZN6DorrieD0Ev
 #   _ZN8PoleLiftD0Ev
 
+# RETIRED at VARIANT2 2026-09-23 (run linkfull, batch B2): each name below is
+# defined by its own src D0 file now, in that file's #ifdef _MSC_VER arm:
+# the qualified destructor call, which MSVC expands in place exactly as it
+# did here, then the class's own operator delete, which is
+# _ZN6Memory10DeallocateEPvP4Heap with the word at 0x020a0eac
+# (GAME_HEAP_PTR). The arm's object makes the same calls, in the same
+# order, as the forwarder it replaces. These classes had no D1 row here,
+# so with this retirement they leave tools/dtor_store_guard.py's scope;
+# the guard passed on every one of them on the last build that carried
+# the forwarder. The rows came out of their batches rather than being
+# skipped, so the generated files carry each name exactly once:
+#   _ZN13PeachPaintingD0Ev
+#   _ZN13PrincessPeachD0Ev
+#   _ZN21daObj_volcanoCannon_cD0Ev
+#   _ZN4ToadD0Ev
+#   _ZN9KoopaFlagD0Ev
+
 BATCHES = {}
 
 BATCHES[1] = """
@@ -149,8 +166,6 @@ _ZN12dScMgJump2_cD0Ev
 _ZN12dScMgJump2_cD1Ev
 _ZN12dScMgSound_cD0Ev
 _ZN12dScMgSound_cD1Ev
-_ZN13PeachPaintingD0Ev
-_ZN13PrincessPeachD0Ev
 _ZN13daObjDorifu_cD1Ev
 _ZN13daObjEmmLog_cD0Ev
 _ZN13daObjEmmLog_cD1Ev
@@ -278,7 +293,6 @@ _ZN21daObjKm2_Fall_Block_cD0Ev
 _ZN21daObjKm2_Fall_Block_cD1Ev
 _ZN21daObjKm3_Kurumajiku_cD0Ev
 _ZN21daObjKm3_Kurumajiku_cD1Ev
-_ZN21daObj_volcanoCannon_cD0Ev
 _ZN6CoffinD1Ev
 _ZN6DorrieD1Ev
 _ZN7daBar_cD0Ev
@@ -298,12 +312,10 @@ _ZN8daKpFr_cD0Ev
 _ZN8daKrpa_cD0Ev
 _ZN8daSCre_cD0Ev
 _ZN8daSCre_cD1Ev
-_ZN9KoopaFlagD0Ev
 _ZN9LightBeamD0Ev
 _ZN9daSCoin_cD0Ev
 _ZN9daSCoin_cD1Ev
 _ZN9daSetSE_cD0Ev
-_ZN4ToadD0Ev
 _ZN8daTree_cD0Ev
 _ZN8daTree_cD1Ev
 """
