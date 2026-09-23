@@ -579,97 +579,48 @@ static void setter_bad_index(int idx)
    second opinion about an address that can no longer arrive. */
 
 
-// ---- the host copy ---------------------------------------------------------
+// ---- the host copy -- RETIRED, run linkfull lane PMFMG1 --------------------
 //
-// src/_ZN10dMgState_c8SetStateEi.cpp, statement for statement, with the twenty-entry
-// PMF table re-typed and the one dispatch replaced. Everything else, including
-// the read-back of self->index and the null-CODE guard, is the src's and the
-// ROM's.
-
-/* The object the ROM's own offsets force. See section 5. */
-namespace {
-struct SetterObj {
-    MgPmf pmf0;     /* +0x00 */
-    int   field_8;  /* +0x08, the low word of the tick pmf */
-    int   field_c;  /* +0x0c, its adjustment */
-    MgPmf pmf2;     /* +0x10 */
-    int   index;    /* +0x18 */
-};
-}  /* namespace */
-
-/* The ROM's function-local static, in the ROM's own shape: one guard word and a
-   0xa0 table, built on the first call and never again. The twenty sources are
-   mount .data and are constant for the life of the process, so the guard is
-   faithful rather than an optimisation. */
-static MgPmf g_table[20];
-static int   g_table_built;
-
-static void mgbase_build_table(void)
-{
-    if (g_table_built)
-        return;
-    g_table_built = 1;
-    g_table[0]  = data_ov004_020bc974;
-    g_table[1]  = data_ov004_020bc96c;
-    g_table[2]  = data_ov004_020bc964;
-    g_table[3]  = data_ov004_020bc95c;
-    g_table[4]  = data_ov004_020bc954;
-    g_table[5]  = data_ov004_020bc94c;
-    g_table[6]  = data_ov004_020bc944;
-    g_table[7]  = data_ov004_020bc92c;
-    g_table[8]  = data_ov004_020bc934;
-    g_table[9]  = data_ov004_020bc97c;
-    g_table[10] = data_ov004_020bc984;
-    g_table[11] = data_ov004_020bc99c;
-    g_table[12] = data_ov004_020bc9a4;
-    g_table[13] = data_ov004_020bca3c;
-    g_table[14] = data_ov004_020bc9bc;
-    g_table[15] = data_ov004_020bc9d4;
-    g_table[16] = data_ov004_020bc9dc;
-    g_table[17] = data_ov004_020bc9ec;
-    g_table[18] = data_ov004_020bc9f4;
-    g_table[19] = data_ov004_020bca0c;
-}
+// src/_ZN10dMgState_c8SetStateEi.cpp runs from src. Section 3's "MSVC cannot
+// compile the src TU" was re-tested on this tree under the port's own flags and
+// is no longer true: the TU compiles clean to the real member
+// ?SetState@dMgState_c@@QAEXH@Z (runs/linkfull/out/PMFMG1/
+// _ZN10dMgState_c8SetStateEi.asm). Its three failures are each answered:
+//
+//   the SIZE: /vmg /vmm (port/CMakeLists.txt block R8) make every member
+//     pointer eight bytes, so `mEnter` at +0, `mRender` at +0x10 and `mState`
+//     at +0x18 are the ROM's offsets (the listing stores [esi], [esi+4],
+//     [esi+16], [esi+20], [esi+24]);
+//   the NAME: the twenty-one pair globals come in decorated as
+//     ?data_ov004_020bcXXX@@3P8dMgState_c@@AEXXZQ1@, and the twenty-one
+//     /alternatename rows below bind each to the mount's C symbol;
+//   the DISPATCH: `(this->*mEnter)()` compiles to `lea ecx, [edi+esi] / call
+//     edx`, nothing pushed, so the twenty group-A pair globals now hold
+//     zero-argument __fastcall faces (the seat below, seats_ecx_a) where they
+//     held the raw cdecl bodies the host copy's plain call pushed a receiver
+//     for.
+//
+// port/faces_sync.txt's row for the member flips F -> R with this change: the
+// generated file used to define the member as a forwarder onto this file's C
+// body; it now defines the C name as a forwarder onto the matched member, so
+// every C-spelled caller reaches the ROM's own compiled setter.
+//
+// THE FUNCTION-LOCAL STATIC. sEnterTable is initialised from twenty extern
+// objects, so MSVC guards it with its thread-safe-statics helpers
+// (__Init_thread_header / _footer / _epoch and the TLS slot). All of them are
+// already in the image (LIBCMT thread_safe_statics.obj and tlssup.obj in the
+// INT45 map), so the import table does not move; the gate row says so. The
+// table is built on the first call from the pair globals, which the seat below
+// has rewritten by then, exactly as the host copy's own g_table was.
+//
+// THE CENSUS MOVES INTO THE FACES. hal/scene_mg.cpp prints calls, dispatched,
+// states and the per-index histogram from port_mg_base_setter_counts. The
+// matched setter cannot count, so each group-A face counts what the host copy
+// counted for its index: all twenty group-A code words are distinct and all are
+// nonzero, so one face is one index, and "called" and "dispatched" are the same
+// number (the host copy's out-of-range arm had no reachable caller, section 4).
 
 static unsigned g_writer_seated;
-static void mgbase_dispatch_seated(void *self, MgPmf p);
-
-/* PORT_HOST_ABI: mwcc pointer-to-member state setter (dScMgBase_c); builds and indexes an 8-byte {code,adj} table and dispatches through it, host-copied because MSVC cannot compile the src TU */
-extern "C" void _ZN10dMgState_c8SetStateEi(void *cv, int idx)
-{
-    SetterObj *self = (SetterObj *)cv;
-
-    ++g_setter_calls;
-    mgbase_build_table();
-
-    self->index = idx;
-
-    /* THE ONE ADDED GUARD, and it is a host guard rather than the ROM's. The ROM
-       indexes the table with no bounds check and would read the .bss word past
-       0x020bfda8; every one of the eleven distinct indices the game's own call
-       sites pass (0, 1, 3, 4, 5, 7, 8, 0xc, 0x10, 0x12, 0x13) is inside the
-       twenty, so this arm has no reachable caller. It reports rather than
-       clamping, because a clamp would dispatch a state the caller did not ask
-       for and that is a wrong call dressed as a recovery. */
-    if (self->index < 0 || self->index >= 20) {
-        setter_bad_index(self->index);
-        self->pmf0.code = 0;
-        self->pmf0.adj = 0;
-        self->pmf2 = data_02086b58;
-        return;
-    }
-
-    ++g_setter_idx[self->index];
-    self->pmf0 = g_table[self->index];
-    self->pmf2 = data_02086b58;
-
-    /* the ROM's own null guard, and it tests the CODE word only */
-    if (self->pmf0.code) {
-        ++g_setter_dispatched;
-        ++g_base_state_hits;
-        mgbase_dispatch_seated(self, self->pmf0);
-    }
-}
 
 /* The census, for hal/scene_mg.cpp. The framework dispatch counters in
    MgBase_StateDispatch.cpp already say how many calls went through the switch;
@@ -695,45 +646,6 @@ extern "C" unsigned port_mg_base_setter_index_hits(unsigned *out, unsigned n)
     for (i = 0; i < n && i < 20; ++i)
         out[i] = g_setter_idx[i];
     return i;
-}
-
-// ---- run link100 lane MGWRITER ---------------------------------------------
-
-/* THE SETTER'S OWN DISPATCH, WITH THE SWITCH TAKEN OUT. The ROM's five
-   instructions are `add r3,r0,r1,asr #1` (this, adjusted), `ands r1,r1,#1` (the
-   virtual bit), the two conditional loads and `blx r1` with r0 = r3 -- a
-   ZERO-ARGUMENT call. What used to stand here handed the DS code word to
-   port_mg_call0's address switch. It cannot any more: the twenty pair globals
-   this function's table is built from now hold HOST addresses, put there by the
-   seat below and checked against the cartridge's own words first. So the call
-   is the call, and the two things the ROM tests are tested here.
-
-   THE DS-WORD REFUSAL IS THE POINT OF THE ABORT. A DS address arriving here
-   means the seat missed a source the writer copies from, and the failure that
-   would follow is not a wrong value, it is a jump into unmapped memory. It is
-   caught by name, at the moment it is provable, rather than as a fault address
-   that moves with the build. */
-static void mgbase_dispatch_seated(void *self, MgPmf p)
-{
-    if (p.adj != 0) {
-        std::fprintf(stderr, "FATAL: _ZN10dMgState_c8SetStateEi: state pair "
-                     "%08x/%d carries a NONZERO ADJUSTMENT. Every measured pair "
-                     "in this family reads zero and no host body implements the "
-                     "this-adjustment or the virtual branch. "
-                     "port/unmatched/MgBase_StateSetter.cpp\n", p.code, p.adj);
-        std::fflush(stderr);
-        std::abort();
-    }
-    if (p.code >= 0x02000000u && p.code < 0x02400000u) {
-        std::fprintf(stderr, "FATAL: _ZN10dMgState_c8SetStateEi: state pair code "
-                     "%08x is still a DS ADDRESS. The seat did not rewrite the "
-                     "pair global this state came from, so there is no host "
-                     "body to call. port/unmatched/MgBase_StateSetter.cpp\n",
-                     p.code);
-        std::fflush(stderr);
-        std::abort();
-    }
-    ((void (*)(void *))(size_t)p.code)(self);
 }
 
 /* ---- THE COUNTING WRAPPERS -----------------------------------------------
@@ -841,6 +753,64 @@ static void mgbase_seat_rows(const SeatRow *rows, unsigned n)
     }
 }
 
+/* ---- GROUP A'S FACES, run linkfull lane PMFMG1 -------------------------
+   The twenty pair globals the matched setter's sEnterTable is built from. Its
+   one dispatch is `lea ecx, [edi+esi] / call edx` with nothing pushed
+   (runs/linkfull/out/PMFMG1/_ZN10dMgState_c8SetStateEi.asm), so each holds a
+   zero-argument __fastcall face; the index in each face's name is the slot
+   the ROM's table puts that pair in (section 4), and the face counts what the
+   retired host copy counted for it. data_ov004_020bc9a4 is section 6's veneer,
+   whose host body above forwards the pointer. */
+#define SA_FACE(i, code)                                                           static void __fastcall sa_##i(void *c, void *)                                 {                                                                                  ++g_setter_calls;                                                              ++g_setter_idx[i];                                                             ++g_setter_dispatched;                                                         ++g_base_state_hits;                                                           func_ov004_##code((char *)c);                                              }
+SA_FACE(0, 020b8688)
+SA_FACE(1, 020b853c)
+SA_FACE(2, 020b83ac)
+SA_FACE(3, 020b81f8)
+SA_FACE(4, 020b7f5c)
+SA_FACE(5, 020b7e38)
+SA_FACE(6, 020b7b90)
+SA_FACE(7, 020b79b0)
+SA_FACE(8, 020b798c)
+SA_FACE(9, 020b7854)
+SA_FACE(10, 020b7744)
+SA_FACE(11, 020b7594)
+SA_FACE(12, 020b7460)
+SA_FACE(13, 020b743c)
+SA_FACE(14, 020b724c)
+SA_FACE(15, 020b70b4)
+SA_FACE(16, 020b7020)
+SA_FACE(17, 020b6f14)
+SA_FACE(18, 020b6d6c)
+SA_FACE(19, 020b6c10)
+
+/* THE TWENTY-ONE NAMES THE MATCHED SETTER ASKS FOR. src/_ZN10dMgState_c8SetStateEi.cpp
+   declares each pair global as `extern dMgState_c::Callback`, a member pointer
+   at C++ linkage, so MSVC spells the references below (read off the listing's
+   EXTRN lines) while the ov004 mount and build/port/host-src/romdata.c define
+   the plain C names. Nothing in the tree defines any of these LHS, so none can
+   be silently defeated. */
+#pragma comment(linker, "/alternatename:?data_ov004_020bc974@@3P8dMgState_c@@AEXXZQ1@=_data_ov004_020bc974")
+#pragma comment(linker, "/alternatename:?data_ov004_020bc96c@@3P8dMgState_c@@AEXXZQ1@=_data_ov004_020bc96c")
+#pragma comment(linker, "/alternatename:?data_ov004_020bc964@@3P8dMgState_c@@AEXXZQ1@=_data_ov004_020bc964")
+#pragma comment(linker, "/alternatename:?data_ov004_020bc95c@@3P8dMgState_c@@AEXXZQ1@=_data_ov004_020bc95c")
+#pragma comment(linker, "/alternatename:?data_ov004_020bc954@@3P8dMgState_c@@AEXXZQ1@=_data_ov004_020bc954")
+#pragma comment(linker, "/alternatename:?data_ov004_020bc94c@@3P8dMgState_c@@AEXXZQ1@=_data_ov004_020bc94c")
+#pragma comment(linker, "/alternatename:?data_ov004_020bc944@@3P8dMgState_c@@AEXXZQ1@=_data_ov004_020bc944")
+#pragma comment(linker, "/alternatename:?data_ov004_020bc92c@@3P8dMgState_c@@AEXXZQ1@=_data_ov004_020bc92c")
+#pragma comment(linker, "/alternatename:?data_ov004_020bc934@@3P8dMgState_c@@AEXXZQ1@=_data_ov004_020bc934")
+#pragma comment(linker, "/alternatename:?data_ov004_020bc97c@@3P8dMgState_c@@AEXXZQ1@=_data_ov004_020bc97c")
+#pragma comment(linker, "/alternatename:?data_ov004_020bc984@@3P8dMgState_c@@AEXXZQ1@=_data_ov004_020bc984")
+#pragma comment(linker, "/alternatename:?data_ov004_020bc99c@@3P8dMgState_c@@AEXXZQ1@=_data_ov004_020bc99c")
+#pragma comment(linker, "/alternatename:?data_ov004_020bc9a4@@3P8dMgState_c@@AEXXZQ1@=_data_ov004_020bc9a4")
+#pragma comment(linker, "/alternatename:?data_ov004_020bca3c@@3P8dMgState_c@@AEXXZQ1@=_data_ov004_020bca3c")
+#pragma comment(linker, "/alternatename:?data_ov004_020bc9bc@@3P8dMgState_c@@AEXXZQ1@=_data_ov004_020bc9bc")
+#pragma comment(linker, "/alternatename:?data_ov004_020bc9d4@@3P8dMgState_c@@AEXXZQ1@=_data_ov004_020bc9d4")
+#pragma comment(linker, "/alternatename:?data_ov004_020bc9dc@@3P8dMgState_c@@AEXXZQ1@=_data_ov004_020bc9dc")
+#pragma comment(linker, "/alternatename:?data_ov004_020bc9ec@@3P8dMgState_c@@AEXXZQ1@=_data_ov004_020bc9ec")
+#pragma comment(linker, "/alternatename:?data_ov004_020bc9f4@@3P8dMgState_c@@AEXXZQ1@=_data_ov004_020bc9f4")
+#pragma comment(linker, "/alternatename:?data_ov004_020bca0c@@3P8dMgState_c@@AEXXZQ1@=_data_ov004_020bca0c")
+#pragma comment(linker, "/alternatename:?data_02086b58@@3P8dMgState_c@@AEXXZQ1@=_data_02086b58")
+
 extern "C" void port_mg_base_writer_seat(void)
 {
     static int done;
@@ -894,10 +864,12 @@ extern "C" void port_mg_base_writer_seat(void)
        shape 27a24ff5a, 651b5e853, f9936e798, 45ce69707, 00732a5ab and PMFSWEEP's
        five classes each had to make one class over.
 
-       seats_cdecl, TWENTY-SEVEN cells, and a thunk on any of them would break
-       what works. Twenty are group A, the setter's own table, dispatched three
-       lines above by mgbase_dispatch_seated, which is a plain cdecl call that
-       PUSHES the receiver, and the object's +0x00 field has no other reader:
+       seats_cdecl, SEVEN cells now, and a thunk on any of them would break
+       what works. It held twenty-seven until run linkfull lane PMFMG1: the
+       other twenty were group A, the setter's own table, dispatched by the
+       host copy's plain cdecl call that PUSHED the receiver. The matched setter
+       dispatches them with the receiver in ecx and nothing pushed, so they are
+       seats_ecx_a above. The object's +0x00 field still has no other reader:
        dMgState_c has three members in the whole image, SetState, which writes
        +0x00, Behavior, which reads +0x08, and Render, which reads +0x10. The
        other seven land in the 020b3278 object (the header's group C:
@@ -949,6 +921,31 @@ extern "C" void port_mg_base_writer_seat(void)
     { &data_ov004_020bca34, "020bca34", 0x020b6b40u, (SeatFn)bwf_020b6b40 },
     };
 
+    /* run linkfull lane PMFMG1: GROUP A, the matched setter's twenty, now
+       __fastcall faces (the block above this function). */
+    static const SeatRow seats_ecx_a[] = {
+    { &data_ov004_020bc974, "020bc974", 0x020b8688u, (SeatFn)sa_0 },
+    { &data_ov004_020bc96c, "020bc96c", 0x020b853cu, (SeatFn)sa_1 },
+    { &data_ov004_020bc964, "020bc964", 0x020b83acu, (SeatFn)sa_2 },
+    { &data_ov004_020bc95c, "020bc95c", 0x020b81f8u, (SeatFn)sa_3 },
+    { &data_ov004_020bc954, "020bc954", 0x020b7f5cu, (SeatFn)sa_4 },
+    { &data_ov004_020bc94c, "020bc94c", 0x020b7e38u, (SeatFn)sa_5 },
+    { &data_ov004_020bc944, "020bc944", 0x020b7b90u, (SeatFn)sa_6 },
+    { &data_ov004_020bc92c, "020bc92c", 0x020b79b0u, (SeatFn)sa_7 },
+    { &data_ov004_020bc934, "020bc934", 0x020b798cu, (SeatFn)sa_8 },
+    { &data_ov004_020bc97c, "020bc97c", 0x020b7854u, (SeatFn)sa_9 },
+    { &data_ov004_020bc984, "020bc984", 0x020b7744u, (SeatFn)sa_10 },
+    { &data_ov004_020bc99c, "020bc99c", 0x020b7594u, (SeatFn)sa_11 },
+    { &data_ov004_020bc9a4, "020bc9a4", 0x020b7460u, (SeatFn)sa_12 },
+    { &data_ov004_020bca3c, "020bca3c", 0x020b743cu, (SeatFn)sa_13 },
+    { &data_ov004_020bc9bc, "020bc9bc", 0x020b724cu, (SeatFn)sa_14 },
+    { &data_ov004_020bc9d4, "020bc9d4", 0x020b70b4u, (SeatFn)sa_15 },
+    { &data_ov004_020bc9dc, "020bc9dc", 0x020b7020u, (SeatFn)sa_16 },
+    { &data_ov004_020bc9ec, "020bc9ec", 0x020b6f14u, (SeatFn)sa_17 },
+    { &data_ov004_020bc9f4, "020bc9f4", 0x020b6d6cu, (SeatFn)sa_18 },
+    { &data_ov004_020bca0c, "020bca0c", 0x020b6c10u, (SeatFn)sa_19 },
+    };
+
     static const SeatRow seats_cdecl[] = {
     { &data_ov004_020bc17c, "020bc17c", 0x020b3978u, (SeatFn)bw_020b3978 },
     { &data_ov004_020bc1b4, "020bc1b4", 0x020b369cu, (SeatFn)bw_020b369c },
@@ -957,39 +954,19 @@ extern "C" void port_mg_base_writer_seat(void)
     { &data_ov004_020bc224, "020bc224", 0x020b4214u, (SeatFn)bw_020b4214 },
     { &data_ov004_020bc254, "020bc254", 0x020b4214u, (SeatFn)bw_020b4214 },
     { &data_ov004_020bc274, "020bc274", 0x020b410cu, (SeatFn)bw_020b410c },
-    { &data_ov004_020bc92c, "020bc92c", 0x020b79b0u, (SeatFn)func_ov004_020b79b0 },
-    { &data_ov004_020bc934, "020bc934", 0x020b798cu, (SeatFn)func_ov004_020b798c },
-    { &data_ov004_020bc944, "020bc944", 0x020b7b90u, (SeatFn)func_ov004_020b7b90 },
-    { &data_ov004_020bc94c, "020bc94c", 0x020b7e38u, (SeatFn)func_ov004_020b7e38 },
-    { &data_ov004_020bc954, "020bc954", 0x020b7f5cu, (SeatFn)func_ov004_020b7f5c },
-    { &data_ov004_020bc95c, "020bc95c", 0x020b81f8u, (SeatFn)func_ov004_020b81f8 },
-    { &data_ov004_020bc964, "020bc964", 0x020b83acu, (SeatFn)func_ov004_020b83ac },
-    { &data_ov004_020bc96c, "020bc96c", 0x020b853cu, (SeatFn)func_ov004_020b853c },
-    { &data_ov004_020bc974, "020bc974", 0x020b8688u, (SeatFn)func_ov004_020b8688 },
-    { &data_ov004_020bc97c, "020bc97c", 0x020b7854u, (SeatFn)func_ov004_020b7854 },
-    { &data_ov004_020bc984, "020bc984", 0x020b7744u, (SeatFn)func_ov004_020b7744 },
-    { &data_ov004_020bc99c, "020bc99c", 0x020b7594u, (SeatFn)func_ov004_020b7594 },
-    { &data_ov004_020bc9a4, "020bc9a4", 0x020b7460u, (SeatFn)func_ov004_020b7460 },
-    { &data_ov004_020bc9bc, "020bc9bc", 0x020b724cu, (SeatFn)func_ov004_020b724c },
-    { &data_ov004_020bc9d4, "020bc9d4", 0x020b70b4u, (SeatFn)func_ov004_020b70b4 },
-    { &data_ov004_020bc9dc, "020bc9dc", 0x020b7020u, (SeatFn)func_ov004_020b7020 },
-    { &data_ov004_020bc9ec, "020bc9ec", 0x020b6f14u, (SeatFn)func_ov004_020b6f14 },
-    { &data_ov004_020bc9f4, "020bc9f4", 0x020b6d6cu, (SeatFn)func_ov004_020b6d6c },
-    { &data_ov004_020bca0c, "020bca0c", 0x020b6c10u, (SeatFn)func_ov004_020b6c10 },
-    { &data_ov004_020bca3c, "020bca3c", 0x020b743cu, (SeatFn)func_ov004_020b743c },
     };
 
     mgbase_seat_rows(seats_ecx, sizeof seats_ecx / sizeof seats_ecx[0]);
+    mgbase_seat_rows(seats_ecx_a, sizeof seats_ecx_a / sizeof seats_ecx_a[0]);
     mgbase_seat_rows(seats_cdecl, sizeof seats_cdecl / sizeof seats_cdecl[0]);
 
-    /* The setter's function-local static table is a COPY of twenty of those
-       globals, built on the first call. Nothing can have called the setter this
-       early -- hal/scene_mg.cpp runs this beside the overlay constructors, long
-       before a minigame asks for a message -- but the copy is the one place a
-       stale DS word could survive the seat, so the guard word is cleared and
-       the table is rebuilt from the seated globals rather than assumed unbuilt. */
-    g_table_built = 0;
-    mgbase_build_table();
+    /* The setter's function-local static table is a COPY of the twenty
+       group-A globals, built on the setter's first call. It is the matched
+       TU's own static now (sEnterTable, behind MSVC's thread-safe guard), so
+       it cannot be cleared from here the way the host copy's was; it does not
+       need to be: hal/scene_mg.cpp runs this beside the overlay constructors,
+       before any minigame object exists, and the setter is only ever called by
+       one (run linkfull lane PMFMG1). */
 }
 
 extern "C" unsigned port_mg_base_writer_seat_count(void)

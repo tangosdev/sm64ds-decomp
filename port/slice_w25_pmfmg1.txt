@@ -29,3 +29,6 @@ src/func_ov006_020c8f20.cpp
 src/func_ov006_020cb030.cpp
 # the memory card record walk (dScMgMemory2_c), unmatched/MgMemory2_FieldPmf.cpp
 src/func_ov004_020b52fc.cpp
+# the minigame framework's state setter (dMgState_c), unmatched/MgBase_StateSetter.cpp;
+# port/faces_sync.txt's row for the member flips F -> R with it
+src/_ZN10dMgState_c8SetStateEi.cpp

@@ -116,13 +116,12 @@ LEDGER = [
      "measured it off the TU's own listing and seated __fastcall faces)"),
 
     ("CDECL", r"^\?seats_cdecl@\?1\?\?port_mg_base_writer_seat@@",
-     "dMgState_c: twenty of these are group A, the setter's own table, and "
-     "the only reader of the object's +0x00 field is the host copy "
-     "__ZN10dMgState_c8SetStateEi, whose mgbase_dispatch_seated is a plain "
-     "cdecl call that PUSHES the receiver. The other seven land in the "
-     "020b3278 object, whose two readers are the FLAT C dispatchers "
-     "_func_ov004_020b321c and _func_ov004_020b31b4, f(self) tail jumps that "
-     "leave the caller's own pushed argument at [esp+4]"),
+     "dMgState_c: the seven cells that land in the 020b3278 object, whose "
+     "two readers are the FLAT C dispatchers _func_ov004_020b321c and "
+     "_func_ov004_020b31b4, f(self) tail jumps that leave the caller's own "
+     "pushed argument at [esp+4]. (Group A, the setter's own twenty, left "
+     "this table in run linkfull lane PMFMG1 for seats_ecx_a above: the "
+     "matched setter dispatches them with the receiver in ecx.)"),
     ("CDECL", r"^\?cells_field@\?1\?\?port_mg_framework_tables_seat@@",
      "data_ov004_020bf428 and _020bf4f8: func_ov004_020b3278 copies these "
      "into the 020b3278 object at +0x00 and +0x08, which _func_ov004_020b321c "
@@ -223,6 +222,12 @@ LEDGER = [
      "table leaves the exception list"),
 
     # ---- run linkfull lane PMFMG1: the minigame member-pointer rows -------
+    ("ECX", r"^\?seats_ecx_a@\?1\?\?port_mg_base_writer_seat@@",
+     "dMgState_c group A: the twenty pair globals the matched "
+     "?SetState@dMgState_c@@QAEXH@Z builds sEnterTable from; it copies the "
+     "chosen pair into the message object at +0x00 and dispatches it itself "
+     "with `lea ecx,[edi+esi]; call edx`, nothing pushed, and +0x00 has no "
+     "other reader (runs/linkfull/out/PMFMG1/_ZN10dMgState_c8SetStateEi.asm)"),
     ("ECX", r"^\?rec@\?1\?\?mem2_record_seat@@",
      "dScMgMemory2_c's record field: the ten ov004 pairs are copied into "
      "data_ov004_020bfa34[i]+0 and read back by src/func_ov004_020b52fc.cpp, "
