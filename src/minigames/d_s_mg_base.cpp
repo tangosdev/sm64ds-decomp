@@ -1,32 +1,31 @@
 //cpp
-/* Shared minigame scene behavior. Production TU ov004/dScMgBase_c;
- * the manifest owns eight functions in [0x020b04e8, 0x020b0a38).
- * Keep definition order: the pinned compiler reverses ordinary function
- * sections. Strength reduction remains disabled for BeforeBehavior.
+/* ov004/dScMgBase_c -- the behavior every minigame scene shares
+ * (.text 0x020b04e8..0x020b0a38).
  *
- * deslop
- * Leftover: the func_ov004_* helpers and data_ov004_* homes come from
- *   decl_common.h, not here; naming belongs at their definitions.
- * Leftover: unk_0a4/0a8/0ac/0b8/0c8/462c/465c are unrecovered scene
- *   state (header); the Ent and SceneVCall6 local views stand in for
- *   unrecovered types and do not establish bases.
+ * Keep definition order: the compiler emits functions in reverse, so the
+ * order below is what makes the ROM order.
+ *
+ * Still raw: unk_0a4, 0a8, 0ac, 0b8, 0c8, 462c and 465c are unnamed in the
+ * header, and the func_ov004 and data_ov004 helpers they feed are unnamed
+ * in symbols.txt.
  */
 
 #include "dScMgBase_c.h"
 #include "decl_common.h"
 #include "Sound.h"
 
-/* FILE-GLOBAL, and deliberately so: the last state set anywhere applies to
-   every function in the TU. Carried over from
-   src/_ZN11dScMgBase_c14BeforeBehaviorEv.cpp, the only member of the real
-   0x020b04e8..0x020b2adc run that had one. */
+/* File-wide on purpose: it applies to every function in this file. It came
+   with BeforeBehavior, the only function here whose source had it. */
 #pragma opt_strength_reduction off
 
-/* shadow struct 'Ent' */
+/* The 0x40 records at data_ov004_020bebe8 are 0x20 bytes each; only the s16
+   at 0x1a (nonzero while the record is live) is known, so the type stays a
+   local view. */
 struct Ent { char pad[0x1a]; s16 f; char pad2[4]; };
 
-/* Local view of the unresolved stylus owner, also used by dScMiniGm_c.
- * Slot 5 gates input handling; this does not establish a dScene_c base. */
+/* Local view of the stylus owner at data_0209f5bc, also used by
+ * dScMiniGm_c. Only slot 5 is known: it says whether input is live. The
+ * owner's real class is not recovered. */
 struct SceneVCall6 {
     virtual int v0(); virtual int v1(); virtual int v2();
     virtual int v3(); virtual int v4(); virtual int IsActive();
@@ -59,12 +58,11 @@ extern unsigned char data_0209d458[];
 }
 
 // @symbol _ZN11dScMgBase_c19BeforeInitResourcesEv
-/* Initialize the scene and displays through the existing virtual interface.
- * Slots 26, 31 and 33 must remain virtual calls so derived scenes can override
- * them; the actor-style slot-26 name is inherited, not recovered scene meaning. */
+/* Sets up the scene and both displays. Slots 26, 31 and 33 must stay
+ * virtual calls so derived scenes can override them. The block at 0x4000 is
+ * padding in the header, so it is still passed by offset. */
 bool dScMgBase_c::BeforeInitResources()
 {
-    char *c = (char *)this;
     if (dScene_c::BeforeInitResources() == 0) return 0;
     if (OnHitByCannonBlastedChar() == 0)
         func_02019028();
@@ -78,7 +76,7 @@ bool dScMgBase_c::BeforeInitResources()
     mHudScore = 0;
     unk_0b8 = 0;
     unk_465c = 0;
-    func_ov004_020b8a8c(c + 0x4000);
+    func_ov004_020b8a8c((char *)this + 0x4000);
     Virtual84();
     func_ov004_020b2cb8();
     dScene_c::SetFaders((FaderBrightness *)data_0209f61c);
@@ -90,7 +88,7 @@ bool dScMgBase_c::BeforeInitResources()
 }
 
 // @symbol _ZN11dScMgBase_c18AfterInitResourcesEj
-/* Complete the display/font setup, then report initialization to dScene_c. */
+/* Finishes the display and font setup, then reports to dScene_c. */
 void dScMgBase_c::AfterInitResources(u32 vfSuccess)
 {
     Virtual80();
@@ -100,7 +98,6 @@ void dScMgBase_c::AfterInitResources(u32 vfSuccess)
 }
 
 // @symbol _ZN11dScMgBase_c21AfterCleanupResourcesEj
-/* dScMgBase_c::AfterCleanupResources - recovered from vtable slot identity. */
 void dScMgBase_c::AfterCleanupResources(u32 vfSuccess)
 {
     if (vfSuccess == 2) {
@@ -123,13 +120,11 @@ void dScMgBase_c::AfterCleanupResources(u32 vfSuccess)
 }
 
 // @symbol _ZN11dScMgBase_c14BeforeBehaviorEv
-/* Gate scene behavior on input/menu state, update the shared UI records,
- * approach the tracked value, and advance the 40-frame animation counter.
- * The stylus owner's slot-5 predicate uses the local view above; its complete
- * class and inheritance remain unresolved. */
+/* Handles input and the menu, runs the UI state controller and the shared
+ * records, approaches unk_0ac toward unk_0a8, and advances the 40-frame
+ * counter. Returns 0 to stop the derived scene's behavior this frame. */
 int dScMgBase_c::BeforeBehavior()
 {
-    char *self = (char *)this;
     int mode;
     unsigned short flags;
 
@@ -153,7 +148,7 @@ int dScMgBase_c::BeforeBehavior()
     }
 
     if (mMenuOpen != 0) {
-        func_ov004_020aeb24(self);
+        func_ov004_020aeb24((char *)this);
         return 0;
     }
     if (unk_462c != 0)
@@ -176,7 +171,7 @@ int dScMgBase_c::BeforeBehavior()
         char *p = data_ov004_020bebe8;
         char *base = data_ov004_020bebe8;
         for (j = 0; j < 0x40; j++) {
-            if (*(short *)(base + j * 0x20 + 0x1a) != 0)
+            if (((struct Ent *)base)[j].f != 0)
                 func_ov004_020adf2c(p);
             p += 0x20;
         }
@@ -197,24 +192,23 @@ int dScMgBase_c::BeforeBehavior()
 }
 
 // @symbol _ZN11dScMgBase_c8BehaviorEv
-/* dScMgBase_c::Behavior - recovered from vtable slot identity. */
 s32 dScMgBase_c::Behavior()
 {
     return 1;
 }
 
 // @symbol _ZN11dScMgBase_c12BeforeRenderEv
-/* dScMgBase_c::BeforeRender - recovered from vtable slot identity. */
+/* Draws the menu instead of the scene while it is open. The two loops draw
+ * the three UI records in two passes, those with 0x30 clear first. */
 int dScMgBase_c::BeforeRender()
 {
-    char *c = (char *)this;
     int i; char *p; int i2; char *p2; int j;
 
     if (dScene_c::BeforeRender() == 0)
         return 0;
 
     if (mMenuOpen != 0) {
-        func_ov004_020ae858(c);
+        func_ov004_020ae858(this);
         return 0;
     }
 
@@ -240,19 +234,17 @@ int dScMgBase_c::BeforeRender()
             func_ov004_020add88(p);
     }
 
-    func_ov004_020b0de0(c);
+    func_ov004_020b0de0(this);
     return 1;
 }
 
 // @symbol _ZN11dScMgBase_c6RenderEv
-/* dScMgBase_c::Render - recovered from vtable slot identity. */
 s32 dScMgBase_c::Render()
 {
     return 1;
 }
 
 // @symbol _ZN11dScMgBase_c16OnPendingDestroyEv
-/* dScMgBase_c::OnPendingDestroy - recovered from vtable slot identity. */
 void dScMgBase_c::OnPendingDestroy()
 {
 }

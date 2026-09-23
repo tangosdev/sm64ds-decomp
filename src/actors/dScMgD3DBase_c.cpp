@@ -1,28 +1,25 @@
 //cpp
-/* Shared 3D minigame scene for Jump, Jump2, Trampoline and Trampoline2.
- * Production TU ov006/dScMgD3DBase_c: 27 functions in [0x020e6c28, 0x020e7660).
- * Keep definition order: 2004/b56 reverses ordinary function sections.
- * The inline destructor and BeforeInitResources key function preserve the
- * emitted vtable and D1/D0 order; see dScMgD3DBase_c.h for layout evidence.
- * Ten free helpers share this reconstructed TU; the original file boundary
- * remains an inference, recorded as medium confidence in the manifest. */
+/* ov006/dScMgD3DBase_c -- the 3D scene base shared by Jump, Jump2,
+ * Trampoline and Trampoline2 (.text 0x020e6c28..0x020e7660).
+ *
+ * Functions run in reverse of ROM order; do not reorder. The destructor is
+ * inline in the header, so BeforeInitResources is the key function that
+ * emits the vtable and the D1 and D0 pair. The ten free helpers are unnamed
+ * in symbols.txt, and so are most of the arm9 and ov004 calls below. */
 
 #include "dScMgD3DBase_c.h"
 #include "decl_common.h"
 #include "decl_Particle.h"
 #include "types.h"
 
-/* Local eight-byte OAM view for the sub-screen table builder.
- * OamAttr.h represents the same hardware entry with individual attributes;
- * this code retains its combined attr01 word stores. */
+/* An OAM entry, with attributes 0 and 1 stored as one word the way this
+ * code writes them. */
 typedef struct Oam {
     u32 attr01;
     u16 attr2;
     u16 aff;
 } Oam;
 
-/* Local data views and ABI boundaries not yet represented by shared headers.
- * The manifest retains the resolved declaration-conflict history. */
 extern "C" {
 
 /* ov006's own data. */
@@ -57,28 +54,24 @@ void  func_ov004_020b290c(void);
 void  func_ov004_020b2980(void);
 int   GetGameLanguage(void);
 void  DecompressLZ16(void *src, void *dst);
-/* The callee takes u16; narrowing the loaded file IDs grows Virtual7C
- * from 260 to 276 bytes. Keep this existing wide ABI boundary pending
- * reconstruction of the file-ID tables and their callers. */
+/* The file ID is really u16, but passing it narrowed grows Virtual7C by
+ * 16 bytes. Keep it wide. */
 u32   LoadCompressedFileAt(unsigned int fileID, void *target);
 void  Ov004_Deallocate(void *x);
 struct Camera;
 void  Camera_UpdateMatrices(Camera *camera);
 
-/* Retained wide-argument ABI bridges for the four saved-bank restores.
- * The native definitions take u16. Narrowing the saved s32 values adds 16
- * bytes each to Virtual7C and OnAimedAtWithEggReturnVec under 2004/b56.
- * Constant bank selections below use the actual namespace declarations. */
+/* The same for the saved-bank restores: GX takes u16, and passing the saved
+ * s32 through the real declaration adds 16 bytes each to Virtual7C and
+ * OnAimedAtWithEggReturnVec. Constant banks use the GX namespace below. */
 void  _ZN2GX15SetBankForSubBGEt(unsigned int x);
 void  _ZN2GX16SetBankForSubOBJEt(unsigned int x);
 
-/* Stage.h's tracker view lacks these ordinary methods. Its layout remains
- * shared with Stage; adding methods to that header is separate scoped work.
- * decl_Particle.h supplies the Initialise ABI declaration. */
+/* Particle::SysTracker::Update, which Stage.h's tracker view does not
+ * declare yet. */
 void _ZN8Particle10SysTracker6UpdateEv(void *self);
 
-/* This TU's own free helpers, forward-declared because they are called from
-   members written above their definitions. */
+/* Defined below. */
 void func_ov006_020e73c4(void);
 void func_ov006_020e740c(void);
 void func_ov006_020e7428(void);
@@ -150,8 +143,8 @@ extern "C" void func_ov006_020e7428(void)
     displayControl = *(volatile u32 *)0x4001000;
     *(volatile u32 *)0x4001000 = (displayControl & 0xffbfff9f) | 0x20;
 
-    /* Keep the index round trips below: removing them grows this table
-     * builder from 0xe0 to 0xe8 bytes under 2004/b56. */
+    /* Keep the index round trips through long long: without them this
+     * function grows from 0xe0 to 0xe8 bytes. */
     sprite = 0;
     for (entry = 0; entry < 0x80; entry++) {
         data_ov006_02141a54[entry].attr01 = 0;
@@ -193,8 +186,9 @@ extern "C" void func_ov006_020e73c4(void)
 }
 
 // @symbol _ZN14dScMgD3DBase_c9Virtual7CEv
-/* Slot 31 prepares sub-screen BG/OBJ resources and restores their saved banks.
- * The actor Kill name does not establish this scene callback's meaning. */
+/* Slot 31: loads the sub-screen BG and OBJ graphics, then restores the
+ * banks it borrowed. Keep the destinations as base plus offset; one folded
+ * constant changes the code. */
 int dScMgD3DBase_c::Virtual7C()
 {
     unk_4660 = func_02053ea0();
@@ -224,14 +218,14 @@ int dScMgD3DBase_c::Virtual7C()
 }
 
 // @symbol _ZN14dScMgD3DBase_c9Virtual84Ev
-/* Slot 33 configures the 3D display and VRAM banks. Keep the loaded buffers
- * alive for later palette/menu work, and publish the two camera bases.
- * This override is shared by all four child minigames. */
+/* Slot 33: sets up the 3D display and VRAM banks, keeps the loaded
+ * buffers for later palette and menu work, and publishes the two camera
+ * blocks at 0x466c and 0x4728 (untyped padding in the header, so still by
+ * offset). */
 void dScMgD3DBase_c::Virtual84()
 {
-    char *obj = (char *)this;
-
-    void *p;
+    char *raw = (char *)this;
+    void *file;
 
     *(vu32 *)0x4001000u |= 0x10000u;
     data_0209d45c = 0x10;
@@ -247,16 +241,16 @@ void dScMgD3DBase_c::Virtual84()
     func_02054748(0);
     GX::SetBankForOBJ(0x10);
     GX::SetBankForBG(2);
-    p = func_ov004_020adc68(data_ov006_0213c5fc[GetGameLanguage()]);
-    data_ov006_02141a4c = p;
+    file = func_ov004_020adc68(data_ov006_0213c5fc[GetGameLanguage()]);
+    data_ov006_02141a4c = file;
     {
         char *dst = (char *)0x6400000;
         dst += 0x4000;
-        DecompressLZ16(p, dst);
+        DecompressLZ16(file, dst);
     }
-    p = func_ov004_020adc68(0xc3);
-    data_ov006_02141a48 = p;
-    GX::LoadOBJPltt(p, 0x100u, 0x100u);
+    file = func_ov004_020adc68(0xc3);
+    data_ov006_02141a48 = file;
+    GX::LoadOBJPltt(file, 0x100u, 0x100u);
     GXS::LoadOBJPltt(data_ov006_02141a48, 0x100u, 0x100u);
     InitialiseVramGlobals();
     func_ov004_020b0d30();
@@ -265,25 +259,21 @@ void dScMgD3DBase_c::Virtual84()
     GX::SetGraphicsMode(1, 0, 1);
     GXS::SetGraphicsMode(5);
     *(vu32 *)0x4000000u &= 0xffcfffefu;
-    data_ov006_02141a44 = (int)(obj + 0x466c);
-    data_ov006_02141a40 = obj + 0x466c;
-    data_ov006_02141a50 = obj + 0x4728;
-    data_ov004_020beb74[1] = (int)obj;
+    data_ov006_02141a44 = (int)(raw + 0x466c);
+    data_ov006_02141a40 = raw + 0x466c;
+    data_ov006_02141a50 = raw + 0x4728;
+    data_ov004_020beb74[1] = (int)raw;
     data_0209d4a8 = (void *)data_ov004_020beb74;
 }
 
 // @symbol func_ov006_020e7110
-/* Clear sub-screen BG1 ownership. The cleanup caller passes this;
- * the helper ignores it and reloads r0 from its literal pool. */
+/* Clears the sub-screen BG1 claim. The caller passes this, which is
+ * unused. */
 extern "C" void func_ov006_020e7110(void *) { data_0209e660 = 0; }
 
 // @symbol _ZN14dScMgD3DBase_c19BeforeInitResourcesEv
-/* THIS IS THE TU'S KEY FUNCTION -- the first DECLARED non-inline virtual of
-   dScMgD3DBase_c (the destructor is declared before it but is defined inline
-   in the class body, so it cannot be the key function).  Defining it here is
-   what makes mwcc emit _ZTV14dScMgD3DBase_c, the class's _ZTI/_ZTS and its
-   four ancestors', and -- through vtable slots 16 and 17 -- the out-of-line
-   D1/D0 pair at the bottom of the ROM range.  See the closing comment. */
+/* The key function: the first virtual declared but not defined inline, so
+   defining it here emits the vtable, the RTTI and the D1 and D0 pair. */
 bool dScMgD3DBase_c::BeforeInitResources()
 {
     if (dScMgBase_c::BeforeInitResources() == 0) return 0;
@@ -322,9 +312,9 @@ int dScMgD3DBase_c::BeforeRender()
 void dScMgD3DBase_c::AfterRender(unsigned int arg)
 {
     volatile unsigned short *reg = (volatile unsigned short *)0x04000006;
-    int v = *reg;
+    int line = *reg;
 
-    if (v > 0xb9 && v <= 0xc0) {
+    if (line > 0xb9 && line <= 0xc0) {
         while ((int)*reg < 0xc0) {
         }
     }
@@ -335,9 +325,7 @@ void dScMgD3DBase_c::AfterRender(unsigned int arg)
 // @symbol _ZN14dScMgD3DBase_c21AfterCleanupResourcesEj
 void dScMgD3DBase_c::AfterCleanupResources(unsigned int vfSuccess)
 {
-    int result = (int)vfSuccess;
-
-    if (result == 2) {
+    if (vfSuccess == 2) {
         CleanCommonModelDataArr();
         *(int*)0x40004c8 = 0x296a5800;
         *(int*)0x40004cc = 0x7fff;
@@ -348,15 +336,16 @@ void dScMgD3DBase_c::AfterCleanupResources(unsigned int vfSuccess)
         Ov004_Deallocate(data_ov006_02141a48);
     }
     data_0209f5f8 = 0;
-    dScMgBase_c::AfterCleanupResources(result);
+    dScMgBase_c::AfterCleanupResources(vfSuccess);
 }
 
 // @symbol _ZN14dScMgD3DBase_c8OnKickedEv
-/* Slot 24 is inherited by Jump and Jump2; it switches the active camera.
- * The two 0xbc-byte camera records remain explicit byte-offset views. */
+/* Slot 24, inherited by Jump and Jump2: switches between the two
+ * 0xbc-byte cameras. Keep the if/else toggle; `unk_4664 = unk_4664 == 0`
+ * compiles differently. */
 int dScMgD3DBase_c::OnKicked()
 {
-    char *self = (char *)this;
+    char *raw = (char *)this;
 
     if (dScMgBase_c::OnKicked() == 0) return 0;
     if (mMenuOpen == 0) {
@@ -365,7 +354,7 @@ int dScMgD3DBase_c::OnKicked()
             unk_4664 = 1;
         else
             unk_4664 = 0;
-        int cameraAddress = (int)(self + 0x466c + unk_4664 * 0xbc);
+        int cameraAddress = (int)(raw + 0x466c + unk_4664 * 0xbc);
         data_ov006_02141a44 = cameraAddress;
         Camera_UpdateMatrices((Camera *)cameraAddress);
         if (unk_4664 == 1) {
@@ -382,23 +371,22 @@ int dScMgD3DBase_c::OnKicked()
 }
 
 // @symbol _ZN14dScMgD3DBase_c8OnPushedEv
-/* Slot 25 forwards to the common minigame scene and normalizes its result. */
+/* Slot 25. */
 int dScMgD3DBase_c::OnPushed()
 {
     return dScMgBase_c::OnPushed() != 0;
 }
 
 // @symbol _ZN14dScMgD3DBase_c24OnHitByCannonBlastedCharEv
-/* Slot 26 identifies this branch of minigame scenes with the value 2. */
+/* Slot 26: marks the 3D scenes with 2. */
 int dScMgD3DBase_c::OnHitByCannonBlastedChar()
 {
     return 2;
 }
 
 // @symbol func_ov006_020e6e3c
-/* Thunk: func_02012718(a, b + 0x80000).  decl_common.h types func_02012718 as
-   returning void, so the forwarded r0 falls out of the tail call rather than
-   being spelled as a `return` -- the same instruction either way. */
+/* Returns whatever func_02012718 leaves in r0; decl_common.h declares it
+   void, so there is no return statement. */
 extern "C" int func_ov006_020e6e3c(int a, int b)
 {
     func_02012718(a, b + 0x80000);
@@ -407,14 +395,14 @@ extern "C" int func_ov006_020e6e3c(int a, int b)
 // @symbol Sound_PlayBank1Panned
 extern "C" void Sound_PlayBank1Panned(int a0, char *a1, void *a2) {
     a1 += data_ov006_0212e574[a0];
-    int r = func_ov006_020e6da4((int)a2);
-    func_020127ec(1, (int)a1, 4, 0, 0, r);
+    int pan = func_ov006_020e6da4((int)a2);
+    func_020127ec(1, (int)a1, 4, 0, 0, pan);
 }
 
 // @symbol func_ov006_020e6db4
 extern "C" void func_ov006_020e6db4(int a0, int a1, int a2) {
-    int s0 = func_020126e8(a1 + 0x80000);
-    func_020126ac(a0, 6, 0, a2, s0);
+    int pan = func_020126e8(a1 + 0x80000);
+    func_020126ac(a0, 6, 0, a2, pan);
 }
 
 // @symbol func_ov006_020e6da4
@@ -425,24 +413,21 @@ extern "C" int func_ov006_020e6da4(int a)
 }
 
 // @symbol _ZN14dScMgD3DBase_c15OnHitByMegaCharEv
-/* Slot 27 forwards across overlays. Its twelve-byte ROM body is a
- * long-branch veneer; the scene behavior belongs to the common base. */
+/* Slot 27: a long-branch veneer to the base. */
 void dScMgD3DBase_c::OnHitByMegaChar()
 {
     dScMgBase_c::OnHitByMegaChar();
 }
 
 // @symbol _ZN14dScMgD3DBase_c19OnHitFromUnderneathEv
-/* Slot 28 forwards the existing base contract. The inherited int return
- * is provisional; no meaningful return value is established by this wrapper. */
+/* Slot 28. */
 int dScMgD3DBase_c::OnHitFromUnderneath()
 {
     return dScMgBase_c::OnHitFromUnderneath();
 }
 
 // @symbol _ZN14dScMgD3DBase_c16OnAimedAtWithEggEv
-/* Slot 29 claims the sub-screen banks before delegating menu setup.
- * Its actor-style name and inherited int return remain provisional. */
+/* Slot 29: claims the sub-screen banks before the base opens the menu. */
 int dScMgD3DBase_c::OnAimedAtWithEgg()
 {
     func_ov006_020e73c4();
@@ -456,7 +441,7 @@ int dScMgD3DBase_c::OnAimedAtWithEgg()
 }
 
 // @symbol _ZN14dScMgD3DBase_c25OnAimedAtWithEggReturnVecEv
-/* Slot 30 restores sub-screen banks around the common menu teardown. */
+/* Slot 30: gives the banks back around the base's menu teardown. */
 void dScMgD3DBase_c::OnAimedAtWithEggReturnVec()
 {
     _ZN2GX15SetBankForSubBGEt(unk_0a0);
@@ -472,6 +457,4 @@ void dScMgD3DBase_c::OnAimedAtWithEggReturnVec()
     }
 }
 
-/* The inline class destructor lets this TU's key function emit D1/D0 in
- * cartridge order without adding a standalone D2. All four child scenes
- * inline this base teardown, including mSysTracker destruction. */
+/* The destructor is inline in the header (see the banner). */
