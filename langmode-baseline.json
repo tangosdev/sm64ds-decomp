@@ -3,7 +3,7 @@
   "codegen_hacks": {
     "cv_launder": 4,
     "cv_launder_sites": 7,
-    "extern_vtable": 104,
+    "extern_vtable": 103,
     "extern_vtable_classes": 105,
     "inline_asm": 13,
     "launder_or_forced": 178,
@@ -57,7 +57,7 @@
     "local_body_no_include_cpp": 247,
     "local_struct_body": 1513,
     "local_struct_body_cpp": 746,
-    "pad_layout": 360
+    "pad_layout": 359
   },
   "totals": {
     "c_extension": 4733,
