@@ -22187,6 +22187,50 @@ foreach(_tl15fs walk_window walk_window_hires smoke_player)
     target_sources(${_tl15fs} PRIVATE ${SLICE_L15FS_SOURCES})
 endforeach()
 
+# ===========================================================================
+# W23-4 OS ARENA (LINK15 batch W23-4)
+# ===========================================================================
+#
+# Run linkfull wave 23, lane OSARENA1. Three NitroSDK OS arena accessors
+# (func_02058eb4 OS_GetArenaHi, func_02058d58 OS_SetArenaLo, func_02058cd0
+# OS_AllocFromArenaLo) run as the ROM's own bodies over the arena table in
+# the shared system block, which ntr/io.cpp maps as a required region.
+# hal/os_arena.cpp seeds the table's OS_ARENA_MAIN words from the port's own
+# arena block at the first arena read. port/slice_w23_arena.txt carries the
+# per-row ROM-address verification and the two rows that stay out.
+#
+# TWO PARTS, both scoped to the three hosting targets:
+#   1. the slice rows, on all three (hal/os_arena.cpp is in the shared object
+#      every one of them links, so the host bodies retire on all three);
+#   2. SM64DS_OS_ARENA_ROM on hal/os_arena.cpp's compile for exactly those
+#      targets. It is a SOURCE property keyed on the compiling target's name,
+#      not a target definition, for two measured reasons: the slice-share
+#      block above has already read the targets' COMPILE_DEFINITIONS by the
+#      time this block runs (a target define here would never reach the
+#      shared object that compiles this file), and a target define would
+#      change the command line of every source the targets compile. The
+#      fourteen smoke_* harnesses compile the same file WITHOUT it and keep
+#      its host stand-ins: they do not take this slice, and smoke_roots and
+#      smoke_fs link no ntr (no shared block under the table). The name list
+#      includes port_slice_shared (the object library that compiles this file
+#      once for all three) and the three targets themselves (the fallback when
+#      the share is off and each compiles it on its own).
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w23_arena.txt" SLICE_W23_ARENA_LINES)
+set(SLICE_W23_ARENA_SOURCES "")
+foreach(line IN LISTS SLICE_W23_ARENA_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_W23_ARENA_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_tw23arena walk_window walk_window_hires smoke_player)
+    target_sources(${_tw23arena} PRIVATE ${SLICE_W23_ARENA_SOURCES})
+endforeach()
+set_property(SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/hal/os_arena.cpp" APPEND PROPERTY
+    COMPILE_DEFINITIONS
+    "$<$<IN_LIST:$<TARGET_PROPERTY:NAME>,port_slice_shared;walk_window;walk_window_hires;smoke_player>:SM64DS_OS_ARENA_ROM=1>")
+
 
 # MOVED BACK TO LAST IN THE FILE at the wave-9c fold (lane INT4). Its own banner
 # below says every port_read_lines call has to be above it, and two blocks had

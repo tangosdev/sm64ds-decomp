@@ -1,9 +1,12 @@
 // Host OS arena: the memory region SetupRootHeap carves the root heap from.
 //
-// On the DS, data_020a0ea4 is the OS globals object and the func_02058*
-// family are the arena accessors (get-low, get-high, align-allocate,
-// set-low). On host the arena is one big malloc'd block, initialized on
-// first use so the smoke needs no setup call.
+// On the DS, data_020a0ea4 is the arena id Heap::SetupRootHeap passes and the
+// func_02058* family are the NitroSDK arena accessors (get-low, get-high,
+// set-low, allocate-from-low) over one table in the shared system block. On
+// host the arena itself is one big block reserved at a fixed base, created on
+// first use. The hosting targets run the ROM's own accessors over that table;
+// the narrow smoke harnesses keep host stand-ins. THE OS ARENA TABLE block
+// below says which is which and why.
 #include <stdlib.h>
 #include "dsstate_seg.h"
 #include <stdio.h>
@@ -103,16 +106,56 @@ static void arena_init(void)
     }
 }
 
+#ifdef SM64DS_OS_ARENA_ROM
+/* The ROM's OS arena table in the shared system block (NitroSDK OSArenaInfo,
+   OS_ARENA_MAX = 9 ids): lo[id] at 0x027ffda0, hi[id] at 0x027ffdc4. The
+   addresses are the ROM's own: src/func_02058ea0.c, src/func_02058eb4.c and
+   src/func_02058d58.c spell them, and the cartridge's bodies at 0x02058ea0 /
+   0x02058eb4 / 0x02058d58 compute 0x027ff000 + 0xda0 / 0xdc4 + id * 4. */
+typedef unsigned int os_word;
+static os_word *const os_arena_lo_word = (os_word *)(size_t)0x027ffda0u;
+static os_word *const os_arena_hi_word = (os_word *)(size_t)0x027ffdc4u;
+enum { OS_ARENA_MAIN = 0 };
+/* 1 once os_arena_seed has run. Host session state, not DS state: it only
+   ever goes 0 -> 1, at the first arena read of the process. */
+static int g_os_seeded;
+#endif
+
 extern "C" {
 /* Read-only arena window accessors for the save-state layer. base and end are
-   fixed for the process lifetime; cursor is the live low-water carve pointer
-   that func_02058cd0/func_02058d58 move. All three return 0 before the first
-   carve forces arena_init, which is why the save-state code calls
-   port_arena_base() (it runs arena_init) before reading any of them. */
+   fixed for the process lifetime; cursor is the live low-water carve pointer.
+   All three return 0 before the first carve forces arena_init, which is why
+   the save-state code calls port_arena_base() (it runs arena_init) before
+   reading any of them.
+
+   WHERE THE CURSOR LIVES. On the narrow harnesses it is g_lo, which the host
+   stand-ins below move. On the hosting targets (SM64DS_OS_ARENA_ROM) the ROM's
+   own func_02058d58 / func_02058cd0 move the OS_ARENA_MAIN lo word of the
+   table instead, so once the table is seeded the cursor IS that word: the
+   save state captures and restores it exactly as it captured g_lo before.
+   After boot both read the arena end, because Heap::SetupRootHeap carves the
+   whole arena into the root heap. */
 void *port_arena_base(void)   { arena_init(); return g_base; }
 void *port_arena_end(void)    { arena_init(); return g_hi; }
-void *port_arena_cursor(void) { arena_init(); return g_lo; }
-void  port_arena_set_cursor(void *p) { g_lo = (char *)p; }
+void *port_arena_cursor(void)
+{
+    arena_init();
+#ifdef SM64DS_OS_ARENA_ROM
+    if (g_os_seeded)
+        return (void *)(size_t)os_arena_lo_word[OS_ARENA_MAIN];
+#endif
+    return g_lo;
+}
+void  port_arena_set_cursor(void *p)
+{
+#ifdef SM64DS_OS_ARENA_ROM
+    if (g_os_seeded) {
+        os_arena_lo_word[OS_ARENA_MAIN] = (os_word)(size_t)p;
+        return;
+    }
+#endif
+    g_lo = (char *)p;
+}
 
 /* 1 if the arena came up at its fixed host base (VirtualAlloc succeeded), 0 if
    it fell back to calloc. The disk save state (hal/lk7_persist.cpp) is only
@@ -203,31 +246,129 @@ void port_install_verdict_add(const char *line)
 }
 
 extern "C" {
-// the OS globals object; the accessors ignore it, but the address must exist
+// The arena id Heap::SetupRootHeap passes to every accessor below
+// (ROOT_HEAP_ARENA_ID, bound here by /alternatename in hal/cxx_aliases.cpp).
+// Heap::InitializeRootHeap stores 0 into it, OS_ARENA_MAIN. The narrow
+// harnesses' stand-ins ignore it; the ROM's accessors index the table by it.
 DSSTATE_BEGIN
 char data_020a0ea4[4];
 DSSTATE_END
 
-/* PORT_HOST_ABI: DS OS-arena globals live at unmapped 0x27ffda0; host substitutes
-   a deterministic calloc'd arena. */
+/* THE OS ARENA TABLE (run linkfull wave 23, lane OSARENA1; LINK15 batch W23-4)
+   -------------------------------------------------------------------------
+   The five PORT_HOST_ABI rows this block used to carry all said the DS
+   arena words at 0x027ffda0 / 0x027ffdc4 were UNMAPPED. They have not been
+   since 08-26: ntr/io.cpp maps the shared system block 0x027ff000..0x027fffff
+   as a required region, so the ROM's accessor bodies can run on the table as
+   they are. What the port never did was WRITE the table, which on the DS is
+   OS_InitArena's job (func_02058f28, the first arm of func_02058c84).
+   hal/boot_os.cpp's pre-main span skips that arm ("the OS arena, owned by
+   hal/os_arena.cpp"), so this file seeds it, from the port's own arena block.
+
+   SM64DS_OS_ARENA_ROM selects the ROM side. port/CMakeLists.txt's W23-4 block
+   sets it on the three hosting targets' compile of this file ONLY (the shared
+   object library and walk_window, walk_window_hires, smoke_player), the same
+   targets port/slice_w23_arena.txt puts the ROM bodies on:
+
+     func_02058eb4  OS_GetArenaHi        src/, slice_w23_arena
+     func_02058d58  OS_SetArenaLo        src/, slice_w23_arena
+     func_02058cd0  OS_AllocFromArenaLo  src/, slice_w23_arena
+     func_02058ea0  OS_GetArenaLo        here: the ROM's own read, after the seed
+     func_02059040  OS_InitAlloc         here: held, see its own comment
+
+   THE SEED is what the ROM's OS_InitArena writes for OS_ARENA_MAIN, with the
+   port's block in place of the cartridge's linker-defined bounds:
+       hi[OS_ARENA_MAIN] = g_hi   (the end of the arena block)
+       lo[OS_ARENA_MAIN] = g_lo   (its 64K-aligned base, nothing carved yet)
+   on the default 8 MB fixed-base arena that is lo 0x30000000, hi 0x30800000.
+   Every other id stays 0. OS_InitArena also fills MAINEX (with 0), ITCM,
+   DTCM, SHARED and WRAM_MAIN from DS ranges this port does not map, and no
+   linked ROM code reads any id but 0 (the only linked caller of these five
+   is Heap::SetupRootHeap, with id 0); a 0 lo makes OS_AllocFromArenaLo
+   refuse, which is the honest answer for an arena that does not exist here.
+
+   WHY THE SEED RUNS AT THE FIRST ARENA READ AND NOT IN arena_init OR AT
+   START-UP. Two things have to be true when it runs: the arena block exists,
+   and ntr holds the shared block. The first read of the table is always
+   func_02058ea0 at the top of Heap::SetupRootHeap (func_02058cd0 reads lo
+   through it too), and every hosting target calls SetupRootHeap after
+   ntr::io_init has succeeded, so both are true there by construction.
+   arena_init is also reachable from host callers whose timing is not tied
+   to io_init (port_arena_base from the GPU device and the save-state layer),
+   and a static initialiser runs after ntr's early TLS claim but BEFORE
+   io_init's retry: on a launch where the early claim lost the shared block
+   and the retry won it (the rescue ntr/io.cpp exists for), a start-up seed
+   would find no table to write and Heap::SetupRootHeap would fault. So
+   func_02058ea0 stays in this file as the seed point. It retires the day the
+   seed moves to the ROM's own point in the order, hal/boot_os.cpp's
+   func_02058f28 line in port_boot_rom_pre_main (and smoke_player's main,
+   which calls SetupRootHeap straight after io_init). */
+#ifdef SM64DS_OS_ARENA_ROM
+static void os_arena_seed(void)
+{
+    if (g_os_seeded)
+        return;
+    g_os_seeded = 1;
+    arena_init();
+    if (!g_lo)
+        return;   /* no arena block: leave the table 0, the allocator refuses */
+    /* OS_InitArena's order: hi first, then lo (func_02058d6c, func_02058d58) */
+    os_arena_hi_word[OS_ARENA_MAIN] = (os_word)(size_t)g_hi;
+    os_arena_lo_word[OS_ARENA_MAIN] = (os_word)(size_t)g_lo;
+    fprintf(stderr, "[arena] OS arena %d seeded: lo %08x hi %08x\n",
+            (int)OS_ARENA_MAIN, os_arena_lo_word[OS_ARENA_MAIN],
+            os_arena_hi_word[OS_ARENA_MAIN]);
+}
+
+/* PORT_HOST_ABI: OS_GetArenaLo is the port's OS_InitArena seam: the first arena read seeds the table (hal/boot_os.cpp skips func_02058f28), then the ROM's own read.
+   The return statement IS src/func_02058ea0.c's body; the seed call is the
+   only difference, and it does nothing after the first call. */
+unsigned int func_02058ea0(int idx)
+{
+    os_arena_seed();
+    return os_arena_lo_word[idx];
+}
+
+/* PORT_HOST_ABI: OS_InitAlloc is HELD: the ROM body reserves its 0x44-byte OS heap-info block at the arena base and returns base+0x60, which moves the root heap; W23-4 keeps the root heap bounds identical.
+   Measured against the cartridge (arm9 0x02059040, 0xbc bytes; match.py
+   2004/b56 MATCHING on src/func_02059040.c): it is NitroSDK OS_InitAlloc.
+   Heap::SetupRootHeap calls it as (id, lo, hi, 4); it stores lo into
+   OSiHeapInfo[id] (data_020a637c), builds the heap-info header plus four
+   0xc-byte descriptors at lo, and returns round32(lo + 0x14 + 4 * 0xc). On
+   the port's arena that is 0x30000060, so the ROM body would start the root
+   heap 0x60 bytes higher and 0x60 bytes smaller than this stand-in does, and
+   every allocation address would move by the same amount. That is the
+   cartridge's own layout, and the brief this lane ran under says a root-heap
+   bound that moves by a byte is reverted, so the row is reported for a ruling
+   rather than taken. What this stand-in returns is unchanged: lo rounded up
+   to the fourth argument, which is lo itself on the 64K-aligned base. */
+int func_02059040(int idx, int lo, int hi, int align)
+{
+    (void)idx;
+    (void)hi;
+    return (lo + align - 1) & ~(align - 1);
+}
+#else
+/* THE NARROW HARNESSES' STAND-INS. Every smoke_* target that links
+   Heap::SetupRootHeap links it without port/slice_w23_arena.txt, and two of
+   them (smoke_roots, smoke_fs) link no ntr at all, so there is no shared
+   block under the table: these five host bodies are the only definitions
+   those links can have. They carve the same arena the same way they always
+   did. */
 int func_02058ea0(void *) { arena_init(); return (int)(size_t)g_lo; }   /* arena lo */
-/* PORT_HOST_ABI: DS OS-arena globals live at unmapped 0x27ffdc4; host arena. */
 int func_02058eb4(void *) { arena_init(); return (int)(size_t)g_hi; }   /* arena hi */
 
-/* align `lo` up by `align`, bounded by hi -- mirrors OS_AllocFromArenaLo's
- * pre-alignment step as SetupRootHeap uses it
- * PORT_HOST_ABI: DS OS-arena state (0x27ffda0) unmapped; host arena carve. */
+/* the round-up SetupRootHeap's OS_InitAlloc call returns here: see the
+   SM64DS_OS_ARENA_ROM arm above for what the ROM body does instead */
 int func_02059040(void *, int lo, int hi, int align)
 {
     (void)hi;
     return (lo + align - 1) & ~(align - 1);
 }
 
-/* PORT_HOST_ABI: DS OS-arena globals live at unmapped 0x27ffda0; host arena. */
 void func_02058d58(void *, int newLo) { g_lo = (char *)(size_t)newLo; }  /* set lo */
 
-/* carve `size` bytes aligned `align` from the low side
-   PORT_HOST_ABI: DS OS-arena state (0x27ffda0) unmapped; host arena carve. */
+/* carve `size` bytes aligned `align` from the low side */
 void *func_02058cd0(void *, int size, int align)
 {
     arena_init();
@@ -237,6 +378,7 @@ void *func_02058cd0(void *, int size, int align)
     g_lo = p + size;
     return p;
 }
+#endif
 }
 
 /* ===================================================================== *
