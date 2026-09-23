@@ -223,7 +223,7 @@ void func_ov074_0211fa74(char* c);
 void func_ov074_0211fa08(char* c);
 void func_ov074_0211f5b8(char* c);
 int func_ov074_0211f38c(u8* c);
-void func_ov074_0211f344(void* r6, unsigned char r5);
+void func_ov074_0211f344(void* self, unsigned char value);
 void func_ov074_0211f244(dActor_c *self);
 void func_ov074_0211f154(char* c);
 extern int func_ov074_02121a20(void* c, int idx);
@@ -473,9 +473,9 @@ void func_ov074_02120bb8(char *self, char *p1, char *p2, int mode)
 extern "C" {
 void func_ov074_02120b90(void *c) {
     int idx = *(unsigned char*)((char*)c + 0x604);
-    int r3 = *(int*)((char*)c + 0x5f0);
-    unsigned short r1 = data_ov074_02122dfc[idx];
-    *(short*)((char*)c + 0x5f8) = r3 * r1;
+    int base = *(int*)((char*)c + 0x5f0);
+    unsigned short scale = data_ov074_02122dfc[idx];
+    *(short*)((char*)c + 0x5f8) = base * scale;
 }
 }
 
@@ -943,9 +943,9 @@ extern "C" void func_ov074_0211fd74(void* self)
     }
 
 L90:;
-    int r5 = data_ov074_02122d80[*(u8*)(c+0x604)];
+    int spawnTarget = data_ov074_02122d80[*(u8*)(c+0x604)];
     u8* pl = (u8*)_ZN8dActor_c13ClosestPlayerEv(self);
-    if (*(u8*)(c+0x604) == 1 && *(s32*)(pl+8) != 3) r5 = r5 + 1;
+    if (*(u8*)(c+0x604) == 1 && *(s32*)(pl+8) != 3) spawnTarget = spawnTarget + 1;
 
     if (_ZN9Animation8FinishedEv((void*)(c+0x260)) == 0) return;
     if (DecIfAbove0_Short((u16*)(c+0x5fc)) != 0) return;
@@ -984,7 +984,7 @@ L90:;
     }
     if (*(u8*)(c+0x602) % dv == 0) *(s32*)(c+0x268) = 0;
 
-    if (*(u8*)(c+0x602) < r5) return;
+    if (*(u8*)(c+0x602) < spawnTarget) return;
     func_ov074_021203e4((char*)self, 3);
 }
 
@@ -1257,70 +1257,77 @@ extern "C" void func_ov074_0211f5b8(char* c)
     }
 }
 
+/* Release one Goomba from the tail, on a timer, and report whether the whole
+   wave has been released.  The tail is built in three tiers: the first seven
+   Goombas ring the base, the next five sit a little higher on a wider step,
+   the last three higher still, and anything past that spawns dead centre with
+   no radius at all.  The spawn count needed is a table lookup on the phase
+   byte at 0x604, with one extra on phase 1 unless the closest player's mode
+   word reads 3. */
 /* ROM ordinal 5 -- func_ov074_0211f38c, 0x0211f38c, size 0x22c */
 // @symbol func_ov074_0211f38c
 extern "C" {
 int func_ov074_0211f38c(u8* c){
-    struct Vector3 p0, p1;
-    struct Vector3_16 ang;
-    int mult;
-    int r5;
-    void* pl;
-    p0.x=0; p0.y=0; p0.z=0;
-    ang.x=0; ang.y=0; ang.z=0;
-    p0.x=*(int*)(c+0x5c);
-    p0.y=*(int*)(c+0x60);
-    p0.z=*(int*)(c+0x64);
-    p0.y+=0xe4000;
-    p1.x=p0.x;
-    p1.y=p0.y;
-    p1.z=p0.z;
-    ang.y=(short)*(short*)(c+0x8e);
+    struct Vector3 spawnPos, basePos;
+    struct Vector3_16 spawnAngle;
+    int radius;
+    int spawnTarget;
+    void* player;
+    spawnPos.x=0; spawnPos.y=0; spawnPos.z=0;
+    spawnAngle.x=0; spawnAngle.y=0; spawnAngle.z=0;
+    spawnPos.x=*(int*)(c+0x5c);
+    spawnPos.y=*(int*)(c+0x60);
+    spawnPos.z=*(int*)(c+0x64);
+    spawnPos.y+=0xe4000;
+    basePos.x=spawnPos.x;
+    basePos.y=spawnPos.y;
+    basePos.z=spawnPos.z;
+    spawnAngle.y=(short)*(short*)(c+0x8e);
     if(DecIfAbove0_Short((u16*)(c+0x5fc))==0){
-        u8 t=c[0x602];
-        if(t<=6){
-            ang.y=(short)(t*0x2492+ang.y);
-            mult=0x18c000;
-        } else if(t<=0xb){
-            p0.y+=0xc4000;
-            ang.y=(short)((c[0x602]-7)*0x3333+ang.y);
-            mult=0x108000;
-        } else if(t>0xe){
-            p0.y+=0x24c000;
-            mult=0;
+        u8 spawned=c[0x602];
+        if(spawned<=6){
+            spawnAngle.y=(short)(spawned*0x2492+spawnAngle.y);
+            radius=0x18c000;
+        } else if(spawned<=0xb){
+            spawnPos.y+=0xc4000;
+            spawnAngle.y=(short)((c[0x602]-7)*0x3333+spawnAngle.y);
+            radius=0x108000;
+        } else if(spawned>0xe){
+            spawnPos.y+=0x24c000;
+            radius=0;
         } else {
-            p0.y+=0x188000;
-            ang.y=(short)((c[0x602]-0xc)*0x5555+ang.y);
-            mult=0x84000;
+            spawnPos.y+=0x188000;
+            spawnAngle.y=(short)((c[0x602]-0xc)*0x5555+spawnAngle.y);
+            radius=0x84000;
         }
         {
-            int s=((u16)ang.y>>4)<<1;
-            p0.x += (int)(((s64)mult * data_02082214[s] + 0x800) >> 0xc);
-            p0.z += (int)(((s64)mult * data_02082214[s+1] + 0x800) >> 0xc);
+            int sinIdx=((u16)spawnAngle.y>>4)<<1;
+            spawnPos.x += (int)(((s64)radius * data_02082214[sinIdx] + 0x800) >> 0xc);
+            spawnPos.z += (int)(((s64)radius * data_02082214[sinIdx+1] + 0x800) >> 0xc);
         }
-        ang.x=Vec3_VertAngle(&p1, &p0);
-        _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0xc7, 0x1111, &p0, &ang, (signed char)c[0xcc], -1);
+        spawnAngle.x=Vec3_VertAngle(&basePos, &spawnPos);
+        _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0xc7, 0x1111, &spawnPos, &spawnAngle, (signed char)c[0xcc], -1);
         {
             u8* pc=(u8*)(c+0x602);
             *pc+=1;
         }
         *(short*)((c+0x500)+0xfc)=2;
     }
-    r5=data_ov074_02122d80[c[0x604]];
-    pl=_ZN8dActor_c13ClosestPlayerEv(c);
-    if(c[0x604]==1){ if(*(int*)((char*)pl+8)!=3) r5+=1; }
-    return c[0x602]>=r5 ? 1 : 0;
+    spawnTarget=data_ov074_02122d80[c[0x604]];
+    player=_ZN8dActor_c13ClosestPlayerEv(c);
+    if(c[0x604]==1){ if(*(int*)((char*)player+8)!=3) spawnTarget+=1; }
+    return c[0x602]>=spawnTarget ? 1 : 0;
 }
 }
 
 /* ROM ordinal 4 -- func_ov074_0211f344, 0x0211f344, size 0x48 */
 // @symbol func_ov074_0211f344
 extern "C" {
-void func_ov074_0211f344(void* r6, unsigned char r5) {
-  void* r1 = (void*)_ZN8dActor_c15FindWithActorIDEjPS_(0xc7, 0);
-  while (r1) {
-    if (r1 != r6) *(unsigned char*)((char*)r1 + 0x60a) = r5;
-    r1 = (void*)_ZN8dActor_c15FindWithActorIDEjPS_(0xc7, r1);
+void func_ov074_0211f344(void* self, unsigned char value) {
+  void* other = (void*)_ZN8dActor_c15FindWithActorIDEjPS_(0xc7, 0);
+  while (other) {
+    if (other != self) *(unsigned char*)((char*)other + 0x60a) = value;
+    other = (void*)_ZN8dActor_c15FindWithActorIDEjPS_(0xc7, other);
   }
 }
 }
