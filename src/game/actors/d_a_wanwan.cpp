@@ -1,46 +1,52 @@
 //cpp
 /**
- * Bob-omb Battlefield Chain Chomp (`wanwan`). Seven chain links,
- * a stump (STUMP, actor 0x1b) and a fence (CHAIN_CHOMP_FENCE, actor
- * 0x29) in ov014.
+ * daWanwan_c -- the Chain Chomp on Bob-omb Battlefield, plus the two objects
+ * it is anchored to.
  *
- * daWanwan_c_classInit is reconstructed (RTTI daWanwan_c, WANWAN
- * registry). Retail does not store that spelling.
+ * The chomp is seven chain links, a stump it is chained to (STUMP, actor
+ * 0x1b) and the fence behind it (CHAIN_CHOMP_FENCE, actor 0x29), all in
+ * ov014. daWanwan_c_classInit is a reconstructed name (RTTI daWanwan_c,
+ * WANWAN registry); retail does not store that spelling.
  *
- * deslop
- * Leftover: func_ov014_02111484..02112788 are written free here, and
- *   that is a reconstruction choice, not a deduction. The image preserves
- *   no original mangled symbol table, so the func_ov labels are
- *   address-derived repository names; the exact historical function
- *   spellings remain unknown, and an existing label is not a barrier to a
- *   member -- a migration renames source and config together. Ownership
- *   evidence is thinner here than a typed receiver would give: all 22 are
- *   defined in this file and each takes the object first, but spelled
- *   char*, void* or u8*, so the receiver type is assumed, not recovered.
- *   Migration scope: this file, the 02111fb8 declaration in daWanwan_c.h,
- *   the 02111ebc declaration in decl_common.h, and the ov014 symbols.txt
- *   rows. (02112ea8 is outside this range, is not defined here, and is
- *   shared with the wanwan-shutter TU.) Until then the original ownership
- *   and form stay uncertain.
- * Leftover: dCcAcPos_c::Init and DropShadowRadHeight stay mangled
- *   (Fix12-by-value, wall 6az).
- * Leftover: SharedFilePtr has no recovered layout. Init's
- *   `&data_ov014_02114978 + 4` is the BMD pointer LoadFile just
- *   filled; decl_common.h spells the four handles as char, so
- *   LoadFile/Release go through that view.
- * Leftover: ClosestPlayer()+0x6fb is a Player byte this TU reads;
- *   the name belongs on Player. Spawned stump uses Stump::mBusy;
- *   Stump.h does not disturb this TU's matrix copies.
- * Leftover: `(Vector3 *)&mPosX` / `&mScaleX` stay; Pos() is not on
- *   this branch's dActor_c.
- * Leftover: BMD/BCA handles still data_ov014_*; sinit file IDs
- *   belong with that sinit. Text-only TU, so g_profile_WANWAN is
- *   not defined here (S14).
- * Leftover: factory stays the hand-rolled C2 / vec_ctor walk.
- *   `return new` size-DIFF (Vector3[7] ctor is func_0203d384, not
- *   the implicit default).
- * Leftover: common.h must be included first. Matrix4x3 has two
- *   0x30-byte spellings; 02112788 copies twelve uniform words.
+ * DO NOT "TIDY" THESE -- each one is load-bearing:
+ *
+ *   common.h must be included first. Matrix4x3 has two 0x30-byte spellings
+ *   and func_ov014_02112788 copies twelve uniform words; the wrong one wins
+ *   if a nested include gets there first.
+ *
+ *   The factory is the hand-rolled C2 / vec_ctor walk, not `return new`. The
+ *   Vector3[7] constructor the ROM calls is func_0203d384, not the implicit
+ *   default, so `return new` size-DIFFs.
+ *
+ *   `(Vector3 *)&mPosX` and `&mScaleX` stay as they are -- dActor_c on this
+ *   branch has no Pos().
+ *
+ *   dCcAcPos_c::Init and DropShadowRadHeight stay spelled as mangled symbols:
+ *   Fix12 passed by value, wall 6az.
+ *
+ * THE FREE FUNCTIONS ARE A CHOICE, NOT A DEDUCTION. func_ov014_02111484
+ * through 02112788 are written as free functions here. The image preserves no
+ * original mangled symbol table, so those labels are address-derived
+ * repository names; the historical spellings are unknown, and an existing
+ * label is no barrier to making one a member -- a migration renames source
+ * and config together. The ownership evidence is thinner here than a typed
+ * receiver would give: all 22 are defined in this file and each takes the
+ * object first, but spelled char*, void* or u8*, so the receiver type is
+ * assumed rather than recovered. Migrating them would touch this file, the
+ * 02111fb8 declaration in daWanwan_c.h, the 02111ebc declaration in
+ * decl_common.h, and the ov014 symbols.txt rows. func_ov014_02112ea8 is
+ * outside that range, is not defined here, and is shared with the
+ * wanwan-shutter TU.
+ *
+ * NOT OWNED BY THIS TU. SharedFilePtr has no recovered layout, so Init's
+ * `&data_ov014_02114978 + 4` is simply the BMD pointer LoadFile has just
+ * filled in, and since decl_common.h spells the four handles as char,
+ * LoadFile and Release go through that view. The BMD/BCA handles keep their
+ * data_ov014_* names and the sinit file IDs belong with that sinit. This is a
+ * text-only TU, so g_profile_WANWAN is not defined here (S14). The byte at
+ * ClosestPlayer()+0x6fb is a Player field this TU reads; naming it belongs on
+ * Player. The spawned stump is reached through Stump::mBusy -- Stump.h does
+ * not disturb this TU's matrix copies.
  */
 
 #include "common.h"

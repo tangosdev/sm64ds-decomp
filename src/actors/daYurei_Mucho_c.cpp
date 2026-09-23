@@ -1,25 +1,39 @@
 //cpp
-/* daYurei_Mucho_c, the YUREI_MUCHO enemy (ov065) -- Snufit.
- * Class identity, layout evidence and matching experiments are recorded in
+/* daYurei_Mucho_c -- Snufit, the masked Snifit that drifts around Hazy Maze
+ * Cave and shoots at you (registry name YUREI_MUCHO, ov065).
+ *
+ * Class identity, layout evidence and the matching experiments behind the
+ * spellings below are recorded in
  * notes/agents/handoffs/daYurei_Mucho_c-ov065.md.
  *
- * deslop
- * Leftover: func_ov065_02115f84..0211696c are this TU's own state/helper
- *   bodies; the ROM symbols are still the func_ov labels. Naming them as
- *   C++ methods would emit _ZN15daYurei_Mucho_c* and miss those labels.
- * Leftover: ModelAnim::SetAnim / dCcAc_c::Init / dBgCh_Actr::Init /
- *   DropShadowRadHeight / KillByInvincibleChar / SpawnCoins / Player::Hurt /
- *   Player::Bounce stay mangled (Fix12-by-value, 6az; dBgCh Init header
- *   Fix12i mangles as int -- this TU's InitResources call).
- * Leftover: Mtx43 / V3A overlays on mModelAnim.mat4x3, mShadowMat, and
- *   player pos copies (Matrix4x3 / Vector3 assignment scalarizes).
- * Leftover: `(int)this + 0x3d8` / `(int)c + 0x3c0` integer-cast forms are
- *   load-bearing in Behavior and func_ov065_0211696c (`&mBobAngle` /
- *   `mShotPosX <<= 3` DIFFs). mStateTimer compares stay unsigned short
- *   (ldrh). SharedFilePtr +4 BCA loads stay raw (layout unrecovered).
- * Leftover: data_ov065_* SharedFilePtr handles (Init LoadFile / Cleanup
- *   Release) and State records (func_ov065_0211691c). S14 no
- *   g_profile_YUREI_MUCHO. pad_3e2 unobserved.
+ * DO NOT "TIDY" THESE -- each one is load-bearing:
+ *
+ *   The integer-cast field forms, `(int)this + 0x3d8` in Behavior and
+ *   `(int)c + 0x3c0` in func_ov065_0211696c. Writing `&mBobAngle`, or
+ *   `mShotPosX <<= 3`, DIFFs.
+ *
+ *   mStateTimer comparisons stay unsigned short, because the ROM loads it
+ *   with ldrh.
+ *
+ *   The Mtx43 / V3A overlays on mModelAnim.mat4x3, mShadowMat and the player
+ *   position copies. Plain Matrix4x3 / Vector3 assignment scalarizes.
+ *
+ *   The SharedFilePtr +4 BCA loads stay raw -- that layout is unrecovered.
+ *
+ *   ModelAnim::SetAnim, dCcAc_c::Init, dBgCh_Actr::Init, DropShadowRadHeight,
+ *   KillByInvincibleChar, SpawnCoins, Player::Hurt and Player::Bounce stay
+ *   spelled as mangled symbols: Fix12 by value, wall 6az. dBgCh_Actr::Init is
+ *   the same wall from the other side -- the header's Fix12i mangles as int,
+ *   which is what InitResources calls here.
+ *
+ * func_ov065_02115f84..0211696c are this TU's own state and helper bodies.
+ * They keep the address-derived func_ov labels deliberately: spelling them as
+ * C++ methods emits _ZN15daYurei_Mucho_c* and misses the ROM's symbols.
+ *
+ * NOT OWNED BY THIS TU. The data_ov065_* SharedFilePtr handles (Init
+ * LoadFile, Cleanup Release) and the state records
+ * (func_ov065_0211691c). g_profile_YUREI_MUCHO is defined outside (S14).
+ * pad_3e2 is unobserved.
  */
 
 #include "daYurei_Mucho_c.h"
