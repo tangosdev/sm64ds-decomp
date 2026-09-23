@@ -11,3 +11,6 @@
 #
 # Coincentration (dScMgCoin_c), unmatched/MgCoin_StateDispatch.cpp
 src/func_ov006_020ddd6c.cpp
+# the curling minigame (dScMgCurling_c), unmatched/MgCurling_StateDispatch.cpp
+src/func_ov006_020e0d84.cpp
+src/func_ov006_020e1214.cpp

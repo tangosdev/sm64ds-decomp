@@ -221,6 +221,15 @@ LEDGER = [
      "at the sibling class the same night. Both the flat dispatcher and the "
      "inlined calls set ecx, so the enter half is thunked too and this "
      "table leaves the exception list"),
+
+    # ---- run linkfull lane PMFMG1: the minigame member-pointer rows -------
+    ("ECX", r"^\?seats@\?1\?\?port_mg_curling_states_seat@@",
+     "dScMgCurling_c: every cell of this installer's table holds a __fastcall "
+     "face. The three tables this lane added (data_ov006_021418f0, _02141930, "
+     "_021418d8) are dispatched only by src/func_ov006_020e1214.cpp and "
+     "src/func_ov006_020e0d84.cpp, `push <index>; mov ecx,tab[eax*8+4]; mov "
+     "eax,tab[eax*8]; add ecx,<this>; call eax`, callee-popped; the three "
+     "PMFB5 tables before them are read with the same shape"),
 ]
 
 
