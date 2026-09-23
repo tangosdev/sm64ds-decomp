@@ -1,34 +1,36 @@
-/* HOST COPY of src/_ZN5Bully16UpdateDeathStateEv.cpp -- BULLY's AfterClsn extension
- * virtual (daDonketu_c::AfterClsn, vtable SLOT 32 -- this comment said 35 and
- * that was wrong; hal/actor_classes_ov064.cpp fills this body at vt[32], which
- * is also where PathLift carries the same extension virtual, and the slot is
- * what its pop contract is read from), the coin pop on the
- * knocked-into-lava path plus the mole-style group census bump. The matched
- * .cpp cannot be compiled verbatim on the MSVC host: after declaring its
- * local `struct Actor` shadow with the two statics, it RE-declares both at
- * namespace scope (`Actor* Actor::Spawn(...);`), an out-of-class member
- * redeclaration mwccarm accepts and MSVC rejects (C2761).
+/* BULLY's AfterClsn extension virtual (daDonketu_c::AfterClsn, vtable SLOT 32;
+ * hal/actor_classes_ov064.cpp fills it at vt[32], which is also where PathLift
+ * carries the same extension virtual), the coin pop on the knocked-into-lava
+ * path plus the group census bump on the Big Bully that spawned it.
  *
- * This is the port/unmatched/ host-copy pattern: the body is the matched
- * source's line for line, with only the two redundant redeclaration lines
- * dropped. The Actor::Spawn id 0x120 = 288 = COIN, hosted since gate 33;
- * both results are null-checked.
+ * HOST COPY RETIRED (run linkfull wave 23, lane HGFRONT1). The body is the
+ * matched TU src/_ZN5Bully16UpdateDeathStateEv.cpp again, on
+ * port/slice_w23_hostgen.txt. It stood here because the old spelling of that TU
+ * re-declared its shadow's two statics at namespace scope, which MSVC rejects
+ * (C2761). The synced TU has no shadow and no redeclaration left: it is a real
+ * member, `void Bully::UpdateDeathState()` against include/Bully.h:48, it
+ * compiles clean under walk_window's own flags, and it is MATCHING at 2004/b56
+ * with --strict-relocs against the cartridge (ov064 0x02117220, 0xf0 bytes).
+ * The object MSVC builds from it reads and writes the same offsets the body
+ * here did (+0x5c/+0x60/+0x64, +0x94, +0xcc, the coin's +0x98/+0xa4/+0xa8/+0xac,
+ * +0x3fc, and the census byte at +0x3fe), in the same order.
+ *
+ * WHAT STAYS IS THE FACE. The slot-32 shim in hal/actor_classes_ov064.cpp
+ * (bly_v32) calls this flat C name with the receiver on the stack, and the
+ * matched body is __thiscall with the receiver in ECX, so an /alternatename
+ * cannot bridge them (a NAME bridge, never an ABI bridge). This is the reverse
+ * face port/faces_sync.txt generates for BigBully's own UpdateDeathState
+ * (0x021175cc), in the same shape: a shadow class declaring only the member, so
+ * the qualified call names ?UpdateDeathState@Bully@@UAEXXZ directly and needs no
+ * header. It is written here rather than as a ledger row because that ledger
+ * belongs to another lane this wave; moving it there is a one-row follow-up.
+ * The binding was checked the way facegen checks a row: ROM 0x02117220 is
+ * _ZN5Bully16UpdateDeathStateEv in config/arm9/overlays/ov064/symbols.txt and
+ * no other symbol shares the address; the member's decorated name reads
+ * `public: virtual void __thiscall Bully::UpdateDeathState(void)`, whose class,
+ * method, arity (0) and constness are the Itanium name's; the return is void,
+ * so there is nothing to widen.
  */
-typedef unsigned char u8;
-typedef signed char s8;
-typedef short s16;
-struct Vector3 { int x, y, z; };
-struct Vector3_16 { s16 x, y, z; };
-struct Actor {
-    static Actor *Spawn(unsigned a, unsigned b, const Vector3 &pos,
-                        const Vector3_16 *rot, int e, int f);
-    static Actor *FindWithID(unsigned id);
-};
-extern "C" {
-extern int RandomIntInternal(void *seed);
-extern int data_0209e650;
-extern int func_ov064_0211616c(void *thiz);
-}
 
 /* the shadow's static spellings onto the hosted C bodies; the Spawn one
    already exists twice (actor_faces_bob / bob_enemy_bridges), FindWithID's
@@ -37,32 +39,10 @@ extern int func_ov064_0211616c(void *thiz);
 // #pragma comment(linker, "/alternatename:?Spawn@dActor_c@@SAPAU1@IIABUVector3@@PBUVector3_16@@HH@Z=__ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as")
 #pragma comment(linker, "/alternatename:?FindWithID@dActor_c@@SAPAU1@I@Z=__ZN8dActor_c10FindWithIDEj")
 
-/* PORT_HOST_ABI: MSVC C2761 rejects the matched TU's out-of-class member
-   redeclarations; body is the matched source's line for line. */
-extern "C" void _ZN5Bully16UpdateDeathStateEv(char *self)
-{
-    if (func_ov064_0211616c(self) == 0) return;
-    int pz = *(int *)(self + 0x64);
-    int py = *(int *)(self + 0x60) + 0x136000;
-    int px = *(int *)(self + 0x5c);
-    Vector3 pos;
-    pos.x = px;
-    pos.y = py;
-    pos.z = pz;
-    int r = RandomIntInternal(&data_0209e650);
-    Vector3_16 rot;
-    s16 ang = (s16)(*(s16 *)(self + 0x94) + 0x8000 + (((unsigned)r >> 8) & 0x3ff));
-    rot.x = 0; rot.z = 0; rot.y = ang;
-    Actor *a = Actor::Spawn(0x120, 2, pos, &rot, *(s8 *)(self + 0xcc), -1);
-    if (a) {
-        *(int *)((char *)a + 0x98) = 0xa000;
-        *(int *)((char *)a + 0xa4) = 0;
-        *(int *)((char *)a + 0xa8) = 0x50000;
-        *(int *)((char *)a + 0xac) = 0;
-    }
-    Actor *f = Actor::FindWithID(*(unsigned *)(self + 0x3fc));
-    if (f) {
-        u8 *p = (u8 *)(((long long)(int)((char *)f + 0x3fe)));
-        *p = (u8)(*p + 1);
-    }
-}
+struct Bully {
+    public: virtual void UpdateDeathState();
+};
+
+/* ROM 0x02117220 -> ?UpdateDeathState@Bully@@UAEXXZ */
+extern "C" void _ZN5Bully16UpdateDeathStateEv(void *self)
+{ ((Bully *)self)->Bully::UpdateDeathState(); }

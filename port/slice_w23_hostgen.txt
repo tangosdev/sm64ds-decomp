@@ -1,0 +1,51 @@
+# slice_w23_hostgen.txt -- run linkfull wave 23, lane HGFRONT1 (LINK15 batch
+# W23-6, "hostgen front-end refusals").
+#
+# MATCHED TUs WHOSE HOST COPIES OUTLIVED THEIR REASON. Each was held out of the
+# link by a PORT_HOST_ABI tag naming an MSVC front-end refusal of the src
+# spelling. Re-measured on the 0.4.2 base by compiling each src under
+# walk_window's own compile line:
+#
+#   func_ov080_02124088            ov080 0x02124088, MONTY_MOLE's 1-Up census
+#       tag: C2733, the TU's own extern "C" self-declaration against
+#       include/decl_common.h:2789. Compiles clean today, no error and no
+#       warning. Host copy was unmatched/MontyMole_1Up.cpp.
+#   func_ov064_02119afc            ov064 0x02119afc, WATER_RING's pass check
+#       tag: C2733, the TU's func_ov064_02119ecc declaration against
+#       include/decl_common.h:2762. Compiles clean today. Host copy was the
+#       named body in unmatched/Ov064_WaterRing.cpp.
+#   func_ov002_020f7780            ov002 0x020f7780, cutscene-object command 2
+#       tag: void* arithmetic, C2036. STILL refused raw, so the row goes
+#       through tools/hostgen.py (it is on PORT_HOSTGEN_TU), whose VOIDPP_ARITH
+#       rewrite now reaches this spelling. Host copy was
+#       unmatched/Ov002_CutsceneCmd_020f7780.c.
+#   _ZN5Bully16UpdateDeathStateEv  ov064 0x02117220, BULLY's slot-32 AfterClsn
+#       tag: C2761, out-of-class member redeclarations. The synced TU has none
+#       left and compiles clean. unmatched/Bully_AfterClsn.cpp keeps only the
+#       reverse face hal/actor_classes_ov064.cpp's slot-32 shim calls.
+#
+# EVIDENCE. All four are MATCHING at 2004/b56 with --strict-relocs against the
+# cartridge's own overlay bytes (tools/match.py by ROM address, overlay bins
+# from extracted/overlays/ at the overlays.yaml bases). Each host body was
+# compared instruction by instruction with the object MSVC builds from the src:
+# ov002's is identical; ov080's and ov064's differ only by the /GS cookie the
+# host copy's local types drew; Bully's also calls the real dActor_c::Spawn and
+# dActor_c::FindWithID members where the host copy called its shadow's
+# spellings, and passes the area-id byte zero-extended instead of
+# sign-extended, which nothing can see: the one reader, func_02010e78, stores
+# the low byte alone.
+#
+# THE BATCH'S OTHER TWO ROWS ARE NOT HERE, and neither is a front-end question
+# any more: src/_ZN13PrincessPeach12UpdateLookAtEv.cpp and
+# src/_ZN6Bowser8BehaviorEv.cpp both compile clean. What holds each out is a
+# FORWARD row in port/faces_sync.txt that defines the very member the TU
+# defines, so seating either is that row's flip, in a file another lane owns
+# this wave.
+#
+# Consumed by the "W23-6 HOSTGEN REFUSALS" block in port/CMakeLists.txt, on
+# walk_window, walk_window_hires and smoke_player: the three targets that
+# carried the host copies.
+src/func_ov080_02124088.cpp
+src/func_ov064_02119afc.cpp
+src/func_ov002_020f7780.c
+src/_ZN5Bully16UpdateDeathStateEv.cpp

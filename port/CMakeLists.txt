@@ -884,6 +884,15 @@ set(PORT_HOSTGEN_TU
     src/minigames/d_s_mg_m_carlo2.cpp
     src/minigames/d_s_mg_trampoline.cpp
     src/minigames/d_s_mg_bsc.cpp
+    # run linkfull wave 23, lane HGFRONT1 (LINK15 batch W23-6). The cutscene
+    # object's command slot 2 adds 0x8e to a loaded void*, the GNU byte
+    # arithmetic mwcc accepts and MSVC refuses (C2036), in the one spelling
+    # tools/hostgen.py's VOIDPP_ARITH did not reach: an operand with a
+    # parenthesis of its own, `*(void **)(p + (idx << 2)) + 0x8e`. The rewrite
+    # now reaches it (the table's own comment has the measurement), so the
+    # matched TU replaces unmatched/Ov002_CutsceneCmd_020f7780.c.
+    # port/slice_w23_hostgen.txt names the row.
+    src/func_ov002_020f7780.c
     # run link100 wave 12, fixer FILESEL (card out/FILESEL1/card_filesel.md). The ov007
     # vector normalise the FILE SELECT runs twice a frame: matched on main by 7dba86b5d
     # (PR #2361), newly on slice_ov007.txt, and every one of its 24 register accesses is a
@@ -22254,6 +22263,33 @@ endforeach()
 set_property(SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/hal/os_arena.cpp" APPEND PROPERTY
     COMPILE_DEFINITIONS
     "$<$<IN_LIST:$<TARGET_PROPERTY:NAME>,port_slice_shared;walk_window;walk_window_hires;smoke_player>:SM64DS_OS_ARENA_ROM=1>")
+
+# W23-6 HOSTGEN REFUSALS (LINK15 batch W23-6)
+# ===========================================================================
+# run linkfull wave 23, lane HGFRONT1. Four matched TUs whose host copies were
+# held by a PORT_HOST_ABI tag naming an MSVC front-end refusal: three of those
+# refusals are gone from the synced src, and the fourth is answered by
+# tools/hostgen.py (its row is on PORT_HOSTGEN_TU near the top of this file).
+# port/slice_w23_hostgen.txt carries the rows, the measurements and the two rows
+# of the batch that stay out. The three targets are the three that compiled the
+# host copies.
+#
+# ABOVE THE HOSTGEN COUNT ON PURPOSE: src/func_ov002_020f7780.c is a
+# PORT_HOSTGEN_TU row and this slice is the only list that names it, so the
+# count below has to see this port_read_lines call.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w23_hostgen.txt"
+                SLICE_W23_HOSTGEN_LINES)
+set(SLICE_W23_HOSTGEN_SOURCES "")
+foreach(line IN LISTS SLICE_W23_HOSTGEN_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_W23_HOSTGEN_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_tw23hg walk_window walk_window_hires smoke_player)
+    target_sources(${_tw23hg} PRIVATE ${SLICE_W23_HOSTGEN_SOURCES})
+endforeach()
 
 
 # MOVED BACK TO LAST IN THE FILE at the wave-9c fold (lane INT4). Its own banner
