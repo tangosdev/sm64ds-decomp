@@ -1,6 +1,6 @@
 # Root actor process readability
 
-Issue: https://github.com/tangosdev/sm64ds-decomp/issues/3012. Task: `fbase-process-readable-0923`. Input/base: `07bb515b4c8b1022b013ee68a0fbca10632ed003`. This commit is a small production-source improvement; no source relocation or TU promotion is involved.
+Issue: https://github.com/tangosdev/sm64ds-decomp/issues/3012. Task: `fbase-process-readable-0923`. Original input: `07bb515b4c8b1022b013ee68a0fbca10632ed003`. Composed/tested base: `83dbedd19f176eb6e2e2e677689ac9fb73f7999e`. This commit is a small production-source improvement; no source relocation or TU promotion is involved.
 
 `Process` is now a nonvirtual `fBase_c` method with named action/before/after callbacks instead of a fake receiver class and hand-mangled definition. The three typedefs preserve the currently configured int/bool/u32 signature. Its call order, return value and after-status mapping are unchanged. Initialization uses the existing manager nodes and byte members, and the parent accessor follows the real scene-node fields.
 
@@ -14,4 +14,6 @@ Source review fixes remove an unsupported polymorphic-member-pointer barrier, st
 - `FBASE-RECONSTRUCTION-01`: partial reconstruction. The lifecycle-list maintainer, heap helpers, explicit destructor variants and key-function/data ownership remain as inherited. The separate Manager deadstrip question remains #2025. These are not declared fully reconstructed by this slice; further root-class work belongs to #3012 with the same owner.
 - Four simple early-return/boolean-expression trials for cleanup, behavior, render and destruction guards changed the emitted object (cleanup/destruction also shortened it by 16 bytes). They were reverted. This is a bounded failed experiment, not a claim that cleaner exact forms are impossible. Local trial sources/objects and results are in `build/basecore/lifecycle-probes.json`; no retained code depends on them.
 
-No layout, virtual-slot, symbol, enrollment, baseline or attribution change is made. Independent review precedes a focused PR; main merge is not authorized by this handoff.
+Adding the callback declarations advances mwccarm's positional name for daMky's existing local Bundle destructor from `$731` to `$734`. `tools/tu_manifest_resync.py ov030/daMky_c` refreshes only that exact name in its compiler-only policy and recorded request/result arrays; the discarded symbol, its disposition and its reason are unchanged. The full build exposed this dependency before publication, and its manifest is reserved by this task.
+
+No layout, virtual-slot, ROM symbol, enrollment, baseline or attribution change is made. Independent review precedes a focused PR; main merge is not authorized by this handoff.
