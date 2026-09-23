@@ -79,6 +79,9 @@
 extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include "dsstate_seg.h"
 #include <cstdlib>
+#include <cstddef>   /* SEATS042 trace: offsetof */
+#include <cstring>   /* SEATS042 trace: memcpy */
+#include <intrin.h>  /* SEATS042 trace: _ReturnAddress */
 
 #include "dActor_c.h"
 #include "fBase_c.h"
@@ -127,22 +130,15 @@ static void wf_trap_report(void *self, int slot)
     static int __fastcall wf_trap##n(void *s, void *) \
     { wf_trap_report(s, n); return 0; }
 WF_TRAP(13) WF_TRAP(14) WF_TRAP(17)
-/* 23/24 are for the two classes below that OVERRIDE one of Actor's tail bodies
-   with an ov015 body that is matched in src but in no slice; running Actor's
-   shared body there would be the wrong code, not merely less code. 27 and 31
-   used to trap here too, but the mega/kill cluster's own ov015 bodies are now
-   sliced and seated (kp_mega/ts_mega/mb_mega for 27, ts_kill/mb_kill for 31; see
-   below). 30 declines for all seven: its ROM body returns a Vector3 by value and
-   the sret contract is unproved. */
+/* 23, 24, 27 and 31 used to trap here too, for the classes below that OVERRIDE
+   one of Actor's tail bodies with their own ov015 body (running Actor's shared
+   body there would be the wrong code, not merely less code). All four are
+   seated now: the mega/kill cluster's own bodies on 27 and 31
+   (kp_mega/ts_mega/mb_mega, ts_kill/mb_kill), and KNOCK_DOWN_PLANK's own
+   OnAttacked2 / OnKicked on 23 and 24 (kp_atk2 / kp_kicked, lane SEATS042).
+   30 declines for all seven: its ROM body returns a Vector3 by value and the
+   sret contract is unproved. */
 #undef WF_TRAP
-/* Slots 23/24 take the three-parameter shape so they emit `ret 4`: their one
-   dispatch site each is now thiscall (Actor_OnAttacked2Dispatch.cpp /
-   Actor_OnKickedDispatch.cpp), which pushes one argument the callee must pop.
-   Body identical to the WF_TRAP shape; only the pop contract widens. */
-static int __fastcall wf_trap23(void *s, void *, void *)
-{ wf_trap_report(s, 23); return 0; }
-static int __fastcall wf_trap24(void *s, void *, void *)
-{ wf_trap_report(s, 24); return 0; }
 
 static int __fastcall wf_binit(void *s, void *)
 { return _ZN8dActor_c19BeforeInitResourcesEv(s); }
@@ -487,8 +483,15 @@ static int __fastcall kp_init(void *s, void *)
 { return _ZN14KnockDownPlank13InitResourcesEv((char *)s); }
 static int __fastcall kp_clean(void *s, void *)
 { return ((KnockDownPlank *)s)->KnockDownPlank::CleanupResources(); }
+static int kp_trace_on(void);              /* SEATS042 trace, below */
+static void kp_trace_behavior(void *s);
 static int __fastcall kp_behavior(void *s, void *)
-{ return _ZN14KnockDownPlank8BehaviorEv((char *)s); }
+{
+    const int r = _ZN14KnockDownPlank8BehaviorEv((char *)s);
+    if (kp_trace_on())
+        kp_trace_behavior(s);
+    return r;
+}
 static int __fastcall kp_render(void *s, void *)
 {
     port_actor_render_probe("KNOCK_DOWN_PLANK", (char *)s + 0xd4);
@@ -498,6 +501,140 @@ static int __fastcall kp_d1(void *s, void *)
 { return (int)(size_t)_ZN14KnockDownPlankD1Ev((int *)s); }
 static int __fastcall kp_d0(void *s, void *)
 { return (int)(size_t)_ZN14KnockDownPlankD0Ev((int *)s); }
+
+/* ---- SLOTS 23 AND 24: the plank's own OnAttacked2 / OnKicked -------------
+   (run rel042, lane SEATS042). Both words are the ROM's, read out of
+   extracted/overlays/overlay_0015.bin (ov015 .text base 0x021111a0, per
+   config/arm9/overlays/ov015/delinks.txt) and config/arm9/overlays/ov015/
+   relocs.txt against the Itanium head of the table at 0x02114420: base-8
+   (0x02114418) is a plain unrelocated zero, base-4 (0x0211441c) relocates to
+   the typeinfo _ZTI17daObjBk_Botaosi_c at 0x021143dc, and
+
+       0x0211447c = base + 4*23  from:0x0211447c to:0x02111408   OnAttacked2
+       0x02114480 = base + 4*24  from:0x02114480 to:0x021113fc   OnKicked
+
+   config/arm9/overlays/ov015/symbols.txt names those two addresses
+   _ZN14KnockDownPlank11OnAttacked2ER8dActor_c and
+   _ZN14KnockDownPlank8OnKickedER8dActor_c, and their matched TUs (with
+   func_ov015_02111414) are already in all three hosting links:
+   port/slice_int4.txt put them on walk_window for the class vftable MSVC
+   emits, and port/CMakeLists.txt's SMOKELINK2 / SMOKELINK5 blocks carry
+   SLICE_INT4 to walk_window_hires and smoke_player. So these thunks only
+   point the ROM's table at bodies the build already had, and linkage.py does
+   not move: those TUs were linked and counted, never dispatched. Before
+   this, both words were traps. Measured on the base build (Whomp's Fortress
+   act 2, three B presses at the plank): the first punch froze the plank,
+   each punch re-entered its trap on every frame until the next press, and
+   the kick that ends the combo re-entered slot 24's trap on every frame to
+   the end of the run, the player stuck in St_PunchKick for good.
+
+   Each ROM body is the three-word veneer onto func_ov015_02111414
+   (`ldr ip,[pc]; bx ip; .word 0x02111414`), and each recovered .cpp NAMES
+   both arguments (`func_ov015_02111414(this, &other)`), so nothing rides a
+   host frame and no tailjump_guard row is needed: the method builds its own
+   call. The three-parameter __fastcall is the pop contract of the only two
+   dispatch sites, func_ov002_020ef070 (slot 23) and func_ov002_020eeeb8
+   (slot 24), both generated with hostgen's VIRTUAL_CALL `__fastcall (a, 0,
+   actor)` shape: receiver in ecx, one pushed argument the callee pops, so
+   these emit `ret 4` exactly as the traps did. Slot 23 hands back what the
+   method returns (the veneer's r0 on the ROM; the dispatcher discards it).
+
+   SM64DS_SEATS042_TRACE=1 prints one line per entry (and per plank state
+   change in kp_behavior) and is otherwise inert. */
+static int kp_trace_on(void)
+{
+    static int v = -1;
+    if (v < 0) {
+        const char *e = std::getenv("SM64DS_SEATS042_TRACE");
+        v = (e && *e && *e != '0') ? 1 : 0;
+    }
+    return v;
+}
+static void kp_trace_entry(int slot, const char *what, unsigned rom, void *s,
+                           void *other, void *thunk, void *caller,
+                           const unsigned char *b, int ret, int has_ret)
+{
+    const unsigned char *p = (const unsigned char *)s;
+    void *word = (*(void ***)s)[slot];
+    static int layout_said;
+    if (!layout_said) {
+        layout_said = 1;
+        std::fprintf(stderr, "SEATS042: layout mWobbleTimer@0x%x mKnockDir@0x%x "
+                     "mState@0x%x (the ROM body writes 0x394/0x396/0x397)\n",
+                     (unsigned)offsetof(KnockDownPlank, mWobbleTimer),
+                     (unsigned)offsetof(KnockDownPlank, mKnockDir),
+                     (unsigned)offsetof(KnockDownPlank, mState));
+    }
+    std::fprintf(stderr,
+        "SEATS042: _ZTV13PoleBillboard[%d] %s (ov015 0x%08x) ENTERED this=%p "
+        "id=%u %s, other=%p id=%u, caller=%p; slot %d word=%p, seated thunk=%p "
+        "-- %s; mState %u->%u mKnockDir %d->%d mWobbleTimer 0x%x->0x%x; ",
+        slot, what, rom, s, (unsigned)*(const unsigned short *)(p + 0xc),
+        port_actor_class_name(*(const unsigned short *)(p + 0xc)), other,
+        other ? (unsigned)*(const unsigned short *)((char *)other + 0xc) : 0u,
+        caller, slot, word, thunk, word == thunk ? "SAME WORD" : "DIFFERENT WORD",
+        (unsigned)b[3], (unsigned)p[0x397], (int)(signed char)b[2],
+        (int)(signed char)p[0x396],
+        (unsigned)(unsigned short)(b[0] | (b[1] << 8)),
+        (unsigned)*(const unsigned short *)(p + 0x394));
+    if (has_ret)
+        std::fprintf(stderr, "returned 0x%08x\n", (unsigned)ret);
+    else
+        std::fprintf(stderr, "returned void\n");
+    std::fflush(stderr);
+}
+static int __fastcall kp_atk2(void *s, void *, void *other)
+{
+    if (!kp_trace_on())
+        return ((KnockDownPlank *)s)->KnockDownPlank::OnAttacked2(
+            *(dActor_c *)other);
+    unsigned char b[4];
+    std::memcpy(b, (char *)s + 0x394, 4);
+    const int r = ((KnockDownPlank *)s)->KnockDownPlank::OnAttacked2(
+        *(dActor_c *)other);
+    kp_trace_entry(23, "OnAttacked2", 0x02111408u, s, other, (void *)kp_atk2,
+                   _ReturnAddress(), b, r, 1);
+    return r;
+}
+static int __fastcall kp_kicked(void *s, void *, void *other)
+{
+    if (!kp_trace_on()) {
+        ((KnockDownPlank *)s)->KnockDownPlank::OnKicked(*(dActor_c *)other);
+        return 0;
+    }
+    unsigned char b[4];
+    std::memcpy(b, (char *)s + 0x394, 4);
+    ((KnockDownPlank *)s)->KnockDownPlank::OnKicked(*(dActor_c *)other);
+    kp_trace_entry(24, "OnKicked", 0x021113fcu, s, other, (void *)kp_kicked,
+                   _ReturnAddress(), b, 0, 0);
+    return 0;
+}
+/* the behaviour-side half of the same trace: what the plank DID with the hit
+   (state 1 is the ROM's wobble, state 2 the fall), read after the ROM's own
+   Behavior ran. One plank per level, so one set of statics. */
+static void kp_trace_behavior(void *s)
+{
+    static void *who;
+    static unsigned last, ticks;
+    static int peak;
+    const unsigned char *p = (const unsigned char *)s;
+    const unsigned st = p[0x397];
+    const int ax = *(const short *)(p + 0x8c);
+    if (s != who) { who = s; last = st; ticks = 0; peak = 0; }
+    if (st == 1) {
+        ++ticks;
+        if ((ax < 0 ? -ax : ax) > peak) peak = ax < 0 ? -ax : ax;
+    }
+    if (st != last) {
+        std::fprintf(stderr, "SEATS042: KNOCK_DOWN_PLANK this=%p Behavior: "
+                     "mState %u -> %u (mAngleX %d, mWobbleTimer 0x%x, wobble "
+                     "ticks so far %u, peak |mAngleX| 0x%x)\n", s, last, st,
+                     ax, (unsigned)*(const unsigned short *)(p + 0x394), ticks,
+                     (unsigned)peak);
+        std::fflush(stderr);
+        last = st;
+    }
+}
 extern "C" void hal_fill_knock_down_plank_vtable(void)
 {
     void **vt = _ZTV13PoleBillboard;
@@ -515,12 +652,13 @@ extern "C" void hal_fill_knock_down_plank_vtable(void)
        stood, and the reference edge that links the TU. */
     vt[17] = (void *)kp_d0;
     /* 32 slots. _ZTV13PoleBillboard overrides four of the tail with its own
-       ov015 bodies, all matched in src and none in a slice: 23 OnAttacked2
-       (0x02111408), 24 OnKicked (0x021113fc), 27 OnHitByMegaChar (0x021113c0)
-       and 31 Kill, which is Platform's (0x020ee55c). Slot 27 is seated now
-       (gate 62, kp_mega -> _ZN14KnockDownPlank15OnHitByMegaCharER6Player); 23/24 stay trapped. */
-    vt[23] = (void *)wf_trap23;
-    vt[24] = (void *)wf_trap24;
+       bodies: 23 OnAttacked2 (0x02111408), 24 OnKicked (0x021113fc), 27
+       OnHitByMegaChar (0x021113c0) and 31 Kill, which is Platform's
+       (0x020ee55c). All four are seated: 27 at gate 62 (kp_mega ->
+       _ZN14KnockDownPlank15OnHitByMegaCharER6Player), 23 and 24 by lane
+       SEATS042 on the two matched methods (see kp_atk2 above). */
+    vt[23] = (void *)kp_atk2;
+    vt[24] = (void *)kp_kicked;
     vt[27] = (void *)kp_mega;
     vt[31] = (void *)wf_kill;
 }
