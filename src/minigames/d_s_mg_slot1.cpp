@@ -1,22 +1,11 @@
 //cpp
-/**
- * Slot-machine minigame scene factory (MG_SLOT1).
+/* Slot machine scene factory (MG_SLOT1). The scene's methods live in
+ * src/actors/dScMgSlot1_c.cpp.
  *
- * This TU is the factory only: it allocates the scene, runs the base
- * constructor, punches the scene and bet-icon vptrs, and runs the two
- * embedded-object initializers the class TU owns. The scene's own
- * methods live in src/actors/dScMgSlot1_c.cpp.
- *
- * deslop
- * Leftover: func_ov006_0210c2b0 / func_ov006_0210c208 are still
- *   linker names of the embedded-object initializers owned by the
- *   class TU. Naming belongs there.
- * Leftover: the three vptr stores stand in for the constructor that
- *   would emit them. No dScMgSlot1_c C1 exists in the ROM, so
- *   `return new` cannot link; the base C2 call is explicit for the
- *   same reason.
- * Leftover: pad_4684 / pad_4690 / pad_469c are embedded objects of
- *   unknown type (header); only mBetIcon is typed.
+ * The allocation, the base C2 call and the three vptr stores are written out
+ * by hand: the ROM has no dScMgSlot1_c C1, so `new dScMgSlot1_c` cannot link.
+ * Still raw: pad_4684, pad_4690 and pad_469c are embedded objects of unknown
+ * type, set up by the unnamed func_ov006_0210c2b0 and func_ov006_0210c208.
  */
 
 #include "dScMgSlot1_c.h"
@@ -30,10 +19,7 @@ extern void *_ZTV12dScMgSlot1_c;
 extern void *_ZTVN12dScMgSlot1_c9betIcon_cE;
 extern void *_ZTV9dThIcon_c;
 void *dScMgSlot1_c_classInit(void);
-/* Reconstructed source-style name: SM64DS proves dScMgSlot1_c through RTTI,
- * allocation size, vtable identity, and the MG_SLOT1 registry profile;
- * later EAD lineage supplies classInit. Exact original spelling is not
- * preserved. Historical alias: func_ov006_0210d6b8. */
+/* The name is reconstructed; the ROM proves the class, not the spelling. */
 void *dScMgSlot1_c_classInit(void)
 {
     dScMgSlot1_c *scene =
