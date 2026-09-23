@@ -133,7 +133,6 @@ _data_0209f250=_port_fault_no_pidx
 _data_0209f2f8=_port_fault_no_level
 _data_0209f394=_port_fault_no_players
 _data_020a4b68=_port_fault_no_walker
-_data_ov021_021149c0=_data_ov014_021149c0
 _port_build_gittip=_port_fault_no_gittip
 _port_crash_dir_get=_port_crash_dir_get_stub
 _port_install_verdict=_port_fault_no_verdict

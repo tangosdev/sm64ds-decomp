@@ -2129,7 +2129,7 @@ ARG_WIDTH = {
     # src/_ZN4cstd5atan2E5Fix12IiES1_.c DEFINES cstd::atan2 `s16`; the camera's
     # follow state declares it `extern s32`. On the cartridge that costs
     # nothing, because the ROM body SIGN-EXTENDS its own result before it
-    # returns -- the epilogue at 0x0203766c is
+    # returns -- the epilogue at 0x0203b66c is
     #     lsl r0, r0, #0x10
     #     asr r0, r0, #0x10
     # so a negative angle arrives in the caller's r0 as a negative 32-bit int.
@@ -2446,7 +2446,7 @@ def reg_ride_arg_patch(text, sym):
 #
 # Run rel042, lane NARROWRET1 (0.4.2). On the DS a function that returns a
 # narrow type (s8/u8/s16/u16/bool) extends it into the whole of r0 before it
-# returns: cstd::atan2's epilogue at 0x0203766c is `lsl r0,r0,#16 / asr
+# returns: cstd::atan2's epilogue at 0x0203b66c is `lsl r0,r0,#16 / asr
 # r0,r0,#16`, and mwccarm does the same for every narrow return in the ROM, so
 # a caller whose declaration names a WIDER return (`extern int f(...)` where the
 # body is `u8 f(...)`) is correct on the cartridge. MSVC's callee writes AL or
