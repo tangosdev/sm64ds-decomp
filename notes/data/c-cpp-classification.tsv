@@ -621,8 +621,8 @@ src/_ZN11MirrorLuigi16OnPendingDestroyEv.c	P1-vtable+mangled	ov055	daLuigi_c	Mir
 src/_ZN11MirrorLuigiD0Ev.c	DTOR-ONLY	ov055	daLuigi_c	MirrorLuigi/daLuigi_c	_ZN11MirrorLuigiD0Ev	1		True	_ZTV11MirrorLuigi	-
 src/_ZN11PowerFlower16CleanupResourcesEv.c	P1-vtable+mangled	ov002	daObjPowerUpItem_c	PowerFlower/daObjPowerUpItem_c	vtable daObjPowerUpItem_c slot 3 @0x20b9a7c | _ZN11PowerFlower16CleanupResourcesEv	1		True		-
 src/_ZN11PowerFlowerD0Ev.c	DTOR-ONLY	ov002	daObjPowerUpItem_c	PowerFlower/daObjPowerUpItem_c	_ZN11PowerFlowerD0Ev	1		True		-
-src/_ZN11PyramidLift16CleanupResourcesEv.c	P1-vtable+mangled	ov025	daDpLift_c	PyramidLift/daDpLift_c	vtable daDpLift_c slot 3 @0x21121c0 | _ZN11PyramidLift16CleanupResourcesEv	1		True		-
-src/_ZN11PyramidLiftD0Ev.c	DTOR-ONLY	ov025	daDpLift_c	PyramidLift/daDpLift_c	_ZN11PyramidLiftD0Ev	1		True	_ZTV10dBgActor_c/_ZTV11PyramidLift	-
+src/_ZN10daDpLift_c16CleanupResourcesEv.c	P1-vtable+mangled	ov025	daDpLift_c	daDpLift_c/daDpLift_c	vtable daDpLift_c slot 3 @0x21121c0 | _ZN10daDpLift_c16CleanupResourcesEv	1		True		-
+src/_ZN10daDpLift_cD0Ev.c	DTOR-ONLY	ov025	daDpLift_c	daDpLift_c/daDpLift_c	_ZN10daDpLift_cD0Ev	1		True	_ZTV10dBgActor_c/_ZTV10daDpLift_c	-
 src/_ZN11RaycastLine10GetClsnPosEv.c	P3-mangled-method-only	arm9		RaycastLine	_ZN11RaycastLine10GetClsnPosEv	1		True		-
 src/_ZN11RaycastLine4Line3SetERK7Vector3S3_.c	P3-mangled-method-only	ov002		Line	_ZN11RaycastLine4Line3SetERK7Vector3S3_	1		False		no-header:Line
 src/_ZN11RaycastLineD1Ev.c	DTOR-ONLY	arm9	dBgCh_Lin	RaycastLine/dBgCh_Lin	_ZN11RaycastLineD1Ev	1		True	_ZTV11RaycastLine	-

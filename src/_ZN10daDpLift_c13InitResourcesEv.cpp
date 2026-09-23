@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN11PyramidLift13InitResourcesEv
+// @symbol _ZN10daDpLift_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "PyramidLift.h"
+#include "daDpLift_c.h"
 #pragma opt_strength_reduction off
 /* Not `Fix12`: this actor's header now reaches math/Fix12.h, where Fix12 is a
    class template. Only the raw word matters at this call. */
@@ -29,7 +29,7 @@ extern void func_020393d4(void* p, void* v);
 extern void func_020393c4(void* p, void* v);
 }
 
-int PyramidLift::InitResources()
+int daDpLift_c::InitResources()
 {
     BMD_File* bmd;
     KCL_File* kcl;

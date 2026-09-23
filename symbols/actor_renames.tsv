@@ -1095,12 +1095,12 @@ ov025	0x02111ed4	func_ov025_02111ed4	_ZN11PyramidStep8BehaviorEv	vtable slot 6
 ov025	0x02111fa0	func_ov025_02111fa0	_ZN11PyramidStep13InitResourcesEv	vtable slot 0
 ov025	0x021120ac	func_ov025_021120ac	PyramidStep_Spawn	spawnfunc
 ov025	0x021120ac	PyramidStep_Spawn	daObjDpBrock_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
-ov025	0x021120e4	func_ov025_021120e4	_ZN11PyramidLiftD1Ev	vtable slot 16
-ov025	0x02112148	func_ov025_02112148	_ZN11PyramidLiftD0Ev	vtable slot 17
-ov025	0x021121c0	func_ov025_021121c0	_ZN11PyramidLift16CleanupResourcesEv	vtable slot 3
-ov025	0x021121fc	func_ov025_021121fc	_ZN11PyramidLift6RenderEv	vtable slot 9
-ov025	0x02112288	func_ov025_02112288	_ZN11PyramidLift8BehaviorEv	vtable slot 6
-ov025	0x02112498	func_ov025_02112498	_ZN11PyramidLift13InitResourcesEv	vtable slot 0
+ov025	0x021120e4	func_ov025_021120e4	_ZN10daDpLift_cD1Ev	vtable slot 16
+ov025	0x02112148	func_ov025_02112148	_ZN10daDpLift_cD0Ev	vtable slot 17
+ov025	0x021121c0	func_ov025_021121c0	_ZN10daDpLift_c16CleanupResourcesEv	vtable slot 3
+ov025	0x021121fc	func_ov025_021121fc	_ZN10daDpLift_c6RenderEv	vtable slot 9
+ov025	0x02112288	func_ov025_02112288	_ZN10daDpLift_c8BehaviorEv	vtable slot 6
+ov025	0x02112498	func_ov025_02112498	_ZN10daDpLift_c13InitResourcesEv	vtable slot 0
 ov025	0x021125f0	func_ov025_021125f0	PyramidLift_Spawn	spawnfunc
 ov025	0x021125f0	PyramidLift_Spawn	daDpLift_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov025	0x0211373c	data_ov025_0211373c	g_profile_DONGURU	reconstructed profile global; literal ROM ID DONGURU+registry role+later EAD lineage; exact SM64DS spelling not preserved
@@ -1111,7 +1111,7 @@ ov025	0x021138f0	PyramidStep_SpawnInfo	g_profile_DP_BROCK	reconstructed profile 
 ov025	0x02113914	data_ov025_02113914	_ZTV11PyramidStep	vtable alloc=0x3a4
 ov025	0x021139b0	data_ov025_021139b0	PyramidLift_SpawnInfo	spawninfo
 ov025	0x021139b0	PyramidLift_SpawnInfo	g_profile_DP_LIFT	reconstructed profile global; literal ROM ID DP_LIFT+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov025	0x021139d4	data_ov025_021139d4	_ZTV11PyramidLift	vtable alloc=0x3fc
+ov025	0x021139d4	data_ov025_021139d4	_ZTV10daDpLift_c	vtable alloc=0x3fc
 ov026	0x02111678	func_ov026_02111678	daObjWlPolelift_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov026	0x02111888	func_ov026_02111888	BowserShutter_Spawn	spawnfunc
 ov026	0x02111888	BowserShutter_Spawn	daObjWlKoopaShutter_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved

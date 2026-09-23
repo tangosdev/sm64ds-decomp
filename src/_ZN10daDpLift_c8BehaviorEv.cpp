@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN11PyramidLift8BehaviorEv
+// @symbol _ZN10daDpLift_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method */
-#include "PyramidLift.h"
+#include "daDpLift_c.h"
 extern "C" {
 extern short data_02082214[];
 extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void*);
@@ -9,7 +9,7 @@ extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void*, int, int);
 extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void*);
 }
 
-int PyramidLift::Behavior()
+int daDpLift_c::Behavior()
 {
     switch (mState) {
     case 0:

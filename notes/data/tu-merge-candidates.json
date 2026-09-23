@@ -24974,17 +24974,17 @@
    "start": "0x21120e4",
    "end": "0x2112654",
    "classes": [
-    "PyramidLift"
+    "daDpLift_c"
    ],
    "n_functions_map": 9,
    "n_files": 9,
    "files": [
-    "src/_ZN11PyramidLiftD1Ev.cpp",
-    "src/_ZN11PyramidLiftD0Ev.c",
-    "src/_ZN11PyramidLift16CleanupResourcesEv.c",
-    "src/_ZN11PyramidLift6RenderEv.cpp",
-    "src/_ZN11PyramidLift8BehaviorEv.cpp",
-    "src/_ZN11PyramidLift13InitResourcesEv.cpp",
+    "src/_ZN10daDpLift_cD1Ev.cpp",
+    "src/_ZN10daDpLift_cD0Ev.c",
+    "src/_ZN10daDpLift_c16CleanupResourcesEv.c",
+    "src/_ZN10daDpLift_c6RenderEv.cpp",
+    "src/_ZN10daDpLift_c8BehaviorEv.cpp",
+    "src/_ZN10daDpLift_c13InitResourcesEv.cpp",
     "src/func_ov025_021125bc.cpp",
     "src/func_ov025_021125dc.c",
     "src/d_a_dp_lift.cpp"

@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN11PyramidLift6RenderEv
+// @symbol _ZN10daDpLift_c6RenderEv
 /* recovered: named members + shared header, real C++ method */
-#include "PyramidLift.h"
+#include "daDpLift_c.h"
 extern "C" {
 struct Mtx { int w[12]; };
 extern void Matrix4x3_FromTranslation(Mtx* m, int x, int y, int z);
@@ -18,7 +18,7 @@ struct Sub {
 
 struct Elem { int w[3]; };
 
-int PyramidLift::Render()
+int daDpLift_c::Render()
 {
     {
         Sub* s = (Sub*)((char*)&mModel);

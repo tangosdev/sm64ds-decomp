@@ -217,7 +217,7 @@ daObjMaruta_c	DONE	include\daObjMaruta_c.h	dBgActor_c	2	ov080	4
 daObjSwdoor_c	DONE	include\daObjSwdoor_c.h	dBgActor_c	2	ov002	3
 daObjUkiyuka_c	DONE	include\daObjUkiyuka_c.h	dBgActor_c	2	ov002	4
 daDgr_c	DONE	include\daDgr_c.h	dBgActor_c	0	ov025	6
-daDpLift_c	DONE	include\PyramidLift.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov025	6
+daDpLift_c	DONE	include\daDpLift_c.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov025	6
 daIwante_c	DONE	include\Eyerok.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov066	8
 daKpa2Bg_c	DONE	include\daKpa2Bg_c.h	dBgActor_c	0	ov060	6
 daKpa3Bg_c	PARTIAL	include\daKpa3Bg_c.h	dBgActor_c	0	ov060	6
