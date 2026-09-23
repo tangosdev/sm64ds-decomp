@@ -1,0 +1,28 @@
+# W23-5 IRQ TABLE (run linkfull, lane IRQTAB1; LINK15 batch W23-5).
+#
+# The game's own interrupt registry, linked into walk_window and
+# walk_window_hires in place of the host copies ntr/runtime.cpp kept. Read by
+# the "W23-5 IRQ TABLE" block at the end of port/CMakeLists.txt, which also
+# sets NTR_ROM_IRQ_TABLE on the two game libraries (ntr_wide_rt, ntr_hires) so
+# their runtime.cpp stops defining these names and dispatches out of the ROM's
+# table instead. The smoke probes link the plain ntr library and keep the host
+# copies: they have no ROM vector table to read.
+#
+# Verified by ROM address against extracted/arm9_dec.bin (base 0x02004000):
+#
+# src/_ZN3IRQ13GetIRQHandlerEj.cpp        arm9 0x02056ee4, 0x8c
+#     IRQ::GetIRQHandler(mask): the lowest set bit of the mask is the IRQ bit
+#     number; bits 8..11 answer data_020a60c4[i - 8].handler, bits 3..6
+#     data_020a60c4[i + 1].handler, every other bit data_02099fe4[i]. Callers:
+#     func_0205a358 (the display-list pump saves the geometry-FIFO handler it
+#     replaces) and dScMgLuigi_c::AfterCleanupResources, plus this port's own
+#     VBlank dispatch (hal/boot2_thread.cpp, hal/os_thread.cpp) and the HBlank
+#     trace line in ntr/rt.cpp.
+# src/_ZN3IRQ13SetIRQHandlerEjPFvvE.cpp   arm9 0x02056f70, 0x90
+#     IRQ::SetIRQHandler(mask, fn): every set bit of the mask, the same
+#     diversion; a diverted slot also gets argument 0 and enabled 1. Callers:
+#     func_0201a4e4 (VBlank), the dWipe_c setters and func_0202fb30 (HBlank
+#     arm and disarm), func_0205a358 / func_0205a21c (geometry FIFO),
+#     func_0205bad8 (IPC receive), func_02059788 (timer 0), dScMgLuigi_c's iris.
+src/_ZN3IRQ13GetIRQHandlerEj.cpp
+src/_ZN3IRQ13SetIRQHandlerEjPFvvE.cpp

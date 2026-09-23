@@ -172,11 +172,76 @@ struct { unsigned handler, active, arg; } data_020a60c4[8]; /* per-channel cbs *
 DSSTATE_END
 }
 
+// ---------------------------------------------------------------------------
+// THE ROM'S OWN VECTOR TABLE (run linkfull, lane IRQTAB1). Built into the two
+// game libraries only (ntr_wide_rt, ntr_hires: NTR_ROM_IRQ_TABLE, set by the
+// "W23-5 IRQ TABLE" block of port/CMakeLists.txt).
+//
+// src/_ZN3IRQ13SetIRQHandlerEjPFvvE.cpp and src/_ZN3IRQ13GetIRQHandlerEj.cpp
+// are the game's own registry and they run as written: the IRQ bit number
+// indexes data_02099fe4, the ROM's 22-word vector table, except bits 3..6
+// (timers) and 8..11 (DMA), which they divert into data_020a60c4 above. The
+// table is ordinary RAM on the DS and ordinary host memory here:
+// hal/arm9_tables_link100.cpp hosts it at its ROM span inside .dsstate and
+// fills it before main with the cartridge's .data words (EmptyHandler, the
+// four timer and four DMA forwarders).
+//
+// So THIS FILE NO LONGER STORES A HANDLER. Its dispatchers read the slot the
+// ROM's own reader would: HBlank delivers data_02099fe4[1] (ntr/rt.cpp's
+// scanline sweep), the geometry FIFO data_02099fe4[21] (DMAStartTransfer
+// below), and the VBlank edge is looked up through the matched
+// IRQ::GetIRQHandler(1) (hal/boot2_thread.cpp step 2, hal/os_thread.cpp),
+// which reads data_02099fe4[0]. Before this, the old host registry kept three
+// file statics and DROPPED every other mask; the ROM table keeps them all
+// (0x40000 IPC, 0x100000 card, the timer and DMA rows), which the cartridge
+// does too. Nothing here dispatches those masks, so storing them changes no
+// delivery.
+//
+// THE ONE VISIBLE DIFFERENCE IS THE ROM'S DEFAULT. An unregistered slot holds
+// IRQ::EmptyHandler (a bare `bx lr`, and a real body here) where the host
+// registry held null, so GetIRQHandler answers EmptyHandler for a mask nobody
+// armed, exactly as the cartridge's does. The HBlank gate below therefore
+// reads "a handler is present" for as long as the slot holds EmptyHandler; the
+// edge still needs IE bit 1, IME, the CPSR I bit and DISPSTAT bit 4, which is
+// what the DS gates on, and the ROM's disarm (func_0202fb30,
+// dScMgLuigi_c::IrisStop / AfterCleanupResources) stores null, which closes it
+// the old way too. hal/arm9_tables_link100.cpp's section 1 note names exactly
+// this hazard and says the honest version is a change to the gate: it is.
+//
+// The flat Itanium names are what the ROM's C callers and this layer's own
+// host callers use (func_0205a358, func_0201a4e4, hal/boot2_thread.cpp,
+// ntr/rt.cpp); the matched TUs define the C++ names. One alias per function
+// joins the two, flat onto matched, and hal/faces4_rows.cpp's /
+// unmatched/MgLuigi_Faces.cpp's older C++-onto-flat rows now resolve through
+// it to the same body (a chained /alternatename, which link.exe follows).
+// ---------------------------------------------------------------------------
+#if defined(NTR_ROM_IRQ_TABLE)
+extern "C" void *data_02099fe4[22];   // hal/arm9_tables_link100.cpp
+#pragma comment(linker, "/alternatename:__ZN3IRQ13GetIRQHandlerEj=?GetIRQHandler@IRQ@@YAP6AXXZI@Z")
+#pragma comment(linker, "/alternatename:__ZN3IRQ13SetIRQHandlerEjPFvvE=?SetIRQHandler@IRQ@@YAXIP6AXXZ@Z")
+#endif
+
 namespace {
+typedef void (*IrqHandler)(void);
 unsigned g_ie;                      // IE word stand-in
-void (*g_gxfifo_handler)(void);     // handler for mask 0x200000
-void (*g_hblank_handler)(void);     // handler for mask 0x2, the HBlank edge
-void (*g_vblank_handler)(void);     // handler for mask 0x1, the VBlank edge
+#if defined(NTR_ROM_IRQ_TABLE)
+constexpr unsigned IRQ_BIT_HBLANK = 1;    // IE/IF bit 1, mask 2
+constexpr unsigned IRQ_BIT_GXFIFO = 21;   // IE/IF bit 21, mask 0x200000
+IrqHandler hblank_handler() {
+    return reinterpret_cast<IrqHandler>(data_02099fe4[IRQ_BIT_HBLANK]);
+}
+IrqHandler gxfifo_handler() {
+    return reinterpret_cast<IrqHandler>(data_02099fe4[IRQ_BIT_GXFIFO]);
+}
+#else
+// The smoke probes' registry (the plain ntr library): they link no ROM vector
+// table and no matched IRQ TUs, so the host copies below stand in for both.
+IrqHandler g_gxfifo_handler;        // handler for mask 0x200000
+IrqHandler g_hblank_handler;        // handler for mask 0x2, the HBlank edge
+IrqHandler g_vblank_handler;        // handler for mask 0x1, the VBlank edge
+IrqHandler hblank_handler() { return g_hblank_handler; }
+IrqHandler gxfifo_handler() { return g_gxfifo_handler; }
+#endif
 
 // The two DS registers the HBlank gate reads. Both are ordinary latches in the
 // mapped I/O window (ntr/mmio.h mechanism 1), written by the ROM's own arming
@@ -213,6 +278,12 @@ struct IrqCensusReg {
 } g_irq_census_reg;
 }  // namespace
 
+#if !defined(NTR_ROM_IRQ_TABLE)
+// THE SMOKE PROBES' COPIES of the two registry calls. The game libraries do not
+// compile these: they link src/_ZN3IRQ13GetIRQHandlerEj.cpp and
+// src/_ZN3IRQ13SetIRQHandlerEjPFvvE.cpp (port/slice_w23_irq.txt) and read the
+// ROM's table above. What follows is the registry as it stood before that, kept
+// for the probes that link the plain ntr library and no ROM table.
 // PORT_HOST_ABI: src walks the DS IRQ vector tables (data_02099fe4,
 //   data_020a60c4); the host models the handlers it dispatches.
 extern "C" void *_ZN3IRQ13GetIRQHandlerEj(unsigned mask) {
@@ -255,6 +326,7 @@ extern "C" void _ZN3IRQ13SetIRQHandlerEjPFvvE(unsigned mask, void (*h)(void)) {
     else if (mask == ntr::IRQ_HBLANK) g_hblank_handler = h;
     else if (mask == ntr::IRQ_VBLANK) g_vblank_handler = h;
 }
+#endif  // !NTR_ROM_IRQ_TABLE
 
 namespace ntr {
 
@@ -262,10 +334,13 @@ namespace ntr {
 // reported one bit each so a closed gate can be NAMED rather than guessed at.
 // All five have a ROM writer on this path, which is what makes the disarm
 // work: func_0202fb30 clears IE bit 1, clears DISPSTAT bit 4 and nulls the
-// handler, and any one of the three closes this.
+// handler, and any one of the three closes this. The handler gate is a host
+// safety net rather than a DS gate (the DS calls whatever the slot holds): on
+// the game libraries it reads the ROM table's slot 1, see THE ROM'S OWN VECTOR
+// TABLE above for what that slot holds before anything arms it.
 unsigned rt_hblank_gates() {
     unsigned g = 0;
-    if (g_hblank_handler) g |= HBLANK_GATE_HANDLER;
+    if (hblank_handler()) g |= HBLANK_GATE_HANDLER;
     if (g_ie & IRQ_HBLANK) g |= HBLANK_GATE_IE;
     if (!rt_irq_masked()) g |= HBLANK_GATE_CPSR;
     if (*reinterpret_cast<volatile uint16_t *>(REG_IME) & 1u) g |= HBLANK_GATE_IME;
@@ -277,7 +352,7 @@ unsigned rt_hblank_gates() {
 
 bool rt_hblank_armed() { return rt_hblank_gates() == HBLANK_GATE_ALL; }
 
-void rt_hblank_dispatch() { g_hblank_handler(); }
+void rt_hblank_dispatch() { hblank_handler()(); }
 
 }  // namespace ntr
 // PORT_HOST_ABI: src pokes the DS interrupt registers (IME 0x4000208, IE
@@ -347,9 +422,9 @@ extern "C" void DMAStartTransfer(int ch, int src, int dst, int ctrl) {
                 reinterpret_cast<void (*)(unsigned)>(h)(data_020a60c4[ch & 7].arg);
             }
         } else if (g_ie & 0x200000u) {
-            if (g_gxfifo_handler) {
+            if (const IrqHandler h = gxfifo_handler()) {
                 ++g_census_gxfifo;
-                g_gxfifo_handler();
+                h();
             }
         }
     }

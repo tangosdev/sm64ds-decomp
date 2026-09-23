@@ -22469,3 +22469,31 @@ endif()
 # wide caller got wrong, written out at exit); every other target that links
 # a wrapper gets the null default the generated TUs carry by /alternatename.
 target_sources(walk_window PRIVATE hal/narrow_return.cpp)
+
+# W23-5 IRQ TABLE (LINK15 batch W23-5)
+# ---- run linkfull, lane IRQTAB1: the game's own interrupt registry ----------
+# port/slice_w23_irq.txt names the matched IRQ::GetIRQHandler /
+# IRQ::SetIRQHandler (and, from the second step, the IE-latch pair) and they
+# go on the two GAME targets, the ones whose ntr library carries
+# NTR_ROM_IRQ_TABLE below. With that define ntr/runtime.cpp stops defining the
+# flat names, aliases them onto the matched C++ bodies, and dispatches HBlank
+# and the geometry FIFO out of data_02099fe4, the ROM's vector table that
+# hal/arm9_tables_link100.cpp already hosts on exactly these targets (the
+# gate-225 block above). smoke_player also links that table but links the
+# plain ntr library, which keeps the host copies, so it is left as it was: it
+# gets neither the define nor the slice, and its registry stays one model.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w23_irq.txt" SLICEW235_LINES)
+set(SLICEW235_SOURCES "")
+foreach(line IN LISTS SLICEW235_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICEW235_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_tw235 walk_window walk_window_hires)
+    target_sources(${_tw235} PRIVATE ${SLICEW235_SOURCES})
+endforeach()
+foreach(_lw235 ntr_wide_rt ntr_hires)
+    target_compile_definitions(${_lw235} PRIVATE NTR_ROM_IRQ_TABLE)
+endforeach()
