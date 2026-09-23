@@ -2698,7 +2698,12 @@ __ZN4ViewD0Ev                                                            _ZN4Vie
 
 __ZN11VolcanoRingD0Ev                                                    _ZN11VolcanoRingD1Ev                                             0x021111e4 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
-__ZN8WallSignD0Ev                                                        _ZN8WallSignD1Ev                                                 0x0212edf8 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
+# RETIRED at CAMP3 2026-09-23 (re-arm per coordinator ruling: port-header gate + d0arm_check decide the port branch; the main-header gate decides main_src.patch scope only, not port eligibility (CAMP1/CAMP2 precedent)): src/_ZN8WallSignD0Ev.cpp
+# defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
+# port/slice_w24_camp3.txt. The arm makes the two calls this row's face made:
+# the D1 body (??1WallSign@@QAE@XZ), then WallSign::operator delete,
+# which is _ZN6Memory10DeallocateEPvP4Heap(self, data_020a0eac), read off the object.
+#__ZN8WallSignD0Ev                                                        _ZN8WallSignD1Ev                                                 0x0212edf8 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
 __ZN9WaterBombD0Ev                                                       _ZN9WaterBombD1Ev                                                0x0213b4c4 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
