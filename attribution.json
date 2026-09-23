@@ -4649,6 +4649,12 @@
     "src/actors/daObjFl_Ring_c.cpp#_ZN14daObjFl_Ring_c16CleanupResourcesEv": "tangosdev",
     "src/actors/daObjFl_Ring_c.cpp#_ZN14daObjFl_Ring_c6RenderEv": "tangosdev",
     "src/actors/daObjFl_Ring_c.cpp#_ZN14daObjFl_Ring_c8BehaviorEv": "tangosdev",
-    "src/actors/daObjFl_Ring_c.cpp#_ZN14daObjFl_Ring_c13InitResourcesEv": "tangosdev"
+    "src/actors/daObjFl_Ring_c.cpp#_ZN14daObjFl_Ring_c13InitResourcesEv": "tangosdev",
+    "src/actors/daObjCtMecha08_c.cpp#_ZN16daObjCtMecha08_cD1Ev": "tangosdev",
+    "src/actors/daObjCtMecha08_c.cpp#_ZN16daObjCtMecha08_cD0Ev": "tangosdev",
+    "src/actors/daObjCtMecha08_c.cpp#_ZN16daObjCtMecha08_c16CleanupResourcesEv": "tangosdev",
+    "src/actors/daObjCtMecha08_c.cpp#_ZN16daObjCtMecha08_c6RenderEv": "tangosdev",
+    "src/actors/daObjCtMecha08_c.cpp#_ZN16daObjCtMecha08_c8BehaviorEv": "lunavyqo",
+    "src/actors/daObjCtMecha08_c.cpp#_ZN16daObjCtMecha08_c13InitResourcesEv": "tangosdev"
   }
 }

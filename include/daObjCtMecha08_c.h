@@ -40,7 +40,10 @@ struct daObjCtMecha08_c : dBgActor_c {
     u8 mMoveDir;                      /* 0x32e */
 
     /* --- vtable --- */
-    virtual ~daObjCtMecha08_c();
+    /* Inline empty dtor: mwccarm emits D1 then D0 and no D2, which is the
+       order the cartridge has -- D1 at 0x0211b7f0, D0 at 0x0211b834. Same
+       form as include/daObjCtMecha10_c.h, the same dBgActor_c shape. */
+    virtual ~daObjCtMecha08_c() {}
 
     int Behavior();
     int CleanupResources();
