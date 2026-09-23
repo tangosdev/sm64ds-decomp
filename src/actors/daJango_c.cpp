@@ -887,11 +887,11 @@ int func_ov062_0211ba84(char *c)
     Vector3 t;
     Vector3 hv;
     Vector3 vv;
-    s16 r4;
+    s16 pitch;
     char *ip;
     int tx, ty, tz;
 
-    r4 = 0;
+    pitch = 0;
     v.x = 0;
     v.y = 0;
     v.z = 0;
@@ -915,15 +915,15 @@ int func_ov062_0211ba84(char *c)
         hv.x = tx; hv.y = ty; hv.z = tz;
         *(s16 *)(c + 0x44a) = Vec3_HorzAngle((Vector3 *)(c + 0x5c), &hv);
         vv.x = tx; vv.y = ty; vv.z = tz;
-        r4 = Vec3_VertAngle((Vector3 *)(c + 0x5c), &vv);
+        pitch = Vec3_VertAngle((Vector3 *)(c + 0x5c), &vv);
 
     }
     if (data_0209f2f8 == 0x10) {
         _Z14ApproachLinearRsss((s16 *)(c + 0x94), *(s16 *)(c + 0x44a), (s16)*(int *)(c + 0x43c));
-        _Z14ApproachLinearRsss((s16 *)(c + 0x92), r4, (s16)*(int *)(c + 0x43c));
+        _Z14ApproachLinearRsss((s16 *)(c + 0x92), pitch, (s16)*(int *)(c + 0x43c));
     } else {
         _Z14ApproachLinearRsss((s16 *)(c + 0x94), *(s16 *)(c + 0x44a), (s16)(*(int *)(c + 0x43c) + 0x500));
-        _Z14ApproachLinearRsss((s16 *)(c + 0x92), r4, (s16)(*(int *)(c + 0x43c) + 0x500));
+        _Z14ApproachLinearRsss((s16 *)(c + 0x92), pitch, (s16)(*(int *)(c + 0x43c) + 0x500));
     }
     v.z = 0x1e000;
     Matrix4x3_FromRotationY(data_020a0e68, *(s16 *)(c + 0x8e));

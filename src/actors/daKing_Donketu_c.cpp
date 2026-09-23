@@ -389,8 +389,8 @@ void func_ov073_0211f494(void *pa, void *pb)
 extern "C" s32 func_ov073_0211f61c(void* self)
 {
     char* c = (char*)self;
-    void* r5;
-    s32 r4;
+    void* target;
+    s32 hit;
     u32 id;
 
     if (DecIfAbove0_Short(c + 0x4cc) != 0)
@@ -398,55 +398,55 @@ extern "C" s32 func_ov073_0211f61c(void* self)
     id = *(u32*)(c + 0x134);
     if (id == 0)
         return 0;
-    r5 = _ZN8dActor_c10FindWithIDEj(id);
-    if (!r5)
+    target = _ZN8dActor_c10FindWithIDEj(id);
+    if (!target)
         return 0;
 
-    r4 = 0;
+    hit = 0;
     if (*(s32*)(c + 0x130) & 0x6000) {
         func_ov073_0211f494(c, c);
         *(s32*)(c + 0x98) = 0x20000;
-        r4 = 1;
+        hit = 1;
     }
 
     {
-        int isBf = (int)(*(u16*)((char*)r5 + 0xc) == 0xbf);
+        int isBf = (int)(*(u16*)((char*)target + 0xc) == 0xbf);
         if (isBf == 1) {
-            if (*(u8*)((char*)r5 + 0x703) != 0) {
+            if (*(u8*)((char*)target + 0x703) != 0) {
                 s32 flags = *(s32*)(c + 0x130) & 0x107e0;
                 if (flags) {
                     *(s32*)(c + 0x98) = 0x41000;
-                    r4 = 1;
+                    hit = 1;
                 }
             }
-            if (r4 == 0) {
+            if (hit == 0) {
                 s32 flags = *(s32*)(c + 0x130) & 0x50380;
                 if (flags) {
                     func_ov073_0211f494(c, c);
                     *(s32*)(c + 0x98) = 0x2d000;
-                    r4 = 1;
+                    hit = 1;
                 }
             }
-            if (r4 == 0) {
-                if ((*(s32*)(c + 0x130) & 0x70) || (*(u8*)((char*)r5 + 0x6f9) != 0)
-                    || (_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(c, c + 0x110, r5) != 0)) {
+            if (hit == 0) {
+                if ((*(s32*)(c + 0x130) & 0x70) || (*(u8*)((char*)target + 0x6f9) != 0)
+                    || (_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(c, c + 0x110, target) != 0)) {
                     func_ov073_0211f494(c, c);
                     *(s32*)(c + 0x98) = 0x20000;
-                    r4 = 1;
+                    hit = 1;
                 }
             }
         }
     }
 
-    if (r4 == 0) {
+    if (hit == 0) {
         if (*(s32*)(c + 0x130) & 0x400) {
             func_ov073_0211f494(c, c);
             *(s32*)(c + 0x98) = 0x3d000;
-            r4 = 1;
+            hit = 1;
         }
     }
 
-    if (r4 != 0) {
+    if (hit != 0) {
         s32 count;
         s32 i;
         s32 shortY;
@@ -507,11 +507,11 @@ extern "C" s32 func_ov073_0211f61c(void* self)
         v2.x = *(s32*)(c + 0x5c);
         v2.y = *(s32*)(c + 0x60);
         v2.z = *(s32*)(c + 0x64);
-        if (_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(r5, &v2, 0, 0x14000, 1, 0, 1) == 0)
+        if (_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(target, &v2, 0, 0x14000, 1, 0, 1) == 0)
             goto done0;
     }
     {
-        s32* pv = (s32*)((u32)r5 + 0x5c);
+        s32* pv = (s32*)((u32)target + 0x5c);
         _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x8a, pv[0], pv[1], pv[2]);
     }
     if (*(void**)(c + 0x37c) == &data_ov073_021233d0) {
@@ -1053,11 +1053,11 @@ int func_ov073_02120844(int *t)
 
 // @symbol func_ov073_021208e4
 extern "C" {
-int func_ov073_021208e4(char *r0) {
-    *(int *)(r0 + 0x98) = 0x14000;
-    *(int *)(r0 + 0xa8) = 0x1e000;
-    *(int *)(r0 + 0x9c) = -0x3000;
-    *(int *)(r0 + 0x500) = 0;
+int func_ov073_021208e4(char *self) {
+    *(int *)(self + 0x98) = 0x14000;
+    *(int *)(self + 0xa8) = 0x1e000;
+    *(int *)(self + 0x9c) = -0x3000;
+    *(int *)(self + 0x500) = 0;
     return 1;
 }
 }
@@ -1305,18 +1305,18 @@ int func_ov073_02120ed0(void *self)
     {
         int d;
         int i;
-        u8 *r5;
+        u8 *dustPos;
         *(int *)(c + 0x4b4) = 0;
         d = *(int *)(c + 0x98);
         if (d < 0) d = -d;
         if (d > 0xa) {
-            r5 = c;
+            dustPos = c;
             i = 0;
             do {
                 _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(
-                    *(int *)(r5 + 0x4d4), *(int *)(r5 + 0x4d8), *(int *)(r5 + 0x4dc));
+                    *(int *)(dustPos + 0x4d4), *(int *)(dustPos + 0x4d8), *(int *)(dustPos + 0x4dc));
                 i++;
-                r5 += 0xc;
+                dustPos += 0xc;
             } while (i < 2);
         }
         _Z14ApproachLinearRiii((int *)(c + 0x98), 0, *(int *)(c + 0x4d0));

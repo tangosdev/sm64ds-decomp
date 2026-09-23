@@ -308,10 +308,10 @@ int func_ov078_02123804(char *c){
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02123864
 extern "C" {
-void func_ov078_02123864(char* r7) {
+void func_ov078_02123864(char* self) {
   int i = 0;
   do {
-    daBmb_c *bmb = (daBmb_c *)_ZN8dActor_c10FindWithIDEj(((unsigned int*)(r7 + 0x424))[i]);
+    daBmb_c *bmb = (daBmb_c *)_ZN8dActor_c10FindWithIDEj(((unsigned int*)(self + 0x424))[i]);
     if (bmb) {
       bmb->unk_3e0 = 0;
       bmb->unk_3f6 = 1;
@@ -1436,8 +1436,8 @@ extern "C" void _ZN7Message7EndTalkEv();
 
 extern "C" int func_ov078_02125950(char *c)
 {
-    char *r5 = *(char **)(c + 0x430);
-    int *src = (int *)(((int)(r5) + 0x5c));
+    char *target = *(char **)(c + 0x430);
+    int *src = (int *)(((int)(target) + 0x5c));
     Vector3 v;
     int t = src[0];
     Vector3 *arg0 = (Vector3 *)(c + 0x5c);
@@ -1447,7 +1447,7 @@ extern "C" int func_ov078_02125950(char *c)
     short ang = Vec3_HorzAngle(arg0, &v);
     ApproachLinear(*(short *)(c + 0x8e), ang, 0x800);
     *(short *)(c + 0x94) = *(short *)(c + 0x8e);
-    if (_ZN6Player12GetTalkStateEv(r5) == -1) {
+    if (_ZN6Player12GetTalkStateEv(target) == -1) {
         _ZN7Message7EndTalkEv();
         func_02011d44();
         _ZN5Sound22LoadAndSetMusic_Layer3Ej(0x2d);
@@ -1588,15 +1588,15 @@ extern "C" void func_ov078_02125c98(void* cv) {
   int ip = *(int*)(c+0x60) - h;
   if (ip <= 0x1000)
     ip = 0x1000;
-  int r8 = 0x15e000 - (int)(((long long)ip * 0x180 + 0x800) >> 12);
-  if (r8 < 0xa000)
-    r8 = 0xa000;
+  int scale = 0x15e000 - (int)(((long long)ip * 0x180 + 0x800) >> 12);
+  if (scale < 0xa000)
+    scale = 0xa000;
   *(struct M12*)(c+0x434) = *(struct M12*)&IDENTITY_MATRIX4X3;   /* flat */
   *(int*)(c+0x458) = *(int*)(c+0x5c) >> 3;
   *(int*)(c+0x45c) = *(int*)(c+0x60) >> 3;
   *(int*)(c+0x460) = *(int*)(c+0x64) >> 3;
   _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
-      c, c+0x3f8, c+0x434, r8, ip + 0x28000, 0xf);
+      c, c+0x3f8, c+0x434, scale, ip + 0x28000, 0xf);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1694,12 +1694,12 @@ void daBombking_c::OnPendingDestroy()
 // @symbol _ZN12daBombking_c6RenderEv
 int daBombking_c::Render()
 {
-    void *r1 = mHeldActor;
-    if (r1 != 0) {
-        int r0 = mFlags;
-        int flag = (r0 & 0x4000) ? 1 : 0;
+    void *held = mHeldActor;
+    if (held != 0) {
+        int flags = mFlags;
+        int flag = (flags & 0x4000) ? 1 : 0;
         if (flag != 0) {
-            if (*(int *)((char *)r1 + 0xc8) != 0) {
+            if (*(int *)((char *)held + 0xc8) != 0) {
                 func_ov078_02125f8c(this);
             }
         }
@@ -1735,11 +1735,11 @@ int daBombking_c::Behavior()
     mBlendModelAnim.Advance();
 
     if ((char *)mState == (char *)data_ov078_0212707c) {
-        void *r1 = mHeldActor;
-        int b;
-        if (r1 != 0) {
-            b = (mFlags & 0x4000) != 0;
-            if (b != 0 && *(int *)((char *)r1 + 0xc8) != 0) {
+        void *held = mHeldActor;
+        int flag;
+        if (held != 0) {
+            flag = (mFlags & 0x4000) != 0;
+            if (flag != 0 && *(int *)((char *)held + 0xc8) != 0) {
                 goto skip_de0;
             }
         }

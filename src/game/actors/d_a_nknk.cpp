@@ -1,10 +1,17 @@
 //cpp
-/* Koopa movement, shell reactions, animation, and drawing.
- * Retail RTTI identifies daNknk_c; both normal and small profiles construct it.
- * The inline destructor and ordinary factories emit the matching lifecycle.
- * This text-only TU supplies all 39 functions; canonical metadata stays in ROM.
- * The manifest preserves source lineage; remaining raw views are in issue #2871.
- * Source functions run in reverse ROM order for mwccarm 2004/b56 emission.
+/* daNknk_c -- Koopa the Troopa.
+ *
+ * A walker that can be separated from its shell.  The actor tracks a target
+ * it was told about (the ID at +0x134), resolves it each frame, and reacts to
+ * whatever collision flags (+0x130) the base class left behind: stomped,
+ * punched, spun, hit by a shell, burned.  Each reaction picks a state number
+ * into +0x10c and the state machine below does the rest.  Both the normal and
+ * the small registry profiles construct this same class.
+ *
+ * Some helpers below still read fields through raw offsets; tracked in #2871.
+ *
+ * Function order in this file is REVERSE ROM order: mwccarm 2004/b56 emits one
+ * .text section per function, last-defined first.  Do not sort.
  */
 // Inline definitions in Koopa.h, emitted here by the two factories:
 #include "Koopa.h"
@@ -963,7 +970,7 @@ void func_ov062_02117c98(void* self)
 {
     u8* c = (u8*)self;
     void* found;
-    int r5;
+    int shelled;
     s32 flags;
     u32 id;
 
@@ -975,13 +982,13 @@ void func_ov062_02117c98(void* self)
         return;
 
     flags = *(s32*)(c + 0x130);
-    r5 = (int)(((long long)(int)0));
+    shelled = (int)(((long long)(int)0));
 
     if (flags & 0x10) {
         Vector3_16 v;
         v.x = (s16)-0x2000;
-        v.y = (s16)r5;
-        v.z = (s16)r5;
+        v.y = (s16)shelled;
+        v.z = (s16)shelled;
         // The member's unused Fix12<int> argument is one raw register word.
         // Native aggregate passing adds a load/copy here under 2004/b56;
         // retain decl_Enemy.h's scalar ABI bridge to the actual member symbol.
@@ -994,12 +1001,12 @@ void func_ov062_02117c98(void* self)
             return;
         }
         *(s32*)(c + 0x10c) = 5;
-        func_ov002_020aea30(self, found, (dBgCh_Actr*)r5);
+        func_ov002_020aea30(self, found, (dBgCh_Actr*)shelled);
         return;
     }
     if (flags & 0x4000) {
         *(s32*)(c + 0x10c) = 6;
-        r5 = 1;
+        shelled = 1;
     } else if (flags & 0x447e0) {
         if (*(s32*)(c + 0x390) == 0) {
             func_ov062_02117bf4(self);
@@ -1028,7 +1035,7 @@ void func_ov062_02117c98(void* self)
         u8* f = (u8*)found;
         struct { Vec3 sv; Vec3 hv; } L;
         int shell;
-        shell = (*(u16*)(f + 0xc) == 0xbf) ? 1 : r5;
+        shell = (*(u16*)(f + 0xc) == 0xbf) ? 1 : shelled;
         if ((int)(((long long)shell)) == 0)
             goto tail;
         if (*(u8*)(f + 0x6f9) != 0) {
@@ -1048,7 +1055,7 @@ void func_ov062_02117c98(void* self)
         }
         if (_ZN6Player9IsOnShellEv(found)) {
             *(s32*)(c + 0x10c) = 5;
-            r5 = 1;
+            shelled = 1;
             goto tail;
         }
         if (_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(self, (void*)(c + 0x110), found)) {
@@ -1091,7 +1098,7 @@ void func_ov062_02117c98(void* self)
 
 tail:
     func_ov002_020aea30(self, found, (dBgCh_Actr*)(c + 0x144));
-    if (r5)
+    if (shelled)
         *(u16*)(c + 0x8e) = *(s16*)(c + 0x94) + 0x8000;
 }
 }
@@ -1146,9 +1153,9 @@ void *func_ov062_02117b9c(void *c) {
 extern "C" {
 int func_ov062_02117b60(void* c)
 {
-    void* r1 = *(void**)((char*)c + 0x3b4);
-    if (!r1) return 0x61a8000;
-    return Vec3_Dist((char*)c + 0x5c, (char*)r1 + 0x5c);
+    void* target = *(void**)((char*)c + 0x3b4);
+    if (!target) return 0x61a8000;
+    return Vec3_Dist((char*)c + 0x5c, (char*)target + 0x5c);
 }
 }
 

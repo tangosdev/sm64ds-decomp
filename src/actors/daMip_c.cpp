@@ -315,12 +315,12 @@ int daMip_c::StateSaveTalkMain()
     extern char data_ov085_021306bc[];
     char *self = (char *)this;
 
-    char *r4 = *(char **)(self + 0x460);
+    char *player = *(char **)(self + 0x460);
     struct V3 vec;
     unsigned char gb;
     int state;
 
-    mTargetAngY = Vec3_HorzAngle((struct V3 *)(self + 0x5c), (struct V3 *)(r4 + 0x5c));
+    mTargetAngY = Vec3_HorzAngle((struct V3 *)(self + 0x5c), (struct V3 *)(player + 0x5c));
     ApproachAngle(self + 0x94, mTargetAngY, 1, 0x500, 0x500);
 
     gb = data_0209d684;
@@ -332,7 +332,7 @@ int daMip_c::StateSaveTalkMain()
     state = mActionStep;
     switch (state) {
     case 0:
-        if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(r4, self, 0x148, &vec, 0, 0)) {
+        if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(player, self, 0x148, &vec, 0, 0)) {
             func_02012790(0xa);
             {
                 int *p = (int *)(((int)self + 0x41c));
@@ -352,7 +352,7 @@ int daMip_c::StateSaveTalkMain()
             } else if (gb == 2) {
                 func_02012790(0x98);
                 {
-                    unsigned short *hp = (unsigned short *)(((int)r4 + 0x6ce));
+                    unsigned short *hp = (unsigned short *)(((int)player + 0x6ce));
                     *hp &= ~0x800;
                 }
                 _ZN7Message7EndTalkEv();
@@ -362,7 +362,7 @@ int daMip_c::StateSaveTalkMain()
         break;
     case 2:
         if (data_0209d660 == 0) {
-            unsigned short *hp = (unsigned short *)(((int)r4 + 0x6ce));
+            unsigned short *hp = (unsigned short *)(((int)player + 0x6ce));
             *hp &= ~0x800;
             _ZN7Message7EndTalkEv();
             SetState(data_ov085_021306bc);
@@ -573,7 +573,7 @@ int daMip_c::StateCaughtMain()
     Vector3 pos;   /* ShowMessage */
     Vector3 pos7;  /* 43c==7 star spawn */
     Vector3 posR;  /* rabbit star spawn */
-    int r4;
+    int soundId;
     int msg;
 
     pl = *(char **)(c + 0x45c);
@@ -606,7 +606,7 @@ int daMip_c::StateCaughtMain()
             {
                 if (_ZN6Player9StartTalkER7fBase_cb(pl, c, 1) != 0) {
                     pos.x = *(s32 *)(c + 0x5c);
-                    r4 = 0;
+                    soundId = 0;
                     pos.y = *(s32 *)(c + 0x60);
                     pos.z = *(s32 *)(c + 0x64);
 
@@ -616,17 +616,17 @@ int daMip_c::StateCaughtMain()
                         if (*(s32 *)(pl + 8) != 3) {
                             _ZN7Message11PrepareTalkEv();
                             {
-                                int z = r4;
+                                int z = soundId;
                                 _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x27, 0x12, 0x7f, 0x15ccc, z);
                             }
                             if (mRabbitId == 6)
                                 goto msg_123a;
                             msg = (s16)(*(s32 *)(pl + 8) + 0x11b);
-                            r4 = 0x163;
+                            soundId = 0x163;
                             goto have_msg;
                         msg_123a:
                             msg = (s16)(*(s32 *)(pl + 8) + 0x123);
-                            r4 = 0x161;
+                            soundId = 0x161;
                             goto have_msg;
                         }
                         /* simple msgs for character id 3 */
@@ -640,24 +640,24 @@ int daMip_c::StateCaughtMain()
                             _ZN7Message11PrepareTalkEv();
                             if (mIsGlowing == 0) {
                                 {
-                                    int z = r4;
+                                    int z = soundId;
                                     _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x26, 0x12, 0x7f, 0x15ccc, z);
                                 }
                                 if (mRabbitId == 6)
                                     goto msg_127a;
                                 msg = (s16)(*(s32 *)(pl + 8) + 0x11f);
-                                r4 = 0x163;
+                                soundId = 0x163;
                                 goto have_msg;
                             msg_127a:
                                 msg = (s16)(*(s32 *)(pl + 8) + 0x127);
-                                r4 = 0x161;
+                                soundId = 0x161;
                             } else {
-                                _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x27, 0x12, 0x7f, 0x15ccc, r4);
+                                _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x27, 0x12, 0x7f, 0x15ccc, soundId);
                                 if (_ZN8SaveData22NumGlowingRabbitsFoundEv() == 7) {
                                     msg = 0x143;
-                                    r4 = 0x160;
+                                    soundId = 0x160;
                                 } else {
-                                    r4 = 0x162;
+                                    soundId = 0x162;
                                     msg = 0x142;
                                 }
                             }
@@ -687,8 +687,8 @@ int daMip_c::StateCaughtMain()
                         pos.y = y;
                         if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(pl, c, (u32)msg, &pos, zero, zero) == 1) {
                             mActionStep = 1;
-                            if (r4 != 0)
-                                func_02012694(r4, (const ::Vector3 *)(c + 0x74));
+                            if (soundId != 0)
+                                func_02012694(soundId, (const ::Vector3 *)(c + 0x74));
                         }
                     }
                     return 1;
@@ -1367,11 +1367,11 @@ int daMip_c::Render()
 
     {
         int** base = (int**)&mModelAnim.data;
-        int* r3 = base[0];
-        char* r1 = (char*)base[1];
-        for (unsigned int i = 0; i < *(unsigned int*)((char*)r3 + 0x24); i++) {
-            *(int*)(r1 + 0x20) = mMaterialColor;
-            r1 += 0x30;
+        int* modelData = base[0];
+        char* mat = (char*)base[1];
+        for (unsigned int i = 0; i < *(unsigned int*)((char*)modelData + 0x24); i++) {
+            *(int*)(mat + 0x20) = mMaterialColor;
+            mat += 0x30;
         }
     }
 
@@ -1646,9 +1646,9 @@ int daMip_c::InitResources()
     extern s8 data_0209f2f8;
     extern int data_0209e650;
 
-    void* r0;
-    void* r6;
-    int r1;
+    void* player;
+    void* closest;
+    int rabbitId;
 
     Animation::LoadFile(*(SharedFilePtr *)&data_ov085_021305b8);
     Animation::LoadFile(*(SharedFilePtr *)&data_ov085_021305d0);
@@ -1676,17 +1676,17 @@ int daMip_c::InitResources()
     if (mCharacterId == 0xf)
         mCharacterId = 0;
 
-    r1 = mRabbitId;
-    if (r1 != 7) {
+    rabbitId = mRabbitId;
+    if (rabbitId != 7) {
         if (!(data_0209caa0[1] & 0x40000000))
             return 0;
     }
 
-    if (r1 == 5 && mCharacterId == 0)
+    if (rabbitId == 5 && mCharacterId == 0)
         goto check18;
-    if (r1 == 1 && mCharacterId == 1)
+    if (rabbitId == 1 && mCharacterId == 1)
         goto check18;
-    if (r1 != 6)
+    if (rabbitId != 6)
         goto skip17;
     if (mCharacterId != 3)
         goto skip17;
@@ -1722,11 +1722,11 @@ skip17:
         goto block_26;
     }
 
-    r0 = ClosestPlayer();
-    if (r0 == 0)
+    player = ClosestPlayer();
+    if (player == 0)
         return 0;
     if (data_0209f2f8 != 0x32) {
-        if (mCharacterId != *(u8*)((char*)r0 + 0x6d9))
+        if (mCharacterId != *(u8*)((char*)player + 0x6d9))
             return 0;
     }
 
@@ -1740,19 +1740,19 @@ block_26:
         goto block_out;
     }
 
-    r6 = ClosestPlayer();
-    if (r6 == 0)
+    closest = ClosestPlayer();
+    if (closest == 0)
         goto block_out;
 
     {
         int v;
-        v = *(s32*)((char*)r6 + 8);
+        v = *(s32*)((char*)closest + 8);
         if (data_0209f2f8 == 0x32)
             v = 1;
         if (func_02013890(mRabbitId, v) != 0 && data_ov085_021305ac < 8) {
             u32 rnd = RandomIntInternal(&data_0209e650) >> 8;
             if (NumStars() >= 0x51) {
-                if (*(s32*)((char*)r6 + 8) == 3) {
+                if (*(s32*)((char*)closest + 8) == 3) {
                     if ((rnd & 0xf) == 0)
                         mColorVariant = 5;
                 } else {
@@ -1760,7 +1760,7 @@ block_26:
                         mColorVariant = 5;
                 }
             } else if (NumStars() >= 0x28) {
-                if (*(s32*)((char*)r6 + 8) == 3) {
+                if (*(s32*)((char*)closest + 8) == 3) {
                     if ((rnd & 0x1f) == 0)
                         mColorVariant = 5;
                 } else {
