@@ -30,3 +30,10 @@ src/_ZN9dBgCh_LinD0Ev.cpp
 src/_ZN13ExpandingHeapD0Ev.cpp
 src/_ZN4HeapD0Ev.cpp
 src/_ZN9SolidHeapD0Ev.cpp
+src/_ZN9AnimationD0Ev.cpp
+src/_ZN7ClipperD0Ev.cpp
+src/_ZN15MaterialChangerD0Ev.cpp
+src/game/actors/daObjTh_Fall_Block_c/_ZN12FallBlockBbhD0Ev.cpp
+src/_ZN6CameraD0Ev.cpp
+src/_ZN6ShipUpD0Ev.cpp
+src/_ZN13QuestionBlockD0Ev.cpp

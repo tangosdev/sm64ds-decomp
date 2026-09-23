@@ -22711,3 +22711,13 @@ endforeach()
 foreach(_tw25d0arm10 walk_window walk_window_hires smoke_player)
     target_sources(${_tw25d0arm10} PRIVATE ${SLICE_W25_D0ARM10_SOURCES})
 endforeach()
+# THE ONE PER-SOURCE PROPERTY IN THIS BLOCK. src/_ZN13QuestionBlockD0Ev.cpp
+# compiles under the same force-included host-ABI view as every other
+# QuestionBlock TU the port links: the PORT_QUESTIONBLOCK_HOSTABI_SOURCES
+# block above says to add the D0 "if it is ever compiled", and it is now.
+# Under that view the class's destructor is ??1QuestionBlock@@UAE@XZ, the
+# name its D1 file's object defines and the arm's qualified call reaches.
+# APPEND, never SET, for the reason that block gives.
+set_property(SOURCE "${PORT_REPO_ROOT_ABS}/src/_ZN13QuestionBlockD0Ev.cpp"
+    APPEND PROPERTY COMPILE_OPTIONS
+    "/FI${CMAKE_CURRENT_SOURCE_DIR}/unmatched/QuestionBlock_HostAbi.h")
