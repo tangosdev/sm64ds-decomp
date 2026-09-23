@@ -37,3 +37,5 @@ src/game/actors/daObjTh_Fall_Block_c/_ZN12FallBlockBbhD0Ev.cpp
 src/_ZN6CameraD0Ev.cpp
 src/_ZN6ShipUpD0Ev.cpp
 src/_ZN13QuestionBlockD0Ev.cpp
+src/_ZN8daDemo_c13simpleModel_cD0Ev.cpp
+src/_ZN8daDemo_c10anmModel_cD0Ev.cpp

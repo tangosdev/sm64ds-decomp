@@ -10,6 +10,26 @@
 
 typedef void (*VFN)(void *);
 
+#ifdef _MSC_VER
+/* THE HOST NEEDS THE ROM'S FLAT D0 NAME, AND MSVC NEVER EMITS IT. MSVC
+ * folds the Itanium destructor variants into the one ~anmModel_c() it
+ * emits, which the class's D1 file already defines. A qualified call to
+ * it from here would not be the face's call: anmModel_c has a virtual
+ * base, so MSVC treats an explicit destructor call as the complete-object
+ * (vbase) destructor and adds the virtual base's teardown and an EH frame.
+ * port/faces_sync.txt's face for this D0 called the flat D1 name, so this
+ * arm makes the same two calls that face made: the D1 body through its
+ * flat name, then the class-specific operator delete. Nothing here
+ * reaches mwccarm: it builds the `#else` arm and emits the ROM bytes it
+ * always emitted, and the object is byte-identical either way. */
+extern "C" void _ZN8daDemo_c10anmModel_cD1Ev(void *self);
+extern "C" daDemo_c::anmModel_c *_ZN8daDemo_c10anmModel_cD0Ev(daDemo_c::anmModel_c *thiz)
+{
+    _ZN8daDemo_c10anmModel_cD1Ev(thiz);           /* the D1 body, through its flat ROM name */
+    daDemo_c::anmModel_c::operator delete(thiz);  /* the class-specific delete D0 ends with */
+    return thiz;
+}
+#else
 daDemo_c::anmModel_c::~anmModel_c()
 {
     char *c = (char *)this;
@@ -33,3 +53,4 @@ daDemo_c::anmModel_c::~anmModel_c()
         }
     }
 }
+#endif

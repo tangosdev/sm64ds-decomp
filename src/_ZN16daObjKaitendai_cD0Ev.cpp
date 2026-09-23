@@ -22,8 +22,27 @@
  */
 #include "daObjKaitendai_c.h"
 
+#ifdef _MSC_VER
+/* THE HOST NEEDS THE ROM'S FLAT D0 NAME, AND MSVC NEVER EMITS IT. ~daObjKaitendai_c()
+ * is defined in the class body, so there is no out-of-line host body for
+ * a qualified call to reach: the call would inline a second copy of the
+ * destructor. The D1 is reachable only by its flat ROM name, and that is
+ * the call port/faces_sync.txt's face for this D0 made, so this arm makes
+ * the same two calls that face made: the D1 body through its flat name,
+ * then the class-specific operator delete. Nothing here reaches mwccarm:
+ * it builds the `#else` arm and emits the ROM bytes it always emitted, and
+ * the object is byte-identical either way. */
+extern "C" void _ZN16daObjKaitendai_cD1Ev(void *self);
+extern "C" daObjKaitendai_c *_ZN16daObjKaitendai_cD0Ev(daObjKaitendai_c *thiz)
+{
+    _ZN16daObjKaitendai_cD1Ev(thiz);          /* the D1 body, through its flat ROM name */
+    daObjKaitendai_c::operator delete(thiz);  /* the class-specific delete D0 ends with */
+    return thiz;
+}
+#else
 /* Not called. Forces the out-of-line copy of the deleting destructor. */
 void daObjKaitendai_c_EmitDeletingDestructor(daObjKaitendai_c *p)
 {
     delete p;
 }
+#endif
