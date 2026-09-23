@@ -1,70 +1,18 @@
 //cpp
 /* ov006/dScMgJump_c -- genuine translation unit, 17 of the class's 18
- * cartridge functions. Licensed .text is 0x020edec0..0x020ee994.
+ * cartridge functions (.text 0x020edec0..0x020ee994).
  *
- * Merged by tools/tubuild.py create from the per-function sources below, then
- * reconciled by hand.
+ * Source runs REVERSE of ROM (highest address first). Do not reorder.
+ * Ordinal 17 (OnYoshiTryEat, 0x020ee994) is NOT here: it is an unmatched
+ * draft kept in its own unenrolled file, and a licensed span cannot cover
+ * it. The destructor is inline in the header, so InitResources (defined
+ * here) is the key function emitting the vtable.
  *
- * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S -- mwccarm 2004/b56
- * emits one .text section per function, in the REVERSE of source order, so
- * the highest-address ROM function is written FIRST here. Do not reorder;
- * see notes/tu-reconstruction-pilot-report.md sec 3 for the one documented
- * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
- *
- * Assembled from these legacy one-function sources (ROM address order). Each
- * lived directly under src/ and none of them exists any more; this file
- * replaces them, and the manifest entry
- * config/tu_manifest.d/ov006/dScMgJump_c.json keeps every one of their full
- * paths in its functions[].legacy_source rows, which is the historical record:
- *   [0] 0x020edec0  _ZN11dScMgJump_cD1Ev.cpp
- *   [1] 0x020edf54  _ZN11dScMgJump_cD0Ev.cpp
- *   [2] 0x020edffc  _ZN11dScMgJump_c16CleanupResourcesEv.cpp
- *   [3] 0x020ee034  _ZN11dScMgJump_c6RenderEv.cpp
- *   [4] 0x020ee27c  _ZN11dScMgJump_c8BehaviorEv.cpp
- *   [5] 0x020ee2c0  func_ov006_020ee2c0.c
- *   [6] 0x020ee2c4  func_ov006_020ee2c4.c
- *   [7] 0x020ee3bc  func_ov006_020ee3bc.c
- *   [8] 0x020ee3ec  func_ov006_020ee3ec.c
- *   [9] 0x020ee44c  func_ov006_020ee44c.c
- *   [10] 0x020ee4e0  func_ov006_020ee4e0.c
- *   [11] 0x020ee508  func_ov006_020ee508.c
- *   [12] 0x020ee598  func_ov006_020ee598.c
- *   [13] 0x020ee5b8  func_ov006_020ee5b8.c
- *   [14] 0x020ee658  func_ov006_020ee658.c
- *   [15] 0x020ee690  _ZN11dScMgJump_c13InitResourcesEv.cpp
- *   [16] 0x020ee8dc  _ZN11dScMgJump_c13OnTurnIntoEggEi.cpp
- *
- * ORDINAL 17 IS NOT HERE, AND THAT IS THE TU BOUNDARY.
- * _ZN11dScMgJump_c13OnYoshiTryEatEi at 0x020ee994 (size 0x168) is the
- * eighteenth function of the cartridge's run, and it is NOT byte-matched: its
- * source carries a draft banner declaring itself a non-match (the draft
- * assembles four bytes short) -- the literal marker word is deliberately not
- * repeated here, because has_draft_banner() in tools/asm_policy.py scans this
- * file's
- * whole leading comment block and would read a mention of it as a claim that
- * THIS file is a draft, which would silently drop all 17 members below out of
- * tools/enroll.py's candidate set and out of the ROM build.
- * tools/enroll.py leaves that one out of the ROM build, and it therefore has no
- * delinks.txt entry at all -- its cartridge bytes are kept as they are. An
- * unmatched function cannot sit inside a licensed `complete` span, and this
- * one sits at the TOP of the run, so the licensed range simply stops below it
- * at 0x020ee994 and its own file stays where it is, unchanged and still
- * unenrolled. When it matches byte-for-byte it moves in here, the span
- * extends to 0x020eeafc, and the manifest's boundary note comes out.
- *
- * DESTRUCTORS: ORDINALS 0 AND 1 ARE NOT WRITTEN OUT HERE EITHER.
- * ~dScMgJump_c() is defined in the class body in include/dScMgJump_c.h; see
- * the note there for why the out-of-line spelling cannot be linked as one
- * translation unit. mwccarm emits D1 and then D0 from that one definition and
- * emits no D2, which is exactly the cartridge's order -- D1 at 0x020edec0,
- * below D0 at 0x020edf54.
- *
- * With the destructor inline, this class's KEY FUNCTION is InitResources, the
- * first virtual the header declares without defining, and it is defined here.
- * So this TU, and no other, emits _ZTV11dScMgJump_c and the inheritance
- * chain's typeinfo. Every one of those is compiler-generated, byte-compared
- * against the cartridge by romdata_check, and then discarded; the manifest's
- * compiler_only_output rows record each one's canonical cartridge address.
+ * Leftover: the C/PMF-stand-in/Pair/Mtx43/V3 shadows and the vtable
+ *   shim stay local; naming a signature for every state function or
+ *   hoisting the types is out of scope (see the member notes).
+ * Leftover: the func_ov006 helpers and data_ov006 homes keep linker
+ *   names; naming belongs at their definitions.
  */
 
 #include "dScMgJump_c.h"
@@ -207,9 +155,6 @@ extern struct Pair data_ov006_0213cb7c;
 extern struct Pair data_ov006_0213cb84;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 16 -- _ZN11dScMgJump_c13OnTurnIntoEggEi, 0x020ee8dc, size 0xb8 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11dScMgJump_c13OnTurnIntoEggEi
 /* dScMgJump_c::OnTurnIntoEgg -- vtable slot 19, recovered from vtable slot
  * identity. */
@@ -236,9 +181,6 @@ int dScMgJump_c::OnTurnIntoEgg(int sel)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 15 -- _ZN11dScMgJump_c13InitResourcesEv, 0x020ee690, size 0x24c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11dScMgJump_c13InitResourcesEv
 /* dScMgJump_c::InitResources -- vtable slot 0.
  *
@@ -318,9 +260,6 @@ s32 dScMgJump_c::InitResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 14 -- func_ov006_020ee658, 0x020ee658, size 0x38 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_020ee658
 /* Still spelled func_<module>_<address> because the symbol is unnamed in
  * config/arm9/overlays/ov006/symbols.txt. Arms the countdown at +0x5014 and
@@ -335,9 +274,6 @@ void func_ov006_020ee658(char *c) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 13 -- func_ov006_020ee5b8, 0x020ee5b8, size 0xa0 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_020ee5b8
 /* Still spelled func_<module>_<address>: unnamed in symbols.txt.
  *
@@ -374,9 +310,6 @@ void func_ov006_020ee5b8(char* c){
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 12 -- func_ov006_020ee598, 0x020ee598, size 0x20 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_020ee598
 /* Still spelled func_<module>_<address>: unnamed in symbols.txt. */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
@@ -385,9 +318,6 @@ void func_ov006_020ee598(char *p) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 11 -- func_ov006_020ee508, 0x020ee508, size 0x90 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_020ee508
 /* Still spelled func_<module>_<address>: unnamed in symbols.txt. */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
@@ -409,9 +339,6 @@ void func_ov006_020ee508(char *c){
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 10 -- func_ov006_020ee4e0, 0x020ee4e0, size 0x28 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_020ee4e0
 /* Still spelled func_<module>_<address>: unnamed in symbols.txt. */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
@@ -422,9 +349,6 @@ void func_ov006_020ee4e0(char *p)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 9 -- func_ov006_020ee44c, 0x020ee44c, size 0x94 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_020ee44c
 /* Still spelled func_<module>_<address>: unnamed in symbols.txt. */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
@@ -449,9 +373,6 @@ void func_ov006_020ee44c(char *c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 8 -- func_ov006_020ee3ec, 0x020ee3ec, size 0x60 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_020ee3ec
 /* Still spelled func_<module>_<address>: unnamed in symbols.txt. */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
@@ -472,9 +393,6 @@ void func_ov006_020ee3ec(char* c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- func_ov006_020ee3bc, 0x020ee3bc, size 0x30 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_020ee3bc
 /* Still spelled func_<module>_<address>: unnamed in symbols.txt. */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
@@ -485,9 +403,6 @@ void func_ov006_020ee3bc(char *c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- func_ov006_020ee2c4, 0x020ee2c4, size 0xf8 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_020ee2c4
 /* Still spelled func_<module>_<address>: unnamed in symbols.txt. This is the
  * helper whose writes to +0x5004 and +0x5014 bound dScMgD3DBase_c from above
@@ -516,9 +431,6 @@ void func_ov006_020ee2c4(char* c){
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- func_ov006_020ee2c0, 0x020ee2c0, size 0x4 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_020ee2c0
 /* Still spelled func_<module>_<address>: unnamed in symbols.txt. One `bx lr`
  * -- an empty state slot in the same table the helpers above install into. */
@@ -528,9 +440,6 @@ void func_ov006_020ee2c0(void)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- _ZN11dScMgJump_c8BehaviorEv, 0x020ee27c, size 0x44 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11dScMgJump_c8BehaviorEv
 /* dScMgJump_c::Behavior -- vtable slot 6.
  *
@@ -546,9 +455,6 @@ s32 dScMgJump_c::Behavior()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- _ZN11dScMgJump_c6RenderEv, 0x020ee034, size 0x248 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11dScMgJump_c6RenderEv
 /* dScMgJump_c::Render -- vtable slot 9.
  *
@@ -637,9 +543,6 @@ s32 dScMgJump_c::Render()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- _ZN11dScMgJump_c16CleanupResourcesEv, 0x020edffc, size 0x38 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11dScMgJump_c16CleanupResourcesEv
 /* dScMgJump_c::CleanupResources -- vtable slot 3.
  *

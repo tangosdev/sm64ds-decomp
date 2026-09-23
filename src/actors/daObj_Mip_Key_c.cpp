@@ -6,6 +6,14 @@
  * names remain pending reconstruction; the caller census does not establish
  * original file-static linkage. See notes/experiments/mip-key-2853-source-forms.md
  * for the boundary evidence and retained ABI bridges.
+ *
+ * Leftover: unk_0a4/0ac/190/19c are unrecovered header fields (0a4/0ac
+ *   ride the loose-update approach; 19c selects the entry).
+ * Leftover: data_020a0e68 is shared arm9 matrix scratch.
+ * Leftover: func_02012790 / func_02013868 are arm9 stubs.
+ * Leftover: the file home is sinit-constructed
+ *   (src/__sinit_ov085_0212f5ec.c); g_profile stays where the
+ *   registry owns it (S14).
  */
 
 #include "daObj_Mip_Key_c.h"

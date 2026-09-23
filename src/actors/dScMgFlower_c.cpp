@@ -1,84 +1,23 @@
 //cpp
-/* Reconstructed translation unit.
- * ov006/dScMgFlower_c  (9 functions)
+/* The flower-petal minigame scene ("loves me, loves me not"): the player drags
+ * petals off a flower with the stylus while a face watches. 9 functions.
  *
- * The flower-petal minigame scene ("loves me, loves me not"): the player drags
- * petals off a flower with the stylus while a face watches. The class identity
- * is the cartridge's own -- tools/rtti_extract.py reads dScMgFlower_c out of
- * ov006's own __si_class_type_info record, single edge to dScMgSingle3DBase_c
- * at offset 0, and the 31-slot vtable at ov006:0x02140140 carries the matching
- * _ZTI13dScMgFlower_c one word below its address point. No name here is coined.
+ * Two load-bearing regimes, both measured whole-TU:
+ *   - `#pragma defer_codegen off`: emission follows source order (ascending),
+ *     and destructor/cross-function pragmas bind positionally. Do not reorder.
+ *   - `#pragma opt_common_subs off` around Behavior only: with CSE on, the
+ *     touch-sample loads coalesce (999 words, 3 relocs wrong); file-wide off
+ *     regresses two other members instead.
+ * The destructor is declared in the header and DEFINED OUT OF LINE below:
+ * with deferral off the group emits D1, D0 (cartridge order, no D2 surviving
+ * in ROM); the emitted D2 is manifest-deadstripped. The factory lives in
+ * src/d_s_mg_flower.cpp, outside this TU.
  *
- * FUNCTION ORDER IS ROM-ASCENDING, WHICH IS THE OPPOSITE OF THIS PROJECT'S
- * USUAL TU ORDER, AND THE PRAGMA IS THE REASON. mwccarm 2004/b56 normally
- * defers code generation to end of file and emits the deferred bodies in
- * REVERSE source order, so a merged TU is normally written highest ROM address
- * first. Deferral also makes every optimisation pragma effectively file-global
- * and last-wins: the compiler reads the whole file, then generates, so a
- * bracket around one member applies to all of them.
- *
- * This TU cannot live with that. Behavior needs common-subexpression
- * elimination OFF and no other member does -- with CSE on, mwcc coalesces the
- * adjacent touch-sample base loads (data_020a0de8/de9/dea/deb and
- * data_020a0e40) into one pooled address, which is 999 words and three wrong
- * relocation destinations away from the cartridge; with it off file-wide, two
- * other members regress instead. `#pragma defer_codegen off` is what makes the
- * bracket bind positionally, because each body is then generated where it
- * stands. Measured both ways on the whole TU: with the bracket, 9/9 MATCH;
- * with the bracket removed and nothing else changed, Behavior alone falls to
- * DIFF (999 words, 3 reloc destinations wrong) for 8/9. The pragma pair is
- * load-bearing, not decoration.
- *
- * Turning deferral off forces the ascending rewrite, because the parse-time
- * half of the emission stream comes out in source order. It also decides the
- * destructor's form, and NOT the way this class's ov006 siblings record it.
- * The cartridge has D1 at 0x0212a554 BELOW D0 at 0x0212a5c8 and no D2 at all.
- * include/dScMgRoulette_c.h reports that only an INLINE, in-class destructor
- * reaches that order, an out-of-line one coming out D2, D0, D1 -- true under
- * DEFERRED codegen, which is the regime every one of those siblings compiles
- * in. With deferral off the variant group emits D1, D0, D2 instead, so here
- * the destructor is declared in the header and DEFINED OUT OF LINE, below.
- * The four rounds behind that are written out in include/dScMgFlower_c.h.
- *
- * The D2 mwcc emits has no cartridge home in any module and nothing in the
- * object references it: D1 and D0 reproduce the ROM with the body inlined
- * rather than chained. It is licensed as a deadstrip in the manifest, and
- * objisolate proves no retained section depends on it before it is dropped.
- *
- * KEY FUNCTION. The destructor is this class's first DECLARED non-inline
- * virtual, so this TU -- and only this one -- emits _ZTV13dScMgFlower_c, its
- * _ZTI/_ZTS pair, and the whole ancestor chain's typeinfo as vague linkage.
- * All thirteen records are licensed in the manifest's compiler_only_output
- * block with their cartridge addresses; each lives outside this TU's single
- * licensed range (.text 0x0212a554-0x0212b7f8), so dsd delinks them from the
- * cartridge independently.
- *
- * SHADOW TYPES AND EXTERNAL DATA STAY INSIDE THE MEMBER THAT RECOVERED THEM,
- * except where two members' views actually conflicted; those are reconciled to
- * the most complete observation at the top of the file, never hoisted wholesale.
- * decl_common.h's signatures win over the legacy files' guesses, and the two
- * members whose bodies assumed a different one take a cast at the head of the
- * body rather than a redeclaration.
- *
- * Assembled from these legacy one-function sources (ROM address order).  They lived
- * directly under src/ and no longer exist; the manifest's per-function
- * legacy_source rows keep their full paths:
- *   [0] 0x0212a554  _ZN13dScMgFlower_cD1Ev.cpp
- *   [1] 0x0212a5c8  _ZN13dScMgFlower_cD0Ev.cpp
- *   [2] 0x0212a650  func_ov006_0212a650.c
- *   [3] 0x0212a654  func_ov006_0212a654.c
- *   [4] 0x0212a764  func_ov006_0212a764.cpp
- *   [5] 0x0212aa74  _ZN13dScMgFlower_c13OnYoshiTryEatEi.cpp
- *   [6] 0x0212aacc  _ZN13dScMgFlower_c6RenderEv.cpp
- *   [7] 0x0212ac74  _ZN13dScMgFlower_c8BehaviorEv.cpp
- *   [8] 0x0212b480  _ZN13dScMgFlower_c13InitResourcesEv.cpp
- *
- * The two destructor shards each carried their own out-of-line copy of the same
- * body; both are absorbed into the single definition below.
- *
- * The class's factory, dScMgFlower_c_classInit at 0x0212b7f8, is NOT here. It
- * sits in src/d_s_mg_flower.cpp, immediately above this range's end, and that
- * file does not include this class's header. It is left where it is.
+ * Leftover: the func_ov006 helpers and data_ov006 tables keep linker
+ *   names; naming belongs at their definitions.
+ * Leftover: the 0x16-entry petal table at +0x4f38 is raw offsets (its element
+ *   type is unreconstructed); LA/LB launders and the Vec2 swap temp are
+ *   load-bearing (register coloring, frame shape) -- see the member notes.
  */
 
 #include "dScMgFlower_c.h"
@@ -189,21 +128,6 @@ dScMgFlower_c::~dScMgFlower_c()
     __cxa_vec_cleanup(mArray, 0x16, 0x20, (void *)func_ov006_0212a650);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinals 1 and 0 -- _ZN13dScMgFlower_cD0Ev 0x0212a5c8 (0x88) and
- * _ZN13dScMgFlower_cD1Ev 0x0212a554 (0x74).
- *
- * NEITHER IS DEFINED HERE. The cartridge puts D1 at 0x0212a554 BELOW D0 at
- * 0x0212a5c8 and carries no D2 at all, and the only admissible source form
- * that makes mwccarm 2004/b56 emit D1-then-D0 is an INLINE, in-class
- * destructor declared as the first member. The two legacy shards each held
- * an out-of-line copy of the same body; merged they would also have been a
- * duplicate definition -- the compiler says so in as many words. The body now
- * lives in include/dScMgFlower_c.h, where the compiler emits both variants
- * itself, in the cartridge's order. See the class header's own note. */
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- func_ov006_0212a650, 0x0212a650, size 0x4 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_0212a650
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_0212a650(void)
@@ -211,9 +135,6 @@ void func_ov006_0212a650(void)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- func_ov006_0212a654, 0x0212a654, size 0x110 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_0212a654
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 /* SIGNATURE FROM decl_common.h, same reconciliation as func_ov006_0212a764
@@ -240,9 +161,6 @@ void func_ov006_0212a654(char *p)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- func_ov006_0212a764, 0x0212a764, size 0x310 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_0212a764
 /* recovered: dScMgFlower_c round setup, ov006 0x0212a764 (784 bytes). Called by
  * InitResources and again from OnYoshiTryEat when a round restarts. Clears the
@@ -387,12 +305,7 @@ extern "C" void func_ov006_0212a764(void *p)
     _ZN3G2x13SetBlendAlphaEPVttttj((volatile u16 *)0x4001050, 4, 8, 6, 0xa);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- _ZN13dScMgFlower_c13OnYoshiTryEatEi, 0x0212aa74, size 0x58 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN13dScMgFlower_c13OnYoshiTryEatEi
-// recovered name: dScMgFlower_c_OnYoshiTryEat_0212aa74
-/* recovered: renamed to Class_Method, declarations from a shared header */
 /* recovered: renamed to Class_Method, vtable slot 18 -- an override of
    dScMgBase_c::OnYoshiTryEat(int). The signature must repeat the base
    declaration exactly, or mwcc appends a slot instead of overriding. */
@@ -421,9 +334,6 @@ void dScMgFlower_c::OnYoshiTryEat(int /* arg */)
     func_ov006_0212a764(self);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- _ZN13dScMgFlower_c6RenderEv, 0x0212aacc, size 0x1a8 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN13dScMgFlower_c6RenderEv
 /* dScMgFlower_c::Render -- vtable slot 9.
  *
@@ -485,9 +395,6 @@ s32 dScMgFlower_c::Render()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- _ZN13dScMgFlower_c8BehaviorEv, 0x0212ac74, size 0x80c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN13dScMgFlower_c8BehaviorEv
 /* dScMgFlower_c::Behavior -- vtable slot 6.
  *
@@ -728,9 +635,6 @@ s32 dScMgFlower_c::Behavior()
 }
 #pragma opt_common_subs on
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 8 -- _ZN13dScMgFlower_c13InitResourcesEv, 0x0212b480, size 0x378 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN13dScMgFlower_c13InitResourcesEv
 /* dScMgFlower_c::InitResources -- vtable slot 0.
  *
