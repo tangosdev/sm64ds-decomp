@@ -1,0 +1,28 @@
+# slice_w23_modeldtor.txt -- run linkfull wave 23, lane MODELDTOR1, batch
+# W23-1 MODEL DTOR ARMS.
+#
+# port/unmatched/ModelFamily_Dtors_HostCopy.c's header (item 6) asks for one
+# of two things before a quarantined row can come back: a host-visible
+# destructor spelling for the class, or a declaration the host header carries
+# for the D0/D1/D2 bodies. include/Model.h and its four siblings already
+# carry the first half (the _MSC_VER Destructor1/Destructor0 virtual pair),
+# and each of these six src/ TUs already carries the second half: a
+# `#ifdef _MSC_VER` arm that defines the ROM's flat Itanium name in terms of
+# the one host destructor symbol MSVC folds D1/D0/D2 into, ending in the
+# class's own operator delete for the D0 (deleting) variant. Nothing here is
+# a new recovery -- every file was already byte-verified against the ROM
+# under its `#else` (mwccarm) arm; this batch only lets the `#ifdef _MSC_VER`
+# arm that was already written start reaching the link.
+#
+# ModelBase's own D0 pairs with these five once its class's operator delete
+# is included; ModelBase's D2 is NOT here (every surviving body in
+# ModelFamily_Dtors_HostCopy.c still calls it from that same TU, and it is
+# not this batch's row to move). ShadowModel's D0 is NOT here either: no
+# _MSC_VER arm has been written for it yet, so item 6 is still open for that
+# class and its host copy stays.
+src/_ZN5ModelD0Ev.cpp
+src/_ZN5ModelD2Ev.cpp
+src/_ZN9ModelBaseD0Ev.cpp
+src/_ZN10ModelAnim2D0Ev.cpp
+src/_ZN11CommonModelD0Ev.cpp
+src/_ZN14BlendModelAnimD0Ev.cpp
