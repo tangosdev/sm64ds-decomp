@@ -249,8 +249,6 @@ extern char data_ov026_02113ee4[];
 extern char data_ov027_021130e8;
 extern char data_ov027_02113108[];
 extern char data_ov027_02113be0[];
-extern char data_ov030_021159f4[];
-extern char data_ov030_02115a04[];
 extern char data_ov030_02115d00;
 extern char data_ov030_02115ddc[];
 extern char data_ov035_02112cb0;
