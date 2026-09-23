@@ -35,7 +35,13 @@
 
 struct daObjHmMaruta_c : daObjMaruta_c {
     /* --- vtable --- */
-    virtual ~daObjHmMaruta_c();      /* slots 16 (D1), 17 (D0) */
+    /* INLINE AND EMPTY, ON PURPOSE. Written out of line, this destructor is the
+       key function and mwccarm lowers it as D0 ahead of D1 plus a D2 the
+       cartridge has no home for; defined here, the key function moves to
+       Behavior and the vtable's slots 16 and 17 emit D1 then D0, which is the
+       ROM order (D1 0x0211155c, D0 0x021115ac). The three vptr stores are
+       daObjMaruta_c's inline destructor and dBgActor_c's, not a body here. */
+    virtual ~daObjHmMaruta_c() {}    /* slots 16 (D1), 17 (D0) */
 
     int Behavior();                    /* slot  6 */
     int CleanupResources();            /* slot  3 */

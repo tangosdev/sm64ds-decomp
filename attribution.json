@@ -4655,6 +4655,11 @@
     "src/actors/daDsn_c.cpp#_ZN7daDsn_c16OnAimedAtWithEggEv": "tangosdev",
     "src/actors/daDsn_c.cpp#_ZN7daDsn_c15OnHitByMegaCharER6Player": "andrewboudreau",
     "src/actors/daDsn_c.cpp#_ZN7daDsn_c8BehaviorEv": "lunavyqo",
-    "src/actors/daDsn_c.cpp#_ZN7daDsn_c13InitResourcesEv": "tangosdev"
+    "src/actors/daDsn_c.cpp#_ZN7daDsn_c13InitResourcesEv": "tangosdev",
+    "src/actors/daObjHmMaruta_c.cpp#_ZN15daObjHmMaruta_cD1Ev": "tangosdev",
+    "src/actors/daObjHmMaruta_c.cpp#_ZN15daObjHmMaruta_cD0Ev": "tangosdev",
+    "src/actors/daObjHmMaruta_c.cpp#_ZN15daObjHmMaruta_c16CleanupResourcesEv": "tangosdev",
+    "src/actors/daObjHmMaruta_c.cpp#_ZN15daObjHmMaruta_c8BehaviorEv": "tangosdev",
+    "src/actors/daObjHmMaruta_c.cpp#_ZN15daObjHmMaruta_c13InitResourcesEv": "tangosdev"
   }
 }
