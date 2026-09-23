@@ -1257,11 +1257,11 @@ extern "C" void func_ov074_0211f5b8(char* c)
     }
 }
 
-/* Release one Goomba from the tail, on a timer, and report whether the whole
-   wave has been released.  The tail is built in three tiers: the first seven
-   Goombas ring the base, the next five sit a little higher on a wider step,
-   the last three higher still, and anything past that spawns dead centre with
-   no radius at all.  The spawn count needed is a table lookup on the phase
+/* Release one Goomba on a timer, and report whether the whole wave has been
+   released.  The wave is built in three tiers: the first seven Goombas ring
+   the base, the next five sit higher on a narrower ring, the next three higher
+   and narrower still, and the sixteenth onward spawns dead centre, highest of
+   all.  The spawn count needed is a table lookup on the phase
    byte at 0x604, with one extra on phase 1 unless the closest player's mode
    word reads 3. */
 /* ROM ordinal 5 -- func_ov074_0211f38c, 0x0211f38c, size 0x22c */

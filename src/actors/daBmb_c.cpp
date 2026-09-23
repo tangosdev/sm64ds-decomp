@@ -1217,10 +1217,10 @@ void func_ov102_0214b128(void *cv) {
     if (t < 0) return;
     if (t > 2) return;
     {
-        void* carrier = _ZN8dActor_c10FindWithIDEj(*(unsigned int*)(c + 0x134));
-        if (!carrier) return;
+        void* hitter = _ZN8dActor_c10FindWithIDEj(*(unsigned int*)(c + 0x134));
+        if (!hitter) return;
         func_ov102_0214bc20(c);
-        *(short*)(c + 0x94) = *(short*)((char*)carrier + 0x8e);
+        *(short*)(c + 0x94) = *(short*)((char*)hitter + 0x8e);
         _ZN8dActor_c9UpdatePosEP5dCc_c(c, c + 0x110);
         _ZN10dBgCh_Actr15ClearGroundFlagEv(c + 0x144);
     }

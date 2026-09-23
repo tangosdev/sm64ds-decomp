@@ -75,8 +75,9 @@ int daPopoi_c::InitResources()
 #include "types.h"
 // @symbol _ZN9daPopoi_c8BehaviorEv
 /* The state machine, as this member sees it. unk_3fc points at a record whose
- * third word is the handler; StateOwner is an opaque stand-in for daPopoi_c so
- * the pointer-to-member call compiles without the real class in scope here. */
+ * third word is the handler. StateOwner is deliberately incomplete: mwccarm
+ * 2004/b56 picks the pointer-to-member representation from class completeness.
+ * Do not substitute daPopoi_c without a byte check. */
 struct StateOwner;
 typedef void (StateOwner::*StateFn)();
 struct StateRecord { char pad[8]; StateFn handler; };
@@ -106,7 +107,8 @@ int daPopoi_c::Behavior()
     int slope;
     StateRecord *state;
 
-    /* Below the kill plane: teleport home and skip the frame entirely. */
+    /* Below the water surface (data_0209f32c): snap back to the spawn position
+     * and skip the frame. */
     if (mPosY < data_0209f32c) {
         mPosX = unk_404;
         mPosY = unk_408;
@@ -167,24 +169,25 @@ writeback:
 // @symbol _ZN9daPopoi_c6RenderEv
 extern int data_0209f32c;
 
-/* Just enough of ModelAnim's vtable to reach the draw entry at slot 5 (offset
- * 0x14). The five leading virtuals exist only to place that slot; declaring the
- * real class here would drag in its bases, and ModelAnim is multiply derived. */
+/* Just enough of ModelAnim's vtable to reach ModelAnim::Render at slot 5
+ * (offset 0x14). The five leading virtuals exist only to place that slot;
+ * declaring the real class here would drag in its bases, and ModelAnim is
+ * multiply derived. */
 struct ModelAnimDraw {
     virtual void slot0();
     virtual void slot1();
     virtual void slot2();
     virtual void slot3();
     virtual void slot4();
-    virtual void Draw(int);  /* vtable offset 0x14 */
+    virtual void Render(int);  /* vtable offset 0x14 */
 };
 
 int daPopoi_c::Render()
 {
-    /* Nothing below the kill plane is worth drawing. */
+    /* Nothing below the water surface is drawn. */
     if (mPosY < data_0209f32c) return 1;
     ModelAnimDraw *model = (ModelAnimDraw *)((char *)&mModelAnim);
-    model->Draw(0);
+    model->Render(0);
     return 1;
 }
 
@@ -585,8 +588,8 @@ extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, int angle);
 extern void MulVec3Mat4x3(void *in, void *m, void *out);
 
 /* Probe ahead for a wall or a missing floor. Returns 1 if the way is blocked,
- * and in that case also rolls the actor back to last frame's position and kills
- * its vertical speed. Returns 0 when the path is clear.
+ * and in that case also rolls the actor back to last frame's position and zeroes
+ * its horizontal speed (+0x98). Returns 0 when the path is clear.
  *
  * Two rays leave the actor's head height (+0x28000): a long level one 0xc8000
  * ahead, and a short one 0x2c000 ahead pitched down 0x3000. Blocked means

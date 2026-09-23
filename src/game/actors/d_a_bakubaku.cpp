@@ -43,7 +43,7 @@
 #include "Player.h"
 #include "SharedFilePtr.h"
 
-typedef daBakubaku_c Klass;
+typedef daBakubaku_c Klass;  /* real class: 2004/b56 does not ICE on this PMF */
 typedef void (Klass::*PMF)();
 /* Tables are 0x10 apart. SetState calls enter at +0; Behavior calls main at +8. */
 struct StateEntry { PMF enter; PMF main; };
