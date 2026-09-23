@@ -2318,13 +2318,13 @@ ov077	0x0212478c	func_ov077_0212478c	_ZN7daJgm_c8SetStateEi	inferred private hel
 ov077	0x02124aa4	func_ov077_02124aa4	_ZN7daJgm_c13OnTurnIntoEggER6Player	vtable slot 19; R6Player is a coined reference spelling, a pointer generates identical ARM
 ov077	0x02124b04	func_ov077_02124b04	daJgm_c_Spawn	spawnfunc
 ov077	0x02124b04	daJgm_c_Spawn	daJgm_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
-ov077	0x02124b64	func_ov077_02124b64	_ZN5SpinyD1Ev	vtable slot 16
-ov077	0x02124bb4	func_ov077_02124bb4	_ZN5SpinyD0Ev	vtable slot 17
-ov077	0x02125eb0	func_ov077_02125eb0	_ZN5Spiny16CleanupResourcesEv	vtable slot 3
-ov077	0x02125eec	func_ov077_02125eec	_ZN5Spiny16OnPendingDestroyEv	vtable slot 12
-ov077	0x02125ef0	func_ov077_02125ef0	_ZN5Spiny6RenderEv	vtable slot 9
-ov077	0x02125f68	func_ov077_02125f68	_ZN5Spiny8BehaviorEv	vtable slot 6
-ov077	0x02126058	func_ov077_02126058	_ZN5Spiny13InitResourcesEv	vtable slot 0
+ov077	0x02124b64	func_ov077_02124b64	_ZN7daTgz_cD1Ev	vtable slot 16
+ov077	0x02124bb4	func_ov077_02124bb4	_ZN7daTgz_cD0Ev	vtable slot 17
+ov077	0x02125eb0	func_ov077_02125eb0	_ZN7daTgz_c16CleanupResourcesEv	vtable slot 3
+ov077	0x02125eec	func_ov077_02125eec	_ZN7daTgz_c16OnPendingDestroyEv	vtable slot 12
+ov077	0x02125ef0	func_ov077_02125ef0	_ZN7daTgz_c6RenderEv	vtable slot 9
+ov077	0x02125f68	func_ov077_02125f68	_ZN7daTgz_c8BehaviorEv	vtable slot 6
+ov077	0x02126058	func_ov077_02126058	_ZN7daTgz_c13InitResourcesEv	vtable slot 0
 ov077	0x021261f4	func_ov077_021261f4	Spiny_Spawn	spawnfunc
 ov077	0x021261f4	Spiny_Spawn	daTgz_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov077	0x0212624c	func_ov077_0212624c	_ZN9daPopoi_cD1Ev	vtable slot 16
@@ -2341,7 +2341,7 @@ ov077	0x02127848	daJgm_c_SpawnInfo	g_profile_JUGEM	reconstructed profile global;
 ov077	0x0212786c	data_ov077_0212786c	_ZTV7daJgm_c	vtable alloc=0x420
 ov077	0x02127960	data_ov077_02127960	Spiny_SpawnInfo	spawninfo
 ov077	0x02127960	Spiny_SpawnInfo	g_profile_TOGEZO	reconstructed profile global; literal ROM ID TOGEZO+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov077	0x02127984	data_ov077_02127984	_ZTV5Spiny	vtable alloc=0x3ec
+ov077	0x02127984	data_ov077_02127984	_ZTV7daTgz_c	vtable alloc=0x3ec
 ov077	0x02127a74	data_ov077_02127a74	HeaveHo_SpawnInfo	spawninfo
 ov077	0x02127a74	HeaveHo_SpawnInfo	g_profile_POPOI	reconstructed profile global; literal ROM ID POPOI+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov077	0x02127a98	data_ov077_02127a98	_ZTV9daPopoi_c	vtable alloc=?

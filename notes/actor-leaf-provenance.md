@@ -282,16 +282,15 @@ Source: `src/game/actors/d_a_kp_fr.cpp`.
 
 Source: `src/game/actors/d_a_krpa.cpp`.
 
-## Spiny -- include/Spiny.h
+## daTgz_c -- include/daTgz_c.h
 
 | offset | new name | evidence |
 | --- | --- | --- |
 | 0x3a0 | `mMatrix` | identity-matrix shape. |
 | 0x3d8 | `mState` | `Render` draws the still `Model` in states 0 and 4 and the `ModelAnim` otherwise; `Behavior` treats 1 (once on the ground), 4 and 5 as states that must keep running whatever the distance to the player. |
-| 0x3e9 | `mDespawnTimer` | 0x2c (44 frames) at init, counted down ONLY on the frames Spiny is too far from the player to behave, destroys at 0. Not a plain life timer -- being near the player refills nothing but stops the count. |
+| 0x3e9 | `mDespawnTimer` | 0x2c (44 frames) at init, counted down ONLY on the frames daTgz_c is too far from the player to behave, destroys at 0. Not a plain life timer -- being near the player refills nothing but stops the count. |
 
-Sources: `src/_ZN5Spiny13InitResourcesEv.cpp`, `src/_ZN5Spiny6RenderEv.cpp`,
-`src/_ZN5Spiny8BehaviorEv.cpp`, `src_tu/actors/Spiny.cpp`.
+Sources: `src/actors/daTgz_c.cpp`.
 
 ## EnemySwitchTag -- include/EnemySwitchTag.h
 

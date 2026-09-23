@@ -916,9 +916,9 @@ src/_ZN5ModelD2Ev.cpp	DTOR-ONLY	arm9		Model	_ZN5ModelD2Ev	1		True	_ZTV5Model	-
 src/_ZN5PokeyD0Ev.c	DTOR-ONLY	ov096	daSanbo_c	Pokey/daSanbo_c	_ZN5PokeyD0Ev	1		True		-
 src/_ZN5Sound17ChangeMusicVolumeEj5Fix12IiE.c	P3-mangled-method-only	arm9		Sound	_ZN5Sound17ChangeMusicVolumeEj5Fix12IiE	1		True		by-value-class-param
 src/_ZN5Sound4PlayEjjRK7Vector3.c	P3-mangled-method-only	arm9		Sound	_ZN5Sound4PlayEjjRK7Vector3	1	active	True		-
-src/_ZN5Spiny16CleanupResourcesEv.c	P1-vtable+mangled	ov077	daTgz_c	Spiny/daTgz_c	vtable daTgz_c slot 3 @0x2125eb0 | _ZN5Spiny16CleanupResourcesEv	1		True		-
-src/_ZN5Spiny16OnPendingDestroyEv.c	P1-vtable+mangled	ov077	daTgz_c	Spiny/daTgz_c	vtable daTgz_c slot 12 @0x2125eec | _ZN5Spiny16OnPendingDestroyEv	1		True		-
-src/_ZN5SpinyD0Ev.c	DTOR-ONLY	ov077	daTgz_c	Spiny/daTgz_c	_ZN5SpinyD0Ev	1		True		-
+src/_ZN7daTgz_c16CleanupResourcesEv.c	P1-vtable+mangled	ov077	daTgz_c	daTgz_c/daTgz_c	vtable daTgz_c slot 3 @0x2125eb0 | _ZN7daTgz_c16CleanupResourcesEv	1		True		-
+src/_ZN7daTgz_c16OnPendingDestroyEv.c	P1-vtable+mangled	ov077	daTgz_c	daTgz_c/daTgz_c	vtable daTgz_c slot 12 @0x2125eec | _ZN7daTgz_c16OnPendingDestroyEv	1		True		-
+src/_ZN7daTgz_cD0Ev.c	DTOR-ONLY	ov077	daTgz_c	daTgz_c/daTgz_c	_ZN7daTgz_cD0Ev	1		True		-
 src/_ZN5StageC3Ev.c	P3-mangled-method-only	arm9		Stage	_ZN5StageC3Ev	1		True	_ZTV5Stage/_ZTV8dScene_c	-
 src/_ZN5StumpD0Ev.c	DTOR-ONLY	ov091	daObjPile_c	Stump/daObjPile_c	_ZN5StumpD0Ev	1		True	_ZTV10dBgActor_c/_ZTV5Stump	-
 src/_ZN5Ukiki16CleanupResourcesEv.c	P1-vtable+mangled	ov030	daMky_c	Ukiki/daMky_c	vtable daMky_c slot 3 @0x21141c4 | _ZN5Ukiki16CleanupResourcesEv	1		True		-

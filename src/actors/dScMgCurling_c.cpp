@@ -1,114 +1,17 @@
 //cpp
-/* dScMgCurling_c -- the one-player curling minigame scene, ov006.
+/* One-player curling scene (ov006/dScMgCurling_c), lower side of a split
+ * run: ordinals 0..26 (.text 0x020e0638..0x020e20bc). A non-matching
+ * draft at ordinal 27 holes the run, so only this contiguous side is
+ * licensed; the far side keeps its own shards. The destructor is out
+ * of line and declared first, so this TU owns the key function.
  *
- * Reconstructed translation unit: ROM ordinals 0..26 of the linker run
- * 0x020e0638..0x020e3854, i.e. .text 0x020e0638..0x020e20bc, 27 functions.
- * Assembled from the 27 one-function legacy sources, then reconciled by hand.
+ * Source runs ROM-ASCENDING under `#pragma defer_codegen off`.
+ * Do not reorder. The PMF receiver stays an INCOMPLETE struct C:
+ * completing it changes the pointer-to-member codegen.
  *
- * WHY THIS IS A SUB-RANGE: a non-matching member splits the run.  ROM ordinal
- * 27, func_ov006_020e20bc (0x020e20bc, size 0x5e0), has a source file but it
- * is an honest non-matching draft -- 299 divergent words of 376 -- and so it
- * carries NO entry in config/arm9/overlays/ov006/delinks.txt at all (the
- * blocks jump from 0x020e1dc8-0x020e20bc straight to 0x020e269c) and
- * tools/enroll.py leaves it out of the ROM build, which keeps the cartridge's
- * own bytes for that range.  It sits in the MIDDLE of the run, and nothing in
- * this tree can express a .text claim with a hole in it -- no file entry in
- * any delinks.txt anywhere carries two .text claims -- so the run has to be
- * licensed as one of its two contiguous sides.
- *
- * THIS FILE IS THE LOWER SIDE, ordinals 0..26 -- 27 functions against 19 on
- * the far side.  It is also the side that holds the class's key function: the
- * destructor, which include/dScMgCurling_c.h declares out of line and declares
- * FIRST.  The 19 members above the hole (func_ov006_020e269c through
- * dScMgCurling_c_classInit, including InitResources, Behavior, Render and
- * OnYoshiTryEat) keep their own shards and their own delinks.txt entries.
- *
- * THE RUN'S TWO BOUNDARIES ARE MEASURED, NOT ASSUMED.  A ROM-wide relocation
- * census -- every relocs.txt in the tree, filtered to targets whose module SET
- * contains 6, with each referring word resolved back to its containing
- * function or data symbol -- gives every member of 0x020e0638..0x020e3854 a
- * referrer set drawn from exactly four places: this class's own
- * _ZTV14dScMgCurling_c, its own factory record g_profile_MG_CURLING, a direct
- * call from another member of this same run, and a pointer-to-member table in
- * the narrow .data band 0x0213c1e4..0x0213c2bc that sits directly below this
- * class's own _ZTI.  Nothing outside ov006 refers into the run at all.  The
- * same census over two sibling ov006 scenes returns three DISJOINT .data bands
- * (dScMgCup_c 0x0213bfe8..0x0213c040, dScMgCurling2_c 0x0213c3d4..0x0213c4b4),
- * each below its own class's _ZTI, so the census discriminates rather than
- * returning the same answer for everything.
- *
- * BELOW the run, func_ov006_020e0634 (4 bytes, 0x020e0634) is NOT ours: its
- * only referrer is dScMgCup_c_classInit, and src/actors/dScMgCup_c.cpp already
- * licenses .text through 0x020e0638, which contains it.  ABOVE the run,
- * 0x020e3854 is dScMgCurling2_c's own D1 and the start of an already-promoted
- * TU.
- *
- * VTABLE, MEASURED OUT OF extracted/overlays/overlay_0006.bin.
- * _ZTV14dScMgCurling_c is 0x90 bytes, 36 slots, the symbol sitting at the
- * address point.  Six of them pin members of this run by name -- slot 0
- * InitResources, slot 6 Behavior, slot 9 Render, slot 16 this file's D1, slot
- * 17 its D0, slot 18 OnYoshiTryEat -- and that is the positive control for the
- * census above.  dScMgCurling2_c and dScMgD3DBase_c carry vtables of exactly
- * the same 36-slot length with the same inherited slot values, which is what
- * proves the base is dScMgBase_c; the 31-word/32-word length rule that
- * separates dActor_c from dBgActor_c is an actor rule and does not reach this
- * family.
- *
- * SLOTS 0 AND 3 ARE NOT ABSTRACT HERE, AND THAT HYPOTHESIS IS REFUTED, NOT
- * DROPPED.  Both are live relocated words -- slot 0 to this class's own
- * InitResources at 0x020e3578, slot 3 to 0x020b0840 in the ov000/ov004 pair --
- * so the "abstract slot 0/3 hides unlabelled helpers at the TU edges" reading
- * buys nothing on dScMgCurling_c.  The unlabelled helpers in this run are
- * unlabelled for the ordinary reason: they are non-virtual file-local members
- * reached through the pointer-to-member tables, and the census above is what
- * attaches them to the class.
- *
- * FUNCTION ORDER IS THE ROM'S OWN, LOWEST ADDRESS FIRST, and that is one
- * decision with `#pragma defer_codegen off` below.  With codegen deferred
- * (the default) mwccarm 2004/b56 emits one .text section per function in the
- * REVERSE of source order; generating at parse time emits them in source
- * order.  Do not reorder.
- *
- * THE DESTRUCTOR IS OUT OF LINE AND THE CARTRIDGE ORDERS IT D1 (0x020e0638)
- * BELOW D0 (0x020e065c), adjacent, with no room between them for a D2 -- and
- * there is no _ZN14dScMgCurling_cD2Ev anywhere in the image.  One out-of-line
- * definition at the end of the source therefore has to produce D1 then D0 and
- * nothing in between.  See the manifest's dtor grid for the cells that were
- * compiled and what each one emitted.
- *
- * Because the destructor is out of line and declared first, this TU owns the
- * class's key function, so mwcc emits the whole inheritance chain's vtable and
- * typeinfo as vague-linkage passengers -- see the manifest's
- * compiler_only_output block.
- *
- * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x020e0638  the legacy D1 shard
- *   [1] 0x020e065c  the legacy D0 shard
- *   [2] 0x020e0694  the legacy func_ov006_020e0694 shard
- *   [3] 0x020e071c  the legacy func_ov006_020e071c shard
- *   [4] 0x020e07b0  the legacy func_ov006_020e07b0 shard
- *   [5] 0x020e0884  the legacy func_ov006_020e0884 shard
- *   [6] 0x020e091c  the legacy func_ov006_020e091c shard
- *   [7] 0x020e0a24  the legacy func_ov006_020e0a24 shard
- *   [8] 0x020e0b64  the legacy func_ov006_020e0b64 shard
- *   [9] 0x020e0ca0  the legacy func_ov006_020e0ca0 shard
- *   [10] 0x020e0d84 the legacy func_ov006_020e0d84 shard
- *   [11] 0x020e0e18 the legacy func_ov006_020e0e18 shard
- *   [12] 0x020e0edc the legacy func_ov006_020e0edc shard
- *   [13] 0x020e0ff0 the legacy func_ov006_020e0ff0 shard
- *   [14] 0x020e1100 the legacy func_ov006_020e1100 shard
- *   [15] 0x020e1214 the legacy func_ov006_020e1214 shard
- *   [16] 0x020e1264 the legacy func_ov006_020e1264 shard
- *   [17] 0x020e12d0 the legacy func_ov006_020e12d0 shard
- *   [18] 0x020e13a4 the legacy func_ov006_020e13a4 shard
- *   [19] 0x020e1554 the legacy func_ov006_020e1554 shard
- *   [20] 0x020e1608 the legacy func_ov006_020e1608 shard
- *   [21] 0x020e1680 the legacy func_ov006_020e1680 shard
- *   [22] 0x020e17f8 the legacy func_ov006_020e17f8 shard
- *   [23] 0x020e1854 the legacy func_ov006_020e1854 shard
- *   [24] 0x020e1b54 the legacy func_ov006_020e1b54 shard
- *   [25] 0x020e1c68 the legacy func_ov006_020e1c68 shard
- *   [26] 0x020e1dc8 the legacy func_ov006_020e1dc8 shard
+ * deslop
+ * Leftover: the func_ov006 helpers keep linker names; naming belongs
+ *   at their definitions.
  */
 
 #pragma defer_codegen off
@@ -240,18 +143,11 @@ extern void func_ov006_020e1dc8(dScMgCurling_c *self, int idx);
 
 }  /* extern "C" */
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 0 -- _ZN14dScMgCurling_cD1Ev, 0x020e0638, size 0x24 */
-/* ROM ordinal 1 -- _ZN14dScMgCurling_cD0Ev, 0x020e065c, size 0x38 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN14dScMgCurling_cD1Ev
 // @symbol _ZN14dScMgCurling_cD0Ev
 dScMgCurling_c::~dScMgCurling_c()
 {
 }
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- func_ov006_020e0694, 0x020e0694, size 0x88 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_020e0694
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_020e0694(char *c)
@@ -269,9 +165,6 @@ void func_ov006_020e0694(char *c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- func_ov006_020e071c, 0x020e071c, size 0x94 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_020e071c
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_020e071c(char *c, int i)
@@ -293,9 +186,6 @@ void func_ov006_020e071c(char *c, int i)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- func_ov006_020e07b0, 0x020e07b0, size 0xd4 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_020e07b0
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_020e07b0(char *o, int i)
@@ -316,9 +206,6 @@ void func_ov006_020e07b0(char *o, int i)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- func_ov006_020e0884, 0x020e0884, size 0x98 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_020e0884
 extern "C" {
 extern int RandomIntInternal(int* seed);
@@ -337,9 +224,6 @@ void func_ov006_020e0884(char* c, int i) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- func_ov006_020e091c, 0x020e091c, size 0x108 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_020e091c
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_020e091c(char *base, int i)
@@ -370,9 +254,6 @@ void func_ov006_020e091c(char *base, int i)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- func_ov006_020e0a24, 0x020e0a24, size 0x140 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_020e0a24
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_020e0a24(char *base, int idx)
@@ -408,9 +289,6 @@ void func_ov006_020e0a24(char *base, int idx)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 8 -- func_ov006_020e0b64, 0x020e0b64, size 0x13c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_020e0b64
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_020e0b64(char *base, int index)
@@ -448,9 +326,6 @@ void func_ov006_020e0b64(char *base, int index)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 9 -- func_ov006_020e0ca0, 0x020e0ca0, size 0xe4 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_020e0ca0
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_020e0ca0(char *o, int i)
@@ -468,9 +343,6 @@ void func_ov006_020e0ca0(char *o, int i)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 10 -- func_ov006_020e0d84, 0x020e0d84, size 0x94 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_020e0d84
 extern "C" void func_ov006_020e0d84(char *c, int i)
 {
@@ -482,9 +354,6 @@ extern "C" void func_ov006_020e0d84(char *c, int i)
     (self->*data_ov006_021418d8[k1])(i);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 11 -- func_ov006_020e0e18, 0x020e0e18, size 0xc4 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_020e0e18
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_020e0e18(char *base, int idx) {
@@ -506,9 +375,6 @@ void func_ov006_020e0e18(char *base, int idx) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 12 -- func_ov006_020e0edc, 0x020e0edc, size 0x114 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_020e0edc
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_020e0edc(char *c, int idx)
@@ -552,9 +418,6 @@ void func_ov006_020e0edc(char *c, int idx)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 13 -- func_ov006_020e0ff0, 0x020e0ff0, size 0x110 */
-/* -------------------------------------------------------------------------- */
 #pragma push
 #pragma inline_depth(0)
 // @symbol func_ov006_020e0ff0
@@ -599,9 +462,6 @@ void func_ov006_020e0ff0(void* base, int idx) {
 #pragma pop
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 14 -- func_ov006_020e1100, 0x020e1100, size 0x114 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_020e1100
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_020e1100(char *c, int idx)
@@ -629,9 +489,6 @@ void func_ov006_020e1100(char *c, int idx)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 15 -- func_ov006_020e1214, 0x020e1214, size 0x50 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_020e1214
 extern "C" void func_ov006_020e1214(char *base, int idx)
 {
@@ -639,9 +496,6 @@ extern "C" void func_ov006_020e1214(char *base, int idx)
     (((C*)base)->*data_ov006_021418f0[state].pmf)(idx);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 16 -- func_ov006_020e1264, 0x020e1264, size 0x6c */
-/* -------------------------------------------------------------------------- */
 #pragma push
 #pragma opt_propagation off
 // @symbol func_ov006_020e1264
@@ -658,9 +512,6 @@ void func_ov006_020e1264(char *c, int idx) {
 }
 #pragma pop
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 17 -- func_ov006_020e12d0, 0x020e12d0, size 0xd4 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_020e12d0
 extern "C" void func_ov006_020e12d0(char *o)
 {
@@ -682,9 +533,6 @@ extern "C" void func_ov006_020e12d0(char *o)
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 18 -- func_ov006_020e13a4, 0x020e13a4, size 0x1b0 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_020e13a4
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_020e13a4(char *c)
@@ -756,9 +604,6 @@ void func_ov006_020e13a4(char *c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 19 -- func_ov006_020e1554, 0x020e1554, size 0xb4 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_020e1554
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_020e1554(Obj *o)
@@ -776,9 +621,6 @@ void func_ov006_020e1554(Obj *o)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 20 -- func_ov006_020e1608, 0x020e1608, size 0x78 */
-/* -------------------------------------------------------------------------- */
 #pragma push
 // @symbol func_ov006_020e1608
 extern "C" {  /* .c-derived member: C linkage for the whole block */
@@ -803,9 +645,6 @@ void func_ov006_020e1608(char *self) {
 }
 #pragma pop
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 21 -- func_ov006_020e1680, 0x020e1680, size 0x178 */
-/* -------------------------------------------------------------------------- */
 #pragma push
 #pragma opt_strength_reduction off
 // @symbol func_ov006_020e1680
@@ -865,9 +704,6 @@ void func_ov006_020e1680(char *o)
 }
 #pragma pop
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 22 -- func_ov006_020e17f8, 0x020e17f8, size 0x5c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_020e17f8
 /* ov006, 0x020e17f8, size 0x5c. RESOLVED: this held the name
  * _ZN6Player16St_WallJump_InitEv, and that symbol has now been moved to the
@@ -889,9 +725,6 @@ extern "C" void func_ov006_020e17f8(char *self)
   func_ov004_020afdd0((int)data_ov006_0213c2e4,(x>>12)-0x20,(y>>12)-8,-1,0);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 23 -- func_ov006_020e1854, 0x020e1854, size 0x300 */
-/* -------------------------------------------------------------------------- */
 #pragma push
 #pragma opt_common_subs off
 // @symbol func_ov006_020e1854
@@ -1053,9 +886,6 @@ void func_ov006_020e1854(void *arg)
 }
 #pragma pop
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 24 -- func_ov006_020e1b54, 0x020e1b54, size 0x114 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_020e1b54
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_020e1b54(char *c)
@@ -1096,9 +926,6 @@ void func_ov006_020e1b54(char *c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 25 -- func_ov006_020e1c68, 0x020e1c68, size 0x160 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_020e1c68
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_020e1c68(char* a0) {
@@ -1131,9 +958,6 @@ void func_ov006_020e1c68(char* a0) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 26 -- func_ov006_020e1dc8, 0x020e1dc8, size 0x2f4 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_020e1dc8
 /* recovered: dScMgCurling_c stone separation, ov006 0x020e1dc8 (756 bytes).
  * Stone idx has just moved; any other active stone within 24 units of it is

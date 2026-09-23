@@ -1,65 +1,19 @@
 //cpp
-/* Reconstructed translation unit.
- * ov085/daPeach_c  (25 functions)
+/* Princess Peach in the castle courtyard (ov085/daPeach_c), 25
+ * functions: states, talk, model, factory. Source ROM-ascending
+ * under defer_codegen off (D1 below D0, no D2). Do not reorder.
  *
- * Princess Peach, as she stands in the castle courtyard. The class identity
- * is the cartridge's own: ov085 0x0212ff84 holds the length-prefixed string
- * "9daPeach_c", 0x0212ff90 is the __si_class_type_info record that names it,
- * and 0x0212ffc0 is her vtable. No part of this name is coined.
- *
- * FUNCTION ORDER IS ROM-ASCENDING. This TU disables deferred code generation
- * so CodeWarrior emits each definition where it stands. That is also what
- * puts the destructor pair out in the cartridge's own order: ov085 has D1 at
- * 0x02129d18 BELOW D0 at 0x02129d60 and no D2 at all. The sibling TUs in this
- * same overlay -- src/actors/daMip_c.cpp, src/game/actors/d_a_c_jugem.cpp and
- * src/actors/daObjKanban_c.cpp -- have the identical destructor shape and
- * are built the same way.
- *
- * Assembled from these legacy one-function sources (ROM address order):
- *   [0]  0x02129d18  _ZN9daPeach_cD1Ev.cpp
- *   [1]  0x02129d60  _ZN9daPeach_cD0Ev.cpp
- *   [2]  0x02129dbc  _ZN9daPeach_c12UpdateLookAtEv.cpp
- *   [3]  0x02129ebc  _ZN9daPeach_c21UpdateGroundCollisionEP10dBgCh_Actr.cpp
- *   [4]  0x02129f8c  func_ov085_02129f8c.c
- *   [5]  0x02129fdc  _ZN9daPeach_c11UpdateModelEv.cpp
- *   [6]  0x0212a0b8  _ZN9daPeach_c10InitState0Ev.cpp
- *   [7]  0x0212a0e8  _ZN9daPeach_c6State0Ev.cpp
- *   [8]  0x0212a148  _ZN9daPeach_c6State2Ev.cpp
- *   [9]  0x0212a150  _ZN9daPeach_c10InitState2Ev.cpp
- *   [10] 0x0212a19c  _ZN9daPeach_c10InitState4Ev.cpp
- *   [11] 0x0212a1d4  _ZN9daPeach_c6State1Ev.cpp
- *   [12] 0x0212a220  _ZN9daPeach_c6State3Ev.cpp
- *   [13] 0x0212a328  _ZN9daPeach_c10InitState1Ev.cpp
- *   [14] 0x0212a37c  _ZN9daPeach_c10InitState3Ev.cpp
- *   [15] 0x0212a3ec  _ZN9daPeach_c6State4Ev.cpp
- *   [16] 0x0212a430  _ZN9daPeach_c17CallStateBehaviorEv.cpp
- *   [17] 0x0212a46c  _ZN9daPeach_c13CallStateInitEv.cpp
- *   [18] 0x0212a4a4  _ZN9daPeach_c8SetStateEi.cpp
- *   [19] 0x0212a4c0  _ZN9daPeach_c16CleanupResourcesEv.cpp
- *   [20] 0x0212a504  _ZN9daPeach_c16OnPendingDestroyEv.cpp
- *   [21] 0x0212a508  _ZN9daPeach_c6RenderEv.cpp
- *   [22] 0x0212a52c  _ZN9daPeach_c8BehaviorEv.cpp
- *   [23] 0x0212a588  _ZN9daPeach_c13InitResourcesEv.cpp
- *   [24] 0x0212a684  d_a_peach.c
- *
- * The last of those, d_a_peach.c, is absent from build/tu_map.json's span:
- * tu_map segments on symbol NAME, and `daPeach_c_classInit` is neither
- * `func_ov085_*` nor `_ZN9daPeach_c*`, so nothing labels it. It is contiguous
- * -- 0x0212a684 + 0x50 = 0x0212a6d4, which is where daMip_c's destructor
- * begins -- and it is this class's own factory: it allocates this class's
- * 0x36c and installs this class's vtable. The sibling TUs in this overlay
- * took in their own factory on the same grounds.
- *
- * FUNCTIONS cannot carry per-member declarations the way types can -- a class
- * member function may not sit inside a linkage-specification region -- so
- * every external call this TU makes is declared once, below, with C linkage,
- * on one reconciled signature. Where include/decl_common.h already carries a
- * declaration of a symbol this TU names, the spelling below is that one, so
- * the tree's declaration plurality is unchanged.
+ * deslop
+ * Leftover: the func_ov085 helper keeps its linker name; the
+ *   ModelAnim SetAnim/Advance calls keep computed spellings
+ *   (by-value Fix12<int> parameters, wall 6az).
+ * Leftover: raw offsets on c (state bytes, second anim) are
+ *   unrecovered header fields.
  */
 #include "common.h"
 #include "daPeach_c.h"
 #include "dActor_c.h"
+#include "Player.h"
 #include "SharedFilePtr.h"
 #include "Animation.h"
 #include "dCc_c.h"
@@ -143,10 +97,8 @@ extern daPeach_c::StateFunc data_ov085_0213055c[];
 
 #pragma defer_codegen off
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinals 0 and 1 -- _ZN9daPeach_cD1Ev 0x02129d18 size 0x48,
                            _ZN9daPeach_cD0Ev 0x02129d60 size 0x5c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daPeach_cD1Ev
 // @symbol _ZN9daPeach_cD0Ev
 /* ONE declaration, TWO ROM functions. mwccarm emits the complete variant D1
@@ -175,9 +127,6 @@ void PeachDemandDeletingDtor(daPeach_c *peach)
     delete peach;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- _ZN9daPeach_c12UpdateLookAtEv, 0x02129dbc, size 0x100 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daPeach_c12UpdateLookAtEv
 /* Peach turns her head toward the nearest player, but only when he is close
  * enough (0x15e000) and roughly in front of her (within 0x3000 of her
@@ -207,10 +156,8 @@ void daPeach_c::UpdateLookAt()
     _Z14ApproachLinearRsss((short *)(s + 0x360), *(short *)(s + 0x364), 0x100);
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 3 -- _ZN9daPeach_c21UpdateGroundCollisionEP10dBgCh_Actr,
                     0x02129ebc, size 0xd0 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daPeach_c21UpdateGroundCollisionEP10dBgCh_Actr
 /* The floor normal becomes a pitch at +0xa8 so Peach stands square on a
  * slope. The wall branch reads its normal and drops it -- the ROM computes
@@ -236,9 +183,6 @@ void daPeach_c::UpdateGroundCollision(dBgCh_Actr *clsn)
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- func_ov085_02129f8c, 0x02129f8c, size 0x50 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov085_02129f8c
 /* The one member of this TU the cartridge does not name: a free function with
  * C linkage, called by InitState0 and InitState4. It asks whether the actor
@@ -264,9 +208,6 @@ done:
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- _ZN9daPeach_c11UpdateModelEv, 0x02129fdc, size 0xdc */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daPeach_c11UpdateModelEv
 /* The model matrix at +0xf0 is rebuilt from the body angle and the position,
  * then the head joint's own matrix (+0x360 inside the animated model) is
@@ -287,9 +228,6 @@ void daPeach_c::UpdateModel()
         c, c + 0x138, c + 0xf0, 0x8c000, 0x32000, 0xf);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- _ZN9daPeach_c10InitState0Ev, 0x0212a0b8, size 0x30 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daPeach_c10InitState0Ev
 int daPeach_c::InitState0()
 {
@@ -300,9 +238,6 @@ int daPeach_c::InitState0()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- _ZN9daPeach_c6State0Ev, 0x0212a0e8, size 0x60 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daPeach_c6State0Ev
 int daPeach_c::State0()
 {
@@ -315,18 +250,12 @@ int daPeach_c::State0()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 8 -- _ZN9daPeach_c6State2Ev, 0x0212a148, size 0x8 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daPeach_c6State2Ev
 int daPeach_c::State2()
 {
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 9 -- _ZN9daPeach_c10InitState2Ev, 0x0212a150, size 0x4c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daPeach_c10InitState2Ev
 int daPeach_c::InitState2()
 {
@@ -337,9 +266,6 @@ int daPeach_c::InitState2()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 10 -- _ZN9daPeach_c10InitState4Ev, 0x0212a19c, size 0x38 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daPeach_c10InitState4Ev
 int daPeach_c::InitState4()
 {
@@ -352,9 +278,6 @@ int daPeach_c::InitState4()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 11 -- _ZN9daPeach_c6State1Ev, 0x0212a1d4, size 0x4c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daPeach_c6State1Ev
 int daPeach_c::State1()
 {
@@ -365,9 +288,6 @@ int daPeach_c::State1()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 12 -- _ZN9daPeach_c6State3Ev, 0x0212a220, size 0x108 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daPeach_c6State3Ev
 /* The conversation, in three steps held in the u8 at +0x368: start the talk,
  * turn to face the player and put the message up, then wait for the player's
@@ -378,39 +298,35 @@ int daPeach_c::State3()
     Vector3 v;
     switch (*(u8 *)(c + 0x368)) {
     case 0:
-        if (_ZN6Player9StartTalkER7fBase_cb(*(void **)(c + 0x35c), c, 1) != 0)
+        if (((daPeach_c *)c)->mTalkPlayer->StartTalk(*(fBase_c *)c, 1) != 0)
             *(u8 *)(((int)c + 0x368)) += 1;
         break;
     case 1:
         if (_Z14ApproachLinearRsss((s16 *)(c + 0x8e),
                 Vec3_HorzAngle((Vector3 *)(c + 0x5c),
-                               (Vector3 *)(*(char **)(c + 0x35c) + 0x5c)),
+                               (Vector3 *)&((daPeach_c *)c)->mTalkPlayer->mPosX),
                 0x514) != 0) {
             v.x = *(int *)(c + 0x5c);
             v.y = *(int *)(c + 0x60);
             v.z = *(int *)(c + 0x64);
             v.y = v.y + 0xa0000;
-            if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(
-                    *(void **)(c + 0x35c), c, 0xd0, &v, 0, 0) != 0)
+            if (((daPeach_c *)c)->mTalkPlayer->ShowMessage(*(fBase_c *)c, 0xd0, &v, 0, 0) != 0)
                 *(u8 *)(((int)c + 0x368)) += 1;
         }
         break;
     case 2:
-        if (_ZN6Player12GetTalkStateEv(*(void **)(c + 0x35c)) == -1)
+        if (((daPeach_c *)c)->mTalkPlayer->GetTalkState() == -1)
             SetState(0);
         break;
     }
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 13 -- _ZN9daPeach_c10InitState1Ev, 0x0212a328, size 0x54 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daPeach_c10InitState1Ev
 int daPeach_c::InitState1()
 {
     char *c = (char *)this;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0xd4, data_ov085_021304d4[1], 0, 0x1000, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((char *)&((daPeach_c *)c)->mModelAnim, data_ov085_021304d4[1], 0, 0x1000, 0);
     *(int *)(c + 0x12c) = 0;
     _ZN9Animation7AdvanceEv(c + 0x124);
     *(char *)(c + 0x368) = 1;
@@ -418,9 +334,6 @@ int daPeach_c::InitState1()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 14 -- _ZN9daPeach_c10InitState3Ev, 0x0212a37c, size 0x70 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daPeach_c10InitState3Ev
 /* The same liveness question func_ov085_02129f8c asks, written out here
  * instead of called -- the ROM inlines it at this one site. */
@@ -430,10 +343,10 @@ int daPeach_c::InitState3()
     if (*(int *)(c + 0x180) & 0x8000000) {
         char *a = (char *)_ZN8dActor_c10FindWithIDEj(*(unsigned int *)(c + 0x184));
         if (a) {
-            int match = (*(unsigned short *)(a + 0xc) == 0xbf) ? 1 : 0;
+            int match = (((dActor_c *)a)->actorID == 0xbf) ? 1 : 0;
             if (match != 0) {
-                *(void **)(c + 0x35c) = a;
-                if (_ZN6Player9StartTalkER7fBase_cb(*(void **)(c + 0x35c), c, false)) {
+                ((daPeach_c *)c)->mTalkPlayer = (Player *)a;
+                if (((daPeach_c *)c)->mTalkPlayer->StartTalk(*(fBase_c *)c, false)) {
                     SetState(1);
                 }
             }
@@ -442,9 +355,6 @@ int daPeach_c::InitState3()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 15 -- _ZN9daPeach_c6State4Ev, 0x0212a3ec, size 0x44 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daPeach_c6State4Ev
 int daPeach_c::State4()
 {
@@ -454,9 +364,6 @@ int daPeach_c::State4()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 16 -- _ZN9daPeach_c17CallStateBehaviorEv, 0x0212a430, size 0x3c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daPeach_c17CallStateBehaviorEv
 /* The second member of the selected pair. mStateFuncs points at a pair of
  * pointers-to-member copied out of the ten ROM constants at 0x0212ff34. */
@@ -466,9 +373,6 @@ void daPeach_c::CallStateBehavior()
     (this->**func)();
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 17 -- _ZN9daPeach_c13CallStateInitEv, 0x0212a46c, size 0x38 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daPeach_c13CallStateInitEv
 void daPeach_c::CallStateInit()
 {
@@ -476,9 +380,6 @@ void daPeach_c::CallStateInit()
     (this->**func)();
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 18 -- _ZN9daPeach_c8SetStateEi, 0x0212a4a4, size 0x1c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daPeach_c8SetStateEi
 void daPeach_c::SetState(int state)
 {
@@ -486,9 +387,6 @@ void daPeach_c::SetState(int state)
     CallStateInit();
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 19 -- _ZN9daPeach_c16CleanupResourcesEv, 0x0212a4c0, size 0x44 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daPeach_c16CleanupResourcesEv
 /* One direct release, then a LOOP over a seven-entry table of pointers.
  * Unlike every sibling in this overlay, which writes its releases out one per
@@ -505,9 +403,6 @@ int daPeach_c::CleanupResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 20 -- _ZN9daPeach_c16OnPendingDestroyEv, 0x0212a504, size 0x4 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daPeach_c16OnPendingDestroyEv
 /* Empty -- the ROM body is a single `bx lr`. The override exists to suppress
  * whatever the base does on pending destroy, not to do anything itself. */
@@ -515,9 +410,6 @@ void daPeach_c::OnPendingDestroy()
 {
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 21 -- _ZN9daPeach_c6RenderEv, 0x0212a508, size 0x24 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daPeach_c6RenderEv
 /* THE CALL IS QUALIFIED, AND THAT IS LOAD-BEARING. Model::Render is virtual
  * (slot 5 of _ZTV5Model) and ModelAnim overrides it, so a plain
@@ -529,9 +421,6 @@ int daPeach_c::Render()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 22 -- _ZN9daPeach_c8BehaviorEv, 0x0212a52c, size 0x5c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daPeach_c8BehaviorEv
 int daPeach_c::Behavior()
 {
@@ -546,9 +435,6 @@ int daPeach_c::Behavior()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 23 -- _ZN9daPeach_c13InitResourcesEv, 0x0212a588, size 0xfc */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daPeach_c13InitResourcesEv
 /* Declared by final name, not as members: both Init calls take Fix12<int>
  * where these calls pass int literals, and Fix12<int> is an aggregate with no
@@ -578,9 +464,6 @@ int daPeach_c::InitResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 24 -- daPeach_c_classInit, 0x0212a684, size 0x50 */
-/* -------------------------------------------------------------------------- */
 // @symbol daPeach_c_classInit
 /* The registry factory behind the PEACH_PRINCESS profile. It allocates 0x36c
  * -- this class's own sizeof -- and installs this class's vtable, the second

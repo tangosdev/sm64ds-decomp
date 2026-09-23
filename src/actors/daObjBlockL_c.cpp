@@ -1,55 +1,28 @@
 //cpp
-/* Recovered translation unit -- ov002/daObjBlockL_c, the big brick block class.
+/* Big brick blocks: one class, six actor IDs (0xf, 0x10, 0x11, 0x12,
+ * 0x13, 0x2e) -- item blocks, the star block, the switch-activated
+ * block. Kill is a switchboard on actorID: coins, stars, particles,
+ * then destroy, except the 0x13 block which the event bit re-enables.
+ * Factories live outside this TU.
  *
- * .text span 0x020b35a0..0x020b406c, 14 functions, ROM ordinals 0..13, exactly
- * the contiguous linker run build/tu_map.json places here. All 14 are assembled
- * below and config/tu_manifest.d/ov002/daObjBlockL_c.json names every one, so the
- * run has no hole and the 14 one-function files under src/ that used to own
- * these bytes are deleted by this change.
- *
- * IDENTITY IS THE CARTRIDGE'S. ov002 holds _ZTS13daObjBlockL_c at 0x02108a14;
- * no BigBrickBlock RTTI record exists anywhere -- that was a coined alias for
- * this same class. The class factories (daObjBlockL_c_classInit_*) and the
- * vtable preamble ZTI at 0x021089f8 prove the ROM name, and _ZTV13daObjBlockL_c
- * sits at the measured address point 0x02108adc.
- *
- * FUNCTION ORDER IS THE ROM'S OWN, under `#pragma defer_codegen off`.
- * Deferred code generation stays off for this TU so mwccarm emits one .text
- * section per function in SOURCE order: the lowest-address ROM function
- * (_ZN13daObjBlockL_cD1Ev, 0x020b35a0) is written FIRST and the highest
- * (_ZN13daObjBlockL_c13InitResourcesEv, 0x020b3d78) LAST. Do not reorder.
- * The verifier reports all 14 sections in the expected ROM-ascending order.
- *
- * THE DESTRUCTOR IS ONE DEFINITION AND TWO SECTIONS (plus a homeless D2).
- * A single `daObjBlockL_c::~daObjBlockL_c()` emits D1 and D0, and with
- * deferred code generation off they land in the cartridge's order, D1 first
- * at 0x020b35a0 and D0 at 0x020b35e4. The homeless D2 has no ROM symbol and
- * no inbound relocation once the leaf D1/D0 pair is retained, so the manifest
- * licenses it as deadstrip compiler-only output.
- *
- * KEY-FUNCTION SIDE EFFECT: none claimed. ~daObjBlockL_c is the first non-inline
- * virtual and this TU defines it, but the promotion is text-only: the manifest's
- * compiler_only_output externalizes _ZTV/_ZTI/_ZTS to their canonical public
- * addresses (deadstrip-data) and claims no data or BSS range.
- *
- * WHAT THE PROMOTION CARRIES OVER, and nothing else was changed:
- *   1. Local shadow structs (BigBrickBlockFileRow/SharedFileRow/ClpsRow) and the
- *      0xc-stride resource tables they describe stay as the legacy shards
- *      recovered them -- no shared header owns those rows yet.
- *   2. Particle::System::NewSimple, dActor_c::SpawnCoins and
- *      dBgActor_c::IsClsnInRangeOnScreen stay spelled as mangled externs: they
- *      take Fix12<int> BY VALUE and declaring the true types changes how the
- *      caller passes them (notes/mwccarm-codegen.md 6az).
- *   3. Event::GetBit's conflicting declarations resolve to the first spelling;
- *      the alternates stay commented out for review (tubuild create warnings).
- *
- * The 14 legacy one-function sources this folds are named by the manifest's
- * `legacy_source` fields (history); they are not repeated here.
+ * Leftover: Particle::System::NewSimple, dActor_c::SpawnCoins and
+ *   dBgActor_c::IsClsnInRangeOnScreen stay mangled (Fix12<int> by
+ *   value, wall 6az).
+ * Leftover: dBgW_KcMbg::SetFile keeps its mangled spelling (by-value
+ *   Fix12<int> parameters, wall 6az).
+ * Leftover: the BigBrickBlockFileRow/SharedFileRow/ClpsRow tables
+ *   stay file-local: no shared header owns those 0xc-stride rows yet.
+ * Leftover: Event::GetBit's conflicting declarations resolve to the
+ *   first spelling (manifest notes both alternates).
+ * Leftover: linkedActor + 0x3b0 / + 0xd6 are unnamed per-actor bytes
+ *   this helper clears/sets.
+ * Leftover: data_0209f2f8 reads as the level ID and data_0209f220 as
+ *   a star flag (same pattern in the KnockDownPlank TU); neither has
+ *   a shared home.
+ * Leftover: IsStarCollectedInCurLevel is a shared coined helper;
+ *   naming belongs at its definition.
  */
 
-/* Includes: union of the legacy files', first-seen in ROM-ascending
- * processing order. NOT verified for header ordering constraints (e.g. a
- * common.h-before-X rule) -- watch for new compile errors after this. */
 #include "daObjBlockL_c.h"
 #include "Player.h"
 #include "dActor_c.h"
@@ -58,10 +31,7 @@
 #include "daObjSwitch_c.h"
 #include "Model.h"
 
-/* Local shadow declarations carried from the legacy files verbatim.
- * NOT reconciled against real project headers -- check include/*.h for
- * each of these before compiling; a real header should usually win. */
-/* shadow struct 'BigBrickBlockFileRow' */
+/* File-local resource rows (see the header note above). */
 struct BigBrickBlockFileRow {
     SharedFilePtr* file;
     u8 pad[8];
@@ -86,8 +56,8 @@ extern BigBrickBlockFileRow data_ov002_02108ab0[];
 extern BigBrickBlockFileRow data_ov002_02108ab4[];
 extern "C" int _ZN5Event6GetBitEj(unsigned int bit);
 extern Vector3 data_ov002_021089e0;
-extern "C" void func_020393a4(void *p, int v);
-extern "C" void func_02039394(void *p, int v);
+extern "C" void func_020393a4(dBgW_KcMbg *p, int v);
+extern "C" void func_02039394(dBgW_KcMbg *p, int v);
 extern "C" void _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(void *self, int a, int b);
 extern ClpsRow data_ov002_02108ab8[];         /* CLPS blocks,       0xc stride */
 extern s8 data_0209f2f8;              /* current level */
@@ -96,16 +66,14 @@ int IsStarCollectedInCurLevel(int star);
 void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
 dBgW_KcMbg *self, KCL_File *kcl, const Matrix4x3 *mat, int scale, s16 angY,
 CLPS_Block *clps);
-/* TUBUILD CONFLICT -- alternate declaration of _ZN5Event6GetBitEj, from the legacy file for _ZN13daObjBlockL_c8BehaviorEv, NOT applied: extern "C" int _ZN5Event6GetBitEj(unsigned int a); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN5Event6GetBitEj, from the legacy file for _ZN13daObjBlockL_c13InitResourcesEv, NOT applied: int _ZN5Event6GetBitEj(u32 bit); */
 }
 
+/* Emission order is ROM order: functions must stay ROM-ascending.
+ * Do not reorder. */
 #pragma defer_codegen off
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinals 0 and 1 -- _ZN13daObjBlockL_cD1Ev 0x020b35a0 size 0x44,
                           _ZN13daObjBlockL_cD0Ev 0x020b35e4 size 0x58 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN13daObjBlockL_cD1Ev
 // @symbol _ZN13daObjBlockL_cD0Ev
 /* recovered: real C++ destructor -- the compiler emits the whole body
@@ -123,9 +91,6 @@ CLPS_Block *clps);
 daObjBlockL_c::~daObjBlockL_c()
 {
 }
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- _ZN13daObjBlockL_c17NotifyLinkedActorEv, 0x020b363c, size 0x64 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN13daObjBlockL_c17NotifyLinkedActorEv
 /* The helper belongs to daObjBlockL_c's recovered TU and has one caller:
    daObjBlockL_c::Kill. It follows mLinkedActor and clears the per-actor state
@@ -153,9 +118,6 @@ void daObjBlockL_c::NotifyLinkedActor()
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- _ZN13daObjBlockL_c16HasNonzeroAngleXEv, 0x020b36a0, size 0x14 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN13daObjBlockL_c16HasNonzeroAngleXEv
 /* Both callers are daObjBlockL_c methods in this TU. The field at 0x8c is the
    inherited dActor_c::mAngleX; no external state participates. */
@@ -164,9 +126,6 @@ bool daObjBlockL_c::HasNonzeroAngleX()
     return mAngleX != 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- _ZN13daObjBlockL_c15OnHitByMegaCharER6Player, 0x020b36b4, size 0x28 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN13daObjBlockL_c15OnHitByMegaCharER6Player
 /* daObjBlockL_c::OnHitByMegaChar -- vtable slot 27, ov002 0x020b36b4.
  * include/dActor_c.h's own slot 27 supplies the signature, `virtual void
@@ -183,9 +142,6 @@ void daObjBlockL_c::OnHitByMegaChar(Player &player)
     Kill();
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- _ZN13daObjBlockL_c8OnKickedER8dActor_c, 0x020b36dc, size 0xac */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN13daObjBlockL_c8OnKickedER8dActor_c
 /* daObjBlockL_c::OnKicked -- vtable slot 24, ov002 0x020b36dc.
  *
@@ -221,9 +177,6 @@ void daObjBlockL_c::OnKicked(dActor_c &other)
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- _ZN13daObjBlockL_c11OnAttacked2ER8dActor_c, 0x020b3788, size 0x64 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN13daObjBlockL_c11OnAttacked2ER8dActor_c
 /* daObjBlockL_c::OnAttacked2 -- vtable slot 23, ov002 0x020b3788.
  * include/dActor_c.h's own slot 23 supplies the signature, `virtual int
@@ -247,9 +200,6 @@ int daObjBlockL_c::OnAttacked2(dActor_c &other)
     Kill();
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- _ZN13daObjBlockL_c11OnAttacked1ER8dActor_c, 0x020b37ec, size 0x40 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN13daObjBlockL_c11OnAttacked1ER8dActor_c
 /* daObjBlockL_c::OnAttacked1 -- vtable slot 22, ov002 0x020b37ec. Was a plain
  * C recovery (func_ov002_020b37ec.c) with a single `void *this` parameter --
@@ -272,9 +222,6 @@ int daObjBlockL_c::OnAttacked1(dActor_c &other)
     Kill();
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 8 -- _ZN13daObjBlockL_c15OnGroundPoundedER8dActor_c, 0x020b382c, size 0x74 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN13daObjBlockL_c15OnGroundPoundedER8dActor_c
 /* daObjBlockL_c::OnGroundPounded -- vtable slot 21, ov002 0x020b382c.
  *
@@ -309,9 +256,6 @@ void daObjBlockL_c::OnGroundPounded(dActor_c &other)
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 9 -- _ZN13daObjBlockL_c4KillEv, 0x020b38a0, size 0x210 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN13daObjBlockL_c4KillEv
 /* daObjBlockL_c::Kill() at ov002 0x020b38a0, 0x210 bytes -- vtable slot 31.
  *
@@ -431,9 +375,6 @@ void daObjBlockL_c::Kill()
     MarkForDestruction();
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 10 -- _ZN13daObjBlockL_c16CleanupResourcesEv, 0x020b3ab0, size 0x64 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN13daObjBlockL_c16CleanupResourcesEv
 int daObjBlockL_c::CleanupResources()
 {
@@ -444,11 +385,7 @@ int daObjBlockL_c::CleanupResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 11 -- _ZN13daObjBlockL_c6RenderEv, 0x020b3b14, size 0xf8 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN13daObjBlockL_c6RenderEv
-/* recovered: named members + shared header, real C++ method */
 /* Event has no shared namespace declaration yet. */
 int daObjBlockL_c::Render()
 {
@@ -475,9 +412,6 @@ int daObjBlockL_c::Render()
   return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 12 -- _ZN13daObjBlockL_c8BehaviorEv, 0x020b3c0c, size 0x16c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN13daObjBlockL_c8BehaviorEv
 /* Event has no shared namespace declaration yet. The two unnamed collision
    setters remain address-named, and IsClsnInRangeOnScreen's by-value Fix12
@@ -523,9 +457,6 @@ int daObjBlockL_c::Behavior()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 13 -- _ZN13daObjBlockL_c13InitResourcesEv, 0x020b3d78, size 0x2f4 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN13daObjBlockL_c13InitResourcesEv
 /* daObjBlockL_c::InitResources -- one class, six actor IDs. mVariant selects the
  * row of the three 0xc-stride resource tables (model, collision, CLPS) that this

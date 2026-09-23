@@ -2012,15 +2012,15 @@
    "start": "0x2124b64",
    "end": "0x212624c",
    "classes": [
-    "Spiny"
+    "daTgz_c"
    ],
    "n_functions_map": 34,
    "n_files": 34,
    "files": [
-    "src/_ZN5SpinyD1Ev.cpp",
-    "src/_ZN5SpinyD0Ev.c",
-    "src/_ZN5Spiny13OnYoshiTryEatEv.cpp",
-    "src/_ZN5Spiny16OnAimedAtWithEggEv.cpp",
+    "src/_ZN7daTgz_cD1Ev.cpp",
+    "src/_ZN7daTgz_cD0Ev.c",
+    "src/_ZN7daTgz_c13OnYoshiTryEatEv.cpp",
+    "src/_ZN7daTgz_c16OnAimedAtWithEggEv.cpp",
     "src/func_ov077_02124c28.cpp",
     "src/func_ov077_02124ce4.c",
     "src/func_ov077_02124d08.cpp",
@@ -2044,12 +2044,12 @@
     "src/func_ov077_02125e20.cpp",
     "src/func_ov077_02125e5c.cpp",
     "src/func_ov077_02125e94.c",
-    "src/_ZN5Spiny16CleanupResourcesEv.c",
-    "src/_ZN5Spiny16OnPendingDestroyEv.c",
-    "src/_ZN5Spiny6RenderEv.cpp",
-    "src/_ZN5Spiny8BehaviorEv.cpp",
-    "src/_ZN5Spiny13InitResourcesEv.cpp",
-    "src/_ZN5Spiny13OnTurnIntoEggER6Player.cpp",
+    "src/_ZN7daTgz_c16CleanupResourcesEv.c",
+    "src/_ZN7daTgz_c16OnPendingDestroyEv.c",
+    "src/_ZN7daTgz_c6RenderEv.cpp",
+    "src/_ZN7daTgz_c8BehaviorEv.cpp",
+    "src/_ZN7daTgz_c13InitResourcesEv.cpp",
+    "src/_ZN7daTgz_c13OnTurnIntoEggER6Player.cpp",
     "src/daTgz_c_classInit.c"
    ],
    "ext_mix": {

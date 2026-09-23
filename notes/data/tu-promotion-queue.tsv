@@ -103,7 +103,7 @@ Fireball	9	433	ov002	yes	no	compiler-only:>=11(derived from own chain: 5 classes
 daObjTbox_c	15	322	ov064	yes	yes	compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json + include/ base clause; floor 2x4+1)	daObjFl_Gura_c	text-only
 CccArena	16	355	ov073	yes	no	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	-	text-only
 Coin	28	1148	ov002	yes	no	pragma:1;compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json + include/ base clause; floor 2x4+1)	daBar_c	text-only
-dMgPsOpt_c	11	343	ov004	yes	no	compiler-only:unknown(no chain for dMgPsOpt_c: no RTTI record in build/rtti.json and no include/ base clause; measure with tubuild verify)	dScMgBase_c	text-only
+dMgPsOpt_c	11	343	ov004	yes	yes	compiler-only:unknown(no chain for dMgPsOpt_c: no RTTI record in build/rtti.json and no include/ base clause; measure with tubuild verify)	dScMgBase_c	text-only
 daWater_Ring_c	14	365	ov064	yes	no	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	daObjFl_Gura_c	text-only
 daObjBk_Lift_c	9	301	ov015	yes	yes	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)	daObjBkBillboard_c	text-only
 daObjHatenaBlock_c	1	1342	ov102	yes	yes	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)	-	text-only
@@ -140,7 +140,7 @@ FireSeaElevator	6	168	ov045	yes	no	compiler-only:>=11(derived from own chain: 5 
 Stump	10	286	ov091	yes	no	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	-	text-only
 MontyMole+MontyMoleRock	24	854	ov080	yes	no	multi-class-tu:2;compiler-only:>=14(derived from own chain: 6 classes incl. self via build/rtti.json + include/ base clause; floor 2x6+2)	-	text-only
 IceBlock	9	318	ov081	yes	no	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	-	text-only
-dMgState_c	4	91	ov004	yes	no	compiler-only:unknown(no chain for dMgState_c: no RTTI record in build/rtti.json and no include/ base clause; measure with tubuild verify)	dScMgBase_c	text-only
+dMgState_c	4	91	ov004	yes	no	intact-object:blocked(TU owns two function-local bss statics; text-only isolate_many and compiler-only deadstrip re-import both refuse, intact-object links and reproduces the ROM but needs a storage alias rombuild does not support; see the manifest notes)	dScMgBase_c	text-only
 daObjClock_c	1	208	ov013	yes	yes	compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json; floor 2x4+1)	daObjClockHuriko_c	text-only
 daObjKi_Fune_c	9	170	ov016	yes	yes	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)	daObjKi_Ita_c	text-only
 SlidingBox	7	189	ov016	yes	no	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	daObjKi_Ita_c	text-only

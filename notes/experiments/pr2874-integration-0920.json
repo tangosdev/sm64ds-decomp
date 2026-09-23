@@ -3629,8 +3629,8 @@
       "diffs": []
     },
     {
-      "file": "src/_ZN5Spiny13InitResourcesEv.cpp",
-      "name": "_ZN5Spiny13InitResourcesEv",
+      "file": "src/_ZN7daTgz_c13InitResourcesEv.cpp",
+      "name": "_ZN7daTgz_c13InitResourcesEv",
       "module": "ov077",
       "addr": "0x2126058",
       "verdict": "VERIFIED",
@@ -20320,7 +20320,7 @@
           "src/_ZN3Key16CleanupResourcesEv.cpp",
           "src/_ZN4Coin8BehaviorEv.cpp",
           "src/_ZN4Heap6SizeofEPv.cpp",
-          "src/_ZN5Spiny13InitResourcesEv.cpp",
+          "src/_ZN7daTgz_c13InitResourcesEv.cpp",
           "src/_ZN5Stage7LoadFogEv.cpp",
           "src/_ZN5Unagi13InitResourcesEv.cpp",
           "src/_ZN6Bowser8BehaviorEv.cpp",
@@ -20444,7 +20444,7 @@
           "src/_ZN3Key16CleanupResourcesEv.cpp",
           "src/_ZN4Coin8BehaviorEv.cpp",
           "src/_ZN4Heap6SizeofEPv.cpp",
-          "src/_ZN5Spiny13InitResourcesEv.cpp",
+          "src/_ZN7daTgz_c13InitResourcesEv.cpp",
           "src/_ZN5Stage7LoadFogEv.cpp",
           "src/_ZN5Unagi13InitResourcesEv.cpp",
           "src/_ZN6Bowser8BehaviorEv.cpp",
@@ -21792,7 +21792,7 @@
         "src/_ZN5Crate16CleanupResourcesEv.cpp",
         "src/_ZN5Crate4KillEv.cpp",
         "src/_ZN5Crate8BehaviorEv.cpp",
-        "src/_ZN5Spiny13InitResourcesEv.cpp",
+        "src/_ZN7daTgz_c13InitResourcesEv.cpp",
         "src/_ZN5Stage11RenderModelEv.cpp",
         "src/_ZN5Stage14GraphCallback2Ev.cpp",
         "src/_ZN5Stage17PS_UpdateSaveMenuEb.cpp",
@@ -23083,8 +23083,8 @@
           "name": "_ZN5Crate8BehaviorEv"
         },
         {
-          "file": "src/_ZN5Spiny13InitResourcesEv.cpp",
-          "name": "_ZN5Spiny13InitResourcesEv"
+          "file": "src/_ZN7daTgz_c13InitResourcesEv.cpp",
+          "name": "_ZN7daTgz_c13InitResourcesEv"
         },
         {
           "file": "src/_ZN5Stage11RenderModelEv.cpp",

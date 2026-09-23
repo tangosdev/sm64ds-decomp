@@ -183,7 +183,7 @@ daSoundObj_c	DONE	include\daSoundObj_c.h	dActor_c	0	ov002	4
 daSpd_c	DONE	include\Scuttlebug.h  [alias: header uses pre-rename name]	dActor_c	0	ov071	10
 daStarBase_c	DONE	include\StarMarker.h  [alias: header uses pre-rename name]	dActor_c	0	ov002	9
 daStarGate_c	DONE	include\StarDoor.h  [alias: header uses pre-rename name]	dActor_c	0	ov100	7
-daTgz_c	DONE	include\Spiny.h  [alias: header uses pre-rename name]	dActor_c	0	ov077	10
+daTgz_c	DONE	include\daTgz_c.h  [alias: header uses pre-rename name]	dActor_c	0	ov077	10
 daTor_c	DONE	include\Tornado.h  [alias: header uses pre-rename name]	dActor_c	0	ov096	10
 daTree_c	DONE	include\daTree_c.h	dActor_c	0	ov002	7
 daTrsIcon_c	DONE	include\daTrsIcon_c.h	dActor_c	0	ov063	3

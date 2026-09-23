@@ -21,17 +21,17 @@
   "changes": "No manual source/header/config/ledger edits. Clean --no-ff merge of pinned main preserves repaired input blobs and every unrelated current-main blob. Only this report and its owned handoff are added afterward.",
   "input_blob_identity": [
     {
-      "path": "src_tu/actors/Spiny.cpp",
+      "path": "src_tu/actors/daTgz_c.cpp",
       "accepted_blob": "43c97ef34298a76d3a69b3adbff244075d578ac4",
       "composition_blob": "43c97ef34298a76d3a69b3adbff244075d578ac4"
     },
     {
-      "path": "include/Spiny.h",
+      "path": "include/daTgz_c.h",
       "accepted_blob": "d419c31569c13d79410204b9f5e25acbd80d8d60",
       "composition_blob": "d419c31569c13d79410204b9f5e25acbd80d8d60"
     },
     {
-      "path": "config/tu_manifest.d/ov077/Spiny.json",
+      "path": "config/tu_manifest.d/ov077/daTgz_c.json",
       "accepted_blob": "5efb23e55a2a87cde80c07a94b7e40de841025e3",
       "composition_blob": "5efb23e55a2a87cde80c07a94b7e40de841025e3"
     },
@@ -50,7 +50,7 @@
   "merge_conflicts": false,
   "compiler": "2004/b56",
   "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-  "command": "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe -X utf8 tools/tubuild.py --manifest build\\pr2863-composition\\manifest.json verify ov077/Spiny",
+  "command": "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe -X utf8 tools/tubuild.py --manifest build\\pr2863-composition\\manifest.json verify ov077/daTgz_c",
   "tubuild_exit_code": 1,
   "strict_verified": 34,
   "function_bytes": 5864,
@@ -61,7 +61,7 @@
   "whole_object_identical_to_accepted": true,
   "function_results": [
     {
-      "symbol": "_ZN5SpinyD1Ev",
+      "symbol": "_ZN7daTgz_cD1Ev",
       "address": "0x02124b64",
       "size": "0x00000050",
       "verdict": "VERIFIED",
@@ -69,7 +69,7 @@
       "blind": 0
     },
     {
-      "symbol": "_ZN5SpinyD0Ev",
+      "symbol": "_ZN7daTgz_cD0Ev",
       "address": "0x02124bb4",
       "size": "0x00000064",
       "verdict": "VERIFIED",
@@ -77,7 +77,7 @@
       "blind": 0
     },
     {
-      "symbol": "_ZN5Spiny13OnYoshiTryEatEv",
+      "symbol": "_ZN7daTgz_c13OnYoshiTryEatEv",
       "address": "0x02124c18",
       "size": "0x00000008",
       "verdict": "VERIFIED",
@@ -85,7 +85,7 @@
       "blind": 0
     },
     {
-      "symbol": "_ZN5Spiny16OnAimedAtWithEggEv",
+      "symbol": "_ZN7daTgz_c16OnAimedAtWithEggEv",
       "address": "0x02124c20",
       "size": "0x00000008",
       "verdict": "VERIFIED",
@@ -277,7 +277,7 @@
       "blind": 0
     },
     {
-      "symbol": "_ZN5Spiny16CleanupResourcesEv",
+      "symbol": "_ZN7daTgz_c16CleanupResourcesEv",
       "address": "0x02125eb0",
       "size": "0x0000003c",
       "verdict": "VERIFIED",
@@ -285,7 +285,7 @@
       "blind": 0
     },
     {
-      "symbol": "_ZN5Spiny16OnPendingDestroyEv",
+      "symbol": "_ZN7daTgz_c16OnPendingDestroyEv",
       "address": "0x02125eec",
       "size": "0x00000004",
       "verdict": "VERIFIED",
@@ -293,7 +293,7 @@
       "blind": 0
     },
     {
-      "symbol": "_ZN5Spiny6RenderEv",
+      "symbol": "_ZN7daTgz_c6RenderEv",
       "address": "0x02125ef0",
       "size": "0x00000078",
       "verdict": "VERIFIED",
@@ -301,7 +301,7 @@
       "blind": 0
     },
     {
-      "symbol": "_ZN5Spiny8BehaviorEv",
+      "symbol": "_ZN7daTgz_c8BehaviorEv",
       "address": "0x02125f68",
       "size": "0x000000f0",
       "verdict": "VERIFIED",
@@ -309,7 +309,7 @@
       "blind": 0
     },
     {
-      "symbol": "_ZN5Spiny13InitResourcesEv",
+      "symbol": "_ZN7daTgz_c13InitResourcesEv",
       "address": "0x02126058",
       "size": "0x0000013c",
       "verdict": "VERIFIED",
@@ -317,7 +317,7 @@
       "blind": 0
     },
     {
-      "symbol": "_ZN5Spiny13OnTurnIntoEggER6Player",
+      "symbol": "_ZN7daTgz_c13OnTurnIntoEggER6Player",
       "address": "0x02126194",
       "size": "0x00000060",
       "verdict": "VERIFIED",
@@ -375,7 +375,7 @@
       "kind": "reconstruction",
       "disposition": "deferred",
       "summary": "Complete output ownership, class identity and remaining raw helper/lifecycle reconstruction are unfinished.",
-      "reason": "Nine unlicensed metadata outputs and reversed destructor pair[0,1] remain; community Spiny RTTI is not retail daTgz_c identity. Actual issue2870 owns these prerequisites. Source remains an unenrolled shadow, with no complete-object/promotion or full-ROM coverage claim.",
+      "reason": "Nine unlicensed metadata outputs and reversed destructor pair[0,1] remain; community daTgz_c RTTI is not retail daTgz_c identity. Actual issue2870 owns these prerequisites. Source remains an unenrolled shadow, with no complete-object/promotion or full-ROM coverage claim.",
       "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2870",
       "owner": "codex-integrator-0920"
     },

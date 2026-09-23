@@ -1033,49 +1033,10 @@ src/func_ov004_020b8a8c.c:
     complete
     .text start:0x020b8a8c end:0x020b8c18
 
-src/_ZN10dMgPsOpt_c11TouchIcon_c6RenderEv.cpp:
+src/actors/dMgPsOpt_c.cpp:
     complete
-    .text start:0x020b8c18 end:0x020b8dc0
-
-src/func_ov004_020b8dc0.c:
-    complete
-    .text start:0x020b8dc0 end:0x020b8ee0
-
-src/func_ov004_020b8ee0.c:
-    complete
-    .text start:0x020b8ee0 end:0x020b8f18
-
-src/func_ov004_020b8f18.cpp:
-    complete
-    .text start:0x020b8f18 end:0x020b8f78
-
-src/func_ov004_020b8f78.cpp:
-    complete
-    .text start:0x020b8f78 end:0x020b91fc
-
-src/func_ov004_020b91fc.c:
-    complete
-    .text start:0x020b91fc end:0x020b9220
-
-src/func_ov004_020b9220.c:
-    complete
-    .text start:0x020b9220 end:0x020b9280
-
-src/_ZN10dMgPsOpt_c11TouchIcon_cD1Ev.cpp:
-    complete
-    .text start:0x020b9280 end:0x020b929c
-
-src/_ZN10dMgPsOpt_cD1Ev.cpp:
-    complete
-    .text start:0x020b929c end:0x020b92c4
-
-src/_ZN10dMgPsOpt_cC1Ev.cpp:
-    complete
-    .text start:0x020b92c4 end:0x020b9430
-
-src/_ZN10dMgPsOpt_c11TouchIcon_cC1Ev.cpp:
-    complete
-    .text start:0x020b9430 end:0x020b944c
+    .text start:0x020b8c18 end:0x020b944c
+    .data start:0x020bca68 end:0x020bcaa0
 
 src/__sinit_ov004_020b948c.c:
     complete

@@ -12,7 +12,7 @@ has been published.
 - Worktree: `C:/tmp/sm64ds-spiny2863-review0920`.
 - Branch: `review/pr2863-repair0920`.
 - Integrator and next coordination owner: `codex-integrator-0920`.
-- Scope: existing Spiny shadow source, this handoff, and the
+- Scope: existing daTgz_c shadow source, this handoff, and the
   [durable experiment record](../../experiments/pr2863-source-repair-0920.json).
 
 ## Repair
@@ -79,9 +79,9 @@ isolation and module-aware relocation linking. Exact commands, flags, replay
 source, per-function results, and unsuccessful alternatives are committed in the
 experiment record. No workaround or compiler limitation is claimed.
 
-`tubuild.py --manifest build/spiny2863-sound-repair/manifest.json verify ov077/Spiny`
+`tubuild.py --manifest build/spiny2863-sound-repair/manifest.json verify ov077/daTgz_c`
 returns **1**: the functions match, but nine emitted metadata symbols remain
-unlicensed, so promotion is refused. Existing policies remove the Spiny D2 and
+unlicensed, so promotion is refused. Existing policies remove the daTgz_c D2 and
 Vector3 D1; there are zero compiler-only policy errors. The D1/D0 ordinal pair
 `[0, 1]` remains reversed. These outputs and ordering are unchanged from both
 controls. The earlier stored count of eleven was stale; the fresh count is nine.

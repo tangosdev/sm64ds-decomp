@@ -1,49 +1,18 @@
 //cpp
-/* Translation unit ov006/dScMgMCarlo2_c  (25 function(s)).
- * Reconstructed with tools/tubuild.py create, then reconciled by hand.
+/* Pair-match minigame scene 2 (ov006/dScMgMCarlo2_c), 25 functions,
+ * enrolled and canonical. The board is 40 card objects on an intrusive
+ * doubly-linked list (see the member notes).
  *
- * ENROLLED AND CANONICAL. config/arm9/overlays/ov006/delinks.txt names this
- * one file for the whole .text range 0x020f8ef4..0x020fa75c, so every byte
- * of that range in the retail overlay is built from the source below -- the
- * 25 legacy functions it replaced are gone. The adjacent factory and element
- * constructor are included because the factory profile and this class's RTTI,
- * vtables, initializer, data, and BSS form one continuous ownership cluster.
- * byte-exact, the linked module byte-identical to the cartridge, and the full
- * ROM identical to the stock build. See the measurements in
- * config/tu_manifest.d/ov006/dScMgMCarlo2_c+MgPairAGoneAndOn.json.
+ * Source runs REVERSE of ROM (highest address first). Do not reorder.
+ * `#pragma long_calls` stays bracketed at its member; opt_propagation
+ * stays ON file-wide (measured: off costs four members).
  *
- * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S -- mwccarm 2004/b56
- * emits one .text section per function, in the REVERSE of source order, so
- * the highest-address ROM function is written FIRST here. Do not reorder;
- * see notes/tu-reconstruction-pilot-report.md sec 3 for the one documented
- * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
- *
- * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x020f8ef4  src/_ZN14dScMgMCarlo2_cD1Ev.cpp
- *   [1] 0x020f8f68  src/_ZN14dScMgMCarlo2_cD0Ev.cpp
- *   [2] 0x020f8ff0  src/func_ov006_020f8ff0.c
- *   [3] 0x020f9000  src/func_ov006_020f9000.cpp
- *   [4] 0x020f94f4  src/func_ov006_020f94f4.c
- *   [5] 0x020f9560  src/func_ov006_020f9560.c
- *   [6] 0x020f95f0  src/func_ov006_020f95f0.c
- *   [7] 0x020f9668  src/func_ov006_020f9668.c
- *   [8] 0x020f96e0  src/func_ov006_020f96e0.c
- *   [9] 0x020f9760  src/func_ov006_020f9760.c
- *   [10] 0x020f98dc  src/func_ov006_020f98dc.c
- *   [11] 0x020f9994  src/func_ov006_020f9994.c
- *   [12] 0x020f9bec  src/func_ov006_020f9bec.c
- *   [13] 0x020f9cbc  src/func_ov006_020f9cbc.c
- *   [14] 0x020f9d68  src/func_ov006_020f9d68.c
- *   [15] 0x020f9db8  src/func_ov006_020f9db8.c
- *   [16] 0x020f9f40  src/func_ov006_020f9f40.c
- *   [17] 0x020f9fe0  src/_ZN14dScMgMCarlo2_c16CleanupResourcesEv.cpp
- *   [18] 0x020f9ffc  src/_ZN14dScMgMCarlo2_c6RenderEv.cpp
- *   [19] 0x020fa13c  src/_ZN14dScMgMCarlo2_c8BehaviorEv.cpp
- *   [20] 0x020fa3d0  src/func_ov006_020fa3d0.c
- *   [21] 0x020fa4d4  src/func_ov006_020fa4d4.cpp
- *   [22] 0x020fa56c  src/_ZN14dScMgMCarlo2_c13InitResourcesEv.cpp
- *   [23] 0x020fa6ac  src/MgPairAGoneAndOn_Spawn.cpp
- *   [24] 0x020fa740  src/func_ov006_020fa740.c
+ * Leftover: 21 func_ov004_* + 30 data_* keep linker names (unnamed in
+ *   symbols.txt); each needs a coined, behaviour-justified name.
+ * Leftover: hand-rolled C1/C2/D0/D1/D2 call shapes and vptr stores
+ *   stand in for real ctors.
+ * Leftover: raw *(T *)(p + 0x..) offsets and 7 unk_NN names not
+ *   evidenced.
  */
 
 /* TUBUILD NOTE -- #pragma directive(s) were present in the legacy sources
@@ -69,20 +38,6 @@
  * is the load-bearing evidence: a single setting, no pragma, all bodies exact.
  */
 
-/* Includes: union of the legacy files', first-seen in ROM-ascending
- * processing order. NOT verified for header ordering constraints (e.g. a
- * common.h-before-X rule) -- watch for new compile errors after this. */
-/* STILL MACHINE-SHAPED (audit 2026-09-18) -- byte-exact; what blocks each part:
- *  21 func_ov004_* + 30 data_*   unnamed in config symbols.txt; each needs a
- *                                coined, behaviour-justified name.
- *  5 ctor/dtor/op-new call(s)    C1/C2/D0/D1/D2 is not expressible
- *                                in C++ source; only a real ctor emits it.
- *  2 _ZTV vptr store(s)          stands in for the ctor that would emit it.
- *  5 `(void *)this` launder(s)   bisect before removing -- some are free,
- *                                some hold the register allocation.
- *  ~7 *(T *)(p + 0x..)           class layout does not name these offsets.
- *  7 unk_NN                      slot/field name not evidenced.
- */
 
 #include "dScMgMCarlo2_c.h"
 #include "types.h"
@@ -165,18 +120,12 @@ namespace Sound { void PlayBank2_2D(unsigned int); }
 int ApproachLinear(int& value, int target, int step);
 int ApproachLinear2(s16& value, s16 target, s16 step);
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 24 -- dMgMCarlo2CardObj_c::dMgMCarlo2CardObj_c, 0x020fa740 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN19dMgMCarlo2CardObj_cC1Ev
 dMgMCarlo2CardObj_c::dMgMCarlo2CardObj_c()
     : mPrev(0), mNext(0)
 {
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 23 -- dScMgMCarlo2_c_classInit, 0x020fa6ac, size 0x94 */
-/* -------------------------------------------------------------------------- */
 // @symbol dScMgMCarlo2_c_classInit
 extern "C" void* dScMgMCarlo2_c_classInit()
 {
@@ -194,9 +143,6 @@ extern "C" void* dScMgMCarlo2_c_classInit()
     return p;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 22 -- _ZN14dScMgMCarlo2_c13InitResourcesEv, 0x020fa56c, size 0x140 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN14dScMgMCarlo2_c13InitResourcesEv
 /* dScMgMCarlo2_c::InitResources -- vtable slot 0.
  *
@@ -235,11 +181,7 @@ s32 dScMgMCarlo2_c::InitResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 21 -- _ZN14dScMgMCarlo2_c13OnYoshiTryEatEi, 0x020fa4d4, size 0x98 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN14dScMgMCarlo2_c13OnYoshiTryEatEi
-// recovered name: dScMgMCarlo2_c_OnYoshiTryEat_020fa4d4
 /* Resets the whole board: rebuild the 40 pieces, clear the match latch,
  * re-arm the shared table, then hand the score display a zero. */
 void dScMgMCarlo2_c::OnYoshiTryEat(int /* arg */)
@@ -257,9 +199,6 @@ void dScMgMCarlo2_c::OnYoshiTryEat(int /* arg */)
   unk_5928 = 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 20 -- _ZN14dScMgMCarlo2_c13OnTurnIntoEggEi, 0x020fa3d0, size 0x104 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN14dScMgMCarlo2_c13OnTurnIntoEggEi
 int dScMgMCarlo2_c::OnTurnIntoEgg(int /* mode */)
 {
@@ -304,9 +243,6 @@ int dScMgMCarlo2_c::OnTurnIntoEgg(int /* mode */)
     return 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 19 -- _ZN14dScMgMCarlo2_c8BehaviorEv, 0x020fa13c, size 0x294 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN14dScMgMCarlo2_c8BehaviorEv
 /* dScMgMCarlo2_c::Behavior -- vtable slot 6, ov006 0x020fa13c.
  *
@@ -406,9 +342,6 @@ s32 dScMgMCarlo2_c::Behavior()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 18 -- _ZN14dScMgMCarlo2_c6RenderEv, 0x020f9ffc, size 0x140 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN14dScMgMCarlo2_c6RenderEv
 /* dScMgMCarlo2_c::Render -- vtable slot 9.
  *
@@ -466,9 +399,6 @@ s32 dScMgMCarlo2_c::Render()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 17 -- _ZN14dScMgMCarlo2_c16CleanupResourcesEv, 0x020f9fe0, size 0x1c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN14dScMgMCarlo2_c16CleanupResourcesEv
 /* dScMgMCarlo2_c::CleanupResources -- vtable slot 3, ov006 0x020f9fe0.
  *
@@ -488,9 +418,6 @@ s32 dScMgMCarlo2_c::CleanupResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 16 -- dMgMCarlo2CardObj_c::Init, 0x020f9f40, size 0xa0 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN19dMgMCarlo2CardObj_c4InitEi
 void dMgMCarlo2CardObj_c::Init(int r1){
     mSlot = (short)r1;
@@ -510,9 +437,6 @@ void dMgMCarlo2CardObj_c::Init(int r1){
     mPrev = mNext;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 15 -- dMgMCarlo2CardObj_c::DealIn, 0x020f9db8, size 0x188 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN19dMgMCarlo2CardObj_c6DealInEi
 void dMgMCarlo2CardObj_c::DealIn(int a)
 {
@@ -552,18 +476,12 @@ void dMgMCarlo2CardObj_c::DealIn(int a)
         mYStep = -mYStep;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 14 -- dMgMCarlo2CardObj_c::FlipAway, 0x020f9d68, size 0x50 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN19dMgMCarlo2CardObj_c8FlipAwayEi
 void dMgMCarlo2CardObj_c::FlipAway(int n) {
     mDealDelay = (short)((4 - n % 5) * 2);
     mState = 5;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 13 -- dMgMCarlo2CardObj_c::IsPairWith, 0x020f9cbc, size 0xac */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN19dMgMCarlo2CardObj_c10IsPairWithEPS_
 int dMgMCarlo2CardObj_c::IsPairWith(dMgMCarlo2CardObj_c *b)
 {
@@ -587,9 +505,6 @@ fail:
     return 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 12 -- dMgMCarlo2CardObj_c::HitTest, 0x020f9bec, size 0xd0 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN19dMgMCarlo2CardObj_c7HitTestEv
 int dMgMCarlo2CardObj_c::HitTest()
 {
@@ -616,9 +531,6 @@ fail:
     return 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 11 -- dMgMCarlo2CardObj_c::Update, 0x020f9994, size 0x258 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN19dMgMCarlo2CardObj_c6UpdateEi
 void dMgMCarlo2CardObj_c::Update(int b)
 {
@@ -690,9 +602,6 @@ void dMgMCarlo2CardObj_c::Update(int b)
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 10 -- dMgMCarlo2CardObj_c::Render, 0x020f98dc, size 0xb8 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN19dMgMCarlo2CardObj_c6RenderEv
 void dMgMCarlo2CardObj_c::Render()
 {
@@ -715,9 +624,6 @@ void dMgMCarlo2CardObj_c::Render()
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 9 -- dScMgMCarlo2_c::SetupBoard, 0x020f9760, size 0x17c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN14dScMgMCarlo2_c10SetupBoardEP19dMgMCarlo2CardObj_c
 void dScMgMCarlo2_c::SetupBoard(dMgMCarlo2CardObj_c* base)
 {
@@ -773,9 +679,6 @@ void dScMgMCarlo2_c::SetupBoard(dMgMCarlo2CardObj_c* base)
     } while (HasRemovablePair() == 0);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 8 -- dScMgMCarlo2_c::HasRemovablePair, 0x020f96e0, size 0x80 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN14dScMgMCarlo2_c16HasRemovablePairEv
 int dScMgMCarlo2_c::HasRemovablePair()
 {
@@ -792,9 +695,6 @@ int dScMgMCarlo2_c::HasRemovablePair()
     return 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- dScMgMCarlo2_c::BoardBusy, 0x020f9668, size 0x78 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN14dScMgMCarlo2_c9BoardBusyEv
 int dScMgMCarlo2_c::BoardBusy() {
     int ret = 1;
@@ -809,9 +709,6 @@ int dScMgMCarlo2_c::BoardBusy() {
     return ret;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- dScMgMCarlo2_c::BoardReady, 0x020f95f0, size 0x78 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN14dScMgMCarlo2_c10BoardReadyEv
 /* One expression, one exit. The cartridge keeps the result pinned in r0 for
  * the whole body (mov r0,#0 up front, mov r0,#1 on the one success path);
@@ -832,9 +729,6 @@ int dScMgMCarlo2_c::BoardReady() {
     return r;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- dScMgMCarlo2_c::DrawCardValue, 0x020f9560, size 0x90 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN14dScMgMCarlo2_c13DrawCardValueEv
 int dScMgMCarlo2_c::DrawCardValue(){
     unsigned char pick = 0;
@@ -855,9 +749,6 @@ int dScMgMCarlo2_c::DrawCardValue(){
     return pick;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- dScMgMCarlo2_c::FlipDealtCards, 0x020f94f4, size 0x6c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN14dScMgMCarlo2_c14FlipDealtCardsEv
 void dScMgMCarlo2_c::FlipDealtCards(){
     dMgMCarlo2CardObj_c* node = data_ov006_0214257c;
@@ -871,9 +762,6 @@ void dScMgMCarlo2_c::FlipDealtCards(){
     } while(i < (data_ov006_0213d700>>12));
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- dScMgMCarlo2_c::UpdateBoard, 0x020f9000, size 0x4f4 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN14dScMgMCarlo2_c11UpdateBoardEv
 void dScMgMCarlo2_c::UpdateBoard()
 {
@@ -1019,16 +907,11 @@ void dScMgMCarlo2_c::UpdateBoard()
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- dMgMCarlo2CardObj_c::~dMgMCarlo2CardObj_c, 0x020f8ff0 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN19dMgMCarlo2CardObj_cD1Ev
 dMgMCarlo2CardObj_c::~dMgMCarlo2CardObj_c()
 {
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 1 -- _ZN14dScMgMCarlo2_cD0Ev, 0x020f8f68, size 0x88            */
 /* --------------------------------------------------------------------------
  * ROM ordinals 0 and 1 -- _ZN14dScMgMCarlo2_cD1Ev at 0x020f8ef4 (0x74)
  *                     and _ZN14dScMgMCarlo2_cD0Ev at 0x020f8f68 (0x88).

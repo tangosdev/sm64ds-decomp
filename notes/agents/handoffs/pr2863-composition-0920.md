@@ -1,6 +1,6 @@
 # Handoff: pr2863-composition-0920
 
-This commit composes the accepted Spiny shadow repair with current main.
+This commit composes the accepted daTgz_c shadow repair with current main.
 Producer evidence is partial and makes no formal source-acceptance claim for this
 new base. The original repair branch is preserved unchanged.
 
