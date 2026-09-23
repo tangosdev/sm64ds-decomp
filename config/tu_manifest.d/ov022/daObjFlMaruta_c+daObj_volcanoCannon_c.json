@@ -1,9 +1,9 @@
 {
   "id": "ov022/daObjFlMaruta_c+daObj_volcanoCannon_c",
   "module": "ov022",
-  "source": "src_tu/actors/daObjFlMaruta_c+daObj_volcanoCannon_c.cpp",
+  "source": "src/game/actors/d_a_obj_fl_maruta.cpp",
   "promoted_source": "src/game/actors/d_a_obj_fl_maruta.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run 0x02112498..0x02112950, 16 function(s); every function carries a `complete` .text claim in config/arm9/overlays/ov022/delinks.txt and the run ends exactly at this overlay's .text boundary",
@@ -141,6 +141,123 @@
       "symbol": "_ZN15daObjFlMaruta_cD2Ev",
       "disposition": "deadstrip",
       "reason": "mwccarm emits the base-object destructor variant beside the licensed D1/D0 pair whenever it lowers an out-of-line destructor definition. daObjFlMaruta_c's D2 has no entry in config/arm9/overlays/ov022/symbols.txt, so the ROM gives it no home, and no function surviving in this TU references it."
+    },
+    {
+      "symbol": "_ZN21daObj_volcanoCannon_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "mwccarm emits the base-object destructor variant beside the licensed D1/D0 pair whenever it lowers an out-of-line destructor definition. daObj_volcanoCannon_c's D2 has no entry in config/arm9/overlays/ov022/symbols.txt, so the ROM gives it no home, and no function surviving in this TU references it."
+    },
+    {
+      "symbol": "_ZTI15daObjFlMaruta_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov022",
+      "canonical_address": "0x02114344",
+      "reason": "Text-only TU: externalize to canonical public address 0x02114344."
+    },
+    {
+      "symbol": "_ZTS15daObjFlMaruta_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov022",
+      "canonical_address": "0x0211436c",
+      "reason": "Text-only TU: externalize to canonical public address 0x0211436c."
+    },
+    {
+      "symbol": "_ZTV15daObjFlMaruta_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov022",
+      "canonical_address": "0x021143a4",
+      "reason": "Text-only TU: externalize to canonical public address 0x021143a4."
+    },
+    {
+      "symbol": "_ZTI21daObj_volcanoCannon_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov022",
+      "canonical_address": "0x02114434",
+      "reason": "Text-only TU: externalize to canonical public address 0x02114434."
+    },
+    {
+      "symbol": "_ZTS21daObj_volcanoCannon_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov022",
+      "canonical_address": "0x02114440",
+      "reason": "Text-only TU: externalize to canonical public address 0x02114440."
+    },
+    {
+      "symbol": "_ZTV21daObj_volcanoCannon_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov022",
+      "canonical_address": "0x0211447c",
+      "reason": "Text-only TU: externalize to canonical public address 0x0211447c."
+    },
+    {
+      "symbol": "_ZTI13daObjMaruta_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov022",
+      "canonical_address": "0x02114350",
+      "reason": "Text-only TU: externalize to canonical public address 0x02114350."
+    },
+    {
+      "symbol": "_ZTS13daObjMaruta_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov022",
+      "canonical_address": "0x0211435c",
+      "reason": "Text-only TU: externalize to canonical public address 0x0211435c."
+    },
+    {
+      "symbol": "_ZTI10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021089ec",
+      "reason": "Text-only TU: externalize to canonical public address 0x021089ec."
+    },
+    {
+      "symbol": "_ZTS10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108a04",
+      "reason": "Text-only TU: externalize to canonical public address 0x02108a04."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Text-only TU: externalize to canonical public address 0x0208e390."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Text-only TU: externalize to canonical public address 0x0208e384."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Text-only TU: externalize to canonical public address 0x02086e78."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Text-only TU: externalize to canonical public address 0x02086e54."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Text-only TU: externalize to canonical public address 0x02086d70."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Text-only TU: externalize to canonical public address 0x02086e60."
     }
   ],
   "notes": [
@@ -151,29 +268,92 @@
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov022-daObjFlMaruta_c+daObj_volcanoCannon_c/daObjFlMaruta_c+daObj_volcanoCannon_c.o (gitignored)",
+    "object": "build/tu/ov022-daObjFlMaruta_c+daObj_volcanoCannon_c/d_a_obj_fl_maruta.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 16,
     "functions_declared": 16,
     "compilerOnlyOutput": {
       "requested": [
-        "_ZN15daObjFlMaruta_cD2Ev"
+        "_ZN15daObjFlMaruta_cD2Ev",
+        "_ZN21daObj_volcanoCannon_cD2Ev"
       ],
       "deadstripped": [
-        "_ZN15daObjFlMaruta_cD2Ev"
+        "_ZN15daObjFlMaruta_cD2Ev",
+        "_ZN21daObj_volcanoCannon_cD2Ev"
       ],
       "droppedSections": [
-        34,
-        35
+        9,
+        10,
+        23,
+        24,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63
       ],
-      "data": [],
-      "dataExternalized": []
+      "data": [
+        "_ZTI15daObjFlMaruta_c",
+        "_ZTS15daObjFlMaruta_c",
+        "_ZTV15daObjFlMaruta_c",
+        "_ZTI21daObj_volcanoCannon_c",
+        "_ZTS21daObj_volcanoCannon_c",
+        "_ZTV21daObj_volcanoCannon_c",
+        "_ZTI13daObjMaruta_c",
+        "_ZTS13daObjMaruta_c",
+        "_ZTI10dBgActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c"
+      ],
+      "dataExternalized": [
+        "_ZTI10dBgActor_c",
+        "_ZTI13daObjMaruta_c",
+        "_ZTI15daObjFlMaruta_c",
+        "_ZTI21daObj_volcanoCannon_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTS13daObjMaruta_c",
+        "_ZTS15daObjFlMaruta_c",
+        "_ZTS21daObj_volcanoCannon_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV15daObjFlMaruta_c",
+        "_ZTV21daObj_volcanoCannon_c"
+      ]
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 16 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
-      "functions_occur_in_expected_order": "PARTIAL -- ordinal pair(s) not in ROM order: [(0, 1), (5, 6)]",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     }
   }

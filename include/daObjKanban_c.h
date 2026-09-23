@@ -41,10 +41,11 @@ struct daObjKanban_c : dBgActor_c {
     int Behavior();
     int Render();
 
-    /* Tail padding. The field span stops short of the real size: WallSign_Spawn
-       calls fBase_c::operator new(0x368), read off the retail
-       instruction. A span is only a LOWER BOUND. */
-    u8 pad_360[0x8];      /* 0x360, to the ROM's 0x368 */
+    /* Tail fields, named from Behavior's own reads and writes. */
+    Player *mTalkingPlayer; /* 0x360 */
+    u8 mState;              /* 0x364 */
+    u8 pad_365;
+    s16 mMessageID;         /* 0x366 */
 };
 
 #ifndef SM64DS_PLATFORM_PC

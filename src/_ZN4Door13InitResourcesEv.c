@@ -5,7 +5,7 @@
 /* Door::InitResources -- vtable slot 0, ov100 0x021455a0. Declared as an
  * override in include/Door.h, defined here as a free function taking the
  * object pointer explicitly, the same idiom the rest of the class uses and
- * the one src/_ZN7fBase_c13InitResourcesEv.cpp uses for fBase_c's own slot 0.
+ * the one src/actors/ActorBase.cpp uses for fBase_c's own slot 0.
  *
  * FOLDED ONTO include/Door.h. This file used to include the generated flat
  * placeholder include/daDoor_c.h -- which restated dActor_c's fields inline

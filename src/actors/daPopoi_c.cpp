@@ -1,63 +1,16 @@
 //cpp
-/* ov077/daPopoi_c -- the enemy behind the POPOI registry profile.
+/* Champignon foe (ov077/daPopoi_c), 22 functions: free helpers plus
+ * class members. Hand-assembled in REVERSE ROM order (highest address
+ * first); the per-function include and declaration blocks are the
+ * assembly scaffolding. Do not reorder.
  *
- * A ground walker that homes on the nearest player. It keeps two anchor
- * positions: a home point (unk_404..unk_40c), which Behavior snaps back to if
- * the actor ever falls below the kill plane at data_0209f32c, and last frame's
- * position (unk_410..unk_418), which every "I would have walked into something"
- * path rolls back to.
- *
- * Its state machine is a pointer-to-member stored at unk_3fc. Each state is one
- * of the func_ov077_* handlers below; func_ov077_02126d5c installs a state and
- * calls it immediately, so the entry action runs on the switching frame. Behavior
- * re-invokes whatever is installed once per frame, after ticking mStateTimer and
- * unk_426 down.
- *
- * The two guards that keep it on its ledge:
- *   - func_ov077_02126300 casts two dBgCh_Lin rays ahead (one level, one pitched
- *     down 0x3000) and reports "blocked"; it also does the rollback itself.
- *   - dEnemyBase_c::IsGoingOffCliff plus a floor-normal slope test in Behavior.
- *
- * Member NAMES come from daPopoi_c.h. Fields it still spells unk_* are ones no
- * evidence has named yet -- the offsets are observed, not guessed.
- *
- * LAYOUT OF THIS FILE: the functions appear in REVERSE ROM order (highest
- * address first). That is not a style choice -- mwccarm 2004/b56 emits one .text
- * section per function in the reverse of source order, so this ordering is what
- * reproduces the cartridge. Do not sort it.
- *
- * Most bodies carry C linkage: they came from .c shards whose ROM symbols are
- * unmangled, so each `extern "C"` block below is preserving a real ABI name
- * rather than making a style point.
- *
- * Absorbed functions, in ROM address order. Each arrived as its own
- * per-symbol legacy shard; promotion consolidated all 22 into this file,
- * so the shard paths are gone and the symbol is the live name:
- *   [0] 0x0212624c  _ZN9daPopoi_cD1Ev
- *   [1] 0x0212629c  _ZN9daPopoi_cD0Ev
- *   [2] 0x02126300  func_ov077_02126300
- *   [3] 0x02126528  func_ov077_02126528
- *   [4] 0x02126640  func_ov077_02126640
- *   [5] 0x02126758  func_ov077_02126758
- *   [6] 0x0212679c  func_ov077_0212679c
- *   [7] 0x02126930  func_ov077_02126930
- *   [8] 0x021269a8  func_ov077_021269a8
- *   [9] 0x02126a04  func_ov077_02126a04
- *   [10] 0x02126a50  func_ov077_02126a50
- *   [11] 0x02126a84  func_ov077_02126a84
- *   [12] 0x02126ad0  func_ov077_02126ad0
- *   [13] 0x02126cd4  func_ov077_02126cd4
- *   [14] 0x02126d5c  func_ov077_02126d5c
- *   [15] 0x02126dac  func_ov077_02126dac
- *   [16] 0x02126dec  _ZN9daPopoi_c16CleanupResourcesEv
- *   [17] 0x02126e34  _ZN9daPopoi_c16OnPendingDestroyEv
- *   [18] 0x02126e38  _ZN9daPopoi_c6RenderEv
- *   [19] 0x02126e88  _ZN9daPopoi_c8BehaviorEv
- *   [20] 0x0212706c  _ZN9daPopoi_c13InitResourcesEv
- *   [21] 0x021271d4  daPopoi_c_classInit
+ * Leftover: the func_ov077 helpers keep linker names; naming belongs
+ *   at their definitions.
+ * Leftover: the file homes keep decl_common.h's char spelling (shared
+ *   header owns them); the Init loads stay mangled accordingly.
+ * Leftover: unk_400 and friends are unrecovered header fields.
  */
 
-/* ROM ordinal 21 -- daPopoi_c_classInit, 0x021271d4, size 0x5c */
 extern "C" {
 // @symbol daPopoi_c_classInit
 #include "decl_ActorBase.h"
@@ -69,6 +22,9 @@ extern "C" {
 #include "decl_dBgCh_Actr.h"
 #include "decl_common.h"
 #include "daPopoi_c.h"
+#include "Model.h"
+#include "Player.h"
+
 /* resolved: VT0 = _ZTV9daPopoi_c */
 int *daPopoi_c_classInit(void)
 {
@@ -76,7 +32,6 @@ int *daPopoi_c_classInit(void)
 }
 }
 
-/* ROM ordinal 20 -- _ZN9daPopoi_c13InitResourcesEv, 0x0212706c, size 0x168 */
 // @symbol _ZN9daPopoi_c13InitResourcesEv
 extern "C" {
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
@@ -86,28 +41,25 @@ extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void*, void*, int, int, un
 extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void*, void*, void*, int, int, unsigned int, unsigned int);
 extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void*, void*, int, int, void*, int);
 extern int func_ov077_02126d5c(void*, void*);
-struct V3 { int x, y, z; };
-extern struct V3 data_ov077_02127a5c;
+extern Vector3 data_ov077_02127a5c;
 }
 
 int daPopoi_c::InitResources()
 {
-  struct V3 v;
-  void* f;
-  f = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov077_02127c88);
-  _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this) + 0x340, f, 1, -1);
+  Vector3 v;
+  mModelAnim.SetFile((BMD_File *)_ZN5Model8LoadFileER13SharedFilePtr(&data_ov077_02127c88), 1, -1);
   _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov077_02127ca0);
   _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov077_02127c90);
   _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov077_02127c98);
   mVertAccel = -0x1000;
   mTerminalVelocity = -0x1e000;
-  _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char*)this) + 0x110, ((char*)this), 0x52000, 0x52000, 0x800004, 0);
+  _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, this, 0x52000, 0x52000, 0x800004, 0);
   v.x = data_ov077_02127a5c.x;
   v.y = data_ov077_02127a5c.y;
   v.z = data_ov077_02127a5c.z;
-  _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(((char*)this) + 0x144, ((char*)this), &v, 0x54000, 0x32000, 0x200004, 0);
+  _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(&mdCcAcPos_c, this, &v, 0x54000, 0x32000, 0x200004, 0);
   mAngleY = mPrevAngleY;
-  _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x184, ((char*)this), 0x64000, 0x64000, 0, 0);
+  _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x64000, 0x64000, 0, 0);
   unk_400 = 0;
   unk_404 = mPosX;
   unk_408 = mPosY;
@@ -120,7 +72,6 @@ int daPopoi_c::InitResources()
   return 1;
 }
 
-/* ROM ordinal 19 -- _ZN9daPopoi_c8BehaviorEv, 0x02126e88, size 0x1e4 */
 #include "types.h"
 // @symbol _ZN9daPopoi_c8BehaviorEv
 /* The state machine, as this member sees it. unk_3fc points at a record whose
@@ -213,7 +164,6 @@ writeback:
     return 1;
 }
 
-/* ROM ordinal 18 -- _ZN9daPopoi_c6RenderEv, 0x02126e38, size 0x50 */
 // @symbol _ZN9daPopoi_c6RenderEv
 extern int data_0209f32c;
 
@@ -238,7 +188,6 @@ int daPopoi_c::Render()
     return 1;
 }
 
-/* ROM ordinal 17 -- _ZN9daPopoi_c16OnPendingDestroyEv, 0x02126e34, size 0x4 */
 // @symbol _ZN9daPopoi_c16OnPendingDestroyEv
 /* recovered: shared header, real C++ method
  *
@@ -249,7 +198,6 @@ void daPopoi_c::OnPendingDestroy()
 {
 }
 
-/* ROM ordinal 16 -- _ZN9daPopoi_c16CleanupResourcesEv, 0x02126dec, size 0x48 */
 // @symbol _ZN9daPopoi_c16CleanupResourcesEv
 /* recovered: shared header, real C++ method
  *
@@ -270,7 +218,6 @@ int daPopoi_c::CleanupResources()
     return 1;
 }
 
-/* ROM ordinal 15 -- func_ov077_02126dac, 0x02126dac, size 0x40 */
 // @symbol func_ov077_02126dac
 extern "C" {
 extern void Matrix4x3_FromRotationY(void *, int);
@@ -283,7 +230,6 @@ void func_ov077_02126dac(char *t)
 }
 }
 
-/* ROM ordinal 14 -- func_ov077_02126d5c, 0x02126d5c, size 0x50 */
 // @symbol func_ov077_02126d5c
 /* Install a state and run its entry action on the same frame.
  *
@@ -309,7 +255,6 @@ extern "C" int func_ov077_02126d5c(void *vc, void *vp)
     return (self->**installed)();
 }
 
-/* ROM ordinal 13 -- func_ov077_02126cd4, 0x02126cd4, size 0x88 */
 // @symbol func_ov077_02126cd4
 extern "C" {
 extern unsigned int RandomIntInternal(void* s);
@@ -326,7 +271,6 @@ int func_ov077_02126cd4(char* c){
 }
 }
 
-/* ROM ordinal 12 -- func_ov077_02126ad0, 0x02126ad0, size 0x204 */
 extern "C" {
 // @symbol func_ov077_02126ad0
 #include "decl_Player.h"
@@ -399,7 +343,6 @@ int func_ov077_02126ad0(char* c)
 }
 }
 
-/* ROM ordinal 11 -- func_ov077_02126a84, 0x02126a84, size 0x4c */
 extern "C" {
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* bca, int frame, int speed, unsigned int flags);
 int func_ov077_02126a84(char *c) {
@@ -411,7 +354,6 @@ int func_ov077_02126a84(char *c) {
 }
 }
 
-/* ROM ordinal 10 -- func_ov077_02126a50, 0x02126a50, size 0x34 */
 extern "C" {
 extern int func_ov077_02126d5c(void*, void*);
 
@@ -424,7 +366,6 @@ int func_ov077_02126a50(char *c) {
 }
 }
 
-/* ROM ordinal 9 -- func_ov077_02126a04, 0x02126a04, size 0x4c */
 extern "C" {
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void*, void*, int, int, unsigned int);
 
@@ -436,7 +377,6 @@ int func_ov077_02126a04(char *c) {
 }
 }
 
-/* ROM ordinal 8 -- func_ov077_021269a8, 0x021269a8, size 0x5c */
 extern "C" {
 extern void _Z14ApproachLinearRsss(short*, short, short);
 extern int func_ov077_02126d5c(void*, void*);
@@ -453,7 +393,6 @@ int func_ov077_021269a8(char* c) {
 }
 }
 
-/* ROM ordinal 7 -- func_ov077_02126930, 0x02126930, size 0x78 */
 extern "C" {
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* bca, int a, int fix, unsigned int j);
 extern unsigned int RandomIntInternal(void* s);
@@ -469,7 +408,6 @@ int func_ov077_02126930(char* c){
 }
 }
 
-/* ROM ordinal 6 -- func_ov077_0212679c, 0x0212679c, size 0x194 */
 extern "C" {
 // @symbol func_ov077_0212679c
 extern int Vec3_Dist(void *a, void *b);
@@ -531,7 +469,6 @@ int func_ov077_0212679c(char *c)
 }
 }
 
-/* ROM ordinal 5 -- func_ov077_02126758, 0x02126758, size 0x44 */
 extern "C" {
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* c, void* f, int a, int b, unsigned int u);
 int func_ov077_02126758(char* c){
@@ -542,9 +479,7 @@ int func_ov077_02126758(char* c){
 }
 }
 
-/* ROM ordinal 4 -- func_ov077_02126640, 0x02126640, size 0x118 */
 // @symbol func_ov077_02126640
-// recovered name: Spiny_Kill
 /* daTgz_c::Kill - recovered from vtable slot identity */
 /* (Vector3: real header type in scope) */
 extern "C" {
@@ -563,23 +498,23 @@ extern "C" int func_ov077_02126640(char *c)
     Vector3 v;
     char *a;
     int t;
-    if (*(int *)(c + 0x400) != 0) {
+    if (((daPopoi_c *)c)->unk_400 != 0) {
         v.x = data_ov077_02127a5c.x;
         v.y = data_ov077_02127a5c.y;
         v.z = data_ov077_02127a5c.z;
-        _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(c + 0x144, v);
+        ((daPopoi_c *)c)->mdCcAcPos_c.SetPosRelativeToActor(v);
         if (*(int *)(c + 0x168) != 0) {
             a = (char *)_ZN8dActor_c10FindWithIDEj(*(int *)(c + 0x168));
             if (a != 0) {
-                if (a == *(char **)(c + 0x400)) {
-                    if (*(unsigned char *)(a + 0x6f9) == 0) {
-                        if (*(unsigned char *)(a + 0x703) == 0) {
-                            t = (*(unsigned char *)(a + 0x709) != 0);
+                if (a == (char *)((daPopoi_c *)c)->unk_400) {
+                    if (((Player *)a)->mIsMetal == 0) {
+                        if (((Player *)a)->mIsMega == 0) {
+                            t = (((Player *)a)->mIsNoControl != 0);
                             if (t == 0) {
-                                if (_ZN6Player12GetHurtStateEv(a) < 0) {
+                                if (((Player *)a)->GetHurtState() < 0) {
                                     if (func_ov002_020db674(a, 0x28000, 0x70000,
                                             (int)(short)(*(short *)(c + 0x8e) + 0x8000)) != 0) {
-                                        *(int *)(c + 0x400) = 0;
+                                        ((daPopoi_c *)c)->unk_400 = 0;
                                         func_02012694(0x10b, c + 0x74, 0);
                                     }
                                 }
@@ -596,7 +531,6 @@ extern "C" int func_ov077_02126640(char *c)
     return 1;
 }
 
-/* ROM ordinal 3 -- func_ov077_02126528, 0x02126528, size 0x118 */
 /* (Vector3: real header type in scope) */
 extern "C" {
 void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void *thiz, const Vector3 &v);
@@ -615,7 +549,7 @@ extern "C" void func_ov077_02126528(char *c)
     v.x = data_ov077_02127a5c.x;
     v.y = data_ov077_02127a5c.y;
     v.z = data_ov077_02127a5c.z;
-    _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(c + 0x144, v);
+    ((daPopoi_c *)c)->mdCcAcPos_c.SetPosRelativeToActor(v);
     if (*(int *)(c + 0x168) == 0) return;
     a = (char *)_ZN8dActor_c10FindWithIDEj(*(int *)(c + 0x168));
     if (a == 0) return;
@@ -623,7 +557,7 @@ extern "C" void func_ov077_02126528(char *c)
     if (t == 0) return;
     if (*(unsigned char *)(a + 0x6f9) == 1) return;
     if (*(unsigned char *)(a + 0x703) == 1) return;
-    t = (*(unsigned char *)(a + 0x709) != 0);
+    t = (((Player *)a)->mIsNoControl != 0);
     if (t == 1) return;
     if (_ZN6Player12GetHurtStateEv(a) >= 0) return;
     if (_ZN6Player15IsCollectingCapEv(a) != 0) return;
@@ -631,7 +565,6 @@ extern "C" void func_ov077_02126528(char *c)
     func_ov077_02126d5c(c, &data_ov077_02127cd8);
 }
 
-/* ROM ordinal 2 -- func_ov077_02126300, 0x02126300, size 0x228 */
 extern "C" {
 /* (Vector3: real header type in scope) */
 
@@ -765,7 +698,6 @@ int func_ov077_02126300(void *vc)
 }
 }
 
-/* ROM ordinal 1 -- _ZN9daPopoi_cD0Ev, 0x0212629c, size 0x64 */
 // @symbol _ZN9daPopoi_cD0Ev
 /* D0 is the DELETING destructor: destroy through this class (dEnemyBase_c
  * chain) then return the object to its heap via an inline operator delete.
@@ -775,7 +707,6 @@ int func_ov077_02126300(void *vc)
 /* (no separate definition: the single ~daPopoi_c() below emits the D0 and
  * D1 variants together; mwccarm orders the variant group itself.) */
 
-/* ROM ordinal 0 -- _ZN9daPopoi_cD1Ev, 0x0212624c, size 0x50 */
 // @symbol _ZN9daPopoi_cD1Ev
 /* D1 is emitted from the inline destructor in daPopoi_c.h alongside D0
  * (class-form skill); this marker at D1's ROM ordinal keeps the

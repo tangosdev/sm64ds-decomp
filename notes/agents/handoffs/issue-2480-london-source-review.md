@@ -49,7 +49,7 @@ Private PR validation has not run for this candidate. Independent source/byte re
 
 ## LON-PROFILE-01 correction and final evidence
 
-`LondonSpawnInfo` now names its two priority fields `behaviorPriority` and `renderPriority`. The existing `src/_ZN7fBase_cC2Ev.cpp` obtains `actorID` separately from `data_020a4b54`, indexes `data_020a4bb8[actorID]`, and passes descriptor offsets `+4/+6` to `SetBehaviorPriority`/`SetRenderPriority`. The names describe these uses, rather than asserting recovered identifiers. Both fields retain `s16`, their order and initializer values. Positive values and the current consumer's `u16` view do not establish the original storage signedness. No shared type or consumer is changed.
+`LondonSpawnInfo` now names its two priority fields `behaviorPriority` and `renderPriority`. The existing `src/actors/ActorBase.cpp` obtains `actorID` separately from `data_020a4b54`, indexes `data_020a4bb8[actorID]`, and passes descriptor offsets `+4/+6` to `SetBehaviorPriority`/`SetRenderPriority`. The names describe these uses, rather than asserting recovered identifiers. Both fields retain `s16`, their order and initializer values. Positive values and the current consumer's `u16` view do not establish the original storage signedness. No shared type or consumer is changed.
 
 The revision changes only these two identifier tokens and prose in the TU, manifest notes and this handoff. The header equals the rework input. Removing comments and reversing the two renames recovers the exact input token sequence; manifest values apart from notes are identical. The Render/helper improvements and all previously recorded findings remain preserved.
 

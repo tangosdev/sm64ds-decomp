@@ -782,7 +782,6 @@ data_ov004_020bca44 kind:data(any) addr:0x020bca44
 data_ov004_020bca58 kind:data(any) addr:0x020bca58
 data_ov004_020bca60 kind:data(any) addr:0x020bca60
 _ZTIN10dMgPsOpt_c11TouchIcon_cE kind:data(any) addr:0x020bca68
-data_ov004_020bca7c kind:data(any) addr:0x020bca7c
 _ZTVN10dMgPsOpt_c11TouchIcon_cE kind:data(any) addr:0x020bca7c
 _ZTSN10dMgPsOpt_c11TouchIcon_cE kind:data(any) addr:0x020bca84
 data_ov004_020bcaa0 kind:data(any) addr:0x020bcaa0

@@ -22,7 +22,7 @@
  * ABSTRACT. Slots 0 and 3 -- InitResources and CleanupResources -- are null. Its
  * own overrides are slots 6 (Behavior), 9 (Render), 16 (D1) and 17 (D0).
  *
- * TWO DESCENDANTS: daObjFl_Ukiyuka_c (historical alias FloatingFloorLllSmall,
+ * TWO DESCENDANTS: daObjFl_Ukiyuka_c (historical alias daObjFl_Ukiyuka_c,
  * which has a second factory daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA building
  * the same class with different parameters) and daObjKm2_Ukishima_c
  * (historical alias FloatingFloorBfs).

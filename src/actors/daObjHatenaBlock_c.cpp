@@ -43,10 +43,10 @@
  *   them; this TU does not own .bss.
  * Leftover: data_ov002_0210d9* / da40 / d954 are ov002 BMD/CLPS
  *   handles this TU loads for caps/contents. Naming belongs in ov002.
- * Leftover: data_ov002_0210da18 / da30 / da58 and gPFlower* stay
- *   char[] -- SharedFilePtr decls tip ov002 plurality (daObjBlockItemTag_c,
- *   Goomboss, daFeather, PowerFlower; S27). Init LoadFile still
- *   treats each slot as the model handle.
+ * Leftover: data_ov002_0210da58 and gPFlower* stay char[] -- a
+ *   SharedFilePtr decl for them would tip ov002 plurality (Goomboss,
+ *   daFeather, PowerFlower; S27). Init LoadFile still treats each slot
+ *   as the model handle.
  * Leftover: data_ov102_0214e890 / e870 / e8c0 are sinit-owned PMF tables
  *   this TU does not own.
  * Leftover: data_02082214 is the NitroSDK FX_SinCosTable_; bounce squash
@@ -140,10 +140,10 @@ extern SharedFilePtr data_ov002_0210d9a0;
 extern SharedFilePtr data_ov002_0210d9c0;
 extern SharedFilePtr data_ov002_0210d9d8;
 extern SharedFilePtr data_ov002_0210d9e0;
-/* da18 / da30 / da58 / gPFlower*: SharedFilePtr here tips ov002
-   plurality (daObjBlockItemTag_c, Goomboss, daFeather, PowerFlower). S27. */
-extern char data_ov002_0210da18[];
-extern char data_ov002_0210da30[];
+/* da58 / gPFlower*: SharedFilePtr here would tip ov002 plurality
+   (Goomboss, daFeather, PowerFlower). S27. */
+extern SharedFilePtr data_ov002_0210da18;
+extern SharedFilePtr data_ov002_0210da30;
 extern SharedFilePtr data_ov002_0210da40;
 extern char data_ov002_0210da58[];
 extern char gPFlowerOpenModelFile[];
@@ -307,13 +307,13 @@ int daObjHatenaBlock_c::InitResources()
     case 1:
         break;
     case 3:
-        Model::LoadFile(*(SharedFilePtr *)data_ov002_0210da18);
+        Model::LoadFile(data_ov002_0210da18);
         break;
     case 2:
         Model::LoadFile(data_ov002_0210d9d8);
         break;
     case 4:
-        Model::LoadFile(*(SharedFilePtr *)data_ov002_0210da30);
+        Model::LoadFile(data_ov002_0210da30);
         break;
     case 7:
         Model::LoadFile(*(SharedFilePtr *)gPFlowerOpenModelFile);
@@ -425,13 +425,13 @@ int daObjHatenaBlock_c::CleanupResources()
             _ZN8dActor_c11UntrackStarERa((char *)this, (char *)this + 0x3f0);
             break;
         case 3:
-            ((SharedFilePtr *)data_ov002_0210da18)->Release();
+            data_ov002_0210da18.Release();
             break;
         case 2:
             data_ov002_0210d9d8.Release();
             break;
         case 4:
-            ((SharedFilePtr *)data_ov002_0210da30)->Release();
+            data_ov002_0210da30.Release();
             break;
         case 7:
             ((SharedFilePtr *)gPFlowerOpenModelFile)->Release();

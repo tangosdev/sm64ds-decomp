@@ -22,6 +22,10 @@
  *
  * data_ov010_02112d64 is the model SharedFilePtr this Init LoadFile's.
  * g_profile_C1_PEACH and the ov010 sinit stay outside this .text run.
+ *
+ * deslop
+ * Leftover: cstd::fdiv is the shared coined fixed-point division used
+ *   across TUs; naming belongs at a shared home, not this leaf.
  */
 
 #include "daObjC1Peach_c.h"
@@ -34,8 +38,6 @@ extern void Matrix4x3_FromRotationY(Matrix4x3 *m, s32 angle);
 /* decl plurality is int[] (the ov010 sinit). SharedFilePtr has no fields. */
 extern int data_ov010_02112d64[];
 }
-
-extern int _ZTV14daObjC1Peach_c[];
 
 /* Reconstructed source-style name. SM64DS proves daObjC1Peach_c through
  * RTTI, the 0x128 allocation, the vtable, and profile C1_PEACH; later EAD

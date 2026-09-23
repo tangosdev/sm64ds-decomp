@@ -312,10 +312,10 @@ int BookShotSpawner::InitResources()
    deliberately not recovered (include/SharedFilePtr.h). Used only by address here. */
 int BookShot::InitResources()
 {
-    _ZN5Model8LoadFileER13SharedFilePtr((SharedFilePtr *)&data_ov020_02114aa0);
-    _ZN5Model8LoadFileER13SharedFilePtr((SharedFilePtr *)&data_ov020_02114ab8);
-    _ZN9Animation8LoadFileER13SharedFilePtr((SharedFilePtr *)&data_ov020_02114aa8);
-    _ZN9Animation8LoadFileER13SharedFilePtr((SharedFilePtr *)&data_ov020_02114ab0);
+    Model::LoadFile(*(SharedFilePtr *)&data_ov020_02114aa0);
+    Model::LoadFile(*(SharedFilePtr *)&data_ov020_02114ab8);
+    Animation::LoadFile(*(SharedFilePtr *)&data_ov020_02114aa8);
+    Animation::LoadFile(*(SharedFilePtr *)&data_ov020_02114ab0);
     LoadBlueCoinModel(((char*)this));
 
     if (mShadowModel.InitCylinder() == 0)
@@ -430,7 +430,7 @@ int BookShotSpawner::Behavior()
 int BookShot::Behavior()
 {
     func_0200f760(((char*)this), &mdCcAcPos_c);
-    if (_ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(this, &mWithMeshClsn) != 0) {
+    if (UpdateYoshiEat(mWithMeshClsn) != 0) {
         if (mEatenByYoshi != 0 && unk_104 == 5) {
             unk_428 = mState;
             mState = 5;
@@ -450,9 +450,9 @@ int BookShot::Behavior()
         break;
     }
     func_ov020_0211216c(((char*)this));
-    _ZN5dCc_c5ClearEv(&mdCcAcPos_c);
-    _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(&mdCcAcPos_c, *(Vector3*)(&unk_438));
-    _ZN5dCc_c6UpdateEv(&mdCcAcPos_c);
+    mdCcAcPos_c.Clear();
+    mdCcAcPos_c.SetPosRelativeToActor(*(const Vector3*)&unk_438);
+    mdCcAcPos_c.Update();
     return 1;
 }
 
@@ -531,15 +531,13 @@ void func_ov020_0211216c(void* vc)
 /* ROM ordinal 16 -- func_ov020_02112110, 0x02112110, size 0x5c */
 /* -------------------------------------------------------------------------- */
 extern "C" {
-void _ZN8dActor_c8PoofDustEv(void* self);
-void _ZN7fBase_c18MarkForDestructionEv(void* self);
 void func_ov020_02112110(char* c) {
   if (*(unsigned char*)(c+0x108)) {
     int param = *(signed char*)(c+0xcc);
-    dActor_c::Spawn(0x122, 2, *(Vector3*)(c+0x5c), 0, param, -1);
+    dActor_c::Spawn(0x122, 2, *(const Vector3*)(c+0x5c), 0, param, -1);
   }
-  _ZN8dActor_c8PoofDustEv(c);
-  _ZN7fBase_c18MarkForDestructionEv(c);
+  ((dActor_c*)c)->PoofDust();
+  ((dActor_c*)c)->MarkForDestruction();
 }
 }
 
@@ -578,7 +576,7 @@ extern "C" void func_ov020_02111fc4(char* thiz)
     if (Vec3_Dist((Vector3*)(c + 0x5c), &v) >= 0x190000) return;
     {
         short ang = Vec3_HorzAngle((Vector3*)(c + 0x5c), &v);
-        if (_ZN8dActor_c14GetSubtractionEss(c, *(short*)(c + 0x94), ang) >= 0x3000) return;
+        if (((dActor_c*)c)->GetSubtraction(*(short*)(c + 0x94), ang) >= 0x3000) return;
     }
     *(int*)(c + 0x424) = 1;
     *(int*)(c + 0x98) = 0x5000;

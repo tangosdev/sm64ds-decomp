@@ -1,10 +1,10 @@
-_ZN10SlidingIceD1Ev kind:function(arm,size=0x44) addr:0x021111a0
-_ZN10SlidingIceD0Ev kind:function(arm,size=0x58) addr:0x021111e4
-_ZN10SlidingIce15OnHitByMegaCharER6Player kind:function(arm,size=0x28) addr:0x0211123c
-_ZN10SlidingIce16CleanupResourcesEv kind:function(arm,size=0x50) addr:0x02111264
-_ZN10SlidingIce6RenderEv kind:function(arm,size=0x50) addr:0x021112b4
-_ZN10SlidingIce8BehaviorEv kind:function(arm,size=0x13c) addr:0x02111304
-_ZN10SlidingIce13InitResourcesEv kind:function(arm,size=0x124) addr:0x02111440
+_ZN17daObjSlIceBlock_cD1Ev kind:function(arm,size=0x44) addr:0x021111a0
+_ZN17daObjSlIceBlock_cD0Ev kind:function(arm,size=0x58) addr:0x021111e4
+_ZN17daObjSlIceBlock_c15OnHitByMegaCharER6Player kind:function(arm,size=0x28) addr:0x0211123c
+_ZN17daObjSlIceBlock_c16CleanupResourcesEv kind:function(arm,size=0x50) addr:0x02111264
+_ZN17daObjSlIceBlock_c6RenderEv kind:function(arm,size=0x50) addr:0x021112b4
+_ZN17daObjSlIceBlock_c8BehaviorEv kind:function(arm,size=0x13c) addr:0x02111304
+_ZN17daObjSlIceBlock_c13InitResourcesEv kind:function(arm,size=0x124) addr:0x02111440
 daObjSlIceBlock_c_classInit_SL_ICEBLOCK_SHOT kind:function(arm,size=0x30) addr:0x02111564
 daObjSlIceBlock_c_classInit_SL_ICEBLOCK kind:function(arm,size=0x30) addr:0x02111594
 _ZN12daIDonketu_cD1Ev kind:function(arm,size=0x54) addr:0x021115c4
@@ -121,7 +121,7 @@ data_ov027_021137f8 kind:data(any) addr:0x021137f8 ambiguous
 g_profile_SL_ICEBLOCK_SHOT kind:data(any) addr:0x02113800 ambiguous
 data_ov027_02113804 kind:data(any) addr:0x02113804 ambiguous
 data_ov027_02113820 kind:data(any) addr:0x02113820 ambiguous
-_ZTV10SlidingIce kind:data(any) addr:0x02113824
+_ZTV17daObjSlIceBlock_c kind:data(any) addr:0x02113824
 data_ov027_0211382c kind:data(any) addr:0x0211382c ambiguous
 _ZTS7daOts_c kind:data(any) addr:0x021138a4
 data_ov027_021138a8 kind:data(any) addr:0x021138a8 ambiguous

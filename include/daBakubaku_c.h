@@ -12,7 +12,7 @@ extern "C" void *_ZN7fBase_cnwEj(unsigned size);
 
 /**
  * Jolly Roger Bay's Bubba (`bakubaku`). Factory size 0x438.
- * ov027 maps SlidingIce at the same vtable VA -- resolve inside ov032.
+ * ov027 maps daObjSlIceBlock_c at the same vtable VA -- resolve inside ov032.
  *
  * `daBakubaku_c` is the RTTI name.
  */

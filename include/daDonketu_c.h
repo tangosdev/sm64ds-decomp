@@ -26,7 +26,7 @@ struct daDonketu_c : daOts_c {
        guide. */
     s32 mBigBullyID;                    /* 0x3fc */
 
-    virtual ~daDonketu_c();
+    virtual ~daDonketu_c() {}
 
     /* methods */
     int Behavior();

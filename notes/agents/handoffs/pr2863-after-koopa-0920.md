@@ -1,6 +1,6 @@
-# Spiny composition after Koopa landed
+# daTgz_c composition after Koopa landed
 
-This composes accepted Spiny `cd675b7536b6a1be60f85ce4eaa8b9b465fb9d4c`
+This composes accepted daTgz_c `cd675b7536b6a1be60f85ce4eaa8b9b465fb9d4c`
 with actual merged main `1fd98ead009fbc281e369954fe8efbfdb7bdf624`.
 The clean merge is `73243fc40736045c1b38c6cf428192b9f25adf1d`; this successor adds
 only this handoff and the [measured report](../../experiments/pr2863-after-koopa-0920.json).
@@ -11,7 +11,7 @@ authors/findings. Only the two new report paths are reserved. The worktree is
 `C:/tmp/sm64ds-spinycompose0920`, branch `integrate/pr2863-after-koopa-0920`.
 Previous branches and the accepted input remain unchanged.
 
-Every accepted Spiny source, header, manifest and experiment blob is preserved.
+Every accepted daTgz_c source, header, manifest and experiment blob is preserved.
 Every unrelated main blob, including Koopa and Mip source and all four checked
 shared ledgers, is preserved. No source, header, declaration, metadata policy or
 enrollment change is introduced by this composition.
@@ -20,7 +20,7 @@ The pinned compiler (`2004/b56`) freshly reproduces all **34 strict functions**,
 5,864 function bytes, with empty differences and zero blind words. The entire
 21,528-byte object exactly equals this composer's independently compiled accepted
 input; SHA256 `c052dd9b101ed0bc57abb9226bbe5dcc2389964d06bb60519c6adfbe3b61f659`.
-The actual conflict-note checker reads Spiny and passes with no note or marker.
+The actual conflict-note checker reads daTgz_c and passes with no note or marker.
 Scoped declarations, port references and dead references pass on the tested merge.
 
 The complete-TU promotion check still exits **1**: nine unlicensed metadata

@@ -89,9 +89,9 @@ int _ZN9ModelAnimC1Ev(void *);
 int _ZN11ShadowModelC1Ev(void *);
 int __cxa_vec_ctor(void *, int, int, void *, void *);
 extern int _ZTV10daWanwan_c[];
-extern void _ZN5ModelD1Ev();
+extern void _ZN5ModelD1Ev(void *);
 extern void _ZN5ModelC1Ev();
-extern void _ZN11ShadowModelD1Ev();
+extern void _ZN11ShadowModelD1Ev(void *);
 extern void _ZN7Vector3D1Ev();
 extern void func_0203d384();
 }

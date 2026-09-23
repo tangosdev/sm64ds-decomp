@@ -2012,15 +2012,15 @@
    "start": "0x2124b64",
    "end": "0x212624c",
    "classes": [
-    "Spiny"
+    "daTgz_c"
    ],
    "n_functions_map": 34,
    "n_files": 34,
    "files": [
-    "src/_ZN5SpinyD1Ev.cpp",
-    "src/_ZN5SpinyD0Ev.c",
-    "src/_ZN5Spiny13OnYoshiTryEatEv.cpp",
-    "src/_ZN5Spiny16OnAimedAtWithEggEv.cpp",
+    "src/_ZN7daTgz_cD1Ev.cpp",
+    "src/_ZN7daTgz_cD0Ev.c",
+    "src/_ZN7daTgz_c13OnYoshiTryEatEv.cpp",
+    "src/_ZN7daTgz_c16OnAimedAtWithEggEv.cpp",
     "src/func_ov077_02124c28.cpp",
     "src/func_ov077_02124ce4.c",
     "src/func_ov077_02124d08.cpp",
@@ -2044,12 +2044,12 @@
     "src/func_ov077_02125e20.cpp",
     "src/func_ov077_02125e5c.cpp",
     "src/func_ov077_02125e94.c",
-    "src/_ZN5Spiny16CleanupResourcesEv.c",
-    "src/_ZN5Spiny16OnPendingDestroyEv.c",
-    "src/_ZN5Spiny6RenderEv.cpp",
-    "src/_ZN5Spiny8BehaviorEv.cpp",
-    "src/_ZN5Spiny13InitResourcesEv.cpp",
-    "src/_ZN5Spiny13OnTurnIntoEggER6Player.cpp",
+    "src/_ZN7daTgz_c16CleanupResourcesEv.c",
+    "src/_ZN7daTgz_c16OnPendingDestroyEv.c",
+    "src/_ZN7daTgz_c6RenderEv.cpp",
+    "src/_ZN7daTgz_c8BehaviorEv.cpp",
+    "src/_ZN7daTgz_c13InitResourcesEv.cpp",
+    "src/_ZN7daTgz_c13OnTurnIntoEggER6Player.cpp",
     "src/daTgz_c_classInit.c"
    ],
    "ext_mix": {
@@ -3084,18 +3084,18 @@
    "start": "0x211af38",
    "end": "0x211b248",
    "classes": [
-    "KoopaFlag"
+    "daRFlag_c"
    ],
    "n_functions_map": 8,
    "n_files": 8,
    "files": [
-    "src/_ZN9KoopaFlagD1Ev.cpp",
-    "src/_ZN9KoopaFlagD0Ev.c",
+    "src/_ZN9daRFlag_cD1Ev.cpp",
+    "src/_ZN9daRFlag_cD0Ev.c",
     "src/func_ov062_0211afbc.c",
-    "src/_ZN9KoopaFlag16CleanupResourcesEv.c",
-    "src/_ZN9KoopaFlag6RenderEv.cpp",
-    "src/_ZN9KoopaFlag8BehaviorEv.cpp",
-    "src/_ZN9KoopaFlag13InitResourcesEv.cpp",
+    "src/_ZN9daRFlag_c16CleanupResourcesEv.c",
+    "src/_ZN9daRFlag_c6RenderEv.cpp",
+    "src/_ZN9daRFlag_c8BehaviorEv.cpp",
+    "src/_ZN9daRFlag_c13InitResourcesEv.cpp",
     "src/d_a_r_flag.c"
    ],
    "ext_mix": {
@@ -3537,17 +3537,17 @@
    "start": "0x21111a0",
    "end": "0x21115a8",
    "classes": [
-    "VolcanoRing"
+    "daObjFl_Ring_c"
    ],
    "n_functions_map": 9,
    "n_files": 9,
    "files": [
-    "src/_ZN11VolcanoRingD1Ev.cpp",
-    "src/_ZN11VolcanoRingD0Ev.c",
-    "src/_ZN11VolcanoRing16CleanupResourcesEv.cpp",
-    "src/_ZN11VolcanoRing6RenderEv.cpp",
-    "src/_ZN11VolcanoRing8BehaviorEv.cpp",
-    "src/_ZN11VolcanoRing13InitResourcesEv.cpp",
+    "src/_ZN14daObjFl_Ring_cD1Ev.cpp",
+    "src/_ZN14daObjFl_Ring_cD0Ev.c",
+    "src/_ZN14daObjFl_Ring_c16CleanupResourcesEv.cpp",
+    "src/_ZN14daObjFl_Ring_c6RenderEv.cpp",
+    "src/_ZN14daObjFl_Ring_c8BehaviorEv.cpp",
+    "src/_ZN14daObjFl_Ring_c13InitResourcesEv.cpp",
     "src/func_ov022_02111558.c",
     "src/func_ov022_02111564.c",
     "src/d_a_obj_fl_ring.c"
@@ -4138,18 +4138,18 @@
    "start": "0x21111a0",
    "end": "0x21113d4",
    "classes": [
-    "TinyCover"
+    "daObjTtFuta_c"
    ],
    "n_functions_map": 8,
    "n_files": 8,
    "files": [
-    "src/_ZN9TinyCoverD1Ev.cpp",
-    "src/_ZN9TinyCoverD0Ev.c",
-    "src/_ZN9TinyCover15OnGroundPoundedER8dActor_c.cpp",
-    "src/_ZN9TinyCover16CleanupResourcesEv.cpp",
-    "src/_ZN9TinyCover6RenderEv.cpp",
-    "src/_ZN9TinyCover8BehaviorEv.cpp",
-    "src/_ZN9TinyCover13InitResourcesEv.cpp",
+    "src/_ZN13daObjTtFuta_cD1Ev.cpp",
+    "src/_ZN13daObjTtFuta_cD0Ev.c",
+    "src/_ZN13daObjTtFuta_c15OnGroundPoundedER8dActor_c.cpp",
+    "src/_ZN13daObjTtFuta_c16CleanupResourcesEv.cpp",
+    "src/_ZN13daObjTtFuta_c6RenderEv.cpp",
+    "src/_ZN13daObjTtFuta_c8BehaviorEv.cpp",
+    "src/_ZN13daObjTtFuta_c13InitResourcesEv.cpp",
     "src/d_a_obj_tt_futa.c"
    ],
    "ext_mix": {
@@ -5780,17 +5780,17 @@
    "start": "0x21113d4",
    "end": "0x21116c8",
    "classes": [
-    "TinyWater"
+    "daObjTtWater_c"
    ],
    "n_functions_map": 7,
    "n_files": 7,
    "files": [
-    "src/_ZN9TinyWaterD1Ev.cpp",
-    "src/_ZN9TinyWaterD0Ev.cpp",
-    "src/_ZN9TinyWater16CleanupResourcesEv.cpp",
-    "src/_ZN9TinyWater6RenderEv.cpp",
-    "src/_ZN9TinyWater8BehaviorEv.c",
-    "src/_ZN9TinyWater13InitResourcesEv.cpp",
+    "src/_ZN14daObjTtWater_cD1Ev.cpp",
+    "src/_ZN14daObjTtWater_cD0Ev.cpp",
+    "src/_ZN14daObjTtWater_c16CleanupResourcesEv.cpp",
+    "src/_ZN14daObjTtWater_c6RenderEv.cpp",
+    "src/_ZN14daObjTtWater_c8BehaviorEv.c",
+    "src/_ZN14daObjTtWater_c13InitResourcesEv.cpp",
     "src/d_a_obj_tt_water.c"
    ],
    "ext_mix": {
@@ -6787,18 +6787,18 @@
    "start": "0x21111a0",
    "end": "0x2111594",
    "classes": [
-    "SlidingIce"
+    "daObjSlIceBlock_c"
    ],
    "n_functions_map": 8,
    "n_files": 8,
    "files": [
-    "src/_ZN10SlidingIceD1Ev.cpp",
-    "src/_ZN10SlidingIceD0Ev.cpp",
-    "src/_ZN10SlidingIce15OnHitByMegaCharER6Player.cpp",
-    "src/_ZN10SlidingIce16CleanupResourcesEv.cpp",
-    "src/_ZN10SlidingIce6RenderEv.cpp",
-    "src/_ZN10SlidingIce8BehaviorEv.cpp",
-    "src/_ZN10SlidingIce13InitResourcesEv.cpp",
+    "src/_ZN17daObjSlIceBlock_cD1Ev.cpp",
+    "src/_ZN17daObjSlIceBlock_cD0Ev.cpp",
+    "src/_ZN17daObjSlIceBlock_c15OnHitByMegaCharER6Player.cpp",
+    "src/_ZN17daObjSlIceBlock_c16CleanupResourcesEv.cpp",
+    "src/_ZN17daObjSlIceBlock_c6RenderEv.cpp",
+    "src/_ZN17daObjSlIceBlock_c8BehaviorEv.cpp",
+    "src/_ZN17daObjSlIceBlock_c13InitResourcesEv.cpp",
     "src/d_a_obj_sl_ice_block_sl_iceblock_shot.c"
    ],
    "ext_mix": {
@@ -8050,17 +8050,17 @@
    "start": "0x2132404",
    "end": "0x2132818",
    "classes": [
-    "SlidingPlatformWf"
+    "daObjSimpleLift_c"
    ],
    "n_functions_map": 7,
    "n_files": 7,
    "files": [
-    "src/_ZN17SlidingPlatformWfD1Ev.cpp",
-    "src/_ZN17SlidingPlatformWfD0Ev.cpp",
-    "src/_ZN17SlidingPlatformWf16CleanupResourcesEv.cpp",
-    "src/_ZN17SlidingPlatformWf6RenderEv.cpp",
-    "src/_ZN17SlidingPlatformWf8BehaviorEv.cpp",
-    "src/_ZN17SlidingPlatformWf13InitResourcesEv.cpp",
+    "src/_ZN17daObjSimpleLift_cD1Ev.cpp",
+    "src/_ZN17daObjSimpleLift_cD0Ev.cpp",
+    "src/_ZN17daObjSimpleLift_c16CleanupResourcesEv.cpp",
+    "src/_ZN17daObjSimpleLift_c6RenderEv.cpp",
+    "src/_ZN17daObjSimpleLift_c8BehaviorEv.cpp",
+    "src/_ZN17daObjSimpleLift_c13InitResourcesEv.cpp",
     "src/d_a_obj_simple_lift_bk_transbar.c"
    ],
    "ext_mix": {
@@ -9366,16 +9366,16 @@
    "start": "0x21118b8",
    "end": "0x2111aa0",
    "classes": [
-    "Submarine"
+    "daObjWlSubmarine_c"
    ],
    "n_functions_map": 6,
    "n_files": 6,
    "files": [
-    "src/_ZN9SubmarineD1Ev.cpp",
-    "src/_ZN9SubmarineD0Ev.c",
-    "src/_ZN9Submarine16CleanupResourcesEv.cpp",
-    "src/_ZN9Submarine6RenderEv.cpp",
-    "src/_ZN9Submarine13InitResourcesEv.cpp",
+    "src/_ZN18daObjWlSubmarine_cD1Ev.cpp",
+    "src/_ZN18daObjWlSubmarine_cD0Ev.c",
+    "src/_ZN18daObjWlSubmarine_c16CleanupResourcesEv.cpp",
+    "src/_ZN18daObjWlSubmarine_c6RenderEv.cpp",
+    "src/_ZN18daObjWlSubmarine_c13InitResourcesEv.cpp",
     "src/d_a_obj_wl_submarine.c"
    ],
    "ext_mix": {
@@ -9760,15 +9760,15 @@
    "start": "0x2111f6c",
    "end": "0x21120f4",
    "classes": [
-    "FloatingFloorLllSmall"
+    "daObjFl_Ukiyuka_c"
    ],
    "n_functions_map": 5,
    "n_files": 5,
    "files": [
-    "src/_ZN21FloatingFloorLllSmallD1Ev.cpp",
-    "src/_ZN21FloatingFloorLllSmallD0Ev.c",
-    "src/_ZN21FloatingFloorLllSmall16CleanupResourcesEv.c",
-    "src/_ZN21FloatingFloorLllSmall13InitResourcesEv.c",
+    "src/_ZN17daObjFl_Ukiyuka_cD1Ev.cpp",
+    "src/_ZN17daObjFl_Ukiyuka_cD0Ev.c",
+    "src/_ZN17daObjFl_Ukiyuka_c16CleanupResourcesEv.c",
+    "src/_ZN17daObjFl_Ukiyuka_c13InitResourcesEv.c",
     "src/d_a_obj_fl_ukiyuka_fl_ukiyuka_l.c"
    ],
    "ext_mix": {
@@ -25091,17 +25091,17 @@
    "start": "0x21116c8",
    "end": "0x21118b8",
    "classes": [
-    "BowserShutter"
+    "daObjWlKoopaShutter_c"
    ],
    "n_functions_map": 7,
    "n_files": 7,
    "files": [
-    "src/_ZN13BowserShutterD1Ev.cpp",
-    "src/_ZN13BowserShutterD0Ev.c",
-    "src/_ZN13BowserShutter16CleanupResourcesEv.cpp",
-    "src/_ZN13BowserShutter6RenderEv.cpp",
-    "src/_ZN13BowserShutter8BehaviorEv.cpp",
-    "src/_ZN13BowserShutter13InitResourcesEv.cpp",
+    "src/_ZN21daObjWlKoopaShutter_cD1Ev.cpp",
+    "src/_ZN21daObjWlKoopaShutter_cD0Ev.c",
+    "src/_ZN21daObjWlKoopaShutter_c16CleanupResourcesEv.cpp",
+    "src/_ZN21daObjWlKoopaShutter_c6RenderEv.cpp",
+    "src/_ZN21daObjWlKoopaShutter_c8BehaviorEv.cpp",
+    "src/_ZN21daObjWlKoopaShutter_c13InitResourcesEv.cpp",
     "src/d_a_obj_wl_koopa_shutter.c"
    ],
    "ext_mix": {
@@ -25641,17 +25641,17 @@
    "start": "0x21111a0",
    "end": "0x211168c",
    "classes": [
-    "RotatingCogSmall"
+    "daObjCtMecha10_c"
    ],
    "n_functions_map": 7,
    "n_files": 7,
    "files": [
-    "src/_ZN16RotatingCogSmallD1Ev.cpp",
-    "src/_ZN16RotatingCogSmallD0Ev.cpp",
-    "src/_ZN16RotatingCogSmall16CleanupResourcesEv.cpp",
-    "src/_ZN16RotatingCogSmall6RenderEv.cpp",
-    "src/_ZN16RotatingCogSmall8BehaviorEv.cpp",
-    "src/_ZN16RotatingCogSmall13InitResourcesEv.cpp",
+    "src/_ZN16daObjCtMecha10_cD1Ev.cpp",
+    "src/_ZN16daObjCtMecha10_cD0Ev.cpp",
+    "src/_ZN16daObjCtMecha10_c16CleanupResourcesEv.cpp",
+    "src/_ZN16daObjCtMecha10_c6RenderEv.cpp",
+    "src/_ZN16daObjCtMecha10_c8BehaviorEv.cpp",
+    "src/_ZN16daObjCtMecha10_c13InitResourcesEv.cpp",
     "src/d_a_obj_ct_mecha10_ct_mecha12s.c"
    ],
    "ext_mix": {
@@ -25917,14 +25917,14 @@
    "start": "0x21111a0",
    "end": "0x21116e4",
    "classes": [
-    "RecRoomCupboard"
+    "daObjCloset_c"
    ],
    "n_functions_map": 6,
    "n_files": 4,
    "files": [
-    "src/_ZN15RecRoomCupboard16CleanupResourcesEv.c",
-    "src/_ZN15RecRoomCupboard8BehaviorEv.cpp",
-    "src/_ZN15RecRoomCupboard13InitResourcesEv.c",
+    "src/_ZN13daObjCloset_c16CleanupResourcesEv.c",
+    "src/_ZN13daObjCloset_c8BehaviorEv.cpp",
+    "src/_ZN13daObjCloset_c13InitResourcesEv.c",
     "src/d_a_obj_closet.cpp"
    ],
    "ext_mix": {

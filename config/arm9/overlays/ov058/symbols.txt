@@ -1,8 +1,8 @@
-_ZN15RecRoomCupboardD1Ev kind:function(arm,size=0x40) addr:0x021111a0
-_ZN15RecRoomCupboardD0Ev kind:function(arm,size=0x54) addr:0x021111e0
-_ZN15RecRoomCupboard16CleanupResourcesEv kind:function(arm,size=0x8) addr:0x02111234
-_ZN15RecRoomCupboard8BehaviorEv kind:function(arm,size=0x3e0) addr:0x0211123c
-_ZN15RecRoomCupboard13InitResourcesEv kind:function(arm,size=0x6c) addr:0x0211161c
+_ZN13daObjCloset_cD1Ev kind:function(arm,size=0x40) addr:0x021111a0
+_ZN13daObjCloset_cD0Ev kind:function(arm,size=0x54) addr:0x021111e0
+_ZN13daObjCloset_c16CleanupResourcesEv kind:function(arm,size=0x8) addr:0x02111234
+_ZN13daObjCloset_c8BehaviorEv kind:function(arm,size=0x3e0) addr:0x0211123c
+_ZN13daObjCloset_c13InitResourcesEv kind:function(arm,size=0x6c) addr:0x0211161c
 daObjCloset_c_classInit kind:function(arm,size=0x5c) addr:0x02111688
 data_ov058_02111700 kind:data(any) addr:0x02111700
 data_ov058_02111704 kind:data(any) addr:0x02111704
@@ -40,7 +40,7 @@ _ZTI13daObjCloset_c kind:data(any) addr:0x02111a30
 _ZTS13daObjCloset_c kind:data(any) addr:0x02111a3c
 g_profile_PL_CLOSET kind:data(any) addr:0x02111a4c ambiguous
 data_ov058_02111a58 kind:data(any) addr:0x02111a58 ambiguous
-_ZTV15RecRoomCupboard kind:data(any) addr:0x02111a70
+_ZTV13daObjCloset_c kind:data(any) addr:0x02111a70
 data_ov058_02111a78 kind:data(any) addr:0x02111a78 ambiguous
 data_ov058_02111abc kind:data(any) addr:0x02111abc ambiguous
 data_ov058_02111ad4 kind:data(any) addr:0x02111ad4 ambiguous

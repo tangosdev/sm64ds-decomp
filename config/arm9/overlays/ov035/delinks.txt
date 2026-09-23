@@ -4,29 +4,9 @@
     .ctor       start:0x02112028 end:0x02112030 kind:rodata align:4
     .data       start:0x02112040 end:0x02112c60 kind:data align:32
     .bss        start:0x02112c60 end:0x02112ce0 kind:bss align:32
-src/_ZN16RotatingCogSmallD1Ev.cpp:
+src/actors/daObjCtMecha10_c.cpp:
     complete
-    .text start:0x021111a0 end:0x021111e4
-
-src/_ZN16RotatingCogSmallD0Ev.cpp:
-    complete
-    .text start:0x021111e4 end:0x0211123c
-
-src/_ZN16RotatingCogSmall16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x0211123c end:0x021112c4
-
-src/_ZN16RotatingCogSmall6RenderEv.cpp:
-    complete
-    .text start:0x021112c4 end:0x021112ec
-
-src/_ZN16RotatingCogSmall8BehaviorEv.cpp:
-    complete
-    .text start:0x021112ec end:0x021114e0
-
-src/_ZN16RotatingCogSmall13InitResourcesEv.cpp:
-    complete
-    .text start:0x021114e0 end:0x0211165c
+    .text start:0x021111a0 end:0x0211165c
 
 src/d_a_obj_ct_mecha10_ct_mecha12s.c:
     complete

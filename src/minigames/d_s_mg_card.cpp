@@ -1,186 +1,34 @@
 //cpp
-/* ov006/dScMgCard_c -- the Dilar (Picture Poker) minigame scene, as one C++
- * translation unit. 37 functions, ROM 0x020d95a4-0x020dbe40.
+/* Picture Poker: the scene, the player's cards and the dealer's cards
+ * (ov006/dScMgCard_c, 37 functions).
  *
- * ENROLLED AND CANONICAL. config/arm9/overlays/ov006/delinks.txt names this
- * one file for that whole .text range, so every byte the cartridge carries
- * there is compiled from here -- nothing in the range is copied out of the
- * ROM any more. The class also emits its own vtable, its six typeinfo
- * records and their name strings; config/tu_manifest.d/ov006/dScMgCard_c.json
- * lists them under "compiler_only_output" with the verdict romdata_check
- * gives each one against the cartridge.
+ * Keep definition order: the compiler emits functions in reverse. The scene
+ * destructor is inline in dScMgCard_c.h, which with the four card
+ * constructor and destructor callbacks keeps D1 ahead of D0 as in the
+ * cartridge.
  *
- * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S -- mwccarm 2004/b56
- * emits one .text section per function, in the REVERSE of source order, so
- * the highest-address ROM function is written FIRST here. Do not reorder;
- * see notes/tu-reconstruction-pilot-report.md sec 3 for the one documented
- * exception (a destructor's D0/D1/D2 group has compiler-chosen order). The
- * destructor is not written here at all -- it is inline in the class header,
- * which is what puts the D1/D0 pair in cartridge order; see that banner.
- *
- * The 37 functions, in ROM address order (the reverse of the order below).
- * Each was a separate one-function source until this commit; the manifest's
- * "functions" array keeps the old path beside every address.
- *   [1] 0x020d95a4  _ZN11dScMgCard_cD1Ev
- *   [2] 0x020d9638  _ZN11dScMgCard_cD0Ev
- *   [3] 0x020d96e0  _ZN12dMgCardObj_cD1Ev
- *   [4] 0x020d96f0  _ZN17dMgDilarCardObj_cD1Ev
- *   [5] 0x020d970c  _ZN17dMgDilarCardObj_c6RenderEv
- *   [6] 0x020d978c  _ZN17dMgDilarCardObj_c6UpdateEv
- *   [7] 0x020d9998  _ZN17dMgDilarCardObj_c13GetOffscreenYEv
- *   [8] 0x020d99a4  _ZN12dMgCardObj_c6FlyOffEv
- *   [9] 0x020d99ec  _ZN12dMgCardObj_c7SetHomeEi
- *   [10] 0x020d9a14  _ZN11dScMgCard_c9RenderHudEv
- *   [11] 0x020d9bd0  _ZN12dMgCardObj_c13GetOffscreenYEv
- *   [12] 0x020d9bdc  _ZN12dMgCardObj_c6RenderEv
- *   [13] 0x020d9c5c  _ZN12dMgCardObj_c6UpdateEv
- *   [14] 0x020da00c  _ZN12dMgCardObj_c6RedealEv
- *   [15] 0x020da0ac  _ZN12dMgCardObj_c6DealInEPKi
- *   [16] 0x020da154  _ZN11dScMgCard_c10SettleHandEP12dMgCardObj_c
- *   [17] 0x020da174  _ZN11dScMgCard_c11ArrangeHandEP12dMgCardObj_c
- *   [18] 0x020da420  _ZN11dScMgCard_c11MarkSinglesEP12dMgCardObj_c
- *   [19] 0x020da4ac  _ZN11dScMgCard_c12EvaluateHandEPK12dMgCardObj_cPs
- *   [20] 0x020da5e8  _ZN11dScMgCard_c12CompareHandsEPK12dMgCardObj_cS2_
- *   [21] 0x020da834  _ZN11dScMgCard_c9AllLiftedEPK12dMgCardObj_c
- *   [22] 0x020da860  _ZN11dScMgCard_c10AllInStateEPK12dMgCardObj_ci
- *   [23] 0x020da88c  _ZN11dScMgCard_c12CountInStateEPK12dMgCardObj_ci
- *   [24] 0x020da8b8  _ZN11dScMgCard_c11FindInStateEPK12dMgCardObj_ci
- *   [25] 0x020da8e4  _ZN11dScMgCard_c13DrawCardValueEv
- *   [26] 0x020da974  _ZN11dScMgCard_c11FillWeightsEi
- *   [27] 0x020da994  _ZN11dScMgCard_c16CleanupResourcesEv
- *   [28] 0x020da9c4  _ZN11dScMgCard_c6RenderEv
- *   [29] 0x020dabec  _ZN11dScMgCard_c8BehaviorEv
- *   [30] 0x020dac34  _ZN11dScMgCard_c11UpdateStateEv
- *   [31] 0x020db6ec  _ZN11dScMgCard_c15OnGroundPoundedEv
- *   [32] 0x020db720  _ZN11dScMgCard_c13OnTurnIntoEggEi
- *   [33] 0x020db9dc  _ZN11dScMgCard_c13OnYoshiTryEatEi
- *   [34] 0x020dbaf0  _ZN11dScMgCard_c13InitResourcesEv
- *   [35] 0x020dbd54  dScMgCard_c_classInit
- *   [36] 0x020dbe14  _ZN17dMgDilarCardObj_cC1Ev
- *   [37] 0x020dbe30  _ZN12dMgCardObj_cC1Ev
- */
-
-/* The union of what the 34 legacy sources included, first-seen in
- * ROM-ascending order. */
-/* STILL MACHINE-SHAPED (audit 2026-09-18) -- byte-exact; what blocks each part:
- *  31 func_ov006_* + 29 data_*   unnamed in config symbols.txt; each needs a
- *                                coined, behaviour-justified name.
- *  7 ctor/dtor/op-new call(s)    C1/C2/D0/D1/D2 is not expressible
- *                                in C++ source; only a real ctor emits it.
- *  4 _ZTV vptr store(s)          stands in for the ctor that would emit it.
- *  2 `(void *)this` launder(s)   bisect before removing -- some are free,
- *                                some hold the register allocation.
- *  4 shadow struct(s)            fake interfaces for the real classes:
- *                                C, Obj, Src, VObj
- *  13 unk_NN                     slot/field name not evidenced.
+ * Blocked: the ROM has no dScMgCard_c constructor, so the factory builds the
+ * scene by hand and its base constructor, operator new and vtable stores stay
+ * mangled; and the ov004 and ov006 helpers are unnamed in symbols.txt.
  */
 
 #include "dScMgCard_c.h"
 #include "types.h"
 #include "decl_common.h"
-#include "cMgSmartball_object_c.h"
+#include "Sound.h"
 
-/* Local declarations carried from the legacy sources. Each one pins the
- * call or field shape mwcc has to emit, so swapping one for a real project
- * header type is a byte-affecting change: re-run tools/rombuild.py after.
- * Reconciling them against include/*.h is readability work still open. */
-/* shadow struct 'Obj' */
-struct Obj {
-    virtual void m00();
-    virtual void m04();
-    virtual int m08();
-};
-
-/* shadow typedef 's32' */
-typedef int s32;
-
-/* shadow struct 'VObj' */
-struct VObj { virtual int f0(); virtual int f1(); virtual int f2(); };
-
-/* shadow struct 'C' */
-struct C {
-    virtual int m0();
-    virtual int m1();
-    virtual int m2();
-    int f4;      // +4
-    int f8;      // +8
-    int fc;      // +0xc
-    int f10;     // +0x10
-    int f14;     // +0x14
-    int f18;     // +0x18
-    int pad1c;   // +0x1c
-    int pad20;   // +0x20
-    int f24;     // +0x24
-    short f28;   // +0x28
-    unsigned char f2a; // +0x2a
-    unsigned char f2b; // +0x2b
-    unsigned char f2c; // +0x2c
-    unsigned char f2d; // +0x2d
-};
-
-/* shadow struct 'Src' */
-struct Src { int f0; int f4; int f8; int fc; };
-
-/* shadow typedef 's8' */
-typedef signed char s8;
-
-/* shadow typedef 'u8' */
-typedef unsigned char u8;
-
-/* shadow typedef 's16' */
-typedef signed short s16;
-
-/* shadow typedef 'u16' */
-typedef unsigned short u16;
-
-/* shadow typedef 'u32' */
-typedef unsigned int u32;
-
-/* shadow typedef 'u64' */
-typedef unsigned long long u64;
-
-/* shadow typedef 'Struct30' */
-typedef struct 
-{
-  u8 _pad[0x2A];
-  u8 unk_2A;
-  u8 _pad2B[2];
-  u8 unk_2D;
-  u8 _pad2E[2];
-} Struct30;
-
-/* shadow typedef 'Five' */
+/* By-value five-card ordering table. */
 typedef struct 
 {
   s32 v[5];
 } Five;
 
-/* shadow typedef 'OamAttrTmpl' */
+/* Sprite template record; attr3 terminates the table at 0xffff. */
 typedef struct OamAttrTmpl {
     u32 attr0; /* 0x0 */
     u16 attr2; /* 0x4 */
     u16 attr3; /* 0x6 */
 } OamAttrTmpl;
-
-/* shadow typedef 'Slot6' */
-typedef struct Slot6 {
-    char b[0x30];
-} Slot6;
-
-/* shadow typedef 'Obj6' */
-typedef struct Obj6 {
-    char _p0[0x51a8];
-    Slot6 rowA[5]; /* 0x51a8 */
-    Slot6 rowB[5]; /* 0x5298 */
-} Obj6;
-
-/* TUBUILD CONFLICT -- alternate body of typedef 's32', from the legacy file for func_ov006_020da174, NOT applied:
-typedef signed int s32;
-*/
-
-/* TUBUILD CONFLICT -- alternate body of typedef 's16', from the legacy file for _ZN11dScMgCard_c13OnTurnIntoEggEi, NOT applied:
-typedef short s16;
-*/
 
 extern "C" {
 extern int data_ov006_0213acb0[2];
@@ -209,7 +57,7 @@ extern int RandomIntInternal(int *seed);
 extern int data_ov006_0213bd18[];
 extern int data_0209e650;
 extern "C" void func_ov006_020c0aa8(void *c);
-extern "C" int RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
+extern "C" void RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
 extern "C" void func_ov004_020b1bc8(char *a0, int a1, int a2, int a3);
 extern "C" void func_ov004_020b1e34(void *a0, int a1, int a2, int a3);
 extern "C" void func_ov006_020c1804(void *c);
@@ -231,27 +79,24 @@ extern int data_ov004_020bfa18;
 extern int data_ov006_0213bd48[];
 extern void FreeGfxSlotsById(int arg);
 extern void func_ov004_020b56c8(int a);
-/* already the mangled Itanium name in the ROM's own symbols.txt --
-extern "C" here means "use literally", not "C linkage" (see
-double-mangling-defect memory note: a C++ TU re-mangles a bare
-`extern` unless told not to, and this name is already the target). */
 extern s16 data_ov004_020bf9e4;
+/* The active scene, as a dScMgBase_c. */
 extern void* data_ov004_020beb68;
 extern "C" void func_ov006_020c1604(char *c, int unused, short a2, int a3);
 extern "C" void func_ov004_020b66d4(void);
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
-/* data_ov004_020beb68 comes from dScMgBase_c.h (void*) -- not redeclared here,
-see its own use below. */
 extern void func_ov006_0210a534(char *);
 extern void *LoadFile(int);
 extern int GetGameLanguage(void);
-extern void DecompressLZ16(void *, u32);
+extern void DecompressLZ16(void *, void *);
 extern int func_ov006_020c1a88(char *);
 void* _ZN7fBase_cnwEj(unsigned int);
 void _ZN11dScMgBase_cC2Ev(void*);
 void _ZN8Particle10SysTrackerC1Ev(void*);
-void __cxa_vec_ctor(void*, int, int, void*, void*);
+typedef void (*CardElementCallback)(void *);
+void __cxa_vec_ctor(void *, unsigned int, unsigned int,
+                    CardElementCallback, CardElementCallback);
 extern int _ZTV19dScMgSingle3DBase_c;
 extern int _ZTV11dScMgCard_c[];
 extern int _ZTV12dMgCardObj_c[];
@@ -270,14 +115,12 @@ void _ZN17dMgDilarCardObj_cC1Ev(void*);
 /* TUBUILD CONFLICT -- alternate declaration of func_ov006_020c0aa8, from the legacy file for _ZN11dScMgCard_c13InitResourcesEv, NOT applied: extern void func_ov006_020c0aa8(char *); */
 }
 
-/* ROM ordinal 37 -- dMgCardObj_c constructor ABI callback, 0x020dbe30. */
 // @symbol _ZN12dMgCardObj_cC1Ev
 extern "C" void _ZN12dMgCardObj_cC1Ev(void* elem)
 {
     *(int*)elem = (int)&_ZTV12dMgCardObj_c[2];
 }
 
-/* ROM ordinal 36 -- dMgDilarCardObj_c constructor ABI callback, 0x020dbe14. */
 // @symbol _ZN17dMgDilarCardObj_cC1Ev
 extern "C" void _ZN17dMgDilarCardObj_cC1Ev(void* elem)
 {
@@ -285,7 +128,6 @@ extern "C" void _ZN17dMgDilarCardObj_cC1Ev(void* elem)
     *(int*)elem = (int)&_ZTV17dMgDilarCardObj_c[2];
 }
 
-/* ROM ordinal 35 -- the unique MG_CARD profile factory, 0x020dbd54. */
 // @symbol dScMgCard_c_classInit
 extern "C" void* dScMgCard_c_classInit()
 {
@@ -297,57 +139,29 @@ extern "C" void* dScMgCard_c_classInit()
         *(int*)p = (int)&_ZTV11dScMgCard_c[2];
         func_ov006_020c1d80(p + 0x4f38);
         __cxa_vec_ctor(p + 0x51a8, 5, 0x30,
-                     (void*)_ZN12dMgCardObj_cC1Ev,
-                     (void*)_ZN12dMgCardObj_cD1Ev);
+                     _ZN12dMgCardObj_cC1Ev,
+                     _ZN12dMgCardObj_cD1Ev);
         __cxa_vec_ctor(p + 0x5298, 5, 0x30,
-                     (void*)_ZN17dMgDilarCardObj_cC1Ev,
-                     (void*)_ZN17dMgDilarCardObj_cD1Ev);
+                     _ZN17dMgDilarCardObj_cC1Ev,
+                     _ZN17dMgDilarCardObj_cD1Ev);
     }
     return p;
 }
 
-/* --- the engine helpers, by their true names -------------------------------
-   These six calls used to be spelled by their mangled ROM names, declared
-   in the extern "C" block above. They are the real C++ names now -- plain
-   file-scope declarations, never extern "C", the idiom dScMgBSC_c's
-   conversion established -- and each one's mwcc mangling IS that same ROM
-   symbol, so every call below compiles to the same bl target as before:
-     Sound::PlayBank2_2D        _ZN5Sound12PlayBank2_2DEj
-     GX::LoadOBJPltt            _ZN2GX11LoadOBJPlttEPKvjj
-     GXS::LoadOBJPltt           _ZN3GXS11LoadOBJPlttEPKvjj
-     G2x::SetBlendAlpha         _ZN3G2x13SetBlendAlphaEPVttttj
-     ApproachLinear             _Z14ApproachLinearRiii
-     ApproachLinear2            _Z15ApproachLinear2Rsss
-   The parameter types are read off the mangled names, not chosen (see
-   include/G2x.h's own banner for why that matters): `j` unsigned int,
-   `t` unsigned short, `s` short, `Riii` int&, `Rsss` short&. Sound is a
-   namespace per include/Sound.h; GX/GXS are spelled as namespaces the same
-   way, since a namespace and a class-only-statics mangle identically and
-   the calls here are static either way. */
-namespace Sound { void PlayBank2_2D(u32 id); }
+/* Engine calls by their C++ names. The parameter types are read off the
+   ROM's mangled names: `j` unsigned int, `t` unsigned short, `s` short,
+   `Riii` int reference, `Rsss` short reference. */
 namespace GX { void LoadOBJPltt(const void *plt, u32 base, u32 size); }
 namespace GXS { void LoadOBJPltt(const void *plt, u32 base, u32 size); }
 namespace G2x { void SetBlendAlpha(volatile u16 *reg, u16 a, u16 b, u16 c, u32 d); }
 int  ApproachLinear(int &value, int target, int step);
 int  ApproachLinear2(s16 &value, s16 target, s16 step);
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 34 -- _ZN11dScMgCard_c13InitResourcesEv, 0x020dbaf0, size 0x264 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11dScMgCard_c13InitResourcesEv
-/* dScMgCard_c::InitResources -- vtable slot 0.
- *
- * Attributed by tools/rtti_vtables.py --own dScMgCard_c, this class's own slot 0
- * (fBase_c::InitResources). The old file's `recovered name:
- * dScMgCard_c_InitResources` agreed.
- *
- * Minigame graphics init: loads/decompresses the OBJ tiles+palettes for both
- * engines, sets blending, patches the OAM attr template list, spawns the two
- * rows of 5 slot sprites, and resets the shared counters.
- *
- * The final `OnYoshiTryEat(-1)` is a self-dispatch through this class's own
- * vtable slot 18 -- the adjudicated eat handler whose body sits below; the
- * reload needs the whole round reset it does. */
+/* Slot 0. Loads and decompresses the OBJ tiles and palettes for both
+ * engines, sets blending, patches the OAM template list, spawns the two rows
+ * of five card sprites and resets the shared counters. It ends with a
+ * virtual call to OnYoshiTryEat(-1), which resets the round. */
 /* One OAM attribute-template entry: the list is a u32 attr word, then the two
  * 16-bit attrs, then an 8-byte stride. Spelled as a struct rather than as casts
  * off a u32* because the ROM addresses all three off ONE base register at
@@ -357,43 +171,42 @@ s32 dScMgCard_c::InitResources()
 {
     dScMgCard_c *self = this;
     char *c = (char *)this;
-    void *f7, *f6, *f5, *f4;
-    int v[2];
+    void *mainTiles, *mainPalette, *subTiles, *subPalette;
+    int pos[2];
 
     func_ov004_020b04d0(0x20);
     func_ov006_0210a534(c);
     data_0209d45c = 0x11;
     data_0209d454 = 0x18;
-    f7 = LoadFile(0xbd);
-    f6 = LoadFile(0xbe);
-    f5 = LoadFile(data_ov006_0213bcb0[GetGameLanguage()]);
-    f4 = LoadFile(0xbb);
-    DecompressLZ16(f7, 0x6400000);
-    GX::LoadOBJPltt(f6, 0, 0x20);
-    DecompressLZ16(f5, 0x6600000);
-    GXS::LoadOBJPltt(f4, 0, 0x100);
-    Deallocate(f7);
-    Deallocate(f6);
-    Deallocate(f5);
-    Deallocate(f4);
+    mainTiles = LoadFile(0xbd);
+    mainPalette = LoadFile(0xbe);
+    subTiles = LoadFile(data_ov006_0213bcb0[GetGameLanguage()]);
+    subPalette = LoadFile(0xbb);
+    DecompressLZ16(mainTiles, (void *)0x6400000);
+    GX::LoadOBJPltt(mainPalette, 0, 0x20);
+    DecompressLZ16(subTiles, (void *)0x6600000);
+    GXS::LoadOBJPltt(subPalette, 0, 0x100);
+    Deallocate(mainTiles);
+    Deallocate(mainPalette);
+    Deallocate(subTiles);
+    Deallocate(subPalette);
     G2x::SetBlendAlpha((volatile u16 *)0x04000050, 0, 1, 0x10, 8);
     *(volatile u16 *)0x04001050 = 0;
 
     {
-        OamAttrTmpl *e = (OamAttrTmpl *)data_ov006_02134028;
+        OamAttrTmpl *entry = (OamAttrTmpl *)data_ov006_02134028;
         u16 last;
         do {
-            e->attr0 = (e->attr0 & ~0xc00) | 0x400;
-            /* NOT `e->attr2 &= ~0xf000;`. Compound assignment makes b56 CSE the
+            entry->attr0 = (entry->attr0 & ~0xc00) | 0x400;
+            /* NOT `entry->attr2 &= ~0xf000;`. Compound assignment makes b56 CSE the
              * field's address and materialise it (`add r2, r3, #4`), then reach
              * attr3 at +2 off that; the ROM keeps ONE base and uses +4 / +6.
              * The extra instruction moves the literal pool and shifts every
-             * pc-relative load in the function -- it is the whole 4-byte size
-             * difference that kept this file pinned to 1.2/base. */
-            u16 a2 = e->attr2;
-            e->attr2 = (u16)(a2 & ~0xf000);
-            last = e->attr3;
-            e++;
+             * pc-relative load in the function. */
+            u16 bits = entry->attr2;
+            entry->attr2 = (u16)(bits & ~0xf000);
+            last = entry->attr3;
+            entry++;
         } while (last != 0xffff);
     }
 
@@ -407,11 +220,11 @@ s32 dScMgCard_c::InitResources()
         int y = 0x2c;
         int i;
         for (i = 0; i < 5; i++) {
-            v[0] = y << 12;
-            v[1] = 0x80000;
-            ((dMgCardObj_c *)((Obj6 *)c)->rowA[i].b)->DealIn(v);
-            v[1] = 0x10000;
-            ((dMgCardObj_c *)((Obj6 *)c)->rowB[i].b)->DealIn(v);
+            pos[0] = y << 12;
+            pos[1] = 0x80000;
+            mArray1[i].DealIn(pos);
+            pos[1] = 0x10000;
+            mArray2[i].DealIn(pos);
             y += 0x28;
         }
     }
@@ -431,20 +244,11 @@ s32 dScMgCard_c::InitResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 33 -- _ZN11dScMgCard_c13OnYoshiTryEatEi, 0x020db9dc, size 0x114 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11dScMgCard_c13OnYoshiTryEatEi
-/* dScMgCard_c::OnYoshiTryEat -- vtable slot 18, the eat handler: reset the
- * whole round. The name is the legacy recovered vtable name
- * (dActor_c.h:131, corroborated by ov006's symbols.txt), standing
- * uncontradicted; what the family adjudication of 2026-08-31 settled is the
- * slot's RETURN TYPE, void (notes/minigame-family-decisions.md). The body
- * agrees: it clears the card-marked counter and both highlight pairs
- * (6 means "none"), re-arms the shared-table pair the round readout uses,
- * refills the six-face weights, redeals both hands, resets the chip
- * globals, sets the round counter to 1 and restarts the state machine at
- * step 1. No destructor does any of that. */
+/* Slot 18 resets the round: clear the selected-card counter and highlights,
+ * restore the face weights, redeal both hands, and restart at state 1.
+ * The inherited actor-style name is retained for the existing interface;
+ * it does not establish this scene callback's original name or event. */
 void dScMgCard_c::OnYoshiTryEat(int mode)
 {
     int i;
@@ -481,18 +285,11 @@ void dScMgCard_c::OnYoshiTryEat(int mode)
     mState = 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 32 -- _ZN11dScMgCard_c13OnTurnIntoEggEi, 0x020db720, size 0x2bc */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11dScMgCard_c13OnTurnIntoEggEi
-/* dScMgCard_c::OnTurnIntoEgg -- vtable slot 19, the eaten exit: the round
- * ends because the player was swallowed, and these steps walk the scene
- * out. 0xe frees the result sprite the comparison picks; 0xf waits for the
- * touch poll, plays the result sound (win scales by the hand's payout
- * row), and steps on; 0x10 settles a forced result or waits the timer out
- * and frees slot 0x1d; 0x11 waits for the player object to leave, flies
- * both hands off, and arms the last timer; 0x12 runs that timer down and
- * reports the exit done. Returns 1 the moment the exit finishes. */
+/* Slot 19 advances the round-end sequence: show the comparison result,
+ * settle the score, fly both hands off, and wait for the final timer.
+ * Returns 1 when complete. The inherited actor-style name does not imply
+ * that a Picture Poker player has been swallowed. */
 int dScMgCard_c::OnTurnIntoEgg(int mode)
 {
     switch (mState) {
@@ -564,14 +361,10 @@ int dScMgCard_c::OnTurnIntoEgg(int mode)
     return 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 31 -- _ZN11dScMgCard_c15OnGroundPoundedEv, 0x020db6ec, size 0x34 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11dScMgCard_c15OnGroundPoundedEv
-/* dScMgCard_c::OnGroundPounded -- vtable slot 21, the ground-pound reaction:
- * the base family's coin-drop call, fed by this scene's dMeter_c score -- the
- * prize tier rises with the score (1..4). This overrides the void slot
- * declared by dScMgBase_c. Recovered from the vtable slot identity. */
+/* Slot 21 selects a tier from 1 to 4 according to mHudScore and passes it
+ * to func_ov004_020b6324. The inherited name does not establish an actor
+ * ground-pound event or the original name of this scene callback. */
 void dScMgCard_c::OnGroundPounded() {
     int x = mHudScore;
     int v;
@@ -587,9 +380,6 @@ void dScMgCard_c::OnGroundPounded() {
     func_ov004_020b6324(v);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 30 -- _ZN11dScMgCard_c11UpdateStateEv, 0x020dac34, size 0xab8 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11dScMgCard_c11UpdateStateEv
 /* dScMgCard_c::UpdateState -- the round's own state machine, one long
  * switch on mState that Behavior drives every frame; the tail past the
@@ -903,8 +693,8 @@ void dScMgCard_c::UpdateState()
     p2 = (unsigned char *)mArray2;
     n = 0;
     do {
-        ((cMgSmartball_object_c *)p1)->Update();
-        ((cMgSmartball_object_c *)p2)->Update();
+        ((dMgCardObj_c *)p1)->Update();
+        ((dMgCardObj_c *)p2)->Update();
         n++;
         p1 += 0x30;
         p2 += 0x30;
@@ -912,20 +702,9 @@ void dScMgCard_c::UpdateState()
     data_ov006_0214176c = 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 29 -- _ZN11dScMgCard_c8BehaviorEv, 0x020dabec, size 0x48 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11dScMgCard_c8BehaviorEv
-/* dScMgCard_c::Behavior -- vtable slot 6, ov006 0x020dabec.
- *
- * Named from the table: 0x020dabec is the word slot 6 of _ZTV11dScMgCard_c
- * holds where its base's table holds something else, so it is this class's
- * own override of the virtual fBase_c declares.
- *
- * mFrameCounter is the frame counter the header's "own tail" note lists among the
- * nine fields five of this class's methods already touch; mShared is the
- * 0x270-byte table six classes in this family share, which
- * func_ov006_020c19d0 steps. */
+/* Slot 6. mShared is the 0x270-byte table this family of scenes shares;
+ * func_ov006_020c19d0 steps it. */
 s32 dScMgCard_c::Behavior()
 {
     mFrameCounter += 1;
@@ -935,41 +714,38 @@ s32 dScMgCard_c::Behavior()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 28 -- _ZN11dScMgCard_c6RenderEv, 0x020da9c4, size 0x228 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11dScMgCard_c6RenderEv
 /* dScMgCard_c::Render -- vtable slot 9.
  *
  * Attributed by tools/rtti_vtables.py --own dScMgCard_c, this class's own slot 9
- * (dScMgBase_c::Render). The old file's `recovered name: dScMgCard_c_Render` agreed. */
+ * (dScMgBase_c::Render). */
 s32 dScMgCard_c::Render()
 {
     char *c = (char *)this;
-    int skip;
-    short v;
+    int hiddenRank;
+    short state;
     int i;
-    int sb;
+    int y;
 
     func_ov006_020c0aa8(pad_4660);
 
-    v = this->mState;
-    if (v > 3 && v < 0x11) {
-        skip = -1;
-        if (v > 0xe) {
+    state = this->mState;
+    if (state > 3 && state < 0x11) {
+        hiddenRank = -1;
+        if (state > 0xe) {
             if (this->mFrameCounter & 8) {
                 if (dScMgCard_c::CompareHands((const dMgCardObj_c *)mArray1, (const dMgCardObj_c *)mArray2) == 1) {
-                    skip = 6 - dScMgCard_c::EvaluateHand((const dMgCardObj_c *)mArray1, 0);
+                    hiddenRank = 6 - dScMgCard_c::EvaluateHand((const dMgCardObj_c *)mArray1, 0);
                 }
             }
         }
 
         i = 0;
-        sb = 0xc;
+        y = 0xc;
         for (; i < 6; i++) {
-            if (i != skip)
-                RenderOamMainScreen(data_ov006_02134010[i], 0x28, sb, -1, -1);
-            sb += 0x10;
+            if (i != hiddenRank)
+                RenderOamMainScreen(data_ov006_02134010[i], 0x28, y, -1, -1);
+            y += 0x10;
         }
 
         RenderOamMainScreen(data_ov006_02134028, 0x28, 0x38, -1, -1);
@@ -997,10 +773,10 @@ s32 dScMgCard_c::Render()
          * not used. */
         int k;
         for (k = 4; k >= 0; k--) {
-            unsigned char cfg = mArray1[k].mValue;
-            if (this->unk_538e == cfg)
+            unsigned char face = mArray1[k].mValue;
+            if (this->unk_538e == face)
                 goto chk1;
-            if (this->unk_5390 != cfg)
+            if (this->unk_5390 != face)
                 goto docall1;
         chk1:
             if (!(this->mFrameCounter & 8))
@@ -1015,10 +791,10 @@ s32 dScMgCard_c::Render()
         /* the dealer's five: same walk, the dealer's pair */
         int k;
         for (k = 4; k >= 0; k--) {
-            unsigned char cfg = mArray2[k].mValue;
-            if (this->unk_5392 == cfg)
+            unsigned char face = mArray2[k].mValue;
+            if (this->unk_5392 == face)
                 goto chk2;
-            if (this->unk_5394 != cfg)
+            if (this->unk_5394 != face)
                 goto docall2;
         chk2:
             if (!(this->mFrameCounter & 8))
@@ -1033,19 +809,8 @@ s32 dScMgCard_c::Render()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 27 -- _ZN11dScMgCard_c16CleanupResourcesEv, 0x020da994, size 0x30 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11dScMgCard_c16CleanupResourcesEv
-/* dScMgCard_c::CleanupResources -- vtable slot 3, ov006 0x020da994.
- *
- * Named from the table: 0x020da994 is the word slot 3 of _ZTV11dScMgCard_c
- * holds where its base's table holds something else, so it is this class's
- * own override of the virtual fBase_c declares.
- *
- * The body never touches the instance -- it only clears three ov006 globals
- * -- which is why the pre-migration stub could take `void` and still match:
- * `this` arrives in r0 and is simply not read. */
+/* Slot 3. Only clears three ov006 globals; `this` is never read. */
 s32 dScMgCard_c::CleanupResources()
 {
     data_ov006_0214176c = 0;
@@ -1054,9 +819,6 @@ s32 dScMgCard_c::CleanupResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 26 -- _ZN11dScMgCard_c11FillWeightsEi, 0x020da974, size 0x20 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11dScMgCard_c11FillWeightsEi
 /* dScMgCard_c::FillWeights -- sets every one of the six card-face weights to
  * the same value: the deal code passes 5 ("all six faces equally likely"),
@@ -1069,9 +831,6 @@ void dScMgCard_c::FillWeights(int v) {
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 25 -- _ZN11dScMgCard_c13DrawCardValueEv, 0x020da8e4, size 0x90 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11dScMgCard_c13DrawCardValueEv
 /* dScMgCard_c::DrawCardValue -- one weighted draw from the six-face deck:
  * roll the seeded RNG scaled by the weight total, then walk the weights
@@ -1079,7 +838,7 @@ void dScMgCard_c::FillWeights(int v) {
  * and its weight is spent. Coined name; the ROM's symbol is address-only. */
 int dScMgCard_c::DrawCardValue(void)
 {
-  int r5 = 0;
+  int value = 0;
   int sum = 0;
   int i;
   for (i = 0; i < 6; i++)
@@ -1093,18 +852,15 @@ int dScMgCard_c::DrawCardValue(void)
     sum -= data_ov006_0213bd18[i];
     if (sum < 0)
     {
-      r5 = i & 0xff;
+      value = i & 0xff;
       data_ov006_0213bd18[i] -= 1;
       break;
     }
   }
 
-  return r5;
+  return value;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 24 -- _ZN11dScMgCard_c11FindInStateEPK12dMgCardObj_ci, 0x020da8b8, size 0x2c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11dScMgCard_c11FindInStateEPK12dMgCardObj_ci
 /* dScMgCard_c::FindInState -- index of the first card in the hand sitting in
  * the given state, or -1 when no card is. Coined name; the ROM's symbol is
@@ -1120,9 +876,6 @@ int dScMgCard_c::FindInState(const dMgCardObj_c *hand, int state)
     return -1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 23 -- _ZN11dScMgCard_c12CountInStateEPK12dMgCardObj_ci, 0x020da88c, size 0x2c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11dScMgCard_c12CountInStateEPK12dMgCardObj_ci
 /* dScMgCard_c::CountInState -- how many of the hand's five cards sit in the
  * given state. Coined name; the ROM's symbol is address-only. */
@@ -1138,9 +891,6 @@ int dScMgCard_c::CountInState(const dMgCardObj_c *hand, int state)
     return count;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 22 -- _ZN11dScMgCard_c10AllInStateEPK12dMgCardObj_ci, 0x020da860, size 0x2c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11dScMgCard_c10AllInStateEPK12dMgCardObj_ci
 /* dScMgCard_c::AllInState -- true only when every card of the hand sits in
  * the given state. Coined name; the ROM's symbol is address-only. */
@@ -1155,9 +905,6 @@ int dScMgCard_c::AllInState(const dMgCardObj_c *hand, int state)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 21 -- _ZN11dScMgCard_c9AllLiftedEPK12dMgCardObj_c, 0x020da834, size 0x2c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11dScMgCard_c9AllLiftedEPK12dMgCardObj_c
 /* dScMgCard_c::AllLifted -- true only when every card of the hand is raised
  * to the full 0x4000 lift. Coined name; the ROM's symbol is address-only. */
@@ -1172,67 +919,101 @@ int dScMgCard_c::AllLifted(const dMgCardObj_c *hand)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 20 -- _ZN11dScMgCard_c12CompareHandsEPK12dMgCardObj_cS2_, 0x020da5e8, size 0x24c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11dScMgCard_c12CompareHandsEPK12dMgCardObj_cS2_
 /* dScMgCard_c::CompareHands -- poker comparison of the two five-card hands:
  * histogram each hand's face counts, find each hand's strongest count and
- * its runner-up (keeping each one's face as the tiebreak, the earlier card
- * winning an equal pair), then compare strongest count, runner-up count,
- * strongest face, runner-up face, in that order. Coined name; the ROM's
- * symbol is address-only. */
-int dScMgCard_c::CompareHands(const dMgCardObj_c *a, const dMgCardObj_c *b) {
-    short arr1[6];
-    short arr2[6];
-    short *p1 = (short *)(((int)arr1));
-    short *p2 = (short *)(((int)arr2));
-    int max1, sec1;
-    short max1i, sec1i;
-    int max2, sec2;
-    short max2i, sec2i;
+ * its runner-up (preferring the higher face index on equal counts), then
+ * compare strongest count, runner-up count,
+ * strongest face, runner-up face, in that order. Singleton face values do
+ * not break ties. Coined name; the ROM's symbol is address-only. */
+int dScMgCard_c::CompareHands(const dMgCardObj_c *handA, const dMgCardObj_c *handB)
+{
+    short countsA[6];
+    short countsB[6];
+    /* Integer round-trips preserve the pinned compiler's histogram stores. */
+    short *countA = (short *)(int)countsA;
+    short *countB = (short *)(int)countsB;
+    int bestCountA, nextCountA;
+    short bestFaceA, nextFaceA;
+    int bestCountB, nextCountB;
+    short bestFaceB, nextFaceB;
     int i;
-    short tmp;
+    short faceTemp;
 
-    p1[0] = 0; p1[1] = 0; p1[2] = 0; p1[3] = 0; p1[4] = 0; p1[5] = 0;
-    p2[0] = 0; p2[1] = 0; p2[2] = 0; p2[3] = 0; p2[4] = 0; p2[5] = 0;
+    countA[0] = 0;
+    countA[1] = 0;
+    countA[2] = 0;
+    countA[3] = 0;
+    countA[4] = 0;
+    countA[5] = 0;
+    countB[0] = 0;
+    countB[1] = 0;
+    countB[2] = 0;
+    countB[3] = 0;
+    countB[4] = 0;
+    countB[5] = 0;
 
-    max1 = 0; max1i = 6; sec1 = 0; sec1i = 6;
-    max2 = 0; sec2 = 0; max2i = 6; sec2i = 6;
+    bestCountA = 0;
+    bestFaceA = 6;
+    nextCountA = 0;
+    nextFaceA = 6;
+    bestCountB = 0;
+    nextCountB = 0;
+    bestFaceB = 6;
+    nextFaceB = 6;
 
     for (i = 0; i < 5; i++) {
-        arr1[a->mValue]++;
-        a++;
-        arr2[b->mValue]++;
-        b++;
+        countsA[handA->mValue]++;
+        handA++;
+        countsB[handB->mValue]++;
+        handB++;
     }
 
     for (i = 0; i < 6; i++) {
-        if (max1 <= arr1[i]) { sec1 = max1; sec1i = max1i; max1 = arr1[i]; max1i = i; }
-        else if (sec1 <= arr1[i]) { sec1 = arr1[i]; sec1i = i; }
-        if (max2 <= arr2[i]) { sec2 = max2; sec2i = max2i; max2 = arr2[i]; max2i = i; }
-        else if (sec2 <= arr2[i]) { sec2 = arr2[i]; sec2i = i; }
+        if (bestCountA <= countsA[i]) {
+            nextCountA = bestCountA;
+            nextFaceA = bestFaceA;
+            bestCountA = countsA[i];
+            bestFaceA = i;
+        } else if (nextCountA <= countsA[i]) {
+            nextCountA = countsA[i];
+            nextFaceA = i;
+        }
+        if (bestCountB <= countsB[i]) {
+            nextCountB = bestCountB;
+            nextFaceB = bestFaceB;
+            bestCountB = countsB[i];
+            bestFaceB = i;
+        } else if (nextCountB <= countsB[i]) {
+            nextCountB = countsB[i];
+            nextFaceB = i;
+        }
     }
 
-    if (max1 == sec1 && max1i < sec1i) { tmp = max1i; max1i = sec1i; sec1i = tmp; }
-    if (max2 == sec2 && max2i < sec2i) { tmp = max2i; max2i = sec2i; sec2i = tmp; }
+    if (bestCountA == nextCountA && bestFaceA < nextFaceA) {
+        faceTemp = bestFaceA;
+        bestFaceA = nextFaceA;
+        nextFaceA = faceTemp;
+    }
+    if (bestCountB == nextCountB && bestFaceB < nextFaceB) {
+        faceTemp = bestFaceB;
+        bestFaceB = nextFaceB;
+        nextFaceB = faceTemp;
+    }
 
-    if (max1 > max2) return 1;
-    if (max1 < max2) return -1;
-    if (sec1 > sec2) return 1;
-    if (sec1 < sec2) return -1;
-    if (max1 == 1 && max2 == 1) return 0;
-    if (max1i > max2i) return 1;
-    if (max1i < max2i) return -1;
-    if (sec1 == 1 && sec2 == 1) return 0;
-    if (sec1i > sec2i) return 1;
-    if (sec1i < sec2i) return -1;
+    if (bestCountA > bestCountB) return 1;
+    if (bestCountA < bestCountB) return -1;
+    if (nextCountA > nextCountB) return 1;
+    if (nextCountA < nextCountB) return -1;
+    if (bestCountA == 1 && bestCountB == 1) return 0;
+    if (bestFaceA > bestFaceB) return 1;
+    if (bestFaceA < bestFaceB) return -1;
+    if (nextCountA == 1 && nextCountB == 1) return 0;
+    if (nextFaceA > nextFaceB) return 1;
+    if (nextFaceA < nextFaceB) return -1;
     return 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 19 -- _ZN11dScMgCard_c12EvaluateHandEPK12dMgCardObj_cPs, 0x020da4ac, size 0x13c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11dScMgCard_c12EvaluateHandEPK12dMgCardObj_cPs
 /* dScMgCard_c::EvaluateHand -- score one hand on the poker scale (nothing,
  * one pair, two pair, three of a kind, full house, four, five), and when out
@@ -1244,10 +1025,10 @@ int dScMgCard_c::EvaluateHand(const dMgCardObj_c *hand, s16 *out)
     int i;
     int j;
     int result = 0;
-    int maxVal = 0;
-    int secVal = 0;
-    s16 maxIdx = 6;
-    s16 secIdx = maxIdx;
+    int bestCount = 0;
+    int nextCount = 0;
+    s16 bestFace = 6;
+    s16 nextFace = bestFace;
 
     for (i = 0; i < 5; i++) {
         counts[hand->mValue]++;
@@ -1255,30 +1036,30 @@ int dScMgCard_c::EvaluateHand(const dMgCardObj_c *hand, s16 *out)
     }
 
     for (j = 0; j < 6; j++) {
-        s16 v = counts[j];
-        if (maxVal <= v) {
-            secVal = maxVal;
-            secIdx = maxIdx;
-            maxVal = v;
-            maxIdx = j;
-        } else if (secVal <= v) {
-            secVal = v;
-            secIdx = j;
+        s16 count = counts[j];
+        if (bestCount <= count) {
+            nextCount = bestCount;
+            nextFace = bestFace;
+            bestCount = count;
+            bestFace = j;
+        } else if (nextCount <= count) {
+            nextCount = count;
+            nextFace = j;
         }
     }
 
-    if (maxVal == secVal && maxIdx < secIdx) {
-        s16 t = maxIdx;
-        maxIdx = secIdx;
-        secIdx = t;
+    if (bestCount == nextCount && bestFace < nextFace) {
+        s16 faceTemp = bestFace;
+        bestFace = nextFace;
+        nextFace = faceTemp;
     }
 
-    switch (maxVal) {
+    switch (bestCount) {
     case 2:
-        result = (secVal == 2) ? 2 : 1;
+        result = (nextCount == 2) ? 2 : 1;
         break;
     case 3:
-        result = (secVal == 2) ? 4 : 3;
+        result = (nextCount == 2) ? 4 : 3;
         break;
     case 4:
         result = 5;
@@ -1291,47 +1072,41 @@ int dScMgCard_c::EvaluateHand(const dMgCardObj_c *hand, s16 *out)
     }
 
     if (out != 0) {
-        if (maxVal > 1)
-            out[0] = (s16)maxIdx;
-        if (secVal > 1)
-            out[1] = (s16)secIdx;
+        if (bestCount > 1)
+            out[0] = (s16)bestFace;
+        if (nextCount > 1)
+            out[1] = (s16)nextFace;
     }
     return result;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 18 -- _ZN11dScMgCard_c11MarkSinglesEP12dMgCardObj_c, 0x020da420, size 0x8c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11dScMgCard_c11MarkSinglesEP12dMgCardObj_c
 /* dScMgCard_c::MarkSingles -- stamp every card whose face appears exactly
  * once in the hand to state 4: the settle step for the cards left out of
  * the winning combination. Coined name; the ROM's symbol is address-only. */
 void dScMgCard_c::MarkSingles(dMgCardObj_c *hand){
     int i;
-    dMgCardObj_c *p;
-    short arr[6];
-    short *a = (short *)(((int)arr));
-    a[0] = 0;
-    a[1] = 0;
-    a[2] = 0;
-    a[3] = 0;
-    a[4] = 0;
-    a[5] = 0;
-    p = hand;
+    dMgCardObj_c *card;
+    short counts[6];
+    short *count = (short *)(int)counts;
+    count[0] = 0;
+    count[1] = 0;
+    count[2] = 0;
+    count[3] = 0;
+    count[4] = 0;
+    count[5] = 0;
+    card = hand;
     for (i = 0; i < 5; i++) {
-        arr[p->mValue]++;
-        p++;
+        counts[card->mValue]++;
+        card++;
     }
     for (i = 0; i < 5; i++) {
-        if (arr[hand->mValue] == 1)
+        if (counts[hand->mValue] == 1)
             hand->mState = 4;
         hand++;
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 17 -- _ZN11dScMgCard_c11ArrangeHandEP12dMgCardObj_c, 0x020da174, size 0x2ac */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11dScMgCard_c11ArrangeHandEP12dMgCardObj_c
 /* dScMgCard_c::ArrangeHand -- the sort that pulls a scored hand together:
  * histogram the faces, decide the winning combination's two faces (the
@@ -1342,7 +1117,7 @@ void dScMgCard_c::MarkSingles(dMgCardObj_c *hand){
  * address-only. */
 int dScMgCard_c::ArrangeHand(dMgCardObj_c *hand)
 {
-  s16 hist[6];
+  s16 counts[6];
   Five order;
   s16 i;
   s32 j;
@@ -1352,68 +1127,68 @@ int dScMgCard_c::ArrangeHand(dMgCardObj_c *hand)
   s32 neg2;
   s32 zero;
   dMgCardObj_c *p;
-  s16 *h;
-  s32 max_val;
-  s32 second_val;
-  s32 max_idx;
-  s32 second_idx;
-  max_val = 0;
-  h = (s16 *) ((u32) ((u64) ((u32) hist)));
-  h[0] = max_val;
-  h[1] = max_val;
-  h[2] = max_val;
-  h[3] = max_val;
-  h[4] = max_val;
-  max_idx = 6;
-  second_val = max_val;
-  second_idx = max_idx;
-  i = max_val;
-  h[5] = max_val;
-  zero = max_val;
+  s16 *count;
+  s32 bestCount;
+  s32 nextCount;
+  s32 bestFace;
+  s32 nextFace;
+  bestCount = 0;
+  count = (s16 *)(u32)counts;
+  count[0] = bestCount;
+  count[1] = bestCount;
+  count[2] = bestCount;
+  count[3] = bestCount;
+  count[4] = bestCount;
+  bestFace = 6;
+  nextCount = bestCount;
+  nextFace = bestFace;
+  i = bestCount;
+  count[5] = bestCount;
+  zero = bestCount;
   for (i = 0; i < 5; i++)
   {
     s32 idx = hand[i].mValue;
-    hist[idx] = (s16) (hist[idx] + 1);
+    counts[idx] = (s16) (counts[idx] + 1);
   }
   p = hand;
 
   for (i = 0; i < 6; i++)
   {
-    s32 v = hist[i];
-    if (max_val <= v)
+    s32 v = counts[i];
+    if (bestCount <= v)
     {
-      second_val = max_val;
-      second_idx = max_idx;
-      max_val = v;
-      max_idx = i;
+      nextCount = bestCount;
+      nextFace = bestFace;
+      bestCount = v;
+      bestFace = i;
     }
     else
-      if (second_val <= v)
+      if (nextCount <= v)
     {
-      second_val = v;
-      second_idx = i;
+      nextCount = v;
+      nextFace = i;
     }
   }
 
-  if (max_val == second_val)
+  if (bestCount == nextCount)
   {
-    if (max_val > 1)
+    if (bestCount > 1)
     {
-      if (second_val > 1)
+      if (nextCount > 1)
       {
         p = hand;
         for (t = 0; t < 5; t++)
         {
           s32 c = p->mValue;
-          if (max_idx == c)
+          if (bestFace == c)
           {
             break;
           }
-          if (second_idx == c)
+          if (nextFace == c)
           {
-            s32 tmp = second_idx;
-            second_idx = max_idx;
-            max_idx = tmp;
+            s32 tmp = nextFace;
+            nextFace = bestFace;
+            bestFace = tmp;
             break;
           }
           p++;
@@ -1435,24 +1210,23 @@ int dScMgCard_c::ArrangeHand(dMgCardObj_c *hand)
       while (k < n)
       {
         s32 v1 = order.v[k];
-        s32 stride = 0x30;
-        dMgCardObj_c *ptr1 = (dMgCardObj_c *) (((u32) hand) + (v1 * stride));
+        dMgCardObj_c *ptr1 = &hand[v1];
         s32 u1 = ptr1->mValue;
         s32 next = k + 1;
         s32 v2;
-        dMgCardObj_c *ptr2 = (dMgCardObj_c *) (((u32) hand) + (order.v[next] * stride));
+        dMgCardObj_c *ptr2 = &hand[order.v[next]];
         s32 u2 = ptr2->mValue;
-        if (u1 == max_idx)
+        if (u1 == bestFace)
         {
-          if (max_val > 1)
+          if (bestCount > 1)
           {
             u1 = neg2;
             goto u1_done;
           }
         }
-        if (u1 == second_idx)
+        if (u1 == nextFace)
         {
-          if (second_val > 1)
+          if (nextCount > 1)
           {
             u1 = neg1;
             goto u1_done;
@@ -1460,18 +1234,18 @@ int dScMgCard_c::ArrangeHand(dMgCardObj_c *hand)
         }
         u1 = zero;
         u1_done:
-        if (u2 == max_idx)
+        if (u2 == bestFace)
         {
-          if (max_val > 1)
+          if (bestCount > 1)
           {
             u2 = neg2;
             goto u2_done;
           }
         }
 
-        if (u2 == second_idx)
+        if (u2 == nextFace)
         {
-          if (second_val > 1)
+          if (nextCount > 1)
           {
             u2 = neg1;
             goto u2_done;
@@ -1502,16 +1276,16 @@ int dScMgCard_c::ArrangeHand(dMgCardObj_c *hand)
     for (; j < 5; j++)
     {
       s32 c = q->mValue;
-      if (max_idx == c)
+      if (bestFace == c)
       {
-        if (max_val > 1)
+        if (bestCount > 1)
         {
           goto store1c;
         }
       }
-      if (second_idx == c)
+      if (nextFace == c)
       {
-        if (second_val <= 1)
+        if (nextCount <= 1)
         {
           goto store0c;
         }
@@ -1536,7 +1310,7 @@ int dScMgCard_c::ArrangeHand(dMgCardObj_c *hand)
   for (j = 0; j < 5; j++)
   {
     s32 v = order.v[j];
-    dMgCardObj_c *ptr = (dMgCardObj_c *) (((u32) hand) + (v * 0x30));
+    dMgCardObj_c *ptr = &hand[v];
     ptr->SetHome(j);
   }
 
@@ -1551,9 +1325,6 @@ int dScMgCard_c::ArrangeHand(dMgCardObj_c *hand)
   return 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 16 -- _ZN11dScMgCard_c10SettleHandEP12dMgCardObj_c, 0x020da154, size 0x20 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11dScMgCard_c10SettleHandEP12dMgCardObj_c
 /* dScMgCard_c::SettleHand -- the round's settle step: stamp all five cards
  * of one hand to state 9. Coined name; the ROM's symbol is address-only. */
@@ -1565,9 +1336,6 @@ void dScMgCard_c::SettleHand(dMgCardObj_c *hand) {
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 15 -- _ZN12dMgCardObj_c6DealInEPKi, 0x020da0ac, size 0xa8 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN12dMgCardObj_c6DealInEPKi
 /* dMgCardObj_c::DealIn -- deal one fresh card in: park it at the {x, y} the
  * source pair names, then retarget the approach steps off GetOffscreenY's
@@ -1599,9 +1367,6 @@ void dMgCardObj_c::DealIn(const s32 *src)
     mValue = (unsigned char)dScMgCard_c::DrawCardValue();
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 14 -- _ZN12dMgCardObj_c6RedealEv, 0x020da00c, size 0xa0 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN12dMgCardObj_c6RedealEv
 /* dMgCardObj_c::Redeal -- re-fly the card from its own target: the same
  * retarget off GetOffscreenY's start height as DealIn, but from the target
@@ -1628,9 +1393,6 @@ void dMgCardObj_c::Redeal()
     mValue = (unsigned char)dScMgCard_c::DrawCardValue();
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 13 -- _ZN12dMgCardObj_c6UpdateEv, 0x020d9c5c, size 0x3b0 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN12dMgCardObj_c6UpdateEv
 /* dMgCardObj_c::Update -- vtable slot 1, the player's card motion state
  * machine. mState: 1 fly in from off-screen and settle (2, lift raising, on
@@ -1646,7 +1408,7 @@ void dMgCardObj_c::Redeal()
  * card up (state 3) and 0x150 putting it back (state 2). */
 void dMgCardObj_c::Update()
 {
-    int r5;
+    int yReached;
 
     if (mState == 0)
         return;
@@ -1656,8 +1418,8 @@ void dMgCardObj_c::Update()
             ApproachLinear2(mFlyDelay, 0, 1);
             return;
         }
-        r5 = ApproachLinear(mY, mTargetY, mYStep);
-        if (ApproachLinear(mX, mTargetX, mXStep) != 0 && r5 != 0) {
+        yReached = ApproachLinear(mY, mTargetY, mYStep);
+        if (ApproachLinear(mX, mTargetX, mXStep) != 0 && yReached != 0) {
             Sound::PlayBank2_2D(0x144);
             mState = 2;
             mLiftFlag = 1;
@@ -1670,31 +1432,31 @@ void dMgCardObj_c::Update()
         ApproachLinear(mLift, 0, 0x200);
 
     {
-        int st = mState;
-        if (st == 3) {
+        int state = mState;
+        if (state == 3) {
             ApproachLinear(mY, mTargetY - 0x10000, 0x2000);
-        } else if (st == 5) {
-            r5 = ApproachLinear(mY, mTargetY, mYStep);
-            if (ApproachLinear(mX, mTargetX, mXStep) != 0 && r5 != 0) {
+        } else if (state == 5) {
+            yReached = ApproachLinear(mY, mTargetY, mYStep);
+            if (ApproachLinear(mX, mTargetX, mXStep) != 0 && yReached != 0) {
                 Sound::PlayBank2_2D(0x144);
                 mState = 2;
                 mLiftFlag = 1;
             }
-        } else if (st == 2) {
+        } else if (state == 2) {
             ApproachLinear(mY, mTargetY, 0x4000);
-        } else if (st == 4 && mLift == 0) {
+        } else if (state == 4 && mLift == 0) {
             int result = GetOffscreenY();
             if (ApproachLinear(mY, result, 0x8000) != 0) {
                 mX = 0x80000;
                 mState = 6;
                 mValue = (unsigned char)dScMgCard_c::DrawCardValue();
             }
-        } else if (st == 7) {
+        } else if (state == 7) {
             if (ApproachLinear(mX, mHomeX, 0x6000) != 0)
                 mState = 8;
-        } else if (st == 9) {
+        } else if (state == 9) {
             ApproachLinear(mY, 0x80000, 0x6000);
-        } else if (st == 0xa) {
+        } else if (state == 0xa) {
             if (ApproachLinear2(mFlyDelay, 0, 1) != 0)
                 ApproachLinear(mX, mHomeX, mXStep);
         }
@@ -1711,32 +1473,32 @@ void dMgCardObj_c::Update()
         return;
 
     {
-        int idx = data_020a0e40;
-        unsigned char e8;
-        int flag = 0;
-        e8 = data_020a0de8[idx * 4];
-        if (e8 != 0 && data_020a0de9[idx * 4] != 0)
-            flag = 1;
-        if (flag == 0)
+        int touchIndex = data_020a0e40;
+        unsigned char touchHeld;
+        int touchActive = 0;
+        touchHeld = data_020a0de8[touchIndex * 4];
+        if (touchHeld != 0 && data_020a0de9[touchIndex * 4] != 0)
+            touchActive = 1;
+        if (touchActive == 0)
             return;
         {
-            unsigned char st = mState;
-            if ((unsigned char)(st + 254) > 1)
+            unsigned char state = mState;
+            if ((unsigned char)(state + 254) > 1)
                 return;
             if (mLift != 0x4000)
                 return;
             {
-                int a = (int)data_020a0dea[idx][0] - (mX >> 12);
-                int b = (int)data_020a0deb[idx][0] - (mY >> 12);
-                if (a <= 7)
+                int touchDeltaX = (int)data_020a0dea[touchIndex][0] - (mX >> 12);
+                int touchDeltaY = (int)data_020a0deb[touchIndex][0] - (mY >> 12);
+                if (touchDeltaX <= 7)
                     return;
-                if (a >= 0x29)
+                if (touchDeltaX >= 0x29)
                     return;
-                if (b <= -1)
+                if (touchDeltaY <= -1)
                     return;
-                if (b >= 0x31)
+                if (touchDeltaY >= 0x31)
                     return;
-                if (st == 2) {
+                if (state == 2) {
                     func_02012790(0x14f);
                     mState = 3;
                 } else {
@@ -1748,9 +1510,6 @@ void dMgCardObj_c::Update()
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 12 -- _ZN12dMgCardObj_c6RenderEv, 0x020d9bdc, size 0x80 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN12dMgCardObj_c6RenderEv
 /* dMgCardObj_c::Render -- vtable slot 0, the player's card. Same table and
  * same index math as the dealer's Render above; the temporaries are spelled
@@ -1771,9 +1530,6 @@ void dMgCardObj_c::Render()
         -1, -1);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 11 -- _ZN12dMgCardObj_c13GetOffscreenYEv, 0x020d9bd0, size 0xc */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN12dMgCardObj_c13GetOffscreenYEv
 /* dMgCardObj_c::GetOffscreenY -- vtable slot 2. The y the card starts flying
  * in from: 6 screens above the table in 1:4096 fixed point. DealIn reads it
@@ -1783,11 +1539,8 @@ s32 dMgCardObj_c::GetOffscreenY()
     return -0x60000;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 10 -- _ZN11dScMgCard_c9RenderHudEv, 0x020d9a14, size 0x1bc */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11dScMgCard_c9RenderHudEv
-/* dScMgCard_c::RenderHud -- the dMeter_c column and the hold prompt. States 4
+/* dScMgCard_c::RenderHud -- the hand-rank table and the hold prompt. States 4
  * through 0x10 stack six face sprites at x=0x14 from y=0xb0 down; the two
  * hands' highlight pairs (unk_538e/unk_5390 for the player's hand,
  * unk_5392/unk_5394 for the dealer's) name the rows drawn in a highlight
@@ -1798,21 +1551,21 @@ s32 dMgCardObj_c::GetOffscreenY()
  * reached state 2. Coined name; the ROM's symbol is address-only. */
 void dScMgCard_c::RenderHud()
 {
-    short v = mState;
-    if (v > 3 && v < 0x11) {
-        int sb = 0xb0;
+    short state = mState;
+    if (state > 3 && state < 0x11) {
+        int y = 0xb0;
         int i;
         for (i = 0; i < 6; i++) {
-            int sel = 0;
+            int highlight = 0;
             if ((i == unk_5392 && i == unk_538e) || (i == unk_5394 && i == unk_5390)) {
-                if (mFrameCounter & 0x10) sel = 1; else sel = 2;
+                if (mFrameCounter & 0x10) highlight = 1; else highlight = 2;
             } else if (i == unk_5392 || i == unk_5394) {
-                if (mFrameCounter & 0x10) sel = 2;
+                if (mFrameCounter & 0x10) highlight = 2;
             } else if (i == unk_538e || i == unk_5390) {
-                if (mFrameCounter & 0x10) sel = 1;
+                if (mFrameCounter & 0x10) highlight = 1;
             }
-            Hud_RenderSprite(data_ov006_0213bd30[i][sel], 0x14, sb, -1, -1);
-            sb -= 0x10;
+            Hud_RenderSprite(data_ov006_0213bd30[i][highlight], 0x14, y, -1, -1);
+            y -= 0x10;
         }
     }
     if (mState != 4) return;
@@ -1823,9 +1576,6 @@ void dScMgCard_c::RenderHud()
         Hud_RenderSprite(data_ov006_0213406c[1], 0x80, 0x58, -1, -1);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 9 -- _ZN12dMgCardObj_c7SetHomeEi, 0x020d99ec, size 0x28 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN12dMgCardObj_c7SetHomeEi
 /* dMgCardObj_c::SetHome -- aim the card at home slot n (the row pitch is
  * 0x28, the first slot sits at 0x2c) and put it into state 7, the fly-home
@@ -1836,9 +1586,6 @@ void dMgCardObj_c::SetHome(s32 n){
   mState = 7;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 8 -- _ZN12dMgCardObj_c6FlyOffEv, 0x020d99a4, size 0x48 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN12dMgCardObj_c6FlyOffEv
 /* dMgCardObj_c::FlyOff -- the end-of-round fly-away: home becomes the
  * off-screen left, the y step tracks the card's own height, and the
@@ -1856,9 +1603,6 @@ void dMgCardObj_c::FlyOff(){
   mState = 0xa;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- _ZN17dMgDilarCardObj_c13GetOffscreenYEv, 0x020d9998, size 0xc */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN17dMgDilarCardObj_c13GetOffscreenYEv
 /* dMgDilarCardObj_c::GetOffscreenY -- vtable slot 2, the same answer the base
  * gives: both hands' cards fly in from 6 screens above the table (-0x60000
@@ -1869,9 +1613,6 @@ s32 dMgDilarCardObj_c::GetOffscreenY()
     return -0x60000;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- _ZN17dMgDilarCardObj_c6UpdateEv, 0x020d978c, size 0x20c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN17dMgDilarCardObj_c6UpdateEv
 /* dMgDilarCardObj_c::Update -- vtable slot 1, the dealer's card motion.
  * Same states as the player's card (see dMgCardObj_c::Update below) minus
@@ -1943,9 +1684,6 @@ void dMgDilarCardObj_c::Update()
     ApproachLinear(mX, mHomeX, mXStep);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- _ZN17dMgDilarCardObj_c6RenderEv, 0x020d970c, size 0x80 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN17dMgDilarCardObj_c6RenderEv
 /* dMgDilarCardObj_c::Render -- vtable slot 0, the dealer's card face down.
  * The sprite bank table data_ov006_0213bd64 is indexed by the card's face
@@ -1967,7 +1705,6 @@ void dMgDilarCardObj_c::Render()
     -1,-1);
 }
 
-/* ROM ordinal 4 -- _ZN17dMgDilarCardObj_cD1Ev, 0x020d96f0, size 0x1c */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN17dMgDilarCardObj_cD1Ev
 /* Genuine C++ produces these two stores only when the base destructor is
@@ -1979,9 +1716,6 @@ extern "C" void _ZN17dMgDilarCardObj_cD1Ev(void *elem)
   *(int *)elem = (int)&_ZTV12dMgCardObj_c[2];
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- _ZN12dMgCardObj_cD1Ev, 0x020d96e0, size 0x10 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN12dMgCardObj_cD1Ev
 /* The real inline body is byte-identical but cannot occupy the cartridge's
  * post-scene-D0 section position. */

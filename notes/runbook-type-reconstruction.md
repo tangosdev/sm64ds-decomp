@@ -232,7 +232,8 @@ fader vtables out of `extracted/arm9_dec.bin` shows 10 slots each with Fader's s
 reconstructed, hierarchy not. Treat "this header looks finished" as a hypothesis and
 check the ROM's own vtable before building on it.
 
-**Rung 2 -- unmigrated function** (`src/_ZN19daObjBlockItemTag_cD0Ev.cpp`, today):
+**Rung 2 -- unmigrated function** (`_ZN19daObjBlockItemTag_cD0Ev`, as the tree carried
+it before ov002/daObjBlockItemTag_c was promoted):
 
 ```c
 int *_ZN19daObjBlockItemTag_cD0Ev(int *t)

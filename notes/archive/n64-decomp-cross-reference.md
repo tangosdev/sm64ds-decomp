@@ -314,7 +314,7 @@ All DS names below confirmed as live mangled symbols (`_ZTV*`, `_ZN*D1Ev`) in
 | `bhvMrI` | → | `MrI` (+`MrI_Projectile`) | [ov071](../../config/arm9/overlays/ov071/symbols.txt) |
 | **`bhvFlyingBookend`** | → | **`BookShot`** — *not* "Bookend" | [ov020](../../config/arm9/overlays/ov020/symbols.txt) |
 | `bhvHomingAmp` / `bhvCirclingAmp` | → | `Amp` | [ov070](../../config/arm9/overlays/ov070/symbols.txt) |
-| `bhvKoopa` | → | `Koopa` (+`daRNk_c`, `KoopaFlag`, `KoopaShell`) | [ov062](../../config/arm9/overlays/ov062/symbols.txt) |
+| `bhvKoopa` | → | `Koopa` (+`daRNk_c`, `daRFlag_c`, `KoopaShell`) | [ov062](../../config/arm9/overlays/ov062/symbols.txt) |
 | `bhvKlepto` / `bhvChuckya` | → | `Klepto` / `daHolhei_c` | [ov062](../../config/arm9/overlays/ov062/symbols.txt) |
 | `bhvHeaveHo` | → | `daPopoi_c` | [ov077](../../config/arm9/overlays/ov077/symbols.txt) |
 | `bhvFlyGuy` | → | `FlyGuy` | [ov070](../../config/arm9/overlays/ov070/symbols.txt) |

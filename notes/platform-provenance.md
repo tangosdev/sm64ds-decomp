@@ -15,7 +15,7 @@ classes) is in the project memory note `platform-family-census`.
 ## `include/dBgActor_c.h`
 
 `dBgActor_c` is the base of the level-object family — daObjRc_Guruguru_c,
-PyramidTop, daObjKm3_Kaitendai_c, daObjBSwdoor_c, daObjCvShutter_c, SlidingIce and ~130
+PyramidTop, daObjKm3_Kaitendai_c, daObjBSwdoor_c, daObjCvShutter_c, daObjSlIceBlock_c and ~130
 others. Seeded by `tools/gen_header.py` from matched-function evidence, then
 given its real base and real member types by hand.
 
@@ -146,17 +146,17 @@ For a class whose destructor stores its own vptr and then `dBgActor_c`'s
 (inlined), and destroys the `dBgW_KcMbg` at 0x124 and the `Model` at 0xd4 before
 chaining to `dActor_c`: all three of those are `dBgActor_c`'s own. Everything such
 a header used to restate below 0x31e was `dActor_c`'s and `dBgActor_c`'s, and is
-inherited. This applies to `SlidingPlatformWf`, `FloatOnLavaPlatform`,
+inherited. This applies to `daObjSimpleLift_c`, `FloatOnLavaPlatform`,
 `daObjRc_Guruguru_c`, `RotatingUpDownPlatformUtm` and their siblings.
 
 Where a size assertion is only the observed field span rounded up, it guards the
 declaration and is **not** independent evidence about the ROM. Where a factory's
 `operator new` literal is available, that is the real size and it wins — see
-`SlidingPlatformWf` below.
+`daObjSimpleLift_c` below.
 
 ---
 
-## `include/SlidingPlatformWf.h`
+## `include/daObjSimpleLift_c.h`
 
 The field span stops short of the real size. `SlidingPlatformBdw_Spawn` and
 `SlidingPlatformBfsRectangle_Spawn` call `fBase_c::operator new(0x330)`, read off
@@ -428,7 +428,7 @@ still builds 106/106.
 
 | function | module / range | what changed |
 |---|---|---|
-| `SlidingPlatformWf::InitResources` | [ov091](../config/arm9/overlays/ov091/symbols.txt) 0x021325d4 +0x214 | `*(u8 *)(c+0x322)` → `mVariant` throughout, `c+0x320` → `mMoveTimer`, `c+0x324..0x32c` → `mBasePos{X,Y,Z}` |
+| `daObjSimpleLift_c::InitResources` | [ov091](../config/arm9/overlays/ov091/symbols.txt) 0x021325d4 +0x214 | `*(u8 *)(c+0x322)` → `mVariant` throughout, `c+0x320` → `mMoveTimer`, `c+0x324..0x32c` → `mBasePos{X,Y,Z}` |
 | `RotatingUpDownPlatform::Behavior` | [ov091](../config/arm9/overlays/ov091/symbols.txt) 0x02132108 +0x104 | `s+0x320` → `mState`, `s+0x354` → `mStateTimer`, `s+0x352` → `mVariant`, `s+0x356` → `mIsPressed`, `s+0x34c` → `mSinkOffsetY`; the two sink magic numbers become `cSinkDepth` / `cSinkRate` |
 | `RotatingUpDownPlatform::InitResources` | [ov091](../config/arm9/overlays/ov091/symbols.txt) 0x0213220c +0x154 | `this+0x344` → `&mPathPtr`, `this+0x338` → `&mTargetPosX`, `this+0x32c` → `&mBasePosX` |
 | `UpDownLiftBbh::InitResources` and `::Behavior` | [ov095](../config/arm9/overlays/ov095/symbols.txt) 0x021365d8 +0x18c, 0x021364d8 +0x100 | the `*((int *)((char *)&mTopY))` cast wrappers drop away now that the fields are `s32`; `this+0x344` and `(&unk_300)+0x44` both become `mStateTimer` |

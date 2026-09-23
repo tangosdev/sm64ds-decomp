@@ -292,7 +292,7 @@ int daObjPushblock_c::OnPushed(dActor_c &other)
  * where _ZTV10dBgActor_c carries dActor_c's generic 0x02010124. Confirmed with
  * tools/mangle.py: _ZN16daObjPushblock_c15OnHitByMegaCharER6Player.
  *
- * Same idiom as SlidingIce::OnHitByMegaChar: Player::IncMegaKillCount is a real
+ * Same idiom as daObjSlIceBlock_c::OnHitByMegaChar: Player::IncMegaKillCount is a real
  * method, and the trailing unqualified Kill() dispatches virtually through slot
  * 31. daObjPushblock_c does override slot 31 (its own _ZN16daObjPushblock_c4KillEv), so this
  * reaches daObjPushblock_c::Kill through the vtable rather than the base. */

@@ -10,7 +10,7 @@ extern void _ZN9ModelAnimC1Ev(void* p);
 extern void __cxa_vec_ctor(void* a, int b, int c, void* d, void* e);
 extern void* data_0208e4b8;
 extern void* _ZTV14UnknownVsEntry;
-extern void _ZN15UnknownVsPlayerD1Ev(void);
+extern void _ZN15UnknownVsPlayerD1Ev(void* p);
 extern void _ZN15UnknownVsPlayerC1Ev(void);
 }
 /* Reconstructed source-style name: SM64DS proves dEntObj_c through RTTI,

@@ -22,7 +22,7 @@ extern void _ZN6Camera9SetFlag_3Ev(void *c);
 extern s16 Vec3_HorzAngle(const int *v0, const int *v1);
 extern int func_020092c4(void *a, void *out, void *target);
 extern int _Z14ApproachLinearRsss(s16 *a, s16 b, s16 c);
-extern void _ZN10SlidingIce16CleanupResourcesEv(void);
+extern void _ZN17daObjSlIceBlock_c16CleanupResourcesEv(void);
 extern u16 func_0201277c(int a);
 extern int func_ov002_020c51d0(void *c, int *st);
 extern int _ZN6Player12GetTalkStateEv(void *p);
@@ -145,7 +145,7 @@ void func_ov063_02117cdc(u8 *arg0) {
         if (*(u16 *)(arg0 + 0x100) < 0x1e) {
             return;
         }
-        _ZN10SlidingIce16CleanupResourcesEv();
+        _ZN17daObjSlIceBlock_c16CleanupResourcesEv();
         {
             u8 *st = (u8 *)(arg0 + 0x5ce);
             int n = *st + 1;

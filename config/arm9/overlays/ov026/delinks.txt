@@ -8,53 +8,17 @@ src/game/actors/d_a_obj_wl_polelift.cpp:
     complete
     .text start:0x021111a0 end:0x021116c8
 
-src/_ZN13BowserShutterD1Ev.cpp:
+src/actors/daObjWlKoopaShutter_c.cpp:
     complete
-    .text start:0x021116c8 end:0x0211170c
-
-src/_ZN13BowserShutterD0Ev.cpp:
-    complete
-    .text start:0x0211170c end:0x02111764
-
-src/_ZN13BowserShutter16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02111764 end:0x021117a8
-
-src/_ZN13BowserShutter6RenderEv.cpp:
-    complete
-    .text start:0x021117a8 end:0x021117d0
-
-src/_ZN13BowserShutter8BehaviorEv.cpp:
-    complete
-    .text start:0x021117d0 end:0x021117d8
-
-src/_ZN13BowserShutter13InitResourcesEv.cpp:
-    complete
-    .text start:0x021117d8 end:0x02111888
+    .text start:0x021116c8 end:0x02111888
 
 src/d_a_obj_wl_koopa_shutter.c:
     complete
     .text start:0x02111888 end:0x021118b8
 
-src/_ZN9SubmarineD1Ev.cpp:
+src/actors/daObjWlSubmarine_c.cpp:
     complete
-    .text start:0x021118b8 end:0x021118fc
-
-src/_ZN9SubmarineD0Ev.cpp:
-    complete
-    .text start:0x021118fc end:0x02111954
-
-src/_ZN9Submarine16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02111954 end:0x02111998
-
-src/_ZN9Submarine6RenderEv.cpp:
-    complete
-    .text start:0x02111998 end:0x021119c0
-
-src/_ZN9Submarine13InitResourcesEv.cpp:
-    complete
-    .text start:0x021119c0 end:0x02111a70
+    .text start:0x021118b8 end:0x02111a70
 
 src/d_a_obj_wl_submarine.c:
     complete

@@ -1,4 +1,4 @@
-# BookShot composition after Spiny landed
+# BookShot composition after daTgz_c landed
 
 This composes accepted metadata-fixed BookShot
 `2de630659a82f027501fe66792068c97ff18f0b6` with actual merged main

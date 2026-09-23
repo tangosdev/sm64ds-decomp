@@ -15,7 +15,7 @@
   },
   "strict_functions": [
     {
-      "name": "_ZN5SpinyD1Ev",
+      "name": "_ZN7daTgz_cD1Ev",
       "module": "ov077",
       "addr": "0x02124b64",
       "verdict": "VERIFIED",
@@ -23,7 +23,7 @@
       "blind": 0
     },
     {
-      "name": "_ZN5SpinyD0Ev",
+      "name": "_ZN7daTgz_cD0Ev",
       "module": "ov077",
       "addr": "0x02124bb4",
       "verdict": "VERIFIED",
@@ -31,7 +31,7 @@
       "blind": 0
     },
     {
-      "name": "_ZN5Spiny13OnYoshiTryEatEv",
+      "name": "_ZN7daTgz_c13OnYoshiTryEatEv",
       "module": "ov077",
       "addr": "0x02124c18",
       "verdict": "VERIFIED",
@@ -39,7 +39,7 @@
       "blind": 0
     },
     {
-      "name": "_ZN5Spiny16OnAimedAtWithEggEv",
+      "name": "_ZN7daTgz_c16OnAimedAtWithEggEv",
       "module": "ov077",
       "addr": "0x02124c20",
       "verdict": "VERIFIED",
@@ -231,7 +231,7 @@
       "blind": 0
     },
     {
-      "name": "_ZN5Spiny16CleanupResourcesEv",
+      "name": "_ZN7daTgz_c16CleanupResourcesEv",
       "module": "ov077",
       "addr": "0x02125eb0",
       "verdict": "VERIFIED",
@@ -239,7 +239,7 @@
       "blind": 0
     },
     {
-      "name": "_ZN5Spiny16OnPendingDestroyEv",
+      "name": "_ZN7daTgz_c16OnPendingDestroyEv",
       "module": "ov077",
       "addr": "0x02125eec",
       "verdict": "VERIFIED",
@@ -247,7 +247,7 @@
       "blind": 0
     },
     {
-      "name": "_ZN5Spiny6RenderEv",
+      "name": "_ZN7daTgz_c6RenderEv",
       "module": "ov077",
       "addr": "0x02125ef0",
       "verdict": "VERIFIED",
@@ -255,7 +255,7 @@
       "blind": 0
     },
     {
-      "name": "_ZN5Spiny8BehaviorEv",
+      "name": "_ZN7daTgz_c8BehaviorEv",
       "module": "ov077",
       "addr": "0x02125f68",
       "verdict": "VERIFIED",
@@ -263,7 +263,7 @@
       "blind": 0
     },
     {
-      "name": "_ZN5Spiny13InitResourcesEv",
+      "name": "_ZN7daTgz_c13InitResourcesEv",
       "module": "ov077",
       "addr": "0x02126058",
       "verdict": "VERIFIED",
@@ -271,7 +271,7 @@
       "blind": 0
     },
     {
-      "name": "_ZN5Spiny13OnTurnIntoEggER6Player",
+      "name": "_ZN7daTgz_c13OnTurnIntoEggER6Player",
       "module": "ov077",
       "addr": "0x02126194",
       "verdict": "VERIFIED",
@@ -288,9 +288,9 @@
     }
   ],
   "accepted_blobs_preserved": {
-    "src_tu/actors/Spiny.cpp": "100644 blob 43c97ef34298a76d3a69b3adbff244075d578ac4",
-    "config/tu_manifest.d/ov077/Spiny.json": "100644 blob 5efb23e55a2a87cde80c07a94b7e40de841025e3",
-    "include/Spiny.h": "100644 blob d419c31569c13d79410204b9f5e25acbd80d8d60",
+    "src_tu/actors/daTgz_c.cpp": "100644 blob 43c97ef34298a76d3a69b3adbff244075d578ac4",
+    "config/tu_manifest.d/ov077/daTgz_c.json": "100644 blob 5efb23e55a2a87cde80c07a94b7e40de841025e3",
+    "include/daTgz_c.h": "100644 blob d419c31569c13d79410204b9f5e25acbd80d8d60",
     "notes/agents/handoffs/pr2863-source-repair-0920.md": "100644 blob 20920943ed698fa24c9b2f43f1a32d6bd80dc96d",
     "notes/experiments/pr2863-source-repair-0920.json": "100644 blob 76ebbd3aa7ba2aa3ec6af0c3a848dbe9ada7d247",
     "notes/agents/handoffs/pr2863-composition-0920.md": "100644 blob 83ca9e49a2d660e2c459fa740e85ab5238cc45f3",
@@ -308,12 +308,12 @@
     "notes/agents/handoffs/pr2863-source-repair-0920.md",
     "notes/experiments/pr2863-composition-0920.json",
     "notes/experiments/pr2863-source-repair-0920.json",
-    "src_tu/actors/Spiny.cpp"
+    "src_tu/actors/daTgz_c.cpp"
   ],
   "checks": [
     {
       "name": "whole_tu",
-      "command": "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe tools/tubuild.py --manifest C:\\tmp\\sm64ds-spinycompose0920\\build\\pr2863-after-koopa\\composition\\manifest.json verify ov077/Spiny",
+      "command": "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe tools/tubuild.py --manifest C:\\tmp\\sm64ds-spinycompose0920\\build\\pr2863-after-koopa\\composition\\manifest.json verify ov077/daTgz_c",
       "exit_code": 1,
       "expected_exit_code": 1,
       "seconds": 1.5,
@@ -321,7 +321,7 @@
     },
     {
       "name": "tubuild_conflicts",
-      "command": "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe tools/check_tubuild_conflicts.py ov077/Spiny --list",
+      "command": "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe tools/check_tubuild_conflicts.py ov077/daTgz_c --list",
       "exit_code": 0,
       "expected_exit_code": 0,
       "seconds": 0.12,
@@ -357,7 +357,7 @@
     [],
     [
       {
-        "name": "_ZTS5Spiny",
+        "name": "_ZTS7daTgz_c",
         "shndx": 5,
         "value": 0,
         "size": 7,
@@ -397,7 +397,7 @@
         "type": "STT_OBJECT"
       },
       {
-        "name": "_ZTI5Spiny",
+        "name": "_ZTI7daTgz_c",
         "shndx": 11,
         "value": 0,
         "size": 12,
@@ -421,7 +421,7 @@
         "type": "STT_OBJECT"
       },
       {
-        "name": "_ZTV5Spiny",
+        "name": "_ZTV7daTgz_c",
         "shndx": 17,
         "value": 0,
         "size": 132,
@@ -459,7 +459,7 @@
       {
         "id": "SP2863-01",
         "kind": "correctness",
-        "location": "src_tu/actors/Spiny.cpp:118,144,243",
+        "location": "src_tu/actors/daTgz_c.cpp:118,144,243",
         "summary": "The state helper uses one truthful two-argument void contract.",
         "reason": "All12module-qualified calls in eight shadow functions agree; ROM callee overwrites incoming r2. All34strict checks and complete-object identity confirm the repair. Unchanged enrolled InitResources shard remains outside this shadow task.",
         "disposition": "fixed"
@@ -467,7 +467,7 @@
       {
         "id": "SP2863-02",
         "kind": "reconstruction",
-        "location": "src_tu/actors/Spiny.cpp:202-213",
+        "location": "src_tu/actors/daTgz_c.cpp:202-213",
         "summary": "Both Render calls use the genuine existing Model and ModelAnim methods.",
         "reason": "The fabricated six-slot interface is removed; actual const Vector3* virtual methods retain slot5 calls and complete-object identity. This does not assert reconstruction of other raw helper interfaces.",
         "disposition": "fixed"
@@ -475,7 +475,7 @@
       {
         "id": "SP2863-03",
         "kind": "reconstruction",
-        "location": "include/Spiny.h:36-41; src_tu/actors/Spiny.cpp:145",
+        "location": "include/daTgz_c.h:36-41; src_tu/actors/daTgz_c.cpp:145",
         "summary": "The matrix is still a byte member plus padding accessed through an M48 view.",
         "reason": "Actual issue2870 assigns the remaining real-field/layout reconstruction and consumer proof to codex-integrator-0920. The reviewed repair does not claim a recovered matrix type.",
         "disposition": "deferred",
@@ -485,9 +485,9 @@
       {
         "id": "SP2863-04",
         "kind": "reconstruction",
-        "location": "src_tu/actors/Spiny.cpp; config/tu_manifest.d/ov077/Spiny.json",
+        "location": "src_tu/actors/daTgz_c.cpp; config/tu_manifest.d/ov077/daTgz_c.json",
         "summary": "Complete output ownership, class identity and remaining raw helper/lifecycle reconstruction are unfinished.",
-        "reason": "Nine unlicensed metadata outputs and reversed destructor pair[0,1] remain; community Spiny RTTI is not retail daTgz_c identity. Actual issue2870 owns these prerequisites. Source remains an unenrolled shadow, with no complete-object/promotion or full-ROM coverage claim.",
+        "reason": "Nine unlicensed metadata outputs and reversed destructor pair[0,1] remain; community daTgz_c RTTI is not retail daTgz_c identity. Actual issue2870 owns these prerequisites. Source remains an unenrolled shadow, with no complete-object/promotion or full-ROM coverage claim.",
         "disposition": "deferred",
         "owner": "codex-integrator-0920",
         "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2870"
@@ -495,7 +495,7 @@
       {
         "id": "SP2863-05",
         "kind": "correctness",
-        "location": "src_tu/actors/Spiny.cpp:114,166,297-307,385,406,636,661-665,728-729,800,835,909,947,955,1048,1054",
+        "location": "src_tu/actors/daTgz_c.cpp:114,166,297-307,385,406,636,661-665,728-729,800,835,909,947,955,1048,1054",
         "summary": "All nine reported call-contract families now agree with their actual definitions or genuine member interfaces.",
         "reason": "Independently checked NewSimple result, short ApproachLinear result, func02010844 result, genuine DetectRaycastClsn, Hurt flags/result, SetAnim frame width, DropShadow opacity, and both sound wrappers. All10sound declarations and11views are corrected. Fresh34strict and whole-object identity pass; no targeted diagnostic remains. Opaque shared scalar/member representations are not falsely claimed complete.",
         "disposition": "fixed"
@@ -503,7 +503,7 @@
       {
         "id": "SP2863-06",
         "kind": "provenance",
-        "location": "src_tu/actors/Spiny.cpp:523-524",
+        "location": "src_tu/actors/daTgz_c.cpp:523-524",
         "summary": "The false recovered daJgm_c_Kill/vtable claim is replaced by the observed state3 PMF relationship.",
         "reason": "Verified relocation021278e8->021258dc and initializer assignment to02127c28+0x30. No original private name or virtual-table identity is invented; unchanged legacy prose remains outside this owned shadow.",
         "disposition": "fixed"

@@ -27,6 +27,10 @@ banked for a pass that owns `include/dActor_c.h`.
 
 ## daBtfly_c (`include/daBtfly_c.h`)
 
+All fifteen of its methods now live in one translation unit,
+[src/actors/daBtfly_c.cpp](../src/actors/daBtfly_c.cpp); the per-member citations
+below name the method rather than the one-function source it used to have.
+
 Actor 0x150. The puzzle where three butterflies flutter around and one of them
 turns into a 1-Up.
 
@@ -41,15 +45,15 @@ named `daBtfly_c::State0` through `State7` from their exact PMF-table indices.
 
 | offset | name | evidence |
 | --- | --- | --- |
-| 0x080/0x084/0x088 | `mScaleX/Y/Z` | `dActor_c`'s own offsets. `src/_ZN9daBtfly_c8BehaviorEv.cpp` writes all three from `mScale` every frame. |
+| 0x080/0x084/0x088 | `mScaleX/Y/Z` | `dActor_c`'s own offsets. `daBtfly_c::Behavior` writes all three from `mScale` every frame. |
 | 0x08e | `mAngleY` | `dActor_c`'s offset. Behavior copies `mPrevAngleY` here and builds the render matrix from it. |
 | 0x092 | `mPrevAngleX` | `dActor_c`'s offset. `daBtfly_c::State5` eases it toward -0x2000 or 0x2000 to make the butterfly climb or dive. Its sine-table users deliberately load through `u16 *`. |
 | 0x094 | `mPrevAngleY` | `dActor_c`'s offset; the heading, eased toward `mWanderAngle`, toward home, or toward the player depending on state. |
 | 0x098 | `mHorzSpeed` | `dActor_c`'s offset. |
 | 0x0a8 | `mVertSpeed` | `dActor_c`'s offset. |
-| 0x3d4/0x3d8/0x3dc | `mHomePosX/Y/Z` | `src/_ZN9daBtfly_c13InitResourcesEv.cpp` copies `mPos` here before anything moves. `State3` and `State2` snap `mPos` back to it; `State5` takes `Vec3_HorzAngle(mPos, mHomePos)` as the heading home. |
+| 0x3d4/0x3d8/0x3dc | `mHomePosX/Y/Z` | `daBtfly_c::InitResources` copies `mPos` here before anything moves. `State3` and `State2` snap `mPos` back to it; `State5` takes `Vec3_HorzAngle(mPos, mHomePos)` as the heading home. |
 | 0x3e0 | `mScale` | InitResources sets 0x1000 and Behavior copies it into all three scale words. `State6` winds it from 0 up to 0x800 in 0x40 steps, or drops it to 0 for a butterfly that is not kind 1; `State7` adds a sine-table wobble driven by `mFlutterPhase`. |
-| 0x3e4 | `mState` | The dispatch index above. InitResources sets 0, 1 or 4; 4 is inert (Behavior skips the matrix work and `src/_ZN9daBtfly_c6RenderEv.cpp` draws nothing). |
+| 0x3e4 | `mState` | The dispatch index above. InitResources sets 0, 1 or 4; 4 is inert (Behavior skips the matrix work and `daBtfly_c::Render` draws nothing). |
 | 0x3e8 | `mStateTimer` | Seeded to a random 0..99 by InitResources, then zeroed by every state that hands over. States compare it against 0x14, 0x3c, 0x6e, 0x78, 0x9d and 100. |
 | 0x3ec | `mWanderAngle` | `State4` rolls a random angle into it at spawn and seeds `mPrevAngleY` from it; after 0x3c frames `State5` steers toward it instead of toward home. |
 | 0x3ee | `mFlutterPhase` | `State7` advances it by 0x2710 or 0xfa0 a frame and feeds it to the sine table to pump `mScale`. Zeroed by `State6`. |

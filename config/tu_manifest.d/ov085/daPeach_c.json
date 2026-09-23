@@ -1,9 +1,9 @@
 {
   "id": "ov085/daPeach_c",
   "module": "ov085",
-  "source": "src_tu/actors/daPeach_c.cpp",
+  "source": "src/actors/daPeach_c.cpp",
   "promoted_source": "src/actors/daPeach_c.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x2129d18..0x212a684, 24 function(s), from build/tu_map.json (tools/tu_map.py); extended to 0x212a6d4 to take in daPeach_c_classInit at 0x212a684, which tu_map cannot label because its symbol is neither func_ov085_* nor _ZN9daPeach_c*. It is contiguous with the run, it is this class's own factory (it allocates this class's 0x36c and installs this class's vtable), and 0x212a6d4 is where the next class's destructor begins. The sibling TUs ov085/daMip_c, ov085/daC_Jugem_c and ov085/daObjKanban_c took in their own classInit on the same grounds; daMip_c is promoted.",
@@ -210,8 +210,8 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold _ZN9daPeach_c6State0Ev and the one that held _ZN9daPeach_c6State4Ev; kept the first, the other is commented out for review -- RESOLVED: reconciled to one spelling for the whole TU, `int _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(char *self, void *bca, int frame, int speed, unsigned int flags);`, in the TU-wide extern \"C\" block. All five callers -- State0, State1, State4, InitState1 and InitState2 -- pass `this + 0xd4` and a table entry, and all five byte-match under it, so no alternate declaration and no commented-out marker survives in src_tu/actors/daPeach_c.cpp.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov085_021304f4' differs between the legacy file that used to hold _ZN9daPeach_c16CleanupResourcesEv and the one that held _ZN9daPeach_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: reconciled to include/decl_common.h's own spelling, `extern char data_ov085_021304f4;`, so this TU adds no new reading of that symbol. Both readers -- CleanupResources, which takes its address as a SharedFilePtr*, and InitResources, which hands the same address to Model::LoadFile -- byte-match under it. No alternate declaration survives.",
     "Reconciliation not covered by a generated warning: the two contradictory declarations of data_ov085_0212f280 that create emitted (SharedFilePtr *[] and void *[]) were replaced by include/decl_common.h's own `extern int data_ov085_0212f280[];`, with the SharedFilePtr* cast moved to CleanupResources' use site. The tree's declaration plurality for that symbol is therefore unchanged, and both readers byte-match.",
-    "daPeach_c declares its destructor inside the class body, so mwccarm emits the two variants on demand rather than at a declaration of their own. The two file-static functions at the head of the TU -- PeachDemandCompleteDtor and PeachDemandDeletingDtor -- are what demands them, in the cartridge's order: a pseudo-destructor call brings out D1 at 0x02129d18, a delete-expression brings out D0 at 0x02129d60. They are the same forcing idiom the two legacy one-function sources src/_ZN9daPeach_cD1Ev.cpp and src/_ZN9daPeach_cD0Ev.cpp already use, which is why neither those files nor include/daPeach_c.h are touched by this fold. Both statics are unreferenced and carry no ROM bytes; they are listed below as unlicensed sections. Moving the destructor declaration out of the class body would remove them, but it would also leave those two enrolled src/ files with no definition to compile, so it is not available without a delinks change.",
-    "tools/tubuild.py linkcheck REFUSES this TU, in both the whole-range and the --partial mode, with \"entry src/func_ov085_02129f8c.c is NOT `complete` today (dsd serves it from ROM bytes); substituting the TU would change enrollment and byte provenance in the same step\". That entry is the only non-`complete` one in all of ov085: the recovered source carries a file-static helper `normalize` whose out-of-line copy is a second .text section, which eligible.py rule 1 rejects, and the ROM's own bytes end in a dead `cmp r0, #0` that only an out-of-line call produces -- six helper-free spellings were measured and every one came out 0x4c instead of 0x50, short by exactly that compare. So the refusal is about that one member's enrollment, not about this TU. tools/linkcheck.py was run per function against this TU's own object instead: 24 of 25 VERIFIED, and func_ov085_02129f8c BLIND-1, which is the identical verdict its legacy source returns today."
+    "daPeach_c declares its destructor inside the class body, so mwccarm emits D1 at 0x02129d18 and D0 at 0x02129d60 from PeachDemandCompleteDtor (a destructor call) and PeachDemandDeletingDtor (a delete-expression). Those two functions are non-static: a static demand leaves a size-0 STB_LOCAL after its section is dropped, and promotion refuses that. Nothing references them, so the link removes the symbols. They are not in the ROM. include/daPeach_c.h is unchanged.",
+    "func_ov085_02129f8c used to call a file-static normalize, and that call is the only relocated word besides FindWithID. The cartridge has cmp r0, #0 at +0x40 (e3500000), not a BL. Returning through both arms of `if (r == 0) goto done` keeps the compare and the 0x50-byte body. tubuild verify is 25/25 MATCH, and that word is the compare in the object. The promoted delink is one complete span, so dsd no longer serves this function from ROM bytes."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -222,30 +222,153 @@
     "functions_matched": 25,
     "functions_declared": 25,
     "compilerOnlyOutput": {
-      "requested": [],
-      "unhandled": [
+      "requested": [
         "_Z23PeachDemandCompleteDtorP9daPeach_c",
         "_Z23PeachDemandDeletingDtorP9daPeach_c",
-        "_ZN7Vector3D1Ev",
-        "normalize"
+        "_ZN7Vector3D1Ev"
       ],
-      "data": []
+      "deadstripped": [
+        "_Z23PeachDemandCompleteDtorP9daPeach_c",
+        "_Z23PeachDemandDeletingDtorP9daPeach_c",
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        5,
+        8,
+        13,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67
+      ],
+      "data": [
+        "_ZTV9daPeach_c",
+        "_ZTI9daPeach_c",
+        "_ZTS9daPeach_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c"
+      ],
+      "dataExternalized": [
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTI9daPeach_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTS9daPeach_c",
+        "_ZTV9daPeach_c"
+      ]
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 13 unlicensed section/symbol(s), 4 compiler-only policy error(s)",
+      "declared_function_set_equals_defined_function_set": "PASS",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
     "linkVerification": {
-      "round": "tools/tubuild.py linkcheck REFUSED (see notes); tools/linkcheck.py run per function against this TU's source instead",
-      "tubuildLinkcheck": "REFUSED -- entry src/func_ov085_02129f8c.c is NOT `complete` today (dsd serves it from ROM bytes); substituting the TU would change enrollment and byte provenance in the same step",
-      "perFunctionVerified": 24,
-      "perFunctionBlind": [
-        "func_ov085_02129f8c (BLIND-1 -- one relocation slot unresolvable; src/func_ov085_02129f8c.c returns the same BLIND-1 today, so this is not a regression)"
-      ],
+      "round": "tools/tubuild.py linkcheck --baseline --module ov085",
+      "tubuildLinkcheck": "ov085 exact: 29792 bytes, differingBytes 0",
+      "perFunctionVerified": 25,
+      "perFunctionBlind": [],
       "perFunctionWrong": []
     }
-  }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_Z23PeachDemandCompleteDtorP9daPeach_c",
+      "disposition": "deadstrip",
+      "reason": "Unreferenced demand for the inline destructor. Nothing references it, the cartridge has no symbol of this name, and the licensed D1 at ov085:0x02129d18 is the variant it forces."
+    },
+    {
+      "symbol": "_Z23PeachDemandDeletingDtorP9daPeach_c",
+      "disposition": "deadstrip",
+      "reason": "Unreferenced delete-expression that forces D0. Nothing references it, the cartridge has no symbol of this name, and the licensed D0 at ov085:0x02129d60 is the variant it forces."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Vector3 locals make this TU re-emit Vector3's vague-linkage D1. The cartridge keeps one copy at arm9:0x020072c0."
+    },
+    {
+      "symbol": "_ZTV9daPeach_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov085",
+      "canonical_address": "0x0212ffc0",
+      "reason": "The inline destructor's key function emits the 0x84-byte vtable. symbols.txt records the address point at ov085:0x0212ffc0, eight bytes above the start of storage. romdata_check proves the copy, then isolation discards it."
+    },
+    {
+      "symbol": "_ZTI9daPeach_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov085",
+      "canonical_address": "0x0212ff90",
+      "reason": "Class typeinfo at its canonical ov085 home. The record names dActor_c as the single base."
+    },
+    {
+      "symbol": "_ZTS9daPeach_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov085",
+      "canonical_address": "0x0212ff84",
+      "reason": "Length-prefixed type name \"9daPeach_c\" at its canonical ov085 home."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Inherited dActor_c typeinfo, vague linkage. The canonical copy is arm9:0x0208e390."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Inherited dActor_c type name. The canonical copy is arm9:0x0208e384."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Inherited dBase_c typeinfo. The canonical copy is arm9:0x02086e78."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Inherited dBase_c type name. The canonical copy is arm9:0x02086e54."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Inherited fBase_c typeinfo. The canonical copy is arm9:0x02086d70."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Inherited fBase_c type name. The canonical copy is arm9:0x02086e60."
+    }
+  ]
 }

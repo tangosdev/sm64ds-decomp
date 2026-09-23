@@ -15,7 +15,7 @@ No whole-TU promotion or completion of the parent reconstruction is claimed.
 Source candidate: `9b825c3d3c0ff0af5f04ff1151649069a3872136`. Tested composition base:
 `5c075024562a469c6e4336d8540e3dfa9ffa84a1`, still the live main when this continuation began.
 The user approved retrying the exact 18-helper proposal. Its six BookShot and
-12 Spiny file/range reservations succeeded under the existing producer tasks;
+12 daTgz_c file/range reservations succeeded under the existing producer tasks;
 no full-class ROM range or extra source scope was acquired. The original workflow
 input and stage artifact lists remain unchanged. Source-review coverage follows
 all amended file resources, not the original initializer-only artifact list.
@@ -42,14 +42,14 @@ header, compiler configuration, manifest, delink or baseline was changed.
 - Port: 418/418 references resolve. Attribution: 8,182 tracked, zero changed/lost.
   Language-mode and CONVERTED ratchets pass against the unchanged baselines;
   CONVERTED remains 2,990 against 2,973. Whitespace check passes.
-- Independent BookShot and Spiny source reviews found no new source blocker,
+- Independent BookShot and daTgz_c source reviews found no new source blocker,
   subject to the recorded partial-reconstruction limits. This does not establish
   full class reconstruction, TU promotion or formal Source review acceptance.
 
 ### Open declaration gate: SHADOWBACK3-DECL-01
 
 `check_decl_agreement.py --changed 5c075024562a469c6e4336d8540e3dfa9ffa84a1` fails on
-one newly reported return mismatch in `src/func_ov077_02125a54.c`. Its corrected
+one newly reported return mismatch in `func_ov077_02125a54.c`. Its corrected
 `int _Z14ApproachLinearRsss(short*, short, short)` declaration agrees with the
 actual native `int ApproachLinear(short&, short, short)` definition in
 `src/_Z14ApproachLinearRsss.cpp`. That definition compiles to the exact linker
@@ -136,7 +136,7 @@ Current composition base: `5c075024562a469c6e4336d8540e3dfa9ffa84a1` (merged loc
 this continuation). Source candidate: `a5edafd2280d93bb61c002b9ca2849ec96e53341`.
 The original workflow input remains `077483245976d72477eba0d2a7ccca4390da2b1b`;
 its three-function evidence below is retained as history. Current production
-source changes are BookShot InitResources/Behavior, Spiny
+source changes are BookShot InitResources/Behavior, daTgz_c
 InitResources/Behavior/Render, and daKinopio_c St_Talk_Main. All six are enrolled
 in the normal `src/` production build.
 

@@ -14,7 +14,7 @@ frozen census now finds 805 destructor symbols, 2,715 destructor-call sites,
 conflicts.
 
 The sized-operator-new census now has no genuinely headerless live class.
-`RecRoomCupboard` gained a header in #1830, and the former `BigBooIcon` result
+`daObjCloset_c` gained a header in #1830, and the former `BigBooIcon` result
 resolves through its vtable alias to the `daTrsIcon_c` header added in #1895.
 The expectations and diagnostics were refreshed to reflect that landed state.
 

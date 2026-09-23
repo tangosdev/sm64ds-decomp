@@ -12,7 +12,7 @@
  * destructor is at 16/17, NOT 0/1, and vtable+0x40 (which AfterCleanupResources
  * dispatches through) is that D1 destructor, not OnPendingDestroy at slot 12.
  *
- * InitResources is declared here but src/_ZN7fBase_c13InitResourcesEv.cpp
+ * InitResources is declared here but src/actors/ActorBase.cpp
  * deliberately defines it as an extern "C" free function, because a class's
  * first non-inline virtual is its key function and CW emits the vtable into
  * whichever TU defines it -- colliding with the copy the module's gap object
@@ -47,7 +47,7 @@ extern "C" void _ZN6Memory10DeallocateEPvP4Heap(void *, void *);
 extern "C" void *data_020a0eac;
 /* ROM body of fBase_c::operator new(unsigned) — mangled _ZN7fBase_cnwEj.
    CW will not accept that signature as an in-class operator new (first
-   parameter is not size_t). Defined in src/_ZN7fBase_cnwEj.cpp. */
+   parameter is not size_t). Defined in src/actors/ActorBase.cpp. */
 extern "C" void *_ZN7fBase_cnwEj(unsigned size);
 
 struct fBase_c {

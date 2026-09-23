@@ -580,7 +580,7 @@ sites across `InitResources` and `CleanupResources`, and `a[0x326] = 1;` in
 
 ---
 
-## RotatingCogSmall (`include/RotatingCogSmall.h`, [ov035](../config/arm9/overlays/ov035/symbols.txt), size 0x330)
+## daObjCtMecha10_c (`include/daObjCtMecha10_c.h`, [ov035](../config/arm9/overlays/ov035/symbols.txt), size 0x330)
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
@@ -720,7 +720,7 @@ In the C twin, `0x00c` becomes `actorID` and `0x08e` `mAngleY`.
 | `TTC_MovingBeam` ([ov065](../config/arm9/overlays/ov065/symbols.txt)) | 0x330 | `mGroundY` | `InitResources` stores the probe point's Y, then overwrites it with the `dBgCh_Gnd` hit height when `DetectClsn` returns nonzero. |
 | `daObjCtKaitendai_c` ([ov065](../config/arm9/overlays/ov065/symbols.txt)) | 0x31e | `mVariant` | `InitResources` sets `0`/`1` and uses it as the row index into `data_ov065_0211d35c` / `...d360`; `CleanupResources` indexes both again. |
 | | 0x320 | `mGroundY` | the same raycast shape as `TTC_MovingBeam`'s: the probe Y, replaced by `raycast + 0x44` on a hit. |
-| `SlidingIce` ([ov027](../config/arm9/overlays/ov027/symbols.txt)) | 0x31e | `mDelayTimer` | `DecIfAbove0_Short`'d at the top of both variants of `Behavior`, which do nothing at all until it reaches 0; seeded `0x64` or `mNumToBigIce * 0x14` and re-armed to `(mNumToBigIce + 1) * 0x14` after each spawn. |
+| `daObjSlIceBlock_c` ([ov027](../config/arm9/overlays/ov027/symbols.txt)) | 0x31e | `mDelayTimer` | `DecIfAbove0_Short`'d at the top of both variants of `Behavior`, which do nothing at all until it reaches 0; seeded `0x64` or `mNumToBigIce * 0x14` and re-armed to `(mNumToBigIce + 1) * 0x14` after each spawn. |
 | `PyramidStep` ([ov025](../config/arm9/overlays/ov025/symbols.txt)) | 0x374 | `mClsnMat2` | `InitResources` passes `&mClsnMat2` as the `const Matrix4x3 &` of `dBgW_KcMbg::SetFile`, and `0x374 + 0x30 = 0x3a4` — the factory's own `operator new` literal. The header's `pad_378[0x2c]` "tail padding" WAS this matrix; it is gone and the size assert now closes on a field span. |
 | `PathLift` ([ov002](../config/arm9/overlays/ov002/symbols.txt)) | 0x42a | `mAfterClsnRan` | set to `1` by the last statement of `AfterClsn`, cleared by the last statement of `BaseBehavior`. |
 | | 0x42b | `mTriggerDelay` | `AfterClsn` fires `func_ov002_020efa54(this, 1)` only when `DecIfAbove0_Byte(&mTriggerDelay)` returns 0 and `mState == 0`. |
@@ -756,16 +756,16 @@ same offsets:
 * `include/FortressTower.h` — `actorID` (0x00c).
 * `include/daObjC0Water_c.h` — `mCamSpacePosX`.
 * `include/TTC_MovingBeam.h` — `mTerminalVelocity`, `mVertSpeed`, `mClsnMat`.
-* `include/SlidingIce.h` — `mHorzSpeed`.
+* `include/daObjSlIceBlock_c.h` — `mHorzSpeed`.
 * `include/PyramidStep.h` — `param1`, `mAngleY`, `mVertSpeed`.
 * `include/PathLift.h` — `actorID`.
 * `include/daObjEmmLog_c.h` — `mPosY`.
-* `include/RotatingCogSmall.h` — `actorID`, `mAngleY`.
+* `include/daObjCtMecha10_c.h` — `actorID`, `mAngleY`.
 
 ## Left `unk_` across this batch, and why
 
 * `CccArena` 0x330 / 0x334 / 0x338 — written once each by `InitResources`, never read.
-* `RotatingCogSmall` 0x326 — written the same table value as `mAngleYStep`, never read.
+* `daObjCtMecha10_c` 0x326 — written the same table value as `mAngleYStep`, never read.
 * `daKpa2Bg_c` 0x56c — zeroed, never read.
 * `RotatingUpDownPlatformUtm` 0x300 in the C twin — that offset is *interior* to
   `dBgActor_c::mClsnMat` (0x2ec + 0x14), and naming a matrix element from a single

@@ -1,9 +1,9 @@
-_ZN11VolcanoRingD1Ev kind:function(arm,size=0x44) addr:0x021111a0
-_ZN11VolcanoRingD0Ev kind:function(arm,size=0x58) addr:0x021111e4
-_ZN11VolcanoRing16CleanupResourcesEv kind:function(arm,size=0x48) addr:0x0211123c
-_ZN11VolcanoRing6RenderEv kind:function(arm,size=0x28) addr:0x02111284
-_ZN11VolcanoRing8BehaviorEv kind:function(arm,size=0x1f0) addr:0x021112ac
-_ZN11VolcanoRing13InitResourcesEv kind:function(arm,size=0xbc) addr:0x0211149c
+_ZN14daObjFl_Ring_cD1Ev kind:function(arm,size=0x44) addr:0x021111a0
+_ZN14daObjFl_Ring_cD0Ev kind:function(arm,size=0x58) addr:0x021111e4
+_ZN14daObjFl_Ring_c16CleanupResourcesEv kind:function(arm,size=0x48) addr:0x0211123c
+_ZN14daObjFl_Ring_c6RenderEv kind:function(arm,size=0x28) addr:0x02111284
+_ZN14daObjFl_Ring_c8BehaviorEv kind:function(arm,size=0x1f0) addr:0x021112ac
+_ZN14daObjFl_Ring_c13InitResourcesEv kind:function(arm,size=0xbc) addr:0x0211149c
 func_ov022_02111558 kind:function(arm,size=0xc) addr:0x02111558
 func_ov022_02111564 kind:function(arm,size=0x14) addr:0x02111564
 daObjFl_Ring_c_classInit kind:function(arm,size=0x30) addr:0x02111578
@@ -37,10 +37,10 @@ _ZN10LavaSeesaw6RenderEv kind:function(arm,size=0x28) addr:0x02111dd4
 _ZN10LavaSeesaw8BehaviorEv kind:function(arm,size=0xa4) addr:0x02111dfc
 _ZN10LavaSeesaw13InitResourcesEv kind:function(arm,size=0x9c) addr:0x02111ea0
 daObjFl_Seesaw_c_classInit kind:function(arm,size=0x30) addr:0x02111f3c
-_ZN21FloatingFloorLllSmallD1Ev kind:function(arm,size=0x50) addr:0x02111f6c
-_ZN21FloatingFloorLllSmallD0Ev kind:function(arm,size=0x64) addr:0x02111fbc
-_ZN21FloatingFloorLllSmall16CleanupResourcesEv kind:function(arm,size=0x20) addr:0x02112020
-_ZN21FloatingFloorLllSmall13InitResourcesEv kind:function(arm,size=0x78) addr:0x02112040
+_ZN17daObjFl_Ukiyuka_cD1Ev kind:function(arm,size=0x50) addr:0x02111f6c
+_ZN17daObjFl_Ukiyuka_cD0Ev kind:function(arm,size=0x64) addr:0x02111fbc
+_ZN17daObjFl_Ukiyuka_c16CleanupResourcesEv kind:function(arm,size=0x20) addr:0x02112020
+_ZN17daObjFl_Ukiyuka_c13InitResourcesEv kind:function(arm,size=0x78) addr:0x02112040
 daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA_L kind:function(arm,size=0x3c) addr:0x021120b8
 daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA kind:function(arm,size=0x3c) addr:0x021120f4
 _ZN15daObjFl_UkiKi_cD1Ev kind:function(arm,size=0x44) addr:0x02112130
@@ -193,7 +193,7 @@ _ZTI14daObjFl_Ring_c kind:data(any) addr:0x02113cd4
 _ZTS14daObjFl_Ring_c kind:data(any) addr:0x02113ce0
 data_ov022_02113cec kind:data(any) addr:0x02113cec ambiguous
 g_profile_FL_RING kind:data(any) addr:0x02113cf4 ambiguous
-_ZTV11VolcanoRing kind:data(any) addr:0x02113d18
+_ZTV14daObjFl_Ring_c kind:data(any) addr:0x02113d18
 data_ov022_02113d30 kind:data(any) addr:0x02113d30 ambiguous
 data_ov022_02113d90 kind:data(any) addr:0x02113d90 ambiguous
 _ZTI16daObjFl_Koma_D_c kind:data(any) addr:0x02113d98
@@ -226,7 +226,7 @@ data_ov022_021140d4 kind:data(any) addr:0x021140d4
 g_profile_FL_UKIYUKA kind:data(any) addr:0x021140ec ambiguous
 data_ov022_021140f8 kind:data(any) addr:0x021140f8 ambiguous
 g_profile_FL_UKIYUKA_L kind:data(any) addr:0x02114108 ambiguous
-_ZTV21FloatingFloorLllSmall kind:data(any) addr:0x0211412c
+_ZTV17daObjFl_Ukiyuka_c kind:data(any) addr:0x0211412c
 data_ov022_0211417c kind:data(any) addr:0x0211417c ambiguous
 _ZTI15daObjFl_UkiKi_c kind:data(any) addr:0x021141ac
 _ZTS15daObjFl_UkiKi_c kind:data(any) addr:0x021141b8

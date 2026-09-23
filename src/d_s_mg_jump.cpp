@@ -16,7 +16,7 @@ extern void _ZN5ModelC1Ev(void *);
 extern void __cxa_vec_ctor(void *p, int a, int b, void *f1, void *f2);
 extern int _ZTV14dScMgD3DBase_c[];
 extern int _ZTV11dScMgJump_c[];
-extern void _ZN16dMgJump3DMario_cD1Ev();
+extern void _ZN16dMgJump3DMario_cD1Ev(void *);
 extern void _ZN16dMgJump3DMario_cC1Ev();
 extern void func_ov006_020c6f70();
 extern void func_ov006_020c6f3c();

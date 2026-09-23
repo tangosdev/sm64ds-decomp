@@ -521,7 +521,7 @@ individually with `match.py` before the link confirmed them:
 | `_ZN9daPeach_c6RenderEv` | `CommonModel::Render` | `Model::Render` |
 | `_ZN7Tornado6RenderEv`, `_ZN14daWater_Ring_c6RenderEv` | `TextureSequence::Update` | `TextureTransformer::Update` |
 | `_ZN11BillBlaster4KillEv` (then `func_ov079_02126e58`) | `Actor::DisappearPoofDustAt` | `Actor::PoofDustAt` |
-| [func_ov085_0212e778](../src/func_ov085_0212e778.cpp) | `…ApplyInPlaceToRotationXYZExt` | `…ApplyInPlaceToRotationZXYExt` |
+| [func_ov085_0212e778](../src/game/actors/d_a_c_jugem.cpp) | `…ApplyInPlaceToRotationXYZExt` | `…ApplyInPlaceToRotationZXYExt` |
 | [func_ov006_0211a048](../src/actors/dScMgSound_c.cpp)(func 17 used to assemble TU), [func_ov006_0211a5ec](../src/actors/dScMgSound_c.cpp)(func 29 used to assemble TU) | wrong `data_ov006_*` base | the adjacent one |
 | [func_ov006_02120c08](../src//minigames/d_s_mg_trampoline.cpp)(func 13 used to assemble TU) | [func_ov006_020eed68](../src\minigames\d_s_mg_jump2.cpp)(func 3 used to assemble TU) | [func_ov006_02120a64](../src\minigames\d_s_mg_trampoline.cpp)(func 8 used to assemble TU) |
 | [func_ov002_020f23d0](../src/func_ov002_020f23d0.c) | the veneer `func_0203cbc0` | `Memory::operator_delete2` |
@@ -567,12 +567,12 @@ retired by the C++ class migration; see the struck-through bullet below.**
   synthesizes veneers it *needs* (out-of-range or interworking, neither of which applies
   to an in-range ARM→ARM `BL`). No linker flag routes a call through another object's
   existing trampoline. Left alone deliberately.
-- ~~three (`_ZN11MirrorLuigiD1Ev`, `_ZN15RecRoomCupboardD0Ev`, `_ZN15RecRoomCupboardD1Ev`)
+- ~~three (`_ZN11MirrorLuigiD1Ev`, `_ZN13daObjCloset_cD0Ev`, `_ZN13daObjCloset_cD1Ev`)
   write `((Actor *)c)->~Actor()`, for which the compiler emits the D1 complete-object
   destructor while the ROM calls the D2 base-object one.~~ **Two of the three are fixed,
-  and by exactly the route this bullet predicted.** `include/RecRoomCupboard.h` now derives
+  and by exactly the route this bullet predicted.** `include/daObjCloset_c.h` now derives
   the class from `dActor_c` and gives it its five `dCcAcPos_c` members, and both destructor
-  files are an empty `RecRoomCupboard::~RecRoomCupboard()`; the compiler picks D2 for the
+  files are an empty `daObjCloset_c::~daObjCloset_c()`; the compiler picks D2 for the
   base step on its own. Both came off `config/rombuild-exclude.txt` and the ROM build
   carries them: source-built functions 11,061 -> 11,063, mismatching 0,
   106/106 exact. `_ZN11MirrorLuigiD1Ev` came off the list separately, in the MirrorLuigi

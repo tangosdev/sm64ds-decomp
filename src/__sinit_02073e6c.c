@@ -1,6 +1,6 @@
 #include "types.h"
 extern void func_020731dc(void *, void *, void **);
-extern void _ZN10FaderColorD1Ev(void);
+extern void _ZN10FaderColorD1Ev(void *);
 extern unsigned char data_02089af8[];
 extern unsigned char data_020875bc[];
 extern unsigned char data_0208766c[];

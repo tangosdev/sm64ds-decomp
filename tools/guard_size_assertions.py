@@ -41,7 +41,7 @@ indentation, not a blank line, not the file's line endings. A run of assertions
 on adjacent lines shares one guard rather than stacking identical ones.
 
 SM64DS_PLATFORM_PC is the guard because it is the marker this tree already uses
-(include/daObjYajirusi_c.h:30, src/_ZN7fBase_c21AfterCleanupResourcesEj.cpp:13),
+(include/daObjYajirusi_c.h:30, fBase_c::AfterCleanupResources),
 every shipping port target defines it, and the matching build never does.
 
 IT IS IDEMPOTENT, and that falls out of the rule rather than being bolted on: an

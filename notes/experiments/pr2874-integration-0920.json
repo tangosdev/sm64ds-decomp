@@ -2837,8 +2837,8 @@
       "diffs": []
     },
     {
-      "file": "src/_ZN13BowserShutter13InitResourcesEv.cpp",
-      "name": "_ZN13BowserShutter13InitResourcesEv",
+      "file": "src/_ZN21daObjWlKoopaShutter_c13InitResourcesEv.cpp",
+      "name": "_ZN21daObjWlKoopaShutter_c13InitResourcesEv",
       "module": "ov026",
       "addr": "0x21117d8",
       "verdict": "VERIFIED",
@@ -2846,8 +2846,8 @@
       "diffs": []
     },
     {
-      "file": "src/_ZN13BowserShutter16CleanupResourcesEv.cpp",
-      "name": "_ZN13BowserShutter16CleanupResourcesEv",
+      "file": "src/_ZN21daObjWlKoopaShutter_c16CleanupResourcesEv.cpp",
+      "name": "_ZN21daObjWlKoopaShutter_c16CleanupResourcesEv",
       "module": "ov026",
       "addr": "0x2111764",
       "verdict": "VERIFIED",
@@ -3629,8 +3629,8 @@
       "diffs": []
     },
     {
-      "file": "src/_ZN5Spiny13InitResourcesEv.cpp",
-      "name": "_ZN5Spiny13InitResourcesEv",
+      "file": "src/_ZN7daTgz_c13InitResourcesEv.cpp",
+      "name": "_ZN7daTgz_c13InitResourcesEv",
       "module": "ov077",
       "addr": "0x2126058",
       "verdict": "VERIFIED",
@@ -4934,8 +4934,8 @@
       "diffs": []
     },
     {
-      "file": "src/_ZN9KoopaFlag8BehaviorEv.cpp",
-      "name": "_ZN9KoopaFlag8BehaviorEv",
+      "file": "src/_ZN9daRFlag_c8BehaviorEv.cpp",
+      "name": "_ZN9daRFlag_c8BehaviorEv",
       "module": "ov062",
       "addr": "0x211b05c",
       "verdict": "VERIFIED",
@@ -5051,8 +5051,8 @@
       "diffs": []
     },
     {
-      "file": "src/_ZN9Submarine13InitResourcesEv.cpp",
-      "name": "_ZN9Submarine13InitResourcesEv",
+      "file": "src/_ZN18daObjWlSubmarine_c13InitResourcesEv.cpp",
+      "name": "_ZN18daObjWlSubmarine_c13InitResourcesEv",
       "module": "ov026",
       "addr": "0x21119c0",
       "verdict": "VERIFIED",
@@ -5060,8 +5060,8 @@
       "diffs": []
     },
     {
-      "file": "src/_ZN9Submarine16CleanupResourcesEv.cpp",
-      "name": "_ZN9Submarine16CleanupResourcesEv",
+      "file": "src/_ZN18daObjWlSubmarine_c16CleanupResourcesEv.cpp",
+      "name": "_ZN18daObjWlSubmarine_c16CleanupResourcesEv",
       "module": "ov026",
       "addr": "0x2111954",
       "verdict": "VERIFIED",
@@ -5069,8 +5069,8 @@
       "diffs": []
     },
     {
-      "file": "src/_ZN9TinyCover13InitResourcesEv.cpp",
-      "name": "_ZN9TinyCover13InitResourcesEv",
+      "file": "src/_ZN13daObjTtFuta_c13InitResourcesEv.cpp",
+      "name": "_ZN13daObjTtFuta_c13InitResourcesEv",
       "module": "ov033",
       "addr": "0x2111310",
       "verdict": "VERIFIED",
@@ -5078,8 +5078,8 @@
       "diffs": []
     },
     {
-      "file": "src/_ZN9TinyCover16CleanupResourcesEv.cpp",
-      "name": "_ZN9TinyCover16CleanupResourcesEv",
+      "file": "src/_ZN13daObjTtFuta_c16CleanupResourcesEv.cpp",
+      "name": "_ZN13daObjTtFuta_c16CleanupResourcesEv",
       "module": "ov033",
       "addr": "0x2111280",
       "verdict": "VERIFIED",
@@ -5087,8 +5087,8 @@
       "diffs": []
     },
     {
-      "file": "src/_ZN9TinyWater13InitResourcesEv.cpp",
-      "name": "_ZN9TinyWater13InitResourcesEv",
+      "file": "src/_ZN14daObjTtWater_c13InitResourcesEv.cpp",
+      "name": "_ZN14daObjTtWater_c13InitResourcesEv",
       "module": "ov033",
       "addr": "0x21115bc",
       "verdict": "VERIFIED",
@@ -5096,8 +5096,8 @@
       "diffs": []
     },
     {
-      "file": "src/_ZN9TinyWater16CleanupResourcesEv.cpp",
-      "name": "_ZN9TinyWater16CleanupResourcesEv",
+      "file": "src/_ZN14daObjTtWater_c16CleanupResourcesEv.cpp",
+      "name": "_ZN14daObjTtWater_c16CleanupResourcesEv",
       "module": "ov033",
       "addr": "0x2111480",
       "verdict": "VERIFIED",
@@ -20093,7 +20093,7 @@
           "src/_ZN9daBtfly_c6State6Ev.cpp",
           "src/_ZN9PowerStar8BehaviorEv.cpp",
           "src/_ZN9SpikeBomb8BehaviorEv.cpp",
-          "src/_ZN9TinyCover16CleanupResourcesEv.cpp",
+          "src/_ZN13daObjTtFuta_c16CleanupResourcesEv.cpp",
           "src/_ZN9dScDSMT_c13InitResourcesEv.cpp",
           "src/_ZN9daShark_c13InitResourcesEv.cpp",
           "src/d_a_book_gen.c",
@@ -20212,7 +20212,7 @@
           "src/_ZN9daBtfly_c6State6Ev.cpp",
           "src/_ZN9PowerStar8BehaviorEv.cpp",
           "src/_ZN9SpikeBomb8BehaviorEv.cpp",
-          "src/_ZN9TinyCover16CleanupResourcesEv.cpp",
+          "src/_ZN13daObjTtFuta_c16CleanupResourcesEv.cpp",
           "src/_ZN9dScDSMT_c13InitResourcesEv.cpp",
           "src/_ZN9daShark_c13InitResourcesEv.cpp",
           "src/d_a_book_gen.c",
@@ -20320,7 +20320,7 @@
           "src/_ZN3Key16CleanupResourcesEv.cpp",
           "src/_ZN4Coin8BehaviorEv.cpp",
           "src/_ZN4Heap6SizeofEPv.cpp",
-          "src/_ZN5Spiny13InitResourcesEv.cpp",
+          "src/_ZN7daTgz_c13InitResourcesEv.cpp",
           "src/_ZN5Stage7LoadFogEv.cpp",
           "src/_ZN5Unagi13InitResourcesEv.cpp",
           "src/_ZN6Bowser8BehaviorEv.cpp",
@@ -20347,7 +20347,7 @@
           "src/_ZN9JetStream13InitResourcesEv.cpp",
           "src/_ZN9SeesawBob13InitResourcesEv.cpp",
           "src/_ZN9Spindrift13InitResourcesEv.cpp",
-          "src/_ZN9TinyWater13InitResourcesEv.cpp",
+          "src/_ZN14daObjTtWater_c13InitResourcesEv.cpp",
           "src/_ZN9dScDSMT_c16CleanupResourcesEv.cpp",
           "src/d_a_b_donketu.c",
           "src/d_a_book_killer_book.c",
@@ -20444,7 +20444,7 @@
           "src/_ZN3Key16CleanupResourcesEv.cpp",
           "src/_ZN4Coin8BehaviorEv.cpp",
           "src/_ZN4Heap6SizeofEPv.cpp",
-          "src/_ZN5Spiny13InitResourcesEv.cpp",
+          "src/_ZN7daTgz_c13InitResourcesEv.cpp",
           "src/_ZN5Stage7LoadFogEv.cpp",
           "src/_ZN5Unagi13InitResourcesEv.cpp",
           "src/_ZN6Bowser8BehaviorEv.cpp",
@@ -20471,7 +20471,7 @@
           "src/_ZN9JetStream13InitResourcesEv.cpp",
           "src/_ZN9SeesawBob13InitResourcesEv.cpp",
           "src/_ZN9Spindrift13InitResourcesEv.cpp",
-          "src/_ZN9TinyWater13InitResourcesEv.cpp",
+          "src/_ZN14daObjTtWater_c13InitResourcesEv.cpp",
           "src/_ZN9dScDSMT_c16CleanupResourcesEv.cpp",
           "src/d_a_b_donketu.c",
           "src/d_a_book_killer_book.c",
@@ -20603,10 +20603,10 @@
           "src/_ZN8Particle6Jitter4FuncERNS_10EffectDataEPcR7Vector3.cpp",
           "src/_ZN8SignPost6RenderEv.cpp",
           "src/_ZN8dActor_cC1Ev.cpp",
-          "src/_ZN9KoopaFlag8BehaviorEv.cpp",
+          "src/_ZN9daRFlag_c8BehaviorEv.cpp",
           "src/_ZN9SeesawBob16CleanupResourcesEv.cpp",
           "src/_ZN9Spindrift8BehaviorEv.cpp",
-          "src/_ZN9TinyWater16CleanupResourcesEv.cpp",
+          "src/_ZN14daObjTtWater_c16CleanupResourcesEv.cpp",
           "src/_ZN9dScDSMT_c6RenderEv.cpp",
           "src/d_a_basabasa.c",
           "src/d_a_book_shoot_book.c",
@@ -20728,10 +20728,10 @@
           "src/_ZN8Particle6Jitter4FuncERNS_10EffectDataEPcR7Vector3.cpp",
           "src/_ZN8SignPost6RenderEv.cpp",
           "src/_ZN8dActor_cC1Ev.cpp",
-          "src/_ZN9KoopaFlag8BehaviorEv.cpp",
+          "src/_ZN9daRFlag_c8BehaviorEv.cpp",
           "src/_ZN9SeesawBob16CleanupResourcesEv.cpp",
           "src/_ZN9Spindrift8BehaviorEv.cpp",
-          "src/_ZN9TinyWater16CleanupResourcesEv.cpp",
+          "src/_ZN14daObjTtWater_c16CleanupResourcesEv.cpp",
           "src/_ZN9dScDSMT_c6RenderEv.cpp",
           "src/d_a_basabasa.c",
           "src/d_a_book_shoot_book.c",
@@ -20827,7 +20827,7 @@
           "src/_ZN12dScStarSel_c16CleanupResourcesEv.cpp",
           "src/_ZN13daObjBlockL_c13InitResourcesEv.cpp",
           "src/_ZN13daObjBlockL_c4KillEv.cpp",
-          "src/_ZN13BowserShutter13InitResourcesEv.cpp",
+          "src/_ZN21daObjWlKoopaShutter_c13InitResourcesEv.cpp",
           "src/_ZN15daObjFlMaruta_c16CleanupResourcesEv.cpp",
           "src/_ZN14CutsceneObject8BehaviorEv.cpp",
           "src/_ZN14dScMgBomroom_c13InitResourcesEv.cpp",
@@ -20868,7 +20868,7 @@
           "src/_ZN8dActor_cC2Ev.cpp",
           "src/_ZN9MontyMole13InitResourcesEv.cpp",
           "src/_ZN9SolidHeap11VDeallocateEPv.cpp",
-          "src/_ZN9Submarine13InitResourcesEv.cpp",
+          "src/_ZN18daObjWlSubmarine_c13InitResourcesEv.cpp",
           "src/_ZN9WaterBomb8BehaviorEv.cpp",
           "src/_ZN9dScDSMT_c8BehaviorEv.cpp",
           "src/d_a_bbl.c",
@@ -20952,7 +20952,7 @@
           "src/_ZN12dScStarSel_c16CleanupResourcesEv.cpp",
           "src/_ZN13daObjBlockL_c13InitResourcesEv.cpp",
           "src/_ZN13daObjBlockL_c4KillEv.cpp",
-          "src/_ZN13BowserShutter13InitResourcesEv.cpp",
+          "src/_ZN21daObjWlKoopaShutter_c13InitResourcesEv.cpp",
           "src/_ZN15daObjFlMaruta_c16CleanupResourcesEv.cpp",
           "src/_ZN14CutsceneObject8BehaviorEv.cpp",
           "src/_ZN14dScMgBomroom_c13InitResourcesEv.cpp",
@@ -20993,7 +20993,7 @@
           "src/_ZN8dActor_cC2Ev.cpp",
           "src/_ZN9MontyMole13InitResourcesEv.cpp",
           "src/_ZN9SolidHeap11VDeallocateEPv.cpp",
-          "src/_ZN9Submarine13InitResourcesEv.cpp",
+          "src/_ZN18daObjWlSubmarine_c13InitResourcesEv.cpp",
           "src/_ZN9WaterBomb8BehaviorEv.cpp",
           "src/_ZN9dScDSMT_c8BehaviorEv.cpp",
           "src/d_a_bbl.c",
@@ -21088,7 +21088,7 @@
           "src/_ZN12daBDonketu_c13InitResourcesEv.cpp",
           "src/_ZN13daObjBlockL_c15OnGroundPoundedER8dActor_c.cpp",
           "src/_ZN13daObjBlockL_c6RenderEv.cpp",
-          "src/_ZN13BowserShutter16CleanupResourcesEv.cpp",
+          "src/_ZN21daObjWlKoopaShutter_c16CleanupResourcesEv.cpp",
           "src/_ZN10daSnmBth_c8BehaviorEv.cpp",
           "src/_ZN14KnockDownPlank16CleanupResourcesEv.cpp",
           "src/_ZN14dScMgBomroom_c13OnYoshiTryEatEi.cpp",
@@ -21129,7 +21129,7 @@
           "src/_ZN9BootScene13InitResourcesEv.cpp",
           "src/_ZN9PowerStar13AddStarMarkerEv.cpp",
           "src/_ZN9SolidHeap7VSizeofEPv.cpp",
-          "src/_ZN9Submarine16CleanupResourcesEv.cpp",
+          "src/_ZN18daObjWlSubmarine_c16CleanupResourcesEv.cpp",
           "src/_ZN9Whirlpool13InitResourcesEv.cpp",
           "src/_ZN9daDossy_c13InitResourcesEv.cpp",
           "src/d_a_bg_snm_hed.c",
@@ -21213,7 +21213,7 @@
           "src/_ZN12daBDonketu_c13InitResourcesEv.cpp",
           "src/_ZN13daObjBlockL_c15OnGroundPoundedER8dActor_c.cpp",
           "src/_ZN13daObjBlockL_c6RenderEv.cpp",
-          "src/_ZN13BowserShutter16CleanupResourcesEv.cpp",
+          "src/_ZN21daObjWlKoopaShutter_c16CleanupResourcesEv.cpp",
           "src/_ZN10daSnmBth_c8BehaviorEv.cpp",
           "src/_ZN14KnockDownPlank16CleanupResourcesEv.cpp",
           "src/_ZN14dScMgBomroom_c13OnYoshiTryEatEi.cpp",
@@ -21254,7 +21254,7 @@
           "src/_ZN9BootScene13InitResourcesEv.cpp",
           "src/_ZN9PowerStar13AddStarMarkerEv.cpp",
           "src/_ZN9SolidHeap7VSizeofEPv.cpp",
-          "src/_ZN9Submarine16CleanupResourcesEv.cpp",
+          "src/_ZN18daObjWlSubmarine_c16CleanupResourcesEv.cpp",
           "src/_ZN9Whirlpool13InitResourcesEv.cpp",
           "src/_ZN9daDossy_c13InitResourcesEv.cpp",
           "src/d_a_bg_snm_hed.c",
@@ -21388,7 +21388,7 @@
           "src/_ZN9BootScene8BehaviorEv.cpp",
           "src/_ZN9PowerStar16CleanupResourcesEv.cpp",
           "src/_ZN9SpikeBomb13InitResourcesEv.cpp",
-          "src/_ZN9TinyCover13InitResourcesEv.cpp",
+          "src/_ZN13daObjTtFuta_c13InitResourcesEv.cpp",
           "src/_ZN9Whirlpool8BehaviorEv.cpp",
           "src/_ZN9daDossy_c16CleanupResourcesEv.cpp",
           "src/d_a_book_book_switch.c",
@@ -21511,7 +21511,7 @@
           "src/_ZN9BootScene8BehaviorEv.cpp",
           "src/_ZN9PowerStar16CleanupResourcesEv.cpp",
           "src/_ZN9SpikeBomb13InitResourcesEv.cpp",
-          "src/_ZN9TinyCover13InitResourcesEv.cpp",
+          "src/_ZN13daObjTtFuta_c13InitResourcesEv.cpp",
           "src/_ZN9Whirlpool8BehaviorEv.cpp",
           "src/_ZN9daDossy_c16CleanupResourcesEv.cpp",
           "src/d_a_book_book_switch.c",
@@ -21704,8 +21704,8 @@
         "src/_ZN13daObjBlockL_c8OnKickedER8dActor_c.cpp",
         "src/_ZN13daObjBlockL_cD0Ev.cpp",
         "src/_ZN13daObjBlockL_cD1Ev.cpp",
-        "src/_ZN13BowserShutter13InitResourcesEv.cpp",
-        "src/_ZN13BowserShutter16CleanupResourcesEv.cpp",
+        "src/_ZN21daObjWlKoopaShutter_c13InitResourcesEv.cpp",
+        "src/_ZN21daObjWlKoopaShutter_c16CleanupResourcesEv.cpp",
         "src/_ZN13FortressTower13InitResourcesEv.cpp",
         "src/_ZN13FortressTower16CleanupResourcesEv.cpp",
         "src/_ZN13MontyMoleRock8BehaviorEv.cpp",
@@ -21792,7 +21792,7 @@
         "src/_ZN5Crate16CleanupResourcesEv.cpp",
         "src/_ZN5Crate4KillEv.cpp",
         "src/_ZN5Crate8BehaviorEv.cpp",
-        "src/_ZN5Spiny13InitResourcesEv.cpp",
+        "src/_ZN7daTgz_c13InitResourcesEv.cpp",
         "src/_ZN5Stage11RenderModelEv.cpp",
         "src/_ZN5Stage14GraphCallback2Ev.cpp",
         "src/_ZN5Stage17PS_UpdateSaveMenuEb.cpp",
@@ -21937,7 +21937,7 @@
         "src/_ZN9BootScene8BehaviorEv.cpp",
         "src/_ZN9daBtfly_c6State6Ev.cpp",
         "src/_ZN9JetStream13InitResourcesEv.cpp",
-        "src/_ZN9KoopaFlag8BehaviorEv.cpp",
+        "src/_ZN9daRFlag_c8BehaviorEv.cpp",
         "src/_ZN9MontyMole13InitResourcesEv.cpp",
         "src/_ZN9PowerStar13AddStarMarkerEv.cpp",
         "src/_ZN9PowerStar16CleanupResourcesEv.cpp",
@@ -21950,12 +21950,12 @@
         "src/_ZN9SpikeBomb8BehaviorEv.cpp",
         "src/_ZN9Spindrift13InitResourcesEv.cpp",
         "src/_ZN9Spindrift8BehaviorEv.cpp",
-        "src/_ZN9Submarine13InitResourcesEv.cpp",
-        "src/_ZN9Submarine16CleanupResourcesEv.cpp",
-        "src/_ZN9TinyCover13InitResourcesEv.cpp",
-        "src/_ZN9TinyCover16CleanupResourcesEv.cpp",
-        "src/_ZN9TinyWater13InitResourcesEv.cpp",
-        "src/_ZN9TinyWater16CleanupResourcesEv.cpp",
+        "src/_ZN18daObjWlSubmarine_c13InitResourcesEv.cpp",
+        "src/_ZN18daObjWlSubmarine_c16CleanupResourcesEv.cpp",
+        "src/_ZN13daObjTtFuta_c13InitResourcesEv.cpp",
+        "src/_ZN13daObjTtFuta_c16CleanupResourcesEv.cpp",
+        "src/_ZN14daObjTtWater_c13InitResourcesEv.cpp",
+        "src/_ZN14daObjTtWater_c16CleanupResourcesEv.cpp",
         "src/_ZN9WaterBomb8BehaviorEv.cpp",
         "src/_ZN9Whirlpool13InitResourcesEv.cpp",
         "src/_ZN9Whirlpool8BehaviorEv.cpp",
@@ -22731,12 +22731,12 @@
           "name": "_ZN13daObjBlockL_cD1Ev"
         },
         {
-          "file": "src/_ZN13BowserShutter13InitResourcesEv.cpp",
-          "name": "_ZN13BowserShutter13InitResourcesEv"
+          "file": "src/_ZN21daObjWlKoopaShutter_c13InitResourcesEv.cpp",
+          "name": "_ZN21daObjWlKoopaShutter_c13InitResourcesEv"
         },
         {
-          "file": "src/_ZN13BowserShutter16CleanupResourcesEv.cpp",
-          "name": "_ZN13BowserShutter16CleanupResourcesEv"
+          "file": "src/_ZN21daObjWlKoopaShutter_c16CleanupResourcesEv.cpp",
+          "name": "_ZN21daObjWlKoopaShutter_c16CleanupResourcesEv"
         },
         {
           "file": "src/_ZN13FortressTower13InitResourcesEv.cpp",
@@ -23083,8 +23083,8 @@
           "name": "_ZN5Crate8BehaviorEv"
         },
         {
-          "file": "src/_ZN5Spiny13InitResourcesEv.cpp",
-          "name": "_ZN5Spiny13InitResourcesEv"
+          "file": "src/_ZN7daTgz_c13InitResourcesEv.cpp",
+          "name": "_ZN7daTgz_c13InitResourcesEv"
         },
         {
           "file": "src/_ZN5Stage11RenderModelEv.cpp",
@@ -23663,8 +23663,8 @@
           "name": "_ZN9JetStream13InitResourcesEv"
         },
         {
-          "file": "src/_ZN9KoopaFlag8BehaviorEv.cpp",
-          "name": "_ZN9KoopaFlag8BehaviorEv"
+          "file": "src/_ZN9daRFlag_c8BehaviorEv.cpp",
+          "name": "_ZN9daRFlag_c8BehaviorEv"
         },
         {
           "file": "src/_ZN9MontyMole13InitResourcesEv.cpp",
@@ -23715,28 +23715,28 @@
           "name": "_ZN9Spindrift8BehaviorEv"
         },
         {
-          "file": "src/_ZN9Submarine13InitResourcesEv.cpp",
-          "name": "_ZN9Submarine13InitResourcesEv"
+          "file": "src/_ZN18daObjWlSubmarine_c13InitResourcesEv.cpp",
+          "name": "_ZN18daObjWlSubmarine_c13InitResourcesEv"
         },
         {
-          "file": "src/_ZN9Submarine16CleanupResourcesEv.cpp",
-          "name": "_ZN9Submarine16CleanupResourcesEv"
+          "file": "src/_ZN18daObjWlSubmarine_c16CleanupResourcesEv.cpp",
+          "name": "_ZN18daObjWlSubmarine_c16CleanupResourcesEv"
         },
         {
-          "file": "src/_ZN9TinyCover13InitResourcesEv.cpp",
-          "name": "_ZN9TinyCover13InitResourcesEv"
+          "file": "src/_ZN13daObjTtFuta_c13InitResourcesEv.cpp",
+          "name": "_ZN13daObjTtFuta_c13InitResourcesEv"
         },
         {
-          "file": "src/_ZN9TinyCover16CleanupResourcesEv.cpp",
-          "name": "_ZN9TinyCover16CleanupResourcesEv"
+          "file": "src/_ZN13daObjTtFuta_c16CleanupResourcesEv.cpp",
+          "name": "_ZN13daObjTtFuta_c16CleanupResourcesEv"
         },
         {
-          "file": "src/_ZN9TinyWater13InitResourcesEv.cpp",
-          "name": "_ZN9TinyWater13InitResourcesEv"
+          "file": "src/_ZN14daObjTtWater_c13InitResourcesEv.cpp",
+          "name": "_ZN14daObjTtWater_c13InitResourcesEv"
         },
         {
-          "file": "src/_ZN9TinyWater16CleanupResourcesEv.cpp",
-          "name": "_ZN9TinyWater16CleanupResourcesEv"
+          "file": "src/_ZN14daObjTtWater_c16CleanupResourcesEv.cpp",
+          "name": "_ZN14daObjTtWater_c16CleanupResourcesEv"
         },
         {
           "file": "src/_ZN9WaterBomb8BehaviorEv.cpp",

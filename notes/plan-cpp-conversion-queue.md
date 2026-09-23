@@ -110,7 +110,7 @@ reason than tidiness.)*
 **Entry:** pilot (§3) passed.
 **Set:** direct-proven, tier `P2-vtable-only` (`func_<addr>`, no mangled name anywhere),
 enrolled, free of all seven lexical hazards. Modules: [ov006](../config/arm9/overlays/ov006/symbols.txt) 51, [ov004](../config/arm9/overlays/ov004/symbols.txt) 13, [arm9](../config/arm9/symbols.txt) 9, [ov064](../config/arm9/overlays/ov064/symbols.txt) 7,
-[ov002](../config/arm9/overlays/ov002/symbols.txt) 5, [ov022](../config/arm9/overlays/ov022/symbols.txt) 5, [ov045](../config/arm9/overlays/ov045/symbols.txt) 5, [ov071](../config/arm9/overlays/ov071/symbols.txt) 4, [ov070](../config/arm9/overlays/ov070/symbols.txt) 4, [ov072](../config/arm9/overlays/ov072/symbols.txt) 3, tail. Six sit in the safe merge pool ([func_ov081_021261b8](../src/func_ov081_021261b8.c)(weak ref to `daSnowman_c`), [func_ov026_021122b0](../src/func_ov026_021122b0.c)(weak ref to `daWater_Tatumaki_c`), [func_ov026_021122cc](../src/func_ov026_021122cc.c)(weak ref to `daWater_Tatumaki_c`), [func_ov027_02111680](../src/game/actors/d_a_i_donketu.cpp)(func 3 used to assemble TU - `d_a_i_donketu.cpp`), `func_ov064_0211755c`(weak ref to `daBDonketu_c`), [func_ov022_02112710](../src/func_ov022_02112710.c))(ROM ordinal 4 of `daObj_volcanoCannon_c`) — **per §7 those six are ceded to the merge**, leaving 76 here.
+[ov002](../config/arm9/overlays/ov002/symbols.txt) 5, [ov022](../config/arm9/overlays/ov022/symbols.txt) 5, [ov045](../config/arm9/overlays/ov045/symbols.txt) 5, [ov071](../config/arm9/overlays/ov071/symbols.txt) 4, [ov070](../config/arm9/overlays/ov070/symbols.txt) 4, [ov072](../config/arm9/overlays/ov072/symbols.txt) 3, tail. Six sit in the safe merge pool ([func_ov081_021261b8](../src/func_ov081_021261b8.c)(weak ref to `daSnowman_c`), [func_ov026_021122b0](../src/func_ov026_021122b0.c)(weak ref to `daWater_Tatumaki_c`), [func_ov026_021122cc](../src/func_ov026_021122cc.c)(weak ref to `daWater_Tatumaki_c`), [func_ov027_02111680](../src/game/actors/d_a_i_donketu.cpp)(func 3 used to assemble TU - `d_a_i_donketu.cpp`), `func_ov064_0211755c`(weak ref to `daBDonketu_c`), [func_ov022_02112710](../src/game/actors/d_a_obj_fl_maruta.cpp))(ROM ordinal 4 of `daObj_volcanoCannon_c`) — **per §7 those six are ceded to the merge**, leaving 76 here.
 
 The exact edit — two lines, no restructuring:
 
@@ -217,7 +217,7 @@ python tools/mangle.py src/game/actors/d_a_obj_km2_fall_block.cpp \
 Add one method declaration to `include/<Class>.h` inside the existing `#ifdef __cplusplus`
 block, then do the S2 edit. Representative classes: `DonutBlock`, `FlameChomp`,
 `Scuttlebug`, `dScEntry_c`, `dScTitle_c`, `BabyPenguin`. Two classes have no header at all
-(`RecRoomCupboard` + one more) — drop those files; that is header-reconstruction work.
+(`daObjCloset_c` + one more) — drop those files; that is header-reconstruction work.
 
 **Why a separate stage:** a header edit has blast radius through every includer, and
 `notes/plan-cpp-language-mode.md` §7 names "header retype silently un-matches a

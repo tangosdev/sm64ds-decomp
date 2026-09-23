@@ -3,6 +3,11 @@
 // This TU contains 18 written bodies and two destructor variants emitted from
 // daObjSwitch_c.h. Reverse source order preserves the retail text order with 2004/b56.
 // Select the shared flat Matrix4x3 before the actor headers, as dBgActor_c.h requires.
+//
+// Leftover: the func_ov002_020b9xxx helpers and data_ov002_021098e8 table
+//   keep linker names; naming belongs at their definitions.
+// Leftover: ChangeMusicVolume / IsClsnInRange / KcMbg::SetFile keep
+//   computed spellings (Fix12<int> by value, wall 6az -- noted at use).
 #include "common.h"
 #include "daObjSwitch_c.h"
 #include "SharedFilePtr.h"

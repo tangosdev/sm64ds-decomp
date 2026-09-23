@@ -34,9 +34,12 @@ struct daObj_volcanoCannon_c : dActor_c {
     u32 mParticleID;             /* 0x114 */
     s32 mKillPosY;               /* 0x118 */
 
-    /* Inline is load-bearing: a forcing use in each destructor source emits
-     * the ROM's D1/D0 pair without adding a homeless D2 to the enrolled file. */
-    virtual ~daObj_volcanoCannon_c() {}
+    /* Declared out of line so the single definition in
+     * src/game/actors/d_a_obj_fl_maruta.cpp pins the D1/D0 sections to the
+     * TU's ROM-ascending order. (An inline body leaves the variants'
+     * emission positions to the compiler, which parks them after the last
+     * defined function -- past func_ov022_02112654.) */
+    virtual ~daObj_volcanoCannon_c();
 
     virtual int InitResources();       /* slot 0 */
     virtual int CleanupResources();    /* slot 3 */

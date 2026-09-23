@@ -30,7 +30,7 @@ about structure, and the map does not merge anything.
 ## The trap that makes the naive detector look correct
 
 Cut wherever the class name changes, and [ov062](../config/arm9/overlays/ov062/symbols.txt) scores 5/5. daHolhei_c, Koopa,
-daRNk_c, KoopaFlag and Klepto really do sit in five contiguous runs.
+daRNk_c, daRFlag_c and Klepto really do sit in five contiguous runs.
 
 [ov062](../config/arm9/overlays/ov062/symbols.txt) is the lucky case. Where two classes share a file, mwcc emits their methods
 **interleaved in source order**, not grouped by class:

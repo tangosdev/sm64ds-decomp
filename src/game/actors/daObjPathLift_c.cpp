@@ -13,6 +13,13 @@
  * The factory stays in src/d_a_obj_path_lift.cpp. Folding `return new`
  * into this TU parks the vague-linkage Vector3 D1 between InitResources
  * and classInit and shifts the factory.
+ *
+ * deslop
+ * Leftover: func_ov002_020efcf4 / func_ov002_020efc74 /
+ *   func_ov002_020efaf0 are shared ov002 helpers taking
+ *   dPathLiftActor_c; naming belongs in ov002.
+ * Leftover: data_0209f2f8 == 13 is a level-ID check (the current
+ *   level); data_0209f2d8 == 1 is the mode-1 check used tree-wide.
  */
 
 #include "daObjPathLift_c.h"
@@ -43,7 +50,7 @@ extern void func_020393d4(dBgW_KcMbg *p, void *v);
 void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     dBgW_KcMbg *self, void *kcl, const Matrix4x3 *mtx, int scale, short angY,
     CLPS_Block *clps);
-void _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(
+int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(
     dBgActor_c *self, int a, int b);
 void _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
     dActor_c *self, ShadowModel *sm, Matrix4x3 *mtx, int a, int b, int d,
@@ -61,8 +68,6 @@ extern SharedFilePtr data_ov002_0210d9f0;
 extern SharedFilePtr data_ov100_02148a54;
 extern SharedFilePtr data_ov100_02148a5c;
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjPathLift_c13InitResourcesEv
 int daObjPathLift_c::InitResources()
 {
@@ -101,8 +106,6 @@ int daObjPathLift_c::InitResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjPathLift_c8BehaviorEv
 int daObjPathLift_c::Behavior()
 {
@@ -130,8 +133,6 @@ int daObjPathLift_c::Behavior()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjPathLift_c6RenderEv
 int daObjPathLift_c::Render()
 {
@@ -145,8 +146,6 @@ int daObjPathLift_c::Render()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjPathLift_c16CleanupResourcesEv
 int daObjPathLift_c::CleanupResources()
 {
@@ -159,8 +158,6 @@ int daObjPathLift_c::CleanupResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov100_0214700c
 extern "C" int func_ov100_0214700c(daObjPathLift_c *self)
 {
@@ -176,8 +173,6 @@ extern "C" int func_ov100_0214700c(daObjPathLift_c *self)
     return z;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov100_02146e70
 extern "C" void func_ov100_02146e70(daObjPathLift_c *self)
 {
@@ -211,8 +206,7 @@ extern "C" void func_ov100_02146e70(daObjPathLift_c *self)
     *(s32 *)((char *)self + 0x4a0) = (self->mPosY - yOff) >> 3;
     *(s32 *)((char *)self + 0x4a4) = self->mPosZ >> 3;
 
-    t = data_0209f2d8;
-    t = t == 1;
+    t = data_0209f2d8 == 1;
     if (t != false) {
         _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
             self, &self->mShadowModel, (Matrix4x3 *)self->unk_478, 0x118000,

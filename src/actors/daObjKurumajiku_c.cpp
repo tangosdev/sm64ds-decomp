@@ -5,6 +5,16 @@
  * This partial TU owns the four functions below. The two destructors retain
  * their individual source files; their emitted order and the discarded class
  * metadata are recorded in the manifest and the source-repair experiment.
+ *
+ * deslop
+ * Leftover: (Vector3 *)&mPosX -- no Pos() accessor exists on this branch,
+ *   so the pun stays.
+ * Leftover: data_ov002_0210ddd0 (four rider mount offsets) and
+ *   data_020a0e68 (shared arm9 matrix scratch, used tree-wide) keep
+ *   linker names; naming belongs at a shared home, not this leaf.
+ * Leftover: func_ov002_020b6a80 keeps its char* entry contract, shared
+ *   with the existing setup helper; the C boundary in func_ov002_020b6ac8
+ *   stays opaque (both descendants retain their own pointer views).
  */
 
 #include "daObjKurumajiku_c.h"

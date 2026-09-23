@@ -7,7 +7,7 @@
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x021111a0..0x021116c8, nine functions with no foreign symbol inside the span (config/arm9/overlays/ov026/symbols.txt runs _ZN17daObjWlPolelift_cD1Ev .. daObjWlPolelift_c_classInit with nothing else between)",
-    "single class label over the whole run (daObjWlPolelift_c, ROM RTTI _ZTS17daObjWlPolelift_c at ov026:0x02113aa8); the neighbour above is a different class (_ZN13BowserShutterD1Ev begins at 0x021116c8) and the run starts at the module's .text edge (0x021111a0)",
+    "single class label over the whole run (daObjWlPolelift_c, ROM RTTI _ZTS17daObjWlPolelift_c at ov026:0x02113aa8); the neighbour above is a different class (_ZN21daObjWlKoopaShutter_cD1Ev begins at 0x021116c8) and the run starts at the module's .text edge (0x021111a0)",
     "build/tu_map.json (tools/tu_map.py) splits this into ov026/daObjWlPolelift_c 0x021111a0..0x02111678 plus the single-function run @02111678-021116c8; the factory daObjWlPolelift_c_classInit is this class's own initializer -- it allocates sizeof(daObjWlPolelift_c) and stores this class's vtable -- so it is joined back on, the same shape landed for ov045/daObjKm2_Ami_Bou_c",
     "module sinit corroboration: 5 sinit(s) / 5 .ctor entries, sinit_vs_tu=ok (module-wide, NOT narrowed to this one TU)"
   ],

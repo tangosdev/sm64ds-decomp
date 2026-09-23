@@ -79,11 +79,10 @@ struct daObjBlockL_c : dBgActor_c {
        _ZN10dBgActor_c4KillEv, and slot 30 is dActor_c's 0x020100dc in both. An
        override adds no slot and no field, so the size assert is unaffected.
 
-       NOT the key function: ~daObjBlockL_c() above is declared out of line and
-       is defined as a real method by src/_ZN13daObjBlockL_cD1Ev.cpp and
-       src/_ZN13daObjBlockL_cD0Ev.cpp, so the destructor stays the first
-       non-inline virtual and those two TUs keep emitting _ZTV13daObjBlockL_c.
-       This one does not -- checked with objisolate, not assumed. */
+        NOT the key function: ~daObjBlockL_c() above is declared out of line and
+        is defined as a real method by src/actors/daObjBlockL_c.cpp, so the destructor stays the first
+        non-inline virtual and that TU keeps emitting _ZTV13daObjBlockL_c.
+        This one does not -- checked with objisolate, not assumed. */
     virtual void Kill();              /* slot 31 */
 
     int Behavior();
@@ -123,7 +122,7 @@ struct daObjBlockL_c : dBgActor_c {
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char BigBrickBlock_size_must_be_0x330[sizeof(daObjBlockL_c) == 0x330 ? 1 : -1];
+typedef char daObjBlockL_c_size_must_be_0x330[sizeof(daObjBlockL_c) == 0x330 ? 1 : -1];
 #endif
 
 #else

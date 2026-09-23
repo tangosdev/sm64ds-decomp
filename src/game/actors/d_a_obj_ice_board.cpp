@@ -1,49 +1,11 @@
 //cpp
-/* Production translation unit for ov018/daObjIceBoard_c, hand-curated.
- * 10 function(s), .text 0x021127bc..0x02112a74.
+/* Cool Cool Mountain's shatterable ice sheet (ICE_BOARD, actor 295): a
+ * mesh collider you can stand on until a ground pound or a mega-Mario
+ * hit breaks it -- one sound, three particle systems, then gone.
  *
- * Cool Cool Mountain's shatterable ice sheet (profile ICE_BOARD, actor 295):
- * a mesh collider you can stand on until a ground pound or a mega-Mario hit
- * breaks it, at which point it plays one sound, throws three particle systems
- * and destroys itself.
- *
- * WHAT THE CARTRIDGE PROVES ABOUT THE NAME AND THE SHAPE:
- *   _ZTS  ov018 0x02113afc  "15daObjIceBoard_c"
- *   _ZTI  ov018 0x02113af0  __si_class_type_info; +8 -> _ZTI10dBgActor_c
- *                           (ov002 0x021089ec), so the DIRECT base is
- *                           dBgActor_c and nothing else.
- *   _ZTV  ov018 0x02113b34  the ADDRESS POINT: V-8 is a zero offset-to-top,
- *                           V-4 is &_ZTI, V+0 is slot 0 (InitResources,
- *                           0x021129c0). 32 slots; the emitted object begins
- *                           at 0x02113b2c.
- *   size  0x320             daObjIceBoard_c_classInit's own literal, which is
- *                           dBgActor_c's own size too: this class adds no
- *                           fields.
- * The coined `IceSheet` alias that used to sit on this vtable is gone; the
- * ROM's own type string is where the class name now comes from.
- *
- * Nine slots point inside ov018 -- 0, 3, 6, 9, 16, 17, 21, 27 and 31 -- and
- * every other slot still holds dBgActor_c's arm9 word, so nothing else is
- * overridden.
- *
- * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S -- mwccarm 2004/b56
- * emits one .text section per function in the REVERSE of source order, so the
- * highest-address ROM function is written FIRST here. Do not reorder. The
- * destructor is not written here at all; it is inline in
- * include/daObjIceBoard_c.h, declared last, and so emits first, which is
- * where the cartridge has it.
- *
- * Consolidated from these legacy one-function sources (ROM address order):
- *   [0] 0x021127bc  src/_ZN15daObjIceBoard_cD1Ev.cpp
- *   [1] 0x02112800  src/_ZN15daObjIceBoard_cD0Ev.cpp
- *   [2] 0x02112858  src/_ZN15daObjIceBoard_c15OnHitByMegaCharER6Player.cpp
- *   [3] 0x02112880  src/_ZN15daObjIceBoard_c4KillEv.cpp
- *   [4] 0x021128e0  src/_ZN15daObjIceBoard_c15OnGroundPoundedER8dActor_c.cpp
- *   [5] 0x02112924  src/_ZN15daObjIceBoard_c16CleanupResourcesEv.cpp
- *   [6] 0x02112968  src/_ZN15daObjIceBoard_c6RenderEv.cpp
- *   [7] 0x02112990  src/_ZN15daObjIceBoard_c8BehaviorEv.cpp
- *   [8] 0x021129c0  src/_ZN15daObjIceBoard_c13InitResourcesEv.cpp
- *   [9] 0x02112a44  src/daObjIceBoard_c_classInit.c
+ * Order is load-bearing: source runs REVERSE of ROM (highest address
+ * first). Do not reorder. The destructor stays inline in the header,
+ * declared last.
  */
 
 #include "daObjIceBoard_c.h"
@@ -69,8 +31,6 @@ void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     s16 angY, CLPS_Block *clps);
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol daObjIceBoard_c_classInit
 /* Every instruction the cartridge has here falls out of the one `new`.
  * 0x02112a48 loads 0x320 -- the class's own size -- into the header's leaf
@@ -84,8 +44,6 @@ extern "C" daObjIceBoard_c *daObjIceBoard_c_classInit()
     return new daObjIceBoard_c();
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjIceBoard_c13InitResourcesEv
 int daObjIceBoard_c::InitResources()
 {
@@ -101,8 +59,6 @@ int daObjIceBoard_c::InitResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjIceBoard_c8BehaviorEv
 int daObjIceBoard_c::Behavior()
 {
@@ -111,8 +67,6 @@ int daObjIceBoard_c::Behavior()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjIceBoard_c6RenderEv
 int daObjIceBoard_c::Render()
 {
@@ -120,8 +74,6 @@ int daObjIceBoard_c::Render()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjIceBoard_c16CleanupResourcesEv
 int daObjIceBoard_c::CleanupResources()
 {
@@ -133,8 +85,6 @@ int daObjIceBoard_c::CleanupResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjIceBoard_c15OnGroundPoundedER8dActor_c
 /* daObjIceBoard_c::OnGroundPounded -- vtable slot 21, ov018 0x021128e0.
  *
@@ -147,8 +97,6 @@ void daObjIceBoard_c::OnGroundPounded(dActor_c &other)
     Kill();
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjIceBoard_c4KillEv
 /* daObjIceBoard_c::Kill() at ov018 0x02112880, 0x60 bytes -- vtable slot 31.
  *
@@ -180,8 +128,6 @@ void daObjIceBoard_c::Kill()
     MarkForDestruction();
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjIceBoard_c15OnHitByMegaCharER6Player
 /* daObjIceBoard_c::OnHitByMegaChar -- vtable slot 27, ov018 0x02112858.
  *
@@ -193,8 +139,6 @@ void daObjIceBoard_c::OnHitByMegaChar(Player &player)
     Kill();
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjIceBoard_cD1Ev
 // @symbol _ZN15daObjIceBoard_cD0Ev
 /* NOT WRITTEN HERE ON PURPOSE. The destructor body is INLINE in

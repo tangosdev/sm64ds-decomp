@@ -3922,7 +3922,7 @@
         "ov010/PeachPainting                                 1        1         0",
         "ov020/BookShot+BookShotSpawner+Bookend             13       13         0",
         "ov062/Koopa+KoopaSmall                             32       32         0",
-        "ov062/KoopaFlag                                     1        1         0",
+        "ov062/daRFlag_c                                     1        1         0",
         "ov090/daPukupuku_c                                  5        5         0",
         "",
         "checked 225 manifest entries (225 sources read); 13 carry a conflict note or marker",

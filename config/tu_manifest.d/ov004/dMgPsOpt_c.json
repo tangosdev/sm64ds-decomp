@@ -1,9 +1,9 @@
 {
   "id": "ov004/dMgPsOpt_c",
   "module": "ov004",
-  "source": "src_tu/actors/dMgPsOpt_c.cpp",
+  "source": "src/actors/dMgPsOpt_c.cpp",
   "promoted_source": "src/actors/dMgPsOpt_c.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x20b8c18..0x20b944c, 11 function(s), from build/tu_map.json (tools/tu_map.py)",
@@ -15,6 +15,11 @@
       "name": ".text",
       "start": "0x020b8c18",
       "end": "0x020b944c"
+    },
+    {
+      "name": ".data",
+      "start": "0x020bca68",
+      "end": "0x020bcaa0"
     }
   ],
   "functions": [
@@ -96,8 +101,92 @@
       "ordinal": 10
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "_ZTIN10dMgPsOpt_c11TouchIcon_cE",
+      "address": "0x020bca68",
+      "size": "0x0000000c",
+      "evidence": "__si_class_type_info record for the nested touch icon. Three words at ov004:0x020bca68 in extracted/dsd/arm9_overlays/ov004.bin (module base 0x020ad660): the __si_class_type_info vptr 0x0209a764, the type-name pointer 0x020bca84 (_ZTSN10dMgPsOpt_c11TouchIcon_cE, the next record here), and the single-base pointer 0x020ad478, which config/arm9/overlays/ov001/symbols.txt names _ZTI9dThIcon_c. That third word is what proves the base edge: TouchIcon_c derives from dThIcon_c, single and public. This TU is the record's home because it defines the class's key function, dMgPsOpt_c::TouchIcon_c::Render at 0x020b8c18, inside the licensed .text run. romdata_check scores it VERIFIED, 12 bytes equal to the cartridge."
+    },
+    {
+      "symbol": "_ZTVN10dMgPsOpt_c11TouchIcon_cE",
+      "address": "0x020bca7c",
+      "size": "0x00000010",
+      "emitted_storage_address": "0x020bca74",
+      "address_point_bias": "0x8",
+      "evidence": "The nested touch icon's vtable, and this TU's to emit: mwccarm anchors the vague-linkage group in the object that defines the key function, and dMgPsOpt_c::TouchIcon_c::Render at 0x020b8c18 is in this entry's licensed .text run. Four words of storage at ov004:0x020bca74 -- offset-to-top 0, &_ZTIN10dMgPsOpt_c11TouchIcon_cE (0x020bca68), then slot 0 = 0x020ab550 = _ZN9dThIcon_c8BehaviorEv, inherited unchanged from the base, and slot 1 = 0x020b8c18 = _ZN10dMgPsOpt_c11TouchIcon_c6RenderEv, this class's own override. Two slots and no destructor slot, which is what makes TouchIcon_c's destructor nonvirtual and licenses the D0 deadstrip below. The _ZTVN10dMgPsOpt_c11TouchIcon_cE row in config/arm9/overlays/ov004/symbols.txt is at 0x020bca7c, the table's ADDRESS POINT (&_ZTV[2]) -- the value a vptr store writes -- not its first word; hence emitted_storage_address 0x020bca74 and address_point_bias 0x8, and hence the row's extent-to-next-symbol reading 8 rather than 0x10. romdata_check scores it VERIFIED."
+    },
+    {
+      "symbol": "_ZTSN10dMgPsOpt_c11TouchIcon_cE",
+      "address": "0x020bca84",
+      "size": "0x0000001c",
+      "evidence": "The nested type's name string, 28 bytes at ov004:0x020bca84: \"N10dMgPsOpt_c11TouchIcon_cE\" and its NUL, read directly out of extracted/dsd/arm9_overlays/ov004.bin. Itanium length-prefixed nesting decodes it as dMgPsOpt_c::TouchIcon_c, so the outer name dMgPsOpt_c is the cartridge's own RTTI spelling and not a coined one -- there is no unnested _ZTS10dMgPsOpt_c anywhere under config/, because the outer class carries no RTTI of its own, and a flat probe for one therefore reads absent. It ends at 0x020bcaa0, exactly where data_ov004_020bcaa0 begins, which closes this entry's .data claim with no foreign symbol inside it. romdata_check scores it VERIFIED, 28 bytes equal to the cartridge."
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".data",
+      "source": "0x020bca68",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTVN3abi20__si_class_type_infoE",
+      "addend": 8,
+      "target_module": "arm9",
+      "target_address": "0x0209a764"
+    },
+    {
+      "section": ".data",
+      "source": "0x020bca6c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTSN10dMgPsOpt_c11TouchIcon_cE",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020bca84"
+    },
+    {
+      "section": ".data",
+      "source": "0x020bca70",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI9dThIcon_c",
+      "addend": 0,
+      "target_module": "overlays(0,1)",
+      "target_address": "0x020ad478"
+    },
+    {
+      "section": ".data",
+      "source": "0x020bca78",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTIN10dMgPsOpt_c11TouchIcon_cE",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020bca68"
+    },
+    {
+      "section": ".data",
+      "source": "0x020bca7c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN9dThIcon_c8BehaviorEv",
+      "addend": 0,
+      "target_module": "overlays(0,1)",
+      "target_address": "0x020ab550"
+    },
+    {
+      "section": ".data",
+      "source": "0x020bca80",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dMgPsOpt_c11TouchIcon_c6RenderEv",
+      "addend": 0,
+      "target_module": "ov004",
+      "target_address": "0x020b8c18"
+    }
+  ],
   "bss": [],
+  "production_mode": "intact-object",
   "compiler_only_output": [
     {
       "symbol": "_ZN10dMgPsOpt_c11TouchIcon_cC2Ev",
@@ -128,13 +217,28 @@
       "symbol": "_ZN9dThIcon_cD2Ev",
       "disposition": "deadstrip",
       "reason": "include/dThIcon_c.h defines ~dThIcon_c() {} inline, so any TU that destroys a dThIcon_c subobject re-emits it as vague linkage -- here STB_LOPROC, 0x10 bytes. dMgPsOpt_c::TouchIcon_c derives from dThIcon_c, so ~TouchIcon_c runs the base-object variant and mwccarm materialises it in this object. Unlike Vector3's inline destructor, this one has no ROM home at all: tools/relocs.py load_symbol_homes() over all 106 checked-in symbols.txt files (arm9, itcm, dtcm and ov000-ov102) finds no dThIcon_c destructor of any variant, only _ZN9dThIcon_c6RenderEv and _ZN9dThIcon_c8BehaviorEv in ov001 plus the class's RTTI and vtable records. A home count of 0 means there is no cartridge body to compare against, so this is a plain deadstrip and specifically not a deadstrip-duplicate."
+    },
+    {
+      "symbol": "_ZTI9dThIcon_c",
+      "disposition": "deadstrip-data",
+      "reason": "dMgPsOpt_c::TouchIcon_c derives from dThIcon_c (include/dMgPsOpt_c.h), and the third word of _ZTIN10dMgPsOpt_c11TouchIcon_cE at ov004:0x020bca70 points at ov001:0x020ad478 to say so. Emitting the derived class's typeinfo therefore drags the base's typeinfo record out of mwccarm as vague linkage too. The cartridge's canonical copy is at ov001:0x020ad478, which config/arm9/overlays/ov001/symbols.txt names and config/tu_manifest.d/ov001/dThIcon_c.json licenses -- dThIcon_c's own TU is the key-function home for that whole group. It is outside both ranges this entry claims (.text 0x020b8c18-0x020b944c and .data 0x020bca68-0x020bcaa0), so dsd goes on delinking those words from the cartridge independently and discarding this object's duplicate cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it."
+    },
+    {
+      "symbol": "_ZTS9dThIcon_c",
+      "disposition": "deadstrip-data",
+      "reason": "dMgPsOpt_c::TouchIcon_c derives from dThIcon_c (include/dMgPsOpt_c.h), and the third word of _ZTIN10dMgPsOpt_c11TouchIcon_cE at ov004:0x020bca70 points at ov001:0x020ad478 to say so. Emitting the derived class's typeinfo therefore drags the base's typeinfo name string out of mwccarm as vague linkage too. The cartridge's canonical copy is at ov001:0x020ad480, which config/arm9/overlays/ov001/symbols.txt names and config/tu_manifest.d/ov001/dThIcon_c.json licenses -- dThIcon_c's own TU is the key-function home for that whole group. It is outside both ranges this entry claims (.text 0x020b8c18-0x020b944c and .data 0x020bca68-0x020bcaa0), so dsd goes on delinking those words from the cartridge independently and discarding this object's duplicate cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it."
     }
   ],
   "notes": [
-    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'GetSoundMode' differs between the legacy file that used to hold func_ov004_020b8f78 and the one that held _ZN10dMgPsOpt_cC1Ev; kept the first, the other is commented out for review -- RESOLVED: the two spellings were `int GetSoundMode(void)` and `int GetSoundMode()`, which declare the same function in C++. The first is kept and the alternate is dropped, not commented out.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'GetGameLanguage' differs between the legacy file that used to hold func_ov004_020b8dc0 and the one that held _ZN10dMgPsOpt_cC1Ev; kept the first, the other is commented out for review -- RESOLVED: the two spellings were `int GetGameLanguage(void)` and `s32 GetGameLanguage()`; s32 is int and an empty parameter list is `(void)` in C++, so they declare the same function. The first is kept and the alternate is dropped, not commented out.",
-    "Folded at text-verified with all eleven functions of the span 0x020b8c18..0x020b944c, including the six that carry no class label. Referrer census over every relocs.txt under config/: each of the six takes a dMgPsOpt_c or a dMgPsOpt_c::TouchIcon_c as its first argument, and every reference from outside the span comes from dScMgBase_c passing `self + 0xf4`, the `dMgPsOpt_c mTouchOptions` member named in include/dScMgBase_c.h. The two labelled members the cartridge does name are called from outside the span too, so an external caller does not argue a function out of this TU. See the source file's header comment for the per-function evidence."
+    "Folded at the full span 0x020b8c18..0x020b944c -- eleven functions, closing out ov004's .text -- including the six that carry no class label. Referrer census over every relocs.txt under config/: each of the six takes a dMgPsOpt_c or a dMgPsOpt_c::TouchIcon_c as its first argument, and every reference from outside the span comes from dScMgBase_c passing `self + 0xf4`, the `dMgPsOpt_c mTouchOptions` member named in include/dScMgBase_c.h. The two labelled members the cartridge does name are called from outside the span too, so an external caller does not argue a function out of this TU. build/tu_map.json derives the same eleven-function span independently.",
+    "The class name is the cartridge's, not coined. dMgPsOpt_c emits no type-info of its own, so a probe for an unnested _ZTS10dMgPsOpt_c finds nothing and reads as absent; the nested record is the proof. ov004:0x020bca84 holds the 28-byte string \"N10dMgPsOpt_c11TouchIcon_cE\", which Itanium length-prefixed nesting decodes as dMgPsOpt_c::TouchIcon_c, so both the outer and the nested name are ROM RTTI names.",
+    "Promoted as an intact object: this TU is the key-function home for the nested type (dMgPsOpt_c::TouchIcon_c::Render at 0x020b8c18 is inside the licensed .text run), so it owns the whole RTTI/vtable block at 0x020bca68..0x020bcaa0 -- type-info, the four-word vtable storage at 0x020bca74 whose address point is 0x020bca7c, and the type string -- with nothing foreign inside the claim. The six words of that block that carry relocations are licensed individually in `relocations`, since a relocated word is otherwise wildcarded and a wrong target would still compare equal.",
+    "The base class's vague-linkage records (_ZTI9dThIcon_c, _ZTS9dThIcon_c) are dragged out by emitting the derived type-info and are dispositioned deadstrip-data: dThIcon_c's own TU homes them at ov001:0x020ad478/0x020ad480, outside both ranges this entry claims.",
+    "config/arm9/overlays/ov004/symbols.txt loses one row: data_ov004_020bca7c, a zero-extent placeholder alias at the vtable's address point, which _ZTVN10dMgPsOpt_c11TouchIcon_cE at the same address already names. Nothing referenced the placeholder. Once this TU emits the vtable the placeholder name no longer appears in the linked binary, and `dsd check symbols` reports it with \"Possible name: _ZTVN10dMgPsOpt_c11TouchIcon_cE\"; removing the row is byte-neutral and returns that check to its 9 pre-existing tree-level errors, 0 new.",
+    "Reconciled while folding: GetSoundMode and GetGameLanguage differed between legacy files only as `(void)` vs `()` and `s32` vs `int`, which are the same declaration in C++.",
+    "The six unlabelled members keep their ROM symbol names, C linkage, and the parameter spelling the rest of the tree already declares for them (include/decl_common.h, src/func_ov004_020ae858.cpp, src/func_ov004_020aeb24.cpp, src/minigames/d_s_mg_base.cpp). Each takes a typed dMgPsOpt_c/TouchIcon_c local on its first line instead, so the bodies read as class code without moving any other TU's declarations or call sites.",
+    "The shadow's shadow structs are gone: both icon loops now dispatch through real TouchIcon_c members (Render in ov004:0x020b8f18, Behavior in ov004:0x020b8f78) and still match byte-for-byte, so the earlier note claiming a retype would change their dispatch was wrong. One real lever did show up in func_ov004_020b8ee0: the loop bound has to be re-read as self->mSelectedIcon in the condition rather than cached in a local -- the legacy shard's cached `n` was an artefact of walking a single char* and costs 5 words.",
+    "include/dMgPsOpt_c.h names one byte that was previously padding: offset 0x125 is a live close-delay countdown (ov004:0x020b8f78 stores 0x14 into it and decrements it), so `pad_125[0x3]` becomes `mCloseTimer` plus `pad_126[0x2]`. Size, offsets and every consumer's codegen are unchanged."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -162,6 +266,9 @@
         "_ZN9dThIcon_cD2Ev"
       ],
       "droppedSections": [
+        5,
+        6,
+        7,
         25,
         26,
         27,
@@ -175,15 +282,115 @@
         43,
         44
       ],
-      "data": [],
-      "dataExternalized": []
+      "data": [
+        "_ZTI9dThIcon_c",
+        "_ZTS9dThIcon_c"
+      ],
+      "dataExternalized": [
+        "_ZTI9dThIcon_c",
+        "_ZTS9dThIcon_c"
+      ]
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 11 unlicensed section/symbol(s), 6 compiler-only policy error(s)",
+      "declared_function_set_equals_defined_function_set": "PASS",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/ov004-dMgPsOpt_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x020b8c18",
+        "end": "0x020b944c",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020b8c18",
+          "end": "0x020b944c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x020bca68",
+          "end": "0x020bcaa0",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 14
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".data",
+            "original": [
+              8,
+              10,
+              12
+            ],
+            "desired": [
+              8,
+              10,
+              12
+            ]
+          }
+        ],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
     }
   }
 }

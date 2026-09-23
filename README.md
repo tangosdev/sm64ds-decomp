@@ -25,10 +25,6 @@ Code size  ███████████████████████
 ```
 <!-- progress:end -->
 
-Every arm-mode function in the game, drawn as a treemap. Each rectangle is one
-function sized by its byte count, green for matched and gray for unmatched, grouped
-by module.
-
 ![Decompilation progress treemap](docs/progress-treemap.svg)
 
 For an interactive version where you can hover any function for its name, address,
@@ -45,7 +41,7 @@ here, and they move independently.
 ```
 MATCHED    ██████████████████████████████  99.8%   11,368 / 11,389 functions
            of which 122 are byte-exact assembly (hand-written in the original, not C)
-CONVERTED  ████████░░░░░░░░░░░░░░░░░░░░░░  26.4%   3,001 / 11,385 functions
+CONVERTED  ████████░░░░░░░░░░░░░░░░░░░░░░  26.6%   3,026 / 11,386 functions
 LINKED     ████████████████████████████░░  93.5%   10,595 / 11,328 matched TUs
 ```
 <!-- tiers:end -->

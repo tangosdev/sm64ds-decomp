@@ -12,9 +12,9 @@ extern char data_0208e4b8[];
 extern char _ZTV8dScene_c[];
 extern char _ZTV10dScEntry_c[];
 extern struct P2 data_02086b58;
-extern void _ZN10dScEntry_c6icon_cD1Ev(void);
+extern void _ZN10dScEntry_c6icon_cD1Ev(void*);
 extern void _ZN10dScEntry_c6icon_cC1Ev(void);
-extern void _ZN12OamAnimationD1Ev(void);
+extern void _ZN12OamAnimationD1Ev(void*);
 extern void _ZN12OamAnimationC1Ev(void);
 
 /* Reconstructed source-style name: SM64DS proves dScEntry_c through RTTI,
