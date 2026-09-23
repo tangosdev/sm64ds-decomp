@@ -170,8 +170,8 @@ struct fBase_c {
     /* CW builds D0 (slot 17) as "run the destructor, then call operator delete".
        The inline class overload selects the actor heap at data_020a0eac. The
        global _ZdlPv exists at arm9 0x0203cbf0 but uses Memory::defaultHeapPtr. The
-       ROM's D0s under this class are each exactly their D1 plus the two
-       instructions this expands to. Note it reaches only fBase_c and dBase_c --
+       deleting destructor additionally calls the actor-heap deallocator.
+       This inline overload reaches only fBase_c and dBase_c --
        CW inlines it from the class itself or its IMMEDIATE base -- which is why
        include/dActor_c.h carries its own copy. */
     void operator delete(void *ptr) { _ZN6Memory10DeallocateEPvP4Heap(ptr, data_020a0eac); }

@@ -6,7 +6,7 @@ Issue: https://github.com/tangosdev/sm64ds-decomp/issues/3012. Task: `fbase-proc
 
 The complete 9,912-byte ActorBase object is identical to the input under `2004/b56` (SHA256 `8be6d52725c9571189b140b313e5b79bb07b6dd1a75fc674affc64b38e68c583`), including all 25 licensed functions, compiler-only output and relocations. Producer and independent verifier publish final consumer, strict-link, whole-object, metadata and full-ROM evidence in the queue, bound to exact candidate/base commits.
 
-Source review fixes remove an unsupported polymorphic-member-pointer barrier, stale migration/skill instructions, an obsolete claim that AfterCleanupResources is unenrolled, and incorrect descriptions of successful default hooks as VS_FAIL. The allocator comment now distinguishes the global default-heap delete at arm9 `0x0203cbf0` from the actor-heap call, addressing #2432 without changing either allocator.
+Source review fixes remove an unsupported polymorphic-member-pointer barrier, stale migration/skill instructions, an obsolete claim that AfterCleanupResources is unenrolled, and incorrect descriptions of successful default hooks as VS_FAIL. The allocator comment now distinguishes the global default-heap delete at arm9 `0x0203cbf0` from the actor-heap call, addressing #2432 without changing either allocator. Independent review also corrected the cleanup-child condition, deleting-destructor instruction-count claim, and distinction between the unsigned allocation bridge and size_t forwarding overload.
 
 ## Deliberate limits
 

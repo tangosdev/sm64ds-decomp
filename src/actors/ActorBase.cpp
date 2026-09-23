@@ -227,8 +227,7 @@ s32 fBase_c::CleanupResources()
     return 1;
 }
 
-/* vtable slot 4. Refuses cleanup while lifecycleState is still busy, or once the
- * scene node has been unlinked. */
+/* vtable slot 4. Wait for pending lifecycle work and remaining scene children. */
 // @symbol _ZN7fBase_c22BeforeCleanupResourcesEv
 int fBase_c::BeforeCleanupResources()
 {
@@ -681,15 +680,9 @@ bool fBase_c::OnHeapCreated()
     return 1;
 }
 
-/* THE LOWEST FUNCTION OF THE RUN, and the one include/fBase_c.h's old
- * 0x02043494 start excluded. Every actor factory in the image calls it -- the
- * literal it is passed is how this project reads each class's size -- so it is
- * unambiguously this class's member.
- *
- * NOT declared in the class, and that is not a choice either: CW 1.2 rejects an
- * in-class declaration of operator new outright ("illegal 'operator'
- * declaration"). Its counterpart operator delete IS accepted in-class and is
- * declared there, which is what lets the destructors above reproduce D0. */
+/* Actor-heap allocation, cleared before construction. The configured ABI takes
+ * unsigned; the class's size_t operator-new overload forwards here because
+ * the compiler requires size_t for an in-class operator new. */
 // @symbol _ZN7fBase_cnwEj
 extern "C" void *_ZN7fBase_cnwEj(unsigned int size)
 {
