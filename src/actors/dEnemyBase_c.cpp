@@ -1,5 +1,5 @@
 //cpp
-/* Recovered translation unit -- ov002/dEnemyBase_c, the shared enemy base class.
+/* dEnemyBase_c -- the shared enemy base class, ov002.
  *
  * .text span 0x020ad838..0x020aedbc, 31 functions, ROM ordinals 0..30, exactly
  * the contiguous linker run build/tu_map.json places here. All 31 are assembled

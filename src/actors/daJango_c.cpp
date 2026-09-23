@@ -1,5 +1,5 @@
 //cpp
-/* Production translation unit for ov062/daJango_c (Klepto).
+/* daJango_c -- Klepto, the condor (ov062).
  *
  * The cartridge names this class daJango_c: _ZTS9daJango_c at ov062 0x0211dd20,
  * _ZTI9daJango_c at 0x0211dd2c, vtable address point _ZTV9daJango_c at 0x0211dd5c.

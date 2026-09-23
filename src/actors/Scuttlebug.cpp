@@ -1,5 +1,5 @@
 //cpp
-/* Genuine production translation unit for ov071/Scuttlebug.
+/* Scuttlebug (ROM RTTI daSpd_c), ov071.
  *
  * SM64DS RTTI names the implementation daSpd_c; the project spells the class
  * Scuttlebug and symbols.txt carries both names on the vtable at 0x02122c2c.

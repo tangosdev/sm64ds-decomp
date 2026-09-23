@@ -1,6 +1,6 @@
 //cpp
-/* Production translation unit for ov078/daBombking_c -- the King Bob-omb that
- * holds the star at the top of Bob-omb Battlefield.
+/* daBombking_c -- King Bob-omb, who holds the star at the top of Bob-omb
+ * Battlefield (ov078).
  *
  * SM64DS RTTI names this class daBombking_c.  ov078 carries _ZTS12daBombking_c
  * at 0x02126e18 and _ZTI12daBombking_c at 0x02126e0c, and the vtable's -4

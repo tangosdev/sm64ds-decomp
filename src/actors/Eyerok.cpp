@@ -1,5 +1,7 @@
 //cpp
-/* ov066/Eyerok -- ROM ordinals 25..58 of the 61-function linker run at
+/* Eyerok -- the two-handed boss inside Shifting Sand Land's pyramid (ov066).
+ *
+ * This file holds ROM ordinals 25..58 of the 61-function linker run at
  * 0x02115ee0..0x0211a2e4.  PARTIAL by necessity: six shards in the run
  * (ordinals 8, 16, 20, 22, 24, 59) reference 0x02112c08/c88/ca8/cc8/d48 under
  * the spellings func_02112c08 etc, which no modules symbols.txt defines, so

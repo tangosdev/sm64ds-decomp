@@ -1,5 +1,5 @@
 //cpp
-/* Production translation unit for ov096/daSanbo_c -- the Pokey.
+/* daSanbo_c -- the Pokey (ov096).
  *
  * SM64DS RTTI names this class daSanbo_c. ov096 0x02137980 holds the
  * null-terminated string '9daSanbo_c'; _ZTI9daSanbo_c at 0x0213798c

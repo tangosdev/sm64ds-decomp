@@ -1,8 +1,7 @@
 //cpp
-/* Reconstructed translation unit.
- * ov085/daMip_c  (32 functions)
+/* daMip_c -- MIP the rabbit (ov085, 32 functions).
  *
- * MIP the rabbit. The class identity is the cartridge's own: ov085 0x021300bc
+ * The class identity is the cartridge's own: ov085 0x021300bc
  * holds the length-prefixed string "7daMip_c", 0x021300c8 is the
  * __si_class_type_info record that names it, and 0x021300f8 is its 31-slot
  * vtable. The tree called this class `Rabbit`; that name is coined, appears
