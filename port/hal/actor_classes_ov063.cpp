@@ -93,6 +93,7 @@ extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include "dsstate_seg.h"
 #include "dtor_faces_cpp.h"
 #include <cstdlib>
+#include <cstring>   /* SEATS042 slot-3 trace: memcpy / memcmp */
 
 #include "dActor_c.h"
 #include "fBase_c.h"
@@ -641,38 +642,105 @@ extern "C" void hal_fill_fall_block_bbh_vtable(void)
 // its state table is seated in ov63_bringup above.
 extern "C" {
 int *_ZN8MadPianoD1Ev(void *self);              /* slot 16, matched .c */
-/* what mp_clean spells out by hand (see its banner) */
-int _ZN4dBgW9IsEnabledEv(void *self);
-void _ZN4dBgW7DisableEv(void *self);
-void _ZN13SharedFilePtr7ReleaseEv(void *sfp);
+/* read, never written, by the SEATS042 slot-3 trace: the piano's three file
+   cells and SignPost's two, the pair the old G0/G1 placeholders were bound
+   to (decl_common.h's spelling for the last two) */
 extern unsigned char data_ov063_0211ef80[], data_ov063_0211ef88[],
                      data_ov063_0211ef90[];
+extern char data_ov002_0210e064;
+extern char data_ov002_0210e05c;
 void *_ZN8MadPianoD0Ev(void *thiz);             /* slot 17, matched extern-C */
 void *daPiano_c_classInit(void);
 DSSTATE_BEGIN
 void *_ZTV8MadPiano[32];
 DSSTATE_END
 }
-struct MadPiano { int InitResources(); int Behavior(); int Render(); };
+struct MadPiano { int InitResources(); int CleanupResources();
+                  int Behavior(); int Render(); };
 static int __fastcall mp_init(void *s, void *)
 { return ((MadPiano *)s)->MadPiano::InitResources(); }
-/* slot 3, HOST THUNK, not the matched TU: src/actors/MadPiano/
-   _ZN8MadPiano16CleanupResourcesEv.cpp spells its three SharedFilePtrs
-   G0/G1/G2, and hal/cxx_aliases.cpp has already bound G0/G1 to SignPost's
-   ov002 pointers -- linking it would Release SignPost's LIVE files on every
-   level-12 teardown. The ov045 PoleLift ep_clean ruling, one global deeper.
-   The ROM body (0x0211de3c, disassembled + relocs): IsEnabled on the
-   collider at +0x124, Disable if so, then Release on 0x0211ef80 (model),
-   0x0211ef90 (attack anim), 0x0211ef88 (collision), in that pool order. */
+/* slot 3, SEATED on the matched TU (run rel042, lane SEATS042). A host
+   transcription stood here because the src file once spelled its three
+   SharedFilePtrs as the placeholders G0/G1/G2, and hal/cxx_aliases.cpp binds
+   G0/G1 to SignPost's LIVE ov002 pointers (the ov045 PoleLift ep_clean
+   ruling). That is no longer the file:
+   src/game/actors/daPiano_c/_ZN8MadPiano16CleanupResourcesEv.cpp names
+   MadPiano_ModelFile, MadPiano_AnimFile and MadPiano_ClsnFile, the config's
+   own names for 0x0211ef80, 0x0211ef90 and 0x0211ef88
+   (config/arm9/overlays/ov063/symbols.txt), released in that order: the three
+   pool words relocs.txt carries at 0x0211de80/84/88, after the IsEnabled-
+   guarded Disable of the collider at +0x124. port/ov063_syms.txt's
+   per-symbol mount defines both spellings of each on the cells the
+   transcription released. The TU matches under 2004/b56 with strict relocs,
+   is linkcheck VERIFIED with 0 blind slots, and is already in all three
+   links (port/slice_faces2.txt).
+
+   The ROM word: _ZTV8MadPiano (0x0211ed34) + 4*3 = 0x0211ed40 relocates to
+   0x0211de3c, _ZN8MadPiano16CleanupResourcesEv (ov063/relocs.txt); the head
+   reads base-8 an unrelocated zero and base-4 the typeinfo at 0x0211ed04,
+   out of extracted/overlays/overlay_0063.bin (.text base 0x02115ee0). The
+   call takes this file's local spelling like its three siblings, so it needs
+   the same QAE -> UAE alias they have in hal/cxx_aliases.cpp; that file
+   belongs to another lane this wave, so the row sits with this file's own
+   MadPiano alias below.
+
+   SM64DS_SEATS042_TRACE=1 prints one line when the slot runs and one per
+   file cell, the piano's three and SignPost's two, read before and after the
+   body; it writes nothing and is otherwise inert. */
+static int ov63_seats042_trace_on(void)
+{
+    static int v = -1;
+    if (v < 0) {
+        const char *e = std::getenv("SM64DS_SEATS042_TRACE");
+        v = (e && *e && *e != '0') ? 1 : 0;
+    }
+    return v;
+}
+static void ov63_seats042_cell(const char *name, const void *cell,
+                               const unsigned char *was)
+{
+    const unsigned char *now = (const unsigned char *)cell;
+    unsigned p0, p1;
+    std::memcpy(&p0, was + 4, 4);
+    std::memcpy(&p1, now + 4, 4);
+    const char *verdict = std::memcmp(was, now, 8) == 0 ? "untouched"
+                        : now[2] < was[2] ? "released" : "CHANGED";
+    std::fprintf(stderr, "SEATS042:   %s: file 0x%04x->0x%04x refs %u->%u "
+                 "ptr 0x%08x->0x%08x -- %s\n", name,
+                 (unsigned)(was[0] | (was[1] << 8)),
+                 (unsigned)(now[0] | (now[1] << 8)), (unsigned)was[2],
+                 (unsigned)now[2], p0, p1, verdict);
+}
 static int __fastcall mp_clean(void *s, void *)
 {
-    char *t = (char *)s;
-    if (_ZN4dBgW9IsEnabledEv(t + 0x124))
-        _ZN4dBgW7DisableEv(t + 0x124);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov063_0211ef80);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov063_0211ef90);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov063_0211ef88);
-    return 1;
+    if (!ov63_seats042_trace_on())
+        return ((MadPiano *)s)->MadPiano::CleanupResources();
+    unsigned char m[8], a[8], c[8], spm[8], spc[8];
+    std::memcpy(m, data_ov063_0211ef80, 8);
+    std::memcpy(a, data_ov063_0211ef90, 8);
+    std::memcpy(c, data_ov063_0211ef88, 8);
+    std::memcpy(spm, &data_ov002_0210e064, 8);
+    std::memcpy(spc, &data_ov002_0210e05c, 8);
+    const int r = ((MadPiano *)s)->MadPiano::CleanupResources();
+    void *word = (*(void ***)s)[3];
+    const unsigned id = *(const unsigned short *)((const char *)s + 0xc);
+    std::fprintf(stderr, "SEATS042: _ZTV8MadPiano[3] CleanupResources (ov063 "
+                 "0x0211de3c, the matched TU) ENTERED this=%p id=%u %s; slot 3 "
+                 "word=%p, seated thunk=%p -- %s; returned %d\n", s, id,
+                 port_actor_class_name(id), word, (void *)mp_clean,
+                 word == (void *)mp_clean ? "SAME WORD" : "DIFFERENT WORD", r);
+    ov63_seats042_cell("data_ov063_0211ef80 MadPiano_ModelFile",
+                       data_ov063_0211ef80, m);
+    ov63_seats042_cell("data_ov063_0211ef90 MadPiano_AnimFile",
+                       data_ov063_0211ef90, a);
+    ov63_seats042_cell("data_ov063_0211ef88 MadPiano_ClsnFile",
+                       data_ov063_0211ef88, c);
+    ov63_seats042_cell("data_ov002_0210e064 SignPost_ModelFile",
+                       &data_ov002_0210e064, spm);
+    ov63_seats042_cell("data_ov002_0210e05c SignPost_ClsnFile",
+                       &data_ov002_0210e05c, spc);
+    std::fflush(stderr);
+    return r;
 }
 static int __fastcall mp_behavior(void *s, void *)
 { return ((MadPiano *)s)->MadPiano::Behavior(); }
@@ -747,6 +815,14 @@ extern "C" void _ZN11dCapEnemy_c12UpdateCapPosERK7Vector3RK10Vector3_16(
    both names already have host storage (this file / hal/actor_vtables.cpp) */
 #pragma comment(linker, "/alternatename:?_ZTV8MadPiano@@3PAPAXA=__ZTV8MadPiano")
 #pragma comment(linker, "/alternatename:?_ZTV10dBgActor_c@@3PAPAXA=__ZTV10dBgActor_c")
+/* mp_clean's call through the local `struct MadPiano` above spells the
+   method non-virtual (QAE); src/game/actors/daPiano_c/
+   _ZN8MadPiano16CleanupResourcesEv.cpp defines it against include/MadPiano.h,
+   where it is virtual (UAE). Same class, same method, same __thiscall and
+   argument list, so only the decoration differs: the row hal/cxx_aliases.cpp
+   carries for InitResources, Behavior and Render (its lines 3084-3086), for
+   the fourth sibling (lane SEATS042). */
+#pragma comment(linker, "/alternatename:?CleanupResources@MadPiano@@QAEHXZ=?CleanupResources@MadPiano@@UAEHXZ")
 /* ...and the ov020 book TUs' spellings of the four SharedFilePtrs (two TUs,
    two type vocabularies for the same storage) plus two @@YA cdecl free
    functions -- the one alias-legal class (hal/cxx_aliases.cpp's law). */
