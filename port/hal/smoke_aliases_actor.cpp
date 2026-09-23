@@ -98,7 +98,10 @@
 /* hal/cxx_aliases.cpp:3290 */
 #pragma comment(linker, "/alternatename:__ZN4cstd11fdiv_resultEv=?fdiv_result@cstd@@YAHXZ")
 /* hal/cxx_aliases.cpp:3288 */
-#pragma comment(linker, "/alternatename:__ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b=?ShouldPassThroughImpl@dBgCh@@SA_NPAXABUCLPS@@ABU1@_N@Z")
+/* run rel042, lane NARROWRET1: bound to the widening wrapper tools/hostgen.py's
+   NARROW_RETURN table appends to the member's generated TU (this target compiles
+   that copy), the same binding hal/cxx_aliases.cpp makes for walk_window. */
+#pragma comment(linker, "/alternatename:__ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b=_hostgen_nrwide__ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b")
 /* hal/cxx_aliases.cpp:3289 */
 #pragma comment(linker, "/alternatename:__ZN6Memory8AllocateEjiP4Heap=?Allocate@Memory@@YAPAXIHPAVHeap@@@Z")
 /* hal/cxx_aliases.cpp:1491 */

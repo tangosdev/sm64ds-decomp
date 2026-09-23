@@ -2442,6 +2442,269 @@ def reg_ride_arg_patch(text, sym):
                          REG_RIDE_ARG_DECL.get(sym, ""))
 
 
+# ---- NARROW_RETURN: THE CALLEE WIDENS, AS THE ARM EPILOGUE DID ---------------
+#
+# Run rel042, lane NARROWRET1 (0.4.2). On the DS a function that returns a
+# narrow type (s8/u8/s16/u16/bool) extends it into the whole of r0 before it
+# returns: cstd::atan2's epilogue at 0x0203766c is `lsl r0,r0,#16 / asr
+# r0,r0,#16`, and mwccarm does the same for every narrow return in the ROM, so
+# a caller whose declaration names a WIDER return (`extern int f(...)` where the
+# body is `u8 f(...)`) is correct on the cartridge. MSVC's callee writes AL or
+# AX and leaves the upper bytes of EAX unspecified, so that same caller reads
+# junk there on the PC. ARG_WIDTH above cures one CALLER at a time (the
+# GetStarCameraSetting and swim-camera rows); port/tools/narrowret_census.py
+# finds 36 flat ROM names of the shape with a wide declarer somewhere (31 are
+# rows below; the other five are named in the census), five static members
+# reached by flat aliases and one wide decorated alias, so the cure goes on
+# the BODY instead, once per definition.
+#
+# THE SHAPE, per row:
+#   "flat"     the body is a C-linkage function under its own ROM name. Its
+#              header is renamed NAME__nr (a prototype of NAME stays in front
+#              of it, so everything else in the TU still names NAME), and
+#              hostgen_nrwide_NAME is appended: it calls the body through an
+#              int-returning pointer (which is exactly what a wide caller used
+#              to read), extends the result the way the ARM epilogue does, and
+#              returns the full int. `/alternatename:_NAME=_hostgen_nrwide_NAME`
+#              binds every caller of NAME -- narrow or wide, C or extern "C",
+#              and every alias in port/hal whose target is NAME -- to it. A
+#              narrow caller still reads AL or AX and extends it itself, which
+#              gives the same value, so nobody loses.
+#   "static"   a STATIC member whose flat ROM name port/hal/cxx_aliases.cpp
+#              binds by /alternatename (cdecl, so the ABI agrees; the alias is
+#              a NAME bridge and cannot see the return type). The member stays
+#              as it is -- a C++ caller through the class declaration reads it
+#              narrow and is right -- and the appended wrapper is what that
+#              cxx_aliases.cpp row now names.
+#   "thiscall" a WIDE decorated spelling of a narrow member that a shadow class
+#              somewhere emits, bound onto the narrow member by /alternatename
+#              (the map shows both at one address). The wrapper is __fastcall
+#              with a dead EDX, which is __thiscall's ABI for a receiver and
+#              stack arguments, and the alias row that named the member now
+#              names the wrapper.
+#
+# C integer promotion is the extension: s8 and s16 sign-extend, u8, u16 and
+# bool zero-extend, exactly the ARM rule. The body's own truncation is kept
+# (it still returns its narrow type), so a body that computes wide and returns
+# narrow is truncated first and extended second, as on the cartridge.
+#
+# THE PROBE. Every wrapper reports each call to port_narrowret_hook when a
+# recorder is linked (port/hal/narrow_return.cpp publishes it; any other target
+# gets the null default below and pays one load and one test): the raw EAX the
+# body left, what the wrapper handed back, the kind and the caller's return
+# address. With SM64DS_NARROWRET=1 the recorder counts, per call site, the
+# calls whose raw register differs from the extended value -- the reads a wide
+# caller got wrong before the cure -- and writes them out at exit. The wrapper
+# calls the body before it touches anything, so the body runs with the
+# caller's EAX/ECX/EDX exactly as a direct call did.
+#
+# Every body the wrappers call is __declspec(noinline): the call through the
+# int-returning pointer must stay a real call, or the optimiser would fold the
+# body into the wrapper and the raw register the probe reads would be the
+# wrapper's arithmetic rather than the body's own EAX. The body's code is
+# unchanged by it; before this table no caller could inline it either, since
+# each of these bodies is the only function of its kind in its TU and every
+# caller reached it by a C name or an alias.
+#
+# NARROW_RETURN_CURE is the switch. False hands back the raw register, which
+# is byte-for-byte what every caller read before this table existed (the
+# measure-before-curing arm, commit "route every narrow ROM return through one
+# wrapper per body"); True hands back the extended value, which is what the
+# cartridge's callers read. It ships True.
+#
+# Exact shapes, hard-errored like the tables above: a row whose header no
+# longer matches exactly once is a source that moved.
+NARROW_RETURN_CURE = True
+NARROW_RETURN_KINDS = {"s8": ("signed char", 0), "u8": ("unsigned char", 1),
+                       "s16": ("short", 2), "u16": ("unsigned short", 3),
+                       "bool": ("unsigned char", 4)}
+NARROW_RETURN = {
+    # flat C-linkage bodies: stem -> [("flat", name, kind)]
+    "_ZN4cstd5atan2E5Fix12IiES1_": [("flat", "_ZN4cstd5atan2E5Fix12IiES1_", "s16")],
+    "GetPlayerFlagByte": [("flat", "GetPlayerFlagByte", "u8")],
+    "DecIfAbove0_Byte": [("flat", "DecIfAbove0_Byte", "u8")],
+    "DecIfAbove0_Short": [("flat", "DecIfAbove0_Short", "u16")],
+    "NumStars": [("flat", "NumStars", "u8")],
+    "Vec3_HorzAngle": [("flat", "Vec3_HorzAngle", "s16")],
+    "Vec3_VertAngle": [("flat", "Vec3_VertAngle", "s16")],
+    "func_02020168": [("flat", "func_02020168", "u8")],
+    "func_02020364": [("flat", "func_02020364", "u8")],
+    "func_020201f0": [("flat", "func_020201f0", "u8")],
+    "GetLevelPart": [("flat", "GetLevelPart", "s8")],
+    "func_0201a96c": [("flat", "func_0201a96c", "u8")],
+    "func_0201a9ec": [("flat", "func_0201a9ec", "u8")],
+    "NumVsStarsObtained": [("flat", "NumVsStarsObtained", "s8")],
+    "func_ov007_020c3be0": [("flat", "func_ov007_020c3be0", "u16")],
+    "IsAreaShowing": [("flat", "IsAreaShowing", "u8")],
+    "IsPlayerWarping": [("flat", "IsPlayerWarping", "u8")],
+    "GetStarCameraSetting": [("flat", "GetStarCameraSetting", "u8")],
+    "func_02065138": [("flat", "func_02065138", "u16")],
+    "func_0205b63c": [("flat", "func_0205b63c", "u16")],
+    # func_02053ee0 and func_02053fbc are NOT here: their one wide declarer
+    # (port/hal/scene_mg_faces.cpp's func_0202e78c face) discards the result,
+    # and moving either TU onto the hostgen path would also bring its DISPCNT_B
+    # read-modify-write under the MMIO rewrite, a behaviour change of its own.
+    # That declaration is corrected to u16 at the caller instead.
+    "func_02053f30": [("flat", "func_02053f30", "u16")],
+    "func_02053f58": [("flat", "func_02053f58", "u16")],
+    "func_02053f80": [("flat", "func_02053f80", "u16")],
+    "func_02053fa8": [("flat", "func_02053fa8", "u16")],
+    "func_02054004": [("flat", "func_02054004", "u16")],
+    "func_02054168": [("flat", "func_02054168", "u16")],
+    "func_0205417c": [("flat", "func_0205417c", "u16")],
+    "func_020456a0": [("flat", "func_020456a0", "u16")],
+    "CountStarsCollectedInLevelToDisplay": [
+        ("flat", "CountStarsCollectedInLevelToDisplay", "u8")],
+    "_ZN8dActor_c12ReflectAngleE5Fix12IiES1_s": [
+        ("flat", "_ZN8dActor_c12ReflectAngleE5Fix12IiES1_s", "s16")],
+    # src/actors/Player.cpp defines it inside an extern "C" block; the TU's own
+    # St_NoControl caller declares it `extern int` and tests `!= 0`.
+    "Player": [("flat", "func_ov002_020c84b0", "u8")],
+    # static members: stem -> [("static", "Cls::Meth", kind, flat ROM name)]
+    "_ZN8SaveData13GetCoinRecordEj": [
+        ("static", "SaveData::GetCoinRecord", "u8", "_ZN8SaveData13GetCoinRecordEj")],
+    "_ZN8SaveData26CountStarsCollectedInLevelEj": [
+        ("static", "SaveData::CountStarsCollectedInLevel", "u8",
+         "_ZN8SaveData26CountStarsCollectedInLevelEj")],
+    "_ZN3OAM11GetObjWidthEii": [
+        ("static", "OAM::GetObjWidth", "u8", "_ZN3OAM11GetObjWidthEii")],
+    "_ZN3OAM12GetObjHeightEii": [
+        ("static", "OAM::GetObjHeight", "u8", "_ZN3OAM12GetObjHeightEii")],
+    "_ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b": [
+        ("static", "dBgCh::ShouldPassThroughImpl", "bool",
+         "_ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b")],
+    # thiscall members read wide through a decorated alias:
+    # stem -> [("thiscall", "Cls::Meth", kind, wrapper name)]
+    "_ZN8dActor_c18HorzAngleToCPlayerEv": [
+        ("thiscall", "dActor_c::HorzAngleToCPlayer", "s16",
+         "hostgen_nrwide_HorzAngleToCPlayer_int")],
+}
+
+NARROW_RETURN_DECL = """/* hostgen NARROW_RETURN: see the table in tools/hostgen.py */
+extern "C" void *_ReturnAddress(void);
+#pragma intrinsic(_ReturnAddress)
+typedef void (*hostgen_nr_hook_t)(int raw, int ret, int kind, const char *name,
+                                  void *ra);
+extern "C" __declspec(selectany) hostgen_nr_hook_t port_narrowret_hook_null = 0;
+extern "C" hostgen_nr_hook_t port_narrowret_hook;
+#pragma comment(linker, "/alternatename:_port_narrowret_hook=_port_narrowret_hook_null")
+"""
+
+_NR_TYPE = (r"(?:unsigned\s+short|signed\s+short|short|unsigned\s+char|"
+            r"signed\s+char|char|bool|u8|s8|u16|s16)")
+_NR_BARE = ("int", "char", "short", "long", "unsigned", "signed", "u8", "s8",
+            "u16", "s16", "u32", "s32", "void", "bool", "Fix12i")
+
+
+def _nr_args(params, sym, name):
+    """The argument names of a parameter list, hard-erroring on a nameless one."""
+    p = params.strip()
+    if p in ("", "void"):
+        return []
+    parts, depth, cur = [], 0, ""
+    for ch in p:
+        if ch in "([":
+            depth += 1
+        elif ch in ")]":
+            depth -= 1
+        if ch == "," and depth == 0:
+            parts.append(cur)
+            cur = ""
+        else:
+            cur += ch
+    parts.append(cur)
+    names = []
+    for part in parts:
+        m = re.search(r"([A-Za-z_]\w*)\s*(?:\[[^\]]*\])?\s*$", part.strip())
+        words = re.findall(r"[A-Za-z_]\w*", part)
+        if not m or len(words) < 2 or m.group(1) in _NR_BARE:
+            sys.exit("hostgen: %s: NARROW_RETURN %s has a nameless parameter "
+                     "(%r); spell the row by hand." % (sym, name, part))
+        names.append(m.group(1))
+    return names
+
+
+def _nr_header(text, sym, qname):
+    """The one definition header of qname: its match object."""
+    pat = re.compile(
+        r"(?m)^(?P<pre>[ \t]*(?:extern\s+(?:\"C\"\s+)?)?)(?P<ret>" + _NR_TYPE +
+        r")(?P<sp>\s+)" + re.escape(qname) +
+        r"(?P<gap>\s*)\((?P<params>[^;{}]*?)\)(?P<tail>\s*\{)")
+    hits = list(pat.finditer(text))
+    if len(hits) != 1:
+        sys.exit("hostgen: %s: NARROW_RETURN expects exactly one definition "
+                 "header of %s, found %d.\nThe source moved. Re-read the row."
+                 % (sym, qname, len(hits)))
+    return hits[0]
+
+
+def _nr_body(call, kind, name):
+    ctype, code = NARROW_RETURN_KINDS[kind]
+    return ("    int nr_raw = %s;\n"
+            "    int nr_ext = (int)(%s)nr_raw;\n"
+            "    int nr_ret = %s;\n"
+            "    hostgen_nr_hook_t nr_h = port_narrowret_hook;\n"
+            "    if (nr_h) nr_h(nr_raw, nr_ret, %d, \"%s\", _ReturnAddress());\n"
+            "    (void)nr_ext;\n"
+            "    return nr_ret;\n}"
+            % (call, ctype, "nr_ext" if NARROW_RETURN_CURE else "nr_raw",
+               code, name))
+
+
+def narrow_return_patch(text, sym):
+    """Widen a narrow ROM return in its definition TU (see the table)."""
+    rows = NARROW_RETURN.get(sym)
+    if not rows:
+        return text, 0
+    tail = ["", "/* hostgen NARROW_RETURN wrappers (cure %s) */"
+            % ("ON" if NARROW_RETURN_CURE else "OFF: the raw register is handed back")]
+    for row in rows:
+        shape, qname, kind = row[0], row[1], row[2]
+        m = _nr_header(text, sym, qname)
+        params = m.group("params")
+        flatp = " ".join(params.split())
+        args = _nr_args(params, sym, qname)
+        if shape == "flat":
+            proto = "%s%s %s(%s);\n" % (m.group("pre"), m.group("ret"), qname, flatp)
+            head = "%s__declspec(noinline) %s%s%s__nr%s(%s)%s" % (
+                m.group("pre"), m.group("ret"), m.group("sp"), qname,
+                m.group("gap"), params, m.group("tail"))
+            text = text[:m.start()] + proto + head + text[m.end():]
+            wrap = "hostgen_nrwide_" + qname
+            call = "((int (*)(%s))%s__nr)(%s)" % (flatp, qname, ", ".join(args))
+            tail.append('#pragma comment(linker, "/alternatename:_%s=_%s")'
+                        % (qname, wrap))
+            tail.append('extern "C" int %s(%s)\n{' % (wrap, flatp))
+            tail.append(_nr_body(call, kind, qname))
+        elif shape == "static":
+            flat = row[3]
+            text = (text[:m.start()] + m.group("pre") + "__declspec(noinline) " +
+                    text[m.start() + len(m.group("pre")):])
+            wrap = "hostgen_nrwide_" + flat
+            call = "((int (*)(%s))&%s)(%s)" % (flatp, qname, ", ".join(args))
+            tail.append("/* named by port/hal/cxx_aliases.cpp for %s */" % flat)
+            tail.append('extern "C" int %s(%s)\n{' % (wrap, flatp))
+            tail.append(_nr_body(call, kind, flat))
+        elif shape == "thiscall":
+            wrap = row[3]
+            text = (text[:m.start()] + m.group("pre") + "__declspec(noinline) " +
+                    text[m.start() + len(m.group("pre")):])
+            cls = qname.rsplit("::", 1)[0]
+            has = flatp.strip() not in ("", "void")
+            ptype = "int (%s::*)(%s)" % (cls, flatp if has else "")
+            call = "(self->*reinterpret_cast<%s>(&%s))(%s)" % (
+                ptype, qname, ", ".join(args))
+            tail.append("/* __fastcall with a dead EDX is __thiscall's ABI; the "
+                        "/alternatename that bound the wide spelling names it */")
+            tail.append('extern "C" int __fastcall %s(%s *self, void *nr_edx%s)\n{'
+                        % (wrap, cls, (", " + flatp) if has else ""))
+            tail.append("    (void)nr_edx;")
+            tail.append(_nr_body(call, kind, qname))
+        else:
+            sys.exit("hostgen: %s: NARROW_RETURN shape %r" % (sym, shape))
+    return NARROW_RETURN_DECL + text + "\n".join(tail) + "\n", len(rows)
+
+
 # ---- A VTABLE EXTERN THAT MSVC DECORATED -----------------------------------
 #
 # PORT_HOST_ABI, run link100, lane VPTR item 1 of the ruling: nine of the
@@ -3300,6 +3563,7 @@ def emit(src_path, out_dir, decomp_root, extern_data=False):
     text, _ = arg_width_patch(text, sym)
     text, _ = callee_seam_patch(text, sym)
     text, _ = reg_ride_arg_patch(text, sym)
+    text, _ = narrow_return_patch(text, sym)
     text, nztv = ztv_c_linkage(text, sym)
     if nztv and not QUIET_VPTR:
         print("  %s: %d vtable extern(s) given C linkage" % (sym, nztv))
