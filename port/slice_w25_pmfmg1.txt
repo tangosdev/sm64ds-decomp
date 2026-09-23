@@ -16,3 +16,6 @@ src/func_ov006_020e0d84.cpp
 src/func_ov006_020e1214.cpp
 # its second class (dScMgCurling2_c), unmatched/MgCurling2_StateDispatch.cpp
 src/func_ov006_020e6354.cpp
+# Psyche Out! (dScMg3DEsp_c), unmatched/Mg3DEsp_StateDispatch.cpp
+src/func_ov006_020e82fc.cpp
+src/func_ov006_020e8830.c

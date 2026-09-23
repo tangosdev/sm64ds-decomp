@@ -373,56 +373,14 @@ extern "C" void port_mg_esp3d_table_counts(unsigned *out7)
    port/slice_seat4.txt, so the host copy that stood in for it is gone and
    the declaration above is what the faces in this file reach. */
 
-/* src/func_ov006_020e8830.c -- THE THIRD SHAPE, and also slot 1 of the table
-   above.  Its src is bannered
-       NONMATCHING: different op / idiom (div=36). Logic verified correct vs ROM
-   and it decodes the pair by hand out of `extern int data_ov006_02141f8c[]`:
-       int* ent = &data_ov006_02141f8c[b*2];
-       int adj = ent[1];
-       void* obj = base + (adj >> 1);
-       if (adj & 1) { void* vt = *(void**)obj; fn = *(Fn*)((char*)vt + ent[0]); }
-       else         { fn = (Fn)ent[0]; }
-       fn(obj, idx);
-   which is the five-instruction ARM Itanium sequence one for one and reads
-   clean on a link and on a `::*` sweep.  ONLY THE DECODE MOVES; everything
-   below the call is the src's own arithmetic, kept line for line, and it is
-   what the ROM does at 0x020e8878..0x020e8918. */
-/* PORT_HOST_ABI: open-coded mwcc member-pointer decode in plain ints; the src compiles under MSVC as it stands, but the decoded code word is a DS address and the call through it is routed to the class's address switch */
-extern "C" void func_ov006_020e8830(char *base, int idx)
-{
-    char *e = base + idx * 0x20;
-    const MgPmf *ent = &data_ov006_02141f8c[*(unsigned char *)(e + 0x52da)];
-    ++g_esp_table_hits[T_F8C];
-    port_mg_esp3d_call1(base, ent->code, ent->adj, idx);
-
-    unsigned char c = *(unsigned char *)(e + 0x52d6);
-    *(int *)(base + 0x52c8 + idx * 0x20) -= (c << 3) + 0x10;
-    int sh = *(unsigned short *)(e + 0x52cc) >> 3;
-    if (sh >= 7) sh = 7;
-    *(unsigned char *)(e + 0x52d7) = (unsigned char)(7 - sh);
-    if (*(unsigned short *)(e + 0x52cc) != 0) {
-        *(unsigned short *)(base + 0x52cc + idx * 0x20) -= 1;
-        if (*(short *)(e + 0x52cc) < 0) *(short *)(e + 0x52cc) = 0;
-    } else {
-        *(unsigned char *)(e + 0x52d9) = 0;
-    }
-}
-
-/* src/func_ov006_020e82fc.cpp -- THE THIRD SHAPE AGAIN, spelled
-   `struct Ent{ int a; int b; }` inside extern "C", which is eight bytes on both
-   machines and therefore reads and links entirely clean.  THE BOUND IS THE
-   ROM'S OWN: `cmp r2,#3 / bxhs lr` at 0x020e830c, and it is kept rather than
-   dropped because it is the only place in the class that states a table
-   length in code. */
-/* PORT_HOST_ABI: open-coded mwcc member-pointer decode in plain ints; the src compiles under MSVC as it stands, but the decoded code word is a DS address and the call through it is routed to the class's address switch */
-extern "C" void func_ov006_020e82fc(char *c)
-{
-    unsigned char idx = *(unsigned char *)(c + 0x5552);
-    if (idx >= 3) return;
-    const MgPmf *e = &data_ov006_02141f44[idx];
-    ++g_esp_table_hits[T_F44];
-    port_mg_esp3d_call0(c, e->code, e->adj);
-}
+/* src/func_ov006_020e8830.c and src/func_ov006_020e82fc.cpp -- RETIRED, run
+   linkfull lane PMFMG1. Both are the THIRD SHAPE (the pair decoded by hand in
+   plain ints, no member-pointer type anywhere), and that is exactly why both
+   can run from src once their tables hold host words: the decode is the
+   ROM's, the stride is eight on both machines, every adjustment is zero, and
+   what each calls is a plain function pointer. Their two tables are seated
+   at the end of this file with __cdecl counting wrappers; the block above the
+   seat has the listings. */
 
 // ---- THREE TABLES SEATED, AND NINE FACES -----------------------------------
 //
@@ -535,6 +493,63 @@ ES_FACE1(func_ov006_020e8cb0, T_F74)
 ES_FACE1(func_ov006_020e8c74, T_F74)
 ES_FACE1(func_ov006_020e8bd0, T_F74)
 
+/* ---- THE LAST TWO TABLES, run linkfull lane PMFMG1 -----------------------
+ *
+ *   func_ov006_020e8830   data_ov006_02141f8c   4 cells   arity 1
+ *   func_ov006_020e82fc   data_ov006_02141f44   3 cells   arity 0
+ *
+ * THE RECORDS, read out of extracted/overlays/overlay_0006.bin with the
+ * overlay's relocations (runs/linkfull/out/PMFMG1/rom_records.txt): the seven
+ * source pairs __sinit_ov006_02130a08 copies are all {load-relocated code
+ * word, 0}, no relocation from +4. Each table's only readers in the ROM are
+ * that sinit and its one dispatcher (rom_table_readers.txt), and each source
+ * pair is read by the sinit alone.
+ *
+ * __cdecl, NOT __fastcall, AND THE LISTINGS SAY WHY (runs/linkfull/out/
+ * PMFMG1/func_ov006_020e8830.asm, func_ov006_020e82fc.asm). Both TUs call a
+ * plain function pointer:
+ *   020e8830  `push DWORD PTR _idx$[ebp] / push edx / call eax`, then the
+ *             caller's own `add esp, 8`: receiver and index on the stack,
+ *             caller-cleaned.
+ *   020e82fc  `mov DWORD PTR _c$[ebp], edx / pop ebp / jmp eax`: it writes the
+ *             adjusted receiver over its OWN argument slot and tail jumps, so
+ *             the callee finds it at [esp+4] and returns to 020e82fc's caller,
+ *             which cleans it. ecx is not the receiver there.
+ * A __fastcall face on either would read the wrong register or pop what the
+ * caller also pops. So each cell holds a __cdecl wrapper with the body's own
+ * parameter list, counting what the retired host copies counted
+ * (g_esp_state_hits, and the per-table census hal/scene_mg_psycheout.cpp
+ * prints), and pmf_guard carries the table as an adjudicated __cdecl row. */
+#define ES_CW1(sym, slot)                                                     \
+    static void ew_##sym(char *self, int i)                                   \
+    {                                                                         \
+        ++g_esp_state_hits;                                                   \
+        ++g_esp_table_hits[slot];                                             \
+        sym(self, i);                                                         \
+    }
+ES_CW1(func_ov006_020e8728, T_F8C)
+ES_CW1(func_ov006_020e85f0, T_F8C)
+ES_CW1(func_ov006_020e84b8, T_F8C)
+ES_CW1(func_ov006_020e83bc, T_F8C)
+static void ew_func_ov006_020e82c8(char *self)
+{
+    ++g_esp_state_hits;
+    ++g_esp_table_hits[T_F44];
+    func_ov006_020e82c8((unsigned char *)self);
+}
+static void ew_func_ov006_020e8214(char *self)
+{
+    ++g_esp_state_hits;
+    ++g_esp_table_hits[T_F44];
+    func_ov006_020e8214(self);
+}
+static void ew_func_ov006_020e81e0(char *self)
+{
+    ++g_esp_state_hits;
+    ++g_esp_table_hits[T_F44];
+    func_ov006_020e81e0(self);
+}
+
 /* run link100 lane SEAT4: this class's remaining state tables are
    seated in port/hal/pmf_seat4.cpp, from inside this installer, so the
    seat order hal/scene_mg.cpp already establishes is the one they get
@@ -580,5 +595,36 @@ extern "C" void port_mg_esp3d_states_seat(void)
             std::abort();
         }
         p->code = (unsigned)(size_t)seats[i].face;
+    }
+
+    /* run linkfull lane PMFMG1: the two open-coded tables, __cdecl cells (the
+       block above the wrappers). Source pairs, in slot order:
+         02141f8c[0..3] <- 0213c6f4 0213c74c 0213c6ec 0213c6c4
+         02141f44[0..2] <- 0213c6dc 0213c724 0213c784 */
+    static const struct {
+        MgPmf *table;
+        const char *name;
+        unsigned slot;
+        unsigned rom;
+        void *face;
+    } seats_cdecl[] = {
+        {data_ov006_02141f8c, "02141f8c", 0, 0x020e8728u, (void *)ew_func_ov006_020e8728},
+        {data_ov006_02141f8c, "02141f8c", 1, 0x020e85f0u, (void *)ew_func_ov006_020e85f0},
+        {data_ov006_02141f8c, "02141f8c", 2, 0x020e84b8u, (void *)ew_func_ov006_020e84b8},
+        {data_ov006_02141f8c, "02141f8c", 3, 0x020e83bcu, (void *)ew_func_ov006_020e83bc},
+        {data_ov006_02141f44, "02141f44", 0, 0x020e82c8u, (void *)ew_func_ov006_020e82c8},
+        {data_ov006_02141f44, "02141f44", 1, 0x020e8214u, (void *)ew_func_ov006_020e8214},
+        {data_ov006_02141f44, "02141f44", 2, 0x020e81e0u, (void *)ew_func_ov006_020e81e0},
+    };
+    for (unsigned i = 0; i < sizeof seats_cdecl / sizeof seats_cdecl[0]; ++i) {
+        MgPmf *p = &seats_cdecl[i].table[seats_cdecl[i].slot];
+        if (p->code != seats_cdecl[i].rom || p->adj != 0) {
+            std::fprintf(stderr, "FATAL: dScMg3DEsp_c state table %s slot %u: "
+                         "the sinit left %08x/%d, the ROM's own pairs say "
+                         "%08x/0 -- WRONG BYTES\n", seats_cdecl[i].name,
+                         seats_cdecl[i].slot, p->code, p->adj, seats_cdecl[i].rom);
+            std::abort();
+        }
+        p->code = (unsigned)(size_t)seats_cdecl[i].face;
     }
 }

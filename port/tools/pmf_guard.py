@@ -234,6 +234,12 @@ LEDGER = [
      "dScMgCurling2_c: data_ov006_02141978 and _021419d8, dispatched only by "
      "src/func_ov006_020e6354.cpp, `mov ecx,tab[eax*8+4]; mov eax,tab[eax*8]; "
      "add ecx,edi; call eax` with zero and one callee-popped argument"),
+    ("CDECL", r"^\?seats_cdecl@\?1\?\?port_mg_esp3d_states_seat@@",
+     "dScMg3DEsp_c: data_ov006_02141f8c and _02141f44 are read only by the "
+     "open-coded src/func_ov006_020e8830.c (`push idx; push obj; call eax`, "
+     "caller cleans) and src/func_ov006_020e82fc.cpp (writes the receiver "
+     "over its own argument slot and tail jumps), so [esp+4] is the receiver "
+     "at both and ecx is not"),
 ]
 
 
