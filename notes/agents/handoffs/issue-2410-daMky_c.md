@@ -18,7 +18,7 @@ This document describes this commit. The queue records its immutable output SHA.
 - Separate evidence commits and required artifacts in this commit:
   no separate evidence commits. `notes/data/class-facts/daMky_c.json` is committed on
   this branch. Required artifacts present: `src/actors/daMky_c.cpp`,
-  `config/tu_manifest.d/ov030/daMky_c.json`.
+  [config/tu_manifest.d/ov030/daMky_c.json](../../../config/tu_manifest.d/ov030/daMky_c.json).
 - Next action, responsible role and blockers:
   independent verification (verifier). No known blocker. One scope note below:
   `symbols/actor_renames.tsv` is not reserved to this task.
@@ -35,14 +35,14 @@ This document describes this commit. The queue records its immutable output SHA.
 ## What changed and why
 
 - Class/TU/symbol and module-qualified ROM scope:
-  `daMky_c` in ov030. The promoted TU owns `.text 0x02111688..0x021145e0`
+  `daMky_c` in [ov030](../../../config/arm9/overlays/ov030/symbols.txt). The promoted TU owns `.text 0x02111688..0x021145e0`
   (44 functions). No other section is claimed.
 - Reserved source/header/config surfaces actually touched by THIS stage: none.
   This stage changed exactly one file, `symbols/actor_renames.tsv`, plus this
   handoff. Everything else on the branch is the adopted v1 input, carried forward
   unchanged through two merges.
 - ROM observations:
-  ov030 0x02115b78 holds the NUL-terminated `_ZTS` payload `7daMky_c`, pointed at
+  [ov030](../../../config/arm9/overlays/ov030/symbols.txt) 0x02115b78 holds the NUL-terminated `_ZTS` payload `7daMky_c`, pointed at
   by `_ZTI7daMky_c` at 0x02115b84; the class vtable symbol is at 0x02115bfc. The
   string `Ukiki` occurs nowhere in the cartridge. `tools/rtti_vtables.py` answers
   only to `daMky_c`. That is why the coined spelling was retired, and it is what
@@ -59,7 +59,7 @@ This document describes this commit. The queue records its immutable output SHA.
   `_classInit_MONKEY_THIEF` factory spellings, are coined.
 - Compiler experiments and measured barriers:
   none run in this stage. The input's own measured barriers are recorded in
-  `config/tu_manifest.d/ov030/daMky_c.json` under `compiler_only_output`: the TU
+  [config/tu_manifest.d/ov030/daMky_c.json](../../../config/tu_manifest.d/ov030/daMky_c.json) under `compiler_only_output`: the TU
   defines the class key function (`~daMky_c`, the first virtual declared), so
   mwccarm emits `_ZTV7daMky_c` as vague-linkage data, 0x84 of storage. The
   cartridge's canonical copy at 0x02115bfc lies outside the entry's only licensed
@@ -72,11 +72,11 @@ This document describes this commit. The queue records its immutable output SHA.
 live address to symbol map (`tools/cpp_index.py`, `tools/cpp_rename.py` consume it
 that way). It has no last-row-wins rule, so appending a correction is not enough.
 
-This branch renames the ov030 symbols to `daMky_c` in
-`config/arm9/overlays/ov030/symbols.txt`. Eight earlier rows still asserted the
+This branch renames the [ov030](../../../config/arm9/overlays/ov030/symbols.txt) symbols to `daMky_c` in
+[config/arm9/overlays/ov030/symbols.txt](../../../config/arm9/overlays/ov030/symbols.txt). Eight earlier rows still asserted the
 retired `Ukiki` spelling at those same addresses. Measured: the checker is green on
-`origin/main` (1923 rows checked) and red only with this branch's symbols.txt
-applied (1944 rows, 8 findings, all ov030). The stale rows are therefore this
+`origin/main` (1923 rows checked) and red only with this branch's `symbols.txt`
+applied (1944 rows, 8 findings, all [ov030](../../../config/arm9/overlays/ov030/symbols.txt)). The stale rows are therefore this
 change's own regression, not pre-existing integration-lane drift.
 
 `python tools/check_rename_ledger.py --repo . --fix` rewrote all eight and left
@@ -135,8 +135,8 @@ Recorded separately, not combined into one score.
   non-text section, so `_ZTV7daMky_c`, `_ZTI7daMky_c`, `_ZTS7daMky_c` and the four
   inherited base RTTI records are all externalized — the ROM supplies them. This
   is the text-only promoted shape, shared by 107 of the tree's 124 promoted TUs.
-  The branch also touches `src/__sinit_ov029_02112c10.c`, a cross-overlay static
-  initializer in ov029; it is covered by the full-ROM build below, which is green.
+  The branch also touches [src/__sinit_ov029_02112c10.c](../../../src/__sinit_ov029_02112c10.c), a cross-overlay static
+  initializer in [ov029](../../../config/arm9/overlays/ov029/symbols.txt); it is covered by the full-ROM build below, which is green.
 - Attribution preserved through each move/rename:
   `attribution.json` carries the 44-shard fold's `path#symbol` overrides; that was
   the input commit's own last change. `tools/port_refcheck.py` reports 402
@@ -166,8 +166,8 @@ pinned compiler `tools/mwccarm/2004/b56/mwccarm.exe`.
   `func_01ff99a4`, `func_01ff9d40`, `_deq`, `func_01ff9e2c` — not the two this
   document first named. By that control's own definition all nine belong to the
   tree, not to this TU, and the operative comparison (zero *new* symbol errors)
-  passed. The 5 differing data symbols are in arm9, ov002 and ov084 — none in
-  ov030, and `romdata_check` on this TU alone reports DIFFERS 0.
+  passed. The 5 differing data symbols are in [arm9](../../../config/arm9/symbols.txt), [ov002](../../../config/arm9/overlays/ov002/symbols.txt) and [ov084](../../../config/arm9/overlays/ov084/symbols.txt) — none in
+  [ov030](../../../config/arm9/overlays/ov030/symbols.txt), and `romdata_check` on this TU alone reports DIFFERS 0.
 
 - Explicit function/consumer relocation checks:
   `python tools/prepush_linkcheck.py --range origin/main..HEAD` — exit 0.
@@ -189,9 +189,9 @@ pinned compiler `tools/mwccarm/2004/b56/mwccarm.exe`.
   `_ZTS7daMky_c`, `_ZTS7fBase_c`, `_ZTS8dActor_c`, each `emitted=9..10`,
   `romExtent=12`, `compared=8`, `differing=0` — the benign sibling pattern.
   The fifth is the **vtable**: `_ZTV7daMky_c`, `emitted=124 romExtent=132
-  compared=124 differing=0 blindWords=0`. The cartridge at ov030 0x02115bfc holds
-  31 real slots and then two zero words, and the ov030 initialised image ends at
-  0x02115c80 where `data_ov030_02115c80 kind:bss` begins, so the 8-byte shortfall
+  compared=124 differing=0 blindWords=0`. The cartridge at [ov030](../../../config/arm9/overlays/ov030/symbols.txt) 0x02115bfc holds
+  31 real slots and then two zero words, and the [ov030](../../../config/arm9/overlays/ov030/symbols.txt) initialised image ends at
+  0x02115c80 where [data_ov030_02115c80](../../../config/arm9/overlays/ov030/symbols.txt) `kind:bss` begins, so the 8-byte shortfall
   is unnamed module tail padding. **All 31 real vtable slots are byte-exact with
   zero blind words.** This is an extent overrun in `symbols.txt`, not a short
   vtable; closing it means correcting the extent, and that belongs to a separate
@@ -200,7 +200,7 @@ pinned compiler `tools/mwccarm/2004/b56/mwccarm.exe`.
   NOT AVAILABLE: `python tools/tubuild.py linkcheck ov030/daMky_c -j16 --no-rom`
   exits 1 at step 4/8 with "intact production requires one .text claim and at least
   one non-text claim". That is the harness path, not this TU: the identical command
-  on `ov002/daObjAbuku_c`, already landed on main, fails with the identical message,
+  on [ov002](../../../config/arm9/overlays/ov002/symbols.txt)/`daObjAbuku_c`, already landed on main, fails with the identical message,
   and 107 of the tree's 124 promoted TUs are text-only. (That 107/124 was
   re-measured at integration and reproduces exactly: of the 124 manifests whose
   `status` is `promoted`, 107 declare no non-`.text` section and no `data`/`bss`
@@ -229,9 +229,9 @@ pinned compiler `tools/mwccarm/2004/b56/mwccarm.exe`.
   header-offsets, langmode-ratchet, layout-check, src-tu-refs and source-coverage
   all pass on both base and merge; nothing goes green to red.
   `python tools/queue_audit.py` — exit 0, reports 3 stale columns on ONE row,
-  `dScMgAmida_c` (ov006). That row is byte-identical on `origin/main`, so it is
+  `dScMgAmida_c` ([ov006](../../../config/arm9/overlays/ov006/symbols.txt)). That row is byte-identical on `origin/main`, so it is
   pre-existing drift on an unrelated class; it was deliberately not rewritten here,
-  because doing so would put an unrelated ov006 row and a CRLF renormalization into
+  because doing so would put an unrelated [ov006](../../../config/arm9/overlays/ov006/symbols.txt) row and a CRLF renormalization into
   this candidate.
   `python tools/cpp_tu_state.py` — exit 0.
 
@@ -274,7 +274,7 @@ only part that describes the composition.
   and `tools/validate_merge.py` are byte-identical to `main`'s, so the head's ROM
   report emits the `{module, symbol, addr, bytes}` anchor rather than the anchorless
   `{module, symbol}` rows the candidate's own pre-#2425 copy would have produced.
-  This matters because the branch **removes** the retired `_ZTV5Ukiki` row at ov030
+  This matters because the branch **removes** the retired `_ZTV5Ukiki` row at [ov030](../../../config/arm9/overlays/ov030/symbols.txt)
   0x02115bfc, where `main` carries both spellings; a name-anchored diff reads that
   de-aliasing as a lost symbol.
 - **Gates re-run on the composed result, not on the branch alone:** `rombuild.py
@@ -285,7 +285,7 @@ only part that describes the composition.
   `check_dead_references`, `cpp_tu_state` and `prepush_attribution` clean.
   `queue_audit` still reports only the unrelated pre-existing `dScMgAmida_c` row.
 - **Contributor credit.** The first validation run on the composed merge reported
-  `0 added, 5 changed, 0 lost` — five ov030 addresses (0x0211172c, 0x02111b20,
+  `0 added, 5 changed, 0 lost` — five [ov030](../../../config/arm9/overlays/ov030/symbols.txt) addresses (0x0211172c, 0x02111b20,
   0x021132d4, 0x02113324, 0x02113a80) whose author would have moved to the squashing
   maintainer, two of them lunavyqo's. The fold's 54 `path#symbol` overrides had
   missed them. Eight rows were added to `attribution.json`, all inside this class's
@@ -300,7 +300,7 @@ only part that describes the composition.
   promotion does move the chart.** The published contributor chart is built by
   `chaos_db_ci`, which resolves overrides by **whole path** and therefore never reads
   a `path#symbol` row at all. Measured on this composition, base versus head, with
-  that same whole-path resolution: **34 ov030 shard paths lose their attribution and
+  that same whole-path resolution: **34 [ov030](../../../config/arm9/overlays/ov030/symbols.txt) shard paths lose their attribution and
   one path gains it** (`src/actors/daMky_c.cpp`), for a net move of
 
   | contributor | delta |

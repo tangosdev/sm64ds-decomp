@@ -121,12 +121,12 @@ _ZN18daObjCtKaitendai_c8BehaviorEv kind:function(arm,size=0x138) addr:0x0211b508
 _ZN18daObjCtKaitendai_c13InitResourcesEv kind:function(arm,size=0x140) addr:0x0211b640
 daObjCtKaitendai_c_classInit_CT_MECHA07 kind:function(arm,size=0x38) addr:0x0211b780
 daObjCtKaitendai_c_classInit_CT_MECHA06 kind:function(arm,size=0x38) addr:0x0211b7b8
-_ZN15TtcRotatingGearD1Ev kind:function(arm,size=0x44) addr:0x0211b7f0
-_ZN15TtcRotatingGearD0Ev kind:function(arm,size=0x58) addr:0x0211b834
-_ZN15TtcRotatingGear16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x0211b88c
-_ZN15TtcRotatingGear6RenderEv kind:function(arm,size=0x28) addr:0x0211b8d0
-_ZN15TtcRotatingGear8BehaviorEv kind:function(arm,size=0x190) addr:0x0211b8f8
-_ZN15TtcRotatingGear13InitResourcesEv kind:function(arm,size=0xf4) addr:0x0211ba88
+_ZN16daObjCtMecha08_cD1Ev kind:function(arm,size=0x44) addr:0x0211b7f0
+_ZN16daObjCtMecha08_cD0Ev kind:function(arm,size=0x58) addr:0x0211b834
+_ZN16daObjCtMecha08_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x0211b88c
+_ZN16daObjCtMecha08_c6RenderEv kind:function(arm,size=0x28) addr:0x0211b8d0
+_ZN16daObjCtMecha08_c8BehaviorEv kind:function(arm,size=0x190) addr:0x0211b8f8
+_ZN16daObjCtMecha08_c13InitResourcesEv kind:function(arm,size=0xf4) addr:0x0211ba88
 daObjCtMecha08_c_classInit_CT_MECHA08B kind:function(arm,size=0x30) addr:0x0211bb7c
 daObjCtMecha08_c_classInit_CT_MECHA08A kind:function(arm,size=0x30) addr:0x0211bbac
 _ZN14TTC_MovingBeamD1Ev kind:function(arm,size=0x4c) addr:0x0211bbdc
@@ -252,7 +252,7 @@ _ZTI16daObjCtMecha08_c kind:data(any) addr:0x0211d434
 _ZTS16daObjCtMecha08_c kind:data(any) addr:0x0211d440
 g_profile_CT_MECHA08A kind:data(any) addr:0x0211d454 ambiguous
 g_profile_CT_MECHA08B kind:data(any) addr:0x0211d470 ambiguous
-_ZTV15TtcRotatingGear kind:data(any) addr:0x0211d494
+_ZTV16daObjCtMecha08_c kind:data(any) addr:0x0211d494
 _ZTI16daObjCtMecha09_c kind:data(any) addr:0x0211d514
 data_ov065_0211d520 kind:data(any) addr:0x0211d520
 _ZTS16daObjCtMecha09_c kind:data(any) addr:0x0211d530

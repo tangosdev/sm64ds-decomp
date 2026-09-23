@@ -240,7 +240,7 @@ daObjCtKaitendai_c	DONE	include\daObjCtKaitendai_c.h  [alias: header uses pre-re
 daObjCtMecha03_c	DONE	include\daObjCtMecha03_c.h	dBgActor_c	0	ov065	6
 daObjCtMecha04_c	DONE	include\daObjCtMecha04_c.h	dBgActor_c	0	ov065	9
 daObjCtMecha05_c	DONE	include\daObjCtMecha05_c.h	dBgActor_c	0	ov065	6
-daObjCtMecha08_c	DONE	include\TtcRotatingGear.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov065	6
+daObjCtMecha08_c	DONE	include\daObjCtMecha08_c.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov065	6
 daObjCtMecha09_c	DONE	include\TTC_MovingBeam.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov065	6
 daObjCtMecha10_c	DONE	include\daObjCtMecha10_c.h	dBgActor_c	0	ov035	6
 daObjCtMecha11_c	DONE	include\SpinningPlatform.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov035	8
@@ -253,7 +253,7 @@ daObjEmmYuka_c	DONE	include\SquarePathLift.h  [alias: header uses pre-rename nam
 daObjEwbIce_c	DONE	include\CccArena.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov073	7
 daObjEwmIceBlock_c	DONE	include\BigMovingIceBlock.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov056	6
 daObjFl_Amilift_c	DONE	include\MetalNetLift.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov064	6
-daObjFl_Block_c	DONE	include\FloatOnLavaPlatform.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov022	6
+daObjFl_Block_c	DONE	include\daObjFl_Block_c.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov022	6
 daObjFl_KomaU_c	DONE	include\RotatingFirebar.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov064	6
 daObjFl_London_c	PARTIAL	include\daObjFl_London_c.h	dBgActor_c	0	ov022	6
 daObjFl_Puzzle_c	DONE	include\BowserPuzzlePiece.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov064	6

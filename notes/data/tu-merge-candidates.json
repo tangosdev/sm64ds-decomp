@@ -1733,18 +1733,18 @@
    "start": "0x2132938",
    "end": "0x2133254",
    "classes": [
-    "Thwomp",
+    "daDsn_c",
     "daDsnBase_c"
    ],
    "n_functions_map": 19,
    "n_files": 19,
    "files": [
-    "src/_ZN6ThwompD1Ev.cpp",
-    "src/_ZN6ThwompD0Ev.c",
-    "src/_ZN6Thwomp16OnAimedAtWithEggEv.cpp",
-    "src/_ZN6Thwomp15OnHitByMegaCharER6Player.cpp",
-    "src/_ZN6Thwomp8BehaviorEv.cpp",
-    "src/_ZN6Thwomp13InitResourcesEv.cpp",
+    "src/_ZN7daDsn_cD1Ev.cpp",
+    "src/_ZN7daDsn_cD0Ev.c",
+    "src/_ZN7daDsn_c16OnAimedAtWithEggEv.cpp",
+    "src/_ZN7daDsn_c15OnHitByMegaCharER6Player.cpp",
+    "src/_ZN7daDsn_c8BehaviorEv.cpp",
+    "src/_ZN7daDsn_c13InitResourcesEv.cpp",
     "src/d_a_dsn.c",
     "src/_ZN11daDsnBase_cD0Ev.cpp",
     "src/_ZN11daDsnBase_cD1Ev.c",
@@ -1755,8 +1755,8 @@
     "src/func_ov091_02132ff4.c",
     "src/func_ov091_02133020.c",
     "src/func_ov091_02133098.cpp",
-    "src/_ZN6Thwomp16CleanupResourcesEv.cpp",
-    "src/_ZN6Thwomp6RenderEv.cpp",
+    "src/_ZN7daDsn_c16CleanupResourcesEv.cpp",
+    "src/_ZN7daDsn_c6RenderEv.cpp",
     "src/func_ov091_02133254.cpp"
    ],
    "ext_mix": {
@@ -3143,17 +3143,17 @@
    "start": "0x21116c4",
    "end": "0x2111980",
    "classes": [
-    "FloatOnLavaPlatform"
+    "daObjFl_Block_c"
    ],
    "n_functions_map": 9,
    "n_files": 9,
    "files": [
-    "src/_ZN19FloatOnLavaPlatformD1Ev.cpp",
-    "src/_ZN19FloatOnLavaPlatformD0Ev.cpp",
-    "src/_ZN19FloatOnLavaPlatform16CleanupResourcesEv.cpp",
-    "src/_ZN19FloatOnLavaPlatform6RenderEv.cpp",
-    "src/_ZN19FloatOnLavaPlatform8BehaviorEv.cpp",
-    "src/_ZN19FloatOnLavaPlatform13InitResourcesEv.cpp",
+    "src/_ZN15daObjFl_Block_cD1Ev.cpp",
+    "src/_ZN15daObjFl_Block_cD0Ev.cpp",
+    "src/_ZN15daObjFl_Block_c16CleanupResourcesEv.cpp",
+    "src/_ZN15daObjFl_Block_c6RenderEv.cpp",
+    "src/_ZN15daObjFl_Block_c8BehaviorEv.cpp",
+    "src/_ZN15daObjFl_Block_c13InitResourcesEv.cpp",
     "src/func_ov022_0211191c.cpp",
     "src/func_ov022_0211193c.c",
     "src/d_a_obj_fl_block.c"
@@ -27334,18 +27334,18 @@
    "start": "0x211b7b8",
    "end": "0x211bb7c",
    "classes": [
-    "TtcRotatingGear"
+    "daObjCtMecha08_c"
    ],
    "n_functions_map": 7,
    "n_files": 7,
    "files": [
     "src/daObjCtKaitendai_c_classInit_CT_MECHA06.c",
-    "src/_ZN15TtcRotatingGearD1Ev.cpp",
-    "src/_ZN15TtcRotatingGearD0Ev.cpp",
-    "src/_ZN15TtcRotatingGear16CleanupResourcesEv.cpp",
-    "src/_ZN15TtcRotatingGear6RenderEv.cpp",
-    "src/_ZN15TtcRotatingGear8BehaviorEv.c",
-    "src/_ZN15TtcRotatingGear13InitResourcesEv.cpp"
+    "src/_ZN16daObjCtMecha08_cD1Ev.cpp",
+    "src/_ZN16daObjCtMecha08_cD0Ev.cpp",
+    "src/_ZN16daObjCtMecha08_c16CleanupResourcesEv.cpp",
+    "src/_ZN16daObjCtMecha08_c6RenderEv.cpp",
+    "src/_ZN16daObjCtMecha08_c8BehaviorEv.c",
+    "src/_ZN16daObjCtMecha08_c13InitResourcesEv.cpp"
    ],
    "ext_mix": {
     ".c": 2,

@@ -106,7 +106,7 @@
     "RECONCILED: the shadow struct dActor_c (30 slots, f00-f29) and struct Sub that the shards carried were dropped for the real types now reachable through daDsnBase_c.h -- dActor_c::OnAimedAtWithEgg (slot 29) and Model::Render (slot 5). Bytes unchanged.",
     "RECONCILED: the two destructor shards' forcing scaffolds were DROPPED, not carried. This TU defines the key function, and that alone emits the vtable and both destructor variants; both come out byte-identical without any scaffold.",
     "INCLUDE ORDER IS LOAD-BEARING: daDsnBase_c.h reaches dBgActor_c.h, which includes common.h BEFORE Model.h. Matrix4x3 is guarded on MATRIX4X3_DEFINED and has two spellings, so this fixes it to common.h's flat s32 m[12] -- the spelling every shard compiled against. func_ov091_02133098 assigns a whole Matrix4x3; hoisting math/Matrix.h above this include would change its codegen.",
-    "Init (_ZN11daDsnBase_c4InitEv at 0x02133254) is a coined member name. Class ownership, inbound calls (Thwomp::InitResources, daDkk_c::InitResources both pass this), body and layout are proven; the exact original English name is not.",
+    "Init (_ZN11daDsnBase_c4InitEv at 0x02133254) is a coined member name. Class ownership, inbound calls (daDsn_c::InitResources, daDkk_c::InitResources both pass this), body and layout are proven; the exact original English name is not.",
     "DESLOP: func_ov091_02132f04 now holds its two Vector3 locals directly instead of inside a file-local anonymous struct, so the _ZN25@class$488daDsnBase_c_cppD1Ev compiler_only row is deleted (no emitted symbol shares its shape; resync reports MANUAL). Bytes unchanged: 10/10 MATCH."
   ],
   "verification": {

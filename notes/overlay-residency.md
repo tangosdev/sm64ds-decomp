@@ -138,7 +138,7 @@ So the resident set for level L is
 and a module in the level system can only reference overlays reachable from some
 level that loads it.
 
-Worked example: `src/_ZN15TtcRotatingGear13InitResourcesEv.cpp` is in [ov065](../config/arm9/overlays/ov065/symbols.txt), which
+Worked example: `daObjCtMecha08_c::InitResources` ([src/actors/daObjCtMecha08_c.cpp](../src/actors/daObjCtMecha08_c.cpp)) is in [ov065](../config/arm9/overlays/ov065/symbols.txt), which
 is `group[0][4]`, loaded by levels 13, 27 and 33 -- level overlays [ov021](../config/arm9/overlays/ov021/symbols.txt), [ov035](../config/arm9/overlays/ov035/symbols.txt),
 [ov041](../config/arm9/overlays/ov041/symbols.txt). Its ambiguous target `0x021121b8` listed eleven candidate level overlays;
 exactly one, **[ov035](../config/arm9/overlays/ov035/symbols.txt)**, is in that set.

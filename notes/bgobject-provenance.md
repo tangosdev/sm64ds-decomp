@@ -553,7 +553,7 @@ In the C twin, `unk_08e` was repointed to `mAngleY`.
 
 ---
 
-## TtcRotatingGear (`include/TtcRotatingGear.h`, [ov065](../config/arm9/overlays/ov065/symbols.txt), size 0x330)
+## daObjCtMecha08_c (`include/daObjCtMecha08_c.h`, [ov065](../config/arm9/overlays/ov065/symbols.txt), size 0x330)
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
