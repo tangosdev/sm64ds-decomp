@@ -104,21 +104,24 @@ they prove a course's boot after a change, and every one of them ends with the
 course still standing. Nothing else in this run has ever run a course's exit.
   exit=void   SM64DS_VOID_DROP=200 -- below the death plane, so the cartridge's
               own func_ov002_020c5d60 -> ST_DEAD_PIT -> HitDeathPlane -> the
-              level change back to the hub with the death reason (2)
+              level change back to the hub with the death reason (2). Also
+              drives HOST_PAD (DPAD_LEFT) after the arrival.
   exit=star   SM64DS_STAR_DROP=#0,200 plus A presses -- stand on the level's
               first PowerStar, let its collision run the star-get sequence and
               the course-clear exit (reason 1). Also drives HOST_PAD (A then
-              DPAD_LEFT) after the arrival and fails the row if [exitpos]
-              shows the player never moved.
+              DPAD_LEFT) after the arrival.
   exit=pause  START then the fourth pause button on the touch screen -- exit
-              course (reason 0)
+              course (reason 0). Also drives HOST_PAD (DPAD_LEFT) after the
+              arrival.
 All three set selftest 1200 and SM64DS_EXIT_WATCH=1, and a row is FAIL unless
 the run carries a "[lvl] change:" line WITH THE REASON THAT ARM ASKED FOR (void
 2, star 1, pause 0), which is printed in the note. Both halves are needed: an
 exit that quietly does nothing exits 0 with the level still up, and a selftest
 that walks a course for 1200 frames falls off plenty of them on its own, so a
-change with the wrong reason measured the fall and not the arm. Scene rows are
-untouched.
+change with the wrong reason measured the fall and not the arm. All three arms
+also drive the host input layer after their own arrival and fail the row if
+[exitpos] shows the player never moved, so a change that completes and leaves
+the world frozen reads as a FAIL, not a silent PASS. Scene rows are untouched.
 
 entrance=<n|all> changes WHICH ENTRANCE RECORD a LEVEL row is entered at, which
 no other arm of this tool has ever moved: every row above enters at record 0.
@@ -464,6 +467,19 @@ def run(kind, ident, label, ent=None, wdir=None):
                 # of one tap.
                 env["SM64DS_TOUCH_PROBE"] = ",".join(
                     "%d-%d:128:148" % (f, f + 1) for f in range(100, 3000, 40))
+                # AFTER THE ARRIVAL, through the HOST INPUT LAYER, same
+                # spelling as the star arm below. 4 is DPAD_LEFT, not
+                # DPAD_UP: the walking selftest already holds the stick
+                # forward, so a script that adds DPAD_UP proves nothing --
+                # only a direction the selftest is NOT already holding shows
+                # the movement is the PLAYER'S and not the harness's own
+                # held-forward walk. The void drop fires at f200 and the
+                # level change lands within about 60 frames of it, so the
+                # window opens at f400, well after the change.
+                env["SM64DS_HOST_PAD"] = (
+                    ",".join("1000@%d-%d" % (f, f + 3)
+                             for f in range(400, 1160, 60))
+                    + ",4@400-1150")
             elif EXIT == "star":
                 # stand on the level's first PowerStar and press A through the
                 # star-get prompts
@@ -505,7 +521,8 @@ def run(kind, ident, label, ent=None, wdir=None):
                 # 0x20 tall; the tap has to carry a press EDGE, so it is a
                 # short range, not a hold.
                 #
-                # SEVEN STARTS, NOT ONE, and that is the cartridge's doing.
+                # FOUR STARTS, NOT SEVEN, and that is run link100 lane
+                # PAUSEEXIT1's finding (09-21, out/PAUSEEXIT1/index.md).
                 # Stage::PS_Update case 2 (src/_ZN5Stage9PS_UpdateEv.cpp:404)
                 # forks on Player::CanPause (0x020bd828 through
                 # src/func_02029408.c), which returns 0 while the player is
@@ -514,12 +531,51 @@ def run(kind, ident, label, ent=None, wdir=None):
                 # buttons at all, and the run then reads as "the pause menu
                 # ignores every tap" -- measured on 14, 15, 28, 33, 34 and
                 # thirteen more. Retrying every 60 frames finds a grounded one.
+                #
+                # THE RETRY TRAIN USED TO RUN ALL THE WAY TO f560. PAUSEEXIT1
+                # measured that once an early retry already grounds the
+                # player, the whole exit closes within about 30 frames of its
+                # own START (level 8: f200 opens, f229 the confirm tap fires
+                # PS_Update's case 0x13, f230 the change lands) -- and every
+                # LATER scheduled START is then pressed fresh IN THE
+                # DESTINATION LEVEL, where it is a perfectly legitimate "open
+                # the menu" press the cartridge has no reason to refuse. 41 of
+                # 51 levels measured that exact shape: the change lands, the
+                # player walks, and only then does the arm's own f440 or f560
+                # retry re-pause him in the new level; the ever-running
+                # 128:148 level-clear-dismiss train (below) then walks that
+                # SECOND, unwanted menu into an unanswered "quit without
+                # saving?" confirm, so the row ends frozen under a menu the
+                # cartridge would freeze under too -- a harness artifact, not
+                # a game defect. PAUSEEXIT1's own manual repro proved the
+                # fix: level 8 truncated to a single "200:START" plus a
+                # shortened tap train opened no second menu and the player
+                # walked the whole pad window. Retries here stop at f380
+                # (four attempts, 180 frames of "is he grounded yet" margin)
+                # rather than cutting to one, so a course that needs a second
+                # or third try still gets it; f440/f500/f560, the three
+                # retries PAUSEEXIT1's own examples named as the reopeners,
+                # are simply not scheduled.
                 env["SM64DS_PROBE_INPUT"] = ",".join(
-                    "%d:START" % f for f in range(200, 620, 60))
+                    "%d:START" % f for f in range(200, 440, 60))
                 env["SM64DS_TOUCH_PROBE"] = ",".join(
-                    "%d-%d:128:168" % (f, f + 1) for f in range(230, 650, 60)
+                    "%d-%d:128:168" % (f, f + 1) for f in range(230, 470, 60)
                 ) + "," + ",".join(
                     "%d-%d:128:148" % (f, f + 1) for f in range(100, 3000, 40))
+                # AFTER THE ARRIVAL, through the HOST INPUT LAYER, same
+                # spelling as the star and void arms. 4 is DPAD_LEFT, not
+                # DPAD_UP: the walking selftest already holds the stick
+                # forward, so a script that adds DPAD_UP proves nothing. The
+                # retry train above now ends at f380 and a successful exit
+                # settles within about 30 frames of its own START (measured),
+                # so the window opens at f500 -- comfortably clear of the
+                # last retry -- instead of f800: a passing row now shows
+                # movement over most of the selftest instead of only its
+                # last 400 frames.
+                env["SM64DS_HOST_PAD"] = (
+                    ",".join("1000@%d-%d" % (f, f + 3)
+                             for f in range(500, 1160, 60))
+                    + ",4@500-1150")
             else:
                 sys.exit("unknown exit=%s (void, star, pause)" % EXIT)
     else: env["SM64DS_SCENE_FRAMES"] = FRAMES
@@ -607,6 +663,14 @@ def run(kind, ident, label, ent=None, wdir=None):
         # back with reason 2 measured a fall, not the pause menu -- eleven of
         # the first star sweep's twenty-six "passes" were that.
         want = {"void": 2, "star": 1, "pause": 0}.get(EXIT)
+        # the first [exitpos] sample frame that counts as taken AFTER this
+        # arm's own arrival, not before it: the three arms' changes land at
+        # very different times (void's HOST_PAD window opens at f400, star's
+        # at f500, pause's at f500 too now that its retry train stops at
+        # f380 instead of f560), so one shared cutoff would read a
+        # pre-arrival sample as an arrival sample on the earlier arms or
+        # discard real arrival samples on the later one.
+        first = {"void": 500, "star": 700, "pause": 500}.get(EXIT, 700)
         chg = ""
         for line in out.splitlines():
             if line.startswith("[lvl] change:"): chg = line.strip(); break
@@ -618,7 +682,7 @@ def run(kind, ident, label, ent=None, wdir=None):
         note = (note + " | " if note else "") + (chg or "NO LEVEL CHANGE")
         # MOVES AFTER THE ARRIVAL. A change that completes and
         # leaves the player unable to move is the softlock Tango
-        # reported, and until now this arm could not see it: the
+        # reported, and until now only the star arm could see it: the
         # [exitwatch] stream prints only on change, so a frozen
         # player prints nothing and a row that ends rc 0 reads as
         # a pass. [exitpos] is the position on a fixed cadence.
@@ -627,8 +691,10 @@ def run(kind, ident, label, ent=None, wdir=None):
         # player to have moved more than a quarter of a walking
         # stride in some axis over them. A frozen player's
         # samples are byte-identical, so the threshold is not
-        # near anything.
-        if EXIT == "star" and ok:
+        # near anything. All three arms now drive the host input
+        # layer after their own arrival and fail a row whose player
+        # never moved, not only the star arm.
+        if EXIT in ("void", "star", "pause") and ok:
             dest = None
             m = re.search(r"-> (-?\d+), entrance", chg)
             if m: dest = int(m.group(1))
@@ -638,7 +704,7 @@ def run(kind, ident, label, ent=None, wdir=None):
                               r"pos=\((-?\d+),(-?\d+),(-?\d+)\)",
                               line.strip())
                 if not mm: continue
-                if int(mm.group(1)) < 700: continue
+                if int(mm.group(1)) < first: continue
                 if dest is not None and int(mm.group(2)) != dest: continue
                 pts.append(tuple(int(mm.group(i)) for i in (3, 4, 5)))
             if len(pts) < 4:

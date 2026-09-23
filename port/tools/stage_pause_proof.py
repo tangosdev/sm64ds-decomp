@@ -161,42 +161,63 @@ def run(exe, root, rundir, name, frames, extra=None, level="1"):
 
 
 # ---------------------------------------------------------------- rung 1
-# symbol -> the object that must define it
-GATE_BODIES = {
-    "?Behavior@Stage@@QAEHXZ": "_ZN5Stage8BehaviorEv",
-    "?PS_Init@Stage@@SAXXZ": "_ZN5Stage7PS_InitEv",
-    "?PS_Update@Stage@@SAXXZ": "_ZN5Stage9PS_UpdateEv",
-    "?LC_Update@Stage@@SAXXZ": "_ZN5Stage9LC_UpdateEv",
-    "?PS_UpdateOptionsMenu@Stage@@SAXXZ": "_ZN5Stage20PS_UpdateOptionsMenuEv",
-    "?PS_UpdateOkAndBackButtons@Stage@@SAX_N@Z":
-        "_ZN5Stage25PS_UpdateOkAndBackButtonsEb",
-    "?Display@Message@@QAEXI@Z": "_ZN7Message7DisplayEj",
-    "__ZN7Message18DisplayPauseTextVSEt": "_ZN7Message18DisplayPauseTextVSEt",
-    "__ZN5Stage10PS_CleanupEv": "_ZN5Stage10PS_CleanupEv",
-    "__ZN5Stage7VE_InitEv": "_ZN5Stage7VE_InitEv",
-    "__ZN5Sound10PauseMusicEv": "_ZN5Sound10PauseMusicEv",
-}
+# The matched OBJECT each gate-220 body must come from -- the flat,
+# decomp-native symbol name that also names its object file
+# (src/<name>.cpp.obj), which is the ROM identity and does not move.
+#
+# What DOES move is which linker-visible SPELLING currently resolves to
+# that object: a class-form promotion keeps the flat name alive as a
+# published /alternatename alongside the new ?Sym@Class@@... entry
+# (PS_Cleanup, cxx_aliases.cpp:3407 -- the map carries both
+# ?PS_Cleanup@Stage@@SAXXZ and __ZN5Stage10PS_CleanupEv at the same
+# address), but a promotion that makes the flat name the FACE's callee
+# rather than a still-published alias drops the flat entry from the map
+# entirely (VE_Init, found 09-22: rung1 read "__ZN5Stage7VE_InitEv is NOT
+# in the map" against a map that in fact carries ?VE_Init@Stage@@SAXXZ at
+# that same body -- INT41X confirmed this on both the 0.4.1 fold and the
+# published 0.4.0, so it is the tool's stale spelling, not a fold defect).
+#
+# So rung1 does not hand-carry an expected SYMBOL spelling to look up --
+# that list would only go stale again the exact way GATE_BODIES did. It
+# reads the map's own Lib:Object column, which always names the matched
+# .obj regardless of which alias currently sits at that address, and
+# accepts whichever spelling(s) the map currently has for it.
+GATE_OBJECTS = [
+    "_ZN5Stage8BehaviorEv",
+    "_ZN5Stage7PS_InitEv",
+    "_ZN5Stage9PS_UpdateEv",
+    "_ZN5Stage9LC_UpdateEv",
+    "_ZN5Stage20PS_UpdateOptionsMenuEv",
+    "_ZN5Stage25PS_UpdateOkAndBackButtonsEb",
+    "_ZN7Message7DisplayEj",
+    "_ZN7Message18DisplayPauseTextVSEt",
+    "_ZN5Stage10PS_CleanupEv",
+    "_ZN5Stage7VE_InitEv",
+    "_ZN5Sound10PauseMusicEv",
+]
 ROW = re.compile(r"\s+[0-9a-fA-F]{4}:[0-9a-fA-F]{8}\s+(\S+)\s+[0-9a-fA-F]{8}"
                  r"\s+\S*\s*(\S+)\s*$")
 
 
 def rung1(mappath):
-    seen = {}
+    found = {}   # matched-object name -> set of symbol spellings seen for it
     with open(mappath, encoding="utf-8", errors="replace") as f:
         for line in f:
             m = ROW.match(line.rstrip("\n"))
-            if m and m.group(1) in GATE_BODIES:
-                seen.setdefault(m.group(1), m.group(2))
+            if not m:
+                continue
+            sym, obj = m.group(1), m.group(2)
+            for want in GATE_OBJECTS:
+                if want in obj:
+                    found.setdefault(want, set()).add(sym)
     ok = True
-    for sym, want_obj in sorted(GATE_BODIES.items()):
-        obj = seen.get(sym)
-        if obj is None:
-            ok = verdict(False, "rung1  %s is NOT in the map" % sym) and ok
-        elif want_obj not in obj:
-            ok = verdict(False, "rung1  %s comes from %s, not %s"
-                         % (sym, obj, want_obj)) and ok
+    for want in sorted(GATE_OBJECTS):
+        syms = found.get(want)
+        if not syms:
+            ok = verdict(False, "rung1  %s is NOT in the map (no symbol "
+                         "resolves to that matched object)" % want) and ok
     return verdict(ok, "rung1  all %d gate-220 bodies in walk_window.map from "
-                       "their own matched objects" % len(GATE_BODIES)) and ok
+                       "their own matched objects" % len(GATE_OBJECTS)) and ok
 
 
 # ---------------------------------------------------------------- rung 2
