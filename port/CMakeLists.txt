@@ -11666,6 +11666,27 @@ set(SOUND_HOST_SOURCES
 set(MODELFAMILY_HOST_SOURCES
     unmatched/ModelFamily_Dtors_HostCopy.c)
 
+# W23-1 MODEL DTOR ARMS (LINK15 batch W23-1, run linkfull). Six of the
+# fourteen bodies above retire here: include/Model.h and its four siblings
+# already carry the _MSC_VER Destructor1/Destructor0 pair the header comment
+# above asks for, and six src/ TUs already define the ROM's flat name under a
+# #ifdef _MSC_VER arm (thiz->~X() through the one host symbol, then the
+# class's own operator delete). port/slice_w23_modeldtor.txt names them; they
+# ride next to MODELFAMILY_HOST_SOURCES on the same three targets because
+# that file's surviving D1/D2 bodies still call into the flat names these TUs
+# now provide instead. ShadowModel's D0 and every D1 body stay host-copied
+# (D1 is already linked through the class's real ??1, so its flat name is a
+# face, not a body; ShadowModel has no _MSC_VER arm yet).
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w23_modeldtor.txt" SLICE_W23_MODELDTOR_LINES)
+set(SLICE_W23_MODELDTOR_SOURCES "")
+foreach(line IN LISTS SLICE_W23_MODELDTOR_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_W23_MODELDTOR_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+
 set(LEVELBOOT_HOST_SOURCES
     unmatched/ActorDerived_Spawn.cpp
     unmatched/PathPtr_FromID.cpp
@@ -17241,6 +17262,7 @@ add_executable(smoke_player EXCLUDE_FROM_ALL tests/smoke_player.cpp "${OV002DATA
     unmatched/Painting_StateRender_021261f4.cpp
     ${CAMERA_HOST_SOURCES} ${LEVELBOOT_HOST_SOURCES} ${SOUND_HOST_SOURCES}
     ${MODELFAMILY_HOST_SOURCES}
+    ${SLICE_W23_MODELDTOR_SOURCES}
     ${SLICE_PTR_SOURCES}
     # Stage 4, lane SD0: slot 0's closure. On all THREE targets rather than
     # walk_window alone, and not by preference: all three compile
@@ -17559,6 +17581,7 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     unmatched/Painting_StateRender_021261f4.cpp
     ${CAMERA_HOST_SOURCES} ${LEVELBOOT_HOST_SOURCES} ${SOUND_HOST_SOURCES}
     ${MODELFAMILY_HOST_SOURCES}
+    ${SLICE_W23_MODELDTOR_SOURCES}
     ${SLICE_PTR_SOURCES}
     # Stage 4, lane SD0: slot 0's closure. On all THREE targets rather than
     # walk_window alone, and not by preference: all three compile
@@ -17996,6 +18019,7 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     unmatched/Painting_StateRender_021261f4.cpp
     ${CAMERA_HOST_SOURCES} ${LEVELBOOT_HOST_SOURCES} ${SOUND_HOST_SOURCES}
     ${MODELFAMILY_HOST_SOURCES}
+    ${SLICE_W23_MODELDTOR_SOURCES}
     ${SLICE_PTR_SOURCES}
     # Stage 4, lane SD0: slot 0's closure. On all THREE targets rather than
     # walk_window alone, and not by preference: all three compile
