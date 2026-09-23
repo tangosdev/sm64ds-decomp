@@ -11,14 +11,15 @@
  * CLASS IDENTITY IS THE ROM'S OWN, not a coined name. _ZTS9daMenbo_c at
  * 0x02134120 holds exactly "9daMenbo_c" NUL-terminated and padded to twelve
  * bytes, so the receipt is dated to this spelling. _ZTI9daMenbo_c at 0x02134138
- * is an abi __si_class_type_info record -- word 1 is that class's own vtable,
- * word 2 points back at _ZTS9daMenbo_c, and word 3 is _ZTI12dEnemyBase_c at
- * 0x021081c0, which is what proves the base. The vtable symbol _ZTV9daMenbo_c
+ * is an abi __si_class_type_info record. Its first word points to the shared
+ * _ZTVN3abi20__si_class_type_infoE at arm9 0x0209a764, its second to
+ * _ZTS9daMenbo_c, and its third to _ZTI12dEnemyBase_c at ov002 0x021081c0,
+ * which proves the base. The vtable symbol _ZTV9daMenbo_c
  * at 0x02134168 points past the usual two-word header: the word at -8 is the
  * zero offset-to-top and the word at -4 relocates to _ZTI9daMenbo_c. Thirty-one
- * slots follow, and four of them name functions in this very run -- slot 16 is
- * 0x02130f00 and slot 17 is 0x02130f40, the D1 and D0 pair; slot 18 is
- * 0x0213264c and slot 19 is 0x02132620.
+ * slots follow. Ten target this run: 0, 3, 6, 9, 12, 16, 17, 18, 19 and 29.
+ * Slots 16 and 17 are the D1 and D0 pair at 0x02130f00 and 0x02130f40;
+ * slots 18 and 19 target 0x0213264c and 0x02132620.
  *
  * THIS TU OWNS THE CLASS VTABLE. The destructor is the first virtual daMenbo_c
  * declares and it is written out of line here, which makes it the key function
@@ -189,7 +190,7 @@ typedef int LocFix12;
 extern "C" {
 
 /* arm9 math and utility */
-void  MulMat4x3Mat4x3(Matrix4x3* out, Matrix4x3* a, Matrix4x3* b);
+void  MulMat4x3Mat4x3(Matrix4x3* a, Matrix4x3* b, Matrix4x3* out);
 void  MulVec3Mat4x3(const Vector3* v, const void* m, Vector3* out);
 void  Matrix4x3_FromRotationY(void* m, s16 angle);
 void  Matrix4x3_FromTranslation(void* m, int x, int y, int z);
@@ -327,9 +328,10 @@ daMenbo_c::~daMenbo_c()
  * of the file is what makes them bind to this member alone -- without it they
  * would go file-global last-wins and recompile the other twenty-three. */
 // @symbol func_ov090_02130f94
-/* The four leg ripples. Each iteration rebuilds the actor's own matrix into the
- * scratch at data_020a0e68, squares it into the model's matrix array, lifts the
- * translation out and spawns a particle at the water line held in 0x3ac. */
+/* The four leg ripples. Each iteration copies the actor matrix into scratch at
+ * data_020a0e68, multiplies the selected model matrix by scratch into scratch,
+ * then extracts the transformed position and spawns a ripple at the water
+ * line held in 0x3ac. The model matrix array is an input, not the destination. */
 extern "C" void func_ov090_02130f94(char* c_)
 {
     int zero;
@@ -572,8 +574,8 @@ int func_ov090_02131584(char* c)
 /* ROM ordinal 7 -- func_ov090_02131608, 0x02131608, size 0x40               */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov090_02131608
-/* State entry: chasing. Clears the counter, resets the playback rate and starts
- * the chase animation. */
+/* Entry paired with update handler func_ov090_02131584. Clears the counter,
+ * resets the playback rate and selects the animation at data_ov090_02134498. */
 int func_ov090_02131608(char* c)
 {
     *(int*)(c + 0x390) = 0;
@@ -844,8 +846,8 @@ int func_ov090_02131c48(char* c)
 /* ROM ordinal 13 -- func_ov090_02131db0, 0x02131db0, size 0x50              */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov090_02131db0
-/* State entry: sinking. Starts the sink animation from its far end and resets
- * the playback rate and the counter. */
+/* Entry paired with update handler func_ov090_02131c48. Selects the animation
+ * at data_ov090_02134488 with flag 0x40000000, then resets the rate and counter. */
 int func_ov090_02131db0(char* c)
 {
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x30c, MENBO_BCA(data_ov090_02134488), 0x40000000, 0x1000, 0);
@@ -1078,9 +1080,9 @@ int daMenbo_c::Behavior()
  * records it as both unk_3a8 and unk_3ac. mPosY is then snapped to unk_3ac, so
  * the skeeter starts exactly on the surface it found.
  *
- * Two early exits skip the raycast entirely: one level and mode combination
- * (0x12 in mode 2) and the flagged-surface case both install a different
- * starting state and return.
+ * The level/mode combination (0x12 in mode 2) installs a different starting
+ * state and returns before the raycast. The flagged-surface case returns only
+ * after DetectClsn and the surface-flag test, also with a different state.
  *
  * Otherwise the heading is randomised -- four bits of RandomIntInternal shifted
  * into the top of a s16 -- and written through mModelAnim's own angle slot
