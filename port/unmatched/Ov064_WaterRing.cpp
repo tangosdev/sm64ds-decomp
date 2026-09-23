@@ -15,19 +15,16 @@
  *    matched source's control flow line for line; only the dispatch is read as
  *    a plain { fn, 0 } and the fn called with `this`.
  *
- * 1b. func_ov064_02119afc is here for a DIFFERENT reason -- a decl_common.h
- *    redeclaration, MEASURED off the first link of this slice rather than
- *    predicted. The matched TU declares `void func_ov064_02119ecc(void*, void*)`
- *    inside its own extern "C" block; include/decl_common.h:2762 already
- *    declares `extern void func_ov064_02119ecc(char*, void*)`. Both visible in
- *    one TU is `error C2733: you cannot overload a function with 'extern "C"'
- *    linkage`, and src/ is not edited to fix it. The ov096 lane hit this exact
- *    class on src/_ZN7Tornado6State1Ev.cpp and port/CMakeLists.txt records the
- *    treatment in one line: "the decl_common.h redeclaration that forced that
- *    one out of the slice". The body below is that TU verbatim, in a file that
- *    includes no decl_common.h, so the two declarations never meet. It forms no
- *    pointer-to-member of its own; it only passes &data_ov064_0211c944 to the
- *    dispatcher above.
+ * 1b. func_ov064_02119afc is NO LONGER here (run linkfull wave 23, lane
+ *    HGFRONT1). It stood here for a decl_common.h redeclaration, a C2733
+ *    between the TU's `void func_ov064_02119ecc(void*, void*)` and
+ *    include/decl_common.h:2762's `(char*, void*)`. The synced TU compiles
+ *    clean under walk_window's own flags today and is MATCHING at 2004/b56
+ *    with --strict-relocs against the cartridge (ov064 0x02119afc, 0x164
+ *    bytes), so src/func_ov064_02119afc.cpp is on port/slice_w23_hostgen.txt
+ *    and the host body, with the declarations only it used, is gone. It forms
+ *    no pointer-to-member of its own; it only passes &data_ov064_0211c944 to
+ *    the dispatcher above.
  *
  * 2. WaterRing::Render is NO LONGER here -- it retired to its matched TU
  *    src/_ZN9WaterRing6RenderEv.cpp (slice_w3c.txt). That TU dispatches its
@@ -86,18 +83,6 @@ extern PortPmf data_ov064_0211c3b8[];   /* {02119c60, 0} */
 extern PortPmf data_ov064_0211c3c0[];   /* {02119ce4, 0} */
 extern PortPmf data_ov064_0211c3c8[];   /* {02119d28, 0} */
 
-/* what func_ov064_02119afc reaches, on top of the ring above */
-struct PortVec3 { int x, y, z; };
-void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(
-        void *t, const PortVec3 &v);
-void *_ZN8dActor_c10FindWithIDEj(unsigned id);
-short Vec3_VertAngle(const PortVec3 *v1, const PortVec3 *v0);
-int AngleDiff(int a, int b);
-short _ZN8dActor_c18HorzAngleToCPlayerEv(void *t);
-void _ZN6Player4HealEi(void *p, int amt);
-extern PortVec3 data_ov064_0211c3d0;
-extern PortPmf data_ov064_0211c944[];   /* the record it switches to */
-
 }  /* extern "C" */
 
 /* HOST COPY RETIRED, run link100 lane PMFB7 gate 1. src/_ZN9WaterRing8BehaviorEv.cpp
@@ -114,58 +99,10 @@ extern PortPmf data_ov064_0211c944[];   /* the record it switches to */
    pair, the matched TU compiles to the same tail jump this body was, and
    the seat in this file aborts the binary on a nonzero delta so the two
    agree word for word. The reading above is kept as the derivation. */
-/* func_ov064_02119afc below still CALLS it and the deleted body was also its
-   only declaration in this TU, so it is declared here. INT, not the void that
-   include/decl_common.h:2762 spells: the matched TU that now defines it returns
-   the dispatched state's own value, and note 1b above is exactly the reason
-   this file includes no decl_common.h, so the two never meet. */
-extern "C" int func_ov064_02119ecc(void *cv, void *pv);
 
-/* PORT_HOST_ABI: displaced by a decl_common.h redeclaration (see 1b in this
-   file's header), not by an ABI fault of its own. src/func_ov064_02119afc.cpp
-   verbatim, including the two gotos and the sign-bit test the matched TU
-   spells as `(x >> 16) & 1`; only the declarations moved. */
-extern "C" void func_ov064_02119afc(char *c)
-{
-    PortVec3 hv;
-    PortVec3 v;
-    char *a;
-    int b;
-    unsigned id;
-
-    *(int *)(c + 0x368) = 0x1000;
-    v = data_ov064_0211c3d0;
-    _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(c + 0x110, v);
-    id = *(unsigned *)(c + 0x134);
-    if (id == 0) return;
-    a = (char *)_ZN8dActor_c10FindWithIDEj(id);
-    if (a == 0) return;
-    b = (*(unsigned short *)(a + 0xc) == 0xbf);
-    if (b == 0) return;
-    {
-        hv.x = *(int *)(a + 0x5c);
-        hv.y = *(int *)(a + 0x60);
-        hv.z = *(int *)(a + 0x64);
-    }
-    if (AngleDiff(*(short *)(c + 0x8c),
-                  Vec3_VertAngle((PortVec3 *)(c + 0x5c), &hv)) >= 0x3000)
-        return;
-    if (*(int *)(c + 0x37c) != 1) goto Lcheck;
-    if (((*(short *)(c + 0x388) >> 16) & 1)
-        != ((_ZN8dActor_c18HorzAngleToCPlayerEv(c) >> 16) & 1))
-        goto Lpassed;
-Lcheck:
-    if (*(int *)(c + 0x37c) == 1) goto Lkeep;
-Lpassed:
-    if (*(int *)(c + 0x37c) == 1)
-        _ZN6Player4HealEi(a, 0x100);
-    *(int *)(c + 0x368) = 0x4000;
-    func_ov064_02119ecc(c, &data_ov064_0211c944[0]);
-    return;
-Lkeep:
-    *(short *)(c + 0x388) = _ZN8dActor_c18HorzAngleToCPlayerEv(c);
-    return;
-}
+/* HOST COPY RETIRED, run linkfull wave 23 lane HGFRONT1: func_ov064_02119afc is
+   src/func_ov064_02119afc.cpp again (port/slice_w23_hostgen.txt); note 1b in
+   this file's header says why it could come back. */
 
 /* ---- the seat ------------------------------------------------------------ */
 
