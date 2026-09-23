@@ -22482,6 +22482,16 @@ target_sources(walk_window PRIVATE hal/narrow_return.cpp)
 # gate-225 block above). smoke_player also links that table but links the
 # plain ntr library, which keeps the host copies, so it is left as it was: it
 # gets neither the define nor the slice, and its registry stays one model.
+#
+# THE IE PAIR BUILDS FROM HOSTGEN COPIES, in this block's own custom commands
+# (GATE4A's shape) rather than on PORT_HOSTGEN_TU, whose region belongs to
+# another lane this wave: IRQ::EnableIRQs and IRQ::DisableIRQs poke IME and IE
+# through literal casts, and the rewrite routes those through ntr/mmio.h the
+# way IRQ::SetIRQs is routed for slice_link21.txt. A slice row named in
+# W235_HOSTGEN_TU compiles its build/host-src copy and never the raw file.
+set(W235_HOSTGEN_TU
+    src/_ZN3IRQ10EnableIRQsEj.cpp
+    src/_ZN3IRQ11DisableIRQsEj.cpp)
 port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w23_irq.txt" SLICEW235_LINES)
 set(SLICEW235_SOURCES "")
 foreach(line IN LISTS SLICEW235_LINES)
@@ -22489,7 +22499,18 @@ foreach(line IN LISTS SLICEW235_LINES)
     if(line MATCHES "^#" OR line STREQUAL "")
         continue()
     endif()
-    list(APPEND SLICEW235_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+    if(line IN_LIST W235_HOSTGEN_TU)
+        set(_w235_out "${CMAKE_BINARY_DIR}/host-src/${line}")
+        add_custom_command(OUTPUT "${_w235_out}"
+            COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+                    --out "${CMAKE_BINARY_DIR}/host-src" ${line}
+            DEPENDS "${PORT_REPO_ROOT_ABS}/${line}"
+                    "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+            COMMENT "hostgen ${line}")
+        list(APPEND SLICEW235_SOURCES "${_w235_out}")
+    else()
+        list(APPEND SLICEW235_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+    endif()
 endforeach()
 foreach(_tw235 walk_window walk_window_hires)
     target_sources(${_tw235} PRIVATE ${SLICEW235_SOURCES})

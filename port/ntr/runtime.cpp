@@ -214,33 +214,51 @@ DSSTATE_END
 // joins the two, flat onto matched, and hal/faces4_rows.cpp's /
 // unmatched/MgLuigi_Faces.cpp's older C++-onto-flat rows now resolve through
 // it to the same body (a chained /alternatename, which link.exe follows).
+//
+// THE IE WORD IS THE ROM'S TOO (the second step). src/_ZN3IRQ10EnableIRQsEj.cpp
+// and src/_ZN3IRQ11DisableIRQsEj.cpp run as written, through hostgen's MMIO
+// rewrite (the "W23-5 IRQ TABLE" block), so their `IME = 0; old = IE;
+// IE = old | mask; IME = saved` lands in IE (0x04000210) and IME (0x04000208),
+// two plain read/write latches of the mapped I/O window (ntr/mmio.h
+// mechanism 1): no side effect to model, nothing for io_write to trigger. The
+// host stand-in word g_ie is gone on these libraries and the two dispatchers
+// here read the latch instead: HBlank's IE gate bit 1, the geometry FIFO's bit
+// 21. ntr/rt.cpp's rt_irq_boot_state already seated bit 0 in that same latch
+// (the VBlank enable src/func_0201a054.c makes, EnableIRQs(1)), so the latch
+// now holds what the cartridge's does at the same point rather than the host
+// word's subset of it. IRQ::ClearInterrupts stays a host body; see its tag.
 // ---------------------------------------------------------------------------
 #if defined(NTR_ROM_IRQ_TABLE)
 extern "C" void *data_02099fe4[22];   // hal/arm9_tables_link100.cpp
 #pragma comment(linker, "/alternatename:__ZN3IRQ13GetIRQHandlerEj=?GetIRQHandler@IRQ@@YAP6AXXZI@Z")
 #pragma comment(linker, "/alternatename:__ZN3IRQ13SetIRQHandlerEjPFvvE=?SetIRQHandler@IRQ@@YAXIP6AXXZ@Z")
+#pragma comment(linker, "/alternatename:__ZN3IRQ10EnableIRQsEj=?EnableIRQs@IRQ@@YAII@Z")
+#pragma comment(linker, "/alternatename:__ZN3IRQ11DisableIRQsEj=?DisableIRQs@IRQ@@YAII@Z")
 #endif
 
 namespace {
 typedef void (*IrqHandler)(void);
-unsigned g_ie;                      // IE word stand-in
 #if defined(NTR_ROM_IRQ_TABLE)
 constexpr unsigned IRQ_BIT_HBLANK = 1;    // IE/IF bit 1, mask 2
 constexpr unsigned IRQ_BIT_GXFIFO = 21;   // IE/IF bit 21, mask 0x200000
+constexpr uintptr_t REG_IE = 0x04000210u;
 IrqHandler hblank_handler() {
     return reinterpret_cast<IrqHandler>(data_02099fe4[IRQ_BIT_HBLANK]);
 }
 IrqHandler gxfifo_handler() {
     return reinterpret_cast<IrqHandler>(data_02099fe4[IRQ_BIT_GXFIFO]);
 }
+unsigned ie_word() { return *reinterpret_cast<volatile uint32_t *>(REG_IE); }
 #else
 // The smoke probes' registry (the plain ntr library): they link no ROM vector
 // table and no matched IRQ TUs, so the host copies below stand in for both.
+unsigned g_ie;                      // IE word stand-in
 IrqHandler g_gxfifo_handler;        // handler for mask 0x200000
 IrqHandler g_hblank_handler;        // handler for mask 0x2, the HBlank edge
 IrqHandler g_vblank_handler;        // handler for mask 0x1, the VBlank edge
 IrqHandler hblank_handler() { return g_hblank_handler; }
 IrqHandler gxfifo_handler() { return g_gxfifo_handler; }
+unsigned ie_word() { return g_ie; }
 #endif
 
 // The two DS registers the HBlank gate reads. Both are ordinary latches in the
@@ -341,7 +359,7 @@ namespace ntr {
 unsigned rt_hblank_gates() {
     unsigned g = 0;
     if (hblank_handler()) g |= HBLANK_GATE_HANDLER;
-    if (g_ie & IRQ_HBLANK) g |= HBLANK_GATE_IE;
+    if (ie_word() & IRQ_HBLANK) g |= HBLANK_GATE_IE;
     if (!rt_irq_masked()) g |= HBLANK_GATE_CPSR;
     if (*reinterpret_cast<volatile uint16_t *>(REG_IME) & 1u) g |= HBLANK_GATE_IME;
     if (*reinterpret_cast<volatile uint16_t *>(REG_DISPSTAT) &
@@ -355,6 +373,10 @@ bool rt_hblank_armed() { return rt_hblank_gates() == HBLANK_GATE_ALL; }
 void rt_hblank_dispatch() { hblank_handler()(); }
 
 }  // namespace ntr
+#if !defined(NTR_ROM_IRQ_TABLE)
+// THE SMOKE PROBES' COPIES of the IE pair. The game libraries link
+// src/_ZN3IRQ10EnableIRQsEj.cpp and src/_ZN3IRQ11DisableIRQsEj.cpp instead
+// (hostgen'd, over the IE latch; see THE IE WORD IS THE ROM'S TOO above).
 // PORT_HOST_ABI: src pokes the DS interrupt registers (IME 0x4000208, IE
 //   0x4000210); the host keeps the IE word stand-in above.
 extern "C" unsigned _ZN3IRQ10EnableIRQsEj(unsigned mask) {
@@ -369,8 +391,21 @@ extern "C" unsigned _ZN3IRQ11DisableIRQsEj(unsigned mask) {
     g_ie &= ~mask;
     return prev;
 }
-// PORT_HOST_ABI: src pokes the DS interrupt registers (IME 0x4000208, IF
-//   0x4000214), which the ntr layer does not model.
+#endif  // !NTR_ROM_IRQ_TABLE
+// PORT_HOST_ABI: src acknowledges IF (0x4000214) by storing the mask, and IF
+//   is write-one-to-clear on the DS; ntr/io.cpp latches IF plain, so the src
+//   store would SET the acknowledged bits and zero the rest.
+//   MEASURED, run linkfull lane IRQTAB1, on every target: the one linked
+//   caller is the display-list pump (src/func_0205a290.c, mask 0x200000, after
+//   each geometry-FIFO chunk), and this port never raises IF bit 21 (the pump
+//   is re-entered straight from DMAStartTransfer below), so on the cartridge's
+//   own semantics the acknowledge is a no-op here -- which is what this body
+//   is. The src TU byte-matches (tools/match.py, 2004/b56, strict relocs) and
+//   is owed the day io_write clears IF bits on a store, which is a change to
+//   ntr/io.cpp's dispatch and not to this file. Until then linking it would
+//   leave the IF latch reading 0x200000 after every chunk (bit 21 set, every
+//   other bit cleared), and that latch is read: src/func_02059650.c tests IF
+//   bit 3 (the tick's pending timer overflow) and the crash screen prints it.
 extern "C" void _ZN3IRQ15ClearInterruptsEj(unsigned) {}
 
 // DMA to the FIFO is the display-list path (func_0205a290). ctrl bit 30 is
@@ -421,7 +456,7 @@ extern "C" void DMAStartTransfer(int ch, int src, int dst, int ctrl) {
                 ++g_census_dmadone;
                 reinterpret_cast<void (*)(unsigned)>(h)(data_020a60c4[ch & 7].arg);
             }
-        } else if (g_ie & 0x200000u) {
+        } else if (ie_word() & 0x200000u) {
             if (const IrqHandler h = gxfifo_handler()) {
                 ++g_census_gxfifo;
                 h();

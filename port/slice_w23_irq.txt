@@ -26,3 +26,26 @@
 #     func_0205bad8 (IPC receive), func_02059788 (timer 0), dScMgLuigi_c's iris.
 src/_ZN3IRQ13GetIRQHandlerEj.cpp
 src/_ZN3IRQ13SetIRQHandlerEjPFvvE.cpp
+#
+# THE IE PAIR, through hostgen (the CMake block builds build/host-src copies of
+# these two rows and compiles those): each body pokes IME (0x4000208) and IE
+# (0x4000210) through literal casts, and hostgen's MMIO rewrite routes them to
+# the port's mapped I/O window the way src/_ZN3IRQ7SetIRQsEj.cpp is routed for
+# slice_link21.txt. Both registers are plain read/write latches on the DS.
+#
+# src/_ZN3IRQ10EnableIRQsEj.cpp           arm9 0x02056de0, 0x38
+#     saved = IME; IME = 0; old = IE; IE = old | mask; IME = saved; return old.
+#     Callers: the dWipe_c setters (mask 2), func_0205a358 (0x200000),
+#     func_02056e98 (a DMA channel's bit; it reads the old word back),
+#     func_02056e4c / func_02059c18 (timers), func_0205bad8 (0x40000),
+#     func_0204175c (card), func_02059788 (8), dScMgLuigi_c's iris.
+# src/_ZN3IRQ11DisableIRQsEj.cpp          arm9 0x02056d98, 0x48
+#     the same bracket, IE = old & ~mask. Callers: func_0202fb30 (the HBlank
+#     disarm), func_0205a21c (the pump's last chunk), IRQ::DmaTimHandler,
+#     func_02059834 / func_02059bc0 / func_02059cb4, dScMgLuigi_c.
+#
+# NOT HERE: src/_ZN3IRQ15ClearInterruptsEj.cpp (0x02056d64, 0x34). It stores
+# the mask into IF (0x4000214), which the DS clears bit by bit on a store and
+# ntr/io.cpp latches plain; see its PORT_HOST_ABI tag in ntr/runtime.cpp.
+src/_ZN3IRQ10EnableIRQsEj.cpp
+src/_ZN3IRQ11DisableIRQsEj.cpp
