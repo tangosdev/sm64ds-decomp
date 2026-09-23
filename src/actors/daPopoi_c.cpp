@@ -1,10 +1,34 @@
 //cpp
-/* HAND-ASSEMBLED translation unit -- ov077/daPopoi_c (22 function(s)).
- * tubuild create refused this TU (legacy bodies wrapped in extern "C" { }),
- * so this is a raw concatenation of the complete legacy files in REVERSE
- * ROM order (mwccarm emits one .text section per function in the reverse
- * of source order). Conflicting declarations were reconciled by hand; see
- * the manifest notes.
+/* ov077/daPopoi_c -- the enemy behind the POPOI registry profile.
+ *
+ * A ground walker that homes on the nearest player. It keeps two anchor
+ * positions: a home point (unk_404..unk_40c), which Behavior snaps back to if
+ * the actor ever falls below the kill plane at data_0209f32c, and last frame's
+ * position (unk_410..unk_418), which every "I would have walked into something"
+ * path rolls back to.
+ *
+ * Its state machine is a pointer-to-member stored at unk_3fc. Each state is one
+ * of the func_ov077_* handlers below; func_ov077_02126d5c installs a state and
+ * calls it immediately, so the entry action runs on the switching frame. Behavior
+ * re-invokes whatever is installed once per frame, after ticking mStateTimer and
+ * unk_426 down.
+ *
+ * The two guards that keep it on its ledge:
+ *   - func_ov077_02126300 casts two dBgCh_Lin rays ahead (one level, one pitched
+ *     down 0x3000) and reports "blocked"; it also does the rollback itself.
+ *   - dEnemyBase_c::IsGoingOffCliff plus a floor-normal slope test in Behavior.
+ *
+ * Member NAMES come from daPopoi_c.h. Fields it still spells unk_* are ones no
+ * evidence has named yet -- the offsets are observed, not guessed.
+ *
+ * LAYOUT OF THIS FILE: the functions appear in REVERSE ROM order (highest
+ * address first). That is not a style choice -- mwccarm 2004/b56 emits one .text
+ * section per function in the reverse of source order, so this ordering is what
+ * reproduces the cartridge. Do not sort it.
+ *
+ * Most bodies carry C linkage: they came from .c shards whose ROM symbols are
+ * unmangled, so each `extern "C"` block below is preserving a real ABI name
+ * rather than making a style point.
  *
  * Absorbed functions, in ROM address order. Each arrived as its own
  * per-symbol legacy shard; promotion consolidated all 22 into this file,
@@ -99,8 +123,12 @@ int daPopoi_c::InitResources()
 /* ROM ordinal 19 -- _ZN9daPopoi_c8BehaviorEv, 0x02126e88, size 0x1e4 */
 #include "types.h"
 // @symbol _ZN9daPopoi_c8BehaviorEv
-struct Klass; typedef void (Klass::*PMF)();
-struct M { char pad[8]; PMF pmf; };
+/* The state machine, as this member sees it. unk_3fc points at a record whose
+ * third word is the handler; StateOwner is an opaque stand-in for daPopoi_c so
+ * the pointer-to-member call compiles without the real class in scope here. */
+struct StateOwner;
+typedef void (StateOwner::*StateFn)();
+struct StateRecord { char pad[8]; StateFn handler; };
 struct dCc_c;
 struct dBgCh_Actr;
 extern "C" {
@@ -122,11 +150,12 @@ extern int data_0209f32c;
 
 int daPopoi_c::Behavior()
 {
-    int b;
-    Vector3 v;
-    int r5;
-    M *m;
+    int goingOffCliff;
+    Vector3 floorNormal;
+    int slope;
+    StateRecord *state;
 
+    /* Below the kill plane: teleport home and skip the frame entirely. */
     if (mPosY < data_0209f32c) {
         mPosX = unk_404;
         mPosY = unk_408;
@@ -137,24 +166,27 @@ int daPopoi_c::Behavior()
     DecIfAbove0_Short((unsigned short *)((char *)&mStateTimer));
     DecIfAbove0_Short((unsigned short *)((char *)&unk_426));
 
-    m = *(M **)((char *)&unk_3fc);
-    if (m->pmf != 0)
-        (((Klass *)((char *)this))->*(m->pmf))();
+    state = *(StateRecord **)((char *)&unk_3fc);
+    if (state->handler != 0)
+        (((StateOwner *)((char *)this))->*(state->handler))();
 
     _ZN8dActor_c9UpdatePosEP5dCc_c(((char *)this), (dCc_c *)((char *)&mdCcAcPos_c));
 
-    r5 = 0;
+    /* Slope under the feet, as an angle relative to the way we are facing. */
+    slope = 0;
     if (_ZNK10dBgCh_Actr10IsOnGroundEv((char *)&mWithMeshClsn)) {
-        void *fr = _ZNK10dBgCh_Actr14GetFloorResultEv((char *)&mWithMeshClsn);
-        _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char *)fr + 4, &v);
-        r5 = func_02010844(((char *)this), &v, mAngleY);
+        void *floorResult = _ZNK10dBgCh_Actr14GetFloorResultEv((char *)&mWithMeshClsn);
+        _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char *)floorResult + 4, &floorNormal);
+        slope = func_02010844(((char *)this), &floorNormal, mAngleY);
     }
 
-    b = _ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actrisbbi(((char *)this), (dBgCh_Actr *)((char *)&mWithMeshClsn), 0x3c000, (s16)0x2888, 0, 1, (void *)0x32000);
-    if (b == 0) {
-        if (r5 < 0)
-            r5 = (s16)-r5;
-        if (r5 <= 0x100)
+    /* Roll back to last frame's position if this step would walk off a ledge,
+     * or onto ground tilted more than 0x100 either way. */
+    goingOffCliff = _ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actrisbbi(((char *)this), (dBgCh_Actr *)((char *)&mWithMeshClsn), 0x3c000, (s16)0x2888, 0, 1, (void *)0x32000);
+    if (goingOffCliff == 0) {
+        if (slope < 0)
+            slope = (s16)-slope;
+        if (slope <= 0x100)
             goto writeback;
     }
     mPosX = unk_410;
@@ -185,20 +217,24 @@ writeback:
 // @symbol _ZN9daPopoi_c6RenderEv
 extern int data_0209f32c;
 
-struct Cls {
-    virtual void method0();
-    virtual void method1();
-    virtual void method2();
-    virtual void method3();
-    virtual void method4();
-    virtual void method5(int);  /* at vtable offset 0x14 */
+/* Just enough of ModelAnim's vtable to reach the draw entry at slot 5 (offset
+ * 0x14). The five leading virtuals exist only to place that slot; declaring the
+ * real class here would drag in its bases, and ModelAnim is multiply derived. */
+struct ModelAnimDraw {
+    virtual void slot0();
+    virtual void slot1();
+    virtual void slot2();
+    virtual void slot3();
+    virtual void slot4();
+    virtual void Draw(int);  /* vtable offset 0x14 */
 };
 
 int daPopoi_c::Render()
 {
+    /* Nothing below the kill plane is worth drawing. */
     if (mPosY < data_0209f32c) return 1;
-    Cls *obj = (Cls*)((char*)&mModelAnim);
-    obj->method5(0);
+    ModelAnimDraw *model = (ModelAnimDraw *)((char *)&mModelAnim);
+    model->Draw(0);
     return 1;
 }
 
@@ -249,9 +285,29 @@ void func_ov077_02126dac(char *t)
 
 /* ROM ordinal 14 -- func_ov077_02126d5c, 0x02126d5c, size 0x50 */
 // @symbol func_ov077_02126d5c
-struct Cst; typedef int (Cst::*PMFst)();  /* renamed: another member's shadow PMF has a different signature */
-struct Cst { char pad[0x3fc]; PMFst *pp; };
-extern "C" int func_ov077_02126d5c(void *vc, void *vp) { Cst *c = (Cst *)vc; PMFst *p = (PMFst *)vp; c->pp = p; PMFst *q = c->pp; if (*q == 0) return 1; return (c->**q)(); }
+/* Install a state and run its entry action on the same frame.
+ *
+ * The handler is read back out of the field after the store rather than reused
+ * from the argument -- mwccarm emits the str and then an ldr of the same slot,
+ * and sourcing it from `p` instead collapses that pair.
+ *
+ * This member's shadow pointer-to-member returns int, where the one Behavior
+ * declares returns void; they are separate typedefs on purpose. */
+struct StateHost;
+typedef int (StateHost::*StateEntryFn)();
+struct StateHost { char pad[0x3fc]; StateEntryFn *state; };
+
+extern "C" int func_ov077_02126d5c(void *vc, void *vp)
+{
+    StateHost *self = (StateHost *)vc;
+    StateEntryFn *next = (StateEntryFn *)vp;
+
+    self->state = next;
+
+    StateEntryFn *installed = self->state;
+    if (*installed == 0) return 1;
+    return (self->**installed)();
+}
 
 /* ROM ordinal 13 -- func_ov077_02126cd4, 0x02126cd4, size 0x88 */
 // @symbol func_ov077_02126cd4
@@ -595,6 +651,20 @@ extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, int angle);
 extern void MulVec3Mat4x3(void *in, void *m, void *out);
 
+/* Probe ahead for a wall or a missing floor. Returns 1 if the way is blocked,
+ * and in that case also rolls the actor back to last frame's position and kills
+ * its vertical speed. Returns 0 when the path is clear.
+ *
+ * Two rays leave the actor's head height (+0x28000): a long level one 0xc8000
+ * ahead, and a short one 0x2c000 ahead pitched down 0x3000. Blocked means
+ * "the level ray hit something, OR the pitched ray found no ground".
+ *
+ * Guarded by data_0209f2f8 == 0x2a, so the probe only runs in one level.
+ *
+ * NOTE on the two `end.x = sx; end.x = sx + ox;` pairs below: the dead first
+ * store is deliberate. mwccarm writes the base and then the sum, and folding
+ * them into one assignment changes the store sequence this function's ROM bytes
+ * record. Leave them. */
 int func_ov077_02126300(void *vc)
 {
     char *c = (char *)vc;
