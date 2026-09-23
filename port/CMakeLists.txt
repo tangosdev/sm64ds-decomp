@@ -22682,3 +22682,46 @@ endforeach()
 foreach(_lw235 ntr_wide_rt ntr_hires)
     target_compile_definitions(${_lw235} PRIVATE NTR_ROM_IRQ_TABLE)
 endforeach()
+
+# W25 PMFMG1 (run linkfull wave 25): the minigame member-pointer rows
+# ---- run linkfull, lane PMFMG1 ----------------------------------------------
+# port/slice_w25_pmfmg1.txt names eleven matched minigame state dispatchers
+# whose host copies this lane retired: each table or field pair run they read
+# is seated with host words at overlay load by the class's own installer in
+# port/unmatched/ (the slice file names the file per row), so the ROM's own
+# compiled dispatch reaches a host body. They go on the three targets that
+# carry the minigame stack (SCENE_MG_SOURCES and the per-class slices).
+#
+# TWO ROWS BUILD FROM HOSTGEN COPIES in this block's own custom commands (the
+# W235 / GATE4A shape, not PORT_HOSTGEN_TU, whose region belongs to another
+# lane): src/func_ov006_020c8f20.cpp and src/func_ov006_020cb030.cpp each
+# redeclare two members at namespace scope, which MSVC refuses as C2761, and
+# port/tools/hostgen.py's MEMBER_REDECL rows for exactly those two files delete
+# the redeclarations. A slice row named in W25MG_HOSTGEN_TU compiles its
+# build/host-src copy and never the raw file.
+set(W25MG_HOSTGEN_TU
+    src/func_ov006_020c8f20.cpp
+    src/func_ov006_020cb030.cpp)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w25_pmfmg1.txt" SLICEW25MG_LINES)
+set(SLICEW25MG_SOURCES "")
+foreach(line IN LISTS SLICEW25MG_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    if(line IN_LIST W25MG_HOSTGEN_TU)
+        set(_w25mg_out "${CMAKE_BINARY_DIR}/host-src/${line}")
+        add_custom_command(OUTPUT "${_w25mg_out}"
+            COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+                    --out "${CMAKE_BINARY_DIR}/host-src" ${line}
+            DEPENDS "${PORT_REPO_ROOT_ABS}/${line}"
+                    "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+            COMMENT "hostgen ${line}")
+        list(APPEND SLICEW25MG_SOURCES "${_w25mg_out}")
+    else()
+        list(APPEND SLICEW25MG_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+    endif()
+endforeach()
+foreach(_tw25mg walk_window walk_window_hires smoke_player)
+    target_sources(${_tw25mg} PRIVATE ${SLICEW25MG_SOURCES})
+endforeach()

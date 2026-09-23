@@ -341,43 +341,33 @@ extern "C" unsigned port_mg_coin_touch_calls(void)
    port/slice_seat4.txt, so the host copy that stood in for it is gone and
    the declaration above is what the faces in this file reach. */
 
-/* src/func_ov006_020ddd6c.cpp. SILENT: `extern "C" Entry data_ov006_02141840[]`.
-   Forty elements of stride 0x1c; the live flag at +0x4677, the state byte at
-   +0x4675. */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgCoin_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
-extern "C" void func_ov006_020ddd6c(char *thiz)
-{
-    int n = 0;
-    char *p = thiz;
-    for (int i = 0; i < 0x28; i++) {
-        if (*(unsigned char *)(p + 0x4000 + 0x677) != 0) {
-            const MgPmf *e =
-                &data_ov006_02141840[*(unsigned char *)(p + 0x4000 + 0x675)];
-            port_mg_coin_call1(thiz, e->code, e->adj, i);
-            if (*(unsigned char *)(p + 0x4000 + 0x675) != 4)
-                n++;
-            func_ov006_020dde28(thiz, i);
-        }
-        p += 0x1c;
-    }
-    if (n != 0)
-        return;
-    *(int *)(thiz + 0x5000 + 0x1c8) = 2;
-    *(unsigned char *)(thiz + 0x4000 + 0xd13) = 1;
-    _ZN5Sound12PlayBank2_2DEj(0x151);
-}
+/* src/func_ov006_020ddd6c.cpp -- RETIRED, run linkfull lane PMFMG1. The table
+   it dispatches, data_ov006_02141840, is the one lane PMFB4 seated below for
+   func_ov006_020de26c: six cells, one-argument __fastcall faces. The matched
+   TU's own `(self->*data_ov006_02141840[state].pmf)(i)` compiles under the
+   port's /vmg /vmm to `push edi / mov ecx, tab[eax*8+4] / mov eax, tab[eax*8]
+   / add ecx, ebx / call eax` with no caller cleanup (its listing,
+   runs/linkfull/out/PMFMG1/func_ov006_020ddd6c.asm), which is exactly how
+   func_ov006_020de26c and func_ov006_020de440 already enter those faces. The
+   table's three readers in the ROM are those three and its sinit, nothing
+   else (runs/linkfull/out/PMFMG1/rom_table_readers.txt), so every reader
+   spells the pair as a member pointer and one set of faces serves all three.
 
-/* THE NAME-SPELLING VARIANT src/func_ov006_020de584.c uses for the TU above:
-   a bare `func_020ddd6c`, a name that exists in no config. Defined here rather
-   than aliased because the host copy is what has to be reached, and an
-   /alternatename whose left-hand side is also a defined symbol is defeated
-   silently -- the class port/tools/alternatename_guard.py exists to catch. It
-   forwards its one argument explicitly, so it is correct whether MSVC compiles
-   it as a call or as a jmp. */
-extern "C" void func_020ddd6c(void *c)
-{
-    func_ov006_020ddd6c((char *)c);
-}
+   The copy it replaces had stopped routing when PMFB4 seated the table: it
+   still handed the seated word to this file's DS address switch, which
+   refuses a host address by name (MgBase_StateDispatch.cpp mg_is_ds_code).
+   MEASURED on the wave-23 fold build (runs/linkfull/out/PMFMG1/witness/): in
+   1200 frames of scene 378 with a scripted stylus the playlog carries
+   "port_mg_call1 WAS HANDED A HOST ADDRESS" 42200 times (forty coins a
+   frame), no coin state is ever entered, the touch state never runs and the
+   class ends in state index 1. The same run on this change enters the coin
+   states 18515 times, runs the touch state 2311 times and ends in state
+   index 5: the ROM's own loop (0x020ddd6c, no null test, one blx per live
+   coin) is what now runs.
+
+   The bare `func_020ddd6c` forwarder that stood here for
+   src/func_ov006_020de584.c is gone with it: that TU now spells the real name,
+   and nothing in the tree references the bare one. */
 
 /* src/func_ov006_020de440 -- RETIRED, run link100 lane SEAT4. Its table is
    seated in port/hal/pmf_seat4.cpp and the matched TU is on

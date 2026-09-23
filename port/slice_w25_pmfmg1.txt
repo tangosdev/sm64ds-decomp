@@ -1,0 +1,13 @@
+# run linkfull wave 25, lane PMFMG1: the minigame member-pointer rows.
+#
+# Every TU below was a state dispatcher the port host-copied because its
+# member-pointer table or field held DS code words for the life of the process.
+# Each table or pair run it reads is now seated with host words at overlay load
+# (after every cell is compared with the cartridge's own word and a zero
+# adjustment), with the calling convention its own listing under the port's
+# flags calls for; the host copy is retired in the same change. The derivation
+# for each row is in the host file named beside it, and the ROM reads are in
+# runs/linkfull/out/PMFMG1/ (rom_records.txt, the sweeps, the listings).
+#
+# Coincentration (dScMgCoin_c), unmatched/MgCoin_StateDispatch.cpp
+src/func_ov006_020ddd6c.cpp
