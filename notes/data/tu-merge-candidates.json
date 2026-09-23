@@ -27334,18 +27334,18 @@
    "start": "0x211b7b8",
    "end": "0x211bb7c",
    "classes": [
-    "TtcRotatingGear"
+    "daObjCtMecha08_c"
    ],
    "n_functions_map": 7,
    "n_files": 7,
    "files": [
     "src/daObjCtKaitendai_c_classInit_CT_MECHA06.c",
-    "src/_ZN15TtcRotatingGearD1Ev.cpp",
-    "src/_ZN15TtcRotatingGearD0Ev.cpp",
-    "src/_ZN15TtcRotatingGear16CleanupResourcesEv.cpp",
-    "src/_ZN15TtcRotatingGear6RenderEv.cpp",
-    "src/_ZN15TtcRotatingGear8BehaviorEv.c",
-    "src/_ZN15TtcRotatingGear13InitResourcesEv.cpp"
+    "src/_ZN16daObjCtMecha08_cD1Ev.cpp",
+    "src/_ZN16daObjCtMecha08_cD0Ev.cpp",
+    "src/_ZN16daObjCtMecha08_c16CleanupResourcesEv.cpp",
+    "src/_ZN16daObjCtMecha08_c6RenderEv.cpp",
+    "src/_ZN16daObjCtMecha08_c8BehaviorEv.c",
+    "src/_ZN16daObjCtMecha08_c13InitResourcesEv.cpp"
    ],
    "ext_mix": {
     ".c": 2,

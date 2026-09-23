@@ -1,5 +1,5 @@
-#ifndef TTCROTATINGGEAR_H
-#define TTCROTATINGGEAR_H
+#ifndef DAOBJCTMECHA08_C_H
+#define DAOBJCTMECHA08_C_H
 
 #include "types.h"
 #include "dBgW_KcMbg.h"
@@ -13,17 +13,25 @@
  * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
  * is not independent evidence about the ROM.
  *
- * SM64DS RTTI names the implementation daObjCtKaitendai_c. The reconstructed
- * factory daObjCtKaitendai_c_classInit_CT_MECHA06 (historical alias
- * TtcRotatingGear_Spawn) constructs it for the CT_MECHA06
- * registry profile.
+ * NAME. The cartridge names this class itself. ov065's vtable storage begins at
+ * 0x0211d48c with an offset-to-top of 0 and a typeinfo word of 0x0211d434; that
+ * record is an __si_class_type_info whose name word points at 0x0211d440, where
+ * the overlay reads the length-prefixed string "16daObjCtMecha08_c", and whose
+ * base word points at _ZTI10dBgActor_c (ov002:0x021089ec). The tree spelled the
+ * class TtcRotatingGear until that reading was applied; that name was coined
+ * and is retired. Two registry profiles share the class -- g_profile_CT_MECHA08A
+ * and g_profile_CT_MECHA08B -- and both reconstructed factories install this
+ * same cartridge vtable. The factory and profile spellings are reconstructed,
+ * not preserved original source names (historical aliases TtcMovingCubeA_Spawn
+ * and TtcMovingCubeB_Spawn). The unrelated alias TtcRotatingGear_Spawn names
+ * daObjCtKaitendai_c's CT_MECHA06 factory, not this class.
  */
 
 #ifdef __cplusplus
 
 #include "dBgActor_c.h"
 
-struct TtcRotatingGear : dBgActor_c {
+struct daObjCtMecha08_c : dBgActor_c {
     u8  pad_31e[0x2];
     s32 mHomePosX;                    /* 0x320 -- InitResources copies mPosX/Y/Z here */
     s32 mHomePosY;                    /* 0x324 -- Behavior clamps mPosY to [mHomePosY, mHomePosY + 0x14a000] */
@@ -32,7 +40,7 @@ struct TtcRotatingGear : dBgActor_c {
     u8 mMoveDir;                      /* 0x32e */
 
     /* --- vtable --- */
-    virtual ~TtcRotatingGear();
+    virtual ~daObjCtMecha08_c();
 
     int Behavior();
     int CleanupResources();
@@ -42,7 +50,7 @@ struct TtcRotatingGear : dBgActor_c {
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char TtcRotatingGear_size_must_be_0x330[sizeof(TtcRotatingGear) == 0x330 ? 1 : -1];
+typedef char daObjCtMecha08_c_size_must_be_0x330[sizeof(daObjCtMecha08_c) == 0x330 ? 1 : -1];
 #endif
 
 #else
@@ -50,7 +58,7 @@ typedef char TtcRotatingGear_size_must_be_0x330[sizeof(TtcRotatingGear) == 0x330
 /* The C spelling of the same object, flat. Kept because the D0 file is a C
    translation unit that reads these fields, and D0 is compiler-generated so it
    can never be migrated. Same arrangement as include/ShadowModel.h. */
-struct TtcRotatingGear {
+struct daObjCtMecha08_c {
     u8  pad_000[0x5c];
     s32 mPosX;            /* 0x05c */
     s32 mPosY;            /* 0x060 */
@@ -65,7 +73,7 @@ struct TtcRotatingGear {
     /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
     Model mModel;            /* 0x0d4 */
-    /* dBgW_KcMbg member. The cartridge's own ~TtcRotatingGear calls _ZN10dBgW_KcMbgD1Ev
+    /* dBgW_KcMbg member. The cartridge's own ~daObjCtMecha08_c calls _ZN10dBgW_KcMbgD1Ev
        at +0x124 (D0/D1), a relocation the ROM build checks; recovered by
        tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
     dBgW_KcMbg mMeshCollider;            /* 0x124 */
@@ -79,4 +87,4 @@ struct TtcRotatingGear {
 
 #endif /* __cplusplus */
 
-#endif /* TTCROTATINGGEAR_H */
+#endif /* DAOBJCTMECHA08_C_H */

@@ -552,7 +552,7 @@ extern int _ZTV13daObjCloset_c;
 extern int _ZTV15RollingIronBall[];
 extern int _ZTV15RotatingFirebar[];
 extern int _ZTV15TtcRotatingCube[];
-extern int _ZTV15TtcRotatingGear[];
+extern int _ZTV16daObjCtMecha08_c[];
 extern int _ZTV15dScMgCurling2_c[];
 extern int _ZTV15dScMgPachinko_c[];
 extern int _ZTV15daObjFlMaruta_c[];

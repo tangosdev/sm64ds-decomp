@@ -272,7 +272,7 @@ symbol, so each pair is a duplicate definition and each also double-counts in an
 |---|---|---|---|
 | `_ZN7Message30DisplayCourseNameForStarSelectEj` | no | MATCH | delete `.c` |
 | [func_ov070_0211f6e0](../config/arm9/overlays/ov070/symbols.txt) | MATCH | no | delete `.cpp` |
-| `_ZN15TtcRotatingGear8BehaviorEv` | MATCH | MATCH | pick one |
+| `_ZN16daObjCtMecha08_c8BehaviorEv` | MATCH | MATCH | pick one |
 | `_ZN5Stage7PS_InitEv` | MATCH | MATCH | pick one |
 | [func_ov006_020f46ec](../config/arm9/overlays/ov006/symbols.txt) | MATCH | MATCH | pick one |
 | [func_ov065_02116364](../config/arm9/overlays/ov065/symbols.txt) | MATCH | MATCH | pick one |

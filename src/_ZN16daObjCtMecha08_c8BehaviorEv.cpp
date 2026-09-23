@@ -1,6 +1,6 @@
 //cpp
-// @symbol _ZN15TtcRotatingGear8BehaviorEv
-/* TtcRotatingGear::Behavior -- Tick Tock Clock's lifts.
+// @symbol _ZN16daObjCtMecha08_c8BehaviorEv
+/* daObjCtMecha08_c::Behavior -- Tick Tock Clock's lifts.
  *
  * data_0209f2c0 is the level's clock hand setting. 3 ("random") pins the lift
  * at the top of its travel; otherwise it runs on a timer, and each time the
@@ -16,7 +16,7 @@
  * mangled free function; UpdateModelPosAndRotY, UpdateClsnPosAndRot and
  * UpdatePos are members.
  */
-#include "TtcRotatingGear.h"
+#include "daObjCtMecha08_c.h"
 
 extern "C" {
 extern u8  data_0209f2c0;      /* clock hand setting */
@@ -29,7 +29,7 @@ int RandomIntInternal(int *seed);
 int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(dBgActor_c *self, int a, int b);
 }
 
-int TtcRotatingGear::Behavior()
+int daObjCtMecha08_c::Behavior()
 {
     if (data_0209f2c0 == 3) {
         mPosY = mHomePosY + 0x14a000;

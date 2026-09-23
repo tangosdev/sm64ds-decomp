@@ -272,27 +272,27 @@ src/actors/daObjCtKaitendai_c.cpp:
     complete
     .text start:0x0211b360 end:0x0211b7f0
 
-src/_ZN15TtcRotatingGearD1Ev.cpp:
+src/_ZN16daObjCtMecha08_cD1Ev.cpp:
     complete
     .text start:0x0211b7f0 end:0x0211b834
 
-src/_ZN15TtcRotatingGearD0Ev.cpp:
+src/_ZN16daObjCtMecha08_cD0Ev.cpp:
     complete
     .text start:0x0211b834 end:0x0211b88c
 
-src/_ZN15TtcRotatingGear16CleanupResourcesEv.cpp:
+src/_ZN16daObjCtMecha08_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x0211b88c end:0x0211b8d0
 
-src/_ZN15TtcRotatingGear6RenderEv.cpp:
+src/_ZN16daObjCtMecha08_c6RenderEv.cpp:
     complete
     .text start:0x0211b8d0 end:0x0211b8f8
 
-src/_ZN15TtcRotatingGear8BehaviorEv.cpp:
+src/_ZN16daObjCtMecha08_c8BehaviorEv.cpp:
     complete
     .text start:0x0211b8f8 end:0x0211ba88
 
-src/_ZN15TtcRotatingGear13InitResourcesEv.cpp:
+src/_ZN16daObjCtMecha08_c13InitResourcesEv.cpp:
     .text start:0x0211ba88 end:0x0211bb7c
 
 src/d_a_obj_ct_mecha08_ct_mecha08b.c:

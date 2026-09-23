@@ -209,7 +209,7 @@
    ]
   },
   "ov065:0x0211ba88": {
-   "name": "_ZN15TtcRotatingGear13InitResourcesEv",
+   "name": "_ZN16daObjCtMecha08_c13InitResourcesEv",
    "missing": [
     "func_021121b8"
    ]

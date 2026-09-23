@@ -11343,7 +11343,7 @@
       "src/_ZN15TtcRotatingCube13InitResourcesEv.cpp": [
         "param:#1 void *"
       ],
-      "src/_ZN15TtcRotatingGear13InitResourcesEv.cpp": [
+      "src/_ZN16daObjCtMecha08_c13InitResourcesEv.cpp": [
         "param:#1 void *"
       ],
       "src/_ZN15daObjMarioCap_c13InitResourcesEv.cpp": [
@@ -14717,7 +14717,7 @@
         "param:#1 void *",
         "return:void *"
       ],
-      "src/_ZN15TtcRotatingGear13InitResourcesEv.cpp": [
+      "src/_ZN16daObjCtMecha08_c13InitResourcesEv.cpp": [
         "param:#1 void *",
         "return:void *"
       ],
@@ -18755,7 +18755,7 @@
       "src/_ZN15TtcRotatingCube13InitResourcesEv.cpp": [
         "return:void"
       ],
-      "src/_ZN15TtcRotatingGear13InitResourcesEv.cpp": [
+      "src/_ZN16daObjCtMecha08_c13InitResourcesEv.cpp": [
         "return:void"
       ],
       "src/_ZN16BowserShockwaves13InitResourcesEv.cpp": [
@@ -22047,7 +22047,7 @@
       ]
     },
     "data_0209f2c0": {
-      "src/_ZN15TtcRotatingGear13InitResourcesEv.cpp": [
+      "src/_ZN16daObjCtMecha08_c13InitResourcesEv.cpp": [
         "return:unsigned char []"
       ],
       "src/_ZN16SpinningPlatform8BehaviorEv.cpp": [
@@ -29660,12 +29660,12 @@
       ]
     },
     "data_ov065_0211c0d0": {
-      "src/_ZN15TtcRotatingGear13InitResourcesEv.cpp": [
+      "src/_ZN16daObjCtMecha08_c13InitResourcesEv.cpp": [
         "return:char []"
       ]
     },
     "data_ov065_0211c0d4": {
-      "src/_ZN15TtcRotatingGear13InitResourcesEv.cpp": [
+      "src/_ZN16daObjCtMecha08_c13InitResourcesEv.cpp": [
         "return:char []"
       ]
     },

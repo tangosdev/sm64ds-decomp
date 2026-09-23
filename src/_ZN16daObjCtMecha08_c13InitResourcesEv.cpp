@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN15TtcRotatingGear13InitResourcesEv
+// @symbol _ZN16daObjCtMecha08_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "TtcRotatingGear.h"
+#include "daObjCtMecha08_c.h"
 /* Mangled ROM names need extern "C" in a .cpp file, or the compiler re-mangles them
    into phantoms no module defines. */
 extern "C" void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
@@ -18,7 +18,7 @@ extern unsigned char data_0209f2c0[];
 extern char data_ov065_0211c0d4[];
 extern char data_ov065_0211c0d0[];
 
-int TtcRotatingGear::InitResources()
+int daObjCtMecha08_c::InitResources()
 {
     void* mdl;
     void* kcl;
