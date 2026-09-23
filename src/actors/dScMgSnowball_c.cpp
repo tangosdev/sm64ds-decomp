@@ -98,7 +98,7 @@ namespace cstd { int fdiv(int numerator, int denominator); }
 namespace G2S  { char *GetBG2ScrPtr(); unsigned GetBG2CharPtr(); void *GetBG3ScrPtr(); }
 namespace GX   { void LoadBGPltt(const void *src, u32 offset, u32 size); void LoadOBJPltt(const void *src, u32 offset, u32 size); }
 namespace GXS  { void LoadBGPltt(const void *src, u32 offset, u32 size); void LoadOBJPltt(const void *src, u32 offset, u32 size); }
-namespace CP15 { void FlushAndInvalidateDataCache(void *address, u32 length); }
+namespace CP15 { void FlushAndInvalidateDataCache(u32 address, u32 length); }
 namespace G3X  { void SetFog(bool enable, int blend, int slope, int offset); }
 
 extern "C" {
@@ -1942,7 +1942,7 @@ s32 dScMgSnowball_c::InitResources()
     data_0209d454 |= 0xc;
 
     buf = func_ov004_020adc74(&data_ov006_0214009c);
-    CP15::FlushAndInvalidateDataCache(buf, 0x100);
+    CP15::FlushAndInvalidateDataCache((u32)buf, 0x100);
     GX::LoadBGPltt(buf, 0x100, 0x100);
     GXS::LoadBGPltt(buf, 0x100, 0x100);
     Ov004_Deallocate(buf);
@@ -1953,7 +1953,7 @@ s32 dScMgSnowball_c::InitResources()
     Ov004_Deallocate(buf);
 
     buf = func_ov004_020adc74(&data_ov006_021400dc);
-    CP15::FlushAndInvalidateDataCache(buf, 0x100);
+    CP15::FlushAndInvalidateDataCache((u32)buf, 0x100);
     GX::LoadOBJPltt(buf, 0, 0x100);
     GXS::LoadOBJPltt(buf, 0, 0x100);
     Ov004_Deallocate(buf);
