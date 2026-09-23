@@ -1,49 +1,56 @@
-/* HOST COPIES of src/func_ov094_02136188.cpp (the state-cell installer) and
- * the inline PMF dispatch inside src/_ZN10HootTheOwl8BehaviorEv.cpp (the
- * per-frame state tick) -- HOOT_THE_OWL's (234, ov094, gate 194) own state
- * machine. The Unagi/MrBlizzard/BabyPenguin shape: a REAL C++ pointer-to-
- * member dispatched through a DELIBERATELY INCOMPLETE class.
+/* HOOT_THE_OWL (234, ov094, gate 194): the SEAT of the owl's five state cells
+ * and the one host copy left of its state machine, the per-frame tick in
+ * src/_ZN10HootTheOwl8BehaviorEv.cpp.
  *
- * func_ov094_02136188 forms:
- *     struct C; typedef int (C::*PMF)();
- *     struct C { char pad[0x3c8]; PMF *pp; };
- *     c->pp = p;
- *     PMF *q = c->pp;
- *     if (*q == 0) return 1;
- *     return (c->**q)();
- * -- store the cell pointer p at self+0x3c8 (mCurrentState) and immediately
- * dispatch cell[0] (the PMF itself, an 8-byte {fn,delta} pair). Behavior
- * reads the SAME stored pointer back every frame and dispatches through it
- * a second time (`Obj *o = *(Obj**)(this+0x3c8); if (o+8 != 0) (this->*o->fn)()`,
- * Obj{char pad[8]; Fn fn;} -- fn at +8 is the same one-word PMF encoding,
- * a non-virtual complete-class dispatch since every state cell's own delta
- * word is 0, ROM-byte verified against overlay_0094.bin the same way every
- * PMF table in this port has been).
+ * THE CELLS. __sinit_ov094_021367e8 copies TEN 8-byte source records
+ * (data_ov094_021369c0..02136a08, five {enter, tick} pairs) into five bss
+ * cells, data_ov094_02136b30/b40/b50/b60/b70, each a 2-entry array.
+ * func_ov094_02136188 (matched, port/slice_pmf3.txt) stores a cell pointer at
+ * self+0x3c8 (mCurrentState) and dispatches cell[0], the ENTER record;
+ * Behavior reads the same pointer back every frame and dispatches cell+8, the
+ * TICK record (HootTheOwl::State's mMain in include/HootTheOwl.h).
  *
- * MSVC's PMF representation for an INCOMPLETE class (no base, no virtuals
- * declared at the typedef) is the "unknown inheritance" general form, not a
- * plain function pointer, and does not reproduce the ROM's own {function,
- * delta} semantics when called through this way -- the SoundObject/Cap/
- * MrBlizzard/BabyPenguin/Unagi disease, confirmed the same way every other
- * instance was: reading the recovered source's own struct declaration, not
- * inferred from a crash. Both dispatch sites are host copies, translated
- * field for field with the PMF call replaced by a plain function-pointer
- * call through the same struct layout the seat below establishes.
+ * WHAT THE ROM DOES WITH A RECORD (run linkfull lane PMF1, disassembled out of
+ * extracted/overlays/overlay_0094.bin at 0x02136488..0x021364b8, the same
+ * five-instruction decode Klepto's Behavior carries at 0x0211c968):
  *
- * THE SEAT (the MrBlizzard/BabyPenguin/Unagi/Amilift/LavaBubble "seat the
- * source before the copy" order). __sinit_ov094_021367e8 copies TEN 8-byte
- * SOURCE records (data_ov094_021369c0..02136a08, five {enter,tick} pairs)
- * into the five bss cells (data_ov094_02136b30/b40/b50/b60/b70, each a
- * 2-entry array) InitResources/Behavior/the ten state handlers all read by
- * address. Each source record's own fn word (reloc-confirmed against
- * config/arm9/overlays/ov094/relocs.txt) is one of the ten func_ov094_*
- * state-handler bodies -- CODE, which the mount's pointer-rebase pass does
- * NOT touch (it only rebases pointers into other MOUNTED DATA), so the raw
- * mounted words are DS addresses. port_hoot_the_owl_states_seat() rewrites
- * each source record's fn word with its HOST body's address BEFORE the
- * sinit runs, validating each mounted word against the ROM's own address
- * first (a wrong mount aborts loudly instead of seating garbage) -- called
- * from hal_fill_hoot_the_owl_vtable() in hal/actor_classes_ov094.cpp.
+ *     ldr   r1, [r4, #0x3c8]      the cell
+ *     ldr   r0, [r1, #8]          word 0 of the tick record: the null test
+ *     add   r3, r1, #8
+ *     ldr   r1, [r3, #4]          word 1
+ *     add   r0, r4, r1, asr #1    receiver = this + (word 1 >> 1)
+ *     ands  r1, r1, #1            word 1 bit 0 set: a VIRTUAL member, word 0
+ *     ldrne ...                   is then an offset into the receiver's vtable
+ *     ldreq r1, [r3]              clear: word 0 IS the code address
+ *     blx   r1
+ *
+ * That is the ARM C++ ABI member pointer: the virtual flag lives in bit 0 of
+ * the ADJUSTMENT word and the adjustment is stored doubled. MSVC's
+ * pointer-to-member under /vmg /vmm (target-wide, port/CMakeLists.txt block
+ * R8) is the same eight bytes in the same order, and its call is
+ * `ecx = this + word 1; call word 0`: no shift and no virtual branch. The two
+ * agree exactly when word 1 is zero, and it is zero in all ten ROM records:
+ * each +4 word of 0x021369c0..0x02136a0c reads 00000000 in the image and no
+ * relocation is recorded from any of them (config/arm9/overlays/ov094/
+ * relocs.txt; runs/linkfull/out/PMF1/rom_hoot_records.txt). The seat below
+ * aborts on any nonzero word 1 as well, so a wrong mount cannot reach either
+ * dispatcher.
+ *
+ * THE RECEIVER RIDES IN ECX. mwcc hands the receiver over in r0; MSVC's call
+ * puts it in ecx and pushes NOTHING, whether the transfer is Behavior's call
+ * or func_ov094_02136188's tail jump (both set ecx = this + word 1 first). The
+ * ten state bodies are extern "C" cdecl and read their receiver from [esp+4],
+ * so every cell word, enter and tick alike, is seated with a __fastcall face
+ * that takes ecx and calls the body with it (the Pokey / Ukiki shape, and the
+ * face goes on every row: port/tools/pmf_guard.py's rule, because the face is
+ * right for a call and a tail jump alike).
+ *
+ * THE SEAT runs from hal_fill_hoot_the_owl_vtable() in
+ * hal/actor_classes_ov094.cpp, after the sinit has filled the live cells and
+ * before InitResources can dispatch through func_ov094_02136188. It verifies
+ * each live record reads the ROM's own {address, 0} first (a wrong mount
+ * aborts loudly instead of seating garbage), then overwrites word 0 with the
+ * face.
  */
 #include <cstdio>
 #include <cstdlib>
@@ -70,23 +77,30 @@ int func_ov094_021359d8(void *self);
 extern PortHootPmf data_ov094_02136b30[2], data_ov094_02136b40[2],
     data_ov094_02136b50[2], data_ov094_02136b60[2], data_ov094_02136b70[2];
 
-typedef int (*PortHootFn)(void *);
+/* The ten faces: receiver in ecx, body called with it as its one cdecl
+   argument. */
+#define HOOT_FACE(a) static int __fastcall hoot_st_##a(void *s) \
+    { return func_ov094_##a(s); }
+HOOT_FACE(02136150) HOOT_FACE(02136024) HOOT_FACE(02135fe0) HOOT_FACE(02135ee0)
+HOOT_FACE(02135e64) HOOT_FACE(02135c28) HOOT_FACE(02135bd4) HOOT_FACE(021359d8)
+HOOT_FACE(0213598c) HOOT_FACE(021358b4)
+#undef HOOT_FACE
+
 static const struct { PortHootPmf *cell; unsigned enter_rom, tick_rom;
-                       PortHootFn enter_host, tick_host; }
+                       void *enter_host, *tick_host; }
 g_hoot_cells[5] = {
-    {data_ov094_02136b40, 0x02136150, 0x02136024, func_ov094_02136150, func_ov094_02136024},
-    {data_ov094_02136b50, 0x02135fe0, 0x02135ee0, func_ov094_02135fe0, func_ov094_02135ee0},
-    {data_ov094_02136b60, 0x02135e64, 0x02135c28, func_ov094_02135e64, func_ov094_02135c28},
-    {data_ov094_02136b70, 0x02135bd4, 0x021359d8, func_ov094_02135bd4, func_ov094_021359d8},
-    {data_ov094_02136b30, 0x0213598c, 0x021358b4, func_ov094_0213598c, func_ov094_021358b4},
+    {data_ov094_02136b40, 0x02136150, 0x02136024, (void *)hoot_st_02136150, (void *)hoot_st_02136024},
+    {data_ov094_02136b50, 0x02135fe0, 0x02135ee0, (void *)hoot_st_02135fe0, (void *)hoot_st_02135ee0},
+    {data_ov094_02136b60, 0x02135e64, 0x02135c28, (void *)hoot_st_02135e64, (void *)hoot_st_02135c28},
+    {data_ov094_02136b70, 0x02135bd4, 0x021359d8, (void *)hoot_st_02135bd4, (void *)hoot_st_021359d8},
+    {data_ov094_02136b30, 0x0213598c, 0x021358b4, (void *)hoot_st_0213598c, (void *)hoot_st_021358b4},
 };
 
-/* Seat the five cells with HOST function addresses, the MrBlizzard/
-   BabyPenguin/Unagi shape: verify the sinit copied the ROM's own {address,0}
+/* Seat the five cells: verify the sinit copied the ROM's own {address, 0}
    pairs (WRONG BYTES aborts instead of silently calling into garbage), then
-   overwrite enter_fn/tick_fn with the host bodies' own addresses. Called
-   from hal_fill_hoot_the_owl_vtable() BEFORE InitResources can dispatch
-   through func_ov094_02136188. */
+   overwrite each word 0 with its face. Called from
+   hal_fill_hoot_the_owl_vtable() BEFORE InitResources can dispatch through
+   func_ov094_02136188. */
 extern "C" void port_hoot_the_owl_states_seat(void)
 {
     static int done;
@@ -111,26 +125,24 @@ extern "C" void port_hoot_the_owl_states_seat(void)
 
 /* func_ov094_02136188, the state-cell installer, IS NO LONGER HOST-COPIED.
    src/func_ov094_02136188.cpp is on port/slice_pmf3.txt (run link100 lane
-   PMF3): with /vmg /vmm target-wide, MSVC's pointer-to-member IS the ROM's
-   8-byte {function, delta} pair, and the emitted body is a TAIL JUMP -- the
-   caller's own cdecl frame survives, so the seated body still reads its
-   receiver from [esp+4] and the extra `p` argument sits unread at [esp+8].
-   The one thing the flag cannot decide is the adjustment, and it is decided
-   twice here: port_hoot_the_owl_states_seat above aborts the binary on any
-   nonzero delta before an owl can dispatch, and the ten source pairs at ov094
-   0x021369c0..0x02136a08 were re-read out of overlay_0094.bin with their
-   relocations and every adjustment word is ROM zero. The seat and the
-   Behavior host copy below both stay: Behavior is a separate ruling. */
+   PMF3), and its tail jump sets ecx = this + word 1 before it jumps, so the
+   faces above receive the owl there too. */
 
-/* PORT_HOST_ABI: HootTheOwl::Behavior, host copy -- ONLY the inline PMF
-   dispatch (the state cell's own "tick" word, read back from self+0x3c8)
-   differs from the matched src; the rest is transcribed line for line off
-   _ZN10HootTheOwl8BehaviorEv.cpp with raw offsets, including the
-   func_ov094_021357a4 call -- the matched src spells this call
-   "_ZN9daSanbo_c13OnYoshiTryEatEv" (a dsd cross-overlay alias typo, port/ov094_syms.txt's
-   own header has the full derivation), but since Behavior is a host copy
-   here, the real ov094 name is called directly and no /alternatename
-   bridge is needed. */
+/* PORT_HOST_ABI: HootTheOwl::Behavior, host copy. The dispatch below is the
+   matched TU's own: MSVC's 8-byte member pointer over the tick record,
+   `mov ecx,[rec+0Ch] / add ecx,this / call [rec+8]` with the null test on
+   word 0 alone, which is what src/_ZN10HootTheOwl8BehaviorEv.cpp compiles to
+   under this build's flags (runs/linkfull/out/PMF1/msvc_hoot_behavior.asm).
+   The rest is transcribed line for line off that TU with raw offsets.
+
+   WHAT STILL KEEPS THE MATCHED TU OUT is its NAME, not its code. The TU
+   defines ?Behavior@HootTheOwl@@UAEHXZ, and port/faces_sync.txt carries that
+   member as a FORWARD face (the generated file defines it and calls the flat
+   name this body defines), so linking the TU as it stands is a duplicate
+   definition. Retiring this body is three steps: that ledger row flips from F
+   to R (the face then defines _ZN10HootTheOwl8BehaviorEv and calls the
+   member), this body goes, and the TU is enrolled. The faces above stay as
+   they are. */
 extern void DecIfAbove0_Short(void *);
 extern void _ZN9Animation7AdvanceEv(void *);
 extern void func_02012694(int, void *);
@@ -142,24 +154,24 @@ extern void func_ov094_021361d8(void *);
 extern void func_ov094_021362e0(void *);
 extern void func_ov094_021357a4(void *);
 
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch; MSVC's PMF over an
- * incomplete class is the wider general representation. See the header. */
+/* The matched TU's view of a state: eight bytes nothing reads, then the tick
+   record as a real member pointer. The class is left incomplete on purpose;
+   under /vmg /vmm its member pointer is the same eight bytes either way. */
+struct PortHootOwl;
+struct PortHootState {
+    unsigned char pad_00[8];
+    void (PortHootOwl::*mMain)();   /* 0x08 */
+};
+
 int _ZN10HootTheOwl8BehaviorEv(void *selfv)
 {
     char *c = (char *)selfv;
 
     DecIfAbove0_Short((unsigned short *)(c + 0x100));
     {
-        /* the matched src's `struct Obj { char pad[8]; Fn fn; }` where Fn
-           is itself the 8-byte {fn,delta} PMF pair -- o points at the SAME
-           cell func_ov094_02136188 stored at c+0x3c8, and the src's
-           `*(int*)(o+8)` reads the fn WORD at cell+8 (the pad[8] skips the
-           cell's own leading 8 bytes, whatever those hold for this state)
-           and tests it non-null before dispatching. */
-        char *o = *(char **)(c + 0x3c8);
-        unsigned fn = *(unsigned *)(o + 8);
-        if (fn != 0)
-            ((void (*)(void *))(size_t)fn)(c);
+        PortHootState *o = *(PortHootState **)(c + 0x3c8);
+        if (*(int *)((char *)o + 8) != 0)
+            (((PortHootOwl *)c)->*(o->mMain))();
     }
     if (*(char **)(c + 0x3c8) == (char *)data_ov094_02136b40)
         return 1;
