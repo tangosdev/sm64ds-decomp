@@ -2507,11 +2507,13 @@ def reg_ride_arg_patch(text, sym):
 #
 # NARROW_RETURN_CURE is the switch. False hands back the raw register, which
 # is byte-for-byte what every caller read before this table existed (the
-# measure-before-curing arm); True hands back the extended value.
+# measure-before-curing arm, commit "route every narrow ROM return through one
+# wrapper per body"); True hands back the extended value, which is what the
+# cartridge's callers read. It ships True.
 #
 # Exact shapes, hard-errored like the tables above: a row whose header no
 # longer matches exactly once is a source that moved.
-NARROW_RETURN_CURE = False
+NARROW_RETURN_CURE = True
 NARROW_RETURN_KINDS = {"s8": ("signed char", 0), "u8": ("unsigned char", 1),
                        "s16": ("short", 2), "u16": ("unsigned short", 3),
                        "bool": ("unsigned char", 4)}
