@@ -2301,11 +2301,26 @@ __ZN17ExtendingPlatformD0Ev                                              ??1Exte
 
 __ZN6EyerokD0Ev                                                          _ZN6EyerokD1Ev                                                   0x02115f84 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
-__ZN15FaderBrightnessD0Ev                                                ??1FaderBrightness@@UAE@XZ                                       0x020177e8 D _ZN6Memory16operator_delete2EPv  -
+# RETIRED at D0ARM10 2026-09-23 (run linkfull, batch B5 faders and the wipe): src/engine/fader/_ZN15FaderBrightnessD0Ev.cpp
+# defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
+# port/slice_w25_d0arm10.txt. The arm makes the two calls this row's face made:
+# the D1 body (??1FaderBrightness@@UAE@XZ), then FaderBrightness::operator delete,
+# which is _ZN6Memory16operator_delete2EPv(self), read off the object.
+#__ZN15FaderBrightnessD0Ev                                                ??1FaderBrightness@@UAE@XZ                                       0x020177e8 D _ZN6Memory16operator_delete2EPv  -
 
-__ZN10FaderColorD0Ev                                                     ??1FaderColor@@UAE@XZ                                            0x02017598 D _ZN6Memory16operator_delete2EPv  -
+# RETIRED at D0ARM10 2026-09-23 (run linkfull, batch B5 faders and the wipe): src/engine/fader/_ZN10FaderColorD0Ev.cpp
+# defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
+# port/slice_w25_d0arm10.txt. The arm makes the two calls this row's face made:
+# the D1 body (??1FaderColor@@UAE@XZ), then FaderColor::operator delete,
+# which is _ZN6Memory16operator_delete2EPv(self), read off the object.
+#__ZN10FaderColorD0Ev                                                     ??1FaderColor@@UAE@XZ                                            0x02017598 D _ZN6Memory16operator_delete2EPv  -
 
-__ZN9FaderWipeD0Ev                                                       _ZN9FaderWipeD1Ev                                                0x02017418 D _ZN6Memory16operator_delete2EPv  -
+# RETIRED at D0ARM10 2026-09-23 (run linkfull, batch B5 faders and the wipe): src/engine/fader/_ZN9FaderWipeD0Ev.cpp
+# defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
+# port/slice_w25_d0arm10.txt. The arm makes the two calls this row's face made:
+# the D1 body (??1FaderWipe@@UAE@XZ), then FaderWipe::operator delete,
+# which is _ZN6Memory16operator_delete2EPv(self), read off the object.
+#__ZN9FaderWipeD0Ev                                                       _ZN9FaderWipeD1Ev                                                0x02017418 D _ZN6Memory16operator_delete2EPv  -
 
 # RETIRED at D0ARM10 2026-09-23 (run linkfull, batch B3 the rest): src/game/actors/daObjTh_Fall_Block_c/_ZN12FallBlockBbhD0Ev.cpp
 # defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
@@ -2660,7 +2675,12 @@ __ZN5dCc_cD0Ev                                                           ??1dCc_
 
 __ZN12dEnemyBase_cD0Ev                                                   ??1dEnemyBase_c@@UAE@XZ                                          0x020aed3c D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
-__ZN10dFdDummy_cD0Ev                                                     _ZN10dFdDummy_cD1Ev                                              0x02017228 D _ZN6Memory16operator_delete2EPv  -
+# RETIRED at D0ARM10 2026-09-23 (run linkfull, batch B5 faders and the wipe): src/_ZN10dFdDummy_cD0Ev.cpp
+# defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
+# port/slice_w25_d0arm10.txt. The arm makes the two calls this row's face made:
+# the D1 body (??1dFdDummy_c@@UAE@XZ), then dFdDummy_c::operator delete,
+# which is _ZN6Memory16operator_delete2EPv(self), read off the object.
+#__ZN10dFdDummy_cD0Ev                                                     _ZN10dFdDummy_cD1Ev                                              0x02017228 D _ZN6Memory16operator_delete2EPv  -
 
 __ZN9dScDSMT_cD0Ev                                                       _ZN9dScDSMT_cD1Ev                                                0x020cc070 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
@@ -3087,7 +3107,12 @@ __ZN15dScMgCurling2_cD0Ev                                                ??1dScM
 # the D1 body (??1dBgW@@UAE@XZ), then dBgW::operator delete,
 # which is _ZN6Memory16operator_delete2EPv(self), read off the object.
 #__ZN4dBgWD0Ev                                                            ??1dBgW@@UAE@XZ                                                  0x02039668 D _ZN6Memory16operator_delete2EPv  -
-__ZN5FaderD0Ev                                                           ??1Fader@@UAE@XZ                                                 0x02017848 D _ZN6Memory16operator_delete2EPv  -
+# RETIRED at D0ARM10 2026-09-23 (run linkfull, batch B5 faders and the wipe): src/engine/fader/_ZN5FaderD0Ev.cpp
+# defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
+# port/slice_w25_d0arm10.txt. The arm makes the two calls this row's face made:
+# the D1 body (??1Fader@@UAE@XZ), then Fader::operator delete,
+# which is _ZN6Memory16operator_delete2EPv(self), read off the object.
+#__ZN5FaderD0Ev                                                           ??1Fader@@UAE@XZ                                                 0x02017848 D _ZN6Memory16operator_delete2EPv  -
 # RETIRED at D0ARM10 2026-09-23 (run linkfull, batch B1 colliders): src/_ZN5dBgChD0Ev.cpp
 # defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
 # port/slice_w25_d0arm10.txt. The arm makes the two calls this row's face made:
@@ -3100,7 +3125,12 @@ __ZN5FaderD0Ev                                                           ??1Fade
 # the D1 body (??1Clipper@@UAE@XZ), then Clipper::operator delete,
 # which is _ZN6Memory16operator_delete2EPv(self), read off the object.
 #__ZN7ClipperD0Ev                                                         _ZN7ClipperD1Ev                                                  0x020156fc D _ZN6Memory16operator_delete2EPv  -
-__ZN7dWipe_cD0Ev                                                         _ZN7dWipe_cD1Ev                                                  0x0202fbc8 D _ZN6Memory16operator_delete2EPv  -
+# RETIRED at D0ARM10 2026-09-23 (run linkfull, batch B5 faders and the wipe): src/_ZN7dWipe_cD0Ev.cpp
+# defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
+# port/slice_w25_d0arm10.txt. The arm makes the two calls this row's face made:
+# the D1 body (??1dWipe_c@@UAE@XZ), then dWipe_c::operator delete,
+# which is _ZN6Memory16operator_delete2EPv(self), read off the object.
+#__ZN7dWipe_cD0Ev                                                         _ZN7dWipe_cD1Ev                                                  0x0202fbc8 D _ZN6Memory16operator_delete2EPv  -
 # RETIRED at D0ARM10 2026-09-23 (run linkfull, batch B1 colliders): src/_ZN8dM3dGSphD0Ev.cpp
 # defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
 # port/slice_w25_d0arm10.txt. The arm makes the two calls this row's face made:

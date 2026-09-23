@@ -39,3 +39,9 @@ src/_ZN6ShipUpD0Ev.cpp
 src/_ZN13QuestionBlockD0Ev.cpp
 src/_ZN8daDemo_c13simpleModel_cD0Ev.cpp
 src/_ZN8daDemo_c10anmModel_cD0Ev.cpp
+src/engine/fader/_ZN10FaderColorD0Ev.cpp
+src/_ZN10dFdDummy_cD0Ev.cpp
+src/engine/fader/_ZN15FaderBrightnessD0Ev.cpp
+src/engine/fader/_ZN5FaderD0Ev.cpp
+src/_ZN7dWipe_cD0Ev.cpp
+src/engine/fader/_ZN9FaderWipeD0Ev.cpp
