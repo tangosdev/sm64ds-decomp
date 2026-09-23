@@ -22682,3 +22682,34 @@ endforeach()
 foreach(_lw235 ntr_wide_rt ntr_hires)
     target_compile_definitions(${_lw235} PRIVATE NTR_ROM_IRQ_TABLE)
 endforeach()
+
+# ===========================================================================
+# W24 CAMP2 D0 ARM CAMPAIGN (batches D0ARM-04, D0ARM-05, D0ARM-06)
+# ===========================================================================
+#
+# Run linkfull, lane CAMP2, following the D0-arm campaign recipe banked by
+# lane D0ARM1 (reviewed SAFE by REVD0ARM1). Per-function src D0 TUs across
+# overlays ov019-ov026, ov027-ov060 and ov062-ov065 that now define their own
+# flat ROM name under MSVC, through the Model family's `#ifdef _MSC_VER` arm,
+# in place of the generated faces port/faces_sync.txt used to emit for them
+# (each retired D row is commented out in the same commit that adds the file
+# here, so each flat name has exactly one definition). port/slice_w24_camp2.txt
+# carries the rows, grown by one section per batch; the delete each arm makes
+# and the byte gate are recorded there and in this lane's own status/out files.
+#
+# ALL THREE HOSTING TARGETS, the slice_w23_d0arm shape: faces_sync_gen.cpp.obj,
+# which defined these names, and the three hal files whose slot-17 thunks call
+# them are on walk_window's, walk_window_hires' and smoke_player's link lines
+# alike (build.ninja), so the retired faces must be answered on all three.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w24_camp2.txt" SLICE_W24_CAMP2_LINES)
+set(SLICE_W24_CAMP2_SOURCES "")
+foreach(line IN LISTS SLICE_W24_CAMP2_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_W24_CAMP2_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_tw24camp2 walk_window walk_window_hires smoke_player)
+    target_sources(${_tw24camp2} PRIVATE ${SLICE_W24_CAMP2_SOURCES})
+endforeach()
