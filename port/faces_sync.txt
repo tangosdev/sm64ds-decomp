@@ -146,7 +146,7 @@ __ZN9BootSceneD1Ev                                                       ??1Boot
 __ZN6Bowser13InitResourcesEv                                             ?InitResources@Bowser@@UAEHXZ                                    0x02116130 R
 __ZN6Bowser16CleanupResourcesEv                                          ?CleanupResources@Bowser@@UAEHXZ                                 0x02115e80 R
 __ZN6Bowser16OnPendingDestroyEv                                          ?OnPendingDestroy@Bowser@@UAEXXZ                                 0x02115f08 R
-__ZN6Bowser8BehaviorEv                                                   ?Behavior@Bowser@@UAEHXZ                                         0x02115f64 F
+__ZN6Bowser8BehaviorEv                                                   ?Behavior@Bowser@@UAEHXZ                                         0x02115f64 R
 
 __ZN10BowserFire13InitResourcesEv                                        ?InitResources@BowserFire@@UAEHXZ                                0x02117790 R
 __ZN10BowserFire16CleanupResourcesEv                                     ?CleanupResources@BowserFire@@UAEHXZ                             0x021176c4 R

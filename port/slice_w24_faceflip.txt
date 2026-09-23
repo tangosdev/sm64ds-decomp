@@ -31,6 +31,13 @@
 #       HGFRONT1). Its one ROM caller (ov085 relocs.txt, from:0x0212a53c) is
 #       PrincessPeach::Behavior, linked matched C++ that calls the member, so
 #       nothing in the port spells the flat name any more.
+#   _ZN6Bowser8BehaviorEv        ov060 0x02115f64 size 0x114, faces_sync row
+#       __ZN6Bowser8BehaviorEv. Host copy was HOST COPY 6 in
+#       port/unmatched/Ov060_StateDispatch.cpp (its C2761 refusal is gone from
+#       the synced src, run linkfull lane HGFRONT1); the flat name's caller is
+#       hal/actor_classes_ov060.cpp's slot-6 shim. The one host-copied callee,
+#       func_ov060_02112434 (that file's HOST COPY 1), stays and is reached by
+#       the same C name.
 #
 # HOOT AND KLEPTO DISPATCH THROUGH A MEMBER POINTER (run linkfull lane PMF1,
 # LINK15 batch W23-7). Both Behaviors call their state machine through an mwcc
@@ -50,3 +57,4 @@
 src/_ZN10HootTheOwl8BehaviorEv.cpp
 src/_ZN6Klepto8BehaviorEv.cpp
 src/_ZN13PrincessPeach12UpdateLookAtEv.cpp
+src/_ZN6Bowser8BehaviorEv.cpp
