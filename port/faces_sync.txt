@@ -721,7 +721,7 @@ __ZN13PrincessPeach10InitState1Ev                                        ?InitSt
 __ZN13PrincessPeach10InitState2Ev                                        ?InitState2@PrincessPeach@@QAEHXZ                                0x0212a150 R
 __ZN13PrincessPeach10InitState3Ev                                        ?InitState3@PrincessPeach@@QAEHXZ                                0x0212a37c R
 __ZN13PrincessPeach10InitState4Ev                                        ?InitState4@PrincessPeach@@QAEHXZ                                0x0212a19c R
-__ZN13PrincessPeach12UpdateLookAtEv                                      ?UpdateLookAt@PrincessPeach@@QAEXXZ                              0x02129dbc F
+__ZN13PrincessPeach12UpdateLookAtEv                                      ?UpdateLookAt@PrincessPeach@@QAEXXZ                              0x02129dbc R
 __ZN13PrincessPeach16CleanupResourcesEv                                  ?CleanupResources@PrincessPeach@@UAEHXZ                          0x0212a4c0 R
 __ZN13PrincessPeach16OnPendingDestroyEv                                  ?OnPendingDestroy@PrincessPeach@@UAEXXZ                          0x0212a504 R
 __ZN13PrincessPeach21UpdateGroundCollisionEP10dBgCh_Actr                 ?UpdateGroundCollision@PrincessPeach@@QAEXPAUdBgCh_Actr@@@Z      0x02129ebc F

@@ -24,6 +24,13 @@
 #       __ZN6Klepto8BehaviorEv. Host copy was the body in
 #       port/unmatched/Klepto_StateDispatch.cpp; the flat name's caller is
 #       hal/actor_classes_koopa_chuckya.cpp's slot thunk.
+#   _ZN13PrincessPeach12UpdateLookAtEv  ov085 0x02129dbc size 0x100,
+#       faces_sync row __ZN13PrincessPeach12UpdateLookAtEv. Host copy was the
+#       UpdateLookAt half of port/unmatched/Ov085_PrincessPeach_Declshapes.cpp
+#       (its C2733 refusal is gone from the synced src, run linkfull lane
+#       HGFRONT1). Its one ROM caller (ov085 relocs.txt, from:0x0212a53c) is
+#       PrincessPeach::Behavior, linked matched C++ that calls the member, so
+#       nothing in the port spells the flat name any more.
 #
 # HOOT AND KLEPTO DISPATCH THROUGH A MEMBER POINTER (run linkfull lane PMF1,
 # LINK15 batch W23-7). Both Behaviors call their state machine through an mwcc
@@ -42,3 +49,4 @@
 # compiled the host copies, and the three that link the generated faces.
 src/_ZN10HootTheOwl8BehaviorEv.cpp
 src/_ZN6Klepto8BehaviorEv.cpp
+src/_ZN13PrincessPeach12UpdateLookAtEv.cpp
