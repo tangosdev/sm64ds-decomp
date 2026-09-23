@@ -93,7 +93,19 @@ struct daDsn_c : daDsnBase_c {
     u8  mTriggered;         /* 0x3a2 */
 
     /* --- vtable --- */
-    virtual ~daDsn_c();                 /* slots 16 (D1), 17 (D0) */
+    /* Slots 16 (D1) and 17 (D0), defined in the class body, the way the sibling
+       leaf daDkk_c.h does it. EMPTY, BUT NOT INERT: the 0x60-byte D1 stores this
+       class's vptr, then daDsnBase_c's (inlined -- its destructor is in its
+       class body too), destroying ShadowModel@0x338 and TextureSequence@0x324,
+       then dBgActor_c's, destroying dBgW_KcMbg@0x124 and Model@0xd4, before
+       chaining to dActor_c::~dActor_c.
+
+       In-class is load-bearing twice. It moves the ABI key function down to
+       Behavior, the first declared virtual that is neither inline nor pure,
+       which src/actors/daDsn_c.cpp defines, so that TU emits _ZTV7daDsn_c. And
+       an out-of-line definition makes mwccarm emit D0 ahead of D1, the reverse
+       of the cartridge (0x02132938 D1, 0x02132998 D0). */
+    virtual ~daDsn_c() {}
 
     /* The two the base declares `= 0`; this class supplies both. */
     int Behavior();                    /* slot  6 */

@@ -15401,9 +15401,6 @@
       "src/_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj.cpp": [
         "return:void"
       ],
-      "src/_ZN7daDsn_c15OnHitByMegaCharER6Player.cpp": [
-        "return:void"
-      ],
       "src/_ZN8CccArena4KillEv.cpp": [
         "return:void"
       ],
@@ -17840,9 +17837,6 @@
     },
     "_ZN9Animation7AdvanceEv": {
       "src/_ZN14UnknownVsEntry8BehaviorEv.cpp": [
-        "return:int"
-      ],
-      "src/_ZN7daDsn_c8BehaviorEv.cpp": [
         "return:int"
       ],
       "src/actors/daPeach_c.cpp": [
@@ -33055,9 +33049,6 @@
       ],
       "src/_ZN6Player16St_BurnFire_MainEv.cpp": [
         "param:#2 const void *"
-      ],
-      "src/_ZN7daDsn_c15OnHitByMegaCharER6Player.cpp": [
-        "param:#1 int"
       ],
       "src/_ZN8Fireball8BehaviorEv.cpp": [
         "param:#2 const void *"
