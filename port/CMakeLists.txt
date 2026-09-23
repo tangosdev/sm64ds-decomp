@@ -22682,3 +22682,32 @@ endforeach()
 foreach(_lw235 ntr_wide_rt ntr_hires)
     target_compile_definitions(${_lw235} PRIVATE NTR_ROM_IRQ_TABLE)
 endforeach()
+
+# ===========================================================================
+# D0ARM10 THE REFUSED D0 ROWS (run linkfull, lane D0ARM10)
+# ===========================================================================
+#
+# Run linkfull, lane D0ARM10. Per-function src D0 TUs the D0-arm campaign's
+# generator had refused on a shape check (out/D0ARM1/refusal_groups.txt),
+# armed by hand with the campaign's `#ifdef _MSC_VER` shape and gated per
+# file. Each now defines its own flat ROM name under MSVC in place of the
+# generated face port/faces_sync.txt used to emit for it (those D rows are
+# retired in the same commits, so each flat name has exactly one
+# definition). port/slice_w25_d0arm10.txt carries the rows.
+#
+# ALL THREE HOSTING TARGETS, the campaign's shape: faces_sync_gen.cpp.obj,
+# which defined these names, is on walk_window's, walk_window_hires' and
+# smoke_player's link lines alike (build.ninja), so the retired faces must
+# be answered on all three.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w25_d0arm10.txt" SLICE_W25_D0ARM10_LINES)
+set(SLICE_W25_D0ARM10_SOURCES "")
+foreach(line IN LISTS SLICE_W25_D0ARM10_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_W25_D0ARM10_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_tw25d0arm10 walk_window walk_window_hires smoke_player)
+    target_sources(${_tw25d0arm10} PRIVATE ${SLICE_W25_D0ARM10_SOURCES})
+endforeach()
