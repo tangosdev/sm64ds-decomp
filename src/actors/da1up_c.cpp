@@ -1,19 +1,22 @@
 //cpp
-/* da1up_c -- the 1-Up / Mega Mushroom actor, ov002.
+/* da1up_c -- the mushroom, in all fourteen of the ways it can behave.
  *
- * Reconstructed translation unit: the contiguous linker run
- * 0x020aee40..0x020b0530, ROM ordinals 0..35, 36 functions, assembled from the
- * 36 one-function legacy sources the promotion deletes and then reconciled by
- * hand. config/tu_manifest.d/ov002/da1up_c.json names every one of them.
+ * One class covers the 1-Up and the Mega Mushroom and every way either of them
+ * enters play: sitting in the open, hidden until a condition is met, running
+ * away, circling, dropping out of something. mMushroomType picks one of the 14
+ * behaviours out of a dispatch array and Behavior calls it every frame; the
+ * class also answers to Yoshi (OnYoshiTryEat) and to being turned into an egg
+ * (OnTurnIntoEgg).
+ *
+ * The TU is the contiguous linker run 0x020aee40..0x020b0530, ROM ordinals
+ * 0..35, 36 functions; config/tu_manifest.d/ov002/da1up_c.json names each one.
  *
  * IDENTITY IS THE CARTRIDGE'S, NOT THE TREE'S. ov002 file offset 0x5ad10 ==
  * address 0x02108370 holds `7da1up_c\0`, the length-prefixed Itanium type-name
  * string, and _ZTI7da1up_c at 0x0210837c is the matching __si_class_type_info
- * whose +8 word reaches _ZTI12dEnemyBase_c at 0x021081c0. The project's former
- * spelling `OneUpMushroom` is absent from every image in every encoding tested,
- * so the class, its header and its nine mangled members move to the ROM name in
- * this change. The scout's fact file is still at its pre-rename path,
- * notes/data/class-facts/OneUpMushroom.json, and records `class: da1up_c`.
+ * whose +8 word reaches _ZTI12dEnemyBase_c at 0x021081c0. The tree's former
+ * spelling `OneUpMushroom` is in no image in any encoding tested; the fact
+ * file kept at notes/data/class-facts/OneUpMushroom.json records the result.
  *
  * SOURCE ORDER IS ROM-ASCENDING AND `#pragma defer_codegen off` IS
  * LOAD-BEARING; they are ONE decision, exactly as on ov006/dScMgPanel_c. With
@@ -87,8 +90,7 @@
  * Leftover fold adds the two classInit factories at 0x020b0530/0x020b0580,
  * so the licensed run is 38 functions through 0x020b05d0.
  *
- * deslop
- * Leftover (cited MATCH walls):
+ * Known walls -- these do NOT byte-match if you convert them:
  * - dBgCh_Actr::Init / dCcAc_c::Init / DropShadowRadHeight / ReflectAngle 6az
  *   (Fix12i mangles as i; ROM is Fix12<int> -- method form Undefined)
  * - Particle::System::New / NewSimple: no method declaration in include/

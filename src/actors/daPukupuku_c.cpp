@@ -1,39 +1,38 @@
 //cpp
-/**
- * Cheep Cheep (PUKUPUKU).
+/* daPukupuku_c -- the Cheep Cheep.
  *
- * Swimming enemy. InitResources records home pos and sets the state;
- * Behavior handles Yoshi-eat, position update, state dispatch, and
- * contact damage; the four state handlers (ordinals 3-6) count timers
- * and steer toward home.
+ * A swimming enemy with a home point. InitResources records where it was
+ * placed and picks a starting state; Behavior runs the frame -- getting eaten
+ * by Yoshi, moving, dispatching the current state through a pointer-to-member
+ * at +0x370, and dealing contact damage. The four state handlers count a timer
+ * down and steer back toward home.
  *
- * daPukupuku_c_classInit / g_profile_PUKUPUKU are reconstructed (RTTI
- * daPukupuku_c at 0x021342f0, PUKUPUKU registry at 0x02134300). Retail
- * does not store those spellings. Historical alias CheepCheep_Spawn.
+ * Function order is the REVERSE of the ROM's (highest address first): mwccarm
+ * 2004/b56 emits one .text section per function in reverse source order. Do
+ * not reorder. D0/D1 order inside the destructor group is the compiler's to
+ * pick (verify reports PARTIAL [(0, 1)], pilot report sec 3).
  *
- * deslop
- * Leftover: function order is reverse ROM (highest address first) --
- *   mwccarm 2004/b56 emits one .text section per function in reverse
- *   source order. Do not reorder; D0/D1 order is compiler-chosen
- *   (verify reports PARTIAL [(0, 1)], pilot report sec 3).
- * Leftover: Behavior and the state handlers still address fields as
- *   char* + offsets (0x100 mStateTimer, 0x107 mEatenByYoshi, 0x110
- *   mdCcAcPos_c, 0x150 mWithMeshClsn, 0x370 state PMF). InitResources
- *   already proves 0x110/0x150/0x374 as real members, but the full
- *   Behavior conversion is unmeasured here; plain member form DIFFs
- *   on address rematerialization in this TU.
- * Leftover: func_ov090_* helpers keep ROM-unnamed spellings. No
- *   replacement is coined; the old daManta_c_Kill claim for 0x2133200
- *   is refuted in the manifest (its only referrer is this TU's own
- *   state table at 0x21342b8).
- * Leftover: data_ov090_* kept as this TU observes them -- 0x213455c
- *   AnimFilePtr (InitResources reads .file), 0x2134564 SharedFilePtr,
- *   0x21342d8 Vector3, 0x2134594 scalar int via decl_common.h.
- * Leftover: factory is `return (int *)new daPukupuku_c` -- real
- *   instantiation, which is what makes mwccarm emit the D1-then-D0 pair
- *   in ROM order plus the vtable homed here. The synthesized constructor
- *   reproduces the ROM init sequence byte-exact.
- * Leftover: S14 g_profile_PUKUPUKU stays outside the TU.
+ * The factory is `return (int *)new daPukupuku_c` -- a real instantiation,
+ * which is what makes mwccarm emit the D1/D0 pair in ROM order and home the
+ * vtable here. The synthesized constructor reproduces the ROM's init sequence
+ * byte-exact.
+ *
+ * Reconstruction notes. The class name comes from the cartridge (RTTI at
+ * 0x021342f0, PUKUPUKU registry at 0x02134300); `daPukupuku_c_classInit`,
+ * `g_profile_PUKUPUKU` and the historical alias CheepCheep_Spawn are
+ * source-style names retail does not store, and the profile stays outside
+ * this TU. Behavior and the state handlers still reach fields as char* plus
+ * an offset (0x100 mStateTimer, 0x107 mEatenByYoshi, 0x110 mdCcAcPos_c, 0x150
+ * mWithMeshClsn, 0x370 the state PMF); InitResources already proves
+ * 0x110/0x150/0x374 are real members, but plain member form DIFFs here on
+ * address rematerialization, so the conversion is unfinished rather than
+ * refused. The func_ov090_* helpers keep their address-derived spellings and
+ * no replacement is coined -- the old daManta_c_Kill claim for 0x2133200 is
+ * refuted in the manifest, its only referrer being this TU's own state table
+ * at 0x21342b8. The data_ov090_* symbols are kept as this TU observes them:
+ * 0x213455c an AnimFilePtr (InitResources reads .file), 0x2134564 a
+ * SharedFilePtr, 0x21342d8 a Vector3, 0x2134594 a scalar int via
+ * decl_common.h.
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending
