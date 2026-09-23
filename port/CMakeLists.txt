@@ -22525,3 +22525,31 @@ endforeach()
 foreach(_tw23s3 smoke_player walk_window walk_window_hires)
     target_sources(${_tw23s3} PRIVATE ${SLICE_W23_STALE3_SOURCES})
 endforeach()
+
+# ===========================================================================
+# W23-2 D0 ARM PILOT (LINK15 batch W23-2)
+# ===========================================================================
+#
+# Run linkfull, lane D0ARM1. Five per-function src D0 TUs that define their own
+# flat ROM name under MSVC now, through the Model family's `#ifdef _MSC_VER`
+# arm, in place of the generated faces port/faces_sync.txt used to emit for
+# them (those five D rows are retired in the same commit, so each flat name has
+# exactly one definition). port/slice_w23_d0arm.txt carries the rows, the delete
+# each arm makes and the byte gate.
+#
+# ALL THREE HOSTING TARGETS, the slice_vtd1 shape: faces_sync_gen.cpp.obj, which
+# defined the five names, and the three hal files whose slot-17 thunks call them
+# are on walk_window's, walk_window_hires' and smoke_player's link lines alike
+# (build.ninja), so the retired faces must be answered on all three.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w23_d0arm.txt" SLICE_W23_D0ARM_LINES)
+set(SLICE_W23_D0ARM_SOURCES "")
+foreach(line IN LISTS SLICE_W23_D0ARM_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_W23_D0ARM_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_tw23d0 walk_window walk_window_hires smoke_player)
+    target_sources(${_tw23d0} PRIVATE ${SLICE_W23_D0ARM_SOURCES})
+endforeach()
