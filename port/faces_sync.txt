@@ -2238,11 +2238,26 @@ __ZN11BobOmbBuddyD0Ev                                                    ??1BobO
 
 __ZN9BootSceneD0Ev                                                       _ZN9BootSceneD1Ev                                                0x020235d4 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
-__ZN6BowserD0Ev                                                          ??1Bowser@@UAE@XZ                                                0x02111950 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
+# RETIRED at CAMP2 2026-09-23 (run linkfull, batch D0ARM-05): src/_ZN6BowserD0Ev.cpp
+# defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
+# port/slice_w24_camp2.txt. The arm makes the two calls this row's face made:
+# the D1 body (??1Bowser@@QAE@XZ), then Bowser::operator delete,
+# which is _ZN6Memory10DeallocateEPvP4Heap(self, data_020a0eac), read off the object.
+#__ZN6BowserD0Ev                                                          ??1Bowser@@UAE@XZ                                                0x02111950 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
-__ZN10BowserFireD0Ev                                                     _ZN10BowserFireD1Ev                                              0x021164c4 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
+# RETIRED at CAMP2 2026-09-23 (run linkfull, batch D0ARM-05): src/_ZN10BowserFireD0Ev.cpp
+# defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
+# port/slice_w24_camp2.txt. The arm makes the two calls this row's face made:
+# the D1 body (??1BowserFire@@QAE@XZ), then BowserFire::operator delete,
+# which is _ZN6Memory10DeallocateEPvP4Heap(self, data_020a0eac), read off the object.
+#__ZN10BowserFireD0Ev                                                     _ZN10BowserFireD1Ev                                              0x021164c4 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
-__ZN16BowserShockwavesD0Ev                                               _ZN16BowserShockwavesD1Ev                                        0x02118d64 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
+# RETIRED at CAMP2 2026-09-23 (run linkfull, batch D0ARM-05): src/_ZN16BowserShockwavesD0Ev.cpp
+# defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
+# port/slice_w24_camp2.txt. The arm makes the two calls this row's face made:
+# the D1 body (??1BowserShockwaves@@QAE@XZ), then BowserShockwaves::operator delete,
+# which is _ZN6Memory10DeallocateEPvP4Heap(self, data_020a0eac), read off the object.
+#__ZN16BowserShockwavesD0Ev                                               _ZN16BowserShockwavesD1Ev                                        0x02118d64 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
 # RETIRED at CAMP2 2026-09-23 (run linkfull, batch D0ARM-04): src/_ZN13BowserShutterD0Ev.cpp
 # defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
@@ -2251,9 +2266,19 @@ __ZN16BowserShockwavesD0Ev                                               _ZN16Bo
 # which is _ZN6Memory10DeallocateEPvP4Heap(self, data_020a0eac), read off the object.
 #__ZN13BowserShutterD0Ev                                                  _ZN13BowserShutterD1Ev                                           0x0211170c D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
-__ZN17BowserSkyPlatformD0Ev                                              _ZN17BowserSkyPlatformD1Ev                                       0x02117d60 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
+# RETIRED at CAMP2 2026-09-23 (run linkfull, batch D0ARM-05): src/_ZN17BowserSkyPlatformD0Ev.cpp
+# defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
+# port/slice_w24_camp2.txt. The arm makes the two calls this row's face made:
+# the D1 body (??1BowserSkyPlatform@@QAE@XZ), then BowserSkyPlatform::operator delete,
+# which is _ZN6Memory10DeallocateEPvP4Heap(self, data_020a0eac), read off the object.
+#__ZN17BowserSkyPlatformD0Ev                                              _ZN17BowserSkyPlatformD1Ev                                       0x02117d60 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
-__ZN10BowserTailD0Ev                                                     ??1BowserTail@@UAE@XZ                                            0x021119e4 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
+# RETIRED at CAMP2 2026-09-23 (run linkfull, batch D0ARM-05): src/_ZN10BowserTailD0Ev.cpp
+# defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
+# port/slice_w24_camp2.txt. The arm makes the two calls this row's face made:
+# the D1 body (??1BowserTail@@QAE@XZ), then BowserTail::operator delete,
+# which is _ZN6Memory10DeallocateEPvP4Heap(self, data_020a0eac), read off the object.
+#__ZN10BowserTailD0Ev                                                     ??1BowserTail@@UAE@XZ                                            0x021119e4 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
 __ZN10BrickBlockD0Ev                                                     ??1BrickBlock@@UAE@XZ                                            0x020b4180 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
@@ -2302,7 +2327,12 @@ __ZN14EnemySwitchTagD0Ev                                                 ??1Enem
 
 __ZN13ExpandingHeapD0Ev                                                  _ZN13ExpandingHeapD1Ev                                           0x0203c9c0 D _ZN6Memory16operator_delete2EPv  -
 
-__ZN17ExtendingPlatformD0Ev                                              ??1ExtendingPlatform@@UAE@XZ                                     0x02111878 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
+# RETIRED at CAMP2 2026-09-23 (run linkfull, batch D0ARM-05): src/_ZN17ExtendingPlatformD0Ev.cpp
+# defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
+# port/slice_w24_camp2.txt. The arm makes the two calls this row's face made:
+# the D1 body (??1ExtendingPlatform@@QAE@XZ), then ExtendingPlatform::operator delete,
+# which is _ZN6Memory10DeallocateEPvP4Heap(self, data_020a0eac), read off the object.
+#__ZN17ExtendingPlatformD0Ev                                              ??1ExtendingPlatform@@UAE@XZ                                     0x02111878 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
 __ZN6EyerokD0Ev                                                          _ZN6EyerokD1Ev                                                   0x02115f84 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
@@ -2316,7 +2346,12 @@ __ZN12FallBlockBbhD0Ev                                                   _ZN12Fa
 
 __ZN19FirePiranhaPlantBigD0Ev                                            _ZN19FirePiranhaPlantBigD1Ev                                     0x0212d288 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
-__ZN15FireSeaElevatorD0Ev                                                _ZN15FireSeaElevatorD1Ev                                         0x021111e4 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
+# RETIRED at CAMP2 2026-09-23 (run linkfull, batch D0ARM-05): src/_ZN15FireSeaElevatorD0Ev.cpp
+# defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
+# port/slice_w24_camp2.txt. The arm makes the two calls this row's face made:
+# the D1 body (??1FireSeaElevator@@QAE@XZ), then FireSeaElevator::operator delete,
+# which is _ZN6Memory10DeallocateEPvP4Heap(self, data_020a0eac), read off the object.
+#__ZN15FireSeaElevatorD0Ev                                                _ZN15FireSeaElevatorD1Ev                                         0x021111e4 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
 __ZN8FireballD0Ev                                                        _ZN8FireballD1Ev                                                 0x020f8898 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
@@ -2461,7 +2496,12 @@ __ZN9RabbitKeyD0Ev                                                       _ZN9Rab
 # which is _ZN6Memory10DeallocateEPvP4Heap(self, data_020a0eac), read off the object.
 #__ZN13RacingPenguinD0Ev                                                  ??1RacingPenguin@@UAE@XZ                                         0x021111f0 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
-__ZN15RecRoomCupboardD0Ev                                                _ZN15RecRoomCupboardD1Ev                                         0x021111e0 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
+# RETIRED at CAMP2 2026-09-23 (run linkfull, batch D0ARM-05): src/_ZN15RecRoomCupboardD0Ev.cpp
+# defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
+# port/slice_w24_camp2.txt. The arm makes the two calls this row's face made:
+# the D1 body (??1RecRoomCupboard@@QAE@XZ), then RecRoomCupboard::operator delete,
+# which is _ZN6Memory10DeallocateEPvP4Heap(self, data_020a0eac), read off the object.
+#__ZN15RecRoomCupboardD0Ev                                                _ZN15RecRoomCupboardD1Ev                                         0x021111e0 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
 # RETIRED at D0ARM1 2026-09-23 (run linkfull, LINK15 batch W23-2): src/_ZN10RockPillarD0Ev.cpp
 # defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
@@ -2479,7 +2519,12 @@ __ZN15RollingIronBallD0Ev                                                _ZN15Ro
 # which is _ZN6Memory10DeallocateEPvP4Heap(self, data_020a0eac), read off the object.
 #__ZN13RollingLogLllD0Ev                                                  _ZN13RollingLogLllD1Ev                                           0x021124e8 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
-__ZN13RollingLogTtmD0Ev                                                  _ZN13RollingLogTtmD1Ev                                           0x021115ac D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
+# RETIRED at CAMP2 2026-09-23 (run linkfull, batch D0ARM-05): src/_ZN13RollingLogTtmD0Ev.cpp
+# defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
+# port/slice_w24_camp2.txt. The arm makes the two calls this row's face made:
+# the D1 body (??1RollingLogTtm@@QAE@XZ), then RollingLogTtm::operator delete,
+# which is _ZN6Memory10DeallocateEPvP4Heap(self, data_020a0eac), read off the object.
+#__ZN13RollingLogTtmD0Ev                                                  _ZN13RollingLogTtmD1Ev                                           0x021115ac D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
 # RETIRED at D0ARM1 2026-09-23 (run linkfull, LINK15 batch W23-2): src/_ZN11RollingRockD0Ev.cpp
 # defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
@@ -2488,7 +2533,12 @@ __ZN13RollingLogTtmD0Ev                                                  _ZN13Ro
 # which is _ZN6Memory10DeallocateEPvP4Heap(self, data_020a0eac), read off the object.
 #__ZN11RollingRockD0Ev                                                    _ZN11RollingRockD1Ev                                             0x02112230 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
-__ZN16RotatingCogSmallD0Ev                                               _ZN16RotatingCogSmallD1Ev                                        0x021111e4 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
+# RETIRED at CAMP2 2026-09-23 (run linkfull, batch D0ARM-05): src/_ZN16RotatingCogSmallD0Ev.cpp
+# defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
+# port/slice_w24_camp2.txt. The arm makes the two calls this row's face made:
+# the D1 body (??1RotatingCogSmall@@QAE@XZ), then RotatingCogSmall::operator delete,
+# which is _ZN6Memory10DeallocateEPvP4Heap(self, data_020a0eac), read off the object.
+#__ZN16RotatingCogSmallD0Ev                                               _ZN16RotatingCogSmallD1Ev                                        0x021111e4 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
 __ZN15RotatingFirebarD0Ev                                                _ZN15RotatingFirebarD1Ev                                         0x02118194 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
@@ -2522,27 +2572,52 @@ __ZN7SkiLiftD0Ev                                                         _ZN7Ski
 # which is _ZN6Memory10DeallocateEPvP4Heap(self, data_020a0eac), read off the object.
 #__ZN10SlidingBoxD0Ev                                                     _ZN10SlidingBoxD1Ev                                              0x02113044 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
-__ZN10SlidingIceD0Ev                                                     _ZN10SlidingIceD1Ev                                              0x021111e4 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
+# RETIRED at CAMP2 2026-09-23 (run linkfull, batch D0ARM-05): src/_ZN10SlidingIceD0Ev.cpp
+# defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
+# port/slice_w24_camp2.txt. The arm makes the two calls this row's face made:
+# the D1 body (??1SlidingIce@@QAE@XZ), then SlidingIce::operator delete,
+# which is _ZN6Memory10DeallocateEPvP4Heap(self, data_020a0eac), read off the object.
+#__ZN10SlidingIceD0Ev                                                     _ZN10SlidingIceD1Ev                                              0x021111e4 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
 __ZN17SlidingPlatformWfD0Ev                                              _ZN17SlidingPlatformWfD1Ev                                       0x02132448 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
 __ZN8SnowballD0Ev                                                        _ZN8SnowballD1Ev                                                 0x02125f5c D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
-__ZN13SnowmanBreathD0Ev                                                  _ZN13SnowmanBreathD1Ev                                           0x02112104 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
+# RETIRED at CAMP2 2026-09-23 (run linkfull, batch D0ARM-05): src/_ZN13SnowmanBreathD0Ev.cpp
+# defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
+# port/slice_w24_camp2.txt. The arm makes the two calls this row's face made:
+# the D1 body (??1SnowmanBreath@@QAE@XZ), then SnowmanBreath::operator delete,
+# which is _ZN6Memory10DeallocateEPvP4Heap(self, data_020a0eac), read off the object.
+#__ZN13SnowmanBreathD0Ev                                                  _ZN13SnowmanBreathD1Ev                                           0x02112104 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
 __ZN11SnowmanHeadD0Ev                                                    ??1SnowmanHead@@UAE@XZ                                           0x0211ff7c D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
 __ZN9SolidHeapD0Ev                                                       _ZN9SolidHeapD1Ev                                                0x0203c970 D _ZN6Memory16operator_delete2EPv  -
 
-__ZN9SpikeBombD0Ev                                                       ??1SpikeBomb@@UAE@XZ                                             0x02118470 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
+# RETIRED at CAMP2 2026-09-23 (run linkfull, batch D0ARM-05): src/_ZN9SpikeBombD0Ev.cpp
+# defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
+# port/slice_w24_camp2.txt. The arm makes the two calls this row's face made:
+# the D1 body (??1SpikeBomb@@QAE@XZ), then SpikeBomb::operator delete,
+# which is _ZN6Memory10DeallocateEPvP4Heap(self, data_020a0eac), read off the object.
+#__ZN9SpikeBombD0Ev                                                       ??1SpikeBomb@@UAE@XZ                                             0x02118470 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
 __ZN9SpindriftD0Ev                                                       _ZN9SpindriftD1Ev                                                0x02123788 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
-__ZN16SpinningPlatformD0Ev                                               _ZN16SpinningPlatformD1Ev                                        0x02111738 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
+# RETIRED at CAMP2 2026-09-23 (run linkfull, batch D0ARM-05): src/_ZN16SpinningPlatformD0Ev.cpp
+# defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
+# port/slice_w24_camp2.txt. The arm makes the two calls this row's face made:
+# the D1 body (??1SpinningPlatform@@QAE@XZ), then SpinningPlatform::operator delete,
+# which is _ZN6Memory10DeallocateEPvP4Heap(self, data_020a0eac), read off the object.
+#__ZN16SpinningPlatformD0Ev                                               _ZN16SpinningPlatformD1Ev                                        0x02111738 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
 __ZN5SpinyD0Ev                                                           _ZN5SpinyD1Ev                                                    0x02124bb4 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
-__ZN14SquarePathLiftD0Ev                                                 _ZN14SquarePathLiftD1Ev                                          0x02111484 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
+# RETIRED at CAMP2 2026-09-23 (run linkfull, batch D0ARM-05): src/_ZN14SquarePathLiftD0Ev.cpp
+# defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
+# port/slice_w24_camp2.txt. The arm makes the two calls this row's face made:
+# the D1 body (??1SquarePathLift@@QAE@XZ), then SquarePathLift::operator delete,
+# which is _ZN6Memory10DeallocateEPvP4Heap(self, data_020a0eac), read off the object.
+#__ZN14SquarePathLiftD0Ev                                                 _ZN14SquarePathLiftD1Ev                                          0x02111484 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
 __ZN5StageD0Ev                                                           _ZN5StageD1Ev                                                    0x020236f0 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
@@ -2567,9 +2642,19 @@ __ZN14TTC_MovingBeamD0Ev                                                 _ZN14TT
 
 __ZN6ThwompD0Ev                                                          _ZN6ThwompD1Ev                                                   0x02132998 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
-__ZN9TinyCoverD0Ev                                                       _ZN9TinyCoverD1Ev                                                0x021111e4 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
+# RETIRED at CAMP2 2026-09-23 (run linkfull, batch D0ARM-05): src/_ZN9TinyCoverD0Ev.cpp
+# defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
+# port/slice_w24_camp2.txt. The arm makes the two calls this row's face made:
+# the D1 body (??1TinyCover@@QAE@XZ), then TinyCover::operator delete,
+# which is _ZN6Memory10DeallocateEPvP4Heap(self, data_020a0eac), read off the object.
+#__ZN9TinyCoverD0Ev                                                       _ZN9TinyCoverD1Ev                                                0x021111e4 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
-__ZN9TinyWaterD0Ev                                                       _ZN9TinyWaterD1Ev                                                0x02111420 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
+# RETIRED at CAMP2 2026-09-23 (run linkfull, batch D0ARM-05): src/_ZN9TinyWaterD0Ev.cpp
+# defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
+# port/slice_w24_camp2.txt. The arm makes the two calls this row's face made:
+# the D1 body (??1TinyWater@@QAE@XZ), then TinyWater::operator delete,
+# which is _ZN6Memory10DeallocateEPvP4Heap(self, data_020a0eac), read off the object.
+#__ZN9TinyWaterD0Ev                                                       _ZN9TinyWaterD1Ev                                                0x02111420 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
 __ZN7TornadoD0Ev                                                         _ZN7TornadoD1Ev                                                  0x02136df8 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
@@ -2620,7 +2705,12 @@ __ZN9WaterRingD0Ev                                                       _ZN9Wat
 
 __ZN5WhompD0Ev                                                           _ZN5WhompD1Ev                                                    0x02123798 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
-__ZN7WigglerD0Ev                                                         _ZN7WigglerD1Ev                                                  0x021112b0 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
+# RETIRED at CAMP2 2026-09-23 (run linkfull, batch D0ARM-05): src/_ZN7WigglerD0Ev.cpp
+# defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
+# port/slice_w24_camp2.txt. The arm makes the two calls this row's face made:
+# the D1 body (??1Wiggler@@QAE@XZ), then Wiggler::operator delete,
+# which is _ZN6Memory10DeallocateEPvP4Heap(self, data_020a0eac), read off the object.
+#__ZN7WigglerD0Ev                                                         _ZN7WigglerD1Ev                                                  0x021112b0 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
 __ZN11WingFeatherD0Ev                                                    ??1WingFeather@@UAE@XZ                                           0x020b2be8 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
@@ -2721,11 +2811,21 @@ __ZN8dScene_cD0Ev                                                        _ZN8dSc
 
 __ZN12daBombking_cD0Ev                                                   _ZN12daBombking_cD1Ev                                            0x02123798 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
-__ZN10daKpa2Bg_cD0Ev                                                     _ZN10daKpa2Bg_cD1Ev                                              0x021179d4 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
+# RETIRED at CAMP2 2026-09-23 (run linkfull, batch D0ARM-05): src/_ZN10daKpa2Bg_cD0Ev.cpp
+# defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
+# port/slice_w24_camp2.txt. The arm makes the two calls this row's face made:
+# the D1 body (??1daKpa2Bg_c@@QAE@XZ), then daKpa2Bg_c::operator delete,
+# which is _ZN6Memory10DeallocateEPvP4Heap(self, data_020a0eac), read off the object.
+#__ZN10daKpa2Bg_cD0Ev                                                     _ZN10daKpa2Bg_cD1Ev                                              0x021179d4 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
 __ZN7daKrb_cD0Ev                                                         _ZN7daKrb_cD1Ev                                                  0x02129070 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
-__ZN13daObjHmBskt_cD0Ev                                                  _ZN13daObjHmBskt_cD1Ev                                           0x021111ec D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
+# RETIRED at CAMP2 2026-09-23 (run linkfull, batch D0ARM-05): src/_ZN13daObjHmBskt_cD0Ev.cpp
+# defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
+# port/slice_w24_camp2.txt. The arm makes the two calls this row's face made:
+# the D1 body (??1daObjHmBskt_c@@QAE@XZ), then daObjHmBskt_c::operator delete,
+# which is _ZN6Memory10DeallocateEPvP4Heap(self, data_020a0eac), read off the object.
+#__ZN13daObjHmBskt_cD0Ev                                                  _ZN13daObjHmBskt_cD1Ev                                           0x021111ec D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
 __ZN16daObjKaitendai_cD0Ev                                               _ZN16daObjKaitendai_cD1Ev                                        0x020b660c D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
