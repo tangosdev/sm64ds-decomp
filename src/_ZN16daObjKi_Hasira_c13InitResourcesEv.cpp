@@ -1,19 +1,13 @@
 //cpp
-// @symbol _ZN10RockPillar13InitResourcesEv
+// @symbol _ZN16daObjKi_Hasira_c13InitResourcesEv
 #include "decl_common.h"
 #include "daObjKi_Hasira_c.h"
-#include "RockPillar.h"
 
-/* RockPillar::InitResources -- vtable slot 0, ov016 0x02112e1c.
+/* daObjKi_Hasira_c::InitResources -- vtable slot 0, ov016 0x02112e1c.
  *
  * Minimal-diff member-function migration: the pre-migration recovery's
- * `char *c` self pointer becomes `this`, unchanged otherwise -- the shadow
- * struct daObjKi_Hasira_c (RTTI class name, include/daObjKi_Hasira_c.h)
- * still supplies field offsets/names exactly as the pre-migration body used
- * them, since RockPillar.h itself only declares the class's own 0x320..
- * 0x327 span as opaque padding. The two inherited fields read here, mAngleY
- * and mAreaId, are dActor_c's and now say so in the shadow too -- this
- * comment used to be where that was written down. */
+ * `char *c` self pointer becomes `this`, unchanged otherwise. The two
+ * inherited fields read here, mAngleY and mAreaId, are dActor_c's. */
 extern "C" {
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void*, void*, int, int);
@@ -24,7 +18,7 @@ extern int _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block
 extern int _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int, unsigned int, void*, void*, int, int);
 }
 
-int RockPillar::InitResources()
+int daObjKi_Hasira_c::InitResources()
 {
     char *c = (char *)this;
     struct daObjKi_Hasira_c *self = (struct daObjKi_Hasira_c *)(void *)c;

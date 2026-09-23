@@ -1,6 +1,6 @@
 //cpp
-// @symbol _ZN10RockPillar16CleanupResourcesEv
-#include "RockPillar.h"
+// @symbol _ZN16daObjKi_Hasira_c16CleanupResourcesEv
+#include "daObjKi_Hasira_c.h"
 // recovered name: daObjKi_Hasira_c_CleanupResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
@@ -12,7 +12,7 @@ extern void _ZN13SharedFilePtr7ReleaseEv(void *);
 extern int RockPillar_ModelFile[];
 }
 
-s32 RockPillar::CleanupResources() {
+s32 daObjKi_Hasira_c::CleanupResources() {
     void * t = (void *)this;
     if (_ZN4dBgW9IsEnabledEv((char *)t + 0x124)) {
         _ZN4dBgW7DisableEv((char *)t + 0x124);

@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN10RockPillarD1Ev
+// @symbol _ZN16daObjKi_Hasira_cD1Ev
 /* recovered: real C++ destructor -- the compiler emits the whole body.
  * Vtable slot 16: one vtable store, the members in reverse, then ~dBgActor_c. */
-#include "RockPillar.h"
+#include "daObjKi_Hasira_c.h"
 
-RockPillar::~RockPillar()
+daObjKi_Hasira_c::~daObjKi_Hasira_c()
 {
 }

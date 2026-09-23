@@ -1,14 +1,14 @@
 //cpp
-// @symbol _ZN10RockPillar8BehaviorEv
-#include "RockPillar.h"
+// @symbol _ZN16daObjKi_Hasira_c8BehaviorEv
+#include "daObjKi_Hasira_c.h"
 
-/* RockPillar::Behavior -- vtable slot 6, ov016 0x02112b50.
+/* daObjKi_Hasira_c::Behavior -- vtable slot 6, ov016 0x02112b50.
  *
  * Minimal-diff member-function migration: the pre-migration recovery's
  * `char *c` self pointer becomes `this`, unchanged otherwise, including its
  * #pragma opt_common_subs off / inline_fn address-preserving idiom -- this
- * function's raw offsets (0x31e/0x31f/0x320/0x322/0x324) are RockPillar's
- * own fields, which include/RockPillar.h only declares as opaque
+ * function's raw offsets (0x31e/0x31f/0x320/0x322/0x324) are daObjKi_Hasira_c's
+ * own fields, which include/daObjKi_Hasira_c.h only declares as opaque
  * `pad_320[0x8]` (plus dBgActor_c's own 0x31e/0x31f tail-padding bytes), so
  * this keeps every access exactly as recovered rather than guessing names
  * for an 8-slot state machine (actor pointer, state byte, counter byte,
@@ -37,7 +37,7 @@ extern void *data_0209f318;
 #pragma opt_common_subs off
 inline int inline_fn(int arg0) { return arg0; }
 
-int RockPillar::Behavior()
+int daObjKi_Hasira_c::Behavior()
 {
     char *c = (char *)this;
     struct Vector3 pos;
