@@ -2,10 +2,14 @@
 #
 # FIVE DELETING DESTRUCTORS THAT NOW DEFINE THEIR OWN FLAT ROM NAME. Each file
 # below is a per-function src D0 TU that gained the Model family's
-# `#ifdef _MSC_VER` arm (src/_ZN5ModelD0Ev.cpp is the shape). Under MSVC the
-# file compiles only
+# `#ifdef _MSC_VER` arm (src/_ZN5ModelD0Ev.cpp is the shape), with one
+# deliberate difference: the destructor call is QUALIFIED. This tree's headers
+# declare these destructors non-virtual under _MSC_VER (the Destructor1 /
+# Destructor0 house pattern), main's headers declare them `virtual`, and a
+# plain `thiz->~Cls()` would be a virtual call through the port's ROM-shaped
+# table there. Under MSVC the file compiles only
 #     extern "C" Cls *_ZN<Cls>D0Ev(Cls *thiz)
-#     { thiz->~Cls(); Cls::operator delete(thiz); return thiz; }
+#     { thiz->Cls::~Cls(); Cls::operator delete(thiz); return thiz; }
 # and mwccarm, which never defines _MSC_VER, compiles the unchanged `#else` arm
 # to the same object bytes as before: match.py 2004/b56 strict MATCHING and
 # linkcheck VERIFIED with 0 blind slots for all five, before and after, and the
