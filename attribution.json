@@ -4649,6 +4649,12 @@
     "src/actors/daObjFl_Ring_c.cpp#_ZN14daObjFl_Ring_c16CleanupResourcesEv": "tangosdev",
     "src/actors/daObjFl_Ring_c.cpp#_ZN14daObjFl_Ring_c6RenderEv": "tangosdev",
     "src/actors/daObjFl_Ring_c.cpp#_ZN14daObjFl_Ring_c8BehaviorEv": "tangosdev",
-    "src/actors/daObjFl_Ring_c.cpp#_ZN14daObjFl_Ring_c13InitResourcesEv": "tangosdev"
+    "src/actors/daObjFl_Ring_c.cpp#_ZN14daObjFl_Ring_c13InitResourcesEv": "tangosdev",
+    "src/actors/daObjFl_Block_c.cpp#_ZN15daObjFl_Block_cD1Ev": "tangosdev",
+    "src/actors/daObjFl_Block_c.cpp#_ZN15daObjFl_Block_cD0Ev": "tangosdev",
+    "src/actors/daObjFl_Block_c.cpp#_ZN15daObjFl_Block_c16CleanupResourcesEv": "tangosdev",
+    "src/actors/daObjFl_Block_c.cpp#_ZN15daObjFl_Block_c6RenderEv": "tangosdev",
+    "src/actors/daObjFl_Block_c.cpp#_ZN15daObjFl_Block_c8BehaviorEv": "tangosdev",
+    "src/actors/daObjFl_Block_c.cpp#_ZN15daObjFl_Block_c13InitResourcesEv": "tangosdev"
   }
 }

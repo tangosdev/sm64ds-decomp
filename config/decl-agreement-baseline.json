@@ -6773,9 +6773,6 @@
       "src/_ZN17BigMovingIceBlock13InitResourcesEv.cpp": [
         "return:int"
       ],
-      "src/_ZN15daObjFl_Block_c13InitResourcesEv.cpp": [
-        "return:int"
-      ],
       "src/_ZN8CccArena13InitResourcesEv.cpp": [
         "return:int"
       ],
@@ -6825,9 +6822,6 @@
         "return:int"
       ],
       "src/_ZN17BigMovingIceBlock13InitResourcesEv.cpp": [
-        "return:int"
-      ],
-      "src/_ZN15daObjFl_Block_c13InitResourcesEv.cpp": [
         "return:int"
       ]
     },
@@ -7266,9 +7260,6 @@
       "src/_ZN17BowserSkyPlatform13InitResourcesEv.cpp": [
         "param:#3 const Matrix4x3 &",
         "param:#6 CLPS_Block &"
-      ],
-      "src/_ZN15daObjFl_Block_c13InitResourcesEv.cpp": [
-        "return:int"
       ],
       "src/_ZN5Crate13InitResourcesEv.cpp": [
         "param:#2 int",
@@ -10954,11 +10945,6 @@
         "arity:0",
         "mangled:0 parameter(s)"
       ],
-      "src/_ZN15daObjFl_Block_c13InitResourcesEv.cpp": [
-        "arity:0",
-        "mangled:0 parameter(s)",
-        "return:int"
-      ],
       "src/_ZN22RotatingUpDownPlatform13InitResourcesEv.cpp": [
         "kind:data"
       ],
@@ -11369,9 +11355,6 @@
       "src/_ZN17dMg3DEspAnimSet_c13InitResourcesEv.cpp": [
         "param:#1 void *",
         "return:int"
-      ],
-      "src/_ZN15daObjFl_Block_c13InitResourcesEv.cpp": [
-        "param:#1 void *"
       ],
       "src/_ZN22RotatingUpDownPlatform13InitResourcesEv.cpp": [
         "param:#1 void *"
@@ -14729,10 +14712,6 @@
         "return:KCL_File *"
       ],
       "src/actors/daObjSimpleLift_c.cpp": [
-        "param:#1 void *",
-        "return:void *"
-      ],
-      "src/_ZN15daObjFl_Block_c13InitResourcesEv.cpp": [
         "param:#1 void *",
         "return:void *"
       ],
@@ -28574,11 +28553,14 @@
     "data_ov022_02114550": {
       "src/__sinit_ov022_02112d80.c": [
         "return:int []"
+      ],
+      "src/actors/daObjFl_Block_c.cpp": [
+        "return:SharedFilePtr"
       ]
     },
     "data_ov022_02114558": {
-      "src/_ZN15daObjFl_Block_c13InitResourcesEv.cpp": [
-        "return:char []"
+      "src/actors/daObjFl_Block_c.cpp": [
+        "return:SharedFilePtr"
       ]
     },
     "data_ov022_02114578": {
@@ -36976,9 +36958,8 @@
       "src/_ZN17BowserSkyPlatform13InitResourcesEv.cpp": [
         "param:#2 void *"
       ],
-      "src/_ZN15daObjFl_Block_c13InitResourcesEv.cpp": [
-        "param:#2 void *",
-        "return:int"
+      "src/actors/daObjFl_Block_c.cpp": [
+        "param:#2 void *"
       ],
       "src/_ZN22RotatingUpDownPlatform13InitResourcesEv.cpp": [
         "param:#2 void *"
@@ -37093,9 +37074,8 @@
       "src/actors/daObjSimpleLift_c.cpp": [
         "param:#2 void *"
       ],
-      "src/_ZN15daObjFl_Block_c13InitResourcesEv.cpp": [
-        "param:#2 void *",
-        "return:int"
+      "src/actors/daObjFl_Block_c.cpp": [
+        "param:#2 void *"
       ],
       "src/_ZN22RotatingUpDownPlatform13InitResourcesEv.cpp": [
         "param:#2 void *"
