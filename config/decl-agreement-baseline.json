@@ -6773,7 +6773,7 @@
       "src/_ZN17BigMovingIceBlock13InitResourcesEv.cpp": [
         "return:int"
       ],
-      "src/_ZN19FloatOnLavaPlatform13InitResourcesEv.cpp": [
+      "src/_ZN15daObjFl_Block_c13InitResourcesEv.cpp": [
         "return:int"
       ],
       "src/_ZN8CccArena13InitResourcesEv.cpp": [
@@ -6827,7 +6827,7 @@
       "src/_ZN17BigMovingIceBlock13InitResourcesEv.cpp": [
         "return:int"
       ],
-      "src/_ZN19FloatOnLavaPlatform13InitResourcesEv.cpp": [
+      "src/_ZN15daObjFl_Block_c13InitResourcesEv.cpp": [
         "return:int"
       ]
     },
@@ -7267,7 +7267,7 @@
         "param:#3 const Matrix4x3 &",
         "param:#6 CLPS_Block &"
       ],
-      "src/_ZN19FloatOnLavaPlatform13InitResourcesEv.cpp": [
+      "src/_ZN15daObjFl_Block_c13InitResourcesEv.cpp": [
         "return:int"
       ],
       "src/_ZN5Crate13InitResourcesEv.cpp": [
@@ -10954,7 +10954,7 @@
         "arity:0",
         "mangled:0 parameter(s)"
       ],
-      "src/_ZN19FloatOnLavaPlatform13InitResourcesEv.cpp": [
+      "src/_ZN15daObjFl_Block_c13InitResourcesEv.cpp": [
         "arity:0",
         "mangled:0 parameter(s)",
         "return:int"
@@ -11370,7 +11370,7 @@
         "param:#1 void *",
         "return:int"
       ],
-      "src/_ZN19FloatOnLavaPlatform13InitResourcesEv.cpp": [
+      "src/_ZN15daObjFl_Block_c13InitResourcesEv.cpp": [
         "param:#1 void *"
       ],
       "src/_ZN22RotatingUpDownPlatform13InitResourcesEv.cpp": [
@@ -14732,7 +14732,7 @@
         "param:#1 void *",
         "return:void *"
       ],
-      "src/_ZN19FloatOnLavaPlatform13InitResourcesEv.cpp": [
+      "src/_ZN15daObjFl_Block_c13InitResourcesEv.cpp": [
         "param:#1 void *",
         "return:void *"
       ],
@@ -28577,7 +28577,7 @@
       ]
     },
     "data_ov022_02114558": {
-      "src/_ZN19FloatOnLavaPlatform13InitResourcesEv.cpp": [
+      "src/_ZN15daObjFl_Block_c13InitResourcesEv.cpp": [
         "return:char []"
       ]
     },
@@ -36976,7 +36976,7 @@
       "src/_ZN17BowserSkyPlatform13InitResourcesEv.cpp": [
         "param:#2 void *"
       ],
-      "src/_ZN19FloatOnLavaPlatform13InitResourcesEv.cpp": [
+      "src/_ZN15daObjFl_Block_c13InitResourcesEv.cpp": [
         "param:#2 void *",
         "return:int"
       ],
@@ -37093,7 +37093,7 @@
       "src/actors/daObjSimpleLift_c.cpp": [
         "param:#2 void *"
       ],
-      "src/_ZN19FloatOnLavaPlatform13InitResourcesEv.cpp": [
+      "src/_ZN15daObjFl_Block_c13InitResourcesEv.cpp": [
         "param:#2 void *",
         "return:int"
       ],

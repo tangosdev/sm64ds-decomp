@@ -146,7 +146,7 @@ For a class whose destructor stores its own vptr and then `dBgActor_c`'s
 (inlined), and destroys the `dBgW_KcMbg` at 0x124 and the `Model` at 0xd4 before
 chaining to `dActor_c`: all three of those are `dBgActor_c`'s own. Everything such
 a header used to restate below 0x31e was `dActor_c`'s and `dBgActor_c`'s, and is
-inherited. This applies to `daObjSimpleLift_c`, `FloatOnLavaPlatform`,
+inherited. This applies to `daObjSimpleLift_c`, `daObjFl_Block_c`,
 `daObjRc_Guruguru_c`, `RotatingUpDownPlatformUtm` and their siblings.
 
 Where a size assertion is only the observed field span rounded up, it guards the

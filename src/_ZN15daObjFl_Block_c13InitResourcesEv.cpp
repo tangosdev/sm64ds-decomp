@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN19FloatOnLavaPlatform13InitResourcesEv
+// @symbol _ZN15daObjFl_Block_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "FloatOnLavaPlatform.h"
+#include "daObjFl_Block_c.h"
 extern "C" {
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void*, void*, int, int);
@@ -19,7 +19,7 @@ extern "C" {
 extern int _ZN4dBgW21UpdatePosWithVelocityERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_(void);
 }
 
-int FloatOnLavaPlatform::InitResources()
+int daObjFl_Block_c::InitResources()
 {
   void* mdl;
   void* kcl;

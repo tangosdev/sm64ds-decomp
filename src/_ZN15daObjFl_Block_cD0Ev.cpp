@@ -1,18 +1,18 @@
 //cpp
-// @symbol _ZN19FloatOnLavaPlatformD0Ev
+// @symbol _ZN15daObjFl_Block_cD0Ev
 /* recovered: real C++ deleting destructor -- the compiler emits the whole body
  *
  * D0 is the DELETING destructor: destroy through this class and its bases --
  * which is why more than one vptr store appears -- then return the object to
- * its heap. Nobody writes that; declaring `~FloatOnLavaPlatform()` is enough, because mwcc
+ * its heap. Nobody writes that; declaring `~daObjFl_Block_c()` is enough, because mwcc
  * emits D2, D0 and D1 together and objisolate keeps the one this file is bound
  * to.
  *
  * The deallocation is an inline operator delete, which is why nothing below
  * mentions a heap.
  */
-#include "FloatOnLavaPlatform.h"
+#include "daObjFl_Block_c.h"
 
-FloatOnLavaPlatform::~FloatOnLavaPlatform()
+daObjFl_Block_c::~daObjFl_Block_c()
 {
 }

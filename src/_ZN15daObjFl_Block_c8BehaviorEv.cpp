@@ -1,15 +1,15 @@
 //cpp
-// @symbol _ZN19FloatOnLavaPlatform8BehaviorEv
+// @symbol _ZN15daObjFl_Block_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "FloatOnLavaPlatform.h"
+#include "daObjFl_Block_c.h"
 extern "C" int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void*, int, int);
 extern "C" void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void*);
 extern "C" void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void*);
 extern "C" void func_020393a4(int* p, int v);
 
-int FloatOnLavaPlatform::Behavior()
+int daObjFl_Block_c::Behavior()
 {
     func_020393a4((int*)((char*)&(*(u8 *)&mMeshCollider)), 0x150000);
     if (mHadClsn) {

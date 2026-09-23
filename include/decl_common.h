@@ -632,7 +632,7 @@ extern int _ZTV8MugenBgm[];
 extern int _ZTV17BowserPuzzlePiece[];
 extern int _ZTV19FirePiranhaPlantBig[];
 extern int _ZTV17daObjKm1_Dorifu_c[];
-extern int _ZTV19FloatOnLavaPlatform[];
+extern int _ZTV15daObjFl_Block_c[];
 extern int _ZTV14daObjWc_Mizu_c[];
 extern int _ZTV19daObjBk_Dossunbar_c[];
 extern int _ZTV19daObjKm1_Ukishima_c[];

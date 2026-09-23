@@ -3143,17 +3143,17 @@
    "start": "0x21116c4",
    "end": "0x2111980",
    "classes": [
-    "FloatOnLavaPlatform"
+    "daObjFl_Block_c"
    ],
    "n_functions_map": 9,
    "n_files": 9,
    "files": [
-    "src/_ZN19FloatOnLavaPlatformD1Ev.cpp",
-    "src/_ZN19FloatOnLavaPlatformD0Ev.cpp",
-    "src/_ZN19FloatOnLavaPlatform16CleanupResourcesEv.cpp",
-    "src/_ZN19FloatOnLavaPlatform6RenderEv.cpp",
-    "src/_ZN19FloatOnLavaPlatform8BehaviorEv.cpp",
-    "src/_ZN19FloatOnLavaPlatform13InitResourcesEv.cpp",
+    "src/_ZN15daObjFl_Block_cD1Ev.cpp",
+    "src/_ZN15daObjFl_Block_cD0Ev.cpp",
+    "src/_ZN15daObjFl_Block_c16CleanupResourcesEv.cpp",
+    "src/_ZN15daObjFl_Block_c6RenderEv.cpp",
+    "src/_ZN15daObjFl_Block_c8BehaviorEv.cpp",
+    "src/_ZN15daObjFl_Block_c13InitResourcesEv.cpp",
     "src/func_ov022_0211191c.cpp",
     "src/func_ov022_0211193c.c",
     "src/d_a_obj_fl_block.c"

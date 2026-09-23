@@ -1,14 +1,14 @@
 //cpp
-// @symbol _ZN19FloatOnLavaPlatform16CleanupResourcesEv
+// @symbol _ZN15daObjFl_Block_c16CleanupResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "FloatOnLavaPlatform.h"
+#include "daObjFl_Block_c.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 extern int data_ov022_02114558[];
 
-int FloatOnLavaPlatform::CleanupResources()
+int daObjFl_Block_c::CleanupResources()
 {
     if (((dBgW *)((char *)&(*(u8 *)&mMeshCollider)))->IsEnabled()) {
         ((dBgW *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();
