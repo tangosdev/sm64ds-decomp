@@ -32,7 +32,7 @@ struct daObjFlamethrower_c : dActor_c {
     u16 mTimer;                    /* 0x466 */
     u32 mSoundHandle;              /* 0x468 */
 
-    virtual ~daObjFlamethrower_c();
+    virtual ~daObjFlamethrower_c() {}
     virtual int InitResources();
     virtual int Behavior();
 };

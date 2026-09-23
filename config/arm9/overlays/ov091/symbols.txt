@@ -26,12 +26,12 @@ func_ov091_02132360 kind:function(arm,size=0x20) addr:0x02132360
 func_ov091_02132380 kind:function(arm,size=0x14) addr:0x02132380
 daLinelift2_c_classInit_KM2_SUSUMU kind:function(arm,size=0x38) addr:0x02132394
 daLinelift2_c_classInit_KM3_LIFT kind:function(arm,size=0x38) addr:0x021323cc
-_ZN17SlidingPlatformWfD1Ev kind:function(arm,size=0x44) addr:0x02132404
-_ZN17SlidingPlatformWfD0Ev kind:function(arm,size=0x58) addr:0x02132448
-_ZN17SlidingPlatformWf16CleanupResourcesEv kind:function(arm,size=0x64) addr:0x021324a0
-_ZN17SlidingPlatformWf6RenderEv kind:function(arm,size=0x28) addr:0x02132504
-_ZN17SlidingPlatformWf8BehaviorEv kind:function(arm,size=0xa8) addr:0x0213252c
-_ZN17SlidingPlatformWf13InitResourcesEv kind:function(arm,size=0x214) addr:0x021325d4
+_ZN17daObjSimpleLift_cD1Ev kind:function(arm,size=0x44) addr:0x02132404
+_ZN17daObjSimpleLift_cD0Ev kind:function(arm,size=0x58) addr:0x02132448
+_ZN17daObjSimpleLift_c16CleanupResourcesEv kind:function(arm,size=0x64) addr:0x021324a0
+_ZN17daObjSimpleLift_c6RenderEv kind:function(arm,size=0x28) addr:0x02132504
+_ZN17daObjSimpleLift_c8BehaviorEv kind:function(arm,size=0xa8) addr:0x0213252c
+_ZN17daObjSimpleLift_c13InitResourcesEv kind:function(arm,size=0x214) addr:0x021325d4
 daObjSimpleLift_c_classInit_BK_TRANSBAR kind:function(arm,size=0x30) addr:0x021327e8
 daObjSimpleLift_c_classInit_KM2_RIFUT02 kind:function(arm,size=0x30) addr:0x02132818
 daObjSimpleLift_c_classInit_KM2_RIFUT01 kind:function(arm,size=0x30) addr:0x02132848
@@ -143,7 +143,7 @@ g_profile_BK_TRANSBAR kind:data(any) addr:0x02135008 ambiguous
 data_ov091_02135024 kind:data(any) addr:0x02135024
 data_ov091_02135028 kind:data(any) addr:0x02135028
 data_ov091_0213502c kind:data(any) addr:0x0213502c
-_ZTV17SlidingPlatformWf kind:data(any) addr:0x02135080
+_ZTV17daObjSimpleLift_c kind:data(any) addr:0x02135080
 data_ov091_02135100 kind:data(any) addr:0x02135100
 _ZTS7daDsn_c kind:data(any) addr:0x02135120
 _ZTI7daDsn_c kind:data(any) addr:0x0213512c

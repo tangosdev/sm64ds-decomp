@@ -253,7 +253,7 @@ first module where a `config_tu/` conversion becomes conceivable.
 |[ov065](../config/arm9/overlays/ov065/symbols.txt)| 0x211b328|  n=8|   `daObjCtKaitendai_c`|      CONF2|
 |[ov079](../config/arm9/overlays/ov079/symbols.txt)| 0x2126dbc|  n=9|   `BillBlaster`|        CONF2|
 |[ov079](../config/arm9/overlays/ov079/symbols.txt)| 0x21271e4|  n=9|   `FortressWall`|       CONF1|
-|[ov091](../config/arm9/overlays/ov091/symbols.txt)| 0x2132404|  n=7|   `SlidingPlatformWf`|  CONF2|
+|[ov091](../config/arm9/overlays/ov091/symbols.txt)| 0x2132404|  n=7|   `daObjSimpleLift_c`|  CONF2|
 
 
 **B10 — R2, normalizer required · 9 TUs / 60 files / net −51 / 1,416 lines**

@@ -8050,17 +8050,17 @@
    "start": "0x2132404",
    "end": "0x2132818",
    "classes": [
-    "SlidingPlatformWf"
+    "daObjSimpleLift_c"
    ],
    "n_functions_map": 7,
    "n_files": 7,
    "files": [
-    "src/_ZN17SlidingPlatformWfD1Ev.cpp",
-    "src/_ZN17SlidingPlatformWfD0Ev.cpp",
-    "src/_ZN17SlidingPlatformWf16CleanupResourcesEv.cpp",
-    "src/_ZN17SlidingPlatformWf6RenderEv.cpp",
-    "src/_ZN17SlidingPlatformWf8BehaviorEv.cpp",
-    "src/_ZN17SlidingPlatformWf13InitResourcesEv.cpp",
+    "src/_ZN17daObjSimpleLift_cD1Ev.cpp",
+    "src/_ZN17daObjSimpleLift_cD0Ev.cpp",
+    "src/_ZN17daObjSimpleLift_c16CleanupResourcesEv.cpp",
+    "src/_ZN17daObjSimpleLift_c6RenderEv.cpp",
+    "src/_ZN17daObjSimpleLift_c8BehaviorEv.cpp",
+    "src/_ZN17daObjSimpleLift_c13InitResourcesEv.cpp",
     "src/d_a_obj_simple_lift_bk_transbar.c"
    ],
    "ext_mix": {
@@ -25641,17 +25641,17 @@
    "start": "0x21111a0",
    "end": "0x211168c",
    "classes": [
-    "RotatingCogSmall"
+    "daObjCtMecha10_c"
    ],
    "n_functions_map": 7,
    "n_files": 7,
    "files": [
-    "src/_ZN16RotatingCogSmallD1Ev.cpp",
-    "src/_ZN16RotatingCogSmallD0Ev.cpp",
-    "src/_ZN16RotatingCogSmall16CleanupResourcesEv.cpp",
-    "src/_ZN16RotatingCogSmall6RenderEv.cpp",
-    "src/_ZN16RotatingCogSmall8BehaviorEv.cpp",
-    "src/_ZN16RotatingCogSmall13InitResourcesEv.cpp",
+    "src/_ZN16daObjCtMecha10_cD1Ev.cpp",
+    "src/_ZN16daObjCtMecha10_cD0Ev.cpp",
+    "src/_ZN16daObjCtMecha10_c16CleanupResourcesEv.cpp",
+    "src/_ZN16daObjCtMecha10_c6RenderEv.cpp",
+    "src/_ZN16daObjCtMecha10_c8BehaviorEv.cpp",
+    "src/_ZN16daObjCtMecha10_c13InitResourcesEv.cpp",
     "src/d_a_obj_ct_mecha10_ct_mecha12s.c"
    ],
    "ext_mix": {

@@ -1,53 +1,28 @@
 //cpp
-/* Memory-match minigame scene (ov006/dScMgMCarlo_c), 25 functions,
- * enrolled and canonical. The board-piece accesses are real members
- * on the recovered dMgMCarloCardObj_c element class; the legacy
- * Node/Obj shadows survive only in the TUBUILD CONFLICT notes below.
+/* ov006/dScMgMCarlo_c: the Monte Carlo card minigame. Pairs of matching
+ * faces on neighbouring board slots are picked with the stylus and removed,
+ * and the board deals itself back in behind them.
  *
- * Source runs REVERSE of ROM (highest address first). Do not reorder.
+ * Functions run in REVERSE of ROM order (highest address first); do not
+ * reorder.
  *
- * Leftover: 30 func_ov004_* + 31 data_* keep linker names (unnamed in
- *   symbols.txt); each needs a coined, behaviour-justified name.
- * Leftover: hand-rolled C1/C2/D0/D1/D2 call shapes and vptr stores
- *   stand in for real ctors.
- * Leftover: 8 unk_NN slot/field names not evidenced.
+ * Still raw: the func_ov004_ helpers and the data_ov006_ board globals are
+ * unnamed in symbols.txt, and the unk_ fields have no evidence for a name
+ * yet. The card methods and the static board helpers have coined names;
+ * the ROM has only addresses for them. The factory writes the allocation
+ * and vptr stores out by hand because the ROM has no dScMgMCarlo_c C1.
  */
 
 #include "dScMgMCarlo_c.h"
 #include "types.h"
 #include "decl_common.h"
 
-/* Reconciled declarations retained from the legacy files.
- *
- * The board-piece shadow struct Node and the vtable shim SceneVtable are
- * GONE: every field access they modelled is now real member access on the
- * RECOVERED element class dMgMCarloCardObj_c (include/dScMgMCarlo_c.h),
- * and the slot-18 self-dispatch InitResources makes is now spelled as what
- * it is, the virtual call OnYoshiTryEat(-1). The legacy files' own partial
- * 'Node'/'Obj' shadows are preserved below in the TUBUILD CONFLICT notes. */
+/* The TUBUILD CONFLICT notes below are the merged legacy files' own
+ * spellings of the card and scene structs; the manifest records them, so
+ * they stay. The code uses dMgMCarloCardObj_c from the header. */
 
-/* shadow typedef 'Fix12' */
-typedef int Fix12;
-
-/* --- the engine helpers, by their true names -------------------------------
-   These four calls used to be spelled by their mangled ROM names, declared
-   in the extern "C" blocks. They are the real C++ names now -- plain
-   file-scope declarations, never extern "C", the idiom dScMgBSC_c's and
-   dScMgCard_c's conversions established (src/actors/dScMgCard_c.cpp:251) --
-   and each one's mwcc mangling IS that same ROM symbol, so every call below
-   compiles to the same bl target as before:
-     GXS::LoadOBJPltt           _ZN3GXS11LoadOBJPlttEPKvjj
-     Sound::PlayBank2_2D        _ZN5Sound12PlayBank2_2DEj
-     ApproachLinear             _Z14ApproachLinearRiii
-     ApproachLinear2            _Z15ApproachLinear2Rsss
-   The parameter types are read off the mangled names, not chosen (see
-   include/G2x.h's own banner for why that matters): `PKv` const void*, `j`
-   unsigned int, `Riii` int&, `Rsss` s16&. Sound is a namespace per
-   include/Sound.h; GXS is spelled as a namespace the same way, since a
-   namespace and a class-only-statics mangle identically and the calls here
-   are static either way. The two ApproachLinear returns are int per the
-   family's committed declaration -- the ApproachLinear2 calls read it, the
-   ApproachLinear calls do not. */
+/* Engine helpers; the parameter types are the ones the mangled names
+ * encode. */
 namespace GXS { void LoadOBJPltt(void const *, unsigned int, unsigned int); }
 namespace Sound { void PlayBank2_2D(u32 id); }
 int  ApproachLinear(int &value, int target, int step);
@@ -120,9 +95,7 @@ extern int data_ov006_021424f8;
 extern int data_ov006_021424f0;
 extern int data_ov006_0213d568;
 extern int data_ov006_0213d56c;
-extern int data_ov006_0213d5e0[8]; /* the eight face weights -- one declaration;
-                                      the []-spelled duplicate at the top of this
-                                      block was the same symbol */
+extern int data_ov006_0213d5e0[8]; /* the eight face weights */
 extern int data_020a0db0;
 extern unsigned short data_ov006_0213d600[];
 extern int data_ov006_0214250c[];
@@ -192,50 +165,38 @@ dMgMCarloCardObj_c::dMgMCarloCardObj_c()
 // @symbol dScMgMCarlo_c_classInit
 extern "C" void* dScMgMCarlo_c_classInit()
 {
-    char* p = (char*)_ZN7fBase_cnwEj(0x60b0);
-    if (p) {
-        _ZN11dScMgBase_cC2Ev(p);
-        *(int*)p = (int)&_ZTV19dScMgSingle3DBase_c;
-        _ZN8Particle10SysTrackerC1Ev(p + 0x471c);
-        *(int*)p = (int)&_ZTV13dScMgMCarlo_c[2];
-        func_ov006_020c1d80(p + 0x4f38);
-        __cxa_vec_ctor(p + 0x51a8, 0x50, 0x30,
+    char* raw = (char*)_ZN7fBase_cnwEj(0x60b0);
+    if (raw) {
+        _ZN11dScMgBase_cC2Ev(raw);
+        *(int*)raw = (int)&_ZTV19dScMgSingle3DBase_c;
+        _ZN8Particle10SysTrackerC1Ev(raw + 0x471c);
+        *(int*)raw = (int)&_ZTV13dScMgMCarlo_c[2];
+        func_ov006_020c1d80(raw + 0x4f38);
+        __cxa_vec_ctor(raw + 0x51a8, 0x50, 0x30,
                      (void*)_ZN18dMgMCarloCardObj_cC1Ev,
                      (void*)_ZN18dMgMCarloCardObj_cD1Ev);
     }
-    return p;
+    return raw;
 }
 
 // @symbol _ZN13dScMgMCarlo_c13InitResourcesEv
-/* dScMgMCarlo_c::InitResources -- vtable slot 0.
- *
- * Attributed by tools/rtti_vtables.py --own dScMgMCarlo_c, this class's own
- * slot 0 (fBase_c::InitResources). The old file's `recovered name:
- * dScMgMCarlo_c_InitResources` agreed.
- *
- * The boot sequence: load the language-selected board file and the shared
- * palette (0xbb), set the two engine mode bytes, park the 3D matrix at the
- * family camera (pad_4660, dScMgSingle3DBase_c's own -- the same call every
- * sibling's InitResources makes), and arm mShared.
- * unk_0a8 / unk_0ac take the per-scene random seed (the same
- * func_ov004_020ad8b8 pairing dScMgCard_c commits), the singleton's score
- * takes the save's carried value, and the round is KICKED by the virtual
- * self-dispatch OnYoshiTryEat(-1) -- this class's own slot-18 override,
- * which deals the first board. Same spelling dScMgCard_c::InitResources
- * commits for its own kick (src/actors/dScMgCard_c.cpp:372). */
+/* Slot 0. Loads the language's board graphics and the shared palette
+ * (0xbb), sets the engine mode bytes, parks the 3D matrix at the family
+ * camera and arms mShared. The round starts with the virtual
+ * OnYoshiTryEat(-1), which deals the first board. */
 s32 dScMgMCarlo_c::InitResources()
 {
-    void *a;
-    void *b;
+    void *chr;
+    void *pal;
 
     func_ov004_020b04d0(0x20);
     func_ov006_0210a534(this);
-    a = (void *)LoadFile(data_ov006_0213d5b4[GetGameLanguage()]);
-    b = (void *)LoadFile(0xbb);
-    DecompressLZ16(a, (void *)0x6600000);
-    GXS::LoadOBJPltt(b, 0, 0x100);
-    Deallocate(a);
-    Deallocate(b);
+    chr = (void *)LoadFile(data_ov006_0213d5b4[GetGameLanguage()]);
+    pal = (void *)LoadFile(0xbb);
+    DecompressLZ16(chr, (void *)0x6600000);
+    GXS::LoadOBJPltt(pal, 0, 0x100);
+    Deallocate(chr);
+    Deallocate(pal);
 
     data_0209d45c = 0x11;
     data_0209d454 = 0x18;
@@ -248,33 +209,21 @@ s32 dScMgMCarlo_c::InitResources()
     unk_0a8 = func_ov004_020ad8b8();
     unk_0ac = unk_0a8;
     {
-        int v = func_ov004_020ad878();
-        if (data_ov004_020beb68 != 0) ((dScMgBase_c *)data_ov004_020beb68)->mHudScore = v;
+        int score = func_ov004_020ad878();
+        if (data_ov004_020beb68 != 0) ((dScMgBase_c *)data_ov004_020beb68)->mHudScore = score;
     }
     OnYoshiTryEat(-1);
     this->unk_60aa = 0;
     return 1;
 }
 
-/*                 size 0xa0                                                */
 // @symbol _ZN13dScMgMCarlo_c13OnYoshiTryEatEi
-/* dScMgMCarlo_c::OnYoshiTryEat -- vtable slot 18, the round-reset hook the
- * base calls when Yoshi swallows the scene: restart the round from a
- * fresh board. SetupBoard deals a new layout over the whole card array,
- * the round re-arms from its entry state (unk_60a8 = 1, unk_60aa = 0),
- * the tail-hide counter unk_60ae clears, the round flag drops, and the
- * shared table's prompt pair (mShared.unk_1e6 / mShared.unk_01a -- the shared
- * constructor's own two fields, see the header) re-arms with the prompt
- * window (func_ov006_020c1604 on mShared, watching
- * &unk_60ae). The ROM's own symbol carries this slot's name
- * (symbols.txt already spells it).
+/* Slot 18: restart the round from a fresh board. SetupBoard deals a new
+ * layout, the round state re-arms (unk_60a8 = 1), and the shared prompt
+ * window re-opens watching unk_60ae.
  *
- * func_ov004_020b66d4's argument here is dead -- the callee takes it and
- * never reads it (Card's own OnYoshiTryEat calls the same engine routine
- * with no argument at all) -- but THIS call site in the ROM does
- * materialize this + 0x6000 into r0, so the honest spelling is the
- * member address it computes: mArray's element 0x4c's mTargetY, exactly
- * 0x51a8 + 0x4c*0x30 + 0x18 = 0x6000. */
+ * func_ov004_020b66d4 never reads its argument, but the ROM still computes
+ * this + 0x6000 for it, which is mArray[76].mTargetY. */
 void dScMgMCarlo_c::OnYoshiTryEat(int arg)
 {
     SetupBoard(mArray);
@@ -290,23 +239,12 @@ void dScMgMCarlo_c::OnYoshiTryEat(int arg)
 }
 
 // @symbol _ZN13dScMgMCarlo_c13OnTurnIntoEggEi
-/* dScMgMCarlo_c::OnTurnIntoEgg -- vtable slot 19, the egg-exit state
- * machine: the same s16 round state (unk_60a8) Behavior runs, driven here
- * while the scene is being folded into Yoshi's egg. Case 4 frees the
- * minigame's Gfx slots. Case 5 waits for the shared table's window to
- * clear (func_ov006_020c1718), then takes the exit path -- with cards
- * dealt, hands the dealt total to func_ov004_020b5e40 and parks the hide
- * timer at -1; otherwise plays the wrap-up cue (func_ov004_020b56c8 on the
- * face tier) -- resets the tail-hide counter and steps. Case 6 is the
- * tail-hide march: while the board still shows a card, each ApproachLinear2
- * tick hides one more card counting back from the tail marker (the mPrev
- * walk), unk_60ae up; once nothing is visible it waits on the engine flag
- * data_ov004_020bf9e4 and steps. Case 7 waits for the active base's
- * unk_0a8 to clear, then flips every dealt card away (FlipDealtCards,
- * unk_60aa = 0x1e) and steps. Case 8 runs the 0x1e timer out
- * (ApproachLinear2 on unk_60aa). Returns 1 while the transition still
- * has frames to run, 0 when the scene is done. The ROM's own symbol
- * carries this slot's name (symbols.txt already spells it). */
+/* Slot 19: the egg-exit sequence, run on the same round state (unk_60a8)
+ * as Behavior. 4 frees the Gfx slots. 5 waits for the shared window, then
+ * hands the dealt total on (or plays the wrap-up cue). 6 hides the board
+ * one card at a time from the tail. 7 waits for the active scene, then
+ * flips every dealt card away. 8 runs the 0x1e timer out. Returns 1 while
+ * frames remain. */
 int dScMgMCarlo_c::OnTurnIntoEgg(int mode)
 {
     switch (unk_60a8) {
@@ -316,9 +254,9 @@ int dScMgMCarlo_c::OnTurnIntoEgg(int mode)
         break;
     case 5:
         if (func_ov006_020c1718(&mShared) != 0) {
-            int v = data_ov006_0213d570;
-            if (v != 0) {
-                func_ov004_020b5e40(v);
+            int dealt = data_ov006_0213d570;
+            if (dealt != 0) {
+                func_ov004_020b5e40(dealt);
                 unk_60aa = -1;
             } else {
                 func_ov004_020b56c8((char*)data_ov006_0213d568);
@@ -328,20 +266,20 @@ int dScMgMCarlo_c::OnTurnIntoEgg(int mode)
         }
         break;
     case 6: {
-        dMgMCarloCardObj_c *q = data_ov006_02142500;
-        if (q != 0 && q->mVisible != 0) {
+        dMgMCarloCardObj_c *head = data_ov006_02142500;
+        if (head != 0 && head->mVisible != 0) {
             if (ApproachLinear2(unk_60aa, 0, 1) != 0) {
-                dMgMCarloCardObj_c *r3;
+                dMgMCarloCardObj_c *card;
                 int i;
                 int n;
                 unk_60aa = 0x10;
                 n = unk_60ae;
-                r3 = data_ov006_02142504;
+                card = data_ov006_02142504;
                 for (i = 0; i < n; i++) {
-                    if (r3 == 0) break;
-                    r3 = r3->mPrev;
+                    if (card == 0) break;
+                    card = card->mPrev;
                 }
-                if (r3 != 0) r3->mVisible = 0;
+                if (card != 0) card->mVisible = 0;
                 unk_60ae += 1;
             }
         } else {
@@ -351,8 +289,8 @@ int dScMgMCarlo_c::OnTurnIntoEgg(int mode)
         break;
     }
     case 7: {
-        dScMgBase_c *p = (dScMgBase_c *)data_ov004_020beb68;
-        if ((p != 0 ? p->unk_0a8 : 0) != 0)
+        dScMgBase_c *active = (dScMgBase_c *)data_ov004_020beb68;
+        if ((active != 0 ? active->unk_0a8 : 0) != 0)
             return 1;
         dScMgMCarlo_c::FlipDealtCards();
         unk_60aa = 0x1e;
@@ -368,25 +306,10 @@ int dScMgMCarlo_c::OnTurnIntoEgg(int mode)
 }
 
 // @symbol _ZN13dScMgMCarlo_c8BehaviorEv
-/* dScMgMCarlo_c::Behavior -- vtable slot 6.
- *
- * Attributed by the ROM's vtable: the one slot where this class's table differs
- * from dScMgSingle3DBase_c's. The old file's `recovered name:` comment agreed, and
- * here it is right -- unlike the four the reference commit had to move up a level.
- *
- * The round's state machine, on the s16 at 0x60a8. Case 1 arms the shared
- * dScMgBase_c counter pair at 0xc3/0xc4/0xc0 -- the identical idiom Flower's and
- * Snowball's own Behaviors use, which is why include/dScMgBase_c.h names those
- * three fields. It then falls through into case 2 deliberately.
- *
- * WAS A C99 FILE. Two consequences, both mechanical:
- *   - the declarations move inside `extern "C"`, or they would mangle;
- *   - `data_ov004_020beb68` is NOT redeclared here. include/dScMgBase_c.h already
- *     declares it `void *`, and the old file's local `extern char *` would now be
- *     a conflicting declaration rather than a private convenience. It is cast at
- *     each use instead, which loads the same word.
- * The local `typedef short s16;` is gone for the same reason: types.h arrives
- * through decl_common.h and already has it. */
+/* Slot 6: the round, on the s16 state at unk_60a8. Case 1 arms the prompt
+ * blink and falls through into case 2 on purpose. data_ov004_020beb68 is
+ * the active scene (dScMgBase_c.h declares it void *), so it is cast at
+ * each use. */
 s32 dScMgMCarlo_c::Behavior()
 {
     switch (unk_60a8) {
@@ -409,11 +332,11 @@ s32 dScMgMCarlo_c::Behavior()
         break;
     case 3:
         if (dScMgMCarlo_c::BoardReady() == 0) {
-            int r5;
+            int shown;
             if (data_ov006_0213d564 == 1)
                 data_ov006_0213d564 = 0;
-            r5 = data_ov006_0213d574 >> 12;
-            if (data_ov006_0213d56c != 0 && r5 > 10 && r5 <= 18
+            shown = data_ov006_0213d574 >> 12;
+            if (data_ov006_0213d56c != 0 && shown > 10 && shown <= 18
                 && func_ov006_020c1718(&mShared) != 0) {
                 unk_60ae = 0;
                 mShared.unk_1e6 = 0;
@@ -422,7 +345,7 @@ s32 dScMgMCarlo_c::Behavior()
                     mShared.unk_01a = 0;
             } else {
                 int lim = unk_60ae + 18;
-                if (r5 >= lim) {
+                if (shown >= lim) {
                     int flag = (data_ov006_021424fc != 0 && data_ov006_02142508 != 0);
                     if (flag == 0)
                         data_ov006_0213d574 = lim << 12;
@@ -438,42 +361,42 @@ s32 dScMgMCarlo_c::Behavior()
                             mShared.unk_01a = 0;
                         } else if (func_ov006_020c16b4(&mShared) != 0) {
                             {
-                                void *g = data_ov004_020beb68;
-                                if (g != 0) {
-                                    if (((dScMgBase_c *)g)->mHudScore > 0)
-                                        ((dScMgBase_c *)g)->mHudScore = ((dScMgBase_c *)g)->mHudScore - 1;
+                                dScMgBase_c *active = (dScMgBase_c *)data_ov004_020beb68;
+                                if (active != 0) {
+                                    if (active->mHudScore > 0)
+                                        active->mHudScore = active->mHudScore - 1;
                                 }
                             }
                             func_ov006_020c0d68(&mShared);
                             func_ov004_020b0a54(5);
                             {
-                                int d = data_ov006_0213d570;
-                                void *g = data_ov004_020beb68;
-                                int t = ((g != 0) ? ((dScMgBase_c *)g)->unk_0a8 : 0) - d;
-                                int u = (g != 0) ? ((dScMgBase_c *)g)->mHudScore : 0;
-                                func_ov004_020ad79c(t, u);
+                                int dealt = data_ov006_0213d570;
+                                dScMgBase_c *active = (dScMgBase_c *)data_ov004_020beb68;
+                                int left = ((active != 0) ? active->unk_0a8 : 0) - dealt;
+                                int score = (active != 0) ? active->mHudScore : 0;
+                                func_ov004_020ad79c(left, score);
                             }
                             mPromptEnabled = 0;
                             unk_60a8++;
                         }
                     } else {
                         {
-                            void *g = data_ov004_020beb68;
-                            if (g != 0) {
-                                if (((dScMgBase_c *)g)->mHudScore < 0x270f)
-                                    ((dScMgBase_c *)g)->mHudScore = ((dScMgBase_c *)g)->mHudScore + 1;
-                                if (((dScMgBase_c *)g)->mHudScore > ((dScMgBase_c *)g)->unk_0b8)
-                                    ((dScMgBase_c *)g)->unk_0b8 = ((dScMgBase_c *)g)->mHudScore;
+                            dScMgBase_c *active = (dScMgBase_c *)data_ov004_020beb68;
+                            if (active != 0) {
+                                if (active->mHudScore < 0x270f)
+                                    active->mHudScore = active->mHudScore + 1;
+                                if (active->mHudScore > active->unk_0b8)
+                                    active->unk_0b8 = active->mHudScore;
                             }
                         }
                         func_ov004_020adb1c(mHudScore);
                         func_ov006_020c0c80(&mShared);
                         func_ov004_020b0a54(4);
                         {
-                            void *g = data_ov004_020beb68;
-                            int t = (g != 0) ? ((dScMgBase_c *)g)->unk_0a8 : 0;
-                            func_ov004_020ad79c(data_ov006_0213d568 + t,
-                                                (g != 0) ? ((dScMgBase_c *)g)->mHudScore : 0);
+                            dScMgBase_c *active = (dScMgBase_c *)data_ov004_020beb68;
+                            int base = (active != 0) ? active->unk_0a8 : 0;
+                            func_ov004_020ad79c(data_ov006_0213d568 + base,
+                                                (active != 0) ? active->mHudScore : 0);
                         }
                         mPromptEnabled = 0;
                         unk_60a8++;
@@ -492,24 +415,14 @@ s32 dScMgMCarlo_c::Behavior()
 }
 
 // @symbol _ZN13dScMgMCarlo_c6RenderEv
-/* dScMgMCarlo_c::Render -- vtable slot 9.
- *
- * Attributed by tools/rtti_vtables.py --own dScMgMCarlo_c, this class's own
- * slot 9 (dScMgBase_c::Render). The old file's `recovered name:
- * dScMgMCarlo_c_Render` agreed.
- *
- * The board draws in TWO passes over the same tail-to-head walk (up to the 20
- * board slots), a z-order trick: cards with a nonzero Y approach step -- the
- * ones rising -- draw in the first pass, on top of the settled board the
- * second pass draws. Both walks spell real member access on the recovered
- * element class, the render itself dispatching through its vtable slot 0. */
+/* Slot 9. The board draws in two passes over the same tail-to-head walk:
+ * cards still rising (nonzero mYStep) first, then the settled ones. */
 s32 dScMgMCarlo_c::Render()
 {
-    char* c = (char*)this;
     func_ov006_020c0aa8(pad_4660);
-    func_ov004_020b1bc8(c, 0xc, 0xc, 0);
+    func_ov004_020b1bc8((char *)this, 0xc, 0xc, 0);
     func_ov004_020b6430();
-    func_ov004_020b1e34(c, 0xe0, 0x14, 1);
+    func_ov004_020b1e34((char *)this, 0xe0, 0x14, 1);
 
     {
         dMgMCarloCardObj_c *n = data_ov006_02142504;
@@ -539,30 +452,27 @@ s32 dScMgMCarlo_c::Render()
 }
 
 // @symbol _ZN13dScMgMCarlo_c9RenderHudEv
-/* dScMgMCarlo_c::RenderHud -- the one member helper: the ROM passes this
- * and the body never reads it (the honest-parameter form). Draw the deck
+/* The ROM passes `this` and the body never reads it. Draw the deck
  * gauge while cards remain in the deck: the count -- data_ov006_0213d56c,
  * seeded with the deck size by SetupBoard and drained one card at a time
  * as the deal proceeds -- drawn as a number at (0xe8, 0x28), with the
- * gauge's frame sprite behind it at (0xe8, 0x18). Render calls this after
- * the board's two draw walks. Coined name; the ROM's symbol is
- * address-only. */
+ * gauge's frame sprite behind it at (0xe8, 0x18). */
 void dScMgMCarlo_c::RenderHud(void)
 {
-    int g = data_ov006_0213d56c;
-    if (g == 0) return;
-    func_ov004_020b1ea4(0xe8, 0x28, g, -1, -1, 0, 0);
+    int deck = data_ov006_0213d56c;
+    if (deck == 0) return;
+    func_ov004_020b1ea4(0xe8, 0x28, deck, -1, -1, 0, 0);
     Hud_RenderSprite((void*)data_ov006_02133f18, 0xe8, 0x18, -1, -1);
 }
 
 // @symbol _ZN18dMgMCarloCardObj_c4InitEi
-/* dMgMCarloCardObj_c::Init -- reset one card to its factory state and assign
+/* Reset one card to its factory state and assign
  * it slot n: the slot index, the deal stagger ((n%5)*2+1 for the board's
  * first twenty, plain 1 for the spares behind), lift down, steps cleared,
  * state 0 (waiting to be dealt), visible, and unlinked from the board list
  * (mPrev = mNext = 0; SetupBoard threads the list). Card 0x13 becoming the
  * tail marker is part of the factory reset. SetupBoard's 0x50 loop runs this
- * down the whole array. Coined name; the ROM's symbol is address-only. */
+ * down the whole array. */
 void dMgMCarloCardObj_c::Init(int n) {
   mSlot = (short)n;
   if (n >= 0x14) {
@@ -581,7 +491,7 @@ void dMgMCarloCardObj_c::Init(int n) {
 }
 
 // @symbol _ZN18dMgMCarloCardObj_c6DealInEi
-/* dMgMCarloCardObj_c::DealIn -- send this card flying to board slot m.
+/* Send this card flying to board slot m.
  * Slots past 0x13 are the spare pile behind the board: those start from the
  * same off-screen x and a y above the board, become the tail marker (state
  * 1), and stop. A card still waiting (state 0) or a spare rising from the
@@ -589,7 +499,7 @@ void dMgMCarloCardObj_c::Init(int n) {
  * data_ov006_021424f4 tracks how many are in the air. The slot's target is
  * col*32+0x30 / row*0x30 in 1:4096 fixed point, and the fly-in step pair is
  * the scaled target-minus-position vector clamped by abs -- the step pair
- * ApproachLinear consumes. Coined name; the ROM's symbol is address-only. */
+ * ApproachLinear consumes. */
 void dMgMCarloCardObj_c::DealIn(int m)
 {
     int tmp[3];
@@ -631,39 +541,37 @@ void dMgMCarloCardObj_c::DealIn(int m)
 }
 
 // @symbol _ZN18dMgMCarloCardObj_c8FlipAwayEi
-/* dMgMCarloCardObj_c::FlipAway -- queue card n for the flip-out: the flip
+/* Queue card n for the flip-out: the flip
  * stagger is the mirror of the deal stagger ((4 - n%5)*2, where Init seeded
  * (n%5)*2+1), and state 5 is the flipping-away state the per-card Update
- * consumes. Called down the whole board by FlipDealtCards between rounds.
- * Coined name; the ROM's symbol is address-only. */
+ * consumes. Called down the whole board by FlipDealtCards between rounds. */
 void dMgMCarloCardObj_c::FlipAway(int n) {
     mDealDelay = (short)((4 - n % 5) * 2);
     mState = 5;
 }
 
 // @symbol _ZN18dMgMCarloCardObj_c10IsPairWithEPS_
-/* dMgMCarloCardObj_c::IsPairWith -- can this card and that card be removed
+/* Can this card and that card be removed
  * together? Same face value, and the two board slots within one step in
  * BOTH axes (slot is col = slot%5, row = slot/5) -- the memory-match
  * adjacency test. Called on the second pick against the first in Update,
- * and across the whole board by HasRemovablePair. Coined name; the ROM's
- * symbol is address-only. */
+ * and across the whole board by HasRemovablePair. */
 int dMgMCarloCardObj_c::IsPairWith(dMgMCarloCardObj_c *other)
 {
-    int ai, bi, dm, dd;
+    int mine, theirs, dcol, drow;
     if (other->mFace != mFace)
         goto fail;
-    bi = other->mSlot;
-    ai = mSlot;
-    dm = ai % 5 - bi % 5;
-    dd = ai / 5 - bi / 5;
-    if (dm < 0)
-        dm = -dm;
-    if (dm >= 2)
+    theirs = other->mSlot;
+    mine = mSlot;
+    dcol = mine % 5 - theirs % 5;
+    drow = mine / 5 - theirs / 5;
+    if (dcol < 0)
+        dcol = -dcol;
+    if (dcol >= 2)
         goto fail;
-    if (dd < 0)
-        dd = -dd;
-    if (dd >= 2)
+    if (drow < 0)
+        drow = -drow;
+    if (drow >= 2)
         goto fail;
     return 1;
 fail:
@@ -671,19 +579,18 @@ fail:
 }
 
 // @symbol _ZN18dMgMCarloCardObj_c7HitTestEv
-/* dMgMCarloCardObj_c::HitTest -- is this card the one under the stylus?
+/* Is this card the one under the stylus?
  * Only when the round is armed (data_ov006_0213d564) and the board is
  * settled (no card still flying or flipping in), the touch panel has to
  * report an active press, and this card's on-screen position (fixed-point
  * >> 12) has to fall in the 0x20-by-0x30 window around the reported touch
- * point -- the same 32x48 slot grid DealIn lays the board out on. Coined
- * name; the ROM's symbol is address-only. */
+ * point -- the same 32x48 slot grid DealIn lays the board out on. */
 int dMgMCarloCardObj_c::HitTest(void)
 {
     u8 idx;
     int off;
     int has;
-    int a, b;
+    int dx, dy;
 
     if (data_ov006_0213d564 == 0) return 0;
     if (dScMgMCarlo_c::BoardBusy() != 0) goto fail;
@@ -696,15 +603,15 @@ int dMgMCarloCardObj_c::HitTest(void)
     }
     if (has == 0) goto fail;
 
-    a = data_020a0dea[idx * 4] - (mX >> 12);
-    b = data_020a0deb[idx * 4] - (mY >> 12);
-    if (a > 7 && a < 0x28 && b > 0 && b < 0x31) return 1;
+    dx = data_020a0dea[idx * 4] - (mX >> 12);
+    dy = data_020a0deb[idx * 4] - (mY >> 12);
+    if (dx > 7 && dx < 0x28 && dy > 0 && dy < 0x31) return 1;
 fail:
     return 0;
 }
 
 // @symbol _ZN18dMgMCarloCardObj_c6UpdateEi
-/* dMgMCarloCardObj_c::Update -- the card's own state machine, slot 1 of the
+/* The card's own state machine, slot 1 of the
  * element vtable; UpdateBoard drives it once per settled card with the
  * round's event, the slot number the current deal is flying toward. State 0
  * waits out the deal stagger one frame at a time (mDealDelay, draining the
@@ -721,8 +628,7 @@ fail:
  * 0x4000) -- settling to idle only when position reaches target, lift is
  * full, and the fly-in counter drains. State 5 flips away: ApproachLinear2
  * counts the flip stagger down while the card flies up off the board
- * toward -0x30000, and stops when the stagger runs out. Coined name; the
- * ROM's symbol is address-only. */
+ * toward -0x30000, and stops when the stagger runs out. */
 void dMgMCarloCardObj_c::Update(int event)
 {
     switch (mState) {
@@ -758,8 +664,8 @@ void dMgMCarloCardObj_c::Update(int event)
         }
         func_02012790(0xe);
         {
-            dMgMCarloCardObj_c *c2 = data_ov006_021424fc;
-            c2->mState = 2;
+            dMgMCarloCardObj_c *first = data_ov006_021424fc;
+            first->mState = 2;
         }
         data_ov006_021424fc = 0;
         return;
@@ -803,7 +709,7 @@ void dMgMCarloCardObj_c::Update(int event)
 }
 
 // @symbol _ZN18dMgMCarloCardObj_c6RenderEv
-/* dMgMCarloCardObj_c::Render -- draw this card through the dMeter_c sprite bank.
+/* Draw this card through the dMeter_c sprite bank.
  * Hidden cards (mVisible 0) and ones still waiting to be dealt (mState 0)
  * draw nothing, and a picked card (state 3) hides while the touch state's
  * bit 8 is down. The bank index is the face's bank (mFace + 1) of five flip
@@ -813,19 +719,19 @@ void dMgMCarloCardObj_c::Update(int event)
  * so this TU is what emits _ZTV/_ZTI/_ZTS for the element class. */
 void dMgMCarloCardObj_c::Render(void)
 {
-    unsigned char k;
+    unsigned char state;
     if (mVisible == 0) return;
-    k = mState;
-    if (k == 0) return;
-    if (k == 3) {
-        if (((&data_020a0db0)[0] & 8) != 0) return;
+    state = mState;
+    if (state == 0) return;
+    if (state == 3) {
+        if ((data_020a0db0 & 8) != 0) return;
     }
     {
         int idx = (mFace + 1) * 5
                   + (mLift >> 12);
-        unsigned short e = data_ov006_0213d600[idx];
+        unsigned short sprite = data_ov006_0213d600[idx];
         Hud_RenderSprite(
-            (void*)data_ov006_0214250c[e],
+            (void*)data_ov006_0214250c[sprite],
             (mX >> 12) + 24,
             (mY >> 12) + 24,
             -1,
@@ -833,9 +739,8 @@ void dMgMCarloCardObj_c::Render(void)
     }
 }
 
-/*                 0x020f7c10, size 0x21c                                   */
 // @symbol _ZN13dScMgMCarlo_c10SetupBoardEP18dMgMCarloCardObj_c
-/* dScMgMCarlo_c::SetupBoard -- static: lay out a fresh round. The active
+/* Lay out a fresh round. The active
  * base's star count picks the tier -- under 5 stars, 6 face values at 6
  * cards each (36); under 10, 7 at 8 (56); past that, all 8 at 0xa (80) --
  * and both the deck counter and the dealt total start at faces-times-weight.
@@ -846,12 +751,11 @@ void dMgMCarloCardObj_c::Render(void)
  * and the dealt cards are threaded onto the board's doubly-linked list in
  * array order. The do-while repeats the whole deal until the twenty board
  * slots hold at least one removable pair (HasRemovablePair never looks past
- * slot 0x13, so the stock behind the board does not count). Coined name;
- * the ROM's symbol is address-only. */
+ * slot 0x13, so the stock behind the board does not count). */
 void dScMgMCarlo_c::SetupBoard(dMgMCarloCardObj_c *cards)
 {
-    int v;
-    dScMgBase_c *o;
+    int stars;
+    dScMgBase_c *active;
     short i;
     short j;
     short off;
@@ -860,14 +764,14 @@ void dScMgMCarlo_c::SetupBoard(dMgMCarloCardObj_c *cards)
     dMgMCarloCardObj_c *n2;
     dMgMCarloCardObj_c *nx;
 
-    o = (dScMgBase_c *)data_ov004_020beb68;
-    v = (o != 0) ? o->mHudScore : 0;
+    active = (dScMgBase_c *)data_ov004_020beb68;
+    stars = (active != 0) ? active->mHudScore : 0;
 
-    if (v < 5) {
+    if (stars < 5) {
         data_ov006_021424f8 = 6;
         data_ov006_021424f0 = 6;
         data_ov006_0213d568 = 5;
-    } else if (v < 0xa) {
+    } else if (stars < 0xa) {
         data_ov006_021424f8 = 8;
         data_ov006_021424f0 = 7;
         data_ov006_0213d568 = 8;
@@ -932,13 +836,12 @@ void dScMgMCarlo_c::SetupBoard(dMgMCarloCardObj_c *cards)
 }
 
 // @symbol _ZN13dScMgMCarlo_c16HasRemovablePairEv
-/* dScMgMCarlo_c::HasRemovablePair -- static: does the board still hold two
+/* Does the board still hold two
  * cards that can be removed together (IsPairWith true for some pair)? The
  * walk skips the spare cards past slot 0x13 (they are never on the board),
  * and the inner walk starts one past the outer card so each pair is tested
  * once. SetupBoard re-deals while this is false so a fresh board always has
- * at least one removable pair; Behavior uses it to catch a stuck board.
- * Coined name; the ROM's symbol is address-only. */
+ * at least one removable pair; Behavior uses it to catch a stuck board. */
 int dScMgMCarlo_c::HasRemovablePair(void)
 {
     dMgMCarloCardObj_c *p, *q;
@@ -955,21 +858,21 @@ int dScMgMCarlo_c::HasRemovablePair(void)
 }
 
 // @symbol _ZN13dScMgMCarlo_c9BoardBusyEv
-/* dScMgMCarlo_c::BoardBusy -- static: the board is mid-deal (the negation of
+/* The board is mid-deal (the negation of
  * BoardReady below, spelled out rather than !BoardReady() because the ROM
  * carries the two bodies separately). Busy while the dealt count is still
  * short of the board size, or a card is still flying in, or either pick
- * slot is held. Coined name; the ROM's symbol is address-only. */
+ * slot is held. */
 int dScMgMCarlo_c::BoardBusy(void)
 {
     int ret = 1;
-    short t;
-    short f;
-    f = (short)(data_ov006_0213d574 >> 12);
-    t = (short)data_ov006_0213d570;
-    if (t > 20)
-        t = 20;
-    if (f == t)
+    short target;
+    short shown;
+    shown = (short)(data_ov006_0213d574 >> 12);
+    target = (short)data_ov006_0213d570;
+    if (target > 20)
+        target = 20;
+    if (shown == target)
     {
         if (data_ov006_021424f4 == 0)
         {
@@ -981,19 +884,19 @@ int dScMgMCarlo_c::BoardBusy(void)
 }
 
 // @symbol _ZN13dScMgMCarlo_c10BoardReadyEv
-/* dScMgMCarlo_c::BoardReady -- static: the dealt count has reached the board
+/* The dealt count has reached the board
  * size, no card is still flying in, and both pick slots are clear. Behavior
- * polls this between rounds. Coined name; the ROM's symbol is address-only. */
+ * polls this between rounds. */
 int dScMgMCarlo_c::BoardReady(void)
 {
     int ret = 0;
-    short t;
-    short f;
-    f = (short)(data_ov006_0213d574 >> 12);
-    t = (short)data_ov006_0213d570;
-    if (t > 20)
-        t = 20;
-    if (f == t)
+    short target;
+    short shown;
+    shown = (short)(data_ov006_0213d574 >> 12);
+    target = (short)data_ov006_0213d570;
+    if (target > 20)
+        target = 20;
+    if (shown == target)
     {
         if (data_ov006_021424f4 == 0)
         {
@@ -1005,22 +908,21 @@ int dScMgMCarlo_c::BoardReady(void)
 }
 
 // @symbol _ZN13dScMgMCarlo_c13DrawCardValueEv
-/* dScMgMCarlo_c::DrawCardValue -- static: one weighted draw from the
+/* One weighted draw from the
  * eight-face deck. Roll the seeded RNG scaled by the weight total, then walk
  * the weights subtracting until the running total goes negative -- that face
  * is the draw, and its weight is spent. The same routine dScMgCard_c runs on
  * its six-face deck (src/actors/dScMgCard_c.cpp); the weights themselves
- * live in this overlay's data and SetupBoard refills them per board size.
- * Coined name; the ROM's symbol is address-only. */
+ * live in this overlay's data and SetupBoard refills them per board size. */
 int dScMgMCarlo_c::DrawCardValue(void)
 {
     unsigned char pick = 0;
     int total = 0;
     int i;
-    int r;
+    int roll;
     for(i=0;i<8;i++) total += data_ov006_0213d5e0[i];
-    r = (int)(((unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 0x13);
-    total = (total * r) >> 0xc;
+    roll = (int)(((unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 0x13);
+    total = (total * roll) >> 0xc;
     for(i=0;i<8;i++){
         total -= data_ov006_0213d5e0[i];
         if(total < 0){
@@ -1033,10 +935,10 @@ int dScMgMCarlo_c::DrawCardValue(void)
 }
 
 // @symbol _ZN13dScMgMCarlo_c14FlipDealtCardsEv
-/* dScMgMCarlo_c::FlipDealtCards -- static: between rounds, queue every card
+/* Between rounds, queue every card
  * currently on the board for the flip-out, walking the board list head to
  * tail and numbering the walk so FlipAway's flip stagger mirrors the deal
- * stagger card by card. Coined name; the ROM's symbol is address-only. */
+ * stagger card by card. */
 void dScMgMCarlo_c::FlipDealtCards(void) {
     dMgMCarloCardObj_c* node = data_ov006_02142500;
     short i = 0;
@@ -1050,7 +952,7 @@ void dScMgMCarlo_c::FlipDealtCards(void) {
 }
 
 // @symbol _ZN13dScMgMCarlo_c11UpdateBoardEv
-/* dScMgMCarlo_c::UpdateBoard -- static: advance the board one frame. When
+/* Advance the board one frame. When
  * both picks are held, count the settle timer down; on zero, compare the two
  * picks' board slots, aim the board camera at the smaller slot's column,
  * unlink both picked cards from the board list (each picked card's unlinks
@@ -1058,7 +960,7 @@ void dScMgMCarlo_c::FlipDealtCards(void) {
  * drop the picks, and set the board size shrinking. Then walk the list from
  * the head telling every still-flying card (state 1) to update. With no pick
  * held, grow the board-size counter toward the dealt target and walk the
- * whole board instead. Coined name; the ROM's symbol is address-only. */
+ * whole board instead. */
 void dScMgMCarlo_c::UpdateBoard(void) {
     dMgMCarloCardObj_c* head = data_ov006_02142500;
     dMgMCarloCardObj_c* n;
@@ -1106,9 +1008,9 @@ void dScMgMCarlo_c::UpdateBoard(void) {
     }
 
     {
-        int t = (short)data_ov006_0213d570;
-        if (t > 0x14) t = 0x14;
-        ApproachLinear(data_ov006_0213d574, t << 12, 0x800);
+        int target = (short)data_ov006_0213d570;
+        if (target > 0x14) target = 0x14;
+        ApproachLinear(data_ov006_0213d574, target << 12, 0x800);
     }
     n = head;
     for (i = 0; i < (data_ov006_0213d574 >> 12); i++) {
@@ -1119,25 +1021,12 @@ void dScMgMCarlo_c::UpdateBoard(void) {
 }
 
 // @symbol _ZN18dMgMCarloCardObj_cD1Ev
-/* The RTTI-proven card class has no base or destructible members; its genuine
- * empty D1 restores its own vptr and reproduces the cartridge's 0x10 body. */
+/* Empty: the card has no base and nothing to destroy. */
 dMgMCarloCardObj_c::~dMgMCarloCardObj_c()
 {
 }
 
-/* --------------------------------------------------------------------------
- * ROM ordinals 0 and 1 -- _ZN13dScMgMCarlo_cD1Ev at 0x020f7634 (0x74)
- *                     and _ZN13dScMgMCarlo_cD0Ev at 0x020f76a8 (0x88).
- *
- * Neither is written out here. ~dScMgMCarlo_c() is defined inline in the class
- * body (include/dScMgMCarlo_c.h), so it cannot be this TU's key function;
- * InitResources, the next virtual declared and non-inline, is, and this TU
- * defines it. That emits _ZTV13dScMgMCarlo_c right here, whose slots 16 and 17
- * name D1 and D0, odr-using both, so the compiler emits the pair out of line
- * for us -- in cartridge order.
- *
- * Written out of line instead, mwcc emits the synthesized D0 AHEAD of the
- * written D1, and linkcheck's pre-link audit refuses a TU whose licensed .text
- * is not in ROM address order. Inlining also removes the homeless D2 that an
- * out-of-line definition would emit with no ROM address to claim.
- * -------------------------------------------------------------------------- */
+/* D1 and D0 are not written here. The destructor is inline in the header,
+ * which makes InitResources the key function; the vtable it emits names
+ * D1 and D0, so the compiler emits both, in ROM order. Writing them out
+ * here puts D0 ahead of D1 and adds a D2 the ROM does not have. */

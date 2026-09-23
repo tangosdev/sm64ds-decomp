@@ -580,7 +580,7 @@ sites across `InitResources` and `CleanupResources`, and `a[0x326] = 1;` in
 
 ---
 
-## RotatingCogSmall (`include/RotatingCogSmall.h`, [ov035](../config/arm9/overlays/ov035/symbols.txt), size 0x330)
+## daObjCtMecha10_c (`include/daObjCtMecha10_c.h`, [ov035](../config/arm9/overlays/ov035/symbols.txt), size 0x330)
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
@@ -760,12 +760,12 @@ same offsets:
 * `include/PyramidStep.h` — `param1`, `mAngleY`, `mVertSpeed`.
 * `include/PathLift.h` — `actorID`.
 * `include/daObjEmmLog_c.h` — `mPosY`.
-* `include/RotatingCogSmall.h` — `actorID`, `mAngleY`.
+* `include/daObjCtMecha10_c.h` — `actorID`, `mAngleY`.
 
 ## Left `unk_` across this batch, and why
 
 * `CccArena` 0x330 / 0x334 / 0x338 — written once each by `InitResources`, never read.
-* `RotatingCogSmall` 0x326 — written the same table value as `mAngleYStep`, never read.
+* `daObjCtMecha10_c` 0x326 — written the same table value as `mAngleYStep`, never read.
 * `daKpa2Bg_c` 0x56c — zeroed, never read.
 * `RotatingUpDownPlatformUtm` 0x300 in the C twin — that offset is *interior* to
   `dBgActor_c::mClsnMat` (0x2ec + 0x14), and naming a matrix element from a single

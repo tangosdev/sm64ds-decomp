@@ -1,0 +1,439 @@
+{
+  "id": "ov090/daMenbo_c",
+  "module": "ov090",
+  "source": "src/actors/daMenbo_c.cpp",
+  "promoted_source": "src/actors/daMenbo_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x2130f00..0x2132654, 24 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): daMenbo_c",
+    "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02130f00",
+      "end": "0x02132654"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN9daMenbo_cD1Ev",
+      "address": "0x02130f00",
+      "size": "0x00000040",
+      "legacy_source": "src/_ZN9daMenbo_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN9daMenbo_cD0Ev",
+      "address": "0x02130f40",
+      "size": "0x00000054",
+      "legacy_source": "src/_ZN9daMenbo_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov090_02130f94",
+      "address": "0x02130f94",
+      "size": "0x00000120",
+      "legacy_source": "src/func_ov090_02130f94.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov090_021310b4",
+      "address": "0x021310b4",
+      "size": "0x000002c4",
+      "legacy_source": "src/func_ov090_021310b4.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov090_02131378",
+      "address": "0x02131378",
+      "size": "0x00000128",
+      "legacy_source": "src/func_ov090_02131378.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov090_021314a0",
+      "address": "0x021314a0",
+      "size": "0x000000e4",
+      "legacy_source": "src/func_ov090_021314a0.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov090_02131584",
+      "address": "0x02131584",
+      "size": "0x00000084",
+      "legacy_source": "src/func_ov090_02131584.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov090_02131608",
+      "address": "0x02131608",
+      "size": "0x00000040",
+      "legacy_source": "src/func_ov090_02131608.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov090_02131648",
+      "address": "0x02131648",
+      "size": "0x0000042c",
+      "legacy_source": "src/func_ov090_02131648.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov090_02131a74",
+      "address": "0x02131a74",
+      "size": "0x00000050",
+      "legacy_source": "src/func_ov090_02131a74.cpp",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov090_02131ac4",
+      "address": "0x02131ac4",
+      "size": "0x000000d0",
+      "legacy_source": "src/func_ov090_02131ac4.cpp",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov090_02131b94",
+      "address": "0x02131b94",
+      "size": "0x000000b4",
+      "legacy_source": "src/func_ov090_02131b94.cpp",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov090_02131c48",
+      "address": "0x02131c48",
+      "size": "0x00000168",
+      "legacy_source": "src/func_ov090_02131c48.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_ov090_02131db0",
+      "address": "0x02131db0",
+      "size": "0x00000050",
+      "legacy_source": "src/func_ov090_02131db0.c",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_ov090_02131e00",
+      "address": "0x02131e00",
+      "size": "0x00000050",
+      "legacy_source": "src/func_ov090_02131e00.cpp",
+      "ordinal": 14
+    },
+    {
+      "symbol": "func_ov090_02131e50",
+      "address": "0x02131e50",
+      "size": "0x0000008c",
+      "legacy_source": "src/func_ov090_02131e50.c",
+      "ordinal": 15
+    },
+    {
+      "symbol": "_ZN9daMenbo_c16CleanupResourcesEv",
+      "address": "0x02131edc",
+      "size": "0x00000054",
+      "legacy_source": "src/_ZN9daMenbo_c16CleanupResourcesEv.cpp",
+      "ordinal": 16
+    },
+    {
+      "symbol": "_ZN9daMenbo_c16OnPendingDestroyEv",
+      "address": "0x02131f30",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN9daMenbo_c16OnPendingDestroyEv.cpp",
+      "ordinal": 17
+    },
+    {
+      "symbol": "_ZN9daMenbo_c6RenderEv",
+      "address": "0x02131f34",
+      "size": "0x00000054",
+      "legacy_source": "src/_ZN9daMenbo_c6RenderEv.cpp",
+      "ordinal": 18
+    },
+    {
+      "symbol": "_ZN9daMenbo_c8BehaviorEv",
+      "address": "0x02131f88",
+      "size": "0x000003d4",
+      "legacy_source": "src/_ZN9daMenbo_c8BehaviorEv.cpp",
+      "ordinal": 19
+    },
+    {
+      "symbol": "_ZN9daMenbo_c13InitResourcesEv",
+      "address": "0x0213235c",
+      "size": "0x000002bc",
+      "legacy_source": "src/_ZN9daMenbo_c13InitResourcesEv.cpp",
+      "ordinal": 20
+    },
+    {
+      "symbol": "_ZN9daMenbo_c16OnAimedAtWithEggEv",
+      "address": "0x02132618",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN9daMenbo_c16OnAimedAtWithEggEv.cpp",
+      "ordinal": 21
+    },
+    {
+      "symbol": "_ZN9daMenbo_c13OnTurnIntoEggER6Player",
+      "address": "0x02132620",
+      "size": "0x0000002c",
+      "legacy_source": "src/_ZN9daMenbo_c13OnTurnIntoEggER6Player.cpp",
+      "ordinal": 22
+    },
+    {
+      "symbol": "_ZN9daMenbo_c13OnYoshiTryEatEv",
+      "address": "0x0213264c",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN9daMenbo_c13OnYoshiTryEatEv.cpp",
+      "ordinal": 23
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Generated by tools/tubuild.py create, then hand-written: the generated shadow did not compile (three stand-in structs collided with the real headers) and its reverse-source layout is incompatible with the pragma bracket this TU needs. The shipped file is ROM-ascending under the defer_codegen pragma. See the file's own header comment for every reconciliation and every control.",
+    "PRAGMA, MEASURED. The legacy shard src/func_ov090_02130f94.c carried two file-global pragma lines and both are live: a delete-outright control on that shard alone against the cartridge gives MATCH with both present, size 0x130 without opt_strength_reduction off, size 0x11c without opt_common_subs off and size 0x12c without either. In the merged input the bracket had to be INVERTED. An off bracket around that one member does not bind, tried four ways: an off and on pair around it, a push and pop pair around it, the same without a forward declaration ahead of the bracket, and a span reaching from the top of the file to the end of that member. All four leave it DIFF at 999 words while the other twenty-three match. Both settings are held off for the whole file instead, and the two members that want common subexpressions back, func_ov090_02131378 and _ZN9daMenbo_c8BehaviorEv, carry an opt_common_subs on bracket at their own definitions. Scores: whole file off with no on bracket, 22 of 24; on bracket spelled opt_strength_reduction, still 22 of 24; on bracket spelled opt_common_subs, 24 of 24.",
+    "The defer_codegen pragma is live on its own control: deleting that one line leaves all 24 bodies matching but turns emission order into 23 ordinal pairs out of ROM order.",
+    "INCLUDE ORDER IS MEASURED. common.h must precede daMenbo_c.h. Both spellings of Matrix4x3 share one guard; the flat twelve-word spelling is what func_ov090_02130f94 and func_ov090_02131e50 matched under, and with daMenbo_c.h first func_ov090_02131e50 DIFFs.",
+    "Key-function TU: the destructor is the first virtual daMenbo_c declares and is written out of line here, so this compiler input emits _ZTV9daMenbo_c, _ZTI9daMenbo_c, _ZTS9daMenbo_c and the inherited RTTI chain. This promotion is text-only; .data licensing is not attempted and the ROM keeps supplying those bytes, exactly as the landed ov064/daOts_c and ov064/daBDonketu_c do. g_profile_MENBO at 0x02134144 sits between _ZTI9daMenbo_c and _ZTV9daMenbo_c, so licensing the vtable would need two disjoint .data intervals.",
+    "daMenbo_c_classInit at 0x02132654 is NOT part of this TU. The evidenced run ends at 0x02132654 and the factory stays in src/d_a_menbo.c, the same boundary the landed ov064/daBDonketu_c and ov100/daBtfly_c took for their own factories.",
+    "ROM RTTI evidence for the class name: _ZTS9daMenbo_c at ov090 0x02134120 holds twelve bytes, the encoded string 9daMenbo_c followed by two zero bytes (terminator and padding), so the receipt dates to this exact spelling and the name is the cartridge's own rather than a coined one. _ZTI9daMenbo_c at 0x02134138 is a three-word abi __si_class_type_info record whose third word is _ZTI12dEnemyBase_c at ov002 0x021081c0. _ZTV9daMenbo_c at 0x02134168 carries a zero offset-to-top at -8 and _ZTI9daMenbo_c at -4, then 31 slots; ten target this run, at indices 0, 3, 6, 9, 12, 16, 17, 18, 19 and 29."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov090-daMenbo_c/daMenbo_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 24,
+    "functions_declared": 24,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN9daMenbo_cD2Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN7Vector3D1Ev",
+        "_ZN9daMenbo_cD2Ev"
+      ],
+      "droppedSections": [
+        9,
+        10,
+        13,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI12dEnemyBase_c",
+        "_ZTS12dEnemyBase_c",
+        "_ZTI9daMenbo_c",
+        "_ZTS9daMenbo_c",
+        "_ZTV9daMenbo_c"
+      ],
+      "dataExternalized": [
+        "_ZTI12dEnemyBase_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTI9daMenbo_c",
+        "_ZTS12dEnemyBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTS9daMenbo_c",
+        "_ZTV9daMenbo_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov090-daMenbo_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x02130f00",
+        "end": "0x02132654",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x02130f00",
+          "end": "0x02132654",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 24
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN9daMenbo_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "compiler-generated base-object destructor. The cartridge has only the D1 and D0 pair for this class, at 0x02130f00 and 0x02130f40, and no symbols row anywhere spells _ZN9daMenbo_cD2Ev, so this variant is homeless and nothing references it once the licensed range is isolated."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Vector3's four-byte inline destructor, emitted as vague linkage because InitResources and func_ov090_02131648 take Vector3 locals. The cartridge owns it at arm9:0x020072c0 and an enrolled source already reaches it, so this object's copy is a duplicate that production isolation discards. Same row as the landed ov064/daOts_c and ov064/daBDonketu_c."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "inherited vague-linkage RTTI; romdata_check verifies the canonical arm9 copy before text isolation"
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "inherited vague-linkage RTTI name; romdata_check verifies the canonical arm9 copy before text isolation"
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "inherited vague-linkage RTTI; romdata_check verifies the canonical arm9 copy before text isolation"
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "inherited vague-linkage RTTI name; romdata_check verifies the canonical arm9 copy before text isolation"
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "inherited vague-linkage RTTI; romdata_check verifies the canonical arm9 copy before text isolation"
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "inherited vague-linkage RTTI name; romdata_check verifies the canonical arm9 copy before text isolation"
+    },
+    {
+      "symbol": "_ZTI12dEnemyBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081c0",
+      "reason": "the direct base's own __si_class_type_info record, and what the third word of _ZTI9daMenbo_c points at. The linker kept the single vague-linkage copy in ov002; romdata_check verifies the canonical ov002 copy before text isolation"
+    },
+    {
+      "symbol": "_ZTS12dEnemyBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081cc",
+      "reason": "inherited vague-linkage RTTI name; romdata_check verifies the canonical ov002 copy before text isolation"
+    },
+    {
+      "symbol": "_ZTI9daMenbo_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov090",
+      "canonical_address": "0x02134138",
+      "reason": "this class's own __si_class_type_info record, dragged in with the vtable because this TU defines the key function. The cartridge homes it in this overlay at 0x02134138, outside this TU's licensed .text; romdata_check verifies the words and the base pointer before text isolation"
+    },
+    {
+      "symbol": "_ZTS9daMenbo_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov090",
+      "canonical_address": "0x02134120",
+      "reason": "literal ROM RTTI type-name string for daMenbo_c at ov090:0x02134120, twelve bytes; romdata_check verifies the compiler copy before text isolation"
+    },
+    {
+      "symbol": "_ZTV9daMenbo_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov090",
+      "canonical_address": "0x02134168",
+      "reason": "compiler-emitted vtable with the two-word ABI preamble, anchored here because this TU defines the key function, the out-of-line destructor. The cartridge homes it at public address point ov090:0x02134168, that is storage 0x02134160, which no source owns: g_profile_MENBO at 0x02134144 sits between it and the _ZTI and _ZTS pair, so licensing it would need two disjoint .data intervals. This promotion stays text-only and lets the ROM keep supplying those bytes, exactly as the landed ov064/daOts_c does for its own vtable; romdata_check verifies the public address point and all slots before text isolation"
+    }
+  ]
+}
