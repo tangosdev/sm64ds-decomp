@@ -4649,6 +4649,13 @@
     "src/actors/daObjFl_Ring_c.cpp#_ZN14daObjFl_Ring_c16CleanupResourcesEv": "tangosdev",
     "src/actors/daObjFl_Ring_c.cpp#_ZN14daObjFl_Ring_c6RenderEv": "tangosdev",
     "src/actors/daObjFl_Ring_c.cpp#_ZN14daObjFl_Ring_c8BehaviorEv": "tangosdev",
-    "src/actors/daObjFl_Ring_c.cpp#_ZN14daObjFl_Ring_c13InitResourcesEv": "tangosdev"
+    "src/actors/daObjFl_Ring_c.cpp#_ZN14daObjFl_Ring_c13InitResourcesEv": "tangosdev",
+    "src/actors/daObjKi_Hasira_c.cpp#_ZN16daObjKi_Hasira_cD1Ev": "tangosdev",
+    "src/actors/daObjKi_Hasira_c.cpp#_ZN16daObjKi_Hasira_cD0Ev": "tangosdev",
+    "src/actors/daObjKi_Hasira_c.cpp#func_ov016_02112a9c": "tangosdev",
+    "src/actors/daObjKi_Hasira_c.cpp#_ZN16daObjKi_Hasira_c16CleanupResourcesEv": "tangosdev",
+    "src/actors/daObjKi_Hasira_c.cpp#_ZN16daObjKi_Hasira_c6RenderEv": "tangosdev",
+    "src/actors/daObjKi_Hasira_c.cpp#_ZN16daObjKi_Hasira_c8BehaviorEv": "lunavyqo",
+    "src/actors/daObjKi_Hasira_c.cpp#_ZN16daObjKi_Hasira_c13InitResourcesEv": "tangosdev"
   }
 }

@@ -31,15 +31,34 @@
  * below differ; every other slot holds the base's own word and is inherited, so it
  * is deliberately not redeclared here.
  */
+struct Player;
+
 struct daObjKi_Hasira_c : dBgActor_c {
-    u8  pad_320[0x8];
+    /* dBgActor_c ends at 0x31e (its own sizeof rounds 0x31e up to 0x320);
+       the first two fields live in the base's tail padding. */
+    u8  mState;             /* 0x31e -- 0 wait for a player, 1 turn to face, 2 fall */
+    u8  mTurnTimer;         /* 0x31f -- frames spent turning before the fall */
+    s16 mFallSpeed;         /* 0x320 -- added to mAngleX each falling frame */
+    s16 mFallAccel;         /* 0x322 -- grows by 4 each falling frame */
+    Player *mTarget;        /* 0x324 -- ClosestPlayer, cached while waiting */
 
-    virtual ~daObjKi_Hasira_c();            /* slots 16 (D1), 17 (D0) */
+    /* MEASURED -- DEFINED INLINE, EMPTY, AND DECLARED FIRST. The destructor is
+       the key function, so the TU that defines it emits _ZTV16daObjKi_Hasira_c,
+       _ZTI16daObjKi_Hasira_c and _ZTS16daObjKi_Hasira_c as vague linkage with
+       the inherited bases' records; all carry configured ROM homes.
 
-    virtual s32   InitResources();         /* slot  0 */
-    virtual s32   CleanupResources();      /* slot  3 */
-    virtual s32   Behavior();              /* slot  6 */
-    virtual s32   Render();                /* slot  9 */
+       Inline and empty is what puts D1 ahead of D0, the cartridge's order
+       (0x02112a00 then 0x02112a44): written out of line mwccarm emits the
+       synthesized D0 first and a D2 this class has no home for. Same lever as
+       the ov022 dBgActor_c leaves daObjFl_Ring_c and daObjFl_Block_c. The
+       brace stays on the signature line -- tools/check_header_offsets.py
+       recognises an inline body only when the signature line carries it. */
+    virtual ~daObjKi_Hasira_c() {}   /* slots 16 (D1), 17 (D0) */
+
+    virtual s32 InitResources();     /* slot  0 */
+    virtual s32 CleanupResources();  /* slot  3 */
+    virtual s32 Behavior();          /* slot  6 */
+    virtual s32 Render();            /* slot  9 */
 };
 
 #ifndef SM64DS_PLATFORM_PC

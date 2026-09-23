@@ -1,0 +1,313 @@
+{
+  "id": "ov016/daObjKi_Hasira_c",
+  "module": "ov016",
+  "source": "src/actors/daObjKi_Hasira_c.cpp",
+  "promoted_source": "src/actors/daObjKi_Hasira_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x2112a00..0x2112ec4, 7 function(s), from build/tu_map.json (tools/tu_map.py); this entry licenses the whole run as one file.",
+    "MEASURED: the run's edges are labelled on both sides with zero gap. The preceding function is daObjKi_Fune_c_classInit_KI_FUNE at 0x021129d0 (size 0x30, ending exactly at 0x02112a00); the following function is the factory daObjKi_Hasira_c_classInit at 0x02112ec4. Every address in between is a `complete` one-function source in ov016 delinks.txt, so nothing unenrolled sits inside the run. The class is not interleaved with its ov016 neighbours: daObjKi_Fune_c ends before it and daObjKi_Ita_c (promoted) begins at 0x02112ef4, after the factory.",
+    "class label(s): daObjKi_Hasira_c -- the cartridge's own RTTI spelling. Read out of extracted/overlays/overlay_0016.bin (ov016 loads at 0x021111a0): _ZTS at 0x02114ac8 is the 18-byte string \"16daObjKi_Hasira_c\" plus its NUL; _ZTI at 0x02114abc reads [__si_class_type_info+8 (0x0209a764), that string, _ZTI10dBgActor_c (ov002 0x021089ec)]; and the word at 0x02114afc -- the typeinfo slot of the two-word header before the _ZTV address point 0x02114b00 -- relocates to that same _ZTI (ov016 relocs.txt `from:0x02114afc kind:load to:0x02114abc`). The class carried the coined name RockPillar until the commit before this one.",
+    "MEASURED: the empty inline destructor in the class header emits D1 ahead of D0, the cartridge's order (0x02112a00 then 0x02112a44), and no D2. Same lever as the dBgActor_c leaves config/tu_manifest.d/ov022/daObjFl_Ring_c.json and daObjFl_UkiKi_c.json.",
+    "SCOPE: the factory daObjKi_Hasira_c_classInit (0x02112ec4..0x02112ef4) sits immediately right of this run. tools/tu_map.py ends this candidate at 0x02112ec4, so it is deliberately not claimed here and remains a one-function C source, as daObjFl_Ring_c and daObjFl_Block_c left theirs (unlike the sibling daObjKi_Ita_c entry, which absorbed its factory on registry evidence).",
+    "module sinit corroboration: 5 sinit(s) / 5 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02112a00",
+      "end": "0x02112ec4"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN16daObjKi_Hasira_cD1Ev",
+      "address": "0x02112a00",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN16daObjKi_Hasira_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN16daObjKi_Hasira_cD0Ev",
+      "address": "0x02112a44",
+      "size": "0x00000058",
+      "legacy_source": "src/_ZN16daObjKi_Hasira_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov016_02112a9c",
+      "address": "0x02112a9c",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov016_02112a9c.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN16daObjKi_Hasira_c16CleanupResourcesEv",
+      "address": "0x02112ae4",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN16daObjKi_Hasira_c16CleanupResourcesEv.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN16daObjKi_Hasira_c6RenderEv",
+      "address": "0x02112b28",
+      "size": "0x00000028",
+      "legacy_source": "src/_ZN16daObjKi_Hasira_c6RenderEv.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN16daObjKi_Hasira_c8BehaviorEv",
+      "address": "0x02112b50",
+      "size": "0x000002cc",
+      "legacy_source": "src/_ZN16daObjKi_Hasira_c8BehaviorEv.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN16daObjKi_Hasira_c13InitResourcesEv",
+      "address": "0x02112e1c",
+      "size": "0x000000a8",
+      "legacy_source": "src/_ZN16daObjKi_Hasira_c13InitResourcesEv.cpp",
+      "ordinal": 6
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Hand-curated from the 7 legacy one-function sources (six C++ members and the C helper func_ov016_02112a9c); see the file's own header comment for the reconciliation.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov016_02112a9c' differs between the legacy file that used to hold _ZN16daObjKi_Hasira_c8BehaviorEv and the one that held _ZN16daObjKi_Hasira_c13InitResourcesEv; kept the first, the other is commented out for review RESOLVED by dropping BOTH declarations (the Behavior source spelled the parameter void *, the InitResources source char *): the helper is now defined in this TU and declared once with its real parameter type, daObjKi_Hasira_c *, with no byte change. No TUBUILD CONFLICT marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN10dBgActor_c19UpdateClsnPosAndRotEv' differs between the legacy file that used to hold _ZN16daObjKi_Hasira_c8BehaviorEv and the one that held _ZN16daObjKi_Hasira_c13InitResourcesEv; kept the first, the other is commented out for review RESOLVED by dropping BOTH mangled declarations (the Behavior source spelled the parameter void *self, the InitResources source void *): the merged TU calls it as the real member include/dBgActor_c.h already declares, `void UpdateClsnPosAndRot();`, with no byte change. No TUBUILD CONFLICT marker survives in the merged source.",
+    "The legacy Behavior source carried `#pragma opt_common_subs off` and an identity inline_fn() that laundered field addresses. Neither survives: with the real member layout (mState/mTurnTimer/mFallSpeed/mFallAccel/mTarget) every access was rewritten by name and re-verified one construct at a time, and removing the pragma changed no byte. Two measured levers remain, each commented where it stands: the off-screen test is spelled as an int flag before the branch, and the crash point is a volatile Vector3.",
+    "The model and collision SharedFilePtrs are ov016 .bss rows named RockPillar_ModelFile / RockPillar_ClsnFile in symbols.txt (each shares its address with a data_ov016_ alias); they are data names, not the class name, and are left for a separate rename. The CLPS block data_ov016_02113cac is unnamed ov016 .data this TU does not own.",
+    "STYLE ORACLE: src/actors/daObjFl_Block_c.cpp / daObjFl_Ring_c.cpp -- dBgActor_c leaves with the same inline-empty-destructor shape and the same deadstrip-data RTTI licensing."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov016-daObjKi_Hasira_c/daObjKi_Hasira_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 7,
+    "functions_declared": 7,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        33
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI10dBgActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTI16daObjKi_Hasira_c",
+        "_ZTS16daObjKi_Hasira_c",
+        "_ZTV16daObjKi_Hasira_c"
+      ],
+      "dataExternalized": [
+        "_ZTI10dBgActor_c",
+        "_ZTI16daObjKi_Hasira_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTS16daObjKi_Hasira_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV16daObjKi_Hasira_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov016-daObjKi_Hasira_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x02112a00",
+        "end": "0x02112ec4",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x02112a00",
+          "end": "0x02112ec4",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 7
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "include/types.h gives Vector3 an empty inline destructor, so every TU that destroys a Vector3 local re-emits it with vague linkage; Behavior's three Vector3 locals do so here, as the legacy one-function Behavior object already did. The cartridge keeps exactly one copy at arm9:0x020072c0, kind:function(arm,size=0x4), and src/_ZN7Vector3D1Ev.cpp is its enrolled `complete` owner of that 0x020072c0..0x020072c4 range. This object's copy is the identical 4-byte `bx lr` body with no relocations, and no surviving section in this TU references it; rombuild compares the body against those cartridge bytes before discarding the duplicate."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Vague-linkage typeinfo record for the inherited base fBase_c, re-emitted by every TU that names the derived class's RTTI -- emitting one _ZTI drags the whole ancestor chain. The cartridge's own copy lives at arm9:0x02086d70, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Vague-linkage type-name string for the inherited base fBase_c, re-emitted by every TU that names the derived class's RTTI -- emitting one _ZTI drags the whole ancestor chain. The cartridge's own copy lives at arm9:0x02086e60, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Vague-linkage typeinfo record for the inherited base dBase_c, re-emitted by every TU that names the derived class's RTTI -- emitting one _ZTI drags the whole ancestor chain. The cartridge's own copy lives at arm9:0x02086e78, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Vague-linkage type-name string for the inherited base dBase_c, re-emitted by every TU that names the derived class's RTTI -- emitting one _ZTI drags the whole ancestor chain. The cartridge's own copy lives at arm9:0x02086e54, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Vague-linkage typeinfo record for the inherited base dActor_c, re-emitted by every TU that names the derived class's RTTI -- emitting one _ZTI drags the whole ancestor chain. The cartridge's own copy lives at arm9:0x0208e390, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Vague-linkage type-name string for the inherited base dActor_c, re-emitted by every TU that names the derived class's RTTI -- emitting one _ZTI drags the whole ancestor chain. The cartridge's own copy lives at arm9:0x0208e384, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTI10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021089ec",
+      "reason": "Vague-linkage typeinfo record for the inherited base dBgActor_c, re-emitted by every TU that names the derived class's RTTI -- emitting one _ZTI drags the whole ancestor chain. The cartridge's own copy lives at ov002:0x021089ec, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTS10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108a04",
+      "reason": "Vague-linkage type-name string for the inherited base dBgActor_c, re-emitted by every TU that names the derived class's RTTI -- emitting one _ZTI drags the whole ancestor chain. The cartridge's own copy lives at ov002:0x02108a04, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTI16daObjKi_Hasira_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov016",
+      "canonical_address": "0x02114abc",
+      "reason": "This class's own typeinfo record, emitted as vague linkage because the destructor -- this class's key function -- is defined in this TU. The cartridge's copy is ov016:0x02114abc, in this module's .data, outside the single .text range this entry claims, so it is discarded rather than claimed. Its three words read [__si_class_type_info+8 (0x0209a764), _ZTS16daObjKi_Hasira_c (0x02114ac8), _ZTI10dBgActor_c (ov002 0x021089ec)] in the overlay bytes at that address."
+    },
+    {
+      "symbol": "_ZTS16daObjKi_Hasira_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov016",
+      "canonical_address": "0x02114ac8",
+      "reason": "This class's own type-name string, emitted as vague linkage alongside the typeinfo record. The cartridge's copy is ov016:0x02114ac8 and reads the 18 bytes \"16daObjKi_Hasira_c\" plus a NUL -- the measurement that settled the class's name and unblocked this promotion. It is in this module's .data, outside the .text range this entry claims, so it is discarded rather than claimed."
+    },
+    {
+      "symbol": "_ZTV16daObjKi_Hasira_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov016",
+      "canonical_address": "0x02114b00",
+      "reason": "This class's own vtable, emitted as vague linkage because the destructor is this class's key function. The compiled object is 0x88 bytes because it includes the two-word [offset-to-top][typeinfo] header; the cartridge's _ZTV symbol at ov016:0x02114b00 points past that header, at the first virtual slot, so the ROM interval is 0x02114af8..0x02114b80 (the next word, 0x02114b80, is _ZTI13daObjKi_Ita_c). Either way it is this module's .data, outside the .text range this entry claims, so it is discarded rather than claimed."
+    }
+  ]
+}

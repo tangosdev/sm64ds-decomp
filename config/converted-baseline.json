@@ -7,7 +7,7 @@
     "no_codegen_trick",
     "no_mangled_refs"
   ],
-  "count": 2993,
+  "count": 2994,
   "converted": [
     "src/ARMMathLoadState.c",
     "src/ARMMathSaveState.c",
@@ -276,9 +276,10 @@
     "src/_ZN10PyramidTop6RenderEv.cpp",
     "src/_ZN10PyramidTopD0Ev.cpp",
     "src/_ZN10PyramidTopD1Ev.cpp",
-    "src/_ZN16daObjKi_Hasira_c6RenderEv.cpp",
-    "src/_ZN16daObjKi_Hasira_cD0Ev.cpp",
-    "src/_ZN16daObjKi_Hasira_cD1Ev.cpp",
+    "src/actors/daObjKi_Hasira_c.cpp#_ZN16daObjKi_Hasira_c16CleanupResourcesEv",
+    "src/actors/daObjKi_Hasira_c.cpp#_ZN16daObjKi_Hasira_c6RenderEv",
+    "src/actors/daObjKi_Hasira_c.cpp#_ZN16daObjKi_Hasira_cD0Ev",
+    "src/actors/daObjKi_Hasira_c.cpp#_ZN16daObjKi_Hasira_cD1Ev",
     "src/_ZN10ScuttlebugD0Ev.cpp",
     "src/_ZN10ScuttlebugD1Ev.cpp",
     "src/_ZN10SlidingBox11UpdateModelEv.cpp",

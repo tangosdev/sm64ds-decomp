@@ -880,9 +880,6 @@
         "param:#1 char *",
         "return:int"
       ],
-      "src/_ZN16daObjKi_Hasira_c8BehaviorEv.cpp": [
-        "return:int"
-      ],
       "src/_ZN21SnowmanBreathParticle8BehaviorEv.cpp": [
         "return:int"
       ],
@@ -4722,10 +4719,6 @@
       ]
     },
     "Vec3_Dist": {
-      "src/_ZN16daObjKi_Hasira_c8BehaviorEv.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
       "src/_ZN12dBgCh_SphCrr10DetectClsnEv.cpp": [
         "param:#1 const void *",
         "param:#2 const void *"
@@ -4896,10 +4889,6 @@
       ]
     },
     "Vec3_HorzAngle": {
-      "src/_ZN16daObjKi_Hasira_c8BehaviorEv.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
       "src/_ZN12daBgSnmHed_c6State1Ev.cpp": [
         "param:#1 const void *",
         "param:#2 const void *"
@@ -6421,9 +6410,6 @@
       ]
     },
     "_Z14ApproachLinearRsss": {
-      "src/_ZN16daObjKi_Hasira_c8BehaviorEv.cpp": [
-        "return:int"
-      ],
       "src/_ZN11BobOmbBuddy8BehaviorEv.cpp": [
         "return:int"
       ],
@@ -6756,12 +6742,6 @@
     },
     "_ZN10dBgActor_c19UpdateClsnPosAndRotEv": {
       "src/_ZN10DonutBlock13InitResourcesEv.cpp": [
-        "return:int"
-      ],
-      "src/_ZN16daObjKi_Hasira_c13InitResourcesEv.cpp": [
-        "return:int"
-      ],
-      "src/_ZN16daObjKi_Hasira_c8BehaviorEv.cpp": [
         "return:int"
       ],
       "src/_ZN14SquarePathLift13InitResourcesEv.cpp": [
@@ -7228,9 +7208,6 @@
       "src/_ZN10DonutBlock13InitResourcesEv.cpp": [
         "param:#2 int",
         "param:#5 int",
-        "return:int"
-      ],
-      "src/_ZN16daObjKi_Hasira_c13InitResourcesEv.cpp": [
         "return:int"
       ],
       "src/_ZN10daKpa2Bg_c13InitResourcesEv.cpp": [
@@ -11262,9 +11239,6 @@
       "src/_ZN10PyramidTop13InitResourcesEv.cpp": [
         "param:#1 void *"
       ],
-      "src/_ZN16daObjKi_Hasira_c13InitResourcesEv.cpp": [
-        "param:#1 void *"
-      ],
       "src/_ZN10StarMarker13InitResourcesEv.cpp": [
         "param:#1 void *"
       ],
@@ -12548,9 +12522,6 @@
     "_ZN5Sound9PlayBank3EjRK7Vector3": {
       "src/_ZN10PyramidTop8BehaviorEv.cpp": [
         "param:#2 void *"
-      ],
-      "src/_ZN16daObjKi_Hasira_c8BehaviorEv.cpp": [
-        "param:#2 const void *"
       ],
       "src/actors/daObjFl_Ring_c.cpp": [
         "param:#2 void *"
@@ -14664,10 +14635,6 @@
         "param:#1 void *",
         "return:void *"
       ],
-      "src/_ZN16daObjKi_Hasira_c13InitResourcesEv.cpp": [
-        "param:#1 void *",
-        "return:void *"
-      ],
       "src/_ZN10daKpa2Bg_c13InitResourcesEv.cpp": [
         "param:#1 void *",
         "return:void *"
@@ -15351,9 +15318,6 @@
     },
     "_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_": {
       "src/_ZN10BulletBill8BehaviorEv.cpp": [
-        "return:void"
-      ],
-      "src/_ZN16daObjKi_Hasira_c8BehaviorEv.cpp": [
         "return:void"
       ],
       "src/_ZN10StarMarker7CollectEv.cpp": [
@@ -17179,12 +17143,6 @@
       "src/_ZN10MrBlizzard8BehaviorEv.cpp": [
         "param:#3 const Vector3 *",
         "param:#4 const void *",
-        "param:#5 int",
-        "param:#6 int",
-        "return:int"
-      ],
-      "src/_ZN16daObjKi_Hasira_c13InitResourcesEv.cpp": [
-        "param:#3 void *",
         "param:#5 int",
         "param:#6 int",
         "return:int"
@@ -32558,9 +32516,6 @@
       ]
     },
     "func_0200d8c8": {
-      "src/_ZN16daObjKi_Hasira_c8BehaviorEv.cpp": [
-        "param:#2 const void *"
-      ],
       "src/_ZN6Player19St_GroundPound_MainEv.cpp": [
         "param:#2 const void *"
       ],
