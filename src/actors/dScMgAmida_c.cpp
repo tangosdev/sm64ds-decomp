@@ -1,50 +1,20 @@
 //cpp
-/* Reconstructed translation unit (PARTIAL -- 13 of the run's 28 functions).
- * ov006/dScMgAmida_c   .text 0x020d3624 .. 0x020d5a54
+/* Ladder-lottery minigame scene (ov006/dScMgAmida_c), upper run only.
  *
- * FUNCTION ORDER IS ROM-ASCENDING, under `#pragma defer_codegen off`.
+ * PARTIAL TU: 13 of the run's 28 functions (.text 0x020d3624..0x020d5a54).
+ * An unmatched draft at ordinal 14 splits the run; the lower stretch and
+ * the key-function TU (destructor pair) live elsewhere, so no vtable is
+ * emitted here and the class header is untouched by this promotion.
+ * Source order is ROM-ascending under `#pragma defer_codegen off`.
  *
- * Assembled from these legacy one-function sources (ROM address order); each
- * one is deleted by the promotion, so this banner names none of their paths
- * outside this list:
- *   [15] 0x020d3624  the legacy func_ov006_020d3624 shard
- *   [16] 0x020d3668  the legacy func_ov006_020d3668 shard
- *   [17] 0x020d36a4  the legacy func_ov006_020d36a4 shard
- *   [18] 0x020d3ba0  the legacy func_ov006_020d3ba0 shard
- *   [19] 0x020d452c  the legacy func_ov006_020d452c shard
- *   [20] 0x020d47f4  the legacy func_ov006_020d47f4 shard
- *   [21] 0x020d48dc  the legacy dScMgAmida_c::Render shard
- *   [22] 0x020d4b7c  the legacy dScMgAmida_c::Behavior shard
- *   [23] 0x020d52f0  the legacy dScMgAmida_c::OnYoshiTryEat shard
- *   [24] 0x020d5384  the legacy dScMgAmida_c::InitResources shard
- *   [25] 0x020d5924  the legacy dScMgAmida_c::AfterCleanupResources shard
- *   [26] 0x020d5974  the legacy dScMgAmida_c_classInit shard
- *   [27] 0x020d5a50  the legacy func_ov006_020d5a50 shard
- *
- * WHY PARTIAL. The class's linker run is 0x020d1018..0x020d5a54, 28 functions.
- * ROM ordinal 14, func_ov006_020d27dc (0x020d27dc, 0xe48), is an unmatched
- * draft: it carries no `complete` marker, so dsd serves the cartridge's own
- * bytes for it, and a licensed .text claim cannot span a hole. That splits the
- * run into two all-matching stretches -- ordinals 0..13 (0x020d1018..0x020d27dc,
- * 14 functions, 0x17c4 bytes) and ordinals 15..27 (this one, 13 functions,
- * 0x2430 bytes). This is the larger of the two by bytes, and it is the one that
- * carries the class's named members.
- *
- * NO VTABLE IS EMITTED HERE. The destructor pair (ordinals 0 and 1) is on the
- * far side of the hole, so this TU is not the class's key-function TU: it is
- * text-only, `compiler_only_output` is empty, and include/dScMgAmida_c.h is not
- * edited by this promotion.
- */
-
-/* STILL MACHINE-SHAPED (audit 2026-09-18) -- byte-exact; what blocks each part:
- *  10 func_ov006_* + 21 data_*   unnamed in config symbols.txt; each needs a
- *                                coined, behaviour-justified name.
- *  4 vtable-shim struct casts    slot 36 is dispatched through a local shim
- *                                struct rather than `this->Unk36()`; see the
- *                                per-function notes below and the class header.
- *  2 ctor/dtor/op-new call(s)    C1/C2/D0/D1/D2 is not expressible in C++
- *                                source; only a real ctor emits it.
- *  ~300 *(T *)(p + 0x..)         class layout does not name these offsets.
+ * Leftover: 10 func_ov006_* + 21 data_* keep linker names (unnamed in
+ *   symbols.txt); each needs a coined, behaviour-justified name.
+ * Leftover: slot 36 dispatches through a local shim struct, not
+ *   `this->Unk36()` -- see the per-function notes and the class header.
+ * Leftover: ~300 *(T *)(p + 0x..) stay raw offsets; the class layout
+ *   does not name them yet.
+ * Leftover: hand-rolled C1/C2/D0/D1/D2 call shapes stand in for real
+ *   constructors only a real ctor emits.
  */
 
 #include "types.h"

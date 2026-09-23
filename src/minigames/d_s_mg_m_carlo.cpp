@@ -1,57 +1,16 @@
 //cpp
-/* Translation unit ov006/dScMgMCarlo_c (25 functions).
+/* Memory-match minigame scene (ov006/dScMgMCarlo_c), 25 functions,
+ * enrolled and canonical. The board-piece accesses are real members
+ * on the recovered dMgMCarloCardObj_c element class; the legacy
+ * Node/Obj shadows survive only in the TUBUILD CONFLICT notes below.
  *
- * ENROLLED AND CANONICAL. One complete delinks range owns
- * 0x020f7634..0x020f8ef4, including the scene, its card-element class, the
- * unique MG_MCARLO factory, and the card constructor. Every linked byte of
- * the range and the resulting stock ROM are verified by the TU manifest.
+ * Source runs REVERSE of ROM (highest address first). Do not reorder.
  *
- * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S -- mwccarm 2004/b56
- * emits one .text section per function, in the REVERSE of source order, so
- * the highest-address ROM function is written FIRST here. Do not reorder;
- * see notes/tu-reconstruction-pilot-report.md sec 3 for the one documented
- * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
- *
- * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x020f7634  src/_ZN13dScMgMCarlo_cD1Ev.cpp
- *   [1] 0x020f76a8  src/_ZN13dScMgMCarlo_cD0Ev.cpp
- *   [2] 0x020f7730  src/func_ov006_020f7730.c
- *   [3] 0x020f7740  src/func_ov006_020f7740.cpp
- *   [4] 0x020f7994  src/func_ov006_020f7994.c
- *   [5] 0x020f7a00  src/func_ov006_020f7a00.c
- *   [6] 0x020f7a90  src/func_ov006_020f7a90.c
- *   [7] 0x020f7b10  src/func_ov006_020f7b10.c
- *   [8] 0x020f7b90  src/func_ov006_020f7b90.c
- *   [9] 0x020f7c10  src/func_ov006_020f7c10.c
- *   [10] 0x020f7e2c  src/func_ov006_020f7e2c.c
- *   [11] 0x020f7ee4  src/func_ov006_020f7ee4.cpp
- *   [12] 0x020f8154  src/func_ov006_020f8154.c
- *   [13] 0x020f8224  src/func_ov006_020f8224.c
- *   [14] 0x020f82d0  src/func_ov006_020f82d0.c
- *   [15] 0x020f8320  src/func_ov006_020f8320.c
- *   [16] 0x020f84a8  src/func_ov006_020f84a8.c
- *   [17] 0x020f8540  src/func_ov006_020f8540.c
- *   [18] 0x020f85b0  src/_ZN13dScMgMCarlo_c6RenderEv.cpp
- *   [19] 0x020f869c  src/_ZN13dScMgMCarlo_c8BehaviorEv.cpp
- *   [20] 0x020f8a3c  src/func_ov006_020f8a3c.c
- *   [21] 0x020f8c68  src/func_ov006_020f8c68.c
- *   [22] 0x020f8d08  src/_ZN13dScMgMCarlo_c13InitResourcesEv.cpp
- *   [23] 0x020f8e44  src/func_ov006_020f8e44.cpp
- *   [24] 0x020f8ed8  src/func_ov006_020f8ed8.c
- */
-
-/* Includes: union of the legacy files', first-seen in ROM-ascending
- * processing order. NOT verified for header ordering constraints (e.g. a
- * common.h-before-X rule) -- watch for new compile errors after this. */
-/* STILL MACHINE-SHAPED (audit 2026-09-18) -- byte-exact; what blocks each part:
- *  30 func_ov004_* + 31 data_*   unnamed in config symbols.txt; each needs a
- *                                coined, behaviour-justified name.
- *  5 ctor/dtor/op-new call(s)    C1/C2/D0/D1/D2 is not expressible
- *                                in C++ source; only a real ctor emits it.
- *  2 _ZTV vptr store(s)          stands in for the ctor that would emit it.
- *  1 `(void *)this` launder(s)   bisect before removing -- some are free,
- *                                some hold the register allocation.
- *  8 unk_NN                      slot/field name not evidenced.
+ * Leftover: 30 func_ov004_* + 31 data_* keep linker names (unnamed in
+ *   symbols.txt); each needs a coined, behaviour-justified name.
+ * Leftover: hand-rolled C1/C2/D0/D1/D2 call shapes and vptr stores
+ *   stand in for real ctors.
+ * Leftover: 8 unk_NN slot/field names not evidenced.
  */
 
 #include "dScMgMCarlo_c.h"
@@ -224,18 +183,12 @@ void _ZN18dMgMCarloCardObj_cC1Ev(void*);
 /* TUBUILD CONFLICT -- alternate declaration of data_ov004_020beb68, from the legacy file for _ZN13dScMgMCarlo_c13InitResourcesEv, NOT applied: extern void *data_ov004_020beb68; */
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 24 -- dMgMCarloCardObj_c::dMgMCarloCardObj_c, 0x020f8ed8 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN18dMgMCarloCardObj_cC1Ev
 dMgMCarloCardObj_c::dMgMCarloCardObj_c()
     : mPrev(0), mNext(0)
 {
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 23 -- dScMgMCarlo_c_classInit, 0x020f8e44, size 0x94 */
-/* -------------------------------------------------------------------------- */
 // @symbol dScMgMCarlo_c_classInit
 extern "C" void* dScMgMCarlo_c_classInit()
 {
@@ -253,9 +206,6 @@ extern "C" void* dScMgMCarlo_c_classInit()
     return p;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 22 -- _ZN13dScMgMCarlo_c13InitResourcesEv, 0x020f8d08, size 0x13c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN13dScMgMCarlo_c13InitResourcesEv
 /* dScMgMCarlo_c::InitResources -- vtable slot 0.
  *
@@ -306,12 +256,7 @@ s32 dScMgMCarlo_c::InitResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 21 -- _ZN13dScMgMCarlo_c13OnYoshiTryEatEi, 0x020f8c68, size 0xa0 */
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 21 -- _ZN13dScMgMCarlo_c13OnYoshiTryEatEi, 0x020f8c68,       */
 /*                 size 0xa0                                                */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN13dScMgMCarlo_c13OnYoshiTryEatEi
 /* dScMgMCarlo_c::OnYoshiTryEat -- vtable slot 18, the round-reset hook the
  * base calls when Yoshi swallows the scene: restart the round from a
@@ -344,9 +289,6 @@ void dScMgMCarlo_c::OnYoshiTryEat(int arg)
     data_ov004_020bc7d4 = 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 20 -- _ZN13dScMgMCarlo_c13OnTurnIntoEggEi, 0x020f8a3c, size 0x22c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN13dScMgMCarlo_c13OnTurnIntoEggEi
 /* dScMgMCarlo_c::OnTurnIntoEgg -- vtable slot 19, the egg-exit state
  * machine: the same s16 round state (unk_60a8) Behavior runs, driven here
@@ -425,9 +367,6 @@ int dScMgMCarlo_c::OnTurnIntoEgg(int mode)
     return 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 19 -- _ZN13dScMgMCarlo_c8BehaviorEv, 0x020f869c, size 0x3a0 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN13dScMgMCarlo_c8BehaviorEv
 /* dScMgMCarlo_c::Behavior -- vtable slot 6.
  *
@@ -552,9 +491,6 @@ s32 dScMgMCarlo_c::Behavior()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 18 -- _ZN13dScMgMCarlo_c6RenderEv, 0x020f85b0, size 0xec */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN13dScMgMCarlo_c6RenderEv
 /* dScMgMCarlo_c::Render -- vtable slot 9.
  *
@@ -602,9 +538,6 @@ s32 dScMgMCarlo_c::Render()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 17 -- _ZN13dScMgMCarlo_c9RenderHudEv, 0x020f8540, size 0x70   */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN13dScMgMCarlo_c9RenderHudEv
 /* dScMgMCarlo_c::RenderHud -- the one member helper: the ROM passes this
  * and the body never reads it (the honest-parameter form). Draw the deck
@@ -622,9 +555,6 @@ void dScMgMCarlo_c::RenderHud(void)
     Hud_RenderSprite((void*)data_ov006_02133f18, 0xe8, 0x18, -1, -1);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 16 -- _ZN18dMgMCarloCardObj_c4InitEi, 0x020f84a8, size 0x98 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN18dMgMCarloCardObj_c4InitEi
 /* dMgMCarloCardObj_c::Init -- reset one card to its factory state and assign
  * it slot n: the slot index, the deal stagger ((n%5)*2+1 for the board's
@@ -650,9 +580,6 @@ void dMgMCarloCardObj_c::Init(int n) {
   mPrev = mNext;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 15 -- _ZN18dMgMCarloCardObj_c6DealInEi, 0x020f8320, size 0x188 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN18dMgMCarloCardObj_c6DealInEi
 /* dMgMCarloCardObj_c::DealIn -- send this card flying to board slot m.
  * Slots past 0x13 are the spare pile behind the board: those start from the
@@ -703,9 +630,6 @@ void dMgMCarloCardObj_c::DealIn(int m)
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 14 -- _ZN18dMgMCarloCardObj_c8FlipAwayEi, 0x020f82d0, size 0x50 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN18dMgMCarloCardObj_c8FlipAwayEi
 /* dMgMCarloCardObj_c::FlipAway -- queue card n for the flip-out: the flip
  * stagger is the mirror of the deal stagger ((4 - n%5)*2, where Init seeded
@@ -717,9 +641,6 @@ void dMgMCarloCardObj_c::FlipAway(int n) {
     mState = 5;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 13 -- _ZN18dMgMCarloCardObj_c10IsPairWithEPS_, 0x020f8224, size 0xac */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN18dMgMCarloCardObj_c10IsPairWithEPS_
 /* dMgMCarloCardObj_c::IsPairWith -- can this card and that card be removed
  * together? Same face value, and the two board slots within one step in
@@ -749,9 +670,6 @@ fail:
     return 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 12 -- _ZN18dMgMCarloCardObj_c7HitTestEv, 0x020f8154, size 0xd0 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN18dMgMCarloCardObj_c7HitTestEv
 /* dMgMCarloCardObj_c::HitTest -- is this card the one under the stylus?
  * Only when the round is armed (data_ov006_0213d564) and the board is
@@ -785,9 +703,6 @@ fail:
     return 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 11 -- _ZN18dMgMCarloCardObj_c6UpdateEi, 0x020f7ee4, size 0x270 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN18dMgMCarloCardObj_c6UpdateEi
 /* dMgMCarloCardObj_c::Update -- the card's own state machine, slot 1 of the
  * element vtable; UpdateBoard drives it once per settled card with the
@@ -887,9 +802,6 @@ void dMgMCarloCardObj_c::Update(int event)
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 10 -- _ZN18dMgMCarloCardObj_c6RenderEv, 0x020f7e2c, size 0xb8 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN18dMgMCarloCardObj_c6RenderEv
 /* dMgMCarloCardObj_c::Render -- draw this card through the dMeter_c sprite bank.
  * Hidden cards (mVisible 0) and ones still waiting to be dealt (mState 0)
@@ -921,10 +833,7 @@ void dMgMCarloCardObj_c::Render(void)
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 9 -- _ZN13dScMgMCarlo_c10SetupBoardEP18dMgMCarloCardObj_c,    */
 /*                 0x020f7c10, size 0x21c                                   */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN13dScMgMCarlo_c10SetupBoardEP18dMgMCarloCardObj_c
 /* dScMgMCarlo_c::SetupBoard -- static: lay out a fresh round. The active
  * base's star count picks the tier -- under 5 stars, 6 face values at 6
@@ -1022,9 +931,6 @@ void dScMgMCarlo_c::SetupBoard(dMgMCarloCardObj_c *cards)
     } while (dScMgMCarlo_c::HasRemovablePair() == 0);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 8 -- _ZN13dScMgMCarlo_c16HasRemovablePairEv, 0x020f7b90, size 0x80 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN13dScMgMCarlo_c16HasRemovablePairEv
 /* dScMgMCarlo_c::HasRemovablePair -- static: does the board still hold two
  * cards that can be removed together (IsPairWith true for some pair)? The
@@ -1048,9 +954,6 @@ int dScMgMCarlo_c::HasRemovablePair(void)
     return 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- _ZN13dScMgMCarlo_c9BoardBusyEv, 0x020f7b10, size 0x80 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN13dScMgMCarlo_c9BoardBusyEv
 /* dScMgMCarlo_c::BoardBusy -- static: the board is mid-deal (the negation of
  * BoardReady below, spelled out rather than !BoardReady() because the ROM
@@ -1077,9 +980,6 @@ int dScMgMCarlo_c::BoardBusy(void)
     return ret;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- _ZN13dScMgMCarlo_c10BoardReadyEv, 0x020f7a90, size 0x80 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN13dScMgMCarlo_c10BoardReadyEv
 /* dScMgMCarlo_c::BoardReady -- static: the dealt count has reached the board
  * size, no card is still flying in, and both pick slots are clear. Behavior
@@ -1104,9 +1004,6 @@ int dScMgMCarlo_c::BoardReady(void)
     return ret;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- _ZN13dScMgMCarlo_c13DrawCardValueEv, 0x020f7a00, size 0x90 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN13dScMgMCarlo_c13DrawCardValueEv
 /* dScMgMCarlo_c::DrawCardValue -- static: one weighted draw from the
  * eight-face deck. Roll the seeded RNG scaled by the weight total, then walk
@@ -1135,9 +1032,6 @@ int dScMgMCarlo_c::DrawCardValue(void)
     return pick;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- _ZN13dScMgMCarlo_c14FlipDealtCardsEv, 0x020f7994, size 0x6c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN13dScMgMCarlo_c14FlipDealtCardsEv
 /* dScMgMCarlo_c::FlipDealtCards -- static: between rounds, queue every card
  * currently on the board for the flip-out, walking the board list head to
@@ -1155,9 +1049,6 @@ void dScMgMCarlo_c::FlipDealtCards(void) {
     } while(i < (data_ov006_0213d574>>12));
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- _ZN13dScMgMCarlo_c11UpdateBoardEv, 0x020f7740, size 0x254 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN13dScMgMCarlo_c11UpdateBoardEv
 /* dScMgMCarlo_c::UpdateBoard -- static: advance the board one frame. When
  * both picks are held, count the settle timer down; on zero, compare the two
@@ -1227,9 +1118,6 @@ void dScMgMCarlo_c::UpdateBoard(void) {
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- _ZN18dMgMCarloCardObj_cD1Ev, 0x020f7730, size 0x10 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN18dMgMCarloCardObj_cD1Ev
 /* The RTTI-proven card class has no base or destructible members; its genuine
  * empty D1 restores its own vptr and reproduces the cartridge's 0x10 body. */

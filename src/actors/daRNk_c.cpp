@@ -9,6 +9,9 @@
  * inline destructor and factory supply the retail D1/D0 order and class data;
  * the text-only manifest verifies and externalizes the emitted RTTI/vtable.
  * Measured source-form constraints: notes/experiments/pr2859-source-repair-0920.json.
+ *
+ * Leftover: the func_ov062_* helpers keep linker names; naming belongs
+ *   at their definitions.
  */
 #include "daRNk_c.h"
 #include "Player.h"
@@ -77,9 +80,6 @@ extern int data_ov062_0211e02c[];
 extern int data_ov062_0211e004[];
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 17 -- daRNk_c_classInit, 0x0211aee0, size 0x58 */
-/* -------------------------------------------------------------------------- */
 // @symbol daRNk_c_classInit
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int *daRNk_c_classInit(void)
@@ -88,9 +88,6 @@ int *daRNk_c_classInit(void)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 16 -- _ZN7daRNk_c13InitResourcesEv, 0x0211ac94, size 0x24c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daRNk_c13InitResourcesEv
 int daRNk_c::InitResources()
 {
@@ -150,9 +147,6 @@ int daRNk_c::InitResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 15 -- _ZN7daRNk_c16CleanupResourcesEv, 0x0211ac10, size 0x84 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daRNk_c16CleanupResourcesEv
 int daRNk_c::CleanupResources()
 {
@@ -168,9 +162,6 @@ int daRNk_c::CleanupResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 14 -- _ZN7daRNk_c8BehaviorEv, 0x0211ab88, size 0x88 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daRNk_c8BehaviorEv
 int daRNk_c::Behavior()
 {
@@ -187,9 +178,6 @@ int daRNk_c::Behavior()
   return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 13 -- _ZN7daRNk_c6RenderEv, 0x0211ab50, size 0x38 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daRNk_c6RenderEv
 /* Model is the real class now, through daRNk_c.h: HideMaterial is its own
    non-virtual and the slot-5 virtual is Render, which ModelAnim overrides. */
@@ -200,9 +188,6 @@ int daRNk_c::Render()
   return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 12 -- func_ov062_0211aac0, 0x0211aac0, size 0x90 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov062_0211aac0
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov062_0211aac0(char* r6){
@@ -216,9 +201,6 @@ void func_ov062_0211aac0(char* r6){
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 11 -- func_ov062_0211a9c4, 0x0211a9c4, size 0xfc */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov062_0211a9c4
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 
@@ -235,11 +217,11 @@ void func_ov062_0211a9c4(char *c)
         return;
     }
 
-    *(void **)(c + 0x398) = ((dActor_c *)c)->ClosestPlayer();
-    if (*(void **)(c + 0x398) == 0)
+    ((daRNk_c *)c)->mPlayer = ((dActor_c *)c)->ClosestPlayer();
+    if (((daRNk_c *)c)->mPlayer == 0)
         return;
 
-    sp = (struct Vector3 *)((int)*(void **)(c + 0x398) + 0x5c);
+    sp = (struct Vector3 *)((int)((daRNk_c *)c)->mPlayer + 0x5c);
     v.x = sp->x;
     v.y = sp->y;
     v.z = sp->z;
@@ -247,7 +229,7 @@ void func_ov062_0211a9c4(char *c)
     if (Vec3_Dist((struct Vector3 *)(c + 0x5c), &v) >= 0xc8000)
         return;
 
-    if (((Player *)*(void **)(c + 0x398))->StartTalk(*(fBase_c *)c, true) == 0)
+    if (((daRNk_c *)c)->mPlayer->StartTalk(*(fBase_c *)c, true) == 0)
         return;
 
     a = (char *)dActor_c::FindWithActorID(0xcd, 0);
@@ -265,9 +247,6 @@ void func_ov062_0211a9c4(char *c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 10 -- func_ov062_0211a740, 0x0211a740, size 0x284 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov062_0211a740
 /* Offer the race after the player finishes talking. */
 extern "C" void func_ov062_0211a740(char* c)
@@ -278,7 +257,7 @@ extern "C" void func_ov062_0211a740(char* c)
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((void*)(c + 0x300), *(void**)(data_ov062_0211e03c + 4), 0, 0x1000, 0);
             *(u8*)(c + 0x390) += 1;
             func_0201267c(0xec, c + 0x74);
-            if (*(int*)(*(int*)(c + 0x398) + 8) == 0) {
+            if (*(int*)((char *)((daRNk_c *)c)->mPlayer + 8) == 0) {
                 func_02012790(0xa);
                 *(u8*)(c + 0x3b6) = 1;
             }
@@ -286,7 +265,7 @@ extern "C" void func_ov062_0211a740(char* c)
         *(s16*)(c + 0x8e) = *(s16*)(c + 0x94);
         return;
     case 1:
-        if (((Player *)*(void **)(c + 0x398))->GetTalkState() != 0)
+        if (((daRNk_c *)c)->mPlayer->GetTalkState() != 0)
             return;
         {
             unsigned int msg;
@@ -307,12 +286,12 @@ extern "C" void func_ov062_0211a740(char* c)
                 v.y = y;
                 v.z = z;
             }
-            if (((Player *)*(void **)(c + 0x398))->ShowMessage(*(fBase_c *)c, msg, &v, 1, 0) != 0)
+            if (((daRNk_c *)c)->mPlayer->ShowMessage(*(fBase_c *)c, msg, &v, 1, 0) != 0)
                 *(u8*)(c + 0x390) += 1;
         }
         return;
     case 2:
-        if (((Player *)*(void **)(c + 0x398))->GetTalkState() != 2)
+        if (((daRNk_c *)c)->mPlayer->GetTalkState() != 2)
             return;
         if (*(u8*)(c + 0x3b6) != 0) {
             if (data_0209d684 == 1) {
@@ -324,14 +303,14 @@ extern "C" void func_ov062_0211a740(char* c)
             } else if (data_0209d684 == 2) {
                 *(int*)(c + 0x38c) = 0;
                 *(u16*)(c + 0x100) = 0x3c;
-                ((Player *)*(void **)(c + 0x398))->HasFinishedTalking();
+                ((daRNk_c *)c)->mPlayer->HasFinishedTalking();
                 _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((void*)(c + 0x300), *(void**)(data_ov062_0211e034 + 4), 0, 0x1000, 0);
                 *(u8*)(c + 0x3b6) = 0;
             }
         } else {
             *(int*)(c + 0x38c) = 0;
             *(u16*)(c + 0x100) = 0x3c;
-            ((Player *)*(void **)(c + 0x398))->HasFinishedTalking();
+            ((daRNk_c *)c)->mPlayer->HasFinishedTalking();
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((void*)(c + 0x300), *(void**)(data_ov062_0211e034 + 4), 0, 0x1000, 0);
         }
         *(u8*)(c + 0x390) = 0;
@@ -343,9 +322,6 @@ extern "C" void func_ov062_0211a740(char* c)
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 9 -- func_ov062_0211a1f4, 0x0211a1f4, size 0x54c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov062_0211a1f4
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov062_0211a1f4(char *a)
@@ -358,12 +334,12 @@ void func_ov062_0211a1f4(char *a)
 
     switch (*(u8 *)(a + 0x390)) {
     case 0:
-        if (((Player *)*(void **)(a + 0x398))->Unk_020c4f40(0x5a) != 0)
+        if (((daRNk_c *)a)->mPlayer->Unk_020c4f40(0x5a) != 0)
             (*(u8 *)(((int)a + 0x390)))++;
         return;
     case 1:
         _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x1f, 0x14, 0x7f, 0x6b000, 0);
-        if (((Player *)*(void **)(a + 0x398))->GetTalkState() != -1)
+        if (((daRNk_c *)a)->mPlayer->GetTalkState() != -1)
             return;
         _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x1f, 0x7f, 0, 0x7f000, 0);
         func_02012694(0x4d, a + 0x74);
@@ -400,14 +376,14 @@ void func_ov062_0211a1f4(char *a)
         else
             r7 = 0x1000;
         if (*(u8 *)(a + 0x3ac) == 0)
-            *(u8 *)(a + 0x3ac) = ((Player *)*(void **)(a + 0x398))->IsBeingShotOutOfCannon();
+            *(u8 *)(a + 0x3ac) = ((daRNk_c *)a)->mPlayer->IsBeingShotOutOfCannon();
         r5 = 4;
         if (*(int *)(a + 0x394) != 0) {
             char *o = (char *)dActor_c::FindWithID(*(int *)(a + 0x394));
             if (o != 0) {
                 if (*(u8 *)(o + 0x16e) != 0 &&
                     Vec3_Dist((const Vector3 *)(a + 0x5c),
-                              (const Vector3 *)(*(char **)(a + 0x398) + 0x5c)) > 0x7d0000)
+                              (const Vector3 *)&((daRNk_c *)a)->mPlayer->mPosX) > 0x7d0000)
                     r5 = 8;
                 else if (data_0209f2f8 == 0x18)
                     r5 = 6;
@@ -478,9 +454,6 @@ void func_ov062_0211a1f4(char *a)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 8 -- func_ov062_0211a168, 0x0211a168, size 0x8c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov062_0211a168
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov062_0211a168(char* r4){
@@ -494,9 +467,6 @@ void func_ov062_0211a168(char* r4){
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- func_ov062_0211a0f0, 0x0211a0f0, size 0x78 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov062_0211a0f0
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov062_0211a0f0(char* c)
@@ -510,9 +480,6 @@ void func_ov062_0211a0f0(char* c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- func_ov062_02119be0, 0x02119be0, size 0x510 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov062_02119be0
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov062_02119be0(char* self)
@@ -539,14 +506,14 @@ void func_ov062_02119be0(char* self)
         if (*(unsigned short*)(self + 0x100) != 0)
             return;
         {
-            Vector3* pp = (Vector3*)(((int)*(char**)(self + 0x398) + 0x5c));
+            Vector3* pp = (Vector3 *)&((daRNk_c *)self)->mPlayer->mPosX;
             playerPos.x = pp->x;
             playerPos.y = pp->y;
             playerPos.z = pp->z;
         }
         if (Vec3_Dist((Vector3*)(self + 0x5c), &playerPos) >= 0x190000)
             return;
-        if (((Player *)*(void **)(self + 0x398))->StartTalk(*(fBase_c *)self, 1) == 0)
+        if (((daRNk_c *)self)->mPlayer->StartTalk(*(fBase_c *)self, 1) == 0)
             return;
         *(short*)(self + 0x3a8) = Vec3_HorzAngle((Vector3*)(self + 0x5c), &playerPos);
         (*(unsigned char*)(((int)self + 0x390)))++;
@@ -565,7 +532,7 @@ void func_ov062_02119be0(char* self)
         *(short*)(self + 0x8e) = *(short*)(self + 0x94);
         return;
     case 2:
-        if (*(int*)(*(char**)(self + 0x398) + 8) == 0) {
+        if (*(int*)((char *)((daRNk_c *)self)->mPlayer + 8) == 0) {
             if (*(unsigned char*)(self + 0x3af) == 0) {
                 msg = 0x14d;
             } else if (*(unsigned char*)(self + 0x3ac) != 0) {
@@ -581,7 +548,7 @@ void func_ov062_02119be0(char* self)
             *(unsigned char*)(self + 0x3b3) = 1;
             msg = 0x9f;
         }
-        x = ((Player *)*(void **)(self + 0x398))->GetTalkState();
+        x = ((daRNk_c *)self)->mPlayer->GetTalkState();
         if (x != 0)
             return;
         x = *(int*)(self + 0x5c);
@@ -590,11 +557,11 @@ void func_ov062_02119be0(char* self)
         msgPos.x = x;
         msgPos.y = y;
         msgPos.z = z;
-        if (((Player *)*(void **)(self + 0x398))->ShowMessage(*(fBase_c *)self, msg, &msgPos, 0, 0) != 0)
+        if (((daRNk_c *)self)->mPlayer->ShowMessage(*(fBase_c *)self, msg, &msgPos, 0, 0) != 0)
             (*(unsigned char*)(((int)self + 0x390)))++;
         return;
     case 3:
-        if (((Player *)*(void **)(self + 0x398))->GetTalkState() != 0xFFFFFFFF)
+        if (((daRNk_c *)self)->mPlayer->GetTalkState() != 0xFFFFFFFF)
             return;
         (*(unsigned char*)(((int)self + 0x390)))++;
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(self + 0x300, *(void**)(data_ov062_0211e034 + 4), 0, 0x1000, 0);
@@ -614,20 +581,20 @@ void func_ov062_02119be0(char* self)
         return;
     case 4:
         {
-            Vector3* pp = (Vector3*)(((int)*(char**)(self + 0x398) + 0x5c));
+            Vector3* pp = (Vector3 *)&((daRNk_c *)self)->mPlayer->mPosX;
             playerPos.x = pp->x;
             playerPos.y = pp->y;
             playerPos.z = pp->z;
         }
         if (Vec3_Dist((Vector3*)(self + 0x5c), &playerPos) >= 0x190000)
             return;
-        if (((Player *)*(void **)(self + 0x398))->StartTalk(*(fBase_c *)self, 0) != 0)
+        if (((daRNk_c *)self)->mPlayer->StartTalk(*(fBase_c *)self, 0) != 0)
             (*(unsigned char*)(((int)self + 0x390)))++;
         return;
     case 5:
-        if (((Player *)*(void **)(self + 0x398))->GetTalkState() != 0)
+        if (((daRNk_c *)self)->mPlayer->GetTalkState() != 0)
             return;
-        *(short*)(self + 0x3a8) = Vec3_HorzAngle((Vector3*)(self + 0x5c), (Vector3*)(*(char**)(self + 0x398) + 0x5c));
+        *(short*)(self + 0x3a8) = Vec3_HorzAngle((Vector3*)(self + 0x5c), (Vector3*)((char *)((daRNk_c *)self)->mPlayer + 0x5c));
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(self + 0x300, *(void**)(data_ov062_0211e03c + 4), 0, 0x1000, 0);
         (*(unsigned char*)(((int)self + 0x390)))++;
         return;
@@ -638,7 +605,7 @@ void func_ov062_02119be0(char* self)
         return;
     case 7:
         {
-            char* p = *(char**)(self + 0x398);
+            char* p = (char *)((daRNk_c *)self)->mPlayer;
             if (*(int*)(p + 8) == 0)
                 msg = 0xa0;
             else
@@ -653,11 +620,11 @@ void func_ov062_02119be0(char* self)
         msgPos.x = x;
         msgPos.y = y;
         msgPos.z = z;
-        if (((Player *)*(void **)(self + 0x398))->ShowMessage(*(fBase_c *)self, msg, &msgPos, 0, 0) != 0)
+        if (((daRNk_c *)self)->mPlayer->ShowMessage(*(fBase_c *)self, msg, &msgPos, 0, 0) != 0)
             (*(unsigned char*)(((int)self + 0x390)))++;
         return;
     case 8:
-        if (((Player *)*(void **)(self + 0x398))->GetTalkState() != 0xFFFFFFFF)
+        if (((daRNk_c *)self)->mPlayer->GetTalkState() != 0xFFFFFFFF)
             return;
         *(unsigned char*)(self + 0x390) = 4;
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(self + 0x300, *(void**)(data_ov062_0211e034 + 4), 0, 0x1000, 0);
@@ -666,9 +633,6 @@ void func_ov062_02119be0(char* self)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- func_ov062_02119af0, 0x02119af0, size 0xf0 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov062_02119af0
 extern "C" int func_ov062_02119af0(char *p) {
     int dxc;
@@ -712,9 +676,6 @@ extern "C" int func_ov062_02119af0(char *p) {
     return 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- func_ov062_021199ac, 0x021199ac, size 0x144 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov062_021199ac
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov062_021199ac(char *self)
@@ -770,9 +731,6 @@ ret0:
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- func_ov062_02119954, 0x02119954, size 0x58 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov062_02119954
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov062_02119954(void *c)
@@ -784,9 +742,6 @@ void func_ov062_02119954(void *c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- func_ov062_02119800, 0x02119800, size 0x154 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov062_02119800
 extern "C" void func_ov062_02119800(char *c)
 {
@@ -856,17 +811,11 @@ reset:
     *(unsigned char *)(self + 0x3b2) = 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 1 -- _ZN7daRNk_cD0Ev, 0x021197a4, size 0x5c */
-/* -------------------------------------------------------------------------- */
 /* D0 is the DELETING destructor: destroy through this class (dEnemyBase_c
  * chain) then return the object to its heap via an inline operator delete.
  * Both variants are emitted from the single inline destructor in
  * daRNk_c.h (class-form skill): D1 then D0 in ROM order, no leaf D2. */
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 0 -- _ZN7daRNk_cD1Ev, 0x0211975c, size 0x48 */
-/* -------------------------------------------------------------------------- */
 /* D1 is emitted from the inline destructor in daRNk_c.h alongside D0
  * alongside D0. Members are destroyed in reverse declaration
  * order, then dEnemyBase_c::~dEnemyBase_c. */

@@ -1,46 +1,18 @@
 //cpp
-/* dScMgSlot1_c -- ov006, intact translation unit.
+/* dScMgSlot1_c -- ov006 slot-machine scene, methods plus shared helpers.
+ * Intact TU (sub-range of the larger Slot1+Slot3 run; the manifest records
+ * the boundary). Source runs REVERSE of ROM (highest address first).
+ * Do not reorder.
  *
- * Licensed .text range 0x0210c180..0x0210c6c0, 18 functions, compiled by
- * mwccarm 2004/b56 and byte-verified against the ROM.
- *
- * This is a SUB-RANGE of a larger original TU. The ROM's own unit spans
- * 0x0210a8c0..0x0210d6b8 and holds dScMgSlot1_c and dScMgSlot3_c together
- * (41 functions); see this TU's manifest boundary_evidence for how that
- * boundary was derived and for the six functions that keep the full range
- * from being claimed. The same truncate-at-the-first-unmatched-function
- * shape is what src/actors/dScMgCurling2_c.cpp and
- * src/minigames/d_s_mg_hanachan.cpp already do in this overlay.
- *
- * FUNCTION ORDER IS THE REVERSE OF THE ROM'S -- mwccarm 2004/b56 emits one
- * .text section per function, in the reverse of source order, so the
- * highest-address ROM function is written first.
- *
- * Folded from the 18 one-function legacy sources that used to carry these
- * symbols; those files are deleted by this change, so they are named here
- * by symbol rather than by a path that no longer resolves (ROM order):
- *   0x0210c180  func_ov006_0210c180
- *   0x0210c1a8  func_ov006_0210c1a8
- *   0x0210c208  func_ov006_0210c208
- *   0x0210c218  func_ov006_0210c218
- *   0x0210c234  func_ov006_0210c234
- *   0x0210c278  func_ov006_0210c278
- *   0x0210c2b0  func_ov006_0210c2b0
- *   0x0210c2c0  func_ov006_0210c2c0
- *   0x0210c2d4  func_ov006_0210c2d4
- *   0x0210c354  func_ov006_0210c354
- *   0x0210c374  _ZN12dScMgSlot1_c9betIcon_c6RenderEv
- *   0x0210c410  _ZN12dScMgSlot1_c9betIcon_c8BehaviorEv
- *   0x0210c478  func_ov006_0210c478
- *   0x0210c4b8  _ZN12dScMgSlot1_c19OnHitFromUnderneathEv
- *   0x0210c4dc  _ZN12dScMgSlot1_c15OnHitByMegaCharEv
- *   0x0210c500  func_ov006_0210c500
- *   0x0210c638  func_ov006_0210c638
- *   0x0210c674  _ZN12dScMgSlot1_c13OnYoshiTryEatEi
+ * Leftover: the C/Obj/T4fe4/T shadows and the vtable shim stay local;
+ *   naming signatures for every helper is out of scope.
+ * Leftover: the func_ov006 helpers and data homes keep linker names;
+ *   naming belongs at their definitions.
  */
 
 #include "dScMgSlot1_c.h"
 #include "dScMgSlot3_c.h"
+#include "Sound.h"
 #include "dScMgBase_c.h"
 #include "decl_common.h"
 #include "private/ov006_slotgrid.h"
@@ -52,11 +24,6 @@
  * each of these before compiling; a real header should usually win. */
 /* shadow struct 'G2' */
 struct G2 { static void* GetBG1ScrPtr(); };
-
-/* shadow namespace 'Sound' */
-namespace Sound {
-    void PlayBank2_2D(unsigned int id);
-}
 
 /* shadow struct 'Obj' */
 struct Obj {
@@ -126,7 +93,6 @@ extern u8 data_020a0de9[];
 extern u8 data_020a0deb[];
 extern int data_ov006_0213e948[];
 extern void func_ov006_0210ab08(char *c, int i);
-extern void _ZN5Sound12PlayBank2_2DEj(unsigned int id);
 extern int Sound_PlayIfNotActive(int, int, int, int);
 extern int RandomIntInternal(int *seed);
 extern int data_0209e650;
@@ -186,11 +152,7 @@ extern s16 data_ov006_0213e4fa[][2];
 extern struct FaderBrightness data_0209f61c;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 37 -- _ZN12dScMgSlot1_c13OnYoshiTryEatEi, 0x0210c674, size 0x4c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN12dScMgSlot1_c13OnYoshiTryEatEi
-// recovered name: dScMgSlot1_c_OnYoshiTryEat_0210c674
 /* dScMgSlot1_c::OnYoshiTryEat - recovered from vtable slot identity. Slot 18
    stays an unmigrated raw extern "C" helper (see include/dScMgSlot1_c.h),
    so this reaches its own fields via raw offsets on a char* rather than
@@ -210,9 +172,6 @@ void dScMgSlot1_c::OnYoshiTryEat(int i)
   *(int*)(c + 0x46b4) = 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 36 -- func_ov006_0210c638, 0x0210c638, size 0x3c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_0210c638
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_0210c638(void *thiz_)
@@ -226,9 +185,6 @@ void func_ov006_0210c638(void *thiz_)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 35 -- func_ov006_0210c500, 0x0210c500, size 0x138 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_0210c500
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov006_0210c500(void *self)
@@ -271,9 +227,6 @@ int func_ov006_0210c500(void *self)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 34 -- _ZN12dScMgSlot1_c15OnHitByMegaCharEv, 0x0210c4dc, size 0x24 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN12dScMgSlot1_c15OnHitByMegaCharEv
 /* dScMgSlot1_c::OnHitByMegaChar -- slot 27, and a REAL OVERRIDE as of this
    commit: dScMgBase_c declares the slot now, so this stops being a new virtual
@@ -307,9 +260,6 @@ void dScMgSlot1_c::OnHitByMegaChar()
     dScMgBase_c::OnHitByMegaChar();
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 33 -- _ZN12dScMgSlot1_c19OnHitFromUnderneathEv, 0x0210c4b8, size 0x24 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN12dScMgSlot1_c19OnHitFromUnderneathEv
 /* dScMgSlot1_c::OnHitFromUnderneath -- slot 28, and a REAL OVERRIDE as of this
    commit: dScMgBase_c declares the slot now, so this stops being a new virtual
@@ -354,9 +304,6 @@ int dScMgSlot1_c::OnHitFromUnderneath()
     SetSubBg1Offset(0x100, 0);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 32 -- func_ov006_0210c478, 0x0210c478, size 0x40 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_0210c478
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_0210c478(char *c) {
@@ -365,9 +312,6 @@ void func_ov006_0210c478(char *c) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 31 -- _ZN12dScMgSlot1_c9betIcon_c8BehaviorEv, 0x0210c410, size 0x68 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN12dScMgSlot1_c9betIcon_c8BehaviorEv
 void dScMgSlot1_c::betIcon_c::Behavior()
 {
@@ -378,16 +322,13 @@ void dScMgSlot1_c::betIcon_c::Behavior()
     if (val != 0) {
         if ((val & 3) == 0) {
             func_ov004_020b1b40(1);
-            _ZN5Sound12PlayBank2_2DEj(0x149);
+            Sound::PlayBank2_2D(0x149);
         }
         unk_020 -= 1;
     }
     dThIcon_c::Behavior();
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 30 -- _ZN12dScMgSlot1_c9betIcon_c6RenderEv, 0x0210c374, size 0x9c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN12dScMgSlot1_c9betIcon_c6RenderEv
 void dScMgSlot1_c::betIcon_c::Render()
 {
@@ -401,9 +342,6 @@ void dScMgSlot1_c::betIcon_c::Render()
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 29 -- func_ov006_0210c354, 0x0210c354, size 0x20 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_0210c354
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_0210c354(void *p_)
@@ -416,9 +354,6 @@ void func_ov006_0210c354(void *p_)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 28 -- func_ov006_0210c2d4, 0x0210c2d4, size 0x80 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_0210c2d4
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_0210c2d4(void *c_)
@@ -444,13 +379,10 @@ void func_ov006_0210c2d4(void *c_)
     func_ov004_020b1b08((void *)1);
     func_ov001_020ab3f0(c);
     sid = 0x163;
-    _ZN5Sound12PlayBank2_2DEj(sid);
+    Sound::PlayBank2_2D(sid);
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 27 -- func_ov006_0210c2c0, 0x0210c2c0, size 0x14 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_0210c2c0
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_0210c2c0(void *o, int v) {
@@ -459,9 +391,6 @@ void func_ov006_0210c2c0(void *o, int v) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 26 -- func_ov006_0210c2b0, 0x0210c2b0, size 0x10 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_0210c2b0
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_0210c2b0(char *p)
@@ -471,9 +400,6 @@ void func_ov006_0210c2b0(char *p)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 25 -- func_ov006_0210c278, 0x0210c278, size 0x38 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_0210c278
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_0210c278(void *o_)
@@ -488,9 +414,6 @@ void func_ov006_0210c278(void *o_)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 24 -- func_ov006_0210c234, 0x0210c234, size 0x44 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_0210c234
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_0210c234(unsigned char* o){
@@ -499,9 +422,6 @@ void func_ov006_0210c234(unsigned char* o){
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 23 -- func_ov006_0210c218, 0x0210c218, size 0x1c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_0210c218
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_0210c218(void *p_, s16 a, s16 b)
@@ -514,9 +434,6 @@ void func_ov006_0210c218(void *p_, s16 a, s16 b)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 22 -- func_ov006_0210c208, 0x0210c208, size 0x10 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_0210c208
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_0210c208(char *p)
@@ -526,9 +443,6 @@ void func_ov006_0210c208(char *p)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 21 -- func_ov006_0210c1a8, 0x0210c1a8, size 0x60 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_0210c1a8
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_0210c1a8(void *o_)
@@ -547,9 +461,6 @@ void func_ov006_0210c1a8(void *o_)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 20 -- func_ov006_0210c180, 0x0210c180, size 0x28 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_0210c180
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_0210c180(void *c_){

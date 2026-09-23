@@ -4,7 +4,12 @@
  * [0x0210a4b0, 0x0210a8c0), including the compiler-owned destructor pair.
  * Keep this definition order: deferred codegen emits ordinary sections in
  * reverse source order under 2004/b56. The manifest records the inferred
- * original file boundary and remaining metadata ownership. */
+ * original file boundary and remaining metadata ownership.
+ *
+ * Leftover: Ov004_Deallocate (ov004-local, 0x020adc5c) and Deallocate
+ *   (arm9-global, 0x02018144) are different functions, not two
+ *   spellings of one free; each call site keeps its own.
+ */
 
 #include "dScMgSingle3DBase_c.h"
 #include "types.h"

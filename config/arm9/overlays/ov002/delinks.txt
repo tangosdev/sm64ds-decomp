@@ -3307,81 +3307,9 @@ src/d_map.cpp:
     complete
     .text start:0x020fb8bc end:0x020fb8f8
 
-src/_ZN8dMeter_cD1Ev.cpp:
+src/actors/dMeter_c.cpp:
     complete
-    .text start:0x020fb8f8 end:0x020fb928
-
-src/_ZN8dMeter_cD0Ev.cpp:
-    complete
-    .text start:0x020fb928 end:0x020fb96c
-
-src/_ZN8dMeter_c15RenderTimeTimerEv.cpp:
-    complete
-    .text start:0x020fb96c end:0x020fbdac
-
-src/_ZN8dMeter_c15CalculateDigitsEt.cpp:
-    complete
-    .text start:0x020fbdac end:0x020fbe38
-
-src/_ZN8dMeter_c15RenderLifeCountEv.cpp:
-    complete
-    .text start:0x020fbe38 end:0x020fc04c
-
-src/_ZN8dMeter_c19RenderCameraButtonsEv.cpp:
-    complete
-    .text start:0x020fc04c end:0x020fc3c4
-
-src/_ZN8dMeter_c17RenderSilverStarsEv.cpp:
-    complete
-    .text start:0x020fc3c4 end:0x020fc458
-
-src/_ZN8dMeter_c15RenderStarCountEv.cpp:
-    complete
-    .text start:0x020fc458 end:0x020fc77c
-
-src/_ZN8dMeter_c14RenderRedCoinsEv.cpp:
-    complete
-    .text start:0x020fc77c end:0x020fc81c
-
-src/_ZN8dMeter_c15RenderCoinCountEv.cpp:
-    complete
-    .text start:0x020fc81c end:0x020fca18
-
-src/_ZN8dMeter_c13RenderVsTimerEv.cpp:
-    complete
-    .text start:0x020fca18 end:0x020fce9c
-
-src/_ZN8dMeter_c13UpdateVsTimerEv.cpp:
-    complete
-    .text start:0x020fce9c end:0x020fcfec
-
-src/_ZN8dMeter_c17RenderHealthMeterEv.cpp:
-    complete
-    .text start:0x020fcfec end:0x020fd218
-
-src/_ZN8dMeter_c17UpdateHealthMeterEv.cpp:
-    complete
-    .text start:0x020fd218 end:0x020fd5d4
-
-src/_ZN8dMeter_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x020fd5d4 end:0x020fd5dc
-
-src/_ZN8dMeter_c16OnPendingDestroyEv.cpp:
-    complete
-    .text start:0x020fd5dc end:0x020fd5e0
-
-src/_ZN8dMeter_c6RenderEv.cpp:
-    complete
-    .text start:0x020fd5e0 end:0x020fd7a4
-
-src/_ZN8dMeter_c8BehaviorEv.cpp:
-    complete
-    .text start:0x020fd7a4 end:0x020fda04
-
-src/_ZN8dMeter_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x020fda04 end:0x020fe154
+    .text start:0x020fb8f8 end:0x020fe154
 
 src/d_meter.cpp:
     complete

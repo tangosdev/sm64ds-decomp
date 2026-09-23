@@ -1,59 +1,17 @@
 //cpp
 /* dScMgSnowball_c -- the MG_SNOWBALL minigame scene class, ov006.
+ * 23 functions (.text 0x0212568c..0x021295ac): the destructor plus
+ * eight virtual overrides plus the thirteen unnamed helpers they call.
  *
- * One translation unit, 0x0212568c..0x021295ac, 23 functions: the class's
- * destructor and eight virtual overrides plus the thirteen unnamed
- * helpers they call. Those helpers are in the run, not merely next to it:
- * tools/tu_map.py puts the TU boundary at 0x021295ac, where the C2
- * constructor (func_ov006_021295ac) starts a different unit.
+ * Source runs ROM-ASCENDING under `#pragma defer_codegen off` -- the
+ * opposite of the usual rule, and load-bearing (removing it costs
+ * five members and scrambles section order). Six bracketed optimiser
+ * pragmas are load-bearing, each with a removal control; include
+ * order is load-bearing (nested Matrix4x3 wins, so the one block
+ * move goes through M4x3Flat). Details above each site.
  *
- * ROM .text, ascending -- and this file is written in the SAME order, which
- * is the opposite of the usual rule. mwccarm 2004/b56 normally emits one
- * .text section per function in the REVERSE of source order, but
- * `#pragma defer_codegen off` below defers nothing, so each function is
- * emitted as it is parsed and the source must ascend. That pragma is not
- * cosmetic: it is also what makes a bracketed optimiser pragma bind to the
- * function it wraps instead of being file-global last-wins. Removing it
- * costs five members and scrambles the section order (measured: 18 of 23
- * match, 22 ordinal pairs out of order).
- *
- *   0x0212568c  _ZN15dScMgSnowball_cD1Ev              ordinal  0  } one
- *   0x0212573c  _ZN15dScMgSnowball_cD0Ev              ordinal  1  } definition
- *   0x02125800  func_ov006_02125800                   ordinal  2
- *   0x02125804  func_ov006_02125804                   ordinal  3
- *   0x02125890  func_ov006_02125890                   ordinal  4
- *   0x02125994  func_ov006_02125994                   ordinal  5
- *   0x021259d8  func_ov006_021259d8                   ordinal  6
- *   0x02125bbc  func_ov006_02125bbc                   ordinal  7  pragma
- *   0x02125cdc  func_ov006_02125cdc                   ordinal  8  pragma
- *   0x02125f68  func_ov006_02125f68                   ordinal  9
- *   0x02126948  func_ov006_02126948                   ordinal 10  pragma
- *   0x02126a98  func_ov006_02126a98                   ordinal 11
- *   0x02126b4c  func_ov006_02126b4c                   ordinal 12  pragma
- *   0x02126ee4  func_ov006_02126ee4                   ordinal 13
- *   0x021279b0  func_ov006_021279b0                   ordinal 14
- *   0x02127d10  _ZN15dScMgSnowball_c6RenderEv         ordinal 15  pragma
- *   0x021283a4  _ZN15dScMgSnowball_c8BehaviorEv       ordinal 16
- *   0x02128fb8  _ZN15dScMgSnowball_c8OnKickedEv       ordinal 17
- *   0x021291b0  _ZN15dScMgSnowball_c8OnPushedEv       ordinal 18
- *   0x021291d4  _ZN15dScMgSnowball_c11OnAttacked2Ev   ordinal 19
- *   0x021291f8  _ZN15dScMgSnowball_c16CleanupResourcesEv  ordinal 20
- *   0x0212921c  _ZN15dScMgSnowball_c13OnYoshiTryEatEi ordinal 21
- *   0x02129268  _ZN15dScMgSnowball_c13InitResourcesEv ordinal 22
- *
- * The destructor is defined out of line here, so this TU owns the class's
- * key function and emits _ZTV/_ZTI/_ZTS as vague-linkage passengers along
- * with the C2/D2 variants nothing in the ROM calls, and with the string and
- * typeinfo records of the bases it names. Those have to deadstrip for the
- * licensed range to close; the manifest's compiler_only_output block names
- * exactly which, and linkcheck is what proves they go.
- *
- * Six of the seven optimiser pragmas the one-function sources carried are
- * load-bearing and are kept, each bracketed around the single function it
- * belongs to. Every one has a removal control: deleting any single bracket
- * turns exactly its own member from MATCH to DIFF and nothing else. The
- * seventh -- `opt_strength_reduction off` on func_ov006_021279b0 -- is NOT
- * carried, because that member matches without it.
+ * Leftover: the func_ov006 helpers keep linker names; naming belongs
+ *   at their definitions.
  */
 #pragma defer_codegen off
 
@@ -226,9 +184,6 @@ extern u8 data_0209d454;
   * explicit parameter list over an implicit int(). */
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 0 -- _ZN15dScMgSnowball_cD1Ev, 0x0212568c, size 0xb0 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15dScMgSnowball_cD1Ev
 /* recovered: real C++ destructor. The three explicit calls reproduce the
    ROM's own recovered body (func_ov006_0212568c, pre-migration): destroy
@@ -247,9 +202,6 @@ dScMgSnowball_c::~dScMgSnowball_c()
     __cxa_vec_cleanup(mArray1, 0x80, 8, (void *)NullDestructor_0203d47c);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 1 -- _ZN15dScMgSnowball_cD0Ev, 0x0212573c, size 0xc4 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15dScMgSnowball_cD0Ev
 /* _ZN15dScMgSnowball_cD0Ev has no source of its own. mwccarm 2004/b56 emits
    both the complete-object (D1) and the deleting (D0) variant from the single
@@ -257,9 +209,6 @@ dScMgSnowball_c::~dScMgSnowball_c()
    marker is here, at the deleting variant's own ROM ordinal, so the ratchet
    scores D1 against the body it names and D0 against this note. */
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- func_ov006_02125800, 0x02125800, size 0x4 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02125800
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_02125800(void)
@@ -267,9 +216,6 @@ void func_ov006_02125800(void)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- func_ov006_02125804, 0x02125804, size 0x8c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02125804
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_02125804(char *c)
@@ -290,9 +236,6 @@ void func_ov006_02125804(char *c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- func_ov006_02125890, 0x02125890, size 0x104 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02125890
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_02125890(char *o)
@@ -321,9 +264,6 @@ void func_ov006_02125890(char *o)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- func_ov006_02125994, 0x02125994, size 0x44 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02125994
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_02125994(char *c) {
@@ -343,9 +283,6 @@ void func_ov006_02125994(char *c) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- func_ov006_021259d8, 0x021259d8, size 0x1e4 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_021259d8
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov006_021259d8(char *p0, int *p1) {
@@ -435,9 +372,6 @@ int func_ov006_021259d8(char *p0, int *p1) {
 }
 
 #pragma opt_strength_reduction off
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- func_ov006_02125bbc, 0x02125bbc, size 0x120 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02125bbc
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov006_02125bbc(char *o, int *p)
@@ -474,9 +408,6 @@ int func_ov006_02125bbc(char *o, int *p)
 #pragma opt_strength_reduction on
 
 #pragma opt_common_subs off
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 8 -- func_ov006_02125cdc, 0x02125cdc, size 0x28c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02125cdc
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov006_02125cdc(int c, int *p)
@@ -530,9 +461,6 @@ int func_ov006_02125cdc(int c, int *p)
 }
 #pragma opt_common_subs on
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 9 -- func_ov006_02125f68, 0x02125f68, size 0x9e0 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02125f68
 /* recovered: dScMgSnowball_c collision ring, ov006 0x02125f68 (2528 bytes).
  * Once a tick the snowball fires 32 probes around itself, one every 0x800 of
@@ -793,12 +721,7 @@ extern "C" void func_ov006_02125f68(char *p_)
 }
 
 #pragma opt_lifetimes off
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 10 -- func_ov006_02126948, 0x02126948, size 0x150 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02126948
-/* recovered: shared common types, declarations from a shared header */
-/* recovered: shared common types */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_02126948(char *c) {
     dScMgSnowball_c *self = (dScMgSnowball_c *)c;
@@ -836,9 +759,6 @@ void func_ov006_02126948(char *c) {
 }
 #pragma opt_lifetimes on
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 11 -- func_ov006_02126a98, 0x02126a98, size 0xb4 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02126a98
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_02126a98(char *c)
@@ -866,9 +786,6 @@ void func_ov006_02126a98(char *c)
 }
 
 #pragma opt_strength_reduction off
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 12 -- func_ov006_02126b4c, 0x02126b4c, size 0x398 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02126b4c
 /* recovered: minigame BG2 tile-column writer.
  *
@@ -1016,9 +933,6 @@ void func_ov006_02126b4c(char *c, int col, int flag)
 }
 #pragma opt_strength_reduction on
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 13 -- func_ov006_02126ee4, 0x02126ee4, size 0xacc */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_02126ee4
 /* recovered: dScMgSnowball_c course generator, ov006 0x02126ee4 (2764 bytes).
  * Paints mTileMap row by row from the bottom of the course upwards, carving a
@@ -1355,9 +1269,6 @@ extern "C" void func_ov006_02126ee4(void *p_)
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 14 -- func_ov006_021279b0, 0x021279b0, size 0x360 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov006_021279b0
 extern "C" void func_ov006_021279b0(void *p_)
 {
@@ -1469,9 +1380,6 @@ extern "C" void func_ov006_021279b0(void *p_)
 
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 15 -- _ZN15dScMgSnowball_c6RenderEv, 0x02127d10, size 0x694 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15dScMgSnowball_c6RenderEv
 /* dScMgSnowball_c::Render -- vtable slot 9, ov006 0x02127d10.
  *
@@ -1642,9 +1550,6 @@ s32 dScMgSnowball_c::Render()
 #pragma opt_common_subs on
 #pragma opt_strength_reduction on
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 16 -- _ZN15dScMgSnowball_c8BehaviorEv, 0x021283a4, size 0xc14 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15dScMgSnowball_c8BehaviorEv
 /* dScMgSnowball_c::Behavior -- vtable slot 6, ov006 0x021283a4.
  *
@@ -1962,9 +1867,6 @@ s32 dScMgSnowball_c::Behavior()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 17 -- _ZN15dScMgSnowball_c8OnKickedEv, 0x02128fb8, size 0x1f8 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15dScMgSnowball_c8OnKickedEv
 /* This member's legacy file wrapped its body in `extern "C" { }`, which the TU
    splitter refuses to parse, so the block below is carried over verbatim --
@@ -1975,8 +1877,6 @@ s32 dScMgSnowball_c::Behavior()
    repeats no-ops. */
 
 extern "C" {
-// recovered name: dScMgSnowball_c_OnKicked
-/* recovered: renamed to Class_Method */
 /* dScMgSnowball_c::OnKicked - recovered from vtable slot identity */
 
 #define V (self->mScrollY >> 12)
@@ -2014,35 +1914,20 @@ int dScMgSnowball_c::OnKicked()
 }
 #undef V
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 18 -- _ZN15dScMgSnowball_c8OnPushedEv, 0x021291b0, size 0x24 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15dScMgSnowball_c8OnPushedEv
-// recovered name: dScMgSnowball_c_OnPushed
-/* recovered: renamed to Class_Method, declarations from a shared header */
-/* recovered: renamed to Class_Method */
 /* dScMgSnowball_c::OnPushed - recovered from vtable slot identity */
 int dScMgSnowball_c::OnPushed()
 {
     void *t = (void *)this;
  return ((dScMgBase_c *)t)->dScMgBase_c::OnPushed() != 0; }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 19 -- _ZN15dScMgSnowball_c11OnAttacked2Ev, 0x021291d4, size 0x24 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15dScMgSnowball_c11OnAttacked2Ev
-// recovered name: dScMgSnowball_c_OnAttacked2
-/* recovered: renamed to Class_Method, declarations from a shared header */
-/* recovered: renamed to Class_Method */
 /* dScMgSnowball_c::OnAttacked2 - recovered from vtable slot identity */
 int dScMgSnowball_c::OnAttacked2()
 {
     void *t = (void *)this;
  return ((dScMgBase_c *)t)->dScMgBase_c::OnAttacked2() != 0; }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 20 -- _ZN15dScMgSnowball_c16CleanupResourcesEv, 0x021291f8, size 0x24 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15dScMgSnowball_c16CleanupResourcesEv
 /* dScMgSnowball_c::CleanupResources -- vtable slot 3, ov006 0x021291f8.
  *
@@ -2061,12 +1946,7 @@ s32 dScMgSnowball_c::CleanupResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 21 -- _ZN15dScMgSnowball_c13OnYoshiTryEatEi, 0x0212921c, size 0x4c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15dScMgSnowball_c13OnYoshiTryEatEi
-// recovered name: dScMgSnowball_c_OnYoshiTryEat_0212921c
-/* recovered: renamed to Class_Method, declarations from a shared header */
 /* recovered: renamed to Class_Method, vtable slot 18 -- an override of
    dScMgBase_c::OnYoshiTryEat(int). The signature must repeat the base
    declaration exactly, or mwcc appends a slot instead of overriding. */
@@ -2081,9 +1961,6 @@ void dScMgSnowball_c::OnYoshiTryEat(int i)
   func_ov006_02126a98((char *)c);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 22 -- _ZN15dScMgSnowball_c13InitResourcesEv, 0x02129268, size 0x344 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN15dScMgSnowball_c13InitResourcesEv
 /* dScMgSnowball_c::InitResources -- vtable slot 0, ov006 0x02129268.
  *

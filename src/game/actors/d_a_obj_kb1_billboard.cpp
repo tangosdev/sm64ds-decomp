@@ -9,7 +9,7 @@
  * first and UpdateModelTransform last. InitResources is the key function; the
  * inline destructor emits retail D1 then D0 with this class's RTTI and vtable.
  *
- * Leftover:
+ * leftovers:
  * - data_ov044_02111680 model handle; SharedFilePtr.h has no fields
  * - Matrix4x3_FromRotationY stays a free function (no header method)
  * - pad_0d0 unused (not live)

@@ -1,72 +1,22 @@
 //cpp
-/* Reconstructed translation unit.
- * ov085/daKinopio_c  (15 functions)
+/* The Toad NPC (KINOPIO registry): idle and talk states, head tracking,
+ * star-guard dialogue, and a variant-1 companion spawn. 15 functions.
  *
- * The Toad NPC ("KINOPIO" in the cartridge's own registry). The class identity
- * is the ROM's: ov085 0x0212fe5c holds the length-prefixed string
- * "11daKinopio_c", 0x0212fe50 is the __si_class_type_info record that names it,
- * and 0x0212feb8 is its vtable. No part of this name is coined.
+ * Load-bearing orders, all measured: common.h before math/Matrix.h (the
+ * flat Matrix4x3 spelling keeps the destructor group D1,D0); source
+ * ROM-ascending under defer_codegen off; the destructor is declared in
+ * the header and defined out of line below (D1 then D0, no D2).
  *
- * FUNCTION ORDER IS ROM-ASCENDING. This TU disables deferred code generation so
- * CodeWarrior emits each definition where it stands, which is also what puts the
- * destructor pair out in the cartridge's own order: ov085 has D1 at 0x02129020
- * BELOW D0 at 0x02129060 and no D2 at all. The two sibling TUs in this same
- * overlay, src/actors/daMip_c.cpp and src/game/actors/d_a_c_jugem.cpp, have the
- * identical destructor shape and are built the same way.
- *
- * The destructor is declared inline in include/daKinopio_c.h and stays that way.
- * That is not a style choice: the two legacy one-function sources below are
- * still the enrolled providers of 0x02129020 and 0x02129060 in
- * config/arm9/overlays/ov085/delinks.txt, and each of them materializes the
- * variant it is licensed for by USING the inline definition. Moving the
- * definition out of the class would leave both of those files emitting a call to
- * a destructor nothing defines. So this TU does not spell the destructor at all:
- * with deferred code generation off, the vtable this TU emits is what drags the
- * inline definition in, and it comes out D1 then D0 at the head of the section
- * list, where the cartridge has it.
- *
- * Assembled from these legacy one-function sources (ROM address order):
- *   [0]  0x02129020  _ZN11daKinopio_cD1Ev.cpp
- *   [1]  0x02129060  _ZN11daKinopio_cD0Ev.cpp
- *   [2]  0x021290b4  _ZN11daKinopio_c12GetMessageIDEv.cpp
- *   [3]  0x021291ac  _ZN11daKinopio_c12St_Talk_MainEv.cpp
- *   [4]  0x0212943c  _ZN11daKinopio_c12St_Talk_InitEv.cpp
- *   [5]  0x02129470  _ZN11daKinopio_c12St_Idle_MainEv.cpp
- *   [6]  0x021294f0  _ZN11daKinopio_c12St_Idle_InitEv.cpp
- *   [7]  0x02129524  _ZN11daKinopio_c8SetStateEi.cpp
- *   [8]  0x02129570  _ZN11daKinopio_c8RunStateEv.cpp
- *   [9]  0x021295bc  _ZN11daKinopio_c15UpdateModelPoseEv.cpp
- *   [10] 0x021297e8  _ZN11daKinopio_c16CleanupResourcesEv.cpp
- *   [11] 0x02129854  _ZN11daKinopio_c6RenderEv.cpp
- *   [12] 0x02129878  _ZN11daKinopio_c8BehaviorEv.cpp
- *   [13] 0x02129a7c  _ZN11daKinopio_c13InitResourcesEv.cpp
- *   [14] 0x02129cd0  d_a_kinopio.c
- *
- * The last of those, d_a_kinopio.c, is absent from build/tu_map.json's span:
- * tu_map segments on symbol NAME, and `daKinopio_c_classInit` is neither
- * `func_ov085_*` nor `_ZN11daKinopio_c*`, so nothing labels it. It is contiguous
- * -- 0x02129cd0 + 0x48 = 0x02129d18, which is the next class's destructor -- and
- * it is this class's own factory: it allocates this class's size and installs
- * this class's vtable. The same was true of daMip_c's and daC_Jugem_c's
- * factories in this overlay, and it belongs here for the same reason.
- *
- * FUNCTIONS cannot carry per-member declarations the way types can -- a class
- * member function may not sit inside a linkage-specification region -- so every
- * external call this TU makes is declared once, below, with C linkage, on one
- * reconciled signature. Where the legacy files disagreed, the reconciliation is
- * the most complete observation: `void *` over `char *`/`u32` for a returned
- * pointer, `int` over `void` wherever any member TESTS the result, and the real
- * SharedFilePtr type over the `int[]` a single member spelled it with.
- *
- * ONE reconciliation is not merely a spelling. `IsStarCollectedInCurLevel` was
- * declared with NO parameters by St_Talk_Main and with one `int` by
- * InitResources, and the two cannot coexist under C linkage. The cartridge
- * settles it: at 0x021292e4 St_Talk_Main loads mStarID into r0, compares it with
- * 0xff, and branches to the call at 0x021292f0 with that value still in r0. The
- * zero-argument spelling reproduced those bytes only because the comparison had
- * already left the argument in the right register. The one-parameter form is
- * what the ROM is doing, so it is what this TU declares, and St_Talk_Main now
- * passes mStarID explicitly.
+ * Leftover: math/vector helpers and game-state free functions keep
+ *   linker names (no header homes).
+ * Leftover: dBgW_KcMbg::SetFile, dCcAc_c::Init, ModelAnim::SetAnim,
+ *   DropShadowRadHeight and Particle::System::NewSimple keep mangled
+ *   spellings (Fix12<int> by value, wall 6az).
+ * Leftover: the companion Spawn keeps its mangled spelling: forming
+ *   a Vector3 reference over int storage is not free, unlike the
+ *   star Spawn's real local.
+ * Leftover: data_0209f2f8 / data_0209caa0 / data_0209f318 and the
+ *   ov085/ov002 file homes keep linker names.
  */
 /* common.h FIRST, and the order is load-bearing. Both it and math/Matrix.h
  * define Matrix4x3 behind one shared guard -- flat `s32 m[12]` here, and
@@ -85,6 +35,8 @@
 #include "common.h"
 #include "daKinopio_c.h"
 #include "SharedFilePtr.h"
+#include "Player.h"
+#include "Message.h"
 #include "dCc_c.h"
 #include "dBgCh_Gnd.h"
 
@@ -177,10 +129,8 @@ void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
 
 #pragma defer_codegen off
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinals 0 and 1 -- _ZN11daKinopio_cD1Ev 0x02129020 size 0x40,
                           _ZN11daKinopio_cD0Ev 0x02129060 size 0x54 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11daKinopio_cD1Ev
 // @symbol _ZN11daKinopio_cD0Ev
 /* recovered: real C++ destructor -- the compiler emits the whole body.
@@ -202,9 +152,6 @@ daKinopio_c::~daKinopio_c()
 {
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- _ZN11daKinopio_c12GetMessageIDEv, 0x021290b4, size 0xf8 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11daKinopio_c12GetMessageIDEv
 /* Which line of dialogue this Toad says. The player's own offset at +8 shifts
  * the id per character; the 0x32 mode overrides it entirely. */
@@ -240,9 +187,6 @@ u16 daKinopio_c::GetMessageID()
     return (u16)sum;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- _ZN11daKinopio_c12St_Talk_MainEv, 0x021291ac, size 0x290 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11daKinopio_c12St_Talk_MainEv
 /* This member's legacy file carried `#pragma opt_propagation off`. That pragma
    is file-global last-wins in mwccarm, so it is bracketed here rather than left
@@ -269,7 +213,7 @@ void daKinopio_c::St_Talk_Main()
         playerPos.z = pos[2];
     }
     angle = Vec3_HorzAngle((Vector3 *)(c + 0x5c), &playerPos);
-    talkState = _ZN6Player12GetTalkStateEv(player);
+    talkState = ((Player *)player)->GetTalkState();
     switch (talkState) {
     case 0: {
         if (_Z14ApproachLinearRsss(&mAngleY, angle, 0x800) == 0)
@@ -291,8 +235,7 @@ void daKinopio_c::St_Talk_Main()
             messagePos.z = z;
             (void)x;
         }
-        _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(
-            player, c, (u32)(s16)messageID, &messagePos, 0, 0);
+        ((Player *)player)->ShowMessage(*this, (u32)(s16)messageID, &messagePos, 0, 0);
         return;
     }
     case 1:
@@ -324,10 +267,10 @@ void daKinopio_c::St_Talk_Main()
             if (found != 0) {
                 _ZN7fBase_c18MarkForDestructionEv(found);
                 mCapUniqueID = 0;
-                _ZN8dActor_c13SpawnSoundObjEj(c, 1);
+                SpawnSoundObj(1);
                 {
                     u32 param = 0x13;
-                    u8 character = *(u8 *)(player + 0x6d9);
+                    u8 character = ((Player *)player)->mCharacter;
                     _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
                         0x10d, param | ((u32)character << 8),
                         &playerPos, 0, mAreaId, -1);
@@ -338,14 +281,11 @@ void daKinopio_c::St_Talk_Main()
 
     if (_ZN5Sound7PlaySubEjjj5Fix12IiEb(0x25, 0x7f, 0, 0x7222, 0) == 0)
         return;
-    _ZN7Message7EndTalkEv();
+    Message::EndTalk();
     SetState(0);
 }
 #pragma opt_propagation on
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- _ZN11daKinopio_c12St_Talk_InitEv, 0x0212943c, size 0x34 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11daKinopio_c12St_Talk_InitEv
 void daKinopio_c::St_Talk_Init()
 {
@@ -355,9 +295,6 @@ void daKinopio_c::St_Talk_Init()
         &mModelAnim, file, 0, 0x1000, flags);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- _ZN11daKinopio_c12St_Idle_MainEv, 0x02129470, size 0x80 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11daKinopio_c12St_Idle_MainEv
 void daKinopio_c::St_Idle_Main()
 {
@@ -368,21 +305,18 @@ void daKinopio_c::St_Idle_Main()
     void *actor = _ZN8dActor_c10FindWithIDEj(*(u32 *)(self + 0xf8));
     if (actor == 0)
         return;
-    int isPlayer = (*(u16 *)((char *)actor + 0xc) == 0xbf) ? 1 : 0;
+    int isPlayer = (((dActor_c *)actor)->actorID == 0xbf) ? 1 : 0;
     if (!isPlayer)
         return;
 
     mTalkPlayer = (Player *)actor;
-    if (_ZN6Player9StartTalkER7fBase_cb(mTalkPlayer, this, 0) == 0)
+    if (mTalkPlayer->StartTalk(*this, 0) == 0)
         return;
 
-    _ZN7Message11PrepareTalkEv();
+    Message::PrepareTalk();
     SetState(1);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- _ZN11daKinopio_c12St_Idle_InitEv, 0x021294f0, size 0x34 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11daKinopio_c12St_Idle_InitEv
 void daKinopio_c::St_Idle_Init()
 {
@@ -390,9 +324,6 @@ void daKinopio_c::St_Idle_Init()
         &mModelAnim, ((BCA_File **)&data_ov085_02130488)[1], 0, 0x1000, 0);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- _ZN11daKinopio_c8SetStateEi, 0x02129524, size 0x4c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11daKinopio_c8SetStateEi
 void daKinopio_c::SetState(s32 state)
 {
@@ -401,9 +332,6 @@ void daKinopio_c::SetState(s32 state)
     (this->*data_ov085_0212fe88[index].init)();
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 8 -- _ZN11daKinopio_c8RunStateEv, 0x02129570, size 0x4c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11daKinopio_c8RunStateEv
 void daKinopio_c::RunState()
 {
@@ -411,10 +339,8 @@ void daKinopio_c::RunState()
     (this->*data_ov085_0212fe88[index].main)();
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 9 -- _ZN11daKinopio_c15UpdateModelPoseEv, 0x021295bc,
                     size 0x22c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11daKinopio_c15UpdateModelPoseEv
 /* An array-only wrapper keeps the C++ aggregate copies in the same ldm/stm form
  * the original C-shaped match used. It stays local to the member that recovered
@@ -481,10 +407,8 @@ void daKinopio_c::UpdateModelPose()
         c, c + 0x16c, c + 0x1c4, 0x50000, 0x64000, 0xf);
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 10 -- _ZN11daKinopio_c16CleanupResourcesEv, 0x021297e8,
                      size 0x6c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11daKinopio_c16CleanupResourcesEv
 /* The three ov002 handles are released only by the variant that took them. The
  * legacy file reached all six through an `int[]` spelling and a cast; they are
@@ -503,9 +427,6 @@ int daKinopio_c::CleanupResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 11 -- _ZN11daKinopio_c6RenderEv, 0x02129854, size 0x24 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11daKinopio_c6RenderEv
 /* One call. THE CALL IS QUALIFIED, AND THAT IS LOAD-BEARING. Model::Render is
  * virtual (slot 5 of _ZTV5Model) and ModelAnim overrides it, so a plain
@@ -520,9 +441,6 @@ int daKinopio_c::Render()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 12 -- _ZN11daKinopio_c8BehaviorEv, 0x02129878, size 0x204 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11daKinopio_c8BehaviorEv
 /* This Toad watches the player and turns his head; everything else in the
  * function is bookkeeping around that.
@@ -549,13 +467,13 @@ int daKinopio_c::Behavior()
     RunState();
     mModelAnim.UpdateVerts();
 
-    char *p = (char *)_ZN8dActor_c13ClosestPlayerEv(this);
+    Player *p = ClosestPlayer();
     if (p != 0) {
         s32 threshold = 0xfa000;
         if (data_0209f2f8 == 0x32)
             threshold = 0x1f4000;
 
-        Vector3 *psrc = (Vector3 *)(p + 0x5c);
+        Vector3 *psrc = (Vector3 *)&p->mPosX;
         Vector3 v;
         v.x = psrc->x;
         v.y = psrc->y;
@@ -616,16 +534,14 @@ int daKinopio_c::Behavior()
 
     mModelAnim.ApplyOpacity((u32)(u8)(mOpacity >> 3), 1);
 
-    ((dCc_c *)&mCollider)->Clear();
-    ((dCc_c *)&mCollider)->Update();
+    mCollider.Clear();
+    mCollider.Update();
 
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
 /* ROM ordinal 13 -- _ZN11daKinopio_c13InitResourcesEv, 0x02129a7c,
                      size 0x254 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11daKinopio_c13InitResourcesEv
 /* Spawn-time setup, and most of it is unpacking the spawn parameter.
  *
@@ -653,11 +569,10 @@ int daKinopio_c::Behavior()
 int daKinopio_c::InitResources()
 {
     Vector3 objPos;
-    _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov085_02130488);
-    _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov085_02130490);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModelAnim,
-        _ZN5Model8LoadFileER13SharedFilePtr(&data_ov085_02130480), 1, 0x16);
-    _ZN11ShadowModel12InitCylinderEv(&mShadowModel);
+    Animation::LoadFile(data_ov085_02130488);
+    Animation::LoadFile(data_ov085_02130490);
+    mModelAnim.SetFile((BMD_File *)Model::LoadFile(data_ov085_02130480), 1, 0x16);
+    mShadowModel.InitCylinder();
     _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mCollider, this,
         0x78000, 0x8c000, 0x4200004, 0);
     mOpacity = 0xff;
@@ -673,7 +588,7 @@ int daKinopio_c::InitResources()
         _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9a0);
         _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9c0);
         if (func_02013a44() != 0) {
-            void *p = _ZN8dActor_c13ClosestPlayerEv(this);
+            Player *p = ClosestPlayer();
             if (p == 0)
                 goto after_spawn;
             {
@@ -721,9 +636,6 @@ int daKinopio_c::InitResources()
 }
 #pragma opt_propagation on
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 14 -- daKinopio_c_classInit, 0x02129cd0, size 0x48 */
-/* -------------------------------------------------------------------------- */
 // @symbol daKinopio_c_classInit
 /* The registry factory behind the KINOPIO profile. It allocates 0x210 -- this
  * class's own sizeof -- and installs this class's vtable, which is the second of
