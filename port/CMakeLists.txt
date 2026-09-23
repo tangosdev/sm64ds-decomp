@@ -22198,9 +22198,9 @@ endforeach()
 
 # W23-6 HOSTGEN REFUSALS (LINK15 batch W23-6)
 # ===========================================================================
-# run linkfull wave 23, lane HGFRONT1. Three matched TUs whose host copies were
-# held by a PORT_HOST_ABI tag naming an MSVC front-end refusal: two of those
-# refusals are gone from the synced src, and the third is answered by
+# run linkfull wave 23, lane HGFRONT1. Four matched TUs whose host copies were
+# held by a PORT_HOST_ABI tag naming an MSVC front-end refusal: three of those
+# refusals are gone from the synced src, and the fourth is answered by
 # tools/hostgen.py (its row is on PORT_HOSTGEN_TU near the top of this file).
 # port/slice_w23_hostgen.txt carries the rows, the measurements and the two rows
 # of the batch that stay out. The three targets are the three that compiled the

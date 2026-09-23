@@ -19,13 +19,21 @@
 #       through tools/hostgen.py (it is on PORT_HOSTGEN_TU), whose VOIDPP_ARITH
 #       rewrite now reaches this spelling. Host copy was
 #       unmatched/Ov002_CutsceneCmd_020f7780.c.
+#   _ZN5Bully16UpdateDeathStateEv  ov064 0x02117220, BULLY's slot-32 AfterClsn
+#       tag: C2761, out-of-class member redeclarations. The synced TU has none
+#       left and compiles clean. unmatched/Bully_AfterClsn.cpp keeps only the
+#       reverse face hal/actor_classes_ov064.cpp's slot-32 shim calls.
 #
-# EVIDENCE. All three are MATCHING at 2004/b56 with --strict-relocs against the
+# EVIDENCE. All four are MATCHING at 2004/b56 with --strict-relocs against the
 # cartridge's own overlay bytes (tools/match.py by ROM address, overlay bins
 # from extracted/overlays/ at the overlays.yaml bases). Each host body was
 # compared instruction by instruction with the object MSVC builds from the src:
 # ov002's is identical; ov080's and ov064's differ only by the /GS cookie the
-# host copy's local types drew.
+# host copy's local types drew; Bully's also calls the real dActor_c::Spawn and
+# dActor_c::FindWithID members where the host copy called its shadow's
+# spellings, and passes the area-id byte zero-extended instead of
+# sign-extended, which nothing can see: the one reader, func_02010e78, stores
+# the low byte alone.
 #
 # THE BATCH'S OTHER TWO ROWS ARE NOT HERE, and neither is a front-end question
 # any more: src/_ZN13PrincessPeach12UpdateLookAtEv.cpp and
@@ -40,3 +48,4 @@
 src/func_ov080_02124088.cpp
 src/func_ov064_02119afc.cpp
 src/func_ov002_020f7780.c
+src/_ZN5Bully16UpdateDeathStateEv.cpp
