@@ -27,3 +27,6 @@ src/_ZN7dBgW_KcD0Ev.cpp
 src/_ZN8dM3dGSphD0Ev.cpp
 src/_ZN9dBgCh_GndD0Ev.cpp
 src/_ZN9dBgCh_LinD0Ev.cpp
+src/_ZN13ExpandingHeapD0Ev.cpp
+src/_ZN4HeapD0Ev.cpp
+src/_ZN9SolidHeapD0Ev.cpp

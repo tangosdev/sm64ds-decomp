@@ -2285,7 +2285,12 @@ __ZN12EnemySpawnerD0Ev                                                   ??1Enem
 
 __ZN14EnemySwitchTagD0Ev                                                 ??1EnemySwitchTag@@UAE@XZ                                        0x020f162c D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
-__ZN13ExpandingHeapD0Ev                                                  _ZN13ExpandingHeapD1Ev                                           0x0203c9c0 D _ZN6Memory16operator_delete2EPv  -
+# RETIRED at D0ARM10 2026-09-23 (run linkfull, batch B2 heaps): src/_ZN13ExpandingHeapD0Ev.cpp
+# defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
+# port/slice_w25_d0arm10.txt. The arm makes the two calls this row's face made:
+# the D1 body (??1ExpandingHeap@@UAE@XZ), then ExpandingHeap::operator delete,
+# which is _ZN6Memory16operator_delete2EPv(self), read off the object.
+#__ZN13ExpandingHeapD0Ev                                                  _ZN13ExpandingHeapD1Ev                                           0x0203c9c0 D _ZN6Memory16operator_delete2EPv  -
 
 __ZN17ExtendingPlatformD0Ev                                              ??1ExtendingPlatform@@UAE@XZ                                     0x02111878 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
@@ -2462,7 +2467,12 @@ __ZN13SnowmanBreathD0Ev                                                  _ZN13Sn
 
 __ZN11SnowmanHeadD0Ev                                                    ??1SnowmanHead@@UAE@XZ                                           0x0211ff7c D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
-__ZN9SolidHeapD0Ev                                                       _ZN9SolidHeapD1Ev                                                0x0203c970 D _ZN6Memory16operator_delete2EPv  -
+# RETIRED at D0ARM10 2026-09-23 (run linkfull, batch B2 heaps): src/_ZN9SolidHeapD0Ev.cpp
+# defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
+# port/slice_w25_d0arm10.txt. The arm makes the two calls this row's face made:
+# the D1 body (??1SolidHeap@@UAE@XZ), then SolidHeap::operator delete,
+# which is _ZN6Memory16operator_delete2EPv(self), read off the object.
+#__ZN9SolidHeapD0Ev                                                       _ZN9SolidHeapD1Ev                                                0x0203c970 D _ZN6Memory16operator_delete2EPv  -
 
 __ZN9SpikeBombD0Ev                                                       ??1SpikeBomb@@UAE@XZ                                             0x02118470 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
@@ -3015,7 +3025,12 @@ __ZN5dPa_c7level_c24fitWaterSimpleCallback_c8OnUpdateERN8Particle6SystemEb ?OnUp
 # had no ruling that says how far a reorder may go.
 __ZN12daBgSnmBdy_cD0Ev                                                   ??1daBgSnmBdy_c@@UAE@XZ                                          0x0211f048 D _ZN6Memory10DeallocateEPvP4Heap  GAME_HEAP_PTR
 __ZN15dScMgCurling2_cD0Ev                                                ??1dScMgCurling2_c@@UAE@XZ                                       0x020e3878 D _ZN6Memory10DeallocateEPvP4Heap  GAME_HEAP_PTR
-__ZN4HeapD0Ev                                                            ??1Heap@@UAE@XZ                                                  0x0203ca20 D _ZN6Memory16operator_delete2EPv  -
+# RETIRED at D0ARM10 2026-09-23 (run linkfull, batch B2 heaps): src/_ZN4HeapD0Ev.cpp
+# defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
+# port/slice_w25_d0arm10.txt. The arm makes the two calls this row's face made:
+# the D1 body (??1Heap@@UAE@XZ), then Heap::operator delete,
+# which is _ZN6Memory16operator_delete2EPv(self), read off the object.
+#__ZN4HeapD0Ev                                                            ??1Heap@@UAE@XZ                                                  0x0203ca20 D _ZN6Memory16operator_delete2EPv  -
 # RETIRED at D0ARM10 2026-09-23 (run linkfull, batch B1 colliders): src/_ZN4dBgWD0Ev.cpp
 # defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
 # port/slice_w25_d0arm10.txt. The arm makes the two calls this row's face made:
