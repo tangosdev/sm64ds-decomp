@@ -17417,6 +17417,14 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     # the launcher's settings.json, read by the game (camera turn direction,
     # and the four screen-gap keys hal/screen_gap.cpp reads)
     hal/host_settings.cpp hal/screen_gap.cpp
+    # run perf1: the player performance log, playlog/perf-<id>.jsonl beside the
+    # flight recorder. A second reader of what the F3 overlay already measures,
+    # so it adds no measurement path and no picture; the frame pump hands it
+    # one struct a frame and it writes one line every five seconds. Every
+    # hardware string it names is reached through LoadLibraryA/GetProcAddress
+    # or the CPUID instruction, so the import table does not move -- the same
+    # rule the two graphics-card files below keep.
+    hal/perf_log.cpp
     # the controller backend: XInput slots 0..3, then a DirectInput pad
     # (Switch Pro, DualShock, DualSense, generic HID) mapped onto the XInput
     # mask. Both DLLs loaded dynamically; no xinput/dinput8/dxguid lib. On
@@ -17846,6 +17854,14 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     # the launcher's settings.json, read by the game (camera turn direction,
     # and the four screen-gap keys hal/screen_gap.cpp reads)
     hal/host_settings.cpp hal/screen_gap.cpp
+    # run perf1: the player performance log, playlog/perf-<id>.jsonl beside the
+    # flight recorder. A second reader of what the F3 overlay already measures,
+    # so it adds no measurement path and no picture; the frame pump hands it
+    # one struct a frame and it writes one line every five seconds. Every
+    # hardware string it names is reached through LoadLibraryA/GetProcAddress
+    # or the CPUID instruction, so the import table does not move -- the same
+    # rule the two graphics-card files below keep.
+    hal/perf_log.cpp
     # the controller backend: XInput slots 0..3, then a DirectInput pad
     # (Switch Pro, DualShock, DualSense, generic HID) mapped onto the XInput
     # mask. Both DLLs loaded dynamically; no xinput/dinput8/dxguid lib. On
@@ -18297,6 +18313,40 @@ else()
     message(WARNING "python not found: the port ABI check targets were not "
                     "created")
 endif()
+
+# THE EXE'S OWN VERSION STRING, FOR THE CODE THAT HAS TO SAY IT.
+#
+# The performance log's header line names the game's version, and a report
+# whose version came from a second copy of the number is a report that will one
+# day name the wrong one. res/walk_window.rc below already holds the release
+# version, is already bumped by hand per release, and is already the number a
+# player sees in the exe's file properties -- so it is the one source, and this
+# block lifts its ProductVersion string out at configure time into a
+# compile-time define. Nothing to keep in step, and a release that bumps the
+# resource bumps the report with it.
+#
+# The rc file joins the configure-time inputs so editing it reconfigures by
+# itself (see "THE CONFIGURE-TIME INPUTS, REGISTERED" above); without that the
+# define would keep the previous release's number until something else forced a
+# configure.
+set(PORT_GAME_VERSION "")
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/res/walk_window.rc"
+     PORT_RC_PRODUCTVERSION_LINES REGEX "VALUE[ \t]+\"ProductVersion\"")
+foreach(rcline IN LISTS PORT_RC_PRODUCTVERSION_LINES)
+    if(rcline MATCHES "\"ProductVersion\"[ \t]*,[ \t]*\"([0-9][0-9.]*)\"")
+        set(PORT_GAME_VERSION "${CMAKE_MATCH_1}")
+    endif()
+endforeach()
+if(PORT_GAME_VERSION STREQUAL "")
+    message(WARNING "res/walk_window.rc has no readable ProductVersion: the "
+                    "performance report's gameVersion will be empty")
+endif()
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
+             "${CMAKE_CURRENT_SOURCE_DIR}/res/walk_window.rc")
+target_compile_definitions(walk_window PRIVATE
+    PORT_GAME_VERSION="${PORT_GAME_VERSION}")
+target_compile_definitions(walk_window_hires PRIVATE
+    PORT_GAME_VERSION="${PORT_GAME_VERSION}")
 
 # Windows identity resources: version info + icon for the game-shaped exes a
 # player can meet (the bundle ships walk_window; hires is its sibling build of
