@@ -1,15 +1,15 @@
-/* PyramidLift, reconstructed from its factory, destructor pair, vtable and
- * five matched methods.
+/* daDpLift_c -- the DP_LIFT actor, reconstructed from its factory, destructor
+ * pair, vtable and five matched methods.
  *
- * BASE: dBgActor_c, direct. The cartridge's __si_class_type_info record at
- * ov025 0x02113994 points to _ZTI10dBgActor_c at ov002 0x021089ec with
- * subobject offset zero. The ROM RTTI name at 0x021139a0 is `10daDpLift_c`,
- * while every configured method name uses the compatibility spelling
- * `PyramidLift`. Consequently a compiler object whose key function emits
- * `_ZTI11PyramidLift`/`_ZTS11PyramidLift` is not ROM metadata and must remain
- * discarded by per-function object isolation. `_ZTV11PyramidLift` is likewise
- * a compiler-facing alias for the ROM-owned daDpLift_c address point; its slot
- * shape and targets are nevertheless checked directly below.
+ * NAME: the cartridge spells this class daDpLift_c. In ov025 (base 0x021111a0)
+ * the typeinfo word of the vtable header, at 0x021139d0 (address point - 4),
+ * is 0x02113994. That __si_class_type_info record reads [0x0209a764
+ * (_ZTVN3abi20__si_class_type_infoE), 0x021139a0, 0x021089ec], and the
+ * string at 0x021139a0 is "10daDpLift_c\0". The tree previously called the
+ * class PyramidLift, a coined name present only on the vtable address.
+ *
+ * BASE: dBgActor_c, direct -- the record's third word is _ZTI10dBgActor_c at
+ * ov002 0x021089ec, with subobject offset zero.
  *
  * SIZE 0x3fc is the literal passed by daDpLift_c_classInit (historically
  * PyramidLift_Spawn) to fBase_c::operator
@@ -22,12 +22,12 @@
  * THE VTABLE at ov025 0x021139d4 has the same 32 slots as dBgActor_c. Only
  * slots 0, 3, 6, 9, 16 and 17 differ, exactly the overrides declared here.
  */
-#ifndef PYRAMIDLIFT_H
-#define PYRAMIDLIFT_H
+#ifndef DADPLIFT_C_H
+#define DADPLIFT_C_H
 
 #include "dBgActor_c.h"
 
-struct PyramidLift : dBgActor_c {
+struct daDpLift_c : dBgActor_c {
     Model mModel2;                    /* 0x320 */
     s32 mBasePosX;                    /* 0x370 */
     s32 mBasePosY;                    /* 0x374 */
@@ -39,11 +39,10 @@ struct PyramidLift : dBgActor_c {
     u8  mNextBullet;                  /* 0x3f8 */
     u8  pad_3f9[0x3];
 
-    /* INLINE ON PURPOSE. The ROM orders the independently enrolled variants
-       D1 then D0 and has no D2 home. Explicit use in the two destructor files
-       makes mwcc emit the required variant while objisolate discards the
-       helper and the other variant. */
-    virtual ~PyramidLift() {}
+    /* OUT OF LINE, DECLARED FIRST. src/actors/daDpLift_c.cpp defines it
+       first under `#pragma defer_codegen off`, which emits D1 then D0 -- the
+       cartridge's order -- then a D2 the cartridge has no home for. */
+    virtual ~daDpLift_c();
 
     virtual s32 InitResources();       /* slot  0 */
     virtual s32 CleanupResources();    /* slot  3 */
@@ -53,7 +52,7 @@ struct PyramidLift : dBgActor_c {
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char PyramidLift_size_must_be_0x3fc[sizeof(PyramidLift) == 0x3fc ? 1 : -1];
+typedef char daDpLift_c_size_must_be_0x3fc[sizeof(daDpLift_c) == 0x3fc ? 1 : -1];
 #endif
 
-#endif /* PYRAMIDLIFT_H */
+#endif /* DADPLIFT_C_H */

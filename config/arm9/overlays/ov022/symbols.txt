@@ -12,12 +12,12 @@ _ZN19RotatingPlatformLllD0Ev kind:function(arm,size=0x64) addr:0x021115f8
 _ZN19RotatingPlatformLll16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x0211165c
 _ZN19RotatingPlatformLll13InitResourcesEv kind:function(arm,size=0x18) addr:0x02111670
 daObjFl_Koma_D_c_classInit kind:function(arm,size=0x3c) addr:0x02111688
-_ZN19FloatOnLavaPlatformD1Ev kind:function(arm,size=0x44) addr:0x021116c4
-_ZN19FloatOnLavaPlatformD0Ev kind:function(arm,size=0x58) addr:0x02111708
-_ZN19FloatOnLavaPlatform16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02111760
-_ZN19FloatOnLavaPlatform6RenderEv kind:function(arm,size=0x28) addr:0x021117a4
-_ZN19FloatOnLavaPlatform8BehaviorEv kind:function(arm,size=0xa4) addr:0x021117cc
-_ZN19FloatOnLavaPlatform13InitResourcesEv kind:function(arm,size=0xac) addr:0x02111870
+_ZN15daObjFl_Block_cD1Ev kind:function(arm,size=0x44) addr:0x021116c4
+_ZN15daObjFl_Block_cD0Ev kind:function(arm,size=0x58) addr:0x02111708
+_ZN15daObjFl_Block_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02111760
+_ZN15daObjFl_Block_c6RenderEv kind:function(arm,size=0x28) addr:0x021117a4
+_ZN15daObjFl_Block_c8BehaviorEv kind:function(arm,size=0xa4) addr:0x021117cc
+_ZN15daObjFl_Block_c13InitResourcesEv kind:function(arm,size=0xac) addr:0x02111870
 func_ov022_0211191c kind:function(arm,size=0x20) addr:0x0211191c
 func_ov022_0211193c kind:function(arm,size=0x14) addr:0x0211193c
 daObjFl_Block_c_classInit kind:function(arm,size=0x30) addr:0x02111950
@@ -208,7 +208,7 @@ _ZTI15daObjFl_Block_c kind:data(any) addr:0x02113e68
 data_ov022_02113e6c kind:data(any) addr:0x02113e6c ambiguous
 _ZTS15daObjFl_Block_c kind:data(any) addr:0x02113e74
 g_profile_FL_BLOCK kind:data(any) addr:0x02113e88 ambiguous
-_ZTV19FloatOnLavaPlatform kind:data(any) addr:0x02113eac
+_ZTV15daObjFl_Block_c kind:data(any) addr:0x02113eac
 data_ov022_02113f20 kind:data(any) addr:0x02113f20 ambiguous
 _ZTI16daObjFl_London_c kind:data(any) addr:0x02113f2c
 _ZTS16daObjFl_London_c kind:data(any) addr:0x02113f38

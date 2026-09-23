@@ -24,16 +24,16 @@ revisions. Current corrections and proof identities follow in the dated
 
 ## What changed and why
 
-- Class/TU/symbol and module-qualified ROM scope: `daYurei_Mucho_c` in ov065.
+- Class/TU/symbol and module-qualified ROM scope: `daYurei_Mucho_c` in [ov065](../../../config/arm9/overlays/ov065/symbols.txt).
   The promoted TU owns `.text 0x02115ee0..0x02116f98`, 23 functions. No other
   section is claimed; this is the text-only route.
 - The reserved neighbour was not touched. `daBasabasa_c` (Swoop) begins at
-  0x02116f98 and shares `config/arm9/overlays/ov065/delinks.txt`; its entries are
+  0x02116f98 and shares [config/arm9/overlays/ov065/delinks.txt](../../../config/arm9/overlays/ov065/delinks.txt); its entries are
   byte-identical to the base commit's.
 
 ### The name
 
-The cartridge names this class. ov065 0x0211cb6c holds the `_ZTS` payload
+The cartridge names this class. [ov065](../../../config/arm9/overlays/ov065/symbols.txt) 0x0211cb6c holds the `_ZTS` payload
 `15daYurei_Mucho_c`, `_ZTI15daYurei_Mucho_c` at 0x0211cb60 points its +4 word at
 that string, and the vtable's -4 header word points back at the `_ZTI`. The
 string `Snufit` occurs nowhere in the cartridge. `tools/class_rename.py` did the
@@ -43,7 +43,7 @@ substitution, because a textual replacement corrupts the Itanium length prefix
 Two things had to be done by hand around it, both recorded in the rename commit:
 
 - `class_rename.py` refused with "`_ZTV15daYurei_Mucho_c` is already defined" --
-  ov065's symbols.txt already carried the ROM-named vtable row at 0x0211cba4
+  [ov065's symbols.txt](../../../config/arm9/overlays/ov065/symbols.txt) already carried the ROM-named vtable row at 0x0211cba4
   alongside a coined `_ZTV6Snufit` alias at the same address. The coined alias
   row was DELETED and nothing was added; exactly one spelling now survives at
   that address. The matching dead `extern int _ZTV6Snufit[];` came out of
@@ -68,11 +68,11 @@ The undercount's cause is in the code, not a judgement call:
 `tools.srcpath._SPAWN_RE` is `^(\w+)_Spawn$`, so `class_of` returns `None` for
 `daYurei_Mucho_c_classInit` and `tu_map` segments the factory as its own
 unlabelled unit. Filed as issue #2436. Absorbing the neighbour under either
-spelling gives the same answer here, because ov065 spells this factory
+spelling gives the same answer here, because [ov065](../../../config/arm9/overlays/ov065/symbols.txt) spells this factory
 `_classInit` and no `_Spawn` symbol exists for the class.
 
 Independent corroboration from a dated artifact:
-`notes/data/tu-merge-candidates.json` already recorded this ov065 unit as
+`notes/data/tu-merge-candidates.json` already recorded this [ov065](../../../config/arm9/overlays/ov065/symbols.txt) unit as
 `0x2115ee0..0x2116f98`, 23 functions.
 
 The factory had to fold anyway. `tu_names.candidate_stem('daYurei_Mucho_c')` is
@@ -116,9 +116,9 @@ mwcc's own D1/D0 vptr stores both write.
 
 ### A wrong callee the byte gate could not see
 
-The retired shard `func_ov065_021162c0.c` called `_ZN6EyerokD0Ev` -- ov066's name
-for address 0x02115f84. In ov065 that address is `func_ov065_02115f84`, the death
-helper two ordinals below, and ov065 is the module this branch links. The ROM's
+The retired shard `func_ov065_021162c0.c`(ROM Ordinal 4 used to assemble `daYurei_Mucho_c.cpp`, see [daYurei_Mucho_c.json](../../../config/tu_manifest.d/ov065/daYurei_Mucho_c.json)) called `_ZN6EyerokD0Ev` -- [ov066](../../../config/arm9/overlays/ov066/symbols.txt)'s name
+for address 0x02115f84. In [ov065](../../../config/arm9/overlays/ov065/symbols.txt) that address is [func_ov065_02115f84](../../../src/actors/daYurei_Mucho_c.cpp)(ROM Ordinal 2), the death
+helper two ordinals below, and [ov065](../../../config/arm9/overlays/ov065/symbols.txt) is the module this branch links. The ROM's
 own `bl 0x02115f84` at 0x02116314 decides it. `match.py` wildcards the relocated
 word, so the wrong callee reproduced the bytes; `linkcheck.py` is what closes it,
 and it now reports VERIFIED with 0 blind slots.
@@ -126,8 +126,8 @@ and it now reports VERIFIED with 0 blind slots.
 ### Style oracle
 
 Templated from `src/actors/daObjCtMecha03_c.cpp` and
-`config/tu_manifest.d/ov065/daObjCtMecha03_c.json` -- the most recent promoted
-ov065 sibling and the one on the live `src/actors/` convention.
+[config/tu_manifest.d/ov065/daObjCtMecha03_c.json](../../../config/tu_manifest.d/ov065/daObjCtMecha03_c.json) -- the most recent promoted
+[ov065](../../../config/arm9/overlays/ov065/symbols.txt) sibling and the one on the live `src/actors/` convention.
 `daObjCtMecha05_c` uses the older `src/game/actors/` path and is not the
 placement precedent. `src/actors/daBmb_c.cpp` supplied the folded-factory shape,
 since Mecha03 has no factory in its TU.
@@ -159,17 +159,17 @@ TU's own `extern "C"` block rather than reached by adding `decl_ActorBase.h`,
 `decl_ShadowModel.h`. Adding one of those headers to satisfy a single extern is
 what silently undoes a deliberate declaration choice elsewhere in the file.
 
-Three of ov065's four `.bss` State objects could not be given their real type
+Three of [ov065](../../../config/arm9/overlays/ov065/symbols.txt)'s four `.bss` State objects could not be given their real type
 here: `decl_common.h`, which this TU takes the vtable declaration from, already
 declares 0x0211d650 and 0x0211d660 as `char[]` and 0x0211d680 as a bare `int`,
 and a second differing declaration is a compile error. They are cast at each use.
 Only the address ever reaches the code, so the cast costs no bytes.
 
-The five-Vector3 stack aggregate in `func_ov065_02116364` was given a file-scope
+The five-Vector3 stack aggregate in [func_ov065_02116364](../../../src/actors/daYurei_Mucho_c.cpp) was given a file-scope
 name, `V3Quint`. As an unnamed local class mwccarm mangles its implicit
 destructor with a file-and-counter tag that moves whenever the file moves, so the
 manifest row licensing it would not have survived the move out of `src_tu/`. The
-emitted bytes are unchanged. Same remedy as `V3Quad` in `ov002/Player`.
+emitted bytes are unchanged. Same remedy as `V3Quad` in [ov002](../../../config/arm9/overlays/ov002/symbols.txt)/`Player`.
 
 ## Reconstruction dimensions
 
@@ -207,8 +207,8 @@ All commands run in `C:/tmp/sm64ds-sm64ds-yurei` at this tree, on the pinned
   collapsing the duplicate vtable alias, and `compiler-emitted data bytes verified`
   rises 44,560 -> 44,572, the new typeinfo record.
   The baseline control in the same run reports **9** `dsd check symbols` error
-  lines with NO TU substitution -- `overlay_100`, `overlay_102`, `data_020ad524`,
-  `data_020ad560`, `func_01ff98f4`, `func_01ff99a4`, `func_01ff9d40`, `_deq`,
+  lines with NO TU substitution -- `overlay_100`, `overlay_102`, [data_020ad524](../../../config/arm9/symbols.txt),
+  [data_020ad560](../../../config/arm9/symbols.txt), `func_01ff98f4`, `func_01ff99a4`, `func_01ff9d40`, `_deq`,
   `func_01ff9e2c`, all arm9/ITCM. By that control's own definition they belong to
   the tree, and the operative comparison (zero NEW symbol errors) passed.
 - **`tools/tubuild.py verify ov065/daYurei_Mucho_c`** -- "23/23 MATCH, objisolate
@@ -271,9 +271,9 @@ All commands run in `C:/tmp/sm64ds-sm64ds-yurei` at this tree, on the pinned
 ### The two gate results that were NOT clean, with their controls
 
 1. **`tools/tubuild.py linkcheck ov065/daYurei_Mucho_c` refuses** at step 4/8:
-   "isolate: intact TU preparation refused: ov065/daYurei_Mucho_c: intact
+   "isolate: intact TU preparation refused: [ov065](../../../config/arm9/overlays/ov065/symbols.txt)/daYurei_Mucho_c: intact
    production requires one .text claim and at least one non-text claim".
-   CONTROL: the identical command on `ov065/daObjCtMecha03_c` -- landed, merged,
+   CONTROL: the identical command on [ov065](../../../config/arm9/overlays/ov065/symbols.txt)/`daObjCtMecha03_c` -- landed, merged,
    also text-only, also `.text`-only -- fails at the same step with the identical
    message. This is the scratch-isolation path, not this TU. The intact-object
    link gate that does apply is the one inside `rombuild.py` step 4/6, which
@@ -300,15 +300,15 @@ All commands run in `C:/tmp/sm64ds-sm64ds-yurei` at this tree, on the pinned
 - **The 12 free helpers keep their address-derived names.** Eight of them are
   reached ONLY through the pointer-to-member records at 0x0211cb20..0x0211cb60,
   and `dsd` resolves those `.data` records BY NAME out of
-  `config/arm9/overlays/ov065/symbols.txt`. Renaming one is therefore a
-  same-commit symbols.txt edit, and no byte gate would catch a miss -- a PMF word
+  [config/arm9/overlays/ov065/symbols.txt](../../../config/arm9/overlays/ov065/symbols.txt). Renaming one is therefore a
+  same-commit `symbols.txt` edit, and no byte gate would catch a miss -- a PMF word
   is relocated, so `match.py` wildcards it. The evidence for individual names is
   not strong enough to spend that risk on in this stage. This is the single
   largest remaining improvement for the class.
 - **89 raw-offset lines** (94 occurrences) remain in the promoted source, and two
   `unk_` fields and three `pad_` runs remain in the header. "Promoted" is a
   packaging state; this class is not a finished reconstruction.
-- **The five `_ZTS` PARTIALs** are an extent question in symbols.txt, not a class
+- **The five `_ZTS` PARTIALs** are an extent question in `symbols.txt`, not a class
   model question, and match the landed siblings exactly. Closing them belongs to a
   separate change.
 - **The scout's dossier is renamed, not rewritten.** `notes/data/class-facts/`
@@ -327,17 +327,17 @@ All commands run in `C:/tmp/sm64ds-sm64ds-yurei` at this tree, on the pinned
   not carry a retired class name in one spelling and its ROM name in another.
   `extern int Snufit_Kill(int*);` was a dead declaration in
   `include/decl_common.h` -- no definition, no caller, and no such symbol in
-  `config/arm9/overlays/ov065/symbols.txt`, which spells the function
-  `func_ov065_021177e4`. It is deleted. It was NOT renamed to
+  [config/arm9/overlays/ov065/symbols.txt](../../../config/arm9/overlays/ov065/symbols.txt), which spells the function
+  [func_ov065_021177e4](../../../src/func_ov065_021177e4.cpp). It is deleted. It was NOT renamed to
   `daYurei_Mucho_c_Kill`, because the shard's own attribution turned out to be
   wrong on both halves, refuted by three ROM reads recorded in the shard's
-  header comment: 0x021177e4 is in no vtable in ov065 (neither
+  header comment: 0x021177e4 is in no vtable in [ov065](../../../config/arm9/overlays/ov065/symbols.txt) (neither
   `_ZTV15daYurei_Mucho_c` at 0x0211cb9c nor `_ZTV5Swoop`/`_ZTV12daBasabasa_c` at
   0x0211cc98 contains it); it sits inside the neighbour's run between
   `_ZN5SwoopD0Ev` (0x02116fe8) and `_ZN5Swoop16CleanupResourcesEv` (0x02117aa4),
   past this class's end at 0x02116f98; and its body calls `ModelAnim::SetAnim`
   on `t + 0x364`, where `daYurei_Mucho_c` holds a `ShadowModel`, while reading
-  `data_ov065_0211d6a0` from outside this class's bss band
+  [data_ov065_0211d6a0](../../../config/arm9/overlays/ov065/symbols.txt) from outside this class's bss band
   0x0211d600..0x0211d690. Naming it belongs to the `daBasabasa_c`/`Swoop` owner.
 
 ## Next action
@@ -372,7 +372,7 @@ The earlier statement that the `int` types were measured was incorrect.
 YUR-04 replaces the exact `UpdateYoshiEat(mWithMeshClsn)` call with the existing
 member interface and removes its redundant mangled declaration. All three methods
 in question were already declared in the included headers. The remaining Init
-calls have these measured constraints under 2004/b56:
+calls have these measured constraints under **2004/b56**:
 
 | Alternative | Result |
 | --- | --- |
@@ -384,11 +384,11 @@ calls have these measured constraints under 2004/b56:
 The existing ABI calls stay pending a coherent shared-interface repair. No alias
 or shared declaration was invented to disguise the unresolved destination.
 
-YUR-05 corrects the copy and metadata explanations. `Matrix4x3` is available
-through the model headers, and `Vector3` is available in types.h. At this include
-order, Matrix4x3 contains the existing non-POD Vector3. Replacing Mtx43's POD
-copies grows func_ov065_0211696c from 0x17c to 0x1c8; replacing the V3A copy
-with Vector3 grows func_ov065_02116364 from 0x224 to 0x234. The small POD views
+*YUR-05* corrects the copy and metadata explanations. `Matrix4x3` is available
+through the model headers, and `Vector3` is available in `types.h`. At this include
+order, `Matrix4x3` contains the existing non-POD `Vector3`. Replacing `Mtx43`'s POD
+copies grows [func_ov065_0211696c](../../../src/actors/daYurei_Mucho_c.cpp)(ROM Ordinal 13 of `daYurei_Mucho_c`) from 0x17c to 0x1c8; replacing the V3A copy
+with `Vector3` grows [func_ov065_02116364](../../../src/actors/daYurei_Mucho_c.cpp)(ROM Ordinal 6 of `daYurei_Mucho_c`) from 0x224 to 0x234. The small POD views
 remain documented matching constraints, not evidence that project types are absent.
 The ordinary subobject constructors also exist; the manual factory is unfinished
 reconstruction, not a requirement caused by missing constructors.
@@ -408,10 +408,10 @@ are `build/probes/*/strict.json`, `build/probes/*/candidate.o`, and
 These are class-local experiment results, not final current-main acceptance.
 
 The 12 address-named free helpers, manual factory, remaining raw storage and
-copy views continue under #2478. SharedFilePtr still has no recovered fields in
+copy views continue under #2478. `SharedFilePtr` still has no recovered fields in
 its header: retain the measured direct +4 file-pointer load rather than calling
-LoadFile or inventing a field. The neighboring func_ov065_021177e4 belongs to
-daBasabasa_c; its previously accepted provenance-only correction is preserved.
+`LoadFile` or inventing a field. The neighboring [func_ov065_021177e4](../../../src/func_ov065_021177e4.cpp) belongs to
+`daBasabasa_c`; its previously accepted provenance-only correction is preserved.
 
 ### Current-main composition
 
@@ -425,9 +425,9 @@ shared Actor header is byte-for-byte main's version.
 The rename-ledger conflict was resolved as the exact three-way row multiset
 (3,573 rows), and attribution equals the recursive three-way merge. Both parent
 histories and their contributor records are preserved. The neighboring
-`func_ov065_021177e4` retains the accepted input's provenance-only correction.
+[func_ov065_021177e4](../../../src/func_ov065_021177e4.cpp) retains the accepted input's provenance-only correction.
 
-Fresh 2004/b56 compilation on this composition verifies all 23 functions and
+Fresh **2004/b56** compilation on this composition verifies all 23 functions and
 4,280 text bytes, with zero blind words or differences. All 156 symbol references
 resolve to permitted modules; eight references use the overlay sets explicitly
 listed in the relocation configuration. Every function's object bytes equal the
@@ -447,6 +447,6 @@ historical counts as current. YUR-07 describes CleanupResources as ignoring its
 incoming object pointer; unused r0 does not prove that the ROM lacked `this`.
 YUR-08 corrects the claim that a member definition cannot appear in an `extern
 "C"` block: class members retain C++ linkage there. The verifier wrapped the
-existing OnYoshiTryEat definition in such a block under 2004/b56 and obtained an
+existing `OnYoshiTryEat` definition in such a block under **2004/b56** and obtained an
 identical complete object. The twelve free helpers retain their existing C
 linkage; no code or symbol identity was changed by these comment corrections.

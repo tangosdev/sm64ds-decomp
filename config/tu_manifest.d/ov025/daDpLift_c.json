@@ -1,0 +1,313 @@
+{
+  "id": "ov025/daDpLift_c",
+  "module": "ov025",
+  "source": "src/actors/daDpLift_c.cpp",
+  "promoted_source": "src/actors/daDpLift_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous linker run: 0x21120e4..0x21125bc, 6 function(s), from build/tu_map.json (tools/tu_map.py); this entry licenses the whole run as one file.",
+    "MEASURED: the run's edges are labelled on both sides with zero gap. The preceding function is daObjDpBrock_c_classInit (0x021120ac..0x021120e4), the factory of the other class ov025 hosts there (PyramidStep, RTTI daObjDpBrock_c), so the two classes are not interleaved. The following function is func_ov025_021125bc, not a daDpLift_c member. Every one of the six addresses in between carries a daDpLift_c name in config/arm9/overlays/ov025/symbols.txt and all six are `complete` one-function sources in that module's delinks.txt, so nothing unenrolled sits inside the run.",
+    "class label(s): daDpLift_c -- the cartridge's own RTTI spelling. Read out of extracted/overlays/overlay_0025.bin (ov025 loads at 0x021111a0, extracted/dsd/arm9_overlays/overlays.yaml): the typeinfo word of the vtable header at 0x021139d0 (address point 0x021139d4 - 4) is 0x02113994; that _ZTI reads [0x0209a764 (_ZTVN3abi20__si_class_type_infoE), 0x021139a0, 0x021089ec (_ZTI10dBgActor_c)]; and _ZTS at 0x021139a0 is \"10daDpLift_c\\0\". The class carried the coined name PyramidLift until the commit before this one; under that spelling _ZTI and _ZTS had no configured home and this object could not license its RTTI.",
+    "MEASURED: the out-of-line destructor, declared first in the header and defined first in the TU under `#pragma defer_codegen off`, emits D1 then D0 in the cartridge's order (0x021120e4, 0x02112148) plus a homeless D2 licensed as deadstrip. The inline-empty destructor used by ov022 daObjFl_Ring_c keeps D1/D0 in order only under deferred codegen, and deferred codegen makes the InitResources opt_strength_reduction bracket file-global, which size-DIFFs Render's indexed loop; with the inline destructor and defer_codegen off, D1/D0 land after InitResources.",
+    "SCOPE: func_ov025_021125bc, func_ov025_021125dc (the collision callback InitResources installs) and the factory daDpLift_c_classInit (0x021125f0) sit immediately to the right of this run and remain one-function sources; they are not claimed here.",
+    "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x021120e4",
+      "end": "0x021125bc"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN10daDpLift_cD1Ev",
+      "address": "0x021120e4",
+      "size": "0x00000064",
+      "legacy_source": "src/_ZN10daDpLift_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN10daDpLift_cD0Ev",
+      "address": "0x02112148",
+      "size": "0x00000078",
+      "legacy_source": "src/_ZN10daDpLift_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN10daDpLift_c16CleanupResourcesEv",
+      "address": "0x021121c0",
+      "size": "0x0000003c",
+      "legacy_source": "src/_ZN10daDpLift_c16CleanupResourcesEv.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN10daDpLift_c6RenderEv",
+      "address": "0x021121fc",
+      "size": "0x0000008c",
+      "legacy_source": "src/_ZN10daDpLift_c6RenderEv.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN10daDpLift_c8BehaviorEv",
+      "address": "0x02112288",
+      "size": "0x00000210",
+      "legacy_source": "src/_ZN10daDpLift_c8BehaviorEv.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN10daDpLift_c13InitResourcesEv",
+      "address": "0x02112498",
+      "size": "0x00000124",
+      "legacy_source": "src/_ZN10daDpLift_c13InitResourcesEv.cpp",
+      "ordinal": 5
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Hand-curated from the 6 legacy one-function C++ sources; see the file's own header comment for the reconciliation.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN10dBgActor_c19UpdateClsnPosAndRotEv' differs between the legacy file that used to hold _ZN10daDpLift_c8BehaviorEv and the one that held _ZN10daDpLift_c13InitResourcesEv; kept the first, the other is commented out for review. RESOLVED by dropping BOTH mangled declarations (two void * spellings of the same call): the merged TU calls UpdateClsnPosAndRot() and UpdateModelPosAndRotY() as dBgActor_c members through dBgActor_c.h. No TUBUILD CONFLICT marker survives in the merged source.",
+    "The legacy InitResources source carried `#pragma opt_strength_reduction off`. It is live (without it InitResources DIFFs) and is carried as a push/pop bracket around that one member, which binds only because the TU is under `#pragma defer_codegen off`.",
+    "Retired helpers: the legacy D1/D0 sources were uncalled PyramidLift_EmitDestructor / PyramidLift_EmitDeletingDestructor helpers that forced one inline variant each; the TU defines the destructor once instead."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov025-daDpLift_c/daDpLift_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 6,
+    "functions_declared": 6,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN10daDpLift_cD2Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN10daDpLift_cD2Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        9,
+        10,
+        11,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI10dBgActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTI10daDpLift_c",
+        "_ZTS10daDpLift_c",
+        "_ZTV10daDpLift_c"
+      ],
+      "dataExternalized": [
+        "_ZTI10dBgActor_c",
+        "_ZTI10daDpLift_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTS10daDpLift_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV10daDpLift_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov025-daDpLift_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x021120e4",
+        "end": "0x021125bc",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x021120e4",
+          "end": "0x021125bc",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 6
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Vague-linkage typeinfo record for the inherited base fBase_c, re-emitted because this TU defines daDpLift_c's key function (its out-of-line destructor) -- emitting one _ZTI drags the whole ancestor chain. The cartridge's own copy lives at arm9:0x02086d70, outside this entry's only licensed range (.text 0x021120e4-0x021125bc), so dsd supplies that ROM data independently; rombuild proves this copy's relocation-resolved words against the cartridge before isolation discards it."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Vague-linkage type-name string for the inherited base fBase_c, re-emitted because this TU defines daDpLift_c's key function (its out-of-line destructor) -- emitting one _ZTI drags the whole ancestor chain. The cartridge's own copy lives at arm9:0x02086e60, outside this entry's only licensed range (.text 0x021120e4-0x021125bc), so dsd supplies that ROM data independently; rombuild proves this copy's relocation-resolved words against the cartridge before isolation discards it."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Vague-linkage typeinfo record for the inherited base dBase_c, re-emitted because this TU defines daDpLift_c's key function (its out-of-line destructor) -- emitting one _ZTI drags the whole ancestor chain. The cartridge's own copy lives at arm9:0x02086e78, outside this entry's only licensed range (.text 0x021120e4-0x021125bc), so dsd supplies that ROM data independently; rombuild proves this copy's relocation-resolved words against the cartridge before isolation discards it."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Vague-linkage type-name string for the inherited base dBase_c, re-emitted because this TU defines daDpLift_c's key function (its out-of-line destructor) -- emitting one _ZTI drags the whole ancestor chain. The cartridge's own copy lives at arm9:0x02086e54, outside this entry's only licensed range (.text 0x021120e4-0x021125bc), so dsd supplies that ROM data independently; rombuild proves this copy's relocation-resolved words against the cartridge before isolation discards it."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Vague-linkage typeinfo record for the inherited base dActor_c, re-emitted because this TU defines daDpLift_c's key function (its out-of-line destructor) -- emitting one _ZTI drags the whole ancestor chain. The cartridge's own copy lives at arm9:0x0208e390, outside this entry's only licensed range (.text 0x021120e4-0x021125bc), so dsd supplies that ROM data independently; rombuild proves this copy's relocation-resolved words against the cartridge before isolation discards it."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Vague-linkage type-name string for the inherited base dActor_c, re-emitted because this TU defines daDpLift_c's key function (its out-of-line destructor) -- emitting one _ZTI drags the whole ancestor chain. The cartridge's own copy lives at arm9:0x0208e384, outside this entry's only licensed range (.text 0x021120e4-0x021125bc), so dsd supplies that ROM data independently; rombuild proves this copy's relocation-resolved words against the cartridge before isolation discards it."
+    },
+    {
+      "symbol": "_ZTI10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021089ec",
+      "reason": "Vague-linkage typeinfo record for the inherited base dBgActor_c, re-emitted because this TU defines daDpLift_c's key function (its out-of-line destructor) -- emitting one _ZTI drags the whole ancestor chain. The cartridge's own copy lives at ov002:0x021089ec, outside this entry's only licensed range (.text 0x021120e4-0x021125bc), so dsd supplies that ROM data independently; rombuild proves this copy's relocation-resolved words against the cartridge before isolation discards it."
+    },
+    {
+      "symbol": "_ZTS10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108a04",
+      "reason": "Vague-linkage type-name string for the inherited base dBgActor_c, re-emitted because this TU defines daDpLift_c's key function (its out-of-line destructor) -- emitting one _ZTI drags the whole ancestor chain. The cartridge's own copy lives at ov002:0x02108a04, outside this entry's only licensed range (.text 0x021120e4-0x021125bc), so dsd supplies that ROM data independently; rombuild proves this copy's relocation-resolved words against the cartridge before isolation discards it."
+    },
+    {
+      "symbol": "_ZTI10daDpLift_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov025",
+      "canonical_address": "0x02113994",
+      "reason": "This class's own typeinfo record, emitted as vague linkage because the destructor -- this class's key function -- is defined in this TU. The cartridge's copy is ov025:0x02113994 and its three words read [0x0209a764 (_ZTVN3abi20__si_class_type_infoE), 0x021139a0 (_ZTS10daDpLift_c), 0x021089ec (_ZTI10dBgActor_c, ov002)] in extracted/overlays/overlay_0025.bin. It is ov025 .data, outside the .text range this entry claims, so it is discarded rather than claimed."
+    },
+    {
+      "symbol": "_ZTS10daDpLift_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov025",
+      "canonical_address": "0x021139a0",
+      "reason": "This class's own type-name string, emitted alongside the typeinfo record. The cartridge's copy is ov025:0x021139a0 and reads the 13 bytes 31 30 64 61 44 70 4c 69 66 74 5f 63 00 (\"10daDpLift_c\" plus NUL) -- the measurement that renamed the class from the coined PyramidLift and unblocked this promotion. It is ov025 .data, outside the .text range this entry claims, so it is discarded rather than claimed."
+    },
+    {
+      "symbol": "_ZTV10daDpLift_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov025",
+      "canonical_address": "0x021139d4",
+      "reason": "This class's vtable, emitted because this TU defines the key function (the out-of-line destructor). Section size 0x88 = 2 preamble words + 32 slots; the cartridge's _ZTV symbol at ov025:0x021139d4 is the address point past the [offset-to-top][typeinfo] header, so the ROM interval is 0x021139cc..0x02113a54. config/arm9/overlays/ov025/relocs.txt relocates every word from 0x021139d0 (typeinfo, to _ZTI10daDpLift_c 0x02113994) through 0x02113a50 (slot 31, to ov002:0x020ee55c dBgActor_c::Kill); slots 16/17 point at this TU's D1 0x021120e4 and D0 0x02112148. The data_ov025_021139f4/02113a00/02113a50 rows are ambiguous interior labels, not table ends. It is ov025 .data, outside the .text range this entry claims, so dsd supplies it as ROM data."
+    },
+    {
+      "symbol": "_ZN10daDpLift_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Homeless. include/daDpLift_c.h declares ~daDpLift_c() OUT OF LINE, so mwccarm 2004/b56 emits three variants from the single definition in this file -- D1, D0 and D2 -- but the cartridge carries only D1 (0x021120e4, 0x64) and D0 (0x02112148, 0x78), which are contiguous with CleanupResources at 0x021121c0. No symbols.txt anywhere under config/ has a _ZN10daDpLift_cD2Ev row and nothing relocates to it, so it has no ROM home: plain deadstrip, not deadstrip-duplicate. It is emitted after the licensed run and does not disturb it -- verify reports all 6 licensed functions MATCH in ROM order with it present. Same disposition as ov084 daKrb_c's D2."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Vector3's four-byte inline destructor, emitted as vague linkage because daDpLift_c has a Vector3 mBulletPositions[10] member whose destruction the D1/D0 pair runs through __cxa_vec_cleanup. The cartridge owns the body at arm9:0x020072c0 and an enrolled source already reaches it, so this object's copy is a duplicate that production isolation discards."
+    }
+  ]
+}
