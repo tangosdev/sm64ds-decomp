@@ -21,3 +21,9 @@ src/func_ov006_020e82fc.cpp
 src/func_ov006_020e8830.c
 # Loves Me...? (dScMgFlower_c), unmatched/MgFlower_SubDispatch.cpp
 src/func_ov006_020c3d18.cpp
+# the trampoline Mario elements of Trampoline Terror and Trampoline Time, one
+# pair run for both, unmatched/MgTrmpln3DMario_StateDispatch.cpp. Both build
+# from hostgen copies (port/tools/hostgen.py MEMBER_REDECL rows for their two
+# C2761 redeclarations); the CMake block names them in W25MG_HOSTGEN_TU.
+src/func_ov006_020c8f20.cpp
+src/func_ov006_020cb030.cpp

@@ -244,6 +244,11 @@ LEDGER = [
      "dScMgFlower_c's object-head field: the five .data pairs (the sentinel "
      "0213aee0 included) are read by src/func_ov006_020c3d18.cpp, which "
      "open-codes the decode and calls `push ecx; call eax`, caller-cleaned"),
+    ("CDECL", r"^\?g_trmpln_seats@@",
+     "the trampoline Mario element field (+0x70 in dScMgTrmpln2Mario_c, +0x64 "
+     "in dMgTrmpln3DMario_c): the thirty-eight .data pairs are read by the "
+     "open-coded src/func_ov006_020c8f20.cpp and src/func_ov006_020cb030.cpp, "
+     "both `push ecx; call edx; add esp,4`"),
 ]
 
 

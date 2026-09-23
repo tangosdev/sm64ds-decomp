@@ -538,6 +538,23 @@ MEMBER_REDECL = {
          "const Vector3_16*, signed char, short);\n", ""),
         ("int dBgActor_c_helper::IsClsnInRange(FixV, FixV);\n", ""),
     ],
+    # run linkfull lane PMFMG1: the two trampoline Mario dispatchers, the
+    # element classes of dScMgTrampoline2_c (Trampoline Terror) and
+    # dScMgTrampoline_c (Trampoline Time). Each TU declares System::New and
+    # Animation::Advance inside its local structs and then again at namespace
+    # scope, which MSVC refuses as C2761 twice per file (measured on this tree
+    # under the port's flags). Deleting the two namespace-scope copies is the
+    # whole patch: the in-struct declarations are the ones every call uses.
+    "func_ov006_020c8f20": [
+        ("System* System::New(unsigned, unsigned, Fix12, Fix12, Fix12, "
+         "const Vector3_16f*, Callback*);\n", ""),
+        ("void Animation::Advance();\n", ""),
+    ],
+    "func_ov006_020cb030": [
+        ("System* System::New(unsigned, unsigned, Fix12, Fix12, Fix12, "
+         "const Vector3_16f*, Callback*);\n", ""),
+        ("void Animation::Advance();\n", ""),
+    ],
 }
 
 

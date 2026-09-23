@@ -496,8 +496,9 @@ extern MgPmf data_ov004_020beb98[];
    framework dispatchers read these tables directly. hal/scene_mg.cpp calls it
    after the four ov004 constructors run. */
 void port_mg_framework_states_seat(void);
-/* run linkfull lane PMFMG1: an ov006 field-pair seat it runs as well */
+/* run linkfull lane PMFMG1: two ov006 field-pair seats it runs as well */
 void port_mg_flower_sub_seat(void);
+void port_mg_trmpln_field_seat(void);
 }
 
 /* ---- THE TWO ALIASES THE MATCHED TUs ASK FOR (lane PMFB3) ----------------
@@ -600,7 +601,7 @@ extern "C" void port_mg_framework_states_seat(void)
         p->code = (unsigned)(size_t)seats[i].host;
     }
 
-    /* run linkfull lane PMFMG1: the ov006 FIELD-pmf pair runs whose
+    /* run linkfull lane PMFMG1: the two ov006 FIELD-pmf pair runs whose
        classes have no installer of their own. Both are mounted ov006 .data
        copied into an object field by state writers at play time, so the only
        requirement on the point of the seat is "after the mount, before any
@@ -608,6 +609,7 @@ extern "C" void port_mg_framework_states_seat(void)
        hal/scene_mg.cpp's overlay load: no new call site anywhere. Each seat
        compares every pair with the cartridge's own word before writing it. */
     port_mg_flower_sub_seat();       /* unmatched/MgFlower_SubDispatch.cpp */
+    port_mg_trmpln_field_seat();     /* unmatched/MgTrmpln3DMario_StateDispatch.cpp */
 }
 
 // ---- THE SEAT, run link100 lane MGWRITER -----------------------------------
