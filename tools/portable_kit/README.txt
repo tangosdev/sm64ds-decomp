@@ -167,7 +167,8 @@ Once you have run it, two more folders appear, both made from your own dump:
 
 The game itself reads your dump, writes those two folders next to itself, and
 runs. The launcher checks tangos.dev for updates, and if the game crashes it
-can send a small crash report so the bug gets fixed; that can be turned off
-in the launcher's settings. Multiplayer talks to our server only while you
-are in a room or a match. Nothing else here touches the internet or changes
-any setting on your PC.
+can send a small crash report, and after each session a short performance
+report (how the game ran and your PC's hardware), so problems get fixed;
+both can be turned off in the launcher's settings. Multiplayer talks to our
+server only while you are in a room or a match. Nothing else here touches
+the internet or changes any setting on your PC.

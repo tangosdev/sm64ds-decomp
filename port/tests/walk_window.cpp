@@ -413,6 +413,7 @@ static bool winapi_load(void)
 #include "fault_probe.h"
 #include "overlay_font.h"
 #include "hal/host_settings.h"   /* settings.json, the launcher's file */
+#include "hal/perf_log.h"        /* run perf1: the player performance report */
 #include "hal/comms_seam.h"       /* run mg15 lane MP1: the radio seam */
 #include "hal/voice_chat.h"      /* lane VOICE: proximity voice chat */
 #include "hal/comms_loopback.h"   /* run mg16 lane MP2: the loopback carrier */
@@ -3075,6 +3076,13 @@ static void ovl_gpu_sample(void)
     p0 = pics; m0 = missed;
 }
 
+/* run perf1: the performance report's one per-frame call. Defined further
+   down, next to the present path, because it reads the window's own client
+   rect; declared here because the pump is the one place BOTH loops pass
+   through every frame, which is what makes the report true of the session a
+   player actually had whether or not they ever pressed F3. */
+static void perf_log_frame(int scene);
+
 extern "C" int port_host_frame_pump(unsigned spin)
 {
     (void)spin;
@@ -3082,6 +3090,7 @@ extern "C" int port_host_frame_pump(unsigned spin)
     ovl_rate_sample();
     ovl_cpu_sample();
     ovl_gpu_sample();
+    perf_log_frame(0);
     frame_stat();
     /* RUNG E1: see frame_pace. One VBlank per turn while the ROM's sleep is
        what ends the frame, one whole game frame per call while this loop is. */
@@ -6992,6 +7001,102 @@ static void present(void)
     hal_present_set_rect(dx, dy, dw, dh, sw, sh);
 }
 
+/* ---- THE PERFORMANCE REPORT'S FRAME HOOK (run perf1) ------------------
+ *
+ * Everything on a sample line is already being measured for the F3 overlay,
+ * once a frame, whether it is shown or not: the PhaseClock spans, the two
+ * rate windows, the cpu share, the graphics card's own timer totals. This
+ * hands that frame's values to hal/perf_log.cpp, which averages them into a
+ * five-second bucket and writes one line when the bucket closes. No new
+ * measurement, and nothing about the picture, the pacing or the input moves.
+ *
+ * THE COST IS IN THE SNAPSHOT, SO IT IS PAID ONCE A BUCKET. The polygon
+ * count, the behaviour-list walk, the working-set query, the client rect and
+ * the card's dropped-picture total are each a real read, and ovl_fill_common
+ * pays for them only on the frames the overlay actually draws. Here they are
+ * filled only when the log says this frame closes a bucket -- one frame in
+ * about a hundred and fifty at a course's rate -- and the log keeps the last
+ * values it was given for all the rest. With no report open the whole
+ * function is one test of a pointer.
+ */
+static void perf_log_frame(int scene)
+{
+    if (!port_perf_log_on()) return;
+    PortPerfFrame pf;
+    memset(&pf, 0, sizeof pf);
+    pf.frame_ms = g_clk.raw[PH_FRAME];
+    pf.input_ms = g_clk.ms[PH_INPUT];
+    pf.camera_ms = g_clk.ms[PH_CAMERA];
+    pf.submit_ms = g_clk.ms[PH_SUBMIT];
+    pf.raster_ms = g_clk.ms[PH_RASTER];
+    pf.blit_ms = g_clk.ms[PH_BLIT];
+    pf.fps = g_rate_shown;
+    pf.tick_rate = g_rate_ticks;
+    pf.cpu_pct = g_cpu_pct;
+    pf.gpu_on = (port_gpu_raster_active() || port_gpu_present_enabled()) ? 1 : 0;
+    pf.gpu_ms_tick = g_gpu_ms_tick;
+    pf.gpu_pct = g_gpu_pct;
+    pf.gpu_read_ms = g_gpu_read_ms;
+    pf.tris = -1;
+    pf.actors = -1;
+    pf.window_w = -1;
+    pf.window_h = -1;
+    if (port_perf_log_due()) {
+        pf.snapshot = 1;
+        /* ONE table walk every five seconds, not one a frame. port_level_id
+           scans the hosted-level table and port_scene_env_want caches, and a
+           bucket is the finest granularity the report has anyway. */
+        pf.level = scene ? -1 - port_scene_env_want() : port_level_id();
+        size_t tn = 0;
+        ntr::gx_polygons(tn);
+        pf.tris = (int)tn;
+        int actors = 0;
+        for (int *node = (int *)(size_t)data_020a4b78[0];
+             node && actors < 4096; node = (int *)(size_t)node[1])
+            if (node[2]) ++actors;
+        pf.actors = actors;
+        if (W.GetProcessMemoryInfo_) {
+            PortMemCounters pmc;
+            pmc.cb = sizeof pmc;
+            if (W.GetProcessMemoryInfo_(GetCurrentProcess(), &pmc, sizeof pmc))
+                pf.mem_kb = (unsigned)(pmc.WorkingSetSize / 1024);
+        }
+        RECT rc;
+        if (g_present_hwnd && W.GetClientRect_ &&
+            W.GetClientRect_(g_present_hwnd, &rc)) {
+            pf.window_w = rc.right - rc.left;
+            pf.window_h = rc.bottom - rc.top;
+        }
+        /* A MINIMISED WINDOW HAS A ZERO-BY-ZERO CLIENT AREA -- present()
+           returns on that same test -- and every automated run in this
+           project is minimised, so the client rect alone would make the
+           report's window size 0 on every run a gate ever takes. The
+           placement's restored rectangle is what the window IS while it sits
+           on the taskbar. It is the OUTER rectangle rather than the client
+           one, so a minimised session's two numbers are a window frame wider
+           and taller than a visible session's; the fields say which kind of
+           run it was anyway, through the rest of the header. */
+        if (pf.window_w <= 0 && g_present_hwnd && W.GetWindowPlacement_) {
+            WINDOWPLACEMENT wp;
+            memset(&wp, 0, sizeof wp);
+            wp.length = sizeof wp;
+            if (W.GetWindowPlacement_(g_present_hwnd, &wp)) {
+                pf.window_w = wp.rcNormalPosition.right -
+                              wp.rcNormalPosition.left;
+                pf.window_h = wp.rcNormalPosition.bottom -
+                              wp.rcNormalPosition.top;
+            }
+        }
+        {
+            double card = 0.0;
+            unsigned long long pics = 0, missed = 0;
+            port_gpu_timer_totals(&card, 0, 0, &pics, &missed);
+            pf.gpu_dropped_total = missed;
+        }
+    }
+    port_perf_log_frame(&pf);
+}
+
 /* ---- THE PRESENT FILTER, MEASURED OFF SCREEN ---------------------------
  *
  * SM64DS_PRESENT_BENCH=<repeats> times the two StretchDIBits scalers -- the
@@ -9053,6 +9158,15 @@ static int scene_window_run(void)
     port_rom_frame_begin("scene loop");
     static XPad pad;
     while (!quit) {
+        /* THE FRAME'S OWN SPAN, the level loop's PH_FRAME exactly: the whole
+           loop body with the pace excluded (run perf1). This path never
+           measured itself, so F3 on the title screen and in every minigame
+           showed a frame time of zero, and a performance report of a session
+           spent in the menus carried no frame time at all. Two
+           QueryPerformanceCounter reads a frame, the same two the level loop
+           has always paid. */
+        double t_frame_scene;
+        ph_begin(&t_frame_scene);
         if (scene_menu_at >= 0 &&
             port_rom_frame_checked(frame, "scene-menu-at") == scene_menu_at)
             menu_on = 1;
@@ -9115,6 +9229,19 @@ static int scene_window_run(void)
                     port_rom_frame_checked(frame, "title-entry"));
             break;
         }
+        /* THE FRAME'S OWN MEASUREMENTS, the same four the level loop's frame
+           pump makes in the same order (port_host_frame_pump above). This
+           loop drives the title, the menus and the minigames, and until run
+           perf1 it made none of them: the two rate windows, the cpu share and
+           the card's totals only ever advanced inside a level, so pressing F3
+           on the title screen showed zeros and a performance report of a
+           session spent in the menus had nothing in it. All four are counter
+           reads with their own half-second windows; none of them draws. */
+        ph_end(PH_FRAME, t_frame_scene);
+        ovl_rate_sample();
+        ovl_cpu_sample();
+        ovl_gpu_sample();
+        perf_log_frame(1);
         /* THE PACE, off the scene's own divider and not off a constant. A
            minigame writes data_0208ee44 = 1 in its InitResources and therefore
            runs at 60; the 33.3ms this block used to hardcode is the 3D level
@@ -9593,6 +9720,20 @@ int main(void)
             printf("flight recorder: %s\n", logname);
             fprintf(stderr, "[recorder] session start\n");
         }
+        /* run perf1: THE PERFORMANCE REPORT, playlog/perf-<id>.jsonl, opened
+           here so it carries the recorder's own id -- including whatever
+           collision suffix the claim above had to walk -- and a report pairs
+           with its prose log by filename alone. The file is created here; the
+           machine query that fills its header line waits for the first frame,
+           because io_init below has not yet claimed the DS address windows
+           and a graphics driver loaded ahead of it could take them. See the
+           banner over perf_write_header in hal/perf_log.cpp. */
+        port_perf_log_open(logname);
+    } else {
+        /* No recorder this run, so no report either -- unless a gate row asked
+           for one with SM64DS_PERFLOG_FORCE=1, which is how a headless proof
+           reads a real file. */
+        port_perf_log_open(0);
     }
     /* A stale file from an earlier run must never be read as this run's verdict.
        Clear it before the decision, write it only if the decision goes badly. */

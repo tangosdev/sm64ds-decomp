@@ -321,13 +321,15 @@ DSSTATE_END
 /* ---- gate 32's last three overlays ---------------------------------------
    Three more kinds of the same two problems.
 
-   THE OVERLAY TAG IS WRONG IN FOUR NAMES. ov014, ov021, ov022 and ov034 are
+   THE OVERLAY TAG WAS WRONG IN FOUR NAMES. ov014, ov021, ov022 and ov034 are
    all linked at the same DS base, so dsd's per-overlay naming can attach a
-   reference to the wrong one: ChainChomp's two destructors spell their own
-   vtable data_ov034_021147ec, and ChainChompFence's InitResources spells three
+   reference to the wrong one: ChainChomp's two destructors spelled their own
+   vtable data_ov034_021147ec, and ChainChompFence's InitResources spelled three
    ov014 symbols with ov021 and ov022 tags. Every one is settled by ADDRESS --
    0x021147ec is _ZTV10daWanwan_c in ov014, 0x021149b8/0x021149c0 are ov014 bss
    and 0x02114558 is ov014 data -- and by the reloc, which names overlay(14).
+   src/ now spells all four by their ov014 names (the fence since #1358), so
+   the routes that carried them are retired below.
 
    daWanwan_c_classInit's `func_020aed98` is NOT one of these and is NOT aliased.
    It is the same address as _ZN12dEnemyBase_cC2Ev, but the source calls it with no
@@ -342,9 +344,28 @@ DSSTATE_END
    which makes the alias inert as well as unused. Deleted rather than
    re-routed: there is no reader to route.
    was: /alternatename:_data_ov034_021147ec=__ZTV10daWanwan_c */
-#pragma comment(linker, "/alternatename:?data_ov021_021149b8@@3PAHA=_data_ov014_021149b8")
-#pragma comment(linker, "/alternatename:_data_ov021_021149c0=_data_ov014_021149c0")
-#pragma comment(linker, "/alternatename:?data_ov022_02114558@@3PAHA=_data_ov014_02114558")
+/* RETIRED, run rel042 lane ALIASFIX1: the fence's three routes, which had
+   become crossed wires. src/game/actors/d_a_obj_wanwan_shutter.cpp spells
+   data_ov014_021149b8, _021149c0 and _02114558 itself, so no ov014 TU reaches
+   an ov021 or ov022 spelling of them any more. The two C++ spellings the old
+   rows caught were each overlay's OWN handle, declared `extern int ...[]`
+   (which MSVC decorates @@3PAHA) by
+     src/_ZN12WorkElevator16CleanupResourcesEv.cpp         (ov021) and
+     src/_ZN19FloatOnLavaPlatform16CleanupResourcesEv.cpp  (ov022),
+   and the cartridge's relocations at those Release calls name their own
+   overlay (0x02111644 -> 0x021149b8 module:overlay(21), 0x0211179c ->
+   0x02114558 module:overlay(22)). Routed to ov014, the elevator never let go
+   of its collision file and the lava platform never let go of its model, and
+   each Release landed on Bob-omb Battlefield's fence instead: its collision
+   handle, and its CLPS block, which is data and not a handle at all. Both
+   spellings now name their own overlay's cell. The middle row was defeated
+   (ov021's mount defines _data_ov021_021149c0, and its one reader is ov021's
+   own __sinit) and is deleted: there is no reader to route.
+   was: /alternatename:?data_ov021_021149b8@@3PAHA=_data_ov014_021149b8
+   was: /alternatename:_data_ov021_021149c0=_data_ov014_021149c0
+   was: /alternatename:?data_ov022_02114558@@3PAHA=_data_ov014_02114558 */
+#pragma comment(linker, "/alternatename:?data_ov021_021149b8@@3PAHA=_data_ov021_021149b8")
+#pragma comment(linker, "/alternatename:?data_ov022_02114558@@3PAHA=_data_ov022_02114558")
 /* The chomp's two animation SharedFilePtrs, ov014 0x02114970 and 0x02114980,
    are spelled with a different type in every TU that reaches them -- `char`,
    `int[]`, `void*[]` and a local two-word `struct S` -- so MSVC decorates the

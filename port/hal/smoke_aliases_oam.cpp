@@ -61,9 +61,12 @@
 /* hal/cxx_aliases.cpp:3245 */
 #pragma comment(linker, "/alternatename:__ZN2GX11LoadTexPlttEPKvjj=?LoadTexPltt@GX@@YAXPBXII@Z")
 /* hal/cxx_aliases.cpp:3309 */
-#pragma comment(linker, "/alternatename:__ZN3OAM11GetObjWidthEii=?GetObjWidth@OAM@@SAEHH@Z")
+/* run rel042, lane NARROWRET1: bound to the widening wrapper tools/hostgen.py's
+   NARROW_RETURN table appends to the member's generated TU (this target compiles
+   that copy), the same binding hal/cxx_aliases.cpp makes for walk_window. */
+#pragma comment(linker, "/alternatename:__ZN3OAM11GetObjWidthEii=_hostgen_nrwide__ZN3OAM11GetObjWidthEii")
 /* hal/cxx_aliases.cpp:3310 */
-#pragma comment(linker, "/alternatename:__ZN3OAM12GetObjHeightEii=?GetObjHeight@OAM@@SAEHH@Z")
+#pragma comment(linker, "/alternatename:__ZN3OAM12GetObjHeightEii=_hostgen_nrwide__ZN3OAM12GetObjHeightEii")
 /* hal/cxx_aliases.cpp:3311 */
 #pragma comment(linker, "/alternatename:__ZN3OAM16LoadAffineParamsEP7OamAttrPiP9Matrix2x2=?LoadAffineParams@OAM@@SAHPAUOamAttr@@PAHPAUMatrix2x2@@@Z")
 /* hal/cxx_aliases.cpp:3328 */

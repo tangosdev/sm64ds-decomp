@@ -745,9 +745,13 @@ extern "C" int func_02053f58(void); extern "C" int func_02054018(void);
 extern "C" int func_02054004(void); extern "C" int func_02053f6c(void);
 extern "C" int func_02053fa8(void); extern "C" int func_02053f94(void);
 extern "C" int func_02053f80(void); extern "C" int func_02053fe0(void);
-extern "C" int func_02053fbc(void); extern "C" int func_02053f44(void);
+extern "C" unsigned short func_02053fbc(void); extern "C" int func_02053f44(void);
 extern "C" int func_02053f30(void); extern "C" int func_02053f08(void);
-extern "C" int func_02053ee0(void);
+extern "C" unsigned short func_02053ee0(void);
+/* run rel042, lane NARROWRET1: func_02053fbc and func_02053ee0 are declared at the
+   width their bodies return (src/ defines both u16). The results are discarded
+   here, so nothing reads the upper bytes of EAX today; the other getters above
+   reach the widening wrappers tools/hostgen.py's NARROW_RETURN table appends. */
 
 int func_0202e78c(void *)
 {

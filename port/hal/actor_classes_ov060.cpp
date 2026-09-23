@@ -42,16 +42,21 @@
 //     __sinit_ov060_02119f94), and ONE cross-window CLPS read -- nothing
 //     touches the state tables. It is hostable without a single new seam.
 //
-// ---- THE CLEANUP THUNK (the one body held out of the slice) ---------------
-// src/_ZN10daKpa2Bg_c16CleanupResourcesEv.cpp spells its two
-// SharedFilePtrs G0/G1, and hal/cxx_aliases.cpp binds those single global
-// names to SignPost's LIVE ov002 pointers -- the identical PoleLift trap
-// hal/actor_classes_ov045.cpp documents. Linking it would Release SignPost's
-// files on every arena teardown. relocs.txt (0x02117b94/98) says the ROM
-// body releases 0x0211affc then 0x0211aff4 behind an IsEnabled-guarded
-// Disable of the collider at +0x374 (calls 0x020393dc IsEnabled then
-// 0x02039140 Disable); arena_clean below is that transcription, the ep_clean
-// recipe verbatim.
+// ---- THE CLEANUP SEAT (run rel042, lane SEATS042) --------------------------
+// Slot 3 held a host transcription here, arena_clean, because the src file
+// once spelled its two SharedFilePtrs as the placeholders G0/G1, which
+// hal/cxx_aliases.cpp binds to SignPost's LIVE ov002 pointers (the PoleLift
+// trap hal/actor_classes_ov045.cpp documents). That is no longer the file:
+// src/_ZN10daKpa2Bg_c16CleanupResourcesEv.cpp now names daKpa2Bg_c_ModelFile
+// and daKpa2Bg_c_ClsnFile, the config's own names for 0x0211affc and
+// 0x0211aff4 (config/arm9/overlays/ov060/symbols.txt), which are exactly the
+// two pool words relocs.txt carries at 0x02117b94/98, model then clsn, and
+// port/ov060_syms.txt's per-symbol mount defines both spellings on the same
+// two cells the transcription released. The TU matches under 2004/b56 with
+// strict relocs and is linkcheck VERIFIED with 0 blind slots, and it is
+// already in all three links (port/slice_faces2.txt), so arena_clean now
+// calls it through the C-name face at file bottom, the Init/Behavior/Render
+// recipe, and the transcription is retired.
 //
 // ---- THE CLPS ALIAS -------------------------------------------------------
 // InitResources passes the collider CLPS as `&func_021115bc` -- dsd's
@@ -76,6 +81,7 @@ extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include "dsstate_seg.h"
 #include "dtor_faces_cpp.h"
 #include <cstdlib>
+#include <cstring>   /* SEATS042 slot-3 trace: memcpy / memcmp */
 
 #include "dActor_c.h"
 #include "fBase_c.h"
@@ -127,16 +133,18 @@ void __sinit_ov060_0211a428(void);
 
 /* the arena's own bodies (the .cpp methods are faced at file bottom) */
 int _ZN10daKpa2Bg_c13InitResourcesEv(void *self);     /* slot 0  */
+int _ZN10daKpa2Bg_c16CleanupResourcesEv(void *self);  /* slot 3  */
 int _ZN10daKpa2Bg_c8BehaviorEv(void *self);           /* slot 6  */
 int _ZN10daKpa2Bg_c6RenderEv(void *self);             /* slot 9  */
 int *_ZN10daKpa2Bg_cD1Ev(int *self);                  /* slot 16 */
 int *_ZN10daKpa2Bg_cD0Ev(int *self);                  /* slot 17 */
 void *daKpa2Bg_c_classInit(void);
-/* what arena_clean spells by hand (the ep_clean recipe) */
-int _ZN4dBgW9IsEnabledEv(void *self);
-void _ZN4dBgW7DisableEv(void *self);
-void _ZN13SharedFilePtr7ReleaseEv(void *sfp);
+/* read, never written, by the SEATS042 slot-3 trace: the arena's two file
+   cells (0x0211affc model, 0x0211aff4 clsn) and SignPost's two, the pair the
+   old G0/G1 placeholders were bound to (decl_common.h's spelling) */
 extern int data_ov060_0211affc[], data_ov060_0211aff4[];
+extern char data_ov002_0210e064;
+extern char data_ov002_0210e05c;
 /* the Enable face's C-linkage dispatcher (hal/cxxname_bridge.cpp routing) */
 int _ZN4dBgW6EnableEP8dActor_c(void *self, void *actor);
 
@@ -465,15 +473,69 @@ extern "C" void port_ov60_bringup(void)
 // helpers. Own slots 0/3/6/9/16/17 + Platform::Kill at 31.
 static int __fastcall arena_init(void *s, void *)
 { return _ZN10daKpa2Bg_c13InitResourcesEv(s); }
-/* slot 3, HOST THUNK, not the matched TU -- the G0/G1 trap (file header). */
+/* slot 3, SEATED on the matched TU (run rel042, lane SEATS042; the file
+   header's CLEANUP SEAT block has the evidence). The ROM word is
+   _ZTV10daKpa2Bg_c (0x0211a8b0) + 4*3 = 0x0211a8bc, which ov060/relocs.txt
+   relocates to 0x02117b58, _ZN10daKpa2Bg_c16CleanupResourcesEv; the head
+   reads base-8 an unrelocated zero and base-4 the typeinfo at 0x0211a870,
+   out of extracted/overlays/overlay_0060.bin (.text base 0x02111900).
+
+   SM64DS_SEATS042_TRACE=1 prints one line when the slot runs and one per
+   file cell, the arena's two and SignPost's two, read before and after the
+   body; it writes nothing and is otherwise inert. */
+static int ov60_seats042_trace_on(void)
+{
+    static int v = -1;
+    if (v < 0) {
+        const char *e = std::getenv("SM64DS_SEATS042_TRACE");
+        v = (e && *e && *e != '0') ? 1 : 0;
+    }
+    return v;
+}
+static void ov60_seats042_cell(const char *name, const void *cell,
+                               const unsigned char *was)
+{
+    const unsigned char *now = (const unsigned char *)cell;
+    unsigned p0, p1;
+    std::memcpy(&p0, was + 4, 4);
+    std::memcpy(&p1, now + 4, 4);
+    const char *verdict = std::memcmp(was, now, 8) == 0 ? "untouched"
+                        : now[2] < was[2] ? "released" : "CHANGED";
+    std::fprintf(stderr, "SEATS042:   %s: file 0x%04x->0x%04x refs %u->%u "
+                 "ptr 0x%08x->0x%08x -- %s\n", name,
+                 (unsigned)(was[0] | (was[1] << 8)),
+                 (unsigned)(now[0] | (now[1] << 8)), (unsigned)was[2],
+                 (unsigned)now[2], p0, p1, verdict);
+}
 static int __fastcall arena_clean(void *s, void *)
 {
-    char *t = (char *)s;
-    if (_ZN4dBgW9IsEnabledEv(t + 0x374))
-        _ZN4dBgW7DisableEv(t + 0x374);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov060_0211affc);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov060_0211aff4);
-    return 1;
+    if (!ov60_seats042_trace_on())
+        return _ZN10daKpa2Bg_c16CleanupResourcesEv(s);
+    unsigned char m[8], c[8], spm[8], spc[8];
+    std::memcpy(m, data_ov060_0211affc, 8);
+    std::memcpy(c, data_ov060_0211aff4, 8);
+    std::memcpy(spm, &data_ov002_0210e064, 8);
+    std::memcpy(spc, &data_ov002_0210e05c, 8);
+    const int r = _ZN10daKpa2Bg_c16CleanupResourcesEv(s);
+    void *word = (*(void ***)s)[3];
+    const unsigned id = *(const unsigned short *)((const char *)s + 0xc);
+    std::fprintf(stderr, "SEATS042: _ZTV18BowserFireSeaArena[3] "
+                 "CleanupResources (ov060 0x02117b58, the matched TU) ENTERED "
+                 "this=%p id=%u %s; slot 3 word=%p, seated thunk=%p -- %s; "
+                 "returned %d\n", s, id, port_actor_class_name(id), word,
+                 (void *)arena_clean,
+                 word == (void *)arena_clean ? "SAME WORD" : "DIFFERENT WORD",
+                 r);
+    ov60_seats042_cell("data_ov060_0211affc daKpa2Bg_c_ModelFile",
+                       data_ov060_0211affc, m);
+    ov60_seats042_cell("data_ov060_0211aff4 daKpa2Bg_c_ClsnFile",
+                       data_ov060_0211aff4, c);
+    ov60_seats042_cell("data_ov002_0210e064 SignPost_ModelFile",
+                       &data_ov002_0210e064, spm);
+    ov60_seats042_cell("data_ov002_0210e05c SignPost_ClsnFile",
+                       &data_ov002_0210e05c, spc);
+    std::fflush(stderr);
+    return r;
 }
 static int __fastcall arena_behavior(void *s, void *)
 { return _ZN10daKpa2Bg_c8BehaviorEv(s); }
@@ -755,14 +817,17 @@ extern "C" void hal_fill_bowser_sky_platform_vtable(void)
 }
 
 // ---- method faces ----------------------------------------------------------
-// The three bodies src defines as real C++ methods against
-// BowserFireSeaArena.h (Init/Behavior/Render; the D1/D0 are .c and callable
-// directly). The IceSheet/ov045 recipe: the face is the C-name bridge INTO
-// the matched method, not a host copy of it.
+// The four bodies src defines as real C++ methods against
+// BowserFireSeaArena.h (Init/Cleanup/Behavior/Render; the D1/D0 are .c and
+// callable directly). The IceSheet/ov045 recipe: the face is the C-name
+// bridge INTO the matched method, not a host copy of it. Cleanup joined the
+// other three at lane SEATS042, when arena_clean's transcription retired.
 #include "daKpa2Bg_c.h"
 extern "C" {
 int _ZN10daKpa2Bg_c13InitResourcesEv(void *self)
 { return ((daKpa2Bg_c *)self)->daKpa2Bg_c::InitResources(); }
+int _ZN10daKpa2Bg_c16CleanupResourcesEv(void *self)
+{ return ((daKpa2Bg_c *)self)->daKpa2Bg_c::CleanupResources(); }
 int _ZN10daKpa2Bg_c8BehaviorEv(void *self)
 { return ((daKpa2Bg_c *)self)->daKpa2Bg_c::Behavior(); }
 int _ZN10daKpa2Bg_c6RenderEv(void *self)

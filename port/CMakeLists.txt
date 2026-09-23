@@ -390,6 +390,52 @@ endfunction()
 #       through hal/cstd_div.c's ds_lsr; src/ is untouched and the body stays
 #       the ROM's, so linkage does not move.
 set(PORT_HOSTGEN_TU
+    # run rel042, lane NARROWRET1: THE NARROW-RETURN CURE. Each of these TUs
+    # DEFINES a function that returns s8/u8/s16/u16/bool; on the DS the callee
+    # extends that into the whole of r0, and under MSVC the upper bytes of EAX
+    # are junk, so every caller that declares the function wider read junk on
+    # the PC. tools/hostgen.py's NARROW_RETURN table renames each body and
+    # binds its ROM name to a wrapper that extends the result as the ARM
+    # epilogue does (or, for a member, adds the wrapper the alias rows in
+    # hal/cxx_aliases.cpp and hal/actor_classes_ov026.cpp now name). src/ is
+    # untouched and every body in the link is still the ROM's. Census:
+    # tools/narrowret_census.py. src/actors/Player.cpp is already on this list.
+    src/_ZN4cstd5atan2E5Fix12IiES1_.c
+    src/GetPlayerFlagByte.c
+    src/DecIfAbove0_Byte.c
+    src/DecIfAbove0_Short.c
+    src/NumStars.c
+    src/Vec3_HorzAngle.c
+    src/Vec3_VertAngle.c
+    src/func_02020168.c
+    src/func_02020364.c
+    src/func_020201f0.c
+    src/GetLevelPart.c
+    src/func_0201a96c.c
+    src/func_0201a9ec.c
+    src/NumVsStarsObtained.c
+    src/func_ov007_020c3be0.c
+    src/IsAreaShowing.c
+    src/IsPlayerWarping.c
+    src/GetStarCameraSetting.c
+    src/func_02065138.c
+    src/func_0205b63c.c
+    src/func_02053f30.c
+    src/func_02053f58.c
+    src/func_02053f80.c
+    src/func_02053fa8.c
+    src/func_02054004.c
+    src/func_02054168.c
+    src/func_0205417c.c
+    src/func_020456a0.c
+    src/CountStarsCollectedInLevelToDisplay.c
+    src/_ZN8dActor_c12ReflectAngleE5Fix12IiES1_s.cpp
+    src/_ZN8SaveData13GetCoinRecordEj.cpp
+    src/_ZN8SaveData26CountStarsCollectedInLevelEj.cpp
+    src/_ZN3OAM11GetObjWidthEii.cpp
+    src/_ZN3OAM12GetObjHeightEii.cpp
+    src/_ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b.cpp
+    src/_ZN8dActor_c18HorzAngleToCPlayerEv.cpp
     src/func_0201b100.c
     # run link100 wave 20, lane CAMSWIM3: the camera follow state. The
     # CAM_TERMS table in tools/hostgen.py traces the eye-height terms
@@ -17417,6 +17463,14 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     # the launcher's settings.json, read by the game (camera turn direction,
     # and the four screen-gap keys hal/screen_gap.cpp reads)
     hal/host_settings.cpp hal/screen_gap.cpp
+    # run perf1: the player performance log, playlog/perf-<id>.jsonl beside the
+    # flight recorder. A second reader of what the F3 overlay already measures,
+    # so it adds no measurement path and no picture; the frame pump hands it
+    # one struct a frame and it writes one line every five seconds. Every
+    # hardware string it names is reached through LoadLibraryA/GetProcAddress
+    # or the CPUID instruction, so the import table does not move -- the same
+    # rule the two graphics-card files below keep.
+    hal/perf_log.cpp
     # the controller backend: XInput slots 0..3, then a DirectInput pad
     # (Switch Pro, DualShock, DualSense, generic HID) mapped onto the XInput
     # mask. Both DLLs loaded dynamically; no xinput/dinput8/dxguid lib. On
@@ -17846,6 +17900,14 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     # the launcher's settings.json, read by the game (camera turn direction,
     # and the four screen-gap keys hal/screen_gap.cpp reads)
     hal/host_settings.cpp hal/screen_gap.cpp
+    # run perf1: the player performance log, playlog/perf-<id>.jsonl beside the
+    # flight recorder. A second reader of what the F3 overlay already measures,
+    # so it adds no measurement path and no picture; the frame pump hands it
+    # one struct a frame and it writes one line every five seconds. Every
+    # hardware string it names is reached through LoadLibraryA/GetProcAddress
+    # or the CPUID instruction, so the import table does not move -- the same
+    # rule the two graphics-card files below keep.
+    hal/perf_log.cpp
     # the controller backend: XInput slots 0..3, then a DirectInput pad
     # (Switch Pro, DualShock, DualSense, generic HID) mapped onto the XInput
     # mask. Both DLLs loaded dynamically; no xinput/dinput8/dxguid lib. On
@@ -18297,6 +18359,40 @@ else()
     message(WARNING "python not found: the port ABI check targets were not "
                     "created")
 endif()
+
+# THE EXE'S OWN VERSION STRING, FOR THE CODE THAT HAS TO SAY IT.
+#
+# The performance log's header line names the game's version, and a report
+# whose version came from a second copy of the number is a report that will one
+# day name the wrong one. res/walk_window.rc below already holds the release
+# version, is already bumped by hand per release, and is already the number a
+# player sees in the exe's file properties -- so it is the one source, and this
+# block lifts its ProductVersion string out at configure time into a
+# compile-time define. Nothing to keep in step, and a release that bumps the
+# resource bumps the report with it.
+#
+# The rc file joins the configure-time inputs so editing it reconfigures by
+# itself (see "THE CONFIGURE-TIME INPUTS, REGISTERED" above); without that the
+# define would keep the previous release's number until something else forced a
+# configure.
+set(PORT_GAME_VERSION "")
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/res/walk_window.rc"
+     PORT_RC_PRODUCTVERSION_LINES REGEX "VALUE[ \t]+\"ProductVersion\"")
+foreach(rcline IN LISTS PORT_RC_PRODUCTVERSION_LINES)
+    if(rcline MATCHES "\"ProductVersion\"[ \t]*,[ \t]*\"([0-9][0-9.]*)\"")
+        set(PORT_GAME_VERSION "${CMAKE_MATCH_1}")
+    endif()
+endforeach()
+if(PORT_GAME_VERSION STREQUAL "")
+    message(WARNING "res/walk_window.rc has no readable ProductVersion: the "
+                    "performance report's gameVersion will be empty")
+endif()
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
+             "${CMAKE_CURRENT_SOURCE_DIR}/res/walk_window.rc")
+target_compile_definitions(walk_window PRIVATE
+    PORT_GAME_VERSION="${PORT_GAME_VERSION}")
+target_compile_definitions(walk_window_hires PRIVATE
+    PORT_GAME_VERSION="${PORT_GAME_VERSION}")
 
 # Windows identity resources: version info + icon for the game-shaped exes a
 # player can meet (the bundle ships walk_window; hires is its sibling build of
@@ -22365,3 +22461,11 @@ if(MSVC)
         endforeach()
     endforeach()
 endif()
+
+# ---- NARROW-RETURN PROBE (run rel042, lane NARROWRET1) ----------------------
+# tools/hostgen.py's NARROW_RETURN wrappers report every call to
+# port_narrowret_hook. hal/narrow_return.cpp defines it for walk_window and
+# arms it only under SM64DS_NARROWRET=1 (a per-call-site count of the reads a
+# wide caller got wrong, written out at exit); every other target that links
+# a wrapper gets the null default the generated TUs carry by /alternatename.
+target_sources(walk_window PRIVATE hal/narrow_return.cpp)
