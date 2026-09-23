@@ -1,12 +1,12 @@
 //cpp
-// @symbol _ZN6Thwomp8BehaviorEv
+// @symbol _ZN7daDsn_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method */
-#include "Thwomp.h"
+#include "daDsn_c.h"
 
 /* Animation::currFrame reached as a raw 20.12 word. The ROM shifts it right by
    12 to read and left by 12 to write, in the same function that calls
    Animation::Advance on the same sub-object, so it is the member and not four
-   bytes of Thwomp -- see include/Thwomp.h. Spelled through a cast rather than
+   bytes of daDsn_c -- see include/daDsn_c.h. Spelled through a cast rather than
    `mTextureSequence.currFrame.val` because mwccarm 2004/b56 rejects the member
    chain through the Fix12<int> template with an expression syntax error; the
    bare member and the cast both compile, and only the cast takes the shifts. */
@@ -25,7 +25,7 @@ void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *c);
 int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *c, int a, int b);
 }
 
-int Thwomp::Behavior()
+int daDsn_c::Behavior()
 {
     if (mState < 2) {
         if (mTriggered != 0)

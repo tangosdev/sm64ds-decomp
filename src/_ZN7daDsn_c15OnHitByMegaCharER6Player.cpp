@@ -1,6 +1,6 @@
 //cpp
-// @symbol _ZN6Thwomp15OnHitByMegaCharER6Player
-#include "Thwomp.h"
+// @symbol _ZN7daDsn_c15OnHitByMegaCharER6Player
+#include "daDsn_c.h"
 // Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov091).
 /* daDsn_c::OnHitByMegaChar - recovered from vtable slot identity. The
    draft cast `this` to a 30-entry vtable-shim struct and called its
@@ -14,7 +14,7 @@ void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int 
 void func_02012694(int, void*);
 }
 
-void Thwomp::OnHitByMegaChar(Player &player)
+void daDsn_c::OnHitByMegaChar(Player &player)
 {
     _ZN6Player16IncMegaKillCountEv(&player);
     Vector3 vec;

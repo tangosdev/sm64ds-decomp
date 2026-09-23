@@ -2725,10 +2725,10 @@ ov091	0x021328d8	func_ov091_021328d8	SlidingPlatformBsWide_Spawn	spawnfunc
 ov091	0x021328d8	SlidingPlatformBsWide_Spawn	daObjSimpleLift_c_classInit_KM3_DERU01	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov091	0x02132908	func_ov091_02132908	SlidingPlatformBdw_Spawn	spawnfunc
 ov091	0x02132908	SlidingPlatformBdw_Spawn	daObjSimpleLift_c_classInit_KM1_DERU	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
-ov091	0x02132938	func_ov091_02132938	_ZN6ThwompD1Ev	vtable slot 16
-ov091	0x02132998	func_ov091_02132998	_ZN6ThwompD0Ev	vtable slot 17
-ov091	0x02132ab0	func_ov091_02132ab0	_ZN6Thwomp8BehaviorEv	vtable slot 6
-ov091	0x02132c84	func_ov091_02132c84	_ZN6Thwomp13InitResourcesEv	vtable slot 0
+ov091	0x02132938	func_ov091_02132938	_ZN7daDsn_cD1Ev	vtable slot 16
+ov091	0x02132998	func_ov091_02132998	_ZN7daDsn_cD0Ev	vtable slot 17
+ov091	0x02132ab0	func_ov091_02132ab0	_ZN7daDsn_c8BehaviorEv	vtable slot 6
+ov091	0x02132c84	func_ov091_02132c84	_ZN7daDsn_c13InitResourcesEv	vtable slot 0
 ov091	0x02132cb8	func_ov091_02132cb8	Thwomp_Spawn	spawnfunc
 ov091	0x02132cb8	Thwomp_Spawn	daDsn_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov091	0x021331b8	func_ov091_021331b8	_ZN11daDsnBase_c16CleanupResourcesEv	vtable slot 3
@@ -2772,7 +2772,7 @@ ov091	0x02135008	SlidingPlatformWf_SpawnInfo	g_profile_BK_TRANSBAR	reconstructed
 ov091	0x02135080	data_ov091_02135080	_ZTV17daObjSimpleLift_c	vtable alloc=0x330
 ov091	0x02135150	data_ov091_02135150	Thwomp_SpawnInfo	spawninfo
 ov091	0x02135150	Thwomp_SpawnInfo	g_profile_DOSUN	reconstructed profile global; literal ROM ID DOSUN+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov091	0x02135174	data_ov091_02135174	_ZTV6Thwomp	vtable alloc=0x3a4
+ov091	0x02135174	data_ov091_02135174	_ZTV7daDsn_c	vtable alloc=0x3a4
 ov091	0x02135298	data_ov091_02135298	Stump_SpawnInfo	spawninfo
 ov091	0x02135298	Stump_SpawnInfo	g_profile_PILE	reconstructed profile global; literal ROM ID PILE+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov091	0x02135388	data_ov091_02135388	Fwoosh_SpawnInfo	spawninfo

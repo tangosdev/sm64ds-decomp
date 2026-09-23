@@ -309,7 +309,7 @@ All DS names below confirmed as live mangled symbols (`_ZTV*`, `_ZN*D1Ev`) in
 | `bhvChainChomp` | → | `daWanwan_c` (+`daObjWanwanShutter_c`) | [ov014](../../config/arm9/overlays/ov014/symbols.txt) |
 | `bhvSmallBully` / `bhvBigBully` | → | `daDonketu_c` / `daBDonketu_c` | [ov064](../../config/arm9/overlays/ov064/symbols.txt) |
 | `bhvSmallWhomp` (+King) | → | `Whomp` (`mIsKing` flag) | [ov079](../../config/arm9/overlays/ov079/symbols.txt) |
-| `bhvThwomp` | → | `Thwomp` | [ov091](../../config/arm9/overlays/ov091/symbols.txt) |
+| `bhvThwomp` | → | `daDsn_c` | [ov091](../../config/arm9/overlays/ov091/symbols.txt) |
 | `bhvBoo` | → | `Boo` / `BigBoo` | [ov063](../../config/arm9/overlays/ov063/symbols.txt) |
 | `bhvMrI` | → | `MrI` (+`MrI_Projectile`) | [ov071](../../config/arm9/overlays/ov071/symbols.txt) |
 | **`bhvFlyingBookend`** | → | **`BookShot`** — *not* "Bookend" | [ov020](../../config/arm9/overlays/ov020/symbols.txt) |

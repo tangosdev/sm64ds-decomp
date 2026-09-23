@@ -148,27 +148,27 @@ src/d_a_obj_simple_lift_km1_deru.c:
     complete
     .text start:0x02132908 end:0x02132938
 
-src/_ZN6ThwompD1Ev.cpp:
+src/_ZN7daDsn_cD1Ev.cpp:
     complete
     .text start:0x02132938 end:0x02132998
 
-src/_ZN6ThwompD0Ev.cpp:
+src/_ZN7daDsn_cD0Ev.cpp:
     complete
     .text start:0x02132998 end:0x02132a0c
 
-src/_ZN6Thwomp16OnAimedAtWithEggEv.cpp:
+src/_ZN7daDsn_c16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x02132a0c end:0x02132a14
 
-src/_ZN6Thwomp15OnHitByMegaCharER6Player.cpp:
+src/_ZN7daDsn_c15OnHitByMegaCharER6Player.cpp:
     complete
     .text start:0x02132a14 end:0x02132ab0
 
-src/_ZN6Thwomp8BehaviorEv.cpp:
+src/_ZN7daDsn_c8BehaviorEv.cpp:
     complete
     .text start:0x02132ab0 end:0x02132c84
 
-src/_ZN6Thwomp13InitResourcesEv.cpp:
+src/_ZN7daDsn_c13InitResourcesEv.cpp:
     complete
     .text start:0x02132c84 end:0x02132cb8
 

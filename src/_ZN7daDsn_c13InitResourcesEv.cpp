@@ -1,11 +1,11 @@
 //cpp
-// @symbol _ZN6Thwomp13InitResourcesEv
+// @symbol _ZN7daDsn_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "Thwomp.h"
+#include "daDsn_c.h"
 
-int Thwomp::InitResources()
+int daDsn_c::InitResources()
 {
     mFileTable = (int)data_ov091_02135138;
     int r = Init();
