@@ -1,0 +1,60 @@
+# slice_w24_faceflip.txt -- run linkfull wave 24, lane FACEFLIP1: matched ROM
+# bodies that were held out of the link by a FORWARD row in port/faces_sync.txt.
+#
+# WHAT HELD EACH ONE OUT WAS ITS NAME, NOT ITS CODE. A forward row (F) makes
+# the generated build/port/host-src/faces_sync_gen.cpp DEFINE the member and
+# call a host copy under the flat ROM name. The matched TU below defines that
+# same member, so linking it beside the forward face was a duplicate
+# definition, and the host copy ran instead. Each row here is closed by the
+# same three steps: the ledger row flips from F to R (the generated face then
+# DEFINES the flat ROM name the port's callers ask for and calls the member),
+# the host copy goes, and the TU is listed here. The two precedents are
+# 7893d85d3 (dScMg3DEsp_c::CleanupResources) and a37611039
+# (Flamethrower::Behavior).
+#
+# EVERY ROW IS MATCHING at 2004/b56 with --strict-relocs against the
+# cartridge's own overlay bytes (tools/match.py by ROM address, the overlay
+# bins from extracted/overlays/ at each overlay's .text start):
+#
+#   _ZN10HootTheOwl8BehaviorEv   ov094 0x02136478 size 0x1bc, faces_sync row
+#       __ZN10HootTheOwl8BehaviorEv. Host copy was the body in
+#       port/unmatched/HootTheOwl_StateDispatch.cpp; the flat name's caller
+#       is hal/actor_classes_ov094.cpp's slot-6 thunk.
+#   _ZN6Klepto8BehaviorEv        ov062 0x0211c94c size 0x200, faces_sync row
+#       __ZN6Klepto8BehaviorEv. Host copy was the body in
+#       port/unmatched/Klepto_StateDispatch.cpp; the flat name's caller is
+#       hal/actor_classes_koopa_chuckya.cpp's slot thunk.
+#   _ZN13PrincessPeach12UpdateLookAtEv  ov085 0x02129dbc size 0x100,
+#       faces_sync row __ZN13PrincessPeach12UpdateLookAtEv. Host copy was the
+#       UpdateLookAt half of port/unmatched/Ov085_PrincessPeach_Declshapes.cpp
+#       (its C2733 refusal is gone from the synced src, run linkfull lane
+#       HGFRONT1). Its one ROM caller (ov085 relocs.txt, from:0x0212a53c) is
+#       PrincessPeach::Behavior, linked matched C++ that calls the member, so
+#       nothing in the port spells the flat name any more.
+#   _ZN6Bowser8BehaviorEv        ov060 0x02115f64 size 0x114, faces_sync row
+#       __ZN6Bowser8BehaviorEv. Host copy was HOST COPY 6 in
+#       port/unmatched/Ov060_StateDispatch.cpp (its C2761 refusal is gone from
+#       the synced src, run linkfull lane HGFRONT1); the flat name's caller is
+#       hal/actor_classes_ov060.cpp's slot-6 shim. The one host-copied callee,
+#       func_ov060_02112434 (that file's HOST COPY 1), stays and is reached by
+#       the same C name.
+#
+# HOOT AND KLEPTO DISPATCH THROUGH A MEMBER POINTER (run linkfull lane PMF1,
+# LINK15 batch W23-7). Both Behaviors call their state machine through an mwcc
+# 8-byte member pointer. The ROM decodes it as the ARM C++ ABI does (word 0
+# the code, word 1 twice the adjustment with the virtual flag in bit 0); MSVC
+# under /vmg /vmm (port/CMakeLists.txt block R8) lays down the same eight bytes
+# and calls `ecx = this + word 1; call word 0`. The two agree exactly when
+# word 1 is zero, and it is zero in all twenty source records the two seats
+# rewrite (overlay_0094.bin 0x021369c0..0x02136a0c and overlay_0062.bin
+# 0x0211dcd0..0x0211dd1c, no relocation from any +4 word; the seats abort on a
+# nonzero one). The receiver arrives in ecx with nothing pushed, so every
+# seated code word is a __fastcall face (the two StateDispatch files above).
+#
+# Consumed by the "W24 FACEFLIP1" block at the end of port/CMakeLists.txt, on
+# walk_window, walk_window_hires and smoke_player: the three targets that
+# compiled the host copies, and the three that link the generated faces.
+src/_ZN10HootTheOwl8BehaviorEv.cpp
+src/_ZN6Klepto8BehaviorEv.cpp
+src/_ZN13PrincessPeach12UpdateLookAtEv.cpp
+src/_ZN6Bowser8BehaviorEv.cpp

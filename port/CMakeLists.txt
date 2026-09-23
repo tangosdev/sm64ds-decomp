@@ -22772,3 +22772,26 @@ endforeach()
 foreach(_tw24camp3 walk_window walk_window_hires smoke_player)
     target_sources(${_tw24camp3} PRIVATE ${SLICE_W24_CAMP3_SOURCES})
 endforeach()
+
+# W24 FACEFLIP1 (run linkfull wave 24, lane FACEFLIP1)
+# ===========================================================================
+# Matched TUs that a FORWARD row in port/faces_sync.txt held out of the link:
+# each of those rows is flipped to REVERSE and its host copy retired, so the
+# matched body runs as the game's own code. port/slice_w24_faceflip.txt
+# carries the rows and the evidence. All three targets take them, because the
+# reverse faces that define the flat names are in ${PORT_FACES_SYNC_GEN},
+# which all three link, and each face calls the member these TUs define. The
+# slice names no PORT_HOSTGEN_TU row, so sitting below the hostgen count (as
+# the other end-of-file blocks do) leaves that count whole.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w24_faceflip.txt" SLICE_W24_FACEFLIP_LINES)
+set(SLICE_W24_FACEFLIP_SOURCES "")
+foreach(line IN LISTS SLICE_W24_FACEFLIP_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_W24_FACEFLIP_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_w24ff_t walk_window walk_window_hires smoke_player)
+    target_sources(${_w24ff_t} PRIVATE ${SLICE_W24_FACEFLIP_SOURCES})
+endforeach()

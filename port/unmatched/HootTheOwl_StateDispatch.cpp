@@ -1,6 +1,6 @@
 /* HOOT_THE_OWL (234, ov094, gate 194): the SEAT of the owl's five state cells
- * and the one host copy left of its state machine, the per-frame tick in
- * src/_ZN10HootTheOwl8BehaviorEv.cpp.
+ * and the faces the per-frame tick dispatches into, src/_ZN10HootTheOwl8BehaviorEv.cpp
+ * (matched, port/slice_w24_faceflip.txt).
  *
  * THE CELLS. __sinit_ov094_021367e8 copies TEN 8-byte source records
  * (data_ov094_021369c0..02136a08, five {enter, tick} pairs) into five bss
@@ -128,89 +128,11 @@ extern "C" void port_hoot_the_owl_states_seat(void)
    PMF3), and its tail jump sets ecx = this + word 1 before it jumps, so the
    faces above receive the owl there too. */
 
-/* PORT_HOST_ABI: HootTheOwl::Behavior, host copy. The dispatch below is the
-   matched TU's own: MSVC's 8-byte member pointer over the tick record,
-   `mov ecx,[rec+0Ch] / add ecx,this / call [rec+8]` with the null test on
-   word 0 alone, which is what src/_ZN10HootTheOwl8BehaviorEv.cpp compiles to
-   under this build's flags (runs/linkfull/out/PMF1/msvc_hoot_behavior.asm).
-   The rest is transcribed line for line off that TU with raw offsets.
-
-   WHAT STILL KEEPS THE MATCHED TU OUT is its NAME, not its code. The TU
-   defines ?Behavior@HootTheOwl@@UAEHXZ, and port/faces_sync.txt carries that
-   member as a FORWARD face (the generated file defines it and calls the flat
-   name this body defines), so linking the TU as it stands is a duplicate
-   definition. Retiring this body is three steps: that ledger row flips from F
-   to R (the face then defines _ZN10HootTheOwl8BehaviorEv and calls the
-   member), this body goes, and the TU is enrolled. The faces above stay as
-   they are. */
-extern void DecIfAbove0_Short(void *);
-extern void _ZN9Animation7AdvanceEv(void *);
-extern void func_02012694(int, void *);
-extern void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void *, void *, unsigned int);
-extern void _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(void *, void *);
-extern void _ZN5dCc_c5ClearEv(void *);
-extern void _ZN5dCc_c6UpdateEv(void *);
-extern void func_ov094_021361d8(void *);
-extern void func_ov094_021362e0(void *);
-extern void func_ov094_021357a4(void *);
-
-/* The matched TU's view of a state: eight bytes nothing reads, then the tick
-   record as a real member pointer. The class is left incomplete on purpose;
-   under /vmg /vmm its member pointer is the same eight bytes either way. */
-struct PortHootOwl;
-struct PortHootState {
-    unsigned char pad_00[8];
-    void (PortHootOwl::*mMain)();   /* 0x08 */
-};
-
-int _ZN10HootTheOwl8BehaviorEv(void *selfv)
-{
-    char *c = (char *)selfv;
-
-    DecIfAbove0_Short((unsigned short *)(c + 0x100));
-    {
-        PortHootState *o = *(PortHootState **)(c + 0x3c8);
-        if (*(int *)((char *)o + 8) != 0)
-            (((PortHootOwl *)c)->*(o->mMain))();
-    }
-    if (*(char **)(c + 0x3c8) == (char *)data_ov094_02136b40)
-        return 1;
-    *(int *)(c + 0x368) = *(int *)(c + 0x3f0);
-    _ZN9Animation7AdvanceEv(c + 0x35c);
-    {
-        char *m = *(char **)(c + 0x3c8);
-        if ((m == (char *)data_ov094_02136b50 || m == (char *)data_ov094_02136b60 ||
-             m == (char *)data_ov094_02136b30) &&
-            (unsigned short)(*(int *)(c + 0x364) >> 0xc) == 0) {
-            func_02012694(0x139, c + 0x74);
-        }
-    }
-    if (*(char **)(c + 0x3c8) == (char *)data_ov094_02136b70) {
-        func_ov094_021362e0(c);
-        *(short *)(c + 0x8c) = *(short *)(c + 0x92);
-        *(short *)(c + 0x8e) = *(short *)(c + 0x94);
-        *(short *)(c + 0x90) = *(short *)(c + 0x96);
-        _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(c, c + 0x150, 0);
-        return 1;
-    }
-    {
-        int s = *(int *)(c + 0xa8) + *(int *)(c + 0x9c);
-        int m2 = *(int *)(c + 0xa0);
-        int ac = *(int *)(c + 0xac);
-        if (s >= m2) m2 = s;
-        *(int *)(c + 0xa8) = m2;
-        *(int *)(c + 0xac) = ac;
-    }
-    _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(c, c + 0x110);
-    *(short *)(c + 0x8c) = *(short *)(c + 0x92);
-    *(short *)(c + 0x8e) = *(short *)(c + 0x94);
-    *(short *)(c + 0x90) = *(short *)(c + 0x96);
-    func_ov094_021361d8(c);
-    if (*(char **)(c + 0x3c8) == (char *)data_ov094_02136b60 && *(unsigned char *)(c + 0x3d4) == 2) {
-        func_ov094_021357a4(c);
-    }
-    _ZN5dCc_c5ClearEv(c + 0x110);
-    _ZN5dCc_c6UpdateEv(c + 0x110);
-    return 1;
-}
+/* HootTheOwl::Behavior IS NOT HOST-COPIED ANY MORE. src/_ZN10HootTheOwl8BehaviorEv.cpp
+   is on port/slice_w24_faceflip.txt: its dispatch compiles to
+   `mov ecx,[rec+0Ch] / add ecx,this / call [rec+8]` under this build's flags
+   (runs/linkfull/out/PMF1/msvc_hoot_behavior.asm), which the faces above take
+   in ecx, and port/faces_sync.txt's reverse face defines the flat
+   _ZN10HootTheOwl8BehaviorEv that hal/actor_classes_ov094.cpp's slot-6 thunk
+   calls. */
 }  /* extern "C" */

@@ -146,7 +146,7 @@ __ZN9BootSceneD1Ev                                                       ??1Boot
 __ZN6Bowser13InitResourcesEv                                             ?InitResources@Bowser@@UAEHXZ                                    0x02116130 R
 __ZN6Bowser16CleanupResourcesEv                                          ?CleanupResources@Bowser@@UAEHXZ                                 0x02115e80 R
 __ZN6Bowser16OnPendingDestroyEv                                          ?OnPendingDestroy@Bowser@@UAEXXZ                                 0x02115f08 R
-__ZN6Bowser8BehaviorEv                                                   ?Behavior@Bowser@@UAEHXZ                                         0x02115f64 F
+__ZN6Bowser8BehaviorEv                                                   ?Behavior@Bowser@@UAEHXZ                                         0x02115f64 R
 
 __ZN10BowserFire13InitResourcesEv                                        ?InitResources@BowserFire@@UAEHXZ                                0x02117790 R
 __ZN10BowserFire16CleanupResourcesEv                                     ?CleanupResources@BowserFire@@UAEHXZ                             0x021176c4 R
@@ -395,7 +395,7 @@ __ZN7HeaveHoD1Ev                                                         ??1Heav
 
 __ZN10HootTheOwl16CleanupResourcesEv                                     ?CleanupResources@HootTheOwl@@UAEHXZ                             0x021363e0 R
 __ZN10HootTheOwl16OnPendingDestroyEv                                     ?OnPendingDestroy@HootTheOwl@@UAEXXZ                             0x02136428 R
-__ZN10HootTheOwl8BehaviorEv                                              ?Behavior@HootTheOwl@@UAEHXZ                                     0x02136478 F
+__ZN10HootTheOwl8BehaviorEv                                              ?Behavior@HootTheOwl@@UAEHXZ                                     0x02136478 R
 __ZN10HootTheOwlD1Ev                                                     ??1HootTheOwl@@UAE@XZ                                            0x02135700 R
 
 __ZN8IceBlock15OnHitByMegaCharER6Player                                  ?OnHitByMegaChar@IceBlock@@UAEXAAUPlayer@@@Z                     0x02127ccc R
@@ -414,7 +414,7 @@ __ZN3KeyD1Ev                                                             ??1Key@
 __ZN6Klepto16CleanupResourcesEv                                          ?CleanupResources@Klepto@@UAEHXZ                                 0x0211c8b0 R
 __ZN6Klepto16OnAimedAtWithEggEv                                          ?OnAimedAtWithEgg@Klepto@@UAEHXZ                                 0x0211ce78 R
 __ZN6Klepto16OnPendingDestroyEv                                          ?OnPendingDestroy@Klepto@@UAEXXZ                                 0x0211c91c R
-__ZN6Klepto8BehaviorEv                                                   ?Behavior@Klepto@@UAEHXZ                                         0x0211c94c F
+__ZN6Klepto8BehaviorEv                                                   ?Behavior@Klepto@@UAEHXZ                                         0x0211c94c R
 __ZN6KleptoD1Ev                                                          ??1Klepto@@UAE@XZ                                                0x0211b248 R
 
 __ZN14KnockDownPlank13InitResourcesEv                                    ?InitResources@KnockDownPlank@@UAEHXZ                            0x02111960 R
@@ -721,7 +721,7 @@ __ZN13PrincessPeach10InitState1Ev                                        ?InitSt
 __ZN13PrincessPeach10InitState2Ev                                        ?InitState2@PrincessPeach@@QAEHXZ                                0x0212a150 R
 __ZN13PrincessPeach10InitState3Ev                                        ?InitState3@PrincessPeach@@QAEHXZ                                0x0212a37c R
 __ZN13PrincessPeach10InitState4Ev                                        ?InitState4@PrincessPeach@@QAEHXZ                                0x0212a19c R
-__ZN13PrincessPeach12UpdateLookAtEv                                      ?UpdateLookAt@PrincessPeach@@QAEXXZ                              0x02129dbc F
+__ZN13PrincessPeach12UpdateLookAtEv                                      ?UpdateLookAt@PrincessPeach@@QAEXXZ                              0x02129dbc R
 __ZN13PrincessPeach16CleanupResourcesEv                                  ?CleanupResources@PrincessPeach@@UAEHXZ                          0x0212a4c0 R
 __ZN13PrincessPeach16OnPendingDestroyEv                                  ?OnPendingDestroy@PrincessPeach@@UAEXXZ                          0x0212a504 R
 __ZN13PrincessPeach21UpdateGroundCollisionEP10dBgCh_Actr                 ?UpdateGroundCollision@PrincessPeach@@QAEXPAUdBgCh_Actr@@@Z      0x02129ebc F
