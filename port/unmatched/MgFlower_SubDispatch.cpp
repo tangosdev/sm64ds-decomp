@@ -131,6 +131,7 @@
  */
 
 #include <cstdio>
+#include <cstdlib>   /* std::abort, for the seat (run linkfull lane PMFMG1) */
 
 extern "C" {
 
@@ -196,39 +197,79 @@ static void sub_call(void *p, unsigned code, int adj)
     sub_unhandled("UNHANDLED", code, adj);
 }
 
-/* src/func_ov006_020c3d18.cpp, verbatim except that the indirect call through
-   the member pointer becomes sub_call. The pair read, the `v >> 1` this
-   adjustment, the virtual-bit test, the Animation::Advance at +0xd68 and the
-   0x16-iteration 0x98-stride sweep with its +0x48 guard are all src's. */
-// PORT_HOST_ABI: mwcc pointer-to-member dispatch open-coded as plain ints, jumping to a raw DS code word MSVC's pmf ABI cannot reproduce
-extern "C" void func_ov006_020c3d18(char *c)
+/* src/func_ov006_020c3d18.cpp -- RETIRED, run linkfull lane PMFMG1. The five
+   .data pairs that can ever reach the object's head are seated below with
+   host words, so the matched TU's own open-coded call reaches a host body.
+
+   ---- WHY THE HEADER'S "DELIBERATELY NOT REWRITTEN" NO LONGER HOLDS ----------
+   The header above is right that rewriting ONE side breaks the idle test:
+   src/func_ov006_020c3b80.c compares the object's live pair with
+   data_ov006_0213aee0 word for word. It is answered the way lanes MGWRITER
+   (MgMemory2_FieldPmf.cpp) and FWD gate 3 (MgTrampolineTerror_MarioDispatch
+   .cpp) answered it: ONE HOST WORD PER CODE WORD, written into every pair that
+   holds it, the sentinel included. 0213aec0 and the sentinel 0213aee0 both
+   hold 0x020c3ad8 and both get the same wrapper, so the comparison answers
+   exactly what the cartridge answers, and `c[0] == 0` stays zero on an
+   unwritten head.
+
+   THE UNIVERSE IS CLOSED BY THE ROM (runs/linkfull/out/PMFMG1/
+   rom_records.txt, rom_flower_code_refs.txt): the four code words have
+   exactly five relocations in the whole of ov006, all five `load` rows from
+   these five .data pairs, every one {code, 0}; no literal pool in code holds
+   any of them, so nothing compares the head against a DS constant. The four
+   writers (020c3adc, 020c3990, 020c38b0, 020c3908) copy a pair whole and the
+   one reader by value is 020c3b80.
+
+   __cdecl, AND THE LISTING SAYS WHY (runs/linkfull/out/PMFMG1/
+   func_ov006_020c3d18.asm): `push ecx / call eax`, then the caller's own
+   `add esp, 8` covering this push and the Animation::Advance one. The receiver
+   is on the stack and the caller cleans it, so each pair holds a __cdecl
+   wrapper that counts what sub_call counted and calls the body. Three of the
+   four bodies take nothing (their ROM bodies are `bx lr`); a cdecl callee that
+   declares nothing reads nothing, and the caller cleans the word it pushed. */
+static void fw_c3ad8(void *self) { ++g_sub_calls; func_ov006_020c3ad8(self); }
+static void fw_c395c(void *self) { ++g_sub_calls; func_ov006_020c395c((int *)self); }
+static void fw_c38ac(void *self) { ++g_sub_calls; func_ov006_020c38ac(self); }
+static void fw_c3904(void *self) { ++g_sub_calls; func_ov006_020c3904(self); }
+
+struct MgFlwPair { unsigned code; int adj; };
+extern "C" {
+extern MgFlwPair data_ov006_0213aec0;   /* written  src/func_ov006_020c3adc.c */
+extern MgFlwPair data_ov006_0213aec8;   /* written  src/func_ov006_020c3990.c */
+extern MgFlwPair data_ov006_0213aed0;   /* written  src/func_ov006_020c38b0.c */
+extern MgFlwPair data_ov006_0213aed8;   /* written  src/func_ov006_020c3908.c */
+extern MgFlwPair data_ov006_0213aee0;   /* SENTINEL src/func_ov006_020c3b80.c */
+void port_mg_flower_sub_seat(void);
+}
+
+/* Called from port_mg_framework_states_seat (unmatched/MgBase_StateDispatch
+   .cpp), which hal/scene_mg.cpp runs once per process after the thirty-five
+   overlay constructors and before any minigame object exists, so no writer
+   can have copied a pair yet. Compare against the cartridge's own word and a
+   zero adjustment first; either mismatch is a loud abort. */
+extern "C" void port_mg_flower_sub_seat(void)
 {
-    int v = *(int *)(c + 4);
-    void *p = c + (v >> 1);
+    static int done;
+    if (done)
+        return;
+    done = 1;
 
-    if (v & 1) {
-        /* The virtual arm. src reads the vtable at *(int**)p and indexes it by
-           the code word as a BYTE OFFSET. No pair in this closure sets the
-           bit, so there is nothing to verify an implementation against and it
-           reports instead. */
-        sub_unhandled("through the VIRTUAL arm of the member pointer, which "
-                      "no measured pair in this closure uses",
-                      (unsigned)*(int *)c, v);
-    } else {
-        sub_call(p, (unsigned)*(int *)c, v);
-    }
-
-    _ZN9Animation7AdvanceEv(c + 0xd68);
-
-    {
-        int i = 0;
-        char *e = c + 8;
-        do {
-            if (*(int *)(c + 0x48) != 0)
-                func_ov006_020c35e8(e);
-            i++;
-            c += 0x98;
-            e += 0x98;
-        } while (i < 0x16);
+    static const struct { MgFlwPair *p; unsigned rom; void *host; const char *what; }
+    seats[] = {
+        {&data_ov006_0213aec0, 0x020c3ad8u, (void *)fw_c3ad8, "0213aec0 written"},
+        {&data_ov006_0213aec8, 0x020c395cu, (void *)fw_c395c, "0213aec8 written"},
+        {&data_ov006_0213aed0, 0x020c38acu, (void *)fw_c38ac, "0213aed0 written"},
+        {&data_ov006_0213aed8, 0x020c3904u, (void *)fw_c3904, "0213aed8 written"},
+        {&data_ov006_0213aee0, 0x020c3ad8u, (void *)fw_c3ad8, "0213aee0 SENTINEL"},
+    };
+    for (unsigned i = 0; i < sizeof seats / sizeof seats[0]; ++i) {
+        if (seats[i].p->code != seats[i].rom || seats[i].p->adj != 0) {
+            std::fprintf(stderr, "FATAL: dScMgFlower_c sub-object pair %s: the "
+                         "mount holds %08x/%d, the ROM's own word says %08x/0 "
+                         "-- WRONG BYTES\n", seats[i].what, seats[i].p->code,
+                         seats[i].p->adj, seats[i].rom);
+            std::abort();
+        }
+        seats[i].p->code = (unsigned)(size_t)seats[i].host;
     }
 }

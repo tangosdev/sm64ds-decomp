@@ -240,6 +240,10 @@ LEDGER = [
      "caller cleans) and src/func_ov006_020e82fc.cpp (writes the receiver "
      "over its own argument slot and tail jumps), so [esp+4] is the receiver "
      "at both and ecx is not"),
+    ("CDECL", r"^\?seats@\?1\?\?port_mg_flower_sub_seat@@",
+     "dScMgFlower_c's object-head field: the five .data pairs (the sentinel "
+     "0213aee0 included) are read by src/func_ov006_020c3d18.cpp, which "
+     "open-codes the decode and calls `push ecx; call eax`, caller-cleaned"),
 ]
 
 
