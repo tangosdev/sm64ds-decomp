@@ -68,7 +68,7 @@
   "bss": [],
   "notes": [
     "Hand-curated from the 6 legacy one-function C++ sources; see the file's own header comment for the reconciliation.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN10dBgActor_c19UpdateClsnPosAndRotEv' differed between the Behavior and InitResources legacy files (two void* spellings). RESOLVED by dropping both mangled declarations: the merged TU calls UpdateClsnPosAndRot() and UpdateModelPosAndRotY() as dBgActor_c members through dBgActor_c.h. No TUBUILD CONFLICT marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN10dBgActor_c19UpdateClsnPosAndRotEv' differs between the legacy file that used to hold _ZN10daDpLift_c8BehaviorEv and the one that held _ZN10daDpLift_c13InitResourcesEv; kept the first, the other is commented out for review. RESOLVED by dropping BOTH mangled declarations (two void * spellings of the same call): the merged TU calls UpdateClsnPosAndRot() and UpdateModelPosAndRotY() as dBgActor_c members through dBgActor_c.h. No TUBUILD CONFLICT marker survives in the merged source.",
     "The legacy InitResources source carried `#pragma opt_strength_reduction off`. It is live (without it InitResources DIFFs) and is carried as a push/pop bracket around that one member, which binds only because the TU is under `#pragma defer_codegen off`.",
     "Retired helpers: the legacy D1/D0 sources were uncalled PyramidLift_EmitDestructor / PyramidLift_EmitDeletingDestructor helpers that forced one inline variant each; the TU defines the destructor once instead."
   ],
