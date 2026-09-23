@@ -40,7 +40,10 @@ struct daObjCtMecha10_c : dBgActor_c {
     s32 mRotationState;               /* 0x32c */
 
     /* --- vtable --- */
-    virtual ~daObjCtMecha10_c();
+    /* Inline empty dtor: mwccarm emits D1 then D0 and no D2, which is the
+       order the cartridge has -- D1 at 0x021111a0, D0 at 0x021111e4. Same
+       form as include/daObjBk_Lift_c.h, the same dBgActor_c shape. */
+    virtual ~daObjCtMecha10_c() {}
 
     int Behavior();
     int CleanupResources();

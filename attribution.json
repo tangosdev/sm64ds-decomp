@@ -4585,6 +4585,12 @@
     "src/actors/daBbl_c.cpp#_ZN7daBbl_c8BehaviorEv": "tangosdev",
     "src/actors/daBbl_c.cpp#_ZN7daBbl_c13InitResourcesEv": "lunavyqo",
     "src/actors/daBbl_c.cpp#_ZN7daBbl_c13OnYoshiTryEatEv": "andrewboudreau",
-    "src/actors/daBbl_c.cpp#daBbl_c_classInit": "tangosdev"
+    "src/actors/daBbl_c.cpp#daBbl_c_classInit": "tangosdev",
+    "src/actors/daObjCtMecha10_c.cpp#_ZN16daObjCtMecha10_cD1Ev": "tangosdev",
+    "src/actors/daObjCtMecha10_c.cpp#_ZN16daObjCtMecha10_cD0Ev": "tangosdev",
+    "src/actors/daObjCtMecha10_c.cpp#_ZN16daObjCtMecha10_c16CleanupResourcesEv": "tangosdev",
+    "src/actors/daObjCtMecha10_c.cpp#_ZN16daObjCtMecha10_c6RenderEv": "tangosdev",
+    "src/actors/daObjCtMecha10_c.cpp#_ZN16daObjCtMecha10_c8BehaviorEv": "tangosdev",
+    "src/actors/daObjCtMecha10_c.cpp#_ZN16daObjCtMecha10_c13InitResourcesEv": "tangosdev"
   }
 }
