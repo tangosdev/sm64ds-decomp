@@ -1,6 +1,6 @@
 # Menbo provenance corrections after PR #2994
 
-Input: `8f5b7274a11573c4ba50a41b66449da984927665`. PR #2994 was merged externally as `c6c1b71a420a20c27d7f1f845b2619b439157c75` while this repair was being reviewed. The final candidate composes main `1e80857fe45a24c974307ea9ad39a1ba6898c843`; its intervening changes are only README and contributions metadata.
+Input: `8f5b7274a11573c4ba50a41b66449da984927665`. PR #2994 was merged externally as `c6c1b71a420a20c27d7f1f845b2619b439157c75` while this repair was being reviewed. This candidate composes main `5e1b476856667904a074d1a8914877170f49cba0`, preserving the explicit D0 source marker landed separately in PR #3003. The earlier review of `cfa2e9ba` against `1e80857f` remains historical; fresh evidence binds this composition and base.
 
 Independent review read all 24 promoted functions, their predecessor bodies, the unchanged class header, relevant callees, relocation rows, enrollment and baseline migrations. It found inaccurate new explanatory text without an introduced runtime regression.
 
@@ -11,6 +11,6 @@ Independent review read all 24 promoted functions, their predecessor bodies, the
 - MENBO-RAYCAST-01: distinguished the pre-raycast level/mode return from the surface-flag return after collision detection.
 - MENBO-STATE-01: replaced unsupported state-entry names with the evidenced updater/animation pairings.
 
-The converted-ratchet D0 false positive is a separate classifier repair. No baseline is lowered here. This task corrects provenance; raw-offset accesses, anonymous helpers and mangled ABI bridges remain inherited reconstruction work, not newly solved methods or layouts.
+MENBO-CURRENT-BASE-01: preserved the landed D0 marker while composing the current source base. PR #3003 fixes the immediate converted-ratchet failure; the general classifier improvement in PR #3002 is no longer a dependency. No baseline is lowered here. This task corrects provenance; raw-offset accesses, anonymous helpers and mangled ABI bridges remain inherited reconstruction work, not newly solved methods or layouts.
 
 Producer and independent verifier record exact object/link/static and full-ROM evidence in the task. Publication is not merge acceptance, and no main merge is requested by this handoff.

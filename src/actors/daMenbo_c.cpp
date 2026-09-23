@@ -306,6 +306,7 @@ void func_ov090_02131e50(char* c);
 /* the whole body of each.                                                     */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN9daMenbo_cD1Ev
+// @symbol _ZN9daMenbo_cD0Ev
 /* One vtable store and four destructor calls, every one a consequence of
  * `struct daMenbo_c : dEnemyBase_c` and the members that declaration types:
  * its own vptr, then ModelAnim at 0x30c, dBgCh_Actr at 0x150 and dCcAcPos_c at
