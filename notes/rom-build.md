@@ -587,7 +587,7 @@ Why the rest are not source-built yet:
 | count | reason |
 |---:|---|
 | 1,972 | references a symbol name `config/**/symbols.txt` does not define — the BLIND matches. No address means nothing to link to, and gap objects import weakly, so it would silently resolve to 0. |
-| 711 | the object defines a different symbol than the file/config name (e.g. `src/func_ov091_02132a0c.c` defines [daDsn_c_OnAimedAtWithEgg](../src/_ZN6Thwomp16OnAimedAtWithEggEv.cpp)) — a src/config naming drift, likely recoverable by reconciling names. |
+| 711 | the object defines a different symbol than the file/config name (e.g. `src/func_ov091_02132a0c.c` defines [daDsn_c_OnAimedAtWithEgg](../src/actors/daDsn_c.cpp)) — a src/config naming drift, likely recoverable by reconciling names. |
 | 70 | compiled `st_size` ≠ the size `symbols.txt` declares |
 | 301 | lives in a `.init` range, where a `File.o(.init)` selector would match nothing in an object whose code is in `.text` |
 | 88 | emits `.data` or `.bss` whose ROM address we do not know |

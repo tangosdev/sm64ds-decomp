@@ -6,7 +6,7 @@
 #include "decl_TextureSequence.h"
 #include "decl_common.h"
 extern int _ZTV11daDsnBase_c[];
-extern int _ZTV6Thwomp[];
+extern int _ZTV7daDsn_c[];
 /* recovered: vtable identified */
 /* vtable identified: VT0 = _ZTV11daDsnBase_c */
 /* Reconstructed source-style name: SM64DS proves daDsn_c through RTTI,
@@ -21,7 +21,7 @@ int *daDsn_c_classInit(void)
         p[0] = (int)_ZTV11daDsnBase_c;
         _ZN15TextureSequenceC1Ev((char *)p + 0x324);
         _ZN11ShadowModelC1Ev((char *)p + 0x338);
-        p[0] = (int)_ZTV6Thwomp;
+        p[0] = (int)_ZTV7daDsn_c;
     }
     return p;
 }

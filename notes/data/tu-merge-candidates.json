@@ -1733,18 +1733,18 @@
    "start": "0x2132938",
    "end": "0x2133254",
    "classes": [
-    "Thwomp",
+    "daDsn_c",
     "daDsnBase_c"
    ],
    "n_functions_map": 19,
    "n_files": 19,
    "files": [
-    "src/_ZN6ThwompD1Ev.cpp",
-    "src/_ZN6ThwompD0Ev.c",
-    "src/_ZN6Thwomp16OnAimedAtWithEggEv.cpp",
-    "src/_ZN6Thwomp15OnHitByMegaCharER6Player.cpp",
-    "src/_ZN6Thwomp8BehaviorEv.cpp",
-    "src/_ZN6Thwomp13InitResourcesEv.cpp",
+    "src/_ZN7daDsn_cD1Ev.cpp",
+    "src/_ZN7daDsn_cD0Ev.c",
+    "src/_ZN7daDsn_c16OnAimedAtWithEggEv.cpp",
+    "src/_ZN7daDsn_c15OnHitByMegaCharER6Player.cpp",
+    "src/_ZN7daDsn_c8BehaviorEv.cpp",
+    "src/_ZN7daDsn_c13InitResourcesEv.cpp",
     "src/d_a_dsn.c",
     "src/_ZN11daDsnBase_cD0Ev.cpp",
     "src/_ZN11daDsnBase_cD1Ev.c",
@@ -1755,8 +1755,8 @@
     "src/func_ov091_02132ff4.c",
     "src/func_ov091_02133020.c",
     "src/func_ov091_02133098.cpp",
-    "src/_ZN6Thwomp16CleanupResourcesEv.cpp",
-    "src/_ZN6Thwomp6RenderEv.cpp",
+    "src/_ZN7daDsn_c16CleanupResourcesEv.cpp",
+    "src/_ZN7daDsn_c6RenderEv.cpp",
     "src/func_ov091_02133254.cpp"
    ],
    "ext_mix": {

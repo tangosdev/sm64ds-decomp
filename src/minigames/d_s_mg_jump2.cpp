@@ -6,6 +6,10 @@
  * reorder. The legacy file for func_ov006_020ef5ac had
  * `#pragma opt_propagation off`; it is not needed, and carried here it
  * would apply to every function in the file.
+ *
+ * deslop
+ * Leftover: the func_ov006 helpers and data homes keep linker names;
+ *   naming belongs at their definitions.
  */
 
 #include "dScMgJump2_c.h"

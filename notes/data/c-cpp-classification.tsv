@@ -471,7 +471,7 @@ src/daObjC0_Switch_c_Spawn.c	S1-stores-rom-vptr	ov012			stores _ZTV16daObjC0_Swi
 src/daBasabasa_c_classInit.c	WEAK-refs-only	ov065				1		None		-
 src/TTC_MovingBar_Spawn.c	S1-stores-rom-vptr	ov065			stores _ZTV16daObjCtMecha05_c	1		None	_ZTV16daObjCtMecha05_c	-
 src/d_a_obj_ct_mecha09.c	WEAK-refs-only	ov065				1		None		-
-src/d_a_dsn.c	S1-stores-rom-vptr	ov091			stores _ZTV11daDsnBase_c	1		None	_ZTV11daDsnBase_c/_ZTV6Thwomp	-
+src/d_a_dsn.c	S1-stores-rom-vptr	ov091			stores _ZTV11daDsnBase_c	1		None	_ZTV11daDsnBase_c/_ZTV7daDsn_c	-
 src/daObjKm2_Gura_c_classInit.c	S1-stores-rom-vptr	ov045			stores _ZTV15daObjGuragura_c	1		None	_ZTV15daObjGuragura_c/_ZTV18TiltingPlatformBfs	-
 src/daObjFl_Gura_c_classInit.c	S1-stores-rom-vptr	ov064			stores _ZTV15daObjGuragura_c	1		None	_ZTV15daObjGuragura_c/_ZTV18TiltingPlatformLll	-
 src/d_a_obj_tt_futa.c	S1-stores-rom-vptr	ov033			stores _ZTV13daObjTtFuta_c	1		None	_ZTV13daObjTtFuta_c	-
@@ -942,7 +942,7 @@ src/_ZN6Memory8AllocateEjiP4Heap.c	P3-mangled-method-only	arm9		Memory	_ZN6Memor
 src/_ZN13daObjNumber_cD0Ev.c	DTOR-ONLY	ov002	daObjNumber_c	daObjNumber_c/daObjNumber_c	_ZN13daObjNumber_cD0Ev	1		True		-
 src/_ZN14daObjKi_Fune_cD0Ev.cpp	DTOR-ONLY	ov016	daObjKi_Fune_c	daObjKi_Fune_c/daObjKi_Fune_c	_ZN14daObjKi_Fune_cD0Ev	1		True	_ZTV10dBgActor_c/_ZTV14daObjKi_Fune_c	-
 src/_ZN14daObjKi_Fune_cD1Ev.cpp	DTOR-ONLY	ov016	daObjKi_Fune_c	daObjKi_Fune_c/daObjKi_Fune_c	_ZN14daObjKi_Fune_cD1Ev	1		True	_ZTV10dBgActor_c/_ZTV14daObjKi_Fune_c	-
-src/_ZN6ThwompD0Ev.c	DTOR-ONLY	ov091	daDsn_c	Thwomp/daDsn_c	_ZN6ThwompD0Ev	1		True	_ZTV10dBgActor_c/_ZTV11daDsnBase_c/_ZTV6Thwomp	-
+src/_ZN7daDsn_cD0Ev.c	DTOR-ONLY	ov091	daDsn_c	daDsn_c/daDsn_c	_ZN7daDsn_cD0Ev	1		True	_ZTV10dBgActor_c/_ZTV11daDsnBase_c/_ZTV7daDsn_c	-
 src/_ZN6ToxBox13InitResourcesEv.c	P1-vtable+mangled	ov092	daOnms_c	ToxBox/daOnms_c	vtable daOnms_c slot 0 @0x2131da0 | _ZN6ToxBox13InitResourcesEv	1		True		-
 src/_ZN7Clipper13Func_020150E8ER7Vector35Fix12IiEPh.c	P3-mangled-method-only	arm9		Clipper	_ZN7Clipper13Func_020150E8ER7Vector35Fix12IiEPh	1		True		by-value-class-param
 src/_ZN7Clipper13Func_02015560ER9Matrix4x3R7Vector35Fix12IiES3_.c	P3-mangled-method-only	arm9		Clipper	_ZN7Clipper13Func_02015560ER9Matrix4x3R7Vector35Fix12IiES3_	1		True		by-value-class-param

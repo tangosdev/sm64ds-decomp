@@ -5,7 +5,12 @@
  * Functions run in reverse of ROM order; do not reorder. The destructor is
  * inline in the header, so BeforeInitResources is the key function that
  * emits the vtable and the D1 and D0 pair. The ten free helpers are unnamed
- * in symbols.txt, and so are most of the arm9 and ov004 calls below. */
+ * in symbols.txt, and so are most of the arm9 and ov004 calls below.
+ *
+ * deslop
+ * Leftover: the ten free helpers and the Oam/data views keep linker
+ *   names; naming belongs at shared headers.
+ */
 
 #include "dScMgD3DBase_c.h"
 #include "decl_common.h"
