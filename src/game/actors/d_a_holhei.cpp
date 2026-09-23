@@ -201,16 +201,16 @@ int daHolhei_c::Behavior()
     if (mState != (void*)data_ov062_0211dea0) {
         if (mState != (void*)data_ov062_0211dec0
             && mState != (void*)data_ov062_0211de70) {
-            int r2 = 0;
+            int atEdge = 0;
             signed char t = data_0209f2f8;
             if (t == 0x16) {
                 if (mPosX > (int)0xff95c000)
-                    r2 = 1;
+                    atEdge = 1;
             } else if (t == 0x15) {
                 if (mPosZ < (int)0xff2f4000)
-                    r2 = 1;
+                    atEdge = 1;
             }
-            if (r2 != 0
+            if (atEdge != 0
                 || (mHorzSpeed != 0
                     && IsGoingOffCliff(mMeshClsn, 0x3c000, (s16)0x2888, 0, 1, 0x32000))) {
                 mHorzSpeed = 0;
@@ -267,12 +267,12 @@ ret:
 // @symbol _ZN10daHolhei_c6RenderEv
 int daHolhei_c::Render()
 {
-    void *r1 = mHeld;
-    if (r1 != 0) {
-        int r0 = mFlags;
-        int flag = (r0 & 0x4000) ? 1 : 0;
+    void *held = mHeld;
+    if (held != 0) {
+        int flags = mFlags;
+        int flag = (flags & 0x4000) ? 1 : 0;
         if (flag != 0) {
-            if (*(int*)((char*)r1 + 0xc8) != 0) {
+            if (*(int*)((char*)held + 0xc8) != 0) {
                 func_ov062_02116edc(this);
             }
         }
@@ -877,16 +877,16 @@ namespace tu {  /* namespaced: a (void*) view of this symbol is in scope */
 // @symbol func_ov062_02115f84
 int func_ov062_02115f84(char* c) {
     Vector3 v;
-    short r4 = 0;
+    short slope = 0;
     if (_ZNK10dBgCh_Actr10IsOnGroundEv(c+0x144)) {
-        char* fr = _ZNK10dBgCh_Actr14GetFloorResultEv(c+0x144);
-        _ZNK11SurfaceInfo12CopyNormalToER7Vector3(fr+4, &v);
-        r4 = func_02010844(c, &v, *(short*)(c+0x8e));
+        char* floorResult = _ZNK10dBgCh_Actr14GetFloorResultEv(c+0x144);
+        _ZNK11SurfaceInfo12CopyNormalToER7Vector3(floorResult+4, &v);
+        slope = func_02010844(c, &v, *(short*)(c+0x8e));
     }
     if (_ZNK10dBgCh_Actr8IsOnWallEv(c+0x144))
         return 1;
-    if (r4 < 0) r4 = -r4;
-    if (r4 > 0x1000) return 2;
+    if (slope < 0) slope = -slope;
+    if (slope > 0x1000) return 2;
     return 0;
 }
 }

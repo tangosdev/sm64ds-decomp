@@ -870,56 +870,56 @@ extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* bca, i
 
 extern "C" void func_ov070_0211f100(daPropeller_Heyho_c* c)
 {
-    Player* r5;
-    s32 r4;
+    Player* hitPlayer;
+    s32 hitFlags;
 
     if (c->mdCcAc_c.otherOwner == 0)
         return;
-    r5 = (Player *)_ZN8dActor_c10FindWithIDEj(c->mdCcAc_c.otherOwner);
-    if (!r5)
+    hitPlayer = (Player *)_ZN8dActor_c10FindWithIDEj(c->mdCcAc_c.otherOwner);
+    if (!hitPlayer)
         return;
 
-    r4 = (s32)c->mdCcAc_c.hitFlags;
-    if (r4 & 0x40000) {
+    hitFlags = (s32)c->mdCcAc_c.hitFlags;
+    if (hitFlags & 0x40000) {
         c->mStateStep = 1;
         FlyGuy_ChangeState(c, &data_ov070_021235bc);
         return;
     }
-    if (r4 & 0x20) {
+    if (hitFlags & 0x20) {
         c->mDeathState = 1;
-        func_ov002_020aea30(c, r5, 0);
+        func_ov002_020aea30(c, hitPlayer, 0);
         return;
     }
-    if (r4 & 0x67c0) {
+    if (hitFlags & 0x67c0) {
         c->mStateStep = 0;
         FlyGuy_ChangeState(c, &data_ov070_021235bc);
         return;
     }
 
     {
-        int isBf = (int)(r5->actorID == 0xbf);
+        int isBf = (int)(hitPlayer->actorID == 0xbf);
         if (!isBf)
             return;
     }
-    if (r5->mIsVanish != 0)
+    if (hitPlayer->mIsVanish != 0)
         return;
 
-    if (_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(c, &c->mdCcAc_c, r5)) {
-        _ZN6Player10SpinBounceE5Fix12IiE(r5, 0x28000);
+    if (_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(c, &c->mdCcAc_c, hitPlayer)) {
+        _ZN6Player10SpinBounceE5Fix12IiE(hitPlayer, 0x28000);
         c->mDeathState = 1;
-        func_ov002_020aea30(c, r5, 0);
+        func_ov002_020aea30(c, hitPlayer, 0);
         return;
     }
 
-    if (r4 & 0x10) {
-        _ZN12dEnemyBase_c22SpawnMegaCharParticlesER8dActor_cPc(c, r5, (char*)0);
-        r5->IncMegaKillCount();
+    if (hitFlags & 0x10) {
+        _ZN12dEnemyBase_c22SpawnMegaCharParticlesER8dActor_cPc(c, hitPlayer, (char*)0);
+        hitPlayer->IncMegaKillCount();
         func_02012694(0x1d, &c->mCamSpacePosX);
         FlyGuy_ChangeState(c, &data_ov070_021235bc);
         return;
     }
 
-    if (r5->mIsMetal == 1 || r5->IsOnShell() == 1) {
+    if (hitPlayer->mIsMetal == 1 || hitPlayer->IsOnShell() == 1) {
         c->mStateStep = 0;
         FlyGuy_ChangeState(c, &data_ov070_021235bc);
         return;
@@ -930,7 +930,7 @@ extern "C" void func_ov070_0211f100(daPropeller_Heyho_c* c)
         v.x = c->mPosX;
         v.y = c->mPosY;
         v.z = c->mPosZ;
-        _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(r5, &v, 2, 0xc000, 1, 0, 1);
+        _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(hitPlayer, &v, 2, 0xc000, 1, 0, 1);
     }
     if (c->mHitDuringAttack != 0)
         return;

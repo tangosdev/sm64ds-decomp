@@ -793,10 +793,10 @@ extern "C" int func_ov071_0211f6f8(char *c)
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0xd4, *(void **)((char *)data_ov071_02122f88 + 4), 0, 0x1000, 0);
     *(int *)(c + 0x130) = 0x4000;
     VSlot29 *b = (VSlot29 *)c;
-    int r1 = b->m29();
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x43, *(int *)(c + 0x5c), *(int *)(c + 0x60) + r1, *(int *)(c + 0x64));
-    int r2 = b->m29();
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x44, *(int *)(c + 0x5c), *(int *)(c + 0x60) + r2, *(int *)(c + 0x64));
+    int yOffset1 = b->m29();
+    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x43, *(int *)(c + 0x5c), *(int *)(c + 0x60) + yOffset1, *(int *)(c + 0x64));
+    int yOffset2 = b->m29();
+    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x44, *(int *)(c + 0x5c), *(int *)(c + 0x60) + yOffset2, *(int *)(c + 0x64));
     *(int *)(c + 0x39c) = 8;
     return 1;
 }
@@ -876,7 +876,7 @@ extern "C" void func_ov071_0211f498(int *t)
 extern "C" void func_ov071_0211f29c(void *thiz)
 {
     unsigned char *c = (unsigned char *)thiz;
-    unsigned char *r4;
+    unsigned char *hitPlayer;
     int b;
 
     if (_ZN8dActor_c7FindEggER5dCc_c(c, c + 0x160) != 0) {
@@ -889,12 +889,12 @@ extern "C" void func_ov071_0211f29c(void *thiz)
         unsigned int id = *(unsigned int *)(c + 0x184);
         if (id == 0)
             return;
-        r4 = (unsigned char *)_ZN8dActor_c10FindWithIDEj(id);
+        hitPlayer = (unsigned char *)_ZN8dActor_c10FindWithIDEj(id);
     }
-    if (r4 == 0)
+    if (hitPlayer == 0)
         return;
 
-    b = (int)(*(unsigned short *)(r4 + 0xc) == 0xbf);
+    b = (int)(*(unsigned short *)(hitPlayer + 0xc) == 0xbf);
     if (b == 0)
         return;
 
@@ -905,23 +905,23 @@ extern "C" void func_ov071_0211f29c(void *thiz)
     }
 
     if ((*(int *)(c + 0x180) & 0x66fe0)
-        || _ZN6Player9IsOnShellEv(r4) != 0
-        || *(unsigned char *)(r4 + 0x6f9) != 0) {
+        || _ZN6Player9IsOnShellEv(hitPlayer) != 0
+        || *(unsigned char *)(hitPlayer + 0x6f9) != 0) {
         _ZN5Sound9PlayBank0EjRK7Vector3(9, c + 0x74);
         func_ov071_0211f498((int *)c);
         return;
     }
 
     if (*(int *)(c + 0x180) & 0x10) {
-        *(short *)(c + 0x94) = Vec3_HorzAngle((Vector3 *)(r4 + 0x5c), (Vector3 *)(c + 0x5c));
+        *(short *)(c + 0x94) = Vec3_HorzAngle((Vector3 *)(hitPlayer + 0x5c), (Vector3 *)(c + 0x5c));
         *(short *)(c + 0x8e) = (short)(*(short *)(c + 0x94) + 0x8000);
-        _ZN6Player16IncMegaKillCountEv(r4);
+        _ZN6Player16IncMegaKillCountEv(hitPlayer);
         Scuttlebug_SetState((char *)c, 8);
         return;
     }
 
-    if (_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(c, c + 0x160, r4) != 0) {
-        _ZN6Player6BounceE5Fix12IiE(r4, 0x28000);
+    if (_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(c, c + 0x160, hitPlayer) != 0) {
+        _ZN6Player6BounceE5Fix12IiE(hitPlayer, 0x28000);
         func_ov071_0211f498((int *)c);
         return;
     }
@@ -934,7 +934,7 @@ extern "C" void func_ov071_0211f29c(void *thiz)
         v[0] = *(int *)(c + 0x5c);
         v[1] = *(int *)(c + 0x60);
         v[2] = *(int *)(c + 0x64);
-        if (_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(r4, v, 1, 0xc000, 1, 0, 1) != 0)
+        if (_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(hitPlayer, v, 1, 0xc000, 1, 0, 1) != 0)
             Scuttlebug_SetState((char *)c, 4);
     }
 }

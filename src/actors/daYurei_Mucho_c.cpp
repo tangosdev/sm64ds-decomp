@@ -464,7 +464,7 @@ int func_ov065_0211672c(daYurei_Mucho_c *p)
    before the `bl` at 0x021165e8 because r0 still holds the incoming object. */
 int func_ov065_021165d8(daYurei_Mucho_c *c)
 {
-    short r4 = 0;
+    short pitch = 0;
     Player *p = c->ClosestNonVanishPlayer();
     if (p != 0) {
         Vector3 tmp = *(Vector3 *)&p->mPosX;
@@ -478,7 +478,7 @@ int func_ov065_021165d8(daYurei_Mucho_c *c)
         b.x = tmp.x;
         b.y = tmp.y;
         b.z = tmp.z;
-        r4 = Vec3_VertAngle(&c->mPosX, &b);
+        pitch = Vec3_VertAngle(&c->mPosX, &b);
         if (Vec3_Dist(&c->mPosX, &tmp) >= 0x1f4000) {
             c->unk_0a4 = 0;
             c->mVertSpeed = 0;
@@ -492,10 +492,10 @@ int func_ov065_021165d8(daYurei_Mucho_c *c)
             MulVec3Mat4x3(&v, data_020a0e68, &c->unk_0a4);
         }
     } else {
-        *(short *)((char *)c + 0x100) = r4;
+        *(short *)((char *)c + 0x100) = pitch;
     }
     ApproachAngle(&c->mPrevAngleY, c->mTargetAngle, 1, 0x500, 0x500);
-    ApproachAngle(&c->mPrevAngleX, r4, 1, 0x500, 0x500);
+    ApproachAngle(&c->mPrevAngleX, pitch, 1, 0x500, 0x500);
     if (*(unsigned short *)((char *)c + 0x100) == 0)
         func_ov065_0211691c(c, (daYurei_Mucho_c::State *)data_ov065_0211d650);
     return 1;
@@ -535,7 +535,7 @@ int func_ov065_02116364(daYurei_Mucho_c *c)
             void *spawned = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
                 0xe9, 1, &c->mShotPosX, 0, c->mAreaId, -1);
             if (spawned != 0) {
-                u8 *sp2 = (u8 *)spawned;
+                u8 *shot = (u8 *)spawned;
                 func_02012694(0xfb, &c->mCamSpacePosX);
                 L.spv.x = 0;
                 L.spv.y = 0;
@@ -546,9 +546,9 @@ int func_ov065_02116364(daYurei_Mucho_c *c)
                 Matrix4x3_FromRotationY(&data_020a0e68, c->mAngleY);
                 Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, c->mAngleX);
                 MulVec3Mat4x3(&L.spv, &data_020a0e68, &L.sout);
-                *(s32 *)(sp2 + 0xa4) = L.sout.x;
-                *(s32 *)(sp2 + 0xa8) = L.sout.y;
-                *(s32 *)(sp2 + 0xac) = L.sout.z;
+                *(s32 *)(shot + 0xa4) = L.sout.x;
+                *(s32 *)(shot + 0xa8) = L.sout.y;
+                *(s32 *)(shot + 0xac) = L.sout.z;
                 c->mShotCount += 1;
                 *(u16 *)((char *)c + 0x100) = 4;
             }

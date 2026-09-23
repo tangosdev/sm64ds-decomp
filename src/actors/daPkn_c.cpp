@@ -75,7 +75,7 @@ void  func_ov084_0212ebb4(daPkn_c *c);
 void  func_ov084_0212ec60(daPkn_c *c);
 int   func_ov084_0212ef00(daPkn_c *self);
 int   func_ov084_0212f1d0(daPkn_c *c);
-void  func_ov084_0212f204(char *r4);
+void  func_ov084_0212f204(char *self);
 void  func_ov084_0212f33c(daPkn_c *self);
 void  func_ov084_0212f460(void *self);
 
@@ -601,14 +601,14 @@ void func_ov084_0212f460(void *self)
 // @symbol func_ov084_0212f33c
 void func_ov084_0212f33c(daPkn_c *c)
 {
-    int r4;
+    int scale;
     struct Vector3 v;
 
     c->mClsnEnabled = 0;
-    r4 = c->mScaleX;
+    scale = c->mScaleX;
     if ((unsigned short)c->mStateTimer == 0) {
         func_02012694(0x11f, &c->mCamSpacePosX);
-        r4 = 0x1000;
+        scale = 0x1000;
     }
 
     c->mParticleHandle = (s32)_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
@@ -618,23 +618,23 @@ void func_ov084_0212f33c(daPkn_c *c)
         (unsigned int)c->unk_474, 0xfd, c->mPosX,
         c->mPosY + 0x1e000, c->mPosZ, 0, 0);
 
-    if (r4 > 0) {
-        r4 = r4 - 0xa3;
+    if (scale > 0) {
+        scale = scale - 0xa3;
     } else {
-        r4 = 0;
+        scale = 0;
         if (c->unk_108 != 0) {
             int y = c->mPosY;
             int z = c->mPosZ;
             v = (struct Vector3){c->mPosX, y + 0x78000, z};
             _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-                0x122, r4, &v, (void*)r4, c->mAreaId, -1);
-            c->unk_108 = r4;
+                0x122, scale, &v, (void*)scale, c->mAreaId, -1);
+            c->unk_108 = scale;
         }
         c->mState = 7;
     }
-    c->mScaleX = r4;
-    c->mScaleY = r4;
-    c->mScaleZ = r4;
+    c->mScaleX = scale;
+    c->mScaleY = scale;
+    c->mScaleZ = scale;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -681,22 +681,22 @@ void func_ov084_0212f298(daPkn_c *c)
 // @symbol func_ov084_0212f204
 extern "C" {  /* Retained C-linkage helper. */
 /* Named unk_460 / mPosX / mTargetAngleY / mAngleY size-DIFF this body. */
-void func_ov084_0212f204(char* r4){
+void func_ov084_0212f204(char* self){
   struct Vector3 v;
-  *(char**)(r4 + 0x460) = _ZN8dActor_c13ClosestPlayerEv(r4);
+  *(char**)(self + 0x460) = _ZN8dActor_c13ClosestPlayerEv(self);
   {
-    char* p = *(char**)(r4 + 0x460);
+    char* p = *(char**)(self + 0x460);
     if (p != 0) {
       struct Vector3* pp = (struct Vector3*)(((int)p + 0x5c));
       v.x = pp->x;
       v.y = pp->y;
       v.z = pp->z;
-      *(int*)(r4 + 0x464) = Vec3_Dist((struct Vector3*)(r4 + 0x5c), &v);
-      *(short*)(r4 + 0x468) = Vec3_HorzAngle((struct Vector3*)(r4 + 0x5c), &v);
-      *(int*)(r4 + 0x46c) = *(unsigned char*)(*(char**)(r4 + 0x460) + 0x6de);
+      *(int*)(self + 0x464) = Vec3_Dist((struct Vector3*)(self + 0x5c), &v);
+      *(short*)(self + 0x468) = Vec3_HorzAngle((struct Vector3*)(self + 0x5c), &v);
+      *(int*)(self + 0x46c) = *(unsigned char*)(*(char**)(self + 0x460) + 0x6de);
     } else {
-      *(int*)(r4 + 0x464) = 0x7fffffff;
-      *(short*)(r4 + 0x468) = *(short*)(r4 + 0x8e);
+      *(int*)(self + 0x464) = 0x7fffffff;
+      *(short*)(self + 0x468) = *(short*)(self + 0x8e);
     }
   }
 }
@@ -850,7 +850,7 @@ void func_ov084_0212ec60(daPkn_c *self)
     volatile s16 ang[3];
     struct { PknMtx43 saved; PknVec3 tv; PknVec3 v; } L;
     int lr;
-    int r3;
+    int scale;
 
     Vec3_Asr(&L.v, (PknVec3*)(c + 0x5c), 3);
     Matrix4x3_FromTranslation(&data_020a0e68, L.v.x, L.v.y, L.v.z);
@@ -888,18 +888,18 @@ void func_ov084_0212ec60(daPkn_c *self)
         int d = rr - 0x28;
         if (d < 0)
             d = -d;
-        r3 = ((d << 12) / 10) + 0x400;
-        if (r3 < 0x800)
-            r3 = 0x800;
-        *(s32*)(c + 0x428) = r3;
-        *(s32*)(c + 0x42c) = r3;
-        *(s32*)(c + 0x430) = r3;
+        scale = ((d << 12) / 10) + 0x400;
+        if (scale < 0x800)
+            scale = 0x800;
+        *(s32*)(c + 0x428) = scale;
+        *(s32*)(c + 0x42c) = scale;
+        *(s32*)(c + 0x430) = scale;
     }
 
     L.tv.x = data_02082214[(*(u16*)(c + 0x8e) >> 4) << 1] * (s16)0xe0 + L.tv.x;
-    r3 = r3 - 0xc00;
+    scale = scale - 0xc00;
     L.tv.z = data_02082214[((*(u16*)(c + 0x8e) >> 4) << 1) + 1] * (s16)0xe0 + L.tv.z;
-    L.tv.y = L.tv.y + (r3 * 0x18 + 0x38000);
+    L.tv.y = L.tv.y + (scale * 0x18 + 0x38000);
 
     *(s32*)(c + 0x434) = L.tv.x;
     *(s32*)(c + 0x438) = L.tv.y;
