@@ -1,6 +1,5 @@
 //cpp
 /* daPkn_c (PAKUN / PIRANHA_PLANT 250), ov084 0x0212eaf0..0x02130174.
- * deslop
  *
  * RTTI names daPkn_c. Typeinfo at 0x02130bf8 points to the string at
  * 0x02130bec; the vtable header at 0x02130c24 points to that typeinfo.
@@ -12,7 +11,7 @@
  * mwccarm 2004/b56. The inline destructor in the header emits the required
  * D1/D0 pair; `new` odr-uses the class so that pair is emitted here.
  *
- * Leftover:
+ * Known limits:
  * - ModelAnim::SetAnim / dCcAc_c::Init / dCcAcPos_c::Init stay mangled
  *   (Fix12<int> by value, wall 6az -- InitResources and the state helpers)
  * - dBgCh_Actr::Init stays mangled: header Fix12i mangles as i; ROM is

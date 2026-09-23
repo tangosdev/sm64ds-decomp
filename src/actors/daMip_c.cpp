@@ -71,8 +71,7 @@
  * inside a linkage-specification region -- so every external call this TU makes
  * is declared once, below, with C linkage, on one reconciled signature.
  *
- * deslop
- * Leftover: SetAnim / dCcAc_c::Init / dBgCh_Actr::Init / DropShadowRadHeight
+ * Known limits: SetAnim / dCcAc_c::Init / dBgCh_Actr::Init / DropShadowRadHeight
  *   stay mangled (Fix12-by-value, 6az; dBgCh Init header Fix12i mangles as
  *   int). Player+8 param1 / +0x6d9 / +0x6ce belong on Player. data_ov085_*
  *   handles. S14 no g_profile_MIP. Shadow copy uses local Mtx43,

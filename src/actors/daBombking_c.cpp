@@ -33,8 +33,7 @@
  * group has a compiler-chosen order of its own; see the destructor comment in
  * the class header for what was measured on this TU.
  *
- * deslop
- * Leftover: BlendModelAnim::SetAnim / dCcAcPos_c::Init / dBgCh_Actr::Init /
+ * Known limits: BlendModelAnim::SetAnim / dCcAcPos_c::Init / dBgCh_Actr::Init /
  *   DropShadowRadHeight stay mangled (Fix12-by-value, 6az; dBgCh Init header
  *   Fix12i mangles as int -- this TU's InitResources call). dActor_c::Spawn
  *   s8/s16 by-value (func_ov078_02125350). Player+8 param1 / +0x6ce talk flag

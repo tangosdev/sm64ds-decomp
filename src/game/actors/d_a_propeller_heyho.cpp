@@ -1,14 +1,15 @@
 //cpp
-/* HAND-ASSEMBLED translation unit -- ov070/daPropeller_Heyho_c (27 function(s)).
- * tubuild create refused this TU (legacy bodies wrapped in extern "C" { }),
- * so this is a raw concatenation of the complete legacy files in REVERSE
- * ROM order (mwccarm emits one .text section per function in the reverse
- * of source order). Conflicting declarations were reconciled by hand; see
- * the manifest notes.
+/* daPropeller_Heyho_c -- the Fly Guy (PROPELLER_HEYHO), ov070, 27 functions.
  *
+ * Function order is the REVERSE of the ROM's: mwccarm 2004/b56 emits one
+ * .text section per function in reverse source order. Do not reorder.
  *
- * deslop
- * Leftover: dCcAc_c::Init / dBgCh_Actr::Init stay mangled (Fix12-by-value, 6az;
+ * This file was assembled by hand -- tubuild create refused the TU because
+ * the legacy bodies were wrapped in extern "C" { } -- by concatenating the
+ * complete legacy files and reconciling their conflicting declarations; the
+ * manifest notes record how each conflict was settled.
+ *
+ * Known limits: dCcAc_c::Init / dBgCh_Actr::Init stay mangled (Fix12-by-value, 6az;
  *   dBgCh Init header Fix12i mangles as int -- this TU's InitResources call).
  *   ModelAnim::SetAnim, DropShadowRadHeight, SpawnCoins, SpawnFireball,
  *   Particle::System::New / NewUnkCallback818, Player::SpinBounce / Hurt stay

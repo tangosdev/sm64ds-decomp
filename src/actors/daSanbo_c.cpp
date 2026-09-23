@@ -61,8 +61,7 @@
  * constants in address order. The existing initializer remains a separate
  * source owner; this text-only promotion does not reconstruct its table.
  *
- * deslop
- * Leftover: dCcAc_c::Init / dBgCh_Actr::Init / DropShadowRadHeight /
+ * Known limits: dCcAc_c::Init / dBgCh_Actr::Init / DropShadowRadHeight /
  *   IsTooFarAwayFromPlayer stay mangled (Fix12-by-value, 6az; dBgCh Init
  *   header Fix12i mangles as int -- this TU's InitResources call).
  *   dActor_c::Spawn s8/s16 by-value at some sites. func_02038414 is the
