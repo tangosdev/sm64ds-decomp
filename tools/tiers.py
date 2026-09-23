@@ -325,11 +325,11 @@ def _marked_member_fragment(text, symbol):
     return text[start:stop]
 
 
-def _balanced_lifecycle_fragment(text, class_name, method_name):
-    """Find an inline ctor/dtor declaration or definition in one header.
+def _balanced_lifecycle_fragment(text, class_name, method_name, *, qualified=False):
+    """Find one balanced lifecycle body, optionally requiring its class qualifier.
 
     This is deliberately a small recognizer, not a C++ parser.  It searches the
-    comment/string-masked text and returns only a balanced inline body. A mere
+    comment/string-masked text and returns only a balanced body. A mere
     declaration is not ownership evidence. If the evidence is not this simple the
     caller falls back to the whole
     TU, which can under-credit a member but can never grant it speculatively.
@@ -337,12 +337,21 @@ def _balanced_lifecycle_fragment(text, class_name, method_name):
     code = _code_only(text)
     unqualified = class_name.rsplit("::", 1)[-1]
     token = f"~{unqualified}" if method_name.startswith("~") else unqualified
-    pattern = re.compile(r"(?<![A-Za-z0-9_~])" + re.escape(token) + r"\s*\(")
+    spelling = re.escape(token)
+    if qualified:
+        qualifier = r"\s*::\s*".join(re.escape(part) for part in class_name.split("::"))
+        spelling = qualifier + r"\s*::\s*" + spelling
+        pattern = re.compile(r"^[ \t]*(?:inline[ \t]+)?" + spelling + r"\s*\(",
+                             re.MULTILINE)
+    else:
+        pattern = re.compile(r"(?<![A-Za-z0-9_~])" + spelling + r"\s*\(")
     matches = list(pattern.finditer(code))
     if len(matches) != 1:
         return None
 
     start = matches[0].start()
+    if qualified and code[:start].strip():
+        return None  # Do not skip enclosing scopes or a continued qualifier.
     open_paren = code.find("(", matches[0].start(), matches[0].end())
     depth = 0
     close_paren = None
@@ -363,6 +372,8 @@ def _balanced_lifecycle_fragment(text, class_name, method_name):
         return None
     if brace < 0:
         return None
+    if qualified and code[close_paren + 1:brace].strip():
+        return None  # In particular, do not drop function-try-block catch handlers.
 
     depth = 0
     for i in range(brace, len(code)):
@@ -376,10 +387,38 @@ def _balanced_lifecycle_fragment(text, class_name, method_name):
 
 
 def _lifecycle_member_fragment(path, text, symbol, repo_root=None):
-    """Return an inline compiler-generated ctor/dtor's direct-header source."""
+    """Find the written body behind a compiler-generated lifecycle variant."""
     parsed = demangle.demangle(symbol)
     if not parsed or not (parsed.get("ctor") or parsed.get("dtor")):
         return None
+
+    # One out-of-line destructor emits D0/D1/D2. A sibling variant's marker
+    # identifies the owner, but require its actual qualified definition too:
+    # a marker, declaration, or similarly named class alone is not a body.
+    if parsed.get("dtor") and not parsed.get("thunk"):
+        siblings = []
+        for marker in SYMBOL.finditer(text):
+            other = demangle.demangle(marker.group(1))
+            if (other and other.get("dtor") and not other.get("thunk")
+                    and other["qualified"] == parsed["qualified"]):
+                siblings.append(marker)
+        if len(siblings) == 1:
+            marker = siblings[0]
+            prefix = _code_only(text[:marker.end()])
+            conditional_depth = 0
+            for directive in re.finditer(
+                    r"^\s*#\s*(if|ifdef|ifndef|endif)\b", prefix, re.MULTILINE):
+                conditional_depth += -1 if directive.group(1) == "endif" else 1
+            if conditional_depth:
+                return None  # Do not infer which preprocessor branch is active.
+            if (prefix.count("{") != prefix.count("}")
+                    or prefix.rstrip().endswith("::")):
+                return None  # Namespace-qualified definitions at file scope only.
+            marked = _marked_member_fragment(text, marker.group(1))
+            fragment = _balanced_lifecycle_fragment(
+                marked, parsed["class"], parsed["method"], qualified=True)
+            if fragment is not None:
+                return fragment
 
     root = pathlib.Path(repo_root or REPO)
     source = pathlib.Path(path)
@@ -407,8 +446,9 @@ def score_member(path, text, symbol, repo_root=None):
     """Score one member of a promoted multi-function translation unit.
 
     Hand-written members use exact ``@symbol`` boundaries.  Compiler-generated
-    ctor/dtor variants use the inline lifecycle definition in a directly included
-    class header.  Anything without either form of evidence is scored against the
+    destructor variants can share a marked out-of-line definition; inline
+    ctor/dtor variants use their directly included header. Anything without this
+    evidence is scored against the
     entire file, preserving the old conservative behavior.
     """
     fragment = _marked_member_fragment(text, symbol)
@@ -427,7 +467,7 @@ def converted(src_root=None):
     Reads committed source only - no ROM, no build, no local state - so it
     reproduces on a fresh checkout, which is what CI needs. Ordinary intake files
     retain file-wide scoring. Members of a promoted production TU are independently
-    scored from explicit source markers or inline lifecycle definitions, with a
+    scored from explicit source markers or evidenced lifecycle definitions, with a
     conservative file-wide fallback when neither boundary is evidenced.
     """
     root = pathlib.Path(src_root or SRC)

@@ -79,6 +79,74 @@ class TranslationUnitIdentities(unittest.TestCase):
             self.assertTrue(scores[identity]["no_unk_field"])
             self.assertTrue(scores[identity]["no_mangled_refs"])
 
+    def test_out_of_line_destructor_variants_share_the_written_body(self):
+        with tempfile.TemporaryDirectory() as td:
+            text = (
+                "// @symbol _ZN5ThingD1Ev\n"
+                "Thing::~Thing() { }\n"
+                "// @symbol Other\n"
+                "int Other(char* p) { return *(int*)(p + 0x18) + unk_18 + "
+                "_ZN3Bad3UseEv(); }\n")
+            for variant in ("D0", "D1", "D2"):
+                with self.subTest(variant=variant):
+                    score = TR.tiers.score_member(
+                        "src/Thing.cpp", text, f"_ZN5Thing{variant}Ev", td)
+                    self.assertTrue(all(score[key] for key in TR.tiers.CRITERIA))
+            other = TR.tiers.score_member("src/Thing.cpp", text, "Other", td)
+            self.assertFalse(other["no_raw_offset"])
+            self.assertFalse(other["no_unk_field"])
+            self.assertFalse(other["no_mangled_refs"])
+
+    def test_out_of_line_destructor_body_still_counts_its_own_failures(self):
+        with tempfile.TemporaryDirectory() as td:
+            text = ("// @symbol _ZN5ThingD1Ev\n"
+                    "Thing::~Thing() { unk_18 = _ZN3Bad3UseEv(); }\n")
+            score = TR.tiers.score_member("src/Thing.cpp", text, "_ZN5ThingD0Ev", td)
+            self.assertFalse(score["no_unk_field"])
+            self.assertFalse(score["no_mangled_refs"])
+
+    def test_out_of_line_destructor_requires_unambiguous_owned_definition(self):
+        cases = {
+            "unmarked": "Thing::~Thing() {}\n",
+            "declaration": "// @symbol _ZN5ThingD1Ev\nThing::~Thing();\n",
+            "different_class": "// @symbol _ZN5OtherD1Ev\nOther::~Other() {}\n",
+            "misleading_marker": "// @symbol _ZN5ThingD1Ev\nOther::~Other() {}\n",
+            "different_namespace": "// @symbol _ZN5ThingD1Ev\nOther::Thing::~Thing() {}\n",
+            "spaced_namespace": "// @symbol _ZN5ThingD1Ev\nOther :: Thing::~Thing() {}\n",
+            "multiline_namespace": "// @symbol _ZN5ThingD1Ev\nOther ::\nThing::~Thing() {}\n",
+            "qualifier_before_marker": "Other ::\n// @symbol _ZN5ThingD1Ev\nThing::~Thing() {}\n",
+            "conditional_before_marker": "#if 0\n// @symbol _ZN5ThingD1Ev\nThing::~Thing() {}\n#endif\n",
+            "inactive_else": "#if 1\n#else\n// @symbol _ZN5ThingD1Ev\nThing::~Thing() {}\n#endif\n",
+            "conditional_after_marker": "// @symbol _ZN5ThingD1Ev\n#if 0\nThing::~Thing() {}\n#endif\n",
+            "enclosing_namespace": "namespace Other {\n// @symbol _ZN5ThingD1Ev\nThing::~Thing() {}\n}\n",
+            "namespace_after_marker": "// @symbol _ZN5ThingD1Ev\nnamespace Other {\nThing::~Thing() {}\n}\n",
+            "function_try_block": "// @symbol _ZN5ThingD1Ev\nThing::~Thing() try {} catch (...) { unk_18 = 1; }\n",
+            "duplicate_markers": ("// @symbol _ZN5ThingD1Ev\nThing::~Thing() {}\n"
+                                  "// @symbol _ZN5ThingD1Ev\n"),
+            "duplicate_bodies": ("// @symbol _ZN5ThingD1Ev\n"
+                                 "Thing::~Thing() {}\nThing::~Thing() {}\n"),
+            "comment_only": "// @symbol _ZN5ThingD1Ev\n// Thing::~Thing() {}\n",
+            "unbalanced": "// @symbol _ZN5ThingD1Ev\nThing::~Thing() {\n",
+        }
+        with tempfile.TemporaryDirectory() as td:
+            for name, definition in cases.items():
+                with self.subTest(case=name):
+                    text = "int unk_18;\n" + definition
+                    score = TR.tiers.score_member(
+                        "src/Thing.cpp", text, "_ZN5ThingD0Ev", td)
+                    self.assertFalse(score["no_unk_field"])
+
+    def test_direct_header_out_of_line_destructor_keeps_existing_credit(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = pathlib.Path(td)
+            (root / "include").mkdir()
+            (root / "include/Thing.h").write_text(
+                "inline Thing::~Thing() {}\n", encoding="utf-8")
+            score = TR.tiers.score_member(
+                "src/Thing.cpp", '#include "Thing.h"\nint unk_18;\n',
+                "_ZN5ThingD0Ev", root)
+            self.assertTrue(score["no_unk_field"])
+
     def test_lifecycle_declaration_is_not_treated_as_its_definition(self):
         with tempfile.TemporaryDirectory() as td:
             root = pathlib.Path(td)

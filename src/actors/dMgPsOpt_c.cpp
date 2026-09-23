@@ -1,51 +1,30 @@
 //cpp
-/* The minigame pause/options touch panel -- ov004/dMgPsOpt_c.
+/* ov004/dMgPsOpt_c: the minigame pause and options touch panel.
  *
- * dMgPsOpt_c is the eight-button options strip dScMgBase_c embeds at self+0xf4
- * as `dMgPsOpt_c mTouchOptions`. Each button is a dMgPsOpt_c::TouchIcon_c, a
- * dThIcon_c with its own Render override, and the panel drives all eight from a
- * small state byte: 1 while it is taking input, 2 while the close delay runs
- * down, 0 when it is shut.
+ * dScMgBase_c embeds one at 0xf4 as mTouchOptions. It is a strip of eight
+ * TouchIcon_c buttons (dThIcon_c with its own Render) driven by mActive:
+ * 1 while taking input, 2 while the close delay runs down, 0 when shut.
+ * Both class names are the ROM's own, from the nested type's RTTI string
+ * "N10dMgPsOpt_c11TouchIcon_cE".
  *
- * CLASS IDENTITY. The outer class carries no type-info of its own, so a probe
- * for an unnested type-string finds nothing. The nested type's record is the
- * cartridge's proof: ov004:0x020bca84 holds the 28-byte string
- * "N10dMgPsOpt_c11TouchIcon_cE", whose Itanium length prefixes decode to
- * dMgPsOpt_c::TouchIcon_c. Both names are the cartridge's own, not coined. The
- * type-info record at 0x020bca68 names dThIcon_c as the single public base in
- * its third word (0x020ad478, ov001), and the two-slot table at 0x020bca74
- * keeps dThIcon_c::Behavior in slot 0 while slot 1 is this class's own Render.
- * Two slots and no destructor slot is what makes TouchIcon_c's destructor
- * nonvirtual.
+ * The six func_ov004_ functions are this class's methods (each takes the
+ * panel or an icon as its first argument), but nothing in the ROM names
+ * them, so they keep their linker names and take the object as a raw
+ * pointer. The icon fields are dThIcon_c's unk_ placeholders until that
+ * header names them.
  *
- * TU BOUNDARY. One contiguous run, 0x020b8c18..0x020b944c, eleven functions,
- * closing out ov004's .text. Only five carried a class label; the six
- * func_ov004_* members are unlabelled simply because nothing in the cartridge
- * names them. Each takes a dMgPsOpt_c or a TouchIcon_c as its first argument,
- * and a referrer census over every relocs.txt under config/ finds every
- * reference from outside the run coming from dScMgBase_c passing self+0xf4.
- * The two labelled members the cartridge does name are called from outside the
- * run too, so an external caller does not argue a function out of this TU --
- * the test that discriminates is the `this` pointer, and all eleven pass it.
- *
- * Those six keep their ROM symbol names and the parameter spelling the rest of
- * the tree already declares for them, so they stay `extern "C"` and take the
- * panel as a raw pointer; each takes a typed local on its first line instead.
- *
- * EMISSION ORDER IS THE REVERSE OF THE ROM'S. mwccarm 2004/b56 emits one .text
- * section per function in the reverse of source order, so the highest-address
- * ROM function is written first here. Do not reorder.
+ * Functions run in REVERSE of ROM order (highest address first); do not
+ * reorder.
  */
 #include "types.h"
 #include "dMgPsOpt_c.h"
 
-/* Opaque to this TU: only ever passed through to the shared blitter. */
+/* Only ever passed through to the shared blitter. */
 struct M;
 
 #define SH(base,i) (*(short*)((char*)(base) + (i)*4))
 
 extern "C" {
-extern u16 *_ZN3G2S12GetBG1ScrPtrEv(void);
 extern void func_ov004_020aea78(void *self, int a1, int a2, struct M *a3);
 extern u16 data_ov004_020bca58[];
 extern u16 data_ov004_020bca60[];
@@ -71,21 +50,15 @@ void func_ov004_020b91fc(char *p);
 extern unsigned char data_0209d454;
 extern unsigned char data_0208ee3c;
 void func_ov004_020b8dc0(char *p, int style, int palette, short x, short y);
-extern s16 data_ov004_020bfe74[];
-extern s16 data_ov004_020bfe88[];
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 10 -- _ZN10dMgPsOpt_c11TouchIcon_cC1Ev, 0x020b9430, size 0x1c */
-/* -------------------------------------------------------------------------- */
+namespace G2S { u16 *GetBG1ScrPtr(); }
+
 // @symbol _ZN10dMgPsOpt_c11TouchIcon_cC1Ev
 dMgPsOpt_c::TouchIcon_c::TouchIcon_c()
 {
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 9 -- _ZN10dMgPsOpt_cC1Ev, 0x020b92c4, size 0x16c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN10dMgPsOpt_cC1Ev
 dMgPsOpt_c::dMgPsOpt_c()
 {
@@ -105,30 +78,21 @@ dMgPsOpt_c::dMgPsOpt_c()
     mActive = 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 8 -- _ZN10dMgPsOpt_cD1Ev, 0x020b929c, size 0x28 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN10dMgPsOpt_cD1Ev
 dMgPsOpt_c::~dMgPsOpt_c()
 {
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- _ZN10dMgPsOpt_c11TouchIcon_cD1Ev, 0x020b9280, size 0x1c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN10dMgPsOpt_c11TouchIcon_cD1Ev
 dMgPsOpt_c::TouchIcon_c::~TouchIcon_c()
 {
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- func_ov004_020b9220, 0x020b9220, size 0x60 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov004_020b9220
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov004_020b9220(char *p)
+void func_ov004_020b9220(char *raw)
 {
-    dMgPsOpt_c *self = (dMgPsOpt_c *)p;
+    dMgPsOpt_c *self = (dMgPsOpt_c *)raw;
 
     self->mIcons[2].unk_010 = 1;
     if (data_0208ee3c != 0) {
@@ -145,14 +109,11 @@ void func_ov004_020b9220(char *p)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- func_ov004_020b91fc, 0x020b91fc, size 0x24 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov004_020b91fc
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov004_020b91fc(char *p)
+void func_ov004_020b91fc(char *raw)
 {
-    dMgPsOpt_c *self = (dMgPsOpt_c *)p;
+    dMgPsOpt_c *self = (dMgPsOpt_c *)raw;
 
     data_0209d454 &= ~2;
     self->mSelectedIcon = 0;
@@ -160,13 +121,10 @@ void func_ov004_020b91fc(char *p)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- func_ov004_020b8f78, 0x020b8f78, size 0x284 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov004_020b8f78
-extern "C" u8 func_ov004_020b8f78(char *p)
+extern "C" u8 func_ov004_020b8f78(char *raw)
 {
-    dMgPsOpt_c *self = (dMgPsOpt_c *)p;
+    dMgPsOpt_c *self = (dMgPsOpt_c *)raw;
     u8 state = self->mActive;
 
     switch (state) {
@@ -265,13 +223,10 @@ extern "C" u8 func_ov004_020b8f78(char *p)
     return self->mActive;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- func_ov004_020b8f18, 0x020b8f18, size 0x60 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov004_020b8f18
-int func_ov004_020b8f18(void *p)
+int func_ov004_020b8f18(void *raw)
 {
-    dMgPsOpt_c *self = (dMgPsOpt_c *)p;
+    dMgPsOpt_c *self = (dMgPsOpt_c *)raw;
     int i;
 
     if (self->mActive == 0)
@@ -284,14 +239,11 @@ int func_ov004_020b8f18(void *p)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- func_ov004_020b8ee0, 0x020b8ee0, size 0x38 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov004_020b8ee0
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov004_020b8ee0(char *p)
+int func_ov004_020b8ee0(char *raw)
 {
-    dMgPsOpt_c *self = (dMgPsOpt_c *)p;
+    dMgPsOpt_c *self = (dMgPsOpt_c *)raw;
     dMgPsOpt_c::TouchIcon_c *icon = self->mIcons;
     int i;
 
@@ -305,16 +257,13 @@ int func_ov004_020b8ee0(char *p)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 1 -- func_ov004_020b8dc0, 0x020b8dc0, size 0x120 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov004_020b8dc0
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov004_020b8dc0(char *p, int style, int palette, short x, short y)
+void func_ov004_020b8dc0(char *raw, int style, int palette, short x, short y)
 {
-    dMgPsOpt_c::TouchIcon_c *icon = (dMgPsOpt_c::TouchIcon_c *)p;
+    dMgPsOpt_c::TouchIcon_c *icon = (dMgPsOpt_c::TouchIcon_c *)raw;
     int kind;
-    int i, j;
+    int lang, lang2;
 
     icon->unk_01c = style;
     kind = (style < 6) ? 2 : 1;
@@ -323,50 +272,33 @@ void func_ov004_020b8dc0(char *p, int style, int palette, short x, short y)
     /* Styles 4 and 5 are the two captioned buttons, so their hit box comes out
        of a per-language table instead of the flat one the rest share. */
     if (style == 4) {
-        i = GetGameLanguage();
-        j = GetGameLanguage();
-        func_ov001_020ab5b0(p, kind, x, y,
-                            SH(data_ov004_020bfe74, i), SH(data_ov004_020bfe76, j));
+        lang = GetGameLanguage();
+        lang2 = GetGameLanguage();
+        func_ov001_020ab5b0(raw, kind, x, y,
+                            SH(data_ov004_020bfe74, lang), SH(data_ov004_020bfe76, lang2));
     } else if (style == 5) {
-        i = GetGameLanguage();
-        j = GetGameLanguage();
-        func_ov001_020ab5b0(p, kind, x, y,
-                            SH(data_ov004_020bfe88, i), SH(data_ov004_020bfe8a, j));
+        lang = GetGameLanguage();
+        lang2 = GetGameLanguage();
+        func_ov001_020ab5b0(raw, kind, x, y,
+                            SH(data_ov004_020bfe88, lang), SH(data_ov004_020bfe8a, lang2));
     } else {
-        func_ov001_020ab5b0(p, kind, x, y,
+        func_ov001_020ab5b0(raw, kind, x, y,
                             SH(data_ov004_020bfe9c, style), SH(data_ov004_020bfe9e, style));
     }
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 0 -- _ZN10dMgPsOpt_c11TouchIcon_c6RenderEv, 0x020b8c18, size 0x1a8 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN10dMgPsOpt_c11TouchIcon_c6RenderEv
-/* dMgPsOpt_c::TouchIcon_c::Render -- slot 1 of the nested touch icon's vtable.
-
-   The icon draws itself one of two ways depending on unk_01c, the style word
-   dScMgBase_c's menu code writes when it builds the eight icons: styles 2 and 3
-   hand a sprite table to the shared blitter and nudge x by two pixels while the
-   icon is held down (unk_010), and styles 0, 1 and 6 recolour a rectangle of BG1
-   screen entries in place, style 0 first laying down a fresh 13-entry run.
-
-   This is the class's own Render override: the cartridge's vtable holds
-   0x020b8c18 in slot 1, where dThIcon_c's own table holds
-   _ZN9dThIcon_c6RenderEv. Until the override was declared in
-   include/dMgPsOpt_c.h, mwcc emitted the inherited address into that word and
-   romdata_check scored _ZTVN10dMgPsOpt_c11TouchIcon_cE DIFFERS; declaring it
-   and giving this body its mangled name is what closes the slot, and the
-   two-slot table is byte-exact against the cartridge now.
-
-   The seven fields it touches are dThIcon_c's own, so the raw `char *self`
-   offsets the C source used are gone; nothing else about the body changed. */
+/* Slot 1. Styles 2 and 3 hand a sprite table to the shared blitter and
+   nudge x two pixels while the icon is held (unk_010); styles 0, 1 and 6
+   recolour a rectangle of BG1 screen entries in place, style 0 first laying
+   down a fresh 13-entry run. */
 void dMgPsOpt_c::TouchIcon_c::Render()
 {
     volatile s16 xy[2];
-    void *tbl;
-    u16 *p;
-    u16 v;
+    void *sprites;
+    u16 *scr;
+    u16 tile;
     int i;
     int w;
     int mask;
@@ -383,44 +315,44 @@ void dMgPsOpt_c::TouchIcon_c::Render()
     case 2:
         if (unk_010 != 0)
             xy[0] = (s16)(xy[0] - 2);
-        tbl = data_ov004_020bca58;
+        sprites = data_ov004_020bca58;
         break;
 
     case 3:
         if (unk_010 != 0)
             xy[0] = (s16)(xy[0] + 2);
-        tbl = data_ov004_020bca60;
+        sprites = data_ov004_020bca60;
         break;
 
     case 0:
-        p = (u16 *)((char *)_ZN3G2S12GetBG1ScrPtrEv() + 0x19e);
-        v = (u16)((unk_020 << 6) + 0x13);
+        scr = (u16 *)((char *)G2S::GetBG1ScrPtr() + 0x19e);
+        tile = (u16)((unk_020 << 6) + 0x13);
         for (i = 0; i < 13; i++) {
-            p[0] = v;
-            p[0x20] = (u16)(v + 0x20);
-            p++;
-            v++;
+            scr[0] = tile;
+            scr[0x20] = (u16)(tile + 0x20);
+            scr++;
+            tile++;
         }
         /* fallthrough */
     case 1:
     case 6:
         mask = (unk_010 != 0) ? 0 : 0x3000;
         w = unk_008;
-        p = _ZN3G2S12GetBG1ScrPtrEv();
+        scr = G2S::GetBG1ScrPtr();
         x = unk_004;
         h = unk_00a;
         x -= w;
         x >>= 3;
-        p += x;
+        scr += x;
         y = unk_006;
         y -= h;
-        p += (y >> 3) << 5;
+        scr += (y >> 3) << 5;
         for (row = 0; row < unk_00a >> 2; row++) {
             for (col = 0; col < w >> 2; col++) {
-                p[col] = (u16)(mask | (p[col] & 0xfff));
+                scr[col] = (u16)(mask | (scr[col] & 0xfff));
                 w = unk_008;
             }
-            p += 0x20;
+            scr += 0x20;
         }
         return;
 
@@ -428,5 +360,5 @@ void dMgPsOpt_c::TouchIcon_c::Render()
         return;
     }
 
-    func_ov004_020aea78(tbl, xy[0], xy[1], 0);
+    func_ov004_020aea78(sprites, xy[0], xy[1], 0);
 }

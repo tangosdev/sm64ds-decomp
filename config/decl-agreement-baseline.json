@@ -6721,7 +6721,7 @@
       "src/_ZN16SpinningPlatform8BehaviorEv.cpp": [
         "param:#1 char *"
       ],
-      "src/_ZN17SlidingPlatformWf8BehaviorEv.cpp": [
+      "src/actors/daObjSimpleLift_c.cpp": [
         "param:#1 char *"
       ],
       "src/_ZN6Coffin8BehaviorEv.cpp": [
@@ -11025,7 +11025,7 @@
         "arity:0",
         "mangled:0 parameter(s)"
       ],
-      "src/_ZN17SlidingPlatformWf13InitResourcesEv.cpp": [
+      "src/actors/daObjSimpleLift_c.cpp": [
         "arity:0",
         "mangled:0 parameter(s)"
       ],
@@ -11365,7 +11365,7 @@
       "src/_ZN17BowserPuzzlePiece13InitResourcesEv.cpp": [
         "return:BMD_File *"
       ],
-      "src/_ZN17SlidingPlatformWf13InitResourcesEv.cpp": [
+      "src/actors/daObjSimpleLift_c.cpp": [
         "param:#1 void *"
       ],
       "src/_ZN17dMg3DEspAnimSet_c13InitResourcesEv.cpp": [
@@ -14734,7 +14734,7 @@
       "src/_ZN17BowserPuzzlePiece13InitResourcesEv.cpp": [
         "return:KCL_File *"
       ],
-      "src/_ZN17SlidingPlatformWf13InitResourcesEv.cpp": [
+      "src/actors/daObjSimpleLift_c.cpp": [
         "param:#1 void *",
         "return:void *"
       ],
@@ -18780,7 +18780,7 @@
       "src/_ZN17BowserPuzzlePiece13InitResourcesEv.cpp": [
         "return:void"
       ],
-      "src/_ZN17SlidingPlatformWf13InitResourcesEv.cpp": [
+      "src/actors/daObjSimpleLift_c.cpp": [
         "return:void"
       ],
       "src/_ZN17dMg3DEspAnimSet_c13InitResourcesEv.cpp": [
@@ -31854,7 +31854,7 @@
       ]
     },
     "data_ov091_02135024": {
-      "src/_ZN17SlidingPlatformWf13InitResourcesEv.cpp": [
+      "src/actors/daObjSimpleLift_c.cpp": [
         "return:SFP []"
       ]
     },
@@ -37100,7 +37100,7 @@
       "src/_ZN17BowserSkyPlatform13InitResourcesEv.cpp": [
         "param:#2 void *"
       ],
-      "src/_ZN17SlidingPlatformWf13InitResourcesEv.cpp": [
+      "src/actors/daObjSimpleLift_c.cpp": [
         "param:#2 void *"
       ],
       "src/_ZN19FloatOnLavaPlatform13InitResourcesEv.cpp": [

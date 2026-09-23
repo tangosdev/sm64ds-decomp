@@ -4631,6 +4631,12 @@
     "src/actors/daMenbo_c.cpp#_ZN9daMenbo_c13InitResourcesEv": "tangosdev",
     "src/actors/daMenbo_c.cpp#_ZN9daMenbo_c16OnAimedAtWithEggEv": "andrewboudreau",
     "src/actors/daMenbo_c.cpp#_ZN9daMenbo_c13OnTurnIntoEggER6Player": "tangosdev",
-    "src/actors/daMenbo_c.cpp#_ZN9daMenbo_c13OnYoshiTryEatEv": "andrewboudreau"
+    "src/actors/daMenbo_c.cpp#_ZN9daMenbo_c13OnYoshiTryEatEv": "andrewboudreau",
+    "src/actors/daObjSimpleLift_c.cpp#_ZN17daObjSimpleLift_cD1Ev": "tangosdev",
+    "src/actors/daObjSimpleLift_c.cpp#_ZN17daObjSimpleLift_cD0Ev": "tangosdev",
+    "src/actors/daObjSimpleLift_c.cpp#_ZN17daObjSimpleLift_c16CleanupResourcesEv": "tangosdev",
+    "src/actors/daObjSimpleLift_c.cpp#_ZN17daObjSimpleLift_c6RenderEv": "tangosdev",
+    "src/actors/daObjSimpleLift_c.cpp#_ZN17daObjSimpleLift_c8BehaviorEv": "tangosdev",
+    "src/actors/daObjSimpleLift_c.cpp#_ZN17daObjSimpleLift_c13InitResourcesEv": "tangosdev"
   }
 }

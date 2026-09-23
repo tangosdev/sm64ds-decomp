@@ -601,7 +601,7 @@ extern int _ZTV17BigMovingIceBlock[];
 extern int _ZTV9JetStream[];
 extern int _ZTV9SpikeBomb[];
 extern int _ZTV16SpinningPlatform[];
-extern int _ZTV17SlidingPlatformWf[];
+extern int _ZTV17daObjSimpleLift_c[];
 extern int _ZTV17daObjBk_Botaosi_c[];
 extern int _ZTV17daObjBk_Rotebar_c[];
 extern int _ZTV17daObjBk_Ukisima_c[];

@@ -283,7 +283,7 @@ daObjRc_Tikuwa_c	MISSING	include/daObjRc_Tikuwa_c.h (MISSING)	dBgActor_c	0	ov036
 daObjRotateUpdownLift_c	DONE	include\RotatingUpDownPlatformUtm.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov091	8
 daObjSeesaw_c	DONE	include\SeesawBob.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov095	7
 daObjSimpleBg_c	DONE	include\FortressTower.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov102	6
-daObjSimpleLift_c	DONE	include\SlidingPlatformWf.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov091	6
+daObjSimpleLift_c	DONE	include\daObjSimpleLift_c.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov091	6
 daObjSlIceBlock_c	DONE	include\daObjSlIceBlock_c.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov027	7
 daObjSm_Lift_c	PARTIAL	include\daObjSm_Lift_c.h	dBgActor_c	0	ov018	7
 daObjSwitch_c	DONE	include\daObjSwitch_c.h	dBgActor_c	0	ov002	7

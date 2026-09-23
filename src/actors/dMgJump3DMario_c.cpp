@@ -1,64 +1,29 @@
 //cpp
-/* dMgJump3DMario_c -- one of the three Marios the two jump minigames
- * (Bounce and Pounce, MG_JUMP, and its sequel MG_JUMP2) construct as
- * `dMgJump3DMario_c mPlayers[3]`, ov006.
+/* dMgJump3DMario_c: one of the three Marios the two jump minigames
+ * (Bounce and Pounce, MG_JUMP and MG_JUMP2) hold as mPlayers[3].
  *
- * 28 functions, .text 0x020c762c..0x020c8a30. The object is a PMF-driven
- * state machine: mState at +0x3c, installed from fifteen 8-byte ROM records
- * at 0x0213b020..0x0213b098. Every update integrates mVel into mPos, runs
- * the current State* handler, and re-projects the screen position. Tap
- * (stylus) near Mario and he bounces; miss and he damps out and respawns.
+ * A pointer-to-member state machine: mState is installed from the 8-byte
+ * records at data_ov006_0213b020..0213b098. Each update applies gravity,
+ * integrates mVel into mPos, runs the current state and re-projects the
+ * screen position. Tap near Mario and he bounces; miss and he damps out and
+ * respawns.
  *
- * Source order is ROM-ascending with `#pragma defer_codegen off` below; the
- * default (deferred) codegen would emit the reverse. Do not reorder. The
- * destructor is not virtual, so the key function is the first declared
- * virtual (Unk_020c76d8, slot 0) and this TU emits the vtable.
+ * Source order is ROM order, which `#pragma defer_codegen off` keeps; do not
+ * reorder. The destructor is not virtual, so the first declared virtual
+ * (Unk_020c76d8) is the key function and this file emits the vtable.
  *
- * common.h FIRST: the mat4x3 copy in func_ov006_020c76e0 wants the flat
- * s32 m[12] spelling; math/Matrix.h's nested {r, t} scalarizes it. Pinned in
- * notes/experiments/jump3d-2711-common-first-matrix.md.
+ * Include common.h first: the mat4x3 copy in func_ov006_020c76e0 needs its
+ * flat s32 m[12]; math/Matrix.h's nested form scalarizes the copy.
+ * decl_common.h is left out because four of the data symbols here collide
+ * with its spellings.
  *
- * decl_common.h is NOT included: it declares only two of these members but
- * four of the data symbols this TU reads collide with it (02141a44,
- * 02141a40, 02140428, 0214042c). No header under include/ pulls it in.
- *
- * deslop leftovers:
- * - ModelAnim::SetAnim 6az: carries Fix12<int> by value; the member form
- *   size-DIFFs (pinned in
- *   notes/experiments/jump3d-2711-setanim-member-form.md). Same wall keeps
- *   the mangled spelling in
- *   src/func_ov006_020c6e4c.cpp. Particle::System::NewSimple has no header
- *   decl at all.
- * - Sound::PlayBank2_2D / Sound_PlayBank1Panned / func_02012718: no header
- *   decl (Panned is owned by dScMgD3DBase_c.cpp with an (int,char*,void*)
- *   spelling; this TU's (int,int,int) passes the same words).
- * - ApproachLinear / ApproachLinear2 / UpdateAngle / Vec3_Sub / AddVec3 /
- *   NormalizeVec3IfNonZero / RandomIntInternal / Matrix4x3_*: no header decl.
- * - func_ov006_020bfec0 (world-to-screen projection), func_ov006_020e6e3c
- *   (thunk: func_02012718(a, b + 0x80000)), func_ov006_020c8c78 (2D spark
- *   spawner into a 3-slot table): no header decl.
- * - func_020179b4 (Model::LoadFile + ModelBase::SetFile, releasing on
- *   failure), func_02016a14/604 (material slots), func_02053200: no header.
- * - data_ov006_* handles/constants: this TU's names for unowned data.
- * - The eight func_ov006_* members keep their labels: each is called by a
- *   plain `bl` from a still-unpromoted `.c` shard below the run (12 sites in
- *   seven shards). A C shard can declare the mangled symbol, so this is a
- *   migration dependency on those shards and their TU configuration, not an
- *   inability to name the member. Deferred with partial scope: the eight
- *   members, the seven shards and the twelve call sites are enumerated in
- *   tangosdev/sm64ds-decomp issue #2722, which owns that migration and its
- *   next owner. This PR reserves none of it. The labels are inferred, not
- *   original spellings.
- * - Four measured load-bearing spellings, each commented at its site and
- *   each with its pinned experiment named there: the int* Mtx zeroing
- *   (7734), flag reuse (StateHold), the volatile v[2] store (StateMove),
- *   the int t temp (87d0). EnterHit's earlier Pair/select spelling was
- *   measured inert and replaced by the plain pointer-to-member assignment
- *   every other record already used
- *   (notes/experiments/jump3d-2711-enterhit-pmf-assign.md).
- * - One retained substitution: the plain Jump3DVec scratch in EnterHold and
- *   the Jump3DVec members it matches. Partial scope, pinned at its site and
- *   in include/dMgJump3DMario_c.h.
+ * Still raw:
+ * - The eight func_ov006_ members keep their linker names because
+ *   unpromoted C files still call them by those names (issue #2722).
+ * - ModelAnim::SetAnim takes Fix12<int> by value; its real spelling makes
+ *   the compiler home the argument and the size changes. NewSimple takes
+ *   Fix12<int> the same way and has no header. Both stay mangled.
+ * - The helper functions and data_ov006_ tables have no header or name yet.
  */
 
 #pragma defer_codegen off
@@ -68,6 +33,7 @@
 #include "SharedFilePtr.h"
 #include "OAM.h"
 #include "fBase_c.h"
+#include "Sound.h"
 
 static const int kWallX = 0x6c000;   /* mPos.x clamp: the arena walls */
 static const int kScreenYMax = 0xbc; /* past this mScreenY the Mario damps out */
@@ -77,25 +43,16 @@ static const int kAnimSpeed = 0x800; /* SetAnim speed every install uses */
  * their own 4 x s32 definition; this is that definition. */
 struct Mtx { int a, b, c, d; };
 
-/* ---------------------------------------------------------------------------
- * ONE file-scope `extern "C"` region: everything the C++-named members reach.
- * A member may not carry a block-scope linkage specification, so these have
- * to be file-scope. Data lives here too, one agreed spelling per symbol.
- * ------------------------------------------------------------------------- */
+/* Everything this file calls or reads that no header declares. Keep it
+ * above the first function. */
 extern "C" {
 
-/* This TU's own member, forward-declared: its callers sit above it in ROM
- * order (StateFallOut, func_ov006_020c8084, StateRiseOut). */
+/* Defined below, called from above. */
 void func_ov006_020c8658(void *c);
 
-/* SetAnim's real signature carries Fix12<int> by value (see ModelAnim.h), so
- * the member form homes the argument and size-DIFFs; the scalar spelling. */
+/* Fix12<int> by value in the real signatures; see the banner. */
 void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *file, int a, int b, unsigned int d);
-void _ZN5Sound12PlayBank2_2DEj(unsigned int id);
 void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
-void _Z14ApproachLinearRiii(int &v, int target, int step);
-int  _Z15ApproachLinear2Rsss(short *v, short target, short step);
-void _Z11UpdateAngleRssis(short *a, int b, int c, int d);
 void Sound_PlayBank1Panned(int a, int b, int c);
 void Vec3_Sub(Jump3DVec *out, Jump3DVec *a, Jump3DVec *b);
 void AddVec3(Jump3DVec *a, Jump3DVec *b, Jump3DVec *c);
@@ -112,8 +69,7 @@ void func_ov006_020c8c78(int a, int b);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationY(void *m, short angY);
 
-/* The mState records this TU installs or compares (0213b040's consumer sits
- * outside the run, so it is not declared here). */
+/* The mState records this file installs or compares. */
 extern Jump3DState data_ov006_0213b020;
 extern Jump3DState data_ov006_0213b028;
 extern Jump3DState data_ov006_0213b030;
@@ -141,8 +97,8 @@ extern int data_ov006_0213b01c;
 extern int data_ov006_02140428;
 extern int data_ov006_02140434;
 
-/* The six anim files func_ov006_020c87d0 loads; the dtor clears five of them
- * (0214041c survives -- that is the ROM's shape, not an omission). */
+/* The six anim files func_ov006_020c87d0 loads. The destructor clears only
+ * five of them; 0214041c survives in the ROM too. */
 extern BCA_File *data_ov006_02140408;
 extern BCA_File *data_ov006_0214040c;
 extern BCA_File *data_ov006_0214041c;
@@ -178,9 +134,13 @@ extern fBase_c *data_0209f5c0;
 
 }  /* extern "C" */
 
+void  UpdateAngle(short &angle, short target, int speed, short maxStep);
+short ApproachLinear2(short &value, short target, short step);
+void  ApproachLinear(int &value, int target, int step);
 
-/* [0] 0x020c762c -- vtable slot 2 */
+
 // @symbol _ZN16dMgJump3DMario_c12Unk_020c762cEv
+/* Vtable slot 2. */
 int dMgJump3DMario_c::Unk_020c762c()
 {
     int r = 0;
@@ -199,106 +159,101 @@ int dMgJump3DMario_c::Unk_020c762c()
 }
 
 
-/* [1] 0x020c76d0 -- vtable slot 1 */
 // @symbol _ZN16dMgJump3DMario_c12Unk_020c76d0Ev
+/* Vtable slot 1. */
 void *dMgJump3DMario_c::Unk_020c76d0()
 {
     return &mVel;
 }
 
 
-/* [2] 0x020c76d8 -- vtable slot 0, KEY FUNCTION */
 // @symbol _ZN16dMgJump3DMario_c12Unk_020c76d8Ev
+/* Vtable slot 0, and the key function. */
 void *dMgJump3DMario_c::Unk_020c76d8()
 {
     return &mPos;
 }
 
 
-/* [3] 0x020c76e0 -- rebuilds the model matrix from mPos/mAngleY */
 extern "C" {
 // @symbol func_ov006_020c76e0
-void func_ov006_020c76e0(char *c)
+/* Rebuilds the model matrix from mPos and mAngleY. */
+void func_ov006_020c76e0(char *raw)
 {
-    dMgJump3DMario_c *o = (dMgJump3DMario_c *)c;
+    dMgJump3DMario_c *self = (dMgJump3DMario_c *)raw;
 
-    Matrix4x3_FromTranslation(&data_020a0e68, o->mPos.x, o->mPos.y, o->mPos.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, o->mAngleY);
-    o->mModelAnim.mat4x3 = data_020a0e68;
+    Matrix4x3_FromTranslation(&data_020a0e68, self->mPos.x, self->mPos.y, self->mPos.z);
+    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, self->mAngleY);
+    self->mModelAnim.mat4x3 = data_020a0e68;
 }
 }
 
 
-/* [4] 0x020c7734 -- OAM shadow sprite plus the model render */
 extern "C" {
 // @symbol func_ov006_020c7734
-void func_ov006_020c7734(char *c)
+/* OAM shadow sprite plus the model render. */
+void func_ov006_020c7734(char *raw)
 {
-    dMgJump3DMario_c *o = (dMgJump3DMario_c *)c;
-    short v[2];
-    int r1res;
-    int r2res;
-    int g;
-    int t;
-    Mtx m;
+    dMgJump3DMario_c *self = (dMgJump3DMario_c *)raw;
+    short screen[2];
+    int scaleX;
+    int scaleY;
+    int angle;
+    int wave;
+    Mtx mtx;
 
-    if (o->mVisible == 0)
+    if (self->mVisible == 0)
         return;
 
     if (data_ov006_02140400 != 0) {
-        func_ov006_020bfec0(data_ov006_02141a44, &o->mPos, v);
+        func_ov006_020bfec0(data_ov006_02141a44, &self->mPos, screen);
 
-        g = data_ov006_02140404;
-        t = data_02082214[(g >> 4) * 2];
-        v[1] = v[1] - (((t << 2) + 0x30000) >> 12);
-        r1res = func_02053200((t >> 2) + 0x1000);
+        angle = data_ov006_02140404;
+        wave = data_02082214[(angle >> 4) * 2];
+        screen[1] = screen[1] - (((wave << 2) + 0x30000) >> 12);
+        scaleX = func_02053200((wave >> 2) + 0x1000);
 
-        g = data_ov006_02140404;
-        r2res = -func_02053200((data_02082214[(g >> 4) * 2 + 1] >> 2) + 0x1000);
+        angle = data_ov006_02140404;
+        scaleY = -func_02053200((data_02082214[(angle >> 4) * 2 + 1] >> 2) + 0x1000);
 
-        /* Zeroed THROUGH `int *`, not through m.a..m.d.  MEASURED: writing the
-           named members instead costs 11 words, reproduced exactly by
-           notes/experiments/jump3d-2711-mtx-intptr-zeroing.md.  Why, is a
-           reading and not a measurement -- the extra words look like a spill
-           of a struct mwccarm had kept in registers, for the Matrix2x2
-           argument below -- so trust the 11 and not the explanation. */
-        int *mp = (int *)&m;
+        /* Zero it through `int *`: writing mtx.a..mtx.d instead costs 11 words
+           (notes/experiments/jump3d-2711-mtx-intptr-zeroing.md). */
+        int *mp = (int *)&mtx;
         mp[0] = 0; mp[1] = 0; mp[2] = 0; mp[3] = 0;
-        m.d = r2res;
-        m.a = r1res;
-        OAM::Render(false, data_ov006_02134d1c, v[0], v[1], -1, -1, (Matrix2x2 *)&m);
+        mtx.d = scaleY;
+        mtx.a = scaleX;
+        OAM::Render(false, data_ov006_02134d1c, screen[0], screen[1], -1, -1, (Matrix2x2 *)&mtx);
     }
 
-    o->mModelAnim.Render(&data_ov006_0212ddd0);
+    self->mModelAnim.Render(&data_ov006_0212ddd0);
 }
 }
 
 
-/* [5] 0x020c7860 -- the per-frame update: gravity, integrate, dispatch mState */
 extern "C" {
 // @symbol func_ov006_020c7860
-void func_ov006_020c7860(char *c)
+/* The per-frame update: gravity, integrate, dispatch mState. */
+void func_ov006_020c7860(char *raw)
 {
-    dMgJump3DMario_c *o = (dMgJump3DMario_c *)c;
+    dMgJump3DMario_c *self = (dMgJump3DMario_c *)raw;
 
-    _Z14ApproachLinearRiii(o->mVel.y, data_ov006_0213b010, data_ov006_0213b018);
-    AddVec3(&o->mPos, &o->mVel, &o->mPos);
-    (o->*o->mState)();
-    func_ov006_020bfec0(data_ov006_02141a40, &o->mPos, &o->mScreenX);
-    func_ov006_020c76e0(c);
-    o->mModelAnim.Animation::Advance();
+    ApproachLinear(self->mVel.y, data_ov006_0213b010, data_ov006_0213b018);
+    AddVec3(&self->mPos, &self->mVel, &self->mPos);
+    (self->*self->mState)();
+    func_ov006_020bfec0(data_ov006_02141a40, &self->mPos, &self->mScreenX);
+    func_ov006_020c76e0(raw);
+    self->mModelAnim.Animation::Advance();
 }
 }
 
 
-/* [6] 0x020c78ec */
 // @symbol _ZN16dMgJump3DMario_c9StateDampEv
 void dMgJump3DMario_c::StateDamp()
 {
     mTimer -= 1;
     if (mTimer == 0) {
-        _Z14ApproachLinearRiii(data_ov006_02140428, 0, 1);
-        _ZN5Sound12PlayBank2_2DEj(0x130);
+        ApproachLinear(data_ov006_02140428, 0, 1);
+        Sound::PlayBank2_2D(0x130);
         func_ov006_020c8c78(mScreenX, 0xc0);
         EnterRespawn();
         return;
@@ -313,21 +268,19 @@ void dMgJump3DMario_c::StateDamp()
 }
 
 
-/* [7] 0x020c79a8 */
 // @symbol _ZN16dMgJump3DMario_c9EnterDampEv
 void dMgJump3DMario_c::EnterDamp()
 {
     if (data_ov006_02140428 > 1)
-        _ZN5Sound12PlayBank2_2DEj(0x1ca);
+        Sound::PlayBank2_2D(0x1ca);
     else
-        _ZN5Sound12PlayBank2_2DEj(0x1c9);
+        Sound::PlayBank2_2D(0x1c9);
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov006_0214042c, 0, kAnimSpeed, 0);
     mTimer = 0x28;
     mState = data_ov006_0213b030;
 }
 
 
-/* [8] 0x020c7a30 */
 // @symbol _ZN16dMgJump3DMario_c9StateHoldEv
 void dMgJump3DMario_c::StateHold()
 {
@@ -340,10 +293,8 @@ void dMgJump3DMario_c::StateHold()
         }
     }
     if (flag != 0) {
-        /* Reusing `flag` as the scratch is load-bearing, not leftover: reading
-           the table straight into `b` and leaving `flag` alone costs 5 words,
-           reproduced exactly by
-           notes/experiments/jump3d-2711-statehold-flag-reuse.md. */
+        /* Keep reusing `flag` here: reading the table straight into `b`
+           costs 5 words (notes/experiments/jump3d-2711-statehold-flag-reuse.md). */
         flag = data_020a0deb[idx][0];
         int b = flag;
         int x = mScreenY - 0x20;
@@ -357,7 +308,7 @@ void dMgJump3DMario_c::StateHold()
                 dx = -dx;
             }
             if (dx < 0x26) {
-                _Z15ApproachLinear2Rsss(&mTimer, 0, 8);
+                ApproachLinear2(mTimer, 0, 8);
             }
         }
     }
@@ -374,7 +325,7 @@ void dMgJump3DMario_c::StateHold()
         mCommand = 0;
         mVel.y = data_ov006_0213b008;
         EnterHit();
-    } else if (_Z15ApproachLinear2Rsss(&mTimer, 0, 1)) {
+    } else if (ApproachLinear2(mTimer, 0, 1)) {
         mCommand = 0;
         if (mVel.y > 0) {
             EnterBounce();
@@ -392,18 +343,12 @@ void dMgJump3DMario_c::StateHold()
 }
 
 
-/* [9] 0x020c7ba4 */
 // @symbol _ZN16dMgJump3DMario_c9EnterHoldEv
 void dMgJump3DMario_c::EnterHold()
 {
-    /* Plain Jump3DVec, not types.h's Vector3. MEASURED and pinned in
-       notes/experiments/jump3d-2711-scratch-vector3.md: the Vector3 spelling
-       leaves this member byte-identical, so a per-function compare cannot
-       see the wall at all -- but the TU then defines `_ZN7Vector3D1Ev`, no
-       compiler_only_output row in
-       config/tu_manifest.d/ov006/dMgJump3DMario_c.json licenses that symbol,
-       and packaging refuses the emission. Retained substitution, accepted as
-       partial scope alongside issue #2722. */
+    /* Jump3DVec, not Vector3: Vector3 matches here too, but it makes this
+       file emit Vector3's destructor, which the manifest does not license
+       (notes/experiments/jump3d-2711-scratch-vector3.md). */
     Jump3DVec v;
 
     Vec3_Sub(&v, &mPos, &mAnchor);
@@ -423,7 +368,6 @@ void dMgJump3DMario_c::EnterHold()
 }
 
 
-/* [10] 0x020c7c68 */
 // @symbol _ZN16dMgJump3DMario_c9StateMoveEv
 void dMgJump3DMario_c::StateMove()
 {
@@ -469,16 +413,9 @@ void dMgJump3DMario_c::StateMove()
                     int t1 = (-az) << 12;
                     v[0] = t0;
                     v[1] = t1;
-                    /* The volatile round-trip is load-bearing.  MEASURED and
-                       pinned in
-                       notes/experiments/jump3d-2711-statemove-volatile-store.md:
-                       writing a plain `v[2] = 0;` rewrites the whole 0x3c4-byte
-                       member, size 0x3c4 against 0x3a8.  That candidate differs
-                       in size, so the run prints no per-word lines: the stack
-                       demotion of v[] and the NewSimple() argument load order
-                       below are a reading of the shape, and the relocation
-                       count an earlier version of this comment gave is NOT
-                       measured by the pin. */
+                    /* Keep the volatile store: a plain `v[2] = 0;` shrinks the
+                       function to 0x3a8 bytes against the ROM's 0x3c4
+                       (notes/experiments/jump3d-2711-statemove-volatile-store.md). */
                     *(volatile int *)&v[2] = 0;
                     mVel.y = *p;
                     mVel.x = data_ov006_0213b01c * dx;
@@ -526,14 +463,13 @@ void dMgJump3DMario_c::StateMove()
     }
 
     if (mVel.x > 0) {
-        _Z11UpdateAngleRssis(&mAngleY, 0x2800, 2, 0x1000);
+        UpdateAngle(mAngleY, 0x2800, 2, 0x1000);
         return;
     }
-    _Z11UpdateAngleRssis(&mAngleY, -0x2800, 2, 0x1000);
+    UpdateAngle(mAngleY, -0x2800, 2, 0x1000);
 }
 
 
-/* [11] 0x020c802c */
 // @symbol _ZN16dMgJump3DMario_c9EnterMoveEv
 void dMgJump3DMario_c::EnterMove()
 {
@@ -541,7 +477,6 @@ void dMgJump3DMario_c::EnterMove()
 }
 
 
-/* [12] 0x020c8048 */
 // @symbol _ZN16dMgJump3DMario_c12StateFallOutEv
 void dMgJump3DMario_c::StateFallOut()
 {
@@ -552,29 +487,27 @@ void dMgJump3DMario_c::StateFallOut()
 }
 
 
-/* [13] 0x020c8084 */
 extern "C" {
 // @symbol func_ov006_020c8084
-void func_ov006_020c8084(char *c)
+void func_ov006_020c8084(char *raw)
 {
-    dMgJump3DMario_c *o = (dMgJump3DMario_c *)c;
+    dMgJump3DMario_c *self = (dMgJump3DMario_c *)raw;
 
-    if (o->mState == data_ov006_0213b088) {
-        o->mVel.y = 0;
-        func_ov006_020c8658(c);
+    if (self->mState == data_ov006_0213b088) {
+        self->mVel.y = 0;
+        func_ov006_020c8658(raw);
     } else {
-        o->mVel.x = 0;
-        o->mVel.y = 0x2000;
-        _ZN5Sound12PlayBank2_2DEj(0x1c9);
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&o->mModelAnim, data_ov006_0214042c, 0, kAnimSpeed, 0);
-        o->mModelAnim.Animation::currFrame = 0;
-        o->mState = data_ov006_0213b090;
+        self->mVel.x = 0;
+        self->mVel.y = 0x2000;
+        Sound::PlayBank2_2D(0x1c9);
+        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModelAnim, data_ov006_0214042c, 0, kAnimSpeed, 0);
+        self->mModelAnim.Animation::currFrame = 0;
+        self->mState = data_ov006_0213b090;
     }
 }
 }
 
 
-/* [14] 0x020c814c */
 // @symbol _ZN16dMgJump3DMario_c12StateRiseOutEv
 void dMgJump3DMario_c::StateRiseOut()
 {
@@ -592,25 +525,23 @@ void dMgJump3DMario_c::StateRiseOut()
 }
 
 
-/* [15] 0x020c81e0 */
 extern "C" {
 // @symbol func_ov006_020c81e0
-void func_ov006_020c81e0(char *c)
+void func_ov006_020c81e0(char *raw)
 {
-    dMgJump3DMario_c *o = (dMgJump3DMario_c *)c;
+    dMgJump3DMario_c *self = (dMgJump3DMario_c *)raw;
 
-    o->mVel.x = 0;
-    o->mVel.y = data_ov006_0213b00c;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&o->mModelAnim, data_ov006_0214041c, 0x40000000, kAnimSpeed, 0);
-    o->mModelAnim.Animation::currFrame = 0;
-    _ZN5Sound12PlayBank2_2DEj(0x10f);
-    func_02012718(0x1b5, o->mScreenX << 12);
-    o->mState = data_ov006_0213b080;
+    self->mVel.x = 0;
+    self->mVel.y = data_ov006_0213b00c;
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModelAnim, data_ov006_0214041c, 0x40000000, kAnimSpeed, 0);
+    self->mModelAnim.Animation::currFrame = 0;
+    Sound::PlayBank2_2D(0x10f);
+    func_02012718(0x1b5, self->mScreenX << 12);
+    self->mState = data_ov006_0213b080;
 }
 }
 
 
-/* [16] 0x020c8270 */
 // @symbol _ZN16dMgJump3DMario_c8EnterHitEv
 void dMgJump3DMario_c::EnterHit()
 {
@@ -626,7 +557,6 @@ void dMgJump3DMario_c::EnterHit()
 }
 
 
-/* [17] 0x020c833c */
 // @symbol _ZN16dMgJump3DMario_c11StateBounceEv
 void dMgJump3DMario_c::StateBounce()
 {
@@ -674,13 +604,12 @@ void dMgJump3DMario_c::StateBounce()
     }
 
     if (mVel.x > 0)
-        _Z11UpdateAngleRssis(&mAngleY, 0x2800, 2, 0x1000);
+        UpdateAngle(mAngleY, 0x2800, 2, 0x1000);
     else
-        _Z11UpdateAngleRssis(&mAngleY, -0x2800, 2, 0x1000);
+        UpdateAngle(mAngleY, -0x2800, 2, 0x1000);
 }
 
 
-/* [18] 0x020c85a0 */
 // @symbol _ZN16dMgJump3DMario_c11EnterBounceEv
 void dMgJump3DMario_c::EnterBounce()
 {
@@ -688,11 +617,10 @@ void dMgJump3DMario_c::EnterBounce()
 }
 
 
-/* [19] 0x020c85bc */
 // @symbol _ZN16dMgJump3DMario_c11StateWindUpEv
 void dMgJump3DMario_c::StateWindUp()
 {
-    if (_Z15ApproachLinear2Rsss(&mTimer, 0, 1) == 0) {
+    if (ApproachLinear2(mTimer, 0, 1) == 0) {
         mPos.y = 0;
         return;
     }
@@ -705,20 +633,18 @@ void dMgJump3DMario_c::StateWindUp()
 }
 
 
-/* [20] 0x020c862c */
 extern "C" {
 // @symbol func_ov006_020c862c
-void func_ov006_020c862c(int *c, int v)
+void func_ov006_020c862c(int *raw, int timer)
 {
-    dMgJump3DMario_c *o = (dMgJump3DMario_c *)c;
+    dMgJump3DMario_c *self = (dMgJump3DMario_c *)raw;
 
-    o->mTimer = (s16)v;
-    o->mState = data_ov006_0213b050;
+    self->mTimer = (s16)timer;
+    self->mState = data_ov006_0213b050;
 }
 }
 
 
-/* [21] 0x020c864c */
 // @symbol _ZN16dMgJump3DMario_c9StateIdleEv
 void dMgJump3DMario_c::StateIdle()
 {
@@ -726,36 +652,34 @@ void dMgJump3DMario_c::StateIdle()
 }
 
 
-/* [22] 0x020c8658 */
 extern "C" {
 // @symbol func_ov006_020c8658
-void func_ov006_020c8658(void *c)
+void func_ov006_020c8658(void *raw)
 {
-    dMgJump3DMario_c *o = (dMgJump3DMario_c *)c;
+    dMgJump3DMario_c *self = (dMgJump3DMario_c *)raw;
 
-    o->mVisible = 0;
-    o->mPos.y = 0;
-    o->mState = data_ov006_0213b048;
+    self->mVisible = 0;
+    self->mPos.y = 0;
+    self->mState = data_ov006_0213b048;
 }
 }
 
 
-/* [23] 0x020c8680 */
 // @symbol _ZN16dMgJump3DMario_c12StateRespawnEv
 void dMgJump3DMario_c::StateRespawn()
 {
-    unsigned int r;
-    int r5;
+    unsigned int rnd;
+    int speed;
 
     mTimer -= 1;
     if (mTimer == 0) {
         mPos.y = 0x100000;
-        r = ((unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 0x13;
-        mPos.x = ((int)r - 0x800) * 0xc0;
+        rnd = ((unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 0x13;
+        mPos.x = ((int)rnd - 0x800) * 0xc0;
         mVel.y = 0;
-        r5 = data_ov006_0213b01c;
-        r = ((unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 0x13;
-        mVel.x = (int)(((s64)(((int)r - 0x800) << 1) * r5 + 0x800) >> 12);
+        speed = data_ov006_0213b01c;
+        rnd = ((unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 0x13;
+        mVel.x = (int)(((s64)(((int)rnd - 0x800) << 1) * speed + 0x800) >> 12);
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov006_02140424, 0x40000000, kAnimSpeed, 0);
         EnterMove();
         return;
@@ -765,7 +689,6 @@ void dMgJump3DMario_c::StateRespawn()
 }
 
 
-/* [24] 0x020c8768 */
 // @symbol _ZN16dMgJump3DMario_c12EnterRespawnEv
 void dMgJump3DMario_c::EnterRespawn()
 {
@@ -777,19 +700,19 @@ void dMgJump3DMario_c::EnterRespawn()
 }
 
 
-/* [25] 0x020c87d0 -- loads the model + six anims; the one-minigame setup */
 extern "C" {
 // @symbol func_ov006_020c87d0
-int func_ov006_020c87d0(char *c)
+/* Loads the model and the six anims. */
+int func_ov006_020c87d0(char *raw)
 {
-    dMgJump3DMario_c *o = (dMgJump3DMario_c *)c;
+    dMgJump3DMario_c *self = (dMgJump3DMario_c *)raw;
 
-    /* `t` is load-bearing, not a leftover: folding the comparison into the
-       `if` below rewrites the whole 0x16c-byte function, size 0x16c against
-       0x160.  Pinned in notes/experiments/jump3d-2711-87d0-int-temp.md. */
+    /* Keep `t`: folding the comparison into the `if` below shrinks
+       the function to 0x160 bytes against the ROM's 0x16c
+       (notes/experiments/jump3d-2711-87d0-int-temp.md). */
     int t;
 
-    if (func_020179b4(&data_ov006_02140450, &o->mModelAnim, 1) == 0)
+    if (func_020179b4(&data_ov006_02140450, &self->mModelAnim, 1) == 0)
         return 0;
 
     data_ov006_02140430 = (BCA_File *)Animation::LoadFile(data_ov006_02140460);
@@ -799,25 +722,24 @@ int func_ov006_020c87d0(char *c)
     data_ov006_02140408 = (BCA_File *)Animation::LoadFile(data_ov006_02140440);
     data_ov006_0214042c = (BCA_File *)Animation::LoadFile(data_ov006_02140448);
 
-    o->mAnimIdx = 0;
+    self->mAnimIdx = 0;
     if (data_ov006_02141a40 != 0)
-        func_ov006_020bfec0(data_ov006_02141a40, &o->mPos, &o->mScreenX);
+        func_ov006_020bfec0(data_ov006_02141a40, &self->mPos, &self->mScreenX);
 
     t = data_0209f5c0->actorID == 0x175;
     if (t != 0) {
-        func_02016a14(&o->mModelAnim, 0x7fff);
-        func_02016a04(&o->mModelAnim, 0x210);
+        func_02016a14(&self->mModelAnim, 0x7fff);
+        func_02016a04(&self->mModelAnim, 0x210);
     }
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-        &o->mModelAnim, data_ov006_02140430, 0x40000000, kAnimSpeed, 0);
+        &self->mModelAnim, data_ov006_02140430, 0x40000000, kAnimSpeed, 0);
 
-    func_ov006_020c8658(c);
+    func_ov006_020c8658(raw);
     return 1;
 }
 }
 
 
-/* [26] 0x020c893c -- D1 */
 // @symbol _ZN16dMgJump3DMario_cD1Ev
 dMgJump3DMario_c::~dMgJump3DMario_c()
 {
@@ -836,9 +758,9 @@ dMgJump3DMario_c::~dMgJump3DMario_c()
 }
 
 
-/* [27] 0x020c8a04 -- C1. Empty: the base ctor, the vptr store and the
- * ModelAnim member construction are all synthesized. */
 // @symbol _ZN16dMgJump3DMario_cC1Ev
+/* Empty: the base constructor, the vptr store and the ModelAnim member
+ * construction are all generated. */
 dMgJump3DMario_c::dMgJump3DMario_c()
 {
 }
