@@ -1,11 +1,11 @@
 //cpp
-// @symbol _ZN11VolcanoRing8BehaviorEv
-#include "VolcanoRing.h"
+// @symbol _ZN14daObjFl_Ring_c8BehaviorEv
+#include "daObjFl_Ring_c.h"
 
-/* VolcanoRing::Behavior -- vtable slot 6, ov022 0x021112ac.
+/* daObjFl_Ring_c::Behavior -- vtable slot 6, ov022 0x021112ac.
  *
  * mState/mSpawnGuard/mTriggered/mCooldown/mSpawnCount are this class's own
- * fields (include/VolcanoRing.h); mPosX/Y/Z, mAreaId, mFlags, mAngleY,
+ * fields (include/daObjFl_Ring_c.h); mPosX/Y/Z, mAreaId, mFlags, mAngleY,
  * mPrevAngleY, mPrevAngleZ are dActor_c's own (include/dActor_c.h).
  * UpdateModelPosAndRotY/UpdateClsnPosAndRot/IsClsnInRange are dBgActor_c's
  * own, called unqualified. DecIfAbove0_Short/Byte, ApproachAngle,
@@ -30,7 +30,7 @@ extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b)
 #define Sound_PlayBank3 _ZN5Sound9PlayBank3EjRK7Vector3
 #define Actor_Spawn _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as
 
-int VolcanoRing::Behavior()
+int daObjFl_Ring_c::Behavior()
 {
     switch (mState) {
     case 0:

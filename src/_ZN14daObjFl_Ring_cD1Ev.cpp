@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN11VolcanoRingD1Ev
+// @symbol _ZN14daObjFl_Ring_cD1Ev
 /* recovered: real C++ destructor -- the compiler emits the whole body.
  * Vtable slot 16: one vtable store, the members in reverse, then ~dBgActor_c. */
-#include "VolcanoRing.h"
+#include "daObjFl_Ring_c.h"
 
-VolcanoRing::~VolcanoRing()
+daObjFl_Ring_c::~daObjFl_Ring_c()
 {
 }

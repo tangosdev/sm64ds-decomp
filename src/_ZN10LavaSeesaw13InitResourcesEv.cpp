@@ -5,7 +5,7 @@
 /* LavaSeesaw::InitResources -- vtable slot 0, ov022 0x02111ea0.
  *
  * Real member function on real fields, same idiom as
- * src/_ZN11VolcanoRing13InitResourcesEv.cpp (#1583): mModel/mMeshCollider/
+ * src/_ZN14daObjFl_Ring_c13InitResourcesEv.cpp (#1583): mModel/mMeshCollider/
  * mClsnMat/mAngleY are dBgActor_c's/dActor_c's own named fields.
  * ModelBase::SetFile and UpdateClsnPosAndRot are real method calls.
  * Model::LoadFile, dBgW_Kc::LoadFile and dBgW_KcMbg::SetFile
@@ -14,7 +14,7 @@
  * (mwccarm-codegen.md 6az). func_ov022_02111d48 and
  * func_020393d4/dBgW::UpdatePosWithTransform are this class's
  * own file-load bookkeeping, still unmigrated (out of this task's scope),
- * called under their existing names -- same as VolcanoRing's. */
+ * called under their existing names -- same as daObjFl_Ring_c's. */
 extern "C" {
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
 extern void *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void *fp);

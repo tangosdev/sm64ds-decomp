@@ -1,8 +1,8 @@
 //cpp
-// @symbol _ZN11VolcanoRing13InitResourcesEv
-#include "VolcanoRing.h"
+// @symbol _ZN14daObjFl_Ring_c13InitResourcesEv
+#include "daObjFl_Ring_c.h"
 
-/* VolcanoRing::InitResources -- vtable slot 0, ov022 0x0211149c.
+/* daObjFl_Ring_c::InitResources -- vtable slot 0, ov022 0x0211149c.
  *
  * Real member function on real fields, same idiom as
  * src/_ZN8SignPost13InitResourcesEv.cpp (#1554): mModel/mMeshCollider/
@@ -35,7 +35,7 @@ extern int _ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16
 extern void func_ov022_02111564(void *);
 }
 
-int VolcanoRing::InitResources()
+int daObjFl_Ring_c::InitResources()
 {
     void *f = _ZN5Model8LoadFileER13SharedFilePtr(data_ov022_02113cc8.a);
     mModel.SetFile((BMD_File *)f, 1, -1);

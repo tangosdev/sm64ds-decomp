@@ -134,7 +134,7 @@ AMBIG actor 63 SKI_LIFT: ['ov018', 'ov024', 'ov025'] -> ov018
 AMBIG actor 68 WORK_ELEVATOR: ['ov021', 'ov015'] -> ov021
 AMBIG actor 70 ROLLING_LOG_LLL: ['ov022', 'ov034'] -> ov022
 AMBIG actor 71 VOLCANO_RING: ['ov022', 'ov026'] -> ov022
-NOVTABLE actor 71 VolcanoRing (alloc=0x328)
+NOVTABLE actor 71 daObjFl_Ring_c (alloc=0x328)
 SKIP TiltingPlatformLll: ov064:0x211bd2c already claimed by MetalNetLift (vtable alloc=0x350)
 SKIP TiltingPlatformLll: ov064:0x21180e8 already claimed by MetalNetLift (vtable slot 0)
 SKIP TiltingPlatformLll: ov064:0x21180d4 already claimed by MetalNetLift (vtable slot 3)

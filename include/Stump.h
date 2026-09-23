@@ -19,7 +19,7 @@
 struct Stump : dBgActor_c {
     /* dBgActor_c ends at 0x31e (its own sizeof rounds up to 0x320); these two
        bytes are this class's own, in the base's tail padding -- same reuse
-       include/VolcanoRing.h documents at the same offset. Field names are
+       include/daObjFl_Ring_c.h documents at the same offset. Field names are
        placeholders: offsets, widths and read/write sites are observed from
        Behavior/OnGroundPounded/OnHitByMegaChar (slots 6/21/27, ov091
        0x02133738/3648/35d4), not proven semantics. */

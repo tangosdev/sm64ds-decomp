@@ -3537,17 +3537,17 @@
    "start": "0x21111a0",
    "end": "0x21115a8",
    "classes": [
-    "VolcanoRing"
+    "daObjFl_Ring_c"
    ],
    "n_functions_map": 9,
    "n_files": 9,
    "files": [
-    "src/_ZN11VolcanoRingD1Ev.cpp",
-    "src/_ZN11VolcanoRingD0Ev.c",
-    "src/_ZN11VolcanoRing16CleanupResourcesEv.cpp",
-    "src/_ZN11VolcanoRing6RenderEv.cpp",
-    "src/_ZN11VolcanoRing8BehaviorEv.cpp",
-    "src/_ZN11VolcanoRing13InitResourcesEv.cpp",
+    "src/_ZN14daObjFl_Ring_cD1Ev.cpp",
+    "src/_ZN14daObjFl_Ring_cD0Ev.c",
+    "src/_ZN14daObjFl_Ring_c16CleanupResourcesEv.cpp",
+    "src/_ZN14daObjFl_Ring_c6RenderEv.cpp",
+    "src/_ZN14daObjFl_Ring_c8BehaviorEv.cpp",
+    "src/_ZN14daObjFl_Ring_c13InitResourcesEv.cpp",
     "src/func_ov022_02111558.c",
     "src/func_ov022_02111564.c",
     "src/d_a_obj_fl_ring.c"
