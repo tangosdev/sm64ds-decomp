@@ -22682,3 +22682,30 @@ endforeach()
 foreach(_lw235 ntr_wide_rt ntr_hires)
     target_compile_definitions(${_lw235} PRIVATE NTR_ROM_IRQ_TABLE)
 endforeach()
+
+# ===========================================================================
+# VARIANT2 (run linkfull, lane VARIANT2): D0 FILES A dtorfwd FORWARDER ANSWERED
+# ===========================================================================
+#
+# port/slice_w26_variant2.txt carries per-function src D0 TUs whose flat ROM
+# name port/tools/dtorfwd.py used to generate as a forwarder
+# (hal/dtor_forwarders_gen_w9c.cpp). Each file defines that name itself now, in
+# its `#ifdef _MSC_VER` arm, and the forwarder row is retired in the same
+# commit, so each flat name has exactly one definition.
+#
+# ALL THREE HOSTING TARGETS: the generated forwarders, and the hal tables and
+# thunks that call these names, are on walk_window's, walk_window_hires' and
+# smoke_player's link lines alike (build.ninja), so the retired forwarders
+# must be answered on all three.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w26_variant2.txt" SLICE_W26_VARIANT2_LINES)
+set(SLICE_W26_VARIANT2_SOURCES "")
+foreach(line IN LISTS SLICE_W26_VARIANT2_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_W26_VARIANT2_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_tw26v2 walk_window walk_window_hires smoke_player)
+    target_sources(${_tw26v2} PRIVATE ${SLICE_W26_VARIANT2_SOURCES})
+endforeach()

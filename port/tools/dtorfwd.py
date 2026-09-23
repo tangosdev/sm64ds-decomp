@@ -132,6 +132,24 @@ import sys
 #   _ZN4ToadD0Ev
 #   _ZN9KoopaFlagD0Ev
 
+# RETIRED at VARIANT2 2026-09-23 (run linkfull, batch B3): each name below is
+# defined by its own src D0 file now, in that file's #ifdef _MSC_VER arm
+# (port/slice_w26_variant2.txt enrols the file): the campaign's qualified
+# call, a direct call to the ??1 the class's D1 file defines out of line,
+# then the class's own operator delete. Those are the same two calls the
+# retired forwarder made, in the same order, with the same deallocation
+# (operator_delete2 for the Model family, Deallocate with the word at
+# 0x020a0eac for the rest). The D1 and D2 rows of these classes stay.
+# The rows came out of their batches rather than being skipped, so the
+# generated files carry each name exactly once:
+#   _ZN11dCapEnemy_cD0Ev
+#   _ZN14KnockDownPlankD0Ev
+#   _ZN15TextureSequenceD0Ev
+#   _ZN15dScMgSnowball_cD0Ev
+#   _ZN18TextureTransformerD0Ev
+#   _ZN9ModelAnimD0Ev
+#   _ZN9TowerStepD0Ev
+
 BATCHES = {}
 
 BATCHES[1] = """
@@ -438,19 +456,12 @@ _ZN7daPkn_cD1Ev
 # is an LNK2005 -- out/SEATS2/seat_table.md's stated reason nobody seated these.
 
 BATCHES[5] = """
-_ZN11dCapEnemy_cD0Ev
 _ZN11dCapEnemy_cD1Ev
-_ZN15TextureSequenceD0Ev
 _ZN15TextureSequenceD1Ev
-_ZN15dScMgSnowball_cD0Ev
-_ZN18TextureTransformerD0Ev
 _ZN18TextureTransformerD1Ev
-_ZN9ModelAnimD0Ev
 _ZN9ModelAnimD1Ev
 _ZN9ModelAnimD2Ev
-_ZN14KnockDownPlankD0Ev
 _ZN14KnockDownPlankD1Ev
-_ZN9TowerStepD0Ev
 _ZN9TowerStepD1Ev
 """
 

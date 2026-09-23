@@ -52,7 +52,6 @@
 #include "TextureTransformer.h"
 #include "TowerStep.h"
 #include "dCapEnemy_c.h"
-#include "dScMgSnowball_c.h"
 #include "daObjFl_Fall_Block_c.h"
 #include "daObjWc_Mizu_c.h"
 #include "daObjWc_Obj03_c.h"
@@ -67,7 +66,6 @@
 // name and what this port already resolves.
 extern "C" {
 void _ZN6Memory10DeallocateEPvP4Heap(void *ptr, void *heap);
-void _ZN6Memory16operator_delete2EPv(void *ptr);
 extern void *GAME_HEAP_PTR;
 }
 
@@ -103,45 +101,21 @@ extern "C" void _ZN7daPkn_cD0Ev(void *self)
 extern "C" void _ZN7daPkn_cD1Ev(void *self)
 { ((daPkn_c *)self)->daPkn_c::~daPkn_c(); }
 
-/* ROM 0x020aedf4 _ZN11dCapEnemy_cD0Ev -- batch 5, ~dCapEnemy_c(), defined out of line by src/_ZN11dCapEnemy_cD1Ev.cpp plus _ZN6Memory10DeallocateEPvP4Heap */
-extern "C" void _ZN11dCapEnemy_cD0Ev(void *self)
-{ ((dCapEnemy_c *)self)->dCapEnemy_c::~dCapEnemy_c(); _ZN6Memory10DeallocateEPvP4Heap(self, GAME_HEAP_PTR); }
-
 /* ROM 0x0200651c _ZN11dCapEnemy_cD1Ev -- batch 5, ~dCapEnemy_c(), defined out of line by src/_ZN11dCapEnemy_cD1Ev.cpp */
 extern "C" void _ZN11dCapEnemy_cD1Ev(void *self)
 { ((dCapEnemy_c *)self)->dCapEnemy_c::~dCapEnemy_c(); }
-
-/* ROM 0x02111360 _ZN14KnockDownPlankD0Ev -- batch 5, ~KnockDownPlank(), defined out of line by src/_ZN14KnockDownPlankD1Ev.cpp plus _ZN6Memory10DeallocateEPvP4Heap */
-extern "C" void _ZN14KnockDownPlankD0Ev(void *self)
-{ ((KnockDownPlank *)self)->KnockDownPlank::~KnockDownPlank(); _ZN6Memory10DeallocateEPvP4Heap(self, GAME_HEAP_PTR); }
 
 /* ROM 0x02111314 _ZN14KnockDownPlankD1Ev -- batch 5, ~KnockDownPlank(), defined out of line by src/_ZN14KnockDownPlankD1Ev.cpp */
 extern "C" void _ZN14KnockDownPlankD1Ev(void *self)
 { ((KnockDownPlank *)self)->KnockDownPlank::~KnockDownPlank(); }
 
-/* ROM 0x02015a00 _ZN15TextureSequenceD0Ev -- batch 5, ~TextureSequence(), defined out of line by src/_ZN15TextureSequenceD1Ev.cpp plus _ZN6Memory16operator_delete2EPv */
-extern "C" void _ZN15TextureSequenceD0Ev(void *self)
-{ ((TextureSequence *)self)->TextureSequence::~TextureSequence(); _ZN6Memory16operator_delete2EPv(self); }
-
 /* ROM 0x02015a2c _ZN15TextureSequenceD1Ev -- batch 5, ~TextureSequence(), defined out of line by src/_ZN15TextureSequenceD1Ev.cpp */
 extern "C" void _ZN15TextureSequenceD1Ev(void *self)
 { ((TextureSequence *)self)->TextureSequence::~TextureSequence(); }
 
-/* ROM 0x0212573c _ZN15dScMgSnowball_cD0Ev -- batch 5, ~dScMgSnowball_c(), defined out of line by src/_ZN15dScMgSnowball_cD1Ev.cpp plus _ZN6Memory10DeallocateEPvP4Heap */
-extern "C" void _ZN15dScMgSnowball_cD0Ev(void *self)
-{ ((dScMgSnowball_c *)self)->dScMgSnowball_c::~dScMgSnowball_c(); _ZN6Memory10DeallocateEPvP4Heap(self, GAME_HEAP_PTR); }
-
-/* ROM 0x02015900 _ZN18TextureTransformerD0Ev -- batch 5, ~TextureTransformer(), defined out of line by src/_ZN18TextureTransformerD1Ev.cpp plus _ZN6Memory16operator_delete2EPv */
-extern "C" void _ZN18TextureTransformerD0Ev(void *self)
-{ ((TextureTransformer *)self)->TextureTransformer::~TextureTransformer(); _ZN6Memory16operator_delete2EPv(self); }
-
 /* ROM 0x0201592c _ZN18TextureTransformerD1Ev -- batch 5, ~TextureTransformer(), defined out of line by src/_ZN18TextureTransformerD1Ev.cpp */
 extern "C" void _ZN18TextureTransformerD1Ev(void *self)
 { ((TextureTransformer *)self)->TextureTransformer::~TextureTransformer(); }
-
-/* ROM 0x020168d8 _ZN9ModelAnimD0Ev -- batch 5, ~ModelAnim(), defined out of line by src/_ZN9ModelAnimD1Ev.cpp plus _ZN6Memory16operator_delete2EPv */
-extern "C" void _ZN9ModelAnimD0Ev(void *self)
-{ ((ModelAnim *)self)->ModelAnim::~ModelAnim(); _ZN6Memory16operator_delete2EPv(self); }
 
 /* ROM 0x0201691c _ZN9ModelAnimD1Ev -- batch 5, ~ModelAnim(), defined out of line by src/_ZN9ModelAnimD1Ev.cpp */
 extern "C" void _ZN9ModelAnimD1Ev(void *self)
@@ -150,10 +124,6 @@ extern "C" void _ZN9ModelAnimD1Ev(void *self)
 /* ROM 0x0201689c _ZN9ModelAnimD2Ev -- batch 5, ~ModelAnim(), defined out of line by src/_ZN9ModelAnimD1Ev.cpp */
 extern "C" void _ZN9ModelAnimD2Ev(void *self)
 { ((ModelAnim *)self)->ModelAnim::~ModelAnim(); }
-
-/* ROM 0x021122dc _ZN9TowerStepD0Ev -- batch 5, ~TowerStep(), defined out of line by src/_ZN9TowerStepD1Ev.cpp plus _ZN6Memory10DeallocateEPvP4Heap */
-extern "C" void _ZN9TowerStepD0Ev(void *self)
-{ ((TowerStep *)self)->TowerStep::~TowerStep(); _ZN6Memory10DeallocateEPvP4Heap(self, GAME_HEAP_PTR); }
 
 /* ROM 0x02112290 _ZN9TowerStepD1Ev -- batch 5, ~TowerStep(), defined out of line by src/_ZN9TowerStepD1Ev.cpp */
 extern "C" void _ZN9TowerStepD1Ev(void *self)
