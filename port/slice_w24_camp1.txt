@@ -1,0 +1,26 @@
+# slice_w24_camp1 -- run linkfull, lane CAMP1, THE VARIANT-ARM CAMPAIGN batches D0ARM-01/02/03.
+#
+# Each file below is a per-function src D0 TU that gained the Model family's
+# `#ifdef _MSC_VER` arm, written by the campaign generator (d0arm_gen.py) and
+# gated the pilot's way: mwccarm 2004/b56 object identical before/after,
+# match.py 2004/b56 strict MATCHING, linkcheck VERIFIED blind 0, per file.
+# THE CALL IS QUALIFIED (thiz->Cls::~Cls()), the one deliberate difference
+# from the Model family's own text, because main's headers declare these
+# destructors `virtual ~Cls();` with no _MSC_VER split while this tree's
+# headers declare them non-virtual under _MSC_VER (the Destructor1 /
+# Destructor0 house pattern); a qualified call is direct either way.
+#
+# Batches D0ARM-01 (arm9 base classes), D0ARM-02 (ov002) and D0ARM-03
+# (ov002..ov018) from the campaign recipe and batch plan banked by lane
+# D0ARM1 (the pilot) and reviewed safe by REVD0ARM1. port/faces_sync.txt
+# carries each retired D row with a RETIRED note naming the lane, date and
+# this file.
+src/_ZN8dActor_cD0Ev.cpp
+src/_ZN8dCcPos_cD0Ev.cpp
+src/_ZN7dCcAc_cD0Ev.cpp
+src/_ZN10dCcAcPos_cD0Ev.cpp
+src/_ZN5dCc_cD0Ev.cpp
+src/_ZN9BootSceneD0Ev.cpp
+src/_ZN5StageD0Ev.cpp
+src/_ZN7dScMB_cD0Ev.cpp
+src/_ZN7fBase_cD0Ev.cpp

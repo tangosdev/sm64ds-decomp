@@ -22682,3 +22682,33 @@ endforeach()
 foreach(_lw235 ntr_wide_rt ntr_hires)
     target_compile_definitions(${_lw235} PRIVATE NTR_ROM_IRQ_TABLE)
 endforeach()
+
+# ===========================================================================
+# CAMP1 D0 ARM CAMPAIGN (run linkfull, batches D0ARM-01/02/03)
+# ===========================================================================
+#
+# Run linkfull, lane CAMP1. The remaining per-function src D0 TUs from the
+# reviewed-safe campaign plan (out/D0ARM1/campaign_recipe.txt,
+# campaign_batches.txt) that now define their own flat ROM name under MSVC,
+# through the Model family's `#ifdef _MSC_VER` arm, in place of the generated
+# faces port/faces_sync.txt used to emit for them (those D rows are retired
+# in the same commits, so each flat name has exactly one definition).
+# port/slice_w24_camp1.txt carries the rows.
+#
+# ALL THREE HOSTING TARGETS, the slice_vtd1 shape: faces_sync_gen.cpp.obj,
+# which defined these names, and the three hal files whose slot-17 thunks
+# call them are on walk_window's, walk_window_hires' and smoke_player's link
+# lines alike (build.ninja), so the retired faces must be answered on all
+# three.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w24_camp1.txt" SLICE_W24_CAMP1_LINES)
+set(SLICE_W24_CAMP1_SOURCES "")
+foreach(line IN LISTS SLICE_W24_CAMP1_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_W24_CAMP1_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_tw24camp1 walk_window walk_window_hires smoke_player)
+    target_sources(${_tw24camp1} PRIVATE ${SLICE_W24_CAMP1_SOURCES})
+endforeach()
