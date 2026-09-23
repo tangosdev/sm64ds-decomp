@@ -372,6 +372,10 @@ static void __fastcall mb4_020c0364(void *self, void *) { ++g_m4f38_hits; func_o
 
 typedef void (*SeatFn)(void *);
 
+/* run linkfull lane PMFMG1: the ov004 record field's ten pairs, seated from
+   the end of the installer below; defined after the field counters. */
+static void mem2_record_seat(void);
+
 /* Compare against the cartridge's own code word and a zero adjustment first,
    abort loudly on either mismatch, then write the host body. */
 extern "C" void port_mg_memory2_model_seat(void)
@@ -417,6 +421,8 @@ extern "C" void port_mg_memory2_model_seat(void)
         seats[i].cell->code = (unsigned)(size_t)seats[i].host;
         ++g_m4f38_seated;
     }
+
+    mem2_record_seat();
 }
 
 extern "C" void port_mg_memory2_model_counts(unsigned *seated, unsigned *hits)
@@ -479,15 +485,93 @@ extern "C" void port_mg_memory2_field_counts(unsigned *calls, unsigned *hits)
 // rather than a PMF field) and the dispatch site.  Where anything else moved it
 // is stated on the line.
 
-/* src/func_ov004_020b52fc.cpp, section 4.  Its whole body is the dispatch, so
-   the host copy is the dispatch and nothing else.  The record pointer IS the
-   object the pair belongs to, so `this` is the argument unchanged -- the ROM's
-   `mov r0,r2` with a zero adjustment is exactly r0. */
-// PORT_HOST_ABI: mwcc pointer-to-member dispatch through an object-field 8-byte member pointer MSVC's 4-byte pmf cannot reproduce
-extern "C" void func_ov004_020b52fc(void *c)
+/* src/func_ov004_020b52fc.cpp -- RETIRED, run linkfull lane PMFMG1. The ten
+   ov004 .data pairs the record field can ever hold are seated with host faces
+   (mem2_record_seat below), so the matched TU's own `(c->*(c->pmf))()`
+   reaches a host body. Its listing (runs/linkfull/out/PMFMG1/
+   func_ov004_020b52fc.asm) is `mov ecx, [eax+4] / add ecx, eax / mov eax,
+   [eax] / pop ebp / jmp eax`: a TAIL JUMP with the receiver in ecx and nothing
+   pushed, so zero-argument __fastcall faces, which pop nothing and return to
+   whoever the jump left on the stack.
+
+   SECTION 4'S MISSING NULL GUARD, MEASURED. The ROM decodes and branches with
+   no `cmp`, and so does the matched TU; the retired copy routed through
+   port_mg_call0, whose first line returns on a zero code word. A cdb count on
+   the INT45 build over 900 frames of scene 363 with a scripted stylus read
+   17060 record dispatches and NONE with a zero code word
+   (runs/linkfull/out/PMFMG1/mem2_null_probe.txt): the twenty records are
+   written before the first walk, so the guard never had a case to catch.
+
+   ---- THE TEN PAIRS AND THE EIGHT FACES ------------------------------------
+   Section 4's ten, re-read out of overlay_0004.bin with their relocations
+   (runs/linkfull/out/PMFMG1/rom_records.txt): all {load-relocated code word,
+   0}. The address-targeted sweep of the whole of ov004 for the eight code
+   words finds exactly these ten pairs, and no literal pool in code holds any
+   of them (rom_memory2_code_refs.txt).
+
+   BOTH SIDES OF THE BY-VALUE TEST MOVE TOGETHER. src/func_ov004_020b5108.c
+   compares the stored pair with data_ov004_020bc800 word for word, and eight
+   more writers copy pairs of this run whole (020b4b84, 020b4cc4, 020b4dfc,
+   020b4e78, 020b4ff0, 020b506c, 020b51f0, 020b5334; three of them also test
+   stored words against zero, which a host word keeps nonzero). One face per
+   CODE WORD, written into every pair that holds it, so every comparison
+   answers what the cartridge answers: 0x020b5288 sits in three pairs and has
+   one face. The census moves into the faces: g_mem2_field_calls and _hits are
+   what hal/scene_mg_memory2.cpp prints as the FIELD dispatch pair. */
+#define M2R_FACE(code)                                                        \
+    static void __fastcall m2r_##code(void *self, void *)                     \
+    {                                                                         \
+        ++g_mem2_field_calls;                                                 \
+        ++g_mem2_field_hits;                                                  \
+        func_ov004_##code((char *)self);                                      \
+    }
+M2R_FACE(020b4aa4)
+M2R_FACE(020b4c30)
+M2R_FACE(020b4d50)
+M2R_FACE(020b4dfc)
+M2R_FACE(020b4f44)
+M2R_FACE(020b4ff0)
+M2R_FACE(020b51f0)
+M2R_FACE(020b5288)
+
+extern "C" {
+extern MgPmf data_ov004_020bc7d8;   /* written  src/func_ov004_020b506c.c */
+extern MgPmf data_ov004_020bc7e0;   /* written  src/func_ov004_020b4dfc.c */
+extern MgPmf data_ov004_020bc7e8;   /* written  src/func_ov004_020b5334.c */
+extern MgPmf data_ov004_020bc7f0;   /* written  src/func_ov004_020b51f0.c */
+extern MgPmf data_ov004_020bc7f8;   /* written  src/func_ov004_020b4ff0.c */
+extern MgPmf data_ov004_020bc800;   /* SENTINEL src/func_ov004_020b5108.c */
+extern MgPmf data_ov004_020bc808;   /* written  src/func_ov004_020b4b84.c */
+extern MgPmf data_ov004_020bc810;   /* written  src/func_ov004_020b4e78.c */
+extern MgPmf data_ov004_020bc818;   /* written  src/func_ov004_020b4cc4.c */
+extern MgPmf data_ov004_020bc820;   /* written  src/func_ov004_020b5108.c */
+}
+
+static void mem2_record_seat(void)
 {
-    const MgPmf *p = (const MgPmf *)c;
-    port_mg_memory2_field_call(c, p->code, p->adj);
+    static const struct { MgPmf *cell; const char *name; unsigned rom; void *host; }
+    rec[] = {
+        { &data_ov004_020bc7d8, "020bc7d8", 0x020b4ff0u, (void *)m2r_020b4ff0 },
+        { &data_ov004_020bc7e0, "020bc7e0", 0x020b4d50u, (void *)m2r_020b4d50 },
+        { &data_ov004_020bc7e8, "020bc7e8", 0x020b5288u, (void *)m2r_020b5288 },
+        { &data_ov004_020bc7f0, "020bc7f0", 0x020b5288u, (void *)m2r_020b5288 },
+        { &data_ov004_020bc7f8, "020bc7f8", 0x020b4f44u, (void *)m2r_020b4f44 },
+        { &data_ov004_020bc800, "020bc800", 0x020b51f0u, (void *)m2r_020b51f0 },
+        { &data_ov004_020bc808, "020bc808", 0x020b4aa4u, (void *)m2r_020b4aa4 },
+        { &data_ov004_020bc810, "020bc810", 0x020b4dfcu, (void *)m2r_020b4dfc },
+        { &data_ov004_020bc818, "020bc818", 0x020b4c30u, (void *)m2r_020b4c30 },
+        { &data_ov004_020bc820, "020bc820", 0x020b5288u, (void *)m2r_020b5288 },
+    };
+    for (unsigned i = 0; i < sizeof rec / sizeof rec[0]; ++i) {
+        if (rec[i].cell->code != rec[i].rom || rec[i].cell->adj != 0) {
+            std::fprintf(stderr, "FATAL: dScMgMemory2_c record pair "
+                         "data_ov004_%s: the mount holds %08x/%d, the ROM's own "
+                         "bytes say %08x/0 -- WRONG BYTES\n", rec[i].name,
+                         rec[i].cell->code, rec[i].cell->adj, rec[i].rom);
+            std::abort();
+        }
+        rec[i].cell->code = (unsigned)(size_t)rec[i].host;
+    }
 }
 
 /* func_ov006_020c19d0 IS GONE, run link100 lane MGWRITER: its host copy is

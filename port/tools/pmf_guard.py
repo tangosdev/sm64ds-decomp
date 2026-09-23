@@ -223,6 +223,11 @@ LEDGER = [
      "table leaves the exception list"),
 
     # ---- run linkfull lane PMFMG1: the minigame member-pointer rows -------
+    ("ECX", r"^\?rec@\?1\?\?mem2_record_seat@@",
+     "dScMgMemory2_c's record field: the ten ov004 pairs are copied into "
+     "data_ov004_020bfa34[i]+0 and read back by src/func_ov004_020b52fc.cpp, "
+     "`mov ecx,[eax+4]; add ecx,eax; mov eax,[eax]; pop ebp; jmp eax` -- a "
+     "tail jump with the receiver in ecx and nothing pushed"),
     ("ECX", r"^\?seats@\?1\?\?port_mg_curling_states_seat@@",
      "dScMgCurling_c: every cell of this installer's table holds a __fastcall "
      "face. The three tables this lane added (data_ov006_021418f0, _02141930, "

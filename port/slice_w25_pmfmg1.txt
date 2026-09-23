@@ -27,3 +27,5 @@ src/func_ov006_020c3d18.cpp
 # C2761 redeclarations); the CMake block names them in W25MG_HOSTGEN_TU.
 src/func_ov006_020c8f20.cpp
 src/func_ov006_020cb030.cpp
+# the memory card record walk (dScMgMemory2_c), unmatched/MgMemory2_FieldPmf.cpp
+src/func_ov004_020b52fc.cpp
