@@ -14,6 +14,11 @@ extern "C" void* _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void*);
 extern "C" void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void*, void*, void*, int, short, void*);
 
+/* The CLPS block. ov065's relocation from 0x0211bb68 lists ten overlays that
+   hold 0x021121b8; tools/overlay_residency.py settles them to ov035, the Tick
+   Tock Clock level overlay. Was spelled func_021121b8, a name no symbols.txt
+   defines. */
+extern "C" char data_ov035_021121b8[];
 extern unsigned char data_0209f2c0[];
 extern char data_ov065_0211c0d4[];
 extern char data_ov065_0211c0d0[];
@@ -30,7 +35,7 @@ int daObjCtMecha08_c::InitResources()
     _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char*)this));
     kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov065_0211d97c);
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        ((char*)this) + 0x124, kcl, ((char*)this) + 0x2ec, 0x199, mAngleY, func_021121b8);
+        ((char*)this) + 0x124, kcl, ((char*)this) + 0x2ec, 0x199, mAngleY, data_ov035_021121b8);
     mHomePosX = mPosX;
     mHomePosY = mPosY;
     mHomePosZ = mPosZ;

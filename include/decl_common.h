@@ -365,7 +365,6 @@ extern char data_ov102_0214e808[];
 extern char data_ov102_0214ea48;
 extern char data_ov102_0214ea58;
 extern char data_ov102_0214ea78;
-extern char func_021121b8[];
 extern char func_02112c08;
 extern char func_02112ca8;
 extern char func_02112d48;

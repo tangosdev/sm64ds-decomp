@@ -293,6 +293,7 @@ src/_ZN16daObjCtMecha08_c8BehaviorEv.cpp:
     .text start:0x0211b8f8 end:0x0211ba88
 
 src/_ZN16daObjCtMecha08_c13InitResourcesEv.cpp:
+    complete
     .text start:0x0211ba88 end:0x0211bb7c
 
 src/d_a_obj_ct_mecha08_ct_mecha08b.c:
