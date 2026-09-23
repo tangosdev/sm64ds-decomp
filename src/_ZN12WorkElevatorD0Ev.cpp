@@ -8,6 +8,24 @@
  */
 #include "WorkElevator.h"
 
+#ifdef _MSC_VER
+/* THE HOST NEEDS THE ROM'S FLAT D0 NAME, AND MSVC NEVER EMITS IT. MSVC
+ * folds the Itanium destructor variants into one `??1WorkElevator@@QAE@XZ`,
+ * which the class's D1 file already defines, so compiling the definition
+ * below here as well would define that symbol twice. This arm spells out,
+ * in terms of it, what the deleting destructor this file is enrolled for
+ * does, the way the Model family's D0 files do: the D1 body, then the
+ * class-specific operator delete. Nothing here reaches mwccarm: it builds
+ * the `#else` arm and emits the ROM bytes it always emitted, and the
+ * object is byte-identical either way. */
+extern "C" WorkElevator *_ZN12WorkElevatorD0Ev(WorkElevator *thiz)
+{
+    thiz->~WorkElevator();                /* the D1 body, through the one host symbol */
+    WorkElevator::operator delete(thiz);  /* the class-specific delete D0 ends with */
+    return thiz;
+}
+#else
 WorkElevator::~WorkElevator()
 {
 }
+#endif

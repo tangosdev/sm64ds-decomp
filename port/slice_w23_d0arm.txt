@@ -1,0 +1,49 @@
+# slice_w23_d0arm -- run linkfull, lane D0ARM1, LINK15 batch W23-2 (the D0-arm pilot).
+#
+# FIVE DELETING DESTRUCTORS THAT NOW DEFINE THEIR OWN FLAT ROM NAME. Each file
+# below is a per-function src D0 TU that gained the Model family's
+# `#ifdef _MSC_VER` arm (src/_ZN5ModelD0Ev.cpp is the shape). Under MSVC the
+# file compiles only
+#     extern "C" Cls *_ZN<Cls>D0Ev(Cls *thiz)
+#     { thiz->~Cls(); Cls::operator delete(thiz); return thiz; }
+# and mwccarm, which never defines _MSC_VER, compiles the unchanged `#else` arm
+# to the same object bytes as before: match.py 2004/b56 strict MATCHING and
+# linkcheck VERIFIED with 0 blind slots for all five, before and after, and the
+# before and after objects byte-identical.
+#
+# WHY THE ROWS WERE UNLINKED. MSVC folds the Itanium D1/D0 pair into one
+# ??1Cls@@QAE@XZ, which the class's D1 TU already defines, so the D0 TU could
+# not be compiled as well (SLICE1 retired every such row: "MSVC folds the ROM
+# destructor variants into one symbol"), and the flat name the port's
+# ROM-shaped vtable slot 17 calls was defined by a generated face out of
+# port/faces_sync.txt instead. That face and this arm make the same two calls:
+# the D1 body, then Memory::Deallocate(self, data_020a0eac), the actor heap.
+# The heap word is the D row's own, proved against config relocs by facegen's
+# D0 rule; the arm's delete is dActor_c's inline operator delete (dEnemyBase_c's
+# copy of it for RollingRock), and the MSVC object of each file was read to
+# confirm the pair. The five D rows are retired in port/faces_sync.txt in the
+# same commit, so exactly one definition of each flat name remains.
+#
+# THE EDGE IS THE ONE THE PORT ALREADY HAS: the ROM's own table word 17 of each
+# class relocates to its D0, and the slot-17 thunks in hal/actor_classes_jrb.cpp
+# (RockPillar, SlidingBox), hal/actor_classes_ov065.cpp (RollingRock,
+# WorkElevator) and hal/actor_classes_ov036.cpp (DonutBlock) call the flat name.
+# No new reference and no keep-alive. Note that slot 17 is not the actor
+# teardown path: fBase_c::AfterCleanupResources dispatches slot 16 and does the
+# Memory::Deallocate itself, on the cartridge as here, so these bodies run only
+# if something deletes an actor through its vtable.
+#
+#   src/_ZN10RockPillarD0Ev.cpp     ov016 0x02112a44 size 0x58
+#   src/_ZN10SlidingBoxD0Ev.cpp     ov016 0x02113044 size 0x60
+#   src/_ZN11RollingRockD0Ev.cpp    ov021 0x02112230 size 0x5c
+#   src/_ZN12WorkElevatorD0Ev.cpp   ov021 0x02111214 size 0x88
+#   src/_ZN10DonutBlockD0Ev.cpp     ov036 0x02111988 size 0x60
+#
+# ALL THREE HOSTING TARGETS (walk_window, walk_window_hires, smoke_player):
+# faces_sync_gen.cpp.obj and the three hal files are on all three link lines in
+# build.ninja, so a flat name retired from the ledger must be defined on all three.
+src/_ZN10RockPillarD0Ev.cpp
+src/_ZN10SlidingBoxD0Ev.cpp
+src/_ZN11RollingRockD0Ev.cpp
+src/_ZN12WorkElevatorD0Ev.cpp
+src/_ZN10DonutBlockD0Ev.cpp
