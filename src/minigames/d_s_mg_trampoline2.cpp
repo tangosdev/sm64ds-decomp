@@ -21,8 +21,9 @@
  *   did not verify.
  * - The G2 BG pointer getters stay mangled because decl_common.h declares a
  *   global array named G2, which hides the namespace.
- * - G2x::SetBlendAlpha is called with five arguments where the real function
- *   takes six, so it stays a C declaration.
+ * - G2x::SetBlendAlpha keeps a local C declaration of its mangled name
+ *   (volatile void *, four u16) rather than G2x.h's (volatile u16 *, three
+ *   u16, unsigned int); the header spelling has not been verified here.
  * - The header pads 0x5004, 0x7ac4 and 0x7b84..0x7b9c; functions that use them
  *   read raw offsets.
  */
