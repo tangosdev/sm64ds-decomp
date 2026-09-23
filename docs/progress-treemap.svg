@@ -43089,27 +43089,27 @@ matched: yes</title></rect><rect x="1303.02" y="830.71" width="5.26" height="4.4
 module: ov091
 addr: 0x02132908
 size: 48 bytes
-matched: yes</title></rect><rect x="1308.28" y="830.71" width="10.52" height="4.44" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6ThwompD1Ev
+matched: yes</title></rect><rect x="1308.28" y="830.71" width="10.52" height="4.44" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daDsn_cD1Ev
 module: ov091
 addr: 0x02132938
 size: 96 bytes
-matched: yes</title></rect><rect x="1318.80" y="830.71" width="12.71" height="4.44" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6ThwompD0Ev
+matched: yes</title></rect><rect x="1318.80" y="830.71" width="12.71" height="4.44" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daDsn_cD0Ev
 module: ov091
 addr: 0x02132998
 size: 116 bytes
-matched: yes</title></rect><rect x="1331.51" y="830.71" width="0.88" height="4.44" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Thwomp16OnAimedAtWithEggEv
+matched: yes</title></rect><rect x="1331.51" y="830.71" width="0.88" height="4.44" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daDsn_c16OnAimedAtWithEggEv
 module: ov091
 addr: 0x02132a0c
 size: 8 bytes
-matched: yes</title></rect><rect x="1332.39" y="830.71" width="17.10" height="4.44" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Thwomp15OnHitByMegaCharER6Player
+matched: yes</title></rect><rect x="1332.39" y="830.71" width="17.10" height="4.44" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daDsn_c15OnHitByMegaCharER6Player
 module: ov091
 addr: 0x02132a14
 size: 156 bytes
-matched: yes</title></rect><rect x="1287.24" y="835.15" width="26.29" height="8.66" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Thwomp8BehaviorEv
+matched: yes</title></rect><rect x="1287.24" y="835.15" width="26.29" height="8.66" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daDsn_c8BehaviorEv
 module: ov091
 addr: 0x02132ab0
 size: 468 bytes
-matched: yes</title></rect><rect x="1313.53" y="835.15" width="2.92" height="8.66" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN6Thwomp13InitResourcesEv
+matched: yes</title></rect><rect x="1313.53" y="835.15" width="2.92" height="8.66" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daDsn_c13InitResourcesEv
 module: ov091
 addr: 0x02132c84
 size: 52 bytes

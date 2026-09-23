@@ -11329,9 +11329,6 @@
       "src/_ZN15TtcRotatingCube13InitResourcesEv.cpp": [
         "param:#1 void *"
       ],
-      "src/_ZN15TtcRotatingGear13InitResourcesEv.cpp": [
-        "param:#1 void *"
-      ],
       "src/_ZN15daObjMarioCap_c13InitResourcesEv.cpp": [
         "param:#1 void *"
       ],
@@ -14700,10 +14697,6 @@
         "param:#1 void *",
         "return:void *"
       ],
-      "src/_ZN15TtcRotatingGear13InitResourcesEv.cpp": [
-        "param:#1 void *",
-        "return:void *"
-      ],
       "src/_ZN17BigMovingIceBlock13InitResourcesEv.cpp": [
         "param:#1 void *",
         "return:void *"
@@ -15378,9 +15371,6 @@
         "return:void"
       ],
       "src/_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj.cpp": [
-        "return:void"
-      ],
-      "src/_ZN6Thwomp15OnHitByMegaCharER6Player.cpp": [
         "return:void"
       ],
       "src/_ZN8CccArena4KillEv.cpp": [
@@ -17821,9 +17811,6 @@
       "src/_ZN14UnknownVsEntry8BehaviorEv.cpp": [
         "return:int"
       ],
-      "src/_ZN6Thwomp8BehaviorEv.cpp": [
-        "return:int"
-      ],
       "src/actors/daPeach_c.cpp": [
         "return:int"
       ],
@@ -18732,9 +18719,6 @@
         "return:void"
       ],
       "src/_ZN15TtcRotatingCube13InitResourcesEv.cpp": [
-        "return:void"
-      ],
-      "src/_ZN15TtcRotatingGear13InitResourcesEv.cpp": [
         "return:void"
       ],
       "src/_ZN16BowserShockwaves13InitResourcesEv.cpp": [
@@ -22026,9 +22010,6 @@
       ]
     },
     "data_0209f2c0": {
-      "src/_ZN15TtcRotatingGear13InitResourcesEv.cpp": [
-        "return:unsigned char []"
-      ],
       "src/_ZN16SpinningPlatform8BehaviorEv.cpp": [
         "return:unsigned char []"
       ],
@@ -29641,16 +29622,6 @@
         "return:short []"
       ]
     },
-    "data_ov065_0211c0d0": {
-      "src/_ZN15TtcRotatingGear13InitResourcesEv.cpp": [
-        "return:char []"
-      ]
-    },
-    "data_ov065_0211c0d4": {
-      "src/_ZN15TtcRotatingGear13InitResourcesEv.cpp": [
-        "return:char []"
-      ]
-    },
     "data_ov065_0211d35c": {
       "src/actors/daObjCtKaitendai_c.cpp": [
         "return:KaitendaiResources []"
@@ -33037,9 +33008,6 @@
       ],
       "src/_ZN6Player16St_BurnFire_MainEv.cpp": [
         "param:#2 const void *"
-      ],
-      "src/_ZN6Thwomp15OnHitByMegaCharER6Player.cpp": [
-        "param:#1 int"
       ],
       "src/_ZN8Fireball8BehaviorEv.cpp": [
         "param:#2 const void *"

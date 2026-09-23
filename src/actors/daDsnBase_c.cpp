@@ -8,7 +8,7 @@
  * state steps of the shared 0..4 cycle (rise, hover, slam, rest, recover),
  * the drop-shadow update, and the Yoshi-egg proximity check that wakes the
  * mesh collider. Grindel's states 5..7 are its own (ov025); the Thwomp's
- * trigger logic is its own (Thwomp::Behavior). There is no factory: the
+ * trigger logic is its own (daDsn_c::Behavior). There is no factory: the
  * class is abstract (InitResources/Behavior are pure) and each leaf builds
  * itself.
  *
@@ -27,9 +27,9 @@
  * deslop
  * Leftover:
  * - func_ov091_* keep ROM labels and C linkage: daDkk_c::Behavior (ov025)
- *   and Thwomp::Behavior call all seven by name across the TU boundary.
+ *   and daDsn_c::Behavior call all seven by name across the TU boundary.
  * - 0x360..0x39f stay offset soup. The shadow Matrix4x3, the rise/ground
- *   heights, mState and the timer live on the LEAVES (daDkk_c.h, Thwomp.h),
+ *   heights, mState and the timer live on the LEAVES (daDkk_c.h, daDsn_c.h),
  *   and both leaves plus this TU read the same words -- Init writes
  *   0x390/0x394/0x39e/0x39f directly. The move up that daDsnBase_c.h
  *   invites is deferred: it edits both leaf headers and re-verifies
