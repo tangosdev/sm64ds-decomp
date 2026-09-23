@@ -39,11 +39,10 @@ struct daDpLift_c : dBgActor_c {
     u8  mNextBullet;                  /* 0x3f8 */
     u8  pad_3f9[0x3];
 
-    /* INLINE ON PURPOSE. The ROM orders the independently enrolled variants
-       D1 then D0 and has no D2 home. Explicit use in the two destructor files
-       makes mwcc emit the required variant while objisolate discards the
-       helper and the other variant. */
-    virtual ~daDpLift_c() {}
+    /* OUT OF LINE, DECLARED FIRST. src/actors/daDpLift_c.cpp defines it
+       first under `#pragma defer_codegen off`, which emits D1 then D0 -- the
+       cartridge's order -- then a D2 the cartridge has no home for. */
+    virtual ~daDpLift_c();
 
     virtual s32 InitResources();       /* slot  0 */
     virtual s32 CleanupResources();    /* slot  3 */
