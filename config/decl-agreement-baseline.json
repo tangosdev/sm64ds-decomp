@@ -6447,7 +6447,7 @@
         "param:#3 int",
         "return:int"
       ],
-      "src/_ZN16RotatingCogSmall8BehaviorEv.cpp": [
+      "src/_ZN16daObjCtMecha10_c8BehaviorEv.cpp": [
         "return:int"
       ],
       "src/_ZN7Wiggler8BehaviorEv.cpp": [
@@ -10951,7 +10951,7 @@
         "arity:0",
         "mangled:0 parameter(s)"
       ],
-      "src/_ZN16RotatingCogSmall13InitResourcesEv.cpp": [
+      "src/_ZN16daObjCtMecha10_c13InitResourcesEv.cpp": [
         "kind:data"
       ],
       "src/_ZN25RotatingUpDownPlatformUtm13InitResourcesEv.cpp": [
@@ -11376,7 +11376,7 @@
         "param:#1 void *",
         "return:int"
       ],
-      "src/_ZN16RotatingCogSmall13InitResourcesEv.cpp": [
+      "src/_ZN16daObjCtMecha10_c13InitResourcesEv.cpp": [
         "param:#1 void *"
       ],
       "src/_ZN16daKing_Donketu_c13InitResourcesEv.cpp": [
@@ -14751,7 +14751,7 @@
         "param:#1 void *",
         "return:void *"
       ],
-      "src/_ZN16RotatingCogSmall13InitResourcesEv.cpp": [
+      "src/_ZN16daObjCtMecha10_c13InitResourcesEv.cpp": [
         "param:#1 void *",
         "return:void *"
       ],
@@ -18819,7 +18819,7 @@
       "src/_ZN16BowserShockwaves13InitResourcesEv.cpp": [
         "return:void"
       ],
-      "src/_ZN16RotatingCogSmall13InitResourcesEv.cpp": [
+      "src/_ZN16daObjCtMecha10_c13InitResourcesEv.cpp": [
         "return:void"
       ],
       "src/_ZN16daKing_Donketu_c13InitResourcesEv.cpp": [
@@ -21789,7 +21789,7 @@
       "src/_ZN14TTC_MovingBeam8BehaviorEv.cpp": [
         "return:int []"
       ],
-      "src/_ZN16RotatingCogSmall8BehaviorEv.cpp": [
+      "src/_ZN16daObjCtMecha10_c8BehaviorEv.cpp": [
         "return:int []"
       ],
       "src/_ZN16SpinningPlatform8BehaviorEv.cpp": [
@@ -22117,10 +22117,10 @@
       "src/_ZN15TtcRotatingGear13InitResourcesEv.cpp": [
         "return:unsigned char []"
       ],
-      "src/_ZN16RotatingCogSmall13InitResourcesEv.cpp": [
+      "src/_ZN16daObjCtMecha10_c13InitResourcesEv.cpp": [
         "return:unsigned char []"
       ],
-      "src/_ZN16RotatingCogSmall8BehaviorEv.cpp": [
+      "src/_ZN16daObjCtMecha10_c8BehaviorEv.cpp": [
         "return:unsigned char []"
       ],
       "src/_ZN16SpinningPlatform8BehaviorEv.cpp": [
@@ -29020,17 +29020,17 @@
       ]
     },
     "data_ov035_02112c60": {
-      "src/_ZN16RotatingCogSmall16CleanupResourcesEv.cpp": [
+      "src/_ZN16daObjCtMecha10_c16CleanupResourcesEv.cpp": [
         "return:char []"
       ]
     },
     "data_ov035_02112c70": {
-      "src/_ZN16RotatingCogSmall16CleanupResourcesEv.cpp": [
+      "src/_ZN16daObjCtMecha10_c16CleanupResourcesEv.cpp": [
         "return:char []"
       ]
     },
     "data_ov035_02112c78": {
-      "src/_ZN16RotatingCogSmall16CleanupResourcesEv.cpp": [
+      "src/_ZN16daObjCtMecha10_c16CleanupResourcesEv.cpp": [
         "return:char []"
       ]
     },
@@ -37203,7 +37203,7 @@
       "src/_ZN15TtcRotatingCube13InitResourcesEv.cpp": [
         "param:#2 void *"
       ],
-      "src/_ZN16RotatingCogSmall13InitResourcesEv.cpp": [
+      "src/_ZN16daObjCtMecha10_c13InitResourcesEv.cpp": [
         "param:#2 void *"
       ],
       "src/_ZN16SpinningPlatform13InitResourcesEv.cpp": [

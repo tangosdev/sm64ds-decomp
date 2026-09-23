@@ -1,10 +1,10 @@
 //cpp
 #include "types.h"
-// @symbol _ZN16RotatingCogSmall13InitResourcesEv
+// @symbol _ZN16daObjCtMecha10_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "RotatingCogSmall.h"
+#include "daObjCtMecha10_c.h"
 extern "C" {
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *sfp);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *m, void *f, int a, int b);
@@ -27,7 +27,7 @@ extern u8 data_0209f2c0[];
 extern s16 data_ov035_02111ef4[][4];
 extern s16 data_ov035_02111ef0[];
 
-int RotatingCogSmall::InitResources()
+int daObjCtMecha10_c::InitResources()
 {
     int b;
 

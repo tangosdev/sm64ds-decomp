@@ -1346,12 +1346,12 @@ ov034	0x021136a4	Wiggler_Spawn	daHanachan_c_classInit	reconstructed classInit; R
 ov034	0x02114498	data_ov034_02114498	Wiggler_SpawnInfo	spawninfo
 ov034	0x02114498	Wiggler_SpawnInfo	g_profile_HANACHAN	reconstructed profile global; literal ROM ID HANACHAN+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov034	0x021144bc	data_ov034_021144bc	_ZTV7Wiggler	vtable alloc=?
-ov035	0x021111a0	func_ov035_021111a0	_ZN16RotatingCogSmallD1Ev	vtable slot 16
-ov035	0x021111e4	func_ov035_021111e4	_ZN16RotatingCogSmallD0Ev	vtable slot 17
-ov035	0x0211123c	func_ov035_0211123c	_ZN16RotatingCogSmall16CleanupResourcesEv	vtable slot 3
-ov035	0x021112c4	func_ov035_021112c4	_ZN16RotatingCogSmall6RenderEv	vtable slot 9
-ov035	0x021112ec	func_ov035_021112ec	_ZN16RotatingCogSmall8BehaviorEv	vtable slot 6
-ov035	0x021114e0	func_ov035_021114e0	_ZN16RotatingCogSmall13InitResourcesEv	vtable slot 0
+ov035	0x021111a0	func_ov035_021111a0	_ZN16daObjCtMecha10_cD1Ev	vtable slot 16 (was _ZN16RotatingCogSmallD1Ev)
+ov035	0x021111e4	func_ov035_021111e4	_ZN16daObjCtMecha10_cD0Ev	vtable slot 17 (was _ZN16RotatingCogSmallD0Ev)
+ov035	0x0211123c	func_ov035_0211123c	_ZN16daObjCtMecha10_c16CleanupResourcesEv	vtable slot 3 (was _ZN16RotatingCogSmall16CleanupResourcesEv)
+ov035	0x021112c4	func_ov035_021112c4	_ZN16daObjCtMecha10_c6RenderEv	vtable slot 9 (was _ZN16RotatingCogSmall6RenderEv)
+ov035	0x021112ec	func_ov035_021112ec	_ZN16daObjCtMecha10_c8BehaviorEv	vtable slot 6 (was _ZN16RotatingCogSmall8BehaviorEv)
+ov035	0x021114e0	func_ov035_021114e0	_ZN16daObjCtMecha10_c13InitResourcesEv	vtable slot 0 (was _ZN16RotatingCogSmall13InitResourcesEv)
 ov035	0x0211165c	func_ov035_0211165c	RotatingCogSmall_Spawn	spawnfunc
 ov035	0x0211165c	RotatingCogSmall_Spawn	daObjCtMecha10_c_classInit_CT_MECHA12S	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov035	0x0211168c	func_ov035_0211168c	daObjCtMecha10_c_classInit_CT_MECHA12L	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
@@ -1372,7 +1372,7 @@ ov035	0x02112aa4	RotatingClockHand_SpawnInfo	g_profile_CT_MECHA10	reconstructed 
 ov035	0x02112ac0	data_ov035_02112ac0	g_profile_CT_MECHA12L	reconstructed profile global; literal ROM ID CT_MECHA12L+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov035	0x02112adc	data_ov035_02112adc	RotatingCogSmall_SpawnInfo	spawninfo
 ov035	0x02112adc	RotatingCogSmall_SpawnInfo	g_profile_CT_MECHA12S	reconstructed profile global; literal ROM ID CT_MECHA12S+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov035	0x02112b00	data_ov035_02112b00	_ZTV16RotatingCogSmall	vtable alloc=0x330
+ov035	0x02112b00	data_ov035_02112b00	_ZTV16daObjCtMecha10_c	vtable alloc=0x330 (was _ZTV16RotatingCogSmall)
 ov035	0x02112ba8	data_ov035_02112ba8	SpinningPlatform_SpawnInfo	spawninfo
 ov035	0x02112ba8	SpinningPlatform_SpawnInfo	g_profile_CT_MECHA11	reconstructed profile global; literal ROM ID CT_MECHA11+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov035	0x02112bcc	data_ov035_02112bcc	_ZTV16SpinningPlatform	vtable alloc=0x380; ROM RTTI name is daObjCtMecha11_c
@@ -3722,3 +3722,10 @@ ov062	0x02119608	_ZN5Koopa16OnAimedAtWithEggEv	_ZN8daNknk_c16OnAimedAtWithEggEv	
 ov062	0x02119628	_ZN5Koopa13OnTurnIntoEggER6Player	_ZN8daNknk_c13OnTurnIntoEggER6Player	Retail RTTI spells 8daNknk_c at0x0211da5c; typeinfo0x0211da68 and vtable addresspoint0x0211dab4 identify dEnemyBase_c-derived class. Only class component changes; address,size and inherited project member name/signature remain unchanged. Member names and OnTurnIntoEgg reference spelling are reconstructed, not preserved original source names.
 ov062	0x021196a8	_ZN5Koopa13OnYoshiTryEatEv	_ZN8daNknk_c13OnYoshiTryEatEv	Retail RTTI spells 8daNknk_c at0x0211da5c; typeinfo0x0211da68 and vtable addresspoint0x0211dab4 identify dEnemyBase_c-derived class. Only class component changes; address,size and inherited project member name/signature remain unchanged. Member names and OnTurnIntoEgg reference spelling are reconstructed, not preserved original source names.
 arm9	0x02016a9c	_ZN9ModelBase12ApplyOpacityEj	_ZN9ModelBase12ApplyOpacityEjj	reconstructed two-scalar ModelBase::ApplyOpacity interface; all25retailcalls set the second word, unused by this body; u32 type/name are reconstruction choices, not recovered source; exact code proof in notes/experiments/applyopacity-api-0920.md
+ov035	0x021111a0	_ZN16RotatingCogSmallD1Ev	_ZN16daObjCtMecha10_cD1Ev	class renamed to the cartridge RTTI name; ov035 vtable storage 0x02112af8 has typeinfo word 0x02112a84, whose name word points at 0x02112a90 where the overlay reads 16daObjCtMecha10_c. Address unchanged. Ev encodes no parameter type.
+ov035	0x021111e4	_ZN16RotatingCogSmallD0Ev	_ZN16daObjCtMecha10_cD0Ev	class renamed to the cartridge RTTI name; ov035 vtable storage 0x02112af8 has typeinfo word 0x02112a84, whose name word points at 0x02112a90 where the overlay reads 16daObjCtMecha10_c. Address unchanged. Ev encodes no parameter type.
+ov035	0x0211123c	_ZN16RotatingCogSmall16CleanupResourcesEv	_ZN16daObjCtMecha10_c16CleanupResourcesEv	class renamed to the cartridge RTTI name; ov035 vtable storage 0x02112af8 has typeinfo word 0x02112a84, whose name word points at 0x02112a90 where the overlay reads 16daObjCtMecha10_c. Address unchanged. Ev encodes no parameter type.
+ov035	0x021112c4	_ZN16RotatingCogSmall6RenderEv	_ZN16daObjCtMecha10_c6RenderEv	class renamed to the cartridge RTTI name; ov035 vtable storage 0x02112af8 has typeinfo word 0x02112a84, whose name word points at 0x02112a90 where the overlay reads 16daObjCtMecha10_c. Address unchanged. Ev encodes no parameter type.
+ov035	0x021112ec	_ZN16RotatingCogSmall8BehaviorEv	_ZN16daObjCtMecha10_c8BehaviorEv	class renamed to the cartridge RTTI name; ov035 vtable storage 0x02112af8 has typeinfo word 0x02112a84, whose name word points at 0x02112a90 where the overlay reads 16daObjCtMecha10_c. Address unchanged. Ev encodes no parameter type.
+ov035	0x021114e0	_ZN16RotatingCogSmall13InitResourcesEv	_ZN16daObjCtMecha10_c13InitResourcesEv	class renamed to the cartridge RTTI name; ov035 vtable storage 0x02112af8 has typeinfo word 0x02112a84, whose name word points at 0x02112a90 where the overlay reads 16daObjCtMecha10_c. Address unchanged. Ev encodes no parameter type.
+ov035	0x02112b00	_ZTV16RotatingCogSmall	_ZTV16daObjCtMecha10_c	coined vtable spelling retired for the cartridge RTTI name; 0x02112b00 is the address point, storage starts eight bytes lower at 0x02112af8 and its typeinfo word 0x02112a84 names 16daObjCtMecha10_c at 0x02112a90. Address unchanged.

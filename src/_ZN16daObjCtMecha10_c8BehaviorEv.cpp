@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN16RotatingCogSmall8BehaviorEv
+// @symbol _ZN16daObjCtMecha10_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method */
-#include "RotatingCogSmall.h"
+#include "daObjCtMecha10_c.h"
 extern "C" {
 extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void*);
 extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void*, int, int);
@@ -15,7 +15,7 @@ extern short data_ov035_02111ef0[];
 extern int data_0209e650[];
 }
 
-int RotatingCogSmall::Behavior()
+int daObjCtMecha10_c::Behavior()
 {
     if (data_0209f2c0[0] == 3) {
         _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char*)this));
