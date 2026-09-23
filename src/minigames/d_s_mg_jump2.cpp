@@ -146,7 +146,8 @@ void func_ov006_020c6f3c();
 // @symbol dScMgJump2_c_classInit
 /* Builds the scene by hand (operator new, base constructor, vtables, member
  * construction) because the class has no constructor declared yet. The empty
- * loop steps over the two 0xbc-byte cameras, which have no constructor. */
+ * loop steps over the two 0xbc-byte cameras, which have no constructor.
+ * Historical alias: dScMgJump2_c_Spawn. */
 void *dScMgJump2_c_classInit()
 {
     char *raw = (char *)_ZN7fBase_cnwEj(0x5a78);
