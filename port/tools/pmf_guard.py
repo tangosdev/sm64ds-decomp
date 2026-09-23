@@ -230,6 +230,10 @@ LEDGER = [
      "src/func_ov006_020e0d84.cpp, `push <index>; mov ecx,tab[eax*8+4]; mov "
      "eax,tab[eax*8]; add ecx,<this>; call eax`, callee-popped; the three "
      "PMFB5 tables before them are read with the same shape"),
+    ("ECX", r"^\?seats2@\?1\?\?port_mg_curling2_states_seat@@",
+     "dScMgCurling2_c: data_ov006_02141978 and _021419d8, dispatched only by "
+     "src/func_ov006_020e6354.cpp, `mov ecx,tab[eax*8+4]; mov eax,tab[eax*8]; "
+     "add ecx,edi; call eax` with zero and one callee-popped argument"),
 ]
 
 
