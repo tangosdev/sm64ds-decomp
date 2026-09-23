@@ -2705,12 +2705,12 @@ ov091	0x02132394	func_ov091_02132394	SquareMetalNetLift_Spawn	spawnfunc
 ov091	0x02132394	SquareMetalNetLift_Spawn	daLinelift2_c_classInit_KM2_SUSUMU	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov091	0x021323cc	func_ov091_021323cc	ArrowPathLift_Spawn	spawnfunc
 ov091	0x021323cc	ArrowPathLift_Spawn	daLinelift2_c_classInit_KM3_LIFT	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
-ov091	0x02132404	func_ov091_02132404	_ZN17SlidingPlatformWfD1Ev	vtable slot 16
-ov091	0x02132448	func_ov091_02132448	_ZN17SlidingPlatformWfD0Ev	vtable slot 17
-ov091	0x021324a0	func_ov091_021324a0	_ZN17SlidingPlatformWf16CleanupResourcesEv	vtable slot 3
-ov091	0x02132504	func_ov091_02132504	_ZN17SlidingPlatformWf6RenderEv	vtable slot 9
-ov091	0x0213252c	func_ov091_0213252c	_ZN17SlidingPlatformWf8BehaviorEv	vtable slot 6
-ov091	0x021325d4	func_ov091_021325d4	_ZN17SlidingPlatformWf13InitResourcesEv	vtable slot 0
+ov091	0x02132404	func_ov091_02132404	_ZN17daObjSimpleLift_cD1Ev	vtable slot 16
+ov091	0x02132448	func_ov091_02132448	_ZN17daObjSimpleLift_cD0Ev	vtable slot 17
+ov091	0x021324a0	func_ov091_021324a0	_ZN17daObjSimpleLift_c16CleanupResourcesEv	vtable slot 3
+ov091	0x02132504	func_ov091_02132504	_ZN17daObjSimpleLift_c6RenderEv	vtable slot 9
+ov091	0x0213252c	func_ov091_0213252c	_ZN17daObjSimpleLift_c8BehaviorEv	vtable slot 6
+ov091	0x021325d4	func_ov091_021325d4	_ZN17daObjSimpleLift_c13InitResourcesEv	vtable slot 0
 ov091	0x021327e8	func_ov091_021327e8	SlidingPlatformWf_Spawn	spawnfunc
 ov091	0x021327e8	SlidingPlatformWf_Spawn	daObjSimpleLift_c_classInit_BK_TRANSBAR	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov091	0x02132818	func_ov091_02132818	SlidingPlatformBfsRectangle_Spawn	spawnfunc
@@ -2769,7 +2769,7 @@ ov091	0x02134fec	data_ov091_02134fec	SlidingPlatformBfsRectangle_SpawnInfo	spawn
 ov091	0x02134fec	SlidingPlatformBfsRectangle_SpawnInfo	g_profile_KM2_RIFUT02	reconstructed profile global; literal ROM ID KM2_RIFUT02+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov091	0x02135008	data_ov091_02135008	SlidingPlatformWf_SpawnInfo	spawninfo
 ov091	0x02135008	SlidingPlatformWf_SpawnInfo	g_profile_BK_TRANSBAR	reconstructed profile global; literal ROM ID BK_TRANSBAR+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov091	0x02135080	data_ov091_02135080	_ZTV17SlidingPlatformWf	vtable alloc=0x330
+ov091	0x02135080	data_ov091_02135080	_ZTV17daObjSimpleLift_c	vtable alloc=0x330
 ov091	0x02135150	data_ov091_02135150	Thwomp_SpawnInfo	spawninfo
 ov091	0x02135150	Thwomp_SpawnInfo	g_profile_DOSUN	reconstructed profile global; literal ROM ID DOSUN+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov091	0x02135174	data_ov091_02135174	_ZTV6Thwomp	vtable alloc=0x3a4

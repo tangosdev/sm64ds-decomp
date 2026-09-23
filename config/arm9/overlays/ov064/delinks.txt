@@ -8,45 +8,9 @@ src/actors/daOts_c.cpp:
     complete
     .text start:0x02115ee0 end:0x02117070
 
-src/_ZN11daDonketu_cD1Ev.cpp:
+src/actors/daDonketu_c.cpp:
     complete
-    .text start:0x02117070 end:0x021170c4
-
-src/_ZN11daDonketu_cD0Ev.cpp:
-    complete
-    .text start:0x021170c4 end:0x0211712c
-
-src/_ZN11daDonketu_c14PlayDeathSoundEv.cpp:
-    complete
-    .text start:0x0211712c end:0x02117140
-
-src/_ZN11daDonketu_c17PlayShellHitSoundEv.cpp:
-    complete
-    .text start:0x02117140 end:0x02117154
-
-src/_ZN11daDonketu_c12PlayHitSoundEv.cpp:
-    complete
-    .text start:0x02117154 end:0x02117168
-
-src/_ZN11daDonketu_c13PlayStepSoundEv.cpp:
-    complete
-    .text start:0x02117168 end:0x021171b0
-
-src/_ZN11daDonketu_c14UpdateRunStateEv.cpp:
-    complete
-    .text start:0x021171b0 end:0x02117220
-
-src/_ZN11daDonketu_c16UpdateDeathStateEv.cpp:
-    complete
-    .text start:0x02117220 end:0x02117310
-
-src/_ZN11daDonketu_c8BehaviorEv.cpp:
-    complete
-    .text start:0x02117310 end:0x02117424
-
-src/_ZN11daDonketu_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x02117424 end:0x02117444
+    .text start:0x02117070 end:0x02117444
 
 src/d_a_donketu.c:
     complete
@@ -364,37 +328,9 @@ src/actors/daObjTbox_c.cpp:
     complete
     .text start:0x0211a200 end:0x0211a930
 
-src/_ZN12daObjShell_cD1Ev.cpp:
+src/actors/daObjShell_c.cpp:
     complete
-    .text start:0x0211a930 end:0x0211a968
-
-src/_ZN12daObjShell_cD0Ev.cpp:
-    complete
-    .text start:0x0211a968 end:0x0211a9b4
-
-src/func_ov064_0211a9b4.c:
-    complete
-    .text start:0x0211a9b4 end:0x0211a9f4
-
-src/_ZN12daObjShell_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x0211a9f4 end:0x0211aa30
-
-src/_ZN12daObjShell_c6RenderEv.cpp:
-    complete
-    .text start:0x0211aa30 end:0x0211aa58
-
-src/_ZN12daObjShell_c8BehaviorEv.cpp:
-    complete
-    .text start:0x0211aa58 end:0x0211acc4
-
-src/_ZN12daObjShell_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x0211acc4 end:0x0211ad70
-
-src/d_a_obj_shell.cpp:
-    complete
-    .text start:0x0211ad70 end:0x0211adb0
+    .text start:0x0211a930 end:0x0211adb0
 
 src/__sinit_ov064_0211ae00.c:
     complete
