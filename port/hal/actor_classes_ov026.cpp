@@ -193,7 +193,12 @@ extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 // 0x8000`, which truncates to s16 regardless of what the upper half of eax
 // holds. The other two shadow methods in that file (Actor::ClosestPlayer,
 // Player::EnterWhirlpool) declare compatible shapes and resolve on their own.
-#pragma comment(linker, "/alternatename:?HorzAngleToCPlayer@dActor_c@@QAEHXZ=?HorzAngleToCPlayer@dActor_c@@QAEFXZ")
+// run rel042, lane NARROWRET1: the wide spelling now reaches the widening wrapper
+// tools/hostgen.py's NARROW_RETURN table appends to the member's own TU (__fastcall
+// with a dead EDX, which is __thiscall's ABI), so the int this shadow declares is the
+// ROM's sign-extended angle rather than AX with junk above it. The use above truncates
+// either way; the route is closed for every caller of the spelling, not just this one.
+#pragma comment(linker, "/alternatename:?HorzAngleToCPlayer@dActor_c@@QAEHXZ=@hostgen_nrwide_HorzAngleToCPlayer_int@8")
 
 extern "C" {
 

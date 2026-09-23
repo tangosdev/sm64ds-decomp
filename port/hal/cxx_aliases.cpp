@@ -3280,9 +3280,17 @@ DSSTATE_END
 #pragma comment(linker, "/alternatename:__ZN3OAM9RenderSubEP7OamAttrii=?RenderSub@OAM@@SAXPAUOamAttr@@HH@Z")
 #pragma comment(linker, "/alternatename:__Z13CopyToViewMatPK9Matrix4x3=?CopyToViewMat@@YAXPBUMatrix4x3@@@Z")
 #pragma comment(linker, "/alternatename:__ZN2G212GetBG0ScrPtrEv=?GetBG0ScrPtr@G2@@YAPAXXZ")
-#pragma comment(linker, "/alternatename:__ZN8SaveData13GetCoinRecordEj=?GetCoinRecord@SaveData@@SAEI@Z")
+/* run rel042, lane NARROWRET1: the flat names of five NARROW static members
+   (SaveData::GetCoinRecord, SaveData::CountStarsCollectedInLevel, OAM::GetObjWidth,
+   OAM::GetObjHeight: u8; dBgCh::ShouldPassThroughImpl: bool) are bound below to the
+   widening wrappers tools/hostgen.py's NARROW_RETURN table appends to each definition
+   TU, not to the member itself: the cdecl ABI agrees either way, but this alias is a
+   NAME bridge, it cannot see the return type, and the flat callers that declare the
+   name `int` read EAX, whose upper bytes the member never writes. The ROM body
+   extends its result into r0; the wrapper extends it into EAX. */
+#pragma comment(linker, "/alternatename:__ZN8SaveData13GetCoinRecordEj=_hostgen_nrwide__ZN8SaveData13GetCoinRecordEj")
 #pragma comment(linker, "/alternatename:__ZN4cstd6strlenEPKc=?strlen@cstd@@YAIPBD@Z")
-#pragma comment(linker, "/alternatename:__ZN8SaveData26CountStarsCollectedInLevelEj=?CountStarsCollectedInLevel@SaveData@@SAEI@Z")
+#pragma comment(linker, "/alternatename:__ZN8SaveData26CountStarsCollectedInLevelEj=_hostgen_nrwide__ZN8SaveData26CountStarsCollectedInLevelEj")
 #pragma comment(linker, "/alternatename:__ZN2G212GetBG3ScrPtrEv=?GetBG3ScrPtr@G2@@YAPAXXZ")
 #pragma comment(linker, "/alternatename:__ZN5Sound21UnsetPlayerVoiceGroupEv=?UnsetPlayerVoiceGroup@Sound@@YAXXZ")
 #pragma comment(linker, "/alternatename:__ZN8dScene_c14StartSceneFadeEjjt=?StartSceneFade@dScene_c@@SAXIIG@Z")
@@ -3335,7 +3343,7 @@ DSSTATE_END
 #pragma comment(linker, "/alternatename:__ZN22ExpandingHeapAllocator10CreateNodeEPN10MemoryNode6TargetEt=?CreateNode@ExpandingHeapAllocator@@SAPAXPAUTarget@MemoryNode@@G@Z")
 #pragma comment(linker, "/alternatename:__ZN22ExpandingHeapAllocator8LinkNodeEP10MemoryNodeS1_S1_=?LinkNode@ExpandingHeapAllocator@@SAPAXPAUMemoryNode@@00@Z")
 #pragma comment(linker, "/alternatename:__ZN4cstd3absEi=?abs@cstd@@YAHH@Z")
-#pragma comment(linker, "/alternatename:__ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b=?ShouldPassThroughImpl@dBgCh@@SA_NPAXABUCLPS@@ABU1@_N@Z")
+#pragma comment(linker, "/alternatename:__ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b=_hostgen_nrwide__ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b")
 #pragma comment(linker, "/alternatename:__ZN6Memory8AllocateEjiP4Heap=?Allocate@Memory@@YAPAXIHPAVHeap@@@Z")
 #pragma comment(linker, "/alternatename:__ZN4cstd11fdiv_resultEv=?fdiv_result@cstd@@YAHXZ")
 #pragma comment(linker, "/alternatename:__ZN5Sound13PlayCharVoiceEjjRK7Vector3=?PlayCharVoice@Sound@@YAIIIABUVector3@@@Z")
@@ -3356,8 +3364,8 @@ DSSTATE_END
 #pragma comment(linker, "/alternatename:__ZN5Sound22StopLoadedMusic_Layer3Ev=?StopLoadedMusic_Layer3@Sound@@YAXXZ")
 #pragma comment(linker, "/alternatename:__ZN5Sound15PlaySecretSoundEP8dActor_cPt=?PlaySecretSound@Sound@@YAHPAUdActor_c@@PAG@Z")
 #pragma comment(linker, "/alternatename:__ZN8SaveData17SetCharacterIntroEi=?SetCharacterIntro@SaveData@@SAXH@Z")
-#pragma comment(linker, "/alternatename:__ZN3OAM11GetObjWidthEii=?GetObjWidth@OAM@@SAEHH@Z")
-#pragma comment(linker, "/alternatename:__ZN3OAM12GetObjHeightEii=?GetObjHeight@OAM@@SAEHH@Z")
+#pragma comment(linker, "/alternatename:__ZN3OAM11GetObjWidthEii=_hostgen_nrwide__ZN3OAM11GetObjWidthEii")
+#pragma comment(linker, "/alternatename:__ZN3OAM12GetObjHeightEii=_hostgen_nrwide__ZN3OAM12GetObjHeightEii")
 #pragma comment(linker, "/alternatename:__ZN3OAM16LoadAffineParamsEP7OamAttrPiP9Matrix2x2=?LoadAffineParams@OAM@@SAHPAUOamAttr@@PAHPAUMatrix2x2@@@Z")
 #pragma comment(linker, "/alternatename:__ZN3GXS18BeginLoadBGExtPlttEv=?BeginLoadBGExtPltt@GXS@@YAXXZ")
 #pragma comment(linker, "/alternatename:__ZN3GXS13LoadBGExtPlttEPKvjj=?LoadBGExtPltt@GXS@@YAXPBXII@Z")

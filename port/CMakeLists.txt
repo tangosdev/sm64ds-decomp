@@ -390,6 +390,52 @@ endfunction()
 #       through hal/cstd_div.c's ds_lsr; src/ is untouched and the body stays
 #       the ROM's, so linkage does not move.
 set(PORT_HOSTGEN_TU
+    # run rel042, lane NARROWRET1: THE NARROW-RETURN CURE. Each of these TUs
+    # DEFINES a function that returns s8/u8/s16/u16/bool; on the DS the callee
+    # extends that into the whole of r0, and under MSVC the upper bytes of EAX
+    # are junk, so every caller that declares the function wider read junk on
+    # the PC. tools/hostgen.py's NARROW_RETURN table renames each body and
+    # binds its ROM name to a wrapper that extends the result as the ARM
+    # epilogue does (or, for a member, adds the wrapper the alias rows in
+    # hal/cxx_aliases.cpp and hal/actor_classes_ov026.cpp now name). src/ is
+    # untouched and every body in the link is still the ROM's. Census:
+    # tools/narrowret_census.py. src/actors/Player.cpp is already on this list.
+    src/_ZN4cstd5atan2E5Fix12IiES1_.c
+    src/GetPlayerFlagByte.c
+    src/DecIfAbove0_Byte.c
+    src/DecIfAbove0_Short.c
+    src/NumStars.c
+    src/Vec3_HorzAngle.c
+    src/Vec3_VertAngle.c
+    src/func_02020168.c
+    src/func_02020364.c
+    src/func_020201f0.c
+    src/GetLevelPart.c
+    src/func_0201a96c.c
+    src/func_0201a9ec.c
+    src/NumVsStarsObtained.c
+    src/func_ov007_020c3be0.c
+    src/IsAreaShowing.c
+    src/IsPlayerWarping.c
+    src/GetStarCameraSetting.c
+    src/func_02065138.c
+    src/func_0205b63c.c
+    src/func_02053f30.c
+    src/func_02053f58.c
+    src/func_02053f80.c
+    src/func_02053fa8.c
+    src/func_02054004.c
+    src/func_02054168.c
+    src/func_0205417c.c
+    src/func_020456a0.c
+    src/CountStarsCollectedInLevelToDisplay.c
+    src/_ZN8dActor_c12ReflectAngleE5Fix12IiES1_s.cpp
+    src/_ZN8SaveData13GetCoinRecordEj.cpp
+    src/_ZN8SaveData26CountStarsCollectedInLevelEj.cpp
+    src/_ZN3OAM11GetObjWidthEii.cpp
+    src/_ZN3OAM12GetObjHeightEii.cpp
+    src/_ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b.cpp
+    src/_ZN8dActor_c18HorzAngleToCPlayerEv.cpp
     src/func_0201b100.c
     # run link100 wave 20, lane CAMSWIM3: the camera follow state. The
     # CAM_TERMS table in tools/hostgen.py traces the eye-height terms
@@ -22415,3 +22461,11 @@ if(MSVC)
         endforeach()
     endforeach()
 endif()
+
+# ---- NARROW-RETURN PROBE (run rel042, lane NARROWRET1) ----------------------
+# tools/hostgen.py's NARROW_RETURN wrappers report every call to
+# port_narrowret_hook. hal/narrow_return.cpp defines it for walk_window and
+# arms it only under SM64DS_NARROWRET=1 (a per-call-site count of the reads a
+# wide caller got wrong, written out at exit); every other target that links
+# a wrapper gets the null default the generated TUs carry by /alternatename.
+target_sources(walk_window PRIVATE hal/narrow_return.cpp)

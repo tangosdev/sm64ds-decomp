@@ -65,7 +65,10 @@
 /* hal/cxx_aliases.cpp:3264 */
 #pragma comment(linker, "/alternatename:__ZN4cstd4sqrtEy=?sqrt@cstd@@YAH_K@Z")
 /* hal/cxx_aliases.cpp:3288 */
-#pragma comment(linker, "/alternatename:__ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b=?ShouldPassThroughImpl@dBgCh@@SA_NPAXABUCLPS@@ABU1@_N@Z")
+/* run rel042, lane NARROWRET1: bound to the widening wrapper tools/hostgen.py's
+   NARROW_RETURN table appends to the member's generated TU (this target compiles
+   that copy), the same binding hal/cxx_aliases.cpp makes for walk_window. */
+#pragma comment(linker, "/alternatename:__ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b=_hostgen_nrwide__ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b")
 
 /* THE HEAP-TEARDOWN SEAM, the same four rows port/hal/smoke_aliases_roots.cpp
    carries and for the same reason.  This target hosts the same root-heap layer,
