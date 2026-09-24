@@ -2,6 +2,7 @@
 // @symbol _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f
 #include "Particle.h"
 extern struct Particle* data_0209ee74;
+struct Vector3_16f;
 
 extern u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     u32 uniqueID, u32 effectID,
@@ -9,7 +10,7 @@ extern u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8Callback
     const void* dir, void* callback);
 
 u32 _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
-    u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z, const void* dir)
+    u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z, const struct Vector3_16f* dir)
 {
     return _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
         uniqueID, effectID, x, y, z, dir,

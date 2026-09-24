@@ -1,6 +1,7 @@
 #include "types.h"
+struct Vector3_16f;
 extern u32 _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
-    u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e, const void* f);
+    u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e, const struct Vector3_16f* f);
 extern u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e, const void* f, void* g);
 extern void* _ZN8Particle6System12FromUniqueIDEj(u32 id);

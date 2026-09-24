@@ -1,11 +1,11 @@
-_ZN12WorkElevatorD1Ev kind:function(arm,size=0x74) addr:0x021111a0
-_ZN12WorkElevatorD0Ev kind:function(arm,size=0x88) addr:0x02111214
+_ZN17daObjCvNewsLift_cD1Ev kind:function(arm,size=0x74) addr:0x021111a0
+_ZN17daObjCvNewsLift_cD0Ev kind:function(arm,size=0x88) addr:0x02111214
 func_ov021_0211129c kind:function(arm,size=0x198) addr:0x0211129c
 func_ov021_02111434 kind:function(arm,size=0x1a8) addr:0x02111434
-_ZN12WorkElevator16CleanupResourcesEv kind:function(arm,size=0x74) addr:0x021115dc
-_ZN12WorkElevator6RenderEv kind:function(arm,size=0x78) addr:0x02111650
-_ZN12WorkElevator8BehaviorEv kind:function(arm,size=0x5a4) addr:0x021116c8
-_ZN12WorkElevator13InitResourcesEv kind:function(arm,size=0x258) addr:0x02111c6c
+_ZN17daObjCvNewsLift_c16CleanupResourcesEv kind:function(arm,size=0x74) addr:0x021115dc
+_ZN17daObjCvNewsLift_c6RenderEv kind:function(arm,size=0x78) addr:0x02111650
+_ZN17daObjCvNewsLift_c8BehaviorEv kind:function(arm,size=0x5a4) addr:0x021116c8
+_ZN17daObjCvNewsLift_c13InitResourcesEv kind:function(arm,size=0x258) addr:0x02111c6c
 func_ov021_02111ec4 kind:function(arm,size=0x18) addr:0x02111ec4
 func_ov021_02111edc kind:function(arm,size=0x40) addr:0x02111edc
 func_ov021_02111f1c kind:function(arm,size=0x18) addr:0x02111f1c
@@ -194,7 +194,7 @@ _ZTI17daObjCvNewsLift_c kind:data(any) addr:0x02114748
 data_ov021_02114750 kind:data(any) addr:0x02114750 ambiguous
 _ZTS17daObjCvNewsLift_c kind:data(any) addr:0x02114754
 g_profile_CV_NEWS_LIFT kind:data(any) addr:0x02114768 ambiguous
-_ZTV12WorkElevator kind:data(any) addr:0x0211478c
+_ZTV17daObjCvNewsLift_c kind:data(any) addr:0x0211478c
 data_ov021_021147c4 kind:data(any) addr:0x021147c4 ambiguous
 _ZTS9daGrock_c kind:data(any) addr:0x0211480c
 _ZTI9daGrock_c kind:data(any) addr:0x02114818

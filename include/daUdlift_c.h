@@ -1,25 +1,28 @@
 /* The three up/down lifts in BBH, HMC and RR share this implementation and
- * _ZTV13UpDownLiftBbh. Their factories allocate 0x34c bytes, call
+ * _ZTV10daUdlift_c. Their factories allocate 0x34c bytes, call
  * dBgActor_c::dBgActor_c(), and install this class's vtable.
  *
  * The destructor proves the hierarchy and ownership independently: it changes
- * the vptr from UpDownLiftBbh to dBgActor_c, destroys dBgActor_c's
+ * the vptr from daUdlift_c to dBgActor_c, destroys dBgActor_c's
  * dBgW_KcMbg and Model members, then chains to dActor_c. In C++ those are all
  * consequences of deriving from dBgActor_c; the source destructor is empty.
  *
  * Two inherited angle slots have an unusual actor-specific reading worth
  * preserving: InitResources treats mPrevAngleX and mPrevAngleZ as UNSIGNED
  * shaft measurements:
- *                           mBottomY = mTopY - (unk_092 << 12)
- *                           mTopY    = mPosY + (unk_096 << 12)   (variant only)
+ *                           mBottomY = mTopY - (mPrevAngleX << 12)
+ *                           mTopY    = mPosY + (mPrevAngleZ << 12)   (variant only)
  * Nothing matched writes either slot, so the base names remain provisional for
  * this use even though the physical inheritance is proven.
  *
- * unk_346 and unk_349 are the actor's own and are still unk_ for the ordinary
- * reason (write-only in matched code), but unk_349 carries one observation that
- * should not be lost: InitResources stores only 0 or 1 into it -- 1 for
+ * mIsAtBottom is set when the descent reaches mBottomY and cleared when the
+ * climb reaches mTopY; the waiting state branches on it.
+ *
+ * unk_349 is still unk_: it picks what happens at the bottom (1 parks the lift
+ * in state 4, 2 sends it straight back up), but no name is evidenced beyond
+ * that. It carries one more observation that should not be lost: InitResources stores only 0 or 1 into it -- 1 for
  * actorID 0x83 -- and then, four statements later, tests it for `== 2`. That
- * branch (the one that raises mTopY by unk_096) is unreachable in the shipped
+ * branch (the one that raises mTopY by mPrevAngleZ) is unreachable in the shipped
  * ROM. It is reproduced as written because the cartridge contains it.
  *
  * SM64DS proves this class as daUdlift_c through RTTI, allocation size and
@@ -32,8 +35,8 @@
  * vtable. It backs the UDLIFT_TERESA registry profile, whose descriptor at
  * 0x021375cc is reconstructed as g_profile_UDLIFT_TERESA.
  */
-#ifndef UPDOWNLIFTBBH_H
-#define UPDOWNLIFTBBH_H
+#ifndef DAUDLIFT_C_H
+#define DAUDLIFT_C_H
 #include "types.h"
 #include "Model.h"
 #include "dBgW_KcMbg.h"
@@ -42,7 +45,7 @@
 
 #include "dBgActor_c.h"
 
-struct UpDownLiftBbh : dBgActor_c {
+struct daUdlift_c : dBgActor_c {
     /* dBgActor_c's last member ends at 0x31e. Keep its two bytes of tail
        padding so the first word owned by this class starts at 0x320. */
     u8 pad_31e[0x2];
@@ -56,14 +59,16 @@ struct UpDownLiftBbh : dBgActor_c {
     s32 mMiddleY;                   /* 0x33c */
     u32 mSoundHandle;               /* 0x340 */
     u16 mStateTimer;                /* 0x344 */
-    u8 unk_346;                     /* 0x346 */
+    u8 mIsAtBottom;                 /* 0x346 */
     u8 mIsArmed;                    /* 0x347 */
     u8 mIsRidden;                   /* 0x348 */
     u8 unk_349;                     /* 0x349 */
 
-    /* Declared first so the destructor TUs, rather than an ordinary virtual
-       method TU, remain the key-function/vtable owners. */
-    virtual ~UpDownLiftBbh();
+    /* Inline and empty, so InitResources is the key function and its TU
+       emits the vtable and RTTI. Written out of line, mwccarm emits D0 ahead
+       of D1 (the cartridge has D1 first) plus a D2 with no ROM home. Keep
+       the brace on this line: tools/check_header_offsets.py needs it. */
+    virtual ~daUdlift_c() {}        /* slots 16 (D1), 17 (D0) */
     virtual int InitResources();
     virtual int CleanupResources();
     virtual int Behavior();
@@ -73,7 +78,7 @@ struct UpDownLiftBbh : dBgActor_c {
 #else
 
 /* Flat C spelling retained for any future C consumer. */
-struct UpDownLiftBbh {
+struct daUdlift_c {
     u8  pad_000[0xc];
     u16 actorID;                 /* 0x00c */
     u8  aliveState;              /* 0x00e */
@@ -137,7 +142,7 @@ struct UpDownLiftBbh {
     s32 mMiddleY;            /* 0x33c */
     u32 mSoundHandle;            /* 0x340 */
     u16 mStateTimer;            /* 0x344 */
-    u8  unk_346;            /* 0x346 */
+    u8  mIsAtBottom;        /* 0x346 */
     u8  mIsArmed;            /* 0x347 */
     u8  mIsRidden;            /* 0x348 */
     u8  unk_349;            /* 0x349 */
@@ -147,7 +152,7 @@ struct UpDownLiftBbh {
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char UpDownLiftBbh_size_must_be_0x34c[sizeof(struct UpDownLiftBbh) == 0x34c ? 1 : -1];
+typedef char daUdlift_c_size_must_be_0x34c[sizeof(struct daUdlift_c) == 0x34c ? 1 : -1];
 #endif
 
 #endif

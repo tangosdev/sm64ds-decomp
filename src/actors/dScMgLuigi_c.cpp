@@ -1598,7 +1598,7 @@ void dScMgLuigi_c::ResetBoard()
     mCatchWait = 0;
 
     mTarget = 0;
-    unk_5458 = 1;
+    mBoardPending = 1;
     mFound = 0;
     mFilled = 0;
 }
@@ -1678,7 +1678,7 @@ void dScMgLuigi_c::StatePlace() {
     if (mFilled == 0)
         return;
     mState = 2;
-    unk_5458 = 0;
+    mBoardPending = 0;
     unk_516c = 0xa;
     unk_516e = 0;
 }

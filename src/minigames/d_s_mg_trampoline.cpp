@@ -1,30 +1,23 @@
 //cpp
-/* dScMgTrampoline_c, the Bounce & Pounce minigame scene: the ov006 text
- * run 0x021207dc..0x021225ac (44 functions) and data run
- * 0x0213faa0..0x0213fbc4.
+/* dScMgTrampoline_c -- Trampoline Time. Draw a line on the touch screen
+ * (up to three at once) and bounce Mario to the lit door. Three misses
+ * end the round.
  *
- * Functions are written in REVERSE of ROM order: mwccarm emits one .text
- * section per function in reverse source order, so the highest address comes
- * first. Do not reorder.
+ * Functions are written in reverse of ROM order; do not reorder.
+ * `opt_loop_invariants off` above Virtual88 has no matching `on`, so it
+ * applies to the whole file. TUBUILD CONFLICT comments are paired with
+ * the manifest; leave them.
  *
- * The one pragma, `opt_loop_invariants off` above Virtual88, has no matching
- * `on`; with codegen deferred, the state at end of file is what binds, so it
- * applies to the whole file.
- *
- * The TUBUILD CONFLICT comments record declarations that disagreed between
- * the original one-function files; check_tubuild_conflicts.py pairs each one
- * with the manifest, so leave them in place.
- *
- * Blocked: the ov004 helpers and most data are unnamed in symbols.txt; many
- * scene fields are not in dScMgTrampoline_c.h, so they are reached by offset;
- * Desc, Node, Obj, UnkObj and B4 below are local stand-ins for classes with
- * no header yet; and the factory builds the scene by hand, so its
- * constructor calls and vtable stores stay mangled.
+ * The factory still builds the object by hand, so its offset stores stay
+ * raw. Score-pop reads in func_ov006_02120a64, func_ov006_02120ab8 and
+ * func_ov006_02120d0c stay offsets: the Desc member form DIFFed there.
+ * ov004 helpers and most data symbols are unnamed.
  */
 
 #include "dScMgTrampoline_c.h"
 #include "types.h"
 #include "G2x.h"
+#include "Sound.h"
 
 namespace cstd { int fdiv(int numerator, int denominator); }
 namespace G2   { void *GetBG0ScrPtr(); void *GetBG1ScrPtr(); void *GetBG2ScrPtr(); void *GetBG3ScrPtr(); void *GetBG2CharPtr(); }
@@ -34,26 +27,34 @@ namespace G3X  { void SetFog(bool enable, int blend, int slope, int offset); }
 /* Local stand-ins for types no header declares yet. */
 typedef short s16;
 
-struct Desc {
-    char _pad0[4];
-    int a;       /* +0x04 = 0x110000 */
-    int b;       /* +0x08 = arg1 */
-    int c;       /* +0x0c = 0xc0000 */
-    int d;       /* +0x10 = arg1 */
-    int e;       /* +0x14 = -0x4000 */
-    int f;       /* +0x18 = 0 */
-    u16 g;       /* +0x1c = 0x80 */
-    u16 h;       /* +0x1e = arg2 */
-    u16 i;       /* +0x20 = 1 */
-};
-
 struct Node { struct Node* next; };
 
+/* One floating score. Five of these are mArray3. Spawned when a Mario
+   lands: x starts at the right edge and drifts left, y eases toward
+   targetY, and number is the score drawn by func_ov004_020b2444.
+   Same 0x24 shape as dScMgJump2_c's Elem. targetX is written and not
+   read by this TU's step. */
+struct Desc {
+    Node *next;     /* +0x00 -- the live list */
+    int x;          /* +0x04 -- 20.12 */
+    int y;          /* +0x08 */
+    int targetX;    /* +0x0c */
+    int targetY;    /* +0x10 */
+    int speedX;     /* +0x14 */
+    int speedY;     /* +0x18 -- func_0203d630 damps it with speedX (it
+                       scales both words); not applied here */
+    u16 life;       /* +0x1c */
+    u16 number;     /* +0x1e */
+    u16 active;     /* +0x20 */
+};
+
+/* Shadow of the scene's +0x68/+0x6c, which sit in dScMgBase_c padding.
+   Virtual88 reads the layer; func_ov006_02120f18 writes both. */
 struct Obj {
     unsigned char pad0[0x68];
-    unsigned char f68;
+    unsigned char brushOn;
     unsigned char pad1[3];
-    int f6c;
+    int bgLayer;
 };
 
 typedef struct UnkObj UnkObj;
@@ -68,6 +69,9 @@ struct B4 {
     unsigned char v;
     unsigned char pad[3];
 };
+
+/* The door mark's layout lives in the header. */
+typedef dScMgTrampoline_DoorMark DoorMark;
 
 /* Raw storage form of mwccarm's eight-byte single-inheritance PMF. Behavior
    gives the live scene storage its dScMgTrampoline_c::State meaning at the
@@ -88,8 +92,6 @@ struct TrampolineTimeProfile {
 
 typedef char TrampolineTimeProfile_size_must_be_8[
     sizeof(TrampolineTimeProfile) == 8 ? 1 : -1];
-
-namespace Sound { void PlayBank2_2D(unsigned int); }
 
 /* TUBUILD CONFLICT -- alternate body of struct 'P2', from the legacy file for func_ov006_021218c4, NOT applied:
 struct P2 { int a, b; };
@@ -483,15 +485,15 @@ void dScMgTrampoline_c::OnYoshiTryEat(int /* arg */)
     func_ov006_02120ca0();
     func_ov006_020c8a9c(0, data_ov006_0213fb18[GetGameLanguage()]);
 
-    func_ov006_02120a44(o + 0x5d84);
+    func_ov006_02120a44((char *)&mDoorMark);
 
     self->mInputEnabled = 0;
-    self->unk_5dc2 = 0;
-    self->unk_5dbc =
+    self->mRoundOver = 0;
+    self->mDoorSwitchTimer =
         (((int)(((unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 0x13)
             * 0x2d0) >> 12) + 0x2d0;
-    self->unk_5dbe = 0;
-    self->unk_5dc0 = 1;
+    self->mDoorBlinkTimer = 0;
+    self->mDoorBlinkPhase = 1;
     self->mArrow1X = 0;
     self->mArrow2X = 0;
 
@@ -517,19 +519,18 @@ int dScMgTrampoline_c::OnTurnIntoEgg(int /* mode */)
 // @symbol _ZN17dScMgTrampoline_c10BeginIntroEv
 void dScMgTrampoline_c::BeginIntro()
 {
-    char *o = (char *)this;
     short a;
     short b;
 
-    *(int *)(o + 0x5d90) = 0x5a;
+    mTimer = 0x5a;
     a = data_ov006_0212e044;
-    *(short *)(o + 0x5db4) = a;
+    mTouchStartX = a;
     b = data_ov006_0212e048;
-    *(short *)(o + 0x5db6) = b;
-    *(short *)(o + 0x5db0) = a;
-    *(short *)(o + 0x5db2) = b;
+    mTouchStartY = b;
+    mTouchX = a;
+    mTouchY = b;
     mDragSoundHandle = 0;
-    *(P2Words *)(o + 0x5004) = *(P2Words *)&data_ov006_0213fab0;
+    *(P2Words *)mState = *(P2Words *)&data_ov006_0213fab0;
 }
 
 // @symbol _ZN17dScMgTrampoline_c10StateIntroEv
@@ -539,14 +540,14 @@ void dScMgTrampoline_c::StateIntro()
     int counter;
 
     func_ov006_020d0ac0();
-    *(int *)(c + 0x5d90) -= 1;
-    counter = *(int *)(c + 0x5d90);
+    mTimer -= 1;
+    counter = mTimer;
 
     if (counter == 0) {
-        if (*(u8 *)(c + 0xc4) == 0) {
-            *(u8 *)(c + 0xc3) = 1;
-            *(u8 *)(c + 0xc4) = 1;
-            *(s16 *)(c + 0xc0) = 0;
+        if (mPromptBlinkCount == 0) {
+            mPromptEnabled = 1;
+            mPromptBlinkCount = 1;
+            mPromptBlinkTimer = 0;
         }
 
         {
@@ -563,22 +564,22 @@ void dScMgTrampoline_c::StateIntro()
 
     {
         int t = cstd::fdiv(counter << 12, 0x5a000);
-        volatile s16 oldY = *(s16 *)(c + 0x5db0);
-        volatile s16 oldZ = *(s16 *)(c + 0x5db2);
+        volatile s16 oldY = mTouchX;
+        volatile s16 oldZ = mTouchY;
         int mixRaw = data_ov006_0212e044 * t +
                      data_ov006_0212e04c * (0x1000 - t);
 
-        *(s16 *)(c + 0x5db0) = (s16)(mixRaw >> 12);
-        *(s16 *)(c + 0x5db2) = data_ov006_0212e048;
+        mTouchX = (s16)(mixRaw >> 12);
+        mTouchY = data_ov006_0212e048;
 
-        *(s16 *)(c + 0x5db2) +=
+        mTouchY +=
             ((((int)((unsigned int)(RandomIntInternal(&data_0209e650) &
                               ~0x80000000) >> 19) -
                0x800) << 2) >> 12);
 
         func_ov004_020ae5c4(c, oldY, oldZ,
-                            *(s16 *)(c + 0x5db0),
-                            *(s16 *)(c + 0x5db2), 2, 0xc);
+                            mTouchX,
+                            mTouchY, 2, 0xc);
 
         mDragSoundHandle =
             func_02012468(mDragSoundHandle, 2, 0x1b0, 2, 0,
@@ -589,13 +590,12 @@ void dScMgTrampoline_c::StateIntro()
 // @symbol _ZN17dScMgTrampoline_c9BeginPlayEv
 void dScMgTrampoline_c::BeginPlay()
 {
-    char *c = (char *)this;
-    *(int*)(c + 0x5d90) = 0x1e;
-    *(short*)(c + 0x5db8) = 1;
-    func_ov006_02120a18((u16 *)(c + 0x5d84), *(short*)(c + 0x5dba));
+    mTimer = 0x1e;
+    mInputEnabled = 1;
+    func_ov006_02120a18((u16 *)&mDoorMark, mDoorSide);
     mDragSoundHandle = 0;
     Sound::PlayBank2_2D(0x1b6);
-    *(P2Words *)(c + 0x5004) = *(P2Words *)&data_ov006_0213fac0;
+    *(P2Words *)mState = *(P2Words *)&data_ov006_0213fac0;
 }
 
 // @symbol _ZN17dScMgTrampoline_c12UpdateScrollEv
@@ -641,71 +641,71 @@ void dScMgTrampoline_c::StatePlay()
     func_ov006_020cd39c();
     if (data_ov006_02140588 > old) {
         if (data_ov006_02140588 == 3)
-            *(u8 *)(c + 0xc3) = 0;
+            mPromptEnabled = 0;
     }
     UpdateScroll();
 
     if (data_ov006_0213b0ec == 0) {
-        *(s16 *)(c + 0x5db8) = 0;
+        mInputEnabled = 0;
         BeginResults();
     } else {
-        if (_Z14ApproachLinearRiii((int *)(c + 0x5d90), 0, 1)) {
+        if (_Z14ApproachLinearRiii(&mTimer, 0, 1)) {
             if (data_ov006_02140588 >= 5 || data_ov006_0214058c < 3) {
                 int i;
-                char *p = c + 0x500c;
+                char *p = (char *)mArray1;
                 for (i = 0; i < 4; i++) {
                     if (func_ov006_020ccd04((int *)p)) {
-                        func_ov006_020cc9fc(c + 0x500c + i * 0xd0);
+                        func_ov006_020cc9fc((char *)mArray1 + i * 0xd0);
                         break;
                     }
                     p += 0xd0;
                 }
             }
-            *(int *)(c + 0x5d90) = 0x168;
+            mTimer = 0x168;
             {
                 int amt = data_ov006_02140588 * 2;
                 if (amt > 0xb4) amt = 0xb4;
-                *(int *)(((int)c + 0x5d90)) -= amt;
+                mTimer -= amt;
             }
         }
     }
 
     if (data_ov006_02142f60 == 0) {
-        if (_Z15ApproachLinear2Rsss((short *)(c + 0x5dbc), 0, 1)) {
+        if (_Z15ApproachLinear2Rsss((short *)&mDoorSwitchTimer, 0, 1)) {
             if (func_ov006_02121768(c)) {
                 func_ov006_02121750(c, 0);
-                func_ov006_02120a18((u16 *)(c + 0x5d84), *(s16 *)(c + 0x5dba));
+                func_ov006_02120a18((u16 *)&mDoorMark, mDoorSide);
             } else {
                 func_ov006_02121750(c, 1);
-                func_ov006_02120a18((u16 *)(c + 0x5d84), *(s16 *)(c + 0x5dba));
+                func_ov006_02120a18((u16 *)&mDoorMark, mDoorSide);
             }
             Sound::PlayBank2_2D(0x1b6);
             {
                 unsigned int rnd = (unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff;
                 int prod = (rnd >> 19) * 0x2d0;
-                *(s16 *)(c + 0x5dbc) = (s16)((prod >> 12) + 0x2d0);
-                *(s16 *)(c + 0x5dbe) = 0;
-                *(s16 *)(c + 0x5dc0) = 1;
+                mDoorSwitchTimer = (s16)((prod >> 12) + 0x2d0);
+                mDoorBlinkTimer = 0;
+                mDoorBlinkPhase = 1;
             }
         }
     }
 
-    if (*(s16 *)(c + 0x5dbc) <= 0x3c) {
-        if (_Z15ApproachLinear2Rsss((short *)(c + 0x5dbe), 0, 1)) {
-            *(s16 *)(c + 0x5dbe) = 0xa;
-            if (*(s16 *)(c + 0x5dc0) != 0)
-                *(s16 *)(c + 0x5dc0) = 0;
+    if (mDoorSwitchTimer <= 0x3c) {
+        if (_Z15ApproachLinear2Rsss((short *)&mDoorBlinkTimer, 0, 1)) {
+            mDoorBlinkTimer = 0xa;
+            if (mDoorBlinkPhase != 0)
+                mDoorBlinkPhase = 0;
             else
-                *(s16 *)(c + 0x5dc0) = 1;
+                mDoorBlinkPhase = 1;
         }
     }
 
-    if (*(s16 *)(c + 0x5dba) != 0) {
-        _Z14ApproachLinearRiii((int *)(c + 0x5da4), 0, 1);
-        _Z14ApproachLinearRiii((int *)(c + 0x5da8), 0x20, 1);
+    if (mDoorSide != 0) {
+        _Z14ApproachLinearRiii(&mArrow1X, 0, 1);
+        _Z14ApproachLinearRiii(&mArrow2X, 0x20, 1);
     } else {
-        _Z14ApproachLinearRiii((int *)(c + 0x5da4), 0x20, 1);
-        _Z14ApproachLinearRiii((int *)(c + 0x5da8), 0, 1);
+        _Z14ApproachLinearRiii(&mArrow1X, 0x20, 1);
+        _Z14ApproachLinearRiii(&mArrow2X, 0, 1);
     }
 }
 
@@ -714,8 +714,8 @@ void dScMgTrampoline_c::BeginResults()
 {
     char *c = (char *)this;
     func_ov006_020cd1e0(c);
-    *(int*)(c + 0x5d90) = 0x5a;
-    *(P2Words *)(c + 0x5004) = *(P2Words *)&data_ov006_0213fac8;
+    mTimer = 0x5a;
+    *(P2Words *)mState = *(P2Words *)&data_ov006_0213fac8;
 }
 
 // @symbol _ZN17dScMgTrampoline_c12StateResultsEv
@@ -723,21 +723,20 @@ void dScMgTrampoline_c::StateResults()
 {
   unsigned char *c = (unsigned char *)this;
   func_ov006_020cd39c(c);
-  if(_Z14ApproachLinearRiii((int*)(c+0x5d90),0,1)==0) return;
+  if(_Z14ApproachLinearRiii(&mTimer,0,1)==0) return;
   if(func_ov006_020cd158()==0) return;
   func_ov004_020b0a54(0x12);
-  *(unsigned char*)(c+0xc3)=0;
-  *(int*)(c+0x5d90)=0xb4;
-  *(P2Words *)(c + 0x5004) = *(P2Words *)&data_ov006_0213faa0;
+  mPromptEnabled = 0;
+  mTimer = 0xb4;
+  *(P2Words *)mState = *(P2Words *)&data_ov006_0213faa0;
 }
 
 // @symbol _ZN17dScMgTrampoline_c13StateWaitExitEv
 void dScMgTrampoline_c::StateWaitExit()
 {
-    char *c = (char *)this;
     int idx, b;
-    *(int *)(c + 0x5d90) -= 1;
-    if (*(int *)(c + 0x5000 + 0xd90) != 0)
+    mTimer -= 1;
+    if (mTimer != 0)
     {
         idx = data_020a0e40[0];
         b = 0;
@@ -753,13 +752,13 @@ void dScMgTrampoline_c::StateWaitExit()
         h = 0;
         MultiStore16(h, (char *)r, 0x6000);
     }
-    *(short *)(c + 0x5dc2) = 1;
+    mRoundOver = 1;
     {
         int w0 = ((int *)&data_ov006_0213faa8)[0];
         int w1 = ((int *)&data_ov006_0213faa8)[1];
         w0 = w1 ? w0 : w0;
-        *(int *)(c + 0x5004) = w0;
-        *(int *)(c + 0x5008) = w1;
+        mState[0] = w0;
+        mState[1] = w1;
     }
 }
 
@@ -771,7 +770,7 @@ void dScMgTrampoline_c::StateDone()
 // @symbol func_ov006_02121768
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 short func_ov006_02121768(char* scene) {
-  return *(short*)(scene + 0x5dba);
+  return ((dScMgTrampoline_c *)scene)->mDoorSide;
 }
 }
 
@@ -780,7 +779,7 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_02121750(char *scene, short value)
 {
     data_ov006_02140538 = value;
-    *(short *)(scene + 0x5dba) = value;
+    ((dScMgTrampoline_c *)scene)->mDoorSide = value;
 }
 }
 
@@ -833,23 +832,18 @@ s32 dScMgTrampoline_c::Behavior()
     func_ov006_02120c40();
     (this->*(*(State *)mState))();
     UpdateTouchInput();
-    func_ov006_021209ac((short *)pad_5d84);
+    func_ov006_021209ac(&mDoorMark.row);
     if (saved != data_ov006_02140588)
         func_ov004_020adb1c(data_ov006_02140588);
     return 1;
 }
 
 // @symbol _ZN17dScMgTrampoline_c6RenderEv
-/* Slot 9. The receiver is a `char *`, not an `int`: every offset here is
- * past 0xfff, and on an integer the C++ front end pools the whole constant
- * (0x230 bytes against the ROM's 0x1fc), while on a pointer it splits it the
- * way the ROM does.
- *
- * The offsets stay raw: 0x4664, 0x5d84 and 0x5da0 fall in padding in
- * dScMgTrampoline_c.h or inside the base class. */
+/* Draws the three miss icons, the two door arrows, and the flashing mark.
+   The arrows slide in mArrow1X / mArrow2X; mDoorBlinkPhase picks the frame
+   on the lit side. */
 s32 dScMgTrampoline_c::Render()
 {
-    char *self = (char *)this;
     int count;
     int a1v;
     int i;
@@ -857,10 +851,10 @@ s32 dScMgTrampoline_c::Render()
     int r6, r5;
     int t;
 
-    func_ov006_0212093c((short*)(self + 0x5d84), *(int*)(self + 0x5d94));
+    func_ov006_0212093c(&mDoorMark.row, mScrollY);
     func_ov006_02120c08();
 
-    if (*(unsigned short*)(self + 0x4664) == 1) {
+    if (unk_4664 == 1) {
         count = data_ov006_0213b0ec;
         a1v = 0x6e;
         for (i = 0; i < 3; i++) {
@@ -876,25 +870,25 @@ s32 dScMgTrampoline_c::Render()
 
     func_ov004_020b1a5c(data_ov006_02140588, 4);
 
-    aa = *(short*)(self + 0x5dba);
+    aa = mDoorSide;
     r6 = 1;
     r5 = 1;
     if (aa == 0) {
-        if (*(short*)(self + 0x5dc0) != 0) r6 = 0;
+        if (mDoorBlinkPhase != 0) r6 = 0;
     }
     if (aa != 0) {
-        if (*(short*)(self + 0x5dc0) != 0) r5 = 0;
+        if (mDoorBlinkPhase != 0) r5 = 0;
     }
 
-    t = data_ov006_0212f0c8[0] - (*(int*)(self + 0x5d94) + *(int*)(self + 0x5da0));
-    func_ov004_020afdd0(data_ov006_02134f08, *(int*)(self + 0x5da4) + 0xf0, t, -1, 2);
+    t = data_ov006_0212f0c8[0] - (mScrollY + mScrollOffsetY);
+    func_ov004_020afdd0(data_ov006_02134f08, mArrow1X + 0xf0, t, -1, 2);
     func_ov004_020afdd0(data_ov006_02134f00[r6], 0xf0, t - 0x20, -1, 2);
 
-    t = data_ov006_0212f0c8[1] - (*(int*)(self + 0x5d94) + *(int*)(self + 0x5da0));
-    func_ov004_020afdd0(data_ov006_02134f08, *(int*)(self + 0x5da8) + 0xf0, t, -1, 2);
+    t = data_ov006_0212f0c8[1] - (mScrollY + mScrollOffsetY);
+    func_ov004_020afdd0(data_ov006_02134f08, mArrow2X + 0xf0, t, -1, 2);
     func_ov004_020afdd0(data_ov006_02134f00[r5], 0xf0, t - 0x20, -1, 2);
 
-    if (*(short*)(self + 0x5dc2) == 0) {
+    if (mRoundOver == 0) {
         func_ov006_020cd270();
         func_ov006_020d09e0();
     }
@@ -913,19 +907,17 @@ s32 dScMgTrampoline_c::CleanupResources()
 /* dScMgTrampoline_c::OnKicked, from its vtable slot. */
 int dScMgTrampoline_c::OnKicked()
 {
-    char *self = (char *)this;
-
-    if (!_ZN14dScMgD3DBase_c8OnKickedEv(self))
+    if (!_ZN14dScMgD3DBase_c8OnKickedEv(this))
         return 0;
-    if (*(int*)(self + 0x4628) == 0) {
-        if (*(unsigned short*)(self + 0x4664) == 0) {
+    if (mMenuOpen == 0) {
+        if (unk_4664 == 0) {
             data_0209d45c &= ~8;
-            SetBg2Offset(0, *(int*)(self + 0x5d94) + *(int*)(self + 0x5da0));
-            *(volatile int*)0x4000018 = (*(int*)(self + 0x5d94) + *(int*)(self + 0x5da0)) << 16 & 0x1ff0000;
+            SetBg2Offset(0, mScrollY + mScrollOffsetY);
+            *(volatile int*)0x4000018 = (mScrollY + mScrollOffsetY) << 16 & 0x1ff0000;
         } else {
             data_0209d45c |= 8;
-            SetBg2Offset(0, *(int*)(self + 0x5d94) + 0xc0 + *(int*)(self + 0x5da0) + func_ov004_020b04c0());
-            *(volatile int*)0x4000018 = (*(int*)(self + 0x5d94) + 0xc0 + *(int*)(self + 0x5da0) + func_ov004_020b04c0()) << 16 & 0x1ff0000;
+            SetBg2Offset(0, mScrollY + 0xc0 + mScrollOffsetY + func_ov004_020b04c0());
+            *(volatile int*)0x4000018 = (mScrollY + 0xc0 + mScrollOffsetY + func_ov004_020b04c0()) << 16 & 0x1ff0000;
         }
     }
     return 1;
@@ -942,8 +934,6 @@ int dScMgTrampoline_c::OnPushed()
 /* dScMgTrampoline_c::OnAttacked2, from its vtable slot. */
 int dScMgTrampoline_c::OnAttacked2()
 {
-    char *self = (char *)this;
-
     volatile u16 z;
     Vec2s v1;
     Vec2s v2;
@@ -962,21 +952,21 @@ int dScMgTrampoline_c::OnAttacked2()
     if (data_ov006_0213fa9c != 0)
         return 0;
 
-    if (*(int*)(self + 0x4628) != 0)
+    if (mMenuOpen != 0)
         return 0;
 
-    if (*(u8*)(self + 0x5dc5) != 0) {
-        a = *(s16*)(self + 0x5db4);
-        if ((a < 0x24 && *(s16*)(self + 0x5db0) < 0x24) ||
-            (a > 0xd4 && *(s16*)(self + 0x5db0) > 0xd4)) {
+    if (mTouchReleased != 0) {
+        a = mTouchStartX;
+        if ((a < 0x24 && mTouchX < 0x24) ||
+            (a > 0xd4 && mTouchX > 0xd4)) {
             func_02012790(0xe);
         } else {
-            v1.x = *(volatile s16*)(self + 0x5db4);
-            v1.y = *(s16*)(self + 0x5db6);
-            v2.x = *(s16*)(self + 0x5db0);
-            v2.y = *(s16*)(self + 0x5db2);
+            v1.x = *(volatile s16 *)&mTouchStartX;
+            v1.y = mTouchStartY;
+            v2.x = mTouchX;
+            v2.y = mTouchY;
             if (func_ov006_020d0c38(&v1, &v2)) {
-                func_02012718(0x1af, (*(s16*)(self + 0x5db4) + *(s16*)(self + 0x5db0)) << 11);
+                func_02012718(0x1af, (mTouchStartX + mTouchX) << 11);
             } else {
                 func_02012790(0xe);
             }
@@ -984,8 +974,8 @@ int dScMgTrampoline_c::OnAttacked2()
         dst = func_02054d88();
         z = 0;
         MultiStore16(z, (char *)dst, 0x6000);
-        *(u8*)(self + 0x5dc4) = 0;
-        *(u8*)(self + 0x5dc5) = 0;
+        mTouching = 0;
+        mTouchReleased = 0;
     }
     return 1;
 }
@@ -1001,10 +991,10 @@ void func_ov006_02120f18(struct Obj *self, int layer)
     char *charPtr;
     int i;
 
-    self->f68 = 1;
-    self->f6c = layer;
+    self->brushOn = 1;
+    self->bgLayer = layer;
 
-    switch (self->f6c) {
+    switch (self->bgLayer) {
     case 0:
         scrPtr = (char *)G2::GetBG0ScrPtr();
         charPtr = (char *)func_02054efc();
@@ -1041,11 +1031,11 @@ void func_ov006_02120f18(struct Obj *self, int layer)
 #pragma opt_loop_invariants off
 
 // @symbol _ZN17dScMgTrampoline_c9Virtual88Eiiii
-/* Slot 34, the brush on the main engine. dScMgD3DBase_c does not override
-   this slot, so each trampoline class has its own; they differ only in the
-   shape table (data_ov006_02142f6c here, _02142f78 in dScMgTrampoline2_c).
-   The layer switch on +0x6c picks G2::GetBG0ScrPtr to GetBG3ScrPtr, and
-   there is no wrapped-region branch: a 3D minigame owns the top screen. */
+/* Slot 34, the brush stamp. dScMgD3DBase_c does not override this slot,
+   so each trampoline class has its own; they differ only in the shape
+   table (data_ov006_02142f6c here, _02142f78 in dScMgTrampoline2_c).
+   bgLayer (+0x6c, in the base padding) picks the character base. No
+   wrapped-region branch: a 3D minigame owns the top screen. */
 void dScMgTrampoline_c::Virtual88(int x_base, int y, int val, int n)
 {
     char *raw = (char *)this;
@@ -1075,7 +1065,7 @@ void dScMgTrampoline_c::Virtual88(int x_base, int y, int val, int n)
                     if (yy >= 0 && yy < 0xc0)
                     {
                         void *ret;
-                        int mode = *(int *)(raw + 0x6c);
+                        int mode = ((Obj *)raw)->bgLayer;
 
                         switch (mode)
                         {
@@ -1121,6 +1111,7 @@ void func_ov006_02120d8c(void *records, int count) { data_ov006_02142f68 = (int)
 
 // @symbol func_ov006_02120d0c
 extern "C" {  /* .c-derived member: C linkage for the whole block */
+/* Desc* index DIFFed (the scale folded the wrong register). */
 void func_ov006_02120d0c(int x, int y) {
   int i;
   for (i = data_ov006_02142f70 - 1; i >= 0; i--) {
@@ -1137,7 +1128,7 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_02120ca0(void){
     int i;
     for(i=0;i<data_ov006_02142f70;i++){
-        *(short*)(data_ov006_02142f68 + i*0x24 + 0x20)=0;
+        ((Desc *)(data_ov006_02142f68 + i * 0x24))->active = 0;
     }
     data_ov006_02142f64=0;
 }
@@ -1172,15 +1163,16 @@ void func_ov006_02120c08(void) {
 
 // @symbol func_ov006_02120bc8
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_02120bc8(int *entry) {
-    int *node;
-    entry[0] = (int)data_ov006_02142f64;
+void func_ov006_02120bc8(int *entryRaw) {
+    Desc *entry = (Desc *)entryRaw;
+    Desc *node;
+    entry->next = data_ov006_02142f64;
     data_ov006_02142f64 = (Node *)entry;
-    node = (int*)entry[0];
-    int v = entry[2] - 0x10000;
+    node = (Desc *)entry->next;
+    int v = entry->y - 0x10000;
     while (node) {
-        node[4] = v;
-        node = (int*)node[0];
+        node->targetY = v;
+        node = (Desc *)node->next;
         v -= 0x10000;
     }
 }
@@ -1210,17 +1202,17 @@ void func_ov006_02120b7c(struct Node* node) {
 /* Fills a particle descriptor with fixed parameters and tail-calls
  * func_ov006_02120bc8. */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_02120b30(struct Desc *self, int x, int y)
+void func_ov006_02120b30(struct Desc *self, int y, int number)
 {
-    self->a = 0x110000;
-    self->b = x;
-    self->e = -0x4000;
-    self->f = 0;
-    self->c = 0xc0000;
-    self->d = x;
-    self->g = 0x80;
-    self->i = 1;
-    self->h = y;
+    self->x = 0x110000;
+    self->y = y;
+    self->speedX = -0x4000;
+    self->speedY = 0;
+    self->targetX = 0xc0000;
+    self->targetY = y;
+    self->life = 0x80;
+    self->active = 1;
+    self->number = number;
     func_ov006_02120bc8((int *)self);
 }
 }
@@ -1230,6 +1222,7 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
 
 int _Z14ApproachLinearRiii(int *a, int b, int c);
 void func_0203d630(int *p, int m);
+/* Member form of x += speedX DIFFed. Offsets are Desc's. */
 void func_ov006_02120ab8(char *self)
 {
   if ((*((short *) (self + 0x20))) == 0)
@@ -1252,6 +1245,7 @@ void func_ov006_02120ab8(char *self)
 
 // @symbol func_ov006_02120a64
 extern "C" {  /* .c-derived member: C linkage for the whole block */
+/* Member form DIFFed (ldrsh of number). Offsets are Desc::active, x, y, number. */
 void func_ov006_02120a64(char *desc){
   if(*(short*)(desc+0x20)==0) return;
   func_ov004_020b2444(*(int*)(desc+4)>>12,*(int*)(desc+8)>>12,*(short*)(desc+0x1e),-1,-1,0,0);
@@ -1262,8 +1256,9 @@ void func_ov006_02120a64(char *desc){
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_02120a54(char *label)
 {
-    *(int *)(label + 0x4) = 0;
-    *(int *)(label + 0x8) = 0;
+    DoorMark *mark = (DoorMark *)label;
+    mark->active = 0;
+    mark->shown = 0;
 }
 }
 
@@ -1271,8 +1266,9 @@ void func_ov006_02120a54(char *label)
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_02120a44(char *label)
 {
-    *(int *)(label + 0x4) = 0;
-    *(int *)(label + 0x8) = 0;
+    DoorMark *mark = (DoorMark *)label;
+    mark->active = 0;
+    mark->shown = 0;
 }
 }
 
@@ -1280,10 +1276,11 @@ void func_ov006_02120a44(char *label)
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_02120a18(unsigned short* label, int row)
 {
-    label[0] = row;
-    label[1] = 0x3c;
-    *(int*)(label + 4) = 1;
-    *(int*)(label + 2) = 1;
+    DoorMark *mark = (DoorMark *)label;
+    mark->row = (s16)row;
+    mark->timer = 0x3c;
+    mark->shown = 1;
+    mark->active = 1;
     Sound::PlayBank2_2D(0x1B7);
 }
 }
@@ -1291,26 +1288,28 @@ void func_ov006_02120a18(unsigned short* label, int row)
 // @symbol func_ov006_021209ac
 extern "C" void func_ov006_021209ac(short *label)
 {
-    if (*(int *)((char *)label + 4) == 0) return;
-    if (_Z15ApproachLinear2Rsss(&label[1], 0, 1) != 0) {
-        *(int *)((char *)label + 4) = 0;
+    DoorMark *mark = (DoorMark *)label;
+    if (mark->active == 0) return;
+    if (_Z15ApproachLinear2Rsss(&mark->timer, 0, 1) != 0) {
+        mark->active = 0;
     }
-    if (((label[1] / 10) & 1) != 0) {
-        *(int *)((char *)label + 8) = 0;
+    if (((mark->timer / 10) & 1) != 0) {
+        mark->shown = 0;
     } else {
-        *(int *)((char *)label + 8) = 1;
+        mark->shown = 1;
     }
 }
 
 // @symbol func_ov006_0212093c
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_0212093c(short* label, int scrollY) {
-    if (*(int*)((char*)label + 4) == 0) return;
-    if (*(int*)((char*)label + 8) == 0) return;
+    DoorMark *mark = (DoorMark *)label;
+    if (mark->active == 0) return;
+    if (mark->shown == 0) return;
     func_ov004_020afdd0(
         (void *)data_ov006_02134f24,
         0xd0,
-        data_ov006_0212f0c8[label[0]] - scrollY - 8,
+        data_ov006_0212f0c8[mark->row] - scrollY - 8,
         -1,
         -1);
 }

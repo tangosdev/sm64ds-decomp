@@ -18,11 +18,11 @@
  * highest-address ROM function is written FIRST here. Do not reorder.
  *
  * ABSTRACT: no classInit in this TU. The leaves own the factories
- * (ov022 daObjFlMaruta_c, ov030 RollingLogTtm).
+ * (ov022 daObjFlMaruta_c, ov030 daObjHmMaruta_c).
  *
  * deslop
  * Leftover: func_ov080_021274ac / 0212714c / 021270dc keep C linkage.
- *   daObjFlMaruta_c (ov022) and RollingLogTtm (ov030) forward InitResources,
+ *   daObjFlMaruta_c (ov022) and daObjHmMaruta_c (ov030) forward InitResources,
  *   Behavior and CleanupResources into these exact symbols. No ROM-proven
  *   English spelling; a member rename would fan those leaves. THIS-TU reason.
  * Leftover: func_ov080_02127094 keeps C linkage (private matrix helper;

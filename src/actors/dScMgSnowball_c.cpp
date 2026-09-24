@@ -26,6 +26,7 @@
 #include "common.h"
 #include "Sound.h"
 #include "dScMgBase_c.h"
+#include "Particle__System.h"
 
 /* Declarations the recovered sources need that no project header supplies.
  * Each one was checked against include/*.h first; these are the residue. */
@@ -89,7 +90,7 @@ struct SPS {
 #define HA(o) (*(short*)AT(c,(o)))
 #define atan2 _ZN4cstd5atan2E5Fix12IiES1_
 #define pnew _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE
-#define pfromid _ZN8Particle6System12FromUniqueIDEj
+#define pfromid(id) ((int *)Particle::System::FromUniqueID(id))
 #define ApproachLinear _Z14ApproachLinearRsss
 /* H is `short` in Behavior and `unsigned short` in the helpers; HS is the
  * signed read where a site needs it. */
@@ -114,7 +115,6 @@ extern int Vec2_Len(int *p);
 extern void func_0203d630(int *p, int m);
 extern u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
 u32 uniqueID, u32 effectID, int x, int y, int z, const void *dir, void *callback);
-extern int *_ZN8Particle6System12FromUniqueIDEj(u32 uniqueID);
 extern void func_02012718(int a, int b);
 extern int _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);
 extern s16 data_02082214[];
@@ -640,14 +640,14 @@ extern "C" void func_ov006_02125f68(char *p_)
                 0, 0xf1, part.x * 8, part.y * 8, part.z * 8, 0, 0);
             id2 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
                 0, 0xf2, part.x * 8, part.y * 8, part.z * 8, 0, 0);
-            sys = _ZN8Particle6System12FromUniqueIDEj(id1);
+            sys = (int *)Particle::System::FromUniqueID(id1);
             if (sys != 0) {
                 sys[0x44 / 4] = (s16)((self->mBallSize - 0x4000) * 11 / 60 + 0x3000);
                 sys[0x48 / 4] = (s16)((self->mBallSize - 0x4000) * 36 / 10 / 60 + 0x1333);
                 sys[0x4c / 4] = (s16)((self->mBallSize - 0x4000) * 26 / 10 / 60 + 0x1666);
                 sys[0x50 / 4] = (s16)((self->mBallSize - 0x4000) * 8 / 10 / 60 + 0x666);
             }
-            sys = _ZN8Particle6System12FromUniqueIDEj(id2);
+            sys = (int *)Particle::System::FromUniqueID(id2);
             if (sys != 0) {
                 sys[0x48 / 4] = (s16)((self->mBallSize - 0x4000) * 62 / 10 / 60 + 0x1ccc);
                 sys[0x50 / 4] = (s16)((self->mBallSize - 0x4000) * 45 / 10 / 60 + 0x1800);
