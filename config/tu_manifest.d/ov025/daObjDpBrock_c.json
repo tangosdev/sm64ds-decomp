@@ -1,9 +1,9 @@
 {
   "id": "ov025/daObjDpBrock_c",
   "module": "ov025",
-  "source": "src_tu/actors/daObjDpBrock_c.cpp",
+  "source": "src/actors/daObjDpBrock_c.cpp",
   "promoted_source": "src/actors/daObjDpBrock_c.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x2111d40..0x21120ac, 8 function(s), from build/tu_map.json (tools/tu_map.py)",
