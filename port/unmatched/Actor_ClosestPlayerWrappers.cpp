@@ -1,4 +1,26 @@
-/* HOST COPIES of src/_ZN8dActor_c13DistToCPlayerEv.cpp and
+/* RETIRED at run linkfull wave 27, lane S1 (the first main -> port file sync):
+ * dActor_c::DistToCPlayer, dActor_c::FarthestPlayer and
+ * dActor_c::IsPlayerInRange(Fix12i, Fix12i, Fix12i, s32). Their matched sources
+ * hold the seats now (port/slice_w28_s1.txt), taken from main by path and
+ * byte-gated at 2004/b56 with strict relocations (object identical to the
+ * port's previous text, linkcheck VERIFIED). main #2726 dropped the stale
+ * zero-argument `_ZN8dActor_c13ClosestPlayerEv(void)` declaration from the first
+ * two; both bodies were already real C++ members calling ClosestPlayer() on
+ * `this`, so on the host the receiver is implicit and correct and the seam
+ * described below no longer exists for them. The Fix12i overload's source
+ * already called self->ClosestPlayer() and defines its own flat name. Who
+ * answers each flat ROM name now:
+ *   _ZN8dActor_c13DistToCPlayerEv   a REVERSE face in port/faces_sync.txt (the
+ *                                   row was FORWARD, defining the member on top
+ *                                   of the body that used to be here; flipped)
+ *   _ZN8dActor_c14FarthestPlayerEv  a REVERSE face in port/faces_sync.txt (new)
+ *   _ZN8dActor_c15IsPlayerInRangeE5Fix12IiES1_S1_i
+ *                                   the matched TU itself (extern "C", wall 6az)
+ * What stays in this file: the hand-written IsPlayerInRange(s32) bridge and the
+ * Vector3 overload's body, both below. The text from here down to the code is
+ * the file's history, kept because it records the seam.
+ *
+ * (HISTORY) HOST COPIES of src/_ZN8dActor_c13DistToCPlayerEv.cpp and
  * src/_ZN8dActor_c14FarthestPlayerEv.cpp -- the two thin wrappers that call
  * Actor::ClosestPlayer() for its side effect (it caches the closest distance
  * and the farthest-player pointer in file-scope globals) and then return one
@@ -72,24 +94,9 @@ extern "C" {
 
 void *_ZN8dActor_c13ClosestPlayerEv(void *self);   /* the real one-arg (this) shape */
 
-extern int   data_0208e380;   /* closest-player distance, set by ClosestPlayer */
-extern void *data_0209b450;   /* farthest-player pointer,  set by ClosestPlayer */
-
-/* Actor::DistToCPlayer() -> s32 */
-// PORT_HOST_ABI: implicit-register-arg (ClosestPlayer's this rode r0 from the enclosing member; the host passes it).
-int _ZN8dActor_c13DistToCPlayerEv(void *self)
-{
-    _ZN8dActor_c13ClosestPlayerEv(self);   /* <-- this, the ROM's r0 */
-    return data_0208e380;
-}
-
-/* Actor::FarthestPlayer() -> Player* */
-// PORT_HOST_ABI: implicit-register-arg (FarthestPlayer: same shape, ClosestPlayer's this rode r0; the host passes it).
-void *_ZN8dActor_c14FarthestPlayerEv(void *self)
-{
-    _ZN8dActor_c13ClosestPlayerEv(self);   /* <-- this, the ROM's r0 */
-    return data_0209b450;
-}
+/* RETIRED at run linkfull wave 27, lane S1: the host bodies of
+   Actor::DistToCPlayer() and Actor::FarthestPlayer() (see the head of this
+   file for who answers their flat names now). */
 
 /* ---- the five readers that kept the zero-argument call -------------------- */
 
@@ -155,19 +162,10 @@ int _ZN8dActor_c15IsPlayerInRangeERK7Vector3i(struct PortActor *self,
     return Vec3_Dist(pos, &closest->pos) < (maxDist << 12);
 }
 
-/* Actor::IsPlayerInRange(Fix12i, Fix12i, Fix12i, s32) -> bool. */
-// PORT_HOST_ABI: implicit-register-arg (ClosestPlayer's this rode r0 from the enclosing member; the host passes it).
-int _ZN8dActor_c15IsPlayerInRangeE5Fix12IiES1_S1_i(struct PortActor *self,
-                                                Fix12i posX, Fix12i posY,
-                                                Fix12i posZ, int maxDist)
-{
-    struct PortVec3 pos;
-    struct PortActor *closest;
-    pos.x = posX;
-    pos.y = posY;
-    pos.z = posZ;
-    closest = (struct PortActor *)_ZN8dActor_c13ClosestPlayerEv(self); /* <-- this */
-    return Vec3_Dist(&pos, &closest->pos) < (maxDist << 12);
-}
+/* RETIRED at run linkfull wave 27, lane S1: the host body of
+   Actor::IsPlayerInRange(Fix12i, Fix12i, Fix12i, s32). Its matched source,
+   src/_ZN8dActor_c15IsPlayerInRangeE5Fix12IiES1_S1_i.cpp, defines this same
+   extern "C" name with the receiver as its first argument and calls
+   self->ClosestPlayer(), so it is seated on port/slice_w28_s1.txt instead. */
 
 }  /* extern "C" */

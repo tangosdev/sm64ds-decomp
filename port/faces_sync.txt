@@ -1110,12 +1110,26 @@ __ZN8dActor_c11SpawnNumberERK7Vector3jbtPS_                              ?SpawnN
 __ZN8dActor_c12BeforeRenderEv                                            ?BeforeRender@dActor_c@@UAEHXZ                                   0x02010f78 R
 __ZN8dActor_c13AfterBehaviorEj                                           ?AfterBehavior@dActor_c@@UAEXI@Z                                 0x02010fc8 R
 __ZN8dActor_c13ClosestPlayerEv                                           ?ClosestPlayer@dActor_c@@QAEPAUPlayer@@XZ                        0x02010ad8 R
-__ZN8dActor_c13DistToCPlayerEv                                           ?DistToCPlayer@dActor_c@@QAEHXZ                                  0x020109e4 F
+# FLIPPED F -> R at run linkfull wave 27, lane S1 (the first main -> port file
+# sync). The forward direction existed because the port had no matched body for
+# this name: port/unmatched/Actor_ClosestPlayerWrappers.cpp carried a host copy
+# under the flat name and the face defined the member on top of it. main #2726
+# made src/_ZN8dActor_c13DistToCPlayerEv.cpp a plain member again (the stale
+# zero-argument ClosestPlayer declaration is gone; the body already called
+# ClosestPlayer() on `this`), and the seat on port/slice_w28_s1.txt now DEFINES
+# the decorated name, so a forward face would be a second definition of it. The
+# reverse direction is what the flat callers need (SEAT15B's HorzAngleToCPlayer
+# flip, same shape).
+__ZN8dActor_c13DistToCPlayerEv                                           ?DistToCPlayer@dActor_c@@QAEHXZ                                  0x020109e4 R
 __ZN8dActor_c13LandingDustAtER7Vector3b                                  ?LandingDustAt@dActor_c@@QAEXAAUVector3@@_N@Z                    0x0200fac4 R
 __ZN8dActor_c13OnTurnIntoEggER6Player                                    ?OnTurnIntoEgg@dActor_c@@UAEXAAUPlayer@@@Z                       0x02010154 R
 __ZN8dActor_c13OnYoshiTryEatEv                                           ?OnYoshiTryEat@dActor_c@@UAEHXZ                                  0x02010160 R
 __ZN8dActor_c13SmallPoofDustEv                                           ?SmallPoofDust@dActor_c@@QAEXXZ                                  0x0200fd40 R
 __ZN8dActor_c14BeforeBehaviorEv                                          ?BeforeBehavior@dActor_c@@UAEHXZ                                 0x02010fd4 R
+# run linkfull wave 27, lane S1: same family, same sync, no row ever existed. The
+# seat src/_ZN8dActor_c14FarthestPlayerEv.cpp (port/slice_w28_s1.txt) defines
+# the member; this face defines the flat name its extern "C" callers spell.
+__ZN8dActor_c14FarthestPlayerEv                                          ?FarthestPlayer@dActor_c@@QAEPAUPlayer@@XZ                       0x02010958 R
 __ZN8dActor_c14TriplePoofDustEv                                          ?TriplePoofDust@dActor_c@@QAEXXZ                                 0x0200fdc8 R
 __ZN8dActor_c15GivePlayerCoinsER6Playerhj                                ?GivePlayerCoins@dActor_c@@QAEXAAUPlayer@@EI@Z                   0x0201061c R
 __ZN8dActor_c15HugeLandingDustEb                                         ?HugeLandingDust@dActor_c@@QAEX_N@Z                              0x0200fb4c R

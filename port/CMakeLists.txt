@@ -22904,3 +22904,32 @@ endforeach()
 foreach(_tw26v2 walk_window walk_window_hires smoke_player)
     target_sources(${_tw26v2} PRIVATE ${SLICE_W26_VARIANT2_SOURCES})
 endforeach()
+
+# ===========================================================================
+# S1 (run linkfull wave 27, lane S1): THE CLOSESTPLAYER RECEIVER FAMILY,
+# THE FIRST MAIN -> PORT FILE SYNC
+# ===========================================================================
+#
+# port/slice_w28_s1.txt seats five matched TUs whose host copies are retired
+# in the same commit (port/unmatched/Actor_ClosestPlayerWrappers.cpp keeps only
+# the IsPlayerInRange(s32) bridge and the Vector3 overload;
+# port/unmatched/Book_WindowAndReceiverFixes.cpp defines nothing now). The two
+# arm9 members' flat ROM names are carried by reverse faces in
+# port/faces_sync.txt.
+#
+# ALL THREE HOSTING TARGETS: the retired host copies were linked into
+# walk_window, walk_window_hires and smoke_player alike (SLICE16_SOURCES and
+# SLICE_W5A_SOURCES ship on all three), and so is faces_sync_gen.cpp, whose
+# reverse faces now call these members, so the seats must be on all three.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w28_s1.txt" SLICE_W28_S1_LINES)
+set(SLICE_W28_S1_SOURCES "")
+foreach(line IN LISTS SLICE_W28_S1_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_W28_S1_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_tw28s1 walk_window walk_window_hires smoke_player)
+    target_sources(${_tw28s1} PRIVATE ${SLICE_W28_S1_SOURCES})
+endforeach()
