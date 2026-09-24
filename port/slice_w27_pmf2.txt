@@ -1,0 +1,11 @@
+# Run linkfull, lane PMF2 (wave 27): the member-pointer rows, second wave.
+# One matched TU per line. A line whose path is followed by the word
+# `hostgen` compiles its build/host-src copy made by port/tools/hostgen.py
+# and never the raw file (the CMake block at the end of port/CMakeLists.txt,
+# PMF2). Each TU replaces a host copy the three game targets link today.
+#
+# The Kuppa script's second command dispatcher (ov002, the cutscene objects'
+# own commands). Its twenty-four records hold __fastcall faces from
+# port_kuppa_cmd_seat on (hal/intro_kuppa_dispatch.cpp), and that file no
+# longer defines the symbol. Its line in slice_gate10.txt stays commented out.
+src/func_ov002_020f7d74.cpp

@@ -22904,3 +22904,43 @@ endforeach()
 foreach(_tw26v2 walk_window walk_window_hires smoke_player)
     target_sources(${_tw26v2} PRIVATE ${SLICE_W26_VARIANT2_SOURCES})
 endforeach()
+
+# ===========================================================================
+# PMF2 (run linkfull, lane PMF2): MEMBER-POINTER ROWS, SECOND WAVE
+# ===========================================================================
+#
+# port/slice_w27_pmf2.txt carries the matched TUs this lane arms. A line whose
+# path is followed by the word `hostgen` compiles its build/host-src copy made
+# by port/tools/hostgen.py (the W25MG / GATE35 shape: a custom command per row,
+# output under host-src with a .cpp suffix) and never the raw file; every other
+# line compiles as it stands, and a raw path keeps whatever per-source property
+# an earlier block set on it.
+#
+# ALL THREE HOSTING TARGETS: each armed TU replaces a host copy that
+# walk_window, walk_window_hires and smoke_player all link today, so all three
+# take the slice.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w27_pmf2.txt" SLICE_W27_PMF2_LINES)
+set(SLICE_W27_PMF2_SOURCES "")
+foreach(line IN LISTS SLICE_W27_PMF2_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    if(line MATCHES "^(src/[^ ]+)[ ]+hostgen$")
+        set(_w27pmf2_src "${CMAKE_MATCH_1}")
+        string(REGEX REPLACE "\\.c$" ".cpp" _w27pmf2_rel "${_w27pmf2_src}")
+        set(_w27pmf2_out "${CMAKE_BINARY_DIR}/host-src/${_w27pmf2_rel}")
+        add_custom_command(OUTPUT "${_w27pmf2_out}"
+            COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+                    --out "${CMAKE_BINARY_DIR}/host-src" ${_w27pmf2_src}
+            DEPENDS "${PORT_REPO_ROOT_ABS}/${_w27pmf2_src}"
+                    "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+            COMMENT "hostgen ${_w27pmf2_src}")
+        list(APPEND SLICE_W27_PMF2_SOURCES "${_w27pmf2_out}")
+    else()
+        list(APPEND SLICE_W27_PMF2_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+    endif()
+endforeach()
+foreach(_tw27pmf2 walk_window walk_window_hires smoke_player)
+    target_sources(${_tw27pmf2} PRIVATE ${SLICE_W27_PMF2_SOURCES})
+endforeach()

@@ -267,6 +267,12 @@ LEDGER = [
      "at +0x5004 by the five installers and read by one dispatcher, the TU's "
      "?Behavior@dScMgTrampoline_c@@UAEHXZ, `mov ecx,[ebx+5008h]; mov eax,"
      "[ebx+5004h]; add ecx,ebx; call eax`, nothing pushed"),
+    ("ECX", r"^\?g_objcmd_seats@@",
+     "the Kuppa script's second dispatcher: the twenty-four ov002 records are "
+     "read only by src/func_ov002_020f7d74.cpp, which copies them into its "
+     "function-local table on the first call and dispatches `push a3; push "
+     "a2; push p+7; mov ecx,[tab+i*8+4]; add ecx,self; call [tab+i*8]`, "
+     "callee-cleaned -- the first dispatcher's shape (port_kuppa_cmd_seat)"),
 ]
 
 
