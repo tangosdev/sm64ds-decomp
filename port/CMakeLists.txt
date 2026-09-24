@@ -6065,8 +6065,10 @@ foreach(line IN LISTS SLICE31_LINES)
 endforeach()
 list(APPEND SLICE31_SOURCES
      "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Player_CleanupResources.cpp"
-     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/func_02073244_hostcopy.c"
-     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/SetNumPlayers_hostcopy.c")
+     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/func_02073244_hostcopy.c")
+# unmatched/SetNumPlayers_hostcopy.c RETIRED (run linkfull, lane RS2PORT):
+# src/SetNumPlayers.c passes func_020308d0 the count (main 59013376ce) and is
+# back on port/slice_gate31.txt.
 # unmatched/Door_CleanupResources.cpp RETIRED (run link100, lane UNMATCH):
 # its `obj->v1()` workaround was the MSVC destructor fold, and
 # hal/model_dtor_seat.cpp seats the ROM's deleting half at slot 1 of all
@@ -11352,12 +11354,10 @@ foreach(line IN LISTS SLICE_PTR_LINES)
     endif()
     list(APPEND SLICE_PTR_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
-# argfix: func_020078c4 calls ApproachAngle with four arguments; the fifth
-# (maxStep=0) rides the stack, which cdecl does not stage. Host copy passes the
-# fifth argument explicitly. Src line commented out in slice_ptrsweep.txt; the
-# data_02086d88 pointer table (hal/ptr_tables.cpp) resolves to this copy.
-list(APPEND SLICE_PTR_SOURCES
-     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Camera_ApproachAngleVeneer.cpp")
+# unmatched/Camera_ApproachAngleVeneer.cpp RETIRED (run linkfull, lane
+# RS2PORT): main 59013376ce passes ApproachAngle its fifth argument (0), so
+# src/func_020078c4.c runs, from port/slice_w28_rs2port.txt; the data_02086d88
+# pointer table (hal/ptr_tables.cpp) resolves to it by the same name.
 
 # gate 10 minus the two files the camera build replaces (ChangeArea by its
 # host copy; func_0200cae4 by hostgen, GATE13_SYMS, lane shadow-A)
@@ -11781,7 +11781,9 @@ set(LEVELBOOT_HOST_SOURCES
 # file is gone.
 
 set(CAMERA_HOST_SOURCES
-    unmatched/ChangeArea_hostcopy.c
+    # unmatched/ChangeArea_hostcopy.c RETIRED (run linkfull, lane RS2PORT):
+    # main 59013376ce passes HideArea the area index the ROM leaves in r0, so
+    # src/ChangeArea.c runs, from port/slice_w28_rs2port.txt.
     # func_0200cae4_hostcopy.cpp and func_0200ca50_hostcopy.cpp RETIRED (lane
     # shadow-A): the matched dispatchers go through hostgen's MG_PMF_CALL
     # table (GATE13_SYMS), the one PMF call each routed into

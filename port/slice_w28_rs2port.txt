@@ -21,6 +21,16 @@
 # one group's commit can be dropped without touching another's lines.
 
 # ---- row group 1: two arm9 argument re-spells (main #3092, 59013376ce) ----
+# ChangeArea: HideArea takes the area index; the ROM calls it with r0 still
+# holding data_02092120 from the guard's ldrsb. Host copy retired:
+# port/unmatched/ChangeArea_hostcopy.c. (port/slice_gate10.txt lists this file
+# too, but the camera build's SLICE10_CAM_SOURCES loop filters it out.)
+src/ChangeArea.c
+# func_020078c4: ApproachAngle takes five arguments and the ROM stores the
+# fifth (0) in the outgoing stack slot. Host copy retired:
+# port/unmatched/Camera_ApproachAngleVeneer.cpp. (Its slice_ptrsweep.txt line
+# stays commented out: that file has another owner.)
+src/func_020078c4.c
 # ---- end of row group 1 ----
 
 # ---- row group 4: the particle emitter veneer (main #3092, 59013376ce) ----
