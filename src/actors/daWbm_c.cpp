@@ -87,10 +87,10 @@ void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
     Vector3_16 *a, Vector3_16 *b);
 void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     dActor_c *self, ShadowModel *shadow, Matrix4x3 *matrix, s32 radius,
-    s32 depth, u32 opacity);
-void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(Player *self, const Vector3 *from,
-    u32 a, s32 b, u32 c, u32 d, u32 e);
-void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 id, s32 x, s32 y, s32 z);
+    s32 depth, u8 opacity);
+int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(Player *self, const Vector3 *from,
+    u32 a, s32 b, u8 c, u8 d, u8 e);
+void *_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 id, s32 x, s32 y, s32 z);
 int _ZN9ModelBase7SetFileEP8BMD_Fileii(ModelBase *self, BMD_File *file, int a, int b);
 
 void func_ov098_0213b520(daWbm_c *bomb);

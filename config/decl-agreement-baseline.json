@@ -4616,6 +4616,10 @@
         "param:#1 Vector3 *",
         "param:#2 Vector3 *"
       ],
+      "src/actors/daWbm_c.cpp": [
+        "param:#1 Vector3 *",
+        "param:#2 const Vector3 *"
+      ],
       "src/actors/daYurei_Mucho_c.cpp": [
         "param:#2 const void *"
       ],
@@ -5098,10 +5102,6 @@
       "src/func_ov094_02136024.cpp": [
         "param:#1 const Vec3 *",
         "param:#2 const Vec3 *"
-      ],
-      "src/func_ov098_0213b7e8.c": [
-        "param:#1 const void *",
-        "param:#2 const void *"
       ],
       "src/func_ov100_021464f4.cpp": [
         "param:#1 Vector3 *",
@@ -6378,9 +6378,6 @@
       "src/func_ov098_02139228.cpp": [
         "return:int"
       ],
-      "src/func_ov098_0213b7e8.c": [
-        "return:int"
-      ],
       "src/func_ov100_021424c0.c": [
         "param:#1 char *"
       ],
@@ -6985,9 +6982,10 @@
         "param:#5 void *",
         "param:#6 void *"
       ],
-      "src/_ZN7daWbm_c13InitResourcesEv.cpp": [
+      "src/actors/daWbm_c.cpp": [
         "param:#2 dActor_c *",
-        "param:#5 Vector3_16 *"
+        "param:#5 Vector3_16 *",
+        "param:#6 Vector3_16 *"
       ],
       "src/_ZN9daDossy_c13InitResourcesEv.cpp": [
         "param:#2 void *",
@@ -13641,12 +13639,6 @@
         "param:#7 unsigned int",
         "return:void"
       ],
-      "src/func_ov098_0213b6e0.cpp": [
-        "param:#5 unsigned int",
-        "param:#6 unsigned int",
-        "param:#7 unsigned int",
-        "return:void"
-      ],
       "src/func_ov100_02141fb0.cpp": [
         "param:#5 unsigned int",
         "param:#6 unsigned int",
@@ -15502,9 +15494,6 @@
       "src/func_ov092_021311b0.cpp": [
         "return:void"
       ],
-      "src/func_ov098_0213b6e0.cpp": [
-        "return:void"
-      ],
       "src/func_ov100_02141fb0.cpp": [
         "return:void"
       ],
@@ -16094,9 +16083,6 @@
       "src/func_ov098_0213ad08.c": [
         "return:char *"
       ],
-      "src/func_ov098_0213b6e0.cpp": [
-        "return:void *"
-      ],
       "src/func_ov100_02141fb0.cpp": [
         "return:void *"
       ],
@@ -16455,12 +16441,6 @@
       ],
       "src/func_ov098_0213ade8.c": [
         "return:int"
-      ],
-      "src/func_ov098_0213b7e8.c": [
-        "return:char *"
-      ],
-      "src/func_ov098_0213b9d8.cpp": [
-        "return:dActor_c *"
       ],
       "src/game/actors/d_a_pg_mthr.cpp": [
         "return:char *"
@@ -17511,11 +17491,6 @@
         "param:#5 int",
         "param:#6 int",
         "return:void *"
-      ],
-      "src/func_ov098_0213b9d8.cpp": [
-        "param:#3 const Vector3 *",
-        "param:#5 int",
-        "param:#6 int"
       ],
       "src/func_ov100_02142b90.c": [
         "param:#3 const Vector3 *",
@@ -24649,9 +24624,6 @@
         "return:int"
       ],
       "src/_ZN6Player16CleanupResourcesEv.cpp": [
-        "return:char []"
-      ],
-      "src/_ZN7daWbm_c13InitResourcesEv.cpp": [
         "return:char []"
       ],
       "src/__sinit_ov002_02100560.c": [
@@ -31845,11 +31817,13 @@
       ]
     },
     "data_ov098_0213c91c": {
-      "src/_ZN7daWbm_c13InitResourcesEv.cpp": [
-        "return:char []"
-      ],
       "src/__sinit_ov098_0213c2b4.c": [
         "return:int []"
+      ]
+    },
+    "data_ov098_0213c930": {
+      "src/actors/daWbm_c.cpp": [
+        "return:State []"
       ]
     },
     "data_ov100_021473b0": {
@@ -32786,17 +32760,6 @@
       ],
       "src/func_ov084_0212e010.cpp": [
         "param:#2 char *"
-      ],
-      "src/func_ov098_0213b520.c": [
-        "param:#1 int",
-        "return:int"
-      ],
-      "src/func_ov098_0213b63c.cpp": [
-        "param:#1 int",
-        "param:#2 char *"
-      ],
-      "src/func_ov098_0213b9d8.cpp": [
-        "arity:4"
       ],
       "src/func_ov100_021464f4.cpp": [
         "param:#1 int"
@@ -47369,9 +47332,14 @@
         "param:#1 Cannon *"
       ]
     },
-    "func_ov098_0213b63c": {
-      "src/func_ov098_0213b6e0.cpp": [
-        "return:int"
+    "func_ov098_0213b584": {
+      "include/decl_common.h": [
+        "param:#1 char *"
+      ]
+    },
+    "func_ov098_0213b6e0": {
+      "include/decl_common.h": [
+        "param:#1 char *"
       ]
     },
     "func_ov100_02141fb0": {
