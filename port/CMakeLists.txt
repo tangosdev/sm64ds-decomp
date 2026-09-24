@@ -22904,3 +22904,62 @@ endforeach()
 foreach(_tw26v2 walk_window walk_window_hires smoke_player)
     target_sources(${_tw26v2} PRIVATE ${SLICE_W26_VARIANT2_SOURCES})
 endforeach()
+
+# ===========================================================================
+# W27 SMALLS1 (run linkfull wave 27, lane SMALLS1): cstd::fdiv
+# ===========================================================================
+#
+# port/slice_w27_smalls1.txt carries the rows. A row goes on all three hosting
+# targets (walk_window, walk_window_hires, smoke_player) unless it is named in
+# W27S_GAME_ONLY (the two game targets whose ntr library carries
+# NTR_ROM_IRQ_TABLE: IRQTAB1's W23-5 shape); a row named in W27S_HOSTGEN_TU
+# compiles its build/host-src copy (hostgen routes its register stores through
+# ntr/mmio.h into ntr/io.cpp's io_write) and never the raw file.
+#
+# cstd::fdiv: src/_ZN4cstd4fdivEii.cpp defines ?fdiv@cstd@@YAHHH@Z;
+# hal/reverse_bridges.cpp (compiled on exactly the three targets) aliases the
+# flat name onto it; hal/cstd_div.c's host body is compiled out on the same
+# three by SM64DS_PORT_FDIV_SEATED (a per-target generator expression, the
+# W23-4 os_arena.cpp shape; the three compile it once, in the shared object
+# library port_slice_shared), so it stays only on the six narrow harnesses
+# that link no divider model.
+set(W27S_GAME_ONLY "")
+set(W27S_HOSTGEN_TU "")
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w27_smalls1.txt" SLICE_W27S_LINES)
+set(SLICE_W27S_ALL3 "")
+set(SLICE_W27S_GAME "")
+foreach(line IN LISTS SLICE_W27S_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    if(line IN_LIST W27S_HOSTGEN_TU)
+        set(_w27s_src "${CMAKE_BINARY_DIR}/host-src/${line}")
+        add_custom_command(OUTPUT "${_w27s_src}"
+            COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+                    --out "${CMAKE_BINARY_DIR}/host-src" ${line}
+            DEPENDS "${PORT_REPO_ROOT_ABS}/${line}"
+                    "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+            COMMENT "hostgen ${line}")
+    else()
+        set(_w27s_src "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+    endif()
+    if(line IN_LIST W27S_GAME_ONLY)
+        list(APPEND SLICE_W27S_GAME "${_w27s_src}")
+    else()
+        list(APPEND SLICE_W27S_ALL3 "${_w27s_src}")
+    endif()
+endforeach()
+if(SLICE_W27S_ALL3)
+    foreach(_tw27s walk_window walk_window_hires smoke_player)
+        target_sources(${_tw27s} PRIVATE ${SLICE_W27S_ALL3})
+    endforeach()
+endif()
+if(SLICE_W27S_GAME)
+    foreach(_tw27s walk_window walk_window_hires)
+        target_sources(${_tw27s} PRIVATE ${SLICE_W27S_GAME})
+    endforeach()
+endif()
+set_property(SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/hal/cstd_div.c" APPEND PROPERTY
+    COMPILE_DEFINITIONS
+    "$<$<IN_LIST:$<TARGET_PROPERTY:NAME>,port_slice_shared;walk_window;walk_window_hires;smoke_player>:SM64DS_PORT_FDIV_SEATED=1>")

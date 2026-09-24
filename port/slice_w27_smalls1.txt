@@ -1,0 +1,11 @@
+# run linkfull wave 27, lane SMALLS1: three small runtime fixes and the rows
+# they unblock. Read by port/CMakeLists.txt's "W27 SMALLS1" block. A row goes on
+# walk_window, walk_window_hires and smoke_player unless the block names it in
+# W27S_GAME_ONLY; a row named in W27S_HOSTGEN_TU builds from its hostgen copy.
+#
+# FDIV1: cstd::fdiv, arm9 0x02053258. The body is two calls, fdiv_async (the
+# divider in 64/32 mode) and fdiv_result (read and round), both already linked
+# matched TUs over ntr/io.cpp's run_divide. hal/reverse_bridges.cpp's bridge
+# of the same C++ name is retired and hal/cstd_div.c's host body is compiled
+# out on these three targets.
+src/_ZN4cstd4fdivEii.cpp
