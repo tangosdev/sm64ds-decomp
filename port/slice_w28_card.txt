@@ -1,0 +1,49 @@
+# run linkfull, lane S4CARD: the game card's read path and bring-up, stage A
+# (the CPU path). Read by port/CMakeLists.txt's "W28 S4CARD" block; every row
+# goes on walk_window and walk_window_hires only (smoke_player keeps
+# hal/nitrofs_face.cpp's synchronous FS_Init face and has no card). A row named
+# in W28C_HOSTGEN_TU builds from its hostgen copy so its register accesses reach
+# ntr/io.cpp, where ntr/card.cpp answers them. Host pieces: hal/card_globals.cpp.
+#
+# THE READ. FS_Init (src/func_0205d96c.c, compiled without the old
+# func_0205db2c=port_nitrofs_read rename) registers func_0205db2c as the "rom"
+# archive's read function. It calls func_02060918 asynchronously and returns 6;
+# func_02060918 takes the busy bit, parks the request in data_020a8180 and, with
+# FS_Init's channel -1 above 3, finds func_02060b64's DMA test false (it still
+# builds the ROMCTRL word from 0x027ffe60) and hands func_02060a30 to the ROM's
+# card thread through func_02060228. func_02060a30 copies what the cached page
+# holds (func_02060ebc) and calls the page reader func_02060a64, which sends B7h
+# through func_02060d98 and reads the block out of the data port; then
+# func_02060e38 wakes the waiters and calls func_0205db78, which tells the FS
+# layer (func_0205cd5c) the read is done.
+src/func_0205db2c.c
+src/func_0205db78.c
+src/func_02060918.c
+src/func_0206090c.c
+src/func_0205ffd0.c
+src/func_02060a30.c
+src/func_02060b64.c
+src/func_02060ebc.c
+src/func_02060a64.c
+src/func_02060d98.c
+src/func_02060e38.c
+#
+# THE DMA ARM, linked because func_02060918 and func_02060b64 name it and dead
+# while FS_Init's channel is -1 (func_02060918 skips func_02059f58 above channel
+# 3 and func_02060b64's aligned test needs channel <= 3). Built plain: their
+# computed DMA-register stores are that dead arm. Stage B (FS_Init(2), card DMA,
+# IRQ 19) would route them; it is not this lane.
+src/func_02059f58.c
+src/func_02060cac.c
+src/func_02060d1c.c
+#
+# THE BRING-UP. func_02042f68's arm 1 is src/func_02060890.c again (the
+# func_02060890=port_rom_card_bringup rename is gone), in the ROM's order inside
+# main's func_0201a054 seam (hal/boot_arms.cpp's R2c arm), before the first card
+# read of any run: it seeds the work object, creates the card thread
+# (func_0206002c), points data_020a8780 at func_02060a64 and installs the IREQ_MC
+# handler on IRQ bit 20 (func_02061138), which nothing raises on this port.
+src/func_02060890.c
+src/func_02061138.c
+src/_ZN3IRQ21GameCardIREQMCHandlerEv.cpp
+src/func_020610fc.c

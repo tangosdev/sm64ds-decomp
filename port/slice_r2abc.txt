@@ -381,31 +381,16 @@ src/func_02060364.c
 src/func_02060398.c
 src/func_02060470.c
 #
-# WHAT IS STILL NOT HERE, and it is arm 1. src/func_02060890.c cannot link:
-#   data_020a8780 = func_02060a64   the FLASH read path; ntr/backup.cpp says no
-#                                   call site in this game reaches it, and
-#                                   data_020a8780 is hosted nowhere (ROM span
-#                                   0x220).
-#   func_02061138()                 IRQ::SetIRQHandler(0x100000,
-#                                   IRQ::GameCardIREQMCHandler) reaches
-#                                   func_020610fc, hand-asm with a deliberate
-#                                   b-self loop MSVC cannot assemble -- family
-#                                   A, permanently. ntr/runtime.cpp's
-#                                   SetIRQHandler drops mask 0x100000 anyway.
-# Six matched TUs stay behind those two lines: func_02060890, func_02060a64,
-# func_02060d98, func_02060ebc, func_02061138 and IRQ::GameCardIREQMCHandler.
-#
-# THE FORM IS A RENAME, NOT A SHADOW ROW. port/CMakeLists.txt compiles
-# src/func_02042f68.c with func_02060890=port_rom_card_bringup, the mechanism
-# hal/rom_main.cpp already uses for main's own two unrun edges: the matched TU
-# stays in the link byte for byte, src/func_02060890.c stays unenrolled and
-# unclaimed instead of becoming a SHADOW in linkage.py's replacement queue, and
-# hal/boot_arms.cpp is the single place that says this edge is not ROM code
-# yet. The body there is func_02060890's ROM body minus those two statements,
-# guard included -- and the guard is what keeps the card thread from being
-# created twice: ntr/backup.cpp seeds the work object's state word to 1 at
-# static-init, so the ROM's own early return trips and hal/boot_os.cpp's direct
-# func_0206002c() stays the only call.
+# ARM 1 IS HERE NOW, on port/slice_w28_card.txt (run linkfull, lane S4CARD).
+# This block used to say src/func_02060890.c could not link, over two
+# statements: `data_020a8780 = func_02060a64` (called the FLASH read path here;
+# it is the card's CPU ROM read, and data_020a8780 is hal/card_globals.cpp's
+# now) and func_02061138() -> func_020610fc (plain C now, not hand-asm).
+# Both link, the func_02060890=port_rom_card_bringup rename on
+# src/func_02042f68.c is retired, ntr/backup.cpp no longer seeds the state
+# word, and the six TUs that stood behind those lines -- func_02060890,
+# func_02060a64, func_02060d98, func_02060ebc, func_02061138 and
+# IRQ::GameCardIREQMCHandler -- are rows there with the rest of the read path.
 
 # ===========================================================================
 # R2d -- src/func_0203bbc0.c and the touch/SPI chain: SEATED (run link100, lane

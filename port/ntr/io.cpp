@@ -682,6 +682,70 @@ static bool hits_gxstat(uint32_t addr, unsigned width) {
     return addr < GXSTAT + 4 && addr + width > GXSTAT;
 }
 
+// ---- THE HARDWARE-MODEL HOOK TABLE (run linkfull, lane S4CARD) ---------------
+// A register whose access DOES something -- a transfer that starts on a store, a
+// data port that hands out the next word on every read -- belongs to a model in
+// its own file, and this is the one place such a model plugs into the bus. The
+// shape is the IPC model's, generalised: the read side is consulted where
+// ipc_reg_read is, BEFORE raw_read (a data port can sit outside every mapped
+// region, as the game card's does at 0x04100010, so a fall-through there would
+// be an access violation); the write side runs AFTER raw_write, so the model
+// sees the store already latched and publishes its own status bits over it,
+// and a store to an address outside the mapped window goes to the model alone.
+//
+// A model registers one address range with io_hook_add from its own file (the
+// game card: ntr/card.cpp); no model is named here. Ranges may not overlap.
+// With nothing registered the table is empty and both sides are the loops they
+// were before it existed. Only a ROUTED access reaches either side -- a TU built
+// through tools/hostgen.py, the note at the foot of io_write -- so a plain TU's
+// store still latches in the window and never reaches a model.
+//
+// The declarations are repeated in each registering file rather than put in a
+// shared header: the C++ name of io_hook_add carries both function-pointer
+// types, so a registrant that spells them differently fails to link instead of
+// calling through the wrong type.
+typedef bool (*io_hook_read_fn)(uint32_t addr, unsigned width, uint64_t *value);
+typedef void (*io_hook_write_fn)(uint32_t addr, uint64_t value, unsigned width);
+bool io_hook_add(uint32_t lo, uint32_t hi, io_hook_read_fn rd, io_hook_write_fn wr);
+
+namespace {
+struct IoHook {
+    uint32_t lo, hi;          // [lo, hi)
+    io_hook_read_fn rd;       // true = the model answered (value in *value)
+    io_hook_write_fn wr;      // told of every routed store in [lo, hi)
+};
+// Zero-initialised static storage, so a model registering from its own static
+// initialiser never races this file's initialisers: there are none to race.
+IoHook g_hooks[8];
+unsigned g_hook_count;
+
+inline const IoHook *hook_at(uint32_t addr) {
+    for (unsigned i = 0; i < g_hook_count; ++i)
+        if (addr >= g_hooks[i].lo && addr < g_hooks[i].hi) return &g_hooks[i];
+    return nullptr;
+}
+inline bool in_window(uint32_t addr, unsigned width) {
+    return addr >= IO_BASE && addr + width <= IO_BASE + IO_SIZE;
+}
+}  // namespace
+
+bool io_hook_add(uint32_t lo, uint32_t hi, io_hook_read_fn rd, io_hook_write_fn wr) {
+    if (lo >= hi || g_hook_count >= sizeof g_hooks / sizeof g_hooks[0]) {
+        std::fprintf(stderr, "[io] hook [%08x,%08x) REFUSED: %s\n", (unsigned)lo,
+                     (unsigned)hi, lo >= hi ? "empty range" : "the table is full");
+        return false;
+    }
+    for (unsigned i = 0; i < g_hook_count; ++i)
+        if (lo < g_hooks[i].hi && g_hooks[i].lo < hi) {
+            std::fprintf(stderr, "[io] hook [%08x,%08x) REFUSED: overlaps "
+                         "[%08x,%08x)\n", (unsigned)lo, (unsigned)hi,
+                         (unsigned)g_hooks[i].lo, (unsigned)g_hooks[i].hi);
+            return false;
+        }
+    g_hooks[g_hook_count++] = IoHook{lo, hi, rd, wr};
+    return true;
+}
+
 uint64_t io_read(uint32_t addr, unsigned width) {
     if (!g_io && !io_init()) return 0;
     /* BEFORE raw_read, not after: IPCFIFORECV lives at 0x04100000, outside
@@ -694,6 +758,15 @@ uint64_t io_read(uint32_t addr, unsigned width) {
         if (ipc_handled) {
             if (ppu_audit_on()) ppu_audit_proxy(addr, ipc_v, width, false);
             return ipc_v;
+        }
+    }
+    /* A registered model's register, same place and same reason. A model that
+       declines leaves the latch to answer, unless the latch is not there. */
+    if (const IoHook *h = hook_at(addr)) {
+        uint64_t hv = 0;
+        if ((h->rd && h->rd(addr, width, &hv)) || !in_window(addr, width)) {
+            if (ppu_audit_on()) ppu_audit_proxy(addr, hv, width, false);
+            return hv;
         }
     }
     if (hits_gxstat(addr, width)) gxstat_normalize();
@@ -710,6 +783,14 @@ void io_write(uint32_t addr, uint64_t value, unsigned width) {
        and a store to IPCFIFOCNT can clear a queue, so the model owns the write
        outright and publishes its own status back into the window. */
     if (ipc_reg_write(addr, value, width)) return;
+    /* A registered model's register: latched first, then the model is told
+       (the hook-table note above io_read). An address the window does not hold
+       has no latch, so the model has that store to itself. */
+    if (const IoHook *h = hook_at(addr)) {
+        if (in_window(addr, width)) raw_write(addr, value, width);
+        if (h->wr) h->wr(addr, value, width);
+        return;
+    }
     /* IF (0x4000214, the interrupt request flags) is not a latch either: it is
        WRITE-ONE-TO-CLEAR (GBATEK, DS Interrupts: writing a 1 acknowledges and
        clears that request, a 0 leaves it alone). The ROM acknowledges that way,
