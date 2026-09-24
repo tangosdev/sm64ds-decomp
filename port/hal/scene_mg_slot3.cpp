@@ -219,6 +219,7 @@
 
 #include "hal/screen_gap.h"
 
+#include "port_d16.h"   /* slot 16: fBase_c::AfterCleanupResources pushes the delete flag; PORT_D16 pops it */
 #include <cstdio>
 #include <cstdlib>
 
@@ -381,13 +382,13 @@ struct S3Face { unsigned ds; void *host; };
 static const S3Face kSingle3DFaces[] = {
     {0x0210a6e4u, (void *)s3b_ainit},  {0x0210a608u, (void *)s3b_aclean},
     {0x0210a698u, (void *)s3b_bbeh},   {0x0210a664u, (void *)s3b_bren},
-    {0x0210a4b0u, (void *)s3b_d2},     {0x0210a4e8u, (void *)s3b_d0},
+    {0x0210a4b0u, (void *)PORT_D16(s3b_d2)},     {0x0210a4e8u, (void *)s3b_d0},
     {0x0210a600u, (void *)s3b_v26},    {0x0210a708u, (void *)s3b_v33},
 };
 
 static const S3Face kSlot3Faces[] = {
     {0x0210bdb0u, (void *)slot3_init},   {0x0210bcb0u, (void *)slot3_beh},
-    {0x0210b648u, (void *)slot3_render}, {0x0210a954u, (void *)slot3_d2},
+    {0x0210b648u, (void *)slot3_render}, {0x0210a954u, (void *)PORT_D16(slot3_d2)},
     {0x0210a9a8u, (void *)slot3_d0},     {0x0210b314u, (void *)slot3_reset},
     {0x0210aa3cu, (void *)slot3_v29},    {0x0210aa10u, (void *)slot3_v30},
     {0x0210aa60u, (void *)slot3_v32},

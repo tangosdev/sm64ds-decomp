@@ -220,6 +220,7 @@
 
 #include "hal/screen_gap.h"
 
+#include "port_d16.h"   /* slot 16: fBase_c::AfterCleanupResources pushes the delete flag; PORT_D16 pops it */
 #include <cstdio>
 #include <cstdlib>
 
@@ -482,14 +483,14 @@ struct RltFace { unsigned ds; void *host; };
 static const RltFace kSingle3DFaces[] = {
     {0x0210a6e4u, (void *)s3_ainit},  {0x0210a608u, (void *)s3_aclean},
     {0x0210a698u, (void *)s3_bbeh},   {0x0210a664u, (void *)s3_bren},
-    {0x0210a4b0u, (void *)s3_d2},     {0x0210a4e8u, (void *)s3_d0},
+    {0x0210a4b0u, (void *)PORT_D16(s3_d2)},     {0x0210a4e8u, (void *)s3_d0},
     {0x0210a600u, (void *)s3_v26},    {0x0210a708u, (void *)s3_v33},
 };
 
 static const RltFace kRouletteFaces[] = {
     {0x0210a194u, (void *)rlt_init},   {0x0210980cu, (void *)rlt_clean},
     {0x02109aacu, (void *)rlt_beh},    {0x02109834u, (void *)rlt_render},
-    {0x0210788cu, (void *)rlt_d2},     {0x02107920u, (void *)rlt_d0},
+    {0x0210788cu, (void *)PORT_D16(rlt_d2)},     {0x02107920u, (void *)rlt_d0},
     {0x021095ccu, (void *)rlt_reset},  {0x021096c8u, (void *)rlt_v19},
 };
 

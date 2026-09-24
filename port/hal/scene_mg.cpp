@@ -270,6 +270,7 @@
 
 #include "hal/screen_gap.h"
 
+#include "port_d16.h"   /* slot 16: fBase_c::AfterCleanupResources pushes the delete flag; PORT_D16 pops it */
 #include <cstdio>
 #include <cstdlib>
 #include <chrono>
@@ -762,7 +763,7 @@ static const MgFace kMgBaseFaces[] = {
     {0x020ad660u, (void *)mb_v35},
     /* the base class's own five, run link60 lane MG2 */
     {0x020b0618u, (void *)mb_beh_base},   {0x020b04ecu, (void *)mb_ren_base},
-    {0x020b2a84u, (void *)mb_d2_base},    {0x020b2a18u, (void *)mb_d0_base},
+    {0x020b2a84u, (void *)PORT_D16(mb_d2_base)},    {0x020b2a18u, (void *)mb_d0_base},
     {0x020b299cu, (void *)mb_reset_base},
 };
 
@@ -770,7 +771,7 @@ static const MgFace kMgBaseFaces[] = {
    these arrays per minigame and reuses everything above it. */
 static const MgFace kCurlingFaces[] = {
     {0x020e3578u, (void *)mg_init},   {0x020e3528u, (void *)mg_beh},
-    {0x020e34ecu, (void *)mg_render}, {0x020e0638u, (void *)mg_d2},
+    {0x020e34ecu, (void *)mg_render}, {0x020e0638u, (void *)PORT_D16(mg_d2)},
     {0x020e065cu, (void *)mg_d0},     {0x020e3470u, (void *)mg_reset},
 };
 
@@ -1847,7 +1848,7 @@ static int __fastcall mgl_init_noop(void *, void *)
 static const MgFace kLuigiFaces[] = {
     {0x020f3460u, (void *)mgl_init},   {0x020efc68u, (void *)mgl_aclean},
     {0x020f3414u, (void *)mgl_beh},    {0x020f33c0u, (void *)mgl_render},
-    {0x020efc0cu, (void *)mgl_d2},     {0x020efc30u, (void *)mgl_d0},
+    {0x020efc0cu, (void *)PORT_D16(mgl_d2)},     {0x020efc30u, (void *)mgl_d0},
     {0x020f3294u, (void *)mgl_reset},
 };
 
@@ -2293,7 +2294,7 @@ static int  __fastcall pch_reset(void *s, void *, int n)
 /* dScMgPachinko_c's own six, the per-class half. */
 static const MgFace kPachinkoFaces[] = {
     {0x020fefc0u, (void *)pch_init},   {0x020fee24u, (void *)pch_beh},
-    {0x020fedc4u, (void *)pch_render}, {0x020fa75cu, (void *)pch_d2},
+    {0x020fedc4u, (void *)pch_render}, {0x020fa75cu, (void *)PORT_D16(pch_d2)},
     {0x020fa780u, (void *)pch_d0},     {0x020fed58u, (void *)pch_reset},
 };
 
@@ -2636,7 +2637,7 @@ static int  __fastcall smb_v31(void *, void *)
 static const MgFace kSmartballFaces[] = {
     {0x02118b70u, (void *)smb_init},   {0x0211944cu, (void *)smb_aclean},
     {0x02118488u, (void *)smb_beh},    {0x021173c8u, (void *)smb_render},
-    {0x0210d740u, (void *)smb_d2},     {0x0210d7e0u, (void *)smb_d0},
+    {0x0210d740u, (void *)PORT_D16(smb_d2)},     {0x0210d7e0u, (void *)smb_d0},
     {0x02118a8cu, (void *)smb_reset},  {0x021147acu, (void *)smb_v25},
     {0x02118ae4u, (void *)smb_v31},
 };
@@ -3174,7 +3175,7 @@ static int  __fastcall mc_reset(void *s, void *, int /*ridethrough*/)
    cannot land on a slot the ROM did not park that body in. */
 static const MgFace kCoinFaces[] = {
     {0x020de704u, (void *)mc_init},   {0x020de69cu, (void *)mc_beh},
-    {0x020de63cu, (void *)mc_render}, {0x020dbe40u, (void *)mc_d2},
+    {0x020de63cu, (void *)mc_render}, {0x020dbe40u, (void *)PORT_D16(mc_d2)},
     {0x020dbe64u, (void *)mc_d0},     {0x020de5b0u, (void *)mc_reset},
 };
 
@@ -3462,7 +3463,7 @@ static int  __fastcall lkt_reset(void *s, void *, int n)
    one address, and none of these six appears in the base table. */
 static const MgFace kPachinko2Faces[] = {
     {0x02103ed0u, (void *)lkt_init},   {0x02103d78u, (void *)lkt_beh},
-    {0x02103d28u, (void *)lkt_render}, {0x020ff420u, (void *)lkt_d2},
+    {0x02103d28u, (void *)lkt_render}, {0x020ff420u, (void *)PORT_D16(lkt_d2)},
     {0x020ff444u, (void *)lkt_d0},     {0x02103cbcu, (void *)lkt_reset},
 };
 
@@ -3745,7 +3746,7 @@ static int  __fastcall mp_reset(void *s, void *, int flag)
    address -- so the key sets stay disjoint by construction. */
 static const MgFace kPanelFaces[] = {
     {0x021073b0u, (void *)mp_init},   {0x02107358u, (void *)mp_beh},
-    {0x0210730cu, (void *)mp_render}, {0x0210428cu, (void *)mp_d2},
+    {0x0210730cu, (void *)mp_render}, {0x0210428cu, (void *)PORT_D16(mp_d2)},
     {0x021042b0u, (void *)mp_d0},     {0x021071fcu, (void *)mp_reset},
 };
 

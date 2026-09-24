@@ -296,6 +296,7 @@
    and the definitions the linker finds are one text. */
 #include "dScMgD3DBase_c.h"
 
+#include "port_d16.h"   /* slot 16: fBase_c::AfterCleanupResources pushes the delete flag; PORT_D16 pops it */
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -696,7 +697,7 @@ static const BnpFace kJumpFaces[] = {
     /* dScMgJump_c's own eight */
     {0x020ee690u, (void *)bnp_init},   {0x020edffcu, (void *)bnp_clean},
     {0x020ee27cu, (void *)bnp_beh},    {0x020ee034u, (void *)bnp_render},
-    {0x020edec0u, (void *)bnp_d2},     {0x020edf54u, (void *)bnp_d0},
+    {0x020edec0u, (void *)PORT_D16(bnp_d2)},     {0x020edf54u, (void *)bnp_d0},
     {0x020ee994u, (void *)bnp_v18},
     {0x020ee8dcu, (void *)bnp_v19},
     /* dScMgD3DBase_c's fifteen, shared with 0x175, 0x180 and 0x181 */

@@ -227,6 +227,7 @@
 
 #include "hal/screen_gap.h"
 
+#include "port_d16.h"   /* slot 16: fBase_c::AfterCleanupResources pushes the delete flag; PORT_D16 pops it */
 #include <cstdio>
 #include <cstdlib>
 
@@ -494,7 +495,7 @@ static const TtiFace kD3DBaseFaces[] = {
     {0x020e70e4u, (void *)d3_binit},  {0x020e70c0u, (void *)d3_ainit},
     {0x020e6f60u, (void *)d3_aclean}, {0x020e7074u, (void *)d3_bbeh},
     {0x020e7040u, (void *)d3_bren},   {0x020e700cu, (void *)d3_aren},
-    {0x020e6c28u, (void *)d3_d1},     {0x020e6c60u, (void *)d3_d0},
+    {0x020e6c28u, (void *)PORT_D16(d3_d1)},     {0x020e6c60u, (void *)d3_d0},
     {0x020e6e78u, (void *)d3_v24},    {0x020e6e54u, (void *)d3_v25},
     {0x020e6e4cu, (void *)d3_v26},    {0x020e6d98u, (void *)d3_v27},
     {0x020e6d8cu, (void *)d3_v28},    {0x020e6d24u, (void *)d3_v29},
@@ -505,7 +506,7 @@ static const TtiFace kD3DBaseFaces[] = {
 static const TtiFace kTtiFaces[] = {
     {0x02122198u, (void *)tti_init},  {0x021212e0u, (void *)tti_clean},
     {0x021214f8u, (void *)tti_beh},   {0x021212fcu, (void *)tti_render},
-    {0x021207dcu, (void *)tti_d2},    {0x02120880u, (void *)tti_d0},
+    {0x021207dcu, (void *)PORT_D16(tti_d2)},    {0x02120880u, (void *)tti_d0},
     {0x02121fa4u, (void *)tti_reset}, {0x02121f70u, (void *)tti_v19},
     {0x0212101cu, (void *)tti_v23},   {0x021211e0u, (void *)tti_v24},
     {0x021211bcu, (void *)tti_v25},   {0x02120da8u, (void *)tti_v34},

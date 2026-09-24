@@ -184,6 +184,7 @@
 
 #include "hal/screen_gap.h"
 
+#include "port_d16.h"   /* slot 16: fBase_c::AfterCleanupResources pushes the delete flag; PORT_D16 pops it */
 #include <cstdio>
 #include <cstdlib>
 
@@ -412,14 +413,14 @@ struct SnwFace { unsigned ds; void *host; };
 static const SnwFace kSingle3DFaces[] = {
     {0x0210a6e4u, (void *)s3_ainit},  {0x0210a608u, (void *)s3_aclean},
     {0x0210a698u, (void *)s3_bbeh},   {0x0210a664u, (void *)s3_bren},
-    {0x0210a4b0u, (void *)s3_d2},     {0x0210a4e8u, (void *)s3_d0},
+    {0x0210a4b0u, (void *)PORT_D16(s3_d2)},     {0x0210a4e8u, (void *)s3_d0},
     {0x0210a600u, (void *)s3_v26},    {0x0210a708u, (void *)s3_v33},
 };
 
 static const SnwFace kSnowFaces[] = {
     {0x02129268u, (void *)snw_init},  {0x021291f8u, (void *)snw_clean},
     {0x021283a4u, (void *)snw_beh},   {0x02127d10u, (void *)snw_render},
-    {0x0212568cu, (void *)snw_d2},    {0x0212573cu, (void *)snw_d0},
+    {0x0212568cu, (void *)PORT_D16(snw_d2)},    {0x0212573cu, (void *)snw_d0},
     {0x0212921cu, (void *)snw_reset}, {0x021291d4u, (void *)snw_v23},
     {0x02128fb8u, (void *)snw_v24},   {0x021291b0u, (void *)snw_v25},
 };

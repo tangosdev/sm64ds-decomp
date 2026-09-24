@@ -134,6 +134,7 @@
 
 #include "hal/screen_gap.h"
 
+#include "port_d16.h"   /* slot 16: fBase_c::AfterCleanupResources pushes the delete flag; PORT_D16 pops it */
 #include <cstdio>
 #include <cstdlib>
 
@@ -300,7 +301,7 @@ struct BooFace { unsigned ds; void *host; };
 
 static const BooFace kTeresaFaces[] = {
     {0x021203fcu, (void *)boo_init},   {0x021203acu, (void *)boo_beh},
-    {0x02120348u, (void *)boo_render}, {0x0211cbd0u, (void *)boo_d2},
+    {0x02120348u, (void *)boo_render}, {0x0211cbd0u, (void *)PORT_D16(boo_d2)},
     {0x0211cbf4u, (void *)boo_d0},     {0x02120248u, (void *)boo_reset},
     {0x02120238u, (void *)boo_v20},    {0x021200dcu, (void *)boo_v34},
 };

@@ -117,6 +117,7 @@
 
 #include "hal/screen_gap.h"
 
+#include "port_d16.h"   /* slot 16: fBase_c::AfterCleanupResources pushes the delete flag; PORT_D16 pops it */
 #include <cstdio>
 #include <cstdlib>
 
@@ -213,7 +214,7 @@ struct C2Face { unsigned ds; void *host; };
 
 static const C2Face kCurling2Faces[] = {
     {0x020e6894u, (void *)c2_init},   {0x020e683cu, (void *)c2_beh},
-    {0x020e67f0u, (void *)c2_render}, {0x020e3854u, (void *)c2_d2},
+    {0x020e67f0u, (void *)c2_render}, {0x020e3854u, (void *)PORT_D16(c2_d2)},
     {0x020e3878u, (void *)c2_d0},     {0x020e6774u, (void *)c2_reset},
 };
 

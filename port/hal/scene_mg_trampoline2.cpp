@@ -206,6 +206,7 @@
 #include "hal/screen_gap.h"
 #include "dScMgD3DBase_c.h"
 
+#include "port_d16.h"   /* slot 16: fBase_c::AfterCleanupResources pushes the delete flag; PORT_D16 pops it */
 #include <cstdio>
 #include <cstdlib>
 
@@ -515,7 +516,7 @@ static const TteFace kD3DBaseFaces[] = {
     {0x020e70e4u, (void *)d3_v1},   {0x020e70c0u, (void *)d3_v2},
     {0x020e6f60u, (void *)d3_v5},   {0x020e7074u, (void *)d3_v7},
     {0x020e7040u, (void *)d3_v10},  {0x020e700cu, (void *)d3_v11},
-    {0x020e6c28u, (void *)d3_v16},  {0x020e6c60u, (void *)d3_v17},
+    {0x020e6c28u, (void *)PORT_D16(d3_v16)},  {0x020e6c60u, (void *)d3_v17},
     {0x020e6e78u, (void *)d3_v24},  {0x020e6e54u, (void *)d3_v25},
     {0x020e6e4cu, (void *)d3_v26},  {0x020e6d98u, (void *)d3_v27},
     {0x020e6d8cu, (void *)d3_v28},  {0x020e6d24u, (void *)d3_v29},
@@ -535,7 +536,7 @@ static const TteFace kTrmplnMarioFaces[] = {
 static const TteFace kTteFaces[] = {
     {0x021243ecu, (void *)tte_init},  {0x0212318cu, (void *)tte_v3},
     {0x02123340u, (void *)tte_beh},   {0x021231acu, (void *)tte_render},
-    {0x021225acu, (void *)tte_d2},    {0x021226b0u, (void *)tte_d0},
+    {0x021225acu, (void *)PORT_D16(tte_d2)},    {0x021226b0u, (void *)tte_d0},
     {0x021242ccu, (void *)tte_v18},   {0x02124298u, (void *)tte_v19},
     {0x02122f24u, (void *)tte_v23},   {0x021230e8u, (void *)tte_v24},
     {0x021230c4u, (void *)tte_v25},   {0x02122cb0u, (void *)tte_v34},
