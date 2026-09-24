@@ -61,6 +61,6 @@ void dScMgJump_c::OnYoshiTryEat(int arg)
     else
         data_ov006_02140328 = 6;
 
-    func_ov006_020c44b4(this->unk_0bc, v);
+    func_ov006_020c44b4((void *)this->unk_0bc, v);
     func_ov006_020ee658((char *)this);
 }
