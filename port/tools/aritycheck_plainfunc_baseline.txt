@@ -177,7 +177,6 @@ func_ov063_02118eac|src/unnamed/ov063/func_ov063_02118ea0.c
 func_ov063_02119b84|src/unnamed/ov063/func_ov063_02119274.c
 func_ov063_0211a0dc|src/unnamed/ov063/func_ov063_02119b1c.c
 func_ov072_02121d50|src/_ZN11BabyPenguin13InitResourcesEv.cpp
-func_ov072_02121d50|src/func_ov072_021217ac.cpp
 func_ov077_0212478c|include/decl_common.h
 func_ov079_02123d4c|src/_ZN5Whomp25OnAimedAtWithEggReturnVecEv.cpp
 func_ov080_0212513c|include/decl_common.h
