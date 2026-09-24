@@ -6389,9 +6389,6 @@
       "src/func_ov084_0212e010.cpp": [
         "return:int"
       ],
-      "src/func_ov095_02136298.cpp": [
-        "param:#1 int &"
-      ],
       "src/func_ov098_02139228.cpp": [
         "return:int"
       ],
@@ -12313,14 +12310,6 @@
         "param:#4 void *",
         "param:#5 unsigned int"
       ],
-      "src/func_ov095_02136178.c": [
-        "param:#4 void *",
-        "param:#5 unsigned int"
-      ],
-      "src/func_ov095_02136298.cpp": [
-        "param:#5 unsigned int",
-        "return:unsigned int"
-      ],
       "src/func_ov098_02139228.cpp": [
         "param:#4 const Vector3 *",
         "param:#5 unsigned int",
@@ -12575,15 +12564,6 @@
         "param:#2 void *"
       ],
       "src/func_ov092_021311b0.cpp": [
-        "param:#2 void *"
-      ],
-      "src/func_ov095_02136090.cpp": [
-        "param:#2 Vector3 *"
-      ],
-      "src/func_ov095_02136104.cpp": [
-        "param:#2 Vector3 *"
-      ],
-      "src/func_ov095_02136178.c": [
         "param:#2 void *"
       ],
       "src/func_ov098_02138344.cpp": [
@@ -15730,6 +15710,9 @@
       "src/actors/daObjHatenaBlock_c.cpp": [
         "arity:3"
       ],
+      "src/actors/daUdlift_c.cpp": [
+        "arity:3"
+      ],
       "src/func_ov060_02111a28.cpp": [
         "arity:3"
       ],
@@ -15761,12 +15744,6 @@
         "arity:3"
       ],
       "src/func_ov092_021315ac.c": [
-        "arity:3"
-      ],
-      "src/func_ov095_02136090.cpp": [
-        "arity:3"
-      ],
-      "src/func_ov095_02136104.cpp": [
         "arity:3"
       ],
       "src/func_ov098_0213aa28.c": [
@@ -31908,7 +31885,7 @@
       ]
     },
     "data_ov095_021375a4": {
-      "src/_ZN10daUdlift_c13InitResourcesEv.cpp": [
+      "src/actors/daUdlift_c.cpp": [
         "return:CLPS_Block * []"
       ]
     },
@@ -36896,9 +36873,6 @@
         "param:#1 dBgW *",
         "param:#2 void *"
       ],
-      "src/_ZN10daUdlift_c13InitResourcesEv.cpp": [
-        "param:#2 void *"
-      ],
       "src/_ZN17BowserSkyPlatform13InitResourcesEv.cpp": [
         "param:#2 void *"
       ],
@@ -36929,6 +36903,9 @@
       ],
       "src/actors/daObjGuragura_c.cpp": [
         "param:#1 dBgW_KcMbg *",
+        "param:#2 void *"
+      ],
+      "src/actors/daUdlift_c.cpp": [
         "param:#2 void *"
       ],
       "src/func_ov002_020b5e58.cpp": [
@@ -36992,9 +36969,6 @@
       ],
       "src/_ZN12WorkElevator13InitResourcesEv.cpp": [
         "param:#1 dBgW *",
-        "param:#2 void *"
-      ],
-      "src/_ZN10daUdlift_c13InitResourcesEv.cpp": [
         "param:#2 void *"
       ],
       "src/_ZN14SquarePathLift13InitResourcesEv.cpp": [
@@ -37072,6 +37046,9 @@
       ],
       "src/actors/daObjSwdoor_c.cpp": [
         "param:#1 dBgW_KcMbg *",
+        "param:#2 void *"
+      ],
+      "src/actors/daUdlift_c.cpp": [
         "param:#2 void *"
       ],
       "src/func_ov002_020b5e58.cpp": [
