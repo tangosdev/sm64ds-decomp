@@ -1,13 +1,13 @@
 {
   "_note": "ratchet baseline; regenerate with `python tools/langmode_audit.py --json <this file>`. Use --full for per-class detail and file lists.",
   "codegen_hacks": {
-    "cv_launder": 4,
-    "cv_launder_sites": 7,
+    "cv_launder": 3,
+    "cv_launder_sites": 6,
     "extern_vtable": 103,
     "extern_vtable_classes": 105,
     "inline_asm": 13,
-    "launder_or_forced": 176,
-    "launder_sites": 412
+    "launder_or_forced": 175,
+    "launder_sites": 409
   },
   "exclusions": {
     "by_value_class_param": 55
