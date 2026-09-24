@@ -10,9 +10,9 @@ This document describes this commit. The queue records its immutable output SHA.
 - Source branch `promote/promote-ov098-wbm-0924`. Input commit
   `787633e5e7e2a7c4e101db521958920c68ebd9f2` (origin/main at enqueue); it is
   also the original source base and the installed workflow and tool SHA.
-- Five commits on top of the input: the byte-neutral class rename, the
+- Six commits on top of the input: the byte-neutral class rename, the
   promotion, the declaration agreement and baseline re-key, the first cut of
-  this note, and the docstring fix plus this note's final form. No separate
+  this note, the docstring fix, and the rework-round-1 rewrite of this note. No separate
   evidence commits.
 - Status: byte-verified candidate, every required gate green except the
   pre-existing `tiers_ratchet --check` failure recorded under Proof.
@@ -35,6 +35,16 @@ This document describes this commit. The queue records its immutable output SHA.
   changed, and `python -m pytest tools/test_demember_calls.py -q` passes
   (16 passed).
 
+## Rework round 1
+
+- The independent verifier returned this task
+  (`rework-promote-ov098-wbm-0924-verify-1`) with one finding, F1: the
+  "Touched, in the reservation" list cited the retired sources by bare file
+  name with the directory removed, which slips past the dead-reference
+  scanner. The list now cites each retired unit by the symbol it held, with
+  no file name in any spelling, and the old header as "the old class header".
+  Nothing else in the note, and no source, changed in this round.
+
 ## What changed and why
 
 - Scope: class `daWbm_c` (formerly `WaterBomb`), TU `ov098/daWbm_c`, ov098
@@ -42,23 +52,22 @@ This document describes this commit. The queue records its immutable output SHA.
   and helper bodies, the four members InitResources, Behavior, Render and
   CleanupResources, and the factory `daWbm_c_classInit`.
 - Touched, in the reservation:
-  [include/daWbm_c.h](../../../include/daWbm_c.h) (renamed from the coined
-  header), ov098 [delinks.txt](../../../config/arm9/overlays/ov098/delinks.txt)
-  and [symbols.txt](../../../config/arm9/overlays/ov098/symbols.txt), the new
-  [manifest entry](../../../config/tu_manifest.d/ov098/daWbm_c.json), the promoted
-  [src/actors/daWbm_c.cpp](../../../src/actors/daWbm_c.cpp), and the fourteen
-  retired one-function sources that the manifest's `legacy_source` fields
-  record (named here without their directory, since they no longer exist):
-  the factory `d_a_wbm.c`; the six class shards `_ZN9WaterBombD1Ev.cpp`,
-  `_ZN9WaterBombD0Ev.cpp`, `_ZN9WaterBomb16CleanupResourcesEv.cpp`,
-  `_ZN9WaterBomb6RenderEv.cpp`, `_ZN9WaterBomb8BehaviorEv.cpp` and
-  `_ZN9WaterBomb13InitResourcesEv.cpp` (renamed to their `_ZN7daWbm_c`
-  spellings in the first commit); and the seven helpers
-  `func_ov098_0213b520.c`, `func_ov098_0213b584.c`,
-  `func_ov098_0213b63c.cpp`, `func_ov098_0213b6e0.cpp`,
-  `func_ov098_0213b7e8.c`, `func_ov098_0213b9d8.cpp` and
-  `func_ov098_0213bb1c.cpp`. The seven helpers are reserved through the ov098
-  .text range, not by file name.
+  [include/daWbm_c.h](../../../include/daWbm_c.h), which replaces the old
+  class header; ov098 [delinks.txt](../../../config/arm9/overlays/ov098/delinks.txt)
+  and [symbols.txt](../../../config/arm9/overlays/ov098/symbols.txt); the new
+  [manifest entry](../../../config/tu_manifest.d/ov098/daWbm_c.json); the
+  promoted [src/actors/daWbm_c.cpp](../../../src/actors/daWbm_c.cpp); and the
+  fourteen one-function units it absorbs, all retired and all now defined in
+  the promoted TU (the manifest's `legacy_source` fields keep the history):
+  - the classInit factory `daWbm_c_classInit`;
+  - the six class members `WaterBomb::~WaterBomb` in its D1 and D0 variants,
+    `WaterBomb::CleanupResources`, `WaterBomb::Render`,
+    `WaterBomb::Behavior` and `WaterBomb::InitResources`, now the matching
+    `daWbm_c` members (the first commit renamed them in place);
+  - the seven helpers `func_ov098_0213b520`, `func_ov098_0213b584`,
+    `func_ov098_0213b63c`, `func_ov098_0213b6e0`, `func_ov098_0213b7e8`,
+    `func_ov098_0213b9d8` and `func_ov098_0213bb1c`, reserved through the
+    ov098 .text range rather than by name.
 - Touched, in the integration-lane ledgers (this class's rows only, edited in
   place): `attribution.json` (14 `path#symbol` overrides from tu_promote),
   `config/converted-baseline.json` (the two destructor identities, renamed and
