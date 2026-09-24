@@ -835,8 +835,76 @@ class ChangedResolutionTests(unittest.TestCase):
             self.assertEqual(defined, {"moved"})
 
 
+class HistoricalArrayConstructorTests(unittest.TestCase):
+    """Keep the original bad imports as fixtures so real callers can be repaired."""
+
+    HISTORICAL_DECLARATIONS = (
+        ("src/d_a_dp_lift.cpp", "int",
+         "extern int __cxa_vec_ctor(void*,int,int,void*,void*);"),
+        ("src/d_a_hanachan.c", "int",
+         "extern int __cxa_vec_ctor(void *p, int a, int b, void *ctor, void *dtor);"),
+        ("src/game/actors/d_a_wanwan.cpp", "int",
+         "int __cxa_vec_ctor(void *, int, int, void *, void *);"),
+        ("src/d_a_luigi.cpp", "void *",
+         "extern void* __cxa_vec_ctor(void* a, int b, int n, void* ctor, void* dtor);"),
+        ("src/func_ov006_020c3f54.cpp", "void *",
+         "extern void* __cxa_vec_ctor(void* a, int b, int c, void* d, void* e);"),
+    )
+    CORRECT_DECLARATION = (
+        "extern void __cxa_vec_ctor(void *base, unsigned int count, unsigned int stride,\n"
+        "                           void (*ctor)(void *), void (*dtor)(void *));\n")
+
+    def _runtime(self, tree):
+        tree.symbols(["__cxa_vec_ctor"])
+        tree.write("src/__cxa_vec_ctor.cpp",
+                   "typedef void (*ctor_t)(void *);\n"
+                   "typedef void (*dtor_t)(void *);\n"
+                   'extern "C" void __cxa_vec_ctor(void *base, unsigned int count,\n'
+                   "                               unsigned int stride, ctor_t ctor, dtor_t dtor) {}\n")
+
+    def _declaration(self, tree, path, text):
+        if path.endswith(".cpp"):
+            text = 'extern "C" {\n' + text + "\n}\n"
+        tree.write(path, text)
+
+    def test_historical_wrong_results_are_reported_against_the_definition(self):
+        def fixture(tree):
+            self._runtime(tree)
+            for path, _result, declaration in self.HISTORICAL_DECLARATIONS:
+                self._declaration(tree, path, declaration)
+        findings, _decls, _defs, _files = build(fixture)
+        returns = [row for row in findings if row["kind"] == "return"]
+        self.assertEqual(
+            sorted((row["file"], row["got"], row["want"]) for row in returns),
+            sorted((path, result, "void") for path, result, _text in self.HISTORICAL_DECLARATIONS))
+        for row in returns:
+            self.assertEqual(row["symbol"], "__cxa_vec_ctor")
+            self.assertEqual(row["basis"], "definition")
+            self.assertEqual(row["ref_file"], "src/__cxa_vec_ctor.cpp")
+
+    def test_fully_corrected_imports_are_silent_at_the_same_paths(self):
+        def fixture(tree):
+            self._runtime(tree)
+            for path, _result, _declaration in self.HISTORICAL_DECLARATIONS:
+                self._declaration(tree, path, self.CORRECT_DECLARATION)
+        findings, decls, _defs, _files = build(fixture)
+        self.assertEqual(len([d for d in decls if d.symbol == "__cxa_vec_ctor"]), 5)
+        self.assertEqual(findings, [])
+
+    def test_a_correct_result_does_not_hide_a_missing_array_base(self):
+        def fixture(tree):
+            self._runtime(tree)
+            self._declaration(tree, "src/missing_base.cpp",
+                              "extern void __cxa_vec_ctor(unsigned int count, unsigned int stride,\n"
+                              "                           void (*ctor)(void *), void (*dtor)(void *));\n")
+        findings, _decls, _defs, _files = build(fixture)
+        arity = [row for row in findings if row["kind"] == "arity"]
+        self.assertEqual([(row["got"], row["want"]) for row in arity], [("4", "5")])
+        self.assertEqual(arity[0]["basis"], "definition")
+
+
 class RealTreeTests(unittest.TestCase):
-    """The gate must reproduce the finding it was commissioned for."""
+    """The current runtime definition must remain visible to the checker."""
 
     @classmethod
     def setUpClass(cls):
@@ -854,23 +922,6 @@ class RealTreeTests(unittest.TestCase):
         self.assertEqual(len(found[0].params), 5)
         self.assertEqual(found[0].params[1], "unsigned int")
 
-    def test_the_five_known_wrong_declarations_are_still_wrong(self):
-        wrong = {
-            "src/d_a_dp_lift.cpp": "int",
-            "src/d_a_hanachan.c": "int",
-            "src/game/actors/d_a_wanwan.cpp": "int",
-            "src/d_a_luigi.cpp": "void *",
-            "src/func_ov006_020c3f54.cpp": "void *",
-        }
-        for rel, want in wrong.items():
-            path = REPO / rel
-            if not path.exists():
-                self.skipTest("%s not in this tree" % rel)
-            text = path.read_text(encoding="utf-8", errors="replace")
-            decls, _defs, _u = CDA.parse_file(rel, text, self.aliases)
-            found = [d for d in decls if d.symbol == "__cxa_vec_ctor"]
-            self.assertEqual(len(found), 1, rel)
-            self.assertEqual(found[0].ret, want, rel)
 
 
 # ------------------------------------- the four false-pass paths reported on #2471
