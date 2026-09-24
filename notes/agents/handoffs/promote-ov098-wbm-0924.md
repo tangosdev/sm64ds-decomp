@@ -10,34 +10,30 @@ This document describes this commit. The queue records its immutable output SHA.
 - Source branch `promote/promote-ov098-wbm-0924`. Input commit
   `787633e5e7e2a7c4e101db521958920c68ebd9f2` (origin/main at enqueue); it is
   also the original source base and the installed workflow and tool SHA.
-- Four commits on top of the input: the byte-neutral class rename, the
-  promotion, the declaration agreement and baseline re-key, and this note.
-  No separate evidence commits.
-- Status: byte-verified candidate with ONE open gate. `check_dead_references`
-  fails on a path this task does not reserve (see "Blocker" below). The
-  candidate is not published to the verify stage until the coordinator
-  reserves that path or rules on it.
-- Next action: coordinator reserves `file:tools/test_demember_calls.py` (or
-  `file:config/dead-reference-baseline.json`), then a producer applies the
-  one-line fix, reruns `check_dead_references`, and publishes for
-  independent verification (byte, relocation, whole-object and source
-  review).
+- Five commits on top of the input: the byte-neutral class rename, the
+  promotion, the declaration agreement and baseline re-key, the first cut of
+  this note, and the docstring fix plus this note's final form. No separate
+  evidence commits.
+- Status: byte-verified candidate, every required gate green except the
+  pre-existing `tiers_ratchet --check` failure recorded under Proof.
+- Next action: independent verification (byte, relocation, whole-object and
+  source review) of this commit.
 - Nothing uncommitted. Gate logs stayed in the producer's private worktree and
   are summarised here; they are not needed to reproduce anything.
 
-## Blocker
+## Dead reference in a test docstring
 
-- `python tools/check_dead_references.py` exits 1 with one new dead
-  reference: the docstring of `test_two_classes_of_the_same_name_go_to_two_different_symbols`
-  in `tools/test_demember_calls.py` (line 98) cites the class's old
-  InitResources source under its repo path, a file the rename retired. The
-  check passes at the input commit.
-- Either fix edits a file outside this task's reservation: reword the
-  docstring (for example to cite `src/actors/daWbm_c.cpp`, or to name the
-  retired file as history without a repo path), or re-bank it in
-  `config/dead-reference-baseline.json` with `--update`. The first is a
-  tooling-file edit inside a source change, which AGENTS.md asks to keep
-  separate, so the coordinator decides.
+- After the rename, `python tools/check_dead_references.py` flagged one new
+  dead reference: the docstring of
+  `test_two_classes_of_the_same_name_go_to_two_different_symbols` in
+  `tools/test_demember_calls.py` cited the class's old InitResources source by
+  its repo path. The coordinator ruled on #3081 to reword the docstring (a
+  promotion must need no change to `config/dead-reference-baseline.json`) and
+  added `file:tools/test_demember_calls.py` to this task's reservation. The
+  docstring now names the symbol, `WaterBomb::InitResources`, now
+  `daWbm_c::InitResources` in the promoted TU; nothing else in the file
+  changed, and `python -m pytest tools/test_demember_calls.py -q` passes
+  (16 passed).
 
 ## What changed and why
 
@@ -157,9 +153,11 @@ This document describes this commit. The queue records its immutable output SHA.
   func_ov098_0213b6e0 fail one more each.
 - Remaining issue scope: member spellings for the three states and four
   helpers; naming `unk_3b4`; the unnamed ov098 data rows; the sound call
-  `func_0201267c`; the stale `srcPath` of func_ov098_0213b9d8 in
+  `func_0201267c`. The stale `srcPath` of func_ov098_0213b9d8 in
   `config/match_provenance.jsonl` line 134 and `config/match_attempts.jsonl`
-  line 629, which name the retired source and were left as found.
+  line 629 (rows 610 and 625 name the same function) is deferred to
+  integration (files held by promote-ov095-udlift-0923); the integrator
+  retargets it to `src/actors/daWbm_c.cpp`.
 
 ## Proof
 
@@ -214,8 +212,8 @@ gates ran.
   `daWbm_c *` definitions. 14 rows of the retired files that no longer apply
   were dropped. After that it exits 0, and the tree-wide run exits 0. The
   baseline was not regenerated, re-sorted or union-merged.
-- `python tools/check_dead_references.py` exit 1: FAILED, the one reference
-  under "Blocker". It exits 0 at the input commit.
+- `python tools/check_dead_references.py` exit 0, after the docstring fix
+  above.
 - `python tools/tiers_ratchet.py --check` exit 1: FAILED, pre-existing. The
   only backslide is `src/actors/dScMgLuigi_c.cpp#_ZN12dScMgLuigi_c10ResetBoardEv`
   (no_unk_field), a file this change does not touch; the same check at the
