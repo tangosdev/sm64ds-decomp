@@ -1558,9 +1558,14 @@ extern "C" int _ZN9dBgCh_Gnd10DetectClsnEv(void *self)
 #pragma comment(linker, "/alternatename:?data_ov002_0210cbf4@@3PAGA=_data_ov002_0210cbf4")
 #pragma comment(linker, "/alternatename:?data_ov002_0211118c@@3FA=_data_ov002_0211118c")
 /* Sound::LoadInitialGroup is a class static in its TU and a C name to the
-   kuppa tail; LoadGroupAndSetBank is the mirror case one call deeper. */
+   kuppa tail. LoadGroupAndSetBank is spelled three ways: LoadInitialGroup's TU
+   calls it as a class static (SAXHH), the C callers and hal/star_flow.cpp by
+   its flat name, and its matched TU defines the namespace function (YAXHH).
+   Both reference spellings name that definition directly; all three are
+   __cdecl with two ints and no receiver. */
 #pragma comment(linker, "/alternatename:__ZN5Sound16LoadInitialGroupEi=?LoadInitialGroup@Sound@@SAXH@Z")
-#pragma comment(linker, "/alternatename:?LoadGroupAndSetBank@Sound@@SAXHH@Z=__ZN5Sound19LoadGroupAndSetBankEii")
+#pragma comment(linker, "/alternatename:?LoadGroupAndSetBank@Sound@@SAXHH@Z=?LoadGroupAndSetBank@Sound@@YAXHH@Z")
+#pragma comment(linker, "/alternatename:__ZN5Sound19LoadGroupAndSetBankEii=?LoadGroupAndSetBank@Sound@@YAXHH@Z")
 /* gate 14, stage A2: the entrance step handlers. 020c71e0's own TU spells it
    as a C name while 020c72a4's declares it without extern "C". */
 /* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEAD RHS and an UNREFERENCED left hand side: nothing in the build defines _func_ov002_020c71e0, and nothing references ?func_ov002_020c71e0@@YAXPAX@Z, so the row can never fire and nothing wants it to. */

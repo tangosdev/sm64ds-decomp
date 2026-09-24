@@ -11873,11 +11873,6 @@ foreach(line IN LISTS SLICE14_LINES)
     endif()
     list(APPEND SLICE14_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
-# argfix: Sound::LoadGroupAndSetBank calls func_0203d7d4() with no argument and
-# relies on func_020134d8's return riding ARM r0. Host copy passes it. Src line
-# commented out in slice_gate14.txt.
-list(APPEND SLICE14_SOURCES
-     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Sound_LoadGroupAndSetBank.cpp")
 
 # Gate 36: the real Stage::InitResources, to replace port_stage_a_boot.
 #
