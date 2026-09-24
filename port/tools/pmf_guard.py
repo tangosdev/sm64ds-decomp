@@ -273,6 +273,13 @@ LEDGER = [
      "function-local table on the first call and dispatches `push a3; push "
      "a2; push p+7; mov ecx,[tab+i*8+4]; add ecx,self; call [tab+i*8]`, "
      "callee-cleaned -- the first dispatcher's shape (port_kuppa_cmd_seat)"),
+    ("ECX", r"^\?g_mb_cells@@",
+     "MrBlizzard: the ten cells at data_ov081_02128e14, pointed to from "
+     "[self+0x3f8]. ?Behavior@MrBlizzard@@UAEHXZ (src/_ZN10MrBlizzard8Behavior"
+     "Ev.cpp) calls the tick half at +8 with ecx = this + delta and nothing "
+     "pushed; _func_ov081_02125488 tail jumps into the enter half with `mov "
+     "ecx,[ecx+4]; add ecx,eax; pop ebp; jmp edx`. Every other reader "
+     "compares the cell pointer by address"),
 ]
 
 

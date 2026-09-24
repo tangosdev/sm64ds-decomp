@@ -15,3 +15,9 @@ src/func_ov002_020f7d74.cpp
 # behaviour siblings; unmatched/func_0204322c_hostcopy.cpp defines nothing.
 src/func_0204322c.c hostgen
 src/func_020432e4.c hostgen
+#
+# Mr Blizzard's own Behavior (ov081): the ROM's tick dispatch through the
+# state cell at +0x3f8, `(this->**(pp + 1))()`. The twenty cell words are
+# __fastcall faces now (hal/actor_classes_ov081.cpp's seat), and
+# unmatched/MrBlizzard_Behavior.cpp defines nothing.
+src/_ZN10MrBlizzard8BehaviorEv.cpp

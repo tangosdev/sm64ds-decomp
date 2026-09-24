@@ -1,128 +1,20 @@
-/* HOST COPY of src/_ZN10MrBlizzard8BehaviorEv.cpp -- the SAME PMF-on-an-
- * incomplete-class seam port/unmatched/MrBlizzard_StateDispatch.cpp fixes
- * for func_ov081_02125488, applied to MrBlizzard's own Behavior tick
- * dispatch.
+/* RETIRED HOST COPY of src/_ZN10MrBlizzard8BehaviorEv.cpp (run linkfull lane
+ * PMF2). The matched TU is on port/slice_w27_pmf2.txt and defines
+ * ?Behavior@MrBlizzard@@UAEHXZ itself; this file defines nothing and stays only
+ * because three target source lists name it by path.
  *
- * THE PMF CALL. The matched src reads `PMF* p = pp + 1; (this->**p)();` --
- * `pp` points at one of the ten state cells (a PortMrBlizzardPair:
- * {enter_fn, enter_delta, tick_fn, tick_delta}); `pp + 1` (PMF-width, 8
- * bytes) lands on the cell's SECOND half, i.e. tick_fn/tick_delta. MSVC's
- * PMF representation for the matched src's deliberately-incomplete `struct
- * C` is not a plain function pointer, so this dispatch does not reproduce
- * the ROM's ABI on the host (see MrBlizzard_StateDispatch.cpp's header for
- * the full derivation) -- confirmed by crash: id 0xdf (MR_BLIZZARD) faults
- * at a near-null address the very first tick after gate 192 boots. This
- * host copy is the matched src translated field for field with that one
- * dispatch replaced by a plain function-pointer call through the seat's
- * own struct layout (hal/actor_classes_ov081.cpp's PortMrBlizzardPair).
- * The `pp+8 != 0` guard (matched src's `*(void**)((char*)pp + 8)`) becomes
- * `cell->tick_fn != 0` -- the identical byte offset, read through the real
- * type instead of a raw pointer.
+ * WHY THE HOST COPY EXISTED. The matched source dispatches the state cell's
+ * tick half as a pointer to member, `(this->**(pp + 1))()`, and the ten cells
+ * held raw cdecl bodies that read their receiver at [esp+4]. MSVC's
+ * member-pointer call puts the receiver in ECX and pushes nothing, so the copy
+ * called the word as a plain function pointer through the seat's own
+ * PortMrBlizzardPair layout instead. (The "callee-saved register violation"
+ * this class was once parked for was that same seam: a stale stack word read
+ * as `this`. hal/actor_classes.inc's gate-192 note has the derivation.)
+ *
+ * WHY IT IS GONE. With /vmg /vmm target-wide (port/CMakeLists.txt block R8)
+ * the matched Behavior's member pointer is the ROM's two-word {code, adj}
+ * layout, and the seat in hal/actor_classes_ov081.cpp now writes a __fastcall
+ * face into every one of the twenty words, so the ROM's own dispatch runs the
+ * cell with the receiver where the face reads it.
  */
-#include "decl_SaveData.h"
-#include "decl_common.h"
-#include "MrBlizzard.h"
-extern "C" {
-extern int _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj(void* self, void* wm, void* anim, unsigned n);
-extern int _ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr(void* self, void* wm);
-extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned a, unsigned b, const Vector3* v, const void* p, int e, int f);
-extern void func_02012694(int a, void* p);
-extern void _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(void* self, int a, int b, int c, int d);
-extern void* _ZN8dActor_c13ClosestPlayerEv(void* self);
-extern unsigned short DecIfAbove0_Short(unsigned short* p);
-extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void* self, void* cyl);
-extern void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void* self, void* wm, unsigned n);
-extern void _ZN5dCc_c5ClearEv(void* self);
-extern void _ZN5dCc_c6UpdateEv(void* self);
-extern void _ZN9Animation7AdvanceEv(void* self);
-extern char data_ov081_02128e24;
-extern char data_ov081_02128e84;
-extern char data_ov081_02128e64;
-extern char data_ov081_02128e94;
-extern void func_ov081_021254d8(void *c);
-extern void func_ov081_021243cc(void *c);
-
-struct PortMrBlizzardPair { unsigned enter_fn, enter_delta, tick_fn, tick_delta; };
-typedef int (*PortMbFn)(void *);
-}
-
-int MrBlizzard::Behavior()
-{
-    char* c = (char*)this;
-    void* r5;
-    char* p;
-    if (*(int*)(c + 0x41c) == 3) {
-        switch (*(unsigned char*)(c + 0x469)) {
-        case 0:
-            if (_ZN8SaveData16HasPlayerLostCapEv()) *(unsigned char*)(c + 0x469) = 1;
-            else *(unsigned char*)(c + 0x469) = 2;
-            break;
-        case 1:
-            if (!_ZN8SaveData16HasPlayerLostCapEv()) *(unsigned char*)(c + 0x469) = 2;
-            break;
-        case 2:
-            if (_ZN8SaveData16HasPlayerLostCapEv()) *(int*)(c + 0x41c) = 2;
-            break;
-        }
-        return 1;
-    }
-    if (_ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj(c, c + 0x150, c + 0x30c, 3)) return 1;
-    if (*(int*)(c + 0x10c) != 0) {
-        if (_ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr(c, c + 0x150) && *(int*)(c + 0x41c) == 2) {
-            _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0xdf, 0x300, (Vector3*)(c + 0x44c), 0, *(signed char*)(c + 0xcc), -1);
-            *(int*)(c + 0x41c) = 0;
-        }
-        if (*(int*)(c + 0x10c) == 0 && *(unsigned char*)(c + 0x468) != 0) {
-            func_02012694(0x166, c + 0x74);
-            *(unsigned char*)(c + 0x468) = 0;
-        }
-        func_ov081_021254d8(c);
-        return 1;
-    }
-    if (*(int*)(c + 0x41c) == 2
-        && *(void**)(c + 0x3f8) != (void*)&data_ov081_02128e94
-        && *(void**)(c + 0x3f8) != (void*)&data_ov081_02128e24
-        && _ZN8SaveData16HasPlayerLostCapEv()
-        && *(int*)(c + 0x400) == 0) {
-
-        p = (char*)_ZN8dActor_c13ClosestPlayerEv(c);
-        if (p != 0) {
-            int param = 0xc;
-            param = param | (*(unsigned char*)(p + 0x6d9) << 8);
-            r5 = (void*)_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
-                0x10d, param, (Vector3*)(c + 0x5c), 0, *(signed char*)(c + 0xcc), -1);
-            if (r5 != 0) {
-                _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(r5, 0x64000, 0xc8000, 0x1000000, 0x1000000);
-                *(int*)(c + 0x400) = *(int*)((char*)r5 + 4);
-            }
-        }
-
-    }
-    *(short*)(c + 0x8c) = *(short*)(c + 0x92);
-    *(short*)(c + 0x8e) = *(short*)(c + 0x94);
-    *(short*)(c + 0x90) = *(short*)(c + 0x96);
-    DecIfAbove0_Short((unsigned short*)(c + 0x100));
-    {
-        PortMrBlizzardPair *cell = *(PortMrBlizzardPair **)(c + 0x3f8);
-        if (cell->tick_fn != 0)
-            ((PortMbFn)(size_t)cell->tick_fn)(c);
-    }
-    _ZN8dActor_c9UpdatePosEP5dCc_c(c, c + 0x110);
-    if (*(int*)(c + 0x41c) == 0)
-        _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(c, c + 0x150, 0);
-    func_ov081_021254d8(c);
-    if (*(void**)(c + 0x3f8) != (void*)&data_ov081_02128e84
-        && *(void**)(c + 0x3f8) != (void*)&data_ov081_02128e64
-        && *(void**)(c + 0x3f8) != (void*)&data_ov081_02128e94
-        && *(void**)(c + 0x3f8) != (void*)&data_ov081_02128e24)
-        func_ov081_021243cc(c);
-    _ZN5dCc_c5ClearEv(c + 0x110);
-    {
-        p = (char*)_ZN8dActor_c13ClosestPlayerEv(c);
-        if (p != 0 && *(unsigned char*)(p + 0x6fb) == 0)
-            _ZN5dCc_c6UpdateEv(c + 0x110);
-    }
-    *(int*)(c + 0x368) = 0x1000;
-    _ZN9Animation7AdvanceEv(c + 0x35c);
-    return 1;
-}
