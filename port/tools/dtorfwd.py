@@ -157,6 +157,22 @@ import sys
 # the one call the retired forwarder made. The row came out of batch 5 rather
 # than being skipped, so the generated files carry the name exactly once.
 
+# RETIRED at V3B 2026-09-24 (run linkfull wave 27, batch 1): each D1 name below
+# is defined by its own src D1 file now, in that file's #ifdef _MSC_VER arm,
+# whose text is this generator's forwarder for the name (the qualified call,
+# so MSVC emits the inline destructor there instead of here) and whose object
+# is the retired forwarder's, instruction for instruction. They were each
+# class's LAST row here (VARIANT2's batch B1 moved their D0s into src and kept
+# these D1s under the guard), and slot 16 is their live teardown path, so they
+# do NOT leave the guard: tools/dtor_store_guard.py's SRC_ARMS names each src
+# file and re-proves the ROM body it stands for on every build, exactly as it
+# did while the forwarder lived here. The rows came out of their batches
+# rather than being skipped, so the generated files no longer carry them:
+#   _ZN13daObjSwdoor_cD1Ev
+#   _ZN17BigMovingIceBlockD1Ev
+#   _ZN17BowserPuzzlePieceD1Ev
+#   _ZN6CoffinD1Ev
+
 BATCHES = {}
 
 BATCHES[1] = """
@@ -194,7 +210,6 @@ _ZN12dScMgSound_cD1Ev
 _ZN13daObjDorifu_cD1Ev
 _ZN13daObjEmmLog_cD0Ev
 _ZN13daObjEmmLog_cD1Ev
-_ZN13daObjSwdoor_cD1Ev
 _ZN13daObjTdFuta_cD0Ev
 _ZN13daObjTdFuta_cD1Ev
 _ZN13daObjWakame_cD0Ev
@@ -268,8 +283,6 @@ _ZN16daObjRcBuranko_cD1Ev
 _ZN16daObjRc_Dorifu_cD0Ev
 _ZN16daObjRc_Dorifu_cD1Ev
 _ZN16daObjWaterfall_cD0Ev
-_ZN17BigMovingIceBlockD1Ev
-_ZN17BowserPuzzlePieceD1Ev
 _ZN17daObjBk_Rotebar_cD0Ev
 _ZN17daObjBk_Rotebar_cD1Ev
 _ZN17daObjBk_Ukisima_cD1Ev
@@ -318,7 +331,6 @@ _ZN21daObjKm2_Fall_Block_cD0Ev
 _ZN21daObjKm2_Fall_Block_cD1Ev
 _ZN21daObjKm3_Kurumajiku_cD0Ev
 _ZN21daObjKm3_Kurumajiku_cD1Ev
-_ZN6CoffinD1Ev
 _ZN6DorrieD1Ev
 _ZN7daBar_cD0Ev
 _ZN7daBar_cD1Ev

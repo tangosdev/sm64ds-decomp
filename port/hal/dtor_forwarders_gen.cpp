@@ -34,9 +34,6 @@
 
 
 #include "types.h"
-#include "BigMovingIceBlock.h"
-#include "BowserPuzzlePiece.h"
-#include "Coffin.h"
 #include "Dorrie.h"
 #include "LightBeam.h"
 #include "PathLift.h"
@@ -114,7 +111,6 @@
 #include "daObjRc_Guruguru_c.h"
 #include "daObjRc_Hane_c.h"
 #include "daObjRc_Kaitendai_c.h"
-#include "daObjSwdoor_c.h"
 #include "daObjTdFuta_c.h"
 #include "daObjTdWater_c.h"
 #include "daObjWakame_c.h"
@@ -289,10 +285,6 @@ extern "C" void _ZN13daObjEmmLog_cD0Ev(void *self)
 /* ROM 0x021111a0 _ZN13daObjEmmLog_cD1Ev -- batch 1, the inline ~daObjEmmLog_c() */
 extern "C" void _ZN13daObjEmmLog_cD1Ev(void *self)
 { ((daObjEmmLog_c *)self)->daObjEmmLog_c::~daObjEmmLog_c(); }
-
-/* ROM 0x020bab64 _ZN13daObjSwdoor_cD1Ev -- batch 1, the inline ~daObjSwdoor_c() */
-extern "C" void _ZN13daObjSwdoor_cD1Ev(void *self)
-{ ((daObjSwdoor_c *)self)->daObjSwdoor_c::~daObjSwdoor_c(); }
 
 /* ROM 0x021124ec _ZN13daObjTdFuta_cD0Ev -- batch 1, the inline ~daObjTdFuta_c() plus _ZN6Memory10DeallocateEPvP4Heap */
 extern "C" void _ZN13daObjTdFuta_cD0Ev(void *self)
@@ -558,14 +550,6 @@ extern "C" void _ZN16daObjRc_Dorifu_cD1Ev(void *self)
 extern "C" void _ZN16daObjWaterfall_cD0Ev(void *self)
 { ((daObjWaterfall_c *)self)->daObjWaterfall_c::~daObjWaterfall_c(); _ZN6Memory10DeallocateEPvP4Heap(self, GAME_HEAP_PTR); }
 
-/* ROM 0x021111a0 _ZN17BigMovingIceBlockD1Ev -- batch 2, the inline ~BigMovingIceBlock() */
-extern "C" void _ZN17BigMovingIceBlockD1Ev(void *self)
-{ ((BigMovingIceBlock *)self)->BigMovingIceBlock::~BigMovingIceBlock(); }
-
-/* ROM 0x02118b50 _ZN17BowserPuzzlePieceD1Ev -- batch 2, the inline ~BowserPuzzlePiece() */
-extern "C" void _ZN17BowserPuzzlePieceD1Ev(void *self)
-{ ((BowserPuzzlePiece *)self)->BowserPuzzlePiece::~BowserPuzzlePiece(); }
-
 /* ROM 0x02112988 _ZN17daObjBk_Rotebar_cD0Ev -- batch 2, the inline ~daObjBk_Rotebar_c() plus _ZN6Memory10DeallocateEPvP4Heap */
 extern "C" void _ZN17daObjBk_Rotebar_cD0Ev(void *self)
 { ((daObjBk_Rotebar_c *)self)->daObjBk_Rotebar_c::~daObjBk_Rotebar_c(); _ZN6Memory10DeallocateEPvP4Heap(self, GAME_HEAP_PTR); }
@@ -729,10 +713,6 @@ extern "C" void _ZN21daObjKm3_Kurumajiku_cD0Ev(void *self)
 /* ROM 0x021111a0 _ZN21daObjKm3_Kurumajiku_cD1Ev -- batch 3, the inline ~daObjKm3_Kurumajiku_c() */
 extern "C" void _ZN21daObjKm3_Kurumajiku_cD1Ev(void *self)
 { ((daObjKm3_Kurumajiku_c *)self)->daObjKm3_Kurumajiku_c::~daObjKm3_Kurumajiku_c(); }
-
-/* ROM 0x02121fe4 _ZN6CoffinD1Ev -- batch 3, the inline ~Coffin() */
-extern "C" void _ZN6CoffinD1Ev(void *self)
-{ ((Coffin *)self)->Coffin::~Coffin(); }
 
 /* ROM 0x02117f40 _ZN6DorrieD1Ev -- batch 3, the inline ~Dorrie() */
 extern "C" void _ZN6DorrieD1Ev(void *self)
