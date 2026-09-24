@@ -42311,10 +42311,6 @@
     "func_ov004_020adc1c": {
       "src/_ZN14dScMgCurling_c6RenderEv.cpp": [
         "arity:1"
-      ],
-      "src/actors/dScMgPachinko_c.cpp": [
-        "arity:1",
-        "return:signed char"
       ]
     },
     "func_ov004_020adc3c": {
@@ -42557,8 +42553,7 @@
         "arity:0"
       ],
       "src/actors/dScMgPachinko_c.cpp": [
-        "param:#1 signed char",
-        "return:void"
+        "param:#1 int"
       ],
       "src/func_ov006_021004c0.c": [
         "arity:0",
@@ -43536,11 +43531,6 @@
     "func_ov006_020fba28": {
       "src/_ZN15dScMgPachinko_c6RenderEv.cpp": [
         "arity:1"
-      ]
-    },
-    "func_ov006_020fba48": {
-      "src/_ZN15dScMgPachinko_c6RenderEv.cpp": [
-        "param:#1 void *"
       ]
     },
     "func_ov006_020fc844": {

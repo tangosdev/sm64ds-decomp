@@ -105,8 +105,8 @@ extern void func_ov004_020afdd0(void *a0, int a1, int a2, int a3, int a4);
 extern void func_ov004_020b2444(int x, int y, int h, int a, int b, int c, int d);
 extern int  func_ov004_020adbc0(void);
 extern int  func_ov004_020b1a5c(int a, int b);
-extern s8   func_ov004_020adc1c(s8 levelID);
-extern void func_ov004_020b19f0(s8 courseID);
+extern int  func_ov004_020adc1c(void);
+extern int  func_ov004_020b19f0(int score);
 extern void func_ov004_020adb1c(int self);
 extern int  func_020126e8(int a);
 extern int  func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
@@ -176,7 +176,7 @@ extern void func_ov006_020fb7e0(char *thiz);
 extern void func_ov006_020fb8fc(char *c, int a2, int a3, int a4, int a5, int a6);
 extern void func_ov006_020fb97c(char *c);
 extern void func_ov006_020fba28(void);
-extern void func_ov006_020fba48(s8 levelID);
+extern void func_ov006_020fba48(void *scene);
 extern void func_ov006_020fba64(char *base);
 extern void func_ov006_020fbad4(char *c);
 extern void func_ov006_020fbb2c(char *c, int idx, unsigned short val);
@@ -817,11 +817,12 @@ void func_ov006_020fba28(void){
 }
 
 // @symbol func_ov006_020fba48
-/* Converts a sublevel ID to a course ID, then opens the cannon for it. */
-void func_ov006_020fba48(s8 levelID)
+/* Draws the high score: the stored best comes back from func_ov004_020adc1c
+   as a full word and goes straight to the HUD's number drawer. Render hands
+   every drawer the scene; this one does not read it. */
+void func_ov006_020fba48(void *)
 {
-    s8 courseID = func_ov004_020adc1c(levelID);
-    func_ov004_020b19f0(courseID);
+    func_ov004_020b19f0(func_ov004_020adc1c());
 }
 
 // @symbol func_ov006_020fba64
