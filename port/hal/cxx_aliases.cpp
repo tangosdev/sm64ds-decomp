@@ -561,12 +561,15 @@ unsigned char data_020a0e98;
 /* The 32 sound-player records, stride 0x1c (func_0204f63c, func_0204f958,
    func_0204f9c4 and func_0204f504 all index it that way, and the ROM runs
    0x020a4d6c..0x020a50ec = 32 * 0x1c exactly). It was one int while sound was
-   stubbed. data_020a4d84 is the SAME array seen from field +0x18 -- the
-   playable-sequence limit that Stage::InitResources sets and func_0204f63c
-   tests before it evicts a voice -- so hal/sdat/sound_abi.cpp hosts
-   Sound::Player::SetPlayableSeqCount to write through THIS object and keep
-   the two views aliased the way DS memory does. */
+   stubbed. Field +0x18 is the playable-sequence limit that
+   Stage::InitResources sets and func_0204f63c tests before it evicts a voice;
+   the ROM's literal for it is 0x020a4d84, which the symbol list also names
+   data_020a4d84. The matched Sound::Player::SetPlayableSeqCount writes it as
+   data_020a4d6c[index].mPlayableSeqCount (include/SoundPlayerRecord.h), so the
+   write lands in THIS object. The row below points the C callers' flat name
+   at that class static: both sides __cdecl, two ints, no receiver. */
 unsigned char data_020a4d6c[32 * 0x1c];
+#pragma comment(linker, "/alternatename:__ZN5Sound6Player19SetPlayableSeqCountEii=?SetPlayableSeqCount@Player@Sound@@SAXHH@Z")
 /* data_ov006_02140330 and data_ov006_02140338, the two ov006 fileptrs
    St_LevelEnter_Main releases, used to be zeroed stand-ins here. The ov006
    mount hosts them now (run link60 lane s2-m46): both are ov006 .bss, both
@@ -1560,9 +1563,14 @@ extern "C" int _ZN9dBgCh_Gnd10DetectClsnEv(void *self)
 #pragma comment(linker, "/alternatename:?data_ov002_0210cbf4@@3PAGA=_data_ov002_0210cbf4")
 #pragma comment(linker, "/alternatename:?data_ov002_0211118c@@3FA=_data_ov002_0211118c")
 /* Sound::LoadInitialGroup is a class static in its TU and a C name to the
-   kuppa tail; LoadGroupAndSetBank is the mirror case one call deeper. */
+   kuppa tail. LoadGroupAndSetBank is spelled three ways: LoadInitialGroup's TU
+   calls it as a class static (SAXHH), the C callers and hal/star_flow.cpp by
+   its flat name, and its matched TU defines the namespace function (YAXHH).
+   Both reference spellings name that definition directly; all three are
+   __cdecl with two ints and no receiver. */
 #pragma comment(linker, "/alternatename:__ZN5Sound16LoadInitialGroupEi=?LoadInitialGroup@Sound@@SAXH@Z")
-#pragma comment(linker, "/alternatename:?LoadGroupAndSetBank@Sound@@SAXHH@Z=__ZN5Sound19LoadGroupAndSetBankEii")
+#pragma comment(linker, "/alternatename:?LoadGroupAndSetBank@Sound@@SAXHH@Z=?LoadGroupAndSetBank@Sound@@YAXHH@Z")
+#pragma comment(linker, "/alternatename:__ZN5Sound19LoadGroupAndSetBankEii=?LoadGroupAndSetBank@Sound@@YAXHH@Z")
 /* gate 14, stage A2: the entrance step handlers. 020c71e0's own TU spells it
    as a C name while 020c72a4's declares it without extern "C". */
 /* RETIRED at ALIAS2 (wave 8, the main -> port sync). DEAD RHS and an UNREFERENCED left hand side: nothing in the build defines _func_ov002_020c71e0, and nothing references ?func_ov002_020c71e0@@YAXPAX@Z, so the row can never fire and nothing wants it to. */

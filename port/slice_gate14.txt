@@ -71,15 +71,15 @@ src/StartIntroCutscene.c
 # The debug character swap calls Player::SetRealCharacter, which reaches it two
 # frames down the voice-bank load, so the host owns it now (see below).
 src/_ZN5Sound16LoadInitialGroupEi.cpp
-# _ZN5Sound19LoadGroupAndSetBankEii: HOST COPY at unmatched/Sound_LoadGroupAndSetBank.cpp
-# (wired in CMakeLists). The matched C calls func_0203d7d4() with no argument and
-# relies on func_020134d8's return being live in ARM r0; cdecl drops it, so the host
-# copy passes func_020134d8(a, data_0209b498) explicitly. See that file's header.
+# Sound::LoadGroupAndSetBank compiles from src/ again: main #3102 passes
+# func_020134d8's return to func_0203d7d4 explicitly, the value the ROM leaves
+# in r0, so the host copy that did the same in port/unmatched/ is gone.
+src/_ZN5Sound19LoadGroupAndSetBankEii.cpp
 # src/_ZN5Sound6Player19SetPlayableSeqCountEii.cpp is also listed in
-# slice_gate10.txt, where SLICE10_CAM_SOURCES now filters it out: it writes
-# through data_020a4d84, which is data_020a4d6c + 0x18 on the DS but a
-# separate object on the host, so hal/sdat/sound_abi.cpp hosts it. Listing it
-# here as well put it straight back into the link.
+# slice_gate10.txt, which is the one place it compiles from. It used to be
+# filtered there and hosted in hal/sdat/sound_abi.cpp (it wrote through
+# data_020a4d84); it writes data_020a4d6c's record field +0x18 now
+# (include/SoundPlayerRecord.h) and links as it is.
 src/DisableSoundPlayersForCredits.c
 # src/func_0203d974.c is the same case: also listed in slice_gate10.txt, where
 # SLICE10_CAM_SOURCES filters it out, and hosted in hal/sdat/sound_abi.cpp

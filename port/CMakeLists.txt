@@ -11407,21 +11407,17 @@ foreach(src IN LISTS SLICE10_SOURCES)
     if(src MATCHES "/_ZN8Particle10SysTracker8Contents5Entry10InitialiseEjjR7Vector3PK11Vector3_16fPN5dPa_c7level_c10callback_cE\\.cpp$")
         continue()
     endif()
-    # Sound: five ARM argument ride-throughs, replaced by hal/sdat/sound_abi.cpp
-    # (declared with fewer parameters than their callers pass, which only
-    # works when the extras sit in r1..r3), plus func_0205b5d4, the "read the
-    # other core's progress" read that hal/sdat/consumer.cpp has to own so the
-    # queue's spin-wait can terminate on a single-threaded host.
-    if(src MATCHES "/func_0204f600\\.c$"
-       OR src MATCHES "/func_0204f89c\\.c$"
-       OR src MATCHES "/func_0204f7cc\\.c$"
-       OR src MATCHES "/func_0204f86c\\.c$"
-       OR src MATCHES "/func_0204fa2c\\.c$"
-       OR src MATCHES "/func_0205b5d4\\.c$"
+    # Sound: func_0205b5d4, the "read the other core's progress" read that
+    # hal/sdat/consumer.cpp has to own so the queue's spin-wait can terminate
+    # on a single-threaded host. The five ARM argument ride-throughs that led
+    # this list (func_0204f600, func_0204f89c, func_0204f7cc, func_0204f86c,
+    # func_0204fa2c) compile from src/ now: each is spelled with the arguments
+    # its callers pass (hal/sdat/sound_abi.cpp's header has the history).
+    if(src MATCHES "/func_0205b5d4\\.c$"
     # ...and Sound::Player::SetPlayableSeqCount, which writes through
-    # data_020a4d84 = data_020a4d6c + 0x18, an adjacency host symbols do not
-    # have. Same file, sound_abi.cpp.
-       OR src MATCHES "/_ZN5Sound6Player19SetPlayableSeqCountEii\\.c$"
+    # data_020a4d6c's record field +0x18 now (include/SoundPlayerRecord.h),
+    # so it is not filtered any more: its .cpp compiles from gate 10 and links
+    # through its hal/cxx_aliases.cpp row.
     # ...and Sound::Play, whose src calls func_02050cdc(void) and lets the
     # kind and id ride through in r0/r1.
        OR src MATCHES "/_ZN5Sound4PlayEjjRK7Vector3\\.c$"
@@ -11883,11 +11879,6 @@ foreach(line IN LISTS SLICE14_LINES)
     endif()
     list(APPEND SLICE14_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
-# argfix: Sound::LoadGroupAndSetBank calls func_0203d7d4() with no argument and
-# relies on func_020134d8's return riding ARM r0. Host copy passes it. Src line
-# commented out in slice_gate14.txt.
-list(APPEND SLICE14_SOURCES
-     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Sound_LoadGroupAndSetBank.cpp")
 
 # Gate 36: the real Stage::InitResources, to replace port_stage_a_boot.
 #

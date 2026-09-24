@@ -1,94 +1,28 @@
-// The src sound functions the host owns, each filtered out of
+// The src sound functions the host still owns, each filtered out of
 // SLICE10_CAM_SOURCES in port/CMakeLists.txt.
 //
-// Most of them are ARM argument ride-throughs. Five functions in the sound
-// stack are declared in src/ with fewer
-// parameters than their callers pass. That is not a decomp error -- on ARM
-// the extra arguments sit in r1..r3 across a call that never names them, and
-// the callee's own call passes them straight on. mwccarm reproduces the ROM
-// bytes exactly that way, so the src stays as it is and the host spells the
-// arguments out instead. Same pattern as the SharedFilePtr::Construct
-// veneers in hal/cxx_aliases.cpp and the gate-14 ride-throughs in
-// port/unmatched/.
+// THE FIVE SOUND COMMAND VENEERS LEFT THIS FILE (run linkfull, lane RS3PORT).
+// func_0204f600, func_0204f89c, func_0204f7cc, func_0204f86c and
+// func_0204fa2c were hosted here as ARM argument ride-throughs: their src
+// named fewer parameters than the callers pass, which only works while the
+// extra arguments sit in r1..r3 across the call. The src now spells each of
+// them with the arguments the ROM passes (main #3102 re-spelled
+// func_0204f600 and func_0204fa2c; the other three already were), the
+// matched TUs are byte-identical to the cartridge, and they compile here
+// unchanged, so their filter lines came out of port/CMakeLists.txt and the
+// game runs the ROM's own bodies.
 //
-// Each of these src files is filtered out of SLICE10_CAM_SOURCES in
-// port/CMakeLists.txt; the bodies below are the same code with the riders
-// named.
-//
-//   func_0204f600  (1 -> 4)  START: the sequence pointer, entry offset and
-//                            bank all ride into Snd_SendCommand(0, ...).
-//   func_0204f89c  (1 -> 2)  volume rides into Snd_SendCommand(3, ...).
-//   func_0204f7cc  (1 -> 3)  pan mode + value ride into Snd_SendCommand(4).
-//   func_0204f86c  (1 -> 3)  two riders into Snd_SendCommand(5, ...).
-//   func_0204fa2c  (1 -> 2)  the fade length rides into func_0204f5a0.
-//   func_02009e70's call (3 -> 4) the stop fade rides into
-//                            Sound_PlayIfNotActive.
-//
-// The rest are not ride-throughs; each says why below.
+// What is left is not that class, and each body below says why. The one
+// ride-through still here is func_02009e70's call (3 -> 4): the stop fade
+// rides into Sound_PlayIfNotActive.
 #include "sdat.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef unsigned char u8;
-
 extern "C" {
 
-void func_0205adc4(void *a, int b, int c, int d);
-void func_0205ad24(int a, int b);
-int  func_0205acac(int a, int b, int c);
-void func_0205aaf4(void *a, int b, int c);
-void func_0204f4bc(void *obj);
-void *func_0205afb4(void);
-void func_0204f5a0(u8 *thiz, int arg1);
 int  Sound_PlayIfNotActive(int a, int b, int c, int d);
-
-// func_0204f600(thiz) on ARM; r1 = sequence data, r2 = entry offset,
-// r3 = resident bank, all of which ride into func_0205adc4.
-// PORT_HOST_ABI: ARM r1..r3 argument ride-through (1 named param -> 4).
-int func_0204f600(void *thiz, int seqData, int entryOff, int bank)
-{
-    func_0205adc4((void *)(size_t)(unsigned)*(u8 *)((char *)thiz + 0x3c),
-                  seqData, entryOff, bank);
-    func_0204f4bc(thiz);
-    *(void **)((char *)thiz + 0x30) = func_0205afb4();
-    *(u8 *)((char *)thiz + 0x2c) = 1;
-    return 1;
-}
-
-// func_0204f89c(c) on ARM; r1 = volume, riding into func_0205ad24's second
-// parameter (which the src file's own declaration does not name either).
-// PORT_HOST_ABI: ARM r1 argument ride-through (volume).
-void func_0204f89c(char **c, int volume)
-{
-    u8 *p = (u8 *)*c;
-    if (p) func_0205ad24(p[0x3c], volume);
-}
-
-// func_0204f7cc(c) on ARM; r1/r2 = the pan mode and value.
-// PORT_HOST_ABI: ARM r1/r2 argument ride-through (pan mode + value).
-void func_0204f7cc(char **c, int mode, int pan)
-{
-    u8 *p = (u8 *)*c;
-    if (p) func_0205acac(p[0x3c], mode, pan);
-}
-
-// func_0204f86c(c) on ARM; r1/r2 ride into func_0205aaf4.
-// PORT_HOST_ABI: ARM r1/r2 argument ride-through.
-void func_0204f86c(char **c, int b, int d)
-{
-    u8 *p = (u8 *)*c;
-    if (p) func_0205aaf4((void *)(size_t)(unsigned)p[0x3c], b, d);
-}
-
-// func_0204fa2c(p) on ARM; r1 = the fade length in frames, riding into
-// func_0204f5a0's second parameter. 0 means stop now, non-zero ramps down.
-// PORT_HOST_ABI: ARM r1 argument ride-through (fade length).
-int func_0204fa2c(int *p, int fade)
-{
-    func_0204f5a0((u8 *)(size_t)(unsigned)*p, fade);
-    return 0;
-}
 
 // src/func_02009e70.cpp declares Sound_PlayIfNotActive with three
 // parameters and calls it with three; the definition takes four and
@@ -273,39 +207,16 @@ void _ZN5Sound4PlayEjjRK7Vector3(unsigned kind, unsigned id, struct Vector3 *v)
 // both halves of the trace.
 int g_snd_trace_play;
 
-// Sound::Player::SetPlayableSeqCount. Not a ride-through -- an ALIAS. The
-// src writes *(u32 *)(data_020a4d84 + id * 0x1c), and on the DS
-// data_020a4d84 is data_020a4d6c + 0x18, i.e. field +0x18 of the same
-// 32-entry player array. Host symbols are separate objects, so the src
-// version would drop the write into a different block from the one
-// func_0204f63c reads it back out of -- and func_0204f63c uses that field as
-// "how many sequences may this player run", so a lost write means it thinks
-// the limit is 0 and evicts a voice on every single sound. Writing through
-// data_020a4d6c keeps the two views aliased.
-//
-// RULED (w6-c item 3), and the comment above is right that it is not a
-// ride-through, so the reason is spelled for what it is: two ROM symbols
-// naming ONE array at a fixed 0x18 offset, which separate host objects
-// cannot express. The src is correct about the ROM and unlinkable on a host
-// for a reason that has nothing to do with argument passing.
-//
-// THE RETIREMENT RECIPE, since this one has a real one and the port already
-// owns the machinery: give data_020a4d6c and data_020a4d84 adjacent grouped
-// sections the way hal/level_boot.cpp's SAVEBLK macro puts the five-way
-// split of data_0209caa0 back in ROM order, sized so data_020a4d84 lands at
-// data_020a4d6c + 0x18. tools/ovdata.py --pack does the same thing per
-// overlay symbol. With the two symbols genuinely overlapping, the matched TU
-// links and this host body retires. It is a seat, not a ruling, so it wants
-// its own lane rather than a line in this one.
-extern unsigned char data_020a4d6c[];
-// PORT_HOST_ABI: two ROM symbols over one array (data_020a4d84 IS
-// data_020a4d6c + 0x18); separate host objects cannot alias.
-void _ZN5Sound6Player19SetPlayableSeqCountEii(int playerId, int maxSeq)
-{
-    if (playerId < 0 || playerId >= 32) return;
-    *(unsigned int *)(data_020a4d6c + playerId * 0x1c + 0x18) =
-        (unsigned short)maxSeq;
-}
+// Sound::Player::SetPlayableSeqCount LEFT THIS FILE (run linkfull, lane
+// RS3PORT). Its host copy wrote through data_020a4d6c + id * 0x1c + 0x18
+// because the src wrote through data_020a4d84, a second ROM name for the
+// same word that separate host objects cannot alias. Main (#3102) spells
+// the store as data_020a4d6c[index].mPlayableSeqCount over the recovered
+// record in include/SoundPlayerRecord.h, one object on both machines, so the
+// matched TU links through its row in hal/cxx_aliases.cpp instead. The host
+// copy's index check went with it: every caller passes 2, 3, 9, a loop
+// index below 0x20, or an id from data_0208e448's ten ROM records (all
+// below 32), so it never fired.
 
 // func_0203d974: "does anything still need loading off the card?" Every
 // group-load seam in the sound stack asks it first. Two independent reasons
