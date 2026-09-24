@@ -23151,3 +23151,19 @@ endif()
 set_property(SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/hal/cstd_div.c" APPEND PROPERTY
     COMPILE_DEFINITIONS
     "$<$<IN_LIST:$<TARGET_PROPERTY:NAME>,port_slice_shared;walk_window;walk_window_hires;smoke_player>:SM64DS_PORT_FDIV_SEATED=1>")
+
+# ===========================================================================
+# W28 S4CARD (run linkfull, lane S4CARD): the game card's read path and
+# bring-up
+# ===========================================================================
+#
+# ntr/card.cpp is the cartridge on the far side of ROMCTRL (0x040001A4), the
+# command latch (0x040001A8) and the data port (0x04100010): it registers two
+# ranges in ntr/io.cpp's hook table and answers the driver's B7h reads out of
+# hal/fs_names.cpp's virtual ROM image. Only a ROUTED access reaches a hook, so
+# the model is inert until a hostgen'd card TU talks to those registers. It goes
+# on the two game targets, which carry the card driver; smoke_player keeps
+# hal/nitrofs_face.cpp's synchronous FS_Init face and has no card.
+foreach(_tw28c walk_window walk_window_hires)
+    target_sources(${_tw28c} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/ntr/card.cpp")
+endforeach()

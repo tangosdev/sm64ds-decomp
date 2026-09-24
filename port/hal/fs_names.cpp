@@ -247,6 +247,11 @@ struct NitroTables {
     u32 fnt_off, fnt_size, fat_off, fat_size;
     u8 *fnt;
     u8 *fat;
+    /* The ARM9 overlay table (cartridge header +0x50/+0x54), for the virtual
+       ROM image only. Optional, like hal/nitrofs_boot.cpp's overlay words: a
+       catalog without it serves 0xFF there instead of refusing to start. */
+    u32 ovt_off, ovt_size;
+    u8 *ovt;
 };
 
 NitroTables g_tables;
@@ -323,6 +328,8 @@ void tables_load(void)
         else if (!strcmp(key, "fnt_size")) g_tables.fnt_size = value;
         else if (!strcmp(key, "fat_offset")) g_tables.fat_off = value;
         else if (!strcmp(key, "fat_size")) g_tables.fat_size = value;
+        else if (!strcmp(key, "ovt9_offset")) g_tables.ovt_off = value;
+        else if (!strcmp(key, "ovt9_size")) g_tables.ovt_size = value;
     }
     fclose(f);
 
@@ -335,6 +342,42 @@ void tables_load(void)
     }
     g_tables.fnt = slurp("FNT", "nitrofs_fnt.bin", g_tables.fnt_size);
     g_tables.fat = slurp("FAT", "nitrofs_fat.bin", g_tables.fat_size);
+}
+
+/* The overlay table's blob, loaded on the first virtual-image read that
+   needs it and never at start-up: a missing or short file costs that span
+   its bytes (0xFF, said once), not the boot. */
+void ovt_load(void)
+{
+    static int tried;
+    char path[520];
+    FILE *f;
+    long got;
+
+    if (tried)
+        return;
+    tried = 1;
+    if (!g_tables.ovt_size)
+        return;
+    snprintf(path, sizeof path, "%s/build/assets/nitrofs_ovt9.bin", asset_root());
+    f = fopen(path, "rb");
+    if (f) {
+        fseek(f, 0, SEEK_END);
+        got = ftell(f);
+        fseek(f, 0, SEEK_SET);
+        if ((u32)got == g_tables.ovt_size) {
+            g_tables.ovt = (u8 *)malloc(g_tables.ovt_size);
+            if (g_tables.ovt && fread(g_tables.ovt, 1, g_tables.ovt_size, f) != g_tables.ovt_size) {
+                free(g_tables.ovt);
+                g_tables.ovt = 0;
+            }
+        }
+        fclose(f);
+    }
+    if (!g_tables.ovt)
+        fprintf(stderr, "[nfs] the virtual ROM image serves 0xFF over the ARM9 "
+                "overlay table (%#x+%#x): %s is missing or not that size\n",
+                g_tables.ovt_off, g_tables.ovt_size, path);
 }
 
 /* The FAT is 8 bytes per file id, {u32 start, u32 end}, in id order but NOT in
@@ -375,6 +418,57 @@ int trace_on(void)
     return state == 2;
 }
 
+/* FNV-1a 64 over a buffer: the trace's digest of what a read left in its
+   destination. A digest rather than a dump so a whole sweep's reads compare
+   line for line; not md5 because that would be new code or a new import for
+   an equality test this small. */
+unsigned long long fnv1a64(const unsigned char *p, u32 n)
+{
+    unsigned long long h = 0xcbf29ce484222325ull;
+    u32 i;
+    for (i = 0; i < n; ++i) {
+        h ^= p[i];
+        h *= 0x100000001b3ull;
+    }
+    return h;
+}
+
+/* THE READ TRACE'S TAP (run linkfull, lane S4CARD). Under SM64DS_NFS_TRACE the
+   archive's two read slots (+0x3c, +0x44: func_0205cb68 fills both from the
+   one pointer FS_Init hands it) are pointed at this wrapper, which calls the
+   read function they held and then prints what it left in the destination.
+   The line is the same on a build whose archive reads through
+   port_nitrofs_read and on one whose archive reads through the ROM's own
+   func_0205db2c and the card driver behind it, which is the per-read A/B the
+   card model is held to.
+
+   WHEN IT HASHES. port_nitrofs_read is synchronous. func_0205db2c returns 6
+   and finishes on the ROM's card thread, which outranks the thread that
+   asked (priority 4, set by src/func_0206002c.c), so the wake inside
+   func_02060228 runs the whole transfer -- completion callback func_0205db78
+   included -- before func_0205db2c returns here. The wrapper reads the
+   driver's busy bit (data_020a8180 + 0x34, bit 2) to show that rather than
+   assume it: "done" is the completion having run, "pending" would be a read
+   still in flight, which this port has not produced. Trace-only: with the
+   variable unset the slots are the ROM's and this code never runs. */
+typedef int (*ArchiveRead)(void *archive, void *dst, u32 src, u32 len);
+ArchiveRead g_traced_read;
+
+}  /* anonymous namespace */
+
+extern "C" unsigned char data_020a8180[];   /* hal/globals_link100.cpp */
+
+namespace {
+
+int traced_read(void *archive, void *dst, u32 src, u32 len)
+{
+    const int rc = g_traced_read(archive, dst, src, len);
+    const int busy = (data_020a8180[0x34] & 4) != 0;
+    fprintf(stderr, "  [nfs] read %#x +%#x rc %d %s fnv %016llx\n", src, len, rc,
+            busy ? "pending" : "done", fnv1a64((const unsigned char *)dst, len));
+    return rc;
+}
+
 }  /* anonymous namespace */
 
 extern "C" {
@@ -390,7 +484,9 @@ extern "C" {
    Called as (archive, dst, absolute ROM offset, length) from two places -- the
    archive's +0x3c slot for file bytes (func_0205c448) and its +0x44 copy for
    name-table words (func_0205c528). FS_LoadArchive sets both from the same
-   pointer, so there is one function and not two. */
+   pointer, so there is one function and not two. Under SM64DS_NFS_TRACE its
+   line is printed by the tap above (traced_read), with a digest of what the
+   read left in dst. */
 int port_nitrofs_read(void *archive, void *dst, u32 src, u32 len)
 {
     u32 start = 0;
@@ -405,9 +501,6 @@ int port_nitrofs_read(void *archive, void *dst, u32 src, u32 len)
 
     if (len == 0)
         return 0;
-
-    if (trace_on())
-        fprintf(stderr, "  [nfs] read %#x +%#x\n", src, len);
 
     if (src >= g_tables.fnt_off && src + len <= g_tables.fnt_off + g_tables.fnt_size) {
         memcpy(dst, g_tables.fnt + (src - g_tables.fnt_off), len);
@@ -446,6 +539,82 @@ int port_nitrofs_read(void *archive, void *dst, u32 src, u32 len)
     fclose(f);
     ++g_read_file_calls;
     return 0;
+}
+
+/* ---- THE VIRTUAL ROM IMAGE, for ntr/card.cpp ------------------------------
+   Run linkfull, lane S4CARD. The game card model answers a B7h command with a
+   block of the cartridge; this assembles that block out of the same three
+   sources the read face above serves from, laid at their own ROM offsets:
+
+     the FNT and the FAT          build/assets/nitrofs_{fnt,fat}.bin
+     the ARM9 overlay table       build/assets/nitrofs_ovt9.bin (header +0x50)
+     every FAT entry's file       extracted/dsd/files/<the catalog's path>
+
+   and 0xFF everywhere none of them lies (the header, the ARM binaries, the
+   overlay files, the banner and the padding between files: the catalog carries
+   no path for FAT ids 0..102, the overlays, and nothing in this port reads
+   them through the card). A block may cross from one source into the next --
+   BUILDTIME's page also holds the start of the NARC after it -- which the face
+   above refused and a cartridge does not. Nothing is kept: every call reads
+   what it needs, so a block costs a few small reads and there is no 16 MB
+   buffer (port/tools/card_image_check.py compares served blocks to a .nds). */
+void port_nitrofs_rom_read(u32 addr, u32 len, unsigned char *out)
+{
+    static unsigned long long unserved;
+    const u32 end = addr + len;
+    u32 n, i;
+
+    memset(out, 0xFF, len);
+    if (!len)
+        return;
+    tables_load();
+    ovt_load();
+
+    {   /* the three tables */
+        struct { u32 off, size; const u8 *blob; } t[3] = {
+            {g_tables.fnt_off, g_tables.fnt_size, g_tables.fnt},
+            {g_tables.fat_off, g_tables.fat_size, g_tables.fat},
+            {g_tables.ovt_off, g_tables.ovt_size, g_tables.ovt},
+        };
+        for (i = 0; i < 3; ++i) {
+            const u32 lo = t[i].off > addr ? t[i].off : addr;
+            const u32 hi = t[i].off + t[i].size < end ? t[i].off + t[i].size : end;
+            if (t[i].blob && lo < hi)
+                memcpy(out + (lo - addr), t[i].blob + (lo - t[i].off), hi - lo);
+        }
+    }
+
+    n = g_tables.fat_size / 8;
+    for (i = 0; i < n; ++i) {
+        u32 start, stop, lo, hi;
+        const char *rel;
+        char path[520];
+        FILE *f;
+        memcpy(&start, g_tables.fat + i * 8, 4);
+        memcpy(&stop, g_tables.fat + i * 8 + 4, 4);
+        lo = start > addr ? start : addr;
+        hi = stop < end ? stop : end;
+        if (stop <= start || lo >= hi)
+            continue;
+        rel = port_fs_catalog_path(i);
+        if (!rel || !rel[0]) {
+            if (!unserved++)
+                fprintf(stderr, "[nfs] the virtual ROM image has no file for FAT "
+                        "entry %u (%#x..%#x); served as 0xFF\n", i, start, stop);
+            continue;
+        }
+        snprintf(path, sizeof path, "%s/extracted/dsd/files/%s", asset_root(), rel);
+        f = fopen(path, "rb");
+        if (!f || fseek(f, (long)(lo - start), SEEK_SET) != 0 ||
+            fread(out + (lo - addr), 1, hi - lo, f) != hi - lo) {
+            if (!unserved++)
+                fprintf(stderr, "[nfs] the virtual ROM image could not read %u "
+                        "bytes at +%#x of %s; served as 0xFF\n", hi - lo,
+                        lo - start, path);
+        }
+        if (f)
+            fclose(f);
+    }
 }
 
 /* ---- FACE: the archive command proc (ROM: func_0205da94) ------------------
@@ -684,6 +853,13 @@ struct NitroFsNamesBoot {
         port_nitrofs_header_mirror_seed();
         func_0205d89c(-1);
         port_nitrofs_boot_report();
+        /* The read trace's tap (traced_read above): both read slots, only
+           under SM64DS_NFS_TRACE, and only when they hold the one pointer
+           FS_Init registered. */
+        if (trace_on() && data_020a8074[15] && data_020a8074[15] == data_020a8074[17]) {
+            g_traced_read = (ArchiveRead)(size_t)data_020a8074[15];
+            data_020a8074[15] = data_020a8074[17] = (int)(size_t)&traced_read;
+        }
         /* SM64DS_NFS_PROBE=1 runs the cross-seam check at boot instead of
            waiting for a caller. It exists because the useful comparison is
            between THIS path and the game's, and the game's dies later in the

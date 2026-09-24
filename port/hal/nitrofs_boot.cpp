@@ -185,6 +185,43 @@ OverlayWords read_overlay_words(void)
     return w;
 }
 
+// ---- THE ROMCTRL WORD (header +0x60), run linkfull, lane S4CARD -------------
+// src/func_02060b64.c builds every card command's ROMCTRL value as
+// (*(u32 *)0x027FFE60 & ~0x07000000) | 0xA1000000: the cartridge header's "port
+// 40001A4h setting for normal commands" with the block size forced to 0x200 and
+// the start bit set. The port's catalog does not carry that word, so it is read
+// here out of dsd's extraction of the same header (extracted/dsd/header.yaml,
+// normal_cmd_setting; 0x586000 on this cartridge, checked against header +0x60
+// of the .nds). A tree without that file -- a player's kit extracts no header
+// -- seeds 0 and says so once: the bits it carries are the cartridge's timing
+// (KEY1 gaps, clock rate), which ntr/card.cpp does not model, so the block the
+// driver asks for is the same either way.
+unsigned read_romctrl_word(void)
+{
+    char path[520];
+    char line[256];
+    unsigned value = 0;
+    int found = 0;
+    std::FILE *f;
+
+    std::snprintf(path, sizeof path, "%s/extracted/dsd/header.yaml",
+                  nitrofs_asset_root());
+    f = std::fopen(path, "r");
+    if (f) {
+        while (!found && std::fgets(line, sizeof line, f))
+            found = std::sscanf(line, "normal_cmd_setting: %u", &value) == 1;
+        std::fclose(f);
+    }
+    if (!found) {
+        std::fprintf(stderr,
+            "[nitrofs] the ROMCTRL word 0x027ffe60 stays 0: %s carries no "
+            "normal_cmd_setting (a timing-only word; the card model reads the "
+            "same blocks either way)\n", path);
+        value = 0;
+    }
+    return value;
+}
+
 }  // namespace
 
 extern "C" {
@@ -192,7 +229,9 @@ extern "C" {
 // ---- THE SEED --------------------------------------------------------------
 // EIGHT stores now: the four addresses src/func_0205d96c.c reads and the four
 // the overlay readers read, from the eight values tools/asset_catalog.py took
-// out of the cartridge header. Called from
+// out of the cartridge header -- and a NINTH, the ROMCTRL word at 0x027ffe60
+// the card driver reads (read_romctrl_word above says where it comes from).
+// Called from
 // hal/fs_names.cpp's static initialiser immediately before the ROM's own
 // once-guard func_0205d89c, so the ordering is inside one translation unit and
 // does not depend on static-initialiser order between files.
@@ -222,6 +261,7 @@ void port_nitrofs_header_mirror_seed(void)
     ov9[1] = w.ovt9_size;
     ov7[0] = w.ovt7_off;
     ov7[1] = w.ovt7_size;
+    *(volatile unsigned *)0x027ffe60u = read_romctrl_word();
 
     std::fprintf(stderr,
         "[nitrofs] cartridge-header mirror seeded: 0x027ffe40 fnt %#010x+%#010x, "
@@ -241,6 +281,8 @@ void port_nitrofs_header_mirror_seed(void)
     std::fprintf(stderr, "[nitrofs] mirror word 0x027ffe58 = %#010x   header +0x58  ARM7 overlay table offset\n", ov7[0]);
     std::fprintf(stderr, "[nitrofs] mirror word 0x027ffe5c = %#010x   header +0x5c  ARM7 overlay table size, %u records\n",
                  ov7[1], (unsigned)(ov7[1] / 32u));
+    std::fprintf(stderr, "[nitrofs] mirror word 0x027ffe60 = %#010x   header +0x60  ROMCTRL setting for normal commands\n",
+                 *(volatile unsigned *)0x027ffe60u);
 }
 
 // ---- THE READ-BACK ---------------------------------------------------------
