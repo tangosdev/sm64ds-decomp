@@ -43,3 +43,10 @@ src/_ZN9ModelAnimC2Ev.cpp
 src/_ZN8dActor_cD2Ev.cpp
 src/_ZN9ModelAnimD2Ev.cpp
 src/_ZN11dScMgBase_cD2Ev.cpp
+#
+# BATCH B5, ArrowSignRight's D0. The header's PC + MSVC branch is a flat host
+# view with no base class, so there is no inherited operator delete for the
+# campaign's arm to name; this arm calls the D1 body and then the deallocation
+# the ROM's D0 ends with, Memory::Deallocate on the word at 0x020a0eac, by
+# name: the two calls the retired port/faces_sync.txt face made.
+src/_ZN14ArrowSignRightD0Ev.cpp

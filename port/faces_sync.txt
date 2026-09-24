@@ -2206,7 +2206,13 @@ __ZN7fBase_c9SceneNodeC1Ev                                               ??0Scen
 # symbol that body's own pooled literal relocates to.
 # --------------------------------------------------------------------------
 
-__ZN14ArrowSignRightD0Ev                                                 _ZN14ArrowSignRightD1Ev                                          0x02137c2c D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
+# RETIRED at VARIANT2 2026-09-23 (run linkfull, batch B5): src/_ZN14ArrowSignRightD0Ev.cpp
+# defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
+# port/slice_w26_variant2.txt. The arm makes the two calls this row's face
+# made: the D1 body (??1ArrowSignRight@@QAE@XZ, which the face reached
+# through its own inlined _ZN14ArrowSignRightD1Ev face), then
+# _ZN6Memory10DeallocateEPvP4Heap(self, data_020a0eac), read off the object.
+#__ZN14ArrowSignRightD0Ev                                                 _ZN14ArrowSignRightD1Ev                                          0x02137c2c D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
 __ZN11BabyPenguinD0Ev                                                    ??1BabyPenguin@@UAE@XZ                                           0x02120ca0 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
