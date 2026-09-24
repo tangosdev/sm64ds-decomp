@@ -267,7 +267,7 @@ true types breaks the byte match. See `notes/mwccarm-codegen.md` 6az.
 
 ## `include/daUdlift_c.h`
 
-Still a flat generated struct ([ov095](../config/arm9/overlays/ov095/symbols.txt)). Own fields start at 0x320.
+A real `dBgActor_c` subclass ([ov095](../config/arm9/overlays/ov095/symbols.txt)), promoted as [src/actors/daUdlift_c.cpp](../src/actors/daUdlift_c.cpp). Own fields start at 0x320.
 
 | offset | name | evidence |
 |---|---|---|
@@ -281,16 +281,14 @@ Still a flat generated struct ([ov095](../config/arm9/overlays/ov095/symbols.txt
 | 0x33c | `mMiddleY` | `= (mTopY + mBottomY) / 2` |
 | 0x340 | `mSoundHandle` | `= Sound::PlayLong(mSoundHandle, 3, 0x82, …)` in the state functions |
 | 0x344 | `mStateTimer` | incremented every `Behavior`, zeroed on a state change |
-| 0x347 | `mIsArmed` | 1 at init; [func_ov095_02136368](../src/func_ov095_02136368.c) only starts the lift while it is 1 and clears it on trigger; `Behavior` re-arms it when the rider leaves |
+| 0x346 | `mIsAtBottom` | set when the descent ([func_ov095_02136178](../src/actors/daUdlift_c.cpp)) reaches `mBottomY`, cleared when the climb ([func_ov095_02136298](../src/actors/daUdlift_c.cpp)) reaches `mTopY`; the waiting state [func_ov095_02136368](../src/actors/daUdlift_c.cpp) branches on it |
+| 0x347 | `mIsArmed` | 1 at init; [func_ov095_02136368](../src/actors/daUdlift_c.cpp) only starts the lift while it is 1 and clears it on trigger; `Behavior` re-arms it when the rider leaves |
 | 0x348 | `mIsRidden` | set by the collider callback [func_ov095_02136764](../src/func_ov095_02136764.cpp), read once and cleared at the end of every `Behavior` |
 
 Left as `unk_`, honestly:
 
-- `unk_346` — a flag the state functions set and clear ([func_ov095_02136178](../src/func_ov095_02136178.c)
-  sets it, [func_ov095_02136298](../src/func_ov095_02136298.cpp) clears it, [func_ov095_02136368](../src/func_ov095_02136368.c) does both). No body in the tree
-  shows what it means.
 - `unk_349` — set to 0, and to 1 for the `actorID == 0x83` variant. Both
-  `InitResources` and [func_ov095_02136298](../src/func_ov095_02136298.cpp) then compare it against 2 and 0, and
+  `InitResources` and [func_ov095_02136298](../src/actors/daUdlift_c.cpp) then compare it against 2 and 0, and
   the `== 2` arm is unreachable from what the tree can see. It is a byte load in
   the ROM, not the `s32 mVariant` at 0x328 (those are different instructions), so
   it is genuinely its own field and its role is not settled. Do not "fix" the

@@ -1,9 +1,9 @@
 {
   "id": "ov095/daUdlift_c",
   "module": "ov095",
-  "source": "src_tu/actors/daUdlift_c.cpp",
+  "source": "src/actors/daUdlift_c.cpp",
   "promoted_source": "src/actors/daUdlift_c.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x2135ff4..0x2136764, 11 function(s), from build/tu_map.json (tools/tu_map.py); this entry licenses the whole run as one file.",
