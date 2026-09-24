@@ -169,10 +169,12 @@ src/func_ov006_020c057c.cpp
 src/func_ov006_020c07a0.c
 src/func_ov006_020c092c.cpp
 src/func_ov006_020c09f8.c
-# HOST-COPIED (mg6 lane MEM): src/func_ov006_020c0a48.c -- its three
-#   SharedFilePtr file ids are spelled `extern int g0[], g1[], g2[]`, three
-#   globals that exist in no config. The ROM loads 0x205, 0x206 and 0x207 out
-#   of its own literal pool. See port/unmatched/MgMemory2_SubObjCtor.cpp.
+# func_ov006_020c0a48 is back (run linkfull, lane RS4PORT). It was host-copied
+#   (mg6 lane MEM) because its three SharedFilePtr file ids were spelled as
+#   placeholder globals g0/g1/g2; main #3107 passes the pool's 0x205, 0x206 and
+#   0x207, so this is main's blob and port/unmatched/MgMemory2_SubObjCtor.cpp
+#   is retired.
+src/func_ov006_020c0a48.c
 src/func_ov006_020c0aa8.c
 src/func_ov006_020c0af8.c
 src/func_ov006_020c0b74.c

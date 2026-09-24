@@ -9026,11 +9026,10 @@ set(SLICE_MEM_SOURCES hal/scene_mg_memory2.cpp
                       # (the card draw) into src/func_ov006_020f5b98.c and
                       # slice_mem.txt carries it.
                       unmatched/MgMemory2_Faces.cpp
-                      # REPLACES src/func_ov006_020c0a48.c, which is out of the
-                      # slice: its three SharedFilePtr file ids are spelled as
-                      # three globals that exist in no config, and the ROM
-                      # loads 0x205/0x206/0x207 out of its own literal pool.
-                      unmatched/MgMemory2_SubObjCtor.cpp
+                      # unmatched/MgMemory2_SubObjCtor.cpp RETIRED (run
+                      # linkfull, lane RS4PORT): main #3107 spells the three
+                      # file ids 0x205/0x206/0x207, so src/func_ov006_020c0a48.c
+                      # is back on slice_mem.txt.
                       )
 # unmatched/MgMemory2_ModelRender_020c1804.cpp and
 # unmatched/MgMemory2_ShadowSlot_020c06dc.cpp RETIRED (run link100, lane
@@ -16690,8 +16689,10 @@ set(SCENE_MG_SLOT1_SOURCES hal/scene_mg_slot1.cpp)
 # references port_mg_slot3_spawn and port_scene_fill_slot3 by name.
 port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_mug.txt" SLICE_MUG_LINES)
 set(SLICE_MUG_SOURCES hal/scene_mg_slot3.cpp
-                      unmatched/MgSlot3_StateDispatch.cpp
-                      unmatched/MgSlot3_SubObjCtor.cpp)
+                      unmatched/MgSlot3_StateDispatch.cpp)
+# unmatched/MgSlot3_SubObjCtor.cpp RETIRED (run linkfull, lane RS4PORT): main
+# #3107 spells the two file ids 0x205/0x206, so src/func_ov006_020c221c.c is
+# on slice_mug.txt.
 # unmatched/MgSlot3_SubObjUpdate_020c1f4c.cpp RETIRED (run link100, lane
 # FOLD2): its shadow's v3() is ROM index 3, BlendModelAnim::UpdateVerts, which
 # is what _ZTV14BlendModelAnim[3] holds again. src/func_ov006_020c1f4c.cpp
