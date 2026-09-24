@@ -7,8 +7,9 @@
  * within 50.0 below is undone (func_ov070_02121be4). A Mario it touches is
  * burnt (Player::Burn) unless he is vanished.
  *
- * One TU, 21 functions. tubuild create refused it (legacy bodies wrapped in
- * extern "C" { }), so it began as a reverse-ROM-order concatenation.
+ * One TU, 21 functions. It began as the old one-function files
+ * concatenated in reverse ROM order: their bodies were wrapped in
+ * extern "C" { }, which the merge tool could not take apart.
  *
  * DO NOT "TIDY" THESE -- each one is load-bearing:
  *   mwcc emits one .text section per ordinary definition in reverse source
@@ -21,8 +22,8 @@
  *   func_ov070_02121d50 calls dBgCh_Actr_UpdateContinuous_Veneer, as the
  *   ROM does, not UpdateContinuous.
  *
- * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS (Fix12<int> by value, wall
- * 6az, unless noted):
+ * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS (Fix12<int> by value, see
+ * notes/mwccarm-codegen.md 6az, unless noted):
  *   dCcAc_c::Init, DropShadowRadHeight and
  *   Particle::System::NewUnkCallback818.
  *   dBgCh_Actr::Init: its header's Fix12i mangles as int.
@@ -88,7 +89,8 @@ extern "C" daKpFrSpawnInfo g_profile_KERONPA_FIRE = {
  * Nested math/Matrix.h spelling (via ShadowModel.h) scalarizes otherwise. */
 struct M48 { int w[12]; };
 extern "C" {
-/* Fix12-by-value, 6az. dBgCh_Actr::Init header Fix12i mangles as int. */
+/* Fix12-by-value, notes/mwccarm-codegen.md 6az. dBgCh_Actr::Init header Fix12i
+   mangles as int. */
 extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(dCcAc_c*, dActor_c*, Fix12i, Fix12i, unsigned int, unsigned int);
 extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(dBgCh_Actr*, dActor_c*, Fix12i, Fix12i, void*, int);
 extern int IDENTITY_MATRIX4X3[];
@@ -244,7 +246,8 @@ int func_ov070_02121eb0(void *c) {
 }
 
 extern "C" {
-/* Fix12-by-value, 6az -- header method form homes the class args. */
+/* Fix12-by-value, notes/mwccarm-codegen.md 6az -- header method form homes the
+   class args. */
 extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     dActor_c *actor, ShadowModel *shadow, Matrix4x3 *matrix,
     Fix12i radius, Fix12i depth, u32 opacity);

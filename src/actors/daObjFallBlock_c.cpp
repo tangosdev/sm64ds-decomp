@@ -35,24 +35,24 @@
  *   callee drops `mov r1, r2`.
  *
  *   Behavior case 2 keeps `((int)this + 0x8c) & U64` / `+ 0x90` for mAngleX /
- *   mAngleZ: the named stores size-DIFF (999 words). Case 1 keeps
- *   (long long)sinv * 0x19000; a plain int multiply size-DIFFs.
+ *   mAngleZ: the named stores do not match. Case 1 keeps
+ *   (long long)sinv * 0x19000; a plain int multiply changes the code size.
  *
- * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS (Fix12<int> by value, wall
- * 6az, unless noted):
+ * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS (Fix12<int> by value, see
+ * notes/mwccarm-codegen.md 6az, unless noted):
  *   dBgActor_c::IsClsnInRange (Behavior); the header method form is refused
  *   by the bytes (include/dBgActor_c.h).
  *   Particle::System::NewSimple (Kill's three Fix12<int>); declaring the
  *   true types changes how the caller passes them.
  *   dBgW_KcMbg::SetFile (InitResources' scale 0x199); the header method
- *   homes the argument and size-DIFFs this TU.
+ *   homes the argument and changes the code size.
  *   MarkForDestruction in func_ov098_0213a0a8: fBase_c.h spells it void,
  *   and this helper returns the callee's r0.
  *
  * Known limits:
  *   func_020393c4 is a 4-byte store into dBgW+0x1c (unk_1c); this TU stores
  *   daObjFallBlock_c_OnStoodOn there. Naming belongs with dBgW in arm9.
- *   No factory and no g_profile (S14): the class is abstract, with
+ *   No factory and no g_profile: the class is abstract, with
  *   InitResources / CleanupResources = 0; the leaves own their records.
  */
 
@@ -179,7 +179,8 @@ int daObjFallBlock_c_InitResources(daObjFallBlock_c *self, ResourceDescriptor *f
 /* daObjFallBlock_c::Behavior - the whole fall-block state machine; see the
    class header for the field-by-field account. Kill() is this class's own
    named virtual (key function). UpdatePos is dActor_c's. dBgW calls go
-   through mMeshCollider. IsClsnInRange stays mangled -- wall 6az. */
+   through mMeshCollider. IsClsnInRange stays mangled --
+   notes/mwccarm-codegen.md 6az. */
 s32 daObjFallBlock_c::Behavior()
 {
     char *c = (char *)this;
@@ -259,7 +260,8 @@ s32 daObjFallBlock_c::Behavior()
             mStateTimer = 0x5a;
         } else {
             sinv = data_02082214[(*(u16 *)&mBobPhase >> 4) << 1];
-            /* (long long) is load-bearing: a plain int mul size-DIFFs. */
+            /* (long long) is load-bearing: a plain int mul changes the code
+               size. */
             mPosY =
                 mRestPos.y
                 + (int)(((long long)sinv * 0x19000 + 0x800) >> 12);
@@ -287,7 +289,7 @@ s32 daObjFallBlock_c::Behavior()
         }
         {
             /* Integer-cast address form: named mAngleX / mAngleZ stores
-               size-DIFF Behavior (999 words). */
+               change the code size of Behavior. */
             s16 t = *(s16 *)(((int)c + 0x8c) & U64);
             t = (s16)(t + mShakeX);
             *(s16 *)(((int)c + 0x8c) & U64) = t;
@@ -403,7 +405,7 @@ void func_ov098_0213a23c(daObjFallBlock_c *t)
  * The second Vector3 is memberwise on purpose: Vector3 declares a destructor
  * (types.h), so a whole-object assignment compiles to an ldm/stm pair, four
  * instructions where the ROM has six. Particle::System::NewSimple stays
- * mangled -- wall 6az. */
+ * mangled -- notes/mwccarm-codegen.md 6az. */
 void daObjFallBlock_c::Kill()
 {
     Vector3 pos;

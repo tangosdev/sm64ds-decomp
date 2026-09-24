@@ -104,13 +104,13 @@ int daObjSimpleLift_c::Behavior()
 }
 
 // @symbol _ZN17daObjSimpleLift_c13InitResourcesEv
-/* Which slab this is comes from the spawn ID; everything else follows from
+/* Which slab this is comes from the actor ID; everything else follows from
    the variant index. */
 int daObjSimpleLift_c::InitResources()
 {
     u8* c = (u8*)((void*)this);
-    u16 spawnID = *(u16*)(c+0xc);
-    switch (spawnID) {
+    u16 actorID = *(u16*)(c+0xc);
+    switch (actorID) {
         case 0x37: mVariant = 6; break;
         case 0x7c: mVariant = 3; break;
         case 0x93: mVariant = 4; break;

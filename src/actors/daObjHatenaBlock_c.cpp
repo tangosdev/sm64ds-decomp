@@ -16,7 +16,7 @@
  * DO NOT "TIDY" THESE -- each one is load-bearing:
  *
  *   common.h must be included first. Otherwise Model.h's nested Matrix4x3
- *   wins and func_ov102_02149e38 / 02149ff0 size-DIFF (0x18 / 0x1c).
+ *   wins and func_ov102_02149e38 / 02149ff0 change size (0x18 / 0x1c).
  *
  *   The destructor stays inline; out of line, mwccarm emits D0 before D1.
  *
@@ -27,8 +27,8 @@
  *   an inline dtor; the manifest marks it compiler_only).
  *
  *   The (Vector3 *)&mPosX puns in the spawn helpers. dActor_c.h has no Pos()
- *   on this tree (S18 uniquifiers), and a real Vector3 copy would emit an
- *   extra Vector3 D1 (S3/S23). The copies here are licensed
+ *   accessor, and a real Vector3 copy would emit an extra Vector3 D1
+ *   destructor. The copies here are licensed
  *   deadstrip-duplicates.
  *
  *   OnAttacked1 / OnHitFromUnderneath keep their valueless nested-if exits;
@@ -36,8 +36,8 @@
  *
  * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS:
  *
- *   (a) Fix12<int> passed by value -- wall 6az. A method call homes the
- *       argument and the bytes move: ModelAnim::SetAnim and
+ *   (a) Fix12<int> passed by value (notes/mwccarm-codegen.md 6az). A
+ *       method call homes the argument and the bytes move: ModelAnim::SetAnim and
  *       dBgW_KcMbg::SetFile (InitResources), dBgActor_c::IsClsnInRange
  *       (Behavior), dActor_c::DropShadowScaleXYZ (func_ov102_02149ea4),
  *       Particle::System::NewSimple (also absent from Particle.h).
@@ -53,7 +53,8 @@
  *   The func_ov102_* helpers keep their linker names: offset soup and PMF
  *   dispatch through data_ov102_0214e890 / 0214e870 / 0214e8c0. None coined.
  *   data_ov002_0210da58 and gPFlower* stay char[]. A SharedFilePtr decl
- *   would tip ov002 plurality (Goomboss, daFeather, PowerFlower; S27), and
+ *   would outvote the char[] spelling that Goomboss, daFeather and
+ *   PowerFlower share, and check_decl_agreement would flag those files; and
  *   Init's LoadFile still treats each slot as the model handle.
  *
  * NOT OWNED BY THIS TU (named where they live, not here):
@@ -70,7 +71,8 @@
  *     by mBounceAng.
  *   data_0209caa0 / 0209f2d8 / 0209f2f8 / 0209f32c / 0209f318 / 0209e650 /
  *     020a0edc -- arm9 globals.
- *   g_profile_HATENA_BLOCK / ITEM_BLOCK / VS_ITEM_BLOCK / CAP_BLOCK_* (S14).
+ *   g_profile_HATENA_BLOCK / ITEM_BLOCK / VS_ITEM_BLOCK / CAP_BLOCK_* (overlay
+ *   data).
  */
 
 /* common.h first: see the header. */
@@ -146,8 +148,9 @@ extern SharedFilePtr data_ov002_0210d9a0;
 extern SharedFilePtr data_ov002_0210d9c0;
 extern SharedFilePtr data_ov002_0210d9d8;
 extern SharedFilePtr data_ov002_0210d9e0;
-/* da58 / gPFlower*: SharedFilePtr here would tip ov002 plurality
-   (Goomboss, daFeather, PowerFlower). S27. */
+/* da58 / gPFlower*: SharedFilePtr here would outvote the char[]
+   spelling Goomboss, daFeather and PowerFlower share, so
+   check_decl_agreement would flag those files. */
 extern SharedFilePtr data_ov002_0210da18;
 extern SharedFilePtr data_ov002_0210da30;
 extern SharedFilePtr data_ov002_0210da40;

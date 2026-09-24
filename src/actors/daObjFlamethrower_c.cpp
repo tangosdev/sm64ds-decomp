@@ -145,7 +145,7 @@ int daObjFlamethrower_c::Behavior()
     int ang0;
     int ang1;
     char *ppos;
-    int swayAngle;
+    int wavePhase;
     char *pclsn;
     int j;
     int in[3];
@@ -223,7 +223,7 @@ int daObjFlamethrower_c::Behavior()
         i = 0;
         if (i < count) {
             ppos = self;
-            swayAngle = i;
+            wavePhase = i;
             pclsn = self;
             do {
                 if (i == (int)(*((u8 *)(self + 0x465))))
@@ -250,7 +250,7 @@ int daObjFlamethrower_c::Behavior()
                         *((int *)(ppos + 0x3ac)) = sum2[2];
                     }
                     if (data_0209f2f8 == 0xc) {
-                        s16 wave = data_02082214[(((u16)(s16)swayAngle) >> 4) * 2];
+                        s16 wave = data_02082214[(((u16)(s16)wavePhase) >> 4) * 2];
                         *((int *)(ppos + 0x3a8)) = (*((int *)(self + 0x60)))
                             + ((int)(((((long long)wave) * (-0xaa000)) + 0x800) >> 12));
                     }
@@ -288,7 +288,7 @@ int daObjFlamethrower_c::Behavior()
                     func_020227ec(part[0], part[1], part[2], ang, data_ov095_02136f98[i]);
                 }
                 ppos += 0xc;
-                swayAngle += 0x1000;
+                wavePhase += 0x1000;
                 pclsn += 0x3c;
                 i++;
             } while (i < count);

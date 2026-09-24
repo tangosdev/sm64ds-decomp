@@ -3,10 +3,13 @@
  *
  * He idles until a Mario (actor 0xbf) touches him, then turns to face the
  * player and talks. His head tracks the closest player and he fades out at a
- * distance. A Toad tied to a star (low byte of mAngleX) says the next line
- * of his dialogue and, after the talk, spawns POWER_STAR 0xb2 once the
- * player owns the star count data_ov085_0212f27c asks for. Variant 1 keeps
- * a companion actor 0x10d keyed to the nearest player's character.
+ * distance. A Toad tied to a star (low byte of mAngleX) whose star is still
+ * uncollected, while the player owns the star count data_ov085_0212f27c asks
+ * for, says his base line, spawns POWER_STAR 0xb2 after the talk and only
+ * then moves on to his next line. If the star is already collected or the
+ * player has too few stars, InitResources starts him on the next line
+ * instead. Variant 1 keeps a companion actor 0x10d keyed to the nearest
+ * player's character.
  *
  * DO NOT "TIDY" THESE -- each one is load-bearing (all measured):
  *   common.h before math/Matrix.h: the flat Matrix4x3 keeps the destructor
@@ -18,7 +21,7 @@
  *
  * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS:
  *   dCcAc_c::Init, ModelAnim::SetAnim, DropShadowRadHeight and
- *   Sound::PlaySub take Fix12<int> by value (wall 6az).
+ *   Sound::PlaySub take Fix12<int> by value (notes/mwccarm-codegen.md 6az).
  *   The companion Spawn: forming a Vector3 reference over int storage is
  *   not free, unlike the star Spawn's real local.
  *

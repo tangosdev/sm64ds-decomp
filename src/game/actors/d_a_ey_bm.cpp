@@ -26,8 +26,9 @@
  *
  * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS:
  *   dCcAcPos_c::Init, dBgCh_Actr::Init, DropShadowRadHeight and Player::Hurt
- *   pass Fix12<int> by value (wall 6az); the header method forms size-DIFF.
- *   dBgCh_Actr::Init also mangles Fix12i as `i` where the ROM has Fix12<int>.
+ *   pass Fix12<int> by value (notes/mwccarm-codegen.md 6az); the header method
+ *   forms change the code size. dBgCh_Actr::Init also mangles Fix12i as `i`
+ *   where the ROM has Fix12<int>.
  *   Particle::System::New / NewUnkCallback818: no shared header declares
  *   them.
  *   dBgCh_Actr_UpdateDiscreteNoLava_veneer (UpdateCollision): the named
@@ -37,7 +38,7 @@
  *   data_ov071_021230b8 (the collider offset) is owned by overlay .data.
  *   UpdateCollision takes R10dBgCh_Actr; a pointer would generate identical
  *   ARM.
- *   g_profile_EYEKUN_BEAM stays outside the licensed .text (S14).
+ *   g_profile_EYEKUN_BEAM is overlay data outside this TU's .text.
  */
 
 #include "common.h"

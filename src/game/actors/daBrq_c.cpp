@@ -30,8 +30,9 @@
  *   SetRanges, dCcAcPos_c::Init, dBgCh_Actr::Init, ModelAnim::SetAnim,
  *   TextureSequence::SetFile, TextureTransformer::SetFile,
  *   DropShadowRadHeight and Particle::System::NewSimple pass Fix12<int> by
- *   value (wall 6az). dBgCh_Actr::Init's header Fix12i also mangles as int.
- *   UpdateDefeatedState calls dBgCh_Actr_UpdateDiscreteNoLava_veneer
+ *   value (notes/mwccarm-codegen.md 6az). dBgCh_Actr::Init's header Fix12i
+ *   also mangles as int. UpdateDefeatedState calls
+ *   dBgCh_Actr_UpdateDiscreteNoLava_veneer
  *   (0x02038420), not the method body at 0x02037024.
  *
  * Known limits:
@@ -78,7 +79,7 @@ extern "C" BrqSpawnInfo g_profile_BIRIKYU = {
 };
 
 /* SetRanges / dCcAcPos_c::Init / dBgCh_Actr::Init stay mangled (Fix12 by
- * value, wall 6az). */
+ * value, notes/mwccarm-codegen.md 6az). */
 #include "TextureSequence.h"
 struct SharedFilePtr;
 struct BMD_File;
@@ -320,8 +321,8 @@ s32 daBrq_c::UpdateActiveState()
 
     {
         int idx = ((unsigned short)mPrevAngleY) >> 4;
-        int cosv = data_02082214[idx * 2];
-        mCylinderOffset.x = (int)(((s64)orbitRadius * cosv + 0x800) >> 0xc);
+        int sinv = data_02082214[idx * 2];
+        mCylinderOffset.x = (int)(((s64)orbitRadius * sinv + 0x800) >> 0xc);
     }
     {
         int idx = ((unsigned short)mOrbitAngle) >> 4;
@@ -330,8 +331,8 @@ s32 daBrq_c::UpdateActiveState()
     }
     {
         int idx = ((unsigned short)mPrevAngleY) >> 4;
-        int sinv = data_02082214[idx * 2 + 1];
-        mCylinderOffset.z = (int)(((s64)orbitRadius * sinv + 0x800) >> 0xc);
+        int cosv = data_02082214[idx * 2 + 1];
+        mCylinderOffset.z = (int)(((s64)orbitRadius * cosv + 0x800) >> 0xc);
     }
 
     AddVec3(&mOrbitCenter, &mCylinderOffset, &mOrbitCenter);
@@ -340,8 +341,8 @@ s32 daBrq_c::UpdateActiveState()
 
     {
         int idx = ((unsigned short)mSpinAngle) >> 4;
-        int cosv = data_02082214[idx * 2];
-        int scale = (int)(((s64)0x555 * cosv + 0x800) >> 0xc) + 0x800;
+        int sinv = data_02082214[idx * 2];
+        int scale = (int)(((s64)0x555 * sinv + 0x800) >> 0xc) + 0x800;
         mScaleX = scale;
         mScaleY = scale;
         mScaleZ = scale;

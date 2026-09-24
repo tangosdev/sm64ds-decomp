@@ -19,8 +19,9 @@
  *   TU's: it is defined in src/game/actors/d_a_obj_hm_bskt.cpp and is also
  *   called from daObjHmBskt_c::Behavior.
  *   SetAnim / dCcAc_c::Init / dBgCh_Actr::Init / DropShadowRadHeight /
- *   IsTooFarAwayFromPlayer stay mangled (Fix12 by value, wall 6az; the dBgCh
- *   Init header's Fix12i mangles as int).
+ *   IsTooFarAwayFromPlayer stay mangled (Fix12 by value,
+ *   notes/mwccarm-codegen.md 6az; the dBgCh Init header's Fix12i mangles as
+ *   int).
  *   func_ov030_02112094 copies via a local M4x3, not Matrix4x3, so include
  *   order is free. Player+8 param1 and cap +0xc8 belong on those classes, as
  *   do the data_ov030_* handles. The factories live in d_a_mky_monkey_*.c

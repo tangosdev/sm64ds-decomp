@@ -16,9 +16,10 @@
  *   include/daDgr_c.h emits the retail D1/D0 pair (0x021111a0 then
  *   0x021111e4) with no D2.
  *
- * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS (Fix12<int> by value, wall
- * 6az): dBgW_KcMbg::SetFile (InitResources), dBgActor_c::IsClsnInRange,
- * dActor_c::Earthquake and Particle::System::New (Behavior).
+ * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS (Fix12<int> by value, see
+ * notes/mwccarm-codegen.md 6az): dBgW_KcMbg::SetFile (InitResources),
+ * dBgActor_c::IsClsnInRange, dActor_c::Earthquake and Particle::System::New
+ * (Behavior).
  *
  * Known limits:
  *   func_020393d4 stores dBgW::UpdatePosAndAngs (there is no setter).
@@ -26,7 +27,7 @@
  *   data_ov025_02113a68 / 02113a60 are SharedFilePtr handles (sinit BSS);
  *   data_ov025_02112c28 is the CLPS block.
  *   func_ov025_* keep ROM labels: the ROM has no identifiers for them.
- *   g_profile_DONGURU lives outside this TU (S14).
+ *   g_profile_DONGURU lives outside this TU.
  */
 
 /* common.h MUST COME FIRST. It and math/Matrix.h both define Matrix4x3;
@@ -67,7 +68,8 @@ void func_02012694(s32 a, void *b);
 void _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(daDgr_c *self, Vec3 *pos, s32 fix);
 u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
 u32 slot, u32 effect, s32 x, s32 y, s32 z, const void *rot, void *cb);
-/* SetFile takes Fix12<int> by value (wall 6az); a real method call DIFFs. */
+/* SetFile takes Fix12<int> by value (notes/mwccarm-codegen.md 6az); a real
+   method call does not match. */
 void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block( dBgW_KcMbg*, KCL_File*, const Matrix4x3&, Fix12i, short, CLPS_Block&);
 void func_020393d4(int* p, int v);
 extern CLPS_Block data_ov025_02112c28;
@@ -125,8 +127,8 @@ s32 daDgr_c::InitResources()
  * trail either end, and the last frame of each roll shakes the ground.
  *
  * IsClsnInRange, Earthquake and Particle::System::New all carry Fix12<int> by
- * value in their mangled names (wall 6az), so all three stay extern-C free
- * functions.
+ * value in their mangled names (notes/mwccarm-codegen.md 6az), so all three
+ * stay extern-C free functions.
  *
  * Swept greedily against build_pin.verify -- 33 substitutions, 33 kept once the
  * three real obstacles were fixed: `mAngleY' is read UNSIGNED at the table-index

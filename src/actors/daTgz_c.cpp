@@ -1,10 +1,15 @@
 //cpp
 /* daTgz_c -- the Spiny on the castle roof, ov077.
  *
- * Six PMF state records (func_ov077_02125e94 picks one); state 5 is the
- * spinning tumble after a mega player flattens it. It caches the water
- * surface under it once, splashes on entry, and poofs away if it sinks too
- * far, drops below course 0x1c's floor, or strays too far from the player.
+ * Six PMF state records (func_ov077_02125e94 picks one). State 0 is the
+ * spinning bounce that settles back into the walk (state 1); state 4 spins
+ * the same way after its carrier lets go. State 5 is the knock-up: it springs
+ * up at vertical speed 40.0, flips backward 0x1000 a frame, and on landing
+ * (or 45 frames later) drops a coin, poofs and is destroyed. It caches the
+ * water surface under it once, splashes on entry, and poofs away if it sinks
+ * too far or drops below course 0x1c's floor. Outside states 4 and 5, while
+ * it is more than 1500.0 from the player it stops updating and counts
+ * mDespawnTimer down from 44 frames, then is destroyed with no poof.
  *
  * Cartridge names: _ZTS7daTgz_c at 0x02127948, _ZTI7daTgz_c at 0x02127954,
  * vtable address point _ZTV7daTgz_c at 0x02127984. Thirty-four functions,

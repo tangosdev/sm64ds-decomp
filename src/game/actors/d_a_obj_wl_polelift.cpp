@@ -21,10 +21,10 @@
  *   common.h first (see the note on the includes).
  *   The destructor is inline: out of line it emits D0 before D1, plus a D2.
  *
- * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS (Fix12<int> by value, wall
- * 6az):
+ * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS (Fix12<int> by value, see
+ * notes/mwccarm-codegen.md 6az):
  *   dCcAcPos_c::Init is not declared on dCcAcPos_c.h, and a by-value Fix12
- *   homes the argument and size-DIFFs InitResources.
+ *   homes the argument and changes the size of InitResources.
  *   dActor_c::DropShadowScaleXYZ takes three Fix12<int> by value.
  *
  * Known limits:

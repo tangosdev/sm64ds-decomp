@@ -307,7 +307,7 @@ extern "C" int func_ov064_021187d0(daBbl_c *self)
 
 // @symbol func_ov064_02118760
 /* Execute hook of the waiting state: once the 180 frames are up, spawn actor
- * 0xd6 -- the bubble that actually jumps -- 480.0 above this one, and start
+ * 0xd6 -- the bubble that actually jumps -- 120.0 above this one, and start
  * the wait over. This is what makes the fixed flame a flame fountain.
  *
  * THE VOLATILE STACK POSITION IS LOAD-BEARING. The three words are written

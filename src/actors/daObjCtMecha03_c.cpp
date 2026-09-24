@@ -18,10 +18,10 @@
  *   spelling.
  *
  *   Behavior's I16(0x322), the accelP mask and the 0x300+0x22 load. The named
- *   mSwingAngle / mSwingSpeed CSE to the r4+0x300 base and DIFF.
+ *   mSwingAngle / mSwingSpeed CSE to the r4+0x300 base and do not match.
  *
  *   dBgW_KcMbg::SetFile / DropShadowScaleXYZ / dBgActor_c::IsClsnInRange stay
- *   mangled: Fix12<int> by value (wall 6az).
+ *   mangled: Fix12<int> by value (notes/mwccarm-codegen.md 6az).
  *
  * Known limits:
  *   func_ov065_02119fe8 and func_ov065_0211a114 keep their address-derived
@@ -31,7 +31,7 @@
  *   callback; there is no setter.
  *
  * NOT OWNED BY THIS TU (it is text-only): the data_ov065_* handles; no
- * g_profile_CT_MECHA03 (S14); data_ov035_02112198, the CLPS_Block, whose
+ * g_profile_CT_MECHA03; data_ov035_02112198, the CLPS_Block, whose
  * name is an overlay_residency settlement rather than a ROM name.
  */
 

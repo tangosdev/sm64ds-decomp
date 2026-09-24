@@ -25,11 +25,11 @@
  *   DaJgmVector3Words.
  *
  *   DaJgmVector3Words: a local Vector3 emits a vague-linkage ~Vector3 into
- *   this text-only TU (S3/S23). UpdateHoverState / UpdateThrowState /
+ *   this text-only TU. UpdateHoverState / UpdateThrowState /
  *   UpdateWallAndWater / HandlePlayerCollision / DieAndDropCoins.
  *
- *   *(Vector3 *)&mPosX / mSpawnPosX: dActor_c has no Pos() on this tree
- *   (S18). UpdateHoverState / UpdateFlight / HandlePlayerCollision.
+ *   *(Vector3 *)&mPosX / mSpawnPosX: dActor_c has no Pos() accessor.
+ *   UpdateHoverState / UpdateFlight / HandlePlayerCollision.
  *
  *   dBgCh_Actr_UpdateDiscreteNoLava_veneer is the retail call
  *   (UpdateFallState / UpdateWallAndWater). The named UpdateDiscreteNoLava
@@ -43,7 +43,7 @@
  *
  * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS:
  *
- *   (a) Fix12<int> passed by value -- wall 6az:
+ *   (a) Fix12<int> passed by value (notes/mwccarm-codegen.md 6az):
  *       dCcAcPos_c::Init / dBgCh_Actr::Init (InitResources; the dBgCh Init
  *       header's Fix12i mangles as i, the ROM's as 5Fix12IiE);
  *       ModelAnim::SetAnim / TextureSequence::SetFile (EnterHoverState /
@@ -58,7 +58,8 @@
  *       dBgCh_Actr.h (UpdateWallAndWater). Sound::PlayLong's header takes
  *       Vector3 & + s16 while this TU passes a pointer + unsigned
  *       (UpdateHoverState / UpdateThrowState). PlayBank0 puns mCamSpacePosX
- *       (S18), and a Vector3 local would emit D1 (S3/S23) -- EnterFallState /
+ *       (dActor_c has no accessor), and a Vector3 local would emit a Vector3
+ *       D1 destructor -- EnterFallState /
  *       HandlePlayerCollision.
  *
  *   ApproachLinear2 keeps C++ linkage (_Z15ApproachLinear2Rsss) in
@@ -89,7 +90,7 @@
  *   data_02082214 -- the NitroSDK sin/cos table (EnterSpitState /
  *     UpdateHoverBob).
  *   data_020a0e68 -- the arm9 scratch Matrix4x3 UpdateModels writes.
- *   g_profile_JUGEM stays outside the licensed .text (deadstrip-data, S14).
+ *   g_profile_JUGEM is overlay data outside this TU's .text.
  */
 
 #include "common.h"
@@ -497,7 +498,7 @@ s32 daJgm_c::UpdateYoshiMouthState()
 // @symbol _ZN7daJgm_c14EnterSpitStateEv
 s32 daJgm_c::EnterSpitState()
 {
-    dActor_c *carried;
+    dActor_c *carrier;
     int *pPosX;
     int *pPosY;
     int *pPosZ;
@@ -508,18 +509,18 @@ s32 daJgm_c::EnterSpitState()
 
     mFlags &= ~0x80000;
 
-    carried = mCarryActor;
+    carrier = mCarryActor;
     pPosX = &mPosX;
-    mHorzSpeed = carried->mHorzSpeed + 0xa000;
+    mHorzSpeed = carrier->mHorzSpeed + 0xa000;
 
-    carried = mCarryActor;
+    carrier = mCarryActor;
     pPosY = &mPosY;
     pPosZ = &mPosZ;
-    mPrevAngleY = carried->mAngleY;
+    mPrevAngleY = carrier->mAngleY;
 
-    carried = mCarryActor;
+    carrier = mCarryActor;
 
-    src = &carried->mPosX;
+    src = &carrier->mPosX;
     mPosX = src[0];
     mPosY = src[1];
     mPosZ = src[2];

@@ -27,18 +27,20 @@
  *   common.h FIRST: InitResources assigns IDENTITY_MATRIX4X3 into mShadowMat,
  *   and only common.h's flat s32 m[12] gives the ROM's twelve-word copy.
  *   State1 / State3 bump mSubstate through (int)this + 0x3a2; the named
- *   `mSubstate = mSubstate + 1` size-DIFFs.
- *   AdvancePath: PathPtr::GetNode / NumNodes as methods size-DIFF (14
- *   words); named &mPath / &mPosX / mRadius / mAngleY size-DIFF (29 words);
+ *   `mSubstate = mSubstate + 1` changes the code size.
+ *   AdvancePath: PathPtr::GetNode / NumNodes as methods change the code
+ *   size (14 words); named &mPath / &mPosX / mRadius / mAngleY change it
+ *   too (29 words);
  *   mPathNode is incremented and compared signed through (int)this + 0x388.
  *   UpdateRollAngle / InitState0 keep (long long)(int) on mRadius / mScaleX.
  *
  * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS:
  *   dCcAc_c::Init, dBgCh_Actr::Init, dActor_c::SetRanges /
  *   DropShadowRadHeight / Earthquake, Particle::RunningSlidingDustAt,
- *   Clipper::Func_02015560 and Player::Hurt pass Fix12<int> by value (wall
- *   6az); the header method forms size-DIFF. dBgCh_Actr::Init's header
- *   Fix12i also mangles as int where the ROM has Fix12<int>.
+ *   Clipper::Func_02015560 and Player::Hurt pass Fix12<int> by value (see
+ *   notes/mwccarm-codegen.md 6az); the header method forms change the code
+ *   size. dBgCh_Actr::Init's header Fix12i also mangles as int where the ROM
+ *   has Fix12<int>.
  *   dBgCh_Actr_UpdateContinuous_Veneer: the ROM calls the veneer, not
  *   UpdateContinuous (a direct call is WRONG-DEST).
  *   dBgCh_Actr::GetFloorResult and Sound::PlayLong: no header declares them.

@@ -10,8 +10,9 @@
  * touch while it is being eaten (flag 0x20000) sends it to state 2, which
  * poofs it once neither 0x20000 nor 0x40000 is set.
  *
- * One TU, 25 functions. tubuild create refused it (legacy bodies wrapped in
- * extern "C" { }), so it began as a reverse-ROM-order concatenation.
+ * One TU, 25 functions. It began as the old one-function files
+ * concatenated in reverse ROM order: their bodies were wrapped in
+ * extern "C" { }, which the merge tool could not take apart.
  *
  * DO NOT "TIDY" THESE -- each one is load-bearing:
  *   mwcc emits one .text section per ordinary definition in reverse source
@@ -22,8 +23,8 @@
  *   func_ov070_021213cc calls dBgCh_Actr_UpdateDiscreteNoLava_veneer: the
  *   veneer is the retail call destination.
  *
- * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS (Fix12<int> by value, wall
- * 6az):
+ * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS (Fix12<int> by value, see
+ * notes/mwccarm-codegen.md 6az):
  *   dCcAcPos_c::Init, dBgCh_Actr::Init (its header Fix12i also mangles as
  *   int), ModelAnim::SetAnim, DropShadowRadHeight and
  *   Particle::System::NewSimple.
@@ -280,10 +281,10 @@ int func_ov070_0212156c(daKrpa_c *self) {
     if (self->mFrameController.cursor == 0x1e) {
         Vector3 firePos;
         int idx = (int)(u16)self->mAngleY >> 4;
-        int sinv = data_02082214[idx * 2 + 1];
-        int cosv = data_02082214[idx * 2];
-        int offZ = (int)(((s64)sinv * 0x50000 + 0x800) >> 12);
-        int offX = (int)(((s64)cosv * 0x50000 + 0x800) >> 12);
+        int cosv = data_02082214[idx * 2 + 1];
+        int sinv = data_02082214[idx * 2];
+        int offZ = (int)(((s64)cosv * 0x50000 + 0x800) >> 12);
+        int offX = (int)(((s64)sinv * 0x50000 + 0x800) >> 12);
         int x = self->mPosX + offX;
         int z = self->mPosZ + offZ;
         int y = self->mPosY - 0x29000;

@@ -13,23 +13,24 @@
  *   first. The inline destructor in daPgRcer_c emits retail D1/D0 and no D2.
  *
  *   `#pragma opt_common_subs off` is file-global (last one wins). Dropping it
- *   DIFFs the race helpers (measured on the shadow TU).
+ *   changes the bytes of the race helpers (measured on the shadow TU).
  *
- *   ((int)c + 0x300) + 0x8c for mTargetAngY in the path helpers is the MATCH
- *   addressing form.
+ *   ((int)c + 0x300) + 0x8c for mTargetAngY in the path helpers is the
+ *   matching addressing form.
  *
  *   (Vector3 *)&mScaleX in Render and (Vector3 *)&mPosX in InitResources'
- *   GetNode: dActor_c has no Pos() on this branch (S18).
+ *   GetNode: dActor_c has no Pos() accessor.
  *
  * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS:
- *   Fix12<int> by value (wall 6az): SetAnim, TextureSequence::SetFile,
- *   dCcAc_c::Init, dBgCh_Actr::Init, SetRanges, DropShadowRadHeight
+ *   Fix12<int> by value (notes/mwccarm-codegen.md 6az): SetAnim,
+ *   TextureSequence::SetFile, dCcAc_c::Init, dBgCh_Actr::Init, SetRanges,
+ *   DropShadowRadHeight
  *   (InitResources and the race helpers). The dBgCh Init header's Fix12i
  *   mangles as int.
  *   Not in dBgCh_Actr.h: GetFloorResult / GetWallResult
  *   (func_ov019_0211140c).
- *   Reference vs pointer (6az): Player StartTalk / ShowMessage /
- *   GetTalkState / HasFinishedTalking / Unk_020c4f40.
+ *   Reference vs pointer (notes/mwccarm-codegen.md 6az): Player StartTalk /
+ *   ShowMessage / GetTalkState / HasFinishedTalking / Unk_020c4f40.
  *
  * Known limits:
  *   The helpers keep their func_ov019_* labels (PMF dispatch and race
@@ -37,7 +38,8 @@
  *   (func_ov019_0211140c); func_0201267c / func_02012790 are unnamed.
  *
  * NOT OWNED BY THIS TU: the data_ov019_* handles and the finish/cheat
- * volumes are sinit-owned (S14); g_profile_PENGUIN_RACER lives elsewhere.
+ * volumes are constructed by the overlay's sinit; g_profile_PENGUIN_RACER
+ * lives elsewhere.
  */
 
 #pragma opt_common_subs off
@@ -84,7 +86,8 @@ extern int _Z14ApproachLinearRsss(short *p, short target, short step);
 extern void _Z14ApproachLinearRiii(int *p, int a, int b);
 extern void Matrix4x3_FromRotationY(void *m, short angle);
 
-/* Fix12-by-value, 6az. This TU's InitResources / race helpers. */
+/* Fix12-by-value, notes/mwccarm-codegen.md 6az. This TU's InitResources / race
+   helpers. */
 extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *, void *, int, int, unsigned int, unsigned int);
 extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *, void *, int, int, void *, int);
 extern void _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(void *self, int a, int b, int cc, int d);

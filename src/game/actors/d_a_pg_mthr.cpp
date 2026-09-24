@@ -3,9 +3,14 @@
  * daPgMthr_c -- the mother penguin of Cool, Cool Mountain (`pg_mthr`,
  * MOTHER_PENGUIN 257), ov018.
  *
- * She walks her home area and talks to the player. Bringing BABY_PENGUIN
- * (actor 256, held in Player+0x358 / +0x360) near her home starts a talk;
- * when that talk ends on message 0xad she spawns a POWER_STAR (actor 0xb2).
+ * She stands at her home spot (state 0 holds mHorzSpeed at 0) and talks when
+ * a player touches her. What that player holds picks the message: 0xac with
+ * no baby, 0xad with her own BABY_PENGUIN (actor 256, param1 0, held in
+ * Player+0x358 / +0x360), 0xae with the other baby (param1 1). When the 0xad
+ * talk ends she spawns a POWER_STAR (actor 0xb2) and sets mGaveStar. Only
+ * after that, a player within 1500.0 of her home who holds her own baby
+ * sends her into state 2, where she walks toward that player; she returns to
+ * state 0 when he lets go of the baby or leaves that range.
  *
  * daPgMthr_c_classInit is reconstructed (RTTI daPgMthr_c, PENGUIN_MOTHER
  * registry); retail does not store that spelling.
@@ -17,7 +22,7 @@
  *
  *   ModelAnim::SetAnim, TextureSequence::SetFile, dCcAc_c::Init and
  *   DropShadowRadHeight stay mangled. The Fix12-by-value method form
- *   size-DIFFs: SetAnim 0x58->0x64, Init 0x1ac->0x1c4, DropShadow
+ *   changes the sizes: SetAnim 0x58->0x64, Init 0x1ac->0x1c4, DropShadow
  *   0x100->0x110.
  *
  *   dBgCh_Actr::Init stays mangled. types.h makes Fix12i a plain s32, so a
@@ -45,7 +50,7 @@
  *   Player.
  *
  * NOT OWNED BY THIS TU: it is text-only, so g_profile_PENGUIN_MOTHER is not
- * defined here (S14).
+ * defined here.
  */
 
 #include "common.h"
@@ -285,8 +290,8 @@ int func_ov018_021121dc(char* c){
 extern "C" {
 int func_ov018_02111fac(char *c)
 {
-    /* Whole-function member form size-DIFF 0x230 -> 0x224. Named-field
-       pointer increment of mTalkStep / mTalkTimer MATCH'd.
+    /* Whole-function member form changes the size, 0x230 -> 0x224. The
+       named-field pointer increments of mTalkStep / mTalkTimer match.
        *(s16 *)(c + 0x300 + 0x84) for mMessageId stays. */
     switch (((daPgMthr_c *)c)->mTalkStep) {
     case 0:

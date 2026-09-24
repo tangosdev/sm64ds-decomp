@@ -7,13 +7,14 @@
  * 0xbf) standing within a quarter turn of its front. With a talker, it
  * turns them (mAngleY) to face the cupboard, then runs message 0xb09
  * through the save/menu script (data_0209d684 picks: finish talking, show
- * saving, or open the minigame menu). InitResources lays the five colliders across the front in
- * 100-unit steps; Behavior repositions them every frame.
+ * saving, or open the minigame menu). InitResources places all five
+ * colliders at mPosX (radius 110.0, height 140.0); Behavior spreads them
+ * every frame, 100 units apart along the cupboard's width, centred on it.
  *
  * DO NOT "TIDY" THESE -- each one is load-bearing:
  *
- *   selfPos is written and never read; volatile keeps its stores, which the
- *   ROM has.
+ *   selfPos, frontPos and playerPos are written and never read; volatile
+ *   keeps their stores, which the ROM has.
  *
  * Known limits:
  *   _Z14ApproachLinearRsss / Vec3_HorzAngle / AngleDiff keep linker names:
@@ -173,11 +174,14 @@ s32 daObjCloset_c::Behavior()
             colliderPos.z = mPosZ;
             {
                 int distFixed = ((2 - j) * 100) << 12;
+                /* sin and cos of the side direction, a quarter turn from
+                   mAngleY: sideSin is cos(mAngleY), sideCos is
+                   -sin(mAngleY). */
                 int idx = (unsigned short)(short)(mAngleY + 0x4000) >> 4;
-                s16 cosv = data_02082214[idx * 2];
-                s16 sinv = data_02082214[idx * 2 + 1];
-                int offX = (int)(((s64)distFixed * cosv + 0x800) >> 12);
-                int offZ = (int)(((s64)distFixed * sinv + 0x800) >> 12);
+                s16 sideSin = data_02082214[idx * 2];
+                s16 sideCos = data_02082214[idx * 2 + 1];
+                int offX = (int)(((s64)distFixed * sideSin + 0x800) >> 12);
+                int offZ = (int)(((s64)distFixed * sideCos + 0x800) >> 12);
                 int newX = mPosX + offX;
                 int newZ = mPosZ + offZ;
                 colliderPos.x = newX;

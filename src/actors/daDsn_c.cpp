@@ -171,7 +171,7 @@ void daDsn_c::OnHitByMegaChar(Player &player)
     poofPos.y += height;
     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x48, poofPos.x, poofPos.y, poofPos.z);
     /* Copied word by word on purpose: `Vector3 poofPosCopy = poofPos;`
-       changes the size of this function (measured: DIFF, not byte-neutral). */
+       changes the size of this function (measured; the bytes differ). */
     Vector3 poofPosCopy;
     ((int *)&poofPosCopy)[0] = ((int *)&poofPos)[0];
     ((int *)&poofPosCopy)[1] = ((int *)&poofPos)[1];

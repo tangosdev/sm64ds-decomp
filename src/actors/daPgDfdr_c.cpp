@@ -5,8 +5,9 @@
  * that ignores its spawn position: InitResources sets (0x6c4000, 0xcb2000,
  * 0x182bb8) facing 0xdd30, then drops it onto the ground. It patrols in
  * nine steps from the stride-0xc table at data_ov027_02113a1c (distance,
- * speed, start and end heading per step): it walks a step (state 1), then
- * pauses 20 frames and turns to that step's end heading (state 0).
+ * speed, start and end heading per step): it walks the current step along
+ * its start heading (state 1), then advances to the next step, pauses 20
+ * frames and turns to that next step's end heading (state 0).
  * Footsteps play sound 0xf3.
  *
  * ov027 is mixed (sliding ice / chill bully / Bubba / snowman breath).
@@ -21,8 +22,9 @@
  *   the c+0x378 / +0x380 / +0x74 loads: named mStepIndex++ / mDistanceLeft
  *   -= / mModelAnim.currFrame / file / mCamSpacePosX CSE the field address.
  *
- * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS (Fix12<int> by value, wall
- * 6az; the header method form size-DIFFs):
+ * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS (Fix12<int> by value, see
+ * notes/mwccarm-codegen.md 6az; the header method form changes the code
+ * size):
  *   SetAnim, TextureSequence::SetFile, dBgW_KcMbg::SetFile, dCcAc_c::Init
  *   (InitResources, func_ov027_02111ca8 / 02111b2c).
  *   dBgActor_c::IsClsnInRangeOnScreen (Behavior): the header method form is
@@ -38,7 +40,7 @@
  *   The data_ov027_* model/KCL/BCA/CLPS handles and the four aliasing
  *   stride-0xc step symbols (02113a1c / 20 / 24 / 26) are consumed here and
  *   owned by overlay .data.
- *   g_profile_PENGUIN_DEFENDER stays outside the licensed .text (S14).
+ *   g_profile_PENGUIN_DEFENDER is overlay data outside this TU's .text.
  *   func_ov027_02111d38 / 02111cfc keep the incomplete C/PMF stand-in over
  *   mStateTable; completing to daPgDfdr_c::* is a pointer-to-member
  *   representation change.

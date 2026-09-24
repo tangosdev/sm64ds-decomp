@@ -26,8 +26,9 @@
  *   *(Vector3 *)&mCamSpacePosX: a Vector3 member at 0x074 is a dActor_c
  *   change, not this leaf's.
  *
- * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS (Fix12<int> by value, wall
- * 6az; the header method form size-DIFFs): dBgW_KcMbg::SetFile
+ * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS (Fix12<int> by value, see
+ * notes/mwccarm-codegen.md 6az; the header method form changes the code
+ * size): dBgW_KcMbg::SetFile
  * (InitResources), dActor_c::DropShadowScaleXYZ (UpdateShadow) and
  * dActor_c::Earthquake (Behavior).
  *
@@ -72,7 +73,8 @@ extern s16 data_02082214[];
 extern void Matrix4x3_FromRotationY(void *, s16);
 extern void Matrix4x3_FromRotationXYZExt(void *, int, int, int);
 /* dActor_c::DropShadowScaleXYZ / Earthquake -- reached through the mangled
-   name because the by-value Fix12<int> parameters are wall 6az. */
+   name because the by-value Fix12<int> parameters
+   (notes/mwccarm-codegen.md 6az) break the method form. */
 extern int _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
     dActor_c *, ShadowModel *, Matrix4x3 *, Fix12i, Fix12i, Fix12i, u32);
 extern void _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(
@@ -148,7 +150,7 @@ int daObjFm_Battan_c::InitResources()
     UpdateClsnPosAndRot();
 
     KCL_File *file = (KCL_File *)dBgW_Kc::LoadFile(data_ov023_02112080);
-    /* MEASURED: by-value Fix12<int> scale is wall 6az. */
+    /* MEASURED: by-value Fix12<int> scale; see notes/mwccarm-codegen.md 6az. */
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         &mMeshCollider, file, &mClsnMat, 0x1000, mAngleY,
         data_ov064_0211ba4c);
@@ -196,7 +198,7 @@ int daObjFm_Battan_c::Behavior()
             pos.x = mPosX;
             pos.y = mPosY;
             pos.z = mPosZ;
-            /* MEASURED: by-value Fix12<int> is wall 6az. */
+            /* MEASURED: by-value Fix12<int> (notes/mwccarm-codegen.md 6az). */
             _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(
                 this, &pos, 0x04000000);
             Sound::PlayBank3(0x44, *(Vector3 *)&mCamSpacePosX);
@@ -288,7 +290,8 @@ int daObjFm_Battan_c::UpdateShadow()
     mShadowMat.m[9] = mPosX >> 3;
     mShadowMat.m[10] = mPosY >> 3;
     mShadowMat.m[11] = mPosZ >> 3;
-    /* MEASURED: three by-value Fix12<int> scales are wall 6az. */
+    /* MEASURED: three by-value Fix12<int> scales; see notes/mwccarm-codegen.md
+       6az. */
     return _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
         this, &mShadowModel, &mShadowMat,
         0x258000, 0x32000, -depth, 0xf);

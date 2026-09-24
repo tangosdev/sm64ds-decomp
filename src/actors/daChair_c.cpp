@@ -16,11 +16,11 @@
  *   is non-POD).
  *
  *   State1's LAUNDER((int)p) and State2's `(int)c + 0x39e`. The named
- *   mStateTimer++ and &mPosX DIFF.
+ *   mStateTimer++ and &mPosX do not match.
  *
  *   State2's State300 overlay at this+0x300 is this class's own
  *   mStateTimer / mActionTimer (0x39e / 0x3a0), reached through the
- *   dBgCh_Actr interior at 0x300. Named fields DIFF.
+ *   dBgCh_Actr interior at 0x300. Named fields do not match.
  *
  *   (Vector3 *)&mPosX: dActor_c has no Pos(). Player+0x6fb and Player+0xc
  *   (actorID == 0xbf PLAYER) stay offsets.
@@ -28,8 +28,9 @@
  * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS:
  *   dCcAcPos_c::Init / dBgCh_Actr::Init / DropShadowRadHeight /
  *   Particle::System::NewSimple / Player::Hurt pass Fix12<int> by value
- *   (wall 6az); the header method form size-DIFFs. The dBgCh Init header's
- *   Fix12i mangles as int; the ROM's is Fix12<int>.
+ *   (notes/mwccarm-codegen.md 6az); the header method form changes the code
+ *   size. The dBgCh Init header's Fix12i mangles as int; the ROM's is
+ *   Fix12<int>.
  *   GetWallResult / CopyNormalTo are not in dBgCh_Actr.h / SurfaceInfo.
  *
  * Known limits:
@@ -38,7 +39,7 @@
  *
  * NOT OWNED BY THIS TU: data_ov020_02114af0 is the BMD SharedFilePtr this
  * TU loads and releases; ov020's sinit constructs it as file ID 0x2d0. There
- * is no g_profile_CHAIR (S14).
+ * is no g_profile_CHAIR in this TU.
  */
 
 #include "common.h"

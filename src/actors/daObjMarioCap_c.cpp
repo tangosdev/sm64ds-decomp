@@ -26,19 +26,20 @@
  *
  *   The (long long)(int) 20.12 multiplies in func_ov002_020b781c and the
  *   (unsigned long long)(c+0x12c) or-into-vulnFlags in func_ov002_020b7b70
- *   are the MATCH forms; member addressing DIFFs.
+ *   are the matching forms; member addressing does not match.
  *
  *   func_ov002_020b6fcc's angle copy keeps `a = b ? a : a` through a V16.
  *
  *   func_ov002_020b7330 / 020b781c / 020b7b70 / 020b7e1c keep offset soup.
- *   Named members and the real Spawn / ClosestPlayer / CopyNormalTo DIFF (s16
- *   vs u16 copies; SetAnim `&mModelAnim` vs `this+0x300` size-DIFFs).
+ *   Named members and the real Spawn / ClosestPlayer / CopyNormalTo do not
+ *   match (s16 vs u16 copies; SetAnim `&mModelAnim` vs `this+0x300` changes
+ *   the size).
  *
  * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS:
- *   dActor_c::SetRanges is not on the header (wall 6az).
+ *   dActor_c::SetRanges is not on the header (notes/mwccarm-codegen.md 6az).
  *   ModelAnim::SetAnim / DropShadowRadHeight / ReflectAngle take Fix12<int>
- *   by value, which has no implicit int conversion (6az).
- *   dBgCh_Actr::GetFloorResult / GetWallResult are not declared.
+ *   by value, which has no implicit int conversion (notes/mwccarm-codegen.md
+ *   6az). dBgCh_Actr::GetFloorResult / GetWallResult are not declared.
  *
  * Known limits:
  *   classInit stays in src/d_a_obj_mario_cap.c. InitResources (0x020b86d0..
