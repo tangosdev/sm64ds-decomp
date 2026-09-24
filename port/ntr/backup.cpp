@@ -160,11 +160,12 @@
 // ============================================================================
 //
 // NO ERASE, NO SECTOR MAP, NO WRITE ENDURANCE. A 64 Kbit EEPROM is byte
-// writable and the ROM never sends an erase command to one; the driver's erase
-// family (func_02060a64 and its neighbours) is the FLASH path and no call site
-// in this game reaches it. If a later lane links that family, its commands land
-// in the `default:` arm below and are refused honestly rather than silently
-// succeeding.
+// writable and the ROM never sends an erase command to one. (An older note here
+// named func_02060a64 and its neighbours as the FLASH erase family: they are the
+// card's CPU ROM read path, linked since run linkfull lane S4CARD over
+// ntr/card.cpp, and they never touch the backup chip.) If a later lane links a
+// real erase family, its commands land in the `default:` arm below and are
+// refused honestly rather than silently succeeding.
 //
 // NO SAVESTATE COUPLING FOR THE MEDIUM. g_image and its file are plain host
 // storage OUTSIDE every DSSTATE_BEGIN/END block, so the lk6/lk7 dev savestate
@@ -536,10 +537,19 @@ struct PortCardWork {
 //                    `while (owner != -3) OS_SleepThread(&waitq)` until it sees
 //                    that value, and a zeroed owner never becomes -3 because
 //                    nothing on the host is going to release a lock nobody took.
-//   state = 1        the driver's "initialised" bit. func_02060484 / 02060558
-//                    or in bit 2 for the duration of a transfer and
-//                    func_0206081c ands out bits 2 and 3 at the end; bit 0 is
-//                    what says the object below them is real.
+//   state = 0        NOT SEEDED ANY MORE (run linkfull, lane S4CARD). Bit 0 is
+//                    the driver's "initialised" bit and the ROM's own bring-up,
+//                    src/func_02060890.c, is what sets it: it now runs in the
+//                    ROM's order inside main (hal/boot_arms.cpp's R2c arm),
+//                    before any card read or save, and its first line returns
+//                    when the word is already set -- a seed of 1 made it skip
+//                    the card thread and the page reader
+//                    (`data_020a8780 = func_02060a64`), and the ROM's card reads
+//                    need both. func_02060484 / 02060558 or in bit 2 for the
+//                    duration of a transfer and func_0206081c ands out bits 2
+//                    and 3 at the end. The other seeds stay: they are the
+//                    values that body writes, and smoke_player, which has no
+//                    bring-up, keeps them.
 static const PortCardWork kCardWorkInit = {
     data_020a8160,  /* cmd    */
     0,              /* f04    */
@@ -551,7 +561,7 @@ static const PortCardWork kCardWorkInit = {
     -1,             /* f24    */
     0, 0,           /* cbfn, cbarg */
     0,              /* f30    */
-    1u,             /* state  */
+    0u,             /* state: set by src/func_02060890.c (see above) */
     4               /* prio   */
 };
 

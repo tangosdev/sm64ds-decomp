@@ -11149,27 +11149,29 @@ foreach(line IN LISTS SLICE_SND8_LINES)
     list(APPEND SLICE_SND8_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
 
-# THREE PER-SOURCE RENAMES, the shape lane R2ABC used for func_02060890 and
-# lane BOOTR1 for main. Each names an edge that is not ROM code yet, in one
-# place, without making a host body under a ROM name -- which would be a new
-# SHADOW row in port/tools/linkage.py's queue, work invented by this change.
-# The three faces and the evidence behind each are in hal/nitrofs_boot.cpp.
+# ONE PER-SOURCE RENAME LEFT OF THE THREE, the shape lane R2ABC used for
+# func_02060890 and lane BOOTR1 for main: an edge that is not ROM code yet,
+# named in one place, without a host body under a ROM name (a new SHADOW row
+# in port/tools/linkage.py's queue). The evidence is in hal/nitrofs_boot.cpp.
 #
-#   func_02060890  the card driver bring-up. NOT hardware: ORDERING. The work
-#                  object data_020a8180 is seeded by ntr/backup.cpp's static
-#                  initialiser and FS_Init runs from hal/fs_names.cpp's, so a
-#                  bring-up called from here could run the whole ROM body --
-#                  card thread included -- before the seeder. func_02042f68's
-#                  arm 1 already brings the driver up inside main (R2ABC), and
-#                  func_02060890's own last two statements are the unhosted
-#                  FLASH path and a hand-asm `b self`.
-#   func_0205db2c  the archive READ function: one call to the card ROM DMA.
-#                  hal/fs_names.cpp's port_nitrofs_read serves the same bytes
-#                  off the ROM's own FAT and extracted/dsd/files.
+#   func_02060890  the card driver bring-up. NOT hardware: ORDERING. FS_Init
+#                  runs from hal/fs_names.cpp's static initialiser, before
+#                  main; the ROM's own bring-up runs later, in the ROM's order,
+#                  as func_02042f68's arm 1 inside main (hal/boot_arms.cpp's
+#                  R2c). Called from here it would find the guard word still 0
+#                  and create the card thread before the OS thread manager
+#                  exists. On the DS FS_Init comes after func_02042f68
+#                  (src/func_0201a054.c) and the guard returns; this rename is
+#                  that return.
+#   func_0205db2c  RETIRED (run linkfull, lane S4CARD). The archive's read
+#                  function is the ROM's own: the card driver behind it runs
+#                  over ntr/card.cpp (port/slice_w28_card.txt), and
+#                  hal/fs_names.cpp's port_nitrofs_read serves smoke_player's
+#                  face alone.
 set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_0205d96c.c"
     PROPERTIES COMPILE_DEFINITIONS
-    "func_02060890=port_nitrofs_card_bringup;func_0205db2c=port_nitrofs_read")
+    "func_02060890=port_nitrofs_card_bringup")
 
 #   func_020570c0  EXMEMCNT |= 0x0800 and &= ~0x0800, the NDS slot's ARM7/ARM9
 #   func_020570d8  access-right bit. THE TWO RENAMES THAT STOOD HERE ARE GONE
@@ -20873,21 +20875,16 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_0203bbc0.c"
     PROPERTIES COMPILE_DEFINITIONS
     "func_0205ea10=port_tsc_wait")
-# ONE PER-SOURCE RENAME, the same mechanism as src/main.c above and for the same
-# reason. func_02042f68's FIRST arm is src/func_02060890.c, and two of that
-# body's statements cannot link: `data_020a8780 = func_02060a64` (the FLASH read
-# path, hosted nowhere and reached by nothing in this game) and func_02061138 ->
-# func_020610fc, hand-asm with a deliberate b-self loop MSVC cannot assemble.
-# Defining func_02060890 as a host body would make it a new SHADOW row in
-# linkage.py's replacement queue -- work invented by this change. The rename
-# leaves src/func_02060890.c exactly where it was, unenrolled and unclaimed, and
-# says in one place (hal/boot_arms.cpp's port_rom_card_bringup) that this edge is
-# not ROM code yet. The other two arms ARE the ROM's: func_020603c8 is on the
-# slice above and the eight-byte tag copy is inline in func_02042f68 itself.
-set_source_files_properties(
-    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_02042f68.c"
-    PROPERTIES COMPILE_DEFINITIONS
-    "func_02060890=port_rom_card_bringup")
+# THE PER-SOURCE RENAME THAT STOOD HERE IS RETIRED (run linkfull, lane S4CARD).
+# src/func_02042f68.c was built with func_02060890=port_rom_card_bringup because
+# two of func_02060890's statements would not link: `data_020a8780 =
+# func_02060a64` and func_02061138 -> func_020610fc. Both link now.
+# data_020a8780 is hal/card_globals.cpp's, func_02060a64 is the card's CPU ROM
+# read (the page reader, not a FLASH path as this note used to say),
+# func_020610fc is plain C (an IPCSend loop and a `for (;;)`), and each is a
+# row of port/slice_w28_card.txt. So func_02042f68's arm 1 is src/func_02060890.c
+# itself, run where func_02042f68 already runs; its other two arms were the
+# ROM's already.
 
 # Run link100, lane NITROFS: the NitroFS seat's target lists, in the shape the
 # rename above uses, and for the reason spelled out beside SLICE_NITROFS_SOURCES
@@ -23166,4 +23163,42 @@ set_property(SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/hal/cstd_div.c" APPEND PROPERTY
 # hal/nitrofs_face.cpp's synchronous FS_Init face and has no card.
 foreach(_tw28c walk_window walk_window_hires)
     target_sources(${_tw28c} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/ntr/card.cpp")
+endforeach()
+#
+# THE ROWS: port/slice_w28_card.txt, the driver's read path, its DMA arm (dead
+# while FS_Init's channel is -1) and the bring-up, on the same two targets, with
+# hal/card_globals.cpp for the storage and the two ARM-only answers they name.
+# Two rows build from hostgen copies (W28C_HOSTGEN_TU, R2D's shape):
+# src/func_02060d98.c sends a command through the byte registers at
+# 0x040001A1..AF and src/func_02060a64.c stores ROMCTRL and reads the data port.
+# Built plain, those accesses would latch in the window (and the data port,
+# outside it, would fault) and never reach ntr/card.cpp. The DMA arm's computed
+# register stores stay plain; stage B, which would run them, is not this block.
+set(W28C_HOSTGEN_TU
+    src/func_02060d98.c
+    src/func_02060a64.c)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w28_card.txt" SLICE_W28C_LINES)
+set(SLICE_W28C_SOURCES "")
+foreach(line IN LISTS SLICE_W28C_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    if(line IN_LIST W28C_HOSTGEN_TU)
+        get_filename_component(_w28c_sym "${line}" NAME_WE)
+        set(_w28c_src "${CMAKE_BINARY_DIR}/host-src/src/${_w28c_sym}.cpp")
+        add_custom_command(OUTPUT "${_w28c_src}"
+            COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+                    --out "${CMAKE_BINARY_DIR}/host-src" ${_w28c_sym}
+            DEPENDS "${PORT_REPO_ROOT_ABS}/${line}"
+                    "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+            COMMENT "hostgen ${_w28c_sym}")
+    else()
+        set(_w28c_src "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+    endif()
+    list(APPEND SLICE_W28C_SOURCES "${_w28c_src}")
+endforeach()
+foreach(_tw28c walk_window walk_window_hires)
+    target_sources(${_tw28c} PRIVATE ${SLICE_W28C_SOURCES}
+        "${CMAKE_CURRENT_SOURCE_DIR}/hal/card_globals.cpp")
 endforeach()

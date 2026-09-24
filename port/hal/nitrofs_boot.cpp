@@ -93,6 +93,10 @@
 //
 //   func_02060890  -> port_nitrofs_card_bringup      (in src/func_0205d96c.c)
 //
+// The READ face that stood beside it (func_0205db2c -> port_nitrofs_read) is
+// RETIRED (run linkfull, lane S4CARD): FS_Init registers the ROM's own read
+// function, whose card driver reads the cartridge through ntr/card.cpp.
+//
 // The two EXMEMCNT renames that stood here are RETIRED (run link100 wave 7,
 // lane SEAT1): src/func_020570c0.c and src/func_020570d8.c now spell the
 // register instead of the placeholder `G`, so src/func_020570f0.c and
@@ -337,17 +341,19 @@ void port_nitrofs_boot_report(void)
 //     read a zeroed work object, see its "already initialised" guard word at
 //     +0x34 clear, and run the whole ROM body -- including func_0206002c(),
 //     which CREATES THE CARD THREAD -- before main and before the seeder.
-//   * The bring-up the ROM's boot order actually wants is already seated:
-//     func_02042f68's arm 1 (hal/boot_arms.cpp's port_rom_card_bringup, lane
-//     R2ABC), which runs inside main and prints its own [rom-a054] line every
-//     boot saying the ROM's guard returns because the driver is up.
-//   * Behind func_02060890 the ROM has two statements no host can link at all:
-//     `data_020a8780 = func_02060a64` (the FLASH read path, hosted nowhere and
-//     reached by nothing in this game) and func_02061138() -> func_020610fc, a
-//     hand-asm deliberate `b self`. Both are R2ABC's word for word.
+//   * The bring-up the ROM's boot order actually wants runs inside main:
+//     func_02042f68's arm 1, which is src/func_02060890.c itself since run
+//     linkfull lane S4CARD (hal/boot_arms.cpp's R2c arm prints what it did).
+//     On the DS FS_Init runs AFTER it (src/func_0201a054.c) and the guard
+//     returns; this no-op is that return, for an FS_Init that runs first.
+//   * (The two statements an older note here called unlinkable --
+//     `data_020a8780 = func_02060a64`, the card's CPU ROM read and not a FLASH
+//     path, and func_02061138() -> func_020610fc, plain C -- link now, as rows
+//     of port/slice_w28_card.txt.)
 //
-// So this is a no-op that names the floor, not a second copy of a body that
-// already exists twenty lines away in another file.
+// So this is a no-op that names the ordering, not a second copy of the body.
+// NOTE ON THE ORDER: the card thread must not come up from here in any case --
+// this runs from a static initialiser, before the OS thread manager.
 void port_nitrofs_card_bringup(void)
 {
 }

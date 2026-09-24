@@ -98,14 +98,18 @@
 // function and its whole body is func_02060918, the card ROM DMA. func_0205da94
 // is the archive's command PROC and its two live cases are func_0205ffb0 /
 // func_0205ff90, the card lock and unlock. Neither has a host meaning.
+// (Both faces are gone from walk_window and walk_window_hires: func_0205da94
+// with lane NITROFS, and func_0205db2c with run linkfull lane S4CARD, whose
+// ntr/card.cpp is the cartridge the ROM's own driver reads. Only smoke_player
+// keeps port_nitrofs_read.)
 //
 // EVERYTHING ELSE IS THE ROM'S. func_0205cd34 (FS_InitArchive), func_0205cc80
 // (FS_RegisterArchiveName), func_0205c7c4 (FS_SetArchiveProc) and func_0205cb68
 // (FS_LoadArchive) are the matched src TUs, called with the ROM's arguments in
 // the ROM's order, and the ROM's once-guard func_0205d89c is what calls the
-// face. Its argument is -1, the value the DS ends up with; the derivation is
-// beside the boot object at the foot of this file, because the ROM has two
-// call sites that disagree.
+// face. Its argument is -1, which is the PORT'S choice and not the cartridge
+// boot's (a cartridge boot runs FS_Init(2)); the derivation is beside the boot
+// object at the foot of this file.
 //
 // ---- WHERE THE BYTES COME FROM ---------------------------------------------
 //
@@ -473,10 +477,25 @@ int traced_read(void *archive, void *dst, u32 src, u32 len)
 
 extern "C" {
 
-/* ---- FACE: the archive read function (ROM: func_0205db2c) -----------------
-   PORT_HOST_ABI: src is one call to func_02060918, the card ROM DMA, and the
-   card returns 6 (async) with the completion arriving on an interrupt. There
-   is no card. This reads synchronously and returns 0, which is the result the
+/* ---- smoke_player's archive read function ---------------------------------
+   ON walk_window AND walk_window_hires THIS IS NO LONGER THE READ FUNCTION
+   (run linkfull, lane S4CARD). Those two targets compile src/func_0205d96c.c
+   without the `func_0205db2c=port_nitrofs_read` rename that stood in
+   port/CMakeLists.txt, so FS_Init registers the ROM's own func_0205db2c: one
+   call to func_02060918, which hands the transfer to the ROM's card thread
+   (func_02060228), whose func_02060a30 / func_02060a64 read the cartridge
+   through ROMCTRL and the data port -- ntr/card.cpp -- and whose completion
+   func_02060e38 calls func_0205db78, which wakes the waiting reader. The
+   bytes come from port_nitrofs_rom_read below, the same FNT, FAT and files
+   this body reads.
+
+   It stays for smoke_player, whose FS_Init is hal/nitrofs_face.cpp's face
+   over port_nitrofs_fs_init: that target carries neither the card driver nor
+   the OS lock family the ROM's archive proc reaches.
+
+   PORT_HOST_ABI (smoke_player only): src is one call to func_02060918, and
+   the card returns 6 (async) with the completion arriving from the card
+   thread. This reads synchronously and returns 0, which is the result the
    SDK's own synchronous archive readers return and which every caller here
    already handles: func_0205c528 treats 0 and 1 as done, and func_0205c5e4
    only takes the sleep-until-woken path on 6.
@@ -649,9 +668,14 @@ int port_nitrofs_proc(void *file, int command)
 /* ---- FACE: FS_Init (ROM: func_0205d96c) -----------------------------------
    Line for line against src/func_0205d96c.c, with the three unmapped or
    card-bound pieces named where they are dropped. Everything that remains is a
-   call into the ROM's own matched code. */
+   call into the ROM's own matched code. smoke_player's alone (hal/
+   nitrofs_face.cpp); it registers the synchronous port_nitrofs_read, which is
+   what lets SM64DS_NFS_PROBE run from the static initialiser there. */
+static int g_sync_face;
+
 void port_nitrofs_fs_init(void *dma)
 {
+    g_sync_face = 1;
     data_020a8060 = dma;
     /* src: data_020a805c = func_02057020(), which allocates an OS lock id from
        the unmapped bitmask at 0x027FFFB0. Nothing on the host locks a card, so
@@ -820,6 +844,20 @@ void port_nitrofs_report(void)
     fflush(stdout);
 }
 
+/* SM64DS_NFS_PROBE, after the card bring-up (run linkfull, lane S4CARD). On
+   walk_window and walk_window_hires the archive reads through the ROM's card
+   driver, whose reads finish on the card thread, and that thread is created by
+   func_02060890 in main's func_0201a054 seam -- so a probe from the static
+   initialiser below would wait for a thread that does not exist yet.
+   hal/boot_arms.cpp calls this right after that arm; smoke_player's synchronous
+   face still probes from the static initialiser. */
+void port_nitrofs_probe_after_boot(void)
+{
+    const char *probe = getenv("SM64DS_NFS_PROBE");
+    if (!g_sync_face && probe && *probe && strcmp(probe, "0"))
+        port_nitrofs_report();
+}
+
 }  /* extern "C" */
 
 namespace {
@@ -827,18 +865,25 @@ namespace {
 /* Run the ROM's once-guard, which runs the face above, which runs the ROM's
    registration.
 
-   THE ARGUMENT IS -1 AND THE ROM HAS TWO ANSWERS, so this had to be chosen
-   rather than copied. func_0205d89c is called from exactly two places in the
-   image and they disagree: func_02040c34, the system init reached from
-   func_0203ea5c, passes -1 (no DMA channel); func_02018aa4, the file loader's
-   own lazy bring-up, passes 2. The guard means the FIRST one wins, and the
-   loader cannot run before the init that gives it a heap, so -1 is the value
-   the DS actually ends up with. It is inert here either way -- it lands in
-   data_020a8060, which only the card DMA reads and the card DMA is faced out
-   -- but a hosted word that could have been either is worth getting right.
+   THE ARGUMENT IS -1, AND IT IS THE PORT'S CHOICE, NOT THE CARTRIDGE'S. An
+   older note here said the DS ends up with -1; it does not. func_0205d89c has
+   two callers: func_02018aa4 passes 2 and func_02040c34 passes -1. On a
+   cartridge boot src/func_0201a054.c:60-61 calls func_02018aa4 (its `if (!r4)`
+   arm, r4 being the download-play word at 0x027ffc40), so the DS runs
+   FS_Init(2): card DMA on channel 2, completion on IRQ 19. func_02040c34 is
+   the wireless system init (src/func_02040c34.c:60), not the cartridge boot.
 
-   A static initialiser is early enough by a wide margin: the first
-   open-by-name in the whole game is inside a scene's InitResources. */
+   THE PORT KEEPS -1 ON PURPOSE (stage A of run linkfull lane S4CARD's card
+   model). With a channel above 3, src/func_02060918.c skips the DMA-channel
+   stop and src/func_02060b64.c's DMA test is false, so every card read takes
+   the CPU path -- ROMCTRL and the data port, which ntr/card.cpp models -- with
+   no DMA and no IRQ 19. FS_Init(2) in the ROM's order, with card-timed DMA
+   and IRQ 19 delivered, needs a DMA model first; it is stage B, not built.
+
+   And FS_Init runs from a static initialiser, before main, which is why its
+   func_02060890 call is renamed onto a no-op (port/CMakeLists.txt): the ROM's
+   own bring-up runs later, inside main. The first open-by-name in the game is
+   inside a scene's InitResources, well after both. */
 struct NitroFsNamesBoot {
     NitroFsNamesBoot()
     {
@@ -865,9 +910,11 @@ struct NitroFsNamesBoot {
            between THIS path and the game's, and the game's dies later in the
            run: the probe calls func_0205d644 with both arguments spelled out
            from C++, so a name that resolves here and fails through the game's
-           own caller isolates the fault to the caller. */
+           own caller isolates the fault to the caller. HERE only on
+           smoke_player's synchronous face; the card targets probe after the
+           card bring-up (port_nitrofs_probe_after_boot above). */
         probe = getenv("SM64DS_NFS_PROBE");
-        if (probe && *probe && strcmp(probe, "0"))
+        if (g_sync_face && probe && *probe && strcmp(probe, "0"))
             port_nitrofs_report();
     }
 };

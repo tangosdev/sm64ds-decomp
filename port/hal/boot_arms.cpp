@@ -80,38 +80,27 @@
 // it goes in the .dsstate capture the save state rolls back.
 //
 // ===========================================================================
-// THE ONE EDGE THAT IS STILL A HOST BRIDGE
+// ARM 1 IS THE ROM'S NOW: THE CARD BRING-UP (run linkfull, lane S4CARD)
 // ===========================================================================
 //
-// Arm 1 of func_02042f68 is func_02060890, the card driver's bring-up, and it
-// stays a host body because two of its statements cannot link:
+// Arm 1 of func_02042f68 is func_02060890, the card driver's bring-up. It was a
+// host body here (port_rom_card_bringup, behind a per-source rename) because two
+// of its statements would not link: `data_020a8780 = func_02060a64` and
+// func_02061138() -> func_020610fc. Both link now -- data_020a8780 is
+// hal/card_globals.cpp's, func_02060a64 is the card's CPU ROM read (the page
+// reader, not the FLASH path an older note here called it), func_020610fc is
+// plain C -- so the rename and the host body are retired and func_02042f68 calls
+// src/func_02060890.c itself. port/slice_w28_card.txt carries it and the read
+// path behind it.
 //
-//     data_020a8780 = func_02060a64   the FLASH read path, hosted nowhere and
-//                                     reached by nothing in this game.
-//     func_02061138()                 reaches func_020610fc, hand-asm with a
-//                                     deliberate `b self` MSVC cannot
-//                                     assemble -- family A, permanently.
-//
-// Six matched TUs stay out behind those two lines and are named in
-// port/slice_r2abc.txt.
-//
-// THE FORM IS A RENAME, NOT A SHADOW, and it is hal/rom_main.cpp's own
-// precedent. port/CMakeLists.txt compiles src/func_02042f68.c with
-// `func_02060890=port_rom_card_bringup`, so the matched TU stays in the link
-// byte for byte, src/func_02060890.c stays unenrolled and unclaimed rather
-// than becoming a new SHADOW row in linkage.py's replacement queue, and one
-// place in the tree says this edge is not ROM code yet. port_rom_card_bringup
-// below is that place: func_02060890's ROM body with its two unlinkable
-// statements removed and nothing else changed, INCLUDING the ROM's own
-// `if (state != 0) return` guard.
-//
-// AND THAT GUARD IS WHY THIS DOES NOT DOUBLE-CREATE THE CARD THREAD. On this
-// host the guard TRIPS: ntr/backup.cpp's PortBackupFill sets the work object's
-// state word to 1 at static-init time, long before this seam, so the bring-up
-// finds the driver already initialised and returns without calling
-// func_0206002c. hal/boot_os.cpp's own direct call to func_0206002c at its
-// own point in port_boot_rom_game_init_head stays the only one, and
-// port/tools/thread_create_proof.py measures exactly the thread it always did.
+// THE ORDER IS WHY IT HAS TO RUN HERE. The ROM's card reads finish on the card
+// thread func_02060890 creates (func_0206002c), and this seam runs inside main
+// before the first card read of every run shape, level and scene alike
+// (measured, out of lane S4CARD's pre-main trace: 0 reads before this arm).
+// ntr/backup.cpp's static seed no longer sets the work object's state word, so
+// the ROM's own `if (state != 0) return` guard lets the body run here, once;
+// hal/boot_os.cpp's later call to it (its transcription's arm-1 line) and
+// FS_Init's renamed one find the guard set and return, as they do on the DS.
 //
 // R2b -- func_0201fec8 -- IS RUN NOW (run link100, lane R2BD), and both of the
 // blockers lane R2ABC measured are answered. WHAT THAT ARM IS: the DS DOWNLOAD
@@ -276,8 +265,10 @@ extern unsigned char data_0208ee50[];
 // here only so the diagnostic below can say which object it is looking at.
 extern int data_port_backup_device[10];
 
-void func_0206002c(void);          // src/func_0206002c.c, the card thread
 void func_02042f68(int a0, unsigned char *src);   // the ROM's own arm
+extern unsigned char data_020a8780[];  // hal/card_globals.cpp, the page reader
+void func_02060a64(void);          // src/func_02060a64.c (hostgen copy)
+void port_nitrofs_probe_after_boot(void);   // hal/fs_names.cpp
 
 // ===========================================================================
 // R2b: THE DOWNLOAD-PLAY ADVERTISEMENT -- STORAGE, THE POINTER BIND, THE GATE
@@ -478,40 +469,10 @@ static int port_r2b_storage_layout(void)
     return bad;
 }
 
-// ---- ARM 1 of func_02042f68, as a host body ------------------------------
-//
-// src/func_02060890.c minus its last two statements, which cannot link. The
-// per-source rename in port/CMakeLists.txt points the ROM's own call here.
-// Every store below is the ROM's, at the ROM's offset, in the ROM's order
-// (0x02060890: read +0x34, return if non-zero, then +0x34 = 1, +0x20 = 0,
-// +0x1c = +0x20, +0x18 = +0x1c, +0x24 = -1, +0x28 = 0, +0x2c = 0, then
-// bl func_0206002c).
-void port_rom_card_bringup(void)
-{
-    char *g = (char *)data_020a8180;
-    if (*(int *)(g + 0x34) != 0) {
-        /* The port reaches this line, every boot: ntr/backup.cpp seeds the
-           work object statically at start-up, so the ROM's own guard says the
-           driver is already up. Said once rather than silently. */
-        std::fprintf(stderr, "  [rom-a054] R2c arm 1 (func_02060890): the card "
-                             "driver is already initialised (state %d), so the "
-                             "ROM's own guard returns -- func_0206002c stays "
-                             "hal/boot_os.cpp's single call\n",
-                     *(int *)(g + 0x34));
-        return;
-    }
-    *(int *)(g + 0x34) = 1;
-    *(int *)(g + 0x20) = 0;
-    *(int *)(g + 0x1c) = *(int *)(g + 0x20);
-    *(int *)(g + 0x18) = *(int *)(g + 0x1c);
-    *(int *)(g + 0x24) = -1;
-    *(int *)(g + 0x28) = 0;
-    *(int *)(g + 0x2c) = 0;
-    func_0206002c();
-    /* data_020a8780 = func_02060a64  -- NOT RUN: the FLASH read path, hosted
-       nowhere and reached by nothing in this game.
-       func_02061138()               -- NOT RUN: hand-asm `b self`, family A. */
-}
+// ---- ARM 1 of func_02042f68: port_rom_card_bringup RETIRED ----------------
+// (run linkfull, lane S4CARD). func_02042f68 calls src/func_02060890.c itself;
+// the header block says why it can and why here. The R2c arm below reports
+// what the ROM's body left behind.
 
 // ---- the seam body hal/rom_main.cpp calls ---------------------------------
 //
@@ -673,8 +634,31 @@ void port_rom_a054_arms(void)
     {
         unsigned char *row_before = 0, *row_after = 0;
         std::memcpy(&row_before, data_020a8760, sizeof row_before);
+        const int state_before = *(int *)(data_020a8180 + 0x34);
         func_02042f68(0xd01, data_0208ee50);
         std::memcpy(&row_after, data_020a8760, sizeof row_after);
+
+        /* ARM 1, READ BACK OFF THE ROM'S OWN STORES: the guard word, the lock
+           owner func_0206002c writes (-3, "free"), and the page reader
+           func_02060890 parks in data_020a8780. A driver that did not come up
+           here would leave the card's first read with no thread and a null
+           reader, so this says which it was. */
+        {
+            unsigned reader = 0;
+            std::memcpy(&reader, data_020a8780, sizeof reader);
+            std::fprintf(stderr,
+                         "  [rom-a054] R2c arm 1 (func_02060890): the ROM's own "
+                         "card bring-up %s -- state %d -> %d, lock owner %d, "
+                         "page reader %s\n",
+                         state_before == 0 ? "ran" : "was skipped by its guard",
+                         state_before, *(int *)(data_020a8180 + 0x34),
+                         *(int *)(data_020a8180 + 0x08),
+                         reader == (unsigned)(size_t)&func_02060a64
+                             ? "func_02060a64" : "NOT func_02060a64");
+        }
+        /* SM64DS_NFS_PROBE's by-name check, which needs the card thread just
+           created (hal/fs_names.cpp says why it moved here). */
+        port_nitrofs_probe_after_boot();
 
         /* WHICH OBJECT DOES THE RETAINED POINTER NAME? An offset into
            data_020867bc only means something if the row is inside

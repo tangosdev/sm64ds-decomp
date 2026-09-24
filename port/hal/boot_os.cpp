@@ -387,11 +387,10 @@ int  func_02053be0(int enable);               // DISPSTAT VBlank-IRQ enable
 void func_0203d740(void);
 void func_0201a4e4(void);                     // install IRQ::VBlankHandler
 void func_0203bb5c(void);
-/* func_02042f68's FIRST ARM, two levels down: func_02060890 -> func_0206002c,
-   the card driver's bring-up and the ROM's own creation of the card thread.
-   The transcription note at its point in the boot below says which arms of
-   func_02042f68 and func_02060890 are skipped and why. */
-void func_0206002c(void);
+/* func_02042f68's FIRST ARM, the card driver's bring-up (src/func_02060890.c).
+   The transcription note at its point in the boot below says why it is
+   called there and why it does nothing on a default boot. */
+void func_02060890(void);
 void port_thread_create_proof(void);          // hal/thread_create.cpp
 void func_02018aa4(void);                     // the file-system bring-up
 void func_0203ad84(void);
@@ -673,9 +672,24 @@ void port_boot_rom_game_init_head(void)
     /* func_0201fec8() -- the user settings block. Still refused; the blocker
        is func_0203db64's eight-name wireless run and not data_0209d574, which
        is sized now. The count is in the header block. */
-    /* func_02042f68(0xd01, data_0208ee50) -- ITS FIRST ARM RUNS NOW, and the
-       three things that refused it have each been retired by a named lane.
-       (run link100, lane THREAD; port/slice_gate223.txt.)
+    /* func_02042f68(0xd01, data_0208ee50) -- ARM 1 IS src/func_02060890.c
+       NOW (run linkfull, lane S4CARD), and the line below is the ROM's
+       bring-up itself, not its func_0206002c two levels down.
+
+       ON A DEFAULT BOOT IT RETURNS AT ONCE, and that is the ROM's order, not a
+       skip: hal/boot_arms.cpp's R2c arm runs func_02042f68 whole inside main's
+       func_0201a054 seam, before this line and before the first card read of
+       every run (the card reads finish on the thread it creates), so the
+       ROM's own `if (state != 0) return` guard is set by the time this runs.
+       The call stays for SM64DS_ROM_MAIN=0, whose transcribed head reaches no
+       a054 seam: there the same guard lets it bring the card up here -- late
+       for a scene run's reads, which that knob does not serve. The direct
+       func_0206002c() that stood here would build a second card thread over
+       the same record, so it is gone.
+
+       What follows is the note this line carried while it called
+       func_0206002c (run link100, lane THREAD; port/slice_gate223.txt),
+       kept for the storage and scheduler evidence.
 
        THE CHAIN, and where this line sits in it:
            src/func_0201a054.c    func_02042f68(0xd01, data_0208ee50)
@@ -730,6 +744,8 @@ void port_boot_rom_game_init_head(void)
        the two that matter to the lock -- owner = ~2 and depth = 0 -- along
        with the command-block pointer, the wait queue and the priority. So the
        skipped arm's effect is already there and this call adds the thread.
+       (SUPERSEDED, lane S4CARD: both statements link now and run in the R2c
+       arm; ntr/backup.cpp no longer seeds the state word.)
 
        WHAT IS STILL SKIPPED ABOVE THIS, and it is not threads:
          func_020603c8(0xd01)  the device identify, blocked on ntr/backup.cpp's
@@ -743,7 +759,7 @@ void port_boot_rom_game_init_head(void)
                                data_0208ee50 ("ds mario"), the other unmounted
                                .rodata span, and ntr/backup.cpp defines
                                data_020a4b40 with those eight bytes today. */
-    func_0206002c();
+    func_02060890();
     /* And the measurement, because a seat that links and never runs reads as
        progress. No-ops unless SM64DS_THREAD_CREATE_PROOF is set; see
        hal/thread_create.cpp and port/tools/thread_create_proof.py. */

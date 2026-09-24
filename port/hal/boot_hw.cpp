@@ -219,22 +219,13 @@ void func_020593f4(void) {
 // every binary links (smoke_player's SaveData path needs it too); the seed of
 // the two lock words lives beside it. Moved there at integration.
 
-// --- the game-card IREQ_MC fatal path ---------------------------------------
-// src/func_020610fc.c is an IPC send loop for command 0xd followed by a
-// deliberate `b self` hang: the ROM's answer to the card raising IREQ_MC is to
-// tell the ARM7 and then stop the world. IRQ::GameCardIREQMCHandler is the only
-// caller, and the port never delivers a card interrupt (ntr models the card
-// registers as memory and raises nothing), so this is unreachable. It is not
-// silently ignored -- reaching it would mean the model started delivering an
-// interrupt it does not implement, which is worth a line and a stop.
-// PORT_HOST_ABI: hand-asm IPC send loop with an intentional hang; there is no
-//                ARM7 to send to (port/docs/mmio-inventory.md: IPC, 0 modelled).
-int func_020610fc(void) {
-    std::fputs("[boot_hw] game-card IREQ_MC fatal path reached -- no ARM7 to notify\n",
-               stderr);
-    std::fflush(stderr);
-    std::abort();
-}
+// --- the game-card IREQ_MC fatal path: RETIRED ------------------------------
+// (run linkfull, lane S4CARD). A host copy of func_020610fc stood here, tagged as
+// hand-asm. src/func_020610fc.c is plain C now -- `while (IPCSend(0xd, 2, 0));
+// for (;;);`, the ROM's answer to the card raising IREQ_MC -- and it links as a
+// row of port/slice_w28_card.txt under IRQ::GameCardIREQMCHandler, its only
+// caller. Unreachable either way: ntr/card.cpp never raises IF bit 20 and the
+// port dispatches no card interrupt.
 
 // --- the MSL printf core ----------------------------------------------------
 // src/func_0206a928.c is MSL's 0x1360-byte formatting DFA, kept as assembly
