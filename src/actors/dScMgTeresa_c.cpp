@@ -1,33 +1,32 @@
 //cpp
-/* dScMgTeresa_c: the Boo (Teresa) hide-and-seek minigame scene, ov006.
+/* Hide and Boo Seek. The player watches the Boo cross the room, the lights
+ * go out, and they rub the Touch Screen to uncover every hiding Boo. The
+ * first 15 rounds give three seconds; after that the clock is two. This
+ * file is the low 48 functions of dScMgTeresa_c (.text
+ * 0x0211cbd0..0x0211e72c): that Boo's flight, the countdown and the reveal
+ * sprites.
  *
- * This file holds the lower 48 functions of the class (.text
- * 0x0211cbd0..0x0211e72c). func_ov006_0211e72c, next in ROM, is not matched
- * yet and the ROM's own bytes cover it, so the 32 functions above it still
- * live in their own files.
+ * func_ov006_0211e72c, next in ROM, is not matched, so the 32 functions
+ * above the hole stay in their own files. Nothing in the ROM names the
+ * helpers, and those files call them by their func_ov006_ names.
  *
  * Functions run in ROM order, lowest address first, because of
- * `#pragma defer_codegen off` below; do not reorder, and do not drop that
- * pragma. It also makes the out-of-line destructor come out D1, D0 as in
- * the ROM (the unused D2 trails it and is deadstripped), and it is what
- * lets the push and pop brackets on func_ov006_0211d924, 0211db7c and
- * 0211e220 bind. All three brackets are needed; each was measured.
+ * `#pragma defer_codegen off` below. Do not reorder, and do not drop that
+ * pragma. It makes the out-of-line destructor come out D1, D0 as in the
+ * ROM (the unused D2 trails it and is deadstripped), and it is what lets
+ * the push and pop brackets on func_ov006_0211d924, 0211db7c and 0211e220
+ * bind. All three brackets are needed; each was measured. The destructor
+ * stays out of line: inline, the key function would be InitResources,
+ * which is above the gap, and this file would emit no vtable. Out of
+ * line, this file emits the vtable and RTTI for the whole base chain.
  *
- * The destructor must stay out of line: inline, the key function would be
- * InitResources, which is above the gap, and this file would emit no
- * vtable and no destructor at all. Out of line, this file emits the vtable
- * and RTTI for the whole base chain.
+ * OAM::Render takes Fix12<int> by value, so that call stays mangled. The
+ * two pointer-to-member receivers stay incomplete on purpose.
  *
- * Still raw:
- * - Everything except the destructor keeps its func_ov006_ name: nothing in
- *   the ROM names these functions, and the unpromoted files above the gap
- *   call them by those names.
- * - dScMgTeresa_c.h leaves 0x4660..0x4be8 as padding, so the Boo records
- *   at 0x4bcc (stride 0x1c), the 0x20-stride pair at 0x4bac, the HUD
- *   sprites at 0x4960 and the rest are reached by offset or through the
- *   local views below. Naming those structs in the header is what unblocks
- *   typed access.
- * - OAM::Render takes Fix12<int> by value, so it stays mangled.
+ * Leftover: dScMgTeresa_c.h leaves 0x4660..0x4be8 as padding, so the
+ * 0x20-stride pair at 0x4bac, the HUD sprites at 0x4960, and the bytes at
+ * 0x4c1b and 0x4c1f are still reached through local views or raw offsets.
+ * Naming them in the header is what would unblock typed access.
  */
 
 #pragma defer_codegen off
@@ -42,19 +41,40 @@
  * merged files each had their own `struct C` and they disagree offset for
  * offset, so they are kept apart. */
 
-/* func_ov006_0211ce94's view of the per-Boo element array at +0x4bd4. */
-struct BooElem {
-    int a;
-    int b;
-    char pad0[5];
-    unsigned char c;
-    unsigned char d;
-    char pad1[0x1c - 0xf];
+/* One Boo, 0x1c bytes, at 0x4bcc. The flight functions are called with an
+ * index and step one record. x/y are the sprite's screen position (20.12).
+ * yVel is added into y and then pulled down until y sits at 192. frameTimer
+ * counts up and the sprite frame steps when it trips. shown is the draw
+ * flag: the render returns immediately when it is clear. moveRight selects
+ * the +x flight and the flipped sprite row. done sends the Boo out instead
+ * of turning it around. */
+struct Boo {
+    int x;            /* 0x00 */
+    int y;            /* 0x04 */
+    int xVel;         /* 0x08 */
+    int yVel;         /* 0x0c */
+    u16 frameTimer;   /* 0x10 */
+    u16 wait;         /* 0x12 */
+    u8 active;        /* 0x14 state machine runs only while set */
+    u8 state;         /* 0x15 which flight function runs */
+    u8 shown;         /* 0x16 */
+    u8 frame;         /* 0x17 sprite; moveRight adds 4 */
+    u8 moveRight;     /* 0x18 */
+    u8 done;          /* 0x19 */
+    u8 pad1a[2];
 };
-struct BooArray {
-    char pad[0x4bd4];
-    struct BooElem member[1];
+struct BooWalk {
+    char pad[0x4bcc];
+    struct Boo boo[1];
 };
+typedef char Boo_size_must_be_0x1c[sizeof(struct Boo) == 0x1c ? 1 : -1];
+/* Each access is a fresh cast. A saved Boo* makes mwcc address every field
+ * from 0x4bcc, and that is not the code in the ROM. */
+#define BOO(p) ((struct Boo *)((p) + 0x4bcc))
+/* func_ov006_0211d018's wait and func_ov006_0211d4e8's y/yVel are a raw
+ * base plus the field. Taking `&BOO(p)->member` shares one base and does
+ * not match. */
+#define BOO_FIELD(p, member) ((p) + (0x4bcc + (int)&((struct Boo *)0)->member))
 
 /* func_ov006_0211d5a8's `struct C`: the flag at +0x4be0 and the state index at
    +0x4be1, called through the PMF table data_ov006_02142f18. */
@@ -169,7 +189,7 @@ extern void func_ov006_0211cc2c(unsigned char *self);
 extern void func_ov006_0211cc90(unsigned char *base);
 extern void func_ov006_0211cd24(void *self, int idx);
 extern void func_ov006_0211ce90(void);
-extern void func_ov006_0211ce94(struct BooArray *base, int index);
+extern void func_ov006_0211ce94(struct BooWalk *base, int index);
 extern void func_ov006_0211cef4(char *c, int i);
 extern void func_ov006_0211d018(char *base, int idx);
 extern void func_ov006_0211d0f8(char *base, int i);
@@ -220,17 +240,17 @@ dScMgTeresa_c::~dScMgTeresa_c()
 // @symbol func_ov006_0211cc2c
 extern "C" void func_ov006_0211cc2c(unsigned char *raw) {
     if (raw[0x4c1f]) {
-        raw[0x4be3] = 3;
+        BOO(raw)->frame = 3;
     } else {
-        raw[0x4be3] = 4;
+        BOO(raw)->frame = 4;
     }
-    *(int *)(raw + 0x4bcc) = 0x80000;
-    *(int *)(raw + 0x4bd0) = 0x100000;
-    *(int *)(raw + 0x4bd8) = -0x1800;
-    *(short *)(raw + 0x4bdc) = 0;
-    raw[0x4be4] = 0;
-    raw[0x4be1] = 8;
-    raw[0x4be2] = 1;
+    BOO(raw)->x = 0x80000;
+    BOO(raw)->y = 0x100000;
+    BOO(raw)->yVel = -0x1800;
+    BOO(raw)->frameTimer = 0;
+    BOO(raw)->moveRight = 0;
+    BOO(raw)->state = 8;
+    BOO(raw)->shown = 1;
     raw[0x4c1b] = 0;
 }
 
@@ -249,56 +269,46 @@ extern "C" void func_ov006_0211cc90(unsigned char *base) {
 extern "C" void func_ov006_0211cca8(void *arg){
   unsigned char *raw = (unsigned char *)arg;
   int idx,v,p,q;
-  if(*(unsigned char*)(raw+0x4be2)==0) return;
-  idx=*(unsigned char*)(raw+0x4be3);
-  p=*(int*)(raw+0x4bcc)>>12;
-  q=*(int*)(raw+0x4bd0)>>12;
-  if(*(unsigned char*)(raw+0x4be4)!=0) idx+=4;
-  if(*(unsigned char*)(raw+0x4be1)==8) v=data_ov006_02135fc8[idx];
+  if(BOO(raw)->shown==0) return;
+  idx=BOO(raw)->frame;
+  p=BOO(raw)->x>>12;
+  q=BOO(raw)->y>>12;
+  if(BOO(raw)->moveRight!=0) idx+=4;
+  if(BOO(raw)->state==8) v=data_ov006_02135fc8[idx];
   else v=data_ov006_021350fc[idx];
   RenderOamMainScreen((void*)v,p,q,-1,-1);
 }
 
 
-#define E_W0  (*(int*)((char*)raw + 0x4bd0 + off))
-#define E_W8  (*(int*)((char*)raw + 0x4bd8 + off))
-#define E_HC  (*(unsigned short*)((char*)raw + 0x4bdc + off))
-#define E_B12 (*(u8*)((char*)raw + 0x4be2 + off))
-#define E_B13 (*(u8*)((char*)raw + 0x4be3 + off))
 #define FLAG  (*(u8*)((char*)raw + 0x4c1f))
 // @symbol func_ov006_0211cd24
 extern "C" void func_ov006_0211cd24(void* raw, int idx) {
-    int off = idx * 0x1c;
+    struct BooWalk *w = (struct BooWalk *)raw;
 
-    if ((E_W0 >> 12) == 0xc0) {
-        E_HC++;
+    if ((w->boo[idx].y >> 12) == 0xc0) {
+        w->boo[idx].frameTimer++;
         if (FLAG != 0) {
-            if (E_B13 >= 3) return;
-            if (E_HC < 4) return;
-            E_HC = 0;
-            E_B13++;
+            if (w->boo[idx].frame >= 3) return;
+            if (w->boo[idx].frameTimer < 4) return;
+            w->boo[idx].frameTimer = 0;
+            w->boo[idx].frame++;
         } else {
-            if (E_B13 >= 6) return;
-            if (E_HC < 8) return;
-            E_HC = 0;
-            E_B13++;
+            if (w->boo[idx].frame >= 6) return;
+            if (w->boo[idx].frameTimer < 8) return;
+            w->boo[idx].frameTimer = 0;
+            w->boo[idx].frame++;
         }
     } else {
-        E_B12 = 1;
-        E_W0 += E_W8;
-        E_W8 -= 0x200;
-        if ((E_W0 >> 12) > 0xc0) return;
-        E_W0 = 0xc0000;
-        E_W8 = 0;
-        E_HC = 0;
-        if (FLAG != 0) E_B13 = 0;
+        w->boo[idx].shown = 1;
+        w->boo[idx].y += w->boo[idx].yVel;
+        w->boo[idx].yVel -= 0x200;
+        if ((w->boo[idx].y >> 12) > 0xc0) return;
+        w->boo[idx].y = 0xc0000;
+        w->boo[idx].yVel = 0;
+        w->boo[idx].frameTimer = 0;
+        if (FLAG != 0) w->boo[idx].frame = 0;
     }
 }
-#undef E_W0
-#undef E_W8
-#undef E_HC
-#undef E_B12
-#undef E_B13
 #undef FLAG
 
 
@@ -309,14 +319,14 @@ extern "C" void func_ov006_0211ce90(void)
 
 
 // @symbol func_ov006_0211ce94
-extern "C" void func_ov006_0211ce94(struct BooArray *base, int index) {
+extern "C" void func_ov006_0211ce94(struct BooWalk *base, int index) {
     void *data;
-    base->member[index].a = 0;
-    base->member[index].b = 0;
-    base->member[index].d = 0;
+    base->boo[index].xVel = 0;
+    base->boo[index].yVel = 0;
+    base->boo[index].shown = 0;
     data = LoadFile(0x103);
     DecompressLZ16(data, (void *)0x6400000);
-    base->member[index].c = 7;
+    base->boo[index].state = 7;
     Deallocate(data);
 }
 
@@ -324,7 +334,8 @@ extern "C" void func_ov006_0211ce94(struct BooArray *base, int index) {
 // @symbol func_ov006_0211cef4
 extern "C" void func_ov006_0211cef4(char *c, int i)
 {
-    unsigned short *p16 = (unsigned short *)(c + 0x4bdc + i * 0x1c);
+    struct BooWalk *w = (struct BooWalk *)c;
+    unsigned short *p16 = &w->boo[i].frameTimer;
     int *sum;
     int *add;
     int v;
@@ -333,24 +344,23 @@ extern "C" void func_ov006_0211cef4(char *c, int i)
         unsigned char *p8;
         int z = 0;
         *p16 = z;
-        p8 = (unsigned char *)(c + 0x4be3 + i * 0x1c);
+        p8 = &w->boo[i].frame;
         *p8 = *p8 + 1;
         if (*p8 >= 4) *p8 = z;
     }
-    add = (int *)(c + 0x4bd4 + i * 0x1c);
-    sum = (int *)(c + 0x4bcc + i * 0x1c);
+    add = &w->boo[i].xVel;
+    sum = &w->boo[i].x;
     *sum = *sum + *add;
-    c = c + i * 0x1c;
     v = *sum >> 12;
-    if (*(unsigned char *)(c + 0x4be4) != 0) {
+    if (w->boo[i].moveRight != 0) {
         if (v >= 0x120) {
-            *(unsigned char *)(c + 0x4be1) = 6;
+            w->boo[i].state = 6;
             return;
         }
         if (*add <= 0x3000) *add = *add + 0x200;
     } else {
         if (v <= -0x20) {
-            *(unsigned char *)(c + 0x4be1) = 6;
+            w->boo[i].state = 6;
             return;
         }
         if (*add >= -0x3000) *add = *add - 0x200;
@@ -361,118 +371,103 @@ extern "C" void func_ov006_0211cef4(char *c, int i)
 // @symbol func_ov006_0211d018
 extern "C" void func_ov006_0211d018(char *raw, int idx)
 {
+  struct BooWalk *w = (struct BooWalk *)raw;
   int off = idx * 0x1c;
-  if (*(u8 *)(raw + off + 0x4be5) != 0)
+  if (w->boo[idx].done != 0)
   {
-    *(u8 *)(raw + off + 0x4be1) = 6;
+    w->boo[idx].state = 6;
     return;
   }
-  char *wait = raw + 0x4bde + off;
-  if (*(u16 *)wait != 0)
+  unsigned short *wait = (unsigned short *)(BOO_FIELD(raw, wait) + off);
+  if (*wait != 0)
   {
-    *(u16 *)wait = *(u16 *)wait - 1;
+    *wait = *wait - 1;
     return;
   }
-  *(u8 *)(raw + off + 0x4be2) = 1;
-  char *pos = raw + 0x4bcc + off;
-  if ((*(s32 *)pos >> 0xc) < 0)
+  w->boo[idx].shown = 1;
+  if ((w->boo[idx].x >> 0xc) < 0)
   {
-    *(u8 *)(raw + off + 0x4be4) = 1;
-    *(s32 *)pos = -0x80000;
-    *(s32 *)(raw + off + 0x4bd4) = 0x4800;
-    *(u8 *)(raw + off + 0x4be1) = 3;
+    w->boo[idx].moveRight = 1;
+    w->boo[idx].x = -0x80000;
+    w->boo[idx].xVel = 0x4800;
+    w->boo[idx].state = 3;
     return;
   }
-  *(u8 *)(raw + off + 0x4be4) = 0;
-  *(s32 *)pos = 0x180000;
-  *(s32 *)(raw + off + 0x4bd4) = -0x4800;
-  *(u8 *)(raw + off + 0x4be1) = 2;
+  w->boo[idx].moveRight = 0;
+  w->boo[idx].x = 0x180000;
+  w->boo[idx].xVel = -0x4800;
+  w->boo[idx].state = 2;
 }
 
 
-#define CNT16(b,i) (*(u16*)((b) + 0x4bdc + (i)*0x1c))
-#define CNT8(b,i)  (*(u8 *)((b) + 0x4be3 + (i)*0x1c))
-#define VEL(b,i)   (*(int*)((b) + 0x4bd4 + (i)*0x1c))
-#define ACC(b,i)   (*(int*)((b) + 0x4bcc + (i)*0x1c))
-#define F15(b,i)   (*(u8 *)((b) + 0x4be1 + (i)*0x1c))
-#define F12(b,i)   (*(u16*)((b) + 0x4bde + (i)*0x1c))
-#define F16(b,i)   (*(u8 *)((b) + 0x4be2 + (i)*0x1c))
-#define F19(b,i)   (*(u8 *)((b) + 0x4be5 + (i)*0x1c))
 // @symbol func_ov006_0211d0f8
 extern "C" void func_ov006_0211d0f8(char* raw, int i)
 {
+    struct BooWalk *w = (struct BooWalk *)raw;
     int v;
-    CNT16(raw, i)++;
-    if (CNT16(raw, i) >= 4) {
-        CNT16(raw, i) = 0;
-        CNT8(raw, i)++;
-        if (CNT8(raw, i) >= 4)
-            CNT8(raw, i) = 0;
+    w->boo[i].frameTimer++;
+    if (w->boo[i].frameTimer >= 4) {
+        w->boo[i].frameTimer = 0;
+        w->boo[i].frame++;
+        if (w->boo[i].frame >= 4)
+            w->boo[i].frame = 0;
     }
-    ACC(raw, i) += VEL(raw, i);
-    v = ACC(raw, i) >> 0xc;
+    w->boo[i].x += w->boo[i].xVel;
+    v = w->boo[i].x >> 0xc;
     if (v >= 0xc0) {
-        if (VEL(raw, i) >= 0x800)
-            VEL(raw, i) -= 0x80;
+        if (w->boo[i].xVel >= 0x800)
+            w->boo[i].xVel -= 0x80;
     } else {
-        if (VEL(raw, i) <= 0x7000)
-            VEL(raw, i) += 0x400;
+        if (w->boo[i].xVel <= 0x7000)
+            w->boo[i].xVel += 0x400;
     }
     if (v >= 0x120) {
-        VEL(raw, i) = 0;
-        ACC(raw, i) = 0x120000;
-        F15(raw, i) = 4;
-        F12(raw, i) = 8;
-        F16(raw, i) = 0;
-        if (F19(raw, i) != 0)
-            F15(raw, i) = 6;
+        w->boo[i].xVel = 0;
+        w->boo[i].x = 0x120000;
+        w->boo[i].state = 4;
+        w->boo[i].wait = 8;
+        w->boo[i].shown = 0;
+        if (w->boo[i].done != 0)
+            w->boo[i].state = 6;
     }
 }
-#undef CNT16
-#undef CNT8
-#undef VEL
-#undef ACC
-#undef F15
-#undef F12
-#undef F16
-#undef F19
 
 
 // @symbol func_ov006_0211d224
 extern "C" void func_ov006_0211d224(char* raw, int i) {
-    int b = i * 0x1c;
+    struct BooWalk *w = (struct BooWalk *)raw;
     int t;
 
-    (*(u16*)(raw + 0x4bdc + b))++;
-    if (*(u16*)(raw + 0x4bdc + b) >= 4) {
-        *(u16*)(raw + 0x4bdc + b) = 0;
-        (*(u8*)(raw + 0x4be3 + b))++;
-        if (*(u8*)(raw + 0x4be3 + b) >= 4) {
-            *(u8*)(raw + 0x4be3 + b) = 0;
+    w->boo[i].frameTimer++;
+    if (w->boo[i].frameTimer >= 4) {
+        w->boo[i].frameTimer = 0;
+        w->boo[i].frame++;
+        if (w->boo[i].frame >= 4) {
+            w->boo[i].frame = 0;
         }
     }
 
-    *(s32*)(raw + 0x4bcc + b) = *(s32*)(raw + 0x4bcc + b) + *(s32*)(raw + 0x4bd4 + b);
-    t = *(s32*)(raw + 0x4bcc + b) >> 0xc;
+    w->boo[i].x = w->boo[i].x + w->boo[i].xVel;
+    t = w->boo[i].x >> 0xc;
     if (t <= 0x40) {
-        if (*(s32*)(raw + 0x4bd4 + b) <= -0x800) {
-            *(s32*)(raw + 0x4bd4 + b) = *(s32*)(raw + 0x4bd4 + b) + 0x80;
+        if (w->boo[i].xVel <= -0x800) {
+            w->boo[i].xVel = w->boo[i].xVel + 0x80;
         }
     } else {
-        if (*(s32*)(raw + 0x4bd4 + b) >= -0x7000) {
-            *(s32*)(raw + 0x4bd4 + b) = *(s32*)(raw + 0x4bd4 + b) - 0x400;
+        if (w->boo[i].xVel >= -0x7000) {
+            w->boo[i].xVel = w->boo[i].xVel - 0x400;
         }
     }
     if (t > -0x20) {
         return;
     }
-    *(s32*)(raw + 0x4bcc + b) = -0x20000;
-    *(s32*)(raw + 0x4bd4 + b) = 0;
-    *(u8*)(raw + 0x4be1 + b) = 4;
-    *(u16*)(raw + 0x4bde + b) = 8;
-    *(u8*)(raw + 0x4be2 + b) = 0;
-    if (*(u8*)(raw + 0x4be5 + b) != 0) {
-        *(u8*)(raw + 0x4be1 + b) = 6;
+    w->boo[i].x = -0x20000;
+    w->boo[i].xVel = 0;
+    w->boo[i].state = 4;
+    w->boo[i].wait = 8;
+    w->boo[i].shown = 0;
+    if (w->boo[i].done != 0) {
+        w->boo[i].state = 6;
     }
 }
 
@@ -480,45 +475,46 @@ extern "C" void func_ov006_0211d224(char* raw, int i) {
 // @symbol func_ov006_0211d368
 extern "C" void func_ov006_0211d368(char *raw, int i)
 {
-    unsigned char state = *(unsigned char *)(raw + 0x4be3 + i * 0x1c);
+    struct BooWalk *w = (struct BooWalk *)raw;
+    unsigned char state = w->boo[i].frame;
     if ((unsigned char)(state - 8) < 2)
     {
-        (*(unsigned short *)(raw + 0x4bdc + i * 0x1c))++;
-        if (*(unsigned short *)(raw + 0x4bdc + i * 0x1c) >= data_ov006_0212efc8[(unsigned char)(state - 8)])
+        w->boo[i].frameTimer++;
+        if (w->boo[i].frameTimer >= data_ov006_0212efc8[(unsigned char)(state - 8)])
         {
-            *(unsigned short *)(raw + 0x4bdc + i * 0x1c) = 0;
-            (*(unsigned char *)(raw + 0x4be3 + i * 0x1c))++;
+            w->boo[i].frameTimer = 0;
+            w->boo[i].frame++;
         }
     }
-    if (*(unsigned short *)(raw + 0x4bde + i * 0x1c) != 0)
+    if (w->boo[i].wait != 0)
     {
-        (*(unsigned short *)(raw + 0x4bde + i * 0x1c))--;
+        w->boo[i].wait--;
         return;
     }
     data_0209d45c &= ~4;
     SetBg3Offset(0, 0x100);
     {
     int rnd = RandomIntInternal(&data_0209d4b8);
-    *(unsigned char *)(raw + 0x4be1 + i * 0x1c) =
+    w->boo[i].state =
         data_ov006_0212efc4[((unsigned int)(((unsigned int)rnd >> 16) & 0x7fff) * 2) >> 15];
     }
-    *(unsigned short *)(raw + 0x4bdc + i * 0x1c) = 0;
-    *(unsigned char *)(raw + 0x4be3 + i * 0x1c) = 0;
-    if (*(unsigned char *)(raw + 0x4be1 + i * 0x1c) == 2)
+    w->boo[i].frameTimer = 0;
+    w->boo[i].frame = 0;
+    if (w->boo[i].state == 2)
     {
-        *(unsigned char *)(raw + 0x4be4 + i * 0x1c) = 0;
-        *(int *)(raw + 0x4bd4 + i * 0x1c) = -0x4800;
-        *(int *)(raw + 0x4bcc + i * 0x1c) = 0x180000;
+        w->boo[i].moveRight = 0;
+        w->boo[i].xVel = -0x4800;
+        w->boo[i].x = 0x180000;
     }
     else
     {
-        *(unsigned char *)(raw + 0x4be4 + i * 0x1c) = 1;
-        *(int *)(raw + 0x4bd4 + i * 0x1c) = 0x4800;
-        *(int *)(raw + 0x4bcc + i * 0x1c) = -0x80000;
+        w->boo[i].moveRight = 1;
+        w->boo[i].xVel = 0x4800;
+        w->boo[i].x = -0x80000;
     }
-    if (*(unsigned char *)(raw + 0x4be5 + i * 0x1c) != 0)
+    if (w->boo[i].done != 0)
     {
-        *(unsigned char *)(raw + 0x4be1 + i * 0x1c) = 5;
+        w->boo[i].state = 5;
     }
 }
 
@@ -526,18 +522,18 @@ extern "C" void func_ov006_0211d368(char *raw, int i)
 // @symbol func_ov006_0211d4e8
 extern "C" void func_ov006_0211d4e8(char* raw, int i) {
     int off = i * 0x1c;
-    char* e = raw + off;
-    int* a = (int*)(raw + 0x4bd0);
-    int* b = (int*)(raw + 0x4bd8);
-    *(unsigned char*)(e + 0x4be2) = 1;
-    *(int*)((char*)a + off) = *(int*)((char*)a + off) + *(int*)((char*)b + off);
-    *(int*)((char*)b + off) = *(int*)((char*)b + off) - 0x100;
-    if (*(int*)((char*)a + off) >> 0xc > 0xc0)
+    struct BooWalk *w = (struct BooWalk *)raw;
+    int *y = (int *)BOO_FIELD(raw, y);
+    int *yVel = (int *)BOO_FIELD(raw, yVel);
+    w->boo[i].shown = 1;
+    *(int *)((char *)y + off) = *(int *)((char *)y + off) + *(int *)((char *)yVel + off);
+    *(int *)((char *)yVel + off) = *(int *)((char *)yVel + off) - 0x100;
+    if (*(int *)((char *)y + off) >> 0xc > 0xc0)
         return;
-    *(int*)((char*)a + off) = 0xc0000;
-    *(int*)((char*)b + off) = 0;
-    *(unsigned char*)(e + 0x4be1) = 1;
-    *(short*)(e + 0x4bde) = 0x30;
+    *(int *)((char *)y + off) = 0xc0000;
+    *(int *)((char *)yVel + off) = 0;
+    w->boo[i].state = 1;
+    w->boo[i].wait = 0x30;
     func_ov004_020b0cac(0xc, 0x80, 0x40, 1, -1, 0xd);
 }
 
@@ -552,17 +548,17 @@ extern "C" void func_ov006_0211d5a8(TeresaPmfA *c){
 // @symbol func_ov006_0211d608
 extern "C" void func_ov006_0211d608(char *raw)
 {
-    *(unsigned char *)(raw + 0x4be0) = 1;
-    *(int *)(raw + 0x4bcc) = 0x80000;
-    *(int *)(raw + 0x4bd0) = 0x100000;
-    *(int *)(raw + 0x4bd4) = 0;
-    *(int *)(raw + 0x4bd8) = -0x1800;
-    *(unsigned short *)(raw + 0x4bdc) = 0;
-    *(unsigned short *)(raw + 0x4bde) = 0;
-    *(unsigned char *)(raw + 0x4be1) = 0;
-    *(unsigned char *)(raw + 0x4be3) = 8;
-    *(unsigned char *)(raw + 0x4be4) = 0;
-    *(unsigned char *)(raw + 0x4be5) = 0;
+    BOO(raw)->active = 1;
+    BOO(raw)->x = 0x80000;
+    BOO(raw)->y = 0x100000;
+    BOO(raw)->xVel = 0;
+    BOO(raw)->yVel = -0x1800;
+    BOO(raw)->frameTimer = 0;
+    BOO(raw)->wait = 0;
+    BOO(raw)->state = 0;
+    BOO(raw)->frame = 8;
+    BOO(raw)->moveRight = 0;
+    BOO(raw)->done = 0;
     G2x::SetBlendAlpha((volatile unsigned short *)0x4000050, 0, 0xc, 0xc, 0x10);
 }
 
@@ -570,8 +566,8 @@ extern "C" void func_ov006_0211d608(char *raw)
 // @symbol func_ov006_0211d688
 extern "C" void func_ov006_0211d688(char *raw)
 {
-    *(char *)(raw + 0x4be0) = 0;
-    *(char *)(raw + 0x4be2) = 0;
+    BOO(raw)->active = 0;
+    BOO(raw)->shown = 0;
 }
 
 
