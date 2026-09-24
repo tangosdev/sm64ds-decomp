@@ -1,9 +1,9 @@
 {
   "id": "ov021/daObjCvNewsLift_c",
   "module": "ov021",
-  "source": "src_tu/actors/daObjCvNewsLift_c.cpp",
+  "source": "src/actors/daObjCvNewsLift_c.cpp",
   "promoted_source": "src/actors/daObjCvNewsLift_c.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x21111a0..0x2111ec4, 8 function(s), from build/tu_map.json (tools/tu_map.py); extended by hand through 0x21121e8 (see notes)",

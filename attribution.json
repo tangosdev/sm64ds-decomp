@@ -4673,6 +4673,25 @@
     "src/actors/daDpLift_c.cpp#_ZN10daDpLift_c16CleanupResourcesEv": "tangosdev",
     "src/actors/daDpLift_c.cpp#_ZN10daDpLift_c6RenderEv": "tangosdev",
     "src/actors/daDpLift_c.cpp#_ZN10daDpLift_c8BehaviorEv": "lunavyqo",
-    "src/actors/daDpLift_c.cpp#_ZN10daDpLift_c13InitResourcesEv": "lunavyqo"
+    "src/actors/daDpLift_c.cpp#_ZN10daDpLift_c13InitResourcesEv": "lunavyqo",
+    "src/actors/daObjCvNewsLift_c.cpp#_ZN17daObjCvNewsLift_cD1Ev": "tangosdev",
+    "src/actors/daObjCvNewsLift_c.cpp#_ZN17daObjCvNewsLift_cD0Ev": "tangosdev",
+    "src/actors/daObjCvNewsLift_c.cpp#func_ov021_0211129c": "tangosdev",
+    "src/actors/daObjCvNewsLift_c.cpp#func_ov021_02111434": "tangosdev",
+    "src/actors/daObjCvNewsLift_c.cpp#_ZN17daObjCvNewsLift_c16CleanupResourcesEv": "tangosdev",
+    "src/actors/daObjCvNewsLift_c.cpp#_ZN17daObjCvNewsLift_c6RenderEv": "tangosdev",
+    "src/actors/daObjCvNewsLift_c.cpp#_ZN17daObjCvNewsLift_c8BehaviorEv": "github-actions[bot]",
+    "src/actors/daObjCvNewsLift_c.cpp#_ZN17daObjCvNewsLift_c13InitResourcesEv": "andrewboudreau",
+    "src/actors/daObjCvNewsLift_c.cpp#func_ov021_02111ec4": "tangosdev",
+    "src/actors/daObjCvNewsLift_c.cpp#func_ov021_02111edc": "tangosdev",
+    "src/actors/daObjCvNewsLift_c.cpp#func_ov021_02111f1c": "tangosdev",
+    "src/actors/daObjCvNewsLift_c.cpp#func_ov021_02111f34": "tangosdev",
+    "src/actors/daObjCvNewsLift_c.cpp#func_ov021_02111f74": "tangosdev",
+    "src/actors/daObjCvNewsLift_c.cpp#func_ov021_02111f8c": "tangosdev",
+    "src/actors/daObjCvNewsLift_c.cpp#func_ov021_02111fcc": "tangosdev",
+    "src/actors/daObjCvNewsLift_c.cpp#func_ov021_02111fe4": "tangosdev",
+    "src/actors/daObjCvNewsLift_c.cpp#func_ov021_02112024": "tangosdev",
+    "src/actors/daObjCvNewsLift_c.cpp#func_ov021_02112128": "tangosdev",
+    "src/actors/daObjCvNewsLift_c.cpp#daObjCvNewsLift_c_classInit": "tangosdev"
   }
 }
