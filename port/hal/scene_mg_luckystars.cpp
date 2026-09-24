@@ -193,6 +193,7 @@
 
 #include "hal/screen_gap.h"
 
+#include "port_d16.h"   /* slot 16: fBase_c::AfterCleanupResources pushes the delete flag; PORT_D16 pops it */
 #include <cstdio>
 #include <cstdlib>
 
@@ -356,13 +357,13 @@ struct BscFace { unsigned ds; void *host; };
 static const BscFace kSingle3DFaces[] = {
     {0x0210a6e4u, (void *)s3_ainit},  {0x0210a608u, (void *)s3_aclean},
     {0x0210a698u, (void *)s3_bbeh},   {0x0210a664u, (void *)s3_bren},
-    {0x0210a4b0u, (void *)s3_d2},     {0x0210a4e8u, (void *)s3_d0},
+    {0x0210a4b0u, (void *)PORT_D16(s3_d2)},     {0x0210a4e8u, (void *)s3_d0},
     {0x0210a600u, (void *)s3_v26},    {0x0210a708u, (void *)s3_v33},
 };
 
 static const BscFace kBscFaces[] = {
     {0x0212551cu, (void *)bsc_init},  {0x021254c0u, (void *)bsc_beh},
-    {0x021253bcu, (void *)bsc_render},{0x02124908u, (void *)bsc_d2},
+    {0x021253bcu, (void *)bsc_render},{0x02124908u, (void *)PORT_D16(bsc_d2)},
     {0x0212497cu, (void *)bsc_d0},    {0x02125364u, (void *)bsc_reset},
     {0x0212527cu, (void *)bsc_v19},   {0x02125248u, (void *)bsc_v21},
 };

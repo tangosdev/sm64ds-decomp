@@ -217,6 +217,7 @@
 
 #include "hal/screen_gap.h"
 
+#include "port_d16.h"   /* slot 16: fBase_c::AfterCleanupResources pushes the delete flag; PORT_D16 pops it */
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -470,7 +471,7 @@ struct SosFace { unsigned ds; void *host; };
    in. */
 static const SosFace kBomroomFaces[] = {
     {0x020d9244u, (void *)sos_init},   {0x020d91b0u, (void *)sos_beh},
-    {0x020d9160u, (void *)sos_render}, {0x020d5a54u, (void *)sos_d2},
+    {0x020d9160u, (void *)sos_render}, {0x020d5a54u, (void *)PORT_D16(sos_d2)},
     {0x020d5a78u, (void *)sos_d0},     {0x020d9104u, (void *)sos_reset},
 };
 

@@ -148,6 +148,7 @@
 
 #include "dScMgD3DBase_c.h"
 
+#include "port_d16.h"   /* slot 16: fBase_c::AfterCleanupResources pushes the delete flag; PORT_D16 pops it */
 #include <cstdio>
 #include <cstdlib>
 
@@ -381,7 +382,7 @@ static const J2Face kD3DFaces[] = {
     {0x020e70e4u, (void *)d3_binit},  {0x020e70c0u, (void *)d3_ainit},
     {0x020e6f60u, (void *)d3_aclean}, {0x020e7074u, (void *)d3_bbeh},
     {0x020e7040u, (void *)d3_bren},   {0x020e700cu, (void *)d3_aren},
-    {0x020e6c28u, (void *)d3_d2},     {0x020e6c60u, (void *)d3_d0},
+    {0x020e6c28u, (void *)PORT_D16(d3_d2)},     {0x020e6c60u, (void *)d3_d0},
     {0x020e6e78u, (void *)d3_v24},    {0x020e6e54u, (void *)d3_v25},
     {0x020e6e4cu, (void *)d3_v26},    {0x020e6d98u, (void *)d3_v27},
     {0x020e6d8cu, (void *)d3_v28},    {0x020e6d24u, (void *)d3_v29},
@@ -397,7 +398,7 @@ static const J2Face kElemFaces[] = {
 static const J2Face kJump2Faces[] = {
     {0x020ef834u, (void *)j2_init},   {0x020ef110u, (void *)j2_clean},
     {0x020ef3e0u, (void *)j2_beh},    {0x020ef148u, (void *)j2_render},
-    {0x020eebe8u, (void *)j2_d2},     {0x020eec9cu, (void *)j2_d0},
+    {0x020eebe8u, (void *)PORT_D16(j2_d2)},     {0x020eec9cu, (void *)j2_d0},
     {0x020efaa8u, (void *)j2_reset},  {0x020efa84u, (void *)j2_v19},
 };
 

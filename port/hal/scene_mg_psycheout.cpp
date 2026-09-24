@@ -169,6 +169,7 @@
 
 #include "hal/screen_gap.h"
 
+#include "port_d16.h"   /* slot 16: fBase_c::AfterCleanupResources pushes the delete flag; PORT_D16 pops it */
 #include <cstdio>
 #include <cstdlib>
 
@@ -313,14 +314,14 @@ struct PsyFace { unsigned ds; void *host; };
 static const PsyFace kSingle3DFaces[] = {
     {0x0210a6e4u, (void *)s3_ainit},  {0x0210a608u, (void *)s3_aclean},
     {0x0210a698u, (void *)s3_bbeh},   {0x0210a664u, (void *)s3_bren},
-    {0x0210a4b0u, (void *)s3_d2},     {0x0210a4e8u, (void *)s3_d0},
+    {0x0210a4b0u, (void *)PORT_D16(s3_d2)},     {0x0210a4e8u, (void *)s3_d0},
     {0x0210a600u, (void *)s3_v26},    {0x0210a708u, (void *)s3_v33},
 };
 
 static const PsyFace kEsp3DFaces[] = {
     {0x020e9e70u, (void *)psy_init},  {0x020e9cecu, (void *)psy_clean},
     {0x020e9e00u, (void *)psy_beh},   {0x020e9d1cu, (void *)psy_render},
-    {0x020e7660u, (void *)psy_d2},    {0x020e76e4u, (void *)psy_d0},
+    {0x020e7660u, (void *)PORT_D16(psy_d2)},    {0x020e76e4u, (void *)psy_d0},
     {0x020e9c20u, (void *)psy_reset}, {0x020e9c10u, (void *)psy_v20},
 };
 

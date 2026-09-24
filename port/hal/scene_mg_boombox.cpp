@@ -200,6 +200,7 @@
 
 #include "hal/screen_gap.h"
 
+#include "port_d16.h"   /* slot 16: fBase_c::AfterCleanupResources pushes the delete flag; PORT_D16 pops it */
 #include <cstdio>
 #include <cstdlib>
 
@@ -357,13 +358,13 @@ struct SndFace { unsigned ds; void *host; };
 static const SndFace kSingle3DFaces[] = {
     {0x0210a6e4u, (void *)s3_ainit},  {0x0210a608u, (void *)s3_aclean},
     {0x0210a698u, (void *)s3_bbeh},   {0x0210a664u, (void *)s3_bren},
-    {0x0210a4b0u, (void *)s3_d2},     {0x0210a4e8u, (void *)s3_d0},
+    {0x0210a4b0u, (void *)PORT_D16(s3_d2)},     {0x0210a4e8u, (void *)s3_d0},
     {0x0210a600u, (void *)s3_v26},    {0x0210a708u, (void *)s3_v33},
 };
 
 static const SndFace kSoundFaces[] = {
     {0x0211c984u, (void *)snd_init},  {0x0211c720u, (void *)snd_beh},
-    {0x0211c6c4u, (void *)snd_render},{0x02119904u, (void *)snd_d2},
+    {0x0211c6c4u, (void *)snd_render},{0x02119904u, (void *)PORT_D16(snd_d2)},
     {0x02119958u, (void *)snd_d0},    {0x0211c5d0u, (void *)snd_reset},
     {0x0211c5b8u, (void *)snd_v20},
 };

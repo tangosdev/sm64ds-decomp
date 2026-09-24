@@ -281,6 +281,7 @@
 
 #include "hal/screen_gap.h"
 
+#include "port_d16.h"   /* slot 16: fBase_c::AfterCleanupResources pushes the delete flag; PORT_D16 pops it */
 #include <cstdio>
 #include <cstdlib>
 
@@ -510,7 +511,7 @@ struct Mc2Face { unsigned ds; void *host; };
 static const Mc2Face kSingle3DFaces[] = {
     {0x0210a6e4u, (void *)s3_ainit},  {0x0210a608u, (void *)s3_aclean},
     {0x0210a698u, (void *)s3_bbeh},   {0x0210a664u, (void *)s3_bren},
-    {0x0210a4b0u, (void *)s3_d2},     {0x0210a4e8u, (void *)s3_d0},
+    {0x0210a4b0u, (void *)PORT_D16(s3_d2)},     {0x0210a4e8u, (void *)s3_d0},
     {0x0210a600u, (void *)s3_v26},    {0x0210a708u, (void *)s3_v33},
 };
 
@@ -526,7 +527,7 @@ static const Mc2Face kCard2Faces[] = {
 static const Mc2Face kMCarlo2Faces[] = {
     {0x020fa56cu, (void *)mc2_init},   {0x020f9fe0u, (void *)mc2_clean},
     {0x020fa13cu, (void *)mc2_beh},    {0x020f9ffcu, (void *)mc2_render},
-    {0x020f8ef4u, (void *)mc2_d2},     {0x020f8f68u, (void *)mc2_d0},
+    {0x020f8ef4u, (void *)PORT_D16(mc2_d2)},     {0x020f8f68u, (void *)mc2_d0},
     {0x020fa4d4u, (void *)mc2_reset},  {0x020fa3d0u, (void *)mc2_v19},
 };
 

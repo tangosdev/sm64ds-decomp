@@ -295,6 +295,7 @@
 
 #include "hal/screen_gap.h"
 
+#include "port_d16.h"   /* slot 16: fBase_c::AfterCleanupResources pushes the delete flag; PORT_D16 pops it */
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -541,7 +542,7 @@ struct WigFace { unsigned ds; void *host; };
 static const WigFace kWigglerFaces[] = {
     {0x020edb04u, (void *)wig_init},   {0x020ecec8u, (void *)wig_clean},
     {0x020ed18cu, (void *)wig_beh},    {0x020ecee4u, (void *)wig_render},
-    {0x020ea280u, (void *)wig_d2},     {0x020ea2c8u, (void *)wig_d0},
+    {0x020ea280u, (void *)PORT_D16(wig_d2)},     {0x020ea2c8u, (void *)wig_d0},
     {0x020eda48u, (void *)wig_reset},
 };
 

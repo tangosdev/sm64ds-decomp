@@ -164,6 +164,7 @@
 #include "hal/screen_gap.h"
 #include "dsstate_seg.h"
 
+#include "port_d16.h"   /* slot 16: fBase_c::AfterCleanupResources pushes the delete flag; PORT_D16 pops it */
 #include <cstdio>
 #include <cstdlib>
 
@@ -357,7 +358,7 @@ struct S1Face { unsigned ds; void *host; };
 
 static const S1Face kSlot1Faces[] = {
     {0x0210d1fcu, (void *)s1_init},       {0x0210c9e0u, (void *)s1_beh},
-    {0x0210c6c0u, (void *)s1_render},     {0x0210a8c0u, (void *)s1_d2},
+    {0x0210c6c0u, (void *)s1_render},     {0x0210a8c0u, (void *)PORT_D16(s1_d2)},
     {0x0210a900u, (void *)s1_d0},         {0x0210c674u, (void *)s1_reset},
     {0x0210c4dcu, (void *)s1_v27},        {0x0210c4b8u, (void *)s1_v28},
 };

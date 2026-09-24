@@ -169,6 +169,7 @@
 
 #include "hal/screen_gap.h"
 
+#include "port_d16.h"   /* slot 16: fBase_c::AfterCleanupResources pushes the delete flag; PORT_D16 pops it */
 #include <cstdio>
 #include <cstdlib>
 
@@ -332,7 +333,7 @@ struct AmFace { unsigned ds; void *host; };
 static const AmFace kAmidaFaces[] = {
     {0x020d5384u, (void *)am_init},   {0x020d5924u, (void *)am_aclean},
     {0x020d4b7cu, (void *)am_beh},    {0x020d48dcu, (void *)am_render},
-    {0x020d1018u, (void *)am_d2},     {0x020d10b8u, (void *)am_d0},
+    {0x020d1018u, (void *)PORT_D16(am_d2)},     {0x020d10b8u, (void *)am_d0},
     {0x020d52f0u, (void *)am_reset},  {0x020d11a0u, (void *)am_v31},
     {0x020d14c0u, (void *)am_v34},
     {0x020d1170u, (void *)am_v35},    {0x020d1188u, (void *)am_v36},

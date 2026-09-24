@@ -137,6 +137,7 @@
 
 #include "hal/screen_gap.h"
 
+#include "port_d16.h"   /* slot 16: fBase_c::AfterCleanupResources pushes the delete flag; PORT_D16 pops it */
 #include <cstdio>
 #include <cstdlib>
 
@@ -278,13 +279,13 @@ struct FlwFace { unsigned ds; void *host; };
 static const FlwFace kSingle3DFaces[] = {
     {0x0210a6e4u, (void *)s3_ainit},  {0x0210a608u, (void *)s3_aclean},
     {0x0210a698u, (void *)s3_bbeh},   {0x0210a664u, (void *)s3_bren},
-    {0x0210a4b0u, (void *)s3_d2},     {0x0210a4e8u, (void *)s3_d0},
+    {0x0210a4b0u, (void *)PORT_D16(s3_d2)},     {0x0210a4e8u, (void *)s3_d0},
     {0x0210a600u, (void *)s3_v26},    {0x0210a708u, (void *)s3_v33},
 };
 
 static const FlwFace kFlowerFaces[] = {
     {0x0212b480u, (void *)flw_init},  {0x0212ac74u, (void *)flw_beh},
-    {0x0212aaccu, (void *)flw_render},{0x0212a554u, (void *)flw_d2},
+    {0x0212aaccu, (void *)flw_render},{0x0212a554u, (void *)PORT_D16(flw_d2)},
     {0x0212a5c8u, (void *)flw_d0},    {0x0212aa74u, (void *)flw_reset},
 };
 

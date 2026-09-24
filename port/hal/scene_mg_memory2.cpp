@@ -153,6 +153,7 @@
 
 #include "hal/screen_gap.h"
 
+#include "port_d16.h"   /* slot 16: fBase_c::AfterCleanupResources pushes the delete flag; PORT_D16 pops it */
 #include <cstdio>
 #include <cstdlib>
 
@@ -356,13 +357,13 @@ struct MemFace { unsigned ds; void *host; };
 static const MemFace kSingle3DFaces[] = {
     {0x0210a6e4u, (void *)s3_ainit},  {0x0210a608u, (void *)s3_aclean},
     {0x0210a698u, (void *)s3_bbeh},   {0x0210a664u, (void *)s3_bren},
-    {0x0210a4b0u, (void *)s3_d2},     {0x0210a4e8u, (void *)s3_d0},
+    {0x0210a4b0u, (void *)PORT_D16(s3_d2)},     {0x0210a4e8u, (void *)s3_d0},
     {0x0210a600u, (void *)s3_v26},    {0x0210a708u, (void *)s3_v33},
 };
 
 static const MemFace kMemory2Faces[] = {
     {0x020f74b4u, (void *)mem_init},  {0x020f7458u, (void *)mem_beh},
-    {0x020f73f4u, (void *)mem_render},{0x020f5564u, (void *)mem_d2},
+    {0x020f73f4u, (void *)mem_render},{0x020f5564u, (void *)PORT_D16(mem_d2)},
     {0x020f55b8u, (void *)mem_d0},    {0x020f7394u, (void *)mem_reset},
     {0x020f7320u, (void *)mem_v19},   {0x020f730cu, (void *)mem_v21},
 };

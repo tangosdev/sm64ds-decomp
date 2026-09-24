@@ -225,6 +225,7 @@
 
 #include "hal/screen_gap.h"
 
+#include "port_d16.h"   /* slot 16: fBase_c::AfterCleanupResources pushes the delete flag; PORT_D16 pops it */
 #include <cstdio>
 #include <cstdlib>
 
@@ -459,7 +460,7 @@ struct McaFace { unsigned ds; void *host; };
 static const McaFace kSingle3DFaces[] = {
     {0x0210a6e4u, (void *)s3_ainit},  {0x0210a608u, (void *)s3_aclean},
     {0x0210a698u, (void *)s3_bbeh},   {0x0210a664u, (void *)s3_bren},
-    {0x0210a4b0u, (void *)s3_d2},     {0x0210a4e8u, (void *)s3_d0},
+    {0x0210a4b0u, (void *)PORT_D16(s3_d2)},     {0x0210a4e8u, (void *)s3_d0},
     {0x0210a600u, (void *)s3_v26},    {0x0210a708u, (void *)s3_v33},
 };
 
@@ -474,7 +475,7 @@ static const McaFace kCardFaces[] = {
 
 static const McaFace kMCarloFaces[] = {
     {0x020f8d08u, (void *)mca_init},   {0x020f869cu, (void *)mca_beh},
-    {0x020f85b0u, (void *)mca_render}, {0x020f7634u, (void *)mca_d2},
+    {0x020f85b0u, (void *)mca_render}, {0x020f7634u, (void *)PORT_D16(mca_d2)},
     {0x020f76a8u, (void *)mca_d0},     {0x020f8c68u, (void *)mca_reset},
     {0x020f8a3cu, (void *)mca_v19},
 };
