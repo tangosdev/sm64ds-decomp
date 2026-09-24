@@ -134,7 +134,6 @@ func_ov002_020aefb8|src/actors/da1up_c.cpp
 func_ov002_020b16c4|src/func_ov002_020b19dc.c
 func_ov002_020b1884|src/func_ov002_020b19dc.c
 func_ov002_020bac18|src/game/actors/d_a_obj_cv_shutter.cpp
-func_ov002_020c3e8c|src/func_ov085_0212d5dc.cpp
 func_ov002_020d4d88|port/unmatched/func_ov002_020d3b9c.c
 func_ov002_020d4d88|src/_ZN6Player13St_Crawl_MainEv.cpp
 func_ov002_020d4d88|src/actors/Player.cpp

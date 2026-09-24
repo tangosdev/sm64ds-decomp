@@ -6095,13 +6095,9 @@ endforeach()
 list(APPEND SLICEINTRO_SOURCES
      "${CMAKE_CURRENT_SOURCE_DIR}/hal/intro_kuppa_dispatch.cpp"
      "${CMAKE_CURRENT_SOURCE_DIR}/hal/actor_classes_intro.cpp")
-# r0-passthrough: func_ov085_0212d5dc is LakituBro's last opening state and it
-# calls func_ov002_020c3e8c() with the player riding ARM r0 -- the fifth
-# instance of the seam its four siblings already have host copies for, and the
-# three lines that END the opening (hand control back, then the ROM's own
-# "intro seen" write). Src line commented out in slice_gate18.txt.
-list(APPEND SLICEINTRO_SOURCES
-     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Ov085_LakituBro_IntroEnd.cpp")
+# unmatched/Ov085_LakituBro_IntroEnd.cpp RETIRED (run linkfull, lane RS4PORT):
+# src/func_ov085_0212d5dc.cpp passes func_ov002_020c3e8c the player (main
+# #3106's hunk) and is back on slice_gate18.txt.
 # void* arithmetic: func_ov002_020f7780 (cutscene-object command slot 2) adds
 # 0x8e to a void*, which mwcc takes as the GNU extension and MSVC C refuses with
 # C2036. One cast, same address; src line commented out in slice_intro.txt.
