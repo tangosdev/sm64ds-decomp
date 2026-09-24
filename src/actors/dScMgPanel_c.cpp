@@ -1,18 +1,38 @@
 //cpp
-/* Puzzle Panic. Flip the touched panel and its neighbours until every
- * face matches the deal.
+/* Puzzle Panic, the whole run 0x0210428c..0x02107858, 71 functions. The
+ * factory and the static initializer live in their own files. Touch a panel
+ * to flip it and its neighbours until every mFace matches mGoal.
+ *
+ * Functions run in ROM order under `#pragma defer_codegen off`; do not
+ * reorder or drop the pragma. It also makes the bracketed optimizer pragmas
+ * bind to their own functions.
+ *
+ * The destructor is out of line and written first, so this file owns the
+ * key function and emits the vtable and typeinfo; the compiler emits D1 and
+ * D0 from the one body in cartridge order.
  *
  * Each helper keeps its own extern "C" declarations: decl_common.h
  * disagrees with seven of them. The class methods are not extern "C",
- * so their callees are declared once above the methods.
+ * so their callees are declared once above the methods. The `_ac4`-style
+ * suffixes on the local struct tags only keep each helper's view apart.
  *
- * Leftover: func_ov006_021042e8, func_ov006_02104354, func_ov006_0210446c,
- *   func_ov006_02104558, `PanelPart *p = (PanelPart *)(scene + 0x46a8)`
- *   with p->x / p->show / p++, DIFF. The 0x18 byte step stays.
- * Leftover: func_ov006_02104580 and func_ov006_02104870, `PanelScroll *`
- *   at 0x4694, DIFF. func_ov006_021048b0's one `on` store matches.
- * Leftover: func_ov006_021051dc, `(u16 *)(int)&mDelay` then an s16 compare,
- *   DIFF, 25 words. func_ov006_02105854, that same form, DIFF.
+ * Leftover, each measured against the matching build:
+ * - func_ov006_021042e8, func_ov006_02104354, func_ov006_0210446c,
+ *   func_ov006_02104558: `PanelPart *p = (PanelPart *)(scene + 0x46a8)`
+ *   with p->x / p->show / p++ DIFFs. The 0x18 byte step stays.
+ * - func_ov006_02104580, func_ov006_02104870: `PanelScroll *` at 0x4694
+ *   DIFFs. func_ov006_021048b0's one `on` store matches.
+ * - func_ov006_021051dc, func_ov006_02105854: mWidth and mDelay stay raw;
+ *   `(u16 *)(int)&mDelay` then an s16 compare DIFFs by 25 words.
+ * - func_ov006_021053a8, func_ov006_02105670, func_ov006_02106bc0,
+ *   func_ov006_02106eb8, func_ov006_02106f44, func_ov006_0210709c: mKind
+ *   and mCount (and mFace, mDelay where used) DIFF as members.
+ * - func_ov006_02105d20: the mFace / mGoal compare DIFFs as members.
+ * - func_ov006_02105de4, func_ov006_02106080, func_ov006_021068d8: mWidth
+ *   DIFFs as a member; so does mKind in func_ov006_021068d8.
+ * - func_ov006_02105ab4, func_ov006_02105de4 keep their own local struct
+ *   views; func_ov006_02106ca4 and func_ov006_02106080's mFace flip go
+ *   through a computed byte pointer. Not tried.
  */
 
 #pragma defer_codegen off /* per-function opt pragmas, and .text in source order */
@@ -23,9 +43,10 @@
 
 #include "Sound.h"
 
-/* Background scroll just under the particles. phase 0 shakes, then y runs
-   up to 32.0 while sparks ride the edge. func_ov006_021048b0 is the one
-   store this spelling matches. */
+/* BG2 offset on both screens. func_ov006_02104580 runs it: phase 0 shakes
+   x by +-2.0 for 0x3c frames and drops particles (func_ov006_0210446c) at
+   both side edges, then y accelerates up to 512.0. func_ov006_02104870 arms
+   it; func_ov006_021048b0 clears `on` and the offsets. */
 struct PanelScroll {
     int x;       /* 0x4694 */
     int y;       /* 0x4698 */
@@ -300,6 +321,7 @@ void func_ov006_021048e4(u8 *scene)
 extern "C" {
 void func_ov006_02104920(char *scene, int index)
 {
+    dScMgPanel_c *s = (dScMgPanel_c *)scene;
     extern void SetSubBg0Offset(int a, int b);
     extern void func_02012790(int a);
     extern u8 data_0209d454;
@@ -315,7 +337,7 @@ void func_ov006_02104920(char *scene, int index)
         SetSubBg0Offset(0, 0);
         data_0209d454 &= ~1;
         func_02012790(0x12f);
-        *(u8 *)(scene + 0x4fe2) -= 1;
+        s->mLives -= 1;
         return;
     }
     *(int *)(scene + 0x468c + n) = data_ov006_0212ed00[cnt >> 3];
@@ -501,10 +523,11 @@ void func_ov006_02104cfc(char *scene, int i)
 extern "C" {
 void func_ov006_02104d44(char *scene)
 {
+    dScMgPanel_c *s = (dScMgPanel_c *)scene;
     void Hud_RenderSprite(void *a, int b, int scene, int d, int e);
     extern void *data_ov006_02136d40[];
     if (*(u8 *)(scene + 0x4fe3) == 0) return;
-    Hud_RenderSprite(data_ov006_02136d40[*(u8 *)(scene + 0x4fe2)],
+    Hud_RenderSprite(data_ov006_02136d40[s->mLives],
                         0xf0, 0x24, -1, -1);
 }
 }
@@ -563,7 +586,8 @@ void func_ov006_02104e80(char *scene)
 extern "C" {
 void func_ov006_02104ea8(char *scene)
 {
-    ((dScMgPanel_c *)scene)->mSlideFlag = 0;
+    dScMgPanel_c *s = (dScMgPanel_c *)scene;
+    s->mSlideFlag = 0;
 }
 }
 
@@ -571,7 +595,8 @@ void func_ov006_02104ea8(char *scene)
 extern "C" {
 void func_ov006_02104eb8(char *scene)
 {
-    ((dScMgPanel_c *)scene)->mSlideFlag = 1;
+    dScMgPanel_c *s = (dScMgPanel_c *)scene;
+    s->mSlideFlag = 1;
 }
 }
 
@@ -681,6 +706,7 @@ void func_ov006_02105118(char *scene)
 extern "C" {
 void func_ov006_02105134(char *scene)
 {
+    dScMgPanel_c *s = (dScMgPanel_c *)scene;
     void func_02012790(int a);
     void func_ov006_021048e4(u8 *r0);
     void func_ov006_02105c1c(char *scene);
@@ -691,7 +717,7 @@ void func_ov006_02105134(char *scene)
     func_02012790(0xe);
     func_ov006_021048e4((u8 *)scene);
 
-    if (*(u8 *)(scene + 0x4fe2) > 1) {
+    if (s->mLives > 1) {
         *(int *)(scene + 0x4ca8) = 3;
         func_ov006_02105c1c(scene);
     } else {
@@ -707,6 +733,7 @@ void func_ov006_02105134(char *scene)
 extern "C" {
 void func_ov006_021051dc(char *scene)
 {
+    dScMgPanel_c *s = (dScMgPanel_c *)scene;
     extern void func_ov006_02104cfc(char *scene, int i);
     int index;
     int w;
@@ -753,8 +780,8 @@ void func_ov006_021051dc(char *scene)
         for (x = 0; x < wq; x++) {
             int cell = *(int *)(scene + 0x4cbc) * (row + y) + (col + x);
 
-            *(u8 *)(scene + cell + 0x4efa) = 1;
-            (*(u8 *)(int)(scene + cell + 0x4f1e)) ^= 1;
+            s->mKind[cell] = 1;
+            s->mFace[cell] ^= 1;
             *(u16 *)(scene + cell * 2 + 0x4e78) = 8;
         }
     }
@@ -926,6 +953,7 @@ typedef struct WarpEntry_730 {
 
 void func_ov006_02105730(char *c)
 {
+    dScMgPanel_c *s = (dScMgPanel_c *)c;
     extern u8 data_020a0e40;
     extern WarpEntry_730 data_020a0de8[];
     u8 idx;
@@ -960,7 +988,7 @@ void func_ov006_02105730(char *c)
     }
     *(u8 *)(c + 0x4fe0) = 1;
     *(u32 *)(c + 0x4ca8) = 5;
-    *(u16 *)(c + 0x4ec4) = 0x20;
+    s->mDelay = 0x20;
 }
 }
 
@@ -995,6 +1023,7 @@ void func_ov006_021057f0(PanelC_7f0 *c)
 extern "C" {
 void func_ov006_02105854(char *scene)
 {
+    dScMgPanel_c *s = (dScMgPanel_c *)scene;
     extern void func_ov006_02104eb8(char *p);
     extern void func_ov006_02104e70(u8 *p);
     if (*(u16 *)(scene + 0x4ec4) != 0) {
@@ -1007,7 +1036,7 @@ void func_ov006_02105854(char *scene)
     {
         int found = 0;
         int i;
-        int n = *(int *)(scene + 0x4cb8);
+        int n = s->mCount;
         for (i = 0; i < n; i++) {
             if (*(u8 *)(scene + i + 0x4efa) != 0) {
                 found++;
@@ -1060,7 +1089,7 @@ void func_ov006_02105854(char *scene)
             for (x = 0; x < wq; x++) {
                 int cell = *(int *)(scene + 0x4cbc) * (row + y) + (col + x);
                 *(u8 *)(scene + cell + 0x4efa) = 1;
-                (*(u8 *)(int)(scene + cell + 0x4f1e)) ^= 1;
+                s->mFace[cell] ^= 1;
                 *(u16 *)(scene + cell * 2 + 0x4e78) = 8;
                 *(u8 *)(scene + cell + 0x4f8a) = 1;
             }
@@ -1147,7 +1176,7 @@ void func_ov006_02105c1c(char *scene)
 
     if (s->mCount <= 0) return;
     do {
-        if (s->mFace[i] != s->mShown[i]) {
+        if (s->mFace[i] != s->mGoal[i]) {
             s->mKind[i] = 2;
             *(u16 *)(scene + (int)(((long long)i)) * 2 + 0x4e30) = 0;
         }
@@ -1167,7 +1196,7 @@ void func_ov006_02105c88(char *scene)
     if (s->mBusy != 0) return;
 
     for (i = 0; i < s->mCount; i++) {
-        if (s->mFace[i] != s->mShown[i]) {
+        if (s->mFace[i] != s->mGoal[i]) {
             cnt++;
             break;
         }
@@ -1199,7 +1228,7 @@ void func_ov006_02105d20(char *scene)
     if (*(u8 *)(scene + 0x4feb) != 0) return;
     found = 0;
     i = 0;
-    n = *(int *)(scene + 0x4cb8);
+    n = ((dScMgPanel_c *)scene)->mCount;
     while (i < n) {
         if (*(u8 *)(scene + i + 0x4f1e) != *(u8 *)(scene + i + 0x4f42)) {
             found++;
@@ -1289,8 +1318,8 @@ void func_ov006_02105de4(char *scene)
                     int x;
                     for (x = 0; x < wq; x++) {
                         int index = *(int *)(scene + 0x4cbc) * (row + y) + (col + x);
-                        *(u8 *)(scene + index + 0x4efa) = 1;
-                        (*(u8 *)(int)(scene + index + 0x4f1e)) ^= 1;
+                        ((dScMgPanel_c *)scene)->mKind[index] = 1;
+                        ((dScMgPanel_c *)scene)->mFace[index] ^= 1;
                         *(u16 *)(scene + index * 2 + 0x4e78) = 8;
                     }
                 }
@@ -1309,13 +1338,13 @@ void func_ov006_02105de4(char *scene)
 
 // @symbol func_ov006_02106048
 extern "C" {
-/* Mark all live panels as settled. */
+/* Show every panel (intro end). */
 void func_ov006_02106048(char *scene)
 {
     dScMgPanel_c *s = (dScMgPanel_c *)scene;
     int i;
     for (i = 0; i < s->mCount; i++) {
-        s->mSettled[i] = 1;
+        s->mVisible[i] = 1;
     }
 }
 }
@@ -1395,10 +1424,10 @@ void func_ov006_02106168(dScMgPanel_c *scene)
             pd = data_ov006_0213ded0;
             if (scene->Virtual8C()) {
                 scene->mFace[i] = pd[idx4][i];
-                scene->mShown[i] = pd[idx4][i];
+                scene->mGoal[i] = pd[idx4][i];
             } else {
                 scene->mFace[i] = pe[idx4][i];
-                scene->mShown[i] = pe[idx4][i];
+                scene->mGoal[i] = pe[idx4][i];
             }
         }
         cnt2 = scene->mFlips;
@@ -1412,7 +1441,7 @@ void func_ov006_02106168(dScMgPanel_c *scene)
         }
         mismatch = 0;
         for (k = 0; k < scene->mCount; k++) {
-            if (scene->mFace[k] != scene->mShown[k]) {
+            if (scene->mFace[k] != scene->mGoal[k]) {
                 mismatch++;
                 break;
             }
@@ -1483,8 +1512,8 @@ void func_ov006_021063a0(char *scene)
             }
             *(int *)(scene + 0x4cb4) = nv;
         }
-        *(int *)(scene + 0x4cbc) = data_ov006_0213dd94[t];
-        { int q = *(int *)(scene + 0x4cbc); *(int *)(scene + 0x4cb8) = q * q; }
+        ((dScMgPanel_c *)scene)->mWidth = data_ov006_0213dd94[t];
+        { int q = ((dScMgPanel_c *)scene)->mWidth; ((dScMgPanel_c *)scene)->mCount = q * q; }
         *(int *)(scene + 0x4cc0) = data_ov006_0213dd74[t];
         *(int *)(scene + 0x4de4) = t;
     } else {
@@ -1510,8 +1539,8 @@ void func_ov006_021063a0(char *scene)
             }
             *(int *)(scene + 0x4cb4) = nv;
         }
-        *(int *)(scene + 0x4cbc) = data_ov006_0213de60[t];
-        { int q = *(int *)(scene + 0x4cbc); *(int *)(scene + 0x4cb8) = q * q; }
+        ((dScMgPanel_c *)scene)->mWidth = data_ov006_0213de60[t];
+        { int q = ((dScMgPanel_c *)scene)->mWidth; ((dScMgPanel_c *)scene)->mCount = q * q; }
         *(int *)(scene + 0x4cc0) = data_ov006_0213de44[t];
     }
 }
@@ -1596,10 +1625,10 @@ void func_ov006_021067a4(char *scene)
         *(s16 *)(scene + i * 2 + 0x4de8) = 0;
         *(s16 *)(scene + i * 2 + 0x4e30) = 0;
         *(s16 *)(scene + i * 2 + 0x4e78) = 0;
-        *(char *)(scene + i + 0x4f1e) = 0;
-        *(char *)(scene + i + 0x4efa) = 0;
-        *(char *)(scene + i + 0x4f42) = 0;
-        *(char *)(scene + i + 0x4f66) = 0;
+        ((dScMgPanel_c *)scene)->mFace[i] = 0;
+        ((dScMgPanel_c *)scene)->mKind[i] = 0;
+        ((dScMgPanel_c *)scene)->mGoal[i] = 0;
+        ((dScMgPanel_c *)scene)->mVisible[i] = 0;
         *(char *)(scene + i + 0x4f8a) = 0;
     }
     *(int *)(scene + 0x4ca8) = 0;
@@ -1608,7 +1637,7 @@ void func_ov006_021067a4(char *scene)
     *(s16 *)(scene + 0x4ec2) = 0;
     *(char *)(scene + 0x4fde) = 0;
     *(char *)(scene + 0x4fe1) = 0;
-    *(char *)(scene + 0x4fe2) = 0;
+    ((dScMgPanel_c *)scene)->mLives = 0;
     for (i = 0; i < 0x20; i++) {
         *(u8 *)(scene + i + 0x4fae) = 0xff;
     }
@@ -1656,11 +1685,12 @@ void func_ov006_021068d8(char *scene)
 extern "C" {
 void func_ov006_02106910(char *scene, int index)
 {
+    dScMgPanel_c *s = (dScMgPanel_c *)scene;
     int old = ((int *)(scene + 0x4d54))[index];
     ((int *)(scene + 0x4d54))[index] = old + 0x10000;
     if ((*(int *)(scene + index * 4 + 0x4d54) >> 12) >= 0xd0) {
-        *(u8 *)(scene + index + 0x4efa) = 0;
-        *(u8 *)(scene + index + 0x4f66) = 0;
+        s->mKind[index] = 0;
+        s->mVisible[index] = 0;
     }
 
     /* Hand the fall on to the panel directly below, unless this one is already
@@ -1673,7 +1703,7 @@ void func_ov006_02106910(char *scene, int index)
         {
             int col = index;
             int row = 0;
-            int div = *(int *)(scene + 0x4cbc);
+            int div = s->mWidth;
             if (index >= div) {
                 do {
                     col -= div;
@@ -1688,7 +1718,7 @@ void func_ov006_02106910(char *scene, int index)
                 int nxt = (row + 1) * div + col;
                 if (((*(int *)(scene + nxt * 4 + 0x4d54) - *(int *)(scene + (u32)index * 4 + 0x4d54)) >> 12) > 0) return;
                 *flag = 1;
-                *(u8 *)(scene + nxt + 0x4efa) = 3;
+                s->mKind[nxt] = 3;
             }
         }
     }
@@ -1699,14 +1729,15 @@ void func_ov006_02106910(char *scene, int index)
 extern "C" {
 void func_ov006_02106a08(char *c, int idx)
 {
+    dScMgPanel_c *s = (dScMgPanel_c *)c;
     u16 *timers = (u16 *)(int)(c + 0x4e30);
     u8 *q;
     timers[idx] = timers[idx] + 1;
     if ((((int)*(u16 *)(c + idx * 2 + 0x4e30) >> 3) & 1) != 0) {
-        q = (u8 *)(int)(c + 0x4f66);
+        q = s->mVisible;
         q[idx] = 1;
     } else {
-        q = (u8 *)(int)(c + 0x4f66);
+        q = s->mVisible;
         q[idx] = 0;
     }
     {
@@ -1717,7 +1748,7 @@ void func_ov006_02106a08(char *c, int idx)
         if (((u16 *)b)[0x18] < 0x40)
             return;
         ((u16 *)b)[0x18] = 0;
-        *(u8 *)(c + idx + 0x4efa) = 0;
+        s->mKind[idx] = 0;
         q[idx] = 1;
     }
 }
@@ -2099,7 +2130,7 @@ void dScMgPanel_c::OnYoshiTryEat(int flag)
         if (*(u32 *)(self + 0xbc) > 0x270e)
             *(int *)(self + 0xbc) = 0x270e;
     } else {
-        mMark = 0;
+        unk_4fea = 0;
         *(int *)(self + 0xbc) = 0;
         if (*(u32 *)(self + 0xbc) > 0x270e)
             *(int *)(self + 0xbc) = 0x270e;
@@ -2280,7 +2311,7 @@ s32 dScMgPanel_c::InitResources()
     func_ov006_02106758(c);
 
     mDealt = 0;
-    mMark = 0;
+    unk_4fea = 0;
     mFaceSet = 0xff;
 
     func_ov006_021063a0(c);
