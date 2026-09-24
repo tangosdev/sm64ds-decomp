@@ -1,0 +1,33 @@
+# slice_w28_p1 -- run linkfull wave 27, lane P1: SIX MATCHED TUs WHOSE HOST
+# REASONS WENT STALE.
+#
+# Each src file below was kept off the link by a host copy whose recorded
+# reason was true when it was written: the matched source dropped an argument
+# the ARM code rides through in a register (r0, r1 or r2), or the ROM body polls
+# DMA hardware the port had not modelled. Every one of those sources has since
+# been re-spelled with the argument named and passed (or, for the DMA submit,
+# was always the ROM's own body), so the host copies now only occupy the names.
+# Each row was re-read against its host reason and gated before it went on this
+# list: mwccarm 2004/b56 object unchanged (no src/ file is edited), tools/match.py
+# 2004/b56 strict MATCHING, linkcheck VERIFIED blind 0 (runs/linkfull/out/P1/).
+#
+# One section per row group; each group's rows, its host retirement and its
+# face rows land in one commit of their own, so any group can be dropped alone.
+#
+# The flat ROM names the C callers spell come from REVERSE faces in
+# port/faces_sync.txt where the matched TU defines only MSVC's decorated member
+# (the two Heap veneers, SharedFilePtr::Construct, dScMgSmartball_c slot 18).
+# func_ov006_020fb7e0 and func_01ffde98 are C definitions of their own flat
+# names and need no face.
+
+# ---- group A: Heap::_Sizeof (arm9 0x0203c274) ------------------------------
+
+# ---- group B: SharedFilePtr::Construct (arm9 0x0201799c) -------------------
+
+# ---- group C: dScMgSmartball_c slot 18, OnYoshiTryEat (ov006 0x02118a8c) ---
+
+# ---- group D: dScMgPachinko_c's scoring tick (ov006 0x020fb7e0) -------------
+
+# ---- group E: the ITCM display-list DMA submit (itcm 0x01ffde98) ------------
+
+# ---- group F: Heap::_Deallocate (arm9 0x0203c280) --------------------------

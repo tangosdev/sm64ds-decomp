@@ -23074,3 +23074,48 @@ endif()
 set_property(SOURCE "${PORT_REPO_ROOT_ABS}/${PSYCHE1_MGBASE_TU}"
     APPEND PROPERTY COMPILE_OPTIONS
     "/FI${CMAKE_CURRENT_SOURCE_DIR}/unmatched/MgBase_Slot5_HostAbi.h")
+
+# ===========================================================================
+# P1 (run linkfull wave 27, lane P1): SIX MATCHED TUs WHOSE HOST REASONS WENT
+# STALE
+# ===========================================================================
+#
+# port/slice_w28_p1.txt seats matched TUs whose host copies retire in the same
+# commits (one commit per row group; the list names each row's host file and
+# the reason it no longer holds). The flat ROM names are carried by reverse
+# faces in port/faces_sync.txt where the matched TU defines only a member.
+#
+# ALL THREE HOSTING TARGETS: every retired host copy was linked into
+# walk_window, walk_window_hires and smoke_player alike, and so is
+# faces_sync_gen.cpp, whose reverse faces now call these members.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w28_p1.txt" SLICE_W28_P1_LINES)
+set(SLICE_W28_P1_SOURCES "")
+foreach(line IN LISTS SLICE_W28_P1_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_W28_P1_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_tw28p1 walk_window walk_window_hires smoke_player)
+    target_sources(${_tw28p1} PRIVATE ${SLICE_W28_P1_SOURCES})
+endforeach()
+#
+# TWO HOST FILES ARE ALSO COMPILED BY THE NARROW HARNESSES. hal/fs.cpp and
+# hal/model_host.cpp are on the smoke_* harnesses as well, which link no
+# faces_sync_gen.cpp and none of these slice rows, so their stand-ins for
+# SharedFilePtr::Construct and func_01ffde98 retire only where the matched TU
+# is linked: behind SM64DS_SFP_CONSTRUCT_ROM and SM64DS_DMA_GXFIFO_ROM, set as a
+# SOURCE property keyed on the compiling target's name. That is the
+# SM64DS_OS_ARENA_ROM shape above and for its two measured reasons (the
+# slice-share block has already read the targets' definitions by now, and a
+# target define would change every command line the targets compile). The
+# name list includes port_slice_shared (the object library that compiles a
+# shared file once for all three) and the three targets themselves (the
+# fallback when the share is off).
+set_property(SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/hal/fs.cpp" APPEND PROPERTY
+    COMPILE_DEFINITIONS
+    "$<$<IN_LIST:$<TARGET_PROPERTY:NAME>,port_slice_shared;walk_window;walk_window_hires;smoke_player>:SM64DS_SFP_CONSTRUCT_ROM=1>")
+set_property(SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/hal/model_host.cpp" APPEND PROPERTY
+    COMPILE_DEFINITIONS
+    "$<$<IN_LIST:$<TARGET_PROPERTY:NAME>,port_slice_shared;walk_window;walk_window_hires;smoke_player>:SM64DS_DMA_GXFIFO_ROM=1>")
