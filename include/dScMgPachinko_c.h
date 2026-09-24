@@ -33,12 +33,13 @@ struct dScMgPachinko_ball {
     s32 unk20;          /* 0x20 */
     u16 unk24;          /* 0x24 */
     u16 angle;          /* 0x26 */
-    u16 unk28;          /* 0x28 */
+    u16 timer;          /* 0x28 seeded with 16 when a hit forces state 6;
+                           only ever written here, so the name is inferred */
     u8  unk2a[0x2];     /* 0x2a */
     u8  active;         /* 0x2c */
     u8  unk2d;          /* 0x2d */
     u8  unk2e;          /* 0x2e */
-    u8  unk2f;          /* 0x2f */
+    u8  state;          /* 0x2f 0 rests; a hit below 5 jumps to 6 */
     u8  unk30;          /* 0x30 */
     u8  unk31[0x2];     /* 0x31 */
     u8  unk33;          /* 0x33 */
@@ -60,16 +61,17 @@ struct dScMgPachinko_shot {
     s32 velY;           /* 0x0c */
     s32 offX;           /* 0x10, grab offset from the stylus */
     s32 offY;           /* 0x14 */
-    u8  unk18[0x8];     /* 0x18 */
+    s32 prevX;          /* 0x18 x the aim line was last drawn from */
+    s32 prevY;          /* 0x1c */
     s32 speed;          /* 0x20 */
     s32 unk24;          /* 0x24 */
     s32 sound;          /* 0x28, sound handle */
     s32 dist;           /* 0x2c, last frame's distance from the launcher */
     u16 angle;          /* 0x30 */
     u16 timer;          /* 0x32 */
-    u8  unk34;          /* 0x34 */
-    u8  state;          /* 0x35 */
-    u8  unk36;          /* 0x36 */
+    u8  active;         /* 0x34 clear: this shot is gone */
+    u8  state;          /* 0x35 at least 2 before it can hit; 2 sits on the launcher */
+    u8  unk36;          /* 0x36 cleared with active on a hit; not read here */
     u8  unk37;          /* 0x37 */
 };
 

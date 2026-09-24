@@ -35,10 +35,10 @@ extern "C" void func_ov006_020fdd40(dScMgPachinko_c *self)
         self->mBall[i].y = -0x100000;
         self->mBall[i].unk08 = 0;
         self->mBall[i].unk0c = 0;
-        self->mBall[i].unk2f = 0;
+        self->mBall[i].state = 0;
         self->mBall[i].unk30 = 0;
         ra = RandomIntInternal(&data_0209d4b8);
-        self->mBall[i].unk28 = ((((u32)ra >> 16) & 0x7fff) * 8 >> 15) << 4;
+        self->mBall[i].timer = ((((u32)ra >> 16) & 0x7fff) * 8 >> 15) << 4;
         self->mBall[i].unk24 = 0;
         self->mBall[i].unk1c = 0;
         self->mBall[i].unk36 = self->unk_5c28;
@@ -64,11 +64,11 @@ extern "C" void func_ov006_020fdd40(dScMgPachinko_c *self)
         self->mBall[i].y = -0x60000;
         self->mBall[i].unk08 = FMUL(data_02082214[(self->mBall[i].angle >> 4) * 2 + 1], 0xe80);
         self->mBall[i].unk0c = FMUL(data_02082214[(self->mBall[i].angle >> 4) * 2], 0xe80);
-        self->mBall[i].unk2f = 3;
+        self->mBall[i].state = 3;
         self->mBall[i].unk2d = 1;
         self->mBall[i].unk33 = 0;
         self->mBall[i].unk20 = 0x1000;
-        self->mBall[i].unk28 = 0x10;
+        self->mBall[i].timer = 0x10;
         break;
     }
     ones = self->unk_5c26;

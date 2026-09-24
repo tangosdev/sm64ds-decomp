@@ -1,125 +1,54 @@
 //cpp
-/* dScMgSound_c -- the MG_SOUND minigame scene, ov006, 82 functions
- * (.text 0x02119904..0x0211cbd0), the registry factory among them.
- * Each round draws a pattern (mPattern) and lays out note slots on the touch
- * screen; touching a slot plays its note back on the pattern's instrument.
+/* Boom-box minigame. Each round deals mNotes on the touch screen; a touch
+ * plays that pitch and pops icons in mPops. The class is a
+ * dScMgSingle3DBase_c (its RTTI is at 0x0213f6e4).
  *
- * The class is a dScMgSingle3DBase_c (its RTTI is at 0x0213f6e4). The
- * compiler emits .text in reverse source order, so the functions run here
- * from the highest address down. Do not reorder.
+ * The compiler emits .text in reverse source order, so the functions run
+ * here from the highest address down. Do not reorder.
  *
- * Still raw: the func_ and data_ helpers are unnamed in symbols.txt, and the
- * header leaves the note slots at 0x50e8 (stride 0x14), the rows at 0x51b0
- * (stride 0x24) and the playback queue at 0x5610 as raw bytes, so they are
- * reached by offset.
+ * Leftover: func_ and data_ helpers are still the linker names.
+ * Leftover: func_ov006_02119bdc reads mState as the raw word at 0x5608.
+ *   The member spelling in the note draw loop grows it by 8 bytes.
+ * Leftover: func_ov006_0211c080's deal loop reaches mPairUses and
+ *   mPairNotes as q + 0x561a and q + 0x561f, with q = scene + pair.
+ *   Indexing the members by pair grows the function by 8 bytes.
+ * Leftover: InitResources passes raw + 0x4660, the camera that
+ *   dScMgSingle3DBase_c.h still leaves as padding.
  */
 
 #include "dScMgSound_c.h"
 #include "types.h"
 #include "decl_common.h"
 
-/* Local views of the scene's arrays; each helper keeps the view it was
-   matched with. The dispatch helpers see `C` as an incomplete type and two
-   others see it complete as `CFull`. The compiler picks the pointer-to-member
-   layout from that, so the two must stay distinct types. */
+/* A cursor keeps the add-#0x5000 split on a walk that advances the scene
+   pointer. Pointing the record itself at the slot pools the base instead. */
+struct dMgSoundNoteCur {
+    char pad[0x50e8];
+    dMgSoundNote_c note;
+};
+struct dMgSoundPopCur {
+    char pad[0x51b0];
+    dMgSoundPop_c pop;
+};
 
-/* --- the state-machine dispatch family (incomplete view) ------------------ */
-struct C;                                   /* opaque: dispatch only */
+/* C is incomplete and CFull is complete on purpose: the two pointer-to-member
+   types get different adjustments, and the dispatch tables need both. */
+struct C;
 typedef void (C::*PMF)(int);
-struct Entry { PMF pmf; };                  /* PMF dispatch entry */
+struct Entry { PMF pmf; };
 
-/* --- the same dispatch, seen by the two members that index the array ------ */
-struct Elem {                               /* 0x24 stride at +0x51d1 */
-  unsigned char idx;
-  char pad[0x23];
+struct Elem {
+    unsigned char idx;
+    char pad[0x23];
 };
 struct CFull {
-  char pad[0x51d1];
-  Elem arr[1];
+    char pad[0x51d1];
+    Elem arr[1];
 };
 typedef void (CFull::*PMFFull)(int);
 struct EntryFull { PMFFull pmf; };
 
-/* --- the 0x24-stride array at +0x51b4, two disjoint field views ----------- */
-struct BallSlot {                           /* func_ov006_0211a500's view */
-    int a;            /* +0x00 (this+0x51b4) */
-    int pad4;         /* +0x04 */
-    int b;            /* +0x08 (this+0x51bc) */
-    int c;            /* +0x0c (this+0x51c0) */
-    char pad10[8];    /* +0x10 */
-    unsigned char f18;/* +0x18 (this+0x51cc) */
-    unsigned char f19;/* +0x19 (this+0x51cd) */
-    char pad1a[10];   /* pad to 0x24 */
-};
-struct BallObj {
-    char pad[0x51b4];
-    struct BallSlot arr[4];
-};
-
-struct BigSlot {                            /* func_ov006_0211aa94's view */
-    int b4;
-    int unk4;
-    int bc;
-    int c0;
-    int unk10;
-    int unk14;
-    unsigned char cc;
-    unsigned char cd;
-    unsigned char pad[10];
-};
-struct BigObj {
-    char pad[0x51b4];
-    BigSlot arr[16];
-};
-
-/* --- the 0x24-stride array at +0x51b8 ------------------------------------- */
-struct NoteSlot {                           /* func_ov006_0211a9fc's view */
-    u32 value;     /* +0x00 (this+0x51b8) */
-    u32 counter;   /* +0x04 */
-    char _pad8[8];
-    u16 halfword;  /* +0x10 (this+0x51c8) */
-    char _pad12[3];
-    u8 flagA;      /* +0x15 (this+0x51cd) */
-    char _pad16[3];
-    u8 flagB;      /* +0x19 (this+0x51d1) */
-    u8 type;       /* +0x1a (this+0x51d2) */
-    char _pad1b[9];
-};
-struct NoteObj {
-    char _pad[0x51b8];
-    struct NoteSlot entries[1];  /* 0x51b8 */
-};
-
-/* --- the 0x14-stride array at +0x50e8, two field views -------------------- */
-struct E { char _[0x14]; };                 /* stride only; no field is read */
-
-struct Slot {                               /* func_ov006_0211b654's view */
-    int f00; int f04; int f08; int f0c; int f10; int f14;
-    u16 f18; u16 f1a;
-    u8 f1c; u8 f1d; u8 f1e; u8 f1f; u8 f20; u8 f21; u8 f22; u8 f23;
-};
-struct Mgr { u8 pad[0x51b0]; struct Slot slot[30]; };
-
-struct SndEntry {
-    s32 x;
-    u8 unk04[0x0c - 0x04];
-    u8 b0c;
-    u8 b0d;
-    u8 b0e;
-    u8 b0f;
-    u8 b10;
-    u8 b11;
-    u8 b12;
-    u8 b13;
-};
-struct SndCtx {
-    u8 unk00[0x50e8];
-    SndEntry ent[67];
-    u8 unk5624[3];
-    u8 mode;
-};
-
-/* --- func_ov006_0211b9c8 reaches the scene through its own vtable --------- */
+/* func_ov006_0211b9c8 calls Virtual8C through the scene vtable. */
 struct SceneVt {
     virtual void p00(); virtual void p01(); virtual void p02(); virtual void p03();
     virtual void p04(); virtual void p05(); virtual void p06(); virtual void p07();
@@ -154,9 +83,6 @@ namespace GXS {
     void LoadOBJPltt(const void *data, u32 offset, u32 size);
 }
 
-#define A(p) ((int)(p))
-#define F1E(b,i) (*(unsigned char*)((char*)(b) + 0x51d1 + (i)*0x24))
-#define M(p) ((void*)(int)(((long long)(int)(p)) & ~0LL))
 #define RND (((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff)
 #define LAUNDER(p) ((int)(p))
 
@@ -212,9 +138,9 @@ extern int data_ov006_0212ef7c[];
 extern int data_ov006_0212ef8c[];
 extern int data_ov006_0212ef5c[];
 extern int data_ov006_0212ef6c[];
-void func_ov006_0211ba88(char *base, int idx);
+void func_ov006_0211ba88(dScMgSound_c *base, int idx);
 extern unsigned short data_ov006_0212ef4c[];
-void func_ov006_0211b654(struct Mgr *m, int n);
+void func_ov006_0211b654(dScMgSound_c *m, int n);
 void func_ov006_020c2300(char *p);
 void func_02012174(u32 bank, u32 id);
 extern u16 data_ov006_0212ef3c[];
@@ -318,9 +244,9 @@ s32 dScMgSound_c::InitResources()
     mTable.mSuppressSound = 1;
     func_ov006_0211c478((char *)this);
     func_ov006_0211c080((char *)this);
-    unk_5626 = 3;
+    mTries = 3;
     mState = 1;
-    *(u16 *)(raw + 0x5618) = 0x20;
+    mIntroTimer = 0x20;
     func_ov004_020b6808();
     func_ov004_020b0cac(0xd, 0x80, 0xa8, 1, -1, 0xd);
     mHudScore = 0;
@@ -328,10 +254,9 @@ s32 dScMgSound_c::InitResources()
 }
 
 // @symbol _ZN12dScMgSound_c8BehaviorEv
-/* One frame of the round, by mState: 0 starts, 1 counts down the intro at
-   0x5618, 2 plays the round and, when the result countdown at 0x5616 runs
-   out, bumps the win counter (capped at 9999), 3 counts down a retry. The
-   countdowns sit in the raw queue storage at 0x5610.
+/* One frame of the round, by mState: 0 starts, 1 counts down mIntroTimer,
+   2 plays the round and, when mResultTimer runs out, bumps the win counter
+   (capped at 9999), 3 counts down a retry.
    The `(int)` casts on the three countdown decrements are needed: without
    them the address folds into the decrement and the function comes out
    short. */
@@ -344,9 +269,9 @@ s32 dScMgSound_c::Behavior()
         mState = 1;
         break;
     case 1:
-        if (*(u16 *)(raw + 0x5618) != 0) {
-            (*(u16 *)(int)(raw + 0x5618))--;
-            if (*(u16 *)(raw + 0x5618) == 0) {
+        if (mIntroTimer != 0) {
+            (*(u16 *)(int)&mIntroTimer)--;
+            if (mIntroTimer == 0) {
                 FreeGfxSlotsById(0x1d);
                 if (mPromptBlinkCount == 0) {
                     mPromptEnabled = 1;
@@ -363,13 +288,13 @@ s32 dScMgSound_c::Behavior()
     case 2:
         func_ov006_0211b954(raw);
         func_ov006_0211b5e0(raw);
-        if (*(u16 *)(raw + 0x5616) != 0) {
-            (*(u16 *)(int)(raw + 0x5616))--;
-            if (*(u16 *)(raw + 0x5616) == 0) {
-                if (unk_5626 != 0) {
+        if (mResultTimer != 0) {
+            (*(u16 *)(int)&mResultTimer)--;
+            if (mResultTimer == 0) {
+                if (mTries != 0) {
                     mTable.mSuppressSound = 0;
                     func_ov006_020c2594((char *)&mTable);
-                    if (unk_5626 == 3)
+                    if (mTries == 3)
                         func_ov004_020b67f8();
                     func_ov004_020b0a54(0);
                     {
@@ -388,7 +313,7 @@ s32 dScMgSound_c::Behavior()
                     mPromptEnabled = 0;
                 } else {
                     mState = 3;
-                    *(u16 *)(raw + 0x5616) = 0x20;
+                    mResultTimer = 0x20;
                     func_ov006_0211b9c8(raw);
                 }
             }
@@ -400,14 +325,14 @@ s32 dScMgSound_c::Behavior()
     case 3:
         func_ov006_0211b954(raw);
         func_ov006_0211b5e0(raw);
-        if (*(u16 *)(raw + 0x5616) != 0) {
-            (*(u16 *)(int)(raw + 0x5616))--;
-            if (*(s16 *)(raw + 0x5616) <= 0) {
+        if (mResultTimer != 0) {
+            (*(u16 *)(int)&mResultTimer)--;
+            if (*(s16 *)&mResultTimer <= 0) {
                 mTable.mSuppressSound = 0;
                 func_ov006_020c2440((char *)&mTable);
                 func_ov004_020b0a54(0x12);
                 mPromptEnabled = 0;
-                *(u16 *)(raw + 0x5616) = 0;
+                mResultTimer = 0;
             }
         }
         break;
@@ -471,10 +396,10 @@ void dScMgSound_c::OnYoshiTryEat(int mode)
     mTable.mSuppressSound = 1;
     func_ov006_0211c478(raw);
 
-    unk_5626 = 3;
+    mTries = 3;
     func_ov006_0211c080(raw);
 
-    *(short*)(raw + 0x5618) = 0x20;
+    mIntroTimer = 0x20;
     func_ov004_020b0cac(0xd, 0x80, 0xa8, 1, -1, 0xd);
 
     Sound::LoadAndSetMusic_Layer1(6);
@@ -485,9 +410,7 @@ void dScMgSound_c::OnYoshiTryEat(int mode)
    known yet. */
 void dScMgSound_c::Virtual50()
 {
-    char *raw = (char *)this;
-
-    func_ov006_020c2594(raw + 0x4f38);
+    func_ov006_020c2594((char *)&mTable);
 }
 
 // @symbol func_ov006_0211c478
@@ -501,39 +424,41 @@ void func_ov006_0211c478(char *scene)
     char *b = scene;
 
     for (cnt1 = 0; cnt1 < 10; cnt1++) {
-        *(int *)(b + 0x50e8) = 0;
-        *(int *)(b + 0x50ec) = 0;
-        *(short *)(b + 0x50f0) = 0;
-        *(unsigned char *)(b + 0x50f4) = 0;
-        *(unsigned char *)(b + 0x50f5) = 0;
-        *(unsigned char *)(b + 0x50f6) = 0;
-        *(unsigned char *)(b + 0x50f7) = 0;
-        *(unsigned char *)(b + 0x50f8) = 0;
+        dMgSoundNoteCur *note = (dMgSoundNoteCur *)b;
+        note->note.x = 0;
+        note->note.y = 0;
+        note->note.timer = 0;
+        note->note.state = 0;
+        note->note.alive = 0;
+        note->note.shown = 0;
+        note->note.frame = 0;
+        note->note.note = 0;
         b += 0x14;
     }
 
     for (cnt2 = 0; cnt2 < 5; cnt2++) {
-        *(unsigned char *)(scene + 0x561a + cnt2) = 0;
-        *(unsigned char *)(scene + 0x561f + cnt2) = 0;
+        self->mPairUses[cnt2] = 0;
+        self->mPairNotes[cnt2] = 0;
     }
 
     b = scene;
     for (i = 0; i < 0x1e; i++) {
-        *(int *)(b + 0x51b0) = 0;
-        *(int *)(b + 0x51b4) = 0;
-        *(int *)(b + 0x51b8) = 0;
-        *(int *)(b + 0x51bc) = 0;
-        *(int *)(b + 0x51c4) = 0;
-        *(short *)(b + 0x51c8) = 0;
-        *(unsigned char *)(b + 0x51cc) = 0;
-        *(unsigned char *)(b + 0x51cd) = 0;
-        *(unsigned char *)(b + 0x51ce) = 0;
-        *(unsigned char *)(b + 0x51cf) = 0;
-        *(unsigned char *)(b + 0x51cc) = 0;
-        *(unsigned char *)(b + 0x51d0) = 0;
-        *(unsigned char *)(b + 0x51d1) = 0;
-        *(unsigned char *)(b + 0x51d2) = 0;
-        *(unsigned char *)(b + 0x51d3) = 0;
+        dMgSoundPopCur *pop = (dMgSoundPopCur *)b;
+        pop->pop.x = 0;
+        pop->pop.y = 0;
+        pop->pop.velX = 0;
+        pop->pop.velY = 0;
+        pop->pop.scale = 0;
+        pop->pop.timer = 0;
+        pop->pop.active = 0;
+        pop->pop.visible = 0;
+        pop->pop.sprite = 0;
+        pop->pop.unk_1f = 0;
+        pop->pop.active = 0; /* stored twice, as in the ROM */
+        pop->pop.state = 0;
+        pop->pop.phase = 0;
+        pop->pop.kind = 0;
+        pop->pop.dir = 0;
         b += 0x24;
     }
 
@@ -548,14 +473,14 @@ void func_ov006_0211c478(char *scene)
     self->mSpriteA.y = 0x9d000;
     self->mSpriteA.frame = 0;
 
-    *(short *)(scene + 0x5612) = 0;
-    *(short *)(scene + 0x5610) = *(unsigned short *)(scene + 0x5612);
-    *(short *)(scene + 0x5614) = 0;
-    self->unk_5625 = 0;
-    self->unk_5624 = 0;
-    *(short *)(scene + 0x5616) = 0;
+    self->mQueue[1] = 0;
+    self->mQueue[0] = self->mQueue[1];
+    self->mQueueTimer = 0;
+    self->mQueueLen = 0;
+    self->mTouchCount = 0;
+    self->mResultTimer = 0;
 
-    func_ov006_020c2924(scene + 0x4f38);
+    func_ov006_020c2924((char *)&self->mTable);
 }
 }
 
@@ -572,7 +497,7 @@ void func_ov006_0211c080(char *scene)
     int speed;
     int i;
 
-    sel = *(int *)(scene + 0xbc);
+    sel = self->unk_0bc;
     self->mPrevPattern = self->mPattern;
     if (sel >= 5) {
         sel = (u32)(RND * 5) >> 15;
@@ -589,21 +514,21 @@ void func_ov006_0211c080(char *scene)
     if (k == 3) {
         int a = (u32)(RND << 2) >> 15;
         int b = (u32)(RND * 3) >> 15;
-        self->mLanes[0] = b;
-        self->mLanes[1] = self->mLanes[0] + 1;
-        if (self->mLanes[1] >= 3)
-            *(u8 *)LAUNDER(scene + 0x5620) -= 3;
-        self->mLanes[2] = self->mLanes[1] + 1;
-        if (self->mLanes[2] >= 3)
-            *(u8 *)LAUNDER(scene + 0x5621) -= 3;
-        *(u8 *)LAUNDER(scene + 0x561f) += a * 3;
-        *(u8 *)LAUNDER(scene + 0x5620) += a * 3;
-        *(u8 *)LAUNDER(scene + 0x5621) += a * 3;
+        self->mPairNotes[0] = b;
+        self->mPairNotes[1] = self->mPairNotes[0] + 1;
+        if (self->mPairNotes[1] >= 3)
+            self->mPairNotes[1] -= 3;
+        self->mPairNotes[2] = self->mPairNotes[1] + 1;
+        if (self->mPairNotes[2] >= 3)
+            self->mPairNotes[2] -= 3;
+        self->mPairNotes[0] += a * 3;
+        self->mPairNotes[1] += a * 3;
+        self->mPairNotes[2] += a * 3;
     } else {
         half = count >> 1;
         for (i = 0; i < half; i++) {
             int v = (u32)(RND * speed) >> 15;
-            *(u8 *)(scene + i + 0x561f) = v;
+            self->mPairNotes[i] = v;
             if (i != 0) {
                 int dup;
                 int j;
@@ -611,25 +536,25 @@ void func_ov006_0211c080(char *scene)
                     dup = 0;
                     j = 0;
                     for (; j < i; j++) {
-                        if (*(u8 *)(scene + i + 0x561f) == *(u8 *)(scene + j + 0x561f)) {
+                        if (self->mPairNotes[i] == self->mPairNotes[j]) {
                             dup = 1;
                             break;
                         }
                     }
                     if (dup == 0)
                         break;
-                    *(u8 *)LAUNDER(scene + i + 0x561f) = (u32)(RND * speed) >> 15;
+                    self->mPairNotes[i] = (u32)(RND * speed) >> 15;
                 }
             }
         }
     }
     k = self->mPattern;
     if (k == 1 || k == 4) {
-        self->unk_560c = data_ov006_0212efb0[((u32)*(int *)(scene + 0xbc) >> 2) & 3];
+        self->mBank = data_ov006_0212efb0[((u32)self->unk_0bc >> 2) & 3];
     }
     half = count >> 1;
     for (i = 0; i < half; i++) {
-        *(u8 *)LAUNDER(scene + i + 0x561f) += data_ov006_0212ef9c[self->mPattern];
+        self->mPairNotes[i] += data_ov006_0212ef9c[self->mPattern];
     }
     {
         int xi;
@@ -646,20 +571,21 @@ void func_ov006_0211c080(char *scene)
         xi = 0;
         p = scene;
         do {
+            dMgSoundNoteCur *note = (dMgSoundNoteCur *)p;
             t = data_ov006_0212ee20[self->mPattern];
-            *(int *)(p + 0x50e8) = data_ov006_0213f6fc[t][xi] << 12;
-            *(int *)(p + 0x50ec) = (*(u16 * volatile *)&data_ov006_0213f6fc[t])[zi] << 12;
-            *(u16 *)(p + 0x50f0) = 0;
-            *(u8 *)(p + 0x50f4) = 0;
-            *(u8 *)(p + 0x50f5) = 1;
-            *(u8 *)(p + 0x50f6) = 1;
-            *(u8 *)(p + 0x50f7) = 0;
-            *(u8 *)(p + 0x50f9) = 0;
+            note->note.x = data_ov006_0213f6fc[t][xi] << 12;
+            note->note.y = (*(u16 * volatile *)&data_ov006_0213f6fc[t])[zi] << 12;
+            note->note.timer = 0;
+            note->note.state = 0;
+            note->note.alive = 1;
+            note->note.shown = 1;
+            note->note.frame = 0;
+            note->note.checked = 0;
             do {
                 q = scene + ((u32)(RND * half) >> 15);
                 slot = (u8 *)LAUNDER(q + 0x561a);
             } while (*slot >= 2);
-            *(u8 *)(p + 0x50f8) = *(u8 *)(q + 0x561f);
+            note->note.note = *(u8 *)(q + 0x561f);
             (*slot)++;
             xi += 2;
             p += 0x14;
@@ -672,19 +598,18 @@ void func_ov006_0211c080(char *scene)
 
 // @symbol func_ov006_0211bf44
 extern "C" {
-void func_ov006_0211bf44(char* scene, int slot)
+void func_ov006_0211bf44(dScMgSound_c* scene, int slot)
 {
     u8 player;
     int offset;
     int active;
-    char* entry;
     int dx;
     int dy;
 
-    if (*(int*)(scene + 0x5608) != 1) {
+    if (scene->mState != 1) {
         return;
     }
-    if (*(u8*)(scene + 0x5624) >= 2) {
+    if (scene->mTouchCount >= 2) {
         return;
     }
 
@@ -700,10 +625,8 @@ void func_ov006_0211bf44(char* scene, int slot)
         return;
     }
 
-    entry = scene + slot * 0x14;
-    entry += 0x5000;
-    dx = data_020a0dea[player * 4] - (*(int*)(entry + 0xe8) >> 12);
-    dy = data_020a0deb[player * 4] - (*(int*)(entry + 0xec) >> 12);
+    dx = data_020a0dea[player * 4] - (scene->mNotes[slot].x >> 12);
+    dy = data_020a0deb[player * 4] - (scene->mNotes[slot].y >> 12);
 
     if (dx > 0x18) {
         return;
@@ -718,57 +641,49 @@ void func_ov006_0211bf44(char* scene, int slot)
         return;
     }
 
-    *(u8*)(entry + 0xf4) = 1;
-    *(u16*)(entry + 0xf0) = 0;
-    *(u8*)(entry + 0xf7) = 0;
-    {
-        u8* counter = (u8*)(int)(scene + 0x5624);
-        *counter = *counter + 1;
-    }
+    scene->mNotes[slot].state = 1;
+    scene->mNotes[slot].timer = 0;
+    scene->mNotes[slot].frame = 0;
+    scene->mTouchCount++;
     Sound::PlayBank2_2D(0x201);
 }
 }
 
 // @symbol func_ov006_0211bc8c
 /* Advances one note slot's animation. When the slot's last frame is
-   reached its note goes on the playback queue at 0x5610 and is played; the
-   instrument at 0x5627 and Virtual8C choose between func_02012790, the bank
-   handle at 0x560c and Sound::PlayBank2_2D.
-   Two spellings are load-bearing. func_ov006_0211b654 is passed `idx` even
-   though it is already in r1: dropping it changes the register allocation
-   of the queue block. And the two queue stores keep their different forms:
-   the compiler picks a different address shape for each, and forcing
-   either one breaks the other. */
+   reached its note goes on mQueue and is played; mPattern and Virtual8C
+   choose between func_02012790, the bank handle mBank and
+   Sound::PlayBank2_2D.
+   func_ov006_0211b654 is passed `idx` even though it is already in r1:
+   dropping it changes the register allocation of the queue block. */
 extern "C" void func_ov006_0211bc8c(dScMgSound_c *self, int idx)
 {
-    char *raw = (char *)self;
-    int off = idx * 0x14;
     u8 note;
     u8 instrument;
 
-    *(u16 *)(raw + 0x50f0 + off) = *(u16 *)(raw + 0x50f0 + off) + 1;
-    if (*(u16 *)(raw + 0x50f0 + off) < data_ov006_0212ef3c[((u8 *)(raw + 0x50f7))[off]]) return;
-    *(u16 *)(raw + 0x50f0 + off) = 0;
-    ((u8 *)(raw + 0x50f7))[off] = ((u8 *)(raw + 0x50f7))[off] + 1;
-    if (((u8 *)(raw + 0x50f7))[off] <= 6) return;
-    ((u8 *)(raw + 0x50f7))[off] = 6;
-    ((u8 *)(raw + off))[0x50f4] = 2;
+    self->mNotes[idx].timer = self->mNotes[idx].timer + 1;
+    if (self->mNotes[idx].timer < data_ov006_0212ef3c[self->mNotes[idx].frame]) return;
+    self->mNotes[idx].timer = 0;
+    self->mNotes[idx].frame = self->mNotes[idx].frame + 1;
+    if (self->mNotes[idx].frame <= 6) return;
+    self->mNotes[idx].frame = 6;
+    self->mNotes[idx].state = 2;
 
-    *(u16 *)(raw + *(u8 *)(raw + 0x5625) * 2 + 0x5610) = ((u8 *)(raw + 0x50f8))[off] + 1;
-    ((u16 *)(raw + 0x5610))[*(u8 *)(raw + 0x5625)] |= idx << 8;
-    (*(u8 *)(raw + 0x5625))++;
-    *(u16 *)(raw + 0x5614) = 0x20;
+    self->mQueue[self->mQueueLen] = self->mNotes[idx].note + 1;
+    self->mQueue[self->mQueueLen] |= idx << 8;
+    self->mQueueLen++;
+    self->mQueueTimer = 0x20;
 
-    func_ov006_0211b654((struct Mgr *)self, idx);
-    note = ((u8 *)(raw + 0x50f8))[off];
+    func_ov006_0211b654(self, idx);
+    note = self->mNotes[idx].note;
 
     if (self->Virtual8C()) {
-        instrument = *(u8 *)(raw + 0x5627);
+        instrument = self->mPattern;
         if (instrument == 0 || instrument == 2) {
             if (data_ov006_0213f794[note] == 2) {
                 func_02012790(data_ov006_0213f7e8[note]);
             } else {
-                func_02012174(*(u32 *)(raw + 0x560c), data_ov006_0213f7e8[note]);
+                func_02012174(self->mBank, data_ov006_0213f7e8[note]);
             }
         } else if (instrument == 1) {
             int n = note - 0x1a;
@@ -779,49 +694,44 @@ extern "C" void func_ov006_0211bc8c(dScMgSound_c *self, int idx)
             Sound::PlayBank2_2D(data_ov006_0213f7e8[note]);
         }
     } else {
-        instrument = *(u8 *)(raw + 0x5627);
+        instrument = self->mPattern;
         if (instrument == 0 || instrument == 2) {
             func_02012790(data_ov006_0213f7e8[note]);
         } else if (instrument == 1) {
-            func_02012174(*(u32 *)(raw + 0x560c), data_ov006_0213f7e8[note]);
+            func_02012174(self->mBank, data_ov006_0213f7e8[note]);
         } else if (instrument == 4) {
             if (data_ov006_0213f794[note] == 2) {
                 Sound::PlayBank2_2D(data_ov006_0213f7e8[note]);
             } else {
-                func_02012174(*(u32 *)(raw + 0x560c), data_ov006_0213f7e8[note]);
+                func_02012174(self->mBank, data_ov006_0213f7e8[note]);
             }
         } else {
             Sound::PlayBank2_2D(data_ov006_0213f7e8[note]);
         }
     }
 
-    if (*(u8 *)(raw + 0x5624) == 1) func_ov006_020c2300((char *)&self->mTable);
+    if (self->mTouchCount == 1) func_ov006_020c2300((char *)&self->mTable);
 }
 
 // @symbol func_ov006_0211bc68
 extern "C" {
 void func_ov006_0211bc68(char* scene, int slot) {
-    if (*(unsigned char*)(scene+0x5624) == 0) {
-        struct E* a = (struct E*)(scene+0x5000);
-        *(unsigned char*)((char*)&a[slot]+0xf4) = 3;
+    if (((dScMgSound_c *)scene)->mTouchCount == 0) {
+        ((dScMgSound_c *)scene)->mNotes[slot].state = 3;
     }
 }
 }
 
 // @symbol func_ov006_0211bbe0
 extern "C" {
-void func_ov006_0211bbe0(char *c, int idx);
-void func_ov006_0211bbe0(char *scene, int slot){
-    int o = slot * 0x14;
-    char *cb = scene + 0x50f0;
-    char *p = scene + o;
+void func_ov006_0211bbe0(dScMgSound_c *scene, int slot){
     unsigned char b;
-    *(unsigned short*)(cb + o) = (unsigned short)(*(unsigned short*)(cb + o) + 1);
-    b = ((unsigned char *)p)[0x50f7];
-    if (*(unsigned short*)(cb + o) < data_ov006_0212ef4c[b]) return;
-    *(unsigned short*)(cb + o) = 0;
-    ((unsigned char *)(scene + 0x50f7))[o] = (unsigned char)(((unsigned char *)(scene + 0x50f7))[o] - 1);
-    if (((unsigned char *)(scene + 0x50f7))[o] == 0) ((unsigned char *)p)[0x50f4] = 0;
+    scene->mNotes[slot].timer = (unsigned short)(scene->mNotes[slot].timer + 1);
+    b = scene->mNotes[slot].frame;
+    if (scene->mNotes[slot].timer < data_ov006_0212ef4c[b]) return;
+    scene->mNotes[slot].timer = 0;
+    scene->mNotes[slot].frame = (unsigned char)(scene->mNotes[slot].frame - 1);
+    if (scene->mNotes[slot].frame == 0) scene->mNotes[slot].state = 0;
 }
 }
 
@@ -829,29 +739,23 @@ void func_ov006_0211bbe0(char *scene, int slot){
 /* Scrolls one note slot left by 0x10 per call and clears it once it has
    gone off screen. Its column comes from the per-mode tables
    data_ov006_0212ef5c and data_ov006_0212ef6c.
-   Three spellings are load-bearing: Virtual8C is asked through `this` in
-   C++, the store at +0x0c is a byte, and the last two clears index the table
-   as an array while every earlier access multiplies by 0x14. */
-void func_ov006_0211ba88(char *scene, int slot)
+   Two spellings are load-bearing: Virtual8C is asked through `this` in
+   C++, and the store at +0x0c is a byte. */
+void func_ov006_0211ba88(dScMgSound_c *scene, int slot)
 {
-    SndCtx *ctx = (SndCtx *)scene;
     int n;
     int i;
     int limit;
-    s32 *cur;
-    u8 *flag;
 
-    cur = (s32 *)(scene + 0x50e8 + slot * 0x14);
-    *cur = *cur - 0x10000;
+    scene->mNotes[slot].x -= 0x10000;
 
-    if (((dScMgSound_c *)scene)->Virtual8C() != 0) {
-        limit = data_ov006_0212ef5c[*(u8 *)(scene + 0x5000 + 0x627)];
+    if (scene->Virtual8C() != 0) {
+        limit = data_ov006_0212ef5c[scene->mPattern];
     } else {
-        limit = data_ov006_0212ef6c[*(u8 *)(scene + 0x5000 + 0x627)];
+        limit = data_ov006_0212ef6c[scene->mPattern];
     }
 
-    flag = (u8 *)(scene + 0x50f9 + slot * 0x14);
-    if (*flag == 0) {
+    if (scene->mNotes[slot].checked == 0) {
         n = slot;
         if (slot >= limit) {
             do {
@@ -859,24 +763,24 @@ void func_ov006_0211ba88(char *scene, int slot)
             } while (n >= limit);
         }
         if (n == 0) {
-            *flag = 1;
+            scene->mNotes[slot].checked = 1;
             return;
         }
         for (i = 0; i < n; i++) {
-            char *e = scene + (slot - i - 1) * 0x14;
-            if (*(u8 *)(e + 0x5000 + 0xf5) != 0) {
-                if ((*(int *)(scene + slot * 0x14 + 0x50e8) - *(int *)(e + 0x5000 + 0xe8)) >> 0xc <= 4) {
-                    *(u8 *)(scene + slot * 0x14 + 0x50f9) = 1;
-                    *(u8 *)(e + 0x5000 + 0xf4) = 4;
+            int prev = slot - i - 1;
+            if (scene->mNotes[prev].alive != 0) {
+                if ((scene->mNotes[slot].x - scene->mNotes[prev].x) >> 0xc <= 4) {
+                    scene->mNotes[slot].checked = 1;
+                    scene->mNotes[prev].state = 4;
                 }
             }
         }
     }
 
-    if (*cur >> 0xc > -0x18) return;
+    if (scene->mNotes[slot].x >> 0xc > -0x18) return;
 
-    ctx->ent[slot].b0d = 0;
-    ctx->ent[slot].b0e = 0;
+    scene->mNotes[slot].alive = 0;
+    scene->mNotes[slot].shown = 0;
 }
 
 // @symbol func_ov006_0211b9c8
@@ -887,20 +791,20 @@ extern "C" void func_ov006_0211b9c8(char *scene) {
     int found;
     int off;
     if (obj->check()) {
-        lr = data_ov006_0212ef7c[*(unsigned char*)((char*)obj + 0x5627)];
+        lr = data_ov006_0212ef7c[((dScMgSound_c *)obj)->mPattern];
     } else {
-        lr = data_ov006_0212ef8c[*(unsigned char*)((char*)obj + 0x5627)];
+        lr = data_ov006_0212ef8c[((dScMgSound_c *)obj)->mPattern];
     }
     for (ip = 0, off = 0; ip < 2; ip++) {
         int sb;
         found = -1;
         for (sb = 0; sb < lr; sb++) {
             int e = sb + off;
-            if (*(unsigned char*)((char*)obj + e * 20 + 0x50f5) != 0)
+            if (((dScMgSound_c *)obj)->mNotes[e].alive != 0)
                 found = e;
         }
         if (found != -1) {
-            *(unsigned char*)((char*)obj + found * 20 + 0x50f4) = 4;
+            ((dScMgSound_c *)obj)->mNotes[found].state = 4;
         }
         off += lr;
     }
@@ -913,8 +817,9 @@ void func_ov006_0211b954(char* scene){
   int i=0;
   char* r5=scene;
   do{
-    if(*(unsigned char*)(r5+0x50f5)!=0){
-      int idx=*(unsigned char*)(r5+0x50f4);
+    dMgSoundNoteCur *note = (dMgSoundNoteCur *)r5;
+    if(note->note.alive != 0){
+      int idx=note->note.state;
       Ent* e=&data_ov006_02142df8[idx];
       int adj=e->b;
       char* obj=scene+(adj>>1);
@@ -935,29 +840,30 @@ void func_ov006_0211b954(char* scene){
 // @symbol func_ov006_0211b80c
 extern "C" {
 void func_ov006_0211b80c(char *scene){
-  if((unsigned char)scene[0x5625] < 2) return;
-  if(*(unsigned short*)(scene+0x5614) != 0){
-    *(unsigned short*)M(scene + 0x5614) -= 1;
-    if(*(short*)(scene+0x5614) <= 0) *(unsigned short*)(scene+0x5614) = 0;
+  dScMgSound_c *self = (dScMgSound_c *)scene;
+  if(self->mQueueLen < 2) return;
+  if(self->mQueueTimer != 0){
+    self->mQueueTimer -= 1;
+    if((short)self->mQueueTimer <= 0) self->mQueueTimer = 0;
     return;
   }
-  if((*(unsigned short*)(scene+0x5610) & 0xff) == (*(unsigned short*)(scene+0x5612) & 0xff)){
-    *((char*)&((struct E*)scene)[*(unsigned short*)(scene+0x5610) >> 8] + 0x50f5) = 0;
-    *((char*)&((struct E*)scene)[*(unsigned short*)(scene+0x5612) >> 8] + 0x50f5) = 0;
+  if((self->mQueue[0] & 0xff) == (self->mQueue[1] & 0xff)){
+    self->mNotes[self->mQueue[0] >> 8].alive = 0;
+    self->mNotes[self->mQueue[1] >> 8].alive = 0;
     func_02012790(0x26);
-    { volatile void* p = (void*)(scene+0x4f38); func_ov006_020c271c((void*)p); }
+    func_ov006_020c271c(&self->mTable);
   } else {
-    *((char*)&((struct E*)scene)[*(unsigned short*)(scene+0x5610) >> 8] + 0x50f4) = 3;
-    *((char*)&((struct E*)scene)[*(unsigned short*)(scene+0x5612) >> 8] + 0x50f4) = 3;
+    self->mNotes[self->mQueue[0] >> 8].state = 3;
+    self->mNotes[self->mQueue[1] >> 8].state = 3;
     func_02012790(0xe);
-    (*(unsigned char*)M(scene + 0x5626))--;
+    self->mTries--;
     func_02012790(0x12f);
-    func_ov006_020c2664(scene+0x4f38);
+    func_ov006_020c2664((char *)&self->mTable);
   }
-  *(unsigned short*)(scene+0x5612) = 0;
-  *(unsigned short*)(scene+0x5610) = *(unsigned short*)(scene+0x5612);
-  scene[0x5625] = 0;
-  scene[0x5624] = 0;
+  self->mQueue[1] = 0;
+  self->mQueue[0] = self->mQueue[1];
+  self->mQueueLen = 0;
+  self->mTouchCount = 0;
 }
 }
 
@@ -966,9 +872,9 @@ extern "C" {
 void func_ov006_0211b790(char* scene)
 {
     dScMgSound_c *self = (dScMgSound_c *)scene;
-    if (self->unk_5626 == 0) {
+    if (self->mTries == 0) {
         self->mState = 2;
-        *(s16*)(scene + 0x5616) = 0x50;
+        self->mResultTimer = 0x50;
         return;
     }
     {
@@ -976,7 +882,7 @@ void func_ov006_0211b790(char* scene)
         int i = 0;
         char* p = scene;
         do {
-            if (*(u8*)(p + 0x50f5) != 0) {
+            if (((dMgSoundNoteCur *)p)->note.alive != 0) {
                 count++;
                 break;
             }
@@ -984,7 +890,7 @@ void func_ov006_0211b790(char* scene)
             p += 0x14;
         } while (i < 0xa);
         if (count != 0) return;
-        *(s16*)(scene + 0x5616) = 0x50;
+        self->mResultTimer = 0x50;
         self->mState = 2;
     }
 }
@@ -992,34 +898,31 @@ void func_ov006_0211b790(char* scene)
 
 // @symbol func_ov006_0211b654
 extern "C" {
-void func_ov006_0211b654(struct Mgr* scene, int n)
+void func_ov006_0211b654(dScMgSound_c *scene, int n)
 {
     int k;
     int i;
     u8* g = data_ov006_0212ee30;
-    int* s00 = (int*)((char*)scene + n * 0x14 + 0x50e8);
-    int* s04 = (int*)((char*)scene + n * 0x14 + 0x50ec);
 
     for (k = 0; k < 3; g++, k++) {
         for (i = 0; i < 30; i++) {
-            if (scene->slot[i].f1c == 0) {
-                scene->slot[i].f1c = 1;
-                scene->slot[i].f00 = *s00;
-                int* d04 = (int*)(((int)scene + i * 0x24 + 0x51b4));
-                *d04 = *s04 - 0x8000;
-                u16* d18 = (u16*)(((int)scene + i * 0x24 + 0x51c8));
-                scene->slot[i].f10 = *d04;
-                scene->slot[i].f1e = *g;
-                scene->slot[i].f22 = *g;
-                *d18 = 0;
-                if (*(u8*)((char*)scene + n * 0x14 + 0x50f8) == 7) {
-                    if (k >= 3) { *d18 = 0x10; } else { *d18 = 8; }
+            if (scene->mPops[i].active == 0) {
+                scene->mPops[i].active = 1;
+                scene->mPops[i].x = scene->mNotes[n].x;
+                scene->mPops[i].y = scene->mNotes[n].y - 0x8000;
+                scene->mPops[i].startY = scene->mPops[i].y;
+                scene->mPops[i].sprite = *g;
+                scene->mPops[i].kind = *g;
+                scene->mPops[i].timer = 0;
+                if (scene->mNotes[n].note == 7) {
+                    if (k >= 3) { scene->mPops[i].timer = 0x10; }
+                    else { scene->mPops[i].timer = 8; }
                 }
-                scene->slot[i].f14 = 0x1000;
-                scene->slot[i].f08 = 0;
-                scene->slot[i].f0c = 0;
-                scene->slot[i].f20 = 0;
-                scene->slot[i].f21 = 0;
+                scene->mPops[i].scale = 0x1000;
+                scene->mPops[i].velX = 0;
+                scene->mPops[i].velY = 0;
+                scene->mPops[i].state = 0;
+                scene->mPops[i].phase = 0;
                 break;
             }
         }
@@ -1034,8 +937,9 @@ void func_ov006_0211b5e0(char* scene){
   int i=0;
   char* r5=scene;
   do{
-    if(*(unsigned char*)(r5+0x51cc)!=0){
-      int idx=*(unsigned char*)(r5+0x51d0);
+    dMgSoundPopCur *pop = (dMgSoundPopCur *)r5;
+    if(pop->pop.active != 0){
+      int idx=pop->pop.state;
       Ent* e=&data_ov006_02142e20[idx];
       int adj=e->b;
       char* obj=scene+(adj>>1);
@@ -1056,60 +960,52 @@ void func_ov006_0211b5e0(char* scene){
 // @symbol func_ov006_0211b590
 extern "C" void func_ov006_0211b590(char *scene, int slot)
 {
-    unsigned char idx = *(unsigned char *)(scene + slot * 0x24 + 0x51d1);
+    unsigned char idx = ((dScMgSound_c *)scene)->mPops[slot].phase;
     (((C *)scene)->*data_ov006_02142d38[idx])(slot);
 }
 
 // @symbol func_ov006_0211b4fc
 extern "C" {
-void func_ov006_0211b4fc(char *scene, int slot)
+void func_ov006_0211b4fc(dScMgSound_c *scene, int slot)
 {
-    unsigned char typeIndex;
-
-    *(unsigned char*)(scene + slot * 0x24 + 0x5000 + 0x1cd) = 1;
-
-    typeIndex = *(unsigned char*)(scene + 0x51d2 + slot * 0x24);
-    *(int*)(scene + 0x51b0 + slot * 0x24) += data_ov006_0212eeb8[typeIndex];
-    *(int*)(scene + slot * 0x24 + 0x5000 + 0x1bc) = 0;
-
-    typeIndex = *(unsigned char*)(scene + 0x51d2 + slot * 0x24);
-    *(int*)(scene + slot * 0x24 + 0x5000 + 0x1b8) = data_ov006_0212eea0[typeIndex];
-
-    typeIndex = *(unsigned char*)(scene + 0x51d2 + slot * 0x24);
-    *(unsigned char*)(scene + slot * 0x24 + 0x5000 + 0x1d3) = data_ov006_0212ee0c[typeIndex];
-    *(unsigned char*)(scene + slot * 0x24 + 0x5000 + 0x1d1) = 1;
+    scene->mPops[slot].visible = 1;
+    scene->mPops[slot].x += data_ov006_0212eeb8[scene->mPops[slot].kind];
+    scene->mPops[slot].velY = 0;
+    scene->mPops[slot].velX = data_ov006_0212eea0[scene->mPops[slot].kind];
+    scene->mPops[slot].dir = data_ov006_0212ee0c[scene->mPops[slot].kind];
+    scene->mPops[slot].phase = 1;
 }
 }
 
 // @symbol func_ov006_0211b3ec
 extern "C" {
-void func_ov006_0211b3ec(char *scene, int slot)
+void func_ov006_0211b3ec(dScMgSound_c *scene, int slot)
 {
     int dir;
 
-    *(int *)(scene + 0x51b0 + slot * 0x24) += *(int *)(scene + 0x51b8 + slot * 0x24);
+    scene->mPops[slot].x += scene->mPops[slot].velX;
 
-    dir = *(unsigned char *)(scene + 0x51d3 + slot * 0x24);
+    dir = scene->mPops[slot].dir;
     if (dir == 0) {
-        *(int *)(scene + 0x51b8 + slot * 0x24) -= 0x100;
-        if (*(int *)(scene + 0x51b8 + slot * 0x24) < -0xc00) {
-            *(int *)(scene + 0x51b8 + slot * 0x24) = -0xc00;
-            *(unsigned char *)(scene + 0x51d3 + slot * 0x24) = 1;
+        scene->mPops[slot].velX -= 0x100;
+        if (scene->mPops[slot].velX < -0xc00) {
+            scene->mPops[slot].velX = -0xc00;
+            scene->mPops[slot].dir = 1;
         }
     } else if (dir != 0) {
-        *(int *)(scene + 0x51b8 + slot * 0x24) += 0x100;
-        if (*(int *)(scene + 0x51b8 + slot * 0x24) > 0xc00) {
-            *(int *)(scene + 0x51b8 + slot * 0x24) = 0xc00;
-            *(unsigned char *)(scene + 0x51d3 + slot * 0x24) = 0;
+        scene->mPops[slot].velX += 0x100;
+        if (scene->mPops[slot].velX > 0xc00) {
+            scene->mPops[slot].velX = 0xc00;
+            scene->mPops[slot].dir = 0;
         }
     }
 
-    *(int *)(scene + 0x51b4 + slot * 0x24) += *(int *)(scene + 0x51bc + slot * 0x24);
-    *(int *)(scene + 0x51bc + slot * 0x24) -= 0xc0;
+    scene->mPops[slot].y += scene->mPops[slot].velY;
+    scene->mPops[slot].velY -= 0xc0;
 
-    if ((*(int *)(scene + 0x51c0 + slot * 0x24) - *(int *)(scene + 0x51b4 + slot * 0x24)) >> 12 >= 0x40) {
-        *(unsigned char *)(scene + 0x51cc + slot * 0x24) = 0;
-        *(unsigned char *)(scene + 0x51cd + slot * 0x24) = 0;
+    if ((scene->mPops[slot].startY - scene->mPops[slot].y) >> 12 >= 0x40) {
+        scene->mPops[slot].active = 0;
+        scene->mPops[slot].visible = 0;
     }
 }
 }
@@ -1124,211 +1020,179 @@ void func_ov006_0211b3e8(void)
 // @symbol func_ov006_0211b398
 extern "C" void func_ov006_0211b398(char *scene, int slot)
 {
-    unsigned char state = F1E(scene, slot);
+    unsigned char state = ((dScMgSound_c *)scene)->mPops[slot].phase;
     (((C*)scene)->*data_ov006_02142d50[state].pmf)(slot);
 }
 
 // @symbol func_ov006_0211b308
 extern "C" {
-void func_ov006_0211b308(char *scene, int slot)
+void func_ov006_0211b308(dScMgSound_c *scene, int slot)
 {
-  int off = slot * 0x24;
-  *((unsigned char *) (((scene + off) + 0x5000) + 0x1cd)) = 1;
-  *((int *) ((scene + 0x51b0) + off)) = (*((int *) ((scene + 0x51b0) + off))) + data_ov006_0212eed0[*((unsigned char *) ((scene + 0x51d2) + off))];
-  if (off && off)
-  {
-  }
-  *((int *) (((scene + off) + 0x5000) + 0x1bc)) = -0x2800;
-  *((int *) (((scene + off) + 0x5000) + 0x1b8)) = data_ov006_0212eec4[*((unsigned char *) ((scene + 0x51d2) + off))];
-  *((short *) (((scene + off) + 0x5100) + 0xc8)) = 0;
-  *((unsigned char *) (((scene + off) + 0x5000) + 0x1d1)) = 1;
+  scene->mPops[slot].visible = 1;
+  scene->mPops[slot].x += data_ov006_0212eed0[scene->mPops[slot].kind];
+  scene->mPops[slot].velY = -0x2800;
+  scene->mPops[slot].velX = data_ov006_0212eec4[scene->mPops[slot].kind];
+  scene->mPops[slot].timer = 0;
+  scene->mPops[slot].phase = 1;
 }
 }
 
 // @symbol func_ov006_0211b278
 extern "C" {
-void func_ov006_0211b278(char *scene, int slot){
-    int o = slot * 0x24;
-    *(int*)(scene + 0x51b0 + o) += *(int*)(scene + 0x51b8 + o);
-    *(int*)(scene + 0x51b4 + o) += *(int*)(scene + 0x51bc + o);
-    *(int*)(scene + 0x51bc + o) += 0x200;
-    if(*(int*)(scene + 0x51bc + o) > 0){
-        *(int*)(scene + 0x51bc + o) = 0;
-        *(unsigned char*)(scene + 0x51d1 + o) = 2;
+void func_ov006_0211b278(dScMgSound_c *scene, int slot){
+    scene->mPops[slot].x += scene->mPops[slot].velX;
+    scene->mPops[slot].y += scene->mPops[slot].velY;
+    scene->mPops[slot].velY += 0x200;
+    if (scene->mPops[slot].velY > 0) {
+        scene->mPops[slot].velY = 0;
+        scene->mPops[slot].phase = 2;
     }
 }
 }
 
 // @symbol func_ov006_0211b1cc
 extern "C" {
-void func_ov006_0211b1cc(char* scene, int slot){
-  int n = slot * 0x24;
-  *(int*)(scene + 0x51b0 + n) = *(int*)(scene + 0x51b0 + n) + *(int*)(scene + 0x5000 + n + 0x1b8);
-  *(int*)(scene + 0x51b4 + n) = *(int*)(scene + 0x51b4 + n) + *(int*)(scene + 0x51bc + n);
-  *(int*)(scene + 0x51bc + n) = *(int*)(scene + 0x51bc + n) + 0x100;
-  if (((*(int*)(scene + 0x5000 + n + 0x1c0) - *(int*)(scene + 0x51b4 + n)) >> 0xc) > 0x18)
+void func_ov006_0211b1cc(dScMgSound_c *scene, int slot){
+  scene->mPops[slot].x += scene->mPops[slot].velX;
+  scene->mPops[slot].y += scene->mPops[slot].velY;
+  scene->mPops[slot].velY += 0x100;
+  if (((scene->mPops[slot].startY - scene->mPops[slot].y) >> 0xc) > 0x18)
     return;
-  if (*(int*)(scene + 0x51bc + n) > 0) {
-    *(unsigned char*)(scene + 0x5000 + n + 0x1cc) = 0;
-    *(unsigned char*)(scene + 0x5000 + n + 0x1cd) = 0;
+  if (scene->mPops[slot].velY > 0) {
+    scene->mPops[slot].active = 0;
+    scene->mPops[slot].visible = 0;
   }
 }
 }
 
 // @symbol func_ov006_0211b17c
 extern "C" void func_ov006_0211b17c(char *scene, int slot) {
-    unsigned char state = *(unsigned char*)((char*)scene + slot * 0x24 + 0x51d1);
+    unsigned char state = ((dScMgSound_c *)scene)->mPops[slot].phase;
     (((C*)scene)->*data_ov006_02142d80[state].pmf)(slot);
 }
 
 // @symbol func_ov006_0211b0ec
 extern "C" {
-void func_ov006_0211b0ec(char *scene, int slot)
+void func_ov006_0211b0ec(dScMgSound_c *scene, int slot)
 {
-    int o = slot * 0x24;
-    char *bIdx = scene + 0x51d2;
-    char *bVal = scene + 0x51b0;
-    char *b50 = (scene + o) + 0x5000;
-    unsigned char idx;
-    *((unsigned char *)(((scene + (o & 0xFFFFFFFFFFFFFFFFu)) + 0x5000) + 0x1cd)) = 1;
-    idx = *((unsigned char *)(bIdx + o));
-    *((int *)(bVal + o)) =
-        (*((int *)(bVal + o))) + data_ov006_0212eef4[idx];
-    *((int *)(((scene + o) + 0x5000) + 0x1bc)) = -0x2000;
-    *((int *)(b50 + 0x1b8)) =
-        data_ov006_0212eee8[*((unsigned char *)(bIdx + o))];
-    *((short *)((scene + o) + 0x51c8)) = 0;
-    *((unsigned char *)(((scene + o) + 0x5000) + 0x1d1)) = 1;
+    scene->mPops[slot].visible = 1;
+    scene->mPops[slot].x += data_ov006_0212eef4[scene->mPops[slot].kind];
+    scene->mPops[slot].velY = -0x2000;
+    scene->mPops[slot].velX = data_ov006_0212eee8[scene->mPops[slot].kind];
+    scene->mPops[slot].timer = 0;
+    scene->mPops[slot].phase = 1;
 }
 }
 
 // @symbol func_ov006_0211b05c
 extern "C" {
-void func_ov006_0211b05c(char *scene, int slot){
-    int o = slot * 0x24;
-    *(int*)(scene + 0x51b0 + o) += *(int*)(scene + 0x51b8 + o);
-    *(int*)(scene + 0x51b4 + o) += *(int*)(scene + 0x51bc + o);
-    *(int*)(scene + 0x51bc + o) += 0x100;
-    if(*(int*)(scene + 0x51bc + o) > 0){
-        *(int*)(scene + 0x51bc + o) = 0;
-        *(unsigned char*)(scene + 0x51d1 + o) = 2;
+void func_ov006_0211b05c(dScMgSound_c *scene, int slot){
+    scene->mPops[slot].x += scene->mPops[slot].velX;
+    scene->mPops[slot].y += scene->mPops[slot].velY;
+    scene->mPops[slot].velY += 0x100;
+    if (scene->mPops[slot].velY > 0) {
+        scene->mPops[slot].velY = 0;
+        scene->mPops[slot].phase = 2;
     }
 }
 }
 
 // @symbol func_ov006_0211afb0
 extern "C" {
-void func_ov006_0211afb0(char* scene, int slot){
-  int n = slot * 0x24;
-  *(int*)(scene + 0x51b0 + n) = *(int*)(scene + 0x51b0 + n) + *(int*)(scene + 0x5000 + n + 0x1b8);
-  *(int*)(scene + 0x51b4 + n) = *(int*)(scene + 0x51b4 + n) + *(int*)(scene + 0x51bc + n);
-  *(int*)(scene + 0x51bc + n) = *(int*)(scene + 0x51bc + n) + 0x100;
-  if (((*(int*)(scene + 0x5000 + n + 0x1c0) - *(int*)(scene + 0x51b4 + n)) >> 0xc) > 0x10)
+void func_ov006_0211afb0(dScMgSound_c *scene, int slot){
+  scene->mPops[slot].x += scene->mPops[slot].velX;
+  scene->mPops[slot].y += scene->mPops[slot].velY;
+  scene->mPops[slot].velY += 0x100;
+  if (((scene->mPops[slot].startY - scene->mPops[slot].y) >> 0xc) > 0x10)
     return;
-  if (*(int*)(scene + 0x51bc + n) > 0) {
-    *(unsigned char*)(scene + 0x5000 + n + 0x1cc) = 0;
-    *(unsigned char*)(scene + 0x5000 + n + 0x1cd) = 0;
+  if (scene->mPops[slot].velY > 0) {
+    scene->mPops[slot].active = 0;
+    scene->mPops[slot].visible = 0;
   }
 }
 }
 
 // @symbol func_ov006_0211af60
 extern "C" void func_ov006_0211af60(char *scene, int slot) {
-    unsigned char state = *(unsigned char*)((char*)scene + slot * 0x24 + 0x51d1);
+    unsigned char state = ((dScMgSound_c *)scene)->mPops[slot].phase;
     (((C*)scene)->*data_ov006_02142dc8[state].pmf)(slot);
 }
 
 // @symbol func_ov006_0211aed0
 extern "C" {
-void func_ov006_0211aed0(char *scene, int slot)
+void func_ov006_0211aed0(dScMgSound_c *scene, int slot)
 {
-  int new_var;
-  int o = slot * 0x24;
-  char *bIdx = scene + 0x51d2;
-  char *bVal = scene + 0x51b0;
-  char *b50 = (scene + o) + 0x5000;
-  unsigned char idx;
-  *((unsigned char *) (b50 + 0x1cd)) = 1;
-  idx = *((unsigned char *) (bIdx + o));
-  new_var = (*((int *) (bVal + o))) + data_ov006_0212ef18[idx];
-  *((int *) (bVal + o)) = *((int *) (bVal + o));
-  if (((!o) && (!o)) && (!o))
-  {
-  }
-  *((int *) (bVal + o)) = new_var;
-  *((int *) (((scene + o) + 0x5000) + 0x1bc)) = -0x4800;
-  *((int *) (((scene + o) + 0x5000) + 0x1b8)) = data_ov006_0212ef24[*((unsigned char *) (bIdx + o))];
-  *((short *) ((scene + o) + 0x51c8)) = 0;
-  *((unsigned char *) (((scene + o) + 0x5000) + 0x1d1)) = 1;
+  scene->mPops[slot].visible = 1;
+  scene->mPops[slot].x += data_ov006_0212ef18[scene->mPops[slot].kind];
+  scene->mPops[slot].velY = -0x4800;
+  scene->mPops[slot].velX = data_ov006_0212ef24[scene->mPops[slot].kind];
+  scene->mPops[slot].timer = 0;
+  scene->mPops[slot].phase = 1;
 }
 }
 
 // @symbol func_ov006_0211ae40
 extern "C" {
-void func_ov006_0211ae40(char *scene, int slot){
-    int o = slot * 0x24;
-    *(int*)(scene + 0x51b0 + o) += *(int*)(scene + 0x51b8 + o);
-    *(int*)(scene + 0x51b4 + o) += *(int*)(scene + 0x51bc + o);
-    *(int*)(scene + 0x51bc + o) += 0x400;
-    if(*(int*)(scene + 0x51bc + o) > 0){
-        *(int*)(scene + 0x51bc + o) = 0;
-        *(unsigned char*)(scene + 0x51d1 + o) = 2;
+void func_ov006_0211ae40(dScMgSound_c *scene, int slot){
+    scene->mPops[slot].x += scene->mPops[slot].velX;
+    scene->mPops[slot].y += scene->mPops[slot].velY;
+    scene->mPops[slot].velY += 0x400;
+    if (scene->mPops[slot].velY > 0) {
+        scene->mPops[slot].velY = 0;
+        scene->mPops[slot].phase = 2;
     }
 }
 }
 
 // @symbol func_ov006_0211ad94
 extern "C" {
-void func_ov006_0211ad94(char* scene, int slot){
-  int n = slot * 0x24;
-  *(int*)(scene + 0x51b0 + n) = *(int*)(scene + 0x51b0 + n) + *(int*)(scene + 0x5000 + n + 0x1b8);
-  *(int*)(scene + 0x51b4 + n) = *(int*)(scene + 0x51b4 + n) + *(int*)(scene + 0x51bc + n);
-  *(int*)(scene + 0x51bc + n) = *(int*)(scene + 0x51bc + n) + 0x200;
-  if (((*(int*)(scene + 0x5000 + n + 0x1c0) - *(int*)(scene + 0x51b4 + n)) >> 0xc) > 0x20)
+void func_ov006_0211ad94(dScMgSound_c *scene, int slot){
+  scene->mPops[slot].x += scene->mPops[slot].velX;
+  scene->mPops[slot].y += scene->mPops[slot].velY;
+  scene->mPops[slot].velY += 0x200;
+  if (((scene->mPops[slot].startY - scene->mPops[slot].y) >> 0xc) > 0x20)
     return;
-  if (*(int*)(scene + 0x51bc + n) > 0) {
-    *(unsigned char*)(scene + 0x5000 + n + 0x1cc) = 0;
-    *(unsigned char*)(scene + 0x5000 + n + 0x1cd) = 0;
+  if (scene->mPops[slot].velY > 0) {
+    scene->mPops[slot].active = 0;
+    scene->mPops[slot].visible = 0;
   }
 }
 }
 
 // @symbol func_ov006_0211ad44
 extern "C" void func_ov006_0211ad44(char *scene, int slot) {
-    unsigned char state = *(unsigned char*)((char*)scene + slot * 0x24 + 0x51d1);
+    unsigned char state = ((dScMgSound_c *)scene)->mPops[slot].phase;
     (((C*)scene)->*data_ov006_02142de0[state].pmf)(slot);
 }
 
 // @symbol func_ov006_0211ad00
 extern "C" {
-void func_ov006_0211ad00(char *scene, int slot) {
-    scene += slot * 0x24;
-    *(int*)(scene + 0x51c4) = 0x3000;
-    *(unsigned char*)(scene + 0x51cd) = 1;
-    *(int*)(scene + 0x51bc) = -0x1000;
-    *(int*)(scene + 0x51b8) = data_ov006_0212ee40[*(unsigned char*)(scene + 0x51d2)];
-    *(unsigned char*)(scene + 0x51d1) = 1;
+void func_ov006_0211ad00(dScMgSound_c *scene, int slot) {
+    scene->mPops[slot].scale = 0x3000;
+    scene->mPops[slot].visible = 1;
+    scene->mPops[slot].velY = -0x1000;
+    scene->mPops[slot].velX = data_ov006_0212ee40[scene->mPops[slot].kind];
+    scene->mPops[slot].phase = 1;
 }
 }
 
 // @symbol func_ov006_0211ac30
 extern "C" {
-void func_ov006_0211ac30(char *self, int slot)
+void func_ov006_0211ac30(dScMgSound_c *self, int slot)
 {
-    int i = slot * 0x24;
-    *(int*)(self + 0x51b0 + i) = *(int*)(self + 0x51b0 + i) + *(int*)(self + 0x51b8 + i);
-    *(int*)(self + 0x51b4 + i) = *(int*)(self + 0x51b4 + i) + *(int*)(self + 0x51bc + i);
-    if (*(int*)(self + 0x51c4 + i) > 0x800) {
-        *(int*)(self + 0x51c4 + i) = *(int*)(self + 0x51c4 + i) - 0x100;
-        if (*(int*)(self + 0x51c4 + i) < 0x800)
-            *(int*)(self + 0x51c4 + i) = 0x800;
+    self->mPops[slot].x += self->mPops[slot].velX;
+    self->mPops[slot].y += self->mPops[slot].velY;
+    if (self->mPops[slot].scale > 0x800) {
+        self->mPops[slot].scale -= 0x100;
+        if (self->mPops[slot].scale < 0x800)
+            self->mPops[slot].scale = 0x800;
     }
-    *(int*)(self + 0x51bc + i) = *(int*)(self + 0x51bc + i) - 0x20;
+    self->mPops[slot].velY -= 0x20;
     {
-        int d = (*(int*)(self + 0x51c0 + i) - *(int*)(self + 0x51b4 + i)) >> 12;
+        int d = (self->mPops[slot].startY - self->mPops[slot].y) >> 12;
         if (d >= 0x38) {
-            *(unsigned char*)(self + 0x51cc + i) = 0;
-            *(unsigned char*)(self + 0x51cd + i) = 0;
+            self->mPops[slot].active = 0;
+            self->mPops[slot].visible = 0;
         }
     }
 }
@@ -1343,167 +1207,157 @@ void func_ov006_0211ac2c(void)
 
 // @symbol func_ov006_0211abdc
 extern "C" void func_ov006_0211abdc(char *scene, int slot) {
-    unsigned char state = *(unsigned char*)((char*)scene + slot * 0x24 + 0x51d1);
+    unsigned char state = ((dScMgSound_c *)scene)->mPops[slot].phase;
     (((C*)scene)->*data_ov006_02142cd8[state].pmf)(slot);
 }
 
 // @symbol func_ov006_0211ab80
 extern "C" {
-void func_ov006_0211ab80(char *scene, int slot) {
-    int n = slot * 0x24;
-    char *base = scene + 0x51b0;
-    char *p = scene + n;
-    *(unsigned char *)(p + 0x51cd) = 1;
-    unsigned char k = *(unsigned char *)(p + 0x51d2);
-    *(int *)(base + n) = *(int *)(base + n) + data_ov006_0212ee7c[k];
-    *(int *)(p + 0x51bc) = -0x4000;
-    *(unsigned char *)(p + 0x51d1) = 1;
+void func_ov006_0211ab80(dScMgSound_c *scene, int slot) {
+    unsigned char k;
+    scene->mPops[slot].visible = 1;
+    k = scene->mPops[slot].kind;
+    scene->mPops[slot].x += data_ov006_0212ee7c[k];
+    scene->mPops[slot].velY = -0x4000;
+    scene->mPops[slot].phase = 1;
 }
 }
 
 // @symbol func_ov006_0211ab0c
 extern "C" {
-void func_ov006_0211ab0c(char* scene, int slot)
+void func_ov006_0211ab0c(dScMgSound_c *scene, int slot)
 {
-    int off = slot * 0x24;
-    *(int*)(scene + 0x51b4 + off) = *(int*)(scene + 0x51b4 + off) + *(int*)(scene + 0x51bc + off);
-    *(int*)(scene + 0x51bc + off) = *(int*)(scene + 0x51bc + off) + 0x400;
-    if (*(int*)(scene + 0x51bc + off) > 0) {
-        *(int*)(scene + 0x51bc + off) = 0;
-        *(unsigned char*)(scene + off + 0x5000 + 0x1d1) = 2;
+    scene->mPops[slot].y += scene->mPops[slot].velY;
+    scene->mPops[slot].velY += 0x400;
+    if (scene->mPops[slot].velY > 0) {
+        scene->mPops[slot].velY = 0;
+        scene->mPops[slot].phase = 2;
     }
 }
 }
 
 // @symbol func_ov006_0211aa94
 extern "C" {
-void func_ov006_0211aa94(BigObj *self, int slot) {
-    self->arr[slot].b4 += self->arr[slot].bc;
-    self->arr[slot].bc += 0x100;
-    if (((self->arr[slot].c0 - self->arr[slot].b4) >> 12) <= 0x18) {
-        self->arr[slot].cc = 0;
-        self->arr[slot].cd = 0;
+void func_ov006_0211aa94(dScMgSound_c *self, int slot) {
+    self->mPops[slot].y += self->mPops[slot].velY;
+    self->mPops[slot].velY += 0x100;
+    if (((self->mPops[slot].startY - self->mPops[slot].y) >> 12) <= 0x18) {
+        self->mPops[slot].active = 0;
+        self->mPops[slot].visible = 0;
     }
 }
 }
 
 // @symbol func_ov006_0211aa44
 extern "C" void func_ov006_0211aa44(char *scene, int slot) {
-    unsigned char state = *(unsigned char*)((char*)scene + slot * 0x24 + 0x51d1);
+    unsigned char state = ((dScMgSound_c *)scene)->mPops[slot].phase;
     (((C*)scene)->*data_ov006_02142cf0[state].pmf)(slot);
 }
 
 // @symbol func_ov006_0211a9fc
-/* Activates one row of the 0x24-stride array at 0x51b8: sets its flags,
-   clears its counters and loads its duration from data_ov006_0212ee70. */
+/* Arms one pop: visible, no vertical speed, horizontal speed from its kind. */
 extern "C" {
-void func_ov006_0211a9fc(struct NoteObj *self, int slot)
+void func_ov006_0211a9fc(dScMgSound_c *self, int slot)
 {
-    self->entries[slot].flagA = 1;
-    self->entries[slot].counter = 0;
-    self->entries[slot].value = data_ov006_0212ee70[self->entries[slot].type];
-    self->entries[slot].flagB = 1;
-    self->entries[slot].halfword = 0;
+    self->mPops[slot].visible = 1;
+    self->mPops[slot].velY = 0;
+    self->mPops[slot].velX = data_ov006_0212ee70[self->mPops[slot].kind];
+    self->mPops[slot].phase = 1;
+    self->mPops[slot].timer = 0;
 }
 }
 
 // @symbol func_ov006_0211a910
 extern "C" {
-void func_ov006_0211a910(char* scene, int slot)
+void func_ov006_0211a910(dScMgSound_c *scene, int slot)
 {
-    int n = slot * 0x24;
     int v;
-    *(int*)(scene + 0x51b0 + n) = *(int*)(scene + 0x51b0 + n) + *(int*)(scene + 0x51b8 + n);
-    *(int*)(scene + 0x51b4 + n) = *(int*)(scene + 0x51b4 + n) + *(int*)(scene + 0x51bc + n);
-    v = *(int*)(scene + 0x51b8 + n);
+    scene->mPops[slot].x += scene->mPops[slot].velX;
+    scene->mPops[slot].y += scene->mPops[slot].velY;
+    v = scene->mPops[slot].velX;
     if (v > 0x20) {
-        *(int*)(scene + 0x51b8 + n) = v - 0x20;
+        scene->mPops[slot].velX = v - 0x20;
     } else if (v < -0x20) {
-        *(int*)(scene + 0x51b8 + n) = v + 0x20;
+        scene->mPops[slot].velX = v + 0x20;
     }
-    *(int*)(scene + 0x51bc + n) = *(int*)(scene + 0x51bc + n) - 0x40;
-    *(unsigned short*)(scene + 0x51c8 + n) = *(unsigned short*)(scene + 0x51c8 + n) + 1;
-    if (*(unsigned short*)(scene + 0x51c8 + n) >= 0x28) {
-        *(unsigned short*)(scene + 0x51c8 + n) = 0;
-        *(unsigned char*)(scene + n + 0x5000 + 0x1d1) = 2;
-        *(unsigned char*)(scene + n + 0x5000 + 0x1d3) = 0;
-        *(int*)(scene + 0x51b8 + n) = 0xc00;
+    scene->mPops[slot].velY -= 0x40;
+    scene->mPops[slot].timer += 1;
+    if (scene->mPops[slot].timer >= 0x28) {
+        scene->mPops[slot].timer = 0;
+        scene->mPops[slot].phase = 2;
+        scene->mPops[slot].dir = 0;
+        scene->mPops[slot].velX = 0xc00;
     }
 }
 }
 
 // @symbol func_ov006_0211a7fc
 extern "C" {
-void func_ov006_0211a7fc(char *scene, int slot)
+void func_ov006_0211a7fc(dScMgSound_c *scene, int slot)
 {
-    int n = slot * 0x24;
     int f;
-    *(int *)(scene + 0x51b0 + n) = *(int *)(scene + 0x51b0 + n) + *(int *)(scene + 0x51b8 + n);
-    *(int *)(scene + 0x51b4 + n) = *(int *)(scene + 0x51b4 + n) + *(int *)(scene + 0x51bc + n);
-    *(int *)(scene + 0x51bc + n) = *(int *)(scene + 0x51bc + n) - 0x40;
-    f = *(unsigned char *)(scene + 0x51d3 + n);
+    scene->mPops[slot].x += scene->mPops[slot].velX;
+    scene->mPops[slot].y += scene->mPops[slot].velY;
+    scene->mPops[slot].velY -= 0x40;
+    f = scene->mPops[slot].dir;
     if (f == 0) {
-        *(int *)(scene + 0x51b8 + n) -= 0x100;
-        if (*(int *)(scene + 0x51b8 + n) < -0xc00) {
-            *(int *)(scene + 0x51b8 + n) = -0xc00;
-            *(unsigned char *)(scene + 0x51d3 + n) = 1;
+        scene->mPops[slot].velX -= 0x100;
+        if (scene->mPops[slot].velX < -0xc00) {
+            scene->mPops[slot].velX = -0xc00;
+            scene->mPops[slot].dir = 1;
         }
     } else if (f != 0) {
-        *(int *)(scene + 0x51b8 + n) += 0x100;
-        if (*(int *)(scene + 0x51b8 + n) > 0xc00) {
-            *(int *)(scene + 0x51b8 + n) = 0xc00;
-            *(unsigned char *)(scene + 0x51d3 + n) = 0;
+        scene->mPops[slot].velX += 0x100;
+        if (scene->mPops[slot].velX > 0xc00) {
+            scene->mPops[slot].velX = 0xc00;
+            scene->mPops[slot].dir = 0;
         }
     }
-    if ((*(int *)(scene + 0x51c0 + n) - *(int *)(scene + 0x51b4 + n)) >> 12 >= 0x30) {
-        *(unsigned char *)(scene + 0x51cc + n) = 0;
-        *(unsigned char *)(scene + 0x51cd + n) = 0;
+    if ((scene->mPops[slot].startY - scene->mPops[slot].y) >> 12 >= 0x30) {
+        scene->mPops[slot].active = 0;
+        scene->mPops[slot].visible = 0;
     }
 }
 }
 
 // @symbol func_ov006_0211a7ac
 extern "C" void func_ov006_0211a7ac(char *scene, int slot) {
-    unsigned char state = *(unsigned char*)((char*)scene + slot * 0x24 + 0x51d1);
+    unsigned char state = ((dScMgSound_c *)scene)->mPops[slot].phase;
     (((C*)scene)->*data_ov006_02142d20[state].pmf)(slot);
 }
 
 // @symbol func_ov006_0211a714
 extern "C" {
-void func_ov006_0211a714(char* scene, int slot) {
-  int idx = slot * 0x24;
-  unsigned short v = *(unsigned short*)(scene + 0x51c8 + idx);
+void func_ov006_0211a714(dScMgSound_c *scene, int slot) {
+  unsigned short v = scene->mPops[slot].timer;
   if (v != 0) {
-    *(short*)(scene + 0x51c8 + idx) = v - 1;
-    if (*(short*)(scene + 0x51c8 + idx) < 0)
-      *(short*)(scene + 0x51c8 + idx) = 0;
+    scene->mPops[slot].timer = v - 1;
+    if (*(short *)&scene->mPops[slot].timer < 0)
+      scene->mPops[slot].timer = 0;
     return;
   }
-  *(unsigned char*)(scene + 0x51cd + idx) = 1;
-  *(int*)(scene + 0x51b0 + idx) += data_ov006_0212ee94[*(unsigned char*)(scene + 0x51d2 + idx)];
-  *(int*)(scene + 0x51bc + idx) = -0x4000;
-  *(unsigned char*)(scene + 0x51d1 + idx) = 1;
+  scene->mPops[slot].visible = 1;
+  scene->mPops[slot].x += data_ov006_0212ee94[scene->mPops[slot].kind];
+  scene->mPops[slot].velY = -0x4000;
+  scene->mPops[slot].phase = 1;
 }
 }
 
 // @symbol func_ov006_0211a69c
 extern "C" {
-void func_ov006_0211a69c(char *scene, int slot)
+void func_ov006_0211a69c(dScMgSound_c *scene, int slot)
 {
-    int off = slot * 0x24;
-    char *pA = scene + 0x51bc;
-    char *pB = scene + 0x51b4;
-    int a = *(int *)(pA + off);
-    int b = *(int *)(pB + off);
-    *(int *)(pB + off) = b + a;
-    a = *(int *)(pA + off);
-    *(int *)(pA + off) = a + 0x400;
+    int a = scene->mPops[slot].velY;
+    int b = scene->mPops[slot].y;
+    scene->mPops[slot].y = b + a;
+    a = scene->mPops[slot].velY;
+    scene->mPops[slot].velY = a + 0x400;
     {
-        int d = *(int *)(scene + off + 0x51c0) - *(int *)(pB + off);
+        int d = scene->mPops[slot].startY - scene->mPops[slot].y;
         d >>= 12;
         if (d >= 0x20) {
-            *(unsigned char *)(scene + off + 0x51cc) = 0;
-            *(unsigned char *)(scene + off + 0x51cd) = 0;
+            scene->mPops[slot].active = 0;
+            scene->mPops[slot].visible = 0;
         }
     }
 }
@@ -1518,46 +1372,43 @@ void func_ov006_0211a698(void)
 
 // @symbol func_ov006_0211a648
 extern "C" void func_ov006_0211a648(char *scene, int slot) {
-    unsigned char state = *(unsigned char*)((char*)scene + slot * 0x24 + 0x51d1);
+    unsigned char state = ((dScMgSound_c *)scene)->mPops[slot].phase;
     (((C*)scene)->*data_ov006_02142d68[state].pmf)(slot);
 }
 
 // @symbol func_ov006_0211a5ec
 extern "C" {
-void func_ov006_0211a5ec(char *scene, int slot) {
-    int n = slot * 0x24;
-    char *base = scene + 0x51b0;
-    char *p = scene + n;
-    *(unsigned char *)(p + 0x51cd) = 1;
-    unsigned char k = *(unsigned char *)(p + 0x51d2);
-    *(int *)(base + n) = *(int *)(base + n) + data_ov006_0212eedc[k];
-    *(int *)(p + 0x51bc) = -0x4000;
-    *(unsigned char *)(p + 0x51d1) = 1;
+void func_ov006_0211a5ec(dScMgSound_c *scene, int slot) {
+    unsigned char k;
+    scene->mPops[slot].visible = 1;
+    k = scene->mPops[slot].kind;
+    scene->mPops[slot].x += data_ov006_0212eedc[k];
+    scene->mPops[slot].velY = -0x4000;
+    scene->mPops[slot].phase = 1;
 }
 }
 
 // @symbol func_ov006_0211a578
 extern "C" {
-void func_ov006_0211a578(char* scene, int slot)
+void func_ov006_0211a578(dScMgSound_c *scene, int slot)
 {
-    int off = slot * 0x24;
-    *(int*)(scene + 0x51b4 + off) = *(int*)(scene + 0x51b4 + off) + *(int*)(scene + 0x51bc + off);
-    *(int*)(scene + 0x51bc + off) = *(int*)(scene + 0x51bc + off) + 0x400;
-    if (*(int*)(scene + 0x51bc + off) > 0) {
-        *(int*)(scene + 0x51bc + off) = 0;
-        *(unsigned char*)(scene + off + 0x5000 + 0x1d1) = 2;
+    scene->mPops[slot].y += scene->mPops[slot].velY;
+    scene->mPops[slot].velY += 0x400;
+    if (scene->mPops[slot].velY > 0) {
+        scene->mPops[slot].velY = 0;
+        scene->mPops[slot].phase = 2;
     }
 }
 }
 
 // @symbol func_ov006_0211a500
 extern "C" {
-void func_ov006_0211a500(BallObj *self, int slot) {
-    self->arr[slot].a += self->arr[slot].b;
-    self->arr[slot].b -= 0x60;
-    if ((self->arr[slot].c - self->arr[slot].a) >> 0xc >= 0x3c) {
-        self->arr[slot].f18 = 0;
-        self->arr[slot].f19 = 0;
+void func_ov006_0211a500(dScMgSound_c *self, int slot) {
+    self->mPops[slot].y += self->mPops[slot].velY;
+    self->mPops[slot].velY -= 0x60;
+    if ((self->mPops[slot].startY - self->mPops[slot].y) >> 0xc >= 0x3c) {
+        self->mPops[slot].active = 0;
+        self->mPops[slot].visible = 0;
     }
 }
 }
@@ -1565,238 +1416,206 @@ void func_ov006_0211a500(BallObj *self, int slot) {
 // @symbol func_ov006_0211a4b0
 extern "C" void func_ov006_0211a4b0(char *scene, int slot)
 {
-    unsigned char idx = *(unsigned char *)(scene + slot * 0x24 + 0x51d1);
+    unsigned char idx = ((dScMgSound_c *)scene)->mPops[slot].phase;
     (((C *)scene)->*data_ov006_02142d98[idx])(slot);
 }
 
 // @symbol func_ov006_0211a420
 extern "C" {
-void func_ov006_0211a420(char *scene, int slot)
+void func_ov006_0211a420(dScMgSound_c *scene, int slot)
 {
-  int o = slot * 0x24;
   unsigned char idx;
-  char *bIdx = scene + 0x51d2;
-  char *bVal;
-  char *b50 = (scene + o) + 0x5000;
-  *((unsigned char *) (b50 + 0x1cd)) = 1;
-  bVal = scene + 0x51b0;
-  idx = *((unsigned char *) (bIdx + o));
-  *((int *) (bVal + o)) = (*((int *) (bVal + o))) + data_ov006_0212ee64[idx];
-  if ((o && o) && o)
-  {
-  }
-  if (1)
-  {
-    *((int *) (((scene + o) + 0x5000) + 0x1bc)) = -0x3800;
-    *((int *) (((scene + o) + 0x5000) + 0x1b8)) = data_ov006_0212ef00[*((unsigned char *) (bIdx + o))];
-    *((short *) (0x51c8 + (scene + o))) = 0;
-    *((unsigned char *) (((scene + o) + 0x5000) + 0x1d1)) = 1;
-  }
+  scene->mPops[slot].visible = 1;
+  idx = scene->mPops[slot].kind;
+  scene->mPops[slot].x += data_ov006_0212ee64[idx];
+  scene->mPops[slot].velY = -0x3800;
+  scene->mPops[slot].velX = data_ov006_0212ef00[scene->mPops[slot].kind];
+  scene->mPops[slot].timer = 0;
+  scene->mPops[slot].phase = 1;
 }
 }
 
 // @symbol func_ov006_0211a388
 extern "C" {
-void func_ov006_0211a388(char* scene, int slot) {
-  int idx = slot * 0x24;
-  *(int*)(scene + 0x51b0 + idx) += *(int*)(scene + 0x51b8 + idx);
-  *(int*)(scene + 0x51b4 + idx) += *(int*)(scene + 0x51bc + idx);
-  *(int*)(scene + 0x51bc + idx) += 0x200;
-  if (*(int*)(scene + 0x51bc + idx) <= 0) return;
-  *(int*)(scene + 0x51bc + idx) = 0;
-  *(unsigned char*)(scene + 0x51d1 + idx) = 2;
-  *(short*)(scene + 0x51c8 + idx) = 0;
+void func_ov006_0211a388(dScMgSound_c *scene, int slot) {
+  scene->mPops[slot].x += scene->mPops[slot].velX;
+  scene->mPops[slot].y += scene->mPops[slot].velY;
+  scene->mPops[slot].velY += 0x200;
+  if (scene->mPops[slot].velY <= 0) return;
+  scene->mPops[slot].velY = 0;
+  scene->mPops[slot].phase = 2;
+  scene->mPops[slot].timer = 0;
 }
 }
 
 // @symbol func_ov006_0211a314
 extern "C" {
-void func_ov006_0211a314(char* scene, int slot)
+void func_ov006_0211a314(dScMgSound_c *scene, int slot)
 {
-    int off = slot * 0x24;
-    int v = *(int*)(scene + 0x51c4 + off);
+    int v = scene->mPops[slot].scale;
     if (v > 0x800) {
-        *(int*)(scene + 0x51c4 + off) = v - 0x60;
-        if (*(int*)(scene + 0x51c4 + off) < 0x800)
-            *(int*)(scene + 0x51c4 + off) = 0x800;
+        scene->mPops[slot].scale = v - 0x60;
+        if (scene->mPops[slot].scale < 0x800)
+            scene->mPops[slot].scale = 0x800;
     }
-    *(unsigned short*)(scene + 0x51c8 + off) = *(unsigned short*)(scene + 0x51c8 + off) + 1;
-    if (*(unsigned short*)(scene + 0x51c8 + off) >= 0x20) {
-        *(unsigned char*)(scene + off + 0x5000 + 0x1cc) = 0;
-        *(unsigned char*)(scene + off + 0x5000 + 0x1cd) = 0;
+    scene->mPops[slot].timer += 1;
+    if (scene->mPops[slot].timer >= 0x20) {
+        scene->mPops[slot].active = 0;
+        scene->mPops[slot].visible = 0;
     }
 }
 }
 
 // @symbol func_ov006_0211a2c4
 extern "C" void func_ov006_0211a2c4(C* scene, int slot){
-  unsigned char sel = *((unsigned char*)((char*)scene + slot*0x24 + 0x51d1));
+  unsigned char sel = ((dScMgSound_c *)scene)->mPops[slot].phase;
   (scene->*data_ov006_02142cc0[sel])(slot);
 }
 
 // @symbol func_ov006_0211a234
 extern "C" {
-void func_ov006_0211a234(char *scene, int slot)
+void func_ov006_0211a234(dScMgSound_c *scene, int slot)
 {
-  int o = slot * 0x24;
-  char *bIdx = scene + 0x51d2;
-  char *bVal = scene + 0x51b0;
-  char *b50;
   unsigned char idx;
-  *((unsigned char *) (((scene + o) + 0x5000) + 0x1cd)) = 1;
-  idx = *((unsigned char *) (bIdx + o));
-  *((int *) (bVal + o)) = (*((int *) (bVal + o))) + data_ov006_0212ee58[idx];
-  if ((slot && slot) != 0)
-  {
-  }
-  *((int *) (((scene + o) + 0x5000) + 0x1bc)) = -0x3200;
-  *((int *) (((scene + o) + 0x5000) + 0x1b8)) = data_ov006_0212ee4c[*((unsigned char *) (bIdx + o))];
-  *((short *) ((scene + o) + 0x51c8)) = 0;
-  *((unsigned char *) (((scene + o) + 0x5000) + 0x1d1)) = 1;
+  scene->mPops[slot].visible = 1;
+  idx = scene->mPops[slot].kind;
+  scene->mPops[slot].x += data_ov006_0212ee58[idx];
+  scene->mPops[slot].velY = -0x3200;
+  scene->mPops[slot].velX = data_ov006_0212ee4c[scene->mPops[slot].kind];
+  scene->mPops[slot].timer = 0;
+  scene->mPops[slot].phase = 1;
 }
 }
 
 // @symbol func_ov006_0211a19c
 extern "C" {
-void func_ov006_0211a19c(char* scene, int slot) {
-  int idx = slot * 0x24;
-  *(int*)(scene + 0x51b0 + idx) += *(int*)(scene + 0x51b8 + idx);
-  *(int*)(scene + 0x51b4 + idx) += *(int*)(scene + 0x51bc + idx);
-  *(int*)(scene + 0x51bc + idx) += 0x200;
-  if (*(int*)(scene + 0x51bc + idx) <= 0) return;
-  *(int*)(scene + 0x51bc + idx) = 0;
-  *(unsigned char*)(scene + 0x51d1 + idx) = 2;
-  *(short*)(scene + 0x51c8 + idx) = 0;
+void func_ov006_0211a19c(dScMgSound_c *scene, int slot) {
+  scene->mPops[slot].x += scene->mPops[slot].velX;
+  scene->mPops[slot].y += scene->mPops[slot].velY;
+  scene->mPops[slot].velY += 0x200;
+  if (scene->mPops[slot].velY <= 0) return;
+  scene->mPops[slot].velY = 0;
+  scene->mPops[slot].phase = 2;
+  scene->mPops[slot].timer = 0;
 }
 }
 
 // @symbol func_ov006_0211a128
 extern "C" {
-void func_ov006_0211a128(char* scene, int slot)
+void func_ov006_0211a128(dScMgSound_c *scene, int slot)
 {
-    int off = slot * 0x24;
-    int v = *(int*)(scene + 0x51c4 + off);
+    int v = scene->mPops[slot].scale;
     if (v > 0x800) {
-        *(int*)(scene + 0x51c4 + off) = v - 0x70;
-        if (*(int*)(scene + 0x51c4 + off) < 0x800)
-            *(int*)(scene + 0x51c4 + off) = 0x800;
+        scene->mPops[slot].scale = v - 0x70;
+        if (scene->mPops[slot].scale < 0x800)
+            scene->mPops[slot].scale = 0x800;
     }
-    *(unsigned short*)(scene + 0x51c8 + off) = *(unsigned short*)(scene + 0x51c8 + off) + 1;
-    if (*(unsigned short*)(scene + 0x51c8 + off) >= 0x20) {
-        *(unsigned char*)(scene + off + 0x5000 + 0x1cc) = 0;
-        *(unsigned char*)(scene + off + 0x5000 + 0x1cd) = 0;
+    scene->mPops[slot].timer += 1;
+    if (scene->mPops[slot].timer >= 0x20) {
+        scene->mPops[slot].active = 0;
+        scene->mPops[slot].visible = 0;
     }
 }
 }
 
 // @symbol func_ov006_0211a0d8
 extern "C" void func_ov006_0211a0d8(CFull* scene, int slot){
-  (scene->*(data_ov006_02142d08[scene->arr[slot].idx].pmf))(slot);
+  unsigned char phase = ((dScMgSound_c *)scene)->mPops[slot].phase;
+  (scene->*(data_ov006_02142d08[phase].pmf))(slot);
 }
 
 // @symbol func_ov006_0211a048
 extern "C" {
-void func_ov006_0211a048(char *scene, int slot)
+void func_ov006_0211a048(dScMgSound_c *scene, int slot)
 {
-  int off = slot * 0x24;
-  *((unsigned char *) (((scene + off) + 0x5000) + 0x1cd)) = 1;
-  *((int *) ((scene + 0x51b0) + off)) = (*((int *) ((scene + 0x51b0) + off))) + data_ov006_0212eeac[*((unsigned char *) ((scene + 0x51d2) + off))];
-  if (off && off)
-  {
-  }
-  *((int *) (((scene + off) + 0x5000) + 0x1bc)) = -0x2800;
-  *((int *) (((scene + off) + 0x5000) + 0x1b8)) = data_ov006_0212ee88[*((unsigned char *) ((scene + 0x51d2) + off))];
-  *((short *) (((scene + off) + 0x5100) + 0xc8)) = 0;
-  *((unsigned char *) (((scene + off) + 0x5000) + 0x1d1)) = 1;
+  scene->mPops[slot].visible = 1;
+  scene->mPops[slot].x += data_ov006_0212eeac[scene->mPops[slot].kind];
+  scene->mPops[slot].velY = -0x2800;
+  scene->mPops[slot].velX = data_ov006_0212ee88[scene->mPops[slot].kind];
+  scene->mPops[slot].timer = 0;
+  scene->mPops[slot].phase = 1;
 }
 }
 
 // @symbol func_ov006_02119fb0
 extern "C" {
-void func_ov006_02119fb0(char* scene, int slot) {
-  int idx = slot * 0x24;
-  *(int*)(scene + 0x51b0 + idx) += *(int*)(scene + 0x51b8 + idx);
-  *(int*)(scene + 0x51b4 + idx) += *(int*)(scene + 0x51bc + idx);
-  *(int*)(scene + 0x51bc + idx) += 0x200;
-  if (*(int*)(scene + 0x51bc + idx) <= 0) return;
-  *(int*)(scene + 0x51bc + idx) = 0;
-  *(unsigned char*)(scene + 0x51d1 + idx) = 2;
-  *(short*)(scene + 0x51c8 + idx) = 0;
+void func_ov006_02119fb0(dScMgSound_c *scene, int slot) {
+  scene->mPops[slot].x += scene->mPops[slot].velX;
+  scene->mPops[slot].y += scene->mPops[slot].velY;
+  scene->mPops[slot].velY += 0x200;
+  if (scene->mPops[slot].velY <= 0) return;
+  scene->mPops[slot].velY = 0;
+  scene->mPops[slot].phase = 2;
+  scene->mPops[slot].timer = 0;
 }
 }
 
 // @symbol func_ov006_02119f3c
 extern "C" {
-void func_ov006_02119f3c(char* scene, int slot)
+void func_ov006_02119f3c(dScMgSound_c *scene, int slot)
 {
-    int off = slot * 0x24;
-    int v = *(int*)(scene + 0x51c4 + off);
+    int v = scene->mPops[slot].scale;
     if (v > 0xa80) {
-        *(int*)(scene + 0x51c4 + off) = v - 0x60;
-        if (*(int*)(scene + 0x51c4 + off) < 0xa80)
-            *(int*)(scene + 0x51c4 + off) = 0xa80;
+        scene->mPops[slot].scale = v - 0x60;
+        if (scene->mPops[slot].scale < 0xa80)
+            scene->mPops[slot].scale = 0xa80;
     }
-    *(unsigned short*)(scene + 0x51c8 + off) = *(unsigned short*)(scene + 0x51c8 + off) + 1;
-    if (*(unsigned short*)(scene + 0x51c8 + off) >= 0x18) {
-        *(unsigned char*)(scene + off + 0x5000 + 0x1cc) = 0;
-        *(unsigned char*)(scene + off + 0x5000 + 0x1cd) = 0;
+    scene->mPops[slot].timer += 1;
+    if (scene->mPops[slot].timer >= 0x18) {
+        scene->mPops[slot].active = 0;
+        scene->mPops[slot].visible = 0;
     }
 }
 }
 
 // @symbol func_ov006_02119eec
 extern "C" void func_ov006_02119eec(CFull* scene, int slot){
-  (scene->*(data_ov006_02142db0[scene->arr[slot].idx].pmf))(slot);
+  unsigned char phase = ((dScMgSound_c *)scene)->mPops[slot].phase;
+  (scene->*(data_ov006_02142db0[phase].pmf))(slot);
 }
 
 // @symbol func_ov006_02119e5c
 extern "C" {
-void func_ov006_02119e5c(char *scene, int slot)
+void func_ov006_02119e5c(dScMgSound_c *scene, int slot)
 {
-  int o = slot * 0x24;
-  char *bIdx = scene + 0x51d2;
-  char *bVal = scene + 0x51b0;
-  char *b50 = (scene + o) + 0x5000;
   unsigned char idx;
-  *((unsigned char *) (((scene + (o & 0xFFFFFFFFFFFFFFFFu)) + 0x5000) + 0x1cd)) = 1;
-  idx = *((unsigned char *) (bIdx + o));
-  *((int *) (bVal + o)) = (*((int *) (bVal + o))) + data_ov006_0212ef30[idx];
-  *((int *) (((scene + o) + 0x5000) + 0x1bc)) = -0x2400;
-  *((int *) (b50 + 0x1b8)) = data_ov006_0212ef0c[*((unsigned char *) (bIdx + o))];
-  *((short *) ((scene + o) + 0x51c8)) = 0;
-  *((unsigned char *) (((scene + o) + 0x5000) + 0x1d1)) = 1;
+  scene->mPops[slot].visible = 1;
+  idx = scene->mPops[slot].kind;
+  scene->mPops[slot].x += data_ov006_0212ef30[idx];
+  scene->mPops[slot].velY = -0x2400;
+  scene->mPops[slot].velX = data_ov006_0212ef0c[scene->mPops[slot].kind];
+  scene->mPops[slot].timer = 0;
+  scene->mPops[slot].phase = 1;
 }
 }
 
 // @symbol func_ov006_02119dc4
 extern "C" {
-void func_ov006_02119dc4(char* scene, int slot) {
-  int idx = slot * 0x24;
-  *(int*)(scene + 0x51b0 + idx) += *(int*)(scene + 0x51b8 + idx);
-  *(int*)(scene + 0x51b4 + idx) += *(int*)(scene + 0x51bc + idx);
-  *(int*)(scene + 0x51bc + idx) += 0x200;
-  if (*(int*)(scene + 0x51bc + idx) <= 0) return;
-  *(int*)(scene + 0x51bc + idx) = 0;
-  *(unsigned char*)(scene + 0x51d1 + idx) = 2;
-  *(short*)(scene + 0x51c8 + idx) = 0;
+void func_ov006_02119dc4(dScMgSound_c *scene, int slot) {
+  scene->mPops[slot].x += scene->mPops[slot].velX;
+  scene->mPops[slot].y += scene->mPops[slot].velY;
+  scene->mPops[slot].velY += 0x200;
+  if (scene->mPops[slot].velY <= 0) return;
+  scene->mPops[slot].velY = 0;
+  scene->mPops[slot].phase = 2;
+  scene->mPops[slot].timer = 0;
 }
 }
 
 // @symbol func_ov006_02119d50
 extern "C" {
-void func_ov006_02119d50(char* scene, int slot)
+void func_ov006_02119d50(dScMgSound_c *scene, int slot)
 {
-    int off = slot * 0x24;
-    int v = *(int*)(scene + 0x51c4 + off);
+    int v = scene->mPops[slot].scale;
     if (v > 0xd80) {
-        *(int*)(scene + 0x51c4 + off) = v - 0x60;
-        if (*(int*)(scene + 0x51c4 + off) < 0xd80)
-            *(int*)(scene + 0x51c4 + off) = 0xd80;
+        scene->mPops[slot].scale = v - 0x60;
+        if (scene->mPops[slot].scale < 0xd80)
+            scene->mPops[slot].scale = 0xd80;
     }
-    *(unsigned short*)(scene + 0x51c8 + off) = *(unsigned short*)(scene + 0x51c8 + off) + 1;
-    if (*(unsigned short*)(scene + 0x51c8 + off) >= 0x18) {
-        *(unsigned char*)(scene + off + 0x5000 + 0x1cc) = 0;
-        *(unsigned char*)(scene + off + 0x5000 + 0x1cd) = 0;
+    scene->mPops[slot].timer += 1;
+    if (scene->mPops[slot].timer >= 0x18) {
+        scene->mPops[slot].active = 0;
+        scene->mPops[slot].visible = 0;
     }
 }
 }
@@ -1813,18 +1632,19 @@ void func_ov006_02119c74(void* scene)
     long long ta = data_02082214[1];
 
     for (i = 0; i < 30; i++) {
-        if (*(unsigned char*)(p + 0x51cd)) {
+        dMgSoundPopCur *pop = (dMgSoundPopCur *)p;
+        if (pop->pop.visible) {
             int m[4];
-            long long vv = *(int*)(p + 0x51c4);
-            int x = *(int*)(p + 0x51b0);
-            int y = *(int*)(p + 0x51b4);
+            long long vv = pop->pop.scale;
+            int x = pop->pop.x;
+            int y = pop->pop.y;
             int a = (int)((ta * vv + 0x800) >> 12);
             int b = (int)(((long long)tb * (int)vv + 0x800) >> 12);
             m[0] = a;
             m[3] = a;
             m[1] = b;
             m[2] = -b;
-            func_ov004_020b023c(data_ov006_0213f6f0[*(unsigned char*)(p + 0x51ce)],
+            func_ov004_020b023c(data_ov006_0213f6f0[pop->pop.sprite],
                                 (x >> 12) - 8, (y >> 12) - 0x10, -1, m);
         }
         tb = data_02082214[0];
@@ -1841,12 +1661,13 @@ void func_ov006_02119bdc(void* scene) {
   int i;
   char* o = c;
   for (i = 0; i < 10; i++) {
-    if (*(unsigned char*)(o + 0x50f6) != 0 && *(unsigned char*)(o + 0x50f5) != 0) {
-      int a1 = *(int*)(o + 0x50e8) >> 12;
-      int a2 = *(int*)(o + 0x50ec) >> 12;
+    dMgSoundNoteCur *note = (dMgSoundNoteCur *)o;
+    if (note->note.shown != 0 && note->note.alive != 0) {
+      int a1 = note->note.x >> 12;
+      int a2 = note->note.y >> 12;
       int a4 = 0;
       if (*(int*)(c + 0x5608) != 1) a4 = 1;
-      unsigned char sel = *(unsigned char*)(o + 0x50f7);
+      unsigned char sel = note->note.frame;
       Hud_RenderSprite((int)data_ov006_0213f730[sel], a1, a2, -1, a4);
     }
     o += 0x14;
@@ -1858,7 +1679,7 @@ void func_ov006_02119bdc(void* scene) {
 extern "C" {
 void func_ov006_02119bc4(void *scene)
 {
-    func_ov004_020b2574(*(unsigned char *)((char *)scene + 0x5000 + 0x626), 1);
+    func_ov004_020b2574(((dScMgSound_c *)scene)->mTries, 1);
 }
 }
 
@@ -1882,29 +1703,21 @@ void func_ov006_02119b00(char *scene)
         return;
     if (self->mSpriteA.frame >= 2)
         return;
-    {
-        u16 *p = (u16 *)(((int)scene + 0x55f0));
-        *p = *p + 1;
-    }
+    (*(u16 *)(int)&self->mSpriteA.timer)++;
     if (self->mSpriteA.timer < data_ov006_0212ee28[self->mSpriteA.frame])
         return;
     self->mSpriteA.timer = 0;
-    {
-        u8 *q = (u8 *)(((int)scene + 0x55f6));
-        *q = *q + 1;
-    }
+    (*(u8 *)(int)&self->mSpriteA.frame)++;
 }
 }
 
 // @symbol func_ov006_02119aa8
 extern "C" {
-void func_ov006_02119aa8(void*scene){
-  char*c=(char*)scene;
-  if(*(unsigned char*)(c+0x5000+0x5f5)==0) return;
-  int x=*(int*)(c+0x5000+0x5e8);
-  int y=*(int*)(c+0x5000+0x5ec);
-  Hud_RenderSprite(data_ov006_02138d28[*(unsigned char*)(c+0x5000+0x5f6)],
-    x>>0xc, y>>0xc, -1, -1);
+void func_ov006_02119aa8(void *scene){
+  dScMgSound_c *self = (dScMgSound_c *)scene;
+  if (self->mSpriteA.visible == 0) return;
+  Hud_RenderSprite(data_ov006_02138d28[self->mSpriteA.frame],
+    self->mSpriteA.x >> 0xc, self->mSpriteA.y >> 0xc, -1, -1);
 }
 }
 
@@ -1926,26 +1739,24 @@ void func_ov006_02119a18(char *scene)
     dScMgSound_c *self = (dScMgSound_c *)scene;
     if (self->mSpriteB.active == 0) return;
     if (self->mSpriteB.frame >= 3) return;
-    *(unsigned short *)A(scene + 0x5600) += 1;
+    (*(u16 *)(int)&self->mSpriteB.timer) += 1;
     if (self->mSpriteB.timer < data_ov006_0212ee38[self->mSpriteB.frame]) return;
     self->mSpriteB.timer = 0;
-    *(unsigned char *)A(scene + 0x5606) += 1;
+    (*(u8 *)(int)&self->mSpriteB.frame) += 1;
 }
 }
 
 // @symbol func_ov006_021199c0
 extern "C" {
-void func_ov006_021199c0(void*scene){
-  char*c=(char*)scene;
-  if(*(unsigned char*)(c+0x5000+0x605)==0) return;
-  int x=*(int*)(c+0x5000+0x5f8);
-  int y=*(int*)(c+0x5000+0x5fc);
-  Hud_RenderSprite(data_ov006_02137ae8[*(unsigned char*)(c+0x5000+0x606)],
-    x>>0xc, y>>0xc, -1, -1);
+void func_ov006_021199c0(void *scene){
+  dScMgSound_c *self = (dScMgSound_c *)scene;
+  if (self->mSpriteB.visible == 0) return;
+  Hud_RenderSprite(data_ov006_02137ae8[self->mSpriteB.frame],
+    self->mSpriteB.x >> 0xc, self->mSpriteB.y >> 0xc, -1, -1);
 }
 }
 
 // @symbol _ZN12dScMgSound_cD1Ev
 // @symbol _ZN12dScMgSound_cD0Ev
 /* Both destructor variants come from the inline body in dScMgSound_c.h.
-   Declared first in the class, it gives D1 below D0, the order ov006 has. */
+   Declared first in the class, so D1 is emitted before D0. */

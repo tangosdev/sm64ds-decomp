@@ -1,34 +1,42 @@
 //cpp
-/* ov062/daRFlag_c. The race flag in Koopa the Quick's course.
+/**
+ * The flag at the end of Koopa the Quick's race.
  *
- * Cartridge names: _ZTS9daRFlag_c at 0x0211dc18, _ZTI9daRFlag_c at 0x0211dc24,
- * vtable address point _ZTV9daRFlag_c at 0x0211dc54. Eight functions,
- * 0x0211af38..0x0211b248. The next object is daJango_c at 0x0211b248.
+ * While armed (mHasTouchedFlag == 0), Mario touching the cylinder stops
+ * the race timer and plays sound 0x1F/0x14. From then mVictoryTimer
+ * counts frames; from frame 90 it retries sound 0x1F/0x7F each frame
+ * until PlaySub accepts it. The model sits 60.0 above the actor.
  *
- * FUNCTION ORDER IS ROM-ASCENDING. defer_codegen off makes CodeWarrior emit
- * each definition where it stands, and the destructor pair comes out D1 then
- * D0 with no enrolled D2.
+ * Source order is ROM-ascending: `#pragma defer_codegen off` makes mwcc
+ * emit each definition where it stands, and the one destructor
+ * definition emits retail D1 then D0 (no D2).
+ *
+ * The name daRFlag_c_classInit is coined from the RTTI class name; the
+ * ROM has no symbol for the factory.
+ *
+ * Leftover: SetAnim and dCcAc_c::Init stay the mangled calls. Spelling
+ *   them as methods changed this function's size (Fix12 by value).
+ * Leftover: `b = (actorID == 0xBF)` has to be an int. A bool does not
+ *   match.
+ * Leftover: func_ov062_0211afbc keeps the linker name. The enrolled
+ *   symbol is that spelling.
  */
 
 #include "daRFlag_c.h"
 #include "decl_common.h"
-#include "decl_Timer.h"
+#include "Timer.h"
 #include "SharedFilePtr.h"
 
 struct BMD_File;
 struct BCA_File;
 
 extern "C" {
-void _ZN5Timer9StopTimerEv(void *);
+
 int _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int, unsigned int, unsigned int, int, int);
 void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *, BCA_File *, int, int, unsigned int);
 void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *, dActor_c *, int, int, unsigned int, unsigned int);
-void *_ZN7fBase_cnwEj(unsigned);
-void _ZN8dActor_cC2Ev(void *);
-void _ZN7dCcAc_cC1Ev(void *);
-void _ZN9ModelAnimC1Ev(void *);
 void Matrix4x3_FromRotationY(void *, int);
-extern char data_0209d4c8[];
+extern Timer data_0209d4c8;
 }
 
 extern SharedFilePtr data_ov062_0211e0d4;
@@ -36,9 +44,6 @@ extern SharedFilePtr data_ov062_0211e0dc;
 
 #pragma defer_codegen off
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinals 0 and 1 -- D1 0x0211af38 size 0x38, D0 0x0211af70 size 0x4c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daRFlag_cD1Ev
 // @symbol _ZN9daRFlag_cD0Ev
 /* Empty body: the vptr store and the member destructors (dCcAc_c at 0xd4,
@@ -48,22 +53,19 @@ daRFlag_c::~daRFlag_c()
 {
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- func_ov062_0211afbc, 0x0211afbc, size 0x44 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov062_0211afbc
-/* Places the model matrix from the body angle and the position. */
-extern "C" void func_ov062_0211afbc(char *t)
+/* Builds the model matrix from the actor's facing and position.
+ * The flag graphic sits 60.0 (0x3c000) above mPosY. Model-matrix
+ * translation is in 1/8 world units, so the position is shifted down by 3. */
+extern "C" void func_ov062_0211afbc(char *raw)
 {
-    Matrix4x3_FromRotationY(t + 0x124, *(short *)(t + 0x8e));
-    *(int *)(t + 0x148) = *(int *)(t + 0x5c) >> 3;
-    *(int *)(t + 0x14c) = (*(int *)(t + 0x60) + 0x3c000) >> 3;
-    *(int *)(t + 0x150) = *(int *)(t + 0x64) >> 3;
+    daRFlag_c *flag = (daRFlag_c *)raw;
+    Matrix4x3_FromRotationY(&flag->mModelAnim.mat4x3, flag->mAngleY);
+    flag->mModelAnim.mat4x3.t.x = flag->mPosX >> 3;
+    flag->mModelAnim.mat4x3.t.y = (flag->mPosY + 0x3c000) >> 3;
+    flag->mModelAnim.mat4x3.t.z = flag->mPosZ >> 3;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- _ZN9daRFlag_c16CleanupResourcesEv, 0x0211b000, size 0x30 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daRFlag_c16CleanupResourcesEv
 int daRFlag_c::CleanupResources()
 {
@@ -72,9 +74,6 @@ int daRFlag_c::CleanupResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- _ZN9daRFlag_c6RenderEv, 0x0211b030, size 0x2c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daRFlag_c6RenderEv
 int daRFlag_c::Render()
 {
@@ -82,9 +81,6 @@ int daRFlag_c::Render()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- _ZN9daRFlag_c8BehaviorEv, 0x0211b05c, size 0x10c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daRFlag_c8BehaviorEv
 int daRFlag_c::Behavior()
 {
@@ -101,7 +97,7 @@ int daRFlag_c::Behavior()
                 b = b == 0xBF;
                 if (b) {
                     mHasTouchedFlag = 1;
-                    _ZN5Timer9StopTimerEv(data_0209d4c8);
+                    data_0209d4c8.StopTimer();
                     mVictoryTimer = 1;
                     _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x1F, 0x14, 0x7F, 0x6B000, 0);
                 }
@@ -110,7 +106,7 @@ int daRFlag_c::Behavior()
     }
 
     if (mVictoryTimer != 0) {
-        *(unsigned short *)(((int)((char *)this) + 0x16C)) += 1;
+        mVictoryTimer += 1;
         if (mVictoryTimer >= 0x5A) {
             if (_ZN5Sound7PlaySubEjjj5Fix12IiEb(0x1F, 0x7F, 0, 0x8777, 0) != 0) {
                 mVictoryTimer = 0;
@@ -125,9 +121,6 @@ int daRFlag_c::Behavior()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- _ZN9daRFlag_c13InitResourcesEv, 0x0211b168, size 0xa0 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daRFlag_c13InitResourcesEv
 /* SetAnim and dCcAc_c::Init are declared with the loose spellings the call
  * sites were matched under. The mangled names pass Fix12 by value. */
@@ -145,18 +138,8 @@ int daRFlag_c::InitResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- daRFlag_c_classInit, 0x0211b208, size 0x40 */
-/* -------------------------------------------------------------------------- */
 // @symbol daRFlag_c_classInit
-extern "C" int *daRFlag_c_classInit(void)
+extern "C" daRFlag_c *daRFlag_c_classInit(void)
 {
-    int *p = (int *)_ZN7fBase_cnwEj(372);
-    if (p) {
-        _ZN8dActor_cC2Ev(p);
-        p[0] = (int)&_ZTV9daRFlag_c[2];
-        _ZN7dCcAc_cC1Ev((char *)p + 0xd4);
-        _ZN9ModelAnimC1Ev((char *)p + 0x108);
-    }
-    return p;
+    return new daRFlag_c();
 }

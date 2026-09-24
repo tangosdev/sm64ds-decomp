@@ -1,10 +1,9 @@
-/* Mirror Luigi's camera-space reflection actor.
+/* daLuigi_c: the mirror-room Luigi reflection actor (ov055).
  *
- * The cartridge's RTTI record names this class `daLuigi_c` and gives it one
- * zero-offset dActor_c base. The repository's configured function symbols use
- * the readable compatibility spelling `MirrorLuigi`; compiler-emitted
- * `_ZTI11MirrorLuigi` / `_ZTS11MirrorLuigi` are therefore isolation-only
- * passengers, not names for the ROM metadata at ov055 0x02111aa4..0x02111abc.
+ * The cartridge's RTTI names this class: _ZTS9daLuigi_c at ov055 0x02111aa4,
+ * _ZTI9daLuigi_c at 0x02111ab0 (one zero-offset dActor_c base), and the
+ * vtable address point _ZTV9daLuigi_c at 0x02111ae0. The tree called it
+ * MirrorLuigi until it was renamed to that ROM name.
  *
  * The 0x20c allocation literal in daLuigi_c_classInit fixes the total size. Its
  * factory constructs the four owned member regions in declaration order and
@@ -23,8 +22,8 @@
  * global g_profile_LUIGI (historical alias MirrorLuigi_SpawnInfo)
  * is its registry descriptor.
  */
-#ifndef MIRRORLUIGI_H
-#define MIRRORLUIGI_H
+#ifndef DALUIGI_C_H
+#define DALUIGI_C_H
 
 #include "dActor_c.h"
 #include "ModelAnim.h"
@@ -33,18 +32,32 @@
 #include "TextureSequence.h"
 #include "math/Matrix.h"
 
-struct MirrorLuigiState;
+/* One reflection state: two callbacks called as members with the player,
+ * `enter` once when the state is set and `execute` every frame from Behavior.
+ * The one table in the ROM (ov055 0x02111a94, copied to 0x02111b70 by the
+ * static initializer) pairs 0x021112bc (enter, returns 1) with 0x02111288
+ * (execute, mirrors the player's position and facing). The callbacks' class is
+ * not recovered; a class without virtuals is what reproduces their calls. */
+struct daLuigiStateHost;
+typedef int (daLuigiStateHost::*daLuigiStateFn)(char *player);
+struct daLuigiState {
+    daLuigiStateFn enter;
+    daLuigiStateFn execute;
+};
 
-struct MirrorLuigi : dActor_c {
+struct daLuigi_c : dActor_c {
     u8 pad_0d0[0x4];
     ModelAnim mModelAnim;                     /* 0x0d4 */
     Model mModel;                             /* 0x138 */
     ShadowModel mShadowModel;                 /* 0x188 */
     TextureSequence mTextureSequences[2];     /* 0x1b0 */
-    MirrorLuigiState *mState;                 /* 0x1d8 */
+    daLuigiState *mState;                     /* 0x1d8 */
     Matrix4x3 mShadowMatrix;                  /* 0x1dc */
 
-    virtual ~MirrorLuigi();                   /* slots 16, 17 */
+    /* Inline and empty: the compiler writes the member teardown, emits D1
+       then D0 in the cartridge's order, and InitResources becomes the key
+       function that places the vtable in src/actors/daLuigi_c.cpp. */
+    virtual ~daLuigi_c() {}                   /* slots 16, 17 */
     virtual s32 InitResources();              /* slot  0 */
     virtual s32 CleanupResources();           /* slot  3 */
     virtual s32 Behavior();                   /* slot  6 */
@@ -54,8 +67,8 @@ struct MirrorLuigi : dActor_c {
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char MirrorLuigi_size_must_be_0x20c[
-    sizeof(MirrorLuigi) == 0x20c ? 1 : -1];
+typedef char daLuigi_c_size_must_be_0x20c[
+    sizeof(daLuigi_c) == 0x20c ? 1 : -1];
 #endif
 
-#endif /* MIRRORLUIGI_H */
+#endif /* DALUIGI_C_H */

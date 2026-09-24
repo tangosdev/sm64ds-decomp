@@ -24436,18 +24436,18 @@
    "start": "0x2112a00",
    "end": "0x2112ef4",
    "classes": [
-    "RockPillar"
+    "daObjKi_Hasira_c"
    ],
    "n_functions_map": 8,
    "n_files": 8,
    "files": [
-    "src/_ZN10RockPillarD1Ev.cpp",
-    "src/_ZN10RockPillarD0Ev.c",
+    "src/_ZN16daObjKi_Hasira_cD1Ev.cpp",
+    "src/_ZN16daObjKi_Hasira_cD0Ev.c",
     "src/func_ov016_02112a9c.c",
-    "src/_ZN10RockPillar16CleanupResourcesEv.cpp",
-    "src/_ZN10RockPillar6RenderEv.cpp",
-    "src/_ZN10RockPillar8BehaviorEv.cpp",
-    "src/_ZN10RockPillar13InitResourcesEv.cpp",
+    "src/_ZN16daObjKi_Hasira_c16CleanupResourcesEv.cpp",
+    "src/_ZN16daObjKi_Hasira_c6RenderEv.cpp",
+    "src/_ZN16daObjKi_Hasira_c8BehaviorEv.cpp",
+    "src/_ZN16daObjKi_Hasira_c13InitResourcesEv.cpp",
     "src/d_a_obj_ki_hasira.c"
    ],
    "ext_mix": {

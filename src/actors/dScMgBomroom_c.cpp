@@ -1,19 +1,22 @@
 //cpp
-/* Bob-omb sorting minigame scene: 41 of its helpers
- * (.text 0x020d5eb8..0x020d7c4c). The rest of the class is not matched yet,
- * so it lives in its own files.
+/* Bob-omb sorting minigame. Each bomb is one of two colors; a stylus
+ * grab carries it by the offset at the touch. Its own pen settles it;
+ * the wrong pen explodes it, which knocks that pen's settled bombs and the
+ * loose ones back into play. When 40 bombs of one color are settled the
+ * round ends, and +0x62f5 records the color.
  *
- * Functions run in ROM order under `#pragma defer_codegen off`; do not
- * reorder.
+ * A bomb is sorted once dropped in its pen: x under 0x40 or over 0xc0, y
+ * between 0x40 and 0x80.
  *
- * The bombs are 0x70 records of 0x40 bytes at 0x4660: x at +0, y at +4, the
- * color (0 or 1) at +0x36 and the state at +0x37. A bomb is sorted once it
- * is dropped in its pen: x under 0x40 or over 0xc0, with y between 0x40 and
- * 0x80.
+ * This TU holds 41 of the class's helpers (.text 0x020d5eb8..0x020d7c4c);
+ * the class's methods live in their own files. Functions run in ROM order
+ * under `#pragma defer_codegen off`; do not reorder. cstd::atan2 takes
+ * Fix12 by value, so its call stays mangled.
  *
- * Blocked: no layout for dScMgBomroom_c is recovered, so every function takes
- * the scene as raw bytes; the helpers and tables are unnamed in symbols.txt;
- * and cstd::atan2 takes Fix12 arguments, so its call stays mangled.
+ * Leftover, measured: a state field (and &state) differs from
+ * (u8 *)(bomb + 0x4697) in func_ov006_020d68a8, and that function's
+ * idle-bomb timer store must stay raw + i*0x40 + 0x4690. &f3c differs
+ * from (unsigned char *)(int)(bomb + 0x469c) in func_ov006_020d7604.
  */
 
 #include "types.h"
@@ -44,6 +47,34 @@ extern void func_ov006_020d5e3c(void *a);
 }
 
 namespace cstd { int sqrt(u64 value); }
+
+/* One bomb: 0x40 bytes at scene + 0x4660. x, y, grabX, grabY and speed are Fix12. */
+struct Bomb {
+    int x;            /* 0x00 */
+    int y;            /* 0x04 */
+    int grabX;        /* 0x08 */
+    int grabY;        /* 0x0c */
+    int speed;        /* 0x10 */
+    char pad14[0x10];
+    int sound;        /* 0x24 */
+    char pad28[4];
+    u16 angle;        /* 0x2c */
+    u16 f2e;          /* 0x2e */
+    u16 f30;          /* 0x30 */
+    s16 f32;          /* 0x32 */
+    u8 type;          /* 0x34 */
+    u8 frame;         /* 0x35 */
+    u8 color;         /* 0x36 */
+    u8 state;         /* 0x37 */
+    u8 f38;           /* 0x38 */
+    u8 f39;           /* 0x39 */
+    u8 f3a;           /* 0x3a */
+    u8 f3b;           /* 0x3b */
+    u8 f3c;           /* 0x3c */
+    u8 f3d;           /* 0x3d */
+    u8 f3e;           /* 0x3e */
+    u8 pad3f[1];
+};
 
 #pragma defer_codegen off
 
@@ -534,21 +565,21 @@ void func_ov006_020d68a8(char *raw, int picked)
     u8 *cur = (u8 *)(((int)(raw + picked * 0x40) + 0x469a));
     for (i = 0; i < 0x70; i++) {
         char *bomb = raw + i * 0x40;
-        if (*(u8 *)(bomb + 0x4698) != 0) {
+        if (((Bomb *)(bomb + 0x4660))->f38 != 0) {
             if (i != picked) {
                 u8 pen = *cur;
                 if (pen == 0) {
                     u8 *state = (u8 *)(bomb + 0x4697);
                     if (*state != 5) {
                         *state = 3;
-                        *(u16 *)(bomb + 0x4690) = 0x20;
+                        ((Bomb *)(bomb + 0x4660))->f30 = 0x20;
                     }
                 } else {
                     u8 *state = (u8 *)(bomb + 0x4697);
                     if (*state == 5) {
-                        if (*(u8 *)(bomb + 0x4696) + 1 == pen) {
+                        if (((Bomb *)(bomb + 0x4660))->color + 1 == pen) {
                             *state = 3;
-                            *(u16 *)(bomb + 0x4690) = 0x20;
+                            ((Bomb *)(bomb + 0x4660))->f30 = 0x20;
                         }
                     }
                     if (*state <= 1) {
@@ -574,10 +605,15 @@ void func_ov006_020d68a8(char *raw, int picked)
  * reaches the per-type frame time, playing its sound effects, and
  * wraps (or holds, for type 3) at the per-type frame count. */
 extern "C" {
+
+struct Scene_69b8 {
+    char pad0[0x2d0];
+    int f2d0;
+};
 struct Bomb_69b8 {
     int f660;
     char pad1[0x20];
-    int f684;
+    int sound;
     char pad2[6];
     unsigned short f68e;
     char pad3[4];
@@ -588,10 +624,6 @@ struct Bomb_69b8 {
     unsigned char f698;
     unsigned char f699;
     char pad4[6];
-};
-struct Scene_69b8 {
-    char pad0[0x2d0];
-    int f2d0;
 };
 #define BOMB (((struct Bomb_69b8 *)(raw + 0x4660))[index])
 #define SCENE ((struct Scene_69b8 *)(raw + 0x6000))
@@ -606,7 +638,7 @@ void func_ov006_020d69b8(char *raw, int index)
     frame = BOMB.f695;
 
     if (type != 3 && type != 0 && SCENE->f2d0 != 3) {
-        BOMB.f684 = func_02012468(BOMB.f684, 2, 0x1db, 4, 0, 0,
+        BOMB.sound = func_02012468(BOMB.sound, 2, 0x1db, 4, 0, 0,
                                func_020126e8(BOMB.f660), 0);
     }
 
@@ -648,29 +680,29 @@ extern "C" {
 void func_ov006_020d6b88(char *raw, int index)
 {
     char *bomb = raw + index * 0x40;
-    u8 color = *(u8*)(bomb + 0x4696);
-    int x = *(int*)(bomb + 0x4660) >> 0xc;
-    int y = *(int*)(bomb + 0x4664) >> 0xc;
+    u8 color = ((Bomb *)(bomb + 0x4660))->color;
+    int x = ((Bomb *)(bomb + 0x4660))->x >> 0xc;
+    int y = ((Bomb *)(bomb + 0x4660))->y >> 0xc;
     if (color != 0) {
         if (x <= 0xc0) return;
         if (y <= 0x40) return;
         if (y >= 0x80) return;
-        *(u8*)(bomb + 0x4697) = 5;
-        *(u8*)(bomb + 0x4694) = 0;
-        *(u8*)(bomb + 0x4695) = 0;
-        *(u16*)(bomb + 0x468e) = 0;
-        *(int*)(bomb + 0x4670) = 0x999;
-        func_02012718((int)0x1dc, *(int*)(bomb + 0x4660));
+        ((Bomb *)(bomb + 0x4660))->state = 5;
+        ((Bomb *)(bomb + 0x4660))->type = 0;
+        ((Bomb *)(bomb + 0x4660))->frame = 0;
+        ((Bomb *)(bomb + 0x4660))->f2e = 0;
+        ((Bomb *)(bomb + 0x4660))->speed = 0x999;
+        func_02012718((int)0x1dc, ((Bomb *)(bomb + 0x4660))->x);
     } else {
         if (x >= 0x40) return;
         if (y <= 0x40) return;
         if (y >= 0x80) return;
-        *(u8*)(bomb + 0x4697) = 5;
-        *(u8*)(bomb + 0x4694) = 0;
-        *(u8*)(bomb + 0x4695) = 0;
-        *(u16*)(bomb + 0x468e) = 0;
-        *(int*)(bomb + 0x4670) = 0x999;
-        func_02012718((int)0x1dc, *(int*)(bomb + 0x4660));
+        ((Bomb *)(bomb + 0x4660))->state = 5;
+        ((Bomb *)(bomb + 0x4660))->type = 0;
+        ((Bomb *)(bomb + 0x4660))->frame = 0;
+        ((Bomb *)(bomb + 0x4660))->f2e = 0;
+        ((Bomb *)(bomb + 0x4660))->speed = 0x999;
+        func_02012718((int)0x1dc, ((Bomb *)(bomb + 0x4660))->x);
     }
 }
 }
@@ -680,9 +712,9 @@ extern "C" {
 void func_ov006_020d6c90(char *raw, int index)
 {
     char *bomb = raw + (index << 6);
-    unsigned char color = *(unsigned char *)(bomb + 0x4696);
-    int x = *(int *)(bomb + 0x4660) >> 12;
-    int y = *(int *)(bomb + 0x4664) >> 12;
+    unsigned char color = ((Bomb *)(bomb + 0x4660))->color;
+    int x = ((Bomb *)(bomb + 0x4660))->x >> 12;
+    int y = ((Bomb *)(bomb + 0x4660))->y >> 12;
 
     if (color != 0) {
         if (x >= 0x40)
@@ -691,13 +723,13 @@ void func_ov006_020d6c90(char *raw, int index)
             return;
         if (y >= 0x80)
             return;
-        *(short *)(bomb + 0x4692) = 0;
-        *(unsigned char *)(bomb + 0x4697) = 4;
-        *(unsigned char *)(bomb + 0x4694) = 3;
-        *(unsigned char *)(bomb + 0x4695) = 0;
-        *(short *)(bomb + 0x468e) = 0;
-        *(unsigned char *)(bomb + 0x469a) = 1;
-        *(unsigned char *)(bomb + 0x469d) = 1;
+        ((Bomb *)(bomb + 0x4660))->f32 = 0;
+        ((Bomb *)(bomb + 0x4660))->state = 4;
+        ((Bomb *)(bomb + 0x4660))->type = 3;
+        ((Bomb *)(bomb + 0x4660))->frame = 0;
+        ((Bomb *)(bomb + 0x4660))->f2e = 0;
+        ((Bomb *)(bomb + 0x4660))->f3a = 1;
+        ((Bomb *)(bomb + 0x4660))->f3d = 1;
         func_ov006_020d68a8(raw, index);
     } else {
         if (x <= 0xc0)
@@ -706,13 +738,13 @@ void func_ov006_020d6c90(char *raw, int index)
             return;
         if (y >= 0x80)
             return;
-        *(short *)(bomb + 0x4692) = 0;
-        *(unsigned char *)(bomb + 0x4697) = 4;
-        *(unsigned char *)(bomb + 0x4694) = 3;
-        *(unsigned char *)(bomb + 0x4695) = 0;
-        *(short *)(bomb + 0x468e) = 0;
-        *(unsigned char *)(bomb + 0x469a) = 2;
-        *(unsigned char *)(bomb + 0x469d) = 1;
+        ((Bomb *)(bomb + 0x4660))->f32 = 0;
+        ((Bomb *)(bomb + 0x4660))->state = 4;
+        ((Bomb *)(bomb + 0x4660))->type = 3;
+        ((Bomb *)(bomb + 0x4660))->frame = 0;
+        ((Bomb *)(bomb + 0x4660))->f2e = 0;
+        ((Bomb *)(bomb + 0x4660))->f3a = 2;
+        ((Bomb *)(bomb + 0x4660))->f3d = 1;
         func_ov006_020d68a8(raw, index);
     }
 }
@@ -720,8 +752,8 @@ void func_ov006_020d6c90(char *raw, int index)
 
 // @symbol func_ov006_020d6d7c
 /* Picks up a bomb under the stylus: a touch within 12 units across and 15
- * down of it, while nothing is held (0x62f6 is 0xff). The grab offset goes
- * to +0x8 and +0xc. */
+ * down of it, while nothing is held (0x62f6 is 0xff). grabX/grabY keep the
+ * stylus-minus-bomb offset. */
 #pragma push
 #pragma opt_propagation off
 extern "C" {
@@ -741,19 +773,19 @@ void func_ov006_020d6d7c(char *raw, int index) {
     if (touching == 0) return;
     if (*(u8*)(raw + 0x62f6) != 0xff) return;
     bomb = raw + index * 0x40;
-    dx = data_020a0de8[touch].f2 - (*(int*)(bomb + 0x4660) >> 0xc);
-    dy = data_020a0de8[touch].f3 - (*(int*)(bomb + 0x4664) >> 0xc);
+    dx = data_020a0de8[touch].f2 - (((Bomb *)(bomb + 0x4660))->x >> 0xc);
+    dy = data_020a0de8[touch].f3 - (((Bomb *)(bomb + 0x4660))->y >> 0xc);
     if (dx > 0xc) return;
     if (dx < -0xc) return;
     if (dy > 0xf) return;
     if (dy < -0xf) return;
-    *(u8*)(raw + 0x62f6) = *(u8*)(bomb + 0x4696);
-    *(u8*)(bomb + 0x4694) = 1;
-    *(u8*)(bomb + 0x4697) = 2;
-    *(int*)(bomb + 0x4668) = dx << 0xc;
-    *(int*)(bomb + 0x466c) = dy << 0xc;
-    *(u8*)(bomb + 0x469e) = 0;
-    func_02012718((int)0x1d2, *(int*)(bomb + 0x4660));
+    *(u8*)(raw + 0x62f6) = ((Bomb *)(bomb + 0x4660))->color;
+    ((Bomb *)(bomb + 0x4660))->type = 1;
+    ((Bomb *)(bomb + 0x4660))->state = 2;
+    ((Bomb *)(bomb + 0x4660))->grabX = dx << 0xc;
+    ((Bomb *)(bomb + 0x4660))->grabY = dy << 0xc;
+    ((Bomb *)(bomb + 0x4660))->f3e = 0;
+    func_02012718((int)0x1d2, ((Bomb *)(bomb + 0x4660))->x);
 }
 }
 #pragma pop
@@ -766,57 +798,57 @@ void func_ov006_020d6e8c(char* raw, int index)
 {
     int x, y, py, dx, dy1, ang, i2, a, dy2, sy, px;
 
-    x = *(int*)(raw + (index << 6) + 0x4660) >> 12;
-    y = *(int*)(raw + (index << 6) + 0x4664) >> 12;
+    x = ((Bomb *)(raw + 0x4660 + (index<<6)))->x >> 12;
+    y = ((Bomb *)(raw + 0x4660 + (index<<6)))->y >> 12;
 
     if (x + 12 > 0x100) {
-        *(u16*)(raw + (index << 6) + 0x468c) = 0x8000 - *(u16*)(raw + (index << 6) + 0x468c);
-        *(int*)(raw + (index << 6) + 0x4660) = 0xF4000;
+        ((Bomb *)(raw + 0x4660 + (index<<6)))->angle = 0x8000 - ((Bomb *)(raw + 0x4660 + (index<<6)))->angle;
+        ((Bomb *)(raw + 0x4660 + (index<<6)))->x = 0xF4000;
     } else if (x - 12 < 0) {
-        *(u16*)(raw + (index << 6) + 0x468c) = 0x8000 - *(u16*)(raw + (index << 6) + 0x468c);
-        *(int*)(raw + (index << 6) + 0x4660) = 0xC000;
+        ((Bomb *)(raw + 0x4660 + (index<<6)))->angle = 0x8000 - ((Bomb *)(raw + 0x4660 + (index<<6)))->angle;
+        ((Bomb *)(raw + 0x4660 + (index<<6)))->x = 0xC000;
     }
 
     if (y + 12 > 0xB8) {
-        *(u16*)(raw + (index << 6) + 0x468c) = 0 - *(u16*)(raw + (index << 6) + 0x468c);
-        *(int*)(raw + (index << 6) + 0x4664) = 0xAC000;
+        ((Bomb *)(raw + 0x4660 + (index<<6)))->angle = 0 - ((Bomb *)(raw + 0x4660 + (index<<6)))->angle;
+        ((Bomb *)(raw + 0x4660 + (index<<6)))->y = 0xAC000;
     } else if (y - 12 < 0) {
-        *(u16*)(raw + (index << 6) + 0x468c) = 0 - *(u16*)(raw + (index << 6) + 0x468c);
-        *(int*)(raw + (index << 6) + 0x4664) = 0xC000;
+        ((Bomb *)(raw + 0x4660 + (index<<6)))->angle = 0 - ((Bomb *)(raw + 0x4660 + (index<<6)))->angle;
+        ((Bomb *)(raw + 0x4660 + (index<<6)))->y = 0xC000;
     }
 
-    px = *(int*)(raw + (index << 6) + 0x4660) >> 12;
-    py = *(int*)(raw + (index << 6) + 0x4664) >> 12;
+    px = ((Bomb *)(raw + 0x4660 + (index<<6)))->x >> 12;
+    py = ((Bomb *)(raw + 0x4660 + (index<<6)))->y >> 12;
 
     if (px + 12 > 0xC0 && py + 12 > 0x40 && py - 12 < 0x80) {
         dx = px - 0xC0;
         dy1 = py - 0x40;
         dy2 = 0x80 - py;
         if (px <= 0xC0 && py >= 0x40 && py <= 0x80) {
-            *(u16*)(raw + (index << 6) + 0x468c) = 0x8000 - *(u16*)(raw + (index << 6) + 0x468c);
-            *(int*)(raw + (index << 6) + 0x4660) = 0xB4000;
+            ((Bomb *)(raw + 0x4660 + (index<<6)))->angle = 0x8000 - ((Bomb *)(raw + 0x4660 + (index<<6)))->angle;
+            ((Bomb *)(raw + 0x4660 + (index<<6)))->x = 0xB4000;
         } else if (px > 0xC0 && py < 0x40) {
-            *(u16*)(raw + (index << 6) + 0x468c) = 0 - *(u16*)(raw + (index << 6) + 0x468c);
-            *(int*)(raw + (index << 6) + 0x4664) = 0x34000;
+            ((Bomb *)(raw + 0x4660 + (index<<6)))->angle = 0 - ((Bomb *)(raw + 0x4660 + (index<<6)))->angle;
+            ((Bomb *)(raw + 0x4660 + (index<<6)))->y = 0x34000;
         } else if (px > 0xC0 && py > 0x80) {
-            *(u16*)(raw + (index << 6) + 0x468c) = 0 - *(u16*)(raw + (index << 6) + 0x468c);
-            *(int*)(raw + (index << 6) + 0x4664) = 0x8C000;
+            ((Bomb *)(raw + 0x4660 + (index<<6)))->angle = 0 - ((Bomb *)(raw + 0x4660 + (index<<6)))->angle;
+            ((Bomb *)(raw + 0x4660 + (index<<6)))->y = 0x8C000;
         } else if (px > 0xC0 && py > 0x40 && py < 0x80) {
             if (dy1 < dy2) {
                 if (dx < dy1) {
-                    *(u16*)(raw + (index << 6) + 0x468c) = 0x8000 - *(u16*)(raw + (index << 6) + 0x468c);
-                    *(int*)(raw + (index << 6) + 0x4660) = 0xB4000;
+                    ((Bomb *)(raw + 0x4660 + (index<<6)))->angle = 0x8000 - ((Bomb *)(raw + 0x4660 + (index<<6)))->angle;
+                    ((Bomb *)(raw + 0x4660 + (index<<6)))->x = 0xB4000;
                 } else {
-                    *(u16*)(raw + (index << 6) + 0x468c) = 0 - *(u16*)(raw + (index << 6) + 0x468c);
-                    *(int*)(raw + (index << 6) + 0x4664) = 0x34000;
+                    ((Bomb *)(raw + 0x4660 + (index<<6)))->angle = 0 - ((Bomb *)(raw + 0x4660 + (index<<6)))->angle;
+                    ((Bomb *)(raw + 0x4660 + (index<<6)))->y = 0x34000;
                 }
             } else {
                 if (dx < dy2) {
-                    *(u16*)(raw + (index << 6) + 0x468c) = 0x8000 - *(u16*)(raw + (index << 6) + 0x468c);
-                    *(int*)(raw + (index << 6) + 0x4660) = 0xB4000;
+                    ((Bomb *)(raw + 0x4660 + (index<<6)))->angle = 0x8000 - ((Bomb *)(raw + 0x4660 + (index<<6)))->angle;
+                    ((Bomb *)(raw + 0x4660 + (index<<6)))->x = 0xB4000;
                 } else {
-                    *(u16*)(raw + (index << 6) + 0x468c) = 0 - *(u16*)(raw + (index << 6) + 0x468c);
-                    *(int*)(raw + (index << 6) + 0x4664) = 0x8C000;
+                    ((Bomb *)(raw + 0x4660 + (index<<6)))->angle = 0 - ((Bomb *)(raw + 0x4660 + (index<<6)))->angle;
+                    ((Bomb *)(raw + 0x4660 + (index<<6)))->y = 0x8C000;
                 }
             }
         } else {
@@ -829,20 +861,20 @@ void func_ov006_020d6e8c(char* raw, int index)
             cstd::sqrt((s64)(sy * sy + dy2 * dy2));
             ang = (u16)_ZN4cstd5atan2E5Fix12IiES1_(dy2, sy);
             i2 = (ang >> 4) * 2;
-            *(int*)(raw + (index << 6) + 0x4660) =
+            ((Bomb *)(raw + 0x4660 + (index<<6)))->x =
                 (0xC0 - (int)(((s64)data_02082214[i2 + 1] * 0xF + 0x800) >> 12)) << 12;
             if (py >= 0x60) {
-                *(int*)(raw + (index << 6) + 0x4664) =
+                ((Bomb *)(raw + 0x4660 + (index<<6)))->y =
                     (0x80 - (int)(((s64)data_02082214[i2] * 0xF + 0x800) >> 12)) << 12;
             } else {
-                *(int*)(raw + (index << 6) + 0x4664) =
+                ((Bomb *)(raw + 0x4660 + (index<<6)))->y =
                     (0x40 - (int)(((s64)data_02082214[i2] * 0xF + 0x800) >> 12)) << 12;
             }
-            a = *(u16*)(raw + (index << 6) + 0x468c);
+            a = ((Bomb *)(raw + 0x4660 + (index<<6)))->angle;
             if (data_02082214[(a >> 4) * 2 + 1] > 0) {
-                *(u16*)(raw + (index << 6) + 0x468c) = 0x8000 - a;
+                ((Bomb *)(raw + 0x4660 + (index<<6)))->angle = 0x8000 - a;
             } else {
-                *(u16*)(raw + (index << 6) + 0x468c) = 0 - a;
+                ((Bomb *)(raw + 0x4660 + (index<<6)))->angle = 0 - a;
             }
         }
     }
@@ -855,38 +887,38 @@ void func_ov006_020d6e8c(char* raw, int index)
     dy1 = py - 0x40;
     sy = 0x80 - py;
     if (px >= 0x40 && py >= 0x40 && py <= 0x80) {
-        *(u16*)(raw + (index << 6) + 0x468c) = 0x8000 - *(u16*)(raw + (index << 6) + 0x468c);
-        *(int*)(raw + (index << 6) + 0x4660) = 0x4C000;
+        ((Bomb *)(raw + 0x4660 + (index<<6)))->angle = 0x8000 - ((Bomb *)(raw + 0x4660 + (index<<6)))->angle;
+        ((Bomb *)(raw + 0x4660 + (index<<6)))->x = 0x4C000;
         return;
     }
     if (px < 0x40 && py < 0x40) {
-        *(u16*)(raw + (index << 6) + 0x468c) = 0 - *(u16*)(raw + (index << 6) + 0x468c);
-        *(int*)(raw + (index << 6) + 0x4664) = 0x34000;
+        ((Bomb *)(raw + 0x4660 + (index<<6)))->angle = 0 - ((Bomb *)(raw + 0x4660 + (index<<6)))->angle;
+        ((Bomb *)(raw + 0x4660 + (index<<6)))->y = 0x34000;
         return;
     }
     if (px < 0x40 && py > 0x80) {
-        *(u16*)(raw + (index << 6) + 0x468c) = 0 - *(u16*)(raw + (index << 6) + 0x468c);
-        *(int*)(raw + (index << 6) + 0x4664) = 0x8C000;
+        ((Bomb *)(raw + 0x4660 + (index<<6)))->angle = 0 - ((Bomb *)(raw + 0x4660 + (index<<6)))->angle;
+        ((Bomb *)(raw + 0x4660 + (index<<6)))->y = 0x8C000;
         return;
     }
     if (px < 0x40 && py > 0x40 && py < 0x80) {
         if (dy1 < sy) {
             if (dy2 < dy1) {
-                *(u16*)(raw + (index << 6) + 0x468c) = 0x8000 - *(u16*)(raw + (index << 6) + 0x468c);
-                *(int*)(raw + (index << 6) + 0x4660) = 0x4C000;
+                ((Bomb *)(raw + 0x4660 + (index<<6)))->angle = 0x8000 - ((Bomb *)(raw + 0x4660 + (index<<6)))->angle;
+                ((Bomb *)(raw + 0x4660 + (index<<6)))->x = 0x4C000;
                 return;
             }
-            *(u16*)(raw + (index << 6) + 0x468c) = 0 - *(u16*)(raw + (index << 6) + 0x468c);
-            *(int*)(raw + (index << 6) + 0x4664) = 0x34000;
+            ((Bomb *)(raw + 0x4660 + (index<<6)))->angle = 0 - ((Bomb *)(raw + 0x4660 + (index<<6)))->angle;
+            ((Bomb *)(raw + 0x4660 + (index<<6)))->y = 0x34000;
             return;
         }
         if (dy2 < sy) {
-            *(u16*)(raw + (index << 6) + 0x468c) = 0x8000 - *(u16*)(raw + (index << 6) + 0x468c);
-            *(int*)(raw + (index << 6) + 0x4660) = 0x4C000;
+            ((Bomb *)(raw + 0x4660 + (index<<6)))->angle = 0x8000 - ((Bomb *)(raw + 0x4660 + (index<<6)))->angle;
+            ((Bomb *)(raw + 0x4660 + (index<<6)))->x = 0x4C000;
             return;
         }
-        *(u16*)(raw + (index << 6) + 0x468c) = 0 - *(u16*)(raw + (index << 6) + 0x468c);
-        *(int*)(raw + (index << 6) + 0x4664) = 0x8C000;
+        ((Bomb *)(raw + 0x4660 + (index<<6)))->angle = 0 - ((Bomb *)(raw + 0x4660 + (index<<6)))->angle;
+        ((Bomb *)(raw + 0x4660 + (index<<6)))->y = 0x8C000;
         return;
     }
 
@@ -896,20 +928,20 @@ void func_ov006_020d6e8c(char* raw, int index)
     cstd::sqrt((s64)(dy2 * dy2 + sy * sy));
     ang = (u16)_ZN4cstd5atan2E5Fix12IiES1_(sy, dy2);
     i2 = (ang >> 4) * 2;
-    *(int*)(raw + (index << 6) + 0x4660) =
+    ((Bomb *)(raw + 0x4660 + (index<<6)))->x =
         (0x40 - (int)(((s64)data_02082214[i2 + 1] * 0xF + 0x800) >> 12)) << 12;
     if (py >= 0x60) {
-        *(int*)(raw + (index << 6) + 0x4664) =
+        ((Bomb *)(raw + 0x4660 + (index<<6)))->y =
             (0x80 - (int)(((s64)data_02082214[i2] * 0xF + 0x800) >> 12)) << 12;
     } else {
-        *(int*)(raw + (index << 6) + 0x4664) =
+        ((Bomb *)(raw + 0x4660 + (index<<6)))->y =
             (0x40 - (int)(((s64)data_02082214[i2] * 0xF + 0x800) >> 12)) << 12;
     }
-    a = *(u16*)(raw + (index << 6) + 0x468c);
+    a = ((Bomb *)(raw + 0x4660 + (index<<6)))->angle;
     if (data_02082214[(a >> 4) * 2 + 1] < 0) {
-        *(u16*)(raw + (index << 6) + 0x468c) = 0x8000 - a;
+        ((Bomb *)(raw + 0x4660 + (index<<6)))->angle = 0x8000 - a;
     } else {
-        *(u16*)(raw + (index << 6) + 0x468c) = 0 - a;
+        ((Bomb *)(raw + 0x4660 + (index<<6)))->angle = 0 - a;
     }
 }
 }
@@ -973,7 +1005,7 @@ void func_ov006_020d7604(void *raw)
                     bomb[0x469b] = 3;
                     v = ca;
                     q = 0;
-                    *(unsigned short *)(bomb + 0x4690) = (unsigned short)(cc * 8);
+                    ((Bomb *)(bomb + 0x4660))->f30 = (unsigned short)(cc * 8);
                     while (v >= 5) { v -= 5; q++; }
                     ((unsigned char *)(int)(bytes + i * 64))[0x469c] = (unsigned char)(q * 10 + v);
                     ca++;
@@ -985,7 +1017,7 @@ void func_ov006_020d7604(void *raw)
                     *d = (unsigned char)cb;
                     bomb[0x469b] = 3;
                     v = cb;
-                    *(unsigned short *)(bomb + 0x4690) = (unsigned short)(cc * 8);
+                    ((Bomb *)(bomb + 0x4660))->f30 = (unsigned short)(cc * 8);
                     q = 0;
                     while (v >= 5) { v -= 5; q++; }
                     *d = (unsigned char)(q * 10 + v + 5);
@@ -995,13 +1027,13 @@ void func_ov006_020d7604(void *raw)
             } else if (bytes[0x62f8] != 0) {
                 bomb[0x469c] = (unsigned char)cc;
                 bomb[0x469b] = 3;
-                *(unsigned short *)(bomb + 0x4690) = (unsigned short)(cc * 8);
+                ((Bomb *)(bomb + 0x4660))->f30 = (unsigned short)(cc * 8);
                 cc++;
             } else {
                 if (bytes[0x62f5] == bomb[0x4696] && bomb[0x4697] == 6) {
                     bomb[0x469c] = (unsigned char)cc;
                     bomb[0x469b] = 3;
-                    *(unsigned short *)(bomb + 0x4690) = (unsigned short)(cc * 8);
+                    ((Bomb *)(bomb + 0x4660))->f30 = (unsigned short)(cc * 8);
                     cc++;
                 }
             }
@@ -1041,30 +1073,30 @@ void func_ov006_020d777c(char *raw, int index)
         off = row * 20;
         targetX = slot * 16 + 0x38;
         targetY = off - 0xC0;
-        curX = *(int*)(raw + (index << 6) + 0x4660) >> 12;
-        curY = *(int*)(raw + (index << 6) + 0x4664) >> 12;
+        curX = ((Bomb *)(raw + 0x4660 + (index<<6)))->x >> 12;
+        curY = ((Bomb *)(raw + 0x4660 + (index<<6)))->y >> 12;
         if (targetX == curX && targetY == curY) {
             *(u8*)(raw + (index << 6) + 0x469b) = 4;
             if (*(u8*)(raw + (index << 6) + 0x4696) != 0)
-                func_02012718((int)0x1d9, *(int*)(raw + (index << 6) + 0x4660));
+                func_02012718((int)0x1d9, ((Bomb *)(raw + 0x4660 + (index<<6)))->x);
             else
-                func_02012718((int)0x1da, *(int*)(raw + (index << 6) + 0x4660));
+                func_02012718((int)0x1da, ((Bomb *)(raw + 0x4660 + (index<<6)))->x);
             return;
         }
         if (targetY != curY) {
-            *(int*)(raw + 0x4664 + (index << 6)) += *(int*)(raw + (index << 6) + 0x4670);
-            if ((*(int*)(raw + (index << 6) + 0x4664) >> 12) >= targetY)
-                *(int*)(raw + (index << 6) + 0x4664) = targetY << 12;
+            *(int*)(raw + 0x4664 + (index << 6)) += ((Bomb *)(raw + 0x4660 + (index << 6)))->speed;
+            if ((((Bomb *)(raw + 0x4660 + (index<<6)))->y >> 12) >= targetY)
+                ((Bomb *)(raw + 0x4660 + (index<<6)))->y = targetY << 12;
             return;
         }
         if (targetX > curX) {
-            *(int*)(raw + 0x4660 + (index << 6)) += *(int*)(raw + (index << 6) + 0x4670);
-            if (targetX <= (*(int*)(raw + (index << 6) + 0x4660) >> 12))
-                *(int*)(raw + (index << 6) + 0x4660) = targetX << 12;
+            *(int*)(raw + 0x4660 + (index << 6)) += ((Bomb *)(raw + 0x4660 + (index << 6)))->speed;
+            if (targetX <= (((Bomb *)(raw + 0x4660 + (index<<6)))->x >> 12))
+                ((Bomb *)(raw + 0x4660 + (index<<6)))->x = targetX << 12;
         } else if (targetX < curX) {
-            *(int*)(raw + 0x4660 + (index << 6)) -= *(int*)(raw + (index << 6) + 0x4670);
+            *(int*)(raw + 0x4660 + (index << 6)) -= ((Bomb *)(raw + 0x4660 + (index << 6)))->speed;
             if (targetX >= curX)
-                *(int*)(raw + (index << 6) + 0x4660) = targetX << 12;
+                ((Bomb *)(raw + 0x4660 + (index<<6)))->x = targetX << 12;
         }
     }
 }
@@ -1089,12 +1121,12 @@ void func_ov006_020d795c(char *raw, int index)
     {
         s16 sine = data_02082214[((*(u16 *)(raw + index * 0x40 + 0x468c)) >> 4) * 2 + 1];
         *(int *)((char *)(raw + 0x4660) + index * 0x40) +=
-            (int)(((s64)sine * *(int *)(raw + index * 0x40 + 0x4670) + 0x800) >> 12);
+            (int)(((s64)sine * ((Bomb *)(raw + 0x4660 + index * 0x40))->speed + 0x800) >> 12);
     }
     {
         s16 sine = data_02082214[((*(u16 *)(raw + index * 0x40 + 0x468c)) >> 4) * 2];
         *(int *)((char *)(raw + 0x4664) + index * 0x40) +=
-            (int)(((s64)sine * *(int *)(raw + index * 0x40 + 0x4670) + 0x800) >> 12);
+            (int)(((s64)sine * ((Bomb *)(raw + 0x4660 + index * 0x40))->speed + 0x800) >> 12);
     }
     color = *(u8 *)(raw + index * 0x40 + 0x4696);
     x = *(int *)(raw + index * 0x40 + 0x4660) >> 12;
@@ -1140,7 +1172,7 @@ void func_ov006_020d7a84(char *raw, int index)
         *(int *)((char *)(raw + 0x4660) +
                   index * 0x40) +=
             (int)(((s64)sine *
-                   *(int *)(raw + index * 0x40 + 0x4670) + 0x800) >> 12);
+                   ((Bomb *)(raw + 0x4660 + index * 0x40))->speed + 0x800) >> 12);
     }
 
     {
@@ -1150,7 +1182,7 @@ void func_ov006_020d7a84(char *raw, int index)
         *(int *)((char *)(raw + 0x4664) +
                   index * 0x40) +=
             (int)(((s64)sine *
-                   *(int *)(raw + index * 0x40 + 0x4670) + 0x800) >> 12);
+                   ((Bomb *)(raw + 0x4660 + index * 0x40))->speed + 0x800) >> 12);
     }
 
     color = *(u8 *)(raw + index * 0x40 + 0x4696);
@@ -1191,7 +1223,7 @@ struct C_7c00 {};
 extern "C" Entry_7c00 data_ov006_02141708[];
 extern "C" void func_ov006_020d7c00(C_7c00* scene, int index){
   Elem_7c00* bomb = (Elem_7c00*)scene + index;
-  unsigned char state = *((unsigned char*)bomb + 0x469b);
+  unsigned char state = ((Bomb *)((char *)bomb + 0x4660))->f3b;
   (scene->*(data_ov006_02141708[state].pmf))(index);
 }
 }

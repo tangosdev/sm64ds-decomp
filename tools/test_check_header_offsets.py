@@ -775,6 +775,15 @@ struct Widget {
 QUALIFIED_BROKEN = QUALIFIED_GOOD.replace("/* 0x00c */", "/* 0x040 */")
 
 
+# A member whose type is written with its namespace, asserted only under that name.
+NAMESPACED_GOOD = """struct Widget {
+	u32 first;                         /* 0x000 */
+	Particle::SysTracker mSysTracker;  /* 0x004 */
+	u32 last;                          /* 0x014 */
+};
+"""
+
+
 class QualifiedSizeAssertTests(unittest.TestCase):
     def test_a_qualified_assertion_is_read_where_the_bare_tag_cannot_answer(self):
         with Repo() as r:
@@ -857,6 +866,28 @@ class QualifiedSizeAssertTests(unittest.TestCase):
         self.assertNotIn("include/dMgPsOpt_c.h", C._known_issues(),
                          "the waiver is back; this test guards its retirement")
         self.assertEqual(C.main(["include/dMgPsOpt_c.h"], REPO), 0)
+
+    def test_a_member_spelled_with_its_namespace_is_sized_by_that_name(self):
+        """`Particle::SysTracker mSysTracker;` names its class outright. The walk
+        strips the member type to its last component, SysTracker, and no bare tag of
+        that name is asserted, so the field came back UNPARSED in every header that
+        embeds one. The sizeof() operand of a qualified assertion is keyed by the same
+        spelling the member uses."""
+        with Repo() as r:
+            r.write("include/Widget.h", NAMESPACED_GOOD)
+            with unittest.mock.patch.dict(C.CLASS_SIZES_QUALIFIED, {}, clear=True):
+                self.assertEqual(r.run("include/Widget.h"), 1,
+                                 "precondition: the bare-tag lookup could not size this")
+            with unittest.mock.patch.dict(C.CLASS_SIZES_QUALIFIED,
+                                          {"Particle::SysTracker": 0x10}, clear=True):
+                self.assertEqual(r.run("include/Widget.h"), 0)
+
+    def test_a_wrong_comment_after_a_namespaced_member_is_still_caught(self):
+        with Repo() as r:
+            r.write("include/Widget.h", NAMESPACED_GOOD.replace("/* 0x014 */", "/* 0x018 */"))
+            with unittest.mock.patch.dict(C.CLASS_SIZES_QUALIFIED,
+                                          {"Particle::SysTracker": 0x10}, clear=True):
+                self.assertEqual(r.run("include/Widget.h"), 1)
 
 
 # ---------------------------------- defect 5: Allman inline member-function bodies

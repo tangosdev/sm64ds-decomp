@@ -33,56 +33,40 @@
  * _ZTS10Scuttlebug and _ZTI10Scuttlebug with no home in the ROM.  That is
  * survivable on the text-only route and fatal to an intact-object one. */
 struct Scuttlebug : dActor_c {
-    /* PROVEN LIVE, not padding: InitResources writes it whole
-       (`str r0,[r4,#0xd0]` at 0x02120528) and two more functions of the run read
-       and write it.  A word slot only ever moved whole, so the signedness is not
-       observable and the name is a placeholder. */
-    u32 unk_0d0;                             /* 0x0d0 */
+    /* Actor this bug copies its pose from, then clears when it lets go. */
+    dActor_c *mParent;                       /* 0x0d0 */
     ModelAnim mModelAnim;                    /* 0x0d4 */
     ShadowModel mShadowModel;                /* 0x138 */
     dCcAc_c mdCcAc_c;  /* 0x160 */
     dBgCh_Actr mWithMeshClsn;              /* 0x194 */
-    /* NOT dead space -- thirteen live offsets sit inside this run and are still
-       reached by raw this-relative arithmetic from the unconverted members:
-       0x350 and 0x390 and 0x3a0 have their addresses taken, 0x380 holds the
-       pointer into the nine-entry state table at ov071:0x02122fa8 that
-       Scuttlebug_SetState writes and both dispatch thunks read back, and 0x39c
-       is the hottest own word in the class after it (eleven functions).  Kept as
-       one pad until the members that use them are named, because splitting it
-       would invite a field-address CSE that moves bytes. */
-    u8  pad_350[0x58];
-    /* Counted down once per frame at the top of Behavior, which passes &mTimer to
-       DecIfAbove0_Short -- a short* helper, so the slot is a HALFWORD and not the
-       u8 the generated header typed it.  Behavior discards the result, so what
-       expiring means is up to a state handler nobody has read.
-       [_ZN10Scuttlebug8BehaviorEv.cpp] */
-    s16 mTimer;                             /* 0x3a8 */
-    /* Its own live byte, not the first of mTimer's padding: func_ov071_0211f498
-       reads and writes it, InitResources writes it (`strb r2,[r4,#0x3aa]` at
-       0x02120500) and OnTurnIntoEgg reads it twice and writes it once. */
-    u8  unk_3aa;                            /* 0x3aa */
+    /* Drop-shadow matrix, flat words. A Matrix4x3 member would run ~Vector3
+       from ~Scuttlebug, and the structured spelling breaks the store. */
+    s32 mShadowMtx[12];                      /* 0x350 */
+    /* Current row of data_ov071_02122fa8. Two pointer-to-member calls. */
+    void *mStateRow;                         /* 0x380 */
+    s32 mHomeX;                              /* 0x384 */
+    s32 mHomeY;                              /* 0x388 */
+    s32 mHomeZ;                              /* 0x38c */
+    /* Where the bug walks back to. Refreshed from mPos when it lands. */
+    s32 mAnchorX;                            /* 0x390 */
+    s32 mAnchorY;                            /* 0x394 */
+    s32 mAnchorZ;                            /* 0x398 */
+    s32 mState;                              /* 0x39c */
+    /* Leap range: set from the distance to the player, then counted down. */
+    s32 mLeapDist;                           /* 0x3a0 */
+    s16 mLeapAngle;                          /* 0x3a4 */
+    s16 mHomeAngleY;                         /* 0x3a6 */
+    /* Counted down once per frame. Every read in this file is an unsigned halfword. */
+    u16 mTimer;                              /* 0x3a8 */
+    /* Coins paid by OnTurnIntoEgg and by the death poof. Init writes 3. */
+    u8  mCoinCount;                          /* 0x3aa */
     u8  pad_3ab[0x1];
 
-    /* DECLARED AND NOT DEFINED, and declared ahead of every other virtual, so
-       ~Scuttlebug is the KEY FUNCTION. src/_ZN10ScuttlebugD1Ev.cpp defines it,
-       and therefore owns _ZTV10Scuttlebug, _ZTI10Scuttlebug and
-       _ZTS10Scuttlebug; no other translation unit including this header emits
-       any of the three.
-
-       THIS IS THE LEVER, and it is measured. An inline body here
-       (`virtual ~Scuttlebug() {}`) gives the vtable and the RTTI vague linkage,
-       so they come out of EVERY odr-using TU regardless of declaration
-       position. That is what left the consolidated TU in src_tu/ holding two
-       homeless data symbols: the cartridge spells this class daSpd_c, so the
-       _ZTI10Scuttlebug and _ZTS10Scuttlebug an inline body forces have no
-       address anywhere in the ROM and no disposition accepts them. With the
-       body removed, that same TU emits zero data symbols. This is the
-       arrangement include/Goomboss.h and include/Eyerok.h already use -- the
-       two other coined classes whose vtable is aliased and whose _ZTS/_ZTI are
-       not -- and both of those are promoted.
-
-       The cartridge orders the pair D1 (0x0211f000) then D0 (0x0211f048) with
-       no D2 anywhere in ov071, and the shard reproduces both byte for byte. */
+    /* Declared, not defined: ~Scuttlebug is the key function. ROM has D1
+       0x0211f000, D0 0x0211f048, no D2. src/_ZN10ScuttlebugD1Ev.cpp defines
+       it; objisolate keeps its .text and drops the homeless _ZTI/_ZTS10Scuttlebug.
+       An inline body would give those vague linkage in every TU. This TU's
+       licensed run is 0x0211f0a4..0x02120668. */
     virtual ~Scuttlebug();            /* slots 16 (D1), 17 (D0) */
 
     virtual int   OnYoshiTryEat();               /* slot 18 */
