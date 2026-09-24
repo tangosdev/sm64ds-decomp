@@ -2,7 +2,8 @@
 #include "types.h"
 typedef struct { s32 x, y, z; } Vec3;
 
-extern void* _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e, const void* f);
+struct Vector3_16f;
+extern u32 _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e, const struct Vector3_16f* f);
 extern void* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e, const void* f, void* g);
 extern void Vec3_Asr(Vec3* d, Vec3* s, int sh);
 extern void Matrix4x3_FromTranslation(Matrix4x3* m, s32 x, s32 y, s32 z);
@@ -29,7 +30,7 @@ void func_ov002_020f8b24(void* arg0)
     }
     v.y = v.y + data_ov002_02100320[*(u8*)(c + 0x36d)];
 
-    *(void**)(c + 0x370) = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
+    *(u32*)(c + 0x370) = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
         *(u32*)(c + 0x370), data_ov002_02100334[*(u8*)(c + 0x36d)], v.x, v.y, v.z, 0);
 
     *(void**)(c + 0x374) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(

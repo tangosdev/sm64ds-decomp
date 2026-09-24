@@ -1,73 +1,81 @@
 //cpp
 /**
- * Question / item / VS-item / cap blocks (HATENA_BLOCK 20, ITEM_BLOCK 21,
- * VS_ITEM_BLOCK 22, CAP_BLOCK_M/W/L 23-25).
+ * daObjHatenaBlock_c -- the ? block and its relatives, ov102: HATENA_BLOCK 20,
+ * ITEM_BLOCK 21, VS_ITEM_BLOCK 22, CAP_BLOCK_M / W / L 23-25.
  *
- * One class, six registry factories. Hit from below, kick, pound, mega, or
- * attack pops the block, then the content-type table spawns the prize
- * (star, cap, 1-up, mushroom, flower, shell, bob-omb, coins).
+ * One class, six registry factories. Hit from below, kicked, ground-pounded,
+ * hit by a mega player or attacked, the block pops, and the content-type
+ * table spawns the prize: star, cap, 1-up, mushroom, flower, shell, Bob-omb
+ * or a spray of coins.
  *
- * daObjHatenaBlock_c_classInit_* are reconstructed (RTTI daObjHatenaBlock_c,
- * those six registry IDs). Retail does not store those spellings.
- * Historical aliases: QuestionBlock_Spawn, ExclamationBlock_Spawn,
+ * daObjHatenaBlock_c_classInit_* are reconstructed names (RTTI
+ * daObjHatenaBlock_c, the six registry IDs above); retail does not store
+ * them. Historical aliases: QuestionBlock_Spawn, ExclamationBlock_Spawn,
  * ExclamationBlockVs_Spawn, CapBlockMario/Wario/Luigi_Spawn.
  *
- * deslop
- * Leftover: common.h first -- Model.h's nested Matrix4x3 would win and
- *   func_ov102_02149e38 / 02149ff0 size-DIFF (this TU, 0x18 / 0x1c).
- * Leftover: ModelAnim::SetAnim and dBgW_KcMbg::SetFile stay mangled in
- *   this TU -- both take Fix12<int> by value (wall 6az); a method call
- *   homes the argument and size-DIFFs InitResources.
- * Leftover: dBgActor_c::IsClsnInRange stays mangled -- Fix12<int> by
- *   value (wall 6az). This TU's Behavior call.
- * Leftover: dActor_c::DropShadowScaleXYZ stays mangled -- Fix12<int> by
- *   value (wall 6az). func_ov102_02149ea4.
- * Leftover: Particle::System::NewSimple stays mangled -- Fix12<int> by
- *   value (wall 6az). Particle.h has no System::NewSimple.
- * Leftover: dActor_c::Earthquake stays mangled -- not on dActor_c.h.
- *   func_ov102_02149c78.
- * Leftover: UntrackStar stays mangled -- takes s8 &, this TU's field is
- *   u8 mStarTracked. CleanupResources.
- * Leftover: KillAndTrackInDeathTable stays mangled in func_ov102_021494cc
- *   -- the real member is void, this helper returns the bl's r0.
- * Leftover: func_020393a4 / func_02039394 poke mMeshCollider (no setter).
- *   This TU's Behavior; naming belongs with dBgW in arm9.
- * Leftover: func_ov102_* helpers stay linker names (offset soup, PMF
- *   dispatch through data_ov102_0214e890 / 0214e870 / 0214e8c0). Not coined.
- * Leftover: func_ov102_0214ad14 / 0214b384 are daBmb_c helpers; this TU's
- *   func_ov102_02149220 calls them. Naming belongs in ov102/daBmb_c.
- * Leftover: func_ov002_020f0438 is ov002; bounce-end calls it on a held
- *   SECRET_COIN (actorID 0x149).
- * Leftover: data_ov102_0214e7d0..808 are this overlay's KCL/BMD/BCA
- *   handles (Init LoadFile / Cleanup Release). ov102 sinit constructs
- *   them; this TU does not own .bss.
- * Leftover: data_ov002_0210d9* / da40 / d954 are ov002 BMD/CLPS
- *   handles this TU loads for caps/contents. Naming belongs in ov002.
- * Leftover: data_ov002_0210da58 and gPFlower* stay char[] -- a
- *   SharedFilePtr decl for them would tip ov002 plurality (Goomboss,
- *   daFeather, PowerFlower; S27). Init LoadFile still treats each slot
- *   as the model handle.
- * Leftover: data_ov102_0214e890 / e870 / e8c0 are sinit-owned PMF tables
- *   this TU does not own.
- * Leftover: data_02082214 is the NitroSDK FX_SinCosTable_; bounce squash
- *   indexes it by mBounceAng. Naming belongs with the SDK table.
- * Leftover: data_0209caa0 / data_0209f2d8 / data_0209f2f8 / data_0209f32c
- *   / data_0209f318 / data_0209e650 / data_020a0edc are arm9 globals.
- * Leftover: g_profile_HATENA_BLOCK / ITEM_BLOCK / VS_ITEM_BLOCK /
- *   CAP_BLOCK_* live outside this TU (S14).
- * Leftover: inline destructor (out-of-line emits D0 before D1).
- * Leftover: return new emits homeless _ZN10dBgActor_cD2Ev; licensed
- *   deadstrip (same helper ov045/daObjKm2_Ami_Bou_c records).
- * Leftover: OnAttacked1 / OnHitFromUnderneath valueless nested-if exits
- *   (C++ rejects valueless return in non-void).
- * Leftover: HbSpawnFrame stays file-scope so @class$ does not drift
- *   (Vector3 inline dtor; manifest compiler_only).
- * Leftover: (Vector3 *)&mPosX puns in the spawn helpers -- dActor_c.h
- *   has no Pos() on this tree (S18 uniquifiers). Do not emit extra
- *   Vector3 D1 (S3/S23); the copies here are licensed deadstrip-duplicate.
+ * DO NOT "TIDY" THESE -- each one is load-bearing:
+ *
+ *   common.h must be included first. Otherwise Model.h's nested Matrix4x3
+ *   wins and func_ov102_02149e38 / 02149ff0 change size (0x18 / 0x1c).
+ *
+ *   The destructor stays inline; out of line, mwccarm emits D0 before D1.
+ *
+ *   `return new` emits a homeless _ZN10dBgActor_cD2Ev. That is a licensed
+ *   deadstrip, the same helper ov045/daObjKm2_Ami_Bou_c records.
+ *
+ *   HbSpawnFrame stays at file scope so @class$ does not drift (Vector3 has
+ *   an inline dtor; the manifest marks it compiler_only).
+ *
+ *   The (Vector3 *)&mPosX puns in the spawn helpers. dActor_c.h has no Pos()
+ *   accessor, and a real Vector3 copy would emit an extra Vector3 D1
+ *   destructor. The copies here are licensed
+ *   deadstrip-duplicates.
+ *
+ *   OnAttacked1 / OnHitFromUnderneath keep their valueless nested-if exits;
+ *   C++ rejects a valueless return in a non-void function.
+ *
+ * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS:
+ *
+ *   (a) Fix12<int> passed by value (notes/mwccarm-codegen.md 6az). A
+ *       method call homes the argument and the bytes move: ModelAnim::SetAnim and
+ *       dBgW_KcMbg::SetFile (InitResources), dBgActor_c::IsClsnInRange
+ *       (Behavior), dActor_c::DropShadowScaleXYZ (func_ov102_02149ea4),
+ *       Particle::System::NewSimple (also absent from Particle.h).
+ *
+ *   (b) No usable declaration: dActor_c::Earthquake is not on dActor_c.h
+ *       (func_ov102_02149c78). UntrackStar takes s8 &, but this TU's field
+ *       is u8 mStarTracked (CleanupResources). KillAndTrackInDeathTable is
+ *       void, but func_ov102_021494cc returns the bl's r0.
+ *
+ * Known limits:
+ *   func_020393a4 / func_02039394 poke mMeshCollider, which has no setter
+ *   (Behavior); naming belongs with dBgW in arm9.
+ *   The func_ov102_* helpers keep their linker names: offset soup and PMF
+ *   dispatch through data_ov102_0214e890 / 0214e870 / 0214e8c0. None coined.
+ *   data_ov002_0210da58 and gPFlower* stay char[]. A SharedFilePtr decl
+ *   would outvote the char[] spelling that Goomboss, daFeather and
+ *   PowerFlower share, and check_decl_agreement would flag those files; and
+ *   Init's LoadFile still treats each slot as the model handle.
+ *
+ * NOT OWNED BY THIS TU (named where they live, not here):
+ *   func_ov102_0214ad14 / 0214b384 -- daBmb_c helpers, called by
+ *     func_ov102_02149220 on the Bob-omb it spawns.
+ *   func_ov002_020f0438 -- ov002; the bounce end calls it on a held
+ *     SECRET_COIN (actorID 0x149).
+ *   data_ov102_0214e7d0..808 -- this overlay's KCL/BMD/BCA handles. ov102's
+ *     sinit constructs them; this TU does not own .bss.
+ *   data_ov002_0210d9* / da40 / d954 -- ov002 BMD/CLPS handles loaded for
+ *     the caps and contents.
+ *   data_ov102_0214e890 / e870 / e8c0 -- sinit-owned PMF tables.
+ *   data_02082214 -- NitroSDK FX_SinCosTable_; the bounce squash indexes it
+ *     by mBounceAng.
+ *   data_0209caa0 / 0209f2d8 / 0209f2f8 / 0209f32c / 0209f318 / 0209e650 /
+ *     020a0edc -- arm9 globals.
+ *   g_profile_HATENA_BLOCK / ITEM_BLOCK / VS_ITEM_BLOCK / CAP_BLOCK_* (overlay
+ *   data).
  */
 
-/* common.h first: see leftover above. */
+/* common.h first: see the header. */
 #include "common.h"
 #include "types.h"
 #include "daObjHatenaBlock_c.h"
@@ -140,8 +148,9 @@ extern SharedFilePtr data_ov002_0210d9a0;
 extern SharedFilePtr data_ov002_0210d9c0;
 extern SharedFilePtr data_ov002_0210d9d8;
 extern SharedFilePtr data_ov002_0210d9e0;
-/* da58 / gPFlower*: SharedFilePtr here would tip ov002 plurality
-   (Goomboss, daFeather, PowerFlower). S27. */
+/* da58 / gPFlower*: SharedFilePtr here would outvote the char[]
+   spelling Goomboss, daFeather and PowerFlower share, so
+   check_decl_agreement would flag those files. */
 extern SharedFilePtr data_ov002_0210da18;
 extern SharedFilePtr data_ov002_0210da30;
 extern SharedFilePtr data_ov002_0210da40;
@@ -178,7 +187,7 @@ extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned id, int x, i
 extern int _ZN8SaveData16HasPlayerLostCapEv(void);
 
 int func_ov102_02149078(dActor_c *self);
-void func_ov102_02149100(char *c, Vector3 *pos, int n, unsigned int speed, short arg5);
+void func_ov102_02149100(char *c, Vector3 *pos, int n, unsigned int speed, short baseAngle);
 void *func_ov102_02149220(char *c);
 void func_ov102_0214953c(char *c, int p1, int p2);
 int func_ov102_02149610(char *c);
@@ -229,10 +238,10 @@ extern "C" daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_CAP_BLOCK_W()
 // @symbol _ZN18daObjHatenaBlock_c13InitResourcesEv
 int daObjHatenaBlock_c::InitResources()
 {
-    void *r5 = 0;
+    void *modelFile = 0;
     switch (actorID - 0x14) {
     case 0:
-        r5 = Model::LoadFile(data_ov102_0214e7e8);
+        modelFile = Model::LoadFile(data_ov102_0214e7e8);
         mModelAnim.SetFile((BMD_File *)Model::LoadFile(data_ov102_0214e808), 1, 0x19);
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
             &mModelAnim, Animation::LoadFile(data_ov102_0214e7f8), 0, 0x1000, 0);
@@ -240,26 +249,26 @@ int daObjHatenaBlock_c::InitResources()
         break;
     case 1:
     case 2:
-        r5 = Model::LoadFile(data_ov102_0214e800);
+        modelFile = Model::LoadFile(data_ov102_0214e800);
         break;
     case 3:
-        r5 = Model::LoadFile(data_ov102_0214e7f0);
+        modelFile = Model::LoadFile(data_ov102_0214e7f0);
         Model::LoadFile(data_ov002_0210da40);
         Model::LoadFile(data_ov002_0210d9e0);
         break;
     case 5:
-        r5 = Model::LoadFile(data_ov102_0214e7d8);
+        modelFile = Model::LoadFile(data_ov102_0214e7d8);
         Model::LoadFile(data_ov002_0210d9a0);
         Model::LoadFile(data_ov002_0210d9e0);
         break;
     case 4:
-        r5 = Model::LoadFile(data_ov102_0214e7e0);
+        modelFile = Model::LoadFile(data_ov102_0214e7e0);
         Model::LoadFile(data_ov002_0210d9c0);
         Model::LoadFile(data_ov002_0210d9e0);
         break;
     }
 
-    mModel.SetFile((BMD_File *)r5, 1, -1);
+    mModel.SetFile((BMD_File *)modelFile, 1, -1);
     mShadowModel.InitCuboid();
     func_ov102_02149da8((C *)this, 0);
     mTerminalVelocity = -0x3c000;
@@ -501,7 +510,7 @@ void func_ov102_02149ff0(char *c)
 extern "C" {
 void func_ov102_02149ea4(char *c)
 {
-    int r4, r5, r2v;
+    int shadowScale, height, paddedHeight;
     int b0, b1;
 
     b0 = (*(int*)(c + 0xb0) & 8) ? 1 : 0;
@@ -511,22 +520,22 @@ void func_ov102_02149ea4(char *c)
     }
     *(int*)(c + 0x3e4) = func_ov102_02149610(c);
 skipcall:
-    r5 = *(int*)(c + 0x60) - *(int*)(c + 0x3e4);
-    if (r5 <= 0x1000) r5 = 0x1000;
-    r4 = (int)(((long long)r5 * 0x180 + 0x800) >> 12);
-    r4 = 0xb4000 - r4;
-    r2v = r5 + 0x214000;
-    if (r4 < 0xa000) r4 = 0xa000;
-    if (r2v < 0x200000) r2v = 0x200000;
-    *(int*)(c + 0xb4) = -((int)((r5 + 0x14000) + ((unsigned)(r5 + 0x14000) >> 31)) >> 1);
-    *(int*)(c + 0xb8) = (int)(r2v + ((unsigned)r2v >> 31)) >> 4;
-    r4 = (int)(((long long)r4 * *(int*)(c + 0x80) + 0x800) >> 12);
+    height = *(int*)(c + 0x60) - *(int*)(c + 0x3e4);
+    if (height <= 0x1000) height = 0x1000;
+    shadowScale = (int)(((long long)height * 0x180 + 0x800) >> 12);
+    shadowScale = 0xb4000 - shadowScale;
+    paddedHeight = height + 0x214000;
+    if (shadowScale < 0xa000) shadowScale = 0xa000;
+    if (paddedHeight < 0x200000) paddedHeight = 0x200000;
+    *(int*)(c + 0xb4) = -((int)((height + 0x14000) + ((unsigned)(height + 0x14000) >> 31)) >> 1);
+    *(int*)(c + 0xb8) = (int)(paddedHeight + ((unsigned)paddedHeight >> 31)) >> 4;
+    shadowScale = (int)(((long long)shadowScale * *(int*)(c + 0x80) + 0x800) >> 12);
     Matrix4x3_FromRotationY(c + 0x3ac, *(short*)(c + 0x8e));
     *(int*)(c + 0x3d0) = *(int*)(c + 0x5c) >> 3;
     *(int*)(c + 0x3d4) = (*(int*)(c + 0x60) - 0x20000) >> 3;
     *(int*)(c + 0x3d8) = *(int*)(c + 0x64) >> 3;
     _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
-        c, c + 0x384, c + 0x3ac, r4, r5 + 0x14000, r4, 0xf);
+        c, c + 0x384, c + 0x3ac, shadowScale, height + 0x14000, shadowScale, 0xf);
 }
 }
 
@@ -587,13 +596,13 @@ extern "C" {
 void func_ov102_02149c78(void *c)
 {
     s32 vec[3];
-    void *r4 = c;
-    vec[0] = *(s32*)((char*)r4 + 0x5c);
-    vec[1] = *(s32*)((char*)r4 + 0x60);
-    vec[2] = *(s32*)((char*)r4 + 0x64);
-    _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(r4, vec, 0x5dc000);
-    *(u16*)((char*)r4 + 0x3ec) = 0x4000;
-    *(u16*)((char*)r4 + 0x3ee) = 7;
+    void *self = c;
+    vec[0] = *(s32*)((char*)self + 0x5c);
+    vec[1] = *(s32*)((char*)self + 0x60);
+    vec[2] = *(s32*)((char*)self + 0x64);
+    _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(self, vec, 0x5dc000);
+    *(u16*)((char*)self + 0x3ec) = 0x4000;
+    *(u16*)((char*)self + 0x3ee) = 7;
 }
 }
 
@@ -767,11 +776,11 @@ int daObjHatenaBlock_c::OnHitFromUnderneath(dActor_c &other)
 // @symbol func_ov102_02149684
 extern "C" {
 void func_ov102_02149684(int* dst, int* src){
-  int v3 = src[0x19];
-  int v2 = src[0x18] + 0x32000;
+  int z = src[0x19];
+  int liftedY = src[0x18] + 0x32000;
   dst[0] = src[0x17];
-  dst[1] = v2;
-  dst[2] = v3;
+  dst[1] = liftedY;
+  dst[2] = z;
 }
 }
 
@@ -823,11 +832,11 @@ extern "C" {
 int func_ov102_021494cc(char* c){
   int s[3];
   func_ov102_02149684(s, (int*)c);
-  int r2 = (*(unsigned int*)(c+8) >> 8) & 0xff;
-  if(r2 == 0xff) r2 = 1;
+  int count = (*(unsigned int*)(c+8) >> 8) & 0xff;
+  if(count == 0xff) count = 1;
   int w[3];
   w[0] = s[0]; w[1] = s[1]; w[2] = s[2];
-  func_ov102_02149100(c, (Vector3 *)w, r2, 0x1800, 0);
+  func_ov102_02149100(c, (Vector3 *)w, count, 0x1800, 0);
   return _ZN8dActor_c24KillAndTrackInDeathTableEv(c);
 }
 }
@@ -912,7 +921,7 @@ void* func_ov102_02149220(char* c){
 
 // @symbol func_ov102_02149100
 extern "C" {
-void func_ov102_02149100(char *c, Vector3 *pos, int n, unsigned int speed, short arg5)
+void func_ov102_02149100(char *c, Vector3 *pos, int n, unsigned int speed, short baseAngle)
 {
     char *a;
     int dir;
@@ -935,7 +944,7 @@ void func_ov102_02149100(char *c, Vector3 *pos, int n, unsigned int speed, short
             q = rnd >> 0x10;
             speed = (speed * (q % 50 + 100)) / 100;
             prevDir = dir;
-            *(short*)(a+0x94) = arg5 + dir;
+            *(short*)(a+0x94) = baseAngle + dir;
             *(short*)(a+0x96) = 0;
             *(unsigned int*)(a+0x98) = speed;
         }

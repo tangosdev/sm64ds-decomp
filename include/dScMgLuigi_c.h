@@ -28,7 +28,7 @@ struct dScMgLuigi_Penalty {
     u8     pad_13;
 };
 #ifndef SM64DS_PLATFORM_PC
-typedef char dScMgLuigi_Penalty_size[sizeof(dScMgLuigi_Penalty) == 0x14 ? 1 : -1];
+typedef char dScMgLuigi_Penalty_size_must_be_0x14[sizeof(dScMgLuigi_Penalty) == 0x14 ? 1 : -1];
 #endif
 
 /* One curtain panel. Two of them, left then right, stride 0x18 at 0x47a0.
@@ -47,7 +47,7 @@ struct dScMgLuigi_Curtain {
     u8     phase;    /* +0x17 step within the motion */
 };
 #ifndef SM64DS_PLATFORM_PC
-typedef char dScMgLuigi_Curtain_size[sizeof(dScMgLuigi_Curtain) == 0x18 ? 1 : -1];
+typedef char dScMgLuigi_Curtain_size_must_be_0x18[sizeof(dScMgLuigi_Curtain) == 0x18 ? 1 : -1];
 #endif
 
 /* The "got it" pop above the picture that was found. It rises, holds,
@@ -64,7 +64,7 @@ struct dScMgLuigi_Reward {
     u8     shown;    /* +0x13 DrawReward */
 };
 #ifndef SM64DS_PLATFORM_PC
-typedef char dScMgLuigi_Reward_size[sizeof(dScMgLuigi_Reward) == 0x14 ? 1 : -1];
+typedef char dScMgLuigi_Reward_size_must_be_0x14[sizeof(dScMgLuigi_Reward) == 0x14 ? 1 : -1];
 #endif
 
 /* The round-end iris. One record, addressed with the same 0x14 stride as
@@ -80,7 +80,7 @@ struct dScMgLuigi_Iris {
     u8     pad[2];
 };
 #ifndef SM64DS_PLATFORM_PC
-typedef char dScMgLuigi_Iris_size[sizeof(dScMgLuigi_Iris) == 0x14 ? 1 : -1];
+typedef char dScMgLuigi_Iris_size_must_be_0x14[sizeof(dScMgLuigi_Iris) == 0x14 ? 1 : -1];
 #endif
 
 struct dScMgLuigi_c : dScMgBase_c {
@@ -189,7 +189,7 @@ struct dScMgLuigi_c : dScMgBase_c {
     u8  mTarget;             /* 0x5456 -- 1-based index of the picture to find;
                                 scatter placement also counts slots with it */
     u8  mClears;             /* 0x5457 -- found pictures; not read back here */
-    u8  unk_5458;            /* 0x5458 -- 1 after a reset, 0 once play starts */
+    u8  mBoardPending;        /* 0x5458 -- 1 from ResetBoard until StatePlace has placed the board; no read here */
     u8  mFound;              /* 0x5459 -- 1 if the catch was the right picture */
     u8  mWanted;             /* 0x545a -- character the poster is asking for */
 };

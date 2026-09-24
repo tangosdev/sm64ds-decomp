@@ -6,8 +6,9 @@ extern unsigned char DecIfAbove0_Byte(unsigned char *p);
 extern void func_0201267c(unsigned int id, void *p);
 extern unsigned int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     unsigned int a, unsigned int b, int x, int y, int z, const void *ang, void *cb);
+struct Vector3_16f;
 extern unsigned int _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
-    unsigned int a, unsigned int b, int x, int y, int z, const void *ang);
+    unsigned int a, unsigned int b, int x, int y, int z, const struct Vector3_16f *ang);
 extern void *_ZN8Particle6System12FromUniqueIDEj(unsigned int id);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
 extern void _ZN9Animation7AdvanceEv(void *self);

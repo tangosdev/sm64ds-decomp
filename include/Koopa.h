@@ -5,12 +5,20 @@
 
 /* Retail ov062 RTTI at 0x0211da5c spells "8daNknk_c". Its typeinfo at
  * 0x0211da68 names dEnemyBase_c; the vtable address point is 0x0211dab4.
- * Normal and small Koopa factories both allocate 0x3d0 bytes of this class.
- * Member names are reconstructed; the member destructor calls and offsets
- * establish mdCc_c@0x110, mWithMeshClsn@0x144, mModelAnim@0x300 and
- * mShadowModel@0x364. The compiler checks the observed final field span.
- * Existing virtual names/signatures, including OnTurnIntoEgg's reference,
- * remain project reconstructions, not original English spellings in the ROM.
+ * Normal (NOKONOKO, actor 0xcb) and small (NOKONOKO_S, actor 0xcc)
+ * factories both allocate 0x3d0 bytes of this one class.
+ *
+ * Field names below are from this TU's reads. mKoopaVariant is 0 while
+ * the Koopa still has its shell, 1 after the shell is popped
+ * (func_ov062_02117bf4), back to 0 when it touches a SHELL (actor 0x11d)
+ * in state 2, and 2 for the small Koopa. mHomePos is the spawn point the
+ * leash is measured from. mSafePos is the last spot that was not a
+ * cliff edge. mAimAngle faces the closest player, or home when that
+ * player is outside the leash. mTargetAngle is what mPrevAngleY is
+ * steered toward. mTimer counts the idle pause and the post-kick wait.
+ * mTurnTimer counts down to the next random heading. mTurning stays set
+ * while AngleAwayFromWallOrCliff's turn is still running. mFootstep
+ * blocks a second dust puff in the same animation window.
  */
 
 #include "dEnemyBase_c.h"
@@ -29,22 +37,27 @@ struct daNknk_c : dEnemyBase_c {
     s32             mState;                  /* 0x38c */
     s32             mKoopaVariant;           /* 0x390 */
     s32             mModelIndex;             /* 0x394 */
-    u8              pad_398[0x4];
-    s32             unk_39c;                 /* 0x39c */
-    s32             unk_3a0;                 /* 0x3a0 */
-    s32             unk_3a4;                 /* 0x3a4 */
-    s32             unk_3a8;                 /* 0x3a8 */
-    s32             unk_3ac;                 /* 0x3ac */
-    s32             unk_3b0;                 /* 0x3b0 */
-    u8              pad_3b4[0x8];
+    u8              mAnimIndex;              /* 0x398 */
+    u8              pad_399[3];              /* 0x399 */
+    s32             mHomePosX;               /* 0x39c */
+    s32             mHomePosY;               /* 0x3a0 */
+    s32             mHomePosZ;               /* 0x3a4 */
+    s32             mSafePosX;               /* 0x3a8 */
+    s32             mSafePosY;               /* 0x3ac */
+    s32             mSafePosZ;               /* 0x3b0 */
+    Player         *mClosestPlayer;          /* 0x3b4 */
+    s32             mPlayerDist;             /* 0x3b8 */
     s32             mAnimSpeed;              /* 0x3bc */
-    u8              pad_3c0[0x4];
+    s16             mAimAngle;               /* 0x3c0 */
+    s16             mTargetAngle;            /* 0x3c2 */
     u16             mWalkState;              /* 0x3c4 */
-    u8              pad_3c6[0x4];
+    u16             mTimer;                  /* 0x3c6 */
+    u16             mTurnTimer;              /* 0x3c8 */
     u16             mInvincibleTimer;        /* 0x3ca */
-    u8              pad_3cc[0x2];
+    u8              mTurning;                /* 0x3cc */
+    u8              mFootstep;               /* 0x3cd */
     u8              mLandingDustTimer;       /* 0x3ce */
-    u8              pad_3cf[0x1];
+    u8              pad_3cf;                 /* 0x3cf */
 
     /* --- vtable --- */
     virtual ~daNknk_c() {}

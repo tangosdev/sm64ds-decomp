@@ -63,11 +63,11 @@ int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *c, int a, int b);
 int daDsn_c::InitResources()
 {
     mFileTable = (int)data_ov091_02135138;
-    int r = Init();
+    int result = Init();
     mState = 0;
     mHoldTimer = 0;
     mTriggered = 0;
-    return r;
+    return result;
 }
 
 // @symbol _ZN7daDsn_c8BehaviorEv
@@ -91,11 +91,11 @@ int daDsn_c::Behavior()
     }
     switch (mState) {
     case 0: {
-        unsigned short cnt = (unsigned short)((*(s32 *)&mTextureSequence.currFrame) >> 12);
-        if (cnt != 0) {
-            (*(s32 *)&mTextureSequence.currFrame) = (int)((((unsigned)cnt - 1) << 16) >> 4);
-            cnt = (unsigned short)((*(s32 *)&mTextureSequence.currFrame) >> 12);
-            if (cnt == 0) {
+        unsigned short frame = (unsigned short)((*(s32 *)&mTextureSequence.currFrame) >> 12);
+        if (frame != 0) {
+            (*(s32 *)&mTextureSequence.currFrame) = (int)((((unsigned)frame - 1) << 16) >> 4);
+            frame = (unsigned short)((*(s32 *)&mTextureSequence.currFrame) >> 12);
+            if (frame == 0) {
                 mHoldTimer = 0xa;
             }
         } else {
@@ -163,20 +163,20 @@ done:
 void daDsn_c::OnHitByMegaChar(Player &player)
 {
     player.IncMegaKillCount();
-    Vector3 vec;
-    vec.x = mPosX;
-    vec.y = mPosY;
-    vec.z = mPosZ;
-    int ret = OnAimedAtWithEgg();
-    vec.y += ret;
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x48, vec.x, vec.y, vec.z);
-    /* Copied word by word on purpose: `Vector3 vec2 = vec;` changes the size
-       of this function (measured: DIFF, not byte-neutral). */
-    Vector3 vec2;
-    ((int *)&vec2)[0] = ((int *)&vec)[0];
-    ((int *)&vec2)[1] = ((int *)&vec)[1];
-    ((int *)&vec2)[2] = ((int *)&vec)[2];
-    PoofDustAt(vec2);
+    Vector3 poofPos;
+    poofPos.x = mPosX;
+    poofPos.y = mPosY;
+    poofPos.z = mPosZ;
+    int height = OnAimedAtWithEgg();
+    poofPos.y += height;
+    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x48, poofPos.x, poofPos.y, poofPos.z);
+    /* Copied word by word on purpose: `Vector3 poofPosCopy = poofPos;`
+       changes the size of this function (measured; the bytes differ). */
+    Vector3 poofPosCopy;
+    ((int *)&poofPosCopy)[0] = ((int *)&poofPos)[0];
+    ((int *)&poofPosCopy)[1] = ((int *)&poofPos)[1];
+    ((int *)&poofPosCopy)[2] = ((int *)&poofPos)[2];
+    PoofDustAt(poofPosCopy);
     MarkForDestruction();
     func_02012694(0x1e, (const Vector3 *)((char *)this + 0x74));
 }

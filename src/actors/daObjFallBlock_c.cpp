@@ -1,47 +1,59 @@
 //cpp
-/* ov098/daObjFallBlock_c -- abstract falling-block base.
+/* daObjFallBlock_c -- the abstract falling-block base, ov098.
+ *
+ * A block that shakes when stood on, then drops until it reaches mKillY (the
+ * ground found under it at Init). A block may be linked to the POWER_STAR
+ * whose +0x49d matches its param1 (func_ov098_0213a0e8).
  *
  * ov098 is mixed (CRATE / CANNON / WATER_BOMB / ARROW_SIGN). This class is
  * none of those: RTTI `_ZTS16daObjFallBlock_c` lives in ov015 at 0x0211488c,
  * the vtable lives here at 0x0213c5bc, and the four leaf profiles are
- * FALL_BLOCK_WF (ov015), FALL_BLOCK_LLL (ov022), FALL_BLOCK_BFS (ov045),
+ * FALL_BLOCK_WF (ov015), FALL_BLOCK_LLL (ov022), FALL_BLOCK_BFS (ov045) and
  * FALL_BLOCK_BBH (ov063). ABSTRACT: slots 0 and 3 are pure, so there is no
  * classInit to fold. Leaves call daObjFallBlock_c_InitResources /
- * func_ov098_0213a2cc with this overlay's model/KCL/CLPS table.
+ * func_ov098_0213a2cc with this overlay's model/KCL/CLPS table, and own
+ * classInit themselves (daObjBk_Fall_Block_c_classInit /
+ * daObjFl_Fall_Block_c_classInit / daObjKm2_Fall_Block_c_classInit /
+ * daObjTh_Fall_Block_c_classInit).
  *
- * common.h FIRST: func_ov098_0213a23c writes Model::mat4x3 (this+0xf0) as a
- * rotation plus translation row. common.h's flat s32 m[12] is the spelling
- * that keeps those stores as word writes; math/Matrix.h's nested
- * {Matrix3x3 r; Vector3 t;} is the other 0x30-byte claim.
+ * DO NOT "TIDY" THESE -- each one is load-bearing:
  *
- * deslop leftovers:
- * - no factory: abstract, InitResources / CleanupResources = 0. Leaves own
- *   classInit (daObjBk_Fall_Block_c_classInit / daObjFl_Fall_Block_c_classInit
- *   / daObjKm2_Fall_Block_c_classInit / daObjTh_Fall_Block_c_classInit).
- * - dBgActor_c::IsClsnInRange 6az: Behavior passes Fix12<int> by value; the
- *   header method form is refused by the bytes (include/dBgActor_c.h).
- * - Particle::System::NewSimple 6az: Kill's three by-value Fix12<int>;
- *   declaring the true types changes how the caller passes them.
- * - dBgW_KcMbg::SetFile 6az: InitResources' by-value Fix12<int> scale 0x199;
- *   the header method homes the argument and size-DIFFs this TU.
- * - func_020393c4: 4-byte store into dBgW+0x1c (unk_1c). This TU stores
- *   daObjFallBlock_c_OnStoodOn there; naming belongs with dBgW in arm9.
- * - daObjFallBlock_c_OnStoodOn keeps #pragma long_calls: the ROM veneer is
- *   the pooled `ldr ip,[pc,#8]; bx ip` absolute tail-call (size 0x14); a
- *   near `b` to RequestShake in this same TU is 0xc.
- * - daObjFallBlock_c_RequestShake keeps a second unused parameter: the
- *   veneer forwards two registers after dropping the collider; a 1-arg
+ *   common.h FIRST: func_ov098_0213a23c writes Model::mat4x3 (this+0xf0) as
+ *   a rotation plus translation row. common.h's flat s32 m[12] keeps those
+ *   stores as word writes; math/Matrix.h's nested {Matrix3x3 r; Vector3 t;}
+ *   is the other 0x30-byte claim.
+ *
+ *   D0 below D1: the in-class inline destructor (the cartridge form for the
+ *   four descendants) emits D1 then D0; the pair stays in its own shards.
+ *
+ *   daObjFallBlock_c_OnStoodOn keeps #pragma long_calls. The ROM veneer is
+ *   the pooled `ldr ip,[pc,#8]; bx ip` absolute tail-call (size 0x14); a near
+ *   `b` to RequestShake in this same TU is 0xc.
+ *
+ *   daObjFallBlock_c_RequestShake keeps a second, unused parameter: the
+ *   veneer forwards two registers after dropping the collider, and a 1-arg
  *   callee drops `mov r1, r2`.
- * - MarkForDestruction stays mangled in func_ov098_0213a0a8: fBase_c.h spells
- *   it void, and this helper returns the callee's r0.
- * - Behavior case 2 keeps `((int)this + 0x8c) & U64` / `+ 0x90` for mAngleX /
- *   mAngleZ: named stores size-DIFF (999 words).
- * - (long long)sinv * 0x19000 in case 1: a plain int mul size-DIFFs.
- * - common.h first: func_ov098_0213a23c's mat4x3 stores stay word writes
- *   against the flat s32 m[12] spelling.
- * - S14: no g_profile for this abstract class; leaves own their records.
- * - D0 below D1: in-class inline destructor (cartridge form for the four
- *   descendants) emits D1 then D0; the pair stays in its own shards.
+ *
+ *   Behavior case 2 keeps `((int)this + 0x8c) & U64` / `+ 0x90` for mAngleX /
+ *   mAngleZ: the named stores do not match. Case 1 keeps
+ *   (long long)sinv * 0x19000; a plain int multiply changes the code size.
+ *
+ * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS (Fix12<int> by value, see
+ * notes/mwccarm-codegen.md 6az, unless noted):
+ *   dBgActor_c::IsClsnInRange (Behavior); the header method form is refused
+ *   by the bytes (include/dBgActor_c.h).
+ *   Particle::System::NewSimple (Kill's three Fix12<int>); declaring the
+ *   true types changes how the caller passes them.
+ *   dBgW_KcMbg::SetFile (InitResources' scale 0x199); the header method
+ *   homes the argument and changes the code size.
+ *   MarkForDestruction in func_ov098_0213a0a8: fBase_c.h spells it void,
+ *   and this helper returns the callee's r0.
+ *
+ * Known limits:
+ *   func_020393c4 is a 4-byte store into dBgW+0x1c (unk_1c); this TU stores
+ *   daObjFallBlock_c_OnStoodOn there. Naming belongs with dBgW in arm9.
+ *   No factory and no g_profile: the class is abstract, with
+ *   InitResources / CleanupResources = 0; the leaves own their records.
  */
 
 #include "common.h"
@@ -90,8 +102,6 @@ extern s16 data_02082214[];
 extern signed char data_0209f2f8;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol daObjFallBlock_c_OnStoodOn
 /* dBgW+0x1c callback veneer. Drops the collider and forwards the actor into
    RequestShake. long_calls is the ROM's pooled absolute tail-call. */
@@ -104,8 +114,6 @@ int daObjFallBlock_c_OnStoodOn(void *collider, daObjFallBlock_c *block, void *un
 #pragma long_calls off
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol daObjFallBlock_c_RequestShake
 /* Sets mShakeRequested so Behavior case 0 starts the shake. Second parameter
    is the veneer's extra forwarded register -- a 1-arg callee drops mov r1,r2. */
@@ -116,8 +124,6 @@ int daObjFallBlock_c_RequestShake(daObjFallBlock_c *block, void *unused)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol daObjFallBlock_c_InitResources
 /* Shared InitResources body for the four leaves. Slot 0 is Model::LoadFile,
    slot 1 is dBgW_Kc::LoadFile, slot 2 is CLPS into SetFile. Ground-raycasts
@@ -126,7 +132,7 @@ extern "C" {
 int daObjFallBlock_c_InitResources(daObjFallBlock_c *self, ResourceDescriptor *fp)
 {
     Vector3 v;
-    int r2;
+    int on;
     int y;
 
     self->mModel.SetFile((BMD_File *)Model::LoadFile(*fp->model), 1, -1);
@@ -153,29 +159,28 @@ int daObjFallBlock_c_InitResources(daObjFallBlock_c *self, ResourceDescriptor *f
             self->mKillY = rc.clsnY;
         self->mVertAccel = -0x4000;
         self->mTerminalVelocity = -0xc8000;
-        r2 = 1;
+        on = 1;
         self->mStateTimer = 4;
-        self->mReady = r2;
+        self->mReady = on;
         self->mRestPos.x = self->mPosX;
         self->mRestPos.y = self->mPosY;
         self->mRestPos.z = self->mPosZ;
         self->mLinkedStarID = 0;
         if (self->actorID != 0x53)
-            r2 = 0;
-        if (r2 != 0)
+            on = 0;
+        if (on != 0)
             self->mSuppressed = 1;
     }
     return 1;
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjFallBlock_c8BehaviorEv
 /* daObjFallBlock_c::Behavior - the whole fall-block state machine; see the
    class header for the field-by-field account. Kill() is this class's own
    named virtual (key function). UpdatePos is dActor_c's. dBgW calls go
-   through mMeshCollider. IsClsnInRange stays mangled -- leftover 6az. */
+   through mMeshCollider. IsClsnInRange stays mangled --
+   notes/mwccarm-codegen.md 6az. */
 s32 daObjFallBlock_c::Behavior()
 {
     char *c = (char *)this;
@@ -255,21 +260,22 @@ s32 daObjFallBlock_c::Behavior()
             mStateTimer = 0x5a;
         } else {
             sinv = data_02082214[(*(u16 *)&mBobPhase >> 4) << 1];
-            /* (long long) is load-bearing: a plain int mul size-DIFFs. */
+            /* (long long) is load-bearing: a plain int mul changes the code
+               size. */
             mPosY =
                 mRestPos.y
                 + (int)(((long long)sinv * 0x19000 + 0x800) >> 12);
             {
-                s16 *p338 = &mBobPhase;
-                *p338 = (s16)(*p338 + 0x3000);
+                s16 *bobPhase = &mBobPhase;
+                *bobPhase = (s16)(*bobPhase + 0x3000);
             }
         }
         break;
 
     case 2:
         if (mAngleX < 0x400) {
-            s16 *p334 = &mShakeX;
-            *p334 = (s16)(*p334 + 0x80);
+            s16 *shakeX = &mShakeX;
+            *shakeX = (s16)(*shakeX + 0x80);
         } else {
             if (mMeshCollider.IsEnabled() != 0)
                 mMeshCollider.Disable();
@@ -277,13 +283,13 @@ s32 daObjFallBlock_c::Behavior()
         yaw = mAngleZ;
         if (yaw > -0x400) {
             if (yaw < 0x400) {
-                s16 *p336 = &mTiltVelZ;
-                *p336 = (s16)(*p336 + 0x40);
+                s16 *tiltVelZ = &mTiltVelZ;
+                *tiltVelZ = (s16)(*tiltVelZ + 0x40);
             }
         }
         {
             /* Integer-cast address form: named mAngleX / mAngleZ stores
-               size-DIFF Behavior (999 words). */
+               change the code size of Behavior. */
             s16 t = *(s16 *)(((int)c + 0x8c) & U64);
             t = (s16)(t + mShakeX);
             *(s16 *)(((int)c + 0x8c) & U64) = t;
@@ -341,8 +347,6 @@ s32 daObjFallBlock_c::Behavior()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjFallBlock_c6RenderEv
 s32 daObjFallBlock_c::Render()
 {
@@ -352,8 +356,6 @@ s32 daObjFallBlock_c::Render()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov098_0213a2cc
 /* Shared CleanupResources body for the four leaves. Keeps the C name because
    they call it as a free function. */
@@ -368,8 +370,6 @@ int func_ov098_0213a2cc(daObjFallBlock_c *t, SharedFilePtr **f)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjFallBlock_c15OnHitByMegaCharER6Player
 /* `player` is never read, matching the ROM body, which only ever takes the
    one (`this`) argument. */
@@ -382,8 +382,6 @@ void daObjFallBlock_c::OnHitByMegaChar(Player &player)
     mStateTimer = 0x3c;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov098_0213a23c
 extern "C" {
 void func_ov098_0213a23c(daObjFallBlock_c *t)
@@ -395,8 +393,6 @@ void func_ov098_0213a23c(daObjFallBlock_c *t)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjFallBlock_c4KillEv
 /* daObjFallBlock_c::Kill() at ov098 0x0213a17c, 0xc0 bytes -- vtable slot 31.
  *
@@ -409,7 +405,7 @@ void func_ov098_0213a23c(daObjFallBlock_c *t)
  * The second Vector3 is memberwise on purpose: Vector3 declares a destructor
  * (types.h), so a whole-object assignment compiles to an ldm/stm pair, four
  * instructions where the ROM has six. Particle::System::NewSimple stays
- * mangled -- leftover 6az. */
+ * mangled -- notes/mwccarm-codegen.md 6az. */
 void daObjFallBlock_c::Kill()
 {
     Vector3 pos;
@@ -441,8 +437,6 @@ void daObjFallBlock_c::Kill()
     mReady = 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov098_0213a148
 extern "C" {
 void func_ov098_0213a148(daObjFallBlock_c *c)
@@ -459,26 +453,22 @@ void func_ov098_0213a148(daObjFallBlock_c *c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov098_0213a0e8
 extern "C" {
-void func_ov098_0213a0e8(daObjFallBlock_c *r5)
+void func_ov098_0213a0e8(daObjFallBlock_c *self)
 {
-    dActor_c *r1;
-    r1 = dActor_c::FindWithActorID(0xb2, 0); /* POWER_STAR */
-    while (r1) {
+    dActor_c *star;
+    star = dActor_c::FindWithActorID(0xb2, 0); /* POWER_STAR */
+    while (star) {
         /* POWER_STAR +0x49d */
-        if (*(unsigned char *)((char *)r1 + 0x49d) == (r5->param1 & 0xf)) {
-            r5->mLinkedStarID = (s32)r1->uniqueID;
+        if (*(unsigned char *)((char *)star + 0x49d) == (self->param1 & 0xf)) {
+            self->mLinkedStarID = (s32)star->uniqueID;
         }
-        r1 = dActor_c::FindWithActorID(0xb2, r1);
+        star = dActor_c::FindWithActorID(0xb2, star);
     }
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov098_0213a0a8
 extern "C" {
 int func_ov098_0213a0a8(daObjFallBlock_c *c)
@@ -491,8 +481,6 @@ int func_ov098_0213a0a8(daObjFallBlock_c *c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov098_0213a00c
 void func_ov098_0213a00c(daObjFallBlock_c *c)
 {
@@ -515,11 +503,9 @@ void func_ov098_0213a00c(daObjFallBlock_c *c)
     c->unk_341 = 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjFallBlock_cD1Ev
 // @symbol _ZN16daObjFallBlock_cD0Ev
-/* recovered: real C++ destructor pair -- NO SOURCE TEXT OF THEIR OWN.
+/* The real C++ destructor pair -- NO SOURCE TEXT OF THEIR OWN.
  *
  * daObjFallBlock_c.h defines `~daObjFallBlock_c() {}` in the class body, and
  * the ROM carries the out-of-line D1 (0x02139fc8) and D0 (0x02139f70) anyway

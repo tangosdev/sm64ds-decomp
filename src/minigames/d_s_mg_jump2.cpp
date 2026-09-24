@@ -17,6 +17,7 @@
 #include "SharedFilePtr.h"
 #include "types.h"
 #include "decl_common.h"
+#include "Particle__System.h"
 
 /* The list link at the head of each Elem. */
 struct Node { struct Node* next; };
@@ -93,7 +94,6 @@ void RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
 extern int data_020a0e68;
 unsigned int _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
 unsigned int a, unsigned int b, int c, int d, int e, const Vector3_16f *f);
-void *_ZN8Particle6System12FromUniqueIDEj(unsigned int id);
 void func_ov006_020eef90(void);
 extern void* func_ov006_020c7300(void*);
 extern void* func_ov006_020c4060(void*);
@@ -447,7 +447,7 @@ s32 dScMgJump2_c::Behavior()
 {
     unk_5a6c = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
         unk_5a6c, 0xf0, 0x400000, 0x800000, -0x480000, 0);
-    void *system = _ZN8Particle6System12FromUniqueIDEj(unk_5a6c);
+    void *system = Particle::System::FromUniqueID(unk_5a6c);
     if (system != 0) {
         *(int *)((char *)system + 0x50) = 0x4000;
         *(unsigned char *)((char *)system + 0x58) = 0x2c;

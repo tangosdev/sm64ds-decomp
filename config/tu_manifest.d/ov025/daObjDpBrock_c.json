@@ -1,0 +1,327 @@
+{
+  "id": "ov025/daObjDpBrock_c",
+  "module": "ov025",
+  "source": "src/actors/daObjDpBrock_c.cpp",
+  "promoted_source": "src/actors/daObjDpBrock_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x2111d40..0x21120ac, 8 function(s), from build/tu_map.json (tools/tu_map.py), plus the one-function run 0x21120ac..0x21120e4 that holds this class's factory daObjDpBrock_c_classInit; this entry licenses 0x02111d40..0x021120e4 as one file.",
+    "class label(s): daObjDpBrock_c -- the cartridge's own RTTI spelling. build/rtti.json records _ZTI14daObjDpBrock_c at ov025 0x021138d0 (kind si, name string at 0x021138dc) and names the vtable at 0x02113914 as this class's. The class carried the coined name PyramidStep until the rename commit before this TU was staged.",
+    "MEASURED: folding the factory is the same shape as the promoted neighbour config/tu_manifest.d/ov025/daDkk_c.json, whose licensed range also ends at the end of its classInit. The factory is the next function after InitResources, the following function _ZN10daDpLift_cD1Ev starts daDpLift_c's own promoted run at 0x021120e4, and `return new daObjDpBrock_c()` reproduces the factory byte for byte (9/9 MATCH, emission order ROM-ascending).",
+    "MEASURED: the empty inline destructor in include/daObjDpBrock_c.h emits D1 ahead of D0, the cartridge's order (0x02111d40 then 0x02111d8c). The folded factory odr-uses the inline chain and materialises one homeless _ZN10dBgActor_cD2Ev, which the compiler-only policy deadstrips exactly as daDkk_c's does.",
+    "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02111d40",
+      "end": "0x021120e4"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN14daObjDpBrock_cD1Ev",
+      "address": "0x02111d40",
+      "size": "0x0000004c",
+      "legacy_source": "src/_ZN14daObjDpBrock_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN14daObjDpBrock_cD0Ev",
+      "address": "0x02111d8c",
+      "size": "0x00000060",
+      "legacy_source": "src/_ZN14daObjDpBrock_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov025_02111dec",
+      "address": "0x02111dec",
+      "size": "0x00000044",
+      "legacy_source": "src/func_ov025_02111dec.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov025_02111e30",
+      "address": "0x02111e30",
+      "size": "0x00000040",
+      "legacy_source": "src/func_ov025_02111e30.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN14daObjDpBrock_c16CleanupResourcesEv",
+      "address": "0x02111e70",
+      "size": "0x00000038",
+      "legacy_source": "src/_ZN14daObjDpBrock_c16CleanupResourcesEv.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN14daObjDpBrock_c6RenderEv",
+      "address": "0x02111ea8",
+      "size": "0x0000002c",
+      "legacy_source": "src/_ZN14daObjDpBrock_c6RenderEv.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN14daObjDpBrock_c8BehaviorEv",
+      "address": "0x02111ed4",
+      "size": "0x000000cc",
+      "legacy_source": "src/_ZN14daObjDpBrock_c8BehaviorEv.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_ZN14daObjDpBrock_c13InitResourcesEv",
+      "address": "0x02111fa0",
+      "size": "0x0000010c",
+      "legacy_source": "src/_ZN14daObjDpBrock_c13InitResourcesEv.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "daObjDpBrock_c_classInit",
+      "address": "0x021120ac",
+      "size": "0x00000038",
+      "legacy_source": "src/d_a_obj_dp_brock.c",
+      "ordinal": 8
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Hand-curated from the nine legacy one-function sources: six C++ members, one C++ helper (src/func_ov025_02111dec.cpp), one C helper (src/func_ov025_02111e30.c) and the C factory (src/d_a_obj_dp_brock.c). tubuild create generated a starting point that was then rewritten by hand; see the file's own header comment.",
+    "RESOLVED tubuild create CONFLICT: the two helper shards declared Matrix4x3_FromRotationY as (void *, short) and (void *, int). The TU uses (void *m, int angleY), the signature of the symbol's definition in src/Matrix4x3_FromRotationY.c and the spelling src/actors/dBgActor_c.cpp uses. Bytes unchanged.",
+    "HEADER EDIT: include/daObjDpBrock_c.h now defines ~daObjDpBrock_c() in the class body, types the 0x374 tail as Matrix4x3 mClsnMat2 instead of a u8[0x30] marker, types mStateTimer as u16 (every access in the cartridge is ldrh or strh), adds the leaf operator new the folded factory needs, and drops the flat C twin: no C file includes the header, and the C destructor shard its comment cited was already C++. No file outside this TU includes the header.",
+    "SOURCE FORM: CleanupResources, Render, Behavior and InitResources are written against named members (mStepModel, mMeshCollider, mClsnMat2, mState, mStateTimer, mPosY, mVertSpeed) and real calls (Model::LoadFile, ModelBase::SetFile, dBgW_Kc::LoadFile, dBgW::Disable, dBgW_KcMbg::Transform, SharedFilePtr::Release, Model::Render). The legacy shards' raw offsets, the Render shard's stand-in Base and Derived structs and its local SharedFilePtr redefinition are gone. MEASURED: InitResources must read param1 & 3 before its three initialising stores; read inside the switch, 11 words differ.",
+    "func_ov025_02111dec and func_ov025_02111e30 keep their address-derived names as C-linkage helpers taking the object as char *, the spelling include/decl_common.h gives both, and cast it to daObjDpBrock_c * to read named members. Each is really a daObjDpBrock_c method (they update the collider matrix and the own-model matrix), but a member spelling would coin two mangled names; that rename is separate work.",
+    "dBgW_KcMbg::SetFile and dBgActor_c::IsClsnInRange stay mangled: each takes Fix12<int> by value (wall 6az). func_020393d4 stays an unnamed arm9 helper, declared (int *, int) to agree with its definition in src/func_020393d4.c.",
+    "STYLE ORACLE: src/actors/daDkk_c.cpp (same overlay, folded factory, inline destructor) and src/actors/daDpLift_c.cpp (same overlay, dBgActor_c leaf).",
+    "DECLARATION BASELINE: the five config/decl-agreement-baseline.json entries keyed to the retired src/_ZN14daObjDpBrock_c13InitResourcesEv.cpp are dropped, because the typed TU no longer carries those disagreements. Two are banked for this TU: it declares data_ov025_02113ab0 and data_ov025_02113ab8 as SharedFilePtr, which is what they are, against src/__sinit_ov025_02112a44.c's int [] spelling. Same pair shape as src/actors/daDpLift_c.cpp and src/__sinit_ov025_02112aac.c."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov025-daObjDpBrock_c/daObjDpBrock_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 9,
+    "functions_declared": 9,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN10dBgActor_cD2Ev"
+      ],
+      "deadstripped": [
+        "_ZN10dBgActor_cD2Ev"
+      ],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        39,
+        40
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI10dBgActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTI14daObjDpBrock_c",
+        "_ZTS14daObjDpBrock_c",
+        "_ZTV14daObjDpBrock_c"
+      ],
+      "dataExternalized": [
+        "_ZTI10dBgActor_c",
+        "_ZTI14daObjDpBrock_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTS14daObjDpBrock_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV14daObjDpBrock_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov025-daObjDpBrock_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x02111d40",
+        "end": "0x021120e4",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x02111d40",
+          "end": "0x021120e4",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 9
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN10dBgActor_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "compiler-emitted base-object destructor helper has no configured ROM symbol and no inbound relocation after the licensed leaf D1/D0 pair is retained. Folding daObjDpBrock_c_classInit as `return new daObjDpBrock_c()` odr-uses the inline destructor chain and is what materialises this D2; the eight-function TU without the factory did not emit it. Same disposition as config/tu_manifest.d/ov025/daDkk_c.json."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Emitted as vague linkage because this TU defines the class's key function (daObjDpBrock_c::Behavior -- the first declared virtual that is neither inline nor pure, now that the destructor is defined in the class body). The cartridge keeps its canonical copy at arm9:0x02086d70, outside this entry's only licensed range (.text 0x02111d40-0x021120e4), so dsd supplies that ROM data independently. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Emitted as vague linkage because this TU defines the class's key function (daObjDpBrock_c::Behavior -- the first declared virtual that is neither inline nor pure, now that the destructor is defined in the class body). The cartridge keeps its canonical copy at arm9:0x02086e60, outside this entry's only licensed range (.text 0x02111d40-0x021120e4), so dsd supplies that ROM data independently. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Emitted as vague linkage because this TU defines the class's key function (daObjDpBrock_c::Behavior -- the first declared virtual that is neither inline nor pure, now that the destructor is defined in the class body). The cartridge keeps its canonical copy at arm9:0x02086e78, outside this entry's only licensed range (.text 0x02111d40-0x021120e4), so dsd supplies that ROM data independently. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Emitted as vague linkage because this TU defines the class's key function (daObjDpBrock_c::Behavior -- the first declared virtual that is neither inline nor pure, now that the destructor is defined in the class body). The cartridge keeps its canonical copy at arm9:0x02086e54, outside this entry's only licensed range (.text 0x02111d40-0x021120e4), so dsd supplies that ROM data independently. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Emitted as vague linkage because this TU defines the class's key function (daObjDpBrock_c::Behavior -- the first declared virtual that is neither inline nor pure, now that the destructor is defined in the class body). The cartridge keeps its canonical copy at arm9:0x0208e390, outside this entry's only licensed range (.text 0x02111d40-0x021120e4), so dsd supplies that ROM data independently. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Emitted as vague linkage because this TU defines the class's key function (daObjDpBrock_c::Behavior -- the first declared virtual that is neither inline nor pure, now that the destructor is defined in the class body). The cartridge keeps its canonical copy at arm9:0x0208e384, outside this entry's only licensed range (.text 0x02111d40-0x021120e4), so dsd supplies that ROM data independently. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it."
+    },
+    {
+      "symbol": "_ZTI10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021089ec",
+      "reason": "Emitted as vague linkage because this TU defines the class's key function (daObjDpBrock_c::Behavior -- the first declared virtual that is neither inline nor pure, now that the destructor is defined in the class body). The cartridge keeps its canonical copy at ov002:0x021089ec, outside this entry's only licensed range (.text 0x02111d40-0x021120e4), so dsd supplies that ROM data independently. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it."
+    },
+    {
+      "symbol": "_ZTS10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108a04",
+      "reason": "Emitted as vague linkage because this TU defines the class's key function (daObjDpBrock_c::Behavior -- the first declared virtual that is neither inline nor pure, now that the destructor is defined in the class body). The cartridge keeps its canonical copy at ov002:0x02108a04, outside this entry's only licensed range (.text 0x02111d40-0x021120e4), so dsd supplies that ROM data independently. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it."
+    },
+    {
+      "symbol": "_ZTI14daObjDpBrock_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov025",
+      "canonical_address": "0x021138d0",
+      "reason": "Emitted as vague linkage because this TU defines the class's key function (daObjDpBrock_c::Behavior -- the first declared virtual that is neither inline nor pure, now that the destructor is defined in the class body). The cartridge keeps its canonical copy at ov025:0x021138d0, outside this entry's only licensed range (.text 0x02111d40-0x021120e4), so dsd supplies that ROM data independently. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it."
+    },
+    {
+      "symbol": "_ZTS14daObjDpBrock_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov025",
+      "canonical_address": "0x021138dc",
+      "reason": "Emitted as vague linkage because this TU defines the class's key function (daObjDpBrock_c::Behavior -- the first declared virtual that is neither inline nor pure, now that the destructor is defined in the class body). The cartridge keeps its canonical copy at ov025:0x021138dc, outside this entry's only licensed range (.text 0x02111d40-0x021120e4), so dsd supplies that ROM data independently. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it."
+    },
+    {
+      "symbol": "_ZTV14daObjDpBrock_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov025",
+      "canonical_address": "0x02113914",
+      "reason": "The class's vtable, emitted by this TU because it defines the key function (daObjDpBrock_c::Behavior -- the first declared virtual that is neither inline nor pure, now that the destructor is defined in the class body). Section size 0x88 = 2 preamble words + 32 slots. The slot count is proven from the cartridge rather than from symbols.txt spacing: config/arm9/overlays/ov025/relocs.txt relocates every word from 0x02113910 (the typeinfo pointer, to _ZTI14daObjDpBrock_c at 0x021138d0) through 0x02113990 (slot 31, to ov002:0x020ee55c dBgActor_c::Kill), and the next relocated word 0x02113994 already belongs to _ZTI10daDpLift_c. The two ambiguous data_ov025_02113934/02113980 rows fall inside the table and are phantom interior symbols. The canonical copy is in THIS module at ov025:0x02113914 (the address point) but outside the licensed range (.text 0x02111d40-0x021120e4), which is .text only, so dsd supplies it as ROM data."
+    }
+  ]
+}

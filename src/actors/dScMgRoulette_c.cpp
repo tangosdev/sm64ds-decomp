@@ -1,23 +1,18 @@
 //cpp
-/* dScMgRoulette_c -- the Mushroom Roulette minigame, ov006, 40 functions
- * (.text 0x0210788c..0x0210a400). Racers are dealt onto a spinning board,
- * the countdown runs, and each racer is paid out by the tile it lands on.
+/* dScMgRoulette_c -- Mushroom Roulette. Racers are dealt onto a spinning
+ * board, the countdown runs, and each racer is paid by the tile it stops on.
  *
- * Eight functions are the class's own virtuals: InitResources,
- * CleanupResources, Behavior, Render, the destructor pair, OnYoshiTryEat and
- * OnTurnIntoEgg. The other 32 are file-local helpers: board hit-testing, the
- * racer update and draw loops, the slider physics and the meter strips.
- *
- * The compiler emits .text in reverse source order, so the functions run
- * here from the highest address down. Do not reorder.
+ * Functions are in reverse ROM order; do not reorder.
  *
  * common.h comes first so its flat Matrix4x3 wins the MATRIX4X3_DEFINED
  * guard; func_ov006_02107db8 copies a whole matrix and needs that spelling.
  *
- * Still raw: the func_ and data_ helpers are unnamed in symbols.txt, and the
- * header leaves the camera (0x4660), the table (0x4f38), the racers (0x51a8),
- * the meter strips (0x52ac) and the slider (0x530c) as padding or raw bytes,
- * so they are reached by offset.
+ * Leftover: the camera at 0x4660 stays an offset; it lives on the base.
+ * Behavior keeps mPhase, mPhaseTimer, mDealIndex, mTableReady (0x53d8),
+ * mTilesScored (0x53dc) and the payout clear at 0x53f4 behind H/HA/I,
+ * and its meter and slider calls at raw offsets: member form DIFFed
+ * there. The slider's PMF stays a local view.
+ * Most func_ and data_ helpers are unnamed.
  */
 
 #include "common.h"
@@ -76,32 +71,35 @@ struct C {
 
 /* One racer, 0x34 bytes, five of them at 0x51a8. Thing, RacerXY and
    RacerPos are three views of the same record; each helper keeps the view
-   it was matched with. */
+   it was matched with. x/y slide toward targetX/targetY by stepX/stepY.
+   state: 0 handled with 3, 1 sliding, 2 under the stylus,
+   3 stopped, 4 about to hop, 5 hopping, 6 settled, 7 sent to the side
+   pile. */
 typedef struct Thing {
-    s32 unk0;
-    s32 unk4;
-    s32 unk8;
-    s32 unkC;
-    s32 unk10;
-    s32 unk14;
-    s32 unk18;
-    s32 unk1C;
+    s32 x;
+    s32 y;
+    s32 grabX;
+    s32 grabY;
+    s32 stepX;
+    s32 stepY;
+    s32 targetX;
+    s32 targetY;
     s32 unk20;
     s32 unk24;
     s32 unk28;
-    s16 unk2C;
+    s16 tile;
     s16 unk2E;
-    s16 unk30;
-    u8 unk32;
+    s16 hop;
+    u8 state;
     u8 unk33;
 } Thing;
 
 struct RacerXY {
     int pad[4];
-    int x;
-    int y;
-    int a;
-    int b;
+    int stepX;
+    int stepY;
+    int targetX;
+    int targetY;
 };
 
 struct RacerPos {
@@ -120,7 +118,7 @@ typedef struct Racer {
 } Racer;
 typedef struct Obj9 {
     char _p0[0x51a8];
-    Racer racers[3]; /* 0x51a8 */
+    Racer racers[5]; /* 0x51a8 -- 5 x 0x34, see the header */
 } Obj9;
 
 /* Address launders and raw field macros. They stop the compiler reusing a
@@ -316,15 +314,15 @@ s32 dScMgRoulette_c::InitResources()
     *(volatile u16 *)0x04000008 = (*(volatile u16 *)0x04000008 & ~3) | 1;
 
     func_ov006_020c0aa8(raw + 0x4660);
-    if (func_ov006_020c1a88(raw + 0x4f38) == 0)
+    if (func_ov006_020c1a88((char *)mTable) == 0)
         return 0;
-    if (func_ov006_021085c0(raw + 0x530c) == 0)
+    if (func_ov006_021085c0((char *)mSlider) == 0)
         return 0;
 
     unk_0a8 = func_ov004_020ad8b8();
     unk_0ac = unk_0a8;
     func_ov004_020b682c();
-    func_ov006_02107b70(raw + 0x52ac);
+    func_ov006_02107b70((char *)mMeter);
     OnYoshiTryEat(-1);
     return 1;
 }
@@ -341,7 +339,7 @@ s32 dScMgRoulette_c::Behavior()
     case 0:
         break;
     case 1:
-        if (func_ov006_020c0efc(c + 0x4f38) != 0) {
+        if (func_ov006_020c0efc((char *)mTable) != 0) {
             if (H(0x53d8) == 0) {
                 H(0x53d8) = 1;
             }
@@ -351,7 +349,7 @@ s32 dScMgRoulette_c::Behavior()
             mPromptBlinkCount = 1;
             mPromptBlinkTimer = 0;
         }
-        if (func_ov006_020c0efc(c + 0x4f38) != 0) {
+        if (func_ov006_020c0efc((char *)mTable) != 0) {
             mPhaseTimer -= 1;
             if (H(0x53e8) == 0) {
                 mCameraPreset = 1;
@@ -361,7 +359,7 @@ s32 dScMgRoulette_c::Behavior()
                     dealY = LNDR(0 - (I(0x53f8) << 16)) + 0x80000;
                     dealPos[0] = 0x20000;
                     dealPos[1] = dealY;
-                    func_ov006_021095ac((int *)(c + 0x51a8 + I(0x53f8) * 0x34), dealPos);
+                    func_ov006_021095ac((int *)(mArray + I(0x53f8) * 0x34), dealPos);
                     mDealIndex += 1;
                     H(0x53e8) = 8;
                     func_ov004_020b1b08(1);
@@ -377,7 +375,7 @@ s32 dScMgRoulette_c::Behavior()
                         } while (i < mRacerCount);
                     }
                     H(0x53e8) = 0x258;
-                    func_ov006_020c1764(c + 0x4f38);
+                    func_ov006_020c1764((char *)mTable);
                     HA(0x53e6) += 1;
                     I(0x53f8) = 0;
                     Sound::PlayBank2_2D(0x15b);
@@ -398,7 +396,7 @@ s32 dScMgRoulette_c::Behavior()
                 int i = 0;
                 if (mRacerCount > 0) {
                     char *racerRaw = c;
-                    char *racer = c + 0x51a8;
+                    char *racer = (char *)mArray;
                     do {
                         *(short *)(racerRaw + 0x51d4) = func_ov006_02108650(*(int *)(racerRaw + 0x51c0) >> 12, *(int *)(racerRaw + 0x51c4) >> 12);
                         onTile = 0;
@@ -414,7 +412,7 @@ s32 dScMgRoulette_c::Behavior()
                         if (onTile == 0)
                             goto landedElsewhere;
                     landedInRange:
-                        func_ov006_02109530((int *)racer, (int *)&data_ov006_02142ab4[tileType * 8], 0x100);
+                        func_ov006_02109530((int *)racer, (int *)&((TileXY *)data_ov006_02142ab4)[tileType].x, 0x100);
                         goto nextRacer;
                     landedElsewhere:
                         func_ov006_0210935c((RacerPos *)racer, tileType);
@@ -436,7 +434,7 @@ s32 dScMgRoulette_c::Behavior()
                 int j = 0;
                 if (mRacerCount > 0) {
                     char *rowRaw = c;
-                    char *row = c + 0x51a8;
+                    char *row = (char *)mArray;
                     do {
                         if (*(short *)(rowRaw + 0x51d4) == 0x25) {
                             func_ov006_021092e8(row);
@@ -465,7 +463,7 @@ s32 dScMgRoulette_c::Behavior()
         int j;
         int payout;
         char *p;
-        onTile = (unk_53c4 == 0) ? 1 : 0;
+        onTile = (mBoardBusy == 0) ? 1 : 0;
         if (LNDR(onTile) != 0) {
             j = 0;
             mPromptEnabled = 0;
@@ -475,9 +473,11 @@ s32 dScMgRoulette_c::Behavior()
                 tile = mSelectedTile;
                 mScore = 0;
                 if (mRacerCount > 0) {
-                    p = c + 0x51a8;
+                    p = (char *)mArray;
                     do {
                         payout = func_ov006_02108b90((short *)p, tile);
+                        /* mMeter[3..0] (payouts 2, 3, 6, 12) DIFFed in this
+                           function; the offsets are those strips. */
                         if (payout == 2) {
                             func_ov006_02107d20((int *)(c + 0x52f4), (int)p);
                         } else if (payout == 3) {
@@ -507,10 +507,10 @@ s32 dScMgRoulette_c::Behavior()
             short target = mTargetScore;
             short score = mScore;
             if (score > target) {
-                func_ov006_020c0c80(c + 0x4f38);
+                func_ov006_020c0c80(mTable);
                 func_ov004_020b0a54(4);
             } else if (score < target) {
-                func_ov006_020c0d68(c + 0x4f38);
+                func_ov006_020c0d68(mTable);
                 func_ov004_020b0a54(5);
             } else {
                 func_ov004_020b0a54(8);
@@ -525,7 +525,7 @@ s32 dScMgRoulette_c::Behavior()
     {
         int n = 0;
         if (mRacerCount > 0) {
-            char *p = c + 0x51a8;
+            char *p = (char *)mArray;
             do {
                 func_ov006_02108f2c((Thing *)p);
                 n++;
@@ -536,7 +536,7 @@ s32 dScMgRoulette_c::Behavior()
     {
         int n = 0;
         if (mRacerCount > 0) {
-            char *p = c + 0x51a8;
+            char *p = (char *)mArray;
             do {
                 func_ov006_02108d28((int *)p);
                 n++;
@@ -545,7 +545,7 @@ s32 dScMgRoulette_c::Behavior()
         }
     }
     func_ov006_02107db8((C *)(c + 0x530c));
-    func_ov006_020c19d0(c + 0x4f38);
+    func_ov006_020c19d0((char *)mTable);
     func_ov004_020b65e4();
     return 1;
 }
@@ -577,14 +577,14 @@ s32 dScMgRoulette_c::Render()
     func_ov006_02109aa0(raw);
 
     {
-        int idle = (int)(((long long)(unk_53c4 == 0)));
+        int idle = (int)(((long long)(mBoardBusy == 0)));
         if (idle != 0) {
             if (mPhase < 8) {
                 if (data_020a0db0 & 8) {
                     s16 idx = mSelectedTile;
                     Hud_RenderSprite((void *)data_ov006_02138c18,
-                                        *(int *)(data_ov006_02142ab4 + idx * 8) >> 12,
-                                        *(int *)(data_ov006_02142ab8 + idx * 8) >> 12,
+                                        ((TileXY *)data_ov006_02142ab4)[idx].x >> 12,
+                                        ((TileXY *)data_ov006_02142ab8)[idx].x >> 12, /* = [idx].y */
                                         -1, 1);
                 }
             }
@@ -631,9 +631,9 @@ s32 dScMgRoulette_c::Render()
             func_ov006_020c0aa8(raw + 0x4660);
         }
         if (preset != 0)
-            func_ov006_02107d80(raw + 0x530c);
+            func_ov006_02107d80((char *)mSlider);
         else
-            func_ov006_020c1804(raw + 0x4f38);
+            func_ov006_020c1804((char *)mTable);
     }
 
     return 1;
@@ -643,7 +643,7 @@ s32 dScMgRoulette_c::Render()
 /* Frees the slider's two model files. */
 s32 dScMgRoulette_c::CleanupResources()
 {
-    func_ov006_0210858c((ResPair *)((char *)this + 0x530c));
+    func_ov006_0210858c((ResPair *)mSlider);
     return 1;
 }
 
@@ -660,7 +660,7 @@ int dScMgRoulette_c::OnTurnIntoEgg(int /* mode */)
             (mPhase)++;
         break;
     case 6:
-        if (func_ov006_020c1718(raw + 0x4f38) != 0) {
+        if (func_ov006_020c1718((char *)mTable) != 0) {
             mPhaseTimer = 0x3c;
             mDealIndex = 0;
             (mPhase)++;
@@ -699,12 +699,12 @@ void dScMgRoulette_c::OnYoshiTryEat(int /* arg */)
     int count;
 
     func_ov006_02107b14();
-    func_ov006_020c0e8c((int *)(raw + 0x4f38));
+    func_ov006_020c0e8c((int *)mTable);
 
     mScore = 0;
     mPhaseTimer = 0xa;
 
-    racer = (int *)(raw + 0x51a8);
+    racer = (int *)mArray;
     for (i = 0; i < 5; i++) {
         func_ov006_021092a0(racer);
         racer = (int *)((char *)racer + 0x34);
@@ -717,7 +717,7 @@ void dScMgRoulette_c::OnYoshiTryEat(int /* arg */)
     if (count >= 5) count = 5;
     mRacerCount = count;
 
-    func_ov006_02108524(raw + 0x530c);
+    func_ov006_02108524((char *)mSlider);
 
     data_ov006_021428c8 = 0;
     mCameraPreset = 0;
@@ -764,16 +764,16 @@ void func_ov006_02109530(int* out, int* target, int scale){
 extern "C" {
 void func_ov006_021094ac(RacerXY *racer, int *target) {
     int v[2];
-    racer->a = target[0];
-    racer->b = target[1];
-    Vec2_Sub(v, &racer->a, (int *)racer);
-    racer->x = v[0];
-    racer->y = v[1];
-    if (func_0203d434(&racer->x)) {
-        func_0203d630(&racer->x, 0x18000);
+    racer->targetX = target[0];
+    racer->targetY = target[1];
+    Vec2_Sub(v, &racer->targetX, (int *)racer);
+    racer->stepX = v[0];
+    racer->stepY = v[1];
+    if (func_0203d434(&racer->stepX)) {
+        func_0203d630(&racer->stepX, 0x18000);
     }
-    if (racer->x < 0) racer->x = -racer->x;
-    if (racer->y < 0) racer->y = -racer->y;
+    if (racer->stepX < 0) racer->stepX = -racer->stepX;
+    if (racer->stepY < 0) racer->stepY = -racer->stepY;
 }
 }
 
@@ -896,38 +896,38 @@ void func_ov006_02108f2c(Thing* racer)
     int b;
     s16 type;
 
-    state = racer->unk32;
+    state = racer->state;
     if (state == 0 || state == 3) {
-        ApproachLinear(racer->unk0, racer->unk18, racer->unk10);
-        ApproachLinear(racer->unk4, racer->unk1C, racer->unk14);
+        ApproachLinear(racer->x, racer->targetX, racer->stepX);
+        ApproachLinear(racer->y, racer->targetY, racer->stepY);
     }
 
-    state = racer->unk32;
+    state = racer->state;
     if (state == 1) {
         func_ov006_02108e24((int *)racer);
-        ApproachLinear(racer->unk0, racer->unk18, racer->unk10);
-        ApproachLinear(racer->unk4, racer->unk1C, racer->unk14);
+        ApproachLinear(racer->x, racer->targetX, racer->stepX);
+        ApproachLinear(racer->y, racer->targetY, racer->stepY);
     } else if (state == 7) {
         s32 out[2];
-        ApproachLinear(racer->unk0, racer->unk18, racer->unk10);
-        ApproachLinear(racer->unk4, racer->unk1C, racer->unk14);
-        Vec2_Sub(out, &racer->unk18, (int *)racer);
+        ApproachLinear(racer->x, racer->targetX, racer->stepX);
+        ApproachLinear(racer->y, racer->targetY, racer->stepY);
+        Vec2_Sub(out, &racer->targetX, (int *)racer);
         if (out[0] != 0)
             return;
         if (out[1] != 0)
             return;
-        racer->unk32 = 6;
+        racer->state = 6;
         func_ov004_020b1b40(1);
     } else if (state == 4) {
         s32 out[2];
-        ApproachLinear(racer->unk0, racer->unk18, racer->unk10);
-        ApproachLinear(racer->unk4, racer->unk1C, racer->unk14);
-        Vec2_Sub(out, &racer->unk18, (int *)racer);
+        ApproachLinear(racer->x, racer->targetX, racer->stepX);
+        ApproachLinear(racer->y, racer->targetY, racer->stepY);
+        Vec2_Sub(out, &racer->targetX, (int *)racer);
         if (out[0] != 0)
             return;
         if (out[1] == 0) {
-            racer->unk30 = 0x14;
-            racer->unk32 = 5;
+            racer->hop = 0x14;
+            racer->state = 5;
         }
     } else if (state == 5) {
         s32 d;
@@ -935,11 +935,11 @@ void func_ov006_02108f2c(Thing* racer)
         s32 q;
         d = data_ov004_020b9488;
         p = (s32*)(((s32)racer + 4));
-        q = -((racer->unk30 - (d >> 1)) << 12) / d - 0x600;
+        q = -((racer->hop - (d >> 1)) << 12) / d - 0x600;
         *p += (s32)((((s64)q << 14) + 0x800) >> 12);
         *(s16*)(((s32)racer + 0x30)) -= 1;
-        if (racer->unk30 == 0)
-            racer->unk32 = 6;
+        if (racer->hop == 0)
+            racer->state = 6;
     } else if (state == 2) {
         s32 vec[2];
         u8 idx = data_020a0e40;
@@ -948,11 +948,11 @@ void func_ov006_02108f2c(Thing* racer)
             vec[1] = data_020a0deb[idx * 4] << 12;
             func_ov006_021094ac((RacerXY *)racer, vec);
         } else {
-            type = func_ov006_02108650(racer->unk18 >> 12, racer->unk1C >> 12);
-            racer->unk2C = type;
+            type = func_ov006_02108650(racer->targetX >> 12, racer->targetY >> 12);
+            racer->tile = type;
             if (type != 0x25) {
                 b = 0;
-                type = racer->unk2C;
+                type = racer->tile;
                 if (type >= 0xc && type <= 0x1c)
                     b = 1;
                 if (b != false)
@@ -975,10 +975,10 @@ void func_ov006_02108f2c(Thing* racer)
                 func_ov006_0210927c((char *)racer);
             }
             data_ov006_021428c8 = 0;
-            racer->unk32 = 1;
+            racer->state = 1;
         }
-        ApproachLinear(racer->unk0, racer->unk18, racer->unk10);
-        ApproachLinear(racer->unk4, racer->unk1C, racer->unk14);
+        ApproachLinear(racer->x, racer->targetX, racer->stepX);
+        ApproachLinear(racer->y, racer->targetY, racer->stepY);
     }
 }
 }

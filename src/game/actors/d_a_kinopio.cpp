@@ -1,22 +1,35 @@
 //cpp
-/* The Toad NPC (KINOPIO registry): idle and talk states, head tracking,
- * star-guard dialogue, and a variant-1 companion spawn. 15 functions.
+/* daKinopio_c -- Toad (KINOPIO), ov085.
  *
- * Load-bearing orders, all measured: common.h before math/Matrix.h (the
- * flat Matrix4x3 spelling keeps the destructor group D1,D0); source
- * ROM-ascending under defer_codegen off; the destructor is declared in
- * the header and defined out of line below (D1 then D0, no D2).
+ * He idles until a Mario (actor 0xbf) touches him, then turns to face the
+ * player and talks. His head tracks the closest player and he fades out at a
+ * distance. A Toad tied to a star (low byte of mAngleX) whose star is still
+ * uncollected, while the player owns the star count data_ov085_0212f27c asks
+ * for, says his base line, spawns POWER_STAR 0xb2 after the talk and only
+ * then moves on to his next line. If the star is already collected or the
+ * player has too few stars, InitResources starts him on the next line
+ * instead. Variant 1 keeps a companion actor 0x10d keyed to the nearest
+ * player's character.
  *
- * Leftover: math/vector helpers and game-state free functions keep
- *   linker names (no header homes).
- * Leftover: dBgW_KcMbg::SetFile, dCcAc_c::Init, ModelAnim::SetAnim,
- *   DropShadowRadHeight and Particle::System::NewSimple keep mangled
- *   spellings (Fix12<int> by value, wall 6az).
- * Leftover: the companion Spawn keeps its mangled spelling: forming
- *   a Vector3 reference over int storage is not free, unlike the
- *   star Spawn's real local.
- * Leftover: data_0209f2f8 / data_0209caa0 / data_0209f318 and the
- *   ov085/ov002 file homes keep linker names.
+ * DO NOT "TIDY" THESE -- each one is load-bearing (all measured):
+ *   common.h before math/Matrix.h: the flat Matrix4x3 keeps the destructor
+ *   group D1, D0 (see the note on the includes).
+ *   Source is ROM-ascending under defer_codegen off; the destructor is
+ *   declared in the header and defined out of line below (D1 then D0, no D2).
+ *   The two opt_propagation off brackets (St_Talk_Main, InitResources).
+ *   Model::Render is called qualified in Render.
+ *
+ * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS:
+ *   dCcAc_c::Init, ModelAnim::SetAnim, DropShadowRadHeight and
+ *   Sound::PlaySub take Fix12<int> by value (notes/mwccarm-codegen.md 6az).
+ *   The companion Spawn: forming a Vector3 reference over int storage is
+ *   not free, unlike the star Spawn's real local.
+ *
+ * Known limits:
+ *   Math/vector helpers and game-state free functions keep linker names (no
+ *   header homes).
+ *   data_0209f2f8 / data_0209caa0 and the ov085/ov002 file handles keep
+ *   linker names.
  */
 /* common.h FIRST, and the order is load-bearing. Both it and math/Matrix.h
  * define Matrix4x3 behind one shared guard -- flat `s32 m[12]` here, and
@@ -129,13 +142,9 @@ void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
 
 #pragma defer_codegen off
 
-/* ROM ordinals 0 and 1 -- _ZN11daKinopio_cD1Ev 0x02129020 size 0x40,
-                          _ZN11daKinopio_cD0Ev 0x02129060 size 0x54 */
 // @symbol _ZN11daKinopio_cD1Ev
 // @symbol _ZN11daKinopio_cD0Ev
-/* recovered: real C++ destructor -- the compiler emits the whole body.
- *
- * ONE definition, TWO ROM functions. mwccarm emits the deleting variant D0 and
+/* ONE definition, TWO ROM functions. mwccarm emits the deleting variant D0 and
  * the complete variant D1 from this single declaration, so D0 has no source of
  * its own; with deferred code generation off they land in the cartridge's order,
  * D1 first at 0x02129020 and D0 at 0x02129060, and the base-object variant D2
@@ -153,7 +162,7 @@ daKinopio_c::~daKinopio_c()
 }
 
 // @symbol _ZN11daKinopio_c12GetMessageIDEv
-/* Which line of dialogue this Toad says. The player's own offset at +8 shifts
+/* Which line of dialogue this Toad says. The player's param1 (+8) shifts
  * the id per character; the 0x32 mode overrides it entirely. */
 u16 daKinopio_c::GetMessageID()
 {
@@ -176,9 +185,9 @@ u16 daKinopio_c::GetMessageID()
     }
 
     if (mVariant == 1 && func_02013a44() != 0) {
-        int n = player[2];
+        int playerParam = player[2];
         int message = 0xb0a;
-        message += n;
+        message += playerParam;
         return ObjectMessageIDToActualMessageID((s16)(u16)message);
     }
 
@@ -198,7 +207,7 @@ void daKinopio_c::St_Talk_Main()
     char *c = (char *)this;
     char *player;
     int messageID;
-    s16 angle;
+    s16 angleToPlayer;
     Vector3 playerPos;
     Vector3 messagePos;
     Vector3 starPos;
@@ -212,11 +221,11 @@ void daKinopio_c::St_Talk_Main()
         playerPos.y = pos[1];
         playerPos.z = pos[2];
     }
-    angle = Vec3_HorzAngle((Vector3 *)(c + 0x5c), &playerPos);
+    angleToPlayer = Vec3_HorzAngle((Vector3 *)(c + 0x5c), &playerPos);
     talkState = ((Player *)player)->GetTalkState();
     switch (talkState) {
     case 0: {
-        if (_Z14ApproachLinearRsss(&mAngleY, angle, 0x800) == 0)
+        if (_Z14ApproachLinearRsss(&mAngleY, angleToPlayer, 0x800) == 0)
             return;
         if (data_0209f2f8 == 0x32) {
             if ((data_0209caa0[1] & 0x40000000) == 0)
@@ -339,8 +348,6 @@ void daKinopio_c::RunState()
     (this->*data_ov085_0212fe88[index].main)();
 }
 
-/* ROM ordinal 9 -- _ZN11daKinopio_c15UpdateModelPoseEv, 0x021295bc,
-                    size 0x22c */
 // @symbol _ZN11daKinopio_c15UpdateModelPoseEv
 /* An array-only wrapper keeps the C++ aggregate copies in the same ldm/stm form
  * the original C-shaped match used. It stays local to the member that recovered
@@ -357,10 +364,10 @@ void daKinopio_c::UpdateModelPose()
     u32 id;
     int x, y, z;
 
-    Matrix4x3_FromRotationY(c + 0x124, *(s16 *)(c + 0x8e));
-    *(s32 *)(c + 0x148) = *(s32 *)(c + 0x5c) >> 3;
-    *(s32 *)(c + 0x14c) = (*(s32 *)(c + 0x60) + 0x4000) >> 3;
-    *(s32 *)(c + 0x150) = *(s32 *)(c + 0x64) >> 3;
+    Matrix4x3_FromRotationY(c + 0x124, mAngleY);
+    *(s32 *)(c + 0x148) = mPosX >> 3;
+    *(s32 *)(c + 0x14c) = (mPosY + 0x4000) >> 3;
+    *(s32 *)(c + 0x150) = mPosZ >> 3;
 
     *(MatrixWords *)&data_020a0e68 =
         *(MatrixWords *)(*(char **)(c + 0x11c) + 0xf0);
@@ -400,15 +407,13 @@ void daKinopio_c::UpdateModelPose()
     }
 
     *(MatrixWords *)(c + 0x1c4) = *(MatrixWords *)&IDENTITY_MATRIX4X3;
-    *(s32 *)(c + 0x1e8) = *(s32 *)(c + 0x5c) >> 3;
-    *(s32 *)(c + 0x1ec) = (*(s32 *)(c + 0x60) - 0x8000) >> 3;
-    *(s32 *)(c + 0x1f0) = *(s32 *)(c + 0x64) >> 3;
+    *(s32 *)(c + 0x1e8) = mPosX >> 3;
+    *(s32 *)(c + 0x1ec) = (mPosY - 0x8000) >> 3;
+    *(s32 *)(c + 0x1f0) = mPosZ >> 3;
     _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
         c, c + 0x16c, c + 0x1c4, 0x50000, 0x64000, 0xf);
 }
 
-/* ROM ordinal 10 -- _ZN11daKinopio_c16CleanupResourcesEv, 0x021297e8,
-                     size 0x6c */
 // @symbol _ZN11daKinopio_c16CleanupResourcesEv
 /* The three ov002 handles are released only by the variant that took them. The
  * legacy file reached all six through an `int[]` spelling and a cast; they are
@@ -467,42 +472,42 @@ int daKinopio_c::Behavior()
     RunState();
     mModelAnim.UpdateVerts();
 
-    Player *p = ClosestPlayer();
-    if (p != 0) {
+    Player *player = ClosestPlayer();
+    if (player != 0) {
         s32 threshold = 0xfa000;
         if (data_0209f2f8 == 0x32)
             threshold = 0x1f4000;
 
-        Vector3 *psrc = (Vector3 *)&p->mPosX;
-        Vector3 v;
-        v.x = psrc->x;
-        v.y = psrc->y;
-        v.z = psrc->z;
+        Vector3 *psrc = (Vector3 *)&player->mPosX;
+        Vector3 playerPos;
+        playerPos.x = psrc->x;
+        playerPos.y = psrc->y;
+        playerPos.z = psrc->z;
 
-        s32 hd = Vec3_HorzDist(&mPosX, &v);
+        s32 horzDist = Vec3_HorzDist(&mPosX, &playerPos);
 
-        Vector3 v2;
-        v2.y = v.y;
-        v2.x = v.x;
-        v2.z = v.z;
-        v2.y = v.y + 0x1e000;
+        Vector3 lookTarget;
+        lookTarget.y = playerPos.y;
+        lookTarget.x = playerPos.x;
+        lookTarget.z = playerPos.z;
+        lookTarget.y = playerPos.y + 0x1e000;
 
-        s16 ha = Vec3_HorzAngle(&mPosX, &v2);
-        s16 va = Vec3_VertAngle(&mPosX, &v2);
+        s16 yawToPlayer = Vec3_HorzAngle(&mPosX, &lookTarget);
+        s16 pitchToPlayer = Vec3_VertAngle(&mPosX, &lookTarget);
 
-        if (hd < 0x190000)
+        if (horzDist < 0x190000)
             mTargetOpacity = 0xff;
         else
             mTargetOpacity = 0x3c;
 
-        if (hd < threshold && AngleDiff(ha, mAngleY) < 0x3000) {
-            mHeadYawTarget = (s16)(ha - mAngleY);
-            mHeadPitchTarget = va;
+        if (horzDist < threshold && AngleDiff(yawToPlayer, mAngleY) < 0x3000) {
+            mHeadYawTarget = (s16)(yawToPlayer - mAngleY);
+            mHeadPitchTarget = pitchToPlayer;
         } else if (data_0209f2f8 != 0x32) {
             mHeadYawTarget = 0;
             mHeadPitchTarget = 0;
         } else {
-            _Z14ApproachLinearRsss(&mAngleY, ha, 0x100);
+            _Z14ApproachLinearRsss(&mAngleY, yawToPlayer, 0x100);
             mHeadYawTarget = 0;
             mHeadPitchTarget = 0;
         }
@@ -540,8 +545,6 @@ int daKinopio_c::Behavior()
     return 1;
 }
 
-/* ROM ordinal 13 -- _ZN11daKinopio_c13InitResourcesEv, 0x02129a7c,
-                     size 0x254 */
 // @symbol _ZN11daKinopio_c13InitResourcesEv
 /* Spawn-time setup, and most of it is unpacking the spawn parameter.
  *
@@ -588,16 +591,16 @@ int daKinopio_c::InitResources()
         _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9a0);
         _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9c0);
         if (func_02013a44() != 0) {
-            Player *p = ClosestPlayer();
-            if (p == 0)
+            Player *player = ClosestPlayer();
+            if (player == 0)
                 goto after_spawn;
             {
                 u32 k = 0xd;
-                u8 pl = *(u8 *)((char *)p + 0x6d9);
-                s8 cc = mAreaId;
+                u8 character = *(u8 *)((char *)player + 0x6d9);
+                s8 area = mAreaId;
                 int m1 = -1;
                 void *spawned = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-                    0x10d, k | ((u32)pl << 8), (Vector3 *)&mPosX, 0, cc, m1);
+                    0x10d, k | ((u32)character << 8), (Vector3 *)&mPosX, 0, area, m1);
                 if (spawned != 0)
                     mCapUniqueID = *(s32 *)((char *)spawned + 4);
             }
@@ -605,8 +608,8 @@ int daKinopio_c::InitResources()
         }
     }
     if (mStarID != 0xff) {
-        u16 v = mMessageID;
-        switch (v) {
+        u16 message = mMessageID;
+        switch (message) {
         case 0xaf5: mStarReqIndex = 0; break;
         case 0xaf7: mStarReqIndex = 1; break;
         case 0xaf9: mStarReqIndex = 2; break;

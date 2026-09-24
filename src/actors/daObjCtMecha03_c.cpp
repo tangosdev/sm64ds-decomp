@@ -1,30 +1,38 @@
 //cpp
-/* Production translation unit for ov065/daObjCtMecha03_c.
+/* daObjCtMecha03_c -- the swinging pendulum of Tick Tock Clock (CT_MECHA03),
+ * ov065.
  *
- * deslop
+ * It swings under mSwingAccel; in clock mode 2 (data_0209f2c0) each stop
+ * rolls a new push strength and an occasional pause. Its shadow follows the
+ * bob, not the pivot (func_ov065_02119fe8).
  *
- * Leftover:
- * - dBgW_KcMbg::SetFile / DropShadowScaleXYZ / dBgActor_c::IsClsnInRange stay
- *   mangled (Fix12-by-value, 6az)
- * - func_020393a4 / func_02039394 / func_020393d4 store dBgW range/callback
- *   (no setter)
- * - Behavior I16(0x322) / accelP mask / 0x300+0x22 load (named mSwingAngle /
- *   mSwingSpeed CSE to the r4+0x300 base; DIFF)
- * - func_ov065_02119fe8 / func_ov065_0211a114 keep ROM address names
- * - data_ov065_* handles; this TU is text-only (S14 no g_profile_CT_MECHA03)
- * - data_ov035_02112198 CLPS_Block (overlay_residency settlement, not a ROM name)
- * - common.h first (shadow/model matrices need the flat 12-word spelling)
- * - return new emits homeless _ZN10dBgActor_cD2Ev; compiler-only policy deadstrips it
+ * DO NOT "TIDY" THESE -- each one is load-bearing:
  *
- * mwccarm emits ordinary functions in reverse source order, so the nine
- * definitions below intentionally run from the highest retail address back
- * toward the compiler-owned destructor group. Keep the factory first.
+ *   mwccarm emits ordinary functions in reverse source order, so the nine
+ *   definitions below run from the highest retail address back toward the
+ *   compiler-owned destructor group. Keep the factory first. The factory is
+ *   `return new` here; it emits a homeless _ZN10dBgActor_cD2Ev that the
+ *   compiler-only policy deadstrips.
  *
- * func_ov065_02119fe8 and func_ov065_0211a114 keep their address-derived
- * names: ov065's symbols.txt spells them that way, so they are C-linkage
- * free functions here rather than members.
+ *   common.h first: the shadow and model matrices need the flat 12-word
+ *   spelling.
  *
- * The factory is `return new` in this file.
+ *   Behavior's I16(0x322), the accelP mask and the 0x300+0x22 load. The named
+ *   mSwingAngle / mSwingSpeed CSE to the r4+0x300 base and do not match.
+ *
+ *   dBgW_KcMbg::SetFile / DropShadowScaleXYZ / dBgActor_c::IsClsnInRange stay
+ *   mangled: Fix12<int> by value (notes/mwccarm-codegen.md 6az).
+ *
+ * Known limits:
+ *   func_ov065_02119fe8 and func_ov065_0211a114 keep their address-derived
+ *   names: ov065's symbols.txt spells them that way, so they are C-linkage
+ *   free functions here rather than members.
+ *   func_020393a4 / func_02039394 / func_020393d4 store the dBgW range and
+ *   callback; there is no setter.
+ *
+ * NOT OWNED BY THIS TU (it is text-only): the data_ov065_* handles; no
+ * g_profile_CT_MECHA03; data_ov035_02112198, the CLPS_Block, whose
+ * name is an overlay_residency settlement rather than a ROM name.
  */
 
 #include "common.h"
@@ -74,16 +82,12 @@ extern SharedFilePtr data_ov065_0211d894;
 extern int data_ov035_02112198;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol daObjCtMecha03_c_classInit
 extern "C" daObjCtMecha03_c *daObjCtMecha03_c_classInit()
 {
     return new daObjCtMecha03_c();
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjCtMecha03_c13InitResourcesEv
 int daObjCtMecha03_c::InitResources()
 {
@@ -117,8 +121,6 @@ int daObjCtMecha03_c::InitResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjCtMecha03_c8BehaviorEv
 int daObjCtMecha03_c::Behavior()
 {
@@ -145,13 +147,13 @@ int daObjCtMecha03_c::Behavior()
                 }
             }
             if (data_0209f2c0 == 2 && mSwingSpeed == 0) {
-                int r0 = RandomIntInternal(&data_0209e650);
-                if ((unsigned)r0 % 3 != 0)
+                int roll = RandomIntInternal(&data_0209e650);
+                if ((unsigned)roll % 3 != 0)
                     mSwingAccel = 0xd;
                 else
                     mSwingAccel = 0x2a;
-                if ((r0 & 1) == 0) {
-                    mPauseTimer = ((unsigned)r0 >> 0x1b) + 3;
+                if ((roll & 1) == 0) {
+                    mPauseTimer = ((unsigned)roll >> 0x1b) + 3;
                 }
             }
             if (mSwingSpeed == 0) {
@@ -169,8 +171,6 @@ int daObjCtMecha03_c::Behavior()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjCtMecha03_c6RenderEv
 int daObjCtMecha03_c::Render()
 {
@@ -178,8 +178,6 @@ int daObjCtMecha03_c::Render()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjCtMecha03_c16CleanupResourcesEv
 int daObjCtMecha03_c::CleanupResources()
 {
@@ -190,8 +188,6 @@ int daObjCtMecha03_c::CleanupResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov065_0211a114
 /* Writes mModel.mat4x3 from the actor's Y/Z angles and copies the
    actor position into its translation row. */
@@ -205,33 +201,31 @@ extern "C" int func_ov065_0211a114(daObjCtMecha03_c *c)
     return z;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov065_02119fe8
 /* Drops the pendulum's shadow: swings a fixed offset through the actor's
    orientation, raycasts the ground under the result, then hands the shadow
    matrix to dActor_c::DropShadowScaleXYZ. */
 extern "C" void func_ov065_02119fe8(daObjCtMecha03_c *self)
 {
-    Vector3 v1;
-    Vector3 v2;
+    Vector3 armOffset;
+    Vector3 bobPos;
     Vector3 pos;
-    v1.y = 0;
-    v1.y = -0x320000;
-    v2.x = 0;
-    v2.y = 0;
-    v2.z = 0;
-    v1.x = 0;
-    v1.z = 0;
+    armOffset.y = 0;
+    armOffset.y = -0x320000;
+    bobPos.x = 0;
+    bobPos.y = 0;
+    bobPos.z = 0;
+    armOffset.x = 0;
+    armOffset.z = 0;
     Matrix4x3_FromRotationZXYExt(&data_020a0e68, self->mAngleX, self->mAngleY, self->mAngleZ);
-    MulVec3Mat4x3(&v1, &data_020a0e68, &v2);
-    AddVec3(&v2, (Vector3 *)&self->mPosX, &v2);
+    MulVec3Mat4x3(&armOffset, &data_020a0e68, &bobPos);
+    AddVec3(&bobPos, (Vector3 *)&self->mPosX, &bobPos);
     {
-        int vy = v2.y;
-        pos.x = v2.x;
-        pos.z = v2.z;
-        pos.y = vy;
-        pos.y = vy - 0xc8000;
+        int bobY = bobPos.y;
+        pos.x = bobPos.x;
+        pos.z = bobPos.z;
+        pos.y = bobY;
+        pos.y = bobY - 0xc8000;
     }
     dBgCh_Gnd rc;
     rc.SetObjAndPos(pos, 0);
@@ -239,15 +233,13 @@ extern "C" void func_ov065_02119fe8(daObjCtMecha03_c *self)
     if (rc.DetectClsn())
         self->mGroundY = rc.clsnY;
     Matrix4x3_FromRotationY(&self->mShadowMat, self->mAngleY);
-    self->mShadowMat.m[9] = v2.x >> 3;
+    self->mShadowMat.m[9] = bobPos.x >> 3;
     self->mShadowMat.m[10] = self->mGroundY >> 3;
-    self->mShadowMat.m[11] = v2.z >> 3;
+    self->mShadowMat.m[11] = bobPos.z >> 3;
     _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
         self, &self->mShadowModel, &self->mShadowMat, 0x12c000, 0x12c000, 0x78000, 0xf);
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 /* No separate body lives here. The inline virtual destructor in the directly
  * included class header makes mwccarm emit retail's D1 then D0 order without
  * the otherwise homeless D2 variant. */

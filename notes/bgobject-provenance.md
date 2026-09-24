@@ -757,7 +757,7 @@ same offsets:
 * `include/daObjC0Water_c.h` — `mCamSpacePosX`.
 * `include/TTC_MovingBeam.h` — `mTerminalVelocity`, `mVertSpeed`, `mClsnMat`.
 * `include/daObjSlIceBlock_c.h` — `mHorzSpeed`.
-* `include/PyramidStep.h` — `param1`, `mAngleY`, `mVertSpeed`.
+* `include/daObjDpBrock_c.h` — `param1`, `mAngleY`, `mVertSpeed`.
 * `include/PathLift.h` — `actorID`.
 * `include/daObjEmmLog_c.h` — `mPosY`.
 * `include/daObjCtMecha10_c.h` — `actorID`, `mAngleY`.

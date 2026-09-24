@@ -1,35 +1,47 @@
 //cpp
-/* Penguin Defender (PENGUIN_DEFENDER 258) -- ov027/daPgDfdr_c.
+/* daPgDfdr_c -- the Penguin Defender (PENGUIN_DEFENDER 258), ov027.
+ *
+ * A solid penguin (it carries a KCL mesh collider) placed at a fixed spot
+ * that ignores its spawn position: InitResources sets (0x6c4000, 0xcb2000,
+ * 0x182bb8) facing 0xdd30, then drops it onto the ground. It patrols in
+ * nine steps from the stride-0xc table at data_ov027_02113a1c (distance,
+ * speed, start and end heading per step): it walks the current step along
+ * its start heading (state 1), then advances to the next step, pauses 20
+ * frames and turns to that next step's end heading (state 0).
+ * Footsteps play sound 0xf3.
  *
  * ov027 is mixed (sliding ice / chill bully / Bubba / snowman breath).
  * RTTI names this class daPgDfdr_c; the debug table names PENGUIN_DEFENDER.
  *
- * common.h FIRST: func_ov027_02111994 assigns a whole Matrix4x3, and the ROM
- * copies it as three 4-word ldm/stm pairs. common.h's flat s32 m[12] is that
- * copy; math/Matrix.h's nested {Matrix3x3 r; Vector3 t;} splits it (0x94 ->
- * 0xac).
- *
- * deslop leftovers:
- * - SetAnim / TextureSequence::SetFile / dBgW_KcMbg::SetFile / dCcAc_c::Init
- *   6az: this TU's InitResources and func_ov027_02111ca8 / 02111b2c pass
- *   Fix12<int> by value; the header method form size-DIFFs.
- * - dBgActor_c::IsClsnInRangeOnScreen 6az: Behavior calls it; the header
- *   method form is refused by the bytes (include/dBgActor_c.h).
- * - func_020393d4: InitResources stores dBgW::UpdatePosAndAngs on
- *   mMeshCollider; dBgW.h has no setter.
- * - func_0201267c: func_ov027_02111a28 plays 0xf3 at mCamSpacePosX on the
- *   walk animation's footstep frames.
- * - SharedFilePtr +4: InitResources' TextureSequence::Prepare / SetFile
- *   read the BMD/BTP at data_ov027_02113c7c / 02113c94 +4;
- *   SharedFilePtr.h has no fields.
- * - data_ov027_* model/KCL/BCA/CLPS handles and the four aliasing
- *   stride-0xc step symbols (02113a1c / 20 / 24 / 26); this TU consumes
- *   them, overlay .data owns them.
- * - S14: g_profile_PENGUIN_DEFENDER stays outside the licensed .text.
- * - func_ov027_02111a28 keeps the (int)c+0x3d9 / +0x3d4 pointer forms and
+ * DO NOT "TIDY" THESE -- each one is load-bearing:
+ *   common.h FIRST: func_ov027_02111994 assigns a whole Matrix4x3, and the
+ *   ROM copies it as three 4-word ldm/stm pairs. common.h's flat s32 m[12]
+ *   is that copy; math/Matrix.h's nested {Matrix3x3 r; Vector3 t;} splits it
+ *   (0x94 -> 0xac).
+ *   func_ov027_02111a28 keeps the (int)c+0x3d9 / +0x3d4 pointer forms and
  *   the c+0x378 / +0x380 / +0x74 loads: named mStepIndex++ / mDistanceLeft
  *   -= / mModelAnim.currFrame / file / mCamSpacePosX CSE the field address.
- * - func_ov027_02111d38 / 02111cfc keep the incomplete C/PMF stand-in over
+ *
+ * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS (Fix12<int> by value, see
+ * notes/mwccarm-codegen.md 6az; the header method form changes the code
+ * size):
+ *   SetAnim, TextureSequence::SetFile, dBgW_KcMbg::SetFile, dCcAc_c::Init
+ *   (InitResources, func_ov027_02111ca8 / 02111b2c).
+ *   dBgActor_c::IsClsnInRangeOnScreen (Behavior): the header method form is
+ *   refused by the bytes (include/dBgActor_c.h).
+ *
+ * Known limits:
+ *   func_020393d4: InitResources stores dBgW::UpdatePosAndAngs on
+ *   mMeshCollider; dBgW.h has no setter.
+ *   func_0201267c is the sound call that plays 0xf3 at mCamSpacePosX.
+ *   SharedFilePtr +4: InitResources' TextureSequence::Prepare / SetFile read
+ *   the BMD/BTP at data_ov027_02113c7c / 02113c94 +4; SharedFilePtr.h has no
+ *   fields.
+ *   The data_ov027_* model/KCL/BCA/CLPS handles and the four aliasing
+ *   stride-0xc step symbols (02113a1c / 20 / 24 / 26) are consumed here and
+ *   owned by overlay .data.
+ *   g_profile_PENGUIN_DEFENDER is overlay data outside this TU's .text.
+ *   func_ov027_02111d38 / 02111cfc keep the incomplete C/PMF stand-in over
  *   mStateTable; completing to daPgDfdr_c::* is a pointer-to-member
  *   representation change.
  */
@@ -85,25 +97,21 @@ extern char data_ov027_02113a26[];
 extern Elem data_ov027_02113ce4[];
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol daPgDfdr_c_classInit
 extern "C" daPgDfdr_c *daPgDfdr_c_classInit()
 {
     return new daPgDfdr_c();
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN10daPgDfdr_c13InitResourcesEv
 s32 daPgDfdr_c::InitResources()
 {
     int i;
-    void *f;
+    void *file;
     Vector3 pos;
 
-    f = Model::LoadFile(*(SharedFilePtr *)&data_ov027_02113c7c);
-    mModelAnim.SetFile((BMD_File *)f, 1, -1);
+    file = Model::LoadFile(*(SharedFilePtr *)&data_ov027_02113c7c);
+    mModelAnim.SetFile((BMD_File *)file, 1, -1);
 
     for (i = 0; i < 3; i++)
         Animation::LoadFile(*(SharedFilePtr *)data_ov027_02112ca4[i]);
@@ -120,9 +128,9 @@ s32 daPgDfdr_c::InitResources()
     mPosZ = 0x182bb8;
     func_ov027_02111994(this);
 
-    f = dBgW_Kc::LoadFile(*(SharedFilePtr *)&data_ov027_02113c6c);
+    file = dBgW_Kc::LoadFile(*(SharedFilePtr *)&data_ov027_02113c6c);
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &mMeshCollider, f, &mClsnMat, 0x199, mAngleY, &data_ov027_021130e8);
+        &mMeshCollider, file, &mClsnMat, 0x199, mAngleY, &data_ov027_021130e8);
     func_020393d4(&mMeshCollider, (int)&dBgW::UpdatePosAndAngs);
 
     mVertAccel = 0;
@@ -146,8 +154,6 @@ s32 daPgDfdr_c::InitResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN10daPgDfdr_c8BehaviorEv
 s32 daPgDfdr_c::Behavior()
 {
@@ -166,8 +172,6 @@ s32 daPgDfdr_c::Behavior()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN10daPgDfdr_c6RenderEv
 s32 daPgDfdr_c::Render()
 {
@@ -176,15 +180,11 @@ s32 daPgDfdr_c::Render()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN10daPgDfdr_c16OnPendingDestroyEv
 void daPgDfdr_c::OnPendingDestroy()
 {
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN10daPgDfdr_c16CleanupResourcesEv
 s32 daPgDfdr_c::CleanupResources()
 {
@@ -201,8 +201,6 @@ s32 daPgDfdr_c::CleanupResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov027_02111d70
 extern "C" void func_ov027_02111d70(void *self, int idx)
 {
@@ -211,8 +209,6 @@ extern "C" void func_ov027_02111d70(void *self, int idx)
     func_ov027_02111d38(self);
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov027_02111d38
 extern "C" void func_ov027_02111d38(void *cv)
 {
@@ -221,8 +217,6 @@ extern "C" void func_ov027_02111d38(void *cv)
     (c->**p)();
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov027_02111cfc
 extern "C" void func_ov027_02111cfc(void *cv)
 {
@@ -231,8 +225,6 @@ extern "C" void func_ov027_02111cfc(void *cv)
     (c->**p)();
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov027_02111ca8
 extern "C" int func_ov027_02111ca8(daPgDfdr_c *self)
 {
@@ -243,23 +235,19 @@ extern "C" int func_ov027_02111ca8(daPgDfdr_c *self)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov027_02111c48
 extern "C" int func_ov027_02111c48(daPgDfdr_c *self)
 {
     if (DecIfAbove0_Byte(&self->mTimer) == 0) {
-        unsigned char idx = self->mStepIndex;
-        short val = *(short *)(data_ov027_02113a26 + idx * 0xc);
-        if (_Z14ApproachLinearRsss(&self->mAngleY, val, 0x514) != 0) {
+        unsigned char step = self->mStepIndex;
+        short endHeading = *(short *)(data_ov027_02113a26 + step * 0xc);
+        if (_Z14ApproachLinearRsss(&self->mAngleY, endHeading, 0x514) != 0) {
             func_ov027_02111d70(self, 1);
         }
     }
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov027_02111b2c
 extern "C" void func_ov027_02111b2c(daPgDfdr_c *self)
 {
@@ -276,14 +264,12 @@ extern "C" void func_ov027_02111b2c(daPgDfdr_c *self)
     self->unk_3d0 = 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov027_02111a28
 extern "C" int func_ov027_02111a28(char *c)
 {
     daPgDfdr_c *self = (daPgDfdr_c *)c;
-    int d = self->mDistanceLeft;
-    if (d == 0) {
+    int distLeft = self->mDistanceLeft;
+    if (distLeft == 0) {
         unsigned char *p = (unsigned char *)(((int)c + 0x3d9));
         *p = *p + 1;
         if (self->mStepIndex >= 9) self->mStepIndex = 0;
@@ -291,27 +277,27 @@ extern "C" int func_ov027_02111a28(char *c)
         return 1;
     }
     {
-        int v = self->mHorzSpeed;
-        if (d < v) {
-            self->mHorzSpeed = d;
+        int speed = self->mHorzSpeed;
+        if (distLeft < speed) {
+            self->mHorzSpeed = distLeft;
             self->mDistanceLeft = 0;
         } else {
             int *q = (int *)(((int)c + 0x3d4));
-            *q = *q - v;
+            *q = *q - speed;
         }
     }
     self->UpdatePos(&self->mdCcAc_c);
     {
-        int t = *(int *)(c + 0x378);
-        int w = data_ov027_02113c74[1];
-        int field = w ? *(int *)(c + 0x380) : *(int *)(c + 0x380);
-        unsigned int id = (unsigned int)(t << 4) >> 0x10;
-        if (field == w) {
-            if (id == 0xa || id == 0x16) {
+        int frameRaw = *(int *)(c + 0x378);
+        int walkAnim = data_ov027_02113c74[1];
+        int curAnim = walkAnim ? *(int *)(c + 0x380) : *(int *)(c + 0x380);
+        unsigned int frame = (unsigned int)(frameRaw << 4) >> 0x10;
+        if (curAnim == walkAnim) {
+            if (frame == 0xa || frame == 0x16) {
                 func_0201267c(0xf3, c + 0x74);
             }
-        } else if (field == data_ov027_02113c8c[1]) {
-            if (id == 9 || id == 0x16) {
+        } else if (curAnim == data_ov027_02113c8c[1]) {
+            if (frame == 9 || frame == 0x16) {
                 func_0201267c(0xf3, c + 0x74);
             }
         }
@@ -319,8 +305,6 @@ extern "C" int func_ov027_02111a28(char *c)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov027_02111994
 extern "C" void func_ov027_02111994(daPgDfdr_c *self)
 {
