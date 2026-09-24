@@ -44410,11 +44410,6 @@
         "param:#1 int"
       ]
     },
-    "func_ov007_020bd648": {
-      "src/func_ov007_020b6eb4.c": [
-        "arity:0"
-      ]
-    },
     "func_ov007_020bdeb0": {
       "include/decl_common.h": [
         "arity:1"
