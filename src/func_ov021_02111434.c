@@ -22,12 +22,7 @@ extern struct Matrix4x3 data_020a0e68;
 extern const int data_ov021_02114a20[];
 extern const s16 data_ov021_02114740[];
 
-static asm unsigned conv_ov021(unsigned x) {
-    ands r0, r0, #1
-    bx lr
-}
-
-int func_ov021_02111434(char *c)
+void func_ov021_02111434(char *c)
 {
     struct Matrix4x3 mtx;
     int i;
@@ -74,7 +69,9 @@ int func_ov021_02111434(char *c)
     }
 
     rv = *((unsigned short *)((c + 0xc00) + 0x74));
+    /* Empty early returns: the ROM keeps the dead flag-setting test. */
     if (rv >= 0x2d)
-        return rv;
-    return conv_ov021(rv);
+        return;
+    if (rv & 1)
+        return;
 }
