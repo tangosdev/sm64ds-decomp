@@ -38289,7 +38289,6 @@
     },
     "func_0204f5a0": {
       "src/func_0204fa2c.c": [
-        "arity:1",
         "return:int"
       ]
     },
@@ -38419,51 +38418,40 @@
       ]
     },
     "func_0204fa2c": {
-      "include/decl_common.h": [
-        "arity:2"
-      ],
       "src/_ZN5Sound22LoadAndSetMusic_Layer1Ei.cpp": [
-        "arity:2",
         "return:void"
       ],
       "src/_ZN5Sound22StopLoadedMusic_Layer1Ej.cpp": [
-        "arity:2",
+        "param:#1 int",
+        "param:#2 unsigned int",
         "return:void"
       ],
       "src/_ZN5Sound22StopLoadedMusic_Layer2Ev.cpp": [
-        "arity:2",
         "return:void"
       ],
       "src/_ZN5Sound22StopLoadedMusic_Layer3Ev.cpp": [
-        "arity:2",
         "return:void"
       ],
       "src/_ZN5Sound8EndMusicEjj.cpp": [
-        "arity:2",
         "return:void"
       ],
       "src/func_020132d8.cpp": [
-        "arity:2",
         "return:void"
       ],
       "src/func_02048af4.c": [
-        "arity:2",
         "return:void"
       ],
       "src/func_02048c30.c": [
-        "arity:2",
         "return:void"
       ],
       "src/func_ov007_020bd9e4.c": [
-        "arity:2",
         "return:void"
       ],
       "src/func_ov007_020bde70.c": [
-        "arity:2",
         "return:void"
       ],
       "src/func_ov007_020bdf60.c": [
-        "arity:2",
+        "param:#1 char *",
         "return:void"
       ]
     },
