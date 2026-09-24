@@ -38,6 +38,12 @@ src/_ZN4Heap7_SizeofEPv.cpp
 src/_ZN13SharedFilePtr9ConstructEj.cpp
 
 # ---- group C: dScMgSmartball_c slot 18, OnYoshiTryEat (ov006 0x02118a8c) ---
+# Host copy retired: port/unmatched/MgSmartball_Slot18.cpp (now an empty TU;
+# its enrolment is another owner's). Its reason was the object riding through
+# r0 into func_ov006_02115b0c; the src member passes this. The flat name the
+# slot-18 thunk in hal/scene_mg.cpp calls flips from a forward face to a
+# reverse one.
+src/_ZN16dScMgSmartball_c13OnYoshiTryEatEi.cpp
 
 # ---- group D: dScMgPachinko_c's scoring tick (ov006 0x020fb7e0) -------------
 

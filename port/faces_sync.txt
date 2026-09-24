@@ -1623,7 +1623,7 @@ __ZN12dScMgSlot3_c9Virtual80Ev                                           ?Virtua
 __ZN12dScMgSlot3_cD1Ev                                                   ??1dScMgSlot3_c@@UAE@XZ                                          0x0210a954 R
 
 __ZN16dScMgSmartball_c13InitResourcesEv                                  ?InitResources@dScMgSmartball_c@@UAEHXZ                          0x02118b70 R
-__ZN16dScMgSmartball_c13OnYoshiTryEatEi                                  ?OnYoshiTryEat@dScMgSmartball_c@@UAEXH@Z                         0x02118a8c F
+__ZN16dScMgSmartball_c13OnYoshiTryEatEi                                  ?OnYoshiTryEat@dScMgSmartball_c@@UAEXH@Z                         0x02118a8c R
 __ZN16dScMgSmartball_c21AfterCleanupResourcesEj                          ?AfterCleanupResources@dScMgSmartball_c@@UAEXI@Z                 0x0211944c R
 __ZN16dScMgSmartball_c8BehaviorEv                                        ?Behavior@dScMgSmartball_c@@UAEHXZ                               0x02118488 R
 __ZN16dScMgSmartball_c8OnPushedEv                                        ?OnPushed@dScMgSmartball_c@@UAEHXZ                               0x021147ac R
