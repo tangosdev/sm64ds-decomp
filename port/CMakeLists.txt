@@ -23104,3 +23104,33 @@ if(SLICE_W28_RS2PORT_SOURCES)
         target_sources(${_tw28rs2} PRIVATE ${SLICE_W28_RS2PORT_SOURCES})
     endforeach()
 endif()
+
+# RS2PORT row group 2: func_0203cbc0, the ROM veneer onto _ZdlPv. Its host
+# body lived in unmatched/func_02073244_hostcopy.c because src spelled it
+# (void); main 59013376ce spells the pointer it frees, so the body left that
+# file (which still defines the DS global data_0209a6fc and stays on every
+# list that names it) and src/func_0203cbc0.c joins every target that
+# compiles it: the three game targets (SLICE31_SOURCES, or the shared object
+# library when the tier split put it there) and the smoke targets
+# (smoke_modelanim's own block, smoke_model's, PORT_SMOKE_MODEL_SRC's five and
+# smoke_clsn). Read off the targets rather than listed, so a target that
+# takes the host file later still gets the veneer it used to carry.
+get_property(_rs2_all_targets DIRECTORY PROPERTY BUILDSYSTEM_TARGETS)
+set(_rs2_cbc0_into "")
+foreach(_rs2_t IN LISTS _rs2_all_targets)
+    get_target_property(_rs2_type ${_rs2_t} TYPE)
+    if(_rs2_type STREQUAL "INTERFACE_LIBRARY" OR _rs2_type STREQUAL "UTILITY")
+        continue()
+    endif()
+    get_target_property(_rs2_srcs ${_rs2_t} SOURCES)
+    if(_rs2_srcs MATCHES "unmatched/func_02073244_hostcopy[.]c")
+        target_sources(${_rs2_t} PRIVATE
+            "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_0203cbc0.c")
+        list(APPEND _rs2_cbc0_into ${_rs2_t})
+    endif()
+endforeach()
+if(NOT _rs2_cbc0_into)
+    message(FATAL_ERROR "no target compiles unmatched/func_02073244_hostcopy.c "
+            "any more, so src/func_0203cbc0.c reached none; re-read this block")
+endif()
+message(STATUS "RS2PORT: src/func_0203cbc0.c joins ${_rs2_cbc0_into}")
