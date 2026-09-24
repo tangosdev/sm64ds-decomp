@@ -38295,11 +38295,12 @@
     },
     "func_0204f600": {
       "src/func_02051a98.c": [
-        "arity:4",
+        "param:#2 void *",
+        "param:#4 void *",
         "return:void"
       ],
       "src/func_02051bd0.c": [
-        "arity:4"
+        "param:#1 int"
       ]
     },
     "func_0204f630": {
@@ -39678,11 +39679,6 @@
     "func_0205ad98": {
       "src/func_0204f3e0.c": [
         "param:#1 unsigned int"
-      ]
-    },
-    "func_0205adc4": {
-      "src/func_0204f600.c": [
-        "arity:1"
       ]
     },
     "func_0205aed0": {
