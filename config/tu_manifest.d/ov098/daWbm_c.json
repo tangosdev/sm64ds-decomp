@@ -1,0 +1,363 @@
+{
+  "id": "ov098/daWbm_c",
+  "module": "ov098",
+  "source": "src/actors/daWbm_c.cpp",
+  "promoted_source": "src/actors/daWbm_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x213b47c..0x213bf10, 13 function(s), from build/tu_map.json (tools/tu_map.py), plus the class factory daWbm_c_classInit at 0x0213bf10..0x0213bf60, which tu_map.py leaves as its own one-function run; this entry licenses 0x0213b47c..0x0213bf60 as one file.",
+    "class label(s): daWbm_c -- the cartridge's own RTTI spelling. Read out of extracted/overlays/overlay_0098.bin (ov098 loads at 0x02137be0): _ZTS at 0x0213c734 is the string \"7daWbm_c\" plus its NUL; _ZTI at 0x0213c740 reads [__si_class_type_info+8 (0x0209a764), that string, _ZTI12dEnemyBase_c (ov002 0x021081c0)]; and the typeinfo word of the two-word header before the _ZTV address point 0x0213c770 reads 0x0213c740. The class carried the coined name WaterBomb until the rename commit on this branch.",
+    "FACTORY FOLDED: daWbm_c_classInit is contiguous with the run (no gap at 0x0213bf10) and ends at the module's .text end 0x0213bf60. Written as `return (int *)new daWbm_c;` first in the source, it emits last, at its ROM address, and the synthesized constructor reproduces the ROM body (operator new(972), dEnemyBase_c C2, vptr, then the dCcAc_c, dBgCh_Actr, Model and ShadowModel C1 calls). Same shape as the promoted neighbour config/tu_manifest.d/ov098/daObjYajirusi_c.json.",
+    "MEASURED: the three func_ov098_* state bodies are this class's states. __sinit_ov098_0213c2b4 copies three pointer-to-member constants from ov098 .data 0x0213c71c..0x0213c734 into the state table data_ov098_0213c930 (.bss) that Behavior indexes by mState, and ov098 relocs.txt resolves them as state 0 -> 0x0213b9d8, 1 -> 0x0213bb1c, 2 -> 0x0213b7e8.",
+    "MEASURED: the empty inline destructor in the class header emits D1 ahead of D0, the cartridge's order (0x0213b47c then 0x0213b4c4), and no D2.",
+    "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x0213b47c",
+      "end": "0x0213bf60"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN7daWbm_cD1Ev",
+      "address": "0x0213b47c",
+      "size": "0x00000048",
+      "legacy_source": "src/_ZN7daWbm_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN7daWbm_cD0Ev",
+      "address": "0x0213b4c4",
+      "size": "0x0000005c",
+      "legacy_source": "src/_ZN7daWbm_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov098_0213b520",
+      "address": "0x0213b520",
+      "size": "0x00000064",
+      "legacy_source": "src/func_ov098_0213b520.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov098_0213b584",
+      "address": "0x0213b584",
+      "size": "0x000000b8",
+      "legacy_source": "src/func_ov098_0213b584.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov098_0213b63c",
+      "address": "0x0213b63c",
+      "size": "0x000000a4",
+      "legacy_source": "src/func_ov098_0213b63c.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov098_0213b6e0",
+      "address": "0x0213b6e0",
+      "size": "0x00000108",
+      "legacy_source": "src/func_ov098_0213b6e0.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov098_0213b7e8",
+      "address": "0x0213b7e8",
+      "size": "0x000001f0",
+      "legacy_source": "src/func_ov098_0213b7e8.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov098_0213b9d8",
+      "address": "0x0213b9d8",
+      "size": "0x00000144",
+      "legacy_source": "src/func_ov098_0213b9d8.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov098_0213bb1c",
+      "address": "0x0213bb1c",
+      "size": "0x00000080",
+      "legacy_source": "src/func_ov098_0213bb1c.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "_ZN7daWbm_c16CleanupResourcesEv",
+      "address": "0x0213bb9c",
+      "size": "0x00000048",
+      "legacy_source": "src/_ZN7daWbm_c16CleanupResourcesEv.cpp",
+      "ordinal": 9
+    },
+    {
+      "symbol": "_ZN7daWbm_c6RenderEv",
+      "address": "0x0213bbe4",
+      "size": "0x0000003c",
+      "legacy_source": "src/_ZN7daWbm_c6RenderEv.cpp",
+      "ordinal": 10
+    },
+    {
+      "symbol": "_ZN7daWbm_c8BehaviorEv",
+      "address": "0x0213bc20",
+      "size": "0x000000f4",
+      "legacy_source": "src/_ZN7daWbm_c8BehaviorEv.cpp",
+      "ordinal": 11
+    },
+    {
+      "symbol": "_ZN7daWbm_c13InitResourcesEv",
+      "address": "0x0213bd14",
+      "size": "0x000001fc",
+      "legacy_source": "src/_ZN7daWbm_c13InitResourcesEv.cpp",
+      "ordinal": 12
+    },
+    {
+      "symbol": "daWbm_c_classInit",
+      "address": "0x0213bf10",
+      "size": "0x00000050",
+      "legacy_source": "src/d_a_wbm.c",
+      "ordinal": 13
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Hand-curated from the 14 legacy one-function sources (six C++ members, the C factory src/d_a_wbm.c, four C++ helpers and three C helpers); see the file's own header comment for the reconciliation. tubuild create's mechanical output was replaced.",
+    "The three state bodies and four helpers keep their func_ov098_* linker names as C-linkage helpers over daWbm_c *. The states are called through the table as members of this class, but a member spelling would coin seven mangled names; that rename is left to a separate change.",
+    "MEASURED: func_ov098_0213b6e0 tests actorID through an int flag before branching; spelled as a plain `if (actorID == 0xbf) ... else if (actorID == 0xce)` it DIFFs (13/14). func_ov098_0213b9d8 keeps its arithmetic one step per statement; folding the lead computation into one expression DIFFs by 7 words (13/14).",
+    "MEASURED: the TU includes common.h before the class header so the flat Matrix4x3 spelling wins; with math/Matrix.h's {Matrix3x3, Vector3} spelling the two matrix copies in func_ov098_0213b584 become memberwise and the function grows from 0xb8 to 0xec bytes.",
+    "dCcAc_c::Init, dBgCh_Actr::Init, dActor_c::DropShadowRadHeight, Player::Hurt and Particle::System::NewSimple stay mangled: each takes Fix12<int> by value (wall 6az). ModelBase::SetFile stays mangled because include/ModelBase.h declares it void and InitResources reads its int result.",
+    "Header fields named in this change (mShadowMat, mSpawnPosX/Y/Z, mBounceCount, mSquashSpeed, mSquashScale, mBouncePhase, mState, mVariant) are inferred from the bodies; the offsets and types are proven by the bytes, the English names are not.",
+    "STYLE ORACLE: src/actors/daUdlift_c.cpp (ov095 promotion) for the state-table shape, and src/actors/daObjYajirusi_c.cpp (same overlay) for the folded `new` factory."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov098-daWbm_c/daWbm_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 14,
+    "functions_declared": 14,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        30
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI12dEnemyBase_c",
+        "_ZTS12dEnemyBase_c",
+        "_ZTI7daWbm_c",
+        "_ZTS7daWbm_c",
+        "_ZTV7daWbm_c"
+      ],
+      "dataExternalized": [
+        "_ZTI12dEnemyBase_c",
+        "_ZTI7dBase_c",
+        "_ZTI7daWbm_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS12dEnemyBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS7daWbm_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV7daWbm_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov098-daWbm_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x0213b47c",
+        "end": "0x0213bf60",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x0213b47c",
+          "end": "0x0213bf60",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 14
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "include/types.h gives Vector3 an empty inline destructor, so every TU that destroys a Vector3 local re-emits it with vague linkage; the Vector3 locals in func_ov098_0213b584, func_ov098_0213b6e0 and func_ov098_0213b9d8 do so here, as their legacy one-function objects already did. The cartridge keeps exactly one copy at arm9:0x020072c0, kind:function(arm,size=0x4), and src/_ZN7Vector3D1Ev.cpp is its enrolled `complete` owner of that 0x020072c0..0x020072c4 range. This object's copy is the identical 4-byte `bx lr` body with no relocations; rombuild compares the body against those cartridge bytes before discarding the duplicate."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Vague-linkage typeinfo record for the inherited base fBase_c, re-emitted by every TU that names the derived class's RTTI -- emitting one _ZTI drags the whole ancestor chain. The cartridge's own copy lives at arm9:0x02086d70, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Vague-linkage type-name string for the inherited base fBase_c, re-emitted by every TU that names the derived class's RTTI -- emitting one _ZTI drags the whole ancestor chain. The cartridge's own copy lives at arm9:0x02086e60, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Vague-linkage typeinfo record for the inherited base dBase_c, re-emitted by every TU that names the derived class's RTTI -- emitting one _ZTI drags the whole ancestor chain. The cartridge's own copy lives at arm9:0x02086e78, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Vague-linkage type-name string for the inherited base dBase_c, re-emitted by every TU that names the derived class's RTTI -- emitting one _ZTI drags the whole ancestor chain. The cartridge's own copy lives at arm9:0x02086e54, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Vague-linkage typeinfo record for the inherited base dActor_c, re-emitted by every TU that names the derived class's RTTI -- emitting one _ZTI drags the whole ancestor chain. The cartridge's own copy lives at arm9:0x0208e390, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Vague-linkage type-name string for the inherited base dActor_c, re-emitted by every TU that names the derived class's RTTI -- emitting one _ZTI drags the whole ancestor chain. The cartridge's own copy lives at arm9:0x0208e384, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTI12dEnemyBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081c0",
+      "reason": "Vague-linkage typeinfo record for the inherited base dEnemyBase_c, re-emitted by every TU that names the derived class's RTTI -- emitting one _ZTI drags the whole ancestor chain. The cartridge's own copy lives at ov002:0x021081c0, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTS12dEnemyBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081cc",
+      "reason": "Vague-linkage type-name string for the inherited base dEnemyBase_c, re-emitted by every TU that names the derived class's RTTI -- emitting one _ZTI drags the whole ancestor chain. The cartridge's own copy lives at ov002:0x021081cc, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTI7daWbm_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov098",
+      "canonical_address": "0x0213c740",
+      "reason": "This class's own typeinfo record, emitted as vague linkage because Behavior -- this class's key function once the destructor is inline -- is defined in this TU. The cartridge's copy is ov098:0x0213c740, in this module's .data, outside the single .text range this entry claims, so it is discarded rather than claimed. Its three words read [__si_class_type_info+8 (0x0209a764), _ZTS7daWbm_c (0x0213c734), _ZTI12dEnemyBase_c (ov002 0x021081c0)] in the overlay bytes at that address."
+    },
+    {
+      "symbol": "_ZTS7daWbm_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov098",
+      "canonical_address": "0x0213c734",
+      "reason": "This class's own type-name string, emitted as vague linkage with its _ZTI. The cartridge's copy is ov098:0x0213c734, the 9 bytes \"7daWbm_c\" plus its NUL, in this module's .data, outside the .text range this entry claims, so it is discarded rather than claimed."
+    },
+    {
+      "symbol": "_ZTV7daWbm_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov098",
+      "canonical_address": "0x0213c770",
+      "reason": "This class's own vtable, emitted because Behavior, the key function, is defined in this TU. The compiled object is 0x84 bytes because it includes the two-word [offset-to-top][typeinfo] header; the cartridge's _ZTV symbol at ov098:0x0213c770 points past that header, whose words read [0, _ZTI7daWbm_c 0x0213c740], so the ROM interval is 0x0213c768..0x0213c7ec, which ends at the module's .data padding before .bss at 0x0213c800. Either way it is this module's .data, outside the .text range this entry claims, so it is discarded rather than claimed."
+    }
+  ]
+}
