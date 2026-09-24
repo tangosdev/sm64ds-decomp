@@ -48,6 +48,11 @@
         "param:#2 Vector3 *",
         "param:#3 Vector3 *"
       ],
+      "src/actors/daObjCvNewsLift_c.cpp": [
+        "param:#1 const Vector3 *",
+        "param:#2 const Vector3 *",
+        "param:#3 Vector3 *"
+      ],
       "src/func_02007b98.c": [
         "param:#1 const Vector3 *",
         "param:#2 const Vector3 *",
@@ -1364,6 +1369,11 @@
         "param:#2 const Matrix4x3 *",
         "return:void"
       ],
+      "src/actors/daObjCvNewsLift_c.cpp": [
+        "return:void",
+        "param:#1 Matrix4x3 *",
+        "param:#2 Matrix4x3 *"
+      ],
       "src/actors/daObjGuragura_c.cpp": [
         "param:#1 Matrix4x3 *",
         "param:#2 Matrix4x3 *",
@@ -1975,6 +1985,9 @@
       "src/actors/daObjCtMecha04_c.cpp": [
         "param:#2 short"
       ],
+      "src/actors/daObjCvNewsLift_c.cpp": [
+        "param:#2 short"
+      ],
       "src/actors/daOts_c.cpp": [
         "param:#2 short"
       ],
@@ -2269,6 +2282,10 @@
       "src/actors/daMip_c.cpp": [
         "param:#1 const void *",
         "param:#2 const void *"
+      ],
+      "src/actors/daObjCvNewsLift_c.cpp": [
+        "param:#1 const Vector3 *",
+        "param:#2 const Matrix4x3 *"
       ],
       "src/actors/daObjKurumajiku_c.cpp": [
         "param:#1 const Vector3 *",
@@ -3013,6 +3030,10 @@
     "Quaternion_FromVector3": {
       "include/decl_common.h": [
         "param:#1 int *",
+        "param:#2 Vector3 *",
+        "param:#3 Vector3 *"
+      ],
+      "src/actors/daObjCvNewsLift_c.cpp": [
         "param:#2 Vector3 *",
         "param:#3 Vector3 *"
       ],
@@ -4884,6 +4905,10 @@
         "param:#2 const Vector3 *"
       ],
       "src/_ZN17daObjCvNewsLift_c8BehaviorEv.cpp": [
+        "param:#1 const Vector3 *",
+        "param:#2 const Vector3 *"
+      ],
+      "src/actors/daObjCvNewsLift_c.cpp": [
         "param:#1 const Vector3 *",
         "param:#2 const Vector3 *"
       ],
@@ -28448,10 +28473,16 @@
     "data_ov021_02113a60": {
       "src/_ZN17daObjCvNewsLift_c13InitResourcesEv.cpp": [
         "return:CLPS_Block"
+      ],
+      "src/actors/daObjCvNewsLift_c.cpp": [
+        "return:CLPS_Block"
       ]
     },
     "data_ov021_02113a80": {
       "src/_ZN17daObjCvNewsLift_c13InitResourcesEv.cpp": [
+        "return:CLPS_Block"
+      ],
+      "src/actors/daObjCvNewsLift_c.cpp": [
         "return:CLPS_Block"
       ]
     },
@@ -28468,26 +28499,41 @@
     "data_ov021_021149a0": {
       "src/_ZN17daObjCvNewsLift_c13InitResourcesEv.cpp": [
         "return:WorkElevatorFile"
+      ],
+      "src/actors/daObjCvNewsLift_c.cpp": [
+        "return:NewsLiftFile"
       ]
     },
     "data_ov021_021149a8": {
       "src/_ZN17daObjCvNewsLift_c13InitResourcesEv.cpp": [
         "return:WorkElevatorFile"
+      ],
+      "src/actors/daObjCvNewsLift_c.cpp": [
+        "return:NewsLiftFile"
       ]
     },
     "data_ov021_021149b0": {
       "src/_ZN17daObjCvNewsLift_c13InitResourcesEv.cpp": [
         "return:WorkElevatorFile"
+      ],
+      "src/actors/daObjCvNewsLift_c.cpp": [
+        "return:NewsLiftFile"
       ]
     },
     "data_ov021_021149b8": {
       "src/_ZN17daObjCvNewsLift_c13InitResourcesEv.cpp": [
         "return:WorkElevatorFile"
+      ],
+      "src/actors/daObjCvNewsLift_c.cpp": [
+        "return:NewsLiftFile"
       ]
     },
     "data_ov021_02114a20": {
       "src/__sinit_ov021_02113500.c": [
         "return:V3"
+      ],
+      "src/actors/daObjCvNewsLift_c.cpp": [
+        "return:Vector3 []"
       ]
     },
     "data_ov021_02114a50": {
@@ -36886,6 +36932,10 @@
       "src/_ZN10DonutBlock13InitResourcesEv.cpp": [
         "param:#2 void *"
       ],
+      "src/actors/daObjCvNewsLift_c.cpp": [
+        "param:#1 dBgW *",
+        "param:#2 void *"
+      ],
       "src/actors/daObjFl_Ring_c.cpp": [
         "param:#2 void *"
       ],
@@ -36983,6 +37033,10 @@
       "src/_ZN10daKpa2Bg_c13InitResourcesEv.cpp": [
         "param:#2 void *",
         "return:int"
+      ],
+      "src/actors/daObjCvNewsLift_c.cpp": [
+        "param:#1 dBgW *",
+        "param:#2 void *"
       ],
       "src/actors/daObjFl_Ring_c.cpp": [
         "param:#2 void *"
@@ -46326,6 +46380,9 @@
       ]
     },
     "func_ov021_02111434": {
+      "include/decl_common.h": [
+        "return:int"
+      ],
       "src/_ZN17daObjCvNewsLift_c13InitResourcesEv.cpp": [
         "param:#1 daObjCvNewsLift_c *",
         "return:void"
