@@ -259,6 +259,14 @@ LEDGER = [
      "in dMgTrmpln3DMario_c): the thirty-eight .data pairs are read by the "
      "open-coded src/func_ov006_020c8f20.cpp and src/func_ov006_020cb030.cpp, "
      "both `push ecx; call edx; add esp,4`"),
+
+    # ---- run linkfull lane PMF2: the member-pointer rows, second wave ------
+    ("ECX", r"^\?g_tti_seats@@",
+     "dScMgTrampoline_c (Trampoline Time): the five .data pairs "
+     "src/minigames/d_s_mg_trampoline.cpp defines are copied into the field "
+     "at +0x5004 by the five installers and read by one dispatcher, the TU's "
+     "?Behavior@dScMgTrampoline_c@@UAEHXZ, `mov ecx,[ebx+5008h]; mov eax,"
+     "[ebx+5004h]; add ecx,ebx; call eax`, nothing pushed"),
 ]
 
 

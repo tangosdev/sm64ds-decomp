@@ -1,4 +1,4 @@
-// PORT_HOST_ABI.  The mwcc POINTER-TO-MEMBER WALL, per-class half:
+// The mwcc POINTER-TO-MEMBER state pairs, per-class half:
 // dScMgTrampoline_c's ONE dispatcher and its five state addresses.
 // Run mg11, lane TTI.  Actor id 0x180, scene 384, "Trampoline Time".
 //
@@ -140,8 +140,8 @@
 //     mov  r0,#1 / add sp,sp,#4 / pop {r4,r5,lr} / bx lr
 //
 // 30 instructions plus a three-word pool = 33 words = 0x84, which is the size
-// config records.  The host copy below is that body with the dispatch site
-// replaced and nothing else moved.
+// config records.  It is the TU's own compiled body that runs now; section 6
+// says what retired the host copy that used to stand in for it.
 //
 // data_ov006_02140588 is ov006 .bss (past the image's 0x021402e0 end), so its
 // value is a run-time reading and the saved/compare pair is kept verbatim
@@ -155,29 +155,68 @@
 // its own: hal/scene_mg_trampoline.cpp prints it on every run, so a later lane
 // that adds an unreachable state gets a nonzero reading instead of silence.
 //
-// ---- 6. WHY THIS FILE HAS ITS OWN ENTRY POINT -----------------------------
+// ---- 6. THE HOST COPY IS RETIRED: THE ROM'S OWN BEHAVIOR RUNS THE FIELD ---
 //
-// unmatched/MgBase_StateDispatch.cpp owns port_mg_call0 and chains it to
-// exactly one per-class pair.  A second class cannot define those names, so
-// this file calls port_mg_tti_call0, which tries THIS class's switch and hands
-// everything else to the framework unchanged -- the shape MgCoin_, MgLuigi_,
-// MgPachinko_, MgMemory2_ and MgBSC_StateDispatch.cpp all use.  The framework
-// therefore remains the single place that decides what a null code word means,
-// what a nonzero adjustment means and how an unhandled address is reported.
+// Until run linkfull lane PMF2 this file carried a host copy of slot 6 that
+// read the {code, adj} pair at +0x5004 and routed the code word through a DS
+// address switch (port_mg_tti_call0, then unmatched/MgBase_StateDispatch.cpp's
+// port_mg_call0).  That switch could not fire once the class's TU was
+// promoted: src/minigames/d_s_mg_trampoline.cpp defines the five pairs itself,
 //
-// There is no port_mg_tti_call1: this class has no arity-1 anything.  The run
-// that sits IMMEDIATELY AFTER this class's vtable is dScMgTrampoline2_c's, and
-// it is FIVE PAIRS: 0x0213fbd0, 0x0213fbd8, 0x0213fbe0, 0x0213fbe8 and
-// 0x0213fbf0.  0x0213fbc8 is NOT one of them -- config names it
-// g_profile_MG_TRAMPOLINE2 and the word after it is the doubled id
-// 0x01810181, which is the SpawnInfo-in-the-pair-run trap section 3 of this
-// file documents for THIS class's own run.  An earlier version of this comment
-// counted six and took the range from the SpawnInfo's factory word.  The five
-// real code words land in 0x02123b20..0x02124088, past this class's last body
-// (0x021225a8), and every literal pool that names one is inside that class's
-// own code.  Deliberately NOT routed here; lane TTE owns it.
+//     P2 data_ov006_0213fab0 = { (int)_ZN17dScMgTrampoline_c10StateIntroEv, 0 };
+//
+// and on this port that initializer is a relocation against the HOST image:
+// the word is the flat reverse face hal/faces_sync_gen.cpp defines for the
+// state member, not 0x02121d64.  Every tick handed the switch a host word and
+// the switch refused it (1153 refusals in 1200 frames of scene 384 on the
+// wave-26 fold, the INT48 exe), so no state body ever ran and Trampoline Time
+// sat on its intro.
+//
+// The TU's own dScMgTrampoline_c::Behavior IS slot 6 and it is already on the
+// link line.  MSVC emits its dispatch as
+//
+//     mov ecx,[ebx+5008h] / mov eax,[ebx+5004h] / add ecx,ebx / call eax
+//
+// -- the receiver in ECX, NOTHING pushed: section 4's ARM sequence with the
+// adjustment zero, which every one of the five pairs is.  A flat reverse face
+// reads its receiver at [esp+4] (`mov ecx,[ebp+8]`), so the TU's words cannot
+// be called that way as they stand.  Two changes retire the host copy:
+//
+//   1. the five pairs are SEATED with the __fastcall faces below, which take
+//      the receiver in ECX and hand it to the flat face, the Trampoline Terror
+//      shape (unmatched/MgTrampolineTerror_StateDispatch.cpp);
+//   2. slot 6's flat name, which hal/scene_mg_trampoline.cpp's fill writes
+//      into the table, is answered by a port/faces_sync.txt R row onto
+//      ?Behavior@dScMgTrampoline_c@@UAEHXZ, the TU's own body.
+//
+// WHY THE SEAT RUNS AT C++ STATIC-INIT TIME.  The five pairs are not a mount.
+// They are ordinary .data the TU defines, set by the loader from the
+// relocations above before any code runs, and nothing writes them afterwards:
+// the five installers only COPY a pair into the object.  So the earliest
+// correct moment is also the only one needed -- before main, once, with no
+// seam a scene boot has to remember to call.  hal/fdr_arm9_fader_seat.cpp and
+// hal/fader_wipes.cpp seat at static-init time for the same reason.  The
+// pairs sit inside the .dsstate span, and a snapshot is taken long after this
+// has run, so a restore writes seated words back.
+//
+// THE CHECK IS AGAINST THIS BUILD'S OWN INITIALISER.  Each pair must read
+// {the address of its flat face, 0}, which is what the TU's initializer
+// produces here, or the seat refuses out loud: a DS word would mean the
+// records came from a hosted blob, and a face word would mean a second seat
+// owns them.  StateDone's flat face is folded by /OPT:ICF with other bodies of
+// the same bytes; taking its address here yields the same folded address the
+// TU's relocation does, so the comparison holds for it too.
+//
+// WHAT THE CENSUS STILL SEES.  hal/scene_mg_trampoline.cpp prints the link
+// histogram and range this file exports, and the faces keep both: every face
+// bumps its link before it forwards, so "routed" now counts the state bodies
+// the ROM's own Behavior entered.  The three anomaly counters (a zero field, a
+// nonzero adjustment, an unrouted word) belonged to the call-time switch and
+// have no observer any more: the ROM's Behavior reads the field itself and
+// tests none of the three, as the cartridge's does.  They report zero.
 
 #include <cstdio>
+#include <cstdlib>
 
 /* The eight-byte mwcc member pointer, in the only spelling that is true on both
    machines: two words, no member-pointer type anywhere. */
@@ -185,89 +224,131 @@ struct MgPmf { unsigned code; int adj; };
 
 extern "C" {
 
-/* the framework's entry point; see MgBase_StateDispatch.cpp */
-void port_mg_call0(void *self, unsigned code, int adj);
-
-/* ---- the five routed state bodies, in install order ----------------------
-   Each is declared with the parameter list ITS OWN src TU defines, so a
-   ride-through is called the way the ROM calls it rather than the way a slot
-   arity would suggest.  _ZN17dScMgTrampoline_c9StateDoneEv is a four-byte `bx lr` body whose
-   src takes (void): the ROM body is one instruction long, so there is nothing
-   for a missing argument to be wrong about.  That is the MgCoin_, MgMemory2_
-   and MgBSC_StateDispatch.cpp ruling for the same shape. */
+/* ---- the five state bodies' flat names, in install order ------------------
+   hal/faces_sync_gen.cpp's reverse faces onto the TU's five members, each
+   declared with the parameter list its own src member takes.  StateDone's
+   member is a four-byte `bx lr` body that ignores its receiver; the face is
+   still handed one, because a face reads its receiver whatever the member
+   does with it. */
 void _ZN17dScMgTrampoline_c10StateIntroEv(char *c);            /* link 0, the intro/countdown */
-void _ZN17dScMgTrampoline_c9StatePlayEv(char *c);            /* link 1, the play state      */
-void _ZN17dScMgTrampoline_c12StateResultsEv(unsigned char *c);   /* link 2, the settle          */
-void _ZN17dScMgTrampoline_c13StateWaitExitEv(char *c);            /* link 3, the result          */
-void _ZN17dScMgTrampoline_c9StateDoneEv(void);               /* link 4, bx lr, terminal     */
+void _ZN17dScMgTrampoline_c9StatePlayEv(char *c);              /* link 1, the play state      */
+void _ZN17dScMgTrampoline_c12StateResultsEv(unsigned char *c); /* link 2, the settle          */
+void _ZN17dScMgTrampoline_c13StateWaitExitEv(char *c);         /* link 3, the result          */
+void _ZN17dScMgTrampoline_c9StateDoneEv(char *c);              /* link 4, bx lr, terminal     */
 
-/* the ordinary callees the host copy keeps, each spelled as its own src TU
-   spells it */
-void func_ov006_02120c40(void);
-void _ZN17dScMgTrampoline_c16UpdateTouchInputEv(char *c);
-void func_ov006_021209ac(short *o);
-void func_ov004_020adb1c(int a);
-
-/* ov006 .bss, written by the state bodies and read by slot 6 */
-extern int data_ov006_02140588;
+/* The five pairs, defined by src/minigames/d_s_mg_trampoline.cpp with C
+   linkage (hostgen), in the table order of section 3. */
+extern MgPmf data_ov006_0213fab0, data_ov006_0213fac0, data_ov006_0213fac8,
+    data_ov006_0213faa0, data_ov006_0213faa8;
 
 }  /* extern "C" */
 
-// ---- the class's address switch --------------------------------------------
+// ---- the census the faces keep ---------------------------------------------
 
 static unsigned g_tti_state_hits;
 /* THE BODILESS-STATE COUNTER, KEPT AND STRUCTURALLY ZERO -- section 5. */
 static unsigned g_tti_floor_hits;
-/* The chain link the switch was last entered on, so a run can say the machine
+/* The lowest and highest chain link entered, so a run can say the machine
    MOVED rather than only that it fired.  This class has no state INDEX in the
-   object -- the link number is this file's own numbering of the five code
-   addresses in install order (section 3) -- so the low and high water marks
-   below are the only progression witness that exists for it. */
+   object -- the link number is this file's own numbering of the five pairs in
+   install order (section 3) -- so the water marks and the per-link counts are
+   the whole progression witness. */
 static int g_tti_link_lo = -1, g_tti_link_hi = -1;
 static unsigned g_tti_link_hits[5];
-/* The last code word the field held, printed when it was routed nowhere. */
-static unsigned g_tti_last_unrouted;
-/* Behaviors entered with the field still zero -- the object ticked before its
-   reset installed a state.  Printed rather than assumed away. */
-static unsigned g_tti_unset;
-/* Nonzero adjustments seen.  Every stored pair in the ROM reads {code, 0}, so
-   this counter is the virtual-member-pointer arm of the ROM's own sequence and
-   a nonzero reading would mean the field was written by something this lane
-   did not find. */
-static unsigned g_tti_virtual_arm;
 
-static int tti_try_0(void *self, unsigned code, int *link)
+static void tti_note(int link)
 {
-    char *c = (char *)self;
-    switch (code) {
-    case 0x02121d64u: *link = 0; _ZN17dScMgTrampoline_c10StateIntroEv(c); return 1;
-    case 0x021218fcu: *link = 1; _ZN17dScMgTrampoline_c9StatePlayEv(c); return 1;
-    case 0x02121848u: *link = 2; _ZN17dScMgTrampoline_c12StateResultsEv((unsigned char *)c); return 1;
-    case 0x02121778u: *link = 3; _ZN17dScMgTrampoline_c13StateWaitExitEv(c); return 1;
-    case 0x02121774u: *link = 4; _ZN17dScMgTrampoline_c9StateDoneEv();  return 1;
-    default:                                             return 0;
+    ++g_tti_state_hits;
+    ++g_tti_link_hits[link];
+    if (g_tti_link_lo < 0 || link < g_tti_link_lo) g_tti_link_lo = link;
+    if (link > g_tti_link_hi)                      g_tti_link_hi = link;
+}
+
+// ---- the five faces ----------------------------------------------------------
+//
+// ONE FACE PER CODE WORD.  MSVC's member-pointer call puts `this + adj` in ECX
+// and pushes nothing, so each face takes the receiver in ECX (the dead EDX
+// absorbs __fastcall's second register), counts its link, and calls the flat
+// face with the receiver pushed.  Arity zero: nothing on the stack to clean,
+// the same `ret` a __thiscall member with no parameters makes.
+#define TTI_FACE(tag, link, call)                                          \
+    static void __fastcall tti_f_##tag(void *self, void *dead_edx)         \
+    {                                                                      \
+        (void)dead_edx;                                                    \
+        tti_note(link);                                                    \
+        call;                                                              \
+    }
+
+TTI_FACE(intro,   0, _ZN17dScMgTrampoline_c10StateIntroEv((char *)self))
+TTI_FACE(play,    1, _ZN17dScMgTrampoline_c9StatePlayEv((char *)self))
+TTI_FACE(results, 2, _ZN17dScMgTrampoline_c12StateResultsEv((unsigned char *)self))
+TTI_FACE(wait,    3, _ZN17dScMgTrampoline_c13StateWaitExitEv((char *)self))
+TTI_FACE(done,    4, _ZN17dScMgTrampoline_c9StateDoneEv((char *)self))
+
+// ---- the seat -----------------------------------------------------------------
+//
+// {pair, face, the cartridge's code word, name}.  The table carries the faces
+// and nothing else callable, so port/tools/pmf_guard.py's ledger row for it
+// checks exactly the five words that land in the field.  The word each pair
+// must hold BEFORE the seat is this build's own flat face, read in
+// tti_initialiser_word rather than stored here.
+namespace {
+struct TtiSeat {
+    MgPmf *rec;
+    void (__fastcall *face)(void *, void *);
+    unsigned rom;
+    const char *what;
+};
+}  /* namespace */
+
+static const TtiSeat g_tti_seats[5] = {
+    {&data_ov006_0213fab0, tti_f_intro,   0x02121d64u, "0213fab0"},
+    {&data_ov006_0213fac0, tti_f_play,    0x021218fcu, "0213fac0"},
+    {&data_ov006_0213fac8, tti_f_results, 0x02121848u, "0213fac8"},
+    {&data_ov006_0213faa0, tti_f_wait,    0x02121778u, "0213faa0"},
+    {&data_ov006_0213faa8, tti_f_done,    0x02121774u, "0213faa8"},
+};
+
+static unsigned tti_initialiser_word(unsigned i)
+{
+    switch (i) {
+    case 0: return (unsigned)(size_t)&_ZN17dScMgTrampoline_c10StateIntroEv;
+    case 1: return (unsigned)(size_t)&_ZN17dScMgTrampoline_c9StatePlayEv;
+    case 2: return (unsigned)(size_t)&_ZN17dScMgTrampoline_c12StateResultsEv;
+    case 3: return (unsigned)(size_t)&_ZN17dScMgTrampoline_c13StateWaitExitEv;
+    default: return (unsigned)(size_t)&_ZN17dScMgTrampoline_c9StateDoneEv;
     }
 }
 
-/* The entry point the host copy below uses.  Everything this switch does not
-   own goes to the framework unchanged, so the null-code guard, the nonzero-
-   adjustment refusal and the UNHANDLED report all still live in exactly one
-   place. */
-extern "C" void port_mg_tti_call0(void *self, unsigned code, int adj)
+extern "C" void port_mg_tti_pairs_seat(void)
 {
-    int link = -1;
-    if (adj != 0) ++g_tti_virtual_arm;
-    if (code == 0) ++g_tti_unset;
-    if (code != 0 && adj == 0 && tti_try_0(self, code, &link)) {
-        ++g_tti_state_hits;
-        ++g_tti_link_hits[link];
-        if (g_tti_link_lo < 0 || link < g_tti_link_lo) g_tti_link_lo = link;
-        if (link > g_tti_link_hi)                      g_tti_link_hi = link;
+    static int done;
+    if (done)
         return;
+    done = 1;
+    for (unsigned i = 0; i < sizeof g_tti_seats / sizeof g_tti_seats[0]; ++i) {
+        MgPmf *p = g_tti_seats[i].rec;
+        const unsigned want = tti_initialiser_word(i);
+        if (p->code != want || p->adj != 0) {
+            std::fprintf(stderr, "FATAL: dScMgTrampoline_c pair %s holds "
+                         "%08x/%d, this build's own initializer says %08x/0 "
+                         "(the cartridge's is %08x/0) -- WRONG BYTES\n",
+                         g_tti_seats[i].what, p->code, p->adj, want,
+                         g_tti_seats[i].rom);
+            std::abort();
+        }
+        p->code = (unsigned)(size_t)g_tti_seats[i].face;
     }
-    if (code != 0) g_tti_last_unrouted = code;
-    port_mg_call0(self, code, adj);
 }
+
+namespace {
+struct TtiSeatAtStaticInit {
+    TtiSeatAtStaticInit() { port_mg_tti_pairs_seat(); }
+};
+TtiSeatAtStaticInit g_tti_seat_at_static_init;
+}  /* namespace */
+
+// ---- the witnesses hal/scene_mg_trampoline.cpp prints ------------------------
 
 extern "C" unsigned port_mg_tti_state_hits(void) { return g_tti_state_hits; }
 extern "C" unsigned port_mg_tti_floor_hits(void) { return g_tti_floor_hits; }
@@ -280,47 +361,13 @@ extern "C" void port_mg_tti_link_hits(unsigned *out5)
 {
     for (int i = 0; i < 5; ++i) out5[i] = g_tti_link_hits[i];
 }
+/* Section 6: the call-time switch that counted these is retired and nothing
+   observes the field between the installers and the ROM's Behavior, so all
+   three read zero by construction. */
 extern "C" void port_mg_tti_anomalies(unsigned *unset, unsigned *virt,
                                       unsigned *last_unrouted)
 {
-    *unset         = g_tti_unset;
-    *virt          = g_tti_virtual_arm;
-    *last_unrouted = g_tti_last_unrouted;
-}
-
-// ---- the one host copy -----------------------------------------------------
-//
-// src/minigames/d_s_mg_trampoline.cpp verbatim except for the field read (two ints
-// rather than a member-pointer type) and the dispatch site (port_mg_tti_call0
-// rather than `(c->*c->pmf)()`).  Nothing else moved.
-//
-// THE src IS SILENT TO A LINK AND TO A COMPILE.  It spells the field as
-// `PMF pmf;` inside a local `struct C`, so there is no external member-pointer
-// symbol for a `::*` sweep to find and nothing for the linker to complain
-// about, while MSVC's single-inheritance member pointer is FOUR bytes where the
-// ROM's field is eight -- so the compiled read takes the code word alone, calls
-// it through MSVC's own thunk shape, and the adjustment word is never seen.
-// It is the third of the three shapes port/mg_fanout_costs.txt section 4 names
-// and the second time a class has hidden it at vtable slot 6.
-
-// PORT_HOST_ABI: dScMgTrampoline_c vtable slot 6 Behavior; src dispatches a member pointer held in the field at c+0x5004 via (c->*c->pmf)() that is four bytes on MSVC where the ROM's field is eight, so the host reads the {code, adj} pair and routes it.
-extern "C" int _ZN17dScMgTrampoline_c8BehaviorEv(void *self)
-{
-    char *c = (char *)self;
-    const int saved = data_ov006_02140588;
-
-    func_ov006_02120c40();
-
-    {
-        const MgPmf *e = (const MgPmf *)(c + 0x5004);
-        port_mg_tti_call0(c, e->code, e->adj);
-    }
-
-    _ZN17dScMgTrampoline_c16UpdateTouchInputEv(c);
-    func_ov006_021209ac((short *)(c + 0x5d84));
-
-    if (saved != data_ov006_02140588)
-        func_ov004_020adb1c(data_ov006_02140588);
-
-    return 1;
+    *unset         = 0;
+    *virt          = 0;
+    *last_unrouted = 0;
 }
