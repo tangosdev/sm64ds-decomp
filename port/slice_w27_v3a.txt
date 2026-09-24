@@ -26,3 +26,15 @@ src/_ZThn16_N12dBgCh_SphCrrD0Ev.cpp
 src/_ZThn16_N12dBgCh_SphCrrD1Ev.cpp
 src/_ZThn56_N12dBgCh_SphCrrD0Ev.cpp
 src/_ZThn56_N12dBgCh_SphCrrD1Ev.cpp
+#
+# BATCH B, the Animation-base thunks (tables filled in hal/cxxname_bridge.cpp and
+# hal/blend_vtable.cpp) and daDemo_c::anmModel_c's (its ov002 table, filled in
+# hal/w2_dtor_heads.cpp).
+src/_ZThn80_N9ModelAnimD0Ev.cpp
+src/_ZThn80_N9ModelAnimD1Ev.cpp
+src/_ZThn80_N10ModelAnim2D0Ev.cpp
+src/_ZThn80_N10ModelAnim2D1Ev.cpp
+src/_ZThn80_N14BlendModelAnimD0Ev.cpp
+src/_ZThn80_N14BlendModelAnimD1Ev.cpp
+src/_ZThn80_N8daDemo_c10anmModel_cD0Ev.cpp
+src/_ZThn80_N8daDemo_c10anmModel_cD1Ev.cpp

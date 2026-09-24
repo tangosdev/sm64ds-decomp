@@ -487,6 +487,47 @@ static void seat_collider_thunk_tables(void)
     data_02099358[1] = (int)(size_t)sph_thn56_d0;
 }
 
+// ===========================================================================
+// SEATED (run linkfull, lane V3A): daDemo_c::anmModel_c's -0x50 TABLE, ov002
+// 0x0210bce8, slots 0 and 1.
+//
+//     from:0x0210bce8 -> 0x020f8848  _ZThn80_N8daDemo_c10anmModel_cD1Ev
+//     from:0x0210bcec -> 0x020f8838  _ZThn80_N8daDemo_c10anmModel_cD0Ev
+//
+// config/arm9/overlays/ov002/relocs.txt, and the same words in
+// extracted/overlays/overlay_0002.bin at that overlay's base 0x020ad660. Two
+// words: offset-to-top -0x50 and the typeinfo sit below, the next table's data
+// above. CutsceneObject::InitResources builds its anmModel_c with this table at
+// +0x50 (src/_ZN14CutsceneObject13InitResourcesEv.cpp). The port's copy is the
+// ov002 mount data_ov002_0210bce8 (port/ov002_syms.txt), byte-copied, so it held
+// the two raw DS addresses until now. hal/actor_classes_intro.cpp fills the same
+// object's PRIMARY table (data_ov002_0210bcc4) and hal/intro_ov002_seat.cpp the
+// mount's pointer words; neither names this one and nothing else writes it.
+//
+// NOTHING READS IT, MEASURED: cdb watchpoints on both words through the opening
+// (which builds the object and dispatches its deleting destructor twice, through
+// the PRIMARY table's slot 1, measured in the same run) and scene 377 saw zero
+// accesses. So this changes no behaviour: the words stop being DS addresses, and
+// they are the reference edge that links the two thunk TUs.
+// ===========================================================================
+extern "C" {
+
+extern unsigned data_ov002_0210bce8[];                  /* the ov002 mount */
+
+void _ZThn80_N8daDemo_c10anmModel_cD1Ev(void *thiz);    /* ov002 0x020f8848 */
+void *_ZThn80_N8daDemo_c10anmModel_cD0Ev(void *thiz);   /* ov002 0x020f8838 */
+
+}
+
+static void __fastcall anm_thn80_d1(void *self, void *) { _ZThn80_N8daDemo_c10anmModel_cD1Ev(self); }
+static void *__fastcall anm_thn80_d0(void *self, void *) { return _ZThn80_N8daDemo_c10anmModel_cD0Ev(self); }
+
+static void seat_anmmodel_thunk_table(void)
+{
+    data_ov002_0210bce8[0] = (unsigned)(size_t)anm_thn80_d1;
+    data_ov002_0210bce8[1] = (unsigned)(size_t)anm_thn80_d0;
+}
+
 extern "C" void hal_seat_w2_dtor_heads(void)
 {
     data_0208e6ec[0] = (int)(size_t)cyl_d1;
@@ -500,6 +541,7 @@ extern "C" void hal_seat_w2_dtor_heads(void)
     _ZTV8dScene_c[16] = (void *)PORT_D16(scene_d1);
     _ZTV8dScene_c[17] = (void *)scene_d0;
     seat_collider_thunk_tables();
+    seat_anmmodel_thunk_table();
 }
 
 // ---- how this fill gets called ---------------------------------------------

@@ -549,6 +549,32 @@ static void __fastcall ma2_render(void *self, void *, const void *s)
 { ((ModelAnim *)self)->ModelAnim::Render((const Vector3 *)s); }
 static void __fastcall ma2_virtual18(void *self, void *, unsigned m, const void *s)
 { ((ModelAnim *)self)->ModelAnim::Virtual18(m, (const Vector3 *)s); }
+/* THE ANIMATION-BASE SECONDARY TABLES carry the ROM's own two words (run
+   linkfull, lane V3A); they used to hold the no-op above. config/arm9/relocs.txt,
+   and the same words in extracted/arm9_dec.bin at its base 0x02004000:
+       from:0x0208e9d8 -> 0x020171b8  _ZThn80_N10ModelAnim2D1Ev  VTable_Animation_ModelAnim2Thunk[0]
+       from:0x0208e9dc -> 0x020171a8  _ZThn80_N10ModelAnim2D0Ev  VTable_Animation_ModelAnim2Thunk[1]
+       from:0x0208e9a4 -> 0x02017178  _ZThn80_N9ModelAnimD1Ev    VTable_Animation_ModelAnimThunk[0]
+       from:0x0208e9a8 -> 0x02017168  _ZThn80_N9ModelAnimD0Ev    VTable_Animation_ModelAnimThunk[1]
+   Two words a table (the next word already belongs to the next table). Each
+   thunk is `ldr ip,=-80; add r0,r0,ip; b <primary>`: move `this` from the
+   Animation base at +0x50 back to the object, then the D1 or D0. The src thunk
+   files' `#ifdef _MSC_VER` arms are exactly that.
+   NOTHING READS THESE FOUR WORDS, MEASURED: MSVC-built ModelAnims carry MSVC's
+   own vftables, and cdb watchpoints on all four words through the level boot,
+   teardown and re-entry of levels 8, 13 and 28 saw zero accesses. So the no-op
+   was never reached and the ROM's words change no behaviour; they are the
+   reference edge that links the four thunk TUs. __fastcall, as every slot here. */
+extern "C" {
+void *_ZThn80_N10ModelAnim2D1Ev(void *thiz);   /* arm9 0x020171b8 */
+void *_ZThn80_N10ModelAnim2D0Ev(void *thiz);   /* arm9 0x020171a8 */
+void _ZThn80_N9ModelAnimD1Ev(void *thiz);      /* arm9 0x02017178 */
+void *_ZThn80_N9ModelAnimD0Ev(void *thiz);     /* arm9 0x02017168 */
+}
+static void *__fastcall ma2_thn80_d1(void *self, void *) { return _ZThn80_N10ModelAnim2D1Ev(self); }
+static void *__fastcall ma2_thn80_d0(void *self, void *) { return _ZThn80_N10ModelAnim2D0Ev(self); }
+static void __fastcall ma_thn80_d1(void *self, void *) { _ZThn80_N9ModelAnimD1Ev(self); }
+static void *__fastcall ma_thn80_d0(void *self, void *) { return _ZThn80_N9ModelAnimD0Ev(self); }
 extern "C" {
 extern void *_ZTV10ModelAnim2[12];
 extern void *VTable_Animation_ModelAnim2Thunk[12];
@@ -567,9 +593,9 @@ void hal_fill_modelanim2_vtable(void)
     _ZTV10ModelAnim2[4] = (void *)ma2_virtual10;
     _ZTV10ModelAnim2[5] = (void *)ma2_render;
     _ZTV10ModelAnim2[6] = (void *)ma2_virtual18;
-    /* the Animation-base secondary table only ever destructs */
-    VTable_Animation_ModelAnim2Thunk[0] = (void *)ma2_dtor;
-    VTable_Animation_ModelAnim2Thunk[1] = (void *)ma2_dtor;
+    /* the Animation-base secondary table: the ROM's two words (block above) */
+    VTable_Animation_ModelAnim2Thunk[0] = (void *)ma2_thn80_d1;
+    VTable_Animation_ModelAnim2Thunk[1] = (void *)ma2_thn80_d0;
     /* plain ModelAnim (the Player's head models) shares every slot */
     _ZTV9ModelAnim[0] = (void *)ma2_dtor;
     _ZTV9ModelAnim[1] = (void *)ma2_dtor;
@@ -578,8 +604,8 @@ void hal_fill_modelanim2_vtable(void)
     _ZTV9ModelAnim[4] = (void *)ma2_virtual10;
     _ZTV9ModelAnim[5] = (void *)ma2_render;
     _ZTV9ModelAnim[6] = (void *)ma2_virtual18;
-    VTable_Animation_ModelAnimThunk[0] = (void *)ma2_dtor;
-    VTable_Animation_ModelAnimThunk[1] = (void *)ma2_dtor;
+    VTable_Animation_ModelAnimThunk[0] = (void *)ma_thn80_d1;
+    VTable_Animation_ModelAnimThunk[1] = (void *)ma_thn80_d0;
 }
 }
 

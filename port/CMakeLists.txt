@@ -22929,3 +22929,9 @@ endforeach()
 foreach(_tw27v3a walk_window walk_window_hires smoke_player)
     target_sources(${_tw27v3a} PRIVATE ${SLICE_W27_V3A_SOURCES})
 endforeach()
+# smoke_modelanim links hal/blend_vtable.cpp, whose fill names the two
+# BlendModelAnim thunks, and its own flat BlendModelAnim D0 / D1 (the
+# ModelBaseModelBlend host copy), so it takes those two thunk TUs as well.
+target_sources(smoke_modelanim PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZThn80_N14BlendModelAnimD0Ev.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZThn80_N14BlendModelAnimD1Ev.cpp")
