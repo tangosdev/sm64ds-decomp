@@ -10,28 +10,25 @@ This document describes this commit. The queue records its immutable output SHA.
 - Source branch `promote/promote-ov025-dpbrock-0924`. Input commit
   `787633e5e7e2a7c4e101db521958920c68ebd9f2` (origin/main at enqueue); it is
   also the original source base and the installed workflow and tool SHA.
-- Five commits on top of the input: the byte-neutral class rename, the staged
-  TU candidate, the promotion, the manifest evidence, and the declaration
-  agreement fix. This commit adds this note. No separate evidence commits.
-- Next action: the coordinator reserves `file:notes/bgobject-provenance.md`
-  (see Blocker below). After that, the producer fixes one prose path there,
-  reruns check_dead_references, and publishes for independent verification.
-- Status: WIP checkpoint. Every byte, link, relocation, attribution and
-  declaration gate passes. `check_dead_references` fails because of one prose
-  path outside this task's reservation.
+- Six commits on top of the input: the byte-neutral class rename, the staged
+  TU candidate, the promotion, the manifest evidence, the declaration
+  agreement fix, and a first handoff checkpoint. This commit repoints one prose
+  path and finalises this note. No separate evidence commits.
+- Next action: independent verification (byte, relocation, whole-object and
+  source review) of this commit, then the integrator. No blockers.
+- Status: verified candidate, from the evidence below.
 - Nothing uncommitted. Gate logs stayed in the producer's private worktree and
   are summarised here.
 
-### Blocker
+### Resolved blocker
 
-[notes/bgobject-provenance.md](../../bgobject-provenance.md) line 760 names the
-class's old header path (the coined name `PyramidStep` with `.h`, under
-`include`), which the rename retires, so
-`python tools/check_dead_references.py` exits 1 with 1 prose reference that
-does not resolve. That file is not in this task's resources. The fix is one
-line: name `include/daObjDpBrock_c.h` there. Line 724 of the same file names
-the old class `PyramidStep` in a table row. That is correct as history, but it
-could name the new class as well.
+The first checkpoint stopped because
+[notes/bgobject-provenance.md](../../bgobject-provenance.md) line 760 still named
+the class's old header path, and that file was outside the reservation. The
+coordinator added `file:notes/bgobject-provenance.md`. This commit repoints
+that one line at `include/daObjDpBrock_c.h`; the sentence is otherwise
+unchanged. Line 724 of the same file keeps the old class name `PyramidStep` in
+a table row, as history. `config/dead-reference-baseline.json` is not changed.
 
 ## What changed and why
 
@@ -61,7 +58,8 @@ could name the new class as well.
   `notes/experiments/pr2874-integration-0920.json`,
   `config/tu_manifest.d/ov025/daDpLift_c.json` (another class's manifest),
   `notes/bgobject-provenance.md` and `notes/plan-tu-merge-queue.md` (outside
-  the reservation). `--with-derived` was not used.
+  the reservation at the time). Only the one path line in
+  `notes/bgobject-provenance.md` was later fixed by hand, as above. `--with-derived` was not used.
 - class_rename refused the rename because `_ZTV14daObjDpBrock_c` already
   existed. The harness also denied its `--allow-collision` flag. The coined
   `_ZTV11PyramidStep` row was deleted first. The tool then ran with
@@ -132,20 +130,24 @@ could name the new class as well.
   0 lost. No credit went to github-actions[bot].
 - Remaining issue scope: member spellings for the two helpers;
   `include/decl_common.h` still declares `_ZTV11PyramidStep`, which nothing
-  references now (that header is reserved by another task); the
-  `PyramidStep` prose in notes/bgobject-provenance.md (the blocker above); and
-  `symbols/profile_reconstruction_registry.json`, which still names the
-  retired factory source as `current_factory_file` (generated data, not
-  edited here). The unnamed data rows and arm9 helper also remain.
+  references now (that header is reserved by another task). The unnamed data
+  rows and arm9 helper also remain.
+- Deferred: `symbols/profile_reconstruction_registry.json` still names the
+  retired factory source as the DP_BROCK row's `current_factory_file`. The
+  field is stale now that the factory lives in
+  [src/actors/daObjDpBrock_c.cpp](../../../src/actors/daObjDpBrock_c.cpp). That file is
+  generated data outside this reservation, so it is not edited here; the fix
+  belongs with its generator or a registry refresh. No gate reads the field.
 - No rows for the old mangled names exist in `config/match_provenance.jsonl`
   or `config/match_attempts.jsonl`. None were edited.
 
 ## Proof
 
 All runs use pinned mwccarm 2004/b56, in the producer's worktree. The source
-is identical in this commit. After the byte gates ran, this commit added
-this note and reworded one manifest `notes` sentence. The static gates below
-were rerun on this commit.
+is identical in this commit. After the byte gates ran, the last two commits
+added this note, reworded one manifest `notes` sentence and repointed one
+prose path in notes/bgobject-provenance.md. None of those is compiled. The
+static gates below were rerun on this commit.
 
 - Rename commit: `python tools/rombuild.py -j16 --no-rom` exit 0, 7589
   enrolled and compiled (the six renamed objects among them), 11,210
@@ -177,13 +179,18 @@ were rerun on this commit.
   9 consolidated with credit intact, 0 changed, 0 lost.
 - `python tools/check_decl_agreement.py --changed 787633e5e7` exit 0: no new
   declaration disagreements.
-- `python tools/check_dead_references.py` exit 1: FAIL, see Blocker.
+- `python tools/check_dead_references.py` exit 0: no new dead references,
+  no broken markdown links. It exited 1 at the first checkpoint, before the
+  prose fix.
 - `python tools/tiers_ratchet.py --check` exit 1: one backslide,
   `src/actors/dScMgLuigi_c.cpp#_ZN12dScMgLuigi_c10ResetBoardEv` (No unk_
   fields). This is pre-existing: the same command at the input commit also
   exits 1 with the same single lost member (+64 gained there, +65 here). This
   TU's four banked identities are retained and not listed as lost. Not
-  `--update`d.
+  `--update`d. Base evidence: a scratch checkout of 787633e5e7 run with the
+  same command exits 1, and `src/actors/dScMgLuigi_c.cpp` and its includes
+  are unchanged by this branch. The coordinator reports that #3077 fixes it on
+  main.
 - `python tools/check_tubuild_conflicts.py` exit 0.
 - `python tools/queue_audit.py --check-promoted` exit 0.
 - `python tools/check_src_tu_compiles.py` exit 0: 271 of 271 TUs compile.
