@@ -1,38 +1,46 @@
 //cpp
-/* Genuine production translation unit for ov023/daObjFm_Battan_c.
+/* daObjFm_Battan_c -- the slamming slab (FM_BATTAN), ov023.
+ *
+ * It waits until the player is within 1000.0 (sound 0x43), then tips over
+ * about X, accelerating until it lies flat (mAngleX -0x4000). On impact it
+ * shakes the ground, plays 0x44 and raises dust 400.0 behind its heading
+ * (position - 400.0 * facing). After 60 frames it swings back upright
+ * (0x45), rests 60 frames, and the cycle starts over. The shadow stretches with the tilt (UpdateShadow).
  *
  * daObjFm_Battan_c_classInit and g_profile_FM_BATTAN are reconstructed
  * source-style names. SM64DS proves the RTTI class, FM_BATTAN registry ID,
  * descriptor/factory relationship, and object shape; later EAD lineage
- * supplies the spelling prior. Exact original SM64DS symbols are not
- * preserved. Historical project aliases: Squasher_Spawn and
- * Squasher_SpawnInfo. Private helper spellings are likewise inferred; their
- * class ownership, bodies, calls, and ordering are byte/relocation proven.
+ * supplies the spelling prior. Historical project aliases: Squasher_Spawn
+ * and Squasher_SpawnInfo. Private helper spellings are likewise inferred;
+ * their class ownership, bodies, calls, and ordering are byte/relocation
+ * proven.
  *
- * mwccarm emits function sections in reverse source order. Keep the ROM-high
- * factory first and the ROM-low helper last. InitResources is the key function;
- * together with the inline destructor in the real header this naturally emits
- * retail D1 then D0 and the class RTTI/vtable without a forcing object.
+ * DO NOT "TIDY" THESE -- each one is load-bearing:
+ *   Source is reverse ROM order: keep the ROM-high factory first and the
+ *   ROM-low helper last. InitResources is the key function; with the inline
+ *   destructor in the real header this emits retail D1 then D0 and the
+ *   class RTTI/vtable without a forcing object.
+ *   BattanVector3: a local Vector3 would emit vague-linkage ~Vector3.
+ *   common.h first (via dBgActor_c.h): Matrix4x3 is s32 m[12], so the
+ *   translation stays m[9]/m[10]/m[11].
+ *   *(Vector3 *)&mCamSpacePosX: a Vector3 member at 0x074 is a dActor_c
+ *   change, not this leaf's.
  *
- * deslop leftovers:
- * - dBgW_KcMbg::SetFile / dActor_c::DropShadowScaleXYZ / dActor_c::Earthquake
- *   6az: InitResources, UpdateShadow, and Behavior pass Fix12<int> by value;
- *   the header method form size-DIFFs.
- * - func_020393d4: InitResources stores dBgW::UpdatePosWithTransform on
+ * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS (Fix12<int> by value, wall
+ * 6az; the header method form size-DIFFs): dBgW_KcMbg::SetFile
+ * (InitResources), dActor_c::DropShadowScaleXYZ (UpdateShadow) and
+ * dActor_c::Earthquake (Behavior).
+ *
+ * Known limits:
+ *   func_020393d4: InitResources stores dBgW::UpdatePosWithTransform on
  *   mMeshCollider; dBgW.h has no setter.
- * - func_0200fa04: Behavior's squash-impact dust; no named method in this TU.
- * - AddVec3 / Matrix4x3_FromRotationY / Matrix4x3_FromRotationXYZExt: no
- *   shared header this TU can take without a campaign.
- * - BattanVector3: a local Vector3 would emit vague-linkage ~Vector3.
- * - data_ov023_02112088 / 02112080 resource handles and data_ov064_0211ba4c
- *   CLPS; this TU's sinit owns the two handles, overlay .data owns the CLPS.
- * - data_02082214 sine table.
- * - common.h first (via dBgActor_c.h): Matrix4x3 is s32 m[12], so translation
- *   stays m[9]/m[10]/m[11].
- * - *(Vector3 *)&mCamSpacePosX addressing shape (a Vector3 member at 0x074 is
- *   a dActor_c campaign, not this leaf).
- * - no Player.h / Camera.h.
- * - leaf operator new until #2570.
+ *   func_0200fa04 is Behavior's impact dust; no named method in this TU.
+ *   AddVec3 / Matrix4x3_FromRotationY / Matrix4x3_FromRotationXYZExt: no
+ *   shared header this TU can take without a wider change.
+ *   data_ov023_02112088 / 02112080 are resource handles this TU's sinit
+ *   owns; data_ov064_0211ba4c (CLPS) is overlay .data; data_02082214 is the
+ *   sine table.
+ *   No Player.h / Camera.h. The leaf operator new stays until #2570.
  */
 
 #include "daObjFm_Battan_c.h"

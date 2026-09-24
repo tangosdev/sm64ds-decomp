@@ -1,8 +1,8 @@
 //cpp
-/* Production translation unit for ov064/daBbl_c.
- * 14 function(s), .text 0x021185c0..0x02118b50.
+/* daBbl_c -- the Lava Bubble (Podoboo), BUBBLE, ov064: 14 functions,
+ * .text 0x021185c0..0x02118b50.
  *
- * The Lava Bubble (Podoboo) of the lava levels, registry profile BUBBLE. Two
+ * The Lava Bubble of the lava levels. Two
  * variants share the class and are chosen by the spawn parameter's low bit: a
  * fixed flame that only hurts what walks into it, and the jumping bubble that
  * leaps out of the lava under gravity, can be hit, and dies when its fuse runs
@@ -39,7 +39,7 @@
  * inline destructor in include/daBbl_c.h emits the retail D1/D0 pair first and
  * emits no D2 body.
  *
- * deslop leftovers:
+ * Known limits:
  * - Particle::System::New and dActor_c::IsTooFarAwayFromPlayer keep their C
  *   ABI spellings: their real declarations pass Fix12<int> by value, which
  *   mwccarm lowers differently at a C++ call site.
@@ -112,7 +112,7 @@ void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
 void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
     dBgCh_Actr *self, int actor, int radius, int height, int rotA, int rotB);
 
-/* This TU's own state hooks -- see the deslop note above. Declared here
+/* This TU's own state hooks -- see Known limits above. Declared here
  * because the state tables reach them by pointer-to-member, and because
  * InitResources, written first, calls the transition. */
 int func_ov064_02118644(daBbl_c *self);
@@ -320,7 +320,7 @@ extern "C" int func_ov064_02118760(daBbl_c *self)
     int spawnZ;
 
     if ((u16)self->mStateTimer == 0) {
-        volatile int pos[3];
+        volatile int spawnPos[3];
 
         self->mStateTimer = 0xb4;
         int y = self->mPosY;
@@ -329,10 +329,10 @@ extern "C" int func_ov064_02118760(daBbl_c *self)
         spawnY = y + spawnY;
         spawnZ = z;
         int x = self->mPosX;
-        pos[1] = spawnY;
-        pos[2] = spawnZ;
-        pos[0] = x;
-        dActor_c::Spawn(0xd6, 0, *(const Vector3 *)pos,
+        spawnPos[1] = spawnY;
+        spawnPos[2] = spawnZ;
+        spawnPos[0] = x;
+        dActor_c::Spawn(0xd6, 0, *(const Vector3 *)spawnPos,
                         (const Vector3_16 *)&self->mPrevAngleX,
                         self->mAreaId, -1);
     }

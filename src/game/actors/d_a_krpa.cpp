@@ -1,4 +1,38 @@
 //cpp
+/* daKrpa_c -- the flame spitter (KERONPA), ov070; it spits KERONPA_FIRE.
+ *
+ * It turns toward the closest visible player within 700.0 (0x800 a frame)
+ * and pulses in size from a frame table. With a player tracked, and while
+ * it stands above data_0209f32c, it counts 115 frames and then spits: on
+ * frame 30 of that animation it spawns KERONPA_FIRE (actor 0x10f, see
+ * d_a_kp_fr.cpp) 80.0 in front of itself and plays sound 0x105. A collider
+ * hit with flag 0x10 knocks it away tumbling (a mega kill, state 3). A
+ * touch while it is being eaten (flag 0x20000) sends it to state 2, which
+ * poofs it once neither 0x20000 nor 0x40000 is set.
+ *
+ * One TU, 25 functions. tubuild create refused it (legacy bodies wrapped in
+ * extern "C" { }), so it began as a reverse-ROM-order concatenation.
+ *
+ * DO NOT "TIDY" THESE -- each one is load-bearing:
+ *   mwcc emits one .text section per ordinary definition in reverse source
+ *   order; the inline destructor group comes out retail D1 then D0, no D2.
+ *   M48, the array wrapper for InitResources' IDENTITY_MATRIX4X3 copy. This
+ *   TU uses the nested Matrix4x3 (.t) that math/Matrix.h brings in via
+ *   ModelAnim.h; putting common.h first would drop .t.
+ *   func_ov070_021213cc calls dBgCh_Actr_UpdateDiscreteNoLava_veneer: the
+ *   veneer is the retail call destination.
+ *
+ * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS (Fix12<int> by value, wall
+ * 6az):
+ *   dCcAcPos_c::Init, dBgCh_Actr::Init (its header Fix12i also mangles as
+ *   int), ModelAnim::SetAnim, DropShadowRadHeight and
+ *   Particle::System::NewSimple.
+ *
+ * Known limits:
+ *   The data_ov070_* SharedFilePtr / BCA / frame tables / state records are
+ *   overlay .data, not this TU's data claim.
+ *   func_0201267c is the sound call behind the spit (0x105).
+ */
 #include "daKrpa_c.h"
 #include "dBgCh_Gnd.h"
 #include "Player.h"
@@ -20,30 +54,6 @@ struct daKrpaSpawnInfo {
 
 typedef char daKrpaSpawnInfo_size_must_be_0x1c[
     sizeof(daKrpaSpawnInfo) == 0x1c ? 1 : -1];
-
-/* Manually curated translation unit -- ov070/daKrpa_c (25 function(s)).
- * tubuild create refused this TU (legacy bodies wrapped in extern "C" { }),
- * so it began as a reverse-ROM-order concatenation. It now uses the real
- * class, typed members, Player/collision headers, `return new daKrpa_c()`,
- * and compiler-owned inline lifecycle. mwcc emits one .text section per
- * ordinary definition in reverse source order; the destructor variant group
- * is emitted first as retail D1 then D0, with no D2.
- *
- *
- * deslop
- * Leftover:
- * - dCcAcPos_c::Init / dBgCh_Actr::Init stay mangled (Fix12-by-value, 6az;
- *   dBgCh Init header Fix12i mangles as i -- this TU's InitResources call).
- * - ModelAnim::SetAnim, DropShadowRadHeight, Particle::System::NewSimple stay
- *   mangled (Fix12-by-value, 6az -- this TU).
- * - M48 wrapper for IDENTITY_MATRIX4X3 copy (this TU InitResources); nested
- *   Matrix4x3.t from math/Matrix.h via ModelAnim.h (common.h-first drops .t).
- * - data_ov070_* SharedFilePtr / BCA / frame tables / state records are
- *   overlay .data, not this TU's data claim.
- * - dBgCh_Actr_UpdateDiscreteNoLava_veneer is the retail call destination
- *   (func_ov070_021213cc).
- * - func_0201267c spawn SFX 0x105 at mCamSpacePosX (func_ov070_0212156c).
- */
 
 // @symbol daKrpa_c_classInit
 /* `return new daKrpa_c()` MATCHES (size 0x50); the leaf unsigned-long
@@ -268,19 +278,19 @@ void func_0201267c(u32 soundID, const Vector3 *pos);
 
 int func_ov070_0212156c(daKrpa_c *self) {
     if (self->mFrameController.cursor == 0x1e) {
-        Vector3 pos;
+        Vector3 firePos;
         int idx = (int)(u16)self->mAngleY >> 4;
-        int s = data_02082214[idx * 2 + 1];
-        int cn = data_02082214[idx * 2];
-        int offZ = (int)(((s64)s * 0x50000 + 0x800) >> 12);
-        int offX = (int)(((s64)cn * 0x50000 + 0x800) >> 12);
+        int sinv = data_02082214[idx * 2 + 1];
+        int cosv = data_02082214[idx * 2];
+        int offZ = (int)(((s64)sinv * 0x50000 + 0x800) >> 12);
+        int offX = (int)(((s64)cosv * 0x50000 + 0x800) >> 12);
         int x = self->mPosX + offX;
         int z = self->mPosZ + offZ;
         int y = self->mPosY - 0x29000;
-        pos.x = x;
-        pos.z = z;
-        pos.y = y;
-        dActor_c::Spawn(0x10f, 0, pos,
+        firePos.x = x;
+        firePos.z = z;
+        firePos.y = y;
+        dActor_c::Spawn(0x10f, 0, firePos,
             (Vector3_16 *)&self->mAngleX, self->mAreaId, -1);
         func_0201267c(0x105, (Vector3 *)&self->mCamSpacePosX);
     }
