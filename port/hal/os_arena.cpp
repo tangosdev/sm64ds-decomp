@@ -276,7 +276,8 @@ DSSTATE_END
      func_02058cd0  OS_AllocFromArenaLo  src/, slice_w23_arena
      func_02058ea0  OS_GetArenaLo        src/, slice_w27_smalls1 (run linkfull
                                          wave 27, lane SMALLS1)
-     func_02059040  OS_InitAlloc         here: held, see its own comment
+     func_02059040  OS_InitAlloc         src/, slice_w27_smalls1 (the same lane):
+                                         the root heap starts 0x60 in, see below
 
    THE SEED is what the ROM's OS_InitArena writes for OS_ARENA_MAIN, with the
    port's block in place of the cartridge's linker-defined bounds:
@@ -323,25 +324,21 @@ void port_os_arena_seed(void)
             os_arena_hi_word[OS_ARENA_MAIN]);
 }
 
-/* PORT_HOST_ABI: OS_InitAlloc is HELD: the ROM body reserves its 0x44-byte OS heap-info block at the arena base and returns base+0x60, which moves the root heap; W23-4 keeps the root heap bounds identical.
-   Measured against the cartridge (arm9 0x02059040, 0xbc bytes; match.py
-   2004/b56 MATCHING on src/func_02059040.c): it is NitroSDK OS_InitAlloc.
+/* OS_InitAlloc RUNS AS THE ROM'S (run linkfull wave 27, lane SMALLS1).
+   src/func_02059040.c (arm9 0x02059040, 0xbc) is NitroSDK OS_InitAlloc.
    Heap::SetupRootHeap calls it as (id, lo, hi, 4); it stores lo into
-   OSiHeapInfo[id] (data_020a637c), builds the heap-info header plus four
-   0xc-byte descriptors at lo, and returns round32(lo + 0x14 + 4 * 0xc). On
-   the port's arena that is 0x30000060, so the ROM body would start the root
-   heap 0x60 bytes higher and 0x60 bytes smaller than this stand-in does, and
-   every allocation address would move by the same amount. That is the
-   cartridge's own layout, and the brief this lane ran under says a root-heap
-   bound that moves by a byte is reverted, so the row is reported for a ruling
-   rather than taken. What this stand-in returns is unchanged: lo rounded up
-   to the fourth argument, which is lo itself on the 64K-aligned base. */
-int func_02059040(int idx, int lo, int hi, int align)
-{
-    (void)idx;
-    (void)hi;
-    return (lo + align - 1) & ~(align - 1);
-}
+   OSiHeapInfo[id] (data_020a637c, hosted in hal/scene_boot.cpp), builds the
+   heap-info header plus four 0xc-byte descriptors at lo, and returns
+   round32(lo + 0x14 + 4 * 0xc) = lo + 0x60. So the root heap starts 0x60
+   bytes into the arena and is 0x60 bytes smaller, as on the cartridge (where
+   lo is 0x0214eaa0), and every allocation carved from the head of the root
+   heap sits 0x60 higher than under the old stand-in, which returned lo
+   rounded to 4, lo itself. OSARENA1 (wave 23) held the row for exactly that
+   move; the coordinator's ruling (09-23, corrected by REVOSARENA1) re-filed
+   it as a ROM-faithful layout move. What moved and what it costs is in the
+   lane's commit: a disk save state is refused by build (gittip) before any
+   layout is looked at, and port/tools/savestate_world_probe.py's fixed
+   camera address moved by the same 0x60. */
 #else
 /* THE NARROW HARNESSES' STAND-INS. Every smoke_* target that links
    Heap::SetupRootHeap links it without port/slice_w23_arena.txt, and two of
@@ -352,8 +349,9 @@ int func_02059040(int idx, int lo, int hi, int align)
 int func_02058ea0(void *) { arena_init(); return (int)(size_t)g_lo; }   /* arena lo */
 int func_02058eb4(void *) { arena_init(); return (int)(size_t)g_hi; }   /* arena hi */
 
-/* the round-up SetupRootHeap's OS_InitAlloc call returns here: see the
-   SM64DS_OS_ARENA_ROM arm above for what the ROM body does instead */
+/* the round-up SetupRootHeap's OS_InitAlloc call returns here; the hosting
+   targets run the ROM body instead (src/func_02059040.c), which starts the
+   root heap 0x60 in */
 int func_02059040(void *, int lo, int hi, int align)
 {
     (void)hi;

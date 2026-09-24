@@ -22,3 +22,10 @@ src/_ZN3IRQ15ClearInterruptsEj.cpp
 # at the first read) is retired; the seed now runs at OS_InitArena's own point,
 # hal/boot_os.cpp's port_boot_rom_pre_main (and smoke_player's main).
 src/func_02058ea0.c
+#
+# BOOTARENA1, second step: OS_InitAlloc, arm9 0x02059040 (0xbc). NitroSDK's heap
+# bookkeeping setup: it writes the 0x44-byte heap-info block at the arena base
+# and returns base + 0x60, so the root heap starts 0x60 in and is 0x60 smaller,
+# as on the cartridge. hal/os_arena.cpp's round-up stand-in stays only for the
+# narrow harnesses.
+src/func_02059040.c

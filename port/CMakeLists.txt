@@ -22907,7 +22907,7 @@ endforeach()
 
 # ===========================================================================
 # W27 SMALLS1 (run linkfull wave 27, lane SMALLS1): cstd::fdiv,
-# IRQ::ClearInterrupts, OS_GetArenaLo
+# IRQ::ClearInterrupts, OS_GetArenaLo, OS_InitAlloc
 # ===========================================================================
 #
 # port/slice_w27_smalls1.txt carries the rows. A row goes on all three hosting
@@ -22934,6 +22934,11 @@ endforeach()
 # set; hal/os_arena.cpp's host copy under SM64DS_OS_ARENA_ROM is retired and
 # the table's seed runs at OS_InitArena's point (hal/boot_os.cpp's pre-main,
 # smoke_player's main).
+#
+# OS_InitAlloc (func_02059040): the same three targets; its SM64DS_OS_ARENA_ROM
+# stand-in in hal/os_arena.cpp is retired, so the root heap starts 0x60 into
+# the arena (the heap-info block the SDK writes at the base), the
+# cartridge's own layout.
 set(W27S_GAME_ONLY
     src/_ZN3IRQ15ClearInterruptsEj.cpp)
 set(W27S_HOSTGEN_TU
