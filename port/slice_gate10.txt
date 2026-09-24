@@ -227,10 +227,11 @@ src/func_0205b1d8.c
 src/func_0205b5d4.c
 src/_ZN5Model14SetPolygonModeEi.cpp
 src/_ZN15TextureSequence17UpdateFileOffsetsER8BTP_File.cpp
-# InitCrashScreen: HOST COPY at unmatched/InitCrashScreen_ResetVeneer.cpp (wired in
-# CMakeLists). The matched C calls Scene::ResetHardwareRegisters() with no argument;
-# the callee never dereferences `this`, so this is a DEFENSIVE fix (pass 0) not a
-# live crash. See that file's header.
+# InitCrashScreen calls dScene_c::ResetHardwareRegisters, a STATIC, by its flat
+# name with no argument, as the ROM does (a bare bl). Its host copy
+# (unmatched/InitCrashScreen_ResetVeneer.cpp) is retired: the face in
+# hal/cxx_aliases.cpp takes no argument now (run linkfull, lane RS2PORT).
+src/InitCrashScreen.c
 src/ShowCrashScreen.c
 src/_ZN4Heap6RescueEv.cpp
 src/func_02043060.c

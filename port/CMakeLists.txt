@@ -11496,8 +11496,12 @@ endforeach()
 # main's own text, with apply_patches hard-erroring if either anchor moves --
 # so nothing about the call changes and one host copy leaves the tree.
 list(APPEND SLICE10_CAM_SOURCES
-     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Player_SwimMain.cpp"
-     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/InitCrashScreen_ResetVeneer.cpp")
+     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Player_SwimMain.cpp")
+# unmatched/InitCrashScreen_ResetVeneer.cpp RETIRED (run linkfull, lane
+# RS2PORT): hal/cxx_aliases.cpp's face for the static
+# dScene_c::ResetHardwareRegisters takes no argument now, so the matched
+# argless call is the ROM's call and src/InitCrashScreen.c is back on
+# port/slice_gate10.txt.
 
 # run link100 wave 15, LINK15 BATCH 6 (lane SEAT15F): the arm9 miscellaneous
 # singles whose host copies recorded an ARM ride-through that main has since
