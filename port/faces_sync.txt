@@ -1660,7 +1660,13 @@ __ZN12dScMgSound_c6RenderEv                                              ?Render
 __ZN12dScMgSound_c8BehaviorEv                                            ?Behavior@dScMgSound_c@@UAEHXZ                                   0x0211c720 R
 __ZN12dScMgSound_c9Virtual50Ev                                           ?Virtual50@dScMgSound_c@@UAEXXZ                                  0x0211c5b8 R
 
-__ZN13dScMgTeresa_c13InitResourcesEv                                     ?InitResources@dScMgTeresa_c@@UAEHXZ                             0x021203fc F
+# FLIPPED F -> R at run linkfull, lane RS4PORT. The forward direction existed
+# because unmatched/MgTeresa_InitResources.cpp carried the body under the flat
+# name (MSVC refused the matched TU's `f2 += 0;` with C2036) and the face defined
+# the member on top of it. main #3107 dropped the no-op, the matched TU is on
+# port/slice_boo.txt and DEFINES the decorated name, and hal/scene_mg_booseek.cpp
+# calls the flat name, which the reverse face defines.
+__ZN13dScMgTeresa_c13InitResourcesEv                                     ?InitResources@dScMgTeresa_c@@UAEHXZ                             0x021203fc R
 __ZN13dScMgTeresa_c13OnYoshiTryEatEi                                     ?OnYoshiTryEat@dScMgTeresa_c@@UAEXH@Z                            0x02120248 R
 __ZN13dScMgTeresa_c6RenderEv                                             ?Render@dScMgTeresa_c@@UAEHXZ                                    0x02120348 R
 __ZN13dScMgTeresa_c8BehaviorEv                                           ?Behavior@dScMgTeresa_c@@UAEHXZ                                  0x021203ac R

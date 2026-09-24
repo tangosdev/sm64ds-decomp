@@ -9665,16 +9665,11 @@ endforeach()
 port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_boo.txt" SLICE_BOO_LINES)
 set(SLICE_BOO_SOURCES hal/scene_mg_booseek.cpp
                       unmatched/MgTeresa_StateDispatch.cpp
-                      # REPLACES src/_ZN13dScMgTeresa_c13InitResourcesEv.cpp, which is OUT of
-                      # slice_boo.txt: vtable slot 0, and MSVC refuses it with
-                      # C2036 "'void *': unknown size" on the `f2 += 0;` at
-                      # its line 69. hostgen.py's VOIDPP_ARITH rewrite covers
-                      # a `*(void**)(x) + n` deref and not a `void*` compound
-                      # assignment, and widening a generator six other gates
-                      # route their sources through is not a fan-out lane's
-                      # change to make. The copy is verbatim minus that one
-                      # statement, checked against the ROM's own 235 words.
-                      unmatched/MgTeresa_InitResources.cpp
+                      # unmatched/MgTeresa_InitResources.cpp RETIRED (run
+                      # linkfull, lane RS4PORT): main #3107 dropped the
+                      # `f2 += 0;` no-op MSVC refused (C2036), so
+                      # src/_ZN13dScMgTeresa_c13InitResourcesEv.cpp compiles
+                      # and is on slice_boo.txt.
                       # REPLACES src/func_ov004_020b6b40.c and
                       # src/func_ov004_020b6c9c.c, both commented out of
                       # slice_mg1.txt in the same commit. THIS IS THE FAMILY'S
