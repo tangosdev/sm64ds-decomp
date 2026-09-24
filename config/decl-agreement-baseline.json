@@ -37431,12 +37431,6 @@
         "return:int"
       ]
     },
-    "func_0203d7d4": {
-      "src/_ZN5Sound19LoadGroupAndSetBankEii.cpp": [
-        "arity:0",
-        "return:void"
-      ]
-    },
     "func_0203d81c": {
       "src/func_020308a8.c": [
         "return:void"
