@@ -72,6 +72,25 @@ static void __fastcall blend_virtual18(void *self, void *, unsigned m,
                                        const void *s)
 { ((BlendModelAnim *)self)->BlendModelAnim::Virtual18(m, (const Vector3 *)s); }
 
+/* THE ANIMATION-BASE SECONDARY TABLE carries the ROM's own two words (run
+   linkfull, lane V3A); it used to hold blend_dtor. config/arm9/relocs.txt, and
+   the same words in extracted/arm9_dec.bin at its base 0x02004000:
+       from:0x0208e970 -> 0x02017198  _ZThn80_N14BlendModelAnimD1Ev  [0]
+       from:0x0208e974 -> 0x02017188  _ZThn80_N14BlendModelAnimD0Ev  [1]
+   Each thunk is `ldr ip,=-80; add r0,r0,ip; b <primary>`, which the src thunk
+   files' `#ifdef _MSC_VER` arms spell out. NOTHING READS THE TWO WORDS,
+   MEASURED: cdb watchpoints through level 6's boot, teardown and re-entry
+   (King Bob-omb's BlendModelAnim) saw zero accesses, so the no-op was never
+   reached and the ROM's words change no behaviour; they are the reference edge
+   that links the two thunk TUs. smoke_modelanim links this file too, so it
+   links the two thunk TUs as well (port/CMakeLists.txt, lane V3A's block). */
+extern "C" {
+void *_ZThn80_N14BlendModelAnimD1Ev(void *thiz);   /* arm9 0x02017198 */
+void *_ZThn80_N14BlendModelAnimD0Ev(void *thiz);   /* arm9 0x02017188 */
+}
+static void *__fastcall blend_thn80_d1(void *self, void *) { return _ZThn80_N14BlendModelAnimD1Ev(self); }
+static void *__fastcall blend_thn80_d0(void *self, void *) { return _ZThn80_N14BlendModelAnimD0Ev(self); }
+
 extern "C" {
 /* installed by _ZN14BlendModelAnimC1Ev: the primary at +0 and the
    multiple-inheritance thunk table the Animation base gets at +0x50 */
@@ -92,8 +111,8 @@ void hal_fill_blendmodelanim_vtable(void)
     _ZTV14BlendModelAnim[4] = (void *)blend_virtual10;
     _ZTV14BlendModelAnim[5] = (void *)blend_render;
     _ZTV14BlendModelAnim[6] = (void *)blend_virtual18;
-    /* the Animation-base secondary table only ever destructs */
-    VTable_Animation_BlendModelAnimThunk[0] = (void *)blend_dtor;
-    VTable_Animation_BlendModelAnimThunk[1] = (void *)blend_dtor;
+    /* the Animation-base secondary table: the ROM's two words (block above) */
+    VTable_Animation_BlendModelAnimThunk[0] = (void *)blend_thn80_d1;
+    VTable_Animation_BlendModelAnimThunk[1] = (void *)blend_thn80_d0;
 }
 }

@@ -8,6 +8,24 @@
 
 typedef void (*VFN)(void *);
 
+#ifdef _MSC_VER
+/* THE HOST NEEDS THE ROM'S FLAT THUNK NAME, AND MSVC NEVER EMITS IT. mwccarm
+ * emits this thunk beside the destructor below: `ldr ip,=-80; add r0,r0,ip;
+ * b _ZN8daDemo_c10anmModel_cD1Ev`, which moves `this` from the Animation base at +0x50 back to
+ * the whole daDemo_c::anmModel_c and runs its complete-object destructor. MSVC makes
+ * adjustor thunks only for its own vftables, and those are not this one. This
+ * arm is the same two steps, reached from slot 0 of the port's copy of the
+ * ROM's secondary table data_ov002_0210bce8 (0x0210bce8, filled in
+ * port/hal/w2_dtor_heads.cpp). The destructor itself is defined by the class's D1
+ * file; defining it here as well would define it twice under MSVC. Nothing
+ * here reaches mwccarm: it builds the `#else` arm, byte for byte as before. */
+extern "C" void _ZN8daDemo_c10anmModel_cD1Ev(void *self);
+
+extern "C" void _ZThn80_N8daDemo_c10anmModel_cD1Ev(Animation *thiz)
+{
+    _ZN8daDemo_c10anmModel_cD1Ev((void *)((char *)thiz - 80));
+}
+#else
 daDemo_c::anmModel_c::~anmModel_c()
 {
     char *c = (char *)this;
@@ -31,3 +49,4 @@ daDemo_c::anmModel_c::~anmModel_c()
         }
     }
 }
+#endif

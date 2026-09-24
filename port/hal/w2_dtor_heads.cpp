@@ -406,6 +406,128 @@ static int __fastcall scene_before_render(void *self, void *)
 static void *__fastcall scene_d1(void *self, void *) { return _ZN8dScene_cD1Ev(self); }
 static void *__fastcall scene_d0(void *self, void *) { return _ZN8dScene_cD0Ev(self); }
 
+// ===========================================================================
+// SEATED (run linkfull, lane V3A): THE FOUR COLLIDER SECONDARY TABLES, slots 0
+// and 1 -- group 1 at the bottom of this file ("the mwcc thunk artefacts").
+//
+// The ROM's own words, config/arm9/relocs.txt, and the same eight words read
+// out of extracted/arm9_dec.bin at the image base 0x02004000:
+//
+//     from:0x02099274 -> 0x020375c0  _ZThn16_N9dBgCh_GndD1Ev      VTable_dBgPi_dBgCh_GndThunk[0]
+//     from:0x02099278 -> 0x020375b0  _ZThn16_N9dBgCh_GndD0Ev      VTable_dBgPi_dBgCh_GndThunk[1]
+//     from:0x020992b4 -> 0x0203781c  _ZThn16_N9dBgCh_LinD1Ev      data_020992b4[0]
+//     from:0x020992b8 -> 0x0203780c  _ZThn16_N9dBgCh_LinD0Ev      data_020992b4[1]
+//     from:0x02099348 -> 0x02037d94  _ZThn16_N12dBgCh_SphCrrD1Ev  data_02099348[0]
+//     from:0x0209934c -> 0x02037d84  _ZThn16_N12dBgCh_SphCrrD0Ev  data_02099348[1]
+//     from:0x02099358 -> 0x02037db4  _ZThn56_N12dBgCh_SphCrrD1Ev  data_02099358[0]
+//     from:0x0209935c -> 0x02037da4  _ZThn56_N12dBgCh_SphCrrD0Ev  data_02099358[1]
+//
+// EACH TABLE IS TWO WORDS. The two words below each address point are its
+// offset-to-top (-16, or -56 for SphereClsn's dM3dGSph base) and its typeinfo;
+// the word after slot 1 already belongs to the next table. Every one of the
+// eight bodies is `ldr ip,=-N; add r0,r0,ip; b <primary D1 or D0>`.
+//
+// WHAT CHANGED SINCE GROUP 1 SAID "NOT LINKABLE". The eight thunk sources are
+// no longer synthetic two-base reconstructions: each defines the class's real
+// destructor, which mwccarm compiles to the thunk as a byproduct, and each now
+// carries an `#ifdef _MSC_VER` arm that defines only the flat thunk name (move
+// `this` back by the ROM's constant, call the flat primary), so each compiles
+// once under MSVC.
+//
+// NOTHING DISPATCHES THESE TABLES, MEASURED. The port's colliders are built by
+// MSVC constructors (??0dBgCh_Gnd and its siblings), which store MSVC's own
+// vftables and never these arrays; no object on the link names the four
+// arrays except the two that define them; and cdb watchpoints on all eight
+// words through a level boot, a full teardown and a re-entry (levels 6 and 13)
+// saw zero accesses. So this changes no behaviour: the port's copy of each
+// table carries the ROM's two words, and that is the reference edge that links
+// the eight thunk TUs. Storage is hal/actor_vtables.cpp and hal/cxx_aliases.cpp
+// and nothing else in the tree writes these words, so the pre-main fill below
+// is not overwritten.
+//
+// ABI, as for every seat in this file: a ROM-shadow dispatch would arrive
+// __thiscall, so each slot takes the ecx->arg adapter.
+// ===========================================================================
+extern "C" {
+
+extern int VTable_dBgPi_dBgCh_GndThunk[];   /* 0x02099274, storage hal/actor_vtables.cpp */
+extern void *data_020992b4[];               /* 0x020992b4, storage hal/cxx_aliases.cpp */
+extern int data_02099348[];                 /* 0x02099348, storage hal/actor_vtables.cpp */
+extern int data_02099358[];                 /* 0x02099358, storage hal/actor_vtables.cpp */
+
+void _ZThn16_N9dBgCh_GndD1Ev(void *thiz);           /* arm9 0x020375c0 */
+void *_ZThn16_N9dBgCh_GndD0Ev(void *thiz);          /* arm9 0x020375b0 */
+void _ZThn16_N9dBgCh_LinD1Ev(void *thiz);           /* arm9 0x0203781c */
+void *_ZThn16_N9dBgCh_LinD0Ev(void *thiz);          /* arm9 0x0203780c */
+void _ZThn16_N12dBgCh_SphCrrD1Ev(void *thiz);       /* arm9 0x02037d94 */
+void *_ZThn16_N12dBgCh_SphCrrD0Ev(void *thiz);      /* arm9 0x02037d84 */
+void _ZThn56_N12dBgCh_SphCrrD1Ev(void *thiz);       /* arm9 0x02037db4 */
+void *_ZThn56_N12dBgCh_SphCrrD0Ev(void *thiz);      /* arm9 0x02037da4 */
+
+}
+
+static void __fastcall gnd_thn16_d1(void *self, void *) { _ZThn16_N9dBgCh_GndD1Ev(self); }
+static void *__fastcall gnd_thn16_d0(void *self, void *) { return _ZThn16_N9dBgCh_GndD0Ev(self); }
+static void __fastcall lin_thn16_d1(void *self, void *) { _ZThn16_N9dBgCh_LinD1Ev(self); }
+static void *__fastcall lin_thn16_d0(void *self, void *) { return _ZThn16_N9dBgCh_LinD0Ev(self); }
+static void __fastcall sph_thn16_d1(void *self, void *) { _ZThn16_N12dBgCh_SphCrrD1Ev(self); }
+static void *__fastcall sph_thn16_d0(void *self, void *) { return _ZThn16_N12dBgCh_SphCrrD0Ev(self); }
+static void __fastcall sph_thn56_d1(void *self, void *) { _ZThn56_N12dBgCh_SphCrrD1Ev(self); }
+static void *__fastcall sph_thn56_d0(void *self, void *) { return _ZThn56_N12dBgCh_SphCrrD0Ev(self); }
+
+static void seat_collider_thunk_tables(void)
+{
+    VTable_dBgPi_dBgCh_GndThunk[0] = (int)(size_t)gnd_thn16_d1;
+    VTable_dBgPi_dBgCh_GndThunk[1] = (int)(size_t)gnd_thn16_d0;
+    data_020992b4[0] = (void *)lin_thn16_d1;
+    data_020992b4[1] = (void *)lin_thn16_d0;
+    data_02099348[0] = (int)(size_t)sph_thn16_d1;
+    data_02099348[1] = (int)(size_t)sph_thn16_d0;
+    data_02099358[0] = (int)(size_t)sph_thn56_d1;
+    data_02099358[1] = (int)(size_t)sph_thn56_d0;
+}
+
+// ===========================================================================
+// SEATED (run linkfull, lane V3A): daDemo_c::anmModel_c's -0x50 TABLE, ov002
+// 0x0210bce8, slots 0 and 1.
+//
+//     from:0x0210bce8 -> 0x020f8848  _ZThn80_N8daDemo_c10anmModel_cD1Ev
+//     from:0x0210bcec -> 0x020f8838  _ZThn80_N8daDemo_c10anmModel_cD0Ev
+//
+// config/arm9/overlays/ov002/relocs.txt, and the same words in
+// extracted/overlays/overlay_0002.bin at that overlay's base 0x020ad660. Two
+// words: offset-to-top -0x50 and the typeinfo sit below, the next table's data
+// above. CutsceneObject::InitResources builds its anmModel_c with this table at
+// +0x50 (src/_ZN14CutsceneObject13InitResourcesEv.cpp). The port's copy is the
+// ov002 mount data_ov002_0210bce8 (port/ov002_syms.txt), byte-copied, so it held
+// the two raw DS addresses until now. hal/actor_classes_intro.cpp fills the same
+// object's PRIMARY table (data_ov002_0210bcc4) and hal/intro_ov002_seat.cpp the
+// mount's pointer words; neither names this one and nothing else writes it.
+//
+// NOTHING READS IT, MEASURED: cdb watchpoints on both words through the opening
+// (which builds the object and dispatches its deleting destructor twice, through
+// the PRIMARY table's slot 1, measured in the same run) and scene 377 saw zero
+// accesses. So this changes no behaviour: the words stop being DS addresses, and
+// they are the reference edge that links the two thunk TUs.
+// ===========================================================================
+extern "C" {
+
+extern unsigned data_ov002_0210bce8[];                  /* the ov002 mount */
+
+void _ZThn80_N8daDemo_c10anmModel_cD1Ev(void *thiz);    /* ov002 0x020f8848 */
+void *_ZThn80_N8daDemo_c10anmModel_cD0Ev(void *thiz);   /* ov002 0x020f8838 */
+
+}
+
+static void __fastcall anm_thn80_d1(void *self, void *) { _ZThn80_N8daDemo_c10anmModel_cD1Ev(self); }
+static void *__fastcall anm_thn80_d0(void *self, void *) { return _ZThn80_N8daDemo_c10anmModel_cD0Ev(self); }
+
+static void seat_anmmodel_thunk_table(void)
+{
+    data_ov002_0210bce8[0] = (unsigned)(size_t)anm_thn80_d1;
+    data_ov002_0210bce8[1] = (unsigned)(size_t)anm_thn80_d0;
+}
+
 extern "C" void hal_seat_w2_dtor_heads(void)
 {
     data_0208e6ec[0] = (int)(size_t)cyl_d1;
@@ -418,6 +540,8 @@ extern "C" void hal_seat_w2_dtor_heads(void)
     _ZTV8dScene_c[11] = (void *)scene_after_render;
     _ZTV8dScene_c[16] = (void *)PORT_D16(scene_d1);
     _ZTV8dScene_c[17] = (void *)scene_d0;
+    seat_collider_thunk_tables();
+    seat_anmmodel_thunk_table();
 }
 
 // ---- how this fill gets called ---------------------------------------------
@@ -456,6 +580,10 @@ W2SeatDtorHeads g_w2_seat_dtor_heads;
 // other twenty-nine fall into five groups.
 //
 // 1. THE mwcc THUNK ARTEFACTS -- four tables, eight bodies. NOT LINKABLE.
+//
+//    SEATED SINCE (run linkfull, lane V3A): the thunk sources changed shape and
+//    gained host arms; the block above hal_seat_w2_dtor_heads fills all four
+//    tables. What follows is the record of why they were refused before.
 //
 //      VTable_dBgPi_dBgCh_GndThunk[0,1]  _ZThn16_N9dBgCh_GndD1Ev / _ZThn16_N9dBgCh_GndD0Ev
 //      data_020992b4[0,1]  _ZThn16_N9dBgCh_LinD1Ev / _ZThn16_N9dBgCh_LinD0Ev

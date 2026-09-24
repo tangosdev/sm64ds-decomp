@@ -22904,3 +22904,34 @@ endforeach()
 foreach(_tw26v2 walk_window walk_window_hires smoke_player)
     target_sources(${_tw26v2} PRIVATE ${SLICE_W26_VARIANT2_SOURCES})
 endforeach()
+
+# ===========================================================================
+# V3A (run linkfull, lane V3A): THE ADJUSTOR-THUNK ROWS
+# ===========================================================================
+#
+# port/slice_w27_v3a.txt carries the per-function src TUs of the ROM's
+# this-adjusting destructor thunks (_ZThn<N>_...). Each file's `#ifdef
+# _MSC_VER` arm defines only the flat thunk name, and the port's copy of the
+# ROM secondary vtable that holds the thunk names it from the ROM's slot.
+#
+# ALL THREE HOSTING TARGETS: the tables' fills (hal/w2_dtor_heads.cpp,
+# hal/cxxname_bridge.cpp, hal/blend_vtable.cpp) are on walk_window's,
+# walk_window_hires' and smoke_player's link lines alike (build.ninja).
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w27_v3a.txt" SLICE_W27_V3A_LINES)
+set(SLICE_W27_V3A_SOURCES "")
+foreach(line IN LISTS SLICE_W27_V3A_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_W27_V3A_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_tw27v3a walk_window walk_window_hires smoke_player)
+    target_sources(${_tw27v3a} PRIVATE ${SLICE_W27_V3A_SOURCES})
+endforeach()
+# smoke_modelanim links hal/blend_vtable.cpp, whose fill names the two
+# BlendModelAnim thunks, and its own flat BlendModelAnim D0 / D1 (the
+# ModelBaseModelBlend host copy), so it takes those two thunk TUs as well.
+target_sources(smoke_modelanim PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZThn80_N14BlendModelAnimD0Ev.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZThn80_N14BlendModelAnimD1Ev.cpp")
