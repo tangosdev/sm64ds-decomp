@@ -68,7 +68,8 @@ fifty", and it is exact by asking a smaller question rather than a vaguer one.
             jump -- because the classification is what a later lane will read
             when it picks the next seat, and a Class A frame that quietly
             became a tail jump would have stopped being a seam without anyone
-            noticing that 5d's list went stale.
+            noticing that 5d's list went stale. Five are declared now: lane
+            DPAD1 seated two (b3360 and b3c54; see the note at their place).
   CLASS C   5 frames, HAND-DECLARED from section 5d's "CLASS C, THE RIDE IS
             PRESERVED BY A TAIL JUMP" listing. Must jump, must not call.
   VENEER   22 frames, DERIVED at run time, not listed here. The ROM shape is
@@ -286,19 +287,17 @@ CLASS_A = tuple(
              'and the callee reads [ebp+8], which is the caller own saved '
              'esi. If this frame ever reads as a tail jump the seam has '
              'silently changed character and 5d Class A row 1 is stale.'},
-        {'frame': 'func_ov007_020b3360', 'callee': 'func_ov007_020b3c54',
-         'tu': 'src/func_ov007_020b3360.c',
-         'note':
-             'b3360 pushes nothing and b3c54 reads its SECOND parameter on '
-             'the default arm of a 24-way jump table. The damage is a STORE '
-             'of garbage into the object rather than a fault.'},
-        {'frame': 'func_ov007_020b3c54', 'callee': 'func_ov007_020b3d30',
-         'tu': 'src/func_ov007_020b3c54.c',
-         'note':
-             'b3c54 pushes one argument and b3d30 reads two. The second is '
-             'used as an array subscript in seven places and the first of '
-             'those is a double dereference. 5d names this the next fault '
-             'after ae558 is seated.'},
+        # SEATED, run linkfull lane DPAD1: 5d's rows b3c54 <- b3360 and
+        # b3d30 <- b3c54 are not seams any more, so they are not asserted
+        # here. Both frames build from hostgen copies
+        # (port/slice_w28_dpad1.txt) whose REG_RIDE_ARG rows pass the
+        # argument the ROM leaves in r1, which made b3d30 the title menu's
+        # D-pad fault. A row cannot follow them: its `tu` would have to name
+        # the generated copy, which does not exist before a build, and
+        # naming the raw TU reads as MISDECLARED because a hostgen rewrite is
+        # not a displacement. What stops the raw TUs coming back is the DPAD1
+        # block at the end of port/CMakeLists.txt, which fails the configure
+        # if port/slice_ov007.txt lists either of them again.
         {'frame': 'func_ov007_020b4b5c', 'callee': 'func_ov007_020c43bc',
          'tu': 'src/func_ov007_020b4b5c.c',
          'note':

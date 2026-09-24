@@ -31,6 +31,10 @@
 # lane AE1 displaced src/func_ov007_020add3c.c, Stage 5 lane TS1 displaced
 # src/func_ov007_020b6eb4.c and run mg15 lane IMPLICITR displaced
 # src/func_ov007_020c2b9c.c, each to a host copy.
+# TWO more of the 531 are not in this file any more, and both ARE built: run
+# linkfull lane DPAD1 moved src/func_ov007_020b3360.c and
+# src/func_ov007_020b3c54.c to port/slice_w28_dpad1.txt, which builds each from
+# its tools/hostgen.py copy (REG_RIDE_ARG); a comment marks each one's place.
 #
 # THIS SENTENCE SAID "ONE" UNTIL RUN MG15 AND IT HAD BEEN WRONG SINCE THE
 # SECOND DISPLACEMENT LANDED. Each lane wrote its own note at the bottom and
@@ -247,9 +251,9 @@ src/func_ov007_020b2e64.c
 src/func_ov007_020b3050.c
 src/func_ov007_020b30b0.c
 src/func_ov007_020b3190.c
-src/func_ov007_020b3360.c
+# src/func_ov007_020b3360.c is built from its hostgen copy: port/slice_w28_dpad1.txt
 src/func_ov007_020b3708.c
-src/func_ov007_020b3c54.c
+# src/func_ov007_020b3c54.c is built from its hostgen copy: port/slice_w28_dpad1.txt
 src/func_ov007_020b3d30.cpp
 src/func_ov007_020b3e04.c
 src/func_ov007_020b3e84.c
