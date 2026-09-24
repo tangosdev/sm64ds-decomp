@@ -7471,7 +7471,7 @@ the first ten words: 69. The ROM puts the selector in r0 in 30 of them and in r1
 r0 untouched in 36, and 2004/b56 reproduces BOTH groups on the matched members (20 of the
 r1/r2 group have matched source, five of them ov063 siblings), so the skip is
 source-reachable and the question was what separates the groups. Not the count of
-`mov r0,<home>` copies in the body (`PyramidLift::Behavior` has three and a selector in r0;
+`mov r0,<home>` copies in the body (`daDpLift_c::Behavior` has three and a selector in r0;
 `KnockDownPlank::Behavior` has the identical `switch (mState)` spelling and a selector in
 r1), so the property lives in the case bodies, not the switch. What separates them is a case
 that consumes r0 STRAIGHT FROM THE ENTRY without a copy: `func_ov063_021172a8`, the

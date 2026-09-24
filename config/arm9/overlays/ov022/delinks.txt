@@ -40,29 +40,9 @@ src/d_a_obj_fl_koma_d.c:
     complete
     .text start:0x02111688 end:0x021116c4
 
-src/_ZN19FloatOnLavaPlatformD1Ev.cpp:
+src/actors/daObjFl_Block_c.cpp:
     complete
-    .text start:0x021116c4 end:0x02111708
-
-src/_ZN19FloatOnLavaPlatformD0Ev.cpp:
-    complete
-    .text start:0x02111708 end:0x02111760
-
-src/_ZN19FloatOnLavaPlatform16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02111760 end:0x021117a4
-
-src/_ZN19FloatOnLavaPlatform6RenderEv.cpp:
-    complete
-    .text start:0x021117a4 end:0x021117cc
-
-src/_ZN19FloatOnLavaPlatform8BehaviorEv.cpp:
-    complete
-    .text start:0x021117cc end:0x02111870
-
-src/_ZN19FloatOnLavaPlatform13InitResourcesEv.cpp:
-    complete
-    .text start:0x02111870 end:0x0211191c
+    .text start:0x021116c4 end:0x0211191c
 
 src/func_ov022_0211191c.cpp:
     complete

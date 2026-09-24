@@ -26,12 +26,12 @@ _ZN11PyramidStep6RenderEv kind:function(arm,size=0x2c) addr:0x02111ea8
 _ZN11PyramidStep8BehaviorEv kind:function(arm,size=0xcc) addr:0x02111ed4
 _ZN11PyramidStep13InitResourcesEv kind:function(arm,size=0x10c) addr:0x02111fa0
 daObjDpBrock_c_classInit kind:function(arm,size=0x38) addr:0x021120ac
-_ZN11PyramidLiftD1Ev kind:function(arm,size=0x64) addr:0x021120e4
-_ZN11PyramidLiftD0Ev kind:function(arm,size=0x78) addr:0x02112148
-_ZN11PyramidLift16CleanupResourcesEv kind:function(arm,size=0x3c) addr:0x021121c0
-_ZN11PyramidLift6RenderEv kind:function(arm,size=0x8c) addr:0x021121fc
-_ZN11PyramidLift8BehaviorEv kind:function(arm,size=0x210) addr:0x02112288
-_ZN11PyramidLift13InitResourcesEv kind:function(arm,size=0x124) addr:0x02112498
+_ZN10daDpLift_cD1Ev kind:function(arm,size=0x64) addr:0x021120e4
+_ZN10daDpLift_cD0Ev kind:function(arm,size=0x78) addr:0x02112148
+_ZN10daDpLift_c16CleanupResourcesEv kind:function(arm,size=0x3c) addr:0x021121c0
+_ZN10daDpLift_c6RenderEv kind:function(arm,size=0x8c) addr:0x021121fc
+_ZN10daDpLift_c8BehaviorEv kind:function(arm,size=0x210) addr:0x02112288
+_ZN10daDpLift_c13InitResourcesEv kind:function(arm,size=0x124) addr:0x02112498
 func_ov025_021125bc kind:function(arm,size=0x20) addr:0x021125bc
 func_ov025_021125dc kind:function(arm,size=0x14) addr:0x021125dc
 daDpLift_c_classInit kind:function(arm,size=0x64) addr:0x021125f0
@@ -141,7 +141,7 @@ _ZTI10daDpLift_c kind:data(any) addr:0x02113994
 data_ov025_02113998 kind:data(any) addr:0x02113998 ambiguous
 _ZTS10daDpLift_c kind:data(any) addr:0x021139a0
 g_profile_DP_LIFT kind:data(any) addr:0x021139b0 ambiguous
-_ZTV11PyramidLift kind:data(any) addr:0x021139d4
+_ZTV10daDpLift_c kind:data(any) addr:0x021139d4
 data_ov025_021139f4 kind:data(any) addr:0x021139f4 ambiguous
 data_ov025_02113a00 kind:data(any) addr:0x02113a00 ambiguous
 data_ov025_02113a50 kind:data(any) addr:0x02113a50 ambiguous

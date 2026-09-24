@@ -880,9 +880,6 @@
         "param:#1 char *",
         "return:int"
       ],
-      "src/_ZN10RockPillar8BehaviorEv.cpp": [
-        "return:int"
-      ],
       "src/_ZN21SnowmanBreathParticle8BehaviorEv.cpp": [
         "return:int"
       ],
@@ -2074,9 +2071,6 @@
     "Matrix4x3_FromTranslation": {
       "src/_ZN11MirrorLuigi8BehaviorEv.cpp": [
         "param:#1 char *"
-      ],
-      "src/_ZN11PyramidLift6RenderEv.cpp": [
-        "param:#1 Mtx *"
       ],
       "src/actors/daPkn_c.cpp": [
         "param:#1 PknMtx43 *"
@@ -4722,10 +4716,6 @@
       ]
     },
     "Vec3_Dist": {
-      "src/_ZN10RockPillar8BehaviorEv.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
       "src/_ZN12dBgCh_SphCrr10DetectClsnEv.cpp": [
         "param:#1 const void *",
         "param:#2 const void *"
@@ -4896,10 +4886,6 @@
       ]
     },
     "Vec3_HorzAngle": {
-      "src/_ZN10RockPillar8BehaviorEv.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
       "src/_ZN12daBgSnmHed_c6State1Ev.cpp": [
         "param:#1 const void *",
         "param:#2 const void *"
@@ -6421,9 +6407,6 @@
       ]
     },
     "_Z14ApproachLinearRsss": {
-      "src/_ZN10RockPillar8BehaviorEv.cpp": [
-        "return:int"
-      ],
       "src/_ZN11BobOmbBuddy8BehaviorEv.cpp": [
         "return:int"
       ],
@@ -6758,12 +6741,6 @@
       "src/_ZN10DonutBlock13InitResourcesEv.cpp": [
         "return:int"
       ],
-      "src/_ZN10RockPillar13InitResourcesEv.cpp": [
-        "return:int"
-      ],
-      "src/_ZN10RockPillar8BehaviorEv.cpp": [
-        "return:int"
-      ],
       "src/_ZN14SquarePathLift13InitResourcesEv.cpp": [
         "return:int"
       ],
@@ -6771,9 +6748,6 @@
         "return:int"
       ],
       "src/_ZN17BigMovingIceBlock13InitResourcesEv.cpp": [
-        "return:int"
-      ],
-      "src/_ZN19FloatOnLavaPlatform13InitResourcesEv.cpp": [
         "return:int"
       ],
       "src/_ZN8CccArena13InitResourcesEv.cpp": [
@@ -6825,9 +6799,6 @@
         "return:int"
       ],
       "src/_ZN17BigMovingIceBlock13InitResourcesEv.cpp": [
-        "return:int"
-      ],
-      "src/_ZN19FloatOnLavaPlatform13InitResourcesEv.cpp": [
         "return:int"
       ]
     },
@@ -7230,17 +7201,11 @@
         "param:#5 int",
         "return:int"
       ],
-      "src/_ZN10RockPillar13InitResourcesEv.cpp": [
-        "return:int"
-      ],
       "src/_ZN10daKpa2Bg_c13InitResourcesEv.cpp": [
         "return:int"
       ],
       "src/_ZN11BillBlaster13InitResourcesEv.cpp": [
         "param:#3 const void *"
-      ],
-      "src/_ZN11PyramidLift13InitResourcesEv.cpp": [
-        "param:#3 struct Matrix4x3 *"
       ],
       "src/_ZN11PyramidStep13InitResourcesEv.cpp": [
         "param:#3 Matrix4x3 &",
@@ -7266,9 +7231,6 @@
       "src/_ZN17BowserSkyPlatform13InitResourcesEv.cpp": [
         "param:#3 const Matrix4x3 &",
         "param:#6 CLPS_Block &"
-      ],
-      "src/_ZN19FloatOnLavaPlatform13InitResourcesEv.cpp": [
-        "return:int"
       ],
       "src/_ZN5Crate13InitResourcesEv.cpp": [
         "param:#2 int",
@@ -10954,11 +10916,6 @@
         "arity:0",
         "mangled:0 parameter(s)"
       ],
-      "src/_ZN19FloatOnLavaPlatform13InitResourcesEv.cpp": [
-        "arity:0",
-        "mangled:0 parameter(s)",
-        "return:int"
-      ],
       "src/_ZN22RotatingUpDownPlatform13InitResourcesEv.cpp": [
         "kind:data"
       ],
@@ -10990,9 +10947,6 @@
       "src/_ZN10SlidingBox13InitResourcesEv.cpp": [
         "arity:0",
         "mangled:0 parameter(s)"
-      ],
-      "src/_ZN11PyramidLift13InitResourcesEv.cpp": [
-        "kind:data"
       ],
       "src/_ZN11PyramidStep13InitResourcesEv.cpp": [
         "kind:data"
@@ -11262,9 +11216,6 @@
       "src/_ZN10PyramidTop13InitResourcesEv.cpp": [
         "param:#1 void *"
       ],
-      "src/_ZN10RockPillar13InitResourcesEv.cpp": [
-        "param:#1 void *"
-      ],
       "src/_ZN10StarMarker13InitResourcesEv.cpp": [
         "param:#1 void *"
       ],
@@ -11279,10 +11230,6 @@
       ],
       "src/_ZN11PowerFlower13InitResourcesEv.cpp": [
         "param:#1 void *"
-      ],
-      "src/_ZN11PyramidLift13InitResourcesEv.cpp": [
-        "param:#1 SharedFilePtr *",
-        "return:struct BMD_File *"
       ],
       "src/_ZN11PyramidStep13InitResourcesEv.cpp": [
         "return:BMD_File *"
@@ -11343,9 +11290,6 @@
       "src/_ZN15TtcRotatingCube13InitResourcesEv.cpp": [
         "param:#1 void *"
       ],
-      "src/_ZN15TtcRotatingGear13InitResourcesEv.cpp": [
-        "param:#1 void *"
-      ],
       "src/_ZN15daObjMarioCap_c13InitResourcesEv.cpp": [
         "param:#1 void *"
       ],
@@ -11369,9 +11313,6 @@
       "src/_ZN17dMg3DEspAnimSet_c13InitResourcesEv.cpp": [
         "param:#1 void *",
         "return:int"
-      ],
-      "src/_ZN19FloatOnLavaPlatform13InitResourcesEv.cpp": [
-        "param:#1 void *"
       ],
       "src/_ZN22RotatingUpDownPlatform13InitResourcesEv.cpp": [
         "param:#1 void *"
@@ -12548,9 +12489,6 @@
     "_ZN5Sound9PlayBank3EjRK7Vector3": {
       "src/_ZN10PyramidTop8BehaviorEv.cpp": [
         "param:#2 void *"
-      ],
-      "src/_ZN10RockPillar8BehaviorEv.cpp": [
-        "param:#2 const void *"
       ],
       "src/actors/daObjFl_Ring_c.cpp": [
         "param:#2 void *"
@@ -14664,20 +14602,12 @@
         "param:#1 void *",
         "return:void *"
       ],
-      "src/_ZN10RockPillar13InitResourcesEv.cpp": [
-        "param:#1 void *",
-        "return:void *"
-      ],
       "src/_ZN10daKpa2Bg_c13InitResourcesEv.cpp": [
         "param:#1 void *",
         "return:void *"
       ],
       "src/_ZN11BillBlaster13InitResourcesEv.cpp": [
         "return:void *"
-      ],
-      "src/_ZN11PyramidLift13InitResourcesEv.cpp": [
-        "param:#1 SharedFilePtr *",
-        "return:struct KCL_File *"
       ],
       "src/_ZN11PyramidStep13InitResourcesEv.cpp": [
         "return:KCL_File *"
@@ -14717,10 +14647,6 @@
         "param:#1 void *",
         "return:void *"
       ],
-      "src/_ZN15TtcRotatingGear13InitResourcesEv.cpp": [
-        "param:#1 void *",
-        "return:void *"
-      ],
       "src/_ZN17BigMovingIceBlock13InitResourcesEv.cpp": [
         "param:#1 void *",
         "return:void *"
@@ -14729,10 +14655,6 @@
         "return:KCL_File *"
       ],
       "src/actors/daObjSimpleLift_c.cpp": [
-        "param:#1 void *",
-        "return:void *"
-      ],
-      "src/_ZN19FloatOnLavaPlatform13InitResourcesEv.cpp": [
         "param:#1 void *",
         "return:void *"
       ],
@@ -15351,9 +15273,6 @@
     },
     "_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_": {
       "src/_ZN10BulletBill8BehaviorEv.cpp": [
-        "return:void"
-      ],
-      "src/_ZN10RockPillar8BehaviorEv.cpp": [
         "return:void"
       ],
       "src/_ZN10StarMarker7CollectEv.cpp": [
@@ -17180,12 +17099,6 @@
         "param:#6 int",
         "return:int"
       ],
-      "src/_ZN10RockPillar13InitResourcesEv.cpp": [
-        "param:#3 void *",
-        "param:#5 int",
-        "param:#6 int",
-        "return:int"
-      ],
       "src/_ZN10StarMarker13InitResourcesEv.cpp": [
         "param:#3 const void *",
         "param:#4 const void *",
@@ -18708,10 +18621,6 @@
       "src/_ZN11MirrorLuigi13InitResourcesEv.cpp": [
         "return:void"
       ],
-      "src/_ZN11PyramidLift13InitResourcesEv.cpp": [
-        "param:#2 struct BMD_File *",
-        "return:void"
-      ],
       "src/_ZN11PyramidStep13InitResourcesEv.cpp": [
         "return:void"
       ],
@@ -18747,9 +18656,6 @@
         "return:void"
       ],
       "src/_ZN15TtcRotatingCube13InitResourcesEv.cpp": [
-        "return:void"
-      ],
-      "src/_ZN15TtcRotatingGear13InitResourcesEv.cpp": [
         "return:void"
       ],
       "src/_ZN16BowserShockwaves13InitResourcesEv.cpp": [
@@ -22041,9 +21947,6 @@
       ]
     },
     "data_0209f2c0": {
-      "src/_ZN15TtcRotatingGear13InitResourcesEv.cpp": [
-        "return:unsigned char []"
-      ],
       "src/_ZN16SpinningPlatform8BehaviorEv.cpp": [
         "return:unsigned char []"
       ],
@@ -28568,11 +28471,14 @@
     "data_ov022_02114550": {
       "src/__sinit_ov022_02112d80.c": [
         "return:int []"
+      ],
+      "src/actors/daObjFl_Block_c.cpp": [
+        "return:SharedFilePtr"
       ]
     },
     "data_ov022_02114558": {
-      "src/_ZN19FloatOnLavaPlatform13InitResourcesEv.cpp": [
-        "return:char []"
+      "src/actors/daObjFl_Block_c.cpp": [
+        "return:SharedFilePtr"
       ]
     },
     "data_ov022_02114578": {
@@ -29651,16 +29557,6 @@
     "data_ov065_0211c0c8": {
       "src/game/actors/daObjCtMecha05_c.cpp": [
         "return:short []"
-      ]
-    },
-    "data_ov065_0211c0d0": {
-      "src/_ZN15TtcRotatingGear13InitResourcesEv.cpp": [
-        "return:char []"
-      ]
-    },
-    "data_ov065_0211c0d4": {
-      "src/_ZN15TtcRotatingGear13InitResourcesEv.cpp": [
-        "return:char []"
       ]
     },
     "data_ov065_0211d35c": {
@@ -32552,9 +32448,6 @@
       ]
     },
     "func_0200d8c8": {
-      "src/_ZN10RockPillar8BehaviorEv.cpp": [
-        "param:#2 const void *"
-      ],
       "src/_ZN6Player19St_GroundPound_MainEv.cpp": [
         "param:#2 const void *"
       ],
@@ -36948,9 +36841,6 @@
       "src/_ZN10DonutBlock13InitResourcesEv.cpp": [
         "param:#2 void *"
       ],
-      "src/_ZN11PyramidLift13InitResourcesEv.cpp": [
-        "param:#2 void *"
-      ],
       "src/actors/daObjFl_Ring_c.cpp": [
         "param:#2 void *"
       ],
@@ -36967,9 +36857,8 @@
       "src/_ZN17BowserSkyPlatform13InitResourcesEv.cpp": [
         "param:#2 void *"
       ],
-      "src/_ZN19FloatOnLavaPlatform13InitResourcesEv.cpp": [
-        "param:#2 void *",
-        "return:int"
+      "src/actors/daObjFl_Block_c.cpp": [
+        "param:#2 void *"
       ],
       "src/_ZN22RotatingUpDownPlatform13InitResourcesEv.cpp": [
         "param:#2 void *"
@@ -37050,9 +36939,6 @@
         "param:#2 void *",
         "return:int"
       ],
-      "src/_ZN11PyramidLift13InitResourcesEv.cpp": [
-        "param:#2 void *"
-      ],
       "src/actors/daObjFl_Ring_c.cpp": [
         "param:#2 void *"
       ],
@@ -37084,9 +36970,8 @@
       "src/actors/daObjSimpleLift_c.cpp": [
         "param:#2 void *"
       ],
-      "src/_ZN19FloatOnLavaPlatform13InitResourcesEv.cpp": [
-        "param:#2 void *",
-        "return:int"
+      "src/actors/daObjFl_Block_c.cpp": [
+        "param:#2 void *"
       ],
       "src/_ZN22RotatingUpDownPlatform13InitResourcesEv.cpp": [
         "param:#2 void *"

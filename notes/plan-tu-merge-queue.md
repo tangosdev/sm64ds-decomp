@@ -227,7 +227,7 @@ first module where a `config_tu/` conversion becomes conceivable.
 |[ov016](../config/arm9/overlays/ov016/symbols.txt)| 0x2112ff8|  n=8|   `SlidingBox`|           CONF2 pcov=3|
 |[ov017](../config/arm9/overlays/ov017/symbols.txt)| 0x21111a0|  n=7|   `daObjKsWater_c`|            CONF2 WHOLEMOD pcov=2|
 |[ov022](../config/arm9/overlays/ov022/symbols.txt)| 0x21111a0|  n=9|   `daObjFl_Ring_c`|          CONF1|
-|[ov022](../config/arm9/overlays/ov022/symbols.txt)| 0x21116c4|  n=9|   `FloatOnLavaPlatform`|  CONF2|
+|[ov022](../config/arm9/overlays/ov022/symbols.txt)| 0x21116c4|  n=9|   `daObjFl_Block_c`|  CONF2|
 |[ov022](../config/arm9/overlays/ov022/symbols.txt)| 0x2112130|  n=7|   `daObjFl_UkiKi_c`|            CONF2|
 |[ov025](../config/arm9/overlays/ov025/symbols.txt)| 0x2111d40|  n=9|   `PyramidStep`|          CONF1|
 |[ov032](../config/arm9/overlays/ov032/symbols.txt)| 0x2112698|  n=7|   `daObjTdWater_c`|            CONF2|

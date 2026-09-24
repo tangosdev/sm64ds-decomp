@@ -48,29 +48,9 @@ src/d_a_obj_dp_brock.c:
     complete
     .text start:0x021120ac end:0x021120e4
 
-src/_ZN11PyramidLiftD1Ev.cpp:
+src/actors/daDpLift_c.cpp:
     complete
-    .text start:0x021120e4 end:0x02112148
-
-src/_ZN11PyramidLiftD0Ev.cpp:
-    complete
-    .text start:0x02112148 end:0x021121c0
-
-src/_ZN11PyramidLift16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x021121c0 end:0x021121fc
-
-src/_ZN11PyramidLift6RenderEv.cpp:
-    complete
-    .text start:0x021121fc end:0x02112288
-
-src/_ZN11PyramidLift8BehaviorEv.cpp:
-    complete
-    .text start:0x02112288 end:0x02112498
-
-src/_ZN11PyramidLift13InitResourcesEv.cpp:
-    complete
-    .text start:0x02112498 end:0x021125bc
+    .text start:0x021120e4 end:0x021125bc
 
 src/func_ov025_021125bc.cpp:
     complete

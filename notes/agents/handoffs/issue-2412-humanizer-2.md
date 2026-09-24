@@ -15,7 +15,7 @@ This document describes this commit. The queue records its immutable output SHA.
 
 ## What changed and why
 
-The scope is class `ov081/daGmch_c`, text `[0x02126504, 0x02127b34)`. The four changed source/metadata surfaces are `src/actors/daGmch_c.cpp`, `include/daGmch_c.h`, `config/tu_manifest.d/ov081/daGmch_c.json`, and four `why` cells in `symbols/actor_renames.tsv`. This handoff is the fifth reserved file.
+The scope is class [ov081](../../../config/arm9/overlays/ov081/symbols.txt)/`daGmch_c`, text `[0x02126504, 0x02127b34)`. The four changed source/metadata surfaces are `src/actors/daGmch_c.cpp`, `include/daGmch_c.h`, [config/tu_manifest.d/ov081/daGmch_c.json](../../../config/tu_manifest.d/ov081/daGmch_c.json), and four `why` cells in `symbols/actor_renames.tsv`. This handoff is the fifth reserved file.
 
 The source/header now distinguish the ROM's RTTI class spelling from reconstructed member and factory names. The factory spelling follows project convention and later EAD lineage; it is not an original function identifier recovered from this cartridge. Two helper ledger rationales describe their calls using reconstructed project names without claiming cartridge mangled-name evidence.
 
@@ -27,7 +27,7 @@ The coordinator reviewed the draft scope and requested two ledger wording refine
 
 ## Reconstruction dimensions
 
-- Function and byte coverage: all 37 manifest functions, 5,680 text bytes, within the recorded ov081 range. Fresh explicit linked-byte checks return VERIFIED for each, with zero blind slots and empty difference lists.
+- Function and byte coverage: all 37 manifest functions, 5,680 text bytes, within the recorded [ov081](../../../config/arm9/overlays/ov081/symbols.txt) range. Fresh explicit linked-byte checks return VERIFIED for each, with zero blind slots and empty difference lists.
 - Methods and bridges: this repair changes comments only. It preserves the landed methods, free factory, and 57 ABI bridge declarations; it does not claim another reduction in bridges.
 - Layout and source quality: the landed named fields and method calls are preserved. The class remains size `0x3f4` with the five owned subobjects. Four local shadow type definitions remain, with their existing measured constraints. This repair makes no layout, field-width, or executable-body change.
 - Lifecycle/data: the real destructor, D1/D0 order, documented compiler-only D2 handling, vtable `+8` address-point adjustment, RTTI, separate initializer, and text-only ownership are unchanged. The manifest still declares no promoted data or bss; compiler-only data retains its recorded ownership/disposition.
