@@ -1,31 +1,17 @@
-/* class dScMgTrampoline2_c, real ROM name confirmed by tools/rtti_extract.py:
- * dScMgTrampoline2_c : dScMgD3DBase_c, single edge, offset 0
- * (build/rtti.json). Its own vtable is ov006:0x0213fc7c. The last of
- * dScMgD3DBase_c's four children, and the largest class in the family.
+/* dScMgTrampoline2_c -- Trampoline Terror. Draw lines on the touch screen
+ * so Mario can bounce through the shapes that drop in. Child of
+ * dScMgD3DBase_c, size 0x7bac from the factory's operator new.
  *
- * SIZE 0x7bac, from dScMgTrampoline2_c_classInit's own
- * `_ZN7fBase_cnwEj(0x7bac)`. MgTrampolineTerror_Spawn is the historical
- * English-minigame alias.
+ * RTTI: dScMgTrampoline2_c : dScMgD3DBase_c; vtable ov006:0x0213fc7c.
+ * Historical alias MgTrampolineTerror_Spawn. Element dtors 020d1008 and
+ * 02120938 are shared with dScMgTrampoline_c, 020eed64 with dScMgJump2_c.
+ * Typed arrays and the state PMF remain #2497.
  *
- * SIX ARRAYS, and factory and destructor agree on all six in exact reverse
- * order: built 0x500c, 0x5458, 0x5ddc, 0x6ffc, 0x7164, 0x7ad0; destroyed
- * 0x7ad0, 0x7164, 0x6ffc, 0x5ddc, 0x5458, 0x500c. Two element destructors
- * are shared with dScMgTrampoline_c (func_ov006_020d1008 for the
- * 0x32c-stride array, func_ov006_02120938 for the 5 * 0x24 one) and one
- * with dScMgJump2_c (func_ov006_020eed64) -- which is what a shared base's
- * children are supposed to look like.
- *
- * Two spans remain byte storage pending typed-field reconstruction (#2497).
- * Behavior uses 0x7ac4 as a Particle::System unique ID and 0x7ac8 as a
- * fixed-point ramp; 0x7acc is still unexplained. That unknown word does not
- * rule out typing the first two. All six words at 0x7b84..0x7b9c have matched
- * accesses in this TU's initialization and state functions. Their original
- * member names are unknown; the storage is live, not unused padding.
- *
- * The current arrays retain raw storage and six reverse-order cleanup calls.
- * Typed components and their lifecycle remain reconstruction work (#2497).
- * The inline destructor body preserves the observed D1/D0 emission.
- * dScMgD3DBase_c supplies operator delete. */
+ * The destructor is inline and destroys the six arrays in reverse of the
+ * order the factory builds them. dScMgD3DBase_c supplies operator delete.
+ * The arrays stay raw bytes; their element types are not recovered.
+ * 0x7acc has no matched read.
+ */
 #ifndef DSCMGTRAMPOLINE2_C_H
 #define DSCMGTRAMPOLINE2_C_H
 #include "dScMgD3DBase_c.h"
@@ -55,28 +41,36 @@ struct dScMgTrampoline2_c : dScMgD3DBase_c {
     virtual int  OnPushed();                           /* slot 25 */
     virtual void Virtual88(int cx, int cy, int colour, int size); /* slot 34 */
 
-    /* 0x5004 -- eight-byte state PMF, invoked by Behavior with this class as
-       receiver. The five table targets already have bodies in the TU:
-       02123b20, 02124088, 02123b24, 02123cb4 and 02123bf4 (all ov006).
-       Converting their raw records and this field together to a typed state
-       interface remains issue #2497; their original method names are unknown. */
-    u8  pad_5004[0x8];   /* 0x5004 -- the state callback; see the block above */
-    u8  mArray1[0x44c];   /* 0x500c -- 5 * 0xdc,    elem dtor func_ov006_020ca604 */
-    u8  mArray2[0x984];   /* 0x5458 -- 3 * 0x32c,   elem dtor func_ov006_020d1008 */
-    u8  mArray3[0x1220];  /* 0x5ddc -- 0xa * 0x1d0, elem dtor func_ov006_021227c8 */
-    u8  mArray4[0x168];   /* 0x6ffc -- 0xa * 0x24,  elem dtor func_ov006_020eed64 */
-    u8  mArray5[0x960];   /* 0x7164 -- 0x14 * 0x78, elem dtor func_ov006_02122c68 */
-    u8  pad_7ac4[0xc];    /* 0x7ac4 -- Behavior reads 0x7ac4 and 0x7ac8; see banner */
-    u8  mArray6[0xb4];    /* 0x7ad0 -- 5 * 0x24,    elem dtor func_ov006_02120938 */
-    u8  pad_7b84[0x18];   /* 0x7b84 -- six live words; see banner */
-    s16 unk_7b9c;         /* 0x7b9c */
-    s16 unk_7b9e;         /* 0x7b9e */
-    s16 unk_7ba0;         /* 0x7ba0 */
-    s16 unk_7ba2;         /* 0x7ba2 */
-    u8  pad_7ba4[0x4];    /* 0x7ba4 */
-    s16 unk_7ba8;         /* 0x7ba8 */
-    u8  unk_7baa;         /* 0x7baa */
-    u8  unk_7bab;         /* 0x7bab */
+    /* Raw eight-byte state PMF. Behavior calls through it. A typed
+       global initializer emits a __sinit this ROM does not have. */
+    u32 mState[2];            /* 0x5004 */
+    u8  mArray1[0x44c];       /* 0x500c -- 5 * 0xdc,    elem dtor func_ov006_020ca604 */
+    u8  mArray2[0x984];       /* 0x5458 -- 3 * 0x32c,   elem dtor func_ov006_020d1008 */
+    u8  mArray3[0x1220];      /* 0x5ddc -- 0xa * 0x1d0, elem dtor func_ov006_021227c8 */
+    u8  mArray4[0x168];       /* 0x6ffc -- 0xa * 0x24,  elem dtor func_ov006_020eed64 */
+    u8  mArray5[0x960];       /* 0x7164 -- 0x14 * 0x78, elem dtor func_ov006_02122c68 */
+    u32 mParticleID;          /* 0x7ac4 -- Particle::System unique ID */
+    int mRamp;                /* 0x7ac8 -- fixed point; rests at 0x14000, eased
+                                 toward 0x7000 as misses come in */
+    u8  pad_7acc[0x4];        /* 0x7acc -- no matched read */
+    u8  mArray6[0xb4];        /* 0x7ad0 -- 5 * 0x24,    elem dtor func_ov006_02120938 */
+    int mTimer;               /* 0x7b84 -- countdown between waves and states */
+    int mPattern;             /* 0x7b88 -- scripted spawn-table index, toward 6 */
+    int mDragSoundHandle;     /* 0x7b8c -- positional drag sound, fed back */
+    int mScoreGate;           /* 0x7b90 -- score at which the tier advances */
+    int mScriptDone;          /* 0x7b94 -- set once mPattern reaches 6 */
+    int mWaveStep;            /* 0x7b98 -- counts to 4 between random waves */
+    s16 mTouchX;              /* 0x7b9c -- current stylus sample */
+    s16 mTouchY;              /* 0x7b9e */
+    s16 mTouchStartX;         /* 0x7ba0 -- press edge; the swipe is measured
+                                 against it */
+    s16 mTouchStartY;         /* 0x7ba2 */
+    s16 mInputEnabled;        /* 0x7ba4 -- while 0 the touch handler clears
+                                 mTouching and returns */
+    u8  pad_7ba6[2];          /* 0x7ba6 */
+    s16 mRoundOver;           /* 0x7ba8 -- Render skips the playfield once set */
+    u8  mTouching;            /* 0x7baa */
+    u8  mTouchReleased;       /* 0x7bab -- OnAttacked2 consumes it */
 
     /* These definitions override existing base slots without adding fields.
        The production TU defines the non-inline virtuals and emits the vtable;

@@ -1,35 +1,17 @@
-/* Memory Master uses the ROM class dScMgMemory2_c, confirmed by RTTI:
- * dScMgMemory2_c : dScMgSingle3DBase_c, single edge, offset 0
- * (build/rtti.json). The THIRTEENTH and last direct child of that base;
- * with this file the family is complete.
+/* Memory Master (MG_MEMORY_J). Twenty cards, three player markers, one cursor.
+ * Deal them face-up, hide them, then touch matching pairs.
  *
- * SAME COINED-NAME STORY AS ITS SIBLING -- see include/dScMgMemory_c.h's
- * own banner for the full version. Short form: this class shipped as
- * `_ZN14MgMemoryMasterD1Ev`/`D0Ev` and `_ZTV14MgMemoryMaster`, and the ROM
- * disagrees. The vptr value is ov006:0x0213d4d4; the RTTI pointer one word
- * below it is `_ZTI14dScMgMemory2_c`, whose `_ZTS` string reads
- * "14dScMgMemory2_c". The factory now spells `dScMgMemory2_c_classInit`
- * (historical alias MgMemoryMaster_Spawn), already
- * attributed. "MgMemoryMaster" and "dScMgMemory2_c" are both 14 characters,
- * so the rename is length-neutral and no mangled prefix changes.
+ * RTTI: dScMgMemory2_c : dScMgSingle3DBase_c. This tree first shipped the
+ * class under the coined name MgMemoryMaster; the ROM disagrees. The vptr is
+ * ov006:0x0213d4d4, and the word below it is _ZTI14dScMgMemory2_c. The
+ * factory is dScMgMemory2_c_classInit (historical alias
+ * MgMemoryMaster_Spawn). SIZE 0x5410, from classInit's
+ * fBase_c::operator new(0x5410). The out-of-line destructor emits D1
+ * 0x020f5564 then D0 0x020f55b8.
  *
- * SIZE 0x5410, from dScMgMemory2_c_classInit's own `_ZN7fBase_cnwEj(0x5410)`.
- *
- * The reconstructed scene TU proves twenty 0x18-byte cards, three 0x14-byte
- * player markers, a cursor/dMeter_c object, and the state-machine scalars below.
- * Address-only handler spellings are descriptive and disclosed as coined in
- * symbols/actor_renames.tsv.
- *
- * THE DESTRUCTOR IS NOT DEFINED INLINE -- a leaf, no RTTI descendants of
- * its own. Defined once, out of line, in src/actors/dScMgMemory2_c.cpp;
- * mwccarm emits D1 and D0 from that single definition, in that order,
- * which is the cartridge's order (D1 0x020f5564, D0 0x020f55b8). No
- * separate operator delete is needed -- dScMgBase_c, two levels up,
- * already provides one.
- *
- * SM64DS RTTI names the implementation dScMgMemory2_c. The reconstructed factory
- * dScMgMemory2_c_classInit (historical alias MgMemoryMaster_Spawn) installs this class's
- * cartridge vtable for the MG_MEMORY_J registry profile.
+ * mShared is what func_ov006_020c1d80 builds and func_ov006_020c1c64 tears
+ * down. The real BlendModelAnim / Model / ShadowModel stay byte arrays:
+ * a member with a destructor would run twice.
  */
 #ifndef DSCMGMEMORY2_C_H
 #define DSCMGMEMORY2_C_H
@@ -42,9 +24,23 @@ extern "C" int func_ov006_020c1d80(char *sharedState);
 struct dMgMemory2SharedState_c {
     dMgMemory2SharedState_c() { func_ov006_020c1d80((char *)this); }
     ~dMgMemory2SharedState_c() { func_ov006_020c1c64((char *)this); }
-    u8 pad_000[0x1e6];
-    s16 ready;
-    u8 pad_1e8[0x88];
+
+    u8  pad_000[0x1a];        /* 0x000 */
+    s16 unk_01a;              /* 0x01a -- func_ov006_020c1d80 stores 0 */
+    u8  blendModelAnim[0x70]; /* 0x01c -- BlendModelAnim */
+    u8  model[0x50];          /* 0x08c -- Model */
+    /* func_ov006_020c0a48: file handles, a second BlendModelAnim at +0x18,
+       ShadowModel at +0x88. */
+    u8  at_0dc[0xf8];         /* 0x0dc */
+    u8  pad_1d4[0x8];         /* 0x1d4 */
+    s16 unk_1dc;              /* 0x1dc -- func_ov006_020c1d80 stores 0 */
+    u8  pad_1de[0x8];         /* 0x1de */
+    s16 ready;                /* 0x1e6 */
+    u8  filePtr[0x78];        /* 0x1e8 -- 15 SharedFilePtr, through +0x258 */
+    s32 unk_260;              /* 0x260 */
+    s32 unk_264;              /* 0x264 */
+    s32 unk_268;              /* 0x268 */
+    s32 unk_26c;              /* 0x26c */
 };
 
 struct dMgMemory2Card_c {
@@ -78,7 +74,7 @@ struct dMgMemory2Player_c {
 struct dMgMemory2Cursor_c {
     s32 x;
     s32 y;
-    s16 angle;
+    s16 blinkTimer;
     u8 pad_0a[2];
     u8 visible;
     u8 frame;
@@ -97,18 +93,10 @@ typedef char dMgMemory2Cursor_c_size_must_be_0x10[sizeof(dMgMemory2Cursor_c) == 
 struct dScMgMemory2_c : dScMgSingle3DBase_c {
     virtual ~dScMgMemory2_c();
 
-    /* This class's own overrides, read off the ROM's vtable: the slots where the
-       table differs from dScMgSingle3DBase_c's. Spelled WITHOUT the `virtual`
-       keyword, the way include/daObjMarioCap_c.h and include/daObjRc_Dorifu_c.h
-       spell theirs -- an override of a virtual an ancestor already declares is
-       implicitly virtual either way, so each reuses an existing slot and adds no
-       field, and the 0x5410 assert below still holds. The destructor above is
-       declared first and out of line, so it is this class's KEY FUNCTION: the
-       one TU that defines it (src/actors/dScMgMemory2_c.cpp) therefore emits
-       _ZTV14dScMgMemory2_c, _ZTI14dScMgMemory2_c and _ZTS14dScMgMemory2_c as
-       compiler-only output. The cartridge keeps its own copies at ov006
-       0x0213d4d4 / 0x0213d350 / 0x0213d35c, so all thirteen typeinfo records
-       are licensed deadstrip-data in that TU's manifest rather than claimed. */
+    /* The out-of-line destructor is the key function, so this TU emits
+       _ZTV/_ZTI/_ZTS14dScMgMemory2_c as compiler-only output; the manifest
+       licenses the cartridge copies at 0x0213d4d4, 0x0213d350 and 0x0213d35c
+       as deadstrip data. */
     s32 InitResources();   /* slot  0 -- 0x020f74b4 */
     virtual void OnYoshiTryEat(int arg);               /* slot 18 */
     virtual int  OnTurnIntoEgg(int mode);              /* slot 19 */

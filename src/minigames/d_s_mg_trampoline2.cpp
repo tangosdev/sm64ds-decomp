@@ -1,31 +1,22 @@
 //cpp
 #pragma opt_loop_invariants off
-/* dScMgTrampoline2_c, the Trampoline Terror minigame scene: its data, the
- * factory, the state callbacks, the falling-shape spawner and the touch-screen
- * drawing.
+/* dScMgTrampoline2_c -- Trampoline Terror. Draw lines on the touch screen
+ * so Mario can bounce through the shapes that drop in.
  *
- * Functions run in the REVERSE of ROM order: mwccarm 2004/b56 emits .text in
- * reverse source order, so the highest-address function comes first. Do not
- * reorder. opt_loop_invariants is off for the whole file (the Virtual88 and
- * spawner loops need it). The TUBUILD CONFLICT lines are recorded in the
- * manifest and stay as they are.
+ * Functions are in reverse ROM order; do not reorder.
+ * opt_loop_invariants is off for the whole file. TUBUILD CONFLICT lines
+ * stay; the manifest pairs them.
  *
- * Still blocked:
- * - Most helpers and tables (func_ov006_*, data_ov006_*) have no recovered
- *   names, and the state callbacks are C functions on a char pointer because
- *   their method names are unknown (issue #2497).
- * - Model, TextureTransformer and Particle::SysTracker are constructed on raw
- *   storage, so their C1 and D1 calls stay spelled by their mangled names.
- * - Particle::System::NewUnkCallback818 takes Fix12 by value and stays mangled.
- *   FromUniqueID stays mangled too: spelling it through Particle__System.h
- *   did not verify.
- * - The G2 BG pointer getters stay mangled because decl_common.h declares a
- *   global array named G2, which hides the namespace.
- * - G2x::SetBlendAlpha keeps a local C declaration of its mangled name
- *   (volatile void *, four u16) rather than G2x.h's (volatile u16 *, three
- *   u16, unsigned int); the header spelling has not been verified here.
- * - The header pads 0x5004, 0x7ac4 and 0x7b84..0x7b9c; functions that use them
- *   read raw offsets.
+ * State callbacks stay free functions; their original names are unknown.
+ * func_ov006_02123cb4 keeps raw int offsets for mTimer, mPattern, mScoreGate,
+ * mScriptDone and mWaveStep: member form DIFFs there (code shifts; the
+ * function grows). Its mRamp access matches.
+ * 0x7acc has no matched read. The factory still builds the arrays by offset.
+ * Model / TextureTransformer / SysTracker C1/D1 stay mangled (built on raw
+ * storage); NewUnkCallback818 takes Fix12 by value; FromUniqueID did not
+ * verify via Particle__System.h; the G2 BG getters stay mangled because
+ * decl_common.h's global G2 hides the namespace; SetBlendAlpha keeps a
+ * local declaration.
  */
 
 #include "common.h"
@@ -56,11 +47,13 @@ struct SharedFilePtr { void Release(); };
 
 struct BMD_File;
 
+/* Shadow of the scene's +0x68/+0x6c, in dScMgBase_c padding.
+   The brush layer. */
 struct Obj {
     unsigned char pad0[0x68];
-    unsigned char f68;
+    unsigned char brushOn;
     unsigned char pad1[3];
-    int f6c;
+    int bgLayer;
 };
 
 struct Vector3_16f;
@@ -109,25 +102,6 @@ typedef struct {
 } SpawnDef;
 
 struct S2 { int words[2]; };
-
-typedef struct {
-    u8 pad0[0xbc];
-    u32 unkBC;
-    u8 pad1[0x7ac8 - 0xc0];
-    u32 unk7AC8;
-    u8 pad2[0x7b88 - 0x7acc];
-    u32 unk7B88;
-    u8 pad3[0x7b94 - 0x7b8c];
-    u32 unk7B94;
-    u32 unk7B98;
-    s16 unk7B9C;
-    s16 unk7B9E;
-    s16 unk7BA0;
-    s16 unk7BA2;
-    s16 unk7BA4;
-    u8 pad4[2];
-    s16 unk7BA8;
-} T;
 
 /* TUBUILD CONFLICT -- alternate body of struct 'Model', from the legacy file for func_ov006_02122c68, NOT applied:
 struct Model { ~Model(); };
@@ -476,35 +450,33 @@ s32 dScMgTrampoline2_c::InitResources()
 /* Vtable slot 18: reset the round. */
 void dScMgTrampoline2_c::OnYoshiTryEat(int /* arg */)
 {
-    T *self = (T *)this;
-
     _ZN3G2x13SetBlendAlphaEPVttttj((volatile void *)0x4000050, 1, 0x2e, 0x10, 0x10);
 
-    self->unk7BA0 = data_020a0dbc[0];
-    self->unk7BA2 = data_020a0dbc[1];
-    self->unk7B9C = data_020a0dbc[0];
-    self->unk7B9E = data_020a0dbc[1];
+    mTouchStartX = data_020a0dbc[0];
+    mTouchStartY = data_020a0dbc[1];
+    mTouchX = data_020a0dbc[0];
+    mTouchY = data_020a0dbc[1];
 
-    self->unkBC = 0;
-    if (self->unkBC > 0x270e)
-        self->unkBC = 0x270e;
+    unk_0bc = 0;
+    if (unk_0bc > 0x270e)
+        unk_0bc = 0x270e;
 
     func_ov006_020cad3c(0x1000);
-    func_ov006_020cac9c(self->unkBC);
+    func_ov006_020cac9c(unk_0bc);
     data_ov006_021405bc = 1;
-    func_ov006_020d0b04(self->unkBC);
-    func_ov006_020cee5c(self->unkBC);
+    func_ov006_020d0b04(unk_0bc);
+    func_ov006_020cee5c(unk_0bc);
     func_ov006_020eeff0();
     func_ov006_02122b24();
     func_ov006_02120ca0();
     func_ov006_020c8a9c(0, data_ov006_0213fc20[GetGameLanguage()]);
 
-    self->unk7BA4 = 0;
-    self->unk7BA8 = 0;
-    self->unk7B88 = 0;
-    self->unk7B94 = 0;
-    self->unk7B98 = 0;
-    self->unk7AC8 = 0x14000;
+    mInputEnabled = 0;
+    mRoundOver = 0;
+    mPattern = 0;
+    mScriptDone = 0;
+    mWaveStep = 0;
+    mRamp = 0x14000;
 
     {
         volatile u16 z;
@@ -513,7 +485,7 @@ void dScMgTrampoline2_c::OnYoshiTryEat(int /* arg */)
         MultiStore16(z, dst, 0x6000);
     }
 
-    func_ov006_02124228((char *)self);
+    func_ov006_02124228((char *)this);
 }
 
 // @symbol _ZN18dScMgTrampoline2_c13OnTurnIntoEggEi
@@ -529,16 +501,16 @@ extern "C" {
 void func_ov006_02124228(char* raw) {
     dScMgTrampoline2_c *self = (dScMgTrampoline2_c *)raw;
     short a, b;
-    *(int*)(raw + 0x7b84) = 0x5a;
+    self->mTimer = 0x5a;
     a = data_ov006_0212e044;
-    self->unk_7ba0 = a;
+    self->mTouchStartX = a;
     b = data_ov006_0212e048;
-    self->unk_7ba2 = b;
-    self->unk_7b9c = a;
-    self->unk_7b9e = b;
-    *(int*)(raw + 0x7b8c) = 0;
-    *(int*)(raw + 0x7b90) = 0x3e8;
-    *(struct P2*)(raw + 0x5004) = data_ov006_0213fbd8;
+    self->mTouchStartY = b;
+    self->mTouchX = a;
+    self->mTouchY = b;
+    self->mDragSoundHandle = 0;
+    self->mScoreGate = 0x3e8;
+    *(struct P2*)self->mState = data_ov006_0213fbd8;
 }
 }
 
@@ -550,14 +522,14 @@ void func_ov006_02124088(char *raw)
     int counter;
 
     func_ov006_020d0ac0();
-    *(int *)(raw + 0x7b84) -= 1;
-    counter = *(int *)(raw + 0x7b84);
+    self->mTimer -= 1;
+    counter = self->mTimer;
 
     if (counter == 0) {
-        if (*(u8 *)(raw + 0xc4) == 0) {
-            *(u8 *)(raw + 0xc3) = 1;
-            *(u8 *)(raw + 0xc4) = 1;
-            *(s16 *)(raw + 0xc0) = 0;
+        if (self->mPromptBlinkCount == 0) {
+            self->mPromptEnabled = 1;
+            self->mPromptBlinkCount = 1;
+            self->mPromptBlinkTimer = 0;
         }
 
         {
@@ -574,18 +546,18 @@ void func_ov006_02124088(char *raw)
 
     {
         int t = cstd::fdiv(counter << 12, 0x5a000);
-        volatile s16 old9c = self->unk_7b9c;
-        volatile s16 old9e = self->unk_7b9e;
+        volatile s16 old9c = self->mTouchX;
+        volatile s16 old9e = self->mTouchY;
         int mixRaw = data_ov006_0212e050 * t + data_ov006_0212e058 * (0x1000 - t);
-        self->unk_7b9c = (s16)(mixRaw >> 12);
-        self->unk_7b9e = data_ov006_0212e048;
+        self->mTouchX = (s16)(mixRaw >> 12);
+        self->mTouchY = data_ov006_0212e048;
 
-        self->unk_7b9e +=
+        self->mTouchY +=
             ((((int)((unsigned int)(RandomIntInternal(&data_0209e650) & ~0x80000000) >> 19) - 0x800) << 2) >> 12);
 
-        func_ov004_020ae5c4((int)raw, old9c, old9e, self->unk_7b9c, self->unk_7b9e, 2, 0xc);
+        func_ov004_020ae5c4((int)raw, old9c, old9e, self->mTouchX, self->mTouchY, 2, 0xc);
 
-        *(int *)(raw + 0x7b8c) = func_02012468(*(int *)(raw + 0x7b8c), 2, 0x1b0, 2, 0,
+        self->mDragSoundHandle = func_02012468(self->mDragSoundHandle, 2, 0x1b0, 2, 0,
                                               func_020126e8(mixRaw), 0, 0);
     }
 }
@@ -594,10 +566,11 @@ void func_ov006_02124088(char *raw)
 // @symbol func_ov006_02124040
 extern "C" {
 void func_ov006_02124040(char* raw){
-  *(int*)(raw+0x7b84) = 0xb4;
-  *(short*)(raw+0x7ba4) = 1;
+  dScMgTrampoline2_c *self = (dScMgTrampoline2_c *)raw;
+  self->mTimer = 0xb4;
+  self->mInputEnabled = 1;
   func_ov006_020caa08(raw+0x7b00);
-  *(struct S2*)(raw+0x5004) = data_ov006_0213fbe8;
+  *(struct S2*)self->mState = data_ov006_0213fbe8;
 }
 }
 
@@ -615,13 +588,13 @@ void func_ov006_02123cb4(char *raw)
         int n = data_ov006_02140818 - old;
         int i;
         for (i = 0; i < n; i++)
-            ApproachLinear(*(int *)(raw + 0x7ac8), 0x7000, -0x800);
+            ApproachLinear(((dScMgTrampoline2_c *)raw)->mRamp, 0x7000, -0x800);
         if (data_ov006_02140818 == 3)
             *(u8 *)(raw + 0xc3) = 0;
     }
     func_ov006_020cad3c((data_ov006_02140818 / 10) * 64 + 0x1000);
     if (data_ov006_0213b0f0 == 0) {
-        *(u16 *)(raw + 0x7ba4) = 0;
+        ((dScMgTrampoline2_c *)raw)->mInputEnabled = 0;
         func_ov006_02123c78(raw);
         return;
     }
@@ -643,6 +616,8 @@ void func_ov006_02123cb4(char *raw)
     }
     if (data_ov006_02140828 != 0)
         return;
+    /* Member form DIFFs here (bytes, not relocations): these are mTimer,
+       mScoreGate, mPattern, mScriptDone and mWaveStep. */
     if (ApproachLinear(*(int *)(raw + 0x7b84), 0, 1) == 0)
         return;
     if (*(int *)(raw + 0x7b94) == 0) {
@@ -685,25 +660,27 @@ void func_ov006_02123cb4(char *raw)
 // @symbol func_ov006_02123c78
 extern "C" {
 void func_ov006_02123c78(char *raw) {
+    dScMgTrampoline2_c *self = (dScMgTrampoline2_c *)raw;
     func_ov006_020ca840(raw);
-    *(int*)(raw + 0x7b84) = 0x5a;
-    *(struct P2*)(raw + 0x5004) = data_ov006_0213fbf0;
+    self->mTimer = 0x5a;
+    *(struct P2*)self->mState = data_ov006_0213fbf0;
 }
 }
 
 // @symbol func_ov006_02123bf4
 extern "C" void func_ov006_02123bf4(char *raw)
 {
+    dScMgTrampoline2_c *self = (dScMgTrampoline2_c *)raw;
     func_ov006_020cedf0();
     func_ov006_020cac30();
-    if (ApproachLinear(*(int *)(raw + 0x7b84), 0, 1) == 0)
+    if (ApproachLinear(self->mTimer, 0, 1) == 0)
         return;
     if (func_ov006_020ca7b8() == 0)
         return;
     func_ov004_020b0a54(0x12);
-    *(unsigned char *)(raw + 0xc3) = 0;
-    *(int *)(raw + 0x7b84) = 0xb4;
-    *(double *)(raw + 0x5004) = data_ov006_0213fbe0.asDouble;
+    self->mPromptEnabled = 0;
+    self->mTimer = 0xb4;
+    *(double *)self->mState = data_ov006_0213fbe0.asDouble;
 }
 
 // @symbol func_ov006_02123b24
@@ -712,8 +689,8 @@ void func_ov006_02123b24(char *raw)
 {
     dScMgTrampoline2_c *self = (dScMgTrampoline2_c *)raw;
     int idx, b;
-    *(int *)(raw + 0x7b84) -= 1;
-    if (*(int *)(raw + 0x7000 + 0xb84) != 0)
+    self->mTimer -= 1;
+    if (self->mTimer != 0)
     {
         idx = data_020a0e40[0];
         b = 0;
@@ -730,13 +707,13 @@ void func_ov006_02123b24(char *raw)
         h = 0;
         MultiStore16(h, (char *)r, 0x6000);
     }
-    self->unk_7ba8 = 1;
+    self->mRoundOver = 1;
     {
         int w0 = data_ov006_0213fbd0[0];
         int w1 = data_ov006_0213fbd0[1];
         w0 = w1 ? w0 : w0;
-        *(int *)(raw + 0x5004) = w0;
-        *(int *)(raw + 0x5008) = w1;
+        self->mState[0] = w0;
+        self->mState[1] = w1;
     }
 }
 }
@@ -752,41 +729,41 @@ void func_ov006_02123b20(void)
 extern "C" {
 void func_ov006_02123938(void *arg)
 {
-    char *raw = (char *)arg;
+    dScMgTrampoline2_c *self = (dScMgTrampoline2_c *)arg;
     int i;
     int b;
 
-    if (*(short *)(raw + 0x7ba4) == 0 || *(unsigned char *)(raw + 0x7bab) != 0) {
-        *(unsigned char *)(raw + 0x7baa) = 0;
+    if (self->mInputEnabled == 0 || self->mTouchReleased != 0) {
+        self->mTouching = 0;
         return;
     }
 
     i = data_020a0e40[0];
     b = (data_020a0de8[i].v != 0 && data_020a0de9[i].v != 0);
     if (b) {
-        *(short *)(raw + 0x7b9c) = data_020a0dea[i].v;
-        *(short *)(raw + 0x7ba0) = *(short *)(raw + 0x7b9c);
-        *(short *)(raw + 0x7b9e) = data_020a0deb[i].v;
-        *(short *)(raw + 0x7ba2) = *(short *)(raw + 0x7b9e);
-        *(unsigned char *)(raw + 0x7baa) = 1;
-        *(int *)(raw + 0x7b8c) = 0;
+        self->mTouchX = data_020a0dea[i].v;
+        self->mTouchStartX = self->mTouchX;
+        self->mTouchY = data_020a0deb[i].v;
+        self->mTouchStartY = self->mTouchY;
+        self->mTouching = 1;
+        self->mDragSoundHandle = 0;
     }
 
-    if (*(unsigned char *)(raw + 0x7baa) != 1) return;
+    if (self->mTouching != 1) return;
 
     i = data_020a0e40[0];
     if (data_020a0de8[i].v != 0) {
-        func_ov004_020ae5c4((int)raw, *(short *)(raw + 0x7b9c), *(short *)(raw + 0x7b9e),
+        func_ov004_020ae5c4((int)arg, self->mTouchX, self->mTouchY,
                             data_020a0dea[i].v, data_020a0deb[i].v, 2, 4);
         i = data_020a0e40[0];
-        *(short *)(raw + 0x7b9c) = data_020a0dea[i].v;
-        *(short *)(raw + 0x7b9e) = data_020a0deb[i].v;
-        *(int *)(raw + 0x7b8c) = func_02012468(*(int *)(raw + 0x7b8c), 2, 0x1b0, 2, 0,
-                                             func_020126e8(*(short *)(raw + 0x7b9c) << 12), 0, 0);
+        self->mTouchX = data_020a0dea[i].v;
+        self->mTouchY = data_020a0deb[i].v;
+        self->mDragSoundHandle = func_02012468(self->mDragSoundHandle, 2, 0x1b0, 2, 0,
+                                             func_020126e8(self->mTouchX << 12), 0, 0);
     } else {
         b = (int)(data_020a0de8[i].v == 0 && data_020a0de9[i].v != 0);
         if (b != 0) {
-            *(unsigned char *)(raw + 0x7bab) = 1;
+            self->mTouchReleased = 1;
         }
     }
 }
@@ -974,10 +951,8 @@ extern "C" void func_ov006_02123428(char *scene)
 }
 
 // @symbol _ZN18dScMgTrampoline2_c8BehaviorEv
-/* Vtable slot 6. 0x7ac4 holds a Particle::System unique ID and 0x7ac8 a
- * fixed-point value ramped towards 0x14000 and written to the system's byte at
- * +0x58. The current state is a pointer-to-member stored at 0x5004, as in
- * dScMgJump2_c. */
+/* Steps the score-pop list, the particle, and the current state.
+   mRamp is written into the particle's byte at +0x58. */
 s32 dScMgTrampoline2_c::Behavior()
 {
     char *raw = (char *)this;
@@ -986,16 +961,16 @@ s32 dScMgTrampoline2_c::Behavior()
     func_ov006_02120c40();
     func_ov006_020eef90();
     func_ov006_02122ab8();
-    *(void **)(raw + 0x7ac4) =
-        _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
-            *(unsigned int *)(raw + 0x7ac4), 0xf0, 0x280000, 0x700000, -0x580000, 0);
-    void *p = _ZN8Particle6System12FromUniqueIDEj(*(unsigned int *)(raw + 0x7ac4));
+    mParticleID =
+        (unsigned int)_ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
+            mParticleID, 0xf0, 0x280000, 0x700000, -0x580000, 0);
+    void *p = _ZN8Particle6System12FromUniqueIDEj(mParticleID);
     if (p != 0) {
-        *(char *)((char *)p + 0x58) = (char)(*(int *)(raw + 0x7ac8) >> 12);
-        ApproachLinear(*(int *)(raw + 0x7ac8), 0x14000, 0x200);
+        *(char *)((char *)p + 0x58) = (char)(mRamp >> 12);
+        ApproachLinear(mRamp, 0x14000, 0x200);
     }
     {
-        dScMgTrampoline2_cState *pp = (dScMgTrampoline2_cState *)pad_5004;
+        dScMgTrampoline2_cState *pp = (dScMgTrampoline2_cState *)mState;
         (this->**pp)();
     }
     func_ov006_02123938(this);
@@ -1030,7 +1005,7 @@ s32 dScMgTrampoline2_c::Render()
     func_ov006_02120c08();
     func_ov006_020eef58();
 
-    if (*(u16 *)((char *)this + 0x4664) == 1) {
+    if (unk_4664 == 1) {
         count = data_ov006_0213b0f0;
         a1v = 0x6e;
         if (GetOwnerLanguage() == 5 || GetOwnerLanguage() == 4)
@@ -1048,7 +1023,7 @@ s32 dScMgTrampoline2_c::Render()
 
     func_ov004_020b1a5c(data_ov006_02140830, 6);
 
-    if (unk_7ba8 == 0) {
+    if (mRoundOver == 0) {
         func_ov006_020caadc();
         func_ov006_020d09e0();
         func_ov006_020ced84();
@@ -1122,18 +1097,18 @@ int dScMgTrampoline2_c::OnAttacked2()
     if (mMenuOpen != 0)
         return 0;
 
-    if (unk_7bab != 0) {
-        s16 a = *(volatile s16*)(raw + 0x7ba0);
-        if ((a < 0x18 && *(volatile s16*)(raw + 0x7b9c) < 0x18) ||
-            (a > 0xe8 && *(volatile s16*)(raw + 0x7b9c) > 0xe8)) {
+    if (mTouchReleased != 0) {
+        s16 a = *(volatile s16 *)&mTouchStartX;
+        if ((a < 0x18 && *(volatile s16 *)&mTouchX < 0x18) ||
+            (a > 0xe8 && *(volatile s16 *)&mTouchX > 0xe8)) {
             func_02012790(0xe);
         } else {
-            buf[1] = unk_7ba0;
-            buf[2] = unk_7ba2;
-            buf[3] = unk_7b9c;
-            buf[4] = unk_7b9e;
+            buf[1] = mTouchStartX;
+            buf[2] = mTouchStartY;
+            buf[3] = mTouchX;
+            buf[4] = mTouchY;
             if (func_ov006_020d0c38(&buf[1], &buf[3])) {
-                func_02012718(0x1af, (unk_7ba0 + unk_7b9c) << 11);
+                func_02012718(0x1af, (mTouchStartX + mTouchX) << 11);
             } else {
                 func_02012790(0xe);
             }
@@ -1143,8 +1118,8 @@ int dScMgTrampoline2_c::OnAttacked2()
             buf[0] = 0;
             MultiStore16(buf[0], dst, 0x6000);
         }
-        unk_7baa = 0;
-        unk_7bab = 0;
+        mTouching = 0;
+        mTouchReleased = 0;
     }
     return 1;
 }
@@ -1161,10 +1136,10 @@ void func_ov006_02122e20(void *arg0, int layer)
     char *charPtr;
     int i;
 
-    self->f68 = 1;
-    self->f6c = layer;
+    self->brushOn = 1;
+    self->bgLayer = layer;
 
-    switch (self->f6c) {
+    switch (self->bgLayer) {
     case 0:
         scrPtr = _ZN2G212GetBG0ScrPtrEv();
         charPtr = (char *)func_02054efc();
@@ -1231,7 +1206,7 @@ void dScMgTrampoline2_c::Virtual88(int x_base, int y, int val, int n)
                     if (yy >= 0 && yy < 0xc0)
                     {
                         void *ret;
-                        int mode = *(int *)((char *)obj + 0x6c);
+                        int mode = ((Obj *)obj)->bgLayer;
 
                         switch (mode)
                         {

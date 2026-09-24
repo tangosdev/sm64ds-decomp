@@ -2,38 +2,34 @@
 #define DSCMGBOMROOM_C_H
 #include "dScMgBase_c.h"
 
-/* dScMgBomroom_c : dScMgBase_c, confirmed leaf via tools/rtti_extract.py (no
-   RTTI record names it as a base). Own vtable slots: 0 (InitResources),
-   6 (Behavior), 9 (Render), 16 (D1), 17 (D0), 18 (own new slot, not yet
-   named -- stays a raw extern "C" helper, not a declared method). Fields
-   below dScMgBase_c's own 0x4660 are INHERITED, not this class's own --
-   accessed via raw offsets on a char* cast of `this`, same as every other
-   dScMgBase_c leaf. Own fields observed only from slots 0/6/9/16/17/18
-   directly; the large block of fields touched only by non-virtual helper
-   functions (func_ov006_020d5b00 and friends, still raw extern "C" calls,
-   not migrated methods) is not represented here -- it stays inside the
-   leading pad.
+/* Bob-omb sorting minigame (dScMgBomroom_c : dScMgBase_c). Fields below
+ * 0x4660 belong to the base and stay raw; the bombs themselves start there.
  *
- * SM64DS RTTI names the implementation dScMgBomroom_c. The reconstructed factory
- * dScMgBomroom_c_classInit (historical alias MgSortOrSplode_Spawn) installs this class's
- * cartridge vtable for the MG_BOMROOM registry profile.
+ * The name is the ROM's RTTI name, and rtti_extract.py confirms it is a
+ * leaf (no RTTI record names it as a base). dScMgBomroom_c_classInit (alias
+ * MgSortOrSplode_Spawn) installs its vtable for the MG_BOMROOM profile.
  */
-/* One bomb (0x70 of them at 0x4660, stride 0x40, see func_ov006_020d6784's
-   i < 0x70 walk). func_ov006_020d7c4c steps it along its angle at unk_10 per
-   frame and bounces it off the room walls. */
+/* One bomb: 0x70 records at +0x4660, stride 0x40. grabX/grabY are the
+   stylus offset at the grab; speed is the Fix12 step along angle. */
 struct dScMgBomroom_Bomb {
     s32 x;            /* +0x00 -- Fix12 */
     s32 y;            /* +0x04 -- Fix12 */
-    u8  unk_08[0x8];
-    s32 unk_10;       /* +0x10 -- speed, Fix12 per frame */
-    u8  unk_14[0x18];
+    s32 grabX;        /* +0x08 -- stylus x minus bomb x, Fix12 */
+    s32 grabY;        /* +0x0c -- stylus y minus bomb y, Fix12 */
+    s32 speed;        /* +0x10 -- Fix12 per-frame step; scaled by sin/cos of
+                                   angle while roaming, added directly when
+                                   walking to its slot */
+    u8  unk_14[0x10];
+    s32 sound;        /* +0x24 -- sound handle; func_02012468 takes it back
+                                   and returns it each frame */
+    u8  unk_28[4];
     u16 angle;        /* +0x2c -- 0..0xffff, sine-table index >> 4 */
     u16 unk_2e;       /* +0x2e -- counter, see func_ov006_020d69b8 */
     u16 unk_30;       /* +0x30 */
     u8  unk_32[0x4];
-    u8  unk_36;       /* +0x36 -- inner-room flag: selects the wall box */
-    u8  unk_37;       /* +0x37 -- state, 5 = settled */
-    u8  unk_38;       /* +0x38 -- active */
+    u8  color;        /* +0x36 -- 0/1; also picks which pen box it bounces in */
+    u8  state;        /* +0x37 -- 5 = settled */
+    u8  active;       /* +0x38 */
     u8  unk_39[0x7];
 };
 #ifndef SM64DS_PLATFORM_PC
