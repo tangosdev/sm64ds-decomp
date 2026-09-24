@@ -664,9 +664,11 @@ void __cdecl fdr_s08(void *s)
    A THIRD SHAPE WOULD BREAK THIS, AND THE ONE THERE WAS IS GONE. A
    no-argument call with the object in ECX looks like shape B from here and
    would get eight bytes it never pushed taken off its frame. The matched
-   IsBetweenStartAndEnd bodies were exactly that, one MSVC slot low against
-   this ROM-ordered table; unmatched/FaderSlots_HostAbi.h now gives them the
-   ROM's slot numbers, so they call +0x14 and +0x18 as the cartridge does.
+   dWipe_c::IsBetweenStartAndEnd was exactly that: it asks IsAtStart and
+   IsAtEnd one MSVC slot low against this ROM-ordered table, so its first
+   question landed here (1329 such calls in a census of 38 scenes and 51
+   levels on the INT48 build, and nothing else of that shape). fdr_s1c below
+   no longer reaches it; see the note there.
 
    The receiver check keeps fdr_s08's job and gains the alignment test
    scene_boot.cpp's bodies make, so a stray word is refused without being
@@ -741,7 +743,19 @@ void *__fastcall fdr_s00(void *s, void *) { return _ZN7dWipe_cD1Ev(s); }
 void *__fastcall fdr_s04(void *s, void *) { return _ZN7dWipe_cD0Ev(s); }
 int   __fastcall fdr_s14(void *s, void *) { return _ZN7dWipe_c9IsAtStartEv(s); }
 int   __fastcall fdr_s18(void *s, void *) { return _ZN7dWipe_c7IsAtEndEv(s); }
-int   __fastcall fdr_s1c(void *s, void *) { return _ZN7dWipe_c20IsBetweenStartAndEndEv(s); }
+/* 0x1c, run linkfull lane PSYCHE1: section 9e's ruling, applied to the one
+   table that had not taken it. The ROM's dWipe_c::IsBetweenStartAndEnd
+   (0x0202ed7c) answers `!IsAtStart() && !IsAtEnd()` through the receiver's own
+   slots 0x14 and 0x18 on BOTH branches: type != 1 asks them itself, type == 1
+   hands off to FaderBrightness::IsBetweenStartAndEnd (0x02017628), which asks
+   the same two. The matched dWipe_c body asks them one MSVC slot low (its
+   first call was SetForwardTime, above), and its type == 1 branch would run
+   FaderBrightness's body on this ROM-ordered table the same way.
+   _ZN15FaderBrightness20IsBetweenStartAndEndEv above runs that matched
+   FaderBrightness body through the view that lands its two calls on this
+   object's ROM 0x14 and 0x18, which is the cartridge's answer on both
+   branches. The dWipe_c TU stays in the link: ??_7dWipe_c@@6B@ names it. */
+int   __fastcall fdr_s1c(void *s, void *) { return _ZN15FaderBrightness20IsBetweenStartAndEndEv(s); }
 /* 0x20: the target the ROM's veneer at 0x0202ed08 tail-calls. See the header
    for why src/_ZN7dWipe_c8SetToEndEv.cpp is not in the link. */
 void  __fastcall fdr_s20(void *s, void *)

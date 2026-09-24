@@ -22910,22 +22910,22 @@ endforeach()
 # ===========================================================================
 #
 # Psyche Out (scene 389) and four other minigames died on the way out under a
-# scripted stylus. Two of the four fixes are force-included headers on matched
-# TUs, the /FI mechanism the dBgW, fader tail-pad and DTORCALL blocks above
-# already use; nothing in src/ or include/ changes. (The other two are
-# hal/fdr_arm9_fader_seat.cpp's slot 0x0c/0x10 trampolines and PORT_D16 on the
-# minigame tables' slot-16 faces, which need no CMake.)
+# scripted stylus. One of the fixes is a force-included header on a matched
+# TU, the /FI mechanism the dBgW, fader tail-pad and DTORCALL blocks above
+# already use; nothing in src/ or include/ changes. (The others are in
+# hal/fdr_arm9_fader_seat.cpp and in the minigame tables' slot-16 entries,
+# which need no CMake.)
 #
-# 1. src/minigames/d_s_mg_base.cpp calls func_0203cbc0 (operator delete) with no
-#    argument where the cartridge frees data_ov004_020beb60 through r0, and the
-#    qualified base calls of the Single3D, Amida, Smartball and Luigi classes
-#    bind to this TU's own dScMgBase_c::AfterCleanupResources.
-#    unmatched/MgBase_Slot5_HostAbi.h renames that one callee to the seam in
-#    unmatched/MgBase_Slot5.cpp, which passes the ROM's r0. The TU is compiled
-#    from src/ off port/slice_mg1.txt, so the row goes on the src path, and the
-#    configure fails if the TU stops spelling exactly the one argless
-#    declaration and the one argless call the header renames, or stops being a
-#    raw slice_mg1 row.
+# src/minigames/d_s_mg_base.cpp calls func_0203cbc0 (operator delete) with no
+# argument where the cartridge frees data_ov004_020beb60 through r0, and the
+# qualified base calls of the Single3D, Amida, Smartball and Luigi classes
+# bind to this TU's own dScMgBase_c::AfterCleanupResources.
+# unmatched/MgBase_Slot5_HostAbi.h renames that one callee to the seam in
+# unmatched/MgBase_Slot5.cpp, which passes the ROM's r0. The TU is compiled
+# from src/ off port/slice_mg1.txt, so the row goes on the src path, and the
+# configure fails if the TU stops spelling exactly the one argless
+# declaration and the one argless call the header renames, or stops being a
+# raw slice_mg1 row.
 set(PSYCHE1_MGBASE_TU src/minigames/d_s_mg_base.cpp)
 file(READ "${PORT_REPO_ROOT_ABS}/${PSYCHE1_MGBASE_TU}" _psy1_mgbase_text)
 string(REGEX MATCHALL "extern void func_0203cbc0[(]void[)]" _psy1_decl "${_psy1_mgbase_text}")
@@ -22948,29 +22948,3 @@ endif()
 set_property(SOURCE "${PORT_REPO_ROOT_ABS}/${PSYCHE1_MGBASE_TU}"
     APPEND PROPERTY COMPILE_OPTIONS
     "/FI${CMAKE_CURRENT_SOURCE_DIR}/unmatched/MgBase_Slot5_HostAbi.h")
-
-# 2. The two matched IsBetweenStartAndEnd bodies ask the receiver's slots 5 and
-#    6, which MSVC numbers one low because include/Fader.h spells the destructor
-#    pair as one virtual; on the dWipe_c table that landed on SetForwardTime.
-#    unmatched/FaderSlots_HostAbi.h shadows Fader alone with the ROM's two
-#    destructor slots. It must be the FIRST force-include: the dWipe_c TU also
-#    takes unmatched/FaderColor_TailPad_HostAbi.h from the tail-pad block above,
-#    which includes the real Fader.h, so this row is prepended rather than
-#    appended.
-set(PSYCHE1_FADER_TUS
-    src/_ZN7dWipe_c20IsBetweenStartAndEndEv.cpp
-    src/engine/fader/_ZN15FaderBrightness20IsBetweenStartAndEndEv.cpp)
-foreach(_psy1_rel IN LISTS PSYCHE1_FADER_TUS)
-    if(NOT EXISTS "${PORT_REPO_ROOT_ABS}/${_psy1_rel}")
-        message(FATAL_ERROR "fader slot host-ABI row names a source that does "
-                "not exist: ${_psy1_rel}")
-    endif()
-    string(REGEX REPLACE "[.](c|cpp)$" ".cpp" _psy1_gen "${_psy1_rel}")
-    foreach(_psy1_path "${PORT_REPO_ROOT_ABS}/${_psy1_rel}"
-                       "${CMAKE_BINARY_DIR}/host-src/${_psy1_gen}")
-        get_property(_psy1_old SOURCE "${_psy1_path}" PROPERTY COMPILE_OPTIONS)
-        set_property(SOURCE "${_psy1_path}" PROPERTY COMPILE_OPTIONS
-            "/FI${CMAKE_CURRENT_SOURCE_DIR}/unmatched/FaderSlots_HostAbi.h"
-            ${_psy1_old})
-    endforeach()
-endforeach()
