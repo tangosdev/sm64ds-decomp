@@ -10,17 +10,29 @@ This document describes this commit. The queue records its immutable output SHA.
 - Source branch `promote/promote-ov071-casket-0924`. Input commit
   `787633e5e7e2a7c4e101db521958920c68ebd9f2` (origin/main at enqueue); it is
   also the original source base and the installed workflow and tool SHA.
-- Six commits on top of the input: the byte-neutral class rename, the staged
-  TU candidate, the promotion, the declaration-baseline re-key, a WIP
-  checkpoint (9f7d8f4de4, this note plus the class-build worklist row), and
-  this commit, which rewords the two citations the rename left dead and
-  finalizes this note. No separate evidence commits.
+- Seven commits on top of the input: the byte-neutral class rename, the
+  staged TU candidate, the promotion, the declaration-baseline re-key, a WIP
+  checkpoint (9f7d8f4de4, this note plus the class-build worklist row), the
+  citation fix (81f3794d0e, which rewords the two citations the rename left
+  dead and finalizes this note), and this rework commit. No separate evidence
+  commits.
 - Status: verified candidate. The first attempt stopped at a WIP checkpoint
   because two prose citations of the old InitResources shard went dead with
   the rename; the coordinator then added `notes/converted-tier.md` and
   `tools/tiers.py` to the reservation (ruling: a promotion makes zero change
   to `config/dead-reference-baseline.json`), and the same session re-claimed
   the stage and reworded both citations.
+- Rework round 1 (verifier request `rework-promote-ov071-casket-0924-verify-1`,
+  re-claimed on input 81f3794d0e by the same session). F1: the "Retired"
+  bullet named the retired sources as bare basenames with the folder split
+  off, a form the dead-reference scanner cannot check, and two entries named
+  no symbol. It now cites every retired unit by its symbol and the old header
+  by its replacement; a grep of this note finds no other retired path or
+  basename. R9 (optional) also fixed: the stale auto-generated banner of
+  include/daObjCasket_c.h now describes the hand-maintained header. That edit
+  is comment-only; `tubuild verify` still reports 14/14 MATCH,
+  TEXT-VERIFIED. `check_dead_references` exit 0, `port_refcheck` exit 0 (408,
+  all resolve), `check_decl_agreement --changed 787633e5e7` exit 0.
 - Next action: independent verification (byte, relocation, whole-object and
   source review) of this commit, then the integrator. No blockers.
 - Nothing uncommitted. Gate logs stayed in the producer's private worktree and
@@ -50,12 +62,15 @@ This document describes this commit. The queue records its immutable output SHA.
   promoted daObjCasket_c TU, with the sentence's meaning kept. The tools edit
   is docstring-only; `git diff` shows no code line changed and the module
   still parses.
-- Retired: the six `Coffin` member sources, the seven func_ov071 helper
-  sources (func_ov071_02122080.c, func_ov071_021220c8.cpp,
-  func_ov071_02122194.c, func_ov071_021221bc.c, func_ov071_021223b0.c,
-  func_ov071_021223c8.cpp, func_ov071_02122414.cpp) and the factory source
-  d_a_obj_casket.c, all formerly in src; and the coined header Coffin.h in
-  include.
+- Retired, cited by symbol: the six `Coffin` members `Coffin::~Coffin` (D1
+  and D0), `Coffin::InitResources`, `Coffin::Behavior`, `Coffin::Render` and
+  `Coffin::CleanupResources`; the seven helpers `func_ov071_02122080`,
+  `func_ov071_021220c8`, `func_ov071_02122194`, `func_ov071_021221bc`,
+  `func_ov071_021223b0`, `func_ov071_021223c8` and `func_ov071_02122414`; and
+  the classInit factory `daObjCasket_c_classInit`. All fourteen are now in the
+  promoted TU, the members under their `daObjCasket_c` names. The old class
+  header was retired too, replaced by
+  [include/daObjCasket_c.h](../../../include/daObjCasket_c.h).
 - Reverted after class_rename: its edits to `include/decl_common.h`
   (held by another task), `config/tu_manifest.d/ov071/daEyBm_c.json`,
   `notes/data/c-cpp-classification.tsv`, `notes/data/tu-merge-candidates.json`,
