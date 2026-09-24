@@ -4,7 +4,7 @@
 #include "common.h"
 
 class dActor_c;
-extern "C" int func_ov072_02121d50(dActor_c *a);
+extern "C" void func_ov072_02121d50(char *c, int i);
 extern "C" int func_0201267c(int id, void *p);
 extern "C" {
 extern bool _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(dActor_c *thiz, Vector3 &a, Vector3 &b, bool c);
@@ -38,7 +38,7 @@ extern "C" int func_ov072_021217ac(dActor_c *thiz)
         {
             int z0 = 0;
             *(int *)(c + 0x360) = z0;
-            func_ov072_02121d50(thiz);
+            func_ov072_02121d50(c, 0);
         }
     }
 after_ray:
