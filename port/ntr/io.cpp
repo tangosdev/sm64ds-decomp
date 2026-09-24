@@ -710,6 +710,25 @@ void io_write(uint32_t addr, uint64_t value, unsigned width) {
        and a store to IPCFIFOCNT can clear a queue, so the model owns the write
        outright and publishes its own status back into the window. */
     if (ipc_reg_write(addr, value, width)) return;
+    /* IF (0x4000214, the interrupt request flags) is not a latch either: it is
+       WRITE-ONE-TO-CLEAR (GBATEK, DS Interrupts: writing a 1 acknowledges and
+       clears that request, a 0 leaves it alone). The ROM acknowledges that way,
+       IRQ::ClearInterrupts storing the mask (arm9 0x02056d64), so a plain store
+       would SET the acknowledged bits and wipe every other pending one. Only a
+       routed store gets here; ntr/rt.cpp keeps its own pending bits by poking
+       the window directly and never passes through. Bytes of a wide store that
+       fall outside IF (a 64-bit store at IE) stay plain. Run linkfull, lane
+       SMALLS1. */
+    constexpr uint32_t IF_ADDR = 0x4000214;
+    if (addr < IF_ADDR + 4 && addr + width > IF_ADDR) {
+        for (unsigned i = 0; i < width; ++i) {
+            uint8_t *const b = slot(addr + i);
+            const uint8_t v = static_cast<uint8_t>(value >> (8 * i));
+            const bool in_if = addr + i >= IF_ADDR && addr + i < IF_ADDR + 4;
+            *b = in_if ? static_cast<uint8_t>(*b & ~v) : v;
+        }
+        return;
+    }
     raw_write(addr, value, width);
 
     // Writing the low half of the operand is what starts the unit on hardware.

@@ -40,7 +40,6 @@ unsigned char _ZN3OAM12GetObjHeightEii(int a, int b);
 int _ZN3OAM16LoadAffineParamsEP7OamAttrPiP9Matrix2x2(void *attr, int *p,
                                                      void *m);
 int _ZN8SaveData19IsCharacterUnlockedEj(unsigned ch);
-int _ZN4cstd4fdivEii(int a, int b);
 /* gate 18 */
 void *_ZN8dActor_c13ClosestPlayerEv(void *self);
 short _ZN8dActor_c18HorzAngleToCPlayerEv(void *self);
@@ -220,8 +219,16 @@ struct SaveData { static int IsCharacterUnlocked(unsigned ch); };
 int SaveData::IsCharacterUnlocked(unsigned ch)
 { return _ZN8SaveData19IsCharacterUnlockedEj(ch); }                          */
 
-namespace cstd { int fdiv(int a, int b); }
-int cstd::fdiv(int a, int b) { return _ZN4cstd4fdivEii(a, b); }
+/* cstd::fdiv: RETIRED BRIDGE, now the other way round (run linkfull wave 27,
+   lane SMALLS1). This used to define ?fdiv@cstd@@YAHHH@Z as a forwarder onto
+   the flat name, which hal/cstd_div.c answered with a pure C divide. The
+   matched src/_ZN4cstd4fdivEii.cpp (port/slice_w27_smalls1.txt, on the three
+   targets that compile this file) defines ?fdiv@cstd@@YAHHH@Z itself now and
+   runs the ROM's own body: fdiv_async starts the divider (routed through
+   ntr/io.cpp's run_divide) and fdiv_result reads and rounds its quotient. The
+   110 src callers that spell the flat name reach that body through this alias,
+   and hal/cstd_div.c keeps its host body only for the narrow harnesses. */
+#pragma comment(linker, "/alternatename:__ZN4cstd4fdivEii=?fdiv@cstd@@YAHHH@Z")
 
 /* ---- sound statics ------------------------------------------------------
    These were stubbed while the SDAT root was null. The host now seats a real

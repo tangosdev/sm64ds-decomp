@@ -429,6 +429,7 @@ static void say(const char *what) {
 // ROM's own order puts it.
 // ---------------------------------------------------------------------------
 extern "C" void port_os_lock_words_seed(void);
+extern "C" void port_os_arena_seed(void);
 extern "C" void func_0205b858(void);
 extern "C" void func_02059e48(void);
 extern "C" void func_0205fde8(void);
@@ -438,7 +439,13 @@ void port_boot_rom_pre_main(void)
 {
     // func_02058c84's arms, in the ROM's order. The gaps are the PXI four;
     // see the header block for the measurement that closes them.
-    /* func_02058f28() -- the OS arena, owned by hal/os_arena.cpp */
+    /* func_02058f28() -- OS_InitArena. Its OS_ARENA_MAIN row, the only one a
+       linked ROM reader asks for, written from the port's arena block by
+       hal/os_arena.cpp (hi then lo, the ROM's order), here at the arm's own
+       point: after ntr::io_init holds the shared block the table lives in,
+       before the ROM's own OS_GetArenaLo (src/func_02058ea0.c) reads it at the
+       top of Heap::SetupRootHeap. Run linkfull wave 27, lane SMALLS1. */
+    port_os_arena_seed();
     func_0205b858();   /* call 2: PXI init (func_0205bad8); the ARM7 half is
                           hal/boot2_ipc.cpp's model, attached before main() */
     /* func_02057320() -- takes the 0x7e lock and spins on the shared block.

@@ -169,11 +169,18 @@ static void render_walk_frame(void *player, const char *dir, int frame)
     ntr::ppu_write_bmp(path, fb);
 }
 
+/* hal/os_arena.cpp: OS_InitArena's OS_ARENA_MAIN row (run linkfull, SMALLS1) */
+extern "C" void port_os_arena_seed(void);
+
 int main(void)
 {
     PORT_INSTALL_FAULT_PROBE();
     setvbuf(stdout, NULL, _IONBF, 0);
     if (!ntr::io_init()) { fprintf(stderr, "io_init failed\n"); return 2; }
+    /* the ROM's order: the arena table after the shared block is held, before
+       SetupRootHeap's first read of it (walk_window does this in
+       port_boot_rom_pre_main; this harness has no pre-main span) */
+    port_os_arena_seed();
     CHECK(Heap::SetupRootHeap() != NULL);
     ident_fx(data_0209b3ec);
     hal_fill_model_vtable();

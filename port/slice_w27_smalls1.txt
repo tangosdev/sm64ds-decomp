@@ -1,0 +1,31 @@
+# run linkfull wave 27, lane SMALLS1: three small runtime fixes and the rows
+# they unblock. Read by port/CMakeLists.txt's "W27 SMALLS1" block. A row goes on
+# walk_window, walk_window_hires and smoke_player unless the block names it in
+# W27S_GAME_ONLY; a row named in W27S_HOSTGEN_TU builds from its hostgen copy.
+#
+# FDIV1: cstd::fdiv, arm9 0x02053258. The body is two calls, fdiv_async (the
+# divider in 64/32 mode) and fdiv_result (read and round), both already linked
+# matched TUs over ntr/io.cpp's run_divide. hal/reverse_bridges.cpp's bridge
+# of the same C++ name is retired and hal/cstd_div.c's host body is compiled
+# out on these three targets.
+src/_ZN4cstd4fdivEii.cpp
+#
+# IFCLEAR1: IRQ::ClearInterrupts, arm9 0x02056d64. It acknowledges by storing
+# the mask to IF, which ntr/io.cpp's io_write now clears write-one-to-clear.
+# GAME TARGETS ONLY (W27S_GAME_ONLY), from its hostgen copy (W27S_HOSTGEN_TU):
+# ntr/runtime.cpp aliases the flat name onto it on the NTR_ROM_IRQ_TABLE
+# libraries; smoke_player links the plain ntr library and keeps its no-op.
+src/_ZN3IRQ15ClearInterruptsEj.cpp
+#
+# BOOTARENA1: OS_GetArenaLo, arm9 0x02058ea0 (0x14): the ROM's own read of the
+# OS arena table's lo word. hal/os_arena.cpp's host copy (which seeded the table
+# at the first read) is retired; the seed now runs at OS_InitArena's own point,
+# hal/boot_os.cpp's port_boot_rom_pre_main (and smoke_player's main).
+src/func_02058ea0.c
+#
+# BOOTARENA1, second step: OS_InitAlloc, arm9 0x02059040 (0xbc). NitroSDK's heap
+# bookkeeping setup: it writes the 0x44-byte heap-info block at the arena base
+# and returns base + 0x60, so the root heap starts 0x60 in and is 0x60 smaller,
+# as on the cartridge. hal/os_arena.cpp's round-up stand-in stays only for the
+# narrow harnesses.
+src/func_02059040.c

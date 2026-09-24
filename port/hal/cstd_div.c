@@ -1,47 +1,50 @@
-/* RE-READ, run linkfull wave 23 lane BANNER3, LINK15 batch W23-3: NOT
- * RETIRED. KEPT AS HOST, blocked outside this lane's owned files.
+/* cstd::fdiv (run linkfull wave 27, lane SMALLS1; BANNER3's block cleared).
  *
- * The batch's premise held for the body but not for the symbol: fdiv's own
- * callees (fdiv_async, fdiv_result) ARE linked matched TUs on walk_window,
- * walk_window_hires and smoke_player, and the divider is modelled at
- * port/ntr/io.cpp's run_divide(). But src/_ZN4cstd4fdivEii.cpp is not a flat
- * function to seat beside them -- it was already language-mode-flipped to
- * real C++ (notes/plan-cpp-language-mode.md phase 1) and defines
- * `namespace cstd { s32 fdiv(s32, s32) {...} }` directly, mangling to
- * `?fdiv@cstd@@YAHHH@Z`. hal/reverse_bridges.cpp:224 already defines that
- * exact symbol -- `int cstd::fdiv(int,int) { return _ZN4cstd4fdivEii(a,b); }`,
- * a bridge written for when this row was still flat-named -- so seating the
- * real TU on any of the three targets is LNK2005, multiply defined, against
- * reverse_bridges.cpp.obj (measured: two build attempts, not assumed).
- * Clearing it means retiring reverse_bridges.cpp's now-redundant bridge
- * (its declaration at line ~43, its definition at line ~223-224), and that
- * file is not one this lane's brief owns; recorded here as `blocked:` rather
- * than edited. This host body is UNCHANGED and still serves all nine
- * targets that reference it.
+ * THE GAME TARGETS RUN THE ROM'S OWN fdiv NOW. walk_window,
+ * walk_window_hires and smoke_player link the matched
+ * src/_ZN4cstd4fdivEii.cpp (port/slice_w27_smalls1.txt): fdiv_async starts
+ * the divider in 64/32 mode on (a << 32) / b and fdiv_result reads the
+ * quotient back, both as matched TUs over port/ntr/io.cpp's run_divide().
+ * hal/reverse_bridges.cpp's old bridge (C++ name -> this flat body) is gone;
+ * an alias there sends the flat name to the matched body instead, and the
+ * CMake block "W27 SMALLS1" defines SM64DS_PORT_FDIV_SEATED for this file on
+ * exactly those three targets, so the body below is not compiled there.
  *
- * THE b == 0 CASE, checked anyway since the re-read asked for it, for
- * whoever picks the block up: this file returns `a < 0 ? -1 : 1`.
- * port/ntr/io.cpp's run_divide() returns `n < 0 ? 1 : -1` (GBATEK: division
- * by zero yields remainder = numerator and a sign-based quotient; see
- * io.cpp's own comment there) -- the OPPOSITE sign. They disagree; per this
- * batch's own ruling the ROM (run_divide) would be right, so this is a
- * real, narrow, pre-existing behaviour gap on the zero-divisor case, left
- * as found and unfixed pending the reverse_bridges.cpp retirement above.
+ * THE BODY BELOW is what the six narrow harnesses that link no divider model
+ * still call, and it now computes what the cartridge computes:
  *
- * On the DS, cstd::fdiv feeds the hardware divider (fdiv_async writes the
- * DIV registers, fdiv_result spins on DIV_BUSY). The operation itself is
- * just a 20.12 divide: (a / b) in Fix12 is (a << 12) / b.
+ *   q = (a << 32) / b            the unit's 64/32 quotient (GBATEK DIVCNT mode 1)
+ *   return (q + 0x80000) >> 20   fdiv_result: round the quotient to 20.12
+ *
+ * Two things were wrong before. (1) THE ZERO DIVISOR: this returned
+ * a < 0 ? -1 : 1. GBATEK's division-by-zero rule gives the quotient +1 or
+ * -1 with the sign OPPOSITE the numerator (run_divide's `n < 0 ? 1 : -1`,
+ * so BANNER3 was right that the sign was backwards), but fdiv does not
+ * return the quotient: fdiv_result rounds it to 20.12, and (+-1 + 0x80000)
+ * >> 20 is 0. So the cartridge's cstd::fdiv(a, 0) is 0 for every a, and so
+ * is this body now. (2) ROUNDING: this truncated (a << 12) / b, where the
+ * cartridge rounds to nearest (the + 0x80000), so e.g. fdiv(2, 3) was 2730
+ * here and is 2731 on the DS. The probe that measured both, old body vs new
+ * body vs the ROM's own arithmetic over the GBATEK divider, is lane
+ * SMALLS1's fdiv_probe (run linkfull out/SMALLS1).
  */
 typedef int s32;
 
-/* PORT_HOST_ABI: src is a thin wrapper over the DS hardware divider's
- * MMIO (the DIV registers, spinning on DIV_BUSY). See the header. */
+#ifndef SM64DS_PORT_FDIV_SEATED
+/* PORT_HOST_ABI: the narrow harnesses link no divider model (ntr/io.cpp's run_divide) and no fdiv_async / fdiv_result; this is the cartridge's arithmetic without the MMIO. See the header. */
 s32 _ZN4cstd4fdivEii(s32 a, s32 b)
 {
+    const long long n = (long long)a * 4294967296LL;   /* (a << 32), 64-bit */
+    long long q;
     if (b == 0)
-        return a < 0 ? -1 : 1;
-    return (s32)(((long long)a << 12) / b);
+        q = n < 0 ? 1 : -1;               /* GBATEK: +-1, sign opposite the numerator */
+    else if (b == -1 && a == (s32)0x80000000)
+        q = n;                            /* GBATEK: -2^63 / -1 overflows to -2^63 */
+    else
+        q = n / b;
+    return (s32)((q + 0x80000) >> 20);    /* fdiv_result */
 }
+#endif
 
 /* ---- DS INTEGER DIVISION SEMANTICS ----------------------------------------
  *
