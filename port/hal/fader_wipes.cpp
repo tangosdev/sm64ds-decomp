@@ -127,6 +127,29 @@
 extern "C" void _ZN3G2x18SetBlendBrightnessEPVtts(volatile unsigned short *p,
                                                   unsigned short val, short amt);
 
+/* cstd::fdiv by its flat name, declared exactly as the matched FaderBrightness
+   setters declare it. On the three targets that compile this file the name is
+   the ROM's own body (src/_ZN4cstd4fdivEii.cpp over the divider model; see
+   hal/cstd_div.c's header for where it is seated and where it is not). */
+extern "C" Fix12i _ZN4cstd4fdivEii(Fix12i a, Fix12i b);
+
+/* The step a fade of `frames` frames takes each frame, computed the way
+   FaderBrightness::SetForwardTime / SetBackwardTime compute it
+   (src/engine/fader/): +-0x1000 for no frames, else
+   cstd::fdiv(+-0x1000, frames << 12). fdiv ROUNDS: fdiv_result (arm9
+   0x020530cc) reads the divider's 64/32 quotient back as (q + 0x80000) >> 20.
+   The plain 0x1000 / frames this file used before truncates, which is not the
+   same number whenever 0x1000 / frames has a fraction of a half or more: 30
+   frames stepped 136 here against the cartridge's 137, so 0 -> 0x1000 took 31
+   steps instead of 30. */
+static Fix12i hal_fade_speed(unsigned frames, int backward)
+{
+    const Fix12i one = backward ? -(Fix12i)0x1000 : (Fix12i)0x1000;
+    if (frames == 0)
+        return one;
+    return _ZN4cstd4fdivEii(one, (Fix12i)(frames << 12));
+}
+
 namespace {
 
 /* Snap vs step: the historical stub snapped the interpolator to its target so
@@ -309,8 +332,14 @@ struct HalFaderWipe {
     }
     /* 0x0c / 0x10 -- NOT delegated: the matched bodies end in a virtual
        IsAtStart()/IsAtEnd() that would land one slot off here. See the dtor-fold
-       note in the header. The arithmetic below is the matched arithmetic:
-       cstd::fdiv(+-0x1000, frames << 12) is +-0x1000 / frames.
+       note in the header. The arithmetic IS the matched bodies' own:
+       hal_fade_speed above makes their cstd::fdiv call, rounding included.
+       This comment used to say fdiv(+-0x1000, frames << 12) equals
+       +-0x1000 / frames; it does not, and the difference was one frame on
+       every 30-frame wipe (the arrival fade after a star took 31 frames at
+       -136 per frame here, and takes 30 at -137, as the opening's fades already
+       did through the matched setters on hal/scene_boot.cpp's FaderColor
+       table).
 
        AND __cdecl, WITH THE RECEIVER ON THE STACK. These two slots are the
        fifth class of the shape 0ec379b94 and 19a71216e retired on the sibling
@@ -350,7 +379,7 @@ struct HalFaderWipe {
             hal_wipe_shape_trap("SetBackwardTime (ROM slot 0x0c)", this);
             return 0;
         }
-        speed = frames ? -(Fix12i)(0x1000 / frames) : -0x1000;
+        speed = hal_fade_speed((unsigned)frames, 1);
         return HalFaderWipe::IsAtStart();
     }
     virtual int __cdecl SetForwardTime(int frames, int)      /* 0x10 */
@@ -359,7 +388,7 @@ struct HalFaderWipe {
             hal_wipe_shape_trap("SetForwardTime (ROM slot 0x10)", this);
             return 0;
         }
-        speed = frames ? (Fix12i)(0x1000 / frames) : 0x1000;
+        speed = hal_fade_speed((unsigned)frames, 0);
         return HalFaderWipe::IsAtEnd();
     }
     /* 0x14 / 0x18 -- the matched predicates, reached qualified */
@@ -698,12 +727,14 @@ void port_fader_start_color(int frames, int toEnd, unsigned short color)
 {
     HalFaderWipe *f = (HalFaderWipe *)(void *)data_0209f5e8;
     f->color = color;
+    /* the same step the ROM's setters take (hal_fade_speed); both callers
+       pass 16 frames, which fdiv and a plain divide agree on (256) */
     if (toEnd) {
         f->currInterp = 0;
-        f->speed = frames > 0 ? (Fix12i)(0x1000 / frames) : 0x1000;
+        f->speed = frames > 0 ? hal_fade_speed((unsigned)frames, 0) : 0x1000;
     } else {
         f->currInterp = 0x1000;
-        f->speed = frames > 0 ? -(Fix12i)(0x1000 / frames) : -0x1000;
+        f->speed = frames > 0 ? hal_fade_speed((unsigned)frames, 1) : -0x1000;
     }
     /* install it as the scene's fader and arm it as the animating one */
     data_0209f5bc = f;
