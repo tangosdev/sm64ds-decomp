@@ -53,5 +53,13 @@ src/_ZN16dScMgSmartball_c13OnYoshiTryEatEi.cpp
 src/func_ov006_020fb7e0.c
 
 # ---- group E: the ITCM display-list DMA submit (itcm 0x01ffde98) ------------
+# STAGE4P's DMA checkpoint 1, no model. Host copy retired on the three hosting
+# targets: the forwarder to the pump func_0205a358 in port/hal/model_host.cpp,
+# now behind SM64DS_DMA_GXFIFO_ROM (the narrow smoke_* harnesses keep it). The
+# ROM body polls DMA3CNT bit 31 in the mapped register window, which the host
+# DMAStartTransfer never sets, and starts each chunk (at most 0x1d8 bytes)
+# through that host body, which feeds GXFIFO destinations to gx_write_fifo.
+# Caller: func_0204488c, the ModelComponents part walk.
+src/func_01ffde98.c
 
 # ---- group F: Heap::_Deallocate (arm9 0x0203c280) --------------------------

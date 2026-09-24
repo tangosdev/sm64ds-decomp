@@ -180,12 +180,22 @@ void func_02052514(int *a, int *b)
 /* ITCM fast-path display-list submit: same (channel, src, size) contract as
  * func_0205a358 (func_02044534 calls that one with identical arguments), so
  * the host forwards to the pump that gate 4a already proved byte-exact.
+ * ONLY FOR THE NARROW HARNESSES since run linkfull wave 27 (lane P1, the
+ * STAGE4P DMA checkpoint 1). The three hosting targets compile this file with
+ * SM64DS_DMA_GXFIFO_ROM and link src/func_01ffde98.c, the ROM's own body: its
+ * bit-31 polls read a DMA3CNT latch the host DMAStartTransfer never sets, and
+ * each chunk it starts reaches gx_write_fifo through that host body, so the
+ * words reach the geometry FIFO in the same order without the pump. The
+ * smoke_* harnesses do not take port/slice_w28_p1.txt and keep this
+ * forwarder.
  * PORT_HOST_ABI: DS DMA-to-GXFIFO; ntr models the FIFO seam, not raw DMA. */
+#ifndef SM64DS_DMA_GXFIFO_ROM
 void func_0205a358(int ch, int src, int size, void (*cb)(int), int arg);
 void func_01ffde98(int ch, int src, int size)
 {
     func_0205a358(ch, src, size, 0, 0);
 }
+#endif /* SM64DS_DMA_GXFIFO_ROM */
 
 // ---- GX bank plumbing ----------------------------------------------------
 // Begin/End LoadTex unmap the destination banks to LCDC and remap after; the
