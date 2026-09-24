@@ -1,0 +1,28 @@
+# slice_w27_v3a -- run linkfull, lane V3A, THE ADJUSTOR-THUNK ROWS.
+#
+# Each file below is a per-function src TU for one of the ROM's this-adjusting
+# destructor thunks (`ldr ip,=-N; add r0,r0,ip; b <primary D1 or D0>`). mwccarm
+# emits the thunk beside the class destructor the file defines; under MSVC
+# that destructor is the class's D1 file's, so the file was never compiled for
+# the port. It gains an `#ifdef _MSC_VER` arm that defines only the flat thunk
+# name: move `this` back by the ROM's constant, call the flat primary. The
+# `#else` side is the file's own text, byte for byte, so the mwccarm object is
+# unchanged.
+#
+# THE REFERENCE EDGE is the ROM's own: each thunk is named from the slot the
+# ROM's secondary vtable holds it in, in the port's copy of that table
+# (hal/w2_dtor_heads.cpp for the collider tables). Gated per file: mwccarm
+# 2004/b56 object identical before and after, match.py 2004/b56 strict
+# MATCHING, linkcheck VERIFIED blind 0; after the build, each arm's object makes
+# exactly one call, to its primary, with `this` moved by the ROM's constant
+# (runs/linkfull/out/V3A/).
+#
+# BATCH A, the collider thunks (tables filled in hal/w2_dtor_heads.cpp).
+src/_ZThn16_N9dBgCh_GndD0Ev.cpp
+src/_ZThn16_N9dBgCh_GndD1Ev.cpp
+src/_ZThn16_N9dBgCh_LinD0Ev.cpp
+src/_ZThn16_N9dBgCh_LinD1Ev.cpp
+src/_ZThn16_N12dBgCh_SphCrrD0Ev.cpp
+src/_ZThn16_N12dBgCh_SphCrrD1Ev.cpp
+src/_ZThn56_N12dBgCh_SphCrrD0Ev.cpp
+src/_ZThn56_N12dBgCh_SphCrrD1Ev.cpp
