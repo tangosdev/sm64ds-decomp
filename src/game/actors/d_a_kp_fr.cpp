@@ -1,4 +1,39 @@
 //cpp
+/* daKpFr_c -- the chasing flame (KERONPA_FIRE), ov070.
+ *
+ * It runs at 10.0 (0xa000) toward the closest visible player, turning 0x180
+ * a frame, and goes out in a poof (func_ov070_02121c8c) after 105 frames or
+ * against a wall. It will not run off a ledge: a step that finds no ground
+ * within 50.0 below is undone (func_ov070_02121be4). A Mario it touches is
+ * burnt (Player::Burn) unless he is vanished.
+ *
+ * One TU, 21 functions. tubuild create refused it (legacy bodies wrapped in
+ * extern "C" { }), so it began as a reverse-ROM-order concatenation.
+ *
+ * DO NOT "TIDY" THESE -- each one is load-bearing:
+ *   mwcc emits one .text section per ordinary definition in reverse source
+ *   order; the inline destructor group comes out retail D1 then D0, no D2.
+ *   M48, the array wrapper for the IDENTITY_MATRIX4X3 copy: the nested
+ *   math/Matrix.h spelling (via ShadowModel.h) scalarizes it.
+ *   Fix12i[3] locals instead of Vector3, which declares its own
+ *   destructor.
+ *   The (long long) smull in func_ov070_02121d50 is the matching form.
+ *   func_ov070_02121d50 calls dBgCh_Actr_UpdateContinuous_Veneer, as the
+ *   ROM does, not UpdateContinuous.
+ *
+ * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS (Fix12<int> by value, wall
+ * 6az, unless noted):
+ *   dCcAc_c::Init, DropShadowRadHeight and
+ *   Particle::System::NewUnkCallback818.
+ *   dBgCh_Actr::Init: its header's Fix12i mangles as int.
+ *   dBgCh_Actr::GetFloorResult: not in dBgCh_Actr.h yet.
+ *
+ * Known limits:
+ *   data_ov070_021236ec, the state table, is sinit-owned BSS, not this TU's
+ *   data claim.
+ *   `return new` synthesizes a vague-linkage _ZN9Matrix4x3D1Ev over mMatrix
+ *   (deadstripped; no ROM symbol).
+ */
 #include "daKpFr_c.h"
 #include "dBgCh_Gnd.h"
 #include "Particle__System.h"
@@ -21,31 +56,6 @@ struct daKpFrSpawnInfo {
 
 typedef char daKpFrSpawnInfo_size_must_be_0x1c[
     sizeof(daKpFrSpawnInfo) == 0x1c ? 1 : -1];
-
-/* Manually curated translation unit -- ov070/daKpFr_c (21 function(s)).
- * tubuild create refused this TU (legacy bodies wrapped in extern "C" { }),
- * so it began as a reverse-ROM-order concatenation. It now uses the real
- * class, typed members, Player/collision headers, `return new daKpFr_c()`,
- * and compiler-owned inline lifecycle. mwcc emits one .text section per
- * ordinary definition in reverse source order; the destructor variant group
- * is emitted first as retail D1 then D0, with no D2.
- *
- *
- * deslop
- * Leftover: dCcAc_c::Init / dBgCh_Actr::Init stay mangled (Fix12-by-value, 6az;
- *   dBgCh Init header Fix12i mangles as int -- this TU's InitResources call).
- *   DropShadowRadHeight, Particle::System::NewUnkCallback818 stay mangled
- *   (Fix12-by-value, 6az -- this TU). GetFloorResult stays mangled (not in
- *   dBgCh_Actr.h -- this TU's func_ov070_02121d50). M48 array-wrapper for
- *   IDENTITY_MATRIX4X3 copy (nested math/Matrix.h spelling via ShadowModel.h
- *   -- this TU). data_ov070_021236ec state table is sinit-owned BSS, not this
- *   TU's data claim. dBgCh_Actr_UpdateContinuous_Veneer (ROM calls the veneer,
- *   not UpdateContinuous -- this TU). (long long) smull in
- *   func_ov070_02121d50 (MATCH addressing form). POD Fix12i[3] locals
- *   instead of Vector3 (standalone Vector3 dtor -- this TU). Synthesized
- *   ctor from `return new` emits vague-linkage `_ZN9Matrix4x3D1Ev` over
- *   mMatrix (deadstrip; no ROM symbol).
- */
 
 /* The registry factory behind the KERONPA_FIRE profile.
  * `return new daKpFr_c()` MATCHES (size 0x48); the synthesized ctor stores
@@ -120,8 +130,8 @@ extern u32 _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_1
 
 int daKpFr_c::Render()
 {
-  int b = (mFlags & 0x40000) != 0;
-  if (b) return 1;
+  int hidden = (mFlags & 0x40000) != 0;
+  if (hidden) return 1;
   mParticle1 = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
       mParticle1, 0x7f, mPosX, mPosY + 0x4b000, mPosZ, 0);
   mParticle2 = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
@@ -194,8 +204,8 @@ int func_ov070_02121f18(char* raw) {
     func_ov070_02121c8c(self);
   player = self->ClosestNonVanishPlayer();
   if (player) {
-    short ang = Vec3_HorzAngle(&self->mPosX, &player->mPosX);
-    ApproachLinear(self->mAngleY, ang, 0x180);
+    short angleToPlayer = Vec3_HorzAngle(&self->mPosX, &player->mPosX);
+    ApproachLinear(self->mAngleY, angleToPlayer, 0x180);
     self->mPrevAngleY = self->mAngleY;
   }
   self->UpdatePos(&self->mdCcAc_c);
@@ -222,11 +232,11 @@ extern "C" {  /* Unresolved func_ placeholder; retain its current C ABI spelling
 extern void func_ov070_02121c8c(void *t);
 int func_ov070_02121eb0(void *c) {
     daKpFr_c *self = (daKpFr_c *)c;
-    int r2 = self->mFlags;
-    int r1 = (r2 & 0x20000) ? 1 : 0;
-    if (r1 == 0) {
-        r1 = (r2 & 0x40000) ? 1 : 0;
-        if (r1 == 0)
+    int flags = self->mFlags;
+    int isSet = (flags & 0x20000) ? 1 : 0;
+    if (isSet == 0) {
+        isSet = (flags & 0x40000) ? 1 : 0;
+        if (isSet == 0)
             func_ov070_02121c8c(c);
     }
     return 1;
@@ -240,18 +250,18 @@ extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiE
     Fix12i radius, Fix12i depth, u32 opacity);
 void func_ov070_02121e14(char *raw) {
   daKpFr_c *self = (daKpFr_c *)raw;
-  int f;
+  int shadowDepth;
   self->mMatrix.t.x = self->mPosX >> 3;
   self->mMatrix.t.y = self->mPosY >> 3;
   self->mMatrix.t.z = self->mPosZ >> 3;
-  dBgCh_Gnd rg;
-  rg.SetObjAndPos(*(Vector3*)&self->mPosX, self);
-  if (rg.DetectClsn() != 0)
-    f = (self->mPosY - rg.clsnY) + 0x1e000;
+  dBgCh_Gnd ground;
+  ground.SetObjAndPos(*(Vector3*)&self->mPosX, self);
+  if (ground.DetectClsn() != 0)
+    shadowDepth = (self->mPosY - ground.clsnY) + 0x1e000;
   else
-    f = 0x12c000;
+    shadowDepth = 0x12c000;
   _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
-      self, &self->mShadowModel, &self->mMatrix, 0x64000, f, 0xf);
+      self, &self->mShadowModel, &self->mMatrix, 0x64000, shadowDepth, 0xf);
 }
 }
 
