@@ -193,7 +193,13 @@ src/func_ov006_020fb74c.c
 src/func_ov006_020fb8fc.c
 src/func_ov006_020fb97c.c
 src/func_ov006_020fba28.cpp
-# Run mg5, lane HSDISP. src/func_ov006_020fba48.c IS EXCLUDED, host-copied in
+# func_ov006_020fba48 is back (run linkfull, lane RS4PORT): main #3107 spells
+# the stored best as the full word it is (getter int(void), drawer int(int));
+# main's body lives in its promoted src/actors/dScMgPachinko_c.cpp, so this
+# per-function file carries the same three lines (the SYNC8C route (a)
+# back-port), byte-identical under mwccarm 2004/b56, and
+# port/unmatched/MgHud_HighScore.cpp is retired. HSDISP's record, kept:
+# Run mg5, lane HSDISP. src/func_ov006_020fba48.c WAS EXCLUDED, host-copied in
 # port/unmatched/MgHud_HighScore.cpp. It is the HIGH SCORE half of this class's
 # HUD and the ROM rides the 32-bit score from func_ov004_020adc1c into
 # func_ov004_020b19f0 in r0 (0x020fba50, 0x020fba54). The src TU declares that
@@ -203,6 +209,7 @@ src/func_ov006_020fba28.cpp
 # getters measured 0. Litter above the cap paints 999999, litter that lands
 # negative misses func_ov004_020b1ea4's signed clamp and indexes the glyph
 # table out of bounds. See that file's banner for the disassembly.
+src/func_ov006_020fba48.c
 src/func_ov006_020fba64.c
 src/func_ov006_020fbad4.c
 src/func_ov006_020fbbe8.c

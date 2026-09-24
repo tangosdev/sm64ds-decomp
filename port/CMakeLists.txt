@@ -7894,15 +7894,10 @@ set(SCENE_MG_SOURCES
     # -- so it is not optional on any target that takes the slice, exactly like
     # the state dispatch above.
     unmatched/MgPachinko_Award.cpp
-    # Run mg5, lane HSDISP: the one 32-bit argument the HIGH SCORE drawer's
-    # caller declares as a single byte, which is why the screen read 999999
-    # while the stored word and both getters read zero. REPLACES
-    # src/func_ov006_020fba48.c (out of slice_pch.txt), so it is not optional
-    # on any target that takes that slice, exactly like the award above. The
-    # drawer itself, src/func_ov004_020b19f0.c, is back on slice_mg1.txt as
-    # the matched TU (lane LINKMG): its void * parameter is the same 4-byte
-    # cdecl slot the host copy had retyped int, so the copy changed nothing.
-    unmatched/MgHud_HighScore.cpp
+    # unmatched/MgHud_HighScore.cpp RETIRED (run linkfull, lane RS4PORT): main
+    # #3107 passes the HIGH SCORE drawer the full 32-bit word (lane HSDISP's
+    # 999999 fix, now in the matched source), so src/func_ov006_020fba48.c is
+    # back on slice_pch.txt.
     # Run mg5, lane WTIMER: the minigame HUD's SCALED NUMBER drawer, the third
     # of the three ov004 addresses with no delink block and no src TU, and the
     # reason the "Wanted!" countdown never appeared. Same three targets and the
