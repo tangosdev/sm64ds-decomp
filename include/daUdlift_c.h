@@ -15,9 +15,12 @@
  * Nothing matched writes either slot, so the base names remain provisional for
  * this use even though the physical inheritance is proven.
  *
- * unk_346 and unk_349 are the actor's own and are still unk_ for the ordinary
- * reason (write-only in matched code), but unk_349 carries one observation that
- * should not be lost: InitResources stores only 0 or 1 into it -- 1 for
+ * mIsAtBottom is set when the descent reaches mBottomY and cleared when the
+ * climb reaches mTopY; the waiting state branches on it.
+ *
+ * unk_349 is still unk_: it picks what happens at the bottom (1 parks the lift
+ * in state 4, 2 sends it straight back up), but no name is evidenced beyond
+ * that. It carries one more observation that should not be lost: InitResources stores only 0 or 1 into it -- 1 for
  * actorID 0x83 -- and then, four statements later, tests it for `== 2`. That
  * branch (the one that raises mTopY by unk_096) is unreachable in the shipped
  * ROM. It is reproduced as written because the cartridge contains it.
@@ -56,14 +59,16 @@ struct daUdlift_c : dBgActor_c {
     s32 mMiddleY;                   /* 0x33c */
     u32 mSoundHandle;               /* 0x340 */
     u16 mStateTimer;                /* 0x344 */
-    u8 unk_346;                     /* 0x346 */
+    u8 mIsAtBottom;                 /* 0x346 */
     u8 mIsArmed;                    /* 0x347 */
     u8 mIsRidden;                   /* 0x348 */
     u8 unk_349;                     /* 0x349 */
 
-    /* Declared first so the destructor TUs, rather than an ordinary virtual
-       method TU, remain the key-function/vtable owners. */
-    virtual ~daUdlift_c();
+    /* Inline and empty, so InitResources is the key function and its TU
+       emits the vtable and RTTI. Written out of line, mwccarm emits D0 ahead
+       of D1 (the cartridge has D1 first) plus a D2 with no ROM home. Keep
+       the brace on this line: tools/check_header_offsets.py needs it. */
+    virtual ~daUdlift_c() {}        /* slots 16 (D1), 17 (D0) */
     virtual int InitResources();
     virtual int CleanupResources();
     virtual int Behavior();
@@ -137,7 +142,7 @@ struct daUdlift_c {
     s32 mMiddleY;            /* 0x33c */
     u32 mSoundHandle;            /* 0x340 */
     u16 mStateTimer;            /* 0x344 */
-    u8  unk_346;            /* 0x346 */
+    u8  mIsAtBottom;        /* 0x346 */
     u8  mIsArmed;            /* 0x347 */
     u8  mIsRidden;            /* 0x348 */
     u8  unk_349;            /* 0x349 */
