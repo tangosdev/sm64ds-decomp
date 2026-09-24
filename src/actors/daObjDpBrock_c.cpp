@@ -26,7 +26,8 @@
  * Leftover: func_020393d4 is a 4-byte store into a dBgW callback slot;
  *   naming it belongs with dBgW in arm9.
  * Leftover: func_ov025_02111dec and func_ov025_02111e30 keep their
- *   address-derived names as C-linkage helpers over a daObjDpBrock_c pointer.
+ *   address-derived names as C-linkage helpers taking the object as char *,
+ *   the spelling include/decl_common.h gives them.
  *   Nothing in the tree spells them any other way.
  * Leftover: the model and collision files and the CLPS block are unnamed
  *   ov025 rows this TU does not own.
@@ -47,10 +48,11 @@ void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     dBgW_KcMbg *self, KCL_File *file, const Matrix4x3 *mat, int scale,
     s16 angleY, CLPS_Block *clps);
 int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
-void func_020393d4(void *p, void *v);
+void func_020393d4(int *p, int v);
 
-void func_ov025_02111dec(daObjDpBrock_c *self);
-void func_ov025_02111e30(daObjDpBrock_c *self);
+/* char *, the spelling include/decl_common.h gives both helpers. */
+void func_ov025_02111dec(char *c);
+void func_ov025_02111e30(char *c);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -74,12 +76,12 @@ extern "C" daObjDpBrock_c *daObjDpBrock_c_classInit()
 int daObjDpBrock_c::InitResources()
 {
     mStepModel.SetFile((BMD_File *)Model::LoadFile(data_ov025_02113ab8), 1, -1);
-    func_ov025_02111e30(this);
-    func_ov025_02111dec(this);
+    func_ov025_02111e30((char *)this);
+    func_ov025_02111dec((char *)this);
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         &mMeshCollider, (KCL_File *)dBgW_Kc::LoadFile(data_ov025_02113ab0),
         &mClsnMat2, 0x1000, mAngleY, &data_ov025_02112ce8);
-    func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosWithTransform);
+    func_020393d4((int *)&mMeshCollider, (int)&dBgW::UpdatePosWithTransform);
 
     int phase = param1 & 3;
     mVertSpeed = -0x5000;
@@ -125,9 +127,9 @@ int daObjDpBrock_c::Behavior()
     }
     mStateTimer++;
     mPosY += mVertSpeed;
-    func_ov025_02111e30(this);
+    func_ov025_02111e30((char *)this);
     if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0) != 0)
-        func_ov025_02111dec(this);
+        func_ov025_02111dec((char *)this);
     return 1;
 }
 
@@ -154,8 +156,9 @@ int daObjDpBrock_c::CleanupResources()
 /* Puts the block's own model on the actor: heading from mAngleY, and the
  * position scaled down by 8 into model space. dBgActor_c's
  * UpdateModelPosAndRotY does the same for the inherited model. */
-extern "C" void func_ov025_02111e30(daObjDpBrock_c *self)
+extern "C" void func_ov025_02111e30(char *c)
 {
+    daObjDpBrock_c *self = (daObjDpBrock_c *)c;
     Matrix4x3_FromRotationY(&self->mStepModel.mat4x3, self->mAngleY);
     self->mStepModel.mat4x3.m[9]  = self->mPosX >> 3;
     self->mStepModel.mat4x3.m[10] = self->mPosY >> 3;
@@ -166,8 +169,9 @@ extern "C" void func_ov025_02111e30(daObjDpBrock_c *self)
 // @symbol func_ov025_02111dec
 /* Moves the collider with the block: rotation from mAngleY, translation
  * from the actor position, then dBgW_KcMbg::Transform. */
-extern "C" void func_ov025_02111dec(daObjDpBrock_c *self)
+extern "C" void func_ov025_02111dec(char *c)
 {
+    daObjDpBrock_c *self = (daObjDpBrock_c *)c;
     Matrix4x3_FromRotationY(&self->mClsnMat2, self->mAngleY);
     self->mClsnMat2.m[9]  = self->mPosX;
     self->mClsnMat2.m[10] = self->mPosY;

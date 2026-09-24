@@ -7201,10 +7201,6 @@
       "src/_ZN11BillBlaster13InitResourcesEv.cpp": [
         "param:#3 const void *"
       ],
-      "src/_ZN14daObjDpBrock_c13InitResourcesEv.cpp": [
-        "param:#3 Matrix4x3 &",
-        "param:#6 CLPS_Block &"
-      ],
       "src/_ZN12FortressWall13InitResourcesEv.cpp": [
         "return:int"
       ],
@@ -10932,9 +10928,6 @@
         "arity:0",
         "mangled:0 parameter(s)"
       ],
-      "src/_ZN14daObjDpBrock_c13InitResourcesEv.cpp": [
-        "kind:data"
-      ],
       "src/_ZN12MetalNetLift13InitResourcesEv.cpp": [
         "arity:0",
         "mangled:0 parameter(s)"
@@ -11211,9 +11204,6 @@
       ],
       "src/_ZN11PowerFlower13InitResourcesEv.cpp": [
         "param:#1 void *"
-      ],
-      "src/_ZN14daObjDpBrock_c13InitResourcesEv.cpp": [
-        "return:BMD_File *"
       ],
       "src/_ZN11RollingRock13InitResourcesEv.cpp": [
         "param:#1 void *",
@@ -14589,9 +14579,6 @@
       ],
       "src/_ZN11BillBlaster13InitResourcesEv.cpp": [
         "return:void *"
-      ],
-      "src/_ZN14daObjDpBrock_c13InitResourcesEv.cpp": [
-        "return:KCL_File *"
       ],
       "src/actors/daObjFl_Ring_c.cpp": [
         "param:#1 void *",
@@ -18584,9 +18571,6 @@
         "return:void"
       ],
       "src/_ZN11CrazedCrate13InitResourcesEv.cpp": [
-        "return:void"
-      ],
-      "src/_ZN14daObjDpBrock_c13InitResourcesEv.cpp": [
         "return:void"
       ],
       "src/_ZN12HealingHeart13InitResourcesEv.cpp": [
@@ -28473,6 +28457,16 @@
     "data_ov025_02113a68": {
       "src/__sinit_ov025_02112970.c": [
         "return:int []"
+      ]
+    },
+    "data_ov025_02113ab0": {
+      "src/actors/daObjDpBrock_c.cpp": [
+        "return:SharedFilePtr"
+      ]
+    },
+    "data_ov025_02113ab8": {
+      "src/actors/daObjDpBrock_c.cpp": [
+        "return:SharedFilePtr"
       ]
     },
     "data_ov025_02113ad8": {
