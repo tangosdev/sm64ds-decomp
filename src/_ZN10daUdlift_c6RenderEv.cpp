@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN13UpDownLiftBbh6RenderEv
+// @symbol _ZN10daUdlift_c6RenderEv
 /* recovered: real C++ method using the inherited model member */
-#include "UpDownLiftBbh.h"
+#include "daUdlift_c.h"
 
-int UpDownLiftBbh::Render()
+int daUdlift_c::Render()
 {
     mModel.Render(0);
     return 1;

@@ -4,7 +4,7 @@
 #include "decl_Platform.h"
 #include "decl_common.h"
 /* recovered: globals resolved */
-/* resolved: VT = _ZTV13UpDownLiftBbh */
+/* resolved: VT = _ZTV10daUdlift_c */
 /* Reconstructed source-style name: SM64DS proves daUdlift_c through RTTI,
  * allocation size, vtable identity, and the RC_RIFT02 registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
@@ -12,6 +12,6 @@
 int *daUdlift_c_classInit_RC_RIFT02(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(844);
-    if (p) { _ZN10dBgActor_cC2Ev(p); p[0] = (int)_ZTV13UpDownLiftBbh; }
+    if (p) { _ZN10dBgActor_cC2Ev(p); p[0] = (int)_ZTV10daUdlift_c; }
     return p;
 }

@@ -1,9 +1,9 @@
 /* The three up/down lifts in BBH, HMC and RR share this implementation and
- * _ZTV13UpDownLiftBbh. Their factories allocate 0x34c bytes, call
+ * _ZTV10daUdlift_c. Their factories allocate 0x34c bytes, call
  * dBgActor_c::dBgActor_c(), and install this class's vtable.
  *
  * The destructor proves the hierarchy and ownership independently: it changes
- * the vptr from UpDownLiftBbh to dBgActor_c, destroys dBgActor_c's
+ * the vptr from daUdlift_c to dBgActor_c, destroys dBgActor_c's
  * dBgW_KcMbg and Model members, then chains to dActor_c. In C++ those are all
  * consequences of deriving from dBgActor_c; the source destructor is empty.
  *
@@ -32,8 +32,8 @@
  * vtable. It backs the UDLIFT_TERESA registry profile, whose descriptor at
  * 0x021375cc is reconstructed as g_profile_UDLIFT_TERESA.
  */
-#ifndef UPDOWNLIFTBBH_H
-#define UPDOWNLIFTBBH_H
+#ifndef DAUDLIFT_C_H
+#define DAUDLIFT_C_H
 #include "types.h"
 #include "Model.h"
 #include "dBgW_KcMbg.h"
@@ -42,7 +42,7 @@
 
 #include "dBgActor_c.h"
 
-struct UpDownLiftBbh : dBgActor_c {
+struct daUdlift_c : dBgActor_c {
     /* dBgActor_c's last member ends at 0x31e. Keep its two bytes of tail
        padding so the first word owned by this class starts at 0x320. */
     u8 pad_31e[0x2];
@@ -63,7 +63,7 @@ struct UpDownLiftBbh : dBgActor_c {
 
     /* Declared first so the destructor TUs, rather than an ordinary virtual
        method TU, remain the key-function/vtable owners. */
-    virtual ~UpDownLiftBbh();
+    virtual ~daUdlift_c();
     virtual int InitResources();
     virtual int CleanupResources();
     virtual int Behavior();
@@ -73,7 +73,7 @@ struct UpDownLiftBbh : dBgActor_c {
 #else
 
 /* Flat C spelling retained for any future C consumer. */
-struct UpDownLiftBbh {
+struct daUdlift_c {
     u8  pad_000[0xc];
     u16 actorID;                 /* 0x00c */
     u8  aliveState;              /* 0x00e */
@@ -147,7 +147,7 @@ struct UpDownLiftBbh {
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char UpDownLiftBbh_size_must_be_0x34c[sizeof(struct UpDownLiftBbh) == 0x34c ? 1 : -1];
+typedef char daUdlift_c_size_must_be_0x34c[sizeof(struct daUdlift_c) == 0x34c ? 1 : -1];
 #endif
 
 #endif

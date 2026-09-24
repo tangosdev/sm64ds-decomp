@@ -304,7 +304,7 @@ daOnms_c	DONE	include\ToxBox.h  [alias: header uses pre-rename name]	dBgActor_c	
 daPgDfdr_c	DONE	include\daPgDfdr_c.h	dBgActor_c	0	ov027	7
 daPiano_c	DONE	include\daPiano_c.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov063	6
 daSlide_Box_c	DONE	include\SlidingBox.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov016	7
-daUdlift_c	DONE	include\UpDownLiftBbh.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov095	6
+daUdlift_c	DONE	include\daUdlift_c.h	dBgActor_c	0	ov095	6
 daOts_c	DONE	include\daOts_c.h	dEnemyBase_c	3	ov064	11
 dCapEnemy_c	DONE	include\dCapEnemy_c.h	dEnemyBase_c	2	arm9;ov002	14
 da1up_c	DONE	include\da1up_c.h	dEnemyBase_c	0	ov002	9

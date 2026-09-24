@@ -1,8 +1,8 @@
 //cpp
 #include "types.h"
-// @symbol _ZN13UpDownLiftBbh13InitResourcesEv
+// @symbol _ZN10daUdlift_c13InitResourcesEv
 /* recovered: real C++ method over the reconstructed platform hierarchy */
-#include "UpDownLiftBbh.h"
+#include "daUdlift_c.h"
 #include "SharedFilePtr.h"
 
 /* dBgW_KcMbg::SetFile takes Fix12<int> by value. A faithful member call hits
@@ -20,7 +20,7 @@ extern SharedFilePtr *data_ov095_02136f68[];
 extern SharedFilePtr *data_ov095_02136f74[];
 extern CLPS_Block *data_ov095_021375a4[];
 
-int UpDownLiftBbh::InitResources()
+int daUdlift_c::InitResources()
 {
   int idx;
   void *new_var;

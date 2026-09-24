@@ -31908,7 +31908,7 @@
       ]
     },
     "data_ov095_021375a4": {
-      "src/_ZN13UpDownLiftBbh13InitResourcesEv.cpp": [
+      "src/_ZN10daUdlift_c13InitResourcesEv.cpp": [
         "return:CLPS_Block * []"
       ]
     },
@@ -36896,7 +36896,7 @@
         "param:#1 dBgW *",
         "param:#2 void *"
       ],
-      "src/_ZN13UpDownLiftBbh13InitResourcesEv.cpp": [
+      "src/_ZN10daUdlift_c13InitResourcesEv.cpp": [
         "param:#2 void *"
       ],
       "src/_ZN17BowserSkyPlatform13InitResourcesEv.cpp": [
@@ -36994,7 +36994,7 @@
         "param:#1 dBgW *",
         "param:#2 void *"
       ],
-      "src/_ZN13UpDownLiftBbh13InitResourcesEv.cpp": [
+      "src/_ZN10daUdlift_c13InitResourcesEv.cpp": [
         "param:#2 void *"
       ],
       "src/_ZN14SquarePathLift13InitResourcesEv.cpp": [

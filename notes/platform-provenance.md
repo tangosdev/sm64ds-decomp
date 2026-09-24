@@ -265,7 +265,7 @@ In `Kill`, `Particle::System::NewSimple`'s signature is deliberately the local
 (`Fix12<int>`) which mwccarm passes differently at the call site, so declaring the
 true types breaks the byte match. See `notes/mwccarm-codegen.md` 6az.
 
-## `include/UpDownLiftBbh.h`
+## `include/daUdlift_c.h`
 
 Still a flat generated struct ([ov095](../config/arm9/overlays/ov095/symbols.txt)). Own fields start at 0x320.
 
@@ -431,7 +431,7 @@ still builds 106/106.
 | `daObjSimpleLift_c::InitResources` | [ov091](../config/arm9/overlays/ov091/symbols.txt) 0x021325d4 +0x214 | `*(u8 *)(c+0x322)` → `mVariant` throughout, `c+0x320` → `mMoveTimer`, `c+0x324..0x32c` → `mBasePos{X,Y,Z}` |
 | `RotatingUpDownPlatform::Behavior` | [ov091](../config/arm9/overlays/ov091/symbols.txt) 0x02132108 +0x104 | `s+0x320` → `mState`, `s+0x354` → `mStateTimer`, `s+0x352` → `mVariant`, `s+0x356` → `mIsPressed`, `s+0x34c` → `mSinkOffsetY`; the two sink magic numbers become `cSinkDepth` / `cSinkRate` |
 | `RotatingUpDownPlatform::InitResources` | [ov091](../config/arm9/overlays/ov091/symbols.txt) 0x0213220c +0x154 | `this+0x344` → `&mPathPtr`, `this+0x338` → `&mTargetPosX`, `this+0x32c` → `&mBasePosX` |
-| `UpDownLiftBbh::InitResources` and `::Behavior` | [ov095](../config/arm9/overlays/ov095/symbols.txt) 0x021365d8 +0x18c, 0x021364d8 +0x100 | the `*((int *)((char *)&mTopY))` cast wrappers drop away now that the fields are `s32`; `this+0x344` and `(&unk_300)+0x44` both become `mStateTimer` |
+| `daUdlift_c::InitResources` and `::Behavior` | [ov095](../config/arm9/overlays/ov095/symbols.txt) 0x021365d8 +0x18c, 0x021364d8 +0x100 | the `*((int *)((char *)&mTopY))` cast wrappers drop away now that the fields are `s32`; `this+0x344` and `(&unk_300)+0x44` both become `mStateTimer` |
 
 One thing that did NOT hold: `*(int *)(s + 0x60) -= mSinkOffsetY;` in
 `RotatingUpDownPlatform::Behavior` is followed by `mPosY = saved;`, so the

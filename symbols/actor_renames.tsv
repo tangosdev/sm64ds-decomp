@@ -2821,12 +2821,12 @@ ov095	0x02135f94	func_ov095_02135f94	SeesawBob_Spawn	spawnfunc
 ov095	0x02135f94	SeesawBob_Spawn	daObjSeesaw_c_classInit_BOMB_SEESAW	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov095	0x02135fc4	func_ov095_02135fc4	SeesawUtm_Spawn	spawnfunc
 ov095	0x02135fc4	SeesawUtm_Spawn	daObjSeesaw_c_classInit_SEESAW	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
-ov095	0x02135ff4	func_ov095_02135ff4	_ZN13UpDownLiftBbhD1Ev	vtable slot 16
-ov095	0x02136038	func_ov095_02136038	_ZN13UpDownLiftBbhD0Ev	vtable slot 17
-ov095	0x0213645c	func_ov095_0213645c	_ZN13UpDownLiftBbh16CleanupResourcesEv	vtable slot 3
-ov095	0x021364b0	func_ov095_021364b0	_ZN13UpDownLiftBbh6RenderEv	vtable slot 9
-ov095	0x021364d8	func_ov095_021364d8	_ZN13UpDownLiftBbh8BehaviorEv	vtable slot 6
-ov095	0x021365d8	func_ov095_021365d8	_ZN13UpDownLiftBbh13InitResourcesEv	vtable slot 0
+ov095	0x02135ff4	func_ov095_02135ff4	_ZN10daUdlift_cD1Ev	vtable slot 16
+ov095	0x02136038	func_ov095_02136038	_ZN10daUdlift_cD0Ev	vtable slot 17
+ov095	0x0213645c	func_ov095_0213645c	_ZN10daUdlift_c16CleanupResourcesEv	vtable slot 3
+ov095	0x021364b0	func_ov095_021364b0	_ZN10daUdlift_c6RenderEv	vtable slot 9
+ov095	0x021364d8	func_ov095_021364d8	_ZN10daUdlift_c8BehaviorEv	vtable slot 6
+ov095	0x021365d8	func_ov095_021365d8	_ZN10daUdlift_c13InitResourcesEv	vtable slot 0
 ov095	0x0213679c	func_ov095_0213679c	UpDownLiftRr_Spawn	spawnfunc
 ov095	0x0213679c	UpDownLiftRr_Spawn	daUdlift_c_classInit_RC_RIFT02	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov095	0x021367cc	func_ov095_021367cc	UpDownLiftHmc_Spawn	spawnfunc
@@ -2860,7 +2860,7 @@ ov095	0x021375e8	data_ov095_021375e8	UpDownLiftHmc_SpawnInfo	spawninfo
 ov095	0x021375e8	UpDownLiftHmc_SpawnInfo	g_profile_UDLIFT	reconstructed profile global; literal ROM ID UDLIFT+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov095	0x02137604	data_ov095_02137604	UpDownLiftRr_SpawnInfo	spawninfo
 ov095	0x02137604	UpDownLiftRr_SpawnInfo	g_profile_RC_RIFT02	reconstructed profile global; literal ROM ID RC_RIFT02+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov095	0x02137628	data_ov095_02137628	_ZTV13UpDownLiftBbh	vtable alloc=0x34c
+ov095	0x02137628	data_ov095_02137628	_ZTV10daUdlift_c	vtable alloc=0x34c
 ov095	0x021376cc	data_ov095_021376cc	Flamethrower_SpawnInfo	spawninfo
 ov095	0x021376cc	Flamethrower_SpawnInfo	g_profile_OBJ_FLAMETHROWER	reconstructed profile global; literal ROM ID OBJ_FLAMETHROWER+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov095	0x021376f0	data_ov095_021376f0	_ZTV19daObjFlamethrower_c	vtable alloc=?

@@ -1,11 +1,11 @@
 //cpp
 #include "types.h"
-// @symbol _ZN13UpDownLiftBbh8BehaviorEv
+// @symbol _ZN10daUdlift_c8BehaviorEv
 /* recovered: real C++ method over the reconstructed actor hierarchy */
-#include "UpDownLiftBbh.h"
+#include "daUdlift_c.h"
 #include "Player.h"
 
-typedef void (UpDownLiftBbh::*State)();
+typedef void (daUdlift_c::*State)();
 extern State data_ov095_02137910[];
 
 /* A real Fix12<int> by-value call homes the two zero arguments to the stack
@@ -13,7 +13,7 @@ extern State data_ov095_02137910[];
    registers. Keep this one proven codegen boundary until wall 6az is solved. */
 extern "C" int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void* c, int a, int b);
 
-int UpDownLiftBbh::Behavior()
+int daUdlift_c::Behavior()
 {
     int old;
     mClosestPlayer = ClosestPlayer();
