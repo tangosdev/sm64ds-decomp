@@ -1,9 +1,9 @@
 {
   "id": "ov071/daObjCasket_c",
   "module": "ov071",
-  "source": "src_tu/actors/daObjCasket_c.cpp",
+  "source": "src/actors/daObjCasket_c.cpp",
   "promoted_source": "src/actors/daObjCasket_c.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x02121fe4..0x02122670, 13 function(s), from build/tu_map.json (tools/tu_map.py), plus the factory daObjCasket_c_classInit at 0x02122670..0x021226a0; this entry licenses the whole run 0x02121fe4..0x021226a0 as one file.",
