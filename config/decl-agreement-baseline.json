@@ -14882,38 +14882,11 @@
       ]
     },
     "_ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f": {
-      "src/_ZN5Crate8BehaviorEv.cpp": [
-        "return:void *"
-      ],
-      "src/_ZN8SignPost8BehaviorEv.cpp": [
-        "return:void *"
-      ],
       "src/actors/dEnemyBase_c.cpp": [
+        "param:#6 const void *",
         "return:void *"
-      ],
-      "src/func_ov002_020f8b24.c": [
-        "return:void *"
-      ],
-      "src/func_ov060_02116f90.c": [
-        "return:int"
-      ],
-      "src/func_ov071_02120b14.cpp": [
-        "return:void *"
-      ],
-      "src/game/actors/d_a_ey_bm.cpp": [
-        "param:#6 const Vector3_16f *"
-      ],
-      "src/game/actors/d_a_kp_fr.cpp": [
-        "param:#6 const Vector3_16f *"
-      ],
-      "src/game/actors/d_a_obj_fl_maruta.cpp": [
-        "param:#6 const Vector3_16f *"
-      ],
-      "src/minigames/d_s_mg_jump2.cpp": [
-        "param:#6 const Vector3_16f *"
       ],
       "src/minigames/d_s_mg_trampoline2.cpp": [
-        "param:#6 const Vector3_16f *",
         "return:void *"
       ]
     },

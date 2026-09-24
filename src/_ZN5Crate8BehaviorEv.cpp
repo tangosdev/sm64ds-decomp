@@ -10,6 +10,7 @@
 enum Bool { FALSE, TRUE };
 
 extern u32 data_0209b454;
+struct Vector3_16f;
 extern "C" {
 extern void _ZN6Player9DropActorEv(void* self);
 extern int Vec3_HorzDist(const struct Vector3* a, const struct Vector3* b);
@@ -17,7 +18,7 @@ extern int _ZN8dActor_c13DistToCPlayerEv(void* self);
 extern void Crate_SetState(char* c, int i);
 extern u8 DecIfAbove0_Byte(u8* p);
 extern void* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(u32 a, u32 b, int c, int d, int e, const void* v, void* cb);
-extern void* _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(u32 a, u32 b, int c, int d, int e, const void* v);
+extern u32 _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(u32 a, u32 b, int c, int d, int e, const Vector3_16f* v);
 }
 
 int Crate::Behavior()
@@ -51,7 +52,7 @@ int Crate::Behavior()
         ((int*)&v)[2] = z;
         if (DecIfAbove0_Byte(&mBreakTimer)) {
             mParticleHandle1 = (u32)_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(mParticleHandle1, 0x13a, v.x, v.y, v.z, 0, 0);
-            mParticleHandle2 = (u32)_ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(mParticleHandle2, 0x13b, v.x, v.y, v.z, 0);
+            mParticleHandle2 = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(mParticleHandle2, 0x13b, v.x, v.y, v.z, 0);
             goto done;
         }
         func_ov098_02138e08(((char*)this));

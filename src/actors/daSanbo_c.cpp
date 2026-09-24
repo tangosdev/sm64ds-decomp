@@ -509,8 +509,9 @@ extern "C" int func_ov096_02136534(char *c)
 // @symbol func_ov096_02136434
 extern "C" {
 
+struct Vector3_16f;
 extern unsigned _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unsigned a, unsigned b, int f, int t1, int t2, const void *v, void *cb);
-extern unsigned _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(unsigned a, unsigned b, int f, int t1, int t2, const void *v);
+extern u32 _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(u32 a, u32 b, int f, int t1, int t2, const Vector3_16f *v);
 extern void *_ZN8Particle6System12FromUniqueIDEj(unsigned id);
 
 int func_ov096_02136434(void *c)
@@ -766,7 +767,7 @@ extern void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int id, void* pos);
 extern void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern s16 data_02082214[];
 extern unsigned _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unsigned a, unsigned b, int f, int t1, int t2, const void* v, void* cb);
-extern unsigned _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(unsigned a, unsigned b, int f, int t1, int t2, const void* v);
+extern u32 _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(u32 a, u32 b, int f, int t1, int t2, const Vector3_16f* v);
 extern void _ZN6Player16IncMegaKillCountEv(void* p);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, void* v, unsigned int a, int fix, unsigned int b, unsigned int d, unsigned int e);
 
