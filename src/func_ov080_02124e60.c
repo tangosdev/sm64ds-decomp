@@ -1,4 +1,4 @@
-extern int func_ov080_0212513c(char *c);
+extern void func_ov080_0212513c(char *c, int i);
 int func_ov080_02124e60(char *c) {
     int v = *(int*)(c + 0xb0);
     int b1 = (v & 0x20000) ? 1 : 0;
@@ -6,7 +6,7 @@ int func_ov080_02124e60(char *c) {
     int b2 = (v & 0x40000) ? 1 : 0;
     if (b2 != 0) goto done;
     *(int*)(c + 0xd0) = 0;
-    func_ov080_0212513c(c);
+    func_ov080_0212513c(c, 0);
 done:
     return 1;
 }
