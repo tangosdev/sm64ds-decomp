@@ -386,6 +386,7 @@ __ZN12HealingHeart16CleanupResourcesEv                                   ?Cleanu
 __ZN12HealingHeart8BehaviorEv                                            ?Behavior@HealingHeart@@UAEHXZ                                   0x020bc6fc R
 
 __ZN4Heap11_DeallocateEPv                                                ?_Deallocate@Heap@@QAEXPAX@Z                                     0x0203c280 R
+__ZN4Heap7_SizeofEPv                                                     ?_Sizeof@Heap@@QAEHPAX@Z                                         0x0203c274 R
 __ZN4Heap8_DestroyEv                                                     ?_Destroy@Heap@@QAEXXZ                                           0x0203c74c R
 __ZN4Heap9_AllocateEji                                                   ?_Allocate@Heap@@QAEPAXIH@Z                                      0x0203c29c R
 

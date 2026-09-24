@@ -21,6 +21,12 @@
 # names and need no face.
 
 # ---- group A: Heap::_Sizeof (arm9 0x0203c274) ------------------------------
+# Host copy retired: the flat-name face in port/hal/method_faces.cpp. Its
+# ruling described a void() veneer calling Sizeof by an Itanium name the link
+# does not define; the src is now the member Heap::_Sizeof(void *) calling the
+# decorated Sizeof with the pointer spelled. Callers: func_02017060 and
+# Particle::SysTracker::Initialise, through the reverse face.
+src/_ZN4Heap7_SizeofEPv.cpp
 
 # ---- group B: SharedFilePtr::Construct (arm9 0x0201799c) -------------------
 
