@@ -220,11 +220,11 @@ src/d_a_cnn.cpp:
     complete
     .text start:0x0213b43c end:0x0213b47c
 
-src/_ZN9WaterBombD1Ev.cpp:
+src/_ZN7daWbm_cD1Ev.cpp:
     complete
     .text start:0x0213b47c end:0x0213b4c4
 
-src/_ZN9WaterBombD0Ev.cpp:
+src/_ZN7daWbm_cD0Ev.cpp:
     complete
     .text start:0x0213b4c4 end:0x0213b520
 
@@ -256,19 +256,19 @@ src/func_ov098_0213bb1c.cpp:
     complete
     .text start:0x0213bb1c end:0x0213bb9c
 
-src/_ZN9WaterBomb16CleanupResourcesEv.cpp:
+src/_ZN7daWbm_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x0213bb9c end:0x0213bbe4
 
-src/_ZN9WaterBomb6RenderEv.cpp:
+src/_ZN7daWbm_c6RenderEv.cpp:
     complete
     .text start:0x0213bbe4 end:0x0213bc20
 
-src/_ZN9WaterBomb8BehaviorEv.cpp:
+src/_ZN7daWbm_c8BehaviorEv.cpp:
     complete
     .text start:0x0213bc20 end:0x0213bd14
 
-src/_ZN9WaterBomb13InitResourcesEv.cpp:
+src/_ZN7daWbm_c13InitResourcesEv.cpp:
     complete
     .text start:0x0213bd14 end:0x0213bf10
 

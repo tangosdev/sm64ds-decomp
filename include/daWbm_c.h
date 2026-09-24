@@ -1,12 +1,12 @@
-#ifndef WATERBOMB_H
-#define WATERBOMB_H
+#ifndef DAWBM_C_H
+#define DAWBM_C_H
 
 #include "types.h"
 
 /* Derives from dEnemyBase_c, and TWO INDEPENDENT WITNESSES agree on the layout:
- * the class's own destructor `_ZN9WaterBombD1Ev` destroys each member, and
+ * the class's own destructor `_ZN7daWbm_cD1Ev` destroys each member, and
  * `daWbm_c_classInit` constructs the same types at the same offsets before
- * storing `_ZTV9WaterBomb`. Everything this header used to restate below
+ * storing `_ZTV7daWbm_c`. Everything this header used to restate below
  * 0x110 belongs to dEnemyBase_c and dActor_c and is inherited now.
  *
  * The members close on each other, which is what makes the layout a
@@ -33,7 +33,7 @@
 #include "ShadowModel.h"
 #include "dBgCh_Actr.h"
 
-struct WaterBomb : dEnemyBase_c {
+struct daWbm_c : dEnemyBase_c {
     dCcAc_c           mdCcAc_c;   /* 0x110 */
     dBgCh_Actr                 mWithMeshClsn;         /* 0x144 */
     Model                        mModel;                /* 0x300 */
@@ -53,7 +53,7 @@ struct WaterBomb : dEnemyBase_c {
     s32                          unk_3c8;               /* 0x3c8 */
 
     /* --- vtable --- */
-    virtual ~WaterBomb();
+    virtual ~daWbm_c();
 
     int Behavior();
     int CleanupResources();
@@ -63,7 +63,7 @@ struct WaterBomb : dEnemyBase_c {
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char WaterBomb_size_must_be_0x3cc[sizeof(WaterBomb) == 0x3cc ? 1 : -1];
+typedef char daWbm_c_size_must_be_0x3cc[sizeof(daWbm_c) == 0x3cc ? 1 : -1];
 #endif
 
-#endif /* WATERBOMB_H */
+#endif /* DAWBM_C_H */

@@ -6985,7 +6985,7 @@
         "param:#5 void *",
         "param:#6 void *"
       ],
-      "src/_ZN9WaterBomb13InitResourcesEv.cpp": [
+      "src/_ZN7daWbm_c13InitResourcesEv.cpp": [
         "param:#2 dActor_c *",
         "param:#5 Vector3_16 *"
       ],
@@ -24651,7 +24651,7 @@
       "src/_ZN6Player16CleanupResourcesEv.cpp": [
         "return:char []"
       ],
-      "src/_ZN9WaterBomb13InitResourcesEv.cpp": [
+      "src/_ZN7daWbm_c13InitResourcesEv.cpp": [
         "return:char []"
       ],
       "src/__sinit_ov002_02100560.c": [
@@ -31845,7 +31845,7 @@
       ]
     },
     "data_ov098_0213c91c": {
-      "src/_ZN9WaterBomb13InitResourcesEv.cpp": [
+      "src/_ZN7daWbm_c13InitResourcesEv.cpp": [
         "return:char []"
       ],
       "src/__sinit_ov098_0213c2b4.c": [

@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN9WaterBomb6RenderEv
+// @symbol _ZN7daWbm_c6RenderEv
 /* recovered: named members + shared header, real C++ method */
-#include "WaterBomb.h"
+#include "daWbm_c.h"
 struct Obj {
     virtual void v0();
     virtual void v1();
@@ -11,7 +11,7 @@ struct Obj {
     virtual void m(void *arg);
 };
 
-int WaterBomb::Render()
+int daWbm_c::Render()
 {
     if (unk_3c8 != 0) {
         Obj *o = (Obj *)((char *)&mModel);

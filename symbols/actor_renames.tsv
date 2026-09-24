@@ -2923,12 +2923,12 @@ ov098	0x0213b26c	func_ov098_0213b26c	_ZN6Cannon8BehaviorEv	vtable slot 6
 ov098	0x0213b2d4	func_ov098_0213b2d4	_ZN6Cannon13InitResourcesEv	vtable slot 0
 ov098	0x0213b43c	func_ov098_0213b43c	Cannon_Spawn	spawnfunc
 ov098	0x0213b43c	Cannon_Spawn	daCnn_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
-ov098	0x0213b47c	func_ov098_0213b47c	_ZN9WaterBombD1Ev	vtable slot 16
-ov098	0x0213b4c4	func_ov098_0213b4c4	_ZN9WaterBombD0Ev	vtable slot 17
-ov098	0x0213bb9c	func_ov098_0213bb9c	_ZN9WaterBomb16CleanupResourcesEv	vtable slot 3
-ov098	0x0213bbe4	func_ov098_0213bbe4	_ZN9WaterBomb6RenderEv	vtable slot 9
-ov098	0x0213bc20	func_ov098_0213bc20	_ZN9WaterBomb8BehaviorEv	vtable slot 6
-ov098	0x0213bd14	func_ov098_0213bd14	_ZN9WaterBomb13InitResourcesEv	vtable slot 0
+ov098	0x0213b47c	func_ov098_0213b47c	_ZN7daWbm_cD1Ev	vtable slot 16
+ov098	0x0213b4c4	func_ov098_0213b4c4	_ZN7daWbm_cD0Ev	vtable slot 17
+ov098	0x0213bb9c	func_ov098_0213bb9c	_ZN7daWbm_c16CleanupResourcesEv	vtable slot 3
+ov098	0x0213bbe4	func_ov098_0213bbe4	_ZN7daWbm_c6RenderEv	vtable slot 9
+ov098	0x0213bc20	func_ov098_0213bc20	_ZN7daWbm_c8BehaviorEv	vtable slot 6
+ov098	0x0213bd14	func_ov098_0213bd14	_ZN7daWbm_c13InitResourcesEv	vtable slot 0
 ov098	0x0213bf10	func_ov098_0213bf10	WaterBomb_Spawn	spawnfunc
 ov098	0x0213bf10	WaterBomb_Spawn	daWbm_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov098	0x0213c398	data_ov098_0213c398	ArrowSignLeft_SpawnInfo	spawninfo
@@ -2945,7 +2945,7 @@ ov098	0x0213c67c	Cannon_SpawnInfo	g_profile_CANNON	reconstructed profile global;
 ov098	0x0213c6a0	data_ov098_0213c6a0	_ZTV6Cannon	vtable alloc=0x198
 ov098	0x0213c74c	data_ov098_0213c74c	WaterBomb_SpawnInfo	spawninfo
 ov098	0x0213c74c	WaterBomb_SpawnInfo	g_profile_WATERBOMB	reconstructed profile global; literal ROM ID WATERBOMB+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov098	0x0213c770	data_ov098_0213c770	_ZTV9WaterBomb	vtable alloc=0x3cc
+ov098	0x0213c770	data_ov098_0213c770	_ZTV7daWbm_c	vtable alloc=0x3cc
 ov100	0x02140d80	func_ov100_02140d80	_ZN9daBtfly_cD1Ev	vtable slot 16
 ov100	0x02140dd8	func_ov100_02140dd8	_ZN9daBtfly_cD0Ev	vtable slot 17
 ov100	0x02140e44	func_ov100_02140e44	_ZN9daBtfly_c6State7Ev	PMF table index 7

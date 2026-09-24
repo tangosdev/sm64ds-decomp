@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN9WaterBomb8BehaviorEv
+// @symbol _ZN7daWbm_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "WaterBomb.h"
+#include "daWbm_c.h"
 extern "C" {
 extern void func_ov098_0213b63c(char* c);
 extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void* a, void* b);
@@ -15,7 +15,7 @@ extern void _ZN7fBase_c18MarkForDestructionEv(void* p);
 extern unsigned short DecIfAbove0_Short(unsigned short* p);
 }
 
-int WaterBomb::Behavior()
+int daWbm_c::Behavior()
 {
     if (func_ov098_0213b6e0(((char*)this))) {
         func_ov098_0213b584(((char*)this));

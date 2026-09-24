@@ -1,13 +1,13 @@
 //cpp
-// @symbol _ZN9WaterBomb13InitResourcesEv
+// @symbol _ZN7daWbm_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method
  *
  * The local `Obj` shadow struct this file used to cast `this` to is gone --
- * `struct WaterBomb : dEnemyBase_c` types every offset it restated. Its tail fields
+ * `struct daWbm_c : dEnemyBase_c` types every offset it restated. Its tail fields
  * (0x3a8..0x3b6) moved into the header, since the shadow was the only place
  * they were ever written down.
  */
-#include "WaterBomb.h"
+#include "daWbm_c.h"
 #include "SharedFilePtr.h"
 
 /* ModelBase::SetFile is declared void in include/ModelBase.h -- which is what its
@@ -26,7 +26,7 @@ extern "C" void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void
 extern char data_ov002_0210da38[];
 extern char data_ov098_0213c91c[];
 
-int WaterBomb::InitResources()
+int daWbm_c::InitResources()
 {
     BMD_File* bmd;
     int kind;
