@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN6Coffin13InitResourcesEv
+// @symbol _ZN13daObjCasket_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "Coffin.h"
+#include "daObjCasket_c.h"
 /* Not `Fix12`: this actor's header now reaches math/Fix12.h, where Fix12 is a
    class template. Only the raw word matters at this call. */
 typedef int Fix12Raw;
@@ -39,7 +39,7 @@ extern CLPS_Block data_ov063_0211ebd8;
 
 extern int _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_;
 
-int Coffin::InitResources()
+int daObjCasket_c::InitResources()
 {
     ((ModelBase*)((char*)&mModel))->SetFile((BMD_File*)Model::LoadFile(data_ov071_021230d0), 1, -1);
     mVertAccel = -0x2000;

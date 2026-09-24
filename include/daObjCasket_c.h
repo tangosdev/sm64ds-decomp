@@ -1,27 +1,24 @@
 /* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class Coffin: 6 matched functions, 9 evidenced fields.
+ * class daObjCasket_c: 6 matched functions, 9 evidenced fields.
  * Offsets/widths are observed, not guessed. Gaps are explicit padding.
  * Field NAMES are placeholders - renaming cannot change codegen. */
-#ifndef COFFIN_H
-#define COFFIN_H
+#ifndef DAOBJCASKET_C_H
+#define DAOBJCASKET_C_H
 #include "types.h"
 
 #ifdef __cplusplus
 
 #include "dBgActor_c.h"
 
-/* ROM identity versus compatibility spelling:
- *
- * The vtable used by the readable `_ZN6Coffin...` function names points at
- * `_ZTI13daObjCasket_c` in the cartridge. Its RTTI record names
- * `daObjCasket_c` and gives dBgActor_c as its sole base. `Coffin` remains the
- * repository's readable compatibility spelling; compiler-emitted Coffin RTTI
- * is a per-function passenger that objisolate must discard.
+/* NAME: daObjCasket_c is the cartridge's RTTI spelling. _ZTS at ov071
+ * 0x02122ea0 is the string "13daObjCasket_c", its _ZTI at 0x02122e94 gives
+ * dBgActor_c as the sole base, and the vtable at 0x02122efc points back at
+ * that _ZTI. The tree called the class Coffin until then.
  *
  * The destructor proves 0x000..0x31f is the dBgActor_c base: it destroys the
  * inherited dBgW_KcMbg at 0x124 and Model at 0x0d4, then chains to dActor_c.
- * The remaining fields are evidenced by the Coffin TU's state helpers. */
-struct Coffin : dBgActor_c {
+ * The remaining fields are evidenced by the class's state helpers. */
+struct daObjCasket_c : dBgActor_c {
     s32 mState;             /* 0x320 */
     u16 mStateTimer;        /* 0x324 */
     s16 mAngleStep;         /* 0x326 */
@@ -30,7 +27,7 @@ struct Coffin : dBgActor_c {
 
     /* Inline is load-bearing: the two destructor sources force mwccarm to
      * emit the ROM's D1/D0 pair without creating a homeless D2. */
-    virtual ~Coffin() {}
+    virtual ~daObjCasket_c() {}
 
     /* Overrides of fBase_c's slots 0, 3, 6 and 9. */
     int InitResources();
@@ -42,7 +39,7 @@ struct Coffin : dBgActor_c {
 #else
 
 /* Flat compatibility view for C translation units. */
-struct Coffin {
+struct daObjCasket_c {
     u8  pad_000[0x320];
     s32 mState;             /* 0x320 */
     u16 mStateTimer;        /* 0x324 */
@@ -55,7 +52,7 @@ struct Coffin {
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char Coffin_size_must_be_0x32c[sizeof(struct Coffin) == 0x32c ? 1 : -1];
+typedef char daObjCasket_c_size_must_be_0x32c[sizeof(struct daObjCasket_c) == 0x32c ? 1 : -1];
 #endif
 
 #endif

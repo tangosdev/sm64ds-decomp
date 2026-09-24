@@ -1,15 +1,15 @@
 //cpp
-// @symbol _ZN6Coffin8BehaviorEv
+// @symbol _ZN13daObjCasket_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "Coffin.h"
+#include "daObjCasket_c.h"
 extern "C" {
 extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(char *self, int a, int b);
 extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(char *self);
 }
 
-int Coffin::Behavior()
+int daObjCasket_c::Behavior()
 {
     char *stateField;
 

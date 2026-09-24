@@ -1,11 +1,11 @@
 //cpp
-// @symbol _ZN6CoffinD0Ev
+// @symbol _ZN13daObjCasket_cD0Ev
 /* A delete-expression forces mwccarm to emit the deleting destructor. The
  * inherited inline dActor_c::operator delete supplies the actor-heap release
  * used by the ROM. */
-#include "Coffin.h"
+#include "daObjCasket_c.h"
 
-void Coffin_EmitDeletingDestructor(Coffin *p)
+void Coffin_EmitDeletingDestructor(daObjCasket_c *p)
 {
     delete p;
 }

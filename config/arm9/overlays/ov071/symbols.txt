@@ -73,8 +73,8 @@ _ZN8daEyBm_c6RenderEv kind:function(arm,size=0x6c) addr:0x02121d14
 _ZN8daEyBm_c8BehaviorEv kind:function(arm,size=0x134) addr:0x02121d80
 _ZN8daEyBm_c13InitResourcesEv kind:function(arm,size=0xe8) addr:0x02121eb4
 daEyBm_c_classInit kind:function(arm,size=0x48) addr:0x02121f9c
-_ZN6CoffinD1Ev kind:function(arm,size=0x44) addr:0x02121fe4
-_ZN6CoffinD0Ev kind:function(arm,size=0x58) addr:0x02122028
+_ZN13daObjCasket_cD1Ev kind:function(arm,size=0x44) addr:0x02121fe4
+_ZN13daObjCasket_cD0Ev kind:function(arm,size=0x58) addr:0x02122028
 func_ov071_02122080 kind:function(arm,size=0x48) addr:0x02122080
 func_ov071_021220c8 kind:function(arm,size=0xcc) addr:0x021220c8
 func_ov071_02122194 kind:function(arm,size=0x28) addr:0x02122194
@@ -82,10 +82,10 @@ func_ov071_021221bc kind:function(arm,size=0x1f4) addr:0x021221bc
 func_ov071_021223b0 kind:function(arm,size=0x18) addr:0x021223b0
 func_ov071_021223c8 kind:function(arm,size=0x4c) addr:0x021223c8
 func_ov071_02122414 kind:function(arm,size=0x4c) addr:0x02122414
-_ZN6Coffin16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02122460
-_ZN6Coffin6RenderEv kind:function(arm,size=0x28) addr:0x021224a4
-_ZN6Coffin8BehaviorEv kind:function(arm,size=0x90) addr:0x021224cc
-_ZN6Coffin13InitResourcesEv kind:function(arm,size=0x114) addr:0x0212255c
+_ZN13daObjCasket_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02122460
+_ZN13daObjCasket_c6RenderEv kind:function(arm,size=0x28) addr:0x021224a4
+_ZN13daObjCasket_c8BehaviorEv kind:function(arm,size=0x90) addr:0x021224cc
+_ZN13daObjCasket_c13InitResourcesEv kind:function(arm,size=0x114) addr:0x0212255c
 daObjCasket_c_classInit kind:function(arm,size=0x30) addr:0x02122670
 data_ov071_021226a0 kind:data(any) addr:0x021226a0
 data_ov071_021226a4 kind:data(any) addr:0x021226a4
@@ -148,7 +148,6 @@ _ZTS13daObjCasket_c kind:data(any) addr:0x02122ea0
 g_profile_CASKET kind:data(any) addr:0x02122eb0 ambiguous
 data_ov071_02122ecc kind:data(any) addr:0x02122ecc
 _ZTV13daObjCasket_c kind:data(any) addr:0x02122efc
-_ZTV6Coffin kind:data(any) addr:0x02122efc
 data_ov071_02122f80 kind:bss addr:0x02122f80
 data_ov071_02122f88 kind:bss addr:0x02122f88
 data_ov071_02122f90 kind:bss addr:0x02122f90

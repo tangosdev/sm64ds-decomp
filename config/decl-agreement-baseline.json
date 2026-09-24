@@ -2242,7 +2242,7 @@
         "param:#1 const Vector3 *",
         "param:#2 const Matrix4x3 *"
       ],
-      "src/_ZN6Coffin13InitResourcesEv.cpp": [
+      "src/_ZN13daObjCasket_c13InitResourcesEv.cpp": [
         "param:#1 const Vector3 *",
         "param:#2 const void *"
       ],
@@ -4465,7 +4465,7 @@
         "param:#2 Vector3 *",
         "param:#3 Vector3 *"
       ],
-      "src/_ZN6Coffin13InitResourcesEv.cpp": [
+      "src/_ZN13daObjCasket_c13InitResourcesEv.cpp": [
         "param:#1 Vector3 *",
         "param:#2 Vector3 *",
         "param:#3 Vector3 *"
@@ -6701,7 +6701,7 @@
       "src/actors/daObjSimpleLift_c.cpp": [
         "param:#1 char *"
       ],
-      "src/_ZN6Coffin8BehaviorEv.cpp": [
+      "src/_ZN13daObjCasket_c8BehaviorEv.cpp": [
         "param:#1 char *"
       ],
       "src/_ZN8SignPost8BehaviorEv.cpp": [
@@ -7231,7 +7231,7 @@
         "param:#3 char *",
         "param:#6 int"
       ],
-      "src/_ZN6Coffin13InitResourcesEv.cpp": [
+      "src/_ZN13daObjCasket_c13InitResourcesEv.cpp": [
         "param:#3 const Matrix4x3 &",
         "param:#6 CLPS_Block &",
         "return:int"
@@ -10968,7 +10968,7 @@
         "arity:0",
         "mangled:0 parameter(s)"
       ],
-      "src/_ZN6Coffin13InitResourcesEv.cpp": [
+      "src/_ZN13daObjCasket_c13InitResourcesEv.cpp": [
         "kind:data"
       ],
       "src/_ZN6Eyerok13InitResourcesEv.cpp": [
@@ -23277,7 +23277,7 @@
       "src/_ZN3Key8BehaviorEv.cpp": [
         "return:char"
       ],
-      "src/_ZN6Coffin13InitResourcesEv.cpp": [
+      "src/_ZN13daObjCasket_c13InitResourcesEv.cpp": [
         "return:char"
       ],
       "src/_ZN6Player6RenderEv.cpp": [
@@ -30136,12 +30136,12 @@
       ]
     },
     "data_ov071_021230d0": {
-      "src/_ZN6Coffin13InitResourcesEv.cpp": [
+      "src/_ZN13daObjCasket_c13InitResourcesEv.cpp": [
         "return:SharedFilePtr"
       ]
     },
     "data_ov071_021230d8": {
-      "src/_ZN6Coffin13InitResourcesEv.cpp": [
+      "src/_ZN13daObjCasket_c13InitResourcesEv.cpp": [
         "return:SharedFilePtr"
       ]
     },

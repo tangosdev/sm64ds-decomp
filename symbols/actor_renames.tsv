@@ -2174,12 +2174,12 @@ ov071	0x02121d80	func_ov071_02121d80	_ZN8daEyBm_c8BehaviorEv	vtable slot 6
 ov071	0x02121eb4	func_ov071_02121eb4	_ZN8daEyBm_c13InitResourcesEv	vtable slot 0
 ov071	0x02121f9c	func_ov071_02121f9c	MrI_Projectile_Spawn	spawnfunc
 ov071	0x02121f9c	MrI_Projectile_Spawn	daEyBm_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
-ov071	0x02121fe4	func_ov071_02121fe4	_ZN6CoffinD1Ev	vtable slot 16
-ov071	0x02122028	func_ov071_02122028	_ZN6CoffinD0Ev	vtable slot 17
-ov071	0x02122460	func_ov071_02122460	_ZN6Coffin16CleanupResourcesEv	vtable slot 3
-ov071	0x021224a4	func_ov071_021224a4	_ZN6Coffin6RenderEv	vtable slot 9
-ov071	0x021224cc	func_ov071_021224cc	_ZN6Coffin8BehaviorEv	vtable slot 6
-ov071	0x0212255c	func_ov071_0212255c	_ZN6Coffin13InitResourcesEv	vtable slot 0
+ov071	0x02121fe4	func_ov071_02121fe4	_ZN13daObjCasket_cD1Ev	vtable slot 16
+ov071	0x02122028	func_ov071_02122028	_ZN13daObjCasket_cD0Ev	vtable slot 17
+ov071	0x02122460	func_ov071_02122460	_ZN13daObjCasket_c16CleanupResourcesEv	vtable slot 3
+ov071	0x021224a4	func_ov071_021224a4	_ZN13daObjCasket_c6RenderEv	vtable slot 9
+ov071	0x021224cc	func_ov071_021224cc	_ZN13daObjCasket_c8BehaviorEv	vtable slot 6
+ov071	0x0212255c	func_ov071_0212255c	_ZN13daObjCasket_c13InitResourcesEv	vtable slot 0
 ov071	0x02122670	func_ov071_02122670	Coffin_Spawn	spawnfunc
 ov071	0x02122670	Coffin_Spawn	daObjCasket_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov071	0x02122c08	data_ov071_02122c08	Scuttlebug_SpawnInfo	spawninfo
@@ -2195,7 +2195,7 @@ ov071	0x02122dc4	MrI_Projectile_SpawnInfo	g_profile_EYEKUN_BEAM	reconstructed pr
 ov071	0x02122de8	data_ov071_02122de8	_ZTV8daEyBm_c	vtable alloc=0x334
 ov071	0x02122eb0	data_ov071_02122eb0	Coffin_SpawnInfo	spawninfo
 ov071	0x02122eb0	Coffin_SpawnInfo	g_profile_CASKET	reconstructed profile global; literal ROM ID CASKET+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov071	0x02122efc	data_ov071_02122efc	_ZTV6Coffin	vtable alloc=0x32c
+ov071	0x02122efc	data_ov071_02122efc	_ZTV13daObjCasket_c	vtable alloc=0x32c
 ov072	0x0211f000	func_ov072_0211f000	_ZN12daBgSnmBdy_cD1Ev	vtable slot 16
 ov072	0x0211f048	func_ov072_0211f048	_ZN12daBgSnmBdy_cD0Ev	vtable slot 17
 ov072	0x0211fccc	func_ov072_0211fccc	_ZN12daBgSnmBdy_c16CleanupResourcesEv	vtable slot 3
