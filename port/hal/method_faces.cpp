@@ -438,10 +438,10 @@ extern "C" void _ZN9ModelBase12ApplyOpacityEj(void *self, unsigned a)
 extern "C" void _ZN5Model17UpdateFileOffsetsER8BMD_File(BMD_File *f)
 { Model::UpdateFileOffsets(*f); }
 
-/* gate 16, the shrink-to-fit tail of Model::LoadAndSetFile. Both are real
-   Heap methods reached by Itanium name from func_02017060; _Sizeof is the ARM
-   two-instruction veneer onto Sizeof, so the face calls the target directly
-   rather than forwarding through a body that would drop both arguments. */
+/* gate 16, the shrink-to-fit tail of Model::LoadAndSetFile: Heap::Reallocate
+   is reached by Itanium name from func_02017060, and its face is below.
+   (Heap::_Sizeof, the same tail's other Heap method, is no longer faced here:
+   see the note above Reallocate's face.) */
 /* gate 16: the actor teardown, FLIPPED. It used to be a host copy owning the
    Itanium name while this face supplied the MSVC method for the slot-5 thunks.
    The matched TU is in the binary now (hostgen --extern-data homes its three
@@ -455,43 +455,17 @@ extern "C" void _ZN5Model17UpdateFileOffsetsER8BMD_File(BMD_File *f)
 extern "C" void _ZN7fBase_c21AfterCleanupResourcesEj(void *self, unsigned a)
 { ((fBase_c *)self)->fBase_c::AfterCleanupResources(a); }
 
-/* src/_ZN4Heap7_SizeofEPv.cpp exists and stays unlinked, and this is the
-   reason, written down so the row stops reading as replacement work. Two lanes
-   (w8-faces and w8-shadows) ruled this symbol independently and reached the
-   same verdict from different evidence; both halves are kept because each
-   closes a hole the other leaves open.
-
-   WHAT THE MATCHED TU IS. The ROM's 0xc long-call veneer at arm9 0x0203c274 --
-   `ldr ip, [pc]; bx ip; .word 0x0203c454` -- transcribed the only way a veneer
-   can be written in C:
-
-       extern "C" void _ZN4Heap6SizeofEPv(void);
-       void _ZN4Heap7_SizeofEPv(void) { _ZN4Heap6SizeofEPv(); }
-
-   -- a void() calling a void(). On ARM that is exact: r0 (`this`) and r1 (the
-   pointer) ride through the branch untouched and Sizeof reads them where the
-   caller left them.
-
-   WHY IT CANNOT BE LINKED, two independent reasons:
-     1. No ride-through under MSVC. Both are __cdecl, the veneer pushes
-        nothing, and the callee reads its receiver and argument off stack slots
-        that were never written -- concretely, it reads its own return address
-        as `this`. Both arguments dropped.
-     2. The callee is not reachable as spelled anyway. __ZN4Heap6SizeofEPv is
-        not in the link at all: src/_ZN4Heap6SizeofEPv.cpp is METHOD-shaped and
-        lands as ?Sizeof@Heap@@QAEHPAX@Z. Slicing the veneer would not even
-        link without a second face under it -- one that would then be entered
-        with nothing on the stack.
-
-   The host face below delivers both arguments explicitly, which is what the
-   ROM's register state means. Flagged as missing a tag at the wave-1 close and
-   ruled here. */
-/* PORT_HOST_ABI: ARM register ride-through -- the matched TU is the ROM's
-   `ldr ip,[pc]; bx ip` veneer, whose void() form carries r0/r1 through in
-   registers; the same shape under __cdecl drops both, and the callee is
-   method-decorated so the veneer could not link regardless. */
-extern "C" int _ZN4Heap7_SizeofEPv(void *self, void *p)
-{ return ((Heap *)self)->Heap::Sizeof(p); }
+/* Heap::_Sizeof's face used to live here, RETIRED at run linkfull wave 27
+   (lane P1). Its ruling was about a matched TU that no longer exists: the
+   veneer at arm9 0x0203c274 (`ldr ip, [pc]; bx ip; .word 0x0203c454`) was
+   transcribed as a void() calling a void() by its Itanium name, which drops
+   both of the arguments ARM rides through r0 and r1 and named a callee the
+   link did not define. src/_ZN4Heap7_SizeofEPv.cpp is now the real member
+   `int Heap::_Sizeof(void *ptr) { return Sizeof(ptr); }`: the receiver and
+   the pointer are spelled and passed, and the callee is the decorated
+   ?Sizeof@Heap@@QAEHPAX@Z the link already carries. The matched TU is on
+   port/slice_w28_p1.txt and the flat name its two callers spell is a reverse
+   face in port/faces_sync.txt. */
 extern "C" void _ZN4Heap10ReallocateEPvj(void *self, void *p, unsigned n)
 { ((Heap *)self)->Heap::Reallocate(p, n); }
 

@@ -386,6 +386,7 @@ __ZN12HealingHeart16CleanupResourcesEv                                   ?Cleanu
 __ZN12HealingHeart8BehaviorEv                                            ?Behavior@HealingHeart@@UAEHXZ                                   0x020bc6fc R
 
 __ZN4Heap11_DeallocateEPv                                                ?_Deallocate@Heap@@QAEXPAX@Z                                     0x0203c280 R
+__ZN4Heap7_SizeofEPv                                                     ?_Sizeof@Heap@@QAEHPAX@Z                                         0x0203c274 R
 __ZN4Heap8_DestroyEv                                                     ?_Destroy@Heap@@QAEXXZ                                           0x0203c74c R
 __ZN4Heap9_AllocateEji                                                   ?_Allocate@Heap@@QAEPAXIH@Z                                      0x0203c29c R
 
@@ -803,6 +804,7 @@ __ZN9SeesawBobD1Ev                                                       ??1Sees
 __ZN11ShadowModelC1Ev                                                    ??0ShadowModel@@QAE@XZ                                           0x02016068 R
 
 __ZN13SharedFilePtr7ReleaseEv                                            ?Release@SharedFilePtr@@QAEXXZ                                   0x02017b64 R
+__ZN13SharedFilePtr9ConstructEj                                          ?Construct@SharedFilePtr@@QAEAAU1@I@Z                            0x0201799c R
 
 __ZN5Shark16CleanupResourcesEv                                           ?CleanupResources@Shark@@UAEHXZ                                  0x02133978 R
 __ZN5Shark16OnPendingDestroyEv                                           ?OnPendingDestroy@Shark@@UAEXXZ                                  0x021339a8 R
@@ -1621,7 +1623,7 @@ __ZN12dScMgSlot3_c9Virtual80Ev                                           ?Virtua
 __ZN12dScMgSlot3_cD1Ev                                                   ??1dScMgSlot3_c@@UAE@XZ                                          0x0210a954 R
 
 __ZN16dScMgSmartball_c13InitResourcesEv                                  ?InitResources@dScMgSmartball_c@@UAEHXZ                          0x02118b70 R
-__ZN16dScMgSmartball_c13OnYoshiTryEatEi                                  ?OnYoshiTryEat@dScMgSmartball_c@@UAEXH@Z                         0x02118a8c F
+__ZN16dScMgSmartball_c13OnYoshiTryEatEi                                  ?OnYoshiTryEat@dScMgSmartball_c@@UAEXH@Z                         0x02118a8c R
 __ZN16dScMgSmartball_c21AfterCleanupResourcesEj                          ?AfterCleanupResources@dScMgSmartball_c@@UAEXI@Z                 0x0211944c R
 __ZN16dScMgSmartball_c8BehaviorEv                                        ?Behavior@dScMgSmartball_c@@UAEHXZ                               0x02118488 R
 __ZN16dScMgSmartball_c8OnPushedEv                                        ?OnPushed@dScMgSmartball_c@@UAEHXZ                               0x021147ac R

@@ -1,0 +1,74 @@
+# slice_w28_p1 -- run linkfull wave 27, lane P1: SIX MATCHED TUs WHOSE HOST
+# REASONS WENT STALE.
+#
+# Each src file below was kept off the link by a host copy whose recorded
+# reason was true when it was written: the matched source dropped an argument
+# the ARM code rides through in a register (r0, r1 or r2), or the ROM body polls
+# DMA hardware the port had not modelled. Every one of those sources has since
+# been re-spelled with the argument named and passed (or, for the DMA submit,
+# was always the ROM's own body), so the host copies now only occupy the names.
+# Each row was re-read against its host reason and gated before it went on this
+# list: mwccarm 2004/b56 object unchanged (no src/ file is edited), tools/match.py
+# 2004/b56 strict MATCHING, linkcheck VERIFIED blind 0 (runs/linkfull/out/P1/).
+#
+# One section per row group; each group's rows, its host retirement and its
+# face rows land in one commit of their own, so any group can be dropped alone.
+#
+# The flat ROM names the C callers spell come from REVERSE faces in
+# port/faces_sync.txt where the matched TU defines only MSVC's decorated member
+# (the two Heap veneers, SharedFilePtr::Construct, dScMgSmartball_c slot 18).
+# func_ov006_020fb7e0 and func_01ffde98 are C definitions of their own flat
+# names and need no face.
+
+# ---- group A: Heap::_Sizeof (arm9 0x0203c274) ------------------------------
+# Host copy retired: the flat-name face in port/hal/method_faces.cpp. Its
+# ruling described a void() veneer calling Sizeof by an Itanium name the link
+# does not define; the src is now the member Heap::_Sizeof(void *) calling the
+# decorated Sizeof with the pointer spelled. Callers: func_02017060 and
+# Particle::SysTracker::Initialise, through the reverse face.
+src/_ZN4Heap7_SizeofEPv.cpp
+
+# ---- group B: SharedFilePtr::Construct (arm9 0x0201799c) -------------------
+# Host copy retired on the three hosting targets: the body in port/hal/fs.cpp,
+# now behind SM64DS_SFP_CONSTRUCT_ROM (the narrow smoke_* harnesses keep it).
+# Its reason was the fileID riding through r1 across a one-argument call; the
+# src spells fileID and passes it to func_02017e48 (itself linked from
+# port/slice_gate10.txt with both arguments spelled), which hands it to
+# func_02017e0c. Callers: 83 linked, through the reverse face.
+src/_ZN13SharedFilePtr9ConstructEj.cpp
+
+# ---- group C: dScMgSmartball_c slot 18, OnYoshiTryEat (ov006 0x02118a8c) ---
+# Host copy retired: port/unmatched/MgSmartball_Slot18.cpp (now an empty TU;
+# its enrolment is another owner's). Its reason was the object riding through
+# r0 into func_ov006_02115b0c; the src member passes this. The flat name the
+# slot-18 thunk in hal/scene_mg.cpp calls flips from a forward face to a
+# reverse one.
+src/_ZN16dScMgSmartball_c13OnYoshiTryEatEi.cpp
+
+# ---- group D: dScMgPachinko_c's scoring tick (ov006 0x020fb7e0) -------------
+# Host copy retired: port/unmatched/MgPachinko_Award.cpp (now an empty TU; its
+# enrolment is another owner's). Its reason was the award's points riding
+# through r2 into func_ov006_020fbb2c; the src declares the third parameter and
+# passes *(u16 *)(b + 0x5962). Caller: dScMgPachinko_c::Behavior (slot 6).
+src/func_ov006_020fb7e0.c
+
+# ---- group E: the ITCM display-list DMA submit (itcm 0x01ffde98) ------------
+# STAGE4P's DMA checkpoint 1, no model. Host copy retired on the three hosting
+# targets: the forwarder to the pump func_0205a358 in port/hal/model_host.cpp,
+# now behind SM64DS_DMA_GXFIFO_ROM (the narrow smoke_* harnesses keep it). The
+# ROM body polls DMA3CNT bit 31 in the mapped register window, which the host
+# DMAStartTransfer never sets, and starts each chunk (at most 0x1d8 bytes)
+# through that host body, which feeds GXFIFO destinations to gx_write_fifo.
+# Caller: func_0204488c, the ModelComponents part walk.
+src/func_01ffde98.c
+
+# ---- group F: Heap::_Deallocate (arm9 0x0203c280) --------------------------
+# Host copy retired: the member definition in port/hal/cxx_aliases.cpp (the
+# body the link took; the flat name's reverse face in port/faces_sync.txt was
+# already R and is unchanged). Its ruling described a zero-argument veneer
+# with this and ptr riding in on r0/r1; the src is now the member
+# Heap::_Deallocate(void *) calling the decorated Deallocate with the pointer
+# spelled. port/slice_gate10.txt still carries the old reason beside its
+# commented-out line for this file; that comment is stale and is left to its
+# owner. Callers: _ZdlPv, func_02018934, func_ov007_020cca98 (linked).
+src/_ZN4Heap11_DeallocateEPv.cpp
