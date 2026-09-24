@@ -10,21 +10,19 @@ This document describes this commit. The queue records its immutable output SHA.
 - Source branch `promote/promote-ov071-casket-0924`. Input commit
   `787633e5e7e2a7c4e101db521958920c68ebd9f2` (origin/main at enqueue); it is
   also the original source base and the installed workflow and tool SHA.
-- Four commits on top of the input: the byte-neutral class rename, the staged
-  TU candidate, the promotion, and the declaration-baseline re-key. This
-  commit adds this note and drops the stale alias annotation from the
-  class-build worklist row. No separate evidence commits.
-- **Status: WIP, blocked on one resource.** Every byte, link, attribution and
-  declaration gate below passes, but `python tools/check_dead_references.py`
-  exits 1 on two historical prose references that the rename made dead (see
-  Proof). Fixing them needs a file this task does not hold, so the lease was
-  released instead of published.
-- Next action (coordinator): reserve `config/dead-reference-baseline.json` for
-  this task (or the integration lane) and bank the two entries listed under
-  Proof, then offer this commit, with that one ledger edit on top, to
-  independent verification. The alternative, rephrasing the two citations
-  themselves, touches `notes/converted-tier.md` and `tools/tiers.py`, and a
-  tools edit does not belong in a source PR.
+- Six commits on top of the input: the byte-neutral class rename, the staged
+  TU candidate, the promotion, the declaration-baseline re-key, a WIP
+  checkpoint (9f7d8f4de4, this note plus the class-build worklist row), and
+  this commit, which rewords the two citations the rename left dead and
+  finalizes this note. No separate evidence commits.
+- Status: verified candidate. The first attempt stopped at a WIP checkpoint
+  because two prose citations of the old InitResources shard went dead with
+  the rename; the coordinator then added `notes/converted-tier.md` and
+  `tools/tiers.py` to the reservation (ruling: a promotion makes zero change
+  to `config/dead-reference-baseline.json`), and the same session re-claimed
+  the stage and reworded both citations.
+- Next action: independent verification (byte, relocation, whole-object and
+  source review) of this commit, then the integrator. No blockers.
 - Nothing uncommitted. Gate logs stayed in the producer's private worktree and
   are summarised here; they are not needed to reproduce anything.
 
@@ -45,6 +43,13 @@ This document describes this commit. The queue records its immutable output SHA.
   (row renamed, promoted cell flipped to yes) and
   `notes/data/class-build-worklist.tsv` (header path; stale alias annotation
   dropped).
+- Rename-forced citation fixes: `notes/converted-tier.md` line 86 and the
+  `_reader_name` docstring in `tools/tiers.py` (line 255) cited the old
+  InitResources shard by its pre-rename path. Both now name the symbol, the old
+  `Coffin::InitResources` shard, now `daObjCasket_c::InitResources` in the
+  promoted daObjCasket_c TU, with the sentence's meaning kept. The tools edit
+  is docstring-only; `git diff` shows no code line changed and the module
+  still parses.
 - Retired: the six `Coffin` member sources, the seven func_ov071 helper
   sources (func_ov071_02122080.c, func_ov071_021220c8.cpp,
   func_ov071_02122194.c, func_ov071_021221bc.c, func_ov071_021223b0.c,
@@ -56,8 +61,10 @@ This document describes this commit. The queue records its immutable output SHA.
   `notes/data/c-cpp-classification.tsv`, `notes/data/tu-merge-candidates.json`,
   `notes/experiments/pr2873-integration-0920.json`,
   `notes/experiments/pr2874-integration-0920.json`,
-  `notes/data/class-facts/Scuttlebug.json`, `notes/handoff-marker-typing.md` and
-  `notes/converted-tier.md` (all historical or out of scope).
+  `notes/data/class-facts/Scuttlebug.json` and `notes/handoff-marker-typing.md`
+  (all historical or out of scope). Its one-line rewrite of
+  `notes/converted-tier.md` was reverted too; that line was fixed by hand
+  afterwards, as above.
   `--with-derived` was not used. `git diff 787633e5e7..HEAD --
   include/decl_common.h` is empty.
 - The rename: class_rename refuses a class whose ROM `_ZTV` already exists.
@@ -180,21 +187,21 @@ note changed after the byte and link gates ran.
   entries were dropped. After that `--changed` exits 0 with no new
   disagreements, and the tree-wide run also exits 0. The baseline was not
   regenerated, re-sorted or union-merged.
-- `python tools/check_dead_references.py`: **exit 1, FAILED.** Two prose
-  references name the pre-rename InitResources shard (basename
-  _ZN6Coffin13InitResourcesEv.cpp, formerly in src): one in `notes/converted-tier.md` (line 86) and one in the docstring of
-  `tools/tiers.py` (line 255). Both are historical descriptions of a
-  scoring bug. At the base the gate exits 0. Neither file, nor
-  `config/dead-reference-baseline.json`, is a resource of this task.
+- `python tools/check_dead_references.py` exit 0: no new dead references, no
+  broken markdown links. Before the citation rewording it exited 1 on exactly
+  the two citations above (0 at the base). `config/dead-reference-baseline.json`
+  is unchanged.
 - `python tools/tiers_ratchet.py --check`: exit 1, baseline 2994, current
   3058 (+65 gained, -1 lost). The one loss is
   `src/actors/dScMgLuigi_c.cpp#_ZN12dScMgLuigi_c10ResetBoardEv`, which this
   change does not touch; the same check exits 1 with that same loss at the
-  base (current 3057 there), so it is pre-existing. The gain is not banked,
-  for the integration lane.
+  base (current 3057 there), so it is pre-existing; #3077 fixes it. The gain
+  is not banked, for the integration lane. Re-run after the citation fix:
+  same result.
 - `python tools/check_tubuild_conflicts.py` exit 0.
 - `python tools/queue_audit.py --check-promoted` exit 0.
 - `python tools/check_src_tu_compiles.py` exit 0, 271/271.
-- `python tools/port_refcheck.py` exit 0, 408 checked, 0 stale.
+- `python tools/port_refcheck.py` exit 0, 408 checked, 0 stale (also re-run
+  after the citation fix).
 - `python tools/romdata_check.py`: not run; the TU owns no non-text data.
 - Private validation and Source review: not run; they belong to later stages.
