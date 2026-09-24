@@ -1,6 +1,6 @@
 //cpp
 /* Production translation unit for ov025/daObjDpBrock_c.
- * 8 function(s), .text 0x02111d40..0x021120ac.
+ * 9 function(s), .text 0x02111d40..0x021120e4, the factory included.
  *
  * DP_BROCK, a pyramid step block. It sinks for 100 frames, rises for 100,
  * and repeats; param1 & 3 picks the phase it starts in. The block carries a
