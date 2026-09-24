@@ -9,3 +9,9 @@
 # port_kuppa_cmd_seat on (hal/intro_kuppa_dispatch.cpp), and that file no
 # longer defines the symbol. Its line in slice_gate10.txt stays commented out.
 src/func_ov002_020f7d74.cpp
+#
+# The render and cleanup ActorBase::Process wrappers (arm9), resolved at the
+# caller by port/tools/hostgen.py's VIRTUAL_CALL rows like their init and
+# behaviour siblings; unmatched/func_0204322c_hostcopy.cpp defines nothing.
+src/func_0204322c.c hostgen
+src/func_020432e4.c hostgen
