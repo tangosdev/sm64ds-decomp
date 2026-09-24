@@ -125,17 +125,17 @@ int daObjSimpleLift_c::InitResources()
 
     /* Heading to slide along: the spawn angle plus this slab's own offset,
        unless the spawn supplies one of its own. */
-    *(u16*)(c+0x94) = (u16)(*(s16*)(c+0x8e) + data_ov091_02134514[mVariant]);
+    mPrevAngleY = (u16)(mAngleY + data_ov091_02134514[mVariant]);
 
-    if (*(s16*)(c+0x8c) != 0) {
-        *(u16*)(c+0x94) = (u16)(*(s16*)(c+0x8e) + *(s16*)(c+0x8c));
+    if (mAngleX != 0) {
+        mPrevAngleY = (u16)(mAngleY + mAngleX);
     }
 
     mMoveTimer = data_ov091_02134504[mVariant];
-    *(s32*)(c+0x98) = 0xa000;
-    mBasePosX = *(s32*)(c+0x5c);
-    mBasePosY = *(s32*)(c+0x60);
-    mBasePosZ = *(s32*)(c+0x64);
+    mHorzSpeed = 0xa000;
+    mBasePosX = mPosX;
+    mBasePosY = mPosY;
+    mBasePosZ = mPosZ;
     _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char*)this));
     _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char*)this));
 

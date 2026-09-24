@@ -75,7 +75,7 @@
 #include "dBgW.h"
 
 /* Render's local view of the object at +0xd4 -- dBgActor_c::mModel -- reaching
- * its slot 5. See the Leftover note in the file banner. */
+ * its slot 5. See Known limits in the file banner. */
 struct Base { virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3(); virtual void v4(); virtual void m(int); };
 
 struct Derived { char pad[0xd4]; Base base; };

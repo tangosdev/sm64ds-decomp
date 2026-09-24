@@ -53,22 +53,16 @@
  * state wins for every member. */
 #pragma defer_codegen off
 
-/* Local shadow declarations carried from the legacy files verbatim.
- * NOT reconciled against real project headers -- check include/*.h for
- * each of these before compiling; a real header should usually win. */
-/* shadow typedef 's16' */
+/* Local declarations carried from the legacy files verbatim; not yet
+ * reconciled against the project headers. */
 typedef short s16;
 
-/* shadow struct 'Vector3' */
 struct Vector3;
 
-/* shadow struct 'Mtx' */
 struct Mtx { int w[12]; };
 
-/* shadow typedef 'void' */
 typedef void (daBtfly_c::*ButterflyState)();
 
-/* shadow struct 'Vec3' */
 struct Vec3 { s32 x, y, z; };
 
 #define L(p) ((int)(p))
@@ -211,9 +205,9 @@ void daBtfly_c::State7()
             int isPlayer = (*(u16*)((char*)a + 0xc) == 0xbf);
             if (isPlayer != 0) {
                 struct Vector3 pos;
-                pos.x = *(int*)(c + 0x5c);
-                pos.y = *(int*)(c + 0x60);
-                pos.z = *(int*)(c + 0x64);
+                pos.x = mPosX;
+                pos.y = mPosY;
+                pos.z = mPosZ;
                 _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(a, &pos, 2, 0xc000, 1, 0, 1);
             }
         }
@@ -272,7 +266,7 @@ void daBtfly_c::State5()
 
     if (*(int*)(c + 0x3e8) > 0x6e && _ZN8dActor_c13DistToCPlayerEv(c) < 0xc8000 &&
         (unsigned char)(*(unsigned char*)(c + 0x3f0) + 0xff) <= 1) {
-        *(int*)(c + 0x98) = 0;
+        mHorzSpeed = 0;
         *(int*)(c + 0x3e8) = 0;
         *(int*)(c + 0x3e4) = 6;
         *(int*)(c + 0xb0) &= ~0x10000;
@@ -288,7 +282,7 @@ void daBtfly_c::State5()
 
     {
         s16 target;
-        if (*(int*)(c + 0x60) < *(int*)(c + 0x3d8) +
+        if (mPosY < mHomePosY +
                 (int)(((unsigned)RandomIntInternal(&data_0209e650) >> 16 & 0xfff) * 0x32 + 0x32000)) {
             target = -0x2000;
         } else {
@@ -347,7 +341,7 @@ void daBtfly_c::State4()
     }
 
     *(s16*)(sl + 0x300 + 0xec) = (s16)((unsigned int)RandomIntInternal(&data_0209e650) >> 0x10);
-    *(s16*)(sl + 0x94) = (s16)(*(s16*)(sl + 0x300 + 0xec) + (int)(((unsigned int)RandomIntInternal(&data_0209e650) >> 0x10) & 0x3fff));
+    mPrevAngleY = (s16)(*(s16*)(sl + 0x300 + 0xec) + (int)(((unsigned int)RandomIntInternal(&data_0209e650) >> 0x10) & 0x3fff));
     *(int*)(sl + 0x98) = (int)(((unsigned int)RandomIntInternal(&data_0209e650) >> 0x10) & 0xfff) * 0xf + 0xf000;
     *(int*)(sl + 0x3e8) = 0;
     *(int*)(sl + 0x3e4) = 5;
@@ -366,7 +360,7 @@ void daBtfly_c::State3()
     _ZN8dActor_c9UpdatePosEP5dCc_c(c, 0);
 
     p = (int *)(c + 0x60);
-    *p = *p - ((int)(((long long)*(int *)(c + 0x98)
+    *p = *p - ((int)(((long long)mHorzSpeed
         * data_02082214[(*(unsigned short *)(c + 0x92) >> 4) * 2] + 0x800) >> 12)
         + (short)data_02082214[
         ((unsigned short)(short)((*(int *)(c + 0x3e8) << 16) / 100) >> 4) * 2 + 1]
@@ -382,9 +376,9 @@ void daBtfly_c::State3()
     if (_ZN8dActor_c15IsPlayerInRangeEi(c, 0xbb8))
         return;
 
-    *(int *)(c + 0x5c) = *(int *)(c + 0x3d4);
-    *(int *)(c + 0x60) = *(int *)(c + 0x3d8);
-    *(int *)(c + 0x64) = *(int *)(c + 0x3dc);
+    mPosX = mHomePosX;
+    mPosY = mHomePosY;
+    mPosZ = mHomePosZ;
     *(int *)(c + 0x3e4) = 1;
 }
 
@@ -397,9 +391,9 @@ void daBtfly_c::State2()
     struct Vector3 v;
     struct Vector3 d;
 
-    *(int *)(c + 0x5c) = *(int *)(c + 0x3d4);
-    *(int *)(c + 0x60) = *(int *)(c + 0x3d8);
-    *(int *)(c + 0x64) = *(int *)(c + 0x3dc);
+    mPosX = mHomePosX;
+    mPosY = mHomePosY;
+    mPosZ = mHomePosZ;
 
     player = (char *)_ZN8dActor_c13ClosestPlayerEv(c);
     if (player != 0) {
@@ -416,9 +410,9 @@ void daBtfly_c::State2()
             *(int *)(c + 0x3e4) = 3;
 
         pp = (int *)(int)M(player + 0x5c);
-        *(int *)(c + 0x5c) = *(int *)(c + 0x68);
-        *(int *)(c + 0x60) = *(int *)(c + 0x6c);
-        *(int *)(c + 0x64) = *(int *)(c + 0x70);
+        mPosX = mPrevPosX;
+        mPosY = mPrevPosY;
+        mPosZ = mPrevPosZ;
 
         v.x = pp[0];
         v.y = pp[1];
@@ -443,7 +437,7 @@ void daBtfly_c::State2()
 
         {
         int *p = (int *)(c + 0x60);
-        *p = *p - ((int)(((long long)*(int *)(c + 0x98)
+        *p = *p - ((int)(((long long)mHorzSpeed
             * data_02082214[(*(unsigned short *)(c + 0x92) >> 4) * 2] + 0x800) >> 12)
             + (short)data_02082214[
             ((unsigned short)(short)((*(int *)(c + 0x3e8) << 16) / 100) >> 4) * 2 + 1]
@@ -455,9 +449,9 @@ void daBtfly_c::State2()
         }
         return;
     }
-    *(int *)(c + 0x5c) = *(int *)(c + 0x68);
-    *(int *)(c + 0x60) = *(int *)(c + 0x6c);
-    *(int *)(c + 0x64) = *(int *)(c + 0x70);
+    mPosX = mPrevPosX;
+    mPosY = mPrevPosY;
+    mPosZ = mPrevPosZ;
 }
 
 #pragma opt_common_subs on
@@ -545,7 +539,7 @@ int daBtfly_c::Behavior()
         *(int*)(c + 0x88) = spd;
 
         {
-            int s = *(int*)(c + 0x98);
+            int s = mHorzSpeed;
             int idx = (*(unsigned short*)(c + 0x92) >> 4) << 1;
             long long p;
             p = (long long)(-(int)data_02082214[idx]) * s;
@@ -571,8 +565,8 @@ int daBtfly_c::Behavior()
         int t[3];
         Vec3_Asr(t, c + 0x5c, 3);
         Matrix4x3_FromTranslation(&data_020a0e68, t[0], t[1], t[2]);
-        *(s16*)(c + 0x8e) = *(s16*)(c + 0x94);
-        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, *(s16*)(c + 0x8e));
+        mAngleY = mPrevAngleY;
+        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
         if (*(unsigned char*)(c + 0x3f1) != 0) {
             *(struct Mtx*)(c + 0xf0) = data_020a0e68;
             _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
@@ -613,7 +607,7 @@ int daBtfly_c::InitResources()
     int sub = (int)(u8)(*(u32*)(c+8) & 0x30);
     if (sub != 0x10 && sub != 0x20) {
         *(u8*)(c+0x3f0) = 0;
-        *(s32*)(c+0x98) = 0x7800;
+        mHorzSpeed = 0x7800;
         *(s32*)(c+0x3e8) = ((u32)RandomIntInternal(&data_0209e650) >> 16) % 100;
         if ((u32)(u8)(*(u32*)(c+8) & 0xf) > 1)
             *(s32*)(c+0x3e4) = 0;
@@ -623,9 +617,9 @@ int daBtfly_c::InitResources()
         *(s32*)(c+0x3e4) = 4;
     }
 
-    *(s32*)(c+0x3d4) = *(s32*)(c+0x5c);
-    *(s32*)(c+0x3d8) = *(s32*)(c+0x60);
-    *(s32*)(c+0x3dc) = *(s32*)(c+0x64);
+    mHomePosX = mPosX;
+    mHomePosY = mPosY;
+    mHomePosZ = mPosZ;
 
     int r = RandomIntInternal(&data_0209e650);
     int fc = _ZNK9Animation13GetFrameCountEv((void*)(c+0x124));

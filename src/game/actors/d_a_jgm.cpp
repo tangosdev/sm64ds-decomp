@@ -204,7 +204,7 @@ extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
     unsigned int n, int x, int y, int z);
 }
 
-/* Leftover C++ linkage: mangles as _Z15ApproachLinear2Rsss. */
+/* C++ linkage on purpose: mangles as _Z15ApproachLinear2Rsss. */
 void ApproachLinear2(short &v, short t, short step);
 
 namespace one_arg_setstate {

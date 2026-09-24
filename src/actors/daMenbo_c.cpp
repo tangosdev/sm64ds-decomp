@@ -300,11 +300,8 @@ void func_ov090_02131e50(char* c);
  * read it through the address. */
 #define MENBO_BCA(handle) (((BCA_File**)&(handle))[1])
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinals 0 and 1 -- _ZN9daMenbo_cD1Ev 0x02130f00, _ZN9daMenbo_cD0Ev     */
-/* 0x02130f40. One written destructor; the compiler emits both variants and    */
-/* the whole body of each.                                                     */
-/* -------------------------------------------------------------------------- */
+/* One written destructor; the compiler emits both variants, D1 (0x02130f00)
+ * and D0 (0x02130f40), and the whole body of each. */
 // @symbol _ZN9daMenbo_cD1Ev
 // @symbol _ZN9daMenbo_cD0Ev
 /* One vtable store and four destructor calls, every one a consequence of

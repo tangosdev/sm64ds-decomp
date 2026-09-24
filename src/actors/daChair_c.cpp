@@ -159,14 +159,14 @@ s32 daChair_c::CleanupResources()
 void daChair_c::UpdateModel()
 {
     char *c = (char *)this;
-    Matrix4x3_FromRotationZXYExt(c + 0xf0, *(short *)(c + 0x8c),
-                                 *(short *)(c + 0x8e), *(short *)(c + 0x90));
-    *(int *)(c + 0x114) = *(int *)(c + 0x5c) >> 3;
-    *(int *)(c + 0x118) = *(int *)(c + 0x60) >> 3;
-    *(int *)(c + 0x11c) = *(int *)(c + 0x64) >> 3;
-    *(int *)(c + 0x170) = *(int *)(c + 0x5c) >> 3;
+    Matrix4x3_FromRotationZXYExt(c + 0xf0, mAngleX,
+                                 mAngleY, mAngleZ);
+    *(int *)(c + 0x114) = mPosX >> 3;
+    *(int *)(c + 0x118) = mPosY >> 3;
+    *(int *)(c + 0x11c) = mPosZ >> 3;
+    *(int *)(c + 0x170) = mPosX >> 3;
     *(int *)(c + 0x174) = *(int *)(c + 0x384) >> 3;
-    *(int *)(c + 0x178) = *(int *)(c + 0x64) >> 3;
+    *(int *)(c + 0x178) = mPosZ >> 3;
     _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
         c, c + 0x124, c + 0x14c, 0x32000, 0x1e000, 0xf);
 }
@@ -246,7 +246,7 @@ void daChair_c::State1()
         if (Vec3_Dist((const Vector3 *)(self + 0x5c), (const Vector3 *)targetPos) >= 0xfa000)
             return;
         d = (short)(Vec3_HorzAngle((const Vector3 *)(self + 0x5c), (const Vector3 *)targetPos)
-                    - *(short *)(self + 0x8e) + 0x2000);
+                    - mAngleY + 0x2000);
         if (d & 0x4000) {
             *(char **)(self + 0x3a4) = self + 0x90;
             if (d > 0)
@@ -282,7 +282,7 @@ void daChair_c::State1()
     p39e = (unsigned short *)(int)LAUNDER(self + 0x39e);
     *p39e = (unsigned short)(*p39e + 1);
     if (mStateTimer & 8) {
-        if (*(short *)(self + 0x8c) >= 0) {
+        if (mAngleX >= 0) {
             wobble = -4;
         } else {
             func_0201267c(0x5f, self + 0x74);
@@ -296,11 +296,11 @@ void daChair_c::State1()
             int *pz = (int *)(int)LAUNDER(self + 0x64);
             *pz = *pz - (wobble << 12);
         }
-        *(short *)(self + 0x90) = (short)(wobble * 0x32);
-        *(short *)(self + 0x8c) = *(short *)(self + 0x90);
+        mAngleZ = (short)(wobble * 0x32);
+        mAngleX = mAngleZ;
     } else {
-        *(short *)(self + 0x90) = 0;
-        *(short *)(self + 0x8c) = *(short *)(self + 0x90);
+        mAngleZ = 0;
+        mAngleX = mAngleZ;
     }
 
     if (mStateTimer < 0x1e)
@@ -350,8 +350,8 @@ void daChair_c::State2()
                     playerPos.y = pp->y;
                     playerPos.z = pp->z;
                     Vec3_Sub(&diff, &playerPos, (PlainVector3 *)(c + 0x5c));
-                    *(s16 *)(c + 0x94) = _ZN4cstd5atan2E5Fix12IiES1_(diff.x, diff.z);
-                    *(s16 *)(c + 0x92) = _ZN4cstd5atan2E5Fix12IiES1_(diff.y, Vec3_HorzLen((const Vector3 *)&diff)) * -1;
+                    mPrevAngleY = _ZN4cstd5atan2E5Fix12IiES1_(diff.x, diff.z);
+                    mPrevAngleX = _ZN4cstd5atan2E5Fix12IiES1_(diff.y, Vec3_HorzLen((const Vector3 *)&diff)) * -1;
                     r = (s32)(((long long)data_02082214[(A92 >> 4) * 2 + 1] * 0x32000 + 0x800) >> 12);
                     *(s32 *)(c + 0xa4) = (s32)(((long long)r * data_02082214[(A94 >> 4) * 2] + 0x800) >> 12);
                     *(s32 *)(c + 0xa8) = (s32)(((long long)data_02082214[(A92 >> 4) * 2] * -0x32000 + 0x800) >> 12);
@@ -369,7 +369,7 @@ void daChair_c::State2()
                 void *wr = _ZNK10dBgCh_Actr13GetWallResultEv(c + 0x1bc);
                 PlainVector3 normal;
                 _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char *)wr + 4, &normal);
-                if (GetSubtraction(*(s16 *)(c + 0x94),
+                if (GetSubtraction(mPrevAngleY,
                         _ZN4cstd5atan2E5Fix12IiES1_(normal.x, normal.z)) > 0x4000) {
                     Break();
                 }
@@ -397,9 +397,9 @@ void daChair_c::State2()
             return;
         {
             PlainVector3 pos;
-            pos.x = *(s32 *)(c + 0x5c);
-            pos.y = *(s32 *)(c + 0x60);
-            pos.z = *(s32 *)(c + 0x64);
+            pos.x = mPosX;
+            pos.y = mPosY;
+            pos.z = mPosZ;
             _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(a, &pos, 2, 0xc000, 1, 0, 1);
         }
     }
@@ -432,10 +432,10 @@ cont: ;
         if (sa >= 0x4000) {
             short d = (short)(sa - 0x4000);
             short t2 = data_02082214[((unsigned short)d >> 4) * 2];
-            *(int *)(c + 0x60) = (short)t2 * (short)0x28 + (*(int *)(c + 0x384) + 0x28000);
+            mPosY = (short)t2 * (short)0x28 + (*(int *)(c + 0x384) + 0x28000);
         } else {
             short t3 = data_02082214[((unsigned short)sa >> 4) * 2];
-            *(int *)(c + 0x60) = (short)t3 * (short)0x28 + *(int *)(c + 0x384);
+            mPosY = (short)t3 * (short)0x28 + *(int *)(c + 0x384);
         }
     }
 }

@@ -179,7 +179,7 @@ int daObjFallBlock_c_InitResources(daObjFallBlock_c *self, ResourceDescriptor *f
 /* daObjFallBlock_c::Behavior - the whole fall-block state machine; see the
    class header for the field-by-field account. Kill() is this class's own
    named virtual (key function). UpdatePos is dActor_c's. dBgW calls go
-   through mMeshCollider. IsClsnInRange stays mangled -- leftover 6az. */
+   through mMeshCollider. IsClsnInRange stays mangled -- wall 6az. */
 s32 daObjFallBlock_c::Behavior()
 {
     char *c = (char *)this;
@@ -403,7 +403,7 @@ void func_ov098_0213a23c(daObjFallBlock_c *t)
  * The second Vector3 is memberwise on purpose: Vector3 declares a destructor
  * (types.h), so a whole-object assignment compiles to an ldm/stm pair, four
  * instructions where the ROM has six. Particle::System::NewSimple stays
- * mangled -- leftover 6az. */
+ * mangled -- wall 6az. */
 void daObjFallBlock_c::Kill()
 {
     Vector3 pos;
@@ -503,7 +503,7 @@ void func_ov098_0213a00c(daObjFallBlock_c *c)
 
 // @symbol _ZN16daObjFallBlock_cD1Ev
 // @symbol _ZN16daObjFallBlock_cD0Ev
-/* recovered: real C++ destructor pair -- NO SOURCE TEXT OF THEIR OWN.
+/* The real C++ destructor pair -- NO SOURCE TEXT OF THEIR OWN.
  *
  * daObjFallBlock_c.h defines `~daObjFallBlock_c() {}` in the class body, and
  * the ROM carries the out-of-line D1 (0x02139fc8) and D0 (0x02139f70) anyway

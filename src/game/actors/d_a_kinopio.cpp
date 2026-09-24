@@ -361,10 +361,10 @@ void daKinopio_c::UpdateModelPose()
     u32 id;
     int x, y, z;
 
-    Matrix4x3_FromRotationY(c + 0x124, *(s16 *)(c + 0x8e));
-    *(s32 *)(c + 0x148) = *(s32 *)(c + 0x5c) >> 3;
-    *(s32 *)(c + 0x14c) = (*(s32 *)(c + 0x60) + 0x4000) >> 3;
-    *(s32 *)(c + 0x150) = *(s32 *)(c + 0x64) >> 3;
+    Matrix4x3_FromRotationY(c + 0x124, mAngleY);
+    *(s32 *)(c + 0x148) = mPosX >> 3;
+    *(s32 *)(c + 0x14c) = (mPosY + 0x4000) >> 3;
+    *(s32 *)(c + 0x150) = mPosZ >> 3;
 
     *(MatrixWords *)&data_020a0e68 =
         *(MatrixWords *)(*(char **)(c + 0x11c) + 0xf0);
@@ -404,9 +404,9 @@ void daKinopio_c::UpdateModelPose()
     }
 
     *(MatrixWords *)(c + 0x1c4) = *(MatrixWords *)&IDENTITY_MATRIX4X3;
-    *(s32 *)(c + 0x1e8) = *(s32 *)(c + 0x5c) >> 3;
-    *(s32 *)(c + 0x1ec) = (*(s32 *)(c + 0x60) - 0x8000) >> 3;
-    *(s32 *)(c + 0x1f0) = *(s32 *)(c + 0x64) >> 3;
+    *(s32 *)(c + 0x1e8) = mPosX >> 3;
+    *(s32 *)(c + 0x1ec) = (mPosY - 0x8000) >> 3;
+    *(s32 *)(c + 0x1f0) = mPosZ >> 3;
     _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
         c, c + 0x16c, c + 0x1c4, 0x50000, 0x64000, 0xf);
 }
