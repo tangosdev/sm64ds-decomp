@@ -56,6 +56,20 @@
  * yet, so item 6 is still open for that one class). The remaining eight
  * bodies keep this file alive until the rest of item 6 is answered the same
  * way.
+ *
+ * AND SHADOWMODEL'S D0 (run linkfull wave 27, lane V3B). Item 6 is answered
+ * for that class the same way: include/ShadowModel.h carries the pair, and
+ * src/_ZN11ShadowModelD0Ev.cpp's _MSC_VER arm now defines the flat D0 as the
+ * one host destructor src/_ZN11ShadowModelD1Ev.cpp defines (the unlink, then
+ * ~ModelBase) followed by ModelBase's inline operator delete,
+ * Memory::operator_delete2 -- the ROM body's own steps (0x02015f80);
+ * port/slice_w27_v3b.txt enrols it. Its host copy below retires to a pointer.
+ * The difference from the copy is the transient vtable words, MSVC's
+ * ShadowModel and ModelBase tables where this file stores _ZTV11ShadowModel
+ * and data_0208e87c; the ROM body stores its table, unlinks through the
+ * neighbours' fields and calls ModelBase D2 with nothing dispatched between,
+ * and tools/dtor_store_guard.py's SRC_ARMS re-proves that on every build.
+ * Seven bodies remain.
  */
 
 struct MdlBase {
@@ -214,22 +228,4 @@ struct ShadowMdl *_ZN11ShadowModelD1Ev(struct ShadowMdl *thiz)
     return thiz;
 }
 
-struct ShadowMdl *_ZN11ShadowModelD0Ev(struct ShadowMdl *thiz)
-{
-    thiz->vtable = (void *)_ZTV11ShadowModel;
-
-    if (thiz->prev)
-        thiz->prev->next = thiz->next;
-    else if (data_0209cef4 == thiz)
-        data_0209cef4 = thiz->next;
-
-    if (thiz->next)
-        thiz->next->prev = thiz->prev;
-
-    thiz->prev = 0;
-    thiz->next = 0;
-
-    _ZN9ModelBaseD2Ev((struct MdlBase *)thiz);
-    _ZN6Memory16operator_delete2EPv(thiz);
-    return thiz;
-}
+/* _ZN11ShadowModelD0Ev RETIRED (V3B, wave 27): src/_ZN11ShadowModelD0Ev.cpp's _MSC_VER arm provides it now. */

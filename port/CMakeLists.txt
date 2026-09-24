@@ -22904,3 +22904,29 @@ endforeach()
 foreach(_tw26v2 walk_window walk_window_hires smoke_player)
     target_sources(${_tw26v2} PRIVATE ${SLICE_W26_VARIANT2_SOURCES})
 endforeach()
+
+# ===========================================================================
+# RUN LINKFULL WAVE 27, LANE V3B: THE VARIANT ROWS THAT WAITED ON HAL FILES
+# ===========================================================================
+#
+# port/slice_w27_v3b.txt carries per-function src destructor TUs that now
+# define the ROM's flat name themselves, in their `#ifdef _MSC_VER` arm, where
+# a hand-written host body used to (the slice's header names each one and
+# what it replaced). Each flat name keeps exactly one definition.
+#
+# ALL THREE HOSTING TARGETS: the hal tables and host files that call these
+# names are on walk_window's, walk_window_hires' and smoke_player's link lines
+# alike (build.ninja: port_slice_shared and int4_rows.cpp), so the names must
+# be answered on all three.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w27_v3b.txt" SLICE_W27_V3B_LINES)
+set(SLICE_W27_V3B_SOURCES "")
+foreach(line IN LISTS SLICE_W27_V3B_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_W27_V3B_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_tw27v3b walk_window walk_window_hires smoke_player)
+    target_sources(${_tw27v3b} PRIVATE ${SLICE_W27_V3B_SOURCES})
+endforeach()

@@ -74,6 +74,19 @@
 // (`x[0] = (int)data_ov006_0213dbbc;`), so the resolution of VT here is
 // confirmed by a second matched TU as well as by the pool. That is also why
 // slot 16 is an ordinary slice line and slot 17 is this file.
+//
+// ---- WHY THIS COPY OUTLIVED ITS SIBLING (run linkfull wave 27, lane V3B) ---
+//
+// The first premise above is stale: src/_ZN16dScMgPachinko2_cD0Ev.cpp is a
+// real C++ destructor now, spelling neither VT nor HEAP, and
+// port/unmatched/MgPachinko_Dtor.cpp retired its copy the same night for an
+// arm in its src file. This one was measured the same way and KEPT, because it
+// is the last caller of the flat base destructor _ZN11dScMgBase_cD2Ev in the
+// whole port: the matched D0 arm reaches the base through MSVC's
+// ??1dScMgBase_c instead, so retiring both copies drops
+// src/_ZN11dScMgBase_cD2Ev.cpp out of the link (measured on that night's
+// build: +2 D0 rows, -1 D2 row). The base D2 needs a caller of its own before
+// this copy can go.
 
 extern "C" {
 

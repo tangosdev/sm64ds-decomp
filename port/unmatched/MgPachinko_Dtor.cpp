@@ -80,32 +80,33 @@
 // family keeps one. That is the w16 finding restated: the marker records how
 // the NAME was recovered, not where the BODY came from.
 
+// ---- RETIRED AS A HOST COPY (run linkfull wave 27, lane V3B) --------------
+//
+// Everything above is the history of the copy that stood here, and its first
+// premise no longer holds: src/_ZN15dScMgPachinko_cD0Ev.cpp is not the
+// decl_common.h text quoted above any more. It is a real C++ destructor,
+// `dScMgPachinko_c::~dScMgPachinko_c() {}`, which spells neither VT nor HEAP,
+// and under _MSC_VER it now defines the ROM's flat D0 name itself: the D1 body
+// through the one host destructor src/_ZN15dScMgPachinko_cD1Ev.cpp defines
+// (??1dScMgPachinko_c), then dScMgBase_c's inline operator delete,
+// Memory::Deallocate with the game heap word at 0x020a0eac -- the ROM body's
+// own two steps. So the name hal/scene_mg.cpp's slot-17 face calls only
+// forwards to the ROM's body now. The retired copy stored the ROM-shaped port
+// table data_ov006_0213d9cc before the base destructor; the matched body's
+// ??1dScMgPachinko_c stores MSVC's own vftable there instead, which the ROM
+// body (0x020fa780: the store, then the base D2 with nothing between) leaves
+// inert, and tools/dtor_store_guard.py's SRC_ARMS re-proves that from the
+// cartridge on every build. The class's slot 16 already ran that same MSVC
+// destructor. runs/linkfull/out/V3B/ holds the object check.
+
 extern "C" {
 
-/* the base's D1, called with the object still holding this class's table */
-void _ZN11dScMgBase_cD2Ev(void *t);
-
-/* Memory::Deallocate(void*, Heap*). Spelled in its Itanium form because that
-   is what the matched arm9 TU defines and what every other host copy in this
-   tree calls. */
-void _ZN6Memory10DeallocateEPvP4Heap(void *p, void *heap);
-
-/* the two words the ROM's literal pool names. Both are mounted: the vtable is
-   ov006 .data that port_scene_fill_pachinko has already filled with host
-   thunks by the time any object of this class exists, and data_020a0eac is the
-   arm9 game-heap pointer every D0 in the family dereferences. */
-extern int data_ov006_0213d9cc[];
-extern void *data_020a0eac;
+/* the ROM's own D0, src/_ZN15dScMgPachinko_cD0Ev.cpp's _MSC_VER arm */
+void *_ZN15dScMgPachinko_cD0Ev(void *self);
 
 void *port_mg_pachinko_d0(void *self)
 {
-    int *t = (int *)self;
-    /* the vptr store the ROM makes with r1 = 0x0213d9cc */
-    t[0] = (int)(size_t)data_ov006_0213d9cc;
-    _ZN11dScMgBase_cD2Ev(t);
-    /* ldr r1,[r1] -- the heap POINTER, not the word's address */
-    _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
-    return t;
+    return _ZN15dScMgPachinko_cD0Ev(self);
 }
 
 }  /* extern "C" */

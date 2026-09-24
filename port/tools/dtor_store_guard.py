@@ -481,11 +481,21 @@ def generated_files(root):
 # forwarder's, and its object is the forwarder's instruction for instruction
 # (runs/linkfull/out/V3B/equal_b1.log, the one-time proof, pasted in the
 # commit).
+#
+# The four D0s after them (wave 27, batch 2) replaced hand-written host bodies
+# rather than generated forwarders: each arm is the one host destructor its D1
+# file defines plus the class's inline operator delete, and that destructor
+# stores MSVC's own vftable where the hand body stored a ROM-shaped table. The
+# ROM D0 body is asked the same question for that store.
 SRC_ARMS = {
     "_ZN13daObjSwdoor_cD1Ev": "src/_ZN13daObjSwdoor_cD1Ev.cpp",
     "_ZN17BigMovingIceBlockD1Ev": "src/_ZN17BigMovingIceBlockD1Ev.cpp",
     "_ZN17BowserPuzzlePieceD1Ev": "src/_ZN17BowserPuzzlePieceD1Ev.cpp",
     "_ZN6CoffinD1Ev": "src/_ZN6CoffinD1Ev.cpp",
+    "_ZN15dScMgPachinko_cD0Ev": "src/_ZN15dScMgPachinko_cD0Ev.cpp",
+    "_ZN19BowserPuzzleManagerD0Ev": "src/_ZN19BowserPuzzleManagerD0Ev.cpp",
+    "_ZN10dScTitle_cD0Ev": "src/_ZN10dScTitle_cD0Ev.cpp",
+    "_ZN11ShadowModelD0Ev": "src/_ZN11ShadowModelD0Ev.cpp",
 }
 
 # A definition inside the arm: `extern "C" <ret> <flat>(<params>)` on one
