@@ -633,27 +633,102 @@ void __cdecl fdr_s08(void *s)
  * shape ever comes back, it says so on stderr and counts into
  * port_fdr_fader_report instead of running on a garbage object.
  */
-int __cdecl fdr_s0c(void *s, int frames, int c)
+/* 0x0c AND 0x10 SERVE SHAPE B AND SHAPE C BOTH NOW. Run linkfull, lane PSYCHE1.
+
+   LEVELBOOT's paragraph above is right about dScene_c::BeforeBehavior and
+   wrong about the table having one caller shape. The minigame framework
+   reaches the same two slots as __thiscall members of a file-local C++
+   struct, receiver in ECX, two words pushed and nothing cleaned after the
+   call. src/func_ov004_020b72d4.cpp is the site measured, its exit fade
+   `data_0209f5bc->m_10(0x1e, 0)`:
+
+       ecx = the fader (data_0209f61c), [esp+4] = 0x1e, [esp+8] = 0
+
+   so the __cdecl body read 0x1e as its receiver and faulted dereferencing it.
+   Measured on the INT48 build, scenes 380, 361 and 386 under a scripted
+   stylus: FAULT at this stub +0xa accessing 0x0000001e, returning into
+   func_ov004_020b72d4+0x2e. Refusing instead of faulting would not have been
+   enough: the caller expects eight bytes cleaned, and a __cdecl return leaves
+   them on its frame.
+
+   hal/scene_boot.cpp's FaderColor table carries the same two callers on the
+   same two slots and was fixed the same way (run link100, card card_fader8):
+   each body keeps its code, renamed with C linkage, and a __declspec(naked)
+   trampoline in front of it reads the discriminator the two shapes leave
+   behind. Shape C leaves the VTABLE in ECX (`mov ecx,[eax]` loads it one
+   instruction before the call) and has pushed the receiver itself, so the
+   trampoline tail-jumps and the caller cleans twelve. Shape B leaves the
+   OBJECT in ECX, so the trampoline rebuilds the __cdecl frame, calls the body
+   and returns with `ret 8`.
+
+   A THIRD SHAPE WOULD BREAK THIS, AND THE ONE THERE WAS IS GONE. A
+   no-argument call with the object in ECX looks like shape B from here and
+   would get eight bytes it never pushed taken off its frame. The matched
+   IsBetweenStartAndEnd bodies were exactly that, one MSVC slot low against
+   this ROM-ordered table; unmatched/FaderSlots_HostAbi.h now gives them the
+   ROM's slot numbers, so they call +0x14 and +0x18 as the cartridge does.
+
+   The receiver check keeps fdr_s08's job and gains the alignment test
+   scene_boot.cpp's bodies make, so a stray word is refused without being
+   dereferenced. */
+}  /* anonymous namespace; the two bodies below need C linkage */
+
+extern "C" int __cdecl port_fdr_s0c_body(void *s, int frames, int c)
 {
-    if (s == 0 || *(void **)s != (void *)data_020926f0) {
+    if (s == 0 || ((std::size_t)s & 3) != 0 || *(void **)s != (void *)data_020926f0) {
         fdr_trap("slot 0x0c SetBackwardTime, WRONG RECEIVER",
-                 "_ZN7dWipe_c15SetBackwardTimeEj -- the caller did not pass the object on "
-                 "the stack, so it is not the cdecl shape this stub is "
-                 "declared for");
+                 "_ZN7dWipe_c15SetBackwardTimeEj -- neither the stack word nor ECX "
+                 "was the object");
         return 0;
     }
     return _ZN7dWipe_c15SetBackwardTimeEj(s, (unsigned)frames, (unsigned)c);
 }
-int __cdecl fdr_s10(void *s, int frames, int)
+extern "C" int __cdecl port_fdr_s10_body(void *s, int frames, int)
 {
-    if (s == 0 || *(void **)s != (void *)data_020926f0) {
+    if (s == 0 || ((std::size_t)s & 3) != 0 || *(void **)s != (void *)data_020926f0) {
         fdr_trap("slot 0x10 SetForwardTime, WRONG RECEIVER",
-                 "_ZN7dWipe_c14SetForwardTimeEj -- the caller did not pass the object on "
-                 "the stack, so it is not the cdecl shape this stub is "
-                 "declared for");
+                 "_ZN7dWipe_c14SetForwardTimeEj -- neither the stack word nor ECX "
+                 "was the object");
         return 0;
     }
     return _ZN7dWipe_c14SetForwardTimeEj(s, (unsigned)frames);
+}
+
+namespace {
+
+__declspec(naked) void fdr_s0c(void)
+{
+    __asm {
+        /* shape C (__cdecl, dScene_c::BeforeBehavior) leaves the VTABLE in ecx;
+           shape B (__thiscall, the minigame framework) leaves the OBJECT. */
+        cmp  ecx, offset data_020926f0
+        je   shape_cdecl
+        /* __thiscall: receiver in ecx, [esp+4] frames, [esp+8] arg2, callee cleans 8 */
+        push dword ptr [esp+8]          /* arg2 */
+        push dword ptr [esp+8]          /* frames, now one push higher */
+        push ecx                        /* the receiver */
+        call port_fdr_s0c_body
+        add  esp, 12
+        ret  8
+    shape_cdecl:
+        /* the arguments are already the body's own __cdecl frame */
+        jmp  port_fdr_s0c_body
+    }
+}
+__declspec(naked) void fdr_s10(void)
+{
+    __asm {
+        cmp  ecx, offset data_020926f0
+        je   shape_cdecl
+        push dword ptr [esp+8]
+        push dword ptr [esp+8]
+        push ecx
+        call port_fdr_s10_body
+        add  esp, 12
+        ret  8
+    shape_cdecl:
+        jmp  port_fdr_s10_body
+    }
 }
 int __fastcall fdr_s28(void *, void *)
 { fdr_trap("overhang slot 0x28", "nothing, this slot is not the ROM's"); return 0; }

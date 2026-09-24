@@ -22948,3 +22948,29 @@ endif()
 set_property(SOURCE "${PORT_REPO_ROOT_ABS}/${PSYCHE1_MGBASE_TU}"
     APPEND PROPERTY COMPILE_OPTIONS
     "/FI${CMAKE_CURRENT_SOURCE_DIR}/unmatched/MgBase_Slot5_HostAbi.h")
+
+# 2. The two matched IsBetweenStartAndEnd bodies ask the receiver's slots 5 and
+#    6, which MSVC numbers one low because include/Fader.h spells the destructor
+#    pair as one virtual; on the dWipe_c table that landed on SetForwardTime.
+#    unmatched/FaderSlots_HostAbi.h shadows Fader alone with the ROM's two
+#    destructor slots. It must be the FIRST force-include: the dWipe_c TU also
+#    takes unmatched/FaderColor_TailPad_HostAbi.h from the tail-pad block above,
+#    which includes the real Fader.h, so this row is prepended rather than
+#    appended.
+set(PSYCHE1_FADER_TUS
+    src/_ZN7dWipe_c20IsBetweenStartAndEndEv.cpp
+    src/engine/fader/_ZN15FaderBrightness20IsBetweenStartAndEndEv.cpp)
+foreach(_psy1_rel IN LISTS PSYCHE1_FADER_TUS)
+    if(NOT EXISTS "${PORT_REPO_ROOT_ABS}/${_psy1_rel}")
+        message(FATAL_ERROR "fader slot host-ABI row names a source that does "
+                "not exist: ${_psy1_rel}")
+    endif()
+    string(REGEX REPLACE "[.](c|cpp)$" ".cpp" _psy1_gen "${_psy1_rel}")
+    foreach(_psy1_path "${PORT_REPO_ROOT_ABS}/${_psy1_rel}"
+                       "${CMAKE_BINARY_DIR}/host-src/${_psy1_gen}")
+        get_property(_psy1_old SOURCE "${_psy1_path}" PROPERTY COMPILE_OPTIONS)
+        set_property(SOURCE "${_psy1_path}" PROPERTY COMPILE_OPTIONS
+            "/FI${CMAKE_CURRENT_SOURCE_DIR}/unmatched/FaderSlots_HostAbi.h"
+            ${_psy1_old})
+    endforeach()
+endforeach()
