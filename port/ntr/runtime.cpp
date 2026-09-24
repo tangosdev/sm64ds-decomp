@@ -226,7 +226,11 @@ DSSTATE_END
 // 21. ntr/rt.cpp's rt_irq_boot_state already seated bit 0 in that same latch
 // (the VBlank enable src/func_0201a054.c makes, EnableIRQs(1)), so the latch
 // now holds what the cartridge's does at the same point rather than the host
-// word's subset of it. IRQ::ClearInterrupts stays a host body; see its tag.
+// word's subset of it. IRQ::ClearInterrupts runs as the ROM's too on these
+// libraries (run linkfull wave 27, lane SMALLS1): src/_ZN3IRQ15ClearInterruptsEj.cpp
+// builds from its hostgen copy (port/CMakeLists.txt's "W27 SMALLS1" block), and
+// its acknowledge store reaches ntr/io.cpp's io_write, which clears IF bits
+// write-one-to-clear the way the DS does; the smoke probes keep the no-op below.
 // ---------------------------------------------------------------------------
 #if defined(NTR_ROM_IRQ_TABLE)
 extern "C" void *data_02099fe4[22];   // hal/arm9_tables_link100.cpp
@@ -234,6 +238,7 @@ extern "C" void *data_02099fe4[22];   // hal/arm9_tables_link100.cpp
 #pragma comment(linker, "/alternatename:__ZN3IRQ13SetIRQHandlerEjPFvvE=?SetIRQHandler@IRQ@@YAXIP6AXXZ@Z")
 #pragma comment(linker, "/alternatename:__ZN3IRQ10EnableIRQsEj=?EnableIRQs@IRQ@@YAII@Z")
 #pragma comment(linker, "/alternatename:__ZN3IRQ11DisableIRQsEj=?DisableIRQs@IRQ@@YAII@Z")
+#pragma comment(linker, "/alternatename:__ZN3IRQ15ClearInterruptsEj=?ClearInterrupts@IRQ@@YAII@Z")
 #endif
 
 namespace {
@@ -392,21 +397,20 @@ extern "C" unsigned _ZN3IRQ11DisableIRQsEj(unsigned mask) {
     return prev;
 }
 #endif  // !NTR_ROM_IRQ_TABLE
-// PORT_HOST_ABI: src acknowledges IF (0x4000214) by storing the mask, and IF
-//   is write-one-to-clear on the DS; ntr/io.cpp latches IF plain, so the src
-//   store would SET the acknowledged bits and zero the rest.
-//   MEASURED, run linkfull lane IRQTAB1, on every target: the one linked
-//   caller is the display-list pump (src/func_0205a290.c, mask 0x200000, after
-//   each geometry-FIFO chunk), and this port never raises IF bit 21 (the pump
-//   is re-entered straight from DMAStartTransfer below), so on the cartridge's
-//   own semantics the acknowledge is a no-op here -- which is what this body
-//   is. The src TU byte-matches (tools/match.py, 2004/b56, strict relocs) and
-//   is owed the day io_write clears IF bits on a store, which is a change to
-//   ntr/io.cpp's dispatch and not to this file. Until then linking it would
-//   leave the IF latch reading 0x200000 after every chunk (bit 21 set, every
-//   other bit cleared), and that latch is read: src/func_02059650.c tests IF
-//   bit 3 (the tick's pending timer overflow) and the crash screen prints it.
+#if !defined(NTR_ROM_IRQ_TABLE)
+// THE SMOKE PROBES' COPY of IRQ::ClearInterrupts. The game libraries link the
+// matched src/_ZN3IRQ15ClearInterruptsEj.cpp instead (the alias above), whose
+// store now reaches ntr/io.cpp's write-one-to-clear IF (run linkfull, lane
+// SMALLS1; IRQTAB1 measured why it had to wait for that).
+// PORT_HOST_ABI: src acknowledges IF (0x4000214) by storing the mask; the
+//   smoke probes link no matched IRQ TUs and route nothing to IF. The one
+//   linked caller is the display-list pump (src/func_0205a290.c, mask
+//   0x200000, after each geometry-FIFO chunk), and this port never raises IF
+//   bit 21 (the pump is re-entered straight from DMAStartTransfer below), so
+//   on the cartridge's own semantics the acknowledge is a no-op here -- which
+//   is what this body is.
 extern "C" void _ZN3IRQ15ClearInterruptsEj(unsigned) {}
+#endif  // !NTR_ROM_IRQ_TABLE
 
 // DMA to the FIFO is the display-list path (func_0205a290). ctrl bit 30 is
 // IRQ-on-complete (the final chunk); a GXFIFO-destined chunk without it relies

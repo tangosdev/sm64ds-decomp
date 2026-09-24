@@ -52,8 +52,14 @@ FRAMES = "150"
 SAVE_AT = "90"
 LEVEL = "1"
 TIMEOUT = 600
-# where the entrance spawns them, every level, every boot (measured 20/20)
-CAMERA = 0x30039D80
+# where the entrance spawns them, every level, every boot (measured 20/20).
+# 0x60 higher than the 0x30039D80 / 0x30039F38 this file carried until run
+# linkfull wave 27 (lane SMALLS1): OS_InitAlloc (src/func_02059040.c) runs as
+# the ROM's now and writes its heap-info block at the arena base, so the root
+# heap and everything carved from its head start 0x60 in (the level-1 log
+# prints both: "camera at 30039DE0", "tree: PLAYER 30039F98").
+CAMERA = 0x30039DE0
+PLAYER = 0x30039F98
 ARENA_BASE = 0x30000000
 
 
@@ -165,10 +171,10 @@ def main():
     # by a baked offset -- the clean state holds the Player pointer exactly once
     # at a 4-aligned slot inside the dsstate body, and ARM 1 proved that state
     # good. Locate it by searching the dsstate body for the Player address the
-    # census prints, which is the entrance-spawned Player, 30039F38.
+    # census prints, which is the entrance-spawned Player, PLAYER above.
     d0 = hdr + asz
     body = clean[d0:d0 + dsz]
-    player_le = struct.pack("<I", 0x30039F38)
+    player_le = struct.pack("<I", PLAYER)
     hits = [i for i in range(0, len(body) - 3, 4)
             if body[i:i + 4] == player_le]
     if not hits:
