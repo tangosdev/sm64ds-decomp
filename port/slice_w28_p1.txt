@@ -46,6 +46,11 @@ src/_ZN13SharedFilePtr9ConstructEj.cpp
 src/_ZN16dScMgSmartball_c13OnYoshiTryEatEi.cpp
 
 # ---- group D: dScMgPachinko_c's scoring tick (ov006 0x020fb7e0) -------------
+# Host copy retired: port/unmatched/MgPachinko_Award.cpp (now an empty TU; its
+# enrolment is another owner's). Its reason was the award's points riding
+# through r2 into func_ov006_020fbb2c; the src declares the third parameter and
+# passes *(u16 *)(b + 0x5962). Caller: dScMgPachinko_c::Behavior (slot 6).
+src/func_ov006_020fb7e0.c
 
 # ---- group E: the ITCM display-list DMA submit (itcm 0x01ffde98) ------------
 
