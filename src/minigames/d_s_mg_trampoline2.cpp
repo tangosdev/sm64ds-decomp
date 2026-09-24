@@ -13,8 +13,8 @@
  * function grows). Its mRamp access matches.
  * 0x7acc has no matched read. The factory still builds the arrays by offset.
  * Model / TextureTransformer / SysTracker C1/D1 stay mangled (built on raw
- * storage); NewUnkCallback818 takes Fix12 by value; FromUniqueID did not
- * verify via Particle__System.h; the G2 BG getters stay mangled because
+ * storage); NewUnkCallback818 takes Fix12 by value, which costs the caller
+ * bytes (notes/mwccarm-codegen.md 6az); the G2 BG getters stay mangled because
  * decl_common.h's global G2 hides the namespace; SetBlendAlpha keeps a
  * local declaration.
  */
@@ -22,6 +22,7 @@
 #include "common.h"
 #include "types.h"
 #include "dScMgTrampoline2_c.h"
+#include "Particle__System.h"
 #define func_ov006_021227c8 func_ov006_021227c8_decl_common_shadow
 #define func_ov006_02122c68 func_ov006_02122c68_decl_common_shadow
 #define _ZTV18dScMgTrampoline2_c _ZTV18dScMgTrampoline2_c_decl_common_shadow
@@ -141,9 +142,8 @@ void func_0203cd80(int *m, short angle);
 int GetGameLanguage(void);
 void DrawOamSprite(void *a0, void *a1, int a2, void *a3);
 void RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
-void *_ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
+unsigned int _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
 unsigned int a, unsigned int b, int c, int d, int e, const Vector3_16f *f);
-void *_ZN8Particle6System12FromUniqueIDEj(unsigned int id);
 void func_ov006_020eef90(void);
 extern int RandomIntInternal(int *seed);
 extern int data_0209e650;
@@ -962,9 +962,9 @@ s32 dScMgTrampoline2_c::Behavior()
     func_ov006_020eef90();
     func_ov006_02122ab8();
     mParticleID =
-        (unsigned int)_ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
+        _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
             mParticleID, 0xf0, 0x280000, 0x700000, -0x580000, 0);
-    void *p = _ZN8Particle6System12FromUniqueIDEj(mParticleID);
+    void *p = Particle::System::FromUniqueID(mParticleID);
     if (p != 0) {
         *(char *)((char *)p + 0x58) = (char)(mRamp >> 12);
         ApproachLinear(mRamp, 0x14000, 0x200);

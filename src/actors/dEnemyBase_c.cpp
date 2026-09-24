@@ -415,11 +415,12 @@ extern "C" int func_ov002_020ae5c8(void* c, int x){
 }
 
 // @symbol func_ov002_020ae4cc
+struct Vector3_16f;
 extern "C" {
 extern void* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
   unsigned int a, unsigned int b, int c, int d, int e, const void* f, void* g);
-extern void* _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
-  unsigned int a, unsigned int b, int c, int d, int e, const void* f);
+extern u32 _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
+  u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z, const Vector3_16f* dir);
 }
 
 extern "C" int func_ov002_020ae4cc(char* self, char* clsn){
@@ -448,7 +449,7 @@ extern "C" int func_ov002_020ae4cc(char* self, char* clsn){
   }
   *(void**)(self+0xf8) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     *(unsigned int*)(self+0xf8), 0x13a, *(int*)((char*)v + 0), *(int*)((char*)v + 4), *(int*)((char*)v + 8), 0, 0);
-  *(void**)(self+0xfc) = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
+  *(u32*)(self+0xfc) = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
     *(unsigned int*)(self+0xfc), 0x13b, *(int*)((char*)v + 0), *(int*)((char*)v + 4), *(int*)((char*)v + 8), 0);
   return 0;
 }

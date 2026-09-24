@@ -88,6 +88,7 @@
 #include "SharedFilePtr.h"
 #include "decl_common.h"
 #include "Player.h"
+#include "Particle__System.h"
 
 enum { SANBO_HEAD = 0xf0, SANBO_BODY = 0xf1 };
 
@@ -512,7 +513,6 @@ extern "C" {
 struct Vector3_16f;
 extern unsigned _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unsigned a, unsigned b, int f, int t1, int t2, const void *v, void *cb);
 extern u32 _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(u32 a, u32 b, int f, int t1, int t2, const Vector3_16f *v);
-extern void *_ZN8Particle6System12FromUniqueIDEj(unsigned id);
 
 int func_ov096_02136434(void *c)
 {
@@ -532,8 +532,8 @@ int func_ov096_02136434(void *c)
             *(unsigned*)(s+0x3a0), 0x13a, pos.x, pos.y, pos.z, 0, 0);
         *(unsigned*)(s+0x3a4) = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
             *(unsigned*)(s+0x3a4), 0x13b, pos.x, pos.y, pos.z, 0);
-        p0 = _ZN8Particle6System12FromUniqueIDEj(*(unsigned*)(s+0x3a0));
-        p1 = _ZN8Particle6System12FromUniqueIDEj(*(unsigned*)(s+0x3a4));
+        p0 = Particle::System::FromUniqueID(*(unsigned*)(s+0x3a0));
+        p1 = Particle::System::FromUniqueID(*(unsigned*)(s+0x3a4));
         if (p0) *(int*)((char*)p0+0x50) = 0x7fff;
         if (p1) *(int*)((char*)p1+0x50) = 0x7fff;
     }

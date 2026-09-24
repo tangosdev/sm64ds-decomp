@@ -14825,18 +14825,6 @@
       ]
     },
     "_ZN8Particle6System12FromUniqueIDEj": {
-      "src/_ZN8IceBlock8BehaviorEv.cpp": [
-        "return:void *"
-      ],
-      "src/actors/dScMgSnowball_c.cpp": [
-        "return:int *"
-      ],
-      "src/actors/daKing_Donketu_c.cpp": [
-        "return:void *"
-      ],
-      "src/actors/daSanbo_c.cpp": [
-        "return:void *"
-      ],
       "src/func_ov060_02116518.c": [
         "return:void *"
       ],
@@ -14844,24 +14832,6 @@
         "return:void *"
       ],
       "src/func_ov084_0212d2dc.c": [
-        "return:void *"
-      ],
-      "src/game/actors/d_a_nknk.cpp": [
-        "return:void *"
-      ],
-      "src/minigames/d_s_mg_jump2.cpp": [
-        "return:void *"
-      ],
-      "src/minigames/d_s_mg_trampoline2.cpp": [
-        "return:void *"
-      ]
-    },
-    "_ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f": {
-      "src/actors/dEnemyBase_c.cpp": [
-        "param:#6 const void *",
-        "return:void *"
-      ],
-      "src/minigames/d_s_mg_trampoline2.cpp": [
         "return:void *"
       ]
     },

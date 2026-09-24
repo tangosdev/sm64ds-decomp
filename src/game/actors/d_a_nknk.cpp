@@ -36,6 +36,7 @@
 #include "decl_ModelAnim.h"
 #include "decl_dCcAc_c.h"
 #include "decl_ShadowModel.h"
+#include "Particle__System.h"
 
 /* Remaining legacy helper views are local to this translation unit. */
 /* shadow struct 'Entry' */
@@ -50,7 +51,6 @@ typedef struct { s32 x, y, z; } Vec3;
 extern "C" {
 extern int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(u32 uniqueID, u32 effectID, s32 x, s32 y, s32 z, const void *dir, void *callback);
 extern void _ZN8Particle19SetSelfDestructFlagEj(u32 id);
-extern void *_ZN8Particle6System12FromUniqueIDEj(u32 id);
 extern void func_0201267c(unsigned int id, const Vector3 *pos);
 extern s16 data_02082214[];
 extern struct Entry *data_ov062_0211cee8[];
@@ -1192,7 +1192,7 @@ void func_ov062_02117724(char *t, unsigned int a1, unsigned int a2, unsigned int
         uid = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(0, 0xf9, pos.x, pos.y, pos.z, 0, 0);
         _ZN8Particle19SetSelfDestructFlagEj(0xf9);
         if (uid == 0) return;
-        ps = (char *)_ZN8Particle6System12FromUniqueIDEj(uid);
+        ps = (char *)Particle::System::FromUniqueID(uid);
         if (ps == 0) return;
         iscb2 = self->actorID == 0xcb;
         if (iscb2)
@@ -1242,7 +1242,7 @@ void func_ov062_021175c0(char *c)
     self->mLandingDustTimer = 0xa;
     if (spawned == 0) return;
 
-    particle = _ZN8Particle6System12FromUniqueIDEj(spawned);
+    particle = Particle::System::FromUniqueID(spawned);
     if (particle == 0) return;
 
     {
