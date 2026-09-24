@@ -54,7 +54,8 @@ struct Goomboss : dEnemyBase_c {
     TextureSequence mTextureSequence;             /* 0x3e4 */
     TextureTransformer mTextureTransformer;       /* 0x3f8 */
     dBgCh_Actr mWithMeshClsn;                   /* 0x40c */
-    u8  pad_5c8[0x4];
+    /* ClosestPlayer, kept for StartTalk / ShowMessage / GetTalkState. */
+    Player *mTalkPlayer;                          /* 0x5c8 */
     s32 mState;            /* 0x5cc */
     /* InitResources copies mPosX/mPosY/mPosZ into these three once, right after
        the collision cylinders are sized, and nothing writes them again. */
@@ -65,23 +66,44 @@ struct Goomboss : dEnemyBase_c {
     u8  pad_5e0[0x4];
     s32 mCurrentScale;            /* 0x5e4 */
     s32 mGoombaTargetSpeed;            /* 0x5e8 */
-    u8  pad_5ec[0x4];
+    /* Scale mCurrentScale is eased toward. */
+    s32 mTargetScale;                         /* 0x5ec */
     s32 mDirection;            /* 0x5f0 */
-    u16 mWalkAngle;            /* 0x5f4 */
+    /* Reads in this TU are signed halfwords (ldrsh), not the old u16. */
+    s16 mWalkAngle;            /* 0x5f4 */
     s16 mWalkSpeed;            /* 0x5f6 */
     s16 mMaxWalkSpeed;            /* 0x5f8 */
-    u8  pad_5fa[0x4];
+    /* Sine phase for the shrink wobble; advances 0x1230 a frame. */
+    s16 mScalePhase;                          /* 0x5fa */
+    /* DecIfAbove0_Short countdown between spawns and in the death talk. */
+    u16 mTimer;                               /* 0x5fc */
     u8  mLeftFootSteppedOnGround;            /* 0x5fe */
     u8  mRightFootSteppedOnGround;            /* 0x5ff */
-    u8  pad_600[0x4];
+    /* 0x600/0x601 are the foot-edge latches, written in func_ov074_02121380
+       (the unmatched draft above this TU), not here. */
+    u8  pad_600[0x2];
+    u8  mSpawnedCount;                        /* 0x602 */
+    u8  mSubState;                            /* 0x603 */
     u8  mSizeIndex;            /* 0x604 */
-    u8  pad_605[0x5];
+    /* DecIfAbove0_Byte; set to 0x1e or 0x10 when the player is hit. */
+    u8  mHurtTimer;                           /* 0x605 */
+    u8  pad_606;
+    /* Remaining shrink steps. Starts at 3, and the last step is the one <= 1. */
+    u8  mScaleSteps;                          /* 0x607 */
+    /* Set on death. func_ov074_02121800 skips the drop shadows while it is set. */
+    u8  mNoShadow;                            /* 0x608 */
+    /* Set when a mini is thrown. func_ov074_021223bc returns immediately while it is 0. */
+    u8  mLaunched;                            /* 0x609 */
     u8  mShouldRender;            /* 0x60a */
-    /* The field span ends at 0x60b, but a span is only a LOWER BOUND. Both factories
+    /* Latched once func_ov074_0211f38c reports the wave has all spawned. */
+    u8  mWaveFinished;                        /* 0x60b */
+    /* Layer-3 music one-shot during the intro talk. */
+    u8  mMusicStarted;                        /* 0x60c */
+    /* The field span ends at 0x60d, but a span is only a LOWER BOUND. Both factories
        that store _ZTV8Goomboss (ov074:0x02122eb8) -- daKuriKing_c_classInit_KURIKING and
        daKuriKing_c_classInit_KURIKING_VANISH -- call fBase_c::operator new(0x610). Two factories
        building one actor is a spawn-info variant, not a second class. */
-    u8  pad_60b[0x5];       /* 0x60b, to the ROM's 0x610 */
+    u8  pad_60d[0x3];                         /* 0x60d, to the ROM's 0x610 */
 
     virtual ~Goomboss();
 
@@ -146,7 +168,7 @@ struct Goomboss {
     u8  mTextureTransformer;            /* 0x3f8 */
     u8  pad_3f9[0x13];
     struct dBgCh_Actr mWithMeshClsn; /* 0x40c */
-    u8  pad_5c8[0x4];
+    void *mTalkPlayer;       /* 0x5c8 */
     s32 mState;            /* 0x5cc */
     /* InitResources copies mPosX/mPosY/mPosZ into these three once, right after
        the collision cylinders are sized, and nothing writes them again. */
@@ -157,18 +179,28 @@ struct Goomboss {
     u8  pad_5e0[0x4];
     s32 mCurrentScale;            /* 0x5e4 */
     s32 mGoombaTargetSpeed;            /* 0x5e8 */
-    u8  pad_5ec[0x4];
+    s32 mTargetScale;        /* 0x5ec */
     s32 mDirection;            /* 0x5f0 */
-    u16 mWalkAngle;            /* 0x5f4 */
+    s16 mWalkAngle;            /* 0x5f4 */
     s16 mWalkSpeed;            /* 0x5f6 */
     s16 mMaxWalkSpeed;            /* 0x5f8 */
-    u8  pad_5fa[0x4];
+    s16 mScalePhase;         /* 0x5fa */
+    u16 mTimer;              /* 0x5fc */
     u8  mLeftFootSteppedOnGround;            /* 0x5fe */
     u8  mRightFootSteppedOnGround;            /* 0x5ff */
-    u8  pad_600[0x4];
+    u8  pad_600[0x2];
+    u8  mSpawnedCount;       /* 0x602 */
+    u8  mSubState;           /* 0x603 */
     u8  mSizeIndex;            /* 0x604 */
-    u8  pad_605[0x5];
+    u8  mHurtTimer;          /* 0x605 */
+    u8  pad_606;
+    u8  mScaleSteps;         /* 0x607 */
+    u8  mNoShadow;           /* 0x608 */
+    u8  mLaunched;           /* 0x609 */
     u8  mShouldRender;            /* 0x60a */
+    u8  mWaveFinished;       /* 0x60b */
+    u8  mMusicStarted;       /* 0x60c */
+    u8  pad_60d[0x3];
 };
 
 #endif /* __cplusplus */
