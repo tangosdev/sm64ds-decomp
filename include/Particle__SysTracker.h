@@ -135,7 +135,7 @@ struct SysTracker {
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Particle_SysTracker_size_must_be_0x81c[
-    sizeof(SysTracker) == 0x81c ? 1 : -1];
+    sizeof(Particle::SysTracker) == 0x81c ? 1 : -1];
 typedef char Particle_SysTracker_Contents_size_must_be_0x748[
     sizeof(SysTracker::Contents) == 0x748 ? 1 : -1];
 #endif
