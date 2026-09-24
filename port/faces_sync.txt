@@ -440,7 +440,15 @@ __ZN10KoopaShellD1Ev                                                     ??1Koop
 
 __ZN13KoopaTheQuickD1Ev                                                  ??1KoopaTheQuick@@UAE@XZ                                         0x0211975c R
 
-__ZN6Lakitu13InitResourcesEv                                             ?InitResources@Lakitu@@UAEHXZ                                    0x02124908 F
+# FLIPPED F -> R at run linkfull, lane RS4PORT. The forward direction existed
+# because unmatched/Lakitu_HostSites.cpp carried the body under the flat name
+# (the state setter's r1 ride-through) and the face defined the member on top
+# of it. src/_ZN6Lakitu13InitResourcesEv.cpp passes state 0 now (main #3106's
+# SetState(0), route (a)) and is on port/slice_ov077.txt, so it DEFINES the
+# decorated name and a forward face would be a second definition of it; the
+# vtable face in hal/actor_classes_ov077.cpp calls the flat name, which the
+# reverse face defines.
+__ZN6Lakitu13InitResourcesEv                                             ?InitResources@Lakitu@@UAEHXZ                                    0x02124908 R
 __ZN6Lakitu13OnTurnIntoEggER6Player                                      ?OnTurnIntoEgg@Lakitu@@UAEXAAUPlayer@@@Z                         0x02124aa4 R
 __ZN6Lakitu13OnYoshiTryEatEv                                             ?OnYoshiTryEat@Lakitu@@UAEHXZ                                    0x02123804 R
 __ZN6Lakitu16CleanupResourcesEv                                          ?CleanupResources@Lakitu@@UAEHXZ                                 0x021247a8 R
