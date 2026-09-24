@@ -207,39 +207,16 @@ void _ZN5Sound4PlayEjjRK7Vector3(unsigned kind, unsigned id, struct Vector3 *v)
 // both halves of the trace.
 int g_snd_trace_play;
 
-// Sound::Player::SetPlayableSeqCount. Not a ride-through -- an ALIAS. The
-// src writes *(u32 *)(data_020a4d84 + id * 0x1c), and on the DS
-// data_020a4d84 is data_020a4d6c + 0x18, i.e. field +0x18 of the same
-// 32-entry player array. Host symbols are separate objects, so the src
-// version would drop the write into a different block from the one
-// func_0204f63c reads it back out of -- and func_0204f63c uses that field as
-// "how many sequences may this player run", so a lost write means it thinks
-// the limit is 0 and evicts a voice on every single sound. Writing through
-// data_020a4d6c keeps the two views aliased.
-//
-// RULED (w6-c item 3), and the comment above is right that it is not a
-// ride-through, so the reason is spelled for what it is: two ROM symbols
-// naming ONE array at a fixed 0x18 offset, which separate host objects
-// cannot express. The src is correct about the ROM and unlinkable on a host
-// for a reason that has nothing to do with argument passing.
-//
-// THE RETIREMENT RECIPE, since this one has a real one and the port already
-// owns the machinery: give data_020a4d6c and data_020a4d84 adjacent grouped
-// sections the way hal/level_boot.cpp's SAVEBLK macro puts the five-way
-// split of data_0209caa0 back in ROM order, sized so data_020a4d84 lands at
-// data_020a4d6c + 0x18. tools/ovdata.py --pack does the same thing per
-// overlay symbol. With the two symbols genuinely overlapping, the matched TU
-// links and this host body retires. It is a seat, not a ruling, so it wants
-// its own lane rather than a line in this one.
-extern unsigned char data_020a4d6c[];
-// PORT_HOST_ABI: two ROM symbols over one array (data_020a4d84 IS
-// data_020a4d6c + 0x18); separate host objects cannot alias.
-void _ZN5Sound6Player19SetPlayableSeqCountEii(int playerId, int maxSeq)
-{
-    if (playerId < 0 || playerId >= 32) return;
-    *(unsigned int *)(data_020a4d6c + playerId * 0x1c + 0x18) =
-        (unsigned short)maxSeq;
-}
+// Sound::Player::SetPlayableSeqCount LEFT THIS FILE (run linkfull, lane
+// RS3PORT). Its host copy wrote through data_020a4d6c + id * 0x1c + 0x18
+// because the src wrote through data_020a4d84, a second ROM name for the
+// same word that separate host objects cannot alias. Main (#3102) spells
+// the store as data_020a4d6c[index].mPlayableSeqCount over the recovered
+// record in include/SoundPlayerRecord.h, one object on both machines, so the
+// matched TU links through its row in hal/cxx_aliases.cpp instead. The host
+// copy's index check went with it: every caller passes 2, 3, 9, a loop
+// index below 0x20, or an id from data_0208e448's ten ROM records (all
+// below 32), so it never fired.
 
 // func_0203d974: "does anything still need loading off the card?" Every
 // group-load seam in the sound stack asks it first. Two independent reasons

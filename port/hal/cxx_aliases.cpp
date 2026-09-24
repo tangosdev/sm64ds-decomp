@@ -561,12 +561,15 @@ unsigned char data_020a0e98;
 /* The 32 sound-player records, stride 0x1c (func_0204f63c, func_0204f958,
    func_0204f9c4 and func_0204f504 all index it that way, and the ROM runs
    0x020a4d6c..0x020a50ec = 32 * 0x1c exactly). It was one int while sound was
-   stubbed. data_020a4d84 is the SAME array seen from field +0x18 -- the
-   playable-sequence limit that Stage::InitResources sets and func_0204f63c
-   tests before it evicts a voice -- so hal/sdat/sound_abi.cpp hosts
-   Sound::Player::SetPlayableSeqCount to write through THIS object and keep
-   the two views aliased the way DS memory does. */
+   stubbed. Field +0x18 is the playable-sequence limit that
+   Stage::InitResources sets and func_0204f63c tests before it evicts a voice;
+   the ROM's literal for it is 0x020a4d84, which the symbol list also names
+   data_020a4d84. The matched Sound::Player::SetPlayableSeqCount writes it as
+   data_020a4d6c[index].mPlayableSeqCount (include/SoundPlayerRecord.h), so the
+   write lands in THIS object. The row below points the C callers' flat name
+   at that class static: both sides __cdecl, two ints, no receiver. */
 unsigned char data_020a4d6c[32 * 0x1c];
+#pragma comment(linker, "/alternatename:__ZN5Sound6Player19SetPlayableSeqCountEii=?SetPlayableSeqCount@Player@Sound@@SAXHH@Z")
 /* data_ov006_02140330 and data_ov006_02140338, the two ov006 fileptrs
    St_LevelEnter_Main releases, used to be zeroed stand-ins here. The ov006
    mount hosts them now (run link60 lane s2-m46): both are ov006 .bss, both

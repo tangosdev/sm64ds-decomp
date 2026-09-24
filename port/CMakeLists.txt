@@ -11415,9 +11415,9 @@ foreach(src IN LISTS SLICE10_SOURCES)
     # its callers pass (hal/sdat/sound_abi.cpp's header has the history).
     if(src MATCHES "/func_0205b5d4\\.c$"
     # ...and Sound::Player::SetPlayableSeqCount, which writes through
-    # data_020a4d84 = data_020a4d6c + 0x18, an adjacency host symbols do not
-    # have. Same file, sound_abi.cpp.
-       OR src MATCHES "/_ZN5Sound6Player19SetPlayableSeqCountEii\\.c$"
+    # data_020a4d6c's record field +0x18 now (include/SoundPlayerRecord.h),
+    # so it is not filtered any more: its .cpp compiles from gate 10 and links
+    # through its hal/cxx_aliases.cpp row.
     # ...and Sound::Play, whose src calls func_02050cdc(void) and lets the
     # kind and id ride through in r0/r1.
        OR src MATCHES "/_ZN5Sound4PlayEjjRK7Vector3\\.c$"
