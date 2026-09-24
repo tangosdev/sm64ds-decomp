@@ -944,12 +944,12 @@ ov020	0x0211495c	data_ov020_0211495c	_ZTV8BookShot	vtable alloc=?
 ov020	0x021149f0	data_ov020_021149f0	daChair_c_SpawnInfo	spawninfo (was HauntedChair_SpawnInfo)
 ov020	0x021149f0	daChair_c_SpawnInfo	g_profile_CHAIR	reconstructed profile global; literal ROM ID CHAIR+registry role+later EAD lineage; exact SM64DS spelling not preserved (was HauntedChair_SpawnInfo)
 ov020	0x02114a14	data_ov020_02114a14	_ZTV9daChair_c	vtable alloc=0x3a8 (was _ZTV12HauntedChair)
-ov021	0x021111a0	func_ov021_021111a0	_ZN17daObjCvNewsLift_cD1Ev	vtable slot 16
-ov021	0x02111214	func_ov021_02111214	_ZN17daObjCvNewsLift_cD0Ev	vtable slot 17
-ov021	0x021115dc	func_ov021_021115dc	_ZN17daObjCvNewsLift_c16CleanupResourcesEv	vtable slot 3
-ov021	0x02111650	func_ov021_02111650	_ZN17daObjCvNewsLift_c6RenderEv	vtable slot 9
-ov021	0x021116c8	func_ov021_021116c8	_ZN17daObjCvNewsLift_c8BehaviorEv	vtable slot 6
-ov021	0x02111c6c	func_ov021_02111c6c	_ZN17daObjCvNewsLift_c13InitResourcesEv	vtable slot 0
+ov021	0x021111a0	func_ov021_021111a0	_ZN17daObjCvNewsLift_cD1Ev	vtable slot 16 (was _ZN12WorkElevatorD1Ev)
+ov021	0x02111214	func_ov021_02111214	_ZN17daObjCvNewsLift_cD0Ev	vtable slot 17 (was _ZN12WorkElevatorD0Ev)
+ov021	0x021115dc	func_ov021_021115dc	_ZN17daObjCvNewsLift_c16CleanupResourcesEv	vtable slot 3 (was _ZN12WorkElevator16CleanupResourcesEv)
+ov021	0x02111650	func_ov021_02111650	_ZN17daObjCvNewsLift_c6RenderEv	vtable slot 9 (was _ZN12WorkElevator6RenderEv)
+ov021	0x021116c8	func_ov021_021116c8	_ZN17daObjCvNewsLift_c8BehaviorEv	vtable slot 6 (was _ZN12WorkElevator8BehaviorEv)
+ov021	0x02111c6c	func_ov021_02111c6c	_ZN17daObjCvNewsLift_c13InitResourcesEv	vtable slot 0 (was _ZN12WorkElevator13InitResourcesEv)
 ov021	0x02112168	func_ov021_02112168	WorkElevator_Spawn	spawnfunc
 ov021	0x02112168	WorkElevator_Spawn	daObjCvNewsLift_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov021	0x021121e8	func_ov021_021121e8	_ZN11RollingRockD1Ev	vtable slot 16
@@ -969,7 +969,7 @@ ov021	0x02112ed4	func_ov021_02112ed4	ShutterHmc_Spawn	spawnfunc
 ov021	0x02112ed4	ShutterHmc_Spawn	daObjCvShutter_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov021	0x02114768	data_ov021_02114768	WorkElevator_SpawnInfo	spawninfo
 ov021	0x02114768	WorkElevator_SpawnInfo	g_profile_CV_NEWS_LIFT	reconstructed profile global; literal ROM ID CV_NEWS_LIFT+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov021	0x0211478c	data_ov021_0211478c	_ZTV17daObjCvNewsLift_c	vtable alloc=0xc80
+ov021	0x0211478c	data_ov021_0211478c	_ZTV17daObjCvNewsLift_c	vtable alloc=0xc80 (was _ZTV12WorkElevator)
 ov021	0x02114824	data_ov021_02114824	RollingRock_SpawnInfo	spawninfo
 ov021	0x02114824	RollingRock_SpawnInfo	g_profile_GORO_ROCK	reconstructed profile global; literal ROM ID GORO_ROCK+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov021	0x02114848	data_ov021_02114848	_ZTV11RollingRock	vtable alloc=0x3c8
