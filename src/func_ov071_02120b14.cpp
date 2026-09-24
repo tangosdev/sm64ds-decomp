@@ -3,6 +3,7 @@
 // @symbol func_ov071_02120b14
 /* recovered: shared common types */
 #include "common.h"
+struct Vector3_16f;
 extern "C" {
     void* _ZN8dActor_c7FindEggER5dCc_c(void* self, void* c);
     void* _ZN8dActor_c18FindExplosionActorER5dCc_c(void* self, void* c);
@@ -10,7 +11,7 @@ extern "C" {
     void func_ov071_02121634(void* self, int a);
     void* _ZN8dActor_c10FindWithIDEj(u32 id);
     void* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(u32 a, u32 b, int c, int d, int e, const void* v, void* cb);
-    void* _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(u32 a, u32 b, int c, int d, int e, const void* v);
+    u32 _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(u32 a, u32 b, int c, int d, int e, const Vector3_16f* v);
     void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, const void* v, u32 a, int b, u32 c, u32 d, u32 e);
 }
 
@@ -45,8 +46,8 @@ idCheck:
         void* p1 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(*(u32*)(c+0x204), 0x13a, *(s32*)(c+0x5c), *(s32*)(c+0x60), *(s32*)(c+0x64), 0, 0);
         *(void**)(c+0x204) = p1;
 
-        void* p2 = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(*(u32*)(c+0x208), 0x13b, *(s32*)(c+0x5c), *(s32*)(c+0x60), *(s32*)(c+0x64), 0);
-        *(void**)(c+0x208) = p2;
+        u32 p2 = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(*(u32*)(c+0x208), 0x13b, *(s32*)(c+0x5c), *(s32*)(c+0x60), *(s32*)(c+0x64), 0);
+        *(u32*)(c+0x208) = p2;
 
         func_ov071_02121634(self, 2);
         return;
