@@ -3,11 +3,11 @@
  *
  * This is the C++ spelling of the object that include/Particle.h still models
  * as a flat C `struct Particle` (kept for the thirteen C99 files that reach it
- * through that name and cannot see a namespace at all) and that include/Stage.h
- * carries a fourth-wall copy of, embedded at Stage+0x50. The three declarations
- * agree field for field and name for name; only this one is the class the ROM's
- * mangled names actually describe, so the members whose symbols are
- * _ZN8Particle10SysTracker* are defined against it.
+ * through that name and cannot see a namespace at all). It is the only C++
+ * definition: Stage (at +0x50) and dScMgSingle3DBase_c (at +0x471c) embed this
+ * class directly. The two declarations agree field for field; only this one is
+ * the class the ROM's mangled names actually describe, so the members whose
+ * symbols are _ZN8Particle10SysTracker* are defined against it.
  *
  * Per-field evidence: notes/system-provenance.md and include/Particle.h's own
  * header comment, which carries the full derivation of the callback bank. In
