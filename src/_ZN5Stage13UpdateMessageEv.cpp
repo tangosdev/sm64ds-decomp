@@ -1,5 +1,6 @@
 //cpp
 #include "types.h"
+#include "SaveData.h"
 extern u8 data_0209d660;
 extern u8 data_0209d654;
 extern s16 data_0209d6d4;
@@ -8,21 +9,13 @@ extern u8 data_0209d670;
 extern s32 data_0208ee44;
 
 struct Message {
-    static bool UpdateWindow();
+    static int UpdateWindow();
     static void Update();
-    static void DisplaySaving(u16);
-};
-struct SaveData {
-    static void SaveCurrentFile();
+    static void DisplaySaving(u16 msgID);
 };
 struct Stage {
-    void UpdateMessage();
+    static void UpdateMessage();
 };
-
-bool Message::UpdateWindow() { return 0; }
-void Message::Update() {}
-void Message::DisplaySaving(u16) {}
-void SaveData::SaveCurrentFile() {}
 
 void Stage::UpdateMessage() {
     if (data_0209d660 == 0) return;
