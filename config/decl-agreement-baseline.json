@@ -23810,6 +23810,9 @@
       ]
     },
     "data_020a4d6c": {
+      "src/_ZN5Sound6Player19SetPlayableSeqCountEii.cpp": [
+        "return:SoundPlayerRecord []"
+      ],
       "src/func_0204f278.cpp": [
         "return:Elem []"
       ],
