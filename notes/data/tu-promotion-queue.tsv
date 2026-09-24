@@ -151,7 +151,7 @@ RickshawBdw	4	79	ov043	yes	no	compiler-only:unknown(no chain for RickshawBdw: no
 daObjKm2_Ukishima_c	1	90	ov045	yes	yes	compiler-only:>=13(derived from own chain: 6 classes incl. self via build/rtti.json; floor 2x6+1)	daObjKm2_Ami_Bou_c	text-only
 daBDonketu_c	7	207	ov064	yes	yes	compiler-only:>=13(derived from own chain: 6 classes incl. self via build/rtti.json + include/ base clause; floor 2x6+1)	daObjFl_Gura_c	text-only
 daObjShell_c	7	221	ov064	yes	yes	compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json + include/ base clause; floor 2x4+1)	daObjFl_Gura_c	text-only
-PyramidStep	8	176	ov025	yes	no	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	-	text-only
+daObjDpBrock_c	8	176	ov025	yes	no	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	-	text-only
 SpinningPlatform	8	186	ov035	yes	no	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	-	text-only
 BillBlaster	8	261	ov079	yes	no	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	-	text-only
 FortressWall	8	210	ov079	yes	no	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	-	text-only

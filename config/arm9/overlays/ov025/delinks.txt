@@ -12,11 +12,11 @@ src/actors/daDkk_c.cpp:
     complete
     .text start:0x021118c8 end:0x02111d40
 
-src/_ZN11PyramidStepD1Ev.cpp:
+src/_ZN14daObjDpBrock_cD1Ev.cpp:
     complete
     .text start:0x02111d40 end:0x02111d8c
 
-src/_ZN11PyramidStepD0Ev.cpp:
+src/_ZN14daObjDpBrock_cD0Ev.cpp:
     complete
     .text start:0x02111d8c end:0x02111dec
 
@@ -28,19 +28,19 @@ src/func_ov025_02111e30.c:
     complete
     .text start:0x02111e30 end:0x02111e70
 
-src/_ZN11PyramidStep16CleanupResourcesEv.cpp:
+src/_ZN14daObjDpBrock_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x02111e70 end:0x02111ea8
 
-src/_ZN11PyramidStep6RenderEv.cpp:
+src/_ZN14daObjDpBrock_c6RenderEv.cpp:
     complete
     .text start:0x02111ea8 end:0x02111ed4
 
-src/_ZN11PyramidStep8BehaviorEv.cpp:
+src/_ZN14daObjDpBrock_c8BehaviorEv.cpp:
     complete
     .text start:0x02111ed4 end:0x02111fa0
 
-src/_ZN11PyramidStep13InitResourcesEv.cpp:
+src/_ZN14daObjDpBrock_c13InitResourcesEv.cpp:
     complete
     .text start:0x02111fa0 end:0x021120ac
 

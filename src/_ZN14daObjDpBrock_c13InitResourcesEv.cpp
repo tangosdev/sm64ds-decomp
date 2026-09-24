@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN11PyramidStep13InitResourcesEv
+// @symbol _ZN14daObjDpBrock_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method */
-#include "PyramidStep.h"
+#include "daObjDpBrock_c.h"
 typedef short s16;
 struct SharedFilePtr { int x; }; struct BMD_File; struct KCL_File; struct Matrix4x3; struct CLPS_Block;
 extern int _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_;
@@ -19,7 +19,7 @@ extern struct SharedFilePtr data_ov025_02113ab0;
 extern struct CLPS_Block data_ov025_02112ce8;
 }
 
-int PyramidStep::InitResources()
+int daObjDpBrock_c::InitResources()
 {
     struct BMD_File *bmd = _ZN5Model8LoadFileER13SharedFilePtr(data_ov025_02113ab8);
     _ZN9ModelBase7SetFileEP8BMD_Fileii(((char *)this) + 0x320, bmd, 1, -1);

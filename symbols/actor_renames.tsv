@@ -1087,12 +1087,12 @@ ov024	0x021138c8	data_ov024_021138c8	_ZTV10PyramidTop	vtable alloc=0x3b8
 ov025	0x02111898	func_ov025_02111898	daDgr_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov025	0x02111cf4	func_ov025_02111cf4	Grindel_Spawn	spawnfunc
 ov025	0x02111cf4	Grindel_Spawn	daDkk_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
-ov025	0x02111d40	func_ov025_02111d40	_ZN11PyramidStepD1Ev	vtable slot 16
-ov025	0x02111d8c	func_ov025_02111d8c	_ZN11PyramidStepD0Ev	vtable slot 17
-ov025	0x02111e70	func_ov025_02111e70	_ZN11PyramidStep16CleanupResourcesEv	vtable slot 3
-ov025	0x02111ea8	func_ov025_02111ea8	_ZN11PyramidStep6RenderEv	vtable slot 9
-ov025	0x02111ed4	func_ov025_02111ed4	_ZN11PyramidStep8BehaviorEv	vtable slot 6
-ov025	0x02111fa0	func_ov025_02111fa0	_ZN11PyramidStep13InitResourcesEv	vtable slot 0
+ov025	0x02111d40	func_ov025_02111d40	_ZN14daObjDpBrock_cD1Ev	vtable slot 16
+ov025	0x02111d8c	func_ov025_02111d8c	_ZN14daObjDpBrock_cD0Ev	vtable slot 17
+ov025	0x02111e70	func_ov025_02111e70	_ZN14daObjDpBrock_c16CleanupResourcesEv	vtable slot 3
+ov025	0x02111ea8	func_ov025_02111ea8	_ZN14daObjDpBrock_c6RenderEv	vtable slot 9
+ov025	0x02111ed4	func_ov025_02111ed4	_ZN14daObjDpBrock_c8BehaviorEv	vtable slot 6
+ov025	0x02111fa0	func_ov025_02111fa0	_ZN14daObjDpBrock_c13InitResourcesEv	vtable slot 0
 ov025	0x021120ac	func_ov025_021120ac	PyramidStep_Spawn	spawnfunc
 ov025	0x021120ac	PyramidStep_Spawn	daObjDpBrock_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov025	0x021120e4	func_ov025_021120e4	_ZN10daDpLift_cD1Ev	vtable slot 16
@@ -1108,7 +1108,7 @@ ov025	0x0211382c	data_ov025_0211382c	Grindel_SpawnInfo	spawninfo
 ov025	0x0211382c	Grindel_SpawnInfo	g_profile_DONKAKU	reconstructed profile global; literal ROM ID DONKAKU+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov025	0x021138f0	data_ov025_021138f0	PyramidStep_SpawnInfo	spawninfo
 ov025	0x021138f0	PyramidStep_SpawnInfo	g_profile_DP_BROCK	reconstructed profile global; literal ROM ID DP_BROCK+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov025	0x02113914	data_ov025_02113914	_ZTV11PyramidStep	vtable alloc=0x3a4
+ov025	0x02113914	data_ov025_02113914	_ZTV14daObjDpBrock_c	vtable alloc=0x3a4
 ov025	0x021139b0	data_ov025_021139b0	PyramidLift_SpawnInfo	spawninfo
 ov025	0x021139b0	PyramidLift_SpawnInfo	g_profile_DP_LIFT	reconstructed profile global; literal ROM ID DP_LIFT+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov025	0x021139d4	data_ov025_021139d4	_ZTV10daDpLift_c	vtable alloc=0x3fc

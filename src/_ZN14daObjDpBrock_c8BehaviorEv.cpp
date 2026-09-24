@@ -1,14 +1,14 @@
 //cpp
-// @symbol _ZN11PyramidStep8BehaviorEv
+// @symbol _ZN14daObjDpBrock_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "PyramidStep.h"
+#include "daObjDpBrock_c.h"
 extern "C" {
 extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void* p, int a, int b);
 }
 
-int PyramidStep::Behavior()
+int daObjDpBrock_c::Behavior()
 {
     char* c = (char*)((void*)this);
     switch (*(unsigned char*)(c + 0x372)) {

@@ -1,5 +1,5 @@
-#ifndef PYRAMIDSTEP_H
-#define PYRAMIDSTEP_H
+#ifndef DAOBJDPBROCK_C_H
+#define DAOBJDPBROCK_C_H
 
 #include "types.h"
 #include "dBgW_KcMbg.h"
@@ -19,7 +19,7 @@
 #include "dBgActor_c.h"
 #include "Model.h"
 
-struct PyramidStep : dBgActor_c {
+struct daObjDpBrock_c : dBgActor_c {
     u8  pad_31e[0x2];
     /* The class's own model. NOT "mModel": dBgActor_c's inherited
        Model at 0xd4 already owns that name, and the flat C twin below
@@ -36,7 +36,7 @@ struct PyramidStep : dBgActor_c {
     u8  mClsnMat2[0x30];              /* 0x374 */
 
     /* --- vtable --- */
-    virtual ~PyramidStep();
+    virtual ~daObjDpBrock_c();
 
     int Behavior();
     int CleanupResources();
@@ -47,7 +47,7 @@ struct PyramidStep : dBgActor_c {
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char PyramidStep_size_must_be_0x3a4[sizeof(PyramidStep) == 0x3a4 ? 1 : -1];
+typedef char daObjDpBrock_c_size_must_be_0x3a4[sizeof(daObjDpBrock_c) == 0x3a4 ? 1 : -1];
 #endif
 
 #else
@@ -55,7 +55,7 @@ typedef char PyramidStep_size_must_be_0x3a4[sizeof(PyramidStep) == 0x3a4 ? 1 : -
 /* The C spelling of the same object, flat. Kept because the D0 file is a C
    translation unit that reads these fields, and D0 is compiler-generated so it
    can never be migrated. Same arrangement as include/ShadowModel.h. */
-struct PyramidStep {
+struct daObjDpBrock_c {
     u8  pad_000[0x8];
     s32 param1;            /* 0x008 */
     u8  pad_00c[0x82];
@@ -65,9 +65,9 @@ struct PyramidStep {
     u8  pad_0ac[0x28];
     /* Model member, named by the class's own destructor calling
        Model's D1 at +0x0d4 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN11PyramidStepD1Ev.c] */
+       checks. Was a u8 marker. [_ZN14daObjDpBrock_cD1Ev.c] */
     Model mModel;             /* 0x0d4 - dBgActor_c's, restated flat */
-    /* dBgW_KcMbg member. The cartridge's own ~PyramidStep calls _ZN10dBgW_KcMbgD1Ev at
+    /* dBgW_KcMbg member. The cartridge's own ~daObjDpBrock_c calls _ZN10dBgW_KcMbgD1Ev at
        +0x124 (D0/D1), a relocation the ROM build checks; recovered by
        tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
     dBgW_KcMbg mMovingMeshCollider;            /* 0x124 */
@@ -83,4 +83,4 @@ struct PyramidStep {
 
 #endif /* __cplusplus */
 
-#endif /* PYRAMIDSTEP_H */
+#endif /* DAOBJDPBROCK_C_H */
