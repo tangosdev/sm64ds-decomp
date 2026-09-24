@@ -19,14 +19,16 @@
  * inherited dBgW_KcMbg at 0x124 and Model at 0x0d4, then chains to dActor_c.
  * The remaining fields are evidenced by the class's state helpers. */
 struct daObjCasket_c : dBgActor_c {
-    s32 mState;             /* 0x320 */
-    u16 mStateTimer;        /* 0x324 */
-    s16 mAngleStep;         /* 0x326 */
-    u16 mBehaviorTimer;     /* 0x328 */
-    u16 unk_32a;            /* 0x32a */
+    s32 mState;             /* 0x320 -- index into the WAIT, STANDUP state table */
+    u16 mStateTimer;        /* 0x324 -- WAIT countdown, then the STANDUP shake */
+    s16 mAngleStep;         /* 0x326 -- per-frame step of mAngleX */
+    u16 mBehaviorTimer;     /* 0x328 -- frame counter; paces the rattle */
+    /* 0x32a..0x32b is tail padding: sizeof rounds to 0x32c, the factory's
+       allocation size. Nothing reads or writes it. */
 
-    /* Inline is load-bearing: the two destructor sources force mwccarm to
-     * emit the ROM's D1/D0 pair without creating a homeless D2. */
+    /* Inline is load-bearing: it makes InitResources the key function, so
+     * src/actors/daObjCasket_c.cpp emits the ROM's D1/D0 pair with the vtable
+     * and no homeless D2. */
     virtual ~daObjCasket_c() {}
 
     /* Overrides of fBase_c's slots 0, 3, 6 and 9. */
@@ -45,7 +47,6 @@ struct daObjCasket_c {
     u16 mStateTimer;        /* 0x324 */
     s16 mAngleStep;         /* 0x326 */
     u16 mBehaviorTimer;     /* 0x328 */
-    u16 unk_32a;            /* 0x32a */
 };
 
 #endif
