@@ -63,3 +63,12 @@ src/func_ov006_020fb7e0.c
 src/func_01ffde98.c
 
 # ---- group F: Heap::_Deallocate (arm9 0x0203c280) --------------------------
+# Host copy retired: the member definition in port/hal/cxx_aliases.cpp (the
+# body the link took; the flat name's reverse face in port/faces_sync.txt was
+# already R and is unchanged). Its ruling described a zero-argument veneer
+# with this and ptr riding in on r0/r1; the src is now the member
+# Heap::_Deallocate(void *) calling the decorated Deallocate with the pointer
+# spelled. port/slice_gate10.txt still carries the old reason beside its
+# commented-out line for this file; that comment is stale and is left to its
+# owner. Callers: _ZdlPv, func_02018934, func_ov007_020cca98 (linked).
+src/_ZN4Heap11_DeallocateEPv.cpp

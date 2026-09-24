@@ -815,17 +815,17 @@ struct Sound {
 SeqEntry *Sound::InfoSequenceEntry::GetWithID(unsigned id)
 { return _ZN5Sound17InfoSequenceEntry9GetWithIDEj(id); }
 
-/* Heap::_Deallocate is a DS tail-call veneer to Deallocate; operator delete
-   dispatches it as a method. Same-shadow definition forwarding to the HAL
-   dealloc keeps the mangling the reference expects. */
-struct Heap { void _Deallocate(void *ptr); };
-extern "C" void _ZN4Heap10DeallocateEPv(void *self, void *ptr);
-/* PORT_HOST_ABI: ARM register ride-through. The matched
-   src/_ZN4Heap11_DeallocateEPv.cpp is a zero-argument veneer whose this and
-   ptr ride in on r0/r1; linked under this MSVC name it would deallocate a
-   garbage pointer from a garbage heap on the first free. This forwarding
-   definition IS the faithful stand-in. */
-void Heap::_Deallocate(void *ptr) { _ZN4Heap10DeallocateEPv(this, ptr); }
+/* Heap::_Deallocate, the DS tail-call veneer to Deallocate that operator
+   delete dispatches as a method, was defined here as a host stand-in: RETIRED
+   at run linkfull wave 27 (lane P1). Its ruling was that the matched
+   src/_ZN4Heap11_DeallocateEPv.cpp was a zero-argument veneer whose this and
+   ptr rode in on r0/r1. It is now the member
+   `void Heap::_Deallocate(void *ptr) { Deallocate(ptr); }`, which passes both
+   (the receiver in ECX, the pointer on the stack) to the decorated
+   ?Deallocate@Heap@@QAEXPAX@Z the link already carries, so the matched TU is
+   linked instead (port/slice_w28_p1.txt). The flat name keeps its reverse face
+   in port/faces_sync.txt. hal/blend_vtable.cpp's copy of this definition
+   stays off on every target that links this file (PORT_CXX_ALIASES_LINKED). */
 
 /* RaycastGround::DetectClsn is defined against a local shadow in its own
    TU; mirror the shadow (no real header here) so the manglings agree. */
