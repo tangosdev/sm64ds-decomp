@@ -1,11 +1,8 @@
 //cpp
 /* daDonketu_c -- the small Bully (DONKETU), ov064 0x02117070..0x02117444.
  *
- * One translation unit, ten functions, the way the cartridge's own build had it.
- * This replaces ten one-function shards. Their bodies are unchanged except for
- * the call spellings noted below; what else changed is that their ten copies of
- * the same local declarations collapse into the single extern block, and that
- * the destructor is now inline in include/daDonketu_c.h.
+ * One translation unit, ten functions, the way the cartridge's own build had
+ * it; the destructor is inline in include/daDonketu_c.h.
  *
  * daDonketu_c derives from daOts_c, the shared Bully base whose own promoted TU
  * sits immediately below this one in the same overlay (0x02115ee0..0x02117070).
@@ -68,9 +65,7 @@ int daDonketu_c::InitResources()
 }
 
 // @symbol _ZN11daDonketu_c8BehaviorEv
-/* recovered: named members + shared header, real C++ method
- *
- * The bully's whole update is delegated: dEnemyBase_c::UpdateKillByInvincibleChar
+/* The bully's whole update is delegated: dEnemyBase_c::UpdateKillByInvincibleChar
  * decides, from the mesh collision and the animation, whether anything happened
  * this frame. 0 means nothing did and the shared behaviour worker runs; 1 means
  * handled; 2 is the death case, and only that arm has a body. That arm is the
@@ -97,9 +92,9 @@ int daDonketu_c::InitResources()
  */
 int daDonketu_c::Behavior()
 {
-    int ret = UpdateKillByInvincibleChar(mWithMeshClsn, mModelAnim, 3);
-    if (ret != 0) {
-        if (ret == 2) {
+    int outcome = UpdateKillByInvincibleChar(mWithMeshClsn, mModelAnim, 3);
+    if (outcome != 0) {
+        if (outcome == 2) {
             int y = mPosY;
             int yoff = 0x136000;
             int z = mPosZ;
@@ -109,8 +104,8 @@ int daDonketu_c::Behavior()
             pos.x = x;
             pos.y = sum;
             pos.z = z;
-            int r = RandomIntInternal(&data_0209e650);
-            int yrot = mPrevAngleY + 0x8000 + (int)(((u32)r >> 8) & 0x3ff);
+            int roll = RandomIntInternal(&data_0209e650);
+            int yrot = mPrevAngleY + 0x8000 + (int)(((u32)roll >> 8) & 0x3ff);
             Vector3_16 rot;
             rot.x = 0;
             rot.z = 0;
@@ -150,9 +145,9 @@ void daDonketu_c::UpdateDeathState()
     pos.x = px;
     pos.y = py;
     pos.z = pz;
-    int r = RandomIntInternal(&data_0209e650);
+    int roll = RandomIntInternal(&data_0209e650);
     Vector3_16 rot;
-    s16 ang = (s16)(mPrevAngleY + 0x8000 + (((u32)r >> 8) & 0x3ff));
+    s16 ang = (s16)(mPrevAngleY + 0x8000 + (((u32)roll >> 8) & 0x3ff));
     rot.x = 0;
     rot.z = 0;
     rot.y = ang;
