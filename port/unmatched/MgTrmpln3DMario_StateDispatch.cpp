@@ -163,6 +163,7 @@
 // switches over the same twenty-one addresses would split the witness.
 
 #include <cstdio>
+#include <cstdlib>   /* std::abort, for the field seat (run linkfull lane PMFMG1) */
 
 struct MgPmf { unsigned code; int adj; };
 
@@ -261,44 +262,189 @@ extern "C" void port_mg_mario_counts(unsigned *hits, unsigned *floor,
     *virt     = g_mario_virtual_arm;
 }
 
-// ---- the one host copy -----------------------------------------------------
+// ---- THE FIELD IS SEATED AND BOTH HOST COPIES ARE GONE, run linkfull lane PMFMG1
 //
-// src/func_ov006_020cb030.cpp verbatim except for the dispatch site
-// (port_mg_mario_call0 rather than the open-coded call through `off`) and the
-// two class-member calls, which are spelled as the ARM symbols the port already
-// links rather than re-declared at namespace scope.  Nothing else moved: the
-// three-field copy at the top, the +0x64 null guard, the 0xb4b 20.12 scale,
-// the +0x38 / +0xcc comparisons and the two tail calls are src's.
+// src/func_ov006_020cb030.cpp (this class's element dispatcher) and
+// src/func_ov006_020c8f20.cpp (dScMgTrmpln2Mario_c's, Trampoline Terror's
+// element: unmatched/MgTrampolineTerror_SubDispatch.cpp) both run from src now.
+// They read ONE pair universe, which is why the seat is here and serves both,
+// as section 6 above asks.
+//
+// ---- 1. THE UNIVERSE, CLOSED BY THE ROM -----------------------------------
+//
+// runs/linkfull/out/PMFMG1/rom_records.txt reads all THIRTY-EIGHT slots of
+// 0x0213b0f4..0x0213b224 (the run section 4 bounds, 0x0213b19c excluded) out
+// of overlay_0006.bin with their relocations: every one {load-relocated code
+// word, 0}, nothing relocated from +4, TWENTY-ONE distinct code words. The
+// address-targeted sweep over the whole overlay for those twenty-one
+// (rom_records_sweep.txt) finds exactly these thirty-eight pairs and no other;
+// rom_trmpln_code_refs.txt lists every other relocation that reaches one of the
+// twenty-one: eight arm_call rows (plain calls of a body) and three literal
+// pool words, each a tail call at the end of a two-line writer
+// (020ca2ec, 020cb814, 020cc618: `*field = pair; body(this);`). No code
+// compares the field against a DS constant.
+//
+// ---- 2. ONE HOST WORD PER CODE WORD --------------------------------------
+//
+// The field is copied BY VALUE (thirty-odd writers) and compared by value
+// (src/func_ov006_020c94e0.cpp compares a stored pair with a pair of the run),
+// so each code word maps to ONE wrapper, written into every pair that holds
+// it. Both sides of every comparison move together and a comparison answers
+// what the cartridge answers: the MgMemory2_FieldPmf.cpp / FWD gate 3 rule.
+//
+// ---- 3. __cdecl, OFF BOTH LISTINGS ----------------------------------------
+//
+// Both TUs compile (under hostgen's MEMBER_REDECL rows for their two C2761s)
+// to `push ecx / call edx / add esp, 4` (runs/linkfull/out/PMFMG1/
+// func_ov006_020cb030.asm, func_ov006_020c8f20.asm): the receiver pushed and
+// the caller cleaning it. So the cells hold __cdecl wrappers, one per code
+// word, each counting what the two switches counted and calling the body with
+// its own src parameter list. Both src TUs keep their own null guard on the
+// code word, as the ROM does.
+//
+// ---- 4. THE WRONG TWIN IS FIXED IN src -----------------------------------
+//
+// Section 5b's finding (020c9024 called where the ROM calls 020cb134) is fixed
+// in src/func_ov006_020cb030.cpp itself; its comment says so and its
+// relocation row 0x020cb088 -> 0x020cb134 agrees.
 
-// PORT_HOST_ABI: dMgTrmpln3DMario_c second-level dispatcher; src open-codes the eight-byte {off, adj} field pmf at element+0x64 in plain ints, which MSVC reads as four bytes and jumps to a DS address (and rejects the TU as C2761 besides), so the host reads the pair and routes it.
-extern "C" void func_ov006_020cb030(char *o)
-{
-    *(int *)(o + 0x28) = *(int *)(o + 0x1c);
-    *(int *)(o + 0x2c) = *(int *)(o + 0x20);
-    *(int *)(o + 0x30) = *(int *)(o + 0x24);
+static unsigned g_trmpln_field_hits;
 
-    if (*(int *)(o + 0x64) != 0) {
-        const MgPmf *cl = (const MgPmf *)(o + 0x64);
-        /* the ROM advances `this` by adj >> 1 before the call -- section 5 */
-        void *tobj = o + (cl->adj >> 1);
-        port_mg_mario_call0(tobj, cl->code, cl->adj);
+#define TRM_W(code, cast)                                                  \
+    static void tw_##code(void *o)                                        \
+    {                                                                     \
+        ++g_mario_state_hits;                                             \
+        ++g_trmpln_field_hits;                                            \
+        func_ov006_##code(cast o);                                        \
     }
+TRM_W(020c905c, (char *))
+TRM_W(020c91ac, (char *))
+TRM_W(020c97bc, (char *))
+TRM_W(020c9d7c, (char *))
+TRM_W(020c9efc, (char *))
+TRM_W(020ca070, (char *))
+TRM_W(020ca310, (char *))
+TRM_W(020ca39c, (int *))
+TRM_W(020cb16c, (int *))
+TRM_W(020cb2b4, )
+TRM_W(020cb5c4, (char *))
+TRM_W(020cb72c, (char *))
+TRM_W(020cb838, (char *))
+TRM_W(020cbd7c, (char *))
+TRM_W(020cc2ac, (char *))
+TRM_W(020cc408, (char *))
+TRM_W(020cc63c, (int *))
+TRM_W(020cc724, (char *))
+TRM_W(020cc9b8, (int *))
+TRM_W(020ccae0, (char *))
+TRM_W(020ccd64, (char *))
 
-    func_ov006_020cb134(o);
-
-    {
-        const int v = (int)((((long long)*(int *)(o + 0x44)) * 0xb4b + 0x800) >> 12);
-        if (*(int *)(o + 0x38) > v) {
-            if (*(int *)(o + 0xcc) == data_ov006_0214059c) {
-                *(int *)(o + 0x54) =
-                    _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-                        *(int *)(o + 0x54), 0xf5,
-                        *(int *)(o + 0x1c) << 3, *(int *)(o + 0x20) << 3,
-                        *(int *)(o + 0x24) << 3, 0, 0);
-            }
-        }
-    }
-
-    func_ov006_020cafdc(o);
-    _ZN9Animation7AdvanceEv(o + 0xbc);
+extern "C" {
+extern MgPmf data_ov006_0213b0f4;
+extern MgPmf data_ov006_0213b0fc;
+extern MgPmf data_ov006_0213b104;
+extern MgPmf data_ov006_0213b10c;
+extern MgPmf data_ov006_0213b114;
+extern MgPmf data_ov006_0213b11c;
+extern MgPmf data_ov006_0213b124;
+extern MgPmf data_ov006_0213b12c;
+extern MgPmf data_ov006_0213b134;
+extern MgPmf data_ov006_0213b13c;
+extern MgPmf data_ov006_0213b144;
+extern MgPmf data_ov006_0213b14c;
+extern MgPmf data_ov006_0213b154;
+extern MgPmf data_ov006_0213b15c;
+extern MgPmf data_ov006_0213b164;
+extern MgPmf data_ov006_0213b16c;
+extern MgPmf data_ov006_0213b174;
+extern MgPmf data_ov006_0213b17c;
+extern MgPmf data_ov006_0213b184;
+extern MgPmf data_ov006_0213b18c;
+extern MgPmf data_ov006_0213b194;
+extern MgPmf data_ov006_0213b1a4;
+extern MgPmf data_ov006_0213b1ac;
+extern MgPmf data_ov006_0213b1b4;
+extern MgPmf data_ov006_0213b1bc;
+extern MgPmf data_ov006_0213b1c4;
+extern MgPmf data_ov006_0213b1cc;
+extern MgPmf data_ov006_0213b1d4;
+extern MgPmf data_ov006_0213b1dc;
+extern MgPmf data_ov006_0213b1e4;
+extern MgPmf data_ov006_0213b1ec;
+extern MgPmf data_ov006_0213b1f4;
+extern MgPmf data_ov006_0213b1fc;
+extern MgPmf data_ov006_0213b204;
+extern MgPmf data_ov006_0213b20c;
+extern MgPmf data_ov006_0213b214;
+extern MgPmf data_ov006_0213b21c;
+extern MgPmf data_ov006_0213b224;
 }
+
+static const struct { MgPmf *p; unsigned rom; void *host; } g_trmpln_seats[] = {
+    {&data_ov006_0213b0f4, 0x020cc2acu, (void *)tw_020cc2ac},
+    {&data_ov006_0213b0fc, 0x020c9d7cu, (void *)tw_020c9d7c},
+    {&data_ov006_0213b104, 0x020ca39cu, (void *)tw_020ca39c},
+    {&data_ov006_0213b10c, 0x020ca39cu, (void *)tw_020ca39c},
+    {&data_ov006_0213b114, 0x020c905cu, (void *)tw_020c905c},
+    {&data_ov006_0213b11c, 0x020ca39cu, (void *)tw_020ca39c},
+    {&data_ov006_0213b124, 0x020ca310u, (void *)tw_020ca310},
+    {&data_ov006_0213b12c, 0x020cc9b8u, (void *)tw_020cc9b8},
+    {&data_ov006_0213b134, 0x020ca070u, (void *)tw_020ca070},
+    {&data_ov006_0213b13c, 0x020c9efcu, (void *)tw_020c9efc},
+    {&data_ov006_0213b144, 0x020ca39cu, (void *)tw_020ca39c},
+    {&data_ov006_0213b14c, 0x020c97bcu, (void *)tw_020c97bc},
+    {&data_ov006_0213b154, 0x020c9efcu, (void *)tw_020c9efc},
+    {&data_ov006_0213b15c, 0x020cb2b4u, (void *)tw_020cb2b4},
+    {&data_ov006_0213b164, 0x020ccd64u, (void *)tw_020ccd64},
+    {&data_ov006_0213b16c, 0x020c9d7cu, (void *)tw_020c9d7c},
+    {&data_ov006_0213b174, 0x020ccd64u, (void *)tw_020ccd64},
+    {&data_ov006_0213b17c, 0x020ccd64u, (void *)tw_020ccd64},
+    {&data_ov006_0213b184, 0x020ccae0u, (void *)tw_020ccae0},
+    {&data_ov006_0213b18c, 0x020ccae0u, (void *)tw_020ccae0},
+    {&data_ov006_0213b194, 0x020c91acu, (void *)tw_020c91ac},
+    {&data_ov006_0213b1a4, 0x020ccd64u, (void *)tw_020ccd64},
+    {&data_ov006_0213b1ac, 0x020cb838u, (void *)tw_020cb838},
+    {&data_ov006_0213b1b4, 0x020c97bcu, (void *)tw_020c97bc},
+    {&data_ov006_0213b1bc, 0x020cbd7cu, (void *)tw_020cbd7c},
+    {&data_ov006_0213b1c4, 0x020cb72cu, (void *)tw_020cb72c},
+    {&data_ov006_0213b1cc, 0x020cc2acu, (void *)tw_020cc2ac},
+    {&data_ov006_0213b1d4, 0x020ca310u, (void *)tw_020ca310},
+    {&data_ov006_0213b1dc, 0x020cbd7cu, (void *)tw_020cbd7c},
+    {&data_ov006_0213b1e4, 0x020cc63cu, (void *)tw_020cc63c},
+    {&data_ov006_0213b1ec, 0x020c91acu, (void *)tw_020c91ac},
+    {&data_ov006_0213b1f4, 0x020cc408u, (void *)tw_020cc408},
+    {&data_ov006_0213b1fc, 0x020cb2b4u, (void *)tw_020cb2b4},
+    {&data_ov006_0213b204, 0x020cb72cu, (void *)tw_020cb72c},
+    {&data_ov006_0213b20c, 0x020cb16cu, (void *)tw_020cb16c},
+    {&data_ov006_0213b214, 0x020ca39cu, (void *)tw_020ca39c},
+    {&data_ov006_0213b21c, 0x020cc724u, (void *)tw_020cc724},
+    {&data_ov006_0213b224, 0x020cb5c4u, (void *)tw_020cb5c4},
+};
+
+/* Called from port_mg_framework_states_seat (unmatched/MgBase_StateDispatch
+   .cpp), which hal/scene_mg.cpp runs once per process after the overlay
+   constructors and before any trampoline element exists. */
+extern "C" void port_mg_trmpln_field_seat(void)
+{
+    static int done;
+    if (done)
+        return;
+    done = 1;
+    for (unsigned i = 0; i < sizeof g_trmpln_seats / sizeof g_trmpln_seats[0]; ++i) {
+        if (g_trmpln_seats[i].p->code != g_trmpln_seats[i].rom ||
+            g_trmpln_seats[i].p->adj != 0) {
+            std::fprintf(stderr, "FATAL: trampoline Mario field pair %u: the "
+                         "mount holds %08x/%d, the ROM's own word says %08x/0 "
+                         "-- WRONG BYTES\n", i, g_trmpln_seats[i].p->code,
+                         g_trmpln_seats[i].p->adj, g_trmpln_seats[i].rom);
+            std::abort();
+        }
+        g_trmpln_seats[i].p->code = (unsigned)(size_t)g_trmpln_seats[i].host;
+    }
+}
+
+/* The shared count, for unmatched/MgTrampolineTerror_SubDispatch.cpp's census
+   entry point: one process runs one of the two scenes, so on scene 385 this is
+   Trampoline Terror's element dispatch count and on scene 384 Trampoline
+   Time's. */
+extern "C" unsigned port_mg_trmpln_field_hits(void) { return g_trmpln_field_hits; }

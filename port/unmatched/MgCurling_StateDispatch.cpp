@@ -243,30 +243,10 @@ extern "C" unsigned port_mg_curling_state_hits(void)
    port/slice_seat4.txt, so the host copy that stood in for it is gone and
    the declaration above is what the faces in this file reach. */
 
-/* src/func_ov006_020e0d84.cpp. Two dispatches, two tables, both one-argument. */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgCurling_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
-extern "C" void func_ov006_020e0d84(char *c, int i)
-{
-    int idx = i * 0x24;
-    unsigned char k0 = *(unsigned char *)(c + idx + 0x4000 + 0x7aa);
-    const MgPmf *p0 = &data_ov006_02141930[k0];
-    port_mg_call1(c, p0->code, p0->adj, i);
-    unsigned char k1 = *(unsigned char *)(c + idx + 0x4000 + 0x7ab);
-    const MgPmf *p1 = &data_ov006_021418d8[k1];
-    port_mg_call1(c, p1->code, p1->adj, i);
-}
-
-/* src/func_ov006_020e1214.cpp. SILENT: its table was declared inside
-   extern "C", so the link never named it. */
-#define F1E(b, i) (*(unsigned char *)((char *)(b) + 0x47aa + (i) * 0x24))
-
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgCurling_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
-extern "C" void func_ov006_020e1214(char *base, int idx)
-{
-    unsigned char state = F1E(base, idx);
-    const MgPmf *p = &data_ov006_021418f0[state];
-    port_mg_call1(base, p->code, p->adj, idx);
-}
+/* src/func_ov006_020e0d84.cpp and src/func_ov006_020e1214.cpp -- RETIRED, run
+   linkfull lane PMFMG1. Their three tables are seated at the end of this file
+   (data_ov006_02141930, _021418d8 and _021418f0, eleven cells), so both matched
+   TUs dispatch through host faces themselves; see the block above the seat. */
 
 // ---- THREE TABLES SEATED AS ONE PIECE, AND BOTH HOST COPIES ARE GONE -------
 //
@@ -420,6 +400,57 @@ CUR_FACE0(t50, 2, func_ov006_020e2f78)
 CUR_FACE0(t50, 3, func_ov006_020e2ebc)
 CUR_FACE0_VOID(t50, 4, func_ov006_020e2eb8)
 
+/* ---- THE LAST THREE TABLES, run linkfull lane PMFMG1 ---------------------
+ *
+ * func_ov006_020e0d84 and func_ov006_020e1214 were this file's last two host
+ * copies. Both are STATE BODIES of data_ov006_021418c0 (seated in
+ * port/hal/pmf_seat4.cpp, whose faces call them by their C names) and both are
+ * DISPATCHERS of their own tables:
+ *
+ *   func_ov006_020e0d84   data_ov006_02141930   4 cells   arity 1
+ *                         data_ov006_021418d8   3 cells   arity 1
+ *   func_ov006_020e1214   data_ov006_021418f0   4 cells   arity 1
+ *
+ * THE RECORDS, read out of extracted/overlays/overlay_0006.bin with the
+ * overlay's own relocations (runs/linkfull/out/PMFMG1/rom_records.txt): the
+ * eleven source pairs __sinit_ov006_021304ac copies each slot from are all
+ * {load-relocated code word, 0}, nothing relocated from any +4 word, so no
+ * cell is virtual and `this` is the object unchanged. Each of the three tables
+ * has exactly two readers in the ROM, the sinit and its one dispatcher, and
+ * each source pair is read by the sinit alone (rom_table_readers.txt,
+ * rom_source_pair_readers.txt).
+ *
+ * THE CALL SHAPE, off each matched TU's own listing under the port's flags
+ * (runs/linkfull/out/PMFMG1/func_ov006_020e0d84.asm, func_ov006_020e1214.asm):
+ * `push <index> / mov ecx, tab[eax*8+4] / mov eax, tab[eax*8] / add ecx,
+ * <this> / call eax` at all three sites, no caller cleanup after any of them.
+ * Receiver in ecx, one callee-popped argument: the one-argument __fastcall
+ * face this file already uses for 02141910. The stride is eight on both sides.
+ *
+ * TWO /alternatename rows. src/func_ov006_020e0d84.cpp declares both of its
+ * tables at C++ linkage through its own shadow class `C`, so MSVC spells the
+ * references ?data_ov006_02141930@@3PAP8C@@AEXH@ZA and
+ * ?data_ov006_021418d8@@3PAP8C@@AEXH@ZA (read off the listing's EXTRN lines);
+ * src/func_ov006_020e1214.cpp declares its table inside extern "C" and comes in
+ * as the plain _data_ov006_021418f0. Nothing in the tree defines either LHS. */
+#pragma comment(linker, "/alternatename:?data_ov006_02141930@@3PAP8C@@AEXH@ZA=_data_ov006_02141930")
+#pragma comment(linker, "/alternatename:?data_ov006_021418d8@@3PAP8C@@AEXH@ZA=_data_ov006_021418d8")
+
+/* data_ov006_021418f0, arity 1, dispatched by func_ov006_020e1214 */
+CUR_FACE1(tf0, 0, func_ov006_020e1100)
+CUR_FACE1(tf0, 1, func_ov006_020e0ff0)
+CUR_FACE1(tf0, 2, func_ov006_020e0edc)
+CUR_FACE1(tf0, 3, func_ov006_020e0e18)
+/* data_ov006_02141930, arity 1, dispatched by func_ov006_020e0d84 */
+CUR_FACE1(t30, 0, func_ov006_020e0ca0)
+CUR_FACE1(t30, 1, func_ov006_020e0b64)
+CUR_FACE1(t30, 2, func_ov006_020e0a24)
+CUR_FACE1(t30, 3, func_ov006_020e091c)
+/* data_ov006_021418d8, arity 1, dispatched by func_ov006_020e0d84 */
+CUR_FACE1(td8, 0, func_ov006_020e0884)
+CUR_FACE1(td8, 1, func_ov006_020e07b0)
+CUR_FACE1(td8, 2, func_ov006_020e071c)
+
 /* run link100 lane SEAT4: this class's remaining state tables are
    seated in port/hal/pmf_seat4.cpp, from inside this installer, so the
    seat order hal/scene_mg.cpp already establishes is the one they get
@@ -455,6 +486,21 @@ extern "C" void port_mg_curling_states_seat(void)
         {data_ov006_02141950, "02141950", 2, 0x020e2f78u, (void *)cur_t50_s2},
         {data_ov006_02141950, "02141950", 3, 0x020e2ebcu, (void *)cur_t50_s3},
         {data_ov006_02141950, "02141950", 4, 0x020e2eb8u, (void *)cur_t50_s4},
+
+        /* run linkfull lane PMFMG1: the last three tables */
+        {data_ov006_021418f0, "021418f0", 0, 0x020e1100u, (void *)cur_tf0_s0},
+        {data_ov006_021418f0, "021418f0", 1, 0x020e0ff0u, (void *)cur_tf0_s1},
+        {data_ov006_021418f0, "021418f0", 2, 0x020e0edcu, (void *)cur_tf0_s2},
+        {data_ov006_021418f0, "021418f0", 3, 0x020e0e18u, (void *)cur_tf0_s3},
+
+        {data_ov006_02141930, "02141930", 0, 0x020e0ca0u, (void *)cur_t30_s0},
+        {data_ov006_02141930, "02141930", 1, 0x020e0b64u, (void *)cur_t30_s1},
+        {data_ov006_02141930, "02141930", 2, 0x020e0a24u, (void *)cur_t30_s2},
+        {data_ov006_02141930, "02141930", 3, 0x020e091cu, (void *)cur_t30_s3},
+
+        {data_ov006_021418d8, "021418d8", 0, 0x020e0884u, (void *)cur_td8_s0},
+        {data_ov006_021418d8, "021418d8", 1, 0x020e07b0u, (void *)cur_td8_s1},
+        {data_ov006_021418d8, "021418d8", 2, 0x020e071cu, (void *)cur_td8_s2},
     };
 
     for (unsigned i = 0; i < sizeof seats / sizeof seats[0]; ++i) {

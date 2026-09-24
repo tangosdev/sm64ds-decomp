@@ -190,43 +190,30 @@ extern "C" void port_mg_tte_sub_call(void *self, unsigned code, int adj)
     port_mg_call0(self, code, adj);
 }
 
+/* THE CENSUS ENTRY POINT, run linkfull lane PMFMG1. hal/scene_mg_trampoline2.cpp
+   prints these two as "attempted" and "routed". The host copy that counted
+   them is retired (below), and every dispatch through the field now lands in
+   one of the wrappers unmatched/MgTrmpln3DMario_StateDispatch.cpp seats for
+   the shared pair run, which count it; so both numbers are that count (every
+   attempt is routed once the words are host words). The switch above stays,
+   unreached, for the reason every retired switch in this family stays. */
+extern "C" unsigned port_mg_trmpln_field_hits(void);
 extern "C" void port_mg_tte_sub_counts(unsigned *calls, unsigned *routed)
 {
-    if (calls)  *calls  = g_tte_sub_calls;
-    if (routed) *routed = g_tte_sub_routed;
+    const unsigned n = g_tte_sub_calls + port_mg_trmpln_field_hits();
+    if (calls)  *calls  = n;
+    if (routed) *routed = g_tte_sub_routed + port_mg_trmpln_field_hits();
 }
 
-// ---- the host copy ----------------------------------------------------------
-
-// PORT_HOST_ABI: dScMgTrmpln2Mario_c sub-object field-pmf dispatcher; the ROM open-codes the eight-byte {off, adj} decode at o+0x70 in plain ints, so it compiles and links but jumps to a DS address, and the host reads the pair and routes it.
-extern "C" void func_ov006_020c8f20(char *o)
-{
-    *(int *)(o + 0x30) = *(int *)(o + 0x24);
-    *(int *)(o + 0x34) = *(int *)(o + 0x28);
-    *(int *)(o + 0x38) = *(int *)(o + 0x2c);
-
-    /* THE DELTA.  src decodes {off, adj} by hand and calls through it; the
-       adjustment is applied to the receiver exactly as src does, and the
-       routing decision is left to one place. */
-    if (*(int *)(o + 0x70) != 0) {
-        const MgPmf *cl = (const MgPmf *)(o + 0x70);
-        void *tobj = o + (cl->adj >> 1);
-        port_mg_tte_sub_call(tobj, cl->code, cl->adj);
-    }
-
-    func_ov006_020c9024(o);
-    {
-        Fix12 v =
-            (Fix12)(((long long)*(int *)(o + 0x4c) * 0xb4b + 0x800) >> 12);
-        if (*(int *)(o + 0x40) > v) {
-            if (*(int *)(o + 0xd8) == data_ov006_0214059c) {
-                *(int *)(o + 0x5c) = (int)System::New(
-                    *(int *)(o + 0x5c), 0xf5,
-                    *(int *)(o + 0x24) << 3, *(int *)(o + 0x28) << 3,
-                    *(int *)(o + 0x2c) << 3, 0, 0);
-            }
-        }
-    }
-    func_ov006_020c8ecc(o);
-    ((Animation *)(o + 0xc8))->Advance();
-}
+// ---- the host copy -- RETIRED, run linkfull lane PMFMG1 ----------------------
+//
+// src/func_ov006_020c8f20.cpp runs from src (through hostgen's MEMBER_REDECL row
+// for its two C2761 redeclarations). Its pair universe, 0x0213b0f4..0x0213b224,
+// is the one dMgTrmpln3DMario_c's dispatcher reads too, and it is seated with
+// __cdecl wrappers, one per code word, in
+// unmatched/MgTrmpln3DMario_StateDispatch.cpp, whose header says why and has
+// the ROM evidence. Section 3's "the stored pair is not rewritten" is answered
+// there the same way lane FWD gate 3 answered it one record class over: every
+// pair holding a code word gets that code word's one host word, so the
+// by-value comparison in src/func_ov006_020c94e0.cpp still answers what the
+// cartridge answers.

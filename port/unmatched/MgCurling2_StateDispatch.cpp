@@ -323,52 +323,28 @@ static void c2_call1(void *p, const MgC2Pair &e, int i)
    port/slice_seat4.txt, so the host copy that stood in for it is gone and
    the declaration above is what the faces in this file reach. */
 
-/* ---- src/func_ov006_020e6354.cpp, table 02141978 (0) and 021419d8 (1) -----
+/* ---- src/func_ov006_020e6354.cpp -- RETIRED, run linkfull lane PMFMG1 -----
  *
- * Verbatim except the two dispatch sites. src launders both decrements through
- * `(u16*)((long long)(int)(p + off))`, an mwcc rematerialisation lever with no
- * host meaning; the plain pointer arithmetic below is the same store.
- * PORT_HOST_ABI: mwcc pointer-to-member wall, decoded through this class's
- * tables and host-copied as the class's address-switch dispatch (c2_call0/
- * c2_call1). */
-extern "C" void func_ov006_020e6354(char *c)
-{
-    if (*(unsigned short *)(c + 0x55b6) != 0) {
-        --*(unsigned short *)(c + 0x55b6);
-        return;
-    }
-    if (*(unsigned char *)(c + 0xc4) == 0) {
-        *(unsigned char *)(c + 0xc3) = 1;
-        *(unsigned char *)(c + 0xc4) = 1;
-        *(unsigned short *)(c + 0xc0) = 0;
-    }
-    if (*(unsigned char *)(c + 0x55bd) != 0)
-        --*(unsigned char *)(c + 0x55bd);
-
-    c2_call0(c, data_ov006_02141978[*(unsigned char *)(c + 0x55b8)]);
-
-    {
-        int count = 0;
-        int i = 0;
-        char *p = c;
-        for (; i < 0xb; i++, p += 0x30) {
-            if (*(unsigned char *)(p + 0x4689) != 0) {
-                *(int *)(p + 0x466c) = *(int *)(p + 0x4660);
-                *(int *)(p + 0x4670) = *(int *)(p + 0x4664);
-                if (*(unsigned short *)(p + 0x4680) != 0)
-                    --*(unsigned short *)(p + 0x4680);
-                c2_call1(c, data_ov006_021419d8[*(unsigned char *)(p + 0x4688)],
-                         i);
-                if (*(unsigned char *)(p + 0x4688) != 2)
-                    count++;
-            }
-        }
-        if (count != 0)
-            return;
-    }
-    *(int *)(c + 0x5580) = 2;
-    *(unsigned short *)(c + 0x55b6) = 0x40;
-}
+ * The last of the five dispatchers. Its two tables, data_ov006_02141978 (arity
+ * 0, DragBegin and DragUpdate) and data_ov006_021419d8 (arity 1, the round-end
+ * machine's four), are seated in port_mg_curling2_states_seat below, so the
+ * matched TU dispatches through host faces itself.
+ *
+ * ONE SPELLING PER TABLE, which is what the header's "both kinds on one class"
+ * warning asks a seat to check. Each of the two tables has exactly two readers
+ * in the ROM, __sinit_ov006_02130758 and func_ov006_020e6354
+ * (runs/linkfull/out/PMFMG1/rom_table_readers.txt), and the TU spells both as
+ * member pointers. The class's open-coded reader, _ZN15dScMgCurling2_c8BehaviorEv,
+ * reads data_ov006_02141a18 only, whose cdecl faces live in hal/pmf_seat4.cpp
+ * and are not touched.
+ *
+ * THE CALL SHAPE, off the TU's own listing (runs/linkfull/out/PMFMG1/
+ * func_ov006_020e6354.asm): 02141978 `push ebx / push esi / mov ecx,
+ * tab[eax*8+4] / mov eax, tab[eax*8] / add ecx, edi / call eax`, where the two
+ * pushes are DEFERRED REGISTER SAVES (ebx and esi are the loop's registers,
+ * popped after it), so ZERO arguments; 021419d8 `push ebx / ... / call eax`,
+ * ebx the loop index, ONE callee-popped argument. So zero- and one-argument
+ * __fastcall faces, the counters c2_call0 / c2_call1 kept moving into them. */
 
 /* ---- 02141988 IS SEATED AND func_ov006_020e4800 IS GONE -------------------
  *
@@ -440,6 +416,37 @@ C2_FACE(0, _ZN15dScMgCurling2_c12PickStepModeEi)
 C2_FACE(1, _ZN15dScMgCurling2_c9StepXOnlyEi)
 C2_FACE(2, _ZN15dScMgCurling2_c9StepXAndYEi)
 
+/* run linkfull lane PMFMG1: func_ov006_020e6354's two tables. The counters are
+   the ones c2_call0 and c2_call1 kept for these six addresses: g_calls on
+   every dispatch, g_4bd4 on DragUpdate, g_d8[slot] on the round-end four
+   (hal/scene_mg_curling2.cpp prints all three). */
+static void __fastcall c2_78_s0(void *self, void *dead_edx)
+{
+    (void)dead_edx;
+    ++g_calls;
+    _ZN15dScMgCurling2_c9DragBeginEv((char *)self);
+}
+static void __fastcall c2_78_s1(void *self, void *dead_edx)
+{
+    (void)dead_edx;
+    ++g_calls;
+    ++g_4bd4;
+    _ZN15dScMgCurling2_c10DragUpdateEv((char *)self);
+}
+#define C2_D8_FACE(slot, sym)                                             \
+    static void __fastcall c2_d8_s##slot(void *self, void *dead_edx, int i)\
+    {                                                                     \
+        (void)dead_edx;                                                   \
+        ++g_calls;                                                        \
+        ++g_d8[slot];                                                     \
+        sym((char *)self, i);                                             \
+    }
+C2_D8_FACE(0, func_ov006_020e5e3c)
+C2_D8_FACE(1, func_ov006_020e5b7c)
+C2_D8_FACE(2, func_ov006_020e5b70)   /* the veneer onto 0x020e5450; it takes
+                                        both words, see c2_call1 */
+C2_D8_FACE(3, func_ov006_020e5a0c)
+
 /* run link100 lane SEAT4: this class's remaining state tables are
    seated in port/hal/pmf_seat4.cpp, from inside this installer, so the
    seat order hal/scene_mg.cpp already establishes is the one they get
@@ -475,6 +482,40 @@ extern "C" void port_mg_curling2_states_seat(void)
             std::abort();
         }
         q->code = (int)(size_t)seats[k].face;
+    }
+
+    /* run linkfull lane PMFMG1: data_ov006_02141978 and _021419d8, the two
+       tables func_ov006_020e6354 dispatches. Source pairs {code, 0} read out
+       of overlay_0006.bin with their relocations
+       (runs/linkfull/out/PMFMG1/rom_records.txt):
+         02141978[0] <- 0213c4b4 020e4ed4/0   021419d8[0] <- 0213c3e4 020e5e3c/0
+         02141978[1] <- 0213c4ac 020e4bd4/0   021419d8[1] <- 0213c3dc 020e5b7c/0
+                                              021419d8[2] <- 0213c3d4 020e5b70/0
+                                              021419d8[3] <- 0213c3ec 020e5a0c/0 */
+    static const struct {
+        MgC2Pair *table;
+        const char *name;
+        unsigned slot;
+        unsigned rom;
+        void *face;
+    } seats2[] = {
+        {data_ov006_02141978, "02141978", 0, 0x020e4ed4u, (void *)c2_78_s0},
+        {data_ov006_02141978, "02141978", 1, 0x020e4bd4u, (void *)c2_78_s1},
+        {data_ov006_021419d8, "021419d8", 0, 0x020e5e3cu, (void *)c2_d8_s0},
+        {data_ov006_021419d8, "021419d8", 1, 0x020e5b7cu, (void *)c2_d8_s1},
+        {data_ov006_021419d8, "021419d8", 2, 0x020e5b70u, (void *)c2_d8_s2},
+        {data_ov006_021419d8, "021419d8", 3, 0x020e5a0cu, (void *)c2_d8_s3},
+    };
+    for (unsigned k = 0; k < sizeof seats2 / sizeof seats2[0]; ++k) {
+        MgC2Pair *q = &seats2[k].table[seats2[k].slot];
+        if ((unsigned)q->code != seats2[k].rom || q->adj != 0) {
+            std::fprintf(stderr, "FATAL: dScMgCurling2_c state table %s slot "
+                         "%u: the sinit left %08x/%d, the ROM's own pairs say "
+                         "%08x/0 -- WRONG BYTES\n", seats2[k].name, seats2[k].slot,
+                         (unsigned)q->code, q->adj, seats2[k].rom);
+            std::abort();
+        }
+        q->code = (int)(size_t)seats2[k].face;
     }
 }
 

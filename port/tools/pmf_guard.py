@@ -116,13 +116,12 @@ LEDGER = [
      "measured it off the TU's own listing and seated __fastcall faces)"),
 
     ("CDECL", r"^\?seats_cdecl@\?1\?\?port_mg_base_writer_seat@@",
-     "dMgState_c: twenty of these are group A, the setter's own table, and "
-     "the only reader of the object's +0x00 field is the host copy "
-     "__ZN10dMgState_c8SetStateEi, whose mgbase_dispatch_seated is a plain "
-     "cdecl call that PUSHES the receiver. The other seven land in the "
-     "020b3278 object, whose two readers are the FLAT C dispatchers "
-     "_func_ov004_020b321c and _func_ov004_020b31b4, f(self) tail jumps that "
-     "leave the caller's own pushed argument at [esp+4]"),
+     "dMgState_c: the seven cells that land in the 020b3278 object, whose "
+     "two readers are the FLAT C dispatchers _func_ov004_020b321c and "
+     "_func_ov004_020b31b4, f(self) tail jumps that leave the caller's own "
+     "pushed argument at [esp+4]. (Group A, the setter's own twenty, left "
+     "this table in run linkfull lane PMFMG1 for seats_ecx_a above: the "
+     "matched setter dispatches them with the receiver in ecx.)"),
     ("CDECL", r"^\?cells_field@\?1\?\?port_mg_framework_tables_seat@@",
      "data_ov004_020bf428 and _020bf4f8: func_ov004_020b3278 copies these "
      "into the 020b3278 object at +0x00 and +0x08, which _func_ov004_020b321c "
@@ -221,6 +220,45 @@ LEDGER = [
      "at the sibling class the same night. Both the flat dispatcher and the "
      "inlined calls set ecx, so the enter half is thunked too and this "
      "table leaves the exception list"),
+
+    # ---- run linkfull lane PMFMG1: the minigame member-pointer rows -------
+    ("ECX", r"^\?seats_ecx_a@\?1\?\?port_mg_base_writer_seat@@",
+     "dMgState_c group A: the twenty pair globals the matched "
+     "?SetState@dMgState_c@@QAEXH@Z builds sEnterTable from; it copies the "
+     "chosen pair into the message object at +0x00 and dispatches it itself "
+     "with `lea ecx,[edi+esi]; call edx`, nothing pushed, and +0x00 has no "
+     "other reader (runs/linkfull/out/PMFMG1/_ZN10dMgState_c8SetStateEi.asm)"),
+    ("ECX", r"^\?rec@\?1\?\?mem2_record_seat@@",
+     "dScMgMemory2_c's record field: the ten ov004 pairs are copied into "
+     "data_ov004_020bfa34[i]+0 and read back by src/func_ov004_020b52fc.cpp, "
+     "`mov ecx,[eax+4]; add ecx,eax; mov eax,[eax]; pop ebp; jmp eax` -- a "
+     "tail jump with the receiver in ecx and nothing pushed"),
+    ("ECX", r"^\?seats@\?1\?\?port_mg_curling_states_seat@@",
+     "dScMgCurling_c: every cell of this installer's table holds a __fastcall "
+     "face. The three tables this lane added (data_ov006_021418f0, _02141930, "
+     "_021418d8) are dispatched only by src/func_ov006_020e1214.cpp and "
+     "src/func_ov006_020e0d84.cpp, `push <index>; mov ecx,tab[eax*8+4]; mov "
+     "eax,tab[eax*8]; add ecx,<this>; call eax`, callee-popped; the three "
+     "PMFB5 tables before them are read with the same shape"),
+    ("ECX", r"^\?seats2@\?1\?\?port_mg_curling2_states_seat@@",
+     "dScMgCurling2_c: data_ov006_02141978 and _021419d8, dispatched only by "
+     "src/func_ov006_020e6354.cpp, `mov ecx,tab[eax*8+4]; mov eax,tab[eax*8]; "
+     "add ecx,edi; call eax` with zero and one callee-popped argument"),
+    ("CDECL", r"^\?seats_cdecl@\?1\?\?port_mg_esp3d_states_seat@@",
+     "dScMg3DEsp_c: data_ov006_02141f8c and _02141f44 are read only by the "
+     "open-coded src/func_ov006_020e8830.c (`push idx; push obj; call eax`, "
+     "caller cleans) and src/func_ov006_020e82fc.cpp (writes the receiver "
+     "over its own argument slot and tail jumps), so [esp+4] is the receiver "
+     "at both and ecx is not"),
+    ("CDECL", r"^\?seats@\?1\?\?port_mg_flower_sub_seat@@",
+     "dScMgFlower_c's object-head field: the five .data pairs (the sentinel "
+     "0213aee0 included) are read by src/func_ov006_020c3d18.cpp, which "
+     "open-codes the decode and calls `push ecx; call eax`, caller-cleaned"),
+    ("CDECL", r"^\?g_trmpln_seats@@",
+     "the trampoline Mario element field (+0x70 in dScMgTrmpln2Mario_c, +0x64 "
+     "in dMgTrmpln3DMario_c): the thirty-eight .data pairs are read by the "
+     "open-coded src/func_ov006_020c8f20.cpp and src/func_ov006_020cb030.cpp, "
+     "both `push ecx; call edx; add esp,4`"),
 ]
 
 

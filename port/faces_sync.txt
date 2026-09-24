@@ -1276,7 +1276,7 @@ __ZN18dMgMCarloCardObj_cC1Ev                                             ??0dMgM
 __ZN18dMgMCarloCardObj_cD1Ev                                             ??1dMgMCarloCardObj_c@@QAE@XZ                                    0x020f7730 R
 
 __ZN10dMgState_c8BehaviorEv                                              ?Behavior@dMgState_c@@QAEXXZ                                     0x020b8778 R
-__ZN10dMgState_c8SetStateEi                                              ?SetState@dMgState_c@@QAEXH@Z                                    0x020b87e0 F
+__ZN10dMgState_c8SetStateEi                                              ?SetState@dMgState_c@@QAEXH@Z                                    0x020b87e0 R
 
 __ZN5dPa_c7level_c20edStarKiraCallback_cC1Ev                             ??0edStarKiraCallback_c@level_c@dPa_c@@QAE@XZ                    0x02022298 R
 
