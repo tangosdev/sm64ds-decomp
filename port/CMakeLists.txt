@@ -10576,13 +10576,12 @@ set(SLICE_TTI_SOURCES hal/scene_mg_trampoline.cpp
                       # open-codes the pair correctly and would still have
                       # jumped to a DS address; MSVC refuses it anyway (C2761).
                       unmatched/MgTrmpln3DMario_StateDispatch.cpp
-                      # TWO CROSS-MODULE MISBINDINGS: src calls the ov007 DATA
-                      # symbol that shares a DS address with the ov006 FUNCTION
-                      # the ROM's relocation names. Harmless on hardware (the
-                      # two overlays are never co-resident), a hard crash in a
-                      # port that mounts both. This was the only thing stopping
-                      # scene 384 from booting.
-                      unmatched/MgTrmpln3DMario_ModuleFix.cpp
+                      # unmatched/MgTrmpln3DMario_ModuleFix.cpp RETIRED (run
+                      # linkfull, lane RS2PORT): the TWO CROSS-MODULE
+                      # MISBINDINGS it repaired (src calling the ov007 DATA
+                      # symbol at an ov006 FUNCTION's address) are fixed in
+                      # src by address (44cb9d5e92, 0fc1499c8b), so both
+                      # sources are back on port/slice_tti.txt.
                       # unmatched/MgTrmpln3DMario_ModelRender.cpp RETIRED
                       # (run link100, lane FOLD2): the local-shadow
                       # slot-numbering defect died with the destructor unfold,

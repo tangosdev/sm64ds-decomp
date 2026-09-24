@@ -438,6 +438,16 @@
 # the sweep that finds it is two greps over a slice: a `data_` symbol used as a
 # call, and any ovNNN name inside a TU of a different overlay.
 #
+# RETIRED at run linkfull, lane RS2PORT: both sources call the ov006 functions
+# by their ov006 names now (44cb9d5e92 for 020cd12c, 0fc1499c8b for 020cb16c,
+# which also passes the receiver the ROM leaves in r0; the port's text is
+# main's), and the element vtable the constructor installs, data_ov006_0213b2c4,
+# is the same mount word the host copy reached as _ZTV18dMgTrmpln3DMario_c (one
+# address in the map; port/unmatched/MgTrampolineTime_Faces.cpp aliases the
+# class name onto it). So both TUs take their seats and the host file is gone.
+src/func_ov006_020cd12c.c
+src/func_ov006_020cb16c.c
+#
 # ---- 14. ONE MORE HOST COPY: THE ELEMENT'S MODEL DRAW ---------------------
 #
 # src/func_ov006_020cafb4.cpp models the object at element+0x6c with a local
