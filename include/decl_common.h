@@ -500,7 +500,7 @@ extern int _ZTV14KnockDownPlank[];
 extern int _ZTV21daObj_volcanoCannon_c[];
 extern int _ZTV7daMky_c[];
 extern int _ZTV11daObjTbox_c[];
-extern int _ZTV10daUdlift_c[];
+extern int _ZTV13UpDownLiftBbh[];
 extern int _ZTV13dScGameOver_c[];
 extern int _ZTV13dScMgTeresa_c[];
 extern int _ZTV13daLinelift2_c[];

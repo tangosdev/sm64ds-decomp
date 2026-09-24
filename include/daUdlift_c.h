@@ -10,8 +10,8 @@
  * Two inherited angle slots have an unusual actor-specific reading worth
  * preserving: InitResources treats mPrevAngleX and mPrevAngleZ as UNSIGNED
  * shaft measurements:
- *                           mBottomY = mTopY - (unk_092 << 12)
- *                           mTopY    = mPosY + (unk_096 << 12)   (variant only)
+ *                           mBottomY = mTopY - (mPrevAngleX << 12)
+ *                           mTopY    = mPosY + (mPrevAngleZ << 12)   (variant only)
  * Nothing matched writes either slot, so the base names remain provisional for
  * this use even though the physical inheritance is proven.
  *
@@ -22,7 +22,7 @@
  * in state 4, 2 sends it straight back up), but no name is evidenced beyond
  * that. It carries one more observation that should not be lost: InitResources stores only 0 or 1 into it -- 1 for
  * actorID 0x83 -- and then, four statements later, tests it for `== 2`. That
- * branch (the one that raises mTopY by unk_096) is unreachable in the shipped
+ * branch (the one that raises mTopY by mPrevAngleZ) is unreachable in the shipped
  * ROM. It is reproduced as written because the cartridge contains it.
  *
  * SM64DS proves this class as daUdlift_c through RTTI, allocation size and
