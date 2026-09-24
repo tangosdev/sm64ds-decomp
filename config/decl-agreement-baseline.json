@@ -23,7 +23,7 @@
       ]
     },
     "AddVec3": {
-      "src/_ZN12WorkElevator8BehaviorEv.cpp": [
+      "src/_ZN17daObjCvNewsLift_c8BehaviorEv.cpp": [
         "param:#1 const Vector3 *",
         "param:#2 const Vector3 *",
         "param:#3 Vector3 *"
@@ -1945,7 +1945,7 @@
       "src/Matrix4x3_ApplyInPlaceToRotationY.c": [
         "param:#2 short"
       ],
-      "src/_ZN12WorkElevator8BehaviorEv.cpp": [
+      "src/_ZN17daObjCvNewsLift_c8BehaviorEv.cpp": [
         "param:#2 short"
       ],
       "src/_ZN15TtcRotatingCube12UpdateShadowEv.cpp": [
@@ -2239,7 +2239,7 @@
         "param:#1 const Vector3 *",
         "param:#2 const Matrix4x3 *"
       ],
-      "src/_ZN12WorkElevator8BehaviorEv.cpp": [
+      "src/_ZN17daObjCvNewsLift_c8BehaviorEv.cpp": [
         "param:#1 const Vector3 *",
         "param:#2 const Matrix4x3 *"
       ],
@@ -4883,7 +4883,7 @@
         "param:#1 const Vector3 *",
         "param:#2 const Vector3 *"
       ],
-      "src/_ZN12WorkElevator8BehaviorEv.cpp": [
+      "src/_ZN17daObjCvNewsLift_c8BehaviorEv.cpp": [
         "param:#1 const Vector3 *",
         "param:#2 const Vector3 *"
       ],
@@ -10978,7 +10978,7 @@
         "arity:0",
         "mangled:0 parameter(s)"
       ],
-      "src/_ZN12WorkElevator13InitResourcesEv.cpp": [
+      "src/_ZN17daObjCvNewsLift_c13InitResourcesEv.cpp": [
         "arity:0",
         "mangled:0 parameter(s)"
       ],
@@ -12194,7 +12194,7 @@
         "param:#4 void *",
         "param:#5 unsigned int"
       ],
-      "src/_ZN12WorkElevator8BehaviorEv.cpp": [
+      "src/_ZN17daObjCvNewsLift_c8BehaviorEv.cpp": [
         "param:#4 const void *",
         "return:unsigned int"
       ],
@@ -12525,7 +12525,7 @@
       "src/_ZN12HealingHeart8BehaviorEv.cpp": [
         "param:#2 const Vector3 *"
       ],
-      "src/_ZN12WorkElevator8BehaviorEv.cpp": [
+      "src/_ZN17daObjCvNewsLift_c8BehaviorEv.cpp": [
         "param:#2 const void *"
       ],
       "src/_ZN15TtcRotatingCube8BehaviorEv.cpp": [
@@ -19095,7 +19095,7 @@
         "param:#2 const Vector3 *",
         "param:#3 const Vector3 *"
       ],
-      "src/_ZN12WorkElevator8BehaviorEv.cpp": [
+      "src/_ZN17daObjCvNewsLift_c8BehaviorEv.cpp": [
         "param:#2 const Vector3 *",
         "param:#3 const Vector3 *"
       ],
@@ -28446,17 +28446,17 @@
       ]
     },
     "data_ov021_02113a60": {
-      "src/_ZN12WorkElevator13InitResourcesEv.cpp": [
+      "src/_ZN17daObjCvNewsLift_c13InitResourcesEv.cpp": [
         "return:CLPS_Block"
       ]
     },
     "data_ov021_02113a80": {
-      "src/_ZN12WorkElevator13InitResourcesEv.cpp": [
+      "src/_ZN17daObjCvNewsLift_c13InitResourcesEv.cpp": [
         "return:CLPS_Block"
       ]
     },
     "data_ov021_02114740": {
-      "src/_ZN12WorkElevator8BehaviorEv.cpp": [
+      "src/_ZN17daObjCvNewsLift_c8BehaviorEv.cpp": [
         "return:unsigned short []"
       ]
     },
@@ -28466,22 +28466,22 @@
       ]
     },
     "data_ov021_021149a0": {
-      "src/_ZN12WorkElevator13InitResourcesEv.cpp": [
+      "src/_ZN17daObjCvNewsLift_c13InitResourcesEv.cpp": [
         "return:WorkElevatorFile"
       ]
     },
     "data_ov021_021149a8": {
-      "src/_ZN12WorkElevator13InitResourcesEv.cpp": [
+      "src/_ZN17daObjCvNewsLift_c13InitResourcesEv.cpp": [
         "return:WorkElevatorFile"
       ]
     },
     "data_ov021_021149b0": {
-      "src/_ZN12WorkElevator13InitResourcesEv.cpp": [
+      "src/_ZN17daObjCvNewsLift_c13InitResourcesEv.cpp": [
         "return:WorkElevatorFile"
       ]
     },
     "data_ov021_021149b8": {
-      "src/_ZN12WorkElevator13InitResourcesEv.cpp": [
+      "src/_ZN17daObjCvNewsLift_c13InitResourcesEv.cpp": [
         "return:WorkElevatorFile"
       ]
     },
@@ -36892,7 +36892,7 @@
       "src/_ZN12MetalNetLift13InitResourcesEv.cpp": [
         "param:#2 void *"
       ],
-      "src/_ZN12WorkElevator13InitResourcesEv.cpp": [
+      "src/_ZN17daObjCvNewsLift_c13InitResourcesEv.cpp": [
         "param:#1 dBgW *",
         "param:#2 void *"
       ],
@@ -36990,7 +36990,7 @@
       "src/_ZN12MetalNetLift13InitResourcesEv.cpp": [
         "param:#2 void *"
       ],
-      "src/_ZN12WorkElevator13InitResourcesEv.cpp": [
+      "src/_ZN17daObjCvNewsLift_c13InitResourcesEv.cpp": [
         "param:#1 dBgW *",
         "param:#2 void *"
       ],
@@ -46318,20 +46318,20 @@
       ]
     },
     "func_ov021_0211129c": {
-      "src/_ZN12WorkElevator13InitResourcesEv.cpp": [
-        "param:#1 WorkElevator *"
+      "src/_ZN17daObjCvNewsLift_c13InitResourcesEv.cpp": [
+        "param:#1 daObjCvNewsLift_c *"
       ],
-      "src/_ZN12WorkElevator8BehaviorEv.cpp": [
-        "param:#1 WorkElevator *"
+      "src/_ZN17daObjCvNewsLift_c8BehaviorEv.cpp": [
+        "param:#1 daObjCvNewsLift_c *"
       ]
     },
     "func_ov021_02111434": {
-      "src/_ZN12WorkElevator13InitResourcesEv.cpp": [
-        "param:#1 WorkElevator *",
+      "src/_ZN17daObjCvNewsLift_c13InitResourcesEv.cpp": [
+        "param:#1 daObjCvNewsLift_c *",
         "return:void"
       ],
-      "src/_ZN12WorkElevator8BehaviorEv.cpp": [
-        "param:#1 WorkElevator *",
+      "src/_ZN17daObjCvNewsLift_c8BehaviorEv.cpp": [
+        "param:#1 daObjCvNewsLift_c *",
         "return:void"
       ]
     },
@@ -46345,7 +46345,7 @@
       "include/decl_common.h": [
         "kind:data"
       ],
-      "src/_ZN12WorkElevator13InitResourcesEv.cpp": [
+      "src/_ZN17daObjCvNewsLift_c13InitResourcesEv.cpp": [
         "arity:0",
         "return:void"
       ]
@@ -46360,7 +46360,7 @@
       "include/decl_common.h": [
         "kind:data"
       ],
-      "src/_ZN12WorkElevator13InitResourcesEv.cpp": [
+      "src/_ZN17daObjCvNewsLift_c13InitResourcesEv.cpp": [
         "arity:0",
         "return:void"
       ]
@@ -46375,7 +46375,7 @@
       "include/decl_common.h": [
         "kind:data"
       ],
-      "src/_ZN12WorkElevator13InitResourcesEv.cpp": [
+      "src/_ZN17daObjCvNewsLift_c13InitResourcesEv.cpp": [
         "arity:0",
         "return:void"
       ]
@@ -46384,7 +46384,7 @@
       "include/decl_common.h": [
         "kind:data"
       ],
-      "src/_ZN12WorkElevator13InitResourcesEv.cpp": [
+      "src/_ZN17daObjCvNewsLift_c13InitResourcesEv.cpp": [
         "arity:0"
       ]
     },
@@ -46397,7 +46397,7 @@
       "include/decl_common.h": [
         "kind:data"
       ],
-      "src/_ZN12WorkElevator13InitResourcesEv.cpp": [
+      "src/_ZN17daObjCvNewsLift_c13InitResourcesEv.cpp": [
         "arity:0",
         "return:void"
       ]

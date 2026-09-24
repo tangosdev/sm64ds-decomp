@@ -1,17 +1,17 @@
-/* WorkElevator is a dBgActor_c with four visible platform models and four
+/* daObjCvNewsLift_c is a dBgActor_c with four visible platform models and four
  * moving-mesh colliders. Its constructor and destructor provide both halves
  * of that ownership evidence: the factory builds the arrays in declaration
  * order, while D1/D0 destroy them in reverse order before the inherited
  * dBgActor_c members. */
-#ifndef WORKELEVATOR_H
-#define WORKELEVATOR_H
+#ifndef DAOBJCVNEWSLIFT_C_H
+#define DAOBJCVNEWSLIFT_C_H
 #include "types.h"
 
 #ifdef __cplusplus
 
 #include "dBgActor_c.h"
 
-struct WorkElevator : dBgActor_c {
+struct daObjCvNewsLift_c : dBgActor_c {
     Model mPlatformModels[4];            /* 0x320 */
     Matrix4x3 mPlatformMats[4];          /* 0x460 */
     dBgW_KcMbg mPlatformColliders[4];    /* 0x520 */
@@ -30,7 +30,7 @@ struct WorkElevator : dBgActor_c {
     u8 pad_c7f;                          /* 0xc7f */
 
     /* --- vtable overrides --- */
-    virtual ~WorkElevator();
+    virtual ~daObjCvNewsLift_c();
     virtual s32 InitResources();
     virtual s32 CleanupResources();
     virtual s32 Behavior();
@@ -42,7 +42,7 @@ struct WorkElevator : dBgActor_c {
 #include "Model.h"
 #include "dBgW_KcMbg.h"
 
-struct WorkElevator {
+struct daObjCvNewsLift_c {
     u8  pad_000[0x5c];
     s32 mPosX;            /* 0x05c */
     s32 mPosY;            /* 0x060 */
@@ -50,11 +50,11 @@ struct WorkElevator {
     u8  pad_068[0x26];
     s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x44];
-    /* Model member. The cartridge's own ~WorkElevator calls _ZN5ModelD1Ev at +0x0d4
+    /* Model member. The cartridge's own ~daObjCvNewsLift_c calls _ZN5ModelD1Ev at +0x0d4
        (D0/D1), a relocation the ROM build checks; recovered by tools/dtor_members.py.
        D1 and not D2, so it is this type and not an inlined base. */
     Model mModel;            /* 0x0d4 */
-    /* dBgW_KcMbg member. The cartridge's own ~WorkElevator calls _ZN10dBgW_KcMbgD1Ev at
+    /* dBgW_KcMbg member. The cartridge's own ~daObjCvNewsLift_c calls _ZN10dBgW_KcMbgD1Ev at
        +0x124 (D0/D1), a relocation the ROM build checks; recovered by
        tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
     dBgW_KcMbg mMeshCollider;            /* 0x124 */
@@ -75,7 +75,7 @@ struct WorkElevator {
     s32 unk_c6c;            /* 0xc6c */
     u8  pad_c70[0xa];
     s8  mLoweredPlatform;            /* 0xc7a */
-    /* trailing extent the ROM's `new WorkElevator` literal proves; see tools/opnew_sizes.py */
+    /* trailing extent the ROM's `new daObjCvNewsLift_c` literal proves; see tools/opnew_sizes.py */
     u8 pad_c7c[0x4];
 };
 
@@ -83,7 +83,7 @@ struct WorkElevator {
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
-typedef char WorkElevator_size_must_be_0xc80[sizeof(struct WorkElevator) == 0xc80 ? 1 : -1];
+typedef char daObjCvNewsLift_c_size_must_be_0xc80[sizeof(struct daObjCvNewsLift_c) == 0xc80 ? 1 : -1];
 #endif
 
 #endif

@@ -1,14 +1,14 @@
 //cpp
-// @symbol _ZN12WorkElevator16CleanupResourcesEv
+// @symbol _ZN17daObjCvNewsLift_c16CleanupResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "WorkElevator.h"
+#include "daObjCvNewsLift_c.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 extern int data_ov021_021149b8[];
 
-int WorkElevator::CleanupResources()
+int daObjCvNewsLift_c::CleanupResources()
 {
     int i;
     char *p = ((char *)this);

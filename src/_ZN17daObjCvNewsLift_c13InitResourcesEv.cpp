@@ -1,6 +1,6 @@
 //cpp
-// @symbol _ZN12WorkElevator13InitResourcesEv
-#include "WorkElevator.h"
+// @symbol _ZN17daObjCvNewsLift_c13InitResourcesEv
+#include "daObjCvNewsLift_c.h"
 #include "SharedFilePtr.h"
 #include "dBgCh_Gnd.h"
 
@@ -22,8 +22,8 @@ void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     Fix12i scale, s16 angle, CLPS_Block *clps);
 void func_020393d4(dBgW *collider, void *callback);
 void func_020393c4(dBgW *collider, void *callback);
-void func_ov021_02111434(WorkElevator *elevator);
-void func_ov021_0211129c(WorkElevator *elevator);
+void func_ov021_02111434(daObjCvNewsLift_c *elevator);
+void func_ov021_0211129c(daObjCvNewsLift_c *elevator);
 void _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_();
 void func_ov021_02112128();
 void func_ov021_02111fe4();
@@ -32,7 +32,7 @@ void func_ov021_02111f34();
 void func_ov021_02111edc();
 }
 
-s32 WorkElevator::InitResources()
+s32 daObjCvNewsLift_c::InitResources()
 {
     Model::LoadFile(*(SharedFilePtr *)&data_ov021_021149a0);
     dBgW_Kc::LoadFile(*(SharedFilePtr *)&data_ov021_021149a8);

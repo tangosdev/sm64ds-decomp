@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN12WorkElevator6RenderEv
+// @symbol _ZN17daObjCvNewsLift_c6RenderEv
 /* recovered: named members + shared header, real C++ method */
-#include "WorkElevator.h"
+#include "daObjCvNewsLift_c.h"
 struct Obj {
     virtual void m0();
     virtual void m1();
@@ -11,7 +11,7 @@ struct Obj {
     virtual void Target(int);
 };
 
-int WorkElevator::Render()
+int daObjCvNewsLift_c::Render()
 {
     unsigned short v = *(unsigned short*)(((char *)this)+0xc00+0x74);
     if (v < 0x2d && (v & 1)) return 1;

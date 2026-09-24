@@ -1,5 +1,5 @@
 //cpp
-// @symbol _ZN12WorkElevatorD1Ev
+// @symbol _ZN17daObjCvNewsLift_cD1Ev
 /* recovered: real C++ complete destructor
  *
  * The four moving-mesh colliders and four models are destroyed in reverse
@@ -7,8 +7,8 @@
  * collider/model pair and chains into dActor_c. The compiler owns every vptr
  * store, array teardown, and destructor-variant call below this empty body.
  */
-#include "WorkElevator.h"
+#include "daObjCvNewsLift_c.h"
 
-WorkElevator::~WorkElevator()
+daObjCvNewsLift_c::~daObjCvNewsLift_c()
 {
 }

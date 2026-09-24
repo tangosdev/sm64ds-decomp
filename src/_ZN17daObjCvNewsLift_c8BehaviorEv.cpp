@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN12WorkElevator8BehaviorEv
-/* WorkElevator::Behavior (ov021 0x021116c8, 0x5a4 bytes), a real C++ method on
- * include/WorkElevator.h. Per frame: while a platform is lowered (unk_c7d) the
+// @symbol _ZN17daObjCvNewsLift_c8BehaviorEv
+/* daObjCvNewsLift_c::Behavior (ov021 0x021116c8, 0x5a4 bytes), a real C++ method on
+ * include/daObjCvNewsLift_c.h. Per frame: while a platform is lowered (unk_c7d) the
  * spin timer unk_c78 counts down and tilts the elevator (angle X or Z, sign by
  * mLoweredPlatform) from the sine table; when it runs out the lowered index
  * steps (0/2 up, 1/3 down) and the pose resets to the table angle at
@@ -29,7 +29,7 @@
  *   - three separate dBgCh_Lin locals in a nested scope give the ROM's three
  *     C1 calls, the loop over them by pointer, and the reverse D1 order after
  *     UpdatePos. */
-#include "WorkElevator.h"
+#include "daObjCvNewsLift_c.h"
 #include "dBgCh_Lin.h"
 
 extern "C" {
@@ -44,15 +44,15 @@ void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(dBgCh_Lin *self, const
 s32 _ZN9dBgCh_Lin10DetectClsnEv(dBgCh_Lin *self);
 void Quaternion_SLerp(void *q0, void *q1, int t, void *out);
 s32 Vec3_Equal(const Vector3 *a, const Vector3 *b);
-void func_ov021_02111434(WorkElevator *c);
-void func_ov021_0211129c(WorkElevator *c);
+void func_ov021_02111434(daObjCvNewsLift_c *c);
+void func_ov021_0211129c(daObjCvNewsLift_c *c);
 extern s16 data_02082214[];
 extern u16 data_ov021_02114740[];
 extern Matrix4x3 data_020a0e68;
 extern s32 data_02092768[];
 }
 
-s32 WorkElevator::Behavior()
+s32 daObjCvNewsLift_c::Behavior()
 {
     char *c = (char *)this;
     Vector3 va[3];

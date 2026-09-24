@@ -245,7 +245,7 @@ daObjCtMecha09_c	DONE	include\TTC_MovingBeam.h  [alias: header uses pre-rename n
 daObjCtMecha10_c	DONE	include\daObjCtMecha10_c.h	dBgActor_c	0	ov035	6
 daObjCtMecha11_c	DONE	include\SpinningPlatform.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov035	8
 daObjCtRotateBlock_c	DONE	include\TtcRotatingCube.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov065	9
-daObjCvNewsLift_c	DONE	include\WorkElevator.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov021	6
+daObjCvNewsLift_c	DONE	include\daObjCvNewsLift_c.h	dBgActor_c	0	ov021	6
 daObjDlPyramid_c	DONE	include\PyramidTop.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov024	6
 daObjDpBrock_c	DONE	include\PyramidStep.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov025	6
 daObjEmmLog_c	DONE	include\daObjEmmLog_c.h	dBgActor_c	0	ov052	6
