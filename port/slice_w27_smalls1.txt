@@ -9,3 +9,10 @@
 # of the same C++ name is retired and hal/cstd_div.c's host body is compiled
 # out on these three targets.
 src/_ZN4cstd4fdivEii.cpp
+#
+# IFCLEAR1: IRQ::ClearInterrupts, arm9 0x02056d64. It acknowledges by storing
+# the mask to IF, which ntr/io.cpp's io_write now clears write-one-to-clear.
+# GAME TARGETS ONLY (W27S_GAME_ONLY), from its hostgen copy (W27S_HOSTGEN_TU):
+# ntr/runtime.cpp aliases the flat name onto it on the NTR_ROM_IRQ_TABLE
+# libraries; smoke_player links the plain ntr library and keeps its no-op.
+src/_ZN3IRQ15ClearInterruptsEj.cpp

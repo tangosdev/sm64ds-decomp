@@ -22906,7 +22906,7 @@ foreach(_tw26v2 walk_window walk_window_hires smoke_player)
 endforeach()
 
 # ===========================================================================
-# W27 SMALLS1 (run linkfull wave 27, lane SMALLS1): cstd::fdiv
+# W27 SMALLS1 (run linkfull wave 27, lane SMALLS1): cstd::fdiv, IRQ::ClearInterrupts
 # ===========================================================================
 #
 # port/slice_w27_smalls1.txt carries the rows. A row goes on all three hosting
@@ -22923,8 +22923,15 @@ endforeach()
 # W23-4 os_arena.cpp shape; the three compile it once, in the shared object
 # library port_slice_shared), so it stays only on the six narrow harnesses
 # that link no divider model.
-set(W27S_GAME_ONLY "")
-set(W27S_HOSTGEN_TU "")
+#
+# IRQ::ClearInterrupts: the two game targets only, from its hostgen copy, so
+# its IME / IF stores reach ntr/io.cpp's io_write (IF clears
+# write-one-to-clear there); ntr/runtime.cpp aliases the flat name onto it on
+# the NTR_ROM_IRQ_TABLE libraries and keeps the no-op for the smoke probes.
+set(W27S_GAME_ONLY
+    src/_ZN3IRQ15ClearInterruptsEj.cpp)
+set(W27S_HOSTGEN_TU
+    src/_ZN3IRQ15ClearInterruptsEj.cpp)
 port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w27_smalls1.txt" SLICE_W27S_LINES)
 set(SLICE_W27S_ALL3 "")
 set(SLICE_W27S_GAME "")
