@@ -804,6 +804,7 @@ __ZN9SeesawBobD1Ev                                                       ??1Sees
 __ZN11ShadowModelC1Ev                                                    ??0ShadowModel@@QAE@XZ                                           0x02016068 R
 
 __ZN13SharedFilePtr7ReleaseEv                                            ?Release@SharedFilePtr@@QAEXXZ                                   0x02017b64 R
+__ZN13SharedFilePtr9ConstructEj                                          ?Construct@SharedFilePtr@@QAEAAU1@I@Z                            0x0201799c R
 
 __ZN5Shark16CleanupResourcesEv                                           ?CleanupResources@Shark@@UAEHXZ                                  0x02133978 R
 __ZN5Shark16OnPendingDestroyEv                                           ?OnPendingDestroy@Shark@@UAEXXZ                                  0x021339a8 R

@@ -15,11 +15,14 @@
 // tools/asset_catalog.py from the ROM). File bytes come from
 // extracted/dsd/files/<path>.
 //
-// Construct is HAL-owned for an ABI reason, not a hardware one: on the DS,
+// Construct was HAL-owned for an ABI reason, not a hardware one: on the DS,
 // _ZN13SharedFilePtr9ConstructEj passes ov0FileID to func_02017e48 by
 // LEAVING IT IN r1 across a call that only names one argument -- a
-// ride-through C cannot express. The host version calls func_02017e0c with
-// both arguments spelled out; same result, portable ABI.
+// ride-through the old C could not express. The host version calls
+// func_02017e0c with both arguments spelled out; same result, portable ABI.
+// The matched source now spells the argument too, so the game targets link it
+// and only the narrow harnesses keep this version (see SM64DS_SFP_CONSTRUCT_ROM
+// at the body).
 //
 // COMPRESSION: 1,287 catalog files begin with ASCII "LZ77" followed by a
 // standard type-0x10 stream (u32 header: 0x10 | decompressed_size << 8).
@@ -835,7 +838,16 @@ void func_02018270(u32 handle, u32 dest, int size)
     free(raw);
 }
 
-/* Construct: host ABI spells out both args (see header comment) */
+/* Construct: host ABI spells out both args (see header comment).
+   ONLY FOR THE NARROW HARNESSES since run linkfull wave 27 (lane P1). The
+   three hosting targets (walk_window, walk_window_hires, smoke_player) compile
+   this file with SM64DS_SFP_CONSTRUCT_ROM and link the matched TU instead:
+   src/_ZN13SharedFilePtr9ConstructEj.cpp spells the fileID and passes it to
+   func_02017e48, which passes it on to func_02017e0c, so the ride-through this
+   stand-in exists for is gone from the source. Its flat name there is a
+   reverse face in port/faces_sync.txt; the smoke_* harnesses link neither the
+   face nor the slice and keep this body. */
+#ifndef SM64DS_SFP_CONSTRUCT_ROM
 void func_02017e0c(void *self, u32 arg); /* portable src/ */
 // PORT_HOST_ABI: ARM register ride-through: the ROM leaves ov0FileID in
 //   r1 across a call that names one argument. See the header's ABI note.
@@ -845,4 +857,5 @@ struct SharedFilePtrC *_ZN13SharedFilePtr9ConstructEj(
     func_02017e0c(self, ov0FileID);
     return self;
 }
+#endif /* SM64DS_SFP_CONSTRUCT_ROM */
 } /* extern "C" */

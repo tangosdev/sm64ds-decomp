@@ -29,6 +29,13 @@
 src/_ZN4Heap7_SizeofEPv.cpp
 
 # ---- group B: SharedFilePtr::Construct (arm9 0x0201799c) -------------------
+# Host copy retired on the three hosting targets: the body in port/hal/fs.cpp,
+# now behind SM64DS_SFP_CONSTRUCT_ROM (the narrow smoke_* harnesses keep it).
+# Its reason was the fileID riding through r1 across a one-argument call; the
+# src spells fileID and passes it to func_02017e48 (itself linked from
+# port/slice_gate10.txt with both arguments spelled), which hands it to
+# func_02017e0c. Callers: 83 linked, through the reverse face.
+src/_ZN13SharedFilePtr9ConstructEj.cpp
 
 # ---- group C: dScMgSmartball_c slot 18, OnYoshiTryEat (ov006 0x02118a8c) ---
 
