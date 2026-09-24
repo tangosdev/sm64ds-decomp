@@ -456,6 +456,99 @@ def generated_files(root):
 
 
 # ---------------------------------------------------------------------------
+# THE SCOPE MOVES WITH THE ROW (run linkfull wave 27, lane V3B)
+#
+# A forwarder can leave hal/dtor_forwarders_gen*.cpp for the matched src file
+# it stands for: that file's `#ifdef _MSC_VER` arm then carries the same
+# qualified call, MSVC emits the inline destructor in that translation unit,
+# and the ROM's flat name comes from the matched TU's own object.  The MSVC
+# vftable store this ruling is about moves with it, unchanged, so the
+# cartridge question does not go away, and for a row whose slot is a live
+# teardown path it keeps being asked on every build.  SRC_ARMS is that scope,
+# per class and by name: each flat name, and the one src file whose
+# `#ifdef _MSC_VER` arm must define it.  The guard reads the arm -- a listed
+# file that no longer defines its name there REFUSES, because the scope went
+# stale -- and asks the ROM body the same check_name every generated row gets.
+#
+# A row that left the generated files WITHOUT entering this table left the
+# guard's scope by the coordinator's ruling (run linkfull, 09-23 21:38: a class
+# whose host forwarder is gone keeps a one-time equality proof; VARIANT2's
+# batch B2, five D0s whose classes had no D1 row).  A class whose last
+# guarded row is a live slot-16 D1 comes here instead.
+#
+# The four below are dtorfwd.py's batch-1..3 D1 forwarders of their classes,
+# retired into src at wave 27 (dtorfwd.py's V3B note): the arm's text is the
+# forwarder's, and its object is the forwarder's instruction for instruction
+# (runs/linkfull/out/V3B/equal_b1.log, the one-time proof, pasted in the
+# commit).
+#
+# The four D0s after them (wave 27, batch 2) replaced hand-written host bodies
+# rather than generated forwarders: each arm is the one host destructor its D1
+# file defines plus the class's inline operator delete, and that destructor
+# stores MSVC's own vftable where the hand body stored a ROM-shaped table. The
+# ROM D0 body is asked the same question for that store.
+#
+# The three D1s last (wave 27, batch 3) replaced slot-16 host thunks, the
+# LIGHT_BEAM branch of hal/actor_classes.cpp's tr_d1, the Amilift's aml_d1
+# and daDsnBase_c's compiler-table alias, the same way.
+SRC_ARMS = {
+    "_ZN13daObjSwdoor_cD1Ev": "src/_ZN13daObjSwdoor_cD1Ev.cpp",
+    "_ZN17BigMovingIceBlockD1Ev": "src/_ZN17BigMovingIceBlockD1Ev.cpp",
+    "_ZN17BowserPuzzlePieceD1Ev": "src/_ZN17BowserPuzzlePieceD1Ev.cpp",
+    "_ZN6CoffinD1Ev": "src/_ZN6CoffinD1Ev.cpp",
+    "_ZN15dScMgPachinko_cD0Ev": "src/_ZN15dScMgPachinko_cD0Ev.cpp",
+    "_ZN19BowserPuzzleManagerD0Ev": "src/_ZN19BowserPuzzleManagerD0Ev.cpp",
+    "_ZN10dScTitle_cD0Ev": "src/_ZN10dScTitle_cD0Ev.cpp",
+    "_ZN11ShadowModelD0Ev": "src/_ZN11ShadowModelD0Ev.cpp",
+    "_ZN9LightBeamD1Ev": "src/_ZN9LightBeamD1Ev.cpp",
+    "_ZN12MetalNetLiftD1Ev": "src/_ZN12MetalNetLiftD1Ev.cpp",
+    "_ZN11daDsnBase_cD1Ev": "src/_ZN11daDsnBase_cD1Ev.cpp",
+}
+
+# A definition inside the arm: `extern "C" <ret> <flat>(<params>)` on one
+# line with no semicolon, the body on the next.  Any return type, because a src
+# arm spells the class pointer the ROM returns where a generated forwarder
+# spells void.
+ARM_DEF_RE = re.compile(
+    r'^extern "C" [^;\n(]*?\b(_ZN\w+D[012]Ev)\([^;\n]*\)[ \t]*$', re.M)
+_IF_RE = re.compile(r"^\s*#\s*(if|ifdef|ifndef|elif|else|endif)\b(.*)$")
+_MSC_RE = re.compile(r"^\s*(?:_MSC_VER|defined\s*\(\s*_MSC_VER\s*\)"
+                     r"|defined\s+_MSC_VER)\s*$")
+
+
+def msvc_arm_text(text):
+    """The lines a src file compiles ONLY under MSVC: the true branch of each
+    top-level `#ifdef _MSC_VER` (or `#if defined(_MSC_VER)`), up to its
+    #else / #elif / #endif, nested conditionals inside it included."""
+    out, stack = [], []
+    for ln in text.replace("\r\n", "\n").split("\n"):
+        m = _IF_RE.match(ln)
+        if m:
+            kw, rest = m.group(1), m.group(2)
+            if kw in ("if", "ifdef", "ifndef"):
+                is_msc = (not stack and kw == "ifdef" and rest.strip() == "_MSC_VER") \
+                    or (not stack and kw == "if" and bool(_MSC_RE.match(rest)))
+                stack.append(is_msc)
+            elif kw in ("elif", "else") and stack:
+                stack[-1] = False if len(stack) == 1 else stack[-1]
+            elif kw == "endif" and stack:
+                stack.pop()
+            continue
+        if stack and stack[0]:
+            out.append(ln)
+    return "\n".join(out)
+
+
+def src_arm_names(path):
+    """The flat destructor names a src file DEFINES in its _MSC_VER arm, or
+    None when the file does not exist."""
+    if not os.path.exists(path):
+        return None
+    text = open(path, encoding="utf-8", errors="replace").read()
+    return ARM_DEF_RE.findall(msvc_arm_text(text))
+
+
+# ---------------------------------------------------------------------------
 # the fixture battery
 
 
@@ -679,11 +772,46 @@ def selftest():
         bx lr
     """, "ModelAnim", "refuse", "virtual dispatch inside the window")
 
+    # 15. wave 27: the src-arm reader takes the definition in the MSVC branch
+    # (any return type, a nested conditional inside the arm included) and
+    # nothing from the #else side or from a declaration.
+    fd, p = tempfile.mkstemp(suffix=".cpp")
+    os.close(fd)
+    open(p, "w", encoding="utf-8").write(
+        '#include "Coffin.h"\r\n'
+        '#ifdef _MSC_VER\r\n'
+        'extern "C" void _ZN6CoffinD0Ev(void *self);\r\n'
+        '#if 1\r\n'
+        'extern "C" Coffin *_ZN6CoffinD1Ev(Coffin *self)\r\n'
+        '#endif\r\n'
+        '{ self->Coffin::~Coffin(); return self; }\r\n'
+        '#else\r\n'
+        'extern "C" void _ZN7daBar_cD1Ev(void *self)\r\n'
+        '{ }\r\n'
+        '#endif\r\n')
+    got = src_arm_names(p)
+    os.unlink(p)
+    if got != ["_ZN6CoffinD1Ev"]:
+        fails.append("src_arm_names: got %r" % (got,))
+
+    # 16. and a file whose arm is gone (only the #else text left, or no file at
+    # all) yields no name, which main() turns into a stale-scope refusal.
+    fd, p = tempfile.mkstemp(suffix=".cpp")
+    os.close(fd)
+    open(p, "w", encoding="utf-8").write(
+        '#ifndef _MSC_VER\n'
+        'extern "C" void _ZN6CoffinD1Ev(void *self)\n{ }\n'
+        '#endif\n')
+    got = src_arm_names(p)
+    os.unlink(p)
+    if got != [] or src_arm_names(p) is not None:
+        fails.append("src_arm_names, no arm: got %r" % (got,))
+
     if fails:
         for f in fails:
             print("dtor_store_guard SELFTEST FAIL: %s" % f)
         return 1
-    print("dtor_store_guard selftest OK -- 14 cases")
+    print("dtor_store_guard selftest OK -- 16 cases")
     return 0
 
 
@@ -695,37 +823,60 @@ def main():
     names = []
     for f in files:
         names += names_in(f)
-    if not names:
+    # the src-arm scope (SRC_ARMS): a listed file must still define its name
+    # in its _MSC_VER arm, or the scope is stale and the build stops here.
+    arms, stale = [], []
+    for n, rel in sorted(SRC_ARMS.items()):
+        got = src_arm_names(os.path.join(root, *rel.split("/")))
+        if got is None:
+            stale.append("%s: %s does not exist" % (n, rel))
+        elif n not in got:
+            stale.append("%s: %s's #ifdef _MSC_VER arm does not define it"
+                         % (n, rel))
+        else:
+            arms.append(n)
+    if stale:
+        print("dtor_store_guard REFUSES: %d SRC_ARMS row(s) no longer match "
+              "their src file, so the guard would stop checking a live "
+              "destructor without anyone deciding it should. Put the arm back, "
+              "or move the row to wherever the name is defined now:"
+              % len(stale))
+        for s in stale:
+            print("  %s" % s)
+        return 1
+    if not names and not arms:
         print("dtor_store_guard OK -- hal/dtor_forwarders_gen*.cpp defines no "
               "forwarder (%d file(s) read)" % len(files))
         return 0
-    dup = sorted(n for n in set(names) if names.count(n) > 1)
+    both = names + arms
+    dup = sorted(n for n in set(both) if both.count(n) > 1)
     if dup:
         print("dtor_store_guard REFUSES: %d name(s) are defined in more than "
-              "one generated file, which is a duplicate symbol waiting to "
-              "happen: %s" % (len(dup), ", ".join(dup[:10])))
+              "one generated file or src arm, which is a duplicate symbol "
+              "waiting to happen: %s" % (len(dup), ", ".join(dup[:10])))
         return 1
     rom = Rom(root)
     bad = []
-    for n in names:
+    for n in both:
         v, why = check_name(rom, n)
         if v != "ok":
             bad.append((n, why))
     if bad:
         print("dtor_store_guard REFUSES %d of %d forwarder(s) over %d "
-              "hal/dtor_forwarders_gen*.cpp file(s)."
-              % (len(bad), len(names), len(files)))
+              "hal/dtor_forwarders_gen*.cpp file(s) and %d src arm(s)."
+              % (len(bad), len(both), len(files), len(arms)))
         print("Each row below is a class whose ROM destructor body no longer "
               "satisfies the PORT_HOST_ABI ruling this file's header states, "
               "so MSVC's own vftable would be live on a dispatch. Drop the "
-              "class from tools/dtorfwd.py's list and regenerate; do not "
-              "weaken the rule.")
+              "class from tools/dtorfwd.py's list (or its src arm and its "
+              "SRC_ARMS row) and regenerate; do not weaken the rule.")
         for n, why in bad:
             print("  %s: %s" % (n, why))
         return 1
     print("dtor_store_guard OK -- %d forwarder(s) over %d file(s), every ROM "
           "destructor body still stores its vtable with no dispatch before the "
-          "base restore" % (len(names), len(files)))
+          "base restore; %d src arm(s) (SRC_ARMS) under the same rule"
+          % (len(names), len(files), len(arms)))
     return 0
 
 

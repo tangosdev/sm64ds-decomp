@@ -136,20 +136,27 @@ int port_tree_link_refusals(void) { return port_tree_link_refused; }
 void *data_020a4bb8_storage[512];
 void **data_020a4bb8 = data_020a4bb8_storage;  /* actorID -> SpawnInfo* */
 
-/* PORT_HOST_ABI: the matched TU is an mwccarm `asm` block (ARM hand-asm); MSVC has no inline ARM assembler.
-   src/_ZN7fBase_cC2Ev.cpp is `extern "C" asm void* _ZN7fBase_cC2Ev(void* self)`
-   followed by 70-odd ARM instructions -- an asm-hatch TU, not C. It is a match
-   under the asm-primitive policy and it is unbuildable by any host compiler:
-   MSVC's __asm accepts x86 only, and the block is register-allocated ARM
-   (ldr r1,=data_02099edc / strh r2,[r0,#0xc] / bl chains). Re-derived from the
-   ROM for this ruling: arm9 0x02043dec (size 0x160) reads e92d4030 / e24dd004
-   / e1a04000 / e59f112c / e2845014 / e1a00005 -- stmdb sp!,{r4,r5,lr}; sub
-   sp,sp,#4; mov r4,r0; ldr r1,[pc,#0x12c]; add r5,r4,#0x14; mov r0,r5 --
-   instruction for instruction the head of that asm block. Same class as
-   __cxa_vec_ctor below, which carries the same tag. The C transcription above
-   is the faithful stand-in, written field for field against that block.
-   NOT a stub: it is a full transcription, and the reason it cannot be retired
-   is the source language, not a missing closure. */
+/* PORT_HOST_ABI: MSVC's compile of the matched constructor stores MSVC's own fBase_c vftable where the cartridge stores the ROM-shaped transient table.
+   THE REASON THIS TAG USED TO GIVE IS STALE, corrected by run linkfull wave 27,
+   lane V3B. It said src/_ZN7fBase_cC2Ev.cpp was an mwccarm `asm` block no host
+   compiler can build. It is not any more: it is a real C++ constructor,
+   `fBase_c::fBase_c() : manager(this) { ... }`, and MSVC compiles it. Measured
+   by a probe compile with walk_window's own flags (runs/linkfull/out/V3B/):
+   its ??0fBase_c@@QAE@XZ makes this transcription's stores and calls field for
+   field -- SceneNode's constructor on +0x14, the two list nodes, the id,
+   param, actor id and area byte, the tree link, both priorities, the parent's
+   pause bits -- EXCEPT that its first store writes ??_7fBase_c@@6B@, MSVC's own
+   table (D1/D0 folded, so every slot after the destructor sits one early),
+   where arm9 0x02043dec (ldr r1,[pc,#0x12c]; str r1,[r4]) and the
+   transcription below write data_02099edc, the ROM-shaped transient table
+   hal/dtor_seats_base.cpp fills and hal/cxx_aliases.cpp publishes as
+   __ZTV9ActorBase; and it drops port_tree_link_refused, the count
+   hal/level_change.cpp prints. Every actor and scene is built through this
+   constructor, and that table is the object's live one until the derived
+   class stores its own, so retiring the transcription is a construction-path
+   change on the whole game that owes its own dispatch proof first; V3B
+   refused it on that measurement. The transcription stays the faithful
+   stand-in, written field for field against the ROM body. */
 void *_ZN7fBase_cC2Ev(char *self)
 {
     *(void **)self = data_02099edc;

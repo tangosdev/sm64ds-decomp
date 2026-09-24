@@ -45,16 +45,17 @@
  *   slot 9   s32  dScTitle_c::Render()             src/_ZN10dScTitle_c6RenderEv.cpp
  *   slot 12  void dScTitle_c::OnPendingDestroy()   src/_ZN10dScTitle_c16OnPendingDestroyEv.cpp
  *   slot 16  D2                                    src/_ZN10dScTitle_cD1Ev.cpp
- *   slot 17  D0                                    the D2 body plus the one
- *            deallocation the cartridge's D0 makes
+ *   slot 17  D0                                    src/_ZN10dScTitle_cD0Ev.cpp
  *
- * SLOT 17 HAS NO TU OF ITS OWN AND THAT IS NOT A GAP. MSVC folds the ROM's
- * destructor variants into one symbol, so only one of a class's two
- * per-function destructor TUs can be compiled -- port/slice_scene1.txt made
- * the same call for src/_ZN12dScStarSel_cD0Ev.cpp. The D0 face is spelled the
- * way hal/dtor_forwarders_gen.cpp spells every other class's: the destructor
- * plus Memory::Deallocate(this, GAME_HEAP_PTR), which is what 0x020ad69c does
- * (include/dScTitle_c.h's VTABLE ORDER note reads it off the body).
+ * SLOT 17 HAS ITS OWN TU NOW (run linkfull wave 27, lane V3B). MSVC folds the
+ * ROM's destructor variants into one symbol, so only one of a class's two
+ * per-function destructor TUs can carry the destructor definition, and
+ * src/_ZN10dScTitle_cD1Ev.cpp does. The D0 file's _MSC_VER arm defines the
+ * ROM's flat D0 name instead, in terms of that one symbol: the destructor,
+ * then dScene_c's inline operator delete, Memory::Deallocate with the game
+ * heap -- what 0x020ad69c does (include/dScTitle_c.h's VTABLE ORDER note reads
+ * it off the body), and what the face below spelled by hand until then. The
+ * D0 file rides port/slice_w27_v3b.txt.
  */
 
 #include "types.h"
@@ -156,13 +157,10 @@ DSSTATE_END
 #pragma comment(linker, "/alternatename:?data_0209b2f4@@3IA=_data_0209b2f4")
 #pragma comment(linker, "/alternatename:?data_0209f5e8@@3PAGA=_data_0209f5e8")
 
-// The deallocation the ROM's D0 body makes and the heap pointer word it reads,
-// both under the ROM's own flat names -- what the cartridge's relocations name
-// and what this port already resolves. Same block hal/dtor_forwarders_gen.cpp
-// carries.
+// The ROM's own D0 body under its flat name: src/_ZN10dScTitle_cD0Ev.cpp's
+// _MSC_VER arm (the destructor, then the deallocation 0x020ad69c makes).
 extern "C" {
-void _ZN6Memory10DeallocateEPvP4Heap(void *ptr, void *heap);
-extern void *GAME_HEAP_PTR;
+void *_ZN10dScTitle_cD0Ev(void *self);
 }
 
 /* THE WITNESS, dScStarSel_c's and dScGameOver_c's, one counter per dispatched
@@ -215,7 +213,6 @@ extern "C" void *__fastcall port_title_d2(void *s, void *)
 extern "C" void *__fastcall port_title_d0(void *s, void *)
 {
     ++g_dbgsel_hits[17];
-    ((dScTitle_c *)s)->dScTitle_c::~dScTitle_c();
-    _ZN6Memory10DeallocateEPvP4Heap(s, GAME_HEAP_PTR);
+    _ZN10dScTitle_cD0Ev(s);
     return s;
 }

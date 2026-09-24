@@ -28,6 +28,26 @@
  */
 #include "ShadowModel.h"
 
+#ifdef _MSC_VER
+/* THE HOST NEEDS THE ROM'S FLAT D0 NAME, AND MSVC ONLY MAKES ONE DESTRUCTOR.
+ * It folds the Itanium D1/D0 pair into the single ??1ShadowModel@@QAE@XZ that
+ * src/_ZN11ShadowModelD1Ev.cpp defines out of line (include/ShadowModel.h
+ * declares ~ShadowModel() with no slot under _MSC_VER), so this file cannot
+ * carry the same definition: the host link refuses the pair (LNK2005). It
+ * spells out, in terms of that one host symbol, what the variant this file is
+ * enrolled for does: the D1 body, then the class-specific operator delete
+ * (Memory::operator_delete2, from ModelBase's inline operator delete). The
+ * qualified call is direct. ShadowModel::Destructor0 (hal/int4_rows.cpp, the
+ * host vtable's slot 1) calls this name. Nothing here reaches mwccarm: it
+ * builds the `#else` arm and emits the ROM bytes it always emitted, and the
+ * object is byte-identical either way. */
+extern "C" ShadowModel *_ZN11ShadowModelD0Ev(ShadowModel *thiz)
+{
+    thiz->ShadowModel::~ShadowModel();          /* the D1 body, through the one host symbol */
+    ShadowModel::operator delete(thiz);  /* the class-specific delete D0 ends with */
+    return thiz;
+}
+#else
 extern ShadowModel *data_0209cef4;  /* head of the live-shadow list */
 
 ShadowModel::~ShadowModel()
@@ -43,3 +63,4 @@ ShadowModel::~ShadowModel()
     prev = 0;
     next = 0;
 }
+#endif

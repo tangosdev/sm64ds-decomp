@@ -148,13 +148,13 @@ int *daObjFl_Puzzle_c_classInit(void);                          /* .c factory */
 /* ---- the id-79 coordinator SHELL (table _ZTV19BowserPuzzleManager, mounted) ---- */
 int _ZN19BowserPuzzleManager13InitResourcesEv(void *self);   /* slot 0, three byte-flags */
 int _ZN19BowserPuzzleManager8BehaviorEv(void *self);   /* slot 6, the range gate */
-/* D1 (_ZN19BowserPuzzleManagerD1Ev) stores the MOUNTED c1d8 as the mid-teardown vptr and
-   D0 (_ZN19BowserPuzzleManagerD0Ev) spells the shared VT/HEAP placeholders -- both are
-   host thunks below storing the HOST shell table instead (the gate-178 Amilift
-   treatment; the mounted words are DS addresses and must never be dispatched). */
-void _ZN8dActor_cD2Ev(void *);
-void _ZN6Memory10DeallocateEPvP4Heap(void *, void *);
-extern void *data_020a0eac;            /* Memory::gameHeapPtr */
+/* D1 (_ZN19BowserPuzzleManagerD1Ev) and D0 (_ZN19BowserPuzzleManagerD0Ev) were both
+   host thunks below storing the HOST shell table as the mid-teardown vptr (the
+   gate-178 Amilift treatment; the mounted words are DS addresses and must never
+   be dispatched). Both reach the matched TUs now: slot 16 through port_bpm_d1,
+   slot 17 through the flat D0 that src/_ZN19BowserPuzzleManagerD0Ev.cpp's
+   _MSC_VER arm defines (run linkfull wave 27, lane V3B; see shl_d0). */
+void *_ZN19BowserPuzzleManagerD0Ev(void *self);
 extern unsigned char _ZTV19BowserPuzzleManager[];  /* the mounted shell table (0x84) */
 int *daObjFl_Coin_c_classInit(void);  /* .c factory, installs c1d8 itself */
 /* The slot-16 face onto the matched src/_ZN19BowserPuzzleManagerD1Ev.cpp; it is
@@ -415,12 +415,20 @@ static int __fastcall shl_d1(void *s, void *)
     port_bpm_d1(s);
     return (int)(size_t)s;
 }
+/* SLOT 17 IS THE MATCHED TU TOO (run linkfull wave 27, lane V3B). What stood
+   here was the same hand-written teardown slot 16 retired -- store the host
+   shell table, then _ZN8dActor_cD2Ev, then Memory::Deallocate with the game
+   heap -- written while src/_ZN19BowserPuzzleManagerD0Ev.cpp spelled the shared
+   VT/HEAP placeholders. That TU is a real C++ destructor now and its _MSC_VER
+   arm defines the ROM's flat D0 (ov064 0x02118c10): the same ??1 slot 16
+   reaches, then dActor_c's inline operator delete, which is that same
+   Deallocate with that same heap word. The only difference from the retired
+   body is the transient vptr, MSVC's own table where this array stood, and the
+   ROM body (the store, then the base D2 with nothing between) leaves it inert:
+   tools/dtor_store_guard.py's SRC_ARMS re-proves that on every build. */
 static int __fastcall shl_d0(void *s, void *)
 {
-    char *st = (char *)s;
-    *(void **)st = (void *)port_bp_shell_vtable;
-    _ZN8dActor_cD2Ev(st);
-    _ZN6Memory10DeallocateEPvP4Heap(st, data_020a0eac);
+    _ZN19BowserPuzzleManagerD0Ev(s);
     return (int)(size_t)s;
 }
 
