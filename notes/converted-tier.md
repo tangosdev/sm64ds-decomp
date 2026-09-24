@@ -83,7 +83,8 @@ An adversarial audit found all four with concrete cases:
 - **Misattribution.** `search()` takes the first match anywhere in the file.
   `src/_ZN5Stage13UpdateMessageEv.cpp` reports `Message::UpdateWindow` — a
   one-line stub for a *dependency* class declared above the real function.
-  `src/_ZN6Coffin13InitResourcesEv.cpp` matches a bare `MeshCollider::LoadFile`
+  The old `Coffin::InitResources` shard (now `daObjCasket_c::InitResources` in
+  the promoted daObjCasket_c TU) matched a bare `MeshCollider::LoadFile`
   forward declaration that ends in `;` and is defined in another file entirely.
 - **Override of a correct failure.** Four files whose own symbol is a genuinely
   unidentified `func_ov*` placeholder ([func_ov006_020c8f20](../src/func_ov006_020c8f20.cpp), [func_ov006_020cb030](../src/func_ov006_020cb030.cpp),

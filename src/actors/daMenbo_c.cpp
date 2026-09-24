@@ -300,11 +300,8 @@ void func_ov090_02131e50(char* c);
  * read it through the address. */
 #define MENBO_BCA(handle) (((BCA_File**)&(handle))[1])
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinals 0 and 1 -- _ZN9daMenbo_cD1Ev 0x02130f00, _ZN9daMenbo_cD0Ev     */
-/* 0x02130f40. One written destructor; the compiler emits both variants and    */
-/* the whole body of each.                                                     */
-/* -------------------------------------------------------------------------- */
+/* One written destructor; the compiler emits both variants, D1 (0x02130f00)
+ * and D0 (0x02130f40), and the whole body of each. */
 // @symbol _ZN9daMenbo_cD1Ev
 // @symbol _ZN9daMenbo_cD0Ev
 /* One vtable store and four destructor calls, every one a consequence of
@@ -321,9 +318,6 @@ daMenbo_c::~daMenbo_c()
 {
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- func_ov090_02130f94, 0x02130f94, size 0x120                */
-/* -------------------------------------------------------------------------- */
 /* THE PRAGMA BRACKET. Both lines are measured live against the cartridge; see
  * the file header for the four-way control. The defer_codegen pragma at the top
  * of the file is what makes them bind to this member alone -- without it they
@@ -375,9 +369,6 @@ extern "C" void func_ov090_02130f94(char* c_)
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- func_ov090_021310b4, 0x021310b4, size 0x2c4               */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov090_021310b4
 /* The whole contact response, in the order the cartridge tests it. Keys held
  * from the shard: the volatile source pointer pins the offset table copy to
@@ -470,9 +461,6 @@ void func_ov090_021310b4(char* c)
     _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(p, &hurt, 2, 0xc000, 1, 0, 1);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- func_ov090_02131378, 0x02131378, size 0x128               */
-/* -------------------------------------------------------------------------- */
 #pragma opt_common_subs on
 // @symbol func_ov090_02131378
 /* Finds the surface under the skeeter and clamps it up onto that surface. One
@@ -515,9 +503,6 @@ void func_ov090_02131378(char* c)
 }
 #pragma opt_common_subs off
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- func_ov090_021314a0, 0x021314a0, size 0xe4                */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov090_021314a0
 /* Looks for a player close enough, and near enough to the skeeter's heading, to
  * chase. Returns 1 while a target is held, and releases it otherwise. */
@@ -550,9 +535,6 @@ out:
     return 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- func_ov090_02131584, 0x02131584, size 0x84               */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov090_02131584
 /* State: resting on the surface. Leaves for the chase once a target turns up or
  * the counter runs long, and for the sinking state on the flag the surface
@@ -571,9 +553,6 @@ int func_ov090_02131584(char* c)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- func_ov090_02131608, 0x02131608, size 0x40               */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov090_02131608
 /* Entry paired with update handler func_ov090_02131584. Clears the counter,
  * resets the playback rate and selects the animation at data_ov090_02134498. */
@@ -585,9 +564,6 @@ int func_ov090_02131608(char* c)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 8 -- func_ov090_02131648, 0x02131648, size 0x42c              */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov090_02131648
 /* State: skimming. A line probe ahead of the skeeter, the distance back to the
  * anchor at 0x374, and the mesh wall flag each turn it around, and each one
@@ -734,9 +710,6 @@ int func_ov090_02131648(MenboState* c)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 9 -- func_ov090_02131a74, 0x02131a74, size 0x50               */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov090_02131a74
 /* State entry: skimming. Resets the playback rate, arms the two skim timers and
  * starts the skim animation. */
@@ -750,9 +723,6 @@ int func_ov090_02131a74(char* c)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 10 -- func_ov090_02131ac4, 0x02131ac4, size 0xd0              */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov090_02131ac4
 /* State: braking. Bleeds the horizontal speed off, and once it reaches zero
  * drops the anchor at the current position, picks a fresh random heading and
@@ -774,9 +744,6 @@ int func_ov090_02131ac4(char* c)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 11 -- func_ov090_02131b94, 0x02131b94, size 0xb4              */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov090_02131b94
 /* State entry: resting. Three draws from the random source jitter the heading
  * twice and set how long the rest lasts, then the rest animation starts. */
@@ -798,9 +765,6 @@ int func_ov090_02131b94(char* thiz)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 12 -- func_ov090_02131c48, 0x02131c48, size 0x168             */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov090_02131c48
 /* State: chasing. Speeds up after a few frames, turns away from a wall it is
  * heading into, and gives the chase up once the animation has run out enough
@@ -843,9 +807,6 @@ int func_ov090_02131c48(char* c)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 13 -- func_ov090_02131db0, 0x02131db0, size 0x50              */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov090_02131db0
 /* Entry paired with update handler func_ov090_02131c48. Selects the animation
  * at data_ov090_02134488 with flag 0x40000000, then resets the rate and counter. */
@@ -857,9 +818,6 @@ int func_ov090_02131db0(char* c)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 14 -- func_ov090_02131e00, 0x02131e00, size 0x50              */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov090_02131e00
 /* Installs a state and runs its entry. Every state table node starts with the
  * pointer-to-member the actor enters through; a null one means the state has no
@@ -872,9 +830,6 @@ int func_ov090_02131e00(MenboState* c, MenboStateFn* p)
     return (c->**q)();
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 15 -- func_ov090_02131e50, 0x02131e50, size 0x8c              */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov090_02131e50
 /* Rebuilds the model matrix at 0x328 from the actor's position and rotation.
  * The position goes in shifted down by three, which is the scale the renderer
@@ -893,9 +848,6 @@ void func_ov090_02131e50(char* c)
     *(Matrix4x3*)(c + 0x328) = data_020a0e68;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 16 -- _ZN9daMenbo_c16CleanupResourcesEv, 0x02131edc, size 0x54 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daMenbo_c16CleanupResourcesEv
 /* Releases the five shared files InitResources claimed -- one model and four
  * animations. Not in claim order, but every one is paired.
@@ -912,9 +864,6 @@ int daMenbo_c::CleanupResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 17 -- _ZN9daMenbo_c16OnPendingDestroyEv, 0x02131f30, size 0x4  */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daMenbo_c16OnPendingDestroyEv
 /* Empty in the ROM -- a single `bx lr`. The override exists to suppress the
  * base's behaviour. */
@@ -922,9 +871,6 @@ void daMenbo_c::OnPendingDestroy()
 {
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 18 -- _ZN9daMenbo_c6RenderEv, 0x02131f34, size 0x54           */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daMenbo_c6RenderEv
 /* Draws through mModelAnim's own vtable, skipping the frame while the actor
  * carries the hidden flag. */
@@ -937,9 +883,6 @@ int daMenbo_c::Render()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 19 -- _ZN9daMenbo_c8BehaviorEv, 0x02131f88, size 0x3d4        */
-/* -------------------------------------------------------------------------- */
 #pragma opt_common_subs on
 // @symbol _ZN9daMenbo_c8BehaviorEv
 /* One frame of the skeeter, in four mutually exclusive branches, each returning
@@ -985,8 +928,8 @@ int daMenbo_c::Behavior()
         if (unk_3a1 == 3) {
             _Z14ApproachLinearRsss(&mAngleX, -32767, 0x500);
             if (AngleDiff(*&mAngleX, -32767) < 0x1000) {
-                s16* p8e = &mAngleY;
-                *p8e += 0x1000;
+                s16* yaw = &mAngleY;
+                *yaw += 0x1000;
             }
         }
         if (mDeathState != 1 && mPosY <= unk_3ac) {
@@ -1068,9 +1011,6 @@ int daMenbo_c::Behavior()
 }
 #pragma opt_common_subs off
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 20 -- _ZN9daMenbo_c13InitResourcesEv, 0x0213235c, size 0x2bc  */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daMenbo_c13InitResourcesEv
 /* Loads the model and four animations, builds both collision volumes, and then
  * FINDS THE WATER LINE -- which is the part that matters.
@@ -1183,9 +1123,6 @@ int daMenbo_c::InitResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 21 -- _ZN9daMenbo_c16OnAimedAtWithEggEv, 0x02132618, size 0x8 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daMenbo_c16OnAimedAtWithEggEv
 /* Vtable slot 29 -- how far Yoshi's aim leads this target. */
 s32 daMenbo_c::OnAimedAtWithEgg()
@@ -1193,9 +1130,6 @@ s32 daMenbo_c::OnAimedAtWithEgg()
     return 131072;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 22 -- _ZN9daMenbo_c13OnTurnIntoEggER6Player, 0x02132620, 0x2c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daMenbo_c13OnTurnIntoEggER6Player
 /* Vtable slot 19, verified against ov090 relocs.txt: _ZTV9daMenbo_c
  * (0x02134168) + 0x4c relocates to 0x02132620, exactly this function. */
@@ -1205,9 +1139,6 @@ void daMenbo_c::OnTurnIntoEgg(Player& player)
     KillAndTrackInDeathTable();
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 23 -- _ZN9daMenbo_c13OnYoshiTryEatEv, 0x0213264c, size 0x8    */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daMenbo_c13OnYoshiTryEatEv
 /* Vtable slot 18 -- what Yoshi turns this into when he swallows it. */
 s32 daMenbo_c::OnYoshiTryEat()

@@ -370,7 +370,7 @@ non-inline virtual, so this class's key function -- it emits the whole
 `_ZTV10daSldMng_c` ([ov019](../config/arm9/overlays/ov019/symbols.txt) `0x021133cc`, 124 bytes) against the cartridge:
 VERIFIED. Under the coined name that comparison was impossible.
 
-## UpDownLiftBbh
+## daUdlift_c
 
 The same shape: `0x000..0x0d4` is the flat `fBase_c -> dBase_c -> dActor_c`
 layout, so `pauseFlags` came from `include/fBase_c.h` and `mPrevPosX/Y/Z`,

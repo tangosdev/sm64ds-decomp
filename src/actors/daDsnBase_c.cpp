@@ -1,6 +1,7 @@
 //cpp
-/* The crushers' shared base: Thwomp (DOSUN 161, ov091) and Grindel
- * (DONKAKU 162, ov025). `dsn` is dossun, the Thwomp's Japanese name.
+/* daDsnBase_c -- the crushers' shared base, ov091: the Thwomp (daDsn_c,
+ * DOSUN 161, ov091) and Grindel (daDkk_c, DONKAKU 162, ov025). `dsn` is
+ * dossun, the Thwomp's Japanese name.
  *
  * This TU owns the two vtable slots both leaves inherit -- CleanupResources
  * (slot 3, the key function, so this TU emits _ZTV11daDsnBase_c) and Render
@@ -24,8 +25,7 @@
  * fixing Matrix4x3 to the flat s32 m[12] spelling the shadow-matrix copy in
  * func_ov091_02133098 compiled against. Do not hoist math/Matrix.h.
  *
- * deslop
- * Leftover:
+ * Known limits (and what each deliberate spelling is for):
  * - func_ov091_* keep ROM labels and C linkage: daDkk_c::Behavior (ov025)
  *   and daDsn_c::Behavior call all seven by name across the TU boundary.
  * - 0x360..0x39f stay offset soup. The shadow Matrix4x3, the rise/ground
@@ -144,7 +144,7 @@ extern void func_020393d4(int *collider, int callback);
 // @symbol _ZN11daDsnBase_c4InitEv
 s32 daDsnBase_c::Init()
 {
-    Vector3 v;
+    Vector3 probePos;
     BMD_File *bmd;
     KCL_File *kcl;
     DsnBaseFileTable *files;
@@ -182,16 +182,16 @@ s32 daDsnBase_c::Init()
     if (!mShadowModel.InitCuboid())
         return 0;
 
-    v.x = mPosX;
-    v.y = mPosY;
-    v.z = mPosZ;
-    v.y = v.y + 0x32000;
+    probePos.x = mPosX;
+    probePos.y = mPosY;
+    probePos.z = mPosZ;
+    probePos.y = probePos.y + 0x32000;
     {
-        dBgCh_Gnd rg;
-        rg.SetObjAndPos(v, 0);
-        *(s32 *)((char *)this + 0x394) = v.y;
-        if (rg.DetectClsn())
-            *(s32 *)((char *)this + 0x394) = rg.clsnY;
+        dBgCh_Gnd ground;
+        ground.SetObjAndPos(probePos, 0);
+        *(s32 *)((char *)this + 0x394) = probePos.y;
+        if (ground.DetectClsn())
+            *(s32 *)((char *)this + 0x394) = ground.clsnY;
 
         *(s32 *)((char *)this + 0x390) = mPosY + 0x190000;
         mPosY = *(s32 *)((char *)this + 0x394);
@@ -303,8 +303,8 @@ extern "C" void func_ov091_02133020(char *c)
 // @symbol func_ov091_02132ff4
 extern "C" void func_ov091_02132ff4(char *c)
 {
-    int r = DecIfAbove0_Byte((u8 *)c + 0x39e);
-    if (r == 0)
+    int timeLeft = DecIfAbove0_Byte((u8 *)c + 0x39e);
+    if (timeLeft == 0)
         *(s32 *)(c + 0x398) = 2;
 }
 
@@ -356,9 +356,9 @@ extern "C" void func_ov091_02132e98(char *c)
     if (DecIfAbove0_Byte((u8 *)c + 0x39e) != 0)
         return;
     *(s32 *)(c + 0x398) = 4;
-    unsigned int r = RandomIntInternal(data_0209e650);
-    unsigned int v = r >> 16;
-    c[0x39e] = (char)(v % 10 + 0x14);
+    unsigned int roll = RandomIntInternal(data_0209e650);
+    unsigned int rollHigh = roll >> 16;
+    c[0x39e] = (char)(rollHigh % 10 + 0x14);
 }
 
 /* State 4, the recover. Spends the timer state 3 set, then closes the cycle
@@ -366,8 +366,8 @@ extern "C" void func_ov091_02132e98(char *c)
 // @symbol func_ov091_02132e64
 extern "C" void func_ov091_02132e64(char *c)
 {
-    int r = DecIfAbove0_Byte((u8 *)c + 0x39e);
-    if (r == 0) {
+    int timeLeft = DecIfAbove0_Byte((u8 *)c + 0x39e);
+    if (timeLeft == 0) {
         *(s32 *)(c + 0x398) = 0;
         *(u8 *)(c + 0x39e) = 0x28;
     }

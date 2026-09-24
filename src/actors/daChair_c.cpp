@@ -1,35 +1,45 @@
 //cpp
 /**
- * d_a_chair.cpp
- * Object - Haunted Chair (CHAIR 326)
+ * daChair_c -- the haunted chair of Big Boo's Haunt (CHAIR 326), ov020.
  *
  * ov020 is BBH's flying furniture: BOOK_SHOT / CHAIR / BOOKEND /
  * BOOK_SHOT_SPAWNER. RTTI ov020:0x021149d8 names this class daChair_c.
  * State0 looks up actor ID 0xf9 (PIANO) and stores its uniqueID; the chair
- * then hunts that piano or the player.
+ * then hunts that piano or the player, rattling in place (State1) before it
+ * moves.
  *
- * common.h FIRST: InitResources assigns IDENTITY_MATRIX4X3 into mShadowMat.
- * common.h's flat s32 m[12] is the ROM's twelve-word copy; math/Matrix.h's
- * nested {Matrix3x3 r; Vector3 t;} scalarizes it (Vector3 is non-POD).
+ * DO NOT "TIDY" THESE -- each one is load-bearing:
  *
- * deslop leftovers:
- * - dCcAcPos_c::Init / dBgCh_Actr::Init / DropShadowRadHeight /
- *   Particle::System::NewSimple / Player::Hurt 6az: this TU passes
- *   Fix12<int> by value; the header method form size-DIFFs. dBgCh Init
- *   header Fix12i mangles as int; ROM is Fix12<int>.
- * - GetWallResult / CopyNormalTo are not in dBgCh_Actr.h / SurfaceInfo.
- * - func_0200f760 (cylinder flags vs Player+0x6fb) and func_0201267c
- *   (sound at mCamSpacePos) stay the linker names.
- * - State1 LAUNDER((int)p) and State2 `(int)c + 0x39e` are load-bearing.
- *   Named mStateTimer++ / &mPosX DIFFs.
- * - State2's State300 overlay at this+0x300 is this class's own
+ *   common.h FIRST: InitResources assigns IDENTITY_MATRIX4X3 into
+ *   mShadowMat. common.h's flat s32 m[12] is the ROM's twelve-word copy;
+ *   math/Matrix.h's nested {Matrix3x3 r; Vector3 t;} scalarizes it (Vector3
+ *   is non-POD).
+ *
+ *   State1's LAUNDER((int)p) and State2's `(int)c + 0x39e`. The named
+ *   mStateTimer++ and &mPosX do not match.
+ *
+ *   State2's State300 overlay at this+0x300 is this class's own
  *   mStateTimer / mActionTimer (0x39e / 0x3a0), reached through the
- *   dBgCh_Actr interior at 0x300. Named fields DIFF.
- * - (Vector3 *)&mPosX: dActor_c has no Pos(). Player+0x6fb and
- *   Player+0xc (actorID == 0xbf PLAYER) stay offsets.
- * - data_ov020_02114af0 is the BMD SharedFilePtr this TU LoadFile /
- *   Release; ov020 sinit constructs it as file ID 0x2d0. S14 no
- *   g_profile_CHAIR.
+ *   dBgCh_Actr interior at 0x300. Named fields do not match.
+ *
+ *   (Vector3 *)&mPosX: dActor_c has no Pos(). Player+0x6fb and Player+0xc
+ *   (actorID == 0xbf PLAYER) stay offsets.
+ *
+ * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS:
+ *   dCcAcPos_c::Init / dBgCh_Actr::Init / DropShadowRadHeight /
+ *   Particle::System::NewSimple / Player::Hurt pass Fix12<int> by value
+ *   (notes/mwccarm-codegen.md 6az); the header method form changes the code
+ *   size. The dBgCh Init header's Fix12i mangles as int; the ROM's is
+ *   Fix12<int>.
+ *   GetWallResult / CopyNormalTo are not in dBgCh_Actr.h / SurfaceInfo.
+ *
+ * Known limits:
+ *   func_0200f760 (cylinder flags vs Player+0x6fb) and func_0201267c (sound
+ *   at mCamSpacePos) keep their linker names.
+ *
+ * NOT OWNED BY THIS TU: data_ov020_02114af0 is the BMD SharedFilePtr this
+ * TU loads and releases; ov020's sinit constructs it as file ID 0x2d0. There
+ * is no g_profile_CHAIR in this TU.
  */
 
 #include "common.h"
@@ -85,9 +95,6 @@ typedef struct {
 
 extern int _ZTV9daChair_c[];
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 13 -- daChair_c_classInit, 0x02113494, size 0x50 */
-/* -------------------------------------------------------------------------- */
 // @symbol daChair_c_classInit
 /* CHAIR registry factory. `return new daChair_c()` MATCHES; the synthesized
    ctor stores `_ZTV9daChair_c + 2` because this TU defines the vtable.
@@ -97,9 +104,6 @@ extern "C" daChair_c *daChair_c_classInit(void)
     return new daChair_c();
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 12 -- _ZN9daChair_c13InitResourcesEv, 0x021133b0, size 0xe4 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daChair_c13InitResourcesEv
 s32 daChair_c::InitResources()
 {
@@ -121,9 +125,6 @@ s32 daChair_c::InitResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 11 -- _ZN9daChair_c8BehaviorEv, 0x02113324, size 0x8c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daChair_c8BehaviorEv
 s32 daChair_c::Behavior()
 {
@@ -141,9 +142,6 @@ s32 daChair_c::Behavior()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 10 -- _ZN9daChair_c6RenderEv, 0x021132fc, size 0x28 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daChair_c6RenderEv
 s32 daChair_c::Render()
 {
@@ -151,9 +149,6 @@ s32 daChair_c::Render()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 9 -- _ZN9daChair_c16CleanupResourcesEv, 0x021132d8, size 0x24 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daChair_c16CleanupResourcesEv
 s32 daChair_c::CleanupResources()
 {
@@ -161,28 +156,22 @@ s32 daChair_c::CleanupResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 8 -- _ZN9daChair_c11UpdateModelEv, 0x02113240, size 0x98 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daChair_c11UpdateModelEv
 void daChair_c::UpdateModel()
 {
     char *c = (char *)this;
-    Matrix4x3_FromRotationZXYExt(c + 0xf0, *(short *)(c + 0x8c),
-                                 *(short *)(c + 0x8e), *(short *)(c + 0x90));
-    *(int *)(c + 0x114) = *(int *)(c + 0x5c) >> 3;
-    *(int *)(c + 0x118) = *(int *)(c + 0x60) >> 3;
-    *(int *)(c + 0x11c) = *(int *)(c + 0x64) >> 3;
-    *(int *)(c + 0x170) = *(int *)(c + 0x5c) >> 3;
+    Matrix4x3_FromRotationZXYExt(c + 0xf0, mAngleX,
+                                 mAngleY, mAngleZ);
+    *(int *)(c + 0x114) = mPosX >> 3;
+    *(int *)(c + 0x118) = mPosY >> 3;
+    *(int *)(c + 0x11c) = mPosZ >> 3;
+    *(int *)(c + 0x170) = mPosX >> 3;
     *(int *)(c + 0x174) = *(int *)(c + 0x384) >> 3;
-    *(int *)(c + 0x178) = *(int *)(c + 0x64) >> 3;
+    *(int *)(c + 0x178) = mPosZ >> 3;
     _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
         c, c + 0x124, c + 0x14c, 0x32000, 0x1e000, 0xf);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- _ZN9daChair_c5BreakEv, 0x021131f8, size 0x48 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daChair_c5BreakEv
 void daChair_c::Break()
 {
@@ -192,9 +181,6 @@ void daChair_c::Break()
     MarkForDestruction();
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- _ZN9daChair_c18ApproachStateValueEPsS0_isis, 0x02113148 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daChair_c18ApproachStateValueEPsS0_isis
 int daChair_c::ApproachStateValue(s16 *pos, s16 *vel, s32 target,
                                   s16 thresh, s32 accel, s16 mult)
@@ -217,9 +203,6 @@ int daChair_c::ApproachStateValue(s16 *pos, s16 *vel, s32 target,
     return 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- _ZN9daChair_c6State0Ev, 0x021130c8, size 0x80 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daChair_c6State0Ev
 void daChair_c::State0()
 {
@@ -243,39 +226,36 @@ void daChair_c::State0()
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- _ZN9daChair_c6State1Ev, 0x02112e94, size 0x234 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daChair_c6State1Ev
 void daChair_c::State1()
 {
-    char *r4 = (char *)this;
-    int sp[4];
-    void *a;
+    char *self = (char *)this;
+    int targetPos[4];
+    void *target;
     short d;
-    void *p;
-    int r3;
+    void *player;
+    int wobble;
     int *av;
     unsigned short *p39e;
 
-    a = dActor_c::FindWithID(mTargetID);
-    if (a != 0) {
-        av = (int *)(int)LAUNDER((char *)a + 0x5c);
-        sp[0] = *av;
-        sp[1] = av[1];
-        sp[2] = av[2];
-        if (Vec3_Dist((const Vector3 *)(r4 + 0x5c), (const Vector3 *)sp) >= 0xfa000)
+    target = dActor_c::FindWithID(mTargetID);
+    if (target != 0) {
+        av = (int *)(int)LAUNDER((char *)target + 0x5c);
+        targetPos[0] = *av;
+        targetPos[1] = av[1];
+        targetPos[2] = av[2];
+        if (Vec3_Dist((const Vector3 *)(self + 0x5c), (const Vector3 *)targetPos) >= 0xfa000)
             return;
-        d = (short)(Vec3_HorzAngle((const Vector3 *)(r4 + 0x5c), (const Vector3 *)sp)
-                    - *(short *)(r4 + 0x8e) + 0x2000);
+        d = (short)(Vec3_HorzAngle((const Vector3 *)(self + 0x5c), (const Vector3 *)targetPos)
+                    - mAngleY + 0x2000);
         if (d & 0x4000) {
-            *(char **)(r4 + 0x3a4) = r4 + 0x90;
+            *(char **)(self + 0x3a4) = self + 0x90;
             if (d > 0)
                 mTargetAngle = 0x4000;
             else
                 mTargetAngle = (short)-0x4000;
         } else {
-            *(char **)(r4 + 0x3a4) = r4 + 0x8c;
+            *(char **)(self + 0x3a4) = self + 0x8c;
             if (d < 0)
                 mTargetAngle = 0x5800;
             else
@@ -290,38 +270,38 @@ void daChair_c::State1()
     }
 
     if (mActionTimer != 0) {
-        p = ClosestPlayer();
-        if (p != 0) {
-            if (Vec3_Dist((const Vector3 *)(r4 + 0x5c),
-                          (const Vector3 *)((char *)p + 0x5c)) < 0x1f4000)
+        player = ClosestPlayer();
+        if (player != 0) {
+            if (Vec3_Dist((const Vector3 *)(self + 0x5c),
+                          (const Vector3 *)((char *)player + 0x5c)) < 0x1f4000)
                 mActionTimer = 0;
         }
         mStateTimer = 0;
         return;
     }
 
-    p39e = (unsigned short *)(int)LAUNDER(r4 + 0x39e);
+    p39e = (unsigned short *)(int)LAUNDER(self + 0x39e);
     *p39e = (unsigned short)(*p39e + 1);
     if (mStateTimer & 8) {
-        if (*(short *)(r4 + 0x8c) >= 0) {
-            r3 = -4;
+        if (mAngleX >= 0) {
+            wobble = -4;
         } else {
-            func_0201267c(0x5f, r4 + 0x74);
-            r3 = 4;
+            func_0201267c(0x5f, self + 0x74);
+            wobble = 4;
         }
         {
-            int *px = (int *)(int)LAUNDER(r4 + 0x5c);
-            *px = *px - (r3 << 12);
+            int *px = (int *)(int)LAUNDER(self + 0x5c);
+            *px = *px - (wobble << 12);
         }
         {
-            int *pz = (int *)(int)LAUNDER(r4 + 0x64);
-            *pz = *pz - (r3 << 12);
+            int *pz = (int *)(int)LAUNDER(self + 0x64);
+            *pz = *pz - (wobble << 12);
         }
-        *(short *)(r4 + 0x90) = (short)(r3 * 0x32);
-        *(short *)(r4 + 0x8c) = *(short *)(r4 + 0x90);
+        mAngleZ = (short)(wobble * 0x32);
+        mAngleX = mAngleZ;
     } else {
-        *(short *)(r4 + 0x90) = 0;
-        *(short *)(r4 + 0x8c) = *(short *)(r4 + 0x90);
+        mAngleZ = 0;
+        mAngleX = mAngleZ;
     }
 
     if (mStateTimer < 0x1e)
@@ -334,9 +314,6 @@ void daChair_c::State1()
     mStateTimer = 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- _ZN9daChair_c6State2Ev, 0x02112b00, size 0x394 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daChair_c6State2Ev
 void daChair_c::State2()
 {
@@ -374,8 +351,8 @@ void daChair_c::State2()
                     playerPos.y = pp->y;
                     playerPos.z = pp->z;
                     Vec3_Sub(&diff, &playerPos, (PlainVector3 *)(c + 0x5c));
-                    *(s16 *)(c + 0x94) = _ZN4cstd5atan2E5Fix12IiES1_(diff.x, diff.z);
-                    *(s16 *)(c + 0x92) = _ZN4cstd5atan2E5Fix12IiES1_(diff.y, Vec3_HorzLen((const Vector3 *)&diff)) * -1;
+                    mPrevAngleY = _ZN4cstd5atan2E5Fix12IiES1_(diff.x, diff.z);
+                    mPrevAngleX = _ZN4cstd5atan2E5Fix12IiES1_(diff.y, Vec3_HorzLen((const Vector3 *)&diff)) * -1;
                     r = (s32)(((long long)data_02082214[(A92 >> 4) * 2 + 1] * 0x32000 + 0x800) >> 12);
                     *(s32 *)(c + 0xa4) = (s32)(((long long)r * data_02082214[(A94 >> 4) * 2] + 0x800) >> 12);
                     *(s32 *)(c + 0xa8) = (s32)(((long long)data_02082214[(A92 >> 4) * 2] * -0x32000 + 0x800) >> 12);
@@ -393,7 +370,7 @@ void daChair_c::State2()
                 void *wr = _ZNK10dBgCh_Actr13GetWallResultEv(c + 0x1bc);
                 PlainVector3 normal;
                 _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char *)wr + 4, &normal);
-                if (GetSubtraction(*(s16 *)(c + 0x94),
+                if (GetSubtraction(mPrevAngleY,
                         _ZN4cstd5atan2E5Fix12IiES1_(normal.x, normal.z)) > 0x4000) {
                     Break();
                 }
@@ -421,17 +398,14 @@ void daChair_c::State2()
             return;
         {
             PlainVector3 pos;
-            pos.x = *(s32 *)(c + 0x5c);
-            pos.y = *(s32 *)(c + 0x60);
-            pos.z = *(s32 *)(c + 0x64);
+            pos.x = mPosX;
+            pos.y = mPosY;
+            pos.z = mPosZ;
             _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(a, &pos, 2, 0xc000, 1, 0, 1);
         }
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- _ZN9daChair_c6State3Ev, 0x021129dc, size 0x124 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daChair_c6State3Ev
 void daChair_c::State3()
 {
@@ -459,10 +433,10 @@ cont: ;
         if (sa >= 0x4000) {
             short d = (short)(sa - 0x4000);
             short t2 = data_02082214[((unsigned short)d >> 4) * 2];
-            *(int *)(c + 0x60) = (short)t2 * (short)0x28 + (*(int *)(c + 0x384) + 0x28000);
+            mPosY = (short)t2 * (short)0x28 + (*(int *)(c + 0x384) + 0x28000);
         } else {
             short t3 = data_02082214[((unsigned short)sa >> 4) * 2];
-            *(int *)(c + 0x60) = (short)t3 * (short)0x28 + *(int *)(c + 0x384);
+            mPosY = (short)t3 * (short)0x28 + *(int *)(c + 0x384);
         }
     }
 }

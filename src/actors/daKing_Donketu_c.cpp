@@ -94,6 +94,7 @@
 #include "decl_Message.h"
 #include "types.h"
 #include "SharedFilePtr.h"
+#include "Particle__System.h"
 
 struct C;
 typedef int (C::*PMF)();
@@ -151,7 +152,6 @@ extern short Vec3_HorzAngle(const Vector3* a, const Vector3* b);
 extern void Matrix4x3_FromRotationY(void* m, short ang);
 extern void MulVec3Mat4x3(const void* in, void* m, void* out);
 extern unsigned int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unsigned int, unsigned int, Fix12i, Fix12i, Fix12i, const void*, void*);
-extern void* _ZN8Particle6System12FromUniqueIDEj(unsigned int id);
 extern void func_0200d8c8(void *cam, void *v, int strength);
 extern void MulMat4x3Mat4x3(void *dst, void *a, void *b);
 extern void Vec3_Lsl(void *d, void *s, int sh);
@@ -238,12 +238,12 @@ void func_ov073_0211f144(void* self) {
     *(unsigned int*)(c + 0x4f8) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(*(unsigned int*)(c + 0x4f8), 0x77, pos.x, pos.y, pos.z, 0, 0);
     *(unsigned int*)(c + 0x4fc) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(*(unsigned int*)(c + 0x4fc), 0x78, pos.x, pos.y, pos.z, 0, 0);
     if (*(unsigned int*)(c + 0x4f8) != 0) {
-        void* sys = _ZN8Particle6System12FromUniqueIDEj(*(unsigned int*)(c + 0x4f8));
+        void* sys = Particle::System::FromUniqueID(*(unsigned int*)(c + 0x4f8));
         if (sys != 0) *(int*)((char*)sys + 0x44) = *(int*)(c + 0x80) * 0x14;
     }
     if (*(unsigned int*)(c + 0x4fc) == 0) return;
     {
-        void* sys = _ZN8Particle6System12FromUniqueIDEj(*(unsigned int*)(c + 0x4fc));
+        void* sys = Particle::System::FromUniqueID(*(unsigned int*)(c + 0x4fc));
         if (sys != 0) *(int*)((char*)sys + 0x44) = *(int*)(c + 0x80) * 0x14;
     }
 }

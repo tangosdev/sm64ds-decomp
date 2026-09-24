@@ -265,9 +265,9 @@ In `Kill`, `Particle::System::NewSimple`'s signature is deliberately the local
 (`Fix12<int>`) which mwccarm passes differently at the call site, so declaring the
 true types breaks the byte match. See `notes/mwccarm-codegen.md` 6az.
 
-## `include/UpDownLiftBbh.h`
+## `include/daUdlift_c.h`
 
-Still a flat generated struct ([ov095](../config/arm9/overlays/ov095/symbols.txt)). Own fields start at 0x320.
+A real `dBgActor_c` subclass ([ov095](../config/arm9/overlays/ov095/symbols.txt)), promoted as [src/actors/daUdlift_c.cpp](../src/actors/daUdlift_c.cpp). Own fields start at 0x320.
 
 | offset | name | evidence |
 |---|---|---|
@@ -281,16 +281,14 @@ Still a flat generated struct ([ov095](../config/arm9/overlays/ov095/symbols.txt
 | 0x33c | `mMiddleY` | `= (mTopY + mBottomY) / 2` |
 | 0x340 | `mSoundHandle` | `= Sound::PlayLong(mSoundHandle, 3, 0x82, …)` in the state functions |
 | 0x344 | `mStateTimer` | incremented every `Behavior`, zeroed on a state change |
-| 0x347 | `mIsArmed` | 1 at init; [func_ov095_02136368](../src/func_ov095_02136368.c) only starts the lift while it is 1 and clears it on trigger; `Behavior` re-arms it when the rider leaves |
+| 0x346 | `mIsAtBottom` | set when the descent ([func_ov095_02136178](../src/actors/daUdlift_c.cpp)) reaches `mBottomY`, cleared when the climb ([func_ov095_02136298](../src/actors/daUdlift_c.cpp)) reaches `mTopY`; the waiting state [func_ov095_02136368](../src/actors/daUdlift_c.cpp) branches on it |
+| 0x347 | `mIsArmed` | 1 at init; [func_ov095_02136368](../src/actors/daUdlift_c.cpp) only starts the lift while it is 1 and clears it on trigger; `Behavior` re-arms it when the rider leaves |
 | 0x348 | `mIsRidden` | set by the collider callback [func_ov095_02136764](../src/func_ov095_02136764.cpp), read once and cleared at the end of every `Behavior` |
 
 Left as `unk_`, honestly:
 
-- `unk_346` — a flag the state functions set and clear ([func_ov095_02136178](../src/func_ov095_02136178.c)
-  sets it, [func_ov095_02136298](../src/func_ov095_02136298.cpp) clears it, [func_ov095_02136368](../src/func_ov095_02136368.c) does both). No body in the tree
-  shows what it means.
 - `unk_349` — set to 0, and to 1 for the `actorID == 0x83` variant. Both
-  `InitResources` and [func_ov095_02136298](../src/func_ov095_02136298.cpp) then compare it against 2 and 0, and
+  `InitResources` and [func_ov095_02136298](../src/actors/daUdlift_c.cpp) then compare it against 2 and 0, and
   the `== 2` arm is unreachable from what the tree can see. It is a byte load in
   the ROM, not the `s32 mVariant` at 0x328 (those are different instructions), so
   it is genuinely its own field and its role is not settled. Do not "fix" the
@@ -431,7 +429,7 @@ still builds 106/106.
 | `daObjSimpleLift_c::InitResources` | [ov091](../config/arm9/overlays/ov091/symbols.txt) 0x021325d4 +0x214 | `*(u8 *)(c+0x322)` → `mVariant` throughout, `c+0x320` → `mMoveTimer`, `c+0x324..0x32c` → `mBasePos{X,Y,Z}` |
 | `RotatingUpDownPlatform::Behavior` | [ov091](../config/arm9/overlays/ov091/symbols.txt) 0x02132108 +0x104 | `s+0x320` → `mState`, `s+0x354` → `mStateTimer`, `s+0x352` → `mVariant`, `s+0x356` → `mIsPressed`, `s+0x34c` → `mSinkOffsetY`; the two sink magic numbers become `cSinkDepth` / `cSinkRate` |
 | `RotatingUpDownPlatform::InitResources` | [ov091](../config/arm9/overlays/ov091/symbols.txt) 0x0213220c +0x154 | `this+0x344` → `&mPathPtr`, `this+0x338` → `&mTargetPosX`, `this+0x32c` → `&mBasePosX` |
-| `UpDownLiftBbh::InitResources` and `::Behavior` | [ov095](../config/arm9/overlays/ov095/symbols.txt) 0x021365d8 +0x18c, 0x021364d8 +0x100 | the `*((int *)((char *)&mTopY))` cast wrappers drop away now that the fields are `s32`; `this+0x344` and `(&unk_300)+0x44` both become `mStateTimer` |
+| `daUdlift_c::InitResources` and `::Behavior` | [ov095](../config/arm9/overlays/ov095/symbols.txt) 0x021365d8 +0x18c, 0x021364d8 +0x100 | the `*((int *)((char *)&mTopY))` cast wrappers drop away now that the fields are `s32`; `this+0x344` and `(&unk_300)+0x44` both become `mStateTimer` |
 
 One thing that did NOT hold: `*(int *)(s + 0x60) -= mSinkOffsetY;` in
 `RotatingUpDownPlatform::Behavior` is followed by `mPosY = saved;`, so the

@@ -1,35 +1,44 @@
 //cpp
-/* Mr. I projectile (EYEKUN_BEAM 264) -- ov071/daEyBm_c.
+/* daEyBm_c -- Mr. I's projectile (EYEKUN_BEAM 264), ov071.
+ *
+ * It flies straight at 10.0 along the pitch and yaw it spawned with
+ * (mPrevAngleX / mPrevAngleY) and bursts (particle 0x45) when it touches
+ * ground or a wall, when it hurts a Mario (Player::Hurt, not while he is
+ * vanished), or after 150 frames.
  *
  * ov071 is mixed (COFFIN / SCUTTLEBUG / MR_I / BIG_MR_I / MR_I_PROJECTILE).
- * RTTI at ov071:0x02122db8 names this class daEyBm_c; the debug table names
- * EYEKUN_BEAM. Historical project aliases: MrI_Projectile_Spawn and
- * MrI_Projectile_SpawnInfo. Private helper spellings are inferred; class
- * ownership, bodies, calls and ordering are proven.
+ * RTTI at ov071:0x02122db8 names this class daEyBm_c. Historical project
+ * aliases: MrI_Projectile_Spawn and MrI_Projectile_SpawnInfo. Private helper
+ * spellings are inferred; class ownership, bodies, calls and ordering are
+ * proven.
  *
- * common.h FIRST: InitResources assigns IDENTITY_MATRIX4X3 onto mMatrix, and
- * the ROM copies it as three 4-word ldm/stm pairs. common.h's flat s32 m[12]
- * is that copy; math/Matrix.h's nested {Matrix3x3 r; Vector3 t;} splits it.
- * UpdateShadow writes translation through m[9..11].
+ * DO NOT "TIDY" THESE -- each one is load-bearing:
+ *   common.h FIRST: InitResources assigns IDENTITY_MATRIX4X3 onto mMatrix,
+ *   and the ROM copies it as three 4-word ldm/stm pairs. common.h's flat
+ *   s32 m[12] is that copy; math/Matrix.h's nested {Matrix3x3 r; Vector3 t;}
+ *   splits it. UpdateShadow writes translation through m[9..11].
+ *   Source is reverse ROM order: keep the ROM-high factory first and
+ *   OnYoshiTryEat last. InitResources is the key function; with the inline
+ *   destructor in the real header this emits retail D1 then D0 and the class
+ *   RTTI/vtable, with no D2 and no forcing object.
+ *   DaEyBmVector3Words, not Vector3: Vector3's empty D1 would instantiate in
+ *   this TU.
  *
- * mwccarm emits ordinary function sections in reverse source order. Keep the
- * ROM-high factory first and OnYoshiTryEat last. InitResources is the key
- * function; together with the inline destructor in the real header this
- * naturally emits retail D1 then D0 and the class RTTI/vtable, without D2 or a
- * forcing object.
- *
- * deslop leftovers:
- * - dCcAcPos_c::Init / dBgCh_Actr::Init / DropShadowRadHeight / Player::Hurt
- *   6az: this TU passes Fix12<int> by value; the header method form size-DIFFs.
- *   dBgCh_Actr::Init also mangles Fix12i as `i` while the ROM is Fix12<int>.
- * - Particle::System::New / NewUnkCallback818: not shared-header declared.
- * - dBgCh_Actr_UpdateDiscreteNoLava_veneer (UpdateCollision): the named
+ * WHY SOME CALLS ARE SPELLED AS MANGLED SYMBOLS:
+ *   dCcAcPos_c::Init, dBgCh_Actr::Init, DropShadowRadHeight and Player::Hurt
+ *   pass Fix12<int> by value (notes/mwccarm-codegen.md 6az); the header method
+ *   forms change the code size. dBgCh_Actr::Init also mangles Fix12i as `i`
+ *   where the ROM has Fix12<int>.
+ *   Particle::System::New / NewUnkCallback818: no shared header declares
+ *   them.
+ *   dBgCh_Actr_UpdateDiscreteNoLava_veneer (UpdateCollision): the named
  *   UpdateDiscreteNoLava method is WRONG-DEST (ROM 0x02038420).
- * - data_ov071_021230b8 collision-offset words; overlay .data owns them.
- * - DaEyBmVector3Words: Vector3's empty D1 would instantiate in this TU.
- * - UpdateCollision R10dBgCh_Actr: a pointer would generate identical ARM.
- * - S14: g_profile_EYEKUN_BEAM stays outside the licensed .text.
- * - no Camera.h.
+ *
+ * Known limits:
+ *   data_ov071_021230b8 (the collider offset) is owned by overlay .data.
+ *   UpdateCollision takes R10dBgCh_Actr; a pointer would generate identical
+ *   ARM.
+ *   g_profile_EYEKUN_BEAM is overlay data outside this TU's .text.
  */
 
 #include "common.h"
@@ -60,8 +69,7 @@ struct DaEyBmSpawnInfo {
 typedef char DaEyBmSpawnInfo_size_must_be_0x1c[
     sizeof(DaEyBmSpawnInfo) == 0x1c ? 1 : -1];
 
-/* Leaf
- * operator new forwards fBase_c::operator new; the implicit constructor
+/* The leaf operator new forwards fBase_c::operator new; the implicit constructor
  * emits the measured dActor_c C2, vptr store, and three member C1s. */
 // @symbol daEyBm_c_classInit
 extern "C" daEyBm_c *daEyBm_c_classInit()
@@ -130,7 +138,7 @@ extern Matrix4x3 data_020a0e68;
 int daEyBm_c::Behavior()
 {
     DaEyBmVector3Words offset;
-    DaEyBmVector3Words speed;
+    DaEyBmVector3Words velocity;
     int flags = mFlags;
     int destroying = (int)((flags & 0x40000) != 0);
     int beingEaten;
@@ -142,13 +150,13 @@ int daEyBm_c::Behavior()
         offset = data_ov071_021230b8;
         mdCcAcPos_c.SetPosRelativeToActor(*(Vector3 *)&offset);
 
-        speed.z = mHorzSpeed;
-        speed.x = 0;
-        speed.y = 0;
+        velocity.z = mHorzSpeed;
+        velocity.x = 0;
+        velocity.y = 0;
         Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngleX);
         MulVec3Mat4x3(
-            &speed, &data_020a0e68, (DaEyBmVector3Words *)&unk_0a4);
+            &velocity, &data_020a0e68, (DaEyBmVector3Words *)&unk_0a4);
 
         /* Retail retains a typed whole-vector writeback after the transform. */
         *(DaEyBmVector3Words *)&unk_0a4 =
@@ -284,5 +292,4 @@ int daEyBm_c::OnYoshiTryEat()
     return 4;
 }
 
-/* The inline class
- * destructor and InitResources vtable instantiation emit both naturally. */
+/* The inline class destructor and InitResources vtable instantiation emit both naturally. */

@@ -72,8 +72,8 @@ void  Camera_UpdateMatrices(Camera *camera);
 void  _ZN2GX15SetBankForSubBGEt(unsigned int x);
 void  _ZN2GX16SetBankForSubOBJEt(unsigned int x);
 
-/* Particle::SysTracker::Update, which Stage.h's tracker view does not
- * declare yet. */
+/* Particle::SysTracker::Update, still called by its mangled name here;
+ * include/Particle__SysTracker.h now declares the real member. */
 void _ZN8Particle10SysTracker6UpdateEv(void *self);
 
 /* Defined below. */

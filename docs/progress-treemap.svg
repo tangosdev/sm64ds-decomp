@@ -31461,11 +31461,11 @@ matched: yes</title></rect><rect x="1454.04" y="138.17" width="1.65" height="5.6
 module: ov020
 addr: 0x0211372c
 size: 60 bytes
-matched: yes</title></rect><rect x="1465.69" y="134.22" width="4.02" height="4.40" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12WorkElevatorD1Ev
+matched: yes</title></rect><rect x="1465.69" y="134.22" width="4.02" height="4.40" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN17daObjCvNewsLift_cD1Ev
 module: ov021
 addr: 0x021111a0
 size: 116 bytes
-matched: yes</title></rect><rect x="1465.69" y="138.62" width="4.02" height="5.16" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12WorkElevatorD0Ev
+matched: yes</title></rect><rect x="1465.69" y="138.62" width="4.02" height="5.16" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN17daObjCvNewsLift_cD0Ev
 module: ov021
 addr: 0x02111214
 size: 136 bytes
@@ -31477,19 +31477,19 @@ matched: yes</title></rect><rect x="1476.22" y="134.22" width="6.77" height="9.5
 module: ov021
 addr: 0x02111434
 size: 424 bytes
-matched: yes</title></rect><rect x="1482.99" y="134.22" width="3.77" height="4.70" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12WorkElevator16CleanupResourcesEv
+matched: yes</title></rect><rect x="1482.99" y="134.22" width="3.77" height="4.70" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN17daObjCvNewsLift_c16CleanupResourcesEv
 module: ov021
 addr: 0x021115dc
 size: 116 bytes
-matched: yes</title></rect><rect x="1482.99" y="138.92" width="3.77" height="4.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12WorkElevator6RenderEv
+matched: yes</title></rect><rect x="1482.99" y="138.92" width="3.77" height="4.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN17daObjCvNewsLift_c6RenderEv
 module: ov021
 addr: 0x02111650
 size: 120 bytes
-matched: yes</title></rect><rect x="1486.76" y="134.22" width="23.05" height="9.57" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12WorkElevator8BehaviorEv
+matched: yes</title></rect><rect x="1486.76" y="134.22" width="23.05" height="9.57" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN17daObjCvNewsLift_c8BehaviorEv
 module: ov021
 addr: 0x021116c8
 size: 1444 bytes
-matched: yes</title></rect><rect x="1509.81" y="134.22" width="9.58" height="9.57" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12WorkElevator13InitResourcesEv
+matched: yes</title></rect><rect x="1509.81" y="134.22" width="9.58" height="9.57" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN17daObjCvNewsLift_c13InitResourcesEv
 module: ov021
 addr: 0x02111c6c
 size: 600 bytes
@@ -32141,11 +32141,11 @@ matched: yes</title></rect><rect x="1258.93" y="175.78" width="4.24" height="3.6
 module: ov025
 addr: 0x02111cf4
 size: 76 bytes
-matched: yes</title></rect><rect x="1258.93" y="179.42" width="4.24" height="3.64" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11PyramidStepD1Ev
+matched: yes</title></rect><rect x="1258.93" y="179.42" width="4.24" height="3.64" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN14daObjDpBrock_cD1Ev
 module: ov025
 addr: 0x02111d40
 size: 76 bytes
-matched: yes</title></rect><rect x="1258.93" y="183.06" width="4.24" height="4.60" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11PyramidStepD0Ev
+matched: yes</title></rect><rect x="1258.93" y="183.06" width="4.24" height="4.60" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN14daObjDpBrock_cD0Ev
 module: ov025
 addr: 0x02111d8c
 size: 96 bytes
@@ -32157,19 +32157,19 @@ matched: yes</title></rect><rect x="1263.17" y="175.78" width="2.20" height="5.9
 module: ov025
 addr: 0x02111e30
 size: 64 bytes
-matched: yes</title></rect><rect x="1263.17" y="181.69" width="2.20" height="5.17" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11PyramidStep16CleanupResourcesEv
+matched: yes</title></rect><rect x="1263.17" y="181.69" width="2.20" height="5.17" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN14daObjDpBrock_c16CleanupResourcesEv
 module: ov025
 addr: 0x02111e70
 size: 56 bytes
-matched: yes</title></rect><rect x="1263.17" y="186.86" width="2.20" height="4.06" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11PyramidStep6RenderEv
+matched: yes</title></rect><rect x="1263.17" y="186.86" width="2.20" height="4.06" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN14daObjDpBrock_c6RenderEv
 module: ov025
 addr: 0x02111ea8
 size: 44 bytes
-matched: yes</title></rect><rect x="1265.38" y="175.78" width="6.33" height="6.54" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11PyramidStep8BehaviorEv
+matched: yes</title></rect><rect x="1265.38" y="175.78" width="6.33" height="6.54" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN14daObjDpBrock_c8BehaviorEv
 module: ov025
 addr: 0x02111ed4
 size: 204 bytes
-matched: yes</title></rect><rect x="1265.38" y="182.32" width="6.33" height="8.59" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11PyramidStep13InitResourcesEv
+matched: yes</title></rect><rect x="1265.38" y="182.32" width="6.33" height="8.59" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN14daObjDpBrock_c13InitResourcesEv
 module: ov025
 addr: 0x02111fa0
 size: 268 bytes
@@ -32949,23 +32949,23 @@ matched: yes</title></rect><rect x="1066.76" y="235.32" width="5.56" height="2.5
 module: ov030
 addr: 0x02111524
 size: 56 bytes
-matched: yes</title></rect><rect x="1066.76" y="237.84" width="5.56" height="3.60" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13RollingLogTtmD1Ev
+matched: yes</title></rect><rect x="1066.76" y="237.84" width="5.56" height="3.60" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15daObjHmMaruta_cD1Ev
 module: ov030
 addr: 0x0211155c
 size: 80 bytes
-matched: yes</title></rect><rect x="1072.31" y="222.92" width="2.97" height="8.42" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13RollingLogTtmD0Ev
+matched: yes</title></rect><rect x="1072.31" y="222.92" width="2.97" height="8.42" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15daObjHmMaruta_cD0Ev
 module: ov030
 addr: 0x021115ac
 size: 100 bytes
-matched: yes</title></rect><rect x="1072.31" y="231.34" width="2.97" height="1.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13RollingLogTtm16CleanupResourcesEv
+matched: yes</title></rect><rect x="1072.31" y="231.34" width="2.97" height="1.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15daObjHmMaruta_c16CleanupResourcesEv
 module: ov030
 addr: 0x02111610
 size: 20 bytes
-matched: yes</title></rect><rect x="1072.31" y="233.02" width="2.97" height="1.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13RollingLogTtm8BehaviorEv
+matched: yes</title></rect><rect x="1072.31" y="233.02" width="2.97" height="1.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15daObjHmMaruta_c8BehaviorEv
 module: ov030
 addr: 0x02111624
 size: 20 bytes
-matched: yes</title></rect><rect x="1072.31" y="234.70" width="2.97" height="1.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13RollingLogTtm13InitResourcesEv
+matched: yes</title></rect><rect x="1072.31" y="234.70" width="2.97" height="1.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15daObjHmMaruta_c13InitResourcesEv
 module: ov030
 addr: 0x02111638
 size: 20 bytes
@@ -43577,11 +43577,11 @@ matched: yes</title></rect><rect x="1367.04" y="799.80" width="3.78" height="4.9
 module: ov095
 addr: 0x02135fc4
 size: 48 bytes
-matched: yes</title></rect><rect x="1370.82" y="799.80" width="5.35" height="4.97" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13UpDownLiftBbhD1Ev
+matched: yes</title></rect><rect x="1370.82" y="799.80" width="5.35" height="4.97" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10daUdlift_cD1Ev
 module: ov095
 addr: 0x02135ff4
 size: 68 bytes
-matched: yes</title></rect><rect x="1376.18" y="799.80" width="6.93" height="4.97" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13UpDownLiftBbhD0Ev
+matched: yes</title></rect><rect x="1376.18" y="799.80" width="6.93" height="4.97" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10daUdlift_cD0Ev
 module: ov095
 addr: 0x02136038
 size: 88 bytes
@@ -43605,19 +43605,19 @@ matched: yes</title></rect><rect x="1384.70" y="804.77" width="12.40" height="7.
 module: ov095
 addr: 0x02136368
 size: 244 bytes
-matched: yes</title></rect><rect x="1397.10" y="804.77" width="4.27" height="7.70" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13UpDownLiftBbh16CleanupResourcesEv
+matched: yes</title></rect><rect x="1397.10" y="804.77" width="4.27" height="7.70" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10daUdlift_c16CleanupResourcesEv
 module: ov095
 addr: 0x0213645c
 size: 84 bytes
-matched: yes</title></rect><rect x="1359.48" y="812.47" width="7.82" height="2.00" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13UpDownLiftBbh6RenderEv
+matched: yes</title></rect><rect x="1359.48" y="812.47" width="7.82" height="2.00" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10daUdlift_c6RenderEv
 module: ov095
 addr: 0x021364b0
 size: 40 bytes
-matched: yes</title></rect><rect x="1359.48" y="814.47" width="7.82" height="12.81" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13UpDownLiftBbh8BehaviorEv
+matched: yes</title></rect><rect x="1359.48" y="814.47" width="7.82" height="12.81" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10daUdlift_c8BehaviorEv
 module: ov095
 addr: 0x021364d8
 size: 256 bytes
-matched: yes</title></rect><rect x="1359.48" y="827.28" width="7.82" height="19.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13UpDownLiftBbh13InitResourcesEv
+matched: yes</title></rect><rect x="1359.48" y="827.28" width="7.82" height="19.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10daUdlift_c13InitResourcesEv
 module: ov095
 addr: 0x021365d8
 size: 396 bytes

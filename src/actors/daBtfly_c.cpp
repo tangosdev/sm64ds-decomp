@@ -53,22 +53,16 @@
  * state wins for every member. */
 #pragma defer_codegen off
 
-/* Local shadow declarations carried from the legacy files verbatim.
- * NOT reconciled against real project headers -- check include/*.h for
- * each of these before compiling; a real header should usually win. */
-/* shadow typedef 's16' */
+/* Local declarations carried from the legacy files verbatim; not yet
+ * reconciled against the project headers. */
 typedef short s16;
 
-/* shadow struct 'Vector3' */
 struct Vector3;
 
-/* shadow struct 'Mtx' */
 struct Mtx { int w[12]; };
 
-/* shadow typedef 'void' */
 typedef void (daBtfly_c::*ButterflyState)();
 
-/* shadow struct 'Vec3' */
 struct Vec3 { s32 x, y, z; };
 
 #define L(p) ((int)(p))
@@ -149,31 +143,21 @@ u32 __aeabi_uidiv(u32 a, u32 b);
 /* TUBUILD CONFLICT -- alternate declaration of data_ov100_02148608, from the legacy file for _ZN9daBtfly_c13InitResourcesEv, NOT applied: extern SFP data_ov100_02148608; */
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 0 -- _ZN9daBtfly_cD1Ev, 0x02140d80, size 0x58 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daBtfly_cD1Ev
 daBtfly_c::~daBtfly_c()
 {
 }
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 1 -- _ZN9daBtfly_cD0Ev, 0x02140dd8, size 0x6c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daBtfly_cD0Ev
 /* (no separate definition: the single ~daBtfly_c() below emits the D0 and D1
  * variants together -- a hand-mangled D0 next to a real destructor is the
  * known mwccarm ICE, ELFgen.c:483.) */
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- _ZN9daBtfly_c6State7Ev, 0x02140e44, size 0x258 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daBtfly_c6State7Ev
-/* recovered: shared common types */
 void daBtfly_c::State7()
 {
     char* c = (char*)this;
     void* player;
-    int r5;
+    int hasContact;
     int v;
 
     if (*(int*)(c + 0x3e8) > 0x78) {
@@ -202,9 +186,9 @@ void daBtfly_c::State7()
 
     {
         int noId = (*(int*)(c + 0x3b8) == 0);
-        r5 = (noId == 0);
+        hasContact = (noId == 0);
     }
-    if (r5 == 0) {
+    if (hasContact == 0) {
         if (_ZNK10dBgCh_Actr8IsOnWallEv(c + 0x1d8) == 0) {
             if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x1d8) == 0) {
                 if (func_02035638((u8*)(c + 0x1d8)) == 0) {
@@ -215,15 +199,15 @@ void daBtfly_c::State7()
         }
     }
 
-    if (r5 != 0) {
+    if (hasContact != 0) {
         void* a = _ZN8dActor_c10FindWithIDEj(*(unsigned int*)(c + 0x3b8));
         if (a != 0) {
             int isPlayer = (*(u16*)((char*)a + 0xc) == 0xbf);
             if (isPlayer != 0) {
                 struct Vector3 pos;
-                pos.x = *(int*)(c + 0x5c);
-                pos.y = *(int*)(c + 0x60);
-                pos.z = *(int*)(c + 0x64);
+                pos.x = mPosX;
+                pos.y = mPosY;
+                pos.z = mPosZ;
                 _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(a, &pos, 2, 0xc000, 1, 0, 1);
             }
         }
@@ -244,12 +228,7 @@ cylinder_only:
     _ZN5dCc_c6UpdateEv(c + 0x394);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- _ZN9daBtfly_c6State6Ev, 0x0214109c, size 0xe0 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daBtfly_c6State6Ev
-/* recovered: shared common types, declarations from a shared header */
-/* recovered: shared common types */
 void daBtfly_c::State6()
 {
     char *c = (char*)this;
@@ -274,12 +253,7 @@ void daBtfly_c::State6()
     *(int*)(c+0x3e4) = 7;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- _ZN9daBtfly_c6State5Ev, 0x0214117c, size 0x15c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daBtfly_c6State5Ev
-/* recovered: shared common types, declarations from a shared header */
-/* recovered: shared common types */
 void daBtfly_c::State5()
 {
     char* c = (char*)this;
@@ -292,7 +266,7 @@ void daBtfly_c::State5()
 
     if (*(int*)(c + 0x3e8) > 0x6e && _ZN8dActor_c13DistToCPlayerEv(c) < 0xc8000 &&
         (unsigned char)(*(unsigned char*)(c + 0x3f0) + 0xff) <= 1) {
-        *(int*)(c + 0x98) = 0;
+        mHorzSpeed = 0;
         *(int*)(c + 0x3e8) = 0;
         *(int*)(c + 0x3e4) = 6;
         *(int*)(c + 0xb0) &= ~0x10000;
@@ -308,7 +282,7 @@ void daBtfly_c::State5()
 
     {
         s16 target;
-        if (*(int*)(c + 0x60) < *(int*)(c + 0x3d8) +
+        if (mPosY < mHomePosY +
                 (int)(((unsigned)RandomIntInternal(&data_0209e650) >> 16 & 0xfff) * 0x32 + 0x32000)) {
             target = -0x2000;
         } else {
@@ -323,11 +297,7 @@ void daBtfly_c::State5()
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- _ZN9daBtfly_c6State4Ev, 0x021412d8, size 0x198 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daBtfly_c6State4Ev
-/* recovered: shared common types */
 void daBtfly_c::State4()
 {
     struct StateRotation { u16 w[3]; };
@@ -371,15 +341,12 @@ void daBtfly_c::State4()
     }
 
     *(s16*)(sl + 0x300 + 0xec) = (s16)((unsigned int)RandomIntInternal(&data_0209e650) >> 0x10);
-    *(s16*)(sl + 0x94) = (s16)(*(s16*)(sl + 0x300 + 0xec) + (int)(((unsigned int)RandomIntInternal(&data_0209e650) >> 0x10) & 0x3fff));
+    mPrevAngleY = (s16)(*(s16*)(sl + 0x300 + 0xec) + (int)(((unsigned int)RandomIntInternal(&data_0209e650) >> 0x10) & 0x3fff));
     *(int*)(sl + 0x98) = (int)(((unsigned int)RandomIntInternal(&data_0209e650) >> 0x10) & 0xfff) * 0xf + 0xf000;
     *(int*)(sl + 0x3e8) = 0;
     *(int*)(sl + 0x3e4) = 5;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- _ZN9daBtfly_c6State3Ev, 0x02141470, size 0x14c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daBtfly_c6State3Ev
 void daBtfly_c::State3()
 {
@@ -393,7 +360,7 @@ void daBtfly_c::State3()
     _ZN8dActor_c9UpdatePosEP5dCc_c(c, 0);
 
     p = (int *)(c + 0x60);
-    *p = *p - ((int)(((long long)*(int *)(c + 0x98)
+    *p = *p - ((int)(((long long)mHorzSpeed
         * data_02082214[(*(unsigned short *)(c + 0x92) >> 4) * 2] + 0x800) >> 12)
         + (short)data_02082214[
         ((unsigned short)(short)((*(int *)(c + 0x3e8) << 16) / 100) >> 4) * 2 + 1]
@@ -409,18 +376,14 @@ void daBtfly_c::State3()
     if (_ZN8dActor_c15IsPlayerInRangeEi(c, 0xbb8))
         return;
 
-    *(int *)(c + 0x5c) = *(int *)(c + 0x3d4);
-    *(int *)(c + 0x60) = *(int *)(c + 0x3d8);
-    *(int *)(c + 0x64) = *(int *)(c + 0x3dc);
+    mPosX = mHomePosX;
+    mPosY = mHomePosY;
+    mPosZ = mHomePosZ;
     *(int *)(c + 0x3e4) = 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- _ZN9daBtfly_c6State2Ev, 0x021415bc, size 0x244 */
-/* -------------------------------------------------------------------------- */
 #pragma opt_common_subs off   /* carried from the legacy _ZN9daBtfly_c6State2Ev source */
 // @symbol _ZN9daBtfly_c6State2Ev
-/* recovered: shared common types */
 void daBtfly_c::State2()
 {
     char *c = (char*)this;
@@ -428,9 +391,9 @@ void daBtfly_c::State2()
     struct Vector3 v;
     struct Vector3 d;
 
-    *(int *)(c + 0x5c) = *(int *)(c + 0x3d4);
-    *(int *)(c + 0x60) = *(int *)(c + 0x3d8);
-    *(int *)(c + 0x64) = *(int *)(c + 0x3dc);
+    mPosX = mHomePosX;
+    mPosY = mHomePosY;
+    mPosZ = mHomePosZ;
 
     player = (char *)_ZN8dActor_c13ClosestPlayerEv(c);
     if (player != 0) {
@@ -447,9 +410,9 @@ void daBtfly_c::State2()
             *(int *)(c + 0x3e4) = 3;
 
         pp = (int *)(int)M(player + 0x5c);
-        *(int *)(c + 0x5c) = *(int *)(c + 0x68);
-        *(int *)(c + 0x60) = *(int *)(c + 0x6c);
-        *(int *)(c + 0x64) = *(int *)(c + 0x70);
+        mPosX = mPrevPosX;
+        mPosY = mPrevPosY;
+        mPosZ = mPrevPosZ;
 
         v.x = pp[0];
         v.y = pp[1];
@@ -474,7 +437,7 @@ void daBtfly_c::State2()
 
         {
         int *p = (int *)(c + 0x60);
-        *p = *p - ((int)(((long long)*(int *)(c + 0x98)
+        *p = *p - ((int)(((long long)mHorzSpeed
             * data_02082214[(*(unsigned short *)(c + 0x92) >> 4) * 2] + 0x800) >> 12)
             + (short)data_02082214[
             ((unsigned short)(short)((*(int *)(c + 0x3e8) << 16) / 100) >> 4) * 2 + 1]
@@ -486,16 +449,13 @@ void daBtfly_c::State2()
         }
         return;
     }
-    *(int *)(c + 0x5c) = *(int *)(c + 0x68);
-    *(int *)(c + 0x60) = *(int *)(c + 0x6c);
-    *(int *)(c + 0x64) = *(int *)(c + 0x70);
+    mPosX = mPrevPosX;
+    mPosY = mPrevPosY;
+    mPosZ = mPrevPosZ;
 }
 
 #pragma opt_common_subs on
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 8 -- _ZN9daBtfly_c6State1Ev, 0x02141800, size 0x48 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daBtfly_c6State1Ev
 void daBtfly_c::State1(){
     char* c = (char*)this;
@@ -505,9 +465,6 @@ void daBtfly_c::State1(){
     *(short*)(c+0x94) = Vec3_HorzAngle(c+0x5c, (char*)p+0x5c);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 9 -- _ZN9daBtfly_c6State0Ev, 0x02141848, size 0x140 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daBtfly_c6State0Ev
 void daBtfly_c::State0(){
   char* c = (char*)this;
@@ -537,9 +494,6 @@ void daBtfly_c::State0(){
   *(int*)(c+0x3e4) = 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 10 -- _ZN9daBtfly_c16CleanupResourcesEv, 0x02141988, size 0x48 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daBtfly_c16CleanupResourcesEv
 /* daBtfly_c::CleanupResources -- vtable slot 3. Releases the four shared files
  * the class holds -- three of its own in ov100 and one shared with the other
@@ -553,9 +507,6 @@ int daBtfly_c::CleanupResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 11 -- _ZN9daBtfly_c16OnPendingDestroyEv, 0x021419d0, size 0x4 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daBtfly_c16OnPendingDestroyEv
 /* daBtfly_c::OnPendingDestroy -- vtable slot 12. The ROM body is empty: the
  * override exists only to occupy the slot. */
@@ -563,11 +514,7 @@ void daBtfly_c::OnPendingDestroy()
 {
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 12 -- _ZN9daBtfly_c6RenderEv, 0x021419d4, size 0x6c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daBtfly_c6RenderEv
-/* recovered: named members + shared header, real C++ method */
 int daBtfly_c::Render()
 {
   if(mState == 4) return 1;
@@ -579,9 +526,6 @@ int daBtfly_c::Render()
   return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 13 -- _ZN9daBtfly_c8BehaviorEv, 0x02141a40, size 0x22c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daBtfly_c8BehaviorEv
 int daBtfly_c::Behavior()
 {
@@ -595,7 +539,7 @@ int daBtfly_c::Behavior()
         *(int*)(c + 0x88) = spd;
 
         {
-            int s = *(int*)(c + 0x98);
+            int s = mHorzSpeed;
             int idx = (*(unsigned short*)(c + 0x92) >> 4) << 1;
             long long p;
             p = (long long)(-(int)data_02082214[idx]) * s;
@@ -621,8 +565,8 @@ int daBtfly_c::Behavior()
         int t[3];
         Vec3_Asr(t, c + 0x5c, 3);
         Matrix4x3_FromTranslation(&data_020a0e68, t[0], t[1], t[2]);
-        *(s16*)(c + 0x8e) = *(s16*)(c + 0x94);
-        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, *(s16*)(c + 0x8e));
+        mAngleY = mPrevAngleY;
+        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
         if (*(unsigned char*)(c + 0x3f1) != 0) {
             *(struct Mtx*)(c + 0xf0) = data_020a0e68;
             _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
@@ -637,11 +581,7 @@ int daBtfly_c::Behavior()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 14 -- _ZN9daBtfly_c13InitResourcesEv, 0x02141c6c, size 0x238 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daBtfly_c13InitResourcesEv
-/* recovered: named members + shared header, real C++ method */
 int daBtfly_c::InitResources()
 {
     u8* c = (u8*)((void*)this);
@@ -667,7 +607,7 @@ int daBtfly_c::InitResources()
     int sub = (int)(u8)(*(u32*)(c+8) & 0x30);
     if (sub != 0x10 && sub != 0x20) {
         *(u8*)(c+0x3f0) = 0;
-        *(s32*)(c+0x98) = 0x7800;
+        mHorzSpeed = 0x7800;
         *(s32*)(c+0x3e8) = ((u32)RandomIntInternal(&data_0209e650) >> 16) % 100;
         if ((u32)(u8)(*(u32*)(c+8) & 0xf) > 1)
             *(s32*)(c+0x3e4) = 0;
@@ -677,9 +617,9 @@ int daBtfly_c::InitResources()
         *(s32*)(c+0x3e4) = 4;
     }
 
-    *(s32*)(c+0x3d4) = *(s32*)(c+0x5c);
-    *(s32*)(c+0x3d8) = *(s32*)(c+0x60);
-    *(s32*)(c+0x3dc) = *(s32*)(c+0x64);
+    mHomePosX = mPosX;
+    mHomePosY = mPosY;
+    mHomePosZ = mPosZ;
 
     int r = RandomIntInternal(&data_0209e650);
     int fc = _ZNK9Animation13GetFrameCountEv((void*)(c+0x124));
