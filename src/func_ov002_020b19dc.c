@@ -4,9 +4,9 @@
  */
 
 extern void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
-extern void func_ov002_020b16c4(char *self);
+extern void func_ov002_020b16c4(char *self, char *p);
 extern void func_ov002_020b1674(char *self, char *p);
-extern void func_ov002_020b1884(char *self);
+extern void func_ov002_020b1884(char *self, char *p);
 
 int func_ov002_020b19dc(char *self)
 {
@@ -17,11 +17,11 @@ int func_ov002_020b19dc(char *self)
             if (*(int *)(self + 0x198) & 0x400000) {
                 *(unsigned short *)(self + 0x3a8) = 0;
                 if (*(int *)(self + 0x3a0) == 1)
-                    func_ov002_020b16c4(self);
+                    func_ov002_020b16c4(self, p);
                 else if (*(int *)(self + 0x3a0) == 2)
                     func_ov002_020b1674(self, p);
                 else
-                    func_ov002_020b1884(self);
+                    func_ov002_020b1884(self, p);
                 return 1;
             }
         }

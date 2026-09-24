@@ -80,7 +80,6 @@
 
 _ZN10FaderColorD1Ev|src/__sinit_02073e6c.c
 _ZN10FaderColorD1Ev|src/__sinit_02074edc.c
-_ZN10StarMarker27SpawnRedCoinStarIfNecessaryEv|src/func_ov002_020b10a0.c
 _ZN9dBgCh_LinC1Ev|src/__sinit_0207501c.c
 _ZN11ShadowModel12InitCylinderEv|port/unmatched/Boo_InitResources.c
 _ZN11ShadowModel12InitCylinderEv|src/game/actors/daTrs_c/_ZN7daTrs_c13InitResourcesEv.cpp

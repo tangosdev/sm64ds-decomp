@@ -6022,13 +6022,11 @@ foreach(line IN LISTS SLICE33_LINES)
 endforeach()
 list(APPEND SLICE33_SOURCES
      "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/WaterfallMist_Behavior_HostSites.cpp"
-     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Coin_Behavior.cpp"
-     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Coin_CollectDispatch.cpp"
-     # argfix: func_ov002_020b10a0 calls StarMarker::SpawnRedCoinStarIfNecessary()
-     # with no argument and relies on func_ov002_020b1328's returned StarMarker
-     # riding ARM r0. Host copy captures and passes it. Src line commented out in
-     # slice_gate33.txt.
-     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/StarMarker_SpawnDispatch.cpp")
+     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Coin_Behavior.cpp")
+# unmatched/Coin_CollectDispatch.cpp and unmatched/StarMarker_SpawnDispatch.cpp
+# RETIRED (run linkfull, lane RS4PORT): main #3106 passes the found player and
+# the found StarMarker their ROM registers carried, so src/func_ov002_020b19dc.c
+# and src/func_ov002_020b10a0.c (main's blobs) are back on slice_gate33.txt.
 
 # Gate 32: Bob-omb Battlefield's living cast -- the first ENEMY-family actor
 # classes the port hosts, and the first vtables past twenty slots. See the head
