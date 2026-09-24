@@ -34,4 +34,9 @@ src/func_020078c4.c
 # ---- end of row group 1 ----
 
 # ---- row group 4: the particle emitter veneer (main #3092, 59013376ce) ----
+# func_0204a5bc forwards both of its arguments to func_0204c584; src spelled
+# it (void). Host copy retired: the first body of
+# port/unmatched/Particle_RideThroughs.cpp. (Its natural line is in the
+# NOT HERE block of port/slice_gate29.txt, which has another owner.)
+src/func_0204a5bc.c
 # ---- end of row group 4 ----

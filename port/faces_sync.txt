@@ -3919,6 +3919,10 @@ __ZN8dActor_c11UntrackStarERa                                            ?Untrac
 __ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h                        ?UntrackAndSpawnStar@dActor_c@@QAEPAU1@AACIABUVector3@@E@Z       0x0200ff14 R
 __ZN12dEnemyBase_c24AngleAwayFromWallOrCliffER10dBgCh_ActrRs             ?AngleAwayFromWallOrCliff@dEnemyBase_c@@QAEHAAUdBgCh_Actr@@AAF@Z 0x020ae244 R
 __ZN5dPa_c7level_c10callback_c14SpawnParticlesERN8Particle6SystemE       ?SpawnParticles@callback_c@level_c@dPa_c@@UAEXAAUSystem@Particle@@@Z 0x020226d0 R
+# NEW at run linkfull, lane RS2PORT: the flat name was a host copy in
+# port/unmatched/Particle_RideThroughs.cpp, whose reason (&sys riding in r1)
+# the matched source no longer has; it passes both arguments to func_02049d60.
+__ZN5dPa_c7level_c16simpleCallback_c14SpawnParticlesERN8Particle6SystemE ?SpawnParticles@simpleCallback_c@level_c@dPa_c@@UAEXAAUSystem@Particle@@@Z 0x02022640 R
 __ZN5dPa_c7level_c10callback_c8OnUpdateERN8Particle6SystemEb             ?OnUpdate@callback_c@level_c@dPa_c@@UAEHAAUSystem@Particle@@_N@Z 0x020226c8 R
 __ZN5dPa_c7level_c14clipCallback_c8OnUpdateERN8Particle6SystemEb         ?OnUpdate@clipCallback_c@level_c@dPa_c@@UAEHAAUSystem@Particle@@_N@Z 0x02021e70 R
 __ZN5dPa_c7level_c15scaleCallback_c14SpawnParticlesERN8Particle6SystemE  ?SpawnParticles@scaleCallback_c@level_c@dPa_c@@UAEXAAUSystem@Particle@@@Z 0x020225d0 R
