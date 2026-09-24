@@ -17382,7 +17382,7 @@ add_executable(smoke_player EXCLUDE_FROM_ALL tests/smoke_player.cpp "${OV002DATA
     hal/actor_classes_enemy_spawner.cpp ${SLICE211_SOURCES} hal/actor_classes_question_switch.cpp ${SLICE212_SOURCES} ${SLICE213_SOURCES}
     # ---- link100 SCENE ---- the two arm9-resident scene classes, gate 218
     hal/actor_classes_l7.cpp ${SLICE_L7_SOURCES} ${GATE_L7_GEN} unmatched/PiranhaPlant_States.cpp
-    unmatched/WaterBomb_StateDispatch.cpp unmatched/WaterBomb_State0.cpp
+    unmatched/WaterBomb_StateDispatch.cpp
     unmatched/KnockDownPlank_Behavior.cpp
     # unmatched/FallBlockWf_InitVeneer.cpp RETIRED (run link100 wave 15, lane
     # SEAT15A): it held ONE body, func_ov098_0213a794, under a PORT_HOST_ABI tag
@@ -17722,7 +17722,7 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     hal/scene_link100_base_faces.cpp hal/scene_link100_boot.cpp
     hal/scene_link100_mb.cpp ${SLICE218_SOURCES}
     hal/actor_classes_l7.cpp ${SLICE_L7_SOURCES} ${GATE_L7_GEN} unmatched/PiranhaPlant_States.cpp
-    unmatched/WaterBomb_StateDispatch.cpp unmatched/WaterBomb_State0.cpp
+    unmatched/WaterBomb_StateDispatch.cpp
     unmatched/KnockDownPlank_Behavior.cpp
     # unmatched/FallBlockWf_InitVeneer.cpp RETIRED (run link100 wave 15, lane
     # SEAT15A): it held ONE body, func_ov098_0213a794, under a PORT_HOST_ABI tag
@@ -18170,7 +18170,7 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     hal/scene_link100_base_faces.cpp hal/scene_link100_boot.cpp
     hal/scene_link100_mb.cpp ${SLICE218_SOURCES}
     hal/actor_classes_l7.cpp ${SLICE_L7_SOURCES} ${GATE_L7_GEN} unmatched/PiranhaPlant_States.cpp
-    unmatched/WaterBomb_StateDispatch.cpp unmatched/WaterBomb_State0.cpp
+    unmatched/WaterBomb_StateDispatch.cpp
     unmatched/KnockDownPlank_Behavior.cpp
     # unmatched/FallBlockWf_InitVeneer.cpp RETIRED (run link100 wave 15, lane
     # SEAT15A): it held ONE body, func_ov098_0213a794, under a PORT_HOST_ABI tag

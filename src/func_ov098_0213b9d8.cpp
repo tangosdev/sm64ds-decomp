@@ -12,7 +12,7 @@ extern "C" void func_0201267c(u32 a, void *b, void *c, int d);
 extern s16 data_02082214[];
 #define M(x) (x)
 
-extern "C" int func_ov098_0213b9d8(char *self)
+extern "C" void func_ov098_0213b9d8(char *self)
 {
     Vector3 v; dActor_c *player; s32 ang; s32 vel; u32 ua; int factor; int a; s16 sn, cs;
     int nx, ny, nz; int py, sy;
@@ -24,7 +24,7 @@ extern "C" int func_ov098_0213b9d8(char *self)
     if (Vec3_HorzDist(&v, (Vector3 *)(self + 0x5c)) > 0x5dc000) return;
     py = v.y;
     sy = *(int *)(self + 0x60);
-    if (py > sy) return sy;
+    if (py > sy) return;
     ang = *(s16 *)((char *)player + 0x94);
     vel = *(int *)((char *)player + 0x98);
     ny = py + 0x480000;

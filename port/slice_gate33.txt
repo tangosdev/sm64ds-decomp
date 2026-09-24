@@ -432,13 +432,14 @@ src/func_02014f5c.c
 # jumping to 0x0213b9d8. All matched src; the table is reseated to these host
 # bodies by port/unmatched/WaterBomb_StateDispatch.cpp.
 #
-# State 0 (func_ov098_0213b9d8) is NOT here: src/func_ov098_0213b9d8.cpp is
-# declared int-returning but its body uses mwccarm's bare `return;` on every
-# early exit and falls off the end -- which mwccarm accepts and MSVC's C++ front
-# end rejects (C2561, "must return a value"). The state table calls it as
-# void(*)(char*) and ignores r0, so its host copy in
-# port/unmatched/WaterBomb_State0.cpp is the same body declared void -- the
-# Cannon_Behavior / Coin_Behavior "HOST COPY" idiom.
+# State 0 (func_ov098_0213b9d8) is back (run linkfull, lane RS4PORT). It was
+# host-copied in port/unmatched/WaterBomb_State0.cpp because the per-function
+# file was declared int-returning with mwccarm's bare `return;` on every early
+# exit (MSVC C2561). main #3089 promoted the state into src/actors/daWbm_c.cpp
+# as a void body; this per-function file carries that return type (the SYNC8C
+# route (a) back-port), byte-identical under mwccarm 2004/b56, and the host
+# copy is retired.
+src/func_ov098_0213b9d8.cpp
 src/func_ov098_0213b7e8.c
 src/func_ov098_0213bb1c.cpp
 src/func_ov098_0213b520.c
