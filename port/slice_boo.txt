@@ -265,6 +265,8 @@
 #      runs exit 0, and no dispatch leaves the host.
 #
 # ---- ONE TU IS HOST-COPIED FOR A COMPILE DEFECT, NOT FOR THE WALL ---------
+# [LIFTED at run linkfull, lane RS4PORT: main #3107 removed the statement and
+# the TU is listed below; this section is kept as the record.]
 #
 # src/_ZN13dScMgTeresa_c13InitResourcesEv.cpp is vtable slot 0 (InitResources) and MSVC refuses
 # it with C2036 "'void *': unknown size" at its line 69, `f2 += 0;` on a
@@ -450,3 +452,9 @@ src/_ZN13dScMgTeresa_c9Virtual88Eiiii.cpp
 src/_ZN13dScMgTeresa_c9Virtual50Ev.cpp
 src/_ZN13dScMgTeresa_c13OnYoshiTryEatEi.cpp
 src/_ZN13dScMgTeresa_c6RenderEv.cpp
+# run linkfull, lane RS4PORT: vtable slot 0 is back as the matched TU. main
+# #3107 dropped the `f2 += 0;` no-op that MSVC refused with C2036 (the ROM has
+# no instruction for it), so port/unmatched/MgTeresa_InitResources.cpp is
+# retired; port/faces_sync.txt's reverse face gives hal/scene_mg_booseek.cpp's
+# flat calls the member.
+src/_ZN13dScMgTeresa_c13InitResourcesEv.cpp

@@ -333,8 +333,10 @@ src/_ZN11CrazedCrate8BehaviorEv.cpp
 #src/_ZN11CrazedCrateD0Ev.cpp
 src/_ZN11CrazedCrate13OnYoshiTryEatEv.cpp
 src/func_ov080_02124acc.cpp
-# func_ov080_02124e60.c: same dropped second argument (ROM r1=0):
-port/unmatched/CrazedCrate_State2Tick.c
+# func_ov080_02124e60.c: its host mirror (port/unmatched/CrazedCrate_State2Tick.c)
+# passed the second argument the ROM leaves in r1 (0); main #3106 spells it, so
+# this is main's blob (run linkfull, lane RS4PORT) and the mirror is retired.
+src/func_ov080_02124e60.c
 src/func_ov080_02124eb0.c
 src/func_ov080_02124edc.cpp
 src/func_ov080_02124fec.c

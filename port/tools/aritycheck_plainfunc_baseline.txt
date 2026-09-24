@@ -131,10 +131,7 @@ func_0205d644|src/func_02018e3c.c
 func_0205d644|src/func_0205d518.c
 func_0205fbd0|src/func_0205fab4.c
 func_ov002_020aefb8|src/actors/da1up_c.cpp
-func_ov002_020b16c4|src/func_ov002_020b19dc.c
-func_ov002_020b1884|src/func_ov002_020b19dc.c
 func_ov002_020bac18|src/game/actors/d_a_obj_cv_shutter.cpp
-func_ov002_020c3e8c|src/func_ov085_0212d5dc.cpp
 func_ov002_020d4d88|port/unmatched/func_ov002_020d3b9c.c
 func_ov002_020d4d88|src/_ZN6Player13St_Crawl_MainEv.cpp
 func_ov002_020d4d88|src/actors/Player.cpp
@@ -180,11 +177,9 @@ func_ov063_02118eac|src/unnamed/ov063/func_ov063_02118ea0.c
 func_ov063_02119b84|src/unnamed/ov063/func_ov063_02119274.c
 func_ov063_0211a0dc|src/unnamed/ov063/func_ov063_02119b1c.c
 func_ov072_02121d50|src/_ZN11BabyPenguin13InitResourcesEv.cpp
-func_ov072_02121d50|src/func_ov072_021217ac.cpp
 func_ov077_0212478c|include/decl_common.h
 func_ov079_02123d4c|src/_ZN5Whomp25OnAimedAtWithEggReturnVecEv.cpp
 func_ov080_0212513c|include/decl_common.h
-func_ov080_0212513c|src/func_ov080_02124e60.c
 _ZN7Tornado6State2Ev|include/decl_common.h
 _ZN7Tornado6State1Ev|include/decl_common.h
 _ZN7Tornado6State0Ev|include/decl_common.h

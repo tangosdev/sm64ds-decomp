@@ -19,13 +19,15 @@ src/_Z11LoadObjectsRN11LVL_Overlay8ObjTableEij.cpp
 
 # ---- the fifteen sub-loaders, in dispatch-table order (index 0..14)
 src/_Z19LoadStandardObjectsRN11LVL_Overlay11ObjSubTableEij.cpp
-# src/_Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij.cpp is hosted in
-# port/unmatched/LoadEntranceObjects.cpp (LEVELBOOT_HOST_SOURCES): its last
-# call is an ARM r0 ride-through into StartEntranceFaderWipe, and the ROM
-# `ldrsb r0, [r0, sl]` two instructions ahead of the `bl` is the argument.
-# Dormant on every mounted level (they all take the `< 0` return); the file
-# header says what it did and did not fix.
-# Left live here it would come back into the link -- gate 14 is unfiltered.
+# LoadEntranceObjects is back (run linkfull, lane RS4PORT). Its last call used
+# to ride the wipe type through ARM r0 into StartEntranceFaderWipe, so
+# port/unmatched/LoadEntranceObjects.cpp hosted it. main #3106 (f0f946a92)
+# passes the table value it tests; this per-function file carries that one
+# hunk from main's src/stage/LevelObjects.cpp (the SYNC8C route (a) back-port),
+# byte-identical under mwccarm 2004/b56, and the host copy is retired.
+# port/hal/cxx_aliases.cpp gives the flat name the port's dispatch calls its
+# alias onto the C++ definition, the same row its fourteen siblings have.
+src/_Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij.cpp
 src/_Z19LoadPathNodeObjectsRN11LVL_Overlay11ObjSubTableEij.cpp
 src/_Z15LoadPathObjectsRN11LVL_Overlay11ObjSubTableEij.cpp
 src/_Z15LoadViewObjectsRN11LVL_Overlay11ObjSubTableEij.cpp

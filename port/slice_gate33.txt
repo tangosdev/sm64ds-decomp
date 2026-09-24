@@ -82,17 +82,16 @@ src/func_ov002_020b1bfc.cpp
 src/func_ov002_020b20b4.cpp
 
 # ---- the five helpers Behavior closes over ---------------------------------
-# func_ov002_020b10a0: HOST COPY at unmatched/StarMarker_SpawnDispatch.cpp (wired in
-# CMakeLists). The matched C calls StarMarker::SpawnRedCoinStarIfNecessary() with no
-# argument and relies on func_ov002_020b1328's returned StarMarker being live in ARM
-# r0; cdecl drops it, so the host copy captures and passes it. See that file's header.
+# func_ov002_020b10a0 and func_ov002_020b19dc are back (run linkfull, lane
+# RS4PORT). Their host copies (unmatched/StarMarker_SpawnDispatch.cpp,
+# unmatched/Coin_CollectDispatch.cpp) passed the StarMarker the ROM leaves in r0
+# and the player it leaves in r1; main #3106 spells both arguments, so these are
+# main's blobs, byte-identical under mwccarm 2004/b56.
+src/func_ov002_020b10a0.c
 src/func_ov002_020b12ec.c
 src/func_ov002_020b14d8.c
 src/func_ov002_020b10e4.c
-# func_ov002_020b19dc: HOST COPY at unmatched/Coin_CollectDispatch.cpp (wired in
-# CMakeLists). The matched C calls func_ov002_020b1884 with one argument and
-# relies on the ARM r1 (the found player) being live; cdecl drops that second
-# argument, so the host copy passes it explicitly. See that file's header.
+src/func_ov002_020b19dc.c
 
 # ---- slots 18 and 19 -------------------------------------------------------
 # OnYoshiTryEat is eight bytes ("no") and OnTurnIntoEgg is the collect path.
@@ -433,13 +432,14 @@ src/func_02014f5c.c
 # jumping to 0x0213b9d8. All matched src; the table is reseated to these host
 # bodies by port/unmatched/WaterBomb_StateDispatch.cpp.
 #
-# State 0 (func_ov098_0213b9d8) is NOT here: src/func_ov098_0213b9d8.cpp is
-# declared int-returning but its body uses mwccarm's bare `return;` on every
-# early exit and falls off the end -- which mwccarm accepts and MSVC's C++ front
-# end rejects (C2561, "must return a value"). The state table calls it as
-# void(*)(char*) and ignores r0, so its host copy in
-# port/unmatched/WaterBomb_State0.cpp is the same body declared void -- the
-# Cannon_Behavior / Coin_Behavior "HOST COPY" idiom.
+# State 0 (func_ov098_0213b9d8) is back (run linkfull, lane RS4PORT). It was
+# host-copied in port/unmatched/WaterBomb_State0.cpp because the per-function
+# file was declared int-returning with mwccarm's bare `return;` on every early
+# exit (MSVC C2561). main #3089 promoted the state into src/actors/daWbm_c.cpp
+# as a void body; this per-function file carries that return type (the SYNC8C
+# route (a) back-port), byte-identical under mwccarm 2004/b56, and the host
+# copy is retired.
+src/func_ov098_0213b9d8.cpp
 src/func_ov098_0213b7e8.c
 src/func_ov098_0213bb1c.cpp
 src/func_ov098_0213b520.c

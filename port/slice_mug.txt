@@ -674,6 +674,11 @@ src/func_ov006_020c201c.cpp
 src/func_ov006_020c2144.c
 src/func_ov006_020c2154.c
 src/func_ov006_020c21e4.c
+# run linkfull, lane RS4PORT: the +0x4f38 sub-object's constructor, host-copied
+# until main #3107 spelled its two file ids (0x205, 0x206) in place of the
+# placeholder globals g0 and g1; main's blob, and
+# port/unmatched/MgSlot3_SubObjCtor.cpp is retired.
+src/func_ov006_020c221c.c
 src/_ZN12dScMgSlot3_cD1Ev.cpp
 # RETIRED at SLICE1: body now in src/_ZN12dScMgSlot3_cD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
 #src/_ZN12dScMgSlot3_cD0Ev.cpp

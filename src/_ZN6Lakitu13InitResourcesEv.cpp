@@ -47,7 +47,11 @@ int Lakitu::InitResources()
     mSpawnPosZ = *(int *)(((int)((char *)this + 0x64)) & 0xFFFFFFFFFFFFFFFFLL);
     unk_410 = 0;
 
-    func_ov077_0212478c(((char *)this));
+    /* The state setter takes the state index (src/func_ov077_0212478c.c:
+       (char *c, int i)); the ROM enters state 0 here, the zero just
+       stored at +0x410 riding r1 into the call. decl_common.h still
+       declares the setter with one parameter, hence the cast. */
+    ((void (*)(void *, int))func_ov077_0212478c)(((char *)this), 0);
     *(Matrix4x3 *)((char *)&mMatrix) = IDENTITY_MATRIX4X3;
     func_ov077_02123d40(((char *)this));
     return 1;

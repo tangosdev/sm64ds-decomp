@@ -72,6 +72,8 @@
 #     stay below as matched source. That asymmetry is the ROM's, not a choice.
 #
 #  D. THE IMPLICIT r1 RIDE-THROUGH (1 TU), FOUND BY THE FIRST BOOT, not by
+#     [LIFTED at run linkfull, lane RS4PORT: the per-function file passes the
+#     state index now (main #3106) and is listed below; kept as the record.]
 #     reading. src/_ZN6Lakitu13InitResourcesEv.cpp:51 calls the state setter
 #     func_ov077_0212478c with ONE argument where it takes two, and
 #     include/decl_common.h:2844 declares the one-argument form so it compiles
@@ -142,6 +144,12 @@ src/_ZN5Spiny16OnPendingDestroyEv.cpp
 src/_ZN5Spiny8BehaviorEv.cpp
 # RETIRED at SLICE1: body now in src/_ZN5SpinyD1Ev.cpp. MSVC folds the ROM destructor variants into one symbol, so only one of a class two per-function destructor TUs can be compiled.
 #src/_ZN5SpinyD0Ev.cpp
+# Lakitu::InitResources is back (run linkfull, lane RS4PORT): refusal D below
+# is lifted. main #3106 passes the state setter its state 0 (daJgm_c's
+# SetState(0) in main's src/game/actors/d_a_jgm.cpp, the same ROM address);
+# the per-function file carries it, byte-identical under mwccarm 2004/b56, and
+# port/unmatched/Lakitu_HostSites.cpp's body is retired.
+src/_ZN6Lakitu13InitResourcesEv.cpp
 src/_ZN6Lakitu16CleanupResourcesEv.cpp
 src/_ZN6Lakitu16OnPendingDestroyEv.cpp
 src/_ZN6Lakitu8BehaviorEv.cpp

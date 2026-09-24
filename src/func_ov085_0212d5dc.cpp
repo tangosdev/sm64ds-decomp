@@ -12,7 +12,7 @@ void _ZN6Camera6SetPosERK7Vector3(void* self, const void* v);
 int Vec3_Dist(const void* a, const void* b);
 int _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b, unsigned int c, int d, bool e);
 void* _ZN8dActor_c13ClosestPlayerEv(void* self);
-void func_ov002_020c3e8c(void);
+void func_ov002_020c3e8c(void* player);
 void func_ov085_0212e728(void* c, void* p);
 }
 extern void* data_0209f318;
@@ -46,8 +46,9 @@ extern "C" int func_ov085_0212d5dc(char* c) {
       *(int*)(c+0xa8) = 0;
       *(int*)(c+0xac) = 0;
       *(short*)(c+0x8c) = 0;
-      if (_ZN8dActor_c13ClosestPlayerEv(c) != 0) {
-        func_ov002_020c3e8c();
+      void* player = _ZN8dActor_c13ClosestPlayerEv(c);
+      if (player != 0) {
+        func_ov002_020c3e8c(player);
         data_0209caa0[2] |= 0x80;
       }
       func_ov085_0212e728(c, &data_ov085_021307e0);

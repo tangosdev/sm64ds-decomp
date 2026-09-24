@@ -111,6 +111,12 @@ src/_ZN11BabyPenguin8BehaviorEv.cpp
 # in src/ as proof, dropped from CMakeLists' gate-193 source list;
 # func_ov072_02121d50.c's own definition stays compiled, unmodified.
 src/func_ov072_02121d50.c
+# func_ov072_021217ac is back (run linkfull, lane RS4PORT): main #3106 passes
+# func_ov072_02121d50 the state 0 the ROM rode in r1, so this is main's blob
+# (byte-identical under mwccarm 2004/b56) and
+# port/unmatched/BabyPenguin_LandTransition.cpp is retired. InitResources' own
+# call is still the one-argument form (not in #3106), so its host copy stays.
+src/func_ov072_021217ac.cpp
 #
 # ---- shared arm9 dependency: Player::IsDiving (called from
 # func_ov072_02120e20.cpp through the real Player class -- MSVC mangles
@@ -139,8 +145,8 @@ src/__sinit_ov072_02122414.c
 # src/_ZN11BabyPenguin13InitResourcesEv.cpp (BabyPenguin InitResources,
 # func_ov072_02121d50 SHORT-1 -- NOT a Prepare bug, BabyPenguin has no
 # TextureSequence member and its own InitResources never calls Prepare),
-# src/func_ov072_021217ac.cpp (the land-transition helper, func_ov072_02121d50
-# SHORT-1, the same bug as InitResources' own call),
+# [src/func_ov072_021217ac.cpp, the land-transition helper, is seated above
+# since run linkfull lane RS4PORT; the other five stay out,]
 # src/_ZN11BabyPenguin6RenderEv.cpp (the ModelAnim slot-5 collision, see
 # the note above; host copy in port/unmatched/ModelAnim_Renders.cpp).
 # All six stay byte-locked in src/ as the matched proof; none is

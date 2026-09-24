@@ -199,7 +199,7 @@ void func_ov006_020d8408(char *c)
           if (sb == 0)
           {
             *ptype = (unsigned char) one;
-            ((void (*)(char *)) func_ov006_020d66c4)(c);
+            func_ov006_020d66c4(c, z1);
           }
           if (sb <= 1)
           {

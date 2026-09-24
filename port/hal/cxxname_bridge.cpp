@@ -244,7 +244,10 @@ DSSTATE_END
 extern "C" {
 void *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void *fp)
 { return dBgW_Kc::LoadFile(*(SharedFilePtr *)fp); }
-void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *bmd, int a, int b)
+/* Returns ModelBase::SetFile's int (run linkfull, lane RS4PORT): matched
+   callers test it (src/func_ov002_020f6618.cpp returns 0 on a failed load),
+   and a void bridge handed them whatever EAX held. */
+int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *bmd, int a, int b)
 {
     if (getenv("PORT_TRACE_SETFILE")) {
         extern void *_ZTV5Model[8];
@@ -255,7 +258,7 @@ void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *bmd, int a, int b)
                 self ? ((void ***)self)[0][1] : 0, bmd, b,
                 (void *)_ZTV5Model, (void *)_ZTV10ModelAnim2);
     }
-    ((ModelBase *)self)->ModelBase::SetFile((BMD_File *)bmd, a, b);
+    return ((ModelBase *)self)->ModelBase::SetFile((BMD_File *)bmd, a, b);
 }
 }
 #pragma comment(linker, "/alternatename:?data_ov098_0213c380@@3PADA=_data_ov098_0213c380")
