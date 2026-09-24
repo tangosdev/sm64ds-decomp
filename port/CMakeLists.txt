@@ -22906,7 +22906,8 @@ foreach(_tw26v2 walk_window walk_window_hires smoke_player)
 endforeach()
 
 # ===========================================================================
-# W27 SMALLS1 (run linkfull wave 27, lane SMALLS1): cstd::fdiv, IRQ::ClearInterrupts
+# W27 SMALLS1 (run linkfull wave 27, lane SMALLS1): cstd::fdiv,
+# IRQ::ClearInterrupts, OS_GetArenaLo
 # ===========================================================================
 #
 # port/slice_w27_smalls1.txt carries the rows. A row goes on all three hosting
@@ -22928,6 +22929,11 @@ endforeach()
 # its IME / IF stores reach ntr/io.cpp's io_write (IF clears
 # write-one-to-clear there); ntr/runtime.cpp aliases the flat name onto it on
 # the NTR_ROM_IRQ_TABLE libraries and keeps the no-op for the smoke probes.
+#
+# OS_GetArenaLo (func_02058ea0): all three targets, the W23-4 arena rows'
+# set; hal/os_arena.cpp's host copy under SM64DS_OS_ARENA_ROM is retired and
+# the table's seed runs at OS_InitArena's point (hal/boot_os.cpp's pre-main,
+# smoke_player's main).
 set(W27S_GAME_ONLY
     src/_ZN3IRQ15ClearInterruptsEj.cpp)
 set(W27S_HOSTGEN_TU

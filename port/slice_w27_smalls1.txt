@@ -16,3 +16,9 @@ src/_ZN4cstd4fdivEii.cpp
 # ntr/runtime.cpp aliases the flat name onto it on the NTR_ROM_IRQ_TABLE
 # libraries; smoke_player links the plain ntr library and keeps its no-op.
 src/_ZN3IRQ15ClearInterruptsEj.cpp
+#
+# BOOTARENA1: OS_GetArenaLo, arm9 0x02058ea0 (0x14): the ROM's own read of the
+# OS arena table's lo word. hal/os_arena.cpp's host copy (which seeded the table
+# at the first read) is retired; the seed now runs at OS_InitArena's own point,
+# hal/boot_os.cpp's port_boot_rom_pre_main (and smoke_player's main).
+src/func_02058ea0.c
