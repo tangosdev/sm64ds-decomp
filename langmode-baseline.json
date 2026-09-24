@@ -53,15 +53,15 @@
     "unmigrated_total": 81
   },
   "shadow_decls": {
-    "local_body_no_include": 802,
-    "local_body_no_include_cpp": 243,
-    "local_struct_body": 1501,
-    "local_struct_body_cpp": 734,
+    "local_body_no_include": 801,
+    "local_body_no_include_cpp": 242,
+    "local_struct_body": 1498,
+    "local_struct_body_cpp": 731,
     "pad_layout": 350
   },
   "totals": {
-    "c_extension": 4712,
-    "cpp_extension": 3000,
-    "src_files": 7712
+    "c_extension": 4708,
+    "cpp_extension": 2991,
+    "src_files": 7699
   }
 }
