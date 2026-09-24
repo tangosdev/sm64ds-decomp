@@ -2206,7 +2206,13 @@ __ZN7fBase_c9SceneNodeC1Ev                                               ??0Scen
 # symbol that body's own pooled literal relocates to.
 # --------------------------------------------------------------------------
 
-__ZN14ArrowSignRightD0Ev                                                 _ZN14ArrowSignRightD1Ev                                          0x02137c2c D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
+# RETIRED at VARIANT2 2026-09-23 (run linkfull, batch B5): src/_ZN14ArrowSignRightD0Ev.cpp
+# defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
+# port/slice_w26_variant2.txt. The arm makes the two calls this row's face
+# made: the D1 body (??1ArrowSignRight@@QAE@XZ, which the face reached
+# through its own inlined _ZN14ArrowSignRightD1Ev face), then
+# _ZN6Memory10DeallocateEPvP4Heap(self, data_020a0eac), read off the object.
+#__ZN14ArrowSignRightD0Ev                                                 _ZN14ArrowSignRightD1Ev                                          0x02137c2c D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
 # RETIRED at CAMP3 2026-09-23 (run linkfull, batch D0ARM-07): src/_ZN11BabyPenguinD0Ev.cpp
 # defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
@@ -3828,13 +3834,30 @@ __ZN15FaderBrightnessD1Ev                                                ??1Fade
 __ZN10FaderColorD1Ev                                                     ??1FaderColor@@UAE@XZ                                            0x020175c4 R
 __ZN4HeapD1Ev                                                            ??1Heap@@UAE@XZ                                                  0x0203ca44 R
 __ZN5ModelC1Ev                                                           ??0Model@@QAE@XZ                                                 0x02016d58 R
-__ZN5ModelC2Ev                                                           ??0Model@@QAE@XZ                                                 0x02016da8 R
+# RETIRED at VARIANT2 2026-09-23 (run linkfull, batch B4): src/_ZN5ModelC2Ev.cpp
+# defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
+# port/slice_w26_variant2.txt. The arm makes the one call this row's face
+# made: the one host constructor, ??0Model@@QAE@XZ, read off the object.
+#__ZN5ModelC2Ev                                                           ??0Model@@QAE@XZ                                                 0x02016da8 R
 __ZN9ModelAnimC1Ev                                                       ??0ModelAnim@@QAE@XZ                                             0x02016958 R
-__ZN9ModelAnimC2Ev                                                       ??0ModelAnim@@QAE@XZ                                             0x02016998 R
+# RETIRED at VARIANT2 2026-09-23 (run linkfull, batch B4): src/_ZN9ModelAnimC2Ev.cpp
+# defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
+# port/slice_w26_variant2.txt. The arm makes the one call this row's face
+# made: the one host constructor, ??0ModelAnim@@QAE@XZ, read off the object.
+#__ZN9ModelAnimC2Ev                                                       ??0ModelAnim@@QAE@XZ                                             0x02016998 R
 __ZN8dActor_cC1Ev                                                        ??0dActor_c@@QAE@XZ                                              0x020113c0 R
-__ZN8dActor_cC2Ev                                                        ??0dActor_c@@QAE@XZ                                              0x0201150c R
+# RETIRED at VARIANT2 2026-09-23 (run linkfull, batch B4): src/_ZN8dActor_cC2Ev.cpp
+# defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
+# port/slice_w26_variant2.txt. The arm makes the one call this row's face
+# made: the one host constructor, ??0dActor_c@@QAE@XZ, read off the object.
+#__ZN8dActor_cC2Ev                                                        ??0dActor_c@@QAE@XZ                                              0x0201150c R
 __ZN8dActor_cD1Ev                                                        ??1dActor_c@@UAE@XZ                                              0x02011374 R
-__ZN8dActor_cD2Ev                                                        ??1dActor_c@@UAE@XZ                                              0x020112c8 R
+# RETIRED at VARIANT2 2026-09-23 (run linkfull, batch B4): src/_ZN8dActor_cD2Ev.cpp
+# defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
+# port/slice_w26_variant2.txt. The arm makes the one call this row's face
+# made: the one host destructor, ??1dActor_c@@UAE@XZ (the map gives the QAE and
+# UAE spellings one address), read off the object.
+#__ZN8dActor_cD2Ev                                                        ??1dActor_c@@UAE@XZ                                              0x020112c8 R
 __ZN5dBgChD1Ev                                                           ??1dBgCh@@UAE@XZ                                                 0x02035504 R
 __ZN5dBgPcC1Ev                                                           ??0dBgPc@@QAE@XZ                                                 0x02037eec R
 __ZN5dBgPcD1Ev                                                           ??1dBgPc@@QAE@XZ                                                 0x02037ee8 R
@@ -3851,7 +3874,12 @@ __ZN5dCc_cD1Ev                                                           ??1dCc_
 __ZN12dEnemyBase_cD1Ev                                                   ??1dEnemyBase_c@@UAE@XZ                                          0x020aed74 R
 __ZN8dM3dGSphD1Ev                                                        ??1dM3dGSph@@UAE@XZ                                              0x0203ac50 R
 __ZN11dScMgBase_cD1Ev                                                    ??1dScMgBase_c@@UAE@XZ                                           0x020b2a84 R
-__ZN11dScMgBase_cD2Ev                                                    ??1dScMgBase_c@@UAE@XZ                                           0x020b29c0 R
+# RETIRED at VARIANT2 2026-09-23 (run linkfull, batch B4): src/_ZN11dScMgBase_cD2Ev.cpp
+# defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
+# port/slice_w26_variant2.txt. The arm makes the one call this row's face
+# made: the one host destructor, ??1dScMgBase_c@@UAE@XZ (the map gives the QAE and
+# UAE spellings one address), read off the object.
+#__ZN11dScMgBase_cD2Ev                                                    ??1dScMgBase_c@@UAE@XZ                                           0x020b29c0 R
 __ZN7fBase_cD1Ev                                                         ??1fBase_c@@UAE@XZ                                               0x02043dbc R
 
 # ---- BATCH 3: nested type names and scalar references ---------------------

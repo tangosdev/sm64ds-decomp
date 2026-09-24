@@ -1,0 +1,52 @@
+# slice_w26_variant2 -- run linkfull, lane VARIANT2, THE REST OF THE
+# DESTRUCTOR-VARIANT FAMILY.
+#
+# Each file below is a per-function src D0 TU whose flat ROM name
+# port/tools/dtorfwd.py used to generate as a forwarder in
+# hal/dtor_forwarders_gen_w9c.cpp (its batch 5, the "outofline" premise:
+# the class's D1 file defines ~Cls() out of line and the forwarder only
+# called it). The file was never compiled for the port because under MSVC it
+# defines that same ~Cls() a second time. It gains the campaign's
+# `#ifdef _MSC_VER` arm now: the qualified, direct call to that one host
+# body, then the class's own operator delete, which are the two calls the
+# retired forwarder made. The `#else` side is the file's own text, byte for
+# byte, so the mwccarm object is unchanged.
+#
+# Gated per file: mwccarm 2004/b56 object identical before and after,
+# match.py 2004/b56 strict MATCHING, linkcheck VERIFIED blind 0, and after
+# the build the arm's object makes the retired forwarder's calls, in order,
+# with its data words (runs/linkfull/out/VARIANT2/). port/tools/dtorfwd.py
+# carries each retired row in its RETIRED note.
+src/_ZN15TextureSequenceD0Ev.cpp
+src/_ZN18TextureTransformerD0Ev.cpp
+src/_ZN9ModelAnimD0Ev.cpp
+src/_ZN11dCapEnemy_cD0Ev.cpp
+src/_ZN15dScMgSnowball_cD0Ev.cpp
+src/_ZN14KnockDownPlankD0Ev.cpp
+src/_ZN9TowerStepD0Ev.cpp
+#
+# BATCH B4, THE BASE-OBJECT VARIANTS A HOST CALLER NAMES. Each file below is
+# a C2 or D2 file whose code is the class's one constructor or destructor;
+# under MSVC that is ??0Cls / ??1Cls, which the class's C1 / D1 file already
+# defines, so the file was never compiled for the port. Host callers (matched
+# TUs compiled as C, hal destructor thunks) name the flat C2 / D2 when they
+# build or tear down a base subobject, and the port answered those names
+# from port/faces_sync.txt's generated faces (ModelAnim's D2 from
+# port/tools/dtorfwd.py). The arm is the one call that face made: the one
+# host constructor run in place, or the one host destructor called
+# qualified. The ROM's C2 / D2 body is the C1 / D1 body (none of these
+# classes has a virtual base; the ROM words differ only at pc-relative
+# branches).
+src/_ZN5ModelC2Ev.cpp
+src/_ZN8dActor_cC2Ev.cpp
+src/_ZN9ModelAnimC2Ev.cpp
+src/_ZN8dActor_cD2Ev.cpp
+src/_ZN9ModelAnimD2Ev.cpp
+src/_ZN11dScMgBase_cD2Ev.cpp
+#
+# BATCH B5, ArrowSignRight's D0. The header's PC + MSVC branch is a flat host
+# view with no base class, so there is no inherited operator delete for the
+# campaign's arm to name; this arm calls the D1 body and then the deallocation
+# the ROM's D0 ends with, Memory::Deallocate on the word at 0x020a0eac, by
+# name: the two calls the retired port/faces_sync.txt face made.
+src/_ZN14ArrowSignRightD0Ev.cpp
