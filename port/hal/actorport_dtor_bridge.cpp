@@ -1163,7 +1163,18 @@ ACTORPORT_D16(fBase_c)
 #pragma comment(linker, "/alternatename:@actorport_d16t_daDossyCap_c@8=??1daDossyCap_c@@QAE@XZ")
 #pragma comment(linker, "/alternatename:?Destructor1@daDossyCap_c@@UAEXXZ=@actorport_d16_daDossyCap_c@12")
 #pragma comment(linker, "/alternatename:?Destructor0@daDossyCap_c@@UAEXXZ=@actorport_dtor_slot_trap@8")
-#pragma comment(linker, "/alternatename:@actorport_d16t_daDsnBase_c@8=??1daDsnBase_c@@QAE@XZ")
+/* daDsnBase_c: slot 16's target is the ROM's flat D1 now, not an alias onto
+   whichever TU's inline COMDAT ??1daDsnBase_c the linker keeps (run linkfull
+   wave 27, lane V3B). src/_ZN11daDsnBase_cD1Ev.cpp's _MSC_VER arm defines
+   _ZN11daDsnBase_cD1Ev as the qualified call to that same inline destructor,
+   so the body run is the one the alias named, one call deeper. A cdecl name
+   cannot stand behind this __fastcall alias, so the thunk is spelled out.
+   The ROM's _ZTV11daDsnBase_c holds the flat D1 in this slot. */
+extern "C" void _ZN11daDsnBase_cD1Ev(void *self);
+extern "C" void __fastcall actorport_d16t_daDsnBase_c(void *s, void *)
+{
+    _ZN11daDsnBase_cD1Ev(s);
+}
 #pragma comment(linker, "/alternatename:?Destructor1@daDsnBase_c@@UAEXXZ=@actorport_d16_daDsnBase_c@12")
 #pragma comment(linker, "/alternatename:?Destructor0@daDsnBase_c@@UAEXXZ=@actorport_dtor_slot_trap@8")
 #pragma comment(linker, "/alternatename:@actorport_d16t_daEyBm_c@8=??1daEyBm_c@@QAE@XZ")

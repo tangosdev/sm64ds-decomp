@@ -32,3 +32,21 @@ src/_ZN15dScMgPachinko_cD0Ev.cpp
 src/_ZN19BowserPuzzleManagerD0Ev.cpp
 src/_ZN10dScTitle_cD0Ev.cpp
 src/_ZN11ShadowModelD0Ev.cpp
+#
+# BATCH 3, THREE COMPLETE-OBJECT DESTRUCTORS (D1, vtable slot 16), each named
+# by a slot-16 host path that spelled its body by hand or aliased past it:
+#   LightBeam     tr_d1's id-0x25 branch, hal/actor_classes.cpp (the TRAP branch
+#                 of the shared table stays the host ruling it was)
+#   MetalNetLift  aml_d1, hal/actor_classes_ov064_gate178.cpp
+#   daDsnBase_c   actorport_d16t_daDsnBase_c, hal/actorport_dtor_bridge.cpp
+#                 (an alias onto the inline COMDAT ??1daDsnBase_c until now)
+# LightBeam and daDsnBase_c are emit forcers for an inline-in-header
+# destructor, so their arm is the dtorfwd forwarder shape; MetalNetLift's
+# file carries the out-of-line ~MetalNetLift() its compiled D0 sibling already
+# defines, so its arm is the call to that one host symbol. port/slice_vtd1.txt
+# refused daDsnBase_c's TU when it was enrolled WITHOUT an arm (it defined no
+# name of its own); with the arm it defines the ROM's flat D1, which the
+# ROM's _ZTV11daDsnBase_c holds in slot 16, and slot 16 names it.
+src/_ZN9LightBeamD1Ev.cpp
+src/_ZN12MetalNetLiftD1Ev.cpp
+src/_ZN11daDsnBase_cD1Ev.cpp

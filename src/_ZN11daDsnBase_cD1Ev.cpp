@@ -13,7 +13,27 @@
  */
 #include "daDsnBase_c.h"
 
+#ifdef _MSC_VER
+/* THE HOST NEEDS THE ROM'S FLAT D1 NAME, AND MSVC NEVER EMITS IT.
+ * ~daDsnBase_c() is defined in the class body, and MSVC emits an inline
+ * destructor only for a caller that odr-uses it. The port's slot 16 for this
+ * class (actorport_d16t_daDsnBase_c in hal/actorport_dtor_bridge.cpp, the
+ * compiler table's Destructor1) calls the flat name, so this arm defines it as
+ * the qualified, direct call that makes MSVC emit the body, the shape
+ * port/tools/dtorfwd.py generates for every inline-destructor class. QUALIFIED
+ * on purpose: `self->~daDsnBase_c()` would be a virtual call through the
+ * port's table at slot 16, straight back into this symbol. The inline chain
+ * MSVC emits stores an MSVC vftable where the cartridge's D1 (0x02132d6c,
+ * ov091) stores _ZTV11daDsnBase_c; port/tools/dtor_store_guard.py reads this
+ * arm (SRC_ARMS) and re-proves from the ROM body on every build that nothing
+ * dispatches before the base destructor restores a ROM-shaped table. Nothing
+ * here reaches mwccarm: it builds the `#else` arm and emits the ROM bytes it
+ * always emitted. */
+extern "C" void _ZN11daDsnBase_cD1Ev(void *self)
+{ ((daDsnBase_c *)self)->daDsnBase_c::~daDsnBase_c(); }
+#else
 void _force_daDsnBase_cD1(daDsnBase_c *p)
 {
     p->~daDsnBase_c();
 }
+#endif

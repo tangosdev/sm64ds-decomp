@@ -2508,13 +2508,20 @@ static int __fastcall tr_render(void *s, void *)
    dispatch returns (the file's gate-31 recipe). The ROM's _ZN9LightBeamD0Ev is
    written for LIGHT_BEAM's layout only -- Model at +0xd4, MovingCylinderClsnWithPos
    at +0x124, then Actor's D2 -- so we can only run that chain when the object
-   really is a LIGHT_BEAM. Discriminate on the actor id at +0xc. */
+   really is a LIGHT_BEAM. Discriminate on the actor id at +0xc.
+   THE LIGHT_BEAM BRANCH IS THE ROM'S OWN D1 NOW (run linkfull wave 27, lane
+   V3B): src/_ZN9LightBeamD1Ev.cpp's _MSC_VER arm defines _ZN9LightBeamD1Ev as
+   the qualified call to the class's inline destructor, which tears down the
+   same three things this branch spelled by hand -- the dCcAcPos_c at +0x124,
+   the Model at +0xd4, then dActor_c -- through the same bodies (measured,
+   runs/linkfull/out/V3B/). The TRAP branch below is unchanged. */
+extern "C" void _ZN9LightBeamD1Ev(void *self);
 static int __fastcall tr_d1(void *s, void *)
 {
     unsigned id = *(unsigned short *)((char *)s + 0xc);
     if (id == 0x25) {                 /* LIGHT_BEAM: the layout the ROM dtor fits */
-        _ZN10dCcAcPos_cD1Ev((char *)s + 0x124);
-        _ZN5ModelD1Ev((char *)s + 0xd4);
+        _ZN9LightBeamD1Ev(s);         /* members, then dActor_c: the whole D1 */
+        return (int)(size_t)s;
     }
     /* TRAP (0x24): Actor-level teardown only. The ROM's 0xd4/0x124 chain is
        LIGHT_BEAM's and would smash Platform's fields on a 944-byte TRAP, whose

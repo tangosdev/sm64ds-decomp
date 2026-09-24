@@ -312,13 +312,21 @@ static int __fastcall aml_kill(void *s, void *)
    once, the shared placeholder elided. High-address-first: MovingMeshCollider
    +0x124, Model +0xd4, then the Actor base D2. D0 also frees on the game heap
    (D1's caller frees itself after the dispatch, so D1 stops before Deallocate). */
+/* SLOT 16 IS THE ROM'S OWN D1 NOW (run linkfull wave 27, lane V3B). The note
+   above predates src/_ZN12MetalNetLiftD1Ev.cpp's conversion: it is a real C++
+   destructor today, spelling no shared placeholder table, and its _MSC_VER arm
+   defines _ZN12MetalNetLiftD1Ev as the one host destructor the compiled D0
+   file defines (??1MetalNetLift). That destructor tears down the same three
+   things the hand chain here did -- the collider at +0x124, the Model at
+   +0xd4, then dActor_c -- through the same bodies (measured,
+   runs/linkfull/out/V3B/). The one difference is the transient vptr: MSVC's
+   own table where this array stood, which the ROM body (0x02117978: the store,
+   two member destructors, then the base D2) leaves inert, and
+   tools/dtor_store_guard.py's SRC_ARMS re-proves that on every build. */
+extern "C" int *_ZN12MetalNetLiftD1Ev(void *self);
 static int __fastcall aml_d1(void *s, void *)
 {
-    char *t = (char *)s;
-    *(void **)t = (void *)_ZTV17daObjFl_Amilift_c;
-    _ZN10dBgW_KcMbgD1Ev(t + 0x124);
-    _ZN5ModelD1Ev(t + 0xd4);
-    _ZN8dActor_cD2Ev(t);
+    _ZN12MetalNetLiftD1Ev(s);
     return (int)(size_t)s;
 }
 /* GATE 229: THE D0 IS THE ROM BODY NOW, and the thunk that used to stand here is

@@ -487,6 +487,10 @@ def generated_files(root):
 # file defines plus the class's inline operator delete, and that destructor
 # stores MSVC's own vftable where the hand body stored a ROM-shaped table. The
 # ROM D0 body is asked the same question for that store.
+#
+# The three D1s last (wave 27, batch 3) replaced slot-16 host thunks, the
+# LIGHT_BEAM branch of hal/actor_classes.cpp's tr_d1, the Amilift's aml_d1
+# and daDsnBase_c's compiler-table alias, the same way.
 SRC_ARMS = {
     "_ZN13daObjSwdoor_cD1Ev": "src/_ZN13daObjSwdoor_cD1Ev.cpp",
     "_ZN17BigMovingIceBlockD1Ev": "src/_ZN17BigMovingIceBlockD1Ev.cpp",
@@ -496,6 +500,9 @@ SRC_ARMS = {
     "_ZN19BowserPuzzleManagerD0Ev": "src/_ZN19BowserPuzzleManagerD0Ev.cpp",
     "_ZN10dScTitle_cD0Ev": "src/_ZN10dScTitle_cD0Ev.cpp",
     "_ZN11ShadowModelD0Ev": "src/_ZN11ShadowModelD0Ev.cpp",
+    "_ZN9LightBeamD1Ev": "src/_ZN9LightBeamD1Ev.cpp",
+    "_ZN12MetalNetLiftD1Ev": "src/_ZN12MetalNetLiftD1Ev.cpp",
+    "_ZN11daDsnBase_cD1Ev": "src/_ZN11daDsnBase_cD1Ev.cpp",
 }
 
 # A definition inside the arm: `extern "C" <ret> <flat>(<params>)` on one
