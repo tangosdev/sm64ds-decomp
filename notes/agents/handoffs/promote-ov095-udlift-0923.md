@@ -24,15 +24,16 @@ This document describes this commit. The queue records its immutable output SHA.
 - Scope: class `daUdlift_c` (formerly `UpDownLiftBbh`), TU `ov095/daUdlift_c`,
   ov095 .text 0x02135ff4..0x02136764, 11 functions.
 - Touched: [include/daUdlift_c.h](../../../include/daUdlift_c.h) (renamed from the coined
-  header), one line of [include/decl_common.h](../../../include/decl_common.h) (the class's own
-  `_ZTV` extern, which the three factory sources read), ov095
+  header), ov095
   [delinks.txt](../../../config/arm9/overlays/ov095/delinks.txt) and [symbols.txt](../../../config/arm9/overlays/ov095/symbols.txt), the new
   [manifest entry](../../../config/tu_manifest.d/ov095/daUdlift_c.json), the promoted
   [src/actors/daUdlift_c.cpp](../../../src/actors/daUdlift_c.cpp), the three factory sources (comment and
   `_ZTV` spelling only), `symbols/actor_renames.tsv` and its report (the
   class_rename rows), and these ledgers, which the integrator reconciles:
   `attribution.json`, `config/converted-baseline.json`,
-  `config/decl-agreement-baseline.json`, `notes/data/tu-promotion-queue.tsv`
+  `config/decl-agreement-baseline.json`, the six ov095 rows of each of
+  `config/match_provenance.jsonl` and `config/match_attempts.jsonl` (rework
+  round 1), `notes/data/tu-promotion-queue.tsv`
   (row renamed, promoted cell flipped), `notes/data/class-build-worklist.tsv`
   (header path; its stale alias annotation dropped), plus the prose in
   [notes/platform-provenance.md](../../../notes/platform-provenance.md) and [notes/player-provenance.md](../../../notes/player-provenance.md)
@@ -153,3 +154,64 @@ and this note were added after the byte and link gates ran.
 - `python tools/check_src_tu_compiles.py` exit 0, 269/269.
 - `python tools/port_refcheck.py` exit 0, 408 checked, 0 stale.
 - Private validation and Source review: not run; they belong to later stages.
+
+## Rework round 1
+
+Session `claude-prod2-promote-ov095-udlift-0923`, input commit
+`f7cd384dd2f36b75e1b67f1bcce64448d5cf982c` (rejected by independent
+verification), base `eb8f46d46a94a2a05cbcff9fd3d3ab228f2afe20`. One fix commit
+plus this note on top of the input; history not rewritten.
+
+- **S1 (fixed):** `include/decl_common.h` is restored to the base bytes;
+  `git diff eb8f46d46a -- include/decl_common.h` is empty. The base already
+  declares `extern int _ZTV10daUdlift_c[];` at line 445, which is what the
+  three udlift factories (`src/d_a_udlift_udlift.c`,
+  `src/d_a_udlift_udlift_teresa.c` and `src/d_a_udlift_rc_rift02.c`) read, so the rename of line 503 was a
+  duplicate. The now-unused `_ZTV13UpDownLiftBbh` extern at line 503 stays,
+  because that header belongs to another task. The three factories compile in
+  the full `rombuild` and link VERIFIED in `prepush_linkcheck` (below).
+- **S2 (fixed):** following #2809, which rewrote the `name` and `srcPath`
+  of such rows in place, the six rows for ov095 0x02135ff4, 0x02136038,
+  0x0213645c, 0x021364b0, 0x021364d8 and 0x021365d8 in
+  `config/match_provenance.jsonl` (lines 451-456) and
+  `config/match_attempts.jsonl` (lines 1842-1847) now carry the
+  `_ZN10daUdlift_c*` names and `srcPath` `src/actors/daUdlift_c.cpp`, the
+  promoted TU (as the `tubuild promote` history-tracker note asks: retarget,
+  do not delete). Only those two fields changed; key order, line endings and
+  row order are preserved and every other field (including `note` and
+  `label`) is verbatim. Deliberately left: `match_attempts.jsonl` line 1848,
+  a *failed* attempt at 0x021367fc named `UpDownLiftBbh_Spawn` with no
+  `srcPath`. It is not a `_ZN13UpDownLiftBbh*` symbol, it records what the
+  attempt tried at the time, and the factory was already renamed
+  `daUdlift_c_classInit_UDLIFT_TERESA` in the base's symbols.txt.
+- **S3 (fixed):** the `include/daUdlift_c.h` header comment (lines 13-14 and
+  25) now names `mPrevAngleX`/`mPrevAngleZ` instead of `unk_092`/`unk_096`.
+- S4-S8 remain deferred to #3071, unchanged.
+
+Proof on the fix commit (all run from the rework worktree):
+
+- `python tools/tubuild.py verify ov095/daUdlift_c` exit 0: 11/11 MATCH,
+  objisolate clean, reloc-destinations clean, ROM emission order, TEXT-VERIFIED.
+- `python tools/rombuild.py -j16` exit 0: 7595 enrolled, 7595 compiled (none
+  from cache); intact TU gates "dsd modules PASS, zero new symbol errors,
+  storage aliases exact"; 11,210 reproducing, 0 mismatching; 106/106 modules
+  exact; `intactTuRom.identical` true (sha256 d1506e90...c478e8, equal to the
+  expected value).
+- `python tools/prepush_linkcheck.py --range eb8f46d46a..HEAD` exit 0: 14
+  checked, 14 VERIFIED, 0 warnings, 0 blocking (the 11 TU functions and the
+  three factories). The header is no longer changed, so consumers no longer
+  expand to the 2062 of the first round.
+- `python tools/prepush_attribution.py --base eb8f46d46a --head HEAD` exit 0:
+  11 consolidated with credit intact, 0 changed, 0 lost.
+- `python tools/check_decl_agreement.py --changed eb8f46d46a` exit 0, no new
+  declaration disagreements.
+- `python tools/check_dead_references.py` exit 0; `python tools/tiers_ratchet.py
+  --check` exit 0 (PASS, baseline 2993, current 3029);
+  `python tools/check_tubuild_conflicts.py` exit 0;
+  `python tools/queue_audit.py --check-promoted` exit 0;
+  `python tools/check_src_tu_compiles.py` exit 0 (269/269);
+  `python tools/port_refcheck.py` exit 0 (408 checked, 0 stale).
+- Undefined-symbol audit of `build/tu/ov095-daUdlift_c/daUdlift_c.o` exit 0:
+  0 unknown undefined symbols.
+- Next action: independent verification of rework round 1 (byte, relocation,
+  whole-object and source review of this exact commit).
