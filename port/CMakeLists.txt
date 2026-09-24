@@ -6120,12 +6120,10 @@ list(APPEND SLICEINTRO_SOURCES
 # Generated and individually checked against relocs.txt; see the file header.
 list(APPEND SLICEINTRO_SOURCES
      "${CMAKE_CURRENT_SOURCE_DIR}/hal/intro_ov002_seat.cpp")
-# The cutscene cast's LOAD SPINE, host-copied to trace the three LoadFile paths
-# per object. The render floor is an unrebased BMD offset and Model::LoadFile
-# only rebases at numRefs == 1; this names which cast member is the FIRST holder
-# of each file and through which class. Src line commented out in slice_intro.txt.
-list(APPEND SLICEINTRO_SOURCES
-     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Ov002_CutsceneLoad_020f6618.cpp")
+# unmatched/Ov002_CutsceneLoad_020f6618.cpp RETIRED (run linkfull, lane
+# RS4PORT): the matched cast LOAD SPINE is back on slice_intro.txt; the flat
+# ModelBase::SetFile bridge returns the int it tests (hal/cxxname_bridge.cpp).
+# Its per-object LoadFile trace (SM64DS_INTRO_WATCH) goes with it.
 # unmatched/CutsceneObject_Render.cpp RETIRED (run link100, lane UNMATCH).
 # It existed because CutsceneObject::Render dispatches its model through a
 # LOCAL SHADOW counted in ROM numbering, and the folded host table put
