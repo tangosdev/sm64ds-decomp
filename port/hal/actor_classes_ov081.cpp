@@ -367,25 +367,67 @@ int func_ov081_02124f20(void *self);   /* cell 9 (ea4) tick */
    merely misattributed by dsd's auto-namer. One real body, two roles,
    declared once above and reused by name in both fill sites below. */
 
-/* {ROM address the sinit's own source cell carries, host body} --
+/* THE TWENTY WORDS TAKE THEIR RECEIVER IN ECX (run linkfull lane PMF2).
+   Both readers of a cell dispatch it as an MSVC member pointer:
+
+     func_ov081_02125488, the installer (a matched TU, src/func_ov081_02125488.cpp),
+       tail jumps into the ENTER half: `mov ecx,[ecx+4] / add ecx,eax /
+       pop ebp / jmp edx` -- ecx = this + delta;
+     MrBlizzard::Behavior (src/_ZN10MrBlizzard8BehaviorEv.cpp, the ROM's own
+       tick dispatch at 0x02125a98) calls the TICK half with
+       `(this->**(pp + 1))()`: ecx = this + delta and NOTHING pushed.
+
+   Every other reader in ov081 compares the cell pointer at +0x3f8 by ADDRESS
+   (Behavior itself, func_ov081_021243cc) or hands a cell to the installer
+   (eleven call sites), so no reader takes a cell's word as a plain function.
+   Until this lane Behavior was a host copy (port/unmatched/MrBlizzard_Behavior.cpp)
+   that called the tick word as a plain cdecl pointer, and the cells held the
+   raw bodies to match it; the installer's tail jump happened to leave the
+   caller's own receiver at [esp+4], which is why the enter half ran either
+   way. With the host copy retired each word is a __fastcall face: the
+   receiver arrives in ecx (the dead edx absorbs fastcall's second register),
+   arity zero, the same `ret` a no-parameter __thiscall member makes.
+
+   func_ov081_02124e64 is ALSO Spindrift's slot 31 (the note above). That role
+   keeps its own vtable face, spd_kill; the member-pointer role gets its own
+   below. One face per role, even where the two compile to the same bytes. */
+#define MB_PMF_FACE(sym)                                                     \
+    static int __fastcall mb_pmf_##sym(void *self, void *dead_edx)          \
+    {                                                                        \
+        (void)dead_edx;                                                      \
+        return sym(self);                                                    \
+    }
+MB_PMF_FACE(func_ov081_02124ec0) MB_PMF_FACE(func_ov081_02124e64)
+MB_PMF_FACE(func_ov081_0212479c) MB_PMF_FACE(func_ov081_021246a0)
+MB_PMF_FACE(func_ov081_02124dfc) MB_PMF_FACE(func_ov081_02124d50)
+MB_PMF_FACE(func_ov081_02124d14) MB_PMF_FACE(func_ov081_02124b98)
+MB_PMF_FACE(func_ov081_0212538c) MB_PMF_FACE(func_ov081_02125208)
+MB_PMF_FACE(func_ov081_02124b08) MB_PMF_FACE(func_ov081_021249f4)
+MB_PMF_FACE(func_ov081_02125200) MB_PMF_FACE(func_ov081_021250c8)
+MB_PMF_FACE(func_ov081_02125068) MB_PMF_FACE(func_ov081_02125038)
+MB_PMF_FACE(func_ov081_0212498c) MB_PMF_FACE(func_ov081_02124894)
+MB_PMF_FACE(func_ov081_02124f7c) MB_PMF_FACE(func_ov081_02124f20)
+
+/* {ROM address the sinit's own source cell carries, host face} --
    verified against the ROM's own record before the rewrite (the
    SoundObject/Cap seat shape: a mount pointing at the wrong bytes aborts
    instead of calling into the overlay image). Order matches
    __sinit_ov081_02128154's own field order (NOT sorted by address -- see
-   port/ov081_syms.txt / that sinit's own body). */
-typedef int (*PortMbFn)(void *);
-static const struct { unsigned enter_rom, tick_rom; PortMbFn enter_host, tick_host; }
+   port/ov081_syms.txt / that sinit's own body). port/tools/pmf_guard.py
+   checks every host word of this table for an ECX receiver. */
+typedef int (__fastcall *PortMbFace)(void *, void *);
+static const struct { unsigned enter_rom, tick_rom; PortMbFace enter_face, tick_face; }
 g_mb_cells[10] = {
-    {0x02124ec0, 0x02124e64, func_ov081_02124ec0, func_ov081_02124e64},
-    {0x0212479c, 0x021246a0, func_ov081_0212479c, func_ov081_021246a0},
-    {0x02124dfc, 0x02124d50, func_ov081_02124dfc, func_ov081_02124d50},
-    {0x02124d14, 0x02124b98, func_ov081_02124d14, func_ov081_02124b98},
-    {0x0212538c, 0x02125208, func_ov081_0212538c, func_ov081_02125208},
-    {0x02124b08, 0x021249f4, func_ov081_02124b08, func_ov081_021249f4},
-    {0x02125200, 0x021250c8, func_ov081_02125200, func_ov081_021250c8},
-    {0x02125068, 0x02125038, func_ov081_02125068, func_ov081_02125038},
-    {0x0212498c, 0x02124894, func_ov081_0212498c, func_ov081_02124894},
-    {0x02124f7c, 0x02124f20, func_ov081_02124f7c, func_ov081_02124f20},
+    {0x02124ec0, 0x02124e64, mb_pmf_func_ov081_02124ec0, mb_pmf_func_ov081_02124e64},
+    {0x0212479c, 0x021246a0, mb_pmf_func_ov081_0212479c, mb_pmf_func_ov081_021246a0},
+    {0x02124dfc, 0x02124d50, mb_pmf_func_ov081_02124dfc, mb_pmf_func_ov081_02124d50},
+    {0x02124d14, 0x02124b98, mb_pmf_func_ov081_02124d14, mb_pmf_func_ov081_02124b98},
+    {0x0212538c, 0x02125208, mb_pmf_func_ov081_0212538c, mb_pmf_func_ov081_02125208},
+    {0x02124b08, 0x021249f4, mb_pmf_func_ov081_02124b08, mb_pmf_func_ov081_021249f4},
+    {0x02125200, 0x021250c8, mb_pmf_func_ov081_02125200, mb_pmf_func_ov081_021250c8},
+    {0x02125068, 0x02125038, mb_pmf_func_ov081_02125068, mb_pmf_func_ov081_02125038},
+    {0x0212498c, 0x02124894, mb_pmf_func_ov081_0212498c, mb_pmf_func_ov081_02124894},
+    {0x02124f7c, 0x02124f20, mb_pmf_func_ov081_02124f7c, mb_pmf_func_ov081_02124f20},
 };
 
 extern "C" void port_mr_blizzard_states_seat(void)
@@ -405,8 +447,8 @@ extern "C" void port_mr_blizzard_states_seat(void)
                          g_mb_cells[i].enter_rom, g_mb_cells[i].tick_rom);
             std::abort();
         }
-        cell.enter_fn = (unsigned)(size_t)g_mb_cells[i].enter_host;
-        cell.tick_fn = (unsigned)(size_t)g_mb_cells[i].tick_host;
+        cell.enter_fn = (unsigned)(size_t)g_mb_cells[i].enter_face;
+        cell.tick_fn = (unsigned)(size_t)g_mb_cells[i].tick_face;
     }
 }
 
@@ -452,10 +494,11 @@ static int __fastcall mb_behavior(void *s, void *)
    as ecx with an empty stack, and the ten seated cells are flat f(self)
    bodies reading [esp+4]. The stale word one of them read was a spilled
    &this->mWithMeshClsn = this+0x150, and 0x150 + 0x368 = 0x4b8 is the stomp
-   that was measured. Cured before this registration by the host copies
-   port/unmatched/MrBlizzard_StateDispatch.cpp (the installer 0x02125488) and
-   port/unmatched/MrBlizzard_Behavior.cpp (the tick dispatch), which call the
-   cell as a plain function pointer through PortMrBlizzardPair. Full
+   that was measured. Cured before this registration by host copies
+   of the installer 0x02125488 and of the tick dispatch, which called the
+   cell as a plain function pointer through PortMrBlizzardPair. Both are ROM
+   code now (the installer a matched TU, Behavior since run linkfull lane
+   PMF2) and the seat above writes a __fastcall face into every word. Full
    derivation in the gate-192 registry comment (port/hal/actor_classes.inc).
    MrBlizzard::Render itself was always clean (calls Model::Render BY NAME --
    no ModelAnim slot-5 exposure). */

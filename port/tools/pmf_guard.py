@@ -259,6 +259,27 @@ LEDGER = [
      "in dMgTrmpln3DMario_c): the thirty-eight .data pairs are read by the "
      "open-coded src/func_ov006_020c8f20.cpp and src/func_ov006_020cb030.cpp, "
      "both `push ecx; call edx; add esp,4`"),
+
+    # ---- run linkfull lane PMF2: the member-pointer rows, second wave ------
+    ("ECX", r"^\?g_tti_seats@@",
+     "dScMgTrampoline_c (Trampoline Time): the five .data pairs "
+     "src/minigames/d_s_mg_trampoline.cpp defines are copied into the field "
+     "at +0x5004 by the five installers and read by one dispatcher, the TU's "
+     "?Behavior@dScMgTrampoline_c@@UAEHXZ, `mov ecx,[ebx+5008h]; mov eax,"
+     "[ebx+5004h]; add ecx,ebx; call eax`, nothing pushed"),
+    ("ECX", r"^\?g_objcmd_seats@@",
+     "the Kuppa script's second dispatcher: the twenty-four ov002 records are "
+     "read only by src/func_ov002_020f7d74.cpp, which copies them into its "
+     "function-local table on the first call and dispatches `push a3; push "
+     "a2; push p+7; mov ecx,[tab+i*8+4]; add ecx,self; call [tab+i*8]`, "
+     "callee-cleaned -- the first dispatcher's shape (port_kuppa_cmd_seat)"),
+    ("ECX", r"^\?g_mb_cells@@",
+     "MrBlizzard: the ten cells at data_ov081_02128e14, pointed to from "
+     "[self+0x3f8]. ?Behavior@MrBlizzard@@UAEHXZ (src/_ZN10MrBlizzard8Behavior"
+     "Ev.cpp) calls the tick half at +8 with ecx = this + delta and nothing "
+     "pushed; _func_ov081_02125488 tail jumps into the enter half with `mov "
+     "ecx,[ecx+4]; add ecx,eax; pop ebp; jmp edx`. Every other reader "
+     "compares the cell pointer by address"),
 ]
 
 

@@ -1659,6 +1659,7 @@ __ZN17dScMgTrampoline_c13StateWaitExitEv                                 ?StateW
 __ZN17dScMgTrampoline_c16CleanupResourcesEv                              ?CleanupResources@dScMgTrampoline_c@@UAEHXZ                      0x021212e0 R
 __ZN17dScMgTrampoline_c16UpdateTouchInputEv                              ?UpdateTouchInput@dScMgTrampoline_c@@QAEXXZ                      0x0212157c R
 __ZN17dScMgTrampoline_c6RenderEv                                         ?Render@dScMgTrampoline_c@@UAEHXZ                                0x021212fc R
+__ZN17dScMgTrampoline_c8BehaviorEv                                       ?Behavior@dScMgTrampoline_c@@UAEHXZ                              0x021214f8 R
 __ZN17dScMgTrampoline_c8OnKickedEv                                       ?OnKicked@dScMgTrampoline_c@@UAEHXZ                              0x021211e0 R
 __ZN17dScMgTrampoline_c8OnPushedEv                                       ?OnPushed@dScMgTrampoline_c@@UAEHXZ                              0x021211bc R
 __ZN17dScMgTrampoline_c9StateDoneEv                                      ?StateDone@dScMgTrampoline_c@@QAEXXZ                             0x02121774 R
