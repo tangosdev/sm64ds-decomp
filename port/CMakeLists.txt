@@ -7813,7 +7813,11 @@ set(SCENE_MG_SOURCES
     hal/scene_mg_sound.cpp
     unmatched/MgBase_Slot1.cpp
     unmatched/MgBase_Slot7.cpp unmatched/MgBase_StateDispatch.cpp
-    unmatched/MgCurling_StateDispatch.cpp unmatched/MgBase_LangTable.cpp
+    unmatched/MgCurling_StateDispatch.cpp
+    # unmatched/MgBase_LangTable.cpp RETIRED (run linkfull, lane RS4PORT): its
+    # reason (a fabricated 29-entry initializer) predates main #1557, which
+    # made the src table the ROM's template; the port's src is that blob and
+    # is back on slice_mg1.txt.
     # Run mg5, lane BASESET. The framework's STATE SETTER, which was the last
     # named trap in the minigame stack and was a FREEZE in a player's hands:
     # _ZN10dMgState_c8SetStateEi set no state, so a class that asked to advance never

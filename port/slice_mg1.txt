@@ -347,8 +347,12 @@ src/func_ov004_020b29a0.cpp
 src/_ZN11dScMgBase_cD1Ev.cpp
 src/_ZN11dScMgBase_cC2Ev.cpp
 src/func_ov004_020b2c84.c
-# HOST-COPIED (MG2): src/func_ov004_020b2cb8.c -- fabricated 29-entry
-#   initializer, see port/unmatched/MgBase_LangTable.cpp
+# func_ov004_020b2cb8 is back (run linkfull, lane RS4PORT). MG2 host-copied it
+#   into port/unmatched/MgBase_LangTable.cpp for a fabricated 29-entry
+#   initializer; main #1557 replaced that with the ROM's template (entry 1 =
+#   {0x140, &data_ov004_020b9f54}) and the port's src is main's blob, so the
+#   host copy is retired.
+src/func_ov004_020b2cb8.c
 src/func_ov004_020b3194.c
 # HOST-COPIED (MG2): src/func_ov004_020b31b4.cpp
 # HOST-COPIED (MG2): src/func_ov004_020b321c.cpp
