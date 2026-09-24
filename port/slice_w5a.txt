@@ -229,7 +229,16 @@ src/unnamed/ov063/func_ov063_02117cdc.c
 # (src:17, `(self)`), so Boo_Teleport.c had nothing left to work around. The src row
 # is on port/slice_l15cp.txt and the host copy is deleted.
 #port/unmatched/Boo_Teleport.c
-port/unmatched/Boo_CrossNamedDispatch.c
+# RETIRED at run linkfull, lane RS2PORT: port/unmatched/Boo_CrossNamedDispatch.c
+# hosted these three because their sources spelled ov063 callees by ov065 or
+# ov066 names (the shared-window naming race). The sources call the ov063
+# functions by address-first names now (0d0c4e9b03 for the two dispatchers;
+# 02116f48 calls func_ov063_0211ad00), identical on main, so the host reason is
+# stale and the matched TUs take their seats.
+#port/unmatched/Boo_CrossNamedDispatch.c
+src/unnamed/ov063/func_ov063_02116d38.c
+src/unnamed/ov063/func_ov063_021192d4.c
+src/unnamed/ov063/func_ov063_02116f48.cpp
 # RETIRED with them: MansionSteps_InitResources.c stood in for
 # _ZN11daTrsTrap_c13InitResourcesEv ("NOT matched in src/ (the other six
 # slots all are)"); it is matched now and on port/slice_shadows3.txt. Because
