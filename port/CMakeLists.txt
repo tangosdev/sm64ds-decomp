@@ -6442,14 +6442,12 @@ foreach(line IN LISTS SLICE_OV007_LINES)
     # correctly). Section 5h is the measurement that turned the candidate into
     # a defect and the frame-0 register readings either side of the fix.
     #
-    # THE FLAG IS NOT BOOKKEEPING, same as the two blocks above: the branch
-    # below reads it, so the cut and the host copy's membership are the same
-    # fact and cannot drift.
-    if(line MATCHES "^src/func_ov007_020b6eb4\\.c$")
-        set(TS1_B6EB4_IN_SLICE TRUE)
-        set(TS1_B6EB4_DISPLACED TRUE)
-        continue()
-    endif()
+    # RETIRED (run linkfull, lane RS4PORT): main #3107 passes
+    # func_ov007_020bd648 the pending mode the guard just loaded, so the
+    # matched TU is in SLICE_OV007_SOURCES as itself, the cut is gone, and
+    # unmatched/Ov007_BdPending_020b6eb4.cpp is no longer appended (the block
+    # that appended it, below, is retired with it). The two TS1_B6EB4 flags
+    # above are no longer set.
     # run mg15 lane IMPLICITR: THE FOURTH DISPLACEMENT IN THIS SLICE, and the
     # FIRST ONE ON THE RETURN SIDE.
     #
@@ -6584,19 +6582,10 @@ endforeach()
 # the source for a `void func_ov007_020c2b9c(` definition, so it stops matching
 # now and starts matching again the moment anyone reintroduces the void spelling.
 # That is the check that makes this retirement safe to assert rather than hope.
-if(TS1_B6EB4_DISPLACED)
-    list(APPEND SLICE_OV007_SOURCES
-        "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Ov007_BdPending_020b6eb4.cpp")
-elseif(NOT TS1_B6EB4_IN_SLICE)
-    # The two states the branches below distinguish, for the same reason: the
-    # slice line is the only thing that puts the matched TU in the build, so if
-    # the line is gone the host copy must not be added blind. Two bodies for
-    # one address is an LNK2005 and none is a silent undefined symbol.
-    message(STATUS "TS1: slice_ov007.txt no longer lists "
-                   "src/func_ov007_020b6eb4.c, so the pending-mode host copy is "
-                   "NOT added and the link will fail on it. Restore the line: "
-                   "this block does the cutting, not the slice file")
-endif()
+# RETIRED (run linkfull, lane RS4PORT): the pending-mode host copy
+# unmatched/Ov007_BdPending_020b6eb4.cpp is no longer appended; the cut in the
+# slice loop above is gone and src/func_ov007_020b6eb4.c (main #3107's blob) is
+# in SLICE_OV007_SOURCES as itself.
 # RETIRED, run link100 wave 15, lane SEAT15E: the ride-through host copy is no
 # longer appended, because the cut above no longer happens and the matched TU is
 # in SLICE_OV007_SOURCES as itself. port/unmatched/Ov007_RideThrough_020be980.cpp

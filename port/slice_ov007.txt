@@ -788,6 +788,8 @@ src/func_ov007_020c5dec.cpp
 # `+1c 1->0` with DISPCNT unchanged, which is the guard passing, the call
 # happening and the callee taking neither of its two switches.
 #
+# [LIFTED at run linkfull, lane RS4PORT: main #3107 passes bd648 the mode, the
+# cut and the host copy are retired, and the TU above is built as itself.]
 # The cut is in port/CMakeLists.txt beside the other two and
 # port/unmatched/Ov007_BdPending_020b6eb4.cpp links in its place. The TU stays
 # MATCHED and stays in the decomp; it is out of the port and only the port, and
