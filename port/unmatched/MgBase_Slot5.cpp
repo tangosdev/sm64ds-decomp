@@ -134,4 +134,17 @@ void _ZN11dScMgBase_c21AfterCleanupResourcesEj(char *c, int arg)
     _ZN8dScene_c21AfterCleanupResourcesEj(c, arg);
 }
 
+/* THE SEAM unmatched/MgBase_Slot5_HostAbi.h names, run linkfull lane PSYCHE1.
+   The host copy above is reached only through the flat symbol. The matched
+   TU src/minigames/d_s_mg_base.cpp is linked again, and its own
+   dScMgBase_c::AfterCleanupResources is what every qualified base call binds
+   to; that header renames the TU's argless func_0203cbc0 to this seam, which
+   passes the value the cartridge has in r0 at 0x020b0898: the TU has just
+   loaded data_ov004_020beb60 and found it non-zero, and nothing between the
+   test and the call writes it. */
+void port_mg_base_slot5_free_r0(void)
+{
+    func_0203cbc0((void *)data_ov004_020beb60[0]);
+}
+
 }  /* extern "C" */
