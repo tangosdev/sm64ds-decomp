@@ -11707,13 +11707,9 @@ set(LEVELBOOT_HOST_SOURCES
     # resolved to the vtable slots they name at the caller.
     unmatched/func_0204322c_hostcopy.cpp
     unmatched/func_02043fdc_hostcopy.cpp
-    # ...and a fourth, dormant one: LoadEntranceObjects ends in
-    # StartEntranceFaderWipe() spelled (void), with the wipe type riding in r0
-    # from the `< 0` test right above it. Every entrance the port mounts takes
-    # that return, so the call never fires today -- see the file header for
-    # what it did and did not fix. Commented out of slice_gate14.txt in
-    # exchange.
-    unmatched/LoadEntranceObjects.cpp
+    # unmatched/LoadEntranceObjects.cpp RETIRED (run linkfull, lane RS4PORT):
+    # the per-function src passes StartEntranceFaderWipe the wipe type (main
+    # #3106's hunk) and is back on slice_gate14.txt.
     # func_02016ff4_hostcopy.cpp RETIRED (lane shadow-A): hostgen VIRTUAL_CALL
     # resolves the shadow-class slot-2 call to DoSetFile's host slot 1 and
     # keeps the shrink switch; see the table's note. GATE35_SYMS.

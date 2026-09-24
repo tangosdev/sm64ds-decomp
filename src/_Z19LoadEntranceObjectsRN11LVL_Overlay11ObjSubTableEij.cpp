@@ -31,7 +31,7 @@ extern void* data_0209f318;
 extern s8 data_ov002_0210cb5c[];
 
 void func_0202b0e0(LVL_Overlay::StandardEntry* e, int count);
-void StartEntranceFaderWipe(void);
+void StartEntranceFaderWipe(int index);
 }
 
 void LoadEntranceObjects(LVL_Overlay::ObjSubTable& tbl, int p2, u32 p3)
@@ -94,8 +94,9 @@ void LoadEntranceObjects(LVL_Overlay::ObjSubTable& tbl, int p2, u32 p3)
 
     if (sl >= 0x13)
         sl = 0;
-    if (data_ov002_0210cb5c[sl] < 0)
+    int wipe = data_ov002_0210cb5c[sl];
+    if (wipe < 0)
         return;
 
-    StartEntranceFaderWipe();
+    StartEntranceFaderWipe(wipe);
 }

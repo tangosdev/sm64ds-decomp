@@ -3278,6 +3278,7 @@ DSSTATE_END
 #pragma comment(linker, "/alternatename:__ZN5Sound22LoadAndSetMusic_Layer1Ei=?LoadAndSetMusic_Layer1@Sound@@YAXH@Z")
 #pragma comment(linker, "/alternatename:__ZN3G2x18SetBlendBrightnessEPVtts=?SetBlendBrightness@G2x@@SAXPCGGF@Z")
 #pragma comment(linker, "/alternatename:__Z19LoadStandardObjectsRN11LVL_Overlay11ObjSubTableEij=?LoadStandardObjects@@YAXAAUObjSubTable@LVL_Overlay@@HI@Z")
+#pragma comment(linker, "/alternatename:__Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij=?LoadEntranceObjects@@YAXAAUObjSubTable@LVL_Overlay@@HI@Z")
 #pragma comment(linker, "/alternatename:__Z19LoadPathNodeObjectsRN11LVL_Overlay11ObjSubTableEij=?LoadPathNodeObjects@@YAXAAUObjSubTable@LVL_Overlay@@HI@Z")
 #pragma comment(linker, "/alternatename:__Z15LoadPathObjectsRN11LVL_Overlay11ObjSubTableEij=?LoadPathObjects@@YAXAAUObjSubTable@LVL_Overlay@@HI@Z")
 #pragma comment(linker, "/alternatename:__Z15LoadViewObjectsRN11LVL_Overlay11ObjSubTableEij=?LoadViewObjects@@YAXAAUObjSubTable@LVL_Overlay@@HI@Z")
