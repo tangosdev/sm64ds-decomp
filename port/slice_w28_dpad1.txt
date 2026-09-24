@@ -1,0 +1,19 @@
+# slice_w28_dpad1 -- run linkfull, lane DPAD1: THE TITLE MENU'S D-PAD FAULT.
+#
+# Two ov007 TUs that byte-match the ROM and still dropped an argument on the
+# host. On the file-select menu of scene 1 a D-pad press runs
+# func_ov007_020b3360 -> func_ov007_020b3c54 -> func_ov007_020b3d30, and on ARM
+# both calls pass their second argument in r1 without an instruction to show
+# it. Each TU's own declaration spells the callee one argument short, so under
+# cdecl func_ov007_020b3d30 read its table index off the stack, faulted, and
+# the scene actor was quarantined: the menu stopped answering and the bottom
+# screen went blank. port/ov007_seat.txt section 5d listed both frames as
+# CLASS A, REAL SEAM.
+#
+# Both rows build from their build/host-src copies (port/CMakeLists.txt, the
+# DPAD1 block at the end of the file), where tools/hostgen.py's REG_RIDE_ARG
+# rows spell the argument the ROM passes; the table there carries the ROM
+# listings. src/ is untouched and each object still carries its TU's stem.
+# They were rows of port/slice_ov007.txt, which marks where each one was.
+src/func_ov007_020b3360.c
+src/func_ov007_020b3c54.c

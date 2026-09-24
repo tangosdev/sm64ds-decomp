@@ -2511,6 +2511,71 @@ REG_RIDE_ARG = {
         ("            func_ov002_020d5cec();",
          "            func_ov002_020d5cec(obj);"),
     ],
+    # ------------------------------------------------------------------
+    # Run linkfull, lane DPAD1: THE TITLE MENU'S D-PAD FAULT. Two frames of
+    # one chain, both listed in port/ov007_seat.txt section 5d as CLASS A, REAL
+    # SEAM (rows b3c54 <- b3360 and b3d30 <- b3c54), and 5d named the second
+    # as the next fault. It is the one a player reaches: on the file-select
+    # menu of scene 1 a D-pad press runs dScDSMT_c::Behavior ->
+    # func_ov007_020b7090 -> func_ov007_020b2e64 -> func_ov007_020b3360 ->
+    # func_ov007_020b3c54 -> func_ov007_020b3d30, and b3d30 indexes its
+    # tables with a word of its caller's stack. The fault is c0000005 in
+    # func_ov007_020b3d30, the scene actor is quarantined, and the menu stops
+    # answering with a blank bottom screen.
+    #
+    # func_ov007_020b3c54 ends (overlay 7, base 0x020ad660)
+    #
+    #     020b3d08  ldr  r0, [pc, #0x14]
+    #     020b3d0c  ldr  ip, [pc, #0x18]    ; ip = 0x020b3d30
+    #     020b3d10  ldr  r2, [r0]
+    #     020b3d14  str  r1, [r2, #8]       ; the TU's *(S + 8) = mode
+    #     020b3d18  ldr  r0, [r0]
+    #     020b3d1c  ldr  r0, [r0, #4]
+    #     020b3d20  bx   ip                 ; r0 = *(S + 4), r1 still mode
+    #
+    # and func_ov007_020b3d30 reads that r1 as its `idx` (020b3d3c
+    # `ldrb r4, [r3, r1]`). The TU declares the callee with one parameter.
+    # `mode` is the TU's own second parameter, live and named at the call, so
+    # the row spells it and nothing else.
+    "func_ov007_020b3c54": [
+        ("extern void func_ov007_020b3d30(int a);",
+         "extern void func_ov007_020b3d30(int a, int idx);"
+         "  /* hostgen REG_RIDE_ARG: mode rides r1, see the table */"),
+        ("    func_ov007_020b3d30(*(int*)(data_ov007_02103360 + 4));",
+         "    func_ov007_020b3d30(*(int*)(data_ov007_02103360 + 4), mode);"),
+    ],
+    # The frame above b3c54. func_ov007_020b3360 declares it `(void)` and
+    # calls it with nothing, while the definition takes (int a, int mode) and
+    # reads `mode` on its default arm: jump-table entries 3 to 6 and the
+    # out-of-range fall-through branch straight to the store at 0x020b3d08
+    # with r1 never written. Without this row that arm would store a word of
+    # b3360's stack into *(S + 8) and hand it to b3d30 as the index, which is
+    # the half 5d warned a one-frame fix would leave live. The ROM's r1 at the
+    # call is b3360's own scratch:
+    #
+    #     020b3380  ldrsh  r1, [r2, #0xa]   ; p0's s16 at +0xa
+    #     020b3384  cmp    r1, #0xff
+    #     020b3388  moveq  r1, #0
+    #     020b338c  strheq r1, [r3, #0xc]
+    #     020b3390  ldreq  r0, [r0]
+    #     020b3394  moveq  r1, #1
+    #     020b3398  strheq r1, [r0, #0xe]
+    #     020b339c  bl     0x020b3c54
+    #
+    # so it is 1 on the 0xff arm and p0's s16 at +0xa otherwise. p0 is the
+    # TU's own local, and the two stores between the compare and the call go
+    # to data_ov007_02103360 + 0xc / + 0xe rather than through p0, so reading
+    # +0xa at the call reads the value the ROM compared. r0 is dead in the
+    # callee (0x020b3c54 reloads it before any read), so the first argument
+    # is 0.
+    "func_ov007_020b3360": [
+        ("extern void func_ov007_020b3c54(void);",
+         "extern void func_ov007_020b3c54(int a, int mode);"
+         "  /* hostgen REG_RIDE_ARG: r1 rides into mode, see the table */"),
+        ("        func_ov007_020b3c54();",
+         "        func_ov007_020b3c54(0, *(s16*)(p0 + 0xa) == 0xff ? 1"
+         " : *(s16*)(p0 + 0xa));"),
+    ],
 }
 
 

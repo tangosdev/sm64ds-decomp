@@ -23265,3 +23265,67 @@ foreach(_tw28c walk_window walk_window_hires)
     target_sources(${_tw28c} PRIVATE ${SLICE_W28C_SOURCES}
         "${CMAKE_CURRENT_SOURCE_DIR}/hal/card_globals.cpp")
 endforeach()
+
+# ===========================================================================
+# DPAD1 (run linkfull, lane DPAD1): THE TITLE MENU'S D-PAD FAULT
+# ===========================================================================
+#
+# A D-pad press on the file-select menu of scene 1 (dScDSMT_c) faulted in
+# func_ov007_020b3d30, which indexed its tables with a word of its caller's
+# stack; the scene actor was quarantined and the menu stopped answering with
+# a blank bottom screen. Two matched ov007 frames drop an argument the ROM
+# passes in r1 (port/ov007_seat.txt section 5d, CLASS A rows b3c54 <- b3360
+# and b3d30 <- b3c54). tools/hostgen.py's REG_RIDE_ARG rows for the two TUs
+# spell it; src/ is untouched and the bodies stay the ROM's.
+#
+# port/slice_w28_dpad1.txt carries the two rows (moved out of
+# port/slice_ov007.txt, which marks where each was) and every row builds from
+# its build/host-src copy in this block's own custom commands: the W25MG /
+# W235 shape, since PORT_HOSTGEN_TU's region is not this lane's. hostgen
+# emits a .c source as a .cpp wrapped whole in extern "C", so the symbols keep
+# C linkage and each object keeps its TU's stem. The same three targets
+# SLICE_OV007_SOURCES feeds.
+set(DPAD1_HOSTGEN_TU
+    src/func_ov007_020b3360.c
+    src/func_ov007_020b3c54.c)
+foreach(_dpad1_tu IN LISTS DPAD1_HOSTGEN_TU)
+    list(FIND SLICE_OV007_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${_dpad1_tu}" _dpad1_idx)
+    if(NOT _dpad1_idx LESS 0)
+        message(FATAL_ERROR "${_dpad1_tu} is a raw port/slice_ov007.txt row "
+                "again, so it would be compiled twice: once raw, with the "
+                "argument the ROM passes in r1 dropped, and once from the "
+                "hostgen copy the DPAD1 block builds")
+    endif()
+endforeach()
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w28_dpad1.txt" SLICE_W28_DPAD1_LINES)
+set(SLICE_W28_DPAD1_SOURCES "")
+foreach(line IN LISTS SLICE_W28_DPAD1_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    if(NOT line IN_LIST DPAD1_HOSTGEN_TU)
+        message(FATAL_ERROR "port/slice_w28_dpad1.txt row ${line} is not on "
+                "DPAD1_HOSTGEN_TU: every row there exists to build from its "
+                "hostgen copy")
+    endif()
+    string(REGEX REPLACE "[.](c|cpp)$" ".cpp" _dpad1_rel "${line}")
+    set(_dpad1_out "${CMAKE_BINARY_DIR}/host-src/${_dpad1_rel}")
+    add_custom_command(OUTPUT "${_dpad1_out}"
+        COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+                --out "${CMAKE_BINARY_DIR}/host-src" ${line}
+        DEPENDS "${PORT_REPO_ROOT_ABS}/${line}"
+                "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+        COMMENT "hostgen ${line}")
+    list(APPEND SLICE_W28_DPAD1_SOURCES "${_dpad1_out}")
+endforeach()
+list(LENGTH SLICE_W28_DPAD1_SOURCES _dpad1_n)
+list(LENGTH DPAD1_HOSTGEN_TU _dpad1_want)
+if(NOT _dpad1_n EQUAL _dpad1_want)
+    message(FATAL_ERROR "port/slice_w28_dpad1.txt lists ${_dpad1_n} of the "
+            "${_dpad1_want} DPAD1 rows; a missing row is an undefined symbol "
+            "on every title-screen build")
+endif()
+foreach(_tw28dpad1 walk_window walk_window_hires smoke_player)
+    target_sources(${_tw28dpad1} PRIVATE ${SLICE_W28_DPAD1_SOURCES})
+endforeach()

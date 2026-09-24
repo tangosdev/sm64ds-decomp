@@ -68,7 +68,9 @@ fifty", and it is exact by asking a smaller question rather than a vaguer one.
             jump -- because the classification is what a later lane will read
             when it picks the next seat, and a Class A frame that quietly
             became a tail jump would have stopped being a seam without anyone
-            noticing that 5d's list went stale.
+            noticing that 5d's list went stale. Two of the seven (b3360 and
+            b3c54) are SEATED since run linkfull lane DPAD1 and report RETIRED
+            on every build; see `seated` in the row format below.
   CLASS C   5 frames, HAND-DECLARED from section 5d's "CLASS C, THE RIDE IS
             PRESERVED BY A TAIL JUMP" listing. Must jump, must not call.
   VENEER   22 frames, DERIVED at run time, not listed here. The ROM shape is
@@ -151,7 +153,8 @@ THE FOUR VERDICTS PER ROW PER MAP, so nothing falls between them:
   ASSERTED   the frame is in this map, its object came from the declared TU,
              and the required form is there and the forbidden one is not
   BROKEN     same, and the form is wrong. Fails the build.
-  RETIRED    the frame is in this map and its object came from somewhere else.
+  RETIRED    the frame is in this map and its object came from somewhere else
+             (a host copy, or the hostgen copy the row declares as `seated`).
              Reported by name, never silent, and not a failure.
   SKIPPED    the frame is not in this map at all. That target does not link it.
 
@@ -268,6 +271,9 @@ from gxband_guard import Refused, parse_map, find_maps  # noqa: E402
 # tu       the repo-relative source that must have produced the frame's object.
 #          THIS IS THE RETIREMENT MECHANISM, not documentation: a row whose
 #          frame is compiled from anything else retires itself. See the banner.
+# seated   OPTIONAL, the hostgen copy (host-src/<the tu, as .cpp>) that seated
+#          the row. A build compiling exactly that copy RETIRES the row by name
+#          instead of reading it as a misdeclared tu. See is_decomp_source.
 # cite     the seat-file section and heading the row was read out of.
 # note     what breaks if the form flips, in this row's own terms.
 # ---------------------------------------------------------------------------
@@ -286,14 +292,21 @@ CLASS_A = tuple(
              'and the callee reads [ebp+8], which is the caller own saved '
              'esi. If this frame ever reads as a tail jump the seam has '
              'silently changed character and 5d Class A row 1 is stale.'},
+        # SEATED, run linkfull lane DPAD1: the next two rows' frames build
+        # from their tools/hostgen.py copies (port/slice_w28_dpad1.txt), whose
+        # REG_RIDE_ARG rows pass the argument the ROM leaves in r1, so each row
+        # names that copy as `seated` and reports RETIRED by name on every
+        # build. The raw TU coming back on a slice re-arms the row.
         {'frame': 'func_ov007_020b3360', 'callee': 'func_ov007_020b3c54',
          'tu': 'src/func_ov007_020b3360.c',
+         'seated': 'host-src/src/func_ov007_020b3360.cpp',
          'note':
              'b3360 pushes nothing and b3c54 reads its SECOND parameter on '
              'the default arm of a 24-way jump table. The damage is a STORE '
              'of garbage into the object rather than a fault.'},
         {'frame': 'func_ov007_020b3c54', 'callee': 'func_ov007_020b3d30',
          'tu': 'src/func_ov007_020b3c54.c',
+         'seated': 'host-src/src/func_ov007_020b3c54.cpp',
          'note':
              'b3c54 pushes one argument and b3d30 reads two. The second is '
              'used as an array subscript in seven places and the first of '
@@ -795,6 +808,14 @@ def is_decomp_source(rel):
                                records that counting it as linked is CORRECT.
       anything else            a host copy, which is what a seat produces
 
+    ONE DECLARED EXCEPTION, checked before this function is asked (run
+    linkfull, lane DPAD1). A seat can also land INSIDE hostgen: a REG_RIDE_ARG
+    row passes the argument the frame used to drop, and the TU builds from its
+    host-src copy. The row then names that copy in `seated`, and a build that
+    compiles exactly that copy retires the row by name. The declaration is the
+    evidence a typo cannot supply: a hostgen rewrite the row does not name, or
+    a `seated` path the build did not compile, is still MISDECLARED here.
+
     WHY NOT THE COUNT PIN THE REVIEW SUGGESTED. Pinning the expected assertion
     count, or asserting zero retirements on a clean tree, closes the same hole
     and this lane was briefed against both: either one makes the ae558 seat
@@ -1048,6 +1069,20 @@ def check_map(root, rows, mp, objsrc, out, report=False):
             results.append((row, 'skipped', why))
             continue
         elif src.lower() != row['tu'].replace('\\', '/').lower():
+            seated = (row.get('seated') or '').replace('\\', '/').lower()
+            srcn = src.replace('\\', '/').lower()
+            if seated and (srcn == seated or srcn.endswith('/' + seated)):
+                # A DECLARED SEAT (run linkfull, lane DPAD1). The build compiles
+                # the hostgen copy the row itself names as its seat, so the seam
+                # this row classified is not what ships. It retires by name like
+                # a displacement. A `seated` path the build did NOT compile
+                # falls through to the checks below and stays MISDECLARED.
+                results.append((row, 'retired',
+                                '%s is SEATED: compiled from %s (object %s), '
+                                'not %s'
+                                % (row['frame'], src, fobj.split(':')[-1],
+                                   row['tu'])))
+                continue
             if is_decomp_source(src):
                 # NOT A SEAT LANDING. The build is still compiling decomp
                 # source for this frame, so nothing was displaced and the
@@ -2110,6 +2145,24 @@ def selftest():
         ])
         rc, out = go([m])
         case('a hostgen rewrite is misdeclared, never retired', 1, rc, out,
+             wants=['MISDECLARED ROW', 'host-src'],
+             unwanted=['RETIRED'])
+        #     ...UNLESS the row declares that exact copy as its seat (lane
+        #     DPAD1's REG_RIDE_ARG rows): then it retires by name, and the
+        #     other row keeps asserting.
+        rc, out = go([m], rows=(dict(JROW,
+                                     seated='host-src/src/veneer_frame.cpp'),
+                                CROW))
+        case('a declared hostgen seat retires by name', 0, rc, out,
+             wants=['RETIRED 1', 'veneer_frame is SEATED', 'host-src',
+                    'forms OK'],
+             unwanted=['MISDECLARED'])
+        #     ...and a `seated` naming a copy the build did NOT compile is
+        #     still a misdeclaration, so the key cannot disarm a row either.
+        rc, out = go([m], rows=(dict(JROW,
+                                     seated='host-src/src/veneer_other.cpp'),
+                                CROW))
+        case('a seated path the build did not compile fails', 1, rc, out,
              wants=['MISDECLARED ROW', 'host-src'],
              unwanted=['RETIRED'])
         _fabninja(bd, [
