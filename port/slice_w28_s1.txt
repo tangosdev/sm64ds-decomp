@@ -1,0 +1,25 @@
+# slice_w28_s1 -- run linkfull wave 27, lane S1: THE FIRST MAIN -> PORT FILE SYNC,
+# the ClosestPlayer receiver family.
+#
+# Each src file below was host-copied because its matched source could not run
+# on the host as the port's tree spelled it: a zero-argument ClosestPlayer
+# declaration, a TU-local dActor_c shadow, or a stale shared-window callee name.
+# main had fixed the first three by re-spelling (#2726, #2730, #2882) and the
+# other two already carried what their host reason said was missing. Each file
+# is main's blob taken by path (the path confirmed by ROM address on main) and
+# gated: mwccarm 2004/b56 object identical to the port's previous text,
+# match.py 2004/b56 strict MATCHING, linkcheck VERIFIED blind 0
+# (runs/linkfull/out/S1/). The host bodies they replace are retired in
+# port/unmatched/Actor_ClosestPlayerWrappers.cpp and
+# port/unmatched/Book_WindowAndReceiverFixes.cpp.
+#
+# The two arm9 members define only MSVC's decorated names, so the flat ROM names
+# their extern "C" callers spell come from REVERSE faces in port/faces_sync.txt
+# (DistToCPlayer's row flipped F -> R, FarthestPlayer's row new). The Fix12i
+# IsPlayerInRange overload and the two ov020 bodies are extern "C" definitions
+# of their own flat names and need no face.
+src/_ZN8dActor_c13DistToCPlayerEv.cpp
+src/_ZN8dActor_c14FarthestPlayerEv.cpp
+src/_ZN8dActor_c15IsPlayerInRangeE5Fix12IiES1_S1_i.cpp
+src/func_ov020_02111fc4.cpp
+src/func_ov020_02111418.cpp
