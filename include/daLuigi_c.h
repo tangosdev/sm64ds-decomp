@@ -32,7 +32,18 @@
 #include "TextureSequence.h"
 #include "math/Matrix.h"
 
-struct MirrorLuigiState;
+/* One reflection state: two callbacks called as members with the player,
+ * `enter` once when the state is set and `execute` every frame from Behavior.
+ * The one table in the ROM (ov055 0x02111a94, copied to 0x02111b70 by the
+ * static initializer) pairs 0x021112bc (enter, returns 1) with 0x02111288
+ * (execute, mirrors the player's position and facing). The callbacks' class is
+ * not recovered; a class without virtuals is what reproduces their calls. */
+struct daLuigiStateHost;
+typedef int (daLuigiStateHost::*daLuigiStateFn)(char *player);
+struct daLuigiState {
+    daLuigiStateFn enter;
+    daLuigiStateFn execute;
+};
 
 struct daLuigi_c : dActor_c {
     u8 pad_0d0[0x4];
@@ -40,10 +51,13 @@ struct daLuigi_c : dActor_c {
     Model mModel;                             /* 0x138 */
     ShadowModel mShadowModel;                 /* 0x188 */
     TextureSequence mTextureSequences[2];     /* 0x1b0 */
-    MirrorLuigiState *mState;                 /* 0x1d8 */
+    daLuigiState *mState;                     /* 0x1d8 */
     Matrix4x3 mShadowMatrix;                  /* 0x1dc */
 
-    virtual ~daLuigi_c();                     /* slots 16, 17 */
+    /* Inline and empty: the compiler writes the member teardown, emits D1
+       then D0 in the cartridge's order, and InitResources becomes the key
+       function that places the vtable in src/actors/daLuigi_c.cpp. */
+    virtual ~daLuigi_c() {}                   /* slots 16, 17 */
     virtual s32 InitResources();              /* slot  0 */
     virtual s32 CleanupResources();           /* slot  3 */
     virtual s32 Behavior();                   /* slot  6 */
