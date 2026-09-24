@@ -149,31 +149,21 @@ u32 __aeabi_uidiv(u32 a, u32 b);
 /* TUBUILD CONFLICT -- alternate declaration of data_ov100_02148608, from the legacy file for _ZN9daBtfly_c13InitResourcesEv, NOT applied: extern SFP data_ov100_02148608; */
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 0 -- _ZN9daBtfly_cD1Ev, 0x02140d80, size 0x58 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daBtfly_cD1Ev
 daBtfly_c::~daBtfly_c()
 {
 }
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 1 -- _ZN9daBtfly_cD0Ev, 0x02140dd8, size 0x6c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daBtfly_cD0Ev
 /* (no separate definition: the single ~daBtfly_c() below emits the D0 and D1
  * variants together -- a hand-mangled D0 next to a real destructor is the
  * known mwccarm ICE, ELFgen.c:483.) */
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- _ZN9daBtfly_c6State7Ev, 0x02140e44, size 0x258 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daBtfly_c6State7Ev
-/* recovered: shared common types */
 void daBtfly_c::State7()
 {
     char* c = (char*)this;
     void* player;
-    int r5;
+    int hasContact;
     int v;
 
     if (*(int*)(c + 0x3e8) > 0x78) {
@@ -202,9 +192,9 @@ void daBtfly_c::State7()
 
     {
         int noId = (*(int*)(c + 0x3b8) == 0);
-        r5 = (noId == 0);
+        hasContact = (noId == 0);
     }
-    if (r5 == 0) {
+    if (hasContact == 0) {
         if (_ZNK10dBgCh_Actr8IsOnWallEv(c + 0x1d8) == 0) {
             if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x1d8) == 0) {
                 if (func_02035638((u8*)(c + 0x1d8)) == 0) {
@@ -215,7 +205,7 @@ void daBtfly_c::State7()
         }
     }
 
-    if (r5 != 0) {
+    if (hasContact != 0) {
         void* a = _ZN8dActor_c10FindWithIDEj(*(unsigned int*)(c + 0x3b8));
         if (a != 0) {
             int isPlayer = (*(u16*)((char*)a + 0xc) == 0xbf);
@@ -244,12 +234,7 @@ cylinder_only:
     _ZN5dCc_c6UpdateEv(c + 0x394);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- _ZN9daBtfly_c6State6Ev, 0x0214109c, size 0xe0 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daBtfly_c6State6Ev
-/* recovered: shared common types, declarations from a shared header */
-/* recovered: shared common types */
 void daBtfly_c::State6()
 {
     char *c = (char*)this;
@@ -274,12 +259,7 @@ void daBtfly_c::State6()
     *(int*)(c+0x3e4) = 7;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- _ZN9daBtfly_c6State5Ev, 0x0214117c, size 0x15c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daBtfly_c6State5Ev
-/* recovered: shared common types, declarations from a shared header */
-/* recovered: shared common types */
 void daBtfly_c::State5()
 {
     char* c = (char*)this;
@@ -323,11 +303,7 @@ void daBtfly_c::State5()
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- _ZN9daBtfly_c6State4Ev, 0x021412d8, size 0x198 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daBtfly_c6State4Ev
-/* recovered: shared common types */
 void daBtfly_c::State4()
 {
     struct StateRotation { u16 w[3]; };
@@ -377,9 +353,6 @@ void daBtfly_c::State4()
     *(int*)(sl + 0x3e4) = 5;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- _ZN9daBtfly_c6State3Ev, 0x02141470, size 0x14c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daBtfly_c6State3Ev
 void daBtfly_c::State3()
 {
@@ -415,12 +388,8 @@ void daBtfly_c::State3()
     *(int *)(c + 0x3e4) = 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- _ZN9daBtfly_c6State2Ev, 0x021415bc, size 0x244 */
-/* -------------------------------------------------------------------------- */
 #pragma opt_common_subs off   /* carried from the legacy _ZN9daBtfly_c6State2Ev source */
 // @symbol _ZN9daBtfly_c6State2Ev
-/* recovered: shared common types */
 void daBtfly_c::State2()
 {
     char *c = (char*)this;
@@ -493,9 +462,6 @@ void daBtfly_c::State2()
 
 #pragma opt_common_subs on
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 8 -- _ZN9daBtfly_c6State1Ev, 0x02141800, size 0x48 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daBtfly_c6State1Ev
 void daBtfly_c::State1(){
     char* c = (char*)this;
@@ -505,9 +471,6 @@ void daBtfly_c::State1(){
     *(short*)(c+0x94) = Vec3_HorzAngle(c+0x5c, (char*)p+0x5c);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 9 -- _ZN9daBtfly_c6State0Ev, 0x02141848, size 0x140 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daBtfly_c6State0Ev
 void daBtfly_c::State0(){
   char* c = (char*)this;
@@ -537,9 +500,6 @@ void daBtfly_c::State0(){
   *(int*)(c+0x3e4) = 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 10 -- _ZN9daBtfly_c16CleanupResourcesEv, 0x02141988, size 0x48 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daBtfly_c16CleanupResourcesEv
 /* daBtfly_c::CleanupResources -- vtable slot 3. Releases the four shared files
  * the class holds -- three of its own in ov100 and one shared with the other
@@ -553,9 +513,6 @@ int daBtfly_c::CleanupResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 11 -- _ZN9daBtfly_c16OnPendingDestroyEv, 0x021419d0, size 0x4 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daBtfly_c16OnPendingDestroyEv
 /* daBtfly_c::OnPendingDestroy -- vtable slot 12. The ROM body is empty: the
  * override exists only to occupy the slot. */
@@ -563,11 +520,7 @@ void daBtfly_c::OnPendingDestroy()
 {
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 12 -- _ZN9daBtfly_c6RenderEv, 0x021419d4, size 0x6c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daBtfly_c6RenderEv
-/* recovered: named members + shared header, real C++ method */
 int daBtfly_c::Render()
 {
   if(mState == 4) return 1;
@@ -579,9 +532,6 @@ int daBtfly_c::Render()
   return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 13 -- _ZN9daBtfly_c8BehaviorEv, 0x02141a40, size 0x22c */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daBtfly_c8BehaviorEv
 int daBtfly_c::Behavior()
 {
@@ -637,11 +587,7 @@ int daBtfly_c::Behavior()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 14 -- _ZN9daBtfly_c13InitResourcesEv, 0x02141c6c, size 0x238 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN9daBtfly_c13InitResourcesEv
-/* recovered: named members + shared header, real C++ method */
 int daBtfly_c::InitResources()
 {
     u8* c = (u8*)((void*)this);

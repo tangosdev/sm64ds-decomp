@@ -94,9 +94,6 @@ extern void _ZN5dCc_c6UpdateEv(void *thiz);
 extern void _ZN8dCcPos_c4InitERK7Vector35Fix12IiES4_jj(void *self, struct Vec3 *pos, int fix, int t, unsigned int a, unsigned int b);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- _ZN19daObjFlamethrower_c13InitResourcesEv, 0x02136d60, size 0x174 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN19daObjFlamethrower_c13InitResourcesEv
 int daObjFlamethrower_c::InitResources()
 {
@@ -157,9 +154,6 @@ int daObjFlamethrower_c::InitResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- _ZN19daObjFlamethrower_c8BehaviorEv, 0x021368f0, size 0x470 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN19daObjFlamethrower_c8BehaviorEv
 int daObjFlamethrower_c::Behavior()
 {

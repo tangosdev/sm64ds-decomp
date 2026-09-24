@@ -49,8 +49,6 @@ struct BrqSpawnInfo {
 typedef char BrqSpawnInfo_size_must_be_0x1c[
     sizeof(BrqSpawnInfo) == 0x1c ? 1 : -1];
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol daBrq_c_classInit
 extern "C" daBrq_c *daBrq_c_classInit()
 {
@@ -68,8 +66,6 @@ extern "C" BrqSpawnInfo g_profile_BIRIKYU = {
     0x00a28000
 };
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 /* recovered: named members + shared header, real C++ method.
  * SetRanges / dCcAcPos_c::Init / dBgCh_Actr::Init stay mangled (Fix12 by
  * value, wall 6az). */
@@ -139,8 +135,6 @@ int daBrq_c::InitResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daBrq_c8BehaviorEv
 int daBrq_c::Behavior()
 {
@@ -153,9 +147,6 @@ int daBrq_c::Behavior()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
-/* recovered: named members + shared header, real C++ method */
 // @symbol _ZN7daBrq_c6RenderEv
 int daBrq_c::Render()
 {
@@ -170,15 +161,11 @@ int daBrq_c::Render()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daBrq_c16OnPendingDestroyEv
 void daBrq_c::OnPendingDestroy()
 {
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 #include "SharedFilePtr.h"
 
 extern SharedFilePtr data_ov070_021235fc;
@@ -202,8 +189,6 @@ int daBrq_c::CleanupResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 extern BrqStateHandlers data_ov070_02123668[];
 // @symbol _ZN7daBrq_c8SetStateEi
 void daBrq_c::SetState(s32 state)
@@ -212,8 +197,6 @@ void daBrq_c::SetState(s32 state)
     EnterState();
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daBrq_c10EnterStateEv
 void daBrq_c::EnterState()
 {
@@ -221,8 +204,6 @@ void daBrq_c::EnterState()
     (this->**handler)();
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daBrq_c11UpdateStateEv
 void daBrq_c::UpdateState()
 {
@@ -230,8 +211,6 @@ void daBrq_c::UpdateState()
     (this->**handler)();
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 extern "C" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
     ModelAnim *model, BCA_File *file, int flags, int speed, u32 startFrame);
 extern int data_ov070_0212360c[];
@@ -246,8 +225,6 @@ s32 daBrq_c::EnterCooldownState()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 /* (Animation: real header type in scope) */
 
 extern "C" unsigned char DecIfAbove0_Byte(unsigned char *p);
@@ -263,8 +240,6 @@ s32 daBrq_c::UpdateCooldownState()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 typedef int Fix12i;
 struct BCA_File; struct BTP_File; struct BTA_File;
 /* (ModelAnim/TextureSequence/TextureTransformer: real header types in scope) */
@@ -303,9 +278,6 @@ s32 daBrq_c::EnterActiveState()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
-/* recovered: real class fields and member state handler */
 void ApproachLinear(s32 &value, s32 target, s32 step);
 extern "C" void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 namespace Sound {
@@ -378,9 +350,6 @@ s32 daBrq_c::UpdateActiveState()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
-/* recovered: real class fields and member state handler */
 namespace Sound {
 void PlayBank0(u32 soundId, const Vector3 &pos);
 }
@@ -411,8 +380,6 @@ s32 daBrq_c::EnterDefeatedState()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 /* The ROM calls the interworking veneer at 0x02038420, not the direct
  * dBgCh_Actr::UpdateDiscreteNoLava body at 0x02037024. */
 extern "C" void dBgCh_Actr_UpdateDiscreteNoLava_veneer(dBgCh_Actr *collision);
@@ -436,8 +403,6 @@ done:
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 #include "dBgCh_Gnd.h"
 extern "C" void Matrix4x3_FromRotationXYZExt(
     Matrix4x3 *matrix, s16 x, s16 y, s16 z);
@@ -492,8 +457,6 @@ void daBrq_c::UpdateModelTransform()
         this, &mShadowModel, &mMat4x3, 0x5a000, g, 0xf);
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 #include "Player.h"
 extern "C" short Vec3_HorzAngle(const Vector3 *from, const Vector3 *to);
 
@@ -535,10 +498,6 @@ foundPlayer:
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 /* The inline destructor and InitResources key function emit the retail D1/D0
  * group without a retained D2 or forcing helper. */
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */

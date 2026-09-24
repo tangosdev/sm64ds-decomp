@@ -59,12 +59,7 @@ extern int RandomIntInternal(int *seed);
 extern int data_0209e650;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 9 -- _ZN11daDonketu_c13InitResourcesEv, 0x02117424, size 0x20 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11daDonketu_c13InitResourcesEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-/* recovered: named members + shared header, real C++ method */
 int daDonketu_c::InitResources()
 {
     mBigBullyID = 0;
@@ -72,9 +67,6 @@ int daDonketu_c::InitResources()
     InitResourcesCommon();
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 8 -- _ZN11daDonketu_c8BehaviorEv, 0x02117310, size 0x114 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11daDonketu_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method
  *
@@ -142,9 +134,6 @@ int daDonketu_c::Behavior()
     return BehaviorCommon();
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- _ZN11daDonketu_c16UpdateDeathStateEv, 0x02117220, size 0xf0 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11daDonketu_c16UpdateDeathStateEv
 /* The state-4 half of the same drop Behavior does for the invincible-char kill.
  * func_ov064_0211616c is the shared daOts_c death-animation step: it returns 0
@@ -181,9 +170,6 @@ void daDonketu_c::UpdateDeathState()
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- _ZN11daDonketu_c14UpdateRunStateEv, 0x021171b0, size 0x70 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11daDonketu_c14UpdateRunStateEv
 /* Below ten ticks the bully stands still and plays the wind-up through the
  * shared daOts_c stepper; from ten on it charges at 0xf000 and the cycle timer
@@ -211,9 +197,6 @@ int daDonketu_c::UpdateRunState()
     return value;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- _ZN11daDonketu_c13PlayStepSoundEv, 0x02117168, size 0x48 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11daDonketu_c13PlayStepSoundEv
 /* Frames 4 and 7 of the walk cycle are the two footfalls. */
 void daDonketu_c::PlayStepSound()
@@ -225,27 +208,18 @@ void daDonketu_c::PlayStepSound()
     func_0201267c(0xca, (const Vector3 *)&mCamSpacePosX);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- _ZN11daDonketu_c12PlayHitSoundEv, 0x02117154, size 0x14 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11daDonketu_c12PlayHitSoundEv
 void daDonketu_c::PlayHitSound()
 {
     func_0201267c(0xcb, (const Vector3 *)&mCamSpacePosX);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- _ZN11daDonketu_c17PlayShellHitSoundEv, 0x02117140, size 0x14 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11daDonketu_c17PlayShellHitSoundEv
 void daDonketu_c::PlayShellHitSound()
 {
     func_0201267c(0xc9, (const Vector3 *)&mCamSpacePosX);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- _ZN11daDonketu_c14PlayDeathSoundEv, 0x0211712c, size 0x14 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN11daDonketu_c14PlayDeathSoundEv
 void daDonketu_c::PlayDeathSound()
 {

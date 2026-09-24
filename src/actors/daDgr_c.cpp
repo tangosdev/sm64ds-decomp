@@ -305,7 +305,7 @@ s32 daDgr_c::CleanupResources() {
  * already-named members and skips auto-named func_ovNN_ADDR shards silently, so
  * without this line tiers scoring would miss this member. The other two
  * auto-named shards got theirs because they were carried in RAW. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 void func_ov025_02111344(char *t)
 {
     daDgr_c *self = (daDgr_c *)t;

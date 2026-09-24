@@ -45,8 +45,6 @@ typedef char daKrpaSpawnInfo_size_must_be_0x1c[
  * - func_0201267c spawn SFX 0x105 at mCamSpacePosX (func_ov070_0212156c).
  */
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol daKrpa_c_classInit
 /* `return new daKrpa_c()` MATCHES (size 0x50); the leaf unsigned-long
  * operator new forwards `_ZN7fBase_cnwEj`. Historical aliases: daKrpa_c_Spawn
@@ -72,8 +70,6 @@ extern "C" daKrpaSpawnInfo g_profile_KERONPA = {
     0x00ed8000
 };
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 extern "C" void func_ov070_02121ae0(
     daKrpaFrameController *controller, u32 *frames, u32 count, u32 mode)
 {
@@ -83,8 +79,6 @@ extern "C" void func_ov070_02121ae0(
     controller->cursor = 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 extern "C" u32 func_ov070_02121a64(daKrpaFrameController *controller)
 {
     switch (controller->mode) {
@@ -100,8 +94,6 @@ extern "C" u32 func_ov070_02121a64(daKrpaFrameController *controller)
     return controller->frames[controller->cursor];
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN8daKrpa_c13InitResourcesEv
 /* The Fix12-by-value Init methods are typed ABI seams: ordinary method calls
  * home their class-typed values and do not reproduce the retail callers. */
@@ -156,8 +148,6 @@ int daKrpa_c::InitResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN8daKrpa_c8BehaviorEv
 extern "C" {
 extern void func_ov070_02121310(daKrpa_c *self);
@@ -171,8 +161,6 @@ int daKrpa_c::Behavior()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN8daKrpa_c6RenderEv
 int daKrpa_c::Render()
 {
@@ -180,16 +168,12 @@ int daKrpa_c::Render()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN8daKrpa_c16OnPendingDestroyEv
 
 void daKrpa_c::OnPendingDestroy()
 {
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN8daKrpa_c16CleanupResourcesEv
 
 int daKrpa_c::CleanupResources()
@@ -198,8 +182,6 @@ int daKrpa_c::CleanupResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 extern "C" {  /* Unresolved func_ names retain their current C ABI spelling. */
 extern daKrpaState data_ov070_021236ac[];
 extern void func_ov070_02121848(daKrpa_c *self);
@@ -209,24 +191,18 @@ void func_ov070_02121880(daKrpa_c *self, int state) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 extern "C" void func_ov070_02121848(daKrpa_c *self)
 {
     daKrpaStateMethod *method = &self->mStateMethods->init;
     (self->**method)();
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 extern "C" void func_ov070_0212180c(daKrpa_c *self)
 {
     daKrpaStateMethod *method = &self->mStateMethods->behavior;
     (self->**method)();
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 /* SetAnim is another proven Fix12-by-value caller seam. */
 extern "C" {
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
@@ -247,8 +223,6 @@ int func_ov070_021217ac(daKrpa_c *self) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 extern "C" {
 extern u8 DecIfAbove0_Byte(u8 *value);
 extern void func_ov070_02121298(daKrpa_c *self);
@@ -276,8 +250,6 @@ int func_ov070_02121710(daKrpa_c *self) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 extern "C" {
 int func_ov070_021216b8(daKrpa_c *self) {
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
@@ -290,8 +262,6 @@ int func_ov070_021216b8(daKrpa_c *self) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 extern "C" {
 extern short data_02082214[];
 void func_0201267c(u32 soundID, const Vector3 *pos);
@@ -329,8 +299,6 @@ int func_ov070_0212156c(daKrpa_c *self) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 extern "C" int func_ov070_02121548(daKrpa_c *self)
 {
     self->mdCcAcPos_c.Clear();
@@ -338,8 +306,6 @@ extern "C" int func_ov070_02121548(daKrpa_c *self)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 extern "C" int func_ov070_021214f8(daKrpa_c *self)
 {
     int flags = self->mFlags;
@@ -354,8 +320,6 @@ extern "C" int func_ov070_021214f8(daKrpa_c *self)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 /* Particle::System::NewSimple is not yet declared by its shared header; retain
  * this typed ABI import without guessing the unresolved state's source name. */
 namespace Sound { void PlayBank0(u32 soundID, const Vector3 &pos); }
@@ -384,8 +348,6 @@ extern "C" int func_ov070_02121438(daKrpa_c *self)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 /* The collision update veneer is retained because it is the retail call
  * destination; the rest are ordinary real class calls. */
 extern "C" {
@@ -406,8 +368,6 @@ end:
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 /* DropShadowRadHeight is a Fix12-by-value caller seam for the same codegen
  * reason as the two Init imports above. */
 extern "C" void Matrix4x3_FromRotationXYZExt(void *m, int x, int y, int z);
@@ -435,8 +395,6 @@ extern "C" void func_ov070_02121310(daKrpa_c *self)
         self->mScaleX * 0x46, self->mGroundDistance, 0xf);
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 int ApproachLinear(short &value, short target, short step);
 extern "C" {
 extern int Vec3_Dist(void* a, void* b);
@@ -458,8 +416,6 @@ extern "C" void func_ov070_02121298(daKrpa_c *self) {
         Vec3_HorzAngle(&self->mPosX, &player->mPosX), 0x800);
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 extern "C" void func_ov070_021211c4(daKrpa_c *self)
 {
     u32 id = self->mdCcAcPos_c.otherOwner;
@@ -481,8 +437,6 @@ extern "C" void func_ov070_021211c4(daKrpa_c *self)
     func_ov070_02121880(self, 3);
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN8daKrpa_c13OnYoshiTryEatEv
 
 int daKrpa_c::OnYoshiTryEat()
@@ -490,15 +444,11 @@ int daKrpa_c::OnYoshiTryEat()
     return 5;
 }
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN8daKrpa_cD0Ev
 
 /* No separate body: the inline class destructor plus vtable instantiation
  * makes mwcc emit the retail deleting variant after D1. */
 
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN8daKrpa_cD1Ev
 
 /* No separate body: the inline class destructor emits this complete variant

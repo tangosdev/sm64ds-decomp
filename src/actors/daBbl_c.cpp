@@ -128,9 +128,6 @@ extern char data_ov064_0211c7b8[];
 extern char data_ov064_0211c7c8[];
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 13 -- daBbl_c_classInit, 0x02118b10, size 0x40 */
-/* -------------------------------------------------------------------------- */
 // @symbol daBbl_c_classInit
 /* Reconstructed source-style name: the cartridge proves daBbl_c through RTTI,
  * allocation size and vtable identity, and the BUBBLE profile at 0x0211bec8
@@ -150,9 +147,6 @@ extern "C" daBbl_c *daBbl_c_classInit()
     return new daBbl_c();
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 12 -- _ZN7daBbl_c13OnYoshiTryEatEv, 0x02118b08, size 0x8 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daBbl_c13OnYoshiTryEatEv
 /* Slot 18. Yoshi is told 5 -- the reply a thing made of fire gives. */
 s32 daBbl_c::OnYoshiTryEat()
@@ -160,9 +154,6 @@ s32 daBbl_c::OnYoshiTryEat()
     return 5;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 11 -- _ZN7daBbl_c13InitResourcesEv, 0x021189d8, size 0x130 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daBbl_c13InitResourcesEv
 /* Slot 0. The spawn parameter's low bit picks the variant, inverted: bit set
  * means the fixed flame, bit clear means the jumping bubble.
@@ -201,9 +192,6 @@ int daBbl_c::InitResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 10 -- _ZN7daBbl_c8BehaviorEv, 0x02118850, size 0x188 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daBbl_c8BehaviorEv
 /* Slot 6. Two early outs come first, on the two dEnemyBase_c flags that mean
  * the enemy is being held or is already dying: 0x20000 still runs the state
@@ -269,9 +257,6 @@ int daBbl_c::Behavior()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 9 -- _ZN7daBbl_c6RenderEv, 0x02118848, size 0x8 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daBbl_c6RenderEv
 /* Slot 9. `return 1` and nothing else -- the whole ROM body is
  * `mov r0,#1; bx lr`. A lava bubble has no model of its own; its two particle
@@ -281,9 +266,6 @@ int daBbl_c::Render()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 8 -- _ZN7daBbl_c16OnPendingDestroyEv, 0x02118844, size 0x4 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daBbl_c16OnPendingDestroyEv
 /* Slot 12. Empty -- the ROM body is a single `bx lr`. The override exists to
  * suppress what the base does on pending destroy, not to do anything itself. */
@@ -291,9 +273,6 @@ void daBbl_c::OnPendingDestroy()
 {
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- _ZN7daBbl_c16CleanupResourcesEv, 0x0211883c, size 0x8 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN7daBbl_c16CleanupResourcesEv
 /* Slot 3. `return 1` with no release calls, which is the finding rather than a
  * stub: every other class in this overlay releases at least one SharedFilePtr
@@ -304,9 +283,6 @@ int daBbl_c::CleanupResources()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- func_ov064_021187ec, 0x021187ec, size 0x50 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov064_021187ec
 /* The state transition: adopt a table and run its enter hook once. Behavior
  * runs the execute hook of whatever table is current. */
@@ -320,9 +296,6 @@ extern "C" int func_ov064_021187ec(daBbl_c *self, daBbl_c::State *state)
     return (self->*(entered->mEnter))();
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- func_ov064_021187d0, 0x021187d0, size 0x1c */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov064_021187d0
 /* Enter hook of the fountain's waiting state: stop dead and wait 180 frames. */
 extern "C" int func_ov064_021187d0(daBbl_c *self)
@@ -332,9 +305,6 @@ extern "C" int func_ov064_021187d0(daBbl_c *self)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- func_ov064_02118760, 0x02118760, size 0x70 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov064_02118760
 /* Execute hook of the waiting state: once the 180 frames are up, spawn actor
  * 0xd6 -- the bubble that actually jumps -- 480.0 above this one, and start
@@ -369,9 +339,6 @@ extern "C" int func_ov064_02118760(daBbl_c *self)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- func_ov064_0211873c, 0x0211873c, size 0x24 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov064_0211873c
 /* Enter hook of the jumping state: no horizontal drift, 20.0 straight up, and
  * a 135-frame fuse. */
@@ -383,9 +350,6 @@ extern "C" int func_ov064_0211873c(daBbl_c *self)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- func_ov064_02118644, 0x02118644, size 0xf8 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov064_02118644
 /* Execute hook of the jumping state. Every landing bounces: the first gives
  * the bubble a little forward drift and a fixed hop, and each one after that

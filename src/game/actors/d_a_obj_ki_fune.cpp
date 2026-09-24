@@ -93,11 +93,7 @@ extern void* _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Ve
 extern unsigned char data_0209f220;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- _ZN14daObjKi_Fune_c13InitResourcesEv, 0x0211283c, size 0x164 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN14daObjKi_Fune_c13InitResourcesEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
 int daObjKi_Fune_c::InitResources()
 {
     void* sp8[2];
@@ -134,11 +130,7 @@ ret1:
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- _ZN14daObjKi_Fune_c8BehaviorEv, 0x0211276c, size 0xd0 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN14daObjKi_Fune_c8BehaviorEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
 int daObjKi_Fune_c::Behavior()
 {
   if(((dBgW *)((char*)&mMeshCollider))->IsEnabled() == 0){
@@ -157,21 +149,13 @@ int daObjKi_Fune_c::Behavior()
   return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- _ZN14daObjKi_Fune_c6RenderEv, 0x02112744, size 0x28 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN14daObjKi_Fune_c6RenderEv
-/* recovered: named members + shared header, real C++ method */
 int daObjKi_Fune_c::Render()
 {
  Base *b = &((Derived *)this)->base; b->m(0); return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- _ZN14daObjKi_Fune_c16CleanupResourcesEv, 0x021126f0, size 0x54 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN14daObjKi_Fune_c16CleanupResourcesEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
 int daObjKi_Fune_c::CleanupResources()
 {
   if(((dBgW *)((char*)&mMeshCollider))->IsEnabled())
@@ -181,11 +165,8 @@ int daObjKi_Fune_c::CleanupResources()
   return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- func_ov016_021126a8, 0x021126a8, size 0x48 */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov016_021126a8
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 void func_ov016_021126a8(char *t)
 {
     Matrix4x3_FromRotationXYZExt(t + 0xf0, *(short *)(t + 0x8c), *(short *)(t + 0x8e), *(short *)(t + 0x90));
