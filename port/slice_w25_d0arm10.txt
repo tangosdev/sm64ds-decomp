@@ -1,0 +1,47 @@
+# slice_w25_d0arm10 -- run linkfull, lane D0ARM10, THE REFUSED D0 ROWS.
+#
+# Each file below is a per-function src D0 TU that gained the Model family's
+# `#ifdef _MSC_VER` arm by hand (the campaign generator had refused it on a
+# shape check, not for behaviour), gated the campaign's way per file: mwccarm
+# 2004/b56 object identical before/after, match.py 2004/b56 strict MATCHING,
+# linkcheck VERIFIED blind 0, and after the build d0arm_check.py on the MSVC
+# object (defines only the flat D0 name, no indirect call, calls exactly the
+# D1 body then the D row's own deallocation with the row's heap).
+#
+# THESE HEADERS DECLARE THE DESTRUCTOR `virtual ~Cls();` UNDER MSVC TOO (no
+# Destructor1 / Destructor0 house pattern), so the D1 file's object defines
+# ??1Cls@@UAE@XZ, not QAE. The arm's QUALIFIED call, thiz->Cls::~Cls(), is a
+# direct call to that one host body either way; the campaign generator
+# looked for the QAE spelling only and refused every such row.
+#
+# port/faces_sync.txt carries each retired D row with a RETIRED note naming
+# the lane, the date and this file.
+src/_ZN10dBgCh_ActrD0Ev.cpp
+src/_ZN10dBgW_KcMbgD0Ev.cpp
+src/_ZN12dBgCh_SphCrrD0Ev.cpp
+src/_ZN14dBgW_KcMbgSclYD0Ev.cpp
+src/_ZN4dBgWD0Ev.cpp
+src/_ZN5dBgChD0Ev.cpp
+src/_ZN5dBgPiD0Ev.cpp
+src/_ZN7dBgW_KcD0Ev.cpp
+src/_ZN8dM3dGSphD0Ev.cpp
+src/_ZN9dBgCh_GndD0Ev.cpp
+src/_ZN9dBgCh_LinD0Ev.cpp
+src/_ZN13ExpandingHeapD0Ev.cpp
+src/_ZN4HeapD0Ev.cpp
+src/_ZN9SolidHeapD0Ev.cpp
+src/_ZN9AnimationD0Ev.cpp
+src/_ZN7ClipperD0Ev.cpp
+src/_ZN15MaterialChangerD0Ev.cpp
+src/game/actors/daObjTh_Fall_Block_c/_ZN12FallBlockBbhD0Ev.cpp
+src/_ZN6CameraD0Ev.cpp
+src/_ZN6ShipUpD0Ev.cpp
+src/_ZN13QuestionBlockD0Ev.cpp
+src/_ZN8daDemo_c13simpleModel_cD0Ev.cpp
+src/_ZN8daDemo_c10anmModel_cD0Ev.cpp
+src/engine/fader/_ZN10FaderColorD0Ev.cpp
+src/_ZN10dFdDummy_cD0Ev.cpp
+src/engine/fader/_ZN15FaderBrightnessD0Ev.cpp
+src/engine/fader/_ZN5FaderD0Ev.cpp
+src/_ZN7dWipe_cD0Ev.cpp
+src/engine/fader/_ZN9FaderWipeD0Ev.cpp
