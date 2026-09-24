@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN11MirrorLuigi8BehaviorEv
+// @symbol _ZN9daLuigi_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "MirrorLuigi.h"
+#include "daLuigi_c.h"
 extern "C" {
 extern int data_0209caa0[];
 extern unsigned char data_0209f250;
@@ -22,7 +22,7 @@ struct Node {
     PMF fn;
 };
 
-int MirrorLuigi::Behavior()
+int daLuigi_c::Behavior()
 {
     int a, b;
     int f;

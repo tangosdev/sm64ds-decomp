@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN11MirrorLuigi6RenderEv
+// @symbol _ZN9daLuigi_c6RenderEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "MirrorLuigi.h"
+#include "daLuigi_c.h"
 struct Mtx { int m[12]; };
 struct Sub {
     virtual void v0();
@@ -28,7 +28,7 @@ void _ZN15TextureSequence6UpdateER15ModelComponents(void* ts, void* mc);
 
 }
 
-int MirrorLuigi::Render()
+int daLuigi_c::Render()
 {
     char* player;
     char* r8res;
@@ -44,7 +44,7 @@ int MirrorLuigi::Render()
     player = data_0209f394[data_0209f250];
     r8res = func_ov002_020e496c(player);
 
-    /* Every offset the cartridge's own ~MirrorLuigi proves is inside one of the two
+    /* Every offset the cartridge's own ~daLuigi_c proves is inside one of the two
        model sub-objects (tools/dtor_members.py): 0x0dc/0x0e8 are the ModelAnim at
        0x0d4 (+0x8 data, +0x14 data.transforms), and 0x140/0x14c/0x154 are the Model
        at 0x138 (+0x8 data, +0x14 data.transforms, +0x1c mat4x3). */

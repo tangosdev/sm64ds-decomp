@@ -1872,7 +1872,7 @@
       ]
     },
     "Matrix4x3_ApplyInPlaceToRotationY": {
-      "src/_ZN11MirrorLuigi13InitResourcesEv.cpp": [
+      "src/_ZN9daLuigi_c13InitResourcesEv.cpp": [
         "param:#2 int"
       ],
       "src/_ZN3Key8BehaviorEv.cpp": [
@@ -2072,7 +2072,7 @@
       ]
     },
     "Matrix4x3_FromTranslation": {
-      "src/_ZN11MirrorLuigi8BehaviorEv.cpp": [
+      "src/_ZN9daLuigi_c8BehaviorEv.cpp": [
         "param:#1 char *"
       ],
       "src/actors/daPkn_c.cpp": [
@@ -8565,7 +8565,7 @@
       ]
     },
     "_ZN15TextureSequence6UpdateER15ModelComponents": {
-      "src/_ZN11MirrorLuigi6RenderEv.cpp": [
+      "src/_ZN9daLuigi_c6RenderEv.cpp": [
         "param:#2 void *"
       ],
       "src/_ZN3MrI6RenderEv.cpp": [
@@ -8600,7 +8600,7 @@
       ]
     },
     "_ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File": {
-      "src/_ZN11MirrorLuigi13InitResourcesEv.cpp": [
+      "src/_ZN9daLuigi_c13InitResourcesEv.cpp": [
         "param:#1 void *",
         "param:#2 void *"
       ],
@@ -8614,7 +8614,7 @@
       ]
     },
     "_ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj": {
-      "src/_ZN11MirrorLuigi13InitResourcesEv.cpp": [
+      "src/_ZN9daLuigi_c13InitResourcesEv.cpp": [
         "param:#5 unsigned int"
       ],
       "src/_ZN12daBgSnmHed_c10InitState0Ev.cpp": [
@@ -11251,7 +11251,7 @@
       "src/_ZN11CrazedCrate13InitResourcesEv.cpp": [
         "param:#1 void *"
       ],
-      "src/_ZN11MirrorLuigi13InitResourcesEv.cpp": [
+      "src/_ZN9daLuigi_c13InitResourcesEv.cpp": [
         "param:#1 void *"
       ],
       "src/_ZN11PowerFlower13InitResourcesEv.cpp": [
@@ -16816,7 +16816,7 @@
       "src/_ZN10StarMarker8BehaviorEv.cpp": [
         "param:#6 unsigned int"
       ],
-      "src/_ZN11MirrorLuigi8BehaviorEv.cpp": [
+      "src/_ZN9daLuigi_c8BehaviorEv.cpp": [
         "param:#1 char *",
         "param:#2 char *",
         "param:#3 char *",
@@ -17815,7 +17815,7 @@
         "param:#1 void *",
         "return:void *"
       ],
-      "src/_ZN11MirrorLuigi13InitResourcesEv.cpp": [
+      "src/_ZN9daLuigi_c13InitResourcesEv.cpp": [
         "param:#1 void *",
         "return:void *"
       ],
@@ -18013,7 +18013,7 @@
       ]
     },
     "_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj": {
-      "src/_ZN11MirrorLuigi13InitResourcesEv.cpp": [
+      "src/_ZN9daLuigi_c13InitResourcesEv.cpp": [
         "param:#5 unsigned int"
       ],
       "src/_ZN12HealingHeart13InitResourcesEv.cpp": [
@@ -18660,7 +18660,7 @@
       "src/_ZN11CrazedCrate13InitResourcesEv.cpp": [
         "return:void"
       ],
-      "src/_ZN11MirrorLuigi13InitResourcesEv.cpp": [
+      "src/_ZN9daLuigi_c13InitResourcesEv.cpp": [
         "return:void"
       ],
       "src/_ZN11PyramidStep13InitResourcesEv.cpp": [
@@ -22149,7 +22149,7 @@
       ]
     },
     "data_0209f318": {
-      "src/_ZN11MirrorLuigi8BehaviorEv.cpp": [
+      "src/_ZN9daLuigi_c8BehaviorEv.cpp": [
         "return:char *"
       ],
       "src/_ZN5Stage16CheckCameraInputEv.cpp": [
@@ -22389,13 +22389,13 @@
       "src/GiveCoins.c": [
         "return:int []"
       ],
-      "src/_ZN11MirrorLuigi13InitResourcesEv.cpp": [
+      "src/_ZN9daLuigi_c13InitResourcesEv.cpp": [
         "return:int []"
       ],
-      "src/_ZN11MirrorLuigi6RenderEv.cpp": [
+      "src/_ZN9daLuigi_c6RenderEv.cpp": [
         "return:char * []"
       ],
-      "src/_ZN11MirrorLuigi8BehaviorEv.cpp": [
+      "src/_ZN9daLuigi_c8BehaviorEv.cpp": [
         "return:char * []"
       ],
       "src/_ZN4Door13InitResourcesEv.c": [
@@ -23345,10 +23345,10 @@
       ]
     },
     "data_020a0e68": {
-      "src/_ZN11MirrorLuigi13InitResourcesEv.cpp": [
+      "src/_ZN9daLuigi_c13InitResourcesEv.cpp": [
         "return:int"
       ],
-      "src/_ZN11MirrorLuigi6RenderEv.cpp": [
+      "src/_ZN9daLuigi_c6RenderEv.cpp": [
         "return:char"
       ],
       "src/_ZN14KnockDownPlank13InitResourcesEv.cpp": [
@@ -25276,7 +25276,7 @@
       ]
     },
     "data_ov002_0210e8d0": {
-      "src/_ZN11MirrorLuigi13InitResourcesEv.cpp": [
+      "src/_ZN9daLuigi_c13InitResourcesEv.cpp": [
         "return:void *"
       ],
       "src/func_ov002_020e5948.c": [
@@ -25329,7 +25329,7 @@
       ]
     },
     "data_ov002_0210eaa0": {
-      "src/_ZN11MirrorLuigi16CleanupResourcesEv.cpp": [
+      "src/_ZN9daLuigi_c16CleanupResourcesEv.cpp": [
         "return:SharedFilePtr"
       ],
       "src/__sinit_ov002_021019d0.c": [
@@ -25352,10 +25352,10 @@
       ]
     },
     "data_ov002_0210eb20": {
-      "src/_ZN11MirrorLuigi13InitResourcesEv.cpp": [
+      "src/_ZN9daLuigi_c13InitResourcesEv.cpp": [
         "return:void *"
       ],
-      "src/_ZN11MirrorLuigi16CleanupResourcesEv.cpp": [
+      "src/_ZN9daLuigi_c16CleanupResourcesEv.cpp": [
         "return:SharedFilePtr"
       ],
       "src/func_ov002_020e5948.c": [
@@ -25406,10 +25406,10 @@
       ]
     },
     "data_ov002_0210ebb8": {
-      "src/_ZN11MirrorLuigi13InitResourcesEv.cpp": [
+      "src/_ZN9daLuigi_c13InitResourcesEv.cpp": [
         "return:void *"
       ],
-      "src/_ZN11MirrorLuigi16CleanupResourcesEv.cpp": [
+      "src/_ZN9daLuigi_c16CleanupResourcesEv.cpp": [
         "return:SharedFilePtr"
       ],
       "src/func_ov002_020e5948.c": [
@@ -25422,7 +25422,7 @@
       ]
     },
     "data_ov002_0210ebd8": {
-      "src/_ZN11MirrorLuigi13InitResourcesEv.cpp": [
+      "src/_ZN9daLuigi_c13InitResourcesEv.cpp": [
         "return:void *"
       ],
       "src/func_ov002_020e5948.c": [
@@ -33805,7 +33805,7 @@
       ]
     },
     "func_02016b24": {
-      "src/_ZN11MirrorLuigi13InitResourcesEv.cpp": [
+      "src/_ZN9daLuigi_c13InitResourcesEv.cpp": [
         "param:#2 int"
       ],
       "src/_ZN16BowserShockwaves13InitResourcesEv.cpp": [
@@ -37287,7 +37287,7 @@
       "include/decl_common.h": [
         "arity:4"
       ],
-      "src/_ZN11MirrorLuigi6RenderEv.cpp": [
+      "src/_ZN9daLuigi_c6RenderEv.cpp": [
         "arity:4"
       ],
       "src/_ZN11ShadowModel9RenderAllEv.cpp": [
@@ -42374,7 +42374,7 @@
       ]
     },
     "func_ov002_020e496c": {
-      "src/_ZN11MirrorLuigi6RenderEv.cpp": [
+      "src/_ZN9daLuigi_c6RenderEv.cpp": [
         "return:char *"
       ],
       "src/_ZN8dActor_c11UpdateCarryER6PlayerRK7Vector3.cpp": [

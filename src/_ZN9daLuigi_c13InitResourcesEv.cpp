@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN11MirrorLuigi13InitResourcesEv
+// @symbol _ZN9daLuigi_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "MirrorLuigi.h"
+#include "daLuigi_c.h"
 extern "C" void* _ZN9Animation8LoadFileER13SharedFilePtr(void*);
 extern "C" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void*, void*, int, int, unsigned int);
 extern "C" void _ZN9ModelBase7SetFileEP8BMD_Fileii(void*, void*, int, int);
@@ -26,7 +26,7 @@ extern int data_020a0e68;
 extern unsigned char data_0209f250;
 extern int data_0209f394[];
 
-int MirrorLuigi::InitResources()
+int daLuigi_c::InitResources()
 {
     int t[3];
 

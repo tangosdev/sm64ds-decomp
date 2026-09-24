@@ -1,14 +1,14 @@
-_ZN11MirrorLuigiD1Ev kind:function(arm,size=0x58) addr:0x021111a0
-_ZN11MirrorLuigiD0Ev kind:function(arm,size=0x6c) addr:0x021111f8
+_ZN9daLuigi_cD1Ev kind:function(arm,size=0x58) addr:0x021111a0
+_ZN9daLuigi_cD0Ev kind:function(arm,size=0x6c) addr:0x021111f8
 func_ov055_02111264 kind:function(arm,size=0x24) addr:0x02111264
 func_ov055_02111288 kind:function(arm,size=0x34) addr:0x02111288
 func_ov055_021112bc kind:function(arm,size=0x8) addr:0x021112bc
 func_ov055_021112c4 kind:function(arm,size=0x54) addr:0x021112c4
-_ZN11MirrorLuigi16CleanupResourcesEv kind:function(arm,size=0x3c) addr:0x02111318
-_ZN11MirrorLuigi16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02111354
-_ZN11MirrorLuigi6RenderEv kind:function(arm,size=0x1b0) addr:0x02111358
-_ZN11MirrorLuigi8BehaviorEv kind:function(arm,size=0x16c) addr:0x02111508
-_ZN11MirrorLuigi13InitResourcesEv kind:function(arm,size=0x1ec) addr:0x02111674
+_ZN9daLuigi_c16CleanupResourcesEv kind:function(arm,size=0x3c) addr:0x02111318
+_ZN9daLuigi_c16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02111354
+_ZN9daLuigi_c6RenderEv kind:function(arm,size=0x1b0) addr:0x02111358
+_ZN9daLuigi_c8BehaviorEv kind:function(arm,size=0x16c) addr:0x02111508
+_ZN9daLuigi_c13InitResourcesEv kind:function(arm,size=0x1ec) addr:0x02111674
 daLuigi_c_classInit kind:function(arm,size=0x74) addr:0x02111860
 __sinit_ov055_021118d4 kind:function(arm,size=0x3c) addr:0x021118d4
 .p__sinit_ov055_021118d4 kind:data(word) addr:0x02111910
@@ -40,7 +40,7 @@ _ZTS9daLuigi_c kind:data(any) addr:0x02111aa4
 _ZTI9daLuigi_c kind:data(any) addr:0x02111ab0
 g_profile_LUIGI kind:data(any) addr:0x02111abc ambiguous
 data_ov055_02111ad4 kind:data(any) addr:0x02111ad4 ambiguous
-_ZTV11MirrorLuigi kind:data(any) addr:0x02111ae0
+_ZTV9daLuigi_c kind:data(any) addr:0x02111ae0
 data_ov055_02111af4 kind:data(any) addr:0x02111af4 ambiguous
 data_ov055_02111b14 kind:data(any) addr:0x02111b14 ambiguous
 data_ov055_02111b34 kind:data(any) addr:0x02111b34 ambiguous

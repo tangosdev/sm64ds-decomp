@@ -1578,18 +1578,18 @@ ov052	0x021124fc	data_ov052_021124fc	g_profile_EMM_LOG	reconstructed profile glo
 ov052	0x021125cc	data_ov052_021125cc	SquarePathLift_SpawnInfo	spawninfo
 ov052	0x021125cc	SquarePathLift_SpawnInfo	g_profile_EMM_YUKA	reconstructed profile global; literal ROM ID EMM_YUKA+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov052	0x021125f0	data_ov052_021125f0	_ZTV14SquarePathLift	vtable alloc=0x330
-ov055	0x021111a0	func_ov055_021111a0	_ZN11MirrorLuigiD1Ev	vtable slot 16
-ov055	0x021111f8	func_ov055_021111f8	_ZN11MirrorLuigiD0Ev	vtable slot 17
-ov055	0x02111318	func_ov055_02111318	_ZN11MirrorLuigi16CleanupResourcesEv	vtable slot 3
-ov055	0x02111354	func_ov055_02111354	_ZN11MirrorLuigi16OnPendingDestroyEv	vtable slot 12
-ov055	0x02111358	func_ov055_02111358	_ZN11MirrorLuigi6RenderEv	vtable slot 9
-ov055	0x02111508	func_ov055_02111508	_ZN11MirrorLuigi8BehaviorEv	vtable slot 6
-ov055	0x02111674	func_ov055_02111674	_ZN11MirrorLuigi13InitResourcesEv	vtable slot 0
+ov055	0x021111a0	func_ov055_021111a0	_ZN9daLuigi_cD1Ev	vtable slot 16
+ov055	0x021111f8	func_ov055_021111f8	_ZN9daLuigi_cD0Ev	vtable slot 17
+ov055	0x02111318	func_ov055_02111318	_ZN9daLuigi_c16CleanupResourcesEv	vtable slot 3
+ov055	0x02111354	func_ov055_02111354	_ZN9daLuigi_c16OnPendingDestroyEv	vtable slot 12
+ov055	0x02111358	func_ov055_02111358	_ZN9daLuigi_c6RenderEv	vtable slot 9
+ov055	0x02111508	func_ov055_02111508	_ZN9daLuigi_c8BehaviorEv	vtable slot 6
+ov055	0x02111674	func_ov055_02111674	_ZN9daLuigi_c13InitResourcesEv	vtable slot 0
 ov055	0x02111860	func_ov055_02111860	MirrorLuigi_Spawn	spawnfunc
 ov055	0x02111860	MirrorLuigi_Spawn	daLuigi_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov055	0x02111abc	data_ov055_02111abc	MirrorLuigi_SpawnInfo	spawninfo
 ov055	0x02111abc	MirrorLuigi_SpawnInfo	g_profile_LUIGI	reconstructed profile global; literal ROM ID LUIGI+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov055	0x02111ae0	data_ov055_02111ae0	_ZTV11MirrorLuigi	vtable alloc=0x20c
+ov055	0x02111ae0	data_ov055_02111ae0	_ZTV9daLuigi_c	vtable alloc=0x20c
 ov056	0x021111a0	func_ov056_021111a0	_ZN17BigMovingIceBlockD1Ev	vtable slot 16
 ov056	0x021111e4	func_ov056_021111e4	_ZN17BigMovingIceBlockD0Ev	vtable slot 17
 ov056	0x0211123c	func_ov056_0211123c	_ZN17BigMovingIceBlock16CleanupResourcesEv	vtable slot 3
