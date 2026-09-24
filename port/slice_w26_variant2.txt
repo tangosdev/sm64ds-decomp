@@ -24,3 +24,22 @@ src/_ZN11dCapEnemy_cD0Ev.cpp
 src/_ZN15dScMgSnowball_cD0Ev.cpp
 src/_ZN14KnockDownPlankD0Ev.cpp
 src/_ZN9TowerStepD0Ev.cpp
+#
+# BATCH B4, THE BASE-OBJECT VARIANTS A HOST CALLER NAMES. Each file below is
+# a C2 or D2 file whose code is the class's one constructor or destructor;
+# under MSVC that is ??0Cls / ??1Cls, which the class's C1 / D1 file already
+# defines, so the file was never compiled for the port. Host callers (matched
+# TUs compiled as C, hal destructor thunks) name the flat C2 / D2 when they
+# build or tear down a base subobject, and the port answered those names
+# from port/faces_sync.txt's generated faces (ModelAnim's D2 from
+# port/tools/dtorfwd.py). The arm is the one call that face made: the one
+# host constructor run in place, or the one host destructor called
+# qualified. The ROM's C2 / D2 body is the C1 / D1 body (none of these
+# classes has a virtual base; the ROM words differ only at pc-relative
+# branches).
+src/_ZN5ModelC2Ev.cpp
+src/_ZN8dActor_cC2Ev.cpp
+src/_ZN9ModelAnimC2Ev.cpp
+src/_ZN8dActor_cD2Ev.cpp
+src/_ZN9ModelAnimD2Ev.cpp
+src/_ZN11dScMgBase_cD2Ev.cpp

@@ -15,6 +15,23 @@ void _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(void* self, int a, int b, int c, 
 
 /* Base-object constructor. The declared inheritance chain generates fBase_c's
    base step and the dBase_c/dActor_c vptr stores before the spawn-seeding body. */
+#ifdef _MSC_VER
+/* THE HOST NEEDS THE ROM'S FLAT C2 NAME, AND MSVC NEVER EMITS IT. MSVC
+ * makes one constructor per class, ??0dActor_c, which the class's C1 file
+ * already defines, so compiling the definition below as well would define
+ * it twice. The base-object variant the ROM spells _ZN8dActor_cC2Ev is the
+ * same body (dActor_c has no virtual base), and host callers that build a
+ * dActor_c base subobject call it by that flat name. This arm is that name:
+ * the one host constructor, run on the object in place. Nothing here
+ * reaches mwccarm: it builds the `#else` arm and emits the ROM bytes it
+ * always emitted, and the object is byte-identical either way. */
+#include <new>
+extern "C" dActor_c *_ZN8dActor_cC2Ev(dActor_c *thiz)
+{
+    ::new ((void *)thiz) dActor_c();  /* the one host constructor, in place */
+    return thiz;
+}
+#else
 dActor_c::dActor_c() : mActorListNode(this) {
     int* info;
     int isMode2;
@@ -57,3 +74,4 @@ dActor_c::dActor_c() : mActorListNode(this) {
         clipDistance = info[5];
     _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(this, info[3], info[4], clipDistance, info[6]);
 }
+#endif

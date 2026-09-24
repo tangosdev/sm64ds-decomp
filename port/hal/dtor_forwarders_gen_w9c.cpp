@@ -121,10 +121,6 @@ extern "C" void _ZN18TextureTransformerD1Ev(void *self)
 extern "C" void _ZN9ModelAnimD1Ev(void *self)
 { ((ModelAnim *)self)->ModelAnim::~ModelAnim(); }
 
-/* ROM 0x0201689c _ZN9ModelAnimD2Ev -- batch 5, ~ModelAnim(), defined out of line by src/_ZN9ModelAnimD1Ev.cpp */
-extern "C" void _ZN9ModelAnimD2Ev(void *self)
-{ ((ModelAnim *)self)->ModelAnim::~ModelAnim(); }
-
 /* ROM 0x02112290 _ZN9TowerStepD1Ev -- batch 5, ~TowerStep(), defined out of line by src/_ZN9TowerStepD1Ev.cpp */
 extern "C" void _ZN9TowerStepD1Ev(void *self)
 { ((TowerStep *)self)->TowerStep::~TowerStep(); }

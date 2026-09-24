@@ -150,6 +150,13 @@ import sys
 #   _ZN9ModelAnimD0Ev
 #   _ZN9TowerStepD0Ev
 
+# RETIRED at VARIANT2 2026-09-23 (run linkfull, batch B4): _ZN9ModelAnimD2Ev is
+# defined by src/_ZN9ModelAnimD2Ev.cpp now, in its #ifdef _MSC_VER arm
+# (port/slice_w26_variant2.txt enrols the file): the qualified, direct call to
+# the ??1ModelAnim@@UAE@XZ that src/_ZN9ModelAnimD1Ev.cpp defines out of line,
+# the one call the retired forwarder made. The row came out of batch 5 rather
+# than being skipped, so the generated files carry the name exactly once.
+
 BATCHES = {}
 
 BATCHES[1] = """
@@ -460,7 +467,6 @@ _ZN11dCapEnemy_cD1Ev
 _ZN15TextureSequenceD1Ev
 _ZN18TextureTransformerD1Ev
 _ZN9ModelAnimD1Ev
-_ZN9ModelAnimD2Ev
 _ZN14KnockDownPlankD1Ev
 _ZN9TowerStepD1Ev
 """
