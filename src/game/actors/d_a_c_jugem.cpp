@@ -82,7 +82,7 @@ int   _ZN15TextureSequence6UpdateER15ModelComponents(void *thiz, void *mc);
 void  _ZN9Animation7AdvanceEv(void *thiz);
 
 /* other overlays / arm9 */
-void  func_ov002_020c3e8c(void);
+void  func_ov002_020c3e8c(void *player);
 int   func_ov002_020c3ea0(void *p);
 void  func_ov002_020c3f18(void *p);
 void  func_ov002_020c3f2c(void *p);
@@ -186,8 +186,9 @@ extern "C" int func_ov085_0212d5dc(daC_Jugem_c *c) {
       c->mVertSpeed = 0;
       c->unk_0ac = 0;
       c->mAngleX = 0;
-      if (_ZN8dActor_c13ClosestPlayerEv(c) != 0) {
-        func_ov002_020c3e8c();
+      void *player = _ZN8dActor_c13ClosestPlayerEv(c);
+      if (player != 0) {
+        func_ov002_020c3e8c(player);
         data_0209caa0[2] |= 0x80;
       }
       func_ov085_0212e728((JugemHost *)c, &data_ov085_021307e0);
