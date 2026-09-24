@@ -180,7 +180,6 @@ func_ov072_02121d50|src/_ZN11BabyPenguin13InitResourcesEv.cpp
 func_ov077_0212478c|include/decl_common.h
 func_ov079_02123d4c|src/_ZN5Whomp25OnAimedAtWithEggReturnVecEv.cpp
 func_ov080_0212513c|include/decl_common.h
-func_ov080_0212513c|src/func_ov080_02124e60.c
 _ZN7Tornado6State2Ev|include/decl_common.h
 _ZN7Tornado6State1Ev|include/decl_common.h
 _ZN7Tornado6State0Ev|include/decl_common.h
