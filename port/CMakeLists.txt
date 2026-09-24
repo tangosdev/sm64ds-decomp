@@ -6065,8 +6065,10 @@ foreach(line IN LISTS SLICE31_LINES)
 endforeach()
 list(APPEND SLICE31_SOURCES
      "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Player_CleanupResources.cpp"
-     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/func_02073244_hostcopy.c"
-     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/SetNumPlayers_hostcopy.c")
+     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/func_02073244_hostcopy.c")
+# unmatched/SetNumPlayers_hostcopy.c RETIRED (run linkfull, lane RS2PORT):
+# src/SetNumPlayers.c passes func_020308d0 the count (main 59013376ce) and is
+# back on port/slice_gate31.txt.
 # unmatched/Door_CleanupResources.cpp RETIRED (run link100, lane UNMATCH):
 # its `obj->v1()` workaround was the MSVC destructor fold, and
 # hal/model_dtor_seat.cpp seats the ROM's deleting half at slot 1 of all
@@ -7845,14 +7847,13 @@ set(SCENE_MG_SOURCES
     # src TU drops the pointer its two callers already pass, so
     # src/func_ov004_020b7460.c is off port/slice_mg1.txt for this file.
     unmatched/MgBase_StateSetter.cpp
-    # Run mg5, lane BASESET. dScMgBase_c slot 5, the second of the two argument
-    # ride-throughs port/mg_fanout_costs.txt section 6 named and left. Its src
-    # TU calls func_0203cbc0 with no argument where the ROM has the pointer
-    # being freed live in r0, and the port's func_0203cbc0 is operator delete,
-    # so the src form frees a stack slot on every minigame teardown.
-    # src/minigames/d_s_mg_base.cpp is off BOTH port/slice_mg1.txt and
-    # port/slice_smb.txt for this file.
-    unmatched/MgBase_Slot5.cpp
+    # unmatched/MgBase_Slot5.cpp RETIRED (run linkfull, lane RS2PORT). It was
+    # dScMgBase_c slot 5's host copy (run mg5, lane BASESET): the src TU called
+    # func_0203cbc0 with no argument where the ROM frees data_ov004_020beb60
+    # through r0. src/minigames/d_s_mg_base.cpp passes it now (main
+    # 59013376ce's one call, taken into the port's text of the TU), and the
+    # flat slot-5 name hal/scene_mg.cpp calls is a reverse face in
+    # port/faces_sync.txt.
     # Lane CT1's dScMgCurling_c twenty-fifth state, unmatched/MgCurling_State_020e1854.cpp,
     # WAS HERE AND IS RETIRED (run link100 wave 14, lane SEAT14E). "The one with
     # no src TU" is what its line said and it is no longer true: PR #2352
@@ -10575,13 +10576,12 @@ set(SLICE_TTI_SOURCES hal/scene_mg_trampoline.cpp
                       # open-codes the pair correctly and would still have
                       # jumped to a DS address; MSVC refuses it anyway (C2761).
                       unmatched/MgTrmpln3DMario_StateDispatch.cpp
-                      # TWO CROSS-MODULE MISBINDINGS: src calls the ov007 DATA
-                      # symbol that shares a DS address with the ov006 FUNCTION
-                      # the ROM's relocation names. Harmless on hardware (the
-                      # two overlays are never co-resident), a hard crash in a
-                      # port that mounts both. This was the only thing stopping
-                      # scene 384 from booting.
-                      unmatched/MgTrmpln3DMario_ModuleFix.cpp
+                      # unmatched/MgTrmpln3DMario_ModuleFix.cpp RETIRED (run
+                      # linkfull, lane RS2PORT): the TWO CROSS-MODULE
+                      # MISBINDINGS it repaired (src calling the ov007 DATA
+                      # symbol at an ov006 FUNCTION's address) are fixed in
+                      # src by address (44cb9d5e92, 0fc1499c8b), so both
+                      # sources are back on port/slice_tti.txt.
                       # unmatched/MgTrmpln3DMario_ModelRender.cpp RETIRED
                       # (run link100, lane FOLD2): the local-shadow
                       # slot-numbering defect died with the destructor unfold,
@@ -11352,12 +11352,10 @@ foreach(line IN LISTS SLICE_PTR_LINES)
     endif()
     list(APPEND SLICE_PTR_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
-# argfix: func_020078c4 calls ApproachAngle with four arguments; the fifth
-# (maxStep=0) rides the stack, which cdecl does not stage. Host copy passes the
-# fifth argument explicitly. Src line commented out in slice_ptrsweep.txt; the
-# data_02086d88 pointer table (hal/ptr_tables.cpp) resolves to this copy.
-list(APPEND SLICE_PTR_SOURCES
-     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Camera_ApproachAngleVeneer.cpp")
+# unmatched/Camera_ApproachAngleVeneer.cpp RETIRED (run linkfull, lane
+# RS2PORT): main 59013376ce passes ApproachAngle its fifth argument (0), so
+# src/func_020078c4.c runs, from port/slice_w28_rs2port.txt; the data_02086d88
+# pointer table (hal/ptr_tables.cpp) resolves to it by the same name.
 
 # gate 10 minus the two files the camera build replaces (ChangeArea by its
 # host copy; func_0200cae4 by hostgen, GATE13_SYMS, lane shadow-A)
@@ -11497,8 +11495,12 @@ endforeach()
 # main's own text, with apply_patches hard-erroring if either anchor moves --
 # so nothing about the call changes and one host copy leaves the tree.
 list(APPEND SLICE10_CAM_SOURCES
-     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Player_SwimMain.cpp"
-     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/InitCrashScreen_ResetVeneer.cpp")
+     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Player_SwimMain.cpp")
+# unmatched/InitCrashScreen_ResetVeneer.cpp RETIRED (run linkfull, lane
+# RS2PORT): hal/cxx_aliases.cpp's face for the static
+# dScene_c::ResetHardwareRegisters takes no argument now, so the matched
+# argless call is the ROM's call and src/InitCrashScreen.c is back on
+# port/slice_gate10.txt.
 
 # run link100 wave 15, LINK15 BATCH 6 (lane SEAT15F): the arm9 miscellaneous
 # singles whose host copies recorded an ARM ride-through that main has since
@@ -11781,7 +11783,9 @@ set(LEVELBOOT_HOST_SOURCES
 # file is gone.
 
 set(CAMERA_HOST_SOURCES
-    unmatched/ChangeArea_hostcopy.c
+    # unmatched/ChangeArea_hostcopy.c RETIRED (run linkfull, lane RS2PORT):
+    # main 59013376ce passes HideArea the area index the ROM leaves in r0, so
+    # src/ChangeArea.c runs, from port/slice_w28_rs2port.txt.
     # func_0200cae4_hostcopy.cpp and func_0200ca50_hostcopy.cpp RETIRED (lane
     # shadow-A): the matched dispatchers go through hostgen's MG_PMF_CALL
     # table (GATE13_SYMS), the one PMF call each routed into
@@ -23032,48 +23036,71 @@ foreach(_tw28s1 walk_window walk_window_hires smoke_player)
 endforeach()
 
 # ===========================================================================
-# PSYCHE1 (run linkfull, lane PSYCHE1): THE MINIGAME EXIT PATH
+# PSYCHE1 (run linkfull, lane PSYCHE1): THE MINIGAME EXIT PATH -- its
+# force-included seam on src/minigames/d_s_mg_base.cpp
+# (unmatched/MgBase_Slot5_HostAbi.h) is RETIRED (run linkfull, lane RS2PORT):
+# the TU passes func_0203cbc0 the block it frees itself now (main
+# 59013376ce's one call), so the rename, its configure check and the /FI
+# are gone. PSYCHE1's other three fixes need no CMake.
+# ===========================================================================
+
+# ===========================================================================
+# RS2PORT (run linkfull, lane RS2PORT): MAIN'S ARGUMENT RE-SPELLS (#3092) INTO
+# THE PORT, AND THE ROWS WHOSE HOST REASONS WERE STALE
 # ===========================================================================
 #
-# Psyche Out (scene 389) and four other minigames died on the way out under a
-# scripted stylus. One of the fixes is a force-included header on a matched
-# TU, the /FI mechanism the dBgW, fader tail-pad and DTORCALL blocks above
-# already use; nothing in src/ or include/ changes. (The others are in
-# hal/fdr_arm9_fader_seat.cpp and in the minigame tables' slot-16 entries,
-# which need no CMake.)
+# port/slice_w28_rs2port.txt seats matched TUs whose host copies are retired
+# in the same commits; each row group's commit says which body left and why its
+# reason no longer holds.
 #
-# src/minigames/d_s_mg_base.cpp calls func_0203cbc0 (operator delete) with no
-# argument where the cartridge frees data_ov004_020beb60 through r0, and the
-# qualified base calls of the Single3D, Amida, Smartball and Luigi classes
-# bind to this TU's own dScMgBase_c::AfterCleanupResources.
-# unmatched/MgBase_Slot5_HostAbi.h renames that one callee to the seam in
-# unmatched/MgBase_Slot5.cpp, which passes the ROM's r0. The TU is compiled
-# from src/ off port/slice_mg1.txt, so the row goes on the src path, and the
-# configure fails if the TU stops spelling exactly the one argless
-# declaration and the one argless call the header renames, or stops being a
-# raw slice_mg1 row.
-set(PSYCHE1_MGBASE_TU src/minigames/d_s_mg_base.cpp)
-file(READ "${PORT_REPO_ROOT_ABS}/${PSYCHE1_MGBASE_TU}" _psy1_mgbase_text)
-string(REGEX MATCHALL "extern void func_0203cbc0[(]void[)]" _psy1_decl "${_psy1_mgbase_text}")
-string(REGEX MATCHALL "func_0203cbc0[(][)]" _psy1_call "${_psy1_mgbase_text}")
-string(REGEX MATCHALL "func_0203cbc0" _psy1_all "${_psy1_mgbase_text}")
-list(LENGTH _psy1_decl _psy1_ndecl)
-list(LENGTH _psy1_call _psy1_ncall)
-list(LENGTH _psy1_all _psy1_nall)
-if(NOT _psy1_ndecl EQUAL 1 OR NOT _psy1_ncall EQUAL 1 OR NOT _psy1_nall EQUAL 2)
-    message(FATAL_ERROR "${PSYCHE1_MGBASE_TU} no longer spells one argless "
-            "func_0203cbc0 declaration and one argless call (${_psy1_ndecl} "
-            "declaration(s), ${_psy1_ncall} call(s), ${_psy1_nall} mention(s)); "
-            "unmatched/MgBase_Slot5_HostAbi.h would rename the wrong thing")
+# ALL THREE HOSTING TARGETS: the host copies these rows retire were linked
+# into walk_window, walk_window_hires and smoke_player alike
+# (CAMERA_HOST_SOURCES, SLICE_PTR_SOURCES and unmatched/Particle_RideThroughs.cpp
+# ship on all three), so the seats are on all three.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w28_rs2port.txt" SLICE_W28_RS2PORT_LINES)
+set(SLICE_W28_RS2PORT_SOURCES "")
+foreach(line IN LISTS SLICE_W28_RS2PORT_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_W28_RS2PORT_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+if(SLICE_W28_RS2PORT_SOURCES)
+    foreach(_tw28rs2 walk_window walk_window_hires smoke_player)
+        target_sources(${_tw28rs2} PRIVATE ${SLICE_W28_RS2PORT_SOURCES})
+    endforeach()
 endif()
-list(FIND SLICE_MG1_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${PSYCHE1_MGBASE_TU}" _psy1_idx)
-if(_psy1_idx LESS 0)
-    message(FATAL_ERROR "${PSYCHE1_MGBASE_TU} is no longer a raw port/slice_mg1.txt "
-            "row, so the force-include below would attach to a file nothing compiles")
+
+# RS2PORT row group 2: func_0203cbc0, the ROM veneer onto _ZdlPv. Its host
+# body lived in unmatched/func_02073244_hostcopy.c because src spelled it
+# (void); main 59013376ce spells the pointer it frees, so the body left that
+# file (which still defines the DS global data_0209a6fc and stays on every
+# list that names it) and src/func_0203cbc0.c joins every target that
+# compiles it: the three game targets (SLICE31_SOURCES, or the shared object
+# library when the tier split put it there) and the smoke targets
+# (smoke_modelanim's own block, smoke_model's, PORT_SMOKE_MODEL_SRC's five and
+# smoke_clsn). Read off the targets rather than listed, so a target that
+# takes the host file later still gets the veneer it used to carry.
+get_property(_rs2_all_targets DIRECTORY PROPERTY BUILDSYSTEM_TARGETS)
+set(_rs2_cbc0_into "")
+foreach(_rs2_t IN LISTS _rs2_all_targets)
+    get_target_property(_rs2_type ${_rs2_t} TYPE)
+    if(_rs2_type STREQUAL "INTERFACE_LIBRARY" OR _rs2_type STREQUAL "UTILITY")
+        continue()
+    endif()
+    get_target_property(_rs2_srcs ${_rs2_t} SOURCES)
+    if(_rs2_srcs MATCHES "unmatched/func_02073244_hostcopy[.]c")
+        target_sources(${_rs2_t} PRIVATE
+            "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_0203cbc0.c")
+        list(APPEND _rs2_cbc0_into ${_rs2_t})
+    endif()
+endforeach()
+if(NOT _rs2_cbc0_into)
+    message(FATAL_ERROR "no target compiles unmatched/func_02073244_hostcopy.c "
+            "any more, so src/func_0203cbc0.c reached none; re-read this block")
 endif()
-set_property(SOURCE "${PORT_REPO_ROOT_ABS}/${PSYCHE1_MGBASE_TU}"
-    APPEND PROPERTY COMPILE_OPTIONS
-    "/FI${CMAKE_CURRENT_SOURCE_DIR}/unmatched/MgBase_Slot5_HostAbi.h")
+message(STATUS "RS2PORT: src/func_0203cbc0.c joins ${_rs2_cbc0_into}")
 
 # ===========================================================================
 # W27 SMALLS1 (run linkfull wave 27, lane SMALLS1): cstd::fdiv,

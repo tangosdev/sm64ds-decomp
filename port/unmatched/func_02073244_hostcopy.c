@@ -1,12 +1,16 @@
-/* HOST COPY of func_0203cbc0 -- half of the MSL array-delete pair.
- * func_02073244, the other half, is RETIRED (run link100 wave 15, SEAT15F).
+/* ONE HOSTED DS GLOBAL, and the record of the MSL array-delete pair's two
+ * host copies, both RETIRED now.
  *
- *   func_0203cbc0 STAYS HOSTED. It is a two-instruction veneer onto _ZdlPv and
- *   src still spells it `void func_0203cbc0(void)` calling `_ZdlPv()` with no
- *   argument, which is exactly right for ARM -- the pointer is already in r0
- *   and the branch keeps it there -- and exactly wrong for cdecl, where the
- *   callee would read the stack for an argument nobody declared. Re-read at
- *   8ddff3187: still true, so this one is not a candidate.
+ *   func_0203cbc0 IS RETIRED (run linkfull, lane RS2PORT). It is a
+ *   two-instruction veneer onto _ZdlPv and was hosted here because src spelled
+ *   it `void func_0203cbc0(void)` calling `_ZdlPv()` with no argument: right
+ *   for ARM, where the pointer is already in r0 and the branch keeps it there,
+ *   and wrong for cdecl, where the callee reads the stack for an argument
+ *   nobody declared. main #3092 (59013376ce) spells the pointer it frees,
+ *   `void func_0203cbc0(void *ptr) { _ZdlPv(ptr); }`, and fixed the two callers
+ *   that declared it `int` (Player::CleanupResources, func_02073244), so
+ *   src/func_0203cbc0.c runs. port/CMakeLists.txt adds it to every target that
+ *   compiles this file, which is every target that used to get the body here.
  *
  *   func_02073244 IS RETIRED. The copy below it used to say it "hands
  *   func_02073300 THREE arguments and lets the fourth (the element destructor)
@@ -34,7 +38,6 @@
  * built by Player::InitResources through the matching func_02073470) and from
  * Stage::CleanupResources, which the port does not run.
  */
-extern void _ZdlPv(void *p);
 
 /* THE ONE DS GLOBAL THE RETIREMENT NEEDS. src/func_020731fc.c is
  * `data_0209a6fc()` -- MSL's terminate hook, the thing a second throw out of
@@ -55,13 +58,8 @@ DSSTATE_BEGIN
 void (*data_0209a6fc)(void);
 DSSTATE_END
 
-/* PORT_HOST_ABI: ARM register ride-through: src spells this
- * `void func_0203cbc0(void)` calling `_ZdlPv()` with no argument, because the
- * pointer is already in r0 and the branch keeps it there. See the header. */
-void func_0203cbc0(void *p)
-{
-    _ZdlPv(p);
-}
+/* func_0203cbc0's host body was here. See the header: main passes the
+ * pointer now and the matched TU runs instead. */
 
 /* func_02073244's host body was here. See the header: both halves of its
  * reason are stale at 8ddff3187 and the matched TU runs instead. */

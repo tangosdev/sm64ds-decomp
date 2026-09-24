@@ -172,7 +172,7 @@ _ZN5Model17UpdateFileOffsetsER8BMD_File                        FORWARDS    hal/m
 _ZN5Model23AddToCommonModelDataArrER8BMD_File                  FORWARDS    hal/cxxname_bridge.cpp:608 -- one statement calling Model::AddToCommonModelDataArr
 _ZN5Model6RenderEPK7Vector3                                    FORWARDS    hal/actor_faces_bob.cpp:173 -- shadow-class idiom, alias pragma at actor_faces_bob.cpp:172
 _ZN5Model8LoadFileER13SharedFilePtr                            FORWARDS    hal/cxxname_bridge.cpp:208 -- PORT_TRACE_SETFILE tracing around Model::LoadFile
-_ZN8dScene_c22ResetHardwareRegistersEv                            FORWARDS    hal/cxx_aliases.cpp:373 -- one statement calling Scene::ResetHardwareRegisters
+_ZN8dScene_c22ResetHardwareRegistersEv                            FORWARDS    hal/cxx_aliases.cpp:744 -- one statement calling Scene::ResetHardwareRegisters
 _ZN5Sound13Func_02048eb4Ev                                     FORWARDS    hal/bob_enemy_shadow_faces.cpp:147 -- one statement calling Sound::Func_02048eb4
 _ZN5Sound22LoadAndSetMusic_Layer3Ej                            FORWARDS    hal/bob_enemy_shadow_faces.cpp:145 -- one statement calling Sound::LoadAndSetMusic_Layer3
 _ZN5Timer10ResetTimerEv                                        FORWARDS    hal/method_faces.cpp:157 -- one statement calling Timer::ResetTimer
@@ -342,3 +342,21 @@ _ZNK9Animation13GetFrameCountEv                                FORWARDS    hal/m
 # and this section reconciles them. Nothing else differs.
 #
 # BUCKET NOW: 210 FORWARDS, 0 DUPLICATES, 0 UNCLEAR.
+
+# ---------------------------------------------------------------------------
+# 2026-09-24, run linkfull, lane RS2PORT: _ZN8dScene_c22ResetHardwareRegistersEv
+#
+# STILL FORWARDS, and one hop shorter. The face was `(void *s)` and called the
+# shadow member Scene::ResetHardwareRegisters on s, which hal/int4_rows.cpp
+# forwards to the static dScene_c::ResetHardwareRegisters. The static is what
+# the ROM has: its one flat-name caller, src/InitCrashScreen.c (0x02014150),
+# reaches it with a bare bl and nothing set up in r0, and the matched source
+# calls it with no argument, so `s` was a stack slot nobody wrote. The face is
+# now `(void)` and calls the matched static itself through a one-member shadow
+# that mangles to ?ResetHardwareRegisters@dScene_c@@SAXXZ, and the host copy
+# unmatched/InitCrashScreen_ResetVeneer.cpp, which existed only to pass 0 into
+# that slot, is retired: src/InitCrashScreen.c runs.
+#
+# The row above keeps its evidence text on purpose (append-only); its
+# citation was re-cited from 373, which had gone stale long before this
+# change, to the face's line now. The ruling does not change.

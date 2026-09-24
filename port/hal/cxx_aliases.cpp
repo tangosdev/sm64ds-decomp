@@ -733,11 +733,16 @@ extern "C" int port_gxbank_layout_check(void)
 
 #pragma comment(linker, "/alternatename:__ZN2GX12SetBankForBGEt=?SetBankForBG@GX@@YAXG@Z")
 
-/* Scene::ResetHardwareRegisters is defined against this exact local shadow
-   in its own TU; mirror it so the manglings agree. */
-struct Scene { void ResetHardwareRegisters(); };
-extern "C" void _ZN8dScene_c22ResetHardwareRegistersEv(void *s)
-{ ((Scene *)s)->Scene::ResetHardwareRegisters(); }
+/* dScene_c::ResetHardwareRegisters is STATIC (include/dScene_c.h) and the ROM
+   reaches it with a bare bl and nothing set up in r0 (InitCrashScreen at
+   0x02014150, whose src calls this flat name with no argument), so the face
+   takes nothing. It used to take `void *s` and call a shadow member on it,
+   which read a stack slot the argless caller never wrote. The one-member
+   shadow mangles to the matched static, ?ResetHardwareRegisters@dScene_c@@SAXXZ
+   (this file includes no dScene_c header). Run linkfull, lane RS2PORT. */
+struct dScene_c { static void ResetHardwareRegisters(); };
+extern "C" void _ZN8dScene_c22ResetHardwareRegistersEv(void)
+{ dScene_c::ResetHardwareRegisters(); }
 
 #pragma comment(linker, "/alternatename:?data_020a0e98@@3EA=_data_020a0e98")
 #pragma comment(linker, "/alternatename:?data_020a4d6c@@3PAEA=_data_020a4d6c")

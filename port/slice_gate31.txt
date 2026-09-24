@@ -46,10 +46,11 @@ src/_ZN5Stage18ResetMeshCollidersEv.cpp
 # ---- StartFile's and Player::CleanupResources' own closures ----------------
 # Everything below is reached only from the two entry points above; each is a
 # few lines and none brings a subsystem with it.
-# SetNumPlayers is a HOST COPY (port/unmatched/): it calls func_020308d0 with
-# the count riding in r0 rather than as a declared argument, and the count is
-# what seats data_0209fc5c -- the per-slot live flag LoadEntranceObjects tests
-# before it keeps the Player it spawned.
+# SetNumPlayers passes func_020308d0 the count the ROM leaves in r0 (main
+# 59013376ce spells the argument), so its host copy is retired (run linkfull,
+# lane RS2PORT). The count is what seats data_0209fc5c -- the per-slot live
+# flag LoadEntranceObjects tests before it keeps the Player it spawned.
+src/SetNumPlayers.c
 src/func_020308d0.c
 src/InitControllerMode.c
 src/UnloadSilverStarAndNumber.c
