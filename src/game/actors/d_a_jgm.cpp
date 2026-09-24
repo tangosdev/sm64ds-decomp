@@ -35,9 +35,6 @@
  *   (UpdateFallState / UpdateWallAndWater). The named UpdateDiscreteNoLava
  *   is WRONG-DEST (ROM 0x02038420).
  *
- *   one_arg_setstate, so InitResources's SetState call keeps r1=0 from the
- *   caller.
- *
  *   InitResources / UpdateThrowState keep `char *c = (char *)this` offset
  *   soup and the 64-bit launder on the spawn-pos stores (named fields CSE).
  *
@@ -208,10 +205,6 @@ extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
 /* C++ linkage on purpose: mangles as _Z15ApproachLinear2Rsss. */
 void ApproachLinear2(short &v, short t, short step);
 
-namespace one_arg_setstate {
-extern "C" void _ZN7daJgm_c8SetStateEi(void *self);
-}
-
 // @symbol daJgm_c_classInit
 extern "C" daJgm_c *daJgm_c_classInit()
 {
@@ -279,7 +272,7 @@ s32 daJgm_c::InitResources()
     mSpawnPosZ = *(int *)(((int)(c + 0x64)) & 0xFFFFFFFFFFFFFFFFLL);
     *(int *)(((int)(c + 0x410)) & 0xFFFFFFFFFFFFFFFFLL) = 0;
 
-    one_arg_setstate::_ZN7daJgm_c8SetStateEi(c);
+    SetState(0);
     *(Matrix4x3 *)((char *)&mMatrix) = IDENTITY_MATRIX4X3;
     UpdateModels();
     return 1;
