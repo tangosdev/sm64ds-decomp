@@ -1,0 +1,27 @@
+# slice_w28_rs2port -- run linkfull, lane RS2PORT: main's argument re-spells
+# (#3092, 59013376ce) taken into the port, and the rows whose host reasons were
+# stale.
+#
+# Each src file below had a host copy in port/unmatched/ because its matched
+# source dropped an argument the ROM rides through a register, or once called a
+# callee by the wrong name. main re-spelled the argument (#3092) or the source
+# already carried the fix, so each is main's blob (the byte gate: mwccarm
+# 2004/b56 object identical to the port's previous text, match.py 2004/b56
+# strict MATCHING, linkcheck VERIFIED; runs/linkfull/out/RS2PORT/) and the host
+# body it replaces is retired in the same commit.
+#
+# Only the rows whose natural slice line is not this lane's to edit live here:
+# the camera build filters src/ChangeArea.c out of port/slice_gate10.txt, and
+# port/slice_ptrsweep.txt and port/slice_gate29.txt have other owners. The rest
+# went back where they were: port/slice_gate10.txt (InitCrashScreen),
+# port/slice_gate31.txt (SetNumPlayers), port/slice_tti.txt (the two ov006
+# element rows) and port/slice_w5a.txt (the three ov063 Boo rows).
+#
+# Each row group that lands a line here has its own marked section, so any
+# one group's commit can be dropped without touching another's lines.
+
+# ---- row group 1: two arm9 argument re-spells (main #3092, 59013376ce) ----
+# ---- end of row group 1 ----
+
+# ---- row group 4: the particle emitter veneer (main #3092, 59013376ce) ----
+# ---- end of row group 4 ----

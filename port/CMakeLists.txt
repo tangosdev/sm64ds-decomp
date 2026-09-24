@@ -23074,3 +23074,31 @@ endif()
 set_property(SOURCE "${PORT_REPO_ROOT_ABS}/${PSYCHE1_MGBASE_TU}"
     APPEND PROPERTY COMPILE_OPTIONS
     "/FI${CMAKE_CURRENT_SOURCE_DIR}/unmatched/MgBase_Slot5_HostAbi.h")
+
+# ===========================================================================
+# RS2PORT (run linkfull, lane RS2PORT): MAIN'S ARGUMENT RE-SPELLS (#3092) INTO
+# THE PORT, AND THE ROWS WHOSE HOST REASONS WERE STALE
+# ===========================================================================
+#
+# port/slice_w28_rs2port.txt seats matched TUs whose host copies are retired
+# in the same commits; each row group's commit says which body left and why its
+# reason no longer holds.
+#
+# ALL THREE HOSTING TARGETS: the host copies these rows retire were linked
+# into walk_window, walk_window_hires and smoke_player alike
+# (CAMERA_HOST_SOURCES, SLICE_PTR_SOURCES and unmatched/Particle_RideThroughs.cpp
+# ship on all three), so the seats are on all three.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w28_rs2port.txt" SLICE_W28_RS2PORT_LINES)
+set(SLICE_W28_RS2PORT_SOURCES "")
+foreach(line IN LISTS SLICE_W28_RS2PORT_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_W28_RS2PORT_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+if(SLICE_W28_RS2PORT_SOURCES)
+    foreach(_tw28rs2 walk_window walk_window_hires smoke_player)
+        target_sources(${_tw28rs2} PRIVATE ${SLICE_W28_RS2PORT_SOURCES})
+    endforeach()
+endif()
