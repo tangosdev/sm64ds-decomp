@@ -7847,14 +7847,13 @@ set(SCENE_MG_SOURCES
     # src TU drops the pointer its two callers already pass, so
     # src/func_ov004_020b7460.c is off port/slice_mg1.txt for this file.
     unmatched/MgBase_StateSetter.cpp
-    # Run mg5, lane BASESET. dScMgBase_c slot 5, the second of the two argument
-    # ride-throughs port/mg_fanout_costs.txt section 6 named and left. Its src
-    # TU calls func_0203cbc0 with no argument where the ROM has the pointer
-    # being freed live in r0, and the port's func_0203cbc0 is operator delete,
-    # so the src form frees a stack slot on every minigame teardown.
-    # src/minigames/d_s_mg_base.cpp is off BOTH port/slice_mg1.txt and
-    # port/slice_smb.txt for this file.
-    unmatched/MgBase_Slot5.cpp
+    # unmatched/MgBase_Slot5.cpp RETIRED (run linkfull, lane RS2PORT). It was
+    # dScMgBase_c slot 5's host copy (run mg5, lane BASESET): the src TU called
+    # func_0203cbc0 with no argument where the ROM frees data_ov004_020beb60
+    # through r0. src/minigames/d_s_mg_base.cpp passes it now (main
+    # 59013376ce's one call, taken into the port's text of the TU), and the
+    # flat slot-5 name hal/scene_mg.cpp calls is a reverse face in
+    # port/faces_sync.txt.
     # Lane CT1's dScMgCurling_c twenty-fifth state, unmatched/MgCurling_State_020e1854.cpp,
     # WAS HERE AND IS RETIRED (run link100 wave 14, lane SEAT14E). "The one with
     # no src TU" is what its line said and it is no longer true: PR #2352
@@ -23034,48 +23033,13 @@ foreach(_tw28s1 walk_window walk_window_hires smoke_player)
 endforeach()
 
 # ===========================================================================
-# PSYCHE1 (run linkfull, lane PSYCHE1): THE MINIGAME EXIT PATH
+# PSYCHE1 (run linkfull, lane PSYCHE1): THE MINIGAME EXIT PATH -- its
+# force-included seam on src/minigames/d_s_mg_base.cpp
+# (unmatched/MgBase_Slot5_HostAbi.h) is RETIRED (run linkfull, lane RS2PORT):
+# the TU passes func_0203cbc0 the block it frees itself now (main
+# 59013376ce's one call), so the rename, its configure check and the /FI
+# are gone. PSYCHE1's other three fixes need no CMake.
 # ===========================================================================
-#
-# Psyche Out (scene 389) and four other minigames died on the way out under a
-# scripted stylus. One of the fixes is a force-included header on a matched
-# TU, the /FI mechanism the dBgW, fader tail-pad and DTORCALL blocks above
-# already use; nothing in src/ or include/ changes. (The others are in
-# hal/fdr_arm9_fader_seat.cpp and in the minigame tables' slot-16 entries,
-# which need no CMake.)
-#
-# src/minigames/d_s_mg_base.cpp calls func_0203cbc0 (operator delete) with no
-# argument where the cartridge frees data_ov004_020beb60 through r0, and the
-# qualified base calls of the Single3D, Amida, Smartball and Luigi classes
-# bind to this TU's own dScMgBase_c::AfterCleanupResources.
-# unmatched/MgBase_Slot5_HostAbi.h renames that one callee to the seam in
-# unmatched/MgBase_Slot5.cpp, which passes the ROM's r0. The TU is compiled
-# from src/ off port/slice_mg1.txt, so the row goes on the src path, and the
-# configure fails if the TU stops spelling exactly the one argless
-# declaration and the one argless call the header renames, or stops being a
-# raw slice_mg1 row.
-set(PSYCHE1_MGBASE_TU src/minigames/d_s_mg_base.cpp)
-file(READ "${PORT_REPO_ROOT_ABS}/${PSYCHE1_MGBASE_TU}" _psy1_mgbase_text)
-string(REGEX MATCHALL "extern void func_0203cbc0[(]void[)]" _psy1_decl "${_psy1_mgbase_text}")
-string(REGEX MATCHALL "func_0203cbc0[(][)]" _psy1_call "${_psy1_mgbase_text}")
-string(REGEX MATCHALL "func_0203cbc0" _psy1_all "${_psy1_mgbase_text}")
-list(LENGTH _psy1_decl _psy1_ndecl)
-list(LENGTH _psy1_call _psy1_ncall)
-list(LENGTH _psy1_all _psy1_nall)
-if(NOT _psy1_ndecl EQUAL 1 OR NOT _psy1_ncall EQUAL 1 OR NOT _psy1_nall EQUAL 2)
-    message(FATAL_ERROR "${PSYCHE1_MGBASE_TU} no longer spells one argless "
-            "func_0203cbc0 declaration and one argless call (${_psy1_ndecl} "
-            "declaration(s), ${_psy1_ncall} call(s), ${_psy1_nall} mention(s)); "
-            "unmatched/MgBase_Slot5_HostAbi.h would rename the wrong thing")
-endif()
-list(FIND SLICE_MG1_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${PSYCHE1_MGBASE_TU}" _psy1_idx)
-if(_psy1_idx LESS 0)
-    message(FATAL_ERROR "${PSYCHE1_MGBASE_TU} is no longer a raw port/slice_mg1.txt "
-            "row, so the force-include below would attach to a file nothing compiles")
-endif()
-set_property(SOURCE "${PORT_REPO_ROOT_ABS}/${PSYCHE1_MGBASE_TU}"
-    APPEND PROPERTY COMPILE_OPTIONS
-    "/FI${CMAKE_CURRENT_SOURCE_DIR}/unmatched/MgBase_Slot5_HostAbi.h")
 
 # ===========================================================================
 # RS2PORT (run linkfull, lane RS2PORT): MAIN'S ARGUMENT RE-SPELLS (#3092) INTO

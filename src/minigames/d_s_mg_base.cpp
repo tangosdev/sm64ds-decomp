@@ -116,7 +116,7 @@ extern unsigned char data_020a0de8[];
 extern int data_0208ee44;
 extern void func_ov004_020ad90c(void);
 extern void FreeGfxSlotsById(int arg);
-extern void func_0203cbc0(void);
+extern void func_0203cbc0(void *ptr);
 extern void func_02012e1c(void);
 extern void _ZN5Sound22StopLoadedMusic_Layer1Ej(unsigned int x);
 void func_ov004_020ae330();
@@ -204,7 +204,7 @@ void dScMgBase_c::AfterCleanupResources(u32 arg)
         data_ov004_020beb74[1] = 0;
         FreeGfxSlotsById(0x1d);
         if (data_ov004_020beb60 != 0) {
-            func_0203cbc0();
+            func_0203cbc0(data_ov004_020beb60);
             data_ov004_020beb60 = 0;
         }
         if (mMenuOpen != 0) {

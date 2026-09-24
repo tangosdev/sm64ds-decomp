@@ -1383,6 +1383,12 @@ __ZN11dScMgBase_c15graphCallback_c14GraphCallback2Ev                     ?GraphC
 __ZN11dScMgBase_c15graphCallback_c14GraphCallback3Ev                     ?GraphCallback3@graphCallback_c@dScMgBase_c@@UAEHXZ              0x020ae03c R
 __ZN11dScMgBase_c16OnPendingDestroyEv                                    ?OnPendingDestroy@dScMgBase_c@@UAEXXZ                            0x020b04e8 R
 __ZN11dScMgBase_c18AfterInitResourcesEj                                  ?AfterInitResources@dScMgBase_c@@UAEXI@Z                         0x020b08f0 R
+# NEW at run linkfull, lane RS2PORT: slot 5's flat name was a host copy,
+# port/unmatched/MgBase_Slot5.cpp, because the matched TU dropped the pointer
+# it frees; src/minigames/d_s_mg_base.cpp passes it now (main 59013376ce's one
+# call) and the copy is retired, so hal/scene_mg.cpp's mb_aclean reaches the
+# matched member through this face.
+__ZN11dScMgBase_c21AfterCleanupResourcesEj                               ?AfterCleanupResources@dScMgBase_c@@UAEXI@Z                      0x020b0840 R
 __ZN11dScMgBase_c24OnHitByCannonBlastedCharEv                            ?OnHitByCannonBlastedChar@dScMgBase_c@@UAEHXZ                    0x020b04e0 R
 __ZN11dScMgBase_c25OnAimedAtWithEggReturnVecEv                           ?OnAimedAtWithEggReturnVec@dScMgBase_c@@UAEXXZ                   0x020aeed8 R
 __ZN11dScMgBase_c6RenderEv                                               ?Render@dScMgBase_c@@UAEHXZ                                      0x020b04ec R
