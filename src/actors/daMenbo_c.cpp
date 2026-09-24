@@ -928,8 +928,8 @@ int daMenbo_c::Behavior()
         if (unk_3a1 == 3) {
             _Z14ApproachLinearRsss(&mAngleX, -32767, 0x500);
             if (AngleDiff(*&mAngleX, -32767) < 0x1000) {
-                s16* p8e = &mAngleY;
-                *p8e += 0x1000;
+                s16* yaw = &mAngleY;
+                *yaw += 0x1000;
             }
         }
         if (mDeathState != 1 && mPosY <= unk_3ac) {

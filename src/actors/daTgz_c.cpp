@@ -172,9 +172,9 @@ extern "C" void func_ov077_02124d08(void* va, void* vw) {
     if (_ZNK10dBgCh_Actr10IsOnGroundEv(w)) {
         _ZN9dBgCh_GndC1Ev(&rc);
         {
-            int p60 = *(int*)(a+0x60);
+            int actorY = *(int*)(a+0x60);
             int pz = *(int*)(a+0x64);
-            int py = p60 + 0xc8000;
+            int py = actorY + 0xc8000;
             pos.x = *(int*)(a+0x5c);
             pos.y = py;
             pos.z = pz;
@@ -565,15 +565,15 @@ extern s16 data_02082214[];
 #define LA(p) ((int)(p))
 int func_ov077_021256b4(char *o)
 {
-    char *d0;
-    int *a5c;
-    int *a60;
-    int *a64;
+    char *carrier;
+    int *pPosX;
+    int *pPosY;
+    int *pPosZ;
     int *src;
-    int k;
-    s16 s;
-    s16 cval;
-    s16 ang;
+    int idx;
+    s16 sinv;
+    s16 cosv;
+    s16 carrierYaw;
     struct Vector3 v;
     int one;
     int y;
@@ -584,39 +584,39 @@ int func_ov077_021256b4(char *o)
     *(int *)(o + 0x98) = 0xa000;
     *(int *)(o + 0xa8) = 0;
 
-    d0 = *(char **)(o + 0xd0);
-    a5c = (int *)LA(o + 0x5c);
-    ang = *(s16 *)(d0 + 0x8e);
+    carrier = *(char **)(o + 0xd0);
+    pPosX = (int *)LA(o + 0x5c);
+    carrierYaw = *(s16 *)(carrier + 0x8e);
     *(s16 *)(o + 0x8c) = 0;
-    *(s16 *)(o + 0x8e) = ang;
+    *(s16 *)(o + 0x8e) = carrierYaw;
     *(s16 *)(o + 0x90) = 0;
 
     *(s16 *)(o + 0x94) = *(s16 *)(o + 0x8e);
-    a60 = (int *)LA(o + 0x60);
-    a64 = (int *)LA(o + 0x64);
+    pPosY = (int *)LA(o + 0x60);
+    pPosZ = (int *)LA(o + 0x64);
 
-    d0 = *(char **)(o + 0xd0);
-    src = (int *)LA(d0 + 0x5c);
+    carrier = *(char **)(o + 0xd0);
+    src = (int *)LA(carrier + 0x5c);
     one = 1;
     *(int *)(o + 0x5c) = src[0];
     *(int *)(o + 0x60) = src[1];
     *(int *)(o + 0x64) = src[2];
 
-    k = ((int)*(u16 *)(o + 0x8e)) >> 4;
-    s = data_02082214[k * 2];
-    *a5c = *a5c + (int)(((s64)s * 0x3c000 + 0x800) >> 12);
-    *a60 = *a60 + 0x85000;
-    k = ((int)*(u16 *)(o + 0x8e)) >> 4;
-    cval = data_02082214[k * 2 + 1];
-    *a64 = *a64 + (int)(((s64)cval * 0x3c000 + 0x800) >> 12);
+    idx = ((int)*(u16 *)(o + 0x8e)) >> 4;
+    sinv = data_02082214[idx * 2];
+    *pPosX = *pPosX + (int)(((s64)sinv * 0x3c000 + 0x800) >> 12);
+    *pPosY = *pPosY + 0x85000;
+    idx = ((int)*(u16 *)(o + 0x8e)) >> 4;
+    cosv = data_02082214[idx * 2 + 1];
+    *pPosZ = *pPosZ + (int)(((s64)cosv * 0x3c000 + 0x800) >> 12);
 
-    d0 = *(char **)(o + 0xd0);
+    carrier = *(char **)(o + 0xd0);
 
     {
-        int ty = *(int *)(d0 + 0x60);
-        int tz = *(int *)(d0 + 0x64);
+        int ty = *(int *)(carrier + 0x60);
+        int tz = *(int *)(carrier + 0x64);
         int ty2 = ty + 0x50000;
-        int tx = *(int *)(d0 + 0x5c);
+        int tx = *(int *)(carrier + 0x5c);
         v.x = tx; v.y = ty2; v.z = tz;
     }
 

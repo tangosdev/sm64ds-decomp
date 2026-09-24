@@ -80,9 +80,9 @@ int daObjFlamethrower_c::InitResources()
     int im1;
     int zero;
     int flag;
-    char *p6;
-    char *p5;
-    char *p4;
+    char *rowBase;
+    char *flamePos;
+    char *collider;
     struct Vec3 offset;
     struct Vec3 dst;
     struct Vec3 firstPos;
@@ -95,9 +95,9 @@ int daObjFlamethrower_c::InitResources()
     flag = 0;
     i = 0;
     if (i < count) {
-        p6 = ((char *)this);
-        p5 = ((char *)this) + 0x3a4;
-        p4 = ((char *)this) + 0xd4;
+        rowBase = ((char *)this);
+        flamePos = ((char *)this) + 0x3a4;
+        collider = ((char *)this) + 0xd4;
         do {
         im1 = i - 1;
         offset.x = zero;
@@ -110,22 +110,22 @@ int daObjFlamethrower_c::InitResources()
         MulVec3Mat4x3((int *)&offset, ((char *)this) + 0x434, (int *)&dst);
         if (im1 < 0) {
             Vec3_Add((int *)&firstPos, (int *)((char *)&mPosX), (int *)&dst);
-            *(int *)(p6 + 0x3a4) = firstPos.x;
-            *(int *)(p6 + 0x3a8) = firstPos.y;
-            *(int *)(p6 + 0x3ac) = firstPos.z;
+            *(int *)(rowBase + 0x3a4) = firstPos.x;
+            *(int *)(rowBase + 0x3a8) = firstPos.y;
+            *(int *)(rowBase + 0x3ac) = firstPos.z;
         } else {
             Vec3_Add((int *)&nextPos, (int *)(((char *)this) + 0x3a4 + im1 * 0xc), (int *)&dst);
-            *(int *)(p6 + 0x3a4) = nextPos.x;
-            *(int *)(p6 + 0x3a8) = nextPos.y;
-            *(int *)(p6 + 0x3ac) = nextPos.z;
+            *(int *)(rowBase + 0x3a4) = nextPos.x;
+            *(int *)(rowBase + 0x3a8) = nextPos.y;
+            *(int *)(rowBase + 0x3ac) = nextPos.z;
         }
         {
             short segmentSize = data_ov095_02136f80[i];
-            _ZN8dCcPos_c4InitERK7Vector35Fix12IiES4_jj(p4, (struct Vec3 *)p5, segmentSize * 0x14, segmentSize * 0x28, 0x200002, flag);
+            _ZN8dCcPos_c4InitERK7Vector35Fix12IiES4_jj(collider, (struct Vec3 *)flamePos, segmentSize * 0x14, segmentSize * 0x28, 0x200002, flag);
         }
-        p6 += 0xc;
-        p5 += 0xc;
-        p4 += 0x3c;
+        rowBase += 0xc;
+        flamePos += 0xc;
+        collider += 0x3c;
         i++;
         } while (i < count);
     }

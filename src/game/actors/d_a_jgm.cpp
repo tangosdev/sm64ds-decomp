@@ -497,40 +497,40 @@ s32 daJgm_c::UpdateYoshiMouthState()
 // @symbol _ZN7daJgm_c14EnterSpitStateEv
 s32 daJgm_c::EnterSpitState()
 {
-    dActor_c *d0;
-    int *a5c;
-    int *a60;
-    int *a64;
+    dActor_c *carried;
+    int *pPosX;
+    int *pPosY;
+    int *pPosZ;
     int *src;
-    int k;
-    s16 s;
-    s16 cval;
+    int idx;
+    s16 sinv;
+    s16 cosv;
 
     mFlags &= ~0x80000;
 
-    d0 = mCarryActor;
-    a5c = &mPosX;
-    mHorzSpeed = d0->mHorzSpeed + 0xa000;
+    carried = mCarryActor;
+    pPosX = &mPosX;
+    mHorzSpeed = carried->mHorzSpeed + 0xa000;
 
-    d0 = mCarryActor;
-    a60 = &mPosY;
-    a64 = &mPosZ;
-    mPrevAngleY = d0->mAngleY;
+    carried = mCarryActor;
+    pPosY = &mPosY;
+    pPosZ = &mPosZ;
+    mPrevAngleY = carried->mAngleY;
 
-    d0 = mCarryActor;
+    carried = mCarryActor;
 
-    src = &d0->mPosX;
+    src = &carried->mPosX;
     mPosX = src[0];
     mPosY = src[1];
     mPosZ = src[2];
 
-    k = ((int)(u16)mPrevAngleY) >> 4;
-    s = data_02082214[k * 2];
-    *a5c = *a5c + (int)(((s64)s * 0x50000 + 0x800) >> 12);
-    *a60 = *a60 + 0x50000;
-    k = ((int)(u16)mPrevAngleY) >> 4;
-    cval = data_02082214[k * 2 + 1];
-    *a64 = *a64 + (int)(((s64)cval * 0x50000 + 0x800) >> 12);
+    idx = ((int)(u16)mPrevAngleY) >> 4;
+    sinv = data_02082214[idx * 2];
+    *pPosX = *pPosX + (int)(((s64)sinv * 0x50000 + 0x800) >> 12);
+    *pPosY = *pPosY + 0x50000;
+    idx = ((int)(u16)mPrevAngleY) >> 4;
+    cosv = data_02082214[idx * 2 + 1];
+    *pPosZ = *pPosZ + (int)(((s64)cosv * 0x50000 + 0x800) >> 12);
 
     mAngVelY = 0x7000;
     mTimer = 0x1e;

@@ -264,16 +264,16 @@ s32 daObjFallBlock_c::Behavior()
                 mRestPos.y
                 + (int)(((long long)sinv * 0x19000 + 0x800) >> 12);
             {
-                s16 *p338 = &mBobPhase;
-                *p338 = (s16)(*p338 + 0x3000);
+                s16 *bobPhase = &mBobPhase;
+                *bobPhase = (s16)(*bobPhase + 0x3000);
             }
         }
         break;
 
     case 2:
         if (mAngleX < 0x400) {
-            s16 *p334 = &mShakeX;
-            *p334 = (s16)(*p334 + 0x80);
+            s16 *shakeX = &mShakeX;
+            *shakeX = (s16)(*shakeX + 0x80);
         } else {
             if (mMeshCollider.IsEnabled() != 0)
                 mMeshCollider.Disable();
@@ -281,8 +281,8 @@ s32 daObjFallBlock_c::Behavior()
         yaw = mAngleZ;
         if (yaw > -0x400) {
             if (yaw < 0x400) {
-                s16 *p336 = &mTiltVelZ;
-                *p336 = (s16)(*p336 + 0x40);
+                s16 *tiltVelZ = &mTiltVelZ;
+                *tiltVelZ = (s16)(*tiltVelZ + 0x40);
             }
         }
         {

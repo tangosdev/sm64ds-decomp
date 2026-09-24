@@ -167,12 +167,12 @@ int daBgSnmBdy_c::InitResources()
     _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
         &mWithMeshClsn, this, 0x82000, 0x82000, 0, 0);
     {
-        int p60;
+        int posY;
         pos.x = mPosX;
-        p60 = mPosY;
-        pos.y = p60;
+        posY = mPosY;
+        pos.y = posY;
         pos.z = mPosZ;
-        pos.y = p60 + 0x14000;
+        pos.y = posY + 0x14000;
     }
     dBgCh_Gnd ground;
     ground.SetObjAndPos(pos, 0);

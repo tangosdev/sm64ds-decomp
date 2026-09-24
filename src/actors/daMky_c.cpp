@@ -772,7 +772,7 @@ int func_ov030_02112400(char* c)
 int daMky_c::EnterState9()
 {
     char *p = (char *)this;
-    *(int *)(p + 0x98) = 0;
+    mHorzSpeed = 0;
     mState = 9;
     return 1;
 }
@@ -1200,13 +1200,13 @@ int daMky_c::EnterState6()
     char *c = (char *)this;
     *(int *)(c + 0xb0) &= ~0x80000;
     if (Vec3_Dist(c + 0x380, c + 0x5c) < 0x514000 &&
-        *(int *)(c + 0x60) > mPerchPosY - 0x12c000) {
+        mPosY > mPerchPosY - 0x12c000) {
         unk_3c7 = 0;
         _ZN8dActor_c13SpawnSoundObjEj(c, 1);
     } else {
         unk_3c7 = 3;
     }
-    *(int *)(c + 0x98) = 0;
+    mHorzSpeed = 0;
     mActionTimer = 0x3c;
     _ZN5dCc_c5ClearEv(c + 0x160);
     mPrevState = mState;

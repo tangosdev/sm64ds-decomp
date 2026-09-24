@@ -1,6 +1,7 @@
 //cpp
-/* The crushers' shared base: Thwomp (DOSUN 161, ov091) and Grindel
- * (DONKAKU 162, ov025). `dsn` is dossun, the Thwomp's Japanese name.
+/* daDsnBase_c -- the crushers' shared base, ov091: the Thwomp (daDsn_c,
+ * DOSUN 161, ov091) and Grindel (daDkk_c, DONKAKU 162, ov025). `dsn` is
+ * dossun, the Thwomp's Japanese name.
  *
  * This TU owns the two vtable slots both leaves inherit -- CleanupResources
  * (slot 3, the key function, so this TU emits _ZTV11daDsnBase_c) and Render
