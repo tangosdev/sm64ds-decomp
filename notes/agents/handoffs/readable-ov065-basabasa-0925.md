@@ -5,10 +5,11 @@ This document describes this commit. The queue records its immutable output SHA.
 ## Identity and resumption
 
 - Issue URL, task ID, stage, session and harness: https://github.com/tangosdev/sm64ds-decomp/issues/3152, task `readable-ov065-basabasa-0925`, stage `revise`, role producer, session `claude-prod-readable-ov065-basabasa-0925`, Claude Code.
+- Round 2: stage `revise`, role producer, session `claude-prod-readable-ov065-basabasa-0925-r2`, Claude Code, input `de0cc89e3ca05da07f5773f168d39c324769c776` (round 1's output). Comment-only rework for verifier finding V1, plus V2 and V4; see Round 2 below.
 - Source branch and previous accepted input SHA: `readable/readable-ov065-basabasa-0925`, input `c31f43bacfde4eb8e184b75077f85f4ba45a72a9` (origin/main at enqueue).
 - Original source base SHA and installed workflow/tool SHA: both `c31f43bacfde4eb8e184b75077f85f4ba45a72a9`.
 - Separate evidence commits and required artifacts in this commit: none. The compiler experiments below are prose records (the source change tried and the measured result); no experiment artifact is committed.
-- Next action, responsible role and blockers: independent verification (byte, relocation, whole-object and source review) of this commit. No blockers.
+- Next action, responsible role and blockers: independent verification (round 2) of the coined-name marking (V1) and the accuracy of this handoff for this commit. No blockers.
 - Status: verified candidate, on the local evidence below.
 - Remaining uncommitted/local-only material and where it is preserved: none.
 
@@ -18,7 +19,7 @@ This document describes this commit. The queue records its immutable output SHA.
 - Reserved source/header/config surfaces actually touched: `src/actors/daBasabasa_c.cpp`, `include/daBasabasa_c.h`, `config/arm9/overlays/ov065/symbols.txt` (nine rows renamed in place), `config/tu_manifest.d/ov065/daBasabasa_c.json`, this handoff, and this class's rows in two integration-lane ledgers: nine `attribution.json` keys and one added key in `config/decl-agreement-baseline.json` (see R19). `config/arm9/overlays/ov065/delinks.txt` is reserved but unchanged: it holds only address ranges.
 - ROM observations: ov065 relocs.txt rows `from:0x0211cc20` to `from:0x0211cc58` put the eight state bodies in .data as four member-pointer pairs: 0x0211cc30 0x021178fc and 0x0211cc50 0x02117888; 0x0211cc20 0x021177e4 and 0x0211cc40 0x02117780; 0x0211cc28 0x021176fc and 0x0211cc38 0x02117624; 0x0211cc58 0x021175b0 and 0x0211cc48 0x02117404. `__sinit_ov065_0211c2a8` copies them into the .bss records 0x0211d700, 0x0211d710, 0x0211d6e0 and 0x0211d6f0 in that order. `daBasabasa_c_classInit` passes 1088 (0x440) to `fBase_c::operator new`, which is the size the header asserts.
 - Lineage evidence or structural inference: the function at 0x02117944 stores its argument at 0x420 and calls the first member pointer of the record through it, so it enters a state and the first pointer of each record is `enter`; Behavior calls the second one every frame (`execute`). The .data records reach the bodies by address, so the rename does not touch them. Field meanings come from their uses: 0x43c selects which ModelAnim is drawn, advanced and placed, and only the 0x300 one plays the wingbeat frames (flying); 0x434 is the yaw target handed to ApproachAngle and ApproachLinear; 0x430 counts frames spent near home and triggers the return to perch at 0x64; 0x3f0 is the matrix built for DropShadowRadHeight (0x30 bytes, a Matrix4x3).
-- Hypothesized names/filenames, explicitly not recovered facts: `SetState` (0x02117944), `ExecuteReturn` (0x02117404), `EnterReturn` (0x021175b0), `ExecuteChase` (0x02117624), `EnterChase` (0x021176fc), `ExecuteDrop` (0x02117780), `EnterDrop` (0x021177e4), `ExecutePerch` (0x02117888), `EnterPerch` (0x021178fc), the `State` members `enter` and `execute`, and the fields `mShadowMatrix`, `mPerchTimer`, `mTargetAngleY` and `mIsFlying` are coined. `include/daBasabasa_c.h` marks them as coined next to the declarations. The labels on the shared files and state records in the source comments are inferred from their uses.
+- Hypothesized names/filenames, explicitly not recovered facts: `SetState` (0x02117944), `ExecuteReturn` (0x02117404), `EnterReturn` (0x021175b0), `ExecuteChase` (0x02117624), `EnterChase` (0x021176fc), `ExecuteDrop` (0x02117780), `EnterDrop` (0x021177e4), `ExecutePerch` (0x02117888), `EnterPerch` (0x021178fc), the `State` members `enter` and `execute`, and the fields `mShadowMatrix`, `mPerchTimer`, `mTargetAngleY` and `mIsFlying` are coined. `include/daBasabasa_c.h` marks each as coined next to its declaration: the nine functions under the `Coined names.` comment above them, `State`, `enter` and `execute` in the State comment, `mShadowMatrix` by its trailing `coined` comment, and `mPerchTimer`, `mTargetAngleY` and `mIsFlying` under the `Coined names from here down.` comment. The labels on the shared files and state records in the source comments are inferred from their uses.
 - Compiler experiments and measured barriers: each row was run with `python tools/tubuild.py verify ov065/daBasabasa_c` on this task's working tree and kept or reverted as the Result column says.
 
 | ID | Where | Change tried | Result |
@@ -37,6 +38,7 @@ This document describes this commit. The queue records its immutable output SHA.
 | E11 | EnterReturn | Plain two-argument `func_02012694` call in place of the four-argument cast | 21/21. Adopted. |
 | E12 | Behavior | Drop the reload and store-back of `unk_0ac` | DIFF, 2 relocation destinations wrong |
 | E13 | ExecuteReturn | `(mFlags & 8)` without `!= 0` | 21/21. Adopted. |
+| E14 | none | ID not used: no experiment was recorded under it | none |
 | E15 | EnterDrop | A `Vector3` local in place of `PoofPos` | 12 words differ |
 | E16 | Behavior | Compare `mCurrentState` directly, no `State *` local | 21/21. Adopted. |
 | E17 | `func_ov065_0211704c` | `Vector3 pos` for the coin spawn in place of `int pos[3]` | 21/21. Adopted. |
@@ -48,6 +50,27 @@ This document describes this commit. The queue records its immutable output SHA.
 | E23 | ExecuteChase | One statement per line for the zeroing | 21/21. Adopted. |
 
 E1, E2, E3 to E6 (one comment at the first use), E10 and E15 leave a codegen-forced form with one short comment. E12's comment already said the reload is the ROM's. E21 needs none: the kept form is plain code.
+
+## Round 2
+
+Verifier findings on round 1's output and their outcome in this commit. Only comments and this handoff change: `git diff de0cc89e3c..HEAD` touches `include/daBasabasa_c.h` (two comment edits) and this handoff.
+
+| ID | Finding | Outcome |
+|---|---|---|
+| V1 | `mShadowMatrix` (0x3f0) is coined but sits above the `Coined names from here down.` comment with no mark | Fixed: trailing `/* 0x3f0 -- coined */`; the declaration is not moved. Every coined-name claim above was rechecked against the header. |
+| V2 | EnterReturn's comment said it flies back to the home position; the state wanders on a random heading and steers home only when far away | Fixed: the comment now reads `wander on a random heading, steer home when far`. |
+| V3 | `mModelAnim1` and `mModelAnim2` are generic names | Still deferred: out of this comment-only round. Owner: next producer on #3152 (https://github.com/tangosdev/sm64ds-decomp/issues/3152). |
+| V4 | The experiment table skipped E14 | Fixed: E14 row added, stating the ID was not used. |
+
+Round 2 proof, run in `C:/tmp/claude-rd-ov065` on this commit's source:
+
+| Command | Exit | Result |
+|---|---|---|
+| `python tools/tubuild.py verify ov065/daBasabasa_c` | 0 | 21/21 MATCH; objisolate clean; relocation destinations clean; ROM-ascending emission order. The manifest was not rewritten. |
+| `python tools/check_dead_references.py` | 0 | no new dead references, no broken markdown links |
+| `python tools/check_decl_agreement.py --changed c31f43bacf` | 0 | no new local redeclarations, no new declaration disagreements |
+
+The Proof section below is round 1's and still applies: this round changes no code.
 
 ## Findings
 
@@ -82,7 +105,7 @@ Self-audit of the base, numbered R1 to R19. Issue #3152 lists target categories 
 - Recovered layout/fields; remaining shadow structs/raw offsets: every daBasabasa_c field is named. No raw offset remains. Inherited `unk_` fields (R7), Vector3 casts over scalars (R9) and the SharedFilePtr second-word view (R10) remain.
 - Lifecycle, vtable/RTTI, initializer and data ownership: unchanged. The new members are non-virtual, so layout and vtable are unchanged.
 - Attribution preserved through each move/rename: the nine `attribution.json` keys follow the renamed symbols with the same authors (`tangosdev` for seven, `ruspecial` for ExecuteDrop, `andrewboudreau` for EnterDrop).
-- Remaining agreed issue scope: R3, R5, R7, R9, R10, R13, R15, R16, R19 (ledgers).
+- Remaining agreed issue scope: R3, R5, R7, R9, R10, R13, R15, R16, R19 (ledgers), V3.
 
 Residue. The `lines` column is `wc -l` of `git show <rev>:<path>` (newline count; both revisions end in a newline). Each token column is the number of lines containing the token, `grep -c -F`, with `MSYS_NO_PATHCONV=1`.
 

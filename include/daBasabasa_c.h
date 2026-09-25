@@ -46,7 +46,7 @@ struct daBasabasa_c : dEnemyBase_c {
     ModelAnim mModelAnim1;            /* 0x300 -- flying model */
     ModelAnim mModelAnim2;            /* 0x364 -- hanging model */
     ShadowModel mShadowModel;         /* 0x3c8 */
-    Matrix4x3 mShadowMatrix;          /* 0x3f0 */
+    Matrix4x3 mShadowMatrix;          /* 0x3f0 -- coined */
     State *mCurrentState;             /* 0x420 */
     /* InitResources copies the spawn position into these three. */
     s32 mHomePosX;                    /* 0x424 */
@@ -74,7 +74,7 @@ struct daBasabasa_c : dEnemyBase_c {
     /* Coined names. SetState enters a state; the four states follow, each
        as its enter and execute pair. */
     int SetState(State *state);
-    int EnterReturn();      /* fly back to the home position */
+    int EnterReturn();      /* wander on a random heading, steer home when far */
     int ExecuteReturn();
     int EnterChase();       /* fly at the closest player */
     int ExecuteChase();
