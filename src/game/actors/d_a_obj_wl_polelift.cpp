@@ -61,9 +61,8 @@ int fdiv(int a, int b);
 }
 
 extern "C" {
-/* Factory ABI: CodeWarrior rejects the actor hierarchy's class-specific
- * operator-new declaration, so the allocation and the base/subobject
- * construction sequence stay explicit here. */
+/* Factory ABI: the allocation goes through fBase_c::operator new by name, but
+ * the base/subobject construction sequence stays explicit here. */
 void _ZN8dActor_cC2Ev(void *self);
 void _ZN5ModelC1Ev(void *self);
 void _ZN10dCcAcPos_cC1Ev(void *self);
