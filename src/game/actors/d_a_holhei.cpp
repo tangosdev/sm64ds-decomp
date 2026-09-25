@@ -44,6 +44,8 @@
 #include "common.h"
 #include "daHolhei_c.h"
 #include "SharedFilePtr.h"
+#include "Player.h"
+#include "SurfaceInfo.h"
 
 struct C; typedef int (C::*PMF)();
 struct C { char pad[0x364]; PMF *pp; };
@@ -51,36 +53,25 @@ struct Klass; typedef void (Klass::*KPMF)();
 struct M { char pad[8]; KPMF pmf; };
 
 extern "C" {
-extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void* p);
 extern char* _ZNK10dBgCh_Actr14GetFloorResultEv(void* p);
-extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void* p, Vector3* v);
 extern short func_02010844(void* unused, Vector3* v, short angle);
-extern int _ZNK10dBgCh_Actr8IsOnWallEv(void* p);
-extern void *_ZN8dActor_c10FindWithIDEj(u32 id);
 extern void _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(void *c, void *v, void *a, int flag);
 extern void func_02012694(int a, void *p);
-extern int _ZN8dActor_c18HorzAngleToCPlayerEv(void *c);
-extern int _ZN6Player7TryGrabER8dActor_c(void *p, void *a);
 extern int daHolhei_c_ChangeState(void *c, void *p);
 extern int func_ov002_020db5f4(void *c, void *arg);
 extern int data_ov062_0211dea0[];
-extern int _ZNK9Animation12WillHitFrameEi(char *anim, int f);
 namespace cv {
   extern "C" int func_ov002_020db54c(int p, int a, int b, int s);
 }
-extern int _ZN9Animation8FinishedEv(char *anim);
 extern int _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *m, void *f, int a, int b, unsigned int e);
 extern int *data_ov062_0211de08[];
 extern int data_ov062_0211deb0[];
 extern int data_ov062_0211dde8[];
-extern int _ZN8dActor_c24KillAndTrackInDeathTableEv(void* c);
-extern int _ZN8dActor_c14TriplePoofDustEv(void* c);
 extern void func_0200d8c8(void* cam, void* v, int strength);
 extern int _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(void* a, Vector3* v, unsigned n, int f, short s);
 extern int data_02092138;
 extern void* data_0209f318;
 extern void *data_ov062_0211de00[];
-extern void* _ZN8dActor_c13ClosestPlayerEv(void* self);
 extern int ApproachAngle(void* angle, int target, int a, int b, int c);
 extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int c, const void* v, unsigned int e);
 extern int Vec3_Dist(const void* a, const void* b);
@@ -99,7 +90,6 @@ extern int data_ov062_0211ddf0[];
 extern int data_ov062_0211dde0[];
 extern void func_ov062_02116edc(void *c);
 extern int Math_Function_0203b14c(void*, int, int, int, int);
-extern void* _ZN8dActor_c11UpdateCarryER6PlayerRK7Vector3(void*, int, void*);
 extern int data_ov062_0211df10[];
 extern int data_ov062_0211df14[];
 extern int data_ov062_0211df18[];
@@ -303,7 +293,6 @@ int daHolhei_c::CleanupResources()
 // @symbol func_ov062_02116edc
 extern "C" {
 int Math_Function_0203b14c(void*, int, int, int, int);
-void* _ZN8dActor_c11UpdateCarryER6PlayerRK7Vector3(void*, int, void*);
 
 void func_ov062_02116edc(void* c_){
     char* c = (char*)c_;
@@ -313,7 +302,7 @@ void func_ov062_02116edc(void* c_){
   Math_Function_0203b14c(c+0x42c, *(int*)((char*)data_ov062_0211df10 + k), 0x800, 0x3e8000, 4);
   Math_Function_0203b14c(c+0x430, *(int*)((char*)data_ov062_0211df14 + k), 0x800, 0x3e8000, 4);
   Math_Function_0203b14c(c+0x434, *(int*)((char*)data_ov062_0211df18 + k), 0x800, 0x3e8000, 4);
-  void* r = _ZN8dActor_c11UpdateCarryER6PlayerRK7Vector3(c, *(int*)(c+0x3f8), c+0x42c);
+  void* r = ((dActor_c *)c)->UpdateCarry(*(Player *)*(int*)(c+0x3f8), *(Vector3 *)(c+0x42c));
   { struct M12w { int w[12]; };  /* array-wrapper copy */
     *(M12w*)(c+0x31c) = *(M12w*)r; }
 }
@@ -344,7 +333,7 @@ extern "C" void func_ov062_02116dbc(char* thiz)
     *(int*)(c + 0x3b4) = *(int*)(c + 0x5c) >> 3;
     *(int*)(c + 0x3b8) = *(int*)(c + 0x60) >> 3;
     *(int*)(c + 0x3bc) = *(int*)(c + 0x64) >> 3;
-    if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x144) != 0) {
+    if (((dBgCh_Actr *)(c + 0x144))->IsOnGround() != 0) {
         _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
             c, *(ShadowModel*)(c + 0x368), *(Matrix4x3*)(c + 0x390), 0x12c000, 0x32000, 0xf);
     } else {
@@ -462,7 +451,7 @@ extern "C" {
         ApproachAngle(c + 0x94, *(short *)(c + 0x3f4), 0xa, 0x200, 0x100);
 
         *(int *)(c + 0x98) = 0xa000;
-        pl = (char *)_ZN8dActor_c13ClosestPlayerEv(c);
+        pl = (char *)((dActor_c *)c)->ClosestPlayer();
 
         *(int *)(c + 0x3ec) =
             _ZN5Sound8PlayLongEjjjRK7Vector3s(
@@ -583,7 +572,7 @@ int func_ov062_021165e8(char* c)
     volatile struct Vector3 pos;
     struct Vector3* pp;
 
-    player = (char*)_ZN8dActor_c13ClosestPlayerEv(c);
+    player = (char*)((dActor_c *)c)->ClosestPlayer();
     r = func_ov062_02115f84(c);
     if (r != 0 || self->mEdgeStop == 1) {
         if (r != 2)
@@ -602,7 +591,7 @@ int func_ov062_021165e8(char* c)
     pos.z = pp->z;
 
     if (*(int*)(c + 0x3f0) == 0) {
-        *(short*)(c + 0x3f4) = (short)_ZN8dActor_c18HorzAngleToCPlayerEv(c);
+        *(short*)(c + 0x3f4) = (short)((dActor_c *)c)->HorzAngleToCPlayer();
         ApproachAngle((short*)(c + 0x94), *(short*)(c + 0x3f4), 0x80, 0x200, 0x400);
         if (AngleDiff(*(short*)(c + 0x3f4), *(short*)(c + 0x8e)) < 0x200) {
             *(int*)(c + 0x98) = 0x1e000;
@@ -706,12 +695,12 @@ int func_ov062_021163b0(char* c)
 {
     Vector3 v[2];
     if (data_02092138 > *(int*)(c + 0x60)) {
-        _ZN8dActor_c24KillAndTrackInDeathTableEv(c);
+        ((dActor_c *)c)->KillAndTrackInDeathTable();
         return 1;
     }
-    if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x144) != 0) {
-        _ZN8dActor_c14TriplePoofDustEv(c);
-        _ZN8dActor_c24KillAndTrackInDeathTableEv(c);
+    if (((dBgCh_Actr *)(c + 0x144))->IsOnGround() != 0) {
+        ((dActor_c *)c)->TriplePoofDust();
+        ((dActor_c *)c)->KillAndTrackInDeathTable();
         func_02012694(0x125, c + 0x74);
         func_0200d8c8(data_0209f318, c + 0x5c, 0x7d0000);
         v[0].x = *(int*)(c + 0x5c);
@@ -742,7 +731,7 @@ extern "C" {
 extern int data_ov062_0211de80[];
 // @symbol func_ov062_0211632c
 int func_ov062_0211632c(void* c){
-  if(_ZN9Animation8FinishedEv((char*)c+0x350)){ *(int*)((char*)c+0x3f0)=0; ::daHolhei_c_ChangeState(c, data_ov062_0211de80); }
+  if(((Animation *)((char*)c+0x350))->Finished()){ *(int*)((char*)c+0x3f0)=0; ::daHolhei_c_ChangeState(c, data_ov062_0211de80); }
   return 1;
 }
 }
@@ -797,13 +786,13 @@ extern "C" {
 // @symbol func_ov062_021161a8
 int func_ov062_021161a8(char *c)
 {
-  if (*(int *)(c + 0x3f8) != 0 && _ZNK9Animation12WillHitFrameEi(c + 0x350, 0x14))
+  if (*(int *)(c + 0x3f8) != 0 && ((Animation *)(c + 0x350))->WillHitFrame(0x14))
   {
     cv::func_ov002_020db54c(*(int *)(c + 0x3f8), 0x28000, 0x50000, *(short *)(c + 0x8e));
     *(int *)(c + 0x3f8) = 0;
     func_02012694(0x126, c + 0x74);
   }
-  if (_ZN9Animation8FinishedEv(c + 0x350))
+  if (((Animation *)(c + 0x350))->Finished())
   {
     int *q = (int *)(c + 0x128);
     *q &= ~2;
@@ -827,7 +816,7 @@ void func_ov062_02116010(char *c)
 
     id = *(u32 *)(c + 0x134);
     if (id != 0 &&
-        (a = _ZN8dActor_c10FindWithIDEj(id)) != 0 &&
+        (a = dActor_c::FindWithID(id)) != 0 &&
         (*(int *)(c + 0x130) & 0x10) != 0) {
         v.x = 0x1000;
         v.y = 0;
@@ -842,19 +831,19 @@ void func_ov062_02116010(char *c)
     id = *(u32 *)(c + 0x134);
     if (id == 0)
         return;
-    a = _ZN8dActor_c10FindWithIDEj(id);
+    a = dActor_c::FindWithID(id);
     if (a == 0)
         return;
     b = (int)(*(u16 *)((char *)a + 0xc) == 0xbf);
     if (b == 0)
         return;
-    angle = _ZN8dActor_c18HorzAngleToCPlayerEv(c);
+    angle = ((dActor_c *)c)->HorzAngleToCPlayer();
     angle = AngleDiff(angle, *(s16 *)(c + 0x8e));
     if (angle > 0x2000) {
         if ((*(int *)(c + 0x130) & 0x1000) == 0)
             return;
         *(int *)(((int)c + 0xb0) & 0xFFFFFFFFFFFFFFFFULL) |= 0x80;
-        if (_ZN6Player7TryGrabER8dActor_c(a, c) == 0)
+        if (((Player *)a)->TryGrab(*(dActor_c *)c) == 0)
             return;
         *(int *)(c + 0x3f8) = (int)a;
         *(int *)(((long long)(int)(c + 0x128)) & 0xFFFFFFFFFFFFFFFFLL) |= 2;
@@ -878,12 +867,12 @@ namespace tu {  /* namespaced: a (void*) view of this symbol is in scope */
 int func_ov062_02115f84(char* c) {
     Vector3 v;
     short slope = 0;
-    if (_ZNK10dBgCh_Actr10IsOnGroundEv(c+0x144)) {
+    if (((dBgCh_Actr *)(c+0x144))->IsOnGround()) {
         char* floorResult = _ZNK10dBgCh_Actr14GetFloorResultEv(c+0x144);
-        _ZNK11SurfaceInfo12CopyNormalToER7Vector3(floorResult+4, &v);
+        ((SurfaceInfo *)(floorResult+4))->CopyNormalTo(v);
         slope = func_02010844(c, &v, *(short*)(c+0x8e));
     }
-    if (_ZNK10dBgCh_Actr8IsOnWallEv(c+0x144))
+    if (((dBgCh_Actr *)(c+0x144))->IsOnWall())
         return 1;
     if (slope < 0) slope = -slope;
     if (slope > 0x1000) return 2;

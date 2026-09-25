@@ -73,7 +73,6 @@ int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
 void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     dBgW_KcMbg *self, KCL_File *file, const Matrix4x3 *mat,
     Fix12i scale, s16 angle, CLPS_Block *clps);
-void _ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -103,7 +102,7 @@ int daObjCtMecha10_c::InitResources()
             &mClsnMat, 0x1000, mAngleY, &data_ov035_021121d8);
         func_020396c0(&mMeshCollider, 0);
         func_020393d4(&mMeshCollider,
-            (void *)&_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
+            (void *)&dBgW::UpdatePosAndAngs);
         mRotationState = 0;
     } else {
         isCarrier = (actorID == 0x79);

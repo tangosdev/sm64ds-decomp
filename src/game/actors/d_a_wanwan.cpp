@@ -82,7 +82,6 @@ void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
 
 // @symbol daWanwan_c_classInit
 extern "C" {
-void *_ZN7fBase_cnwEj(unsigned int);
 void _ZN12dEnemyBase_cC2Ev(void *);
 int _ZN10dCcAcPos_cC1Ev(void *);
 int _ZN9ModelAnimC1Ev(void *);
@@ -98,7 +97,7 @@ extern void func_0203d384();
 
 extern "C" daWanwan_c *daWanwan_c_classInit()
 {
-    char *c = (char *)_ZN7fBase_cnwEj(0x620);
+    char *c = (char *)fBase_c::operator new(0x620);
     if (c) {
         _ZN12dEnemyBase_cC2Ev(c);
         *(int **)c = &_ZTV10daWanwan_c[2];
@@ -557,7 +556,6 @@ void func_ov014_021122dc(char *c)
 /* ROM ordinal 19 -- func_ov014_02112114, 0x02112114, size 0x1c8 */
 extern "C" {
 // @symbol func_ov014_02112114
-extern void *_ZN8dActor_c10FindWithIDEj(unsigned id);
 extern void func_ov014_02111ebc(void *c, int i);
 extern int Vec3_HorzAngle(void *a, void *b);
 extern int AngleDiff(int a, int b);
@@ -577,7 +575,7 @@ void func_ov014_02112114(void *cc)
     id = *(int*)(c + 0x134);
     if (id == 0)
         return;
-    e = (char*)_ZN8dActor_c10FindWithIDEj(id);
+    e = (char*)dActor_c::FindWithID(id);
     if (e == 0)
         return;
 
@@ -663,27 +661,23 @@ void func_ov014_02111fe0(char* c){
 extern "C" {
 // @symbol func_ov014_02111fb8
 extern int func_0201267c(int,void*);
-extern void _ZN8dActor_c15HugeLandingDustEb(void*,int);
 int func_ov014_02111fb8(char* c){
   func_0201267c(0x39, (char*)c+0x74);
-  _ZN8dActor_c15HugeLandingDustEb(c,1);
+  ((dActor_c *)c)->HugeLandingDust(1);
 }
 }
 
 /* ROM ordinal 16 -- func_ov014_02111f54, 0x02111f54, size 0x64 */
 extern "C" {
 // @symbol func_ov014_02111f54
-void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
-char* _ZN8dActor_c13ClosestPlayerEv(char* a);
-int _ZN6Player17SetNoControlStateEhih(void* p, unsigned char a, int b, unsigned char c);
 void func_ov014_02111ebc(void* c, int i);
 int func_ov014_02111f54(void* c){
   char* self=(char*)c;
-  void* a=_ZN8dActor_c10FindWithIDEj(*(unsigned int*)(self+0x608));
+  void* a=dActor_c::FindWithID(*(unsigned int*)(self+0x608));
   if(*(unsigned char*)((char*)a+0x31e)!=0) goto fail;
   {
-    void* p=_ZN8dActor_c13ClosestPlayerEv(self);
-    if(_ZN6Player17SetNoControlStateEhih(p,4,-1,0)==0) goto fail;
+    void* p=((dActor_c *)self)->ClosestPlayer();
+    if(((Player *)p)->SetNoControlState(4, -1, 0)==0) goto fail;
     func_ov014_02111ebc(self,3);
     *(unsigned char*)(self+0x605)=1;
     return 1;
@@ -778,11 +772,8 @@ int ApproachAngle(void* p, int a, int b, int c, int d);
 unsigned short DecIfAbove0_Short(unsigned short* p);
 int _Z14ApproachLinearRiii(int* p, int to, int step);
 void _Z14ApproachLinearRsss(short* p, short to, short step);
-int _ZN8dActor_c13DistToCPlayerEv(void* self);
-short _ZN8dActor_c18HorzAngleToCPlayerEv(void* self);
 int AngleDiff(int a, int b);
 void func_ov014_02111ebc(void* c, int i);
-int _ZN9Animation7AdvanceEv(void* self);
 
 void func_ov014_02111ca8(char* c){
     if (func_ov014_02111f54(c)) return;
@@ -792,8 +783,8 @@ void func_ov014_02111ca8(char* c){
     _Z14ApproachLinearRsss((short*)(c + 0x8e), *(short*)(c + 0x602), 0x190);
     _Z14ApproachLinearRiii((int*)(c + 0x98), 0, 0x400);
     if (*(unsigned char*)(c + 0x61c)) {
-        int d = _ZN8dActor_c13DistToCPlayerEv(c);
-        *(short*)(c + 0x602) = _ZN8dActor_c18HorzAngleToCPlayerEv(c);
+        int d = ((dActor_c *)c)->DistToCPlayer();
+        *(short*)(c + 0x602) = ((dActor_c *)c)->HorzAngleToCPlayer();
         *(short*)(c + 0x94) = *(short*)(c + 0x8e);
         *(int*)(c + 0x98) = 0xa000;
         *(int*)(c + 0xa8) = 0x14000;
@@ -804,7 +795,7 @@ void func_ov014_02111ca8(char* c){
             func_ov014_02111ebc(c, 2);
         }
     }
-    _ZN9Animation7AdvanceEv(c + 0x1a0);
+    ((Animation *)(c + 0x1a0))->Advance();
 }
 }
 
@@ -813,7 +804,6 @@ extern "C" {
 // @symbol func_ov014_02111b70
 namespace call3_267c { extern "C" int func_0201267c(int, void *, int); } /* this member byte-requires the three-argument call (r2 set); the TU's file-scope view is (int, void*) */
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *, void *, int, int, unsigned int);
-extern char *_ZN8dActor_c13ClosestPlayerEv(char *);
 extern short Vec3_VertAngle(const void *, const void *);
 extern short data_02082214[];
 
@@ -828,7 +818,7 @@ void func_ov014_02111b70(char *c)
     *((int *)(c + 0x9c)) = 0;
     call3_267c::func_0201267c(0x3a, c + 0x74, 0);
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x150, (void *)((int *)&data_ov014_02114970)[1], 0, 0x1000, 0);
-    p = (char *)_ZN8dActor_c13ClosestPlayerEv(c);
+    p = (char *)((dActor_c *)c)->ClosestPlayer();
 
     /* ROM load order: y, z, x — then y+0x50000, store x, setup call, store y/z */
     {
@@ -862,7 +852,6 @@ extern int func_ov014_02111f54(void*);
 extern int Math_Function_0203b14c(void*,int,int,int,int);
 extern unsigned short DecIfAbove0_Short(unsigned short*);
 extern void func_ov014_02111ebc(void*,int);
-extern int _ZN9Animation7AdvanceEv(void*);
 int func_ov014_02111af0(char* c){
   int r = func_ov014_02111f54(c);
   if(r) return r;
@@ -870,7 +859,7 @@ int func_ov014_02111af0(char* c){
   if(DecIfAbove0_Short((unsigned short*)(c+0x5fc))) goto adv;
   func_ov014_02111ebc(c, 1);
 adv:
-  return _ZN9Animation7AdvanceEv((char*)c+0x1a0);
+  ((Animation *)((char*)c+0x1a0))->Advance();
 }
 }
 
@@ -905,9 +894,7 @@ extern "C" void func_ov014_021115ec(u8 *self)
      * are byte-load-bearing and diverge from the TU's canonical ones; block
      * scope keeps them its own (C linkage inherited, file-scope views hidden). */
     void _ZN5Sound15PlaySecretSoundEP8dActor_cPt(void *actor, u16 *snd);
-    void *_ZN8dActor_c10FindWithIDEj(unsigned id);
     int ApproachAngle(void *self_, s32 a, s32 b, s32 c, s32 d);
-    s16 _ZN8dActor_c18HorzAngleToCPlayerEv(void *self_);
     s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
     s32 _Z14ApproachLinearRsss(void *dst, s32 target, s32 step);
     u16 DecIfAbove0_Short(void *p);
@@ -916,17 +903,15 @@ extern "C" void func_ov014_021115ec(u8 *self)
     s32 Vec3_ApproachHorz(Vector3 *out, Vector3 *target, s32 maxStep);
     void func_ov014_02112ea8(void *actor);
     void _ZN6Camera9SetFlag_3Ev(void *cam);
-    void *_ZN8dActor_c13ClosestPlayerEv(void *self_);
     s32 _ZN6Player12Unk_020ca150Eh(void *player, u8 a);
     void _ZN6Camera9SetLookAtERK7Vector3(void *cam, const Vector3 *v);
     void _ZN7fBase_c18MarkForDestructionEv(void *self_);
-    int _ZN9Animation7AdvanceEv(void *self_);
     extern s16 data_02082214[];
     extern void *data_0209f318;
     Vector3 partnerPos;
     u8 *partner; s16 angleToPlayer; s16 angleToAnchor; u8 *camera;
     _ZN5Sound15PlaySecretSoundEP8dActor_cPt(self, (u16 *)(self + 0x5fe));
-    partner = (u8 *)_ZN8dActor_c10FindWithIDEj(*(unsigned *)(self + 0x60c));
+    partner = (u8 *)dActor_c::FindWithID(*(unsigned *)(self + 0x60c));
     {
         s32 *src = (s32 *)(partner + 0x5c);
         s32 fifth = 0x80;
@@ -938,7 +923,7 @@ extern "C" void func_ov014_021115ec(u8 *self)
         ApproachAngle(ap, z, 4, 0x200, fifth);
     }
     camera = *(u8 **)&data_0209f318;
-    angleToPlayer = _ZN8dActor_c18HorzAngleToCPlayerEv(self);
+    angleToPlayer = ((dActor_c *)self)->HorzAngleToCPlayer();
     angleToAnchor = Vec3_HorzAngle((Vector3 *)(self + 0x5c), (Vector3 *)(self + 0x5ec));
     switch (*(u8 *)(self + 0x604)) {
     case 0:
@@ -1033,7 +1018,7 @@ extern "C" void func_ov014_021115ec(u8 *self)
                 unsigned *flag = (unsigned *)(camera + 0x154);
                 *flag &= ~8u;
             }
-            if (_ZN6Player12Unk_020ca150Eh(_ZN8dActor_c13ClosestPlayerEv(self), 4) != 0) {
+            if (_ZN6Player12Unk_020ca150Eh(((dActor_c *)self)->ClosestPlayer(), 4) != 0) {
                 inc604(self);
                 *(u16 *)(self + 0x5fc) = 0x3c;
             }
@@ -1046,7 +1031,7 @@ extern "C" void func_ov014_021115ec(u8 *self)
             _ZN7fBase_c18MarkForDestructionEv(self);
         break;
     }
-    _ZN9Animation7AdvanceEv(self + 0x1a0);
+    ((Animation *)(self + 0x1a0))->Advance();
 }
 
 /* ROM ordinal 5 -- func_ov014_021115c0, 0x021115c0, size 0x2c */

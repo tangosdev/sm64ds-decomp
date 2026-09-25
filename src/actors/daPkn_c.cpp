@@ -6,25 +6,23 @@
  * The base is dEnemyBase_c. This vtable's 31 slots end at 0x02130ca4; seven
  * zero words follow. The section boundary alone does not establish its extent.
  *
- * Factory is `return new daPkn_c()`. Leaf operator new(unsigned long) forwards
- * `_ZN7fBase_cnwEj` until #2570. Definitions run in reverse address order for
+ * Factory is `return new daPkn_c()`, through the inherited
+ * fBase_c::operator new. Definitions run in reverse address order for
  * mwccarm 2004/b56. The inline destructor in the header emits the required
- * D1/D0 pair; `new` odr-uses the class so that pair is emitted here.
+ * D1 and D0 pair; `new` odr-uses the class so that pair is emitted here.
  *
  * Known limits:
- * - ModelAnim::SetAnim / dCcAc_c::Init / dCcAcPos_c::Init stay mangled
- *   (Fix12<int> by value, wall 6az -- InitResources and the state helpers)
- * - dBgCh_Actr::Init stays mangled: header Fix12i mangles as i; ROM is
- *   Fix12<int> (InitResources)
- * - Particle::System::New / NewSimple, Sound::PlaySub / PlayLong, Player::Hurt
- *   / Bounce stay mangled (Fix12<int> by value, 6az)
- * - Animation::Finished / WillHitFrame keep +0x160 (ModelAnim MI +0x50)
- * - (int)this + 0x440 in InitResources (named `mHomePos = mHeadClsnOffset` DIFFs)
- * - mStateTimer unsigned halfword increment (ldrh; ++mStateTimer is ldrsh)
- * - func_ov084_0212f204 / 0212f460 named fields size-DIFF (keep offset soup)
- * - PknMtx43 / PknVec3 POD copies (Vector3 / nested Matrix4x3 scalarize)
- * - data_ov084_* SharedFilePtr handles and the PMF table at 0x02130e80
- *   (text-only TU; sinit-owned BSS)
+ * - ModelAnim::SetAnim, dCcAc_c::Init, dCcAcPos_c::Init, dBgCh_Actr::Init,
+ *   Particle::System::New and NewSimple, Sound::PlaySub, Player::Hurt and
+ *   Player::Bounce are called by their mangled names. Each symbol carries a
+ *   Fix12<int> by value. The measured SetAnim and Init alternatives are
+ *   noted at their declarations.
+ * - Six helpers keep C linkage under their address names, because
+ *   include/decl_common.h declares them that way.
+ * - func_ov084_0212ec60 walks PknMtx43 and PknVec3 views: a Vector3 or
+ *   Matrix4x3 copy is emitted differently.
+ * - The shared files and the state table at 0x02130e80 keep their address
+ *   names (text-only TU; the static initializer owns the .bss).
  *
  * Boundary, layout and compiler experiments are recorded in
  * notes/data/class-facts/daPkn_c.json and
@@ -33,10 +31,9 @@
 
 #include "common.h"
 #include "daPkn_c.h"
-#include "decl_Animation.h"
-#include "Player.h"
-#include "Animation.h"
 #include "SharedFilePtr.h"
+#include "Player.h"
+#include "Sound.h"
 
 /* The six shared files this actor claims.  include/SharedFilePtr.h declares no
    fields on purpose -- the files that shadow it disagree about the layout -- so
@@ -62,11 +59,11 @@ struct PknVec3 { int x, y, z; };
 struct PknMtx43 { int w[12]; };
 
 /* Behavior calls the current state through this actor's member-pointer table
-   in .bss at 0x02130e80.  The free handler identities and the unowned PMF
-   records stay unchanged until their coordinated method conversion. */
+   in .bss at 0x02130e80, which __sinit_ov084_02130654 fills from the .data
+   records at 0x02130ba4. */
 typedef void (daPkn_c::*PknStatePMF)();
 
-#define AT(p, off) ((void *)(int)((char *)(p) + (off)))
+int ApproachLinear(short &value, short target, short step);
 
 /* C-linkage declarations for the remaining raw entry points and shared data. */
 extern "C" {
@@ -76,9 +73,7 @@ void  func_ov084_0212ebb4(daPkn_c *c);
 void  func_ov084_0212ec60(daPkn_c *c);
 int   func_ov084_0212ef00(daPkn_c *self);
 int   func_ov084_0212f1d0(daPkn_c *c);
-void  func_ov084_0212f204(char *self);
-void  func_ov084_0212f33c(daPkn_c *self);
-void  func_ov084_0212f460(void *self);
+void  func_ov084_0212f204(daPkn_c *c);
 
 /* -- the state table __sinit_ov084_02130654 fills in -- */
 extern PknStatePMF data_ov084_02130e80[];
@@ -90,11 +85,8 @@ int   func_0201267c(int a, void *b);
 void  func_02012694(u32 id, void *pos);
 void  func_020105cc(void *thiz, u32 flags);
 
-
 void  _ZN6Player6BounceE5Fix12IiE(void *player, int fix);
 int   _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *player, const void *pos, u32 a, int fix, u32 b, u32 c, u32 d);
-
-
 
 /* Measured remaining call seams in InitResources (mwccarm 2004/b56): real
    SetAnim and dCcAc/dCcAcPos Init calls with local Fix12<int> arguments change
@@ -114,7 +106,6 @@ extern int data_ov084_02130334[];        /* per-frame particle Y offset */
 extern u8  data_ov084_021302ec[];        /* five indices {0,3,4,5,6}; 0212ec60 sums s16 at [i]*0x34+0x1c into ang[1] (dead -- later y-adjust reads ang[0]==0, so the offset is constant 0x32000). 0x34 is not BMD_Bone (0x40). */
 extern PknMtx43 data_020a0e68;           /* the shared scratch matrix */
 
-void  _Z14ApproachLinearRsss(s16 *val, s16 target, s16 step);
 int   Vec3_Dist(const Vector3 *a, const Vector3 *b);
 short Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 void  Vec3_Asr(PknVec3 *d, PknVec3 *s, int sh);
@@ -127,13 +118,12 @@ void  MulMat4x3Mat4x3(void *a, void *b, void *c);
 void *_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(u32 handle, u32 id, int x, int y, int z, const void *f, void *cb);
 void  _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 id, int x, int y, int z);
 int   _ZN5Sound7PlaySubEjjj5Fix12IiEb(u32 a, u32 b, u32 c, int t, int flag);
-int   _ZN5Sound8PlayLongEjjjRK7Vector3s(u32 handle, u32 b, u32 c, void *pos, u32 d);
 
 }
 
 /* ==========================================================================
  *
- * Allocates sizeof(daPkn_c) (0x47c) through the leaf operator new and
+ * Allocates sizeof(daPkn_c) (0x47c) through fBase_c::operator new and
  * inlines the implicit constructor: dEnemyBase_c C2, vptr store, then the
  * six member C1s in declaration order.
  * ======================================================================== */
@@ -147,21 +137,12 @@ extern "C" daPkn_c *daPkn_c_classInit()
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN7daPkn_c13InitResourcesEv
 /*
- * This was still `extern "C" int _ZN7daPkn_c13InitResourcesEv(char* c)`
- * working raw offsets -- a file renamed .cpp without ever being migrated. It is
- * a real method now, with the remaining copy seam measured below.
- *
- * Unlike daFPkn_c's, this one DOES check its loads: a failed SetFile
- * on either model returns 0 rather than carrying on.
+ * Unlike daFPkn_c's, this one checks its loads: a failed SetFile on either
+ * model returns 0.
  *
  * The tail seeds the sleep-bubble position: 0xe0 along the facing angle out
- * of the shared sin/cos table at data_02082214, and 0x37800 above mPosY.
- * 0212ec60 rewrites mBubblePos every frame. PIRANHA_PLANT (250) does not
- * breathe fire -- that is daFPkn_c.
- *
- * The remaining SetAnim/Init bridges are described at their declarations.
- * Their measured alternatives are recorded in the continuation handoff;
- * the general callee-homing note does not prove a caller ABI restriction.
+ * of the shared sin and cos table at data_02082214, and 0x37800 above mPosY.
+ * func_ov084_0212ec60 rewrites mBubblePos every frame.
  */
 int daPkn_c::InitResources()
 {
@@ -185,27 +166,27 @@ int daPkn_c::InitResources()
     mScaleZ = 0x1000;
     mState = 0;
     mTargetAngleY = mPrevAngleY;
-    unk_464 = 0x7fffffff;
-    unk_460 = 0;
+    mPlayerDist = 0x7fffffff;
+    mClosestPlayer = 0;
     mClsnEnabled = 0;
-    unk_45d = 1;
+    mSubSoundFadedOut = 1;
     mStateTimer = 0;
     unk_108 = 3;
-    unk_46c = 0;
+    mPlayerAirborne = 0;
     _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x64000, 0x64000, 0, 0);
     mHeadClsnOffset.x = mPosX;
     mHeadClsnOffset.y = mPosY;
     mHeadClsnOffset.z = mPosZ;
     {
         s16 *tbl = data_02082214;
-        /* The add sits INSIDE the integer cast, which is load-bearing here:
-           not interchangeable with `&mHeadClsnOffset`. */
-        Vector3* home = (Vector3*)(((int)this + 0x440));
+        /* Copied through a pointer: `mHomePos = mHeadClsnOffset` emits a
+           different copy. */
+        Vector3 *home = &mHeadClsnOffset;
         mHomePos = *home;
         /* The shift must be LOGICAL so the angle wraps -- on the signed s16 it
            would index the wrong table entry for negative angles. */
-        unsigned short angh = *(unsigned short*)&mAngleY;
-        int ang = angh >> 4;
+        int ang = (u16)mAngleY >> 4;
+        /* Temporaries in the ROM's load order; folding them reorders it. */
         int y0 = mPosY;
         int z0 = mPosZ;
         int cosv = tbl[(ang << 1) + 1];
@@ -217,9 +198,9 @@ int daPkn_c::InitResources()
         mBubblePos.y = y;
         mBubblePos.z = z;
     }
-    unk_474 = 0;
-    mParticleHandle = unk_474;
-    unk_478 = 0;
+    mParticleHandle2 = 0;
+    mParticleHandle = mParticleHandle2;
+    mLoopSoundHandle = 0;
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov084_02130df4.file, 0, 0x1000, 0);
     return 1;
 }
@@ -247,14 +228,13 @@ int daPkn_c::Behavior()
     }
     MakeVanishLuigiWork(mdCcAc_c1);
     mModelAnim.Advance();
-    func_ov084_0212f204((char *)this);
+    func_ov084_0212f204(this);
     old = mState;
     (this->*data_ov084_02130e80[old])();
     {
-        /* This counter loads the shared signed field as an unsigned halfword.
-           ++mStateTimer instead emits ldrsh where the ROM uses ldrh. */
-        unsigned short* p100 = (unsigned short*)((char*)&mStateTimer);
-        *p100 = (unsigned short)(*p100 + 1);
+        /* mStateTimer is s16; the ROM counts it as a u16 (ldrh, not ldrsh). */
+        u16 *timer = (u16 *)&mStateTimer;
+        *timer = *timer + 1;
     }
     cur = mState;
     if (old != cur) {
@@ -262,7 +242,7 @@ int daPkn_c::Behavior()
             mFlags &= ~0x10000000;
         }
         mStateTimer = 0;
-        unk_478 = 0;
+        mLoopSoundHandle = 0;
     }
     func_ov084_0212ec60(this);
     mdCcAc_c1.Clear();
@@ -282,13 +262,8 @@ int daPkn_c::Behavior()
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN7daPkn_c6RenderEv
 /*
- * The six-slot `struct Obj` this file used to cast both models to was their own
- * vtable, and the slot it called is Render -- ModelAnim's for the plant, Model's
- * for the sleep bubble (BUBBLE_MODEL_PTR).
- *
- * `mModelAnim.file` is a BCA_File * where the raw field was an int, so the
- * comparison against the second word of data_ov084_02130df4 needs the cast the
- * offset spelling did not.
+ * The bubble is drawn only while the idle animation (data_ov084_02130df4)
+ * is playing.
  */
 int daPkn_c::Render()
 {
@@ -313,619 +288,548 @@ void daPkn_c::OnPendingDestroy()
 // @symbol _ZN7daPkn_c16CleanupResourcesEv
 int daPkn_c::CleanupResources()
 {
-  int i;
-  ((SharedFilePtr *)&data_ov084_02130dfc)->Release();
-  for(i=0;i<6;i++){
-    data_ov084_021302f4[i]->Release();
-  }
-  UnloadBlueCoinModel(((void*)this));
-  ((SharedFilePtr *)&data_ov002_0210da38)->Release();
-  return 1;
+    int i;
+    ((SharedFilePtr *)&data_ov084_02130dfc)->Release();
+    for (i = 0; i < 6; i++)
+        data_ov084_021302f4[i]->Release();
+    UnloadBlueCoinModel(this);
+    ((SharedFilePtr *)&data_ov002_0210da38)->Release();
+    return 1;
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov084_0212fc10
-extern "C" {  /* Retained C-linkage helper. */
-void func_ov084_0212fc10(daPkn_c *c)
+// @symbol _ZN7daPkn_c9StateWaitEv
+void daPkn_c::StateWait()
 {
-    c->mScaleX = 0x1000;
-    c->mScaleY = 0x1000;
-    c->mScaleZ = 0x1000;
-    c->mClsnEnabled = 1;
-    c->mFlags |= 0x10000000;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&c->mModelAnim, data_ov084_02130df4.file, 0, 0x1000, 0);
-    if (c->unk_464 < 0x4b0000)
-        c->mState = 1;
-    func_ov084_0212ef00(c);
-}
+    mScaleX = 0x1000;
+    mScaleY = 0x1000;
+    mScaleZ = 0x1000;
+    mClsnEnabled = 1;
+    mFlags |= 0x10000000;
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov084_02130df4.file, 0, 0x1000, 0);
+    if (mPlayerDist < 0x4b0000)
+        mState = 1;
+    func_ov084_0212ef00(this);
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov084_0212fa7c
-/* daPkn state 1: the PMF record at ov084:0x02130ba4 targets this body.
-   The former FirePiranhaPlantBig_Kill / daFPkn_c::Kill comments were a
-   misattribution: this is not a vtable slot.  Its original name is unknown. */
-extern "C" {  /* Retained C-linkage helper. */
-void func_ov084_0212fa7c(daPkn_c *c) {
-    c->mClsnEnabled = 1;
-    if (((Animation *)((char *)c + 0x160))->Finished() || _ZNK9Animation12WillHitFrameEi((char *)c + 0x160, 0)) {
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&c->mModelAnim, data_ov084_02130df4.file, 0, 0x1000, 0);
+// @symbol _ZN7daPkn_c10StateSleepEv
+void daPkn_c::StateSleep()
+{
+    mClsnEnabled = 1;
+    if (mModelAnim.Finished() || mModelAnim.WillHitFrame(0))
+        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov084_02130df4.file, 0, 0x1000, 0);
+    int thr = (mPlayerAirborne != 0) ? 0x12c000 : 0x190000;
+    if (mPlayerDist < thr && func_ov084_0212f1d0(this)) {
+        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov084_02130e0c.file, 0x40000000, 0x1000, 0);
+        mState = 3;
+        func_02012694(0x175, &mCamSpacePosX);
+        _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xfe, mBubblePos.x, mBubblePos.y, mBubblePos.z);
+        _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xff, mBubblePos.x, mBubblePos.y, mBubblePos.z);
+        return;
     }
-    {
-        int thr = (c->unk_46c != 0) ? 0x12c000 : 0x190000;
-        if (c->unk_464 < thr && func_ov084_0212f1d0(c)) {
-            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&c->mModelAnim, data_ov084_02130e0c.file, 0x40000000, 0x1000, 0);
-            c->mState = 3;
-            func_02012694(0x175, &c->mCamSpacePosX);
-            _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xfe, c->mBubblePos.x, c->mBubblePos.y, c->mBubblePos.z);
-            _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xff, c->mBubblePos.x, c->mBubblePos.y, c->mBubblePos.z);
-            return;
-        }
-    }
-    c->unk_478 = _ZN5Sound8PlayLongEjjjRK7Vector3s(c->unk_478, 3, 0x174, &c->mCamSpacePosX, 0);
-    if (c->unk_464 < 0x352000) {
+    mLoopSoundHandle = Sound::PlayLong(mLoopSoundHandle, 3, 0x174, *(Vector3 *)&mCamSpacePosX, 0);
+    if (mPlayerDist < 0x352000) {
         _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x36, 0, 0x7f, 0x1451, 0);
-        c->unk_45d = 0;
-    } else if (c->unk_45d == 0) {
+        mSubSoundFadedOut = 0;
+    } else if (mSubSoundFadedOut == 0) {
         if (_ZN5Sound7PlaySubEjjj5Fix12IiEb(0x36, 0x7f, 0, 0x1451, 0))
-            c->unk_45d = 1;
+            mSubSoundFadedOut = 1;
     }
-    func_ov084_0212ef00(c);
-}
+    func_ov084_0212ef00(this);
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov084_0212f6d8
-extern "C" {  /* Retained C-linkage helper. */
-void func_ov084_0212f6d8(daPkn_c *self)
+// @symbol _ZN7daPkn_c9StateBiteEv
+void daPkn_c::StateBite()
 {
-    char *c = (char *)self;
-    void *actor;
+    dActor_c *actor;
     u16 type;
     int isPlayer;
     int isNine;
     u32 flags;
-    struct Vector3 pos1;
-    struct Vector3 pos2;
+    Vector3 pos1;
+    Vector3 pos2;
 
-    *(u8 *)(c + 0x45c) = 1;
+    /* isPlayer and isNine hold the compares as ints: testing
+       `type == 0xbf` directly changes the code. */
+    mClsnEnabled = 1;
 
-    if (_ZNK9Animation12WillHitFrameEi(c + 0x160, 0x10)
-        || _ZNK9Animation12WillHitFrameEi(c + 0x160, 0x20)
-        || _ZNK9Animation12WillHitFrameEi(c + 0x160, 0x34)
-        || _ZNK9Animation12WillHitFrameEi(c + 0x160, 0x4b)) {
-        func_0201267c(0xc0, c + 0x74);
+    if (mModelAnim.WillHitFrame(0x10)
+        || mModelAnim.WillHitFrame(0x20)
+        || mModelAnim.WillHitFrame(0x34)
+        || mModelAnim.WillHitFrame(0x4b)) {
+        func_0201267c(0xc0, &mCamSpacePosX);
     }
 
-    _Z14ApproachLinearRsss((s16 *)(c + 0x94), *(s16 *)(c + 0x468), 0x800);
-    *(s16 *)(c + 0x8e) = *(s16 *)(c + 0x94);
+    ApproachLinear(mPrevAngleY, mTargetAngleY, 0x800);
+    mAngleY = mPrevAngleY;
 
-    if (((Animation *)(c + 0x160))->Finished() != 0) {
+    if (mModelAnim.Finished() != 0) {
         int thr;
-        if (*(int *)(c + 0x46c) != 0)
+        if (mPlayerAirborne != 0)
             thr = 0x12c000;
         else
             thr = 0x190000;
         thr = thr + 0x64000;
-        if (*(int *)(c + 0x464) > thr)
-            *(int *)(c + 0x458) = 4;
+        if (mPlayerDist > thr)
+            mState = 4;
         else
-            *(int *)(c + 0x168) = 0;
+            mModelAnim.currFrame = 0;
     }
 
-    /* cylinder 0 (id @ +0x3a4, flags @ +0x3a0) */
-    if (*(u32 *)(c + 0x3a4) != 0) {
-        actor = dActor_c::FindWithID(*(u32 *)(c + 0x3a4));
+    /* Body cylinder. */
+    if (mdCcAc_c1.otherOwner != 0) {
+        actor = dActor_c::FindWithID(mdCcAc_c1.otherOwner);
         if (actor != 0) {
-            type = *(u16 *)((char *)actor + 0xc);
+            type = actor->actorID;
             isPlayer = (int)(type == 0xbf);
             if (isPlayer != 0) {
-                flags = *(u32 *)(c + 0x3a0);
+                flags = mdCcAc_c1.hitFlags;
                 if (flags & 0x10) {
                     ((Player *)actor)->IncMegaKillCount();
-                    func_02012694(0x1d, c + 0x74);
-                    func_ov084_0212ebb4(self);
+                    func_02012694(0x1d, &mCamSpacePosX);
+                    func_ov084_0212ebb4(this);
                     return;
                 }
-                if (*(u8 *)((char *)actor + 0x6f9) != 0) {
-                    func_ov084_0212ebb4(self);
+                if (((Player *)actor)->mIsMetal != 0) {
+                    func_ov084_0212ebb4(this);
                     return;
                 }
-                if (*(u8 *)((char *)actor + 0x6fb) == 0) {
-                    pos1.x = *(int *)(c + 0x5c);
-                    pos1.y = *(int *)(c + 0x60);
-                    pos1.z = *(int *)(c + 0x64);
+                if (((Player *)actor)->mIsVanish == 0) {
+                    pos1.x = mPosX;
+                    pos1.y = mPosY;
+                    pos1.z = mPosZ;
                     _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(actor, &pos1, 3, 0xc000, 1, 0, 1);
                     return;
                 }
                 if ((flags & 0x40000) == 0)
                     return;
-                func_ov084_0212ebb4(self);
+                func_ov084_0212ebb4(this);
                 return;
             }
-            if ((*(u32 *)(c + 0x3a0) & 0x2000) != 0) {
+            if ((mdCcAc_c1.hitFlags & 0x2000) != 0) {
                 isNine = (int)(type == 9);
                 if (isNine != 0) {
-                    func_ov084_0212ebb4(self);
+                    func_ov084_0212ebb4(this);
                     return;
                 }
             }
         }
     }
 
-    /* cylinder 1 (id @ +0x3d8, flags @ +0x3d4; mega bit read from +0x3a0 per ROM) */
-    if (*(u32 *)(c + 0x3d8) != 0) {
-        actor = dActor_c::FindWithID(*(u32 *)(c + 0x3d8));
+    /* Second body cylinder. Its mega test reads mdCcAc_c1's hit flags. */
+    if (mdCcAc_c2.otherOwner != 0) {
+        actor = dActor_c::FindWithID(mdCcAc_c2.otherOwner);
         if (actor != 0) {
-            type = *(u16 *)((char *)actor + 0xc);
+            type = actor->actorID;
             isPlayer = (int)(type == 0xbf);
             if (isPlayer != 0) {
-                if ((*(u32 *)(c + 0x3a0) & 0x10) != 0) {
+                if ((mdCcAc_c1.hitFlags & 0x10) != 0) {
                     ((Player *)actor)->IncMegaKillCount();
-                    func_02012694(0x1d, c + 0x74);
-                    func_ov084_0212ebb4(self);
+                    func_02012694(0x1d, &mCamSpacePosX);
+                    func_ov084_0212ebb4(this);
                     return;
                 }
-                if (*(u8 *)((char *)actor + 0x6f9) != 0) {
-                    func_ov084_0212ebb4(self);
+                if (((Player *)actor)->mIsMetal != 0) {
+                    func_ov084_0212ebb4(this);
                     return;
                 }
-                if ((*(u32 *)(c + 0x3d4) & 0x40000) == 0)
+                if ((mdCcAc_c2.hitFlags & 0x40000) == 0)
                     return;
-                func_ov084_0212ebb4(self);
+                func_ov084_0212ebb4(this);
                 return;
             }
-            if ((*(u32 *)(c + 0x3d4) & 0x2000) != 0) {
+            if ((mdCcAc_c2.hitFlags & 0x2000) != 0) {
                 isNine = (int)(type == 9);
                 if (isNine != 0) {
-                    func_ov084_0212ebb4(self);
+                    func_ov084_0212ebb4(this);
                     return;
                 }
             }
         }
     }
 
-    /* cylinder 2 (id @ +0x40c, flags @ +0x408) — player only */
-    if (*(u32 *)(c + 0x40c) == 0)
+    /* Head cylinder, players only. */
+    if (mdCcAcPos_c.otherOwner == 0)
         return;
-    actor = dActor_c::FindWithID(*(u32 *)(c + 0x40c));
+    actor = dActor_c::FindWithID(mdCcAcPos_c.otherOwner);
     if (actor == 0)
         return;
-    type = *(u16 *)((char *)actor + 0xc);
+    type = actor->actorID;
     isPlayer = (int)(type == 0xbf);
     if (isPlayer == 0)
         return;
-    if ((*(u32 *)(c + 0x408) & 0x10) != 0) {
+    if ((mdCcAcPos_c.hitFlags & 0x10) != 0) {
         ((Player *)actor)->IncMegaKillCount();
-        func_02012694(0x1d, c + 0x74);
-        func_ov084_0212ebb4(self);
+        func_02012694(0x1d, &mCamSpacePosX);
+        func_ov084_0212ebb4(this);
         return;
     }
-    if (*(u8 *)((char *)actor + 0x6f9) != 0)
+    if (((Player *)actor)->mIsMetal != 0)
         return;
-    pos2.x = *(int *)(c + 0x5c);
-    pos2.y = *(int *)(c + 0x60);
-    pos2.z = *(int *)(c + 0x64);
+    pos2.x = mPosX;
+    pos2.y = mPosY;
+    pos2.z = mPosZ;
     _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(actor, &pos2, 3, 0xc000, 1, 0, 1);
 }
-}
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov084_0212f630
-extern "C" void func_ov084_0212f630(daPkn_c *c)
+// @symbol _ZN7daPkn_c9StateWakeEv
+void daPkn_c::StateWake()
 {
     _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x36, 0x7f, 0, 0xcb33, 0);
-    if (func_ov084_0212ef00(c) != 0) return;
-    /* mStateTimer is signed; the ROM compares it as unsigned ldrh. */
-    if ((unsigned short)c->mStateTimer <= 0xb) return;
-    if (!((Animation *)((char *)c + 0x160))->Finished()) return;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&c->mModelAnim, data_ov084_02130e14.file, 0x40000000, 0x1000, 0);
-    c->mState = 2;
+    if (func_ov084_0212ef00(this) != 0) return;
+    /* mStateTimer is s16; the ROM compares it as a u16 (ldrh). */
+    if ((u16)mStateTimer <= 0xb) return;
+    if (!mModelAnim.Finished()) return;
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov084_02130e14.file, 0x40000000, 0x1000, 0);
+    mState = 2;
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov084_0212f588
-extern "C" void func_ov084_0212f588(daPkn_c *c)
+// @symbol _ZN7daPkn_c9StateDozeEv
+void daPkn_c::StateDoze()
 {
-    c->mClsnEnabled = 1;
-    if (((Animation *)((char *)c + 0x160))->Finished()) {
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&c->mModelAnim, data_ov084_02130e0c.file, 0x40000000, 0x1000, 0);
-        c->mState = 1;
+    mClsnEnabled = 1;
+    if (mModelAnim.Finished()) {
+        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov084_02130e0c.file, 0x40000000, 0x1000, 0);
+        mState = 1;
     } else {
-        int thresh = (c->unk_46c != 0) ? 0x12c000 : 0x190000;
-        if (c->unk_464 < thresh) {
-            if (func_ov084_0212f1d0(c) != 0) {
-                *(int *)((char *)c + 0x168) = 0;
-                c->mState = 2;
+        int thresh = (mPlayerAirborne != 0) ? 0x12c000 : 0x190000;
+        if (mPlayerDist < thresh) {
+            if (func_ov084_0212f1d0(this) != 0) {
+                mModelAnim.currFrame = 0;
+                mState = 2;
             }
         }
     }
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov084_0212f460
-/* Named mStateTimer / mPos* / mAngleY / mParticleHandle size-DIFF this body. */
-void func_ov084_0212f460(void *self)
+// @symbol _ZN7daPkn_c8StateDieEv
+void daPkn_c::StateDie()
 {
-    char *c = (char *)self;
-    int space[3];
-    int zero;
+    Vector3 pos;
 
     _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x36, 0x7f, 0, 0xcb33, 0);
-    /* `fp` is assigned BEFORE `zero`, and the test reads through it. Under 2004/b56
-       the callee-saved registers are handed out in assignment order, so this is what
-       puts fp in r7 and zero in r6 as the ROM has them; with `zero = 0` first they come
-       out swapped and nothing else moves. The ROM emits `mov r6,#0; strb` before
-       `add r7,r4,#0x100` regardless -- the store is independent, so it schedules ahead
-       of the address computation that feeds the compare. */
-    u16 *fp = (u16 *)(c + 0x100);
-    zero = 0;
-    *(unsigned char *)(c + 0x45c) = zero;
-    if (*fp < 0xa) {
-        int x = *(int *)(c + 0x5c);
-        s16 *sintbl = data_02082214;
-        *(volatile int *)&space[0] = x;
-        int y = *(int *)(c + 0x60);
-        int *xtbl = data_ov084_0213030c;
-        *(volatile int *)&space[1] = y;
-        int z = *(int *)(c + 0x64);
-        int *ytbl = data_ov084_02130334;
-        *(volatile int *)&space[2] = z;
-
-        x = xtbl[*fp] * sintbl[(*(u16 *)(c + 0x8e) >> 4) * 2] + x;
-        *(volatile int *)&space[0] = x;
-        z = xtbl[*fp] * sintbl[(*(u16 *)(c + 0x8e) >> 4) * 2 + 1] + z;
-        *(volatile int *)&space[2] = z;
-        y = y + (ytbl[*fp] << 12);
-        *(volatile int *)&space[1] = y;
-
-        u32 slot = *(u32 *)(c + 0x470);
-        int px = space[0];
-        int py = space[1];
-        *(void **)(c + 0x470) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-            slot, 0xfb, px, py, z, 0, 0);
+    mClsnEnabled = 0;
+    if ((u16)mStateTimer < 0xa) {
+        pos.x = mPosX;
+        pos.y = mPosY;
+        pos.z = mPosZ;
+        pos.x += data_ov084_0213030c[(u16)mStateTimer] * data_02082214[((u16)mAngleY >> 4) * 2];
+        pos.z += data_ov084_0213030c[(u16)mStateTimer] * data_02082214[((u16)mAngleY >> 4) * 2 + 1];
+        pos.y += data_ov084_02130334[(u16)mStateTimer] << 12;
+        mParticleHandle = (s32)_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+            mParticleHandle, 0xfb, pos.x, pos.y, pos.z, 0, 0);
     }
-    if (((Animation *)(c + 0x160))->Finished() == 0)
+    if (mModelAnim.Finished() == 0)
         return;
-    *(int *)(c + 0x458) = 6;
-    *(int *)(c + 0x474) = 0;
-    *(void **)(c + 0x470) = *(void **)(c + 0x474);
+    mState = 6;
+    mParticleHandle2 = 0;
+    mParticleHandle = mParticleHandle2;
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov084_0212f33c
-void func_ov084_0212f33c(daPkn_c *c)
+// @symbol _ZN7daPkn_c11StateShrinkEv
+void daPkn_c::StateShrink()
 {
     int scale;
-    struct Vector3 v;
+    Vector3 v;
 
-    c->mClsnEnabled = 0;
-    scale = c->mScaleX;
-    if ((unsigned short)c->mStateTimer == 0) {
-        func_02012694(0x11f, &c->mCamSpacePosX);
+    mClsnEnabled = 0;
+    scale = mScaleX;
+    if ((u16)mStateTimer == 0) {
+        func_02012694(0x11f, &mCamSpacePosX);
         scale = 0x1000;
     }
 
-    c->mParticleHandle = (s32)_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-        (unsigned int)c->mParticleHandle, 0xfc, c->mPosX,
-        c->mPosY + 0x1e000, c->mPosZ, 0, 0);
-    c->unk_474 = (s32)_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-        (unsigned int)c->unk_474, 0xfd, c->mPosX,
-        c->mPosY + 0x1e000, c->mPosZ, 0, 0);
+    mParticleHandle = (s32)_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+        mParticleHandle, 0xfc, mPosX,
+        mPosY + 0x1e000, mPosZ, 0, 0);
+    mParticleHandle2 = (s32)_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+        mParticleHandle2, 0xfd, mPosX,
+        mPosY + 0x1e000, mPosZ, 0, 0);
 
     if (scale > 0) {
         scale = scale - 0xa3;
     } else {
         scale = 0;
-        if (c->unk_108 != 0) {
-            int y = c->mPosY;
-            int z = c->mPosZ;
-            v = (struct Vector3){c->mPosX, y + 0x78000, z};
-            dActor_c::Spawn(
-                0x122, scale, v, (const Vector3_16 *)scale, c->mAreaId, -1);
-            c->unk_108 = scale;
+        if (unk_108 != 0) {
+            /* Loading y and z ahead of the aggregate keeps the ROM's order. */
+            int y = mPosY;
+            int z = mPosZ;
+            v = (Vector3){mPosX, y + 0x78000, z};
+            dActor_c::Spawn(0x122, 0, v, 0, mAreaId, -1);
+            unk_108 = 0;
         }
-        c->mState = 7;
+        mState = 7;
     }
-    c->mScaleX = scale;
-    c->mScaleY = scale;
-    c->mScaleZ = scale;
+    mScaleX = scale;
+    mScaleY = scale;
+    mScaleZ = scale;
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov084_0212f2dc
-extern "C" {  /* Retained C-linkage helper. */
-void func_ov084_0212f2dc(daPkn_c *c){
-    c->mClsnEnabled = 0;
-    if (c->unk_464 <= 0x4b0000) return;
-    c->mState = 8;
-    c->unk_474 = 0;
-    c->mParticleHandle = c->unk_474;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&c->mModelAnim, data_ov084_02130e0c.file, 0, 0x1000, 0);
-}
+// @symbol _ZN7daPkn_c9StateGoneEv
+void daPkn_c::StateGone()
+{
+    mClsnEnabled = 0;
+    if (mPlayerDist <= 0x4b0000) return;
+    mState = 8;
+    mParticleHandle2 = 0;
+    mParticleHandle = mParticleHandle2;
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov084_02130e0c.file, 0, 0x1000, 0);
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov084_0212f298
-/* State 8 is reached through the void PMF table and has no result consumer.
-   The previous int declaration fell through when this body became C++. */
-extern "C" {  /* Retained C-linkage helper. */
-void func_ov084_0212f298(daPkn_c *c)
+// @symbol _ZN7daPkn_c11StateRegrowEv
+void daPkn_c::StateRegrow()
 {
     int v;
-    c->mClsnEnabled = 0;
-    v = c->mScaleX;
-    if ((u16)c->mStateTimer == 0)
+    mClsnEnabled = 0;
+    v = mScaleX;
+    if ((u16)mStateTimer == 0)
         v = 0x4cc;
-    if (v < 0x1000)
-    {
+    if (v < 0x1000) {
         v += 0x52;
-    }
-    else
-    {
-        c->mState = 0;
+    } else {
+        mState = 0;
         v = 0x1000;
     }
-    c->mScaleX = v;
-    c->mScaleY = v;
-    c->mScaleZ = v;
-}
+    mScaleX = v;
+    mScaleY = v;
+    mScaleZ = v;
 }
 
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212f204
-extern "C" {  /* Retained C-linkage helper. */
-/* Named unk_460 / mPosX / mTargetAngleY / mAngleY size-DIFF this body. */
-void func_ov084_0212f204(char* self){
-  struct Vector3 v;
-  *(char**)(self + 0x460) = (char *)((dActor_c *)self)->ClosestPlayer();
-  {
-    char* p = *(char**)(self + 0x460);
+extern "C" {  /* include/decl_common.h declares it with C linkage */
+/* Tracks the closest player: its distance, the yaw toward it and whether it
+   is airborne. */
+void func_ov084_0212f204(daPkn_c *c)
+{
+    Vector3 v;
+    c->mClosestPlayer = c->ClosestPlayer();
+    Player *p = c->mClosestPlayer;
     if (p != 0) {
-      struct Vector3* pp = (struct Vector3*)(((int)p + 0x5c));
-      v.x = pp->x;
-      v.y = pp->y;
-      v.z = pp->z;
-      *(int*)(self + 0x464) = Vec3_Dist((struct Vector3*)(self + 0x5c), &v);
-      *(short*)(self + 0x468) = Vec3_HorzAngle((struct Vector3*)(self + 0x5c), &v);
-      *(int*)(self + 0x46c) = *(unsigned char*)(*(char**)(self + 0x460) + 0x6de);
+        /* Member by member: `v = *pos` emits a different copy. */
+        Vector3 *pos = (Vector3 *)&p->mPosX;
+        v.x = pos->x;
+        v.y = pos->y;
+        v.z = pos->z;
+        c->mPlayerDist = Vec3_Dist((Vector3 *)&c->mPosX, &v);
+        c->mTargetAngleY = Vec3_HorzAngle((Vector3 *)&c->mPosX, &v);
+        c->mPlayerAirborne = c->mClosestPlayer->mIsAirborne;
     } else {
-      *(int*)(self + 0x464) = 0x7fffffff;
-      *(short*)(self + 0x468) = *(short*)(self + 0x8e);
+        c->mPlayerDist = 0x7fffffff;
+        c->mTargetAngleY = c->mAngleY;
     }
-  }
 }
 }
 
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212f1d0
-extern "C" {  /* Retained C-linkage helper. */
-int func_ov084_0212f1d0(daPkn_c *c) {
-    char *p = (char *)c->unk_460;
+extern "C" {  /* include/decl_common.h declares it with C linkage */
+/* Is the closest player moving fast enough to wake the plant? */
+int func_ov084_0212f1d0(daPkn_c *c)
+{
+    Player *p = c->mClosestPlayer;
     if (p == 0) return 0;
-    /* Player mVertSpeed at +0xa8 / mHorzSpeed at +0x98. */
-    if (*(int*)(p + 0xa8) > 0xa000) return 1;
-    return *(int*)(p + 0x98) > 0xa000;
+    if (p->mVertSpeed > 0xa000) return 1;
+    return p->mHorzSpeed > 0xa000;
 }
 }
 
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212ef00
-extern "C" {  /* Retained C-linkage helper. */
+extern "C" {  /* include/decl_common.h declares it with C linkage */
+/* The collision check the idle states share: returns 1 when a hit killed
+   the plant. t and u hold the actor-type compares as ints; testing
+   `type == 0xbf` directly changes the code. */
 int func_ov084_0212ef00(daPkn_c *pkn)
 {
-    char *self = (char *)pkn;
-    void *actor;
+    dActor_c *actor;
     u32 flags;
-    u32 raw;
     u16 type;
     u32 id;
 
-    id = *(u32*)(self + 0x3a4);
-    if (id == 0) goto second;
-
-    actor = dActor_c::FindWithID(id);
-    if (actor == 0) goto second;
-
-    type = *(u16*)((char*)actor + 0xc);
-    {
-        int t = (int)(type == 0xbf);
-        if (t == 0) goto checkA2;
+    id = pkn->mdCcAc_c1.otherOwner;
+    if (id != 0) {
+        actor = dActor_c::FindWithID(id);
+        if (actor != 0) {
+            type = actor->actorID;
+            int t = (int)(type == 0xbf);
+            if (t != 0) {
+                flags = pkn->mdCcAc_c1.hitFlags & 0x26ff0;
+                if (flags != 0) {
+                    if (flags & 0x10) {
+                        ((Player *)actor)->IncMegaKillCount();
+                        func_02012694(0x1d, &pkn->mCamSpacePosX);
+                    }
+                    func_020105cc(pkn, flags);
+                    func_ov084_0212ebb4(pkn);
+                } else if (pkn->JumpedOnByPlayer(pkn->mdCcAc_c1, *(Player *)actor) != 0) {
+                    _ZN6Player6BounceE5Fix12IiE(actor, 0x28000);
+                    func_ov084_0212ebb4(pkn);
+                } else if (pkn->mdCcAc_c1.hitFlags & 0x40000) {
+                    func_ov084_0212ebb4(pkn);
+                } else {
+                    Vector3 v;
+                    v.x = pkn->mPosX;
+                    v.y = pkn->mPosY;
+                    v.z = pkn->mPosZ;
+                    _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(actor, &v, 3, 0xc000, 1, 0, 1);
+                    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&pkn->mModelAnim, data_ov084_02130e0c.file, 0, 0x1000, 0);
+                    pkn->mModelAnim.SetFlags(0x40000000);
+                    pkn->mState = 3;
+                    func_02012694(0x175, &pkn->mCamSpacePosX);
+                    return 0;
+                }
+                return 1;
+            } else if (pkn->mdCcAc_c1.hitFlags & 0x2000) {
+                int u = (int)(type == 9);
+                if (u != 0) {
+                    func_ov084_0212ebb4(pkn);
+                    return 1;
+                }
+            }
+        }
     }
 
-    raw = *(u32*)(self + 0x3a0);
-    flags = raw & 0x26ff0;
-    if (flags == 0) goto jumpA;
-
-    if (flags & 0x10) {
-        ((Player *)actor)->IncMegaKillCount();
-        func_02012694(0x1d, self + 0x74);
+    id = pkn->mdCcAc_c2.otherOwner;
+    if (id != 0) {
+        actor = dActor_c::FindWithID(id);
+        if (actor != 0) {
+            type = actor->actorID;
+            int t = (int)(type == 0xbf);
+            if (t != 0) {
+                flags = pkn->mdCcAc_c2.hitFlags & 0x26ff0;
+                if (flags != 0) {
+                    if (flags & 0x10) {
+                        ((Player *)actor)->IncMegaKillCount();
+                        func_02012694(0x1d, &pkn->mCamSpacePosX);
+                    }
+                    func_020105cc(pkn, flags);
+                    func_ov084_0212ebb4(pkn);
+                    return 1;
+                }
+                if (pkn->JumpedOnByPlayer(pkn->mdCcAc_c1, *(Player *)actor) != 0) {
+                    _ZN6Player6BounceE5Fix12IiE(actor, 0x28000);
+                    func_ov084_0212ebb4(pkn);
+                    return 1;
+                }
+                if (pkn->mdCcAc_c2.hitFlags & 0x40000) {
+                    func_ov084_0212ebb4(pkn);
+                    return 1;
+                }
+            } else if (pkn->mdCcAc_c2.hitFlags & 0x2000) {
+                int u = (int)(type == 9);
+                if (u != 0) {
+                    func_ov084_0212ebb4(pkn);
+                    return 1;
+                }
+            }
+        }
     }
-    func_020105cc(self, flags);
-    func_ov084_0212ebb4(pkn);
-    goto successA;
-
-jumpA:
-    if (((dActor_c *)self)->JumpedOnByPlayer(*(dCc_c *)(self + 0x380), *(Player *)actor) != 0) {
-        _ZN6Player6BounceE5Fix12IiE(actor, 0x28000);
-        func_ov084_0212ebb4(pkn);
-        goto successA;
-    }
-
-    if (*(u32*)(self + 0x3a0) & 0x40000) {
-        func_ov084_0212ebb4(pkn);
-        goto successA;
-    }
-
-    {
-        int v[3];
-        v[0] = *(int*)(self + 0x5c);
-        v[1] = *(int*)(self + 0x60);
-        v[2] = *(int*)(self + 0x64);
-        _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(actor, v, 3, 0xc000, 1, 0, 1);
-    }
-
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(self + 0x110, data_ov084_02130e0c.file, 0, 0x1000, 0);
-    _ZN9Animation8SetFlagsEi(self + 0x160, 0x40000000);
-    *(int*)(self + 0x458) = 3;
-    func_02012694(0x175, self + 0x74);
-    return 0;
-
-successA:
-    return 1;
-
-checkA2:
-    if (!(*(u32*)(self + 0x3a0) & 0x2000)) goto second;
-    {
-        int u = (int)(type == 9);
-        if (u == 0) goto second;
-    }
-    func_ov084_0212ebb4(pkn);
-    return 1;
-
-second:
-    id = *(u32*)(self + 0x3d8);
-    if (id == 0) goto fail;
-
-    actor = dActor_c::FindWithID(id);
-    if (actor == 0) goto fail;
-
-    type = *(u16*)((char*)actor + 0xc);
-    {
-        int t = (int)(type == 0xbf);
-        if (t == 0) goto checkB2;
-    }
-
-    raw = *(u32*)(self + 0x3d4);
-    flags = raw & 0x26ff0;
-    if (flags == 0) goto jumpB;
-
-    if (flags & 0x10) {
-        ((Player *)actor)->IncMegaKillCount();
-        func_02012694(0x1d, self + 0x74);
-    }
-    func_020105cc(self, flags);
-    func_ov084_0212ebb4(pkn);
-    return 1;
-
-jumpB:
-    if (((dActor_c *)self)->JumpedOnByPlayer(*(dCc_c *)(self + 0x380), *(Player *)actor) != 0) {
-        _ZN6Player6BounceE5Fix12IiE(actor, 0x28000);
-        func_ov084_0212ebb4(pkn);
-        return 1;
-    }
-
-    if (*(u32*)(self + 0x3d4) & 0x40000) {
-        func_ov084_0212ebb4(pkn);
-        return 1;
-    }
-
-    goto fail;
-
-checkB2:
-    if (!(*(u32*)(self + 0x3d4) & 0x2000)) goto fail;
-    {
-        int u = (int)(type == 9);
-        if (u == 0) goto fail;
-    }
-    func_ov084_0212ebb4(pkn);
-    return 1;
-
-fail:
     return 0;
 }
 }
 
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212ec60
-extern "C" {  /* Retained C-linkage helper. */
+extern "C" {  /* include/decl_common.h declares it with C linkage */
+/* Poses both models and places the head cylinder and the sleep bubble. The
+   bone sum into ang[1] is never read. */
 void func_ov084_0212ec60(daPkn_c *self)
 {
-    char *c = (char *)self;
     volatile s16 ang[3];
     struct { PknMtx43 saved; PknVec3 tv; PknVec3 v; } L;
     int lr;
     int scale;
 
-    Vec3_Asr(&L.v, (PknVec3*)(c + 0x5c), 3);
+    Vec3_Asr(&L.v, (PknVec3 *)&self->mPosX, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, L.v.x, L.v.y, L.v.z);
     L.saved = data_020a0e68;
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, *(s16*)(c + 0x8e));
-    *(PknMtx43*)(c + 0x12c) = data_020a0e68;
+    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, self->mAngleY);
+    *(PknMtx43 *)&self->mModelAnim.mat4x3 = data_020a0e68;
 
     ang[0] = 0;
     ang[1] = 0;
     ang[2] = 0;
     for (lr = 0; lr < 5; lr++) {
-        ang[1] = (s16)(ang[1] + *(s16*)(*(char**)(c + 0x120) + data_ov084_021302ec[lr] * 0x34 + 0x1c));
+        ang[1] = (s16)(ang[1] + *(s16*)((char *)self->mModelAnim.data.bones + data_ov084_021302ec[lr] * 0x34 + 0x1c));
     }
 
-    *(s32*)(c + 0x440) = 0;
-    *(s32*)(c + 0x444) = 0;
-    *(s32*)(c + 0x448) = 0;
+    self->mHeadClsnOffset.x = 0;
+    self->mHeadClsnOffset.y = 0;
+    self->mHeadClsnOffset.z = 0;
     data_020a0e68 = L.saved;
-    MulMat4x3Mat4x3((char*)*(void**)(c + 0x124) + 0x120, &data_020a0e68, &data_020a0e68);
-    *(s32*)(c + 0x440) = data_020a0e68.w[9];
-    *(s32*)(c + 0x444) = data_020a0e68.w[10];
-    *(s32*)(c + 0x448) = data_020a0e68.w[11];
-    Vec3_LslInPlace((PknVec3*)(c + 0x440), 3);
-    SubVec3((PknVec3*)(c + 0x440), (PknVec3*)(c + 0x5c), (PknVec3*)(c + 0x440));
+    MulMat4x3Mat4x3(&self->mModelAnim.data.transforms[6], &data_020a0e68, &data_020a0e68);
+    self->mHeadClsnOffset.x = data_020a0e68.w[9];
+    self->mHeadClsnOffset.y = data_020a0e68.w[10];
+    self->mHeadClsnOffset.z = data_020a0e68.w[11];
+    Vec3_LslInPlace((PknVec3 *)&self->mHeadClsnOffset, 3);
+    SubVec3((PknVec3 *)&self->mHeadClsnOffset, (PknVec3 *)&self->mPosX, (PknVec3 *)&self->mHeadClsnOffset);
 
-    *(s32*)AT(c, 0x444) -= data_02082214[((u16)ang[0] >> 4) << 1] * (s16)0x14 + 0x32000;
-    *(s32*)AT(c, 0x448) += 0x32000;
+    self->mHeadClsnOffset.y -= data_02082214[((u16)ang[0] >> 4) << 1] * (s16)0x14 + 0x32000;
+    self->mHeadClsnOffset.z += 0x32000;
 
-    L.tv.x = *(s32*)(c + 0x5c);
-    L.tv.y = *(s32*)(c + 0x60);
-    L.tv.z = *(s32*)(c + 0x64);
+    L.tv.x = self->mPosX;
+    L.tv.y = self->mPosY;
+    L.tv.z = self->mPosZ;
 
     {
-        int rr = (int)((u32)(*(s32*)(c + 0x168) << 4) >> 0x10);
+        int rr = (int)((u32)(self->mModelAnim.currFrame << 4) >> 0x10);
         int d = rr - 0x28;
         if (d < 0)
             d = -d;
         scale = ((d << 12) / 10) + 0x400;
         if (scale < 0x800)
             scale = 0x800;
-        *(s32*)(c + 0x428) = scale;
-        *(s32*)(c + 0x42c) = scale;
-        *(s32*)(c + 0x430) = scale;
+        self->mBubbleScale.x = scale;
+        self->mBubbleScale.y = scale;
+        self->mBubbleScale.z = scale;
     }
 
-    L.tv.x = data_02082214[(*(u16*)(c + 0x8e) >> 4) << 1] * (s16)0xe0 + L.tv.x;
+    L.tv.x = data_02082214[((u16)self->mAngleY >> 4) << 1] * (s16)0xe0 + L.tv.x;
     scale = scale - 0xc00;
-    L.tv.z = data_02082214[((*(u16*)(c + 0x8e) >> 4) << 1) + 1] * (s16)0xe0 + L.tv.z;
+    L.tv.z = data_02082214[(((u16)self->mAngleY >> 4) << 1) + 1] * (s16)0xe0 + L.tv.z;
     L.tv.y = L.tv.y + (scale * 0x18 + 0x38000);
 
-    *(s32*)(c + 0x434) = L.tv.x;
-    *(s32*)(c + 0x438) = L.tv.y;
-    *(s32*)(c + 0x43c) = L.tv.z;
+    self->mBubblePos.x = L.tv.x;
+    self->mBubblePos.y = L.tv.y;
+    self->mBubblePos.z = L.tv.z;
 
-    Matrix4x3_FromTranslation((PknMtx43*)(c + 0x190), L.tv.x >> 3, L.tv.y >> 3, L.tv.z >> 3);
+    Matrix4x3_FromTranslation((PknMtx43 *)&self->mModel.mat4x3, L.tv.x >> 3, L.tv.y >> 3, L.tv.z >> 3);
 }
 }
 
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN7daPkn_c16OnAimedAtWithEggEv
-/* daPkn_c::OnAimedAtWithEgg - recovered from vtable slot identity */
-s32 daPkn_c::OnAimedAtWithEgg() {
+/* Vtable slot 29. */
+s32 daPkn_c::OnAimedAtWithEgg()
+{
     return 0x46000;
 }
 
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212ec04
-extern "C" {  /* Retained C-linkage helper. */
-void func_ov084_0212ec04(daPkn_c *c, int arg) {
+extern "C" {  /* include/decl_common.h declares it with C linkage */
+/* Enters state 2 with the lunge animation at `frame`. */
+void func_ov084_0212ec04(daPkn_c *c, int frame)
+{
     c->mState = 2;
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&c->mModelAnim, data_ov084_02130e14.file, 0x40000000, 0x1000, 0);
-    /* currFrame is ModelAnim's Animation base at +0x50, then +0x8. Named
-       `mModelAnim.currFrame` DIFFs the store (MI this-adjust). */
-    *(unsigned int *)((char *)c + 0x168) = ((unsigned int)(arg << 0x10)) >> 4;
+    c->mModelAnim.currFrame = (u16)frame << 12;
 }
 }
 
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212ebb4
-extern "C" {  /* Retained C-linkage helper. */
+extern "C" {  /* include/decl_common.h declares it with C linkage */
+/* Kills the plant: death animation and state 5. */
 void func_ov084_0212ebb4(daPkn_c *c)
 {
     func_0201267c(0xc1, &c->mCamSpacePosX);

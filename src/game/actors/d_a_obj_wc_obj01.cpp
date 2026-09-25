@@ -38,6 +38,8 @@ typedef char ResourceDescriptor_size_must_be_0x0c[
 
 extern "C" int func_ov002_020b5e58(void *self, ResourceDescriptor *data);
 extern "C" ResourceDescriptor data_ov029_02113be8;
+/* local extern: the header returns Vector3 by value, and the temporary emits a
+   Vector3 destructor this TU does not own (rombuild isolate refuses it) */
 extern "C" void _ZN9dBgCh_Lin10GetClsnPosEv(Vector3 *out, dBgCh_Lin *self);
 
 enum {

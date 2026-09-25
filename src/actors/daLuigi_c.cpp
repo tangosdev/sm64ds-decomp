@@ -1,8 +1,8 @@
 //cpp
 /* daLuigi_c -- the mirror-room Luigi reflection actor (ov055).
  *
- * One translation unit: the class's destructor, its three state-table helpers,
- * the reflection-state setter, and its five resource and update virtuals,
+ * One translation unit: the class's destructor, a fade-in helper, the
+ * mirror state and SetState, and its five resource and update virtuals,
  * ov055 .text 0x021111a0..0x02111860. The factory daLuigi_c_classInit that
  * follows it stays in its own source (tu_map ends this TU at 0x02111860).
  *
@@ -11,9 +11,11 @@
  */
 #include "daLuigi_c.h"
 #include "SharedFilePtr.h"
+#include "Player.h"
 
 /* A Matrix4x3 copied as twelve plain words. Assigning Matrix4x3 itself
- * compiles to a different copy sequence (measured in InitResources). */
+ * compiles to a different copy sequence (measured in InitResources and
+ * Render). */
 struct Mtx { int m[12]; };
 
 /* The loaded file a SharedFilePtr holds, one word in. SharedFilePtr.h leaves
@@ -26,6 +28,10 @@ int ApproachLinear(int &value, int target, int step);
  * names: declaring the real member does not reproduce the by-value argument
  * passing (wall 6az). */
 extern "C" {
+/* The reflection's shared state. b68 is a request word: bit 0 resets, bit 1
+ * fades the reflection in. b6c is that fade, 0 (hidden) to 0x1ffff; bit
+ * 0x20000 of b64 hides the models. b70 is the one state, filled by the
+ * static initializer. */
 extern int data_ov055_02111a90;
 extern int data_ov055_02111b60;
 extern int data_ov055_02111b64;
@@ -48,14 +54,13 @@ void func_0203c178(void *m, int a, int b, int c);
 void MulMat3x3Mat3x3(void *d, void *a, void *b);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void func_ov002_020e4374(char *c, int *p1, int *p2);
-void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(dActor_c *self, ShadowModel *shadow, Matrix4x3 *mat, int height, int radius, unsigned char opacity);
+void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(dActor_c *self, ShadowModel *shadow, Matrix4x3 *mat, int radius, int depth, unsigned char opacity);
 void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(ModelAnim *, BCA_File *, int, int, unsigned short);
 void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(TextureSequence *, BTP_File *, int, int, unsigned short);
 void func_02016acc(void *model, unsigned int v);
 void func_02016b24(void *model, unsigned int v);
 void Vec3_Asr(void *d, void *s, int sh);
 void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, short angY);
-int func_ov055_021112c4(daLuigi_c *self, daLuigiState *state, char *player);
 }
 
 // @symbol _ZN9daLuigi_c13InitResourcesEv
@@ -89,7 +94,7 @@ int daLuigi_c::InitResources()
     *(Mtx *)&mModelAnim.mat4x3 = *(Mtx *)&data_020a0e68;
     *(Mtx *)&mModel.mat4x3 = *(Mtx *)&data_020a0e68;
 
-    func_ov055_021112c4(this, &data_ov055_02111b70, (char *)data_0209f394[data_0209f250]);
+    SetState(&data_ov055_02111b70, (Player *)data_0209f394[data_0209f250]);
 
     data_ov055_02111b68 = 0;
     data_ov055_02111a90 = 0x1ffff;
@@ -100,28 +105,24 @@ int daLuigi_c::InitResources()
 // @symbol _ZN9daLuigi_c8BehaviorEv
 int daLuigi_c::Behavior()
 {
-    int a, b;
-    int f;
-    char *val;
-    daLuigiState *state;
+    int depth, radius;
+    Player *player;
 
-    f = data_ov055_02111b68;
-    if (f & 1) {
+    if (data_ov055_02111b68 & 1) {
         data_ov055_02111b6c = 0;
         data_ov055_02111a90 = 0x1ffff;
         data_ov055_02111b60 = 0;
-    } else if ((f & 2) && !(data_0209caa0[1] & 0x10)) {
+    } else if ((data_ov055_02111b68 & 2) && !(data_0209caa0[1] & 0x10)) {
         ApproachLinear(data_ov055_02111b6c, 0x1ffff, 0x400);
         data_ov055_02111b64 = (data_ov055_02111b64 & ~0x20000) + (0x1ffff - data_ov055_02111b6c);
     }
-    val = (char *)data_0209f394[data_0209f250];
-    state = mState;
-    if (state->execute != 0)
-        (((daLuigiStateHost *)this)->*state->execute)(val);
+    player = (Player *)data_0209f394[data_0209f250];
+    if (mState->execute != 0)
+        (this->*mState->execute)(player);
     Matrix4x3_FromTranslation(&mShadowMatrix, mPosX >> 3, mPosY >> 3, mPosZ >> 3);
-    func_ov002_020e4374(val, &a, &b);
+    func_ov002_020e4374((char *)player, &depth, &radius);
     _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
-        this, &mShadowModel, &mShadowMatrix, b, a, 0xf);
+        this, &mShadowModel, &mShadowMatrix, radius, depth, 0xf);
     *(char **)((char *)data_0209f318 + 0x114) = ((char *)this);
     return 1;
 }
@@ -129,52 +130,48 @@ int daLuigi_c::Behavior()
 // @symbol _ZN9daLuigi_c6RenderEv
 int daLuigi_c::Render()
 {
-    char *player;
-    char *r8res;
-    char *comp;
-    char *q;
-    char *p_f0;
+    Player *player;
+    Model *body;
+    ModelComponents *mine;
+    BMD_File *file;
+    Matrix4x3 *mat;
     unsigned int i;
     Mtx *dst;
     Mtx *src;
 
     if (data_ov055_02111b6c == 0) return 1;
 
-    /* Still raw: the player's model record returned by func_ov002_020e496c
-     * and the player's +0x6fb frame byte have no typed layout yet. */
-    player = (char *)data_0209f394[data_0209f250];
-    r8res = (char *)func_ov002_020e496c(player);
+    player = (Player *)data_0209f394[data_0209f250];
+    body = (Model *)func_ov002_020e496c((char *)player);
 
-    q = (char *)(int)((char *)&mModelAnim.data);
-    comp = *(char **)q;
-    dst = *(Mtx **)(q + 0xc);
-    src = *(Mtx **)(r8res + 0x14);
-    for (i = 0; i < *(unsigned int *)(comp + 4); i++) {
+    mine = &mModelAnim.data;
+    file = mine->modelFile;
+    dst = (Mtx *)mine->transforms;
+    src = (Mtx *)body->data.transforms;
+    for (i = 0; i < file->numBones; i++) {
         /* The 64-bit round trip keeps the store pointer in the register
-         * pair the ROM uses (lever 6m in notes/mwccarm-codegen.md). */
+         * the ROM uses (lever 6m in notes/mwccarm-codegen.md). */
         *(Mtx *)(int)((long long)(int)dst) = *src;
         src++;
         dst++;
     }
 
-    p_f0 = (char *)&mModelAnim.mat4x3;
-    *(Mtx *)p_f0 = *(Mtx *)(r8res + 0x1c);
-    *(int *)(p_f0 + 0x24) = -*(int *)(p_f0 + 0x24);
+    mat = &mModelAnim.mat4x3;
+    *(Mtx *)mat = *(Mtx *)&body->mat4x3;
+    mat->t.x = -mat->t.x;
     func_0203c178(&data_020a0e68, -0x1000, 0x1000, 0x1000);
-    MulMat3x3Mat3x3(p_f0, &data_020a0e68, p_f0);
-    *(Mtx *)((char *)&mModel.mat4x3) = *(Mtx *)p_f0;
+    MulMat3x3Mat3x3(mat, &data_020a0e68, mat);
+    *(Mtx *)&mModel.mat4x3 = *(Mtx *)mat;
 
     if (data_ov055_02111b64 & 0x20000) return 1;
 
     mModelAnim.Model::Render(0);
-    *(Mtx *)(*(char **)((char *)&mModel.data.transforms)) =
-        *(Mtx *)(*(char **)((char *)&mModelAnim.data.transforms) + 0x2d0);
+    *(Mtx *)&mModel.data.transforms[0] =
+        *(Mtx *)&mModelAnim.data.transforms[15];
     mTextureSequences[0].Update(mModelAnim.data);
-    mTextureSequences[0].currFrame =
-        (int)(*(unsigned char *)(player + 0x6fb)) << 12;
+    mTextureSequences[0].currFrame = player->mIsVanish << 12;
     mTextureSequences[1].Update(mModel.data);
-    mTextureSequences[1].currFrame =
-        (int)(*(unsigned char *)(player + 0x6fb)) << 12;
+    mTextureSequences[1].currFrame = player->mIsVanish << 12;
     mModel.Render(0);
     return 1;
 }
@@ -193,37 +190,41 @@ int daLuigi_c::CleanupResources()
     return 1;
 }
 
-// @symbol func_ov055_021112c4
-extern "C" int func_ov055_021112c4(daLuigi_c *self, daLuigiState *state, char *player)
+// @symbol _ZN9daLuigi_c8SetStateEP12daLuigiStateP6Player
+int daLuigi_c::SetState(daLuigiState *state, Player *player)
 {
-    self->mState = state;
-    daLuigiState *s = self->mState;
-    if (s->enter == 0) return 1;
-    return (((daLuigiStateHost *)self)->*s->enter)(player);
+    mState = state;
+    if (mState->enter == 0) return 1;
+    return (this->*mState->enter)(player);
 }
 
-// @symbol func_ov055_021112bc
-extern "C" int func_ov055_021112bc(void)
+// @symbol _ZN9daLuigi_c11EnterMirrorEP6Player
+int daLuigi_c::EnterMirror(Player *player)
 {
     return 1;
 }
 
-// @symbol func_ov055_02111288
-extern "C" int func_ov055_02111288(daLuigi_c *self, dActor_c *player)
+// @symbol _ZN9daLuigi_c13ExecuteMirrorEP6Player
+int daLuigi_c::ExecuteMirror(Player *player)
 {
+    /* One base pointer, read x, z, y: direct member reads schedule
+     * differently. */
     int *pos = &player->mPosX;
     int x = pos[0];
     int z = pos[2];
     int y = pos[1];
 
-    self->mPosX = -x;
-    self->mPosY = y;
-    self->mPosZ = z;
-    self->mAngleY = -player->mAngleY;
+    mPosX = -x;
+    mPosY = y;
+    mPosZ = z;
+    mAngleY = -player->mAngleY;
     return 1;
 }
 
 // @symbol func_ov055_02111264
+/* Requests the fade-in and plays sound 0x179. Its one candidate caller, at
+ * ov063 0x02118004, relocates ambiguously to ov027 or ov055, so its owner
+ * and name are unknown. */
 extern "C" void func_ov055_02111264(void)
 {
     data_ov055_02111b68 = 2;

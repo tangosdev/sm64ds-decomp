@@ -72,7 +72,7 @@ extern int data_ov002_0211094c;
    SharedFilePtr* entries src/LoadKeyModels.cpp bounds-checks with `idx >= 8`.
    That is the table LoadKeyModels loads into, which is why the call on the line
    below is handed the very same index this is then subscripted by, and
-   src/UnloadKeyModels.cpp and src/_ZN3Key13InitResourcesEv.cpp already declare
+   src/UnloadKeyModels.cpp and src/actors/daObjKey_c.cpp already declare
    and subscript it under this name with this element type. */
 extern void *data_ov089_02132894[];
 extern void LoadKeyModels(int idx);

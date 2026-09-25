@@ -7,9 +7,9 @@
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x213b47c..0x213bf10, 13 function(s), from build/tu_map.json (tools/tu_map.py), plus the class factory daWbm_c_classInit at 0x0213bf10..0x0213bf60, which tu_map.py leaves as its own one-function run; this entry licenses 0x0213b47c..0x0213bf60 as one file.",
-    "class label(s): daWbm_c -- the cartridge's own RTTI spelling. Read out of extracted/overlays/overlay_0098.bin (ov098 loads at 0x02137be0): _ZTS at 0x0213c734 is the string \"7daWbm_c\" plus its NUL; _ZTI at 0x0213c740 reads [__si_class_type_info+8 (0x0209a764), that string, _ZTI12dEnemyBase_c (ov002 0x021081c0)]; and the typeinfo word of the two-word header before the _ZTV address point 0x0213c770 reads 0x0213c740. The class carried the coined name WaterBomb until the rename commit on this branch.",
+    "class label(s): daWbm_c -- the cartridge's own RTTI spelling. Read out of extracted/overlays/overlay_0098.bin (ov098 loads at 0x02137be0): _ZTS at 0x0213c734 is the string \"7daWbm_c\" plus its NUL; _ZTI at 0x0213c740 reads [__si_class_type_info+8 (0x0209a764), that string, _ZTI12dEnemyBase_c (ov002 0x021081c0)]; and the typeinfo word of the two-word header before the _ZTV address point 0x0213c770 reads 0x0213c740. The tree called the class WaterBomb until it took this RTTI spelling.",
     "FACTORY FOLDED: daWbm_c_classInit is contiguous with the run (no gap at 0x0213bf10) and ends at the module's .text end 0x0213bf60. Written as `return (int *)new daWbm_c;` first in the source, it emits last, at its ROM address, and the synthesized constructor reproduces the ROM body (operator new(972), dEnemyBase_c C2, vptr, then the dCcAc_c, dBgCh_Actr, Model and ShadowModel C1 calls). Same shape as the promoted neighbour config/tu_manifest.d/ov098/daObjYajirusi_c.json.",
-    "MEASURED: the three func_ov098_* state bodies are this class's states. __sinit_ov098_0213c2b4 copies three pointer-to-member constants from ov098 .data 0x0213c71c..0x0213c734 into the state table data_ov098_0213c930 (.bss) that Behavior indexes by mState, and ov098 relocs.txt resolves them as state 0 -> 0x0213b9d8, 1 -> 0x0213bb1c, 2 -> 0x0213b7e8.",
+    "MEASURED: the members StateDrop, StateFall and StateBounce are this class's states. __sinit_ov098_0213c2b4 copies three pointer-to-member constants from ov098 .data 0x0213c71c..0x0213c734 into the state table data_ov098_0213c930 (.bss) that Behavior indexes by mState, and ov098 relocs.txt resolves them as state 0 -> 0x0213b9d8 (StateDrop), 1 -> 0x0213bb1c (StateFall), 2 -> 0x0213b7e8 (StateBounce).",
     "MEASURED: the empty inline destructor in the class header emits D1 ahead of D0, the cartridge's order (0x0213b47c then 0x0213b4c4), and no D2.",
     "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU)"
   ],
@@ -36,7 +36,7 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov098_0213b520",
+      "symbol": "_ZN7daWbm_c4LandEv",
       "address": "0x0213b520",
       "size": "0x00000064",
       "legacy_source": "src/func_ov098_0213b520.c",
@@ -50,7 +50,7 @@
       "ordinal": 3
     },
     {
-      "symbol": "func_ov098_0213b63c",
+      "symbol": "_ZN7daWbm_c5BurstEv",
       "address": "0x0213b63c",
       "size": "0x000000a4",
       "legacy_source": "src/func_ov098_0213b63c.cpp",
@@ -64,21 +64,21 @@
       "ordinal": 5
     },
     {
-      "symbol": "func_ov098_0213b7e8",
+      "symbol": "_ZN7daWbm_c11StateBounceEv",
       "address": "0x0213b7e8",
       "size": "0x000001f0",
       "legacy_source": "src/func_ov098_0213b7e8.c",
       "ordinal": 6
     },
     {
-      "symbol": "func_ov098_0213b9d8",
+      "symbol": "_ZN7daWbm_c9StateDropEv",
       "address": "0x0213b9d8",
       "size": "0x00000144",
       "legacy_source": "src/func_ov098_0213b9d8.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "func_ov098_0213bb1c",
+      "symbol": "_ZN7daWbm_c9StateFallEv",
       "address": "0x0213bb1c",
       "size": "0x00000080",
       "legacy_source": "src/func_ov098_0213bb1c.cpp",
@@ -123,12 +123,12 @@
   "data": [],
   "bss": [],
   "notes": [
-    "Hand-curated from the 14 legacy one-function sources (six C++ members, the C factory src/d_a_wbm.c, four C++ helpers and three C helpers); see the file's own header comment for the reconciliation. tubuild create's mechanical output was replaced.",
-    "The three state bodies and four helpers keep their func_ov098_* linker names as C-linkage helpers over daWbm_c *. The states are called through the table as members of this class, but a member spelling would coin seven mangled names; that rename is left to a separate change.",
-    "MEASURED: func_ov098_0213b6e0 tests actorID through an int flag before branching; spelled as a plain `if (actorID == 0xbf) ... else if (actorID == 0xce)` it DIFFs (13/14). func_ov098_0213b9d8 keeps its arithmetic one step per statement; folding the lead computation into one expression DIFFs by 7 words (13/14).",
+    "Hand-curated from the 14 legacy one-function sources: six C++ members, the C factory daWbm_c_classInit, and seven func_ov098_* free functions over the object (four in C++, three in C). tubuild create's mechanical output was replaced.",
+    "Five of the seven legacy free functions are members now, under coined names: the three states StateDrop, StateFall and StateBounce, which Behavior calls through the pointer-to-member table, and Land and Burst. Only the hit check func_ov098_0213b6e0 and the placement helper func_ov098_0213b584 keep their C-linkage names, over a daWbm_c pointer, because include/decl_common.h declares both by those names.",
+    "MEASURED: func_ov098_0213b6e0 tests actorID through an int flag before branching; spelled as a plain `if (actorID == 0xbf) ... else if (actorID == 0xce)` it is 0xf0 bytes against the ROM's 0x108, and as a switch 0xf4 (13/14 either way). _ZN7daWbm_c9StateDropEv keeps its arithmetic one step per statement; folding the lead computation shrinks it from 0x144 to 0x13c bytes (13/14).",
     "MEASURED: the TU includes common.h before the class header so the flat Matrix4x3 spelling wins; with math/Matrix.h's {Matrix3x3, Vector3} spelling the two matrix copies in func_ov098_0213b584 become memberwise and the function grows from 0xb8 to 0xec bytes.",
-    "dCcAc_c::Init, dBgCh_Actr::Init, dActor_c::DropShadowRadHeight, Player::Hurt and Particle::System::NewSimple stay mangled: each takes Fix12<int> by value (wall 6az). ModelBase::SetFile stays mangled because include/ModelBase.h declares it void and InitResources reads its int result.",
-    "Header fields named in this change (mShadowMat, mSpawnPosX/Y/Z, mBounceCount, mSquashSpeed, mSquashScale, mBouncePhase, mState, mVariant) are inferred from the bodies; the offsets and types are proven by the bytes, the English names are not.",
+    "dCcAc_c::Init, dBgCh_Actr::Init, dActor_c::DropShadowRadHeight, Player::Hurt and Particle::System::NewSimple stay mangled: each takes Fix12<int> by value (wall 6az). MEASURED: passing Fix12<int> locals to mdCcAc_c.Init makes _ZN7daWbm_c13InitResourcesEv 0x21c bytes against the ROM's 0x1fc (13/14).",
+    "The header field names mShadowMat, mSpawnPosX, mSpawnPosY, mSpawnPosZ, mBounceCount, mSquashSpeed, mSquashScale, mBouncePhase, mState and mVariant are inferred from the bodies; the offsets and types are proven by the bytes, the English names are not. unk_3b4 stays unnamed because the class only ever stores 0 to it.",
     "STYLE ORACLE: src/actors/daUdlift_c.cpp (ov095 promotion) for the state-table shape, and src/actors/daObjYajirusi_c.cpp (same overlay) for the folded `new` factory."
   ],
   "verification": {
@@ -280,7 +280,7 @@
       "disposition": "deadstrip-duplicate",
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
-      "reason": "include/types.h gives Vector3 an empty inline destructor, so every TU that destroys a Vector3 local re-emits it with vague linkage; the Vector3 locals in func_ov098_0213b584, func_ov098_0213b6e0 and func_ov098_0213b9d8 do so here, as their legacy one-function objects already did. The cartridge keeps exactly one copy at arm9:0x020072c0, kind:function(arm,size=0x4), and src/_ZN7Vector3D1Ev.cpp is its enrolled `complete` owner of that 0x020072c0..0x020072c4 range. This object's copy is the identical 4-byte `bx lr` body with no relocations; rombuild compares the body against those cartridge bytes before discarding the duplicate."
+      "reason": "include/types.h gives Vector3 an empty inline destructor, so every TU that destroys a Vector3 local re-emits it with vague linkage; the Vector3 locals in func_ov098_0213b584, func_ov098_0213b6e0 and _ZN7daWbm_c9StateDropEv do so here, as their legacy one-function objects already did. The cartridge keeps exactly one copy at arm9:0x020072c0, kind:function(arm,size=0x4), and src/_ZN7Vector3D1Ev.cpp is its enrolled `complete` owner of that 0x020072c0..0x020072c4 range. This object's copy is the identical 4-byte `bx lr` body with no relocations; rombuild compares the body against those cartridge bytes before discarding the duplicate."
     },
     {
       "symbol": "_ZTI7fBase_c",
