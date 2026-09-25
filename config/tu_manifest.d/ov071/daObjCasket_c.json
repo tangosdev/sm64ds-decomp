@@ -9,7 +9,7 @@
     "contiguous linker run: 0x02121fe4..0x02122670, 13 function(s), from build/tu_map.json (tools/tu_map.py), plus the factory daObjCasket_c_classInit at 0x02122670..0x021226a0; this entry licenses the whole run 0x02121fe4..0x021226a0 as one file.",
     "FACTORY FOLDED: tools/tu_map.py gives daObjCasket_c_classInit its own one-function run because it cuts on symbol name, but its delinks entry src/d_a_obj_casket.c abuts _ZN13daObjCasket_c13InitResourcesEv (0x0212255c + 0x114 = 0x02122670) with a zero-byte gap, and ov071 puts each class's classInit last in its own run (config/tu_manifest.d/ov071/Scuttlebug.json folds daSpd_c_classInit the same way). Written first in this TU, `return new daObjCasket_c();` emits it at the top of the run, in ROM order.",
     "class label(s): daObjCasket_c -- the cartridge's own RTTI spelling. Read out of extracted/overlays/overlay_0071.bin (ov071 loads at 0x0211f000): _ZTS at 0x02122ea0 is the string \"13daObjCasket_c\" plus its NUL; _ZTI at 0x02122e94 reads [__si_class_type_info+8 (0x0209a764), that string, _ZTI10dBgActor_c (ov002 0x021089ec)]; and the typeinfo word of the two-word header before the _ZTV address point 0x02122efc reads 0x02122e94. The class carried the coined name Coffin until the commit before this one.",
-    "MEASURED: the four func_ov071_021220c8, 02122194, 021221bc and 021223b0 bodies are this class's state functions. __sinit_ov071_02122a64 copies the pointer-to-member constants at 0x02122e74, 0x02122e8c, 0x02122e84 and 0x02122e7c into the { init, exec, name } table data_ov071_02122ecc, whose name words point at \"WAIT\" (0x02122e64) and \"STANDUP\" (0x02122e6c). The constants resolve to state 0 WAIT = { 0x021223b0, 0x021221bc } and state 1 STANDUP = { 0x02122194, 0x021220c8 }. func_ov071_021223c8 enters a state through the init entry and func_ov071_02122414 runs the exec entry.",
+    "MEASURED: the four bodies at 0x021220c8, 0x02122194, 0x021221bc and 0x021223b0 are this class's state functions (St_StandUp_Main, St_StandUp_Init, St_Wait_Main and St_Wait_Init). __sinit_ov071_02122a64 copies the pointer-to-member constants at 0x02122e74, 0x02122e8c, 0x02122e84 and 0x02122e7c into the { init, exec, name } table data_ov071_02122ecc, whose name words point at \"WAIT\" (0x02122e64) and \"STANDUP\" (0x02122e6c). The constants resolve to state 0 WAIT = { 0x021223b0, 0x021221bc } and state 1 STANDUP = { 0x02122194, 0x021220c8 }. SetState (0x021223c8) enters a state through the init entry and RunState (0x02122414) runs the exec entry.",
     "MEASURED: the empty inline destructor in the class header emits D1 ahead of D0, the cartridge's order (0x02121fe4 then 0x02122028), and no D2. Same lever as the promoted ov095 daUdlift_c and the ov009 daObjMcWater_c dBgActor_c leaves.",
     "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU)"
   ],
@@ -36,49 +36,49 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov071_02122080",
+      "symbol": "_ZN13daObjCasket_c20UpdateModelTransformEv",
       "address": "0x02122080",
       "size": "0x00000048",
       "legacy_source": "src/func_ov071_02122080.c",
       "ordinal": 2
     },
     {
-      "symbol": "func_ov071_021220c8",
+      "symbol": "_ZN13daObjCasket_c15St_StandUp_MainEv",
       "address": "0x021220c8",
       "size": "0x000000cc",
       "legacy_source": "src/func_ov071_021220c8.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov071_02122194",
+      "symbol": "_ZN13daObjCasket_c15St_StandUp_InitEv",
       "address": "0x02122194",
       "size": "0x00000028",
       "legacy_source": "src/func_ov071_02122194.c",
       "ordinal": 4
     },
     {
-      "symbol": "func_ov071_021221bc",
+      "symbol": "_ZN13daObjCasket_c12St_Wait_MainEv",
       "address": "0x021221bc",
       "size": "0x000001f4",
       "legacy_source": "src/func_ov071_021221bc.c",
       "ordinal": 5
     },
     {
-      "symbol": "func_ov071_021223b0",
+      "symbol": "_ZN13daObjCasket_c12St_Wait_InitEv",
       "address": "0x021223b0",
       "size": "0x00000018",
       "legacy_source": "src/func_ov071_021223b0.c",
       "ordinal": 6
     },
     {
-      "symbol": "func_ov071_021223c8",
+      "symbol": "_ZN13daObjCasket_c8SetStateEi",
       "address": "0x021223c8",
       "size": "0x0000004c",
       "legacy_source": "src/func_ov071_021223c8.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "func_ov071_02122414",
+      "symbol": "_ZN13daObjCasket_c8RunStateEv",
       "address": "0x02122414",
       "size": "0x0000004c",
       "legacy_source": "src/func_ov071_02122414.cpp",
@@ -124,9 +124,9 @@
   "bss": [],
   "notes": [
     "Hand-curated from the 14 legacy one-function sources (six C++ members, two C++ table helpers, four C helpers, one C++ helper and the C factory); tools/tubuild.py create's output carried conflicting local declarations and shadow types, so the file was consolidated by hand following the ov095 daUdlift_c promotion.",
-    "The six state and table helpers keep their func_ov071_* linker names as C-linkage functions over a daObjCasket_c pointer, reading the header's field names instead of raw offsets, with no byte change. They are called as members of this class through the state table, but a member spelling would coin six mangled names; that rename is left to a separate change. The same holds for func_ov071_02122080, which writes the model matrix.",
+    "The four state functions, the two table helpers and the model-matrix update are member functions of this class. Their ov071 symbols.txt rows carry the compiler's mangled spellings of those descriptive member names (UpdateModelTransform, St_StandUp_Main, St_StandUp_Init, St_Wait_Main, St_Wait_Init, SetState, RunState); the member form is byte-identical to the former C-linkage helpers over a daObjCasket_c pointer.",
     "The factory is `return new daObjCasket_c();` through fBase_c's class-scope operator new, replacing the legacy C seam (_ZN7fBase_cnwEj, _ZN10dBgActor_cC2Ev and a raw vptr store). It makes mwcc also emit _ZN10dBgActor_cD2Ev, licensed below as deadstrip exactly as ov002 daObjBC_Switch_c and ov009 daObjMcWater_c license it.",
-    "MEASURED: in func_ov071_021221bc the closest player's position is copied through a Vector3 pointer; read straight off Player::mPosX..mPosZ the function compiles to 0x1f0 bytes against the ROM's 0x1f4.",
+    "MEASURED: in St_Wait_Main (0x021221bc) the closest player's position is copied through a Vector3 pointer; read straight off Player::mPosX..mPosZ the function compiles to 0x1f0 bytes against the ROM's 0x1f4.",
     "dBgW_KcMbg::SetFile, dBgActor_c::IsClsnInRange and dActor_c::Earthquake stay mangled: each takes Fix12<int> by value (wall 6az).",
     "The class header's unk_32a was tail padding (sizeof rounds 0x32a up to 0x32c, the factory's allocation size; nothing reads or writes it) and is gone.",
     "STYLE ORACLE: the ov095 daUdlift_c promotion and src/actors/Scuttlebug.cpp (same overlay, factory folded)."
@@ -284,7 +284,7 @@
       "disposition": "deadstrip-duplicate",
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
-      "reason": "include/types.h gives Vector3 an empty inline destructor, so every TU that destroys a Vector3 local re-emits it with vague linkage; the Vector3 locals in InitResources and func_ov071_021221bc do so here, as the legacy one-function InitResources object already did. The cartridge keeps exactly one copy at arm9:0x020072c0, kind:function(arm,size=0x4), and src/_ZN7Vector3D1Ev.cpp is its enrolled `complete` owner of that 0x020072c0..0x020072c4 range. This object's copy is the identical 4-byte `bx lr` body with no relocations; rombuild compares the body against those cartridge bytes before discarding the duplicate."
+      "reason": "include/types.h gives Vector3 an empty inline destructor, so every TU that destroys a Vector3 local re-emits it with vague linkage; the Vector3 locals in InitResources and St_Wait_Main do so here, as the legacy one-function InitResources object already did. The cartridge keeps exactly one copy at arm9:0x020072c0, kind:function(arm,size=0x4), and src/_ZN7Vector3D1Ev.cpp is its enrolled `complete` owner of that 0x020072c0..0x020072c4 range. This object's copy is the identical 4-byte `bx lr` body with no relocations; rombuild compares the body against those cartridge bytes before discarding the duplicate."
     },
     {
       "symbol": "_ZN10dBgActor_cD2Ev",
