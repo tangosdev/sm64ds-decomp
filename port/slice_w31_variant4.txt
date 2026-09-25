@@ -30,3 +30,10 @@ src/_ZN7MinimapD0Ev.cpp
 # port/unmatched/MgPachinko2_Dtor.cpp, now a forwarder. The qualified shape
 # would drop the port's one caller of that flat base destructor.
 src/_ZN16dScMgPachinko2_cD0Ev.cpp
+# Batch 5, the slot-16 D1 rows: each file's _MSC_VER arm spells the ROM's own
+# D1 step for step, the calls the hand-written slot-16 thunk made (ml_d1 in
+# port/hal/actor_classes_ov055.cpp, bbi_d1 and ms_d1 in
+# port/hal/actor_classes_ov063.cpp), and each thunk now only forwards.
+src/_ZN11MirrorLuigiD1Ev.cpp
+src/game/actors/daTrsIcon_c/_ZN11daTrsIcon_cD1Ev.cpp
+src/game/actors/daTrsTrap_c/_ZN11daTrsTrap_cD1Ev.cpp

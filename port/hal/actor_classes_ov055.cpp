@@ -351,15 +351,16 @@ static int __fastcall ml_render(void *s, void *)
   return _ZN11MirrorLuigi6RenderEv(s); }
 static int __fastcall ml_pdes(void *s, void *)
 { (void)s; _ZN11MirrorLuigi16OnPendingDestroyEv(); return 0; }
+/* SLOT 16 IS THE ROM'S OWN D1 NOW (run linkfull wave 31, lane VARIANT4). The
+   transcription above moved into src/_ZN11MirrorLuigiD1Ev.cpp's _MSC_VER arm,
+   which defines the flat ROM name and makes the same calls in the same order
+   with the same offsets and the same table (its MSVC object and this thunk's
+   old body are compared in runs/linkfull/out/VARIANT4/). The thunk keeps the
+   slot's __fastcall shape and the PORT_D16 census and only forwards. */
+extern "C" void *_ZN11MirrorLuigiD1Ev(void *self);
 static int __fastcall ml_d1(void *s, void *)
 {
-    char *t = (char *)s;
-    *(void **)t = (void *)_ZTV11MirrorLuigi;
-    __cxa_vec_cleanup(t + 0x1b0, 2, 0x14, (void *)&_ZN15TextureSequenceD1Ev);
-    _ZN11ShadowModelD1Ev(t + 0x188);
-    _ZN5ModelD1Ev(t + 0x138);
-    _ZN9ModelAnimD1Ev(t + 0xd4);
-    _ZN8dActor_cD2Ev(t);
+    _ZN11MirrorLuigiD1Ev(s);
     return (int)(size_t)s;
 }
 static int __fastcall ml_d0(void *s, void *)

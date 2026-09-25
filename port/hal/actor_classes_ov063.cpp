@@ -416,10 +416,15 @@ static int __fastcall bbi_behavior(void *s, void *)
 { return ((fBase_c *)s)->fBase_c::Behavior(); }
 static int __fastcall bbi_render(void *s, void *)
 { return ((fBase_c *)s)->fBase_c::Render(); }
+/* SLOT 16 IS THE ROM'S OWN D1 NOW (run linkfull wave 31, lane VARIANT4):
+   src/game/actors/daTrsIcon_c/_ZN11daTrsIcon_cD1Ev.cpp's _MSC_VER arm defines
+   the flat ROM name and makes this thunk's two steps (the store of
+   _ZTV10BigBooIcon, then ActorD2); the thunk keeps the slot's shape and the
+   PORT_D16 census and only forwards. */
+extern "C" void *_ZN11daTrsIcon_cD1Ev(void *self);
 static int __fastcall bbi_d1(void *s, void *)
 {
-    *(void **)s = (void *)_ZTV10BigBooIcon;
-    _ZN8dActor_cD2Ev(s);
+    _ZN11daTrsIcon_cD1Ev(s);
     return (int)(size_t)s;
 }
 static int __fastcall bbi_d0(void *s, void *)
@@ -526,13 +531,16 @@ static int __fastcall ms_render(void *s, void *)
   return ((MansionSteps *)s)->MansionSteps::Render(); }
 static int __fastcall ms_pdes(void *s, void *)
 { (void)s; _ZN11daTrsTrap_c16OnPendingDestroyEv(); return 0; }
+/* SLOT 16 IS THE ROM'S OWN D1 NOW (run linkfull wave 31, lane VARIANT4):
+   src/game/actors/daTrsTrap_c/_ZN11daTrsTrap_cD1Ev.cpp's _MSC_VER arm defines
+   the flat ROM name and makes this thunk's four steps (the store of the table,
+   spelled _ZTV11daTrsTrap_c, which the alternatename above binds to
+   _ZTV12MansionSteps; the collider at +0x15c; the Model at +0xd4; ActorD2); the
+   thunk keeps the slot's shape and the PORT_D16 census and only forwards. */
+extern "C" void *_ZN11daTrsTrap_cD1Ev(void *self);
 static int __fastcall ms_d1(void *s, void *)
 {
-    char *t = (char *)s;
-    *(void **)t = (void *)_ZTV12MansionSteps;
-    _ZN10dBgW_KcMbgD1Ev(t + 0x15c);
-    _ZN5ModelD1Ev(t + 0xd4);
-    _ZN8dActor_cD2Ev(t);
+    _ZN11daTrsTrap_cD1Ev(s);
     return (int)(size_t)s;
 }
 static int __fastcall ms_d0(void *s, void *)
