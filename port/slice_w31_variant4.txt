@@ -1,0 +1,39 @@
+# slice_w31_variant4 -- run linkfull, lane VARIANT4, THE LAST D0 ROWS THE
+# D0-ARM CAMPAIGN HELD BACK.
+#
+# Each file below is a per-function src D0 TU in the campaign's shape (lane
+# D0ARM1's generator, the shape port/slice_w24_camp3.txt describes): the
+# class's D1 file defines ~Cls() out of line, so under MSVC the D0 file could
+# not be compiled as well, and the flat ROM name the port's slot 17 calls was a
+# generated face out of port/faces_sync.txt. Each file gains the `#ifdef
+# _MSC_VER` arm now: the qualified, direct call to that one host destructor
+# body, then the class's own operator delete (Memory::Deallocate on the game
+# heap word data_020a0eac), which are the two calls the retired face made. The
+# `#else` side is the file's own text, byte for byte, so mwccarm compiles what
+# it always compiled (tools/match.py 2004/b56 strict MATCHING and
+# tools/linkcheck.py VERIFIED, before and after, object identical).
+#
+# WHY THESE WERE LEFT: the campaign parked them by name. MrBlizzard for the
+# family's old callee-saved-register ruling, which lane PMF2 re-opened and its
+# review agreed no longer holds; Minimap as "the VS minimap", which it is not:
+# actor 335 MINIMAP is spawned in every one of the 51 levels (the bottom-screen
+# map; the class carries FixTHIPaintingRoomPos and GetMinimapID).
+#
+# THE EDGE IS THE ONE THE PORT ALREADY HAS: the ROM's own table word 17 of each
+# class relocates to its D0, and the port's slot-17 thunks call the flat name.
+# No new reference and no keep-alive.
+src/_ZN10MrBlizzardD0Ev.cpp
+src/_ZN7MinimapD0Ev.cpp
+# Batch 4, a different arm: src/_ZN16dScMgPachinko2_cD0Ev.cpp spells the ROM's
+# own three steps (the store of its own vtable, the flat base destructor
+# _ZN11dScMgBase_cD2Ev, Memory::Deallocate), which are the host copy's calls in
+# port/unmatched/MgPachinko2_Dtor.cpp, now a forwarder. The qualified shape
+# would drop the port's one caller of that flat base destructor.
+src/_ZN16dScMgPachinko2_cD0Ev.cpp
+# Batch 5, the slot-16 D1 rows: each file's _MSC_VER arm spells the ROM's own
+# D1 step for step, the calls the hand-written slot-16 thunk made (ml_d1 in
+# port/hal/actor_classes_ov055.cpp, bbi_d1 and ms_d1 in
+# port/hal/actor_classes_ov063.cpp), and each thunk now only forwards.
+src/_ZN11MirrorLuigiD1Ev.cpp
+src/game/actors/daTrsIcon_c/_ZN11daTrsIcon_cD1Ev.cpp
+src/game/actors/daTrsTrap_c/_ZN11daTrsTrap_cD1Ev.cpp
