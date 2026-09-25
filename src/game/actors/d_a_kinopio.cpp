@@ -102,35 +102,17 @@ u16 ObjectMessageIDToActualMessageID(s16 id);
 int IsStarCollectedInCurLevel(int starID);
 u8 NumStars(void);
 
-/* Player / Message, reached by their ROM names */
-int _ZN6Player12GetTalkStateEv(char *player);
-int _ZN6Player9StartTalkER7fBase_cb(void *player, void *actor, char flag);
-void _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(
-    char *player, char *actor, u32 messageID, const Vector3 *pos, u32 a, u32 b);
-int _ZN7Message11PrepareTalkEv(void);
-void _ZN7Message7EndTalkEv(void);
-
-/* dActor_c / fBase_c / Sound.
+/* dActor_c / Sound.
    The mangled spellings are kept wherever the real declaration takes a
-   Fix12<int> or an s8/s16 BY VALUE, because mwccarm passes those differently at
+   Fix12<int> BY VALUE, because mwccarm passes those differently at
    the call site than a loose spelling would. */
 int _ZN5Sound7PlaySubEjjj5Fix12IiEb(u32 a, u32 b, u32 c, int d, int e);
-void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-    u32 profile, u32 param, const void *pos, const void *rot, int area, int id);
-void *_ZN8dActor_c10FindWithIDEj(u32 id);
-void *_ZN8dActor_c13ClosestPlayerEv(void *thiz);
-void _ZN8dActor_c13SpawnSoundObjEj(char *thiz, u32 id);
 void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     void *thiz, void *sm, void *mtx, int rad, int height, u32 flags);
-void _ZN7fBase_c18MarkForDestructionEv(char *thiz);
 
 /* model / collision / shadow */
 void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
     void *thiz, BCA_File *file, int a, int speed, u32 flags);
-void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *thiz, BMD_File *f, int a, int b);
-BMD_File *_ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr *p);
-BMD_File *_ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr *p);
-void _ZN11ShadowModel12InitCylinderEv(void *thiz);
 void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
     void *thiz, void *actor, Fix12i a, Fix12i b, u32 c, u32 d);
 
@@ -261,8 +243,8 @@ void daKinopio_c::St_Talk_Main()
                 starPos.y = mPosY;
                 starPos.z = mPosZ;
                 starPos.y += 0xc8000;
-                _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-                    0xb2, mStarID | 0x20, &starPos, 0, mAreaId, -1);
+                dActor_c::Spawn(
+                    0xb2, mStarID | 0x20, starPos, 0, mAreaId, -1);
                 u16 *message = (u16 *)(int)M(c + 0x208);
                 *message = (u16)(*message + 1);
             }
@@ -272,17 +254,17 @@ void daKinopio_c::St_Talk_Main()
     if (mVariant == 1 && func_02013a44() != 0) {
         u32 id = mCapUniqueID;
         if (id != 0) {
-            char *found = (char *)_ZN8dActor_c10FindWithIDEj(id);
+            char *found = (char *)dActor_c::FindWithID(id);
             if (found != 0) {
-                _ZN7fBase_c18MarkForDestructionEv(found);
+                ((fBase_c *)found)->MarkForDestruction();
                 mCapUniqueID = 0;
                 SpawnSoundObj(1);
                 {
                     u32 param = 0x13;
                     u8 character = ((Player *)player)->mCharacter;
-                    _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
+                    dActor_c::Spawn(
                         0x10d, param | ((u32)character << 8),
-                        &playerPos, 0, mAreaId, -1);
+                        playerPos, 0, mAreaId, -1);
                 }
             }
         }
@@ -311,7 +293,7 @@ void daKinopio_c::St_Idle_Main()
     if ((*(int *)(self + 0xf4) & 0x08000000) == 0)
         return;
 
-    void *actor = _ZN8dActor_c10FindWithIDEj(*(u32 *)(self + 0xf8));
+    void *actor = dActor_c::FindWithID(*(u32 *)(self + 0xf8));
     if (actor == 0)
         return;
     int isPlayer = (((dActor_c *)actor)->actorID == 0xbf) ? 1 : 0;
@@ -378,7 +360,7 @@ void daKinopio_c::UpdateModelPose()
 
     id = *(u32 *)(c + 0x1f4);
     if (id != 0) {
-        actor = _ZN8dActor_c10FindWithIDEj(id);
+        actor = dActor_c::FindWithID(id);
         if (actor != 0) {
             *(s32 *)&x = 0;
             *(s32 *)&y = 0;
@@ -518,7 +500,7 @@ int daKinopio_c::Behavior()
     {
         u32 id = mCapUniqueID;
         if (id != 0) {
-            if (_ZN8dActor_c10FindWithIDEj(id) != 0)
+            if (dActor_c::FindWithID(id) != 0)
                 mTargetOpacity = 0xff;
         }
     }
@@ -587,9 +569,9 @@ int daKinopio_c::InitResources()
         mMessageID = 0;
     mCapUniqueID = 0;
     if (mVariant == 1) {
-        _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210da40);
-        _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9a0);
-        _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9c0);
+        Model::LoadFile(data_ov002_0210da40);
+        Model::LoadFile(data_ov002_0210d9a0);
+        Model::LoadFile(data_ov002_0210d9c0);
         if (func_02013a44() != 0) {
             Player *player = ClosestPlayer();
             if (player == 0)
@@ -598,9 +580,9 @@ int daKinopio_c::InitResources()
                 u32 k = 0xd;
                 u8 character = *(u8 *)((char *)player + 0x6d9);
                 s8 area = mAreaId;
-                int m1 = -1;
-                void *spawned = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-                    0x10d, k | ((u32)character << 8), (Vector3 *)&mPosX, 0, area, m1);
+                s16 m1 = -1;
+                void *spawned = dActor_c::Spawn(
+                    0x10d, k | ((u32)character << 8), *(Vector3 *)&mPosX, 0, area, m1);
                 if (spawned != 0)
                     mCapUniqueID = *(s32 *)((char *)spawned + 4);
             }
