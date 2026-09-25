@@ -591,8 +591,6 @@ void port_scene_mg_seed_rng(int id, int windowed);
 void port_graph_block_register(void *vt);
 extern "C" int port_graph_block_beat(void);
 extern "C" int port_graph_block_verdict(void);
-/* func_02019390 phase 2's head: the same block's WORD 0, scene slot 23 */
-extern "C" int port_graph_block_word0(void);
 
 
 /* the frame: the same calls, in the same order, that walk_window's own loop
@@ -607,7 +605,9 @@ void port_actor_scene_pass(void);    /* phase 1 */
    probe gates itself on SM64DS_WIDEN_PROBE. */
 void hal_camera_widen_frustum_scene(void);
 void hal_widen_probe_scene_frame(int frame, const char *where);  /* inert unset */
-void port_fader_advance(void);
+/* phase 2: the ROM's func_02019390 and the settle-clear (hal/fader_wipes.cpp) */
+void port_frame_phase2(void);
+extern "C" int data_0209d50c;        /* the ROM's phase word (hal/rom_frame.cpp) */
 void port_frame_clock_tick(void);    /* phase 6: data_020a0db0 (hal/fader_wipes.cpp) */
 /* SM64DS_MG_RESULTS_PROBE (hal/scene_mg.cpp), off unless the variable is set */
 void port_mg_results_probe(int frame);
@@ -652,6 +652,9 @@ extern int data_020a4b6c[8];         /* the scene tree: head, callback, 0 */
 extern void *data_0209f5bc;          /* the installed fader; hal/fader_wipes.cpp */
 
 }  /* extern "C" */
+/* C++ linkage, outside the block above: the OAM reset port_scene_tick
+   makes on the frames its own pause holds still (src/_ZN3OAM5ResetEv.cpp). */
+namespace OAM { void Reset(); }
 
 DSSTATE_BEGIN
 extern "C" {
@@ -4084,10 +4087,16 @@ extern "C" int port_graph_block_beat(void)
  * (func_02019440, _ZN7dScMB_c16CleanupResourcesEv, _ZN7dScMB_c13InitResourcesEv and two in the 0x0202Cxxx pair).
  *
  * WHERE WORD 0 IS CALLED FROM: src/func_020197b8.c, the ROM's frame loop, at
- * PHASE 2 -- `data_0209d50c = 2; func_02019390();`. This port has that position
- * already; it is where port_fader_advance() is called from, because
- * func_02019390's TAIL is the two fade advances hal/fader_wipes.cpp
- * reproduces. What the port never had was func_02019390's HEAD, which is this.
+ * PHASE 2 -- `data_0209d50c = 2; func_02019390();`. This file used to dispatch
+ * it itself (port_graph_block_word0, a registry-checked beat whose answer was
+ * discarded), beside hal/fader_wipes.cpp's stand-in for the phase's fade
+ * advances. BOTH ARE RETIRED (run linkfull, lane RESET2): the two loops call
+ * the ROM's own func_02019390 through hal/fader_wipes.cpp's port_frame_phase2,
+ * which dispatches word 0 of whatever block is current -- no registry test,
+ * the ROM has none, and every block this port can hold carries host addresses
+ * now (the Stage's data_02092188 included, hal/arm9_tables_link100.cpp) -- and
+ * USES the answer: the title's dScDSMT_c::graphCallback_c::GraphCallback0 and
+ * dScMB_c's answer 0, so on those scenes phase 2 takes its early arm.
  *
  * WHAT IT UNBLOCKS. Scene slot 23 is the stylus stroke-connected test's
  * dispatcher, and its ONLY dispatch site in the entire ROM is word 0. With the
@@ -4124,11 +4133,6 @@ extern "C" int port_graph_block_beat(void)
  * func_02019100 discards) and SEVEN override, including the whole D3D family.
  * That is a separate census and a separate proof and it is queued, not taken.
  */
-extern "C" int port_graph_block_word0(void)
-{
-    return graph_block_word(0);
-}
-
 /* What the beat answered THIS frame, for the second half of the tail. The
    engine A display path runs the beat; the engine B one reads the answer,
    because the block's slot 2 is called once per frame on the DS and calling
@@ -7545,6 +7549,27 @@ extern "C" void port_scene_tick(int frame, int tick_game)
            the record from the ring, func_0203e0ac broadcasts it, and the
            scene's Behavior reads the broadcast, all in one frame. */
         port_scene_comms_publish();
+        /* PHASE 2, THE FRAME'S RESET (run linkfull, lane RESET2): the ROM's
+           func_02019390 at the ROM's point -- after the input read above and
+           before phase 3 (the carrier below) and phase 4 (port_actor_tick), as
+           src/func_020197b8.c orders them. tests/walk_window.cpp's level loop
+           calls it at the same point; hal/fader_wipes.cpp's port_frame_phase2
+           carries the argument. It retires this function's late pair (the
+           word-0 beat and the fade step after the tick) and
+           hal_sub_screen_frame_begin's OAM::Reset.
+
+           UNDER tick_game, as the pair it replaces was: the debug menu's pause
+           holds a scene still (the ROM has no pause), and a stylus stroke must
+           not reach a minigame's word 0 while it does. A paused frame still
+           renders, so it gets the one piece of phase 2 its render needs, the
+           OAM reset, from the host: without it the frozen scene's sprites would
+           be appended to the shadow again every frame. */
+        if (tick_game) {
+            data_0209d50c = 2;
+            port_frame_phase2();
+        } else {
+            OAM::Reset();
+        }
         /* THE SCENE-REQUEST CARRIER, run mg16 arc 3.
          *
          * The port ran HALF of the ROM's scene change. Scene::SetSceneToSpawn
@@ -7625,29 +7650,19 @@ extern "C" void port_scene_tick(int frame, int tick_game)
             port_title_skip_tick(frame);
             /* THE FRAME CLOCK, func_020197b8 phase 6 (hal/fader_wipes.cpp).
                After the actor phases and before the render. NOT the ROM's exact
-               slot: the ROM steps it at phase 6, after phase 5 and so after its
-               phase 2 fade advance, while this sits before port_fader_advance --
-               one phase early, with nothing in between that reads the word.
+               slot: the ROM steps it at phase 6, after phase 5, while this sits
+               before the render -- one phase early, with nothing in between that
+               reads the word. Phase 2 runs before the tick, above.
                Every blink in the game hangs off this counter, and on this path
                that includes the only visual difference between a SELECTED
                Pair-a-Gone card and an idle one. */
             port_frame_clock_tick();
-            /* PHASE 2's HEAD, AHEAD OF ITS TAIL, which is the ROM's own order:
-               func_02019390 dispatches the graphics block's word 0 first and
-               only then reaches the two fade advances port_fader_advance
-               stands in for.
-
-               THE ANSWER IS DISCARDED, and that is a statement rather than an
-               oversight. On the DS a 0 here skips OAM::Reset, func_0200f468
-               and func_02018ec0 and still runs func_02018efc -- so inside what
-               this port reproduces, the whole difference between the two arms
-               is the SECOND fade advance. Word 0's forwarder
-               _ZN11dScMgBase_c15graphCallback_c14GraphCallback0Ev returns 1 on every path with no branch in it,
-               and it is what every one of the thirty-two ov006 blocks reaches,
-               so no scene in this game can take the 0 arm. If one ever does,
-               this is the line that has to grow the split. */
-            port_graph_block_word0();
-            port_fader_advance();
+            /* PHASE 2 (the word-0 beat and the fade step) used to be called
+               here, after the tick, with word 0's answer discarded on the claim
+               that no scene answers 0. The title does:
+               dScDSMT_c::graphCallback_c::GraphCallback0 is `return 0;`. It is
+               the ROM's func_02019390 now, before the tick, and the answer is
+               the ROM's to use (PHASE 2, THE FRAME'S RESET, above). */
             /* SM64DS_MG_RESULTS_PROBE=<frame> (hal/scene_mg.cpp): raise the
                minigame framework's results panel through the ROM's own slot 27
                at a chosen frame, so the play-again prompt can be captured on a

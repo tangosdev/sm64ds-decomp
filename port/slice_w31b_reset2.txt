@@ -1,0 +1,44 @@
+# RESET2 (run linkfull, wave 31B): THE GAME LOOP'S OWN PHASE 2.
+#
+# src/func_020197b8.c, the ROM's frame loop, runs `data_0209d50c = 2;
+# func_02019390();` every frame, before phase 3 spawns and phase 4 ticks.
+# hal/fader_wipes.cpp's port_frame_phase2 calls it (inside the fader stepping
+# bracket), and both host loops call that at the ROM's point: tests/
+# walk_window.cpp's level loop and hal/scene_boot.cpp's port_scene_tick. It
+# retires the phase's host pieces: hal/scene_boot.cpp's port_graph_block_word0
+# (word 0 of the graphics block), hal/fader_wipes.cpp's port_fader_advance
+# (func_02018efc plus a stand-in for func_02018ec0) and the OAM::Reset in
+# hal/sub_screen.cpp's hal_sub_screen_frame_begin.
+#
+# hal/fader_wipes.cpp is compiled once for all three hosting targets and
+# hal/scene_boot.cpp by each of them, so all three take the slice: walk_window,
+# walk_window_hires and smoke_player.
+#
+# A line whose path is followed by the word `hostgen` compiles its
+# build/host-src copy made by port/tools/hostgen.py (the PMF3 block's shape).
+#
+# The phase itself: the graphics block's word 0 decides the arm; the full arm
+# runs OAM::Reset, the GX reset, the empty func_0200f468 and the three fader
+# steps; the early arm only the first two fader steps.
+src/func_02019390.c
+#
+# The GX reset (full arm, when func_02019018's data_0208ee00 is up, which is
+# its ROM value): func_020557b4 (linked, hostgen-routed by the TIDEP block),
+# then MTX_MODE 3 / MTX_IDENTITY / MTX_MODE 2. Its three stores are geometry
+# command ports, so the copy goes through hostgen: a plain store would land in
+# the mapped window and the geometry engine would never see it (gxport_guard
+# refuses one).
+src/func_0200f4b4.c hostgen
+#
+# An empty body, called on the full arm.
+src/func_0200f468.c
+#
+# The fader IN MOTION's advance: vt[2] on data_0209d4b0, the ROM body the old
+# stand-in reproduced. Its settle-clear, which the ROM does not have, stays in
+# port_frame_phase2 (read its banner for why).
+src/func_02018ec0.c
+#
+# vt[2] on data_0209f1e4, the soft-reset fader. Only dScene_c::BeforeBehavior's
+# soft-reset branch writes that word, and the latch behind it never rises on
+# this port (func_02023498 is not linked), so this is the ROM's null test.
+src/func_0202345c.c

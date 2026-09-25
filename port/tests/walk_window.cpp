@@ -1451,10 +1451,11 @@ int  port_rom_frame(void);
 int  port_rom_frame_checked(int host, const char *reader);
 void port_rom_frame_rewind(int to);
 void port_rom_frame_report(void);
-/* func_020197b8 PHASE 2's head (hal/scene_boot.cpp): the current scene's
-   graphics block, word 0, which is scene slot 23's only dispatch site in the
-   whole ROM. Answers 1 for a block this port has not seated. */
-int port_graph_block_word0(void);
+/* func_020197b8 PHASE 2 (hal/fader_wipes.cpp): the ROM's own func_02019390 --
+   the graphics block's word 0, OAM::Reset, the GX reset and the three fader
+   steps -- inside the fader stepping bracket, then the port's one kept host
+   step, the settle-clear of data_0209d4b0. Called at the ROM's point below. */
+void port_frame_phase2(void);
 /* gate 31: the level handoff (hal/level_change.cpp). port_level_change_poll
    sits where Scene::SpawnIfNecessary sits in func_020197b8 -- after input,
    before the actor phases -- and returns 1 on the frame a new level came up,
@@ -1474,11 +1475,10 @@ void ExitLevel(void);
 void LoadLevelNoReturn(int level, unsigned entrance, unsigned star,
                        unsigned reason);
 extern signed char data_0209f2f8;    /* the level currently up */
-/* gate 31 faders (hal/fader_wipes.cpp): port_fader_advance steps whatever fade
-   is in motion one frame and writes the 2D master-blend register the ROM's own
-   FaderColor::AdvanceFade writes; port_fader_blend_state reads it back so the
-   compositor can fade the framebuffer. */
-void port_fader_advance(void);
+/* gate 31 faders (hal/fader_wipes.cpp): phase 2 (port_frame_phase2 above) steps
+   whatever fade is in motion one frame through the ROM's own AdvanceFade, which
+   writes the 2D master-blend register; port_fader_blend_state reads it back so
+   the compositor can fade the framebuffer. */
 int port_fader_blend_state(int *evy, int *toWhite);
 void port_fader_start_color(int frames, int toEnd, unsigned short color);
 /* dialogue pipeline (hal/message_pump.cpp, hal/message_compositor.cpp,
@@ -12507,6 +12507,32 @@ int main(void)
                 func_0201ffcc();
                 if (rb_replaying()) rb_replay_phase(6, ovl_now_ms() - t_rb);
             }
+            /* ---- PHASE 2, THE FRAME'S RESET (run linkfull, lane RESET2) -----
+               func_020197b8.c:38 is `data_0209d50c = 2; func_02019390();`,
+               after the lid machine (0xb, DS-only, not run here) and before the
+               input steps below, so it follows phase 0x15 above in the ROM's own
+               cycle (7, 0x15, 9, then the next frame's 0xb, 2, 0x16, 0x17, 3,
+               4): the graphics block's word 0, OAM::Reset, the GX reset
+               (func_0200f4b4), and the three fader steps, all before phase 3
+               spawns and phase 4 ticks. hal/fader_wipes.cpp's
+               port_frame_phase2 is the ROM body inside the fader stepping
+               bracket plus the port's one kept host step (read its banner).
+
+               EVERY FRAME, as the fade step it replaces always ran here: with
+               the debug menu holding the world still the frame's reset and a
+               fade on screen keep going (the DS has no pause). On a level the
+               graphics block is null, so word 0 is never dispatched and the
+               full arm runs, as the cartridge's Stage block answers 1.
+
+               IT RETIRES three host pieces of the same phase: the fade step and
+               word-0 beat that used to sit AFTER the actor tick further down
+               this frame (port_fader_advance, port_graph_block_word0), and the
+               OAM::Reset in hal_sub_screen_frame_begin at the top of this
+               frame. ntr::gx_reset in the render block below is NOT one of
+               them: it is the host rasteriser's frame opener (the hardware's
+               swap), which the ROM never calls. */
+            data_0209d50c = 2;
+            port_frame_phase2();
             /* PHASES 0x16 AND 0x17, the second half of the same block: the
                ROM's own PadData builder, then func_020197b8.c:43-46 -- the
                input ring -- in the ROM's order, right after the read that
@@ -14538,9 +14564,10 @@ int main(void)
         /* THE FRAME CLOCK, func_020197b8 phase 6 (hal/fader_wipes.cpp): after
            the actor phases the branch above ran, before the render below. ONE
            PHASE EARLY against the ROM, which steps it at phase 6 -- after phase
-           5, and so after its phase 2 fade advance -- where this sits before
-           port_fader_advance. Nothing between the two reads the word, so no
-           linked reader can tell; the banner carries the argument. Gated on
+           5 -- where this sits after the actor tick and before the render.
+           Phase 2 runs before the tick (the input block above), as the ROM
+           orders it. No linked reader can tell; the banner carries the
+           argument. Gated on
            game_ticked -- the ROM has no pause, so a frozen frame holding its
            blinks still is this port's decision and the same one port_actor_tick
            makes. hal/scene_boot.cpp's port_scene_tick calls it at the matching
@@ -14548,33 +14575,17 @@ int main(void)
            every blink in the game hangs off this one counter. */
         if (game_ticked)
             port_frame_clock_tick();
-        /* PHASE 2's HEAD, the graphics block's word 0 (hal/scene_boot.cpp).
-           The ROM's func_02019390 dispatches it before the fade advances below,
-           and slot 23 -- the stylus stroke test -- has no other dispatch site in
-           the game. GATED ON THE TICK, unlike the fade under it: a fade must
-           keep moving while the debug menu holds the world still, and a stylus
-           stroke must not be accepted by a paused game.
-
-           IT CANNOT REACH ANYTHING ON THIS PATH TODAY and it is here anyway.
-           The seated blocks are the minigame block and the title block, both
-           installed on the scene path, so on a level the registry check misses
-           and this returns 1 without dispatching. Leaving the level loop
-           without the beat is the same half-wiring that cost 384 its stylus. */
-        if (game_ticked)
-            port_graph_block_word0();
-        /* THE FADE STEPS HERE, and it steps every frame -- even with the menu
-           open and the game tick skipped -- because a fade transition must not
-           freeze while it is on screen. This is func_02018ec0's job in the
-           ROM's own frame (phase 2, func_02019390): advance the fader currently
-           in motion (data_0209d4b0) by one frame, which writes the 2D blend
-           register the compositor below reads. */
-        port_fader_advance();
+        /* PHASE 2 (the graphics block's word 0 and the fade steps) used to be
+           called here, after the actor tick. It is the ROM's func_02019390 now,
+           at the ROM's point before the tick: see PHASE 2, THE FRAME'S RESET,
+           in the input block above. */
         /* THE DISPLAY SCAN-OUT, and with it IRQ 2. The DS raises the HBlank
            edge once per scanline while the picture is drawn; the ROM's
            dWipe_c motion path is built on it and nothing on the host used to
-           raise it. Here, beside the fade step, because both are the ROM's
-           own frame phase 2 and because everything below this point is the
-           host rasteriser rather than game code. Costs nothing on a frame
+           raise it. Here, where the fade step also sat until phase 2 moved to
+           the ROM's point before the tick (run linkfull lane RESET2), because
+           everything below this point is the host rasteriser rather than game
+           code. Costs nothing on a frame
            with no mask-2 handler registered: the gate is five loads.
            SM64DS_IRQ2_OFF=1 puts the old behaviour back on this same binary.
            See port/irq2_map.txt. */
@@ -16166,8 +16177,8 @@ int main(void)
            opening writes them differently and that is where it showed.
            Composited after the sub-screen present but before the host debug
            overlay, because the overlay is not game content and must stay
-           readable through a fade. port_fader_advance wrote those registers
-           this frame; read them back and do the same fade over the finished
+           readable through a fade. Phase 2 (port_frame_phase2) wrote those
+           registers this frame; read them back and do the same fade over the finished
            framebuffer. EVY is the 0..16 coefficient: fade-to-black is
            rgb*(1 - evy/16), fade-to-white is rgb + (255-rgb)*evy/16, both per
            channel, which is exactly the DS blend math (16/16 = full).

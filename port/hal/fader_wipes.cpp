@@ -22,7 +22,7 @@
 // delegation note after the slot table. AdvanceFade keeps one deliberate
 // divergence: an UNDRIVEN advance snaps currInterp to its target rather than
 // stepping, because a fade nobody is driving must not hold a scene transition
-// open for 30 frames, while port_fader_advance's driven advance steps for real
+// open for 30 frames, while the frame loop's phase 2 (port_frame_phase2) steps for real
 // so the fade renders.
 //
 // ---- SLOT ORDER: the ROM's, not MSVC's ------------------------------------
@@ -155,7 +155,7 @@ namespace {
 /* Snap vs step: the historical stub snapped the interpolator to its target so
    an invisible fade could not hold a transition open. Now the fade renders, so
    it has to STEP -- but only when the frame loop is actually driving the
-   advance (port_fader_advance). A direct SetToStart/SetToEnd still snaps. The
+   advance (port_frame_phase2). A direct SetToStart/SetToEnd still snaps. The
    flag is set for the duration of one driven advance. */
 int g_hal_fader_stepping;
 
@@ -296,7 +296,7 @@ struct HalFaderWipe {
     }
     virtual int AdvanceFade()                        /* 0x08 */
     {
-        /* Driven advance (the frame loop's port_fader_advance) STEPS the
+        /* Driven advance (the frame loop's port_frame_phase2) STEPS the
            interpolator one frame and writes the 2D master-blend register the
            way FaderColor::AdvanceFade does, so the fade renders. Any other
            caller keeps the old snap: a fade nobody is driving must not stall a
@@ -559,114 +559,126 @@ DSSTATE_END
 extern "C" void _ZN9FaderWipe14LoadAndSetFileEt(void *thiz, unsigned short fileID)
 { ((FaderWipe *)thiz)->FaderWipe::LoadAndSetFile(fileID); }
 
-/* ---- the per-frame fade driver -------------------------------------------
-   func_02018ec0 is the ROM's own per-frame fade advance: it reads
-   data_0209d4b0 -- the fader CURRENTLY IN MOTION, distinct from data_0209f5bc
-   the installed one -- and calls its AdvanceFade (vtable slot 0x08). The port
-   does not run func_02018ec0 (the port has its own frame loop, not
-   func_020197b8), so nothing advanced a fade. This is that driver, called from
-   walk_window.cpp's frame loop right where phase 2 (func_02019390) sits.
+/* ---- THE ROM'S FRAME PHASE 2, AND THE ONE HOST STEP LEFT BESIDE IT --------
+   run linkfull, lane RESET2.
 
-   data_0209d4b0 is an int[8] in hal/cxx_aliases.cpp; its first word holds the
-   animating-fader pointer. When a fade reaches its resting end the driver
-   clears it, exactly as FUN_02029934 / FUN_02029a68 do, so the Stage::Behavior
-   gates that test `data_0209d4b0 == 0` come back true. */
+   src/func_020197b8.c, the cartridge's frame loop, runs
+       data_0209d50c = 2;   func_02019390();
+   between the lid machine (0xb) and the input steps (0x16 / 0x17), so before
+   phase 3 spawns and phase 4 ticks. src/func_02019390.c is
+
+       if (data_0209d4a8 && data_0209d4a8->vt[0](data_0209d4a8) == 0) {
+           func_0202345c(); func_02018efc(); return;         the EARLY arm
+       }
+       OAM::Reset();
+       if (func_02019018()) func_0200f4b4();                 the GX reset
+       func_0200f468();
+       func_0202345c(); func_02018efc(); func_02018ec0();    the three fader steps
+
+   THIS PORT RAN IT IN PIECES, AND LATE. The graphics block's word 0 was
+   hal/scene_boot.cpp's port_graph_block_word0 (answer discarded), the two fade
+   advances were this file's port_fader_advance -- func_02018efc, then a host
+   stand-in for func_02018ec0 -- and OAM::Reset was hal/sub_screen.cpp's
+   hal_sub_screen_frame_begin; both loops called the first two AFTER the actor
+   tick. func_0200f4b4 and func_0202345c ran nowhere. All of it is the ROM's
+   body now, called by the two loops at the ROM's point (tests/walk_window.cpp's
+   level loop, hal/scene_boot.cpp's port_scene_tick), and the pieces are gone.
+
+   WHAT THE ROM'S BODY DECIDES THAT THE PIECES DID NOT. Word 0's answer is used:
+   the title's block (dScDSMT_c::graphCallback_c::GraphCallback0) and dScMB_c's
+   answer 0, so on those scenes the cartridge skips OAM::Reset, the GX reset and
+   the in-motion fader step every frame, exactly as src/func_02019390.c says;
+   every other block this port can hold answers 1 (the thirty-two minigame
+   blocks through dScMgBase_c's forwarder, scene 6's func_ov102_0214d1b0, the
+   Stage's dGraph_c body), and a level holds no block (Stage::InitResources'
+   store is not replayed; the title's CleanupResources nulls it before the
+   handoff), so a level takes the full arm every frame, as the DS does with the
+   Stage's block. func_0202345c steps data_0209f1e4, which only the soft-reset
+   branch of dScene_c::BeforeBehavior ever sets; that latch never rises on this
+   port (func_02023498 is not linked), so it is the ROM's null test here.
+
+   THE STEPPING BRACKET STAYS, because HalFaderWipe is still the host stand-in
+   for FaderWipe: its AdvanceFade steps only while the frame loop drives it and
+   snaps otherwise (see the class). func_02018efc and func_02018ec0 are the
+   frame loop's two driven advances, so the whole phase runs inside it. Both
+   dispatch vt[2] with the receiver pushed and in ecx (func_02018efc's compiled
+   body: mov ecx,[blk] / push ecx / call [eax+8] / pop ecx), which is right for
+   the colour faders' __cdecl l2_eb2c_s08 (hal/scene_boot.cpp) and for this
+   class's __thiscall AdvanceFade alike; the old stand-in's qualified call ran
+   HalFaderWipe's body on a FaderColor, which is the same arithmetic
+   (src/engine/fader/_ZN10FaderColor11AdvanceFadeEv.cpp).
+
+   THE SETTLE-CLEAR IS THE ONE HOST STEP KEPT, and it is not the ROM's. The
+   cartridge never clears data_0209d4b0 because a fade finished: it clears it at
+   named points -- Stage::CleanupResources (src/_ZN5Stage16CleanupResourcesEv.cpp
+   `data_0209d4b0 = 0`), the Kuppa script's level command, Player's wipe
+   routines (FUN_02029934 / FUN_02029a68), Stage::Behavior's VS end and
+   func_02019440. This port does not run Stage::CleanupResources (the Stage's
+   slot 3 is not hosted; hal/level_change.cpp), so a fade still pointed at when a
+   level is torn down would stay pointed at into the next level and hold
+   Stage::Behavior's pause gate (`data_0209d4b0 == 0`) shut. Until the teardown
+   is the ROM's, a fader that has reached its target is dropped out of motion
+   here, after the ROM's phase, as the stand-in always did, with the same blend
+   register clear when it lands fully open. */
 extern "C" {
 extern int data_0209d4b0[8];
+extern unsigned char data_0209d4a8[4];   /* hal/w8a_stage_storage.cpp */
+extern unsigned char data_0208ee00;      /* func_02019018's word: the GX reset arm */
+void func_02019390(void);
 
-/* PHASE 2 ADVANCES TWO FADERS, NOT ONE, and this port only ever ran the
-   second. Run link60 Stage 5 lane SEAT8.
-
-   The ROM's func_02019390 is
-
-       ... func_0202345c(); func_02018efc(); func_02018ec0();
-
-   and the two advances read different globals: func_02018efc dispatches
-   vtable byte 0x08 on data_0209d4ac, the INSTALLED fader, and func_02018ec0
-   does the same on data_0209d4b0, the fader in motion. Both run every frame,
-   and func_02018efc runs on the early-return path too.
-
-   data_0209d4ac is written by _ZN8dScene_c9SetFadersEP15FaderBrightness, which
-   ends `data_0209f5bc = thiz; data_0209d4ac = thiz;`. That TU is in the link
-   already (slice_gate10), so on a minigame boot dScMgBase_c slot 1 arms the
-   arm9 dWipe_c at data_0209f61c into d4ac with the ROM's own store, and the
-   only thing the port was missing was the six-line reader.
-
-   SO THE ROM BODY IS SEATED RATHER THAN STOOD IN FOR. src/func_02018efc.c is
-   on port/slice_fdr.txt beside the fader table it dispatches through, and it
-   is called here, first, in the ROM's own order. This function stays the
-   stand-in for the OTHER half (func_02018ec0), which cannot be seated as it
-   stands because the port also has to clear data_0209d4b0 when a fade
-   settles -- the ROM does that from the Scene actor machinery this port does
-   not run. */
-void func_02018efc(void);
-
-/* The animating fader, spelled through the same int[8] Stage::Behavior reads.
-   Nonzero while a fade is stepping. */
-static HalFaderWipe *port_fader_animating(void)
+/* THE PHASE'S OWN ACCOUNT, the [r3e] / [b5input] pattern: one line per distinct
+   graphics block phase 2 was handed (its vtable's word 0 is what decides the
+   arm, resolvable through walk_window.map), and one line at exit with the call
+   and settle-clear counts. Eight blocks at most; a process meets two or three. */
+static unsigned g_p2_calls, g_p2_clears;
+static void *g_p2_seen[8];
+static unsigned g_p2_seen_n;
+static void p2_report(void)
 {
-    return (HalFaderWipe *)(size_t)data_0209d4b0[0];
+    std::fprintf(stderr, "[reset2] phase 2 (func_02019390): %u call(s), %u "
+                 "settle-clear(s) of data_0209d4b0, %u distinct block(s)\n",
+                 g_p2_calls, g_p2_clears, g_p2_seen_n);
+}
+static void p2_census(void)
+{
+    if (g_p2_calls++ == 0) {
+        std::atexit(p2_report);
+        std::fprintf(stderr, "[reset2] phase 2 first call: data_0208ee00=%u "
+                     "(the GX reset arm)\n", (unsigned)data_0208ee00);
+    }
+    void *blk = *(void **)data_0209d4a8;
+    for (unsigned i = 0; i < g_p2_seen_n; ++i)
+        if (g_p2_seen[i] == blk) return;
+    if (g_p2_seen_n >= sizeof g_p2_seen / sizeof g_p2_seen[0]) return;
+    g_p2_seen[g_p2_seen_n++] = blk;
+    void **vt = blk ? *(void ***)blk : 0;
+    std::fprintf(stderr, "[reset2] phase 2 call %u: block %p vptr %p word0 %p "
+                 "(%s)\n", g_p2_calls, blk, (void *)vt,
+                 vt ? vt[0] : (void *)0,
+                 blk ? "the block's word 0 decides the arm" : "no block: the full arm");
 }
 
-void port_fader_advance(void)
+void port_frame_phase2(void)
 {
-    /* Phase 2's FIRST advance, the ROM's own body, on the INSTALLED fader.
-       INSIDE the stepping bracket, and the bracket is not decoration here.
-       HalFaderWipe::AdvanceFade has two paths: driven, which steps the
-       interpolator, and undriven, which SNAPS currInterp to the target so an
-       invisible fade cannot hold a transition open. func_02018efc IS the
-       frame loop's driven advance -- it is the very function
-       port_fader_advance was written to stand in half of -- so calling it
-       outside the bracket makes every level snap the installed fader to its
-       target once a frame. That was measured, not reasoned: the first cut of
-       this line sat above the bracket and level 1's selftest started printing
-       the host stub's AdvanceFade note. */
+    p2_census();
     g_hal_fader_stepping = 1;
-    func_02018efc();
+    func_02019390();
     g_hal_fader_stepping = 0;
 
-    HalFaderWipe *f = port_fader_animating();
+    /* The settle-clear: currInterp at +4 and speed at +8 in every fader class
+       (HalFaderWipe, FaderColor, FaderBrightness), and the target is the one
+       Fader::AdvanceInterp picks from the sign of speed. */
+    HalFaderWipe *f = (HalFaderWipe *)(size_t)data_0209d4b0[0];
     if (!f)
         return;
-    g_hal_fader_stepping = 1;
-    /* QUALIFIED, NOT VIRTUAL, run link100 lane CTOR3 rung 2, and it is a
-       calling-convention fix rather than a style choice.
-
-       f is either one of the seven hal_wipes -- host C++ objects carrying this
-       class's own MSVC vtable -- or data_0209f5e8, the colour fader, which
-       port_fader_start_color installs into data_0209d4b0[0]. Since rung C1c the
-       ROM's own __sinit_02074edc is the last writer of THAT object's vptr, so
-       it points at hal/scene_boot.cpp's data_0208eb2c and not at this class's
-       table any more.
-
-       A virtual call here compiles to __thiscall: `mov ecx,f / mov eax,[ecx] /
-       call [eax+8]`, read out of this lane's own binary at
-       _port_fader_advance+0x22, with NOTHING pushed. Byte +0x08 of
-       data_0208eb2c is hal/scene_boot.cpp's l2_eb2c_s08, which is __cdecl on
-       purpose -- the ROM's one dispatch site for that slot, src/func_02018efc.c,
-       passes the receiver as a STACK argument -- so it would read its receiver
-       off this function's frame, dereference it in its own guard, and hand back
-       a void EAX where the line below wants an int. Nothing in the gates
-       reaches it (port_fader_start_color has one caller in
-       hal/level_change.cpp, the title row that warps to a level, and one in the
-       harness), which is exactly why it had to be read out of the binary rather
-       than waited for.
-
-       A qualified call takes no vtable at all. For the seven wipes it is the
-       same body the virtual call resolved to -- no class derives from this one
-       -- and for the colour fader it is what ran before C1c. So this restores
-       one behaviour and changes none. */
-    int at_target = f->HalFaderWipe::AdvanceFade();
-    g_hal_fader_stepping = 0;
-    /* Settled: drop it out of motion so the next transition's gates open, and
-       leave the blend register at 0 when the fade landed fully OPEN (interp 0),
-       the way FUN_02029934 clears 0x4000050 at the end of a fade-in. */
-    if (at_target && f->currInterp == 0) {
-        data_0209d4b0[0] = 0;
+    const Fix12i target = f->speed >= 0 ? 0x1000 : 0;
+    if (f->currInterp != target)
+        return;
+    data_0209d4b0[0] = 0;
+    ++g_p2_clears;
+    if (f->currInterp == 0) {
         *(volatile unsigned short *)0x4000050 = 0;
         *(volatile unsigned short *)0x4001050 = 0;
-    } else if (at_target) {
-        data_0209d4b0[0] = 0;
     }
 }
 
@@ -869,8 +881,8 @@ int port_fader_blend_state_sub(int *evy, int *toWhite)
  * does not run it -- both host loops (tests/walk_window.cpp's level loop and
  * hal/scene_boot.cpp's port_scene_tick) are their own frame. So the counter
  * sat at its BSS zero for the life of every process. Same shape and same cause
- * as port_fader_advance above, which is phase 2 of the same loop and needed the
- * same six lines -- which is why the two drivers share a file.
+ * as phase 2 above, which the host loops did not run either until they called
+ * port_frame_phase2 -- which is why the two drivers share a file.
  *
  * WHICH DIRECTION THE RISK RUNS, and this is the half that is easy to get
  * backwards. With the counter frozen at zero, `& n` is FALSE for every mask in
@@ -924,10 +936,10 @@ int port_fader_blend_state_sub(int *evy, int *toWhite)
  *
  * WHERE IT IS CALLED, and it sits ONE PHASE EARLY -- said plainly rather than
  * claimed to be exact. The ROM increments at phase 6, AFTER phase 5
- * (func_02019404) and therefore after its phase 2 fade advance. This port calls
- * it from both loops immediately BEFORE port_fader_advance, which is the stand-
- * in for phase 2, so by the ROM's own numbering the step happens earlier in the
- * frame than the ROM puts it.
+ * (func_02019404). This port calls it from both loops after the actor tick and
+ * BEFORE the render, so by the ROM's own numbering the step happens one phase
+ * earlier in the frame than the ROM puts it. (Phase 2 itself runs before the
+ * tick on both loops since run linkfull lane RESET2, in the ROM's order.)
  *
  * State the consequence exactly, because an earlier wording of this paragraph
  * got it wrong. It said the render "follows the step in both orders". It does
@@ -942,7 +954,7 @@ int port_fader_blend_state_sub(int *evy, int *toWhite)
  * of the thirteen couples a behaviour-phase read to a render-phase read in the
  * same frame, so none of them can observe the two values disagreeing, and a
  * uniform one-frame offset in a blink is invisible by construction. Nothing
- * between the step and the fade advance touches the word. The residue is where
+ * between the step and the render touches the word. The residue is where
  * the phase sits in the frame, not what any reader sees.
  *
  * Gated on the game tick rather than free-running -- with the debug menu open
