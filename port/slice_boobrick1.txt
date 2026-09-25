@@ -1,0 +1,11 @@
+# Run linkfull, lane BOOBRICK1: the brick's own vtable slot 22.
+#
+# src/_ZN13BigBrickBlock11OnAttacked1ER8dActor_c.cpp is BigBrickBlock::OnAttacked1,
+# ov002 0x020b37ec, size 0x40: the word the ROM's _ZTV13daObjBlockL_c (0x02108adc)
+# holds at slot 22, 0x02108b34 (config/arm9/overlays/ov002/relocs.txt line 13722,
+# symbols.txt line 159). port/slice_ov2t.txt refused it for MSVC C2561 (a bare
+# `return;` in an int body); the TU's _MSC_VER arm answers that and nothing else,
+# and hal/actor_classes.cpp seats slot 22 on it (bbb_atk1). Built by
+# port/CMakeLists.txt's BOOBRICK1 R7 block on the three targets that compile
+# hal/actor_classes.cpp.
+src/_ZN13BigBrickBlock11OnAttacked1ER8dActor_c.cpp

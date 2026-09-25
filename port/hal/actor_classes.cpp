@@ -755,6 +755,18 @@ static int __fastcall bbb_d0(void *s, void *)
 extern "C" void _ZN13BigBrickBlock15OnGroundPoundedER8dActor_c(void *self, void *other);
 static int __fastcall bbb_pounded(void *s, void *, void *other)
 { _ZN13BigBrickBlock15OnGroundPoundedER8dActor_c(s, other); return 0; }
+/* Slot 22, OnAttacked1(Actor &attacker): a Bob-omb's blast or a thrown crate
+   against the brick. func_ov002_020ef228 finds the owner of the wall the
+   attacker touches and dispatches its slot 22 as a C++ virtual (thiscall: the
+   receiver in ECX, the attacker pushed). The ROM word at 0x02108adc + 22*4 =
+   0x02108b34 relocates to 0x020b37ec (config/arm9/overlays/ov002/relocs.txt),
+   BigBrickBlock::OnAttacked1: unless the receiver is id 0x11 it calls its own
+   slot 31, Kill, as a C++ virtual (thiscall), so it lands on bbb_kill. The
+   matched src links through port/slice_boobrick1.txt; its _MSC_VER arm only
+   respells the valueless early exit MSVC refuses. Three parameters, so it pops
+   the pushed attacker like the other seats on slots 21..28 here. */
+static int __fastcall bbb_atk1(void *s, void *, void *o)
+{ ((BigBrickBlock *)s)->BigBrickBlock::OnAttacked1(*(dActor_c *)o); return 0; }
 /* Slot 23, OnAttacked2(Actor &attacker): a bro's PUNCH (St_PunchKick steps 0/1
    -> func_ov002_020d8a50 which==0/1 -> func_ov002_020ef070 dispatches slot 23).
    The matched body (host copy unmatched/BigBrickBlock_OnAttacked2.cpp) reads the
@@ -786,9 +798,9 @@ static int __fastcall bbb_kill(void *s, void *)
    class's own slot 31. GATE 227. port/ov002_frontier.txt read this body and
    slot 24's together and ruled both "convention-clean, held out only by the
    marker": it reaches slot 31 through a C++ VIRTUAL, already thiscall, so it
-   lands on the two-parameter bbb_kill unchanged -- unlike slot 22 below, whose
-   src reaches slot 31 through a cdecl `fn(c)` and still traps for that reason
-   and not for the marker. The table word at 0x02108adc + 27*4 = 0x02108b48
+   lands on the two-parameter bbb_kill unchanged. Slot 22's src reached slot 31
+   through a cdecl `fn(c)` when this was written, and trapped for that reason
+   and not for the marker; it is a C++ virtual now and seated (bbb_atk1). The table word at 0x02108adc + 27*4 = 0x02108b48
    relocates to 0x020b36b4 in config/arm9/overlays/ov002/relocs.txt, and
    symbols.txt gives that address its own kind:function(arm,size=0x28) entry.
    Three-parameter, like every other seat on slots 21..28 in this file. */
@@ -837,16 +849,20 @@ extern "C" void hal_fill_black_brick_block_vtable(void)
        the only thing left was the bodies: 24's src links directly (its slot-31
        call is a C++ virtual), 23's rides a thiscall host copy
        (unmatched/BigBrickBlock_OnAttacked2.cpp) because its src reaches slot 31
-       through a cdecl `fn(c)`. Slot 22 (OnAttacked1, 0x020b37ec) STAYS TRAPPED:
-       a bro's punch/kick never dispatches it, and its body reaches slot 31
-       through the same cdecl `fn(c)`, so seating it needs its own host copy --
-       a follow-up, not this change.
+       through a cdecl `fn(c)`. Slot 22 (OnAttacked1, 0x020b37ec) stayed
+       trapped here because a bro's punch/kick never dispatches it and its body
+       then reached slot 31 through the same cdecl `fn(c)`.
+       SLOT 22 IS SEATED NOW (run linkfull, lane BOOBRICK1). A Bob-omb's blast
+       and a thrown crate DO dispatch it (func_ov002_020ef228), and the trap froze
+       the brick and left the Bob-omb exploding every four frames (the 0.4.2
+       report). Its src has since become a real method whose Kill() is a C++
+       virtual, so the ROM body itself is the seat; see bbb_atk1 above.
        SLOT 27 IS SEATED NOW (gate 227). It was the other half of that reading:
        convention-clean, reaching slot 31 through a C++ virtual, and held out
        only by the inferred-stub marker that lane STUBADJ has since ruled. See
        the bbb_mega block above. */
     vt[21] = (void *)bbb_pounded;
-    vt[22] = (void *)ac_trap22;
+    vt[22] = (void *)bbb_atk1;    /* BOOBRICK1 */
     vt[23] = (void *)bbb_atk2;
     vt[24] = (void *)bbb_kicked;
     vt[27] = (void *)bbb_mega;      /* gate 227 */
@@ -1068,9 +1084,10 @@ extern "C" void port_sign_post_states_seat(void);   /* port/unmatched */
    slot 31 (ldr r1,[r0]; ldr r1,[r1,#0x7c]; blx r1), and src spells that as a
    C++ virtual call, which MSVC emits as thiscall with the receiver in ECX and
    nothing pushed -- so it lands on the two-parameter sp_kill correctly.
-   BLACK_BRICK_BLOCK's slot 22 reaches ITS slot 31 through a raw `fn(c)`
-   function pointer instead, a cdecl call that would leave ECX garbage; that is
-   why the block's 22 still traps below and the sign's does not. */
+   BLACK_BRICK_BLOCK's slot 22 reached ITS slot 31 through a raw `fn(c)`
+   function pointer when this was written, a cdecl call that would leave ECX
+   garbage, which is why the block's 22 trapped and the sign's did not. That
+   src is a C++ virtual now too, and the block's 22 is seated (bbb_atk1). */
 extern "C" {
 void _ZN8SignPost15OnGroundPoundedER8dActor_c(char *self, void *attacker);  /* 21 OnGroundPounded */
 void _ZN8SignPost11OnAttacked1ER8dActor_c(void *self, void *attacker);  /* 22 OnAttacked1     */
