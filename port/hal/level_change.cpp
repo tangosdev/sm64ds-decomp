@@ -761,31 +761,37 @@ extern "C" int port_level_teardown(void)
     if (port_test_noconverge() && !left)
         left = 1;                      /* test builds only; see the note above */
     if (left) {
+        /* NO DECLINE PAST THIS POINT, and the reason is what the rounds above
+           have already done. They ran every reachable actor's own
+           CleanupResources -- the Player's among them, so its body and head
+           models are freed by now -- and there is no level left to stand. The
+           `return 0` that used to sit here handed main's cached Player back to
+           the next render: hal_render_player_world drew the freed body, read
+           the freed head's vptr, which the D1 chain leaves at _ZTV9ModelBase
+           (hal/model_host.cpp: slots 0 and 1 only, never dispatched), took
+           its slot 5, which is 0, and called it. That is the crash intake's
+           "eip 0, return hal_render_player_world+0x4b8" on Whomp's Fortress,
+           two frames after St_DeadPit_Init: 950 frames earlier a stake's coin
+           payout had faulted inside dActor_c's constructor (the 0.4.2 stake
+           bug), the walker froze the stake, and the half-built coin stayed on
+           the pending list, unmarked by these rounds and never reaching the
+           cleanup list, so the census counted it sixteen times.
+
+           The cartridge's teardown has no such branch: every actor goes and
+           the next level boots. So a survivor now gets the treatment a frozen
+           actor and a dangling node already get here: named out loud, dropped
+           from every list and the scene tree by the passes below, and leaked.
+           The freeze set was reaped and cleared above, so nothing carries
+           into the next level but the leak, and the survivor lines say what
+           it was. The two holes in the freeze legs (the PORT_Q_MAX instance
+           cap, the PORT_Q_IDS id span) now cost the same leak instead of a
+           dead Player on screen. */
         std::fprintf(stderr, "  [lvl] TEARDOWN DID NOT CONVERGE: %d actors "
-                     "still live after %d rounds -- the change will be DECLINED "
-                     "and the player is stranded in the leaving state\n",
-                     left, rounds);
+                     "still live after %d rounds -- the rounds have already "
+                     "destroyed the rest of the level, so the change goes on: "
+                     "the survivors are named below, dropped from every list by "
+                     "name and leaked\n", left, rounds);
         port_level_name_survivors();
-        /* The freeze set has already been reaped and cleared above, so this
-           return no longer poisons the session: the next level change starts
-           from a clean net and can converge.
-
-           Anything reaching this branch now is a second, non-quarantine cause
-           -- a frozen actor cannot block the census any more -- and the
-           survivor line just above is what names it.
-
-           ONE HOLE, WRITTEN DOWN RATHER THAN FIXED. Neither freeze leg covers
-           everything. The instance set caps at PORT_Q_MAX (256) and the class
-           latch table only spans ids below PORT_Q_IDS (512), so an actor with
-           an id at or above 512, or an unreadable id, that faults after 256
-           instances are already frozen in this level is held by neither leg:
-           port_quarantine_is_frozen answers no, the census counts it, and it
-           blocks convergence exactly the way things did before the reap. It
-           needs 256 frozen instances in a single level to reach, and it fails
-           back to pre-fix behaviour rather than to something worse, so it is
-           not worth code today -- but the survivor line above is what would
-           expose it, and this is the note that says what to suspect. */
-        return 0;
     }
     /* The four processing lists have to be genuinely empty, not just free of
        actors this walk could see. A stale head is a dangling node the next
