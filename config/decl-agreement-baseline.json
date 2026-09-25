@@ -6727,7 +6727,7 @@
       ]
     },
     "_ZN10dBgActor_c19UpdateClsnPosAndRotEv": {
-      "src/_ZN15FireSeaElevator8BehaviorEv.cpp": [
+      "src/_ZN16daObjKm2_Agaru_c8BehaviorEv.cpp": [
         "return:int"
       ]
     },
@@ -6763,7 +6763,7 @@
       ]
     },
     "_ZN10dBgActor_c21UpdateModelPosAndRotYEv": {
-      "src/_ZN15FireSeaElevator8BehaviorEv.cpp": [
+      "src/_ZN16daObjKm2_Agaru_c8BehaviorEv.cpp": [
         "return:int"
       ]
     },
@@ -7169,7 +7169,7 @@
       "src/_ZN12MetalNetLift13InitResourcesEv.cpp": [
         "param:#3 Matrix4x3 *"
       ],
-      "src/_ZN15FireSeaElevator13InitResourcesEv.cpp": [
+      "src/_ZN16daObjKm2_Agaru_c13InitResourcesEv.cpp": [
         "param:#2 int"
       ],
       "src/_ZN17BowserPuzzlePiece13InitResourcesEv.cpp": [
@@ -10859,7 +10859,7 @@
         "arity:0",
         "mangled:0 parameter(s)"
       ],
-      "src/_ZN15FireSeaElevator13InitResourcesEv.cpp": [
+      "src/_ZN16daObjKm2_Agaru_c13InitResourcesEv.cpp": [
         "kind:data"
       ],
       "src/_ZN17BowserSkyPlatform13InitResourcesEv.cpp": [
@@ -11137,7 +11137,7 @@
         "param:#1 void *",
         "return:BMD_File *"
       ],
-      "src/_ZN15FireSeaElevator13InitResourcesEv.cpp": [
+      "src/_ZN16daObjKm2_Agaru_c13InitResourcesEv.cpp": [
         "param:#1 void *",
         "return:int"
       ],
@@ -14378,7 +14378,7 @@
         "param:#1 void *",
         "return:void *"
       ],
-      "src/_ZN15FireSeaElevator13InitResourcesEv.cpp": [
+      "src/_ZN16daObjKm2_Agaru_c13InitResourcesEv.cpp": [
         "param:#1 void *",
         "return:int"
       ],
@@ -18143,7 +18143,7 @@
       "src/_ZN17daObjBk_Botaosi_c13InitResourcesEv.cpp": [
         "return:void"
       ],
-      "src/_ZN15FireSeaElevator13InitResourcesEv.cpp": [
+      "src/_ZN16daObjKm2_Agaru_c13InitResourcesEv.cpp": [
         "param:#2 int",
         "return:void"
       ],
@@ -28383,6 +28383,11 @@
         "return:CLPS_Block"
       ]
     },
+    "data_ov045_021125d0": {
+      "src/game/actors/d_a_obj_km2_agaru.cpp": [
+        "return:CLPS_Block"
+      ]
+    },
     "data_ov045_02112f08": {
       "src/game/actors/d_a_obj_km2_ukishima.cpp": [
         "return:ResourceDescriptor"
@@ -28391,6 +28396,16 @@
     "data_ov045_021130ac": {
       "src/game/actors/d_a_obj_km2_fall_block.cpp": [
         "return:ResourceDescriptor"
+      ]
+    },
+    "data_ov045_02113180": {
+      "src/game/actors/d_a_obj_km2_agaru.cpp": [
+        "return:SharedFilePtr"
+      ]
+    },
+    "data_ov045_02113188": {
+      "src/game/actors/d_a_obj_km2_agaru.cpp": [
+        "return:SharedFilePtr"
       ]
     },
     "data_ov045_021131a8": {
@@ -45481,7 +45496,7 @@
       ]
     },
     "func_ov045_021114c8": {
-      "src/_ZN15FireSeaElevator13InitResourcesEv.cpp": [
+      "src/_ZN16daObjKm2_Agaru_c13InitResourcesEv.cpp": [
         "arity:2"
       ]
     },
