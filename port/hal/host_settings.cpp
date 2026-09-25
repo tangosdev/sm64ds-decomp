@@ -538,7 +538,7 @@ const char *const CAMERA_MODE_KEY[3] = { "analog", "freecam", "ds" };
    That is the whole of the alias, and it lives in the two lines that read the
    run entry rather than in a rule anywhere else. */
 struct BindKey { const char *name; int dflt; };
-const BindKey KEY_BIND[14] = {
+const BindKey KEY_BIND[HOST_KEY_COUNT] = {
     { "KeyUp",       0x57 },      /* W */
     { "KeyDown",     0x53 },      /* S */
     { "KeyLeft",     0x41 },      /* A */
@@ -553,17 +553,24 @@ const BindKey KEY_BIND[14] = {
     { "KeyRun",      0x10 },      /* VK_SHIFT; alias RunButtonKey */
     { "KeyStart",    0x0d },      /* VK_RETURN */
     { "KeySelect",   0x08 },      /* VK_BACK */
+    { "KeyLook",     0x5a },      /* Z: the DS X button; see header */
 };
-const BindKey PAD_BIND[6] = {
+const BindKey PAD_BIND[HOST_PAD_COUNT] = {
     { "PadJump",   0x1000 },      /* A */
     { "PadAttack", 0x2000 },      /* B */
     { "PadCrouch", 0x20000 },     /* RT, the trigger pseudo-button; see header */
     { "PadRun",    0x4000 },      /* X; alias RunButtonPad */
     { "PadStart",  0x0010 },      /* START */
     { "PadSelect", 0      },      /* BACK opens the debug menu; see header */
+    { "PadLook",   0x8000 },      /* Y: the DS X button; see header */
 };
-int g_key[14];
-int g_pad[6];
+int g_key[HOST_KEY_COUNT];
+int g_pad[HOST_PAD_COUNT];
+/* Which action already held the Look default's key / pad button in a file
+   that did not name KeyLook / PadLook (index + 1; 0 = none). Set by load_once,
+   said once by its log block. */
+int g_look_key_taken;
+int g_look_pad_taken;
 
 /* ---- THE DS SCREEN GAP -------------------------------------------------
    The four keys behind the launcher's "remove minigame gap" checkbox and
@@ -1352,8 +1359,10 @@ void load_once(void)
     g_run_key = 0x10;
     g_run_pad = 0x4000;
     g_camera_mode = 2;   /* CameraMode ds, on Tango's order */
-    for (int i = 0; i < 14; ++i) g_key[i] = KEY_BIND[i].dflt;
-    for (int i = 0; i < 6; ++i) g_pad[i] = PAD_BIND[i].dflt;
+    for (int i = 0; i < HOST_KEY_COUNT; ++i) g_key[i] = KEY_BIND[i].dflt;
+    for (int i = 0; i < HOST_PAD_COUNT; ++i) g_pad[i] = PAD_BIND[i].dflt;
+    g_look_key_taken = 0;
+    g_look_pad_taken = 0;
     g_gap_on = 1;
     g_gap_fill = 1;
     g_gap_color = 0xFF000000u;
@@ -1461,14 +1470,14 @@ void load_once(void)
            moves jump and says nothing about the rest is honoured for jump.
            Out of the code space is a typo, not a choice, like the run pair. */
         int keyrun_ok = 0, padrun_ok = 0;   /* KeyRun / PadRun parsed IN RANGE */
-        for (int i = 0; i < 14; ++i) {
+        for (int i = 0; i < HOST_KEY_COUNT; ++i) {
             const int k = json_int(text, KEY_BIND[i].name, KEY_BIND[i].dflt);
             if (k >= 0 && k <= 0xff) {
                 g_key[i] = k;
                 if (i == 11 && json_value(text, KEY_BIND[i].name)) keyrun_ok = 1;
             }
         }
-        for (int i = 0; i < 6; ++i) {
+        for (int i = 0; i < HOST_PAD_COUNT; ++i) {
             const int p = json_int(text, PAD_BIND[i].name, PAD_BIND[i].dflt);
             if (p >= 0 && p <= HOST_PAD_MASK_MAX) {
                 g_pad[i] = p;
@@ -1486,6 +1495,26 @@ void load_once(void)
         else g_key[11] = g_run_key;
         if (padrun_ok) g_run_pad = g_pad[3];
         else g_pad[3] = g_run_pad;
+        /* LOOK, THE BINDING NEWER THAN THE FILE (the header's "CAME AFTER
+           0.4.2" rule). A file that does not name KeyLook / PadLook holds the
+           default from the table above, unless another action in that same
+           file already has the default's key or button; then that half stays
+           unbound instead of doubling up a choice the player made. After the
+           alias lines, so a run moved by its old spelling counts. */
+        if (!json_value(text, KEY_BIND[HOST_KEY_LOOK].name))
+            for (int i = 0; i < HOST_KEY_COUNT; ++i)
+                if (i != HOST_KEY_LOOK && g_key[i] == g_key[HOST_KEY_LOOK]) {
+                    g_look_key_taken = i + 1;
+                    g_key[HOST_KEY_LOOK] = 0;
+                    break;
+                }
+        if (!json_value(text, PAD_BIND[HOST_PAD_LOOK].name))
+            for (int i = 0; i < HOST_PAD_COUNT; ++i)
+                if (i != HOST_PAD_LOOK && (g_pad[i] & g_pad[HOST_PAD_LOOK])) {
+                    g_look_pad_taken = i + 1;
+                    g_pad[HOST_PAD_LOOK] = 0;
+                    break;
+                }
         /* the screen gap. Each key is read against its OWN default, so a file
            that sets one of the four and none of the others is honoured for
            the one it set. */
@@ -1745,16 +1774,26 @@ void load_once(void)
                 (unsigned)g_padlayouts[i].pid, g_padlayouts[i].name, path);
     /* one line per binding the player moved, so a support log answers "what
        was jump bound to" without anyone opening the file */
-    for (int i = 0; i < 14; ++i)
+    for (int i = 0; i < HOST_KEY_COUNT; ++i)
         if (g_key[i] != KEY_BIND[i].dflt)
             fprintf(stderr, "[settings] %s 0x%02x (default 0x%02x) (%s)\n",
                     KEY_BIND[i].name, (unsigned)g_key[i],
                     (unsigned)KEY_BIND[i].dflt, path);
-    for (int i = 0; i < 6; ++i)
+    for (int i = 0; i < HOST_PAD_COUNT; ++i)
         if (g_pad[i] != PAD_BIND[i].dflt)
             fprintf(stderr, "[settings] %s 0x%04x (default 0x%04x) (%s)\n",
                     PAD_BIND[i].name, (unsigned)g_pad[i],
                     (unsigned)PAD_BIND[i].dflt, path);
+    if (g_look_key_taken)
+        fprintf(stderr, "[settings] KeyLook left unbound: its default key "
+                        "0x%02x is already %s (%s)\n",
+                (unsigned)KEY_BIND[HOST_KEY_LOOK].dflt,
+                KEY_BIND[g_look_key_taken - 1].name, path);
+    if (g_look_pad_taken)
+        fprintf(stderr, "[settings] PadLook left unbound: its default button "
+                        "0x%04x is already %s (%s)\n",
+                (unsigned)PAD_BIND[HOST_PAD_LOOK].dflt,
+                PAD_BIND[g_look_pad_taken - 1].name, path);
     if (!g_gap_on || g_gap_fill != 1 || g_gap_color != 0xFF000000u ||
         g_gap_peek)
         fprintf(stderr, "[settings] MinigameGap %s, fill %s #%06x, peek %s "
@@ -2054,26 +2093,26 @@ extern "C" int host_setting_camera_mode(void)
 extern "C" int host_setting_key(int action)
 {
     load_once();
-    if (action < 0 || action >= 14) return 0;
+    if (action < 0 || action >= HOST_KEY_COUNT) return 0;
     return g_key[action];
 }
 
 extern "C" int host_setting_pad(int action)
 {
     load_once();
-    if (action < 0 || action >= 6) return 0;
+    if (action < 0 || action >= HOST_PAD_COUNT) return 0;
     return g_pad[action];
 }
 
 extern "C" const char *host_setting_key_name(int action)
 {
-    if (action < 0 || action >= 14) return "";
+    if (action < 0 || action >= HOST_KEY_COUNT) return "";
     return KEY_BIND[action].name;
 }
 
 extern "C" const char *host_setting_pad_name(int action)
 {
-    if (action < 0 || action >= 6) return "";
+    if (action < 0 || action >= HOST_PAD_COUNT) return "";
     return PAD_BIND[action].name;
 }
 
