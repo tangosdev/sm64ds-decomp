@@ -40,24 +40,17 @@ typedef int (C::*PMF)();
 struct C { char pad[0x420]; PMF *pp; };
 
 extern "C" {
-extern char* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(char* m, void* f, int a, int fix, unsigned sp0);
 extern void func_ov002_020aea30(void *self, void *actor, void *collision);
 extern void func_02012694(int a, void* b);
 extern void _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(char* c, short* v, char* p);
-extern int _ZN8dActor_c24BumpedUnderneathByPlayerER6Player(char* c, char* p);
-extern int _ZN6Player9IsOnShellEv(char* p);
-extern void _ZN8dActor_c13SmallPoofDustEv(char* c);
-extern void _ZN8dActor_c24KillAndTrackInDeathTableEv(char* c);
 extern void _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(char* c, Vector3* pos, unsigned n, int fix, short s);
-extern int _ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(char* c, char* clsn, char* p);
 extern void _ZN6Player6BounceE5Fix12IiE(char* p, int fix);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(char* p, Vector3* pos, unsigned a, int fix, unsigned b, unsigned d, unsigned e);
 extern int func_ov065_02117944(C *c, PMF *p);
 extern char data_ov065_0211d6e0[];
 extern char data_ov065_0211d6f0[];
 int Vec3_Dist(const void* a, const void* b);
-int _ZNK10dBgCh_Actr8IsOnWallEv(void* self);
 short Vec3_HorzAngle(const Vector3* a, const Vector3* b);
 void Matrix4x3_FromRotationY(void* m, int angle);
 void ApproachAngle(short* a, int b, int c, int d, int e);
@@ -66,18 +59,14 @@ extern int data_ov065_0211d700;
 extern Matrix4x3 data_020a0e68;
 extern unsigned int RandomIntInternal(int* seed);
 extern int data_0209e650;
-extern int _ZN8dActor_c18HorzAngleToCPlayerEv(void* c);
 extern void _Z14ApproachLinearRsss(short* p, short t, short step);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void* m, short ang);
-extern char *_ZN8dActor_c13ClosestPlayerEv(char *);
 extern int func_ov065_021177e4(int *t);
-extern char* _ZN8dActor_c22ClosestNonVanishPlayerEv(void *thiz);
 extern void* data_ov065_0211d710;
 extern void Vec3_Asr(Vector3* d, Vector3* s, int sh);
 extern void Matrix4x3_FromTranslation(Matrix4x3* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void* m, int x, int y, int z);
 extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void* self, void* sm, Matrix4x3* m, int fx, int t, unsigned int u);
-extern int _ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(dEnemyBase_c *thiz, dBgCh_Actr *c);
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
 extern SharedFilePtr data_ov065_0211d698;
 extern SharedFilePtr data_ov065_0211d6a8;
@@ -119,7 +108,7 @@ void func_ov065_0211704c(char* c)
     int b;
 
     if (*(int*)(c + 0x134) == 0) return;
-    p = _ZN8dActor_c10FindWithIDEj(*(int*)(c + 0x134));
+    p = (char *)dActor_c::FindWithID(*(int*)(c + 0x134));
     if (p == 0) return;
     flags = *(int*)(c + 0x130);
     if (flags & 0x2400) {
@@ -174,9 +163,9 @@ void func_ov065_0211704c(char* c)
     if (b == 0)
         return;
 
-    if (_ZN8dActor_c24BumpedUnderneathByPlayerER6Player(c, p) == 1)
+    if (((dActor_c *)c)->BumpedUnderneathByPlayer(*(Player *)p) == 1)
         goto kill;
-    if (_ZN6Player9IsOnShellEv(p) == 1)
+    if (((Player *)p)->IsOnShell() == 1)
         goto kill;
     if (*(unsigned char*)(p + 0x6f9) != 1)
         goto jumped;
@@ -184,8 +173,8 @@ void func_ov065_0211704c(char* c)
 kill:
     {
         int pos[3];
-        _ZN8dActor_c13SmallPoofDustEv(c);
-        _ZN8dActor_c24KillAndTrackInDeathTableEv(c);
+        ((dActor_c *)c)->SmallPoofDust();
+        ((dActor_c *)c)->KillAndTrackInDeathTable();
         func_02012694(0x112, c + 0x74);
         pos[0] = *(int*)(c + 0x5c);
         pos[1] = *(int*)(c + 0x60);
@@ -196,7 +185,7 @@ kill:
     }
 
 jumped:
-    if (_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(c, c + 0x110, p) != 0) {
+    if (((dActor_c *)c)->JumpedOnByPlayer(*(dCc_c *)(c + 0x110), *(Player *)p) != 0) {
         _ZN6Player6BounceE5Fix12IiE(p, 0x28000);
         *(int*)(c + 0x10c) = 1;
         func_ov002_020aea30(c, p, 0);
@@ -230,7 +219,7 @@ extern "C" int func_ov065_02117404(unsigned char* thiz)
     v.z = 0;
     int dist = Vec3_Dist((Vector3*)(thiz + 0x5c), (Vector3*)(thiz + 0x424));
     if (dist <= 0x1f4000) {
-        if (_ZNK10dBgCh_Actr8IsOnWallEv(thiz + 0x144) == 0) goto skip;
+        if (((dBgCh_Actr *)(thiz + 0x144))->IsOnWall() == 0) goto skip;
     }
     *(short*)(thiz + 0x434) = Vec3_HorzAngle((Vector3*)(thiz + 0x5c), (Vector3*)(thiz + 0x424));
     if (*(unsigned short*)(thiz + 0x100) < 0x14) *(unsigned short*)(thiz + 0x100) = 0x14;
@@ -294,7 +283,7 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov065_02117624(char* c) {
     int v[3];
     v[0] = 0; v[1] = 0; v[2] = 0;
-    *(short*)(c + 0x434) = (short)_ZN8dActor_c18HorzAngleToCPlayerEv(c);
+    *(short*)(c + 0x434) = (short)((dActor_c *)c)->HorzAngleToCPlayer();
     _Z14ApproachLinearRsss((short*)(c + 0x94), *(short*)(c + 0x434), 0x500);
     _Z14ApproachLinearRsss((short*)(c + 0x92), 0x100, 0x500);
     v[2] = 0xa000;
@@ -337,7 +326,7 @@ int func_ov065_02117780(char *c) {
     int r2, v60;
     char *p;
     *(short *)(int)(c + 0x94) += 0x1000;
-    p = _ZN8dActor_c13ClosestPlayerEv(c);
+    p = (char *)((dActor_c *)c)->ClosestPlayer();
     v60 = *(int *)(c + 0x60);
     r2 = v60 - 0xc8000;
     if (p != 0) {
@@ -398,7 +387,7 @@ int func_ov065_021177e4(int *t)
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov065_02117888(char* c)
 {
-    char* p = _ZN8dActor_c22ClosestNonVanishPlayerEv(c);
+    char* p = (char *)((dActor_c *)c)->ClosestNonVanishPlayer();
     if (p) {
         Vector3 v;
         int* q = (int*)(((int)p + 0x5c));
@@ -528,14 +517,10 @@ int daBasabasa_c::Render()
  * The two ModelAnims are what the tail is choosing between: `c + 0x350` and
  * `c + 0x3b4` are each one's Animation base (+0x50), so the branch advances
  * mModelAnim1 or mModelAnim2.
- *
- * dEnemyBase_c::UpdateYoshiEat is still reached by its mangled name -- unlike
- * UpdateDeath, UpdateWMClsn and UpdateKillByInvincibleChar, it is not declared
- * in dEnemyBase_c.h yet.
  */
 int daBasabasa_c::Behavior()
 {
-    if (_ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(this, &mWithMeshClsn) != 0) {
+    if (UpdateYoshiEat(mWithMeshClsn) != 0) {
         mdCcAc_c.Clear();
         if (mEatenByYoshi != 0) {
             if (unk_104 == 0) {

@@ -73,7 +73,8 @@ extern u16  data_ov002_0210cbf4[];
  * disagreed among themselves -- `const Vector3 *` versus `const Vector3 &` for
  * the position, `Vector3s` versus `Vector3_16` for the rotation -- so all five
  * call sites now go through this one declaration. Measured byte-free on all
- * five, including LoadEntranceObjects' move off the real method. */
+ * five, including LoadEntranceObjects' move off the real method.
+ * local extern: the header's s8/s16 tail adds areaID truncates (+4 bytes). */
 void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
         u32 actorID, u32 spawnParam, const Vector3 *pos, const Vector3_16 *rot,
         s32 areaID, s32 deathTableID);
@@ -92,12 +93,6 @@ void StartEntranceFaderWipe(int index);
 struct KCL_File;
 struct CLPS_Block;
 KCL_File *LoadFile(int handle);
-void _ZN7dBgW_Kc17UpdateFileOffsetsER8KCL_File(KCL_File *f);
-void _ZN7dBgW_Kc7SetFileEP8KCL_FileR10CLPS_Block(dBgW_Kc *thiz,
-                                                       KCL_File *f,
-                                                       CLPS_Block *clps);
-int  _ZNK7dBgW_Kc16GetOctreeOriginYEv(dBgW_Kc *thiz);
-int  _ZNK7dBgW_Kc13GetUnkOctreeYEv(dBgW_Kc *thiz);
 
 /* The handler table LoadObjects dispatches through. Believed to belong to this
  * TU (its fifteen entries are exactly the fifteen loaders below and nothing
@@ -503,9 +498,9 @@ void Stage::LoadClsnAndObjects(LVL_Overlay &ovlRef, u32 p, dBgW_Kc &mcRef)
 
     if (ovl->kclFileId != 0) {
         f = LoadFile(ovl->kclFileId);
-        _ZN7dBgW_Kc17UpdateFileOffsetsER8KCL_File(f);
-        _ZN7dBgW_Kc7SetFileEP8KCL_FileR10CLPS_Block(mc, f, ovl->clps);
-        func_0202a850(_ZNK7dBgW_Kc16GetOctreeOriginYEv(mc), _ZNK7dBgW_Kc13GetUnkOctreeYEv(mc));
+        dBgW_Kc::UpdateFileOffsets(*f);
+        ((dBgW_Kc *)mc)->SetFile(f, *ovl->clps);
+        func_0202a850(((dBgW_Kc *)mc)->GetOctreeOriginY(), ((dBgW_Kc *)mc)->GetUnkOctreeY());
         ((dBgW *)(mc))->Enable((dActor_c *)(0));
     }
 

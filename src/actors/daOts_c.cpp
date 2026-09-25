@@ -85,6 +85,7 @@
 #include "common.h"
 #include "dBgCh_Gnd.h"
 #include "SharedFilePtr.h"
+#include "Player.h"
 
 /* Local stand-ins with no header of their own. */
 
@@ -142,14 +143,11 @@ int _Z14ApproachLinearRiii(int *dst, int target, int rate);
 
 int _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(void* self, int fix12);
 int _ZN8dActor_c15IsPlayerInRangeE5Fix12IiES1_S1_i(void*,int,int,int,int);
-int _ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(void* c, void* clsn, void* player);
 void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void* a, void* sm, void* mtx, int rad, int h, unsigned int x);
 int _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(void* c, void* v, void* player, s32 flag);
-int _ZN6Player9IsOnShellEv(void* p);
 int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, const Vector3* v, u32 a, s32 f, u32 b, u32 c, u32 d);
 void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, dActor_c *a, int r, int h, unsigned int d, unsigned int e);
 void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, int a, int b, int c, int d, int e);
-void _ZN9Animation7AdvanceEv(void *self);
 
 void func_ov064_02115f98(daOts_c* a0, char* a1);
 void func_ov064_02116220(daOts_c* c);
@@ -309,7 +307,7 @@ int daOts_c::BehaviorCommon()
         break;
     }
 
-    _ZN9Animation7AdvanceEv(thiz + 0x160);
+    ((Animation *)(thiz + 0x160))->Advance();
     unsigned short *p100 = (unsigned short *)(thiz + 0x100);
     *p100 = *p100 + 1;
     if (four != *(int *)(thiz + 0x398))
@@ -455,7 +453,7 @@ extern "C" void func_ov064_02116754(daOts_c* self)
         return;
     }
 
-    if (_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(self, &self->mdCcAc_c, hitPlayer) != 0) {
+    if (self->JumpedOnByPlayer(self->mdCcAc_c, *(Player *)hitPlayer) != 0) {
         self->mPrevAngleY = hitPlayer->mAngleY;
         if (hitPlayer->param1 == 2)
             self->mHorzSpeed = 0x32000;
@@ -469,7 +467,7 @@ extern "C" void func_ov064_02116754(daOts_c* self)
         return;
     }
 
-    if (_ZN6Player9IsOnShellEv(hitPlayer) != 0) {
+    if (((Player *)hitPlayer)->IsOnShell() != 0) {
         hitPlayer->mHorzSpeed = -self->mHorzSpeed;
         self->mPrevAngleY = (s16)(self->mAngleY + 0x8000);
         self->mHorzSpeed = 0x28000;

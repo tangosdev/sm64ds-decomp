@@ -4,7 +4,7 @@
  * order, while D1/D0 destroy them in reverse order before the inherited
  * dBgActor_c members.
  *
- * Field names below 0xc40 follow the arrays' types. The names from 0xc4c on
+ * Field names below 0xc40 follow the arrays' types. The names from 0xc40 on
  * are inferred from how src/actors/daObjCvNewsLift_c.cpp uses each field;
  * the ROM keeps none of them. */
 #ifndef DAOBJCVNEWSLIFT_C_H
@@ -40,6 +40,22 @@ struct daObjCvNewsLift_c : dBgActor_c {
     virtual s32 CleanupResources();
     virtual s32 Behavior();
     virtual s32 Render();
+
+    /* --- non-virtual. The ROM keeps none of these names; all are coined. --- */
+    void UpdateClsnTransforms();
+    void UpdateModelTransforms();
+    void OnPlatform3Ride(dActor_c *player);
+    void OnPlatform2Ride(dActor_c *player);
+    void OnPlatform1Ride(dActor_c *player);
+    void OnPlatform0Ride(dActor_c *player);
+    void OnMainMeshRide(dActor_c *player);
+
+    /* Collision callbacks, stored in each collider by func_020393c4. */
+    static void Platform3Callback(dBgW *clsn, daObjCvNewsLift_c *self, dActor_c *other);
+    static void Platform2Callback(dBgW *clsn, daObjCvNewsLift_c *self, dActor_c *other);
+    static void Platform1Callback(dBgW *clsn, daObjCvNewsLift_c *self, dActor_c *other);
+    static void Platform0Callback(dBgW *clsn, daObjCvNewsLift_c *self, dActor_c *other);
+    static void MainMeshCallback(dBgW *clsn, daObjCvNewsLift_c *self, dActor_c *other);
 };
 
 #ifndef SM64DS_PLATFORM_PC

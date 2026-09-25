@@ -62,7 +62,6 @@ extern "C" {
 extern char data_ov081_02128d60;
 extern int data_ov081_02128d68[];
 
-void _ZN8dActor_c10PoofDustAtERK7Vector3(void* c, const Vector3& v);
 int _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(void* c, Vector3* v, unsigned int n, int f, short s);
 void Matrix4x3_FromTranslation(struct Matrix4x3* m, int x, int y, int z);
 void MulMat4x3Mat4x3(const int* a, const int* b, int* dst);
@@ -71,38 +70,19 @@ void Vec3_LslInPlace(Vector3* v, int n);
 void AddVec3(Vector3* a, Vector3* b, Vector3* c);
 void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int a, int x, int y, int z);
 void func_0201267c(int a, void* b);
-void _ZN8dActor_c24KillAndTrackInDeathTableEv(void* c);
 extern struct Matrix4x3 data_020a0e68;
 extern int func_ov002_020e10a8(void*);
-extern void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
-extern int _ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(void* self, void* cyl, void* player);
 extern short Vec3_HorzAngle(void* a, void* b);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, void* v, unsigned n, int f, unsigned a, unsigned b, unsigned c);
 void Matrix4x3_FromRotationY(void* m, int angle);
-int _ZNK10dBgCh_Actr10IsOnGroundEv(void*);
 void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     void* thiz, ShadowModel& sm, Matrix4x3& mtx, Fix12i a, Fix12i b, unsigned int c);
-int _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj(void *, void *, void *, unsigned);
-int _ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(void *, void *);
-void _ZN5dCc_c5ClearEv(void *);
-void _ZN5dCc_c6UpdateEv(void *);
-void _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c(void *, void *);
 void _Z14ApproachLinearRiii(void *, int, int);
-void *_ZN8dActor_c13ClosestPlayerEv(void *);
 int Vec3_HorzDist(void *a, void *b);
 void _Z14ApproachLinearRsss(void *, int, int);
-void _ZN9Animation7AdvanceEv(void *);
-void _ZN8dActor_c9UpdatePosEP5dCc_c(void *, void *);
-void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void *, void *, unsigned);
-int _ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actrisbbi(void *, void *, int, short, int, int, int);
-void *_ZN5Model8LoadFileER13SharedFilePtr(void *ref);
-void *_ZN9Animation8LoadFileER13SharedFilePtr(void *ref);
-int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, BMD_File *f, int b, int c);
 void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, BCA_File *f, int b, int c, unsigned int d);
-int _ZN11ShadowModel12InitCylinderEv(void *self);
 void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, dActor_c *a, int r, int h, unsigned int d, unsigned int e);
 void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, dActor_c *a, int r, int h, void *v, void *w);
-void _ZN10dBgCh_Actr19StartDetectingWaterEv(void *self);
 }
 
 /* One written destructor. The compiler emits D1 then D0 and anchors
@@ -136,7 +116,7 @@ extern "C" void func_ov081_021237ec(char* c)
     t.z = *(int*)(c + 0x64);
     t.y += *(int*)(c + 0x1a4) - 0x50000;
     v = t;
-    _ZN8dActor_c10PoofDustAtERK7Vector3(c, v);
+    ((dActor_c *)c)->PoofDustAt(v);
 
     b.x = *(int*)(c + 0x5c);
     b.y = *(int*)(c + 0x60);
@@ -155,7 +135,7 @@ extern "C" void func_ov081_021237ec(char* c)
 
     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x53, t.x, t.y, t.z);
     func_0201267c(0xd5, c + 0x74);
-    _ZN8dActor_c24KillAndTrackInDeathTableEv(c);
+    ((dActor_c *)c)->KillAndTrackInDeathTable();
 }
 
 // @symbol func_ov081_02123910
@@ -171,7 +151,7 @@ extern "C" void func_ov081_02123910(char* c)
     id = *(unsigned int*)(c + 0x1c0);
     if (id == 0)
         return;
-    other = _ZN8dActor_c10FindWithIDEj(id);
+    other = dActor_c::FindWithID(id);
     if (other == 0)
         return;
 
@@ -213,7 +193,7 @@ cont:
         }
     }
 
-    if (_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(c, c + 0x19c, other) != 0) {
+    if (((dActor_c *)c)->JumpedOnByPlayer(*(dCc_c *)(c + 0x19c), *(Player *)other) != 0) {
         _ZN6Player10SpinBounceE5Fix12IiE(other, 0x28000);
         func_ov081_021237ec(c);
         return;
@@ -254,7 +234,7 @@ extern "C" void func_ov081_02123b20(char* thiz)
         int b = (int)((*(int*)(c + 0xb0) & 0x40000) != 0);
         if (b != 0) return;
     }
-    if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x1d0) != 0) {
+    if (((dBgCh_Actr *)(c + 0x1d0))->IsOnGround() != 0) {
         _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
             c, *(ShadowModel*)(c + 0x174), *(Matrix4x3*)(c + 0x12c), 0x50000, 0x1e000, 0xf);
     } else {
@@ -283,31 +263,31 @@ int daHuwa_c::Render()
 // @symbol _ZN8daHuwa_c8BehaviorEv
 int daHuwa_c::Behavior()
 {
-    int r = _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj(((char *)this), ((char *)this) + 0x1d0, ((char *)this) + 0x110, 3);
+    int r = ((dEnemyBase_c *)(((char *)this)))->UpdateKillByInvincibleChar(*(dBgCh_Actr *)(((char *)this) + 0x1d0), *(ModelAnim *)(((char *)this) + 0x110), 3);
     if (r != 0) {
         if (r == 2)
             func_ov081_021237ec(((char *)this));
         return 1;
     }
 
-    if (_ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(((char *)this), ((char *)this) + 0x1d0) != 0) {
+    if (((dEnemyBase_c *)(((char *)this)))->UpdateYoshiEat(*(dBgCh_Actr *)(((char *)this) + 0x1d0)) != 0) {
         if (_ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER5dCc_c(((char *)this), ((char *)this) + 0x19c) != 0)
             func_ov081_021237ec(((char *)this));
         func_ov081_02123b20(((char *)this));
-        _ZN5dCc_c5ClearEv((char *)&mdCcAc_c);
+        ((dCc_c *)((char *)&mdCcAc_c))->Clear();
         if (mEatenByYoshi != 0 && unk_104 == 0) {
-            _ZN5dCc_c6UpdateEv((char *)&mdCcAc_c);
+            ((dCc_c *)((char *)&mdCcAc_c))->dCc_c::Update();
         }
         return 1;
     }
 
-    _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c(((char *)this), ((char *)this) + 0x19c);
+    ((dActor_c *)(((char *)this)))->MakeVanishLuigiWork(*(dCc_c *)(((char *)this) + 0x19c));
     func_ov081_02123910(((char *)this));
 
     switch (unk_39a) {
     case 0: {
             _Z14ApproachLinearRiii(((char *)this) + 0x98, 0x4000, 0x1000);
-            void *cp = _ZN8dActor_c13ClosestPlayerEv(((char *)this));
+            void *cp = ((dActor_c *)(((char *)this)))->ClosestPlayer();
             if (cp != 0) {
                 int *src = (int *)((int)cp + 0x5c);
                 int v3[3];
@@ -334,18 +314,18 @@ int daHuwa_c::Behavior()
         break;
     }
 
-    _ZN9Animation7AdvanceEv((char *)(Animation *)&mModelAnim);
-    _ZN8dActor_c9UpdatePosEP5dCc_c(((char *)this), 0);
-    _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(((char *)this), ((char *)this) + 0x1d0, 0);
+    ((Animation *)((char *)(Animation *)&mModelAnim))->Advance();
+    ((dActor_c *)(((char *)this)))->UpdatePos(0);
+    ((dEnemyBase_c *)(((char *)this)))->UpdateWMClsn(*(dBgCh_Actr *)(((char *)this) + 0x1d0), 0);
 
-    if (_ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actrisbbi(((char *)this), ((char *)this) + 0x1d0, 0x3c000, 0x2888, 1, 1, 0x32000) != 0) {
+    if (((dEnemyBase_c *)(((char *)this)))->IsGoingOffCliff(*(dBgCh_Actr *)(((char *)this) + 0x1d0), 0x3c000, 0x2888, 1, 1, 0x32000) != 0) {
         mPosX = mPrevPosX;
         mPosY = mPrevPosY;
         mPosZ = mPrevPosZ;
     }
     func_ov081_02123b20(((char *)this));
-    _ZN5dCc_c5ClearEv((char *)&mdCcAc_c);
-    _ZN5dCc_c6UpdateEv((char *)&mdCcAc_c);
+    ((dCc_c *)((char *)&mdCcAc_c))->Clear();
+    ((dCc_c *)((char *)&mdCcAc_c))->dCc_c::Update();
     return 1;
 }
 
@@ -353,15 +333,15 @@ int daHuwa_c::Behavior()
 int daHuwa_c::InitResources()
 {
     char *s = (char*)((dActor_c *)this);
-    void *mf = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov081_02128d60);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(s + 0x110, (BMD_File*)mf, 1, -1);
-    _ZN9Animation8LoadFileER13SharedFilePtr(data_ov081_02128d68);
+    void *mf = Model::LoadFile(*(SharedFilePtr *)&data_ov081_02128d60);
+    ((ModelBase *)(s + 0x110))->ModelBase::SetFile((BMD_File*)mf, 1, -1);
+    Animation::LoadFile(*(SharedFilePtr *)data_ov081_02128d68);
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(s + 0x110, (BCA_File*)data_ov081_02128d68[1], 0, 0x1000, 0);
-    if (_ZN11ShadowModel12InitCylinderEv(s + 0x174) == 0)
+    if (((ShadowModel *)(s + 0x174))->InitCylinder() == 0)
         return 0;
     _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(s + 0x19c, ((dActor_c *)this), 0x3c000, 0x78000, 0x200000, 0xa6efe0);
     _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(s + 0x1d0, ((dActor_c *)this), 0x3c000, 0x3c000, 0, 0);
-    _ZN10dBgCh_Actr19StartDetectingWaterEv(s + 0x1d0);
+    ((dBgCh_Actr *)(s + 0x1d0))->StartDetectingWater();
     *(int*)(s + 0x38c) = *(int*)(s + 0x5c);
     *(int*)(s + 0x390) = *(int*)(s + 0x60);
     *(int*)(s + 0x394) = *(int*)(s + 0x64);

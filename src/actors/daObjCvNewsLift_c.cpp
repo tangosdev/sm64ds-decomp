@@ -17,10 +17,12 @@
 struct Quaternion;
 
 /* A SharedFilePtr seen from outside: SharedFilePtr.h deliberately declares
- * no fields, and these reads need the loaded buffer at +4. */
+ * no fields, and these reads need the loaded buffer. The fields follow the
+ * layout that _ZN13SharedFilePtr4LoadEv's definition uses. */
 struct NewsLiftFile {
-    u32 unk_00;
-    void *file;
+    u16 fileID;
+    u8 numRefs;
+    void *filePtr;
 };
 
 extern NewsLiftFile data_ov021_021149a0;
@@ -49,6 +51,8 @@ void Quaternion_SLerp(void *q0, void *q1, int t, void *out);
 s32 Vec3_Equal(const Vector3 *a, const Vector3 *b);
 u16 DecIfAbove0_Short(u16 *p);
 u8 DecIfAbove0_Byte(u8 *p);
+/* dBgW_KcMbg::SetFile by its mangled name: the member call, with a Fix12<int>
+ * scale, makes InitResources 0x26c bytes against the ROM's 0x258. */
 void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     dBgW_KcMbg *self, KCL_File *file, const Matrix4x3 *mat,
     Fix12i scale, s16 angle, CLPS_Block *clps);
@@ -60,14 +64,6 @@ extern s32 data_02092768[];
 extern s16 data_02082214[];
 extern const Vector3 data_ov021_02114a20[4];
 extern const u16 data_ov021_02114740[];
-
-void func_ov021_0211129c(daObjCvNewsLift_c *self);
-void func_ov021_02111434(daObjCvNewsLift_c *self);
-void func_ov021_02111ec4(daObjCvNewsLift_c *self, dActor_c *other);
-void func_ov021_02111f1c(daObjCvNewsLift_c *self, dActor_c *other);
-void func_ov021_02111f74(daObjCvNewsLift_c *self, dActor_c *other);
-void func_ov021_02111fcc(daObjCvNewsLift_c *self, dActor_c *other);
-void func_ov021_02112024(daObjCvNewsLift_c *self, dActor_c *other);
 }
 
 // @symbol daObjCvNewsLift_c_classInit
@@ -81,104 +77,104 @@ extern "C" daObjCvNewsLift_c *daObjCvNewsLift_c_classInit()
     return new daObjCvNewsLift_c();
 }
 
-// @symbol func_ov021_02112128
+// @symbol _ZN17daObjCvNewsLift_c16MainMeshCallbackEP4dBgWPS_P8dActor_c
 /* Collision callbacks. InitResources registers one per collider; each fires
  * when an actor touches that mesh and reacts only to the player (0xbf). The
  * comparison is kept in an int: testing it inline drops the ROM's moveq/movne
  * materialisation. */
-extern "C" void func_ov021_02112128(dBgW *clsn, daObjCvNewsLift_c *self, dActor_c *other)
+void daObjCvNewsLift_c::MainMeshCallback(dBgW *clsn, daObjCvNewsLift_c *self, dActor_c *other)
 {
     int isPlayer = other->actorID == 0xbf;
     if (isPlayer)
-        func_ov021_02112024(self, other);
+        self->OnMainMeshRide(other);
 }
 
-// @symbol func_ov021_02112024
+// @symbol _ZN17daObjCvNewsLift_c14OnMainMeshRideEP8dActor_c
 /* The player is on the main mesh: hold the lift and, unless it is bumped,
  * tilt the target pose toward the player's position in the lift's frame. */
-extern "C" void func_ov021_02112024(daObjCvNewsLift_c *self, dActor_c *other)
+void daObjCvNewsLift_c::OnMainMeshRide(dActor_c *player)
 {
-    self->mPlayerOnMesh = 1;
-    self->mResetTimer = 300;
-    if (self->mBumped) {
-        self->mTargetRotation[0] = data_02092768[0];
-        self->mTargetRotation[1] = data_02092768[1];
-        self->mTargetRotation[2] = data_02092768[2];
-        self->mTargetRotation[3] = data_02092768[3];
+    mPlayerOnMesh = 1;
+    mResetTimer = 300;
+    if (mBumped) {
+        mTargetRotation[0] = data_02092768[0];
+        mTargetRotation[1] = data_02092768[1];
+        mTargetRotation[2] = data_02092768[2];
+        mTargetRotation[3] = data_02092768[3];
     } else {
-        data_020a0e68 = self->mClsnMat;
+        data_020a0e68 = mClsnMat;
         InvMat4x3(&data_020a0e68, &data_020a0e68);
         Vector3 t;
-        MulVec3Mat4x3((Vector3 *)&other->mPosX, &data_020a0e68, &t);
+        MulVec3Mat4x3((Vector3 *)&player->mPosX, &data_020a0e68, &t);
         t.y = t.y * 0x30;
         Vector3 axis;
         axis.x = 0;
         axis.y = 0x1000;
         axis.z = 0;
-        Quaternion_FromVector3(&self->mTargetRotation[0], &axis, &t);
-        Quaternion_Normalize(&self->mTargetRotation[0]);
-        self->mTiltHoldTimer = 10;
+        Quaternion_FromVector3(&mTargetRotation[0], &axis, &t);
+        Quaternion_Normalize(&mTargetRotation[0]);
+        mTiltHoldTimer = 10;
     }
 }
 
-// @symbol func_ov021_02111fe4
-extern "C" void func_ov021_02111fe4(dBgW *clsn, daObjCvNewsLift_c *self, dActor_c *other)
+// @symbol _ZN17daObjCvNewsLift_c17Platform0CallbackEP4dBgWPS_P8dActor_c
+void daObjCvNewsLift_c::Platform0Callback(dBgW *clsn, daObjCvNewsLift_c *self, dActor_c *other)
 {
     int isPlayer = other->actorID == 0xbf;
     if (isPlayer)
-        func_ov021_02111fcc(self, other);
+        self->OnPlatform0Ride(other);
 }
 
-// @symbol func_ov021_02111fcc
-extern "C" void func_ov021_02111fcc(daObjCvNewsLift_c *self, dActor_c *other)
+// @symbol _ZN17daObjCvNewsLift_c15OnPlatform0RideEP8dActor_c
+void daObjCvNewsLift_c::OnPlatform0Ride(dActor_c *player)
 {
-    self->mResetTimer = 300;
-    self->mLoweredPlatform = 0;
+    mResetTimer = 300;
+    mLoweredPlatform = 0;
 }
 
-// @symbol func_ov021_02111f8c
-extern "C" void func_ov021_02111f8c(dBgW *clsn, daObjCvNewsLift_c *self, dActor_c *other)
-{
-    int isPlayer = other->actorID == 0xbf;
-    if (isPlayer)
-        func_ov021_02111f74(self, other);
-}
-
-// @symbol func_ov021_02111f74
-extern "C" void func_ov021_02111f74(daObjCvNewsLift_c *self, dActor_c *other)
-{
-    self->mResetTimer = 300;
-    self->mLoweredPlatform = 1;
-}
-
-// @symbol func_ov021_02111f34
-extern "C" void func_ov021_02111f34(dBgW *clsn, daObjCvNewsLift_c *self, dActor_c *other)
+// @symbol _ZN17daObjCvNewsLift_c17Platform1CallbackEP4dBgWPS_P8dActor_c
+void daObjCvNewsLift_c::Platform1Callback(dBgW *clsn, daObjCvNewsLift_c *self, dActor_c *other)
 {
     int isPlayer = other->actorID == 0xbf;
     if (isPlayer)
-        func_ov021_02111f1c(self, other);
+        self->OnPlatform1Ride(other);
 }
 
-// @symbol func_ov021_02111f1c
-extern "C" void func_ov021_02111f1c(daObjCvNewsLift_c *self, dActor_c *other)
+// @symbol _ZN17daObjCvNewsLift_c15OnPlatform1RideEP8dActor_c
+void daObjCvNewsLift_c::OnPlatform1Ride(dActor_c *player)
 {
-    self->mResetTimer = 300;
-    self->mLoweredPlatform = 2;
+    mResetTimer = 300;
+    mLoweredPlatform = 1;
 }
 
-// @symbol func_ov021_02111edc
-extern "C" void func_ov021_02111edc(dBgW *clsn, daObjCvNewsLift_c *self, dActor_c *other)
+// @symbol _ZN17daObjCvNewsLift_c17Platform2CallbackEP4dBgWPS_P8dActor_c
+void daObjCvNewsLift_c::Platform2Callback(dBgW *clsn, daObjCvNewsLift_c *self, dActor_c *other)
 {
     int isPlayer = other->actorID == 0xbf;
     if (isPlayer)
-        func_ov021_02111ec4(self, other);
+        self->OnPlatform2Ride(other);
 }
 
-// @symbol func_ov021_02111ec4
-extern "C" void func_ov021_02111ec4(daObjCvNewsLift_c *self, dActor_c *other)
+// @symbol _ZN17daObjCvNewsLift_c15OnPlatform2RideEP8dActor_c
+void daObjCvNewsLift_c::OnPlatform2Ride(dActor_c *player)
 {
-    self->mResetTimer = 300;
-    self->mLoweredPlatform = 3;
+    mResetTimer = 300;
+    mLoweredPlatform = 2;
+}
+
+// @symbol _ZN17daObjCvNewsLift_c17Platform3CallbackEP4dBgWPS_P8dActor_c
+void daObjCvNewsLift_c::Platform3Callback(dBgW *clsn, daObjCvNewsLift_c *self, dActor_c *other)
+{
+    int isPlayer = other->actorID == 0xbf;
+    if (isPlayer)
+        self->OnPlatform3Ride(other);
+}
+
+// @symbol _ZN17daObjCvNewsLift_c15OnPlatform3RideEP8dActor_c
+void daObjCvNewsLift_c::OnPlatform3Ride(dActor_c *player)
+{
+    mResetTimer = 300;
+    mLoweredPlatform = 3;
 }
 
 // @symbol _ZN17daObjCvNewsLift_c13InitResourcesEv
@@ -189,23 +185,23 @@ s32 daObjCvNewsLift_c::InitResources()
     Model::LoadFile(*(SharedFilePtr *)&data_ov021_021149b0);
     dBgW_Kc::LoadFile(*(SharedFilePtr *)&data_ov021_021149b8);
 
-    mModel.SetFile((BMD_File *)data_ov021_021149a0.file, 1, -1);
+    mModel.SetFile((BMD_File *)data_ov021_021149a0.filePtr, 1, -1);
     {
         int i = 0;
         Model *platformModel = mPlatformModels;
         for (; i < 4; i++, platformModel++)
-            platformModel->SetFile((BMD_File *)data_ov021_021149b0.file, 1, -1);
+            platformModel->SetFile((BMD_File *)data_ov021_021149b0.filePtr, 1, -1);
     }
 
     mLoweredPlatform = -1;
-    func_ov021_02111434(this);
-    func_ov021_0211129c(this);
+    UpdateModelTransforms();
+    UpdateClsnTransforms();
 
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &mMeshCollider, (KCL_File *)data_ov021_021149a8.file, &mClsnMat,
+        &mMeshCollider, (KCL_File *)data_ov021_021149a8.filePtr, &mClsnMat,
         0x199, mAngleY, &data_ov021_02113a60);
     func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosWithTransform);
-    func_020393c4(&mMeshCollider, (void *)&func_ov021_02112128);
+    func_020393c4(&mMeshCollider, (void *)&MainMeshCallback);
     mMeshCollider.Enable(this);
 
     {
@@ -214,16 +210,16 @@ s32 daObjCvNewsLift_c::InitResources()
         dBgW_KcMbg *platformCollider = mPlatformColliders;
         for (; i < 4; i++, platformMat++, platformCollider++) {
             _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-                platformCollider, (KCL_File *)data_ov021_021149b8.file, platformMat,
+                platformCollider, (KCL_File *)data_ov021_021149b8.filePtr, platformMat,
                 0x199, mAngleY, &data_ov021_02113a80);
             func_020393d4(platformCollider, (void *)&dBgW::UpdatePosWithTransform);
         }
     }
 
-    func_020393c4(&mPlatformColliders[0], (void *)&func_ov021_02111fe4);
-    func_020393c4(&mPlatformColliders[1], (void *)&func_ov021_02111f8c);
-    func_020393c4(&mPlatformColliders[2], (void *)&func_ov021_02111f34);
-    func_020393c4(&mPlatformColliders[3], (void *)&func_ov021_02111edc);
+    func_020393c4(&mPlatformColliders[0], (void *)&Platform0Callback);
+    func_020393c4(&mPlatformColliders[1], (void *)&Platform1Callback);
+    func_020393c4(&mPlatformColliders[2], (void *)&Platform2Callback);
+    func_020393c4(&mPlatformColliders[3], (void *)&Platform3Callback);
 
     for (int i = 0; i < 4; i++)
         mPlatformColliders[i].Enable(this);
@@ -253,9 +249,9 @@ s32 daObjCvNewsLift_c::InitResources()
  * direction (0 and 1, 2 and 3 are opposite platforms). The shared tail slerps
  * the tilt toward its target, snaps home when mResetTimer runs out and
  * rebuilds both sets of matrices.
- * Measured: the double cast on mWobblePhase, the volatile reads in the
- * reset and the per-element pointer writes to va[1..2] are load-bearing;
- * dropping any one rewrites the function. */
+ * Measured: the double cast on mWobblePhase (0x59c without it), the
+ * volatile reads in the reset (0x594 without them) and the per-element
+ * pointer writes to va[1..2] are load-bearing against the ROM's 0x5a4. */
 s32 daObjCvNewsLift_c::Behavior()
 {
     Vector3 va[3];
@@ -397,8 +393,8 @@ s32 daObjCvNewsLift_c::Behavior()
         mLoweredPlatform = -1;
         mHorzSpeed = 0;
     }
-    func_ov021_02111434(this);
-    func_ov021_0211129c(this);
+    UpdateModelTransforms();
+    UpdateClsnTransforms();
     mPlayerOnMesh = 0;
     mHorzSpeed = 0;
     if (mPrevLoweredPlatform != mLoweredPlatform)
@@ -436,10 +432,10 @@ s32 daObjCvNewsLift_c::CleanupResources()
     return 1;
 }
 
-// @symbol func_ov021_02111434
-/* The render-side twin of func_ov021_0211129c: the same pose, built at model
+// @symbol _ZN17daObjCvNewsLift_c21UpdateModelTransformsEv
+/* The render-side twin of UpdateClsnTransforms: the same pose, built at model
  * scale (positions shifted down by 3), written into the models' matrices. */
-extern "C" void func_ov021_02111434(daObjCvNewsLift_c *self)
+void daObjCvNewsLift_c::UpdateModelTransforms()
 {
     Matrix4x3 tilt;
     int i;
@@ -449,42 +445,39 @@ extern "C" void func_ov021_02111434(daObjCvNewsLift_c *self)
     Vector3 pos;
     Vector3 scaled;
 
-    Matrix4x3_FromQuaternion((Quaternion *)self->mRotation, &tilt);
-    Vec3_Asr(&pos, &self->mPosX, 3);
+    Matrix4x3_FromQuaternion((Quaternion *)mRotation, &tilt);
+    Vec3_Asr(&pos, &mPosX, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
     MulMat4x3Mat4x3(&tilt, &data_020a0e68, &data_020a0e68);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, self->mAngleX);
-    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, self->mAngleZ);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, self->mAngleY);
-    self->mModel.mat4x3 = data_020a0e68;
-    mainMat = &self->mModel.mat4x3;
+    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
+    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
+    mModel.mat4x3 = data_020a0e68;
+    mainMat = &mModel.mat4x3;
     offset = data_ov021_02114a20;
     i = 0;
     for (; i < 4; i++) {
         v = *offset;
-        if (self->mLoweredPlatform == i && !self->mBumped)
+        if (mLoweredPlatform == i && !mBumped)
             v.y -= 0x1e000;
         data_020a0e68 = *mainMat;
         Vec3_Asr(&scaled, &v, 3);
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, scaled.x, scaled.y, scaled.z);
         Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, data_ov021_02114740[i]);
-        self->mPlatformModels[i].mat4x3 = data_020a0e68;
+        mPlatformModels[i].mat4x3 = data_020a0e68;
         offset++;
     }
 
-    unsigned timer = self->mResetTimer;
-    /* Empty early returns: the ROM keeps the dead flag-setting test. */
-    if (timer >= 0x2d)
-        return;
-    if (timer & 1)
+    /* Render's blink test with nothing after it; the ROM keeps the test. */
+    if (mResetTimer < 45 && (mResetTimer & 1))
         return;
 }
 
-// @symbol func_ov021_0211129c
+// @symbol _ZN17daObjCvNewsLift_c20UpdateClsnTransformsEv
 /* Rebuild the collision matrices: the main mesh from position, tilt and
  * facing, then each platform hung at its offset (lowered by 0x1e000 while
  * the player stands on it and the lift is not bumped). */
-extern "C" void func_ov021_0211129c(daObjCvNewsLift_c *self)
+void daObjCvNewsLift_c::UpdateClsnTransforms()
 {
     Matrix4x3 tilt;
     int i;
@@ -494,34 +487,34 @@ extern "C" void func_ov021_0211129c(daObjCvNewsLift_c *self)
     dBgW_KcMbg *platformCollider;
     Vector3 v;
 
-    Matrix4x3_FromQuaternion((Quaternion *)self->mRotation, &tilt);
-    Matrix4x3_FromTranslation(&data_020a0e68, self->mPosX, self->mPosY, self->mPosZ);
+    Matrix4x3_FromQuaternion((Quaternion *)mRotation, &tilt);
+    Matrix4x3_FromTranslation(&data_020a0e68, mPosX, mPosY, mPosZ);
     MulMat4x3Mat4x3(&tilt, &data_020a0e68, &data_020a0e68);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, self->mAngleX);
-    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, self->mAngleZ);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, self->mAngleY);
-    self->mClsnMat = data_020a0e68;
-    self->mMeshCollider.Transform(self->mClsnMat, self->mAngleY);
+    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
+    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
+    mClsnMat = data_020a0e68;
+    mMeshCollider.Transform(mClsnMat, mAngleY);
 
     offset = data_ov021_02114a20;
     i = 0;
-    platform = self;
-    platformMat = self->mPlatformMats;
-    platformCollider = self->mPlatformColliders;
+    platform = this;
+    platformMat = mPlatformMats;
+    platformCollider = mPlatformColliders;
     for (; i < 4; i++) {
         v = *offset;
-        if (self->mLoweredPlatform == i && !self->mBumped)
+        if (mLoweredPlatform == i && !mBumped)
             v.y -= 0x1e000;
-        data_020a0e68 = self->mClsnMat;
+        data_020a0e68 = mClsnMat;
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, v.x, v.y, v.z);
         Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, data_ov021_02114740[i]);
-        /* The ROM stores through a 0x30-stepped object pointer with the
-         * +0x460 folded into the str. mPlatformMats[i] misses by 8 words;
-         * a second matrix pointer reallocates the whole loop. */
-        *(Matrix4x3 *)((char *)platform + 0x460) = data_020a0e68;
-        platformCollider->Transform(*platformMat, self->mAngleY);
+        /* Stored through a this-based cursor stepped one matrix at a time,
+         * which folds the member offset into the str. mPlatformMats[i] is 8
+         * words off and *platformMat is 4 bytes short. */
+        platform->mPlatformMats[0] = data_020a0e68;
+        platformCollider->Transform(*platformMat, mAngleY);
         offset++;
-        platform = (daObjCvNewsLift_c *)((char *)platform + 0x30);
+        platform = (daObjCvNewsLift_c *)((Matrix4x3 *)platform + 1);
         platformMat++;
         platformCollider++;
     }

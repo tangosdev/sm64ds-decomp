@@ -71,6 +71,8 @@ namespace OAM { void EnableSubOAM(OamTmp*);
    ROM name carries by-value class parameters (e.g. Fix12<int>), which
    mwccarm passes differently at the call site, so declaring the true
    types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+/* local extern: the matched Render passes &tmp in r0; the header's
+   static EnableSubOAM() takes no argument */
 extern "C" void _ZN3OAM12EnableSubOAMEv(OamTmp*);
  }
 
@@ -118,7 +120,6 @@ extern u8 data_0209d45c[];
 extern u8 data_0208ee44[];
 extern u8 data_0209ee90[];
 extern void func_02012790(int idx);
-extern void _ZN8dScene_c14StartSceneFadeEjjt(u32 a, u32 b, u16 c);
 extern void _ZN5Sound22StopLoadedMusic_Layer1Ej(u32 a);
 extern u16 DecIfAbove0_Short(u16 *p);
 extern void Enable3dEngines(void);
@@ -232,19 +233,19 @@ s32 dScTitle_c::Behavior()
             if (f == 0)
                 goto chk;
         fade5:
-            _ZN8dScene_c14StartSceneFadeEjjt(5, 0, 0);
+            dScene_c::StartSceneFade(5, 0, 0);
             _ZN5Sound22StopLoadedMusic_Layer1Ej(0x3c);
             goto tail;
         chk:
             if (t == -2) {
-                _ZN8dScene_c14StartSceneFadeEjjt(6, 0, 0);
+                dScene_c::StartSceneFade(6, 0, 0);
                 _ZN5Sound22StopLoadedMusic_Layer1Ej(0x3c);
             } else {
                 data_0209f2d8 = 0;
                 LoadLevelNoReturn(t, data_ov003_020b1181[i << 3], 1, 0);
                 SetPlayerGlobals();
                 SetNumPlayers(1);
-                _ZN8dScene_c14StartSceneFadeEjjt(4, 0, 0);
+                dScene_c::StartSceneFade(4, 0, 0);
                 data_0209f5e8[6] = 0x7fff;
             }
             goto tail;

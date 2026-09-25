@@ -174,27 +174,27 @@ Field roles, from `InitResources` [ov091](../config/arm9/overlays/ov091/symbols.
 | 0x320 | `mMoveTimer`  | `DecIfAbove0_Short`; reloaded from [data_ov091_02134504](../config/arm9/overlays/ov091/symbols.txt)`[mVariant]` and the yaw flips by 0x8000 when it expires |
 | 0x322 | `mVariant`    | set 0..6 by a switch on `actorID`; indexes the model, collider and CLPS tables (stride 0xc) and the two [data_ov091_021345xx](../config/arm9/overlays/ov091/symbols.txt) tables |
 
-## `include/RotatingUpDownPlatform.h`
+## `include/daLinelift2_c.h`
 
 Still a flat generated struct. Own fields start at 0x320.
 
 | offset | name | evidence |
 |---|---|---|
-| 0x320 | `mState` | `Behavior` dispatches [data_ov091_021354e0](../config/arm9/overlays/ov091/symbols.txt)`[mState]` as a pointer-to-member; [func_ov091_02132000](../src/func_ov091_02132000.c) sets it to 1 |
+| 0x320 | `mState` | `Behavior` dispatches [data_ov091_021354e0](../config/arm9/overlays/ov091/symbols.txt)`[mState]` as a pointer-to-member; [func_ov091_02132000](../src/game/actors/d_a_linelift2.cpp) sets it to 1 |
 | 0x324 | `mNodeCount` | `= PathPtr::NumNodes()` |
 | 0x328 | `mNodeIndex` | `= 0`, passed to `PathPtr::GetNode(…, idx)`, incremented when the first node equals the start position |
 | 0x32c | `mBasePosX` | `= mPosX` in `InitResources`; `Vec3_Equal(this+0x338, this+0x32c)` reads 0x32c as a `Vector3` |
 | 0x330 | `mBasePosY` | `= mPosY` |
 | 0x334 | `mBasePosZ` | `= mPosZ` |
-| 0x338 | `mTargetPosX` | `PathPtr::GetNode` writes a `Vector3` over 0x338/0x33c/0x340; [func_ov091_02132000](../src/func_ov091_02132000.c) reads all three back as one |
+| 0x338 | `mTargetPosX` | `PathPtr::GetNode` writes a `Vector3` over 0x338/0x33c/0x340; [func_ov091_02132000](../src/game/actors/d_a_linelift2.cpp) reads all three back as one |
 | 0x33c | `mTargetPosY` | as above |
 | 0x340 | `mTargetPosZ` | as above |
 | 0x344 | `mPathPtr` | `PathPtr::FromID(this+0x344, param & 0xf)` |
 | 0x34c | `mSinkOffsetY` | `ApproachLinear(&this[0x34c], mIsPressed ? 0x1e000 : 0, 0x5000)`, then subtracted from `mPosY` |
 | 0x350 | `mBaseAngleY` | `= mAngleY` in `InitResources` |
 | 0x352 | `mVariant` | `= (param1 >> 8) & 0xff`; indexes the model / collider / CLPS tables |
-| 0x354 | `mStateTimer` | incremented every `Behavior`, zeroed on a state change; [func_ov091_02132000](../src/func_ov091_02132000.c) gates on `<= 0x14` |
-| 0x356 | `mIsPressed` | cleared at the end of every `Behavior`; [func_ov091_02132360](../src/func_ov091_02132360.cpp) sets it from a collision callback when the toucher's actorID is 0xbf; when set, `mSinkOffsetY` approaches 0x1e000 and [func_ov091_02132000](../src/func_ov091_02132000.c) advances the state |
+| 0x354 | `mStateTimer` | incremented every `Behavior`, zeroed on a state change; [func_ov091_02132000](../src/game/actors/d_a_linelift2.cpp) gates on `<= 0x14` |
+| 0x356 | `mIsPressed` | cleared at the end of every `Behavior`; [func_ov091_02132360](../src/game/actors/d_a_linelift2.cpp) sets it from a collision callback when the toucher's actorID is 0xbf; when set, `mSinkOffsetY` approaches 0x1e000 and [func_ov091_02132000](../src/game/actors/d_a_linelift2.cpp) advances the state |
 
 `mIsPressed` names the *observed role* (something is bearing on the platform), not
 the identity of actor 0xbf, which is not settled here.
@@ -427,12 +427,12 @@ still builds 106/106.
 | function | module / range | what changed |
 |---|---|---|
 | `daObjSimpleLift_c::InitResources` | [ov091](../config/arm9/overlays/ov091/symbols.txt) 0x021325d4 +0x214 | `*(u8 *)(c+0x322)` → `mVariant` throughout, `c+0x320` → `mMoveTimer`, `c+0x324..0x32c` → `mBasePos{X,Y,Z}` |
-| `RotatingUpDownPlatform::Behavior` | [ov091](../config/arm9/overlays/ov091/symbols.txt) 0x02132108 +0x104 | `s+0x320` → `mState`, `s+0x354` → `mStateTimer`, `s+0x352` → `mVariant`, `s+0x356` → `mIsPressed`, `s+0x34c` → `mSinkOffsetY`; the two sink magic numbers become `cSinkDepth` / `cSinkRate` |
-| `RotatingUpDownPlatform::InitResources` | [ov091](../config/arm9/overlays/ov091/symbols.txt) 0x0213220c +0x154 | `this+0x344` → `&mPathPtr`, `this+0x338` → `&mTargetPosX`, `this+0x32c` → `&mBasePosX` |
+| `daLinelift2_c::Behavior` | [ov091](../config/arm9/overlays/ov091/symbols.txt) 0x02132108 +0x104 | `s+0x320` → `mState`, `s+0x354` → `mStateTimer`, `s+0x352` → `mVariant`, `s+0x356` → `mIsPressed`, `s+0x34c` → `mSinkOffsetY`; the two sink magic numbers become `cSinkDepth` / `cSinkRate` |
+| `daLinelift2_c::InitResources` | [ov091](../config/arm9/overlays/ov091/symbols.txt) 0x0213220c +0x154 | `this+0x344` → `&mPathPtr`, `this+0x338` → `&mTargetPosX`, `this+0x32c` → `&mBasePosX` |
 | `daUdlift_c::InitResources` and `::Behavior` | [ov095](../config/arm9/overlays/ov095/symbols.txt) 0x021365d8 +0x18c, 0x021364d8 +0x100 | the `*((int *)((char *)&mTopY))` cast wrappers drop away now that the fields are `s32`; `this+0x344` and `(&unk_300)+0x44` both become `mStateTimer` |
 
 One thing that did NOT hold: `*(int *)(s + 0x60) -= mSinkOffsetY;` in
-`RotatingUpDownPlatform::Behavior` is followed by `mPosY = saved;`, so the
+`daLinelift2_c::Behavior` is followed by `mPosY = saved;`, so the
 subtraction is dead as the tree spells it. That is what reproduces, and it was
 left exactly as it is — do not "fix" it into something that reads better.
 
