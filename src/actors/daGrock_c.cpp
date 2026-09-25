@@ -20,6 +20,7 @@
 
 #include "decl_common.h"
 #include "daGrock_c.h"
+#include "Player.h"
 
 /* Flat field view of the GORO_ROCK file handle. SharedFilePtr.h has the
  * method and no fields; InitResources reads .bmd, so this completes the
@@ -45,53 +46,33 @@ struct Vec3 {
 struct AngleWords { u16 w[3]; };
 
 extern "C" {
-extern void _ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h(void *self, void *a, unsigned int b, void *c, unsigned int d);
 extern void Vec3_Asr(void *dst, void *src, int n);
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, short a, short b, short c);
 extern int _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void *thiz, void *sm, void *m, int rad, int h, unsigned u);
 extern struct Matrix4x3 data_020a0e68;
-extern void *_ZN8dActor_c10FindWithIDEj(u32 id);
 extern void func_02012694(int a, void *p);
-extern void _ZN6Player16IncMegaKillCountEv(void *p);
-extern void _ZN8dActor_c14TriplePoofDustEv(void *a);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 id, int x, int y, int z);
-extern void _ZN7fBase_c18MarkForDestructionEv(void *a);
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(u32 id, void *pos);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *p, struct Vector3 *pos, u32 a, int b, u32 d, u32 e, u32 f);
 extern void dBgCh_Actr_UpdateContinuous_Veneer(void *p);
-extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *p);
 extern void *_ZNK10dBgCh_Actr14GetFloorResultEv(void *p);
-extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *info, Vec3 *out);
-extern int _ZNK10dBgCh_Actr13JustHitGroundEv(void *p);
 extern void func_0201267c(int a, void *p);
 extern void *_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unsigned int a, unsigned int b, int c, int d, int e, void *v, void *cb);
 extern void *_ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int c, void *v, unsigned int d);
 extern int Vec3_HorzLen(void *v);
 extern int _ZN4cstd5atan2E5Fix12IiES1_(int a, int b);
-extern int _ZNK10dBgCh_Actr8IsOnWallEv(void *p);
 extern void *_ZNK10dBgCh_Actr13GetWallResultEv(void *p);
+/* local extern: dActor_c.h types GetSubtraction(short, short); func_ov021_02112544 passes its int wall angle straight through (mov r2, r0) and the short spelling adds lsl/asr #16 */
 extern int _ZN8dActor_c14GetSubtractionEss(void *a, s16 x, int y);
 extern s16 _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(void *a, int x, int y, s16 ang);
-extern void _ZN8dActor_c28UpdatePosWithHorzSpeedAndAngEv(void *a);
 extern s16 data_02082214[];
 extern void AddVec3(struct Vector3 *dst, struct Vector3 *a, struct Vector3 *b);
 extern void func_0200f760(char *c, void *p);
-extern void _ZN5dCc_c5ClearEv(void *thiz);
-extern void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void *thiz, const struct Vector3 *v);
-extern void _ZN5dCc_c6UpdateEv(void *thiz);
-extern void _ZN8dActor_c11UntrackStarERa(void *thiz, s8 *ref);
-extern int _ZN8dActor_c13DistToCPlayerEv(void *thiz);
 extern int RandomIntInternal(int *seed);
-extern void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, const struct Vector3 *pos, const struct Vector3_16 *ang, int e, int f);
 extern int data_0209e650;
-extern void _ZN5Model8LoadFileER13SharedFilePtr(void *shared);
-extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *mb, void *bmd, int a, int b);
-extern int _ZN11ShadowModel12InitCylinderEv(void *sm);
 extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *w, void *a, int r, int rr, void *v, void *vv);
-extern void _ZN10dBgCh_Actr13SetLimMovFlagEv(void *w);
 extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void *c, void *a, void *pos, int r, int rr, u32 e, u32 f);
-extern u8 _ZN8dActor_c9TrackStarEjj(void *a, u32 x, u32 y);
 extern SharedFilePtr data_ov021_02114a50;
 }
 
@@ -118,9 +99,9 @@ void func_ov021_02112294(void *c)
     if (*(unsigned char*)((char*)c + 0x3c1) == 0xff)
         return;
     if (*(unsigned char*)((char*)c + 0x3be) == 4) {
-        _ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h(c, (char*)c + 0x3c0, *(unsigned char*)((char*)c + 0x3c1), (char*)c + 0x5c, 2);
+        ((dActor_c *)c)->UntrackAndSpawnStar(*(s8*)((char*)c + 0x3c0), *(unsigned char*)((char*)c + 0x3c1), *(Vector3*)((char*)c + 0x5c), 2);
     } else {
-        _ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h(c, (char*)c + 0x3c0, *(unsigned char*)((char*)c + 0x3c1), (char*)c + 0x5c, 4);
+        ((dActor_c *)c)->UntrackAndSpawnStar(*(s8*)((char*)c + 0x3c0), *(unsigned char*)((char*)c + 0x3c1), *(Vector3*)((char*)c + 0x5c), 4);
     }
 }
 }
@@ -147,17 +128,17 @@ void func_ov021_021123b0(char *c)
     u32 id = *(u32*)(c + 0x1dc);
 
     if (id == 0) return;
-    a = (char*)_ZN8dActor_c10FindWithIDEj(id);
+    a = (char*)dActor_c::FindWithID(id);
     if (a == 0) return;
     fl = *(u32*)(c + 0x1d8);
     if ((fl & 0x10) != 0) {
         func_02012694(0x17a, c + 0x74);
-        _ZN6Player16IncMegaKillCountEv(a);
-        _ZN8dActor_c14TriplePoofDustEv(c);
+        ((Player *)a)->IncMegaKillCount();
+        ((dActor_c *)c)->TriplePoofDust();
         _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
             0x67, *(int*)(c + 0x5c), *(int*)(c + 0x60), *(int*)(c + 0x64));
         func_ov021_02112294(c);
-        _ZN7fBase_c18MarkForDestructionEv(c);
+        ((fBase_c *)c)->MarkForDestruction();
         return;
     }
 
@@ -169,8 +150,8 @@ void func_ov021_021123b0(char *c)
     if ((fl & 0x3c0) != 0) {
         if (*(int*)(a + 8) == 2) {
             func_02012694(0x17a, c + 0x74);
-            _ZN7fBase_c18MarkForDestructionEv(c);
-            _ZN8dActor_c14TriplePoofDustEv(c);
+            ((fBase_c *)c)->MarkForDestruction();
+            ((dActor_c *)c)->TriplePoofDust();
             _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
                 0x67, *(int*)(c + 0x5c), *(int*)(c + 0x60), *(int*)(c + 0x64));
             func_ov021_02112294(c);
@@ -199,15 +180,15 @@ extern "C" void func_ov021_02112544(char* self)
     Vec3 walln;
 
     dBgCh_Actr_UpdateContinuous_Veneer(self + 0x1f8);
-    if (_ZNK10dBgCh_Actr10IsOnGroundEv(self + 0x1f8) != 0) {
-        _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char*)_ZNK10dBgCh_Actr14GetFloorResultEv(self + 0x1f8) + 4, &normal);
+    if (((dBgCh_Actr *)(self + 0x1f8))->IsOnGround() != 0) {
+        ((SurfaceInfo *)((char*)_ZNK10dBgCh_Actr14GetFloorResultEv(self + 0x1f8) + 4))->CopyNormalTo(*(Vector3 *)&normal);
 
         pos = *(Vec3*)(self + 0x5c);
         pos.x -= normal.x * 0x12c;
         pos.y -= normal.y * 0x12c;
         pos.z -= normal.z * 0x12c;
 
-        if (_ZNK10dBgCh_Actr13JustHitGroundEv(self + 0x1f8) != 0) {
+        if (((dBgCh_Actr *)(self + 0x1f8))->JustHitGround() != 0) {
             if (*(int*)(self + 0xa8) < (*(int*)(self + 0x9c) << 1) && normal.y >= 0xc00) {
                 *(int*)(self + 0xa8) = -*(int*)(self + 0xa8) * 6 / 10;
             }
@@ -235,16 +216,16 @@ extern "C" void func_ov021_02112544(char* self)
         }
     }
 
-    if (_ZNK10dBgCh_Actr8IsOnWallEv(self + 0x1f8) == 0)
+    if (((dBgCh_Actr *)(self + 0x1f8))->IsOnWall() == 0)
         return;
 
-    _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char*)_ZNK10dBgCh_Actr13GetWallResultEv(self + 0x1f8) + 4, &walln);
+    ((SurfaceInfo *)((char*)_ZNK10dBgCh_Actr13GetWallResultEv(self + 0x1f8) + 4))->CopyNormalTo(*(Vector3 *)&walln);
     {
         int wa = _ZN4cstd5atan2E5Fix12IiES1_(walln.x, walln.z);
         if (_ZN8dActor_c14GetSubtractionEss(self, *(s16*)(self + 0x94), wa) <= 0x1000)
             return;
         *(s16*)(self + 0x94) = _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(self, walln.x, walln.z, *(s16*)(self + 0x94));
-        _ZN8dActor_c28UpdatePosWithHorzSpeedAndAngEv(self);
+        ((dActor_c *)self)->UpdatePosWithHorzSpeedAndAng();
     }
 }
 
@@ -292,38 +273,38 @@ int daGrock_c::Behavior()
             func_ov021_02112544(c);
         }
         func_ov021_021122fc(c);
-        _ZN5dCc_c5ClearEv(c + 0x1b8);
+        ((dCc_c *)(c + 0x1b8))->Clear();
 
         if (*(int*)(c + 0x64) >= (int)0xfe82c000) {
             struct Vector3 v;
             v.x = 0;
             v.y = (int)0xffebb000;
             v.z = 0;
-            _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(c + 0x1b8, &v);
+            ((dCcAcPos_c *)(c + 0x1b8))->SetPosRelativeToActor(v);
         } else {
             struct Vector3 v;
             v.x = 0;
             v.y = -0xe1000;
             v.z = 0;
-            _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(c + 0x1b8, &v);
+            ((dCcAcPos_c *)(c + 0x1b8))->SetPosRelativeToActor(v);
         }
-        _ZN5dCc_c6UpdateEv(c + 0x1b8);
+        ((dCc_c *)(c + 0x1b8))->dCc_c::Update();
 
         if (*(u8*)(c + 0x3be) != 4) {
             if (*(int*)(c + 0x60) < -0x3e8000) {
-                _ZN7fBase_c18MarkForDestructionEv(c);
+                ((fBase_c *)c)->MarkForDestruction();
                 if (*(u32*)(c + 0x3b4) != 0) {
-                    char *a = (char*)_ZN8dActor_c10FindWithIDEj(*(u32*)(c + 0x3b4));
+                    char *a = (char*)dActor_c::FindWithID(*(u32*)(c + 0x3b4));
                     if (a) *(u8*)(a + 0x3c2) = 0;
                 }
-                _ZN8dActor_c11UntrackStarERa(c, (s8*)(c + 0x3c0));
-                _ZN8dActor_c14TriplePoofDustEv(c);
+                ((dActor_c *)c)->UntrackStar(*(s8*)(c + 0x3c0));
+                ((dActor_c *)c)->TriplePoofDust();
                 _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x67, *(int*)(c + 0x5c), *(int*)(c + 0x60), *(int*)(c + 0x64));
                 func_02012694(0x17a, c + 0x74);
             }
         }
     } else {
-        int dist = _ZN8dActor_c13DistToCPlayerEv(c);
+        int dist = ((dActor_c *)c)->DistToCPlayer();
         if (dist > 0x5dc000) {
             u32 th = (dist < 0x1770000) ? 0x70 : 0xe0;
             if (*(u16*)(c + 0x100) >= th) {
@@ -339,13 +320,11 @@ int daGrock_c::Behavior()
                 if (*(u8*)(c + 0x3be) == 1 && *(u8*)(c + 0x3bf) >= 5 && *(u8*)(c + 0x3c2) == 0) {
                     char *a;
                     *(u8*)(c + 0x3c2) = 1;
-                    a = (char*)_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-                        0xdd, (*(u8*)(c + 0x3c1) << 8) | 3, (struct Vector3*)(c + 0x5c), &v16, *(s8*)(c + 0xcc), -1);
+                    a = (char*)dActor_c::Spawn(0xdd, (*(u8*)(c + 0x3c1) << 8) | 3, *(Vector3*)(c + 0x5c), &v16, *(s8*)(c + 0xcc), -1);
                     *(u8*)(c + 0x3bf) = 0;
                     if (a) *(u32*)(a + 0x3b4) = *(u32*)(c + 4);
                 } else {
-                    _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-                        0xdd, 2, (struct Vector3*)(c + 0x5c), &v16, *(s8*)(c + 0xcc), -1);
+                    dActor_c::Spawn(0xdd, 2, *(Vector3*)(c + 0x5c), &v16, *(s8*)(c + 0xcc), -1);
                 }
             }
         }
@@ -367,16 +346,16 @@ int daGrock_c::InitResources()
     *(signed char*)(c+0x3c0) = -1;
     *(u8*)(c+0x3bf) = 0;
 
-    _ZN5Model8LoadFileER13SharedFilePtr(&data_ov021_02114a50);
+    Model::LoadFile(data_ov021_02114a50);
 
     if (*(u8*)(c+0x3be) >= 2) {
-        if (_ZN9ModelBase7SetFileEP8BMD_Fileii((void*)(c+0x110), data_ov021_02114a50.bmd, 1, 1) == 0)
+        if (((ModelBase *)((void*)(c+0x110)))->SetFile((BMD_File *)data_ov021_02114a50.bmd, 1, 1) == 0)
             return 0;
-        if (_ZN11ShadowModel12InitCylinderEv((void*)(c+0x160)) == 0)
+        if (((ShadowModel *)((void*)(c+0x160)))->InitCylinder() == 0)
             return 0;
 
         _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_((void*)(c+0x1f8), ((void*)this), 0x12c000, 0, 0, 0);
-        _ZN10dBgCh_Actr13SetLimMovFlagEv((void*)(c+0x1f8));
+        ((dBgCh_Actr *)((void*)(c+0x1f8)))->SetLimMovFlag();
         *(s32*)(c+0x3b8) = 0;
 
         if (*(u8*)(c+0x3be) == 4) {
@@ -405,7 +384,7 @@ int daGrock_c::InitResources()
     }
 
     if (*(u8*)(c+0x3be) != 1 && *(u8*)(c+0x3c1) != 0xff) {
-        *(u8*)(c+0x3c0) = _ZN8dActor_c9TrackStarEjj(((void*)this), *(u8*)(c+0x3c1), 2);
+        *(u8*)(c+0x3c0) = TrackStar(*(u8*)(c+0x3c1), 2);
     }
     *(s32*)(c+0x3c4) = 0;
     *(s32*)(c+0x10c) = 0;
