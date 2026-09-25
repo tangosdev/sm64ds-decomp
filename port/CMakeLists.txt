@@ -23301,3 +23301,36 @@ endif()
 foreach(_tw28dpad1 walk_window walk_window_hires smoke_player)
     target_sources(${_tw28dpad1} PRIVATE ${SLICE_W28_DPAD1_SOURCES})
 endforeach()
+
+# XREL1 (run linkfull): EVERY OVERLAY MOUNT DEPENDS ON THE CONFIG IT READS.
+#
+# tools/ovdata.py builds each mount out of its overlay's config/arm9/overlays/
+# <ov>/relocs.txt (which words are addresses), delinks.txt (the base and the
+# section ends) and symbols.txt (the per-symbol ranges), and the cross pass
+# builds on the mounts' sidecar maps. None of the add_custom_command calls
+# above names those three files, so a config edit -- a relocation row removed
+# because the word is not a pointer, a symbol moved -- left host-src/<ov>_data.c,
+# <ov>_syms.c and ov_cross.c holding the OLD patch lists in every incremental
+# build, and only a clean build saw the change. That is how a removed false
+# relocation can look fixed in one tree and still ship from another.
+#
+# So append the three files of each mount's OWN overlay to that mount's
+# command. The cross pass already depends on every sidecar map, so it re-runs
+# whenever a mount does. A mount whose name does not start ovNNN_ is refused
+# here rather than skipped: it would be the one that goes stale.
+set(_xrel1_mounts 0)
+foreach(_xrel1_map IN LISTS OV_DATA_MAPS)
+    string(REGEX REPLACE "[.]map$" "" _xrel1_out "${_xrel1_map}")
+    get_filename_component(_xrel1_name "${_xrel1_out}" NAME)
+    if(NOT _xrel1_name MATCHES "^(ov[0-9][0-9][0-9])_")
+        message(FATAL_ERROR "ovdata mount ${_xrel1_name} does not name its "
+                "overlay (ovNNN_...), so the XREL1 block cannot tie it to "
+                "its config/arm9/overlays/<ov>/ files")
+    endif()
+    set(_xrel1_cfg "${PORT_REPO_ROOT_ABS}/config/arm9/overlays/${CMAKE_MATCH_1}")
+    add_custom_command(OUTPUT "${_xrel1_out}" APPEND
+        DEPENDS "${_xrel1_cfg}/relocs.txt" "${_xrel1_cfg}/delinks.txt"
+                "${_xrel1_cfg}/symbols.txt")
+    math(EXPR _xrel1_mounts "${_xrel1_mounts} + 1")
+endforeach()
+message(STATUS "XREL1: ${_xrel1_mounts} ovdata mount(s) rebuild when their overlay's config changes")
