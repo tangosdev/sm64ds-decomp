@@ -48,6 +48,7 @@
 
 #include "daObjFlamethrower_c.h"
 #include "decl_common.h"
+#include "Player.h"
 
 /* Layout-identical three-int stand-in for the vector the two math helpers
  * take; see Known limits in the header comment above. */
@@ -61,14 +62,10 @@ extern unsigned short DecIfAbove0_Short(unsigned short *p);
 extern u32 _ZN5Sound8PlayLongEjjjRK7Vector3s(u32 a, u32 b, u32 c, const Vector3 *v, s16 e);
 extern void MulVec3Mat4x3(int *v, void *m, int *dst);
 extern void Vec3_Add(int *out, int *a, int *b);
-extern char *_ZN8dActor_c10FindWithIDEj(u32 id);
-extern void _ZN6Player4BurnEv(char *thiz);
 extern void func_02022774(Fix12i x, Fix12i y, Fix12i z, s16 ang1, int ang2);
 extern void func_020226fc(Fix12i x, Fix12i y, Fix12i z, s16 ang1, s16 ang2);
 extern void func_02022864(Fix12i x, Fix12i y, Fix12i z, s16 ang1, int ang2);
 extern void func_020227ec(Fix12i x, Fix12i y, Fix12i z, s16 ang1, s16 ang2);
-extern void _ZN5dCc_c5ClearEv(void *thiz);
-extern void _ZN5dCc_c6UpdateEv(void *thiz);
 extern void _ZN8dCcPos_c4InitERK7Vector35Fix12IiES4_jj(void *self, struct Vec3 *pos, int fix, int t, unsigned int a, unsigned int b);
 }
 
@@ -260,14 +257,14 @@ int daObjFlamethrower_c::Behavior()
                 }
                 id = *((u32 *)(pclsn + 0xf8));
                 if (id != 0) {
-                    other = _ZN8dActor_c10FindWithIDEj(id);
+                    other = (char *)dActor_c::FindWithID(id);
                     if (other != 0) {
                         if (*((u16 *)(other + 0xc)) == 0xbf)
                             isPlayer = one;
                         else
                             isPlayer = no;
                         if (isPlayer != 0)
-                            _ZN6Player4BurnEv(other);
+                            ((Player *)other)->Burn();
                     }
                 }
                 part[0] = *((int *)(ppos + 0x3a4));
@@ -299,9 +296,9 @@ int daObjFlamethrower_c::Behavior()
     if (count > 0) {
         char *pc = self + 0xd4;
         do {
-            _ZN5dCc_c5ClearEv(pc);
+            ((dCc_c *)pc)->Clear();
             if (j < (int)(*((u8 *)(self + 0x465))))
-                _ZN5dCc_c6UpdateEv(pc);
+                ((dCc_c *)pc)->dCc_c::Update();
             j++;
             pc += 0x3c;
         } while (j < count);

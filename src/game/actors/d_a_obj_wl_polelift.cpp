@@ -64,7 +64,6 @@ extern "C" {
 /* Factory ABI: CodeWarrior rejects the actor hierarchy's class-specific
  * operator-new declaration, so the allocation and the base/subobject
  * construction sequence stay explicit here. */
-void *_ZN7fBase_cnwEj(u32 size);
 void _ZN8dActor_cC2Ev(void *self);
 void _ZN5ModelC1Ev(void *self);
 void _ZN10dCcAcPos_cC1Ev(void *self);
@@ -97,7 +96,7 @@ extern SharedFilePtr data_ov026_02113ea0;
 extern "C" daObjWlPolelift_c *daObjWlPolelift_c_classInit()
 {
     daObjWlPolelift_c *actor =
-        (daObjWlPolelift_c *)_ZN7fBase_cnwEj(sizeof(daObjWlPolelift_c));
+        (daObjWlPolelift_c *)fBase_c::operator new(sizeof(daObjWlPolelift_c));
     if (actor) {
         _ZN8dActor_cC2Ev(actor);
         *(int *)actor = (int)&_ZTV17daObjWlPolelift_c[2];

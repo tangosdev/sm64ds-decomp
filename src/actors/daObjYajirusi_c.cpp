@@ -46,6 +46,7 @@
 #include "Sound.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
+#include "Player.h"
 #include "decl_ActorBase.h"
 #include "decl_Platform.h"
 #include "decl_ShadowModel.h"
@@ -65,19 +66,12 @@ extern "C" {
 extern void Matrix4x3_FromRotationY(void *, int);
 extern "C" void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_( u32 id, Fix12i x, Fix12i y, Fix12i z);
 int func_02012694(int, void*);
-void _ZN6Player16IncMegaKillCountEv(void*);
-void _ZN10dBgActor_c14KillByMegaCharER6Player(void*, void*);
 int _ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE(void* c, short a, short b, short d, int e);
 void func_02039394(int* p, int v);
 void func_020393a4(int* p, int v);
 void _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(void* c, void* sm, void* mtx, int s, int x, int y, unsigned int j);
 int _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(void* c, int a, int b);
-void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
-void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *bmd, int a, int b);
-void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *self);
-void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
 void func_ov098_02137c8c(char *self);
-void *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void *fp);
 void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
 void *self, void *kcl, void *mtx, int scale, short angle, void *clps);
 /* Each row is model/KCL/CLPS, but the ROM gives each column its own symbol.
@@ -130,15 +124,15 @@ int daObjYajirusi_c::InitResources()
     }
 
     u32 modelIndex = mVariant;
-    void *model = _ZN5Model8LoadFileER13SharedFilePtr(data_ov098_0213c380[modelIndex].value);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModel, model, 1, -1);
+    void *model = Model::LoadFile(*(SharedFilePtr *)data_ov098_0213c380[modelIndex].value);
+    mModel.ModelBase::SetFile((BMD_File *)model, 1, -1);
     mShadowModel.InitCuboid();
-    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(this);
-    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(this);
+    UpdateModelPosAndRotY();
+    UpdateClsnPosAndRot();
     func_ov098_02137c8c((char *)this);
 
     u32 collisionIndex = mVariant;
-    void *kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov098_0213c384[collisionIndex].value);
+    void *kcl = dBgW_Kc::LoadFile(*(SharedFilePtr *)data_ov098_0213c384[collisionIndex].value);
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         &mMeshCollider, kcl, &mClsnMat, 0x199, mAngleY,
         data_ov098_0213c388[collisionIndex].value);
@@ -197,9 +191,9 @@ int daObjYajirusi_c::CleanupResources()
 /* daObjYajirusi_c::OnHitByMegaChar - recovered from vtable slot identity */
 void daObjYajirusi_c::OnHitByMegaChar(Player &player)
 {
-    _ZN6Player16IncMegaKillCountEv(&player);
+    player.IncMegaKillCount();
     func_02012694(0x1e, (char*)this + 0x74);
-    _ZN10dBgActor_c14KillByMegaCharER6Player(this, &player);
+    KillByMegaChar(player);
 }
 
 /* -------------------------------------------------------------------------- */
