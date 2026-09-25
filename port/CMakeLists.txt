@@ -11392,9 +11392,9 @@ foreach(src IN LISTS SLICE10_SOURCES)
     # data_020a4d6c's record field +0x18 now (include/SoundPlayerRecord.h),
     # so it is not filtered any more: its .cpp compiles from gate 10 and links
     # through its hal/cxx_aliases.cpp row.
-    # ...and Sound::Play, whose src calls func_02050cdc(void) and lets the
-    # kind and id ride through in r0/r1.
-       OR src MATCHES "/_ZN5Sound4PlayEjjRK7Vector3\\.c$"
+    # (Sound::Play's clause went at run linkfull lane RS5A: it named a .c the
+    # tree no longer has, and the .cpp links now through hal/sdat/sound_abi.cpp's
+    # flat-name bridge.)
     # ...and func_0203d974, "does anything still need loading off the card".
     # Its src reads the DS main-RAM mirror word 0x027ffc40 literally, which is
     # past MAIN_BASE+MAIN_SIZE (ntr/include/ntr/mmio.h) and unmapped -- and the

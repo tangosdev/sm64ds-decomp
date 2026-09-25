@@ -40,64 +40,48 @@ int hal_Sound_PlayIfNotActive_ridethrough(int a, int b, int c)
     return Sound_PlayIfNotActive(a, b, c, 0);
 }
 
-// Sound::Play. Its src declares the resolver as func_02050cdc(void) and
-// calls it with no arguments -- the kind and id are already in r0/r1 from
-// Play's own frame, so on ARM they ride straight through. On the host the
-// callee read whatever happened to be in the argument slots, returned 0, and
-// the very next line (*(u8 *)(s + 5)) faulted on address 5. That was the
-// first crash the unstubbed front door produced.
+// Sound::Play IS THE ROM'S OWN BODY NOW (run linkfull wave 31, lane RS5A).
+// This file carried a host copy of it. The copy's first reason was an ARM
+// argument ride-through: the pre-sync src declared the resolver
+// func_02050cdc(void) and let the kind and id ride in r0/r1. That spelling
+// went at the 09-14 sync (the src calls func_02050cdc(j1, j2)), and main
+// caca8949ed made the four Sound:: callers forward the kind and id, so
+// src/_ZN5Sound4PlayEjjRK7Vector3.cpp compiles here unchanged. It was on
+// port/slice_gate10.txt all along and /OPT:REF dropped it, because every
+// caller spells the flat name below and only the copy defined it.
 //
-// The null check is a host addition, not the ROM's behaviour: func_02050cdc
-// legitimately returns 0 for an id whose group was never loaded, and on
-// hardware the game is never in that state. Printing once and returning is
-// the honest answer instead of reproducing a crash the DS would not have.
+// What stays here is that FLAT NAME, as a bridge into the ROM body. It keeps
+// the two host duties the copy carried and none of the game's logic:
 //
-// STALE AS OF THE 09-14 SYNC (run link100 wave 10, lane SMOKELINK5). RULED
-// (w6-c item 3) read this as the ride-through class, the same one the five
-// functions at the top of this file are in: the PRE-SYNC src declared the
-// resolver `func_02050cdc(void)` and called it with no arguments, so kind and
-// id rode through in r0/r1 from Play's own frame and a cdecl host callee had
-// no spelling that reads them -- "the src is not wrong and there is nothing
-// to replace it with" was true of THAT declaration.
+//   1. sd_consumer_init, the idempotent self-seat. Not every harness has a
+//      frame loop calling sdat_host_tick before its first sound (smoke_player
+//      reaches Player::Behavior -> Sound::Play directly), and the resolver's
+//      table walk reads data_020a5bb8 + 0x84 unconditionally, so an unseated
+//      root is a null dereference rather than a quiet no-op. The same seat
+//      hal/reverse_bridges.cpp puts in front of PlaySub, Play2D and
+//      LoadAndSetMusic_Layer1.
+//   2. The null-resolver guard. func_02050cdc returns 0 for an id whose group
+//      was never loaded, and the ROM body's next line reads the entry's +5.
+//      On hardware the game is never in that state; on the host that read is
+//      a page fault inside whichever actor asked. The bridge asks the same
+//      lookup first (three table reads, no side effects), and on 0 skips the
+//      call with one line per id, exactly as the copy did. No measured run
+//      takes this branch.
 //
-// The synced src/_ZN5Sound4PlayEjjRK7Vector3.cpp no longer declares it that
-// way. It now spells `extern "C" char* func_02050cdc(int a, int idx);` and
-// calls `func_02050cdc(j1, j2)` with both arguments explicit, which is an
-// ordinary two-int cdecl call MSVC reproduces with no ride-through at all --
-// the (void) spelling this ruling turned on is simply gone from the source.
-// The declaration two lines below this comment, `void *func_02050cdc(int
-// kind, int idx);`, already matches the synced shape; only this prose still
-// described the pre-sync one. Nothing here argues the whole front door is
-// unride-through now (SetPlayableSeqCount's own w6-c note below is about a
-// different symbol and a different reason, and is untouched), only that this
-// one function's excuse for being a ride-through no longer holds against the
-// current source. The two host additions below (sd_consumer_init and the
-// null guard) are unaffected either way and are still argued in their own
-// comments.
+// SM64DS_SND_REQLOG=1 keeps its one line per request at the front door, with
+// the inputs the decision is made on (the listener-relative vector, its
+// distance, the limit, bank, group and the sound-effects switch). The copy
+// also printed a verdict for each request, and SM64DS_SND_TRACE /
+// SM64DS_VOICE_TRACE lit up its two culls; those were decided inside the
+// copy's own branches, and the ROM body decides them inside matched callees
+// (func_02048720, func_02048a1c) with no host function on the path, so they
+// retired with it. A request line now ends "sent to the ROM body" or, for
+// the guard, "DROPPED: no SEQARC entry".
 struct Vector3 { int x, y, z; };
 void *func_02050cdc(int kind, int idx);
-void *func_02048720(struct Vector3 *v, int kind, int id);
-void  func_02048908(void *obj, int *p);
-int   func_02048a1c(int *v, int kind, int id);
-void  func_02048d80(void *obj, int *p);
 int   func_02049018(int *v);          /* listener-relative distance */
-void  Player_PlaySoundEffect(int x, unsigned a, unsigned b);
-extern int data_0209b4a4[];
 extern int data_02099fac;             /* the 3D distance limit, romdata */
 
-// SM64DS_SND_REQLOG=1: ONE LINE PER REQUEST, WITH THE VERDICT ON THE SAME LINE.
-//
-// SM64DS_SND_TRACE already reports the two culls, but a cull report cannot
-// answer the question a missing sound actually asks first: did the request
-// HAPPEN. A level where a sound is absent because the game never asked for it
-// and a level where it was asked for and dropped produce the SAME quiet trace,
-// and telling those two apart is the whole opening move of a "sound X does not
-// play here" hunt -- it halves the search space before any deeper reading.
-//
-// So this logs every arrival at the front door together with the inputs the
-// decision is made on: the listener-relative vector the caller passed, the
-// distance that vector works out to, the limit it is about to be compared
-// against, and the bank and group in force. Off by default, latched once.
 int g_snd_reqlog = -1;
 extern signed char data_0208e428;        /* the bank every kind-3 sound rides */
 extern unsigned char data_0209b47c;      /* the loaded sound group */
@@ -117,19 +101,23 @@ static void snd_req(unsigned kind, unsigned id, int type,
             (int)data_0209b480, verdict);
 }
 
-// PORT_HOST_ABI: ARM r0/r1 argument ride-through into a (void)-declared
-// resolver, plus a host null guard where the DS could not reach the state.
+}  // extern "C"
+
+namespace Sound {
+/* src/_ZN5Sound4PlayEjjRK7Vector3.cpp: ?Play@Sound@@YAXIIABUVector3@@@Z */
+void Play(unsigned int j1, unsigned int j2, const Vector3 &v);
+}
+
+extern "C" {
+
+// PORT_HOST_ABI: the flat name every caller spells, with the self-seat and the
+// null-resolver guard in front of the ROM's own Sound::Play (see above).
 void _ZN5Sound4PlayEjjRK7Vector3(unsigned kind, unsigned id, struct Vector3 *v)
 {
     if (g_snd_reqlog < 0)
         g_snd_reqlog = getenv("SM64DS_SND_REQLOG") != 0;
-    // Self-initialise. Not every harness has a frame loop calling
-    // sdat_host_tick -- smoke_player reaches Player::Behavior -> Sound::Play
-    // directly -- and the table walkers below read data_020a5bb8 + 0x84
-    // unconditionally, so an unseated root is a null dereference rather than
-    // a quiet no-op. Idempotent and cheap after the first call.
     sd_consumer_init();
-    unsigned char *s = (unsigned char *)func_02050cdc((int)kind, (int)id);
+    const unsigned char *s = (const unsigned char *)func_02050cdc((int)kind, (int)id);
     if (s == 0) {
         static unsigned char seen[8][32];
         unsigned k = kind & 7, b = (id >> 3) & 31, m = 1u << (id & 7);
@@ -141,66 +129,8 @@ void _ZN5Sound4PlayEjjRK7Vector3(unsigned kind, unsigned id, struct Vector3 *v)
         snd_req(kind, id, -1, v, "DROPPED: no SEQARC entry");
         return;
     }
-    // SM64DS_SND_TRACE also lights up the TWO SILENT RETURNS below. Both are
-    // the ROM's own 3D culls -- func_02048720 answers "no free positional
-    // voice for this priority", func_02048a1c answers "further away than this
-    // sound's distance limit" -- and on the ROM they are ordinary. On the
-    // port they were the shape of a whole class of bug: data_02099fac, the
-    // default distance limit, was zeroed HAL storage rather than the ROM's
-    // 550, so func_02048a1c culled EVERY positional sound in the game and
-    // Sound::Play returned without a word. A cull that cannot be told apart
-    // from silence is the one thing this path is not allowed to be.
-    int t = s[5];
-    if (t == 9 || t == 2) {
-        void *r = func_02048720(v, (int)kind, (int)id);
-        if (r == 0) {
-            if (g_snd_trace_play)
-                fprintf(stderr, "[snd] Play(%u, %u) type %d: no positional "
-                        "voice free -- culled\n", kind, id, t);
-            // func_02048720 is matched src and refuses for two reasons it
-            // does not distinguish to its caller: the sound is further than
-            // its limit, or every slot in its pool is held by something it
-            // may not take. Print both inputs rather than guess -- the
-            // census line right after says which pool is full.
-            SD_VT("play REFUSED Sound::Play(%u, %u) type %d: no 3D slot "
-                  "(distance %d, limit %d)\n", kind, id, t,
-                  func_02049018((int *)v), data_02099fac);
-            sd_vtrace_arm9_census("at the refusal");
-            snd_req(kind, id, t, v, "DROPPED: no 3D slot (range or pool full)");
-            return;
-        }
-        snd_req(kind, id, t, v, "accepted (positional)");
-        Player_PlaySoundEffect((int)(size_t)r, kind, id);
-        // func_0204f63c writes the voice it took back into the owner slot and
-        // leaves it null if it could not get one (func_0204f934 has already
-        // cleared whatever was there). That null is the only place the ARM9's
-        // "no voice for you" answer is visible -- Sound::Play never looks at
-        // a return value -- so it is the one worth naming.
-        if (g_voice_trace && *(void **)r == 0) {
-            sd_vtrace("play REFUSED Sound::Play(%u, %u) type %d: the ARM9 "
-                      "voice pool gave out no voice\n", kind, id, t);
-            sd_vtrace_arm9_census("at the refusal");
-        }
-        func_02048908(r, (int *)v);
-        return;
-    }
-    if (func_02048a1c((int *)v, (int)kind, (int)id) == 0) {
-        if (g_snd_trace_play)
-            fprintf(stderr, "[snd] Play(%u, %u) type %d: out of range "
-                    "-- culled\n", kind, id, t);
-        SD_VT("play REFUSED Sound::Play(%u, %u) type %d: out of range\n",
-              kind, id, t);
-        snd_req(kind, id, t, v, "DROPPED: out of range");
-        return;
-    }
-    snd_req(kind, id, t, v, "accepted");
-    Player_PlaySoundEffect((int)(size_t)data_0209b4a4, kind, id);
-    if (g_voice_trace && data_0209b4a4[0] == 0) {
-        sd_vtrace("play REFUSED Sound::Play(%u, %u) type %d: the ARM9 voice "
-                  "pool gave out no voice\n", kind, id, t);
-        sd_vtrace_arm9_census("at the refusal");
-    }
-    func_02048d80(data_0209b4a4, (int *)v);
+    snd_req(kind, id, s[5], v, "sent to the ROM body");
+    Sound::Play(kind, id, *v);
 }
 
 // Set from the consumer's own SM64DS_SND_TRACE read, so one variable arms
