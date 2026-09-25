@@ -32,11 +32,6 @@ extern int data_ov033_02111bfc[];
 extern int _ZN5Event6GetBitEj(unsigned int);
 extern void _ZN5Event6SetBitEj(unsigned int b);
 extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
-extern void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
-extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void*, void*, int, int);
-extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void*);
-extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void*);
-extern void* _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void*);
 extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void*, void*, void*, int, short, void*);
 }
 

@@ -48,6 +48,8 @@
 #include "decl_common.h"
 #include "types.h"
 #include "decl_Player.h"
+#include "Player.h"
+#include "Stage.h"
 
 /* The declarations below are the union of what the nineteen shards declared
  * locally, minus everything a shared header already supplies. What is left is
@@ -96,9 +98,6 @@ struct VObj {
     virtual int v5();
 };
 
-/* Only GetHealth is reached from this TU. */
-struct Player { u8 GetHealth(); };
-
 namespace GX { void LoadOBJPltt(const void*, u32, u32); }
 
 namespace GXS { void LoadOBJPltt(const void*, u32, u32); }
@@ -118,7 +117,6 @@ extern struct OamAttr data_ov002_0210c6c0;
 * so can never be the module this reaches. Sits with OAM::TIME and OAM::MINUTES above. */
 extern struct OamAttr* _ZN3OAM7NUMBERSE[];
 extern void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int sub, struct OamAttr* attr, int x, int y, int a, int b, int sx, int sy, int c, int d);
-extern void _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(int sub, struct OamAttr* attr, int x, int y, int a, int b, void* m);
 extern volatile unsigned short data_ov002_0210c208[];
 extern unsigned char data_0209f250;
 extern unsigned char data_ov002_02111178;
@@ -131,7 +129,6 @@ char pad[0x6d9];
 unsigned char field_6d9;
 };
 extern HUDInfo* data_0209f394[];
-void _ZN3OAM9RenderSubEP7OamAttriiii(OamAttr* attr, int x, int y, int priority, int rotation);
 extern u8 data_020a0e40;
 extern u8 data_ov002_02111180;
 extern S154 *data_0209f318;
@@ -185,10 +182,8 @@ extern struct OamAttr data_ov002_0210d4f0;
 extern struct OamAttr data_ov002_0210c690;
 extern void _ZN2GX11LoadOBJPlttEPKvjj(const void* p, unsigned int a, unsigned int b);
 extern int _ZN5Event6GetBitEj(unsigned int bit);
-extern int _ZN6Player7IsInAirEv(void *p);
 extern int data_0209caa0[];
 extern unsigned char data_0209f284;
-void _ZN5Stage20RenderBouncingArrowsEv(void);
 extern VObj *data_0209f5bc;
 void* LoadFile(int handle);
 void DecompressLZ16(void* handle, int addr);
@@ -511,7 +506,7 @@ int dMeter_c::Render()
                 RenderTimeTimer();
             }
             if (data_0209f284 != 0) {
-                _ZN5Stage20RenderBouncingArrowsEv();
+                Stage::RenderBouncingArrows();
             }
         } else {
             if (v != 0) {
@@ -642,7 +637,7 @@ void dMeter_c::UpdateHealthMeter()
                 return;
             if (*(unsigned char *)(player + 0x706) != 0)
                 return;
-            if (_ZN6Player7IsInAirEv(player))
+            if (((Player *)player)->IsInAir())
                 return;
             if (data_ov002_02111178 == 1) {
                 data_ov002_02111178 = 3;
@@ -821,14 +816,14 @@ void dMeter_c::RenderVsTimer()
         int pal = (mVsTimer <= 5) ? 0xb : -1;
         unsigned short tens = t / 10;
         if (tens != 0) {
-            _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM17VS_YELLOW_NUMBERSE[tens], 0x74, mVsTimerY, pal, -1, 0);
-            _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM17VS_YELLOW_NUMBERSE[t % 10], 0x84, mVsTimerY, pal, -1, 0);
+            OAM::Render(false, _ZN3OAM17VS_YELLOW_NUMBERSE[tens], 0x74, mVsTimerY, pal, -1, 0);
+            OAM::Render(false, _ZN3OAM17VS_YELLOW_NUMBERSE[t % 10], 0x84, mVsTimerY, pal, -1, 0);
         } else {
             int ones = t % 10;
             if (ones > 3) {
                 _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(0, _ZN3OAM17VS_YELLOW_NUMBERSE[ones], 0x7c, mVsTimerY, -1, -1, 0x1000, 0);
             } else {
-                _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, data_ov002_0210ca0c[3 - ones], 0x84, mVsTimerY, -1, -1, 0);
+                OAM::Render(false, data_ov002_0210ca0c[3 - ones], 0x84, mVsTimerY, -1, -1, 0);
             }
         }
     } else {
@@ -957,12 +952,12 @@ void dMeter_c::RenderStarCount()
         CalculateDigits((unsigned short)data_0209f310[data_0209f250]);
         for (i = 2; i >= 0; i--) {
             if (mDigits[i] >= 0) {
-                _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[mDigits[i]], x, 2, -1, 1, 0);
+                OAM::Render(false, _ZN3OAM7NUMBERSE[mDigits[i]], x, 2, -1, 1, 0);
                 x -= 9;
             }
         }
-        _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &_ZN3OAM5TIMESE, x, 10, -1, 1, 0);
-        _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &_ZN3OAM10POWER_STARE, x - 16, 10, -1, 1, 0);
+        OAM::Render(false, &_ZN3OAM5TIMESE, x, 10, -1, 1, 0);
+        OAM::Render(false, &_ZN3OAM10POWER_STARE, x - 16, 10, -1, 1, 0);
         return;
     }
 
@@ -987,24 +982,24 @@ void dMeter_c::RenderStarCount()
             }
             for (i = 2; i >= 0; i--) {
                 if (mDigits[i] >= 0) {
-                    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[mDigits[i]], x, 2, -1, 1, 0);
+                    OAM::Render(false, _ZN3OAM7NUMBERSE[mDigits[i]], x, 2, -1, 1, 0);
                     x -= 9;
                 }
             }
-            _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &_ZN3OAM5TIMESE, x, 10, -1, 1, 0);
-            _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &_ZN3OAM10POWER_STARE, x - 16, 10, -1, 1, 0);
+            OAM::Render(false, &_ZN3OAM5TIMESE, x, 10, -1, 1, 0);
+            OAM::Render(false, &_ZN3OAM10POWER_STARE, x - 16, 10, -1, 1, 0);
             return;
         }
     }
 
     for (i = 2; i >= 0; i--) {
         if (mDigits[i] >= 0) {
-            _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(1, _ZN3OAM7NUMBERSE[mDigits[i]], x, 2, -1, 1, 0);
+            OAM::Render(true, _ZN3OAM7NUMBERSE[mDigits[i]], x, 2, -1, 1, 0);
             x -= 9;
         }
     }
-    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(1, &_ZN3OAM5TIMESE, x, 10, -1, 1, 0);
-    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(1, &_ZN3OAM10POWER_STARE, x - 16, 10, -1, 1, 0);
+    OAM::Render(true, &_ZN3OAM5TIMESE, x, 10, -1, 1, 0);
+    OAM::Render(true, &_ZN3OAM10POWER_STARE, x - 16, 10, -1, 1, 0);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1121,26 +1116,26 @@ void dMeter_c::RenderLifeCount()
 
     if (state >= 3 && state < 6) {
         _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, _ZN3OAM10LIFE_ICONSE[info->field_6d9], mLifeCountX, 0xa, -1, 1, 0x1000, 0x1000, 0, -1);
-        _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &_ZN3OAM5TIMESE, mLifeCountX + 0x10, 0xa, -1, 1, 0);
+        OAM::Render(false, &_ZN3OAM5TIMESE, mLifeCountX + 0x10, 0xa, -1, 1, 0);
         CalculateDigits((unsigned short)data_0209f2f4);
         int x = mLifeCountX + 0x18;
         for (int i = 0; i < 3; i++) {
             signed char d = mDigits[i];
             if (d >= 0) {
-                _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[d], x, 2, -1, 1, 0);
+                OAM::Render(false, _ZN3OAM7NUMBERSE[d], x, 2, -1, 1, 0);
                 x += 9;
             }
         }
     } else {
-        _ZN3OAM9RenderSubEP7OamAttriiii(_ZN3OAM10LIFE_ICONSE[info->field_6d9], mLifeCountX, 0xa, -1, 1);
-        _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(1, &_ZN3OAM5TIMESE, mLifeCountX + 0x10, 0xa, -1, 1, 0);
+        OAM::RenderSub(_ZN3OAM10LIFE_ICONSE[info->field_6d9], mLifeCountX, 0xa, -1, 1);
+        OAM::Render(true, &_ZN3OAM5TIMESE, mLifeCountX + 0x10, 0xa, -1, 1, 0);
         CalculateDigits((unsigned short)data_0209f2f4);
         int i;
         int x = mLifeCountX + 0x18;
         for (i = 0; i < 3; i++) {
             signed char d = mDigits[i];
             if (d >= 0) {
-                _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(1, _ZN3OAM7NUMBERSE[d], x, 2, -1, 1, 0);
+                OAM::Render(true, _ZN3OAM7NUMBERSE[d], x, 2, -1, 1, 0);
                 x += 9;
             }
         }
@@ -1215,7 +1210,7 @@ void dMeter_c::RenderTimeTimer()
         } else {
             _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &_ZN3OAM4TIMEE, 0xa4, 0x1e, -1, 1, 0x1000, 0x1000, 0, -1);
         }
-        _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[min / 10], 0xb8, 0x16, -1, 1, 0);
+        OAM::Render(false, _ZN3OAM7NUMBERSE[min / 10], 0xb8, 0x16, -1, 1, 0);
     } else {
         if (GetOwnerLanguage() == 5 || GetOwnerLanguage() == 4 || GetOwnerLanguage() == 2) {
             _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, &data_ov002_0210ce80, 0xac, 0x1e, -1, 1, 0x1000, 0x1000, 0, -1);
@@ -1224,13 +1219,13 @@ void dMeter_c::RenderTimeTimer()
         }
     }
 
-    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[min % 10], 0xc0, 0x16, -1, 1, 0);
-    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &_ZN3OAM7MINUTESE, 0xc4, 0x1e, -1, 1, 0);
-    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[sec / 10], 0xcf, 0x16, -1, 1, 0);
-    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[sec % 10], 0xd7, 0x16, -1, 1, 0);
-    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &data_ov002_0210c6c0, 0xdb, 0x1e, -1, 1, 0);
-    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[centi / 10], 0xe8, 0x16, -1, 1, 0);
-    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[centi % 10], 0xf0, 0x16, -1, 1, 0);
+    OAM::Render(false, _ZN3OAM7NUMBERSE[min % 10], 0xc0, 0x16, -1, 1, 0);
+    OAM::Render(false, &_ZN3OAM7MINUTESE, 0xc4, 0x1e, -1, 1, 0);
+    OAM::Render(false, _ZN3OAM7NUMBERSE[sec / 10], 0xcf, 0x16, -1, 1, 0);
+    OAM::Render(false, _ZN3OAM7NUMBERSE[sec % 10], 0xd7, 0x16, -1, 1, 0);
+    OAM::Render(false, &data_ov002_0210c6c0, 0xdb, 0x1e, -1, 1, 0);
+    OAM::Render(false, _ZN3OAM7NUMBERSE[centi / 10], 0xe8, 0x16, -1, 1, 0);
+    OAM::Render(false, _ZN3OAM7NUMBERSE[centi % 10], 0xf0, 0x16, -1, 1, 0);
 }
 
 /* -------------------------------------------------------------------------- */
