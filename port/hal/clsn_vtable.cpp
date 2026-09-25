@@ -12,17 +12,31 @@
 #include <string.h>
 
 #include "dBgW_Kc.h"
-
-extern "C" int g_sphere_dbg[16];   /* port/unmatched/MeshCollider_DetectClsn_Sphere.cpp */
+#include "hal/dsstate_seg.h"
 
 // BATCH-3 LINKAGE SEAT bridge. The real dBgW_Kc::DetectClsn(RaycastGround&)
 // body (now seated in slot 6) reads/writes the shared prism SurfaceInfo global
 // data_020a0cec, which it references with C++ type (mangled
-// ?data_020a0cec@@3USurfaceInfo@@A). The global is DEFINED once, flat-C, in
-// port/unmatched/MeshCollider_DetectClsn_Sphere.cpp (_data_020a0cec). Bridge the
+// ?data_020a0cec@@3USurfaceInfo@@A), and so does the sphere overload in slot 8.
+// The global is DEFINED once, flat-C, just below (_data_020a0cec). Bridge the
 // typed reference to the flat definition, the same /alternatename mechanism the
 // dBgW seat uses for its method bodies. One storage, both names.
 #pragma comment(linker, "/alternatename:?data_020a0cec@@3USurfaceInfo@@A=_data_020a0cec")
+
+/* THE GLOBAL SurfaceInfo the ROM reuses for every prism -- data_020a0cec,
+   constructed once by __sinit_02074fe4 (_ZN5dBgPcC1Ev) with _ZN5dBgPcD1Ev
+   registered as its atexit destructor. Five words carrying _ZN5dBgPcC1Ev's
+   exact seed: c[0] = 0xfc0, c[1] = 0xff, c[2..4] = 0. GetSurfaceInfo rewrites
+   all five before every read, so the seed only ever describes the state before
+   the first prism of the first frame. It lived in the sphere pass's host
+   transcription (port/unmatched/MeshCollider_DetectClsn_Sphere.cpp) until run
+   linkfull lane RS5B retired that file for the matched body, and moved here,
+   beside its alias, unchanged. */
+extern "C" {
+DSSTATE_BEGIN
+u32 data_020a0cec[5] = { 0xfc0u, 0xffu, 0u, 0u, 0u };
+DSSTATE_END
+}
 
 static void __fastcall slot_v08(void *self, void *)
 { ((dBgW_Kc *)self)->dBgW_Kc::Virtual08(); }
@@ -139,9 +153,13 @@ extern "C" int hal_line_ray(void *mc, const int *a, const int *b, int *out)
    a 46-unit bob at 3 Hz, and the whole reason the harness ground snap and
    wall stop existed.
 
-   HOSTED since the slot-8 transcription: port/unmatched/
-   MeshCollider_DetectClsn_Sphere.cpp, read straight off the ROM. Its header
-   carries the provenance and the basis convention.
+   THE ROM'S OWN BODY since run linkfull lane RS5B:
+   src/_ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr.cpp, the 2004/b56 byte-match,
+   built from its tools/hostgen.py copy so the DS square-root unit it drives
+   (SQRTCNT / SQRT_PARAM stores) is the port's modelled hardware
+   (port/CMakeLists.txt, the RS5B block). It replaced the slot-8 host
+   transcription, port/unmatched/MeshCollider_DetectClsn_Sphere.cpp, whose
+   counters (g_sphere_dbg) the trace line below used to print.
 
    SM64DS_NO_SPHERE=1 puts the stub back, which is how the two configurations
    get A/B'd (and what the pre-transcription screenshots were taken under).
@@ -183,11 +201,10 @@ static int __fastcall slot_sphere(void *self, void *, void *sph)
         *(dBgCh_SphCrr *)sph);
     if (r && getenv("PORT_TRACE_CLSN")) {
         const unsigned char *s = (const unsigned char *)sph;
-        fprintf(stderr, "  [sphere] mask=%d flags=%02x tri=%d kind=%d "
-                        "r=%d cy=%d class(f/e/c)=%d/%d/%d push=(%d,%d,%d)\n",
-                r, s[0x70], g_sphere_dbg[14], g_sphere_dbg[15],
+        fprintf(stderr, "  [sphere] mask=%d flags=%02x "
+                        "r=%d cy=%d push=(%d,%d,%d)\n",
+                r, s[0x70],
                 ((const int *)(s + 0x48))[0], ((const int *)(s + 0x3c))[1],
-                g_sphere_dbg[4], g_sphere_dbg[5], g_sphere_dbg[6],
                 ((const int *)(s + 0x58))[0] + ((const int *)(s + 0x64))[0],
                 ((const int *)(s + 0x58))[1] + ((const int *)(s + 0x64))[1],
                 ((const int *)(s + 0x58))[2] + ((const int *)(s + 0x64))[2]);

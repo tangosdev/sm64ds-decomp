@@ -8,7 +8,12 @@ port/unmatched/MeshCollider_DetectClsn_RaycastLine.cpp
 # walk; the three shared with later gates (func_02039794, func_02037e58,
 # DotVec3) are added per-target as GATE8_EXTRA_SOURCES so the gate-10/13
 # binaries do not link them twice.
-port/unmatched/MeshCollider_DetectClsn_Sphere.cpp
+# The pass itself is no longer on this slice (run linkfull, lane RS5B): the host
+# transcription port/unmatched/MeshCollider_DetectClsn_Sphere.cpp retired for
+# the matched src/_ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr.cpp, which is built
+# from its tools/hostgen.py copy (the DS square-root unit it drives has to reach
+# the port's I/O model) by port/slice_w31_rs5b_hostgen.txt and the RS5B block at
+# the end of port/CMakeLists.txt, on the same seven targets this slice feeds.
 src/func_020379f4.c
 src/func_020379c0.c
 src/func_0203798c.c
