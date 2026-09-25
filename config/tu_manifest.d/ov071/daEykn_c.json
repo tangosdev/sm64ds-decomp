@@ -6,8 +6,8 @@
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
-    "tu_map cut (build/tu_map.json): 0x02120668..0x021219cc, 23 functions, class daEykn_c. That cut includes _ZN8daEykn_c13InitResourcesEv, whose delink is not complete.",
-    "shipped span: .text 0x02120668..0x02121734, 22 function(s). InitResources (0x02121734..0x021219cc) stays a shard: it byte-matches but has no delinks.txt entry, so it is not part of the linked build. daEykn_c_classInit_EYEKUN_BOSS and daEykn_c_classInit_EYEKUN are the next unattributed unit and are not absorbed.",
+    "tu_map cut (build/tu_map.json): 0x02120668..0x021219cc, 23 functions, class daEykn_c. The shipped span is that whole cut.",
+    "shipped span: .text 0x02120668..0x021219cc, 23 function(s), ending with _ZN8daEykn_c13InitResourcesEv. daEykn_c_classInit_EYEKUN_BOSS and daEykn_c_classInit_EYEKUN are the next unattributed unit and are not absorbed.",
     "class label(s): daEykn_c",
     "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU)"
   ],
@@ -15,7 +15,7 @@
     {
       "name": ".text",
       "start": "0x02120668",
-      "end": "0x02121734"
+      "end": "0x021219cc"
     }
   ],
   "functions": [
@@ -34,112 +34,112 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov071_0212070c",
+      "symbol": "_ZN8daEykn_c14UpdateCirclingEv",
       "address": "0x0212070c",
       "size": "0x00000154",
       "legacy_source": "src/func_ov071_0212070c.c",
       "ordinal": 2
     },
     {
-      "symbol": "func_ov071_02120860",
+      "symbol": "_ZN8daEykn_c13UpdateEyeAnimEv",
       "address": "0x02120860",
       "size": "0x00000168",
       "legacy_source": "src/func_ov071_02120860.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov071_021209c8",
+      "symbol": "_ZN8daEykn_c12ResetEyeAnimEv",
       "address": "0x021209c8",
       "size": "0x00000058",
       "legacy_source": "src/func_ov071_021209c8.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "func_ov071_02120a20",
+      "symbol": "_ZN8daEykn_c12StartEyeAnimEv",
       "address": "0x02120a20",
       "size": "0x00000028",
       "legacy_source": "src/func_ov071_02120a20.c",
       "ordinal": 5
     },
     {
-      "symbol": "func_ov071_02120a48",
+      "symbol": "_ZN8daEykn_c13LookForPlayerEv",
       "address": "0x02120a48",
       "size": "0x000000cc",
       "legacy_source": "src/func_ov071_02120a48.cpp",
       "ordinal": 6
     },
     {
-      "symbol": "func_ov071_02120b14",
+      "symbol": "_ZN8daEykn_c12CheckAttacksEv",
       "address": "0x02120b14",
       "size": "0x0000017c",
       "legacy_source": "src/func_ov071_02120b14.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "func_ov071_02120c90",
+      "symbol": "_ZN8daEykn_c20UpdateModelTransformEv",
       "address": "0x02120c90",
       "size": "0x000000a0",
       "legacy_source": "src/func_ov071_02120c90.cpp",
       "ordinal": 8
     },
     {
-      "symbol": "func_ov071_02120d30",
+      "symbol": "_ZN8daEykn_c11St_Die_MainEv",
       "address": "0x02120d30",
       "size": "0x000003dc",
       "legacy_source": "src/func_ov071_02120d30.c",
       "ordinal": 9
     },
     {
-      "symbol": "func_ov071_0212110c",
+      "symbol": "_ZN8daEykn_c11St_Die_InitEv",
       "address": "0x0212110c",
       "size": "0x000000d4",
       "legacy_source": "src/func_ov071_0212110c.c",
       "ordinal": 10
     },
     {
-      "symbol": "func_ov071_021211e0",
+      "symbol": "_ZN8daEykn_c14St_Attack_MainEv",
       "address": "0x021211e0",
       "size": "0x00000314",
       "legacy_source": "src/func_ov071_021211e0.c",
       "ordinal": 11
     },
     {
-      "symbol": "func_ov071_021214f4",
+      "symbol": "_ZN8daEykn_c14St_Attack_InitEv",
       "address": "0x021214f4",
       "size": "0x00000038",
       "legacy_source": "src/func_ov071_021214f4.c",
       "ordinal": 12
     },
     {
-      "symbol": "func_ov071_0212152c",
+      "symbol": "_ZN8daEykn_c12St_Wait_MainEv",
       "address": "0x0212152c",
       "size": "0x00000044",
       "legacy_source": "src/func_ov071_0212152c.c",
       "ordinal": 13
     },
     {
-      "symbol": "func_ov071_02121570",
+      "symbol": "_ZN8daEykn_c12St_Wait_InitEv",
       "address": "0x02121570",
       "size": "0x00000050",
       "legacy_source": "src/func_ov071_02121570.c",
       "ordinal": 14
     },
     {
-      "symbol": "func_ov071_021215c0",
+      "symbol": "_ZN8daEykn_c8RunStateEv",
       "address": "0x021215c0",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov071_021215c0.cpp",
       "ordinal": 15
     },
     {
-      "symbol": "func_ov071_021215fc",
+      "symbol": "_ZN8daEykn_c12RunStateInitEv",
       "address": "0x021215fc",
       "size": "0x00000038",
       "legacy_source": "src/func_ov071_021215fc.cpp",
       "ordinal": 16
     },
     {
-      "symbol": "func_ov071_02121634",
+      "symbol": "_ZN8daEykn_c8SetStateEi",
       "address": "0x02121634",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov071_02121634.c",
@@ -172,14 +172,21 @@
       "size": "0x00000048",
       "legacy_source": "src/_ZN8daEykn_c8BehaviorEv.cpp",
       "ordinal": 21
+    },
+    {
+      "symbol": "_ZN8daEykn_c13InitResourcesEv",
+      "address": "0x02121734",
+      "size": "0x00000298",
+      "legacy_source": "src/_ZN8daEykn_c13InitResourcesEv.cpp",
+      "ordinal": 22
     }
   ],
   "data": [],
   "bss": [],
   "notes": [
-    "InitResources at 0x02121734 stays in src/_ZN8daEykn_c13InitResourcesEv.cpp because its delink is not complete.",
+    "_ZN8daEykn_c13InitResourcesEv (0x02121734) was absorbed after promotion, extending the delinks.txt range to 0x021219cc.",
     "The destructor is defined once, out of line, first in the file. Under #pragma defer_codegen off that emits D1 then D0 in ROM order, plus a homeless D2.",
-    "Previous tree name MrI was coined. class_rename kept MrI_Spawn / MrI_Projectile rows (no --with-derived). The duplicate _ZTV3MrI alias of _ZTV8daEykn_c was deleted."
+    "The state helpers are members with coined names (see include/daEykn_c.h); their symbols.txt rows were renamed in place. Previous tree name MrI was coined. class_rename kept MrI_Spawn / MrI_Projectile rows (no --with-derived). The duplicate _ZTV3MrI alias of _ZTV8daEykn_c was deleted."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -187,8 +194,8 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov071-daEykn_c/daEykn_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 22,
-    "functions_declared": 22,
+    "functions_matched": 23,
+    "functions_declared": 23,
     "compilerOnlyOutput": {
       "requested": [
         "_ZN8daEykn_cD2Ev",
@@ -202,8 +209,6 @@
         9,
         10,
         20,
-        48,
-        49,
         50,
         51,
         52,
@@ -215,7 +220,9 @@
         58,
         59,
         60,
-        61
+        61,
+        62,
+        63
       ],
       "data": [
         "_ZTV8daEykn_c",

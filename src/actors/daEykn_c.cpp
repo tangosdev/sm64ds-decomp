@@ -1,6 +1,7 @@
 //cpp
 /* Production translation unit for ov071/daEykn_c.
- * 22 function(s), .text 0x02120668..0x02121734. Mr. I (EYEKUN / EYEKUN_BOSS).
+ * 23 function(s), .text 0x02120668..0x021219cc. Mr. I (EYEKUN / EYEKUN_BOSS):
+ * actor 0x106 is the small one, 0x107 the big one that holds a star.
  *
  * NAME: _ZTS8daEykn_c is "8daEykn_c" at ov071 0x02122cd8; _ZTI at 0x02122ce4
  * reads [__si_class_type_info, that string, _ZTI8dActor_c]. The vtable address
@@ -14,11 +15,18 @@
  * then a D2 the cartridge has no home for (manifest: deadstrip); the same
  * pragma lays .text down in source order, so this file is ROM-ascending.
  *
- * InitResources (0x02121734..0x021219cc) stays in
- * src/_ZN8daEykn_c13InitResourcesEv.cpp: it byte-matches but has no
- * delinks.txt entry, so it is not part of the linked build and cannot be
- * licensed here. The two classInit factories after it (src/d_a_eykn_eyekun_boss.c,
- * src/d_a_eykn_eyekun.c) are separate units and are not absorbed.
+ * Behavior runs one of three states out of the { init, exec } table at
+ * data_ov071_02123088, which __sinit_ov071_021228c8 fills:
+ *
+ *   0 wait    init St_Wait_Init    exec St_Wait_Main
+ *   1 attack  init St_Attack_Init  exec St_Attack_Main
+ *   2 die     init St_Die_Init     exec St_Die_Main
+ *
+ * The state names are descriptive; the table has no name strings.
+ *
+ * InitResources (0x02121734) closes the unit. The two classInit factories
+ * after it (src/d_a_eykn_eyekun_boss.c, src/d_a_eykn_eyekun.c) are separate
+ * units and are not absorbed.
  */
 
 #pragma defer_codegen off
@@ -27,69 +35,74 @@
 #include "common.h"
 #include "types.h"
 #include "SharedFilePtr.h"
+#include "Player.h"
+#include "Sound.h"
 #include "Particle__System.h"
+#include "dBgCh_Gnd.h"
 
-/* shadow struct 'Vector3_16f' */
-struct Vector3_16f;
+/* Twelve plain words: assigning a Matrix4x3 copies it member by member,
+   0x1c bytes longer than the cartridge's block copy. */
+struct MatrixWords {
+    s32 m[12];
+};
 
-/* shadow typedef 'AnimData' */
-typedef struct { int f0; void *f4; } AnimData;
+/* A loaded SharedFilePtr: the second word is the file it loaded. */
+struct LoadedFile {
+    u32 fileID;
+    void *file;
+};
 
-/* shadow typedef 'Item16' */
-typedef struct { int a, b, c, d; } Item16;
-
-/* shadow struct 'Sub' */
-struct Sub { virtual int g0(); virtual int g1(); virtual int g2(); virtual int g3(); virtual int g4(); virtual int g5(void*); };
-
-/* shadow struct 'BMD_File' */
-struct BMD_File;
-
-/* shadow struct 'BTP_File' */
-struct BTP_File;
-
-/* shadow struct 'BCA_File' */
-struct BCA_File;
-
-struct C;
-typedef void (C::*PMF)();
-struct C { char pad[0x1e4]; PMF *pp; };
+int ApproachLinear(int &value, int target, int step);
+void ApproachLinear(short &value, short target, short step);
+void UpdateAngle(s16 &angle, s16 target, int div, s16 maxStep);
 
 extern "C" {
-extern int AngleDiff(int, int);
-extern unsigned char DecIfAbove0_Byte(unsigned char* p);
-extern "C" int Vec3_Dist(const void *a, const void *b);
-extern "C" short Vec3_HorzAngle(const void *a, const void *b);
-void _ZN5Sound9PlayBank0EjRK7Vector3(u32 id, const void* v);
-void func_ov071_02121634(char *self, int a);
-void* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(u32 a, u32 b, int c, int d, int e, const void* v, void* cb);
-u32 _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(u32 a, u32 b, int c, int d, int e, const Vector3_16f* v);
-void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, const void* v, u32 a, int b, u32 c, u32 d, u32 e);
-extern int _Z14ApproachLinearRiii(int *ref, int target, int step);
-extern void func_0201267c(unsigned int id, void *p);
-extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
+int AngleDiff(int a, int b);
+u8 DecIfAbove0_Byte(u8 *counter);
+s32 Vec3_Dist(const Vector3 *a, const Vector3 *b);
+s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
+s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
+void Matrix4x3_FromRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
+void LoadBlueCoinModel(void *actor);
+void UnloadBlueCoinModel(void *actor);
+void func_0201267c(u32 id, void *pos);
+void func_0200f760(void *actor, void *clsn);
+
+/* Each of these takes a Fix12<int> by value and stays declared by its
+   mangled name. Only DropShadowRadHeight was measured as a member call: it
+   gives 0xb0 bytes against the cartridge's 0xa0 in UpdateModelTransform. */
+int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+    u32 uniqueID, u32 effectID, int x, int y, int z, const void *dir, void *callback);
+u32 _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
+    u32 uniqueID, u32 effectID, int x, int y, int z, const Vector3_16f *dir);
+/* FindEgg keeps its mangled name: declared through dActor_c instead, the
+   tree's plurality spelling of it flips and src/actors/Scuttlebug.cpp's
+   declaration reads as a contradiction. */
+void *_ZN8dActor_c7FindEggER5dCc_c(void *actor, void *clsn);
+void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 effectID, int x, int y, int z);
+int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(
+    Player *player, void *source, u32 damage, int speed, u8 a, u8 b, u8 c);
+void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
+    ModelAnim *anim, void *file, int flags, int speed, u32 startFrame);
+void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(
+    TextureSequence *seq, void *file, int flags, int speed, u32 startFrame);
+void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
+    dCcAcPos_c *clsn, dActor_c *actor, const Vector3 *offset, int radius, int height, u32 flags, u32 vulnFlags);
+void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+    dActor_c *actor, ShadowModel *shadow, Matrix4x3 *matrix, int radius, int depth, u32 opacity);
+
+/* Sine and cosine pairs indexed by (angle >> 4) * 2. */
 extern s16 data_02082214[];
 extern s8 data_0209f2f8;
-extern AnimData data_ov071_02123048;
-extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *file, int a, int speed, unsigned int d);
-extern s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
-extern void _Z11UpdateAngleRssis(s16 *p, s16 tgt, int div, s16 maxStep);
-extern int func_ov071_02120a20(char *c);
-extern void func_ov071_021209c8(char *c);
-extern int func_ov071_02120860(char *c);
-extern int func_ov071_0212070c(char *c);
-extern void func_ov071_02120b14(void *c);
-extern void _Z14ApproachLinearRsss(short *, short, short);
-extern void func_ov071_02120a48(char *c);
-extern Item16 data_ov071_02123088[];
-extern void func_ov071_021215fc(void *self);
-void UnloadBlueCoinModel(void *context);
+extern Matrix4x3 IDENTITY_MATRIX4X3;
+extern daEykn_c::State data_ov071_02123088[];
+extern LoadedFile data_ov071_02123038;
+extern LoadedFile data_ov071_02123040;
+extern LoadedFile data_ov071_02123048;
 extern SharedFilePtr data_ov002_0210da38;
 extern SharedFilePtr data_ov071_02123050;
 extern SharedFilePtr *data_ov071_021226a4[2];
 extern SharedFilePtr *data_ov071_021226a0;
-void func_ov071_021215c0(void *c);
-void func_0200f760(void *c, void *p);
-void func_ov071_02120c90(char *c);
 }
 
 // @symbol _ZN8daEykn_cD1Ev
@@ -99,396 +112,359 @@ daEykn_c::~daEykn_c()
 }
 
 
-// @symbol func_ov071_0212070c
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov071_0212070c(char* c)
+// @symbol _ZN8daEykn_c14UpdateCirclingEv
+/* Accumulates the yaw the eye turns while following a player around it in one
+ * direction. Turning the other way, or too slowly, for 0x2e frames starts the
+ * count again. Returns 1 once the count passes 0x17fff: the eye is dizzy. */
+int daEykn_c::UpdateCircling()
 {
     int delta;
-    int eq;
-    int hi;
-    int *p;
-    int v;
-    short *b200;
+    int isBig;
+    int limit;
 
-    b200 = (short *)(c + 0x200);
-    delta = (short)(*(short *)(c + 0x8e) - b200[6]);
-    eq = (int)(*(unsigned short *)(c + 0xc) == 0x107);
-    if (eq != 0)
-        hi = 0x190;
+    delta = (short)(mAngleY - mTurnRefAngleY);
+    /* The int flags here and below are load-bearing: testing actorID
+       directly compiles differently. */
+    isBig = (int)(actorID == 0x107);
+    if (isBig != 0)
+        limit = 0x190;
     else
-        hi = 0x320;
+        limit = 0x320;
 
-    if (delta > hi) {
-        v = *(int *)(c + 0x1f4);
-        if (v >= 0) {
-            p = (int *)(((int)c + 0x1f4));
-            *p = *p + delta;
-            *(unsigned char *)(c + 0x216) = 0x2e;
+    if (delta > limit) {
+        if (mCircleAngle >= 0) {
+            mCircleAngle += delta;
+            mCircleTimer = 0x2e;
         } else {
-            if (*(unsigned char *)(c + 0x216) == 0)
-                *(int *)(c + 0x1f4) = 0;
-            DecIfAbove0_Byte((unsigned char *)(((int)c + 0x216)));
+            if (mCircleTimer == 0)
+                mCircleAngle = 0;
+            DecIfAbove0_Byte(&mCircleTimer);
         }
-    } else if (delta < -hi) {
-        v = *(int *)(c + 0x1f4);
-        /* fallthrough ADD when v <= 0 (target: bgt to Dec) */
-        if (v <= 0) {
-            p = (int *)(((int)c + 0x1f4));
-            *p = *p + delta;
-            *(unsigned char *)(c + 0x216) = 0x2e;
+    } else if (delta < -limit) {
+        if (mCircleAngle <= 0) {
+            mCircleAngle += delta;
+            mCircleTimer = 0x2e;
         } else {
-            if (*(unsigned char *)(c + 0x216) == 0)
-                *(int *)(c + 0x1f4) = 0;
-            DecIfAbove0_Byte((unsigned char *)(((int)c + 0x216)));
+            if (mCircleTimer == 0)
+                mCircleAngle = 0;
+            DecIfAbove0_Byte(&mCircleTimer);
         }
     } else {
-        if (*(unsigned char *)(c + 0x216) == 0)
-            *(int *)(c + 0x1f4) = 0;
-        DecIfAbove0_Byte((unsigned char *)(((int)c + 0x216)));
+        if (mCircleTimer == 0)
+            mCircleAngle = 0;
+        DecIfAbove0_Byte(&mCircleTimer);
     }
 
-    v = *(int *)(c + 0x1f4);
-    if (v > 0x17fff || v < -0x17fff) {
-        *(int *)(c + 0x1f4) = 0;
-        *(unsigned char *)(c + 0x216) = 0x2e;
+    if (mCircleAngle > 0x17fff || mCircleAngle < -0x17fff) {
+        mCircleAngle = 0;
+        mCircleTimer = 0x2e;
         return 1;
     }
     return 0;
 }
-}
 
 
-// @symbol func_ov071_02120860
-extern "C" {
-struct E { int w[2]; };
-extern E data_ov071_02123038;
-extern E data_ov071_02123040;
-void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void* ts, void* file, int a, int d, unsigned e);
-
-int func_ov071_02120860(char* c)
+// @symbol _ZN8daEykn_c13UpdateEyeAnimEv
+/* Steps the eye's texture animation through two identical blinks: steps 1-3
+ * and steps 4-6 each play the data_ov071_02123038 sequence, then the
+ * data_ov071_02123040 sequence. Step 7 resets to 0 and returns 1, one call
+ * after the second blink finishes. */
+int daEykn_c::UpdateEyeAnim()
 {
-    unsigned char* st;
-    switch (*(unsigned char*)(c + 0x214)) {
+    switch (mSubState) {
     case 0:
         return 0;
     case 1:
     case 4:
-        _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(c + 0x138, (void*)data_ov071_02123038.w[1], 0, 0x1000, 0);
-        ((Animation *)(c + 0x138))->SetFlags(0x40000000);
-        *(int*)(c + 0x144) = 0x1000;
-        *(int*)(c + 0x140) = 0;
-        st = (unsigned char*)(((int)c + 0x214));
-        *st = *st + 1;
+        _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(&mTextureSequence, data_ov071_02123038.file, 0, 0x1000, 0);
+        mTextureSequence.SetFlags(0x40000000);
+        mTextureSequence.speed = 0x1000;
+        mTextureSequence.currFrame = 0;
+        mSubState++;
         /* fall through */
     case 2:
     case 5:
-        if (((Animation *)(c + 0x138))->Finished() != 0) {
-            _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(c + 0x138, (void*)data_ov071_02123040.w[1], 0, 0x1000, 0);
-            ((Animation *)(c + 0x138))->SetFlags(0x40000000);
-            *(int*)(c + 0x144) = 0x1000;
-            *(int*)(c + 0x140) = 0;
-            st = (unsigned char*)(((int)c + 0x214));
-            *st = *st + 1;
+        if (mTextureSequence.Finished() != 0) {
+            _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(&mTextureSequence, data_ov071_02123040.file, 0, 0x1000, 0);
+            mTextureSequence.SetFlags(0x40000000);
+            mTextureSequence.speed = 0x1000;
+            mTextureSequence.currFrame = 0;
+            mSubState++;
         }
-        ((Animation *)(c + 0x138))->Advance();
+        mTextureSequence.Advance();
         return 0;
     case 3:
     case 6:
-        if (((Animation *)(c + 0x138))->Finished() != 0) {
-            st = (unsigned char*)(((int)c + 0x214));
-            *st = *st + 1;
-        }
-        ((Animation *)(c + 0x138))->Advance();
+        if (mTextureSequence.Finished() != 0)
+            mSubState++;
+        mTextureSequence.Advance();
         return 0;
     case 7:
-        *(unsigned char*)(c + 0x214) = 0;
+        mSubState = 0;
         return 1;
     default:
         return 0;
     }
 }
-}
 
 
-// @symbol func_ov071_021209c8
-extern "C" {
-void func_ov071_021209c8(char* c){
-  _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(c+0x138, (void*)data_ov071_02123038.w[1], 0, 0x1000, 0);
-  ((Animation *)(c+0x138))->SetFlags(0x40000000);
-  *(int*)(c+0x144)=0x1000;
-  *(int*)(c+0x140)=0;
-  *(char*)(c+0x214)=0;
-}
-}
-
-
-// @symbol func_ov071_02120a20
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov071_02120a20(char *c)
+// @symbol _ZN8daEykn_c12ResetEyeAnimEv
+void daEykn_c::ResetEyeAnim()
 {
-    if (*(unsigned char *)(c + 0x214) == 0) {
-        (*(volatile unsigned char *)(((int)c + 0x214)))++;
+    _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(&mTextureSequence, data_ov071_02123038.file, 0, 0x1000, 0);
+    mTextureSequence.SetFlags(0x40000000);
+    mTextureSequence.speed = 0x1000;
+    mTextureSequence.currFrame = 0;
+    mSubState = 0;
+}
+
+
+// @symbol _ZN8daEykn_c12StartEyeAnimEv
+/* Starts the blink that ends in a shot. Returns 0 if one is already running. */
+int daEykn_c::StartEyeAnim()
+{
+    if (mSubState == 0) {
+        mSubState++;
         return 1;
     }
 
     return 0;
 }
-}
 
 
-// @symbol func_ov071_02120a48
-/* recovered: shared common types, declarations from a shared header */
-/* recovered: shared common types */
-extern "C" void func_ov071_02120a48(char *c)
+// @symbol _ZN8daEykn_c13LookForPlayerEv
+/* Watches for the closest visible player within range, inside the eye's
+ * field of view and with a clear line of sight, and starts the attack. */
+void daEykn_c::LookForPlayer()
 {
-    char *p = (char *)((dActor_c *)c)->ClosestNonVanishPlayer();
+    Player *p = ClosestNonVanishPlayer();
     if (p == 0)
         return;
-    if (Vec3_Dist(c + 0x5c, p + 0x5c) > 0x5dc000)
+    if (Vec3_Dist((Vector3 *)&mPosX, (Vector3 *)&p->mPosX) > 0x5dc000)
         return;
-    if (AngleDiff(Vec3_HorzAngle(c + 0x5c, p + 0x5c), *(short *)(c + 0x8e)) > 0x190)
+    if (AngleDiff(Vec3_HorzAngle((Vector3 *)&mPosX, (Vector3 *)&p->mPosX), mAngleY) > 0x190)
         return;
-    int px = *(int *)(p + 0x5c);
-    int pz = *(int *)(p + 0x64);
-    int py = *(int *)(p + 0x60) + 0x8c000;
+    int px = p->mPosX;
+    int pz = p->mPosZ;
+    int py = p->mPosY + 0x8c000;
     Vector3 v;
     v.x = px;
     v.y = py;
     v.z = pz;
-    if (((dActor_c *)c)->DetectRaycastClsn(v, *(Vector3 *)(c + 0x5c), false) != 0)
+    if (DetectRaycastClsn(v, *(Vector3 *)&mPosX, false) != 0)
         return;
-    *(char **)(c + 0x1ec) = p;
-    *(unsigned char *)(c + 0x216) = 0x2e;
-    func_ov071_02121634(c, 1);
+    mTarget = p;
+    mCircleTimer = 0x2e;
+    SetState(1);
 }
 
 
-// @symbol func_ov071_02120b14
-/* recovered: shared common types */
-extern "C" void func_ov071_02120b14(void* self)
+// @symbol _ZN8daEykn_c12CheckAttacksEv
+/* An egg (actor 9) or an explosion kills the eye. A player (actor 0xbf)
+ * touching it is hurt, unless hit flag 0x40000 is set, which kills the eye
+ * with particle systems 0x13a and 0x13b attached. */
+void daEykn_c::CheckAttacks()
 {
-    u8* c = (u8*)self;
-
-    void* egg = ((dActor_c *)self)->FindEgg(*(dCc_c *)(c+0x174));
+    /* The gotos are load-bearing: the same test as one || condition misses. */
+    dActor_c *egg = (dActor_c *)_ZN8dActor_c7FindEggER5dCc_c(this, &mdCcAcPos_c);
     if (egg != 0) {
-        int isEgg9 = (int)(*(u16*)((u8*)egg+0xc) == 9);
+        int isEgg9 = (int)(egg->actorID == 9);
         if (isEgg9) goto playSound;
     }
 
-    if (((dActor_c *)self)->FindExplosionActor(*(dCc_c *)(c+0x174)) == 0) goto idCheck;
+    if (FindExplosionActor(mdCcAcPos_c) == 0) goto idCheck;
 
 playSound:
-    _ZN5Sound9PlayBank0EjRK7Vector3(9, (void*)(c+0x74));
-    func_ov071_02121634((char *)self, 2);
+    Sound::PlayBank0(9, *(Vector3 *)&mCamSpacePosX);
+    SetState(2);
     return;
 
 idCheck:
 
-    if (*(u32*)(c+0x198) == 0) return;
+    if (mdCcAcPos_c.otherOwner == 0) return;
 
-    u8* f = (u8*)dActor_c::FindWithID(*(u32*)(c+0x198));
+    dActor_c *f = FindWithID(mdCcAcPos_c.otherOwner);
     if (f == 0) return;
 
-    int isbf = (int)(*(u16*)(f+0xc) == 0xbf);
-    if (!isbf) return;
+    int isPlayer = (int)(f->actorID == 0xbf);
+    if (!isPlayer) return;
 
-    if (*(s32*)(c+0x194) & 0x40000) {
-        void* p1 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(*(u32*)(c+0x204), 0x13a, *(s32*)(c+0x5c), *(s32*)(c+0x60), *(s32*)(c+0x64), 0, 0);
-        *(void**)(c+0x204) = p1;
-
-        u32 p2 = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(*(u32*)(c+0x208), 0x13b, *(s32*)(c+0x5c), *(s32*)(c+0x60), *(s32*)(c+0x64), 0);
-        *(u32*)(c+0x208) = p2;
-
-        func_ov071_02121634((char *)self, 2);
+    if (mdCcAcPos_c.hitFlags & 0x40000) {
+        mParticleID0 = (u32)_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(mParticleID0, 0x13a, mPosX, mPosY, mPosZ, 0, 0);
+        mParticleID1 = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(mParticleID1, 0x13b, mPosX, mPosY, mPosZ, 0);
+        SetState(2);
         return;
     }
 
-    struct Vector3 hv;
-    hv.x = *(s32*)(c+0x5c);
-    hv.y = *(s32*)(c+0x60);
-    hv.z = *(s32*)(c+0x64);
-    _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(f, &hv, 2, 0xc000, 1, 0, 1);
+    Vector3 hv;
+    hv.x = mPosX;
+    hv.y = mPosY;
+    hv.z = mPosZ;
+    _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj((Player *)f, &hv, 2, 0xc000, 1, 0, 1);
 }
 
 
-// @symbol func_ov071_02120c90
-extern "C" {
-void Matrix4x3_FromRotationXYZExt(void* m, int x, int y, int z);
-void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void* self, void* sm, void* mtx, int a, int b, unsigned int g);
-
-void func_ov071_02120c90(char* c) {
-  Matrix4x3_FromRotationXYZExt(c+0xf0, *(s16*)(c+0x8c), *(s16*)(c+0x8e), *(s16*)(c+0x90));
-  *(int*)(c+0x114) = *(int*)(c+0x5c) >> 3;
-  *(int*)(c+0x118) = *(int*)(c+0x60) >> 3;
-  *(int*)(c+0x11c) = *(int*)(c+0x64) >> 3;
-  *(int*)(c+0x1d8) = *(int*)(c+0x5c) >> 3;
-  *(int*)(c+0x1dc) = *(int*)(c+0x60) >> 3;
-  *(int*)(c+0x1e0) = *(int*)(c+0x64) >> 3;
-  _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(c, c+0x14c, c+0x1b4, *(int*)(c+0x1f0) * 0xb4, *(int*)(c+0x200), 0xf);
-}
-}
-
-
-// @symbol func_ov071_02120d30
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov071_02120d30(char *c)
+// @symbol _ZN8daEykn_c20UpdateModelTransformEv
+void daEykn_c::UpdateModelTransform()
 {
-    unsigned int id1;
+    Matrix4x3_FromRotationXYZExt(&mModelAnim.mat4x3, mAngleX, mAngleY, mAngleZ);
+    mModelAnim.mat4x3.t.x = mPosX >> 3;
+    mModelAnim.mat4x3.t.y = mPosY >> 3;
+    mModelAnim.mat4x3.t.z = mPosZ >> 3;
+    mShadowMat[9] = mPosX >> 3;
+    mShadowMat[10] = mPosY >> 3;
+    mShadowMat[11] = mPosZ >> 3;
+    _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(this, &mShadowModel, (Matrix4x3 *)mShadowMat, mScale * 0xb4, mShadowHeight, 0xf);
+}
 
-    _Z14ApproachLinearRiii((int *)(c + 0x98), *(s16 *)(c + 0x20e), 300);
-    *(s16 *)(c + 0x8e) = (s16)(*(s16 *)(c + 0x8e) + *(int *)(c + 0x98));
-    *(int *)(c + 0x1f8) = *(int *)(c + 0x1f8) + *(int *)(c + 0x98);
-    if (*(int *)(c + 0x1f8) / 131070 != 0) {
-        func_0201267c(0x119, c + 0x74);
-    }
-    {
-        int *spin = (int *)(c + 0x1f8);
-        *spin %= 131070;
-    }
 
-    id1 = *(unsigned int *)(c + 0x204);
-    if (id1 != 0 && *(unsigned int *)(c + 0x208) != 0) {
-        void *p1;
-        void *p2;
-        *(unsigned int *)(c + 0x204) = (unsigned int)
-            _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-                id1, 0x13a, *(int *)(c + 0x5c), *(int *)(c + 0x60), *(int *)(c + 0x64), 0, 0);
-        *(unsigned int *)(c + 0x208) =
-            _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
-                *(unsigned int *)(c + 0x208), 0x13b, *(int *)(c + 0x5c), *(int *)(c + 0x60), *(int *)(c + 0x64), 0);
-        p1 = Particle::System::FromUniqueID(*(unsigned int *)(c + 0x204));
-        p2 = Particle::System::FromUniqueID(*(unsigned int *)(c + 0x208));
+// @symbol _ZN8daEykn_c11St_Die_MainEv
+/* State 2 exec: spin with a wobble, play the death animation, shrink to scale
+ * 0xa4, then despawn, spawning actor 0x122 (small one) or releasing the star
+ * (big one). */
+int daEykn_c::St_Die_Main()
+{
+    u32 id0;
+
+    ApproachLinear(mHorzSpeed, mDeathSpinSpeed, 300);
+    mAngleY = (s16)(mAngleY + mHorzSpeed);
+    mDeathSpinAngle += mHorzSpeed;
+    if (mDeathSpinAngle / 131070 != 0) {
+        func_0201267c(0x119, &mCamSpacePosX);
+    }
+    mDeathSpinAngle %= 131070;
+
+    id0 = mParticleID0;
+    if (id0 != 0 && mParticleID1 != 0) {
+        Particle::System *p0;
+        Particle::System *p1;
+        mParticleID0 = (u32)_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+            id0, 0x13a, mPosX, mPosY, mPosZ, 0, 0);
+        mParticleID1 = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
+            mParticleID1, 0x13b, mPosX, mPosY, mPosZ, 0);
+        p0 = Particle::System::FromUniqueID(mParticleID0);
+        p1 = Particle::System::FromUniqueID(mParticleID1);
+        if (p0 != 0) {
+            p0->callbackScale = 0x7fff;
+        }
         if (p1 != 0) {
-            *(int *)((char *)p1 + 0x50) = 0x7fff;
-        }
-        if (p2 != 0) {
-            *(int *)((char *)p2 + 0x50) = 0x7fff;
+            p1->callbackScale = 0x7fff;
         }
     }
 
-    switch ((unsigned char)c[0x214]) {
+    switch (mSubState) {
     case 0: {
-        s16 sinv = data_02082214[((int)*(unsigned short *)(c + 0x210) >> 4) * 2];
-        *(s16 *)(c + 0x8c) = (s16)((int)(((s64)*(int *)(c + 0x1fc) * sinv + 0x800) >> 12));
-        *(s16 *)(c + 0x210) = (s16)(*(s16 *)(c + 0x210) + 0xe000);
-        _Z14ApproachLinearRiii((int *)(c + 0x1fc), 0, 0x1b);
-        if (DecIfAbove0_Byte((unsigned char *)c + 0x215) == 0) {
-            unsigned char *st = (unsigned char *)c + 0x214;
-            *st = (unsigned char)(*st + 1);
+        s16 sinv = data_02082214[((int)mWobblePhase >> 4) * 2];
+        mAngleX = (s16)((int)(((s64)mWobbleAmp * sinv + 0x800) >> 12));
+        /* Read back signed (ldrsh); a plain += misses. */
+        *(s16 *)&mWobblePhase = (s16)(*(s16 *)&mWobblePhase + 0xe000);
+        ApproachLinear(mWobbleAmp, 0, 0x1b);
+        if (DecIfAbove0_Byte(&mSubTimer) == 0) {
+            mSubState++;
         }
         break;
     }
     case 1:
-        ((Animation *)(c + 0x124))->Advance();
-        if (((Animation *)(c + 0x124))->Finished() != 0) {
-            unsigned char *st = (unsigned char *)c + 0x214;
-            *st = (unsigned char)(*st + 1);
+        mModelAnim.Advance();
+        if (mModelAnim.Finished() != 0) {
+            mSubState++;
         }
         break;
     case 2: {
         int scale;
         unsigned short kind;
-        int isBig;
-        if (_Z14ApproachLinearRiii((int *)(c + 0x1f0), 0xa4, 0xa4) != 0) {
-            unsigned char *st = (unsigned char *)c + 0x214;
-            *st = (unsigned char)(*st + 1);
+        int isSmall;
+        if (ApproachLinear(mScale, 0xa4, 0xa4) != 0) {
+            mSubState++;
         }
-        scale = *(int *)(c + 0x1f0);
-        *(int *)(c + 0x80) = scale;
-        *(int *)(c + 0x84) = scale;
-        *(int *)(c + 0x88) = scale;
-        kind = *(unsigned short *)(c + 0xc);
-        isBig = (int)(kind == 0x106);
-        if (isBig != 0) {
-            *(int *)(c + 0x178) = *(int *)(c + 0x1f0) * 0x55;
+        scale = mScale;
+        mScaleX = scale;
+        mScaleY = scale;
+        mScaleZ = scale;
+        kind = actorID;
+        isSmall = (int)(kind == 0x106);
+        if (isSmall != 0) {
+            mdCcAcPos_c.radius = mScale * 0x55;
         } else {
-            int isSmall = (int)(kind == 0x107);
-            if (isSmall != 0) {
-                *(int *)(c + 0x178) = *(int *)(c + 0x1f0) * 0x55;
+            int isBig = (int)(kind == 0x107);
+            if (isBig != 0) {
+                mdCcAcPos_c.radius = mScale * 0x55;
             }
         }
         break;
     }
     case 3: {
-        unsigned short kind = *(unsigned short *)(c + 0xc);
-        int isBig = (int)(kind == 0x106);
-        if (isBig != 0) {
+        unsigned short kind = actorID;
+        int isSmall = (int)(kind == 0x106);
+        if (isSmall != 0) {
+            /* This load order is the cartridge's; plain field copies miss. */
             int yadj, zcopy, y, z, x;
             Vector3 pos;
-            y = *(int *)(c + 0x60);
-            z = *(int *)(c + 0x64);
+            y = mPosY;
+            z = mPosZ;
             yadj = 0x78000;
             yadj = y + yadj;
             zcopy = z;
-            x = *(int *)(c + 0x5c);
+            x = mPosX;
             pos.x = x;
             pos.z = zcopy;
             pos.y = yadj;
-            dActor_c::Spawn(
-                0x122, 2, pos, 0, *(signed char *)(c + 0xcc), -1);
-            ((dActor_c *)c)->PoofDust();
+            Spawn(0x122, 2, pos, 0, mAreaId, -1);
+            PoofDust();
         } else {
-            int isSmall = (int)(kind == 0x107);
-            if (isSmall != 0) {
-                unsigned char star = (unsigned char)(*(unsigned int *)(c + 8) & 0xf);
-                ((dActor_c *)c)->UntrackAndSpawnStar(*(s8 *)(c + 0x217), star, *(Vector3 *)(c + 0x5c), 4);
-                _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
-                    0x124, *(int *)(c + 0x5c), *(int *)(c + 0x60), *(int *)(c + 0x64));
-                _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
-                    0x125, *(int *)(c + 0x5c), *(int *)(c + 0x60), *(int *)(c + 0x64));
-                _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
-                    0x126, *(int *)(c + 0x5c), *(int *)(c + 0x60), *(int *)(c + 0x64));
+            int isBig = (int)(kind == 0x107);
+            if (isBig != 0) {
+                unsigned char star = (unsigned char)(param1 & 0xf);
+                UntrackAndSpawnStar(mStarTrackID, star, *(Vector3 *)&mPosX, 4);
+                _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x124, mPosX, mPosY, mPosZ);
+                _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x125, mPosX, mPosY, mPosZ);
+                _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x126, mPosX, mPosY, mPosZ);
             }
         }
-        func_0201267c(0xc4, c + 0x74);
+        func_0201267c(0xc4, &mCamSpacePosX);
         if (data_0209f2f8 == 0x2e) {
-            ((dActor_c *)c)->KillAndTrackInDeathTable();
+            KillAndTrackInDeathTable();
         } else {
-            ((fBase_c *)c)->MarkForDestruction();
+            MarkForDestruction();
         }
         break;
     }
     }
     return 1;
 }
-}
 
 
-// @symbol func_ov071_0212110c
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov071_0212110c(char *self)
+// @symbol _ZN8daEykn_c11St_Die_InitEv
+/* State 2 init: spin on in the direction of the last turn. */
+int daEykn_c::St_Die_Init()
 {
-    short diff = *(short*)(self + 0x8e) - *(short*)(self + 0x20c);
-    *(int*)(self + 0x98) = diff;
-    if (*(int*)(self + 0x98) > 0)
-        *(short*)(self + 0x20e) = 0x2500;
+    short diff = mAngleY - mTurnRefAngleY;
+    mHorzSpeed = diff;
+    if (mHorzSpeed > 0)
+        mDeathSpinSpeed = 0x2500;
     else
-        *(short*)(self + 0x20e) = -0x2500;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(self + 0xd4, data_ov071_02123048.f4, 0, 0x1000, 0);
-    ((Animation *)(self + 0x124))->SetFlags(0x40000000);
-    *(int*)(self + 0x130) = 0x2800;
-    *(int*)(self + 0x12c) = 0;
-    *(unsigned char*)(self + 0x214) = 0;
-    *(unsigned char*)(self + 0x215) = 0x2e;
-    *(short*)(self + 0x210) = 0;
-    func_0201267c(0x119, self + 0x74);
-    *(int *)(((int)self + 0xb0)) &= ~1;
-    *(int*)(self + 0x1e8) = 2;
-    *(int*)(self + 0x1fc) = 0x500;
+        mDeathSpinSpeed = -0x2500;
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov071_02123048.file, 0, 0x1000, 0);
+    mModelAnim.SetFlags(0x40000000);
+    mModelAnim.speed = 0x2800;
+    mModelAnim.currFrame = 0;
+    mSubState = 0;
+    mSubTimer = 0x2e;
+    mWobblePhase = 0;
+    func_0201267c(0x119, &mCamSpacePosX);
+    mFlags &= ~1;
+    mStateID = 2;
+    mWobbleAmp = 0x500;
     return 1;
 }
-}
 
 
-// @symbol func_ov071_021211e0
-/* daEykn_c (ov071) tracking behaviour: turns toward the player, fires a bullet actor
- * (0x108) from its facing when the state byte reaches 7, and hands off to the
- * timeout/distance/blocked-by-terrain exits. The three target vectors are built
- * with the same load-then-assign shape: the second one must be spelled exactly
- * like the first or the pointer/y registers swap (the previous draft used
- * volatile field stores there and sat at div 7). */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov071_021211e0(char *c)
+// @symbol _ZN8daEykn_c14St_Attack_MainEv
+/* State 1 exec: turn toward the target, blink and fire a bullet (actor 0x108)
+ * each time the blink reaches step 7, and fall back to waiting when the target
+ * leaves range, vanishes or goes behind terrain. Each target vector is built
+ * through locals; spelled straight off mTarget, the second or the third misses. */
+int daEykn_c::St_Attack_Main()
 {
     Vector3_16 rot;
     Vector3 target1;
@@ -498,49 +474,49 @@ int func_ov071_021211e0(char *c)
     s16 ang;
 
     {
-        s32 *pl;
+        Player *pl;
         s32 py;
         s32 pz;
         s32 yoff;
 
-        pl = *(s32 **)(c + 0x1ec);
-        py = pl[0x60 / 4];
-        pz = pl[0x64 / 4];
+        pl = mTarget;
+        py = pl->mPosY;
+        pz = pl->mPosZ;
         yoff = py + 0x78000;
-        target1.x = pl[0x5c / 4];
+        target1.x = pl->mPosX;
         target1.y = yoff;
         target1.z = pz;
     }
 
-    Vec3_HorzAngle((Vector3 *)(c + 0x5c), &target1);
-    ang = Vec3_VertAngle((Vector3 *)(c + 0x5c), &target1);
-    _Z11UpdateAngleRssis((s16 *)(c + 0x8c), ang, 2, 0x320);
-    ang = Vec3_HorzAngle((Vector3 *)(c + 0x5c), &target1);
-    _Z11UpdateAngleRssis((s16 *)(c + 0x8e), ang, 2, 0x8fc);
+    Vec3_HorzAngle((Vector3 *)&mPosX, &target1);
+    ang = Vec3_VertAngle((Vector3 *)&mPosX, &target1);
+    UpdateAngle(mAngleX, ang, 2, 0x320);
+    ang = Vec3_HorzAngle((Vector3 *)&mPosX, &target1);
+    UpdateAngle(mAngleY, ang, 2, 0x8fc);
 
-    if ((s16)(*(s16 *)(c + 0x8e) - *(s16 *)(c + 0x20c)) == 0) {
-        if (DecIfAbove0_Byte((u8 *)(c + 0x213)) == 0 && func_ov071_02120a20(c) != 0)
-            *(u8 *)(c + 0x213) = 0x53;
-        *(u8 *)(c + 0x212) = 0xf0;
+    if ((s16)(mAngleY - mTurnRefAngleY) == 0) {
+        if (DecIfAbove0_Byte(&mShotTimer) == 0 && StartEyeAnim() != 0)
+            mShotTimer = 0x53;
+        unk_212 = 0xf0;
     }
 
-    if (*(u8 *)(c + 0x214) == 7) {
-        s32 *pl2;
+    if (mSubState == 7) {
+        Player *pl2;
         s32 py2;
         s32 pz2;
         s32 yoff2;
 
-        pl2 = *(s32 **)(c + 0x1ec);
-        py2 = pl2[0x60 / 4];
-        pz2 = pl2[0x64 / 4];
+        pl2 = mTarget;
+        py2 = pl2->mPosY;
+        pz2 = pl2->mPosZ;
         yoff2 = py2 + 0x4b000;
-        target2.x = pl2[0x5c / 4];
+        target2.x = pl2->mPosX;
         target2.y = yoff2;
         target2.z = pz2;
 
         {
             s32 px;
-            s32 pz2;
+            s32 pz;
             s32 scale;
             s32 round;
             int idx;
@@ -548,140 +524,138 @@ int func_ov071_021211e0(char *c)
             int isBig;
             int param;
 
-            px = *(s32 *)(c + 0x5c);
+            px = mPosX;
             scale = 0x50000;
             pos.x = px;
-            pos.y = *(s32 *)(c + 0x60);
-            pz2 = *(s32 *)(c + 0x64);
+            pos.y = mPosY;
+            pz = mPosZ;
             round = 0x800;
-            pos.z = pz2;
+            pos.z = pz;
 
             {
-                unsigned short rx = *(unsigned short *)(c + 0x8c);
-                unsigned short ry = *(unsigned short *)(c + 0x8e);
+                /* Read unsigned: the cartridge loads these with ldrh. */
+                unsigned short rx = *(unsigned short *)&mAngleX;
+                unsigned short ry = *(unsigned short *)&mAngleY;
                 rot.y = ry;
                 rot.x = rx;
-                unsigned short rz = *(unsigned short *)(c + 0x90);
+                unsigned short rz = *(unsigned short *)&mAngleZ;
                 rot.z = rz;
             }
 
-            idx = *(u16 *)(c + 0x8e) >> 4;
+            idx = (u16)mAngleY >> 4;
             s = data_02082214[idx * 2];
             pos.x = px + (s32)(((s64)s * scale + round) >> 12);
 
-            idx = *(u16 *)(c + 0x8e) >> 4;
+            idx = (u16)mAngleY >> 4;
             s = data_02082214[idx * 2 + 1];
-            pos.z = pz2 + (s32)(((s64)s * scale + round) >> 12);
+            pos.z = pz + (s32)(((s64)s * scale + round) >> 12);
 
             rot.x = Vec3_VertAngle(&pos, &target2);
 
-            isBig = (int)(*(u16 *)(c + 0xc) == 0x107);
+            isBig = (int)(actorID == 0x107);
             if (isBig != 0)
                 param = 1;
             else
                 param = 0;
-            dActor_c::Spawn(
-                0x108, param, pos, &rot, *(s8 *)(c + 0xcc), -1);
-            func_0201267c(0x165, c + 0x74);
-            *(u8 *)(c + 0x216) = 0x2e;
-            *(u8 *)(c + 0x212) = 0xf0;
-            *(u8 *)(c + 0x213) = 0x53;
-            *(s32 *)(c + 0x1f4) = 0;
-            func_ov071_021209c8(c);
+            Spawn(0x108, param, pos, &rot, mAreaId, -1);
+            func_0201267c(0x165, &mCamSpacePosX);
+            mCircleTimer = 0x2e;
+            unk_212 = 0xf0;
+            mShotTimer = 0x53;
+            mCircleAngle = 0;
+            ResetEyeAnim();
         }
     }
 
-    func_ov071_02120860(c);
+    UpdateEyeAnim();
 
     {
-        s32 *p3;
+        Player *p3;
         s32 y3;
         s32 z3;
         s32 yoff3;
 
-        p3 = *(s32 **)(c + 0x1ec);
-        y3 = p3[0x60 / 4];
-        z3 = p3[0x64 / 4];
+        p3 = mTarget;
+        y3 = p3->mPosY;
+        z3 = p3->mPosZ;
         yoff3 = y3 + 0x8c000;
-        target3.x = p3[0x5c / 4];
+        target3.x = p3->mPosX;
         target3.y = yoff3;
         target3.z = z3;
     }
 
-    if (func_ov071_0212070c(c) != 0) {
-        func_ov071_02121634(c, 2);
-    } else if (Vec3_Dist((Vector3 *)(c + 0x5c), &target1) > 0x5dc000) {
-        func_ov071_02121634(c, 0);
-    } else if (*(u8 *)(*(char **)(c + 0x1ec) + 0x6fb) != 0) {
-        func_ov071_02121634(c, 0);
-    } else if (((dActor_c *)c)->DetectRaycastClsn(target3, *(Vector3 *)(c + 0x5c), 0) != 0) {
-        func_ov071_02121634(c, 0);
+    if (UpdateCircling() != 0) {
+        SetState(2);
+    } else if (Vec3_Dist((Vector3 *)&mPosX, &target1) > 0x5dc000) {
+        SetState(0);
+    } else if (mTarget->mIsVanish != 0) {
+        SetState(0);
+    } else if (DetectRaycastClsn(target3, *(Vector3 *)&mPosX, false) != 0) {
+        SetState(0);
     }
 
-    func_ov071_02120b14(c);
+    CheckAttacks();
     return 1;
 }
-}
 
 
-// @symbol func_ov071_021214f4
-// recovered name: Scuttlebug_Kill
-/* recovered: renamed to Class_Method */
-/* daSpd_c::Kill - recovered from vtable slot identity */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov071_021214f4(char* c) {
-    *(unsigned char*)(c+0x212) = 0xf0;
-    *(unsigned char*)(c+0x213) = 0;
-    *(int*)(c+0x1f4) = 0;
-    *(int*)(c+0x1e8) = 1;
-    func_ov071_021209c8(c);
-    return 1;
-}
-}
-
-
-// @symbol func_ov071_0212152c
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov071_0212152c(void *c)
+// @symbol _ZN8daEykn_c14St_Attack_InitEv
+int daEykn_c::St_Attack_Init()
 {
-    _Z14ApproachLinearRsss((short *)((char *)c + 0x8c), 0, 0x320);
-    *(short *)((char *)c + 0x8e) = *(short *)((char *)c + 0x8e) + *(int *)((char *)c + 0x98);
-    func_ov071_02120a48((char *)c);
-    func_ov071_02120b14(c);
+    unk_212 = 0xf0;
+    mShotTimer = 0;
+    mCircleAngle = 0;
+    mStateID = 1;
+    ResetEyeAnim();
     return 1;
 }
-}
 
 
-// @symbol func_ov071_02121570
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov071_02121570(char* c) {
-    short v = *(short*)(c+0x8e) - *(short*)(c+0x20c);
-    if (v >= 0) *(int*)(c+0x98) = 0xc8;
-    else *(int*)(c+0x98) = -0xc8;
-    func_ov071_021209c8(c);
-    *(int*)(c+0x1ec) = 0;
-    *(int*)(c+0x1e8) = 0;
-    return 1;
-}
-}
-
-
-// @symbol func_ov071_021215c0
-extern "C" void func_ov071_021215c0(void *raw) { C *c = (C *)raw; PMF *p = c->pp + 1; (c->**p)(); }
-
-
-// @symbol func_ov071_021215fc
-extern "C" void func_ov071_021215fc(void *raw) { C *c = (C *)raw; PMF *p = c->pp; (c->**p)(); }
-
-
-// @symbol func_ov071_02121634
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov071_02121634(char *self, int idx)
+// @symbol _ZN8daEykn_c12St_Wait_MainEv
+/* State 0 exec: level out, keep turning, and look for a player. */
+int daEykn_c::St_Wait_Main()
 {
-    *(Item16 **)(self + 0x1e4) = &data_ov071_02123088[idx];
-    func_ov071_021215fc(self);
+    ApproachLinear(mAngleX, 0, 0x320);
+    mAngleY = mAngleY + mHorzSpeed;
+    LookForPlayer();
+    CheckAttacks();
+    return 1;
 }
+
+
+// @symbol _ZN8daEykn_c12St_Wait_InitEv
+/* State 0 init: drift on in the direction of the last turn. */
+int daEykn_c::St_Wait_Init()
+{
+    short v = mAngleY - mTurnRefAngleY;
+    if (v >= 0) mHorzSpeed = 0xc8;
+    else mHorzSpeed = -0xc8;
+    ResetEyeAnim();
+    mTarget = 0;
+    mStateID = 0;
+    return 1;
+}
+
+
+// @symbol _ZN8daEykn_c8RunStateEv
+void daEykn_c::RunState()
+{
+    (this->*mState->exec)();
+}
+
+
+// @symbol _ZN8daEykn_c12RunStateInitEv
+void daEykn_c::RunStateInit()
+{
+    (this->*mState->init)();
+}
+
+
+// @symbol _ZN8daEykn_c8SetStateEi
+void daEykn_c::SetState(int state)
+{
+    mState = &data_ov071_02123088[state];
+    RunStateInit();
 }
 
 
@@ -708,28 +682,108 @@ void daEykn_c::OnPendingDestroy()
 
 
 // @symbol _ZN8daEykn_c6RenderEv
-/* recovered: named members + shared header, real C++ method */
 int daEykn_c::Render()
 {
-  ((TextureSequence *)(((char*)this)+0x138))->Update(*(ModelComponents *)(((char*)this)+0xdc));
-  ((Sub*)((char*)&mModelAnim))->g5((char*)&mScaleX);
-  return 1;
+    mTextureSequence.Update(mModelAnim.data);
+    mModelAnim.Render((Vector3 *)&mScaleX);
+    return 1;
 }
 
 
 // @symbol _ZN8daEykn_c8BehaviorEv
-/* recovered: named members + shared header, real C++ method */
-/* dCc_c comes from the real dCcAc_c chain now that daEykn_c.h types mdCcAcPos_c;
-   the ad-hoc redeclaration that used to stand in for it ICEd mwccarm
-   (CClass.c:3328) once the real class was visible. Clear and Update are
-   non-virtual there, so the direct bl is unchanged. */
 int daEykn_c::Behavior()
 {
-    func_ov071_021215c0(((char *)this));
-    func_0200f760(((char *)this), ((char *)this) + 0x174);
+    RunState();
+    func_0200f760(this, &mdCcAcPos_c);
     mTurnRefAngleY = mAngleY;
-    ((dCc_c*)((char *)&mdCcAcPos_c))->Clear();
-    ((dCc_c*)((char *)&mdCcAcPos_c))->Update();
-    func_ov071_02120c90(((char *)this));
+    mdCcAcPos_c.Clear();
+    mdCcAcPos_c.Update();
+    UpdateModelTransform();
+    return 1;
+}
+
+// @symbol _ZN8daEykn_c13InitResourcesEv
+/* LoadBlueCoinModel ignores its argument, but every caller passes the actor
+ * in r0; declared (void) the entry block's argument setup comes out rotated. */
+s32 daEykn_c::InitResources()
+{
+    BMD_File *bmd;
+    LoadBlueCoinModel(this);
+
+    Model::LoadFile(data_ov002_0210da38);
+    bmd = (BMD_File *)Model::LoadFile(data_ov071_02123050);
+    ((ModelBase *)&mModelAnim)->SetFile(bmd, 1, 1);
+
+    int i;
+    for (i = 0; i < 2; i++) {
+        SharedFilePtr *seq = data_ov071_021226a4[i];
+        TextureSequence::LoadFile(*seq);
+        BMD_File *bmd2 = *(BMD_File **)((char *)&data_ov071_02123050 + 4);
+        BTP_File *btp = *(BTP_File **)((char *)seq + 4);
+        TextureSequence::Prepare(*bmd2, *btp);
+    }
+
+    Animation::LoadFile(*data_ov071_021226a0);
+
+    if (!mShadowModel.InitCylinder())
+        return 0;
+
+    unsigned short kind = actorID;
+    int isSmall = (kind == 0x106);
+    if (isSmall) {
+        Vector3 v;
+        v.x = 0;
+        v.y = -0x4b000;
+        v.z = 0;
+        _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(&mdCcAcPos_c, this, &v, 0x55000, 0x96000, 0x200004, 0x42000);
+        mScaleX = 0x1000;
+        mScaleY = 0x1000;
+        mScaleZ = 0x1000;
+        mScale = 0x1000;
+    } else {
+        int isBig = (kind == 0x107);
+        if (isBig) {
+            Vector3 v;
+            v.x = 0;
+            v.y = -0x96000;
+            v.z = 0;
+            _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(&mdCcAcPos_c, this, &v, 0xaa000, 0x12c000, 0x200004, 0);
+            mScaleX = 0x2000;
+            mScaleY = 0x2000;
+            mScaleZ = 0x2000;
+            mScale = 0x2000;
+            {
+                unsigned char starID = (unsigned char)(param1 & 0xf);
+                mStarTrackID = TrackStar(starID, 2);
+            }
+        }
+    }
+
+    mVertAccel = 0;
+    mTerminalVelocity = 0;
+    SetState(0);
+
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov071_02123048.file, 0, 0x1000, 0);
+
+    mModelAnim.speed = 0x1000;
+    _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(&mTextureSequence, data_ov071_02123038.file, 0, 0x1000, 0);
+
+    mTextureSequence.speed = 0x1000;
+    mTarget = 0;
+    mCircleTimer = 0x2e;
+
+    *(MatrixWords *)mShadowMat = *(MatrixWords *)&IDENTITY_MATRIX4X3;
+
+    dBgCh_Gnd ray;
+    ray.SetObjAndPos(*(Vector3 *)&mPosX, this);
+    int y;
+    if (ray.DetectClsn()) {
+        y = (mPosY - ray.clsnY) + 0x1e000;
+    } else {
+        y = 0x12c000;
+    }
+    mShadowHeight = y;
+    UpdateModelTransform();
+
     return 1;
 }
