@@ -10,8 +10,9 @@
  * coined Key before the ROM name was read (factory alias Key_Spawn).
  *
  * PARTIAL: this is not the whole class. The destructors stay shards. D1 at
- * 0x02130f00 and D0 at 0x02130f50 sit in front of the unmatched
- * func_ov089_0213162c, so one file cannot contain both them and this run.
+ * 0x02130f00 and D0 at 0x02130f50 sit in front of func_ov089_0213162c,
+ * which byte-matches but is enrolled without a `complete` marker, so the
+ * build keeps the cartridge's bytes there and this TU cannot span it.
  * func_ov089_02130fb4, UnloadKeyModels, LoadKeyModels, func_ov089_0213115c
  * and func_ov089_021311c0 stay shards for the same reason. The D1 shard
  * holds the out-of-line destructor, the key function, so it emits
@@ -38,8 +39,18 @@ namespace Event { void SetBit(unsigned int bit); int ClearBit(unsigned int bit);
 typedef void (daObjKey_c::*StateFunc)();
 extern StateFunc data_ov089_02132cec[];
 
-/* The mangled names below are calls the headers cannot spell: Fix12<int>
- * parameters, or members the shared headers do not declare. */
+/* Mangled bridges below, each kept for its own reason:
+ * - Camera::SetFlag_3, Particle::System::New: include/Camera.h and
+ *   include/Particle__System.h do not declare them.
+ * - dActor_c::DropShadowRadHeight, dCcAcPos_c::Init: the real calls pass
+ *   Fix12<int> by value and do not match.
+ * - ModelAnim::SetAnim: include/ModelAnim.h declares it with Fix12<int>;
+ *   the real call is untried.
+ * - dBgCh_Actr::Init: include/dBgCh_Actr.h declares it with Fix12i, which
+ *   mangles to a different name.
+ * - Player::SetNoControlState: include/Player.h declares it and the real
+ *   call matches; the local declaration holds the declaration-agreement
+ *   plurality that src/game/actors/d_a_wanwan.cpp needs. */
 extern "C" {
 extern void dBgCh_Actr_UpdateContinuous_Veneer(char *p);
 extern void *data_0209f318;

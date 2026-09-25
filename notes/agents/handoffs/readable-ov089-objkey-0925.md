@@ -5,10 +5,11 @@ This document describes this commit. The queue records its immutable output SHA.
 ## Identity and resumption
 
 - Issue URL, task ID, stage, session and harness: https://github.com/tangosdev/sm64ds-decomp/issues/3154, task `readable-ov089-objkey-0925`, stage `revise`, role producer, session `claude-prod-readable-ov089-objkey-0925`, Claude Code.
-- Source branch and previous accepted input SHA: `readable/readable-ov089-objkey-0925`, input `c31f43bacfde4eb8e184b75077f85f4ba45a72a9` (origin/main at enqueue).
+- Round 2: stage `revise`, role producer, session `claude-prod-readable-ov089-objkey-0925-r2`, Claude Code, input `be3560b7134e0d0848116f20be7820b41d509185` (the round-1 output). Comment-only rework of verifier findings V1 and V2; see Round 2 below.
+- Source branch and previous accepted input SHA: `readable/readable-ov089-objkey-0925`, input `c31f43bacfde4eb8e184b75077f85f4ba45a72a9` (origin/main at enqueue), which stays the tested base.
 - Original source base SHA and installed workflow/tool SHA: both `c31f43bacfde4eb8e184b75077f85f4ba45a72a9`.
 - Separate evidence commits and required artifacts in this commit: none. The compiler experiments below are prose records (the source change tried and the measured result); no experiment artifact is committed.
-- Next action, responsible role and blockers: independent verification of this commit (byte, relocation, whole-object and source review). No blockers.
+- Next action, responsible role and blockers: independent verification (round 2) of this commit: comment accuracy of V1 and V2. No blockers.
 - Status: verified candidate, on the local evidence below.
 - Remaining uncommitted/local-only material and where it is preserved: none.
 
@@ -46,6 +47,25 @@ This document describes this commit. The queue records its immutable output SHA.
 | E21 | InitResources | `dCcAcPos_c::Init` with `Fix12<int>` locals | DIFF, seven relocation destinations wrong. Mangled call kept. |
 | E22 | OnTurnIntoEgg | `if (actorID == 0x11a)` without the flag | DIFF. Flag kept with one comment. |
 | E23 | Whole TU | Dead declarations removed (the bridges replaced above, `L`, `LAUNDER`, `Sub`, `C`, `PmfEntry`, `decl_dBgCh_Actr.h`, local copies of `data_0209f2ac`, `func_ov089_0213115c` and `_ZN5Sound22LoadAndSetMusic_Layer3Ej` that `include/decl_common.h` already declares) | 10/10, undefined-symbol set unchanged. Adopted. |
+
+## Round 2
+
+Verifier findings on `be3560b713`. Only comment lines in `src/actors/daObjKey_c.cpp` and this handoff changed; `include/daObjKey_c.h` needed no change.
+
+| ID | Finding | Outcome | Evidence |
+|---|---|---|---|
+| V1 | The bridge comment above the `extern "C"` block said every mangled name is a call the headers cannot spell; false for `Player::SetNoControlState` | Fixed | The comment now gives one reason per bridge, each checked against the header: `include/Camera.h` has no SetFlag_3 and `include/Particle__System.h` has no New (missing declaration); DropShadowRadHeight and dCcAcPos_c::Init take Fix12<int> by value and the real calls do not match (E11, E21); `include/ModelAnim.h:88` declares SetAnim with Fix12<int> and the real call is untried; `include/dBgCh_Actr.h:113` declares Init with Fix12i, a typedef of s32 that mangles as `i`, not `5Fix12IiE`; `include/Player.h:512` declares SetNoControlState and the real call matches, and the local declaration stays for the plurality `src/game/actors/d_a_wanwan.cpp:678` needs (E7, R8). |
+| V2 | The banner called `func_ov089_0213162c` unmatched | Fixed | Banner now says it byte-matches but is enrolled without a `complete` marker (ov089 `delinks.txt:35-36`), so the build keeps the cartridge's bytes there. `python tools/match.py --c src/func_ov089_0213162c.c --func func_ov089_0213162c --addr 0x0213162c --size 0x4ec --version 2004/b56 --module ov089 --strict-relocs` reports MATCHING VERSIONS: 2004/b56. The banner's other claims were rechecked against ov089 `delinks.txt`: the run 0x02131b18..0x021327d0 (lines 38-40), D1 0x02130f00 and D0 0x02130f50 (lines 7-13), and the `func_ov089_02130fb4`, `UnloadKeyModels`, `LoadKeyModels`, `func_ov089_0213115c` and `func_ov089_021311c0` shards (lines 15-33), all with `complete` markers. |
+| V2a | `config/tu_manifest.d/ov089/daObjKey_c.json` `boundary_evidence[0]` repeats "the unmatched func_ov089_0213162c" and "the unmatched hole" | Still deferred | Not a comment; round 2 is limited to comments and this handoff. Owner: next producer on #3154 (https://github.com/tangosdev/sm64ds-decomp/issues/3154). |
+| V3 | `mState` is really the key kind | Still deferred | Left as instructed. |
+
+Round 2 proof, run in `C:/tmp/claude-rd-ov089` on this commit's source:
+
+| Command | Exit | Result |
+|---|---|---|
+| `python tools/tubuild.py verify ov089/daObjKey_c` | 0 | 10/10 MATCH, objisolate clean, reloc-destinations clean; manifest not rewritten |
+| `python tools/check_dead_references.py` | 0 | no new dead references, no broken markdown links |
+| `python tools/check_decl_agreement.py --changed c31f43bacf` | 0 | no new local redeclarations, no new declaration disagreements |
 
 ## Findings
 
@@ -87,12 +107,13 @@ Self-audit of the base, R1 to R24. Deferred rows name the owner as the next prod
 - Attribution preserved through each move/rename: the two `attribution.json` keys follow the renamed symbols with the same authors (`lunavyqo` keeps StateDrop, `tangosdev` keeps UpdateModelTransform).
 - Remaining agreed issue scope: R3, R5 to R8, R12 to R14, R17, R19 to R21, R24.
 
-Residue. The `lines` column is `wc -l` of `git show <rev>:<path>` (newline count; all four revisions end in a newline). Each token column is the number of lines containing the token, `grep -c -F`, with `MSYS_NO_PATHCONV=1`. Occurrence counts differ only at base for the source (21 `unk_` and 31 `func_` occurrences) and at this commit for `func_` (21 occurrences on 20 lines).
+Residue. The `lines` column is `wc -l` of `git show <rev>:<path>` (newline count; every revision listed ends in a newline). Each token column is the number of lines containing the token, `grep -c -F`, with `MSYS_NO_PATHCONV=1`. Occurrence counts differ only at base for the source (21 `unk_` and 31 `func_` occurrences) and at this commit for `func_` (21 occurrences on 20 lines).
 
 | Path | Revision | lines | `unk_` | `func_` | `extern "C"` | `_ZN` |
 |---|---|---|---|---|---|---|
 | `src/actors/daObjKey_c.cpp` | base `c31f43bacf` | 520 | 17 | 30 | 5 | 83 |
-| `src/actors/daObjKey_c.cpp` | this commit | 456 | 0 | 20 | 3 | 38 |
+| `src/actors/daObjKey_c.cpp` | round 1 `be3560b713` | 456 | 0 | 20 | 3 | 38 |
+| `src/actors/daObjKey_c.cpp` | this commit | 467 | 0 | 20 | 3 | 38 |
 | `include/daObjKey_c.h` | base `c31f43bacf` | 92 | 13 | 0 | 0 | 1 |
 | `include/daObjKey_c.h` | this commit | 75 | 0 | 0 | 0 | 1 |
 
