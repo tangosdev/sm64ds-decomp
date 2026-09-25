@@ -1,0 +1,13 @@
+# Run linkfull, lane RS5A (wave 31), row R9: the brick's own vtable slot 23.
+#
+# src/_ZN13BigBrickBlock11OnAttacked2ER8dActor_c.cpp is BigBrickBlock::OnAttacked2,
+# ov002 0x020b3788, size 0x64: the word the ROM's _ZTV13daObjBlockL_c (0x02108adc)
+# holds at slot 23, 0x02108b38 (config/arm9/overlays/ov002/relocs.txt line 13723).
+# It rode a thiscall host copy (port/unmatched/BigBrickBlock_OnAttacked2.cpp) while
+# its src reached Kill through a cdecl `fn(c)`; the src makes a C++ virtual call
+# now (main's promoted src/actors/daObjBlockL_c.cpp spells the same body), so the
+# copy is retired. The TU's _MSC_VER arm answers MSVC C2561 (valueless returns in
+# an int body) and nothing else, and hal/actor_classes.cpp seats slot 23 on it
+# (bbb_atk2). Built by port/CMakeLists.txt's RS5A block on the three targets that
+# compile hal/actor_classes.cpp.
+src/_ZN13BigBrickBlock11OnAttacked2ER8dActor_c.cpp

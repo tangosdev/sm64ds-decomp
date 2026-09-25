@@ -2805,7 +2805,6 @@ void _ZN18cMgSmartball_ana_c14RestoreInitialEv(void *);
 void _ZN20cMgSmartball_board_c12SaveSnapshotEv(void *);   void _ZN20cMgSmartball_board_c6UpdateEv(void *);
 void _ZN20cMgSmartball_board_c14RestoreInitialEv(void *);
 void _ZN19cMgSmartball_slot_c12SaveSnapshotEv(void *);   void _ZN19cMgSmartball_slot_c6UpdateEv(void *);
-void port_mg_smartball_slot_restore(void *);
 void _ZN21cMgSmartball_kinoko_c12SaveSnapshotEv(void *);   void _ZN21cMgSmartball_kinoko_c6UpdateEv(void *);
 void _ZN21cMgSmartball_kinoko_c14RestoreInitialEv(void *);
 void _ZN21cMgSmartball_pakkun_c12SaveSnapshotEv(void *);   void _ZN21cMgSmartball_pakkun_c6UpdateEv(void *);
@@ -2886,7 +2885,27 @@ static void smb_brd_s1(void *s)   SMB_OBJ(_ZN20cMgSmartball_board_c6UpdateEv(s))
 static void smb_brd_s2(void *s)   SMB_OBJ(_ZN20cMgSmartball_board_c14RestoreInitialEv(s))
 static void smb_slt_s0(void *s)   SMB_OBJ(_ZN19cMgSmartball_slot_c12SaveSnapshotEv(s))
 static void smb_slt_s1(void *s)   SMB_OBJ(_ZN19cMgSmartball_slot_c6UpdateEv(s))
-static void smb_slt_s2(void *s)   SMB_OBJ(port_mg_smartball_slot_restore(s))
+/* SLOT 2 IS THE MATCHED MEMBER NOW (run linkfull, lane RS5A). It used to call
+   port_mg_smartball_slot_restore, a host copy of the body with the base call's
+   receiver placed by hand, because the src dropped it where the ROM keeps
+   r0 = this (0x02110158 mov r4,r0 then bl 0x02114738). main #1489 made
+   src/_ZN19cMgSmartball_slot_c14RestoreInitialEv.cpp the real member, whose base
+   call cMgSmartball_object_c::RestoreInitial() passes `this`, so the copy is
+   retired and the ROM body links from port/slice_smb.txt.
+
+   A QUALIFIED CALL through the member mangle, the smb_dok_s2 shape above: the
+   flat name at 0x02110154 is not defined anywhere on purpose, because
+   hal/cxx_aliases.cpp routes it to ov002's Wait State data (the shared load
+   window). Three virtuals in ROM slot order, which is what
+   include/cMgSmartball_slot_c.h declares; MSVC's mangle for a member does not
+   encode the base list or the fields. */
+struct cMgSmartball_slot_c {
+    virtual void SaveSnapshot();    /* slot 0 -- ROM 0x021100a8 */
+    virtual void Update();          /* slot 1 -- ROM 0x0210ff1c */
+    virtual void RestoreInitial();  /* slot 2 -- ROM 0x02110154 */
+};
+static void smb_slt_s2(void *s)
+    SMB_OBJ(((cMgSmartball_slot_c *)s)->cMgSmartball_slot_c::RestoreInitial())
 static void smb_kin_s0(void *s)   SMB_OBJ(_ZN21cMgSmartball_kinoko_c12SaveSnapshotEv(s))
 static void smb_kin_s1(void *s)   SMB_OBJ(_ZN21cMgSmartball_kinoko_c6UpdateEv(s))
 static void smb_kin_s2(void *s)   SMB_OBJ(_ZN21cMgSmartball_kinoko_c14RestoreInitialEv(s))

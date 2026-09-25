@@ -251,11 +251,16 @@ src/_ZN16dScMgSmartball_c13InitResourcesEv.cpp
 src/_ZN16dScMgSmartball_c6RenderEv.cpp
 src/_ZN20cMgSmartball_board_c12SaveSnapshotEv.cpp
 src/_ZN24cMgSmartball_propeller_c12SaveSnapshotEv.cpp
-# src/_ZN19cMgSmartball_slot_c14RestoreInitialEv.cpp (0x02110154, cMgSmartball_slot_c's RestoreInitial
-# under a wrong recovered name) is DELIBERATELY ABSENT: it drops the receiver
-# on a call the ROM rides through in r0, and the callee STORES through it.
-# port/unmatched/MgSmartball_SlotRestore.cpp is that body with the argument
-# placed, the same split MgSmartball_Slot18.cpp makes for _ZN16dScMgSmartball_c13OnYoshiTryEatEi.
+# src/_ZN19cMgSmartball_slot_c14RestoreInitialEv.cpp (0x02110154, cMgSmartball_slot_c's RestoreInitial)
+# was DELIBERATELY ABSENT while its src dropped the receiver on the base call the
+# ROM makes with r0 = this (the callee STORES through it), and
+# port/unmatched/MgSmartball_SlotRestore.cpp carried the body with the argument
+# placed. main #1489 made it the real member, whose base call is
+# cMgSmartball_object_c::RestoreInitial() with `this` passed, and the port's src
+# is that same blob, so the copy is retired (run linkfull, lane RS5A) and the
+# matched TU is back. hal/scene_mg.cpp's smb_slt_s2 calls the member qualified;
+# the flat name stays the ov002 alias hal/cxx_aliases.cpp documents.
+src/_ZN19cMgSmartball_slot_c14RestoreInitialEv.cpp
 src/_ZN19cMgSmartball_wing_c6UpdateEv.cpp
 src/_ZN19cMgSmartball_wing_c12SaveSnapshotEv.cpp
 src/_ZN19cMgSmartball_wing_c14RestoreInitialEv.cpp

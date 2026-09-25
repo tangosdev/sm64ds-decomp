@@ -173,6 +173,16 @@ import sys
 #   _ZN17BowserPuzzlePieceD1Ev
 #   _ZN6CoffinD1Ev
 
+# RETIRED at RS5A 2026-09-25 (run linkfull wave 31, row R8): _ZN8SignPostD0Ev
+# is defined by src/_ZN8SignPostD0Ev.cpp now, in its #ifdef _MSC_VER arm, in
+# batch B1's shape: the flat D1 (still a row here, so the D1 stays under
+# tools/dtor_store_guard.py) and then the class's own operator delete, the
+# same two steps the retired forwarder made. The arm is what keeps that file's
+# key-function forcer, an EMPTY SignPost::Kill, out of the MSVC build: it had
+# been the port's only ?Kill@SignPost@@UAEXXZ, so a signpost's slot 31 ran
+# nothing. The row came out of batch 1 rather than being skipped, so the
+# generated files carry the name exactly once.
+
 BATCHES = {}
 
 BATCHES[1] = """
@@ -342,7 +352,6 @@ _ZN7daDgr_cD1Ev
 _ZN7daDkk_cD0Ev
 _ZN7daDkk_cD1Ev
 _ZN8PoleLiftD1Ev
-_ZN8SignPostD0Ev
 _ZN8SignPostD1Ev
 _ZN8daEyBm_cD0Ev
 _ZN8daKpFr_cD0Ev

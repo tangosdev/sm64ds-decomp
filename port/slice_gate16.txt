@@ -115,10 +115,11 @@ src/_ZN13BigBrickBlockD1Ev.cpp
 # kick (St_PunchKick step 2, SweepKick) dispatches slot 24; its body reaches
 # Kill through a C++ virtual (already thiscall), so it links here directly and
 # lands on the seated slot 31. Slot 23 OnAttacked2 (0x020b3788, the bro PUNCH)
-# is NOT here as raw src: its body reaches Kill through a cdecl `fn(c)`, so it
-# rides the thiscall host copy port/unmatched/BigBrickBlock_OnAttacked2.cpp
-# (wired in CMakeLists.txt) instead. Slot 22 OnAttacked1 (0x020b37ec) stays
-# trapped; see hal/actor_classes.cpp for why.
+# is NOT here: it rode a thiscall host copy while its body reached Kill through
+# a cdecl `fn(c)`, and now that its src makes a C++ virtual call it links from
+# port/slice_w31_rs5a.txt (run linkfull, lane RS5A), which carries the MSVC
+# options it needs. Slot 22 OnAttacked1 (0x020b37ec) is seated from
+# port/slice_boobrick1.txt; see hal/actor_classes.cpp.
 src/_ZN13BigBrickBlock15OnGroundPoundedER8dActor_c.cpp
 src/_ZN13BigBrickBlock8OnKickedER8dActor_c.cpp
 src/_ZN13BigBrickBlock4KillEv.cpp
