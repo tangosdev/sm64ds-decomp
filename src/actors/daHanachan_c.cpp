@@ -203,6 +203,7 @@ void daHanachan_c::StateDamageStopInit()
 // @symbol _ZN12daHanachan_c13StateDeadMainEv
 void daHanachan_c::StateDeadMain()
 {
+    /* starPos is written and never read; removing it changes StateDeadMain's bytes. */
     Vector3 starPos;
     Vector3 v;
     int a, b;

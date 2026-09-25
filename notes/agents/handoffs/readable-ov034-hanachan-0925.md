@@ -7,13 +7,16 @@ This document describes this commit. The queue records its immutable output SHA.
 - Issue URL, task ID, stage, session and harness: https://github.com/tangosdev/sm64ds-decomp/issues/3140,
   `readable-ov034-hanachan-0925`, stage `revise`, session `claude-prod-readable-ov034-hanachan-0925`,
   Claude Code (Opus 5.5).
+- Round 2 (comment-only rework of verifier findings V1-V3): stage `revise`, session
+  `claude-prod-readable-ov034-hanachan-0925-r2`, Claude Code (Opus 5.5), input
+  `5b4b8a1a68e820a0711177253d6e5316ee50a781`; tested base unchanged, `ace15a6c62`.
 - Source branch and previous accepted input SHA: `readable/readable-ov034-hanachan-0925`, input
   `ace15a6c626d8fd133dd8accc41dd313be567d96`.
 - Original source base SHA and installed workflow and tool SHA: both `ace15a6c626d8fd133dd8accc41dd313be567d96`.
 - Separate evidence commits and required artifacts in this commit: none. Every experiment below was
   scratch-applied, measured with `tubuild verify` and reverted; there is no committed artifact for them.
-- Next action, responsible role and blockers: independent verification (verifier) of this commit:
-  byte, relocation, whole-object and source review. No blockers.
+- Next action, responsible role and blockers: independent verification (verifier), round 2:
+  comment accuracy (V1-V3) of this commit. No blockers.
 - Status: verified candidate. Every local gate listed below exits 0.
 - Remaining uncommitted or local-only material: none.
 
@@ -84,6 +87,28 @@ https://github.com/tangosdev/sm64ds-decomp/issues/3140.
 | R14 | dead or local declarations | `include/decl_common.h` declares `func_ov034_02112650` and `func_ov034_021129ec` (now members) and `data_ov034_02114538` as `int []` | still deferred | claude-promo-coord-0923 | https://github.com/tangosdev/sm64ds-decomp/issues/3140 | The file is held by `jump-contract-repair-0918`. The two function lines name no defined symbol and nothing uses them; delete them when the file is free. |
 | R15 | stale manifest notes | old `func_ov034_*` names in `CLAIMS.md`, `notes/mwccarm-codegen.md`, `symbols/actor_renames.tsv` and generated docs; the `config/decl-agreement-baseline.json` key `func_ov034_02112650` | still deferred | claude-promo-coord-0923 | https://github.com/tangosdev/sm64ds-decomp/issues/3140 | Outside this reservation; no gate requires them. The baseline key is inert. |
 
+## Round 2: verifier findings
+
+Round 2 changes comment lines only: `include/daHanachan_c.h` and one added comment line in
+`src/actors/daHanachan_c.cpp`.
+
+| ID | Finding | Outcome | Reason |
+|---|---|---|---|
+| V1 | the comment above `Behavior()` called it declared but not yet decompiled | fixed | Replaced with one line: it overrides fBase_c::Behavior, slot 6 of `_ZTV12daHanachan_c` (slot number from `include/fBase_c.h`). Behavior is defined in this TU and matches at 0x02112b5c. |
+| V2 | the layout banner claimed eight arrays on eight consecutive boundaries and skipped 0x462 to 0x478 | fixed | Recounted from the header: eleven five-element arrays from 0x110 to 0x707, contiguous except the 2-byte pad at 0x462 and the 1-byte pad at 0x707. The listing now includes `mSegmentSpacing[5]` at 0x464, `mSegmentBouncePhase` at 0x6f8, `mSegmentBounceTimer` at 0x702 and `mWithMeshClsn` at 0x708. |
+| V3 | the `mSegmentBounceTimer` comment said the stomped segment's entry is set | fixed | HandlePlayerHits sets `[i]` to 0x1e only when i > 1; a stomp on segment 0 or 1 sets `[0]` and enters DAMAGE. The comment now says so. |
+| V4 | the `data_ov034_02114538` decl baseline key | still deferred | Ruled justified by the verifier; unchanged. |
+| V5 | the unused `starPos` local in StateDeadMain | fixed | One comment line added saying it must stay. Measured in round 2: deleting the local and its three stores gives 33/34, StateDeadMain DIFF; reverted. No committed artifact. |
+
+Round 2 proof, on this commit:
+
+- `python tools/tubuild.py verify ov034/daHanachan_c`: exit 0, 34/34 MATCH, objisolate clean,
+  reloc-destinations clean. The input commit was also 34/34 before any edit. The manifest's
+  `verification` block is unchanged.
+- `python tools/check_dead_references.py`: exit 0, no new dead references, no broken markdown links.
+- `python tools/check_decl_agreement.py --changed ace15a6c62`: exit 0, no new disagreements, no new
+  local redeclarations.
+
 ## Reconstruction dimensions
 
 - Exact function, byte and relocation coverage: 34 of 34 functions, full TU range.
@@ -103,8 +128,8 @@ https://github.com/tangosdev/sm64ds-decomp/issues/3140.
 
   | Path | lines | `unk_` | `func_` | `extern "C"` | `_ZN` |
   |---|---|---|---|---|---|
-  | `src/actors/daHanachan_c.cpp` | 1424 to 1173 | 34 to 0 | 124 to 13 | 36 to 7 | 122 to 78 |
-  | `include/daHanachan_c.h` | 100 to 144 | 15 to 0 | 1 to 1 | 0 to 0 | 2 to 2 |
+  | `src/actors/daHanachan_c.cpp` | 1424 to 1174 | 34 to 0 | 124 to 13 | 36 to 7 | 122 to 78 |
+  | `include/daHanachan_c.h` | 100 to 142 | 15 to 0 | 1 to 1 | 0 to 0 | 2 to 1 |
 
   Of the 78 `_ZN` lines in the TU, 34 are marker lines (6 at the base), so the other `_ZN` lines go
   from 116 to 44: the 10 bridge declarations of R5 and R6, their call sites, and the call site of

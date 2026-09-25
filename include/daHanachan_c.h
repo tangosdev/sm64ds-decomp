@@ -3,18 +3,23 @@
 
 #include "types.h"
 
-/* The Wiggler (daHanachan_c). Five body segments, so five of everything -- and EIGHT arrays,
- * which close on eight consecutive boundaries:
+/* The Wiggler (daHanachan_c). Five body segments, so five of everything: eleven
+ * five-element arrays run from the end of dEnemyBase_c to mWithMeshClsn, back to
+ * back except for two pad gaps:
  *
  *     dEnemyBase_c                        ends 0x110
- *     ModelAnim[5]                 0x110 + 5*0x64 = 0x304  -> MaterialChanger
- *     MaterialChanger[5]           0x304 + 5*0x14 = 0x368  -> TextureSequence
- *     TextureSequence[5]           0x368 + 5*0x14 = 0x3cc  -> the first triple
- *     Vector3[5]                   0x3cc + 5*0x0c = 0x408  -> the second
- *     Vector3[5]                   0x408 + 5*0x0c = 0x444  -> the shorts
- *     Vector3s[5]                  0x444 + 5*0x06 = 0x462
- *     dCcAcPos_c[5] 0x478 + 5*0x40 = 0x5b8  -> the second set
- *     dCcAcPos_c[5] 0x5b8 + 5*0x40 = 0x6f8
+ *     ModelAnim[5]                 0x110 + 5*0x64 = 0x304
+ *     MaterialChanger[5]           0x304 + 5*0x14 = 0x368
+ *     TextureSequence[5]           0x368 + 5*0x14 = 0x3cc
+ *     Vector3[5]                   0x3cc + 5*0x0c = 0x408
+ *     Vector3[5]                   0x408 + 5*0x0c = 0x444
+ *     Vector3s[5]                  0x444 + 5*0x06 = 0x462  (2 bytes pad)
+ *     s32 mSegmentSpacing[5]       0x464 + 5*0x04 = 0x478
+ *     dCcAcPos_c[5]                0x478 + 5*0x40 = 0x5b8
+ *     dCcAcPos_c[5]                0x5b8 + 5*0x40 = 0x6f8
+ *     s16[5]                       0x6f8 + 5*0x02 = 0x702
+ *     u8[5]                        0x702 + 5*0x01 = 0x707  (1 byte pad)
+ *     dBgCh_Actr                          at 0x708
  *
  * The Vector3s array is what named func_02011508 -- see the note on Vector3s in
  * include/types.h and src/_ZN8Vector3sD1Ev.cpp.
@@ -54,7 +59,7 @@ struct daHanachan_c : dEnemyBase_c {
     dCcAcPos_c mdCc_cs1[5];    /* 0x478 */
     dCcAcPos_c mdCc_cs2[5];    /* 0x5b8 */
     s16 mSegmentBouncePhase[5];                      /* 0x6f8 -- Behavior adds 0x1200 */
-    u8  mSegmentBounceTimer[5];                      /* 0x702 -- set to 0x1e when that segment is stomped */
+    u8  mSegmentBounceTimer[5];                      /* 0x702 -- a stomp sets [i] to 0x1e for segments 2-4, [0] for segment 0 or 1 */
     u8  pad_707[0x1];
     dBgCh_Actr mWithMeshClsn;                      /* 0x708 */
     /* The fields below close on the ROM's `new daHanachan_c` size; see tools/opnew_sizes.py.
@@ -77,14 +82,7 @@ struct daHanachan_c : dEnemyBase_c {
 
     virtual ~daHanachan_c();
 
-    /* An override the cartridge proves and this header never declared. _ZTV12daHanachan_c
-       slot 6 pointed at fBase_c::Behavior; the ROM has ov034:_ZN12daHanachan_c8BehaviorEv
-       (0x02112b5c, 0x6e0 bytes), named in symbols.txt but not yet decompiled -- the
-       slot needs the symbol, not a body, so declaring it is the whole fix.
-       No `virtual` keyword, matching the overrides beside it: a derived declaration
-       of a base virtual overrides whether or not it repeats the word.
-       Measured by tools/romdata_check.py, the only gate that reads vtable bytes --
-       objisolate drops every non-.text section, so 106/106 is blind here. */
+    /* Overrides fBase_c::Behavior, slot 6 of _ZTV12daHanachan_c. */
     int Behavior();
     int CleanupResources();
     int InitResources();
