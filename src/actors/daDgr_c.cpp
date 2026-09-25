@@ -73,7 +73,6 @@ u32 slot, u32 effect, s32 x, s32 y, s32 z, const void *rot, void *cb);
 void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block( dBgW_KcMbg*, KCL_File*, const Matrix4x3&, Fix12i, short, CLPS_Block&);
 void func_020393d4(int* p, int v);
 extern CLPS_Block data_ov025_02112c28;
-extern int _ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_;
 }
 
 // @symbol daDgr_c_classInit
@@ -103,7 +102,7 @@ s32 daDgr_c::InitResources()
             &mMeshCollider, kcl, mClsnMat, 0x1000, mAngleY, data_ov025_02112c28);
     }
     func_020393d4((int*)&mMeshCollider,
-                  (int)&_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
+                  (int)&dBgW::UpdatePosAndAngs);
     mAngleY = 0;
     mBasePosY = mPosY;
     mAngleXSpeed = 0;

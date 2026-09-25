@@ -46,7 +46,6 @@ void func_020393d4(void *p, void *v);
 void func_020393c4(void *p, void *v);
 void func_020393a4(int *p, int v);
 int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned a, unsigned b, unsigned c, void *pos, unsigned e);
-extern int _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -100,7 +99,7 @@ s32 daObjWc_Obj05_c::InitResources()
     KCL_File *mc = (KCL_File *)dBgW_Kc::LoadFile(*(SharedFilePtr *)data_ov029_02114284);
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         &mMeshCollider, mc, &mClsnMat, 0x1000, mAngleY, *(CLPS_Block *)data_ov029_0211306c);
-    func_020393d4(&mMeshCollider, (void *)&_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
+    func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosWithTransform);
     func_020393c4(&mMeshCollider, (void *)&func_ov029_02111e60);
     unk_32b = 0;
     unk_32a = unk_32b;
