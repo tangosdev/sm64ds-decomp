@@ -23629,6 +23629,26 @@ endforeach()
 # AND THE SPHERE PASS RUN AS THE ROM'S OWN BODIES
 # ===========================================================================
 #
+# R3. port/slice_w31_rs5b.txt: src/_Znwj.cpp, the DS global operator new with
+# its real signature (main #1394). hal/cxxname_bridge.cpp's host body of the
+# same C symbol is retired in the same change, so the six targets that compile
+# that file take the src TU instead (smoke_actor / smoke_savestate /
+# smoke_persist stay EXCLUDE_FROM_ALL; they get it so their link line keeps the
+# symbol).
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w31_rs5b.txt" SLICE_W31_RS5B_LINES)
+set(SLICE_W31_RS5B_SOURCES "")
+foreach(line IN LISTS SLICE_W31_RS5B_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_W31_RS5B_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_trs5b walk_window walk_window_hires smoke_player smoke_actor
+                smoke_savestate smoke_persist)
+    target_sources(${_trs5b} PRIVATE ${SLICE_W31_RS5B_SOURCES})
+endforeach()
+
 # R7. port/slice_w31_rs5b_stage.txt: src/_ZN5Stage13UpdateMessageEv.cpp, main's
 # blob, on the two targets that compile Stage::Behavior and hal/message_pump.cpp.
 # hal/stage_frame.cpp (another lane's file this wave) still defines

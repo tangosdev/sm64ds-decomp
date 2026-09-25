@@ -1,0 +1,15 @@
+# slice_w31_rs5b.txt -- run linkfull wave 31B, lane RS5B, row R3: THE DS GLOBAL
+# operator new.
+#
+#   _Znwj  arm9 0x0203cbe4, the three-word veneer onto func_0203cc0c (`ldr ip,
+#       [pc]; bx ip; .word 0x0203cc0c`), MATCHING 2004/b56. Its src carries the
+#       real signature since main #1394 (932df01c82): `void *_Znwj(u32 size)
+#       { return func_0203cc0c(size); }`, the same blob on main and here. The
+#       host body in port/hal/cxxname_bridge.cpp (written when the src spelled
+#       it void/void and so passed no size under cdecl) is retired in the same
+#       change, and this TU is built on the six targets that compile that file
+#       (the RS5B block at the end of port/CMakeLists.txt). The decorated
+#       spellings ?_Znwj@@YAPAXI@Z (hal/cxx_aliases.cpp) and ?_Znwj@@YAPAXH@Z
+#       (hal/actor_classes_intro.cpp) still alias onto __Znwj, which this object
+#       now defines.
+src/_Znwj.cpp
