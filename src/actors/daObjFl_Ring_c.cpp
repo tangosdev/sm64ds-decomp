@@ -67,11 +67,6 @@ u8  DecIfAbove0_Byte(u8 *p);
 int ApproachAngle(s16 *p, int target, int a, int b, int c);
 
 void _ZN5Sound9PlayBank3EjRK7Vector3(u32 id, void *pos);
-void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-    u32 actorId, u32 param, void *pos, void *rot, int areaId, int mapObjId);
-
-void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
-void *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void *fp);
 void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *self, void *kcl, void *mtx, int scale, s16 angleY, void *clps);
 int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
@@ -80,7 +75,6 @@ void func_020393a4(void *p, int v);
 void func_02039394(void *p, int v);
 void func_020393d4(void *p, void *fn);
 void func_020393c4(void *p, void *fn);
-extern int _ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_[];
 void func_ov022_02111564(void *);
 }
 
@@ -92,17 +86,17 @@ void func_ov022_02111564(void *);
  * so that one call deliberately keeps the measured register-level spelling. */
 s32 daObjFl_Ring_c::InitResources()
 {
-    void *f = _ZN5Model8LoadFileER13SharedFilePtr(data_ov022_02113cc8.mModelFile);
+    void *f = Model::LoadFile(*data_ov022_02113cc8.mModelFile);
     mModel.SetFile((BMD_File *)f, 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
-    void *k = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov022_02113cc8.mClsnFile);
+    void *k = dBgW_Kc::LoadFile(*data_ov022_02113cc8.mClsnFile);
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         &mMeshCollider, k, &mClsnMat, 0x199, mAngleY,
         data_ov022_02113cc8.mClps);
 
-    func_020393d4(&mMeshCollider, _ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
+    func_020393d4(&mMeshCollider, (void *)dBgW::UpdatePosAndAngs);
     func_020393c4(&mMeshCollider, (void *)func_ov022_02111564);
 
     /* The ring's own Z channel carries its spin rate, not an angle: it rests
@@ -156,8 +150,8 @@ s32 daObjFl_Ring_c::Behavior()
             v[1] = mPosY;
             v[2] = mPosZ;
             v[1] = mPosY + 0x1f4000;
-            s = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-                0xf3, 0, v, 0, mAreaId, -1);
+            s = dActor_c::Spawn(
+                0xf3, 0, *(Vector3 *)v, 0, mAreaId, -1);
             *(void **)((u8 *)s + 0x10c) = this;
             *(int *)((u8 *)s + 0x118) = mPosY;
             {

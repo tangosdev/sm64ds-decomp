@@ -17,6 +17,9 @@
 #include "Scuttlebug.h"
 #include "dBgCh_Gnd.h"
 #include "Player.h"
+#include "SharedFilePtr.h"
+#include "Animation.h"
+#include "SurfaceInfo.h"
 
 /* ------------------------------------------------------------------------
  * Local value shapes carried from the legacy one-function files.
@@ -80,69 +83,35 @@ void  func_02012694(int id, void *pos);
 int   func_02037e38(unsigned int *p);
 
 void  dBgCh_Actr_UpdateDiscreteNoLava_veneer(void *p);
-int   _ZNK10dBgCh_Actr10IsOnGroundEv(void *self);
-int   _ZNK10dBgCh_Actr8IsOnWallEv(void *self);
-int   _ZNK10dBgCh_Actr13JustHitGroundEv(void *self);
-int   _ZNK10dBgCh_Actr14GetResultFlag1Ev(void *self);
 int   _ZNK10dBgCh_Actr12TouchesWaterEv(void *self);
 void *_ZNK10dBgCh_Actr14GetFloorResultEv(void *self);
 void *_ZNK10dBgCh_Actr13GetWallResultEv(void *self);
-void  _ZN10dBgCh_Actr13SetLimMovFlagEv(void *self);
-void  _ZN10dBgCh_Actr15ClearLimMovFlagEv(void *self);
-void  _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *self, Vector3 *out);
 
-void  _ZN9Animation7AdvanceEv(void *self);
 void  _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *bca, int a,
                                                   int fix, unsigned int j);
-void  _ZN5dCc_c5ClearEv(void *self);
-void  _ZN5dCc_c6UpdateEv(void *self);
 
-void  _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *clsn);
-void *_ZN8dActor_c22ClosestNonVanishPlayerEv(void *self);
-void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
-void *_ZN8dActor_c7FindEggER5dCc_c(void *self, void *clsn);
-int   _ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(void *self, void *clsn,
-                                                     void *player);
-void  _ZN8dActor_c8PoofDustEv(void *self);
 void  _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(void *self, const void *pos,
                                                      unsigned int count,
                                                      int value, short s);
-int   _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(void *self, Vector3 *from,
-                                                    Vector3 *out, int doStore);
 void  _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
           void *self, void *shadow, void *mtx, int radius, int height, u32 flags);
-void  _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c(char *self, void *clsn);
-void  _ZN8dActor_c15GivePlayerCoinsER6Playerhj(void *self, void *player,
-                                               unsigned char count,
-                                               unsigned int flags);
-int   _ZN8dActor_c13DistToCPlayerEv(void *self);
 
 void  _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int id, const void *pos);
 void  _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x,
                                                      int y, int z);
 
-int   _ZN6Player15IsCollectingCapEv(void *player);
-void  _ZN6Player20RegisterEggCoinCountEjbb(void *player, unsigned int count,
-                                           int b1, int b2);
-int   _ZN6Player9IsOnShellEv(void *player);
-void  _ZN6Player16IncMegaKillCountEv(void *player);
 void  _ZN6Player6BounceE5Fix12IiE(void *player, int speed);
 int   _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *player, void *pos,
                                               unsigned int a, int damage,
                                               unsigned int b, unsigned int c,
                                               unsigned int d);
 
-void  _ZN7fBase_c18MarkForDestructionEv(void *self);
-void *_ZN7fBase_cnwEj(u32 size);
 void  _ZN8dActor_cC2Ev(void *actor);
 void  _ZN9ModelAnimC1Ev(void *p);
 void  _ZN11ShadowModelC1Ev(void *p);
 void  _ZN7dCcAc_cC1Ev(void *p);
 void  _ZN10dBgCh_ActrC1Ev(void *p);
 
-void  _ZN13SharedFilePtr7ReleaseEv(void *p);
-void  _ZN9Animation8LoadFileER13SharedFilePtr(void *p);
-void *_ZN5Model8LoadFileER13SharedFilePtr(void *p);
 
 /* Declared by final name rather than as members: both take Fix12<int> where
  * these call sites pass int literals, and dBgCh_Actr::Init's last two
@@ -205,10 +174,10 @@ void Scuttlebug::OnTurnIntoEgg(Player &player)
     void *p = &player;
     int *bp;
     int t;
-    if (_ZN6Player15IsCollectingCapEv(p))
-        _ZN8dActor_c15GivePlayerCoinsER6Playerhj(a, p, ((Scuttlebug *)a)->mCoinCount, 0);
+    if (((Player *)p)->IsCollectingCap())
+        GivePlayerCoins(*(Player *)p, ((Scuttlebug *)a)->mCoinCount, 0);
     else
-        _ZN6Player20RegisterEggCoinCountEjbb(p, ((Scuttlebug *)a)->mCoinCount, 0, 0);
+        ((Player *)p)->RegisterEggCoinCount(((Scuttlebug *)a)->mCoinCount, 0, 0);
     if (((Scuttlebug *)a)->param1 != 0) {
         ((Scuttlebug *)a)->mCoinCount = 0;
         bp = (int *)&((Scuttlebug *)a)->mFlags;
@@ -217,7 +186,7 @@ void Scuttlebug::OnTurnIntoEgg(Player &player)
         *bp = t;
         Scuttlebug_SetState(a, 0);
     } else {
-        _ZN7fBase_c18MarkForDestructionEv(a);
+        MarkForDestruction();
     }
 }
 
@@ -225,9 +194,9 @@ void Scuttlebug::OnTurnIntoEgg(Player &player)
 int Scuttlebug::InitResources()
 {
     char *s = (char *)((dActor_c *)this);
-    void *mf = _ZN5Model8LoadFileER13SharedFilePtr(data_ov071_02122f80);
+    void *mf = Model::LoadFile(*(SharedFilePtr *)data_ov071_02122f80);
     ((ModelBase *)(&((Scuttlebug *)s)->mModelAnim))->SetFile((BMD_File *)mf, 1, -1);
-    _ZN9Animation8LoadFileER13SharedFilePtr(data_ov071_02122f88);
+    Animation::LoadFile(*(SharedFilePtr *)data_ov071_02122f88);
     if (((ShadowModel *)(&((Scuttlebug *)s)->mShadowModel))->InitCylinder() == 0)
         return 0;
     _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
@@ -264,8 +233,8 @@ int Scuttlebug::Behavior()
 {
     DecIfAbove0_Short((char *)&mTimer);
     func_ov071_02120278((ScuttlebugState *)((char *)this));
-    _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c((char *)this, &mdCcAc_c);
-    if (_ZNK10dBgCh_Actr14GetResultFlag1Ev((char *)&mWithMeshClsn) &&
+    MakeVanishLuigiWork(mdCcAc_c);
+    if (mWithMeshClsn.GetResultFlag1() &&
         _ZNK10dBgCh_Actr12TouchesWaterEv((char *)&mWithMeshClsn)) {
         func_ov071_0211f498((int *)((char *)this));
     }
@@ -300,8 +269,8 @@ void Scuttlebug::OnPendingDestroy()
 // @symbol _ZN10Scuttlebug16CleanupResourcesEv
 int Scuttlebug::CleanupResources()
 {
-    _ZN13SharedFilePtr7ReleaseEv(data_ov071_02122f80);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov071_02122f88);
+    ((SharedFilePtr *)data_ov071_02122f80)->Release();
+    ((SharedFilePtr *)data_ov071_02122f88)->Release();
     return 1;
 }
 
@@ -350,7 +319,7 @@ extern "C" int func_ov071_02120200(char *c)
     self->mAngleZ = z;
     self->mHorzSpeed = z;
     self->mTimer = 0x1e;
-    _ZN5dCc_c5ClearEv(&self->mdCcAc_c);
+    self->mdCcAc_c.Clear();
     self->mState = 0;
     return 1;
 }
@@ -359,7 +328,7 @@ extern "C" int func_ov071_02120200(char *c)
 extern "C" int func_ov071_021201b4(void *c)
 {
     if (((Scuttlebug *)c)->mTimer) return 1;
-    if (_ZN8dActor_c13DistToCPlayerEv(c) < 0x5dc000) Scuttlebug_SetState((char *)c, 1);
+    if (((dActor_c *)c)->DistToCPlayer() < 0x5dc000) Scuttlebug_SetState((char *)c, 1);
     return 1;
 }
 
@@ -373,7 +342,7 @@ extern "C" int func_ov071_02120130(char *c)
     self->mVertSpeed = 0x4d000;
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&self->mModelAnim, (void *)data_ov071_02122f88[1], 0, 0x1000, 0);
     self->mModelAnim.speed = 0x1000;
-    _ZN10dBgCh_Actr13SetLimMovFlagEv(&self->mWithMeshClsn);
+    self->mWithMeshClsn.SetLimMovFlag();
     func_0201267c(0xf1, &self->mCamSpacePosX);
     self->mState = 1;
     return 1;
@@ -384,9 +353,9 @@ extern "C" int func_ov071_02120028(char *c)
 {
     Scuttlebug *self = (Scuttlebug *)c;
     self->mModelAnim.Advance();
-    _ZN8dActor_c9UpdatePosEP5dCc_c(c, &self->mdCcAc_c);
+    ((dActor_c *)c)->UpdatePos(&self->mdCcAc_c);
     dBgCh_Actr_UpdateDiscreteNoLava_veneer(&self->mWithMeshClsn);
-    if (_ZNK10dBgCh_Actr13JustHitGroundEv(&self->mWithMeshClsn)) {
+    if (self->mWithMeshClsn.JustHitGround()) {
         Vec3 v;
         int x, y, z;
         x = *(volatile int *)&self->mPosX;
@@ -399,9 +368,9 @@ extern "C" int func_ov071_02120028(char *c)
         *(volatile int *)&v.y = y;
         _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xb2, x, y, z);
         self->mVertSpeed = self->mVertSpeed * -0x28 / 100;
-    } else if (_ZNK10dBgCh_Actr10IsOnGroundEv(&self->mWithMeshClsn)) {
+    } else if (self->mWithMeshClsn.IsOnGround()) {
         self->mVertSpeed = 0;
-        _ZN10dBgCh_Actr15ClearLimMovFlagEv(&self->mWithMeshClsn);
+        self->mWithMeshClsn.ClearLimMovFlag();
         self->mAnchorX = self->mPosX;
         self->mAnchorY = self->mPosY;
         self->mAnchorZ = self->mPosZ;
@@ -409,8 +378,8 @@ extern "C" int func_ov071_02120028(char *c)
         Scuttlebug_SetState(c, 2);
     }
     func_ov071_0211f29c(c);
-    _ZN5dCc_c5ClearEv(&self->mdCcAc_c);
-    _ZN5dCc_c6UpdateEv(&self->mdCcAc_c);
+    self->mdCcAc_c.Clear();
+    self->mdCcAc_c.Update();
     return 1;
 }
 
@@ -483,12 +452,12 @@ extern "C" int func_ov071_0211fd58(char *c)
         self->mTimer = 0x3c;
         Scuttlebug_SetState(c, 2);
     }
-    _ZN8dActor_c9UpdatePosEP5dCc_c(c, &self->mdCcAc_c);
+    ((dActor_c *)c)->UpdatePos(&self->mdCcAc_c);
     func_ov071_0211f148(c, (char *)&self->mWithMeshClsn);
     func_ov071_0211f29c(c);
-    _ZN5dCc_c5ClearEv(&self->mdCcAc_c);
-    _ZN5dCc_c6UpdateEv(&self->mdCcAc_c);
-    if (_ZNK10dBgCh_Actr10IsOnGroundEv(&self->mWithMeshClsn) != 0) {
+    self->mdCcAc_c.Clear();
+    self->mdCcAc_c.Update();
+    if (self->mWithMeshClsn.IsOnGround() != 0) {
         unsigned int t = (unsigned int)(self->mModelAnim.currFrame << 4) >> 0x10;
         if ((t <= 2) || (t >= 8 && t <= 0xa) || (t >= 0x18 && t <= 0x1a) || (t >= 0x20 && t <= 0x22)) {
             func_0201267c(0xf0, &self->mCamSpacePosX);
@@ -517,15 +486,15 @@ extern "C" int func_ov071_0211fc60(char *c)
 {
     Scuttlebug *self = (Scuttlebug *)c;
     self->mModelAnim.Advance();
-    if (_ZNK10dBgCh_Actr10IsOnGroundEv(&self->mWithMeshClsn)) {
+    if (self->mWithMeshClsn.IsOnGround()) {
         self->mTimer = 0x3c;
         Scuttlebug_SetState(c, 2);
     }
-    _ZN8dActor_c9UpdatePosEP5dCc_c(c, &self->mdCcAc_c);
+    ((dActor_c *)c)->UpdatePos(&self->mdCcAc_c);
     func_ov071_0211f148(c, (char *)&self->mWithMeshClsn);
     func_ov071_0211f29c(c);
-    _ZN5dCc_c5ClearEv(&self->mdCcAc_c);
-    _ZN5dCc_c6UpdateEv(&self->mdCcAc_c);
+    self->mdCcAc_c.Clear();
+    self->mdCcAc_c.Update();
     return 1;
 }
 
@@ -555,11 +524,11 @@ extern "C" int func_ov071_0211fb24(char *c)
                   (Vector3 *)&self->mAnchorX) < 0x12c000)
         Scuttlebug_SetState(c, 2);
     func_ov071_0211f0b4(c);
-    _ZN8dActor_c9UpdatePosEP5dCc_c(c, &self->mdCcAc_c);
+    ((dActor_c *)c)->UpdatePos(&self->mdCcAc_c);
     func_ov071_0211f148(c, (char *)&self->mWithMeshClsn);
     func_ov071_0211f29c(c);
-    _ZN5dCc_c5ClearEv(&self->mdCcAc_c);
-    _ZN5dCc_c6UpdateEv(&self->mdCcAc_c);
+    self->mdCcAc_c.Clear();
+    self->mdCcAc_c.Update();
     unsigned short v = (unsigned short)(self->mModelAnim.currFrame >> 0xc);
     if (v == 0 || v == 8 || v == 0x17 || v == 0x1f)
         func_0201267c(0xf0, &self->mCamSpacePosX);
@@ -604,7 +573,7 @@ extern "C" int func_ov071_0211fa54(void *thiz)
         Scuttlebug_SetState(c, 2);
     }
 done:
-    _ZN5dCc_c5ClearEv(&((Scuttlebug *)c)->mdCcAc_c);
+    ((Scuttlebug *)c)->mdCcAc_c.Clear();
     return 1;
 }
 
@@ -675,10 +644,10 @@ extern "C" int func_ov071_0211f8d0(char *self)
     v.y = y2;
     v.z = z;
 
-    _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(self, &v, pos, one);
+    ((dActor_c *)self)->DetectRaycastClsn(v, *pos, one);
 
     ((Scuttlebug *)self)->mParent = (dActor_c *)zero;
-    _ZN10dBgCh_Actr13SetLimMovFlagEv(&((Scuttlebug *)self)->mWithMeshClsn);
+    ((Scuttlebug *)self)->mWithMeshClsn.SetLimMovFlag();
 
     ((Scuttlebug *)self)->mState = 7;
     return 1;
@@ -710,8 +679,8 @@ extern "C" int func_ov071_0211f7d4(dActor_c *self)
     }
     self->UpdatePos((dCc_c *)(&((Scuttlebug *)s)->mdCcAc_c));
     func_ov071_0211f29c(s);
-    _ZN5dCc_c5ClearEv((dCc_c *)(&((Scuttlebug *)s)->mdCcAc_c));
-    _ZN5dCc_c6UpdateEv((dCc_c *)(&((Scuttlebug *)s)->mdCcAc_c));
+    ((Scuttlebug *)s)->mdCcAc_c.Clear();
+    ((Scuttlebug *)s)->mdCcAc_c.Update();
     return 1;
 }
 
@@ -740,9 +709,9 @@ extern "C" int func_ov071_0211f694(char *t)
 {
     ((Scuttlebug *)t)->mAngleX = ((Scuttlebug *)t)->mAngleX - 0x1000;
     ((Scuttlebug *)t)->mModelAnim.Advance();
-    _ZN8dActor_c9UpdatePosEP5dCc_c(t, &((Scuttlebug *)t)->mdCcAc_c);
+    ((dActor_c *)t)->UpdatePos(&((Scuttlebug *)t)->mdCcAc_c);
     dBgCh_Actr_UpdateDiscreteNoLava_veneer(&((Scuttlebug *)t)->mWithMeshClsn);
-    if (_ZNK10dBgCh_Actr13JustHitGroundEv(&((Scuttlebug *)t)->mWithMeshClsn) != 0 || ((Scuttlebug *)t)->mTimer == 0)
+    if (((Scuttlebug *)t)->mWithMeshClsn.JustHitGround() != 0 || ((Scuttlebug *)t)->mTimer == 0)
         func_ov071_0211f498((int *)t);
     return 1;
 }
@@ -789,14 +758,14 @@ extern "C" void func_ov071_0211f498(int *t)
     v.y = ((Scuttlebug *)t)->mPosY;
     v.z = ((Scuttlebug *)t)->mPosZ;
     _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(t, &v, ((Scuttlebug *)t)->mCoinCount, 0xf000, 0);
-    _ZN8dActor_c8PoofDustEv(t);
+    ((dActor_c *)t)->PoofDust();
     func_02012694(0xc4, &((Scuttlebug *)t)->mCamSpacePosX);
     if (((Scuttlebug *)t)->param1) {
         ((Scuttlebug *)t)->mCoinCount = 0;
         Scuttlebug_SetState((char *)t, 0);
         return;
     }
-    _ZN7fBase_c18MarkForDestructionEv(t);
+    ((fBase_c *)t)->MarkForDestruction();
 }
 
 // @symbol func_ov071_0211f29c
@@ -806,7 +775,7 @@ extern "C" void func_ov071_0211f29c(void *thiz)
     unsigned char *hitPlayer;
     int b;
 
-    if (_ZN8dActor_c7FindEggER5dCc_c(c, &((Scuttlebug *)c)->mdCcAc_c) != 0) {
+    if (((dActor_c *)c)->FindEgg(((Scuttlebug *)c)->mdCcAc_c) != 0) {
         _ZN5Sound9PlayBank0EjRK7Vector3(9, &((Scuttlebug *)c)->mCamSpacePosX);
         func_ov071_0211f498((int *)c);
         return;
@@ -816,7 +785,7 @@ extern "C" void func_ov071_0211f29c(void *thiz)
         unsigned int id = ((Scuttlebug *)c)->mdCcAc_c.otherOwner;
         if (id == 0)
             return;
-        hitPlayer = (unsigned char *)_ZN8dActor_c10FindWithIDEj(id);
+        hitPlayer = (unsigned char *)dActor_c::FindWithID(id);
     }
     if (hitPlayer == 0)
         return;
@@ -832,7 +801,7 @@ extern "C" void func_ov071_0211f29c(void *thiz)
     }
 
     if ((((Scuttlebug *)c)->mdCcAc_c.hitFlags & 0x66fe0)
-        || _ZN6Player9IsOnShellEv(hitPlayer) != 0
+        || ((Player *)hitPlayer)->IsOnShell() != 0
         || ((Player *)hitPlayer)->mIsMetal != 0) {
         _ZN5Sound9PlayBank0EjRK7Vector3(9, &((Scuttlebug *)c)->mCamSpacePosX);
         func_ov071_0211f498((int *)c);
@@ -844,12 +813,12 @@ extern "C" void func_ov071_0211f29c(void *thiz)
             (Vector3 *)&((Player *)hitPlayer)->mPosX,
             (Vector3 *)&((Scuttlebug *)c)->mPosX);
         ((Scuttlebug *)c)->mAngleY = (short)(((Scuttlebug *)c)->mPrevAngleY + 0x8000);
-        _ZN6Player16IncMegaKillCountEv(hitPlayer);
+        ((Player *)hitPlayer)->IncMegaKillCount();
         Scuttlebug_SetState((char *)c, 8);
         return;
     }
 
-    if (_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(c, &((Scuttlebug *)c)->mdCcAc_c, hitPlayer) != 0) {
+    if (((dActor_c *)c)->JumpedOnByPlayer(((Scuttlebug *)c)->mdCcAc_c, *(Player *)hitPlayer) != 0) {
         _ZN6Player6BounceE5Fix12IiE(hitPlayer, 0x28000);
         func_ov071_0211f498((int *)c);
         return;
@@ -876,7 +845,7 @@ extern "C" void func_ov071_0211f148(char *a, char *w)
     Vector3 wallnormal;
 
     dBgCh_Actr_UpdateDiscreteNoLava_veneer(w);
-    if (_ZNK10dBgCh_Actr10IsOnGroundEv(w)) {
+    if (((dBgCh_Actr *)w)->IsOnGround()) {
         dBgCh_Gnd rc;
         {
             int p60 = ((Scuttlebug *)a)->mPosY;
@@ -894,7 +863,7 @@ extern "C" void func_ov071_0211f148(char *a, char *w)
             ((Scuttlebug *)a)->mPosZ = ((Scuttlebug *)a)->mPrevPosZ;
         } else {
             void *fr = _ZNK10dBgCh_Actr14GetFloorResultEv(w);
-            _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char *)fr + 4, &normal);
+            ((SurfaceInfo *)((char *)fr + 4))->CopyNormalTo(normal);
             if (normal.y != 0) {
                 ((Scuttlebug *)a)->mVertSpeed = -(_ZN4cstd4fdivEii(
                     (int)(((long long)normal.x * ((Scuttlebug *)a)->unk_0a4 + 0x800) >> 12)
@@ -903,9 +872,9 @@ extern "C" void func_ov071_0211f148(char *a, char *w)
             }
         }
     }
-    if (_ZNK10dBgCh_Actr8IsOnWallEv(w)) {
+    if (((dBgCh_Actr *)w)->IsOnWall()) {
         void *wr = _ZNK10dBgCh_Actr13GetWallResultEv(w);
-        _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char *)wr + 4, &wallnormal);
+        ((SurfaceInfo *)((char *)wr + 4))->CopyNormalTo(wallnormal);
     }
 }
 
@@ -917,7 +886,7 @@ extern "C" void func_ov071_0211f0b4(char *c)
     Fix12i d;
     short ang;
     if (self->mTimer != 0) return;
-    p = (dActor_c *)_ZN8dActor_c22ClosestNonVanishPlayerEv(c);
+    p = (dActor_c *)((dActor_c *)c)->ClosestNonVanishPlayer();
     if (p == 0) return;
     d = Vec3_Dist((const Vector3 *)&self->mPosX, (const Vector3 *)&p->mPosX);
     if (d > 0x5dc000) return;

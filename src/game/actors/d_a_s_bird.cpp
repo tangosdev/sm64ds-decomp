@@ -71,13 +71,6 @@ extern s16 _ZN4cstd5atan2E5Fix12IiES1_(s32 y, s32 x);
 extern void _Z14ApproachLinearRsss(void *p, s16 target, s16 step);
 extern int func_0201267c(unsigned int a, void *b);
 extern void func_ov009_02111224(char *c, int r1);
-extern dActor_c *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-    unsigned int id, unsigned int p1, const Vector3 *pos, const Vector3_16 *rot,
-    int a, int b);
-extern dActor_c *_ZN8dActor_c10FindWithIDEj(u32 id);
-extern Player *_ZN8dActor_c13ClosestPlayerEv(void *self);
-extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *cc);
-extern void _ZN7fBase_c18MarkForDestructionEv(void *self);
 
 /* ModelAnim::SetAnim -- wall 6az. */
 void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
@@ -177,8 +170,8 @@ extern "C" void func_ov009_021116ec(char *c)
                         * 4096;
                 rot.y = (short)(rot.y
                     + (short)(RandomIntInternal(&data_0209e650) >> 16));
-                void *a = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-                    0x157, 0, &pos, &rot, (int)*(signed char *)(c + 0xcc), -1);
+                void *a = dActor_c::Spawn(
+                    0x157, 0, pos, &rot, *(signed char *)(c + 0xcc), -1);
                 if (a)
                     func_ov009_02111224((char *)a, *(int *)(c + 4));
             }
@@ -193,7 +186,7 @@ extern "C" void func_ov009_021116ec(char *c)
 extern "C" void func_ov009_021115d8(char *c)
 {
     if (*(unsigned char *)(c + 0x180) != 0) {
-        char *p2 = (char *)_ZN8dActor_c13ClosestPlayerEv(c);
+        char *p2 = (char *)((dActor_c *)c)->ClosestPlayer();
         if (p2 != 0) {
             struct Vector3 copy;
             struct Vector3 diff;
@@ -208,9 +201,9 @@ extern "C" void func_ov009_021115d8(char *c)
         }
         func_0201267c(0x6a, c + 0x74);
     } else {
-        char *p = (char *)_ZN8dActor_c10FindWithIDEj(*(unsigned int *)(c + 0x178));
+        char *p = (char *)dActor_c::FindWithID(*(unsigned int *)(c + 0x178));
         if (p == 0) {
-            _ZN7fBase_c18MarkForDestructionEv(c);
+            ((fBase_c *)c)->MarkForDestruction();
             return;
         }
         if (*(int *)(p + 0x17c) != 3)

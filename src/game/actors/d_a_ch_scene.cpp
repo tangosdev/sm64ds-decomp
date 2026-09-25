@@ -11,8 +11,6 @@
  * own vtable slot.
  *
  * deslop leftovers:
- * - Player::IsStateEnteringLevel / Unk_020c9e5c / SetNoControlState stay
- *   mangled: Player.h is out of scope for this TU.
  * - Camera::SetFlag_3 / LookAtExit stay mangled: Camera.h has no LookAtExit,
  *   and Camera.h is out of scope.
  * - func_ov002_020b0a0c writes the exit band and calls LoadLevel; a member
@@ -28,6 +26,7 @@
 #include "daChScene_c.h"
 #include "dScene_c.h"
 #include "FaderColor.h"
+#include "Player.h"
 
 extern "C" {
 extern void LoadLevel(s8 levelID, u8 entranceID, s8 starID, u32 d, s8 e);
@@ -35,11 +34,8 @@ extern u8 data_0209f2c0[];
 extern void MulVec3Mat4x3(void *in, void *m, void *out);
 extern void InvMat4x3(void *in, void *out);
 extern void func_ov002_020b0a0c(daChScene_c *self);
-extern int _ZN6Player20IsStateEnteringLevelEv(void *p);
-extern int _ZN6Player12Unk_020c9e5cEh(void *p, int a);
 extern void StartExitFaderWipe(int a);
 extern void _ZN6Camera9SetFlag_3Ev(void *cam);
-extern void _ZN6Player17SetNoControlStateEhih(void *p, int a, int b, int d);
 extern int Vec3_Dist(void *a, void *b);
 extern void func_02012790(int id);
 extern void _ZN6Camera10LookAtExitER8dActor_c(void *cam, void *a);
@@ -140,7 +136,7 @@ s32 daChScene_c::Behavior()
         }
     } else {
         if (data_02092110 < 0) {
-            if (_ZN6Player20IsStateEnteringLevelEv(player) == 0) {
+            if (((Player *)player)->IsStateEnteringLevel() == 0) {
                 MulVec3Mat4x3(&player->mPosX, &mInvMat, out2);
                 {
                     int a = out2[0];
@@ -157,12 +153,12 @@ s32 daChScene_c::Behavior()
                                     mAngleZ = 1;
                                 }
                                 cam = data_0209f318;
-                                if (_ZN6Player12Unk_020c9e5cEh(player, 7)) {
+                                if (((Player *)player)->Unk_020c9e5c(7)) {
                                     func_ov002_020b0a0c(this);
                                     StartExitFaderWipe(6);
                                     _ZN6Camera9SetFlag_3Ev(cam);
                                 } else {
-                                    _ZN6Player17SetNoControlStateEhih(player, 6, -1, 0);
+                                    ((Player *)player)->SetNoControlState(6, -1, 0);
                                     if (mAngleX != 0) {
                                         dActor_c *o;
                                         func_ov002_020b0a0c(this);

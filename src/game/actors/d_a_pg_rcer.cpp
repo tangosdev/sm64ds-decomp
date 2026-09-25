@@ -29,8 +29,6 @@
  *   mangles as int.
  *   Not in dBgCh_Actr.h: GetFloorResult / GetWallResult
  *   (func_ov019_0211140c).
- *   Reference vs pointer (notes/mwccarm-codegen.md 6az): Player StartTalk /
- *   ShowMessage / GetTalkState / HasFinishedTalking / Unk_020c4f40.
  *
  * Known limits:
  *   The helpers keep their func_ov019_* labels (PMF dispatch and race
@@ -96,20 +94,8 @@ extern int _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *, void *, int, int,
 extern void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void *self, void *btp, int a, int fix, unsigned int b);
 extern void *_ZNK10dBgCh_Actr14GetFloorResultEv(void *c);
 extern void *_ZNK10dBgCh_Actr13GetWallResultEv(void *c);
-extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *s, int *out);
-extern int _ZN9Animation8FinishedEv(void *self);
-extern void _ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h(void *self, signed char *a, unsigned int b, void *pos, unsigned int d);
-extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *clsn);
-extern void _ZNK7PathPtr7GetNodeER7Vector3j(void *p, void *v, unsigned int i);
-extern int _ZNK7PathPtr8NumNodesEv(void *p);
-extern int _ZNK10dBgCh_Actr13JustHitGroundEv(void *m);
 
 /* Player talk helpers: reference-vs-pointer is unprovable (this TU). */
-extern int _ZN6Player9StartTalkER7fBase_cb(void *actor, void *self, int b);
-extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void *actor, void *ab, unsigned int id, void *pos, unsigned int a, unsigned int b);
-extern int _ZN6Player12GetTalkStateEv(void *actor);
-extern int _ZN6Player18HasFinishedTalkingEv(void *actor);
-extern int _ZN6Player12Unk_020c4f40Et(void *p, unsigned short a);
 
 extern void _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b, unsigned int cc, int d, int e);
 extern u32 _ZN5Sound8PlayLongEjjjRK7Vector3s(u32 a, u32 b, u32 cc, void *v, u32 d);
@@ -274,7 +260,7 @@ int func_ov019_02112168(char *c)
         return 1;
     int d178 = *(int *)((char *)c + 0x178);
     if (Vec3_Dist((char *)c + 0x5c, (char *)pl + 0x5c) < d178 + 0x78000) {
-        if (_ZN6Player9StartTalkER7fBase_cb(pl, c, 1)) {
+        if (((Player *)pl)->StartTalk(*(fBase_c *)c, 1)) {
             *(int *)((char *)c + 0x378) = (int)pl;
             func_ov019_021122dc(c, 1);
         }
@@ -317,15 +303,14 @@ int func_ov019_02111fec(char *c)
                 msg = 0xab;
             else
                 msg = 0xa7;
-            if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(
-                    *(void **)(c + 0x378), c, (unsigned int)(short)msg, &pos, 1, 2) != 0) {
+            if (((Player *)(*(void **)(c + 0x378)))->ShowMessage(*(fBase_c *)c, (unsigned int)(short)msg, &pos, 1, 2) != 0) {
                 LB(0x38f) = LB(0x38f) + 1;
             }
         }
         break;
     }
     case 1:
-        if (_ZN6Player12GetTalkStateEv(*(void **)(c + 0x378)) == 2) {
+        if (((Player *)(*(void **)(c + 0x378)))->GetTalkState() == 2) {
             unsigned char d = data_0209d684;
             if (d == 1) {
                 func_02012790(0x98);
@@ -333,7 +318,7 @@ int func_ov019_02111fec(char *c)
             } else if (d == 2) {
                 func_02012790(0x63);
                 *(unsigned char *)(c + 0x38e) = 0x5a;
-                _ZN6Player18HasFinishedTalkingEv(*(void **)(c + 0x378));
+                ((Player *)(*(void **)(c + 0x378)))->HasFinishedTalking();
                 func_ov019_021122dc(c, 0);
             }
         }
@@ -361,7 +346,7 @@ int func_ov019_02111dec(char *c)
 {
     switch (*(unsigned char *)(c + 0x38f)) {
     case 0:
-        if (_ZN6Player12Unk_020c4f40Et(*(void **)(c + 0x378), 0x5a) != 0) {
+        if (((Player *)(*(void **)(c + 0x378)))->Unk_020c4f40(0x5a) != 0) {
             LB(0x38f) = LB(0x38f) + 1;
         }
         break;
@@ -371,18 +356,18 @@ int func_ov019_02111dec(char *c)
             *(short *)((char *)(((int)c + 0x300)) + 0x8c),
             2, 0x800);
         *(short *)(c + 0x8e) = *(short *)(c + 0x94);
-        _ZN8dActor_c9UpdatePosEP5dCc_c(c, c + 0x174);
+        ((dActor_c *)c)->UpdatePos((dCc_c *)(c + 0x174));
         func_ov019_0211140c((int *)c, c + 0x1a8);
-        if (_ZNK10dBgCh_Actr13JustHitGroundEv(c + 0x1a8) != 0) {
+        if (((dBgCh_Actr *)(c + 0x1a8))->JustHitGround() != 0) {
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0xd4, (void *)data_ov019_02113460[1], 0x40000000, 0x1000, 0);
             LB(0x38f) = LB(0x38f) + 1;
         }
         break;
     case 2:
-        if (_ZN9Animation8FinishedEv(c + 0x124) != 0) {
+        if (((Animation *)(c + 0x124))->Finished() != 0) {
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0xd4, (void *)data_ov019_02113470[1], 0, 0x1000, 0);
         }
-        if (_ZN6Player12GetTalkStateEv(*(void **)(c + 0x378)) == -1) {
+        if (((Player *)(*(void **)(c + 0x378)))->GetTalkState() == -1) {
             _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x1f, 0x7f, 0, 0x15666, 0);
             func_0201267c(0x4d, c + 0x74);
             func_ov019_021122dc(c, 3);
@@ -416,12 +401,12 @@ int func_ov019_0211197c(void *self)
         if (func_ov019_0211131c(c)) {
             func_ov019_021113b0(c);
         }
-        if (_ZN9Animation8FinishedEv(c + 0x124)) {
+        if (((Animation *)(c + 0x124))->Finished()) {
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0xd4, (void *)data_ov019_02113488[1], 0, 0x1000, 0);
             *(int *)(c + 0x130) = 0x1000;
             c[0x38f]++;
         }
-        _ZN8dActor_c9UpdatePosEP5dCc_c(c, c + 0x174);
+        ((dActor_c *)c)->UpdatePos((dCc_c *)(c + 0x174));
         func_ov019_0211140c((int *)c, c + 0x1a8);
         if (c[0x394] == 0 && c[0x393] == 0) {
             {
@@ -449,17 +434,17 @@ int func_ov019_0211197c(void *self)
 
     case 1:
         if (func_ov019_0211131c(c)) {
-            if (*(int *)(c + 0x36c) >= _ZNK7PathPtr8NumNodesEv(c + 0x364) - 2) {
+            if (*(int *)(c + 0x36c) >= (int)((PathPtr *)(c + 0x364))->NumNodes() - 2) {
                 _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0xd4, (void *)data_ov019_02113490[1], 0x40000000, 0x1000, 0);
                 c[0x38f]++;
             } else {
                 func_ov019_021113b0(c);
             }
         }
-        _ZN8dActor_c9UpdatePosEP5dCc_c(c, c + 0x174);
+        ((dActor_c *)c)->UpdatePos((dCc_c *)(c + 0x174));
         func_ov019_0211140c((int *)c, c + 0x1a8);
         if (c[0x394] == 0 && c[0x393] == 0 &&
-            *(int *)(c + 0x36c) < _ZNK7PathPtr8NumNodesEv(c + 0x364) - 2) {
+            *(int *)(c + 0x36c) < (int)((PathPtr *)(c + 0x364))->NumNodes() - 2) {
             {
                 Vector3 v;
                 v.x = *(int *)(c + 0x5c);
@@ -502,7 +487,7 @@ int func_ov019_0211197c(void *self)
         break;
 
     case 2:
-        if (_ZN9Animation8FinishedEv(c + 0x124)) {
+        if (((Animation *)(c + 0x124))->Finished()) {
             func_ov019_021122dc(c, 4);
         }
         break;
@@ -536,8 +521,8 @@ int func_ov019_021117a8(char *c)
     int node[3];
     switch (*(unsigned char *)(c + 0x38f)) {
     case 0: {
-        int n = _ZNK7PathPtr8NumNodesEv(c + 0x364);
-        _ZNK7PathPtr7GetNodeER7Vector3j(c + 0x364, node, n - 1);
+        int n = ((PathPtr *)(c + 0x364))->NumNodes();
+        ((PathPtr *)(c + 0x364))->GetNode(*(Vector3 *)node, n - 1);
         *(int *)(c + 0x380) = Vec3_Dist(c + 0x5c, node);
         *(short *)((char *)(((int)c + 0x300)) + 0x8c) =
             Vec3_HorzAngle(c + 0x5c, node);
@@ -550,7 +535,7 @@ int func_ov019_021117a8(char *c)
             *(int *)(c + 0x98) = *(int *)(c + 0x380);
             LB(0x38f) = LB(0x38f) + 1;
         }
-        _ZN8dActor_c9UpdatePosEP5dCc_c(c, c + 0x174);
+        ((dActor_c *)c)->UpdatePos((dCc_c *)(c + 0x174));
         func_ov019_0211140c((int *)c, c + 0x1a8);
         {
             unsigned int s = ((unsigned int)*(int *)(c + 0x12c) << 4) >> 0x10;
@@ -597,7 +582,7 @@ int func_ov019_02111558(void *thiz)
         int radius = *(int *)(c + 0x178);
         int d = Vec3_Dist(c + 0x5c, (char *)*(void **)(c + 0x378) + 0x5c);
         if (d < radius + 0x78000) {
-            if (_ZN6Player9StartTalkER7fBase_cb(*(void **)(c + 0x378), c, 1) != 0) {
+            if (((Player *)(*(void **)(c + 0x378)))->StartTalk(*(fBase_c *)c, 1) != 0) {
                 LB(0x38f) = LB(0x38f) + 1;
             }
         }
@@ -624,7 +609,7 @@ int func_ov019_02111558(void *thiz)
                 else
                     id = 0xa8;
             }
-            if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(*(void **)(c + 0x378), c, id, &v, 1, 2) != 0) {
+            if (((Player *)(*(void **)(c + 0x378)))->ShowMessage(*(fBase_c *)c, id, (Vector3 *)&v, 1, 2) != 0) {
                 func_0201267c(0xdf, c + 0x74);
                 LB(0x38f) = LB(0x38f) + 1;
             }
@@ -632,14 +617,11 @@ int func_ov019_02111558(void *thiz)
         break;
     }
     case 2:
-        if (_ZN6Player12GetTalkStateEv(*(void **)(c + 0x378)) == 2) {
+        if (((Player *)(*(void **)(c + 0x378)))->GetTalkState() == 2) {
             if (*(unsigned char *)(c + 0x395) == 0) {
-                _ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h(
-                    c, (signed char *)(((int)c + 0x396)),
-                    (unsigned int)(unsigned char)((*(unsigned int *)(c + 8) >> 8) & 0xf),
-                    c + 0x5c, 4);
+                ((dActor_c *)c)->UntrackAndSpawnStar(*(signed char *)(((int)c + 0x396)), (unsigned int)(unsigned char)((*(unsigned int *)(c + 8) >> 8) & 0xf), *(Vector3 *)(c + 0x5c), 4);
             }
-            _ZN6Player18HasFinishedTalkingEv(*(void **)(c + 0x378));
+            ((Player *)(*(void **)(c + 0x378)))->HasFinishedTalking();
             _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(c + 0x138, (void *)data_ov019_02113468[1], 0, 0x1000, 0);
             LB(0x38f) = LB(0x38f) + 1;
         }
@@ -666,7 +648,7 @@ int func_ov019_0211140c(int *self, void *clsn)
     int n1[3];
     func_02038414(clsn);
     if (((dBgCh_Actr *)clsn)->IsOnGround()) {
-        _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char *)_ZNK10dBgCh_Actr14GetFloorResultEv(clsn) + 4, n0);
+        ((SurfaceInfo *)((char *)_ZNK10dBgCh_Actr14GetFloorResultEv(clsn) + 4))->CopyNormalTo(*(Vector3 *)n0);
         if (n0[1] != 0) {
             long long a = (long long)n0[0] * (long long)self[0xa4 / 4];
             long long b = (long long)n0[2] * (long long)self[0xac / 4];
@@ -678,7 +660,7 @@ int func_ov019_0211140c(int *self, void *clsn)
         }
     }
     if (((dBgCh_Actr *)clsn)->IsOnWall()) {
-        _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char *)_ZNK10dBgCh_Actr13GetWallResultEv(clsn) + 4, n1);
+        ((SurfaceInfo *)((char *)_ZNK10dBgCh_Actr13GetWallResultEv(clsn) + 4))->CopyNormalTo(*(Vector3 *)n1);
     }
 }
 

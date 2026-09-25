@@ -10,9 +10,6 @@
  *
  * deslop
  * Leftover: Event::GetBit stays mangled (no Event header in this tree).
- * Leftover: TextureTransformer::Prepare keeps its mangled spelling: the
- *   real signature takes references, and the double-dereference expression
- *   that would bind them is worse slop than the call.
  * Leftover: dBgW_KcMbg::SetFile and TextureTransformer::SetFile keep
  *   mangled spellings (by-value Fix12<int> parameters, wall 6az).
  * Leftover: data_ov033_02111bc8 (BTA) and data_ov033_02111c1c
@@ -30,10 +27,8 @@ extern SharedFilePtr data_ov033_021124e8;
 
 extern "C" {
 int _ZN5Event6GetBitEj(u32 bit);
-extern void _ZN18TextureTransformer7PrepareER8BMD_FileR8BTA_File(void* bmd, void* bta);
 extern int data_ov033_02111bc8[];
 extern int data_ov033_02111c1c[];
-extern void _ZN6dMap_c19UpdateLevelSpecificEv(void);
 extern void _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(void* thiz, void* bta, int a, int b, unsigned int e);
 extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* thiz, void* kcl, void* mtx, int fix, short s, void* clps);
 }
@@ -70,11 +65,8 @@ int daObjTtWater_c::Render()
 
 // @symbol _ZN14daObjTtWater_c8BehaviorEv
 /* Sound and Event have no headers in this tree, so those two stay extern-C
- * mangled free functions. dMap_c::UpdateLevelSpecific is declared in
- * include/dMap_c.h since #2899; the call stays mangled here to keep the
- * text-verified shadow's instruction selection (member spelling needs the
- * build box). Animation::Advance and fBase_c::MarkForDestruction are
- * declared, and are reached as members.
+ * mangled free functions. dMap_c::UpdateLevelSpecific, Animation::Advance
+ * and fBase_c::MarkForDestruction are declared, and are reached as members.
  */
 int daObjTtWater_c::Behavior()
 {
@@ -87,7 +79,7 @@ int daObjTtWater_c::Behavior()
             mSoundID = Sound::PlayLong(mSoundID, 3, 0x96, *(const Vector3 *)&mCamSpacePosX, 0);
             if (mPosY <= mMinPosY) {
                 mPosY = mMinPosY;
-                _ZN6dMap_c19UpdateLevelSpecificEv();
+                dMap_c::UpdateLevelSpecific();
             }
         }
     }
@@ -103,7 +95,7 @@ int daObjTtWater_c::InitResources()
 {
     void* m = Model::LoadFile(data_ov033_021124f0);
     mModel.SetFile((BMD_File*)m, 1, 0x14);
-    _ZN18TextureTransformer7PrepareER8BMD_FileR8BTA_File(*(void**)((char*)&data_ov033_021124f0 + 4), data_ov033_02111bc8);
+    TextureTransformer::Prepare(**(BMD_File**)((char*)&data_ov033_021124f0 + 4), *(BTA_File*)data_ov033_02111bc8);
     _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(&mTextureTransformer, data_ov033_02111bc8, 0, 0x1000, 0);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();

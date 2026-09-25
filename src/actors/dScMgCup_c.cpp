@@ -122,7 +122,6 @@ extern void func_ov006_020c225c(char *);
 extern int func_ov006_020c3050(char *);
 extern void LoadCompressedFileAt(int, int);
 extern void *LoadFile(int);
-void *_ZN7fBase_cnwEj(unsigned int size);
 void _ZN8Particle10SysTrackerC1Ev(void *tracker);
 void func_ov006_020c33dc(void *table);
 void __cxa_vec_ctor(void *base, int count, int stride, void *ctor, void *dtor);

@@ -75,7 +75,6 @@ FlyingCarpetResources data_ov036_02113f58 = {
     &data_ov036_02112b28
 };
 
-extern void *_ZN7fBase_cnwEj(u32 size);
 extern void _ZN10dBgActor_cC2Ev(dBgActor_c *actor);
 extern void _ZN5ModelC1Ev(Model *model);
 extern void _ZN5ModelD1Ev(Model *model);

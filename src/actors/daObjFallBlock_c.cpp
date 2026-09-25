@@ -91,6 +91,7 @@ int func_ov098_0213a0a8(daObjFallBlock_c *c);
 void func_ov098_0213a0e8(daObjFallBlock_c *c);
 void func_ov098_0213a148(daObjFallBlock_c *c);
 void func_ov098_0213a23c(daObjFallBlock_c *c);
+/* local extern: fBase_c.h declares MarkForDestruction void; func_ov098_0213a0a8 tail-calls it and returns its r0, so the header spelling adds a mov r0, #0 */
 int _ZN7fBase_c18MarkForDestructionEv(void *);
 void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *self, void *kcl, const Matrix4x3 *mat, int scale, short angle, void *clps);

@@ -48,8 +48,8 @@
     "function_count": 37,
     "contiguity": "No gaps and no overlaps. Walking config/arm9/overlays/ov081/symbols.txt addr+size across the run, each function ends exactly where the next begins, and the last (daGmch_c_classInit, 0x02127adc + 0x58) ends exactly at 0x02127b34.",
     "boundary_proof_low": "The preceding symbol is daSnowball_c_classInit at 0x021264b4 size 0x50, ending at exactly 0x02126504. So the run starts on a function boundary and does not begin inside Snowball.",
-    "boundary_proof_high": "The following symbol is _ZN8IceBlockD1Ev at 0x02127b34. So the run ends on a function boundary and does NOT spill into IceBlock.",
-    "neighbour_check": "ov081 holds five classes in .text address order: Spindrift/daHuwa_c (0x02123740..), MrBlizzard/daSnowman_c (0x02124090..), Snowball/daSnowball_c (0x02125ba0..), Moneybag/daGmch_c (0x02126504..0x02127b34), IceBlock/daObjIceBlock_c (0x02127b34..0x021280d8). The claimed run touches neither MrBlizzard nor IceBlock, which the task asked to be confirmed explicitly.",
+    "boundary_proof_high": "The following symbol is _ZN15daObjIceBlock_cD1Ev at 0x02127b34. So the run ends on a function boundary and does NOT spill into daObjIceBlock_c.",
+    "neighbour_check": "ov081 holds five classes in .text address order: Spindrift/daHuwa_c (0x02123740..), MrBlizzard/daSnowman_c (0x02124090..), Snowball/daSnowball_c (0x02125ba0..), Moneybag/daGmch_c (0x02126504..0x02127b34), IceBlock/daObjIceBlock_c (0x02127b34..0x021280d8). The claimed run touches neither MrBlizzard nor daObjIceBlock_c, which the task asked to be confirmed explicitly.",
     "composition": "10 mangled _ZN8Moneybag*/_ZN8MoneybagD* + 26 auto-named func_ov081_* + 1 daGmch_c_classInit."
   },
   "vtable": {
@@ -62,7 +62,7 @@
     "address_point_note": "The symbol IS the address point. offset-to-top at 0x02128bfc = 0x00000000 (and carries NO relocation, as an absolute zero should not) and the typeinfo pointer at 0x02128c00 = 0x02128bd4 = _ZTI8daGmch_c. Confirmed a third time from code: daGmch_c_classInit (literal pool word at 0x02127b30), _ZN8MoneybagD1Ev (0x02126550) and _ZN8MoneybagD0Ev (0x021265b0) all store the BARE value 0x02128c04 into this+0, not &_ZTV[2].",
     "extent_evidence": [
       "Next symbol: _ZTI15daObjIceBlock_c is at 0x02128c80 in config/arm9/overlays/ov081/symbols.txt, so the table cannot run past 0x02128c80. It ends precisely where the next datum begins.",
-      "Content at the boundary: the word at 0x02128c80 is 0x0209a764 = _ZTVN3abi20__si_class_type_infoE, i.e. the first word of IceBlock's own __si_class_type_info record -- a type_info vtable pointer, not a method.",
+      "Content at the boundary: the word at 0x02128c80 is 0x0209a764 = _ZTVN3abi20__si_class_type_infoE, i.e. the first word of daObjIceBlock_c's own __si_class_type_info record -- a type_info vtable pointer, not a method.",
       "Relocations: config/arm9/overlays/ov081/relocs.txt carries an unbroken run of kind:load records from 0x02128c00 through 0x02128c7c with no gap; the next record after it is from:0x02128c80 -> 0x0209a764.",
       "Base length: _ZTV8dActor_c in arm9 runs 0x0208e3a4..0x0208e420 (next arm9 symbol at 0x0208e420) = 0x7c = 31 words, the same length. This class adds no slot; it only overrides."
     ],
@@ -467,7 +467,7 @@
     "ambiguous_row_resolved": "One row read `from:0x02090b58 kind:load to:0x02126e28 module:overlays(78,81)`. Resolved to ov078, NOT ov081: ov078's symbols.txt names 0x02126e28 as g_profile_BOMBKING and ov078's .data band is 0x02126ce0..0x02126ee0, which contains that address, whereas in ov081 0x02126e28 is a .text function. The referrer is ACTOR_SPAWN_TABLE+0x2f4, and spawn-table entries point at profiles, not at function bodies. So this is ov078's BOMB KING and not a caller of this class.",
     "accepted_64_breakdown": "35 from .text inside the run (34 arm_call + 1 load) and 29 from .data (18 PMF records + the 10 own vtable slots + the profile's factory word). Zero from .text outside the run, zero from .init.",
     "intra_overlay_scan": "Done separately by DECODING ov081's .text and .init, because a relocation scan alone cannot be trusted to find intra-overlay calls. Decoding every B/BL/BLX word in 0x02123740..0x021280d8 and 0x021280e8..0x02128824 finds 34 BL sites landing in the run, against 7 distinct targets, plus intra-function B branches. The two methods AGREE exactly: 34 decoded BL == 34 arm_call relocations, and the one extra reloc is the `load` at 0x02127794 that takes the address of 0x02127744.",
-    "callers_from_other_ov081_classes": "NONE. No BL from Spindrift, MrBlizzard, Snowball or IceBlock lands anywhere in 0x02126504..0x02127b34, so the run is self-contained and can be lifted without dragging a sibling class in."
+    "callers_from_other_ov081_classes": "NONE. No BL from Spindrift, MrBlizzard, Snowball or daObjIceBlock_c lands anywhere in 0x02126504..0x02127b34, so the run is self-contained and can be lifted without dragging a sibling class in."
   },
   "tree_derived": {
     "re_derived_at": "a81adfa37",
@@ -476,7 +476,7 @@
     "total_lines_verified": "948, counted at this base across exactly those 36 files -- matches the queue row exactly.",
     "chain_length_verified": "4 classes including self, matching the blocker text.",
     "sibling_oracle": "NONE, and this is now positively confirmed rather than copied from the queue: config/tu_manifest.d/ has directories for 43 modules and ov081 is NOT among them. No class in this overlay has ever been promoted, so there is no in-overlay TU to copy. The writer must take the output convention from another overlay's recent promotion.",
-    "promoted_siblings_in_ov081": "None of Spindrift, MrBlizzard, Snowball or IceBlock is promoted at this base.",
+    "promoted_siblings_in_ov081": "None of Spindrift, MrBlizzard, Snowball or daObjIceBlock_c is promoted at this base.",
     "delinks_ownership": "config/arm9/overlays/ov081/delinks.txt has 113 file blocks and EVERY ONE of them is .text or .init only. No delink file owns any .data, .rodata, .ctor or .bss. So the vtable, the RTTI records, the profile, the 18 PMF records and all 13 .bss objects stay in the unowned/unlicensed block after promotion -- the promoted TU will not own its own vtable, which is the expected shape for the text-only route."
   },
   "blockers_for_the_writer": [

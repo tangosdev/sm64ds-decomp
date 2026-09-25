@@ -46,21 +46,12 @@ struct C { char pad[0x300]; PMF *pp; };
 namespace Model { void LoadFile(SharedFilePtr& f); }
 
 extern "C" {
-extern char *_ZN8dActor_c13ClosestPlayerEv(void *c);
-extern int _ZN8dActor_c13DistToCPlayerEv(void *c);
-extern s16 _ZN8dActor_c18HorzAngleToCPlayerEv(void *c);
 extern void Matrix4x3_FromRotationY(void *m, s16 angle);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
 extern void MulVec3Mat4x3(struct Vec3 *in, void *m, struct Vec3 *out);
-extern void _ZN5dCc_c5ClearEv(void *c);
-extern void _ZN5dCc_c6UpdateEv(void *c);
 extern int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     int a, int b, int x, int y, int z, int f, int cb);
-extern char *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-    unsigned int a, unsigned int b, struct Vec3 *pos, struct Vec3_16 *rot, int e, int f);
 extern void func_02012790(int a);
-extern void _ZN8dActor_c11SpawnNumberERK7Vector3jbtPS_(
-    void *self, struct Vec3 *pos, unsigned int a, int b, unsigned short c, void *d);
 extern int data_020a0e68;
 extern int SublevelToLevel(int);
 extern int data_ov064_0211c934;
@@ -113,9 +104,9 @@ int func_ov064_021193b4(char *c)
     s16 tx;
     int m1;
 
-    p = _ZN8dActor_c13ClosestPlayerEv(c);
+    p = (char *)((dActor_c *)c)->ClosestPlayer();
     if (p != 0 && *(u8 *)(p + 0x6f9) == 0) {
-        dist = _ZN8dActor_c13DistToCPlayerEv(c);
+        dist = ((dActor_c *)c)->DistToCPlayer();
         if (dist < 0x3e8000) {
             dist = (0x3e8000 - dist) / 30;
             base.x = 0;
@@ -124,7 +115,7 @@ int func_ov064_021193b4(char *c)
             off.x = 0;
             off.y = 0;
             off.z = 0;
-            Matrix4x3_FromRotationY(&data_020a0e68, (s16)(_ZN8dActor_c18HorzAngleToCPlayerEv(c) + 0x8000));
+            Matrix4x3_FromRotationY(&data_020a0e68, (s16)(((dActor_c *)c)->HorzAngleToCPlayer() + 0x8000));
             Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, -0x4000);
             MulVec3Mat4x3(&base, &data_020a0e68, &off);
             pp = (int *)(int)M(p + 0x5c);
@@ -144,8 +135,8 @@ int func_ov064_021193b4(char *c)
                 *(int *)(p + 0x64) = base.z;
             }
         }
-        _ZN5dCc_c5ClearEv(c + 0x110);
-        _ZN5dCc_c6UpdateEv(c + 0x110);
+        ((dCc_c *)(c + 0x110))->Clear();
+        ((dCc_c *)(c + 0x110))->dCc_c::Update();
         if (dist > 0x7d0000 && *(int *)(c + 0x30c) < 5) {
             *(int *)(c + 0x30c) = 0;
         }
@@ -170,9 +161,7 @@ int func_ov064_021193b4(char *c)
                     tx = (s16)(tx + 0x4000);
                     vr->x = (u16)tx;
                 }
-                spawned = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-                    0xf4, 2, (struct Vec3 *)(c + 0x5c), &rot,
-                    *(signed char *)(c + 0xcc), -1);
+                spawned = (char *)dActor_c::Spawn(0xf4, 2, *(Vector3 *)(c + 0x5c), (Vector3_16 *)&rot, *(signed char *)(c + 0xcc), -1);
                 if (spawned != 0) {
                     *(int *)(c + 0x320 + (*(int *)(c + 0x370) * 4)) = *(int *)(spawned + 4);
                     p370 = (int *)(int)M(c + 0x370);
@@ -204,8 +193,7 @@ int func_ov064_021193b4(char *c)
                             npos1.x = posp[0];
                             npos1.y = posp[1];
                             npos1.z = posp[2];
-                            _ZN8dActor_c11SpawnNumberERK7Vector3jbtPS_(
-                                c, &npos1, *(unsigned int *)(c + 0x30c), 0, 0, 0);
+                            ((dActor_c *)c)->SpawnNumber(*(Vector3 *)&npos1, *(unsigned int *)(c + 0x30c), 0, 0, 0);
                             *(char **)(c + 0x31c) = 0;
                             return 1;
                         }
@@ -230,8 +218,7 @@ int func_ov064_021193b4(char *c)
                                 npos2.x = posp[0];
                                 npos2.y = posp[1];
                                 npos2.z = posp[2];
-                                _ZN8dActor_c11SpawnNumberERK7Vector3jbtPS_(
-                                    c, &npos2, *(unsigned int *)(c + 0x30c), 0, 0, 0);
+                                ((dActor_c *)c)->SpawnNumber(*(Vector3 *)&npos2, *(unsigned int *)(c + 0x30c), 0, 0, 0);
                                 *(char **)(c + 0x31c) = 0;
                                 return 1;
                             }
@@ -258,10 +245,7 @@ int func_ov064_021193b4(char *c)
         spos.y = spos.y - 0x64000;
         *p310 = *p310 + 1;
         if (*(int *)(c + 0x310) > 0x1e) {
-            _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-                0xb2, *(int *)(c + 0x314) | 0x40, &spos,
-                (struct Vec3_16 *)(c + 0x8c),
-                *(signed char *)(c + 0xcc), -1);
+            dActor_c::Spawn(0xb2, *(int *)(c + 0x314) | 0x40, *(Vector3 *)&spos, (Vector3_16 *)(c + 0x8c), *(signed char *)(c + 0xcc), -1);
             *(int *)(c + 0x30c) = 0xa;
         }
     }

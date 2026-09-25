@@ -1,34 +1,22 @@
-/* Started life AUTO-GENERATED from matched-function evidence by
- * tools/gen_header.py; the field names below have since been recovered from
- * the bodies. Offsets/widths are observed, not guessed. Gaps are explicit
- * padding. Renaming cannot change codegen.
+/* daOnms_c, the rolling crush box (profile ONIMASU). The cartridge keeps no
+ * field names, so all are coined; the ones marked coined were named here
+ * from their uses in src/actors/daOnms_c.cpp. Offsets and widths are observed.
  *
- * The rolling crush box. mParam's low two bits pick how it moves: 0..2 index
- * data_ov092_02132294 for a canned direction sequence, 3 makes it follow the
- * path whose id is in mParam bits 8..11. That choice is mMoveKind, and it is
- * what func_ov092_021314d0 and func_ov092_021313b0 branch on to
- * choose the next mMoveDir. Every function this header cites is in
- * src/actors/daOnms_c.cpp.
- *
- * 0x008, 0x05c..0x064 and 0x08c..0x090 ARE fBase_c's and dActor_c's OWN
- * LAYOUT, not this class's, and were already named from include/dActor_c.h by
- * offset.
- *
+ * param1's low two bits pick how it moves: 0..2 index data_ov092_02132294
+ * for a canned sequence of moves, 3 makes it follow the path whose id is in
+ * param1 bits 8..11. That choice is mMoveKind, and NextMove and
+ * func_ov092_021313b0 branch on it to choose the next mMoveDir.
  *
  * SM64DS proves this class as daOnms_c through RTTI, allocation size and
- * vtable identity. The factory and profile spellings below are reconstructed
- * source-style names -- evidence-bounded proposals, not recovered SM64DS
- * symbols.
- *
+ * vtable identity. The factory and profile spellings are reconstructed
+ * source-style names, not recovered SM64DS symbols:
  * daOnms_c_classInit at 0x02132018 (historical alias ToxBox_Spawn) installs
- * this class's cartridge vtable. It backs the ONIMASU registry profile,
- * whose descriptor at 0x021322ac is reconstructed as g_profile_ONIMASU.
+ * this class's vtable and backs the ONIMASU registry profile, whose
+ * descriptor at 0x021322ac is reconstructed as g_profile_ONIMASU.
  * Provenance table: notes/butterfly-tornado-provenance.md. */
 #ifndef DAONMS_C_H
 #define DAONMS_C_H
 #include "types.h"
-
-#ifdef __cplusplus
 
 /* dBgActor_c.h deliberately selects the flat Matrix4x3 spelling before
  * Model.h. It must therefore be the first ownership header included here. */
@@ -37,26 +25,29 @@
 #include "dCcAcPos_c.h"
 #include "PathPtr.h"
 
-/* The teardown and construction order independently identify the real class:
- * dBgActor_c is the base, followed by dBgCh_Actr, dCcAcPos_c, and PathPtr
- * members at the same offsets used by ToxBox_Spawn. The base owns the Model
- * and dBgW_KcMbg formerly repeated in this header. */
+/* The teardown and construction order identify the class: dBgActor_c is the
+ * base, followed by dBgCh_Actr, dCcAcPos_c and PathPtr members at the
+ * offsets daOnms_c_classInit constructs. */
 struct daOnms_c : dBgActor_c {
-    dActor_c *mPlayerActor;         /* 0x320 - player that started the roll */
+    dActor_c *mPlayerActor;         /* 0x320 - player that knocked the box away */
     dBgCh_Actr mWithMeshClsn;       /* 0x324 */
-    u8 pad_4e0[0x8];
+    s16 mTumbleVelX;                /* 0x4e0 - added to mAngleX each frame */ /* coined */
+    s16 mTumbleVelY;                /* 0x4e2 */ /* coined */
+    s16 mTumbleVelZ;                /* 0x4e4 */ /* coined */
+    u8 pad_4e6[0x2];
     dCcAcPos_c mdCcAcPos_c;         /* 0x4e8 */
     Matrix4x3 mBaseMtx;             /* 0x528 - untumbled model transform */
-    Vector3 mRestPos;               /* 0x558 */
+    Vector3 mRestPos;               /* 0x558 - spawn position lifted 0xfa000;
+                                       y follows each landing */
     u16 mStateTimer;                /* 0x564 */
     u8 pad_566[0x2];
-    s32 mMoveDir;                   /* 0x568 - movement-state dispatch index */
-    s32 *mMoveSeq;                  /* 0x56c */
+    s32 mMoveDir;                   /* 0x568 - state index, see the states */
+    s32 *mMoveSeq;                  /* 0x56c - canned states, -1 ends */
     s32 mMoveSeqIndex;              /* 0x570 */
     u8 mMoveKind;                   /* 0x574 - canned sequence or path */
-    u8 mOrientBits;                 /* 0x575 */
-    u8 unk_576;
-    u8 unk_577;
+    u8 mOrientBits;                 /* 0x575 - angles X, Y, Z >> 14, 2 bits each */
+    u8 mTumbling;                   /* 0x576 - rotate the model this frame */ /* coined */
+    u8 mRollDone;                   /* 0x577 - a roll finished this frame */ /* coined */
     s32 mPathNodeCount;             /* 0x578 */
     s32 mPathNodeIndex;             /* 0x57c */
     Vector3 mPathNode;              /* 0x580 */
@@ -68,114 +59,35 @@ struct daOnms_c : dBgActor_c {
     virtual int CleanupResources();
     virtual int Behavior();
     virtual int Render();
+
+    /* The movement states, indexed by mMoveDir through the member-pointer
+       table the ov092 static initializer fills. State 1 (wait,
+       func_ov092_02131578) and the helpers func_ov092_021313b0 and
+       func_ov092_02131a88 stay C-linkage free functions because
+       include/decl_common.h declares them by those names. Every member
+       name below is coined; the cartridge keeps none. */
+    void StateLand();               /* 0 - coined */
+    void StateRollPosZ();           /* 2 - coined */
+    void StateRollNegZ();           /* 3 - coined */
+    void StateRollNegX();           /* 4 - coined */
+    void StateRollPosX();           /* 5 - coined */
+    void StateKnocked();            /* 6 - coined */
+    int  StateBounce();             /* 7 - coined */
+    void StateSink();               /* 8 - coined */
+
+    void NextMove();                                    /* coined */
+    void Roll(s32 stepZ, s32 stepX, s32 pitch, s16 bank); /* coined */
+    void Launch(dActor_c *player, u32 how);             /* coined */
+    void CheckPlayerHit();                              /* coined */
+    void UpdateModelMtx();                              /* coined */
+
+    /* ov092 .rodata. Launch indexes the speeds by `how` (punch, kick,
+       bump); Roll indexes sBankAxis by mOrientBits for the angle a sideways
+       roll turns. Coined names. */
+    static const s32 sLaunchVertSpeed[3];   /* 0x02132074 */
+    static const s32 sLaunchHorzSpeed[3];   /* 0x02132080 */
+    static const s8  sBankAxis[64];         /* 0x0213208c */
 };
-
-#else
-
-#include "Model.h"
-#include "dBgW_KcMbg.h"
-#include "dBgCh_Actr.h"
-#include "dCcAcPos_c.h"
-
-struct daOnms_c {
-    u8  pad_000[0x8];
-    s32 mParam;            /* 0x008 */
-    u8  pad_00c[0x50];
-    s32 mPosX;            /* 0x05c */
-    s32 mPosY;            /* 0x060 */
-    s32 mPosZ;            /* 0x064 */
-    u8  pad_068[0x24];
-    s16 mAngleX;            /* 0x08c */
-    s16 mAngleY;            /* 0x08e */
-    s16 mAngleZ;            /* 0x090 */
-    u8  pad_092[0x42];
-    /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
-       D1 and not D2, so it is this type and not an inlined base. The marker's pad stopped
-       short of the object, so the member also takes over unk_0f0 (+0x1c = mat4x3), which
-       the header declared separately inside it. */
-    Model mModel;            /* 0x0d4 */
-    /* dBgW_KcMbg member. The cartridge's own ~daOnms_c calls _ZN10dBgW_KcMbgD1Ev at
-       +0x124 (D0/D1), a relocation the ROM build checks; recovered by
-       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
-    dBgW_KcMbg mMeshCollider;            /* 0x124 */
-    u8  pad_2ec[0x34];
-    /* The player who set this box moving. func_ov092_021319b0 resolves
-       it from the collision's own id at 0x50c, keeps it only if its actorID is
-       0xbf, and func_ov092_021311b0 uses its position as the epicentre
-       of the landing earthquake before clearing this back to 0. A dActor_c*,
-       stored through an int. */
-    s32 mPlayerActor;            /* 0x320 */
-    /* dBgCh_Actr member. The cartridge's own ~daOnms_c calls _ZN10dBgCh_ActrD1Ev at
-       +0x324 (D0/D1), a relocation the ROM build checks; recovered by
-       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
-    dBgCh_Actr mWithMeshClsn;            /* 0x324 */
-    u8  pad_4e0[0x8];
-    /* dCcAcPos_c member. The cartridge's own ~daOnms_c calls _ZN10dCcAcPos_cD1Ev at
-       +0x4e8 (D0/D1), a relocation the ROM build checks; recovered by
-       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
-    dCcAcPos_c mdCcAcPos_c;            /* 0x4e8 */
-    /* 0x528..0x557 is ONE Matrix4x3, written whole: InitResources copies
-       mModel's own matrix at 0xf0 into it, and func_ov092_02131aec
-       copies it back out again -- so it is the box's untumbled base transform,
-       kept while the render matrix is rebuilt each frame. Four separate
-       members rather than a typed one because that is the spelling the bytes
-       reproduce. */
-    u8  mBaseMtx;                /* 0x528 -- first byte of that matrix */
-    u8  pad_529[0x2f];
-    s32 mRestPosX;               /* 0x558 -- where the box rests. InitResources
-                                     copies mPos here after lifting mPosY by
-                                     0xfa000; func_ov092_021311b0
-                                     refreshes mRestPosY from mPosY every time
-                                     the box lands. */
-    s32 mRestPosY;               /* 0x55c */
-    s32 mRestPosZ;               /* 0x560 */
-    u8  pad_564[0x4];
-    s32 mMoveDir;                /* 0x568 -- which way the box rolls next.
-                                     func_ov092_021314d0 reads it out of
-                                     mMoveSeq for a canned pattern;
-                                     func_ov092_021313b0 derives it
-                                     from the horizontal angle to the next path
-                                     node (2/3/4/5 for the four quadrants, 1
-                                     when the node did not move); and
-                                     func_ov092_021311b0 overrides it
-                                     with 7 or 8 for the two special floor
-                                     types it lands on. */
-    s32 mMoveSeq;                /* 0x56c -- pointer to this box's canned
-                                     direction sequence,
-                                     ((int **)&data_ov092_02132294)[mMoveKind].
-                                     A 0 entry ends the sequence and
-                                     func_ov092_021314d0 wraps back to
-                                     the first. */
-    s32 mMoveSeqIndex;           /* 0x570 -- how far into mMoveSeq the box is */
-    u8  mMoveKind;               /* 0x574 -- mParam & 3. 0..2 pick a canned
-                                     sequence, 3 means follow a path. */
-    u8  mOrientBits;             /* 0x575 -- the box's discrete orientation,
-                                     three 2-bit fields packed out of the three
-                                     rotation angles (X >> 0xe, Y >> 0xc,
-                                     Z >> 0xa). InitResources builds it from
-                                     the spawn rotation and
-                                     func_ov092_021314d0 rebuilds it
-                                     after every roll;
-                                     func_ov092_021316d8 and
-                                     func_ov092_02131878 read it back to
-                                     tell which face is down. */
-    u8  pad_576[0x2];
-    s32 mPathNodeCount;          /* 0x578 -- PathPtr::NumNodes for mPathPtr */
-    s32 mPathNodeIndex;          /* 0x57c -- the node the box is heading for;
-                                     func_ov092_021313b0 advances it
-                                     and wraps at mPathNodeCount */
-    /* The Vector3 PathPtr::GetNode fills in for mPathNodeIndex.
-       func_ov092_021313b0 keeps the previous one on the stack and
-       takes the horizontal angle between the two to pick mMoveDir. */
-    s32 mPathNodeX;              /* 0x580 */
-    s32 mPathNodeY;              /* 0x584 */
-    s32 mPathNodeZ;              /* 0x588 */
-    u8  mPathPtr;            /* 0x58c */
-    /* trailing extent the ROM's `new daOnms_c` literal proves; see tools/opnew_sizes.py */
-    u8 pad_590[0x4];
-};
-
-#endif /* __cplusplus */
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */

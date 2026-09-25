@@ -83,16 +83,11 @@ struct Derived { char pad[0xd4]; Base base; };
 extern "C" {
 extern void Matrix4x3_FromRotationXYZExt(void *, int, int, int);
 extern void func_020393a4(int* p, int v);
-extern int _ZN8dActor_c13DistToCPlayerEv(void* a);
 extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int cc, void* v, unsigned int e);
 extern short data_02082214[];
-extern void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
-extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void*, void*, int, int);
-extern void* _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void*);
 extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void*, void*, void*, int, short, void*);
 extern void func_020393d4(int* p, int v);
 extern int IsStarCollected(int a, int b);
-extern void* _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_;
 extern unsigned char data_0209f220;
 }
 
@@ -109,15 +104,15 @@ int daObjKi_Fune_c::InitResources()
     if (isModel0 != 0) mModelIndex = 0;
     else mModelIndex = 1;
     idx = mModelIndex;
-    file = _ZN5Model8LoadFileER13SharedFilePtr(data_ov016_021136e4[idx]);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this)+0xd4, file, 1, -1);
+    file = Model::LoadFile(*(SharedFilePtr *)data_ov016_021136e4[idx]);
+    ((ModelBase *)(((char*)this)+0xd4))->SetFile((BMD_File *)file, 1, -1);
     func_ov016_021126a8(((char*)this));
     UpdateClsnPosAndRot();
     idx = mModelIndex;
-    file = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov016_021136dc[idx]);
+    file = dBgW_Kc::LoadFile(*(SharedFilePtr *)data_ov016_021136dc[idx]);
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(((char*)this)+0x124, file, ((char*)this)+0x2ec, 0x1000, mAngleY, clpsBlocks[idx]);
     if (mModelIndex == 0) {
-        func_020393d4((int*)((char*)&mMeshCollider), (int)&_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
+        func_020393d4((int*)((char*)&mMeshCollider), (int)&dBgW::UpdatePosWithTransform);
     }
     ((dBgW *)(((char*)this)+0x124))->Enable((dActor_c *)(((char*)this)));
     mSoundHandle = 0;
@@ -144,7 +139,7 @@ int daObjKi_Fune_c::Behavior()
     /* mBobAngle, through a short: the u16 member spelling fails ov016. */
     *(short*)(((int)((char*)this) + 0x320)) += 0xda;
     mAngleX = (short)((*(short*)((char*)data_02082214 + ((mBobAngle>>4)<<2)) << 0xa) >> 0xc);
-    if(_ZN8dActor_c13DistToCPlayerEv(((char*)this)) < 0xbb8000){
+    if(DistToCPlayer() < 0xbb8000){
       mSoundHandle = _ZN5Sound8PlayLongEjjjRK7Vector3s(mSoundHandle, 3, 0x8b, ((char*)this)+0x74, 0);
     }
     func_ov016_021126a8(((char*)this));

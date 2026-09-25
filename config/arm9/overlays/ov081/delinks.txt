@@ -192,45 +192,9 @@ src/actors/daGmch_c.cpp:
     complete
     .text start:0x02126504 end:0x02127b34
 
-src/_ZN8IceBlockD1Ev.cpp:
+src/game/actors/d_a_obj_ice_block.cpp:
     complete
-    .text start:0x02127b34 end:0x02127b80
-
-src/_ZN8IceBlockD0Ev.cpp:
-    complete
-    .text start:0x02127b80 end:0x02127be0
-
-src/func_ov081_02127be0.cpp:
-    complete
-    .text start:0x02127be0 end:0x02127ccc
-
-src/_ZN8IceBlock15OnHitByMegaCharER6Player.cpp:
-    complete
-    .text start:0x02127ccc end:0x02127cf4
-
-src/_ZN8IceBlock4KillEv.cpp:
-    complete
-    .text start:0x02127cf4 end:0x02127d98
-
-src/_ZN8IceBlock16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02127d98 end:0x02127ddc
-
-src/_ZN8IceBlock6RenderEv.cpp:
-    complete
-    .text start:0x02127ddc end:0x02127e1c
-
-src/_ZN8IceBlock8BehaviorEv.cpp:
-    complete
-    .text start:0x02127e1c end:0x02127ff0
-
-src/_ZN8IceBlock13InitResourcesEv.cpp:
-    complete
-    .text start:0x02127ff0 end:0x021280a0
-
-src/d_a_obj_ice_block.c:
-    complete
-    .text start:0x021280a0 end:0x021280d8
+    .text start:0x02127b34 end:0x021280d8
 
 src/__sinit_ov081_021280e8.c:
     complete

@@ -45,7 +45,7 @@
  *   members in headers this TU includes. InitResources /
  *   func_ov005_020c16e4 / func_ov005_020c1688 are the callers.
  * Leftover: Sound::LoadGroupAndSetBank / LoadAndSetMusic_Layer1 and
- *   dScene_c::SetFaders / StartSceneFade / SetAndStopColorFader stay
+ *   dScene_c::SetFaders / SetAndStopColorFader stay
  *   mangled -- decl_common.h / decl_Scene.h already declare the
  *   extern "C" names this TU includes.
  * Leftover: TouchOwner is a local overlay of data_0209f5bc. Slot 5 is
@@ -58,6 +58,7 @@
 #include "dScMiniGm_c.h"
 #include "types.h"
 #include "Sound.h"
+#include "OAM.h"
 #include "decl_Scene.h"
 #include "decl_common.h"
 
@@ -153,8 +154,6 @@ extern char *LoadFile(int id);
 extern void DecompressLZ16(void *src, void *dst);
 extern void MultiStore16(u16 val, void *dst, int nbytes);
 extern void _ZN4CP1527FlushAndInvalidateDataCacheEjj(u32 a, u32 b);
-int  _ZN8dScene_c14StartSceneFadeEjjt(u32 a, u32 b, u16 c);
-int  _ZN3OAM9RenderSubEP7OamAttriiii(void *oam, int x, int y, int a, int b);
 extern void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int sub, OamAttr *attr, int x, int y, int pal, int prio, int sx, int sy, int c, int d);
 extern void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(int sub, OamAttr *attr, int x, int y, int pal, int prio, int s, int c);
 extern void *_ZN2G212GetBG2ScrPtrEv(void);
@@ -654,19 +653,19 @@ void func_ov005_020c1130(void *selfv)
                 if (type == 1) {
                     y = data_ov005_020c2280[i].y;
                     x = data_ov005_020c2280[i].x;
-                    _ZN3OAM9RenderSubEP7OamAttriiii(data_ov005_020c2f4c[0], x - 0x10, y, neg1, zero);
+                    OAM::RenderSub((OamAttr *)data_ov005_020c2f4c[0], x - 0x10, y, neg1, zero);
                     val = func_ov005_020bfff4(self, data_0208a170 + r8, zero);
                     func_ov005_020c1030(self, x - 4, y, val);
                 } else if (type == 2) {
                     y = data_ov005_020c2280[i].y;
                     x = data_ov005_020c2280[i].x;
-                    _ZN3OAM9RenderSubEP7OamAttriiii(data_ov005_020c2f4c[1], x - 0x10, y, neg1, zero);
+                    OAM::RenderSub((OamAttr *)data_ov005_020c2f4c[1], x - 0x10, y, neg1, zero);
                     val = func_ov005_020bfff4(self, data_0208a170 + r8, zero);
                     func_ov005_020c1030(self, x - 4, y, val);
                 } else if (type == 4) {
                     y = data_ov005_020c2280[i].y;
                     x = data_ov005_020c2280[i].x;
-                    _ZN3OAM9RenderSubEP7OamAttriiii(data_ov005_020c2f4c[2], x - 0x10, y, neg1, zero);
+                    OAM::RenderSub((OamAttr *)data_ov005_020c2f4c[2], x - 0x10, y, neg1, zero);
                     val = func_ov005_020bfff4(self, data_0208a170 + r8, zero);
                     func_ov005_020c1030(self, x - 4, y, val);
                 } else if (type == 3) {
@@ -681,7 +680,7 @@ void func_ov005_020c1130(void *selfv)
                     u = (unsigned int)val;
                     major = u / 60u;
                     func_ov005_020c1030(self, x - 0x10, y, (int)major);
-                    _ZN3OAM9RenderSubEP7OamAttriiii(data_ov005_020c2f4c[4], x, y - 8, neg1, zero);
+                    OAM::RenderSub((OamAttr *)data_ov005_020c2f4c[4], x, y - 8, neg1, zero);
 
                     val = func_ov005_020bfff4(self, data_0208a170 + r8, zero);
                     u = (unsigned int)val;
@@ -708,7 +707,7 @@ extern "C" {
 
 void func_ov005_020c1030(void *a0, int x, int y, int val){
     if(val==0){
-        _ZN3OAM9RenderSubEP7OamAttriiii((void*)data_ov005_020c2efc[0], x, y, -1, 0);
+        OAM::RenderSub((OamAttr *)data_ov005_020c2efc[0], x, y, -1, 0);
         return;
     }
     int n=1;
@@ -723,7 +722,7 @@ void func_ov005_020c1030(void *a0, int x, int y, int val){
     if(val<=0) return;
     do{
         int dig=val%10;
-        _ZN3OAM9RenderSubEP7OamAttriiii((void*)data_ov005_020c2efc[dig], x+xx, y, -1, 0);
+        OAM::RenderSub((OamAttr *)data_ov005_020c2efc[dig], x+xx, y, -1, 0);
         val=val/10;
         xx-=8;
     }while(val>0);
@@ -752,7 +751,7 @@ void func_ov005_020c0f38(void *selfv)
             continue;
         if (func_ov005_020c007c(self, data_0208a170 + i * 4) == 0)
             continue;
-        _ZN3OAM9RenderSubEP7OamAttriiii((void *)data_ov005_020c2f60[g],
+        OAM::RenderSub((OamAttr *)data_ov005_020c2f60[g],
             data_ov005_020c22c8[i].x, data_ov005_020c22c8[i].y + 0x30, -1, 0);
     }
 }
@@ -785,13 +784,13 @@ s32 dScMiniGm_c::Render()
             blink = 0;
         for (j = 0; j < 9; j++) {
             if (func_ov005_020c00b4(this, data_ov005_020c2250[i] + j * 4) != 0 && func_ov005_020c007c(this, j * 4 + data_ov005_020c2250[i]) != 0) {
-                _ZN3OAM9RenderSubEP7OamAttriiii((void *)data_ov005_020c2f60[blink], 0x18, y1, -1, 0);
+                OAM::RenderSub((OamAttr *)data_ov005_020c2f60[blink], 0x18, y1, -1, 0);
                 break;
             }
         }
         if (mGroupBase != data_ov005_020c2250[i])
             k += 4;
-        _ZN3OAM9RenderSubEP7OamAttriiii((void *)data_ov005_020c2c28[k], 0x18, y0, -1, 0);
+        OAM::RenderSub((OamAttr *)data_ov005_020c2c28[k], 0x18, y0, -1, 0);
         y1 += 0x30;
         y0 += 0x30;
     }
@@ -1048,7 +1047,7 @@ void func_ov005_020c0378(char *selfc)
     _ZN8dScene_c9SetFadersEP15FaderBrightness(&data_0209f61c);
     func_0202ec9c(&data_0209f61c, 0);
     data_0209b308.unk30 = self->unk_05c;
-    _ZN8dScene_c14StartSceneFadeEjjt(data_ov005_020c24d8[data_0208a174[0]].id, data_ov005_020c24d8[data_0208a174[0]].unk4, 0);
+    dScene_c::StartSceneFade(data_ov005_020c24d8[data_0208a174[0]].id, data_ov005_020c24d8[data_0208a174[0]].unk4, 0);
     _ZN5Sound22StopLoadedMusic_Layer1Ej(0x1e);
     self->mExiting = 1;
     data_0209b2fc = 1;

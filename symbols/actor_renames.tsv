@@ -2481,12 +2481,12 @@ ov081	0x02127854	func_ov081_02127854	_ZN8daGmch_c8BehaviorEv	vtable slot 6 (was 
 ov081	0x021278a8	func_ov081_021278a8	_ZN8daGmch_c13InitResourcesEv	vtable slot 0 (was _ZN8Moneybag13InitResourcesEv)
 ov081	0x02127adc	func_ov081_02127adc	Moneybag_Spawn	spawnfunc
 ov081	0x02127adc	Moneybag_Spawn	daGmch_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
-ov081	0x02127b34	func_ov081_02127b34	_ZN8IceBlockD1Ev	vtable slot 16
-ov081	0x02127b80	func_ov081_02127b80	_ZN8IceBlockD0Ev	vtable slot 17
-ov081	0x02127d98	func_ov081_02127d98	_ZN8IceBlock16CleanupResourcesEv	vtable slot 3
-ov081	0x02127ddc	func_ov081_02127ddc	_ZN8IceBlock6RenderEv	vtable slot 9
-ov081	0x02127e1c	func_ov081_02127e1c	_ZN8IceBlock8BehaviorEv	vtable slot 6
-ov081	0x02127ff0	func_ov081_02127ff0	_ZN8IceBlock13InitResourcesEv	vtable slot 0
+ov081	0x02127b34	func_ov081_02127b34	_ZN15daObjIceBlock_cD1Ev	vtable slot 16
+ov081	0x02127b80	func_ov081_02127b80	_ZN15daObjIceBlock_cD0Ev	vtable slot 17
+ov081	0x02127d98	func_ov081_02127d98	_ZN15daObjIceBlock_c16CleanupResourcesEv	vtable slot 3
+ov081	0x02127ddc	func_ov081_02127ddc	_ZN15daObjIceBlock_c6RenderEv	vtable slot 9
+ov081	0x02127e1c	func_ov081_02127e1c	_ZN15daObjIceBlock_c8BehaviorEv	vtable slot 6
+ov081	0x02127ff0	func_ov081_02127ff0	_ZN15daObjIceBlock_c13InitResourcesEv	vtable slot 0
 ov081	0x021280a0	func_ov081_021280a0	IceBlock_Spawn	spawnfunc
 ov081	0x021280a0	IceBlock_Spawn	daObjIceBlock_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov081	0x02128858	data_ov081_02128858	Spindrift_SpawnInfo	spawninfo
@@ -2503,7 +2503,7 @@ ov081	0x02128be0	Moneybag_SpawnInfo	g_profile_GAMAGUCHI	reconstructed profile gl
 ov081	0x02128c04	data_ov081_02128c04	_ZTV8daGmch_c	vtable alloc=0x3f4 (was _ZTV8Moneybag -- the same class under its cartridge RTTI name, not a different owner, so the alloc figure stands: daGmch_c_classInit at 0x02127adc passes the literal 1012 = 0x3f4 to fBase_c::operator new and include/daGmch_c.h asserts sizeof(daGmch_c) == 0x3f4)
 ov081	0x02128ca0	data_ov081_02128ca0	IceBlock_SpawnInfo	spawninfo
 ov081	0x02128ca0	IceBlock_SpawnInfo	g_profile_ICE_BLOCK_LL	reconstructed profile global; literal ROM ID ICE_BLOCK_LL+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov081	0x02128cc4	data_ov081_02128cc4	_ZTV8IceBlock	vtable alloc=0x368
+ov081	0x02128cc4	data_ov081_02128cc4	_ZTV15daObjIceBlock_c	vtable alloc=0x368
 ov084	0x02129020	func_ov084_02129020	_ZN7daKrb_cD1Ev	vtable slot 16
 ov084	0x02129070	func_ov084_02129070	_ZN7daKrb_cD0Ev	vtable slot 17
 ov084	0x0212b510	func_ov084_0212b510	_ZN7daKrb_c16CleanupResourcesEv	vtable slot 3

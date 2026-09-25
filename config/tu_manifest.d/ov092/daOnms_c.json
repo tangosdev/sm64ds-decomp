@@ -34,21 +34,21 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov092_02130fcc",
+      "symbol": "_ZN8daOnms_c9StateSinkEv",
       "address": "0x02130fcc",
       "size": "0x00000044",
       "legacy_source": "src/func_ov092_02130fcc.c",
       "ordinal": 2
     },
     {
-      "symbol": "func_ov092_02131010",
+      "symbol": "_ZN8daOnms_c11StateBounceEv",
       "address": "0x02131010",
       "size": "0x000001a0",
       "legacy_source": "src/func_ov092_02131010.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov092_021311b0",
+      "symbol": "_ZN8daOnms_c12StateKnockedEv",
       "address": "0x021311b0",
       "size": "0x00000200",
       "legacy_source": "src/func_ov092_021311b0.cpp",
@@ -62,7 +62,7 @@
       "ordinal": 5
     },
     {
-      "symbol": "func_ov092_021314d0",
+      "symbol": "_ZN8daOnms_c8NextMoveEv",
       "address": "0x021314d0",
       "size": "0x000000a8",
       "legacy_source": "src/func_ov092_021314d0.c",
@@ -76,56 +76,56 @@
       "ordinal": 7
     },
     {
-      "symbol": "func_ov092_021315ac",
+      "symbol": "_ZN8daOnms_c9StateLandEv",
       "address": "0x021315ac",
       "size": "0x00000074",
       "legacy_source": "src/func_ov092_021315ac.c",
       "ordinal": 8
     },
     {
-      "symbol": "func_ov092_02131620",
+      "symbol": "_ZN8daOnms_c13StateRollPosXEv",
       "address": "0x02131620",
       "size": "0x00000030",
       "legacy_source": "src/func_ov092_02131620.c",
       "ordinal": 9
     },
     {
-      "symbol": "func_ov092_02131650",
+      "symbol": "_ZN8daOnms_c13StateRollNegXEv",
       "address": "0x02131650",
       "size": "0x00000030",
       "legacy_source": "src/func_ov092_02131650.c",
       "ordinal": 10
     },
     {
-      "symbol": "func_ov092_02131680",
+      "symbol": "_ZN8daOnms_c13StateRollNegZEv",
       "address": "0x02131680",
       "size": "0x00000030",
       "legacy_source": "src/func_ov092_02131680.c",
       "ordinal": 11
     },
     {
-      "symbol": "func_ov092_021316b0",
+      "symbol": "_ZN8daOnms_c13StateRollPosZEv",
       "address": "0x021316b0",
       "size": "0x00000028",
       "legacy_source": "src/func_ov092_021316b0.c",
       "ordinal": 12
     },
     {
-      "symbol": "func_ov092_021316d8",
+      "symbol": "_ZN8daOnms_c4RollEiiis",
       "address": "0x021316d8",
       "size": "0x000001a0",
       "legacy_source": "src/func_ov092_021316d8.c",
       "ordinal": 13
     },
     {
-      "symbol": "func_ov092_02131878",
+      "symbol": "_ZN8daOnms_c6LaunchEP8dActor_cj",
       "address": "0x02131878",
       "size": "0x00000138",
       "legacy_source": "src/func_ov092_02131878.c",
       "ordinal": 14
     },
     {
-      "symbol": "func_ov092_021319b0",
+      "symbol": "_ZN8daOnms_c14CheckPlayerHitEv",
       "address": "0x021319b0",
       "size": "0x000000d8",
       "legacy_source": "src/func_ov092_021319b0.cpp",
@@ -139,7 +139,7 @@
       "ordinal": 16
     },
     {
-      "symbol": "func_ov092_02131aec",
+      "symbol": "_ZN8daOnms_c14UpdateModelMtxEv",
       "address": "0x02131aec",
       "size": "0x000000ec",
       "legacy_source": "src/func_ov092_02131aec.cpp",
@@ -178,7 +178,8 @@
   "bss": [],
   "notes": [
     "Text-only. One out-of-line destructor under #pragma defer_codegen off emits D1 then D0 and anchors the vtable; D2 is compiler-only. The factory is the next function and is not in this TU.",
-    "daOnms_c.h is included first so the flat Matrix4x3 stands. No body reads Matrix4x3::t."
+    "daOnms_c.h is included first so the flat Matrix4x3 stands. No body reads Matrix4x3::t.",
+    "Thirteen functions are daOnms_c members under coined names; their ov092 symbols.txt rows were renamed in place: func_ov092_02130fcc StateSink, 02131010 StateBounce, 021311b0 StateKnocked, 021314d0 NextMove, 021315ac StateLand, 02131620 StateRollPosX, 02131650 StateRollNegX, 02131680 StateRollNegZ, 021316b0 StateRollPosZ, 021316d8 Roll, 02131878 Launch, 021319b0 CheckPlayerHit, 02131aec UpdateModelMtx. The .data member-pointer records at 0x02132240..0x02132288 reach the states by address. func_ov092_021313b0, 02131578 and 02131a88 keep their C names because include/decl_common.h declares them. The data rows data_ov092_02132074, 02132080 and 0213208c became the static members sLaunchVertSpeed, sLaunchHorzSpeed and sBankAxis. StateBounce's three Vector3 locals are plain locals now, so the compiler no longer emits a local Frame destructor."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -191,11 +192,9 @@
     "compilerOnlyOutput": {
       "requested": [
         "_ZN8daOnms_cD2Ev",
-        "_ZN21Frame$498daOnms_c_cppD1Ev",
         "_ZN7Vector3D1Ev"
       ],
       "deadstripped": [
-        "_ZN21Frame$498daOnms_c_cppD1Ev",
         "_ZN7Vector3D1Ev",
         "_ZN8daOnms_cD2Ev"
       ],
@@ -203,7 +202,7 @@
         9,
         10,
         15,
-        18,
+        51,
         52,
         53,
         54,
@@ -219,8 +218,7 @@
         64,
         65,
         66,
-        67,
-        68
+        67
       ],
       "data": [
         "_ZTI7fBase_c",
@@ -264,16 +262,11 @@
       "reason": "compiler-generated base-object destructor. The cartridge has only the D1 and D0 pair, at 0x02130f00 and 0x02130f5c, and no symbols row spells _ZN8daOnms_cD2Ev."
     },
     {
-      "symbol": "_ZN21Frame$498daOnms_c_cppD1Ev",
-      "disposition": "deadstrip",
-      "reason": "compiler-generated destructor of the local Frame in func_ov092_02131010. No symbols.txt row names it; the four-byte body is vague linkage from its Vector3 members and is not in the ROM."
-    },
-    {
       "symbol": "_ZN7Vector3D1Ev",
       "disposition": "deadstrip-duplicate",
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
-      "reason": "Vector3's four-byte destructor, vague linkage from Vector3 locals in func_ov092_02131010 and func_ov092_021311b0. The cartridge owns the one copy at arm9:0x020072c0."
+      "reason": "Vector3's four-byte destructor, vague linkage from the Vector3 locals in this TU (StateBounce, StateKnocked, StateLand, Behavior and others). The cartridge owns the one copy at arm9:0x020072c0."
     },
     {
       "symbol": "_ZTI7fBase_c",

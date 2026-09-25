@@ -32,20 +32,13 @@ struct Derived { char pad[0xd4]; Base base; };
 extern "C" {
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 extern unsigned short DecIfAbove0_Short(unsigned short* p);
-extern void _ZN8dActor_c9UpdatePosEP5dCc_c(char* c, void* cc);
-extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(char* c);
 extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(char* c, Fix12i a, Fix12i b);
-extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(char* c);
-void* _ZN5Model8LoadFileER13SharedFilePtr(void* shared);
-void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* mb, void* bmd, int a, int b);
-void* _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void* shared);
 void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* mc, void* kcl, void* mtx, int f, s16 s, void* clps);
 void func_020393d4(void* p, void* v);
 extern char data_ov091_02135028[]; /* per-variant collision file, stride 0xc */
 extern char data_ov091_0213502c[]; /* per-variant CLPS block, stride 0xc */
 extern u16 data_ov091_02134514[]; /* per-variant heading offset */
 extern u16 data_ov091_02134504[]; /* per-variant travel time */
-extern void _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_();
 }
 
 /* Emission order is ROM order: the destructor pair must stay first.
@@ -93,12 +86,12 @@ int daObjSimpleLift_c::Behavior()
       *heading += 0x8000;
       mPauseTimer = 0xf;
     } else {
-      _ZN8dActor_c9UpdatePosEP5dCc_c(((char*)this), 0);
+      UpdatePos(0);
     }
   }
-  _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char*)this));
+  UpdateModelPosAndRotY();
   if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(((char*)this), 0, 0) != 0) {
-    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char*)this));
+    UpdateClsnPosAndRot();
   }
   return 1;
 }
@@ -120,8 +113,8 @@ int daObjSimpleLift_c::InitResources()
         case 0x92: mVariant = 5; break;
     }
 
-    void* bmd = _ZN5Model8LoadFileER13SharedFilePtr(*(void**)(data_ov091_02135024 + mVariant*0xc));
-    _ZN9ModelBase7SetFileEP8BMD_Fileii((void*)(c+0xd4), bmd, 1, -1);
+    void* bmd = Model::LoadFile(**(SharedFilePtr**)(data_ov091_02135024 + mVariant*0xc));
+    ((ModelBase*)(c+0xd4))->SetFile((BMD_File*)bmd, 1, -1);
 
     /* Heading to slide along: the spawn angle plus this slab's own offset,
        unless the spawn supplies one of its own. */
@@ -136,21 +129,21 @@ int daObjSimpleLift_c::InitResources()
     mBasePosX = mPosX;
     mBasePosY = mPosY;
     mBasePosZ = mPosZ;
-    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char*)this));
-    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char*)this));
+    UpdateModelPosAndRotY();
+    UpdateClsnPosAndRot();
 
     /* Slab 6 gets the full-size collider; the rest are scaled to 0x199. */
     if (mVariant == 6) {
         int tableOffset = mVariant * 0xc;
-        void* kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(*(void**)(data_ov091_02135028+tableOffset));
+        void* kcl = dBgW_Kc::LoadFile(**(SharedFilePtr**)(data_ov091_02135028+tableOffset));
         _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
             (void*)(c+0x124), kcl, (void*)(c+0x2ec), 0x1000, *(s16*)(c+0x8e), *(void**)(data_ov091_0213502c+tableOffset));
     } else {
         int tableOffset = mVariant * 0xc;
-        void* kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(*(void**)(data_ov091_02135028+tableOffset));
+        void* kcl = dBgW_Kc::LoadFile(**(SharedFilePtr**)(data_ov091_02135028+tableOffset));
         _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
             (void*)(c+0x124), kcl, (void*)(c+0x2ec), 0x199, *(s16*)(c+0x8e), *(void**)(data_ov091_0213502c+tableOffset));
     }
-    func_020393d4((void*)(c+0x124), (void*)_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
+    func_020393d4((void*)(c+0x124), (void*)dBgW::UpdatePosWithTransform);
     return 1;
 }
