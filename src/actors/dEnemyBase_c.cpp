@@ -25,6 +25,8 @@
 #include "dEnemyBase_c.h"
 #include "decl_dBgPi.h"
 #include "dBgCh_Lin.h"
+#include "Player.h"
+#include "SurfaceInfo.h"
 
 /* Written as the real constructor, which is the form the legacy shard recovered
    and byte-matched. Two steps, and neither is spelled below: the dActor_c
@@ -73,12 +75,8 @@ extern void func_020383f0(dBgCh_Actr *);
 extern void dBgCh_Actr_UpdateDiscreteNoLava_veneer(dBgCh_Actr *);
 extern void func_02038414(dBgCh_Actr *);
 extern void dBgCh_Actr_UpdateContinuous_Veneer(dBgCh_Actr *);
-extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *);
 extern struct SurfaceInfo *_ZNK10dBgCh_Actr14GetFloorResultEv(dBgCh_Actr *);
-extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *, Vector3 *);
-extern int _ZNK10dBgCh_Actr13GetLimMovFlagEv(dBgCh_Actr *);
 extern int _ZN4cstd4fdivEii(int, int);
-extern int _ZNK10dBgCh_Actr8IsOnWallEv(void *);
 extern struct SurfaceInfo *_ZNK10dBgCh_Actr13GetWallResultEv(dBgCh_Actr *);
 }
 
@@ -92,10 +90,10 @@ void dEnemyBase_c::UpdateWMClsn(dBgCh_Actr & clsn_, unsigned int sel)
     case 3: func_02038414(clsn); break;
     default: dBgCh_Actr_UpdateContinuous_Veneer(clsn); break;
     }
-    if (_ZNK10dBgCh_Actr10IsOnGroundEv(clsn)) {
+    if (clsn->IsOnGround()) {
 
-        _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char*)_ZNK10dBgCh_Actr14GetFloorResultEv(clsn)+4, (Vector3*)&mFloorNormalX);
-        if (_ZNK10dBgCh_Actr13GetLimMovFlagEv(clsn) == 0) {
+        ((SurfaceInfo *)((char*)_ZNK10dBgCh_Actr14GetFloorResultEv(clsn)+4))->CopyNormalTo(*(Vector3*)&mFloorNormalX);
+        if (clsn->GetLimMovFlag() == 0) {
             int dz = mFloorNormalY;
             if (dz != 0) {
                 int nx = mFloorNormalX;
@@ -110,8 +108,8 @@ void dEnemyBase_c::UpdateWMClsn(dBgCh_Actr & clsn_, unsigned int sel)
             }
         }
     }
-    if (_ZNK10dBgCh_Actr8IsOnWallEv(clsn)) {
-        _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char*)_ZNK10dBgCh_Actr13GetWallResultEv(clsn)+4, (Vector3*)&mWallNormalX);
+    if (clsn->IsOnWall()) {
+        ((SurfaceInfo *)((char*)_ZNK10dBgCh_Actr13GetWallResultEv(clsn)+4))->CopyNormalTo(*(Vector3*)&mWallNormalX);
     }
 
 }
@@ -352,7 +350,6 @@ extern int (dEnemyBase_c::*data_ov002_0210dbc0[])(dBgCh_Actr &);
 
 extern "C" {
 extern void DecIfAbove0_Short(unsigned short *p);
-extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *thiz, void *clsn);
 }
 
 // @symbol _ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr
@@ -396,7 +393,7 @@ extern "C" int func_ov002_020ae64c(char* c, int x){
 
 // @symbol func_ov002_020ae608
 extern "C" int func_ov002_020ae608(void* c, void* a){
-  if(_ZNK10dBgCh_Actr10IsOnGroundEv(a)==0) return 0;
+  if(((dBgCh_Actr *)a)->IsOnGround()==0) return 0;
   ((dEnemyBase_c *)c)->SpawnCoin();
   ((dEnemyBase_c *)c)->KillAndTrackInDeathTable();
   *(int*)((char*)c+0x10c)=0;
@@ -441,7 +438,7 @@ extern "C" int func_ov002_020ae4cc(char* self, char* clsn){
     v[1] = y;
     v[2] = z;
   }
-  if (_ZNK10dBgCh_Actr10IsOnGroundEv(clsn)) {
+  if (((dBgCh_Actr *)clsn)->IsOnGround()) {
     ((dEnemyBase_c *)self)->SpawnCoin();
     ((dEnemyBase_c *)self)->KillAndTrackInDeathTable();
     *(int*)(self+0x10c) = 0;
@@ -456,7 +453,7 @@ extern "C" int func_ov002_020ae4cc(char* self, char* clsn){
 
 // @symbol func_ov002_020ae454
 extern "C" int func_ov002_020ae454(char* c, void* a){
-  if(*(unsigned short*)(c+0x102)==0 || _ZNK10dBgCh_Actr10IsOnGroundEv(a)!=0 || _ZNK10dBgCh_Actr8IsOnWallEv(a)!=0){
+  if(*(unsigned short*)(c+0x102)==0 || ((dBgCh_Actr *)a)->IsOnGround()!=0 || ((dBgCh_Actr *)a)->IsOnWall()!=0){
     ((dEnemyBase_c *)c)->SpawnCoin();
     ((dEnemyBase_c *)c)->KillAndTrackInDeathTable();
     *(int*)(c+0x10c)=0;
@@ -469,7 +466,6 @@ extern "C" int func_ov002_020ae454(char* c, void* a){
    form the legacy shard recovered and byte-matched. The two by-value Fix12i
    parameters the mangled name claims are spelled as themselves. */
 extern "C" {
-extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void* self);
 extern short data_02082214[];
 }
 
@@ -481,7 +477,7 @@ int dEnemyBase_c::IsGoingOffCliff(dBgCh_Actr &clsn_, Fix12i fix2, s16 a3,
   Vector3 v1;
   Vector3 v2;
   mCliffState = 0;
-  if (_ZNK10dBgCh_Actr10IsOnGroundEv(clsn) != 0) {
+  if (((dBgCh_Actr *)clsn)->IsOnGround() != 0) {
     dBgCh_Lin line;
     v1.x = this->mPosX;
     v1.y = this->mPosY;
@@ -531,7 +527,7 @@ int dEnemyBase_c::AngleAwayFromWallOrCliff(dBgCh_Actr & clsn_, short & outAngle_
 {
     void *clsn = &clsn_;
     short *outAngle = &outAngle_;
-    if (_ZNK10dBgCh_Actr8IsOnWallEv(clsn)) {
+    if (((dBgCh_Actr *)clsn)->IsOnWall()) {
         *outAngle = _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(this,
             mWallNormalX, mWallNormalZ, *outAngle);
     } else if (mCliffState) {
@@ -569,9 +565,6 @@ int dEnemyBase_c::AngleAwayFromWallOrCliff(dBgCh_Actr & clsn_, short & outAngle_
    carry an explicit cast, which costs nothing. */
 extern "C" {
 extern s32 Vec3_HorzLen(const Vector3 *v);
-extern void _ZN10dBgCh_Actr13SetLimMovFlagEv(void *c);
-extern void _ZN10dBgCh_Actr15ClearLimMovFlagEv(void *c);
-extern int _ZNK10dBgCh_Actr13JustHitGroundEv(void *c);
 extern short data_02082214[];
 }
 
@@ -654,18 +647,18 @@ int dEnemyBase_c::UpdateYoshiEat(dBgCh_Actr & clsn_)
             *(int *)(self + 0xa8) = 0xc000;
             *(int *)(self + 0xd0) = 0;
         }
-        lim = _ZNK10dBgCh_Actr13GetLimMovFlagEv((dBgCh_Actr *)clsn);
-        _ZN10dBgCh_Actr13SetLimMovFlagEv(clsn);
-        _ZN8dActor_c9UpdatePosEP5dCc_c(self, 0);
+        lim = ((dBgCh_Actr *)clsn)->GetLimMovFlag();
+        ((dBgCh_Actr *)clsn)->SetLimMovFlag();
+        UpdatePos(0);
         dBgCh_Actr_UpdateContinuous_Veneer((dBgCh_Actr *)clsn);
-        if (_ZNK10dBgCh_Actr10IsOnGroundEv(clsn) != 0) {
+        if (((dBgCh_Actr *)clsn)->IsOnGround() != 0) {
             char *fr = (char *)_ZNK10dBgCh_Actr14GetFloorResultEv((dBgCh_Actr *)clsn);
-            _ZNK11SurfaceInfo12CopyNormalToER7Vector3(fr + 4, (Vector3 *)(self + 0xd4));
-            if (_ZNK10dBgCh_Actr13JustHitGroundEv(clsn) == 0) {
+            ((SurfaceInfo *)(fr + 4))->CopyNormalTo(*(Vector3 *)(self + 0xd4));
+            if (((dBgCh_Actr *)clsn)->JustHitGround() == 0) {
                 *(int *)(self + 0xa8) = 0;
                 *(unsigned char *)(self + 0x107) = 0;
             } else {
-                _ZNK11SurfaceInfo12CopyNormalToER7Vector3(fr + 4, (Vector3 *)(self + 0xd4));
+                ((SurfaceInfo *)(fr + 4))->CopyNormalTo(*(Vector3 *)(self + 0xd4));
                 *(int *)(self + 0xa8) =
                     _ZN4cstd4fdivEii((*(int *)(self + 0xa8) * -50) / 100, *(int *)(self + 0xd8));
             }
@@ -678,7 +671,7 @@ int dEnemyBase_c::UpdateYoshiEat(dBgCh_Actr & clsn_)
         }
         *(s16 *)(self + 0x8e) = *(s16 *)(self + 0x94);
         if (lim == 0)
-            _ZN10dBgCh_Actr15ClearLimMovFlagEv(clsn);
+            ((dBgCh_Actr *)clsn)->ClearLimMovFlag();
         return 3;
     }
     *(int *)(self + 0xd0) = 0;
@@ -691,7 +684,6 @@ int dEnemyBase_c::UpdateYoshiEat(dBgCh_Actr & clsn_)
    IDs 0x120/0x121 spawns the mega-character particles; otherwise bit 0x20000 on
    the collision is raised. Clearing mEatenByYoshi clears that bit instead. */
 extern "C" {
-extern void* _ZN8dActor_c10FindWithIDEj(unsigned int);
 }
 
 // @symbol _ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER5dCc_c
@@ -702,7 +694,7 @@ int dEnemyBase_c::SpawnParticlesIfHitOtherObj(dCc_c & clsn_)
     if (mEatenByYoshi != 0) {
         unsigned int id = *(unsigned int*)(clsn+0x24);
         if (id != 0) {
-            void* a = _ZN8dActor_c10FindWithIDEj(id);
+            void* a = dActor_c::FindWithID(id);
             if (a != 0) {
                 unsigned short t = *(unsigned short*)((char*)a+0xc);
                 int e1 = (t == 0x120);
@@ -816,7 +808,6 @@ void dEnemyBase_c::SpawnMegaCharParticles(dActor_c &a, char *p)
    function at the same address. */
 extern "C" {
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int a, int x, int y, int z);
-extern void _ZN6Player16IncMegaKillCountEv(void *p);
 }
 
 // @symbol _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE
@@ -846,7 +837,7 @@ void dEnemyBase_c::KillByInvincibleChar(const Vector3_16 & vel_, Player & player
     v[1] = vy;
     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x43, vx, vy, v[2]);
     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x44, v[0], v[1], v[2]);
-    _ZN6Player16IncMegaKillCountEv(&player_);
+    player_.IncMegaKillCount();
 }
 
 
@@ -860,7 +851,6 @@ extern void Vec3_Asr(void *dst, const void *src, int sh);
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void *m, int x, int y, int z);
-extern void _ZN8dActor_c24KillAndTrackInDeathTableEv(void *actor);
 extern char data_020a0e68;
 }
 
@@ -920,19 +910,19 @@ int dEnemyBase_c::UpdateKillByInvincibleChar(dBgCh_Actr & ww_, ModelAnim & mm_, 
         *(unsigned short *)LAUNDER(&mDeathTimer) -= 1;
 
     if (mDeathTimer == 0 ||
-        (clsn != 0 && _ZNK10dBgCh_Actr10IsOnGroundEv(clsn) != 0 && mVertSpeed < 0)) {
+        (clsn != 0 && clsn->IsOnGround() != 0 && mVertSpeed < 0)) {
         if (flags & 1)
             SpawnCoin();
         if (flags & 2)
-            _ZN8dActor_c24KillAndTrackInDeathTableEv(this);
+            KillAndTrackInDeathTable();
         mDeathState = 0;
         return 2;
     }
 
-    _ZN8dActor_c9UpdatePosEP5dCc_c(this, 0);
+    UpdatePos(0);
     if (clsn != 0) {
         UpdateWMClsn(*clsn, 0);
-        if (_ZNK10dBgCh_Actr8IsOnWallEv(clsn) != 0)
+        if (clsn->IsOnWall() != 0)
             mPrevAngleY = _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(
                 this, mWallNormalX, mWallNormalZ, mPrevAngleY);
     }

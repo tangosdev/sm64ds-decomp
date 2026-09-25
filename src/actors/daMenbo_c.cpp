@@ -116,6 +116,7 @@
 #include "dBgCh_Lin.h"
 #include "SharedFilePtr.h"
 #include "Player.h"
+#include "Animation.h"
 
 /* FILE DEFAULT. func_ov090_02130f94 at ROM ordinal 2 is the only member that
  * needs either of these, and it needs both. Every other member reproduces with
@@ -212,44 +213,22 @@ void  func_02012694(int id, const Vector3* pos);
 /* arm9 engine */
 int   _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
           unsigned int a0, unsigned int a1, int a2, int a3, int a4, int a5, int a6);
-void* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr& f);
-void  _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, BMD_File* f, int a, int b);
-char* _ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr& f);
-void  _ZN9Animation7AdvanceEv(void* self);
-int   _ZN9Animation8FinishedEv(void* self);
 int   _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, BCA_File* f, int a, LocFix12 rate, unsigned int n);
 
 /* arm9 collision and actor services */
-void  _ZN5dCc_c5ClearEv(void* self);
-void  _ZN5dCc_c6UpdateEv(void* self);
-void  _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void* self, void* v);
 void  _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void* self, dActor_c* a, const Vector3* v, LocFix12 r, LocFix12 h, unsigned int e, unsigned int g);
 void  _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* self, int a, LocFix12 r, LocFix12 h, int p, int q);
-int   _ZNK10dBgCh_Actr8IsOnWallEv(void* self);
 int   SurfaceInfo_TestFlag0x20(const SurfaceInfo* p);
 void  func_0203558c(void* self);
 int   func_02035638(u8* p);
 void  func_02035684(int* p, int v);
 
-void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
-void* _ZN8dActor_c13ClosestPlayerEv(void* self);
-void* _ZN8dActor_c22ClosestNonVanishPlayerEv(void* self);
-int   _ZN8dActor_c18HorzAngleToCPlayerEv(void* self);
-int   _ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(void* self, void* cyl, void* player);
-void  _ZN8dActor_c9UpdatePosEP5dCc_c(void* self, void* cyl);
 void  _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(void* self, const void* v, u32 n, s32 fix, s16 s);
-void  _ZN8dActor_c8PoofDustEv(void* self);
-void  _ZN8dActor_c24KillAndTrackInDeathTableEv(void* self);
 
 /* ov002 -- the shared enemy base and the player */
-int   _ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(void* self, void* wm);
-int   _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj(void* self, void* wm, void* anim, u32 n);
-void  _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void* self, void* wm, u32 n);
-int   _ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr(void* self, void* wm);
 void  _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(void* self, void* v, void* player, LocFix12 a);
 void  func_ov002_020aea30(void* self, void* actor, void* collision);
 void  _ZN6Player6BounceE5Fix12IiE(void* p, LocFix12 f);
-int   _ZN6Player9IsOnShellEv(void* p);
 void  _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, void* v, int a, LocFix12 b, int d, int e, int f);
 
 /* arm9 and ov090 data */
@@ -392,10 +371,10 @@ void func_ov090_021310b4(char* c)
     sv.z = z;
     sv.x = x;
     sv.y = y;
-    _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(c + 0x110, &sv);
+    ((dCcAcPos_c *)(c + 0x110))->SetPosRelativeToActor(sv);
 
     if (*(unsigned int*)(c + 0x134) == 0) return;
-    if ((p = (char*)_ZN8dActor_c10FindWithIDEj(*(unsigned int*)(c + 0x134))) == 0) return;
+    if ((p = (char*)dActor_c::FindWithID(*(unsigned int*)(c + 0x134))) == 0) return;
     flags = (int)(((long long)*(int*)(c + 0x130)));
 
     if (flags & 0x2400) {
@@ -413,7 +392,7 @@ void func_ov090_021310b4(char* c)
         func_ov002_020aea30(c, p, 0);
         return;
     }
-    if (_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(c, c + 0x110, p)) {
+    if (((dActor_c *)c)->JumpedOnByPlayer(*(dCc_c *)(c + 0x110), *(Player *)p)) {
         _ZN6Player6BounceE5Fix12IiE(p, 0x28000);
         *(int*)(c + 0x10c) = 1;
         func_ov002_020aea30(c, p, 0);
@@ -446,13 +425,13 @@ void func_ov090_021310b4(char* c)
         int b = (*(unsigned short*)(p + 0xc) == 0xbf) ? 1 : 0;
         if ((int)(((long long)b)) == 0) return;
     }
-    if (*(unsigned char*)(p + 0x6f9) == 1 || _ZN6Player9IsOnShellEv(p) == 1) {
+    if (*(unsigned char*)(p + 0x6f9) == 1 || ((Player *)p)->IsOnShell() == 1) {
         cv.x = *(int*)(c + 0x5c);
         cv.y = *(int*)(c + 0x60);
         cv.z = *(int*)(c + 0x64);
         _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(c, &cv, *(unsigned char*)(c + 0x10a) + 1, 0xa000, 0);
-        _ZN8dActor_c8PoofDustEv(c);
-        _ZN8dActor_c24KillAndTrackInDeathTableEv(c);
+        ((dActor_c *)c)->PoofDust();
+        ((dActor_c *)c)->KillAndTrackInDeathTable();
         return;
     }
     hurt.x = *(int*)(c + 0x5c);
@@ -508,9 +487,9 @@ void func_ov090_02131378(char* c)
  * chase. Returns 1 while a target is held, and releases it otherwise. */
 int func_ov090_021314a0(char* c)
 {
-    char* p = (char*)_ZN8dActor_c22ClosestNonVanishPlayerEv(c);
+    char* p = (char*)((dActor_c *)c)->ClosestNonVanishPlayer();
     if (p == 0) goto out;
-    if (AngleDiff(*(short*)(c + 0x94), _ZN8dActor_c18HorzAngleToCPlayerEv(c)) >= 0x2000) goto out;
+    if (AngleDiff(*(short*)(c + 0x94), ((dActor_c *)c)->HorzAngleToCPlayer()) >= 0x2000) goto out;
     {
         int* sv = (int*)(((int)p + 0x5c));
         int v[3];
@@ -650,7 +629,7 @@ int func_ov090_02131648(MenboState* c)
         *(u8*)(self + 0x39e) = 0;
     }
 
-    if (_ZNK10dBgCh_Actr8IsOnWallEv(self + 0x150) != 0) {
+    if (((dBgCh_Actr *)(self + 0x150))->IsOnWall() != 0) {
         if (*(u8*)(self + 0x39f) == 0 && *(u8*)(self + 0x39e) == 0 && *(u8*)(self + 0x3a0) == 0) {
             ha = Vec3_HorzAngle((Vector3*)(self + 0x5c), (Vector3*)(self + 0x374));
             sh = (rnd & 3) << 0xc;
@@ -778,7 +757,7 @@ int func_ov090_02131c48(char* c)
         func_02012694(0xfd, (const Vector3*)(c + 0x74));
 
     if (*(u16*)(c + 0x394) == 0
-        && _ZNK10dBgCh_Actr8IsOnWallEv(c + 0x150)
+        && ((dBgCh_Actr *)(c + 0x150))->IsOnWall()
         && AngleDiff(*(s16*)(c + 0x94), *(s16*)(c + 0x39a)) < 0x200) {
         s16* p = (s16*)(((int)c + 0x39a));
         *p = *p + 0x4000;
@@ -788,7 +767,7 @@ int func_ov090_02131c48(char* c)
     if (*(u16*)(c + 0x394) != 0) {
         ApproachAngle((s16*)(c + 0x94), *(s16*)(c + 0x39a), 1, 0x1000, 0x1000);
     } else {
-        if (_ZN9Animation8FinishedEv(c + 0x35c)) {
+        if (((Animation *)(c + 0x35c))->Finished()) {
             int* q = (int*)(((int)c + 0x390));
             *q = *q + 1;
             if (*(int*)(c + 0x390) > 0x14)
@@ -905,26 +884,26 @@ int daMenbo_c::Behavior()
 {
     char* c = (char*)this;
 
-    if (_ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(c, &mWithMeshClsn)) {
-        _ZN5dCc_c5ClearEv(&mdCcAcPos_c);
+    if (UpdateYoshiEat(mWithMeshClsn)) {
+        mdCcAcPos_c.Clear();
         if (mEatenByYoshi != 0 && unk_104 == 0)
-            _ZN5dCc_c6UpdateEv(&mdCcAcPos_c);
+            mdCcAcPos_c.Update();
         func_ov090_02131e50(c);
         return 1;
     }
 
-    if (_ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj(c, &mWithMeshClsn, &mModelAnim, 3))
+    if (UpdateKillByInvincibleChar(mWithMeshClsn, mModelAnim, 3))
         return 1;
 
     if (mDeathState != 0) {
         func_02035684((int*)(&mWithMeshClsn), 0xd2000);
-        _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(c, &mWithMeshClsn, 0);
-        if (_ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr(c, &mWithMeshClsn))
+        UpdateWMClsn(mWithMeshClsn, 0);
+        if (UpdateDeath(mWithMeshClsn))
             return 1;
         func_ov090_02131378(c);
         func_ov090_02131e50(c);
         if (mDeathState == 0)
-            _ZN8dActor_c8PoofDustEv(c);
+            PoofDust();
         if (unk_3a1 == 3) {
             _Z14ApproachLinearRsss(&mAngleX, -32767, 0x500);
             if (AngleDiff(*&mAngleX, -32767) < 0x1000) {
@@ -938,8 +917,8 @@ int daMenbo_c::Behavior()
             v.y = mPosY;
             v.z = mPosZ;
             _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(c, &v, unk_10a + 1, 0xa000, 0);
-            _ZN8dActor_c8PoofDustEv(c);
-            _ZN8dActor_c24KillAndTrackInDeathTableEv(c);
+            PoofDust();
+            KillAndTrackInDeathTable();
         }
         return 1;
     }
@@ -948,17 +927,17 @@ int daMenbo_c::Behavior()
     int flag = (mFlags & 8) != 0;
     if (flag) {
         mHorzSpeed = 0;
-        _ZN8dActor_c9UpdatePosEP5dCc_c(c, &mdCcAcPos_c);
+        UpdatePos(&mdCcAcPos_c);
         func_ov090_02131378(c);
         if (data_0209f2f8 == 0x15 && mAreaId == 1) {
-            _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(c, &mWithMeshClsn, 2);
+            UpdateWMClsn(mWithMeshClsn, 2);
             if (func_02035638((u8*)(&mWithMeshClsn))) {
                 mVertAccel = 0;
                 unk_0a4 = 0;
                 mVertSpeed = 0;
                 unk_0ac = 0;
                 mDeathState = 1;
-                func_ov002_020aea30(c, _ZN8dActor_c13ClosestPlayerEv(c), 0);
+                func_ov002_020aea30(c, ClosestPlayer(), 0);
                 return 1;
             }
         }
@@ -966,13 +945,13 @@ int daMenbo_c::Behavior()
     }
     }
 
-    _ZN8dActor_c9UpdatePosEP5dCc_c(c, &mdCcAcPos_c);
+    UpdatePos(&mdCcAcPos_c);
     func_ov090_02131378(c);
     DecIfAbove0_Short((u16*)&mStateTimer);
     DecIfAbove0_Short(&unk_394);
     DecIfAbove0_Short(&unk_396);
     DecIfAbove0_Short(&unk_398);
-    _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(c, &mWithMeshClsn, 2);
+    UpdateWMClsn(mWithMeshClsn, 2);
     if (mPosY <= unk_3ac)
         mPosY = unk_3ac;
     if (data_0209f2f8 == 0x15 && mAreaId == 1 && func_02035638((u8*)(&mWithMeshClsn))) {
@@ -981,7 +960,7 @@ int daMenbo_c::Behavior()
         mVertSpeed = 0;
         unk_0ac = 0;
         mDeathState = 1;
-        func_ov002_020aea30(c, _ZN8dActor_c13ClosestPlayerEv(c), 0);
+        func_ov002_020aea30(c, ClosestPlayer(), 0);
         return 1;
     }
 
@@ -998,14 +977,14 @@ int daMenbo_c::Behavior()
        for free. Offsetting from a typed sub-object's address is not the same
        to mwcc as offsetting from `this`, so these stay as they are. */
     *(s32*)(c + 0x368) = *(s32*)(c + 0x3a4);
-    _ZN9Animation7AdvanceEv(c + 0x35c);
+    ((Animation *)(c + 0x35c))->Advance();
     func_ov090_02131e50(c);
     func_ov090_021310b4(c);
-    _ZN5dCc_c5ClearEv(&mdCcAcPos_c);
+    mdCcAcPos_c.Clear();
     {
-        void* p = _ZN8dActor_c13ClosestPlayerEv(c);
+        void* p = ClosestPlayer();
         if (p != 0 && *(u8*)((char*)p + 0x6fb) == 0)
-            _ZN5dCc_c6UpdateEv(&mdCcAcPos_c);
+            mdCcAcPos_c.Update();
     }
     return 1;
 }
@@ -1036,12 +1015,12 @@ int daMenbo_c::InitResources()
     Vector3 pos;
     Vector3 v;
 
-    f = (BMD_File*)_ZN5Model8LoadFileER13SharedFilePtr(data_ov090_021344a0);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModelAnim, f, 1, -1);
-    _ZN9Animation8LoadFileER13SharedFilePtr(data_ov090_02134488);
-    _ZN9Animation8LoadFileER13SharedFilePtr(data_ov090_02134480);
-    _ZN9Animation8LoadFileER13SharedFilePtr(data_ov090_02134490);
-    _ZN9Animation8LoadFileER13SharedFilePtr(data_ov090_02134498);
+    f = (BMD_File*)Model::LoadFile(data_ov090_021344a0);
+    mModelAnim.SetFile(f, 1, -1);
+    Animation::LoadFile(data_ov090_02134488);
+    Animation::LoadFile(data_ov090_02134480);
+    Animation::LoadFile(data_ov090_02134490);
+    Animation::LoadFile(data_ov090_02134498);
 
     mTerminalVelocity = -0x3c000;
 

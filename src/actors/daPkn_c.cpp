@@ -34,6 +34,8 @@
 #include "common.h"
 #include "daPkn_c.h"
 #include "decl_Animation.h"
+#include "Player.h"
+#include "Animation.h"
 #include "SharedFilePtr.h"
 
 /* The six shared files this actor claims.  include/SharedFilePtr.h declares no
@@ -88,17 +90,11 @@ int   func_0201267c(int a, void *b);
 void  func_02012694(u32 id, void *pos);
 void  func_020105cc(void *thiz, u32 flags);
 
-void *_ZN8dActor_c10FindWithIDEj(u32 id);
-char *_ZN8dActor_c13ClosestPlayerEv(void *self);
-int   _ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(void *self, void *clsn, void *player);
-void  _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, const Vector3 *c, const void *d, int e, int f);
 
-void  _ZN6Player16IncMegaKillCountEv(void *player);
 void  _ZN6Player6BounceE5Fix12IiE(void *player, int fix);
 int   _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *player, const void *pos, u32 a, int fix, u32 b, u32 c, u32 d);
 
 
-int   _ZN9Animation8FinishedEv(void *a);
 
 /* Measured remaining call seams in InitResources (mwccarm 2004/b56): real
    SetAnim and dCcAc/dCcAcPos Init calls with local Fix12<int> arguments change
@@ -352,7 +348,7 @@ void func_ov084_0212fc10(daPkn_c *c)
 extern "C" {  /* Retained C-linkage helper. */
 void func_ov084_0212fa7c(daPkn_c *c) {
     c->mClsnEnabled = 1;
-    if (_ZN9Animation8FinishedEv((char *)c + 0x160) || _ZNK9Animation12WillHitFrameEi((char *)c + 0x160, 0)) {
+    if (((Animation *)((char *)c + 0x160))->Finished() || _ZNK9Animation12WillHitFrameEi((char *)c + 0x160, 0)) {
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&c->mModelAnim, data_ov084_02130df4.file, 0, 0x1000, 0);
     }
     {
@@ -404,7 +400,7 @@ void func_ov084_0212f6d8(daPkn_c *self)
     _Z14ApproachLinearRsss((s16 *)(c + 0x94), *(s16 *)(c + 0x468), 0x800);
     *(s16 *)(c + 0x8e) = *(s16 *)(c + 0x94);
 
-    if (_ZN9Animation8FinishedEv(c + 0x160) != 0) {
+    if (((Animation *)(c + 0x160))->Finished() != 0) {
         int thr;
         if (*(int *)(c + 0x46c) != 0)
             thr = 0x12c000;
@@ -419,14 +415,14 @@ void func_ov084_0212f6d8(daPkn_c *self)
 
     /* cylinder 0 (id @ +0x3a4, flags @ +0x3a0) */
     if (*(u32 *)(c + 0x3a4) != 0) {
-        actor = _ZN8dActor_c10FindWithIDEj(*(u32 *)(c + 0x3a4));
+        actor = dActor_c::FindWithID(*(u32 *)(c + 0x3a4));
         if (actor != 0) {
             type = *(u16 *)((char *)actor + 0xc);
             isPlayer = (int)(type == 0xbf);
             if (isPlayer != 0) {
                 flags = *(u32 *)(c + 0x3a0);
                 if (flags & 0x10) {
-                    _ZN6Player16IncMegaKillCountEv(actor);
+                    ((Player *)actor)->IncMegaKillCount();
                     func_02012694(0x1d, c + 0x74);
                     func_ov084_0212ebb4(self);
                     return;
@@ -459,13 +455,13 @@ void func_ov084_0212f6d8(daPkn_c *self)
 
     /* cylinder 1 (id @ +0x3d8, flags @ +0x3d4; mega bit read from +0x3a0 per ROM) */
     if (*(u32 *)(c + 0x3d8) != 0) {
-        actor = _ZN8dActor_c10FindWithIDEj(*(u32 *)(c + 0x3d8));
+        actor = dActor_c::FindWithID(*(u32 *)(c + 0x3d8));
         if (actor != 0) {
             type = *(u16 *)((char *)actor + 0xc);
             isPlayer = (int)(type == 0xbf);
             if (isPlayer != 0) {
                 if ((*(u32 *)(c + 0x3a0) & 0x10) != 0) {
-                    _ZN6Player16IncMegaKillCountEv(actor);
+                    ((Player *)actor)->IncMegaKillCount();
                     func_02012694(0x1d, c + 0x74);
                     func_ov084_0212ebb4(self);
                     return;
@@ -492,7 +488,7 @@ void func_ov084_0212f6d8(daPkn_c *self)
     /* cylinder 2 (id @ +0x40c, flags @ +0x408) — player only */
     if (*(u32 *)(c + 0x40c) == 0)
         return;
-    actor = _ZN8dActor_c10FindWithIDEj(*(u32 *)(c + 0x40c));
+    actor = dActor_c::FindWithID(*(u32 *)(c + 0x40c));
     if (actor == 0)
         return;
     type = *(u16 *)((char *)actor + 0xc);
@@ -500,7 +496,7 @@ void func_ov084_0212f6d8(daPkn_c *self)
     if (isPlayer == 0)
         return;
     if ((*(u32 *)(c + 0x408) & 0x10) != 0) {
-        _ZN6Player16IncMegaKillCountEv(actor);
+        ((Player *)actor)->IncMegaKillCount();
         func_02012694(0x1d, c + 0x74);
         func_ov084_0212ebb4(self);
         return;
@@ -522,7 +518,7 @@ extern "C" void func_ov084_0212f630(daPkn_c *c)
     if (func_ov084_0212ef00(c) != 0) return;
     /* mStateTimer is signed; the ROM compares it as unsigned ldrh. */
     if ((unsigned short)c->mStateTimer <= 0xb) return;
-    if (!_ZN9Animation8FinishedEv((char *)c + 0x160)) return;
+    if (!((Animation *)((char *)c + 0x160))->Finished()) return;
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&c->mModelAnim, data_ov084_02130e14.file, 0x40000000, 0x1000, 0);
     c->mState = 2;
 }
@@ -532,7 +528,7 @@ extern "C" void func_ov084_0212f630(daPkn_c *c)
 extern "C" void func_ov084_0212f588(daPkn_c *c)
 {
     c->mClsnEnabled = 1;
-    if (_ZN9Animation8FinishedEv((char *)c + 0x160)) {
+    if (((Animation *)((char *)c + 0x160))->Finished()) {
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&c->mModelAnim, data_ov084_02130e0c.file, 0x40000000, 0x1000, 0);
         c->mState = 1;
     } else {
@@ -589,7 +585,7 @@ void func_ov084_0212f460(void *self)
         *(void **)(c + 0x470) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
             slot, 0xfb, px, py, z, 0, 0);
     }
-    if (_ZN9Animation8FinishedEv(c + 0x160) == 0)
+    if (((Animation *)(c + 0x160))->Finished() == 0)
         return;
     *(int *)(c + 0x458) = 6;
     *(int *)(c + 0x474) = 0;
@@ -625,8 +621,8 @@ void func_ov084_0212f33c(daPkn_c *c)
             int y = c->mPosY;
             int z = c->mPosZ;
             v = (struct Vector3){c->mPosX, y + 0x78000, z};
-            _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-                0x122, scale, &v, (void*)scale, c->mAreaId, -1);
+            dActor_c::Spawn(
+                0x122, scale, v, (const Vector3_16 *)scale, c->mAreaId, -1);
             c->unk_108 = scale;
         }
         c->mState = 7;
@@ -682,7 +678,7 @@ extern "C" {  /* Retained C-linkage helper. */
 /* Named unk_460 / mPosX / mTargetAngleY / mAngleY size-DIFF this body. */
 void func_ov084_0212f204(char* self){
   struct Vector3 v;
-  *(char**)(self + 0x460) = _ZN8dActor_c13ClosestPlayerEv(self);
+  *(char**)(self + 0x460) = (char *)((dActor_c *)self)->ClosestPlayer();
   {
     char* p = *(char**)(self + 0x460);
     if (p != 0) {
@@ -728,7 +724,7 @@ int func_ov084_0212ef00(daPkn_c *pkn)
     id = *(u32*)(self + 0x3a4);
     if (id == 0) goto second;
 
-    actor = _ZN8dActor_c10FindWithIDEj(id);
+    actor = dActor_c::FindWithID(id);
     if (actor == 0) goto second;
 
     type = *(u16*)((char*)actor + 0xc);
@@ -742,7 +738,7 @@ int func_ov084_0212ef00(daPkn_c *pkn)
     if (flags == 0) goto jumpA;
 
     if (flags & 0x10) {
-        _ZN6Player16IncMegaKillCountEv(actor);
+        ((Player *)actor)->IncMegaKillCount();
         func_02012694(0x1d, self + 0x74);
     }
     func_020105cc(self, flags);
@@ -750,7 +746,7 @@ int func_ov084_0212ef00(daPkn_c *pkn)
     goto successA;
 
 jumpA:
-    if (_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(self, self + 0x380, actor) != 0) {
+    if (((dActor_c *)self)->JumpedOnByPlayer(*(dCc_c *)(self + 0x380), *(Player *)actor) != 0) {
         _ZN6Player6BounceE5Fix12IiE(actor, 0x28000);
         func_ov084_0212ebb4(pkn);
         goto successA;
@@ -791,7 +787,7 @@ second:
     id = *(u32*)(self + 0x3d8);
     if (id == 0) goto fail;
 
-    actor = _ZN8dActor_c10FindWithIDEj(id);
+    actor = dActor_c::FindWithID(id);
     if (actor == 0) goto fail;
 
     type = *(u16*)((char*)actor + 0xc);
@@ -805,7 +801,7 @@ second:
     if (flags == 0) goto jumpB;
 
     if (flags & 0x10) {
-        _ZN6Player16IncMegaKillCountEv(actor);
+        ((Player *)actor)->IncMegaKillCount();
         func_02012694(0x1d, self + 0x74);
     }
     func_020105cc(self, flags);
@@ -813,7 +809,7 @@ second:
     return 1;
 
 jumpB:
-    if (_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(self, self + 0x380, actor) != 0) {
+    if (((dActor_c *)self)->JumpedOnByPlayer(*(dCc_c *)(self + 0x380), *(Player *)actor) != 0) {
         _ZN6Player6BounceE5Fix12IiE(actor, 0x28000);
         func_ov084_0212ebb4(pkn);
         return 1;

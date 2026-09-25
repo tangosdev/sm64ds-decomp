@@ -84,6 +84,8 @@
 #include "common.h"
 #include "dScStarSel_c.h"
 #include "decl_common.h"
+#include "OAM.h"
+#include "SaveData.h"
 
 /* Field accessors and externs the nine functions below use, reconciled to
  * one spelling each -- see "deslop leftovers" above for which spelling won
@@ -97,7 +99,6 @@
 #define COS(a) data_02082214[((u16)(a) >> 4) * 2 + 1]
 
 extern "C" {
-extern int _ZN8SaveData19IsCharacterUnlockedEj(unsigned int);
 extern unsigned char data_ov003_020b169c[];
 extern unsigned short data_ov003_020b16ac[];
 extern void func_02012790(int a);
@@ -111,9 +112,7 @@ extern int data_0208ee44;
 extern unsigned char data_0209caa0[];
 extern unsigned short data_020a0e5a[][2];
 int IsStarCollectedInLevel(s8 levelID, s32 starID);
-void _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(int, void *, int, int, int, int, void *);
 void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int, void *, int, int, int, int, int, int, int, int);
-void _ZN3OAM9RenderSubEP7OamAttrii(void *, int, int);
 void _ZN3G3i13PerspectiveW_E5Fix12IiES1_S1_S1_S1_S1_bP9Matrix4x3(int, int, int, int, int, int, int, void *);
 void _ZN3G3i7LookAt_EPK7Vector3S2_S2_bP9Matrix4x3(const void *, const void *, const void *, int, Matrix4x3 *);
 void _Z13CopyToViewMatPK9Matrix4x3(const Matrix4x3 *);
@@ -184,12 +183,12 @@ s32 dScStarSel_c::Render()
         v = SublevelToLevel(data_02092110) + 1;
         if (v <= 0xf) {
             if (v >= 10) {
-                _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[v / 10], c = 0x77, 0x7a, 8, -1, 0);
+                OAM::Render(0, (OamAttr *)_ZN3OAM7NUMBERSE[v / 10], c = 0x77, 0x7a, 8, -1, 0);
                 c += 9;
             } else {
                 c = 0x7c;
             }
-            _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[v % 10], c, 0x7a, 8, -1, 0);
+            OAM::Render(0, (OamAttr *)_ZN3OAM7NUMBERSE[v % 10], c, 0x7a, 8, -1, 0);
         }
     }
 
@@ -215,22 +214,22 @@ s32 dScStarSel_c::Render()
         for (i = 0; i < FB(this, 0x114); i++) {
             if ((FB(this, 0x131) >> i) & 1) {
                 if (i == FB(this, 0x115)) {
-                    _ZN3OAM9RenderSubEP7OamAttrii(&data_ov001_020ab938, FB((u8 *)this + i, 0x11a), 0x18);
+                    OAM::RenderSub((OamAttr *)&data_ov001_020ab938, FB((u8 *)this + i, 0x11a), 0x18);
                 } else {
-                    _ZN3OAM9RenderSubEP7OamAttrii(&data_ov001_020ab940, FB((u8 *)this + i, 0x11a), 0x18);
+                    OAM::RenderSub((OamAttr *)&data_ov001_020ab940, FB((u8 *)this + i, 0x11a), 0x18);
                 }
             }
-            _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, data_ov001_020abb18[i], FB((u8 *)this + i, 0x11a), 8, -1, -1, 0);
+            OAM::Render(0, (OamAttr *)data_ov001_020abb18[i], FB((u8 *)this + i, 0x11a), 8, -1, -1, 0);
         }
 
         if (FB(this, 0x135) != 0) {
             if (FB(this, 0x133) == 0) {
-                _ZN3OAM9RenderSubEP7OamAttrii(&data_ov001_020abd78, FB((u8 *)this + FB(this, 0x115), 0x11a), 6);
+                OAM::RenderSub((OamAttr *)&data_ov001_020abd78, FB((u8 *)this + FB(this, 0x115), 0x11a), 6);
             } else if (FB(this, 0x133) == 1) {
                 u8 *sel = (u8 *)this + func_ov003_020adf50((char *)this);
-                _ZN3OAM9RenderSubEP7OamAttrii(&data_ov001_020abd80, FB(sel, 0x124) - 0x24, FB(sel, 0x128) - 8);
+                OAM::RenderSub((OamAttr *)&data_ov001_020abd80, FB(sel, 0x124) - 0x24, FB(sel, 0x128) - 8);
             } else {
-                _ZN3OAM9RenderSubEP7OamAttrii(&data_ov001_020abd80, 0x50, FB(this, 0x12b) + 8);
+                OAM::RenderSub((OamAttr *)&data_ov001_020abd80, 0x50, FB(this, 0x12b) + 8);
             }
         }
 
@@ -296,7 +295,7 @@ s32 dScStarSel_c::Render()
                 if (FB(this, 0x132) == i && FB(this, 0x118) != 0) {
                     yoff = 3;
                 }
-                if (_ZN8SaveData19IsCharacterUnlockedEj(i) != 0) {
+                if (SaveData::IsCharacterUnlocked(i) != 0) {
                     if (FB(this, 0x139) == 2) {
                         if (i == func_ov003_020adf50((char *)this)) {
                             if (FB(this, 0x13a) == 0) {
@@ -310,8 +309,8 @@ s32 dScStarSel_c::Render()
                             _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(1, data_ov001_020abcb4[FB((u8 *)this + i, 0x12c)], FB((u8 *)this + i, 0x124), FB((u8 *)this + i, 0x128), -1, -1, FW(this, 0x60), FW(this, 0x60), 0, -1);
                         }
                     } else {
-                        _ZN3OAM9RenderSubEP7OamAttrii(data_ov001_020abcb4[i + 3], FB((u8 *)this + i, 0x124), yoff + FB((u8 *)this + i, 0x128));
-                        _ZN3OAM9RenderSubEP7OamAttrii(data_ov001_020abcb4[FB((u8 *)this + i, 0x12c)], FB((u8 *)this + i, 0x124), yoff + FB((u8 *)this + i, 0x128));
+                        OAM::RenderSub((OamAttr *)data_ov001_020abcb4[i + 3], FB((u8 *)this + i, 0x124), yoff + FB((u8 *)this + i, 0x128));
+                        OAM::RenderSub((OamAttr *)data_ov001_020abcb4[FB((u8 *)this + i, 0x12c)], FB((u8 *)this + i, 0x124), yoff + FB((u8 *)this + i, 0x128));
                     }
                 }
             }
@@ -320,9 +319,9 @@ s32 dScStarSel_c::Render()
 
         if (FB(this, 0x130) <= 1 || data_0209caa0[0x41] != 3) {
             if (SublevelToLevel(data_02092110) <= 0xe) {
-                _ZN3OAM9RenderSubEP7OamAttrii(&data_ov001_020abbb4, 0x80, (FH(this, 0x10a) >> 8) + 0xa0);
+                OAM::RenderSub((OamAttr *)&data_ov001_020abbb4, 0x80, (FH(this, 0x10a) >> 8) + 0xa0);
             } else {
-                _ZN3OAM9RenderSubEP7OamAttrii(&data_ov001_020abbf4, 0x80, (FH(this, 0x10a) >> 8) + 0xa0);
+                OAM::RenderSub((OamAttr *)&data_ov001_020abbf4, 0x80, (FH(this, 0x10a) >> 8) + 0xa0);
             }
         }
     }
@@ -405,7 +404,7 @@ void func_ov003_020ae358(char *c)
   }
   for (i = 0; i < 3; i++)
   {
-    if (_ZN8SaveData19IsCharacterUnlockedEj(i) != 0)
+    if (SaveData::IsCharacterUnlocked(i) != 0)
     {
       int ri = data_020a0e40;
       if (((unsigned short) ((data_020a0de8[data_020a0e40][2] - (*((unsigned char *) ((c + i) + 0x124)))) + 0x18)) < 0x30)
@@ -498,7 +497,6 @@ void func_ov003_020ae358(char *c)
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int SublevelToLevel(int i);
 void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int b, void *attr, int x, int y, int a, int cc, int fx, int t, int e, int f);
-void _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(int b, void *attr, int x, int y, int a, int cc, void *m);
 void func_ov003_020ae1a4(char *sl, int r);
 extern signed char data_0209f2f4[];
 extern void *_ZN3OAM10LIFE_ICONSE[];
@@ -519,7 +517,7 @@ void func_ov003_020ae238(char *sl)
     r8 = 0xac;
   }
   _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, _ZN3OAM10LIFE_ICONSE[*((unsigned char *) (sl + 0x116))], sb, r8 + 8, -1, -1, 0x1000, 0x1000, 0, -1);
-  _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &_ZN3OAM5TIMESE, sb + 0x10, r8 + 8, -1, -1, 0);
+  OAM::Render(0, (OamAttr *)&_ZN3OAM5TIMESE, sb + 0x10, r8 + 8, -1, -1, 0);
   func_ov003_020ae1a4(sl, (unsigned short) data_0209f2f4[0]);
   {
     int i = 0;
@@ -529,7 +527,7 @@ void func_ov003_020ae238(char *sl)
       signed char d = *((signed char *) ((sl + i) + 0x121));
       if (d >= 0)
       {
-        _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[d], sb, r8, 8, -1, 0);
+        OAM::Render(0, (OamAttr *)_ZN3OAM7NUMBERSE[d], sb, r8, 8, -1, 0);
         sb += 9;
       }
       i++;
@@ -572,7 +570,6 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
 int SublevelToLevel(int i);
 unsigned char NumStars(void);
 void func_ov003_020ae1a4(char *sl, int r);
-void _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(int b, void *attr, int x, int y, int a, int cc, void *m);
 extern void *_ZN3OAM7NUMBERSE[];
 extern void *_ZN3OAM5TIMESE;
 extern void *_ZN3OAM10POWER_STARE;
@@ -598,15 +595,15 @@ void func_ov003_020ae0b0(char *sl)
       signed char d = *((signed char *) ((sl + i) + 0x121));
       if (d >= 0)
       {
-        _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[d], sb, r8, 8, -1, 0);
+        OAM::Render(0, (OamAttr *)_ZN3OAM7NUMBERSE[d], sb, r8, 8, -1, 0);
         sb -= 9;
       }
       i--;
     }
     while (i >= 0);
   }
-  _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &_ZN3OAM5TIMESE, sb, r8 + 8, -1, -1, 0);
-  _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &_ZN3OAM10POWER_STARE, sb - 0x10, r8 + 8, -1, -1, 0);
+  OAM::Render(0, (OamAttr *)&_ZN3OAM5TIMESE, sb, r8 + 8, -1, -1, 0);
+  OAM::Render(0, (OamAttr *)&_ZN3OAM10POWER_STARE, sb - 0x10, r8 + 8, -1, -1, 0);
 }
 }
 
@@ -616,26 +613,24 @@ void func_ov003_020ae0b0(char *sl)
 // @symbol func_ov003_020adfc8
 extern "C" {
 extern int SublevelToLevel(int i);
-extern int _ZN8SaveData13GetCoinRecordEj(unsigned int);
 extern void func_ov003_020ae1a4(char* sl, int r);
-extern void _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(int b, void* attr, int x, int y, int a, int c, void* m);
 extern void* _ZN3OAM7NUMBERSE[];
 extern void* _ZN3OAM4COINE[];
 void func_ov003_020adfc8(char* sl) {
     int sb = 0xb8;
     int lvl = SublevelToLevel(data_02092110);
-    int coin = _ZN8SaveData13GetCoinRecordEj(lvl);
+    int coin = SaveData::GetCoinRecord(lvl);
     func_ov003_020ae1a4(sl, coin);
     int i;
     for (i = 2; i >= 0; i--) {
         signed char d = *(signed char*)(sl + i + 0x121);
         if (d >= 0) {
-            _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[d], sb, 0x4c, 8, -1, 0);
+            OAM::Render(0, (OamAttr *)_ZN3OAM7NUMBERSE[d], sb, 0x4c, 8, -1, 0);
             sb -= 9;
         }
     }
-    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &_ZN3OAM5TIMESE, sb, 0x54, -1, -1, 0);
-    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM4COINE, sb - 0x10, 0x4c, -1, -1, 0);
+    OAM::Render(0, (OamAttr *)&_ZN3OAM5TIMESE, sb, 0x54, -1, -1, 0);
+    OAM::Render(0, (OamAttr *)_ZN3OAM4COINE, sb - 0x10, 0x4c, -1, -1, 0);
 }
 }
 
@@ -653,7 +648,7 @@ int func_ov003_020adf50(char* c){
     int r5 = 0;
     int r4 = 0;
     for(; r4 < 3; r4++){
-      if(_ZN8SaveData19IsCharacterUnlockedEj((unsigned int)r4) != 0){
+      if(SaveData::IsCharacterUnlocked((unsigned int)r4) != 0){
         if(r5 == *(unsigned char*)(c+0x134)) return r4;
         r5++;
       }
@@ -681,7 +676,7 @@ int func_ov003_020adec0(char* c, unsigned int r6){
     int r5 = 0;
     int r4;
     for(r4 = 0; r4 < 3; r4++){
-      if(_ZN8SaveData19IsCharacterUnlockedEj((unsigned int)r4) != 0){
+      if(SaveData::IsCharacterUnlocked((unsigned int)r4) != 0){
         if((unsigned int)r4 == r6) return r5;
         r5++;
       }

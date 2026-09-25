@@ -15,10 +15,10 @@
  * Leftover: dBgW_KcMbg::SetFile, dBgActor_c::UpdateKillByMegaChar and
  *   dBgActor_c::IsClsnInRange take Fix12<int> by value, so they stay mangled;
  *   a member call homes the argument and changes the ROM ABI.
- * Leftover: the PathPtr, Model::LoadFile, ModelBase::SetFile and
- *   Sound::PlayLong externs are the shards' own spellings. Retyping them is
- *   declaration-changing matching work, so their banked decl-agreement
- *   entries moved to this file unchanged.
+ * Leftover: the Sound::PlayLong extern is the shards' own spelling.
+ *   Retyping it is declaration-changing matching work, so its banked
+ *   decl-agreement entry moved to this file unchanged. The path handles
+ *   are still 8-byte local views of PathPtr, constructed explicitly.
  * Leftover: InitResources keeps the param1 mask, the yaw adjust, and the
  *   node-index add as offset writes. Naming them changed the function size.
  * Leftover: func_ov018_021117e8, func_ov018_02111804 (the callback
@@ -30,6 +30,7 @@
 #include "daObjSm_Lift_c.h"
 #include "Player.h"
 #include "SharedFilePtr.h"
+#include "PathPtr.h"
 
 extern "C" {
 void Vec3_Asr(Vector3 *d, Vector3 *s, int n);
@@ -45,16 +46,7 @@ void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *th, void *kf, void *mtx, int fx, short s, void *clps);
 void func_020393d4(int *p, int v);
 void func_020393c4(int *p, int v);
-void *_ZN5Model8LoadFileER13SharedFilePtr(void *sfp);
-void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *th, void *f, int a, int b);
-void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *c);
-void *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void *sfp);
 void _ZN7PathPtrC1Ev(void *self);
-void _ZN7PathPtr6FromIDEj(void *self, unsigned int id);
-void _ZNK7PathPtr7GetNodeER7Vector3j(const void *self, void *out, unsigned int idx);
-int _ZNK7PathPtr8NumNodesEv(void *self);
-int _ZNK7PathPtr5LoopsEv(const void *self);
-extern int _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_[];
 
 u8 DecIfAbove0_Byte(u8 *p);
 int Vec3_HorzDist(const void *a, const void *b);
@@ -158,7 +150,7 @@ int daObjSm_Lift_c::Behavior()
         unk_350 = _ZN5Sound8PlayLongEjjjRK7Vector3s(unk_350, 3, 0x8c, &mCamSpacePosX, 0);
 
         _ZN7PathPtrC1Ev(&path);
-        _ZN7PathPtr6FromIDEj(&path, mPathId);
+        ((PathPtr *)&path)->FromID(mPathId);
 
         {
             int step = mNodeStep;
@@ -170,9 +162,9 @@ int daObjSm_Lift_c::Behavior()
             } else {
                 if (idx2 >= mNodeCount) idx2 = 0;
             }
-            _ZNK7PathPtr7GetNodeER7Vector3j(&path, &nodeA, curIdx);
+            ((PathPtr *)&path)->GetNode(nodeA, curIdx);
         }
-        _ZNK7PathPtr7GetNodeER7Vector3j(&path, &nodeB, idx2);
+        ((PathPtr *)&path)->GetNode(nodeB, idx2);
 
         Math_Function_0203b14c(&mHorzSpeed, 0xa000, 0x200, 0x2000, 0x200);
 
@@ -195,7 +187,7 @@ int daObjSm_Lift_c::Behavior()
             int *pIdx = &mNodeIndex;
             *pIdx = *pIdx + mNodeStep;
             if (mNodeIndex < 0) {
-                if (_ZNK7PathPtr5LoopsEv(&path) != 0) {
+                if (((PathPtr *)&path)->Loops() != 0) {
                     mNodeIndex = mNodeCount - 1;
                 } else {
                     unk_331 = 0x3c;
@@ -206,7 +198,7 @@ int daObjSm_Lift_c::Behavior()
                 }
             }
             if (mNodeIndex >= mNodeCount) {
-                if (_ZNK7PathPtr5LoopsEv(&path) != 0) {
+                if (((PathPtr *)&path)->Loops() != 0) {
                     mNodeIndex = 0;
                 } else {
                     unk_331 = 0x3c;
@@ -237,14 +229,14 @@ s32 daObjSm_Lift_c::InitResources()
     mPathId = *(int *)(c + 8) & 0xff;
     if (mPathId == 0xff)
         return 0;
-    void *f = _ZN5Model8LoadFileER13SharedFilePtr(data_ov018_02113bc8);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0xd4, f, 1, -1);
+    void *f = Model::LoadFile(reinterpret_cast<SharedFilePtr &>(data_ov018_02113bc8));
+    ((ModelBase *)(c + 0xd4))->SetFile((BMD_File *)f, 1, -1);
     func_ov018_02111278(c);
-    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
-    void *kf = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov018_02113bc0);
+    UpdateClsnPosAndRot();
+    void *kf = dBgW_Kc::LoadFile(reinterpret_cast<SharedFilePtr &>(data_ov018_02113bc0));
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         c + 0x124, kf, c + 0x2ec, 0x1000, mAngleY, data_ov018_02112f48);
-    func_020393d4((int *)(c + 0x124), (int)_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
+    func_020393d4((int *)(c + 0x124), (int)dBgW::UpdatePosWithTransform);
     func_020393c4((int *)(c + 0x124), (int)func_ov018_02111804);
     unk_331 = 0x3c;
     mBasePosX = mPosX;
@@ -256,8 +248,8 @@ s32 daObjSm_Lift_c::InitResources()
     }
     PathBytes p;
     _ZN7PathPtrC1Ev(&p);
-    _ZN7PathPtr6FromIDEj(&p, mPathId);
-    mNodeCount = _ZNK7PathPtr8NumNodesEv(&p);
+    ((PathPtr *)&p)->FromID(mPathId);
+    mNodeCount = ((PathPtr *)&p)->NumNodes();
     mNodeStep = 1;
     {
         int *ip = (int *)(c + 0x33c);

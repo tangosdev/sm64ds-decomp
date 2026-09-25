@@ -25,6 +25,8 @@
 #include "daFPkn_c.h"
 #include "SharedFilePtr.h"
 #include "Player.h"
+#include "Particle__System.h"
+#include "Animation.h"
 
 #pragma defer_codegen off
 
@@ -52,9 +54,8 @@ extern PknSharedFile data_ov084_02130df4;
  * (fire position); 0212e010 calls 0212d2dc, 0212d42c and 0212d560.
  *
  * Leftover: they stay extern "C" functions over a char * receiver, as the
- * C shards they came from were written. Their callees stay mangled externs
- * for the same reason: a C-style body has no typed object to make a member
- * call through. Retyping them as daFPkn_c members is remaining work. */
+ * C shards they came from were written, so their member calls go through a
+ * cast of that receiver. Retyping them as daFPkn_c members is remaining work. */
 typedef struct FPknVec3 { int x, y, z; } FPknVec3;
 #define AT(p, off) ((void*)(int)((char*)(p) + (off)))
 struct Locals {
@@ -65,33 +66,19 @@ struct Locals {
 extern "C" {
 u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e, const void *f, void *g);
-void *_ZN8Particle6System12FromUniqueIDEj(u32 id);
 void func_02012694(u32 id, void *pos);
 void _ZN5Sound9PlayBank0EjRK7Vector3(u32 id, void *pos);
-void _ZN12dEnemyBase_c9SpawnCoinEv(void *self);
-void _ZN8dActor_c24KillAndTrackInDeathTableEv(void *self);
-void *_ZN8dActor_c10FindWithIDEj(u32 id);
-void _ZN6Player16IncMegaKillCountEv(void *p);
-int _ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(void *self, void *clsn, void *player);
 void _ZN6Player6BounceE5Fix12IiE(void *p, int fix);
 int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *self, const void *pos, u32 a, int fix, u32 b, u32 c, u32 d);
 int _Z14ApproachLinearRiii(int *cur, int target, int step);
 int _Z14ApproachLinearRsss(short *cur, short target, short step);
-int _ZNK9Animation12WillHitFrameEi(void *anim, int frame);
-int _ZN9Animation8FinishedEv(void *anim);
 void func_0201267c(unsigned int id, const void *pos);
-void *_ZN8dActor_c13ClosestPlayerEv(void *self);
 short Vec3_HorzAngle(const void *a, const void *b);
-void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int id, unsigned int a, const void *pos, const void *rot, int e, int f);
-void _ZN7fBase_c18MarkForDestructionEv(void *self);
 void _ZN8dActor_c13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j(
     void *self, const void *pos, const void *v16, int a, int b, u32 g);
 void _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(void *self, const void *pos, unsigned int a, int b, short c);
-void _ZN8dActor_c17TrackInDeathTableEv(void *self);
-int _ZN8dActor_c13DistToCPlayerEv(void *self);
 int IsStarCollectedInCurLevel(unsigned int flag);
 void SetStarMarker(int i, void *self, int v);
-void *_ZN8dActor_c15FindWithActorIDEjPS_(unsigned int id, void *prev);
 void Matrix4x3_FromRotationY(void *m, int angle);
 void Vec3_Asr(void *d, void *s, int sh);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
@@ -134,7 +121,7 @@ void func_ov084_0212d2dc(char* c)
     *(u32*)(c + 0x224) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
         *(u32*)(c + 0x224), 0xfc, *(int*)(c + 0x5c), *(int*)(c + 0x60) + 0x1e000, *(int*)(c + 0x64), 0, 0);
     if (*(u32*)(c + 0x224) != 0) {
-        o = _ZN8Particle6System12FromUniqueIDEj(*(u32*)(c + 0x224));
+        o = Particle::System::FromUniqueID(*(u32*)(c + 0x224));
         if (o != 0) {
             *(int*)((char*)o + 0x50) = (short)(Fix12i)(((long long)(*(int*)(c + 0x210)) * 0x2800 + 0x800) >> 12);
         }
@@ -144,7 +131,7 @@ void func_ov084_0212d2dc(char* c)
         *(u32*)(c + 0x228), 0xfd, *(int*)(c + 0x5c), *(int*)(c + 0x60) + 0x1e000, *(int*)(c + 0x64), 0, 0);
     if (*(u32*)(c + 0x228) == 0)
         return;
-    o = _ZN8Particle6System12FromUniqueIDEj(*(u32*)(c + 0x228));
+    o = Particle::System::FromUniqueID(*(u32*)(c + 0x228));
     if (o == 0)
         return;
     *(int*)((char*)o + 0x50) = (short)(Fix12i)(((long long)(*(int*)(c + 0x210)) * 0x2800 + 0x800) >> 12);
@@ -315,8 +302,8 @@ void func_ov084_0212d86c(char *r5)
         t = (int)(*(u16 *)(r5 + 0xc) == 0xfc);
         if (t != 0) {
             *(u8 *)(r5 + 0x108) = 1;
-            _ZN12dEnemyBase_c9SpawnCoinEv(r5);
-            _ZN8dActor_c24KillAndTrackInDeathTableEv(r5);
+            ((dEnemyBase_c *)r5)->SpawnCoin();
+            ((dActor_c *)r5)->KillAndTrackInDeathTable();
             _ZN5Sound9PlayBank0EjRK7Vector3(0xa, r5 + 0x74);
         } else {
             *(int *)(r5 + 0x1ec) = 1;
@@ -335,15 +322,15 @@ void func_ov084_0212d86c(char *r5)
         if ((*(int *)(r5 + 0x194) & 0x10) == 0)
             goto second;
         _ZN5Sound9PlayBank0EjRK7Vector3(0xa, r5 + 0x74);
-        r4 = (char *)_ZN8dActor_c10FindWithIDEj(*(u32 *)(r5 + 0x198));
+        r4 = (char *)dActor_c::FindWithID(*(u32 *)(r5 + 0x198));
         if (r4 == 0)
             goto second;
-        _ZN6Player16IncMegaKillCountEv(r4);
+        ((Player *)r4)->IncMegaKillCount();
         func_02012694(0x1d, r5 + 0x74);
         goto second;
     }
 
-    r4 = (char *)_ZN8dActor_c10FindWithIDEj(id);
+    r4 = (char *)dActor_c::FindWithID(id);
     if (r4 == 0)
         goto second;
     t = (int)(*(u16 *)(r4 + 0xc) == 0xbf);
@@ -355,7 +342,7 @@ void func_ov084_0212d86c(char *r5)
     }
     t = (int)(*(u16 *)(r5 + 0xc) == 0xfc);
     if (t != 0) {
-        if (_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(r5, r5 + 0x174, r4) != 0) {
+        if (((dActor_c *)r5)->JumpedOnByPlayer(*(dCc_c *)(r5 + 0x174), *(Player *)r4) != 0) {
             _ZN5Sound9PlayBank0EjRK7Vector3(0xb6, r5 + 0x74);
             _ZN6Player6BounceE5Fix12IiE(r4, 0x28000);
             goto activate_path;
@@ -375,7 +362,7 @@ second:
     id = *(u32 *)(r5 + 0x1cc);
     if (id == 0)
         return;
-    r4 = (char *)_ZN8dActor_c10FindWithIDEj(id);
+    r4 = (char *)dActor_c::FindWithID(id);
     if (r4 == 0)
         return;
     t = (int)(*(u16 *)(r4 + 0xc) == 0xbf);
@@ -385,7 +372,7 @@ second:
     flags = *(int *)(r5 + 0x1c8) & 0x66ff0;
     if (flags != 0) {
         if ((flags & 0x10) != 0) {
-            _ZN6Player16IncMegaKillCountEv(r4);
+            ((Player *)r4)->IncMegaKillCount();
             func_02012694(0x1d, r5 + 0x74);
         } else {
             t = (int)(*(u16 *)(r5 + 0xc) == 0xfb);
@@ -432,15 +419,15 @@ void func_ov084_0212dc30(char *c)
         goto tail;
     }
 
-    if (_ZNK9Animation12WillHitFrameEi(c + 0x160, 0x10) ||
-        _ZNK9Animation12WillHitFrameEi(c + 0x160, 0x20) ||
-        _ZNK9Animation12WillHitFrameEi(c + 0x160, 0x34) ||
-        _ZNK9Animation12WillHitFrameEi(c + 0x160, 0x4b)) {
+    if (((Animation *)(c + 0x160))->WillHitFrame(0x10) ||
+        ((Animation *)(c + 0x160))->WillHitFrame(0x20) ||
+        ((Animation *)(c + 0x160))->WillHitFrame(0x34) ||
+        ((Animation *)(c + 0x160))->WillHitFrame(0x4b)) {
         func_0201267c(0xc0, (struct Vector3*)(c + 0x74));
     }
 
     angle = *(short*)(c + 0x8e);
-    player = _ZN8dActor_c13ClosestPlayerEv(c);
+    player = ((dActor_c *)c)->ClosestPlayer();
     p = (int*)AT(player, 0x5c);
     v.x = p[0];
     v.y = p[1];
@@ -451,7 +438,7 @@ void func_ov084_0212dc30(char *c)
     _Z14ApproachLinearRsss((short*)(c + 0x8e), angle, 0x400);
 
     if (*(unsigned char*)(c + 0x21e) == 1) {
-        spawned = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0xfa, 0, (struct Vector3*)(c + 0x5c), (void*)(c + 0x8c), *(signed char*)(c + 0xcc), -1);
+        spawned = dActor_c::Spawn(0xfa, 0, *(struct Vector3*)(c + 0x5c), (Vector3_16 *)(c + 0x8c), *(signed char*)(c + 0xcc), -1);
         if (spawned == 0) return;
 
         *(unsigned char*)(c + 0x21e) = 2;
@@ -461,7 +448,7 @@ void func_ov084_0212dc30(char *c)
         return;
     }
 
-    _ZN7fBase_c18MarkForDestructionEv(c);
+    ((fBase_c *)c)->MarkForDestruction();
     return;
 
 tail:
@@ -485,7 +472,7 @@ void func_ov084_0212ddbc(char *c)
     if (_Z14ApproachLinearRiii((s32 *)(c + 0x204), *(s32 *)(c + 0x210), *(s32 *)(c + 0x214)) == 0)
         goto cold;
 
-    if (_ZN9Animation8FinishedEv(c + 0x160) != 0) {
+    if (((Animation *)(c + 0x160))->Finished() != 0) {
         b = (int)(*(u16 *)(c + 0xc) == 0xfc);
         if (b != 0)
             func_0201267c(0xe3, c + 0x74);
@@ -496,14 +483,14 @@ void func_ov084_0212ddbc(char *c)
     } else {
         if (*(u16 *)(c + 0x100) < 0x3a) {
             ang = *(s16 *)(c + 0x8e);
-            player = _ZN8dActor_c13ClosestPlayerEv(c);
+            player = ((dActor_c *)c)->ClosestPlayer();
             if (player != 0)
                 ang = Vec3_HorzAngle(c + 0x5c, (char *)player + 0x5c);
             _Z14ApproachLinearRsss((s16 *)(c + 0x8e), ang, 0x400);
         }
     }
 
-    if (_ZNK9Animation12WillHitFrameEi(c + 0x160, 0x3a) == 0)
+    if (((Animation *)(c + 0x160))->WillHitFrame(0x3a) == 0)
         return;
 
     b = (int)(*(u16 *)(c + 0xc) == 0xfc);
@@ -561,7 +548,7 @@ void func_ov084_0212e010(char* self)
         *hp = (s16)(*hp + *(s16*)(self + 0x218));
         _Z14ApproachLinearRsss((short*)(self + 0x218), 0, 0xc8);
         func_ov084_0212d42c(self);
-        if (_ZN9Animation8FinishedEv(self + 0x160) == 0)
+        if (((Animation *)(self + 0x160))->Finished() == 0)
             return;
         (*(u8*)((int)self + 0x21d))--;
         if (*(u8*)(self + 0x21d) != 0)
@@ -588,7 +575,7 @@ void func_ov084_0212e010(char* self)
         if (*(u16*)(self + 0xc) == 0xfb)
             b = 1;
         if (b != false) {
-            other = (char*)_ZN8dActor_c10FindWithIDEj(*(u32*)(self + 0x1f0));
+            other = (char*)dActor_c::FindWithID(*(u32*)(self + 0x1f0));
             if (other == 0)
                 return;
             (*(u8*)((int)other + 0x21a))--;
@@ -602,17 +589,17 @@ void func_ov084_0212e010(char* self)
                 _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(self, &buf1, 2, 0xa000, 0);
             }
             if (*(u8*)(other + 0x21b) == 5) {
-                _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0xb2, *(u8*)(self + 0x21f) | 0x40, (FPknVec3*)(self + 0x5c), 0, *(signed char*)(self + 0xcc), -1);
-                _ZN8dActor_c24KillAndTrackInDeathTableEv(other);
-                _ZN8dActor_c24KillAndTrackInDeathTableEv(self);
+                dActor_c::Spawn(0xb2, *(u8*)(self + 0x21f) | 0x40, *(Vector3 *)(self + 0x5c), 0, *(signed char*)(self + 0xcc), -1);
+                ((dActor_c *)other)->KillAndTrackInDeathTable();
+                ((dActor_c *)self)->KillAndTrackInDeathTable();
                 return;
             }
             func_ov084_0212d560(self);
             if (*(int*)(self + 0x1e8) != 1) {
-                _ZN8dActor_c24KillAndTrackInDeathTableEv(self);
+                ((dActor_c *)self)->KillAndTrackInDeathTable();
                 return;
             }
-            _ZN8dActor_c17TrackInDeathTableEv(self);
+            ((dActor_c *)self)->TrackInDeathTable();
             *(int*)(self + 0x1ec) = 4;
             return;
         }
@@ -625,14 +612,14 @@ void func_ov084_0212e010(char* self)
         buf2.y = *(int*)(self + 0x60);
         buf2.z = *(int*)(self + 0x64);
         _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(self, &buf2, 1, 0xa000, 0);
-        _ZN8dActor_c24KillAndTrackInDeathTableEv(self);
+        ((dActor_c *)self)->KillAndTrackInDeathTable();
         return;
     }
 
-    dist = _ZN8dActor_c13DistToCPlayerEv(self);
+    dist = ((dActor_c *)self)->DistToCPlayer();
     b = *(u16*)(self + 0xc) == 0xfb;
     if (b != false) {
-        other = (char*)_ZN8dActor_c10FindWithIDEj(*(u32*)(self + 0x1f0));
+        other = (char*)dActor_c::FindWithID(*(u32*)(self + 0x1f0));
         if (other == 0)
             return;
     }
@@ -679,7 +666,7 @@ void func_ov084_0212e010(char* self)
             *(int*)(other + 0x1f4) = *(int*)(self + 4);
         }
     }
-    dist = (int)_ZN8dActor_c13ClosestPlayerEv(self);
+    dist = (int)((dActor_c *)self)->ClosestPlayer();
     if (dist == 0)
         return;
     *(s16*)(self + 0x8e) = Vec3_HorzAngle((FPknVec3*)(self + 0x5c), (FPknVec3*)(dist + 0x5c));
@@ -696,7 +683,7 @@ int func_ov084_0212e4e0(char* c)
         *(int*)(c + 0x1e8) = 1;
         p = 0;
         for (;;) {
-            p = _ZN8dActor_c15FindWithActorIDEjPS_(0xfb, p);
+            p = dActor_c::FindWithActorID(0xfb, (dActor_c *)p);
             if (p == 0) break;
             if (p != c) {
                 *(int*)((char*)p + 0x1e8) = 2;

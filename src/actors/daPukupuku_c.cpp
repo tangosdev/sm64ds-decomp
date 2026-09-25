@@ -51,6 +51,7 @@
 #include "types.h"
 #include "decl_common.h"
 #include "SharedFilePtr.h"
+#include "Animation.h"
 /* For daPukupuku_c_classInit (ROM ordinal 14) -- the class factory that sits
  * immediately above InitResources in this run and installs this class's
  * vtable. The legacy shard that carried daPukupuku_c_classInit took these
@@ -128,8 +129,6 @@ struct Vector3_16;
 struct AnimFilePtr { int a; struct BCA_File *file; };
 
 extern "C" {
-extern "C" void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3( dCcAcPos_c*, const Vector3&);
-extern "C" Player* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern "C" void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj( Player*, const Vector3&, unsigned int, Fix12i, unsigned int, unsigned int, unsigned int);
 extern Vector3 data_ov090_021342d8;
 /* RECONCILED: the three callers of func_ov090_021332e8 each declared it with a
@@ -159,16 +158,7 @@ extern SharedFilePtr data_ov090_02134564;
  * layout -- so it is the declared type, and CleanupResources casts to reach
  * Release(). Both spellings name the same address, so no call changes. */
 extern AnimFilePtr data_ov090_0213455c;
-extern int _ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(dEnemyBase_c *thiz, dBgCh_Actr *c);
-extern void _ZN5dCc_c5ClearEv(void *thiz);
-extern void _ZN5dCc_c6UpdateEv(void *thiz);
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
-extern void _ZN8dActor_c9UpdatePosEP5dCc_c(dEnemyBase_c *thiz, void *clsn);
-extern void _ZN9Animation7AdvanceEv(void *thiz);
-extern char *_ZN8dActor_c13ClosestPlayerEv(dEnemyBase_c *thiz);
-extern struct BMD_File *_ZN5Model8LoadFileER13SharedFilePtr(struct SharedFilePtr &);
-extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *thisp, struct BMD_File *, int, int);
-extern void _ZN9Animation8LoadFileER13SharedFilePtr(struct SharedFilePtr &);
 extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
 void *thisp, struct dActor_c *, struct Vector3 const &, int, int, unsigned int, unsigned int);
 extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
@@ -203,10 +193,10 @@ int daPukupuku_c::InitResources()
     struct BMD_File *bmd;
     struct Vector3 v;
 
-    bmd = _ZN5Model8LoadFileER13SharedFilePtr(data_ov090_02134564);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii((void *)((char *)&(*(u8 *)&mModelAnim)), bmd, 1, -1);
+    bmd = (struct BMD_File *)Model::LoadFile(data_ov090_02134564);
+    mModelAnim.SetFile(bmd, 1, -1);
 
-    _ZN9Animation8LoadFileER13SharedFilePtr(*(struct SharedFilePtr *)&data_ov090_0213455c);
+    Animation::LoadFile(*(struct SharedFilePtr *)&data_ov090_0213455c);
 
     v = data_ov090_021342d8;
     _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
@@ -231,11 +221,11 @@ int daPukupuku_c::InitResources()
 int daPukupuku_c::Behavior()
 {
     char *c = (char *)((dEnemyBase_c *)this);
-    if (_ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(((dEnemyBase_c *)this), (dBgCh_Actr *)(c + 0x150)) != 0) {
-        _ZN5dCc_c5ClearEv(c + 0x110);
+    if (UpdateYoshiEat(*(dBgCh_Actr *)(c + 0x150)) != 0) {
+        ((dCc_c *)(c + 0x110))->Clear();
         if (*(unsigned char *)(c + 0x107) != 0) {
             if (*(unsigned short *)(c + 0x104) == 0) {
-                _ZN5dCc_c6UpdateEv(c + 0x110);
+                ((dCc_c *)(c + 0x110))->Update();
             }
         }
         func_ov090_02133338(c);
@@ -243,21 +233,21 @@ int daPukupuku_c::Behavior()
     }
 
     DecIfAbove0_Short((unsigned short *)(c + 0x100));
-    _ZN8dActor_c9UpdatePosEP5dCc_c(((dEnemyBase_c *)this), (void *)(c + 0x110));
+    UpdatePos((dCc_c *)(c + 0x110));
     {
         Holder *q = *(Holder **)(c + 0x370);
         if (q->fn != 0) (((dEnemyBase_c *)this)->*(q->fn))();
     }
     *(short *)(c + 0x8e) = *(short *)(c + 0x94);
     *(int *)(c + 0x368) = 0x1000;
-    _ZN9Animation7AdvanceEv(c + 0x35c);
+    ((Animation *)(c + 0x35c))->Advance();
     func_ov090_02133338(c);
     func_ov090_021330c8(c);
-    _ZN5dCc_c5ClearEv(c + 0x110);
+    ((dCc_c *)(c + 0x110))->Clear();
     {
-        char *p = _ZN8dActor_c13ClosestPlayerEv(((dEnemyBase_c *)this));
+        char *p = (char *)ClosestPlayer();
         if (p != 0 && *(unsigned char *)(p + 0x6fb) == 0) {
-            _ZN5dCc_c6UpdateEv(c + 0x110);
+            ((dCc_c *)(c + 0x110))->Update();
         }
     }
     return 1;
@@ -384,13 +374,12 @@ extern "C" void func_ov090_021330c8(char* thiz)
     v.x = data_ov090_021342d8.x;
     v.y = data_ov090_021342d8.y;
     v.z = data_ov090_021342d8.z;
-    _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(
-        (dCcAcPos_c*)(c + 0x110), v);
+    ((dCcAcPos_c*)(c + 0x110))->SetPosRelativeToActor(v);
     {
         unsigned int id = *(unsigned int*)(c + 0x134);
         if (id == 0) return;
         {
-            Player* a = _ZN8dActor_c10FindWithIDEj(id);
+            Player* a = (Player*)dActor_c::FindWithID(id);
             int b = (int)(*(unsigned short*)((char*)a + 0xc) == 0xbf);
             if (b == 0) return;
             if (*(unsigned char*)((char*)a + 0x6fb) != 0) return;

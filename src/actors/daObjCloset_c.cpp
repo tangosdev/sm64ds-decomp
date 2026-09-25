@@ -39,9 +39,6 @@ int _Z14ApproachLinearRsss(short* cur, short target, short step);
 short Vec3_HorzAngle(const struct Vec3Raw* a, const struct Vec3Raw* b);
 int AngleDiff(int a, int b);
 void StartMinigameMenu(unsigned char a);
-void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
-void _ZN5dCc_c5ClearEv(void* self);
-void _ZN5dCc_c6UpdateEv(void* self);
 extern s16 data_02082214[];
 extern u8 data_0209d684;
 extern u8 data_0209d660;
@@ -141,7 +138,7 @@ s32 daObjCloset_c::Behavior()
         for (i = 0; i < 5; i++) {
             if (mColliders[i].hitFlags & 0x8000000) {
                 u32 id = mColliders[i].otherOwner;
-                dActor_c* actor = (dActor_c*)_ZN8dActor_c10FindWithIDEj(id);
+                dActor_c* actor = dActor_c::FindWithID(id);
                 if (actor) {
                     int isMatch = (actor->actorID == 0xbf);
                     if (isMatch != false) {
@@ -190,8 +187,8 @@ s32 daObjCloset_c::Behavior()
                 mColliders[j].pos.y = colliderPos.y;
                 mColliders[j].pos.z = colliderPos.z;
             }
-            _ZN5dCc_c5ClearEv(cyl);
-            _ZN5dCc_c6UpdateEv(cyl);
+            cyl->Clear();
+            cyl->Update();
             cyl++;
         }
     }

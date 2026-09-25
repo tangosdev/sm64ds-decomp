@@ -56,10 +56,6 @@ void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
     Vector3_16 *a, Vector3_16 *b);
 
 void dBgCh_Actr_UpdateContinuous_Veneer(void *);
-int _ZNK10dBgCh_Actr10IsOnGroundEv(void *);
-void _ZN7fBase_c18MarkForDestructionEv(void *);
-void _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-    unsigned int, unsigned int, void *, void *, int, int);
 void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
     unsigned int, int, int, int);
 }
@@ -154,21 +150,21 @@ s32 daObjHmBskt_c::CleanupResources()
 extern "C" int func_ov030_0211124c(char *c, char *mc)
 {
     dBgCh_Actr_UpdateContinuous_Veneer(mc);
-    int g = _ZNK10dBgCh_Actr10IsOnGroundEv(mc);
+    int g = ((dBgCh_Actr *)mc)->IsOnGround();
     if (!g) return g;
-    _ZN7fBase_c18MarkForDestructionEv(*(void **)(c + 0x4dc));
+    ((fBase_c *)*(void **)(c + 0x4dc))->MarkForDestruction();
     int px = *(int *)(c + 0x5c);
     int pz = *(int *)(c + 0x64);
     int py = *(int *)(c + 0x60) + 0x96000;
     Vector3 p = { px, py, pz };
-    _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-        0xb2, (unsigned char)((*(unsigned int *)(c + 8)) & 0xf) | 0x20, &p, 0,
+    dActor_c::Spawn(
+        0xb2, (unsigned char)((*(unsigned int *)(c + 8)) & 0xf) | 0x20, p, 0,
         *(signed char *)(c + 0xcc), -1);
     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
         0xb, *(int *)(c + 0x5c), *(int *)(c + 0x60), *(int *)(c + 0x64));
     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
         0xd, *(int *)(c + 0x5c), *(int *)(c + 0x60), *(int *)(c + 0x64));
-    _ZN7fBase_c18MarkForDestructionEv(c);
+    ((fBase_c *)c)->MarkForDestruction();
 }
 
 /* _ZN13daObjHmBskt_cD1Ev and _ZN13daObjHmBskt_cD0Ev are NOT WRITTEN HERE ON
