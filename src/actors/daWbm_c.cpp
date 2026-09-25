@@ -1,6 +1,6 @@
 //cpp
 /* Production translation unit for ov098/daWbm_c, hand-curated.
- * 14 function(s), .text 0x0213b47c..0x0213bf60.
+ * 14 functions, .text 0x0213b47c..0x0213bf60.
  *
  * The water bomb. Variant 0 is an invisible dropper that waits for a player
  * to pass beneath it and drops a variant-1 bomb ahead of them. A variant-1
@@ -17,6 +17,7 @@
  * is the string "7daWbm_c", and the _ZTI at 0x0213c740 names the vtable at
  * 0x0213c770 as this class's. The tree called the class WaterBomb until then.
  *
+ * Land and Burst are coined method names; the ROM keeps no names for them.
  * THE DESTRUCTOR IS INLINE AND EMPTY in the class header, so Behavior is the
  * key function and this TU emits _ZTV7daWbm_c, _ZTI7daWbm_c and _ZTS7daWbm_c
  * with the inherited bases' RTTI records. D1 and D0 are emitted from the
@@ -30,13 +31,12 @@
  *
  * Leftover: dCcAc_c::Init, dBgCh_Actr::Init, dActor_c::DropShadowRadHeight,
  *   Player::Hurt and Particle::System::NewSimple stay mangled. Each takes
- *   Fix12<int> by value (wall 6az), and a member call homes the argument
- *   and changes the code. ModelBase::SetFile stays mangled because
- *   include/ModelBase.h declares it void and InitResources reads its result.
- * Leftover: the three state bodies and their four helpers keep their
- *   func_ov098_* linker names as C-linkage helpers over a daWbm_c pointer.
- *   A member spelling would coin seven mangled names; that renaming is
- *   separate work.
+ *   Fix12<int> by value (wall 6az): passing a Fix12<int> local to
+ *   mdCcAc_c.Init makes InitResources 0x20 bytes longer.
+ * Leftover: the three state bodies, the hit check and the placement helper
+ *   keep their func_ov098_* linker names as C-linkage functions over a
+ *   daWbm_c pointer. The state table in src/__sinit_ov098_0213c2b4.c and
+ *   include/decl_common.h name them.
  * Leftover: the state table (data_ov098_0213c930, .bss), the fragment
  *   angle table (data_ov098_0213bf90) and the bomb model file
  *   (data_ov098_0213c91c) are unnamed ov098 rows this TU does not own;
@@ -45,7 +45,7 @@
 
 /* common.h first, so its flat Matrix4x3 is the spelling this TU sees: with
    math/Matrix.h's {Matrix3x3, Vector3} form, the matrix copies in
-   func_ov098_0213b584 are memberwise and come out 0x34 bytes longer. */
+   func_ov098_0213b584 are memberwise, 0x34 bytes longer. */
 #include "common.h"
 #include "daWbm_c.h"
 #include "SharedFilePtr.h"
@@ -91,11 +91,8 @@ void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
 int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(Player *self, const Vector3 *from,
     u32 a, s32 b, u8 c, u8 d, u8 e);
 void *_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 id, s32 x, s32 y, s32 z);
-int _ZN9ModelBase7SetFileEP8BMD_Fileii(ModelBase *self, BMD_File *file, int a, int b);
 
-void func_ov098_0213b520(daWbm_c *bomb);
 void func_ov098_0213b584(daWbm_c *bomb);
-void func_ov098_0213b63c(daWbm_c *bomb);
 int func_ov098_0213b6e0(daWbm_c *bomb);
 void func_ov098_0213b7e8(daWbm_c *bomb);
 void func_ov098_0213b9d8(daWbm_c *bomb);
@@ -123,14 +120,14 @@ int daWbm_c::InitResources()
     if (mVariant == 2)
     {
         bmd = (BMD_File *)Model::LoadFile(data_ov002_0210da38);
-        if (_ZN9ModelBase7SetFileEP8BMD_Fileii(&mModel, bmd, 1, 0x16) == 0)
+        if (mModel.SetFile(bmd, 1, 0x16) == 0)
             return 0;
     }
     else
     {
         Model::LoadFile(data_ov002_0210da38);
         bmd = (BMD_File *)Model::LoadFile(data_ov098_0213c91c);
-        if (_ZN9ModelBase7SetFileEP8BMD_Fileii(&mModel, bmd, 1, 0x16) == 0)
+        if (mModel.SetFile(bmd, 1, 0x16) == 0)
             return 0;
     }
 
@@ -195,7 +192,7 @@ int daWbm_c::Behavior()
         UpdateWMClsn(mWithMeshClsn, 0);
         if (mWithMeshClsn.IsOnWall()) {
             if (mVariant == 1)
-                func_ov098_0213b63c(this);
+                Burst();
             else
                 MarkForDestruction();
             return 0;
@@ -244,7 +241,7 @@ extern "C" void func_ov098_0213bb1c(daWbm_c *bomb)
             return;
         if (bomb->mVariant == 1) {
             bomb->mState = 2;
-            func_ov098_0213b520(bomb);
+            bomb->Land();
             func_ov098_0213b7e8(bomb);
             return;
         }
@@ -261,8 +258,7 @@ extern "C" void func_ov098_0213bb1c(daWbm_c *bomb)
 /* State 0, the dropper. Once the cooldown has run out, and the closest player
  * is within 1500 units horizontally and not above the dropper, drop a bomb
  * 1152 units above the player, led ahead of them by their speed. The arithmetic is
- * kept one step per statement; folded into fewer statements it allocates
- * registers differently. */
+ * kept one step per statement: folded, the function is 8 bytes shorter. */
 extern "C" void func_ov098_0213b9d8(daWbm_c *bomb)
 {
     Vector3 v;
@@ -326,7 +322,7 @@ extern "C" void func_ov098_0213b7e8(daWbm_c *bomb)
     if (state == 0) {
         if (bomb->mBounceCount >= 3) {
             if (ApproachLinear(bomb->mSquashScale, 0x100, bomb->mSquashSpeed) != 0) {
-                func_ov098_0213b63c(bomb);
+                bomb->Burst();
                 return;
             }
         } else {
@@ -348,7 +344,7 @@ extern "C" void func_ov098_0213b7e8(daWbm_c *bomb)
             if (player != 0) {
                 bomb->mPrevAngleY = Vec3_HorzAngle((Vector3 *)&bomb->mPosX, (Vector3 *)&player->mPosX);
             } else {
-                func_ov098_0213b63c(bomb);
+                bomb->Burst();
                 return;
             }
         }
@@ -383,8 +379,8 @@ extern "C" int func_ov098_0213b6e0(daWbm_c *bomb)
         dActor_c *other = dActor_c::FindWithID(id);
         if (other != 0) {
             u16 actorID = other->actorID;
-            /* Tested as a flag first: tested inline, the branch comes out a
-               different shape. */
+            /* Tested as a flag first: tested inline, or as a switch, the
+               function is shorter than the ROM's. */
             int is = actorID == 0xbf;
             if (is) {
                 pos.x = bomb->mPosX;
@@ -394,14 +390,14 @@ extern "C" int func_ov098_0213b6e0(daWbm_c *bomb)
                 if (bomb->mVariant == 1) {
                     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x1c, bomb->mPosX, bomb->mPosY, bomb->mPosZ);
                     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x1d, bomb->mPosX, bomb->mPosY, bomb->mPosZ);
-                    func_ov098_0213b63c(bomb);
+                    bomb->Burst();
                     return 1;
                 }
             } else {
                 is = actorID == 0xce;
                 if (is) {
                     if (bomb->mVariant == 1) {
-                        func_ov098_0213b63c(bomb);
+                        bomb->Burst();
                         return 1;
                     }
                 }
@@ -412,15 +408,14 @@ extern "C" int func_ov098_0213b6e0(daWbm_c *bomb)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov098_0213b63c
-/* Burst: throw five fragments out at the table's angles, play the splash
- * and go. */
-extern "C" void func_ov098_0213b63c(daWbm_c *bomb)
+// @symbol _ZN7daWbm_c5BurstEv
+/* Throw five fragments out at the table's angles, play the splash and go. */
+void daWbm_c::Burst()
 {
     int i;
     for (i = 0; i < 5; i++) {
-        dActor_c *a = dActor_c::Spawn(0xd0, 2, *(const Vector3 *)&bomb->mPosX,
-                                      (const Vector3_16 *)0, bomb->mAreaId, -1);
+        dActor_c *a = dActor_c::Spawn(0xd0, 2, *(const Vector3 *)&mPosX,
+                                      (const Vector3_16 *)0, mAreaId, -1);
         a->unk_0a4 = 0;
         a->mVertSpeed = 0x14000;
         a->unk_0ac = 0;
@@ -429,8 +424,8 @@ extern "C" void func_ov098_0213b63c(daWbm_c *bomb)
         a->mPrevAngleY = data_ov098_0213bf90[i];
         a->mPrevAngleZ = 0;
     }
-    func_0201267c(0xda, &bomb->mCamSpacePosX);
-    bomb->MarkForDestruction();
+    func_0201267c(0xda, &mCamSpacePosX);
+    MarkForDestruction();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -450,17 +445,16 @@ extern "C" void func_ov098_0213b584(daWbm_c *bomb)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov098_0213b520
-/* A landing: stop, start the squash from the current height and count the
- * bounce. */
-extern "C" void func_ov098_0213b520(daWbm_c *bomb)
+// @symbol _ZN7daWbm_c4LandEv
+/* Stop, start the squash from the current height and count the bounce. */
+void daWbm_c::Land()
 {
-    bomb->mSquashSpeed = 0x600;
-    bomb->mSquashScale = bomb->mScaleY;
-    bomb->mBounceCount++;
-    bomb->unk_3b4 = 0;
-    bomb->mVertSpeed = 0;
-    bomb->mHorzSpeed = 0;
-    bomb->mBouncePhase = 0;
-    func_0201267c(0xd9, &bomb->mCamSpacePosX);
+    mSquashSpeed = 0x600;
+    mSquashScale = mScaleY;
+    mBounceCount++;
+    unk_3b4 = 0;
+    mVertSpeed = 0;
+    mHorzSpeed = 0;
+    mBouncePhase = 0;
+    func_0201267c(0xd9, &mCamSpacePosX);
 }

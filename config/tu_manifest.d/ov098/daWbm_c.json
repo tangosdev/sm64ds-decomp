@@ -36,7 +36,7 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov098_0213b520",
+      "symbol": "_ZN7daWbm_c4LandEv",
       "address": "0x0213b520",
       "size": "0x00000064",
       "legacy_source": "src/func_ov098_0213b520.c",
@@ -50,7 +50,7 @@
       "ordinal": 3
     },
     {
-      "symbol": "func_ov098_0213b63c",
+      "symbol": "_ZN7daWbm_c5BurstEv",
       "address": "0x0213b63c",
       "size": "0x000000a4",
       "legacy_source": "src/func_ov098_0213b63c.cpp",

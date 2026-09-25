@@ -78,6 +78,9 @@ struct daWbm_c : dEnemyBase_c {
     int CleanupResources();
     int InitResources();
     int Render();
+
+    void Land();
+    void Burst();
 };
 
 #ifndef SM64DS_PLATFORM_PC
