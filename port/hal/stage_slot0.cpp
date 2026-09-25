@@ -82,39 +82,26 @@
 
 #include "dsstate_seg.h"
 
-extern "C" {
-
-/* PORT_HOST_ABI: releases a NARC the DS card loader mounted back to the DS
-   heap; the host's mount is static storage in hal/card_mount.cpp and never came
-   off that heap (the note at the head of this file has the whole of it).
-
-   RULED AGAIN, run link100 lane CARDFS2, because the reason it used to rest on
-   has moved. The mount table is hosted now (lane CARDFS) and so are its two DS
-   strings (this lane), so "the table is not hosted" is no longer available as
-   an answer. Two things are, and both are about running, not about linking:
-
-     THE FREE IS WRONG. src/UnloadArchive.c is
-     `if (e->f0) { func_02018908(e->f0, e->f4); e->f0 = 0; e->f4 = 0; }`. On
-     this host e->f0 is hal/card_mount.cpp's static g_mount_obj[i] and e->f4 is
-     zero -- the residency publish never writes a heap word, which is exactly
-     what that file's audit line proves. So the ROM's body would hand static
-     host storage to a null heap, and then zero the residency word that keeps
-     src/LoadArchive.c out of its mount branch. The next LoadArchive would take
-     that branch, which hal/card_mount.cpp's "THE MOUNT BRANCH" section says
-     cannot run.
-
-     AND ITS ONE ARM9 CALLER RIDES A REGISTER. src/func_02018770.c -- linked,
-     and called by src/func_0201834c.c on every card read -- declares
-     `extern void UnloadArchive(void)` and calls it with no argument at all; the
-     ARM original leaves the archive index from data_0208eb54 in r0. Seating the
-     one-argument body would give that call site whatever cdecl left, and index
-     a thirteen-entry table with it.
-
-   Takeable when the mount is heap-shaped AND that arity is fixed, not before.
-   Neither is a decomp gap: both are host-ABI. */
-void UnloadArchive(int)             {}
-
-}  /* extern "C" */
+// ---- UnloadArchive IS THE ROM'S NOW (run linkfull, lane S4ARC) ------------
+//
+// `void UnloadArchive(int) {}` stood here, faced for the two reasons its note
+// gave, and both are answered:
+//
+//   THE FREE WAS WRONG because the mount was hal/card_mount.cpp's static
+//     stand-in with a zero heap word. The stand-in is retired: the ROM's own
+//     LoadArchive mounts off the heap it names at +0x04 (func_02018934), so
+//     src/UnloadArchive.c's func_02018908(e->f0, e->f4) frees a block that
+//     heap really owns.
+//   ITS ONE ARM9 CALLER RODE A REGISTER. src/func_02018770.c is main's
+//     re-spelling now (PR #3130, synced path-scoped): it passes the index in
+//     data_0208eb54 where the ARM leaves it in r0.
+//
+// The body is src/UnloadArchive.c on port/slice_w31_s4arc.txt, reached by the
+// ROM's own callers: func_02018770 after a read that mounted for itself,
+// dScEntry_c::InitResources, func_ov075_02118bf8, and the level boot's replay of
+// Stage::InitResources' and Stage::CleanupResources' archive lines
+// (hal/level_boot.cpp). The note at the head of this file is the history; its
+// first paragraph describes the face this block retired.
 
 // ---- THE TWO OVERLAY BODIES ARE GONE (run link100, lane STAGE) -------------
 //
