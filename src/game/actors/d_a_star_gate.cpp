@@ -16,8 +16,8 @@
  * compiler-ordered.
  *
  * deslop
- * Leftover: Camera::GoBehindPlayer / SetFlag_3 stay mangled (no Camera.h;
- *   SetFlag_3 is not on Camera.h). This TU's St_OpenClose_Init / Main.
+ * Leftover: Camera::GoBehindPlayer / SetFlag_3 stay mangled (Camera.h shifts
+ *   this TU's @452 uniquifier; SetFlag_3 is not on Camera.h). This TU's St_OpenClose_Init / Main.
  * Leftover: func_ov100_02144fcc / 02145014 / 02145070 / 02144f84 stay those
  *   ROM labels. 02144fcc keeps the ellipsis: St_StayClosed_Main passes
  *   (this, player); the body is 0-arg.
@@ -45,6 +45,7 @@ extern "C" {
 int func_ov100_02144fcc(...);
 unsigned char DecIfAbove0_Byte(unsigned char *p);
 void func_02012694(int soundID, void *position, ...);
+/* local extern: including Camera.h shifts this TU's @452 uniquifier; the TU binding policy refuses it */
 void _ZN6Camera14GoBehindPlayerEj(Camera *self, unsigned int a);
 void Vec3_RotateYAndTranslate(Vector3 *out, void *m, short angle, Vector3 *in);
 void ChangeArea(int areaID);

@@ -52,24 +52,30 @@ struct daFPkn_c : dEnemyBase_c {
     s32                          mRespawnMode;          /* 0x1e8 */
     s32                          mState;                /* 0x1ec */
     s32                          mGroupLeaderID;        /* 0x1f0 */
-    s32                          unk_1f4;               /* 0x1f4 */
+    /* Coined field names, from their uses: mMarkedMemberID (the leader's copy
+       holds the uniqueID of the last member that emerged under the star
+       marker), mSpinSpeed and mSpinCount (the spin after a hit), mEmerged,
+       mStarMarkerIdx (the leader's star-marker slot, -1 for none) and the two
+       Particle::System handles. */
+    s32                          mMarkedMemberID;       /* 0x1f4 */
     Vector3                      mClsnOffset;           /* 0x1f8 */
     s32                          mScale;                /* 0x204 */
     s32                          mClsnRadiusFactor;     /* 0x208 */
     s32                          mClsnHeightFactor;     /* 0x20c */
     s32                          mMaxScale;             /* 0x210 */
     s32                          mScaleRate;            /* 0x214 */
-    u8  pad_218[0x2];
+    s16                          mSpinSpeed;            /* 0x218 */
     u8                           mGroupAliveCount;      /* 0x21a */
     u8                           mGroupDefeatedCount;   /* 0x21b */
-    u8                           unk_21c;               /* 0x21c */
-    u8                           unk_21d;               /* 0x21d */
+    u8                           mEmerged;              /* 0x21c */
+    u8                           mSpinCount;            /* 0x21d */
     u8                           mSuppressDeathReward;  /* 0x21e */
     u8                           mStarID;               /* 0x21f */
     u8                           mAlive;                /* 0x220 */
-    u8  pad_221[0x3];
-    s32                          unk_224;               /* 0x224 */
-    s32                          unk_228;               /* 0x228 */
+    s8                           mStarMarkerIdx;        /* 0x221 */
+    u8  pad_222[0x2];
+    s32                          mParticleHandle1;      /* 0x224 */
+    s32                          mParticleHandle2;      /* 0x228 */
 
     /* --- vtable --- */
     virtual ~daFPkn_c();
@@ -82,6 +88,18 @@ struct daFPkn_c : dEnemyBase_c {
     int CleanupResources();
     int InitResources();
     int Render();
+
+    /* Coined names for the nine helpers at 0x0212d2dc..0x0212e554. Behavior
+       runs StateInit, StateWait, StateSpit and StateGrow for mState 0..3. */
+    void SpawnDeathSmoke();
+    void SpawnDeathBurst();
+    void OnGroupMemberDefeated();
+    void UpdateClsnOffset();
+    void CheckClsnHits();
+    void StateGrow();
+    void StateSpit();
+    void StateWait();
+    int  StateInit();
 };
 
 #ifndef SM64DS_PLATFORM_PC

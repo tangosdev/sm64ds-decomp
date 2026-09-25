@@ -30164,23 +30164,23 @@
    "start": "0x213a900",
    "end": "0x213b47c",
    "classes": [
-    "Cannon"
+    "daCnn_c"
    ],
    "n_functions_map": 13,
    "n_files": 13,
    "files": [
-    "src/_ZN6CannonD1Ev.cpp",
-    "src/_ZN6CannonD0Ev.cpp",
+    "src/_ZN7daCnn_cD1Ev.cpp",
+    "src/_ZN7daCnn_cD0Ev.cpp",
     "src/func_ov098_0213a984.c",
     "src/func_ov098_0213aa28.c",
     "src/func_ov098_0213ad08.c",
     "src/func_ov098_0213ade8.c",
     "src/func_ov098_0213b0a4.cpp",
     "src/func_ov098_0213b15c.cpp",
-    "src/_ZN6Cannon16CleanupResourcesEv.c",
-    "src/_ZN6Cannon6RenderEv.cpp",
-    "src/_ZN6Cannon8BehaviorEv.cpp",
-    "src/_ZN6Cannon13InitResourcesEv.cpp",
+    "src/_ZN7daCnn_c16CleanupResourcesEv.c",
+    "src/_ZN7daCnn_c6RenderEv.cpp",
+    "src/_ZN7daCnn_c8BehaviorEv.cpp",
+    "src/_ZN7daCnn_c13InitResourcesEv.cpp",
     "src/daCnn_c_classInit.cpp"
    ],
    "ext_mix": {

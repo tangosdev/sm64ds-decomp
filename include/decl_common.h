@@ -649,7 +649,6 @@ extern int _ZTV5Whomp[];
 extern int _ZTV7daBmb_c[];
 extern int _ZTV6Bowser[];
 extern int _ZTV6Bullet[];
-extern int _ZTV6Cannon[];
 extern int _ZTV6Coffin[];
 extern int _ZTV6Eyerok[];
 extern int _ZTV14daObjKi_Fune_c[];

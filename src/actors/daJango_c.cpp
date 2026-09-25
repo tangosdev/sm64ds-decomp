@@ -28,6 +28,8 @@ extern "C" int AngleDiff(int a, int b);
 #include "PathPtr.h"
 #include "SharedFilePtr.h"
 #include "decl_SaveData.h"
+#include "SaveData.h"
+#include "Player.h"
 #include "BlendModelAnim.h"
 #include "Animation.h"
 
@@ -116,20 +118,10 @@ extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void* m, short angX);
 extern void MulVec3Mat4x3(const Vector3* v, const void* m, Vector3* res);
 extern int data_020a0e68[];
-extern "C" char *_ZN8dActor_c13ClosestPlayerEv(char *self);
 extern "C" void _ZN7PathPtrC1Ev(void *self);
-extern "C" void _ZN7PathPtr6FromIDEj(void *self, unsigned int id);
 extern "C" int Vec3_HorzDist(const Vector3* a, const Vector3* b);
 extern signed char data_0209f2f8;
-extern void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern "C" int func_ov062_0211c658(void *c, void *p);
-extern int _ZN8dActor_c24BumpedUnderneathByPlayerER6Player(void *c, void *pl);
-extern int _ZN6Player9IsOnShellEv(void *pl);
-extern int _ZN6Player15IsCollectingCapEv(void *pl);
-extern void _ZN6Player18SetNewHatCharacterEjjb(void *pl, unsigned int a, unsigned int b, int c);
-extern int _ZN8SaveData16HasPlayerLostCapEv(void);
-extern void _ZN8SaveData13PlayerLoseCapEv(void);
-extern void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, void *pos, void *rot, int e, int f);
 extern void _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(void *a, int b, int c, int d, int e);
 extern int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *pl, Vector3 *v, unsigned int a, int b, unsigned int c, unsigned int d, unsigned int e);
 extern char data_ov062_0211e14c[];
@@ -143,7 +135,6 @@ extern SharedFilePtr data_ov062_0211e10c;
 extern SharedFilePtr data_ov062_0211e114;
 extern s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 extern s16 Vec3_VertAngle(const Vector3 *v0, const Vector3 *v1);
-extern int _ZNK10dBgCh_Actr8IsOnWallEv(char *self);
 extern "C" int data_0209e650;
 extern "C" int RandomIntInternal(int* seed);
 extern int Vec3_Dist(const void *a, const void *b);
@@ -161,10 +152,6 @@ extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void* m, int x, int y, int z)
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void* m, int x, int y, int z);
 extern void MulMat4x3Mat4x3(void* a, void* b, void* c);
 extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void* thiz, void* sm, void* m, int rad, int h, unsigned int u);
-extern void *_ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr *f);
-extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *f, int a, int b);
-extern int _ZN11ShadowModel12InitCylinderEv(void *self);
-extern void *_ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr *f);
 extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, void *a, Fix12i r, Fix12i h, unsigned int d, unsigned int e);
 extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, void *a, Fix12i b, Fix12i c, void *d, void *e);
 extern SharedFilePtr data_ov062_0211e0fc;
@@ -248,15 +235,15 @@ int daJango_c::InitResources()
     int zero;
     
 
-    bmd = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov062_0211e0fc);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(&mBlendModelAnim, bmd, 1, -1);
-    _ZN11ShadowModel12InitCylinderEv((char *)&mShadowModel);
-    _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov062_0211e114);
-    _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov062_0211e10c);
-    _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov062_0211e104);
-    _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210da40);
-    _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9a0);
-    _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9c0);
+    bmd = Model::LoadFile(data_ov062_0211e0fc);
+    mBlendModelAnim.SetFile((BMD_File *)bmd, 1, -1);
+    mShadowModel.InitCylinder();
+    Animation::LoadFile(data_ov062_0211e114);
+    Animation::LoadFile(data_ov062_0211e10c);
+    Animation::LoadFile(data_ov062_0211e104);
+    Model::LoadFile(data_ov002_0210da40);
+    Model::LoadFile(data_ov002_0210d9a0);
+    Model::LoadFile(data_ov002_0210d9c0);
 
     mPathId = param1 & 0xff;
     mCarriedItem = (param1 >> 8) & 0xf;
@@ -271,7 +258,7 @@ int daJango_c::InitResources()
     }
 
     _ZN7PathPtrC1Ev(path1);
-    _ZN7PathPtr6FromIDEj(path1, mPathId);
+    ((PathPtr *)path1)->FromID(mPathId);
     unk_470 = 4;
     mTerminalVelocity = -0x1e000;
     mSpawnPosX = mPosX;
@@ -282,18 +269,16 @@ int daJango_c::InitResources()
     _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, ((char *)this), 0x1e000, 0x1e000, 0, 0);
 
     _ZN7PathPtrC1Ev(path2);
-    _ZN7PathPtr6FromIDEj(path2, mPathId);
+    ((PathPtr *)path2)->FromID(mPathId);
     ((PathPtr *)path2)->GetNode(*(Vector3 *)&mPathNodePosX, mPathNodeIndex);
     mBlendModelAnim.speed = 0x1000;
     mHeldActorID = 0;
 
     if (mCarriedItem == 1) {
         if (unk_448 != 2) {
-            spawned = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-                0xb2, mHeldItemParam | 0x50, &mPosX, 0, mAreaId, -1);
+            spawned = dActor_c::Spawn(0xb2, mHeldItemParam | 0x50, *(Vector3 *)&mPosX, 0, mAreaId, -1);
         } else {
-            spawned = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-                0xb3, 0x50, &mPosX, 0, mAreaId, -1);
+            spawned = dActor_c::Spawn(0xb3, 0x50, *(Vector3 *)&mPosX, 0, mAreaId, -1);
         }
         if (spawned != 0) {
             mHeldActorID = *(int *)((char *)spawned + 4);
@@ -305,14 +290,13 @@ int daJango_c::InitResources()
         func_ov062_0211c658(((char *)this), &data_ov062_0211e15c);
     } else {
         pl = data_0209f394;
-        if (pl != 0 && *(int *)((char *)pl + 8) != 3 && _ZN8SaveData16HasPlayerLostCapEv() != 0) {
+        if (pl != 0 && *(int *)((char *)pl + 8) != 3 && SaveData::HasPlayerLostCap() != 0) {
             {
                 unsigned int hat = *(unsigned char *)((char *)pl + 0x6d9);
                 int area = mAreaId;
                 unsigned int param = 0;
                 param = param | (hat << 8);
-                spawned = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-                    0x10d, param, &mPosX, 0, area, -1);
+                spawned = dActor_c::Spawn(0x10d, param, *(Vector3 *)&mPosX, 0, area, -1);
             }
             if (spawned != 0) {
                 _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(spawned, 0x64000, 0x258000, 0x1f40000, 0x1f40000);
@@ -332,13 +316,7 @@ struct dCc_c;
 struct dBgCh_Actr;
 extern "C" {
 unsigned short DecIfAbove0_Short(unsigned short *p);
-void _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(void *self, dCc_c *cc);
-void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void *self, dBgCh_Actr *wm, unsigned int j);
 extern "C" void func_ov062_0211c6a8(char *self);
-void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
-void _ZN7fBase_c18MarkForDestructionEv(void *self);
-void _ZN5dCc_c5ClearEv(dCc_c *self);
-void _ZN5dCc_c6UpdateEv(dCc_c *self);
 extern char data_ov062_0211e17c[];
 }
 
@@ -365,8 +343,8 @@ int daJango_c::Behavior()
         mVertSpeed = lim;
         unk_0ac = t;
     }
-    _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(((char *)this), (dCc_c *)&mdCcAc_c1);
-    _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(((char *)this), (dBgCh_Actr *)&mWithMeshClsn, 0);
+    UpdatePosWithOnlySpeed((dCc_c *)&mdCcAc_c1);
+    UpdateWMClsn(mWithMeshClsn, 0);
 
     mAngleX = mPrevAngleX;
     mAngleY = mPrevAngleY;
@@ -375,7 +353,7 @@ int daJango_c::Behavior()
 
     unsigned int actorId = mHeldActorID;
     if (actorId != 0) {
-        void *p = _ZN8dActor_c10FindWithIDEj(actorId);
+        void *p = dActor_c::FindWithID(actorId);
         if (p != 0) {
             if (mCarriedItem == 1) {
                 *(int *)((char *)p + 0x5c) = mHeldPosX;
@@ -406,7 +384,7 @@ int daJango_c::Behavior()
     if (mCarriedItem == 1 && unk_448 != 2) {
         b = (mFlags & 8) != 0;
         if (b != 0) {
-            _ZN7fBase_c18MarkForDestructionEv(((char *)this));
+            MarkForDestruction();
         }
     }
 skip_destroy:
@@ -415,10 +393,10 @@ skip_destroy:
         func_ov062_0211b51c(((char *)this));
     }
 
-    _ZN5dCc_c5ClearEv((dCc_c *)&mdCcAc_c1);
-    _ZN5dCc_c6UpdateEv((dCc_c *)&mdCcAc_c1);
-    _ZN5dCc_c5ClearEv((dCc_c *)&mdCcAc_c2);
-    _ZN5dCc_c6UpdateEv((dCc_c *)&mdCcAc_c2);
+    mdCcAc_c1.Clear();
+    mdCcAc_c1.Update();
+    mdCcAc_c2.Clear();
+    mdCcAc_c2.Update();
 
     return 1;
 }
@@ -473,7 +451,7 @@ void func_ov062_0211c6a8(char* c)
 
     if (*(unsigned int*)(c + 0x44c) != 0)
     {
-        actor = (char*)_ZN8dActor_c10FindWithIDEj(*(unsigned int*)(c + 0x44c));
+        actor = (char*)dActor_c::FindWithID(*(unsigned int*)(c + 0x44c));
         if (actor != 0)
         {
             *(int*)(c + 0x450) = 0;
@@ -659,7 +637,7 @@ int func_ov062_0211bd10(char *c)
     int flag;
 
     if (*(u16 *)(c + 0x444) != 0) {
-        if (_ZNK10dBgCh_Actr8IsOnWallEv(c + 0x178) != 0) {
+        if (((dBgCh_Actr *)(c + 0x178))->IsOnWall() != 0) {
             *(s16 *)(c + 0x44a) = (s16)(*(s16 *)(c + 0x94) + 0x4000);
         } else {
             *(s16 *)(c + 0x44a) = Vec3_HorzAngle((const Vector3 *)(c + 0x5c), (const Vector3 *)(c + 0x484));
@@ -700,8 +678,8 @@ int func_ov062_0211bd10(char *c)
     }
 
     if (*(int *)(c + 0x44c) == 0 && *(int *)(c + 0x468) == 0) {
-        if (_ZN8SaveData16HasPlayerLostCapEv() == 0) {
-            player = _ZN8dActor_c13ClosestPlayerEv(c);
+        if (SaveData::HasPlayerLostCap() == 0) {
+            player = ((dActor_c *)c)->ClosestPlayer();
             if (player != 0) {
                 pp = (int *)((char *)player + 0x5c);
                 tmp = pp[0];
@@ -776,7 +754,7 @@ int func_ov062_0211bd10(char *c)
 
     if (*(u16 *)(c + 0x100) == 0 && *(int *)(c + 0x440) == 0) {
         _ZN7PathPtrC1Ev(path);
-        _ZN7PathPtr6FromIDEj(path, *(unsigned int *)(c + 0x464));
+        ((PathPtr *)path)->FromID(*(unsigned int *)(c + 0x464));
         ((PathPtr *)path)->GetNode(node, *(unsigned int *)(c + 0x474));
         if (AngleDiff(Vec3_HorzAngle((const Vector3 *)(c + 0x5c), &node), *(s16 *)(c + 0x8e)) < 0x2000) {
             func_ov062_0211c658(c, &data_ov062_0211e15c);
@@ -816,6 +794,10 @@ extern "C" int func_ov062_0211bc54(char *thiz)
    on every installed mwccarm. func_ov062_0211b930 ends at this address, so
    it was emitted in this object, not linked in from outside. */
 #pragma cplusplus off
+/* local extern: this function is compiled as C, which cannot call a member */
+extern char *_ZN8dActor_c13ClosestPlayerEv(char *self);
+/* local extern: this function is compiled as C, which cannot call a member */
+extern int _ZNK10dBgCh_Actr8IsOnWallEv(char *self);
 int func_ov062_0211ba84(char *c)
 {
     Vector3 v;
@@ -976,7 +958,7 @@ int func_ov062_0211b51c(char *c)
 
     id = *(int *)(c + 0x134);
     if (id != 0) {
-        pl = _ZN8dActor_c10FindWithIDEj((unsigned int)id);
+        pl = dActor_c::FindWithID((unsigned int)id);
         if (pl == 0)
             return (int)pl;
         fl = *(int *)(c + 0x130);
@@ -986,9 +968,9 @@ int func_ov062_0211b51c(char *c)
             return func_ov062_0211c658(c, data_ov062_0211e14c);
         isPlayer = (enum Bool)(((dActor_c *)pl)->actorID == 0xbf);
         if (isPlayer) {
-            if (_ZN8dActor_c24BumpedUnderneathByPlayerER6Player(c, pl) == 1 ||
+            if (((dActor_c *)c)->BumpedUnderneathByPlayer(*(Player *)pl) == 1 ||
                 *(u8 *)((char *)pl + 0x6f9) == 1 ||
-                _ZN6Player9IsOnShellEv(pl) == 1)
+                ((Player *)pl)->IsOnShell() == 1)
                 return func_ov062_0211c658(c, data_ov062_0211e14c);
         }
     }
@@ -996,7 +978,7 @@ int func_ov062_0211b51c(char *c)
     id = *(int *)(c + 0x168);
     if (id == 0)
         return id;
-    pl = _ZN8dActor_c10FindWithIDEj((unsigned int)id);
+    pl = dActor_c::FindWithID((unsigned int)id);
     if (pl == 0)
         return (int)pl;
     isPlayer = (enum Bool)(((dActor_c *)pl)->actorID == 0xbf);
@@ -1005,7 +987,7 @@ int func_ov062_0211b51c(char *c)
     state = data_ov062_0211e18c;
     if (*(void **)(c + 0x42c) != state)
         return (int)state;
-    r = _ZN6Player15IsCollectingCapEv(pl);
+    r = ((Player *)pl)->IsCollectingCap();
     if (r != 0)
         return r;
     r = *(int *)(c + 0x44c);
@@ -1022,20 +1004,19 @@ int func_ov062_0211b51c(char *c)
         *(int *)((char *)pl + 8) != 3) {
         newchar = *(int *)((char *)pl + 8);
         if (hc != newchar) {
-            _ZN6Player18SetNewHatCharacterEjjb(pl, hc, 0, 0);
+            ((Player *)pl)->SetNewHatCharacter(hc, 0, 0);
         } else {
-            r = _ZN8SaveData16HasPlayerLostCapEv();
+            r = SaveData::HasPlayerLostCap();
             if (r != 0)
                 return r;
-            _ZN8SaveData13PlayerLoseCapEv();
+            SaveData::PlayerLoseCap();
         }
         {
             int area = *(signed char *)(c + 0xcc);
             unsigned int ch = *(unsigned int *)((char *)pl + 8);
             unsigned int param = 0;
             param = param | (ch << 8);
-            sp = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-                0x10d, param, c + 0x5c, 0, area, -1);
+            sp = dActor_c::Spawn(0x10d, param, *(Vector3 *)(c + 0x5c), 0, area, -1);
         }
         if (sp != 0) {
             _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(
@@ -1082,9 +1063,9 @@ extern "C" int func_ov062_0211b3ac(char* sl)
     if (*(int *)(sl + 0x460) != 0)
         return 0;
 
-    player = _ZN8dActor_c13ClosestPlayerEv(sl);
+    player = (char *)((dActor_c *)sl)->ClosestPlayer();
     _ZN7PathPtrC1Ev(&path);
-    _ZN7PathPtr6FromIDEj(&path, *(u32*)(sl + 0x464));
+    ((PathPtr *)&path)->FromID(*(u32*)(sl + 0x464));
 
     bestIdx = 0;
     node.x = bestIdx; node.y = bestIdx; node.z = bestIdx;

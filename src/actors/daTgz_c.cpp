@@ -39,6 +39,8 @@
 /* Vtable slot 16. The compiler writes the whole body: one vtable store, the
  * members in reverse, then ~dActor_c. */
 #include "daTgz_c.h"
+#include "Player.h"
+#include "SharedFilePtr.h"
 
 daTgz_c::~daTgz_c()
 {
@@ -86,11 +88,15 @@ struct dBgCh_Gnd {
     char pad48[0xc];
 };
 extern "C" void _ZN9dBgCh_GndC1Ev(dBgCh_Gnd*);
+/* local extern: takes this TU's shadow dBgCh_Gnd, which collides with dBgCh_Gnd.h */
 extern "C" void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(dBgCh_Gnd*, const Vector3&, dActor_c*);
+/* local extern: takes this TU's shadow dBgCh_Gnd, which collides with dBgCh_Gnd.h */
 extern "C" void _ZN5dBgCh19StartDetectingWaterEv(void*);
+/* local extern: takes this TU's shadow dBgCh_Gnd, which collides with dBgCh_Gnd.h */
 extern "C" int _ZN9dBgCh_Gnd10DetectClsnEv(dBgCh_Gnd*);
 extern "C" int SurfaceInfo_TestFlag0x20(int* p);
 extern "C" void _ZN9dBgCh_GndD1Ev(dBgCh_Gnd*);
+/* local extern: takes this TU's shadow dBgCh_Gnd, which collides with dBgCh_Gnd.h */
 extern "C" void _ZN5dBgCh18StopDetectingWaterEv(void*);
 }
 
@@ -151,20 +157,18 @@ struct dBgPi;
 struct SurfaceInfo;
 
 extern "C" void dBgCh_Actr_UpdateDiscreteNoLava_veneer(void* p);
-extern "C" int _ZNK10dBgCh_Actr10IsOnGroundEv(void* self);
 extern "C" void _ZN9dBgCh_GndC1Ev(dBgCh_Gnd* self);
+/* local extern: takes this TU's shadow dBgCh_Gnd, which collides with dBgCh_Gnd.h */
 extern "C" void _ZN5dBgCh19StartDetectingToxicEv(void* self);
+/* local extern: takes this TU's shadow dBgCh_Gnd, which collides with dBgCh_Gnd.h */
 extern "C" void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(dBgCh_Gnd* self, const Vector3& v, void* actor);
+/* local extern: takes this TU's shadow dBgCh_Gnd, which collides with dBgCh_Gnd.h */
 extern "C" int _ZN9dBgCh_Gnd10DetectClsnEv(dBgCh_Gnd* self);
-extern "C" void _ZN8dActor_c8PoofDustEv(void* self);
 extern "C" void func_02012694(unsigned int id, const Vector3* pos);
-extern "C" void _ZN7fBase_c18MarkForDestructionEv(void* self);
 extern "C" void _ZN9dBgCh_GndD1Ev(dBgCh_Gnd* self);
 extern "C" void* _ZNK10dBgCh_Actr14GetFloorResultEv(void* self);
-extern "C" void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void* self, Vector3* out);
 extern "C" int _ZN4cstd4fdivEii(int a, int b);
 extern "C" s32 func_02010844(void* unused, Vector3* v, s16 angle);
-extern "C" int _ZNK10dBgCh_Actr8IsOnWallEv(void* self);
 
 extern "C" void func_ov077_02124d08(void* va, void* vw) {
     char* a = (char*)va; char* w = (char*)vw;
@@ -174,7 +178,7 @@ extern "C" void func_ov077_02124d08(void* va, void* vw) {
     Vector3 wallnormal;
 
     dBgCh_Actr_UpdateDiscreteNoLava_veneer(w);
-    if (_ZNK10dBgCh_Actr10IsOnGroundEv(w)) {
+    if (((dBgCh_Actr *)w)->IsOnGround()) {
         _ZN9dBgCh_GndC1Ev(&rc);
         {
             int actorY = *(int*)(a+0x60);
@@ -188,15 +192,15 @@ extern "C" void func_ov077_02124d08(void* va, void* vw) {
         _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rc, pos, a);
         if (_ZN9dBgCh_Gnd10DetectClsnEv(&rc)) {
             if (func_02037e20(rc.floor) != 0 && *(int*)(a+0x60) < rc.floor[(0x44-0x14)/4]) {
-                _ZN8dActor_c8PoofDustEv(a);
+                ((dActor_c *)a)->PoofDust();
                 func_02012694(0xc4, (const Vector3*)(a+0x74));
-                _ZN7fBase_c18MarkForDestructionEv(a);
+                ((fBase_c *)a)->MarkForDestruction();
                 _ZN9dBgCh_GndD1Ev(&rc);
                 return;
             }
             {
                 void* fr = _ZNK10dBgCh_Actr14GetFloorResultEv(w);
-                _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char*)fr + 4, &normal);
+                ((SurfaceInfo *)((char*)fr + 4))->CopyNormalTo(normal);
             }
             if (normal.y != 0) {
                 *(int*)(a+0xa8) = -(_ZN4cstd4fdivEii(
@@ -209,23 +213,17 @@ extern "C" void func_ov077_02124d08(void* va, void* vw) {
         }
         _ZN9dBgCh_GndD1Ev(&rc);
     }
-    if (_ZNK10dBgCh_Actr8IsOnWallEv(w)) {
+    if (((dBgCh_Actr *)w)->IsOnWall()) {
         void* wr = _ZNK10dBgCh_Actr13GetWallResultEv(w);
-        _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char*)wr + 4, &wallnormal);
+        ((SurfaceInfo *)((char*)wr + 4))->CopyNormalTo(wallnormal);
     }
 }
 
-extern "C" int _ZN8dActor_c7FindEggER5dCc_c(void *self, void *clsn); /* decl_Actor.h view */
 extern "C" void _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(void *self, const Vector3 *pos, unsigned int a, int fix, short b);
-extern "C" void _ZN8dActor_c8PoofDustEv(void *self);
 extern "C" void func_02012694(unsigned int id, const Vector3* pos);
-extern "C" void _ZN7fBase_c18MarkForDestructionEv(void *self);
-extern "C" void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern "C" void func_ov077_02125e94(void *c, int i);
-extern "C" int _ZN6Player9IsOnShellEv(void *p);
 extern "C" void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int id, const Vector3 &pos);
 extern "C" short Vec3_HorzAngle(void *a, void *b);
-extern "C" void _ZN6Player16IncMegaKillCountEv(void *p);
 extern "C" int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *self, const Vector3 *pos, unsigned int a, int fix, u8 b, u8 cc, u8 d);
 
 extern "C" void func_ov077_02124eb0(void *thiz)
@@ -234,15 +232,15 @@ extern "C" void func_ov077_02124eb0(void *thiz)
     unsigned char *player;
     int b;
 
-    if (_ZN8dActor_c7FindEggER5dCc_c(c, c + 0x1b0) != 0) {
+    if (((dActor_c *)c)->FindEgg(*(dCc_c *)(c + 0x1b0)) != 0) {
         int v[3];
         v[0] = *(int *)(c + 0x5c);
         v[1] = *(int *)(c + 0x60);
         v[2] = *(int *)(c + 0x64);
         _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(c, (const Vector3 *)v, 1, 0x2000, 0);
-        _ZN8dActor_c8PoofDustEv(c);
+        ((dActor_c *)c)->PoofDust();
         func_02012694(0xc4, (const Vector3*)(c + 0x74));
-        _ZN7fBase_c18MarkForDestructionEv(c);
+        ((fBase_c *)c)->MarkForDestruction();
         return;
     }
 
@@ -250,7 +248,7 @@ extern "C" void func_ov077_02124eb0(void *thiz)
         unsigned int id = *(unsigned int *)(c + 0x1d4);
         if (id == 0)
             return;
-        player = (unsigned char *)_ZN8dActor_c10FindWithIDEj(id);
+        player = (unsigned char *)dActor_c::FindWithID(id);
     }
     if (player == 0)
         return;
@@ -266,7 +264,7 @@ extern "C" void func_ov077_02124eb0(void *thiz)
     }
 
     if ((*(int *)(c + 0x1d0) & 0x403c0)
-        || _ZN6Player9IsOnShellEv(player) != 0
+        || ((Player *)player)->IsOnShell() != 0
         || *(unsigned char *)(player + 0x6f9) != 0) {
         if (*(int *)(c + 0x3d8) != 1)
             return;
@@ -278,7 +276,7 @@ extern "C" void func_ov077_02124eb0(void *thiz)
 
     if (*(int *)(c + 0x1d0) & 0x10) {
         *(short *)(c + 0x94) = Vec3_HorzAngle(player + 0x5c, c + 0x5c);
-        _ZN6Player16IncMegaKillCountEv(player);
+        ((Player *)player)->IncMegaKillCount();
         func_ov077_02125e94(c, 5);
         return;
     }
@@ -298,17 +296,15 @@ extern "C" void func_ov077_02124eb0(void *thiz)
 extern "C" {
 typedef struct dActor_c dActor_c;
 typedef struct Player Player;
-void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 void func_ov077_02125e94(void* c, int a);
 short Vec3_HorzAngle(void* a, void* b);
-void _ZN6Player16IncMegaKillCountEv(void* p);
 int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, const Vector3* v, unsigned int a, int b, u8 d, u8 e, u8 f);
 
 void func_ov077_021250a8(void* vc){
   char* c = (char*)vc;
   unsigned int id = *(unsigned int*)(c+0x1d4);
   if (id == 0) return;
-  char* player = (char*)_ZN8dActor_c10FindWithIDEj(id);
+  char* player = (char*)dActor_c::FindWithID(id);
   if (player == 0) return;
   int b1 = (int)(*(unsigned short*)(player+0xc) == 0xbf);
   if (b1 == 0) return;
@@ -321,7 +317,7 @@ void func_ov077_021250a8(void* vc){
   if ((flags & 0x10) != 0) {
     *(short*)(c+0x94) = Vec3_HorzAngle((Vector3*)(player+0x5c), (Vector3*)(c+0x5c));
     *(short*)(c+0x8e) = *(short*)(c+0x94) + 0x8000;
-    _ZN6Player16IncMegaKillCountEv((Player*)player);
+    ((Player*)player)->IncMegaKillCount();
     func_ov077_02125e94(c, 5);
     return;
   }
@@ -430,22 +426,17 @@ void func_ov077_02125304(char *c) {
 // @symbol func_ov077_021253a4
 
 extern "C" {
-extern void _ZN9Animation7AdvanceEv(void*);
-extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void*, void*);
 extern void dBgCh_Actr_UpdateContinuous_Veneer(void*);
 extern void dBgCh_Actr_UpdateDiscreteNoLava_veneer(void*);
-extern int _ZNK10dBgCh_Actr13JustHitGroundEv(void*);
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 extern void _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(void*, const Vector3*, unsigned int, int, short);
-extern void _ZN8dActor_c8PoofDustEv(void*);
 extern void func_02012694(unsigned int id, const Vector3* pos);
-extern void _ZN7fBase_c18MarkForDestructionEv(void*);
 
 int func_ov077_021253a4(char* c)
 {
     *(short*)(c + 0x8c) = *(short*)(c + 0x8c) - 0x1000;
-    _ZN9Animation7AdvanceEv(c + 0x174);
-    _ZN8dActor_c9UpdatePosEP5dCc_c(c, c + 0x1b0);
+    ((Animation *)(c + 0x174))->Advance();
+    ((dActor_c *)c)->UpdatePos((dCc_c *)(c + 0x1b0));
 
     if (*(int*)(c + 0x98) >= *(int*)(c + 0x1fc) || *(int*)(c + 0xa8) >= *(int*)(c + 0x1fc)) {
         dBgCh_Actr_UpdateContinuous_Veneer(c + 0x1e4);
@@ -453,15 +444,15 @@ int func_ov077_021253a4(char* c)
         dBgCh_Actr_UpdateDiscreteNoLava_veneer(c + 0x1e4);
     }
 
-    if (_ZNK10dBgCh_Actr13JustHitGroundEv(c + 0x1e4) || DecIfAbove0_Byte((unsigned char*)(c + 0x3e8)) == 0) {
+    if (((dBgCh_Actr *)(c + 0x1e4))->JustHitGround() || DecIfAbove0_Byte((unsigned char*)(c + 0x3e8)) == 0) {
         Vector3 v;
         v.x = *(int*)(c + 0x5c);
         v.y = *(int*)(c + 0x60);
         v.z = *(int*)(c + 0x64);
         _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(c, &v, 1, 0x2000, 0);
-        _ZN8dActor_c8PoofDustEv(c);
+        ((dActor_c *)c)->PoofDust();
         func_02012694(0xc4, (const Vector3*)(c + 0x74));
-        _ZN7fBase_c18MarkForDestructionEv(c);
+        ((fBase_c *)c)->MarkForDestruction();
     }
     return 1;
 }
@@ -504,16 +495,10 @@ extern "C" int func_ov077_02125480(char* c)
 extern "C" {
 extern void dBgCh_Actr_UpdateContinuous_Veneer(void* p);
 extern void dBgCh_Actr_UpdateDiscreteNoLava_veneer(void* p);
-extern int _ZNK10dBgCh_Actr13JustHitGroundEv(void* p);
 extern void* _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int n, int a, int b, int c);
 extern void func_0201267c(unsigned int id, const Vector3* pos);
 extern void func_ov077_02125e94(void* c, int a);
-extern void _ZN8dActor_c8PoofDustEv(void* c);
 extern void func_02012694(unsigned int id, const Vector3* pos);
-extern void _ZN7fBase_c18MarkForDestructionEv(void* c);
-extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void* c, void* p);
-extern void _ZN5dCc_c5ClearEv(void* p);
-extern void _ZN5dCc_c6UpdateEv(void* p);
 }
 
 extern "C" int func_ov077_02125550(char* c)
@@ -530,7 +515,7 @@ extern "C" int func_ov077_02125550(char* c)
         dBgCh_Actr_UpdateDiscreteNoLava_veneer(c + 0x1e4);
     }
 
-    if (_ZNK10dBgCh_Actr13JustHitGroundEv(c + 0x1e4)) {
+    if (((dBgCh_Actr *)(c + 0x1e4))->JustHitGround()) {
         *(int*)(c + 0xa8) = *(int*)(c + 0xa8) * -0x3c / 100;
         if (*(int*)(c + 0xa8) > 0x8000) {
             x = *(int*)(c + 0x5c);
@@ -544,22 +529,22 @@ extern "C" int func_ov077_02125550(char* c)
         } else {
             *(int*)(c + 0xa8) = 0;
             *(short*)(c + 0x8c) = 0;
-            _ZN10dBgCh_Actr15ClearLimMovFlagEv(c + 0x1e4);
+            ((dBgCh_Actr *)(c + 0x1e4))->ClearLimMovFlag();
             func_ov077_02125e94(c, 1);
         }
     }
 
     d = *(int*)(c + 0x3dc) ? *(int*)(c + 0x60) - *(int*)(c + 0x3dc) : 0;
     if (d < -0xc8000) {
-        _ZN8dActor_c8PoofDustEv(c);
+        ((dActor_c *)c)->PoofDust();
         func_02012694(0x166, (const Vector3*)(c + 0x74));
-        _ZN7fBase_c18MarkForDestructionEv(c);
+        ((fBase_c *)c)->MarkForDestruction();
     }
 
-    _ZN8dActor_c9UpdatePosEP5dCc_c(c, c + 0x1b0);
+    ((dActor_c *)c)->UpdatePos((dCc_c *)(c + 0x1b0));
     func_ov077_02124eb0(c);
-    _ZN5dCc_c5ClearEv(c + 0x1b0);
-    _ZN5dCc_c6UpdateEv(c + 0x1b0);
+    ((dCc_c *)(c + 0x1b0))->Clear();
+    ((dCc_c *)(c + 0x1b0))->Update();
     return 1;
 }
 
@@ -628,7 +613,7 @@ int func_ov077_021256b4(char *o)
     ((dActor_c*)o)->DetectRaycastClsn(v, *(Vector3*)(o + 0x5c), one);
 
     *(int *)(o + 0xd0) = 0;
-    _ZN10dBgCh_Actr13SetLimMovFlagEv(o + 0x1e4);
+    ((dBgCh_Actr *)(o + 0x1e4))->SetLimMovFlag();
 
     *(int *)(o + 0x3d8) = 4;
     return 1;
@@ -668,11 +653,10 @@ extern "C" {
 // @symbol func_ov077_021258dc
 /* State 3 entry handler: PMF record data_ov077_021278e8 is copied into
  * data_ov077_02127c28 at +0x30 by __sinit_ov077_0212749c. */
-extern void _ZN5dCc_c5ClearEv(void *);
 int func_ov077_021258dc(char *c)
 {
     *(int *)(c + 0x98) = 0;
-    _ZN5dCc_c5ClearEv((char *)c + 0x1b0);
+    ((dCc_c *)((char *)c + 0x1b0))->Clear();
     *(int *)(c + 0x3d8) = 3;
     return 1;
 }
@@ -680,15 +664,6 @@ int func_ov077_021258dc(char *c)
 
 extern "C" {
 extern void dBgCh_Actr_UpdateDiscreteNoLava_veneer(void *p);
-extern int _ZNK10dBgCh_Actr13JustHitGroundEv(void *p);
-extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *p);
-extern void _ZN10dBgCh_Actr15ClearLimMovFlagEv(void *p);
-extern void _ZN8dActor_c8PoofDustEv(void *p);
-extern void _ZN7fBase_c18MarkForDestructionEv(void *p);
-extern void _ZN9Animation7AdvanceEv(void *p);
-extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *p, void *cc);
-extern void _ZN5dCc_c5ClearEv(void *p);
-extern void _ZN5dCc_c6UpdateEv(void *p);
 extern void func_02012694(unsigned int id, const Vector3* pos);
 extern void func_ov077_02125e94(void *p, int v);
 extern void func_ov077_02124eb0(void *p);
@@ -698,14 +673,14 @@ int func_ov077_02125908(char *c)
     int v;
 
     dBgCh_Actr_UpdateDiscreteNoLava_veneer(c + 0x1e4);
-    if (_ZNK10dBgCh_Actr13JustHitGroundEv(c + 0x1e4) != 0)
+    if (((dBgCh_Actr *)(c + 0x1e4))->JustHitGround() != 0)
     {
         *(int *)(c + 0xa8) = *(int *)(c + 0xa8) * -50 / 100;
     }
-    else if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x1e4) != 0)
+    else if (((dBgCh_Actr *)(c + 0x1e4))->IsOnGround() != 0)
     {
         *(int *)(c + 0xa8) = 0;
-        _ZN10dBgCh_Actr15ClearLimMovFlagEv(c + 0x1e4);
+        ((dBgCh_Actr *)(c + 0x1e4))->ClearLimMovFlag();
         *(int *)(c + 0x3d4) = 0;
         *(short *)(c + 0x94) = *(short *)(c + 0x8e);
         func_ov077_02125e94(c, 1);
@@ -718,29 +693,28 @@ int func_ov077_02125908(char *c)
 
     if (v < -0xc8000)
     {
-        _ZN8dActor_c8PoofDustEv(c);
+        ((dActor_c *)c)->PoofDust();
         func_02012694(0x166, (const Vector3*)(c + 0x74));
-        _ZN7fBase_c18MarkForDestructionEv(c);
+        ((fBase_c *)c)->MarkForDestruction();
     }
 
-    _ZN9Animation7AdvanceEv(c + 0x174);
-    _ZN8dActor_c9UpdatePosEP5dCc_c(c, c + 0x1b0);
+    ((Animation *)(c + 0x174))->Advance();
+    ((dActor_c *)c)->UpdatePos((dCc_c *)(c + 0x1b0));
     func_ov077_02124eb0(c);
-    _ZN5dCc_c5ClearEv(c + 0x1b0);
-    _ZN5dCc_c6UpdateEv(c + 0x1b0);
+    ((dCc_c *)(c + 0x1b0))->Clear();
+    ((dCc_c *)(c + 0x1b0))->Update();
     return 1;
 }
 }
 
 extern "C" {
 extern short Vec3_HorzAngle(void*, void*);
-extern void _ZN10dBgCh_Actr13SetLimMovFlagEv(void *);
 int func_ov077_02125a0c(char *c) {
     *(int*)(c+0x98) = 0x5000;
     *(int*)(c+0xa8) = 0xd000;
     short ang = (short)Vec3_HorzAngle((char*)*(int*)(c+0x3d4)+0x5c, c+0x5c);
     *(short*)(c+0x94) = ang;
-    _ZN10dBgCh_Actr13SetLimMovFlagEv(c+0x1e4);
+    ((dBgCh_Actr *)(c+0x1e4))->SetLimMovFlag();
     *(int*)(c+0x3d8) = 2;
     return 1;
 }
@@ -748,15 +722,9 @@ int func_ov077_02125a0c(char *c) {
 
 extern "C" {
 extern int _Z14ApproachLinearRsss(short *a, short b, short c);
-extern void _ZN9Animation7AdvanceEv(void *);
 extern void func_ov077_02124eb0(void *c);
-extern void _ZN8dActor_c8PoofDustEv(void *);
 extern void func_02012694(unsigned int id, const Vector3* pos);
-extern void _ZN7fBase_c18MarkForDestructionEv(void *);
-extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *c, void *clsn);
 extern void func_ov077_02124d08(void *c, void *p);
-extern void _ZN5dCc_c5ClearEv(void *c);
-extern void _ZN5dCc_c6UpdateEv(void *c);
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 extern void func_ov077_02125e94(void *c, int a);
 
@@ -764,21 +732,21 @@ int func_ov077_02125a54(char *c){
   int d;
   _Z14ApproachLinearRsss((short*)(c + 0x8e), *(short*)(c + 0x3e6), 0x64);
   *(short*)(c + 0x94) = *(short*)(c + 0x8e);
-  _ZN9Animation7AdvanceEv(c + 0x174);
+  ((Animation *)(c + 0x174))->Advance();
   func_ov077_02124eb0(c);
   if(*(int*)(c + 0x3dc))
     d = *(int*)(c + 0x60) - *(int*)(c + 0x3dc);
   else
     d = 0;
   if(d < -0xc8000){
-    _ZN8dActor_c8PoofDustEv(c);
+    ((dActor_c *)c)->PoofDust();
     func_02012694(0x166, (const Vector3*)(c + 0x74));
-    _ZN7fBase_c18MarkForDestructionEv(c);
+    ((fBase_c *)c)->MarkForDestruction();
   }
-  _ZN8dActor_c9UpdatePosEP5dCc_c(c, c + 0x1b0);
+  ((dActor_c *)c)->UpdatePos((dCc_c *)(c + 0x1b0));
   func_ov077_02124d08(c, c + 0x1e4);
-  _ZN5dCc_c5ClearEv(c + 0x1b0);
-  _ZN5dCc_c6UpdateEv(c + 0x1b0);
+  ((dCc_c *)(c + 0x1b0))->Clear();
+  ((dCc_c *)(c + 0x1b0))->Update();
   if(DecIfAbove0_Byte((unsigned char*)(c + 0x3e8)) == 0)
     func_ov077_02125e94(c, 1);
   return 1;
@@ -809,21 +777,15 @@ extern "C" {
 typedef int Fix12i;
 
 
-extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *c, void *p);
 extern void dBgCh_Actr_UpdateContinuous_Veneer(void *p);
 extern void func_02012694(unsigned int id, const Vector3* pos);
 extern unsigned int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     unsigned int uniqueID, unsigned int effectID,
     Fix12i x, Fix12i y, Fix12i z,
     const void *dir, void *callback);
-extern int _ZNK10dBgCh_Actr13JustHitGroundEv(void *p);
-extern void _ZN8dActor_c8PoofDustEv(void *c);
-extern void _ZN7fBase_c18MarkForDestructionEv(void *c);
 extern void func_ov077_02125e94(void *c, int a);
 extern void* _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, Fix12i x, Fix12i y, Fix12i z);
 extern void func_0201267c(unsigned int id, const Vector3* pos);
-extern void _ZN5dCc_c5ClearEv(void *p);
-extern void _ZN5dCc_c6UpdateEv(void *p);
 
 extern int data_0209f32c;
 
@@ -835,9 +797,9 @@ int func_ov077_02125bb4(char *c)
     struct Vector3 vec;
 
     *(short *)(c + 0x8c) = *(short *)(c + 0x8c) + 0x4e20;
-    _ZN8dActor_c9UpdatePosEP5dCc_c(c, c + 0x1b0);
+    ((dActor_c *)c)->UpdatePos((dCc_c *)(c + 0x1b0));
     func_ov077_021250a8(c);
-    _ZN10dBgCh_Actr13SetLimMovFlagEv(c + 0x1e4);
+    ((dBgCh_Actr *)(c + 0x1e4))->SetLimMovFlag();
     dBgCh_Actr_UpdateContinuous_Veneer(c + 0x1e4);
 
     underwater = func_ov077_02124ce4(c);
@@ -862,19 +824,19 @@ int func_ov077_02125bb4(char *c)
     }
     *(unsigned char *)(c + 0x3e4) = (unsigned char)underwater;
 
-    if (_ZNK10dBgCh_Actr13JustHitGroundEv(c + 0x1e4)) {
+    if (((dBgCh_Actr *)(c + 0x1e4))->JustHitGround()) {
         *(int *)(c + 0xa8) = (*(int *)(c + 0xa8) * -0x3c) / 100;
         d = *(int *)(c + 0x3dc) ? *(int *)(c + 0x60) - *(int *)(c + 0x3dc) : 0;
         if (d < -0xc8000) {
-            _ZN8dActor_c8PoofDustEv(c);
+            ((dActor_c *)c)->PoofDust();
             func_02012694(0x166, (const Vector3*)(c + 0x74));
-            _ZN7fBase_c18MarkForDestructionEv(c);
+            ((fBase_c *)c)->MarkForDestruction();
         } else if (*(int *)(c + 0xa8) < 0xa000) {
             *(int *)(c + 0xa8) = 0;
             *(short *)(c + 0x8c) = *(short *)(c + 0x92);
             *(short *)(c + 0x8e) = *(short *)(c + 0x94);
             *(short *)(c + 0x90) = *(short *)(c + 0x96);
-            _ZN10dBgCh_Actr15ClearLimMovFlagEv(c + 0x1e4);
+            ((dBgCh_Actr *)(c + 0x1e4))->ClearLimMovFlag();
             *(unsigned int *)(c + 0xb0) |= 0x10000000u;
             func_ov077_02125e94(c, 1);
         } else {
@@ -889,21 +851,20 @@ int func_ov077_02125bb4(char *c)
         }
     }
 
-    _ZN5dCc_c5ClearEv(c + 0x1b0);
-    _ZN5dCc_c6UpdateEv(c + 0x1b0);
+    ((dCc_c *)(c + 0x1b0))->Clear();
+    ((dCc_c *)(c + 0x1b0))->Update();
     return 1;
 }
 }
 
 extern "C" {
-extern void _ZN10dBgCh_Actr13SetLimMovFlagEv(void *);
 int func_ov077_02125dd4(char *c)
 {
     *(int *)(c + 0x9c) = -0x2000;
     *(int *)(c + 0xa0) = -0x3c000;
     *(int *)(c + 0x98) = 0x4000;
     *(int *)(c + 0xa8) = 0x19000;
-    _ZN10dBgCh_Actr13SetLimMovFlagEv((char *)c + 0x1e4);
+    ((dBgCh_Actr *)((char *)c + 0x1e4))->SetLimMovFlag();
     *(int *)(c + 0x3d8) = 0;
     return 1;
 }
@@ -927,12 +888,11 @@ void func_ov077_02125e94(void* vc, int i) {
 }
 
 extern "C" {
-extern void _ZN13SharedFilePtr7ReleaseEv(void *);
 int _ZN7daTgz_c16CleanupResourcesEv(void)
 {
-    _ZN13SharedFilePtr7ReleaseEv(&data_ov077_02127b48);
-    _ZN13SharedFilePtr7ReleaseEv(&data_ov077_02127b38);
-    _ZN13SharedFilePtr7ReleaseEv(&data_ov077_02127c14);
+    data_ov077_02127b48.Release();
+    data_ov077_02127b38.Release();
+    data_ov077_02127c14.Release();
     return 1;
 }
 }

@@ -2922,12 +2922,12 @@ ov098	0x02139f04	Crate_Spawn	daObjBlockS_c_classInit	reconstructed classInit; RO
 ov098	0x0213a794	func_ov098_0213a794	daObjFallBlock_c_InitResources	shared InitResources body; Model::LoadFile / dBgW_Kc::LoadFile / CLPS SetFile; called from all four leaf InitResources overrides. C linkage: the base leaves slots 0/3 pure virtual
 ov098	0x0213a8e0	func_ov098_0213a8e0	daObjFallBlock_c_RequestShake	writes mShakeRequested at 0x33e; callee of the dBgW+0x1c veneer
 ov098	0x0213a8ec	func_ov098_0213a8ec	daObjFallBlock_c_OnStoodOn	dBgW+0x1c callback veneer; drops collider, forwards actor into RequestShake
-ov098	0x0213a900	func_ov098_0213a900	_ZN6CannonD1Ev	vtable slot 16
-ov098	0x0213a938	func_ov098_0213a938	_ZN6CannonD0Ev	vtable slot 17
-ov098	0x0213b1d8	func_ov098_0213b1d8	_ZN6Cannon16CleanupResourcesEv	vtable slot 3
-ov098	0x0213b214	func_ov098_0213b214	_ZN6Cannon6RenderEv	vtable slot 9
-ov098	0x0213b26c	func_ov098_0213b26c	_ZN6Cannon8BehaviorEv	vtable slot 6
-ov098	0x0213b2d4	func_ov098_0213b2d4	_ZN6Cannon13InitResourcesEv	vtable slot 0
+ov098	0x0213a900	func_ov098_0213a900	_ZN7daCnn_cD1Ev	vtable slot 16
+ov098	0x0213a938	func_ov098_0213a938	_ZN7daCnn_cD0Ev	vtable slot 17
+ov098	0x0213b1d8	func_ov098_0213b1d8	_ZN7daCnn_c16CleanupResourcesEv	vtable slot 3
+ov098	0x0213b214	func_ov098_0213b214	_ZN7daCnn_c6RenderEv	vtable slot 9
+ov098	0x0213b26c	func_ov098_0213b26c	_ZN7daCnn_c8BehaviorEv	vtable slot 6
+ov098	0x0213b2d4	func_ov098_0213b2d4	_ZN7daCnn_c13InitResourcesEv	vtable slot 0
 ov098	0x0213b43c	func_ov098_0213b43c	Cannon_Spawn	spawnfunc
 ov098	0x0213b43c	Cannon_Spawn	daCnn_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov098	0x0213b47c	func_ov098_0213b47c	_ZN7daWbm_cD1Ev	vtable slot 16
@@ -2949,7 +2949,7 @@ ov098	0x0213c510	Crate_SpawnInfo	g_profile_BLOCK_S	reconstructed profile global;
 ov098	0x0213c534	data_ov098_0213c534	_ZTV13daObjBlockS_c	vtable alloc=?
 ov098	0x0213c67c	data_ov098_0213c67c	Cannon_SpawnInfo	spawninfo
 ov098	0x0213c67c	Cannon_SpawnInfo	g_profile_CANNON	reconstructed profile global; literal ROM ID CANNON+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov098	0x0213c6a0	data_ov098_0213c6a0	_ZTV6Cannon	vtable alloc=0x198
+ov098	0x0213c6a0	data_ov098_0213c6a0	_ZTV7daCnn_c	vtable alloc=0x198
 ov098	0x0213c74c	data_ov098_0213c74c	WaterBomb_SpawnInfo	spawninfo
 ov098	0x0213c74c	WaterBomb_SpawnInfo	g_profile_WATERBOMB	reconstructed profile global; literal ROM ID WATERBOMB+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov098	0x0213c770	data_ov098_0213c770	_ZTV7daWbm_c	vtable alloc=0x3cc

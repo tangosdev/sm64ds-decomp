@@ -152,12 +152,9 @@ extern void MultiStore16(unsigned short val, char *dst, int nbytes);
 extern const unsigned char data_ov006_0212f0d0[];
 extern UnkObj* data_0209f5bc;
 extern int data_ov006_0213fa9c;
-int _ZN11dScMgBase_c11OnAttacked2Ev(void *);
 unsigned int func_02012790(unsigned int a);
 int func_ov006_020d0c38(Vec2s* a, Vec2s* b);
 
-int _ZN14dScMgD3DBase_c8OnKickedEv(void *self);
-int _ZN14dScMgD3DBase_c8OnPushedEv(void *self);
 void SetBg2Offset(int a, int b);
 int func_ov004_020b04c0(void);
 extern "C" unsigned char data_0209d45c;
@@ -229,7 +226,6 @@ extern void *data_ov006_02134f00[];
 extern void *data_ov006_02134f08;
 extern void func_ov006_020cd270(void);
 extern void func_ov006_020d09e0(void);
-extern void *_ZN7fBase_cnwEj(unsigned int size);
 extern void _ZN11dScMgBase_cC2Ev(void *self);
 extern void _ZN8Particle10SysTrackerC1Ev(void *self);
 extern void __cxa_vec_ctor(void *base, int count, int stride, void *ctor, void *dtor);
@@ -242,12 +238,14 @@ extern void func_ov006_02120a54(char *self);
 
 void *dScMgTrampoline_c_classInit(void);
 /* Literal aliases used only to make the five ROM PMF relocations static data.
-   Their definitions below are real compiler-spelled C++ members. */
-extern "C" void _ZN17dScMgTrampoline_c9StateDoneEv(void);
-extern "C" void _ZN17dScMgTrampoline_c13StateWaitExitEv(void);
-extern "C" void _ZN17dScMgTrampoline_c12StateResultsEv(void);
-extern "C" void _ZN17dScMgTrampoline_c9StatePlayEv(void);
-extern "C" void _ZN17dScMgTrampoline_c10StateIntroEv(void);
+   Their definitions below are real compiler-spelled C++ members. Each is a
+   local extern: a pointer to member cannot convert to the int word a P2
+   entry holds, so dScMgTrampoline_c.h's declarations cannot fill the table. */
+extern "C" void _ZN17dScMgTrampoline_c9StateDoneEv(void);       /* local extern: PMF -> int */
+extern "C" void _ZN17dScMgTrampoline_c13StateWaitExitEv(void);  /* local extern: PMF -> int */
+extern "C" void _ZN17dScMgTrampoline_c12StateResultsEv(void);   /* local extern: PMF -> int */
+extern "C" void _ZN17dScMgTrampoline_c9StatePlayEv(void);       /* local extern: PMF -> int */
+extern "C" void _ZN17dScMgTrampoline_c10StateIntroEv(void);     /* local extern: PMF -> int */
 extern int data_ov006_02134d40[];
 extern int data_ov006_02134d4c[];
 extern int data_ov006_02134d58[];
@@ -907,7 +905,7 @@ s32 dScMgTrampoline_c::CleanupResources()
 /* dScMgTrampoline_c::OnKicked, from its vtable slot. */
 int dScMgTrampoline_c::OnKicked()
 {
-    if (!_ZN14dScMgD3DBase_c8OnKickedEv(this))
+    if (!dScMgD3DBase_c::OnKicked())
         return 0;
     if (mMenuOpen == 0) {
         if (unk_4664 == 0) {
@@ -927,8 +925,8 @@ int dScMgTrampoline_c::OnKicked()
 /* dScMgTrampoline_c::OnPushed, from its vtable slot. */
 int dScMgTrampoline_c::OnPushed()
 {
-    void *t = (void *)this;
- return _ZN14dScMgD3DBase_c8OnPushedEv(t) != 0; }
+    return dScMgD3DBase_c::OnPushed() != 0;
+}
 
 // @symbol _ZN17dScMgTrampoline_c11OnAttacked2Ev
 /* dScMgTrampoline_c::OnAttacked2, from its vtable slot. */
@@ -940,7 +938,7 @@ int dScMgTrampoline_c::OnAttacked2()
     s16 a;
     int dst;
 
-    if (!_ZN11dScMgBase_c11OnAttacked2Ev(this))
+    if (!dScMgBase_c::OnAttacked2())
         return 0;
 
     if (data_0209f5bc->vt[5](data_0209f5bc)) {
