@@ -1,0 +1,54 @@
+# slice_w31_smalls2.txt -- run linkfull wave 31, lane SMALLS2: matched ROM
+# bodies that a FORWARD row in port/faces_sync.txt held out of the link.
+#
+# Each was listed as an "MSVC front-end refusal" by the linkage census, and
+# each refusal is gone from the synced src: every TU below compiles clean
+# under the port's own compile line (the flags build.ninja gives
+# port_slice_shared). What still held each one out was its name: a forward
+# row makes build/port/host-src/faces_sync_gen.cpp DEFINE the member and call
+# a host copy under the flat ROM name, so the matched TU was a duplicate
+# definition of that member. Each row is closed by the three steps
+# port/slice_w24_faceflip.txt describes: the ledger row flips from F to R (the
+# generated face then DEFINES the flat ROM name and calls the member), the host
+# copy goes, and the TU is listed here.
+#
+# EVERY ROW IS MATCHING at 2004/b56 with --strict-relocs against the
+# cartridge's own overlay bytes (tools/match.py by ROM address, the overlay
+# bins from extracted/overlays/ at each overlay's .text start), and each
+# matched body makes the same calls in the same order as the host copy it
+# replaces (the objects disassembled side by side):
+#
+#   _ZN13PrincessPeach21UpdateGroundCollisionEP10dBgCh_Actr  ov085 0x02129ebc
+#       size 0xd0, faces_sync row
+#       __ZN13PrincessPeach21UpdateGroundCollisionEP10dBgCh_Actr. Host copy
+#       was port/unmatched/Ov085_PrincessPeach_Declshapes.cpp (a C4716
+#       refusal: the old src was an int body falling off the end; the synced
+#       src is void). Its two ROM callers (ov085 relocs.txt, from:0x0212a0d0
+#       and from:0x0212a1bc) are PrincessPeach::InitState0 and InitState4,
+#       linked matched C++ that calls the member, so nothing in the port
+#       spells the flat name.
+#   _ZN8WallSign8BehaviorEv  ov085 0x0212eea4 size 0x30c, faces_sync row
+#       __ZN8WallSign8BehaviorEv. Host copy was a reimplementation written
+#       from the ROM before the function was decompiled, the WALL_SIGN half
+#       of port/unmatched/Ov085_Behaviors.cpp. The flat name's caller is
+#       hal/actor_classes_ov085.cpp's slot-6 thunk.
+#   _ZN7daTrs_c13InitResourcesEv  ov063 0x0211b9bc size 0x9a0, faces_sync
+#       row __ZN7daTrs_c13InitResourcesEv. Host copy was
+#       port/unmatched/Boo_InitResources.c (its K&R ClosestPlayer declaration
+#       tripped closestplayer_guard; the synced src passes the receiver). The
+#       flat name's caller is hal/actor_classes_ov063.cpp's slot-0 thunk.
+#
+# AND ONE BASE-OBJECT DESTRUCTOR (run linkfull wave 31, batch 2, LINK15 W23-1's
+# stretch row):
+#
+#   _ZN9ModelBaseD2Ev  arm9 0x020170b8 size 0x30. Its #else arm is the ROM body
+#       (MATCHING 2004/b56, --strict-relocs); its _MSC_VER arm is
+#       `thiz->~ModelBase(); return thiz;`, the shape W23-1 enrolled for
+#       Model's D2 (port/slice_w23_modeldtor.txt). Host copy was the body in
+#       port/unmatched/ModelFamily_Dtors_HostCopy.c, whose remaining Model,
+#       CommonModel and ShadowModel D1 bodies call it by its flat name the way
+#       the ROM's own D1s call 0x020170b8.
+src/_ZN13PrincessPeach21UpdateGroundCollisionEP10dBgCh_Actr.cpp
+src/_ZN8WallSign8BehaviorEv.cpp
+src/game/actors/daTrs_c/_ZN7daTrs_c13InitResourcesEv.cpp
+src/_ZN9ModelBaseD2Ev.cpp

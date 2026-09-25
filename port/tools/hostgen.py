@@ -3505,7 +3505,66 @@ DATA_C_LINKAGE = {
         _c_linkage_line("extern int %s[];" % _DBGW_XFRM, _DBGW_XFRM),
     "_ZN6ShipUp13InitResourcesEv":
         _c_linkage_line("extern void* %s;" % _DBGW_XFRM, _DBGW_XFRM),
+    # File scope, run linkfull lane SMALLS2: Goomboss::InitResources declares
+    # these eleven ROM data externs at file scope in a //cpp TU, above any
+    # extern "C" region, so MSVC asks for decorated names while the ov002,
+    # ov074 and ov084 mounts emit the C ones (eleven LNK2019s, measured). The
+    # retired host copy port/unmatched/Goomboss_InitResources.cpp moved them
+    # inside its extern "C" block by hand. data_02082214, the {sin, cos} table
+    # the same run declares, is left out: it already resolves under its
+    # decorated spelling.
+    "_ZN8Goomboss13InitResourcesEv": ("extern void *data_ov002_0210da30;\n", [
+        ("extern void *data_ov002_0210da30;", "data_ov002_0210da30"),
+        ("extern void *data_ov084_02130cf8;", "data_ov084_02130cf8"),
+        ("extern void *data_ov074_0212292c[];", "data_ov074_0212292c"),
+        ("extern void *data_ov074_02122948[];", "data_ov074_02122948"),
+        ("extern void *data_ov074_02123040;", "data_ov074_02123040"),
+        ("extern void *data_ov074_02123000;", "data_ov074_02123000"),
+        ("extern void *data_ov074_02122e4c[];", "data_ov074_02122e4c"),
+        ("extern void *data_ov074_02123030;", "data_ov074_02123030"),
+        ("extern void *data_ov074_02122e5c[];", "data_ov074_02122e5c"),
+        ("extern u16 data_ov074_02122e04[];", "data_ov074_02122e04"),
+        ("extern u16 data_ov074_02122dfc[];", "data_ov074_02122dfc"),
+    ], "before"),
 }
+
+
+# ---- A LEVEL OVERLAY'S FILE OBJECT, BY ADDRESS (run linkfull lane SMALLS2) --
+#
+# Goomboss::InitResources takes the ADDRESS of two file objects in the level
+# overlay window and spells them func_021123f4 and func_021124ac, the names the
+# decomp's symbol table gives two addresses every level overlay in the
+# 0x021111a0 window shares: ov074's relocs.txt loads them (from:0x02122278 and
+# from:0x02122280) with module:overlays(...), and config/arm9/overlays/ov053/
+# symbols.txt lists 0x021123f4 as data_ov053_021123f4, ambiguous. The port
+# mounts each level overlay whole at a host address and gives no C name to an
+# interior address, so no symbol can stand for the ROM's word. Goomboss's one
+# level is 45, whose overlay is ov053, and port_ov053_at() is that mount's own
+# DS-to-host resolver: a pure function over ov053's static image, valid before
+# the level is entered (hal/actor_classes_ov074.cpp uses it for the same
+# overlay; hal/level_boot.cpp's JRB STATIC_ROCK is the precedent). The retired
+# host copy port/unmatched/Goomboss_InitResources.cpp made exactly this
+# substitution by hand; here it is a row, so the matched TU compiles as the
+# ROM's own body. Taking &func_021123f4 raw would hand MaterialChanger and
+# TextureTransformer an address no host object lives at.
+OVERLAY_OBJECT_AT_DECL = {
+    "_ZN8Goomboss13InitResourcesEv":
+        '/* hostgen OVERLAY_OBJECT_AT: see the table in tools/hostgen.py */\n'
+        'extern "C" void *port_ov053_at(unsigned ds);\n',
+}
+OVERLAY_OBJECT_AT = {
+    "_ZN8Goomboss13InitResourcesEv": [
+        ("*(BMA_File *)&func_021123f4", "*(BMA_File *)port_ov053_at(0x021123f4)"),
+        ("&func_021123f4, 0x40000000", "port_ov053_at(0x021123f4), 0x40000000"),
+        ("&func_021124ac, 0, 0x1000", "port_ov053_at(0x021124ac), 0, 0x1000"),
+    ],
+}
+
+
+def overlay_object_at_patch(text, sym):
+    """Resolve a level overlay's interior file object through its mount."""
+    return apply_patches(text, sym, OVERLAY_OBJECT_AT, "OVERLAY_OBJECT_AT",
+                         OVERLAY_OBJECT_AT_DECL.get(sym, ""))
 
 
 def data_c_linkage(text, sym):
@@ -3702,6 +3761,7 @@ def emit(src_path, out_dir, decomp_root, extern_data=False):
     text, _ = ledger_park(text, sym)
     text, _ = host_copy_park(text, sym)
     text, _ = extern_c_data_patch(text, sym)
+    text, _ = overlay_object_at_patch(text, sym)
     text, _ = call_state_fn_patch(text, sym)
     text, _ = arg_width_patch(text, sym)
     text, _ = callee_seam_patch(text, sym)

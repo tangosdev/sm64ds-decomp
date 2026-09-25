@@ -1,0 +1,17 @@
+# slice_w31_smalls2_hostgen.txt -- run linkfull wave 31, lane SMALLS2: matched
+# TUs built from their tools/hostgen.py copy (build/host-src) by the SMALLS2 block
+# at the end of port/CMakeLists.txt, never raw. Every row here must also be on
+# that block's SMALLS2_HOSTGEN_TU list, and on no raw slice.
+#
+#   _ZN8Goomboss13InitResourcesEv  ov074 0x02121e98 size 0x404, MATCHING
+#       2004/b56 with --strict-relocs against overlay_0074.bin. Held out as a
+#       host copy (port/unmatched/Goomboss_InitResources.cpp, now retired) for
+#       an MSVC C2561 the synced src no longer has. hostgen's DATA_C_LINKAGE and
+#       OVERLAY_OBJECT_AT rows for this stem give its eleven file-scope ROM data
+#       externs C linkage and resolve its two level-overlay file objects through
+#       ov053's mount; hostgen --all before and after differs in this one
+#       generated file only. Its faces_sync row __ZN8Goomboss13InitResourcesEv
+#       is REVERSE: the flat name the ov074 slot thunk calls is the generated
+#       face into Goomboss::InitResources. Goomboss is level 45's one placed
+#       instance.
+src/_ZN8Goomboss13InitResourcesEv.cpp

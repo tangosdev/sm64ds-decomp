@@ -371,7 +371,7 @@ __ZN6Fwoosh16OnAimedAtWithEggEv                                          ?OnAime
 __ZN6Fwoosh16OnPendingDestroyEv                                          ?OnPendingDestroy@Fwoosh@@UAEXXZ                                 0x02134180 R
 __ZN6FwooshD1Ev                                                          ??1Fwoosh@@UAE@XZ                                                0x02133968 R
 
-__ZN8Goomboss13InitResourcesEv                                           ?InitResources@Goomboss@@UAEHXZ                                  0x02121e98 F
+__ZN8Goomboss13InitResourcesEv                                           ?InitResources@Goomboss@@UAEHXZ                                  0x02121e98 R
 __ZN8GoombossD1Ev                                                        ??1Goomboss@@UAE@XZ                                              0x0211f000 R
 
 __ZN3HUD13RenderVsTimerEv                                                ?RenderVsTimer@HUD@@QAEXXZ                                       0x020fca18 R
@@ -733,7 +733,7 @@ __ZN13PrincessPeach10InitState4Ev                                        ?InitSt
 __ZN13PrincessPeach12UpdateLookAtEv                                      ?UpdateLookAt@PrincessPeach@@QAEXXZ                              0x02129dbc R
 __ZN13PrincessPeach16CleanupResourcesEv                                  ?CleanupResources@PrincessPeach@@UAEHXZ                          0x0212a4c0 R
 __ZN13PrincessPeach16OnPendingDestroyEv                                  ?OnPendingDestroy@PrincessPeach@@UAEXXZ                          0x0212a504 R
-__ZN13PrincessPeach21UpdateGroundCollisionEP10dBgCh_Actr                 ?UpdateGroundCollision@PrincessPeach@@QAEXPAUdBgCh_Actr@@@Z      0x02129ebc F
+__ZN13PrincessPeach21UpdateGroundCollisionEP10dBgCh_Actr                 ?UpdateGroundCollision@PrincessPeach@@QAEXPAUdBgCh_Actr@@@Z      0x02129ebc R
 __ZN13PrincessPeach6RenderEv                                             ?Render@PrincessPeach@@UAEHXZ                                    0x0212a508 R
 __ZN13PrincessPeach6State0Ev                                             ?State0@PrincessPeach@@QAEHXZ                                    0x0212a0e8 R
 __ZN13PrincessPeach6State1Ev                                             ?State1@PrincessPeach@@QAEHXZ                                    0x0212a1d4 R
@@ -1030,7 +1030,7 @@ __ZN11VolcanoRing8BehaviorEv                                             ?Behavi
 __ZN11VolcanoRingD1Ev                                                    ??1VolcanoRing@@UAE@XZ                                           0x021111a0 R
 
 __ZN8WallSign16CleanupResourcesEv                                        ?CleanupResources@WallSign@@UAEHXZ                               0x0212ee58 R
-__ZN8WallSign8BehaviorEv                                                 ?Behavior@WallSign@@UAEHXZ                                       0x0212eea4 F
+__ZN8WallSign8BehaviorEv                                                 ?Behavior@WallSign@@UAEHXZ                                       0x0212eea4 R
 __ZN8WallSignD1Ev                                                        ??1WallSign@@UAE@XZ                                              0x0212edac R
 
 __ZN9WaterBombD1Ev                                                       ??1WaterBomb@@UAE@XZ                                             0x0213b47c R
@@ -2193,7 +2193,7 @@ __ZN11daTrsIcon_c13InitResourcesEv                                       ?InitRe
 __ZN11daTrsTrap_c13InitResourcesEv                                       ?InitResources@daTrsTrap_c@@UAEHXZ                               0x0211cf00 R
 __ZN11daTrsTrap_c16OnPendingDestroyEv                                    ?OnPendingDestroy@daTrsTrap_c@@UAEXXZ                            0x0211ce30 R
 
-__ZN7daTrs_c13InitResourcesEv                                            ?InitResources@daTrs_c@@UAEHXZ                                   0x0211b9bc F
+__ZN7daTrs_c13InitResourcesEv                                            ?InitResources@daTrs_c@@UAEHXZ                                   0x0211b9bc R
 __ZN7daTrs_c13OnYoshiTryEatEv                                            ?OnYoshiTryEat@daTrs_c@@UAEHXZ                                   0x0211c480 R
 __ZN7daTrs_c16OnAimedAtWithEggEv                                         ?OnAimedAtWithEgg@daTrs_c@@UAEHXZ                                0x021160c4 R
 __ZN7daTrs_c16OnPendingDestroyEv                                         ?OnPendingDestroy@daTrs_c@@UAEXXZ                                0x0211af6c R

@@ -137,25 +137,6 @@ void port_ov034_syms_patch(void);
    destructor chain nodes and the twenty-two state pmfs. */
 void __sinit_ov034_021138ec(void);
 
-/* what port_factory_wiggler spells by hand (src/d_a_hanachan.c is held out --
-   it rides the ROM's r0 through into Enemy::C2, the ChiefChilly shape) */
-void *_ZN7fBase_cnwEj(unsigned int sz);
-void _ZN12dEnemyBase_cC2Ev(void *self);
-int __cxa_vec_ctor(void *p, int n, int stride, void *ctor, void *dtor);
-int _ZN10dBgCh_ActrC1Ev(void *p);
-int _ZN10dCcAcPos_cC1Ev(void *p);
-int _ZN10dCcAcPos_cD1Ev(void *p);
-int func_0203d73c(void *p);
-int _ZN8Vector3sD1Ev(void *p);
-int func_0203d384(void *p);
-int _ZN7Vector3D1Ev(void *p);
-int _ZN15TextureSequenceC1Ev(void *p);
-int _ZN15TextureSequenceD1Ev(void *p);
-int _ZN15MaterialChangerC1Ev(void *p);
-int _ZN15MaterialChangerD1Ev(void *p);
-int _ZN9ModelAnimC1Ev(void *p);
-int _ZN9ModelAnimD1Ev(void *p);
-
 /* the class's own bodies */
 int *_ZN7WigglerD1Ev(void *self);                 /* slot 16 */
 int *_ZN7WigglerD0Ev(void *self);                 /* slot 17 */
@@ -288,49 +269,16 @@ int _ZN7Wiggler13InitResourcesEv(void *self)
 }
 
 // ============================================================================
-// THE FACTORY, SPELLED BY HAND -- the ChiefChilly r0 ride-through
+// THE FACTORY: RETIRED HERE (run linkfull lane SMALLS2)
 // ============================================================================
-/* src/d_a_hanachan.c is HELD OUT of the slice. It calls `func_020aed98();`
-   with NO ARGUMENT because in the ROM the object operator new just returned is
-   still in r0 when Enemy::C2 is entered:
-       021136b0 bl 0x02043444   ActorBase::operator new(0x8e8)
-       021136b4 movs r4, r0
-       021136bc bl 0x020aed98   module:overlays(2,7) = ov002 _ZN12dEnemyBase_cC2Ev
-   mwcc reproduced that, so the TU is byte-faithful and unusable under cdecl --
-   and the name it spells, func_020aed98, is an arm9-style spelling of an ov002
-   symbol that exists nowhere in the link. Exactly the shape
-   port/slice_w12.txt holds src/d_a_king_donketu.cpp out for, and this is that
-   lane's remedy: the ROM's own sequence with the receiver spelled, every
-   offset, count and stride read from the disassembly at 0x021136a4. The
-   allocation size 0x8e8 is the ROM's own literal pool word at 0x021137d4. */
-extern "C" void *port_factory_wiggler(void)
-{
-    char *c = (char *)_ZN7fBase_cnwEj(0x8e8);
-    if (c) {
-        _ZN12dEnemyBase_cC2Ev(c);                     /* ROM: entered with r0 = c */
-        *(void **)c = (void *)_ZTV7Wiggler;
-        __cxa_vec_ctor(c + 0x110, 5, 0x64, (void *)&_ZN9ModelAnimC1Ev,
-                      (void *)&_ZN9ModelAnimD1Ev);
-        __cxa_vec_ctor(c + 0x304, 5, 0x14, (void *)&_ZN15MaterialChangerC1Ev,
-                      (void *)&_ZN15MaterialChangerD1Ev);
-        __cxa_vec_ctor(c + 0x368, 5, 0x14, (void *)&_ZN15TextureSequenceC1Ev,
-                      (void *)&_ZN15TextureSequenceD1Ev);
-        __cxa_vec_ctor(c + 0x3cc, 5, 0xc, (void *)&func_0203d384,
-                      (void *)&_ZN7Vector3D1Ev);
-        __cxa_vec_ctor(c + 0x408, 5, 0xc, (void *)&func_0203d384,
-                      (void *)&_ZN7Vector3D1Ev);
-        __cxa_vec_ctor(c + 0x444, 5, 6, (void *)&func_0203d73c,
-                      (void *)&_ZN8Vector3sD1Ev);
-        __cxa_vec_ctor(c + 0x478, 5, 0x40,
-                      (void *)&_ZN10dCcAcPos_cC1Ev,
-                      (void *)&_ZN10dCcAcPos_cD1Ev);
-        __cxa_vec_ctor(c + 0x5b8, 5, 0x40,
-                      (void *)&_ZN10dCcAcPos_cC1Ev,
-                      (void *)&_ZN10dCcAcPos_cD1Ev);
-        _ZN10dBgCh_ActrC1Ev(c + 0x708);
-    }
-    return c;
-}
+/* port_factory_wiggler, the ROM's factory sequence spelled by hand, stood in
+   for src/d_a_hanachan.c while that TU rode the ROM's r0 into Enemy::C2 with
+   no argument. The synced TU passes the receiver, compiles to the same
+   sequence (operator new 0x8e8, dEnemyBase_c C2 on it, the _ZTV7Wiggler store,
+   the eight __cxa_vec_ctor runs and the dBgCh_Actr C1 at +0x708, every offset,
+   count and stride as here), and port/slice_faces2.txt already compiles it
+   into all three targets, so the WIGGLER row in hal/actor_classes.inc names
+   daHanachan_c_classInit, the ROM profile's own word, instead. */
 
 // ---- the trap and the ONE missing body ------------------------------------
 static void ov34_trap_report(void *self, int slot)

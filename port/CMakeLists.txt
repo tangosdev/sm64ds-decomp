@@ -23414,6 +23414,85 @@ foreach(_tw31v4 walk_window walk_window_hires smoke_player)
     target_sources(${_tw31v4} PRIVATE ${SLICE_W31_VARIANT4_SOURCES})
 endforeach()
 
+# ===========================================================================
+# W31 SMALLS2 (run linkfull wave 31, lane SMALLS2)
+# ===========================================================================
+# Matched TUs the linkage census listed as MSVC front-end refusals. Each
+# refusal is gone from the synced src and each TU compiles clean here; what
+# held it out was a FORWARD row in port/faces_sync.txt, which defined the
+# member the TU defines. The rows are flipped to REVERSE and the host copies
+# retired, so the matched bodies run as the game's own code (the FACEFLIP1
+# shape above). port/slice_w31_smalls2.txt carries the rows and the evidence.
+# All three targets take them, because the reverse faces are in
+# ${PORT_FACES_SYNC_GEN}, which all three link, and the ROM-shaped callers
+# (the ov063 / ov085 slot thunks, Peach's InitState0 / InitState4) are in all
+# three. The slice also carries ModelBase's D2 (LINK15 W23-1's stretch row),
+# whose _MSC_VER arm replaces the body in
+# port/unmatched/ModelFamily_Dtors_HostCopy.c; that file is on the same three
+# targets and its D1 bodies call the D2 by its flat name. The slice names no
+# PORT_HOSTGEN_TU row.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w31_smalls2.txt" SLICE_W31_SMALLS2_LINES)
+set(SLICE_W31_SMALLS2_SOURCES "")
+foreach(line IN LISTS SLICE_W31_SMALLS2_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_W31_SMALLS2_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_w31s2_t walk_window walk_window_hires smoke_player)
+    target_sources(${_w31s2_t} PRIVATE ${SLICE_W31_SMALLS2_SOURCES})
+endforeach()
+
+# THE HOSTGEN HALF OF THE SAME BLOCK (lane SMALLS2, batch 4). A matched TU that
+# needs a tools/hostgen.py row to compile as the ROM's own body is built from
+# its build/host-src copy here, in custom commands of this block's own (the
+# DPAD1 / W235 shape, since the PORT_HOSTGEN_TU region belongs to another
+# lane). port/slice_w31_smalls2_hostgen.txt carries the rows and the
+# evidence; every row must be on SMALLS2_HOSTGEN_TU and on no raw slice.
+set(SMALLS2_HOSTGEN_TU
+    src/_ZN8Goomboss13InitResourcesEv.cpp)
+foreach(_s2_tu IN LISTS SMALLS2_HOSTGEN_TU)
+    list(FIND SLICE_W31_SMALLS2_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${_s2_tu}" _s2_idx)
+    if(NOT _s2_idx LESS 0)
+        message(FATAL_ERROR "${_s2_tu} is a raw port/slice_w31_smalls2.txt row, "
+                "so it would be compiled twice: once raw, where MSVC decorates "
+                "its ROM data externs, and once from the hostgen copy")
+    endif()
+endforeach()
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w31_smalls2_hostgen.txt" SLICE_W31_SMALLS2_HG_LINES)
+set(SLICE_W31_SMALLS2_HG_SOURCES "")
+foreach(line IN LISTS SLICE_W31_SMALLS2_HG_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    if(NOT line IN_LIST SMALLS2_HOSTGEN_TU)
+        message(FATAL_ERROR "port/slice_w31_smalls2_hostgen.txt row ${line} is "
+                "not on SMALLS2_HOSTGEN_TU: every row there exists to build "
+                "from its hostgen copy")
+    endif()
+    string(REGEX REPLACE "[.](c|cpp)$" ".cpp" _s2_rel "${line}")
+    set(_s2_out "${CMAKE_BINARY_DIR}/host-src/${_s2_rel}")
+    add_custom_command(OUTPUT "${_s2_out}"
+        COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+                --out "${CMAKE_BINARY_DIR}/host-src" ${line}
+        DEPENDS "${PORT_REPO_ROOT_ABS}/${line}"
+                "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+        COMMENT "hostgen ${line}")
+    list(APPEND SLICE_W31_SMALLS2_HG_SOURCES "${_s2_out}")
+endforeach()
+list(LENGTH SLICE_W31_SMALLS2_HG_SOURCES _s2_n)
+list(LENGTH SMALLS2_HOSTGEN_TU _s2_want)
+if(NOT _s2_n EQUAL _s2_want)
+    message(FATAL_ERROR "port/slice_w31_smalls2_hostgen.txt lists ${_s2_n} of "
+            "the ${_s2_want} SMALLS2 hostgen rows; a missing row is an "
+            "undefined symbol on every level build")
+endif()
+foreach(_w31s2hg_t walk_window walk_window_hires smoke_player)
+    target_sources(${_w31s2hg_t} PRIVATE ${SLICE_W31_SMALLS2_HG_SOURCES})
+endforeach()
+
 # XREL1 (run linkfull): EVERY OVERLAY MOUNT DEPENDS ON THE CONFIG IT READS.
 #
 # tools/ovdata.py builds each mount out of its overlay's config/arm9/overlays/
