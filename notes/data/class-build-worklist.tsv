@@ -335,7 +335,7 @@ daMenbo_c	DONE	include\daMenbo_c.h  [alias: header uses pre-rename name]	dEnemyB
 daMip_c	DONE	include\daMip_c.h	dEnemyBase_c	0	ov085	8
 daMoray_c	DONE	include\Unagi.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov016	7
 daNknk_c	DONE	include\Koopa.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov062	10
-daObjKey_c	DONE	include\Key.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov089	8
+daObjKey_c	DONE	include\daObjKey_c.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov089	8
 daObjMarioCap_c	DONE	include\daObjMarioCap_c.h	dEnemyBase_c	0	ov002	9
 daObj_Mip_Key_c	DONE	include\daObj_Mip_Key_c.h	dEnemyBase_c	0	ov085	7
 daOwl_c	DONE	include\daOwl_c.h	dEnemyBase_c	0	ov094	7

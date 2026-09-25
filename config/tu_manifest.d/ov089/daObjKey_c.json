@@ -1,0 +1,133 @@
+{
+  "id": "ov089/daObjKey_c",
+  "module": "ov089",
+  "source": "src/actors/daObjKey_c.cpp",
+  "promoted_source": "src/actors/daObjKey_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "tu_map unit ov089/daObjKey_c is 0x02130f00..0x021327d0 and starts at D1. The unmatched func_ov089_0213162c (0x0213162c, no complete marker) sits between the destructors and this run, so the licensed span is only the complete side 0x02131b18..0x021327d0, ten functions. D1, D0, UnloadKeyModels, LoadKeyModels and the unmatched hole stay shards."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02131b18",
+      "end": "0x021327d0"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "func_ov089_02131b18",
+      "address": "0x02131b18",
+      "size": "0x000002b4",
+      "legacy_source": "src/func_ov089_02131b18.c",
+      "ordinal": 0
+    },
+    {
+      "symbol": "func_ov089_02131dcc",
+      "address": "0x02131dcc",
+      "size": "0x00000028",
+      "legacy_source": "src/func_ov089_02131dcc.c",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov089_02131df4",
+      "address": "0x02131df4",
+      "size": "0x00000110",
+      "legacy_source": "src/func_ov089_02131df4.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN10daObjKey_c13OnTurnIntoEggER6Player",
+      "address": "0x02131f04",
+      "size": "0x00000048",
+      "legacy_source": "src/_ZN10daObjKey_c13OnTurnIntoEggER6Player.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN10daObjKey_c13OnYoshiTryEatEv",
+      "address": "0x02131f4c",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN10daObjKey_c13OnYoshiTryEatEv.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov089_02131f54",
+      "address": "0x02131f54",
+      "size": "0x00000130",
+      "legacy_source": "src/func_ov089_02131f54.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN10daObjKey_c16CleanupResourcesEv",
+      "address": "0x02132084",
+      "size": "0x0000006c",
+      "legacy_source": "src/_ZN10daObjKey_c16CleanupResourcesEv.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_ZN10daObjKey_c6RenderEv",
+      "address": "0x021320f0",
+      "size": "0x000000a4",
+      "legacy_source": "src/_ZN10daObjKey_c6RenderEv.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "_ZN10daObjKey_c8BehaviorEv",
+      "address": "0x02132194",
+      "size": "0x00000310",
+      "legacy_source": "src/_ZN10daObjKey_c8BehaviorEv.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "_ZN10daObjKey_c13InitResourcesEv",
+      "address": "0x021324a4",
+      "size": "0x0000032c",
+      "legacy_source": "src/_ZN10daObjKey_c13InitResourcesEv.cpp",
+      "ordinal": 9
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Stripped from the tubuild candidate before verify. Destructors are not in this file. The next function, daObjKey_c_classInit_LAST_STAR at 0x021327d0, is not absorbed."
+  ],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "func_ov089_02131b18 declares a local Vector3, so this TU odr-uses inline ~Vector3. The cartridge's copy lives at arm9:0x020072c0, owned by src/_ZN7Vector3D1Ev.cpp; rombuild compares this object copy against those cartridge bytes before dropping it."
+    }
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov089-daObjKey_c/daObjKey_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 10,
+    "functions_declared": 10,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        7
+      ],
+      "data": [],
+      "dataExternalized": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}

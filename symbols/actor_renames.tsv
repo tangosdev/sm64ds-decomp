@@ -2628,12 +2628,12 @@ ov085	0x02130344	data_ov085_02130344	_ZTV11daC_Jugem_c	vtable alloc=0x2e8 (was _
 ov085	0x021303dc	data_ov085_021303dc	WallSign_SpawnInfo	spawninfo
 ov085	0x021303dc	WallSign_SpawnInfo	g_profile_KANBAN	reconstructed profile global; literal ROM ID KANBAN+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov085	0x02130400	data_ov085_02130400	_ZTV13daObjKanban_c	vtable alloc=0x368 (was _ZTV8WallSign)
-ov089	0x02130f00	func_ov089_02130f00	_ZN3KeyD1Ev	vtable slot 16
-ov089	0x02130f50	func_ov089_02130f50	_ZN3KeyD0Ev	vtable slot 17
-ov089	0x02132084	func_ov089_02132084	_ZN3Key16CleanupResourcesEv	vtable slot 3
-ov089	0x021320f0	func_ov089_021320f0	_ZN3Key6RenderEv	vtable slot 9
-ov089	0x02132194	func_ov089_02132194	_ZN3Key8BehaviorEv	vtable slot 6
-ov089	0x021324a4	func_ov089_021324a4	_ZN3Key13InitResourcesEv	vtable slot 0
+ov089	0x02130f00	func_ov089_02130f00	_ZN10daObjKey_cD1Ev	vtable slot 16
+ov089	0x02130f50	func_ov089_02130f50	_ZN10daObjKey_cD0Ev	vtable slot 17
+ov089	0x02132084	func_ov089_02132084	_ZN10daObjKey_c16CleanupResourcesEv	vtable slot 3
+ov089	0x021320f0	func_ov089_021320f0	_ZN10daObjKey_c6RenderEv	vtable slot 9
+ov089	0x02132194	func_ov089_02132194	_ZN10daObjKey_c8BehaviorEv	vtable slot 6
+ov089	0x021324a4	func_ov089_021324a4	_ZN10daObjKey_c13InitResourcesEv	vtable slot 0
 ov089	0x021327d0	func_ov089_021327d0	LastStar_Spawn	spawnfunc
 ov089	0x021327d0	LastStar_Spawn	daObjKey_c_classInit_LAST_STAR	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov089	0x02132828	func_ov089_02132828	Key_Spawn	spawnfunc
@@ -2642,7 +2642,7 @@ ov089	0x02132b68	data_ov089_02132b68	Key_SpawnInfo	spawninfo
 ov089	0x02132b68	Key_SpawnInfo	g_profile_OBJ_KEY	reconstructed profile global; literal ROM ID OBJ_KEY+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov089	0x02132b84	data_ov089_02132b84	LastStar_SpawnInfo	spawninfo
 ov089	0x02132b84	LastStar_SpawnInfo	g_profile_LAST_STAR	reconstructed profile global; literal ROM ID LAST_STAR+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov089	0x02132ba8	data_ov089_02132ba8	_ZTV3Key	vtable alloc=0x470
+ov089	0x02132ba8	data_ov089_02132ba8	_ZTV10daObjKey_c	vtable alloc=0x470
 ov090	0x02130f00	func_ov090_02130f00	_ZN9daMenbo_cD1Ev	vtable slot 16
 ov090	0x02130f40	func_ov090_02130f40	_ZN9daMenbo_cD0Ev	vtable slot 17
 ov090	0x02131edc	func_ov090_02131edc	_ZN9daMenbo_c16CleanupResourcesEv	vtable slot 3

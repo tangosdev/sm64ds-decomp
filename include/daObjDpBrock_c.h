@@ -15,16 +15,14 @@
  * the dBgW_KcMbg at 0x124 and the Model at 0xd4 before chaining to dActor_c.
  *
  * On top of dBgActor_c's model and collider it carries a second model and a
- * second collider matrix of its own, kept in step by the two helpers in
- * src/actors/daObjDpBrock_c.cpp.
+ * second collider matrix of its own, kept in step by
+ * UpdateStepModelPosAndRotY and UpdateStepClsnPosAndRot.
  */
 
 #ifdef __cplusplus
 
 #include "dBgActor_c.h"
 #include "Model.h"
-
-extern "C" void *_ZN7fBase_cnwEj(unsigned size);
 
 struct daObjDpBrock_c : dBgActor_c {
     u8  pad_31e[0x2];
@@ -51,13 +49,12 @@ struct daObjDpBrock_c : dBgActor_c {
     int InitResources();
     int Render();
 
-    /* Leaf operator new, the same form as include/daDkk_c.h. unsigned long,
-       not unsigned int: the global ::operator new an implicit `new` would
-       otherwise call is `_Znwm`. */
-    static void *operator new(size_t size)
-    {
-        return _ZN7fBase_cnwEj((unsigned)size);
-    }
+    /* --- non-virtual --- */
+    /* Coined names, after dBgActor_c's UpdateModelPosAndRotY and
+       UpdateClsnPosAndRot, which do the same for the inherited model and
+       collider. The ROM keeps no names for these two. */
+    void UpdateStepClsnPosAndRot();       /* 0x02111dec */
+    void UpdateStepModelPosAndRotY();     /* 0x02111e30 */
 };
 
 #ifndef SM64DS_PLATFORM_PC
