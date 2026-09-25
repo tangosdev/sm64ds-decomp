@@ -2678,17 +2678,17 @@
    "start": "0x21111a0",
    "end": "0x211150c",
    "classes": [
-    "FireSeaElevator"
+    "daObjKm2_Agaru_c"
    ],
    "n_functions_map": 9,
    "n_files": 9,
    "files": [
-    "src/_ZN15FireSeaElevatorD1Ev.cpp",
-    "src/_ZN15FireSeaElevatorD0Ev.c",
-    "src/_ZN15FireSeaElevator16CleanupResourcesEv.cpp",
-    "src/_ZN15FireSeaElevator6RenderEv.cpp",
-    "src/_ZN15FireSeaElevator8BehaviorEv.cpp",
-    "src/_ZN15FireSeaElevator13InitResourcesEv.cpp",
+    "src/_ZN16daObjKm2_Agaru_cD1Ev.cpp",
+    "src/_ZN16daObjKm2_Agaru_cD0Ev.c",
+    "src/_ZN16daObjKm2_Agaru_c16CleanupResourcesEv.cpp",
+    "src/_ZN16daObjKm2_Agaru_c6RenderEv.cpp",
+    "src/_ZN16daObjKm2_Agaru_c8BehaviorEv.cpp",
+    "src/_ZN16daObjKm2_Agaru_c13InitResourcesEv.cpp",
     "src/func_ov045_021114a8.cpp",
     "src/func_ov045_021114c8.c",
     "src/d_a_obj_km2_agaru.c"
@@ -29621,23 +29621,23 @@
    "start": "0x2131bdc",
    "end": "0x2132360",
    "classes": [
-    "RotatingUpDownPlatform"
+    "daLinelift2_c"
    ],
    "n_functions_map": 13,
    "n_files": 13,
    "files": [
     "src/d_a_obj_rotate_updown_lift_updown_lift.c",
-    "src/_ZN22RotatingUpDownPlatformD1Ev.c",
-    "src/_ZN22RotatingUpDownPlatformD0Ev.c",
+    "src/_ZN13daLinelift2_cD1Ev.c",
+    "src/_ZN13daLinelift2_cD0Ev.c",
     "src/func_ov091_02131cb0.c",
     "src/func_ov091_02131db8.c",
     "src/func_ov091_02131ef0.c",
     "src/func_ov091_02131f9c.c",
     "src/func_ov091_02132000.c",
-    "src/_ZN22RotatingUpDownPlatform16CleanupResourcesEv.cpp",
-    "src/_ZN22RotatingUpDownPlatform6RenderEv.cpp",
-    "src/_ZN22RotatingUpDownPlatform8BehaviorEv.cpp",
-    "src/_ZN22RotatingUpDownPlatform13InitResourcesEv.cpp",
+    "src/_ZN13daLinelift2_c16CleanupResourcesEv.cpp",
+    "src/_ZN13daLinelift2_c6RenderEv.cpp",
+    "src/_ZN13daLinelift2_c8BehaviorEv.cpp",
+    "src/_ZN13daLinelift2_c13InitResourcesEv.cpp",
     "src/func_ov091_02132380.c"
    ],
    "ext_mix": {

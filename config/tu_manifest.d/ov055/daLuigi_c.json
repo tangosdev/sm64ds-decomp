@@ -40,21 +40,21 @@
       "ordinal": 2
     },
     {
-      "symbol": "func_ov055_02111288",
+      "symbol": "_ZN9daLuigi_c13ExecuteMirrorEP6Player",
       "address": "0x02111288",
       "size": "0x00000034",
       "legacy_source": "src/func_ov055_02111288.c",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov055_021112bc",
+      "symbol": "_ZN9daLuigi_c11EnterMirrorEP6Player",
       "address": "0x021112bc",
       "size": "0x00000008",
       "legacy_source": "src/func_ov055_021112bc.c",
       "ordinal": 4
     },
     {
-      "symbol": "func_ov055_021112c4",
+      "symbol": "_ZN9daLuigi_c8SetStateEP12daLuigiStateP6Player",
       "address": "0x021112c4",
       "size": "0x00000054",
       "legacy_source": "src/func_ov055_021112c4.cpp",
@@ -106,7 +106,7 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_020a0e68' differs between the legacy file that used to hold _ZN9daLuigi_c6RenderEv and the one that held _ZN9daLuigi_c13InitResourcesEv; kept the first, the other is commented out for review",
     "The four extern conflicts above are resolved: the promoted TU carries one declaration of each, matching the definition side where one exists; Matrix4x3_FromTranslation takes a pointer, the five ov002 file handles are SharedFilePtr, and data_020a0e68 is a Matrix4x3.",
     "Promoted after renaming the tree's coined MirrorLuigi to the cartridge RTTI spelling daLuigi_c (_ZTS9daLuigi_c ov055 0x02111aa4, _ZTI9daLuigi_c 0x02111ab0, vtable address point 0x02111ae0). The destructor is inline and empty in include/daLuigi_c.h: that emits D1 then D0 in ROM order with no D2, and makes InitResources the key function, so the vtable and the fBase_c, dBase_c, dActor_c, daLuigi_c RTTI chain are emitted here and licensed as deadstrip-data at their canonical homes; romdata_check verifies _ZTV9daLuigi_c (124 bytes) and all four _ZTI records word for word, and the four _ZTS strings read PARTIAL only because the ROM pads them.",
-    "Coined, not ROM names: daLuigiState, daLuigiStateFn and daLuigiStateHost (include/daLuigi_c.h) describe the two-callback state table at ov055 0x02111a94; its callbacks keep their func_ov055_ linker names and C linkage, so no mangled spelling is asserted for them. The factory daLuigi_c_classInit (0x02111860) stays a separate source, as tu_map ends this TU before it."
+    "Coined, not ROM names: daLuigiState and daLuigiStateFn (include/daLuigi_c.h) describe the two-member state table at ov055 0x02111a94, and the members SetState (0x021112c4), EnterMirror (0x021112bc) and ExecuteMirror (0x02111288) carry coined mangled names; their ov055 symbols.txt rows were renamed in place, and the table and the InitResources call reach them by relocation address. func_ov055_02111264 keeps its linker name and C linkage. The factory daLuigi_c_classInit (0x02111860) stays a separate source, as tu_map ends this TU before it."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
