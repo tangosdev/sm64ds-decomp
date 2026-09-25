@@ -134,7 +134,6 @@ short ApproachLinear2(short &value, short target, short step);
 int   ApproachLinear(int &value, int target, int step);
 
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-void *_ZN7fBase_cnwEj(u32 sz);
 void _ZN11dScMgBase_cC2Ev(void *p);
 void __cxa_vec_ctor(void *o, int a, int b, void *f1, void *f2);
 void _ZN8Particle10SysTrackerC1Ev(void *p);
@@ -143,9 +142,7 @@ extern char _ZTV14dScMgD3DBase_c[];
 void _ZN16dMgJump3DMario_cD1Ev(void *p);
 void _ZN16dMgJump3DMario_cC1Ev();
 void func_ov006_020c6f70();
-void func_ov006_020eed64();
 void func_ov006_020efc08();
-void func_ov006_020c6f3c();
 
 // @symbol dScMgJump2_c_classInit
 /* Builds the scene by hand (operator new, base constructor, vtables, member

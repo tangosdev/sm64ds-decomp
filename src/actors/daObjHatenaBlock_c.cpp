@@ -43,9 +43,8 @@
  *       Particle::System::NewSimple (also absent from Particle.h).
  *
  *   (b) No usable declaration: dActor_c::Earthquake is not on dActor_c.h
- *       (func_ov102_02149c78). UntrackStar takes s8 &, but this TU's field
- *       is u8 mStarTracked (CleanupResources). KillAndTrackInDeathTable is
- *       void, but func_ov102_021494cc returns the bl's r0.
+ *       (func_ov102_02149c78). KillAndTrackInDeathTable is void, but
+ *       func_ov102_021494cc returns the bl's r0.
  *
  * Known limits:
  *   func_020393a4 / func_02039394 poke mMeshCollider, which has no setter
@@ -83,6 +82,7 @@
 #include "Player.h"
 #include "SharedFilePtr.h"
 #include "Sound.h"
+#include "SaveData.h"
 
 struct CLPS_Block;
 struct KCL_File;
@@ -174,17 +174,16 @@ extern int DecIfAbove0_Short(void *p);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void func_020393a4(int *p, int v);
 extern void func_02039394(int *p, int v);
+/* local extern: dActor_c.h declares it void, but func_ov102_021494cc returns the bl's r0 */
 extern int _ZN8dActor_c24KillAndTrackInDeathTableEv(void *self);
 extern void _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(void *self, void *pos, s32 radius);
 extern void _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(void *self, void *shadow, void *mtx, int fix, int t1, int t2, unsigned int n);
-extern void _ZN8dActor_c11UntrackStarERa(void *self, void *p);
 extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *thiz, void *bca, int a, int fx, unsigned int f);
 extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *thiz, void *kcl, void *mtx, int fix, short s, void *clps);
 extern void func_ov102_0214ad14(void *actor);
 extern void func_ov002_020f0438(void *actor);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned id, int x, int y, int z);
-extern int _ZN8SaveData16HasPlayerLostCapEv(void);
 
 int func_ov102_02149078(dActor_c *self);
 void func_ov102_02149100(char *c, Vector3 *pos, int n, unsigned int speed, short baseAngle);
@@ -431,7 +430,7 @@ int daObjHatenaBlock_c::CleanupResources()
     dosw:
         switch (mContentType) {
         case 1:
-            _ZN8dActor_c11UntrackStarERa((char *)this, (char *)this + 0x3f0);
+            UntrackStar(*(s8 *)&mStarTracked);
             break;
         case 3:
             data_ov002_0210da18.Release();
@@ -542,16 +541,14 @@ skipcall:
 // @symbol func_ov102_02149e38
 extern "C" {
 
-struct MMC { char p[0x124]; };
 struct HbMbgObj { char p[0x2ec]; Matrix4x3 m; };
-int _ZN10dBgW_KcMbg9TransformERK9Matrix4x3s(MMC*, Matrix4x3&, short);
 void func_ov102_02149e38(char* self){
     HbMbgObj* o = (HbMbgObj*)self;
     o->m = *(Matrix4x3*)(self + 0xf0);
     *(int*)(self+0x310) = *(int*)(self+0x5c);
     *(int*)(self+0x314) = *(int*)(self+0x60) + *(int*)(self+0x3dc);
     *(int*)(self+0x318) = *(int*)(self+0x64);
-    _ZN10dBgW_KcMbg9TransformERK9Matrix4x3s((MMC*)(self+0x124), o->m, *(short*)(self+0x8e));
+    ((dBgW_KcMbg *)(self+0x124))->Transform(o->m, *(short*)(self+0x8e));
 }
 }
 
@@ -672,7 +669,7 @@ extern "C" void func_ov102_021498e0(C *self)
         break;
     }
     case 0:
-        if (_ZN8SaveData16HasPlayerLostCapEv() == 0 || data_0209f2f8 == 0x1f) {
+        if (SaveData::HasPlayerLostCap() == 0 || data_0209f2f8 == 0x1f) {
             PMF (*tbl)[4] = data_ov102_0214e8c0;
             u8 content = *(u8 *)(c + 0x3f3);
             if (ch >= 4) ch = 0;
@@ -682,15 +679,15 @@ extern "C" void func_ov102_021498e0(C *self)
         }
         break;
     case 3:
-        if (_ZN8SaveData16HasPlayerLostCapEv() == 0) func_ov102_0214953c(c, 0, 0x12);
+        if (SaveData::HasPlayerLostCap() == 0) func_ov102_0214953c(c, 0, 0x12);
         else func_ov102_02149220(c);
         break;
     case 5:
-        if (_ZN8SaveData16HasPlayerLostCapEv() == 0) func_ov102_0214953c(c, 1, 0x12);
+        if (SaveData::HasPlayerLostCap() == 0) func_ov102_0214953c(c, 1, 0x12);
         else func_ov102_02149220(c);
         break;
     case 4:
-        if (_ZN8SaveData16HasPlayerLostCapEv() == 0) func_ov102_0214953c(c, 2, 0x12);
+        if (SaveData::HasPlayerLostCap() == 0) func_ov102_0214953c(c, 2, 0x12);
         else func_ov102_02149220(c);
         break;
     }

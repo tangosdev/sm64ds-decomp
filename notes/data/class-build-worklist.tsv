@@ -109,7 +109,7 @@ daChRoom_c	DONE	include\daChRoom_c.h	dActor_c	0	ov002	7
 daChScene_c	DONE	include\daChScene_c.h	dActor_c	0	ov002	7
 daChair_c	DONE	include\daChair_c.h  [alias: header uses pre-rename name]	dActor_c	0	ov020	13
 daChoropu_c	DONE	include\MontyMole.h  [alias: header uses pre-rename name]	dActor_c	0	ov080	7
-daCnn_c	DONE	include\Cannon.h  [alias: header uses pre-rename name]	dActor_c	0	ov098	6
+daCnn_c	DONE	include\daCnn_c.h  [alias: header uses pre-rename name]	dActor_c	0	ov098	6
 daCoin_c	DONE	include\Coin.h  [alias: header uses pre-rename name]	dActor_c	0	ov002	8
 daDemo_c	DONE	include\daDemo_c.h	dActor_c	0	ov002	4
 daDoor_c	DONE	include\Door.h  [alias: header uses pre-rename name]	dActor_c	0	ov100	7

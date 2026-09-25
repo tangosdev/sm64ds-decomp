@@ -33,24 +33,17 @@ struct Vector3_16f;
 extern "C" {
 extern u32 data_0209b454;
 extern int data_ov098_0213c4c8[];
-extern void _ZN6Player9DropActorEv(void *self);
 extern int Vec3_HorzDist(const struct Vector3 *a, const struct Vector3 *b);
-extern int _ZN8dActor_c13DistToCPlayerEv(void *self);
 extern void Crate_SetState(char *c, int i);
 extern u8 DecIfAbove0_Byte(u8 *p);
 extern void *_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     u32 a, u32 b, int c, int d, int e, const void *v, void *cb);
 extern u32 _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
     u32 a, u32 b, int c, int d, int e, const Vector3_16f *v);
-extern int _ZN5Model8LoadFileER13SharedFilePtr(char *f);
-extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(char *thiz, int f, int a, int b);
-extern void _ZN11ShadowModel10InitCuboidEv(char *thiz);
-extern int _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(char *f);
 extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     char *thiz, int f, char *m, int fix, short s, int blk);
 extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
     char *thiz, char *actor, int b, int d, void *v, int f);
-extern void _ZN10dBgCh_Actr19StartDetectingWaterEv(char *thiz);
 }
 
 enum Bool { FALSE, TRUE };
@@ -109,13 +102,13 @@ int daObjBlockS_c::Behavior()
 
     b1 = (enum Bool)((mFlags & 0x4000000) != 0);
     if (b1 != FALSE && (data_0209b454 & 0x4000000) && mHoldingPlayer) {
-        _ZN6Player9DropActorEv(mHoldingPlayer);
+        mHoldingPlayer->DropActor();
     }
 
     b2 = (enum Bool)((mFlags & 8) != 0);
     if (b2 != FALSE
         && Vec3_HorzDist((struct Vector3 *)&mPosX, (const struct Vector3 *)&mHomePosX)
-        && _ZN8dActor_c13DistToCPlayerEv(((char *)this)) > 0x7d0000) {
+        && DistToCPlayer() > 0x7d0000) {
         Crate_SetState(((char *)this), 6);
         return 1;
     }
@@ -178,15 +171,14 @@ int daObjBlockS_c::InitResources()
     mHomeAngleX = mAngleX;
     mHomeAngleY = mAngleY;
     mHomeAngleZ = mAngleZ;
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(
-        (char *)&mModel, _ZN5Model8LoadFileER13SharedFilePtr(*(char **)(f)), 1, -1);
-    _ZN11ShadowModel10InitCuboidEv((char *)&mShadowModel);
+    mModel.SetFile((BMD_File *)Model::LoadFile(**(SharedFilePtr **)(f)), 1, -1);
+    mShadowModel.InitCuboid();
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        (char *)&mMeshCollider, _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(*(char **)(f + 4)),
+        (char *)&mMeshCollider, (int)dBgW_Kc::LoadFile(**(SharedFilePtr **)(f + 4)),
         (char *)&mClsnMat, 0x199, mAngleY, *(int *)(f + 8));
     _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
         (char *)&mWithMeshClsn, ((char *)this), 0x28000, 0x28000, 0, 0);
-    _ZN10dBgCh_Actr19StartDetectingWaterEv((char *)&mWithMeshClsn);
+    mWithMeshClsn.StartDetectingWater();
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
     Crate_SetState(((char *)this), 0);
