@@ -73,15 +73,17 @@ extern "C" void _ZN6Player14InitMetalWarioEv(void *self)
 #pragma comment(linker, "/alternatename:?data_ov002_020ff480@@3PAPADA=_data_ov002_020ff480")
 
 extern "C" {
-void func_ov002_020b7d94(void *); void func_ov002_020b7d6c(void *);
-void func_ov002_020b7cdc(void *); void func_ov002_020b7c30(void *);
-void func_ov002_020b7d58(void *); void func_ov002_020b7cec(void *);
-void func_ov002_020b7b70(void *); void func_ov002_020b781c(void *);
-void func_ov002_020b71f0(void *); void func_ov002_020b71e8(void *);
-void func_ov002_020b76ec(void *); void func_ov002_020b74d0(void *);
-void func_ov002_020b7f24(void *); void func_ov002_020b7e1c(void *);
-void func_ov002_020b7330(void *); void func_ov002_020b7200(void *);
-void func_ov002_020b7e08(void *); void func_ov002_020b7d9c(void *);
+/* int, as every definition in src/ spells them: the cells are
+   `int (C::*)()` and the state setter returns what the body returns. */
+int func_ov002_020b7d94(void *); int func_ov002_020b7d6c(void *);
+int func_ov002_020b7cdc(void *); int func_ov002_020b7c30(void *);
+int func_ov002_020b7d58(void *); int func_ov002_020b7cec(void *);
+int func_ov002_020b7b70(void *); int func_ov002_020b781c(void *);
+int func_ov002_020b71f0(void *); int func_ov002_020b71e8(void *);
+int func_ov002_020b76ec(void *); int func_ov002_020b74d0(void *);
+int func_ov002_020b7f24(void *); int func_ov002_020b7e1c(void *);
+int func_ov002_020b7330(void *); int func_ov002_020b7200(void *);
+int func_ov002_020b7e08(void *); int func_ov002_020b7d9c(void *);
 
 struct PortCapPair { unsigned fn; int delta; };
 extern PortCapPair data_ov002_0210df04[];   /* the flat 18-pair run */
@@ -89,18 +91,50 @@ extern PortCapPair data_ov002_0210df04[];   /* the flat 18-pair run */
 
 enum { PORT_CAP_PAIRS = 18 };
 
+/* ---- THE EIGHTEEN FACES (run linkfull, lane BOWSTAKE1; lane PMFB2's shape
+   in OneUpMushroom_Behavior.cpp) ------------------------------------------
+   Every reader of these cells is a pointer-to-member call, which MSVC emits
+   with the receiver in ECX and nothing pushed: the state setter
+   func_ov002_020b7f2c (a tail jump), the cap Behavior's per-frame dispatch,
+   and the copy of that setter MSVC inlines into
+   daObjMarioCap_c::OnTurnIntoEgg. The eighteen bodies are plain cdecl and
+   read the receiver off the stack, so a raw body in a cell took whatever
+   the caller's frame held there: the setter's own argument by luck, the
+   walker's saved EDI in Behavior, and the Player (or Player+0x6a0) in
+   OnTurnIntoEgg. That last one is Yoshi swallowing a character cap: the
+   enter body func_ov002_020b76ec worked on the Player, faulted at +0x8a and
+   the quarantine froze Yoshi. On the cartridge every one of these calls
+   hands the body the cap in r0. So each cell holds a __fastcall face, and
+   the face calls the body with the receiver ECX carried and returns what
+   the body returns. */
+#define CAP_FACE(sym)                                                         \
+    static int __fastcall pmf_face_##sym(void *self, void *dead_edx)          \
+    { return sym(self); }
+CAP_FACE(func_ov002_020b7d94) CAP_FACE(func_ov002_020b7d6c)
+CAP_FACE(func_ov002_020b7cdc) CAP_FACE(func_ov002_020b7c30)
+CAP_FACE(func_ov002_020b7d58) CAP_FACE(func_ov002_020b7cec)
+CAP_FACE(func_ov002_020b7b70) CAP_FACE(func_ov002_020b781c)
+CAP_FACE(func_ov002_020b71f0) CAP_FACE(func_ov002_020b71e8)
+CAP_FACE(func_ov002_020b76ec) CAP_FACE(func_ov002_020b74d0)
+CAP_FACE(func_ov002_020b7f24) CAP_FACE(func_ov002_020b7e1c)
+CAP_FACE(func_ov002_020b7330) CAP_FACE(func_ov002_020b7200)
+CAP_FACE(func_ov002_020b7e08) CAP_FACE(func_ov002_020b7d9c)
+#undef CAP_FACE
+
+#define CF(sym) (void (*)(void *))pmf_face_##sym
 static const struct { unsigned rom; void (*host)(void *); }
 g_cap_states[PORT_CAP_PAIRS] = {
-    {0x020b7d94, func_ov002_020b7d94}, {0x020b7d6c, func_ov002_020b7d6c},
-    {0x020b7cdc, func_ov002_020b7cdc}, {0x020b7c30, func_ov002_020b7c30},
-    {0x020b7d58, func_ov002_020b7d58}, {0x020b7cec, func_ov002_020b7cec},
-    {0x020b7b70, func_ov002_020b7b70}, {0x020b781c, func_ov002_020b781c},
-    {0x020b71f0, func_ov002_020b71f0}, {0x020b71e8, func_ov002_020b71e8},
-    {0x020b76ec, func_ov002_020b76ec}, {0x020b74d0, func_ov002_020b74d0},
-    {0x020b7f24, func_ov002_020b7f24}, {0x020b7e1c, func_ov002_020b7e1c},
-    {0x020b7330, func_ov002_020b7330}, {0x020b7200, func_ov002_020b7200},
-    {0x020b7e08, func_ov002_020b7e08}, {0x020b7d9c, func_ov002_020b7d9c},
+    {0x020b7d94, CF(func_ov002_020b7d94)}, {0x020b7d6c, CF(func_ov002_020b7d6c)},
+    {0x020b7cdc, CF(func_ov002_020b7cdc)}, {0x020b7c30, CF(func_ov002_020b7c30)},
+    {0x020b7d58, CF(func_ov002_020b7d58)}, {0x020b7cec, CF(func_ov002_020b7cec)},
+    {0x020b7b70, CF(func_ov002_020b7b70)}, {0x020b781c, CF(func_ov002_020b781c)},
+    {0x020b71f0, CF(func_ov002_020b71f0)}, {0x020b71e8, CF(func_ov002_020b71e8)},
+    {0x020b76ec, CF(func_ov002_020b76ec)}, {0x020b74d0, CF(func_ov002_020b74d0)},
+    {0x020b7f24, CF(func_ov002_020b7f24)}, {0x020b7e1c, CF(func_ov002_020b7e1c)},
+    {0x020b7330, CF(func_ov002_020b7330)}, {0x020b7200, CF(func_ov002_020b7200)},
+    {0x020b7e08, CF(func_ov002_020b7e08)}, {0x020b7d9c, CF(func_ov002_020b7d9c)},
 };
+#undef CF
 
 extern "C" void port_cap_states_seat(void)
 {
