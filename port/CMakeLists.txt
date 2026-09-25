@@ -23334,3 +23334,54 @@ set_property(SOURCE
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/unnamed/ov063/func_ov063_02117cdc.c"
     APPEND PROPERTY COMPILE_DEFINITIONS
     "data_ov008_02111b6c=data_ov055_02111b6c")
+
+# ===========================================================================
+# BOOBRICK1 (run linkfull, lane BOOBRICK1), R7: THE BRICK'S OWN SLOT 22
+# ===========================================================================
+#
+# _ZTV13daObjBlockL_c (ov002 0x02108adc) is the table BRICK_BLOCK (15),
+# BIG_BRICK_BLOCK (16), BLACK_BRICK_BLOCK (17), BRICK_BLOCK_SWITCH_ACTIVATED
+# (19) and FORTRESS_TOWER_WALL (46) all install, and it holds 0x020b37ec at
+# slot 22 (0x02108b34, config/arm9/overlays/ov002/relocs.txt line 13722):
+# BigBrickBlock::OnAttacked1, src/_ZN13BigBrickBlock11OnAttacked1ER8dActor_c.cpp.
+# The port trapped that slot. A Bob-omb's blast or a thrown crate against a
+# brick dispatches it (func_ov002_020ef228 calls slot 22 on the owner of the
+# wall the attacker touches), so the trap froze the brick in the quarantine
+# (gone from view, still solid) and unwound the Bob-omb before its blast
+# ended, and the Bob-omb blew up again every four frames (0.4.2 forum report
+# R7). hal/actor_classes.cpp now seats slot 22 on the ROM body, which calls
+# the brick's own Kill (slot 31) unless it is id 0x11.
+#
+# The TU was refused at port/slice_ov2t.txt for MSVC C2561, a bare `return;`
+# in an int body. Its _MSC_VER arm spells that early exit as the absence of
+# the call, the shape SignPost::OnAttacked1 and QuestionBlock::OnAttacked1 are
+# seated in, so it falls off the end like them and takes /wd4716, per source,
+# for the reason the PORT_FALLS_OFF_END_SOURCES block gives: the ROM sets no
+# return value on either path and nothing reads one. mwccarm builds the
+# unchanged #else arm, byte-identical.
+#
+# It also takes the tail-pad force-include every other BigBrickBlock TU gets
+# from the PORT_TAILPAD_DBGACTOR_SOURCES block, so all of the class's TUs in
+# the link see one class layout. APPEND, never SET, for that block's reason.
+#
+# The three targets that compile hal/actor_classes.cpp, whose slot-22 seat
+# references this body.
+set(BOOBRICK1_R7_SRC
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN13BigBrickBlock11OnAttacked1ER8dActor_c.cpp")
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_boobrick1.txt" SLICE_BOOBRICK1_LINES)
+set(SLICE_BOOBRICK1_SOURCES "")
+foreach(line IN LISTS SLICE_BOOBRICK1_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_BOOBRICK1_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+if(MSVC)
+    set_property(SOURCE "${BOOBRICK1_R7_SRC}" APPEND PROPERTY COMPILE_OPTIONS
+        /wd4716
+        "/FI${CMAKE_CURRENT_SOURCE_DIR}/unmatched/dBgActor_c_TailPad_HostAbi.h")
+endif()
+foreach(_tboobrick1 walk_window walk_window_hires smoke_player)
+    target_sources(${_tboobrick1} PRIVATE ${SLICE_BOOBRICK1_SOURCES})
+endforeach()
