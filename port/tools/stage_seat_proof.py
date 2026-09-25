@@ -23,6 +23,13 @@ hal/stage_bridges.cpp's st_clean thunk -- which is the same shape
 hal/stage_slot0.cpp uses to gate the ROM's Stage::InitResources. Rungs 6 and 7
 MEASURE that gate rather than asserting it: the same binary, one run each way.
 
+THE GATE TURNED ROUND (run linkfull, lane GAMEOVER1). The port has a Stage
+teardown now -- hal/level_change.cpp's level-to-scene crossing, which the Game
+Over request takes -- so the ROM's body is the default for the two callers that
+hold the frame loop still (the crossing, and this probe's at-exit dispatch),
+and SM64DS_STAGE_SLOT3_TRAP (presence = on) is the named abort. Rung 6 sets it;
+rung 7 sets nothing. Every other slot-3 dispatch still stops by name.
+
 What IS observable, and what the seven rungs check:
 
   RUNG 1  STATIC.  walk_window.map carries all five matched symbols the gate
@@ -131,8 +138,8 @@ TRAP_SLOTS = (18, 19)
 # slot name, not the "is not hosted" fragment -- rung 4's comment below is the
 # reason that fragment is not safe to match on.
 SLOT3_TRAP_LINE = "FATAL: Stage vtable slot 3 (CleanupResources) is not hosted"
-SLOT3_ROM_NOTE = ("[stage] slot 3: SM64DS_STAGE_SLOT3_ROM is set, so the ROM's "
-                  "Stage::CleanupResources is running")
+SLOT3_ROM_NOTE = ("[stage] slot 3: the ROM's Stage::CleanupResources is "
+                  "tearing the Stage")
 SLOT3_DISPATCHED = "[stage-slot3] dispatching _ZTV5Stage[3]"
 SLOT3_RETURNED = "[stage-slot3] Stage::CleanupResources returned 1"
 
@@ -186,9 +193,9 @@ def run(root, exe, out, frames, mode):
 
 
 def run_dispatch(root, exe, out, frames, rom):
-    """One slot-3 dispatch run. `rom` is the gate: False leaves
-    SM64DS_STAGE_SLOT3_ROM unset, which is the shipped default and the named
-    abort; True sets it, which is the ROM's own body.
+    """One slot-3 dispatch run. `rom` is the gate: False sets
+    SM64DS_STAGE_SLOT3_TRAP, the named abort; True sets nothing, which is the
+    ROM's own body (the default since lane GAMEOVER1).
 
     env_base scrubs every inherited SM64DS_ variable before it sets its own, so
     a lane's shell cannot leak the gate into the run that is supposed to be
@@ -202,8 +209,8 @@ def run_dispatch(root, exe, out, frames, rom):
     e = M.env_base(root, d, tag)
     e["SM64DS_WINDOW_SELFTEST"] = str(frames)
     e["SM64DS_STAGE_SLOT3_DISPATCH"] = "1"
-    if rom:
-        e["SM64DS_STAGE_SLOT3_ROM"] = "1"
+    if not rom:
+        e["SM64DS_STAGE_SLOT3_TRAP"] = "1"
     rc = M.run_one(exe, d, e, log, timeout=600)
     return rc, M.text(log)
 

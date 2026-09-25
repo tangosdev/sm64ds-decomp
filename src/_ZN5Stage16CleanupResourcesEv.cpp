@@ -36,8 +36,19 @@ extern void func_02073244(void *, int, int, void (*)(void *));
 extern void _ZN9FaderWipeD1Ev(void *);
 extern void CleanCommonModelDataArr(void);
 extern void _ZN5Stage18ResetMeshCollidersEv(void);
+#ifdef _MSC_VER
+/* The host spelling of the KCL free below. On ARM, MeshCollider::GetFile
+   (func_01ffb0c8) returns the level's KCL image in r0 and Deallocate frees
+   whatever r0 still holds, so the DS side calls it with no argument. A cdecl
+   host call has no register to ride: Deallocate read a stale stack word
+   there (&mMeshCollider, the argument pushed for GetFile). The host passes
+   the pointer the ROM frees; mwccarm never sees this arm. */
+extern void *func_01ffb0c8(void *);
+extern void Deallocate(void *);
+#else
 extern void func_01ffb0c8(void *);
 extern void Deallocate(void);
+#endif
 extern void _Z19UnloadLevelOverlaysi(int);
 extern void UnloadArchive(int);
 extern void _ZN7Message15ResetAllGlobalsEv(void);
@@ -101,8 +112,12 @@ int Stage::CleanupResources()
     CleanCommonModelDataArr();
     ((dBgW *)((char *)&mMeshCollider))->Disable();
     _ZN5Stage18ResetMeshCollidersEv();
+#ifdef _MSC_VER
+    Deallocate(func_01ffb0c8((char *)&mMeshCollider));
+#else
     func_01ffb0c8((char *)&mMeshCollider);
     Deallocate();
+#endif
     _Z19UnloadLevelOverlaysi(data_0209f2f8);
     if (data_0209f2f8 == 1)
         UnloadArchive(7);

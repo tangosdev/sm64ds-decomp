@@ -6367,6 +6367,41 @@ static void port_level_free_captured_kcl(void)
     }
 }
 
+/* THE KCL THE ROM FREED ITSELF (run linkfull, lane GAMEOVER1). The two
+   functions above are the port freeing the level's KCL because the port's
+   level change never runs Stage::CleanupResources. The Game Over crossing
+   does run it -- _ZTV5Stage slot 3, hal/stage_bridges.cpp's st_clean -- and
+   the ROM body frees the image through its own Deallocate(GetFile()). That
+   leaves this table's row naming a block the allocator has already taken
+   back, and the next level change's port_level_capture_kcl would find the
+   row by its handle and free the block a second time (after the scene in
+   between may have been handed the same memory). So the row goes, here, the
+   moment the ROM's free has happened: removed from the table rather than left
+   as a hole, the same compaction port_level_reset_host makes. Returns 1 if a
+   row named the image. */
+extern "C" int port_level_kcl_released(void *image)
+{
+    for (int i = 0; i < g_loadfile_used; ++i) {
+        if ((void *)g_loadfile_slot[i].filePtr != image)
+            continue;
+        std::fprintf(stderr, "  [lvl] the Stage's own teardown freed handle %u's "
+                     "image %p (the level's KCL); dropping its LoadFile row\n",
+                     (unsigned)g_loadfile_slot[i].fileID, image);
+        for (int j = i; j + 1 < g_loadfile_used; ++j) {
+            g_loadfile_slot[j] = g_loadfile_slot[j + 1];
+            g_loadfile_loads[j] = g_loadfile_loads[j + 1];
+        }
+        --g_loadfile_used;
+        g_loadfile_slot[g_loadfile_used].fileID = 0;
+        g_loadfile_slot[g_loadfile_used].numRefs = 0;
+        g_loadfile_slot[g_loadfile_used].filePtr = 0;
+        g_loadfile_slot[g_loadfile_used].pad = 0;
+        g_loadfile_loads[g_loadfile_used] = 0;
+        return 1;
+    }
+    return 0;
+}
+
 extern "C" void port_level_reset_host(void)
 {
     /* Capture the outgoing level's KCL slot (the one LoadFile image the port
@@ -6560,7 +6595,30 @@ extern "C" void port_level_reset_host(void)
 // fader the title path already routes around -- data_0209f5e8 is a null host
 // slot), func_02073244 over the FaderWipe array (the wipe subsystem the port
 // stages separately), and UnloadLevelOverlays / UnloadArchive (the NARC
-// archive path the port's fs seam replaces). Its Model::LoadAndSetFile
+// archive path the port's fs seam replaces).
+//
+// ^^ THOSE THREE, RE-READ (run linkfull, lane GAMEOVER1), because the ROM body
+// runs now -- on the one path where the ROM destroys its Stage (a scene
+// request from a level: the Game Over screen), through _ZTV5Stage slot 3 --
+// and each of the three has an answer:
+//   Scene::SetAndStopColorFader  NOT hostile any more. data_0209f5e8 is a live
+//       host fader since gate 31 (hal/fader_wipes.cpp's placement-new), and
+//       LoadLevel has called this same function on every level entry since.
+//   func_02073244 over the wipes  STILL hostile (static host storage, no
+//       array-new cookie), answered by ownership: the pool is the port's, not
+//       the Stage's, so the teardown releases its pointer and frees nothing
+//       (hal/stage_bridges.cpp, st_wipes_withdraw), and the next Stage's slot 0
+//       takes it back.
+//   UnloadLevelOverlays / UnloadArchive  NOT hostile. The first is the ROM's
+//       own body (lane STAGE, port/slice_gate213.txt) and ends in the
+//       loud-once UnloadOverlay seam; the second is hal/stage_slot0.cpp's
+//       ruled empty body.
+// and two more the three did not name, both found by running it: the area
+// TextureTransformers' DestroyVirt (MSVC has no ROM slot 1 on that class) and
+// Deallocate() riding GetFile's r0 (on this host it read a stale stack word).
+// hal/stage_bridges.cpp's st_clean has both. THE REST OF THIS BANNER STANDS
+// FOR THE LEVEL-CHANGE PATH, which still keeps its Stage and still reseats in
+// place; only the scene crossing destroys one. Its Model::LoadAndSetFile
 // (src) also does NOT free the old BMD -- it overwrites modelFile and calls
 // SetFile -- so the D2/C1 reseat below is load-bearing, not belt-and-braces:
 // without it the previous level's BMD and ModelComponents leak and the render
