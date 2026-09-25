@@ -11,17 +11,17 @@ _ZN25RotatingUpDownPlatformUtm8BehaviorEv kind:function(arm,size=0x488) addr:0x0
 _ZN25RotatingUpDownPlatformUtm13InitResourcesEv kind:function(arm,size=0x2b4) addr:0x021318f0
 daObjRotateUpdownLift_c_classInit_HS_UPDOWN_LIFT kind:function(arm,size=0x38) addr:0x02131ba4
 daObjRotateUpdownLift_c_classInit_UPDOWN_LIFT kind:function(arm,size=0x38) addr:0x02131bdc
-_ZN22RotatingUpDownPlatformD1Ev kind:function(arm,size=0x44) addr:0x02131c14
-_ZN22RotatingUpDownPlatformD0Ev kind:function(arm,size=0x58) addr:0x02131c58
+_ZN13daLinelift2_cD1Ev kind:function(arm,size=0x44) addr:0x02131c14
+_ZN13daLinelift2_cD0Ev kind:function(arm,size=0x58) addr:0x02131c58
 func_ov091_02131cb0 kind:function(arm,size=0x108) addr:0x02131cb0
 func_ov091_02131db8 kind:function(arm,size=0x138) addr:0x02131db8
 func_ov091_02131ef0 kind:function(arm,size=0xac) addr:0x02131ef0
 func_ov091_02131f9c kind:function(arm,size=0x64) addr:0x02131f9c
 func_ov091_02132000 kind:function(arm,size=0x9c) addr:0x02132000
-_ZN22RotatingUpDownPlatform16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x0213209c
-_ZN22RotatingUpDownPlatform6RenderEv kind:function(arm,size=0x28) addr:0x021320e0
-_ZN22RotatingUpDownPlatform8BehaviorEv kind:function(arm,size=0x104) addr:0x02132108
-_ZN22RotatingUpDownPlatform13InitResourcesEv kind:function(arm,size=0x154) addr:0x0213220c
+_ZN13daLinelift2_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x0213209c
+_ZN13daLinelift2_c6RenderEv kind:function(arm,size=0x28) addr:0x021320e0
+_ZN13daLinelift2_c8BehaviorEv kind:function(arm,size=0x104) addr:0x02132108
+_ZN13daLinelift2_c13InitResourcesEv kind:function(arm,size=0x154) addr:0x0213220c
 func_ov091_02132360 kind:function(arm,size=0x20) addr:0x02132360
 func_ov091_02132380 kind:function(arm,size=0x14) addr:0x02132380
 daLinelift2_c_classInit_KM2_SUSUMU kind:function(arm,size=0x38) addr:0x02132394
@@ -129,7 +129,6 @@ _ZTI13daLinelift2_c kind:data(any) addr:0x02134e64
 _ZTS13daLinelift2_c kind:data(any) addr:0x02134e70
 g_profile_KM3_LIFT kind:data(any) addr:0x02134e80 ambiguous
 g_profile_KM2_SUSUMU kind:data(any) addr:0x02134e9c ambiguous
-_ZTV22RotatingUpDownPlatform kind:data(any) addr:0x02134ec0
 _ZTV13daLinelift2_c kind:data(any) addr:0x02134ec0
 _ZTI17daObjSimpleLift_c kind:data(any) addr:0x02134f40
 _ZTS17daObjSimpleLift_c kind:data(any) addr:0x02134f4c

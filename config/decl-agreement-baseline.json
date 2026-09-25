@@ -171,6 +171,11 @@
         "param:#2 const Vec3 *",
         "param:#3 const Vec3 *"
       ],
+      "src/game/actors/d_a_linelift2.cpp": [
+        "param:#1 Vector3 *",
+        "param:#2 const Vector3 *",
+        "param:#3 const Vector3 *"
+      ],
       "src/game/actors/d_a_obj_cannon_shutter.cpp": [
         "param:#1 const Vector3 *",
         "param:#2 const Vector3 *",
@@ -5855,6 +5860,11 @@
         "param:#2 Vector3 *",
         "param:#3 Vector3 *"
       ],
+      "src/game/actors/d_a_linelift2.cpp": [
+        "param:#1 Vector3 *",
+        "param:#2 const Vector3 *",
+        "param:#3 const Vector3 *"
+      ],
       "src/game/actors/d_a_obj_wl_polelift.cpp": [
         "param:#1 Vector3 *",
         "param:#2 Vector3 *",
@@ -6711,7 +6721,7 @@
       ]
     },
     "_ZN10dBgActor_c19UpdateClsnPosAndRotEv": {
-      "src/_ZN15FireSeaElevator8BehaviorEv.cpp": [
+      "src/_ZN16daObjKm2_Agaru_c8BehaviorEv.cpp": [
         "return:int"
       ]
     },
@@ -6747,7 +6757,7 @@
       ]
     },
     "_ZN10dBgActor_c21UpdateModelPosAndRotYEv": {
-      "src/_ZN15FireSeaElevator8BehaviorEv.cpp": [
+      "src/_ZN16daObjKm2_Agaru_c8BehaviorEv.cpp": [
         "return:int"
       ]
     },
@@ -7153,7 +7163,7 @@
       "src/_ZN12MetalNetLift13InitResourcesEv.cpp": [
         "param:#3 Matrix4x3 *"
       ],
-      "src/_ZN15FireSeaElevator13InitResourcesEv.cpp": [
+      "src/_ZN16daObjKm2_Agaru_c13InitResourcesEv.cpp": [
         "param:#2 int"
       ],
       "src/_ZN17BowserPuzzlePiece13InitResourcesEv.cpp": [
@@ -10809,10 +10819,10 @@
       ]
     },
     "_ZN4dBgW21UpdatePosWithVelocityERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_": {
-      "src/_ZN22RotatingUpDownPlatform13InitResourcesEv.cpp": [
+      "src/_ZN13daLinelift2_c13InitResourcesEv.cpp": [
         "kind:data"
       ],
-      "src/_ZN22RotatingUpDownPlatform8BehaviorEv.cpp": [
+      "src/_ZN13daLinelift2_c8BehaviorEv.cpp": [
         "arity:0",
         "mangled:0 parameter(s)"
       ],
@@ -10837,7 +10847,7 @@
         "arity:0",
         "mangled:0 parameter(s)"
       ],
-      "src/_ZN15FireSeaElevator13InitResourcesEv.cpp": [
+      "src/_ZN16daObjKm2_Agaru_c13InitResourcesEv.cpp": [
         "kind:data"
       ],
       "src/_ZN17BowserSkyPlatform13InitResourcesEv.cpp": [
@@ -11107,7 +11117,7 @@
         "param:#1 void *",
         "return:BMD_File *"
       ],
-      "src/_ZN15FireSeaElevator13InitResourcesEv.cpp": [
+      "src/_ZN16daObjKm2_Agaru_c13InitResourcesEv.cpp": [
         "param:#1 void *",
         "return:int"
       ],
@@ -11131,7 +11141,7 @@
         "param:#1 void *",
         "return:int"
       ],
-      "src/_ZN22RotatingUpDownPlatform13InitResourcesEv.cpp": [
+      "src/_ZN13daLinelift2_c13InitResourcesEv.cpp": [
         "param:#1 void *"
       ],
       "src/_ZN25RotatingUpDownPlatformUtm13InitResourcesEv.cpp": [
@@ -14344,7 +14354,7 @@
         "param:#1 void *",
         "return:void *"
       ],
-      "src/_ZN15FireSeaElevator13InitResourcesEv.cpp": [
+      "src/_ZN16daObjKm2_Agaru_c13InitResourcesEv.cpp": [
         "param:#1 void *",
         "return:int"
       ],
@@ -14355,7 +14365,7 @@
         "param:#1 void *",
         "return:void *"
       ],
-      "src/_ZN22RotatingUpDownPlatform13InitResourcesEv.cpp": [
+      "src/_ZN13daLinelift2_c13InitResourcesEv.cpp": [
         "param:#1 void *",
         "return:void *"
       ],
@@ -18078,7 +18088,7 @@
       "src/_ZN17daObjBk_Botaosi_c13InitResourcesEv.cpp": [
         "return:void"
       ],
-      "src/_ZN15FireSeaElevator13InitResourcesEv.cpp": [
+      "src/_ZN16daObjKm2_Agaru_c13InitResourcesEv.cpp": [
         "param:#2 int",
         "return:void"
       ],
@@ -18096,7 +18106,7 @@
         "param:#2 int",
         "return:void"
       ],
-      "src/_ZN22RotatingUpDownPlatform13InitResourcesEv.cpp": [
+      "src/_ZN13daLinelift2_c13InitResourcesEv.cpp": [
         "return:void"
       ],
       "src/_ZN25RotatingUpDownPlatformUtm13InitResourcesEv.cpp": [
@@ -18804,7 +18814,7 @@
       "src/_ZN15RollingIronBall13InitResourcesEv.cpp": [
         "param:#2 void *"
       ],
-      "src/_ZN22RotatingUpDownPlatform13InitResourcesEv.cpp": [
+      "src/_ZN13daLinelift2_c13InitResourcesEv.cpp": [
         "param:#2 void *"
       ],
       "src/_ZN5Unagi13InitResourcesEv.cpp": [
@@ -28312,6 +28322,11 @@
         "return:CLPS_Block"
       ]
     },
+    "data_ov045_021125d0": {
+      "src/game/actors/d_a_obj_km2_agaru.cpp": [
+        "return:CLPS_Block"
+      ]
+    },
     "data_ov045_02112f08": {
       "src/game/actors/d_a_obj_km2_ukishima.cpp": [
         "return:ResourceDescriptor"
@@ -28320,6 +28335,16 @@
     "data_ov045_021130ac": {
       "src/game/actors/d_a_obj_km2_fall_block.cpp": [
         "return:ResourceDescriptor"
+      ]
+    },
+    "data_ov045_02113180": {
+      "src/game/actors/d_a_obj_km2_agaru.cpp": [
+        "return:SharedFilePtr"
+      ]
+    },
+    "data_ov045_02113188": {
+      "src/game/actors/d_a_obj_km2_agaru.cpp": [
+        "return:SharedFilePtr"
       ]
     },
     "data_ov045_021131a8": {
@@ -30865,13 +30890,18 @@
       ]
     },
     "data_ov091_021344f4": {
-      "src/_ZN22RotatingUpDownPlatform16CleanupResourcesEv.cpp": [
+      "src/_ZN13daLinelift2_c16CleanupResourcesEv.cpp": [
         "return:void * []"
       ]
     },
     "data_ov091_021344fc": {
-      "src/_ZN22RotatingUpDownPlatform16CleanupResourcesEv.cpp": [
+      "src/_ZN13daLinelift2_c16CleanupResourcesEv.cpp": [
         "return:void * []"
+      ]
+    },
+    "data_ov091_02134e5c": {
+      "src/game/actors/d_a_linelift2.cpp": [
+        "return:CLPS_Block * []"
       ]
     },
     "data_ov091_02135024": {
@@ -30880,8 +30910,11 @@
       ]
     },
     "data_ov091_021354e0": {
-      "src/_ZN22RotatingUpDownPlatform8BehaviorEv.cpp": [
+      "src/_ZN13daLinelift2_c8BehaviorEv.cpp": [
         "return:PmfRow []"
+      ],
+      "src/game/actors/d_a_linelift2.cpp": [
+        "return:StateFunc []"
       ]
     },
     "data_ov091_02135674": {
@@ -35896,7 +35929,7 @@
       "src/actors/daObjFl_Block_c.cpp": [
         "param:#2 void *"
       ],
-      "src/_ZN22RotatingUpDownPlatform13InitResourcesEv.cpp": [
+      "src/_ZN13daLinelift2_c13InitResourcesEv.cpp": [
         "param:#2 void *"
       ],
       "src/_ZN6Eyerok13InitResourcesEv.cpp": [
@@ -35992,10 +36025,10 @@
       "src/actors/daObjFl_Block_c.cpp": [
         "param:#2 void *"
       ],
-      "src/_ZN22RotatingUpDownPlatform13InitResourcesEv.cpp": [
+      "src/_ZN13daLinelift2_c13InitResourcesEv.cpp": [
         "param:#2 void *"
       ],
-      "src/_ZN22RotatingUpDownPlatform8BehaviorEv.cpp": [
+      "src/_ZN13daLinelift2_c8BehaviorEv.cpp": [
         "param:#2 void *"
       ],
       "src/_ZN25RotatingUpDownPlatformUtm13InitResourcesEv.cpp": [
@@ -45372,7 +45405,7 @@
       ]
     },
     "func_ov045_021114c8": {
-      "src/_ZN15FireSeaElevator13InitResourcesEv.cpp": [
+      "src/_ZN16daObjKm2_Agaru_c13InitResourcesEv.cpp": [
         "arity:2"
       ]
     },
