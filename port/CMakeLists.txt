@@ -23451,9 +23451,6 @@ foreach(line IN LISTS SLICE_W31_PMF3_LINES)
         list(APPEND SLICE_W31_PMF3_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
     endif()
 endforeach()
-# hal/pmf3_cells.cpp hosts the twelve virtual member-pointer records the four
-# ActorBase::Process wrappers hand fBase_c::Process (arm9 0x02099e74..ecc).
-list(APPEND SLICE_W31_PMF3_SOURCES hal/pmf3_cells.cpp)
 # hal/pmf3_player_states.cpp seats the Player::State cells the matched
 # ChangeState and Behavior dispatch through.
 list(APPEND SLICE_W31_PMF3_SOURCES hal/pmf3_player_states.cpp)

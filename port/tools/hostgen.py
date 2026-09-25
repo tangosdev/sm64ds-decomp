@@ -1231,16 +1231,103 @@ VIRTUAL_CALL = {
         ("ptr.ReallocateModelFile();",
          "if (port_model_shrink_enabled()) ptr.ReallocateModelFile();"),
     ],
-    # THE FOUR ActorBase::Process WRAPPERS ARE NOT HERE ANY MORE (run
-    # linkfull, lane PMF3). Lane shadow-A (func_0204335c, func_02043288) and
-    # lane PMF2 (func_0204322c, func_020432e4) resolved each wrapper's three
-    # virtual member-pointer records {vtable byte offset, 1} at the caller,
-    # inlining Process's control flow over the vtable slots, which left
-    # src/_ZN7fBase_c7ProcessEMS_FivEMS_FbvEMS_FvjE.cpp with no caller. The
-    # records are hosted as the ROM's twelve {face, 0} pairs now
-    # (hal/pmf3_cells.cpp: each face reads the vptr and calls the slot, the
-    # ROM's virtual branch), so every wrapper compiles as its source stands
-    # and calls the matched fBase_c::Process, as the ROM does.
+    # Lane shadow-A: two of the four ActorBase::Process wrappers. Each passes
+    # three mwcc pointer-to-member-functions, static {vtable byte offset, 1}
+    # records at 0x02099e74..0x02099ecc, into
+    #
+    #     ActorBase::Process(self, <main>, <before>, <after>)
+    #
+    # and on the host those three globals are zeroed storage
+    # (hal/player_bridges.cpp) because MSVC has no representation for the
+    # mwcc pair. The records are static and the ROM's bytes name the slots:
+    # 0x02099ebc/ec4/e94 = {0x00,1} {0x04,1} {0x08,1} -> InitResources,
+    # BeforeInitResources, AfterInitResources (func_0204335c, the init
+    # Process); 0x02099ea4/eac/eb4 = {0x18,1} {0x1c,1} {0x20,1} -> Behavior,
+    # BeforeBehavior, AfterBehavior (func_02043288, the per-frame tick). The
+    # patch inlines Process's own control flow over those slots (the body of
+    # src/_ZN7fBase_c7ProcessEMS_FivEMS_FbvEMS_FvjE.cpp, unchanged: before,
+    # then main, then after(code)), through the same __fastcall thunk
+    # convention as func_02016ff4 above. Retires
+    # port/unmatched/func_0204335c_hostcopy.cpp and func_02043288_hostcopy.cpp.
+    # The other two wrappers (func_0204322c render 9/10/11, func_020432e4
+    # cleanup 3/4/5) keep their host copies: the render one carries the slot-5
+    # Virtual18 ruling and is not this lane's.
+    "func_0204335c": [
+        ("    return _ZN7fBase_c7ProcessEMS_FivEMS_FbvEMS_FvjE(\n"
+         "        self, data_02099ebc, data_02099ec4, data_02099e94);",
+         "    /* hostgen VIRTUAL_CALL: Process over slots 1/0/2, see the table */\n"
+         "    void **vt = *(void ***)self;\n"
+         "    int r = ((int (__fastcall *)(void *, void *))vt[1])(self, 0);\n"
+         "    unsigned code;\n"
+         "    if (r != 0) {\n"
+         "        r = ((int (__fastcall *)(void *, void *))vt[0])(self, 0);\n"
+         "        code = r == -1 ? 3u : r == 1 ? 2u : 1u;\n"
+         "    } else {\n"
+         "        code = 0;\n"
+         "    }\n"
+         "    ((void (__fastcall *)(void *, void *, unsigned))vt[2])(self, 0, code);\n"
+         "    return r;"),
+    ],
+    "func_02043288": [
+        ("    return _ZN7fBase_c7ProcessEMS_FivEMS_FbvEMS_FvjE(\n"
+         "        self, data_02099ea4, data_02099eac, data_02099eb4);",
+         "    /* hostgen VIRTUAL_CALL: Process over slots 7/6/8, see the table */\n"
+         "    void **vt = *(void ***)self;\n"
+         "    int r = ((int (__fastcall *)(void *, void *))vt[7])(self, 0);\n"
+         "    unsigned code;\n"
+         "    if (r != 0) {\n"
+         "        r = ((int (__fastcall *)(void *, void *))vt[6])(self, 0);\n"
+         "        code = r == -1 ? 3u : r == 1 ? 2u : 1u;\n"
+         "    } else {\n"
+         "        code = 0;\n"
+         "    }\n"
+         "    ((void (__fastcall *)(void *, void *, unsigned))vt[8])(self, 0, code);\n"
+         "    return r;"),
+    ],
+    # Run linkfull, lane PMF2 (plan group C): the other two ActorBase::Process
+    # wrappers, the same resolution as the pair above. Their static records
+    # are the virtual form too, read out of arm9 with their relocations:
+    # func_0204322c's pool loads 0x02099ecc/e74/e9c = {0x24,1} {0x28,1} {0x2c,1}
+    # -> Render, BeforeRender, AfterRender (slots 9/10/11, the render pass),
+    # and func_020432e4's loads 0x02099e8c/e7c/e84 = {0x0c,1} {0x10,1} {0x14,1}
+    # -> CleanupResources, BeforeCleanupResources, AfterCleanupResources (slots
+    # 3/4/5). The patch inlines Process's control flow over those slots exactly
+    # as for 0204335c/02043288; 020432e4 keeps its own id read before the call
+    # and its func_0204302c(id) on a finished cleanup. Retires
+    # port/unmatched/func_0204322c_hostcopy.cpp, which carried both.
+    # _ZN7fBase_c7ProcessEMS_FivEMS_FbvEMS_FvjE stays stripped: with all four
+    # wrappers resolved at the caller, nothing in the image calls it.
+    "func_0204322c": [
+        ("    return _ZN7fBase_c7ProcessEMS_FivEMS_FbvEMS_FvjE(\n"
+         "        self, data_02099ecc, data_02099e74, data_02099e9c);",
+         "    /* hostgen VIRTUAL_CALL: Process over slots 10/9/11, see the table */\n"
+         "    void **vt = *(void ***)self;\n"
+         "    int r = ((int (__fastcall *)(void *, void *))vt[10])(self, 0);\n"
+         "    unsigned code;\n"
+         "    if (r != 0) {\n"
+         "        r = ((int (__fastcall *)(void *, void *))vt[9])(self, 0);\n"
+         "        code = r == -1 ? 3u : r == 1 ? 2u : 1u;\n"
+         "    } else {\n"
+         "        code = 0;\n"
+         "    }\n"
+         "    ((void (__fastcall *)(void *, void *, unsigned))vt[11])(self, 0, code);\n"
+         "    return r;"),
+    ],
+    "func_020432e4": [
+        ("    int r = _ZN7fBase_c7ProcessEMS_FivEMS_FbvEMS_FvjE(\n"
+         "        self, data_02099e8c, data_02099e7c, data_02099e84);",
+         "    /* hostgen VIRTUAL_CALL: Process over slots 4/3/5, see the table */\n"
+         "    void **vt = *(void ***)self;\n"
+         "    int r = ((int (__fastcall *)(void *, void *))vt[4])(self, 0);\n"
+         "    unsigned code;\n"
+         "    if (r != 0) {\n"
+         "        r = ((int (__fastcall *)(void *, void *))vt[3])(self, 0);\n"
+         "        code = r == -1 ? 3u : r == 1 ? 2u : 1u;\n"
+         "    } else {\n"
+         "        code = 0;\n"
+         "    }\n"
+         "    ((void (__fastcall *)(void *, void *, unsigned))vt[5])(self, 0, code);"),
+    ],
     # Run link100, lane EXCEPT. dScMgSnowball_c's Render, ROM vtable slot 9,
     # and the last of lane FOLD2's thirty ov006 rows. Its divergence is NOT
     # the destructor fold: the vtable read is already right. The ROM is
