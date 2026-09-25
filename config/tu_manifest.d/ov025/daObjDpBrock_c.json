@@ -35,14 +35,14 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov025_02111dec",
+      "symbol": "_ZN14daObjDpBrock_c23UpdateStepClsnPosAndRotEv",
       "address": "0x02111dec",
       "size": "0x00000044",
       "legacy_source": "src/func_ov025_02111dec.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "func_ov025_02111e30",
+      "symbol": "_ZN14daObjDpBrock_c25UpdateStepModelPosAndRotYEv",
       "address": "0x02111e30",
       "size": "0x00000040",
       "legacy_source": "src/func_ov025_02111e30.c",
@@ -89,10 +89,11 @@
   "notes": [
     "Hand-curated from the nine legacy one-function sources: six C++ members, one C++ helper (src/func_ov025_02111dec.cpp), one C helper (src/func_ov025_02111e30.c) and the C factory (src/d_a_obj_dp_brock.c). tubuild create generated a starting point that was then rewritten by hand; see the file's own header comment.",
     "RESOLVED tubuild create CONFLICT: the two helper shards declared Matrix4x3_FromRotationY as (void *, short) and (void *, int). The TU uses (void *m, int angleY), the signature of the symbol's definition in src/Matrix4x3_FromRotationY.c and the spelling src/actors/dBgActor_c.cpp uses. Bytes unchanged.",
-    "HEADER EDIT: include/daObjDpBrock_c.h now defines ~daObjDpBrock_c() in the class body, types the 0x374 tail as Matrix4x3 mClsnMat2 instead of a u8[0x30] marker, types mStateTimer as u16 (every access in the cartridge is ldrh or strh), adds the leaf operator new the folded factory needs, and drops the flat C twin: no C file includes the header, and the C destructor shard its comment cited was already C++. No file outside this TU includes the header.",
+    "HEADER EDIT: include/daObjDpBrock_c.h now defines ~daObjDpBrock_c() in the class body, types the 0x374 tail as Matrix4x3 mClsnMat2 instead of a u8[0x30] marker, types mStateTimer as u16 (every access in the cartridge is ldrh or strh), and drops the flat C twin: no C file includes the header, and the C destructor shard its comment cited was already C++. No file outside this TU includes the header.",
     "SOURCE FORM: CleanupResources, Render, Behavior and InitResources are written against named members (mStepModel, mMeshCollider, mClsnMat2, mState, mStateTimer, mPosY, mVertSpeed) and real calls (Model::LoadFile, ModelBase::SetFile, dBgW_Kc::LoadFile, dBgW::Disable, dBgW_KcMbg::Transform, SharedFilePtr::Release, Model::Render). The legacy shards' raw offsets, the Render shard's stand-in Base and Derived structs and its local SharedFilePtr redefinition are gone. MEASURED: InitResources must read param1 & 3 before its three initialising stores; read inside the switch, 11 words differ.",
-    "func_ov025_02111dec and func_ov025_02111e30 keep their address-derived names as C-linkage helpers taking the object as char *, the spelling include/decl_common.h gives both, and cast it to daObjDpBrock_c * to read named members. Each is really a daObjDpBrock_c method (they update the collider matrix and the own-model matrix), but a member spelling would coin two mangled names; that rename is separate work.",
+    "The two helpers are daObjDpBrock_c members: UpdateStepClsnPosAndRot (0x02111dec, formerly func_ov025_02111dec) updates the collider matrix mClsnMat2 and UpdateStepModelPosAndRotY (0x02111e30, formerly func_ov025_02111e30) the own-model matrix. Both take the object in r0 and are only called with it. The names are coined after dBgActor_c::UpdateClsnPosAndRot and dBgActor_c::UpdateModelPosAndRotY; the ov025 symbols.txt rows are renamed in place and the bytes and relocations are unchanged. include/decl_common.h still declares the two old C names as (char *) and nothing calls them.",
     "dBgW_KcMbg::SetFile and dBgActor_c::IsClsnInRange stay mangled: each takes Fix12<int> by value (wall 6az). func_020393d4 stays an unnamed arm9 helper, declared (int *, int) to agree with its definition in src/func_020393d4.c.",
+    "OPERATOR NEW: the class declares no operator new of its own. `new daObjDpBrock_c()` binds the inherited fBase_c::operator new(size_t), which include/fBase_c.h defines inline as the forward to _ZN7fBase_cnwEj; the object's undefined symbols are unchanged.",
     "STYLE ORACLE: src/actors/daDkk_c.cpp (same overlay, folded factory, inline destructor) and src/actors/daDpLift_c.cpp (same overlay, dBgActor_c leaf).",
     "DECLARATION BASELINE: the five config/decl-agreement-baseline.json entries keyed to the retired src/_ZN14daObjDpBrock_c13InitResourcesEv.cpp are dropped, because the typed TU no longer carries those disagreements. Two are banked for this TU: it declares data_ov025_02113ab0 and data_ov025_02113ab8 as SharedFilePtr, which is what they are, against src/__sinit_ov025_02112a44.c's int [] spelling. Same pair shape as src/actors/daDpLift_c.cpp and src/__sinit_ov025_02112aac.c."
   ],

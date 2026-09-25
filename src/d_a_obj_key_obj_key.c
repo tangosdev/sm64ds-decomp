@@ -9,7 +9,7 @@
 #include "decl_dBgCh_Actr.h"
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
-/* resolved: VT0 = _ZTV3Key */
+/* resolved: VT0 = _ZTV10daObjKey_c */
 /* Reconstructed source-style name: SM64DS proves daObjKey_c through RTTI,
  * allocation size, vtable identity, and the OBJ_KEY registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
@@ -19,7 +19,7 @@ int *daObjKey_c_classInit_OBJ_KEY(void)
     int *p = (int *)_ZN7fBase_cnwEj(1136);
     if (p) {
         _ZN12dEnemyBase_cC2Ev(p);
-        p[0] = (int)_ZTV3Key;
+        p[0] = (int)_ZTV10daObjKey_c;
         _ZN9ModelAnimC1Ev((char *)p + 0x114);
         _ZN5ModelC1Ev((char *)p + 0x178);
         _ZN11ShadowModelC1Ev((char *)p + 0x1c8);
