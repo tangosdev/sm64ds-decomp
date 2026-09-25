@@ -4532,9 +4532,15 @@ static void *const hal_player_trap_thunk[HAL_PLAYER_SLOTS] = {
     (void *)ps_trap24, (void *)ps_trap25, (void *)ps_trap26, (void *)ps_trap27,
     (void *)ps_trap28, (void *)ps_trap29, (void *)ps_trap30};
 
+extern "C" void port_player_states_seat(void);   /* hal/pmf3_player_states.cpp */
 extern "C" void hal_fill_player_vtable(void)
 {
     void **vt = (void **)data_ov002_0210a83c;
+    /* the sinit copied the ROM's own {Init, Main, Cleanup} pairs into the 78
+       Player::State objects, which means DS code addresses; seat the
+       __fastcall faces over them before any Player exists (run linkfull, lane
+       PMF3: src/_ZN6Player8BehaviorEv.cpp and ChangeState dispatch them) */
+    port_player_states_seat();
     for (int i = 0; i < HAL_PLAYER_SLOTS; ++i)
         vt[i] = hal_player_trap_thunk[i];
     vt[0] = (void *)ps_init;

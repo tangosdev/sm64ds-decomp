@@ -3676,6 +3676,10 @@ __ZN11daTrsTrap_cD0Ev                                                    ??1daTr
 # ---------------------------------------------------------------------------
 __ZN14ArrowSignRight4KillEv                                              ?Kill@ArrowSignRight@@QAEXXZ                                     0x02137ccc R
 
+# run linkfull lane PMF3: Player::ChangeState is the matched TU now (its host copy
+# unmatched/Player_ChangeState.cpp defined the flat name); the flat ROM name the
+# C callers ask for gets its reverse face here.
+__ZN6Player11ChangeStateERNS_5StateE                                     ?ChangeState@Player@@QAEHAAUState@1@@Z                           0x020e30a0 R
 __ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh                          ?ShowMessage@Player@@QAEHAAUfBase_c@@IPBUVector3@@EE@Z           0x020c4ec0 R
 __ZN6Player12CanEnterDoorEh                                              ?CanEnterDoor@Player@@QAEHE@Z                                    0x020ca5cc R
 __ZN6Player12ShowMessage2ER7fBase_cjPK7Vector3hh                         ?ShowMessage2@Player@@QAEHAAUfBase_c@@IPBUVector3@@EE@Z          0x020c4c60 R

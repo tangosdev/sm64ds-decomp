@@ -1,7 +1,10 @@
 // HOST COPY of src/_ZN6Player8BehaviorEv.cpp -- the single state-main
-// PMF dispatch replaced with hal_call_state_fn on the DS fn word at
-// State+8 (see Player_ChangeState.cpp for the same treatment of
-// onEnter/onExit). Everything else is the matched source verbatim.
+// PMF dispatch spelled by hand. Since run linkfull lane PMF3 the State cells
+// hold the __fastcall faces port_player_states_seat installs
+// (hal/pmf3_player_states.cpp), so the hand call passes the receiver in ECX
+// exactly as the matched TU's member-pointer call does; the next commit
+// retires this copy for the matched TU. Everything else is the matched
+// source verbatim.
 extern "C" int hal_call_state_fn(void *self, unsigned ds_addr);
 #include "types.h"
 // @symbol _ZN6Player8BehaviorEv
@@ -190,7 +193,9 @@ after_player_slot:
     {
         ::State *st = *(::State **)((char *)&mState);
         if (*(unsigned *)((char *)st + 8) != 0)
-            hal_call_state_fn(this, *(unsigned *)((char *)st + 8));
+            ((int (__fastcall *)(void *, void *))(size_t)
+                 *(unsigned *)((char *)st + 8))(
+                (char *)this + *(int *)((char *)st + 0xc), 0);
     }
 
     if ((u16)(mStateFlags & 0x80) != 0) {

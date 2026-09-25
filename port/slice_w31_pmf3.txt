@@ -16,3 +16,10 @@ src/func_020441cc.cpp
 # where a logic-verified near-miss host copy stood; the other nine cells and
 # both dispatchers are unchanged.
 src/func_ov002_020bb614.c
+#
+# Mario's own state machine (ov002): Player::ChangeState calls the old state's
+# Cleanup and the new state's Init through real member pointers into the 78
+# Player::State objects, whose 185 filled cells port_player_states_seat
+# (hal/pmf3_player_states.cpp) seats with __fastcall faces;
+# unmatched/Player_ChangeState.cpp defines nothing now.
+src/_ZN6Player11ChangeStateERNS_5StateE.cpp

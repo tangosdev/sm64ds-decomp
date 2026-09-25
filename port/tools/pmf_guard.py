@@ -294,6 +294,13 @@ LEDGER = [
      "FvjE.cpp, which calls each `(self->*pmf)()` / `(self->*pmf)(code)` with "
      "ecx = self + delta, the code pushed and callee-popped; hal/pmf3_cells.cpp"
      " hosts each as {face, 0}"),
+    ("ECX", r"^_g_pmf3_player_state_faces$",
+     "the 78 Player::State objects (ov002 0x0210ffec..0x02110724): "
+     "port_player_states_seat writes these faces into their 185 cells, and "
+     "the readers are src/_ZN6Player8BehaviorEv.cpp (`(this->*(st->mMain))()`)"
+     " and src/_ZN6Player11ChangeStateERNS_5StateE.cpp (Cleanup and Init), "
+     "both ecx = this + delta with nothing pushed; every other reader compares "
+     "the State pointer by address"),
 ]
 
 
