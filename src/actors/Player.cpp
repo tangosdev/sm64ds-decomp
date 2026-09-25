@@ -423,6 +423,32 @@ void func_ov002_020bdb50(char* c, int arg) {
     extern void func_ov002_020d71a0(void*);
     extern void func_ov002_020d5cec(void);
     extern void func_ov002_020bdb50(void*, int);
+#ifdef _MSC_VER
+    /* THE HELD OBJECT'S SLOTS 18 AND 19 ARE VIRTUAL CALLS: Actor::OnYoshiTryEat()
+       and Actor::OnTurnIntoEgg(Player &), the same two slots St_Swallow_Main
+       spells as virtuals (src/_ZN6Player15St_Swallow_MainEv.cpp). On ARM the
+       #else spelling below, a raw function-pointer call through the vtable, is
+       the same instructions as a virtual call (r0 = the held object, r1 = this
+       Player), and it is what mwccarm compiles to the ROM's bytes. Under MSVC it
+       is not: a raw function-pointer call is cdecl (every argument pushed, the
+       caller cleans), while every seated slot-18/19 face is the thiscall-shaped
+       __fastcall (the receiver in ecx, the argument pushed, the callee pops it).
+       At slot 19 the face read the held object as its Player argument and popped
+       four bytes the caller popped again, so this function returned through its
+       own stacked Player pointer. These arms make the calls the cartridge makes.
+       Pure virtuals: MSVC refuses an undefined virtual in a local class (C3640);
+       the call shape is the same. */
+    struct HeldActor {
+        virtual int v00() = 0; virtual int v01() = 0; virtual int v02() = 0;
+        virtual int v03() = 0; virtual int v04() = 0; virtual int v05() = 0;
+        virtual int v06() = 0; virtual int v07() = 0; virtual int v08() = 0;
+        virtual int v09() = 0; virtual int v10() = 0; virtual int v11() = 0;
+        virtual int v12() = 0; virtual int v13() = 0; virtual int v14() = 0;
+        virtual int v15() = 0; virtual int v16() = 0; virtual int v17() = 0;
+        virtual int OnYoshiTryEat() = 0;               /* slot 18, +0x48 */
+        virtual void OnTurnIntoEgg(char* player) = 0;  /* slot 19, +0x4c */
+    };
+#endif
     func_ov002_020bdc18(c);
     Player_ReleaseHeldActor(c);
     if (arg != 0) return;
@@ -430,8 +456,12 @@ void func_ov002_020bdb50(char* c, int arg) {
     func_ov002_020d71a0(c);
     {
         char* obj = *(char**)(c+0x360);
+#ifdef _MSC_VER
+        int r = ((HeldActor*)obj)->OnYoshiTryEat();
+#else
         char* vt = *(char**)obj;
         int r = (*(int(**)(char*))(vt+0x48))(obj);
+#endif
         if (r == 0) return;
     }
     {
@@ -441,8 +471,12 @@ void func_ov002_020bdb50(char* c, int arg) {
             func_ov002_020d5cec();
             (*(unsigned short *)(((int)c + 0x6ce))) &= ~2;
         } else {
+#ifdef _MSC_VER
+            ((HeldActor*)obj)->OnTurnIntoEgg(c);
+#else
             char* vt = *(char**)obj;
             (*(void(**)(char*, char*))(vt+0x4c))(obj, c);
+#endif
         }
     }
     *(int*)(c+0x360) = 0;
