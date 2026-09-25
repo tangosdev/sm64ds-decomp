@@ -23623,3 +23623,34 @@ endif()
 foreach(_trs5a walk_window walk_window_hires smoke_player)
     target_sources(${_trs5a} PRIVATE ${SLICE_W31_RS5A_SOURCES})
 endforeach()
+
+# ===========================================================================
+# RS5B (run linkfull wave 31B, lane RS5B): OPERATOR NEW, STAGE::UPDATEMESSAGE
+# AND THE SPHERE PASS RUN AS THE ROM'S OWN BODIES
+# ===========================================================================
+#
+# R7. port/slice_w31_rs5b_stage.txt: src/_ZN5Stage13UpdateMessageEv.cpp, main's
+# blob, on the two targets that compile Stage::Behavior and hal/message_pump.cpp.
+# hal/stage_frame.cpp (another lane's file this wave) still defines
+# ?UpdateMessage@Stage@@SAXXZ as a face onto port_message_pump, so this TU is
+# compiled under a per-source rename and hal/message_pump.cpp's pump is one call
+# into it; the two decorated data names it asks for that nothing bridged are
+# aliased in that file. When the stage_frame.cpp face is deleted, delete this
+# define with it. src/ is untouched; the ARM object is main's.
+set(RS5B_R7_SRC
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN5Stage13UpdateMessageEv.cpp")
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w31_rs5b_stage.txt" SLICE_W31_RS5B_STAGE_LINES)
+set(SLICE_W31_RS5B_STAGE_SOURCES "")
+foreach(line IN LISTS SLICE_W31_RS5B_STAGE_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_W31_RS5B_STAGE_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+set_property(SOURCE "${RS5B_R7_SRC}" APPEND PROPERTY COMPILE_DEFINITIONS
+    "UpdateMessage=UpdateMessage_rom")
+foreach(_trs5bs walk_window walk_window_hires)
+    target_sources(${_trs5bs} PRIVATE ${SLICE_W31_RS5B_STAGE_SOURCES})
+endforeach()
+

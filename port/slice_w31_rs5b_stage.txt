@@ -1,0 +1,15 @@
+# slice_w31_rs5b_stage.txt -- run linkfull wave 31B, lane RS5B, row R7:
+# Stage::UpdateMessage.
+#
+#   _ZN5Stage13UpdateMessageEv  arm9 0x0201cb7c, MATCHING 2004/b56. main's blob
+#       (c45176b308 via #3107): the four callees it used to stub with empty
+#       bodies (Message::UpdateWindow / Update / DisplaySaving,
+#       SaveData::SaveCurrentFile) are declared only, so the real ones run, and
+#       the method is static, as Stage::Behavior calls it. Built on the two
+#       targets that compile Stage::Behavior and hal/message_pump.cpp, under the
+#       per-source rename UpdateMessage=UpdateMessage_rom (the RS5B block at the
+#       end of port/CMakeLists.txt): hal/stage_frame.cpp's face still defines
+#       ?UpdateMessage@Stage@@SAXXZ this wave and forwards to port_message_pump,
+#       which is one call into this body. Retire the face and the rename
+#       together and the ROM body answers Stage::Behavior by its own name.
+src/_ZN5Stage13UpdateMessageEv.cpp
