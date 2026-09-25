@@ -1,22 +1,31 @@
-/* HOST COPIES of src/func_02043fdc.cpp and src/func_020441cc.cpp -- the two
- * processing-list walks, with the mwcc pointer-to-member-function they
- * dispatch through read as a plain function pointer.
+/* THE PER-ACTOR NET UNDER THE ROM'S OWN LIST WALKS, and the five faces that
+ * carry it.
  *
- * Each list head carries its callback as an eight-byte PMF pair that
- * __sinit_02075154 copies out of arm9's five statics at 0x02099f48..0x02099f70.
- * All five are NONVIRTUAL PMFs -- { function address, 0 } -- naming
- * func_020432e4, func_0204335c, func_02043880, func_0204322c and
- * func_02043288, the four Process wrappers plus the scene-tree housekeeping
- * pass. MSVC has no representation for an mwcc PMF, so the port seats the
- * host function in the first word and reads it back as a function pointer;
- * hal/actor_registry.cpp's port_actor_lists_seat is the sinit's other half.
+ * src/func_02043fdc.cpp (the four processing lists) and src/func_020441cc.cpp
+ * (the scene tree) are the matched walks and they run as the ROM does (run
+ * linkfull, lane PMF3): each calls its list head's callback through a real
+ * pointer-to-member, `(node->obj->*thiz->callback)()`, which /vmg /vmm makes
+ * the ROM's eight-byte {code, adjust} pair, so MSVC emits `mov ecx,[cb+4];
+ * add ecx,obj; call [cb]` with the receiver in ECX and nothing pushed.
  *
- * Control flow is the matched sources', unchanged. func_02043fdc reads the
- * successor BEFORE the callback runs (a Process that destroys the actor
- * unlinks the node under it) and publishes the node it is on in
- * data_020a4b68, which is what _ZN11fLiNdBaPr_cD1Ev/_ZN9fLiNdBa_cD1Ev clear when a
- * destructor takes the walk's own cursor out. func_020441cc walks the scene
- * tree instead, whose successor comes from func_0203b394.
+ * Each list head carries its callback as that pair, which __sinit_02075154
+ * copies out of arm9's five statics (read out of arm9_dec.bin with their
+ * relocations: 0x02099f48 {0x02043288, 0}, 0x02099f50 {0x020432e4, 0},
+ * 0x02099f60 {0x02043880, 0}, 0x02099f68 {0x0204322c, 0}, 0x02099f70
+ * {0x0204335c, 0}; word 0 relocated, word 1 zero with no relocation). All
+ * five are NONVIRTUAL, so the adjustment is zero and the receiver is the
+ * node's own actor. hal/actor_registry.cpp's port_actor_lists_seat is the
+ * sinit's other half: it writes the code word of each pair with one of the
+ * five __fastcall faces below (g_pmf3_list_cells) and the adjustment with 0.
+ *
+ * The faces are where the port's per-actor fault quarantine lives now. It
+ * used to wrap fn(actor) inside host copies of the two walks; the walks are
+ * the ROM's, and the net moved one frame down, around the same call, in the
+ * same order: the list canary on the node the matched walk has just published
+ * in data_020a4b68, the guarded dispatch, then the fader watch (the four
+ * processing lists), or the guarded dispatch alone (the scene tree, exactly
+ * as its old walk did). The successor is read by the matched walk BEFORE the
+ * callback, so a quarantined actor strands nothing.
  */
 extern "C" {
 
@@ -860,55 +869,75 @@ extern "C" int port_quarantine_is_frozen(void *actor)
     return port_q_is_frozen(actor);
 }
 
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch: each list head carries its
- * callback as an eight-byte PMF pair MSVC cannot represent. See the header.
- * {head, tail, callback, 0}; node is {prev, next, owner, ...} */
-void *func_02043fdc(void *listv)
-{
-    int *list = (int *)listv;
-    PortListFn fn = (PortListFn)(size_t)list[2];
-    int *node;
-    if (fn == 0)
-        return (void *)1;
-    node = (int *)(size_t)list[0];
-    int walked = 0;
-    while (node != 0) {
-        int *next;
-        data_020a4b68[0] = (int)(size_t)node;
-        next = (int *)(size_t)node[1];
-        port_list_canary(node, walked++);
-        /* per-actor quarantine boundary: a fault in this one actor's phase
-           callback is caught, the actor frozen, and the walk continues at
-           `next` -- which was read BEFORE the callback (matched behaviour: a
-           Process that unlinks the node under itself is why). */
-        port_dispatch_guarded(fn, (void *)(size_t)node[2]);
-        port_fader_watch((void *)(size_t)node[2]);
-        node = next;
-    }
-    data_020a4b68[0] = 0;
-    return (void *)1;
+/* ---- THE FIVE LIST CALLBACK FACES (run linkfull, lane PMF3) ---------------
+   The matched walks call the callback pair with the actor in ECX and nothing
+   pushed; the four Process wrappers and the scene-tree pass are flat cdecl
+   bodies that read the actor off the stack. Each face takes it in ECX (the
+   dead EDX absorbs __fastcall's second register), runs the per-node work the
+   retired host walks ran around fn(actor), and returns nothing: the walks
+   discard the callback's value, as the ROM's do.
+
+   port_list_canary keeps its per-walk index: a face restarts its count on the
+   node that heads its own list, which is the walk's index 0. */
+extern "C" {
+int func_0204335c(void *self);
+int func_02043288(void *self);
+int func_0204322c(void *self);
+int func_020432e4(void *self);
+int func_02043880(void *self);
+extern int data_020a4b78[], data_020a4b88[], data_020a4b98[], data_020a4ba8[];
 }
 
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch: each list head carries its
- * callback as an eight-byte PMF pair MSVC cannot represent. See the header.
- * {head, callback, 0}; scene node is 0x14 bytes with the owner at +0x10 */
-void *func_020441cc(void *listv)
+static void port_list_node(PortListFn fn, void *actor, const int *list,
+                           int *idx)
 {
-    int *list = (int *)listv;
-    PortListFn fn = (PortListFn)(size_t)list[1];
-    int *node;
-    if (fn == 0)
-        return (void *)1;
-    node = (int *)(size_t)list[0];
-    while (node != 0) {
-        int *next = (int *)func_0203b394(node);
-        /* the scene-tree pass dispatches on the owner at node[4]; same net.
-           The successor comes from func_0203b394 and is read before dispatch,
-           so a quarantined actor does not strand the walk. */
-        port_dispatch_guarded(fn, (void *)(size_t)node[4]);
-        node = next;
-    }
-    return (void *)1;
+    int *node = (int *)(size_t)data_020a4b68[0];
+    if (node == (int *)(size_t)list[0])
+        *idx = 0;
+    port_list_canary(node, (*idx)++);
+    port_dispatch_guarded(fn, actor);
+    port_fader_watch(actor);
 }
+
+static int g_list_idx_init, g_list_idx_beh, g_list_idx_ren, g_list_idx_cln;
+static void __fastcall pmf_face_func_0204335c(void *actor, void *dead_edx)
+{   /* data_020a4b88, the init Process */
+    (void)dead_edx;
+    port_list_node(func_0204335c, actor, data_020a4b88, &g_list_idx_init);
+}
+static void __fastcall pmf_face_func_02043288(void *actor, void *dead_edx)
+{   /* data_020a4b78, the behaviour Process */
+    (void)dead_edx;
+    port_list_node(func_02043288, actor, data_020a4b78, &g_list_idx_beh);
+}
+static void __fastcall pmf_face_func_0204322c(void *actor, void *dead_edx)
+{   /* data_020a4b98, the render Process */
+    (void)dead_edx;
+    port_list_node(func_0204322c, actor, data_020a4b98, &g_list_idx_ren);
+}
+static void __fastcall pmf_face_func_020432e4(void *actor, void *dead_edx)
+{   /* data_020a4ba8, the cleanup Process */
+    (void)dead_edx;
+    port_list_node(func_020432e4, actor, data_020a4ba8, &g_list_idx_cln);
+}
+
+/* the scene tree: func_020441cc's old host walk ran the guarded dispatch and
+   nothing else around the callback */
+static void __fastcall pmf_face_func_02043880(void *actor, void *dead_edx)
+{
+    (void)dead_edx;
+    port_dispatch_guarded(func_02043880, actor);
+}
+
+/* THE SEAT TABLE port/tools/pmf_guard.py reads (its ECX row
+   ^_g_pmf3_list_cells$): the code words port_actor_lists_seat writes into the
+   five list heads, in the seat's own order. */
+extern "C" void (__fastcall *const g_pmf3_list_cells[5])(void *, void *) = {
+    pmf_face_func_02043880,   /* data_020a4b6c, the scene tree (020441cc) */
+    pmf_face_func_0204335c,   /* data_020a4b88, phase 2 init            */
+    pmf_face_func_02043288,   /* data_020a4b78, phase 3 behaviour       */
+    pmf_face_func_0204322c,   /* data_020a4b98, phase 5 render          */
+    pmf_face_func_020432e4,   /* data_020a4ba8, phase 4 cleanup         */
+};
 
 }

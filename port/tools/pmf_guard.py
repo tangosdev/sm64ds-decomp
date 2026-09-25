@@ -280,6 +280,14 @@ LEDGER = [
      "pushed; _func_ov081_02125488 tail jumps into the enter half with `mov "
      "ecx,[ecx+4]; add ecx,eax; pop ebp; jmp edx`. Every other reader "
      "compares the cell pointer by address"),
+
+    # ---- run linkfull lane PMF3: the last member-pointer rows --------------
+    ("ECX", r"^_g_pmf3_list_cells$",
+     "the five actor list heads (data_020a4b6c/78/88/98/a8): port_actor_lists_"
+     "seat writes these words into the callback pairs, and their only readers "
+     "are the matched walks src/func_02043fdc.cpp and src/func_020441cc.cpp, "
+     "which call `(node->obj->*thiz->callback)()` with ecx = obj + delta and "
+     "nothing pushed"),
 ]
 
 

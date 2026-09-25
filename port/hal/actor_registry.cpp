@@ -39,9 +39,10 @@
 // read straight out of the five PMF pairs __sinit_02075154 copies into the
 // list heads (arm9 0x02099f48/50/60/68/70; each is {function, 0}, a plain
 // nonvirtual pointer-to-member). The port seats the same five functions in
-// the same slots and walks the lists with host copies of func_02043fdc /
-// func_020441cc, because MSVC has no representation for an mwcc PMF -- the
-// same treatment func_0204335c and func_02043288 already have.
+// the same slots, each behind a __fastcall face that carries the per-actor
+// quarantine, and the lists are walked by the matched src/func_02043fdc.cpp
+// and src/func_020441cc.cpp through /vmg /vmm member pointers, which are the
+// ROM's eight-byte pairs (unmatched/func_02043fdc_hostcopy.cpp's header).
 //
 // The frame is SPLIT here rather than driven through one func_02044120 call
 // for one reason: the render pass has to run inside the host's render frame,
@@ -409,25 +410,29 @@ extern "C" void port_actor_registry_install(void)
 
 // ---- the frame -------------------------------------------------------------
 //
-// Seat the five list callbacks the way __sinit_02075154 does, with the host
-// copies of the Process wrappers in place of the ROM's PMFs. The list heads
+// Seat the five list callbacks the way __sinit_02075154 does. The list heads
 // are the port's own zeroed storage, so the two words the ROM's sinit copies
-// out of data_02099f48..70 are written directly here.
+// out of data_02099f48..70 are written directly here: the code word is the
+// __fastcall face for the ROM's callback (g_pmf3_list_cells, in
+// unmatched/func_02043fdc_hostcopy.cpp, which also carries the per-actor
+// quarantine) and the adjustment is the ROM's 0. The matched walks call the
+// pair with the actor in ECX and nothing pushed (run linkfull, lane PMF3).
 typedef int (*PortListFn)(void *);
+extern "C" void (__fastcall *const g_pmf3_list_cells[5])(void *, void *);
 
 extern "C" void port_actor_lists_seat(void)
 {
     /* {head, callback, 0} -- the scene tree, walked by func_020441cc */
-    data_020a4b6c[1] = (int)(size_t)(PortListFn)func_02043880;
+    data_020a4b6c[1] = (int)(size_t)g_pmf3_list_cells[0];   /* func_02043880 */
     data_020a4b6c[2] = 0;
     /* {head, tail, callback, 0} -- the four walked by func_02043fdc */
-    data_020a4b88[2] = (int)(size_t)(PortListFn)func_0204335c;
+    data_020a4b88[2] = (int)(size_t)g_pmf3_list_cells[1];   /* func_0204335c */
     data_020a4b88[3] = 0;
-    data_020a4b78[2] = (int)(size_t)(PortListFn)func_02043288;
+    data_020a4b78[2] = (int)(size_t)g_pmf3_list_cells[2];   /* func_02043288 */
     data_020a4b78[3] = 0;
-    data_020a4b98[2] = (int)(size_t)(PortListFn)func_0204322c;
+    data_020a4b98[2] = (int)(size_t)g_pmf3_list_cells[3];   /* func_0204322c */
     data_020a4b98[3] = 0;
-    data_020a4ba8[2] = (int)(size_t)(PortListFn)func_020432e4;
+    data_020a4ba8[2] = (int)(size_t)g_pmf3_list_cells[4];   /* func_020432e4 */
     data_020a4ba8[3] = 0;
 }
 
