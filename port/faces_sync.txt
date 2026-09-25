@@ -3228,12 +3228,7 @@ __ZN11MirrorLuigiD0Ev                                                    ??1Mirr
 # which is _ZN6Memory10DeallocateEPvP4Heap(self, data_020a0eac), read off the object.
 #__ZN14UnchainedChompD0Ev                                                 _ZN14UnchainedChompD1Ev                                          0x02143290 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
-# RETIRED at VARIANT4 2026-09-25 (run linkfull, batch 2): src/_ZN14UnknownVsEntryD0Ev.cpp
-# defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
-# port/slice_w31_variant4_vs.txt. The arm makes the two calls this row's face made:
-# the D1 body (??1UnknownVsEntry@@QAE@XZ), then UnknownVsEntry::operator delete,
-# which is _ZN6Memory10DeallocateEPvP4Heap(self, data_020a0eac), read off the object.
-#__ZN14UnknownVsEntryD0Ev                                                 _ZN14UnknownVsEntryD1Ev                                          0x02113f54 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
+__ZN14UnknownVsEntryD0Ev                                                 _ZN14UnknownVsEntryD1Ev                                          0x02113f54 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
 # RETIRED at CAMP3 2026-09-23 (run linkfull, batch D0ARM-09): src/_ZN13UpDownLiftBbhD0Ev.cpp
 # defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
@@ -3442,12 +3437,7 @@ __ZN10dBgActor_cD0Ev                                                     _ZN10dB
 # which is _ZN6Memory10DeallocateEPvP4Heap(self, data_020a0eac), read off the object.
 #__ZN9dScDSMT_cD0Ev                                                       _ZN9dScDSMT_cD1Ev                                                0x020cc070 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
-# RETIRED at VARIANT4 2026-09-25 (run linkfull, batch 2): src/_ZN10dScEntry_cD0Ev.cpp
-# defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on
-# port/slice_w31_variant4_vs.txt. The arm makes the two calls this row's face made:
-# the D1 body (??1dScEntry_c@@QAE@XZ), then dScEntry_c::operator delete,
-# which is _ZN6Memory10DeallocateEPvP4Heap(self, data_020a0eac), read off the object.
-#__ZN10dScEntry_cD0Ev                                                     _ZN10dScEntry_cD1Ev                                              0x02115b28 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
+__ZN10dScEntry_cD0Ev                                                     _ZN10dScEntry_cD1Ev                                              0x02115b28 D _ZN6Memory10DeallocateEPvP4Heap  data_020a0eac
 
 # RETIRED at CAMP1 2026-09-23 (run linkfull, batch D0ARM-01): src/_ZN7dScMB_cD0Ev.cpp
 # defines this flat name itself now, in its #ifdef _MSC_VER arm, and is on

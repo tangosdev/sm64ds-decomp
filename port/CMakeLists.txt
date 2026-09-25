@@ -23414,22 +23414,6 @@ foreach(_tw31v4 walk_window walk_window_hires smoke_player)
     target_sources(${_tw31v4} PRIVATE ${SLICE_W31_VARIANT4_SOURCES})
 endforeach()
 
-# VARIANT4 batch 2: port/slice_w31_variant4_vs.txt, the VS entry pair (scene 6),
-# enrolled apart from the block above so its commit can be dropped alone. Same
-# three targets, same reason.
-port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w31_variant4_vs.txt" SLICE_W31_VARIANT4_VS_LINES)
-set(SLICE_W31_VARIANT4_VS_SOURCES "")
-foreach(line IN LISTS SLICE_W31_VARIANT4_VS_LINES)
-    string(STRIP "${line}" line)
-    if(line MATCHES "^#" OR line STREQUAL "")
-        continue()
-    endif()
-    list(APPEND SLICE_W31_VARIANT4_VS_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
-endforeach()
-foreach(_tw31v4vs walk_window walk_window_hires smoke_player)
-    target_sources(${_tw31v4vs} PRIVATE ${SLICE_W31_VARIANT4_VS_SOURCES})
-endforeach()
-
 # XREL1 (run linkfull): EVERY OVERLAY MOUNT DEPENDS ON THE CONFIG IT READS.
 #
 # tools/ovdata.py builds each mount out of its overlay's config/arm9/overlays/
