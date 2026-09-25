@@ -371,7 +371,7 @@ __ZN6Fwoosh16OnAimedAtWithEggEv                                          ?OnAime
 __ZN6Fwoosh16OnPendingDestroyEv                                          ?OnPendingDestroy@Fwoosh@@UAEXXZ                                 0x02134180 R
 __ZN6FwooshD1Ev                                                          ??1Fwoosh@@UAE@XZ                                                0x02133968 R
 
-__ZN8Goomboss13InitResourcesEv                                           ?InitResources@Goomboss@@UAEHXZ                                  0x02121e98 F
+__ZN8Goomboss13InitResourcesEv                                           ?InitResources@Goomboss@@UAEHXZ                                  0x02121e98 R
 __ZN8GoombossD1Ev                                                        ??1Goomboss@@UAE@XZ                                              0x0211f000 R
 
 __ZN3HUD13RenderVsTimerEv                                                ?RenderVsTimer@HUD@@QAEXXZ                                       0x020fca18 R
