@@ -5229,6 +5229,19 @@
     "src/game/actors/d_a_linelift2.cpp#func_ov091_02132360": "tangosdev",
     "src/game/actors/d_a_linelift2.cpp#func_ov091_02132380": "tangosdev",
     "src/game/actors/d_a_linelift2.cpp#daLinelift2_c_classInit_KM2_SUSUMU": "tangosdev",
-    "src/game/actors/d_a_linelift2.cpp#daLinelift2_c_classInit_KM3_LIFT": "tangosdev"
+    "src/game/actors/d_a_linelift2.cpp#daLinelift2_c_classInit_KM3_LIFT": "tangosdev",
+    "src/game/actors/d_a_cnn.cpp#_ZN7daCnn_cD1Ev": "tangosdev",
+    "src/game/actors/d_a_cnn.cpp#_ZN7daCnn_cD0Ev": "tangosdev",
+    "src/game/actors/d_a_cnn.cpp#func_ov098_0213a984": "andrewboudreau",
+    "src/game/actors/d_a_cnn.cpp#func_ov098_0213aa28": "lunavyqo",
+    "src/game/actors/d_a_cnn.cpp#func_ov098_0213ad08": "tangosdev",
+    "src/game/actors/d_a_cnn.cpp#func_ov098_0213ade8": "tangosdev",
+    "src/game/actors/d_a_cnn.cpp#func_ov098_0213b0a4": "tangosdev",
+    "src/game/actors/d_a_cnn.cpp#func_ov098_0213b15c": "tangosdev",
+    "src/game/actors/d_a_cnn.cpp#_ZN7daCnn_c16CleanupResourcesEv": "tangosdev",
+    "src/game/actors/d_a_cnn.cpp#_ZN7daCnn_c6RenderEv": "tangosdev",
+    "src/game/actors/d_a_cnn.cpp#_ZN7daCnn_c8BehaviorEv": "tangosdev",
+    "src/game/actors/d_a_cnn.cpp#_ZN7daCnn_c13InitResourcesEv": "andrewboudreau",
+    "src/game/actors/d_a_cnn.cpp#daCnn_c_classInit": "tangosdev"
   }
 }

@@ -62,18 +62,18 @@ _ZN16daObjFallBlock_c8BehaviorEv kind:function(arm,size=0x428) addr:0x0213a36c
 daObjFallBlock_c_InitResources kind:function(arm,size=0x14c) addr:0x0213a794
 daObjFallBlock_c_RequestShake kind:function(arm,size=0xc) addr:0x0213a8e0
 daObjFallBlock_c_OnStoodOn kind:function(arm,size=0x14) addr:0x0213a8ec
-_ZN6CannonD1Ev kind:function(arm,size=0x38) addr:0x0213a900
-_ZN6CannonD0Ev kind:function(arm,size=0x4c) addr:0x0213a938
+_ZN7daCnn_cD1Ev kind:function(arm,size=0x38) addr:0x0213a900
+_ZN7daCnn_cD0Ev kind:function(arm,size=0x4c) addr:0x0213a938
 func_ov098_0213a984 kind:function(arm,size=0xa4) addr:0x0213a984
 func_ov098_0213aa28 kind:function(arm,size=0x2e0) addr:0x0213aa28
 func_ov098_0213ad08 kind:function(arm,size=0xe0) addr:0x0213ad08
 func_ov098_0213ade8 kind:function(arm,size=0x2bc) addr:0x0213ade8
 func_ov098_0213b0a4 kind:function(arm,size=0xb8) addr:0x0213b0a4
 func_ov098_0213b15c kind:function(arm,size=0x7c) addr:0x0213b15c
-_ZN6Cannon16CleanupResourcesEv kind:function(arm,size=0x3c) addr:0x0213b1d8
-_ZN6Cannon6RenderEv kind:function(arm,size=0x58) addr:0x0213b214
-_ZN6Cannon8BehaviorEv kind:function(arm,size=0x68) addr:0x0213b26c
-_ZN6Cannon13InitResourcesEv kind:function(arm,size=0x168) addr:0x0213b2d4
+_ZN7daCnn_c16CleanupResourcesEv kind:function(arm,size=0x3c) addr:0x0213b1d8
+_ZN7daCnn_c6RenderEv kind:function(arm,size=0x58) addr:0x0213b214
+_ZN7daCnn_c8BehaviorEv kind:function(arm,size=0x68) addr:0x0213b26c
+_ZN7daCnn_c13InitResourcesEv kind:function(arm,size=0x168) addr:0x0213b2d4
 daCnn_c_classInit kind:function(arm,size=0x40) addr:0x0213b43c
 _ZN7daWbm_cD1Ev kind:function(arm,size=0x48) addr:0x0213b47c
 _ZN7daWbm_cD0Ev kind:function(arm,size=0x5c) addr:0x0213b4c4
@@ -140,7 +140,6 @@ data_ov098_0213c65c kind:data(any) addr:0x0213c65c
 _ZTS7daCnn_c kind:data(any) addr:0x0213c664
 _ZTI7daCnn_c kind:data(any) addr:0x0213c670
 g_profile_CANNON kind:data(any) addr:0x0213c67c ambiguous
-_ZTV6Cannon kind:data(any) addr:0x0213c6a0
 _ZTV7daCnn_c kind:data(any) addr:0x0213c6a0
 data_ov098_0213c71c kind:data(any) addr:0x0213c71c
 data_ov098_0213c724 kind:data(any) addr:0x0213c724
