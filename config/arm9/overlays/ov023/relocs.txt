@@ -81,7 +81,6 @@ from:0x02111bdc kind:load to:0x02111b20 module:overlay(23)
 from:0x02111be4 kind:load to:0x02111bf8 module:overlay(23)
 from:0x02111bec kind:load to:0x02111b40 module:overlay(23)
 from:0x02111bf4 kind:load to:0x02111b24 module:overlay(23)
-from:0x02111c04 kind:load to:0x02080000 module:main
 from:0x02111fa0 kind:load to:0x0209a764 module:main
 from:0x02111fa4 kind:load to:0x02111fac module:overlay(23)
 from:0x02111fa8 kind:load to:0x021089ec module:overlay(2)
