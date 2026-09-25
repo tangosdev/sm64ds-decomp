@@ -17168,6 +17168,9 @@
       ]
     },
     "_ZN8dActor_c7FindEggER5dCc_c": {
+      "include/decl_Actor.h": [
+        "return:int"
+      ],
       "src/actors/Scuttlebug.cpp": [
         "return:void *"
       ],
