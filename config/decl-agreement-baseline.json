@@ -28101,6 +28101,9 @@
     "data_ov034_02114538": {
       "include/decl_common.h": [
         "return:int []"
+      ],
+      "src/actors/daHanachan_c.cpp": [
+        "return:daHanachan_c::State []"
       ]
     },
     "data_ov035_021121d8": {
