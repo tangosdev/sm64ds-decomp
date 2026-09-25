@@ -6,7 +6,7 @@
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
-    "tu_map unit ov089/daObjKey_c is 0x02130f00..0x021327d0 and starts at D1. The unmatched func_ov089_0213162c (0x0213162c, no complete marker) sits between the destructors and this run, so the licensed span is only the complete side 0x02131b18..0x021327d0, ten functions. D1, D0, UnloadKeyModels, LoadKeyModels and the unmatched hole stay shards."
+    "tu_map unit ov089/daObjKey_c is 0x02130f00..0x021327d0 and starts at D1. The not complete-enrolled func_ov089_0213162c (0x0213162c, no complete marker) sits between the destructors and this run, so the licensed span is only the complete side 0x02131b18..0x021327d0, ten functions. D1, D0, UnloadKeyModels, LoadKeyModels and the not complete-enrolled hole stay shards."
   ],
   "sections": [
     {

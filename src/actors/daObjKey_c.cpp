@@ -42,15 +42,14 @@ extern StateFunc data_ov089_02132cec[];
 /* Mangled bridges below, each kept for its own reason:
  * - Camera::SetFlag_3, Particle::System::New: include/Camera.h and
  *   include/Particle__System.h do not declare them.
- * - dActor_c::DropShadowRadHeight, dCcAcPos_c::Init: the real calls pass
- *   Fix12<int> by value and do not match.
- * - ModelAnim::SetAnim: include/ModelAnim.h declares it with Fix12<int>;
- *   the real call is untried.
+ * - dActor_c::DropShadowRadHeight, dCcAcPos_c::Init, ModelAnim::SetAnim:
+ *   the real calls pass Fix12<int> by value and do not match.
  * - dBgCh_Actr::Init: include/dBgCh_Actr.h declares it with Fix12i, which
  *   mangles to a different name.
  * - Player::SetNoControlState: include/Player.h declares it and the real
  *   call matches; the local declaration holds the declaration-agreement
- *   plurality that src/game/actors/d_a_wanwan.cpp needs. */
+ *   plurality that src/game/actors/d_a_wanwan.cpp needs.
+ * - Sound::LoadAndSetMusic_Layer3 is declared in include/decl_common.h. */
 extern "C" {
 extern void dBgCh_Actr_UpdateContinuous_Veneer(char *p);
 extern void *data_0209f318;

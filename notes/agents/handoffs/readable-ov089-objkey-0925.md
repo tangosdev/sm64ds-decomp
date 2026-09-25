@@ -6,10 +6,11 @@ This document describes this commit. The queue records its immutable output SHA.
 
 - Issue URL, task ID, stage, session and harness: https://github.com/tangosdev/sm64ds-decomp/issues/3154, task `readable-ov089-objkey-0925`, stage `revise`, role producer, session `claude-prod-readable-ov089-objkey-0925`, Claude Code.
 - Round 2: stage `revise`, role producer, session `claude-prod-readable-ov089-objkey-0925-r2`, Claude Code, input `be3560b7134e0d0848116f20be7820b41d509185` (the round-1 output). Comment-only rework of verifier findings V1 and V2; see Round 2 below.
+- Round 3: stage `revise`, role producer, session `claude-prod-readable-ov089-objkey-0925-r3`, Claude Code, input `ccd7f8295b463f2540761b1191a88dc7a84eea3e` (the round-2 output). Rework of verifier finding V4, plus V2a and V5; see Round 3 below.
 - Source branch and previous accepted input SHA: `readable/readable-ov089-objkey-0925`, input `c31f43bacfde4eb8e184b75077f85f4ba45a72a9` (origin/main at enqueue), which stays the tested base.
 - Original source base SHA and installed workflow/tool SHA: both `c31f43bacfde4eb8e184b75077f85f4ba45a72a9`.
 - Separate evidence commits and required artifacts in this commit: none. The compiler experiments below are prose records (the source change tried and the measured result); no experiment artifact is committed.
-- Next action, responsible role and blockers: independent verification (round 2) of this commit: comment accuracy of V1 and V2. No blockers.
+- Next action, responsible role and blockers: independent verification (round 3) of this commit: comment accuracy (V4) and the V2a manifest wording. No blockers.
 - Status: verified candidate, on the local evidence below.
 - Remaining uncommitted/local-only material and where it is preserved: none.
 
@@ -54,9 +55,9 @@ Verifier findings on `be3560b713`. Only comment lines in `src/actors/daObjKey_c.
 
 | ID | Finding | Outcome | Evidence |
 |---|---|---|---|
-| V1 | The bridge comment above the `extern "C"` block said every mangled name is a call the headers cannot spell; false for `Player::SetNoControlState` | Fixed | The comment now gives one reason per bridge, each checked against the header: `include/Camera.h` has no SetFlag_3 and `include/Particle__System.h` has no New (missing declaration); DropShadowRadHeight and dCcAcPos_c::Init take Fix12<int> by value and the real calls do not match (E11, E21); `include/ModelAnim.h:88` declares SetAnim with Fix12<int> and the real call is untried; `include/dBgCh_Actr.h:113` declares Init with Fix12i, a typedef of s32 that mangles as `i`, not `5Fix12IiE`; `include/Player.h:512` declares SetNoControlState and the real call matches, and the local declaration stays for the plurality `src/game/actors/d_a_wanwan.cpp:678` needs (E7, R8). |
+| V1 | The bridge comment above the `extern "C"` block said every mangled name is a call the headers cannot spell; false for `Player::SetNoControlState` | Fixed | The comment now gives one reason per bridge, each checked against the header: `include/Camera.h` has no SetFlag_3 and `include/Particle__System.h` has no New (missing declaration); DropShadowRadHeight, dCcAcPos_c::Init and ModelAnim::SetAnim take Fix12<int> by value and the real calls do not match (E11, E21, E24; round 3 corrected the SetAnim clause, which round 2 wrote as untried); `include/dBgCh_Actr.h:113` declares Init with Fix12i, a typedef of s32 that mangles as `i`, not `5Fix12IiE`; `include/Player.h:512` declares SetNoControlState and the real call matches, and the local declaration stays for the plurality `src/game/actors/d_a_wanwan.cpp:678` needs (E7, R8). |
 | V2 | The banner called `func_ov089_0213162c` unmatched | Fixed | Banner now says it byte-matches but is enrolled without a `complete` marker (ov089 `delinks.txt:35-36`), so the build keeps the cartridge's bytes there. `python tools/match.py --c src/func_ov089_0213162c.c --func func_ov089_0213162c --addr 0x0213162c --size 0x4ec --version 2004/b56 --module ov089 --strict-relocs` reports MATCHING VERSIONS: 2004/b56. The banner's other claims were rechecked against ov089 `delinks.txt`: the run 0x02131b18..0x021327d0 (lines 38-40), D1 0x02130f00 and D0 0x02130f50 (lines 7-13), and the `func_ov089_02130fb4`, `UnloadKeyModels`, `LoadKeyModels`, `func_ov089_0213115c` and `func_ov089_021311c0` shards (lines 15-33), all with `complete` markers. |
-| V2a | `config/tu_manifest.d/ov089/daObjKey_c.json` `boundary_evidence[0]` repeats "the unmatched func_ov089_0213162c" and "the unmatched hole" | Still deferred | Not a comment; round 2 is limited to comments and this handoff. Owner: next producer on #3154 (https://github.com/tangosdev/sm64ds-decomp/issues/3154). |
+| V2a | `config/tu_manifest.d/ov089/daObjKey_c.json` `boundary_evidence[0]` repeats "the unmatched func_ov089_0213162c" and "the unmatched hole" | Fixed in round 3 | See Round 3 below. |
 | V3 | `mState` is really the key kind | Still deferred | Left as instructed. |
 
 Round 2 proof, run in `C:/tmp/claude-rd-ov089` on this commit's source:
@@ -64,6 +65,28 @@ Round 2 proof, run in `C:/tmp/claude-rd-ov089` on this commit's source:
 | Command | Exit | Result |
 |---|---|---|
 | `python tools/tubuild.py verify ov089/daObjKey_c` | 0 | 10/10 MATCH, objisolate clean, reloc-destinations clean; manifest not rewritten |
+| `python tools/check_dead_references.py` | 0 | no new dead references, no broken markdown links |
+| `python tools/check_decl_agreement.py --changed c31f43bacf` | 0 | no new local redeclarations, no new declaration disagreements |
+
+## Round 3
+
+Verifier findings on `ccd7f8295b`. Changed: comment lines in `src/actors/daObjKey_c.cpp`, two words in `boundary_evidence[0]` of `config/tu_manifest.d/ov089/daObjKey_c.json`, and this handoff.
+
+| ID | Finding | Outcome | Evidence |
+|---|---|---|---|
+| V4 | The bridge comment and the V1 row said the `ModelAnim::SetAnim` real call is untried | Fixed | SetAnim moved into the "pass Fix12<int> by value and do not match" bullet; V1 and R5 rows corrected. Measured (E24). |
+| V2a | Manifest `boundary_evidence[0]` said "unmatched" | Fixed | "The unmatched func_ov089_0213162c" became "The not complete-enrolled func_ov089_0213162c" and "the unmatched hole" became "the not complete-enrolled hole"; no other manifest text or field changed. The function byte-matches (V2) but ov089 `delinks.txt:35-36` has no `complete` marker. |
+| V5 | The bridge comment did not say where `Sound::LoadAndSetMusic_Layer3` is declared | Fixed | One line added: it is declared in `include/decl_common.h` (line 1866), not in the block below. |
+
+| ID | Function | Tried | Result |
+|---|---|---|---|
+| E24 | InitResources | Both SetAnim sites as `mModelAnim.SetAnim(..., 0x40000000, sp, 0)` with a `Fix12<int> sp` local of 0x1000 | DIFF, 9 relocation destinations wrong, objisolate failure. Reverted; mangled call kept. |
+
+Round 3 proof, run in `C:/tmp/claude-rd-ov089` on this commit's source:
+
+| Command | Exit | Result |
+|---|---|---|
+| `python tools/tubuild.py verify ov089/daObjKey_c` | 0 | 10/10 MATCH, objisolate clean, reloc-destinations clean; manifest verification block not rewritten |
 | `python tools/check_dead_references.py` | 0 | no new dead references, no broken markdown links |
 | `python tools/check_decl_agreement.py --changed c31f43bacf` | 0 | no new local redeclarations, no new declaration disagreements |
 
@@ -77,7 +100,7 @@ Self-audit of the base, R1 to R24. Deferred rows name the owner as the next prod
 | R2 | extern "C" helpers | `func_ov089_02131f54` is a C-linkage free function | Fixed | Member `UpdateModelTransform` (coined), renamed the same way. `include/decl_common.h` still declares `func_ov089_02131f54(void *)`; nothing uses that declaration, and the file is off limits (R20). E10. |
 | R3 | extern "C" helpers | `func_ov089_02131dcc` and `func_ov089_02131df4` are C-linkage on `char *` | Partially fixed | Bodies use typed locals, named fields and real calls (E6, E8). The names and `(char *, char *)` signature stay: the enrolled `src/func_ov089_021311c0.c` and `src/func_ov089_0213162c.c` shards call them by name, outside this reservation. Owner: next producer on #3154. |
 | R4 | mangled bridges | Camera::SetLookAt and SetPos, dBgCh_Actr::JustHitGround, IsOnGround and SetLimMovFlag, dActor_c::FindWithID and UpdatePos, dEnemyBase_c::UpdateYoshiEat, dCc_c::Clear and Update, dCcAcPos_c::SetPosRelativeToActor, fBase_c::MarkForDestruction, Event::SetBit and ClearBit, Animation::LoadFile, ModelBase::SetFile, Sound::PlayBank3, ShadowModel::InitCylinder | Fixed | Real calls (E1, E13, E15, E20); Event is declared locally in namespace form as other sources do. Undefined-symbol set unchanged. |
-| R5 | mangled bridges | `ModelAnim::SetAnim`, `dCcAcPos_c::Init`, `dActor_c::DropShadowRadHeight`, `Particle::System::New` | Deferred: measured, no committed artifact | Fix12<int> by value: E11, E21. SetAnim and Particle::System::New take the same Fix12<int> arguments and are not declared by any header this TU may edit; not tried separately. Owner: next producer on #3154. |
+| R5 | mangled bridges | `ModelAnim::SetAnim`, `dCcAcPos_c::Init`, `dActor_c::DropShadowRadHeight`, `Particle::System::New` | Deferred: measured, no committed artifact | Fix12<int> by value: E11, E21. SetAnim as a real call: DIFF (E24). Particle::System::New is not declared by any header this TU may edit. Owner: next producer on #3154. |
 | R6 | mangled bridges | `dBgCh_Actr::Init` | Still deferred | `include/dBgCh_Actr.h` declares Init with `Fix12i`, which mangles to a different symbol; shared header outside this reservation. |
 | R7 | mangled bridges | `Camera::SetFlag_3`, `Sound::LoadAndSetMusic_Layer3` | Still deferred | `include/Camera.h` does not declare SetFlag_3 and `include/Sound.h` does not declare LoadAndSetMusic_Layer3; both shared headers are outside this reservation. |
 | R8 | mangled bridges | `Player::SetNoControlState` | Deferred: measured, no committed artifact | E7: the real call matches, but dropping the local bridge declaration flips the decl-gate plurality and reds an untouched file. |
