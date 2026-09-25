@@ -327,7 +327,7 @@ daHyuhyu_c	DONE	include\Fwoosh.h  [alias: header uses pre-rename name]	dEnemyBas
 daIbl_c	DONE	include\RollingIronBall.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov100	7
 daJango_c	DONE	include\Klepto.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov062	8
 daKing_Donketu_c	DONE	include\daKing_Donketu_c.h	dEnemyBase_c	0	ov073	8
-daKlr_c	DONE	include\BulletBill.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov079	7
+daKlr_c	DONE	include\daKlr_c.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov079	7
 daKpaFire_c	DONE	include\BowserFire.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov060	6
 daKuriKing_c	DONE	include\Goomboss.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov074	6
 daManta_c	DONE	include\daManta_c.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov090	7

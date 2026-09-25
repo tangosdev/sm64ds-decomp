@@ -4549,6 +4549,11 @@
         "param:#1 int *",
         "param:#2 int *",
         "param:#3 int *"
+      ],
+      "src/game/actors/d_a_klr.cpp": [
+        "param:#1 Vector3 *",
+        "param:#2 const Vector3 *",
+        "param:#3 const Vector3 *"
       ]
     },
     "Vec3_ApproachHorz": {
@@ -6796,7 +6801,7 @@
         "param:#2 void *",
         "param:#5 void *"
       ],
-      "src/_ZN10BulletBill13InitResourcesEv.cpp": [
+      "src/_ZN7daKlr_c13InitResourcesEv.cpp": [
         "param:#1 char *",
         "param:#2 dActor_c *",
         "param:#5 Vector3_16 *"
@@ -7042,6 +7047,11 @@
         "param:#5 void *",
         "param:#6 void *",
         "return:int"
+      ],
+      "src/game/actors/d_a_klr.cpp": [
+        "param:#2 dActor_c *",
+        "param:#5 Vector3_16 *",
+        "param:#6 Vector3_16 *"
       ],
       "src/game/actors/d_a_kp_fr.cpp": [
         "param:#2 dActor_c *",
@@ -7327,7 +7337,7 @@
       ]
     },
     "_ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3": {
-      "src/_ZN10BulletBill8BehaviorEv.cpp": [
+      "src/_ZN7daKlr_c8BehaviorEv.cpp": [
         "param:#2 const Vector3 *"
       ],
       "src/actors/daGrock_c.cpp": [
@@ -7384,7 +7394,7 @@
       ]
     },
     "_ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj": {
-      "src/_ZN10BulletBill13InitResourcesEv.cpp": [
+      "src/_ZN7daKlr_c13InitResourcesEv.cpp": [
         "param:#1 char *",
         "param:#3 Vector3 *"
       ],
@@ -11067,7 +11077,7 @@
       "src/LoadSilverStarAndNumber.c": [
         "return:void"
       ],
-      "src/_ZN10BulletBill13InitResourcesEv.cpp": [
+      "src/_ZN7daKlr_c13InitResourcesEv.cpp": [
         "param:#1 void *",
         "return:BMD_File *"
       ],
@@ -12174,7 +12184,7 @@
       ]
     },
     "_ZN5Sound9PlayBank0EjRK7Vector3": {
-      "src/_ZN10BulletBill8BehaviorEv.cpp": [
+      "src/_ZN7daKlr_c8BehaviorEv.cpp": [
         "param:#2 const Vector3 *"
       ],
       "src/_ZN6Player10SpinBounceE5Fix12IiE.cpp": [
@@ -13091,7 +13101,7 @@
       ]
     },
     "_ZN6Player16IncMegaKillCountEv": {
-      "src/_ZN10BulletBill8BehaviorEv.cpp": [
+      "src/_ZN7daKlr_c8BehaviorEv.cpp": [
         "arity:0"
       ]
     },
@@ -13181,7 +13191,7 @@
       ]
     },
     "_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj": {
-      "src/_ZN10BulletBill8BehaviorEv.cpp": [
+      "src/_ZN7daKlr_c8BehaviorEv.cpp": [
         "param:#5 unsigned int",
         "param:#6 unsigned int",
         "param:#7 unsigned int",
@@ -14909,7 +14919,7 @@
       ]
     },
     "_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_": {
-      "src/_ZN10BulletBill8BehaviorEv.cpp": [
+      "src/_ZN7daKlr_c8BehaviorEv.cpp": [
         "return:void"
       ],
       "src/_ZN10StarMarker7CollectEv.cpp": [
@@ -15351,7 +15361,7 @@
       ]
     },
     "_ZN8dActor_c10FindWithIDEj": {
-      "src/_ZN10BulletBill8BehaviorEv.cpp": [
+      "src/_ZN7daKlr_c8BehaviorEv.cpp": [
         "return:void *"
       ],
       "src/_ZN10StarMarker16OnPendingDestroyEv.cpp": [
@@ -30210,10 +30220,10 @@
       ]
     },
     "data_ov079_021282f0": {
-      "src/_ZN10BulletBill13InitResourcesEv.cpp": [
+      "src/_ZN7daKlr_c13InitResourcesEv.cpp": [
         "return:char []"
       ],
-      "src/_ZN10BulletBill16CleanupResourcesEv.cpp": [
+      "src/_ZN7daKlr_c16CleanupResourcesEv.cpp": [
         "return:SharedFilePtr"
       ],
       "src/__sinit_ov079_02127a10.c": [
@@ -30221,10 +30231,10 @@
       ]
     },
     "data_ov079_02128300": {
-      "src/_ZN10BulletBill13InitResourcesEv.cpp": [
+      "src/_ZN7daKlr_c13InitResourcesEv.cpp": [
         "return:char []"
       ],
-      "src/_ZN10BulletBill16CleanupResourcesEv.cpp": [
+      "src/_ZN7daKlr_c16CleanupResourcesEv.cpp": [
         "return:SharedFilePtr"
       ],
       "src/__sinit_ov079_02127a10.c": [
@@ -31643,6 +31653,11 @@
         "return:int"
       ]
     },
+    "func_0200f760": {
+      "src/game/actors/d_a_klr.cpp": [
+        "param:#2 dCc_c *"
+      ]
+    },
     "func_0200fa04": {
       "src/func_0200fa8c.c": [
         "return:void"
@@ -32013,7 +32028,7 @@
       ]
     },
     "func_02012694": {
-      "src/_ZN10BulletBill8BehaviorEv.cpp": [
+      "src/_ZN7daKlr_c8BehaviorEv.cpp": [
         "param:#1 int"
       ],
       "src/_ZN10MrBlizzard8BehaviorEv.cpp": [

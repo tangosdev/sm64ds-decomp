@@ -147,49 +147,9 @@ src/d_a_btn_batan.c:
     complete
     .text start:0x021265e8 end:0x02126648
 
-src/_ZN10BulletBillD1Ev.cpp:
+src/game/actors/d_a_klr.cpp:
     complete
-    .text start:0x02126648 end:0x02126698
-
-src/_ZN10BulletBillD0Ev.cpp:
-    complete
-    .text start:0x02126698 end:0x021266fc
-
-src/_ZN10BulletBill16OnAimedAtWithEggEv.cpp:
-    complete
-    .text start:0x021266fc end:0x02126704
-
-src/func_ov079_02126704.c:
-    complete
-    .text start:0x02126704 end:0x02126794
-
-src/func_ov079_02126794.cpp:
-    complete
-    .text start:0x02126794 end:0x0212682c
-
-src/func_ov079_0212682c.c:
-    complete
-    .text start:0x0212682c end:0x02126a18
-
-src/_ZN10BulletBill16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02126a18 end:0x02126a48
-
-src/_ZN10BulletBill6RenderEv.cpp:
-    complete
-    .text start:0x02126a48 end:0x02126a84
-
-src/_ZN10BulletBill8BehaviorEv.cpp:
-    complete
-    .text start:0x02126a84 end:0x02126c44
-
-src/_ZN10BulletBill13InitResourcesEv.cpp:
-    complete
-    .text start:0x02126c44 end:0x02126d64
-
-src/d_a_klr.c:
-    complete
-    .text start:0x02126d64 end:0x02126dbc
+    .text start:0x02126648 end:0x02126dbc
 
 src/actors/daObjBkKillerdai_c.cpp:
     complete

@@ -418,7 +418,6 @@ extern int _ZTV10BigBooIcon[];
 extern int _ZTV10BowserFire[];
 extern int _ZTV10BowserTail[];
 extern int _ZTV19daObjBlockItemTag_c[];
-extern int _ZTV10BulletBill[];
 extern int _ZTV12daBombking_c[];
 extern int _ZTV10KoopaShell[];
 extern int _ZTV7daBbl_c[];
