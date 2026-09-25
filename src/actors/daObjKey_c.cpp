@@ -46,9 +46,6 @@ extern StateFunc data_ov089_02132cec[];
  *   the real calls pass Fix12<int> by value and do not match.
  * - dBgCh_Actr::Init: include/dBgCh_Actr.h declares it with Fix12i, which
  *   mangles to a different name.
- * - Player::SetNoControlState: include/Player.h declares it and the real
- *   call matches; the local declaration holds the declaration-agreement
- *   plurality that src/game/actors/d_a_wanwan.cpp needs.
  * - Sound::LoadAndSetMusic_Layer3 is declared in include/decl_common.h. */
 extern "C" {
 extern void dBgCh_Actr_UpdateContinuous_Veneer(char *p);
@@ -58,7 +55,6 @@ extern void _ZN6Camera9SetFlag_3Ev(Camera *cam);
 extern void *_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     u32 a, u32 b, int c, int d, int e, void *f, void *g);
 extern void func_02012694(unsigned int id, const Vector3 *pos);
-extern int _ZN6Player17SetNoControlStateEhih(void *p, unsigned char a, int b, unsigned char d);
 extern void func_ov002_020c3dbc(void *player);
 extern int data_0209caa0[];
 void Matrix4x3_FromRotationY(void *m, short angle);
@@ -201,10 +197,10 @@ extern "C" void func_ov089_02131df4(char *c, char *p)
     data_0209caa0[1] |= (2 << key->mState);
 
     if (key->mState <= 1) {
-        _ZN6Player17SetNoControlStateEhih(player, 3, -1, 0);
+        player->SetNoControlState(3, -1, 0);
         _ZN5Sound22LoadAndSetMusic_Layer3Ej(0x17);
     } else if (key->mState != 7) {
-        _ZN6Player17SetNoControlStateEhih(player, 3, -1, 0);
+        player->SetNoControlState(3, -1, 0);
         _ZN5Sound22LoadAndSetMusic_Layer3Ej(0x17);
     }
 
@@ -230,7 +226,7 @@ extern "C" void func_ov089_02131df4(char *c, char *p)
  * -> 0x02131f04. */
 void daObjKey_c::OnTurnIntoEgg(Player &player)
 {
-    /* The flag keeps the ROM's moveq/movne pair. */
+    /* The flag keeps the ROM's moveq and movne pair. */
     unsigned isKey = (actorID == 0x11a);
     if (isKey)
         return func_ov089_02131df4((char *)this, (char *)&player);
@@ -351,7 +347,7 @@ int daObjKey_c::Behavior()
         mModelAnim.Advance();
         UpdateModelTransform();
         if (mModelAnim.Finished()) {
-            /* The flag keeps the ROM's moveq/movne pair. */
+            /* The flag keeps the ROM's moveq and movne pair. */
             int isKey = (actorID == 0x11a);
             if (isKey != 0) {
                 if (mModelAnim.file != (BCA_File *)data_ov089_02132c40[1])
