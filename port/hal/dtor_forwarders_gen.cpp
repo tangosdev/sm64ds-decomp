@@ -758,10 +758,6 @@ extern "C" void _ZN7daDkk_cD1Ev(void *self)
 extern "C" void _ZN8PoleLiftD1Ev(void *self)
 { ((PoleLift *)self)->PoleLift::~PoleLift(); }
 
-/* ROM 0x020bae2c _ZN8SignPostD0Ev -- batch 3, the inline ~SignPost() plus _ZN6Memory10DeallocateEPvP4Heap */
-extern "C" void _ZN8SignPostD0Ev(void *self)
-{ ((SignPost *)self)->SignPost::~SignPost(); _ZN6Memory10DeallocateEPvP4Heap(self, GAME_HEAP_PTR); }
-
 /* ROM 0x020badd0 _ZN8SignPostD1Ev -- batch 3, the inline ~SignPost() */
 extern "C" void _ZN8SignPostD1Ev(void *self)
 { ((SignPost *)self)->SignPost::~SignPost(); }

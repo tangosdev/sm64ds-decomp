@@ -61,8 +61,13 @@
 src/_ZN8SignPost15OnGroundPoundedER8dActor_c.cpp
 src/_ZN8SignPost11OnAttacked1ER8dActor_c.cpp
 src/_ZN8SignPost15OnHitByMegaCharER6Player.cpp
-# RETIRED at SLICE1: body now in src/_ZN8SignPostD0Ev.cpp. main consolidation put this body in the class TU, which the build already compiles, so the per-function leftover is a second definition.
-#src/_ZN8SignPost4KillEv.cpp
+# RESTORED at RS5A (run linkfull wave 31, row R8). The SLICE1 note that retired
+# this row read src/_ZN8SignPostD0Ev.cpp's key-function forcer as the Kill body.
+# It is an EMPTY Kill, and the port's slot 31 had been running it: the map gave
+# ?Kill@SignPost@@UAEXXZ to _ZN8SignPostD0Ev.cpp.obj, folded with
+# IRQ::EmptyHandler. That file's _MSC_VER arm now defines the flat D0 instead,
+# so the ROM's own Kill below is the one definition.
+src/_ZN8SignPost4KillEv.cpp
 #
 # ---------------------------------------------------------------------------
 # BLACK_BRICK_BLOCK's table, ov002 0x02108adc -- slot 27 only.
