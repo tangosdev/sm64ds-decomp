@@ -35,39 +35,22 @@ extern "C" {
 extern void _ZN6Camera9SetFlag_3Ev(void* cam);
 extern void Matrix4x3_FromRotationY(void* m, short ang);
 extern void MulVec3Mat4x3(void* a, void* m, void* b);
-extern void _ZN6Camera9SetLookAtERK7Vector3(void* cam, struct Vector3* v);
-extern void _ZN6Camera6SetPosERK7Vector3(void* cam, struct Vector3* v);
 extern char* data_0209f318;
 extern "C" int RandomIntInternal(int *seed);
 extern "C" int data_0209e650;
-extern void* _ZN8dActor_c15FindWithActorIDEjPS_(unsigned int, void*);
 extern u16 DecIfAbove0_Short(u16* p);
 extern s16 Vec3_VertAngle(const struct Vector3* v1, const struct Vector3* v0);
-extern char* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, const struct Vector3* pos, const struct Vector3_16* ang, int e, int f);
-extern char* _ZN8dActor_c13ClosestPlayerEv(void* self);
 extern s16 data_02082214[];
-extern int _ZN9Animation8FinishedEv(void* c);
-extern int _ZN6Player12GetTalkStateEv(void* p);
-extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void* p, void* actor, u32 id, const Vector3* v, u32 a, u32 b);
-extern void _ZN8dActor_c10PoofDustAtERK7Vector3(void* c, const Vector3* v);
-extern void _ZN7fBase_c18MarkForDestructionEv(void* a);
 extern void func_02012694(u32 a, void* b);
-extern int _ZN6Player18HasFinishedTalkingEv(void* p);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 id, int x, int y, int z);
-extern void _ZN7Message7EndTalkEv();
 extern void _ZN5Sound22StopLoadedMusic_Layer3Ev();
 extern void func_02011cfc();
 extern void _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(u32 a, int f);
 extern int func_01ffa344(int);
 extern unsigned short data_ov074_02122e04[];
 extern int ApproachAngle(void*,int,int,int,int);
-extern int _ZN6Player9StartTalkER7fBase_cb(void* p, void* a, int b);
-extern void _ZN7Message11PrepareTalkEv(void);
-void _ZN8dActor_c19DisappearPoofDustAtERK7Vector3(void* self, void* v);
 void func_ov084_021296b0(void* a, void* b);
 int __aeabi_idiv(int a, int b);
-extern int _ZN8dActor_c13DistToCPlayerEv(char* c);
-extern int _ZN8dActor_c18HorzAngleToCPlayerEv(char* c);
 extern int AngleDiff(int a, int b);
 extern void _ZN5Sound22LoadAndSetMusic_Layer3Ej(unsigned int id);
 extern int func_01ffa594(int a, int b);
@@ -81,15 +64,12 @@ extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern s32 Vec3_HorzLen(const Vector3 *v);
 extern s16 _ZN4cstd5atan2E5Fix12IiES1_(s32 y, s32 x);
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
-extern char *_ZN8dActor_c10FindWithIDEj(unsigned int id);
-extern void _ZN6Player12Unk_020c6a10Ej(char *p, unsigned int a);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(char *p, const struct Vector3 *v, unsigned int a, int b, unsigned int c, unsigned int d, unsigned int e);
 extern s16 Vec3_HorzAngle(const struct Vector3 *v0, const struct Vector3 *v1);
 extern void MulMat4x3Mat4x3(void* out, void* a, void* b);
 extern void Vec3_LslInPlace(void* v, int n);
 extern struct Matrix4x3 data_020a0e68;
 extern struct Matrix4x3 IDENTITY_MATRIX4X3;
-extern void _ZN9Animation7AdvanceEv(void* p);
 void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* anim, void* file, int a, int b, unsigned int u);
 void _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(void* tt, void* file, int a, int b, unsigned int u);
 extern char data_ov074_02122f3c[];
@@ -99,15 +79,9 @@ extern char data_ov002_0210da30;
 extern char data_ov084_02130cf8;
 extern char data_ov074_02123000;
 extern char data_ov074_02123040;
-void *_ZN5Model8LoadFileER13SharedFilePtr(void *shared);
 void LoadKeyModels(int idx);
-void *_ZN9Animation8LoadFileER13SharedFilePtr(void *shared);
-void *_ZN15TextureSequence8LoadFileER13SharedFilePtr(void *shared);
-void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *mb, void *bmd, int a, int b);
-void _ZN11ShadowModel12InitCylinderEv(void *self);
 void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
 void *self, void *actor, void *pos, s32 fx, s32 fy, u32 a, u32 b);
-void _ZN18TextureTransformer7PrepareER8BMD_FileR8BTA_File(void *bmd, void *bta);
 void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void *self, void *f, int a, s32 fix, u32 c);
 void _ZN15MaterialChanger7SetFileER8BMA_Filei5Fix12IiEj(void *self, void *f, int a, s32 fix, u32 c);
 void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
@@ -169,6 +143,8 @@ extern int func_ov074_021216f4(void* c);
 
 // @symbol func_ov074_02121300
 #include "common.h"
+#include "Camera.h"
+#include "Message.h"
 extern "C" {
 
 
@@ -240,7 +216,7 @@ void func_ov074_02120d74(char *raw)
     do {
         cur = p;
         if (cur->otherOwner != 0)
-            player = (dActor_c *)_ZN8dActor_c10FindWithIDEj(cur->otherOwner);
+            player = (dActor_c *)dActor_c::FindWithID(cur->otherOwner);
         if (player != 0)
             break;
         i++;
@@ -262,7 +238,7 @@ void func_ov074_02120d74(char *raw)
                 if (!(flags & 0x26fe0) && *(u8 *)&pl->mIsTakingDamage == 0) {
                     if (cur == &a->mdCc_cs[2]) {
                         if (a->mWalkSpeed != 0) {
-                            _ZN6Player12Unk_020c6a10Ej((char *)pl, 2);
+                            ((Player *)((char *)pl))->Unk_020c6a10(2);
                             a->mHurtTimer = 0x1e;
                         } else {
                             v1.x = a->mPosX;
@@ -272,7 +248,7 @@ void func_ov074_02120d74(char *raw)
                         }
                     } else if (cur == &a->mdCc_cs[3]) {
                         if (a->mWalkSpeed != 0) {
-                            _ZN6Player12Unk_020c6a10Ej((char *)pl, 2);
+                            ((Player *)((char *)pl))->Unk_020c6a10(2);
                             a->mHurtTimer = 0x1e;
                         } else {
                             v2.x = a->mPosX;
@@ -313,12 +289,12 @@ void func_ov074_02120d74(char *raw)
                                 v0.x = a->mPosX;
                                 v0.y = a->mPosY;
                                 v0.z = a->mPosZ;
-                                if (a->mMegaMushroomID == 0 && _ZN8dActor_c10FindWithIDEj(a->mMegaMushroomID) == 0) {
+                                if (a->mMegaMushroomID == 0 && dActor_c::FindWithID(a->mMegaMushroomID) == 0) {
                                     int k = ((u16)(s16)(a->mDirection * ((s16)((a->mScaleX / 0x1000) * 0x350 + 0x500) + 0x600) + (a->mWalkAngle + a->mMaxWalkSpeed))) >> 4;
                                     v0.x = (int)(((long long)data_02082214[k * 2] * 0x546000LL + 0x800) >> 12);
                                     v0.y += 0x32000;
                                     v0.z = (int)(((long long)data_02082214[k * 2 + 1] * 0x546000LL + 0x800) >> 12);
-                                    a->mMegaMushroomID = ((fBase_c *)_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0x115, 0, &v0, 0, a->mAreaId, -1))->uniqueID;
+                                    a->mMegaMushroomID = ((fBase_c *)dActor_c::Spawn(0x115, 0, v0, 0, a->mAreaId, -1))->uniqueID;
                                 }
                             }
                         }
@@ -445,7 +421,7 @@ void func_ov074_0212087c(int* out, Goomboss* self, int n_)
     out[1] = self->mPosY;
     out[2] = self->mPosZ;
 
-    if (*(int*)(_ZN8dActor_c13ClosestPlayerEv(self) + 8) == 3) {
+    if (*(int*)((char *)self->ClosestPlayer() + 8) == 3) {
         int rem;
         int quo;
         int scale;
@@ -523,7 +499,7 @@ void func_ov074_0212087c(int* out, Goomboss* self, int n_)
 extern "C" void func_ov074_02120808(Goomboss* c)
 {
     int ang = (short)(c->mWalkAngle + c->mDirection * 0x4500);
-    if (AngleDiff(ang, _ZN8dActor_c18HorzAngleToCPlayerEv((char*)c)) <= 0x4000)
+    if (AngleDiff(ang, ((dActor_c *)((char*)c))->HorzAngleToCPlayer()) <= 0x4000)
         return;
     func_ov074_02121a4c((char*)c, 6);
     c->mDirection *= -1;
@@ -720,7 +696,7 @@ void func_ov074_021201f0(Goomboss* c) {
     void* cam;
     short msg;
 
-    player = (Player*)_ZN8dActor_c13ClosestPlayerEv(c);
+    player = (Player*)c->ClosestPlayer();
     cam = data_0209f318;
     _ZN6Camera9SetFlag_3Ev(cam);
 
@@ -736,8 +712,8 @@ void func_ov074_021201f0(Goomboss* c) {
     pos.x -= 0x2f0000;
     pos.y += 0x20000;
     pos.z += 0x254000;
-    _ZN6Camera9SetLookAtERK7Vector3(cam, &look);
-    _ZN6Camera6SetPosERK7Vector3(cam, &pos);
+    ((Camera *)cam)->SetLookAt(look);
+    ((Camera *)cam)->SetPos(pos);
 
     ang = *(struct Ang16*)&c->mAngleX;
     ang.v[1] += 0x7fff;
@@ -758,14 +734,14 @@ void func_ov074_021201f0(Goomboss* c) {
 
     c->mAngleY = c->mDirection * 0x4500 + c->mWalkAngle;
     c->mTalkPlayer = player;
-    if (_ZN6Player9StartTalkER7fBase_cb(player, c, 1) == 0) return;
-    _ZN7Message11PrepareTalkEv();
+    if (player->StartTalk(*c, 1) == 0) return;
+    Message::PrepareTalk();
     if (c->mMusicStarted == 0) {
         _ZN5Sound22LoadAndSetMusic_Layer3Ej(0x2c);
         c->mMusicStarted = 1;
     }
     msg = (unsigned short)((int)player->param1 + 0xd3);
-    if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(player, c, msg, &msgpos[1], 0, 2) == 0) return;
+    if (player->ShowMessage(*c, msg, &msgpos[1], 0, 2) == 0) return;
     func_02012694(0x15a, &c->mCamSpacePosX);
     func_ov074_021203e4((char*)c, 1);
 }
@@ -784,12 +760,12 @@ extern void func_02011d20(void);
 extern char *data_0209f318;
 void func_ov074_0212018c(Goomboss *c)
 {
-    if (_ZN6Player12GetTalkStateEv(c->mTalkPlayer) != -1)
+    if (((Player *)c->mTalkPlayer)->GetTalkState() != -1)
         return;
     (*(int *)(((int)data_0209f318 + 0x154))) &= ~8;
     _ZN5Sound22LoadAndSetMusic_Layer3Ej(0x2d);
     func_02011d20();
-    _ZN7Message7EndTalkEv();
+    Message::EndTalk();
     func_ov074_021203e4((char*)c, 2);
 }
 }
@@ -816,8 +792,8 @@ void func_ov074_02120080(Goomboss* c){
   }
   ApproachAngle(&c->mWalkSpeed, c->mMaxWalkSpeed, 0xa, 0x20, 1);
   func_ov074_021216f4(c);
-  if(_ZN8dActor_c13DistToCPlayerEv((char*)c) >= 0x4b0000) return;
-  if(AngleDiff(_ZN8dActor_c18HorzAngleToCPlayerEv((char*)c), c->mAngleY) <= 0x4000) return;
+  if(((dActor_c *)((char*)c))->DistToCPlayer() >= 0x4b0000) return;
+  if(AngleDiff(((dActor_c *)((char*)c))->HorzAngleToCPlayer(), c->mAngleY) <= 0x4000) return;
   func_ov074_021203e4((char*)c, 4);
 }
 }
@@ -837,10 +813,10 @@ void func_ov074_0211ffcc(Goomboss* c) {
     func_ov074_02121a4c((char*)c, 5);
     return;
   }
-  if (_ZN8dActor_c13DistToCPlayerEv((char*)c) >= 0x4b0000) {
+  if (((dActor_c *)((char*)c))->DistToCPlayer() >= 0x4b0000) {
     func_ov074_021203e4((char*)c, 3);
   } else {
-    if (AngleDiff(_ZN8dActor_c18HorzAngleToCPlayerEv((char*)c), c->mAngleY) < 0x3000) {
+    if (AngleDiff(((dActor_c *)((char*)c))->HorzAngleToCPlayer(), c->mAngleY) < 0x3000) {
       func_ov074_021203e4((char*)c, 3);
       return;
     }
@@ -874,7 +850,7 @@ extern "C" void func_ov074_0211fd74(Goomboss* self)
 
 L90:;
     int spawnTarget = data_ov074_02122d80[self->mSizeIndex];
-    Player* pl = (Player*)_ZN8dActor_c13ClosestPlayerEv(self);
+    Player* pl = (Player*)self->ClosestPlayer();
     if (self->mSizeIndex == 1 && (int)pl->param1 != 3) spawnTarget = spawnTarget + 1;
 
     if (self->mModelAnim.Finished() == 0) return;
@@ -886,15 +862,15 @@ L90:;
     pp.x = pos.x;
     pp.y = pos.y;
     pp.z = pos.z;
-    _ZN8dActor_c19DisappearPoofDustAtERK7Vector3(self, &pp);
+    self->DisappearPoofDustAt(pp);
 
     u32 sid = 0xeeee;
     if ((int)pl->param1 != 3) {
         if (self->mSpawnedCount % 2 == 0) sid = 0xeeef;
     }
 
-    daKrb_c* sp2 = (daKrb_c*)_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-        0xc8, sid, &pos, (const struct Vector3_16*)&self->mAngleX, self->mAreaId, -1);
+    daKrb_c* sp2 = (daKrb_c*)dActor_c::Spawn(
+        0xc8, sid, pos, (const struct Vector3_16*)&self->mAngleX, self->mAreaId, -1);
     sp2->mTargetUniqueID = self->uniqueID;
     Vector3 v2;
     v2.x = self->mSpawnPosX;
@@ -908,7 +884,7 @@ L90:;
     *p602 = (u8)(*p602 + 1);
     self->mTimer = 2;
 
-    Player* pl2 = (Player*)_ZN8dActor_c13ClosestPlayerEv(self);
+    Player* pl2 = (Player*)self->ClosestPlayer();
     int dv = 3;
     if ((int)pl2->param1 != 3) {
         if (self->mSizeIndex == 1) dv = 5;
@@ -941,9 +917,9 @@ void func_ov074_0211fc38(Goomboss* c)
     if (c->mModelAnim.Finished() == 0) return;
     if (c->mSizeIndex != 0) goto detox;
     {
-        Player* player = (Player*)_ZN8dActor_c13ClosestPlayerEv(c);
-        if (_ZN6Player9StartTalkER7fBase_cb(player, c, 1) == 0) return;
-        _ZN7Message11PrepareTalkEv();
+        Player* player = (Player*)c->ClosestPlayer();
+        if (player->StartTalk(*c, 1) == 0) return;
+        Message::PrepareTalk();
         if (func_ov074_02121a20(c, 1) != 0 || func_ov074_02121a20(c, 2) != 0) {
             func_ov074_02121a4c((char*)c, 0xc);
             return;
@@ -1073,7 +1049,7 @@ extern "C" void func_ov074_0211f5b8(Goomboss* c)
         func_ov074_0211f154(c);
         {
             u16 msgId = (u16)((s32)player->param1 + 0xd7);
-            state = _ZN6Player12GetTalkStateEv(player);
+            state = player->GetTalkState();
             if (state != 0) {
                 if (state == 1)
                     return;
@@ -1081,7 +1057,7 @@ extern "C" void func_ov074_0211f5b8(Goomboss* c)
                     goto inc603;
                 return;
             }
-            if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(player, c, (s16)msgId, &vmsg, 1, 2) == 0)
+            if (player->ShowMessage(*c, (s16)msgId, &vmsg, 1, 2) == 0)
                 return;
             func_0201277c(0x15a);
         }
@@ -1091,7 +1067,7 @@ extern "C" void func_ov074_0211f5b8(Goomboss* c)
         return;
     case 1:
         if (DecIfAbove0_Short(&c->mTimer) == 0) {
-            dActor_c* actor = (dActor_c*)_ZN8dActor_c15FindWithActorIDEjPS_(0xc8, 0);
+            dActor_c* actor = (dActor_c*)dActor_c::FindWithActorID(0xc8, 0);
             if (actor != 0) {
                 u32 id = 0xc8;
                 while (1) {
@@ -1102,19 +1078,19 @@ extern "C" void func_ov074_0211f5b8(Goomboss* c)
                         v2.x = src[0];
                         v2.y = src[1];
                         v2.z = src[2];
-                        _ZN8dActor_c10PoofDustAtERK7Vector3(c, &v2);
-                        _ZN7fBase_c18MarkForDestructionEv(actor);
+                        c->PoofDustAt(v2);
+                        actor->fBase_c::MarkForDestruction();
                         c->mTimer = 2;
                         return;
                     }
-                    actor = (dActor_c*)_ZN8dActor_c15FindWithActorIDEjPS_(id, actor);
+                    actor = (dActor_c*)dActor_c::FindWithActorID(id, actor);
                     if (actor == 0)
                         break;
                 }
             }
         }
         if (c->mSpawnedCount == 1) {
-            dActor_c* a2 = (dActor_c*)_ZN8dActor_c15FindWithActorIDEjPS_(0xc8, 0);
+            dActor_c* a2 = (dActor_c*)dActor_c::FindWithActorID(0xc8, 0);
             if (a2 != 0) {
                 s32 flag2;
                 if (a2->mFlags & 0x40000)
@@ -1147,7 +1123,7 @@ extern "C" void func_ov074_0211f5b8(Goomboss* c)
         c->mSubState += 1;
         return;
     case 3:
-        if (_ZN6Player18HasFinishedTalkingEv(player) == 0)
+        if (player->HasFinishedTalking() == 0)
             return;
         c->mShouldRender = 0;
         vzero.x = c->mPosX;
@@ -1160,7 +1136,7 @@ extern "C" void func_ov074_0211f5b8(Goomboss* c)
         func_ov074_0211f344(c, 1);
         func_ov074_0211f244(c);
         *(s32*)AT(data0209f318, 0x154) &= ~8;
-        _ZN7Message7EndTalkEv();
+        Message::EndTalk();
         _ZN5Sound22StopLoadedMusic_Layer3Ev();
         func_02011cfc();
         _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0x7f, 0x15666);
@@ -1173,9 +1149,9 @@ extern "C" void func_ov074_0211f5b8(Goomboss* c)
         vzero.y = c->mPosY;
         vzero.z = c->mPosZ;
         vzero.y = vzero.y + 0x12c000;
-        _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0x11a, 2, &vzero, 0, c->mAreaId, -1);
+        dActor_c::Spawn(0x11a, 2, vzero, 0, c->mAreaId, -1);
         func_02012694(0xbb, &c->mCamSpacePosX);
-        _ZN7fBase_c18MarkForDestructionEv(c);
+        c->fBase_c::MarkForDestruction();
         return;
     default:
         return;
@@ -1229,12 +1205,12 @@ int func_ov074_0211f38c(Goomboss* c){
             spawnPos.z += (int)(((s64)radius * data_02082214[sinIdx+1] + 0x800) >> 0xc);
         }
         spawnAngle.x=Vec3_VertAngle(&basePos, &spawnPos);
-        _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0xc7, 0x1111, &spawnPos, &spawnAngle, c->mAreaId, -1);
+        dActor_c::Spawn(0xc7, 0x1111, spawnPos, &spawnAngle, c->mAreaId, -1);
         c->mSpawnedCount += 1;
         c->mTimer = 2;
     }
     spawnTarget=data_ov074_02122d80[c->mSizeIndex];
-    player=(Player*)_ZN8dActor_c13ClosestPlayerEv(c);
+    player=(Player*)c->ClosestPlayer();
     if(c->mSizeIndex==1){ if((int)player->param1!=3) spawnTarget+=1; }
     return c->mSpawnedCount>=spawnTarget ? 1 : 0;
 }
@@ -1243,10 +1219,10 @@ int func_ov074_0211f38c(Goomboss* c){
 // @symbol func_ov074_0211f344
 extern "C" {
 void func_ov074_0211f344(Goomboss* self, unsigned char value) {
-  Goomboss* other = (Goomboss*)_ZN8dActor_c15FindWithActorIDEjPS_(0xc7, 0);
+  Goomboss* other = (Goomboss*)dActor_c::FindWithActorID(0xc7, 0);
   while (other) {
     if (other != self) other->mShouldRender = value;
-    other = (Goomboss*)_ZN8dActor_c15FindWithActorIDEjPS_(0xc7, other);
+    other = (Goomboss*)dActor_c::FindWithActorID(0xc7, other);
   }
 }
 }
@@ -1306,8 +1282,8 @@ void func_ov074_0211f154(Goomboss* c) {
     pos.x = pos.x + out.x;
     pos.y = pos.y + 0x300000;
     pos.z = pos.z + out.z;
-    _ZN6Camera9SetLookAtERK7Vector3(cam, &look);
-    _ZN6Camera6SetPosERK7Vector3(cam, &pos);
+    ((Camera *)cam)->SetLookAt(look);
+    ((Camera *)cam)->SetPos(pos);
 }
 }
 

@@ -150,6 +150,15 @@ struct fBase_c {
     virtual ~fBase_c();                              /* slots 16 (D1), 17 (D0) */
 
     /* --- non-virtual --- */
+    /* Callback types follow the configured Process signature. The cleanup,
+       behavior and render guards still declare int returns; their callers keep
+       the existing ABI records until those guard contracts are reconciled. */
+    typedef int (fBase_c::*ProcessFunction)();
+    typedef bool (fBase_c::*BeforeProcessFunction)();
+    typedef void (fBase_c::*AfterProcessFunction)(u32);
+
+    int Process(ProcessFunction action, BeforeProcessFunction before,
+                AfterProcessFunction after);
     void MarkForDestruction();
     /* size_t is unsigned long (`m`). The ROM allocator is operator new(unsigned)
        (`j` / _ZN7fBase_cnwEj); CW rejects that signature in-class
@@ -158,11 +167,11 @@ struct fBase_c {
     static void *operator new(size_t size) {
         return _ZN7fBase_cnwEj((unsigned)size);
     }
-    /* operator delete IS accepted in-class, and must be, INLINE: CW builds D0
-       (slot 17) as "run the destructor, then call operator delete", and without
-       this it calls the global _ZdlPv, which exists nowhere in this image. The
-       ROM's D0s under this class are each exactly their D1 plus the two
-       instructions this expands to. Note it reaches only fBase_c and dBase_c --
+    /* CW builds D0 (slot 17) as "run the destructor, then call operator delete".
+       The inline class overload selects the actor heap at data_020a0eac. The
+       global _ZdlPv exists at arm9 0x0203cbf0 but uses Memory::defaultHeapPtr. The
+       deleting destructor additionally calls the actor-heap deallocator.
+       This inline overload reaches only fBase_c and dBase_c --
        CW inlines it from the class itself or its IMMEDIATE base -- which is why
        include/dActor_c.h carries its own copy. */
     void operator delete(void *ptr) { _ZN6Memory10DeallocateEPvP4Heap(ptr, data_020a0eac); }
