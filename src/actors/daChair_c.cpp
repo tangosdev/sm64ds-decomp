@@ -59,7 +59,6 @@ void Vec3_Sub(void *res, void *v0, void *v1);
 s16 _ZN4cstd5atan2E5Fix12IiES1_(s32 y, s32 x);
 s32 Vec3_HorzLen(const Vector3 *v0);
 void *_ZNK10dBgCh_Actr13GetWallResultEv(void *);
-void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *, void *);
 void AddVec3(void *, void *, void *);
 int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
@@ -369,7 +368,7 @@ void daChair_c::State2()
             } else if (mWithMeshClsn.IsOnWall() != 0) {
                 void *wr = _ZNK10dBgCh_Actr13GetWallResultEv(c + 0x1bc);
                 PlainVector3 normal;
-                _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char *)wr + 4, &normal);
+                ((SurfaceInfo *)((char *)wr + 4))->CopyNormalTo(*(Vector3 *)&normal);
                 if (GetSubtraction(mPrevAngleY,
                         _ZN4cstd5atan2E5Fix12IiES1_(normal.x, normal.z)) > 0x4000) {
                     Break();

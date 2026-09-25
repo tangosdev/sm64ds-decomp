@@ -88,7 +88,6 @@ void func_0203568c(int *clsn, int radius);
 void func_02035684(int *clsn, int height);
 int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(dBgActor_c *, int, int);
 void func_ov063_0211ddf4(daPiano_c *self);
-void *_ZN7fBase_cnwEj(unsigned int size);
 void _ZN10dBgActor_cC2Ev(void *self);
 void _ZN9ModelAnimC1Ev(void *self);
 void _ZN11ShadowModelC1Ev(void *self);

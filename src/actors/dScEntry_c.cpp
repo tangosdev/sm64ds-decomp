@@ -51,6 +51,7 @@
  */
 
 #include "dScEntry_c.h"
+#include "OAM.h"
 
 extern "C" {
 unsigned int _ZN3G2S12GetBG2ScrPtrEv();
@@ -61,7 +62,6 @@ int _Z15ApproachLinear2Rsss(short *, short, short);
 extern unsigned char data_0209b2e4;
 
 extern void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int a, void *oam, int b, int c, int d, int e, int f, int g, int h, int i);
-extern void _ZN3OAM9RenderSubEP7OamAttrii(void *oam, int x, int y);
 extern int func_0203d974(void);
 
 int func_0200f0bc(void);
@@ -295,7 +295,7 @@ void dScEntry_c::icon_c::Render()
     }
 
 renderSub:
-    _ZN3OAM9RenderSubEP7OamAttrii(oam, xy[0], xy[1]);
+    OAM::RenderSub((OamAttr *)oam, xy[0], xy[1]);
 }
 
 // @symbol _ZN12OamAnimationD1Ev

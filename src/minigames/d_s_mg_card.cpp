@@ -80,8 +80,6 @@ extern int data_ov006_0213bd48[];
 extern void FreeGfxSlotsById(int arg);
 extern void func_ov004_020b56c8(int a);
 extern s16 data_ov004_020bf9e4;
-/* The active scene, as a dScMgBase_c. */
-extern void* data_ov004_020beb68;
 extern "C" void func_ov006_020c1604(char *c, int unused, short a2, int a3);
 extern "C" void func_ov004_020b66d4(void);
 extern u8 data_0209d45c;
@@ -91,7 +89,6 @@ extern void *LoadFile(int);
 extern int GetGameLanguage(void);
 extern void DecompressLZ16(void *, void *);
 extern int func_ov006_020c1a88(char *);
-void* _ZN7fBase_cnwEj(unsigned int);
 void _ZN11dScMgBase_cC2Ev(void*);
 void _ZN8Particle10SysTrackerC1Ev(void*);
 typedef void (*CardElementCallback)(void *);

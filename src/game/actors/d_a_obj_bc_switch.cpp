@@ -116,7 +116,6 @@ extern u8 IsAreaShowing(s32 idx);
 extern s32 _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(u32 a, s32 vol);
 extern void _ZN5Event6SetBitEj(u32 bit);
 extern u16 DecIfAbove0_Short(u16 *p);
-extern void *_ZN8dActor_c15FindWithActorIDEjPS_(u32 id, void *prev);
 /* dBgActor_c::IsClsnInRange(Fix12<int>, Fix12<int>) -- wall 6az on Behavior. */
 extern s32 _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, s32 a, s32 b);
 /* dBgW_KcMbg::SetFile -- wall 6az on InitResources. */
@@ -313,7 +312,7 @@ s32 daObjBC_Switch_c::Behavior()
                 else
                     mTickSound = func_02012310(mTickSound, 0x38, 0);
                 _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0x40, 0xc999);
-                if (_ZN8dActor_c15FindWithActorIDEjPS_(0x122, 0) == 0)
+                if (dActor_c::FindWithActorID(0x122, 0) == 0)
                     mCoinTimer = 1;
             }
         }

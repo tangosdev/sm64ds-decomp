@@ -84,7 +84,6 @@ int  func_ov015_021128e8(daObjBk_Lift_c *lift, void *unused);
 int  func_ov015_021128f8(void *collider, daObjBk_Lift_c *lift, void *unused);
 void func_ov015_021123c8(daObjBk_Lift_c *lift);
 
-void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *clsn);
 int  _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
 unsigned _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned handle, unsigned a,
                                            unsigned id, void *pos, s16 f);
@@ -93,7 +92,6 @@ void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 id, Fix12i x, Fix12i y,
 void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     dBgW_KcMbg *self, KCL_File *file, const Matrix4x3 *mat,
     Fix12i scale, s16 angle, CLPS_Block *clps);
-void _ZN4dBgW21UpdatePosWithVelocityERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_();
 void _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
     void *self, void *shadow, void *mat, int a, int b, int c, unsigned flags);
 }
@@ -156,7 +154,7 @@ int daObjBk_Lift_c::InitResources()
         (KCL_File *)dBgW_Kc::LoadFile(data_ov015_02114a5c),
         &mClsnMat, 0x199, mAngleY, &data_ov015_02113594);
     func_020393d4(&mMeshCollider,
-        (void *)&_ZN4dBgW21UpdatePosWithVelocityERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
+        (void *)&dBgW::UpdatePosWithVelocity);
     func_020393c4(&mMeshCollider, (void *)&func_ov015_021128f8);
 
     Vector3 probePos;
@@ -218,7 +216,7 @@ int daObjBk_Lift_c::Behavior()
             *p = v;
             mMoveTimer = b;
         }
-        _ZN8dActor_c9UpdatePosEP5dCc_c(self, 0);
+        UpdatePos(0);
         UpdateModelPosAndRotY();
         if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(self, 0x150000, 0x1000) != 0)
             UpdateClsnPosAndRot();
@@ -229,7 +227,7 @@ int daObjBk_Lift_c::Behavior()
                 int bound;
                 int y;
 
-                _ZN8dActor_c9UpdatePosEP5dCc_c(self, 0);
+                UpdatePos(0);
                 bound = mMinPosY;
                 y = mPosY;
                 flag = (y >= bound);

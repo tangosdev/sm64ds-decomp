@@ -24,7 +24,6 @@ namespace cstd { int fdiv(int a, int b); }
 
 extern "C" {
 extern SharedFilePtr *data_ov056_02113314[];
-extern int _ZNK7PathPtr8NumNodesEv(void *p);
 extern void Vec3_Sub(Vector3 *out, Vector3 *a, Vector3 *b);
 extern int LenVec3(Vector3 *v);
 extern void Vec3_MulScalar(Vector3 *out, Vector3 *v, int s);
@@ -83,14 +82,14 @@ int daObjEwmIceBlock_c::Behavior()
     if (mPath.Loops()) {
         if (mPathDir > 0) {
             if (delta < 0)
-                delta = _ZNK7PathPtr8NumNodesEv((char *)&mPath) - 1;
+                delta = (int)mPath.NumNodes() - 1;
         } else {
-            if (delta >= _ZNK7PathPtr8NumNodesEv((char *)&mPath))
+            if (delta >= (int)mPath.NumNodes())
                 delta = looped;
         }
         mPath.GetNode(node, delta);
     } else {
-        if (delta < 0 || delta >= _ZNK7PathPtr8NumNodesEv((char *)&mPath)) {
+        if (delta < 0 || delta >= (int)mPath.NumNodes()) {
             node.x = mPosX;
             node.y = mPosY;
             node.z = mPosZ;
@@ -117,13 +116,13 @@ int daObjEwmIceBlock_c::Behavior()
         mPathNodeIdx += mPathDir;
         if (mPathNodeIdx < 0) {
             if (mPath.Loops())
-                mPathNodeIdx = _ZNK7PathPtr8NumNodesEv((char *)&mPath) - 1;
+                mPathNodeIdx = (int)mPath.NumNodes() - 1;
             else {
                 mPathDir = 1;
                 mPathNodeIdx += mPathDir * 2;
             }
         }
-        if (mPathNodeIdx >= _ZNK7PathPtr8NumNodesEv((char *)&mPath)) {
+        if (mPathNodeIdx >= (int)mPath.NumNodes()) {
             if (mPath.Loops())
                 mPathNodeIdx = 0;
             else {
