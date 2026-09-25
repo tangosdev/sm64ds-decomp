@@ -23301,3 +23301,36 @@ endif()
 foreach(_tw28dpad1 walk_window walk_window_hires smoke_player)
     target_sources(${_tw28dpad1} PRIVATE ${SLICE_W28_DPAD1_SOURCES})
 endforeach()
+
+# ===========================================================================
+# BOOBRICK1 (run linkfull, lane BOOBRICK1), R3: KING BOO'S GATE READS THE
+# ov055 WORD MIRROR LUIGI WRITES
+# ===========================================================================
+#
+# src/unnamed/ov063/func_ov063_02117cdc.c is King Boo's cutscene (ov063
+# 0x02117cdc). Its step 5 waits for (&data_ov008_02111b6c)[0] == 0x1f000
+# (line 160), and the name it spells picks ov008, the test map's level
+# overlay, out of the thirteen overlays that claim 0x02111b6c
+# (config/arm9/overlays/ov063/relocs.txt line 199, the literal at 0x02118434).
+# The same function's call at 0x02118004 lists overlays 27 and 55 (line 184),
+# and the R-L15B3 block above settled that one as ov055 by disassembly. The
+# two lists meet only at ov055: level 47's own level overlay, .bss
+# 0x02111b60..0x02111b80, and level 47 is the one level that places the
+# type-15 King Boo (actor 210, param 0xff03; port/tools/ov_places.py --id 210
+# gives level 12 x2 and level 47 x1, and level 12's two are Big Boo types).
+# So on the cartridge this read is always ov055's word: Mirror Luigi's fade,
+# data_ov055_02111b6c, which src/_ZN11MirrorLuigi8BehaviorEv.cpp moves toward
+# 0x1ffff by 0x400 a frame, landing on 0x1f000 at tick 124, the frame the
+# gate accepts.
+#
+# The port bound the ov008 name to a frozen host copy (port/hal/link21_rows.cpp
+# row 8, retired in the same change as this block), so the gate never opened:
+# the player stayed in the talk state after Luigi appeared and King Boo never
+# came. A per-source rename, not an /alternatename, for R-L15B3's reason: both
+# names are real ROM addresses of different overlays, and only this one TU's
+# read belongs to ov055. APPEND, so R-L15B3's define on the same source stays.
+# src/ is untouched; the object's only change is the symbol it references.
+set_property(SOURCE
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/unnamed/ov063/func_ov063_02117cdc.c"
+    APPEND PROPERTY COMPILE_DEFINITIONS
+    "data_ov008_02111b6c=data_ov055_02111b6c")

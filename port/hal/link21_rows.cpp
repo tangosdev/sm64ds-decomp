@@ -7,8 +7,6 @@
 #include <cstdio>
 #include <cstring>
 
-#include "dsstate_seg.h"
-
 // =========================================================================
 // 1. Sound::PlayBank2_2D, the one name the two bannered drafts bring with them
 // =========================================================================
@@ -378,43 +376,28 @@ int data_ov062_0211d9c0(void)
 }
 
 // =========================================================================
-// 8. _data_ov008_02111b6c, a word inside an overlay that IS mounted whole
+// 8. _data_ov008_02111b6c, RETIRED (run linkfull, lane BOOBRICK1)
 // =========================================================================
 //
-// ov008 is mounted whole at port/CMakeLists.txt:2410, base 0x021111a0, end
-// 0x02111c20, so 0x02111b6c is inside it at offset 0x9cc with 0xb4 bytes to
-// spare. There is no port/ov008_syms.txt and there must not be one: ovdata.py's
-// --whole emitter publishes port_ov008_image and nothing by name, and adding a
-// per-symbol mount beside it would be a SECOND storage for one ROM address,
-// which is the thing this row was refused over.
+// This row defined the name as a frozen copy of the two words ov008's image
+// holds at 0x02111b6c. Its one reader is King Boo's cutscene,
+// src/unnamed/ov063/func_ov063_02117cdc.c:160, whose step 5 waits for the word
+// to equal 0x1f000. The row left open which of the overlays that claim the
+// address the gate reads, and the cartridge answers it: the literal at ov063
+// 0x02118434 lists thirteen candidates (config/arm9/overlays/ov063/relocs.txt
+// line 199) and the same function's call at 0x02118004 lists 27 and 55 (line
+// 184, settled as ov055 by the R-L15B3 block in port/CMakeLists.txt). They
+// meet only at ov055, level 47's own level overlay, whose .bss is
+// 0x02111b60..0x02111b80, and level 47 is the one level that places the
+// type-15 King Boo. The word is Mirror Luigi's fade, data_ov055_02111b6c,
+// which src/_ZN11MirrorLuigi8BehaviorEv.cpp moves toward 0x1ffff by 0x400 a
+// frame (0x1f000 at tick 124) and which port/ov055_syms.txt mounts by name.
 //
-// MSVC's /alternatename cannot carry an offset, so the name is defined here as
-// the two words the cartridge's own ov008 image holds at that address, read out
-// of extracted/overlays/overlay_0008.bin at 0x9cc:
-//
-//     02111b6c  0000fa14        02111b70  25e26810
-//
-// THE READ IS A SHARED-WINDOW READ and the port has already ruled on it. The
-// referrer, src/unnamed/ov063/func_ov063_02117cdc.c:160, tests
-// (&data_ov008_02111b6c)[0] == 0x1f000 in the Boo cutscene's TALK sub-state, and
-// config/arm9/overlays/ov002/relocs.txt:6676 says thirteen overlays claim that
-// address. port/unmatched/Boo_StateTalk.c:19-31 is the host copy of this very
-// function and its banner records that the 0x1f000 sentinel's home overlay is
-// NOT identified, that on level 12 the window holds ov020's image and the test
-// is false, and that it returns 0 elsewhere for the same reason.
-//
-// ov008's own bytes give the SAME BRANCH as that host copy's zero: 0xfa14 is not
-// 0x1f000, so the input-flag arm decides either way. This row therefore closes
-// the link without deciding the question the banner leaves open, and the
-// question is carried into out/LINK21/bugs.md rather than answered here.
-// IN .dsstate, because it is a hosted DS global and dsstate_guard says so: the
-// first build in this campaign that reached a link caught this row outside the
-// captured span, where a save state would not roll it back. Bracketed the way
-// hal/dsstate_seg.h asks, and no later extern re-declaration of the name
-// appears in this file, which is the silent way the bracket gets undone.
-DSSTATE_BEGIN
-int data_ov008_02111b6c[2] = { 0x0000fa14, 0x25e26810 };
-DSSTATE_END
+// Nothing ever wrote this copy, so the gate never opened: the player stayed
+// locked in the talk after Luigi appeared and King Boo never came (the 0.4.2
+// report). The reader now names the ov055 word through a per-source rename,
+// port/CMakeLists.txt's BOOBRICK1 block, the same route the R-L15B3 block
+// takes for the callee in the same function. ov008's own image is untouched.
 
 // =========================================================================
 // 9. _func_0206a4a0, the GBA cartridge probe
