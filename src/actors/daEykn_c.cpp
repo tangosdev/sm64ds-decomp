@@ -68,9 +68,9 @@ void UnloadBlueCoinModel(void *actor);
 void func_0201267c(u32 id, void *pos);
 void func_0200f760(void *actor, void *clsn);
 
-/* Each of these takes a Fix12<int> by value, so they stay declared by their
-   mangled names: DropShadowRadHeight as a member call measures 0xb0 bytes
-   against the cartridge's 0xa0 in UpdateModelTransform. */
+/* Each of these takes a Fix12<int> by value and stays declared by its
+   mangled name. Only DropShadowRadHeight was measured as a member call: it
+   gives 0xb0 bytes against the cartridge's 0xa0 in UpdateModelTransform. */
 int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     u32 uniqueID, u32 effectID, int x, int y, int z, const void *dir, void *callback);
 u32 _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
@@ -165,8 +165,10 @@ int daEykn_c::UpdateCircling()
 
 
 // @symbol _ZN8daEykn_c13UpdateEyeAnimEv
-/* Steps the eye's texture animation: close (steps 1-3), open (4-6), done (7).
- * Returns 1 on the step after the second opening finishes. */
+/* Steps the eye's texture animation through two identical blinks: steps 1-3
+ * and steps 4-6 each play the data_ov071_02123038 sequence, then the
+ * data_ov071_02123040 sequence. Step 7 resets to 0 and returns 1, one call
+ * after the second blink finishes. */
 int daEykn_c::UpdateEyeAnim()
 {
     switch (mSubState) {

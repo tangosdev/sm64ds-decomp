@@ -7,14 +7,16 @@ This document describes this commit. The queue records its immutable output SHA.
 - Issue URL, task ID, stage, session and harness: https://github.com/tangosdev/sm64ds-decomp/issues/3141,
   `readable-ov071-eykn-0925`, stage `revise`, session `claude-prod-readable-ov071-eykn-0925`,
   Claude Code (Opus 5.5).
+- Round 2: stage `revise`, session `claude-prod-readable-ov071-eykn-0925-r2`, Claude Code (Opus 5.5),
+  input `6a18279e12f052c02352883914e2d1145fa975d0`. It changes comments only (V1 and V2 below).
 - Source branch and previous accepted input SHA: `readable/readable-ov071-eykn-0925`, input
   `ace15a6c626d8fd133dd8accc41dd313be567d96`.
 - Original source base SHA and installed workflow/tool SHA: both `ace15a6c626d8fd133dd8accc41dd313be567d96`.
 - Separate evidence commits and required artifacts in this commit: none. Every measurement below was
   applied to the working tree, compiled with the pinned compiler and reverted. None has a committed
   artifact.
-- Next action, responsible role and blockers: independent verification (verifier) of this commit:
-  byte, relocation, whole-object and source review. No blockers.
+- Next action, responsible role and blockers: independent verification, round 2 (verifier), of this
+  commit: comment accuracy (V1). No blockers.
 - Status: verified candidate. Every local gate listed below exits 0.
 - Remaining uncommitted or local-only material and where it is preserved: none.
 
@@ -76,6 +78,13 @@ This document describes this commit. The queue records its immutable output SHA.
 | R11 | dead or local declarations | `include/decl_common.h` lines 2656-2657 declare `func_ov071_02120c90` and `func_ov071_02121634` | deferred | Those names no longer exist. The file is held by `jump-contract-repair-0918`. The declarations are unused, so nothing is affected. They should be deleted when the file is free. Owner: holder of `include/decl_common.h`, https://github.com/tangosdev/sm64ds-decomp/issues/3141. |
 | R12 | stale manifest notes | `config/decl-agreement-baseline.json` still has keys for the retired `_ZN8daEykn_c13InitResourcesEv` source and entries this commit resolves | deferred | Stale entries do not fail the gate. The rules forbid regenerating that file. Owner: integrator, https://github.com/tangosdev/sm64ds-decomp/issues/3141. |
 
+## Verifier findings, round 1
+
+| ID | Finding | Outcome | Change |
+|---|---|---|---|
+| V1 | The `daEykn_c::UpdateEyeAnim` comment said "close (steps 1-3), open (4-6), done (7)". Cases 1 and 4, 2 and 5, and 3 and 6 share bodies, so each range plays the same two sequences. | fixed | The comment now says the function steps through two identical blinks: steps 1-3 and steps 4-6 each play the `data_ov071_02123038` sequence, then the `data_ov071_02123040` sequence, and step 7 resets to 0 and returns 1, one call after the second blink finishes. |
+| V2 | The Fix12 bridge comment gave the DropShadowRadHeight measurement as the reason for all eight bridges. | fixed | The comment now says only DropShadowRadHeight was measured as a member call. Nothing else changed. |
+
 ## Reconstruction dimensions
 
 - Exact function, byte and relocation coverage: 23 of 23 functions, the whole tu_map cut
@@ -109,6 +118,17 @@ This document describes this commit. The queue records its immutable output SHA.
   is `partial`.
 
 ## Proof
+
+Round 2 (this commit against `6a18279e12`; `git diff 6a18279e12..HEAD` shows only comment lines in
+`src/actors/daEykn_c.cpp` and this handoff):
+
+- `python tools/tubuild.py verify ov071/daEykn_c`: exit 0. 23/23 MATCH, objisolate clean,
+  reloc-destinations clean, all 23 in ROM order, TEXT-VERIFIED. The manifest was not rewritten.
+- `python tools/check_dead_references.py`: exit 0. No new dead references and no broken markdown links.
+- `python tools/check_decl_agreement.py --changed ace15a6c62`: exit 0. No new local
+  redeclarations and no new disagreements.
+
+Round 1:
 
 All commands were run in this worktree against this commit's tree. The base is `ace15a6c62`.
 
