@@ -14,7 +14,14 @@
      remap       a file that moves jump, attack, the walk keys, a pad button
                  and the camera mode, and leaves everything else alone --
                  the moved ones move, the rest stay at their defaults, an
-                 out-of-range value reads as its default.
+                 out-of-range value reads as its default. Its PadJump is Y,
+                 the look default's button, so PadLook starts unbound.
+     look_042    a whole 0.4.2 launcher file (every Key* and Pad* it wrote,
+                 no KeyLook / PadLook): Look comes up on Z and pad Y.
+     look_taken  a file whose jump is Z and whose run is pad Y (the old
+                 RunButtonPad spelling): both halves of Look start unbound.
+     look_named  a file that names KeyLook and PadLook: obeyed as written,
+                 even onto a button another action holds.
      alias_old   only RunButtonKey / RunButtonPad in the file: read exactly
                  as before, and the new names answer the same.
      alias_both  both spellings present and disagreeing: KeyRun / PadRun win.
@@ -89,10 +96,11 @@ static void check_eq(int got, int want, const char *what)
 
 static const int KEY_DFLT[HOST_KEY_COUNT] = {
     0x57, 0x53, 0x41, 0x44, 0x26, 0x28, 0x25, 0x27,
-    0x20, 0x58, 0x11, 0x10, 0x0d, 0x08,
+    0x20, 0x58, 0x11, 0x10, 0x0d, 0x08, 0x5a,
 };
 static const int PAD_DFLT[HOST_PAD_COUNT] = {
     0x1000, 0x2000, 0x20000, 0x4000, 0x0010, 0,   /* crouch = RT pseudo-mask */
+    0x8000,                                       /* look = Y, the DS X */
 };
 
 static void check_defaults_except(const int *skip_key, int nskip_key,
@@ -141,8 +149,8 @@ static int child(const char *which)
         const int sk[] = { HOST_KEY_JUMP, HOST_KEY_ATTACK, HOST_KEY_UP,
                            HOST_KEY_LEFT, HOST_KEY_DOWN, HOST_KEY_RIGHT,
                            HOST_KEY_UP_ALT, HOST_KEY_SELECT };
-        const int sp[] = { HOST_PAD_JUMP, HOST_PAD_SELECT };
-        check_defaults_except(sk, 8, sp, 2);
+        const int sp[] = { HOST_PAD_JUMP, HOST_PAD_SELECT, HOST_PAD_LOOK };
+        check_defaults_except(sk, 8, sp, 3);
         check_eq(host_setting_key(HOST_KEY_JUMP), 0x4a, "KeyJump J");
         check_eq(host_setting_key(HOST_KEY_ATTACK), 0x4b, "KeyAttack K");
         check_eq(host_setting_key(HOST_KEY_UP), 0x49, "KeyUp I");
@@ -156,10 +164,33 @@ static int child(const char *which)
                  "KeySelect out of range reads as default");
         check_eq(host_setting_pad(HOST_PAD_JUMP), 0x8000, "PadJump Y");
         check_eq(host_setting_pad(HOST_PAD_SELECT), 0x0020, "PadSelect BACK");
+        check_eq(host_setting_pad(HOST_PAD_LOOK), 0, "PadLook unbound: "
+                 "the file's PadJump already holds Y");
         check_eq(host_setting_camera_mode(), 2, "CameraMode ds");
         /* the run pair was not in the file, so both spellings answer the
            default */
         check_eq(host_setting_run_key(), 0x10, "run key untouched");
+    } else if (!strcmp(which, "look_042")) {
+        /* the file a 0.4.2 launcher leaves: every binding it knows, at the
+           defaults, and nothing about Look -- which then comes up on its
+           defaults, the way an updating player gets the button */
+        check_defaults_except(0, 0, 0, 0);
+        check_eq(host_setting_key(HOST_KEY_LOOK), 0x5a, "KeyLook Z");
+        check_eq(host_setting_pad(HOST_PAD_LOOK), 0x8000, "PadLook Y");
+    } else if (!strcmp(which, "look_taken")) {
+        /* jump already on Z, run already on pad Y by its OLD spelling: the
+           new defaults would double up those choices, so both halves of
+           Look start unbound */
+        check_eq(host_setting_key(HOST_KEY_JUMP), 0x5a, "KeyJump Z");
+        check_eq(host_setting_pad(HOST_PAD_RUN), 0x8000, "PadRun Y (old name)");
+        check_eq(host_setting_key(HOST_KEY_LOOK), 0, "KeyLook unbound");
+        check_eq(host_setting_pad(HOST_PAD_LOOK), 0, "PadLook unbound");
+    } else if (!strcmp(which, "look_named")) {
+        /* named in the file: obeyed as written, even onto the button jump
+           holds (two actions on one key is legal) */
+        check_eq(host_setting_key(HOST_KEY_LOOK), 0x56, "KeyLook V");
+        check_eq(host_setting_pad(HOST_PAD_LOOK), 0x1000, "PadLook A as written");
+        check_eq(host_setting_pad(HOST_PAD_JUMP), 0x1000, "PadJump A");
     } else if (!strcmp(which, "camera_number")) {
         check_eq(host_setting_camera_mode(), 1, "CameraMode 1 is freecam");
     } else if (!strcmp(which, "alias_old")) {
@@ -544,6 +575,22 @@ int main(int argc, char **argv)
         "  \"CameraMode\": \"ds\",\n"
         "  \"Volume\": 50\n"
         "}\n");
+    bad |= run_case(exe, dir, "look_042",
+        "{\n"
+        "  \"KeyUp\": 87, \"KeyDown\": 83, \"KeyLeft\": 65, \"KeyRight\": 68,\n"
+        "  \"KeyUpAlt\": 38, \"KeyDownAlt\": 40, \"KeyLeftAlt\": 37,\n"
+        "  \"KeyRightAlt\": 39, \"KeyJump\": 32, \"KeyAttack\": 88,\n"
+        "  \"KeyCrouch\": 17, \"KeyRun\": 16, \"RunButtonKey\": 16,\n"
+        "  \"KeyStart\": 13, \"KeySelect\": 8,\n"
+        "  \"PadJump\": 4096, \"PadAttack\": 8192, \"PadCrouch\": 131072,\n"
+        "  \"PadRun\": 16384, \"RunButtonPad\": 16384, \"PadStart\": 16,\n"
+        "  \"PadSelect\": 0,\n"
+        "  \"RunMode\": \"analog\", \"CameraMode\": \"ds\"\n"
+        "}\n");
+    bad |= run_case(exe, dir, "look_taken",
+        "{ \"KeyJump\": 90, \"RunButtonPad\": 32768 }");
+    bad |= run_case(exe, dir, "look_named",
+        "{ \"KeyLook\": 86, \"PadLook\": 4096 }");
     bad |= run_case(exe, dir, "camera_number", "{ \"CameraMode\": 1 }");
     bad |= run_case(exe, dir, "alias_old",
         "{ \"RunButtonKey\": 82, \"RunButtonPad\": 32768 }");
@@ -654,6 +701,6 @@ int main(int argc, char **argv)
     }
     /* the count is the run_case calls above, counted rather than remembered:
        it was one out of date before run hd1 added five cases to it */
-    printf("smoke_settings: ok, 32 cases\n");
+    printf("smoke_settings: ok, 35 cases\n");
     return 0;
 }
