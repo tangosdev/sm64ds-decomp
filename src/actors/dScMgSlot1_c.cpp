@@ -40,7 +40,6 @@ extern void RenderOamMainScreen(void*, int, int, int, int);
 extern void* data_ov006_0213e6a8;
 extern void func_ov004_020b1b08(void *c);
 extern void func_ov001_020ab3f0(void *c);
-extern void *data_ov004_020beb68;
 void func_ov004_020af948(void* a, int b, int c, void* m);
 extern void* data_ov006_0213e528[];
 extern void** data_ov006_0213e5ec[];

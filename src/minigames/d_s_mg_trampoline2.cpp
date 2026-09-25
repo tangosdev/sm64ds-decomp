@@ -211,7 +211,6 @@ extern int data_ov006_021373fc[];
 extern int data_ov006_0213734c[];
 extern int data_ov006_021372f4[];
 extern int data_ov006_02137454[];
-extern void *_ZN7fBase_cnwEj(unsigned int size);
 extern void _ZN11dScMgBase_cC2Ev(void *scene);
 extern void _ZN8Particle10SysTrackerC1Ev(void *tracker);
 extern void __cxa_vec_ctor(void *base, int count, int stride, void *ctor, void *dtor);
@@ -221,11 +220,11 @@ extern void func_ov006_020d100c(void);
 extern void func_ov006_020efc08(void);
 extern void func_ov006_021225a8(void);
 extern void _ZN18TextureTransformerC1Ev(void *transformer);
+/* local extern: only sibling minigame headers (dScMgAmida_c.h and four
+   others) declare it; this TU includes none of them */
 extern void NullDestructor_0203d47c(void);
 extern void func_0203d738(void);
-extern int func_ov006_021227c8(char *object);
 extern int func_ov006_02122c90(char *object);
-extern Model *func_ov006_02122c68(Model *model);
 /* TUBUILD CONFLICT -- alternate declaration of func_ov006_02122814, from the legacy file for func_ov006_02122a4c, NOT applied: extern void func_ov006_02122814(char *obj); */
 /* TUBUILD CONFLICT -- alternate declaration of data_ov006_02142f7c, from the legacy file for func_ov006_02122b24, NOT applied: extern int data_ov006_02142f7c; */
 /* TUBUILD CONFLICT -- alternate declaration of data_ov006_02142f7c, from the legacy file for func_ov006_02122b88, NOT applied: extern unsigned char *data_ov006_02142f7c; */
@@ -320,7 +319,7 @@ extern "C" void *func_ov006_021248a8(char *raw)
 // @symbol dScMgTrampoline2_c_classInit
 extern "C" void *dScMgTrampoline2_c_classInit(void)
 {
-    char *scene = (char *)_ZN7fBase_cnwEj(0x7bac);
+    char *scene = (char *)fBase_c::operator new(0x7bac);
     if (scene) {
         char *it;
         _ZN11dScMgBase_cC2Ev(scene);
@@ -1427,8 +1426,8 @@ extern "C" void func_ov006_02122814(char *raw) {
 }
 
 extern "C" {
+/* local extern: no header declares it (the include/ hits are comments) */
 extern void __cxa_vec_cleanup(void* a, int b, int c, void* d);
-extern void NullDestructor_0203d47c(void);
 extern void _ZN18TextureTransformerD1Ev(void*);
 extern void _ZN5ModelD1Ev(void*);
 // @symbol func_ov006_021227c8
