@@ -1,7 +1,7 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class daEykn_c: 5 matched functions, 23 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
+/* daEykn_c: Mr. I, the eye that turns to watch a player and shoots at it.
+ * Offsets and widths are pinned by the bytes. The names of the fields from
+ * 0x1b4 on, and of the non-virtual methods, are coined from how
+ * src/actors/daEykn_c.cpp uses them; the ROM records none of them. */
 #ifndef DAEYKN_C_H
 #define DAEYKN_C_H
 #include "types.h"
@@ -17,19 +17,17 @@
  * (address point 0x02122d30); the tree's old coined name MrI only aliased
  * _ZTV3MrI to that same address, and the alias is gone. */
 struct daEykn_c : dActor_c {
+#ifdef __cplusplus
+    struct State;
+#endif
     /* dActor_c ends at 0x0d0; the derived payload begins at 0x0d4. */
     u8 pad_0d0[0x4];
     /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0xd4 -- a relocation the ROM build
-       checks. D1 and not D2, so it is this type and not an inlined base. The marker's pad
-       stopped short of the object, so the member also takes over unk_130 (+0x5c = speed),
-       which the header declared separately inside it. */
+       checks. D1 and not D2, so it is this type and not an inlined base. */
     ModelAnim mModelAnim;            /* 0x0d4 */
     /* TextureSequence member. The cartridge's own ~daEykn_c calls _ZN15TextureSequenceD1Ev
        at +0x138 (D0/D1), a relocation the ROM build checks; recovered by
-       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base.
-       The marker's pad stopped short of the object, so the member also takes over
-       unk_144 (+0xc = the Animation base's speed), which the header declared
-       separately inside it. */
+       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
     TextureSequence mTextureSequence;            /* 0x138 */
     /* ShadowModel member. The cartridge's own ~daEykn_c calls _ZN11ShadowModelD1Ev at +0x14c
        (D0/D1), a relocation the ROM build checks; recovered by tools/dtor_members.py.
@@ -39,17 +37,28 @@ struct daEykn_c : dActor_c {
        (D0/D1), a relocation the ROM build checks; recovered by tools/dtor_members.py.
        D1 and not D2, so it is this type and not an inlined base. */
     dCcAcPos_c mdCcAcPos_c;            /* 0x174 */
-    u8  mShadowMat;            /* 0x1b4 */
-    u8  pad_1b5[0x37];
-    s32 unk_1ec;            /* 0x1ec */
-    s32 mShadowRadiusScale;            /* 0x1f0 */
-    u8  pad_1f4[0xc];
-    s32 mShadowHeight;            /* 0x200 */
-    u8  pad_204[0x8];
-    s16 mTurnRefAngleY;            /* 0x20c */
-    u8  pad_20e[0x8];
-    u8  mTimer;            /* 0x216 */
-    u8  unk_217;            /* 0x217 */
+    /* The shadow's Matrix4x3, spelled flat: a Matrix4x3 member holds a Vector3,
+       whose inline destructor reorders this class's D1, D0 and D2 output. */
+    s32 mShadowMat[12];        /* 0x1b4 -- identity; [9..11] track the position */
+    const State *mState;       /* 0x1e4 -- current row of the state table */
+    s32 mStateID;              /* 0x1e8 -- 0 wait, 1 attack, 2 die; set by each init */
+    Player *mTarget;           /* 0x1ec -- the player being watched, or null */
+    s32 mScale;                /* 0x1f0 -- body scale; shadow radius and death swell */
+    s32 mCircleAngle;          /* 0x1f4 -- yaw turned while following one direction */
+    s32 mDeathSpinAngle;       /* 0x1f8 -- yaw turned while dying, per sound cue */
+    s32 mWobbleAmp;            /* 0x1fc -- pitch wobble amplitude while dying */
+    s32 mShadowHeight;         /* 0x200 */
+    u32 mParticleID0;          /* 0x204 -- particle system 0x13a */
+    u32 mParticleID1;          /* 0x208 -- particle system 0x13b */
+    s16 mTurnRefAngleY;        /* 0x20c -- last frame's yaw */
+    s16 mDeathSpinSpeed;       /* 0x20e -- target yaw speed while dying */
+    u16 mWobblePhase;          /* 0x210 */
+    u8  unk_212;               /* 0x212 -- only ever written (0xf0) */
+    u8  mShotTimer;            /* 0x213 -- frames until the next shot */
+    u8  mSubState;             /* 0x214 -- eye blink step, or the death step */
+    u8  mSubTimer;             /* 0x215 -- death wobble frames */
+    u8  mCircleTimer;          /* 0x216 -- frames left to keep circling */
+    s8  mStarTrackID;          /* 0x217 -- TrackStar slot of the big one's star */
 #ifdef __cplusplus
     virtual ~daEykn_c();                          /* slots 16/17 */
     virtual s32 InitResources();             /* slot 0 */
@@ -57,6 +66,34 @@ struct daEykn_c : dActor_c {
     virtual s32 Behavior();                  /* slot 6 */
     virtual s32 Render();                    /* slot 9 */
     virtual void OnPendingDestroy();         /* slot 12 -- empty body in the ROM */
+
+    /* Coined names: the state table carries no name strings, so every name
+       below is descriptive, following daObjCasket_c's SetState, RunState and
+       St_*_Init and St_*_Main. */
+    int  UpdateCircling();
+    int  UpdateEyeAnim();
+    void ResetEyeAnim();
+    int  StartEyeAnim();
+    void LookForPlayer();
+    void CheckAttacks();
+    void UpdateModelTransform();
+    int  St_Die_Main();
+    int  St_Die_Init();
+    int  St_Attack_Main();
+    int  St_Attack_Init();
+    int  St_Wait_Main();
+    int  St_Wait_Init();
+    void RunState();
+    void RunStateInit();
+    void SetState(int state);
+
+    /* One row of the state table: entered through init, run each frame
+       through exec. */
+    typedef int (daEykn_c::*StateFunc)();
+    struct State {
+        StateFunc init;
+        StateFunc exec;
+    };
 #endif
 };
 
