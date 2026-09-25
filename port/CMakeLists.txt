@@ -8137,8 +8137,7 @@ endforeach()
 set(SCENE_SMB_SOURCES
     unmatched/MgSmartball_Traps.cpp
     unmatched/MgSmartball_Slot18.cpp
-    unmatched/MgSmartball_Faces.cpp
-    unmatched/MgSmartball_SlotRestore.cpp)
+    unmatched/MgSmartball_Faces.cpp)
 
 # Run mg5 lane SMBSEAT: TWO SOURCE PROPERTIES THE SUB-OBJECT SEAT NEEDS.
 #
