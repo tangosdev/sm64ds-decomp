@@ -41,10 +41,6 @@ extern void _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(void *c, V3 v, unsign
 extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *self, void *kcl, void *mtx, int fix, short s, void *clps);
 extern int func_02012694(int a, void *b);
-extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *c);
-extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *c);
-extern int _ZN8dActor_c18GetBitInDeathTableEv(void *c);
-extern void _ZN8dActor_c17TrackInDeathTableEv(void *c);
 }
 
 /* ROM order. The out-of-line destructor is the key function, so it stays
@@ -89,8 +85,8 @@ extern "C" void func_ov091_021334b8(char *c, int flag)
         *q = *q - 1;
     }
     *(unsigned char *)(c + 0x31f) = 0xf;
-    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
-    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
+    ((daObjPile_c *)c)->UpdateModelPosAndRotY();
+    ((daObjPile_c *)c)->UpdateClsnPosAndRot();
     if (*(unsigned char *)(c + 0x31e) != 0) return;
 
     struct {
@@ -102,7 +98,7 @@ extern "C" void func_ov091_021334b8(char *c, int flag)
     st.vz = *(int *)(c + 0x64);
     st.vy = st.vy + 0x17c000;
     if (*(unsigned char *)(c + 0x320) == 0) {
-        if (_ZN8dActor_c18GetBitInDeathTableEv(c) == 0) {
+        if (((daObjPile_c *)c)->GetBitInDeathTable() == 0) {
             st.v2x = st.vx;
             st.v2y = st.vy;
             st.v2z = st.vz;
@@ -111,7 +107,7 @@ extern "C" void func_ov091_021334b8(char *c, int flag)
                 c, *(Vector3 *)&st.v2x, 5, 0x5000, 0);
         }
     }
-    _ZN8dActor_c17TrackInDeathTableEv(c);
+    ((daObjPile_c *)c)->TrackInDeathTable();
     func_ov091_02133498(c);
 }
 
