@@ -23418,3 +23418,21 @@ foreach(_xrel1_map IN LISTS OV_DATA_MAPS)
     math(EXPR _xrel1_mounts "${_xrel1_mounts} + 1")
 endforeach()
 message(STATUS "XREL1: ${_xrel1_mounts} ovdata mount(s) rebuild when their overlay's config changes")
+
+# B5INPUT (run linkfull): THE GAME LOOP'S OWN INPUT STEPS. port/slice_w31_b5input.txt
+# lists the ROM TUs tests/walk_window.cpp's level loop calls at the frame loop's
+# input phases (0x15, the pad read; 0x17, PadData, the ring and the soft-reset
+# latch). The two targets that compile tests/walk_window.cpp take them; nothing
+# in smoke_player calls them.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w31_b5input.txt" SLICE_B5INPUT_LINES)
+set(SLICE_B5INPUT_SOURCES "")
+foreach(line IN LISTS SLICE_B5INPUT_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_B5INPUT_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_tb5input walk_window walk_window_hires)
+    target_sources(${_tb5input} PRIVATE ${SLICE_B5INPUT_SOURCES})
+endforeach()

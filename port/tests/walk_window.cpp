@@ -817,6 +817,15 @@ void func_0203e0ac(void);
    port/slice_mp3.txt. It owns the switch that used to be hosted at the call
    site below, and the only call site of the seam's close() face. */
 void func_0203df40(void);
+/* run linkfull lane B5INPUT: the game loop's own pad read, phase 0x15
+   (src/func_0201ffcc.c, which calls func_0203df40 above), called from the
+   level loop's input phase point (see THE GAME LOOP'S OWN INPUT STEPS there).
+   The phase id is hal/rom_frame.cpp's. */
+extern "C" void func_0201ffcc(void);
+extern "C" int data_0209d50c;
+extern "C" unsigned char data_0209e64c;    /* hal/boot_arms.cpp: the gate */
+extern "C" int data_0209d574[];            /* hal/actor_vtables.cpp: the
+                                              watchdog alarm, ROM span 68 */
 /* the ROM's own camera math, which the freecam rig builds its view with:
    the same eye construction func_02009e70 uses and the same two G3i entry
    points plus CopyToViewMat that Camera::Render ends in */
@@ -12053,9 +12062,17 @@ int main(void)
                Under the real camera this is NOT written by hand: the
                camera publishes its own heading through func_0203dafc ->
                data_020a1040 -> func_0203e0ac -> data_020a1154, and
-               GetAngleToCamera reads the far end of that chain. */
+               GetAngleToCamera reads the far end of that chain.
+
+               The old dev rig (SM64DS_OLD_CAMERA) writes the LOCAL record's
+               heading, the head of that chain, since run linkfull lane
+               B5INPUT: the ROM's own pad read (phase 0x15, a little further
+               down this frame) now runs on every frame, and its echo copies
+               the local record's heading into all four per-player records, so
+               a store straight into record 0 would be overwritten before the
+               tick read it. */
             if (!real_camera)
-                *(short *)((char *)data_020a1164 + 0) =
+                *(short *)data_020a1050 =
                     (short)((int)(cam_yaw * (32768.0f / 3.14159265f)) + 0x8000);
             /* TEMPORARY headless input: OR any SM64DS_PROBE_INPUT press for this
                frame into the raw pad mirror BEFORE CheckInput, so the remap and
@@ -12419,6 +12436,68 @@ int main(void)
                still reaches raw_all this frame. */
             const unsigned short raw_all =
                 (unsigned short)(port_raw_dir_bits() | port_raw_bt_bits_for_mirror);
+            /* ---- THE GAME LOOP'S OWN INPUT STEPS (run linkfull, lane
+               B5INPUT) ------------------------------------------------------
+               src/func_020197b8.c reads the pad at phase 0x15, after phase 7's
+               wait, and the next frame consumes it at phases 0x16 / 0x17,
+               before phase 3 spawns and phase 4 ticks:
+
+                   data_0209d50c = 7;    func_0201a4bc();   the VBlank sleep
+                   data_0209d50c = 0x15; func_0201ffcc();   the pad read
+                   ... phase 9, then the next frame's 0xb and 2 ...
+                   data_0209d50c = 0x16; func_0203bb60();   TouchInfo
+                   data_0209d50c = 0x17; func_0203bc7c();   PadData
+
+               The host's between-frame duties -- the message pump and the
+               live keypad poll above, which is what the DS's KEYINPUT simply
+               IS at the instant the ROM reads it -- belong to phase 7's halt,
+               so THIS is the ROM's point on this loop: the frame's key word is
+               final and nothing of phase 3 or 4 has run. Phases 9, 0xb and 2
+               read no input word, so the order the ROM gives every word the
+               read touches is kept. (At the loop's foot instead, the read
+               would hand the tick the PREVIOUS frame's poll: a frame of input
+               lag the cartridge does not have.)
+
+               func_0201ffcc is the ROM's own wrapper round func_0203df40: it
+               holds the data_0209d574 watchdog alarm off across the read,
+               stamps its tick and republishes func_0203daac's count into
+               data_0208f274. It returns at once unless data_0209e64c is up,
+               and src/func_0201fec8.c:44 raises that on every boot (the a054
+               seam's R2b arm runs it).
+
+               IT RETIRES the camera block's direct func_0203df40() call further
+               down this frame (run mg16 lane MP3): a second call would read the
+               pad twice. The KEYINPUT publish moves up with it, because it
+               must land before the read (hal/comms_conductor.cpp, THE STUCK
+               CONTROLLER); the value is the word that block published, the
+               direction stash OR the button stash, which is raw_all. The one
+               thing the move shifts is WHERE the local record's heading
+               (Camera::Behavior's, or the rig's in analog mode) is echoed into
+               the four per-player records: here, at the top of the next frame,
+               rather than straight after the camera. Its first reader is still
+               the next frame's tick (GetAngleToCamera), so Mario steers by the
+               same heading on the same frame. */
+            port::comms_publish_pad(port_raw_pad_bits() | port_raw_btn_bits());
+            {
+                /* One line, once: the two words that decide what the ROM's
+                   wrapper does -- data_0209e64c (0 = it returns at once and
+                   the records go stale) and the watchdog's armed flag at
+                   data_0209d574+0x40 (1 = the wrapper's set/restore pair is a
+                   no-op and no alarm is ever armed). */
+                static int b5in_said;
+                if (!b5in_said) {
+                    b5in_said = 1;
+                    fprintf(stderr, "[b5input] phase 0x15 func_0201ffcc: "
+                            "data_0209e64c=%u watchdog+0x40=%u key=%04x\n",
+                            (unsigned)data_0209e64c,
+                            (unsigned)((const unsigned char *)data_0209d574)[0x40],
+                            (unsigned)(port_raw_pad_bits() | port_raw_btn_bits()));
+                }
+                const double t_rb = rb_replaying() ? ovl_now_ms() : 0;
+                data_0209d50c = 0x15;
+                func_0201ffcc();
+                if (rb_replaying()) rb_replay_phase(6, ovl_now_ms() - t_rb);
+            }
             if (!(port::comms_transport() && comms_fanout_on())) {
                 /* THE LOCAL SLOT, not always slot 0. PadData strides 4 bytes per
                    player ({u16 held, u16 pressed}); on the child data_0209f250 is
@@ -14739,11 +14818,14 @@ int main(void)
                BOTH HALVES of the host pad go in: the d-pad stash and the
                button stash (run mg16 lane MPBTN). Publishing only the first
                is what made every session's key word a d-pad nibble and every
-               button dead once the direct Ctrl stores were gated. */
-            port::comms_publish_pad(port_raw_pad_bits() | port_raw_btn_bits());
-            { const double t_rb = rb_replaying() ? ovl_now_ms() : 0;
-            func_0203df40();
-            if (rb_replaying()) rb_replay_phase(6, ovl_now_ms() - t_rb); }
+               button dead once the direct Ctrl stores were gated.
+
+               MOVED (run linkfull, lane B5INPUT): the publish and the read now
+               run at the ROM's own phase 0x15 point, THE GAME LOOP'S OWN INPUT
+               STEPS above the tick, through the ROM's wrapper func_0201ffcc.
+               Everything this paragraph says still holds there, in the same
+               order; the heading written just above reaches the four records
+               at that point, before the next frame's tick reads it. */
             /* run mg16 lane MP4: one frame of the state-sync layer, AFTER the
                conductor. Call position is the contract's ordering rule made
                structural: func_0203df40 above has already put this frame's

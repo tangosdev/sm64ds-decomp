@@ -1,0 +1,13 @@
+# B5INPUT (run linkfull, wave 31): THE GAME LOOP'S OWN INPUT STEPS.
+#
+# src/func_020197b8.c, the ROM's frame loop, reads the pad at phase 0x15
+# (func_0201ffcc) and turns it into PadData at phase 0x17 (func_0203bc7c, the
+# input ring, func_02023498). tests/walk_window.cpp's level loop calls each one
+# at that point (see THE GAME LOOP'S OWN INPUT STEPS there), so these are
+# enrolled in the two targets that compile that file: walk_window and
+# walk_window_hires. Nothing else calls them, so smoke_player does not carry
+# them.
+#
+# L5, phase 0x15: the pad read. The ROM's own wrapper round func_0203df40
+# (linked since run mg16 lane MP3), which retires that loop's direct call.
+src/func_0201ffcc.c
