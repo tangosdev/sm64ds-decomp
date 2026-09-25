@@ -264,6 +264,196 @@ def load_relocs(root, ov):
     return relocs
 
 
+# THE LEVEL-RECORD GUARD (run linkfull, lane XREL1).
+#
+# relocs.txt is a delinking artefact: dsd marks an aligned word as an address when
+# its VALUE falls inside some module's range. Inside a level overlay's object data
+# that guess is wrong wherever two data halfwords happen to read as an address:
+# an entrance record's rot.z 0x0000 then param 0x0210 is the word 0x02100000, which
+# sits inside ov002 and ov007. The mounts below take every row at its word, the
+# cross pass bound that one to ov002's copy of 0x02100000, and at boot the port
+# wrote a host address over the record: Shifting Sand Land's pyramid top
+# (level 17 entrance 4) arrived in the wrong mode and area, and Bowser in the
+# Fire Sea's entrance 4 (level 37) sent Mario straight into the arena. The DS
+# never relocates overlay data at run time, so a word inside a record field that
+# the record's own layout says is not a pointer can never be a pointer.
+#
+# So every mount of a LEVEL overlay walks that level's LVL_Overlay tree in the
+# ROM image and refuses a relocation whose word overlaps a non-pointer field.
+# The walk is the one bootab.entrance_counts and ov_places use: data_020758c8
+# [level] is the level's overlay id, data_02092208[level] its LVL_Overlay. The
+# layouts come from the matched loaders and headers, named per table below; a
+# kind nothing reads (13) is not judged. Absent ROM (link-only) = not checked,
+# said once, never passed silently.
+_LEVEL_OVERLAY_OF = 0x020758C8
+_LEVEL_LVL_OF = 0x02092208
+_P, _N = True, False
+_REC_LAYOUT = {
+    # name: [(offset, size, field, is_pointer)]
+    # Stage::LoadClsnAndObjects (clps, objTable, kclFileId, subTables, subCount),
+    # Stage::LoadModel (+8), func_0202a980 (+0xc), func_0202a96c (+0xe),
+    # StartWithFarCamera (+0x15), func_0202a958 (+0x16), Stage::GetSkyboxID (+0x18)
+    "LVL_Overlay": [(0, 4, "clps", _P), (4, 4, "objTable", _P), (8, 2, "bmdFileId", _N),
+                    (0xA, 2, "kclFileId", _N), (0xC, 4, "hdr_0c", _N),
+                    (0x10, 4, "subTables", _P), (0x14, 8, "subCount..skyboxWord", _N)],
+    # LoadClsnAndObjects (+0 table), Stage::LoadTextureTransformers (+4 bta), GetMinimapID (+8)
+    "LVL_SubTbl": [(0, 4, "table", _P), (4, 4, "bta", _P), (8, 4, "minimapId", _N)],
+    # include/LVL_Overlay.h ObjTable / ObjSubTable, LoadObjects
+    "ObjTable": [(0, 4, "count", _N), (4, 4, "entries", _P)],
+    "ObjSubTable": [(0, 4, "type|count", _N), (4, 4, "records", _P)],
+    # include/CLPS.h: 8-byte header, entries of two data words
+    "CLPS_Header": [(0, 8, "magic|stride|count", _N)],
+    "CLPS": [(0, 8, "w0|w1", _N)],
+    # src/func_020469e8.c Desc / Entry, src/func_02046b64.c (name at +4)
+    "BTA_Desc": [(0, 4, "numFrames", _N), (4, 4, "tableA", _P), (8, 4, "tableB", _P),
+                 (0xC, 4, "tableC", _P), (0x10, 4, "count", _N), (0x14, 4, "entries", _P)],
+    "BTA_Entry": [(0, 4, "id", _N), (4, 4, "name", _P), (8, 0x14, "flag/idx x5", _N)],
+}
+# category kind (LoadObjects' handler table data_ov002_0210cbb8) -> (record, stride)
+_KIND_LAYOUT = {
+    0: ("standard object", 0x10),   # include/LVL_Overlay.h StandardEntry
+    1: ("entrance", 0x10),          # StandardEntry, LoadEntranceObjects
+    2: ("path node", 6),            # include/PathPtr.h, PathPtr::GetNode
+    3: ("path", 6),                 # include/PathPtr.h PathDef
+    4: ("view", 0xE),               # GetViewObj, Camera::InitResources
+    5: ("simple object", 8),        # SimpleEntry
+    6: ("teleport source", 8),      # TeleportSourceEntry
+    7: ("teleport destination", 8), # GetTeleportDestObj, Player ObjTeleport
+    8: ("fog", 8),                  # Stage::LoadFog
+    9: ("door", 0xC),               # LoadDoorObjects
+    10: ("exit", 0xE),              # ExitEntry
+    11: ("minimap tile", 2),        # Minimap::InitResources
+    12: ("minimap scale", 2),       # GetMinimapScale
+    14: ("star camera", 4),         # GetStarCameraSetting
+}
+_RECORD_GUARD_SAID = set()
+
+
+def level_record_fields(root, ovid, base, data):
+    """({byte address: record description} for every NON-pointer byte of every
+    level record in this overlay, {pointer field address}), or None when the
+    overlay is not a level overlay or the ROM is absent."""
+    arm9p = root / "extracted/arm9_dec.bin"
+    if not arm9p.exists():
+        return None
+    arm9 = arm9p.read_bytes()
+    a32 = lambda x: struct.unpack_from("<I", arm9, x - 0x02004000)[0]
+    levels = [(lvl, a32(_LEVEL_LVL_OF + 4 * lvl)) for lvl in range(52)
+              if a32(_LEVEL_OVERLAY_OF + 4 * lvl) == ovid]
+    if not levels:
+        return None
+    has = lambda a, n=1: base <= a and a + n <= base + len(data)
+    u8 = lambda a: data[a - base]
+    u16 = lambda a: struct.unpack_from("<H", data, a - base)[0]
+    u32 = lambda a: struct.unpack_from("<I", data, a - base)[0]
+    nonptr, ptr = {}, set()
+
+    def lay(addr, fields, what):
+        for off, size, name, is_ptr in fields:
+            if not has(addr + off, size):
+                continue
+            if is_ptr:
+                ptr.add(addr + off)
+            else:
+                for b in range(addr + off, addr + off + size):
+                    nonptr.setdefault(b, "%s .%s" % (what, name) if name else what)
+
+    for lvl, lo in levels:
+        if not has(lo, 0x1C):
+            continue
+        lay(lo, _REC_LAYOUT["LVL_Overlay"], "level %d LVL_Overlay" % lvl)
+        clps = u32(lo)
+        if clps and has(clps, 8):
+            lay(clps, _REC_LAYOUT["CLPS_Header"], "level %d CLPS header" % lvl)
+            for i in range(u16(clps + 6)):
+                lay(clps + 8 + 8 * i, _REC_LAYOUT["CLPS"], "level %d CLPS entry %d" % (lvl, i))
+        tables = [("main", u32(lo + 4))]
+        subs, nsub = u32(lo + 0x10), u8(lo + 0x14)
+        btas = []
+        if subs and has(subs, nsub * 0xC):
+            for s in range(nsub):
+                lay(subs + s * 0xC, _REC_LAYOUT["LVL_SubTbl"], "level %d area %d" % (lvl, s))
+                tables.append(("area %d" % s, u32(subs + s * 0xC)))
+                if u32(subs + s * 0xC + 4):
+                    btas.append((s, u32(subs + s * 0xC + 4)))
+        for tname, t in tables:
+            if not t or not has(t, 8):
+                continue
+            lay(t, _REC_LAYOUT["ObjTable"], "level %d %s object table" % (lvl, tname))
+            n, ents = u16(t), u32(t + 4)
+            if not has(ents, n * 8):
+                continue
+            for j in range(n):
+                e = ents + 8 * j
+                lay(e, _REC_LAYOUT["ObjSubTable"], "level %d %s category %d" % (lvl, tname, j))
+                kind, cnt, recs = u8(e) & 0x1F, u8(e + 1), u32(e + 4)
+                if kind not in _KIND_LAYOUT:
+                    continue
+                label, stride = _KIND_LAYOUT[kind]
+                for i in range(cnt):
+                    lay(recs + i * stride, [(0, stride, "", _N)],
+                        "level %d %s %s record %d" % (lvl, tname, label, i))
+        for s, b in btas:
+            if not has(b, 0x18):
+                continue
+            lay(b, _REC_LAYOUT["BTA_Desc"], "level %d area %d texture animation" % (lvl, s))
+            nf, cnt, ents = u16(b), u16(b + 0x10), u32(b + 0x14)
+            hi = {4: -1, 8: -1, 0xC: -1}
+            for i in range(cnt):
+                e = ents + 0x1C * i
+                if not has(e, 0x1C):
+                    continue
+                lay(e, _REC_LAYOUT["BTA_Entry"], "level %d area %d texanim entry %d" % (lvl, s, i))
+                nm = u32(e + 4)
+                if nm and has(nm):
+                    n = 0
+                    while has(nm + n) and u8(nm + n):
+                        n += 1
+                    lay(nm, [(0, n + 1, "chars", _N)], "level %d texanim name" % lvl)
+                for fo, tab in ((8, 4), (0xC, 4), (0x10, 8), (0x14, 0xC), (0x18, 0xC)):
+                    top = u16(e + fo + 2) + (0 if u16(e + fo) == 1 else nf - 1)
+                    hi[tab] = max(hi[tab], top)
+            for tab, width in ((4, 4), (8, 2), (0xC, 4)):
+                if hi[tab] >= 0 and u32(b + tab):
+                    lay(u32(b + tab), [(0, (hi[tab] + 1) * width, "values", _N)],
+                        "level %d area %d texanim table at +0x%x" % (lvl, s, tab))
+    return nonptr, ptr
+
+
+def refuse_false_record_relocs(root, ov, ovid, base, data, relocs=None):
+    """Stop the build on a relocation that lands inside a non-pointer level
+    record field. See the banner above."""
+    if link_only.LINK_ONLY:
+        if ov not in _RECORD_GUARD_SAID:
+            _RECORD_GUARD_SAID.add(ov)
+            print(f"{ov}: level-record relocation guard NOT RUN (link-only: no "
+                  f"cartridge image to walk)")
+        return
+    got = level_record_fields(root, ovid, base, data)
+    if got is None:
+        return
+    nonptr, ptr = got
+    if relocs is None:
+        relocs = load_relocs(root, ov)
+    bad = []
+    for site in sorted(relocs):
+        hit = [nonptr[b] for b in range(site, site + 4) if b in nonptr]
+        if hit and site not in ptr:
+            word = int.from_bytes(data[site - base:site - base + 4], "little") \
+                if base <= site and site + 4 <= base + len(data) else None
+            bad.append((site, relocs[site], word, sorted(set(hit))))
+    if bad:
+        lines = [f"{ov}: {len(bad)} relocation(s) in config/arm9/overlays/{ov}/"
+                 f"relocs.txt land inside level record fields that are NOT "
+                 f"pointers. The DS never relocates overlay data, so each word "
+                 f"is data that only reads like an address; a host address "
+                 f"written over it changes the level. Remove the row(s):"]
+        for site, target, word, what in bad:
+            lines.append(f"  from:{site:#010x} to:{target:#010x} (word "
+                         f"{word:#010x}) inside {'; '.join(what)}")
+        sys.exit("\n".join(lines))
+
+
 # A synthetic gap block, as named below. Matched generically because the cross
 # pass sees blocks from every mount at once, not just one overlay's.
 IS_GAP = re.compile(r"^port_ov\d+_gap_")
@@ -1039,6 +1229,11 @@ def main():
         assert (word >> 24) == 0xEB, (
             f"{img}: first arm_call site 0x{mc.group(1)} is not a BL "
             f"(0x{word:08x}) -- image/config desync, re-extract")
+
+    # A level overlay's object data holds no pointers the records do not
+    # declare; refuse a relocation that says otherwise (see the banner above
+    # refuse_false_record_relocs).
+    refuse_false_record_relocs(root, ov, ovid, base, data)
 
     if whole:
         whole_mode(root, ov, ovid, base, data, out_path)
