@@ -21,4 +21,3 @@ from:0x0211199c kind:load to:0x021119b8 module:overlay(41)
 from:0x021119a4 kind:load to:0x02111880 module:overlay(41)
 from:0x021119ac kind:load to:0x02111888 module:overlay(41)
 from:0x021119b4 kind:load to:0x021118c0 module:overlay(41)
-from:0x021119c4 kind:load to:0x02080000 module:main
