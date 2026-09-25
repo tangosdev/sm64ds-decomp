@@ -63,8 +63,13 @@ TIMEOUT = 600
 # block (plus its 16-byte header) off the root heap's head, before the game heap
 # is carved from it (the level-1 log: "camera at 3003AE04", "tree: PLAYER
 # 3003AFBC").
-CAMERA = 0x3003AE04
-PLAYER = 0x3003AFBC
+# And 0xA804 (43012) LOWER since run linkfull wave 31 (lane S4ARC): the level
+# boot replays Stage::InitResources' archive lines, so on the castle grounds the
+# ROM's LoadArchive(7) mounts ar1 (42892 bytes plus its 0x60-byte archive
+# object) off the GAME heap's tail before the entrance spawns these two, as on
+# the DS (the level-1 log: "camera at 30030600", "tree: PLAYER 300307B8").
+CAMERA = 0x30030600
+PLAYER = 0x300307B8
 ARENA_BASE = 0x30000000
 
 

@@ -62,6 +62,17 @@
 # published into +0x00 carries the +0x50 image, +0x54 BTAF and +0x58 file-base
 # words src/func_0204ee40.c writes, which are the three
 # src/func_0204eda4.c and src/func_0204ede8.c read.
+#
+# RUN LINKFULL, LANE S4ARC: THESE FOUR RUN NOW. hal/card_mount.cpp's residency
+# publish is retired, so src/LoadArchive.c takes its mount branch whenever an
+# entry reads zero, on the heap it records at +0x04. The two ride-throughs
+# above are gone from src/ (func_02018d98 takes and passes (file, path);
+# Heap::_Allocate's veneer forwards (size, align) and returns the block, its C
+# name a port/faces_sync.txt R row onto the real member), so the branch runs
+# the ROM's own mount. The other half named under WHAT IS DELIBERATELY ABSENT
+# is split: func_020185c0, func_02018598 and func_0204eda4 (the open) are on
+# port/slice_w31_s4arc.txt with func_02018270 and the unmount; LoadFile,
+# func_0201818c, func_020186c0 and func_0204ede8 remain route R3's.
 src/LoadArchive.c
 src/func_02018934.c
 src/func_02018d98.c

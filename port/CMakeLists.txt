@@ -23586,6 +23586,45 @@ if(MSVC)
     endforeach()
 endif()
 
+# ===========================================================================
+# W31 S4ARC (run linkfull wave 31, lane S4ARC): THE ARCHIVE LOADER
+# ===========================================================================
+# The cartridge mounts and unmounts its thirteen NARC archives itself; the port
+# published them as permanently resident from a static initialiser in
+# hal/card_mount.cpp. That publish is retired, the ROM's own LoadArchive mounts
+# (its branch was already linked, port/slice_cardfs.txt), and
+# port/slice_w31_s4arc.txt carries the rest of the loader: LoadFileAt's reader
+# func_02018270 with the open (func_020185c0, func_02018598, func_0204eda4) and
+# the unmount (UnloadArchive, UnloadArchives, func_02018908, func_0204ee10).
+# Their empty faces in hal/stage_slot0.cpp and hal/scene_boot.cpp are gone; the
+# level boot replays Stage::InitResources' archive lines (hal/level_boot.cpp).
+#
+# All three hosting targets compile hal/stage_slot0.cpp, hal/scene_boot.cpp,
+# hal/level_boot.cpp and hal/card_mount.cpp, so all three take the slice.
+# hal/fs.cpp is compiled ONCE for them (port_slice_shared), so its host copy of
+# func_02018270 retires behind SM64DS_LOADAT_ROM on that whole name list, the
+# SM64DS_OV0_TABLE_ROM shape above; the smoke_* harnesses keep it.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w31_s4arc.txt" SLICE_W31_S4ARC_LINES)
+set(SLICE_W31_S4ARC_SOURCES "")
+foreach(line IN LISTS SLICE_W31_S4ARC_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_W31_S4ARC_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+set(S4ARC_READER_SRC "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_02018270.c")
+if(NOT S4ARC_READER_SRC IN_LIST SLICE_W31_S4ARC_SOURCES)
+    message(FATAL_ERROR "port/slice_w31_s4arc.txt does not list "
+            "src/func_02018270.c, the reader hal/fs.cpp's copy retires for")
+endif()
+foreach(_ts4arc walk_window walk_window_hires smoke_player)
+    target_sources(${_ts4arc} PRIVATE ${SLICE_W31_S4ARC_SOURCES})
+endforeach()
+set_property(SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/hal/fs.cpp" APPEND PROPERTY
+    COMPILE_DEFINITIONS
+    "$<$<IN_LIST:$<TARGET_PROPERTY:NAME>,port_slice_shared;walk_window;walk_window_hires;smoke_player>:SM64DS_LOADAT_ROM=1>")
+
 # XREL1 (run linkfull): EVERY OVERLAY MOUNT DEPENDS ON THE CONFIG IT READS.
 #
 # tools/ovdata.py builds each mount out of its overlay's config/arm9/overlays/

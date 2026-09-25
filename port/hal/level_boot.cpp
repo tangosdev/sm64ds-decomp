@@ -3440,6 +3440,50 @@ signed char GetLevelPart(int idx);
    Stage::InitResources:313. Called from port_stage_boot_body below. */
 extern "C" void func_ov001_020ab2e4(void);
 
+/* ---- STAGE::INITRESOURCES' ARCHIVE LINES (run linkfull, lane S4ARC) --------
+   The ROM mounts a level's archives in Stage::InitResources and the port's
+   level boot is this host body, so the lines are replayed here, at their
+   positions, calling the ROM's own functions (all matched src):
+
+     :236-258  the VS maps' archive index (0xBF = none); UnloadArchive(2..5)
+               except that one; LoadTextNarcs (archive 6 and the language's
+               text archive); LoadArchive(0); on the castle grounds archive 7
+               onto the GAME heap (Heap::SetDefault round trip); the VS archive
+     :402-403  after the level is built, the VS archive is released again
+               unless this machine is a download-play child (func_0203da3c())
+
+   and Stage::CleanupResources' `if (data_0209f2f8 == 1) UnloadArchive(7)`
+   (:107-108) rides port_level_reset_host, the teardown half, below.
+
+   WHY THE PORT OWES THEM NOW. Until this lane hal/card_mount.cpp published all
+   thirteen archives as resident from a static initialiser, so none of this had
+   an observable. The publish is retired (that file's banner) and the ROM's own
+   loader mounts: without these lines a level's archive reads (the bottom
+   screen's palettes through LoadFileAt, Stage::LoadGraphics2D) would find their
+   archive absent, and func_020185c0 would mount the whole NARC for the one read
+   and func_02018770 unmount it again after, per read. The level being entered
+   is port_level_id(), the value this body's own latch writes into
+   data_0209f2f8 further down (the ROM latches first, :227, then runs these). */
+extern "C" {
+int LoadArchive(int idx);
+void UnloadArchive(int i);
+void LoadTextNarcs(void);
+int func_0203da3c(void);
+int _ZN4Heap10SetDefaultEv(void *thiz);
+extern void *data_020a0eac;                         /* the game heap */
+void port_card_mount_snapshot(const char *where);   /* hal/card_mount.cpp */
+}
+
+static int port_stage_archive_idx(int level)
+{
+    int archiveIdx = 0xBF;
+    if (level == 0x33) archiveIdx = 2;
+    else if (level == 0x2B) archiveIdx = 3;
+    else if (level == 0x1D) archiveIdx = 4;
+    else if (level == 0x2A) archiveIdx = 5;
+    return archiveIdx;
+}
+
 extern "C" void *port_stage_boot_body(void *mc, int spawn)
 {
     const double lvlperf_t0 = port_lvlperf_now();
@@ -3462,6 +3506,29 @@ extern "C" void *port_stage_boot_body(void *mc, int spawn)
        the warp path. Either way the mount below resolves to the right overlay
        -- which is the whole fix for the warp booting the wrong level. */
     port_level_boot_target();
+    /* Stage::InitResources:236-258, the archive lines (the block above
+       port_stage_boot_body says why they are here). */
+    const int s4arc_level = (signed char)port_level_id();
+    const int s4arc_archive = port_stage_archive_idx(s4arc_level);
+    {
+        unsigned r7_2 = 2;
+        do {
+            if (r7_2 != (unsigned)s4arc_archive)
+                UnloadArchive((int)r7_2);
+            r7_2 += 1;
+        } while (r7_2 <= 5);
+        LoadTextNarcs();
+        LoadArchive(0);
+        if (s4arc_level == 1) {
+            const int saved = _ZN4Heap10SetDefaultEv(data_020a0eac);
+            LoadArchive(7);
+            _ZN4Heap10SetDefaultEv((void *)saved);
+        }
+        if (s4arc_archive != 0xBF)
+            LoadArchive(s4arc_archive);
+        if (std::getenv("SM64DS_CARDFS"))
+            port_card_mount_snapshot("level boot, InitResources:258");
+    }
     /* fx wrote this against the ov009-only mount; the lvl stream made the
        mount parameterised, and the bank load wants to happen before any level
        logic can open a text box, so it rides the new call */
@@ -4147,6 +4214,13 @@ extern "C" void *port_stage_boot_body(void *mc, int spawn)
     port_scene_canary("after LoadClsnAndObjects");
     if (!intro_seen && std::getenv("SM64DS_INTRO_UNSEEN"))
         data_0209caa0[8] &= ~0x80;
+
+    /* Stage::InitResources:402-403: the VS archive goes again once the level
+       is built, unless this machine is a download-play child. */
+    if (func_0203da3c() != 2 && s4arc_archive != 0xBF)
+        UnloadArchive(s4arc_archive);
+    if (std::getenv("SM64DS_CARDFS"))
+        port_card_mount_snapshot("level boot, InitResources:403");
 
     /* RISK 1 IS CLOSED, and not by writing anything here. The real SetFile
        leaves the collider's file<->world vectors at 1.0, which on the ROM is
@@ -6530,6 +6604,15 @@ extern "C" void port_level_reset_host(void)
         extern signed char data_02092120;
         data_02092120 = -1;
     }
+
+    /* Stage::CleanupResources:107-108, the teardown half of the archive lines
+       (run linkfull, lane S4ARC): leaving the castle grounds returns archive 7
+       to the game heap. data_0209f2f8 is still the level being LEFT here --
+       every caller runs this before port_level_latch. */
+    if (data_0209f2f8 == 1)
+        UnloadArchive(7);
+    if (std::getenv("SM64DS_CARDFS"))
+        port_card_mount_snapshot("level teardown, CleanupResources:108");
 }
 
 // ---- the Stage, between two levels -----------------------------------------

@@ -1,0 +1,45 @@
+# slice_w31_s4arc.txt -- run linkfull wave 31, lane S4ARC: THE ARCHIVE LOADER.
+#
+# The cartridge keeps its thirteen NARC archives in a mount table
+# (data_0208ecf4, hosted by hal/card_mount.cpp) and mounts and unmounts them
+# itself: LoadArchive reads the whole NARC off the card onto the heap it names
+# and registers it as a NitroSDK memory archive; these eight TUs are the other
+# half -- the reader that opens a file out of a mounted archive, and the
+# unmount. Before this lane the table was published as permanently resident by
+# a host static initialiser, UnloadArchive / UnloadArchives were empty faces
+# (hal/stage_slot0.cpp, hal/scene_boot.cpp) and func_02018270 was a host copy
+# (hal/fs.cpp); all three are retired and the publish with them.
+#
+#   src/func_02018270.c   LoadFileAt's reader (0x02018270): the handle through
+#                         func_02018a24, the open through func_020185c0, the
+#                         read through func_020184e0 (already linked), whose
+#                         tail is func_02018770's unmount-after-read.
+#   src/func_020185c0.c   the open by file id: a loose file (id < 0x8000) on
+#                         the "rom" archive through func_02018598 +
+#                         func_02018dc4; an archive member through the table,
+#                         mounting the archive first when it is not resident
+#                         and noting that in data_0208eb54 so the read's tail
+#                         unmounts it again.
+#   src/func_02018598.c   the FSFileID {data_0209d3b4, id} of a loose file.
+#   src/func_0204eda4.c   opens member idx of a mounted archive (func_0205d568).
+#   src/UnloadArchive.c   one entry: func_02018908(object, heap), zero both.
+#   src/UnloadArchives.c  all thirteen: the title and the DS theatre.
+#   src/func_02018908.c   unload the archive, then Heap::_Deallocate the block.
+#   src/func_0204ee10.c   the NitroSDK unload (func_0205caa8) and name release
+#                         (func_0205cbe4).
+#
+# src/func_02018770.c, the unmount-after-read, is already compiled
+# (port/slice_mg1.txt); this lane synced main's re-spelling of it (PR #3130),
+# which passes the archive index where the ARM leaves it in r0.
+#
+# All eight are MATCHING at 2004/b56 with --strict-relocs (tools/match.py by
+# ROM address) and VERIFIED by tools/prepush_linkcheck.py; none has an
+# #ifdef _MSC_VER arm, and none needed one.
+src/func_02018270.c
+src/func_020185c0.c
+src/func_02018598.c
+src/func_0204eda4.c
+src/UnloadArchive.c
+src/UnloadArchives.c
+src/func_02018908.c
+src/func_0204ee10.c

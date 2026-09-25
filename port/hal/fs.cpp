@@ -831,7 +831,14 @@ void *func_0201817c(u32 handle)
    LoadCompressedFileAt, so decode rather than write an LZ header into VRAM --
    and say so once, because it means the two are being confused.
    PORT_HOST_ABI: src drives the DS card loader (func_02018a24/func_020185c0/
-   func_020184e0 over card hardware); the HAL reimplements the load contract. */
+   func_020184e0 over card hardware); the HAL reimplements the load contract.
+
+   ONLY FOR THE NARROW HARNESSES since run linkfull wave 31 (lane S4ARC). The
+   three hosting targets compile this file with SM64DS_LOADAT_ROM and link
+   src/func_02018270.c instead (port/slice_w31_s4arc.txt): the ROM's reader
+   opens the file through func_020185c0 -- an archive member out of the archive
+   the ROM's own LoadArchive mounted -- and reads it with func_020184e0. */
+#ifndef SM64DS_LOADAT_ROM
 void func_02018270(u32 handle, u32 dest, int size)
 {
     long len = 0;
@@ -851,6 +858,7 @@ void func_02018270(u32 handle, u32 dest, int size)
     }
     free(raw);
 }
+#endif /* SM64DS_LOADAT_ROM */
 
 /* Construct: host ABI spells out both args (see header comment).
    ONLY FOR THE NARROW HARNESSES since run linkfull wave 27 (lane P1). The

@@ -955,6 +955,14 @@ extern "C" { int overlay_60, overlay_98; }
    mount is heap-shaped, and hal/card_mount.cpp's "THE MOUNT BRANCH" section is
    where the three things standing in the way of that are written down.
 
+   AND NOW IT IS NOT FACED AT ALL (run linkfull, lane S4ARC). The mount is
+   heap-shaped: hal/card_mount.cpp's publish is retired, the ROM's LoadArchive
+   mounts off the heap it records at +0x04, and an entry that is not mounted
+   reads zero. So src/UnloadArchives.c runs as the cartridge's: the title
+   (dScTitle_c::InitResources) and the DS theatre (dScDSMT_c::InitResources)
+   unmount whatever is resident through func_02018908 and free it to the heap
+   it came off. The face's line below is replaced by that note.
+
    The observable each face has to reproduce is nothing: three return void and
    the fourth is void, none has an out-parameter, and the ROM's own answer when
    the overlay is not resident is to do nothing. */
@@ -970,7 +978,9 @@ extern "C" void LoadOverlay(int)                       {}
    data_0209d3c4 is never filled, so the ROM's own body does exactly what this
    empty face did -- for the ROM's own reason instead of by assertion. The
    split of targets is hal/nitrofs_face.cpp's, for its reason. */
-extern "C" void UnloadArchives(void)                   {}
+/* UnloadArchives WAS FACED HERE; it is src/UnloadArchives.c now, on
+   port/slice_w31_s4arc.txt (run linkfull, lane S4ARC). See the paragraph
+   above that ends "the face's line below is replaced by that note". */
 /* AND THE FOURTH IS RETIRED (run link100, lane STAGEFIX). It stood here as
        extern "C" void LoadOrUnloadObjectOverlays(void (*)(int), int) {}
    until gate 213 enrolled the ROM's own src/
