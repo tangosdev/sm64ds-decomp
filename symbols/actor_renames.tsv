@@ -2525,12 +2525,12 @@ ov084	0x0212cf6c	func_ov084_0212cf6c	_ZN11BobOmbBuddy8BehaviorEv	vtable slot 6
 ov084	0x0212d028	func_ov084_0212d028	_ZN11BobOmbBuddy13InitResourcesEv	vtable slot 0
 ov084	0x0212d200	func_ov084_0212d200	BobOmbBuddy_Spawn	spawnfunc
 ov084	0x0212d200	BobOmbBuddy_Spawn	daRedBombhei_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
-ov084	0x0212d248	func_ov084_0212d248	_ZN19FirePiranhaPlantBigD1Ev	vtable slot 16
-ov084	0x0212d288	func_ov084_0212d288	_ZN19FirePiranhaPlantBigD0Ev	vtable slot 17
-ov084	0x0212e554	func_ov084_0212e554	_ZN19FirePiranhaPlantBig16CleanupResourcesEv	vtable slot 3
-ov084	0x0212e5a8	func_ov084_0212e5a8	_ZN19FirePiranhaPlantBig6RenderEv	vtable slot 9
-ov084	0x0212e614	func_ov084_0212e614	_ZN19FirePiranhaPlantBig8BehaviorEv	vtable slot 6
-ov084	0x0212e774	func_ov084_0212e774	_ZN19FirePiranhaPlantBig13InitResourcesEv	vtable slot 0
+ov084	0x0212d248	func_ov084_0212d248	_ZN8daFPkn_cD1Ev	vtable slot 16
+ov084	0x0212d288	func_ov084_0212d288	_ZN8daFPkn_cD0Ev	vtable slot 17
+ov084	0x0212e554	func_ov084_0212e554	_ZN8daFPkn_c16CleanupResourcesEv	vtable slot 3
+ov084	0x0212e5a8	func_ov084_0212e5a8	_ZN8daFPkn_c6RenderEv	vtable slot 9
+ov084	0x0212e614	func_ov084_0212e614	_ZN8daFPkn_c8BehaviorEv	vtable slot 6
+ov084	0x0212e774	func_ov084_0212e774	_ZN8daFPkn_c13InitResourcesEv	vtable slot 0
 ov084	0x0212ea18	func_ov084_0212ea18	FirePiranhaPlant_Spawn	spawnfunc
 ov084	0x0212ea18	FirePiranhaPlant_Spawn	daFPkn_c_classInit_PAKUN2	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov084	0x0212ea60	func_ov084_0212ea60	FirePiranhaPlantSmall_Spawn	spawnfunc
@@ -2555,7 +2555,7 @@ ov084	0x02130ae8	data_ov084_02130ae8	FirePiranhaPlantBig_SpawnInfo	spawninfo
 ov084	0x02130ae8	FirePiranhaPlantBig_SpawnInfo	g_profile_FIREPAKUN	reconstructed profile global; literal ROM ID FIREPAKUN+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov084	0x02130b04	data_ov084_02130b04	FirePiranhaPlantSmall_SpawnInfo	spawninfo
 ov084	0x02130b04	FirePiranhaPlantSmall_SpawnInfo	g_profile_FIREPAKUN_S	reconstructed profile global; literal ROM ID FIREPAKUN_S+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov084	0x02130b28	data_ov084_02130b28	_ZTV19FirePiranhaPlantBig	vtable alloc=0x22c
+ov084	0x02130b28	data_ov084_02130b28	_ZTV8daFPkn_c	vtable alloc=0x22c
 ov084	0x02130c04	data_ov084_02130c04	PiranhaPlant_SpawnInfo	spawninfo
 ov084	0x02130c04	PiranhaPlant_SpawnInfo	g_profile_PAKUN	reconstructed profile global; literal ROM ID PAKUN+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov085	0x02129020	func_ov085_02129020	_ZN11daKinopio_cD1Ev	vtable slot 16 (was _ZN4ToadD1Ev)

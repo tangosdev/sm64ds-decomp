@@ -17,7 +17,7 @@
  *
  * The destructor proves 0x000..0x31f is the dBgActor_c base: it destroys the
  * inherited dBgW_KcMbg at 0x124 and Model at 0x0d4, then chains to dActor_c.
- * The remaining fields are evidenced by the class's state helpers. */
+ * The remaining fields are evidenced by the class's state functions. */
 struct daObjCasket_c : dBgActor_c {
     s32 mState;             /* 0x320 -- index into the WAIT, STANDUP state table */
     u16 mStateTimer;        /* 0x324 -- WAIT countdown, then the STANDUP shake */
@@ -36,6 +36,16 @@ struct daObjCasket_c : dBgActor_c {
     int CleanupResources();
     int Behavior();
     int Render();
+
+    /* The state functions are named after the "WAIT" and "STANDUP" strings
+       in the state table; these names are descriptive, not recovered. */
+    void UpdateModelTransform();
+    void St_StandUp_Main();
+    void St_StandUp_Init();
+    void St_Wait_Main();
+    void St_Wait_Init();
+    void SetState(int state);
+    void RunState();
 };
 
 #else

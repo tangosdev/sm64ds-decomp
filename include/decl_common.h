@@ -614,7 +614,6 @@ extern int _ZTV18daWater_Hakidasi_c[];
 extern int _ZTV18daWater_Tatumaki_c[];
 extern int _ZTV8MugenBgm[];
 extern int _ZTV17BowserPuzzlePiece[];
-extern int _ZTV19FirePiranhaPlantBig[];
 extern int _ZTV17daObjKm1_Dorifu_c[];
 extern int _ZTV15daObjFl_Block_c[];
 extern int _ZTV14daObjWc_Mizu_c[];

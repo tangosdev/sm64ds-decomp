@@ -318,7 +318,7 @@ daBtn_c	DONE	include\Whomp.h  [alias: header uses pre-rename name]	dEnemyBase_c	
 daC_Jugem_c	DONE	include\daC_Jugem_c.h	dEnemyBase_c	0	ov085	7
 daChoro_Rock_c	DONE	include\MontyMoleRock.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov080	6
 daFPknBall_c	DONE	include\Fireball.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov002	6
-daFPkn_c	DONE	include\FirePiranhaPlantBig.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov084	9
+daFPkn_c	DONE	include\daFPkn_c.h	dEnemyBase_c	0	ov084	9
 daGrock_c	DONE	include\daGrock_c.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov021	7
 daHanachan_c	DONE	include\daHanachan_c.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov034	6
 daHolhei_c	DONE	include\daHolhei_c.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov062	8

@@ -93,7 +93,7 @@ daBgSnmHed_c	19	396	ov072	yes	yes	intact-object(owns non-text data at natural ad
 daStarGate_c	1	456	ov100	yes	yes	compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json; floor 2x4+1)	daObjPathLift_c	text-only
 daBttBk_c	20	458	ov080	yes	yes	compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json + include/ base clause; floor 2x4+1)	-	text-only
 Fwoosh	19	544	ov091	yes	no	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	-	text-only
-FirePiranhaPlantBig	18	982	ov084	yes	no	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	-	text-only
+daFPkn_c	18	982	ov084	yes	yes	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	-	text-only
 daObjBlockItemTag_c	10	213	ov002	yes	yes	compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json + include/ base clause; floor 2x4+1)	daBar_c	text-only
 dM3dGLin	2	27	ov002	yes	yes	compiler-only:>=3(derived from own chain: 1 classes incl. self via build/rtti.json; floor 2x1+1)	daBar_c	text-only
 daObjBlockS_c	36	1426	ov098	yes	yes	pragma:1;compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	daObjYajirusi_c	text-only
