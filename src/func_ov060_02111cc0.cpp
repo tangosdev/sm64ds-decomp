@@ -16,9 +16,23 @@ extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *anim, void *file, 
 extern void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void *ts, void *file, int a, int d, unsigned e);
 extern void _ZN9Animation8SetFlagsEi(void *anim, int flags);
 
+/* The ROM body never writes r2 before its SetAnim call (0x02111cc0..0x02111cec),
+ * so SetAnim's flags argument is whatever the caller left in r2. All 38 ROM call
+ * sites load r2 with an immediate just before the call (0 = loop, 0x40000000 =
+ * play once), and the src callers pass that value as a third argument. MSVC
+ * has no such ride-through: `a` below would hold a stale word, and a missing
+ * play-once bit makes the post-bomb landing animation loop forever, which
+ * blocks the defeat talk and the key or Grand Star. The host arm takes the
+ * caller's value as a real parameter. */
+#ifdef _MSC_VER
+void func_ov060_02111cc0(char *c, int idx, int a)
+#else
 void func_ov060_02111cc0(char *c, int idx)
+#endif
 {
+#ifndef _MSC_VER
     int a;
+#endif
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0xd4, (void *)data_ov060_021192dc[idx][1], a, 0x1000, 0);
     switch (idx) {
     case 1:

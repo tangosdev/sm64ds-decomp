@@ -29,7 +29,16 @@ struct V3 {
 extern "C" {
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
 extern int _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(void *c, int a, int b);
+#ifdef _MSC_VER
+/* mwccarm passes the by-value V3 as a pointer to a caller-built copy, which is
+ * the const Vector3 * the definition takes. MSVC x86 copies the 12 bytes onto
+ * the stack instead, so SpawnCoins read the stake's X coordinate as the
+ * pointer and the circle payout faulted in the first coin's constructor. The
+ * host arm passes the pointer the cartridge passes. */
+extern void _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(void *c, const V3 *v, unsigned int n, int f, short s);
+#else
 extern void _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(void *c, V3 v, unsigned int n, int f, short s);
+#endif
 }
 
 int Stump::Behavior()
@@ -59,7 +68,11 @@ int Stump::Behavior()
                     v.y = mPosY;
                     v.z = mPosZ;
                     v.y += 0xc8000;
+#ifdef _MSC_VER
+                    _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(this, &v, 5, 0x5000, 0);
+#else
                     _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(this, v, 5, 0x5000, 0);
+#endif
                     TrackInDeathTable();
                 }
             }
