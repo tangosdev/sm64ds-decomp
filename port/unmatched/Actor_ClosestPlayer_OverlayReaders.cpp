@@ -108,26 +108,13 @@ extern "C" void func_ov084_0212f204(char* r4)
  * nothing left to work around. The src row is uncommented in
  * port/slice_gate194.txt and the body below is gone. */
 
-/* ---- func_ov102_02149078 (receiver self) ---------------------------------- */
-extern "C" {
-extern signed char data_0209f2f8;
-extern int data_0209f32c;
-}
-
-// PORT_HOST_ABI: implicit-register-arg (ClosestPlayer's this rode r0 from the enclosing member; the host passes self).
-extern "C" int func_ov102_02149078(void *self)
-{
-    if (data_0209f2f8 == 0x15) {
-        if ((int)(*(int*)((char*)self + 0x3e0) - 0x32000) <= data_0209f32c)
-            return 1;
-    } else {
-        if (data_0209f2f8 == 0x21)
-            return 0;
-        if (*(unsigned char*)((char*)_ZN8dActor_c13ClosestPlayerEv(self) + 0x706))   /* <-- this */
-            return 1;
-    }
-    return 0;
-}
+/* ---- func_ov102_02149078 -- RETIRED, the matched TU has the seat --------- */
+/* Run linkfull wave 31 lane RS5A (row R4). main #2812 passes the receiver
+ * (self->ClosestPlayer() in its promoted src/actors/daObjHatenaBlock_c.cpp), and
+ * the port's per-function src/func_ov102_02149078.c takes that one fix as
+ * `_ZN8dActor_c13ClosestPlayerEv(self)` (route (a), byte-identical under
+ * mwccarm), so this copy had nothing left to work around. The src row is back
+ * on port/slice_gate203.txt and the body below is gone. */
 
 /* ---- func_ov060_02111f08 -- RETIRED, the matched TU has the seat --------- */
 /* Run link100 wave 15 lane SEAT15B (LINK15 BATCH 1). src/func_ov060_02111f08.c
