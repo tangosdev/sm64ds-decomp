@@ -14,6 +14,7 @@
  * Leftover: the func_0203/data_ helpers and homes keep linker names.
  */
 #include "fBase_c.h"
+#include "Heap.h"
 
 struct fBaseActorInfo {
     u32 unk_000;
@@ -74,22 +75,15 @@ extern void *func_02043810(void *p);
    one that says what it is. */
 extern void *_ZTV7fBase_c[];
 
-/* Heap and Memory, by their exact ROM names.
-   `void *` rather than `Heap *` throughout, deliberately: include/Heap.h has a
-   real polymorphic Heap class, but Virtual34 and Virtual38 both reach two of
-   its fields by raw offset (`+4` flags word, `+8` top-of-heap) rather than by
-   member, and reconciling those onto named members is a per-function codegen
-   change this round has no reason to risk. include/Heap.h itself declares
-   InitializeSolidHeapAsDefault as returning `void *`, so that part is the
-   tree's own choice, not an evasion. Memory::Deallocate and data_020a0eac come
-   from include/fBase_c.h, which needs them for its inline operator delete. */
-extern void *_ZN4Heap28InitializeSolidHeapAsDefaultEjPS_i(u32 size, void *root,
-                                                          int align);
+/* Heap's methods come from include/Heap.h. The heap locals stay `void *`
+   (and are cast at each call), deliberately: Virtual34 and Virtual38 both
+   reach two of its fields by raw offset (`+4` flags word, `+8` top-of-heap)
+   rather than by member, and reconciling those onto named members is a
+   per-function codegen change this round has no reason to risk.
+   include/Heap.h itself declares InitializeSolidHeapAsDefault as returning
+   `void *`. Memory::Deallocate and data_020a0eac come from include/fBase_c.h,
+   which needs them for its inline operator delete. */
 extern void *_ZN6Memory8AllocateEjiP4Heap(unsigned int size, int align, void *heap);
-extern void  _ZN4Heap20RestoreFromTemporaryEv(void);
-extern void  _ZN4Heap8_DestroyEv(void *h);
-extern u32   _ZN4Heap21MaxAllocationUnitSizeEv(void *h);
-extern u32   _ZN4Heap11ResizeToFitEv(void *h);
 
 }
 
@@ -255,7 +249,7 @@ void fBase_c::AfterCleanupResources(u32 vfSuccess)
     func_0203b3c0(data_020a4b6c, &manager.sceneNode);
     func_0203b27c(data_020a4ba8, &manager.behaviorNode);
     if (heap)
-        _ZN4Heap8_DestroyEv(heap);
+        ((Heap *)heap)->_Destroy();
     if (lifecycleState)
         func_02044334(lifecycleState);
     this->~fBase_c();   /* vtable+0x40 = slot 16 = D1 */
@@ -522,7 +516,7 @@ extern "C" void *func_02043810(void *base)
  * `this->v15()` in the legacy shadow is slot 15, which the real class names
  * OnHeapCreated -- so this now reads as the virtual it is. The heap's flags
  * word (+4) and top (+8) are still reached by raw offset: see the note on the
- * Heap declarations above. */
+ * Heap note above. */
 // @symbol _ZN7fBase_c9Virtual34Ejj
 int fBase_c::Virtual34(u32 a, u32 b)
 {
@@ -533,7 +527,7 @@ int fBase_c::Virtual34(u32 a, u32 b)
         return 1;
 
     if (a != 0) {
-        h = _ZN4Heap28InitializeSolidHeapAsDefaultEjPS_i(a, (void *)b, 0x20);
+        h = Heap::InitializeSolidHeapAsDefault(a, (Heap *)b, 0x20);
         if (h != 0) {
             u32 flagA = (*(u32 *)((char *)h + 4)) & 0x10;
             if (flagA != 0)
@@ -546,16 +540,16 @@ int fBase_c::Virtual34(u32 a, u32 b)
                 void *allocRes = _ZN6Memory8AllocateEjiP4Heap(0x10, 4, 0);
                 okA = (allocRes != 0) ? (u32)res : 0;
             }
-            _ZN4Heap20RestoreFromTemporaryEv();
+            Heap::RestoreFromTemporary();
             if (okA == 0) {
-                _ZN4Heap8_DestroyEv(h);
+                ((Heap *)h)->_Destroy();
                 h = 0;
             } else {
                 u32 topA = *(u32 *)((char *)h + 8);
-                avail = topA - _ZN4Heap21MaxAllocationUnitSizeEv(h);
+                avail = topA - ((Heap *)h)->MaxAllocationUnitSize();
                 avail = (avail + 0x1f) & ~0x1f;
                 if (a == avail) {
-                    _ZN4Heap11ResizeToFitEv(h);
+                    ((Heap *)h)->ResizeToFit();
                     heap = h;
                     return 1;
                 }
@@ -564,7 +558,7 @@ int fBase_c::Virtual34(u32 a, u32 b)
     }
 
     if (h == 0) {
-        h = _ZN4Heap28InitializeSolidHeapAsDefaultEjPS_i((u32)-1, (void *)b, 0x20);
+        h = Heap::InitializeSolidHeapAsDefault((u32)-1, (Heap *)b, 0x20);
         u32 flagB = (*(u32 *)((char *)h + 4)) & 0x10;
         if (flagB != 0)
             _ZN6Memory8AllocateEjiP4Heap(0x10, 4, 0);
@@ -574,14 +568,14 @@ int fBase_c::Virtual34(u32 a, u32 b)
             if (allocRes2 == 0)
                 a = 0;
         }
-        _ZN4Heap20RestoreFromTemporaryEv();
+        Heap::RestoreFromTemporary();
         if (a == 0) {
-            _ZN4Heap8_DestroyEv(h);
+            ((Heap *)h)->_Destroy();
             MarkForDestruction();
             return 0;
         }
         u32 topB = *(u32 *)((char *)h + 8);
-        avail = topB - _ZN4Heap21MaxAllocationUnitSizeEv(h);
+        avail = topB - ((Heap *)h)->MaxAllocationUnitSize();
         avail = (avail + 0x1f) & ~0x1f;
     }
 
@@ -591,37 +585,37 @@ int fBase_c::Virtual34(u32 a, u32 b)
     {
         u32 topH = *(u32 *)((char *)h + 8);
         void *h2 = 0;
-        u32 availInH = topH - _ZN4Heap21MaxAllocationUnitSizeEv(h);
+        u32 availInH = topH - ((Heap *)h)->MaxAllocationUnitSize();
         u32 needed = ((availInH + 0xf) & ~0xf) + 0x30;
-        if (needed < _ZN4Heap21MaxAllocationUnitSizeEv((void *)b)) {
-            h2 = _ZN4Heap28InitializeSolidHeapAsDefaultEjPS_i(avail, (void *)b, 0x20);
+        if (needed < ((Heap *)b)->MaxAllocationUnitSize()) {
+            h2 = Heap::InitializeSolidHeapAsDefault(avail, (Heap *)b, 0x20);
         }
         if (h2 != 0) {
             if ((u32)h2 < (u32)h) {
-                _ZN4Heap8_DestroyEv(h);
+                ((Heap *)h)->_Destroy();
                 h = 0;
                 int res3 = OnHeapCreated();
                 u32 okC = (u32)res3;
-                _ZN4Heap20RestoreFromTemporaryEv();
+                Heap::RestoreFromTemporary();
                 if (okC == 0) {
-                    _ZN4Heap8_DestroyEv(h2);
+                    ((Heap *)h2)->_Destroy();
                     h2 = h;
                 }
             } else {
-                _ZN4Heap20RestoreFromTemporaryEv();
-                _ZN4Heap8_DestroyEv(h2);
+                Heap::RestoreFromTemporary();
+                ((Heap *)h2)->_Destroy();
                 h2 = 0;
             }
         }
         if (h2 != 0) {
-            _ZN4Heap11ResizeToFitEv(h2);
+            ((Heap *)h2)->ResizeToFit();
             heap = h2;
             return 1;
         }
     }
 
     if (h != 0) {
-        _ZN4Heap11ResizeToFitEv(h);
+        ((Heap *)h)->ResizeToFit();
         heap = h;
         return 1;
     }
@@ -634,20 +628,15 @@ fail:
 /* vtable slot 14 (vtable+0x38). The short form of Virtual34: one attempt, no
  * right-sizing retry.
  *
- * The legacy file reached Heap and Memory through local classes with real
- * methods (`h->_Destroy()`, `Heap::RestoreFromTemporary()`,
- * `Memory::Allocate(...)`) while Virtual34 reached the same ROM functions
- * through their mangled names. Both spellings compile to the same non-virtual
- * direct calls, but two definitions of `struct Heap` cannot coexist in one TU,
- * so this member is reconciled onto Virtual34's mangled-name form -- the one of
- * the two that needs no class definition at all. */
+ * Heap is reached through include/Heap.h's real methods, the same
+ * non-virtual direct calls Virtual34 makes. */
 // @symbol _ZN7fBase_c9Virtual38Ejj
 int fBase_c::Virtual38(u32 a, u32 b)
 {
     if (heap != 0)
         return 1;
     if (a != 0) {
-        void *h = _ZN4Heap28InitializeSolidHeapAsDefaultEjPS_i(a, (void *)b, 0x20);
+        void *h = Heap::InitializeSolidHeapAsDefault(a, (Heap *)b, 0x20);
         if (h != 0) {
             int ok;
             int flag = (*(int *)((char *)h + 4)) & 0x10;
@@ -658,10 +647,10 @@ int fBase_c::Virtual38(u32 a, u32 b)
                 if (_ZN6Memory8AllocateEjiP4Heap(0x10, 4, 0) == 0)
                     ok = 0;
             }
-            _ZN4Heap21MaxAllocationUnitSizeEv(h);
-            _ZN4Heap20RestoreFromTemporaryEv();
+            ((Heap *)h)->MaxAllocationUnitSize();
+            Heap::RestoreFromTemporary();
             if (ok == 0) {
-                _ZN4Heap8_DestroyEv(h);
+                ((Heap *)h)->_Destroy();
             } else {
                 heap = h;
                 return 1;

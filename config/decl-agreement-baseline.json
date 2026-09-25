@@ -12360,6 +12360,12 @@
         "param:#1 int"
       ]
     },
+    "_ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR7dBgW_Kc": {
+      "src/_ZN5Stage13InitResourcesEv.cpp": [
+        "param:#1 void *",
+        "param:#3 void *"
+      ]
+    },
     "_ZN5Timer10StartTimerEv": {
       "src/_ZN5Stage10PS_CleanupEv.cpp": [
         "return:int"
@@ -14565,6 +14571,9 @@
       ]
     },
     "_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE": {
+      "src/game/actors/d_a_cnn.cpp": [
+        "param:#6 const Vector3_16 *"
+      ],
       "src/_ZN15dMg3DEspModel_c8BehaviorEv.cpp": [
         "param:#6 const void *",
         "return:void *"
@@ -15289,6 +15298,9 @@
       ]
     },
     "_ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE": {
+      "src/game/actors/d_a_cnn.cpp": [
+        "arity:3"
+      ],
       "src/_ZN17daObjBk_Botaosi_c8BehaviorEv.cpp": [
         "arity:3"
       ],
@@ -17168,6 +17180,9 @@
       ]
     },
     "_ZN8dActor_c7FindEggER5dCc_c": {
+      "include/decl_Actor.h": [
+        "return:int"
+      ],
       "src/actors/Scuttlebug.cpp": [
         "return:void *"
       ],
@@ -19105,7 +19120,7 @@
         "return:unsigned int"
       ]
     },
-    "_ZTV6Cannon": {
+    "_ZTV7daCnn_c": {
       "include/decl_common.h": [
         "return:int []"
       ]
@@ -28117,6 +28132,9 @@
     "data_ov034_02114538": {
       "include/decl_common.h": [
         "return:int []"
+      ],
+      "src/actors/daHanachan_c.cpp": [
+        "return:daHanachan_c::State []"
       ]
     },
     "data_ov035_021121d8": {
@@ -28909,6 +28927,9 @@
     "data_ov065_0211d6e0": {
       "src/__sinit_ov065_0211c2a8.c": [
         "return:S8 []"
+      ],
+      "src/actors/daBasabasa_c.cpp": [
+        "return:daBasabasa_c::State"
       ]
     },
     "data_ov065_0211d6f0": {
@@ -31056,7 +31077,15 @@
         "return:int []"
       ]
     },
+    "func_ov002_020df300": {
+      "src/game/actors/d_a_cnn.cpp": [
+        "param:#1 Player *"
+      ]
+    },
     "data_ov098_0213c8e8": {
+      "src/game/actors/d_a_cnn.cpp": [
+        "return:SharedFilePtr"
+      ],
       "include/decl_common.h": [
         "return:char"
       ],
@@ -46281,17 +46310,6 @@
       "src/game/actors/daObjFl_Fall_Block_c.cpp": [
         "param:#1 daObjFl_Fall_Block_c *",
         "param:#2 ResourceDescriptor *"
-      ]
-    },
-    "func_ov098_0213a984": {
-      "src/_ZN6Cannon8BehaviorEv.cpp": [
-        "param:#1 Cannon *",
-        "return:int"
-      ]
-    },
-    "func_ov098_0213b15c": {
-      "src/_ZN6Cannon13InitResourcesEv.cpp": [
-        "param:#1 Cannon *"
       ]
     },
     "func_ov098_0213b584": {

@@ -335,7 +335,6 @@ extern "C" {
 typedef short s16;
 
 extern int Vec3_Dist(void *a, void *b);
-extern int _ZNK10dBgCh_Actr8IsOnWallEv(void *p);
 extern short Vec3_HorzAngle(void *a, void *b);
 extern void ApproachAngle(s16 *dst, s16 target, int a, int b, int c);
 extern short Vec3_VertAngle(void *a, void *b);
@@ -345,7 +344,6 @@ extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
 extern void MulVec3Mat4x3(void *in, void *m, void *out);
 extern void _Z14ApproachLinearRiii(void *dst, int a, int b);
 extern int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
-extern Player *_ZN8dActor_c22ClosestNonVanishPlayerEv(daPropeller_Heyho_c *c);
 
 extern int data_020a0e68[];
 extern daPropeller_Heyho_c::State data_ov070_0212359c;
@@ -391,7 +389,7 @@ int func_ov070_0211fd98(daPropeller_Heyho_c *c)
     if (c->mCooldown != 0)
         return 1;
     if (Vec3_Dist(&c->mPosX, &c->mHomePosX) < 0x5dc000) {
-        p = _ZN8dActor_c22ClosestNonVanishPlayerEv(c);
+        p = c->ClosestNonVanishPlayer();
         if (p) {
             int *pos = (int *)&p->mPosX;
             t.x = pos[0];
@@ -420,7 +418,6 @@ int func_ov070_0211fd60(daPropeller_Heyho_c *p) {
 // @symbol func_ov070_0211fae4
 extern "C" {
 
-extern Player *_ZN8dActor_c22ClosestNonVanishPlayerEv(daPropeller_Heyho_c *self);
 extern short Vec3_HorzAngle(void *v0, void *v1);
 extern short Vec3_VertAngle(void *v1, void *v0);
 extern void ApproachAngle(s16 *cur, s16 target, int a, int b, int c);
@@ -447,7 +444,7 @@ int func_ov070_0211fae4(daPropeller_Heyho_c *c)
     Vector3 vc;
     Vector3 vd;
 
-    player = _ZN8dActor_c22ClosestNonVanishPlayerEv(c);
+    player = c->ClosestNonVanishPlayer();
     if (player == 0) {
         if (data_0209f2f8 != 0x16) {
             c->mHomePosX = c->mPosX;
@@ -526,7 +523,6 @@ int func_ov070_0211fae4(daPropeller_Heyho_c *c)
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov070_0211fa80
 extern "C" {
-extern int _ZN8dActor_c23HorzAngleToCPlayerOrAngEv(void *);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* bca, int a, int fix, unsigned int j);
 int func_ov070_0211fa80(daPropeller_Heyho_c *c) {
     c->mHitDuringAttack = 0;
@@ -557,11 +553,8 @@ extern s32 data_0209f32c;
 extern int data_020a0e68[];
 
 /* (ApproachAngle: this file's own int-target view, declared inside the function body) */
-extern int _ZN9Animation8FinishedEv(void* thiz);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* bca, int a, int fix, unsigned int j);
 extern int FlyGuy_ChangeState(daPropeller_Heyho_c* c, daPropeller_Heyho_c::State* p);
-extern int _ZNK10dBgCh_Actr8IsOnWallEv(void* thiz);
-extern Player *_ZN8dActor_c22ClosestNonVanishPlayerEv(daPropeller_Heyho_c* thiz);
 extern short Vec3_VertAngle(void* v1, void* v0);
 extern int Vec3_Dist(void* a, void* b);
 extern u16 DecIfAbove0_Short(u16* p);
@@ -584,7 +577,7 @@ int func_ov070_0211f6e0(char* c)
     ApproachAngle((s16*)(c + 0x94), self->mTargetAngY, 0x100, 0x1000, 0x1000);
     ApproachAngle((s16*)(c + 0x96), 0, 0x100, 0x1000, 0x1000);
 
-    if (_ZN9Animation8FinishedEv(c + 0x350)) {
+    if (((Animation *)(c + 0x350))->Finished()) {
         if (self->mStateStep == 0) {
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x300, (void*)((int *)&data_ov070_02123510)[1], 0, 0x1000, 0);
             self->mStateStep = 1;
@@ -599,7 +592,7 @@ int func_ov070_0211f6e0(char* c)
         }
     }
 
-    if (*(u16*)(c + 0x100) == 0 || _ZNK10dBgCh_Actr8IsOnWallEv(c + 0x144)) {
+    if (*(u16*)(c + 0x100) == 0 || ((dBgCh_Actr *)(c + 0x144))->IsOnWall()) {
         if (data_0209f2f8 != 0x16) {
             self->mHomePosX = *(s32*)(c + 0x5c);
             self->mHomePosY = *(s32*)(c + 0x60);
@@ -610,7 +603,7 @@ int func_ov070_0211f6e0(char* c)
         return 1;
     }
 
-    player = (char*)_ZN8dActor_c22ClosestNonVanishPlayerEv((daPropeller_Heyho_c*)c);
+    player = (char*)((daPropeller_Heyho_c*)c)->ClosestNonVanishPlayer();
     if (player == 0) {
         if (data_0209f2f8 != 0x16) {
             self->mHomePosX = *(s32*)(c + 0x5c);
@@ -695,14 +688,13 @@ int func_ov070_0211f694(daPropeller_Heyho_c *c) {
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov070_0211f62c
 extern "C" {
-extern int _ZN9Animation8FinishedEv(void *p);
 extern signed char data_0209f2f8;
 extern int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
 extern daPropeller_Heyho_c::State data_ov070_0212359c;
 
 int func_ov070_0211f62c(char *c)
 {
-    if (_ZN9Animation8FinishedEv(c + 0x350) != 0) {
+    if (((Animation *)(c + 0x350))->Finished() != 0) {
         if (data_0209f2f8 != 0x16)
             ((daPropeller_Heyho_c *)c)->mHomePosY += 0x12c000;
         ((daPropeller_Heyho_c *)c)->mStateStep = 0;
@@ -736,14 +728,11 @@ extern "C" int func_ov070_0211f5f0(daPropeller_Heyho_c *c) {
 /* -------------------------------------------------------------------------- */
 extern "C" {
 // @symbol func_ov070_0211f48c
-char* _ZN8dActor_c13ClosestPlayerEv(void* self);
 short Vec3_HorzAngle(void* a, void* b);
 /* (ApproachAngle: this file's own int-target view, declared inside the function body) */
-int _ZNK9Animation12WillHitFrameEi(void* a, int f);
 short Vec3_VertAngle(void* a, void* b);
 void* _ZN8dActor_c13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j(void* self, void* pos, void* vel, int a, int b, unsigned int d);
 void func_02012694(int a, void* p);
-int _ZN9Animation8FinishedEv(void* a);
 int FlyGuy_ChangeState(daPropeller_Heyho_c* c, daPropeller_Heyho_c::State* p);
 extern daPropeller_Heyho_c::State data_ov070_0212359c;
 
@@ -758,7 +747,7 @@ int func_ov070_0211f48c(char* c) {
     struct Vector3 tmp;
     daPropeller_Heyho_c* self = (daPropeller_Heyho_c*)c;
 
-    pl = _ZN8dActor_c13ClosestPlayerEv(c);
+    pl = (char *)((dActor_c *)c)->ClosestPlayer();
     if ((unsigned)(*(int*)(c+0x358) << 4) >> 0x10 >= 0xd)
         goto hitframe;
 
@@ -772,7 +761,7 @@ int func_ov070_0211f48c(char* c) {
     ApproachAngle((short*)(c+0x94), self->mTargetAngY, 0xa, 0x400, 0x200);
 
 hitframe:
-    if (_ZNK9Animation12WillHitFrameEi(c+0x350, 0xd) != 0) {
+    if (((Animation *)(c+0x350))->WillHitFrame(0xd) != 0) {
         *(V3h*)&vel = *(V3h*)(c+0x8c);
         if (pl != 0) {
             int *base = (int *)(int)M(pl + 0x5c);
@@ -784,7 +773,7 @@ hitframe:
         _ZN8dActor_c13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j(c, c+0x5c, &vel, 0x1e000, 0xa000, 1);
         func_02012694(0x105, c+0x74);
     }
-    if (_ZN9Animation8FinishedEv(c+0x350) != 0) {
+    if (((Animation *)(c+0x350))->Finished() != 0) {
         *(int*)(c+0x358) = 0;
         self->mCooldown = 0x5a;
         FlyGuy_ChangeState(self, &data_ov070_0212359c);
@@ -857,15 +846,10 @@ extern daPropeller_Heyho_c::State data_ov070_021235cc;
 /* (data_ov070_02123528: SharedFilePtr view declared earlier in this TU) */
 
 extern "C" {
-extern dActor_c* _ZN8dActor_c10FindWithIDEj(u32 id);
 extern int FlyGuy_ChangeState(daPropeller_Heyho_c* c, daPropeller_Heyho_c::State* p);
 extern void func_ov002_020aea30(void *self, void *actor, void *collision);
-extern int _ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(void* c, void* clsn, void* player);
 extern void _ZN6Player10SpinBounceE5Fix12IiE(void* p, s32 f);
-extern void _ZN12dEnemyBase_c22SpawnMegaCharParticlesER8dActor_cPc(void* enemy, void* actor, char* s);
-extern void _ZN6Player16IncMegaKillCountEv(void* p);
 extern void func_02012694(int a, void* b);
-extern int _ZN6Player9IsOnShellEv(void* p);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, const Vector3* v, u32 a, s32 f, u32 b, u32 c, u32 d);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* bca, int a, int fix, unsigned int j);
 }
@@ -877,7 +861,7 @@ extern "C" void func_ov070_0211f100(daPropeller_Heyho_c* c)
 
     if (c->mdCcAc_c.otherOwner == 0)
         return;
-    hitPlayer = (Player *)_ZN8dActor_c10FindWithIDEj(c->mdCcAc_c.otherOwner);
+    hitPlayer = (Player *)dActor_c::FindWithID(c->mdCcAc_c.otherOwner);
     if (!hitPlayer)
         return;
 
@@ -906,7 +890,7 @@ extern "C" void func_ov070_0211f100(daPropeller_Heyho_c* c)
     if (hitPlayer->mIsVanish != 0)
         return;
 
-    if (_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(c, &c->mdCcAc_c, hitPlayer)) {
+    if (c->JumpedOnByPlayer(c->mdCcAc_c, *hitPlayer)) {
         _ZN6Player10SpinBounceE5Fix12IiE(hitPlayer, 0x28000);
         c->mDeathState = 1;
         func_ov002_020aea30(c, hitPlayer, 0);
@@ -914,7 +898,7 @@ extern "C" void func_ov070_0211f100(daPropeller_Heyho_c* c)
     }
 
     if (hitFlags & 0x10) {
-        _ZN12dEnemyBase_c22SpawnMegaCharParticlesER8dActor_cPc(c, hitPlayer, (char*)0);
+        c->SpawnMegaCharParticles(*hitPlayer, (char*)0);
         hitPlayer->IncMegaKillCount();
         func_02012694(0x1d, &c->mCamSpacePosX);
         FlyGuy_ChangeState(c, &data_ov070_021235bc);

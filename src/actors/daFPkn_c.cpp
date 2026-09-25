@@ -1,13 +1,12 @@
 //cpp
 /* daFPkn_c -- the fire piranha plant (PAKUN2 / FIREPAKUN / FIREPAKUN_S).
  * ov084 .text 0x0212d248..0x0212ea18, eighteen functions: D1, D0, nine
- * state helpers, then the seven vtable methods.
+ * helpers and states, then the seven vtable methods.
  *
  * NAME: daFPkn_c is the cartridge's RTTI spelling. The word before the
  * vtable address point 0x02130b28 (0x02130b24) relocates to _ZTI8daFPkn_c
  * at 0x02130ac0, which reads [__si_class_type_info, _ZTS8daFPkn_c
- * (0x02130ab4, "8daFPkn_c"), _ZTI12dEnemyBase_c (ov002 0x021081c0)]. The
- * class carried the coined name FirePiranhaPlantBig until this change.
+ * (0x02130ab4, "8daFPkn_c"), _ZTI12dEnemyBase_c (ov002 0x021081c0)].
  *
  * THE DESTRUCTOR IS THE KEY FUNCTION. It is defined first under
  * `#pragma defer_codegen off`, so mwccarm emits each function as it is
@@ -19,12 +18,23 @@
  * The run's left neighbour is daRedBombhei_c_classInit (0x0212d200), another
  * class's factory. The three daFPkn_c classInit factories start at
  * 0x0212ea18 and stay one-function C sources.
+ *
+ * Known limits:
+ * - ModelAnim::SetAnim, dCcAc_c::Init, dCcAcPos_c::Init,
+ *   Particle::System::New, dActor_c::SpawnFireball and SpawnCoins,
+ *   Player::Hurt and Player::Bounce are called by their mangled names. Each
+ *   symbol carries a Fix12<int> by value; a Fix12<int> local for SetAnim's
+ *   speed changes InitResources.
+ * - The shared files and tables keep their address names; the static
+ *   initializer and the classInit sources name them too.
  */
 
 #include "decl_common.h"
 #include "daFPkn_c.h"
 #include "SharedFilePtr.h"
 #include "Player.h"
+#include "Sound.h"
+#include "Particle__System.h"
 
 #pragma defer_codegen off
 
@@ -35,82 +45,55 @@ struct PknSharedFile {
 };
 typedef char PknSharedFile_size_must_be_0x8[sizeof(PknSharedFile) == 0x8 ? 1 : -1];
 
-extern "C" {
-void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *f, int a, int b, unsigned short cc);
-void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, void *a, int r, int h, unsigned int e, unsigned int g);
-void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void *self, void *a, const Vector3 *v, int r, int h, unsigned int e, unsigned int g);
-void LoadBlueCoinModel(void *c);
-void UnloadBlueCoinModel(void *);
-extern SharedFilePtr data_ov084_02130dfc;
-extern SharedFilePtr *data_ov084_021302f4[];
-extern SharedFilePtr data_ov002_0210da38;
-extern PknSharedFile data_ov084_02130df4;
-}
-
-/* The nine state helpers. Behavior dispatches mState 0..3 to 0212e4e0,
- * 0212e010, 0212ddbc and 0212dc30, then runs 0212d86c (damage) and 0212d564
- * (fire position); 0212e010 calls 0212d2dc, 0212d42c and 0212d560.
- *
- * Leftover: they stay extern "C" functions over a char * receiver, as the
- * C shards they came from were written. Their callees stay mangled externs
- * for the same reason: a C-style body has no typed object to make a member
- * call through. Retyping them as daFPkn_c members is remaining work. */
-typedef struct FPknVec3 { int x, y, z; } FPknVec3;
-#define AT(p, off) ((void*)(int)((char*)(p) + (off)))
+/* UpdateClsnOffset's stack locals: three bone-angle sums, then the
+   position shifted down by 3. */
 struct Locals {
     s16 acc[3];
     int tmp[3];
 };
 
+int ApproachLinear(int &value, int target, int step);
+int ApproachLinear(short &value, short target, short step);
+
 extern "C" {
+void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *f, int a, int b, unsigned short cc);
+void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, void *a, int r, int h, unsigned int e, unsigned int g);
+void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void *self, void *a, const Vector3 *v, int r, int h, unsigned int e, unsigned int g);
 u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e, const void *f, void *g);
-void *_ZN8Particle6System12FromUniqueIDEj(u32 id);
-void func_02012694(u32 id, void *pos);
-void _ZN5Sound9PlayBank0EjRK7Vector3(u32 id, void *pos);
-void _ZN12dEnemyBase_c9SpawnCoinEv(void *self);
-void _ZN8dActor_c24KillAndTrackInDeathTableEv(void *self);
-void *_ZN8dActor_c10FindWithIDEj(u32 id);
-void _ZN6Player16IncMegaKillCountEv(void *p);
-int _ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(void *self, void *clsn, void *player);
 void _ZN6Player6BounceE5Fix12IiE(void *p, int fix);
 int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *self, const void *pos, u32 a, int fix, u32 b, u32 c, u32 d);
-int _Z14ApproachLinearRiii(int *cur, int target, int step);
-int _Z14ApproachLinearRsss(short *cur, short target, short step);
-int _ZNK9Animation12WillHitFrameEi(void *anim, int frame);
-int _ZN9Animation8FinishedEv(void *anim);
-void func_0201267c(unsigned int id, const void *pos);
-void *_ZN8dActor_c13ClosestPlayerEv(void *self);
-short Vec3_HorzAngle(const void *a, const void *b);
-void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int id, unsigned int a, const void *pos, const void *rot, int e, int f);
-void _ZN7fBase_c18MarkForDestructionEv(void *self);
 void _ZN8dActor_c13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j(
     void *self, const void *pos, const void *v16, int a, int b, u32 g);
 void _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(void *self, const void *pos, unsigned int a, int b, short c);
-void _ZN8dActor_c17TrackInDeathTableEv(void *self);
-int _ZN8dActor_c13DistToCPlayerEv(void *self);
+
+void LoadBlueCoinModel(void *c);
+void UnloadBlueCoinModel(void *);
+void func_02012694(u32 id, void *pos);
+void func_0201267c(unsigned int id, const void *pos);
+short Vec3_HorzAngle(const void *a, const void *b);
 int IsStarCollectedInCurLevel(unsigned int flag);
 void SetStarMarker(int i, void *self, int v);
-void *_ZN8dActor_c15FindWithActorIDEjPS_(unsigned int id, void *prev);
 void Matrix4x3_FromRotationY(void *m, int angle);
 void Vec3_Asr(void *d, void *s, int sh);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void MulMat4x3Mat4x3(void *d, void *a, void *b);
 void Vec3_LslInPlace(void *v, int sh);
 void SubVec3(void *a, void *b, void *c);
-void func_ov084_0212d2dc(char *c);
-void func_ov084_0212d42c(char *self);
-void func_ov084_0212d560(void *self);
 
+extern SharedFilePtr data_ov084_02130dfc;   /* the plant's model */
+extern SharedFilePtr *data_ov084_021302f4[];
+extern SharedFilePtr data_ov002_0210da38;
+extern PknSharedFile data_ov084_02130df4;   /* idle animation */
 extern PknSharedFile data_ov084_02130e24;   /* death animation */
-extern int data_ov084_0213029c[];
-extern int data_ov084_021302c4[];
-extern void *data_ov084_02130e1c[];
 extern PknSharedFile data_ov084_02130e14;   /* lunge animation */
-extern void *data_ov084_02130e04[];
-extern u8 data_ov084_02130294[];
-extern s32 data_020a0e68[];
-extern s16 data_02082214[];
+extern PknSharedFile data_ov084_02130e04;   /* spit animation */
+extern int data_ov084_0213029c[];           /* SpawnDeathBurst reach per frame */
+extern int data_ov084_021302c4[];           /* SpawnDeathBurst height per frame */
+extern u8 data_ov084_02130294[];            /* UpdateClsnOffset's five bone indices */
+extern s32 data_020a0e68[];                 /* the shared scratch matrix */
+extern s16 data_02082214[];                 /* the sin and cos table, two shorts a step */
+}
 
 /* One vtable store and four destructor calls, every one a consequence of
  * `struct daFPkn_c : dEnemyBase_c` and the members that declaration types,
@@ -124,112 +107,82 @@ daFPkn_c::~daFPkn_c()
 {
 }
 
-// @symbol func_ov084_0212d2dc
-void func_ov084_0212d2dc(char* c)
+// @symbol _ZN8daFPkn_c15SpawnDeathSmokeEv
+void daFPkn_c::SpawnDeathSmoke()
 {
-    void* o;
-    if (*(void **)(c + 0x170) != data_ov084_02130e24.file)
+    Particle::System *o;
+    if (mModelAnim.file != data_ov084_02130e24.file)
         return;
 
-    *(u32*)(c + 0x224) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-        *(u32*)(c + 0x224), 0xfc, *(int*)(c + 0x5c), *(int*)(c + 0x60) + 0x1e000, *(int*)(c + 0x64), 0, 0);
-    if (*(u32*)(c + 0x224) != 0) {
-        o = _ZN8Particle6System12FromUniqueIDEj(*(u32*)(c + 0x224));
+    mParticleHandle1 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+        mParticleHandle1, 0xfc, mPosX, mPosY + 0x1e000, mPosZ, 0, 0);
+    if (mParticleHandle1 != 0) {
+        o = Particle::System::FromUniqueID(mParticleHandle1);
         if (o != 0) {
-            *(int*)((char*)o + 0x50) = (short)(Fix12i)(((long long)(*(int*)(c + 0x210)) * 0x2800 + 0x800) >> 12);
+            o->callbackScale = (short)(Fix12i)(((long long)mMaxScale * 0x2800 + 0x800) >> 12);
         }
     }
 
-    *(u32*)(c + 0x228) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-        *(u32*)(c + 0x228), 0xfd, *(int*)(c + 0x5c), *(int*)(c + 0x60) + 0x1e000, *(int*)(c + 0x64), 0, 0);
-    if (*(u32*)(c + 0x228) == 0)
+    mParticleHandle2 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+        mParticleHandle2, 0xfd, mPosX, mPosY + 0x1e000, mPosZ, 0, 0);
+    if (mParticleHandle2 == 0)
         return;
-    o = _ZN8Particle6System12FromUniqueIDEj(*(u32*)(c + 0x228));
+    o = Particle::System::FromUniqueID(mParticleHandle2);
     if (o == 0)
         return;
-    *(int*)((char*)o + 0x50) = (short)(Fix12i)(((long long)(*(int*)(c + 0x210)) * 0x2800 + 0x800) >> 12);
+    o->callbackScale = (short)(Fix12i)(((long long)mMaxScale * 0x2800 + 0x800) >> 12);
 }
 
-// @symbol func_ov084_0212d42c
-void func_ov084_0212d42c(char *self)
+// @symbol _ZN8daFPkn_c15SpawnDeathBurstEv
+void daFPkn_c::SpawnDeathBurst()
 {
-    int space[3];
-    int idx, fac, spd, s, m, x, y, z, zero, bias;
-    long long prod;
-    volatile int *ytbl;
-    volatile int *xtbl;
-    s16 *st;
+    Vector3 pos;
+    int idx, fac, m;
 
-    if (*(void **)(self + 0x170) != data_ov084_02130e24.file)
+    if (mModelAnim.file != data_ov084_02130e24.file)
         return;
-    idx = (int)((unsigned)(*(int *)(self + 0x168) << 4) >> 16);
+    idx = (int)((unsigned)(mModelAnim.currFrame << 4) >> 16);
     if (idx >= 0xa)
         return;
 
-    x = *(int *)(self + 0x5c);
-    st = data_02082214;
-    *(volatile int *)&space[0] = x;
-    y = *(int *)(self + 0x60);
-    xtbl = data_ov084_0213029c;
-    *(volatile int *)&space[1] = y;
-    z = *(int *)(self + 0x64);
-    bias = 0x800;
-    *(volatile int *)&space[2] = z;
-
-    {
-        unsigned short ang = *(unsigned short *)(self + 0x8e);
-        fac = xtbl[idx];
-        spd = *(int *)(self + 0x204);
-        s = st[(ang >> 4) << 1];
-        ytbl = data_ov084_021302c4;
-        zero = 0;
-        m = fac * s;
-        prod = (long long)m * spd + bias;
-        x = x + (int)(prod >> 12);
-        *(volatile int *)&space[0] = x;
-    }
-    {
-        unsigned short ang = *(unsigned short *)(self + 0x8e);
-        s = st[((ang >> 4) << 1) + 1];
-        spd = *(int *)(self + 0x204);
-        m = fac * s;
-        prod = (long long)m * spd + bias;
-        z = z + (int)(prod >> 12);
-        *(volatile int *)&space[2] = z;
-    }
-    y = y + *(int *)(self + 0x204) * ytbl[idx];
-    *(volatile int *)&space[1] = y;
-    *(u32 *)(self + 0x224) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-        *(u32 *)(self + 0x224), 0xfb, space[0], space[1], z, (void *)zero, (void *)zero);
+    pos.x = mPosX;
+    pos.y = mPosY;
+    pos.z = mPosZ;
+    fac = data_ov084_0213029c[idx];
+    m = fac * data_02082214[((u16)mAngleY >> 4) * 2];
+    pos.x = pos.x + (int)(((long long)m * mScale + 0x800) >> 12);
+    m = fac * data_02082214[((u16)mAngleY >> 4) * 2 + 1];
+    pos.z = pos.z + (int)(((long long)m * mScale + 0x800) >> 12);
+    pos.y = pos.y + mScale * data_ov084_021302c4[idx];
+    mParticleHandle1 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+        mParticleHandle1, 0xfb, pos.x, pos.y, pos.z, 0, 0);
 }
 
-/* Empty. func_ov084_0212e010 passes this in r0, so it takes an unused
- * pointer; the body is still one bx lr. */
-// @symbol func_ov084_0212d560
-void func_ov084_0212d560(void *)
+/* Empty. StateWait passes this in r0 and nothing reads it. */
+// @symbol _ZN8daFPkn_c21OnGroupMemberDefeatedEv
+void daFPkn_c::OnGroupMemberDefeated()
 {
 }
 
-// @symbol func_ov084_0212d564
-void func_ov084_0212d564(char* c)
+// @symbol _ZN8daFPkn_c16UpdateClsnOffsetEv
+void daFPkn_c::UpdateClsnOffset()
 {
     struct Locals locals;
     int sx, sy, sz, v, flag;
-    int *px, *py, *pz;
 
-    Matrix4x3_FromRotationY(c + 0x12c, *(s16*)(c + 0x8e));
-    *(s32*)(c + 0x150) = *(s32*)(c + 0x5c) >> 3;
-    *(s32*)(c + 0x154) = *(s32*)(c + 0x60) >> 3;
-    *(s32*)(c + 0x158) = *(s32*)(c + 0x64) >> 3;
+    Matrix4x3_FromRotationY(&mModelAnim.mat4x3, mAngleY);
+    mModelAnim.mat4x3.m[9] = mPosX >> 3;
+    mModelAnim.mat4x3.m[10] = mPosY >> 3;
+    mModelAnim.mat4x3.m[11] = mPosZ >> 3;
 
-    if ((u32)(*(s32*)(c + 0x1ec) - 2) > 1) return;
-    if (*(s32*)(c + 0x204) != *(s32*)(c + 0x210)) return;
+    if ((u32)(mState - 2) > 1) return;
+    if (mScale != mMaxScale) return;
 
     locals.acc[0] = 0;
     locals.acc[1] = 0;
     locals.acc[2] = 0;
     {
-        char* base = *(char**)(c + 0x120);
+        char* base = (char *)mModelAnim.data.bones;
         int i;
         for (i = 0; i < 5; i++) {
             u8* p = data_ov084_02130294 + i;
@@ -239,474 +192,433 @@ void func_ov084_0212d564(char* c)
         }
     }
 
-    *(s32*)(c + 0x1f8) = 0;
-    *(s32*)(c + 0x1fc) = 0;
-    *(s32*)(c + 0x200) = 0;
+    mClsnOffset.x = 0;
+    mClsnOffset.y = 0;
+    mClsnOffset.z = 0;
 
-    Vec3_Asr(locals.tmp, c + 0x5c, 3);
+    Vec3_Asr(locals.tmp, &mPosX, 3);
     Matrix4x3_FromTranslation(
         data_020a0e68,
         locals.tmp[0],
         locals.tmp[1],
         locals.tmp[2]
     );
-    MulMat4x3Mat4x3(
-        *(char**)(c + 0x124) + 0x120,
-        data_020a0e68,
-        data_020a0e68
-    );
-    *(s32*)(c + 0x1f8) = data_020a0e68[0x24 / 4];
-    *(s32*)(c + 0x1fc) = data_020a0e68[0x28 / 4];
-    *(s32*)(c + 0x200) = data_020a0e68[0x2c / 4];
-    Vec3_LslInPlace(c + 0x1f8, 3);
-    SubVec3(c + 0x1f8, c + 0x5c, c + 0x1f8);
+    MulMat4x3Mat4x3(&mModelAnim.data.transforms[6], data_020a0e68, data_020a0e68);
+    mClsnOffset.x = data_020a0e68[0x24 / 4];
+    mClsnOffset.y = data_020a0e68[0x28 / 4];
+    mClsnOffset.z = data_020a0e68[0x2c / 4];
+    Vec3_LslInPlace(&mClsnOffset, 3);
+    SubVec3(&mClsnOffset, &mPosX, &mClsnOffset);
 
     sx = data_02082214[((u16)locals.acc[0] >> 4) * 2] * 0x32;
     sy = data_02082214[((u16)locals.acc[1] >> 4) * 2];
 
-    px = (int*)(int)(c + 0x1f8);
-    *px = *px + (int)(((s64)sx * sy + 0x800) >> 12);
+    mClsnOffset.x = mClsnOffset.x + (int)(((s64)sx * sy + 0x800) >> 12);
 
-    flag = (*(u16*)(c + 0xc) == 0xfb);
+    /* The int flag keeps the ROM's compare; a direct test DIFFs. */
+    flag = (actorID == 0xfb);
     if (flag != false) {
-        py = (int*)(int)(c + 0x1fc);
         v = data_02082214[((u16)locals.acc[0] >> 4) * 2 + 1] * 0x32;
-        *py = *py - (0x19000 - v);
+        mClsnOffset.y = mClsnOffset.y - (0x19000 - v);
     } else {
-        py = (int*)(int)(c + 0x1fc);
         v = data_02082214[((u16)locals.acc[0] >> 4) * 2 + 1] * 0x32;
-        *py = *py - (0x32000 - v);
+        mClsnOffset.y = mClsnOffset.y - (0x32000 - v);
     }
 
-    pz = (int*)(int)(c + 0x200);
     sz = data_02082214[((u16)locals.acc[1] >> 4) * 2 + 1];
-    *pz = *pz + (int)(((s64)sx * sz + 0x800) >> 12);
+    mClsnOffset.z = mClsnOffset.z + (int)(((s64)sx * sz + 0x800) >> 12);
 
-    *(s32*)(c + 0x1f8) =
-        (int)(((s64)*(s32*)(c + 0x1f8) * *(s32*)(c + 0x204) + 0x800) >> 12);
-    *(s32*)(c + 0x1fc) =
-        (int)(((s64)*(s32*)(c + 0x1fc) * *(s32*)(c + 0x204) + 0x800) >> 12);
-    *(s32*)(c + 0x200) =
-        (int)(((s64)*(s32*)(c + 0x200) * *(s32*)(c + 0x204) + 0x800) >> 12);
+    mClsnOffset.x = (int)(((s64)mClsnOffset.x * mScale + 0x800) >> 12);
+    mClsnOffset.y = (int)(((s64)mClsnOffset.y * mScale + 0x800) >> 12);
+    mClsnOffset.z = (int)(((s64)mClsnOffset.z * mScale + 0x800) >> 12);
 }
 
-// @symbol func_ov084_0212d86c
-void func_ov084_0212d86c(char *r5)
+// @symbol _ZN8daFPkn_c13CheckClsnHitsEv
+void daFPkn_c::CheckClsnHits()
 {
-    char *r4;
+    dActor_c *actor;
     int t;
     int flags;
-    int pos1[3];
-    int pos2[3];
+    Vector3 pos1;
+    Vector3 pos2;
     u32 id;
 
-    id = *(u32 *)(r5 + 0x198);
+    /* The two gotos share the defeat path; a goto-free nesting of it DIFFs. */
+    id = mdCcAc_c.otherOwner;
     if (id == 0)
         goto second;
 
-    flags = *(int *)(r5 + 0x194) & 0x66ff0;
+    flags = mdCcAc_c.hitFlags & 0x66ff0;
     if (flags != 0) {
-        t = (int)(*(u16 *)(r5 + 0xc) == 0xfb);
+        t = (int)(actorID == 0xfb);
         if (t != 0)
-            func_02012694(0x1e, r5 + 0x74);
+            func_02012694(0x1e, &mCamSpacePosX);
         else
-            _ZN5Sound9PlayBank0EjRK7Vector3(0xa, r5 + 0x74);
+            Sound::PlayBank0(0xa, (Vector3 &)mCamSpacePosX);
     activate_path:
-        t = (int)(*(u16 *)(r5 + 0xc) == 0xfc);
+        t = (int)(actorID == 0xfc);
         if (t != 0) {
-            *(u8 *)(r5 + 0x108) = 1;
-            _ZN12dEnemyBase_c9SpawnCoinEv(r5);
-            _ZN8dActor_c24KillAndTrackInDeathTableEv(r5);
-            _ZN5Sound9PlayBank0EjRK7Vector3(0xa, r5 + 0x74);
+            unk_108 = 1;
+            SpawnCoin();
+            KillAndTrackInDeathTable();
+            Sound::PlayBank0(0xa, (Vector3 &)mCamSpacePosX);
         } else {
-            *(int *)(r5 + 0x1ec) = 1;
-            *(u8 *)(r5 + 0x21d) = 0xa;
-            *(u16 *)(r5 + 0x218) = 0x1f40;
-            {
-                u32 *p18c = (u32 *)(r5 + 0x18c);
-                u32 *pb0 = (u32 *)(r5 + 0xb0);
-                *p18c |= 1u;
-                *pb0 &= ~0x10000000u;
-            }
-            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(r5 + 0x110, data_ov084_02130e24.file, 0x40000000, 0x1000, 0);
-            *(u8 *)(r5 + 0x21e) = 0;
-            *(int *)(r5 + 0x224) = 0;
+            mState = 1;
+            mSpinCount = 0xa;
+            mSpinSpeed = 0x1f40;
+            mdCcAc_c.flags |= 1;
+            mFlags &= ~0x10000000;
+            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov084_02130e24.file, 0x40000000, 0x1000, 0);
+            mSuppressDeathReward = 0;
+            mParticleHandle1 = 0;
         }
-        if ((*(int *)(r5 + 0x194) & 0x10) == 0)
+        if ((mdCcAc_c.hitFlags & 0x10) == 0)
             goto second;
-        _ZN5Sound9PlayBank0EjRK7Vector3(0xa, r5 + 0x74);
-        r4 = (char *)_ZN8dActor_c10FindWithIDEj(*(u32 *)(r5 + 0x198));
-        if (r4 == 0)
+        Sound::PlayBank0(0xa, (Vector3 &)mCamSpacePosX);
+        actor = dActor_c::FindWithID(mdCcAc_c.otherOwner);
+        if (actor == 0)
             goto second;
-        _ZN6Player16IncMegaKillCountEv(r4);
-        func_02012694(0x1d, r5 + 0x74);
+        ((Player *)actor)->IncMegaKillCount();
+        func_02012694(0x1d, &mCamSpacePosX);
         goto second;
     }
 
-    r4 = (char *)_ZN8dActor_c10FindWithIDEj(id);
-    if (r4 == 0)
+    actor = dActor_c::FindWithID(id);
+    if (actor == 0)
         goto second;
-    t = (int)(*(u16 *)(r4 + 0xc) == 0xbf);
+    t = (int)(actor->actorID == 0xbf);
     if (t == 0)
         goto second;
-    if (*(u8 *)(r4 + 0x6f9) != 0) {
-        _ZN5Sound9PlayBank0EjRK7Vector3(0xa, r5 + 0x74);
+    if (((Player *)actor)->mIsMetal != 0) {
+        Sound::PlayBank0(0xa, (Vector3 &)mCamSpacePosX);
         goto activate_path;
     }
-    t = (int)(*(u16 *)(r5 + 0xc) == 0xfc);
+    t = (int)(actorID == 0xfc);
     if (t != 0) {
-        if (_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(r5, r5 + 0x174, r4) != 0) {
-            _ZN5Sound9PlayBank0EjRK7Vector3(0xb6, r5 + 0x74);
-            _ZN6Player6BounceE5Fix12IiE(r4, 0x28000);
+        if (JumpedOnByPlayer(mdCcAc_c, *(Player *)actor) != 0) {
+            Sound::PlayBank0(0xb6, (Vector3 &)mCamSpacePosX);
+            _ZN6Player6BounceE5Fix12IiE(actor, 0x28000);
             goto activate_path;
         }
     }
-    if (*(u8 *)(r4 + 0x6fb) != 0)
+    if (((Player *)actor)->mIsVanish != 0)
         goto second;
-    t = (int)(*(u16 *)(r5 + 0xc) == 0xfb);
+    t = (int)(actorID == 0xfb);
     if (t != 0)
         goto second;
-    pos1[0] = *(int *)(r5 + 0x5c);
-    pos1[1] = *(int *)(r5 + 0x60);
-    pos1[2] = *(int *)(r5 + 0x64);
-    _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(r4, pos1, 2, 0xc000, 1, 0, 1);
+    pos1.x = mPosX;
+    pos1.y = mPosY;
+    pos1.z = mPosZ;
+    _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(actor, &pos1, 2, 0xc000, 1, 0, 1);
 
 second:
-    id = *(u32 *)(r5 + 0x1cc);
+    id = mdCcAcPos_c.otherOwner;
     if (id == 0)
         return;
-    r4 = (char *)_ZN8dActor_c10FindWithIDEj(id);
-    if (r4 == 0)
+    actor = dActor_c::FindWithID(id);
+    if (actor == 0)
         return;
-    t = (int)(*(u16 *)(r4 + 0xc) == 0xbf);
+    t = (int)(actor->actorID == 0xbf);
     if (t == 0)
         return;
 
-    flags = *(int *)(r5 + 0x1c8) & 0x66ff0;
+    flags = mdCcAcPos_c.hitFlags & 0x66ff0;
     if (flags != 0) {
         if ((flags & 0x10) != 0) {
-            _ZN6Player16IncMegaKillCountEv(r4);
-            func_02012694(0x1d, r5 + 0x74);
+            ((Player *)actor)->IncMegaKillCount();
+            func_02012694(0x1d, &mCamSpacePosX);
         } else {
-            t = (int)(*(u16 *)(r5 + 0xc) == 0xfb);
+            t = (int)(actorID == 0xfb);
             if (t != 0)
-                func_02012694(0x1e, r5 + 0x74);
+                func_02012694(0x1e, &mCamSpacePosX);
             else
-                _ZN5Sound9PlayBank0EjRK7Vector3(0xa, r5 + 0x74);
+                Sound::PlayBank0(0xa, (Vector3 &)mCamSpacePosX);
         }
-        *(int *)(r5 + 0x1ec) = 1;
-        *(u8 *)(r5 + 0x21d) = 0xa;
-        *(u16 *)(r5 + 0x218) = 0x1f40;
-        {
-            u32 *p18c = (u32 *)(r5 + 0x18c);
-            u32 *pb0 = (u32 *)(r5 + 0xb0);
-            *p18c |= 1u;
-            *pb0 &= ~0x10000000u;
-        }
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(r5 + 0x110, data_ov084_02130e24.file, 0x40000000, 0x1000, 0);
-        *(u8 *)(r5 + 0x21e) = 0;
-        *(int *)(r5 + 0x224) = 0;
+        mState = 1;
+        mSpinCount = 0xa;
+        mSpinSpeed = 0x1f40;
+        mdCcAc_c.flags |= 1;
+        mFlags &= ~0x10000000;
+        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov084_02130e24.file, 0x40000000, 0x1000, 0);
+        mSuppressDeathReward = 0;
+        mParticleHandle1 = 0;
         return;
     }
 
-    if (*(u8 *)(r4 + 0x6f9) != 0)
+    if (((Player *)actor)->mIsMetal != 0)
         return;
-    if (*(u8 *)(r4 + 0x6fb) != 0)
+    if (((Player *)actor)->mIsVanish != 0)
         return;
-    pos2[0] = *(int *)(r5 + 0x5c);
-    pos2[1] = *(int *)(r5 + 0x60);
-    pos2[2] = *(int *)(r5 + 0x64);
-    _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(r4, pos2, 2, 0xc000, 1, 0, 1);
+    pos2.x = mPosX;
+    pos2.y = mPosY;
+    pos2.z = mPosZ;
+    _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(actor, &pos2, 2, 0xc000, 1, 0, 1);
 }
 
-// @symbol func_ov084_0212dc30
-void func_ov084_0212dc30(char *c)
+// @symbol _ZN8daFPkn_c9StateGrowEv
+void daFPkn_c::StateGrow()
 {
-    void *player;
-    struct Vector3 v;
+    Player *player;
+    Vector3 v;
     short angle;
-    void *spawned;
+    dActor_c *spawned;
     int *p;
 
-    if (_Z14ApproachLinearRiii((int*)(c + 0x204), *(int*)(c + 0x210), *(int*)(c + 0x214)) == 0) {
-        goto tail;
+    if (ApproachLinear(mScale, mMaxScale, mScaleRate) == 0) {
+        goto tail;  /* an early return here DIFFs */
     }
 
-    if (_ZNK9Animation12WillHitFrameEi(c + 0x160, 0x10) ||
-        _ZNK9Animation12WillHitFrameEi(c + 0x160, 0x20) ||
-        _ZNK9Animation12WillHitFrameEi(c + 0x160, 0x34) ||
-        _ZNK9Animation12WillHitFrameEi(c + 0x160, 0x4b)) {
-        func_0201267c(0xc0, (struct Vector3*)(c + 0x74));
+    if (mModelAnim.WillHitFrame(0x10) ||
+        mModelAnim.WillHitFrame(0x20) ||
+        mModelAnim.WillHitFrame(0x34) ||
+        mModelAnim.WillHitFrame(0x4b)) {
+        func_0201267c(0xc0, &mCamSpacePosX);
     }
 
-    angle = *(short*)(c + 0x8e);
-    player = _ZN8dActor_c13ClosestPlayerEv(c);
-    p = (int*)AT(player, 0x5c);
+    angle = mAngleY;
+    player = ClosestPlayer();
+    /* Read through p before the null test; direct member reads DIFF. */
+    p = &player->mPosX;
     v.x = p[0];
     v.y = p[1];
     v.z = p[2];
     if (player != 0) {
-        angle = Vec3_HorzAngle((struct Vector3*)(c + 0x5c), &v);
+        angle = Vec3_HorzAngle(&mPosX, &v);
     }
-    _Z14ApproachLinearRsss((short*)(c + 0x8e), angle, 0x400);
+    ApproachLinear(mAngleY, angle, 0x400);
 
-    if (*(unsigned char*)(c + 0x21e) == 1) {
-        spawned = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0xfa, 0, (struct Vector3*)(c + 0x5c), (void*)(c + 0x8c), *(signed char*)(c + 0xcc), -1);
+    if (mSuppressDeathReward == 1) {
+        spawned = dActor_c::Spawn(0xfa, 0, (Vector3 &)mPosX, (Vector3_16 *)&mAngleX, mAreaId, -1);
         if (spawned == 0) return;
 
-        *(unsigned char*)(c + 0x21e) = 2;
-        func_ov084_0212ec04((char*)spawned, (short)((unsigned int)(*(int*)(c + 0x168) << 4) >> 16));
-        *(int*)AT(c, 0x18c) |= 1;
-        *(int*)AT(c, 0x1c0) |= 1;
+        mSuppressDeathReward = 2;
+        func_ov084_0212ec04((char*)spawned, (short)((unsigned int)(mModelAnim.currFrame << 4) >> 16));
+        mdCcAc_c.flags |= 1;
+        mdCcAcPos_c.flags |= 1;
         return;
     }
 
-    _ZN7fBase_c18MarkForDestructionEv(c);
+    MarkForDestruction();
     return;
 
 tail:
-    *(int*)AT(c, 0x18c) |= 1;
+    mdCcAc_c.flags |= 1;
 }
 
-// @symbol func_ov084_0212ddbc
-void func_ov084_0212ddbc(char *c)
+// @symbol _ZN8daFPkn_c9StateSpitEv
+void daFPkn_c::StateSpit()
 {
-    struct Vector3 pos;
+    Vector3 pos;
     s16 ang;
     int b;
-    int speed;
-    int idx;
-    int dx;
-    int dz;
-    int y;
-    int tmp;
-    void *player;
+    Player *player;
 
-    if (_Z14ApproachLinearRiii((s32 *)(c + 0x204), *(s32 *)(c + 0x210), *(s32 *)(c + 0x214)) == 0)
-        goto cold;
+    if (ApproachLinear(mScale, mMaxScale, mScaleRate) == 0)
+        goto cold;  /* the ROM places this branch last */
 
-    if (_ZN9Animation8FinishedEv(c + 0x160) != 0) {
-        b = (int)(*(u16 *)(c + 0xc) == 0xfc);
+    /* The int flag b keeps the ROM's compare; a direct test DIFFs. */
+    if (mModelAnim.Finished() != 0) {
+        b = (int)(actorID == 0xfc);
         if (b != 0)
-            func_0201267c(0xe3, c + 0x74);
+            func_0201267c(0xe3, &mCamSpacePosX);
         else
-            func_0201267c(0x120, c + 0x74);
-        *(s32 *)(c + 0x1ec) = 1;
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x110, data_ov084_02130e1c[1], 0, 0x1000, 0);
+            func_0201267c(0x120, &mCamSpacePosX);
+        mState = 1;
+        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov084_02130e1c[1], 0, 0x1000, 0);
     } else {
-        if (*(u16 *)(c + 0x100) < 0x3a) {
-            ang = *(s16 *)(c + 0x8e);
-            player = _ZN8dActor_c13ClosestPlayerEv(c);
+        if ((u16)mStateTimer < 0x3a) {
+            ang = mAngleY;
+            player = ClosestPlayer();
             if (player != 0)
-                ang = Vec3_HorzAngle(c + 0x5c, (char *)player + 0x5c);
-            _Z14ApproachLinearRsss((s16 *)(c + 0x8e), ang, 0x400);
+                ang = Vec3_HorzAngle(&mPosX, &player->mPosX);
+            ApproachLinear(mAngleY, ang, 0x400);
         }
     }
 
-    if (_ZNK9Animation12WillHitFrameEi(c + 0x160, 0x3a) == 0)
+    if (mModelAnim.WillHitFrame(0x3a) == 0)
         return;
 
-    b = (int)(*(u16 *)(c + 0xc) == 0xfc);
+    b = (int)(actorID == 0xfc);
     if (b != 0)
-        func_0201267c(0x105, c + 0x74);
+        func_0201267c(0x105, &mCamSpacePosX);
     else
-        func_0201267c(0x122, c + 0x74);
+        func_0201267c(0x122, &mCamSpacePosX);
 
-    pos.x = *(s32 *)(c + 0x5c);
-    y = *(s32 *)(c + 0x60);
-    pos.y = y;
-    pos.z = *(s32 *)(c + 0x64);
-    speed = *(s32 *)(c + 0x210);
-    idx = *(u16 *)(c + 0x8e) >> 4;
-    tmp = speed * 0x3c;
-    dx = (s32)(((s64)tmp * data_02082214[idx * 2] + 0x800) >> 12);
-    pos.x = pos.x + dx;
-
-    idx = *(u16 *)(c + 0x8e) >> 4;
-    speed = *(s32 *)(c + 0x210);
-    tmp = speed * 0x3c;
-    dz = (s32)(((s64)tmp * data_02082214[idx * 2 + 1] + 0x800) >> 12);
-    pos.z = pos.z + dz;
-
-    speed = *(s32 *)(c + 0x210);
-    pos.y = y + speed * 0x5a;
-    *(s16 *)(c + 0x8c) = 0x1000;
+    pos.x = mPosX;
+    pos.y = mPosY;
+    pos.z = mPosZ;
+    pos.x += (s32)(((s64)(mMaxScale * 0x3c) * data_02082214[((u16)mAngleY >> 4) * 2] + 0x800) >> 12);
+    pos.z += (s32)(((s64)(mMaxScale * 0x3c) * data_02082214[((u16)mAngleY >> 4) * 2 + 1] + 0x800) >> 12);
+    pos.y += mMaxScale * 0x5a;
+    mAngleX = 0x1000;
 
     _ZN8dActor_c13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j(
-        c, &pos, c + 0x8c, 0x1e000, 0xa000, 3);
+        this, &pos, &mAngleX, 0x1e000, 0xa000, 3);
     return;
 
 cold:
-    if (*(s32 *)(c + 0x204) <= (*(s32 *)(c + 0x210) >> 1))
+    if (mScale <= (mMaxScale >> 1))
         return;
-    {
-        u32 *p18c = (u32 *)(c + 0x18c);
-        u32 *pb0 = (u32 *)(c + 0xb0);
-        *p18c &= ~1u;
-        *pb0 |= 0x10000000u;
-    }
+    mdCcAc_c.flags &= ~1;
+    mFlags |= 0x10000000;
 }
 
-// @symbol func_ov084_0212e010
-void func_ov084_0212e010(char* self)
+// @symbol _ZN8daFPkn_c9StateWaitEv
+void daFPkn_c::StateWait()
 {
-    FPknVec3 buf1;
-    FPknVec3 buf2;
-    char* other;
+    Vector3 buf1;
+    Vector3 buf2;
+    daFPkn_c *other;
+    Player *player;
     int dist;
     int b;
 
-    if (*(u8*)(self + 0x21d) != 0) {
-        short* hp = (short*)(self + 0x8e);
-        *hp = (s16)(*hp + *(s16*)(self + 0x218));
-        _Z14ApproachLinearRsss((short*)(self + 0x218), 0, 0xc8);
-        func_ov084_0212d42c(self);
-        if (_ZN9Animation8FinishedEv(self + 0x160) == 0)
+    if (mSpinCount != 0) {
+        mAngleY += mSpinSpeed;
+        ApproachLinear(mSpinSpeed, 0, 0xc8);
+        SpawnDeathBurst();
+        if (mModelAnim.Finished() == 0)
             return;
-        (*(u8*)((int)self + 0x21d))--;
-        if (*(u8*)(self + 0x21d) != 0)
+        mSpinCount--;
+        if (mSpinCount != 0)
             return;
-        func_02012694(0x11f, self + 0x74);
-        *(int*)(self + 0x228) = 0;
-        *(int*)(self + 0x224) = *(int*)(self + 0x228);
+        func_02012694(0x11f, &mCamSpacePosX);
+        mParticleHandle2 = 0;
+        mParticleHandle1 = mParticleHandle2;
         return;
     }
 
-    func_ov084_0212d2dc(self);
-    if (_Z14ApproachLinearRiii((int*)(self + 0x204), 0, *(int*)(self + 0x214)) == 0)
+    SpawnDeathSmoke();
+    if (ApproachLinear(mScale, 0, mScaleRate) == 0)
         return;
-    {
-        u32* p0 = (u32*)(self + 0xb0);
-        u32* p1 = (u32*)(self + 0x18c);
-        *p0 &= ~0x10000000;
-        *p1 |= 1;
-    }
+    mFlags &= ~0x10000000;
+    mdCcAc_c.flags |= 1;
 
-    if (*(u8*)(self + 0x21c) != 0) {
-        *(u8*)(self + 0x21c) = 0;
+    /* The int flag b keeps the ROM's compares; direct tests DIFF. */
+    if (mEmerged != 0) {
+        mEmerged = 0;
         b = 0;
-        if (*(u16*)(self + 0xc) == 0xfb)
+        if (actorID == 0xfb)
             b = 1;
         if (b != false) {
-            other = (char*)_ZN8dActor_c10FindWithIDEj(*(u32*)(self + 0x1f0));
+            other = (daFPkn_c *)dActor_c::FindWithID(mGroupLeaderID);
             if (other == 0)
                 return;
-            (*(u8*)((int)other + 0x21a))--;
-            if (*(u8*)(self + 0x21e) != 0)
+            other->mGroupAliveCount--;
+            if (mSuppressDeathReward != 0)
                 return;
-            (*(u8*)((int)other + 0x21b))++;
-            if (*(u8*)(self + 0x220) != 0) {
-                buf1.x = *(int*)(self + 0x5c);
-                buf1.y = *(int*)(self + 0x60);
-                buf1.z = *(int*)(self + 0x64);
-                _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(self, &buf1, 2, 0xa000, 0);
+            other->mGroupDefeatedCount++;
+            if (mAlive != 0) {
+                buf1.x = mPosX;
+                buf1.y = mPosY;
+                buf1.z = mPosZ;
+                _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(this, &buf1, 2, 0xa000, 0);
             }
-            if (*(u8*)(other + 0x21b) == 5) {
-                _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0xb2, *(u8*)(self + 0x21f) | 0x40, (FPknVec3*)(self + 0x5c), 0, *(signed char*)(self + 0xcc), -1);
-                _ZN8dActor_c24KillAndTrackInDeathTableEv(other);
-                _ZN8dActor_c24KillAndTrackInDeathTableEv(self);
-                return;
-            }
-            func_ov084_0212d560(self);
-            if (*(int*)(self + 0x1e8) != 1) {
-                _ZN8dActor_c24KillAndTrackInDeathTableEv(self);
+            if (other->mGroupDefeatedCount == 5) {
+                dActor_c::Spawn(0xb2, mStarID | 0x40, (Vector3 &)mPosX, 0, mAreaId, -1);
+                other->KillAndTrackInDeathTable();
+                KillAndTrackInDeathTable();
                 return;
             }
-            _ZN8dActor_c17TrackInDeathTableEv(self);
-            *(int*)(self + 0x1ec) = 4;
+            OnGroupMemberDefeated();
+            if (mRespawnMode != 1) {
+                KillAndTrackInDeathTable();
+                return;
+            }
+            TrackInDeathTable();
+            mState = 4;
             return;
         }
-        b = *(u16*)(self + 0xc) == 0xfd;
+        b = actorID == 0xfd;
         if (b == false)
             return;
-        if (*(u8*)(self + 0x21e) != 0)
+        if (mSuppressDeathReward != 0)
             return;
-        buf2.x = *(int*)(self + 0x5c);
-        buf2.y = *(int*)(self + 0x60);
-        buf2.z = *(int*)(self + 0x64);
-        _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(self, &buf2, 1, 0xa000, 0);
-        _ZN8dActor_c24KillAndTrackInDeathTableEv(self);
+        buf2.x = mPosX;
+        buf2.y = mPosY;
+        buf2.z = mPosZ;
+        _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(this, &buf2, 1, 0xa000, 0);
+        KillAndTrackInDeathTable();
         return;
     }
 
-    dist = _ZN8dActor_c13DistToCPlayerEv(self);
-    b = *(u16*)(self + 0xc) == 0xfb;
+    dist = DistToCPlayer();
+    b = actorID == 0xfb;
     if (b != false) {
-        other = (char*)_ZN8dActor_c10FindWithIDEj(*(u32*)(self + 0x1f0));
+        other = (daFPkn_c *)dActor_c::FindWithID(mGroupLeaderID);
         if (other == 0)
             return;
     }
-    if (*(u16*)(self + 0x100) <= 0x64)
+    if ((u16)mStateTimer <= 0x64)
         return;
     if (dist <= 0x64000)
         return;
     if (dist >= 0x320000)
         return;
-    b = *(u16*)(self + 0xc) == 0xfb;
+    b = actorID == 0xfb;
     if (b != false) {
-        if (*(u8*)(other + 0x21a) >= 2)
+        if (other->mGroupAliveCount >= 2)
             return;
     }
-    b = *(u16*)(self + 0xc) == 0xfc;
+    b = actorID == 0xfc;
     if (b != false)
-        func_0201267c(0x104, self + 0x74);
+        func_0201267c(0x104, &mCamSpacePosX);
     else
-        func_0201267c(0x121, self + 0x74);
+        func_0201267c(0x121, &mCamSpacePosX);
     b = 1;
-    *(u8*)(self + 0x21c) = 1;
-    if (*(u16*)(self + 0xc) != 0xfb)
+    mEmerged = 1;
+    if (actorID != 0xfb)
         b = 0;
     if (b != false)
-        (*(u8*)((int)other + 0x21a))++;
-    b = *(u16*)(self + 0xc) == 0xfd;
+        other->mGroupAliveCount++;
+    b = actorID == 0xfd;
     if (b != false) {
-        *(int*)(self + 0x1ec) = 3;
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(self + 0x110, data_ov084_02130e14.file, 0x40000000, 0x1000, 0);
+        mState = 3;
+        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov084_02130e14.file, 0x40000000, 0x1000, 0);
     } else {
-        *(int*)(self + 0x1ec) = 2;
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(self + 0x110, data_ov084_02130e04[1], 0x40000000, 0x1000, 0);
-        *(int*)(self + 0x168) = 0;
+        mState = 2;
+        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov084_02130e04.file, 0x40000000, 0x1000, 0);
+        mModelAnim.currFrame = 0;
     }
-    b = *(u16*)(self + 0xc) == 0xfb;
+    b = actorID == 0xfb;
     if (b != false) {
-        if (*(signed char*)(other + 0x221) >= 0) {
+        if (other->mStarMarkerIdx >= 0) {
             int v;
-            if (IsStarCollectedInCurLevel(*(u8*)(self + 0x21f)) != 0)
+            if (IsStarCollectedInCurLevel(mStarID) != 0)
                 v = 3;
             else
                 v = 2;
-            SetStarMarker(*(signed char*)(other + 0x221), self, v);
-            *(int*)(other + 0x1f4) = *(int*)(self + 4);
+            SetStarMarker(other->mStarMarkerIdx, this, v);
+            other->mMarkedMemberID = uniqueID;
         }
     }
-    dist = (int)_ZN8dActor_c13ClosestPlayerEv(self);
-    if (dist == 0)
+    player = ClosestPlayer();
+    if (player == 0)
         return;
-    *(s16*)(self + 0x8e) = Vec3_HorzAngle((FPknVec3*)(self + 0x5c), (FPknVec3*)(dist + 0x5c));
+    mAngleY = Vec3_HorzAngle(&mPosX, &player->mPosX);
 }
 
-// @symbol func_ov084_0212e4e0
-int func_ov084_0212e4e0(char* c)
+// @symbol _ZN8daFPkn_c9StateInitEv
+int daFPkn_c::StateInit()
 {
-    void* p;
-    if (*(int*)(c + 0x1e8) == 0) {
-        *(signed char*)(c + 0x221) = -1;
-        *(int*)(c + 0x1f0) = *(int*)(c + 4);
-        *(int*)(c + 0x1f4) = *(int*)(c + 4);
-        *(int*)(c + 0x1e8) = 1;
+    daFPkn_c *p;
+    if (mRespawnMode == 0) {
+        mStarMarkerIdx = -1;
+        mGroupLeaderID = uniqueID;
+        mMarkedMemberID = uniqueID;
+        mRespawnMode = 1;
         p = 0;
-        for (;;) {
-            p = _ZN8dActor_c15FindWithActorIDEjPS_(0xfb, p);
+        for (;;) {  /* a while loop over the assignment DIFFs */
+            p = (daFPkn_c *)FindWithActorID(0xfb, p);
             if (p == 0) break;
-            if (p != c) {
-                *(int*)((char*)p + 0x1e8) = 2;
-                *(int*)((char*)p + 0x1f0) = *(int*)(c + 4);
+            if (p != this) {
+                p->mRespawnMode = 2;
+                p->mGroupLeaderID = uniqueID;
             }
         }
     }
-    *(int*)(c + 0x1ec) = 1;
+    mState = 1;
     return 1;
-}
 }
 
 // @symbol _ZN8daFPkn_c16CleanupResourcesEv
@@ -721,8 +633,7 @@ int daFPkn_c::CleanupResources()
 }
 
 // @symbol _ZN8daFPkn_c6RenderEv
-/* Leftover: Render. Folding the scale-zero test and the 0x40000 flag
-   into one condition DIFFs; the flag stays in its own temporary. */
+/* The int b keeps the ROM's flag test; a plain `||` DIFFs. */
 int daFPkn_c::Render()
 {
     int v = mScale;
@@ -742,39 +653,39 @@ int daFPkn_c::Render()
 int daFPkn_c::Behavior()
 {
     MakeVanishLuigiWork(mdCcAc_c);
+    /* The int flags b and b2 keep the ROM's tests; direct tests DIFF. */
     int b = (mFlags & 0x60000) != 0;
     if (b != 0) {
-        func_ov084_0212d564(((char *)this));
+        UpdateClsnOffset();
         return 1;
     }
     mModelAnim.Advance();
     int s = mState;
     switch (s) {
     case 0:
-        func_ov084_0212e4e0(((char *)this));
+        StateInit();
         break;
     case 1:
-        func_ov084_0212e010(((char *)this));
+        StateWait();
         break;
     case 2:
-        func_ov084_0212ddbc(((char *)this));
+        StateSpit();
         break;
     case 3:
-        func_ov084_0212dc30(((char *)this));
+        StateGrow();
         break;
     case 4:
         break;
     }
-    /* Leftover: Behavior. mStateTimer is s16, so ++ sign-extends (ldrsh).
-       The ROM increments the halfword unsigned. */
+    /* mStateTimer is s16; the ROM counts it unsigned, and `(u16)mStateTimer + 1` DIFFs. */
     {
         unsigned short *p = (unsigned short *)&mStateTimer;
         *p = *p + 1;
         if (s != mState)
             *p = 0;
     }
-    func_ov084_0212d86c(((char *)this));
-    func_ov084_0212d564(((char *)this));
+    CheckClsnHits();
+    UpdateClsnOffset();
     mdCcAc_c.Clear();
     mdCcAc_c.radius = mScale * mClsnRadiusFactor;
     mdCcAc_c.height = mScale * mClsnHeightFactor;
@@ -806,9 +717,7 @@ int daFPkn_c::InitResources()
     Model::LoadFile(data_ov002_0210da38);
     LoadBlueCoinModel(this);
 
-    /* Leftover: InitResources. ModelAnim::SetAnim and the two dCc Init
-       calls take Fix12<int> by value; spelling them that way DIFFs, so the
-       calls stay the scalar externs. */
+    /* A real SetAnim call with a Fix12<int> speed DIFFs; see the file header. */
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
         &mModelAnim, data_ov084_02130df4.file, 0x40000000, 0x1000, 0);
 
@@ -825,16 +734,17 @@ int daFPkn_c::InitResources()
     mRespawnMode = 0;
     mState = 0;
     mGroupLeaderID = 0;
-    unk_1f4 = 0;
+    mMarkedMemberID = 0;
     mGroupAliveCount = 0;
     mGroupDefeatedCount = 0;
-    unk_21c = 0;
-    unk_21d = 0;
+    mEmerged = 0;
+    mSpinCount = 0;
     mSuppressDeathReward = 1;
-    unk_228 = 0;
-    unk_224 = unk_228;
+    mParticleHandle2 = 0;
+    mParticleHandle1 = mParticleHandle2;
 
     id = actorID;
+    /* id and cond keep the ROM's compares; direct tests DIFF. */
     cond = (id == 0xfc);
     if (cond != 0) {
         mClsnRadiusFactor = 0x3c;
@@ -888,8 +798,7 @@ void daFPkn_c::OnTurnIntoEgg(Player &player)
 }
 
 // @symbol _ZN8daFPkn_c13OnYoshiTryEatEv
-/* Leftover: OnYoshiTryEat keeps the two-step flag. A single
-   `return actorID == 0xfc ? 4 : 0` DIFFs. */
+/* Two steps; `return actorID == 0xfc ? 4 : 0` DIFFs. */
 s32 daFPkn_c::OnYoshiTryEat() {
     int r;
     if (actorID == 0xfc)
